@@ -1,0 +1,9 @@
+[submodule "src/ext/openssl"]
+	path = src/ext/openssl
+	url = https://github.com/openssl/openssl.git
+[submodule "src/ext/wxwidgets"]
+	path = src/ext/wxwidgets
+	url = https://github.com/wxWidgets/wxWidgets.git
+[submodule "src/ext/libcurl"]
+	path = src/ext/libcurl
+	url = https://github.com/curl/curl.git

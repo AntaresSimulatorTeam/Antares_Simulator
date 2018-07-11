@@ -1,0 +1,35 @@
+Starting ANTARES version 6.0.0:
+===============================
+
+* libcurl-7.51.0
+* openssl-1.0.2j
+* wxwidgets-3.0.2
+* yuni-1.1.1
+
+openssl build options
+x64:
+"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\amd64\vcvars64.bat" 
+cd ${ANTARES}\src\ext\openssl
+perl Configure VC-WIN64A --prefix=vc-release-x86_64 no-shared
+ms\do_win64a
+nmake -f ms\nt.mak
+nmake -f ms\nt.mak install
+
+x86:
+"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\vcvars32.bat" 
+cd ${ANTARES}\src\ext\openssl
+perl Configure VC-WIN32 no-asm --prefix=vc-release-x86 no-shared
+ms\do_ms
+nmake -f ms\nt.mak
+nmake -f ms\nt.mak install
+
+libcurl build options 
+x86:
+"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\vcvars32.bat" 
+cd ${ANTARES}\src\ext\libcurl\winbuild
+nmake /f Makefile.vc mode=static VC=14 WITH_SSL=static WITH_DEVEL=../../openssl/vc-release-x86 ENABLE_SSPI=no ENABLE_IDN=no ENABLE_WINSSL=no GEN_PDB=no DEBUG=no MACHINE=x86
+
+x64:
+"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\amd64\vcvars64.bat" 
+cd ${ANTARES}\src\ext\libcurl\winbuild
+nmake /f Makefile.vc mode=static VC=14 WITH_SSL=static WITH_DEVEL=../../openssl/vc-release-x86_64 ENABLE_SSPI=no ENABLE_IDN=no ENABLE_WINSSL=no GEN_PDB=no DEBUG=no MACHINE=x64

@@ -1,0 +1,1229 @@
+	//! Add traces to the stdcout
+	# define HAS_TRACES 0
+
+	//! Enable time-consuming checks
+	#ifndef NDEBUG
+	# define MORE_CHECKS 1
+	#else
+	# define MORE_CHECKS 0
+	#endif
+
+	# define HAS_STATISTICS 0
+
+	//! Size (in bytes), when increasing the stack capacity
+	# define GROW_CHUNK  4096 // 1024 * sizeof(Chunk) -> 16KiB
+
+	//! Arbitrary value for consistency checks
+	# define ARBITRARY_HARD_LIMIT  (1024 * 1024 * 500)
+
+
+	# ifndef NDEBUG
+	# define TRACE_INFO(X)  std::cout << "  == parser == " << X << std::endl
+	# else
+	# define TRACE_INFO(X)  {}
+	# endif
+
+
+	# if HAS_TRACES != 0
+
+	# define TRACE(X) \
+		do { \
+			assert(ctx.offset < ctx.capacity); /* valid only because not called from grow */ \
+			assert(ctx.stack[ctx.offset].urlindex < (uint) ctx.urls.size()); \
+			const String& filename = ctx.urls[ctx.stack[ctx.offset].urlindex]; \
+			assert(filename.size() < 65535); \
+			assert(filename.capacity() < 65535); \
+			assert(filename.data() != NULL); \
+			\
+			std::cout << "  == parser == stack == " << filename \
+				<< ", depth:" << ctx.offset << ": " << X << std::endl; \
+		} while (false)
+
+
+	# define TRACE_LOCAL(X) \
+		do { \
+			assert(stack[offset].urlindex < (uint) urls.size()); \
+			const String& filename = urls[stack[offset].urlindex]; \
+			assert(filename.size() < 65535); \
+			assert(filename.capacity() < 65535); \
+			assert(filename.data() != NULL); \
+			\
+			std::cout << "  == parser == stack == " << filename \
+				<< ", depth:" << offset << ": " << X << std::endl; \
+		} while (false)
+
+	# else
+
+	# define TRACE(X)  {}
+
+	# define TRACE_LOCAL(X)  {}
+
+	# endif
+
+
+
+
+
+
+	# if HAS_STATISTICS != 0 && !defined(NDEBUG)
+
+	# define DATASOURCE_PARSE(ctx) \
+		do { \
+			sint64 start = ::Yuni::DateTime::NowMilliSeconds(); \
+			ctx.clear(); \
+			ctx.success = yyrgStart(ctx) and ctx.isParseComplete(); \
+			ctx.duration = (uint64) (::Yuni::DateTime::NowMilliSeconds() - start); \
+			ctx.buildAST(); \
+			root = ctx.rootnode; \
+		} \
+		while (false)
+
+	# else
+
+	# define DATASOURCE_PARSE(ctx) \
+		do { \
+			ctx.clear(); \
+			ctx.success = yyrgStart(ctx) and ctx.isParseComplete(); \
+			ctx.buildAST(); \
+			root = ctx.rootnode; \
+		} \
+		while (false)
+
+	# endif // HAS_STATISTICS
+
+
+
+
+
+
+
+
+
+	struct Chunk
+	{
+		//! ASTRule ID - a negative value means that the rule has not been commited yet
+		int rule;
+		//! hint about the parent frame (last uncommited)
+		uint lastUncommited;
+		//! Parent rule
+		uint parent;
+		//! Iterator on the source
+		uint offset;
+		//! Index of the current source url (see `urls`)
+		uint urlindex;
+		//! End offset - means nothing if rule == 0
+		uint offsetEnd;
+	};
+
+
+
+
+	class Datasource final
+	{
+	public:
+
+	public:
+		//! \name Constructors
+		//@{
+		//! Default constructor
+		Datasource(Notification::Vector& notifications);
+		~Datasource();
+		//@}
+
+		//! \name Matching
+		//@{
+		bool matchSingleAsciiChar(char);
+		bool matchString(const AnyString& text);
+		bool matchOneOf(const AnyString& text);
+
+		bool notMatchSingleAsciiChar(char);
+		bool notMatchOneOf(const AnyString& text);
+		//@}
+
+		//! \name Chunk
+		//@{
+		void pushInclude(uint urlindex);
+		uint push();
+		uint enterRule(enum ASTRule rule);
+		void restart(uint from);
+		void commit(uint ruleOffset, enum ASTRule rule);
+		//@}
+
+		//! \name Filename manipulation
+		//@{
+		//! Open a new url
+		bool open(const AnyString& newurl);
+		//! Open from anonymous origin
+		void openContent(const AnyString& content);
+		//! Close the current url
+		void close();
+		//@}
+
+		//! \name AST Builder
+		//@{
+		//! Clear internal variables
+		void clear();
+		//! Build the whole AST from the stack informations
+		void buildAST();
+
+		//! Get if the parse has been successful or not
+		bool isParseComplete() const;
+		//@}
+
+
+		//! \name Notifications
+		//@{
+		//! Create a new notification
+		void notify(const AnyString& message) const;
+		//@}
+
+
+		//! \name Address translation
+		//@{
+		void translateOffset(uint& column, uint& line, uint offset) const;
+		//@}
+
+
+	public:
+		//! Stack
+		Chunk* stack;
+		uint offset;
+		# if HAS_STATISTICS != 0 && !defined(NDEBUG)
+		uint maxOffset;
+		uint64 duration;
+		# endif
+		uint capacity;
+
+		//! Root folder
+		YString root;
+		//! File Content of all encountered urls, ordered by their order of arrival
+		Clob::Vector contents;
+		//! Reverse mapping for retriving the index of a known file
+		::Yuni::Dictionary<String, uint>::Unordered  reverseUrlIndexes;
+		//! All urls
+		::Yuni::String::Vector urls;
+
+		//! Success flag
+		bool success;
+		//! Root node
+		Node::Ptr rootnode;
+
+		//! Notifications
+		Notification::Vector& notifications;
+
+	private:
+		void grow();
+		void buildASTForNonEmptyContent();
+		void findOptimalNewOffsetAfterCommit(uint ruleOffset);
+
+	}; // class Datasource
+
+
+
+	class OffsetAutoReset final
+	{
+	public:
+		OffsetAutoReset(Datasource& ctx) :
+			ctx(ctx),
+			oldOffset(ctx.offset),
+			oldFileOffset(ctx.stack[ctx.offset].offset)
+		{}
+
+		~OffsetAutoReset()
+		{
+			ctx.offset = oldOffset;
+			ctx.stack[oldOffset].offset = oldFileOffset;
+		}
+
+	private:
+		Datasource& ctx;
+		uint oldOffset;
+		uint oldFileOffset;
+	};
+
+
+
+
+	#if MORE_CHECKS != 0
+	static inline std::ostream& PrintFrame(std::ostream& out, const Chunk& cursor)
+	{
+		out << "{offset: " << cursor.offset
+			<< ", url: " << cursor.urlindex
+			<< ", rule: " << cursor.rule
+			<< ", end: " << cursor.offsetEnd
+			<< ", parent: " << cursor.parent << "}";
+		return out;
+	}
+	# endif
+
+
+
+
+	inline Datasource::Datasource(Notification::Vector& notifications) :
+		stack(),
+		offset(),
+		capacity(GROW_CHUNK),
+		notifications(notifications)
+	{
+		stack = (Chunk*)::malloc(sizeof(Chunk) * GROW_CHUNK);
+	}
+
+
+	inline Datasource::~Datasource()
+	{
+		// rootnode = nullptr
+		::free(stack);
+	}
+
+
+	inline void Datasource::clear()
+	{
+		offset = 0;
+		success = false;
+
+		# if HAS_STATISTICS != 0 && !defined(NDEBUG)
+		maxOffset = 0;
+		duration  = 0;
+		# endif
+
+		rootnode = nullptr;
+
+		// avoid too much memory consumption
+		if (capacity > GROW_CHUNK * 1024)
+		{
+			capacity = GROW_CHUNK * 1024;
+			stack = (Chunk*)::realloc(stack, sizeof(Chunk) * capacity);
+		}
+
+		// initializing the first frame
+		Chunk& firstFrame = stack[0];
+		// no offset
+		firstFrame.offset = 0;
+		// the first one will be good enough
+		firstFrame.urlindex = 0;
+		// to make the frame 0 the root parent frame (and to avoid useless checks)
+		firstFrame.rule = - (int) rgEOF;
+		// no end
+		firstFrame.offsetEnd = 0;
+		// no parent
+		firstFrame.parent = 0;
+		firstFrame.lastUncommited = 0;
+	}
+
+
+	inline void Datasource::grow()
+	{
+		// WARNING The variable 'offset' might be unreliable for displying
+		// and/or checking values from the stack frames
+		#if MORE_CHECKS != 0
+		assert(capacity + GROW_CHUNK < ARBITRARY_HARD_LIMIT); // arbitrary
+		#endif
+
+		// grow the stack
+		stack = (Chunk*)::realloc(stack, (capacity += GROW_CHUNK) * sizeof(Chunk));
+
+		#if MORE_CHECKS != 0  // post-checks
+		assert(offset < capacity);
+		#endif
+	}
+
+
+	inline void Datasource::pushInclude(uint urlindex)
+	{
+		#if MORE_CHECKS != 0
+		assert(urlindex < ARBITRARY_HARD_LIMIT);
+		assert(capacity + GROW_CHUNK < ARBITRARY_HARD_LIMIT); // arbitrary
+		assert(offset < ARBITRARY_HARD_LIMIT); // arbitrary
+		assert(urls.size() == contents.size());
+		assert(urls.size() == reverseUrlIndexes.size());
+		#endif
+
+		if (YUNI_UNLIKELY(not (++offset < capacity))) // grow
+			grow();
+
+		Chunk& cursor    = stack[offset];
+		cursor.offset    = 0;
+		cursor.urlindex  = urlindex;
+		cursor.rule      = 0;
+		cursor.offsetEnd = 0;
+		cursor.parent    = (uint) -1;
+		cursor.lastUncommited = (uint) -1;
+	}
+
+
+	inline uint Datasource::push()
+	{
+		#if MORE_CHECKS != 0
+		assert(capacity + GROW_CHUNK < ARBITRARY_HARD_LIMIT); // arbitrary
+		assert(offset < ARBITRARY_HARD_LIMIT); // arbitrary
+		#endif
+
+		if (YUNI_UNLIKELY(not (++offset < capacity))) // grow
+			grow();
+
+		assert(offset < capacity);
+		# if HAS_STATISTICS != 0 && !defined(NDEBUG)
+		if (offset > maxOffset)
+			maxOffset = offset;
+		# endif
+
+		Chunk* const cursor     = &(stack[offset]);
+		const Chunk* const prev = cursor - 1;
+
+		#if MORE_CHECKS != 0
+		assert(prev->offset   < ARBITRARY_HARD_LIMIT);
+		assert(prev->urlindex < ARBITRARY_HARD_LIMIT);
+		#endif
+
+		cursor->offset    = prev->offset;
+		cursor->urlindex  = prev->urlindex;
+		cursor->rule      = 0;
+		// cursor->offsetEnd = 0;  means nothing if rule == 0
+		cursor->lastUncommited = prev->lastUncommited;
+
+		// Since TRACE_LOCAL uses cursor.offset, this macro must be called after
+		// the previous initialization
+		TRACE_LOCAL("    push at offset " << prev->offset);
+		return offset - 1;
+	}
+
+
+	inline uint Datasource::enterRule(enum ASTRule rule)
+	{
+		#if MORE_CHECKS != 0
+		assert(capacity + GROW_CHUNK < ARBITRARY_HARD_LIMIT); // arbitrary
+		assert(offset < ARBITRARY_HARD_LIMIT); // arbitrary
+		assert((uint) rule < (uint) ruleCount);
+		#endif
+
+		// This method is quite similar to `push`
+		// Grow !
+		if (YUNI_UNLIKELY(not (++offset < capacity)))
+			grow();
+
+		# if HAS_STATISTICS != 0 && !defined(NDEBUG)
+		if (offset > maxOffset)
+			maxOffset = offset;
+		# endif
+
+		#if MORE_CHECKS != 0
+		assert(offset > 0);
+		assert(capacity < ARBITRARY_HARD_LIMIT);
+		#endif
+
+		Chunk* const cursor     = &(stack[offset]);
+		const Chunk* const prev = cursor - 1;
+
+		cursor->offset    = prev->offset;
+		cursor->urlindex  = prev->urlindex;
+		cursor->rule      = - ((int) rule);
+		cursor->offsetEnd = cursor->offset; // store offset for reuse at commit*/
+		cursor->lastUncommited = offset;
+
+		TRACE_LOCAL("    enter at offset " << cursor->offset);
+		return offset;
+	}
+
+
+	inline void Datasource::findOptimalNewOffsetAfterCommit(uint ruleOffset)
+	{
+		// trying to reduce the stack size by removing all stack frames which are
+		// not marked as a real rule this optimization can reduce by 3 the size of
+		// the stack and reduce by 4 the time required to parse some big input
+
+		// if a stack frame with the variable 'rule' not null (aka a stack frame
+		// dedicated to create a node in the AST), then it would not be safe to
+		// get rid of the end of the stack
+		const Chunk* const end = &(stack[offset]);
+		const Chunk* it = &(stack[ruleOffset + 1]);
+		for (; it <= end; ++it)
+		{
+			if (it->rule != 0)
+			{
+				++offset;
+				return;
+			}
+		}
+		// it seems that it is safe to ignore the end of the stack - hourray \o/
+		offset = ruleOffset + 1;
+	}
+
+
+	inline void Datasource::commit(uint ruleOffset, enum ASTRule rule)
+	{
+		// committing the current stack frame
+		{
+			Chunk* const ruleCursor = &(stack[ruleOffset]);
+
+			#if MORE_CHECKS != 0
+			assert(ruleCursor->rule == - (int) rule and "inconsistency ruleid in the stack");
+			assert(offset >= ruleOffset and "invalid stack entre/commit");
+			assert(stack[offset].offset >= ruleCursor->offset and "Huh? Should go forward...");
+			#endif
+
+			// restore previous offset - a temporary variable must be used
+			// it may happen that `offset` and `ruleOffset` are the same
+			uint newEndOffset     = stack[offset].offset;
+			ruleCursor->offset    = ruleCursor->offsetEnd;
+			ruleCursor->offsetEnd = newEndOffset;
+			ruleCursor->rule      = static_cast<int>(rule);
+
+			#if MORE_CHECKS != 0
+			assert(ruleCursor->offset <= ruleCursor->offsetEnd and "invalid boundaries");
+			#endif
+
+			// try to find the lastest uncommited rule
+			{
+				uint lastUncommited = ruleOffset - 1;
+				do
+				{
+					assert(lastUncommited < capacity);
+					Chunk* element = &(stack[lastUncommited]);
+					if (element->rule < 0)
+					{
+						ruleCursor->parent = lastUncommited;
+						if (lastUncommited > 0)
+							element->lastUncommited = (element - 1)->lastUncommited;
+						break;
+					}
+
+					assert(lastUncommited > 0);
+					lastUncommited = (element - 1)->lastUncommited;
+				}
+				while (true);
+			}
+
+			# if HAS_TRACES != 0
+			uint csize = ruleCursor.offsetEnd - ruleCursor.offset;
+			AnyString content(contents[ruleCursor.urlindex], ruleCursor.offset, csize);
+			TRACE_LOCAL("    COMMIT " << ASTRuleToString(rule) << ", offset " << newEndOffset << ": " << content);
+			# endif
+		}
+
+		// new stack frame - push - to keep this element in the stack
+		// calculating the new offset: [optimization]
+		findOptimalNewOffsetAfterCommit(ruleOffset);
+
+		# if HAS_STATISTICS != 0 && !defined(NDEBUG)
+		if (offset > maxOffset)
+			maxOffset = offset;
+		# endif
+
+		if (YUNI_UNLIKELY(not (offset < capacity))) // grow !
+			grow();
+
+		// the item at `ruleOffset` may have changed - re-acquiring a new ref on it
+		// (cf `grow()`)
+		assert(ruleOffset != 0 and ruleOffset < capacity);
+		const Chunk* ruleCursor = &(stack[ruleOffset]);
+		Chunk& cursor     = stack[offset];
+		cursor.offset     = ruleCursor->offsetEnd;
+		cursor.urlindex   = ruleCursor->urlindex;
+		cursor.rule       = 0;
+		cursor.lastUncommited = (ruleCursor - 1)->lastUncommited;
+	}
+
+
+	inline void Datasource::restart(uint from)
+	{
+		// the method `push` returns `offset - 1`
+		#if MORE_CHECKS != 0
+		assert(from + 1 < capacity);
+		assert(from < offset and "can not restart from a non existing frame");
+		#endif
+
+		offset = from + 1;
+
+		Chunk* const cursor     = &(stack[offset]);
+		const Chunk* const prev = cursor - 1;
+
+		cursor->offset   = prev->offset;
+		cursor->urlindex = prev->urlindex;
+		cursor->rule     = 0;
+		cursor->lastUncommited = prev->lastUncommited;
+		TRACE_LOCAL("    restart at offset " << cursor->offset);
+	}
+
+
+	bool Datasource::open(const AnyString& newurl)
+	{
+		// getting the root directory once and for all if not already done
+		// the operation is not done in the constructor to let the caller
+		// initialize this variable if needed
+		if (root.empty())
+			::Yuni::IO::Directory::Current::Get(root, false);
+
+		// canonicalizing the filename
+		String filename;
+		::Yuni::IO::Canonicalize(filename, newurl, root);
+
+		// filename index
+		uint index;
+		Yuni::Dictionary<String, uint>::Unordered::const_iterator knownIndex = reverseUrlIndexes.find(filename);
+		if (YUNI_LIKELY(knownIndex == reverseUrlIndexes.end()))
+		{
+			assert(contents.size() == urls.size());
+			// indexes
+			index = (uint) contents.size();
+			reverseUrlIndexes[filename] = index;
+			// load the entire content in memory
+			contents.push_back(nullptr);
+			urls.push_back(filename);
+			if (::Yuni::IO::errNone != ::Yuni::IO::File::LoadFromFile(contents.back(), filename))
+				return false;
+		}
+		else
+			index = knownIndex->second;
+
+		// new item in the stack
+		pushInclude(index);
+		return true;
+	}
+
+
+	void Datasource::openContent(const AnyString& content)
+	{
+		const String filename = "<memory>";
+		// filename index
+		uint index;
+		::Yuni::Dictionary<String, uint>::Unordered::const_iterator knownIndex = reverseUrlIndexes.find(filename);
+		if (YUNI_LIKELY(knownIndex == reverseUrlIndexes.end()))
+		{
+			assert(contents.size() == urls.size());
+			// indexes
+			index = static_cast<uint>(contents.size());
+			reverseUrlIndexes[filename] = index;
+			urls.push_back(filename);
+			// load the entire content in memory
+			contents.push_back(nullptr);
+			contents.back() = content;
+		}
+		else
+			index = knownIndex->second;
+
+		pushInclude(index);
+	}
+
+
+	inline bool Datasource::matchSingleAsciiChar(char c)
+	{
+		assert(offset < capacity);
+		Chunk& cursor    = stack[offset];
+		assert(cursor.urlindex < contents.size());
+		const Clob& data = contents[cursor.urlindex];
+		if (cursor.offset < data.size() and c == data[cursor.offset])
+		{
+			++cursor.offset;
+			return true;
+		}
+		return false;
+	}
+
+
+	inline bool Datasource::matchString(const AnyString& text)
+	{
+		assert(offset < capacity);
+		Chunk& cursor = stack[offset];
+		assert(cursor.urlindex < contents.size());
+		if (AnyString(contents[cursor.urlindex], cursor.offset).startsWith(text))
+		{
+			cursor.offset += text.size();
+			return true;
+		}
+		return false;
+	}
+
+
+	inline bool Datasource::matchOneOf(const AnyString& text)
+	{
+		assert(offset < capacity);
+		Chunk& cursor    = stack[offset];
+		assert(cursor.urlindex < contents.size());
+		const Clob& data = contents[cursor.urlindex];
+
+		if (cursor.offset < data.size())
+		{
+			if (text.contains(data[cursor.offset]))
+			{
+				++cursor.offset;
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+	inline bool Datasource::notMatchSingleAsciiChar(char c)
+	{
+		assert(offset < capacity);
+		Chunk& cursor    = stack[offset];
+		assert(cursor.urlindex < contents.size());
+		const Clob& data = contents[cursor.urlindex];
+
+		if (cursor.offset < data.size() and c != data[cursor.offset])
+		{
+			++cursor.offset;
+			return true;
+		}
+		return false;
+	}
+
+
+	inline bool Datasource::notMatchOneOf(const AnyString& text)
+	{
+		assert(offset < capacity);
+		Chunk& cursor    = stack[offset];
+		assert(cursor.urlindex < contents.size());
+		const Clob& data = contents[cursor.urlindex];
+
+		if (cursor.offset < data.size())
+		{
+			if (not text.contains(data[cursor.offset]))
+			{
+				++cursor.offset;
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+
+	static bool StandardURILoaderHandler(Clob& out, const AnyString& uri)
+	{
+		if (not uri.empty())
+		{
+			out.clear();
+			if (::Yuni::IO::errNone == ::Yuni::IO::File::LoadFromFile(out, uri))
+				return true;
+		}
+		return false;
+	}
+
+
+
+
+	static void InternalNodeExportHTML(Clob& out, const Node& node, String& indent, String& tmp)
+	{
+		assert(&node != NULL);
+		out << indent << "<div class=\"node\">";
+		out << "<span class=\"rule\">" << ASTRuleToString(node.rule) << "</span>";
+
+		bool attrCapture = RuleAttributeCapture(node.rule);
+		if (attrCapture)
+		{
+			// out << " <span class=\"line\">l." << node.line << "</span> ";
+			out << " <code>";
+			tmp = node.text;
+			tmp.replace("<", "&lt;");
+			tmp.replace(">", "&gt;");
+			out << tmp << "</code>";
+		}
+
+		if (not node.children.empty())
+		{
+			out << '\n' << indent << "<ul>\n";
+			indent.append("    ", 4);
+			for (uint i = 0; i != (uint) node.children.size(); ++i)
+			{
+				out << indent << "<li>\n";
+				InternalNodeExportHTML(out, *(node.children[i]), indent, tmp);
+				out << indent << "</li>\n";
+			}
+
+			indent.chop(4);
+			out << indent << "</ul>\n" << indent;
+		}
+		out << "</div>\n";
+	}
+
+
+	static void InternalNodeExportJSON(Clob& out, const Node& node, bool hasSibling, String& indent, String& tmp,
+		void (*callback)(Yuni::Dictionary<AnyString, YString>::Unordered&, const Nany::Node&))
+	{
+		using namespace ::Yuni::System::Console;
+		assert(&node != NULL);
+
+		typedef Yuni::Dictionary<AnyString, YString>::Unordered  DictType;
+		DictType dict;
+		dict["rule"] = ASTRuleToString(node.rule);
+		dict["prefix"] = indent;
+
+		if (YUNI_UNLIKELY(RuleAttributeError(node.rule)))
+		{
+			dict["rule-type"] = "error";
+		}
+		else
+		{
+			if (YUNI_UNLIKELY(RuleAttributeImportant(node.rule)))
+				dict["rule-type"] = "important";
+			else
+				dict["rule-type"] = nullptr;
+		}
+
+		bool attrCapture = RuleAttributeCapture(node.rule);
+		if (attrCapture)
+		{
+			dict["text"] = node.text;
+			dict["text-capture"] = nullptr;
+		}
+		else
+		{
+			// it can be interresting to print the text itself when the node
+			// is a simple text capture
+			AnyString textCapture = RuleAttributeSimpleTextCapture(node.rule);
+			if (not textCapture.empty())
+			{
+				dict["text"] = nullptr;
+				dict["text-capture"] = textCapture;
+			}
+			else
+			{
+				dict["text"] = nullptr;
+				dict["text-capture"] = nullptr;
+			}
+		}
+
+		if (callback)
+			callback(dict, node);
+
+		// exporting the dict
+		{
+			out << "\t{";
+			bool  first = true;
+			for (DictType::const_iterator i = dict.begin(); i != dict.end(); ++i)
+			{
+				tmp = i->second;
+				tmp.replace("\"", "\\\"");
+				tmp.replace("\n", "\\n");
+
+				if (not first)
+					out << ",\n";
+				else
+					out << '\n';
+				out << "\t\t\"" << i->first << "\": \"" << tmp << "\"";
+				first = false;
+			}
+			out << "\n\t},\n";
+		}
+
+		// sub nodes
+		if (not node.children.empty())
+		{
+			if (hasSibling)
+				indent.append("|   ", 4);
+			else
+				indent.append("    ", 4);
+
+			for (uint i = 0; i != (uint) node.children.size(); ++i)
+			{
+				bool hasSibling = (i != (uint) node.children.size() - 1);
+				InternalNodeExportJSON(out, *(node.children[i]), hasSibling, indent, tmp, callback);
+			}
+
+			indent.chop(4);
+		}
+	}
+
+
+	template<bool ColorT>
+	static void InternalNodeExportConsole(Clob& out, const Node& node, bool hasSibling, String& indent,
+		String& tmp, Node::ExportCallback callback)
+	{
+		using namespace ::Yuni::System::Console;
+		assert(&node != NULL);
+
+		if (ColorT)
+			::Yuni::System::Console::SetTextColor(out, blue);
+		out << indent;
+
+		if (not ColorT)
+		{
+			out << ASTRuleToString(node.rule);
+		}
+		else
+		{
+			if (YUNI_UNLIKELY(RuleAttributeError(node.rule)))
+			{
+				::Yuni::System::Console::SetTextColor(out, red);
+				out << ASTRuleToString(node.rule);
+				::Yuni::System::Console::ResetTextColor(out);
+			}
+			else
+			{
+				if (YUNI_UNLIKELY(RuleAttributeImportant(node.rule)))
+				{
+					::Yuni::System::Console::SetTextColor(out, purple);
+					out << ASTRuleToString(node.rule);
+					::Yuni::System::Console::ResetTextColor(out);
+				}
+				else
+				{
+					::Yuni::System::Console::ResetTextColor(out);
+					out << ASTRuleToString(node.rule);
+				}
+			}
+		}
+
+		bool attrCapture = RuleAttributeCapture(node.rule);
+		if (attrCapture)
+		{
+			tmp = node.text;
+			tmp.replace("\n", "\\n");
+			out << ": ";
+
+			if (ColorT)
+				::Yuni::System::Console::SetTextColor(out, green);
+			out << tmp;
+			if (ColorT)
+				::Yuni::System::Console::ResetTextColor(out);
+		}
+		else
+		{
+			// it can be interresting to print the text itself when the node
+			// is a simple text capture
+			AnyString textCapture = RuleAttributeSimpleTextCapture(node.rule);
+			if (not textCapture.empty())
+			{
+				out << ", ";
+				if (ColorT)
+					::Yuni::System::Console::SetTextColor(out, green);
+				out << textCapture;
+				if (ColorT)
+					::Yuni::System::Console::ResetTextColor(out);
+			}
+		}
+
+		if (node.children.size() > 1)
+		{
+			if (ColorT)
+				::Yuni::System::Console::SetTextColor(out, blue);
+			out << " (+" << node.children.size() << ')';
+			if (ColorT)
+				::Yuni::System::Console::ResetTextColor(out);
+		}
+
+		out << '\n';
+		//if (!callback)
+		//	out << '\n';
+		//else
+		//{
+			//if (ColorT)
+			//	::Yuni::System::Console::SetTextColor(out, lightblue);
+			//out << " [" << (void*) &node << "]\n";
+			//if (ColorT)
+			//	::Yuni::System::Console::ResetTextColor(out);
+		//}
+
+		if (callback) // callback for additional information ?
+		{
+			tmp.clear();
+			callback(node, tmp);
+			if (not tmp.empty())
+			{
+				AnyString prefix = ":: ";
+				String newIndent;
+				newIndent += '\n';
+				newIndent += indent;
+				newIndent.append(prefix);
+
+				tmp.trimRight('\n');
+				tmp.replace("\n", newIndent);
+
+				if (ColorT)
+					::Yuni::System::Console::SetTextColor(out, blue);
+				out << indent;
+				if (ColorT)
+					::Yuni::System::Console::SetTextColor(out, yellow);
+				out << prefix;
+				if (ColorT)
+					::Yuni::System::Console::ResetTextColor(out);
+				out << tmp << '\n';
+			}
+		}
+
+		// sub nodes
+		if (not node.children.empty())
+		{
+			if (hasSibling)
+				indent.append("|   ", 4);
+			else
+				indent.append("    ", 4);
+
+			for (uint i = 0; i != (uint) node.children.size(); ++i)
+			{
+				bool hasSibling = (i != (uint) node.children.size() - 1);
+				InternalNodeExportConsole<ColorT>(out, *(node.children[i]), hasSibling, indent, tmp, callback);
+			}
+
+			indent.chop(4);
+		}
+	}
+
+
+	void Datasource::buildAST()
+	{
+		if (success)
+		{
+			if (offset > 0) // not empty content
+			{
+				buildASTForNonEmptyContent();
+			}
+			else
+			{
+				// minor optimisation to avoid allocation on empty contents
+				rootnode = new Node();
+				rootnode->rule = rgUnknown;
+				rootnode->offset = 0;
+				rootnode->offsetEnd = 0;
+			}
+		}
+		else
+			rootnode = nullptr;
+
+		# if HAS_STATISTICS != 0 && !defined(NDEBUG)
+		{
+			uint realRuleCount = 0;
+
+			for (uint i = 0; i != offset; ++i)
+			{
+				if (stack[i].rule > 0)
+					++realRuleCount;
+			}
+
+			TRACE_INFO("STATISTICS");
+			TRACE_INFO("result: " << (success ? "OK" : "FAILED") << "  (" << duration << "ms)");
+			uint ratio = (uint)((double) realRuleCount * 100. / offset);
+			TRACE_INFO("stack: " << realRuleCount << " rules for " << offset << " stack frames, ratio: "
+				<< ratio << "% (higher is better), max depth: " << maxOffset);
+			TRACE_INFO("stack: " << ((capacity * sizeof(Chunk)) / 1024) << " KiB (capacity: " << capacity
+				<< ", " << sizeof(Chunk) << " bytes per frame)");
+			uint64 totalCapa = 0;
+			for (uint i = 0; i != (uint) contents.size(); ++i)
+				totalCapa += contents[i].capacity();
+			TRACE_INFO("content from urls: " << contents.size() << ", total " << (totalCapa / 1024) << " KiB in memory");
+
+			totalCapa += (capacity * sizeof(Chunk));
+			for (uint i = 0; i != (uint) urls.size(); ++i)
+				totalCapa += urls[i].capacity();
+			totalCapa += root.capacity();
+			TRACE_INFO("total memory usage: " << (totalCapa / 1024) << " KiB");
+		}
+		# endif
+
+		// cleanup
+		::free(stack);
+		stack = nullptr;
+		offset = 0;
+		capacity = 0;
+	}
+
+
+	void Datasource::buildASTForNonEmptyContent()
+	{
+		// at this point, the parse was successful and something has been found
+		assert(success);
+		assert(offset > 0);
+		assert(stack[0].rule == + (int) rgEOF and "invalid stack (should have called isParseComplete())");
+
+		// all AST nodes, mapping the stack elements
+		uint astNodesSize = offset + 1;
+		Node** astNodes = (Node**)::calloc(astNodesSize, sizeof(void*));
+
+		// pseudo root node to avoid special cases for retrieving the parent node
+		astNodes[0] = new Node();
+		astNodes[0]->rule = rgUnknown;
+		astNodes[0]->offset = 0;
+		astNodes[0]->offsetEnd = 0;
+
+		const Chunk* cursor = &(stack[0]);
+		const Chunk* const end = &(stack[offset]);
+		uint i = 0;
+
+		// starting from the first real frame
+		while (++cursor != end)
+		{
+			++i;
+			#if MORE_CHECKS != 0
+			if (YUNI_UNLIKELY(cursor->rule < 0))
+			{
+				std::cerr << "assert failed: invalid rule  ";
+				PrintFrame(std::cerr, *cursor) << std::endl;
+				assert(cursor->rule >= 0 and "some rules are not commited - the parse should have failed");
+			}
+			# endif
+
+
+			if (cursor->rule > 0) // only commited rules
+			{
+				#if MORE_CHECKS != 0
+				if (YUNI_UNLIKELY(not (cursor->parent < offset)))
+				{
+					std::cerr << "assert failed: invalid parent: " << i << "/" << offset << ",  ";
+					PrintFrame(std::cerr, *cursor) << std::endl;
+					assert(cursor->parent < offset and "invalid parent index");
+				}
+				assert(cursor->parent < astNodesSize);
+				assert(!(!astNodes[cursor->parent]) and "invalid parent");
+				# endif
+
+				// The grammar rule for the current node
+				enum ASTRule rule = (enum ASTRule) cursor->rule;
+
+				assert(cursor->parent < astNodesSize);
+
+				Node* newnode = new Node();
+				newnode->rule      = rule;
+				newnode->offset    = cursor->offset;
+				newnode->offsetEnd = cursor->offsetEnd;
+
+				// Flag to determine whether the node has to capture the content or not
+				if (RuleAttributeCapture(rule))
+				{
+					// Checking integrity of the captured content
+					assert(
+						cursor->offsetEnd >= cursor->offset                // valid end offset
+						and cursor->offsetEnd != (uint) -1                // valid end offset
+						and cursor->offset    != (uint) -1                // valid offset
+						and cursor->urlindex  <  (uint)contents.size()    // valuid url index
+						and cursor->offset    <  contents[cursor->urlindex].size()  // valid range
+						and cursor->offsetEnd <= contents[cursor->urlindex].size() // valid range
+						and "invalid offset for content capture");
+
+					// size of the captured content
+					uint size = cursor->offsetEnd - cursor->offset;
+					// Captured content
+					newnode->text.assign(contents[cursor->urlindex], size, cursor->offset);
+				}
+
+				astNodes[i] = newnode;
+				astNodes[cursor->parent]->children.push_back(newnode);
+			}
+		}
+
+		rootnode = YUNI_LIKELY((astNodes[0]->children.size() == 1))
+			? astNodes[0]->children[0] : nullptr;
+
+		delete astNodes[0];
+		free(astNodes);
+	}
+
+
+	void Datasource::notify(const AnyString& message) const
+	{
+		assert(offset < capacity);
+		Chunk& cursor    = stack[offset];
+		assert(cursor.urlindex < contents.size());
+		const Clob& data = contents[cursor.urlindex];
+
+		uint line = 1;
+		uint x = 0;
+
+		// trying to find the appropriate line index
+		if (cursor.offset < data.size())
+		{
+			for (uint i = 0; i != cursor.offset; ++i)
+			{
+				if (data[i] == '\n')
+				{
+					++line;
+					x = 0;
+				}
+				else
+					++x;
+			}
+		}
+
+		Notification* notification = new Notification();
+		notification->offset     = ((0 != x) ? x : 1);
+		notification->line       = line;
+		notification->message    = message;
+		notification->filename   = urls[cursor.urlindex];
+
+		const_cast<Notification::Vector&>(notifications).push_back(notification);
+	}
+
+
+	bool Datasource::isParseComplete() const
+	{
+		if (offset > 1)
+		{
+			assert(offset < capacity);
+			assert(stack[offset].urlindex < (uint) urls.size());
+			assert(stack[0].rule == - (int) rgEOF and "invalid stack");
+
+			// pseudo commit the root frame
+			stack[0].rule = + (int) rgEOF;
+
+			// trying to find the commit rule "start", which should be at index 1
+			const Chunk* const end = &(stack[offset]);
+			const Chunk* cursor = &(stack[1]);
+			do
+			{
+				if (cursor->rule == rgStart)
+				{
+					if (cursor->urlindex == 0) // the original input source
+					{
+						// the original content
+						const Clob& data = contents[cursor->urlindex];
+
+						if (cursor->offset < data.size() and cursor->offsetEnd <= data.size())
+						{
+							if (data.size() == cursor->offsetEnd)
+								return true;
+						}
+					}
+					break;
+				}
+
+				++cursor;
+			}
+			while (cursor <= end);
+
+			notify("failed to parse");
+		}
+		return false;
+	}
+
+
+	inline void Datasource::translateOffset(uint& column, uint& line, uint offset) const
+	{
+		uint fileindex = 0;
+
+		if (fileindex < (uint) contents.size())
+		{
+			// alias to the content
+			const Clob& content = contents[fileindex];
+			// maximum size
+			uint maxSize = std::min((uint) content.size(), offset);
+
+			column = 0;
+			line = 1;
+
+			const char* c = &(content[0]);
+			const char* const end = c + maxSize;
+
+			for (; c != end; ++c)
+			{
+				if (*c == '\n')
+				{
+					column = 0;
+					++line;
+				}
+				else
+					++column;
+			}
+
+			if (column == 0)
+				column = 1;
+		}
+		else
+		{
+			line = 0;
+			column = 0;
+		}
+	}
+
+
+
+

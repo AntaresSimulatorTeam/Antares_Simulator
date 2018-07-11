@@ -1,0 +1,30 @@
+Antares_Simulator is a project which, twelve years after its beginning, is still subject
+to significant evolutions.
+
+To have an general idea of the progress that has been made so far, please read the NEWS file
+at the root of this directory.
+
+To get of a wiew of the main directions in which further developments are currently oriented,
+please read the ROADMAP file at the root of this directory.
+
+If you think about contributing to the Antares_Simulator project, your first move should be to get the source code.
+There are two ways to achieve that:
+
+1) Clone the Antares_Simulator git repository available on GitHub : (link to be added)
+2) Get an Antares_Simulator installer package available at https://antares-simulator@rte-france.com 
+and tick the box "copy source code"  when installing the software.   
+ 
+In the process followed to release the code of Antares_Simulator under Open Source, there are two important milestones:
+
+* In Summer 2018 , release of Antares_Simulator 6.0.0 : this first (ex-post) publication is meant to
+provide a general access to the code, giving to everybody the ability to review as well as to (re)build the application.
+At this stage, however, all will not be set yet regarding how to contribute (this file), conduct code, coding conventions, etc.
+
+* In Winter 2018/2019, release of Antares_Simulator 7.0.0 source. With this version will start the actual open
+developement process, no more code being written in proprietary mode. This publication is meant to give the actual kick-off
+for external contributions.
+
+* During the interim period (second  half of 2018), developers who wish to join are welcome to examine
+the code already published and to share their thoughts with the Antares_Simulator Team through one of
+the email addresses that can be found at https://antares-simulator@rte-france.com 
+

@@ -1,0 +1,45 @@
+This file describes the development roadmap leading from Antares_Simulator 6.0.0
+(released: Summer 2018) to Antares_Simulator 7.0.0 (expected: winter 2018/2019).
+
+a) Enhancement of the perimeter of binding constraints:
+
+Since from their first apparition in Antares_Simulator, so-called
+binding constraints have been defined as arbitrary linear constraints
+on flow variables. Since Antares_Simulator makes it possible to define
+completely artificial flow variables, the binding constraint editor is
+quite versatile and this property has for long been intensively and 
+successfully used to build up handy auxiliary sub-problems
+(e.g reservoir level equations of PSP)
+
+However, a significant improvement will be brought by extending the 
+binding constraint domain to the output from dispatchable plants. 
+Alike flow variables, generation variables will include physical
+ones as well as completely artificial ones, should the need for
+them arise in the course of setting up a specific power system model. 
+
+b) Automation of the definition of "DC approximation" load flow
+constraints:
+
+Using conventional binding constraints defined on a cycle basis of the
+graph formed by the AC components of the power system is, in 
+Antares_Simulator, a well established practice for enforcing Kirchhoff's
+second law on power flows in the classical "DC approximation". A 
+suitable tuning of the RHS of these constraints already gives, in 
+addition, the ability to model the operation of PSTs or to reproduce 
+the "natural" loop flows that may be have to be taken into account on
+a grid whose geography has been simplified.   
+
+However, the manual edition of all of these constraints may represent 
+a heavy task, even with the assistance of partially automated scripts.
+For this reason the roadmap to Antares_Simulator 7.0.0 includes the 
+development of a new integrated "binding constraints generator" that
+will automatically set up the desired constraints, on the basis of the
+impedances and PST settings provided by the user in the 
+Antares_Simulator dataset.
+
+c) Extension of the hydro storage model
+
+As compared to Antares 6.0.0, the next Open Source version shall 
+introduce much more flexibility in the way hydro resources (or any 
+other storable forms of energy) can be managed at the different stages
+of the optimization problems definition and resolution.

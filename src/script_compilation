@@ -1,0 +1,35 @@
+#!/bin/bash
+
+ANTARES_SRC=`pwd`
+
+cd ..
+
+git submodule init
+git submodule update
+
+cd src/ext
+
+#OPENSSL
+cd openssl
+./config
+make
+
+#CURL
+cd ../libcurl
+./buildconf
+env  LDFLAGS=-R$ANTARES_SRC/ext/openssl ./configure --disable-shared --with-ssl
+make
+
+export CC=/usr/local/gcc/4.8/bin/gcc-4.8
+export CXX=/usr/local/gcc/4.8/bin/g++-4.8
+
+#wxWidgets
+cd ../wxwidgets
+mkdir build_gtk
+cd build_gtk
+../configure --with-gtk --disable-shared
+make
+
+cd $ANTARES_SRC
+cmake .
+make

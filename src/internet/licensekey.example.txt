@@ -1,0 +1,34 @@
+[vendor]
+vendor = rte
+
+[product]
+product.allow = 18ed9039-7d7e-47d9-951d-046656c29df3
+product.version.min = 400
+product.version.max = 500
+
+[customer]
+customer.caption = License granted to RTE
+customer.id=7aa48f60-63dd-490a-b4cc-ff3b978262fc
+customer.name=RTE
+customer.tick = 30
+
+[os]
+os.require = linux
+memory.max = 64
+
+[host]
+host.allow  = aojoB23f8gyKmvDP+Iw6dg4J+sQVmrS8jFUA/5vphw8=
+
+[date]
+expires = 4070908800
+
+[study]
+study.max.areas = 9999
+study.max.thermal.clusters.per.area = 9999
+
+[floating]
+license.servers = no
+
+[internetlicenseserver]
+internet.server.check = yes
+internet.server.url = https://grovsl3d

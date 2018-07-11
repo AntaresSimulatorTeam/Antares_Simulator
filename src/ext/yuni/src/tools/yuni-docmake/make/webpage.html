@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="${LANG}"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="${LANG}"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="${LANG}"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="${LANG}"> <!--<![endif]-->
+<head>
+<meta charset="utf-8" />
+<title>@{TITLE} - Yuni Framework</title>
+<meta name="description" content="@{DESCRIPTION}" />
+<!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<meta name="keywords" content="@{KEYWORDS}" />
+<meta name="viewport" content="width=1024, initial-scale=1, maximum-scale=1" />
+<meta http-equiv="content-language" content="@{LANG}" />
+<meta name="copyright" content="libyuni.org, 2008 / 2011" />
+<meta name="rating" content="general" />
+<meta name="author" content="libyuni.org" />
+<meta name="DC.title" lang="@{LANG}" content="@{TITLE}" />
+<meta name="DC.publisher"  content="Yuni Team" />
+<meta name="DC.date" content="@{MODIFIED_ISO8601}" />
+<meta name="DC.creator" content="libyuni.org" />
+<meta name="DC.description" lang="@{LANG}" content="@{DESCRIPTION}" />
+<meta name="DC.type" scheme="DCMIType" content="text" />
+<meta name="DC.format" scheme="IMT" content="text/html" />
+<meta name="DC.language" scheme="RFC3066" content="@{LANG}" />
+<meta http-equiv='pragma' content='public' />
+<!-- Icon / Style -->
+<link rel="icon"  href="@{ROOT}/favicon.ico" type="image/x-icon" />
+<link rel='stylesheet' type='text/css' media='all' href="@{ROOT}/theme/default/css/yuni.css" />
+<!--[if IE]>
+<link rel='stylesheet' type='text/css' media='all' href="@{ROOT}/theme/default/css/yuni-ie.css" />
+<![endif]-->
+<link rel='stylesheet' type='text/css' media='print' href="@{ROOT}/theme/default/css/yuni-print.css" />
+<link rel='stylesheet' type='text/css' media='print' href="@{ROOT}/theme/default/font/style.css" />
+<!-- -->
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="@{ROOT}/theme/default/js/excanvas.min.js"></script><![endif]-->
+<script type="text/javascript" src="@{ROOT}/theme/default/js/jquery.js"></script>
+<script type="text/javascript" src="@{ROOT}/theme/default/js/jquery.flot.js"></script>
+<!-- Offline search -->
+<script src="@{ROOT}/seo/seo.js" type="text/javascript"></script>
+<script src="@{ROOT}/seo/data.js" type="text/javascript"></script>
+<!-- Syntax Highlither http://softwaremaniacs.org/soft/highlight/en/description/ -->
+<script src="@{ROOT}/theme/default/js/highlight.min.js" type="text/javascript"></script>
+<!-- mathjax -->
+<script type="text/javascript" src="https://d3eoax9i5htok0.cloudfront.net/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<!-- Google -->
+<meta name="google-site-verification" content="P989BNW4O28Vzpd8-NS4x5wFOoH5qkj0vVKTE93bt8k" />
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-25638108-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body>
+
+
+<!--
+title  : @{TITLE}
+source : @{URL}
+-->
+
+
+
+
+<script type="text/javascript">
+<!--
+function toggle_toc() {
+	var e = document.getElementById('toclist');
+	var l = document.getElementById('toclink');
+	if (e && l) {
+		if (e.style.display == 'block') {
+			e.style.display = 'none';
+			l.innerHTML = "[ Show ]";
+		} else {
+			e.style.display = 'block';
+			l.innerHTML = "[ Hide ]";
+		}
+	}
+}
+//-->
+</script>
+
+<div class="layout">
+
+<div id="top" class="headertop">
+<h1>@{TITLE}</h1>
+<div class="path">
+<ul>
+<li class="home"><a class="home" href="@{ROOT}/@{INDEX}">&nbsp;</a></li>
+@{URL_PARTS}
+</ul>
+</div>
+</div>
+
+
+<div class="laycontent">
+
+
+
+@{TOC_BEGIN}
+<div id="toc" class="toc">
+<div>
+<span><b>&nbsp;Table of Contents</b> <a id="toclink" href="javascript:toggle_toc()">[ Show ]</a></span>
+<div id="toclist" style="display:none">
+@{TOC_CONTENT}
+</div>
+</div>
+</div>
+@{TOC_END}
+
+
+
+
+<div class="content">
+
+@{CONTENT}
+@{DIRECTORY_INDEX}
+@{TAGS_LIST}
+
+</div> <!-- content -->
+
+
+<div class="modified">
+Last modified : @{MODIFIED}
+</div>
+
+
+</div> <!-- laycontent -->
+
+
+
+<div class="leftmenu">
+
+<div class="titled">
+<span class="unbreakable"><strong>Yuni </strong>Framework</span>
+</div>
+
+
+
+<div class="menud">
+
+<fieldset><legend>&nbsp;Search&nbsp;</legend>
+<input id="search" type="text" onkeyup="SEO.searchFromObjValue('@{ROOT}', '@{INDEX}', 'search');" />
+<div id="spotlight" class="spotlight"></div>
+</fieldset>
+
+
+@{QUICKLINKS_BEGIN}
+<fieldset><legend>&nbsp;Quick links&nbsp;</legend>
+	<a href="@{ROOT}/en/@{INDEX}">Home</a>
+	<a href="@{ROOT}/en/downloads/@{INDEX}">Download</a>
+	<a href="@{ROOT}/en/developers/@{INDEX}">Developers</a>
+	<a href="@{ROOT}/en/links/@{INDEX}">Links</a>
+	<a href="@{ROOT}/en/contacts/@{INDEX}">Contacts</a>
+</fieldset>
+<fieldset><legend>&nbsp;Documentation&nbsp;</legend>
+	<p>
+	Development version (0.2)
+	</p>
+	<a href="@{ROOT}/en/documentation/@{INDEX}">Documentation</a>
+	<a href="@{ROOT}/en/documentation/v0.2/users/@{INDEX}">User's manual</a>
+	<a href="@{ROOT}/en/documentation/v0.2/doxygen/@{INDEX}">API reference</a>
+	<!--
+	<br />
+	<p>
+	Development version
+	</p>
+	<a href="@{ROOT}/en/documentation/trunk/user/@{INDEX}">User's manual (trunk)</a>
+	<a href="@{ROOT}/en/documentation/trunk/doxygen/@{INDEX}">API reference (trunk)</a>
+	-->
+</fieldset>
+
+@{QUICKLINKS_END}
+</div>
+</div>
+
+
+
+</div>
+
+<script type="text/javascript">
+hljs.tabReplace = '    ';
+hljs.initHighlightingOnLoad();
+$(document).ready(function() {
+  $('pre').each(function(i, e) {hljs.highlightBlock(e, '    ', (navigator.appName == 'Microsoft Internet Explorer') ? true : null)});
+  });
+</script>
+</body>
+</html>
