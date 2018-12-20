@@ -4,6 +4,8 @@ set(SRC_UI_WINDOWS_OPTIONS
 	# Options
 	windows/options/temp-folder/temp-folder.h
 	windows/options/temp-folder/temp-folder.cpp
+	windows/options/select-output/select-output.h
+	windows/options/select-output/select-output.cpp
 	windows/options/playlist/playlist.h
 	windows/options/playlist/playlist.cpp
 	windows/options/optimization/optimization.h

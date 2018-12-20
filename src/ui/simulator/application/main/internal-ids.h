@@ -130,6 +130,7 @@ namespace Forms
 		//@{
 		mnIDOptionTempFolder,
 		mnIDOptionConfigurePrefetch,
+		mnIDOptionConfigureSelectOutputvariables,
 		mnIDOptionConfigureDistricts,
 		mnIDOptionConfigureMCScenarioBuilder,
 		mnIDOptionConfigureMCScenarioPlaylist,

@@ -372,10 +372,9 @@ namespace Forms
 		pMenuOptions = new wxMenu();
 		wxMenuItem* it;
 
-		it = Menu::CreateItem(pMenuOptions, wxID_ANY,
+		Menu::CreateItem(pMenuOptions, mnIDOptionConfigureSelectOutputvariables,
 				wxT("Filters on simulation results\tctrl+alt+f"), "images/16x16/filter.png",
 				wxT("Configure Filters on simulation results"));
-		it->Enable(false);
 		it = Menu::CreateItem(pMenuOptions, mnIDOptionConfigureDistricts,
 				wxT("Geographic districts\tctrl+alt+d"), "images/16x16/filter.png",
 				wxT("Configure geographic districts"));

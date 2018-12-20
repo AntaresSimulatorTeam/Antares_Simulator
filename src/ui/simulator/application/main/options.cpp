@@ -28,6 +28,7 @@
 #include "../main.h"
 #include "../study.h"
 #include "../../windows/options/temp-folder/temp-folder.h"
+#include "../../windows/options/select-output/select-output.h"
 #include "../../windows/options/playlist/playlist.h"
 #include "../../windows/options/optimization/optimization.h"
 #include "../../windows/options/advanced/advanced.h"
@@ -44,6 +45,12 @@ namespace Forms
 		Dispatcher::GUI::CreateAndShowModal<Window::Options::ConfigureTempFolder>(this);
 	}
 
+	void ApplWnd::evtOnOptionsSelectOutput(wxCommandEvent&)
+	{
+		Forms::Disabler<ApplWnd> disabler(*this);
+		if (Data::Study::Current::Valid())
+			Dispatcher::GUI::CreateAndShowModal<Window::Options::SelectOutput>(this);
+	}
 
 	void ApplWnd::evtOnOptionsMCPlaylist(wxCommandEvent&)
 	{

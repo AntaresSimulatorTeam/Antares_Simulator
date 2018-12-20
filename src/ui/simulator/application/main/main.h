@@ -594,6 +594,8 @@ namespace Forms
 		//@{
 		//! Event: Temp folder
 		void evtOnOptionsTempFolder(wxCommandEvent& evt);
+		//! Selecting output
+		void evtOnOptionsSelectOutput(wxCommandEvent& evt);
 		//! MC districts
 		void evtOnOptionsDistricts(wxCommandEvent& evt);
 		//! MC Playlist
