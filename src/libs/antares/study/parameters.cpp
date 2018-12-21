@@ -130,6 +130,12 @@ namespace Data
 			mode = stdmAdequacyDraft;
 			return true;
 		}
+		// Expansion
+		if (text == "expansion")
+		{
+			mode = stdmExpansion;
+			return true;
+		}
 		return false;
 	}
 
@@ -186,6 +192,8 @@ namespace Data
 	{
 		// Mode
 		mode                   = stdmEconomy;
+		// Expansion
+		expansion			   = false;
 		// Calendar
 		horizon                = nullptr;
 		nbYears                = 1;
@@ -233,6 +241,11 @@ namespace Data
 		// readonly
 		readonly               = false;
 		synthesis              = true;
+
+		// Initial reservoir levels
+		initialReservoirLevels.iniLevels = irlColdStart;
+		allSetsHaveSameSize = true;
+
 
 		// Shedding strategies
 		power.fluctuations     = lssFreeModulations;
@@ -426,6 +439,8 @@ namespace Data
 			return value.to<bool>(d.include.constraints);
 		if (key == "include-hurdlecosts")
 			return value.to<bool>(d.include.hurdleCosts);
+		if (key == "include-loopflowfee")//backward compatibility
+			return true;// value.to<bool>(d.include.loopFlowFee);
 		if (key == "include-tc-minstablepower")
 			return value.to<bool>(d.include.thermal.minStablePower);
 		if (key == "include-tc-min-ud-time")
@@ -440,6 +455,20 @@ namespace Data
 			return value.to<bool>(d.include.reserve.primary);
 		if (key == "include-exportmps")
 			return value.to<bool>(d.include.exportMPS);
+		if (key == "initial-reservoir-levels")
+		{
+			auto iniLevels = StringToInitialReservoirLevels(value);
+			if (iniLevels != irlUnknown)
+			{
+				d.initialReservoirLevels.iniLevels = iniLevels;
+				return true;
+			}
+			logs.warning() << "parameters: invalid initital reservoir levels mode. Got '" << value
+				<< "'. reset to fast mode";
+			d.initialReservoirLevels.iniLevels = irlColdStart;
+			return false;
+		}
+
 
 		// Error
 		return false;
@@ -458,6 +487,19 @@ namespace Data
 	{
 		if (key == "leapyear")
 			return value.to(d.leapYear);
+		if (key == "link-type")
+		{
+			CString<64, false> v = value;
+			v.trim();
+			v.toLower();
+			if (value == "local")
+				d.linkType = ltLocal;
+			else if (value == "ac")
+				d.linkType = ltAC;
+			else
+				d.linkType = ltLocal;
+			return true;
+		}
 		// Error
 		return false;
 	}
@@ -918,14 +960,30 @@ namespace Data
 		}
 
 		// Simulation mode
+		// ... Expansion
+		if (mode == stdmExpansion)
+		{
+			mode = stdmEconomy;
+			expansion = true;
+		}
+
+		// ... Enforcing simulation mode
 		if (options.forceMode != stdmUnknown)
 		{
-			mode = options.forceMode;
+			if (options.forceMode == stdmExpansion)
+			{
+				mode = stdmEconomy;
+				expansion = true;
+			}
+			else
+				mode = options.forceMode;
+
 			logs.info() << "  forcing the simulation mode " << StudyModeToCString(mode);
 			assert(mode != stdmMax && "Invalid simulation mode");
 		}
 		else
 			logs.info() << "  simulation mode: " << StudyModeToCString(mode);
+
 
 		if (options.forceDerated)
 			derated = true;
@@ -1190,6 +1248,8 @@ namespace Data
 			timeSeriesToImport = 0;
 		}
 
+		if (expansion)
+			logs.info() << "  :: enabling expansion";
 		if (yearByYear)
 			logs.info() << "  :: enabling the 'year-by-year' mode";
 		if (derated)
@@ -1261,7 +1321,13 @@ namespace Data
 			auto* section = ini.addSection("general");
 
 			// Mode
-			section->add("mode", StudyModeToCString(mode));
+			if (expansion && mode == stdmEconomy)
+				section->add("mode", "Expansion");
+			else
+			{
+				section->add("mode", StudyModeToCString(mode));
+				expansion = false;
+			}
 
 			// Calendar
 			section->add("horizon  ",               horizon);
@@ -1335,6 +1401,12 @@ namespace Data
 				case tncIgnore:   section->add("transmission-capacities", "false");break;
 				case tncInfinite: section->add("transmission-capacities", "infinite");break;
 			}
+
+			switch (linkType)
+			{
+				case ltLocal:	section->add("link-type", "local"); break;
+				case ltAC:		section->add("link-type", "ac"); break;
+			}
 			section->add("include-constraints",       include.constraints);
 			section->add("include-hurdlecosts",       include.hurdleCosts);
 			section->add("include-tc-minstablepower", include.thermal.minStablePower);
@@ -1350,6 +1422,7 @@ namespace Data
 		// Other preferences
 		{
 			auto* section = ini.addSection("other preferences");
+			section->add("initial-reservoir-levels",			 InitialReservoirLevelsToCString(initialReservoirLevels.iniLevels));
 			section->add("power-fluctuations",           PowerFluctuationsToCString(power.fluctuations));
 			section->add("shedding-strategy",            SheddingStrategyToCString(shedding.strategy));
 			section->add("shedding-policy",              SheddingPolicyToCString(shedding.policy));

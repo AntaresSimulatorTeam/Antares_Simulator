@@ -402,9 +402,9 @@ namespace Datagrid
 			}
 
 			// Invalidating the cache of the wxGrid
-			wxGridTableBase* tbl = grid->GetTable();
+			/*wxGridTableBase* tbl = grid->GetTable();
 			if (tbl)
-				grid->SetTable(tbl, false);
+				grid->SetTable(tbl, false);*/
 		}
 	}
 
@@ -1404,7 +1404,10 @@ namespace Datagrid
 				cols.clear();
 				line.split(cols, ";\t", true, true);
 				if (cols.empty())
+				{
+					y++;
 					continue;
+				}
 				logs.debug() << "paste : " << cols.size() << " cols, in " << rows.size() << " rows";
 				if (y)
 				{

@@ -269,6 +269,12 @@ namespace Antares
 		template<class U> void multiplyAllEntriesBy(const U& c);
 
 		/*!
+		** \brief Multiply or divide a column by a given value
+		*/
+		template<class U> void multiplyColumnBy(uint x, const U& c);
+		template<class U> void divideColumnBy(uint x, const U& c);
+
+		/*!
 		** \brief Compute the average of all timeseries (derated mode)
 		*/
 		void averageTimeseries(bool roundValues = true);

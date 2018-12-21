@@ -116,7 +116,7 @@ namespace Window
 		void onMapNameChanged(wxCommandEvent& evt);
 		void onMapFolderNameChanged(wxCommandEvent& evt);
 		void onBrowse(wxCommandEvent& evt);
-		void ensureUniqueFileName(Yuni::String& folderPath);
+		void ensureUniqueFileName(Yuni::String folderPath);
 
 		void onMapFormatChanged(wxCommandEvent& evt);
 

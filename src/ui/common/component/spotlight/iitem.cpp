@@ -396,25 +396,37 @@ namespace Component
 		{
 			// Sub caption, wx format
 			wxString subCaption = wxStringFromUTF8(pSubCaption);
+			bool b = pCaption.equals("W2");
+			int length = subCaption.Length();
 			// display the main label
 			// display the sub label, with shadow
 			if (!reverseTextColor)
 			{
 				DrawTextWithSelection<true, false>(pCaption, pCacheCaption, dc, tokens, tagHeight,
 					bounds.x, bounds.y, mayHasSelection);
-				dc.SetTextForeground(wxColour(255, 255, 255));
-				dc.DrawText(subCaption, bounds.x + 1, bounds.y + 16 + 1);
-				dc.SetTextForeground(wxColour(70, 70, 90));
-				dc.DrawText(subCaption, bounds.x, bounds.y + 16);
+				if (pSubCaption.length() * 5 < bounds.width - bounds.x - 1)
+				{
+					dc.SetTextForeground(wxColour(255, 255, 255));
+					dc.DrawText(subCaption, bounds.x + 1, bounds.y + 16 + 1);
+					dc.SetTextForeground(wxColour(70, 70, 90));
+					dc.DrawText(subCaption, bounds.x, bounds.y + 16);
+				}
+				else
+					dc.DrawText(subCaption(0, subCaption.Find(')') +1) + " ...", bounds.x, bounds.y + 16);
 			}
 			else
 			{
 				DrawTextWithSelection<true, true>(pCaption, pCacheCaption, dc, tokens, tagHeight,
 					bounds.x, bounds.y, mayHasSelection);
-				dc.SetTextForeground(wxColour(70, 70, 90));
-				dc.DrawText(subCaption, bounds.x + 1, bounds.y + 16 + 1);
-				dc.SetTextForeground(wxColour(255, 255, 255));
-				dc.DrawText(subCaption, bounds.x, bounds.y + 16);
+				if (pSubCaption.length() * 5 < bounds.width - bounds.x - 1)
+				{
+					dc.SetTextForeground(wxColour(70, 70, 90));
+					dc.DrawText(subCaption, bounds.x + 1, bounds.y + 16 + 1);
+					dc.SetTextForeground(wxColour(255, 255, 255));
+					dc.DrawText(subCaption, bounds.x, bounds.y + 16);
+				}
+				else
+					dc.DrawText(subCaption(0, subCaption.Find(')') + 1) + " ...", bounds.x, bounds.y + 16);
 			}
 		}
 		else

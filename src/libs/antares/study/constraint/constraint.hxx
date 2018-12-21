@@ -74,7 +74,12 @@ namespace Data
 
 	inline uint BindingConstraint::linkCount() const
 	{
-		return (uint) pWeights.size();
+		return (uint) pLinkWeights.size();
+	}
+
+	inline uint BindingConstraint::clusterCount() const
+	{
+		return (uint)pClusterWeights.size();
 	}
 
 
@@ -105,22 +110,22 @@ namespace Data
 
 	inline BindingConstraint::iterator BindingConstraint::begin()
 	{
-		return pWeights.begin();
+		return pLinkWeights.begin();
 	}
 
 	inline BindingConstraint::iterator BindingConstraint::end()
 	{
-		return pWeights.end();
+		return pLinkWeights.end();
 	}
 
 	inline BindingConstraint::const_iterator BindingConstraint::begin() const
 	{
-		return pWeights.begin();
+		return pLinkWeights.begin();
 	}
 
 	inline BindingConstraint::const_iterator BindingConstraint::end() const
 	{
-		return pWeights.end();
+		return pLinkWeights.end();
 	}
 
 
@@ -181,7 +186,6 @@ namespace Data
 				predicate(constraint);
 		}
 	}
-
 
 
 

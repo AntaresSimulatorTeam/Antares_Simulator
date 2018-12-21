@@ -25,6 +25,32 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include <yuni/yuni.h>
 #include <antares/study.h>
 #include "xcast.h"
@@ -327,6 +353,11 @@ namespace XCast
 		TREN    = m.allocate<float>(p);
 		WIEN    = m.allocate<float>(p + 1);
 		BROW    = m.allocate<float>(p);
+
+		BASI	= m.allocate<float>(p);
+		ALPH	= m.allocate<float>(p);
+		BETA	= m.allocate<float>(p);
+
 		D_COPIE = m.allocate<float>(p);
 
 		pUseConversion = m.allocate<bool>(p);

@@ -45,6 +45,11 @@ namespace Variable
 		memset(thermalClusterNonProportionalCostForYear, 0, sizeof(thermalClusterNonProportionalCostForYear));
 		memset(thermalClusterPMinOfTheClusterForYear, 0, sizeof(thermalClusterPMinOfTheClusterForYear));
 		memset(thermalClusterDispatchedUnitsCountForYear,0, sizeof(thermalClusterDispatchedUnitsCountForYear));
+
+		// Re-initializing annual costs (to be printed in output into separate files)
+		annualSystemCost = 0.;
+		optimalSolutionCost1 = 0.;
+		optimalSolutionCost2 = 0.;
 	}
 
 	inline void State::yearEndReset()
@@ -81,6 +86,8 @@ namespace Variable
 					break;
 				}
 			case Data::stdmUnknown:
+				break;
+			case Data::stdmExpansion:
 				break;
 			case Data::stdmMax:
 				break;

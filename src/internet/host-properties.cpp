@@ -52,6 +52,7 @@
 #endif
 #ifdef YUNI_OS_WINDOWS
 # include <stdio.h>
+# include <intrin.h>
 # include <yuni/core/system/windows.hdr.h>
 # include <winsock2.h>
 # include <iphlpapi.h>
@@ -863,13 +864,14 @@ namespace License
 		struct ifaddrs* ifa = ifaddr;
 		if(ifa != NULL)
 		{
-			if (ifa->ifa_addr == NULL or ifa->ifa_addr->sa_family == AF_PACKET)
-				continue;
-			AnyString name = ifa->ifa_name;
-			if (name != "lo" and alreadyProcessed.count(name) == 0)
+			if (!(ifa->ifa_addr == NULL or ifa->ifa_addr->sa_family == AF_PACKET))
 			{
-				alreadyProcessed.insert(name);
-				GetFirstMACAddress(out, name);
+				AnyString name = ifa->ifa_name;
+				if (name != "lo" and alreadyProcessed.count(name) == 0)
+				{
+					alreadyProcessed.insert(name);
+					GetFirstMACAddress(out, name);
+				}
 			}
 		}
 		freeifaddrs(ifaddr);

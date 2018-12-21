@@ -95,6 +95,10 @@ namespace Forms
 		OpenPDF("help/antares-general-reference-guide.pdf");
 	}
 
+	void ApplWnd::evtOnHelpPDFOptimizationProblemsFormulation(wxCommandEvent&)
+	{
+		OpenPDF("help/optimization-problems-formulation.pdf");
+	}
 
 	void ApplWnd::evtOnHelpPDFSystemMapEditorReferenceGuide(wxCommandEvent&)
 	{
@@ -102,12 +106,17 @@ namespace Forms
 	}
 
 
+	void ApplWnd::evtOnHelpPDFExamplesLibrary(wxCommandEvent&)
+	{
+		OpenPDF("help/antares-examples-library.pdf");
+	}
+
 
 	void ApplWnd::evtOnHelpContinueOnline(wxCommandEvent&)
 	{
 		setGDPRStatus(true);
 	}
-	
+
 	void ApplWnd::evtOnHelpContinueOffline(wxCommandEvent&)
 	{
 		setGDPRStatus(false);
@@ -128,6 +137,8 @@ namespace Forms
 		message.showModal();
 	}
 
-	
+
+
+
 } // namespace Forms
 } // namespace Antares

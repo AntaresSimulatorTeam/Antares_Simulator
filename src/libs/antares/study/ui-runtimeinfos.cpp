@@ -57,6 +57,8 @@ namespace Data
 	{
 		// Reseting all variables
 		pLink.clear();
+		pClusters.clear();
+		pClusterCount = 0;
 		pLinkCount = 0;
 		orderedAreasAndLinks.clear();
 
@@ -84,8 +86,17 @@ namespace Data
 					for (AreaLink::Map::iterator i = area->links.begin(); i != end; ++i)
 						set.insert(i->second);
 				}
+
+				for (auto j = 0; j < area->thermal.clusterCount; ++j)
+				{
+					ThermalCluster* cluster = area->thermal.clusters[j];
+					pClusters.push_back(cluster);
+				}
 			}
 		}
+
+
+		pClusterCount = pClusters.size();
 
 		// Sorting the links between the areas as well
 		{
@@ -101,6 +112,7 @@ namespace Data
 					++pLinkCount;
 				}
 			}
+			std::sort(pLink.begin(), pLink.end(), CompareLinkName());
 		}
 	}
 
@@ -158,6 +170,30 @@ namespace Data
 				return (uint) j->second.size();
 		}
 		return 0;
+	}
+
+	uint UIRuntimeInfo::visibleClustersCount(uint layerID)
+	{
+		int count = 0;
+		auto cEnd = pClusters.end();
+		for (auto cluster = pClusters.begin(); cluster != cEnd; cluster++)
+		{
+			if ((*cluster)->isVisibleOnLayer(layerID))
+				count++;
+		}
+		return count;
+	}
+
+	uint UIRuntimeInfo::visibleLinksCount(uint layerID)
+	{
+		int count = 0;
+		auto lEnd = pLink.end();
+		for (auto link = pLink.begin(); link != lEnd; link++)
+		{
+			if ((*link)->isVisibleOnLayer(layerID))
+				count++;
+		}
+		return count;
 	}
 
 

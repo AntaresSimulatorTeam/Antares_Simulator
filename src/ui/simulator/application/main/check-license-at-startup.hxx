@@ -82,7 +82,7 @@ static void LicenseOnLineIsNotValid(bool startupwizard)
 		Antares::License::Limits::customerCaption.clear();
 		mainfrm->resetDefaultStatusBarText();
 
-		Antares::Window::LicenseCoultNotConnectToInternetServer form(mainfrm);
+		Antares::Window::LicenseCouldNotConnectToInternetServer form(mainfrm);
 		form.ShowModal();
 
 		if (not form.canceled())
@@ -108,11 +108,11 @@ static void LicenseOnLineIsNotValid(bool startupwizard)
 			// check the license informations
 			// (in another thread - it can take some time)
 			Antares::License::statusOnline = Antares::License::Status::stNotRequested;
-			Bind<void()> callback;
+			Bind<void ()> callback;
 			callback.bind(&CheckAntaresLicense, startupwizard);
 			Antares::Dispatcher::Post(callback);
 		}
-	}
+		}
 	else
 	{
 		// what ?
@@ -133,12 +133,12 @@ static void AskForTryingAgain(bool startupwizard)
 		{
 			case Antares::License::errLSHostDown:
 			{
-				msg = wxT("The License Server seems down. Please retry in a few minutes.\r\nPlease contact your system administrator if the problem persists.");
+				msg = wxT("The internet server seems down. Please retry in a few minutes.\r\nPlease contact your system administrator if the problem persists.");
 				break;
 			}
 			case Antares::License::errLSTooManyLicense:
 			{
-				msg = wxT("Exceeded maximum licenses.\r\nAll license tokens provided by the License Server are currently used");
+				msg = wxT("Exceeded maximum licenses.\r\nAll tokens provided by the internet Server are currently used");
 				break;
 			}
 			default:
@@ -150,7 +150,7 @@ static void AskForTryingAgain(bool startupwizard)
 
 
 		Antares::Window::Message message(mainfrm, wxT("Floating license"),
-			wxT("Error with the license Server"),
+			wxT("Error with the internet Server"),
 			msg,
 			"images/misc/error.png");
 
@@ -226,9 +226,32 @@ static void CheckAntaresLicense(bool startupwizard)
 		// check license on the server
 		if (not Antares::License::CheckOnlineLicenseValidity())
 		{
-			Bind<void ()> callback;
-			callback.bind(& LicenseOnLineIsNotValid, startupwizard);
-			Antares::Dispatcher::GUI::Post(callback);
+			switch (Antares::License::lastError)
+			{
+			case Antares::License::errNone:
+				{
+					assert(Antares::License::lastError!=Antares::License::errNone);
+					break;
+				}
+				case Antares::License::errLSOnline:
+				{
+					// Could not connect, let's try to set a proxy first
+					Antares::License::statusOnline=Antares::License::stWaiting;
+
+					Bind<void ()> callback;
+					callback.bind(& LicenseOnLineIsNotValid, startupwizard);
+					Antares::Dispatcher::GUI::Post(callback);
+					break;
+				}
+				default:
+				{
+					Antares::License::statusOnline=Antares::License::stWaiting;
+
+					Bind<void ()> callback;
+					callback.bind(&LicenseOnLineIsNotValid, startupwizard);
+					Antares::Dispatcher::GUI::Post(callback);
+				}
+			}
 		}
 		else
 		{

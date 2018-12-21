@@ -30,8 +30,10 @@
 # include <yuni/yuni.h>
 # include <yuni/core/string.h>
 # include <yuni/core/noncopyable.h>
-# include "../../constants.h"
 # include "../fwd.h"
+# include "../../constants.h"
+# include "../area/links.h"
+# include "../parts/thermal/cluster.h"
 # include "../../array/matrix.h"
 # include "../../inifile/inifile.h"
 # include <vector>
@@ -86,19 +88,33 @@ namespace Data
 		};
 
 		//! Map of weight (for links)
-		typedef std::map<const AreaLink*, double> WeightMap;
+		typedef std::map<const AreaLink*, double, CompareLinkName> linkWeightMap;
 		//! Iterator
-		typedef WeightMap::iterator iterator;
+		typedef linkWeightMap::iterator iterator;
 		//! Const iterator
-		typedef WeightMap::const_iterator const_iterator;
+		typedef linkWeightMap::const_iterator const_iterator;
+
+		//! Map of weight (for thermal clusters)
+		typedef std::map<const ThermalCluster*, double, CompareThermalClusterName> clusterWeightMap;
+		//! Iterator
+		typedef clusterWeightMap::iterator thermalIterator;
+		//! Const iterator
+		typedef clusterWeightMap::const_iterator const_thermalIterator;
 		
 
 		//! Map of offset (for links)
-		typedef std::map<const AreaLink*, int> OffsetMap;
+		typedef std::map<const AreaLink*, int> linkOffsetMap;
 		//! Iterator
-		typedef OffsetMap::iterator OffsetIterator;
+		typedef linkOffsetMap::iterator OffsetIterator;
 		//! Const iterator
-		typedef WeightMap::const_iterator OffsetConst_iterator;
+		typedef linkOffsetMap::const_iterator OffsetConst_iterator;
+
+		//! Map of offset (for links)
+		typedef std::map<const ThermalCluster*, int> clusterOffsetMap;
+		//! Iterator
+		typedef clusterOffsetMap::iterator thermalOffsetIterator;
+		//! Const iterator
+		typedef clusterOffsetMap::const_iterator thermalOffsetConst_iterator;
 
 		//! Vector of binding constraints
 		typedef std::vector<BindingConstraint*> Vector;
@@ -236,12 +252,13 @@ namespace Data
 		const Matrix<>& matrix() const;
 		//! Values for inequalities
 		Matrix<>& matrix();
+		
 		//@}
 
 		bool hasAllWeightedLinksOnLayer(size_t layerID);
 
-		/* set weights for all links visible on the given layer to 1*/
-		void setAllWeightedLinksOnLayer(size_t layerID);
+		bool hasAllWeightedClustersOnLayer(size_t layerID);
+
 		//! \name Links
 		//@{
 		/*!
@@ -255,6 +272,20 @@ namespace Data
 		** \brief Set the weight of an interconnection
 		*/
 		void weight(const AreaLink* lnk, double w);
+
+		//! \name Thermal clusters
+		//@{
+		/*!
+		** \brief Get the weight of a given thermal cluster
+		**
+		** \return The weight of the thermal cluster. 0. if not found
+		*/
+		double weight(const ThermalCluster* clstr) const;
+
+		/*!
+		** \brief Set the weight of a thermal cluster
+		*/
+		void weight(const ThermalCluster* clstr, double w);
 
 		/*!
 		** \brief Remove all weights
@@ -280,9 +311,21 @@ namespace Data
 		int offset(const AreaLink* lnk) const;
 
 		/*!
+		** \brief Get the offset of a given thermal cluster
+		**
+		** \return The offset of the cluster. 0. if not found
+		*/
+		int offset(const ThermalCluster * lnk) const;
+
+		/*!
 		** \brief Set the weight of an interconnection
 		*/
 		void offset(const AreaLink* lnk, int o);
+
+		/*!
+		** \brief Set the weight of a thermal cluster
+		*/
+		void offset(const ThermalCluster * clstr, int o);
 
 		/*!
 		** \brief Remove all offsets
@@ -306,11 +349,26 @@ namespace Data
 		uint linkCount() const;
 
 		/*!
+		** \brief Get how many thermal clusters the binding constraint contains
+		*/
+		uint clusterCount() const;
+
+		/*!
+		** \brief Get how many thermal clusters the binding constraint contains
+		*/
+		uint enabledClusterCount() const;
+
+		/*!
 		** \brief Remove an interconnection
 		*/
 		bool removeLink(const AreaLink* lnk);
 		//@}
 
+		/*!
+		** \brief Remove a thermalcluster
+		*/
+		bool removeCluster(const ThermalCluster * clstr);
+		//@}
 
 		//! \name Type of the binding constraint
 		//@{
@@ -388,11 +446,13 @@ namespace Data
 		bool saveToEnv(EnvForSaving& env);
 
 		/*!
-		** \brief Reverse the sign of the weight for a given interconnection
+		** \brief Reverse the sign of the weight for a given interconnection or thermal cluster
 		**
-		** This method is used when reverting an interconnection
+		** This method is used when reverting an interconnection or thermal cluster
 		*/
 		void reverseWeightSign(const AreaLink* lnk);
+
+		void reverseWeightSign(const ThermalCluster * clstr);
 
 		/*!
 		** \brief Get if the given binding constraint is identical
@@ -404,9 +464,11 @@ namespace Data
 		bool contains(const Area* area) const;
 
 		/*!
-		** \brief Get if the binding constraint is linked with an interconnection
+		** \brief Get if the binding constraint is linked with an interconnection or thermal cluster
 		*/
 		bool contains(const AreaLink* lnk) const;
+
+		bool contains(const ThermalCluster * clstr) const;
 
 		/*!
 		** \brief Build a human readable formula for the binding constraint
@@ -414,8 +476,16 @@ namespace Data
 		void buildFormula(YString& s) const;
 		void buildHTMLFormula(YString& s) const;
 
-		void initLinkArrays(double* weigth, int* o, long* linkIndex) const;
+		void initLinkArrays(double* weigth, double* cWeigth, int* o, int* cO, long* linkIndex, long* clusterIndex, long* clustersAreaIndex) const;
 
+		/*!
+		** \brief Fill the second member matrix with all member to the same value
+		*/
+		void matrix(const double onevalue);
+		/*!
+		** \brief Fill the second member matrix with a given matrix
+		*/
+		void matrix(const Matrix<double, double>&);
 
 	private:
 		//! Raw name
@@ -424,10 +494,14 @@ namespace Data
 		ConstraintName pID;
 		//! Matrix<> where values for inequalities could be found
 		Matrix<> pValues;
-		//! Weights
-		WeightMap pWeights;
-		//! Offsets
-		OffsetMap pOffsets;
+		//! Weights for links
+		linkWeightMap pLinkWeights;
+		//! Weights for thermal clusters
+		clusterWeightMap pClusterWeights;
+		//! Link Offsets
+		linkOffsetMap pLinkOffsets;
+		//! Thermal Offsets
+		clusterOffsetMap pClusterOffsets;
 		//! Type of the binding constraint
 		Type pType;
 		//! Operator
@@ -537,11 +611,13 @@ namespace Data
 		bool saveToFolder(const AnyString& folder) const;
 
 		/*!
-		** \brief Reverse the sign of the weight for a given interconnection
+		** \brief Reverse the sign of the weight for a given interconnection or thermal cluster
 		**
-		** This method is used when reverting an interconnection
+		** This method is used when reverting an interconnection or thermal cluster
 		*/
 		void reverseWeightSign(const AreaLink* lnk);
+
+		void reverseWeightSign(const ThermalCluster * clstr);
 
 		//! Get the number of binding constraints
 		uint size() const;
@@ -558,6 +634,12 @@ namespace Data
 		** \brief Remove any binding constraint linked with a given interconnection
 		*/
 		void remove(const AreaLink* area);
+
+		/*!
+		** \brief Remove any binding constraint whose name contains the string in argument
+		*/
+		void removeConstraintsWhoseNameConstains(const AnyString& filter);
+
 
 		/*!
 		** \brief Rename a binding constraint
@@ -610,6 +692,21 @@ namespace Data
 			return ((s1->name()) < (s2->name()));
 		}
 	};
+
+	struct WhoseNameContains final
+	{
+	public:
+		WhoseNameContains(const AnyString& filter) :pFilter(filter)
+		{}
+		bool operator()(const BindingConstraint* s) const
+		{
+			return (s->name()).contains(pFilter);
+		}
+
+	private:
+		AnyString pFilter;
+	};
+
 
 
 

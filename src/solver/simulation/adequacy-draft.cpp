@@ -25,6 +25,32 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include <yuni/yuni.h>
 #include <antares/study/memory-usage.h>
 #include "adequacy-draft.h"
@@ -59,7 +85,7 @@ namespace Simulation
 		{pNbMaxPerformedYearsInParallel = nbMaxPerformedYearsInParallel;}
 
 
-	void AdequacyDraft::initializeState(Variable::State& state, uint numSpace)
+	void AdequacyDraft::initializeState(Variable::State& state, uint )
 	{
 		
 		state.simplexHasBeenRan = false;
@@ -82,8 +108,8 @@ namespace Simulation
 	bool AdequacyDraft::year(	Progression::Task & progression,
 								Variable::State& state, 
 								uint numSpace,
-								yearRandomNumbers & randomForYear,
-								uint & failedWeek
+								yearRandomNumbers &, 
+								uint &  
 							)
 	{
 		
@@ -130,7 +156,7 @@ namespace Simulation
 	}
 
 
-	void AdequacyDraft::prepareClustersInMustRunMode(uint numSpace)
+	void AdequacyDraft::prepareClustersInMustRunMode(uint )
 	{
 		
 	}

@@ -25,6 +25,32 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
 #include <antares/study.h>
@@ -235,7 +261,7 @@ void SIM_RenseignementValeursPourTouteLAnnee(const Antares::Data::Study& study, 
 		memset(Pt.PuissanceThermiqueCumulee, 0, study.runtime->nbHoursPerYear * sizeof(double));
 		memset(Pt.Reserve                  , 0, study.runtime->nbHoursPerYear * sizeof(double));
 
-		auto& avgMaxPower = area.hydro.maxPower.entry[1]; 
+		auto& avgMaxPower = area.hydro.maxPower.entry[0]; 
 		for (uint h = startTime; h < finalHour; ++h)
 		{
 			assert((uint) tsIndex.Consommation < scratchpad.ts.load.width);

@@ -101,6 +101,13 @@ namespace Simulation
 	*/
 	bool RemixHydroForAllAreas(const Data::Study& study, PROBLEME_HEBDO& problem, uint numSpace, uint hourInYear, uint nbHours);
 
+	/*
+	** \brief Computing levels from hydro generation, natural and pumping inflows
+	**
+	** If hydro remix was not done yet, levels are computed only for areas for which we do not use the heuristic
+	** If hydro remix was done, levels are computed only for areas for which we use the heuristic
+	*/
+	void computingHydroLevels(const Data::Study& study, PROBLEME_HEBDO& problem, uint nbHoursInAWeek, bool remixWasRun, bool computeAnyway = false);
 
 	/*!
 	** \brief Calculate the Dispatchable margin for all areas
@@ -116,8 +123,41 @@ namespace Simulation
 										uint hourInYear, 
 										uint nbHours);
 
+	/*
+	** \brief Interpolates water values related to reservoir levels for outputs only
+	**
+	** \param study The Antares study
+	** \param problem The weekly problem, from the solver
+	** \param state The simulation's current state (variable values to be stored and read at different point of weekly simulation)
+	** \param hourInYear The hour in the year of the first hour in the current week
+	** \param nbHoursInAWeek Number of hours in a week
+	**
+	** For any hour, the computed water values are related to the beginning of the hour, not the end.
+	*/
+	void interpolateWaterValue(	const Data::Study& study,
+								PROBLEME_HEBDO& problem,
+								Antares::Solver::Variable::State & state,
+								int hourInTheYear,
+								uint nbHoursInAWeek);
 
+	/*
+	** \brief Updating the weekly simulation final reservoir level, to be used as a start for the next week. 
+	**
+	** \param study The Antares study
+	** \param problem The weekly problem, from the solver
+	** \param nbHoursInAWeek Number of hours in a week
+	*/
+	void updatingWeeklyFinalHydroLevel(	const Data::Study& study,
+										PROBLEME_HEBDO& problem,
+										uint nbHoursInAWeek);
 
+	/*
+	** \brief Updating the year final reservoir level, to be used as a start for the year.
+	**
+	** \param study The Antares study
+	** \param problem The weekly problem, living over the whole simuation.
+	*/
+	void updatingAnnualFinalHydroLevel( const Data::Study& study, PROBLEME_HEBDO& problem );
 
 
 } // namespace Simulation

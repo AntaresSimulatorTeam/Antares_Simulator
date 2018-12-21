@@ -94,6 +94,10 @@ for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
 }
 
 
+CoutLineaire[Var] = DonneesAnnuelles->CoutViolMaxDuVolumeMin;
+Var++;
+
+
 for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
 	
 	

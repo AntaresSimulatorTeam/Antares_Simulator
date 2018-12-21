@@ -30,6 +30,7 @@
 #include "../array/correlation.h"
 #include "scenario-builder/sets.h"
 #include <yuni/core/string/wstring.h>
+#include <fstream>
 
 
 using namespace Yuni;
@@ -155,6 +156,19 @@ namespace Data
 				scenarioRulesCreate();
 		}
 
+		buffer.clear() << folder << Yuni::IO::Separator << "ConstraintBuilder" << Yuni::IO::Separator << "ConstraintBuilder.ini";//moving the constraint builder file introduced in version 6.4 if it exists
+		if (IO::File::Exists(buffer))
+		{
+			YString  dest;
+			dest << folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator << "constraintbuilder.ini";
+
+			IO::File::Copy(buffer,dest);
+
+
+			buffer.clear() << folder << Yuni::IO::Separator << "ConstraintBuilder";
+			IO::Directory::Remove(buffer);
+		}
+
 		buffer.clear() << folder << SEP << "study.antares";
 		header.saveToFile(buffer);
 
@@ -169,7 +183,16 @@ namespace Data
 		{
 			buffer.clear() << folder << SEP << "settings" << SEP << "resources"
 				<< SEP << "study.ico";
-			IO::File::Copy(StudyIconFile, buffer);
+
+			std::ifstream  src(StudyIconFile.c_str(), std::ios::binary);
+			std::ofstream  dst(buffer.c_str(), std::ios::binary);
+
+			dst << src.rdbuf();
+
+			
+			dst.close();
+			src.close();
+
 		}
 
 		// User
@@ -258,7 +281,7 @@ namespace Data
 		IO::File::Stream file;
 		if (file.openRW(filename))
 		{
-			CString<256, false> data;
+			CString<256, true> data;
 			data << "[layers]\n";
 			for (std::map<size_t, std::string>::iterator iterator = layers.begin(); iterator != layers.end(); iterator++)
 			{

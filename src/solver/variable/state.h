@@ -33,7 +33,7 @@
 # include "../simulation/sim_structure_donnees.h"
 # include "../simulation/sim_structure_probleme_economique.h"
 # include "../simulation/sim_extern_variables_globales.h"
-
+# include <antares/study/parts/hydro/container.h>
 
 
 namespace Antares
@@ -194,6 +194,22 @@ namespace Variable
 		*/
 		bool simplexHasBeenRan;
 
+
+		// Working variable for output water values computation
+		Antares::Data::h2oValueWorkVarsType h2oValueWorkVars;
+
+		// Annual costs to be printed in output into separate files
+		// -----------------------------------------------------------------
+		// Sum over all year's hours of  :
+		// - sum over all areas of variable "overall cost"
+		// - sum over all links of variable "hurdle cost".
+		// That is : Somme(h in Y)[ Somme(a in areas)(OV. COST[h,a])  +  Somme(l in links)(HURDLE COST[h,l]) ]
+		double annualSystemCost;
+		// Sum of the weekly optimal costs over the year (first optimisation step)
+		double optimalSolutionCost1;
+		// Sum of the weekly optimal costs over the year (second optimisation step)
+		double optimalSolutionCost2;
+		// -----------------------------------------------------------------
 	}; // class State
 
 

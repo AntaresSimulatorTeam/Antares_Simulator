@@ -264,7 +264,7 @@ namespace Analyzer
 		return 0.;
 	}
 
-
+	
 	bool Areas::cellValue(int x, int y, const String& value)
 	{
 		if (x == 0)
@@ -313,7 +313,7 @@ namespace Analyzer
 
 			if (v == "r" || v == "raw")
 				newvalue = true;
-			else if (v == "d" || v == "detrended")
+			else if (v == "d" || v == "detrended" || v =="azerty")
 				newvalue = false;
 			else
 				return false;
@@ -350,7 +350,7 @@ namespace Analyzer
 		}
 		return false;
 	}
-
+	
 
 	bool Areas::valid() const
 	{

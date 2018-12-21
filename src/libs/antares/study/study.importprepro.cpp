@@ -131,7 +131,6 @@ namespace Data
 
 					buffer.clear() << folderInput << SEP << "thermal" << SEP << "series";
 					ret = ThermalClusterListSaveDataSeriesToFolder(&area.thermal.list, buffer.c_str(), msg) && ret;
-					ret = ThermalClusterListSaveDataSeriesToFolder(&area.thermal.mustrunList, buffer.c_str(), msg) && ret;
 					++progression;
 				});
 			}

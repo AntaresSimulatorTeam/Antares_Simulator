@@ -234,7 +234,7 @@ namespace XCast
 	/*
 	** \brief Verification de l'acceptabilite d'une factorisation LtL
 	**
-	** MD 10/09/09
+	** 
 	** Ce code verifie si LtL est proche de A, A symetrique reelle et L triangulaire
 	** inferieure qui n'est pas necessairement definie positive.
 	**

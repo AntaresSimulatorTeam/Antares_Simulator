@@ -1665,6 +1665,28 @@ namespace Antares
 
 
 	template<class T, class ReadWriteT>
+	template<class U>
+	void Matrix<T, ReadWriteT>::multiplyColumnBy(uint x, const U& c)
+	{
+		assert(x < width and "Invalid column index (bigger than `this->width`)");
+		ColumnType& column = entry[x];
+		for (uint y = 0; y != height; ++y)
+			column[y] *= (T)c;
+	}
+
+	template<class T, class ReadWriteT>
+	template<class U>
+	void Matrix<T, ReadWriteT>::divideColumnBy(uint x, const U& c)
+	{
+		assert(x < width and "Invalid column index (bigger than `this->width`)");
+		assert(c!= (T)0 && "Dividing by zero");
+		ColumnType& column = entry[x];
+		for (uint y = 0; y != height; ++y)
+			column[y] /= (T)c;
+	}
+
+
+	template<class T, class ReadWriteT>
 	void Matrix<T,ReadWriteT>::roundAllEntries()
 	{
 		MatrixAutoFlush<MatrixType> autoflush(*this);
@@ -1844,7 +1866,7 @@ namespace Antares
 			std::cout << "]\n";
 		}
 	}
-
+	
 
 	template<class T, class ReadWriteT>
 	void Matrix<T,ReadWriteT>::unloadFromMemory() const

@@ -97,7 +97,7 @@ namespace Renderer
 	{
 		Data::ThermalCluster* cluster = (pArea and (uint) y < pArea->thermal.list.size())
 			? pArea->thermal.list.byIndex[y] : nullptr;
-		if (!cluster)
+		if (!cluster->enabled)
 			return wxEmptyString;
 		switch (x)
 		{
@@ -125,7 +125,7 @@ namespace Renderer
 	{
 		Data::ThermalCluster* cluster = (pArea and (uint) y < pArea->thermal.list.size())
 			? pArea->thermal.list.byIndex[y] : nullptr;
-		if (!cluster)
+		if (!cluster->enabled)
 			return 0.;
 		switch (x)
 		{

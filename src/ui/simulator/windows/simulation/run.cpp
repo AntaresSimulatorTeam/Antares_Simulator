@@ -841,15 +841,12 @@ namespace Simulation
 			// Number of cores before any reduction, that is based on nb of cores level (advanced parameters) 
 			uint nbCoresRaw = Data::Study::Current::Get()->nbYearsParallelRaw;
 
-			// Min nb of years in a set was limited by total numbers of MC years ?
-			bool coresLimitedByTotYears = Data::Study::Current::Get()->coresLimitedByTotYears;
-
 			if (minNbCores)
 			{
 				wxString s = wxT("");
 				s << nbCoresRaw;
-				if (minNbCores < nbCoresRaw && ! coresLimitedByTotYears)
-					s << L"  (reduced to " << minNbCores << L")";
+				if (minNbCores < nbCoresRaw)
+					s << L"  (smallest batch size : " << minNbCores << L")";
 				pNbCores->SetLabel(s);
 
 				pBtnRun->Enable(true);

@@ -164,6 +164,21 @@ bool SolverApplication::prepare(int argc, char* argv[])
 		return false;
 	}
 
+	// CHECK
+	// Daily simplex optimisation and any area's use heurictic target turned to "No" are not compatible.
+	if (pParameters->simplexOptimizationRange == Antares::Data::SimplexOptimization::sorDay)
+	{
+		for (uint i = 0; i < pStudy->areas.size(); ++i)
+		{
+			auto & area = *(pStudy->areas.byIndex[i]);
+			if (!area.hydro.useHeuristicTarget)
+			{
+				logs.error() << "Area " << area.name << " : simplex daily optimization and use heuristic target == no are not compatible.";
+				return false;
+			}
+		}
+	}
+
 	// CHECK MinStablePower
 	bool tsGenThermal = (0 != (pStudy->parameters.timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));
 	logs.debug()<<"tsGenThermal = "<<tsGenThermal;

@@ -307,7 +307,7 @@ namespace Variable
 		void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace)
 		{
 			LeftType ::template computeSpatialAggregateWith<SearchVCardT,O>(out, area, numSpace);
-			RightType::template computeSpatialAggregateWith<SearchVCardT,O>(out, area, numSpace);
+			RightType::template computeSpatialAggregateWith<SearchVCardT,O>(out, area);
 		}
 
 		template<class V>

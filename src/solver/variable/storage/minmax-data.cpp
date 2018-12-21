@@ -49,6 +49,7 @@ namespace AllYears
 
 	namespace // anonymous
 	{
+		double eps = 1.e-7;
 
 		template<uint Size, bool OpInferior>
 		struct ArrayInitializer
@@ -117,7 +118,7 @@ namespace AllYears
 				for (uint i = 0; i != Size; ++i)
 				{
 					MinMaxData::Data& data = results[i];
-					if (values[i] < data.value)
+					if (values[i] < data.value - eps)
 					{
 						data.value  = values[i];
 						data.indice = year + 1; // The year is zero-based
@@ -130,7 +131,7 @@ namespace AllYears
 			{
 				for (uint i = 0; i != Size; ++i)
 				{
-					if (values[i] < results[i].value)
+					if (values[i] < results[i].value - eps)
 					{
 						results[i].value  = values[i];
 						results[i].indice = year + 1; // The year is zero-based
@@ -150,7 +151,7 @@ namespace AllYears
 				for (uint i = 0; i != Size; ++i)
 				{
 					MinMaxData::Data& data = results[i];
-					if (values[i] > data.value)
+					if (values[i] > data.value + eps)
 					{
 						data.value = values[i];
 						data.indice = year + 1; // The year is zero-based
@@ -164,7 +165,7 @@ namespace AllYears
 				for (uint i = 0; i != Size; ++i)
 				{
 					MinMaxData::Data& data = results[i];
-					if (values[i] > data.value)
+					if (values[i] > data.value + eps)
 					{
 						data.value = values[i];
 						data.indice = year + 1; // The year is zero-based

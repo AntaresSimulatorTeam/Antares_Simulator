@@ -50,7 +50,7 @@ else()
 	find_package(CURL 7.51.0)
 
 	if (CURL_FOUND)
-		set(ANTARES_CURL_INCLUDE "${CURL_INCLUDE_DIRS}/curl")
+		set(ANTARES_CURL_INCLUDE "${CURL_INCLUDE_DIRS}/curl" "${CURL_INCLUDE_DIRS}")
 		set(ANTARES_CURL_LINK "${CURL_LIBRARIES}")
 		set(ANTARES_CURL_LIBS "${ANTARES_CURL_LINK}")
 	else()	
@@ -62,10 +62,10 @@ else()
 		set(OPENSSL_ROOT_DIR "/") # default value
 	endif()
 	
-	find_package(OpenSSL 1.1.0)
+	find_package(OpenSSL 1.0.2)
 	
 	if (OPENSSL_FOUND)
-		set(ANTARES_OSSL_INCLUDE "${OPENSSL_INCLUDE_DIR}/openssl")		
+		set(ANTARES_OSSL_INCLUDE "${OPENSSL_INCLUDE_DIR}/openssl" "${OPENSSL_INCLUDE_DIR}")		
 		set(ANTARES_OSSL_LINK "${OPENSSL_LIBRARIES}")
 		set(ANTARES_OSSL_LIBS "${ANTARES_OSSL_LINK}")		
 	else()

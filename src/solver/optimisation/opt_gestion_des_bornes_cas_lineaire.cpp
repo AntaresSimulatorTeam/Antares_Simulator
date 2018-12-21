@@ -62,6 +62,7 @@ for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ ) {
   for ( PdtHebdo = 0 ; PdtHebdo < ProblemeHebdo->NombreDePasDeTemps ; PdtHebdo++ ) {
 	  if ( ContrainteDePmaxHydrauliqueHoraire[PdtHebdo] > PmaxHyd ) PmaxHyd = ContrainteDePmaxHydrauliqueHoraire[PdtHebdo];
   }
+
   ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->MaxDesPmaxHydrauliques = PmaxHyd;
   ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->MaxDesPmaxHydrauliquesRef = PmaxHyd;
 }
@@ -93,9 +94,6 @@ return( SommeDesPmaxThermiques );
 
 
 
-
-
-
 double OPT_SommeDesPminThermiques( PROBLEME_HEBDO * ProblemeHebdo, int Pays, int PdtHebdo )
 {
 int Index; double SommeDesPminThermiques;
@@ -122,14 +120,15 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire( PROBLEME_HEBDO * Pr
 																														 const int NumeroDeLIntervalle )
 {
 int PdtHebdo; int PdtJour; int Interco; int Pays; int Palier; int Var; int Index; double PmxTh;
-double * AdresseDuResultat ; int maxThermalPlant; double Sup; double Wj; double C ;
+	double * AdresseDuResultat ; int maxThermalPlant; double C ;
 double ** AdresseOuPlacerLaValeurDesVariablesOptimisees; double ** AdresseOuPlacerLaValeurDesCoutsReduits;
 double * Xmin; double * Xmax; int * TypeDeVariable;
 
 VALEURS_DE_NTC_ET_RESISTANCES * ValeursDeNTC           ; CORRESPONDANCES_DES_VARIABLES      * CorrespondanceVarNativesVarOptim;
 PALIERS_THERMIQUES            * PaliersThermiquesDuPays; PDISP_ET_COUTS_HORAIRES_PAR_PALIER * PuissanceDisponibleEtCout       ; 
 CONSOMMATIONS_ABATTUES * ConsommationsAbattues         ; COUTS_DE_TRANSPORT                 * CoutDeTransport                 ;
-PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre                ;
+ALL_MUST_RUN_GENERATION * AllMustRunGeneration		   ;
+PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre		   ;
  
 ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
@@ -151,10 +150,12 @@ for ( PdtHebdo = PremierPdtDeLIntervalle , PdtJour  = 0 ; PdtHebdo < DernierPdtD
 
 	for ( Interco = 0 ; Interco < ProblemeHebdo->NombreDInterconnexions ; Interco++ ) {
 		Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+		CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
 		
 
 
 		Xmax[Var] =  ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+
 		Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
 
 		
@@ -183,11 +184,16 @@ for ( PdtHebdo = PremierPdtDeLIntervalle , PdtJour  = 0 ; PdtHebdo < DernierPdtD
 		
 		
 		if ( COUT_TRANSPORT == OUI_ANTARES ) {
-			CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
+			
 			if ( CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES ) {
 				Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
-				Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-        Xmax[Var] += 0.01; 								
+
+				if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
+					Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco] - ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
+				else
+					Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+
+				Xmax[Var] += 0.01; 								
 				TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
 				if (Math::Infinite( Xmax[Var] ) == 1) {
 				  TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
@@ -197,8 +203,12 @@ for ( PdtHebdo = PremierPdtDeLIntervalle , PdtJour  = 0 ; PdtHebdo < DernierPdtD
 				AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
 
 				Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
-				Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco];
-        Xmax[Var] += 0.01; 
+				if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
+					Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco] + ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
+				else
+					Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco];
+
+				Xmax[Var] += 0.01; 
 				TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
 				if (Math::Infinite( Xmax[Var] ) == 1) {
 					TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
@@ -208,10 +218,11 @@ for ( PdtHebdo = PremierPdtDeLIntervalle , PdtJour  = 0 ; PdtHebdo < DernierPdtD
 				AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
 			}
 		}
-	} 
+		}	
 
 	
 	ConsommationsAbattues = ProblemeHebdo->ConsommationsAbattues[PdtHebdo];
+	AllMustRunGeneration = ProblemeHebdo->AllMustRunGeneration[PdtHebdo];
 
 	for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ ) {
 		PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
@@ -271,6 +282,7 @@ for ( PdtHebdo = PremierPdtDeLIntervalle , PdtJour  = 0 ; PdtHebdo < DernierPdtD
 						AdresseOuPlacerLaValeurDesCoutsReduits[Var] = NULL;
 				    AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;				
 				  }
+
 		      Var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaHausse[Pays];
 			    if ( Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables ) {
 			      Xmin[Var] = 0.0;
@@ -282,11 +294,50 @@ for ( PdtHebdo = PremierPdtDeLIntervalle , PdtJour  = 0 ; PdtHebdo < DernierPdtD
 		  }
 		}
 				
+			
+			Var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDePompage[Pays];
+			ProblemeHebdo->ResultatsHoraires[Pays]->PompageHoraire[PdtHebdo] = 0.0;
+			if (Var >= 0)
+			{
+				Xmin[Var] = 0.0;
+				Xmax[Var] = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->ContrainteDePmaxPompageHoraire[PdtHebdo];
+				AdresseDuResultat = &(ProblemeHebdo->ResultatsHoraires[Pays]->PompageHoraire[PdtHebdo]);
+				AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
+			}
+			
+			Var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeDebordement[Pays];
+			
+			ProblemeHebdo->ResultatsHoraires[Pays]->debordementsHoraires[PdtHebdo] = 0.;
+			if (Var >= 0)
+			{
+				Xmin[Var] = 0.0;
+				Xmax[Var] = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->ApportNaturelHoraire[PdtHebdo];
+				AdresseOuPlacerLaValeurDesCoutsReduits[Var] = NULL; 
+				AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
+			}
+
+			
+			Var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeNiveau[Pays];
+			if (Var >= 0)
+			{
+				Xmin[Var] = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->NiveauHoraireInf[PdtHebdo];
+				Xmax[Var] = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->NiveauHoraireSup[PdtHebdo];
+				AdresseDuResultat = &(ProblemeHebdo->ResultatsHoraires[Pays]->niveauxHoraires[PdtHebdo]);
+				AdresseOuPlacerLaValeurDesCoutsReduits[Var] = NULL;
+				AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
+			}
+				
 		
 		
 		C = ConsommationsAbattues->ConsommationAbattueDuPays[Pays];
+
 		
-		if ( ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES && ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION ) {
+		bool reserveJm1 = (ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES);
+		bool opt1		= (ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION);
+		bool exp		= (ProblemeHebdo->Expansion == OUI_ANTARES);
+		bool opt2		= (ProblemeAResoudre->NumeroDOptimisation == DEUXIEME_OPTIMISATION);
+		if ((reserveJm1 && opt1) || (reserveJm1 && exp && opt2))
+		{
 			C += ProblemeHebdo->ReserveJMoins1[Pays]->ReserveHoraireJMoins1[PdtHebdo];
 		}
 
@@ -295,23 +346,13 @@ for ( PdtHebdo = PremierPdtDeLIntervalle , PdtJour  = 0 ; PdtHebdo < DernierPdtD
 			Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[Pays];
 			Xmin[Var] = 0.0;
 
-			
-			
-			
-			
-			
-						
-			
-			  
+			double MaxAllMustRunGenerationOfArea = 0.;
+			if (AllMustRunGeneration->AllMustRunGenerationOfArea[Pays] > 0.)
+				MaxAllMustRunGenerationOfArea = AllMustRunGeneration->AllMustRunGenerationOfArea[Pays];
 
-			  
-			
-
-			
-
+			C = C + MaxAllMustRunGenerationOfArea;
 			if (C >= 0.) Xmax[Var] = C + 1e-5;
-			else         Xmax[Var] = 0.;			
-			
+			else         Xmax[Var] = 0.;
 			
 			
 			if ( ProblemeHebdo->BorneDeLaDefaillancePositive == EGOISTE && 0  ) {
@@ -347,39 +388,8 @@ for ( PdtHebdo = PremierPdtDeLIntervalle , PdtJour  = 0 ; PdtHebdo < DernierPdtD
 			
 			Xmin[Var] = 0.0;
 
-			double v = 0.;
 			
-			if (ProblemeHebdo->DefaillanceNegativeUtiliserPMinThermique[Pays])
-				v += OPT_SommeDesPminThermiques(ProblemeHebdo, Pays, PdtHebdo);
-
-
-			
-			if (ProblemeHebdo->DefaillanceNegativeUtiliserHydro[Pays] && ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable == OUI_ANTARES)
-			{
-				Sup  = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->ContrainteDePmaxHydrauliqueHoraire[PdtHebdo];
-				Wj   = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->CntEnergieH2OParIntervalleOptimise[NumeroDeLIntervalle] /
-					((double) DernierPdtDeLIntervalle - (double) PremierPdtDeLIntervalle );
-				v += (Wj > Sup) ? Wj : Sup;
-			}
-
-			
-			
-			if (C < 0. && ProblemeHebdo->DefaillanceNegativeUtiliserConsoAbattue[Pays])
-				v -= C; 
-
-			
-			if (C > 0.) v -= C;
-
-			
-			
-			
-			
-
-			
-
-
-
-      Xmax[Var] = LINFINI_ANTARES;
+			Xmax[Var] = LINFINI_ANTARES;
 			
 			
 			ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDeDefaillanceNegative[PdtHebdo] = 0.0;
@@ -413,9 +423,9 @@ for ( PdtHebdo = PremierPdtDeLIntervalle , PdtJour  = 0 ; PdtHebdo < DernierPdtD
 		  AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
 		}
 		
-	}
+		} 
 
-}
+	} 
 
 if ( ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES ) {
   OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage( ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle );  

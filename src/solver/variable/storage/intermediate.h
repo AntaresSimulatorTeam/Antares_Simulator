@@ -101,9 +101,9 @@ namespace Variable
 		void computeStatisticsAdequacyForTheCurrentYear();
 
 		/*!
-		** \brief Compute statistics (for a price) for the current year
+		** \brief Compute daily, weekly, monthly and yearly averages for the current year
 		*/
-		void computePriceStatisticsForTheCurrentYear();
+		void computeAVGstatisticsForCurrentYear();
 
 		/*!
 		** \brief Compute probabilities for the current year
@@ -147,6 +147,8 @@ namespace Variable
 		Antares::Data::StudyRangeLimits* pRange;
 		//! Calendar, from the study, but dedicated to the output (with leap year)
 		Antares::Date::Calendar* calendar;
+		//! Range
+		Antares::Data::StudyRuntimeInfos* pRuntimeInfo;
 
 		//! Values for each month
 		Type month[maxMonths];

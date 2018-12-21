@@ -42,12 +42,18 @@ namespace Data
 		fhlNTCDirect = 0,
 		//! NTC Indirect
 		fhlNTCIndirect,
-		//! Impedances,
-		fhlImpedances,
 		//! Hurdles cost, Direct
 		fhlHurdlesCostDirect,
 		//! Hurdles cost, Indirect
 		fhlHurdlesCostIndirect,
+		//! Impedances,
+		fhlImpedances,
+		//! Loop flow,
+		fhlLoopFlow,
+		//! P.shift min,
+		fhlPShiftMinus,
+		//! P.shift max,
+		fhlPShiftPlus,
 		//! Maximum number of items
 		fhlMax,
 	};

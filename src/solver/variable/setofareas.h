@@ -173,7 +173,7 @@ namespace Variable
 		void computeSpatialAggregateWith(O& out);
 
 		template<class VCardSearchT, class O>
-		void computeSpatialAggregateWith(O& out, const Data::Area* area, unsigned int numSpace);
+		void computeSpatialAggregateWith(O& out, const Data::Area* area);
 
 		template<class VCardToFindT>
 		const double* retrieveHourlyResultsForCurrentYear() const;

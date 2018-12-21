@@ -269,21 +269,21 @@ namespace License
 
 	void WriteLastError(String& message, String& errType)
 	{
-		String licenseErr = "Antares License server";
+		String licenseErr = "Antares Internet server";
 		String connectionErr = "Connection to the Internet";
 
 		switch (lastError)
 		{
 			case errNone:
 			{
-				message << "Antares License is valid";
+				message << "Antares token is valid";
 				return;
 			}
 
 			//License errors
 			case errLSTooManyLicense:
 			{
-				message << "The maximum number of licenses has been reached from the Antares License server.\n";
+				message << "The maximum number of tokens has been reached from the Antares server.\n";
 				if(used_Machines.size()>0){
 					size_t used_Size=used_Machines.size();
 					message<<"These users are currently using antares :\n";
@@ -346,7 +346,7 @@ namespace License
 			// Connection or server side errors
 			case errLSHostDown:
 			{
-				message << "Impossible to connect to Antares license server";
+				message << "Impossible to connect to Antares server";
 				errType << connectionErr;
 				return;
 			}
@@ -540,11 +540,9 @@ namespace License
 		bool floatingLicenses = false;
 		// customer caption, for delayed updated
 		String customerCaption;
-		String customerId;
-		// check on the License Server
-		//bool checkOnline = false;
+		String customerId;;
 
-		// check if need to verify on the license server
+		// check if need to verify on the internet server
 		if (licenseproperties.find("internet.server.check") == licenseproperties.end())
 			statusOnline = stNotRequested;
 
@@ -1060,7 +1058,7 @@ namespace License
 				if (lastError != errNone or statusOnline != stValidOnline)
 					return false;
 
-				LICENSE_DEBUG("checking activation key on the license server success");
+				LICENSE_DEBUG("checking activation key on the server success");
 
 				if(timerlaunched==false)
 				{
@@ -1071,13 +1069,13 @@ namespace License
 			}
 			case stValidOnline:
 			{
-				LICENSE_DEBUG("checking activation key on the license server always success");
+				LICENSE_DEBUG("checking activation key on the server always success");
 				break;
 			}
 			case stNotRequested:
 			{
 				// do nothing
-				LICENSE_DEBUG("checking activation key on the license server not requested");
+				LICENSE_DEBUG("checking activation key on the server not requested");
 				break;
 			}
 			default:

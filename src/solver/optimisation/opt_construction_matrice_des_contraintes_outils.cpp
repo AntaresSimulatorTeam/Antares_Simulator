@@ -24,6 +24,32 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # include "opt_structure_probleme_a_resoudre.h"
 
 # include "../simulation/simulation.h"
@@ -70,8 +96,8 @@ void OPT_ChargerLaContrainteAPartirDePi( PROBLEME_ANTARES_A_RESOUDRE * ProblemeA
 
 
 void OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                             PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre,
-                             double * Pi,
+														PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre,
+															double * Pi,
 														 int   * Colonne,
 														 int     NombreDeTermesDeLaContrainte,
 														 char     SensContrainte )

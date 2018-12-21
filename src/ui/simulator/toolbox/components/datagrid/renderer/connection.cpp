@@ -26,6 +26,7 @@
 */
 
 #include "connection.h"
+#include "../../../libs/antares/constants.h"
 #include <antares/study/area/constants.h>
 #include <yuni/core/math.h>
 
@@ -71,9 +72,12 @@ namespace Renderer
 		{
 			case Data::fhlNTCDirect            :return wxT(" TRANS. CAPACITY \nDirect   ");
 			case Data::fhlNTCIndirect          :return wxT(" TRANS. CAPACITY \nIndirect");
-			case Data::fhlImpedances           :return wxT(" IMPEDANCES ");
 			case Data::fhlHurdlesCostDirect    :return wxT(" HURDLES COST \nDirect");
 			case Data::fhlHurdlesCostIndirect  :return wxT(" HURDLES COST \nIndirect");
+			case Data::fhlImpedances		   :return wxT(" IMPEDANCES ");
+			case Data::fhlLoopFlow			   :return wxT(" LOOP FLOW ");
+			case Data::fhlPShiftMinus		:return wxT(" P.SHIFT MIN ");
+			case Data::fhlPShiftPlus		   :return wxT(" P.SHIFT MAX ");
 		}
 		return wxString();
 	}
@@ -93,9 +97,53 @@ namespace Renderer
 	IRenderer::CellStyle Connection::cellStyle(int col, int row) const
 	{
 		double cellvalue = cellNumericValue(col, row);
-		return ((col < 2 && cellvalue < 1.) || (col == 2 && cellvalue < 0.))
-			? (Math::Zero(cellvalue) ? IRenderer::cellStyleWarning : IRenderer::cellStyleError)
-			: Renderer::Matrix<>::cellStyle(col, row);
+		switch (col)
+		{
+			case 0:
+				break;
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case Data::fhlImpedances:
+				return (cellvalue < 0.) ? IRenderer::cellStyleWarning: Renderer::Matrix<>::cellStyle(col, row);
+			case Data::fhlLoopFlow:
+			{	
+				double ntcDirect = cellNumericValue(Data::fhlNTCDirect, row);
+				double ntcIndirect = cellNumericValue(Data::fhlNTCIndirect, row);
+				if ((ntcDirect < cellvalue))
+				{
+					return IRenderer::cellStyleError;
+				}
+				if (cellvalue < 0. && std::abs(cellvalue) > ntcIndirect)
+				{
+					return IRenderer::cellStyleError;
+				}
+				break;
+			}
+			case Data::fhlPShiftMinus:
+			{
+				double pShiftMax = cellNumericValue(Data::fhlPShiftPlus, row);
+				if (cellvalue > pShiftMax)
+				{
+					return IRenderer::cellStyleError;
+				}
+
+				break;
+			}
+			case Data::fhlPShiftPlus:
+			{
+				double pShiftMin = cellNumericValue(Data::fhlPShiftMinus, row);
+				if (cellvalue < pShiftMin)
+				{
+					return IRenderer::cellStyleError;
+				}
+				break;
+			}
+		}
+		return Renderer::Matrix<>::cellStyle(col, row);
 	}
 
 

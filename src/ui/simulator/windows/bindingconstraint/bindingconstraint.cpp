@@ -191,10 +191,170 @@ namespace Window
 
 
 
+		class BindingConstraintWeightsPanel final :
+		public Component::Panel,
+		public Yuni::IEventObserver<BindingConstraintWeightsPanel>
+	{
+	public:
+		BindingConstraintWeightsPanel(wxWindow* parent) :
+			Component::Panel(parent)
+		{
+			auto* sizer = new wxBoxSizer(wxVERTICAL);
+
+			auto* notebook = new Component::Notebook(this, Component::Notebook::orTop);
+			notebook->theme(Component::Notebook::themeLight);
+
+			linkWeightsGrid = new Component::Datagrid::Component(notebook,
+				new Component::Datagrid::Renderer::BindingConstraint::LinkWeights(notebook), wxEmptyString, true, true,
+				false, false, true);
+			pPageLinkWeights = notebook->add(linkWeightsGrid, wxT("links"), wxT("  Links  "));
+
+			clusterWeightsGrid = new Component::Datagrid::Component(notebook,
+				new Component::Datagrid::Renderer::BindingConstraint::ClusterWeights(notebook), wxEmptyString, true, true,
+				false, false, true);
+			pPageclusterWeights = notebook->add(clusterWeightsGrid, wxT("clusters"), wxT("  Clusters  "));
+
+			// Post
+			notebook->select(wxT("links"));
+			sizer->Add(notebook, 1, wxALL | wxEXPAND);
+			SetSizer(sizer);
+			//pPageLinkWeights->select();
+
+		}
+
+		virtual ~BindingConstraintWeightsPanel()
+		{
+			destroyBoundEvents();
+		}
+
+		void forceRefresh()
+		{
+			assert(clusterWeightsGrid && "Invalid pointer to clusterWeightsGrid");
+			assert(linkWeightsGrid && "Invalid pointer to linkWeightsGrid");
+			assert(GetSizer() && "Invalid sizer");
+
+			if (Data::Study::Current::Valid())
+			{
+				linkWeightsGrid->InvalidateBestSize();
+				linkWeightsGrid->forceRefresh();
+				clusterWeightsGrid->InvalidateBestSize();
+				clusterWeightsGrid->forceRefresh();
+				Data::UIRuntimeInfo& uiinfo = *(Data::Study::Current::Get()->uiinfo);
+				wxString s;
+				uint c;
+
+				c = uiinfo.visibleLinksCount(Data::Study::Current::Get()->activeLayerID);
+				s << wxT("  Links  (") << c << wxT(") ");
+				pPageLinkWeights->caption(s);
+
+				c = uiinfo.visibleClustersCount(Data::Study::Current::Get()->activeLayerID);
+				s.clear();
+				s << wxT("  Thermal Clusters  (") << c << wxT(") ");
+				pPageclusterWeights->caption(s);
+
+				GetSizer()->Layout();
+			}
+		}
+
+		void selectDefaultPage()
+		{
+			// Select the first page
+			pPageLinkWeights->select(true);
+		}
+
+	public:
+		Component::Datagrid::Component* linkWeightsGrid;
+		Component::Datagrid::Component* clusterWeightsGrid;
+
+	private:
+
+		Component::Notebook::Page* pPageLinkWeights;
+		Component::Notebook::Page* pPageclusterWeights;
+
+	}; // class BindingConstraintWeightsPanel
 
 
+	class BindingConstraintOffsetsPanel final :
+		public Component::Panel,
+		public Yuni::IEventObserver<BindingConstraintOffsetsPanel>
+	{
+	public:
+		BindingConstraintOffsetsPanel(wxWindow* parent) :
+			Component::Panel(parent)
+		{
+			auto* sizer = new wxBoxSizer(wxVERTICAL);
 
+			auto* notebook = new Component::Notebook(this, Component::Notebook::orTop);
+			notebook->theme(Component::Notebook::themeLight);
 
+			linkOffsetsGrid = new Component::Datagrid::Component(notebook,
+				new Component::Datagrid::Renderer::BindingConstraint::LinkOffsets(notebook), wxEmptyString, true, true,
+				false, false, true);
+			pPageLinkOffsets = notebook->add(linkOffsetsGrid, wxT("links"), wxT("  Links  "));
+
+			clusterOffsetsGrid = new Component::Datagrid::Component(notebook,
+				new Component::Datagrid::Renderer::BindingConstraint::ClusterOffsets(notebook), wxEmptyString, true, true,
+				false, false, true);
+			pPageclusterOffsets = notebook->add(clusterOffsetsGrid, wxT("clusters"), wxT("  Clusters  "));
+
+			// Post
+			notebook->select(wxT("links"));
+			sizer->Add(notebook, 1, wxALL | wxEXPAND);
+			SetSizer(sizer);
+			//pPageLinkWeights->select();
+
+		}
+
+		virtual ~BindingConstraintOffsetsPanel()
+		{
+			destroyBoundEvents();
+		}
+
+		void forceRefresh()
+		{
+			assert(clusterOffsetsGrid && "Invalid pointer to clusterOffsetsGrid");
+			assert(linkOffsetsGrid && "Invalid pointer to linkOffsetsGrid");
+			assert(GetSizer() && "Invalid sizer");
+
+			if (Data::Study::Current::Valid())
+			{
+				linkOffsetsGrid->InvalidateBestSize();
+				linkOffsetsGrid->forceRefresh();
+				clusterOffsetsGrid->InvalidateBestSize();
+				clusterOffsetsGrid->forceRefresh();
+				Data::UIRuntimeInfo& uiinfo = *(Data::Study::Current::Get()->uiinfo);
+				wxString s;
+				uint c;
+
+				c = uiinfo.visibleLinksCount(Data::Study::Current::Get()->activeLayerID);
+				s << wxT("  Links  (") << c << wxT(") ");
+				pPageLinkOffsets->caption(s);
+
+				c = uiinfo.visibleClustersCount(Data::Study::Current::Get()->activeLayerID);
+				s.clear();
+				s << wxT("  Thermal Clusters  (") << c << wxT(") ");
+				pPageclusterOffsets->caption(s);
+
+				GetSizer()->Layout();
+			}
+		}
+
+		void selectDefaultPage()
+		{
+			// Select the first page
+			pPageLinkOffsets->select(true);
+		}
+
+	public:
+		Component::Datagrid::Component* linkOffsetsGrid;
+		Component::Datagrid::Component* clusterOffsetsGrid;
+
+	private:
+
+		Component::Notebook::Page* pPageLinkOffsets;
+		Component::Notebook::Page* pPageclusterOffsets;
+
+	}; // class BindingConstraintWeightsPanel
 
 
 	BindingConstraint::BindingConstraint(wxWindow* parent) :
@@ -205,12 +365,13 @@ namespace Window
 		pPageEqual(nullptr),
 		pPageLess(nullptr),
 		pPageGreater(nullptr),
-		pGridWeights(nullptr),
+		//pGridWeights(nullptr),
 		pAllConstraints(nullptr),
 		pSelected(nullptr),
 		pDataPanelEqual(nullptr),
 		pDataPanelLess(nullptr),
-		pDataPanelGreater(nullptr)
+		pDataPanelGreater(nullptr),
+		pWeightsPanel(nullptr)
 	{
 		// Main sizer
 		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
@@ -245,6 +406,9 @@ namespace Window
 			btn = new Component::Button(p, wxT("Edit"), "images/16x16/constraint_edit.png",
 				this, &BindingConstraint::onEdit);
 			h->Add(btn, 0, wxALIGN_CENTER_VERTICAL|wxALL);
+			
+			// vertical line
+			Component::AddVerticalSeparator(p, h);
 
 			// vertical line
 			Component::AddVerticalSeparator(p, h);
@@ -264,18 +428,16 @@ namespace Window
 
 		// Weights
 		{
-			pGridWeights = new Component::Datagrid::Component(n,
-				new Component::Datagrid::Renderer::BindingConstraint::Weights(n), wxEmptyString, true, true,
-				false,false, true);
-			pPageWeights = n->add(pGridWeights, wxT("weights"), wxT("  Weights  "));
+
+			pWeightsPanel = new BindingConstraintWeightsPanel(n);
+			pPageWeights = n->add(pWeightsPanel, wxT("weights"), wxT("  Weights  "));
 		}
 
 		// Offsets
 		{
-			pGridOffsets = new Component::Datagrid::Component(n,
-				new Component::Datagrid::Renderer::BindingConstraint::Offsets(n), wxEmptyString, true, true,
-				false, false, true);
-			pPageOffsets = n->add(pGridOffsets, wxT("offsets"), wxT("  Offsets  "));
+			
+			pOffsetsPanel = new BindingConstraintOffsetsPanel(n);
+			pPageOffsets = n->add(pOffsetsPanel, wxT("offsets"), wxT("  Offsets  "));
 		}
 
 		// Second membre
@@ -341,17 +503,16 @@ namespace Window
 		if (&page == pPageWeights)
 		{
 			logs.info() << "notebook binding constraints: page changed: weights";
-			pGridWeights->InvalidateBestSize();
-			pGridWeights->forceRefresh();
-			pGridWeights->Refresh();
+
+			pWeightsPanel->forceRefresh();
+
 			return;
 		}
 		if (&page == pPageOffsets)
 		{
 			logs.info() << "notebook binding constraints: page changed: offsets";
-			pGridOffsets->InvalidateBestSize();
-			pGridOffsets->forceRefresh();
-			pGridOffsets->Refresh();
+
+			pOffsetsPanel->forceRefresh();
 			return;
 		}
 		if (&page == pPageLess)
@@ -505,7 +666,7 @@ namespace Window
 			for( int i = 0; i< BCListSize; i++)
 			{
 
-				if ((*BC)->hasAllWeightedLinksOnLayer(study.activeLayerID))
+				if ((*BC)->hasAllWeightedLinksOnLayer(study.activeLayerID) && (*BC)->hasAllWeightedClustersOnLayer(study.activeLayerID))
 					study.bindingConstraints.remove(*BC);
 				else
 					++BC;
@@ -549,10 +710,6 @@ namespace Window
 		if (pPageList)
 			pPageList->select();
 	}
-
-
-
-
 
 } // namespace Window
 } // namespace Antares

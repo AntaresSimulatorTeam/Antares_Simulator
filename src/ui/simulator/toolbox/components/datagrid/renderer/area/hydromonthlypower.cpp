@@ -56,9 +56,10 @@ namespace Renderer
 	{
 		switch (colIndx)
 		{
-			case Data::PartHydro::minimum: return wxT("  Low  \n   (MW)   ");
-			case Data::PartHydro::average: return wxT("  Avg  \n   (MW)   ");
-			case Data::PartHydro::maximum: return wxT("  High  \n   (MW)   ");
+			case Data::PartHydro::genMaxP: return wxT("  Generating Max Power  \n   (MW)   ");
+			case Data::PartHydro::genMaxE: return wxT("  Generating Max Energy  \n   (Hours at Pmax)   ");
+			case Data::PartHydro::pumpMaxP: return wxT(" Pumping Max Power  \n   (MW)   ");
+			case Data::PartHydro::pumpMaxE: return wxT("  Pumping Max Energy \n   (Hours at Pmax)   ");
 			default : return wxEmptyString;
 		}
 		return wxEmptyString;
@@ -86,7 +87,13 @@ namespace Renderer
 			return MatrixAncestorType::cellValue(x, y, "0");
 		if (v > 1000000)
 			return MatrixAncestorType::cellValue(x, y, "1000000");
-		return MatrixAncestorType::cellValue(x, y, String() << Math::Round(v));
+		int round;
+		if (x == 0 || x == 2)
+			round = 0;
+		else
+			round = 2;
+
+		return MatrixAncestorType::cellValue(x, y, String() << Math::Round(v,round));
 	}
 
 
@@ -107,30 +114,37 @@ namespace Renderer
 
 	IRenderer::CellStyle HydroMonthlyPower::cellStyle(int col, int row) const
 	{
-		double avg = MatrixAncestorType::cellNumericValue(1, row);
 
 		switch (col)
 		{
-			case 1: // average power - always valid if > 0
+			case 0:
 				{
-					if (avg < 0.)
+					double genMaxP = MatrixAncestorType::cellNumericValue(0, row);
+					if (genMaxP<0.)
 						return IRenderer::cellStyleError;
 					break;
 				}
-			case 0:
+			case 1: 
 				{
-					double min = MatrixAncestorType::cellNumericValue(0, row);
-					if (min < 0. || min > avg)
+					double genMaxE = MatrixAncestorType::cellNumericValue(1, row);
+					if (genMaxE < 0. || genMaxE>24.)
 						return IRenderer::cellStyleError;
 					break;
 				}
 			case 2:
 				{
-					double max = MatrixAncestorType::cellNumericValue(2, row);
-					if (max < 0. || max < avg)
+					double PumpMaxP = MatrixAncestorType::cellNumericValue(2, row);
+					if (PumpMaxP < 0.)
 						return IRenderer::cellStyleError;
 					break;
 				}
+			case 3:
+			{
+				double PumpMaxE = MatrixAncestorType::cellNumericValue(3, row);
+				if (PumpMaxE < 0. || PumpMaxE >24.)
+					return IRenderer::cellStyleError;
+				break;
+			}
 		}
 		return IRenderer::cellStyleWithNumericCheck(col, row);
 	}

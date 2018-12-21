@@ -638,6 +638,14 @@ namespace Forms
 		// Output viewer
 		createNBOutputViewer();
 
+		// yield !
+		wxTheApp->Yield();
+
+		// Separator
+		pNotebook->addSeparator();
+
+		createNBSets();
+
 		// Select the first page
 		pSectionNotebook->select(wxT("input"));
 

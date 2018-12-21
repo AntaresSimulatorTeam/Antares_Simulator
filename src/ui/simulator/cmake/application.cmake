@@ -27,6 +27,7 @@ SET(SRC_APPLICATION
 		application/main/clean-swap-files.cpp
 		application/main/options.cpp
 		application/main/analyzer.cpp
+		application/main/constraintsbuilder.cpp
 		application/main/main.h
 		application/main/main.hxx
 		application/main/disabler.h
@@ -42,6 +43,7 @@ SET(SRC_APPLICATION
 		application/main/build/wind.cpp
 		application/main/build/hydro.cpp
 		application/main/build/notes.cpp
+		application/main/build/sets.cpp
 		application/main/build/economic-optimization.cpp
 		application/main/build/scenario-builder.cpp
 		application/main/logs.cpp

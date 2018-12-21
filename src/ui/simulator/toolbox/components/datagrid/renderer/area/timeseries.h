@@ -216,11 +216,11 @@ namespace Renderer
 		{}
 		virtual ~TimeSeriesHydroMod() {destroyBoundEvents();}
 
-		virtual Date::Precision precision() {return Date::monthly;}
+		virtual Date::Precision precision() {return Date::daily;}
 
-		virtual wxString rowCaption(int rowIndx) const {return wxStringFromUTF8(Date::MonthToString(rowIndx));}
+		virtual wxString rowCaption(int rowIndx) const {return wxStringFromUTF8(study->calendar.text.daysYear[rowIndx]);}
 
-		virtual uint maxHeightResize() const {return 12;}
+		virtual uint maxHeightResize() const {return DAYS_PER_YEAR;}
 
 	protected:
 		virtual void internalAreaChanged(Antares::Data::Area* area)

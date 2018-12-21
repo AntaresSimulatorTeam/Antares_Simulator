@@ -22,6 +22,7 @@ set(SRC_SIMULATION
 		simulation/timeseries-numbers.cpp
 
 		# Solver
+		simulation/solver.utils.h
 		simulation/solver.h
 		simulation/solver.hxx
 		simulation/solver.data.h
@@ -29,6 +30,7 @@ set(SRC_SIMULATION
 		simulation/common-eco-adq.h
 		simulation/common-eco-adq.cpp
 		simulation/common-hydro-remix.cpp
+		simulation/common-hydro-levels.cpp
 		simulation/common-dispatchable-margin.cpp
 		simulation/adequacy-draft.h
 		simulation/adequacy-draft.cpp

@@ -99,7 +99,7 @@ namespace Antares
 
 		if (typeProperty == type)
 		{
-			if (section and *value != '\0' and value and '\0' != value)
+			if (section and *value != '\0' and value)
 				section->add(key, value);
 			return section;
 		}

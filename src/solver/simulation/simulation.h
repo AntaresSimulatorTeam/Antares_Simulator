@@ -31,6 +31,7 @@
 # include <antares/study/study.h>
 # include "sim_structure_donnees.h"
 # include "sim_structure_probleme_economique.h"
+# include "../variable/state.h"
 
 # define OUI_ANTARES 1
 # define NON_ANTARES 0
@@ -59,7 +60,7 @@ void SIM_InitialisationProblemeHebdo(Antares::Data::Study& study, PROBLEME_HEBDO
 
 void SIM_PreallocationTableaux(void);
 
-void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem, uint numSpace, const int);
+void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem, Antares::Solver::Variable::State & state, uint numSpace, const int);
 
 void SIM_RenseignementProblemeHoraireAdequation(long);
 

@@ -30,6 +30,7 @@
 # include <yuni/yuni.h>
 # include "../../array/matrix.h"
 # include "../fwd.h"
+#include "../study.h"
 # include <yuni/core/noncopyable.h>
 
 
@@ -94,6 +95,18 @@ namespace ScenarioBuilder
 		void set(uint index, uint year, uint value);
 		//@}
 
+		/*!
+		** \brief Assign a single value
+		**
+		** \param cluster A pointer to the thermal cluster
+		** \param year  A year
+		** \param value The new TS number
+		*/
+		void set(const Antares::Data::ThermalCluster * cluster, const uint year, uint value);
+		//@}
+
+		uint get(const Antares::Data::ThermalCluster * cluster, const uint year) const;
+
 		//! \name Rules matrix
 		//@{
 		/*!
@@ -129,6 +142,8 @@ namespace ScenarioBuilder
 		MatrixType pTSNumberRules;
 		//! The attached area, if any
 		const Area* pArea;
+		//! The map between clusters and there line index
+		std::map<const ThermalCluster*, uint> clusterIndexMap;
 
 	}; // class TSNumberRules
 

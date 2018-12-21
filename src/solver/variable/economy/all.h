@@ -51,6 +51,12 @@
 # include "nonProportionalCost.h"
 # include "nbOfDispatchedUnits.h"
 # include "hydrostorage.h"
+# include "pumping.h"
+# include "reservoirlevel.h"
+# include "inflow.h"
+# include "overflow.h"
+# include "waterValue.h"
+# include "hydroCost.h"
 # include "unsupliedEnergy.h"
 # include "spilledEnergy.h"
 
@@ -70,6 +76,7 @@
 
 # include "links/flowLinear.h"
 # include "links/flowLinearAbs.h"
+# include "links/loopFlow.h"
 # include "links/flowQuad.h"
 # include "links/hurdleCosts.h"
 # include "links/congestionFee.h"
@@ -94,13 +101,14 @@ namespace Economy
 	*/
 	typedef FlowLinear                     // Flow linear
 			< FlowLinearAbs                // Flow linear Abs
+			< LoopFlow					   // Loop flow
 			< FlowQuad                     // Flow Quad
 			< CongestionFee                // Congestion Fee
 			< CongestionFeeAbs             // Congestion Fee (Abs)
 			< MarginalCost                 // Marginal Cost
 			< CongestionProbability        // Congestion Probability (+/-)
 			< HurdleCosts                  // Hurdle costs
-			< > > > > > > > >              VariablePerLink;
+			< > > > > > > > > >            VariablePerLink;
 	// forward declaration
 	class Links;
 
@@ -130,6 +138,12 @@ namespace Economy
 			// Other
 			< DispatchableGeneration           // All dispatchable generation
 			< HydroStorage                     // Hydro Storage Generation
+			< Pumping						   // Pumping generation
+			< ReservoirLevel				   // Reservoir levels
+			< Inflows						   // Hydraulic inflows
+			< Overflows						   // Hydraulic overflows
+		    < WaterValue					   // Water values
+			< HydroCost						   // Hydro costs
 			< UnsupliedEnergy                  // Unsuplied Energy
 			< SpilledEnergy                    // Spilled Energy
 			< LOLD                             // LOLD
@@ -143,7 +157,7 @@ namespace Economy
 			< NbOfDispatchedUnitsByPlant				// Number of Units Dispatched by plant- MBO 25/02/2016 - refs: #55
 			// Links
 			< Variable::Economy::Links         // All links
-			> > > > > > > > > > > > > > > > > > > > > > > > > >       VariablesPerArea;
+			> > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >  VariablesPerArea;
 
 
 	/*!
@@ -169,6 +183,12 @@ namespace Economy
 			// Other
 			Common::SpatialAggregate<DispatchableGeneration,
 			Common::SpatialAggregate<HydroStorage,
+			Common::SpatialAggregate<Pumping,
+			Common::SpatialAggregate<ReservoirLevel,
+			Common::SpatialAggregate<Inflows,
+			Common::SpatialAggregate<Overflows,
+			Common::SpatialAggregate<WaterValue,
+			Common::SpatialAggregate<HydroCost,
 			Common::SpatialAggregate<UnsupliedEnergy,
 			Common::SpatialAggregate<SpilledEnergy,
 			// LOLD
@@ -184,7 +204,7 @@ namespace Economy
 			
 			// Number Of Dispatched Units
 			Common::SpatialAggregate<NbOfDispatchedUnits	// MBO 25/02/2016 - refs: #55
-			> > > > > > > > > > > > > > > > > > > > > > > 
+			> > > > > > > > > > > > > > > > > > > > > > > > > > > > >
 			VariablesPerSetOfAreas;
 
 

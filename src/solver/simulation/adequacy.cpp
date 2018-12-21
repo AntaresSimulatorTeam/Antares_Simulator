@@ -183,7 +183,7 @@ namespace Simulation
 			pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
 
 			
-			::SIM_RenseignementProblemeHebdo(*pProblemesHebdo[numSpace], numSpace, hourInTheYear);
+			::SIM_RenseignementProblemeHebdo(*pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
 
 			if ((state.simplexHasBeenRan = simplexIsRequired(hourInTheYear, numSpace)))
 			{
@@ -230,11 +230,19 @@ namespace Simulation
 				}
 
 				
+				
+				computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
+
+				
 				if (not RemixHydroForAllAreas(study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek))
 				{
 					failedWeek = w;
 					return false;
 				}
+
+				
+				computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, true);
+				
 			}
 			else
 			{
@@ -266,6 +274,9 @@ namespace Simulation
 					memset(hourlyResults.ValeursHorairesDeDefaillancePositive, 0, sizeof(double) * nbHoursInAWeek);
 					memset(hourlyResults.ValeursHorairesDeDefaillanceNegative, 0, sizeof(double) * nbHoursInAWeek);
 					memset(hourlyResults.CoutsMarginauxHoraires, 0, sizeof(double) * nbHoursInAWeek);
+					memset(hourlyResults.PompageHoraire, 0, sizeof(double) * nbHoursInAWeek);
+					memset(hourlyResults.debordementsHoraires, 0, sizeof(double) * nbHoursInAWeek);
+					memset(hourlyResults.niveauxHoraires, 0, sizeof(double) * nbHoursInAWeek);
 				}
 
 				uint indx  = hourInTheYear;
@@ -289,7 +300,17 @@ namespace Simulation
 							- pProblemesHebdo[numSpace]->ConsommationsAbattues[j]->ConsommationAbattueDuPays[k];
 					}
 				}
+
+				
+				computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false, true);
+				
 			}
+
+			
+			interpolateWaterValue(study, *pProblemesHebdo[numSpace], state, hourInTheYear, nbHoursInAWeek);
+
+			updatingWeeklyFinalHydroLevel(study, *pProblemesHebdo[numSpace], nbHoursInAWeek);
+			
 
 			variables.weekBegin(state);
 			uint previousHourInTheYear = state.hourInTheYear;
@@ -321,6 +342,10 @@ namespace Simulation
 
 			++progression;
 		}	
+
+		
+		updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
+
 		return true;
 	}
 

@@ -25,6 +25,32 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
 #include "simulation.h"
@@ -110,6 +136,11 @@ void SIM_AllocationTableaux()
 			NumeroChroniquesTireesParPays[numSpace][i]->ThermiqueParPalier      = (int *)    MemAlloc(area.thermal.clusterCount * sizeof(int));
 			ValeursGenereesParPays[numSpace][i]->HydrauliqueModulableQuotidien  = (double *) MemAlloc(study.runtime->nbDaysPerYear * sizeof(double));
 			ValeursGenereesParPays[numSpace][i]->AleaCoutDeProductionParPalier  = (double *) MemAlloc(area.thermal.clusterCount * sizeof(double));
+			if (area.hydro.reservoirManagement)
+			{
+				ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsDebutJours	= (double *)MemAlloc(study.runtime->nbDaysPerYear * sizeof(double));
+				ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsFinJours		= (double *)MemAlloc(study.runtime->nbDaysPerYear * sizeof(double));
+			}
 		}
 	}
 
@@ -140,10 +171,18 @@ void SIM_DesallocationTableaux()
 		{
 			for (uint i = 0; i < study.areas.size(); ++i)
 			{
+				auto& area = *study.areas.byIndex[i];
+
 				MemFree(NumeroChroniquesTireesParPays[numSpace][i]->ThermiqueParPalier);
 				MemFree(NumeroChroniquesTireesParPays[numSpace][i]);
 				MemFree(ValeursGenereesParPays[numSpace][i]->HydrauliqueModulableQuotidien);
-				MemFree(ValeursGenereesParPays[numSpace][i]->AleaCoutDeProductionParPalier);
+
+				if (area.hydro.reservoirManagement)
+				{
+					MemFree(ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsDebutJours);
+					MemFree(ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsFinJours);
+				}
+
 				MemFree(ValeursGenereesParPays[numSpace][i]);
 			}
 			MemFree(NumeroChroniquesTireesParPays[numSpace]);

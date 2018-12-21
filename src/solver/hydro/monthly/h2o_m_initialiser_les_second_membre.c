@@ -69,6 +69,9 @@ for ( Pdt = 1 ; Pdt < NbPdt ; Pdt++ ) {
 SecondMembre[Cnt] = DonneesAnnuelles->Volume[0] - DonneesAnnuelles->Apport[NbPdt-1];
 Cnt++;
 
+
+
+
 for ( Pdt = 1 ; Pdt < NbPdt ; Pdt++ ) {
   
   SecondMembre[Cnt] = DonneesAnnuelles->VolumeMax[Pdt];
@@ -77,7 +80,16 @@ for ( Pdt = 1 ; Pdt < NbPdt ; Pdt++ ) {
   SecondMembre[Cnt] = DonneesAnnuelles->VolumeMin[Pdt] * ChgmtSens; 
   Cnt++;
 }
-	
+
+
+
+
+for (Pdt = 1; Pdt < NbPdt; Pdt++)
+{
+	SecondMembre[Cnt] = 0.;
+	Cnt++;
+}
+
 
 
 

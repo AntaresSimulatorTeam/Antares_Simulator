@@ -61,6 +61,11 @@ namespace XCast
 
 		
 		float x;
+		float alph;
+		float beta;
+		float numer;
+		float denom;
+
 		
 		uint Compteur_ndp = 0;
 
@@ -80,6 +85,18 @@ namespace XCast
 				
 				POSI[s] = 0.f;
 			}
+			
+			All_normal = false;
+			if (pAccuracyOnCorrelation)
+			{
+				All_normal = true;
+				for (uint s = 0; s != processCount; ++s)
+				{
+					if (L[s] != 3) All_normal = false;  
+				}
+			}
+			if (All_normal)	pAccuracyOnCorrelation = false; 
+					
 		}
 
 		
@@ -124,36 +141,84 @@ namespace XCast
 				D_COPIE[s] = diffusion(A[s], B[s], G[s], D[s], L[s], T[s], ESPE[s]);
 			}
 
-			
-			for (uint s = 0; s != processCount; ++s)
+			if (All_normal)		
 			{
-				for (uint t = 0; t < s; ++t)
+				for (uint s = 0; s != processCount; ++s)
 				{
-					float z = D_COPIE[t] * STDE[s];
-					if (Math::Zero(z))
-						CORR[s][t] = 0.f;
-					else
+					ALPH[s]  = float(exp(-T[s]));
+					BETA[s]  = float(sqrt(1 - ALPH[s] * ALPH[s]));
+					BASI[s]  = (1.f - ALPH[s])*ESPE[s];
+				}
+			}
+			if (All_normal)
+			{
+				
+				for (uint s = 0; s != processCount; ++s)
+				{
+					for (uint t = 0; t < s; ++t)
 					{
-						x = D_COPIE[s] * STDE[t] / z;
-						CORR[s][t] = (*pCorrMonth)[s][t] * (x + 1.f / x) / 2.f;
-						if (CORR[s][t] >  1.f)
-						{
-							CORR[s][t] = 1.f;
-							++pLevellingCount;
-						}
+						float z = D_COPIE[t] * STDE[s];
+						if (Math::Zero(z))
+							CORR[s][t] = 0.f;
 						else
 						{
-							if (CORR[s][t] < -1.f)
+							x  = 1.f - ALPH[s] * ALPH[t];
+							x /= BETA[s];
+							x /= BETA[t];
+							CORR[s][t] = (*pCorrMonth)[s][t] * x;
+							if (CORR[s][t] >  1.f)
 							{
-								CORR[s][t] = -1.f;
+								CORR[s][t] = 1.f;
 								++pLevellingCount;
+							}
+							else
+							{
+								if (CORR[s][t] < -1.f)
+								{
+									CORR[s][t] = -1.f;
+									++pLevellingCount;
+								}
 							}
 						}
 					}
-				}
 
+					
+					CORR[s][s] = 1.f;
+				}
+			}
+			else
+			{
 				
-				CORR[s][s] = 1.f;
+				for (uint s = 0; s != processCount; ++s)
+				{
+					for (uint t = 0; t < s; ++t)
+					{
+						float z = D_COPIE[t] * STDE[s];
+						if (Math::Zero(z))
+							CORR[s][t] = 0.f;
+						else
+						{
+							x = D_COPIE[s] * STDE[t] / z;
+							CORR[s][t] = (*pCorrMonth)[s][t] * (x + 1.f / x) / 2.f;
+							if (CORR[s][t] >  1.f)
+							{
+								CORR[s][t] = 1.f;
+								++pLevellingCount;
+							}
+							else
+							{
+								if (CORR[s][t] < -1.f)
+								{
+									CORR[s][t] = -1.f;
+									++pLevellingCount;
+								}
+							}
+						}
+					}
+
+					
+					CORR[s][s] = 1.f;
+				}
 			}
 
 			
@@ -169,26 +234,29 @@ namespace XCast
 
 			
 			STEP = 1.f;
-			for (uint s = 0; s != processCount; ++s)
+			if (!All_normal)
 			{
-				x = 1.f;
-				if (T[s] > PETIT)
-					x = PETIT / T[s];
-				if (x < STEP)
+				for (uint s = 0; s != processCount; ++s)
 				{
-					
-					STEP = x;
-				}
-
-				x = maxiDiffusion(A[s], B[s], G[s], D[s], L[s], T[s]);
-				if (x > 0.f)
-				{
-					x = STDE[s] / x;
-					x *= x;
-					
-					x *= 4.f * PETIT;
+					x = 1.f;
+					if (T[s] > PETIT)
+						x = PETIT / T[s];
 					if (x < STEP)
+					{
+						
 						STEP = x;
+					}
+
+					x = maxiDiffusion(A[s], B[s], G[s], D[s], L[s], T[s]);
+					if (x > 0.f)
+					{
+						x = STDE[s] / x;
+						x *= x;
+						
+						x *= 4.f * PETIT;
+						if (x < STEP)
+							STEP = x;
+					}
 				}
 			}
 			if (STEP < float(1e-2))
@@ -233,7 +301,7 @@ namespace XCast
 					DATL[s][nbHoursADay - 1] = POSI[s];
 				}
 			}
-		}
+		}  
 		else
 		{
 			for (uint s = 0; s != processCount; ++s)
@@ -263,99 +331,132 @@ namespace XCast
 			for (uint l = 0; l != Nombre_points_intermediaire; ++l)
 			{
 				++pComputedPointCount;
-
-				
-				for (uint s = 0; s != processCount; ++s)
-					DIFF[s] = diffusion(A[s], B[s], G[s], D[s], L[s], T[s], POSI[s]);
-
-				
-				if (pAccuracyOnCorrelation)
+				if (All_normal) 
 				{
-					
-					float c;
-					float z;
 
+					
+					uint j = processCount;
+					if ((processCount - 2 * (processCount / 2)) != 0)
+						++j;
+					for (uint k = 0; k < j; ++k)
+						normal(WIEN[k], WIEN[j - (1 + k)]);
+
+					
 					for (uint s = 0; s != processCount; ++s)
 					{
-						float* corr_s = CORR[s];
-						auto& userMonthlyCorr = pCorrMonth->column(s);
-						for (uint t = 0; t < s; ++t)
-						{
-							if (Math::Zero(DIFF[s]) || Math::Zero(DIFF[t]))
-								corr_s[t] = 0;
-							else
-							{
-								z = DIFF[t] * STDE[s];
-								x = DIFF[s] * STDE[t] / z;
-								c = userMonthlyCorr[t] * (x + 1.f / x) / 2.f;
+						BROW[s] = 0.f;
+						for (uint t = 0; t < s + 1; ++t)
+							BROW[s] += Triangle_courant[s][t] * WIEN[t]; 
+					}
+										
+					
+					for (uint s = 0; s != processCount; ++s)
+					{
+						POSI[s] *= ALPH[s];
+						POSI[s] += BASI[s];
+						POSI[s] += BETA[s] * STDE[s] * BROW[s];
+											
+						if (POSI[s] >= MAXI[s])
+							POSI[s] = Presque_maxi[s];
+						if (POSI[s] <= MINI[s])
+							POSI[s] = Presque_mini[s];
+					}
+				}
+				else 
+				{
+					
+					for (uint s = 0; s != processCount; ++s)
+						DIFF[s] = diffusion(A[s], B[s], G[s], D[s], L[s], T[s], POSI[s]);
 
-								if (c > 1.f)
-								{
-									c = 1.f;
-									++pLevellingCount;
-								}
+					
+					if (pAccuracyOnCorrelation)
+					{
+						
+						float c;
+						float z;
+
+						for (uint s = 0; s != processCount; ++s)
+						{
+							float* corr_s = CORR[s];
+							auto& userMonthlyCorr = pCorrMonth->column(s);
+							for (uint t = 0; t < s; ++t)
+							{
+								if (Math::Zero(DIFF[s]) || Math::Zero(DIFF[t]))
+									corr_s[t] = 0;
 								else
 								{
-									if (c < -1.f)
+									z = DIFF[t] * STDE[s];
+									x = DIFF[s] * STDE[t] / z;
+									c = userMonthlyCorr[t] * (x + 1.f / x) / 2.f;
+
+									if (c > 1.f)
 									{
-										c = -1.f;
+										c = 1.f;
 										++pLevellingCount;
 									}
+									else
+									{
+										if (c < -1.f)
+										{
+											c = -1.f;
+											++pLevellingCount;
+										}
+									}
+									corr_s[t] = c;
 								}
-								corr_s[t] = c;
 							}
+							
+							corr_s[s] = 1.f;
 						}
-						
-						corr_s[s] = 1.f;
+
+						shrink = MatrixDPMake<float>(Triangle_courant, CORR, Carre_courant, Carre_reference, processCount, pQCHOLTotal);
+						if (shrink <= 1.f)
+						{
+							if (shrink == -1.f)
+							{
+								
+								logs.error() << "TS " << pTSName << " generator: invalid correlation matrix";
+								return false;
+							}
+							if (shrink < 1.f)
+								++pNDPMatrixCount;
+						}
+					} 
+
+
+					
+					uint j = processCount;
+					if ((processCount - 2 * (processCount / 2)) != 0)
+						++j;
+					for (uint k = 0; k < j; ++k)
+						normal(WIEN[k], WIEN[j - (1 + k)]);
+
+					
+					for (uint s = 0; s != processCount; ++s)
+					{
+						BROW[s] = 0.f;
+						for (uint t = 0; t < s + 1; ++t)
+							BROW[s] += Triangle_courant[s][t] * WIEN[t]; 
 					}
 
-					shrink = MatrixDPMake<float>(Triangle_courant, CORR, Carre_courant, Carre_reference, processCount, pQCHOLTotal);
-					if (shrink <= 1.f)
+					
+					for (uint s = 0; s != processCount; ++s)
 					{
-						if (shrink == -1.f)
-						{
-							
-							logs.error() << "TS " << pTSName << " generator: invalid correlation matrix";
-							return false;
-						}
-						if (shrink < 1.f)
-							++pNDPMatrixCount;
+						TREN[s] = T[s] * (ESPE[s] - POSI[s]);
+						DIFF[s] = DIFF[s] * BROW[s];
+
+					}
+
+					
+					for (uint s = 0; s != processCount; ++s)
+					{
+						POSI[s] += (TREN[s] * STEP) + (DIFF[s] * SQST);
+						if (POSI[s] >= MAXI[s])
+							POSI[s] = Presque_maxi[s];
+						if (POSI[s] <= MINI[s])
+							POSI[s] = Presque_mini[s];
 					}
 				} 
-
-
-				
-				uint j = processCount;
-				if ((processCount - 2 * (processCount / 2)) != 0)
-					++j;
-				for (uint k = 0; k < j; ++k)
-					normal(WIEN[k], WIEN[j - (1 + k)]);
-
-				
-				for (uint s = 0; s != processCount; ++s)
-				{
-					BROW[s] = 0.f;
-					for (uint t = 0; t < s + 1; ++t)
-						BROW[s] += Triangle_courant[s][t] * WIEN[t]; 
-				}
-
-				
-				for (uint s = 0; s != processCount; ++s)
-				{
-					TREN[s] = T[s] * (ESPE[s] - POSI[s]);
-					DIFF[s] = DIFF[s] * BROW[s];
-
-				}
-
-				
-				for (uint s = 0; s != processCount; ++s)
-				{
-					POSI[s] += (TREN[s] * STEP) + (DIFF[s] * SQST);
-					if (POSI[s] >= MAXI[s])
-						POSI[s] = Presque_maxi[s];
-					if (POSI[s] <= MINI[s])
-						POSI[s] = Presque_mini[s];
-				}
 			}
 
 			for (uint s = 0; s != processCount; ++s)

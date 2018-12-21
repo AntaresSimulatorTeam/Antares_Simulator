@@ -446,11 +446,23 @@ namespace Inspector
 
 		Category(pg, wxT("Parameters"), wxT("link.params"));
 		P_BOOL("Hurdles cost", "link.hurdles_cost");
+		P_BOOL("Loop flow", "link.use_loop_flow")->Enable(false);
+		P_BOOL("Phase shifter", "link.use_phase_shifter")->Enable(false);
 	//	P_BOOL("Trans. capacities", "link.transmission-capacities");
 		Category(pg, wxT("Caption"), wxT("link.coms"));
 		P_BOOL("Caption on map", "link.display_comments");
 		P_STRING("Caption", "link.comments");
 
+		Category(pg, wxT("Style"), wxT("link.styles"));
+		pPGLinkColor = page->Append(new wxColourProperty(wxT("Color"), wxT("link.color"), wxColour(0, 0, 0)));
+		
+		wxPGChoices arrStyle;
+		arrStyle.Add(wxT("Plain"), Data::stPlain);
+		arrStyle.Add(wxT("Dot"), Data::stDot);
+		arrStyle.Add(wxT("Dash"), Data::stDash);
+		arrStyle.Add(wxT("Dot & Dash"), Data::stDotDash);
+		pPGLinkStyle = pg->Append(new wxEnumProperty(wxT("Style"), wxT("link.style"), arrStyle));
+		pPGLinkWidth = P_INT("Width", "link.width");
 		pPGLinkFilteringStatus  = Category(pg, wxT("Output print status"), wxT("link.filtering"));
 		lid                     = page->Append(new wxStringProperty(wxT("Output synthesis"), wxT("link.filtering-synthesis"), wxT("<composed>")) );
 		pPGLinkFilteringSynthesis[0]  = page->AppendIn(lid, new wxBoolProperty(wxT("hourly"), wxT("hourly"), true));
@@ -791,6 +803,7 @@ namespace Inspector
 		p->Hide(hide);
 		if (!hide)
 		{
+			
 			if (!multiple)
 				p->SetLabel(wxT("LINK"));
 			else
@@ -799,7 +812,13 @@ namespace Inspector
 			Accumulator<PLinkArea<false> >   ::Apply(PROPERTY("link.to"),   data->links);
 			//Accumulator<PLinkCopperPlate>    ::Apply(PROPERTY("link.transmission-capacities"), data->links);
 			Accumulator<PLinkHurdlesCost>    ::Apply(PROPERTY("link.hurdles_cost"), data->links);
+			Accumulator<PLinkLoopFlow>    ::Apply(PROPERTY("link.use_loop_flow"), data->links);
+			Accumulator<PLinkPhaseShift>    ::Apply(PROPERTY("link.use_phase_shifter"), data->links);
 			Accumulator<PLinkComments>       ::Apply(PROPERTY("link.comments"), data->links);
+			//Accumulator<PLinkColor>			 ::Apply(PROPERTY("link.color"), data->links);
+			Accumulator<PLinkColor>			 ::Apply(pPGLinkColor, data->links);
+			Accumulator<PLinkStyle>			 ::Apply(pPGLinkStyle, data->links);
+			Accumulator<PLinkWidth>			 ::Apply(pPGLinkWidth, data->links);
 			Accumulator<PLinkDisplayComments>::Apply(PROPERTY("link.display_comments"), data->links);
 
 			Accumulator<PLinkFiltering<true, Data::filterHourly> >      ::Apply(pPGLinkFilteringSynthesis[0], data->links);
@@ -817,6 +836,7 @@ namespace Inspector
 		PROPERTY("link.connection")->Hide(hide);
 		PROPERTY("link.params")->Hide(hide);
 		PROPERTY("link.coms")->Hide(hide);
+		PROPERTY("link.styles")->Hide(hide);
 
 
 		// ----------------

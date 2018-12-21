@@ -172,11 +172,10 @@ if ( ProblemeLineairePartieVariable->ExistenceDUneSolution != OUI_SPX && Premier
 if ( ProblemeLineairePartieVariable->ExistenceDUneSolution == OUI_SPX ) {
 
 	
-	
-	
-	
-	
-	
+	ProblemeHydraulique->CoutDeLaSolution = 0.0;
+	for (Var = 0; Var < Probleme->NombreDeVariables; Var++) {
+		ProblemeHydraulique->CoutDeLaSolution += Probleme->CoutLineaire[Var] * Probleme->X[Var];
+	}
 	
 		
   DonneesAnnuelles->ResultatsValides = OUI;		

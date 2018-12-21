@@ -220,7 +220,7 @@ namespace Economy
 		
 		void yearEnd(unsigned int year, unsigned int numSpace)
 		{
-			// Compute all statistics for the current year (daily,weekly,monthly)
+			// Compute all statistics for the current year (daily, weekly, monthly)
 			pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
 
 			// Next variable

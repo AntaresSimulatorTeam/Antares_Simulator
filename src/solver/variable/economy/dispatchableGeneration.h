@@ -244,9 +244,7 @@ namespace Economy
 		void yearEnd(unsigned int year, unsigned int numSpace)
 		{
 
-			VariableAccessorType::template ComputeStatistics<VCardType>(
-													pValuesForTheCurrentYear[numSpace],
-													year);
+			VariableAccessorType::template ComputeStatistics<VCardType>(pValuesForTheCurrentYear[numSpace]);
 
 			// Next variable
 			NextType::yearEnd(year, numSpace);

@@ -82,6 +82,10 @@ namespace Data
 
 		bool hydroHasMod;
 
+		//! if sum(365)[pumpMaxP * pumpMaxE] > 0. then pumpHasMod = true
+		//	else pumpHasMod = false
+		bool pumpHasMod;
+
 		//! Spinning reserve
 		// This variable is initialized once at the begining of the simulation
 		double spinningReserve[HOURS_PER_YEAR];
@@ -96,6 +100,9 @@ namespace Data
 
 		//! Optimal max power (OPP) - Hydro management
 		double optimalMaxPower[DAYS_PER_YEAR];
+
+		//! 
+		double pumpingMaxPower[DAYS_PER_YEAR];
 
 		/*!
 		** \brief Dispatchable Generation Margin

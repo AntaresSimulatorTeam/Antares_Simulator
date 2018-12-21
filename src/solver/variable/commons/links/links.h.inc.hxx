@@ -174,7 +174,7 @@ namespace LINK_NAMESPACE
 		template<class I> static void provideInformations(I& infos);
 
 		template<class VCardToFindT>
-		inline const double* retrieveHourlyResultsForCurrentYear(uint numSpace) const
+		inline const double* retrieveHourlyResultsForCurrentYear(uint) const
 		{
 			return nullptr;
 		}

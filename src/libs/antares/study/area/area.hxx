@@ -46,36 +46,6 @@ namespace Data
 	};
 
 
-
-	struct CompareLinkName final
-	{
-		inline bool operator()(const AreaLink* s1, const AreaLink* s2) const
-		{
-			return (s1->from->name < s2->from->name)
-				? true
-				: (
-					(s1->from->name == s2->from->name)
-						? (s1->with->name < s2->with->name) : false
-				);
-		}
-	};
-
-	struct CompareThermalClusterName final
-	{
-		inline bool operator()(const ThermalCluster* s1, const ThermalCluster* s2) const
-		{
-			return (s1->parentArea->name < s2->parentArea->name)
-				? true
-				: (
-					(s1->parentArea->name == s2->parentArea->name)
-						? (s1->name() < s2->name()) : false
-				);
-		}
-	};
-
-
-
-
 	template<int TimeSeriesT>
 	inline bool Area::storeTimeseriesNumbers(Study& study)
 	{

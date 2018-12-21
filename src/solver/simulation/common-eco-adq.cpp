@@ -296,7 +296,8 @@ namespace Simulation
 			
 			
 			
-			
+			rnd = randomForYear.pSpilledEnergy[indexArea];
+
 			if( area.spreadSpilledEnergyCost == 0) 
 			{
 				if (rnd<0.5)
@@ -327,7 +328,7 @@ namespace Simulation
 				{
 					
 					for (uint j = 0; j != 8784; ++j)
-						noise[j] = 9.0 * randomForYear.pHydroCostsByArea_freeMod[indexArea][j];
+						noise[j] = randomForYear.pHydroCostsByArea_freeMod[indexArea][j];
 
 					
 					

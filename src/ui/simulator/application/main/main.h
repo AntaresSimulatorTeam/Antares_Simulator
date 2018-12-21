@@ -40,35 +40,35 @@
 # include <ui/common/component/frame/local-frame.h>
 
 const Yuni::String ANTARES_ONLINE_ACTIVATION_KEY = "-----BEGIN LICENSE ACTIVATION KEY-----\n\
-KhdzHc1K+qf48oQE6WVxMAhdazfLoHAEDBFdmLAUFhDYmHc6Sh7f6mpDlyeiwX63R5bk4vfhaFkDOot+h\n\
-GrDshZD/PJk/1z/6f8SCnbbX0G8qZu88VqscnI2AXBvBSY39G8ZYo/Qy41gJZdEQgG/mPksc/O3o5pMW+\n\
-Y9xy6sofg=-uWL3Qn9+Q2liZzCxiLDCePf0efIGizgdQvwveQsNIPiBgvkpntg1/4LHz8JZFNKbg4VXkM\n\
-PV7NB3Ad1VGD25mpvTyCIpwS7CEVHOJm7th0nRfNlaQugAqv4bBbPVpiCC+E60cwzeGDvzzd+gl/7dwE2\n\
-YE/XwAgX/RIfwJwsP4u8EC81gVOWtBfxhW1zAOdmtcYmooBXJ2haUMaOBrJqd+xPEKid+/OkJJ0jgtYNv\n\
-S7g3o2kxID2FwwSK8sB78DZtQqD738OWzB9jAi7Yxw486mwMsaOQzsF1ShPzsnR9T/qcUsX7DN9kpzUn/\n\
-b/M86nn6ZyNEoNb4l0BLIXQdwm41F2j9PdoExymkpep38bloYKdM2M6tOZ0576YBh8HHA9L9IBqg2zsUw\n\
-QjLxwcpD7nLq9/y9UUxUdQ2VQqGoPqBztO8dTMTtLK1QTNNYGftK/nuViPnfYJlX2GhBj53uhqz39IkjR\n\
-0ejnMjSvabTjZgyhn6fGTz1Cg3N3jayiOBc4n3tuQo0V/QPXuxeZYSkWQn7b9C9Cz6io/moBzJQiVFaX0\n\
-qrvXvCQvvUhiMIOjrIYxbuRxfYiujVc6dQtp8BF8rwc/e3d5TCeJQARDpRKeQ1DnYveTqiOU4a6T5mCMy\n\
-blGExhFzozsO8B/thIJ3gXk+7mVRceHIMTop81klggNqXIvD/jGGHok8iWWlNgTI/TWlzgpb/yPjCSCE0\n\
-6r3b+Gog+hjjoIyFMih2v6FYf8xw8ZVBxjSFlY3cGze5uKuq4JMGkZTy3pjnOP1wur9CUuSw2u3qSehAt\n\
-CfIlrj0ktJLHOUkxjS0cLRA==\n\
+Hm5bXP8aFA5iitO1onfoX5QYRI94okjAPfyw7i6WTtM4CpV/ykRkcJTpch1+LIG6TeOPJDtLy6aIV1w17\n\
+lQ9S6XKNrMV87lUiBXKVjp8H0YAtpSUVgHRNUtHePC2gOR1ezX9srQAAwHXmZ+ZVx9EHVkqjf0hooRDE0\n\
+DY9FtrSVM=-4iPNFCCcneOcebARQMvUeTIztV0oGU4mEnEMFvbYUrMKoyIa9HUewLBFj7ZtY5pOUAwMft\n\
+5ImEN/vZDIm4VctD5f+ZR+mmghrJgsFpLXDeO3LAVvI+YeTWVMYC138t/+TgKQfUXx162rLfbCsrH8Hlh\n\
+z3pZWP4L62MnE3XpoQeQpO3pPXJsw8ZHb0/jYroDm8HtOSH9vWWR2zJ4bQ+r5b8Rnae92kPB6m+9rBC4A\n\
+Kiwq7Mls6iIkLDvl0q2cwQfE3ytITyyAlABDtUwo7gLePnirRiXvq9KBfgQxkypj0z/bpmjnsKXK1yttP\n\
+YG3Aa3J7WZtJdWluLlgJfYsfoS4idW+09HBXDDQIHZ3cGqLUjE75O6KPp31Nn6N0+nttc4ZDdxT2O//Oj\n\
+VX8WmTOE7GqkYv6/vnkldJKZ9ecV9yzmquLa1k03oNJRLEsB1gk6jZq/SpUbw/+uhOY4IwEoTIdWSt3YD\n\
+SkCa8RRKT76CkRCw2TgrbaLJ7H4+ZmnJnX2jcqIPlbamhRh/kbyZojmbXdrGp2/I4CwqFtPDUew7dEIdG\n\
+2WmnotLzSGI80uzWlimGAoxRYPJmVM/AVTCVUiXvKEzUYvMaUwec0Lav24GTYwipdTRl0K46CpLSoHW6V\n\
+pRkg9bSUOhVjUSoblBtfC1SKazqiFNDndHiIZSPf1nYEODygq9dS6Udg0M6YW3OJ9DK4UPdw53QJyTsf5\n\
+QvdBODf+RkenwLeNrkfNtTQnBRKPuyQn4LEdtcjbgpUYtQIzAYCK05BsatikIZjgC7qBwWvn8D5owyTt8\n\
+Eeh3c3YNJkvzLcyVgr8bH3Q==\n\
 -----END LICENSE ACTIVATION KEY-----";
 
 const Yuni::String ANTARES_OFFLINE_ACTIVATION_KEY = "-----BEGIN LICENSE ACTIVATION KEY-----\n\
-GERrD6Ah7M0lVgkYfmz+7XMMIt/nz6E/E5LIt+uncPR602dcf4cGUL+IdIY1u/tHhWC1/DtB4tEA2D4w+\n\
-2OD7I9/7Q4Jv6WsWSx0BJ0DKny14ut3wlTP2knuPe8o1g9f3At5jIgunUUY/V0pNqp+Dy+++TVjmfEPyz\n\
-hoBNQkknI=-a0RdEEk5vJ18zS1hzrkv8q9I7ouze18nmjzTB/ZKNP9fKLjjdmMW7TuzKmd7lvCJ521zAC\n\
-kmlPSsc2Oa8dxFvgYgFhWUwpp+8dznN2mBpe4Hrq/qmJLSWKIJA3aXcR5p17wzVqIy8kurbAXf0tNmsX4\n\
-1gMqGHwMl9XkSEfq1ZQ4clhlCUgkuoxtbYJv5/bGK5/h6nJRNQ/m+V/DknewulPUTnzM0+8LGJ+wHDnJA\n\
-wy/Pens0bp9mamctFTA18n0phng3WsWSMNNPjqMfKWpna5Ki8PExeNBwIP+wsGBYvMbFAuKaQH2P05tF5\n\
-xZSjIyYQ9W7s8/Gl0H5i6uYXWcynQkKKfzmt6ZvvQK5P9qiKM2ZkrjxlZyZs88xPphvX5XJs95+rXkOv9\n\
-xeppmOd5orhcnikpokaW7gU42KVCHnNQDLYBg+tleZLbk9MG6aVtUnN595dMNbWBef4XPEILXYOPlOcrm\n\
-J/Et07vXlS56c+a565/gmtVHH1uV0HYzGR9Xl8u+tfNsNSMIfCW0tkpMZRPvR40Y0F0r7BTCGqBGRQxfg\n\
-Qln78nU5TJsLwB9ScNJ3rUgtXJGNMsopb9m733OK46MBMQJZ8wD7RyO4PoMsp9RoETtsboOUDffALK1gL\n\
-E+3yjDOtDN/8RfX5MspJXNYRaSP/1jcdi5m0maGhEOH38BCXlPpuCU6FpgDYvgFCoQdt9xYmiOr7Z2iOH\n\
-SHC5SBp/02W98nCrSK7uUTxjzu621RnNBdhGNAXupG2JLyuNAxVB0Vm7OjiExUmcDVpiXcbCigPFIY58p\n\
-aYykG4lePPY4AbI7BBeSTVQ==\n\
+phHph3BZQBDRCyGBbzGgo9SkZCXIa30tjunKlOxpR/HzlZxAKbeoVaPEhBna36jCAsP2aQXmoO/l4tkCP\n\
+Qi6OZu+CMbLWx7CPLJ/cEHowWyOYUsjT5HYLuPileNim5AgSG8NLm8StML3Rfgb18/o5nZyU3h+5HDwL0\n\
+qfPT8btD0=-IDOU7I2VvaAYYjn/5SEodSxzJDvpDDXIlNIyJhRiHdV62WpSe3lsXeCqFK1rsa8EYgKO62\n\
+djpTAcoBmxFp4JS+thr2MiwmCL0HfwwVdGxslUo9PKyN2IJdQSj6dQxhw0OjMbH8KL+VaCtaGC/H0LrIg\n\
+7QK0NpgkAnXCBYJlEmzmR52G0UvQCQrYDoO1cSiP3Ys8NWvNwHPrNx8vhIgQurRKIQr6smrtx6ADsGkIO\n\
+/6fO0wQF656lFsOrj11DxAnDzuPgK3KD7nuLeW8KfksYYqGoH49ccdN6oVSIpxu6xU5MDZZHoRoLlNHR8\n\
+GyMb2bZgvTbbJlVNHQPjezH6GOlT8laNPu9P6RzTwHVFvUCatzkr64/7llracgyucFQX/w/ohab7gO9qx\n\
+/6TFda7lGvaU25o36wOGakItdgJzozqJLUxQpz3Fi0mkyUvYAnoLEnjKTd3+EdLNj7oEe9+rqn7qKFVS3\n\
+rXetekvRafVtzpEE/if6QKRKsNcQHFNcOqqZrY4fRsX5PiOwOWKSmFXfkdfpglwXGHH/+xSAc6gAn1ffy\n\
+BYsUhJyOGTNTeuvTklIdjHABRkW2N1t9bl4V7M+7qI59MrXUXFQggF6aoGz7SN47EEqVLBNOHsN8WnL2O\n\
+QW417K8+3+ppwvsQ3Crjj80JCxhLKFlKrZDMFxDqCQcLX/Quu8GIdWPeXAfsP7R46314IgJSQMV0wvgad\n\
+29q5KIZybY0VBljd19vltMwProVN8GjuAAnIcPJMVILb7/c5atdtjujv4KJMBqapcSoBPTEy+vnIYsG5c\n\
++dc/ol2V8wECt+6R85vecug==\n\
 -----END LICENSE ACTIVATION KEY-----";
 
 namespace Antares
@@ -205,6 +205,9 @@ namespace Forms
 		void loadUserNotes();
 		void saveUserNotes();
 
+		void loadSets();
+		void saveSets();
+
 		//! Save the study
 		void saveStudy();
 		//! Save the study as...
@@ -289,6 +292,13 @@ namespace Forms
 		** \param filename A filename which contains all required informations for the analyzer
 		*/
 		void launchAnalyzer(const Yuni::String& filename);
+
+		/*!
+		** \brief Launch the processor
+		**
+		** \param filename A filename which contains all required informations for the constraints builder
+		*/
+		void launchConstraintsBuilder(const Yuni::String& filename);
 
 
 		//! \name Extras
@@ -400,7 +410,6 @@ namespace Forms
 
 		void setGDPRStatus(bool checkOnline);
 
-
 		//! Prepare the icon file to use for study folders
 		void prepareStudyIconFile();
 
@@ -464,6 +473,8 @@ namespace Forms
 		void createNBScenarioBuilder();
 		//! Create output viewer
 		void createNBOutputViewer();
+		//! Create the page about the sets of the study
+		void createNBSets();
 		//@}
 
 
@@ -568,6 +579,9 @@ namespace Forms
 
 		void evtOnRunTSAnalyzer(wxCommandEvent& evt);
 		void evtOnRunTSAnalyzerDelayed();
+
+		void evtOnRunConstraintsBuilder(wxCommandEvent& evt);
+		void evtOnRunConstraintsBuilderDelayed();
 		//@}
 
 		//! \name Event: Menu: Tools
@@ -580,6 +594,8 @@ namespace Forms
 		//@{
 		//! Event: Temp folder
 		void evtOnOptionsTempFolder(wxCommandEvent& evt);
+		//! MC districts
+		void evtOnOptionsDistricts(wxCommandEvent& evt);
 		//! MC Playlist
 		void evtOnOptionsMCPlaylist(wxCommandEvent& evt);
 		//! MC Scenario Builder
@@ -606,14 +622,20 @@ namespace Forms
 		void evtOnHelpAbout(wxCommandEvent& evt);
 		//! Event: PDF General Reference guide
 		void evtOnHelpPDFGeneralReferenceGuide(wxCommandEvent& evt);
+		//! Event: PDF Optimization problems formulation
+		void evtOnHelpPDFOptimizationProblemsFormulation(wxCommandEvent& evt);
 		//! Event: PDF System Map Editor Reference guide
 		void evtOnHelpPDFSystemMapEditorReferenceGuide(wxCommandEvent& evt);
+		//! Event: PDF Examples library
+		void evtOnHelpPDFExamplesLibrary(wxCommandEvent& evt);
+		
 
 		void evtOnHelpContinueOnline(wxCommandEvent& evt);
 
 		void evtOnHelpContinueOffline(wxCommandEvent& evt);
 
 		void evtOnShowID(wxCommandEvent &);
+
 		//@}
 
 		//! \name Menu event
@@ -649,6 +671,8 @@ namespace Forms
 		void evtOnCleanStudyFolder(wxCommandEvent& evt);
 
 		void evtLaunchAnalyzer(wxCommandEvent& evt);
+
+		void evtLaunchConstraintsBuilder(wxCommandEvent& evt);
 
 		void onMouseMoved(wxMouseEvent& evt);
 
@@ -762,6 +786,9 @@ namespace Forms
 
 		//! User notes
 		Window::Notes* pUserNotes;
+
+		//! Districts
+		Window::Sets* pSets;
 
 		//! Lazy creation of components for the main notebook
 		bool pMainNotebookAlreadyHasItsComponents;

@@ -1,6 +1,6 @@
 This file describes the development roadmap leading from Antares_Simulator 6.0.0
 (released: Summer 2018) to Antares_Simulator 7.0.0 (expected: winter 2018/2019).
-
+ 
 a) Enhancement of the perimeter of binding constraints:
 
 Since from their first apparition in Antares_Simulator, so-called

@@ -61,6 +61,8 @@ namespace Data
 		//! Standard iterators from the STL (const)
 		typedef typename MapType::const_iterator const_iterator;
 
+		
+
 		enum RuleType
 		{
 			ruleNone = 0,
@@ -201,6 +203,8 @@ namespace Data
 
 		uint size() const;
 
+
+
 		void rebuildIndexes();
 
 		/*!
@@ -231,6 +235,10 @@ namespace Data
 		template<class StringT> bool loadFromFile(const StringT& filename);
 
 		template<class StringT> bool saveToFile(const StringT& filename) const;
+		/*!
+		** \brief format the string to match the options
+		*/
+		YString toString();
 
 		/*!
 		** \brief Create default groups for set of areas
@@ -264,7 +272,22 @@ namespace Data
 
 		T& operator [] (uint i);
 		const T& operator [] (uint i) const;
+/*
+		void changeTextFile(YString filename) {
+			if (IO::File::LoadFromFile(pFileContents, filename)) {
+				pFileContents = NULL;
+			}
+		}
 
+		YString getFileContents() {
+			if (pFileContents!=NULL) {
+				YString ret;
+				ret << pFileContents;
+				return ret;
+			}
+			else return NULL;
+		}
+		*/
 	private:
 		//! All groups
 		MapType pMap;

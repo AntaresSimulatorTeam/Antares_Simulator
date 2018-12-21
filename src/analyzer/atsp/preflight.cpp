@@ -116,7 +116,6 @@ namespace Antares
 		logs.info() << "Coefficients: area " << (1+areaIndex) << '/' << pArea.size()
 			<< ": " << info.name;
 
-
 		// Reading the matrix file for the current area
 		Matrix<> MTRX;
 		if (!MTRX.loadFromCSVFile(info.filename, 1, pMHeight, Matrix<>::optImmediate))
@@ -203,14 +202,24 @@ namespace Antares
 				Colonne_moyenne(buffer_p, SERIE_P, durmois[j], NBS);
 				const double expect = Moyenne_generale(buffer_p, durmois[j]);
 				double ratios[24];
-
-				for (uint n = 0; n < 24; ++n)
+				if (abs(expect) > 0.001)  // average of absolute values over all series is actually different from zero
 				{
-					double d  = 0;
-					for (uint m = 0; m < lonmois[j]; ++m)
-						d += (buffer_p[24 * m + n] / lonmois[j]);
-					ratios[n] = d / expect;
+					for (uint n = 0; n < 24; ++n)
+					{
+						double d = 0;
+						for (uint m = 0; m < lonmois[j]; ++m)
+							d += (buffer_p[24 * m + n] / lonmois[j]);
+						ratios[n] = d / expect;
+					}
 				}
+				else
+				{
+					for (uint n = 0; n < 24; ++n)
+					{
+						ratios[n] = 1.;
+					}
+				}
+
 				modulation.pasteToColumn(j, ratios);
 
 				// il faut normaliser les series avant de les reecrire
@@ -311,28 +320,31 @@ namespace Antares
 					// les correlations de chaque paire (buffer_n, buffer_q)
 					// pour chacune des NBS séries contribuent à la corrélation (X0,X0+n)*/
 					//
-					// 20/07/2010 : on inhibe le calcul de AUTO_ESTIM1 car toujours moins bon
-					//   que ESTIM2 dans sa formulation actuelle
+					// NOTE: autocorrelation theta can be assessed either with:
+					// AUTOESTIM1 
+					// AUTOESTIM2 
+					// in this code AUTOESTIM2 is used in all cases 
 
 					// xx = Correlation(buffer_p,buffer_q,durmois[j]-(n+1),moments_centr[i][j][0],moments_centr[i][j][0],moments_centr[i][j][1],moments_centr[i][j][1],1);
 					double yy = Correlation(buffer_p, buffer_q, durmois[j] - (n + 1), 0, 0, 0, 0, 0);
 					//	AUTO_ESTIM1[n] += xx/NBS;
 					AUTO_ESTIM2[n] += yy / NBS;
 				}
+				
+			}
+			// time-series may include negative auto-correlation 
+			for (uint n = 1; n < PRA; ++n)
+			{
+				if (AUTO_ESTIM2[n] < 1. / 1000000.) AUTO_ESTIM2[n] = 0.000001;
 			}
 
-
-			// identification de theta et mu.
-			// On tient compte de HOR si on n'analyse pas une loi normale
+			// assessment of theta and mu
+			// ignore HOR if variable type is not "Normal"
+		
 			if (info.distribution != Data::XCast::dtNormal)
 				Analyse_auto(AUTO_ESTIM2, PRA, AUC, AUM, (double)HOR, stocha[4], stocha[5]);
 			else
 				Analyse_auto(AUTO_ESTIM2, PRA, AUC, AUM, 0,           stocha[4], stocha[5]);
-
-			// On constate que ESTIM2 conduit à surévaluer theta, on corrige le biais
-			// avec une fonction empirique
-			if (stocha[4] > 0.002)
-				stocha[4] -= 0.04 * sqrt(stocha[4]);
 
 			// si mu>1 il faut majorer l'ecart-type observe  sur les valeurs lissees
 			// pour remonter a l'ecart-type des valeurs des series non-lissees

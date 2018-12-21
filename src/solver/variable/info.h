@@ -131,7 +131,7 @@ namespace Variable
 
 
 		template<class VCardT, class U>
-		static void ComputeStatistics(U& intermediateValues, uint year)
+		static void ComputeStatistics(U& intermediateValues)
 		{
 			for (uint i = 0; i != ColumnCountT; ++i)
 			{
@@ -143,7 +143,7 @@ namespace Variable
 				else
 				{
 					if (VCardT::spatialAggregatePostProcessing == (int)Category::spatialAggregatePostProcessingPrice)
-						intermediateValues[i].computePriceStatisticsForTheCurrentYear();
+						intermediateValues[i].computeAVGstatisticsForCurrentYear();
 					else
 						intermediateValues[i].computeStatisticsForTheCurrentYear();
 				}
@@ -305,7 +305,7 @@ namespace Variable
 
 
 		template<class VCardT, class U>
-		static void ComputeStatistics(U& intermediateValues, uint year)
+		static void ComputeStatistics(U& intermediateValues, Type& container, uint year)
 		{
 			for (uint i = 0; i != container.size(); ++i)
 			{
@@ -318,7 +318,7 @@ namespace Variable
 					// Compute all statistics for the current year (daily,weekly,monthly)
 					if (VCardT::spatialAggregatePostProcessing == (int)Category::spatialAggregatePostProcessingPrice)
 						//intermediateValues[i].adjustValuesWhenRelatedToAPrice();
-						intermediateValues[i].computePriceStatisticsForTheCurrentYear();
+						intermediateValues[i].computeAVGstatisticsForCurrentYear();
 					else
 						intermediateValues[i].computeStatisticsForTheCurrentYear();
 				}
@@ -463,7 +463,7 @@ namespace Variable
 
 
 		template<class VCardT, class U>
-		static void ComputeStatistics(U& intermediateValues, uint year)
+		static void ComputeStatistics(U& intermediateValues)
 		{
 			if (VCardT::spatialAggregate & Category::spatialAggregateOr)
 			{
@@ -474,7 +474,7 @@ namespace Variable
 				// Compute all statistics for the current year (daily,weekly,monthly)
 				if (VCardT::spatialAggregatePostProcessing == (int)Category::spatialAggregatePostProcessingPrice)
 					//intermediateValues[i].adjustValuesWhenRelatedToAPrice();
-					intermediateValues.computePriceStatisticsForTheCurrentYear();
+					intermediateValues.computeAVGstatisticsForCurrentYear();
 				else
 					intermediateValues.computeStatisticsForTheCurrentYear();
 			}

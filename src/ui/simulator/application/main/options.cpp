@@ -52,6 +52,15 @@ namespace Forms
 			Dispatcher::GUI::CreateAndShowModal<Window::Options::MCPlaylist>(this);
 	}
 
+	void ApplWnd::evtOnOptionsDistricts(wxCommandEvent&)
+	{
+		Forms::Disabler<ApplWnd> disabler(*this);
+		if (Data::Study::Current::Valid())
+		{
+			assert(NULL != pNotebook);
+			pNotebook->select("sets");
+		}
+	}
 
 	void ApplWnd::evtOnOptionsMCScenarioBuilder(wxCommandEvent&)
 	{

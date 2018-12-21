@@ -412,7 +412,7 @@ namespace Window
 		}
 	}
 
-	void ExportMap::ensureUniqueFileName(Yuni::String& folderPath)
+	void ExportMap::ensureUniqueFileName(Yuni::String folderPath)
 	{
 		// Ensure unique name for file -- begin
 		String baseMapFileName, currentMapName;

@@ -210,6 +210,9 @@ namespace Private
 	SurveyResultsData::SurveyResultsData(const Data::Study& s, const String& o, uint year) :
 		time("Survey report"),
 		columnIndex((uint) -1),
+		resLvlColRetrieved(false),
+		waterValColRetrieved(false),
+		ovfColRetrieved(false),
 		thermalCluster(nullptr),
 		area(nullptr),
 		link(nullptr),
@@ -421,8 +424,14 @@ namespace Variable
 
 	template<class StringT, class ConvertT, class PrecisionT>
 	inline void
-	SurveyResults::AppendDoubleValue(uint& error, double v, StringT& buffer, ConvertT& conversionBuffer, const PrecisionT& precision)
+	SurveyResults::AppendDoubleValue(uint& error, double v, StringT& buffer, ConvertT& conversionBuffer, const PrecisionT& precision, const bool available)
 	{
+		if (!available)
+		{
+			buffer.append("\tN/A", 4);
+			return;
+		}
+		
 		if (not Math::Zero(v))
 		{
 			if (Math::NaN(v))
@@ -664,6 +673,24 @@ namespace Variable
 				assert(i < maxVariables && "i greater can not be greater than maxVariables");
 				assert(y < maxHoursInAYear && "y can not be greater than maxHoursInAYear");
 
+				if (std::find(data.ReservoirLvlColIdx.begin(), data.ReservoirLvlColIdx.end(), i) != data.ReservoirLvlColIdx.end())
+				{
+					data.fileBuffer.append("\tN/A", 4);
+					continue;
+				}
+
+				if (std::find(data.waterValuesColIdx.begin(), data.waterValuesColIdx.end(), i) != data.waterValuesColIdx.end())
+				{
+					data.fileBuffer.append("\tN/A", 4);
+					continue;
+				}
+
+				if (std::find(data.ReservoirLvlColIdx.begin(), data.ReservoirLvlColIdx.end(), i) != data.ReservoirLvlColIdx.end())
+				{
+					data.fileBuffer.append("\tN/A", 4);
+					continue;
+				}
+
 				if (Math::Zero(values[i][y]))
 				{
 					data.fileBuffer.append("\t0", 2);
@@ -764,8 +791,10 @@ namespace Variable
 			assert(not precision[x].empty() && "invalid precision");
 		# endif
 
+		std::vector<unsigned int>::iterator it;
+
 		if (fileLevel & Category::mc)
-		{
+		{			
 			// Each row
 			for (uint y = heightBegin; y < heightEnd; ++y)
 			{
@@ -778,7 +807,16 @@ namespace Variable
 				// Each column
 				assert(data.columnIndex <= data.matrix.width);
 				for (uint x = 0; x != data.columnIndex; ++x)
-					AppendDoubleValue(error, data.matrix[x][y], data.fileBuffer, conversionBuffer, precision[x]);
+				{
+					if (
+						std::find(data.ReservoirLvlColIdx.begin(), data.ReservoirLvlColIdx.end(), x) != data.ReservoirLvlColIdx.end() ||
+						std::find(data.waterValuesColIdx.begin(), data.waterValuesColIdx.end(), x) != data.waterValuesColIdx.end() ||
+						std::find(data.OverflowsColIdx.begin(), data.OverflowsColIdx.end(), x) != data.OverflowsColIdx.end()
+					   )
+						AppendDoubleValue(error, data.matrix[x][y], data.fileBuffer, conversionBuffer, precision[x], false);
+					else
+						AppendDoubleValue(error, data.matrix[x][y], data.fileBuffer, conversionBuffer, precision[x], true);
+				}
 
 				// End of line
 				data.fileBuffer += '\n';
@@ -797,8 +835,16 @@ namespace Variable
 				// Each column
 				assert(data.columnIndex <= maxVariables);
 				for (uint x = 0; x != data.columnIndex; ++x)
-					AppendDoubleValue(error, values[x][y], data.fileBuffer, conversionBuffer, precision[x]);
-
+				{
+					if (
+						std::find(data.ReservoirLvlColIdx.begin(), data.ReservoirLvlColIdx.end(), x) != data.ReservoirLvlColIdx.end() ||
+						std::find(data.waterValuesColIdx.begin(), data.waterValuesColIdx.end(), x) != data.waterValuesColIdx.end() ||
+						std::find(data.OverflowsColIdx.begin(), data.OverflowsColIdx.end(), x) != data.OverflowsColIdx.end()
+					   )
+						AppendDoubleValue(error, values[x][y], data.fileBuffer, conversionBuffer, precision[x], false);
+					else
+						AppendDoubleValue(error, values[x][y], data.fileBuffer, conversionBuffer, precision[x], true);
+				}
 				// End of line
 				data.fileBuffer += '\n';
 			}

@@ -63,7 +63,7 @@ namespace Antares
 namespace Window
 {
 	
-	LicenseCoultNotConnectToInternetServer::LicenseCoultNotConnectToInternetServer(wxWindow* parent) :
+	LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(wxWindow* parent) :
 		wxDialog(parent, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize,
 			wxCLOSE_BOX|wxCAPTION|wxCLIP_CHILDREN),
 		pEditProxyHost(nullptr),
@@ -74,7 +74,7 @@ namespace Window
 	{
 		assert(parent);
 
-		
+
 		// Background color
 		wxColour defaultBgColor = GetBackgroundColour();
 		wxColour bgColor(255, 255, 255);
@@ -94,7 +94,7 @@ namespace Window
 
 		auto* titlespacer = new wxBoxSizer(wxHORIZONTAL);
 		auto* title  = Component::CreateLabel(this,
-			wxT("Impossible to connect to the internet"), false, false, +1);
+			wxT("Impossible to connect to the internet with current settings.\nPlease check or update proxy parameters to use for this location"), false, false, +1);
 		auto* subtitle  = Component::CreateLabel(this,
 			wxT("No internet access or connection controlled by local proxy.\nPlease fill out your proxy parameters to allow connection."), false, false);
 		subtitle->Enable(false);
@@ -119,6 +119,10 @@ namespace Window
 		proxySizerDiv->Add(proxySizer, 1, wxALL|wxEXPAND);
 		contentSizer->Add(proxySizerDiv, 1, wxALL|wxEXPAND);
 
+		pProxyEnabled = new wxCheckBox(this, wxID_ANY, wxT(" Activate proxy"));
+		proxySizer->Add(pProxyEnabled, 0, wxALL | wxEXPAND);
+		proxySizer->AddSpacer(15);
+
 		pFlexSizer = new wxFlexGridSizer(2, 2, 5);
 		auto* loginSizer = new wxBoxSizer(wxHORIZONTAL);
 		//loginSizer->AddSpacer(25);
@@ -139,10 +143,12 @@ namespace Window
 		auto& proxy = Antares::License::proxy;
 		// read proxy parameters from file
 		proxy.loadProxyFile();
+		pProxyEnabled->SetValue(proxy.enabled);
 		pEditProxyHost->SetValue(wxStringFromUTF8(proxy.host));
 		pEditProxyPort->SetValue(wxStringFromUTF8(proxy.port));
 		pEditProxyLogin->SetValue(wxStringFromUTF8(proxy.login));
 		pEditProxyPass->SetValue(wxStringFromUTF8(proxy.password));
+		
 		
 
 		auto* urlDiv = new wxBoxSizer(wxHORIZONTAL);
@@ -161,6 +167,7 @@ namespace Window
 
 		contentSizer->AddSpacer(40);
 
+
 		// Buttons
 		auto* panel = new Component::Panel(this);
 		panel->SetBackgroundColour(defaultBgColor);
@@ -174,11 +181,11 @@ namespace Window
 		pnlSizerBtns->AddSpacer(25);
 
 		pnlSizerBtns->AddStretchSpacer();
-		auto* pBtnValidate = Antares::Component::CreateButton(panel, wxT(" Connect "), this, &LicenseCoultNotConnectToInternetServer::onProceed);
+		auto* pBtnValidate = Antares::Component::CreateButton(panel, wxT(" Connect "), this, &LicenseCouldNotConnectToInternetServer::onProceed);
 		pBtnValidate->SetDefault();
 
 
-		auto* pBtnCancel = Antares::Component::CreateButton(panel, wxT(" Cancel "), this, &LicenseCoultNotConnectToInternetServer::onClose);
+		auto* pBtnCancel = Antares::Component::CreateButton(panel, wxT(" Cancel "), this, &LicenseCouldNotConnectToInternetServer::onClose);
 
 		pnlSizerBtns->Add(pBtnCancel, 0, wxALL|wxEXPAND);
 		pnlSizerBtns->AddSpacer(5);
@@ -190,9 +197,10 @@ namespace Window
 
 		// refresh
 		Connect(GetId(), wxEVT_MOTION,
-			wxMouseEventHandler(LicenseCoultNotConnectToInternetServer::onInternalMotion), NULL, this);
+			wxMouseEventHandler(LicenseCouldNotConnectToInternetServer::onInternalMotion), NULL, this);
 
-
+		pProxyEnabled->Connect(pProxyEnabled->GetId(), wxEVT_COMMAND_CHECKBOX_CLICKED,
+			wxCommandEventHandler(LicenseCouldNotConnectToInternetServer::evtToggleUseProxy), nullptr, this);
 
 		SetSizer(sizer);
 		sizer->Layout();
@@ -201,33 +209,35 @@ namespace Window
 		sizer->Fit(this);
 		Centre(wxBOTH);
 
+		toggleProxySettings();
+
 	}
 
 
-	LicenseCoultNotConnectToInternetServer::~LicenseCoultNotConnectToInternetServer()
+	LicenseCouldNotConnectToInternetServer::~LicenseCouldNotConnectToInternetServer()
 	{
 		//MakeModal(false);
 		Component::Spotlight::FrameClose();
 	}
 
 
-	void LicenseCoultNotConnectToInternetServer::onClose(void*)
+	void LicenseCouldNotConnectToInternetServer::onClose(void*)
 	{
 		Dispatcher::GUI::Close(this);
 	}
 
 
-	void LicenseCoultNotConnectToInternetServer::onInternalMotion(wxMouseEvent&)
+	void LicenseCouldNotConnectToInternetServer::onInternalMotion(wxMouseEvent&)
 	{
 		Component::Panel::OnMouseMoveFromExternalComponent();
 	}
 
 
-	void LicenseCoultNotConnectToInternetServer::onProceed(void*)
+	void LicenseCouldNotConnectToInternetServer::onProceed(void*)
 	{
 		auto& proxy = Antares::License::proxy;
 		// update proxy value
-		proxy.enabled = true;
+		proxy.enabled = pProxyEnabled->GetValue();
 		if (proxy.enabled)
 		{
 			wxStringToString(pEditProxyHost->GetValue(), proxy.host);
@@ -240,13 +250,15 @@ namespace Window
 		::wxBeginBusyCursor();
 
 		// check if the proxy is correct
-		if(!proxy.check())
+		if(!proxy.check() && proxy.enabled)
 		{
 			logs.error() << "Incorrect or missing proxy settings, please check your proxy settings";
 			::wxEndBusyCursor();
 			return;
 		}
 
+		//save parameters in the file
+		proxy.saveProxyFile();
 		// if check license on the server failed
 		if(not Antares::License::CheckOnlineLicenseValidity(Data::versionLatest, true))
 		{
@@ -260,7 +272,6 @@ namespace Window
 
 			// dispaly error message
 			Antares::Window::Message message(this, wxT(""),
-				//wxT("Error with the license Server"),
 				wxType,
 				wxMessage,
 				"images/misc/error.png");
@@ -271,8 +282,7 @@ namespace Window
 			return;
 		}
 
-		//save parameters in the file
-		proxy.saveProxyFile();
+		
 
 		::wxEndBusyCursor();
 
@@ -284,12 +294,45 @@ namespace Window
 	}
 
 
-	
+	void LicenseCouldNotConnectToInternetServer::toggleProxySettings()
+	{
+		// show poxy parameters
+		bool hasProxy = pProxyEnabled->GetValue();
+
+		pEditProxyHost->Show(hasProxy);
+		pEditProxyPort->Show(hasProxy);
+		pEditProxyLogin->Show(hasProxy);
+		pEditProxyPass->Show(hasProxy);
+
+		pLblProxyHost->Show(hasProxy);
+		pLblProxyPort->Show(hasProxy);
+		pLblProxyLogin->Show(hasProxy);
+		pLblProxyPass->Show(hasProxy);
+
+		auto* sizer = pLblProxyHost->GetSizer();
+		if (sizer)
+			sizer->Layout();
+		sizer = pLblProxyLogin->GetSizer();
+		if (sizer)
+			sizer->Layout();
+
+		pFlexSizer->Layout();
+
+		auto* mainsizer = GetSizer();
+		if (mainsizer)
+			mainsizer->Layout();
+	}
+
+
+	void LicenseCouldNotConnectToInternetServer::evtToggleUseProxy(wxCommandEvent&)
+	{
+		toggleProxySettings();
+	}
 
 
 
 
-	bool LicenseCoultNotConnectToInternetServer::canceled() const
+	bool LicenseCouldNotConnectToInternetServer::canceled() const
 	{
 		return pCanceled;
 	}

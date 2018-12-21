@@ -21,7 +21,7 @@ In May 2018 RTE decided to relicense the project under the GPLv3 license.
 Links:
 ======
 
-The Antares web site. . . . https://antares.rte-france.com/
+The Antares web site. . . . https://antares-simulator.org
 Support . . . . . . . . . . To do
 Forums  . . . . . . . . . . To do
 Wiki  . . . . . . . . . . . To do

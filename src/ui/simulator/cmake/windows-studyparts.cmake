@@ -10,8 +10,16 @@ set(SRC_UI_WINDOWS_STUDYPARTS
 		windows/hydro/series.cpp
 		windows/hydro/prepro.h
 		windows/hydro/prepro.cpp
+		windows/hydro/dailypower.h
+		windows/hydro/dailypower.cpp
 		windows/hydro/allocation.cpp
 		windows/hydro/allocation.h
+		windows/hydro/localdatahydro.h
+		windows/hydro/localdatahydro.cpp
+		windows/hydro/management.h
+		windows/hydro/management.cpp
+		windows/hydro/levelsandvalues.h
+		windows/hydro/levelsandvalues.cpp
 		windows/thermal/cluster.h
 		windows/thermal/cluster.cpp
 		windows/thermal/panel.h

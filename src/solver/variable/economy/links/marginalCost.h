@@ -69,7 +69,7 @@ namespace Economy
 			//! Indentation (GUI)
 			nodeDepthForGUI = +0,
 			//! Decimal precision
-			decimal = 0,
+			decimal = 2,
 			//! Number of columns used by the variable (One ResultsType per column)
 			columnCount = 1,
 			//! The Spatial aggregation
@@ -248,6 +248,15 @@ namespace Economy
 		{
 			pValuesForTheCurrentYear[numSpace][state.hourInTheYear] =
 				Yuni::Math::Abs(state.problemeHebdo->VariablesDualesDesContraintesDeNTC[state.hourInTheWeek]->VariableDualeParInterconnexion[state.link->index]);
+
+			// This value should be reset to zero if  (flow_lowerbound) < flow < (flow_upperbound)  (with signed values)
+			double flow = state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]->ValeurDuFlux[state.link->index];
+			double flow_lowerbound = -state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]->ValeurDeNTCExtremiteVersOrigine[state.link->index];
+			double flow_upperbound = state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]->ValeurDeNTCOrigineVersExtremite[state.link->index];
+
+			if (flow - 0.001 > flow_lowerbound && flow + 0.001 < flow_upperbound)
+				pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 0.;
+		
 			// Next item in the list
 			NextType::hourForEachLink(state, numSpace);
 		}

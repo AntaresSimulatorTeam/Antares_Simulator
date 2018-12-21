@@ -96,7 +96,7 @@ namespace Container
 			static void buildSurveyResults(const L& list, S& results)
 			{
 				// Exporting data for the current state
-				list.buildSurveyResults<S, CDataLevel, CFile>(results);
+				list.template buildSurveyResults<S, CDataLevel, CFile>(results);
 				// Go to the next status
 				BrowseAllVariables<NextT, nextDataLevel, nextFileLevel>::template buildSurveyResults<L,S>(list, results);
 			}
@@ -114,7 +114,7 @@ namespace Container
 			static void buildSurveyResults(const L& list, S& results)
 			{
 				// Exporting data for the current state
-				list.buildSurveyResults<S, Category::maxDataLevel, Category::maxFileLevel>(results);
+				list.template buildSurveyResults<S, Category::maxDataLevel, Category::maxFileLevel>(results);
 				// This is the final available state
 			}
 		};
@@ -142,6 +142,17 @@ namespace Container
 					RunGlobalResults(list, results);
 				else
 					RunAnnual(list, results, numSpace);
+
+				// Resetting tools for special printings of some variables
+				// ... Reservoir levels
+				results.data.ReservoirLvlColIdx.clear();
+				results.data.resLvlColRetrieved = false;
+				// ... water values
+				results.data.waterValuesColIdx.clear();
+				results.data.waterValColRetrieved = false;
+				// ... Overflows
+				results.data.OverflowsColIdx.clear();
+				results.data.ovfColRetrieved = false;
 
 				// The survey type
 				typedef SurveyReportBuilderFile<GlobalT, NextT, CDataLevel, nextFileLevel> SurveyRBFileType;
@@ -248,10 +259,35 @@ namespace Container
 					// Digest: Summary for All years
 					logs.debug() << " . Digest, annual";
 
+					// Digest file : areas part
 					list.buildDigest(results, Category::digestAllYears, Category::area);
 					results.exportDigestAllYears();
+
+					// Resetting tools for special printings of some variables :
+					// ... Reservoir levels
+					results.data.ReservoirLvlColIdx.clear();
+					results.data.resLvlColRetrieved = false;
+					// ... Water values
+					results.data.waterValuesColIdx.clear();
+					results.data.waterValColRetrieved = false;
+					// ... Overflows
+					results.data.OverflowsColIdx.clear();
+					results.data.ovfColRetrieved = false;
+
+					// Degest file : districts part
 					list.buildDigest(results, Category::digestAllYears, Category::setOfAreas);
 					results.exportDigestAllYears();
+					// Resetting tools for special printings of some variables :
+					// ... Reservoir levels
+					results.data.ReservoirLvlColIdx.clear();
+					results.data.resLvlColRetrieved = false;
+					// ... Water values
+					results.data.waterValuesColIdx.clear();
+					results.data.waterValColRetrieved = false;
+					// ... Overflows
+					results.data.OverflowsColIdx.clear();
+					results.data.ovfColRetrieved = false;
+
 
 					if (results.data.study.parameters.mode != Data::stdmAdequacyDraft)
 					{

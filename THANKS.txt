@@ -34,7 +34,12 @@ license:	EPL 2.0								https://spdx.org/licenses/EPL-2.0.html
 SPECIAL THANKS
 ==============
   
-Special thanks are due to two Authors without whom Antares_Simulator would not be what it is:
+Special thanks are due to a few Authors without whom Antares_Simulator would not be what it is:
 
-	Damien Gerard   (also developer of the libYuni library)
-	Robert Gonzalez (also author of the Sirius_Solver library) 
+	
+	Robert 		Gonzalez 	(also author of the Sirius_Solver library) 
+	Damien 		Gerard   	(also developer of the libYuni library)
+	Papa		Ndiaye		(system map editor, constraints builder, power flow physics)
+	Guillaume	Pierre 		(parallel computing, generic power storage facility modelling)
+	Sylvain		Marandon	(also author of the Antares_Data_Organizer application) 
+	Michel 		Doquet		(project initiator)

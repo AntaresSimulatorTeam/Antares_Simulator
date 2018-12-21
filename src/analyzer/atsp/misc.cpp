@@ -390,9 +390,19 @@ namespace Antares
 		if (max_mu  > 24) max_mu = 24;
 		if (max_mu == 0)  max_mu = 1;
 
+		
 		// cas ou l'autocorrelation experimentale ne decroît pas suffisamment en PRA heures
 		// il faut alors rectifier auc et aum puis TC et TM
-		if (A[nblig - 1] >= aum)
+		
+		if (A[nblig - 1] >= auc) // autocorrelation after PRA hours is higher than short-term target
+		{
+			TC = nblig - 1;
+			auc = A[TC];
+			TM = TC;
+			aum = A[TM];
+		}
+					
+		if (A[nblig - 1] > aum) // ">" instead of ">=" to differentiate from previous case 
 		{
 			TM  = nblig - 1;
 			aum = A[TM];
@@ -400,17 +410,37 @@ namespace Antares
 			auc = A[TC];
 		}
 
-		// cas ou les valeurs de auc et aum ont ete mal choisies
-		if (TC == TM) TC = TM - 1;
-		if (TC <= 0)  TC = 1;
-		if (TM <= 1)  TM = 2;
+		// must enforce max_mu=1 in the case auc=aum
+		if (auc == aum) max_mu = 1;
+
+
+		// case where auc,aum lead to close values for TC ,TM
+		if (aum < auc)
+		{
+			if (TC == TM) TC = TM - 1;
+			if (TC <= 0)  TC = 1;
+			if (TM <= 1)  TM = 2;
+		}
+		if (aum == auc && TC <= 0)
+		{
+			TC = 1; 
+			TM = 1;
+		}
 
 		// cas particulier ou l'autocorrelation est constante : on retourne
 		// directement theta =0 mu=1
-		if (A[TC] == A[TM])
+	    // if (A[TC] == A[TM]) no longer correct if TC = TM is allowed 
+		if (A[TC] == A[TM] && TC != TM)
 		{
 			theta = 0.;
 			mu    = 1.;
+			return;
+		}
+		//special case : auc=aum
+		if (auc == aum)
+		{
+			theta = -log(A[TC]) / TC;
+			mu = 1;
 			return;
 		}
 

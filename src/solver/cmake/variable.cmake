@@ -3,6 +3,7 @@
 
 set(SRC_VARIABLE
 		variable/variable.h
+		variable/variable.hxx
 		variable/info.h
 		variable/container.h
 		variable/container.hxx
@@ -124,6 +125,12 @@ set(SRC_VARIABLE_ECONOMY
 		variable/economy/overallCost.h
 		variable/economy/nonProportionalCost.h
 		variable/economy/hydrostorage.h
+		variable/economy/pumping.h
+		variable/economy/reservoirlevel.h
+		variable/economy/inflow.h
+		variable/economy/overflow.h
+		variable/economy/waterValue.h
+		variable/economy/hydroCost.h
 		variable/economy/unsupliedEnergy.h
 		variable/economy/spilledEnergy.h
 		variable/economy/dispatchableGeneration.h
@@ -139,6 +146,7 @@ set(SRC_VARIABLE_ECONOMY
 		# Links
 		variable/economy/links/flowLinear.h
 		variable/economy/links/flowLinearAbs.h
+		variable/economy/links/loopFlow.h
 		variable/economy/links/flowQuad.h
 		variable/economy/links/hurdleCosts.h
 		variable/economy/links/congestionFee.h

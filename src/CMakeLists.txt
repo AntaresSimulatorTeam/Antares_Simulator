@@ -2,7 +2,7 @@ project(antares)
 cmake_minimum_required(VERSION 2.8)
 
 # Version
-set(ANTARES_VERSION_HI	      6)
+set(ANTARES_VERSION_HI	      7)
 set(ANTARES_VERSION_LO	      0)
 set(ANTARES_VERSION_REVISION  0)
 set(ANTARES_VERSION_YEAR      2018)
@@ -13,7 +13,6 @@ set(ANTARES_WEBSITE	   	   "https://antares.rte-france.com")
 # Beta release
 set(ANTARES_BETA 0)
 #set(ANTARES_RC 1)
-
 
 
 

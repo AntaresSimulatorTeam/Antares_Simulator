@@ -56,7 +56,7 @@ namespace Renderer
 
 	int HydroPrepro::width() const
 	{
-		return Data::PreproHydro::hydroPreproMax + 3 /* reservoir levels*/;
+		return Data::PreproHydro::hydroPreproMax/* + 3 reservoir levels*/;
 	}
 
 
@@ -70,14 +70,11 @@ namespace Renderer
 	{
 		switch (colIndx)
 		{
-			case 0: return wxT(" Expectation \n(GWh)");
-			case 1: return wxT(" Std Deviation \n(GWh)");
-			case 2: return wxT("   Min.   \n(GWh)");
-			case 3: return wxT("   Max.   \n(GWh)");
+			case 0: return wxT(" Expectation \n(MWh)");
+			case 1: return wxT(" Std Deviation \n(MWh)");
+			case 2: return wxT("   Min.   \n(MWh)");
+			case 3: return wxT("   Max.   \n(MWh)");
 			case 4: return wxT(" ROR Share ");
-			case 5: return wxT(" Level low \n (%) ");
-			case 6: return wxT(" Level avg \n (%) ");
-			case 7: return wxT(" Level high \n (%) ");
 			default : return wxEmptyString;
 		}
 		return wxEmptyString;
@@ -86,7 +83,7 @@ namespace Renderer
 
 	wxString HydroPrepro::cellValue(int x, int y) const
 	{
-		if (x >= 5 && x < 8)
+	/*	if (x >= 5 && x < 8)
 		{
 			if (!pArea)
 				return wxString();
@@ -95,14 +92,13 @@ namespace Renderer
 			return ((uint) x < matrix.width && (uint) y < matrix.height)
 				? DoubleToWxString(100. * matrix[x][y])
 				: wxString();
-		}
+		}*/
 		return MatrixAncestorType::cellValue(x, y);
 	}
 
 
 	double HydroPrepro::cellNumericValue(int x, int y) const
-	{
-		if (x >= 5 && x < 8)
+	{/*if (x >= 5 && x < 8)
 		{
 			if (!pArea)
 				return 0.;
@@ -111,7 +107,7 @@ namespace Renderer
 			return ((uint) x < matrix.width && (uint) y < matrix.height)
 				? matrix[x][y] * 100.
 				: 0.;
-		}
+		}*/
 		return MatrixAncestorType::cellNumericValue(x, y);
 	}
 
@@ -123,7 +119,7 @@ namespace Renderer
 			return false;
 
 		// reservoir level
-		if (x >= 5 && x < 8)
+		/*if (x >= 5 && x < 8)
 		{
 			if (!pArea)
 				return false;
@@ -145,7 +141,7 @@ namespace Renderer
 				}
 			}
 			return false;
-		}
+		}*/
 		if (v < 0.)
 			return MatrixAncestorType::cellValue(x, y, "0");
 		return MatrixAncestorType::cellValue(x, y, value);
@@ -164,7 +160,7 @@ namespace Renderer
 		Renderer::ARendererArea::internalAreaChanged(area);
 		if (pPreproHydro)
 		{
-			area->hydro.reservoirLevel.invalidate(true);
+			//area->hydro.reservoirLevel.invalidate(true);
 			MatrixAncestorType::matrix(&pPreproHydro->data);
 		}
 		else
@@ -213,29 +209,6 @@ namespace Renderer
 					if (d < 0. || d > 1.)
 						return IRenderer::cellStyleError;
 					break;
-				}
-			case 5:
-			case 6:
-			case 7:
-				{
-					if (pArea)
-					{
-						uint column = col - 5;
-						auto& matrix = pArea->hydro.reservoirLevel;
-						if ((uint) row < matrix.height)
-						{
-							double d = matrix[column][row];
-							if (d < 0 || d > 1.)
-								return IRenderer::cellStyleError;
-
-							// We can use IRenderer::cellStyleWithNu... since this method
-							// as no mean to know data from hydro.reservoirLevel
-							return Math::Zero(d)
-								? ((row % 2) ? cellStyleDefaultAlternateDisabled : cellStyleDefaultDisabled)
-								: ((row % 2) ? cellStyleDefaultAlternate : cellStyleDefault);
-						}
-					}
-					return ((row % 2) ? cellStyleDefaultAlternate : cellStyleDefault);
 				}
 		}
 		return IRenderer::cellStyleWithNumericCheck(col, row);

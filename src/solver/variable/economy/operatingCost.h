@@ -252,7 +252,7 @@ namespace Economy
 		}
 
 		void hourForEachArea(State& state, unsigned int numSpace)
-		{
+		{	
 			// Next variable
 			NextType::hourForEachArea(state, numSpace);
 		}

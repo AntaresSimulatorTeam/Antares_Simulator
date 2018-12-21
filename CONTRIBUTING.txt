@@ -10,8 +10,8 @@ please read the ROADMAP file at the root of this directory.
 If you think about contributing to the Antares_Simulator project, your first move should be to get the source code.
 There are two ways to achieve that:
 
-1) Clone the Antares_Simulator git repository available on GitHub : (link to be added)
-2) Get an Antares_Simulator installer package available at https://antares-simulator@rte-france.com 
+1) Clone the Antares_Simulator git repository available on GitHub : https://github.com/AntaresSimulatorTeam/Antares_Simulator
+2) Get an Antares_Simulator installer package available at https://antares-simulator.org 
 and tick the box "copy source code"  when installing the software.   
  
 In the process followed to release the code of Antares_Simulator under Open Source, there are two important milestones:
@@ -26,5 +26,5 @@ for external contributions.
 
 * During the interim period (second  half of 2018), developers who wish to join are welcome to examine
 the code already published and to share their thoughts with the Antares_Simulator Team through one of
-the email addresses that can be found at https://antares-simulator@rte-france.com 
+the email addresses that can be found at https://antares-simulator.org 
 

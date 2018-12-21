@@ -46,8 +46,13 @@ namespace Variable
 		studyMode(s.parameters.mode),
 		study(s),
 		simplexHasBeenRan(true),
-		unitCommitmentMode(s.parameters.unitCommitment.ucMode)
+		unitCommitmentMode(s.parameters.unitCommitment.ucMode),
+		annualSystemCost(0.),
+		optimalSolutionCost1(0.),
+		optimalSolutionCost2(0.)
 	{
+		h2oValueWorkVars.levelUp = 0.;
+		h2oValueWorkVars.levelDown = 0.;
 	}
 
 	void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint numSpace)

@@ -6,6 +6,9 @@ add_subdirectory(keys)
 
 
 
+if(NOT MSVC)
+  add_definitions(-DCURL_STATICLIB)
+endif()
 
 include_directories("${ANTARES_OSSL_INCLUDE}")
 include_directories("${ANTARES_CURL_INCLUDE}")

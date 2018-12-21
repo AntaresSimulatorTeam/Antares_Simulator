@@ -47,11 +47,14 @@ namespace Window
 
 
 	Interconnection::Interconnection(wxWindow* parent, Toolbox::InputSelector::Connections* notifier) :
-		Component::Panel(parent),
+		wxScrolledWindow(parent),
 		pLink(nullptr),
 		pLinkName(),
 		pHurdlesCost(nullptr),
-		pCopperPlate(nullptr)
+		pLoopFlow(nullptr),
+		pPhaseShift(nullptr),
+		pCopperPlate(nullptr),
+		pAssetType(nullptr)
 	{
 		auto* mainsizer = new wxBoxSizer(wxVERTICAL);
 		SetSizer(mainsizer);
@@ -64,7 +67,7 @@ namespace Window
 
 		auto* sizer = new wxBoxSizer(wxVERTICAL);
 		pLinkData->SetSizer(sizer);
-
+		
 		wxFlexGridSizer* s = new wxFlexGridSizer(0, 0, 10);
 		pGridSizer = s;
 		s->AddGrowableCol(1, 0);
@@ -127,6 +130,28 @@ namespace Window
 			s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 			pCopperPlate = button;
 		}
+		// Asset Type
+		{
+			button = new Component::Button(pLinkData, wxT("Asset type"), "images/16x16/light_green.png");
+			button->menu(true);
+			onPopup.bind(this, &Interconnection::onPopupMenuAssetType);
+			button->onPopupMenu(onPopup);
+			s->AddSpacer(10);
+			s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+			pAssetType = button;
+		}
+		// Loop flow
+		{
+			button = new Component::Button(pLinkData, wxT("loop flow"), "images/16x16/light_green.png");
+			s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+			pLoopFlow = button;
+		}
+		// Phase Shifter
+		{
+			button = new Component::Button(pLinkData, wxT("phase shifter"), "images/16x16/light_green.png");
+			s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+			pPhaseShift = button;
+		}
 
 
 		sizer->AddSpacer(4);
@@ -138,11 +163,12 @@ namespace Window
 
 		sizer->Add(new Component::Datagrid::Component(pLinkData,
 			new Component::Datagrid::Renderer::Connection(this, notifier)),
-			1, wxALL|wxEXPAND);
+			1, wxALL|wxEXPAND|wxFIXED_MINSIZE);
 
 		sizer->Layout();
 
 		mainsizer->Layout();
+		
 
 		if (notifier)
 			notifier->onConnectionChanged.connect(this, &Interconnection::onConnectionChanged);
@@ -218,6 +244,27 @@ namespace Window
 				pHurdlesCost->caption(wxT("Ignore hurdles costs"));
 				pHurdlesCost->image("images/16x16/light_orange.png");
 			}
+			if (link->useLoopFlow)
+			{
+				pLoopFlow->caption(wxT("Account for loop flows"));
+				pLoopFlow->image("images/16x16/light_green.png");
+			}
+			else
+			{
+				pLoopFlow->caption(wxT("Ignore loop flows"));
+				pLoopFlow->image("images/16x16/light_orange.png");
+			}
+
+			if (link->usePST)
+			{
+				pPhaseShift->caption(wxT("Tune PST"));
+				pPhaseShift->image("images/16x16/light_green.png");
+			}
+			else
+			{
+				pPhaseShift->caption(wxT("Ignore PST "));
+				pPhaseShift->image("images/16x16/light_orange.png");
+			}
 
 			switch (link->transmissionCapacities)
 			{
@@ -234,9 +281,35 @@ namespace Window
 					pCopperPlate->image("images/16x16/infinity.png");
 					break;
 			}
+
+			switch (link->assetType)
+			{
+			case Data::atAC:
+				pAssetType->caption(wxT("Asset type: AC"));
+				pAssetType->image("images/16x16/light_green.png");
+				break;
+			case Data::atDC:
+				pAssetType->caption(wxT("Asset type: DC"));
+				pAssetType->image("images/16x16/light_orange.png");
+				break;
+			case Data::atGas:
+				pAssetType->caption(wxT("Asset type: Gas"));
+				pAssetType->image("images/16x16/light_orange.png");
+				break;
+			case Data::atVirt:
+				pAssetType->caption(wxT("Asset type: Virtual"));
+				pAssetType->image("images/16x16/light_orange.png");
+				break;
+			case Data::atOther:
+				pAssetType->caption(wxT("Asset type: other"));
+				pAssetType->image("images/16x16/light_orange.png");
+				break;
+			}
 		}
 
 		sizer->Layout();
+		this->FitInside(); // ask the sizer about the needed size
+		this->SetScrollRate(5, 5);
 	}
 
 
@@ -298,7 +371,113 @@ namespace Window
 	}
 
 
+	void Interconnection::onPopupMenuAssetType(Component::Button&, wxMenu& menu, void*)
+	{
+		wxMenuItem* it;
 
+		it = Menu::CreateItem(&menu, wxID_ANY, wxT("Set to AC"),
+			"images/16x16/light_green.png", wxEmptyString);
+		menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
+			wxCommandEventHandler(Interconnection::onSelectAssetTypeAC), nullptr, this);
+
+		it = Menu::CreateItem(&menu, wxID_ANY, wxT("Set to DC"), "images/16x16/light_orange.png", wxEmptyString);
+		menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
+			wxCommandEventHandler(Interconnection::onSelectAssetTypeDC), nullptr, this);
+
+		it = Menu::CreateItem(&menu, wxID_ANY, wxT("Set to Gas"), "images/16x16/light_orange.png", wxEmptyString);
+		menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
+			wxCommandEventHandler(Interconnection::onSelectAssetTypeGas), nullptr, this);
+
+		it = Menu::CreateItem(&menu, wxID_ANY, wxT("Set to Virt"), "images/16x16/light_orange.png", wxEmptyString);
+		menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
+			wxCommandEventHandler(Interconnection::onSelectAssetTypeVirt), nullptr, this);
+
+		it = Menu::CreateItem(&menu, wxID_ANY, wxT("Set to other"), "images/16x16/light_orange.png", wxEmptyString);
+		menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
+			wxCommandEventHandler(Interconnection::onSelectAssetTypeOther), nullptr, this);
+	}
+
+
+	void Interconnection::onSelectAssetTypeAC(wxCommandEvent&)
+	{
+		if (pLink && pLink->assetType != Data::atAC)
+		{
+			pLink->assetType = Data::atAC;
+			onConnectionChanged(pLink);
+			MarkTheStudyAsModified();
+			OnInspectorRefresh(nullptr);
+			pLink->color[0] = 112;
+			pLink->color[1] = 112;
+			pLink->color[2] = 112;
+			pLink->style = Data::stPlain;
+			pLink->linkWidth = 1;
+		}
+	}
+
+
+	void Interconnection::onSelectAssetTypeDC(wxCommandEvent&)
+	{
+		if (pLink && pLink->assetType != Data::atDC)
+		{
+			pLink->assetType = Data::atDC;
+			onConnectionChanged(pLink);
+			MarkTheStudyAsModified();
+			OnInspectorRefresh(nullptr);
+			pLink->color[0] = 0;
+			pLink->color[1] = 255;
+			pLink->color[2] = 0;
+			pLink->style = Data::stDash;
+			pLink->linkWidth = 2;
+		}
+	}
+
+	void Interconnection::onSelectAssetTypeGas(wxCommandEvent&)
+	{
+		if (pLink && pLink->assetType != Data::atGas)
+		{
+			pLink->assetType = Data::atGas;
+			onConnectionChanged(pLink);
+			MarkTheStudyAsModified();
+			OnInspectorRefresh(nullptr);
+			pLink->color[0] = 0;
+			pLink->color[1] = 128;
+			pLink->color[2] = 255;
+			pLink->style = Data::stPlain;
+			pLink->linkWidth = 3;
+		}
+	}
+
+	void Interconnection::onSelectAssetTypeVirt(wxCommandEvent&)
+	{
+		if (pLink && pLink->assetType != Data::atVirt)
+		{
+			pLink->assetType = Data::atVirt;
+			onConnectionChanged(pLink);
+			MarkTheStudyAsModified();
+			OnInspectorRefresh(nullptr);
+			pLink->color[0] = 255;
+			pLink->color[1] = 0;
+			pLink->color[2] = 128;
+			pLink->style = Data::stDotDash;
+			pLink->linkWidth = 2;
+		}
+	}
+
+	void Interconnection::onSelectAssetTypeOther(wxCommandEvent&)
+	{
+		if (pLink && pLink->assetType != Data::tncInfinite)
+		{
+			pLink->assetType = Data::atOther;
+			onConnectionChanged(pLink);
+			MarkTheStudyAsModified();
+			OnInspectorRefresh(nullptr);
+			pLink->color[0] = 255;
+			pLink->color[1] = 128;
+			pLink->color[2] = 0;
+			pLink->style = Data::stDot;
+			pLink->linkWidth = 2;
+		}
+	}
 
 
 
@@ -339,11 +518,6 @@ namespace Window
 			OnInspectorRefresh(nullptr);
 		}
 	}
-
-
-
-
-
 
 
 	void Interconnection::onPopupMenuLink(Component::Button&, wxMenu& menu, void*)

@@ -127,7 +127,7 @@ namespace Data
 				{
 					// Detaching the thermal cluster from the main list...
 					ThermalCluster* cluster = list.detach(i);
-					if (!cluster)
+					if (!cluster->enabled)
 						continue;
 					// ...and attaching it into the second list
 					if (!mustrunList.add(cluster))
@@ -156,6 +156,44 @@ namespace Data
 			list.rebuildIndex();
 			mustrunList.rebuildIndex();
 		}
+
+		return count;
+	}
+
+
+
+	uint PartThermal::removeDisabledClusters()
+	{
+		// nothing to do if there is no cluster available
+		if (list.empty())
+			return 0;
+
+		// the number of clusters in 'must-run' mode
+		uint count = 0;
+		bool doWeContinue;
+		do
+		{
+			doWeContinue = false;
+			auto end = list.end();
+			for (auto i = list.begin(); i != end; ++i)
+			{
+				if (!(i->second)->enabled)
+				{
+					// Removing the thermal cluster from the main list...
+					list.remove(i);
+
+					++count;
+
+					// the iterator has been invalidated, loop again
+					doWeContinue = true;
+					break;
+				}
+			}
+		} while (doWeContinue);
+
+		// if some thermal cluster has been moved, we must rebuild all the indexes
+		if (count)
+			list.rebuildIndex();
 
 		return count;
 	}

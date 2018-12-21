@@ -228,7 +228,7 @@ namespace Window
 			Antares::License::statusOnline == Antares::License::stValidOnline)
 			Dispatcher::GUI::Show(globalWndStartupWizard, true, true);
 		else
-			Dispatcher::GUI::ShowModal(new LicenseCoultNotConnectToInternetServer(Forms::ApplWnd::Instance()), true);
+			Dispatcher::GUI::ShowModal(new LicenseCouldNotConnectToInternetServer(Forms::ApplWnd::Instance()), true);
 	}
 
 

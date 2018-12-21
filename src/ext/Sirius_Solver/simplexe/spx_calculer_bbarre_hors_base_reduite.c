@@ -128,7 +128,7 @@ else {
 			}
 	    else if ( Position == HORS_BASE_SUR_BORNE_INF ) {			
 		    if ( StatutBorneSupCourante[Var1] == BORNE_AUXILIAIRE_DE_VARIABLE_NON_BORNEE ) {
-				  printf("CalculerBBarreAHorsReduite variable non bornee sur borne inf fictive %d\n",Var1);
+				  /*printf("CalculerBBarreAHorsReduite variable non bornee sur borne inf fictive %d\n",Var1);*/
           ValBBarre += A[il] * Xmax[Var1];
 		    }
 	    }

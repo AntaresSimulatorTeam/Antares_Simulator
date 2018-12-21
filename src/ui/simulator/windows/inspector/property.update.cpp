@@ -255,12 +255,66 @@ namespace Inspector
 			return false;
 		}
 
+		if (name == "link.color")
+		{
+			wxColour color; color << value;
+			for (; i != end; ++i)
+			{
+				(*i)->color[0] = Math::MinMax<int>(color.Red(), 0, 255);
+				(*i)->color[1] = Math::MinMax<int>(color.Green(), 0, 255);
+				(*i)->color[2] = Math::MinMax<int>(color.Blue(), 0, 255);
+				OnStudyLinkChanged(*i);
+			}
+			return true;
+		}
+
+		if (name == "link.style")
+		{
+			for (; i != end; ++i)
+			{
+				Data::StyleType style= (Data::StyleType)(int)value.GetChar();
+				(*i)->style = style;
+				OnStudyLinkChanged(*i);
+			}
+			return true;
+		}
+
+		if (name == "link.width")
+		{
+			for (; i != end; ++i)
+			{
+				(*i)->linkWidth = Math::MinMax((int)value.GetChar(),1,6);
+				OnStudyLinkChanged(*i);
+			}
+			return true;
+		}
+
 		if (name == "link.hurdles_cost")
 		{
 			bool v = value.GetBool();
 			for (; i != end; ++i)
 			{
 				(*i)->useHurdlesCost = v;
+				OnStudyLinkChanged(*i);
+			}
+			return true;
+		}
+		if (name == "link.use_loop_flow")
+		{
+			bool v = value.GetBool();
+			for (; i != end; ++i)
+			{
+				(*i)->useLoopFlow = v;
+				OnStudyLinkChanged(*i);
+			}
+			return true;
+		}
+		if (name == "link.use_phase_shifter")
+		{
+			bool v = value.GetBool();
+			for (; i != end; ++i)
+			{
+				(*i)->usePST = v;
 				OnStudyLinkChanged(*i);
 			}
 			return true;
@@ -285,6 +339,34 @@ namespace Inspector
 			for (; i != end; ++i)
 			{
 				(*i)->transmissionCapacities = tc;
+				OnStudyLinkChanged(*i);
+			}
+			return true;
+		}
+		if (name == "link.asset-type")
+		{
+			String s;
+			wxStringToString(value.GetString(), s);
+			s.toLower();
+			s.trim();
+
+			Data::AssetType at;
+			if (s == "ac")
+				at = Data::atAC;
+			else if (s == "dc")
+				at = Data::atDC;
+			else if (s == "gaz")
+				at = Data::atGas;
+			else if (s == "virt")
+				at = Data::atVirt;
+			else if (s == "other")
+				at = Data::atOther;
+			else
+				at = Data::atOther;
+
+			for (; i != end; ++i)
+			{
+				(*i)->assetType = at;
 				OnStudyLinkChanged(*i);
 			}
 			return true;
@@ -315,6 +397,29 @@ namespace Inspector
 			mainFrm.map()->refresh();
 			return true;
 		}
+		/*if (name == "link.style")
+		{
+			String s;
+			wxStringToString(value.GetString(), s);
+			s.toLower();
+			s.trim();
+
+			Data::StyleType st;
+			if (s == "stPlain")
+				st = Data::stPlain;
+			else if (s == "dc")
+				st = Data::atDC;
+			else if (s == "other")
+				at = Data::atOther;
+			else
+				at = Data::atOther;
+
+			for (; i != end; ++i)
+			{
+				(*i)->assetType = at;
+				OnStudyLinkChanged(*i);
+			}
+		}*/
 		if (name.startsWith("link.filtering-synthesis."))
 		{
 			AnyString precision(name, 25);

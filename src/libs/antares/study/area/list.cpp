@@ -1742,6 +1742,22 @@ namespace Data
 		return findLink(from, to);
 	}
 
+	ThermalCluster* AreaList::findClusterFromINIKey(const AnyString& key)
+	{
+		
+		if (key.empty())
+			return nullptr;
+		auto offset = key.find('.'); 
+		if (offset == AreaName::npos or (0 == offset) or (offset == key.size() - 1))
+			return nullptr;
+		AreaName parentName(key.c_str(), offset);
+		ThermalClusterName id(key.c_str() + offset + 1, key.size() - (offset + 1));
+		Area* parentArea = findFromName(parentName);
+		if (parentArea == nullptr)
+			return nullptr;
+		ThermalCluster* i = parentArea->thermal.list.find(id);
+		return (i != nullptr) ? i : nullptr;
+	}
 
 	void AreaList::updateNameIDSet() const
 	{
@@ -1769,7 +1785,7 @@ namespace Data
 		each ([&] (Data::Area& area)
 		{
 			area.hydro.series->ror.reset(1, HOURS_PER_YEAR);
-			area.hydro.series->storage.reset(1, 12);
+			area.hydro.series->storage.reset(1, DAYS_PER_YEAR);
 			area.hydro.series->count = 1;
 		});
 	}

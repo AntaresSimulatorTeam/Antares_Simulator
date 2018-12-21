@@ -161,6 +161,10 @@ namespace Data
 
 		//! Get the thermal cluster name
 		const Data::ThermalClusterName& name() const;
+
+		//! Get the full thermal cluster name
+		Yuni::String getFullName() const;
+
 		//! Set the name/ID
 		void name(const AnyString& newname);
 		//@}
@@ -242,6 +246,11 @@ namespace Data
 		*/
 		bool checkMinStablePowerWithNewModulation(uint index, double value);
 		//@}
+
+		/*!
+		** \brief Check wether the cluster is visible in a layer (it's parent area is visible in the layer)
+		*/
+		bool isVisibleOnLayer(const size_t& layerID)const;
 
 	public:
 		/*!
@@ -530,6 +539,17 @@ namespace Data
 
 
 		/*!
+		** \brief Remove a cluster represented by an iterator
+		**
+		** The thermal cluster will be removed from the list but _not_
+		** destroyed.
+		** The iterator should considered as invalid after using this method.
+		** \return void
+		*/
+		void remove(iterator i);
+
+
+		/*!
 		** \brief Load a list of thermal cluster from a folder
 		**
 		** \param folder The folder where the data are located (ex: `input/thermal/clusters/[area]/`)
@@ -711,9 +731,6 @@ namespace Data
 		** \brief Original mapping from the input
 		**
 		** Without taking into consideration the enabled or mustrun flags
-		** Only used by the solver.
-		** This is a dirty hack, which must be removed as soon as possible
-		** (see equipments)
 		*/
 		ThermalCluster::Map mapping;
 
@@ -818,13 +835,19 @@ namespace Data
 
 
 
-
+	struct CompareThermalClusterName final
+	{
+		inline bool operator()(const ThermalCluster* s1, const ThermalCluster* s2) const
+		{
+			return (s1->getFullName() < s2->getFullName());
+		}
+	};
 
 
 } // namespace Data
 } // namespace Antares
 
 # include "cluster.hxx"
-# include "../../area.h"
+//# include "../../area.h"
 
 #endif /* __ANTARES_LIBS_STUDY_PARTS_THERMAL_CLUSTER_H__ */

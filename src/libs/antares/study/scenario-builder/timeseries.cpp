@@ -162,12 +162,13 @@ namespace ScenarioBuilder
 				// Foreach thermal cluster...
 				for (uint y = 0; y != pTSNumberRules.height; ++y)
 				{
-					const MatrixType::Type  value = col[y];
+					const uint val = get(pArea->thermal.list.byIndex[index], y);
+					//const MatrixType::Type  value = col[y];
 					// Equals to zero means 'auto', which is the default mode
-					if (!value)
+					if (!val)
 						continue;
 					file << prefix << pArea->id << "," << y << ',' << pArea->thermal.list.byIndex[index]->id()
-						<< " = " << value << '\n';
+						<< " = " << val << '\n';
 				}
 			}
 		}

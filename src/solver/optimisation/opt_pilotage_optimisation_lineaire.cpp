@@ -59,7 +59,7 @@ ProblemeHebdo->OptimisationMUTetMDT = OUI_ANTARES;
  
  
 ProblemeHebdo->SolveurDuProblemeLineaire = ANTARES_SIMPLEXE;
-if ( ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES ) {
+if ( ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES && ProblemeHebdo->Expansion == NON_ANTARES) {
   ProblemeHebdo->SolveurDuProblemeLineaire = ANTARES_PNE;
 }
 
@@ -70,44 +70,6 @@ if ( ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES ) {
 
 if (ProblemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES ) {
 	if (ProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE) {	
-		
-		
-		
-
-
-
-
-
-
-
-
-		
-		
-		for ( CntCouplante = 0 ; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes ; CntCouplante++ ) {
-			MatriceDesContraintesCouplantes = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
-			iMx = MatriceDesContraintesCouplantes->NombreDInterconnexionsDansLaContrainteCouplante;
-      OnReboucle = 1;
-			while ( OnReboucle == 1 ) {
-			  OnReboucle = 0;
-				for ( i = 0 ; i < iMx - 1 ; i++ ) {
-			    if ( MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[i] < MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[i+1] ) continue;			
-			    OnReboucle = 1;				
-          x = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[i];
-				  MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[i] = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[i+1];
-				  MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[i+1] = x;				
-          ix = MatriceDesContraintesCouplantes->OffsetTemporelSurLInterco[i];				
-				  MatriceDesContraintesCouplantes->OffsetTemporelSurLInterco[i] = MatriceDesContraintesCouplantes->OffsetTemporelSurLInterco[i+1];
-          MatriceDesContraintesCouplantes->OffsetTemporelSurLInterco[i+1] = ix;				
-          ix = MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[i];
-          MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[i] = MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[i+1];
-				  MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[i+1] = ix;
-				}	 	    
-			}		
-		}
-		
-		
-		
-		
 		
 		
 		
@@ -145,9 +107,6 @@ if (ProblemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES ) {
 
 	ProblemeHebdo->LeProblemeADejaEteInstancie = OUI_ANTARES;
 }
-
-
-memset( (char *) ProblemeHebdo->CoutOptimalDeLaSolution, 0, 7 * sizeof(double) );
 
 ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 

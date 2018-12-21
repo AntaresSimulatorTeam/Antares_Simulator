@@ -31,7 +31,6 @@
 # include <yuni/core/string.h>
 # include <yuni/core/noncopyable.h>
 # include <stdlib.h>
-# include "../fwd.h"
 # include "../../array/matrix.h"
 # include "../parts/parts.h"
 # include <vector>
@@ -620,6 +619,11 @@ namespace Data
 		** \brief Try to find the link from a given INI key (<area1>%<area2>)
 		*/
 		AreaLink* findLinkFromINIKey(const AnyString& key);
+
+		/*!
+		** \brief Try to find the cluster from a given INI key (<area>.<cluster>)
+		*/
+		ThermalCluster * findClusterFromINIKey(const AnyString & key);
 
 		/*!
 		** \brief Get the total number of interconnections between all areas

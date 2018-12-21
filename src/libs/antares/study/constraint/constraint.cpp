@@ -52,6 +52,10 @@ namespace Antares
 {
 namespace Data
 {
+	bool compareConstraints(const BindingConstraint* s1, const BindingConstraint* s2) 
+	{
+		return ((s1->name()) < (s2->name()));
+	}
 
 	BindingConstraint::Operator  BindingConstraint::StringToOperator(const AnyString& text)
 	{
@@ -176,6 +180,8 @@ namespace Data
 		Antares::TransformNameIntoID(pName, pID);
 	}
 
+	
+
 
 	void BindingConstraint::weight(const AreaLink* lnk, double w)
 	{
@@ -183,19 +189,35 @@ namespace Data
 		{
 			if (Math::Zero(w))
 			{
-				auto i = pWeights.find(lnk);
-				if (i != pWeights.end())
-					pWeights.erase(i);
+				auto i = pLinkWeights.find(lnk);
+				if (i != pLinkWeights.end())
+					pLinkWeights.erase(i);
 			}
 			else
-				pWeights[lnk] = w;
+				pLinkWeights[lnk] = w;
+		}
+	}
+
+	void BindingConstraint::weight(const ThermalCluster* clstr, double w)
+	{
+		if (clstr)
+		{
+			if (Math::Zero(w))
+			{
+				auto i = pClusterWeights.find(clstr);
+				if (i != pClusterWeights.end())
+					pClusterWeights.erase(i);
+			}
+			else
+				pClusterWeights[clstr] = w;
 		}
 	}
 
 	
 	void BindingConstraint::removeAllWeights()
 	{
-		pWeights.clear();
+		pLinkWeights.clear();
+		pClusterWeights.clear();
 	}
 
 
@@ -205,35 +227,127 @@ namespace Data
 		{
 			if (Math::Zero(o))
 			{
-				auto i = pOffsets.find(lnk);
-				if (i != pOffsets.end())
-					pOffsets.erase(i);
+				auto i = pLinkOffsets.find(lnk);
+				if (i != pLinkOffsets.end())
+					pLinkOffsets.erase(i);
 			}
 			else
-				pOffsets[lnk] = o;
+				pLinkOffsets[lnk] = o;
+		}
+	}
+
+	void BindingConstraint::offset(const ThermalCluster* clstr, int o)
+	{
+		if (clstr)
+		{
+			if (Math::Zero(o))
+			{
+				auto i = pClusterOffsets.find(clstr);
+				if (i != pClusterOffsets.end())
+					pClusterOffsets.erase(i);
+			}
+			else
+				pClusterOffsets[clstr] = o;
 		}
 	}
 
 		
 	void BindingConstraint::removeAllOffsets()
 	{
-		pOffsets.clear();
+		pLinkOffsets.clear();
+		pClusterOffsets.clear();
 	}
 
+	uint Antares::Data::BindingConstraint::enabledClusterCount()const
+	{
+		auto end = pClusterWeights.end();
+		uint enabledClusterNumber = 0;
+		for (auto i = pClusterWeights.begin(); i != end; ++i)
+		{
+			if (i->first->enabled && !i->first->mustrun)
+				++enabledClusterNumber;
+		}
+		return enabledClusterNumber;
+	}
+
+	void BindingConstraint::matrix(const Matrix<double, double>& secondMember)
+	{ 
+		assert(secondMember.width == 1 and "Too many column in the matrix");
+		assert((uint) pType < (uint) (typeMax + 1) and "Type of the constraint not defined");
+		assert((uint) pOperator < (uint) (opMax + 1) and "Operator not defined");
+
+		switch (pType)
+		{
+			case typeHourly:
+				{
+					assert(secondMember.height == 8784 and "Height of the matrix does not fit");
+					break;
+				}
+			case typeDaily:
+				{
+					assert(secondMember.height == 366 and "Height of the matrix does not fit");
+					break;
+				}
+			case typeWeekly:
+				{
+					assert(secondMember.height == 366 and "Height of the matrix does not fit");
+					break;
+				}
+		}
+		switch (pOperator)
+		{	
+			case opEquality:
+				{
+					pValues.pasteToColumn((uint) columnEquality, secondMember.column(0));
+				}
+			case opLess:
+				{
+					pValues.pasteToColumn(columnInferior, secondMember.column(0));
+				}
+			case opGreater:
+				{
+					pValues.pasteToColumn(columnSuperior, secondMember.column(0));
+				}
+			case opBoth:
+				{
+					pValues.pasteToColumn(columnInferior, secondMember.column(0));
+					pValues.pasteToColumn(columnSuperior, secondMember.column(0));
+				}
+		}
+
+	}
 
 	bool BindingConstraint::removeLink(const AreaLink* lnk)
 	{
-		auto iw = pWeights.find(lnk);
-		if (iw != pWeights.end())
+		auto iw = pLinkWeights.find(lnk);
+		if (iw != pLinkWeights.end())
 		{
-			pWeights.erase(iw);
+			pLinkWeights.erase(iw);
 			return true;
 		}
 
-		auto io = pOffsets.find(lnk);
-		if (io != pOffsets.end())
+		auto io = pLinkOffsets.find(lnk);
+		if (io != pLinkOffsets.end())
 		{
-			pOffsets.erase(io);
+			pLinkOffsets.erase(io);
+			return true;
+		}
+		return false;
+	}
+
+	bool BindingConstraint::removeCluster(const ThermalCluster* clstr)
+	{
+		auto iw = pClusterWeights.find(clstr);
+		if (iw != pClusterWeights.end())
+		{
+			pClusterWeights.erase(iw);
+			return true;
+		}
+
+		auto io = pClusterOffsets.find(clstr);
+		if (io != pClusterOffsets.end())
+		{
+			pClusterOffsets.erase(io);
 			return true;
 		}
 		return false;
@@ -253,12 +367,15 @@ namespace Data
 	void BindingConstraint::copyWeights(const Study& study, const BindingConstraint& rhs, bool emptyBefore)
 	{
 		if (emptyBefore)
-			pWeights.clear();
-
-		if (not rhs.pWeights.empty())
 		{
-			auto end = rhs.pWeights.end();
-			for (auto i = rhs.pWeights.begin(); i != end; ++i)
+			pLinkWeights.clear();
+			pClusterWeights.clear();
+		}
+
+		if (not rhs.pLinkWeights.empty())
+		{
+			auto end = rhs.pLinkWeights.end();
+			for (auto i = rhs.pLinkWeights.begin(); i != end; ++i)
 			{
 				// Alias to the current link
 				const AreaLink* sourceLink = i->first;
@@ -270,7 +387,29 @@ namespace Data
 				assert(sourceLink->with and "Invalid area pointer 'with' within link");
 				const AreaLink* localLink = study.areas.findLink(sourceLink->from->id, sourceLink->with->id);
 				if (localLink)
-					pWeights[localLink] = weight;
+					pLinkWeights[localLink] = weight;
+			}
+		}
+
+		if (not rhs.pClusterWeights.empty())
+		{
+			auto end = rhs.pClusterWeights.end();
+			for (auto i = rhs.pClusterWeights.begin(); i != end; ++i)
+			{
+				// Alias to the current thermalCluster
+				const ThermalCluster* thermalCluster = i->first;
+				// weight
+				const double weight = i->second;
+
+				assert(thermalCluster and "Invalid thermal cluster in binding constraint");
+
+				const Area* localParent = study.areas.findFromName(thermalCluster->parentArea->name);
+				if (localParent)
+				{
+					const ThermalCluster* localTC = localParent->thermal.list.find(thermalCluster->id());
+					if (localTC)
+						pClusterWeights[localTC] = weight;
+				}
 			}
 		}
 	}
@@ -280,15 +419,19 @@ namespace Data
 		Yuni::Bind<void (AreaName&, const AreaName&)>& translate)
 	{
 		if (emptyBefore)
-			pWeights.clear();
-		if (rhs.pWeights.empty())
+		{
+			pLinkWeights.clear();
+			pClusterWeights.clear();
+		}
+
+		if (rhs.pLinkWeights.empty())
 			return;
 
 		AreaName fromID;
 		AreaName withID;
 
-		auto end = rhs.pWeights.end();
-		for (auto i = rhs.pWeights.begin(); i != end; ++i)
+		auto end = rhs.pLinkWeights.end();
+		for (auto i = rhs.pLinkWeights.begin(); i != end; ++i)
 		{
 			// Alias to the current link
 			const AreaLink* sourceLink = i->first;
@@ -305,7 +448,32 @@ namespace Data
 
 			const AreaLink* localLink = study.areas.findLink(fromID, withID);
 			if (localLink)
-				pWeights[localLink] = weight;
+				pLinkWeights[localLink] = weight;
+		}
+
+		if (not rhs.pClusterWeights.empty())
+		{
+			auto end = rhs.pClusterWeights.end();
+			for (auto i = rhs.pClusterWeights.begin(); i != end; ++i)
+			{
+				// Alias to the current thermalCluster
+				const ThermalCluster* thermalCluster = i->first;
+				// weight
+				const double weight = i->second;
+
+				assert(thermalCluster and "Invalid thermal cluster in binding constraint");
+
+				AreaName parentID;
+				translate(parentID, thermalCluster->parentArea->id);
+
+				const Area* localParent = study.areas.find(parentID);
+				if (localParent)
+				{
+					const ThermalCluster* localTC = localParent->thermal.list.find(thermalCluster->id());
+					if (localTC)
+						pClusterWeights[localTC] = weight;
+				}
+			}
 		}
 	}
 
@@ -313,12 +481,15 @@ namespace Data
 	void BindingConstraint::copyOffsets(const Study& study, const BindingConstraint& rhs, bool emptyBefore)
 	{
 		if (emptyBefore)
-			pOffsets.clear();
-
-		if (not rhs.pOffsets.empty())
 		{
-			auto end = rhs.pOffsets.end();
-			for (auto i = rhs.pOffsets.begin(); i != end; ++i)
+			pLinkOffsets.clear();
+			pClusterOffsets.clear();
+		}
+
+		if (not rhs.pLinkOffsets.empty())
+		{
+			auto end = rhs.pLinkOffsets.end();
+			for (auto i = rhs.pLinkOffsets.begin(); i != end; ++i)
 			{
 				// Alias to the current link
 				const AreaLink* sourceLink = i->first;
@@ -330,9 +501,32 @@ namespace Data
 				assert(sourceLink->with and "Invalid area pointer 'with' within link");
 				const AreaLink* localLink = study.areas.findLink(sourceLink->from->id, sourceLink->with->id);
 				if (localLink)
-					pOffsets[localLink] = offset;
+					pLinkOffsets[localLink] = offset;
 			}
 		}
+
+		if (not rhs.pClusterOffsets.empty())
+		{
+			auto end = rhs.pClusterOffsets.end();
+			for (auto i = rhs.pClusterOffsets.begin(); i != end; ++i)
+			{
+				// Alias to the current thermalCluster
+				const ThermalCluster* thermalCluster = i->first;
+				// weight
+				const int offset = i->second;
+
+				assert(thermalCluster and "Invalid thermal cluster in binding constraint");
+
+				const Area* localParent = study.areas.findFromName(thermalCluster->parentArea->name);
+				if (localParent)
+				{
+					const ThermalCluster* localTC = localParent->thermal.list.find(thermalCluster->id());
+					if (localTC)
+						pClusterOffsets[localTC] = offset;
+				}
+			}
+		}
+
 	}
 
 
@@ -340,15 +534,15 @@ namespace Data
 		Yuni::Bind<void (AreaName&, const AreaName&)>& translate)
 	{
 		if (emptyBefore)
-			pOffsets.clear();
-		if (rhs.pOffsets.empty())
+			pLinkOffsets.clear();
+		if (rhs.pLinkOffsets.empty())
 			return;
 
 		AreaName fromID;
 		AreaName withID;
 
-		auto end = rhs.pOffsets.end();
-		for (auto i = rhs.pOffsets.begin(); i != end; ++i)
+		auto end = rhs.pLinkOffsets.end();
+		for (auto i = rhs.pLinkOffsets.begin(); i != end; ++i)
 		{
 			// Alias to the current link
 			const AreaLink* sourceLink = i->first;
@@ -365,8 +559,34 @@ namespace Data
 
 			const AreaLink* localLink = study.areas.findLink(fromID, withID);
 			if (localLink)
-				pOffsets[localLink] = offset;
+				pLinkOffsets[localLink] = offset;
 		}
+
+		if (not rhs.pClusterOffsets.empty())
+		{
+			auto end = rhs.pClusterOffsets.end();
+			for (auto i = rhs.pClusterOffsets.begin(); i != end; ++i)
+			{
+				// Alias to the current thermalCluster
+				const ThermalCluster* thermalCluster = i->first;
+				// weight
+				const int offset = i->second;
+
+				assert(thermalCluster and "Invalid thermal cluster in binding constraint");
+
+				AreaName parentID;
+				translate(parentID, thermalCluster->parentArea->id);
+
+				const Area* localParent = study.areas.find(parentID);
+				if (localParent)
+				{
+					const ThermalCluster* localTC = localParent->thermal.list.find(thermalCluster->id());
+					if (localTC)
+						pClusterOffsets[localTC] = offset;
+				}
+			}
+		}
+
 	}
 
 
@@ -455,94 +675,63 @@ namespace Data
 			}
 
 
-			// It should be an link
+			// It may be a link
 			// Separate the key
 			String::Size setKey = p->key.find('%');
-			if (0 == setKey or setKey == String::npos)
-			{
-				logs.error() << env.iniFilename << ": in [" << env.section->name
-					<< "]: `" << p->key << "`: invalid key";
-				continue;
-			}
-
-			// initilize the values
+			
+			// initialize the values
 			double w = .0;
 			int o = 0;
 			
 			// Separate the value
-			CString<64> stringWO = p->value;
-			String::Size setVal = p->value.find('%');	
-			uint occurence = 0;
-			bool ret = true;
-			stringWO.words("%", [&](const CString<64>& part) -> bool
+			if (setKey != 0 && setKey != String::npos)// It is a link
 			{
-				if (occurence == 0)
+				CString<64> stringWO = p->value;
+				String::Size setVal = p->value.find('%');
+				uint occurence = 0;
+				bool ret = true;
+				stringWO.words("%", [&](const CString<64>& part) -> bool
 				{
-					if (setVal == 0) // weight is null
+					if (occurence == 0)
+					{
+						if (setVal == 0) // weight is null
+						{
+							if (not part.to<int>(o))
+							{
+								logs.error() << env.iniFilename << ": in [" << env.section->name
+									<< "]: `" << p->key << "`: invalid offset";
+								ret = false;
+							}
+						}
+						else // weight is not null
+						{
+							if (not part.to<double>(w))
+							{
+								logs.error() << env.iniFilename << ": in [" << env.section->name
+									<< "]: `" << p->key << "`: invalid weight";
+								ret = false;
+							}
+						}
+					}
+
+					if (occurence == 1 && setVal != 0)
 					{
 						if (not part.to<int>(o))
 						{
 							logs.error() << env.iniFilename << ": in [" << env.section->name
-							<< "]: `" << p->key << "`: invalid offset";
+								<< "]: `" << p->key << "`: invalid offset";
 							ret = false;
 						}
 					}
-					else // weight is not null
-					{
-						if (not part.to<double>(w))
-						{
-							logs.error() << env.iniFilename << ": in [" << env.section->name
-							<< "]: `" << p->key << "`: invalid weight";
-							ret = false;
-						}
-					}
-				}
-					
-				if (occurence == 1 && setVal != 0)
-				{
-					if (not part.to<int>(o))
-					{
-						logs.error() << env.iniFilename << ": in [" << env.section->name
-						<< "]: `" << p->key << "`: invalid offset";
-						ret = false;
-					}
-				}
-					
-				++occurence;
-				return ret; // continue to iterate
-			});
 
-			
-			if (not ret)
-				continue;
+					++occurence;
+					return ret; // continue to iterate
+				});
 
-			const AreaLink* lnk = env.areaList.findLinkFromINIKey(p->key);
-			if (!lnk)
-			{
-				logs.error() << env.iniFilename << ": in [" << env.section->name
-					<< "]: `" << p->key << "`: link not found";
-				continue;
-			}
-			if (not Math::Zero(w))
-				this->weight(lnk, w);
 
-			if (not Math::Zero(o))
-				this->offset(lnk, o);
-				
-			
-			/*else
-			{
-				if (not p->value.to<double>(w))
-				{
-					logs.error() << env.iniFilename << ": in [" << env.section->name
-						<< "]: `" << p->key << "`: invalid weight";
+				if (not ret)
 					continue;
-				}
 
-			}
-			
-			if (not Math::Zero(w))
-			{
 				const AreaLink* lnk = env.areaList.findLinkFromINIKey(p->key);
 				if (!lnk)
 				{
@@ -550,8 +739,89 @@ namespace Data
 						<< "]: `" << p->key << "`: link not found";
 					continue;
 				}
-				this->weight(lnk, w);
-			}*/
+				if (not Math::Zero(w))
+					this->weight(lnk, w);
+
+				if (not Math::Zero(o))
+					this->offset(lnk, o);
+
+				continue;
+			}
+			else //It must be a cluster
+			{
+				// Separate the key
+				String::Size setKey = p->key.find('.');
+				if (0 == setKey or setKey == String::npos)
+				{
+					logs.error() << env.iniFilename << ": in [" << env.section->name
+						<< "]: `" << p->key << "`: invalid key";
+					continue;
+				}
+
+				CString<64> stringWO = p->value;
+				String::Size setVal = p->value.find('%');
+				uint occurence = 0;
+				bool ret = true;
+				stringWO.words("%", [&](const CString<64>& part) -> bool
+				{
+					if (occurence == 0)
+					{
+						if (setVal == 0) // weight is null
+						{
+							if (not part.to<int>(o))
+							{
+								logs.error() << env.iniFilename << ": in [" << env.section->name
+									<< "]: `" << p->key << "`: invalid offset";
+								ret = false;
+							}
+						}
+						else // weight is not null
+						{
+							if (not part.to<double>(w))
+							{
+								logs.error() << env.iniFilename << ": in [" << env.section->name
+									<< "]: `" << p->key << "`: invalid weight";
+								ret = false;
+							}
+						}
+					}
+
+					if (occurence == 1 && setVal != 0)
+					{
+						if (not part.to<int>(o))
+						{
+							logs.error() << env.iniFilename << ": in [" << env.section->name
+								<< "]: `" << p->key << "`: invalid offset";
+							ret = false;
+						}
+					}
+
+					++occurence;
+					return ret; // continue to iterate
+				});
+
+
+				if (not ret)
+					continue;
+
+				const ThermalCluster* clstr = env.areaList.findClusterFromINIKey(p->key);
+				if (!clstr)
+				{
+					logs.error() << env.iniFilename << ": in [" << env.section->name
+						<< "]: `" << p->key << "`: cluster not found";
+					continue;
+				}
+				if (not Math::Zero(w))
+					this->weight(clstr, w);
+
+				if (not Math::Zero(o))
+					this->offset(clstr, o);
+
+				continue;
+
+			}
+			
+
 		}
 
 		// Checking for validity
@@ -572,7 +842,7 @@ namespace Data
 		}
 
 		// The binding constraint can not be enabled if there is no weight in the table
-		if (pWeights.empty())
+		if (pLinkWeights.empty() && pClusterWeights.empty())
 			pEnabled = false;
 
 		if (env.version > 310)
@@ -630,10 +900,10 @@ namespace Data
 		if (not pComments.empty())
 			env.section->add("comments", pComments);
 
-		if (not pWeights.empty())
+		if (not pLinkWeights.empty())
 		{
-			auto end = pWeights.end();
-			for (auto i = pWeights.begin(); i != end; ++i)
+			auto end = pLinkWeights.end();
+			for (auto i = pLinkWeights.begin(); i != end; ++i)
 			{
 				// asserts
 				assert(i->first       and "Invalid link");
@@ -644,8 +914,27 @@ namespace Data
 				env.key.clear() << lnk.from->id << '%' << lnk.with->id;
 				String value;
 				value << i->second;
-				if (pOffsets.find(i->first) != pOffsets.end())
-					value << '%' << pOffsets[i->first];
+				if (pLinkOffsets.find(i->first) != pLinkOffsets.end())
+					value << '%' << pLinkOffsets[i->first];
+				//env.section->add(env.key, i->second);
+				env.section->add(env.key, value);
+			}
+		}
+
+		if (not pClusterWeights.empty())
+		{
+			auto end = pClusterWeights.end();
+			for (auto i = pClusterWeights.begin(); i != end; ++i)
+			{
+				// asserts
+				assert(i->first       and "Invalid thermal cluster");
+
+				const ThermalCluster& clstr = *(i->first);
+				env.key.clear() << clstr.getFullName();
+				String value;
+				value << i->second;
+				if (pClusterOffsets.find(i->first) != pClusterOffsets.end())
+					value << '%' << pClusterOffsets[i->first];
 				//env.section->add(env.key, i->second);
 				env.section->add(env.key, value);
 			}
@@ -746,6 +1035,8 @@ namespace Data
 			logs.info() << "No binding constraint found";
 		else
 		{
+			std::sort(pList.begin(), pList.end(), compareConstraints);
+
 			if (pList.size() == 1)
 				logs.info() << "1 binding constraint found";
 			else
@@ -825,11 +1116,29 @@ namespace Data
 		});
 	}
 
+	void BindConstList::reverseWeightSign(const ThermalCluster* clstr)
+	{
+		each([&](BindingConstraint& constraint)
+		{
+			constraint.reverseWeightSign(clstr);
+		});
+	}
+
 
 	void BindingConstraint::reverseWeightSign(const AreaLink* lnk)
 	{
-		auto i = pWeights.find(lnk);
-		if (i != pWeights.end())
+		auto i = pLinkWeights.find(lnk);
+		if (i != pLinkWeights.end())
+		{
+			i->second *= -1.;
+			logs.info() << "Updated the binding constraint `" << pName << '`';
+		}
+	}
+
+	void BindingConstraint::reverseWeightSign(const ThermalCluster* clstr)
+	{
+		auto i = pClusterWeights.find(clstr);
+		if (i != pClusterWeights.end())
 		{
 			i->second *= -1.;
 			logs.info() << "Updated the binding constraint `" << pName << '`';
@@ -848,12 +1157,20 @@ namespace Data
 
 	bool BindingConstraint::contains(const Area* area) const
 	{
-		const WeightMap::const_iterator end = pWeights.end();
-		for (WeightMap::const_iterator i = pWeights.begin(); i != end; ++i)
+		const linkWeightMap::const_iterator end = pLinkWeights.end();
+		for (linkWeightMap::const_iterator i = pLinkWeights.begin(); i != end; ++i)
 		{
 			if ((i->first)->from == area or (i->first)->with == area)
 				return true;
 		}
+
+		const clusterWeightMap::const_iterator tEnd = pClusterWeights.end();
+		for (clusterWeightMap::const_iterator i = pClusterWeights.begin(); i != tEnd; ++i)
+		{
+			if ((i->first)->parentArea == area)
+				return true;
+		}
+
 		return false;
 	}
 
@@ -919,26 +1236,51 @@ namespace Data
 	{
 		char tmp[42];
 		bool first = true;
-		auto end = pWeights.end();
-		for (auto i = pWeights.begin(); i != end; ++i)
+		auto end = pLinkWeights.end();
+		for (auto i = pLinkWeights.begin(); i != end; ++i)
 		{
 			if (!first)
 				s << " + ";
 			SNPRINTF(tmp, sizeof(tmp), "%.2f", i->second);
 
 			s << '(' << (const char*)tmp << " x "
-				<< (i->first)->from->name << '.' << (i->first)->with->name;
+				<< (i->first)->getName();
+			//<< (i->first)->from->name << '.' << (i->first)->with->name;
 
-			auto at = pOffsets.find(i->first);
-			if(at != pOffsets.end())
+			auto at = pLinkOffsets.find(i->first);
+			if(at != pLinkOffsets.end())
 			{		
 				int o = at->second;
 				if (o > 0)
-					s << " x (t + " << pOffsets.find(i->first)->second << ')';
+					s << " x (t + " << pLinkOffsets.find(i->first)->second << ')';
 				if (o < 0)
-					s << " x (t - " << Math::Abs(pOffsets.find(i->first)->second) << ')';
+					s << " x (t - " << Math::Abs(pLinkOffsets.find(i->first)->second) << ')';
 			}
 		
+			s << ')';
+			first = false;
+		}
+
+		auto tEnd = pClusterWeights.end();
+		for (auto i = pClusterWeights.begin(); i != tEnd; ++i)
+		{
+			if (!first)
+				s << " + ";
+			SNPRINTF(tmp, sizeof(tmp), "%.2f", i->second);
+
+			s << '(' << (const char*)tmp << " x "
+				<< (i->first)->getFullName();
+
+			auto at = pClusterOffsets.find(i->first);
+			if (at != pClusterOffsets.end())
+			{
+				int o = at->second;
+				if (o > 0)
+					s << " x (t + " << pClusterOffsets.find(i->first)->second << ')';
+				if (o < 0)
+					s << " x (t - " << Math::Abs(pClusterOffsets.find(i->first)->second) << ')';
+			}
+
 			s << ')';
 			first = false;
 		}
@@ -950,8 +1292,8 @@ namespace Data
 		char tmp[42];
 		s.clear();
 		bool first = true;
-		auto end = pWeights.end();
-		for (auto i = pWeights.begin(); i != end; ++i)
+		auto end = pLinkWeights.end();
+		for (auto i = pLinkWeights.begin(); i != end; ++i)
 		{
 			if (!first)
 				s << " <font color=\"black\">+</font> ";
@@ -960,6 +1302,20 @@ namespace Data
 			s << (const char*) tmp;
 			s << "</font><font color=\"#FF2222\">x</font> <font color=\"#4F5B81\">"
 				<< (i->first)->from->name << '.' << (i->first)->with->name
+				<< "</font><font color=\"#AAAAAA\">)</font>";
+			first = false;
+		}
+
+		auto tEnd = pClusterWeights.end();
+		for (auto i = pClusterWeights.begin(); i != tEnd; ++i)
+		{
+			if (!first)
+				s << " <font color=\"black\">+</font> ";
+			s << "<font color=\"#AAAAAA\">(</font><font color=\"#FF781E\">";
+			SNPRINTF(tmp, sizeof(tmp), "%.2f", i->second);
+			s << (const char*)tmp;
+			s << "</font><font color=\"#FF2222\">x</font> <font color=\"#4F5B81\">"
+				<< (i->first)->name()
 				<< "</font><font color=\"#AAAAAA\">)</font>";
 			first = false;
 		}
@@ -998,9 +1354,13 @@ namespace Data
 			// Values
 			+ pValues.memoryUsage()
 			// Estimation
-			+ pWeights.size() * (sizeof(double) + 3 * sizeof(void*))
+			+ pLinkWeights.size() * (sizeof(double) + 3 * sizeof(void*))
 			// Estimation
-			+ pOffsets.size() * (sizeof(int) + 3 * sizeof(void*));
+			+ pLinkOffsets.size() * (sizeof(int) + 3 * sizeof(void*))
+			// Estimation
+			+ pClusterWeights.size() * (sizeof(double) + 3 * sizeof(void*))
+			// Estimation
+			+ pClusterOffsets.size() * (sizeof(int) + 3 * sizeof(void*));
 	}
 
 
@@ -1022,6 +1382,7 @@ namespace Data
 			{
 				u.requiredMemoryForInput += sizeof(BindingConstraintRTI);
 				u.requiredMemoryForInput += (sizeof(long) + sizeof(double)) * bc.linkCount();
+				u.requiredMemoryForInput += (sizeof(long) + sizeof(double)) * bc.clusterCount();
 				Matrix<>::EstimateMemoryUsage(u, 1, HOURS_PER_YEAR);
 			}
 		}
@@ -1037,8 +1398,14 @@ namespace Data
 
 	bool BindingConstraint::contains(const AreaLink* lnk) const
 	{
-		const WeightMap::const_iterator i = pWeights.find(lnk);
-		return (i != pWeights.end());
+		const linkWeightMap::const_iterator i = pLinkWeights.find(lnk);
+		return (i != pLinkWeights.end());
+	}
+
+	bool BindingConstraint::contains(const ThermalCluster* clstr) const
+	{
+		const clusterWeightMap::const_iterator i = pClusterWeights.find(clstr);
+		return (i != pClusterWeights.end());
 	}
 
 
@@ -1055,6 +1422,8 @@ namespace Data
 
 	bool BindingConstraint::hasAllWeightedLinksOnLayer(size_t layerID)
 	{
+		if (layerID == 0 || (linkCount() == 0 && clusterCount() == 0))
+			return true;
 
 		BindingConstraint::iterator endWeights = this->end();
 
@@ -1072,67 +1441,90 @@ namespace Data
 		return true;
 	}
 
-	void BindingConstraint::setAllWeightedLinksOnLayer(size_t layerID)
+	bool BindingConstraint::hasAllWeightedClustersOnLayer(size_t layerID)
 	{
-		auto studyptr = Data::Study::Current::Get();
-		if (!studyptr)
-			return;
+		if (layerID == 0 || (linkCount() == 0 && clusterCount() == 0))
+			return true;
 
-		auto& study = *studyptr;
+		auto endWeights = pClusterWeights.end();
 
-		const Data::Area::Map::iterator end = study.areas.end();
-		for (Data::Area::Map::iterator i = study.areas.begin(); i != end; ++i)
+		for (auto j = pClusterWeights.begin(); j != endWeights; ++j)
 		{
-			// Reference to the area
-			Data::Area& area = *(i->second);
-			if (area.isVisibleOnLayer(layerID))
-			{
-				// Foreach Interconnection for the area
-				const Data::AreaLink::Map::iterator end = area.links.end();
-				for (Data::AreaLink::Map::iterator i = area.links.begin(); i != end; ++i)
-				{
-					Data::AreaLink* lnk = i->second;
+			auto* clstr = j->first;
+			if (!clstr)
+				continue;
 
-					if (lnk->isVisibleOnLayer(layerID))
-					{
-						weight(lnk, 1);
-					}
-				}
+			if (!clstr->isVisibleOnLayer(layerID) || j->second == 0)
+			{
+				return false;
 			}
 		}
-		return ;
+		return true;
 	}
+
 
 	double BindingConstraint::weight(const AreaLink* lnk) const
 	{
-		WeightMap::const_iterator i = pWeights.find(lnk);
-		return (i != pWeights.end()) ? i->second : 0.;
+		linkWeightMap::const_iterator i = pLinkWeights.find(lnk);
+		return (i != pLinkWeights.end()) ? i->second : 0.;
+	}
+
+	double BindingConstraint::weight(const ThermalCluster* clstr) const
+	{
+		clusterWeightMap::const_iterator i = pClusterWeights.find(clstr);
+		return (i != pClusterWeights.end()) ? i->second : 0.;
 	}
 
 
 	int BindingConstraint::offset(const AreaLink* lnk) const
 	{
-		OffsetMap::const_iterator i = pOffsets.find(lnk);
-		return (i != pOffsets.end()) ? i->second : 0;
+		linkOffsetMap::const_iterator i = pLinkOffsets.find(lnk);
+		return (i != pLinkOffsets.end()) ? i->second : 0;
+	}
+
+	int BindingConstraint::offset(const ThermalCluster* lnk) const
+	{
+		clusterOffsetMap::const_iterator i = pClusterOffsets.find(lnk);
+		return (i != pClusterOffsets.end()) ? i->second : 0;
 	}
 
 
-	void BindingConstraint::initLinkArrays(double* w, int* o, long* linkIndex) const
+	void BindingConstraint::initLinkArrays(double* w, double* cW, int* o, int* cO, long* linkIndex, long* clusterIndex, long* clustersAreaIndex) const
 	{
 		assert(w and "Invalid weight pointer");
 
 		uint off = 0;
-		auto end = pWeights.end();
-		for (auto i = pWeights.begin(); i != end; ++i, ++off)
+		auto end = pLinkWeights.end();
+		for (auto i = pLinkWeights.begin(); i != end; ++i, ++off)
 		{
 			linkIndex[off] = (i->first)->index;
 			w[off]         = i->second;
 
-			auto offsetIt = pOffsets.find(i->first);
-			if ( offsetIt != pOffsets.end())
+			auto offsetIt = pLinkOffsets.find(i->first);
+			if ( offsetIt != pLinkOffsets.end())
 				o[off] = offsetIt->second;
 			else
 				o[off] = 0;
+		}
+
+		off = 0;
+		auto cEnd = pClusterWeights.end();
+		for (auto i = pClusterWeights.begin(); i != cEnd; ++i)
+		{
+			if (i->first->enabled && !i->first->mustrun)
+			{
+				clusterIndex[off] = (i->first)->index;
+				clustersAreaIndex[off] = (i->first)->parentArea->index;
+				cW[off] = i->second;
+
+				auto offsetIt = pClusterOffsets.find(i->first);
+				if (offsetIt != pClusterOffsets.end())
+					cO[off] = offsetIt->second;
+				else
+					cO[off] = 0;
+
+				++off;
+			}
 		}
 	}
 
@@ -1184,9 +1576,13 @@ namespace Data
 		// Operator
 		pOperator = op;
 		// Resetting the weights
-		pWeights.clear();
+		pLinkWeights.clear();
 		// Resetting the offsets
-		pOffsets.clear();
+		pLinkOffsets.clear();
+		// Resetting the weights
+		pClusterWeights.clear();
+		// Resetting the offsets
+		pClusterOffsets.clear();
 
 		switch (pType)
 		{
@@ -1294,16 +1690,26 @@ namespace Data
 		return NULL;
 	}
 
+	void BindConstList::removeConstraintsWhoseNameConstains(const AnyString& filter)
+	{
+		WhoseNameContains pred(filter);
+		pList.erase(std::remove_if(pList.begin(), pList.end(), pred), pList.end());
+	}
 
 	BindingConstraint* BindConstList::add(const AnyString& name)
 	{
 		auto* bc = new BindingConstraint();
 		bc->name(name);
 		pList.push_back(bc);
+		std::sort(pList.begin(), pList.end(), compareConstraints);
 		return bc;
 	}
 
-
+		void BindingConstraint::matrix(const double onevalue)
+	{
+		pValues.fill(onevalue);
+		pValues.markAsModified();
+	}
 
 
 

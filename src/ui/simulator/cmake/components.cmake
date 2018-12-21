@@ -53,6 +53,8 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS
 		toolbox/components/datagrid/renderer/area.cpp
 		toolbox/components/datagrid/renderer/analyzer/areas.h
 		toolbox/components/datagrid/renderer/analyzer/areas.cpp
+		toolbox/components/datagrid/renderer/constraintsbuilder/links.h
+		toolbox/components/datagrid/renderer/constraintsbuilder/links.cpp
 		toolbox/components/datagrid/renderer/connection.h
 		toolbox/components/datagrid/renderer/connection.cpp
 		toolbox/components/datagrid/renderer/simulation.h
@@ -78,6 +80,12 @@ source_group("Datagrid\\Renderer\\Matrix" FILES ${SRC_TOOLBOX_COM_DBGRID_RENDERE
 
 SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS_AREAS
 		# Areas
+		toolbox/components/datagrid/renderer/area/reservoirlevels.h
+		toolbox/components/datagrid/renderer/area/reservoirlevels.cpp
+		toolbox/components/datagrid/renderer/area/watervalues.h
+		toolbox/components/datagrid/renderer/area/watervalues.cpp
+		toolbox/components/datagrid/renderer/area/inflowpattern.h
+		toolbox/components/datagrid/renderer/area/inflowpattern.cpp
 		toolbox/components/datagrid/renderer/correlation.h
 		toolbox/components/datagrid/renderer/correlation.cpp
 		toolbox/components/datagrid/renderer/area/timeseries.h
@@ -86,6 +94,8 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS_AREAS
 		toolbox/components/datagrid/renderer/area/hydroprepro.cpp
 		toolbox/components/datagrid/renderer/area/hydromonthlypower.h
 		toolbox/components/datagrid/renderer/area/hydromonthlypower.cpp
+		toolbox/components/datagrid/renderer/area/creditmodulations.h
+		toolbox/components/datagrid/renderer/area/creditmodulations.cpp
 		toolbox/components/datagrid/renderer/area/thermalprepro.h
 		toolbox/components/datagrid/renderer/area/thermalprepro.cpp
 		toolbox/components/datagrid/renderer/area/thermalmodulation.h

@@ -70,6 +70,7 @@ namespace InputSelector
 			pBmpOn  = Resources::BitmapLoadFromFile("images/16x16/light_green.png");
 			pBmpOff = Resources::BitmapLoadFromFile("images/16x16/light_red.png");
 
+			OnStudyThermalClusterRenamed.connect(this, &SpotlightProviderConstraint::onStudyClusterRename);
 			OnStudyAreaRename.connect(this, &SpotlightProviderConstraint::onStudyAreaRename);
 			OnStudyEndUpdate.connect(this, &SpotlightProviderConstraint::onStudyEndUpdate);
 			OnStudyAreasChanged.connect(this, &SpotlightProviderConstraint::onStudyAreasChanged);
@@ -116,7 +117,7 @@ namespace InputSelector
 							// The current constraint
 							Data::BindingConstraint& constraint = *(*i);
 
-							if (constraint.hasAllWeightedLinksOnLayer(layerIt->first) || layerIt == study.layers.begin())//all binding constraints are shown for first layer
+							if ((constraint.hasAllWeightedLinksOnLayer(layerIt->first) && constraint.hasAllWeightedClustersOnLayer(layerIt->first)) || layerIt == study.layers.begin())//all binding constraints are shown for first layer
 							{
 								layerFilteredItems.push_back(&constraint);
 							}
@@ -229,6 +230,11 @@ namespace InputSelector
 		}
 
 		void onStudyAreaRename(Data::Area*)
+		{
+			redoResearch();
+		}
+
+		void onStudyClusterRename(Data::ThermalCluster*)
 		{
 			redoResearch();
 		}

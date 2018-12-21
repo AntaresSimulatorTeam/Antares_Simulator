@@ -82,11 +82,15 @@ namespace Options
 		void onSelectTransCapInclude(wxCommandEvent&);
 		void onSelectTransCapIgnore(wxCommandEvent&);
 		void onSelectTransCapInfinite(wxCommandEvent&);
+		
+		void onSelectLinkTypeLocal(wxCommandEvent& evt);
+		void onSelectLinkTypeAC(wxCommandEvent& evt);
 
 		void onPopupMenu(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
 		void onPopupMenuSimplex(Component::Button&, wxMenu& menu, void*);
 		void onPopupMenuSpecify(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
 		void onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*);
+		void onPopupMenuLinkType(Component::Button&, wxMenu& menu, void*);
 
 		void onInternalMotion(wxMouseEvent&);
 
@@ -94,6 +98,7 @@ namespace Options
 		Component::Button* pBtnConstraints;
 		Component::Button* pBtnHurdleCosts;
 		Component::Button* pBtnTransmissionCapacities;
+		Component::Button* pBtnLinkType;
 		Component::Button* pBtnThermalClusterMinStablePower;
 		Component::Button* pBtnThermalClusterMinUPTime;
 		Component::Button* pBtnDayAheadReserve;

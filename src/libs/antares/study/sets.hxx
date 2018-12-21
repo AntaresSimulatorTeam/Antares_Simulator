@@ -153,6 +153,35 @@ namespace Data
 		add("all areas", item, opts);
 	}
 
+	template<class T>
+	YString Sets<T>::toString() {
+		using namespace Yuni;
+		using namespace Antares;
+		static const char* cmds[ruleMax] =
+		{
+			"none", "+", "-", "apply-filter"
+		};
+		const auto end = pOptions.cend();
+		YString ret = "";
+		for (auto i = pOptions.cbegin(); i != end; ++i)
+		{
+			const Options& opts = i->second;
+			ret << '[' << i->first << "]\n";
+			ret << "caption = " << opts.caption << '\n';
+			if (not opts.comments.empty())
+				ret << "comments = " << opts.comments << '\n';
+			if (!opts.output)
+				ret << "output = false\n";
+
+			for (uint r = 0; r != opts.rules.size(); ++r)
+			{
+				const Rule& rule = opts.rules[r];
+				ret << cmds[rule.first] << " = " << rule.second << '\n';
+			}
+			ret << '\n';
+		}
+		return ret;
+	}
 
 	template<class T>
 	template<class StringT>
@@ -208,6 +237,7 @@ namespace Data
 		if (!IO::File::Exists(filename))
 			// Error silently ignored
 			return true;
+
 
 		IniFile ini;
 		if (ini.open(filename))

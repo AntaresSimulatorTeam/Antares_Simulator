@@ -29,6 +29,7 @@
 #include "../study.h"
 #include "../../windows/simulation/run.h"
 #include "../../windows/analyzer/analyzer.h"
+#include "../../windows/constraints-builder/constraintsbuilder.h"
 #include "internal-data.h"
 #include "../../config.h"
 #include <yuni/datetime/timestamp.h>
@@ -88,10 +89,6 @@ namespace Forms
 	}
 
 
-
-
-
-
 	void MainFormData::onToolbarRunSimulation(void*)
 	{
 		// the call to this window must be delayed to avoid issues with other main loop
@@ -100,13 +97,12 @@ namespace Forms
 		ShowSimulationPanel(&pMainForm, false);
 	}
 
-
 	void ApplWnd::evtOnRunSimulation(wxCommandEvent&)
 	{
 
 		// the call to this window must be delayed to avoid issues with other main loop
 		// events, from the output viewer for example
-		Yuni::Bind<void ()> callback;
+		Yuni::Bind<void()> callback;
 		callback.bind(pData, &MainFormData::onToolbarRunSimulation, nullptr);
 		Dispatcher::GUI::Post(callback);
 	}
@@ -166,7 +162,51 @@ namespace Forms
 		}
 	}
 
+	void ApplWnd::evtOnRunConstraintsBuilder(wxCommandEvent&)
+	{
+		Dispatcher::GUI::Post(this, &ApplWnd::evtOnRunConstraintsBuilderDelayed);
+	}
 
+
+	void ApplWnd::evtOnRunConstraintsBuilderDelayed()
+	{
+		
+		if (not Data::Study::Current::Valid())
+		{
+			logs.error() << "No study opened";
+			return;
+		}
+		auto& study = *Data::Study::Current::Get();
+
+		if (SimulationCheck(study))
+		{
+			if (study.folder.empty() || study.folderInput.empty())
+			{
+				logs.error() << "The study must be saved before launching the constraints builder";
+				return;
+			}
+			if (study.header.version != Data::versionLatest)
+			{
+				logs.error() << "The study must be upgraded to the v"
+					<< Data::VersionToCStr((Data::Version)Data::versionLatest)
+					<< " format before launching the constraints builder";
+				return;
+			}
+
+			Forms::Disabler<ApplWnd> disabler(*this);
+			size_t beforeRun = study.bindingConstraints.size();
+			auto* form = new Window::ConstraintsBuilderWizard(nullptr);
+			form->ShowModal();
+			form->Destroy();
+
+			if (beforeRun != study.bindingConstraints.size())
+				MarkTheStudyAsModified();
+			
+			// TO DO : create job
+			//String filename = "D:/settings.ini";
+			//launchConstraintsBuilder(filename);
+		}
+	}
 
 
 

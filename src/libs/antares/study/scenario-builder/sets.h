@@ -73,7 +73,7 @@ namespace ScenarioBuilder
 		/*!
 		** \brief Load data from the study
 		*/
-		bool loadFromStudy(const Study& study);
+		bool loadFromStudy(Study& study);
 
 		/*!
 		** \brief Clear all data
@@ -155,7 +155,7 @@ namespace ScenarioBuilder
 		//! All available sets, ordered by their lower name
 		Rules::Map pMap;
 		//! Alias to the study
-		const Study* pStudy;
+		Study* pStudy;
 	}; // class Sets
 
 

@@ -220,7 +220,7 @@ namespace Economy
 		void yearEnd(uint year, unsigned int numSpace)
 		{
 			// Compute all statistics for the current year (daily,weekly,monthly)
-			pValuesForTheCurrentYear[numSpace].computePriceStatisticsForTheCurrentYear();
+			pValuesForTheCurrentYear[numSpace].computeAVGstatisticsForCurrentYear();
 
 			// Next variable
 			NextType::yearEnd(year, numSpace);

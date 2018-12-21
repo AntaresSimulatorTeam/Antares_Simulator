@@ -112,9 +112,15 @@ namespace Data
 		// The list should remain ordered in the reverse order for performance reasons
 		switch (v)
 		{
-			case version600:      return "6.0";
-			case versionFutur:    return ">6.0";
+			case versionFutur:    return ">7.0";
+			case version700:      return "7.0";
+			case version650:      return "6.5";			
 			// older versions
+			case version640:      return "6.4";
+			case version630:      return "6.3";
+			case version620:      return "6.2";
+			case version610:      return "6.1";
+			case version600:      return "6.0";
 			case version510:      return "5.1";
 			case version500:      return "5.0";
 			case version450:      return "4.5";
@@ -147,9 +153,16 @@ namespace Data
 		// The list should remain ordered in the reverse order for performance reasons
 		switch (v)
 		{
-			case version600:      return L"6.0";
-			case versionFutur:    return L">6.0";
+			case versionFutur:    return L">7.0";
+			case version700:    return L"7.0";
+			case version650:      return L"6.5";
+			
 			// older versions
+			case version640:      return L"6.4";
+			case version630:      return L"6.3";
+			case version620:      return L"6.2";
+			case version610:      return L"6.1";
+			case version600:      return L"6.0";
 			case version500:      return L"5.0";
 			case version510:      return L"5.1";
 			case version450:      return L"4.5";
@@ -182,6 +195,12 @@ namespace Data
 		// The list should remain ordered in the reverse order for performance reasons
 		switch (version)
 		{
+			case 700: return version700;
+			case 650: return version650;
+			case 640: return version640;
+			case 630: return version630;
+			case 620: return version620;
+			case 610: return version610;
 			case 600: return version600;
 			case 510: return version510;
 			case 500: return version500;

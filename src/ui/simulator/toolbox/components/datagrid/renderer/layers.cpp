@@ -329,7 +329,7 @@ namespace Antares
 					std::advance(areaIterator, y);
 					Antares::Data::Area* pArea = areaIterator->second;
 					std::vector<size_t>& layerList = pArea->ui->mapLayersVisibilityList;
-					auto& layerPosition = std::find(layerList.begin(), layerList.end(), layerIterator->first);
+					auto layerPosition = std::find(layerList.begin(), layerList.end(), layerIterator->first);
 					bool b = value.to<bool>();
 
 					if (b)
@@ -360,7 +360,7 @@ namespace Antares
 						std::advance(areaIterator, y);
 						Antares::Data::Area* pArea = areaIterator->second;
 						std::vector<size_t>& layerList = pArea->ui->mapLayersVisibilityList;
-						auto& layerPosition = std::find(layerList.begin(), layerList.end(), layerIterator->first);
+						auto layerPosition = std::find(layerList.begin(), layerList.end(), layerIterator->first);
 
 							return layerPosition != layerList.end() ? 1. : 0.;
 
@@ -378,7 +378,7 @@ namespace Antares
 						std::advance(areaIterator, y);
 						Antares::Data::Area* pArea = areaIterator->second;
 						std::vector<size_t>& layerList = pArea->ui->mapLayersVisibilityList;
-						auto& layerPosition = std::find(layerList.begin(), layerList.end(), layerIterator->first);
+						auto layerPosition = std::find(layerList.begin(), layerList.end(), layerIterator->first);
 
 						return layerPosition != layerList.end() ? wxT("Yes") : wxT("No");
 

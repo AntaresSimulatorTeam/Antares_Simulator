@@ -90,6 +90,18 @@ namespace Data
 		version510 = 510,
 		//! Study version 6.0
 		version600 = 600,
+		//! Study version 6.1
+		version610 = 610,
+		//! Study version 6.2
+		version620 = 620,
+		//! Study version 6.3
+		version630 = 630,
+		//! Study version 6.4
+		version640 = 640,
+		//! Study version 6.5
+		version650 = 650,
+		//! Study version 6.5
+		version700 = 700,
 
 		// see versionLatest below
 
@@ -102,7 +114,7 @@ namespace Data
 	enum
 	{
 		//! The latest version
-		versionLatest = version600,
+		versionLatest = version700,
 	};
 
 

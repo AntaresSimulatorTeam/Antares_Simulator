@@ -124,6 +124,8 @@ namespace Data
 
 		bool isVisibleOnLayer(const size_t& layerID)const;
 
+		Yuni::String getName()const;
+
 	public:
 		//! \name Graph
 		//@{
@@ -143,6 +145,12 @@ namespace Data
 		*/
 		Matrix<> data;
 
+		//! Flag for using loop flow
+		bool useLoopFlow;
+
+		//! Flag for using the phase shifter
+		bool usePST;
+
 		//! Flag for using hurdles cost
 		bool useHurdlesCost;
 
@@ -151,6 +159,8 @@ namespace Data
 		TransmissionCapacities transmissionCapacities;
 		//@}
 
+		//! Flag for the asset type (AC/DC/Other)
+		AssetType assetType;
 
 		//! \name Indexes
 		//@{
@@ -188,9 +198,22 @@ namespace Data
 		uint filterYearByYear;
 		//@}
 
+		//! Colors
+		int color[3];
+		//! Style
+		StyleType style;
+		//! link width
+		int linkWidth;
+
 	}; // class AreaLink
 
-
+	struct CompareLinkName final
+	{
+		inline bool operator()(const AreaLink* s1, const AreaLink* s2) const
+		{
+			return (s1->getName().toLower() < s2->getName().toLower());
+		}
+	};
 
 
 

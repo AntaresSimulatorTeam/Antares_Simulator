@@ -46,11 +46,11 @@ namespace Renderer
 
 
 	class HydroMonthlyPower final :
-		public Renderer::Matrix<double, uint, 0>,
+		public Renderer::Matrix<double, double, 2>,
 		public Renderer::ARendererArea
 	{
 	public:
-		typedef Renderer::Matrix<double, uint, 0>  MatrixAncestorType;
+		typedef Renderer::Matrix<double, double, 2>  MatrixAncestorType;
 
 	public:
 		//! \name Constructor & Destructor
@@ -63,8 +63,8 @@ namespace Renderer
 		virtual ~HydroMonthlyPower();
 		//@}
 
-		virtual int width() const {return 3;}
-		virtual int height() const {return 365;}
+		virtual int width() const {return 4;}
+		virtual int height() const {return DAYS_PER_YEAR;}
 
 		virtual wxString columnCaption(int colIndx) const;
 

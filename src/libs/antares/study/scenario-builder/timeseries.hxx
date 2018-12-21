@@ -92,6 +92,28 @@ namespace ScenarioBuilder
 			pTSNumberRules[areaindex][year] = value;
 	}
 
+	inline void TSNumberRules::set(const Antares::Data::ThermalCluster * cluster,const uint year, uint value)
+	{
+		assert(cluster!=nullptr);
+		if (clusterIndexMap.find(cluster) == clusterIndexMap.end())
+			clusterIndexMap[cluster] = cluster->areaWideIndex;
+		if (year < pTSNumberRules.height)
+			pTSNumberRules[clusterIndexMap[cluster]][year] = value;
+	}
+
+	inline uint TSNumberRules::get(const Antares::Data::ThermalCluster * cluster, const uint year) const
+	{
+		assert(cluster != nullptr);
+		if (clusterIndexMap.find(cluster) != clusterIndexMap.end() && year < pTSNumberRules.height)
+		{
+			uint index = clusterIndexMap.at(cluster);
+			return pTSNumberRules[index][year];
+		}
+
+		return 0;
+
+	}
+
 
 
 

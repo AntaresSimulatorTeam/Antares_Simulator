@@ -44,7 +44,7 @@ namespace Window
 	/*!
 	**
 	*/
-	class Interconnection : public Component::Panel, public Yuni::IEventObserver<Interconnection>
+	class Interconnection : public wxScrolledWindow, public Yuni::IEventObserver<Interconnection>
 	{
 	public:
 		//! \name Constructor & Destructor
@@ -65,6 +65,13 @@ namespace Window
 		void onSelectTransCapIgnore(wxCommandEvent&);
 		void onSelectTransCapInfinite(wxCommandEvent&);
 
+		void onPopupMenuAssetType(Component::Button&, wxMenu& menu, void*);
+		void onSelectAssetTypeAC(wxCommandEvent&);
+		void onSelectAssetTypeDC(wxCommandEvent&);
+		void onSelectAssetTypeGas(wxCommandEvent&);
+		void onSelectAssetTypeVirt(wxCommandEvent&);
+		void onSelectAssetTypeOther(wxCommandEvent&);
+
 		void onPopupMenuHurdlesCosts(Component::Button&, wxMenu& menu, void*);
 		void onSelectIncludeHurdlesCosts(wxCommandEvent&);
 		void onSelectIgnoreHurdlesCosts(wxCommandEvent&);
@@ -82,8 +89,14 @@ namespace Window
 		Component::Button* pLinkName;
 		//! Hudrles costs
 		Component::Button* pHurdlesCost;
+		//! Loop flow
+		Component::Button* pLoopFlow;
+		// !Phase shifter
+		Component::Button* pPhaseShift;
 		//! Copper Plate
 		Component::Button* pCopperPlate;
+		//! Asset type
+		Component::Button* pAssetType;
 		//! Caption
 		wxWindow* pCaptionText;
 		//! No Link

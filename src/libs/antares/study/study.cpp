@@ -33,6 +33,7 @@
 #include <yuni/datetime/timestamp.h>
 
 #include <cassert>
+#include <climits>
 
 #include "study.h"
 #include "runtime.h"
@@ -85,7 +86,6 @@ namespace Data
 		maxNbYearsInParallel_save(0),
 		minNbYearsInParallel(0),
 		minNbYearsInParallel_save(0),
-		coresLimitedByTotYears(false),
 		simulation(*this),
 		areas(*this),
 		scenarioRules(nullptr),
@@ -477,7 +477,9 @@ namespace Data
 
 		for (uint y = 0; y < p.nbYears; ++y)
 		{
-			bool performCalculations =  p.yearsFilter[y];
+			bool performCalculations = true;
+			if (p.userPlaylist)
+				performCalculations = p.yearsFilter[y];
 
 			// Do we have to refresh ?
 			bool refreshing = false;
@@ -526,27 +528,18 @@ namespace Data
 				buildNewSet = false;
 		}	// End of loop over years
 
+
 		// Now finding the smallest size among all sets.
 		minNbYearsInParallel = maxNbYearsInParallel;
-		if (setsOfParallelYears.size() == 1)
+		for (int s = 0; s < setsOfParallelYears.size(); s++)
 		{
-			coresLimitedByTotYears = true;
-			minNbYearsInParallel = setsOfParallelYears[0].size();
+			uint setSize = (uint)setsOfParallelYears[s].size();
+			// Empty sets are not taken into account because, on the solver side,
+			// they will contain only skipped years
+			if (setSize && (setSize < minNbYearsInParallel))
+				minNbYearsInParallel = setSize;
 		}
-		else
-		{
-			// The last set is not taken into account here : it contains remaining MC years, 
-			// so this set was not sized according to the same rules the others sets were 
-			// sized with (full with actually run years or limiting refresh intervall).
-			for (int s = 0; s < setsOfParallelYears.size() - 1; s++)
-			{
-				uint setSize = setsOfParallelYears[s].size();
-				// Empty sets are not taken into account because on the solver side,
-				// they will contain only skipped years
-				if (setSize && (setSize < minNbYearsInParallel))
-					minNbYearsInParallel = setSize;
-			}
-		}
+
 
 		// GUI : storing minimum number of parallel years (in a set of parallel years).
 		//		 Useful in the run window's simulation cores field in case parallel mode is enabled by user.
@@ -559,7 +552,7 @@ namespace Data
 		for (int s = 0; s < setsOfParallelYears.size(); s++)
 		{
 			if (setsOfParallelYears[s].size() > maxNbYearsOverAllSets)
-				maxNbYearsOverAllSets = setsOfParallelYears[s].size();
+				maxNbYearsOverAllSets = (uint)setsOfParallelYears[s].size();
 		}
 		maxNbYearsInParallel = maxNbYearsOverAllSets;
 
@@ -567,8 +560,94 @@ namespace Data
 		//		 Useful for RAM estimation.
 		maxNbYearsInParallel_save = maxNbYearsInParallel;
 
+		// Here we answer the question (useful only if hydro hot start is asked) : do all sets of parallel years have the same size ?
+		if (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart && setsOfParallelYears.size() && maxNbYearsInParallel > 1)
+		{
+			uint currentSetSize = (uint)setsOfParallelYears[0].size();
+			if (setsOfParallelYears.size() > 1)
+			{
+				for (int s = 1; s < setsOfParallelYears.size(); s++)
+				{
+					if (setsOfParallelYears[s].size() != currentSetSize)
+					{
+						parameters.allSetsHaveSameSize = false;
+						break;
+					}
+				}
+			}
+		}	// End if hot start
+
 	}
+
+
 	
+	bool Study::checkHydroHotStart()
+	{
+		// Error messages possibly used in this method.
+		std::string parallelParametersErrMsg1 = "Hot Start Hydro option : conflict with parallelization parameters.";
+		std::string parallelParametersErrMsg2 = "Please update relevant simulation parameters or use Cold Start option.    ";
+
+		std::string calendarErrMsg1 = "Hot Start Hydro option : conflict with Hydro Local Data and/or Simulation Calendar.    ";
+		std::string calendarErrMsg2 = "Please update data or use Cold Start option.";
+		
+		bool hydroHotStart = (parameters.initialReservoirLevels.iniLevels == irlHotStart);
+
+		// No need to check further if hydro hot start is not required
+		if (!hydroHotStart)
+			return true;
+
+		// Here we answer the question (useful only if hydro hot start is asked) : In case of parallel run, 
+		// do all sets of parallel years have the same size ?
+		if (maxNbYearsInParallel != 1 && !parameters.allSetsHaveSameSize)
+		{
+			logs.error() << parallelParametersErrMsg1;
+			logs.error() << parallelParametersErrMsg2;
+			return false;
+		}
+
+
+		// Checking calendar conditions
+		// ... The simulation lasts one year exactly
+		uint nbDaysInSimulation = parameters.simulationDays.end - parameters.simulationDays.first + 1;
+		if (nbDaysInSimulation < 364)
+		{
+			logs.error() << calendarErrMsg1;
+			logs.error() << calendarErrMsg2;
+			return false;
+		}
+
+		// ... For all areas for which reservoir management is enabled :
+		//     - Their starting level is initialized on the same day
+		//     - This day is the first day of the simulation calendar
+		const Area::Map::iterator end = areas.end();
+		for (Area::Map::iterator i = areas.begin(); i != end; ++i)
+		{
+			// Reference to the area
+			Area* area = i->second;
+
+			// Month the reservoir level is initialized according to.
+			// This month number is given in the civil calendar, from january to december (0 is january).
+			int initLevelOnMonth = area->hydro.initializeReservoirLevelDate;
+
+			// Conversion of the previous month into simulation calendar
+			uint initLevelOnSimMonth = calendar.mapping.months[initLevelOnMonth];
+
+			// Previous month's first day in the year
+			uint initLevelOnSimDay = calendar.months[initLevelOnSimMonth].daysYear.first;
+
+			// Check the day of level initialization is the first day of simulation
+			if (initLevelOnSimDay != parameters.simulationDays.first)
+			{
+				logs.error() << calendarErrMsg1;
+				logs.error() << calendarErrMsg2;
+				return false;
+			}
+		}	// End loop over areas
+
+		return true;
+	}
+
+
 
 	bool Study::initializeRuntimeInfos()
 	{
@@ -1051,12 +1130,14 @@ namespace Data
 
 		// Archiving data
 		{
+			ret = area.thermal.list.rename(cluster->id(), newName);
+			area.thermal.prepareAreaWideIndexes();
 			ScenarioBuilderUpdater updaterSB(*this);
 
 			// Restoring the old ID
 	//		cluster->name(oldId);
 			// Rename the cluster
-			ret = area.thermal.list.rename(cluster->id(), newName);
+			//ret = area.thermal.list.rename(cluster->id(), newName);
 		}
 
 		if (uiinfo)

@@ -358,6 +358,10 @@ namespace Forms
 				wxT("Run the time-series analyzer"), nullptr,
 				wxT("Run the time-series analyzer"));
 
+		Menu::CreateItem(pMenuSimulation, mnIDRunTheConstraintsBuilder,
+				wxT("Run the Kirchhoff's constraints generator"), nullptr,
+				wxT("Run the Kirchhoff's constraints generator"));
+
 		return pMenuSimulation;
 	}
 
@@ -372,10 +376,9 @@ namespace Forms
 				wxT("Filters on simulation results\tctrl+alt+f"), "images/16x16/filter.png",
 				wxT("Configure Filters on simulation results"));
 		it->Enable(false);
-		it = Menu::CreateItem(pMenuOptions, wxID_ANY,
+		it = Menu::CreateItem(pMenuOptions, mnIDOptionConfigureDistricts,
 				wxT("Geographic districts\tctrl+alt+d"), "images/16x16/filter.png",
 				wxT("Configure geographic districts"));
-		it->Enable(false);
 		Menu::CreateItem(pMenuOptions, mnIDOptionConfigureMCScenarioBuilder,
 				wxT("MC Scenario Builder"), "images/16x16/scenariobuilder.png",
 				wxT("Configure MC Scenario Builder"));
@@ -520,9 +523,19 @@ namespace Forms
 		Menu::CreateItem(pMenuHelp, mnIDHelpPDFGeneralReferenceGuide,
 				wxT("General reference guide    \tF1"), "images/16x16/help.png",
 				wxT("Open PDF : General reference guide"));
+
+		Menu::CreateItem(pMenuHelp, mnIDHelpPDFOptimizationProblemsFormulation,
+			wxT("Optimization problems formulation"), "images/16x16/help.png",
+			wxT("Open PDF : Optimization problems formulation"));
+
 		Menu::CreateItem(pMenuHelp, mnIDHelpPDFSystemMapEditorReferenceGuide,
 			wxT("System Map Editor reference guide"), "images/16x16/help.png",
 			wxT("Open PDF : System Map Editor reference guide"));
+
+		
+		Menu::CreateItem(pMenuHelp, mnIDHelpPDFExamplesLibrary,
+				wxT("Examples library"), "images/16x16/help.png",
+				wxT("Open PDF : Examples library"));
 
 		pMenuHelp->AppendSeparator();
 
@@ -536,6 +549,8 @@ namespace Forms
 		Menu::CreateItem(pMenuHelp, mnIDHelpShowID,
 			wxT("Show signature"), nullptr,
 			wxT("Show unique signature"));
+		
+
 
 		pMenuHelp->AppendSeparator();
 

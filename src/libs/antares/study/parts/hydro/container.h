@@ -55,6 +55,26 @@ namespace Data
 			maximum,
 		};
 
+		enum powerDailyE
+		{
+			//! Generated max power
+			genMaxP = 0,
+			//! Generated max energy
+			genMaxE,
+			//! Pumping max Power
+			pumpMaxP,
+			// Pumping max Energy
+			pumpMaxE,
+		};
+
+		enum weeklyHydroMod
+		{
+			//! Weekly generating modulation
+			genMod = 0,
+			//! Weekly pumping modulation
+			pumpMod,
+		};
+
 	public:
 		/*!
 		** \brief Load data for hydro container from a folder
@@ -96,6 +116,7 @@ namespace Data
 		*/
 		void markAsModified() const;
 
+
 	public:
 		//! Inter-daily breakdown (previously called Smoothing Factor or alpha)
 		double interDailyBreakdown;
@@ -107,17 +128,46 @@ namespace Data
 
 		//! Enabled reservoir management
 		bool reservoirManagement;
+
+		//! Following load modulation
+		bool followLoadModulations;
+		//! Use water values
+		bool useWaterValue;
+		//! Hard bound on rule curves
+		bool hardBoundsOnRuleCurves;
+		//! Use heuristic target
+		bool useHeuristicTarget;
 		//! Reservoir capacity (MWh)
 		double reservoirCapacity;
+		// gp : pb - initializeReservoirLevelDate must be an enum from january (= 0) to december (= 11) 
+		//! Initialize reservoir level date (month)
+		int initializeReservoirLevelDate;
+		//! Use Leeway 
+		bool useLeeway;
+		//! Power to level modulations
+		bool powerToLevel;
+		//! Leeway low bound
+		double leewayLowerBound;
+		//! Leeway upper bound
+		double leewayUpperBound;
+		//! Puming efficiency
+		double pumpingEfficiency;
+		//! Daily max power ({generating max Power, generating max energy, pumping max power, pumping max energy}x365)
+		Matrix<double,double> maxPower;
+		//! Credit Modulation (default 0, 101 * 2)
+		Matrix<double, double> creditModulation;
 
-		//! Daily max power ({min,avg,max}x365)
-		Matrix<double, uint> maxPower;
+		//! Daily Inflow Patern ([default 1, 0<x<dayspermonth]x365)
+		Matrix<double> inflowPattern;
 
 		// Useful for solver RAM estimation
 		bool hydroModulable;
 
-		//! Monthly reservoir level ({min,avg,max}x12)
+		//! Daily reservoir level ({min,avg,max}x365)
 		Matrix<double> reservoirLevel;
+
+		//! Daily water value ({0,1,2%...100%}x365)
+		Matrix<double> waterValues;
 
 		//! Hydro allocation, from other areas
 		HydroAllocation allocation;
@@ -129,11 +179,25 @@ namespace Data
 
 	}; // class PartHydro
 
+	// Type encapsulating working variables for next function :
+	// As the next function can be called a lot of times, passing an already created variable
+	// avoids the overhead of local variables creation
+	struct h2oValueWorkVarsType {
+		double levelUp;
+		double levelDown;
+	};
 
+	// Interpolates a water value from a table according to a level and a day.
+	// As this function can be called a lot of times, we pass working variables and returned variables
+	// as arguments, so that we don't have to create them locally (as in a classical function) each time.
+	void getWaterValue(	const double & level,
+						const Matrix<double> & waterValues,
+						const uint day,
+						h2oValueWorkVarsType & workVar,
+						double & waterValueToReturn);
 
-
-
-
+	// Interpolates a rate from the credit modulation table according to a level
+	double getWeeklyModulation(const double & level /* format : in % of reservoir capacity */, Matrix<double, double> & creditMod, int modType);
 
 } // namespace Data
 } // namespace Antares

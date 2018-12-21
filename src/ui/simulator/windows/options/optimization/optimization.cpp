@@ -102,6 +102,22 @@ namespace Options
 		}
 	}
 
+	static void ResetButton(Component::Button* button, Data::LinkType value)
+	{
+		assert(button != NULL);
+		switch (value)
+		{
+		case Data::ltLocal:
+			button->image("images/16x16/light_green.png");
+			button->caption(wxT("local values"));
+			break;
+		case Data::ltAC:
+			button->image("images/16x16/light_orange.png");
+			button->caption(wxT("set to AC"));
+			break;
+		}
+	}
+
 
 	Optimization::Optimization(wxWindow* parent) :
 		wxDialog(parent, wxID_ANY, wxT("Optimization preferences"), wxDefaultPosition, wxDefaultSize,
@@ -173,6 +189,18 @@ namespace Options
 			s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 			s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 			pBtnTransmissionCapacities = button;
+		}
+		// Asset type
+		{
+			label = Component::CreateLabel(this, wxT("Link type"));
+			button = new Component::Button(this, wxT("local values"), "images/16x16/light_green.png");
+			button->SetBackgroundColour(bgColor);
+			button->menu(true);
+			onPopup.bind(this, &Optimization::onPopupMenuLinkType);
+			button->onPopupMenu(onPopup);
+			s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+			s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+			pBtnLinkType = button;
 		}
 		// Thermal clusters Min Stable Power
 		{
@@ -351,6 +379,7 @@ namespace Options
 				study.parameters.include.constraints            = true;
 				study.parameters.include.hurdleCosts            = true;
 				study.parameters.transmissionCapacities         = Data::tncEnabled;
+				study.parameters.linkType						= Data::ltLocal;
 				study.parameters.include.thermal.minStablePower = true;
 				study.parameters.include.thermal.minUPTime      = true;
 				study.parameters.include.reserve.dayAhead       = true;
@@ -388,6 +417,8 @@ namespace Options
 		ResetButton(pBtnHurdleCosts, study.parameters.include.hurdleCosts);
 		// Transmission capacities
 		ResetButton(pBtnTransmissionCapacities, study.parameters.transmissionCapacities);
+		// Link type
+		ResetButton(pBtnLinkType, study.parameters.linkType);
 		// Min Stable power
 		ResetButton(pBtnThermalClusterMinStablePower, study.parameters.include.thermal.minStablePower);
 		// Min U/D time
@@ -576,6 +607,47 @@ namespace Options
 		}
 	}
 
+	void Optimization::onPopupMenuLinkType(Component::Button&, wxMenu& menu, void*)
+	{
+		wxMenuItem* it;
+
+		it = Menu::CreateItem(&menu, wxID_ANY, wxString() << wxT("local values"),
+			"images/16x16/light_green.png", wxEmptyString);
+		menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
+			wxCommandEventHandler(Optimization::onSelectLinkTypeLocal), nullptr, this);
+
+		it = Menu::CreateItem(&menu, wxID_ANY, wxT("set to AC"), "images/16x16/light_orange.png", wxEmptyString);
+		menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
+			wxCommandEventHandler(Optimization::onSelectLinkTypeAC), nullptr, this);
+	}
+
+	void Optimization::onSelectLinkTypeLocal(wxCommandEvent&)
+	{
+		auto study = Data::Study::Current::Get();
+		if (!(!study))
+		{
+			if (study->parameters.linkType != Data::ltLocal)
+			{
+				study->parameters.linkType = Data::ltLocal;
+				refresh();
+				MarkTheStudyAsModified();
+			}
+		}
+	}
+
+	void Optimization::onSelectLinkTypeAC(wxCommandEvent&)
+	{
+		auto study = Data::Study::Current::Get();
+		if (!(!study))
+		{
+			if (study->parameters.linkType != Data::ltAC)
+			{
+				study->parameters.linkType = Data::ltAC;
+				refresh();
+				MarkTheStudyAsModified();
+			}
+		}
+	}
 
 
 

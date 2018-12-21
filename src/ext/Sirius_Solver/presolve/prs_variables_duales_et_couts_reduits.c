@@ -60,6 +60,14 @@ TypeDeBornePourPresolve = Presolve->TypeDeBornePourPresolve;
 NbCycles = 0;
 NbModifications = 0;
 
+if ( Pne->YaDesVariablesEntieres == NON_PNE ) {
+  /* Si on est en continu, on ne sait pas (pour l'instant) recalculer exactement les variables
+	   duales des contraintes quand on fait des substitutions de variables. Donc on prefere ne pas
+		 faire ce genre de presolve. Todo: stocker toutes les transfromations de la matrice pour
+		 recalculer exactement les variables duales. */
+  return;
+}
+
 /* Scanner les colonnes pour resserer les bornes sur la variable qui correspond
    a la colonne */
 

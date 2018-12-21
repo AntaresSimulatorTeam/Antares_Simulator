@@ -27,6 +27,7 @@
 
 #include "../main.h"
 #include "../../windows/notes.h"
+#include "../../windows/sets.h"
 
 
 using namespace Yuni;
@@ -51,8 +52,18 @@ namespace Forms
 		pUserNotes->saveToStudy();
 	}
 
+	void ApplWnd::loadSets()
+	{
+		assert(NULL != pSets);
+		pSets->loadFromStudy();
+	}
 
 
+	void ApplWnd::saveSets()
+	{
+		assert(NULL != pSets);
+		pSets->saveToStudy();
+	}
 
 } // namespace Forms
 } // namespace Antares

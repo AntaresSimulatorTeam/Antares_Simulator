@@ -649,10 +649,11 @@ namespace Date
 			for (int w = weekindex - 1; w >= 0; --w, --userweek)
 				weeks[w].userweek = userweek;
 		}
+		
+		// Caution : 
+		//		weeks[w].days are not computed here and are useless.
+		//		their runtime counterparts are computed though (look in the study runtime infos).
 
-		// Total number of days per week
-		for (uint w = 0; w < maxWeeksInYear; ++w)
-			weeks[w].days = weeks[w].daysYear.end - weeks[w].daysYear.first;
 
 		// preparing all text representations
 		{

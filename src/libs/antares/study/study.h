@@ -487,6 +487,20 @@ namespace Data
 		void getNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced);
 
 		/*!
+		** \brief In case hydro hot start is enabled, checking all conditions are met.
+		**
+		** If hydro hot start is enabled, check that :
+		** - For all areas for which reservoir management is enabled :
+		**   + Their starting level is initialized on the same day
+		**   + This day is the first day of the simulation calendar
+		** - The simulation lasts exactly one year
+		** - All batches (or sets) of simultaneous years have the same size (obvious if a parallel run is not required : answer is yes).
+		**
+		** If these conditions are not met, some error message is raised, when attempting to run the study.
+		*/
+		bool checkHydroHotStart();
+
+		/*!
 		** \brief Remove timeseries if ts-generator is enabled
 		*/
 		void removeTimeseriesIfTSGeneratorEnabled();
@@ -666,9 +680,6 @@ namespace Data
 		// Allows storing the minimum number of years in a set of parallel years. 
 		// Useful to populate the run window's simulation cores field.
 		uint minNbYearsInParallel_save;
-
-		// Is min number of years in a set of parallel years limited by the total number of cores ? 
-		bool coresLimitedByTotYears;
 
 		
 		//! Parameters

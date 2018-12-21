@@ -435,9 +435,12 @@ bool JobFileReader::prepareJumpTable()
 		{
 			if (output->columns[j] == entry)
 			{
-				pJumpTable[i] = j;
-				pVariablesOn[j] = true;
-				++jumpFound;
+				if (!jumpFound)
+				{
+					pJumpTable[i] = j;
+					pVariablesOn[j] = true;
+					++jumpFound;
+				}
 				break;
 			}
 		}

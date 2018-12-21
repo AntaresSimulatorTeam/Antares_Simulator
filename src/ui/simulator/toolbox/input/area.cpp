@@ -178,22 +178,9 @@ namespace InputSelector
 
 			// We may have no selection at all. For this container, we always want
 			// something selected
-			if (!pLastAreaID && !out.empty())
+			if (!pLastAreaID || !out.empty())
 			{
-				typedef Toolbox::Spotlight::ItemArea::Ptr ItemArea;
-				ItemArea itemarea = Spotlight::IItem::Ptr::DynamicCast<ItemArea>(out[0]);
-				if (!(!itemarea) && itemarea->area)
-				{
-					gLastArea = itemarea->area;
-					pLastAreaID = gLastArea->id;
-					itemarea->select();
-					if (pAutoTriggerSelection)
-					{
-						//pAutoTriggerSelection = false;
-						// To reduce flickering, this event should be delayed
-						Dispatcher::GUI::Post(this, &SpotlightProviderArea::broadcastAreaChange, 20);
-					}
-				}
+				Dispatcher::GUI::Post(this, &SpotlightProviderArea::broadcastAreaChange, 20);
 			}
 		}
 

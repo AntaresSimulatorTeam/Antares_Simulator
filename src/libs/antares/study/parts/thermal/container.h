@@ -88,6 +88,18 @@ namespace Data
 		uint prepareClustersInMustRunMode();
 
 		/*!
+		** \brief Removes disabled thermal clusters
+		**
+		** All clusters with the flag 'enabled' turned to false will be removed from 'list'.
+		** As a consequence, they will no longer be seen as thermal clusters
+		** from the solver's point of view.
+		** \warning This method should only be used from the solver
+		**
+		** \return The number of disabled clusters found
+		*/
+		uint removeDisabledClusters();
+
+		/*!
 		** \brief Invalidate all JIT data
 		*/
 		bool invalidate(bool reload) const;
@@ -103,7 +115,7 @@ namespace Data
 		//! The spilled energy cost
 		double spilledEnergyCost;
 
-		//! List of all thermal clusters
+		//! List of all thermal clusters (enabled and disabled) except must-run clusters
 		ThermalClusterList list;
 		//! List of all thermal clusters in 'must-run' mode
 		//! \warning This list must only be used from the solver

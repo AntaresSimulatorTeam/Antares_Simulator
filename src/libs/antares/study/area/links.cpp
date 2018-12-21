@@ -42,7 +42,6 @@ using namespace Antares;
 
 #define SEP (IO:: Separator)
 
-
 namespace Antares
 {
 namespace Data
@@ -54,12 +53,18 @@ namespace Data
 		with(nullptr),
 		data(fhlMax, HOURS_PER_YEAR),
 		useHurdlesCost(false),
+		useLoopFlow(false),
+		usePST(false),
 		transmissionCapacities(Data::tncEnabled),
+		assetType(Data::atAC),
 		index(0),
 		indexForArea(0),
 		displayComments(true),
 		filterSynthesis(filterAll),
-		filterYearByYear(filterAll)
+		filterYearByYear(filterAll),
+		color{ 112,112,112 },
+		style(stPlain),
+		linkWidth(1)
 	{
 	}
 
@@ -91,9 +96,15 @@ namespace Data
 			data[fhlNTCDirect][i]   = 1.;
 			data[fhlNTCIndirect][i] = 1.;
 		}
-
+		useLoopFlow = false;
+		usePST = false;
 		useHurdlesCost  = false;
 		transmissionCapacities = Data::tncEnabled;
+		assetType = Data::atAC;
+		color[0] = 112;
+		color[1] = 112;
+		color[2] = 112;
+		style = stPlain;
 
 		filterSynthesis  = (uint) filterAll;
 		filterYearByYear = (uint) filterAll;
@@ -169,6 +180,12 @@ namespace Data
 		{
 			if (key == "hurdles-cost")
 				return value.to<bool>(link.useHurdlesCost);
+			if (key == "loop-flow-fee")//backward compatibility with version 6.5.1
+				return value.to<bool>(link.useLoopFlow);
+			if (key == "loop-flow")
+				return value.to<bool>(link.useLoopFlow);
+			if (key == "use-phase-shifter")
+				return value.to<bool>(link.usePST);
 			if (key == "copper-plate")
 			{
 				bool copperPlate;
@@ -178,6 +195,62 @@ namespace Data
 					return true;
 				}
 				return false;
+			}
+			if (key == "asset-type")
+			{
+				if (value == "ac")
+					link.assetType = atAC;
+				else if (value == "dc")
+					link.assetType = atDC;
+				else if (value == "gaz")
+					link.assetType = atGas;
+				else if (value == "virt")
+					link.assetType = atVirt;
+				else if (value == "other")
+					link.assetType = atOther;
+				else
+				{
+					link.assetType = atOther;
+					return false;
+				}
+				return true;
+			}
+			if (key == "link-style")
+			{
+				if (value == "plain")
+					link.style = stPlain;
+				else if (value == "dot")
+					link.style = stDot;
+				else if (value == "dash")
+					link.style = stDash;
+				else if (value == "dotdash")
+					link.style = stDotDash;
+				else
+				{
+					link.style = stPlain;
+					return false;
+				}
+				return true;
+			}
+			if (key == "link-width")
+			{
+				link.linkWidth = Math::MinMax<int>(value.to<int>(), 1, 6);
+				return true;
+			}
+			if (key == "colorr")
+			{
+				link.color[0]=Math::MinMax<int>(value.to<int>(), 0, 255);
+				return true;
+			}
+			if (key == "colorg")
+			{
+				link.color[1] = Math::MinMax<int>(value.to<int>(), 0, 255);
+				return true;
+			}
+			if (key == "colorb")
+			{
+				link.color[2] = Math::MinMax<int>(value.to<int>(), 0, 255);
+				return true;
 			}
 			if (key == "transmission-capacities")
 			{
@@ -301,12 +374,122 @@ namespace Data
 
 				link.data.markAsModified();
 			}
+			else if (study.header.version < 630)
+			{
+				bool enabledModeIsChanged = false;
+				if (JIT::enabled)
+				{
+					JIT::enabled = false;	// Allowing to read the area's daily max power
+					enabledModeIsChanged = true;
+				}
+				buffer.clear() << folder << SEP << link.with->id << ".txt";
+				ret = link.data.loadFromCSVFile(buffer, 5, HOURS_PER_YEAR,
+					Matrix<>::optFixedSize) && ret;
+				double temp[5][HOURS_PER_YEAR];
+				
+				auto& TCD = link.data[fhlNTCDirect];
+				auto& TCI = link.data[fhlNTCIndirect];
+				auto& impedances = link.data[2];
+				auto& HCD = link.data[3];
+				auto& HCI = link.data[4];
+				for (int i = 0; i < HOURS_PER_YEAR; i++)
+				{
+					temp[fhlNTCDirect][i] = TCD[i];
+					temp[fhlNTCIndirect][i] = TCI[i];
+					temp[fhlImpedances][i] = impedances[i];
+					temp[fhlHurdlesCostDirect][i] = HCD[i];
+					temp[fhlHurdlesCostIndirect][i] = HCI[i];
+				}
+				link.data.resize(fhlMax, HOURS_PER_YEAR);
+				link.data.zero();
+				for (int i = 0; i < HOURS_PER_YEAR; i++) {
+					link.data[fhlNTCDirect][i] = temp[fhlNTCDirect][i];
+					link.data[fhlNTCIndirect][i] = temp[fhlNTCIndirect][i];
+					link.data[fhlImpedances][i] = temp[fhlImpedances][i];
+					link.data[fhlHurdlesCostDirect][i] = temp[fhlHurdlesCostDirect][i];
+					link.data[fhlHurdlesCostIndirect][i] = temp[fhlHurdlesCostIndirect][i];
+				}
+				if (enabledModeIsChanged)
+					JIT::enabled = true;	// Back to the previous loading mode.
+			}
 			else
 			{
 				buffer.clear() << folder << SEP << link.with->id << ".txt";
 				ret = link.data.loadFromCSVFile(buffer, fhlMax, HOURS_PER_YEAR, Matrix<>::optFixedSize) && ret;
 			}
-
+			if (study.usedByTheSolver)
+			{
+				bool fatal = false;
+				for (int colNum = 0; colNum < fhlMax; colNum++)
+				{
+					switch (colNum)
+					{
+					case Data::fhlNTCDirect:
+						{
+							auto& col = link.data[colNum];
+							auto& colLoopFlow = link.data[Data::fhlLoopFlow];
+							for (int i = 0; i < HOURS_PER_YEAR; i++)
+							{
+								// if ((col[i] < 1.) || (col[i] < colLoopFlow[i]))
+								if ((col[i] < 0.) || (col[i] < colLoopFlow[i]))
+								{
+									fatal = true;
+									break;
+									//logs.error() << "Wrong value of Trans. Capacity Direct in link from " << link.from->name << " to " << link.with->name << " at line " << i +1;
+								}
+							}
+							break;
+						}
+					case Data::fhlNTCIndirect:
+						{
+							auto& col = link.data[colNum];//
+							auto& colLoopFlow = link.data[Data::fhlLoopFlow];
+							for (int i = 0; i < HOURS_PER_YEAR; i++)
+							{
+								// if ((col[i] < 1.) || ((col[i] + colLoopFlow[i]) <= 0))
+								if ((col[i] < 0.) || ((col[i] + colLoopFlow[i]) < 0))
+								{
+									fatal = true;
+									break;
+									//logs.error() << "Wrong value of Trans. Capacity Indirect in link from " << link.from->name << " to " << link.with->name << " at line " << i + 1;
+								}
+							}
+							break;
+						}
+						case 2:
+							break;
+						case 3:
+							break;
+						case 4:
+							break;
+						case 5:
+							break;
+						case 6:
+							break;
+						case Data::fhlPShiftPlus:
+						{
+							auto& col = link.data[colNum];
+							auto& colPShiftMinus = link.data[Data::fhlPShiftMinus];
+							for (int i = 0; i < HOURS_PER_YEAR; i++)
+							{
+								if (col[i]<colPShiftMinus[i])
+								{
+									fatal = true;
+									break;
+									//logs.error() << "Wrong value of Pshift- in link from " << link.from->name << " to " << link.with->name << " at line " << i + 1;
+								}
+							}
+							break;
+						}
+					}
+				}
+				if (fatal)
+				{
+					logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Invalid values";
+					study.gotFatalError = true;
+					return false;
+				}
+			}
 			// Inifile
 			const IniFile::Property* p = s->firstProperty;
 			for (; p; p = p->next)
@@ -439,7 +622,8 @@ namespace Data
 			buffer << '[' << link.with->id << "]\n";
 			// Properties
 			buffer << "hurdles-cost = " << (link.useHurdlesCost  ? "true\n" : "false\n");
-
+			buffer << "loop-flow = " << (link.useLoopFlow ? "true\n" : "false\n");
+			buffer << "use-phase-shifter = " << (link.usePST ? "true\n" : "false\n");
 			switch (link.transmissionCapacities)
 			{
 				case Data::tncEnabled:
@@ -452,6 +636,44 @@ namespace Data
 					buffer << "transmission-capacities = infinite\n";
 					break;
 			}
+
+			switch (link.assetType)
+			{
+			case Data::atAC:
+				buffer << "asset-type = ac\n";
+				break;
+			case Data::atDC:
+				buffer << "asset-type = dc\n";
+				break;
+			case Data::atGas:
+				buffer << "asset-type = gaz\n";
+				break;
+			case Data::atVirt:
+				buffer << "asset-type = virt\n";
+				break;
+			case Data::atOther:
+				buffer << "asset-type = other\n";
+				break;
+			}
+			switch (link.style)
+			{
+			case Data::stPlain:
+				buffer << "link-style = plain\n";
+				break;
+			case Data::stDot:
+				buffer << "link-style = dot\n";
+				break;
+			case Data::stDash:
+				buffer << "link-style = dash\n";
+				break;
+			case Data::stDotDash:
+				buffer << "link-style = dotdash\n";
+				break;
+			}
+			buffer << "link-width = " << link.linkWidth << "\n";
+			buffer << "colorr = " << link.color[0] <<"\n";
+			buffer << "colorg = " << link.color[1] << "\n";
+			buffer << "colorb = " << link.color[2] << "\n";
 
 			buffer << "display-comments = " << (link.displayComments ? "true\n" : "false\n");
 			if (not link.comments.empty())
@@ -537,7 +759,12 @@ namespace Data
 		data.markAsModified();
 	}
 
-
+	String AreaLink::getName() const
+	{
+		String s;
+		s << from->name << "/" << with->name;
+		return s;
+	}
 
 
 } // namespace Data

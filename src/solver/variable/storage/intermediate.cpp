@@ -59,8 +59,9 @@ namespace Variable
 
 	void IntermediateValues::initializeFromStudy(Data::Study& study)
 	{
-		pRange   = & study.runtime->rangeLimits;
-		calendar = & study.calendarOutput;
+		pRange		= & study.runtime->rangeLimits;
+		calendar	= & study.calendarOutput;
+		pRuntimeInfo = study.runtime;
 	}
 
 
@@ -192,8 +193,7 @@ namespace Variable
 	}
 
 
-
-	void IntermediateValues::computePriceStatisticsForTheCurrentYear()
+	void IntermediateValues::computeAVGstatisticsForCurrentYear()
 	{
 		uint i;
 		uint j;
@@ -210,7 +210,7 @@ namespace Variable
 		uint indx = pRange->hour[Data::rangeBegin];
 
 		// Ratio
-		double ratioDay  = 1. / maxHoursInADay;
+		double ratioDay = 1. / maxHoursInADay;
 
 		for (i = pRange->day[Data::rangeBegin]; i <= pRange->day[Data::rangeEnd]; ++i)
 		{
@@ -230,8 +230,8 @@ namespace Variable
 			week[i] = 0.;
 		for (i = pRange->day[Data::rangeBegin]; i <= pRange->day[Data::rangeEnd]; ++i)
 			week[calendar->days[i].week] += day[i];
-		for (i = 0; i != maxWeeksInAYear; ++i)
-			week[i] /= calendar->weeks[i].days;
+		for (i = pRange->week[Data::rangeBegin]; i <= pRange->week[Data::rangeEnd]; ++i)
+			week[i] /= pRuntimeInfo->simulationDaysPerWeek[i];
 
 		// x(m)
 		//indx = Date::FirstDayPerMonth[pRange->month[Data::rangeBegin]];
@@ -246,13 +246,12 @@ namespace Variable
 				d += day[indx];
 				++indx;
 			}
-			month[i] = d / daysInMonth;
+			month[i] = d / pRuntimeInfo->simulationDaysPerMonth[i];
 		}
 
 		// Year
 		year /= pRange->hour[Data::rangeCount];
 	}
-
 
 	void IntermediateValues::computeProbabilitiesForTheCurrentYear()
 	{

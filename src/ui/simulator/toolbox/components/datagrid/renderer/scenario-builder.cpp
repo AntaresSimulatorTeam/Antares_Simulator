@@ -185,7 +185,8 @@ namespace Renderer
 					assert(pArea->index < pRules->areaCount());
 					assert((uint) y < pRules->thermal[pArea->index].overlay().width);
 					assert((uint) x < pRules->thermal[pArea->index].overlay().height);
-					pRules->thermal[pArea->index].overlay().entry[y][x] = d;
+					pRules->thermal[pArea->index].set(pArea->thermal.list.byIndex[y], x, d);
+					//pRules->thermal[pArea->index].overlay().entry[y][x] = d;
 					return true;
 				}
 			}

@@ -269,6 +269,13 @@ namespace Adequacy
 				+ state.resSpilled.entry[state.area->index][state.hourInTheWeek])
 				* state.area->thermal.spilledEnergyCost);
 
+			// Hydro costs : water value and pumping
+			pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] +=
+				state.problemeHebdo->CaracteristiquesHydrauliques[state.area->index]->WeeklyWaterValueStateRegular
+				*
+				(state.hourlyResults->TurbinageHoraire[state.hourInTheWeek]
+					- state.area->hydro.pumpingEfficiency * state.hourlyResults->PompageHoraire[state.hourInTheWeek]);
+
 			// Next variable
 			NextType::hourForEachArea(state, numSpace);
 		}

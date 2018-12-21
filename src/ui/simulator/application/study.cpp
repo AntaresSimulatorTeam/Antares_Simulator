@@ -712,6 +712,7 @@ namespace Antares
 
 		// User notes
 		mainFrm.loadUserNotes();
+		mainFrm.loadSets();
 		mainFrm.selectSystem();
 		SystemParameterHaveChanged = true;
 

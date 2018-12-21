@@ -82,6 +82,8 @@ set(SRCS
 		windows/cleaner.cpp
 		windows/analyzer/analyzer.cpp
 		windows/analyzer/analyzer.h
+		windows/constraints-builder/constraintsbuilder.cpp
+		windows/constraints-builder/constraintsbuilder.h
 		windows/saveas.h
 		windows/saveas.hxx
 		windows/saveas.cpp
@@ -90,6 +92,8 @@ set(SRCS
 		windows/exportmap.cpp
 		windows/notes.h
 		windows/notes.cpp
+		windows/sets.h
+		windows/sets.cpp
 		windows/studylogs.h
 		windows/studylogs.cpp
 		windows/memorystatistics.h
@@ -162,6 +166,7 @@ set(ANTARES_LIBS
 		libantares-ui-toolbox-spotlight
 		libantares-ui-dispatcher
 		libantares-ui-common
+		libantares-solver-constraints-builder
 		libantares-solver-variable-info-swap
 		libantares-core-swap
 		libantares-core-calendar
@@ -177,7 +182,7 @@ set(ANTARES_LIBS
 	
 if(NOT MSVC)
 	target_link_libraries(${execname}
-		-Wl,--start-group ${ANTARES_LIBS} uuid dl ssh2 idn rt -Wl,--end-group)
+		-Wl,--start-group ${ANTARES_LIBS} uuid dl ssh2 idn idn2 rt -Wl,--end-group)
 else()
 	# required for uuid
 	target_link_libraries(${execname} ${ANTARES_LIBS} ole32 rpcrt4)

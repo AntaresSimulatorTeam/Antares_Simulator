@@ -166,6 +166,11 @@ namespace Data
 		StudyMode mode;
 		//@}
 
+		//! \name Expansion
+		//@{
+		//! Expansion flag
+		mutable bool expansion;
+
 		//! \name Horizon
 		//@{
 		//! Horizon year
@@ -397,7 +402,17 @@ namespace Data
 			//! Number of Cores Mode
 			NumberOfCoresMode  ncMode;
 		} nbCores;
+
+		struct
+		{
+			//! Initial reservoir levels
+			InitialReservoirLevels  iniLevels;
+		} initialReservoirLevels;
 		
+		// In case of hydro hot start and MC years simultaneous run
+		// ... Answers the question : do all sets of simultaneous years have the same size ?
+		//     (obvious if the parallel mode is not required : answer is yes).
+		bool allSetsHaveSameSize;
 
 		struct
 		{
@@ -408,6 +423,8 @@ namespace Data
 
 		//! Transmission capacities
 		TransmissionCapacities transmissionCapacities;
+		//! Asset type
+		LinkType linkType;
 		//! Simplex optimization range (day/week)
 		SimplexOptimization  simplexOptimizationRange;
 		//@}

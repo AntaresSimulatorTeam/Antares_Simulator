@@ -25,6 +25,32 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
 #include <limits>
@@ -49,7 +75,7 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage( PROBLEME_HEBDO * ProblemeH
 																			const int PremierPdtDeLIntervalle,
                                       const int DernierPdtDeLIntervalle)
 {
-int PdtJour; int Pays; int Palier; int Var; int Index; int PdtHebdo; double X; double CoutDeDemarrage;
+int PdtJour; int Pays; int Palier; int Var; int Index; int PdtHebdo; double CoutDeDemarrage;
 char ContrainteDeReserveJMoins1ParZone; int PdtJourMoins1; int NombreDePasDeTempsPourUneOptimisation;
 CORRESPONDANCES_DES_VARIABLES * CorrespondanceVarNativesVarOptim; double * CoutLineaire;
 PALIERS_THERMIQUES * PaliersThermiquesDuPays;

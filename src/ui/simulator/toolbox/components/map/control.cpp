@@ -223,7 +223,7 @@ namespace Map
 		wxRect boundsRect(box.first, box.second);
 		
 		// Drawing in a bitmap
-		wxBitmap bmp(boundsRect.GetWidth()+80, boundsRect.GetHeight()+80, tmpDC);//40 more pixels on each side to allow drawing the shadow(down and right) and some space around
+		wxBitmap bmp(boundsRect.GetWidth()+80, boundsRect.GetHeight()+80);//40 more pixels on each side to allow drawing the shadow(down and right) and some space around
 			
 		tmpDC.SelectObject(bmp);
 

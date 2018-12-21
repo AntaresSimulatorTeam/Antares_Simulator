@@ -399,11 +399,29 @@ namespace Map
 			device.DrawLine(rCenterA.x, rCenterA.y, rCenterB.x, rCenterB.y);
 		}
 
+		wxColor personalColor(pAttachedAreaLink->color[0], pAttachedAreaLink->color[1], pAttachedAreaLink->color[2]);
 		// The line itself
+		int penWidth = pAttachedAreaLink->linkWidth;
+		wxPenStyle myStyle;
+		switch (pAttachedAreaLink->style)
+		{
+			case Data::stPlain: myStyle = wxPENSTYLE_SOLID;
+				break;
+			case Data::stDot:	myStyle = wxPENSTYLE_DOT;
+				break;
+			case Data::stDash: myStyle = wxPENSTYLE_LONG_DASH;
+				break;
+			case Data::stDotDash: myStyle = wxPENSTYLE_DOT_DASH;
+				break;
+			default: myStyle = wxPENSTYLE_SOLID;
+		}
 		if (pSelected)
-			device.SetPen(wxPen(Settings::connectionHighlighted, 1, (pDirection == dirIndirect ? wxPENSTYLE_LONG_DASH : wxPENSTYLE_SOLID) ));
+			device.SetPen(wxPen(Settings::connectionHighlighted, penWidth, (pDirection == dirIndirect ? wxPENSTYLE_LONG_DASH : myStyle) ));
 		else
-			device.SetPen(wxPen(Settings::connection, 1, (pDirection == dirIndirect ? wxPENSTYLE_LONG_DASH : wxPENSTYLE_SOLID) ));
+		{
+			wxColor personalColor(pAttachedAreaLink->color[0], pAttachedAreaLink->color[1], pAttachedAreaLink->color[2]);
+			device.SetPen(wxPen(personalColor, penWidth, (pDirection == dirIndirect ? wxPENSTYLE_LONG_DASH : myStyle)));
+		}
 		// Draw the line
 		device.DrawLine(rCenterA.x, rCenterA.y, rCenterB.x, rCenterB.y);
 
@@ -506,7 +524,6 @@ namespace Map
 		# endif
 		pAttachedAreaLink = a;
 	}
-
 
 
 

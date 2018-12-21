@@ -30,6 +30,32 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include <math.h>
 #include "opt_structure_probleme_a_resoudre.h"
 

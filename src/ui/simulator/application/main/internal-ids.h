@@ -114,6 +114,7 @@ namespace Forms
 		mnIDRunTheSimulation,
 		mnIDRunTheTSGenerators,
 		mnIDRunTheTSAnalyzer,
+		mnIDRunTheConstraintsBuilder,
 		mnIDOpenOutputInExplorer,
 		//@}
 
@@ -129,6 +130,7 @@ namespace Forms
 		//@{
 		mnIDOptionTempFolder,
 		mnIDOptionConfigurePrefetch,
+		mnIDOptionConfigureDistricts,
 		mnIDOptionConfigureMCScenarioBuilder,
 		mnIDOptionConfigureMCScenarioPlaylist,
 		mnIDOptionConfigureFiltersResults,
@@ -157,7 +159,9 @@ namespace Forms
 		//@{
 		mnIDHelpHelp,
 		mnIDHelpPDFGeneralReferenceGuide,
+		mnIDHelpPDFOptimizationProblemsFormulation,
 		mnIDHelpPDFSystemMapEditorReferenceGuide,
+		mnIDHelpPDFExamplesLibrary,
 		mnIDHelpAbout,
 		mnIDHelpVisitRTEWebSite,
 		mnIDHelpContinueOnline,
@@ -175,6 +179,7 @@ namespace Forms
 		mnInternalLogMessage,
 		mnRefreshGUI,
 		mnIDLaunchAnalyzer,
+		mnIDLaunchConstraintsBuilder,
 
 		//! \name Popup Menu Operator for selected cells on any grid
 		//@{

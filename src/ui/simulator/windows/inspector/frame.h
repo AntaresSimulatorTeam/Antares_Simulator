@@ -194,6 +194,9 @@ namespace Inspector
 		wxPGProperty* pPGLinkFilteringStatus;
 		wxPGProperty* pPGLinkFilteringSynthesis[5];
 		wxPGProperty* pPGLinkFilteringYbY[5];
+		wxPGProperty* pPGLinkColor;
+		wxPGProperty* pPGLinkStyle;
+		wxPGProperty* pPGLinkWidth;
 
 		// About Thermal clusters
 		wxPGProperty* pPGClusterSeparator;

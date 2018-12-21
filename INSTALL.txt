@@ -17,7 +17,7 @@ Windows 10
 Linux CentOS  6
 RHEL 7.3 
 
-with compilers MSVC 19.00 &  GCC 4.8.1
+with compilers MSVC 19.00 &  GCC 4.8.1 & GCC 7
 
 Note on End-Of-Line convention
 ------------------------------
@@ -63,7 +63,9 @@ Four external dependencies are integrated as Git submodules:
 * src/ext/Sirius_Solver	- Sirius_Solver 6.0.0
  
 After a pull on Antares repository , submodules should be already properly initialized
+if not, run : 
 
+git submodule update --init --recursive
 
 1.3.1 Compiling OpenSSL with Visual Studio - 64 bits solution
 =============================================================

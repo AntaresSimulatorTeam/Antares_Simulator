@@ -164,6 +164,7 @@ NombreDeVariables += NbPdt;
 NombreDeVariables += NbPdt; 
 NombreDeVariables += NbPdt; 
 NombreDeVariables += NbPdt; 
+NombreDeVariables += 1;		
 NombreDeVariables += NbPdt; 
 NombreDeVariables += NbPdt; 
 NombreDeVariables += 1; 
@@ -182,6 +183,7 @@ if ( ProblemeLineairePartieFixe->TypeDeVariable == NULL ) {
 NombreDeContraintes = 0;
 NombreDeContraintes += NbPdt; 
 NombreDeContraintes += 1;     
+NombreDeContraintes += NbPdt; 
 NombreDeContraintes += NbPdt; 
 NombreDeContraintes += NbPdt; 
 NombreDeContraintes += NbPdt; 
@@ -207,6 +209,7 @@ NombreDeTermesAlloues += 3 * NbPdt;
 NombreDeTermesAlloues += 2;       
 NombreDeTermesAlloues += 2 * NbPdt; 
 NombreDeTermesAlloues += 2 * NbPdt; 
+NombreDeTermesAlloues += 2 * NbPdt;	
 NombreDeTermesAlloues += 3 * NbPdt; 
 NombreDeTermesAlloues += 3 * NbPdt; 
 

@@ -243,7 +243,10 @@ if ( ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX ) {
 		if ( pt != NULL ) *pt = ProblemeAResoudre->CoutsReduits[Var];
 	}
 
-  ProblemeHebdo->CoutOptimalDeLaSolution[NumIntervalle] = CoutOpt;
+	if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION)
+		ProblemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
+	else
+		ProblemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
 
 	
 	for ( Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++ ) {
@@ -252,14 +255,12 @@ if ( ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX ) {
 	}
 }
 else {
-	logs.info(); 
-	logs.error() << "Infeasible linear problem encountered. Possible causes: binding constraints and last resort shedding status";
-		
-
-
-
-	logs.info(); 
-
+	logs.error() << "Infeasible linear problem encountered. Possible causes:";
+	logs.error() << "* binding constraints,";
+	logs.error() << "* last resort shedding status,";
+	logs.error() << "* negative hurdle costs on lines with infinite capacity,";
+	logs.error() << "* Hydro reservoir impossible to manage with cumulative options \"hard bounds without heuristic\"";
+	
 	
 	
 	
@@ -368,8 +369,9 @@ if ( ProblemeAResoudre->ExistenceDUneSolution == ARRET_CAR_ERREUR_INTERNE ) {
 }
 
 
-
-if ( ProblemeAResoudre->ExistenceDUneSolution == SOLUTION_OPTIMALE_TROUVEE ) {
+bool sol_opt_trouvee = (ProblemeAResoudre->ExistenceDUneSolution == SOLUTION_OPTIMALE_TROUVEE);
+sol_opt_trouvee = (sol_opt_trouvee || ProblemeAResoudre->ExistenceDUneSolution == SOLUTION_OPTIMALE_TROUVEE_MAIS_QUELQUES_CONTRAINTES_SONT_VIOLEES);
+if (sol_opt_trouvee) {
   CoutOpt = 0.0;
 	
 
@@ -396,7 +398,10 @@ if ( ProblemeAResoudre->ExistenceDUneSolution == SOLUTION_OPTIMALE_TROUVEE ) {
 		if ( pt != NULL ) *pt = ProblemeAResoudre->CoutsReduits[Var];
 	}
 
-  ProblemeHebdo->CoutOptimalDeLaSolution[NumIntervalle] = CoutOpt;
+	if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION)
+		ProblemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
+	else
+		ProblemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
 
 	
 	for ( Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++ ) {
@@ -406,14 +411,11 @@ if ( ProblemeAResoudre->ExistenceDUneSolution == SOLUTION_OPTIMALE_TROUVEE ) {
 	
 }
 else {
-	logs.info(); 
-	logs.error() << "Infeasible linear problem encountered. Possible causes: binding constraints and last resort shedding status";
-		
-
-
-
-
-	logs.info(); 
+	logs.error() << "Infeasible linear problem encountered. Possible causes:";
+	logs.error() << "* binding constraints,";
+	logs.error() << "* last resort shedding status,";
+	logs.error() << "* negative hurdle costs on lines with infinite capacity,";
+	logs.error() << "* Hydro reservoir impossible to manage with cumulative options \"hard bounds without heuristic\"";
 
 	
 	
@@ -462,7 +464,11 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void * Prob, uint numSpace, 
 
 	Probleme = (PROBLEME_HEBDO *) Prob;		
 	
-	CoutOptimalDeLaSolution = Probleme->CoutOptimalDeLaSolution[NumeroDeLIntervalle];
+	CoutOptimalDeLaSolution = 0.;
+	if (Probleme->numeroOptimisation[NumeroDeLIntervalle] == PREMIERE_OPTIMISATION)
+		CoutOptimalDeLaSolution = Probleme->coutOptimalSolution1[NumeroDeLIntervalle];
+	else
+		CoutOptimalDeLaSolution = Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
 	
 	
 	auto& study = *Data::Study::Current::Get();
@@ -471,7 +477,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void * Prob, uint numSpace, 
 		exit(2);
 
 	
-	fprintf(Flot,"* Optimal criterion value :   %11.10e\n",CoutOptimalDeLaSolution);	
+	fprintf(Flot,"* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);	
 
 	fclose( Flot );
 

@@ -61,7 +61,7 @@ namespace ScenarioBuilder
 	}
 
 
-	bool Sets::loadFromStudy(const Study& study)
+	bool Sets::loadFromStudy(Study& study)
 	{
 		if (not study.usedByTheSolver)
 			logs.info() << "  Loading data for the scenario builder overlay";

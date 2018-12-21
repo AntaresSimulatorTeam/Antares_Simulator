@@ -61,14 +61,7 @@ namespace Hydro
 		void onAreaChanged(Data::Area* area);
 
 		void onIntermonthlyCorrelationChanged(wxCommandEvent& evt);
-		void onInterdailyBreakdownChanged(wxCommandEvent& evt);
-		void onIntradailyModulationChanged(wxCommandEvent& evt);
-		void onIntermonthlyBreakdownChanged(wxCommandEvent& evt);
-		void onReservoirCapacityChanged(wxCommandEvent& evt);
-		void onToggleReservoirManagement(Component::Button&, wxMenu& menu, void*);
-
-		void onEnableReserveManagement(wxCommandEvent& evt);
-		void onDisableReserveManagement(wxCommandEvent& evt);
+		//void onPumpingEfficiencyChanged(wxCommandEvent& evt);
 
 	private:
 		//! The input area selector
@@ -76,13 +69,8 @@ namespace Hydro
 		Data::Area* pArea;
 		bool pComponentsAreReady;
 		Component::Panel* pSupport;
-		wxTextCtrl* pIntermonthlyBreakdown;
 		wxTextCtrl* pIntermonthlyCorrelation;
-		wxTextCtrl* pInterdailyBreakdown;
-		wxTextCtrl* pIntradailyModulation;
-		wxTextCtrl* pReservoirCapacity;
-		wxWindow* pLabelReservoirCapacity;
-		Component::Button* pReservoirManagement;
+		//wxTextCtrl* pPumpingEfficiency;
 
 	}; // class Prepro
 

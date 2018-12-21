@@ -46,18 +46,18 @@
 static std::string Authors = "AUTHORS  (from version/to version)\n\
 == == == == == == == == == == == == == == == == ==\n\
 \n\
-Brahim		Abbes	V5\n\
-Valentin		Borozan	V5\n\
-Michael		Boulade	V4 - V6\n\
-Michel		Doquet	V1 - V7\n\
-Damien		Gerard	V3 - V5\n\
-Robert		Gonzalez	V3 - V5\n\
-Sylvain		Marandon	V6 - V7\n\
-Eric		Momot	V1 - V2\n\
-Papa		Ndiaye	V5 - V7\n\
-Guillaume		Pierre	V5 - V7\n\
-Frederique	Verrier	V1 - V2\n\
-Li		Wu	V5\n\
+Brahim		Abbes		V5\n\
+Valentin		Borozan		V5\n\
+Michael		Boulade		V4 - V6\n\
+Michel		Doquet		V1 - V7\n\
+Damien		Gerard		V3 - V5\n\
+Robert		Gonzalez		V3 - V5\n\
+Sylvain		Marandon		V6 - V7\n\
+Eric		Momot		V1 - V2\n\
+Papa		Ndiaye		V5 - V7\n\
+Guillaume		Pierre		V5 - V7\n\
+Frederique	Verrier		V1 - V2\n\
+Li		Wu		V5\n\
 \n\
 Artwork\n\
 == == == =\n\
@@ -68,41 +68,47 @@ static std::string Thanks = "ATTRIBUTION NOTICES\n\
 ===================\n\
 \n\
 Antares_Simulator uses external libraries and makes extensive use of the \n\
-following persons or companies code. Source and binary forms of these programs\n\
-are distributed along with Antares_Simulator with NO WARRANTY : \n\
+following persons' or companies code. Source and binary forms of these programs\n\
+are distributed along with Antares_Simulator with NO WARRANTY:\n\
 \n\
-Wxwidgets 3.0.2		Copyright (c) 1998-2017  	The wxWidget Team\n\
-license:	wxWindows Library License, V3.1		https ://spdx.org/licenses/wxWindows.html\n\
+Wxwidgets 3.0.2	Copyright (c) 1998-2017	The wxWidget Team\n\
+license: wxWindows Library License,V3.1	https://spdx.org/licenses/wxWindows.html\n\
 \n\
-libCurl   7.51.0	Copyright(c) 1996 - 2017  	Daniel Stenberg et al\n\
-license : curl license					https ://spdx.org/licenses/curl.html\n\
+libCurl 7.51.0	Copyright (c) 1996-2017	Daniel Stenberg et al			\n\
+license: curl license	https://spdx.org/licenses/curl.html\n\
 \n\
-OpenSSL	  1.1.0  	Copyright(c) 1998 - 2016  The OpenSSL Project\n\
+OpenSSL 1.1.0	Copyright (c) 1998-2016	The OpenSSL Project\n\
 \"This product includes software developed by the OpenSSL Project\n\
-for use in the OpenSSL Toolkit(http ://www.openssl.org/)\"\n\
-\"This product includes software written by Tim Hudson (tjh@cryptsoft.com)\"\n\
-license : OpenSSL license and SSLeay license		https ://spdx.org/licenses/OpenSSL.html\n\
+for use in the OpenSSL Toolkit(http://www.openssl.org/)\"\n\
+\"This product includes software written by Tim Hudson (tjh@cryptsoft.com)\" \n\
+license: OpenSSL license and SSLeay license	https://spdx.org/licenses/OpenSSL.html\n\
+					\n\
+libYuni 1.1.0	https://github.com/libyuni	\n\
+license: Mozilla Public License 2.0	https://spdx.org/licenses/MPL-2.0.html\n\
 \n\
-libYuni	  1.1.0					https ://github.com/libyuni\n\
-license : Mozilla Public License 2.0			https ://spdx.org/licenses/MPL-2.0.html\n\
+Mersenne Twister	Copyright (c) 1997-2002	M.Matsumoto and T.Nishimura   \n\
+license: 3-clause BSD	https://spdx.org/licenses/BSD-3-Clause.html\n\
 \n\
-Mersenne Twister	Copyright(c) 1997 - 2002  M.Matsumoto and T.Nishimura\n\
-license : 3 - clause BSD				https ://spdx.org/licenses/BSD-3-Clause.html\n\
-\n\
-strtod library      Copyright(c) 1988 - 1993 The Regents of the University of California\n\
-Copyright(c) 1994 Sun Microsystems, Inc\n\
-license : ISC license					https ://spdx.org/licenses/ISC.html\n\
-\n\
-Sirius_Solver 6.0.0	Copyright(c) 2007 - 2018  RTE\n\
-license : EPL 2.0					https ://spdx.org/licenses/EPL-2.0.html\n\
-\n\
+strtod library	Copyright (c) 1988-1993 The Regents of the University of California		\n\
+ 	Copyright (c) 1994 Sun Microsystems, Inc\n\
+license: ISC license	https://spdx.org/licenses/ISC.html\n\
+					\n\
+Sirius_Solver 6.0.0	Copyright (c) 2007-2018 RTE\n\
+license: EPL 2.0	https://spdx.org/licenses/EPL-2.0.html\n\
+  \n\
+  \n\
 SPECIAL THANKS\n\
 ==============\n\
   \n\
-Special thanks are due to two Authors without whom Antares_Simulator would not be what it is:\n\
+Special thanks are due to a few Authors without whom Antares_Simulator would not be what it is:\n\
 \n\
-	Damien Gerard   (also developer of the libYuni library)\n\
-	Robert Gonzalez (also author of the Sirius_Solver library) ";
+	\n\
+	Robert 		Gonzalez		(also author of the Sirius_Solver library) \n\
+	Damien 		Gerard		(also developer of the libYuni library)\n\
+	Papa		Ndiaye		(system map editor, constraints builder, power flow physics)\n\
+	Guillaume 	Pierre		(parallel computing, generic power storage facility modelling)\n\
+	Sylvain		Marandon		(also author of the Antares_Data_Organizer application) \n\
+	Michel 		Doquet		(project initiator)";
 
 
 

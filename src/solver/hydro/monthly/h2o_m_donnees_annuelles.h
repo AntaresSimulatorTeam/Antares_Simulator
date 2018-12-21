@@ -47,6 +47,7 @@ typedef struct {
 	   avoir appele " H2O_M_Instanciation " */
   /* Commence a 0 pour le 1er janvier et se termine a 11 pour le 1er decembre */
 	double   CoutDepassementVolume; /* A renseigner par l'appelant : 1 valeur */
+	double   CoutViolMaxDuVolumeMin;	// A renseigner par l'appelant : 1 valeur
 	double   VolumeInitial;         /* A renseigner par l'appelant : 1 valeur */
 	double * TurbineMax;          /* A renseigner par l'appelant : 1 valeur par mois */
 	double * TurbineCible;        /* A renseigner par l'appelant : 1 valeur par mois */

@@ -78,6 +78,10 @@ namespace Options
 		void onSelectNumericQualityStandard(wxCommandEvent& evt);
 		void onSelectNumericQualityHigh(wxCommandEvent& evt);
 
+		void onInitialReservoirLevels(Component::Button&, wxMenu&, void*);
+		void onSelectHotStart(wxCommandEvent& evt);
+		void onSelectColdStart(wxCommandEvent& evt);
+
 		void onPowerFluctuations(Component::Button&, wxMenu&, void*);
 		void onSelectMinimizeRamping(wxCommandEvent& evt);
 		void onSelectMinimizeExcursions(wxCommandEvent& evt);
@@ -107,6 +111,7 @@ namespace Options
 		Component::Button* pBtnNumericQualityWind;
 		Component::Button* pBtnNumericQualitySolar;
 		Component::Button* pBtnPowerFluctuations;
+		Component::Button* pBtnInitialReservoirLevels;
 		Component::Button* pBtnSheddingPolicy;
 		Component::Button* pBtnMultiNodalMarginalPrices;
 		Component::Button* pBtnUnitCommitment;

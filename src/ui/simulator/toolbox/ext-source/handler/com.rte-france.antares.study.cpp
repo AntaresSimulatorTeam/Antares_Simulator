@@ -184,7 +184,7 @@ namespace Handler
 					Data::AreaName toWantedName = j->first;
 
 					//check wheither there is a selected area with the same name
-					if (not Antares::Window::Inspector::isAreaSelected(fromWantedName) || not Antares::Window::Inspector::isAreaSelected(toWantedName));
+					if (not Antares::Window::Inspector::isAreaSelected(fromWantedName) || not Antares::Window::Inspector::isAreaSelected(toWantedName))
 					{
 						if (ctx->area.find(fromWantedName) == ctx->area.end() || ctx->area.find(toWantedName) == ctx->area.end())
 						{
@@ -404,7 +404,7 @@ namespace Handler
 				for (auto i = ctx.constraint.begin(); i != end; ++i)
 				{
 					auto* sourceConstraint = context->extStudy->bindingConstraints.findByName(*i);
-					if (!sourceConstraint)
+					if (!sourceConstraint || (sourceConstraint->clusterCount() == 0 && sourceConstraint->linkCount() == 0))
 						continue;
 					//check wheither there is a selected binding constraint with the same name
 					auto* create = (not Antares::Window::Inspector::isConstraintSelected(*i))

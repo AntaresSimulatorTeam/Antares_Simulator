@@ -729,7 +729,7 @@ namespace Window
 
 			// Mapping areas
 			// \_ renderer
-			typedef Component::Datagrid::Renderer::Analyzer::Areas RendererType;
+			//typedef Component::Datagrid::Renderer::Analyzer::Areas RendererType;
 			pRenderer = new RendererType();
 			pRenderer->study = Data::Study::Current::Get();
 			pRenderer->initializeFromStudy();
@@ -749,7 +749,7 @@ namespace Window
 				s->Add(pGrid, 1, wxEXPAND|wxALL);
 				split->Add(s, 7, wxEXPAND|wxALL);
 			}
-
+			
 			// Vertical separator
 			split->AddSpacer(3);
 			Component::AddVerticalSeparator(panelTS, split, 1, 1);

@@ -27,8 +27,6 @@
 #ifndef __SOLVER_SIMULATION_SOLVER_H__
 # define __SOLVER_SIMULATION_SOLVER_H__
 
-# include <vector>
-# include <yuni/yuni.h>
 # include <antares/study/memory-usage.h>
 # include <antares/study.h>
 # include <antares/logs.h>
@@ -36,10 +34,10 @@
 # include "../variable/state.h"
 # include "../misc/options.h"
 # include "solver.data.h"
+# include "solver.utils.h"
 # include "../hydro/management/management.h"
 
 # include "../../libs/antares/study/fwd.h"	// Added for definition of type PowerFluctuations
-
 
 namespace Antares
 {
@@ -48,11 +46,8 @@ namespace Solver
 namespace Simulation
 {
 
-	struct setOfParallelYears;
-	class yearRandomNumbers;
-	class randomNumbers;
 	template<class Impl> class yearJob;
-
+	
 	template<class Impl>
 	class ISimulation : public Impl
 	{
@@ -135,6 +130,17 @@ namespace Simulation
 									std::map<unsigned int, bool> & isYearPerformed	);
 
 		/*!
+		** \brief Computes statistics on annual (system and solution) costs, to be printed in output into separate files
+		**
+		** Adds the contributions of each performed year contained in the current set to annual system and solution costs averages over all years.
+		** These average costs are meant to be printed in output into separate files.
+		** Same thing for min and max costs over all years.
+		** Storing these costs to compute std deviation later.
+		*/
+		void computeAnnualCostsStatistics(	std::vector<Variable::State> & state,
+											std::vector<setOfParallelYears>::iterator & set_it	);
+
+		/*!
 		** \brief Iterate through all MC years
 		**
 		** \param firstYear The first real MC year
@@ -155,194 +161,14 @@ namespace Simulation
 		bool pYearByYear;
 		//! Hydro management
 		HydroManagement pHydroManagement;
+		//! Hydro hot start
+		bool pHydroHotStart;
+		//! The first set of parallel year(s) was already run ? 
+		bool pFirstSetParallelWasRun;
 
+		//! Statistics about annual (system and solution) costs
+		annualCostsStatistics pAnnualCostsStatistics;
 	}; // class ISimulation
-
-
-	struct setOfParallelYears
-	{
-		/*
-			Un lot d'année à exécuter en parallèle.
-			En fonction d'une éventuelle play-list, certaines seront jouées et d'autres non.
-		*/
-		public:
-			// Numeros des annees en parallele pour ce lot (certaines ne seront pas jouées en cas de play-list "trouée")
-			std::vector<unsigned int> yearsIndices;
-
-			// Une annee doit-elle être rejouée ?
-			std::map<uint, bool> yearFailed;
-
-			// Associe le numero d'une année jouée à l'indice de l'espace
-			std::map<unsigned int, unsigned int> performedYearToSpace;
-
-			// L'inverse : pour une année jouée, associe l'indice de l'espace au numero de l'année
-			std::map<unsigned int, unsigned int> spaceToPerformedYear;
-
-			// Pour chaque année, est-elle la première à devoir être jouée dans son lot d'années ?
-			std::map<unsigned int, bool> isFirstPerformedYearOfASet;
-
-			// Pour chaque année du lot, est-elle jouée ou non ? 
-			std::map<unsigned int, bool> isYearPerformed;
-
-			// Nbre d'années en parallele vraiment jouées pour ce lot
-			unsigned int nbPerformedYears;
-
-			// Nbre d'années en parallele jouées ou non pour ce lot
-			unsigned int nbYears;
-
-			// Regenere-t-on des times series avant de jouer les annees du lot courant
-			bool regenerateTS;
-
-			// Annee a passer a la fonction "regenerateTimeSeries<false>(y /* year */)" (si regenerateTS is "true")
-			unsigned int yearForTSgeneration;
-
-	}; 
-
-	
-	class yearRandomNumbers
-	{
-		public:
-			yearRandomNumbers() 
-			{
-				pThermalNoisesByArea = nullptr;
-				pNbClustersByArea = nullptr;
-				pNbAreas = 0;
-			}
-
-			~yearRandomNumbers() 
-			{
-				// General
-				delete[] pNbClustersByArea;
-				
-				// Thermal noises 
-				for(uint a = 0; a != pNbAreas; a++)
-					delete[] pThermalNoisesByArea[a];
-				delete[] pThermalNoisesByArea;
-				
-				// Reservoir levels and unsupplied energy
-				delete[] pReservoirLevels;
-				delete[] pUnsuppliedEnergy;
-
-				// Hydro costs noises
-				switch(pPowerFluctuations)
-				{
-					case Data::lssFreeModulations:
-					{
-						for(uint a = 0; a != pNbAreas; a++)
-							delete[] pHydroCostsByArea_freeMod[a];
-						delete[] pHydroCostsByArea_freeMod;
-						break;
-					}
-
-					case Data::lssMinimizeRamping:
-					case Data::lssMinimizeExcursions:
-					{
-						delete[] pHydroCosts_rampingOrExcursion;
-						break;
-					}
-				}
-			}
-
-			void setNbAreas(uint nbAreas) { pNbAreas = nbAreas; }
-
-			void setPowerFluctuations(Data::PowerFluctuations powerFluctuations)
-			{ pPowerFluctuations = powerFluctuations;}
-
-			void reset()
-			{
-				// General
-				memset(pNbClustersByArea, 0, pNbAreas * sizeof(size_t));
-				
-				// Thermal noises
-				for(uint a = 0; a != pNbAreas; a++)
-					memset(pThermalNoisesByArea[a], 0, pNbClustersByArea[a] * sizeof(double));
-
-				// Reservoir levels and unsupplied energy
-				memset(pReservoirLevels, 0, pNbAreas * sizeof(double));
-				memset(pUnsuppliedEnergy, 0, pNbAreas * sizeof(double));
-
-				// Hydro costs noises
-				switch(pPowerFluctuations)
-				{
-					case Data::lssFreeModulations:
-					{
-						for(uint a = 0; a != pNbAreas; a++)
-							memset(pHydroCostsByArea_freeMod[a], 0, 8784 * sizeof(double));
-						break;
-					}
-
-					case Data::lssMinimizeRamping:
-					case Data::lssMinimizeExcursions:
-					{
-						memset(pHydroCosts_rampingOrExcursion, 0, pNbAreas * sizeof(double));
-						break;
-					}
-				}
-			}
-
-		public:
-			// General data
-			uint pNbAreas;
-			Data::PowerFluctuations pPowerFluctuations;
-
-			// Data for thermal noises
-			double ** pThermalNoisesByArea;
-			size_t * pNbClustersByArea;
-
-			// Data for reservoir levels
-			double * pReservoirLevels;
-
-			// Data for unsupplied energy
-			double * pUnsuppliedEnergy;
-
-			// Hydro costs noises
-			double ** pHydroCostsByArea_freeMod;
-			double *  pHydroCosts_rampingOrExcursion;
-	};
-	
-	class randomNumbers
-	{
-		public:
-			randomNumbers(uint maxNbPerformedYearsInAset, Data::PowerFluctuations powerFluctuations) 
-				: pMaxNbPerformedYears(maxNbPerformedYearsInAset)
-			{ 
-				// Allocate a table of parallel years structures
-				pYears = new yearRandomNumbers[maxNbPerformedYearsInAset];
-
-				// Tells these structures their power fluctuations mode 
-				for(uint y = 0; y < maxNbPerformedYearsInAset; ++y)
-					pYears[y].setPowerFluctuations(powerFluctuations);
-			}
-
-			~randomNumbers() { delete[] pYears; }
-
-			void reset()
-			{
-				for(uint i = 0; i < pMaxNbPerformedYears; i++)	pYears[i].reset();
-
-				yearNumberToIndex.clear();
-
-			}
-
-		public:
-			uint pMaxNbPerformedYears;
-			yearRandomNumbers * pYears;
-
-			// Associates : 
-			//		year number (0, ..., total nb of years to compute - 1) --> index of the year's space (0, ..., max nb of parallel years - 1)
-			std::map<uint,uint> yearNumberToIndex;
-
-	};
-	
-
-
-
-	/*!
-	** \brief Re-Generate the time-series numbers
-	*/
-	void GenerateTimeseriesNumbers(Data::Study& study);
-
-
 
 } // namespace Simulation
 } // namespace Solver

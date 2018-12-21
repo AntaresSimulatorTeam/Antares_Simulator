@@ -91,13 +91,19 @@ namespace Data
 
 	public:
 		Matrix<double> bounds;
-		uint linkCount;
 		BindingConstraint::Type  type;
 		char operatorType;
 
-		double* weight;
-		int* offset;
+		uint linkCount;
+		double* linkWeight;
+		int* linkOffset;
 		long* linkIndex;
+
+		uint clusterCount;
+		double* clusterWeight;
+		int* clusterOffset;
+		long* clusterIndex;
+		long* clustersAreaIndex;
 	};
 
 
@@ -197,6 +203,11 @@ namespace Data
 		uint simulationDaysPerMonth[12];
 
 		/*!
+		** \brief The number of simulation days per week
+		*/
+		uint simulationDaysPerWeek[53];
+
+		/*!
 		** \brief Flag to know if at least one error occured during the quadratic optimization
 		**
 		** In this case, error on NaN should be disabled
@@ -218,6 +229,7 @@ namespace Data
 		void initializeRangeLimits(const Study& study, StudyRangeLimits& limits);
 		//! Prepare all thermal clusters in 'must-run' mode
 		bool initializeThermalClustersInMustRunMode(Study& study);
+		void removeDisabledThermalClustersFromSolverComputations(Study& study);
 
 		void disableAllFilters(Study& study);
 

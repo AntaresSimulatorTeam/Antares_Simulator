@@ -43,8 +43,6 @@ namespace Antares
 {
 namespace Window
 {
-
-
 	class AnalyzerWizard final : public wxDialog
 	{
 	public:

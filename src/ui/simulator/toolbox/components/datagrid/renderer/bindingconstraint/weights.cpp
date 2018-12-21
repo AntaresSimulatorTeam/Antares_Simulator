@@ -49,20 +49,20 @@ namespace BindingConstraint
 {
 
 
-	Weights::Weights(wxWindow* control) :
+	LinkWeights::LinkWeights(wxWindow* control) :
 		pControl(control),
 		pZero(wxT("0 "))
 	{
 	}
 
 
-	Weights::~Weights()
+	LinkWeights::~LinkWeights()
 	{
 		destroyBoundEvents();
 	}
 
 
-	wxString Weights::rowCaption(int rowIndx) const
+	wxString LinkWeights::rowCaption(int rowIndx) const
 	{
 		switch (rowIndx)
 		{
@@ -92,7 +92,7 @@ namespace BindingConstraint
 	}
 
 
-	wxString Weights::cellValue(int x, int y) const
+	wxString LinkWeights::cellValue(int x, int y) const
 	{
 		if (!study)
 			return wxEmptyString;
@@ -116,7 +116,7 @@ namespace BindingConstraint
 					{
 						if ((study->uiinfo->constraint(x))->enabled())
 						{
-							if ((study->uiinfo->constraint(x))->linkCount())
+							if (((study->uiinfo->constraint(x))->linkCount() > 0 || (study->uiinfo->constraint(x))->clusterCount() > 0))
 								return wxT("   Yes   ");
 							return wxT("   Skipped   ");
 						}
@@ -133,7 +133,7 @@ namespace BindingConstraint
 	}
 
 
-	wxString Weights::columnCaption(int x) const
+	wxString LinkWeights::columnCaption(int x) const
 	{
 		if (not Data::Study::Current::Valid())
 			return wxEmptyString;
@@ -144,7 +144,7 @@ namespace BindingConstraint
 	}
 
 
-	IRenderer::CellStyle Weights::cellStyle(int x, int y) const
+	IRenderer::CellStyle LinkWeights::cellStyle(int x, int y) const
 	{
 		if (not Data::Study::Current::Valid())
 			return IRenderer::cellStyleConstraintDisabled;
@@ -161,7 +161,7 @@ namespace BindingConstraint
 				return IRenderer::cellStyleConstraintWeightCount;
 			case 3:
 				return ((study->uiinfo->constraint(x))->enabled() &&
-					(study->uiinfo->constraint(x))->linkCount() > 0)
+					((study->uiinfo->constraint(x))->linkCount() > 0 || (study->uiinfo->constraint(x))->clusterCount() > 0))
 					? IRenderer::cellStyleConstraintEnabled
 					: IRenderer::cellStyleConstraintDisabled;
 			case 4:
@@ -179,7 +179,7 @@ namespace BindingConstraint
 	}
 
 
-	bool Weights::cellValue(int x, int y, const String& value)
+	bool LinkWeights::cellValue(int x, int y, const String& value)
 	{
 		if (!study || !study->uiinfo || (uint) x >= study->uiinfo->constraintCount())
 			return false;
@@ -253,13 +253,13 @@ namespace BindingConstraint
 	}
 
 
-	bool Weights::valid() const
+	bool LinkWeights::valid() const
 	{
 		return !study ? false : (study->bindingConstraints.size() > 0);
 	}
 
 
-	double Weights::cellNumericValue(int x, int y) const
+	double LinkWeights::cellNumericValue(int x, int y) const
 	{
 		if (!study)
 			return 0;
@@ -270,19 +270,19 @@ namespace BindingConstraint
 	}
 
 
-	int Weights::width() const
+	int LinkWeights::width() const
 	{
 		return !study ? 0 : study->uiinfo->constraintCount();
 	}
 
 
-	int Weights::height() const
+	int LinkWeights::height() const
 	{
 		return !study ? 0 : study->uiinfo->linkCount() + 5;
 	}
 
 
-	wxColour Weights::cellBackgroundColor(int x, int y) const
+	wxColour LinkWeights::cellBackgroundColor(int x, int y) const
 	{
 		if (!study)
 			return wxColour(229, 206, 206);
@@ -295,7 +295,7 @@ namespace BindingConstraint
 	}
 
 
-	wxColour Weights::cellTextColor(int x, int y) const
+	wxColour LinkWeights::cellTextColor(int x, int y) const
 	{
 		if (!study)
 			return wxColour(0, 0, 0);
@@ -306,7 +306,7 @@ namespace BindingConstraint
 		return wxColour(255, 100, 43);
 	}
 
-	void Weights::applyLayerFiltering(size_t layerID, VGridHelper* gridHelper)
+	void LinkWeights::applyLayerFiltering(size_t layerID, VGridHelper* gridHelper)
 	{
 		int last = 0; // The count of valid cols 
 		for (int x = 0; x < gridHelper->virtualSize.x; ++x)
@@ -314,7 +314,7 @@ namespace BindingConstraint
 			// The current constraint
 			Data::BindingConstraint* constraint = study->uiinfo->constraint(gridHelper->indicesCols[x]);
 
-			if (constraint->hasAllWeightedLinksOnLayer(layerID))
+			if (constraint->hasAllWeightedLinksOnLayer(layerID) && constraint->hasAllWeightedClustersOnLayer(layerID))
 			{
 				gridHelper->indicesCols[last] = gridHelper->indicesCols[x];
 				++last;
@@ -324,23 +324,307 @@ namespace BindingConstraint
 		//gridHelper->indicesCols.resize(last);
 		gridHelper->virtualSize.x = last;
 
-		/*last = 5;// The count of valid rows
+		last = 5;// The count of valid rows
 		for (int r = 5; r != gridHelper->virtualSize.y; ++r)
 		{
-		auto* lnk = study->uiinfo->link((uint)(r - 5));
-		assert(lnk);
-		assert(lnk->from);
-		assert(lnk->with);
-		if (lnk->isVisibleOnLayer(layerIt->first))
+			auto* lnk = study->uiinfo->link((uint)(r - 5));
+			assert(lnk);
+			assert(lnk->from);
+			assert(lnk->with);
+			if (lnk->isVisibleOnLayer(layerID))
+			{
+				gridHelper->indicesRows[last] = r;
+				++last;
+			}
+		}
+		gridHelper->virtualSize.y = last;
+	}
+
+	ClusterWeights::ClusterWeights(wxWindow* control) :
+		pControl(control),
+		pZero(wxT("0 "))
+	{
+	}
+
+
+	ClusterWeights::~ClusterWeights()
+	{
+		destroyBoundEvents();
+	}
+
+
+	wxString ClusterWeights::rowCaption(int rowIndx) const
+	{
+		switch (rowIndx)
+		{
+		case 0: return wxT("Bounds");
+		case 1: return wxT("Type");
+		case 2: return wxT("Clusters");
+		case 3: return wxT("On / Off");
+		case 4: return wxEmptyString;
+		default:
+			if (!(!study))
+			{
+				if ((uint)(rowIndx - 5) < study->uiinfo->clusterCount())
+				{
+					auto* clstr = study->uiinfo->cluster((uint)(rowIndx - 5));
+					assert(clstr);
+					assert(clstr->parentArea);
+					wxString s;
+					s += wxStringFromUTF8(clstr->getFullName());
+					return s;
+				}
+			}
+		}
+		return wxEmptyString;
+	}
+
+
+	wxString ClusterWeights::cellValue(int x, int y) const
+	{
+		if (!study)
+			return wxEmptyString;
+
+		if ((uint)x >= study->uiinfo->constraintCount())
+			return wxEmptyString;
+		if (y < 5)
+		{
+			switch (y)
+			{
+			case 0:
+				return wxStringFromUTF8(
+					Data::BindingConstraint::MathOperatorToCString((study->uiinfo->constraint(x))->operatorType()))
+					<< wxT(' ');
+			case 1:
+				return wxStringFromUTF8(
+					Data::BindingConstraint::TypeToCString((study->uiinfo->constraint(x))->type())) << wxT(' ');
+			case 2:
+				return wxString() << (study->uiinfo->constraint(x))->clusterCount() << wxT(" clusters   ");
+			case 3:
+			{
+				if ((study->uiinfo->constraint(x))->enabled())
+				{
+					if (((study->uiinfo->constraint(x))->linkCount() > 0 || (study->uiinfo->constraint(x))->clusterCount() > 0))
+						return wxT("   Yes   ");
+					return wxT("   Skipped   ");
+				}
+				return wxT("   Disabled   ");
+			}
+			}
+			return wxEmptyString;
+		}
+
+		const double d = cellNumericValue(x, y);
+		if (!Math::Zero(d))
+			return DoubleToWxString(d);
+		return pZero;
+	}
+
+
+	wxString ClusterWeights::columnCaption(int x) const
+	{
+		if (not Data::Study::Current::Valid())
+			return wxEmptyString;
+
+		if ((uint)x < study->uiinfo->constraintCount())
+			return wxStringFromUTF8((study->uiinfo->constraint((uint)x))->name());
+		return wxEmptyString;
+	}
+
+
+	IRenderer::CellStyle ClusterWeights::cellStyle(int x, int y) const
+	{
+		if (not Data::Study::Current::Valid())
+			return IRenderer::cellStyleConstraintDisabled;
+
+		if ((uint)x >= study->uiinfo->constraintCount())
+			return IRenderer::cellStyleConstraintDisabled;
+		switch (y)
+		{
+		case 0:
+			return IRenderer::cellStyleConstraintOperator;
+		case 1:
+			return IRenderer::cellStyleConstraintType;
+		case 2:
+			return IRenderer::cellStyleConstraintWeightCount;
+		case 3:
+			return ((study->uiinfo->constraint(x))->enabled() &&
+				((study->uiinfo->constraint(x))->linkCount() > 0 || (study->uiinfo->constraint(x))->clusterCount() > 0))
+				? IRenderer::cellStyleConstraintEnabled
+				: IRenderer::cellStyleConstraintDisabled;
+		case 4:
+			return IRenderer::cellStyleDefault;
+
+		default:
+		{
+			//return IRenderer::cellStyleCustom;
+			if (study->uiinfo->cluster(y - 5)->enabled && !study->uiinfo->cluster(y - 5)->mustrun)
+				return IRenderer::cellStyleCustom;
+			else
+				return IRenderer::cellStyleWarning;
+		}
+		}
+	}
+
+
+	bool ClusterWeights::cellValue(int x, int y, const String& value)
+	{
+		if (!study || !study->uiinfo || (uint)x >= study->uiinfo->constraintCount())
+			return false;
+
+		auto& uiinfo = *(study->uiinfo);
+		auto* constraint = ((uint)x < uiinfo.orderedConstraint.size())
+			? (uiinfo.constraint(x)) : nullptr;
+		if (!constraint)
+			return false;
+
+		switch (y)
+		{
+		case 0: // operator
+		{
+			const Data::BindingConstraint::Operator op = Data::BindingConstraint::StringToOperator(value);
+			if (op != Data::BindingConstraint::opUnknown)
+			{
+				constraint->operatorType(op);
+				uiinfo.reloadBindingConstraints();
+				OnStudyConstraintModified(constraint);
+				return true;
+			}
+			return false;
+		}
+		case 1: // type
+		{
+			if (constraint->type() != Data::BindingConstraint::typeHourly)
+			{
+				const Data::BindingConstraint::Type type = Data::BindingConstraint::StringToType(value);
+				if (type == Data::BindingConstraint::typeDaily || type == Data::BindingConstraint::typeWeekly)
+				{
+					constraint->mutateTypeWithoutCheck(type);
+					OnStudyConstraintModified(constraint);
+					return true;
+				}
+			}
+			return false;
+		}
+		case 2:
+			return false;
+		case 3:
+		{
+			const bool v = value.to<bool>();
+			constraint->enabled(v);
+			OnStudyConstraintModified(constraint);
+			return true;
+		}
+		case 4:
+			return false;
+
+		default:
+		{
+			uint clusterIndex = y - 5;
+			assert(clusterIndex < uiinfo.clusterCount());
+
+			double d;
+			if (value.to(d))
+			{
+				if (clusterIndex < uiinfo.clusterCount())
+				{
+					constraint->weight(uiinfo.cluster(clusterIndex), d);
+					if (pControl)
+						pControl->Refresh();
+					OnStudyConstraintModified(constraint);
+					return true;
+				}
+			}
+		}
+		}
+		return false;
+	}
+
+
+	bool ClusterWeights::valid() const
+	{
+		return !study ? false : (study->bindingConstraints.size() > 0);
+	}
+
+
+	double ClusterWeights::cellNumericValue(int x, int y) const
+	{
+		if (!study)
+			return 0;
+
+		return (y > 4)
+			? (study->uiinfo->constraint(x))->weight(study->uiinfo->cluster(y - 5))
+			: ((y == 3) ? (study->uiinfo->constraint(x))->clusterCount() : 0.);
+	}
+
+
+	int ClusterWeights::width() const
+	{
+		return !study ? 0 : study->uiinfo->constraintCount();
+	}
+
+
+	int ClusterWeights::height() const
+	{
+		return !study ? 0 : study->uiinfo->clusterCount() + 5;
+	}
+
+
+	wxColour ClusterWeights::cellBackgroundColor(int x, int y) const
+	{
+		if (!study)
+			return wxColour(229, 206, 206);
+
+		double value = cellNumericValue(x, y);
+		if (Math::NaN(value) || Math::Zero(value))
+			return wxColour(250, 250, 250);
+
+		return wxColour(240, 240, 250);
+	}
+
+
+	wxColour ClusterWeights::cellTextColor(int x, int y) const
+	{
+		if (!study)
+			return wxColour(0, 0, 0);
+
+		double value = cellNumericValue(x, y);
+		if (Math::Zero(value))
+			return wxColour(230, 230, 230);
+		return wxColour(255, 100, 43);
+	}
+
+	void ClusterWeights::applyLayerFiltering(size_t layerID, VGridHelper* gridHelper)
+	{
+		int last = 0; // The count of valid cols 
+		for (int x = 0; x < gridHelper->virtualSize.x; ++x)
+		{
+			// The current constraint
+			Data::BindingConstraint* constraint = study->uiinfo->constraint(gridHelper->indicesCols[x]);
+
+			if (constraint->hasAllWeightedLinksOnLayer(layerID) && constraint->hasAllWeightedClustersOnLayer(layerID))
+			{
+				gridHelper->indicesCols[last] = gridHelper->indicesCols[x];
+				++last;
+			}
+
+		}
+		//gridHelper->indicesCols.resize(last);
+		gridHelper->virtualSize.x = last;
+
+		last = 5;// The count of valid rows
+		for (int r = 5; r != gridHelper->virtualSize.y; ++r)
+		{
+		auto* clstr = study->uiinfo->cluster((uint)(r - 5));
+		assert(clstr);
+		if (clstr->isVisibleOnLayer(layerID))
 		{
 		gridHelper->indicesRows[last] = r;
 		++last;
 		}
 		}
-		gridHelper->virtualSize.y = last;*/
+		gridHelper->virtualSize.y = last;
 	}
-
-
 
 
 

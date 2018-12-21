@@ -394,7 +394,7 @@ namespace Variable
 	template<class NextT>
 	template<class SearchVCardT, class O>
 	inline void
-	SetsOfAreas<NextT>::computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace)
+	SetsOfAreas<NextT>::computeSpatialAggregateWith(O& out, const Data::Area* area)
 	{
 		(void) out;
 		(void) area;

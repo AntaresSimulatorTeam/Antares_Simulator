@@ -45,6 +45,8 @@
 #include <yuni/job/job.h>
 #include <yuni/job/queue/service.h>
 
+# define SEP Yuni::IO::Separator
+# define HYDRO_HOT_START 0
 
 namespace Antares
 {
@@ -62,6 +64,7 @@ namespace Simulation
 						std::vector<unsigned int> & pYearsIndices,
 						std::map<uint, bool> & pYearFailed,
 						std::map<uint, bool> & pIsFirstPerformedYearOfASet,
+						bool pFirstSetParallelWasRun,
 						unsigned int pNumSpace,
 						randomNumbers & pRandomForParallelYears,
 						bool pPerformCalculations,
@@ -73,25 +76,30 @@ namespace Simulation
 						yearsIndices(pYearsIndices),
 						yearFailed(pYearFailed),
 						isFirstPerformedYearOfASet(pIsFirstPerformedYearOfASet),
+						firstSetParallelWasRun(pFirstSetParallelWasRun),
 						numSpace(pNumSpace), 
 						randomForParallelYears(pRandomForParallelYears),
 						performCalculations(pPerformCalculations),
 						study(pStudy),
 						state(pState),
 						yearByYear(pYearByYear)
-				  {}
+				{
+					hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
+				}
 		private :
 			ISimulation<Impl> * simulationObj;
 			unsigned int y;
 			std::vector<unsigned int> & yearsIndices;
 			std::map<uint, bool> & yearFailed;
 			std::map<uint, bool> & isFirstPerformedYearOfASet;
+			bool firstSetParallelWasRun;
 			unsigned int numSpace;
 			randomNumbers & randomForParallelYears;
 			bool performCalculations;
 			Data::Study & study;
 			std::vector<Variable::State> & state;
 			bool yearByYear;
+			bool hydroHotStart;
 
 		private:
 			virtual void onExecute() override
@@ -117,7 +125,14 @@ namespace Simulation
 					// Getting random tables for this year
 					yearRandomNumbers & randomForCurrentYear = randomForParallelYears.pYears[indexYear];
 					double ** thermalNoisesByArea = randomForCurrentYear.pThermalNoisesByArea;
-					double * randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
+					double * randomReservoirLevel = nullptr;
+					if (not study.parameters.adequacyDraft())
+					{
+						if (hydroHotStart && firstSetParallelWasRun)
+							randomReservoirLevel = state[numSpace].problemeHebdo->previousYearFinalLevels;
+						else
+							randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
+					}
 
 					// 3 - Preparing the Time-series numbers
 					// We want to draw lots of numbers for time-series
@@ -125,17 +140,17 @@ namespace Simulation
 					
 					
 					// 3 - Preparing data related to Clusters in 'must-run' mode
-					simulationObj->ImplementationType::prepareClustersInMustRunMode(numSpace);
+					simulationObj->prepareClustersInMustRunMode(numSpace);
 								
 					// 4 - Hydraulic ventilation
 					if (not study.parameters.adequacyDraft())
-						simulationObj->pHydroManagement(randomReservoirLevel, numSpace);
+						simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y, numSpace);
 
 					// Updating the state
 					state[numSpace].year = y;
 
 					// 5 - Resetting all variables for the output
-					simulationObj->ImplementationType:: variables.yearBegin(y, numSpace);
+					simulationObj-> variables.yearBegin(y, numSpace);
 
 					// Flush all memory into the swap files
 					if (Antares::Memory::swapSupport)
@@ -143,7 +158,7 @@ namespace Simulation
 					
 					// 6 - The Solver itself
 					uint failedWeek = 0;
-					if ( not simulationObj->ImplementationType:: year(progression, state[numSpace], numSpace, randomForCurrentYear, failedWeek) )
+					if ( not simulationObj-> year(progression, state[numSpace], numSpace, randomForCurrentYear, failedWeek) )
 					{
 						// Something goes wrong with this year. We have to restarting it
 						logs.info(); // empty line
@@ -157,11 +172,11 @@ namespace Simulation
 					if (Antares::Memory::swapSupport)
 						Antares::memory.flushAll();
 
-					simulationObj->ImplementationType::variables.yearEndBuild(state[numSpace], y, numSpace);
+					simulationObj->variables.yearEndBuild(state[numSpace], y, numSpace);
 
 					// 7 - End of the year, this is the last stade where the variables can retrieve
 					// their data for this year.
-					simulationObj->ImplementationType::variables.yearEnd(y, numSpace);
+					simulationObj->variables.yearEnd(y, numSpace);
 
 					// 7.5 - Flush all memory into the swap files
 					// This is mandatory for big studies, with numerous areas and thermal clusters
@@ -172,20 +187,20 @@ namespace Simulation
 					// Notifying all variables to perform spatial aggregates.
 					// This must be done only when all variables have finished to compute their
 					// data for the year.
-					simulationObj->ImplementationType::variables.yearEndSpatialAggregates(simulationObj->ImplementationType::variables, y, numSpace);
+					simulationObj->variables.yearEndSpatialAggregates(simulationObj->variables, y, numSpace);
 
 					// 9 - Write results for the current year
 					if (yearByYear)
 					{
 						// Before writing, some variable may require minor modifications
-						simulationObj->ImplementationType:: variables.beforeYearByYearExport(y, numSpace);
+						simulationObj-> variables.beforeYearByYearExport(y, numSpace);
 						// writing the results for the current year into the output
 						simulationObj->writeResults(false, y, numSpace);	// false for synthesis
 					}
 				}
 				else
 				{
-					simulationObj->ImplementationType::incrementProgression(progression);
+					simulationObj->incrementProgression(progression);
 
 					logs.info() << "  playlist: ignoring the year " << (y + 1);
 
@@ -209,7 +224,9 @@ namespace Simulation
 		pNbYearsReallyPerformed(0),
 		pNbMaxPerformedYearsInParallel(0),
 		pYearByYear(study.parameters.yearByYear),
-		pHydroManagement(study)
+		pHydroManagement(study),
+		pFirstSetParallelWasRun(false),
+		pAnnualCostsStatistics(study)
 	{
 		// Ask to the interface to show the messages
 		logs.info();
@@ -221,6 +238,8 @@ namespace Simulation
 
 		if (pYearByYear && (settings.noOutput || settings.tsGeneratorsOnly))
 			pYearByYear = false;
+
+		pHydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
 	}
 
 
@@ -696,7 +715,9 @@ namespace Simulation
 		int NombreDePasDeTemps = 168;
 		int NombreDeJoursDansUnIntervalleOptimise = 0;
 		int mxPaliers = 0;
-
+		int NombreDeContraintesCouplantes = 0;  
+		int Sparsity = 0;						
+		int Adder = 0;							
 
 		// ---------------------------------
 		// Preliminary variables computation
@@ -715,8 +736,13 @@ namespace Simulation
 			auto& area = *(study.areas.byIndex[i]);
 			NombreDeVariables += area.thermal.list.size();
 
-			if(area.hydro.hydroModulable)
+			if (area.hydro.hydroModulable)
+			{
 				NombreDeVariables++;	/* La variable de production hydraulique */
+				NombreDeVariables++;	// pumping
+				NombreDeVariables++;	// levels
+				NombreDeVariables++;	// overflow
+			}
 
 			NombreDeVariables+= 2;	/* Les groupes de defaillance positive et negative */
 		}
@@ -760,7 +786,12 @@ namespace Simulation
 		{
 			auto& area = *(study.areas.byIndex[i]);
 			if (area.hydro.hydroModulable)
-				NombreDeContraintes++;	/* Contraintes de turbine */
+			{
+				NombreDeContraintes++;	/* Contraintes de turbine min */
+				NombreDeContraintes++;	/* Contraintes de turbine max */
+				NombreDeContraintes++;	// max energy pump
+				NombreDeContraintes += NombreDePasDeTempsPourUneOptimisation;	// levels
+			}
 		}
 
 		if (parameters.power.fluctuations == Data::lssMinimizeRamping)
@@ -810,6 +841,10 @@ namespace Simulation
 
 		} // End if mode accurate
 
+		NombreDeVariables += nbAreas * 3 * NombreDePasDeTempsPourUneOptimisation; //pump, level, overflow
+		NombreDeContraintes += nbAreas*NombreDePasDeTempsPourUneOptimisation;  //level modelling
+		NombreDeContraintes += nbAreas * 3;  //hydro generation min,hydro generation max, pumping max
+
 		/*
 			Computation of mxPaliers
 		*/
@@ -841,12 +876,46 @@ namespace Simulation
 
 		// Computation of NbTermes :
 		// -----------------------
-		NbTermes  = (int) mxPaliers;
-		NbTermes += 3;		/* Production hydraulique et groupes de defaillance */
-		NbTermes += (int)(0.25 * nbLinks);
-		NbTermes *= NombreDeContraintes;
-		NbTermes += nbAreas * NombreDePasDeTempsPourUneOptimisation;
-		NbTermes += nbAreas * NombreDePasDeTempsPourUneOptimisation * 4;
+		
+		for (auto i = bindingConstraints.begin(); i != bindingConstraints.end(); ++i)
+		{
+			NombreDeContraintesCouplantes++;
+		}
+
+		Sparsity = (int)mxPaliers *nbAreas;
+		Sparsity += nbLinks;
+		if (Sparsity > 100) Sparsity = 100;   /* The average number of non-zero coefficients in binding constraints is expected to be smaller than 100*/
+
+		NbTermes = 0;
+		NbTermes += NombreDeContraintes; // overhead to be safe - should be removable  
+										 /*  non-zero terms in node balance equations */
+		Adder = (int)mxPaliers;										/* thermal clusters*/
+		Adder += 4;													/* hydro generation, positive shedding, negative shedding, pumping*/
+		Adder *= nbAreas;											/* one balance equation per node...*/
+		Adder += 2 * nbLinks;										/* Each interconnection appears twice in balance equations*/
+		Adder *= NombreDePasDeTempsPourUneOptimisation;				/* one balance Equation per time step*/
+
+		NbTermes += Adder;
+
+		/* Non-zero Terms in node spillage limiting equation */
+
+		NbTermes += Adder;
+
+		/* non-zero Terms in flow decomposition equations*/
+
+		Adder = 3 * nbLinks*NombreDePasDeTempsPourUneOptimisation;/* Each interconnection flow F,  F+,F- may appear once in flow orientation decomposition*/
+		NbTermes += Adder;
+
+		/*  non-zero terms in binding constraints  equations */
+		Adder = Sparsity * NombreDeContraintesCouplantes;				/* The average number of non-zero coefficients in binding constraints is assumed to be smaller than 100*/
+		Adder *= (NombreDePasDeTempsPourUneOptimisation);				/* Best case : all binding constraints are hourly */
+		Adder += Sparsity *(7 + 7)* NombreDeContraintesCouplantes;		/* Worst case : all binding constraints are deily */
+		NbTermes += Adder;
+
+		NbTermes += 3 * nbAreas* NombreDePasDeTempsPourUneOptimisation; // hydro min, max, pump
+		NbTermes += nbAreas* NombreDePasDeTempsPourUneOptimisation * 4; // in case of hydro-smoothing*/
+		NbTermes += nbAreas* NombreDePasDeTempsPourUneOptimisation * 5; // if explicit hydro level and overflow modelling																			 
+		
 		/* Les contraintes pour la prise en compte des coûts de demarrage et durees min d'arret/marche */
 		NbTermes += NbTermesContraintesPourLesCoutsDeDemarrage;
 
@@ -979,7 +1048,7 @@ namespace Simulation
 				set->regenerateTS = false;
 				set->yearForTSgeneration = 999999;
 
-				// In case we have regenerate times series before run the current set of parallel years 
+				// In case we have to regenerate times series before run the current set of parallel years 
 				if(refreshing)
 				{
 					set->regenerateTS = true;
@@ -994,6 +1063,9 @@ namespace Simulation
 
 			if (performCalculations)
 			{
+				// Another year performed
+				++pNbYearsReallyPerformed;
+				
 				// Number of actually performed years in the current set (up to now).
 				set->nbPerformedYears++;
 				// Index of the MC year's space (useful if this year is actually run)
@@ -1056,8 +1128,9 @@ namespace Simulation
 			// Reservoir levels
 			randomForParallelYears.pYears[y].pReservoirLevels = new double[nbAreas];
 
-			// Noises on unsupplied energy
-			randomForParallelYears.pYears[y].pUnsuppliedEnergy = new double[nbAreas];
+			// Noises on unsupplied and spilled energy
+			randomForParallelYears.pYears[y].pUnsuppliedEnergy	= new double[nbAreas];
+			randomForParallelYears.pYears[y].pSpilledEnergy		= new double[nbAreas];
 
 			// Hydro costs noises
 			switch (study.parameters.power.fluctuations)
@@ -1067,11 +1140,18 @@ namespace Simulation
 					randomForParallelYears.pYears[y].pHydroCostsByArea_freeMod = new double*[nbAreas];
 					for (uint a = 0; a != nbAreas; ++a)
 						randomForParallelYears.pYears[y].pHydroCostsByArea_freeMod[a] = new double[8784];
+					break;
 				}
 				case Data::lssMinimizeRamping:
 				case Data::lssMinimizeExcursions:
 				{
 					randomForParallelYears.pYears[y].pHydroCosts_rampingOrExcursion = new double[nbAreas];
+					break;
+				}
+				case Data::lssUnknown:
+				{
+					logs.error() << "Power fluctuation unknown";
+					break;
 				}
 			}
 		}	// End loop over years
@@ -1119,33 +1199,80 @@ namespace Simulation
 
 			// ... Reservoir levels ...
 			uint areaIndex = 0;
-			study.areas.each([&] (Data::Area& area)
+			study.areas.each([&](Data::Area& area)
 			{
 				// looking for the initial reservoir level (begining of the year)
 				auto& min = area.hydro.reservoirLevel[Data::PartHydro::minimum];
 				auto& avg = area.hydro.reservoirLevel[Data::PartHydro::average];
 				auto& max = area.hydro.reservoirLevel[Data::PartHydro::maximum];
-				// Whatever the case, we always draw a random initial reservoir level
-				// to ensure the same results whether if the reservoir management is enable
-				// or not.
-				if (isPerformed)
-					randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = pHydroManagement.randomReservoirLevel(min[0], avg[0], max[0]);
+
+				// Month the reservoir level is initialized according to.
+				// This month number is given in the civil calendar, from january to december (0 is january).
+				int initResLevelOnMonth = area.hydro.initializeReservoirLevelDate;
+
+				// Conversion of the previous month into simulation calendar
+				int initResLevelOnSimMonth = study.calendar.mapping.months[initResLevelOnMonth];
+
+				// Previous month's first day in the year
+				int firstDayOfMonth = study.calendar.months[initResLevelOnSimMonth].daysYear.first;
+
+				double randomLevel = pHydroManagement.randomReservoirLevel(min[firstDayOfMonth], avg[firstDayOfMonth], max[firstDayOfMonth]);
+				
+				if (pHydroHotStart)
+				{
+					if (!isPerformed || !area.hydro.reservoirManagement)
+					{
+						// This initial level should be unused, so -1, as impossible value, is suitable.
+						randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = -1.;
+						areaIndex++;
+						return;	// Skipping the current area
+					}
+
+					if (!pFirstSetParallelWasRun)
+						randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = randomLevel;
+					// Else : means the start levels (multiple areas are affected) of a year are retrieved from a previous year and
+					//		  these levels are updated inside the year job (see year job).
+				}
 				else
-					pHydroManagement.randomReservoirLevel(min[0], avg[0], max[0]);
+				{
+					// Current area's hydro starting (or initial) level computation 
+					// (no matter if the year is performed or not, we always draw a random initial
+					// reservoir level to ensure the same results)
+					if (isPerformed)
+						randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = randomLevel;
+				}
+
+
 				areaIndex++;
 			}); // each area
 			
 			
-			// ... Unsupplied energy noise (french : bruit sur la defaillance positive) ...
+			// ... Unsupplied and spilled energy costs noises (french : bruits sur la defaillance positive et negatives) ...
 			// references to the random number generators
 			auto& randomUnsupplied = study.runtime->random[Data::seedUnsuppliedEnergyCosts];
+			auto& randomSpilled = study.runtime->random[Data::seedSpilledEnergyCosts];
+
+			int currentSpilledEnergySeed = study.parameters.seed[Data::seedSpilledEnergyCosts];
+			int defaultSpilledEnergySeed = Data::antaresSeedDefaultValue + Data::seedSpilledEnergyCosts * Data::antaresSeedIncrement;
+			bool SpilledEnergySeedIsDefault = (currentSpilledEnergySeed == defaultSpilledEnergySeed);
 			areaIndex = 0;
 			study.areas.each([&] (Data::Area& area)
 			{
+				(void)area; // Avoiding warnings at compilation (unused variable) on linux
 				if (isPerformed)
-					randomForYears.pYears[indexYear].pUnsuppliedEnergy[areaIndex] = randomUnsupplied();
+				{
+					double randomNumber = randomUnsupplied();
+					randomForYears.pYears[indexYear].pUnsuppliedEnergy[areaIndex] = randomNumber;
+					randomForYears.pYears[indexYear].pSpilledEnergy[areaIndex] = randomNumber;
+					if (! SpilledEnergySeedIsDefault)
+						randomForYears.pYears[indexYear].pSpilledEnergy[areaIndex] = randomSpilled();
+				}
 				else
+				{
 					randomUnsupplied();
+					if (! SpilledEnergySeedIsDefault)
+						randomSpilled();
+				}
 
 				areaIndex++;
 			}); // each area
@@ -1159,19 +1286,47 @@ namespace Simulation
 				case Data::lssFreeModulations:
 				{
 					areaIndex = 0;
-					auto end = study.areas.end();
-					for (auto i = study.areas.begin(); i != end; ++i)
-					{
-						for (uint j = 0; j != 8784; ++j)
-						{
-							if (isPerformed)
-								randomForYears.pYears[indexYear].pHydroCostsByArea_freeMod[areaIndex][j] = randomHydro();
-							else
-								randomHydro();
-						}
+					auto end = study.areas.end();					
 
-						areaIndex++;
+					// Computing hourly hydro costs noises so that they are homogeneously spread into : [-1.e-3, -5*1.e-4] U [+5*1.e-4, +1.e-3]
+					if (isPerformed)
+					{
+						for (auto i = study.areas.begin(); i != end; ++i)
+						{
+							double * noise = randomForYears.pYears[indexYear].pHydroCostsByArea_freeMod[areaIndex];
+							std::set<hydroCostNoise, compareHydroCostsNoises> setHydroCostsNoises;
+							for (uint j = 0; j != 8784; ++j)
+							{
+								noise[j] = randomHydro();
+								noise[j] -= 0.5;	// Now we have : -0.5 < noise[j] < +0.5
+
+								// This std::set naturally sorts the hydro costs noises into increasing absolute values order
+								setHydroCostsNoises.insert(hydroCostNoise(noise[j], j));
+							}
+
+							uint rank = 0;
+							std::set<hydroCostNoise, compareHydroCostsNoises>::iterator it;
+							for (it = setHydroCostsNoises.begin(); it != setHydroCostsNoises.end(); it++)
+							{
+								uint index = it->getIndex();
+								double value = it->getValue();
+
+								if (value < 0.)
+									noise[index] = -5 * 1.e-4 * (1 + rank / 8784.);
+								else
+									noise[index] = 5 * 1.e-4 * (1 + rank / 8784.);
+								
+								rank++;
+							}
+
+							areaIndex++;
+						}
 					}
+					else
+						for (auto i = study.areas.begin(); i != end; ++i)
+							for (uint j = 0; j != 8784; ++j)
+								randomHydro();
+
 					break;
 				}
 
@@ -1192,12 +1347,43 @@ namespace Simulation
 					break;
 				}
 
+				case Data::lssUnknown:
+				{
+					logs.error() << "Power fluctuation unknown";
+					break;
+				}
+
 			} // end of switch
 
 			if (isPerformed) indexYear++;
 
 		}	// End loop over years
 	}	// End function 
+
+
+	template<class Impl>
+	void ISimulation<Impl>::computeAnnualCostsStatistics(std::vector<Variable::State> & state,
+														 std::vector<setOfParallelYears>::iterator & set_it)
+	{
+		assert(not study.parameters.adequacyDraft());
+		
+		// Loop over years contained in the set
+		std::vector<unsigned int>::iterator year_it;
+		for (year_it = set_it->yearsIndices.begin(); year_it != set_it->yearsIndices.end(); ++year_it)
+		{
+			// Get the index of the year
+			unsigned int y = *year_it;
+			if (set_it->isYearPerformed[y])
+			{
+				// Get space number associated to the performed year
+				uint numSpace = set_it->performedYearToSpace[y];
+				pAnnualCostsStatistics.systemCost.addCost(state[numSpace].annualSystemCost);
+				pAnnualCostsStatistics.criterionCost1.addCost(state[numSpace].optimalSolutionCost1);
+				pAnnualCostsStatistics.criterionCost2.addCost(state[numSpace].optimalSolutionCost2);
+			}
+		}
+	}
+
 
 	template<class Impl>
 	template<bool PerformCalculationsT>
@@ -1208,8 +1394,6 @@ namespace Simulation
 		if (Antares::Memory::swapSupport)
 			Antares::memory.flushAll();
 
-		// Filter on the years
-		const bool* yearsFilter = study.parameters.yearsFilter;
 		assert(endYear <= study.parameters.nbYears);
 
 		// List of parallel years sets
@@ -1223,6 +1407,8 @@ namespace Simulation
 																							endYear, 
 																							setsOfParallelYears
 																						);
+		// Related to annual costs statistics (printed in output into separate files)
+		pAnnualCostsStatistics.setNbPerformedYears(pNbYearsReallyPerformed);
 
 		// Container for random numbers of parallel years (to be executed or not)
 		randomNumbers randomForParallelYears(maxNbYearsPerformedInAset, study.parameters.power.fluctuations);
@@ -1240,7 +1426,7 @@ namespace Simulation
 		for(set_it = setsOfParallelYears.begin(); set_it != setsOfParallelYears.end(); ++set_it)
 		{
 			
-			logs.info() << "nb years in set : " << set_it->nbYears;
+			logs.info() << "parallel batch size : " << set_it->nbYears;
 			// 1 - We may want to regenerate the time-series this year.
 			// This is the case when the preprocessors are enabled from the
 			// interface and/or the refresh is enabled.
@@ -1252,13 +1438,37 @@ namespace Simulation
 			std::vector<unsigned int>::iterator year_it;
 			std::vector<unsigned int> yearsIndicesCopy(set_it->yearsIndices);
 
+			# if HYDRO_HOT_START != 0
+			// Printing on columns the years chained by final levels 
+			if (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart)
+			{
+				Yuni::String folder;
+				folder << study.folderOutput << SEP << "debug" << SEP << "solver";
+				if (Yuni::IO::Directory::Create(folder))
+				{
+					Yuni::String filename = folder;
+					filename << SEP << "hydroHotstart.txt";
+					Yuni::IO::File::Stream file;
+					if (file.open(filename, Yuni::IO::OpenMode::append))
+					{
+						for (year_it = set_it->yearsIndices.begin(); year_it != set_it->yearsIndices.end(); ++year_it)
+						{
+							// Get the index of the year
+							uint y = *year_it;
+
+							if (set_it->isYearPerformed[y])
+								file << y + 1 << '\t';
+						}
+						file << '\n';
+					}
+				}
+			}
+			#endif
+
 			for(year_it = set_it->yearsIndices.begin(); year_it != set_it->yearsIndices.end(); ++year_it)
 			{
 				// Get the index of the year
 				unsigned int y = *year_it;
-				
-				// Another year
-				++pNbYearsReallyPerformed;
 
 				bool performCalculations = set_it->isYearPerformed[y];
 				unsigned int numSpace = 999999;
@@ -1284,6 +1494,7 @@ namespace Simulation
 															yearsIndicesCopy,
 															set_it->yearFailed,
 															set_it->isFirstPerformedYearOfASet,
+															pFirstSetParallelWasRun,
 															numSpace, 
 															randomForParallelYears,
 															performCalculations,
@@ -1299,6 +1510,10 @@ namespace Simulation
 
 			qs.wait(Yuni::qseIdle);
 			qs.stop();
+
+			// At this point, the first set of parallel year(s) was run
+			if(!pFirstSetParallelWasRun)
+				pFirstSetParallelWasRun = true;
 
 			// On regarde si au moins une année du lot n'a pas trouvé de solution
 			std::map<uint, bool>::iterator it;
@@ -1327,12 +1542,22 @@ namespace Simulation
 			ImplementationType::variables.computeSpatialAggregatesSummary(	ImplementationType::variables, 
 																			set_it->spaceToPerformedYear,
 																			set_it->nbPerformedYears	);
+
+			// Computes statistics on annual (system and solution) costs, to be printed in output into separate files
+			if (not study.parameters.adequacyDraft())
+				computeAnnualCostsStatistics(state, set_it);
 			
 			// Set to zero the random numbers of all parallel years
 			randomForParallelYears.reset();
 
 		} // End loop over sets of parallel years
 
+		// Writing annual costs statistics 
+		if (not study.parameters.adequacyDraft())
+		{
+			pAnnualCostsStatistics.endStandardDeviations();
+			pAnnualCostsStatistics.writeToOutput();
+		}
 	}
 
 

@@ -93,6 +93,8 @@ namespace Link
 				ctx.link->data.pasteToColumn((uint) Data::fhlHurdlesCostIndirect,
 					source->data.entry[Data::fhlHurdlesCostIndirect]);
 				ctx.link->useHurdlesCost = source->useHurdlesCost;
+
+				ctx.link->assetType = source->assetType;
 				return true;
 			}
 		}

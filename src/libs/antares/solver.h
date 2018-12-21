@@ -59,6 +59,11 @@ namespace Solver
 	*/
 	bool FindAnalyzerLocation(Yuni::String& location);
 
+	/*!
+	** \brief Find the location of the constraints builder
+	** \return A non-empty string if the solver has been found, empty otherwise
+	*/
+	bool FindConstraintsBuilderLocation(Yuni::String& location);
 
 	/*!
 	** \brief Try to find the location of `antares-ybyaggregator`

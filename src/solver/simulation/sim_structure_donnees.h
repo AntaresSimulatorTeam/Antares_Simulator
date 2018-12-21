@@ -63,6 +63,8 @@ typedef struct
 {
 	double *                         HydrauliqueModulableQuotidien ; /* indice par jour */
 	double *                         AleaCoutDeProductionParPalier; /* epsilon sur le cout de production */
+	double *						 NiveauxReservoirsDebutJours;	// Niveaux (quotidiens) du reservoir de début de jour (en cas de gestion des reservoirs).
+	double *						 NiveauxReservoirsFinJours;		// Niveaux (quotidiens) du reservoir de fin de jour (en cas de gestion des reservoirs).
 } VALEURS_GENEREES_PAR_PAYS;
 
 

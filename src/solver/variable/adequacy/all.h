@@ -49,6 +49,12 @@
 # include "../adequacy/overallCost.h"
 # include "../economy/operatingCost.h"
 # include "../economy/hydrostorage.h"
+# include "../economy/pumping.h"
+# include "../economy/reservoirlevel.h"
+# include "../economy/inflow.h"
+# include "../economy/overflow.h"
+# include "../economy/waterValue.h"
+# include "../economy/hydroCost.h"
 # include "../economy/unsupliedEnergy.h"
 # include "../adequacy/spilledEnergy.h"
 # include "../economy/productionByDispatchablePlant.h"
@@ -121,6 +127,12 @@ namespace Adequacy
 			// Other
 			< Variable::Economy::DispatchableGeneration           // All dispatchable generation
 			< Variable::Economy::HydroStorage                     // Hydro Storage Generation
+			< Variable::Economy::Pumping						  // Pumping generation
+			< Variable::Economy::ReservoirLevel					  // Reservoir levels
+			< Variable::Economy::Inflows						  // Hydraulic inflows
+			< Variable::Economy::Overflows						  // Hydraulic overflows
+			< Variable::Economy::WaterValue						  // Water values
+			< Variable::Economy::HydroCost						  // Hydro costs
 			< Variable::Economy::UnsupliedEnergy                  // Unsuplied Energy
 			< Variable::Adequacy::SpilledEnergy                   // Spilled Energy
 			< Variable::Economy::LOLD                             // LOLD
@@ -130,7 +142,7 @@ namespace Adequacy
 			< Variable::Economy::Marge                            // OP. MRG
 			// Links
 			< Variable::Adequacy::Links                           // All links
-			> > > > > > > > > > > > > > > > > > > > > >    VariablesPerArea;
+			> > > > > > > > > > > > > > > > > > > > > > > > > > > >   VariablesPerArea;
 
 
 	/*!
@@ -156,6 +168,12 @@ namespace Adequacy
 			// Other
 			Common::SpatialAggregate<Variable::Economy::DispatchableGeneration,
 			Common::SpatialAggregate<Variable::Economy::HydroStorage,
+			Common::SpatialAggregate<Variable::Economy::Pumping,
+			Common::SpatialAggregate<Variable::Economy::ReservoirLevel,
+			Common::SpatialAggregate<Variable::Economy::Inflows,
+			Common::SpatialAggregate<Variable::Economy::Overflows,
+			Common::SpatialAggregate<Variable::Economy::WaterValue,
+			Common::SpatialAggregate<Variable::Economy::HydroCost,
 			Common::SpatialAggregate<Variable::Economy::UnsupliedEnergy,
 			Common::SpatialAggregate<Variable::Adequacy::SpilledEnergy,
 			// LOLD
@@ -165,7 +183,7 @@ namespace Adequacy
 			Common::SpatialAggregate<Variable::Economy::AvailableDispatchGen,
 			Common::SpatialAggregate<Variable::Economy::DispatchableGenMargin,
 			Common::SpatialAggregate<Variable::Economy::Marge
-			> > > > > > > > > > > > > > > > > > > > >
+			> > > > > > > > > > > > > > > > > > > > > > > > > > >
 			VariablesPerSetOfAreas;
 
 

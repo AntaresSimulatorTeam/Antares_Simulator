@@ -246,15 +246,41 @@ namespace Economy
 			if (state.link->useHurdlesCost)
 			{
 				const double flowLinear = state.ntc->ValeurDuFlux[state.link->index];
-				if (flowLinear > 0.)
+
+				if (state.link->useLoopFlow)
 				{
-					pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] +=
-						flowLinear * state.link->data.entry[Data::fhlHurdlesCostDirect][state.hourInTheYear];
+					const double loopFlow = state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]->ValeurDeLoopFlowOrigineVersExtremite[state.link->index];
+					if (flowLinear - loopFlow > 0.)
+					{
+						const double hurdleCostDirect = (flowLinear - loopFlow) * state.link->data.entry[Data::fhlHurdlesCostDirect][state.hourInTheYear];
+						pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] += hurdleCostDirect;
+						// Incrementing annual system cost (to be printed in output in a separate file)
+						state.annualSystemCost += hurdleCostDirect;
+					}
+					else
+					{
+						const double hurdleCostIndirect = -(flowLinear - loopFlow) * state.link->data.entry[Data::fhlHurdlesCostIndirect][state.hourInTheYear];
+						pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] += hurdleCostIndirect;
+						// Incrementing annual system cost (to be printed in output into a separate file)
+						state.annualSystemCost += hurdleCostIndirect;
+					}
 				}
 				else
 				{
-					pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] +=
-						- flowLinear * state.link->data.entry[Data::fhlHurdlesCostIndirect][state.hourInTheYear];
+					if (flowLinear > 0.)
+					{
+						const double hurdleCostDirect = flowLinear * state.link->data.entry[Data::fhlHurdlesCostDirect][state.hourInTheYear];
+						pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] += hurdleCostDirect;
+						// Incrementing annual system cost (to be printed in output in a separate file)
+						state.annualSystemCost += hurdleCostDirect;
+					}
+					else
+					{
+						const double hurdleCostIndirect = -flowLinear * state.link->data.entry[Data::fhlHurdlesCostIndirect][state.hourInTheYear];
+						pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] += hurdleCostIndirect;
+						// Incrementing annual system cost (to be printed in output into a separate file)
+						state.annualSystemCost += hurdleCostIndirect;
+					}
 				}
 			}
 			// Next item in the list

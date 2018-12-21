@@ -31,6 +31,7 @@
 #include "../../../toolbox/components/datagrid/renderer/area/timeseries.h"
 #include "../../../windows/hydro/series.h"
 #include "../../../windows/hydro/prepro.h"
+#include "../../../windows/hydro/localdatahydro.h"
 #include "../../../windows/hydro/allocation.h"
 #include "standard-page.hxx"
 
@@ -63,7 +64,7 @@ namespace Forms
 		pageHydroCorrelation->displayExtraControls(false);
 
 		// TS Generator
-		pageHydroPrepro = page.first->add(new Window::Hydro::Prepro(page.first, page.second),
+		pageHydroPrepro = page.first->add(new Antares::Window::Hydro::Localdatahydro(page.first, page.second),
 			wxT("Local data"));
 
 		// Time-series

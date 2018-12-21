@@ -125,7 +125,7 @@ namespace ScenarioBuilder
 	}
 
 
-	void Rules::loadFromInstrs(const Study& study, const AreaName::Vector& instrs, uint value, bool updaterMode=false)
+	void Rules::loadFromInstrs( Study& study, const AreaName::Vector& instrs, uint value, bool updaterMode=false)
 	{
 		assert(instrs.size() > 2);
 
@@ -136,7 +136,8 @@ namespace ScenarioBuilder
 
 		// The current area name
 		const AreaName& areaname = instrs[1];
-		const Data::Area* area = study.areas.find(areaname);
+		auto pStudy = &study;
+		Data::Area* area = pStudy->areas.find(areaname);
 		if (!area)
 		{
 			// silently ignore the error
@@ -145,6 +146,8 @@ namespace ScenarioBuilder
 			
 			return;
 		}
+		
+
 		// Year
 		const uint year = instrs[2].to<uint>();
 
@@ -161,7 +164,8 @@ namespace ScenarioBuilder
 
 					if (cluster)
 					{
-						thermal[area->index].set(cluster->areaWideIndex, year, value);
+						//thermal[area->index].set(cluster->areaWideIndex, year, value);
+						thermal[area->index].set(cluster, year, value);
 					}
 					else
 						if (not updaterMode) 

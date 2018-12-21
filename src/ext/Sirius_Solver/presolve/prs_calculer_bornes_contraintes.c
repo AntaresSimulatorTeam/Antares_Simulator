@@ -53,7 +53,16 @@ ContrainteInactive = Presolve->ContrainteInactive;
 NbCntSuppr = 0;
 NbVarSuppr = 0;
 
-CalculDeForcingConstraints = OUI_PNE;  
+CalculDeForcingConstraints = OUI_PNE;
+
+if ( Pne->YaDesVariablesEntieres == NON_PNE ) {
+  /* Si on est en continu, on ne sait pas (pour l'instant) recalculer exactement les variables
+	   duales des contraintes quand on fait des substitutions de variables. Donc on prefere ne pas
+		 faire ce genre de presolve. Todo: stocker toutes les transfromations de la matrice pour
+		 recalculer exactement les variables duales. */
+  CalculDeForcingConstraints = NON_PNE;
+}
+
 
 for ( Cnt = 0 ; Cnt < Pne->NombreDeContraintesTrav ; Cnt++ ) {
   if ( ContrainteInactive[Cnt] != OUI_PNE ) {

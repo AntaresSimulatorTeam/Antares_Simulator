@@ -75,7 +75,7 @@ namespace Limits
 	extern Yuni::String expiryDate;
 
 	/*!
-	** \brief url license server
+	** \brief url internet server
 	*/
 	extern Yuni::String urlLicenseServer;
 

@@ -39,18 +39,31 @@
 # include "../ext/Sirius_Solver/simplexe/spx_fonctions.h"
 # include <stdio.h>
 
+#include <antares/logs.h>
+#include <antares/emergency.h>
+
+using namespace Antares;
+
+# ifdef _MSC_VER
+#	define SNPRINTF sprintf_s
+# else
+#	define SNPRINTF snprintf
+# endif
+
 static void optimisationAllocateProblem( PROBLEME_HEBDO * ProblemeHebdo, const int mxPaliers )
 {
 	int NbTermes; int NbIntervalles; int NumIntervalle; int i;
 	size_t szNbVarsDouble; size_t szNbVarsint; size_t szNbContint;
-  int NombreDePasDeTempsPourUneOptimisation;
+	int NombreDePasDeTempsPourUneOptimisation;
+	int Adder;     
+	int Sparsity;  
 	
 	PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
 	PROBLEMES_SIMPLEXE ** ProblemesSpxDUneClasseDeManoeuvrabilite;
 
 	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
-  NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+	NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 	
 	szNbVarsDouble = ProblemeAResoudre->NombreDeVariables   * sizeof(double);
 	szNbVarsint    = ProblemeAResoudre->NombreDeVariables   * sizeof(int  );
@@ -60,17 +73,61 @@ static void optimisationAllocateProblem( PROBLEME_HEBDO * ProblemeHebdo, const i
 	ProblemeAResoudre->IndicesDebutDeLigne     = (int *)  MemAlloc(szNbContint);
 	ProblemeAResoudre->NombreDeTermesDesLignes = (int *)  MemAlloc(szNbContint);
 
-  NbTermes  = (int) mxPaliers;
-	NbTermes += 3; 
-	NbTermes += (int)(0.25 * ProblemeHebdo->NombreDInterconnexions);
-	NbTermes *= ProblemeAResoudre->NombreDeContraintes;
-	NbTermes += ProblemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation;
+	
 
-	NbTermes += ProblemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation * 4;
+	Sparsity = (int)mxPaliers * ProblemeHebdo->NombreDePays;
+	Sparsity += ProblemeHebdo->NombreDInterconnexions;
+	if (Sparsity > 100) Sparsity = 100;   
+
+	NbTermes = 0;
+	NbTermes += ProblemeAResoudre->NombreDeContraintes; 
+														
+
+	Adder = (int)mxPaliers;										
+	Adder += 4;				  									
+	Adder *= ProblemeHebdo->NombreDePays;						
+	Adder += 2 * ProblemeHebdo->NombreDInterconnexions;			
+	Adder *= NombreDePasDeTempsPourUneOptimisation;				
+
+	NbTermes += Adder;
 
 	
-  NbTermes += ProblemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage;
-		
+
+	NbTermes += Adder;
+
+	
+	
+	Adder = 3 * ProblemeHebdo->NombreDInterconnexions*NombreDePasDeTempsPourUneOptimisation;
+	NbTermes += Adder;
+
+	
+	Adder = Sparsity * ProblemeHebdo->NombreDeContraintesCouplantes; 
+	Adder *= (NombreDePasDeTempsPourUneOptimisation);				 
+	Adder += Sparsity *(7 + 7)* ProblemeHebdo->NombreDeContraintesCouplantes;   
+
+	NbTermes += Adder;
+	
+	NbTermes += 3 * ProblemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation;	 
+	NbTermes += ProblemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation * 4;     
+	NbTermes += ProblemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation * 5; 	 
+
+	
+	
+	NbTermes += ProblemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage;
+
+	
+	logs.info(); 
+	logs.info() << " Starting Memory Allocation for a Weekly Optimization problem in Canonical form ";
+	logs.info() << " ( Problem Size :" << ProblemeAResoudre->NombreDeVariables << " Variables " << ProblemeAResoudre->NombreDeContraintes << " Constraints) ";
+	logs.info() << " Expected Number of Non-zero terms in Problem Matrix : " << NbTermes;
+	logs.info(); 
+
+	if (NbTermes > (std::numeric_limits<std::size_t>::max() / 8) - 1)
+	{
+		logs.fatal() << "Optimisation problem too large to be allocated.";
+		AntaresSolverEmergencyShutdown();
+	}
+
 	ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes = (double *) MemAlloc(NbTermes * sizeof( double ));
 	ProblemeAResoudre->IndicesColonnes                       = (int *)    MemAlloc(NbTermes * sizeof( int ));
 
@@ -121,6 +178,12 @@ static void optimisationAllocateProblem( PROBLEME_HEBDO * ProblemeHebdo, const i
 	ProblemeAResoudre->Pi      = (double *) MemAlloc( ProblemeAResoudre->NombreDeVariables * sizeof( double ) );
 	ProblemeAResoudre->Colonne = (int *)    MemAlloc( ProblemeAResoudre->NombreDeVariables * sizeof( int   ) );
 	
+	
+	logs.info(); 
+	logs.info() << " Status of Preliminary Allocations for Generic Problem Resolution : Successful";
+	logs.info(); 
+	
+
 }
 
 
@@ -146,6 +209,18 @@ void OPT_AugmenterLaTailleDeLaMatriceDesContraintes( PROBLEME_ANTARES_A_RESOUDRE
 
 	NbTermes = ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes;
 	NbTermes+= ProblemeAResoudre->IncrementDAllocationMatriceDesContraintes;
+
+	
+	logs.info(); 
+	logs.info() << " Expected Number of Non-zero terms in Problem Matrix : increased to : " << NbTermes;
+	logs.info(); 
+	
+
+	if (NbTermes > (std::numeric_limits<std::size_t>::max() / 8) - 1)
+	{
+		logs.fatal() << "Optimisation problem too large to be allocated.";
+		AntaresSolverEmergencyShutdown();
+	}
 
 	ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes =
 		(double *) MemRealloc(ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes, NbTermes * sizeof( double ));

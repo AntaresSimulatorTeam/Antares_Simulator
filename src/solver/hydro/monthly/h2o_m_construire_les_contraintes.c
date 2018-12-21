@@ -117,9 +117,10 @@ Sens[NombreDeContraintes] = '=';
 NombreDeTermesDesLignes[NombreDeContraintes] = 2;
 NombreDeContraintes++;
 
+
 for ( Pdt = 1 ; Pdt < NbPdt ; Pdt++ ) {
-  
-  IndicesDebutDeLigne[NombreDeContraintes] = il;
+	
+	IndicesDebutDeLigne[NombreDeContraintes] = il;
 	
 	CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
 	IndicesColonnes[il] = NumeroDeVariableVolume[Pdt];
@@ -129,12 +130,12 @@ for ( Pdt = 1 ; Pdt < NbPdt ; Pdt++ ) {
 	ProblemeLineairePartieFixe->IndicesColonnes[il] = NumeroDeVariableDepassementVolumeMax[Pdt];
 	il++;
 	
-  Sens[NombreDeContraintes] = '<';
-  NombreDeTermesDesLignes[NombreDeContraintes] = 2;
-  NombreDeContraintes++;
+	Sens[NombreDeContraintes] = '<';
+	NombreDeTermesDesLignes[NombreDeContraintes] = 2;
+	NombreDeContraintes++;
 	
-
-  IndicesDebutDeLigne[NombreDeContraintes] = il;
+	
+	IndicesDebutDeLigne[NombreDeContraintes] = il;
 	
 	CoefficientsDeLaMatriceDesContraintes[il] = 1.0 * ChgmtSens; 
 	IndicesColonnes[il] = NumeroDeVariableVolume[Pdt];	
@@ -144,10 +145,31 @@ for ( Pdt = 1 ; Pdt < NbPdt ; Pdt++ ) {
 	IndicesColonnes[il] = NumeroDeVariableDepassementVolumeMin[Pdt];
 	il++;
 	
-  Sens[NombreDeContraintes] = '<' ;
-  NombreDeTermesDesLignes[NombreDeContraintes] = 2;
-  NombreDeContraintes++;			
+	Sens[NombreDeContraintes] = '<';
+	NombreDeTermesDesLignes[NombreDeContraintes] = 2;
+	NombreDeContraintes++;
 }
+
+
+
+
+for (Pdt = 1; Pdt < NbPdt; Pdt++)
+{
+	IndicesDebutDeLigne[NombreDeContraintes] = il;
+
+	CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+	IndicesColonnes[il] = NumeroDeVariableDepassementVolumeMin[Pdt];
+	il++;
+
+	CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
+	IndicesColonnes[il] = CorrespondanceDesVariables->NumeroDeLaVariableViolMaxVolumeMin;
+	il++;
+
+	Sens[NombreDeContraintes] = '<';
+	NombreDeTermesDesLignes[NombreDeContraintes] = 2;
+	NombreDeContraintes++;
+}
+
 
 
 

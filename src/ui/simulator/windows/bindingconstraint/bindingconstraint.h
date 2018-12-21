@@ -41,6 +41,8 @@ namespace Window
 {
 
 	class BindingConstraintDataPanel;
+	class BindingConstraintWeightsPanel;
+	class BindingConstraintOffsetsPanel;
 
 
 
@@ -77,7 +79,8 @@ namespace Window
 		void onEdit(void*);
 		void onDeleteAll(void*);
 		void onEditFromMouse(wxMouseEvent&);
-
+		void onBuild(void*);
+		
 	private:
 		Component::Notebook::Page* pPageList;
 		Component::Notebook::Page* pPageWeights;
@@ -85,14 +88,14 @@ namespace Window
 		Component::Notebook::Page* pPageEqual;
 		Component::Notebook::Page* pPageLess;
 		Component::Notebook::Page* pPageGreater;
-		Component::Datagrid::Component* pGridWeights;
-		Component::Datagrid::Component* pGridOffsets;
 		Toolbox::InputSelector::BindingConstraint* pAllConstraints;
 		Data::BindingConstraint* pSelected;
 
 		BindingConstraintDataPanel* pDataPanelEqual;
 		BindingConstraintDataPanel* pDataPanelLess;
 		BindingConstraintDataPanel* pDataPanelGreater;
+		BindingConstraintWeightsPanel* pWeightsPanel;
+		BindingConstraintOffsetsPanel* pOffsetsPanel;
 
 	public:
 		// Event table

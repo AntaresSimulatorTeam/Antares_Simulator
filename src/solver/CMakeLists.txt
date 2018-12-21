@@ -15,18 +15,20 @@ else(MSVC)
 endif(MSVC)
 
 
-include("cmake/solver.cmake")
-include("cmake/hydro.cmake")
+
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/mps")
-include_directories("${PROJECT_SOURCE_DIR}/ext/Sirius_Solver/branchAndBound")
-include_directories("${PROJECT_SOURCE_DIR}/ext/Sirius_Solver/simplexe/lu")
-include_directories("${PROJECT_SOURCE_DIR}/ext/Sirius_Solver/presolve")
-include_directories("${PROJECT_SOURCE_DIR}/ext/Sirius_Solver/simplexe")
-include_directories("${PROJECT_SOURCE_DIR}/ext/Sirius_Solver/pne")
-include_directories("${PROJECT_SOURCE_DIR}/ext/Sirius_Solver/branchAndBound")
-include_directories("${PROJECT_SOURCE_DIR}/ext/Sirius_Solver/allocateur")
-include_directories("${PROJECT_SOURCE_DIR}/ext/Sirius_Solver/pointInterieur")
+include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/branchAndBound")
+include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/simplexe/lu")
+include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/presolve")
+include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/simplexe")
+include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/pne")
+include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/branchAndBound")
+include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/allocateur")
+include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/pointInterieur")
+
+include("cmake/solver.cmake")
+include("cmake/hydro.cmake")
 
 
 include("cmake/main.cmake")
@@ -34,6 +36,7 @@ include("cmake/variable.cmake")
 include("cmake/randomness.cmake")
 include("cmake/simulation.cmake")
 include("cmake/ts-generator.cmake")
+include("cmake/constraints-builder.cmake")
 # Pour trouver les fonctions dans libs/*
 include_directories("../libs")
 
@@ -153,7 +156,7 @@ macro(solver_app name swap)
 	if(NOT MSVC)
 		#-Wl,--start-group ${ANTARES_SOLVER_LIBS} -Wl,--end-group)
 		target_link_libraries(${exec_name} ${ANTARES_SOLVER_LIBS} uuid)
-		target_link_libraries(${exec_name} uuid dl ssh2 idn rt)
+		target_link_libraries(${exec_name}  z uuid dl ssh2 idn idn2 rt)
 	else()
 		target_link_libraries(${exec_name} ${ANTARES_SOLVER_LIBS})
 		target_link_libraries(${exec_name} ole32 rpcrt4) # uuid

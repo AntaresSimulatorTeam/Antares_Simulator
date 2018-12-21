@@ -169,20 +169,6 @@ namespace TSGenerator
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		class GeneratorTempData final
 		{
 		public:
@@ -944,10 +930,11 @@ namespace TSGenerator
 		study.areas.each([&] (Data::Area& area)
 		{
 			
-			for (uint i = 0; i != area.thermal.clusterCount; ++i)
+			auto end = area.thermal.list.mapping.end();
+			for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
 			{
 				
-				auto& cluster = *(area.thermal.clusters[i]);
+				auto& cluster = *(it->second);
 				
 				(*generator)(area, cluster);
 

@@ -114,6 +114,13 @@ for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
 }
 
 
+CorrespondanceDesVariables->NumeroDeLaVariableViolMaxVolumeMin = Var;
+ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
+ProblemeLineairePartieVariable->Xmax[Var] = LINFINI;
+ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+Var++;
+
+
 for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
   CorrespondanceDesVariables->NumeroDeVariableDEcartPositifAuTurbineCible[Pdt] = Var;
 	ProblemeLineairePartieVariable->Xmin[Var] = 0.0;

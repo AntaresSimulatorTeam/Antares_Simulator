@@ -190,6 +190,7 @@ namespace ThermalCluster
 				ctx.cluster->reset();
 				(ctx.area)->thermal.list.add(ctx.cluster);
 				(ctx.area)->thermal.list.rebuildIndex();
+				(ctx.area)->thermal.prepareAreaWideIndexes();
 			}
 			else
 			{

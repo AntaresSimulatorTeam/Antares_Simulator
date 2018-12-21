@@ -67,9 +67,6 @@ namespace Data
 
 			// alias to the simulation mode
 			auto mode = r.mode;
-
-			if (area.hydro.reservoirCapacity < 1e-6)
-				area.hydro.reservoirCapacity = 1.;
 			
 			// Hydro TS Generator: log(expectation) ; log(stddeviation)
 			if (area.hydro.prepro)
@@ -188,14 +185,22 @@ namespace Data
 		}
 		logs.debug() << "copying constraint " << rti.operatorType << ' ' << b.name();
 		rti.linkCount = b.linkCount();
+		rti.clusterCount = b.enabledClusterCount();
 		assert(rti.linkCount < 50000000 and "Seems a bit large..."); // arbitrary value
+		assert(rti.clusterCount < 50000000 and "Seems a bit large..."); // arbitrary value
 		rti.bounds.resize(1, b.matrix().height);
 		rti.bounds.pasteToColumn(0, b.matrix()[C]);
 
-		rti.weight    = new double[rti.linkCount];
-		rti.offset    = new int[rti.linkCount];
+		rti.linkWeight    = new double[rti.linkCount];
+		rti.linkOffset    = new int[rti.linkCount];
 		rti.linkIndex = new long[rti.linkCount];
-		b.initLinkArrays(rti.weight, rti.offset, rti.linkIndex);
+
+		rti.clusterWeight = new double[rti.clusterCount];
+		rti.clusterOffset = new int[rti.clusterCount];
+		rti.clusterIndex = new long[rti.clusterCount];
+		rti.clustersAreaIndex = new long[rti.clusterCount];
+
+		b.initLinkArrays(rti.linkWeight, rti.clusterWeight, rti.linkOffset, rti.clusterOffset, rti.linkIndex, rti.clusterIndex, rti.clustersAreaIndex);
 
 		// reduce the memory footprint
 		rti.bounds.flush();
@@ -317,6 +322,12 @@ namespace Data
 			logs.info() << "Simulation days per month : " << s;
 		}
 
+		// Number of simulation days per week
+		for (uint i = 0; i != 53; ++i)
+			simulationDaysPerWeek[i] = 0;
+
+		for (uint d = limits.day[rangeBegin]; d <= limits.day[rangeEnd]; d++)
+			simulationDaysPerWeek[study.calendar.days[d].week]++;
 
 		// We make the test on the field 'hour' because the field 'week' might be equals to 0
 		// (Example: 1 week: from 0 to 0 and it is valid)
@@ -339,17 +350,23 @@ namespace Data
 
 
 	BindingConstraintRTI::BindingConstraintRTI() :
-		weight(nullptr),
-		offset(nullptr),
-		linkIndex(nullptr)
+		linkWeight(nullptr),
+		linkOffset(nullptr),
+		linkIndex(nullptr),
+		clusterWeight(nullptr),
+		clusterOffset(nullptr),
+		clusterIndex(nullptr)
 	{}
 
 
 	BindingConstraintRTI::~BindingConstraintRTI()
 	{
-		delete[] weight;
-		delete[] offset;
+		delete[] linkWeight;
+		delete[] linkOffset;
 		delete[] linkIndex;
+		delete[] clusterWeight;
+		delete[] clusterOffset;
+		delete[] clusterIndex;
 	}
 
 
@@ -492,6 +509,10 @@ namespace Data
 		study.calendarOutput.reset(study.parameters);
 		initializeRangeLimits(study, rangeLimits);
 
+		
+		// Removing disabled thermal clusters from solver computations
+		removeDisabledThermalClustersFromSolverComputations(study);
+		
 		// Must-run mode
 		initializeThermalClustersInMustRunMode(study);
 
@@ -613,7 +634,31 @@ namespace Data
 	}
 
 
+	void StudyRuntimeInfos::removeDisabledThermalClustersFromSolverComputations(Study& study)
+	{
+		logs.info();
+		logs.info() << "Removing disabled thermal clusters in from solver computations...";
 
+		// The number of thermal clusters in 'must-run' mode
+		uint count = 0;
+		// each area...
+		for (uint a = 0; a != study.areas.size(); ++a)
+		{
+			Area& area = *(study.areas.byIndex[a]);
+			count += area.thermal.removeDisabledClusters();
+		}
+
+		switch (count)
+		{
+		case 0:
+			logs.info() << "No disabled thermal cluster removed before solver computations";
+			break;
+		default:
+			logs.info() << "Found " << count << " disabled thermal clusters and removed them before solver computations";
+		}
+		// space
+		logs.info();
+	}
 
 
 	StudyRuntimeInfos::~StudyRuntimeInfos()

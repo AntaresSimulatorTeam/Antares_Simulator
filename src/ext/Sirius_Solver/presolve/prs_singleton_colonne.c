@@ -58,6 +58,16 @@ int * ContrainteDeLaSubstitution; int * CorrespondanceCntPneCntEntree;
 
 Pne = (PROBLEME_PNE *) Presolve->ProblemePneDuPresolve;
 
+if ( Pne->YaDesVariablesEntieres == NON_PNE ) {
+  /* Si on est en continu, on ne sait pas (pour l'instant) recalculer exactement les variables
+	   duales des contraintes quand on fait des substitutions de variables. Donc on prefere ne pas
+		 faire ce genre de presolve. Todo: stocker toutes les transfromations de la matrice pour
+		 recalculer exactement les variables duales quand on fait des substitutions de variables. */
+	/* Par contre on peut le faire s'il y a des variables entieres car de toutes façons les variables
+	   duales de la solution optimale ne peuvent pas etre interpretees comme des couts marginaux. */
+  return;
+}
+
 if ( Pne->NumeroDesVariablesSubstituees == NULL ) return; /* Pas de substitution possible */
 /* Si la table de substitution est plein on arrete */
 if ( Pne->NbVariablesSubstituees >= Pne->NombreDeVariablesTrav - 1 ) return;

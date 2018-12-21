@@ -73,7 +73,7 @@ namespace Window
 		}
 
 		{
-			pGridSizer->Add(Component::CreateLabel(this, wxT("     Comments ")),
+			pGridSizer->Add(Component::CreateLabel(this, wxT("     Comments")),
 				0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
 			wxString s;
@@ -353,7 +353,6 @@ namespace Window
 				constraint->comments(tmp);
 			}
 
-			constraint->setAllWeightedLinksOnLayer(study.activeLayerID);
 			// mark all values as modified
 			constraint->markAsModified();
 

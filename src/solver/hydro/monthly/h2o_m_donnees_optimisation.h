@@ -89,13 +89,14 @@ typedef struct {
 
 /* Les correspondances des variables */
 typedef struct {
-  int * NumeroDeVariableVolume;  /* Volumes */
-  int * NumeroDeVariableTurbine; /* Turbines */
+	int * NumeroDeVariableVolume;  /* Volumes */
+	int * NumeroDeVariableTurbine; /* Turbines */
 	int * NumeroDeVariableDepassementVolumeMax; /* Depassement du volume max */
 	int * NumeroDeVariableDepassementVolumeMin; /* Depassement du volume min */
-  int * NumeroDeVariableDEcartPositifAuTurbineCible; /* Ecart positif au volume cible */
-  int * NumeroDeVariableDEcartNegatifAuTurbineCible; /* Ecart negatif au volume cible */
-  int   NumeroDeLaVariableXi; /* Variable decrivant l'ecart max au turbine cible */
+	int	  NumeroDeLaVariableViolMaxVolumeMin;	// Depassement max du volume min
+	int * NumeroDeVariableDEcartPositifAuTurbineCible; /* Ecart positif au volume cible */
+	int * NumeroDeVariableDEcartNegatifAuTurbineCible; /* Ecart negatif au volume cible */
+	int   NumeroDeLaVariableXi; /* Variable decrivant l'ecart max au turbine cible */
 } CORRESPONDANCE_DES_VARIABLES;
 
 /* Structure uniquement exploitee par l'optimisation (donc a ne pas acceder depuis l'exterieur) */
@@ -110,6 +111,8 @@ typedef struct {
 	
   void ** ProblemeSpx; /* Il y en a 1 par reservoir */
   void *  Probleme;    /* Le probleme en cours passe au simplexe */
+
+  double CoutDeLaSolution;
 	
 } PROBLEME_HYDRAULIQUE;
 

@@ -230,13 +230,13 @@ namespace Filter
 		// The algorithm may not manage all cases and the default values
 		// are expected
 		pGridHelper->resetIndicesToDefault();
-
+		onUpdateSearchResults();
 		// Something to do ?
 		if (!onRows.empty() || !onCols.empty() || !onCells.empty())
 		{
 			// Prepare only the arrays
-			pGridHelper->resetIndicesToDefaultWithoutInit();
-
+			/*pGridHelper->resetIndicesToDefaultWithoutInit();
+			onUpdateSearchResults();*/
 			if (!onRows.empty())
 			{
 				int last = 0; /* The count of valid rows */
@@ -253,7 +253,7 @@ namespace Filter
 					}
 					if (good)
 					{
-						pGridHelper->indicesRows[last] = r;
+						pGridHelper->indicesRows[last] = pGridHelper->indicesRows[r];
 						++last;
 					}
 				}
@@ -276,7 +276,7 @@ namespace Filter
 					}
 					if (good)
 					{
-						pGridHelper->indicesCols[last] = c;
+						pGridHelper->indicesCols[last] = pGridHelper->indicesCols[c];
 						++last;
 					}
 				}
@@ -295,7 +295,7 @@ namespace Filter
 			pGrid->SetTable(tbl, false);
 		pGrid->EndBatch();
 
-		onUpdateSearchResults();
+		
 	}
 
 

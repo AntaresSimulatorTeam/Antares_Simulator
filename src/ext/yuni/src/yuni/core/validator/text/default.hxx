@@ -129,7 +129,10 @@ namespace Text
 	template<Yuni::Validator::DefaultPolicy OtherDefaultPolicy>
 	inline ExceptionList<DefaultPolicy>& ExceptionList<DefaultPolicy>::operator += (const ExceptionList<OtherDefaultPolicy>& rhs)
 	{
-		pExceptionList += rhs.pExceptionList;
+		//pExceptionList += rhs.pExceptionList;
+		const String::List::const_iterator end = rhs.end();
+		for (String::List::const_iterator i = rhs.begin(); i != end; ++i)
+			pExceptionList.push_back(*i);
 		return *this;
 	}
 
@@ -137,7 +140,10 @@ namespace Text
 	template<Yuni::Validator::DefaultPolicy DefaultPolicy>
 	inline ExceptionList<DefaultPolicy>& ExceptionList<DefaultPolicy>::operator += (const String::Vector& rhs)
 	{
-		pExceptionList += rhs;
+		//pExceptionList += rhs;
+		const String::Vector::const_iterator end = rhs.end();
+		for (String::Vector::const_iterator i = rhs.begin(); i != end; ++i)
+				pExceptionList.push_back(*i);
 		return *this;
 	}
 
@@ -168,7 +174,10 @@ namespace Text
 	template<Yuni::Validator::DefaultPolicy OtherDefaultPolicy>
 	inline ExceptionList<DefaultPolicy>& ExceptionList<DefaultPolicy>::operator << (const ExceptionList<OtherDefaultPolicy>& rhs)
 	{
-		pExceptionList += rhs.pExceptionList;
+		//pExceptionList += rhs.pExceptionList;
+		const String::List::const_iterator end = rhs.end();
+		for (String::List::const_iterator i = rhs.begin(); i != end; ++i)
+			pExceptionList.push_back(*i);
 		return *this;
 	}
 
@@ -176,7 +185,10 @@ namespace Text
 	template<Yuni::Validator::DefaultPolicy DefaultPolicy>
 	inline ExceptionList<DefaultPolicy>& ExceptionList<DefaultPolicy>::operator << (const String::Vector& rhs)
 	{
-		pExceptionList += rhs;
+		//pExceptionList += rhs;
+		const String::Vector::const_iterator end = rhs.end();
+		for (String::Vector::const_iterator i = rhs.begin(); i != end; ++i)
+				pExceptionList.push_back(*i);
 		return *this;
 	}
 

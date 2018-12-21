@@ -32,6 +32,8 @@
 # include "state.h"
 # include "surveyresults.h"
 
+// To remove warnings (unused variable) at compile time on linux
+# define UNUSED_VARIABLE(x) (void)(x)
 
 namespace Antares
 {
@@ -41,7 +43,6 @@ namespace Variable
 {
 namespace Container
 {
-
 
 	class EndOfList
 	{
@@ -90,16 +91,32 @@ namespace Container
 
 		static void yearBegin(unsigned int, unsigned int) {}
 
-		static void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year, uint numSpace) {}
-		static void yearEndBuildForEachThermalCluster(State& state, uint year, uint numSpace) {}
+		static void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year, uint numSpace)
+		{	
+			UNUSED_VARIABLE(state);
+			UNUSED_VARIABLE(year);
+			UNUSED_VARIABLE(numSpace);
+		}
+
+		static void yearEndBuildForEachThermalCluster(State& state, uint year, uint numSpace)
+		{ 
+			UNUSED_VARIABLE(state);
+			UNUSED_VARIABLE(year);
+			UNUSED_VARIABLE(numSpace);
+		}
+
 		static void yearEndBuild(State&, unsigned int) {}
 		static void yearEnd(unsigned int, unsigned int) {}
 
-		static void computeSummary(std::map<unsigned int, unsigned int> & numSpaceToYear, uint nbYearsForCurrentSummary) {};
+		static void computeSummary(std::map<unsigned int, unsigned int> & numSpaceToYear, uint nbYearsForCurrentSummary)
+		{ 
+			UNUSED_VARIABLE(numSpaceToYear);
+			UNUSED_VARIABLE(nbYearsForCurrentSummary);
+		};
 
 		template<class V> void yearEndSpatialAggregates(V&, unsigned int, uint numSpace) {}
 
-		template<class V, class SetT> void yearEndSpatialAggregates(V&, unsigned int, const SetT&, uint numSpace) {}
+		template<class V, class SetT> void yearEndSpatialAggregates(V&, unsigned int, const SetT&, uint numSpace) { UNUSED_VARIABLE(numSpace); }
 
 		template<class V> void computeSpatialAggregatesSummary(V&, std::map<unsigned int, unsigned int> &, unsigned int) {}
 
@@ -108,17 +125,17 @@ namespace Container
 
 		static void weekBegin(State&) {}
 
-		static void weekForEachArea(State&, uint numSpace) {}
+		static void weekForEachArea(State&, uint numSpace) { UNUSED_VARIABLE(numSpace); }
 
 		static void weekEnd(State&) {}
 
 		static void hourBegin(unsigned int) {}
 
-		static void hourForEachArea(State&, uint numSpace) {}
+		static void hourForEachArea(State&, uint numSpace) { UNUSED_VARIABLE(numSpace); }
 
-		static void hourForEachLink(State&, uint numSpace) {}
+		static void hourForEachLink(State&, uint numSpace) { UNUSED_VARIABLE(numSpace); }
 
-		static void hourForEachThermalCluster(State&, uint numSpace) {}
+		static void hourForEachThermalCluster(State&, uint numSpace) { UNUSED_VARIABLE(numSpace); }
 
 		static void hourEnd(State&, unsigned int) {}
 

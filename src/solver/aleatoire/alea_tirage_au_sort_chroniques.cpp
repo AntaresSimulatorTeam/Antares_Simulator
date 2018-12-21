@@ -103,7 +103,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(double 
 				// Draw a new random number, whatever the cluster is
 				double rnd = thermalNoisesByArea[i][indexCluster];
 
-				if (!cluster)
+				if (!cluster->enabled)
 				{
 					indexCluster++;
 					continue;

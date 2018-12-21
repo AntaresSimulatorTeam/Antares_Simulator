@@ -225,7 +225,6 @@ void OPT_GenererLesDonneesSelonLePasDeTempsDeLaClasseDeManoeuvrabilite(
 			
 
 			
-
 			
 
 

@@ -280,12 +280,24 @@ namespace InputSelector
 
 		auto& mainFrm = *Forms::ApplWnd::Instance();
 
+		wxString messageText = wxT("");
+		uint selectedConstraintsCount = Antares::Window::Inspector::SelectionBindingConstraintCount();
+		if (selectedConstraintsCount > 0)
+		{
+			messageText << "\nSelected: ";
+			messageText << selectedConstraintsCount;
+			messageText << " Constraint";
+			if (selectedConstraintsCount > 1)
+				messageText << "s";
+		}
+
 		// If the pointer has been, it is guaranteed to be valid
 		Window::Message message(&mainFrm, wxT("Thermal cluster"),
 			wxT("Delete a thermal cluster"),
 			wxString() << wxT("Do you really want to delete the thermal cluster '")
 			<< wxStringFromUTF8(toDelete->name())
-			<< wxT("' ?"));
+			<< wxT("' ?")
+			<< messageText);
 		message.add(Window::Message::btnYes);
 		message.add(Window::Message::btnCancel, true);
 		if (message.showModal() == Window::Message::btnYes)
@@ -295,7 +307,8 @@ namespace InputSelector
 			OnStudyBeginUpdate();
 			
 			// Because we may need to update this afterwards
-			Data::Study::Current::Get()->scenarioRulesLoadIfNotAvailable();
+			auto study = Data::Study::Current::Get();
+			study->scenarioRulesLoadIfNotAvailable();
 
 			// Update the list
 			Window::Inspector::RemoveThermalCluster(toDelete);
@@ -303,7 +316,7 @@ namespace InputSelector
 			onThermalClusterChanged(nullptr);
 
 			// We have to rebuild the scenario builder data, if required
-			ScenarioBuilderUpdater updaterSB(*Data::Study::Current::Get()); // this will create a temp file, and save it during destructor call
+			ScenarioBuilderUpdater updaterSB(*study); // this will create a temp file, and save it during destructor call
 
 			if (pArea->thermal.list.remove(toDelete->id()))
 			{
@@ -311,13 +324,40 @@ namespace InputSelector
 				// We may delete an area and re-create a new one with the same
 				// name (or rename) for example, but the data related to the old
 				// area must be gone.
-				
 
 				update();
 				Refresh();
 				MarkTheStudyAsModified();
 				updateInnerValues();
+				pArea->thermal.list.rebuildIndex();
 				pArea->thermal.prepareAreaWideIndexes();
+				study->uiinfo->reload();
+
+
+				//delete associated constraints
+				Antares::Data::BindConstList::iterator BC = study->bindingConstraints.begin();
+				int BCListSize = study->bindingConstraints.size();
+
+				if (BCListSize)
+				{
+					logs.info() << "deleting the constraints ";
+
+					WIP::Locker wip;
+					for (int i = 0; i < BCListSize; i++)
+					{
+
+						if (Window::Inspector::isConstraintSelected((*BC)->name()))
+							study->bindingConstraints.remove(*BC);
+						else
+							++BC;
+
+					}
+
+
+
+					study->uiinfo->reloadBindingConstraints();
+					OnStudyConstraintDelete(nullptr);
+				}
 			}
 			else
 				logs.error() << "Impossible to delete the cluster '" << toDelete->name() << "'";
@@ -342,6 +382,8 @@ namespace InputSelector
 		}
 
 		Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
+
+		auto study = Data::Study::Current::Get();
 
 		// If the pointer has been, it is guaranteed to be valid
 		Window::Message message(&mainFrm, wxT("Thermal cluster"),
@@ -368,12 +410,36 @@ namespace InputSelector
 			pLastSelectedThermalCluster = nullptr;
 			onThermalClusterChanged(nullptr);
 
-			pArea->thermal.list.clear();
+
+
+
+			//delete associated constraints
+
+			int BCListSize = study->bindingConstraints.size();
+
+			if (BCListSize)
+			{
+				logs.info() << "deleting the constraints ";
+
+
+				WIP::Locker wip;
+				study->bindingConstraints.remove(pArea);
+
+
+			}
+
+
+			pArea->thermal.reset();
 
 			update();
 			Refresh();
 			MarkTheStudyAsModified();
 			updateInnerValues();
+
+
+
+			study->uiinfo->reloadAll();
+
 
 			// The components are now allow to refresh themselves
 			OnStudyEndUpdate();
@@ -412,7 +478,9 @@ namespace InputSelector
 			cluster->name(sFl);
 			cluster->reset();
 			pArea->thermal.list.add(cluster);
+			pArea->thermal.list.mapping[cluster->id()] = cluster;
 			pArea->thermal.list.rebuildIndex();
+			pArea->thermal.prepareAreaWideIndexes();
 
 			// Update the list
 			update();
@@ -423,6 +491,8 @@ namespace InputSelector
 			updateInnerValues();
 
 			pArea->invalidate();
+
+			study->uiinfo->reload();
 		}
 	}
 
@@ -488,7 +558,9 @@ namespace InputSelector
 			cluster->copyFrom(selectedPlant);
 
 			pArea->thermal.list.add(cluster);
+			pArea->thermal.list.mapping[cluster->id()] = cluster;
 			pArea->thermal.list.rebuildIndex();
+			pArea->thermal.prepareAreaWideIndexes();
 
 			// Update the list
 			update();
@@ -497,6 +569,10 @@ namespace InputSelector
 			onThermalClusterChanged(cluster);
 			MarkTheStudyAsModified();
 			updateInnerValues();
+
+			pArea->invalidate();
+
+			study->uiinfo->reload();
 		}
 	}
 
@@ -546,7 +622,27 @@ namespace InputSelector
 			onThermalClusterChanged(cluster);
 			Window::Inspector::SelectThermalCluster(cluster);
 			updateInnerValues();
+
+
+			//Selecting Binding constraints containing the cluster
+
+			Data::BindingConstraint::Set constraintlist;
+
+			auto study = Data::Study::Current::Get();
+
+			const Data::BindConstList::iterator cEnd = study->bindingConstraints.end();
+			for (Data::BindConstList::iterator i = study->bindingConstraints.begin(); i != cEnd; ++i)
+			{
+				// alias to the current constraint
+				Data::BindingConstraint* constraint = *i;
+
+				if (constraint->contains(cluster))
+					constraintlist.insert(constraint);
+			}
+			Window::Inspector::AddBindingConstraints(constraintlist);
 		}
+
+
 	}
 
 

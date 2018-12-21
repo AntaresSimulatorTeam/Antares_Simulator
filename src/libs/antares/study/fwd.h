@@ -51,6 +51,7 @@ namespace Data
 	class AreaLink;
 	class AreaList;
 	class AreaUI;
+	class ThermalCluster;
 
 	class AreaScratchpad;
 
@@ -117,6 +118,8 @@ namespace Data
 		stdmEconomy,
 		//! Adequacy (subset of the economy mode)
 		stdmAdequacy,
+		//! Expansion
+		stdmExpansion,
 		//! Max
 		stdmMax
 
@@ -154,6 +157,52 @@ namespace Data
 	}; // enum TransmissionCapacities
 
 
+	/*!
+	** \brief Asset Type mode
+	*/
+	enum AssetType
+	{
+		//! Asset Type AC
+		atAC= 0,
+		//! Asset Type DC
+		atDC,
+		//! Asset Type gas
+		atGas,
+		//! Asset Type virtual
+		atVirt,
+		//! Asset Type Other (gas, etc)
+		atOther,
+
+	}; // enum AssetType
+
+	/*!
+	** \brief Style Type mode
+	*/
+	enum StyleType
+	{
+		//! Style Type plain
+		stPlain = 0,
+		//! Style Type dot
+		stDot,
+		//! Style Type dash
+		stDash,
+		//! Style Type dot & dash
+		stDotDash,
+
+	}; // enum StyleType
+
+
+	/*!
+	** \brief Link Type mode
+	*/
+	enum LinkType
+	{
+		//! Link Type defined locally
+		ltLocal = 0,
+		//! Link Type AC
+		ltAC,
+
+	}; // enum LinkType
 
 	/*!
 	** \brief Types of timeSeries
@@ -249,7 +298,22 @@ namespace Data
 	*/
 	const char* SeedToID(SeedIndex seed);
 
+	enum InitialReservoirLevels
+	{
+		irlColdStart = 0,
+		irlHotStart,
+		irlUnknown,
+	};
 
+	/*!
+	** \brief Convert an Initial Reservoir Levels strategy into a text
+	*/
+	const char* InitialReservoirLevelsToCString(InitialReservoirLevels iniLevels);
+
+	/*!
+	** \brief Convert a text into an Initial Reservoir Levels strategy
+	*/
+	InitialReservoirLevels  StringToInitialReservoirLevels(const AnyString& text);
 
 	enum PowerFluctuations
 	{

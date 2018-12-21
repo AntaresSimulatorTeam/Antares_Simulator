@@ -124,7 +124,7 @@ namespace Data
 		/*!
 		** \brief Mod (MW)
 		**
-		** Merely a matrix of TimeSeriesCount * 12 (months) values
+		** Merely a matrix of TimeSeriesCount * 365 values
 		** This matrix is not used in `adequation` mode.
 		*/
 		Matrix<double, Yuni::sint32> storage;

@@ -25,6 +25,32 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include <yuni/yuni.h>
 #include "timeseries-numbers.h"
 #include <antares/study.h>
@@ -439,7 +465,7 @@ namespace Solver
 				for (auto i = area.thermal.list.mapping.begin(); i != end; ++i)
 				{
 					auto* cluster = i->second;
-					if (!cluster)
+					if (!cluster->enabled)
 					{
 						
 						study.runtime->random[Data::seedTimeseriesNumbers].next();

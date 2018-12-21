@@ -415,7 +415,8 @@ namespace InputSelector
 	{
 		if (IsGUIAboutToQuit())
 			return;
-		OnMapLayerChanged(&(pLayerFilter->GetValue()));
+		wxString temp = pLayerFilter->GetValue();
+		OnMapLayerChanged(&temp);
 		Dispatcher::GUI::Post(this, &Connections::update);
 	}
 

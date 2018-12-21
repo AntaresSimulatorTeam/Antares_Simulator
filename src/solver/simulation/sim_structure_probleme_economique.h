@@ -34,7 +34,10 @@
 # include "../optimisation/opt_structure_probleme_a_resoudre.h"
 
 # define GROSSES_VARIABLES  NON_ANTARES 
-# define COEFF_GROSSES_VARIABLES 100 
+# define COEFF_GROSSES_VARIABLES 100
+
+# include <yuni/core/math.h>	
+
 
 
 typedef enum {
@@ -70,27 +73,63 @@ typedef enum {
 CLASSE_DE_MANOEUVRABILITE;
 
 
+
+
 typedef struct {
 	int * NumeroDeVariableDeLInterconnexion;    
 	int * NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion; 
 	int * NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion; 
+		
 	int * NumeroDeVariableDuPalierThermique;    
+	int * NumeroDeVariableDuPalierThermiqueUp;								
+	int * NumeroDeVariableDuPalierThermiqueDown;							
+	
 	int * NumeroDeVariablesDeLaProdHyd;         
+	int * NumeroDeVariablesDeLaProdHydUp;									
+	int * NumeroDeVariablesDeLaProdHydDown;									
+
+	int * NumeroDeVariablesDePompage;			
+	int * NumeroDeVariablesDeNiveau;			
+	int * NumeroDeVariablesDeDebordement;		
+
 	int * NumeroDeVariableDefaillancePositive;  
+	int * NumeroDeVariableDefaillancePositiveUp;							
+	int * NumeroDeVariableDefaillancePositiveDown;							
+	int * NumeroDeVariableDefaillancePositiveAny;							
+	
+
 	int * NumeroDeVariableDefaillanceNegative;  
+	int * NumeroDeVariableDefaillanceNegativeUp;							
+	int * NumeroDeVariableDefaillanceNegativeDown;							
+	int * NumeroDeVariableDefaillanceNegativeAny;							
+
+
 	int * NumeroDeGrosseVariableDefaillancePositive;  
 	int * NumeroDeGrosseVariableDefaillanceNegative;  
 	int * NumeroDeVariableDefaillanceEnReserve; 
 	int * NumeroDeGrosseVariableDefaillanceEnReserve; 
 	
+	
 	int * NumeroDeVariablesVariationHydALaBaisse;
+	int * NumeroDeVariablesVariationHydALaBaisseUp;							
+	int * NumeroDeVariablesVariationHydALaBaisseDown;						
+
 	int * NumeroDeVariablesVariationHydALaHausse;
+	int * NumeroDeVariablesVariationHydALaHausseUp;							
+	int * NumeroDeVariablesVariationHydALaHausseDown;						
+
+
+	
 	
 	int *	NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique;
 	int *	NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique;
 	int *	NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique;
 	int *	NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique;
+		
+																			
+		
 	
+																			
 } CORRESPONDANCES_DES_VARIABLES;
 
 
@@ -98,8 +137,10 @@ typedef struct {
 	int * NumeroDeContrainteDesBilansPays;                
 	int * NumeroDeContraintePourEviterLesChargesFictives; 	
 	        
-  int * NumeroPremiereContrainteDeReserveParZone; 
-  int * NumeroDeuxiemeContrainteDeReserveParZone; 	
+
+	int * NumeroPremiereContrainteDeReserveParZone; 
+	int * NumeroDeuxiemeContrainteDeReserveParZone; 
+
 	int * NumeroDeContrainteDeDissociationDeFlux;     
 	int * NumeroDeContrainteDesContraintesCouplantes; 
 
@@ -107,7 +148,9 @@ typedef struct {
 	int * NumeroDeContrainteDesContraintesDeDureeMinDeMarche; 
 	int * NumeroDeContrainteDesContraintesDeDureeMinDArret; 
 	int * NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne; 	
-	
+		
+	int * NumeroDeContrainteDesNiveauxPays;    
+
 } CORRESPONDANCES_DES_CONTRAINTES;
 
 
@@ -126,9 +169,32 @@ typedef struct {
 typedef struct {
 	double * ValeurDeNTCOrigineVersExtremite;
 	double * ValeurDeNTCExtremiteVersOrigine;
+	double * ValeurDeLoopFlowOrigineVersExtremite;
 	double * ValeurDuFlux;
-	double * ResistanceApparente;
-} VALEURS_DE_NTC_ET_RESISTANCES;
+																	
+	double * ValeurDuFluxUp;										
+	double * ValeurDuFluxDown;										
+
+	double * ResistanceApparente;									
+} VALEURS_DE_NTC_ET_RESISTANCES;										
+	
+typedef struct {													
+	double * TransferBoundMarketEdge;								
+	double * TransferLevelMarketEdge;								  
+} TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE;							    	
+	
+																
+typedef struct {													
+	double * TransferBoundFlexUpEdge;								
+	double * TransferLevelFlexUpEdge;								  
+} TRANSFER_BOUND_AND_LEVEL_FLEX_UP_EDGE;								
+	
+																
+typedef struct {													
+	double * TransferBoundFlexDownEdge;								
+	double * TransferLevelFlexDownEdge;								  
+} TRANSFER_BOUND_AND_LEVEL_FLEX_DOWN_EDGE;								
+	
 
 
 typedef struct {
@@ -148,22 +214,76 @@ typedef struct {
 
 
   
-  int      NombreDInterconnexionsDansLaContrainteCouplante;
-  double * PoidsDeLInterconnexion;
-  int *    NumeroDeLInterconnexion;
-  
-  int *    OffsetTemporelSurLInterco;
+ 
+  int		NombreDElementsDansLaContrainteCouplante;				
+  int		NombreDInterconnexionsDansLaContrainteCouplante;
+  double *	PoidsDeLInterconnexion;
+  int *		NumeroDeLInterconnexion;
+  int *		OffsetTemporelSurLInterco;
+  int		NombreDePaliersDispatchDansLaContrainteCouplante;		
+  double *	PoidsDuPalierDispatch;									
+  int *		PaysDuPalierDispatch;									
+  int *		NumeroDuPalierDispatch;									
+  int *		OffsetTemporelSurLePalierDispatch;						
 } CONTRAINTES_COUPLANTES;
 
+
+typedef struct {													
+  double * TotalDemandOfMarketPool;									
+} DEMAND_MARKET_POOL;												
+
+typedef struct {													
+  double * FosteredDemandOfFlexUpPool;								
+} DEMAND_FLEX_UP_POOL;												
+
+typedef struct {													
+  double * FosteredDemandOfFlexDownPool;							
+} DEMAND_FLEX_DOWN_POOL;											
+																		  
+
+typedef struct {													
+  double * BoundFlexUpNode;											
+} BOUND_FLEX_UP_NODE;												
+
+typedef struct {													
+  double * BoundFlexDownNode;										
+} BOUND_FLEX_DOWN_NODE;												
+
+
+typedef struct {													
+																	
+  double * LevelFlexUpNode;											
+} LEVEL_FLEX_UP_NODE;												
+
+typedef struct {													
+																	
+  double * LevelFlexDownNode;									    
+} LEVEL_FLEX_DOWN_NODE;												
+
+
+ 
 
 typedef struct {
   double * ConsommationAbattueDuPays; 
 } CONSOMMATIONS_ABATTUES;
 
+																	
+																	
+typedef struct {													
+  double * AllMustRunGenerationOfArea; 		
+} ALL_MUST_RUN_GENERATION;											
+																	
+																	
+																	
+																	
+																	
+
+
 
 
 typedef struct {
   double * SoldeMoyenDuPays; 
+																	
 } SOLDE_MOYEN_DES_ECHANGES;
 
 
@@ -180,6 +300,11 @@ typedef struct {
   double * CoutHoraireDeProductionDuPalierThermique; 
   
   double * CoutHoraireDeProductionDuPalierThermiqueRef;
+
+  
+  double * CoutHoraireDuPalierThermiqueUp;						    
+  double * CoutHoraireDuPalierThermiqueDown;						
+
   
 	
 
@@ -213,22 +338,139 @@ typedef struct {
 
 
 typedef struct {
+ 
   
-  double * CntEnergieH2OParIntervalleOptimise;
-  double * CntEnergieH2OParJour;
-  double * ContrainteDePmaxHydrauliqueHoraire;
-	double   MaxDesPmaxHydrauliques;
+																	
+	double * MaxEnergieHydrauParIntervalleOptimise;					 
+																	
+	double * MinEnergieHydrauParIntervalleOptimise;					
+																	
+																	
+	double * CntEnergieH2OParIntervalleOptimise;						
+	double * CntEnergieH2OParJour;									    
+	double * ContrainteDePmaxHydrauliqueHoraire;
   
-  double * CntEnergieH2OParIntervalleOptimiseRef;
-  double * ContrainteDePmaxHydrauliqueHoraireRef;
-	double   MaxDesPmaxHydrauliquesRef;
-  
-  char     PresenceDHydrauliqueModulable; 
-  
+	double   MaxDesPmaxHydrauliques;	
+
+	
+	double * CntEnergieH2OParIntervalleOptimiseRef;					
+	double * ContrainteDePmaxHydrauliqueHoraireRef;					
+	double   MaxDesPmaxHydrauliquesRef;								
+	
+
+   
+	double * MaxEnergiePompageParIntervalleOptimise;					
+	double * ContrainteDePmaxPompageHoraire;							
+	
+	
+
+	char     PresenceDePompageModulable;								
+	char     PresenceDHydrauliqueModulable; 
+
 	double   PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations;
 	double   PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax;
+	
+	double	 WeeklyWaterValueStateRegular;								
+	double	 WeeklyWaterValueStateUp;									
+	double	 WeeklyWaterValueStateDown;									
+																		
+																		
+
+	char	TurbinageEntreBornes;										
+																		
+																		
+	char	SuiviNiveauHoraire;											
+																		
+	
+																		
+	double * NiveauHoraireSup;											
+	double * NiveauHoraireInf;											
+
+																		
+	double * ApportNaturelHoraire;										
+	double   NiveauInitialReservoir;									
+	double   TailleReservoir;											
+	double	 PumpingRatio;												
+
+	double	 WeeklyGeneratingModulation;								
+	double	 WeeklyPumpingModulation;									
 
 } ENERGIES_ET_PUISSANCES_HYDRAULIQUES;
+
+
+class computeTimeStepLevel
+{
+	private:
+		
+		int step;			
+		double level;		
+
+		double capacity;
+		double * inflows;		
+		double * ovf;			
+		double * turb;			
+		double pumpRatio;		
+		double * pump;			
+		double excessDown;
+
+	public:
+		
+		computeTimeStepLevel()
+			: step(0), level(0.), capacity(0.), inflows(nullptr), ovf(nullptr), turb(nullptr), pumpRatio(0.), pump(nullptr), excessDown(0.)
+		{}
+
+		void setParameters(const double & startLvl, double * Infl, double * overfl, double * H, double pumpEff, double * Pump, double rc)
+		{
+			step = 0;
+			level = startLvl;
+			inflows = Infl;
+			ovf = overfl;
+			turb = H;
+			pumpRatio = pumpEff;
+			pump = Pump;
+			capacity = rc;
+		}
+
+		void run()
+		{
+			
+			excessDown = 0.;
+
+			level = level + inflows[step] - turb[step] + pumpRatio * pump[step];
+
+			if (Yuni::Math::Zero(level))
+				level = 0.;
+			
+			if (Yuni::Math::Zero(1. - level))
+				level = capacity;
+
+			
+			
+			
+			if (level > capacity)
+			{
+				ovf[step] = level - capacity;
+				level = capacity;
+			}
+
+			if (level < 0)
+			{
+				excessDown = -level;
+				level = 0.;
+				inflows[step] += excessDown;
+			}
+		}
+
+		void prepareNextStep()
+		{
+			step++;
+			
+			inflows[step] -= excessDown;
+		}
+
+		double getLevel() { return level; }
+};
+
 
 
 typedef struct {
@@ -252,7 +494,14 @@ typedef struct {
 	
 
 
- 	double * NombreDeGroupesEnMarcheDuPalier; 
+
+
+  double * ProductionThermiqueDuPalierUp;					 
+  double * ProductionThermiqueDuPalierDown;					
+
+  			
+	
+  double * NombreDeGroupesEnMarcheDuPalier; 
   double * NombreDeGroupesQuiDemarrentDuPalier; 
 
   double * NombreDeGroupesQuiSArretentDuPalier; 
@@ -265,9 +514,27 @@ typedef struct {
 
 typedef struct {
   double * ValeursHorairesDeDefaillancePositive;
+  double * ValeursHorairesDeDefaillancePositiveUp;			 
+  double * ValeursHorairesDeDefaillancePositiveDown;		
+  double * ValeursHorairesDeDefaillancePositiveAny;			
+    
   double * ValeursHorairesDeDefaillanceNegative;
+  double * ValeursHorairesDeDefaillanceNegativeUp;			 
+  double * ValeursHorairesDeDefaillanceNegativeDown;		
+  double * ValeursHorairesDeDefaillanceNegativeAny;			
+ 
   double * ValeursHorairesDeDefaillanceEnReserve;  	
+  double * PompageHoraire;									
   double * TurbinageHoraire;
+  double * TurbinageHoraireUp;								 
+  double * TurbinageHoraireDown;							
+
+  
+  double * niveauxHoraires;
+  double * valeurH2oHoraire;	
+								
+  double * debordementsHoraires;
+  
   double * CoutsMarginauxHoraires;
   PRODUCTION_THERMIQUE_OPTIMALE ** ProductionThermique;
 } RESULTATS_HORAIRES;
@@ -275,12 +542,14 @@ typedef struct {
 
 typedef struct {
 	char     IntercoGereeAvecDesCouts; 
+	char     IntercoGereeAvecLoopFlow;
   double * CoutDeTransportOrigineVersExtremite; 
   double * CoutDeTransportExtremiteVersOrigine; 
 	 
   
   double * CoutDeTransportOrigineVersExtremiteRef;
   double * CoutDeTransportExtremiteVersOrigineRef;
+															 
 } COUTS_DE_TRANSPORT;
 
 
@@ -290,8 +559,14 @@ typedef struct {
 
 
 typedef struct {
-  double * CoutsMarginauxHorairesDeLaReserveParZone;  	
+  double * CoutsMarginauxHorairesDeLaReserveParZone;  
 } COUTS_MARGINAUX_ZONES_DE_RESERVE;
+
+
+
+
+
+
 
 struct PROBLEME_HEBDO {
 
@@ -308,7 +583,25 @@ struct PROBLEME_HEBDO {
 	
 		
 	char ReinitOptimisation; 
+															
+	char SecondeOptimisationRelaxee;						
+															
+															
 
+	char MarketPoolActivated;								
+	char FlexUpPoolActivated;								
+	char FlexDownPoolActivated;								
+
+
+
+															
+	char ImpressionDuCritere;								
+															
+															
+															
+	char UnitCommitmentExact;								
+
+												
 	
 
 
@@ -329,7 +622,7 @@ struct PROBLEME_HEBDO {
 
 	
  	char OptimisationAvecCoutsDeDemarrage; 
-  int NbTermesContraintesPourLesCoutsDeDemarrage;
+	int NbTermesContraintesPourLesCoutsDeDemarrage;
 
 	
 
@@ -380,9 +673,94 @@ struct PROBLEME_HEBDO {
 	char LeProblemeADejaEteInstancie;   
 	char TypeDOptimisation;             
 	char SolveurDuProblemeLineaire;
+
 	
+
+												
 	int    NombreDePays;
 	const char ** NomsDesPays;
+	int    NombreDePaliersThermiques;
+
+												
+	int		NumberOfMarketOfferPool;			
+	int		NumberOfMarketDemandPool;			
+	int		NumberOfFlexUpOfferPool;			
+	int		NumberOfFlexUpDemandPool;			
+	int		NumberOfFlexDownOfferPool;			
+	int		NumberOfFlexDownDemandPool;			
+
+												
+	int	*	MarketOfferPoolOfNode;				
+	int	*	MarketDemandPoolOfNode;					
+	int	*	FlexUpOfferPoolOfNode;					
+	int	*	FlexUpDemandPoolOfNode;					
+	int	*	FlexDownOfferPoolOfNode;				
+	int	*	FlexDownDemandPoolOfNode;			
+
+												
+	int **  IsInMarketOfferPool;				
+	int **  IsInMarketDemandPool;				
+	int **  IsInFlexUpOfferPool;				
+	int **  IsInFlexUpDemandPool;				
+	int **  IsInFlexDownOfferPool;				
+	int **  IsInFlexDownDemandPool;				
+
+
+	int    NumberOfMarketEdge;					
+	int *  OfferPoolOfMarketEdge;				
+	int *  DemandPoolOfMarketEdge;				
+												
+	int * IndexFirstMarketEdgeOffer;			
+	int * IndexNextMarketEdgeOffer;				
+	int * IndexFirstMarketEdgeDemand;			
+	int * IndexNextMarketEdgeDemand;			
+		
+	int    NumberOfFlexUpEdge;					
+	int *  OfferPoolOfFlexUpEdge;				
+	int *  DemandPoolOfFlexUpEdge;				
+												
+	int * IndexFirstFlexUpEdgeOffer;			
+	int * IndexNextFlexUpEdgeOffer;				
+	int * IndexFirstFlexUpEdgeDemand;			
+	int * IndexNextFlexUpEdgeDemand;			
+
+
+	int    NumberOfFlexDownEdge;				
+	int *  OfferPoolOfFlexDownEdge;				
+	int *  DemandPoolOfFlexDownEdge;			
+												
+	int * IndexFirstFlexDownEdgeOffer;			
+	int * IndexNextFlexDownEdgeOffer;			
+	int * IndexFirstFlexDownEdgeDemand;			
+	int * IndexNextFlexDownEdgeDemand;			
+	
+
+												
+	double **	MarketPoolQuota;				
+												
+												
+	double **	FlexUpPoolQuota;				
+												
+												
+	double **	FlexDownPoolQuota;				
+												
+												
+												
+												
+	TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE		** DataMarketEdges;		
+	TRANSFER_BOUND_AND_LEVEL_FLEX_UP_EDGE		** DataFlexUpEdges;		
+	TRANSFER_BOUND_AND_LEVEL_FLEX_DOWN_EDGE		** DataFlexDownEdges;	
+	
+	DEMAND_MARKET_POOL							** DemandMarketPool;	
+	DEMAND_FLEX_UP_POOL							** DemandFlexUpPool;		
+	DEMAND_FLEX_DOWN_POOL						** DemandFlexDownPool;		
+	BOUND_FLEX_UP_NODE							** BoundFlexUpNode;		
+	BOUND_FLEX_DOWN_NODE						** BoundFlexDownNode;	
+	LEVEL_FLEX_UP_NODE							** LevelFlexUpNode;		
+	LEVEL_FLEX_DOWN_NODE						** LevelFlexDownNode;	
+				
+
+
 	
 	int   NombreDInterconnexions;
 	int * PaysOrigineDeLInterconnexion;
@@ -393,6 +771,11 @@ struct PROBLEME_HEBDO {
 	int * IndexSuivantIntercoOrigine;   
 	int * IndexDebutIntercoExtremite;   
 	int * IndexSuivantIntercoExtremite; 
+
+			
+
+		
+
 	
 	
 	int   NombreDeClassesDeManoeuvrabiliteActives;
@@ -408,9 +791,10 @@ struct PROBLEME_HEBDO {
 	
 	int   NombreDePasDeTempsPourUneOptimisation;
 	int * NumeroDIntervalleOptimiseDuPasDeTemps;
-
 	int   NombreDeJours;
 	char  YaDeLaReserveJmoins1; 
+	char  Expansion;				
+	
 	
 	int * NbGrpCourbeGuide; 
 	int * NbGrpOpt;         
@@ -431,6 +815,10 @@ struct PROBLEME_HEBDO {
 	
 
 	
+	ALL_MUST_RUN_GENERATION ** AllMustRunGeneration;
+	
+
+	
 	SOLDE_MOYEN_DES_ECHANGES ** SoldeMoyenHoraire;
 
 	
@@ -438,17 +826,41 @@ struct PROBLEME_HEBDO {
 
 	
 	ENERGIES_ET_PUISSANCES_HYDRAULIQUES ** CaracteristiquesHydrauliques; 
+
+	computeTimeStepLevel computeLvl_object;
+
+	
+	double * previousSimulationFinalLevel;
+
+	
+	
+	bool hydroHotStart;
+	
+	double * previousYearFinalLevels;
+
+
 	
 	 
 	
-	char ContrainteDeReserveJMoins1ParZone; 
-	int NombreDeZonesDeReserveJMoins1; 
-		
-	int * NumeroDeZoneDeReserveJMoins1; 
-  COUTS_MARGINAUX_ZONES_DE_RESERVE ** CoutsMarginauxDesContraintesDeReserveParZone; 	
+	char ContrainteDeReserveJMoins1ParZone;		
+	int NombreDeZonesDeReserveJMoins1;			
+												
+	int * NumeroDeZoneDeReserveJMoins1;			
+	COUTS_MARGINAUX_ZONES_DE_RESERVE ** CoutsMarginauxDesContraintesDeReserveParZone; 
+
+	
+	
+	
+	
+	
+	
+	
+
 	RESERVE_JMOINS1 ** ReserveJMoins1;  
 
 	
+																    
+																	
 	double * CoutDeDefaillancePositive;
 	double * CoutDeDefaillanceNegative;
 	double * CoutDeDefaillanceEnReserve ;
@@ -465,6 +877,10 @@ struct PROBLEME_HEBDO {
 	CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES ** CorrespondanceCntNativesCntOptimHebdomadaires; 
 
 	int * NumeroDeContrainteEnergieHydraulique; 
+	int * NumeroDeContrainteMinEnergieHydraulique;							
+	int * NumeroDeContrainteMaxEnergieHydraulique;							
+	int * NumeroDeContrainteMaxPompage;										
+
 	int * NumeroDeContrainteDeSoldeDEchange;    
 
 	
@@ -472,10 +888,14 @@ struct PROBLEME_HEBDO {
 	RESULTATS_HORAIRES ** ResultatsHoraires; 
 	
 	VARIABLES_DUALES_INTERCONNEXIONS ** VariablesDualesDesContraintesDeNTC;
+
 	
+	int * numeroOptimisation;
+	
+	double * coutOptimalSolution1;
+	
+	double * coutOptimalSolution2;
 
-
-	double * CoutOptimalDeLaSolution;
 
 	
 	

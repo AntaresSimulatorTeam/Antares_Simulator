@@ -31,8 +31,6 @@
 # include <antares/study/fwd.h>
 # include <antares/mersenne-twister/mersenne-twister.h>
 
-# define HYDRO_MANAGEMENT_DEBUG 0
-
 
 namespace Antares
 {
@@ -54,7 +52,7 @@ namespace Antares
 		double randomReservoirLevel(double min, double avg, double max);
 
 		//! Perform the hydro ventilation
-		void operator () (double * randomReservoirLevel, uint numSpace);
+		void operator () (double * randomReservoirLevel, Solver::Variable::State & state, uint y, uint numSpace);
 
 	public:
 		//! Random number generator
@@ -74,15 +72,15 @@ namespace Antares
 		//! Prepare the effective demand for each area
 		void prepareEffectiveDemand(uint numSpace);
 		//! Monthly Optimal generations
-		void prepareMonthlyOptimalGenerations(double * random_reservoir_level, uint numSpace);
+		void prepareMonthlyOptimalGenerations(double * random_reservoir_level, uint y, uint numSpace);
 
 		//! Monthly target generations
 		// note: inflows may have two different types, if in swap mode or not
 		// \return The total inflow for the whole year
 		double prepareMonthlyTargetGenerations(Data::Area& area, PerArea& data);
 
-		void prepareDailyOptimalGenerations(uint numSpace);
-		void prepareDailyOptimalGenerations(Data::Area& area, uint numSpace);
+		void prepareDailyOptimalGenerations(Solver::Variable::State & state, uint y, uint numSpace);
+		void prepareDailyOptimalGenerations(Solver::Variable::State & state, Data::Area& area, uint y, uint numSpace);
 		//@}
 
 		//! \name Utilities

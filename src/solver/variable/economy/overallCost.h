@@ -216,7 +216,9 @@ namespace Economy
 			// Get end year calculations
 			for (unsigned int i = state.study.runtime->rangeLimits.hour[Data::rangeBegin]; i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd]; ++i)
 			{
-				 pValuesForTheCurrentYear[numSpace][i] +=  state.thermalClusterOperatingCostForYear[i];
+				 pValuesForTheCurrentYear[numSpace][i] += state.thermalClusterOperatingCostForYear[i];
+				 // Incrementing annual system cost (to be printed in output into a separate file)
+				 state.annualSystemCost += state.thermalClusterOperatingCostForYear[i];
 			}
 
 			// Next variable
@@ -259,14 +261,26 @@ namespace Economy
 
 		void hourForEachArea(State& state, unsigned int numSpace)
 		{
-			// Total UnsupliedEnergy emissions
-			pValuesForTheCurrentYear[numSpace][state.hourInTheYear] +=
-				// Current Hydro Storage generation
+			const double costForSpilledOrUnsuppliedEnergy = 
+				// Total UnsupliedEnergy emissions
 				(state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek]
 				* state.area->thermal.unsuppliedEnergyCost)
 				+
 				(state.hourlyResults->ValeursHorairesDeDefaillanceNegative[state.hourInTheWeek]
-				* state.area->thermal.spilledEnergyCost);
+				* state.area->thermal.spilledEnergyCost)
+				// Current hydro storage and pumping generation costs
+				+
+				(
+					state.hourlyResults->valeurH2oHoraire[state.hourInTheWeek]
+					*
+					(state.hourlyResults->TurbinageHoraire[state.hourInTheWeek] - 
+									state.area->hydro.pumpingEfficiency * state.hourlyResults->PompageHoraire[state.hourInTheWeek])
+				);
+
+			pValuesForTheCurrentYear[numSpace][state.hourInTheYear] += costForSpilledOrUnsuppliedEnergy;
+
+			// Incrementing annual system cost (to be printed in output into a separate file)
+			state.annualSystemCost += costForSpilledOrUnsuppliedEnergy;
 
 			// Next variable
 			NextType::hourForEachArea(state, numSpace);

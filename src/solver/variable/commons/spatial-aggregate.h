@@ -165,12 +165,12 @@ namespace Common
 	public:
 		void initializeFromStudy(Data::Study& study)
 		{
-			typedef typename VCardType::VCardOrigin  VCardOrigin;
+			typedef typename VCardType::VCardOrigin::IntermediateValuesBaseType  IntermediateValuesBaseType;
 			pNbYearsParallel = study.maxNbYearsInParallel;
 			
 			// Intermediate values
 			VarT<Container::EndOfList>::InitializeResultsFromStudy(AncestorType::pResults, study);
-			pValuesForTheCurrentYear = new VCardOrigin::IntermediateValuesBaseType[pNbYearsParallel];
+			pValuesForTheCurrentYear = new IntermediateValuesBaseType[pNbYearsParallel];
 			for(unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
 				 VariableAccessorType::InitializeAndReset(pValuesForTheCurrentYear[numSpace], study);
 
@@ -289,7 +289,7 @@ namespace Common
 		void yearEndSpatialAggregates(V& allVars, uint year, const SetT& set, uint numSpace)
 		{
 			if (VCardType::VCardOrigin::spatialAggregateMode & Category::spatialAggregateEachYear)
-				internalSpatialAggregateForCurrentYear(allVars, year, set, numSpace);
+				internalSpatialAggregateForCurrentYear(allVars, set, numSpace);
 
 			// Next variable
 			NextType::template yearEndSpatialAggregates(allVars, year, set, numSpace);
@@ -299,7 +299,7 @@ namespace Common
 		void computeSpatialAggregatesSummary(V& allVars, std::map<unsigned int, unsigned int> & numSpaceToYear, uint nbYearsForCurrentSummary)
 		{
 			if (VCardType::VCardOrigin::spatialAggregateMode & Category::spatialAggregateEachYear)
-				internalSpatialAggregateForParallelYears(allVars, numSpaceToYear, nbYearsForCurrentSummary);
+				internalSpatialAggregateForParallelYears(numSpaceToYear, nbYearsForCurrentSummary);
 
 			// Next variable
 			NextType::computeSpatialAggregatesSummary(allVars, numSpaceToYear, nbYearsForCurrentSummary);
@@ -317,10 +317,40 @@ namespace Common
 
 		inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
 		{
-			// Generate the Digest for the local results
+			// Generate the Digest for the local results (districts part)
 			if (VCardType::columnCount != 0
 				&& (VCardType::categoryDataLevel & Category::setOfAreas))
 			{
+				// We don't print usual results in the digest file for reservoir levels (see below for improvement)
+				if (std::strcmp(VCardType::VCardOrigin::Caption(), "H. LEV") == 0)
+				{
+					if (!results.data.resLvlColRetrieved)
+					{
+						results.data.ReservoirLvlColIdx.push_back(results.data.columnIndex);
+						results.data.resLvlColRetrieved = true;
+					}
+				}
+
+				// We don't print usual results in the digest file for water values
+				if (std::strcmp(VCardType::VCardOrigin::Caption(), "H. VAL") == 0)
+				{
+					if (!results.data.waterValColRetrieved)
+					{
+						results.data.waterValuesColIdx.push_back(results.data.columnIndex);
+						results.data.waterValColRetrieved = true;
+					}
+				}
+
+				// We don't print usual results in the digest file for overflows (see below for improvement)
+				if (std::strcmp(VCardType::VCardOrigin::Caption(), "H. OVFL") == 0)
+				{
+					if (!results.data.ovfColRetrieved)
+					{
+						results.data.OverflowsColIdx.push_back(results.data.columnIndex);
+						results.data.ovfColRetrieved = true;
+					}
+				}
+				
 				VariableAccessorType::
 					template BuildDigest<typename VCardType::VCardOrigin>(results, AncestorType::pResults, digestLevel, dataLevel);
 			}
@@ -332,8 +362,44 @@ namespace Common
 		void localBuildAnnualSurveyReport(SurveyResults& results, int fileLevel, int precision, uint numSpace) const
 		{
 			if (VCardType::columnCount != 0
-				&& (VCardType::categoryDataLevel & Category::setOfAreas))
+				&& (VCardType::categoryDataLevel & Category::setOfAreas)
+				// Trying to use "VCardReservoirLevel::spatialAggregate" does not work here, another way has to be found,
+				// avoiding to use "VCardReservoirLevel::Caption()", which is not generic enough.
+				/* && VCardType::VCardOrigin::spatialAggregate != Category::noSpatialAggregate*/ )
 			{
+				
+				// For "mc-ind/<year>/<district>/values-<precision>.txt", prints "N/A" on the reservoir levels column
+				if (std::strcmp(VCardType::VCardOrigin::Caption(), "H. LEV") == 0)
+				// See what "VCardType::VCardOrigin::spatialAggregate" is, and try not to select reservoir levels using its "Caption()".
+				// if (VCardType::VCardOrigin::spatialAggregate != Category::noSpatialAggregate)
+				{
+					if (!results.data.resLvlColRetrieved)
+					{
+						results.data.ReservoirLvlColIdx.push_back(results.data.columnIndex);
+						results.data.resLvlColRetrieved = true;
+					}
+				}
+
+				// For "mc-ind/<year>/<district>/values-<precision>.txt", prints "N/A" on the water values column
+				if (std::strcmp(VCardType::VCardOrigin::Caption(), "H. VAL") == 0)
+				{
+					if (!results.data.waterValColRetrieved)
+					{
+						results.data.waterValuesColIdx.push_back(results.data.columnIndex);
+						results.data.waterValColRetrieved = true;
+					}
+				}
+
+				// For "mc-ind/<year>/<district>/values-<precision>.txt", prints "N/A" on the overflows column
+				if (std::strcmp(VCardType::VCardOrigin::Caption(), "H. OVFL") == 0)
+				{
+					if (!results.data.ovfColRetrieved)
+					{
+						results.data.OverflowsColIdx.push_back(results.data.columnIndex);
+						results.data.ovfColRetrieved = true;
+					}
+				}
+							
 				typedef VariableAccessor<typename VCardType::IntermediateValuesBaseType, VCardType::columnCount>  VAType;
 				VAType::template
 					BuildAnnualSurveyReport<typename VCardType::VCardOrigin>(
@@ -374,13 +440,13 @@ namespace Common
 				assert(!set.empty() && "The set should not be empty at this point");
 
 			// Compute all statistics for the current year (daily,weekly,monthly,...)
-			VariableAccessorType::template ComputeStatistics<VCardOrigin>(pValuesForTheCurrentYear[0], year);
+			VariableAccessorType::template ComputeStatistics<VCardOrigin>(pValuesForTheCurrentYear[0]);
 			VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[0], AncestorType::pResults, year);
 		}
 
 
 		template<class V, class SetT>
-		void internalSpatialAggregateForCurrentYear(V& allVars, uint year, const SetT& set, uint numSpace)
+		void internalSpatialAggregateForCurrentYear(V& allVars, const SetT& set, uint numSpace)
 		{
 			typedef typename VCardType::VCardOrigin  VCardOrigin;
 			// Reset the results
@@ -410,15 +476,12 @@ namespace Common
 				assert(!set.empty() && "The set should not be empty at this point");
 
 			// Compute all statistics for the current year (daily,weekly,monthly,...)
-			VariableAccessorType::template ComputeStatistics<VCardOrigin>(pValuesForTheCurrentYear[numSpace], year);
+			VariableAccessorType::template ComputeStatistics<VCardOrigin>(pValuesForTheCurrentYear[numSpace]);
 		}
 
 
-		template<class V>
-		void internalSpatialAggregateForParallelYears(V& allVars, std::map<unsigned int, unsigned int> & numSpaceToYear, uint nbYearsForCurrentSummary)
+		void internalSpatialAggregateForParallelYears(std::map<unsigned int, unsigned int> & numSpaceToYear, uint nbYearsForCurrentSummary)
 		{
-			typedef typename VCardType::VCardOrigin  VCardOrigin;
-			
 			for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
 			{
 				// Merge all those values with the global results

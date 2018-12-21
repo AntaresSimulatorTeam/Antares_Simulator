@@ -64,6 +64,7 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
 	settings.displayProgression   = false;
 	settings.ignoreConstraints    = false;
 
+	bool optForceExpansion = false;
 	bool optForceEconomy = false;
 	bool optForceAdequacy = false;
 	bool optForceAdequacyDraft = false;
@@ -82,6 +83,8 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
 	getopt.addParagraph("Simulation");
 	// --input
 	getopt.addFlag(optStudyFolder, 'i', "input", "Study folder");
+	// --expansion
+	getopt.addFlag(optForceExpansion, ' ', "expansion", "Force the simulation in expansion mode");
 	// --economy
 	getopt.addFlag(optForceEconomy, ' ', "economy", "Force the simulation in economy mode");
 	// --adequacy
@@ -220,14 +223,16 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
 
 	// Forcing simulation mode
 	{
-		uint mask = optForceEconomy + optForceAdequacy + optForceAdequacyDraft;
+		uint mask = optForceExpansion + optForceEconomy + optForceAdequacy + optForceAdequacyDraft;
 		switch (mask)
 		{
 			case 0:
 				break;
 			case 1:
 				{
-					if (optForceEconomy)
+					if (optForceExpansion)
+						options.forceMode = stdmExpansion;
+					else if (optForceEconomy)
 						options.forceMode = stdmEconomy;
 					else if (optForceAdequacy)
 						options.forceMode = stdmAdequacy;
@@ -237,7 +242,7 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
 				}
 			default:
 				{
-					logs.error() << "Only one simulation mode is allowed: --economy, --adequacy or --adequacy-draft";
+					logs.error() << "Only one simulation mode is allowed: --expansion, --economy, --adequacy or --adequacy-draft";
 					return false;
 				}
 		}

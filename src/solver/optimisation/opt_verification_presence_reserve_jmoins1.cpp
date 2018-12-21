@@ -30,6 +30,32 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # include "opt_structure_probleme_a_resoudre.h"
  
 # include "../simulation/simulation.h"

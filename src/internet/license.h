@@ -68,7 +68,7 @@
 				auto* mainFrm = Antares::Forms::ApplWnd::Instance(); \
 				if (mainFrm) \
 				{ \
-					Antares::Window::LicenseCoultNotConnectToInternetServer form(mainFrm); \
+					Antares::Window::LicenseCouldNotConnectToInternetServer form(mainFrm); \
 					form.ShowModal(); \
 					/* reset the status bar which uses informations from the status bar */ \
 					mainFrm->resetDefaultStatusBarText(); \
@@ -168,13 +168,13 @@ namespace License
 		errNone = 0,
 		//! Generic error
 		errFailed,
-		//! The maximum number of licenses has been reached from the License Server (LS)
+		//! The maximum number of licenses has been reached from the Internet Server (LS)
 		errLSTooManyLicense,
-		//! The License server is down \o/
+		//! The Internet server is down \o/
 		errLSHostDown,
 		//! The proxy is not correct
 		errLSPoxy,
-		//! The License is not valid on ther license server
+		//! The License is not valid on the internet server
 		errLSOnline,
 		//! The license root CAcertificat error
 		errCAFileRoot,
@@ -182,7 +182,7 @@ namespace License
 		errHostid,
 		//! The product is expired
 		errProductExpired,
-		//! The licese batabase connexion error
+		//! The license database connexion error
 		errDBConnexion,
 		//! The licence server rejected the machine start date
 		errStart,
@@ -198,22 +198,22 @@ namespace License
 
 	enum Status
 	{
-		//! The license has not been verfied on the license server
+		//! The license has not been verfied on the internet server
 		stInitialize = 0,
 		//! The verification on the server is not requested
 		stNotRequested,
 		//! The verification is running
 		stWaiting,
-		//! The license is valided on the License Server
+		//! The license is validated on the Internet Server
 		stValidOnline,
-		//! The license is not valided in the License Server
+		//! The license is not validated in the Internet Server
 		stInvalidOnline,
 	};
 
 
 
 	/*!
-	** \brief Flag to determine whether the current license has license servers enabled
+	** \brief Flag to determine whether the current toiken has internet servers enabled
 	*/
 	extern bool hasLicenseServers;
 

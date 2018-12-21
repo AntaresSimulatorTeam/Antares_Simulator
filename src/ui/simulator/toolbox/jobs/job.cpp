@@ -643,6 +643,7 @@ namespace // anonymous
 
 
 
+
 	Job::Job(const wxString& title, const wxString& subTitle, const char* icon) :
 		wxDialog(Forms::ApplWnd::Instance(), wxID_ANY, title, wxDefaultPosition,
 			wxSize(530, 100), wxCAPTION|wxCLIP_CHILDREN),

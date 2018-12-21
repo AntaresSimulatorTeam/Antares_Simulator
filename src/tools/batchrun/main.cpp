@@ -90,6 +90,7 @@ int main(int argc, char* argv[])
 	bool optSwap = false;
 	bool optNoTSImport = false;
 	bool optIgnoreAllConstraints = false;
+	bool optForceExpansion = false;
 	bool optForceEconomy = false;
 	bool optForceAdequacy = false;
 	bool optForce = false;
@@ -112,6 +113,7 @@ int main(int argc, char* argv[])
 
 		// Simulation mode
 		options.addParagraph("\nSimulation mode");
+		options.addFlag(optForceExpansion, ' ', "economy", "Force the simulation(s) in expansion mode");
 		options.addFlag(optForceEconomy, ' ', "economy", "Force the simulation(s) in economy mode");
 		options.addFlag(optForceAdequacy, ' ', "adequacy", "Force the simulation(s) in adequacy mode");
 
@@ -149,6 +151,13 @@ int main(int argc, char* argv[])
 			logs.error() << "A folder input is required.";
 			return EXIT_FAILURE;
 		}
+
+		if (optForceExpansion and optForceAdequacy)
+		{
+			logs.error() << "contradictory options: --expansion and --adequacy";
+			return EXIT_FAILURE;
+		}
+		
 		if (optForceEconomy and optForceAdequacy)
 		{
 			logs.error() << "contradictory options: --economy and --adequacy";
@@ -234,6 +243,8 @@ int main(int argc, char* argv[])
 			cmd << "\"" << solver << "\"";
 			if (optForce)
 				cmd << " --force";
+			if (optForceExpansion)
+				cmd << " --economy";
 			if (optForceEconomy)
 				cmd << " --economy";
 			if (optForceAdequacy)

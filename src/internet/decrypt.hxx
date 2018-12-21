@@ -57,7 +57,7 @@
 
 namespace Antares {
 	namespace License {
-
+		typedef unsigned char uchar;
 # ifdef YUNI_OS_WINDOWS
 
 		static bool WideCharIntoString(Yuni::String& out, const wchar_t* wcstr)
@@ -167,7 +167,7 @@ namespace Antares {
 			return false;
 		}
 
-		typedef unsigned char uchar;
+		
 
 
 	}

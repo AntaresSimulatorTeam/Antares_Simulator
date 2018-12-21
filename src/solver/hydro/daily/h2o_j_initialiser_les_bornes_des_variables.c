@@ -66,7 +66,6 @@ for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
   Var = NumeroDeVariableTurbine[Pdt];
 	Xmax[Var] = TurbineMax[Pdt];
 	
-
 	if ( TurbineMax[Pdt] > TurbineCible[Pdt] ) {
 	  Xmin[Var] = TurbineCible[Pdt];
 	}

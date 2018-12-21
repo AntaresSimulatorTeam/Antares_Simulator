@@ -195,8 +195,17 @@ if ( VariablesDualesDesContraintesE != NULL ) {
   NuvarE = Probleme->IndicesColonnes;
 	Zborne = 1.e-6;
   for ( CntE = 0 ; CntE < NombreDeContraintesE ; CntE++ ) {
-    if ( VariablesDualesDesContraintesE[CntE] < VALEUR_NON_INITIALISEE ) continue;
+    if ( VariablesDualesDesContraintesE[CntE] < VALEUR_NON_INITIALISEE ) continue;		
     VariablesDualesDesContraintesE[CntE] = 0;
+
+    if ( Pne->YaDesVariablesEntieres == NON_PNE ) {
+      /* Si on est en continu, on ne sait pas (pour l'instant) recalculer exactement les variables
+	       duales des contraintes quand on fait des substitutions de variables. Donc on prefere ne pas
+		     faire ce genre de presolve. Todo: stocker toutes les transfromations de la matrice pour
+		     recalculer exactement les variables duales. */
+      continue;
+    }
+		
 		if ( SensE[CntE] != '=' ) continue; 
 		/* Contrainte de type = :
 			 C1 = le plus petit cout des variable a coefficient positif qui ne sont pas sur Xmax
@@ -204,7 +213,7 @@ if ( VariablesDualesDesContraintesE != NULL ) {
 			 C3 = le plus petit cout des variables a coefficient negatif qui ne sont pas sur Xmax
 			 C4 = le plus petit cout change de signe des variables a coefficient negatif qui ne sont pas su Xmin
 			 Et on affecte le min de C1, C2, C3, C4 
-     */
+     */		 
     C1 = 2 * VALEUR_NON_INITIALISEE;
     C2 = 2 * VALEUR_NON_INITIALISEE;
     C3 = 2 * VALEUR_NON_INITIALISEE;
@@ -219,7 +228,7 @@ if ( VariablesDualesDesContraintesE != NULL ) {
 
 			S += a * UE[VarE];
 			
-			CoutE = LE[VarE];
+			CoutE = LE[VarE];			
 			if ( TypeDeBorneE[VarE] == VARIABLE_FIXE ) goto NextIlE;					
 			if ( TypeDeBorneE[VarE] == VARIABLE_NON_BORNEE ) {
         if ( a > 0 ) {
@@ -281,16 +290,17 @@ if ( VariablesDualesDesContraintesE != NULL ) {
       NextIlE:
 		  ilE++;
 		}	
-	  u = 4 * VALEUR_NON_INITIALISEE;
-    if ( u > C1 ) u = C1;
+	  u = 4 * VALEUR_NON_INITIALISEE;    
+		if ( u > C1 ) u = C1;
     if ( u > C2 ) u = C2;
     if ( u > C3 ) u = C3;
-    if ( u > C4 ) u = C4;			
+    if ( u > C4 ) u = C4;
+						
 	  if ( u > VALEUR_NON_INITIALISEE ) u = 0;
 		
 		/* Il faut changer le signe pour se remettre dans le contexte d'un simplexe */
 		u = -u;
-		
+				
     /* Ici on n'a jamais une contrainte d'egalite */
     if ( Probleme->Sens[CntE]	== '<' ) {
       if ( S < Probleme->SecondMembre[CntE] + 1.e-7 ) u = 0;			

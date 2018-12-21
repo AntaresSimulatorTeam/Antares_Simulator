@@ -25,7 +25,7 @@
 # include "spx_sys.h"
 
 # include "spx_fonctions.h"   
-# include "spx_define.h"
+# include "spx_define.h"  
 
 # include "pne_fonctions.h"
 
@@ -61,11 +61,14 @@
 # define DEGRADATION_MAX_DU_RAPPORT 10 /*10*/
 # define RAPPORT_ACCEPTABLE 1.e+4 /*1.e+4*/
 
+# define PLUS_PETIT_COUT_SOUHAITE (10*VALEUR_PERTURBATION_COUT_A_POSTERIORI) 
+
 # define MIN_SCALE_LIGNE_COUTS 1.e-6 /*1.e-6*/
 
+# define ECART_MIN_XMAX_XMIN 1.e-4 
+# define RAPPORT_COUT_LIMITE 1.e+10
 
-# define VERBOSE_SPX_SCALING 0  
-
+# define VERBOSE_SPX_SCALING 0
 
 void SPX_InitMatriceEtCoutsAvantScaling( PROBLEME_SPX *, double * , double * );
 void SPX_AppliquerScalingSurMatriceDeTravail( PROBLEME_SPX * , double *, double * );
@@ -139,15 +142,15 @@ return;
 
 void SPX_CalculerLeScaling( PROBLEME_SPX * Spx )
 {
-int il; int   ilMax; int k; double X; double UnSurX; int Phase; double PlusGrandTerme;
-double PlusPetitTerme; double Rapport; int Flag; double RapportPrecedent; double SeuilRapport;
-double * A; double * C; int NombreDeVariables; int NombreDeContraintes; double ScaleLigneDesCoutsOpt;
-double PlusGrandTermeCouts; double PlusPetitTermeCouts; double * ScaleXOpt; double * ScaleBOpt;
-char FaireScalingDesCouts; char EquilibrageApresMoyenneGeometrique; char LignesOk;
-char ColonnesOk; int kMin; double RapportOpt; double * ScaleX ; double * ScaleB;
-double ScaleLigneDesCouts; double * XMult; double * PlusGrandTermeColonne; double * PlusPetitTermeColonne;
-int * Mdeb; int * NbTerm; int * Indcol; double RapportIntialDesCouts; double RapportOptCouts;
-int Var; int Cnt;
+int il; int ilMax; int k; double X; double UnSurX; int Phase; double PlusGrandTerme; double PlusPetitTerme;
+double Rapport; int Flag; double RapportPrecedent; double SeuilRapport; double * A; double * C;
+int NombreDeVariables; int NombreDeContraintes; double ScaleLigneDesCoutsOpt; double PlusGrandCout;
+double PlusPetitCout; double * ScaleXOpt; double * ScaleBOpt; char FaireScalingDesCouts;
+char EquilibrageApresMoyenneGeometrique; char LignesOk; char ColonnesOk; int kMin; double RapportOpt;
+double * ScaleX ; double * ScaleB; double ScaleLigneDesCouts; double * XMult; double * PlusGrandTermeColonne; 
+double * PlusPetitTermeColonne; int * Mdeb; int * NbTerm; int * Indcol; double RapportIntialDesCouts; 
+double RapportOptCouts; int Var; int Cnt; double RapportCouts; char ScalingCoutsInhibe; double X0; double NouveauCout;
+char * TypeDeVariable; double * Xmax; double * Xmin; double * Csv; double CoutVar; 
 
 if ( Spx->FaireDuScalingSPX == NON_SPX ) return;
 
@@ -181,16 +184,16 @@ if ( A == NULL || C == NULL || ScaleX  == NULL || PlusGrandTermeColonne == NULL 
 
 SPX_InitMatriceEtCoutsAvantScaling( Spx, A, C );
 
-PlusGrandTermeCouts = -1.;
-PlusPetitTermeCouts = LINFINI_SPX;
+PlusGrandCout = -1.;
+PlusPetitCout = LINFINI_SPX;
 for ( Var = 0 ; Var < NombreDeVariables ; Var++ ) {
 	if ( C[Var] == 0.0 ) continue;
-	if ( C[Var] < PlusPetitTermeCouts ) PlusPetitTermeCouts =  C[Var];
-	if ( C[Var] > PlusGrandTermeCouts ) PlusGrandTermeCouts =  C[Var];
+	if ( C[Var] < PlusPetitCout ) PlusPetitCout =  C[Var];
+	if ( C[Var] > PlusGrandCout ) PlusGrandCout =  C[Var];
 }
 
 RapportIntialDesCouts = 1.;
-if ( PlusPetitTermeCouts < LINFINI_SPX ) RapportIntialDesCouts = PlusGrandTermeCouts / PlusPetitTermeCouts;
+if ( PlusPetitCout < LINFINI_SPX ) RapportIntialDesCouts = PlusGrandCout / PlusPetitCout;
 
 EquilibrageApresMoyenneGeometrique = EQUILIBRAGE_APRES_MOYENNE_GEOMETRIQUE;
 
@@ -209,13 +212,24 @@ ScaleLigneDesCoutsOpt = 1; /* Juste pour eviter les warning de compilation */
 DebutDesPassesDeScaling:
 /* Plusieurs passes */
 
+ScalingCoutsInhibe = NON_PNE;
+
 for ( k = 0 ; k < NOMBRE_MAX_DE_PASSES_DE_SCALING ; k++ ) {
 
   /* Controle du conditionnement avant la passe de scaling */	
-  PlusGrandTermeCouts = -1.;
-  PlusPetitTermeCouts = LINFINI_SPX;			
-  PlusGrandTerme = -1.;
-  PlusPetitTerme = LINFINI_SPX;	
+  PlusGrandCout = -1.;
+  PlusPetitCout = LINFINI_SPX;	  
+	if ( FaireScalingDesCouts == OUI_SPX && ScalingCoutsInhibe == NON_PNE ) {
+    for ( Var = 0 ; Var < NombreDeVariables ; Var++ ) {
+      X = C[Var];        
+      if( X != 0.0 ) {
+        if ( X > PlusGrandCout ) PlusGrandCout = X; 
+        if ( X < PlusPetitCout ) PlusPetitCout = X; 
+      } 
+    }
+  }
+  PlusGrandTerme = PlusGrandCout;
+  PlusPetitTerme = PlusPetitCout;		
   for ( Cnt = 0 ; Cnt < NombreDeContraintes ; Cnt++ ) {
     il    = Mdeb[Cnt]; 
     ilMax = il + NbTerm[Cnt]; 
@@ -232,7 +246,7 @@ for ( k = 0 ; k < NOMBRE_MAX_DE_PASSES_DE_SCALING ; k++ ) {
   Rapport = PlusGrandTerme / PlusPetitTerme;
 	
   #if VERBOSE_SPX_SCALING == 1
-    printf(" Avant passe de scaling PlusPetitTerme %20.10lf PlusGrandTerme %20.10lf rapport %20.10lf \n",PlusPetitTerme,PlusGrandTerme,Rapport);
+    printf(" Avant passe de scaling PlusPetitTerme %e PlusGrandTerme %e rapport %e \n",PlusPetitTerme,PlusGrandTerme,Rapport);
   #endif
 
   if ( k == 0 ) {
@@ -265,29 +279,34 @@ for ( k = 0 ; k < NOMBRE_MAX_DE_PASSES_DE_SCALING ; k++ ) {
   memcpy( (char *) ScaleX, (char *) Spx->ScaleX, NombreDeVariables   * sizeof( double ) );
   memcpy( (char *) ScaleB, (char *) Spx->ScaleB, NombreDeContraintes * sizeof( double ) );
 
+  ScalingCoutsInhibe = NON_PNE;
+
   /*-------------------- Scaling des lignes ------------------------*/
 	
 	/* On regarde les couts pour savoir s'il est necessaire de faire un scaling dessus */
+	RapportCouts = 1;
 	if ( FaireScalingDesCouts == OUI_SPX ) {
 	  Flag = 0;
-    PlusGrandTerme = -1.;
-    PlusPetitTerme = LINFINI_SPX;
+    PlusGrandCout = -1.;
+    PlusPetitCout = LINFINI_SPX;
     for ( Var = 0 ; Var < NombreDeVariables ; Var++ ) {
       X = C[Var];        
       if( X != 0.0 ) {
-        if ( X > PlusGrandTerme ) PlusGrandTerme = X; 
-        if ( X < PlusPetitTerme ) { PlusPetitTerme = X; Flag = 1; }
+        if ( X > PlusGrandCout ) PlusGrandCout = X; 
+        if ( X < PlusPetitCout ) { PlusPetitCout = X; Flag = 1; }
       } 
     }
-	  if ( Flag == 1 ) {		
+		RapportCouts = PlusGrandCout / PlusPetitCout;
+	  if ( Flag == 1 && RapportCouts > RAPPORT_MAX_COUTS ) {		
 		  FaireScalingDesCouts = OUI_SPX;
-      X = PlusGrandTerme * PlusPetitTerme;			
+      X = PlusGrandCout * PlusPetitCout;			
       X = sqrt( X );			
       UnSurX = 1. / X;				
       if ( ARRONDI_EN_PUISSANCES_DE_2 == OUI_SPX ) SPX_ArrondiEnPuissanceDe2( &UnSurX );			
       Spx->ScaleLigneDesCouts *= UnSurX;
       for ( Var = 0 ; Var < NombreDeVariables ; Var++ ) C[Var] *= UnSurX; 			
 		}
+		else ScalingCoutsInhibe = OUI_PNE;
 	}
 
   /* Lignes */
@@ -347,7 +366,7 @@ for ( k = 0 ; k < NOMBRE_MAX_DE_PASSES_DE_SCALING ; k++ ) {
     }
   }
   /* Objectif */
-  if ( FaireScalingDesCouts == OUI_SPX ) { 
+  if ( FaireScalingDesCouts == OUI_SPX && ScalingCoutsInhibe == NON_PNE ) { 
     for ( Var = 0 ; Var < NombreDeVariables ; Var++ ) { 
 			X = C[Var];
       if( X != 0.0  ) {        
@@ -365,8 +384,7 @@ for ( k = 0 ; k < NOMBRE_MAX_DE_PASSES_DE_SCALING ; k++ ) {
       X = sqrt( X );
       UnSurX = 1. / X;						
     }
-    if ( ARRONDI_EN_PUISSANCES_DE_2 == OUI_SPX ) SPX_ArrondiEnPuissanceDe2( &UnSurX );
-				
+    if ( ARRONDI_EN_PUISSANCES_DE_2 == OUI_SPX ) SPX_ArrondiEnPuissanceDe2( &UnSurX );				
     XMult[Var] = UnSurX;
     Spx->ScaleX[Var] *= UnSurX;
     /* Scaling du cout */
@@ -386,32 +404,32 @@ for ( k = 0 ; k < NOMBRE_MAX_DE_PASSES_DE_SCALING ; k++ ) {
 /* Fin Boucle generale de scaling */
 }
 
+/* Il faut appliquer le scaling obtenu juste avant car les coeff de scaling ne correspondent pas toujours a
+   l'etat de la matrice */
+SPX_AppliquerScalingSurMatriceDeTravail( Spx, A, C );	
+
 if ( EquilibrageApresMoyenneGeometrique == OUI_SPX && Rapport > SEUIL_POUR_EQUILIBRAGE_MATRICE ) {
 
   # if VERBOSE_SPX_SCALING == 1	
     printf("Phase d'equilibrage ...\n");
   # endif	 
-
-	/* Il faut appliquer le scaling obtenu juste avant car les coeff de scaling ne correspondent pas toujours a
-	   l'etat de la matrice */
-  SPX_AppliquerScalingSurMatriceDeTravail( Spx, A, C );	
-  	 
+ 	 
   for ( k = 0 ; k < NOMBRE_MAX_DE_PASSES_DE_SCALING ; k++ ) {
 		
     LignesOk   = OUI_SPX;
 		ColonnesOk = OUI_SPX;
 
-    if ( FaireScalingDesCouts == OUI_SPX ) { 
+    if ( FaireScalingDesCouts == OUI_SPX && k < 1 ) { 
       Flag = 0;
-		  PlusGrandTerme = -1.;
+		  PlusGrandCout = -1.;
       for ( Var = 0 ; Var < NombreDeVariables ; Var++ ) {
         X = C[Var];        
         if( X != 0.0 ) {
-          if ( X > PlusGrandTerme ) { PlusGrandTerme = X; Flag = 1; }
+          if ( X > PlusGrandCout ) { PlusGrandCout = X; Flag = 1; }
         } 
       }
 	    if ( Flag == 1 ) {
-        X = PlusGrandTerme;			
+        X = PlusGrandCout;			
         UnSurX = 1. / X;				
         if ( ARRONDI_EN_PUISSANCES_DE_2 == OUI_SPX ) SPX_ArrondiEnPuissanceDe2( &UnSurX );			
         Spx->ScaleLigneDesCouts *= UnSurX;
@@ -435,12 +453,9 @@ if ( EquilibrageApresMoyenneGeometrique == OUI_SPX && Rapport > SEUIL_POUR_EQUIL
 			if ( PlusGrandTerme > 0 ) {
         X = PlusGrandTerme;      
         UnSurX = 1. / X;
-			}
-									
-      if ( ARRONDI_EN_PUISSANCES_DE_2_POUR_EQUILIBRAGE == OUI_SPX ) SPX_ArrondiEnPuissanceDe2( &UnSurX );
-						
+			}									
+      if ( ARRONDI_EN_PUISSANCES_DE_2_POUR_EQUILIBRAGE == OUI_SPX ) SPX_ArrondiEnPuissanceDe2( &UnSurX );						
       Spx->ScaleB[Cnt] *= UnSurX;
-
       /* Scaling de A */
       il    = Mdeb[Cnt];
       ilMax = il + NbTerm[Cnt]; 
@@ -460,9 +475,9 @@ if ( EquilibrageApresMoyenneGeometrique == OUI_SPX && Rapport > SEUIL_POUR_EQUIL
         if ( A[il] > PlusGrandTermeColonne[Indcol[il]] ) PlusGrandTermeColonne[Indcol[il]] = A[il];				
         il++;
       }
-    }
+    }  
 
-    if ( FaireScalingDesCouts == OUI_SPX ) { 
+    if ( FaireScalingDesCouts == OUI_SPX && k < 1 ) { 
       for ( Var = 0 ; Var < NombreDeVariables ; Var++ ) { 
 			  X = C[Var];
         if( X != 0.0  ) {        
@@ -480,8 +495,7 @@ if ( EquilibrageApresMoyenneGeometrique == OUI_SPX && Rapport > SEUIL_POUR_EQUIL
       if ( X > 0  ) {
 			  UnSurX = 1. / X;
 			}
-      if ( ARRONDI_EN_PUISSANCES_DE_2_POUR_EQUILIBRAGE == OUI_SPX ) SPX_ArrondiEnPuissanceDe2( &UnSurX );			
-			
+      if ( ARRONDI_EN_PUISSANCES_DE_2_POUR_EQUILIBRAGE == OUI_SPX ) SPX_ArrondiEnPuissanceDe2( &UnSurX );					
       XMult[Var] = UnSurX;
       Spx->ScaleX[Var] *= UnSurX;
 		
@@ -535,8 +549,6 @@ if ( Phase == 1 ) {
 }
 else {
 
-	/*Spx->ScaleLigneDesCouts = 1;*/
-
 	if ( Spx->ScaleLigneDesCouts < MIN_SCALE_LIGNE_COUTS ) Spx->ScaleLigneDesCouts = MIN_SCALE_LIGNE_COUTS;
 	
   Rapport = PlusGrandTerme / PlusPetitTerme;	
@@ -545,17 +557,17 @@ else {
     # if VERBOSE_SPX_SCALING == 1
 		  printf("Prise en compte des couts dans le scaling:\n");
 	    printf("  Matrice: PlusPetitTerme %e  PlusGrandTerme %e  Rapport %e\n",PlusPetitTerme,PlusGrandTerme,PlusGrandTerme/PlusPetitTerme);
-      PlusGrandTerme = -1.;
-      PlusPetitTerme = LINFINI_SPX;
+      PlusGrandCout = -1.;
+      PlusPetitCout = LINFINI_SPX;
       for ( Var = 0 ; Var < NombreDeVariables ; Var++ ) {
         X = C[Var];				
         if( X != 0.0 ) {		
-          if ( X > PlusGrandTerme ) PlusGrandTerme = X; 
-          if ( X < PlusPetitTerme ) PlusPetitTerme = X;
+          if ( X > PlusGrandCout ) PlusGrandCout = X; 
+          if ( X < PlusPetitCout ) PlusPetitCout = X;
         } 
       }
-      Rapport = PlusGrandTerme / PlusPetitTerme;
-	    printf("  Couts: PlusPetitTerme %e  PlusGrandTerme %e  Rapport %e\n",PlusPetitTerme,PlusGrandTerme,PlusGrandTerme/PlusPetitTerme);			
+      Rapport = PlusGrandCout / PlusPetitCout;
+	    printf("  Couts: PlusPetitCout %e  PlusGrandCout %e  Rapport %e\n",PlusPetitCout,PlusGrandCout,Rapport);			
 			printf("  Le rapport sur la matrice se degrade trop  => on prend les coeffs de scaling de la premiers passe (sans le scaling des couts)\n");
     # endif		
 	  Spx->ScaleLigneDesCouts = ScaleLigneDesCoutsOpt;
@@ -570,26 +582,24 @@ Phase++;
 /* Controle du scaling resultant des cout: si le rapport est trop grand, on refait un scaling
    en tenant compte des cout */
 
-PlusGrandTerme = -1.;
-PlusPetitTerme = LINFINI_SPX;
+PlusGrandCout = -1.;
+PlusPetitCout = LINFINI_SPX;
 for ( Var = 0 ; Var < NombreDeVariables ; Var++ ) {
   X = C[Var];				
   if( X != 0.0 ) {		
-    if ( X > PlusGrandTerme ) PlusGrandTerme = X; 
-    if ( X < PlusPetitTerme ) PlusPetitTerme = X;
+    if ( X > PlusGrandCout ) PlusGrandCout = X; 
+    if ( X < PlusPetitCout ) PlusPetitCout = X;
   } 
 }
-Rapport = PlusGrandTerme / PlusPetitTerme;
+Rapport = PlusGrandCout / PlusPetitCout;
 RapportOptCouts = Rapport;
 
 # if VERBOSE_SPX_SCALING == 1	
-  printf("  Couts: PlusPetitTerme %e  PlusGrandTerme %e  Rapport %e  Rapport initial %e\n",PlusPetitTerme,PlusGrandTerme,
-	          Rapport,RapportIntialDesCouts);
+  printf("  Couts: PlusPetitCout %e  PlusGrandCout %e  Rapport %e  Rapport initial %e\n",PlusPetitCout,PlusGrandCout,Rapport,RapportIntialDesCouts);
 # endif
 	 
 if ( FaireScalingDesCouts == NON_SPX ) {
-	Rapport = PlusGrandTerme / PlusPetitTerme;
-	if ( Rapport > RAPPORT_MAX_COUTS && Rapport > RapportIntialDesCouts ) {
+	if ( RapportOptCouts > RAPPORT_MAX_COUTS && RapportOptCouts > RapportIntialDesCouts ) {
     # if VERBOSE_SPX_SCALING == 1	
 		  printf("  Rapport des couts / Rapport initial trop degrade . On refait un scaling avec les couts \n");
 		# endif			
@@ -608,17 +618,50 @@ if ( FaireScalingDesCouts == NON_SPX ) {
 	}
 }
 
-/* Si le cout max est inferieur a 1 on le remonte a 1 */
-PlusGrandTerme = -1;
-for ( Var = 0 ; Var < NombreDeVariables ; Var++ ) {
-  if( C[Var] != 0.0 ) {		
-    if ( C[Var] > PlusGrandTerme ) PlusGrandTerme = C[Var];
+/* On applique le scaling sur les bornes pour corriger les rapprochements excessifs */
+TypeDeVariable = Spx->TypeDeVariable;
+Xmax = Spx->Xmax;
+Xmin = Spx->Xmin;
+Csv = Spx->Csv;
+ScaleLigneDesCouts = Spx->ScaleLigneDesCouts;
+for ( Var = 0 ; Var < NombreDeVariables ; Var++ ) {    
+  if ( TypeDeVariable[Var] == BORNEE && Xmax[Var] != Xmin[Var] ) { 
+    X0 = Xmax[Var] - Xmin[Var];
+    X = X0 / Spx->ScaleX[Var];
+    if ( X < ECART_MIN_XMAX_XMIN ) {
+      X = X0 / ECART_MIN_XMAX_XMIN;
+      /* Il faut verifier qu'on ne deteriore pas trop le rapport plus grand cout / plus petit cout: ne pas depasser 10^10 */
+      CoutVar = Csv[Var];
+      if ( CoutVar != 0 ) {
+        NouveauCout = ScaleLigneDesCouts * fabs( CoutVar ) * X;
+        if ( NouveauCout > PlusGrandCout ) {
+          if ( NouveauCout / PlusPetitCout > RAPPORT_COUT_LIMITE ) {
+            X = ( RAPPORT_COUT_LIMITE * PlusPetitCout ) / ( ScaleLigneDesCouts * fabs( CoutVar ) );           
+          }
+        }
+        else if ( NouveauCout < PlusPetitCout ) {
+          if ( PlusGrandCout / NouveauCout > RAPPORT_COUT_LIMITE ) {
+            X = PlusGrandCout / ( RAPPORT_COUT_LIMITE * ScaleLigneDesCouts * fabs( CoutVar ) );           
+          }
+        }
+      }
+      if ( ARRONDI_EN_PUISSANCES_DE_2_POUR_EQUILIBRAGE == OUI_SPX ) SPX_ArrondiEnPuissanceDe2( &X );					
+      Spx->ScaleX[Var] = X;
+    }
   }
 }
+PlusPetitCout = LINFINI_SPX;
+for ( Var = 0 ; Var < NombreDeVariables ; Var++ ) {
+  if ( Csv[Var] == 0 ) continue;
+  X = fabs( Csv[Var] ) * ScaleLigneDesCouts * Spx->ScaleX[Var];				
+  if ( X < PlusPetitCout ) PlusPetitCout = X; 
+}
 
-if ( PlusGrandTerme > 0 ) {
-  if ( PlusGrandTerme < 10 ) Spx->ScaleLigneDesCouts *=  10./PlusGrandTerme;
-	else if ( PlusGrandTerme > 1000. ) Spx->ScaleLigneDesCouts *=  1000./PlusGrandTerme;
+/* Si le cout min est trop petit on le remonte pour ne pas le confondre avec une valeur de bruitage dans le cas degenere */
+if ( PlusPetitCout < LINFINI_SPX ) {
+  if ( PlusPetitCout < PLUS_PETIT_COUT_SOUHAITE ) {
+	  Spx->ScaleLigneDesCouts *= PLUS_PETIT_COUT_SOUHAITE / PlusPetitCout;	
+	}
 }
 
 FinScaling:

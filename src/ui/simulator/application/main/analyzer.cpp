@@ -37,7 +37,6 @@
 
 using namespace Yuni;
 
-
 namespace Antares
 {
 namespace Forms
@@ -179,7 +178,7 @@ namespace Forms
 		mainFrm.timerCleanSwapFiles(5000 /*ms*/);
 
 		// Remove the temporary file
-		IO::File::Delete(filename);
+		IO::File::Delete(filename); 
 
 		if (result)
 		{

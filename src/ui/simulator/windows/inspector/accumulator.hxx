@@ -29,7 +29,6 @@
 
 # include <antares/study/filter.h>
 
-
 namespace Antares
 {
 namespace Window
@@ -557,6 +556,27 @@ namespace Inspector
 		}
 	};
 
+	struct PLinkAssetType
+	{
+		typedef Data::AssetType Type;
+		static Type Value(const Data::AreaLink* link)
+		{
+			return link->assetType;
+		}
+		static wxString ConvertToString(const Type v)
+		{
+			switch (v)
+			{
+			case Data::atAC:   return wxT("ac");
+			case Data::atDC:   return wxT("dc");
+			case Data::atGas:   return wxT("gas");
+			case Data::atVirt:   return wxT("virt");
+			case Data::atOther:return wxT("other");
+			}
+			return wxT("ac");
+		}
+	};
+
 
 	struct PLinkHurdlesCost
 	{
@@ -564,6 +584,32 @@ namespace Inspector
 		static Type Value(const Data::AreaLink* link)
 		{
 			return link->useHurdlesCost;
+		}
+		static wxString ConvertToString(const Type v)
+		{
+			return v ? wxT("True") : wxT("False");
+		}
+	};
+
+	struct PLinkPhaseShift
+	{
+		typedef bool Type;
+		static Type Value(const Data::AreaLink* link)
+		{
+			return link->usePST;
+		}
+		static wxString ConvertToString(const Type v)
+		{
+			return v ? wxT("True") : wxT("False");
+		}
+	};
+
+	struct PLinkLoopFlow
+	{
+		typedef bool Type;
+		static Type Value(const Data::AreaLink* link)
+		{
+			return link->useLoopFlow;
 		}
 		static wxString ConvertToString(const Type v)
 		{
@@ -599,6 +645,88 @@ namespace Inspector
 		}
 	};
 
+	/*struct PLinkStyle
+	{
+		typedef wxString Type;
+		static Type Value(const Data::AreaLink* link)
+		{
+			return wxStringFromUTF8(link->style);
+		}
+		static wxString ConvertToString(const Type v)
+		{
+			return v;
+		}
+	};*/
+	struct PLinkStyle
+	{
+		typedef int Type;
+		static Type Value(const Data::AreaLink* link)
+		{
+			return link->style;
+		}
+		static wxString ConvertToString(const Type v)
+		{
+			wxString ret;
+			switch (v)
+			{
+				case 0 :
+					ret = "Plain";
+					break;
+				case 1 :
+					ret = "Dot";
+					break;
+				case 2 :
+					ret = "Dash";
+					break;
+				case 3 :
+					ret = "Dot & Dash";
+					break;
+				default:
+					ret = "Plain";
+					break;
+			}
+			return ret;
+		}
+	};
+	struct PLinkWidth
+	{
+		typedef int Type;
+		static Type Value(const Data::AreaLink* link)
+		{
+			return Math::MinMax(link->linkWidth,1,6);
+		}
+		static wxString ConvertToString(const Type v)
+		{
+			return DoubleToWxString(v);
+		}
+	};
+
+	struct PLinkColor
+	{
+		struct Color
+		{
+			Color(const int c[3])
+			{
+				color[0] = c[0];
+				color[1] = c[1];
+				color[2] = c[2];
+			}
+			int color[3];
+			bool operator == (const Color& rhs) const
+			{
+				return rhs.color[0] == color[0] && rhs.color[1] == color[1] && rhs.color[2] == color[2];
+			}
+		};
+		typedef Color Type;
+		static Type Value(const Data::AreaLink* link)
+		{
+			return Color(link->color);
+		}
+		static wxString ConvertToString(const Type v)
+		{
+			return wxString() << wxT("(") << v.color[0] << wxT(',') << v.color[1] << wxT(',') << v.color[2] << wxT(")");
+		}
+	};
 
 
 	struct PAreaUnsuppliedEnergyCost

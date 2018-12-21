@@ -104,8 +104,14 @@ for ( Var = 0 ; Var < NombreDeVariables ; Var++ ) {
     else ValeurDeXPourPresolve[Var] = BorneSupPourPresolve[Var]; 
   }
   else {
-    /* Le cout de la variable est nul, on la met a 0 */
-    ValeurDeXPourPresolve[Var] = 0.; 
+     /* Le cout de la variable est nul, on la fixe a 0 (ou sur une borne si 0 est hors bornes) */
+	  if (BorneSupPourPresolve[Var] > 0) {
+		  BorneSupPourPresolve[Var] = 0;
+	  }  
+	  if (BorneInfPourPresolve[Var] > BorneSupPourPresolve[Var]) {
+		  BorneSupPourPresolve[Var] = BorneInfPourPresolve[Var];
+	  }
+	  ValeurDeXPourPresolve[Var] = BorneSupPourPresolve[Var]; 
   }
   TypeDeBornePourPresolve[Var] = VARIABLE_FIXE;
 

@@ -149,6 +149,7 @@ namespace Data
 				assert(0 != (data.jit->options & Matrix<>::optFixedSize));
 				assert(data.jit->minWidth == hydroPreproMax);
 			}
+
 			ret = data.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
 
 			return ret;
@@ -183,6 +184,7 @@ namespace Data
 			else
 				intermonthlyCorrelation = 1.;
 		}
+
 
 		if (s.header.version < 350)
 		{
@@ -262,7 +264,18 @@ namespace Data
 		else
 		{
 			buffer.clear() << folder << SEP << areaID << SEP << "energy.txt";
-			ret = data.loadFromCSVFile(buffer, hydroPreproMax, 12, Matrix<>::optFixedSize, &s.dataBuffer) && ret;
+			ret = data.loadFromCSVFile(buffer, hydroPreproMax, 12, mtrxOption, &s.dataBuffer) && ret;
+		}
+
+		if (s.header.version < 640)
+		{
+			// Converting into MWh just after loading generation parameters
+			data.multiplyColumnBy(expectation, 1000.);
+			data.multiplyColumnBy(stdDeviation, 1000.);
+			data.multiplyColumnBy(minimumEnergy, 1000.);
+			data.multiplyColumnBy(maximumEnergy, 1000.);
+
+			data.markAsModified();
 		}
 
 		if (JIT::enabled)

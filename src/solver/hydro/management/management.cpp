@@ -108,6 +108,8 @@ namespace Antares
 
 	void HydroManagement::prepareInflowsScaling(uint numSpace)
 	{
+		auto& calendar = study.calendar;
+
 		study.areas.each([&] (Data::Area& area)
 		{
 			
@@ -122,15 +124,39 @@ namespace Antares
 
 			
 			auto& data = pAreas[numSpace][z];
+				
+			
+			for (uint month = 0; month != 12; ++month)
+			{	
+				
+				uint realmonth = calendar.months[month].realmonth;
 
-			assert(area.hydro.reservoirCapacity != 0 && "Divide by zero");
+				double totalMonthInflows = 0;
 
-			if (not Math::Zero(area.hydro.reservoirCapacity))
-			{
-				for (uint realmonth = 0; realmonth != 12; ++realmonth)
+				
+				uint firstDayOfMonth = calendar.months[month].daysYear.first;
+
+				uint firstDayOfNextMonth = calendar.months[month].daysYear.end;
+
+				for (uint d = firstDayOfMonth; d != firstDayOfNextMonth; ++d)
+					totalMonthInflows += srcinflows[d];
+
+				if (not (area.hydro.reservoirCapacity < 1e-4))
 				{
-					data.inflows[realmonth] = srcinflows[realmonth] / (area.hydro.reservoirCapacity);
-					assert(!Math::NaN(data.inflows[realmonth]) && "nan value detect in inflows");
+					if (area.hydro.reservoirManagement)
+					{
+						
+						data.inflows[realmonth] = totalMonthInflows / (area.hydro.reservoirCapacity);
+						assert(!Math::NaN(data.inflows[month]) && "nan value detect in inflows");
+					}
+					else
+						data.inflows[realmonth] = totalMonthInflows;
+				}
+				else
+				{
+					
+					
+					data.inflows[realmonth] = totalMonthInflows;
 				}
 			}
 		});
@@ -278,7 +304,7 @@ namespace Antares
 		return x * max + (1. - x) * min;
 	}
 
-	void HydroManagement::operator () (double * randomReservoirLevel, uint numSpace)
+	void HydroManagement::operator () (double * randomReservoirLevel, Solver::Variable::State & state, uint y, uint numSpace)
 	{
 		
 		memset(pAreas[numSpace], 0, sizeof(PerArea) * study.areas.size());
@@ -296,8 +322,8 @@ namespace Antares
 		prepareEffectiveDemand(numSpace);
 
 		
-		prepareMonthlyOptimalGenerations(randomReservoirLevel, numSpace);
-		prepareDailyOptimalGenerations(numSpace);
+		prepareMonthlyOptimalGenerations(randomReservoirLevel, y, numSpace);
+		prepareDailyOptimalGenerations(state, y, numSpace);
 	}
 
 

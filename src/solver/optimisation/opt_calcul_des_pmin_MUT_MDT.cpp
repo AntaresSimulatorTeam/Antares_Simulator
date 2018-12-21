@@ -137,17 +137,7 @@ for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays; ++Pays) {
 			}
 			else NbGrpCourbeGuide[Pdt] = (int) ceil( P );
 
-      
-      
-		
-			
-
-
-
-
-
-
-			
+     		
 		}		
 				
     
@@ -166,10 +156,8 @@ for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays; ++Pays) {
 		}
 		else IntervalleDAjustement = MUTetMDT + PetitDelta;
 
-		
+	
 		IntervalleDAjustement = PetitDelta;
-
-	  
 
 		IntervalleDAjustement = MUTetMDT;
     if ( NombreDePasDeTemps - MUTetMDT < IntervalleDAjustement ) IntervalleDAjustement = NombreDePasDeTemps - MUTetMDT;
@@ -201,9 +189,7 @@ for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays; ++Pays) {
 
 
 
-      
-
-			
+     
 			
 
 			if ( PminDuPalierThermiquePendantUneHeure[Palier] * NbGrpOpt[Pdt] > PuissanceMinDuPalierThermique[Pdt] ) {

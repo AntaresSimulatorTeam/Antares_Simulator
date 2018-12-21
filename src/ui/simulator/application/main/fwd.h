@@ -61,6 +61,7 @@ namespace Window
 	class StudyLogs;
 	class BindingConstraint;
 	class Notes;
+	class Sets;
 
 } // namespace Window
 

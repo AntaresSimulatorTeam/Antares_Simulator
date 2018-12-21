@@ -463,7 +463,6 @@ namespace Data
 		delete prepro;
 		delete series;
 
-		/* clusters for paral - bloc added */
 		if(unitCountLastHour)	delete[] unitCountLastHour;
 		if(productionLastHour)	delete[] productionLastHour;
 		if(pminOfAGroup)	delete[] pminOfAGroup;
@@ -496,6 +495,13 @@ namespace Data
 	{
 		if (parentArea)
 			parentArea->invalidate();
+	}
+
+	String Antares::Data::ThermalCluster::getFullName() const
+	{
+		String s;
+		s<<parentArea->name<<"."<<pID;
+		return s;
 	}
 
 
@@ -610,16 +616,13 @@ namespace Data
 			byIndex = nullptr;
 		}
 
+		auto end = mapping.end();
+		for (auto it = mapping.begin(); it != end; ++it)
+			delete it->second;
+		mapping.clear();
+
 		if (not cluster.empty())
-		{
-			auto end = cluster.end();
-			for (auto i = cluster.begin(); i != end; ++i)
-			{
-				delete i->second;
-				i->second = nullptr;
-			}
 			cluster.clear();
-		}
 	}
 
 
@@ -985,7 +988,7 @@ namespace Data
 						break;
 					}
 
-					auto* cluster = new ThermalCluster(area, study.maxNbYearsInParallel);;
+					auto* cluster = new ThermalCluster(area, study.maxNbYearsInParallel);
 
 					// Load data of a thermal cluster from a ini file section
 					if (not ThermalClusterLoadFromSection(study.buffer, *cluster, *section))
@@ -1000,19 +1003,6 @@ namespace Data
 						// temporary reverting to the old naming convention
 						cluster->pID = cluster->name();
 						cluster->pID.toLower();
-					}
-
-					if (study.usedByTheSolver)
-					{
-						// The cluster is disabled. It won't appear in the simulation
-						if (not cluster->enabled)
-						{
-							mapping[cluster->id()] = nullptr;
-							delete cluster;
-							continue;
-						}
-						// done later, when we are sure about the real id
-						// mapping[cluster->id()] = cluster;
 					}
 
 					// Keeping the current value of 'mustrun' somewhere else
@@ -1222,7 +1212,11 @@ namespace Data
 						if (not study.parameters.include.thermal.minStablePower)
 							cluster->minStablePower = 0.;
 						if (not study.parameters.include.thermal.minUPTime)
+						{
 							cluster->minUpDownTime = 1;
+							cluster->minUpTime = 1;
+							cluster->minDownTime = 1;
+						}
 						else
 							cluster->minUpDownTime = Math::Max(cluster->minUpTime, cluster->minDownTime);
 
@@ -1240,11 +1234,9 @@ namespace Data
 					{
 						// This error should never happen
 						logs.error() << "Impossible to add the thermal cluster '" << cluster->name() << "'";
-						mapping[cluster->id()] = nullptr;
 						delete cluster;
 						continue;
 					}
-
 					// keeping track of the cluster
 					mapping[cluster->id()] = cluster;
 
@@ -1288,8 +1280,10 @@ namespace Data
 		Clob buffer;
 		bool ret = true;
 
-		list->each([&] (Data::ThermalCluster& cluster)
+		auto end = list->cluster.end();
+		for (auto it = list->cluster.begin(); it != end; ++it)
 		{
+			auto& cluster = *(it->second);
 			if (cluster.prepro)
 			{
 				assert(cluster.parentArea and "cluster: invalid parent area");
@@ -1307,7 +1301,7 @@ namespace Data
 			}
 			++options.progressTicks;
 			options.pushProgressLogs();
-		});
+		}
 		return ret;
 	}
 
@@ -1320,11 +1314,13 @@ namespace Data
 
 		int ret = 1;
 
-		l->each([&] (const Data::ThermalCluster& cluster)
+		auto end = l->cluster.end();
+		for (auto it = l->cluster.begin(); it != end; ++it)
 		{
+			auto& cluster = *(it->second);
 			if (cluster.series)
 				ret = DataSeriesThermalSaveToFolder(cluster.series, &cluster, folder) and ret;
-		});
+		}
 		return ret;
 	}
 
@@ -1337,15 +1333,17 @@ namespace Data
 		int ret = 1;
 		uint ticks = 0;
 
-		l->each([&] (const Data::ThermalCluster& cluster)
+		auto end = l->mapping.end();
+		for (auto it = l->mapping.begin(); it != end; ++it)
 		{
+			auto& cluster = *(it->second);
 			if (cluster.series)
 			{
-				logs.info() << msg << "  " << (ticks * 100 / (1+ l->cluster.size())) << "% complete";
+				logs.info() << msg << "  " << (ticks * 100 / (1+ l->mapping.size())) << "% complete";
 				ret = DataSeriesThermalSaveToFolder(cluster.series, &cluster, folder) and ret;
 			}
 			++ticks;
-		});
+		}
 		return ret;
 	}
 
@@ -1374,21 +1372,25 @@ namespace Data
 
 	void ThermalClusterListEnsureDataPrepro(ThermalClusterList* list)
 	{
-		list->each([&] (Data::ThermalCluster& cluster)
+		auto end = list->cluster.end();
+		for (auto it = list->cluster.begin(); it != end; ++it)
 		{
+			auto& cluster = *(it->second);
 			if (not cluster.prepro)
 				cluster.prepro = new PreproThermal();
-		});
+		}
 	}
 
 
 	void ThermalClusterListEnsureDataTimeSeries(ThermalClusterList* list)
 	{
-		list->each([&] (Data::ThermalCluster& cluster)
+		auto end = list->cluster.end();
+		for (auto it = list->cluster.begin(); it != end; ++it)
 		{
+			auto& cluster = *(it->second);
 			if (not cluster.series)
 				cluster.series = new DataSeriesThermal();
-		});
+		}
 	}
 
 
@@ -1582,10 +1584,12 @@ namespace Data
 
 	void ThermalClusterList::reverseCalculationOfSpinning()
 	{
-		each([&] (Data::ThermalCluster& cluster)
+		auto end = cluster.end();
+		for (auto it = cluster.begin(); it != end; ++it)
 		{
+			auto& cluster = *(it->second);
 			cluster.reverseCalculationOfSpinning();
-		});
+		}
 	}
 
 
@@ -1880,6 +1884,12 @@ namespace Data
 	}
 
 
+	void ThermalClusterList::remove(iterator i)
+	{
+		auto* c = i->second;
+		cluster.erase(i);
+	}
+
 	bool ThermalClusterList::exists(const Data::ThermalClusterName& id) const
 	{
 		if (not cluster.empty())
@@ -1968,7 +1978,6 @@ namespace Data
 		return checkMinStablePower();
 	}
 
-
 	void ThermalClusterList::enableMustrunForEveryone()
 	{
 		// enabling the mustrun mode
@@ -1986,7 +1995,10 @@ namespace Data
 		TransformNameIntoID(pName, pID);
 	}
 
-
+	bool ThermalCluster::isVisibleOnLayer(const size_t& layerID)const
+	{
+		return parentArea ? parentArea->isVisibleOnLayer(layerID) : false;
+	}
 
 
 

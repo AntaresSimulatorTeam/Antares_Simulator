@@ -245,6 +245,11 @@ namespace Data
 
 		calendarOutput.reset(parameters);
 
+		// In case hydro hot start is enabled, check all conditions are met.
+		// (has to be called after areas load and calendar building)
+		if (usedByTheSolver && !checkHydroHotStart())
+			return false;
+
 		// Reducing memory footprint
 		reduceMemoryUsage();
 

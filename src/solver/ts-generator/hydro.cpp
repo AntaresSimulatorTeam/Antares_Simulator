@@ -62,7 +62,7 @@ namespace TSGenerator
 			auto& hydroseries = *(area.hydro.series);
 
 			hydroseries.ror.    resize(tsCount, HOURS_PER_YEAR);
-			hydroseries.storage.resize(tsCount, 12);
+			hydroseries.storage.resize(tsCount, DAYS_PER_YEAR);
 			hydroseries.count  = tsCount;
 
 			
@@ -277,25 +277,72 @@ namespace TSGenerator
 						EnergieHydrauliqueTotaleMensuelle = colMaxEnergy[realmonth];
 				}
 
+				
+				
+				
+				
+				uint h = calendar.months[month].hours.first;
+				uint end = calendar.months[month].hours.end;
+				uint d = calendar.months[month].daysYear.first;
+				uint dend = calendar.months[month].daysYear.end;
 
 				
-				{
-					double monthlyROR = 1000. * EnergieHydrauliqueTotaleMensuelle * colPOW[realmonth];
-					monthlyROR /= (24. * (double) daysPerMonth);
+				double SIP = 0.;
+				for (uint i = d; i < dend; i++)
+					SIP += area.hydro.inflowPattern[0][i];
 
-					uint h   = calendar.months[month].hours.first;
-					uint end = calendar.months[month].hours.end;
-					for (; h != end; ++h)
-						ror[h] = monthlyROR;
+				if (Math::Zero(SIP))
+				{
+					logs.fatal() << "Sum of monthly inflow patterns equals zero.";
+					return false;
 				}
 
 				
+				double dailyStorage = 0.;
+				double hourlyStorage = 0.;
+				double dailyInflowPattern = 0.;
+				double sumInflowPatterns = SIP;
+				
+				
+				
+				
+				double monthlyROR = EnergieHydrauliqueTotaleMensuelle * colPOW[realmonth];
+
+				for (; h != end; ++h)
 				{
-					double monthlyStorage = 1000. * EnergieHydrauliqueTotaleMensuelle * (1. - colPOW[realmonth]);
-					series.storage[l][realmonth] = monthlyStorage;
-					assert(not Math::NaN(monthlyStorage)
-						&& "TS generator Hydro: NaN value detected in timeseries");
+					uint dayOfHour = h / 24;
+					dailyInflowPattern = area.hydro.inflowPattern[0][dayOfHour];
+					hourlyStorage = round(monthlyROR * dailyInflowPattern / (24. * sumInflowPatterns));
+
+					
+					ror[h] = hourlyStorage;
+
+					monthlyROR -= hourlyStorage;
+					sumInflowPatterns -= dailyInflowPattern / 24.;
 				}
+
+				
+				
+				
+				double monthlyStorage = EnergieHydrauliqueTotaleMensuelle * (1. - colPOW[realmonth]);					
+				
+				sumInflowPatterns = SIP;
+				dailyStorage = 0.;
+				dailyInflowPattern = 0.;
+				for (; d != dend; ++d)
+				{
+					dailyInflowPattern = area.hydro.inflowPattern[0][d];
+					dailyStorage = round(monthlyStorage * dailyInflowPattern / sumInflowPatterns);
+
+					
+					series.storage[l][d] = dailyStorage;
+
+					monthlyStorage -= dailyStorage;
+					sumInflowPatterns -= dailyInflowPattern;
+				}
+
+				assert(not Math::NaN(monthlyStorage)
+					&& "TS generator Hydro: NaN value detected in timeseries");
 
 				if (Antares::Memory::swapSupport)
 				{

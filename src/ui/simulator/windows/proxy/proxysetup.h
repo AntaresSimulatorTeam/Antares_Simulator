@@ -42,7 +42,7 @@ namespace Window
 	/*!
 	** \brief Startup Wizard User Interface
 	*/
-	class LicenseCoultNotConnectToInternetServer final : public wxDialog
+	class LicenseCouldNotConnectToInternetServer final : public wxDialog
 	{
 	public:
 		/*!
@@ -57,9 +57,9 @@ namespace Window
 		**
 		** \param parent The parent window
 		*/
-		LicenseCoultNotConnectToInternetServer(wxWindow* parent);
+		LicenseCouldNotConnectToInternetServer(wxWindow* parent);
 		//! Destructor
-		virtual ~LicenseCoultNotConnectToInternetServer();
+		virtual ~LicenseCouldNotConnectToInternetServer();
 		//@}
 
 
@@ -70,11 +70,13 @@ namespace Window
 	private:
 		void onClose(void*);
 		void onProceed(void*);
+		void toggleProxySettings();
+		void evtToggleUseProxy(wxCommandEvent &);
 		void onInternalMotion(wxMouseEvent&);
 
 
 	private:
-
+		wxCheckBox* pProxyEnabled;
 		wxTextCtrl* pEditProxyHost;
 		wxTextCtrl* pEditProxyPort;
 		wxTextCtrl* pEditProxyLogin;
@@ -86,7 +88,7 @@ namespace Window
 		wxSizer* pFlexSizer;
 		bool pCanceled;
 
-	}; // class LicenseCoultNotConnectToInternetServer
+	}; // class LicenseCoudtNotConnectToInternetServer
 
 
 

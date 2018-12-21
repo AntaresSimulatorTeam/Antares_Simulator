@@ -144,6 +144,7 @@ namespace LINK_NAMESPACE
 	inline void Links::weekForEachArea(State&, uint numSpace)
 	{
 		// do nothing
+		UNUSED_VARIABLE(numSpace);
 	}
 
 

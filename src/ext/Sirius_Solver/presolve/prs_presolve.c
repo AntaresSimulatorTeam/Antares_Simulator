@@ -267,7 +267,7 @@ while ( Relancer == OUI_PNE && NbCycles < 5 /*5*/ && Pne->YaUneSolution != PROBL
 	  }
   }
 	else {	
-	  PRS_ColonnesColineaires( Presolve, &NbModifications );
+    PRS_ColonnesColineaires( Presolve, &NbModifications ); 
 	}
 	# if TRACES == 1
 	  if ( Pne->YaUneSolution != OUI_PNE ) printf("Probleme infaisable apres PRS_ColonnesColineaires\n");
@@ -327,11 +327,27 @@ ContrainteBornanteSuperieurement = Presolve->ContrainteBornanteSuperieurement;
 Marge = 1.e-5;  
 
 for ( Var = 0 ; Var < Pne->NombreDeVariablesTrav ; Var++ ) {																																					
-  if ( TypeDeBornePourPresolve[Var] == VARIABLE_FIXE ) { /* C'est entre autres toujours vrai si c'est dans les donnees de depart */		
+  if ( TypeDeBornePourPresolve[Var] == VARIABLE_FIXE ) { /* C'est entre autres toujours vrai si c'est dans les donnees de depart */
     UTrav[Var] = ValeurDeXPourPresolve[Var];
     UminTrav[Var] = BorneInfPourPresolve[Var];
     UmaxTrav[Var] = BorneSupPourPresolve[Var];		
-    TypeDeBorneTrav[Var] = TypeDeBornePourPresolve[Var];
+
+    if ( Pne->YaDesVariablesEntieres == NON_PNE ) {
+      /* Si on est en continu, on ne sait pas (pour l'instant) recalculer exactement les variables
+	       duales des contraintes quand on fait des substitutions de variables. Donc on prefere ne pas
+		     faire ce genre de presolve. Todo: stocker toutes les transfromations de la matrice pour
+		     recalculer exactement les variables duales. */
+			if ( TypeDeBorneTrav[Var] != VARIABLE_FIXE ) {
+        TypeDeBorneTrav[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+			}
+		  else {
+        TypeDeBorneTrav[Var] = VARIABLE_FIXE;
+		  }					
+    }
+		else {
+      TypeDeBorneTrav[Var] = TypeDeBornePourPresolve[Var];
+		}
+		
 		continue;
 	}
 	else if ( ConserverLaBorneInfDuPresolve[Var] == OUI_PNE ) {			

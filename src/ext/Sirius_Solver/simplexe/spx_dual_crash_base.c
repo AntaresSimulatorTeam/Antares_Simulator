@@ -854,6 +854,17 @@ Spx->Xmax      [Spx->NombreDeVariables] = 0.;
 Seuil = SEUIL_DE_VIOLATION_DE_BORNE_NON_NATIVE * Spx->ScaleB[Cnt];
 if ( Seuil < SEUIL_MIN_DE_VIOLATION_DE_BORNE_NON_NATIVE ) Seuil = SEUIL_MIN_DE_VIOLATION_DE_BORNE_NON_NATIVE;
 else if ( Seuil > SEUIL_MAX_DE_VIOLATION_DE_BORNE_NON_NATIVE ) Seuil = SEUIL_MAX_DE_VIOLATION_DE_BORNE_NON_NATIVE;
+
+if ( fabs( Spx->B[Cnt] ) > 1.e+10 ) {
+  if ( Seuil < 1.e-3 ) Seuil = 1.e-3;
+}
+else if ( fabs( Spx->B[Cnt] ) > 1.e+9 ) {
+  if ( Seuil < 1.e-4 ) Seuil = 1.e-4;
+}
+else if ( fabs( Spx->B[Cnt] ) > 1.e+6 ) {
+  if ( Seuil < 1.e-5 ) Seuil = 1.e-5;
+}
+
 Spx->SeuilDeViolationDeBorne[Spx->NombreDeVariables] = Seuil;
 
 Spx->SeuilDAmissibiliteDuale1[Spx->NombreDeVariables] = SEUIL_ADMISSIBILITE_DUALE_1;

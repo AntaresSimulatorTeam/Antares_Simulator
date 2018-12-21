@@ -73,6 +73,7 @@ void OPT_RestaurerLesDonneesSelonManoeuvrabilite_1( PROBLEME_HEBDO * ProblemeHeb
 		for ( Interco = 0 ; Interco < ProblemeHebdo->NombreDInterconnexions ; Interco++ ) {
 			ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco] = ValeursDeNTCRef->ValeurDeNTCOrigineVersExtremite[Interco];
 			ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco] = ValeursDeNTCRef->ValeurDeNTCExtremiteVersOrigine[Interco];
+			ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco] = ValeursDeNTCRef->ValeurDeLoopFlowOrigineVersExtremite[Interco];
 		}
 	}
 
@@ -131,7 +132,6 @@ void OPT_RestaurerLesDonneesSelonManoeuvrabilite_1( PROBLEME_HEBDO * ProblemeHeb
 			
 			
 			
-
 			
 
 

@@ -208,7 +208,7 @@ namespace Variable
 
 	template<class ChildT, class NextT, class VCardT>
 	inline void
-	IVariable<ChildT,NextT,VCardT>::weekForEachArea(State& state, unsigned int numSpace)	/* gp : modified */
+	IVariable<ChildT,NextT,VCardT>::weekForEachArea(State& state, unsigned int numSpace)
 	{
 		// Next variable
 		NextType::weekForEachArea(state, numSpace);
@@ -244,7 +244,7 @@ namespace Variable
 
 	template<class ChildT, class NextT, class VCardT>
 	inline void
-	IVariable<ChildT,NextT,VCardT>::hourForEachLink(State& state, unsigned int numSpace)	/* gp : modified */
+	IVariable<ChildT,NextT,VCardT>::hourForEachLink(State& state, unsigned int numSpace)
 	{
 		// Next item in the list
 		NextType::hourForEachLink(state, numSpace);
@@ -278,8 +278,66 @@ namespace Variable
 		{
 			// And only if we match the current data level _and_ precision level
 			if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
-				&& (precision & VCardType::precision))
+				// Trying to use "VCardReservoirLevel::spatialAggregate" does not work here, another way has to be found,
+				// avoiding to use "VCardReservoirLevel::Caption()", which is not generic enough.
+				&& (precision & VCardType::precision) /*&& (ChildT::VCardType::spatialAggregate != Category::noSpatialAggregate)*/)
 			{
+				// Districts output & reservoir levels variable ("mc-all/areas/<district>") : prints "N/A" on reservoir levels columns
+				// See what "ChildT::VCardType::spatialAggregate" is, and try not to select reservoir levels using its "Caption()".
+				// if (VCardType::VCardOrigin::spatialAggregate != Category::noSpatialAggregate)
+				if (std::strcmp(ChildT::VCardType::Caption(), "H. LEV") == 0)
+				{
+					if (!results.data.resLvlColRetrieved)
+					{
+						// Only min and max have to be printed in when dealing with "id-{precision}.txt"
+						if (fileLevel & Category::id)
+							for (int i = 0; i < 2; i++)
+								results.data.ReservoirLvlColIdx.push_back(results.data.columnIndex + i);
+						// All variable results are printed when dealing with "values-{precision}.txt"
+						else
+							for (int i = 0; i < ResultsType::count; i++)
+								results.data.ReservoirLvlColIdx.push_back(results.data.columnIndex + i);
+
+						results.data.resLvlColRetrieved = true;
+					}
+				}
+
+				// Districts output & water value variable ("mc-all/areas/<district>") : prints "N/A" on water value columns
+				if (std::strcmp(ChildT::VCardType::Caption(), "H. VAL") == 0)
+				{
+					if (!results.data.waterValColRetrieved)
+					{
+						// Only min and max have to be printed in when dealing with "id-{precision}.txt"
+						if (fileLevel & Category::id)
+							for (int i = 0; i < 2; i++)
+								results.data.waterValuesColIdx.push_back(results.data.columnIndex + i);
+						// All variable results are printed when dealing with "values-{precision}.txt"
+						else
+							for (int i = 0; i < ResultsType::count; i++)
+								results.data.waterValuesColIdx.push_back(results.data.columnIndex + i);
+
+						results.data.waterValColRetrieved = true;
+					}
+				}
+
+				// Districts output & reservoir levels variable ("mc-all/areas/<district>") : prints "N/A" on overflows columns
+				if (std::strcmp(ChildT::VCardType::Caption(), "H. OVFL") == 0)
+				{
+					if (!results.data.ovfColRetrieved)
+					{
+						// Only min and max have to be printed in when dealing with "id-{precision}.txt"
+						if (fileLevel & Category::id)
+							for (int i = 0; i < 2; i++)
+								results.data.OverflowsColIdx.push_back(results.data.columnIndex + i);
+						// All variable results are printed when dealing with "values-{precision}.txt"
+						else
+							for (int i = 0; i < ResultsType::count; i++)
+								results.data.OverflowsColIdx.push_back(results.data.columnIndex + i);
+
+						results.data.ovfColRetrieved = true;
+					}
+				}
+
 				VariableAccessorType::template
 					BuildSurveyReport<VCardType>(results, pResults, dataLevel, fileLevel, precision);
 			}
@@ -292,7 +350,7 @@ namespace Variable
 
 	template<class ChildT, class NextT, class VCardT>
 	inline void
-	IVariable<ChildT,NextT,VCardT>::buildAnnualSurveyReport(SurveyResults& results, int dataLevel, int fileLevel, int precision, uint numSpace) const	/* gp : modified */
+	IVariable<ChildT,NextT,VCardT>::buildAnnualSurveyReport(SurveyResults& results, int dataLevel, int fileLevel, int precision, uint numSpace) const
 	{
 		// Generating value for the area
 		// Only if there are some results to export...
@@ -303,12 +361,12 @@ namespace Variable
 				&& (precision & VCardType::precision))
 			{
 				// getting its imtermediate results
-				static_cast<const ChildT*>(this)->localBuildAnnualSurveyReport(results, fileLevel, precision, numSpace);	/* gp : modified */
+				static_cast<const ChildT*>(this)->localBuildAnnualSurveyReport(results, fileLevel, precision, numSpace);
 			}
 		}
 		// Ask to the next item in the static list to export
 		// its results as well
-		NextType::buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);	/* gp : modified */
+		NextType::buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
 	}
 
 
@@ -316,12 +374,42 @@ namespace Variable
 	inline void
 	IVariable<ChildT,NextT,VCardT>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
 	{
-		// Generate the Digest for the local results
+		// Generate the Digest for the local results (areas part)
 		if (VCardType::columnCount != 0
 			&& (VCardType::categoryDataLevel & Category::setOfAreas
 				|| VCardType::categoryDataLevel & Category::area
 				|| VCardType::categoryDataLevel & Category::link))
 		{
+			// We don't print usual results in the digest file for reservoir levels (see above for improvement)
+			if (std::strcmp(ChildT::VCardType::Caption(), "H. LEV") == 0)
+			{
+				if (!results.data.resLvlColRetrieved)
+				{
+					results.data.ReservoirLvlColIdx.push_back(results.data.columnIndex);
+					results.data.resLvlColRetrieved = true;
+				}
+			}
+
+			// We don't print usual results in the digest file for water values
+			if (std::strcmp(ChildT::VCardType::Caption(), "H. VAL") == 0)
+			{
+				if (!results.data.waterValColRetrieved)
+				{
+					results.data.waterValuesColIdx.push_back(results.data.columnIndex);
+					results.data.waterValColRetrieved = true;
+				}
+			}
+
+			// We don't print usual results in the digest file for overflows (see above for improvement)
+			if (std::strcmp(ChildT::VCardType::Caption(), "H. OVFL") == 0)
+			{
+				if (!results.data.ovfColRetrieved)
+				{
+					results.data.OverflowsColIdx.push_back(results.data.columnIndex);
+					results.data.ovfColRetrieved = true;
+				}
+			}
+
 			VariableAccessorType::template BuildDigest<VCardT>(results, pResults, digestLevel, dataLevel);
 		}
 		// Ask to build the digest to the next variable
@@ -331,7 +419,7 @@ namespace Variable
 
 	template<class ChildT, class NextT, class VCardT>
 	inline void
-	IVariable<ChildT,NextT,VCardT>::beforeYearByYearExport(uint year, uint numspace)	/* gp : modified */
+	IVariable<ChildT,NextT,VCardT>::beforeYearByYearExport(uint year, uint numspace)
 	{
 		NextType:: beforeYearByYearExport(year, numspace);
 	}
@@ -383,7 +471,7 @@ namespace Variable
 	template<class ChildT, class NextT, class VCardT>
 	template<class SearchVCardT, class O>
 	inline void
-	IVariable<ChildT,NextT,VCardT>::computeSpatialAggregateWith(O& out, uint numSpace)	/* gp : modified */
+	IVariable<ChildT,NextT,VCardT>::computeSpatialAggregateWith(O& out, uint numSpace)
 	{
 		// if this variable has the vcard we are looking for,
 		// then we will add our results
@@ -395,7 +483,7 @@ namespace Variable
 				Yuni::Static::Type::StrictlyEqual<VCardT,SearchVCardT>::Yes, // To avoid instanciation
 				VCardT::spatialAggregate, // The spatial cluster operation to perform
 				VCardType // The VCard
-				>::Perform(out, *(static_cast<ChildT*>(this)), numSpace);	/* gp : modified */
+				>::Perform(out, *(static_cast<ChildT*>(this)), numSpace);
 			return;
 		}
 		// Otherwise we keep looking
@@ -442,7 +530,7 @@ namespace Variable
 	template<class ChildT, class NextT, class VCardT>
 	template<class VCardToFindT>
 	inline const double*
-	IVariable<ChildT,NextT,VCardT>::retrieveHourlyResultsForCurrentYear(uint numSpace) const	/* gp : modified */
+	IVariable<ChildT,NextT,VCardT>::retrieveHourlyResultsForCurrentYear(uint numSpace) const
 	{
 		typedef RetrieveResultsAssignment<
 			Yuni::Static::Type::StrictlyEqual<VCardT,VCardToFindT>::Yes> AssignT;
@@ -530,7 +618,7 @@ namespace Variable
 
 	template<class ChildT, class NextT, class VCardT>
 	inline Antares::Memory::Stored<double>::ConstReturnType
-	IVariable<ChildT,NextT,VCardT>::retrieveRawHourlyValuesForCurrentYear(uint column, uint /* numSpace */) const	/* gp : modified */
+	IVariable<ChildT,NextT,VCardT>::retrieveRawHourlyValuesForCurrentYear(uint column, uint /* numSpace */) const
 	{
 		return HourlyResultsForCurrentYear<VCardType::columnCount>::Get(pResults, column);
 	}

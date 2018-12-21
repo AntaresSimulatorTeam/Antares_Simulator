@@ -154,11 +154,13 @@ namespace Forms
 		EVT_MENU(mnIDRunTheSimulation, ApplWnd::evtOnRunSimulation)
 		EVT_MENU(mnIDRunTheTSGenerators, ApplWnd::evtOnRunTSGenerators)
 		EVT_MENU(mnIDRunTheTSAnalyzer, ApplWnd::evtOnRunTSAnalyzer)
+		EVT_MENU(mnIDRunTheConstraintsBuilder, ApplWnd::evtOnRunConstraintsBuilder)
 		// Tools
 		EVT_MENU(mnIDCleanAStudyFolder, ApplWnd::evtOnCleanStudyFolder)
 
 		// Options
 		EVT_MENU(mnIDOptionTempFolder, ApplWnd::evtOnOptionsTempFolder)
+		EVT_MENU(mnIDOptionConfigureDistricts, ApplWnd::evtOnOptionsDistricts)
 		EVT_MENU(mnIDOptionConfigureMCScenarioPlaylist, ApplWnd::evtOnOptionsMCPlaylist)
 		EVT_MENU(mnIDOptionConfigureMCScenarioBuilder, ApplWnd::evtOnOptionsMCScenarioBuilder)
 		EVT_MENU(mnIDOptionOptimizationPrefs, ApplWnd::evtOnOptionsOptimizationPrefs)
@@ -182,15 +184,18 @@ namespace Forms
 		// Help
 		EVT_MENU(mnIDHelpAbout, ApplWnd::evtOnHelpAbout)
 		EVT_MENU(mnIDHelpPDFGeneralReferenceGuide, ApplWnd::evtOnHelpPDFGeneralReferenceGuide)
+		EVT_MENU(mnIDHelpPDFOptimizationProblemsFormulation, ApplWnd::evtOnHelpPDFOptimizationProblemsFormulation)
 		EVT_MENU(mnIDHelpPDFSystemMapEditorReferenceGuide, ApplWnd::evtOnHelpPDFSystemMapEditorReferenceGuide)
+		EVT_MENU(mnIDHelpPDFExamplesLibrary, ApplWnd::evtOnHelpPDFExamplesLibrary)
 		EVT_MENU(mnIDHelpContinueOnline, ApplWnd::evtOnHelpContinueOnline)
 		EVT_MENU(mnIDHelpContinueOffline, ApplWnd::evtOnHelpContinueOffline)
 		EVT_MENU(mnIDHelpShowID, ApplWnd::evtOnShowID)
 
 
+
 		EVT_MENU(mnInternalLogMessage,    ApplWnd::onLogMessage)
 		EVT_MENU(mnIDLaunchAnalyzer,  ApplWnd::evtLaunchAnalyzer)
-
+		EVT_MENU(mnIDLaunchConstraintsBuilder,  ApplWnd::evtLaunchConstraintsBuilder)
 
 		// Context menu : Operator for selected cells (grid)
 		EVT_MENU(mnIDPopupOpNone,      ApplWnd::evtOnContextMenuChangeOperator)
@@ -526,6 +531,7 @@ namespace Forms
 			EnableItem(menu, mnIDRunTheSimulation, opened);
 			EnableItem(menu, mnIDRunTheTSGenerators, opened);
 			EnableItem(menu, mnIDRunTheTSAnalyzer, opened);
+			EnableItem(menu, mnIDRunTheConstraintsBuilder, opened);
 
 			// Options
 			EnableItem(menu, mnIDOptionConfigureMCScenarioBuilder, opened);
@@ -567,9 +573,11 @@ namespace Forms
 		resetDefaultStatusBarText();
 		gridOperatorSelectedCellsUpdateResult(pGridSelectionAttachedGrid);
 
-		// reload the user notes
-		if (not aboutToQuit and study)
+		// reload the user notes and districts
+		if (not aboutToQuit and study) {
 			loadUserNotes();
+			loadSets();
+		}
 
 		// Force the focus to the main form
 		// This action is mandatory to have the shortcuts of the map
@@ -715,7 +723,7 @@ namespace Forms
 	class JobLoadScenarioBuilder final : public Toolbox::Jobs::Job
 	{
 	public:
-		JobLoadScenarioBuilder(const Data::Study& study) :
+		JobLoadScenarioBuilder(Data::Study& study) :
 			Toolbox::Jobs::Job(wxT("Scenario Builder"), wxT("Loading data"),
 				"images/32x32/open.png"),
 			pStudy(study),
@@ -747,7 +755,7 @@ namespace Forms
 
 	private:
 		//! Our study
-		const Data::Study& pStudy;
+		Data::Study& pStudy;
 		//!
 		Data::ScenarioBuilder::Sets*  pSets;
 

@@ -11,7 +11,7 @@ set(SRC_EXT_SOLVER_H2O_DAILY
 	hydro/daily/h2o_j_instanciation.c
 	hydro/daily/h2o_j_optimiser_un_mois.c
 	hydro/daily/h2o_j_resoudre_le_probleme_lineaire.c
-  hydro/daily/h2o_j_lisser_les_sur_turbines.c
+	hydro/daily/h2o_j_lisser_les_sur_turbines.c
 	hydro/daily/h2o_j_sys.h
 )
 
@@ -28,6 +28,20 @@ set(SRC_EXT_SOLVER_H2O_MONTHLY
 	hydro/monthly/h2o_m_optimiser_une_annee.c
 	hydro/monthly/h2o_m_resoudre_le_probleme_lineaire.c
 	hydro/monthly/h2o_m_sys.h
+)
+
+set(SRC_EXT_SOLVER_H2O2_DAILY
+	hydro/daily2/h2o2_j_construire_les_contraintes.c
+	hydro/daily2/h2o2_j_construire_les_variables.c
+	hydro/daily2/h2o2_j_donnees_mensuelles.h
+	hydro/daily2/h2o2_j_donnees_optimisation.h
+	hydro/daily2/h2o2_j_fonctions.h
+	hydro/daily2/h2o2_j_free.c
+	hydro/daily2/h2o2_j_initialiser_les_bornes_des_variables.c
+	hydro/daily2/h2o2_j_initialiser_les_second_membre.c
+	hydro/daily2/h2o2_j_instanciation.c
+	hydro/daily2/h2o2_j_optimiser_un_mois.c
+	hydro/daily2/h2o2_j_resoudre_le_probleme_lineaire.c
 )
 
 set(SRC_MANAGEMENT
@@ -47,6 +61,7 @@ macro(add_solver_hydro  suffix)
 	add_library(libantares-solver-hydro${suffix}
 		${SRC_EXT_SOLVER_H2O_DAILY}
 		${SRC_EXT_SOLVER_H2O_MONTHLY}
+		${SRC_EXT_SOLVER_H2O2_DAILY}
 		${SRC_MANAGEMENT} )
 
 	target_link_libraries(libantares-solver-hydro${suffix}

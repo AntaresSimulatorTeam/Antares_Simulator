@@ -28,6 +28,7 @@
 #include "prepro.h"
 #include <wx/stattext.h>
 #include "../../toolbox/components/datagrid/renderer/area/hydroprepro.h"
+#include "../../toolbox/components/datagrid/renderer/area/inflowpattern.h"
 #include "../../toolbox/components/datagrid/renderer/area/hydromonthlypower.h"
 #include "../../toolbox/components/button.h"
 #include "../../toolbox/validator.h"
@@ -53,13 +54,7 @@ namespace Hydro
 		pArea(nullptr),
 		pComponentsAreReady(false),
 		pSupport(nullptr),
-		pIntermonthlyBreakdown(nullptr),
-		pIntermonthlyCorrelation(nullptr),
-		pInterdailyBreakdown(nullptr),
-		pIntradailyModulation(nullptr),
-		pReservoirCapacity(nullptr),
-		pLabelReservoirCapacity(nullptr),
-		pReservoirManagement(nullptr)
+		pIntermonthlyCorrelation(nullptr)
 	{
 		OnStudyClosed.connect(this, &Prepro::onStudyClosed);
 		if (notifier)
@@ -79,6 +74,7 @@ namespace Hydro
 			pSupport = new Component::Panel(this);
 			sizer->Add(pSupport, 1, wxALL|wxEXPAND);
 		}
+
 		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 		pSupport->SetSizer(sizer);
 
@@ -90,119 +86,39 @@ namespace Hydro
 			left  = wxLEFT  | wxALIGN_LEFT  | wxALIGN_CENTER_VERTICAL,
 		};
 
-		auto* pGrid = new wxFlexGridSizer(5, 0, 8);
-		sizer->Add(pGrid, 0, wxALL, 15);
 
+		wxBoxSizer* sizerH = new wxBoxSizer(wxHORIZONTAL);
+		sizer->Add(sizerH, 0, wxALL | wxEXPAND | wxFIXED_MINSIZE, 15);
 		// Options
 		{
-			pGrid->Add(Component::CreateLabel(pSupport, wxT("Options"), false, true), 0, right);
-		}
-		// Intermonthly breakdown
-		{
-			pGrid->Add(Component::CreateLabel(pSupport, wxT("    Inter-monthly breakdown")), 0, right);
-
-			auto* edit = new wxTextCtrl(pSupport, wxID_ANY, wxT("0.0"),
-				wxDefaultPosition, ourDefaultSize, 0, Toolbox::Validator::Numeric());
-			pGrid->Add(edit, 0, wxALL|wxEXPAND);
-			pIntermonthlyBreakdown = edit;
+			sizerH->Add(Component::CreateLabel(pSupport, wxT("Options"), false, true), 0, right);
 		}
 		// Intermonthly correlation
 		{
-			pGrid->Add(Component::CreateLabel(pSupport, wxT("  Inter-monthly correlation")), 0, right);
+			sizerH->Add(Component::CreateLabel(pSupport, wxT("  Inter-monthly correlation")), 0, right);
 
 			auto* edit = new wxTextCtrl(pSupport, wxID_ANY, wxT("0.0"),
 				wxDefaultPosition, ourDefaultSize, 0, Toolbox::Validator::Numeric());
-			pGrid->Add(edit, 0, wxALL|wxEXPAND);
+			sizerH->Add(edit, 0, wxALL| wxFIXED_MINSIZE);
 			pIntermonthlyCorrelation = edit;
 		}
-		// empty
-		{
-			pGrid->AddSpacer(10);
-		}
-		// Interdaily breakdown
-		{
-			pGrid->Add(Component::CreateLabel(pSupport, wxT("Inter-daily breakdown")), 0, right);
-
-			auto* edit = new wxTextCtrl(pSupport, wxID_ANY, wxT("0.0"),
-				wxDefaultPosition, ourDefaultSize, 0, Toolbox::Validator::Numeric());
-			pGrid->Add(edit, 0, wxALL|wxEXPAND);
-			pInterdailyBreakdown = edit;
-		}
-		// Interdaily modulation
-		{
-			pGrid->Add(Component::CreateLabel(pSupport, wxT("Intra-daily modulation")), 0, right);
-
-			auto* edit = new wxTextCtrl(pSupport, wxID_ANY, wxT("0.0"),
-				wxDefaultPosition, ourDefaultSize, 0, Toolbox::Validator::Numeric());
-			pGrid->Add(edit, 0, wxALL|wxEXPAND);
-			pIntradailyModulation = edit;
-		}
-		// Space
-		{
-			enum { verticalSpace = 10 };
-			pGrid->AddSpacer(verticalSpace);
-			pGrid->AddSpacer(verticalSpace);
-			pGrid->AddSpacer(verticalSpace);
-			pGrid->AddSpacer(verticalSpace);
-			pGrid->AddSpacer(verticalSpace);
-		}
-		// empty
-		{
-			pGrid->Add(Component::CreateLabel(pSupport, wxT("   Reservoir"), false, true), 0, right);
-		}
-		// Reservoir management
-		{
-			pGrid->Add(Component::CreateLabel(pSupport, wxT("Reservoir management")), 0, right);
-
-			auto* button = new Component::Button(pSupport, wxT("Yes"));
-			button->menu(true);
-			button->onPopupMenu(this, &Prepro::onToggleReservoirManagement);
-			pGrid->Add(button, 0, left);
-			pReservoirManagement = button;
-		}
-		// Reservoir capacity
-		{
-			auto* label = Component::CreateLabel(pSupport, wxT("Reservoir capacity (GWh)"));
-			pLabelReservoirCapacity = label;
-			pGrid->Add(label, 0, right);
-
-			auto* edit = new wxTextCtrl(pSupport, wxID_ANY, wxT("0.0"),
-				wxDefaultPosition, ourDefaultSize, 0, Toolbox::Validator::Numeric());
-			pGrid->Add(edit, 0, wxALL|wxEXPAND);
-			pReservoirCapacity = edit;
-		}
-
-		pGrid->SetItemMinSize(pIntermonthlyBreakdown, 64, 10);
-		pGrid->SetItemMinSize(pReservoirCapacity, 64, 10);
-
 
 		wxBoxSizer* ssGrids = new wxBoxSizer(wxHORIZONTAL);
 		ssGrids->Add(new Component::Datagrid::Component(pSupport,
 			new Component::Datagrid::Renderer::HydroPrepro(this, pInputAreaSelector), wxT("Overall monthly hydro Energy (ROR + Storage)")),
 			4, wxALL|wxEXPAND, 5);
 
-		ssGrids->Add(new wxStaticLine(pSupport, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL), 0, wxALL|wxEXPAND);
+		ssGrids->Add(new wxStaticLine(pSupport, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL), 0, wxALL | wxEXPAND);
 
 		ssGrids->Add(new Component::Datagrid::Component(pSupport,
-			new Component::Datagrid::Renderer::HydroMonthlyPower(this, pInputAreaSelector), wxT("Hydro storage daily maximum Power")),
-			3, wxALL|wxEXPAND, 5);
+			new Component::Datagrid::Renderer::InflowPattern(this, pInputAreaSelector), wxT("Inflow Pattern")),
+			2, wxALL | wxEXPAND, 5);
+
 
 		sizer->Add(ssGrids, 1, wxALL|wxEXPAND);
 		sizer->Layout();
-
-
-		pInterdailyBreakdown->Connect(pInterdailyBreakdown->GetId(), wxEVT_COMMAND_TEXT_UPDATED,
-			wxCommandEventHandler(Prepro::onInterdailyBreakdownChanged), nullptr, this);
-		pIntradailyModulation->Connect(pIntradailyModulation->GetId(), wxEVT_COMMAND_TEXT_UPDATED,
-			wxCommandEventHandler(Prepro::onIntradailyModulationChanged), nullptr, this);
-
 		pIntermonthlyCorrelation->Connect(pIntermonthlyCorrelation->GetId(), wxEVT_COMMAND_TEXT_UPDATED,
 			wxCommandEventHandler(Prepro::onIntermonthlyCorrelationChanged), nullptr, this);
-		pIntermonthlyBreakdown->Connect(pIntermonthlyBreakdown->GetId(), wxEVT_COMMAND_TEXT_UPDATED,
-			wxCommandEventHandler(Prepro::onIntermonthlyBreakdownChanged), nullptr, this);
-
-		pReservoirCapacity->Connect(pReservoirCapacity->GetId(), wxEVT_COMMAND_TEXT_UPDATED,
-			wxCommandEventHandler(Prepro::onReservoirCapacityChanged), nullptr, this);
 	}
 
 
@@ -226,36 +142,13 @@ namespace Hydro
 			else
 				GetSizer()->Show(pSupport, true);
 
-			pIntermonthlyBreakdown->ChangeValue(wxString()  << area->hydro.intermonthlyBreakdown);
 			pIntermonthlyCorrelation->ChangeValue(wxString()<< area->hydro.prepro->intermonthlyCorrelation);
-			pInterdailyBreakdown->ChangeValue(wxString()    << area->hydro.interDailyBreakdown);
-			pIntradailyModulation->ChangeValue(wxString()   << area->hydro.intraDailyModulation);
-			pReservoirCapacity->ChangeValue(wxString()      << (area->hydro.reservoirCapacity / 1000.));
-			if (area->hydro.reservoirManagement)
-			{
-				pReservoirManagement->caption(wxT("Yes"));
-				pReservoirManagement->image("images/16x16/light_green.png");
-				pLabelReservoirCapacity->Enable(true);
-			}
-			else
-			{
-				pReservoirManagement->caption(wxT("No"));
-				pReservoirManagement->image("images/16x16/light_orange.png");
-				pLabelReservoirCapacity->Enable(false);
-			}
 		}
 		else
 		{
 			if (pComponentsAreReady)
 			{
-				pIntermonthlyBreakdown->ChangeValue(wxString(wxT("0.0")));
 				pIntermonthlyCorrelation->ChangeValue(wxString(wxT("0.0")));
-				pInterdailyBreakdown->ChangeValue(wxString(wxT("0.0")));
-				pIntradailyModulation->ChangeValue(wxString(wxT("0.0")));
-				pReservoirCapacity->ChangeValue(wxString(wxT("0")));
-				pReservoirManagement->caption(wxT("No"));
-				pReservoirManagement->image("images/16x16/light_orange.png");
-				pLabelReservoirCapacity->Enable(false);
 			}
 		}
 	}
@@ -283,87 +176,6 @@ namespace Hydro
 	}
 
 
-	void Prepro::onIntermonthlyBreakdownChanged(wxCommandEvent& evt)
-	{
-		if (pArea)
-		{
-			if (evt.GetString().empty())
-				return;
-			double d;
-			evt.GetString().ToDouble(&d);
-			if (not Math::Equals(d, pArea->hydro.intermonthlyBreakdown))
-			{
-				if (d < 0.)
-				{
-					d = 0.;
-					pIntermonthlyBreakdown->ChangeValue(wxT("0.0"));
-				}
-				pArea->hydro.intermonthlyBreakdown = d;
-				MarkTheStudyAsModified();
-			}
-		}
-	}
-
-
-	void Prepro::onInterdailyBreakdownChanged(wxCommandEvent& evt)
-	{
-		if (pArea)
-		{
-			if (evt.GetString().empty())
-				return;
-			double d;
-			evt.GetString().ToDouble(&d);
-			if (not Math::Equals(d, pArea->hydro.interDailyBreakdown))
-			{
-				pArea->hydro.interDailyBreakdown = d;
-				MarkTheStudyAsModified();
-			}
-		}
-	}
-
-
-	void Prepro::onIntradailyModulationChanged(wxCommandEvent& evt)
-	{
-		if (pArea)
-		{
-			if (evt.GetString().empty())
-				return;
-			double d;
-			evt.GetString().ToDouble(&d);
-			if (not Math::Equals(d, pArea->hydro.intraDailyModulation))
-			{
-				if (d < 1.)
-				{
-					d = 1.;
-					pIntradailyModulation->ChangeValue(wxT("1"));
-				}
-
-				pArea->hydro.intraDailyModulation = d;
-				MarkTheStudyAsModified();
-			}
-		}
-	}
-
-
-	void Prepro::onReservoirCapacityChanged(wxCommandEvent& evt)
-	{
-		if (pArea)
-		{
-			if (evt.GetString().empty())
-				return;
-			double d;
-			evt.GetString().ToDouble(&d);
-			d *= 1000.;
-			if (d < 1e-6)
-				d = 0;
-			if (not Math::Equals(d, pArea->hydro.reservoirCapacity))
-			{
-				pArea->hydro.reservoirCapacity = d;
-				MarkTheStudyAsModified();
-			}
-		}
-	}
-
 
 	void Prepro::onStudyClosed()
 	{
@@ -374,47 +186,6 @@ namespace Hydro
 	}
 
 
-
-	void Prepro::onToggleReservoirManagement(Component::Button&, wxMenu& menu, void*)
-	{
-		if (!pArea)
-		{
-			Menu::CreateItem(&menu, wxID_ANY, wxT("Please select an area"),
-				"images/16x16/light_orange.png", wxEmptyString);
-			return;
-		}
-		wxMenuItem* it;
-
-		it = Menu::CreateItem(&menu, wxID_ANY, wxT("Use reservoir management"),
-			"images/16x16/light_green.png", wxEmptyString);
-		menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
-			wxCommandEventHandler(Prepro::onEnableReserveManagement), nullptr, this);
-		it = Menu::CreateItem(&menu, wxID_ANY, wxT("No"), "images/16x16/light_orange.png", wxEmptyString);
-		menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
-			wxCommandEventHandler(Prepro::onDisableReserveManagement), nullptr, this);
-	}
-
-
-	void Prepro::onEnableReserveManagement(wxCommandEvent&)
-	{
-		if (pArea and not pArea->hydro.reservoirManagement)
-		{
-			pArea->hydro.reservoirManagement = true;
-			MarkTheStudyAsModified();
-			onAreaChanged(pArea);
-		}
-	}
-
-
-	void Prepro::onDisableReserveManagement(wxCommandEvent&)
-	{
-		if (pArea and pArea->hydro.reservoirManagement)
-		{
-			pArea->hydro.reservoirManagement = false;
-			MarkTheStudyAsModified();
-			onAreaChanged(pArea);
-		}
-	}
 
 
 

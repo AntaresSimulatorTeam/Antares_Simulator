@@ -73,11 +73,23 @@ namespace Data
 		** \brief The total number of links in the study
 		*/
 		uint linkCount() const {return pLinkCount;}
+
+		/*!
+		** \brief The total number of links in the clusters
+		*/
+		uint clusterCount() const { return pClusterCount; }
+
 		/*!
 		** \brief Get the link according a given index
 		*/
 		AreaLink* link(uint i) {assert(i < pLink.size());return pLink[i];}
 		const AreaLink* link(uint i) const {assert(i < pLink.size());return pLink[i];}
+
+		/*!
+		** \brief Get the cluster according a given index
+		*/
+		ThermalCluster* cluster(uint i) { assert(i < pClusters.size()); return pClusters[i]; }
+		const ThermalCluster* cluster(uint i) const { assert(i < pClusters.size()); return pClusters[i]; }
 
 
 		BindingConstraint* constraint(uint i) {assert(i < pConstraint.size());return pConstraint[i];}
@@ -85,6 +97,10 @@ namespace Data
 		uint constraintCount() const {return (uint)pConstraint.size();}
 
 		uint countItems(BindingConstraint::Operator op, BindingConstraint::Type type);
+
+		uint visibleClustersCount(uint layerID);
+
+		uint visibleLinksCount(uint layerID);
 
 		Yuni::uint64 memoryUsage() const;
 
@@ -99,8 +115,10 @@ namespace Data
 	private:
 		Study& pStudy;
 		uint pLinkCount;
+		uint pClusterCount;
 		AreaLink::Vector pLink;
 		BindingConstraint::Vector pConstraint;
+		ThermalCluster::Vector pClusters;
 
 	}; // class UIRuntimeInfo
 

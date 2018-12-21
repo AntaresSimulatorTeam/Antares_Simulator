@@ -143,7 +143,7 @@ namespace Simulation
 			pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
 
 			
-			::SIM_RenseignementProblemeHebdo(*pProblemesHebdo[numSpace], numSpace, hourInTheYear);
+			::SIM_RenseignementProblemeHebdo(*pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
 
 			
 			if (not ::OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace))
@@ -163,11 +163,23 @@ namespace Simulation
 			}
 
 			
+			
+			computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
+
+			
 			if (not RemixHydroForAllAreas(study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek))
 			{
 				failedWeek = w;
 				return false;
 			}
+
+			
+			computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, true);
+
+			interpolateWaterValue(study, *pProblemesHebdo[numSpace], state, hourInTheYear, nbHoursInAWeek);
+
+			updatingWeeklyFinalHydroLevel(study, *pProblemesHebdo[numSpace], nbHoursInAWeek);
+			
 
 			variables.weekBegin(state);
 			uint previousHourInTheYear = state.hourInTheYear;
@@ -194,10 +206,20 @@ namespace Simulation
 			variables.weekEnd(state);
 
 			
+			for (int opt = 0; opt < 7; opt++)
+			{
+				state.optimalSolutionCost1 += pProblemesHebdo[numSpace]->coutOptimalSolution1[opt];
+				state.optimalSolutionCost2 += pProblemesHebdo[numSpace]->coutOptimalSolution2[opt];
+			}
+
+			
 			hourInTheYear += nbHoursInAWeek;
 
 			++progression;
 		}	
+
+		
+		updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
 
 		return true;
 	}

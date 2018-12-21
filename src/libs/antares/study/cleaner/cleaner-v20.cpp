@@ -87,6 +87,12 @@ namespace Data
 			e.add(buffer);
 
 			// Hydro
+			buffer.clear() << "input/hydro/common/capacity/waterValues_" << id << ".txt";
+			e.add(buffer);
+			buffer.clear() << "input/hydro/common/capacity/creditmodulations_" << id << ".txt";
+			e.add(buffer);
+			buffer.clear() << "input/hydro/common/capacity/inflowPattern_" << id << ".txt";
+			e.add(buffer);
 			buffer.clear() << "input/hydro/common/capacity/maxpower_" << id << ".txt";
 			e.add(buffer);
 			buffer.clear() << "input/hydro/common/capacity/reservoir_" << id << ".txt";
@@ -218,6 +224,7 @@ namespace Data
 		e.add("settings/comments.txt");
 		e.add("settings/resources/study.ico");
 		e.add("settings/generaldata.ini");
+		e.add("settings/constraintbuilder.ini");
 		e.add("settings/scenariobuilder.dat");
 		e.add("input/bindingconstraints/bindingconstraints.ini");
 		e.add("input/hydro/hydro.ini");

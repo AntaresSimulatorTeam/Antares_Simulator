@@ -120,6 +120,9 @@ for ( PdtHebdo = 0 , NumeroDeLIntervalle = 0 ; PdtHebdo < ProblemeHebdo->NombreD
 	OPT_InitialiserLesCoutsLineaire( ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, numSpace );
 
 	
+	ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle]++;
+	
+	
 	if (!OPT_AppelDuSolveurLineaire( ProblemeHebdo, numSpace, NumeroDeLIntervalle )) {
 	  logs.debug().appendFormat("Flexibility level: %ld",
 	                            ProblemeHebdo->ClasseDeManoeuvrabiliteActive[
@@ -128,7 +131,12 @@ for ( PdtHebdo = 0 , NumeroDeLIntervalle = 0 ; PdtHebdo < ProblemeHebdo->NombreD
 	  return false;
 	}
 
-	if ( ProblemeHebdo->ExportMPS == OUI_ANTARES) OPT_EcrireResultatFonctionObjectiveAuFormatTXT((void *) ProblemeHebdo, numSpace, NumeroDeLIntervalle);
+	if ( ProblemeHebdo->ExportMPS == OUI_ANTARES || ProblemeHebdo->Expansion == OUI_ANTARES)
+		OPT_EcrireResultatFonctionObjectiveAuFormatTXT((void *) ProblemeHebdo, numSpace, NumeroDeLIntervalle);
+
+	
+	if (ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle] == DEUXIEME_OPTIMISATION)
+		ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle] = 0;
 }
 
 if ( ProblemeHebdo->OptimisationMUTetMDT == OUI_ANTARES ) {
@@ -141,10 +149,11 @@ if ( ProblemeHebdo->OptimisationMUTetMDT == OUI_ANTARES ) {
 		else if ( ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES ) {
       OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage( ProblemeHebdo );
 		}
-		else printf("BUG: l'indicateur ProblemeHebdo->OptimisationAvecCoutsDeDemarrage doit etre initialise a OUI_ANTARES ou NON_ANTARES\n");		
+		else printf("BUG: l'indicateur ProblemeHebdo->OptimisationAvecCoutsDeDemarrage doit etre initialise a OUI_ANTARES ou NON_ANTARES\n");
+
     (ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation = DEUXIEME_OPTIMISATION;
-    ProblemeHebdo->YaDeLaReserveJmoins1	= NON_ANTARES; /* <- Pour etre certain de ne pas ajouter la reserve dans la conso */
-	  goto OptimisationHebdo;
+
+	if (ProblemeHebdo->Expansion == NON_ANTARES) goto OptimisationHebdo;
   }
   return true;
 }

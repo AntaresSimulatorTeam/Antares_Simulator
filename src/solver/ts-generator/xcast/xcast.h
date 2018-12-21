@@ -64,7 +64,7 @@ namespace XCast
 		** une precision suffisante dans le domaine 1 <= s <= 2 et 0 <= z <= 10
 		** \warning Dans les lois de Weibull, la valeur maximale que z peut atteindre
 		**   est Log(1 / NEGLI_WEIB). Il faut donc regler NEGLI_WEIB en conséquence
-		** (MD 09/06/10)
+		** 
 		*/
 		static double GammaInc(double s, double z);
 
@@ -192,6 +192,7 @@ namespace XCast
 		uint pLevellingCount;
 
 		bool pAccuracyOnCorrelation;
+		bool All_normal;  //all processes are Normal 
 
 		float* A; // les variables de A à CO sont des vues de ALPH à CORR pour un mois particulier
 		float* B;
@@ -222,6 +223,10 @@ namespace XCast
 		float* TREN;
 		float* WIEN;
 		float* BROW;
+
+		float* BASI; // used only if all processes are Normal
+		float* ALPH; // used only if all processes are Normal
+		float* BETA; // used only if all processes are Normal
 
 		float** Triangle_reference;
 		float** Triangle_courant;

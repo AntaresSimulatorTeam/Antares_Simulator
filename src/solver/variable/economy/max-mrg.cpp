@@ -141,7 +141,7 @@ namespace Economy
 		// ref to the study calendar
 		auto& calendar = state.study.calendar;
 		// Pmax
-		auto& P = area.hydro.maxPower[Data::PartHydro::maximum];
+		auto& P = area.hydro.maxPower[Data::PartHydro::genMaxP];
 		//auto& P = problem.CaracteristiquesHydrauliques[index]->ContrainteDePmaxHydrauliqueHoraire;
 
 		do
