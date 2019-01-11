@@ -24,4 +24,4 @@ add_library(libantares-license
 	getstarttime.cpp
 	getstarttime.h
 )
-target_link_libraries(libantares-license ${ANTARES_OSSL_LIBS} ${ANTARES_CURL_LIBS} base64)
+target_link_libraries(libantares-license -Wl,--start-group ${ANTARES_OSSL_LIBS} ${ANTARES_CURL_LIBS} base64 -Wl,--end-group)
