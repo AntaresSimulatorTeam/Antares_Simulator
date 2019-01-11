@@ -46,7 +46,7 @@
 using namespace Yuni;
 
 #define SEP Yuni::IO::Separator
-#define BUFSIZE 256 
+#define BUFSIZE 256
 
 namespace Antares
 {
@@ -59,17 +59,17 @@ namespace Antares
 		// preparing the message
 		Clob message;
 		message = value;
-		
-		// encrypting the message with the key 
+
+		// encrypting the message with the key
 		License::EncryptionKey enckey;
 		enckey.key = "ENId99w5R466zoQt";
 		enckey.iv.assign("ENId99w5R466zoQt", enckey.key.size());
-		
+
 		// -1- encrypt
 		Clob encrypted;
 		encrypted.reserve(message.size()*2+enckey.key.size()*2);
 		Encrypt(encrypted, message, enckey);
-		
+
 		String encoded;
 		encoded.reserve(encrypted.size());
 
@@ -85,7 +85,7 @@ namespace Antares
 
 		/*static const AnyString& keyCBF64 = "ENId99w5R466zoQt";
 		static const AnyString& ivecStr = "ENId99w5R466zoQt";
-	
+
 		int len;
 		int n = 0;
 		out.resize(BUFSIZE);
@@ -93,7 +93,7 @@ namespace Antares
 		DES_cblock ivec;
 		DES_key_schedule keySchedule;
 
-		// Converting the key into architecture dependent format 
+		// Converting the key into architecture dependent format
 		DES_set_key_checked((C_Block *)keyCBF64.c_str(), &keySchedule);
 
 		memcpy(ivec, (C_Block *)ivecStr.c_str(), sizeof(ivec));
@@ -102,7 +102,7 @@ namespace Antares
 		// Encryption
 		DES_cfb64_encrypt((const unsigned char*)value.c_str(), (unsigned char*)out.data(), len, &keySchedule, &ivec, &n, DES_ENCRYPT);
 		*/
-		
+
 	}
 
 	static inline void deobfuscate(YString& out, YString& value)
@@ -111,16 +111,16 @@ namespace Antares
 		License::EncryptionKey enckey;
 		enckey.key = "ENId99w5R466zoQt";
 		enckey.iv.assign("ENId99w5R466zoQt", enckey.key.size());
-		
+
 		// -1- decode
 		// the real message to decipher
 		String decoded;
 		decoded.reserve(value.size());
-		
+
 		base64_decodestate state;
 		base64_init_decodestate(&state);
 		auto length = base64_decode_block(value.c_str(), value.size(), decoded.data(), &state);
-		
+
 		assert((uint) length < decoded.capacity());
 		decoded.resize(length);
 
@@ -128,7 +128,7 @@ namespace Antares
 		String decrypted;
 		decrypted.reserve(decoded.size());
 		License::Decrypt(decrypted, decoded, enckey);
-		
+
 		out = decrypted;
 
 		/*static const AnyString& keyCBF64 = "ENId99w5R466zoQt";
@@ -146,13 +146,13 @@ namespace Antares
 			DES_cblock ivec;
 			DES_key_schedule keySchedule;
 
-			// Converting the key into architecture dependent format 
+			// Converting the key into architecture dependent format
 			DES_set_key_checked((C_Block *)keyCBF64.c_str(), &keySchedule);
 
 			memcpy(ivec, (C_Block *)ivecStr.c_str(), sizeof(ivec));
-		
+
 			// Unciphering
-			DES_cfb64_encrypt((unsigned char*)value.c_str(), (unsigned char*)out.data(), len, &keySchedule, &ivec, &n, DES_DECRYPT);	
+			DES_cfb64_encrypt((unsigned char*)value.c_str(), (unsigned char*)out.data(), len, &keySchedule, &ivec, &n, DES_DECRYPT);
 		}
 		*/
 	}
@@ -160,11 +160,11 @@ namespace Antares
 	static inline bool FindProxyFile(String& filename)
 	{
 		filename.clear();
-		
-		// search or create the directory		
+
+		// search or create the directory
 		if (not OperatingSystem::FindAntaresLocalAppData(filename, false))
 			return false;
-		
+
 		if (not IO::Directory::Create(filename))
 			return false;
 
@@ -192,7 +192,7 @@ namespace Antares
 
 		// Check for missing parameters
 		//if(password.empty()||login.empty()||host.empty()||port.empty())
-		
+
 		if(host.empty()||port.empty())
 		{
 			return false;
@@ -222,8 +222,8 @@ namespace Antares
 		content << "[proxy]\n";
 		content << "proxy.enabled = " << enabled << '\n';
 		content << "proxy.host  = " << host << '\n';
-		
-		
+
+
 		if( !login.empty() )
 		{
 			plainCredentials << login;
@@ -236,13 +236,13 @@ namespace Antares
 			obfuscate(encCredentials, plainCredentials);
 			content << "proxy.credentials = " << encCredentials << '\n';
 		}
-		
+
 		content << "proxy.port = " << port << '\n';
 
 		// search or create the directory
 		String filename;
 		if (not FindProxyFile(filename))
-		{	
+		{
 			logs.error() << "impossible to create the proxy directory. Please check your user account privileges";
 			return false;
 		}
@@ -315,7 +315,7 @@ namespace Antares
 				else
 					login = plainCredentials;
 			}
-			
+
 			return true;
 		}
 		else

@@ -166,10 +166,6 @@ namespace Antares {
 			out.clear();
 			return false;
 		}
-
-		
-
-
 	}
 }
 
