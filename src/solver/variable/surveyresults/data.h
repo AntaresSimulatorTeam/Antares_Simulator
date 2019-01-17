@@ -72,17 +72,10 @@ namespace Private
 		//! The current column index
 		unsigned int columnIndex;
 
-		// Special prints in output for some variables :
-		// ... Reservoir levels
-		std::vector<unsigned int> ReservoirLvlColIdx;
-		bool resLvlColRetrieved;
-		// ... Water values
-		std::vector<unsigned int> waterValuesColIdx;
-		bool waterValColRetrieved;
-		// ... Overflows
-		std::vector<unsigned int> OverflowsColIdx;
-		bool ovfColRetrieved;
-
+		// Output variable non applicable :
+		//	Column indices related to non applicable output variables
+		//	Useful to print "N/A" in output files for these variables 
+		std::vector<unsigned int> nonApplicableColIdx;
 
 		//! Current thermal cluster
 		const Data::ThermalCluster* thermalCluster;

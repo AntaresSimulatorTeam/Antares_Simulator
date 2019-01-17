@@ -143,16 +143,7 @@ namespace Container
 				else
 					RunAnnual(list, results, numSpace);
 
-				// Resetting tools for special printings of some variables
-				// ... Reservoir levels
-				results.data.ReservoirLvlColIdx.clear();
-				results.data.resLvlColRetrieved = false;
-				// ... water values
-				results.data.waterValuesColIdx.clear();
-				results.data.waterValColRetrieved = false;
-				// ... Overflows
-				results.data.OverflowsColIdx.clear();
-				results.data.ovfColRetrieved = false;
+				// results.data.nonApplicableColIdx.clear(); // gp : to be removed
 
 				// The survey type
 				typedef SurveyReportBuilderFile<GlobalT, NextT, CDataLevel, nextFileLevel> SurveyRBFileType;
@@ -262,32 +253,12 @@ namespace Container
 					// Digest file : areas part
 					list.buildDigest(results, Category::digestAllYears, Category::area);
 					results.exportDigestAllYears();
-
-					// Resetting tools for special printings of some variables :
-					// ... Reservoir levels
-					results.data.ReservoirLvlColIdx.clear();
-					results.data.resLvlColRetrieved = false;
-					// ... Water values
-					results.data.waterValuesColIdx.clear();
-					results.data.waterValColRetrieved = false;
-					// ... Overflows
-					results.data.OverflowsColIdx.clear();
-					results.data.ovfColRetrieved = false;
+					// results.data.nonApplicableColIdx.clear(); // gp : to be removed
 
 					// Degest file : districts part
 					list.buildDigest(results, Category::digestAllYears, Category::setOfAreas);
 					results.exportDigestAllYears();
-					// Resetting tools for special printings of some variables :
-					// ... Reservoir levels
-					results.data.ReservoirLvlColIdx.clear();
-					results.data.resLvlColRetrieved = false;
-					// ... Water values
-					results.data.waterValuesColIdx.clear();
-					results.data.waterValColRetrieved = false;
-					// ... Overflows
-					results.data.OverflowsColIdx.clear();
-					results.data.ovfColRetrieved = false;
-
+					// results.data.nonApplicableColIdx.clear(); // gp : to be removed
 
 					if (results.data.study.parameters.mode != Data::stdmAdequacyDraft)
 					{

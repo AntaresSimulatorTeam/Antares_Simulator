@@ -321,9 +321,14 @@ namespace Variable
 		//! The results
 		const StoredResultType& results() const;
 
+		const bool isNotApplicable() const;
+
 	protected:
 		//! All the results about this variable
 		StoredResultType pResults;
+		//! Is variable not applicable ?
+		//! Meaning : do we print N/A in output files for that variable ?
+		bool pIsNotApplicable;
 
 	}; // class Variable
 

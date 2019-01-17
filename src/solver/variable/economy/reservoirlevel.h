@@ -157,9 +157,9 @@ namespace Antares
 
 					void initializeFromArea(Data::Study* study, Data::Area* area)
 					{
-						// Getting the reservoir management status for the current area.
-						pReservoirManagement = area->hydro.reservoirManagement;
-
+						// For this variable (if no revervoir management), "N/A" is printed in output files 
+						pIsNotApplicable = not area->hydro.reservoirManagement;
+						
 						// Next
 						NextType::initializeFromArea(study, area);
 					}
@@ -275,13 +275,8 @@ namespace Antares
 
 					void localBuildAnnualSurveyReport(SurveyResults& results, int fileLevel, int precision, unsigned int numSpace) const
 					{
-						if (!results.data.resLvlColRetrieved)
-						{
-							if (!pReservoirManagement)
-								results.data.ReservoirLvlColIdx.push_back(results.data.columnIndex);
-
-							results.data.resLvlColRetrieved = true;
-						}
+						if (pIsNotApplicable && !(fileLevel & Category::id))
+							results.data.nonApplicableColIdx.push_back(results.data.columnIndex);
 
 						// Write the data for the current year
 						results.variableCaption = VCardType::Caption();
@@ -300,21 +295,16 @@ namespace Antares
 							if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
 								&& (precision & VCardType::precision))
 							{
-								
-								if (!results.data.resLvlColRetrieved)
+								if (pIsNotApplicable)
 								{
-									if (!pReservoirManagement)
-									{
-										// Only min and max have to be printed in id-{precision}.txt
-										if (fileLevel & Category::id)
-											for (int i = 0; i < 2; i++)
-												results.data.ReservoirLvlColIdx.push_back(results.data.columnIndex + i);
-										// All variable results are printed (see ResultsType) in other output files
-										else
-											for (int i = 0; i < ResultsType::count; i++)
-												results.data.ReservoirLvlColIdx.push_back(results.data.columnIndex + i);
-									}
-									results.data.resLvlColRetrieved = true;
+									// Only min and max have to be printed in id-{precision}.txt
+									if (fileLevel & Category::id)
+										for (int i = 0; i < 2; i++)
+											results.data.nonApplicableColIdx.push_back(results.data.columnIndex + i);
+									// All variable results are printed (see ResultsType) in other output files
+									else
+										for (int i = 0; i < ResultsType::count; i++)
+											results.data.nonApplicableColIdx.push_back(results.data.columnIndex + i);
 								}
 
 								VariableAccessorType::template
@@ -332,7 +322,6 @@ namespace Antares
 					//! Intermediate values for each year
 					typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
 					unsigned int pNbYearsParallel;
-					bool pReservoirManagement;
 
 				}; // class HydroLevel
 

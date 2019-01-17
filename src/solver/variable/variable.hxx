@@ -83,6 +83,9 @@ namespace Variable
 	inline void
 	IVariable<ChildT,NextT,VCardT>::initializeFromStudy(Data::Study& study)
 	{
+		// By default, variable is applicable : no "N/A" is printed in output files for this variable 
+		pIsNotApplicable = false;
+		
 		// Next
 		NextType::initializeFromStudy(study);
 	}
@@ -277,65 +280,18 @@ namespace Variable
 		if (0 != ResultsType::count)
 		{
 			// And only if we match the current data level _and_ precision level
-			if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
-				// Trying to use "VCardReservoirLevel::spatialAggregate" does not work here, another way has to be found,
-				// avoiding to use "VCardReservoirLevel::Caption()", which is not generic enough.
-				&& (precision & VCardType::precision) /*&& (ChildT::VCardType::spatialAggregate != Category::noSpatialAggregate)*/)
+			if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel) && (precision & VCardType::precision))
 			{
-				// Districts output & reservoir levels variable ("mc-all/areas/<district>") : prints "N/A" on reservoir levels columns
-				// See what "ChildT::VCardType::spatialAggregate" is, and try not to select reservoir levels using its "Caption()".
-				// if (VCardType::VCardOrigin::spatialAggregate != Category::noSpatialAggregate)
-				if (std::strcmp(ChildT::VCardType::Caption(), "H. LEV") == 0)
+				if (!pIsNotApplicable)
 				{
-					if (!results.data.resLvlColRetrieved)
-					{
-						// Only min and max have to be printed in when dealing with "id-{precision}.txt"
-						if (fileLevel & Category::id)
-							for (int i = 0; i < 2; i++)
-								results.data.ReservoirLvlColIdx.push_back(results.data.columnIndex + i);
-						// All variable results are printed when dealing with "values-{precision}.txt"
-						else
-							for (int i = 0; i < ResultsType::count; i++)
-								results.data.ReservoirLvlColIdx.push_back(results.data.columnIndex + i);
-
-						results.data.resLvlColRetrieved = true;
-					}
-				}
-
-				// Districts output & water value variable ("mc-all/areas/<district>") : prints "N/A" on water value columns
-				if (std::strcmp(ChildT::VCardType::Caption(), "H. VAL") == 0)
-				{
-					if (!results.data.waterValColRetrieved)
-					{
-						// Only min and max have to be printed in when dealing with "id-{precision}.txt"
-						if (fileLevel & Category::id)
-							for (int i = 0; i < 2; i++)
-								results.data.waterValuesColIdx.push_back(results.data.columnIndex + i);
-						// All variable results are printed when dealing with "values-{precision}.txt"
-						else
-							for (int i = 0; i < ResultsType::count; i++)
-								results.data.waterValuesColIdx.push_back(results.data.columnIndex + i);
-
-						results.data.waterValColRetrieved = true;
-					}
-				}
-
-				// Districts output & reservoir levels variable ("mc-all/areas/<district>") : prints "N/A" on overflows columns
-				if (std::strcmp(ChildT::VCardType::Caption(), "H. OVFL") == 0)
-				{
-					if (!results.data.ovfColRetrieved)
-					{
-						// Only min and max have to be printed in when dealing with "id-{precision}.txt"
-						if (fileLevel & Category::id)
-							for (int i = 0; i < 2; i++)
-								results.data.OverflowsColIdx.push_back(results.data.columnIndex + i);
-						// All variable results are printed when dealing with "values-{precision}.txt"
-						else
-							for (int i = 0; i < ResultsType::count; i++)
-								results.data.OverflowsColIdx.push_back(results.data.columnIndex + i);
-
-						results.data.ovfColRetrieved = true;
-					}
+					// Only min and max have to be printed in id-{precision}.txt
+					if (fileLevel & Category::id)
+						for (int i = 0; i < 2; i++)
+							results.data.nonApplicableColIdx.push_back(results.data.columnIndex + i);
+					// All variable results are printed (see ResultsType) in other output files
+					else
+						for (int i = 0; i < ResultsType::count; i++)
+							results.data.nonApplicableColIdx.push_back(results.data.columnIndex + i);
 				}
 
 				VariableAccessorType::template
@@ -380,35 +336,9 @@ namespace Variable
 				|| VCardType::categoryDataLevel & Category::area
 				|| VCardType::categoryDataLevel & Category::link))
 		{
-			// We don't print usual results in the digest file for reservoir levels (see above for improvement)
-			if (std::strcmp(ChildT::VCardType::Caption(), "H. LEV") == 0)
-			{
-				if (!results.data.resLvlColRetrieved)
-				{
-					results.data.ReservoirLvlColIdx.push_back(results.data.columnIndex);
-					results.data.resLvlColRetrieved = true;
-				}
-			}
-
-			// We don't print usual results in the digest file for water values
-			if (std::strcmp(ChildT::VCardType::Caption(), "H. VAL") == 0)
-			{
-				if (!results.data.waterValColRetrieved)
-				{
-					results.data.waterValuesColIdx.push_back(results.data.columnIndex);
-					results.data.waterValColRetrieved = true;
-				}
-			}
-
-			// We don't print usual results in the digest file for overflows (see above for improvement)
-			if (std::strcmp(ChildT::VCardType::Caption(), "H. OVFL") == 0)
-			{
-				if (!results.data.ovfColRetrieved)
-				{
-					results.data.OverflowsColIdx.push_back(results.data.columnIndex);
-					results.data.ovfColRetrieved = true;
-				}
-			}
+			// To print N/A in the digest output file is output variable is non applicable
+			if (isNotApplicable())
+				results.data.nonApplicableColIdx.push_back(results.data.columnIndex);
 
 			VariableAccessorType::template BuildDigest<VCardT>(results, pResults, digestLevel, dataLevel);
 		}
@@ -629,6 +559,12 @@ namespace Variable
 	IVariable<ChildT,NextT,VCardT>::results() const
 	{
 		return pResults;
+	}
+
+	template<class ChildT, class NextT, class VCardT>
+	inline const bool IVariable<ChildT, NextT, VCardT>::isNotApplicable() const
+	{
+		return pIsNotApplicable;
 	}
 
 

@@ -210,9 +210,6 @@ namespace Private
 	SurveyResultsData::SurveyResultsData(const Data::Study& s, const String& o, uint year) :
 		time("Survey report"),
 		columnIndex((uint) -1),
-		resLvlColRetrieved(false),
-		waterValColRetrieved(false),
-		ovfColRetrieved(false),
 		thermalCluster(nullptr),
 		area(nullptr),
 		link(nullptr),
@@ -658,6 +655,16 @@ namespace Variable
 		conversionBuffer[0] = '\t';
 		int sizePrintf;
 
+		// Mapping results matrix column indices to non applicable variables status
+		std::map<uint, bool> colIdx_to_nonApplicableStatus;
+		for (uint x = 0; x != data.columnIndex; ++x)
+		{
+			if (std::find(data.nonApplicableColIdx.begin(), data.nonApplicableColIdx.end(), x) != data.nonApplicableColIdx.end())
+				colIdx_to_nonApplicableStatus[x] = true;
+			else
+				colIdx_to_nonApplicableStatus[x] = false;
+		}
+
 		auto end = data.rowCaptions.end();
 		uint y = 0;
 		for (auto j = data.rowCaptions.begin(); j != end; ++j, ++y)
@@ -667,25 +674,19 @@ namespace Variable
 
 			data.fileBuffer << '\t' << *j;
 
-			for (uint i = 0; i != data.columnIndex; ++i)
+			// Loop over results matrix columns
+			uint i = 0;
+			bool isNotApplicable = false;
+			std::map<uint, bool>::iterator it = colIdx_to_nonApplicableStatus.begin();
+			for (; it != colIdx_to_nonApplicableStatus.end(); ++it)
 			{
+				i = it->first;
+				isNotApplicable = it->second;
 				// asserts
 				assert(i < maxVariables && "i greater can not be greater than maxVariables");
 				assert(y < maxHoursInAYear && "y can not be greater than maxHoursInAYear");
 
-				if (std::find(data.ReservoirLvlColIdx.begin(), data.ReservoirLvlColIdx.end(), i) != data.ReservoirLvlColIdx.end())
-				{
-					data.fileBuffer.append("\tN/A", 4);
-					continue;
-				}
-
-				if (std::find(data.waterValuesColIdx.begin(), data.waterValuesColIdx.end(), i) != data.waterValuesColIdx.end())
-				{
-					data.fileBuffer.append("\tN/A", 4);
-					continue;
-				}
-
-				if (std::find(data.ReservoirLvlColIdx.begin(), data.ReservoirLvlColIdx.end(), i) != data.ReservoirLvlColIdx.end())
+				if (isNotApplicable)
 				{
 					data.fileBuffer.append("\tN/A", 4);
 					continue;
@@ -700,9 +701,9 @@ namespace Variable
 					// The snprintf routine is required since we may not have the ending zero
 					// with the standard printf. The conversion may require a bigger buffer.
 					# ifdef YUNI_OS_MSVC
-					sizePrintf = ::sprintf_s(conversionBuffer + 1, sizeof(conversionBuffer)-2, precision[i].c_str(), values[i][y]);
+					sizePrintf = ::sprintf_s(conversionBuffer + 1, sizeof(conversionBuffer) - 2, precision[i].c_str(), values[i][y]);
 					# else
-					sizePrintf = ::snprintf(conversionBuffer + 1, sizeof(conversionBuffer)-2, precision[i].c_str(), values[i][y]);
+					sizePrintf = ::snprintf(conversionBuffer + 1, sizeof(conversionBuffer) - 2, precision[i].c_str(), values[i][y]);
 					# endif
 					if (sizePrintf >= 0)
 						data.fileBuffer.append((const char*)conversionBuffer, 1 + sizePrintf);
@@ -717,6 +718,9 @@ namespace Variable
 		data.fileBuffer.append("\n\n", 2);
 
 		out << data.fileBuffer;
+
+		// Clearing the collection of indices related to non applicable variables
+		data.nonApplicableColIdx.clear();
 	}
 
 
@@ -791,8 +795,17 @@ namespace Variable
 			assert(not precision[x].empty() && "invalid precision");
 		# endif
 
-		std::vector<unsigned int>::iterator it;
+		// Mapping results matrix column indices to non applicable variables status
+		std::map<uint, bool> colIdx_to_nonApplicableStatus;
+		for (uint x = 0; x != data.columnIndex; ++x)
+		{
+			if (std::find(data.nonApplicableColIdx.begin(), data.nonApplicableColIdx.end(), x) != data.nonApplicableColIdx.end())
+				colIdx_to_nonApplicableStatus[x] = true;
+			else
+				colIdx_to_nonApplicableStatus[x] = false;
+		}
 
+		
 		if (fileLevel & Category::mc)
 		{			
 			// Each row
@@ -806,16 +819,14 @@ namespace Variable
 
 				// Each column
 				assert(data.columnIndex <= data.matrix.width);
-				for (uint x = 0; x != data.columnIndex; ++x)
+
+				// Loop over results matrix columns
+				uint x = 0;
+				std::map<uint, bool>::iterator it = colIdx_to_nonApplicableStatus.begin();
+				for (; it != colIdx_to_nonApplicableStatus.end(); ++it)
 				{
-					if (
-						std::find(data.ReservoirLvlColIdx.begin(), data.ReservoirLvlColIdx.end(), x) != data.ReservoirLvlColIdx.end() ||
-						std::find(data.waterValuesColIdx.begin(), data.waterValuesColIdx.end(), x) != data.waterValuesColIdx.end() ||
-						std::find(data.OverflowsColIdx.begin(), data.OverflowsColIdx.end(), x) != data.OverflowsColIdx.end()
-					   )
-						AppendDoubleValue(error, data.matrix[x][y], data.fileBuffer, conversionBuffer, precision[x], false);
-					else
-						AppendDoubleValue(error, data.matrix[x][y], data.fileBuffer, conversionBuffer, precision[x], true);
+					x = it->first;
+					AppendDoubleValue(error, data.matrix[x][y], data.fileBuffer, conversionBuffer, precision[x], not it->second);
 				}
 
 				// End of line
@@ -834,16 +845,14 @@ namespace Variable
 
 				// Each column
 				assert(data.columnIndex <= maxVariables);
-				for (uint x = 0; x != data.columnIndex; ++x)
+
+				// Loop over results matrix columns
+				uint x = 0;
+				std::map<uint, bool>::iterator it = colIdx_to_nonApplicableStatus.begin();
+				for (; it != colIdx_to_nonApplicableStatus.end(); ++it)
 				{
-					if (
-						std::find(data.ReservoirLvlColIdx.begin(), data.ReservoirLvlColIdx.end(), x) != data.ReservoirLvlColIdx.end() ||
-						std::find(data.waterValuesColIdx.begin(), data.waterValuesColIdx.end(), x) != data.waterValuesColIdx.end() ||
-						std::find(data.OverflowsColIdx.begin(), data.OverflowsColIdx.end(), x) != data.OverflowsColIdx.end()
-					   )
-						AppendDoubleValue(error, values[x][y], data.fileBuffer, conversionBuffer, precision[x], false);
-					else
-						AppendDoubleValue(error, values[x][y], data.fileBuffer, conversionBuffer, precision[x], true);
+					x = it->first;
+					AppendDoubleValue(error, values[x][y], data.fileBuffer, conversionBuffer, precision[x], not it->second);
 				}
 				// End of line
 				data.fileBuffer += '\n';
@@ -851,6 +860,9 @@ namespace Variable
 		}
 
 		IOFileSetContent(data.filename, data.fileBuffer);
+
+		// Clearing the collection of indices related to non applicable variables
+		data.nonApplicableColIdx.clear();
 	}
 
 

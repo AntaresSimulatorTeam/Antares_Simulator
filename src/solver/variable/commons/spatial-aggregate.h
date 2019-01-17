@@ -321,35 +321,9 @@ namespace Common
 			if (VCardType::columnCount != 0
 				&& (VCardType::categoryDataLevel & Category::setOfAreas))
 			{
-				// We don't print usual results in the digest file for reservoir levels (see below for improvement)
-				if (std::strcmp(VCardType::VCardOrigin::Caption(), "H. LEV") == 0)
-				{
-					if (!results.data.resLvlColRetrieved)
-					{
-						results.data.ReservoirLvlColIdx.push_back(results.data.columnIndex);
-						results.data.resLvlColRetrieved = true;
-					}
-				}
-
-				// We don't print usual results in the digest file for water values
-				if (std::strcmp(VCardType::VCardOrigin::Caption(), "H. VAL") == 0)
-				{
-					if (!results.data.waterValColRetrieved)
-					{
-						results.data.waterValuesColIdx.push_back(results.data.columnIndex);
-						results.data.waterValColRetrieved = true;
-					}
-				}
-
-				// We don't print usual results in the digest file for overflows (see below for improvement)
-				if (std::strcmp(VCardType::VCardOrigin::Caption(), "H. OVFL") == 0)
-				{
-					if (!results.data.ovfColRetrieved)
-					{
-						results.data.OverflowsColIdx.push_back(results.data.columnIndex);
-						results.data.ovfColRetrieved = true;
-					}
-				}
+				// To print N/A in the digest output file is output variable is non applicable
+				if (isNotApplicable())
+					results.data.nonApplicableColIdx.push_back(results.data.columnIndex);
 				
 				VariableAccessorType::
 					template BuildDigest<typename VCardType::VCardOrigin>(results, AncestorType::pResults, digestLevel, dataLevel);
@@ -361,44 +335,12 @@ namespace Common
 
 		void localBuildAnnualSurveyReport(SurveyResults& results, int fileLevel, int precision, uint numSpace) const
 		{
-			if (VCardType::columnCount != 0
-				&& (VCardType::categoryDataLevel & Category::setOfAreas)
-				// Trying to use "VCardReservoirLevel::spatialAggregate" does not work here, another way has to be found,
-				// avoiding to use "VCardReservoirLevel::Caption()", which is not generic enough.
-				/* && VCardType::VCardOrigin::spatialAggregate != Category::noSpatialAggregate*/ )
+			if (VCardType::columnCount != 0 && (VCardType::categoryDataLevel & Category::setOfAreas) )
 			{
-				
-				// For "mc-ind/<year>/<district>/values-<precision>.txt", prints "N/A" on the reservoir levels column
-				if (std::strcmp(VCardType::VCardOrigin::Caption(), "H. LEV") == 0)
-				// See what "VCardType::VCardOrigin::spatialAggregate" is, and try not to select reservoir levels using its "Caption()".
-				// if (VCardType::VCardOrigin::spatialAggregate != Category::noSpatialAggregate)
-				{
-					if (!results.data.resLvlColRetrieved)
-					{
-						results.data.ReservoirLvlColIdx.push_back(results.data.columnIndex);
-						results.data.resLvlColRetrieved = true;
-					}
-				}
-
-				// For "mc-ind/<year>/<district>/values-<precision>.txt", prints "N/A" on the water values column
-				if (std::strcmp(VCardType::VCardOrigin::Caption(), "H. VAL") == 0)
-				{
-					if (!results.data.waterValColRetrieved)
-					{
-						results.data.waterValuesColIdx.push_back(results.data.columnIndex);
-						results.data.waterValColRetrieved = true;
-					}
-				}
-
-				// For "mc-ind/<year>/<district>/values-<precision>.txt", prints "N/A" on the overflows column
-				if (std::strcmp(VCardType::VCardOrigin::Caption(), "H. OVFL") == 0)
-				{
-					if (!results.data.ovfColRetrieved)
-					{
-						results.data.OverflowsColIdx.push_back(results.data.columnIndex);
-						results.data.ovfColRetrieved = true;
-					}
-				}
+				// Ouput file "mc-ind/<year>/<district>/values-<precision>.txt" :
+				// prints N/A in the digest output file is output variable is non applicable
+				if (isNotApplicable())
+					results.data.nonApplicableColIdx.push_back(results.data.columnIndex);
 							
 				typedef VariableAccessor<typename VCardType::IntermediateValuesBaseType, VCardType::columnCount>  VAType;
 				VAType::template
