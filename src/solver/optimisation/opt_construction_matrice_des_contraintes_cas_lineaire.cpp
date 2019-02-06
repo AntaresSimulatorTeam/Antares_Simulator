@@ -699,18 +699,40 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 	for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++) {
 		char presenceHydro = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable;
 		char TurbEntreBornes = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->TurbinageEntreBornes;
+		char presencePompage = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDePompageModulable;
 		if (presenceHydro == OUI_ANTARES && TurbEntreBornes == NON_ANTARES)
 		{
 			NombreDeTermes = 0;
-			for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++) {
-				Var = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt]->NumeroDeVariablesDeLaProdHyd[Pays];
-				if (Var >= 0) {
-					Pi[NombreDeTermes] = 1.0;
-					Colonne[NombreDeTermes] = Var;
-					NombreDeTermes++;
+			if (presencePompage == NON_ANTARES)
+			{
+				for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++) {
+					Var = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt]->NumeroDeVariablesDeLaProdHyd[Pays];
+					if (Var >= 0) {
+						Pi[NombreDeTermes] = 1.0;
+						Colonne[NombreDeTermes] = Var;
+						NombreDeTermes++;
+					}
 				}
 			}
-			
+			if (presencePompage == OUI_ANTARES)
+			{
+				for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++) {
+					Var = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt]->NumeroDeVariablesDeLaProdHyd[Pays];
+					if (Var >= 0) {
+						Pi[NombreDeTermes] = 1.0;
+						Colonne[NombreDeTermes] = Var;
+						NombreDeTermes++;
+					}
+					Var = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt]->NumeroDeVariablesDePompage[Pays];
+					if (Var >= 0) {
+						Pi[NombreDeTermes]  = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PumpingRatio;
+						Pi[NombreDeTermes] *= -1.0;
+						Colonne[NombreDeTermes] = Var;
+						NombreDeTermes++;
+					}
+				}
+			}
+				
 			ProblemeHebdo->NumeroDeContrainteEnergieHydraulique[Pays] = ProblemeAResoudre->NombreDeContraintes;
 			
 			OPT_ChargerLaContrainteDansLaMatriceDesContraintes(ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=');
