@@ -39,9 +39,8 @@ namespace Solver
 	{
 		enum
 		{
-			//! la profondeur doit rester faible de facon a obtenir rapidement
-			// une matrice acceptable
-			dichotomie = 7,
+			//! set exploration depth to a value ensuring that final accuracy is 0.5% in the worst case
+			dichotomie = 10,
 			//! Maximum number of iterations
 			maxLoopCount = 10,
 		};
