@@ -279,6 +279,8 @@ namespace Antares
 				return 999.; // should never happen
 		}
 
+		if (Math::Abs(sigma_A) < 1e-4 && Math::Abs(sigma_B) < 1e-4)
+			return 1.;
 		if (Math::Abs(sigma_A) < 1e-4 || Math::Abs(sigma_B) < 1e-4)
 			return 0.;
 
@@ -373,8 +375,66 @@ namespace Antares
 
 		enum { dicho = 20 };
 
-		// cas standard ou de bonnes valeurs peuvent etre trouvees
-		for (int l = nblig - 2; l > -1; --l)
+		// check thresholds aum & auc
+
+		if (aum <= double(0.01)) aum = double(0.01);
+		if (auc < aum)			 auc = aum;
+
+		// 1 address special cases  
+
+		// thresholds are different and experimental data lies strictly in-between
+		if (aum < auc && A[1] < auc && A[nblig - 1] > aum)
+		{
+			theta = -log(A[TC]) / TC; // TC= int(0.5*(nblig-1))
+			mu = 1;
+			return;
+		}
+
+		// Experimental data lies below both thresholds
+		if (A[1] <= aum )
+		{
+			theta = -log(A[1]) / double(1.); 
+			mu = 1;
+			return;
+		}
+		// Experimental data lies above both thresholds
+		if (A[nblig-1] >= auc)
+		{
+			theta = -log(A[nblig-1]) / double(nblig-1);
+			if (theta < double(0.0001)) theta = 0;
+			mu = 1;
+			return;
+		}
+		// Experimental data crosses only the short-term threshold
+		if (A[1] > auc && A[nblig-1] >aum)
+		{
+			aum = auc ; // keep only short-term and process later
+		}
+		// Experimental data crosses only long-term threshold
+		if (A[1] < auc && A[nblig - 1] <aum)
+		{
+			auc = aum;  // keep only long-term and process later
+		}
+		// Thresholds are identical and crossed by experimental data 
+		if (aum == auc)
+		{
+			double auto_threshold = aum;
+			for (int l = nblig - 2; l > -1; --l)
+			{
+				//  long-term threshold crossed at l 
+				if (A[l] >= auto_threshold && A[l + 1] < auto_threshold)
+				{
+					theta = -log(A[l]) / double(l);
+					mu = 1;
+					return;
+				}
+			}
+		}
+
+			
+		// 2 address regular case :thresholds are different and experimental data crosses both of them
+				
+		for (int l = nblig - 2; l > 0; --l)
 		{
 			// on trouve une bonne estimation pour TM
 			if (A[l] >= aum && A[l+1] < aum)
@@ -390,60 +450,16 @@ namespace Antares
 		if (max_mu  > 24) max_mu = 24;
 		if (max_mu == 0)  max_mu = 1;
 
-		
-		// cas ou l'autocorrelation experimentale ne decroît pas suffisamment en PRA heures
-		// il faut alors rectifier auc et aum puis TC et TM
-		
-		if (A[nblig - 1] >= auc) // autocorrelation after PRA hours is higher than short-term target
-		{
-			TC = nblig - 1;
-			auc = A[TC];
-			TM = TC;
-			aum = A[TM];
-		}
-					
-		if (A[nblig - 1] > aum) // ">" instead of ">=" to differentiate from previous case 
-		{
-			TM  = nblig - 1;
-			aum = A[TM];
-			TC  = int(TM / 2);
-			auc = A[TC];
+		// both thresholds crossed at the same time
+
+		if (TM == TC)
+		{		
+				theta = -log(A[TC]) / double(TC);
+				mu = 1;
+				return;
 		}
 
-		// must enforce max_mu=1 in the case auc=aum
-		if (auc == aum) max_mu = 1;
-
-
-		// case where auc,aum lead to close values for TC ,TM
-		if (aum < auc)
-		{
-			if (TC == TM) TC = TM - 1;
-			if (TC <= 0)  TC = 1;
-			if (TM <= 1)  TM = 2;
-		}
-		if (aum == auc && TC <= 0)
-		{
-			TC = 1; 
-			TM = 1;
-		}
-
-		// cas particulier ou l'autocorrelation est constante : on retourne
-		// directement theta =0 mu=1
-	    // if (A[TC] == A[TM]) no longer correct if TC = TM is allowed 
-		if (A[TC] == A[TM] && TC != TM)
-		{
-			theta = 0.;
-			mu    = 1.;
-			return;
-		}
-		//special case : auc=aum
-		if (auc == aum)
-		{
-			theta = -log(A[TC]) / TC;
-			mu = 1;
-			return;
-		}
-
+	
 		// cas general : recherche des valeurs ad hoc pour T= theta et M= int(mu)
 		// initialisation standard
 		int M      = 1;
@@ -579,8 +595,9 @@ namespace Antares
 
 		if (Math::Abs(S) < 1e-40)
 		{
-			double fe = Math::Abs(E);
-			S = (fe < 1e-40) ? (1e-4) : (1e-4 / fe);
+		//	double fe = Math::Abs(E);
+		//	S = (fe < 1e-40) ? (1e-4) : (1e-4 / fe);
+			S = 0;
 		}
 
 		switch (law)

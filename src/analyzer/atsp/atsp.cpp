@@ -163,7 +163,7 @@ namespace Antares
 				continue;
 
 			f << info.name << '\t';
-			const MomentCentrSingle& moment = moments_centr[i];
+			const MomentCentrSingle& moment = moments_centr_net[i];
 
 			for (uint j = 0; j < 12; ++j)
 			{

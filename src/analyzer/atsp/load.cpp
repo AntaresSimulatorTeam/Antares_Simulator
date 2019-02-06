@@ -260,7 +260,9 @@ namespace Antares
 			SERIE_Q.resize(pTimeseriesCount, 744);
 
 			folderPerArea.resize(pArea.size());
-			moments_centr.resize(pArea.size());
+			moments_centr_net.resize(pArea.size());
+			moments_centr_raw.resize(pArea.size());
+			hidden_hours.resize(pArea.size());
 
 			// Copying the INI file
 			pStr.clear() << pTemp << SEP << tsName << SEP << "settings.ini";

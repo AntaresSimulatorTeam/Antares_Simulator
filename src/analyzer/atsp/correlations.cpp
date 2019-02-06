@@ -95,6 +95,11 @@ namespace Antares
 		//
 		size_t sizePerMatrix = 744 * pTimeseriesCount * sizeof(double);
 
+		int Ni  = 0; // local counter used to remove the contribution of hours hidden by zeroes  
+		int Nj  = 0; // local counter used to remove the contribution of hours hidden by zeroes  
+		int Nij = 0; // local counter used to remove the contribution of hours hidden by zeroes  
+		int NZR = 0; // local counter used to remove the contribution of hours hidden by zeroes
+
 		for (uint m = 0; m < 12; ++m)
 		{
 			logs.info() << "Correlation: Precaching data for " << Antares::Date::MonthToString(m);
@@ -163,15 +168,18 @@ namespace Antares
 					}
 
 
-					double coeff = 0.;
+					double coeff	=	0.;
+					
+
 					for (uint q = 0; q < NBS; ++q)
 					{
 						Extrait_col(buffer_n, SERIE_N, durmois[m], q);
 						Extrait_col(buffer_p, SERIE_P, durmois[m], q);
 						const double xx = Correlation(buffer_n, buffer_p, durmois[m],
-							moments_centr[i].data[m][0], moments_centr[j].data[m][0],
-							moments_centr[i].data[m][1], moments_centr[j].data[m][1], 0);
-
+							moments_centr_raw[i].data[m][0], moments_centr_raw[j].data[m][0],
+							moments_centr_raw[i].data[m][1], moments_centr_raw[j].data[m][1], 1);
+	//					const double xx = Correlation(buffer_n, buffer_p, durmois[m],
+	//						0,0,0,0,0);
 						coeff += xx / NBS;
 					}
 
@@ -179,6 +187,34 @@ namespace Antares
 					// be rounding as well
 					CORR_MNP.entry[iZ][jZ] = coeff;
 					CORR_MNP.entry[jZ][iZ] = coeff;
+
+					// The contribution of hidden hours (structural zeroes) in the time-series
+					// needs to be removed
+					// C(iz,jz)= C(jz,iz) =  coeff*raw correlation
+					// with coeff = (24-Ni)^0.5*(24-Nj)^0.5/(24+Nij-Ni-Nj)
+					// where Ni,Nj : hidden hours in i and j 
+					// Nij         : hours hidden in both i and j
+					
+					Ni   = 0;
+					Nj   = 0;
+					Nij  = 0;
+					
+					for (uint n = 0; n < 24; ++n)
+					{
+						Ni  += hidden_hours[i].data[m][n];
+						Nj  += hidden_hours[j].data[m][n];
+						Nij += hidden_hours[i].data[m][n]* hidden_hours[j].data[m][n];
+					}
+					NZR = 24 + Nij - (Ni + Nj);
+					if (NZR > 0)
+					{
+						coeff  = (24. - double(Ni))*(24. - double(Nj));
+						coeff  = sqrt(coeff);
+						coeff /= double(NZR);
+						CORR_MNP.entry[iZ][jZ] *= coeff;
+						CORR_MNP.entry[jZ][iZ] *= coeff;
+					}
+					
 				}
 			}
 
@@ -259,7 +295,9 @@ namespace Antares
 		SERIE_P.clear();
 		SERIE_Q.clear();
 		CORR_MNP.clear();
-		moments_centr.clear();
+		moments_centr_net.clear();
+		moments_centr_raw.clear();
+		hidden_hours.clear();
 		cacheDestroy();
 
 

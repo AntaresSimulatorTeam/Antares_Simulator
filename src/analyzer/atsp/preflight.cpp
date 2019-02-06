@@ -113,7 +113,7 @@ namespace Antares
 		const String& folder = folderPerArea[areaIndex];
 
 		// log
-		logs.info() << "Coefficients: area " << (1+areaIndex) << '/' << pArea.size()
+		logs.info() << "Coefficients: area " << (1 + areaIndex) << '/' << pArea.size()
 			<< ": " << info.name;
 
 		// Reading the matrix file for the current area
@@ -143,20 +143,135 @@ namespace Antares
 		// Initializing non standardized bounds
 		double minimu_brut[12];
 		double maximu_brut[12];
+		double minimu_net[12];
+		double maximu_net[12];
+
 		for (uint j = 0; j != 12; ++j)
 		{
 			minimu_brut[j] = +1e+30;
 			maximu_brut[j] = -1e+30;
+			minimu_net [j] = +1e+30;
+			maximu_net [j] = -1e+30;
 		}
 
 		// Series de coefficients d'autocorrelation, en pratique seuls
 		// les PRA premières valeurs sont utilisées
-		double AUTO_ESTIM1[744];
-		// les deux estimations convergent pour des series infinies
-		double AUTO_ESTIM2[744];
+
+		double AUTO_ESTIM[744];
 
 		// col 1=alpha 2= beta 3=gamma 4=delta 5=theta 6=mu
 		double stocha_values[12][6];
+
+		// determination of the hour of the year for which the overall expectation
+		// of the absolute value of the TS is the greatest. This point will be further used
+		// to set the shape factor to 1
+
+		double maxabsyear = 0;
+		double maxabsmnth[12];
+		double normratios[12][24];
+		int    hiddenhours[12];
+
+		for (uint j = 0; j != 12; ++j)
+		{
+			maxabsmnth[j] = 0;
+
+			Extrait_bloc(SERIE_N, posmois[j], 0, MTRX, durmois[j], NBS);
+
+			// si on travaille avec les donnees brutes on les recopie et la serie de
+			// translation vaut zero, sinon on calcule la moyenne pluis les ecarts
+			if (!info.rawData)
+			{
+				// buffer_n will be reseted. No need to initialize it with memset.
+				Colonne_moyenne(buffer_n, SERIE_N, durmois[j], NBS);
+				Retranche_mtrx(SERIE_N, buffer_n, durmois[j], NBS);
+			}
+			else
+				(void)::memset(buffer_n, 0, sizeof(buffer_n));
+
+
+			// On calcule les coefficients horaires de modulation pour le mois courant
+			{
+				Mtrx_abs(SERIE_P, SERIE_N, durmois[j], NBS);
+				Colonne_moyenne(buffer_p, SERIE_P, durmois[j], NBS);
+				const double expect = Moyenne_generale(buffer_p, durmois[j]);
+				if (abs(expect) > 0.001)  // average of absolute values over all series is actually different from zero
+				{
+					for (uint n = 0; n < 24; ++n)
+					{
+						double d = 0;
+						for (uint m = 0; m < lonmois[j]; ++m)
+							d += (buffer_p[24 * m + n] / lonmois[j]);
+						if (d > maxabsmnth[j]) maxabsmnth[j] = d;
+					}
+					if (maxabsmnth[j] == 0) maxabsmnth[j] = 1; //should never happen
+					for (uint n = 0; n < 24; ++n)
+					{
+						double d = 0;
+						for (uint m = 0; m < lonmois[j]; ++m)
+							d += (buffer_p[24 * m + n] / lonmois[j]);
+						normratios[j][n] = d / maxabsmnth[j];  //at this point the maximum shape factor of each month is eqaul to 1
+					}
+				}
+				else
+				{
+					for (uint n = 0; n < 24; ++n)
+					{
+						normratios[j][n] = 1.;
+					}
+				}
+				if (maxabsmnth[j] > maxabsyear) maxabsyear = maxabsmnth[j];
+			}
+
+		} // each month
+
+		  // identification of hours hidden by structural zero-shape factors
+		for (uint j = 0; j != 12; ++j)
+		{
+			hiddenhours[j] = 0;
+			int * hidden_hours_month = hidden_hours[areaIndex].data[j];
+			for (uint n = 0; n < 24; ++n)
+			{
+				if (normratios[j][n] == 0)
+				{
+					hidden_hours_month[n] = 1;
+					hiddenhours[j]++;
+				}
+				else   hidden_hours_month[n] = 0;
+			}
+		} // each month
+
+
+		if (info.rawData)
+		{
+			double cumul;
+			// normalization of monthly shape-factors: average monthly value of non-zero terms = 1 
+			// if analysis on raw data
+			for (uint j = 0; j != 12; ++j)
+			{
+				cumul = 0;
+				for (uint n = 0; n < 24; ++n)
+				{
+					cumul += normratios[j][n];
+				}
+				for (uint n = 0; n < 24; ++n)
+				{
+					if (cumul > 0.001) normratios[j][n] *= double(24 -hiddenhours[j])/cumul;
+				}
+			} // each month
+		}
+		else
+		{
+			// normalization of monthly shape-factors: max annual value = 1 if analysis on detrended data
+			for (uint j = 0; j != 12; ++j)
+			{
+				for (uint n = 0; n < 24; ++n)
+				{
+					if (maxabsyear > 0.001) normratios[j][n] *= maxabsmnth[j] / maxabsyear;
+				}
+			} // each month
+		}
+	
+
 
 		// traitement des donnees brutes avec decoupage mensuel, normalisation
 		// et copie locale (ces copies sont a ranger dans user/ wind,solar,load/ "areaname.txt")
@@ -164,7 +279,7 @@ namespace Antares
 		{
 			// Alias to the stochastics values of the month
 			double* stocha = stocha_values[j];
-			double* moments_centr_mois = moments_centr[areaIndex].data[j];
+			double* moments_centr_net_mois = moments_centr_net[areaIndex].data[j];
 
 			Extrait_bloc(SERIE_N, posmois[j], 0, MTRX, durmois[j], NBS);
 
@@ -202,23 +317,11 @@ namespace Antares
 				Colonne_moyenne(buffer_p, SERIE_P, durmois[j], NBS);
 				const double expect = Moyenne_generale(buffer_p, durmois[j]);
 				double ratios[24];
-				if (abs(expect) > 0.001)  // average of absolute values over all series is actually different from zero
-				{
-					for (uint n = 0; n < 24; ++n)
+				for (uint n = 0; n < 24; ++n)
 					{
-						double d = 0;
-						for (uint m = 0; m < lonmois[j]; ++m)
-							d += (buffer_p[24 * m + n] / lonmois[j]);
-						ratios[n] = d / expect;
+						ratios[n] = normratios[j][n];
 					}
-				}
-				else
-				{
-					for (uint n = 0; n < 24; ++n)
-					{
-						ratios[n] = 1.;
-					}
-				}
+				
 
 				modulation.pasteToColumn(j, ratios);
 
@@ -233,6 +336,8 @@ namespace Antares
 					}
 				}
 			}
+			// On calcule les valeurs extrêmes du processus net
+			Mtrx_bound(minimu_net[j], maximu_net[j], SERIE_N, durmois[j], NBS);
 
 			// copie locale des donnees mormalisees dans study/user/wind,solar,load/ ...
 			{
@@ -265,7 +370,8 @@ namespace Antares
 			double variance = varian_global - expect_global*expect_global;
 			if (variance < 0.)
 				variance = 0.; // si bruit numerique
-			const double standard = sqrt(variance);
+			double standard = sqrt(variance);
+			if (standard < double(0.0001)) standard = 0;
 
 
 			// calcul des moments d'ordre 3 et 4
@@ -290,22 +396,59 @@ namespace Antares
 				}
 			}
 
-			// mise a jour du tableau general des moments (NBZ X 12 X 4)
-			moments_centr_mois[0] = expect_global;
-			moments_centr_mois[1] = standard;
-			moments_centr_mois[2] = skewne_global;
-			moments_centr_mois[3] = kurtos_global - 3;
+			moments_centr_raw[areaIndex].data[j][0] = expect_global;
+			moments_centr_raw[areaIndex].data[j][1] = standard;
+		
+			// mise a jour du tableau general des moments nets (NBZ X 12 X 4)
+			if (hiddenhours[j] == 0 || hiddenhours[j]==24)
+			{
+				moments_centr_net_mois[0] = expect_global;
+				moments_centr_net_mois[1] = standard;
+				moments_centr_net_mois[2] = skewne_global;
+				moments_centr_net_mois[3] = kurtos_global - 3;
+			}
+			else
+			{
+				// update of expectation and standard deviation to remove the contribution of hidden hours
+				// skewness and kurtotis are set to zero to signify they are not corrected (not used) in this version of the code 
+				// local notations : raw expectation = E net expectation E'
+				//                   raw variance    = V net variance    V'
+				//                   raw std dev     = S net std dev     S'
+				//                   hiddenhours     = N
+				// formulation of  E' :  E' = (24/24-N)*E
+				// formulation of  V' :  V' = (24/24-N)(S^2 + E^2) - E'^2
+				//                       V' = (24/24-N) (S^2 - (N/24-N)*E^2)
+				// formulation of  S' :  S' = V' ^0.5
 
-			// Calcul des autocorrelations a l'aide de deux estimateurs AUTO_ESTIM1
-			// (pour theta) et AUTO_ESTIM2 (pour mu).
-			//
-			// AUTO_ESTIM1 et AUTO_ESTIM2 convergent vers des valeurs identiques pour
-			// des series longues et nombreuses
-			(void)::memset(AUTO_ESTIM1, 0, sizeof(AUTO_ESTIM1));
-			(void)::memset(AUTO_ESTIM2, 0, sizeof(AUTO_ESTIM2));
+				moments_centr_net_mois[0]  = (24. / (24. - double(hiddenhours[j])))*expect_global;
+				
+				moments_centr_net_mois[1]  = - double(hiddenhours[j])*expect_global*expect_global;
+				moments_centr_net_mois[1] /= (24. - double(hiddenhours[j]));
+				moments_centr_net_mois[1] += standard*standard;
+				moments_centr_net_mois[1] *= 24. / (24. - double(hiddenhours[j]));
+				if (moments_centr_net_mois[1] < 0) moments_centr_net_mois[1] = 0;
+				moments_centr_net_mois[1] = sqrt(moments_centr_net_mois[1]);
+			
+				moments_centr_net_mois[2] = 0;
+				moments_centr_net_mois[3] = 0;
 
-			AUTO_ESTIM1[0] = 1.; // autocorrelation (Xt, Xt + 0) = 100%
-			AUTO_ESTIM2[0] = 1.; // autocorrelation (Xt, Xt + 0) = 100%
+				expect_global	= moments_centr_net_mois[0];
+				standard		= moments_centr_net_mois[1];
+			}
+			// Calcul des autocorrelations 
+
+		
+			(void)::memset(AUTO_ESTIM, 0, sizeof(AUTO_ESTIM));
+						
+			AUTO_ESTIM[0] = 1.; // autocorrelation (Xt, Xt + 0) = 100%
+
+			// if analysis on raw data with part of signal masked, detrending enforced 
+			if (info.rawData && hiddenhours[j] >= 1 && hiddenhours[j] <= 23)
+			{
+				Colonne_moyenne(buffer_n, SERIE_N, durmois[j], NBS);
+				Retranche_mtrx(SERIE_N, buffer_n, durmois[j], NBS);
+			}
+
 
 			for (uint m = 0; m < NBS; ++m)
 			{
@@ -320,46 +463,65 @@ namespace Antares
 					// les correlations de chaque paire (buffer_n, buffer_q)
 					// pour chacune des NBS séries contribuent à la corrélation (X0,X0+n)*/
 					//
-					// NOTE: autocorrelation theta can be assessed either with:
-					// AUTOESTIM1 
-					// AUTOESTIM2 
-					// in this code AUTOESTIM2 is used in all cases 
-
-					// xx = Correlation(buffer_p,buffer_q,durmois[j]-(n+1),moments_centr[i][j][0],moments_centr[i][j][0],moments_centr[i][j][1],moments_centr[i][j][1],1);
-					double yy = Correlation(buffer_p, buffer_q, durmois[j] - (n + 1), 0, 0, 0, 0, 0);
-					//	AUTO_ESTIM1[n] += xx/NBS;
-					AUTO_ESTIM2[n] += yy / NBS;
+					
+					double xx = Correlation(buffer_p, buffer_q, durmois[j] - (n + 1), 0, 0, 0, 0, 0);
+					AUTO_ESTIM[n] += xx / NBS;
 				}
 				
 			}
-			// time-series may include negative auto-correlation 
+			// If autocorrelation too low (or even negative) theta parameter capped to 5  
 			for (uint n = 1; n < PRA; ++n)
 			{
-				if (AUTO_ESTIM2[n] < 1. / 1000000.) AUTO_ESTIM2[n] = 0.000001;
+				if (AUTO_ESTIM[n] < 0.006737947) AUTO_ESTIM[n] = exp(-5.);
 			}
 
 			// assessment of theta and mu
 			// ignore HOR if variable type is not "Normal"
 		
 			if (info.distribution != Data::XCast::dtNormal)
-				Analyse_auto(AUTO_ESTIM2, PRA, AUC, AUM, (double)HOR, stocha[4], stocha[5]);
+				Analyse_auto(AUTO_ESTIM, PRA, AUC, AUM, (double)HOR, stocha[4], stocha[5]);
 			else
-				Analyse_auto(AUTO_ESTIM2, PRA, AUC, AUM, 0,           stocha[4], stocha[5]);
+				Analyse_auto(AUTO_ESTIM, PRA, AUC, AUM, 0,           stocha[4], stocha[5]);
+
+			// update of exponential decay parameter theta to remove the contribution of hidden hours
+			if (hiddenhours[j] >= 1 && hiddenhours[j] <= 22)
+			 {
+				 stocha[4]  = exp(-stocha[4]);
+				 stocha[4] *= (24. - double(hiddenhours[j]));
+				 stocha[4] /= (24. - (double(hiddenhours[j]) + 1.));
+				 if (stocha[4] > 1.) stocha[4] = 1.;
+				 stocha[4] = -log(stocha[4]);
+			 }
+
+
 
 			// si mu>1 il faut majorer l'ecart-type observe  sur les valeurs lissees
 			// pour remonter a l'ecart-type des valeurs des series non-lissees
 			double standard_majore = (Math::Abs(stocha[5] - 1.) < 1e-6)
 				? standard
 				: standard / Standard_shrinkage((int)stocha[5], exp(-stocha[4]));
-
-			// identification des alpha, beta, gamma, delta
-			if (!Probab_density_funct(minimu_brut[j], maximu_brut[j], expect_global, standard_majore,
-				info.distribution, stocha[0], stocha[1], stocha[2], stocha[3]))
+			
+			double minimum;
+			double maximum;
+			if (info.rawData)
 			{
-				logs.error() << "Area " << info.name << ", month " << (j + 1)
-					<< ": fitting impossible for the chosen type of law";
-				return false;
+				minimum = minimu_brut[j];
+				maximum = maximu_brut[j];
 			}
+			else
+			{
+				minimum = minimu_net[j];
+				maximum = maximu_net[j];
+			}
+				// identification des alpha, beta, gamma, delta
+				if (!Probab_density_funct(minimum, maximum, expect_global, standard_majore,
+					info.distribution, stocha[0], stocha[1], stocha[2], stocha[3]))
+				{
+					logs.error() << "Area " << info.name << ", month " << (j + 1)
+						<< ": fitting impossible for the chosen type of law";
+					return false;
+				}
+			
 
 		} // each month
 

@@ -91,6 +91,11 @@ namespace Antares
 		};
 		typedef std::vector<MomentCentrSingle> MomentCentr;
 
+		struct HiddenHoursSingle
+		{
+			int data[12][24];
+		};
+		typedef std::vector<HiddenHoursSingle> HiddenHours;
 
 	private:
 		// range dans les nblig première lignes et nbcol premières colonnes de OUT
@@ -231,7 +236,11 @@ namespace Antares
 			PRA = 120,
 		};
 
-		MomentCentr moments_centr;
+		MomentCentr moments_centr_net;
+		MomentCentr moments_centr_raw;
+		
+
+		HiddenHours hidden_hours;
 
 		Matrix<> SERIE_N;
 		Matrix<> SERIE_P;
