@@ -159,6 +159,8 @@ namespace AllYears
 					report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<VCardT::decimal>::Value();
 					// Value
 					report.values[report.data.columnIndex][report.data.rowIndex] = rawdata.allYears;
+					// Non applicability
+					report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
 					++(report.data.columnIndex);
 				}
@@ -212,6 +214,8 @@ namespace AllYears
 			report.captions[2][report.data.columnIndex] = "values";
 			// Precision
 			report.precision[report.data.columnIndex] = Solver::Variable::PrecisionToPrintfFormat<VCardT::decimal>::Value();
+			// Non applicability
+			report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
 			// Values
 			if (PrecisionT == Category::annual)
@@ -241,6 +245,8 @@ namespace AllYears
 			report.captions[2][report.data.columnIndex] = "values";
 			// Precision
 			report.precision[report.data.columnIndex] = Solver::Variable::PrecisionToPrintfFormat<VCardT::decimal>::Value();
+			// Non applicability
+			report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
 			(void)::memcpy(report.data.matrix[report.data.columnIndex], array, report.data.nbYears * sizeof(double));
 

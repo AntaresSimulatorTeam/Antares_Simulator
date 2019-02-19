@@ -81,6 +81,8 @@ namespace Economy
 			spatialAggregatePostProcessing = 0,
 			//! Intermediate values
 			hasIntermediateValues = 1,
+			//! Can this variable be non applicable (0 : no, 1 : yes)
+			isPossiblyNonApplicable = 0,
 		};
 
 		typedef IntermediateValues IntermediateValuesBaseType[columnCount];
@@ -149,6 +151,8 @@ namespace Economy
 		~DispatchableGeneration()
 		{
 			delete[] pValuesForTheCurrentYear;
+			delete[] isNotApplicable;
+			delete[] isPrinted;
 		}
 
 		void initializeFromStudy(Data::Study& study)
@@ -156,6 +160,13 @@ namespace Economy
 			pNbYearsParallel = study.maxNbYearsInParallel;
 			
 			InitializeResultsFromStudy(AncestorType::pResults, study);
+
+			// current variable output behavior container
+			isNotApplicable = new bool[VCardType::columnCount];
+			isPrinted = new bool[VCardType::columnCount];
+
+			// Setting print info for current variable
+			setPrintInfo(study);
 
 			pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
 			for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; ++numSpace)
@@ -200,6 +211,21 @@ namespace Economy
 			NextType::initializeFromThermalCluster(study, area, cluster);
 		}
 
+		bool* getPrintStatus() const { return isPrinted; }
+
+		bool* getNonApplicableStatus() const { return isNotApplicable; }
+
+		void setPrintInfo(Data::Study& study)
+		{
+			for (uint i = 0; i != VCardType::columnCount; ++i)
+			{
+				// Shifting (inside the variables print info collection) to the current variable print info
+				study.parameters.variablesPrintInfo.find(VCardType::Multiple::Caption(i));
+				// And then getting the non applicable and print status
+				isNotApplicable[i] = study.parameters.variablesPrintInfo.isNotApplicable();
+				isPrinted[i] = study.parameters.variablesPrintInfo.isPrinted();
+			}
+		}
 
 		void simulationBegin()
 		{
@@ -296,12 +322,20 @@ namespace Economy
 
 		void localBuildAnnualSurveyReport(SurveyResults& results, int fileLevel, int precision, unsigned int numSpace) const
 		{
-			// Write the data for the current year
-			for (unsigned int i = 0; i != VCardType::columnCount; ++i)
+			// The current variable is actually a multiple-variable.
+			// Initializing external pointer on internal variables' non applicable status array to beginning
+			results.isCurrentVarNA = isNotApplicable;
+			
+			for (uint i = 0; i != VCardType::columnCount; ++i)
 			{
-				results.variableCaption = VCardType::Multiple::Caption(i);
-				pValuesForTheCurrentYear[numSpace][i].template
-					buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+				if (isPrinted[i])
+				{
+					// Write the data for the current year
+					results.variableCaption = VCardType::Multiple::Caption(i);
+					pValuesForTheCurrentYear[numSpace][i].template
+						buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+				}
+				results.isCurrentVarNA++;
 			}
 		}
 
@@ -310,6 +344,11 @@ namespace Economy
 		//! Intermediate values for each year
 		typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
 		unsigned int pNbYearsParallel;
+		//! Are internal variables not applicable ?
+		//! Meaning : do we print N/A in output files regarding the current variable ?
+		bool* isNotApplicable;
+		// Do we print results regarding internal variables in output files ? Or do we skip them ?
+		bool* isPrinted;
 
 	}; // class DispatchableGeneration
 

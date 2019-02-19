@@ -35,8 +35,9 @@
 # include "../date.h"
 # include "../inifile.h"
 # include "fwd.h"
+# include "variable-print-info.h"
 
-
+using namespace std;
 
 namespace Antares
 {
@@ -206,6 +207,11 @@ namespace Data
 		bool userPlaylist;
 		//! Flag to perform the calculations or not from the solver
 		bool* yearsFilter;
+
+		//! Custom variable selection (each variable will be manually selected for print by the user)
+		bool userVariableSelection;
+		//! List of all output variables print info
+		mutable AllVariablesPrintInfo variablesPrintInfo;
 
 		//! The number of years that will be really performed
 		// Computed automatically from the number of MC years and the playlist

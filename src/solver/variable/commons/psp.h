@@ -80,6 +80,8 @@ namespace Economy
 			spatialAggregatePostProcessing = 0,
 			//! Intermediate values
 			hasIntermediateValues = 1,
+			//! Can this variable be non applicable (0 : no, 1 : yes)
+			isPossiblyNonApplicable = 0,
 		};
 
 		typedef IntermediateValues IntermediateValuesBaseType;
@@ -129,6 +131,8 @@ namespace Economy
 		~PSP()
 		{
 			delete[] pValuesForTheCurrentYear;
+			delete[] isNotApplicable;
+			delete[] isPrinted;
 		}
 
 		void initializeFromStudy(Data::Study& study)
@@ -137,6 +141,13 @@ namespace Economy
 
 			// Average on all years
 			InitializeResultsFromStudy(AncestorType::pResults, study);
+
+			// current variable output behavior container
+			isNotApplicable = new bool[VCardType::columnCount];
+			isPrinted = new bool[VCardType::columnCount];
+
+			// Setting print info for current variable
+			setPrintInfo(study);
 
 			// Intermediate values
 			pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
@@ -182,6 +193,17 @@ namespace Economy
 		{
 			// Next
 			NextType::simulationBegin();
+		}
+
+		bool* getPrintStatus() const { return isPrinted; }
+
+		bool* getNonApplicableStatus() const { return isNotApplicable; }
+
+		void setPrintInfo(Data::Study& study)
+		{
+			study.parameters.variablesPrintInfo.find(VCardType::Caption());
+			isNotApplicable[0] = study.parameters.variablesPrintInfo.isNotApplicable();
+			isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted();
 		}
 
 		void simulationEnd()
@@ -263,10 +285,16 @@ namespace Economy
 
 		void localBuildAnnualSurveyReport(SurveyResults& results, int fileLevel, int precision, unsigned int numSpace) const
 		{
-			// Write the data for the current year
-			results.variableCaption = VCardType::Caption();
-			pValuesForTheCurrentYear[numSpace].template
-				buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+			// Initializing external pointer on current variable non applicable status
+			results.isCurrentVarNA = isNotApplicable;
+
+			if (isPrinted[0])
+			{
+				// Write the data for the current year
+				results.variableCaption = VCardType::Caption();
+				pValuesForTheCurrentYear[numSpace].template
+					buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+			}
 		}
 
 
@@ -274,6 +302,11 @@ namespace Economy
 		//! Intermediate values for each year
 		typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
 		unsigned int pNbYearsParallel;
+		//! Is variable not applicable ?
+		//! Meaning : do we print N/A in output files regarding the current variable ?
+		bool* isNotApplicable;
+		// Do we print results regarding the current variable in output files ? Or do we skip them ?
+		bool* isPrinted;
 
 	}; // class PSP
 

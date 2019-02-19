@@ -150,6 +150,8 @@ namespace AdequacyDraft
 			NextType::initializeFromThermalCluster(study, area, cluster);
 		}
 
+		bool* getPrintStatus() const { return nullptr; }
+		bool* getNonApplicableStatus() const { return nullptr; }
 
 		void simulationBegin()
 		{

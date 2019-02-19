@@ -28,6 +28,8 @@ set(SRC_UI_WINDOWS_OUTPUT
 )
 
 set(SRC_UI_OUTPUT_PROVIDERS
+		windows/output/provider/variable-collector.h
+		windows/output/provider/variable-collector.cpp
 		windows/output/provider/variables.h
 		windows/output/provider/variables.cpp
 		windows/output/provider/outputs.h

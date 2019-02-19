@@ -162,6 +162,8 @@ namespace AllYears
 				report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<VCardT::decimal>::Value();
 				// Value
 				report.values[report.data.columnIndex][report.data.rowIndex] = avgdata.allYears;
+				// Non applicability
+				report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
 				++(report.data.columnIndex);
 			}
@@ -208,6 +210,8 @@ namespace AllYears
 			report.captions[2][report.data.columnIndex] = "EXP";
 			// Precision
 			report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<VCardT::decimal>::Value();
+			// Non applicability
+			report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
 			// Values
 			switch (PrecisionT)

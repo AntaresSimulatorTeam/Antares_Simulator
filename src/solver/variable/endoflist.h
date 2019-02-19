@@ -80,10 +80,16 @@ namespace Container
 		~EndOfList() {}
 		//@}
 
-		static void initializeFromStudy(Data::Study&) {}
+		static void initializeFromStudy(Data::Study& study)
+		{
+			study.parameters.variablesPrintInfo.resetInfoIterator();
+		}
 		static void initializeFromArea(Data::Study*, Data::Area*) {}
 		static void initializeFromThermalCluster(Data::Study*, Data::Area*, Data::ThermalCluster*) {}
 		static void initializeFromAreaLink(Data::Study*, Data::AreaLink*) {}
+
+		bool* getPrintStatus() const { return nullptr; }
+		bool* getNonApplicableStatus() const { return nullptr; }
 
 		static void simulationBegin() {}
 

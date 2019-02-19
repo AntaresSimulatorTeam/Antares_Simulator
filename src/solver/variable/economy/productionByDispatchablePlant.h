@@ -42,7 +42,7 @@ namespace Economy
 	struct VCardProductionByDispatchablePlant
 	{
 		//! Caption
-		static const char* Caption() {return "ENERG. PLANT";}
+		static const char* Caption() {return "DTG by plant";}
 		//! Unit
 		static const char* Unit() {return "MWh";}
 
@@ -77,6 +77,8 @@ namespace Economy
 			spatialAggregatePostProcessing = 0,
 			//! Intermediate values
 			hasIntermediateValues = 1,
+			//! Can this variable be non applicable (0 : no, 1 : yes)
+			isPossiblyNonApplicable = 0,
 		};
 
 		typedef IntermediateValues IntermediateValuesDeepType;
@@ -155,7 +157,9 @@ namespace Economy
 		ProductionByDispatchablePlant() :
 			pValuesForTheCurrentYear(nullptr),
 			pminOfTheClusterForYear(nullptr),
-			pSize(0)
+			pSize(0),
+			isNotApplicable(nullptr),
+			isPrinted(nullptr)
 		{
 		}
 
@@ -168,10 +172,20 @@ namespace Economy
 			for(unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
 				delete[] pminOfTheClusterForYear[numSpace];
 			delete[] pminOfTheClusterForYear;
+
+			delete[] isNotApplicable;
+			delete[] isPrinted;
 		}
 
 		void initializeFromStudy(Data::Study& study)
 		{
+			// current variable output behavior container
+			isNotApplicable = new bool[1];	// Constant dynamicColumns (= -1) cannot be used to allocate  
+			isPrinted = new bool[1];		// Constant dynamicColumns (= -1) cannot be used to allocate
+
+			// Setting print info for current variable
+			setPrintInfo(study);
+			
 			// Next
 			NextType::initializeFromStudy(study);
 		}
@@ -247,6 +261,16 @@ namespace Economy
 			NextType::initializeFromThermalCluster(study, area, cluster);
 		}
 
+		bool* getPrintStatus() const { return isPrinted; }
+
+		bool* getNonApplicableStatus() const { return isNotApplicable; }
+
+		void setPrintInfo(Data::Study& study)
+		{
+			study.parameters.variablesPrintInfo.find(VCardType::Caption());
+			isNotApplicable[0] = study.parameters.variablesPrintInfo.isNotApplicable();
+			isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted();
+		}
 
 		void simulationBegin()
 		{
@@ -395,15 +419,22 @@ namespace Economy
 
 		void localBuildAnnualSurveyReport(SurveyResults& results, int fileLevel, int precision, unsigned int numSpace) const
 		{
-			assert(NULL != results.data.area);
-			const auto& thermal = results.data.area->thermal;
+			// Initializing external pointer on current variable non applicable status
+			results.isCurrentVarNA = isNotApplicable;
 
-			// Write the data for the current year
-			for (uint i = 0; i < pSize; ++i)
+			if (isPrinted[0])
 			{
-				results.variableCaption = thermal.clusters[i]->name();
-				pValuesForTheCurrentYear[numSpace][i].template
-					buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+				assert(NULL != results.data.area);
+				const auto& thermal = results.data.area->thermal;
+
+				// Write the data for the current year
+				for (uint i = 0; i < pSize; ++i)
+				{
+					// Write the data for the current year
+					results.variableCaption = thermal.clusters[i]->name(); //VCardType::Caption();
+					pValuesForTheCurrentYear[numSpace][i].template
+						buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+				}
 			}
 		}
 
@@ -414,6 +445,11 @@ namespace Economy
 		double ** pminOfTheClusterForYear;
 		unsigned int pSize;
 		unsigned int pNbYearsParallel;
+		//! Is variable not applicable ?
+		//! Meaning : do we print N/A in output files regarding the current variable ?
+		bool* isNotApplicable;
+		// Do we print results regarding the current variable in output files ? Or do we skip them ?
+		bool* isPrinted;
 
 	}; // class ProductionByDispatchablePlant
 

@@ -38,7 +38,7 @@ namespace Antares
 namespace Data
 {
 
-
+	// gp : voir l'impact de la selection des variables ici
 	StudyMemoryUsage::StudyMemoryUsage(const Study& s) :
 		mode(s.parameters.mode),
 		swappingSupport(false),

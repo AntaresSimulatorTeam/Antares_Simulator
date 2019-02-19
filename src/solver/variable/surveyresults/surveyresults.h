@@ -34,6 +34,7 @@
 # include "../categories.h"
 # include <antares/timeelapsed/timeelapsed.h>
 # include "data.h"
+# include <antares/study/variable-print-info.h>
 
 
 
@@ -123,11 +124,28 @@ namespace Variable
 		//! Precision to for each column (in the printf format)
 		PrecisionType* precision;
 
+		//! Non applicable status for each column (in the printf format)
+		bool* nonApplicableStatus;
+
 		//! The total number of variables
 		const uint maxVariables;
 
 		//! Flag to known if we are in the year-by-year mode
 		bool yearByYearResults;
+
+		// All variables print info
+		// Antares::Data::AllVariablesPrintInfo * allvarsinfo;
+
+		//! When looping over output variables, is current variable non applicable ?
+		//! In the static type list of variables, there is a need to convey the non applicable status to variables
+		//! statistic results through an instance of the current class.
+		//! Furthermore, some unusual variables are actually "multi-variables", that is they contain actually
+		//! several variables.
+		//! Therefore, the following is a pointer on the current ouput variable's non applicable status,
+		//! and in case of a multi-variable, on the current sub-variable's non applicable status.
+		bool* isCurrentVarNA;
+		//! Same thing for print status (do we print the current output variable ?)
+		bool* isPrinted;
 
 	private:
 		/*!

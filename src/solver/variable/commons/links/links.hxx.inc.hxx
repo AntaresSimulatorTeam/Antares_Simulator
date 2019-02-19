@@ -46,9 +46,10 @@ namespace LINK_NAMESPACE
 	}
 
 
-	inline void Links::initializeFromStudy(Data::Study&)
+	inline void Links::initializeFromStudy(Data::Study& study)
 	{
-		// Do nothing
+		// Do nothing but resetting the pointer on print info collection
+		study.parameters.variablesPrintInfo.resetInfoIterator();
 	}
 
 

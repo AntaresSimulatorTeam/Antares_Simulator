@@ -228,6 +228,9 @@ namespace Data
 					logs.error() << "impossible to write " << buffer;
 			}
 
+			// In output files, do we write N/A for few variables' columns ?
+			parameters.variablesPrintInfo.setNonApplicableStatusForEachVariable();
+
 			// Write all available links as a reminder
 			buffer.clear() << folderOutput << SEP << "about-the-study" << SEP << "links.txt";
 			if (not areas.saveLinkListToFile(buffer))

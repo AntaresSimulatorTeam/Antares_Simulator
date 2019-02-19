@@ -28,7 +28,7 @@
 # define __SOLVER_VARIABLE_VARIABLE_HXX__
 
 # include <yuni/core/static/types.h>
-
+# include <antares/study/variable-print-info.h>
 
 
 namespace Antares
@@ -82,10 +82,7 @@ namespace Variable
 	template<class ChildT, class NextT, class VCardT>
 	inline void
 	IVariable<ChildT,NextT,VCardT>::initializeFromStudy(Data::Study& study)
-	{
-		// By default, variable is applicable : no "N/A" is printed in output files for this variable 
-		pIsNotApplicable = false;
-		
+	{	
 		// Next
 		NextType::initializeFromStudy(study);
 	}
@@ -126,6 +123,21 @@ namespace Variable
 		NextType::initializeFromThermalCluster(study, area, cluster);
 	}
 
+	template<class ChildT, class NextT, class VCardT>
+	bool* 
+	IVariable<ChildT, NextT, VCardT>::getPrintStatus() const
+	{ 
+		// Default function (draft mode)
+		return nullptr;
+	}
+
+	template<class ChildT, class NextT, class VCardT>
+	bool*
+	IVariable<ChildT, NextT, VCardT>::getNonApplicableStatus() const
+	{ 
+		// Default function (draft mode)
+		return nullptr;
+	}
 
 	template<class ChildT, class NextT, class VCardT>
 	inline void
@@ -282,22 +294,15 @@ namespace Variable
 			// And only if we match the current data level _and_ precision level
 			if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel) && (precision & VCardType::precision))
 			{
-				if (!pIsNotApplicable)
-				{
-					// Only min and max have to be printed in id-{precision}.txt
-					if (fileLevel & Category::id)
-						for (int i = 0; i < 2; i++)
-							results.data.nonApplicableColIdx.push_back(results.data.columnIndex + i);
-					// All variable results are printed (see ResultsType) in other output files
-					else
-						for (int i = 0; i < ResultsType::count; i++)
-							results.data.nonApplicableColIdx.push_back(results.data.columnIndex + i);
-				}
+				// Initializing pointer on variable non applicable and print stati arrays to beginning
+				results.isPrinted = static_cast<const ChildT*>(this)->getPrintStatus();
+				results.isCurrentVarNA = static_cast<const ChildT*>(this)->getNonApplicableStatus();
 
 				VariableAccessorType::template
 					BuildSurveyReport<VCardType>(results, pResults, dataLevel, fileLevel, precision);
 			}
 		}
+
 		// Ask to the next item in the static list to export
 		// its results as well
 		NextType:: buildSurveyReport(results, dataLevel, fileLevel, precision);
@@ -316,13 +321,15 @@ namespace Variable
 			if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
 				&& (precision & VCardType::precision))
 			{
-				// getting its imtermediate results
+				// Getting its intermediate results
 				static_cast<const ChildT*>(this)->localBuildAnnualSurveyReport(results, fileLevel, precision, numSpace);
 			}
 		}
+
 		// Ask to the next item in the static list to export
 		// its results as well
 		NextType::buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
+
 	}
 
 
@@ -336,9 +343,9 @@ namespace Variable
 				|| VCardType::categoryDataLevel & Category::area
 				|| VCardType::categoryDataLevel & Category::link))
 		{
-			// To print N/A in the digest output file is output variable is non applicable
-			if (isNotApplicable())
-				results.data.nonApplicableColIdx.push_back(results.data.columnIndex);
+			// Initializing pointer on variable non applicable and print stati arrays to beginning
+			results.isPrinted = static_cast<const ChildT*>(this)->getPrintStatus();
+			results.isCurrentVarNA = static_cast<const ChildT*>(this)->getNonApplicableStatus();
 
 			VariableAccessorType::template BuildDigest<VCardT>(results, pResults, digestLevel, dataLevel);
 		}
@@ -561,16 +568,11 @@ namespace Variable
 		return pResults;
 	}
 
-	template<class ChildT, class NextT, class VCardT>
-	inline const bool IVariable<ChildT, NextT, VCardT>::isNotApplicable() const
-	{
-		return pIsNotApplicable;
-	}
-
 
 	namespace // anonymous
 	{
-		template<int ColumnT, class VCardT>
+
+		template<int ColumnT, class VCardT, class ChildT>
 		class RetrieveVariableListHelper
 		{
 		public:
@@ -579,24 +581,56 @@ namespace Variable
 				for (int i = 0; i < VCardT::columnCount; ++i)
 					predicate.add(VCardT::Multiple::Caption(i), VCardT::Unit(), VCardT::Description());
 			}
+
+			static void Do(Data::variablePrintInfoCollector& printInfoCollector)
+			{
+				for (int i = 0; i < VCardT::columnCount; ++i)
+				{
+					printInfoCollector.add(	VCardT::Multiple::Caption(i),
+											VCardT::ResultsType::count,
+											VCardT::categoryDataLevel,
+											VCardT::categoryFileLevel,
+											VCardT::isPossiblyNonApplicable);
+				}
+			}
+
 		};
 
-		template<class VCardT>
-		class RetrieveVariableListHelper<1, VCardT>
+		template<class VCardT, class ChildT>
+		class RetrieveVariableListHelper<1, VCardT, ChildT>
 		{
 		public:
 			template<class PredicateT> static void Do(PredicateT& predicate)
 			{
 				predicate.add(VCardT::Caption(), VCardT::Unit(), VCardT::Description());
 			}
+
+			static void Do(Data::variablePrintInfoCollector& printInfoCollector)
+			{
+				printInfoCollector.add(	VCardT::Caption(),
+										VCardT::ResultsType::count,
+										VCardT::categoryDataLevel,
+										VCardT::categoryFileLevel,
+										VCardT::isPossiblyNonApplicable);
+			}
 		};
 
-		template<class VCardT>
-		class RetrieveVariableListHelper<-1, VCardT>
+		template<class VCardT, class ChildT>
+		class RetrieveVariableListHelper<-1, VCardT, ChildT>
 		{
 		public:
 			template<class PredicateT> static void Do(PredicateT&)
 			{}
+
+			// We want variable with columnCount = dynamicColumns to be selected if needed
+			static void Do(Data::variablePrintInfoCollector& printInfoCollector)
+			{
+				printInfoCollector.add(	VCardT::Caption(),
+										VCardT::ResultsType::count,
+										VCardT::categoryDataLevel,
+										VCardT::categoryFileLevel,
+										VCardT::isPossiblyNonApplicable);
+			}
 		};
 
 	} // anonymous namespace
@@ -606,13 +640,10 @@ namespace Variable
 	template<class PredicateT>
 	void IVariable<ChildT,NextT,VCardT>::RetrieveVariableList(PredicateT& predicate)
 	{
-		RetrieveVariableListHelper<VCardType::columnCount, VCardType>::Do(predicate);
+		RetrieveVariableListHelper<VCardType::columnCount, VCardType, ChildT>::Do(predicate);
 		// Go to the next variable
 		NextType::RetrieveVariableList(predicate);
 	}
-
-
-
 
 
 

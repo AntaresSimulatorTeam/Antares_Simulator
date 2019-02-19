@@ -173,8 +173,14 @@ namespace Variable
 		{
 			for (uint i = 0; i != ColumnCountT; ++i)
 			{
-				results.variableCaption = VCardT::Multiple::Caption(i);
-				container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
+				if (*results.isPrinted)
+				{
+					results.variableCaption = VCardT::Multiple::Caption(i);
+					container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
+				}
+				// Shift to the next internal variable's non applicable status and print status
+				results.isCurrentVarNA++;
+				results.isPrinted++;
 			}
 		}
 
@@ -183,9 +189,14 @@ namespace Variable
 		{
 			for (uint i = 0; i != ColumnCountT; ++i)
 			{
-				results.variableCaption = VCardType::Multiple::Caption(i);
-				//container[i].template buildSurveyReport<DataLevel,FileLevel,Precision,S,VCardType>(results);
-				container[i].template buildSurveyReport<ResultsT,VCardType>(results, container[i], dataLevel, fileLevel, precision);
+				if(*results.isPrinted)
+				{
+					results.variableCaption = VCardType::Multiple::Caption(i);
+					container[i].template buildSurveyReport<ResultsT, VCardType>(results, container[i], dataLevel, fileLevel, precision);
+				}
+				// Shift to the next internal variable's non applicable status and print status
+				results.isCurrentVarNA++;
+				results.isPrinted++;
 			}
 		}
 
@@ -194,8 +205,14 @@ namespace Variable
 		{
 			for (uint i = 0; i != ColumnCountT; ++i)
 			{
-				results.variableCaption = VCardType::Multiple::Caption(i);
-				container[i].template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+				if(*results.isPrinted)
+				{
+					results.variableCaption = VCardType::Multiple::Caption(i);
+					container[i].template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+				}
+				// Shift to the next internal variable's non applicable status and print status
+				results.isCurrentVarNA++;
+				results.isPrinted++;
 			}
 		}
 
@@ -347,11 +364,14 @@ namespace Variable
 		template<class VCardT>
 		static void BuildDigest(SurveyResults& results, const Type& container, int digestLevel, int dataLevel)
 		{
-			const Data::PartThermal& thermal = results.data.area->thermal;
-			for (uint i = 0; i != container.size(); ++i)
+			if(*results.isPrinted)
 			{
-				results.variableCaption = thermal.clusters[i]->name();
-				container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
+				const Data::PartThermal& thermal = results.data.area->thermal;
+				for (uint i = 0; i != container.size(); ++i)
+				{
+					results.variableCaption = thermal.clusters[i]->name();
+					container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
+				}
 			}
 		}
 
@@ -359,22 +379,28 @@ namespace Variable
 		template<class VCardType>
 		static void BuildSurveyReport(SurveyResults& results, const Type& container, int dataLevel, int fileLevel, int precision)
 		{
-			const Data::PartThermal& thermal = results.data.area->thermal;
-			for (uint i = 0; i != container.size(); ++i)
+			if(*results.isPrinted)
 			{
-				results.variableCaption = thermal.clusters[i]->name();
-				container[i].template buildSurveyReport<ResultsT,VCardType>(results, container[i], dataLevel, fileLevel, precision);
+				const Data::PartThermal& thermal = results.data.area->thermal;
+				for (uint i = 0; i != container.size(); ++i)
+				{
+					results.variableCaption = thermal.clusters[i]->name();
+					container[i].template buildSurveyReport<ResultsT, VCardType>(results, container[i], dataLevel, fileLevel, precision);
+				}
 			}
 		}
 
 		template<class VCardType>
 		static void BuildAnnualSurveyReport(SurveyResults& results, const Type& container, int fileLevel, int precision)
 		{
-			const Data::PartThermal& thermal = results.data.area->thermal;
-			for (uint i = 0; i != container.size(); ++i)
+			if(*results.isPrinted)
 			{
-				results.variableCaption = thermal.clusters[i]->name();
-				container[i].template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+				const Data::PartThermal& thermal = results.data.area->thermal;
+				for (uint i = 0; i != container.size(); ++i)
+				{
+					results.variableCaption = thermal.clusters[i]->name();
+					container[i].template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+				}
 			}
 		}
 
@@ -495,22 +521,31 @@ namespace Variable
 		template<class VCardT>
 		static void BuildDigest(SurveyResults& results, const Type& container, int digestLevel, int dataLevel)
 		{
-			results.variableCaption = VCardT::Caption();
-			container.template buildDigest<VCardT>(results, digestLevel, dataLevel);
+			if(*results.isPrinted)
+			{
+				results.variableCaption = VCardT::Caption();
+				container.template buildDigest<VCardT>(results, digestLevel, dataLevel);
+			}
 		}
 
 		template<class VCardType>
 		static void BuildSurveyReport(SurveyResults& results, const Type& container, int dataLevel, int fileLevel, int precision)
 		{
-			results.variableCaption = VCardType::Caption();
-			container.template buildSurveyReport<ResultsT,VCardType>(results, container, dataLevel, fileLevel, precision);
+			if (*results.isPrinted)
+			{
+				results.variableCaption = VCardType::Caption();
+				container.template buildSurveyReport<ResultsT, VCardType>(results, container, dataLevel, fileLevel, precision);
+			}
 		}
 
 		template<class VCardType>
 		static void BuildAnnualSurveyReport(SurveyResults& results, const Type& container, int fileLevel, int precision)
 		{
-			results.variableCaption = VCardType::Caption();
-			container.template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+			if (*results.isPrinted)
+			{
+				results.variableCaption = VCardType::Caption();
+				container.template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+			}
 		}
 
 

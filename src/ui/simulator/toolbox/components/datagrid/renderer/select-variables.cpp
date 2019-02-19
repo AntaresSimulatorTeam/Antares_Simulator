@@ -37,7 +37,7 @@ namespace Renderer
 
 	int SelectVariables::height() const
 	{
-		return (not study) ? 0 : (int) study->parameters.nbYears;
+		return (not study) ? 0 : (int) study->parameters.variablesPrintInfo.size();
 	}
 
 	wxString SelectVariables::columnCaption(int) const
@@ -48,20 +48,20 @@ namespace Renderer
 
 	wxString SelectVariables::rowCaption(int rowIndx) const
 	{
-		return wxString(wxT("var  ")) << (rowIndx + 1) << wxT("  ");
+		return wxString(wxT(" ")) << study->parameters.variablesPrintInfo[rowIndx]->name() << wxT("  ");
 	}
 
 
-	bool SelectVariables::cellValue(int, int y, const Yuni::String& value)
+	bool SelectVariables::cellValue(int, int var, const Yuni::String& value)
 	{
-		if (!(!study) && (uint) y < study->parameters.nbYears)
+		if (!(!study) && (uint) var < study->parameters.variablesPrintInfo.size())
 		{
 			String s = value;
 			s.trim();
 			s.toLower();
 			bool v = s.to<bool>() || s == "active" || s == "enabled";
-			assert(study->parameters.yearsFilter);
-			study->parameters.yearsFilter[y] = v;
+			assert(!study->parameters.variablesPrintInfo.isEmpty());
+			study->parameters.variablesPrintInfo[var]->enablePrint(v);
 			onTriggerUpdate();
 			Dispatcher::GUI::Refresh(pControl);
 			return true;
@@ -70,34 +70,34 @@ namespace Renderer
 	}
 
 
-	double SelectVariables::cellNumericValue(int, int y) const
+	double SelectVariables::cellNumericValue(int, int var) const
 	{
-		if (!(!study) && (uint) y < study->parameters.nbYears)
+		if (!(!study) && (uint) var < study->parameters.variablesPrintInfo.size())
 		{
-			assert(study->parameters.yearsFilter);
-			return study->parameters.yearsFilter[y];
+			assert(!study->parameters.variablesPrintInfo.isEmpty());
+			return study->parameters.variablesPrintInfo[var]->isPrinted();
 		}
 		return 0.;
 	}
 
 
-	wxString SelectVariables::cellValue(int, int y) const
+	wxString SelectVariables::cellValue(int, int var) const
 	{
-		if (!(!study) && static_cast<uint>(y) < study->parameters.nbYears)
+		if (!(!study) && static_cast<uint>(var) < study->parameters.variablesPrintInfo.size())
 		{
-			assert(study->parameters.yearsFilter);
-			return study->parameters.yearsFilter[y] ? wxT("Active") : wxT("skip");
+			assert(!study->parameters.variablesPrintInfo.isEmpty());
+			return study->parameters.variablesPrintInfo[var]->isPrinted() ? wxT("Active") : wxT("skip");
 		}
 		return wxEmptyString;
 	}
 
 
-	IRenderer::CellStyle SelectVariables::cellStyle(int, int y) const
+	IRenderer::CellStyle SelectVariables::cellStyle(int, int var) const
 	{
-		if (!(!study) && (uint) y < study->parameters.nbYears)
+		if (!(!study) && (uint) var < study->parameters.variablesPrintInfo.size())
 		{
-			assert(study->parameters.yearsFilter);
-			return !study->parameters.yearsFilter[y]
+			assert(!study->parameters.variablesPrintInfo.isEmpty());
+			return !study->parameters.variablesPrintInfo[var]->isPrinted()
 				? IRenderer::cellStyleConstraintNoWeight : IRenderer::cellStyleConstraintWeight;
 		}
 		return IRenderer::cellStyleConstraintNoWeight;

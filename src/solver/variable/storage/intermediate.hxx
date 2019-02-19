@@ -138,6 +138,8 @@ namespace Variable
 		report.captions[2][report.data.columnIndex] = nullptr;
 		// Precision
 		report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<VCardT::decimal>::Value();
+		// Non applicability
+		report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
 		// Values
 		if (not annual)

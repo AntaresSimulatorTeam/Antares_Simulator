@@ -70,11 +70,8 @@ namespace Options
 			wxString s = wxT("All output variables will be saved on disk  (");
 			if (!(!study))
 			{
-				uint y = study->parameters.nbYears;
-				if (y < 2)
-					s << wxT("1 year)");
-				else
-					s << y << wxT(" years)");
+				uint nvars = study->parameters.variablesPrintInfo.size();
+				s << nvars << wxT(" variables)");
 			}
 			else
 				s << wxT("no study)");
@@ -175,8 +172,8 @@ namespace Options
 		auto& study = *studyptr;
 
 		Freeze();
-		for (uint i = 0; i != study.parameters.nbYears; ++i)
-			study.parameters.yearsFilter[i] = true;
+		for (uint i = 0; i != study.parameters.variablesPrintInfo.size(); ++i)
+			study.parameters.variablesPrintInfo[i]->enablePrint(true);
 		pGrid->forceRefresh();
 		updateCaption();
 		Dispatcher::GUI::Refresh(pGrid);
@@ -193,8 +190,8 @@ namespace Options
 		auto& study = *studyptr;
 
 		Freeze();
-		for (uint i = 0; i != study.parameters.nbYears; ++i)
-			study.parameters.yearsFilter[i] = false;
+		for (uint i = 0; i != study.parameters.variablesPrintInfo.size(); ++i)
+			study.parameters.variablesPrintInfo[i]->enablePrint(false);
 		pGrid->forceRefresh();
 		updateCaption();
 		Dispatcher::GUI::Refresh(pGrid);
@@ -211,10 +208,9 @@ namespace Options
 		auto& study = *studyptr;
 
 		Freeze();
-		for (uint i = 0; i != study.parameters.nbYears; ++i)
+		for (uint i = 0; i != study.parameters.variablesPrintInfo.size(); ++i)
 		{
-			study.parameters.yearsFilter[i] =
-				!study.parameters.yearsFilter[i];
+			study.parameters.variablesPrintInfo[i]->enablePrint( not study.parameters.variablesPrintInfo[i]->isPrinted() );
 		}
 		pGrid->forceRefresh();
 		updateCaption();
@@ -239,20 +235,19 @@ namespace Options
 		auto& study = *studyptr;
 
 		auto& d = study.parameters;
-		bool b = d.userPlaylist and d.nbYears > 1;
-
-		if (b)
+		
+		if (d.userVariableSelection)
 		{
-			uint y = 0;
-			for (uint i = 0; i != d.nbYears; ++i)
+			uint v = 0;
+			for (uint i = 0; i != d.variablesPrintInfo.size(); ++i)
 			{
-				if (d.yearsFilter[i])
-					++y;
+				if (d.variablesPrintInfo[i]->isPrinted())
+					++v;
 			}
-			if (y < 2)
-				pStatus->SetLabel(wxString() << wxT(" Ask for selecting ") << y << wxT(" output variable  "));
+			if (v < 2)
+				pStatus->SetLabel(wxString() << wxT(" Ask for selecting ") << v << wxT(" output variable  "));
 			else
-				pStatus->SetLabel(wxString() << wxT(" Ask for selecting ") << y << wxT(" output variables  "));
+				pStatus->SetLabel(wxString() << wxT(" Ask for selecting ") << v << wxT(" output variables  "));
 		}
 		else
 			pStatus->SetLabel(wxT(" Ask for selecting output variables "));
@@ -267,7 +262,7 @@ namespace Options
 		auto& study = *studyptr;
 
 		Freeze();
-		bool b = study.parameters.userPlaylist and study.parameters.nbYears > 1;
+		bool b = study.parameters.userVariableSelection;
 
 		updateCaption();
 		wxSizer& sizer = *GetSizer();
@@ -290,7 +285,7 @@ namespace Options
 		{
 			bool v = evt.IsChecked();
 			auto& d = studyptr->parameters;
-			d.userPlaylist = v;
+			d.userVariableSelection = v;
 		}
 		onUpdateStatus();
 		OnStudySimulationSettingsChanged();

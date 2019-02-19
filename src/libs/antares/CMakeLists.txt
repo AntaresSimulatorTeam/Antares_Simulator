@@ -327,9 +327,7 @@ set(SRC_IO
 	io/file.cpp
 	)
 source_group("io" FILES ${SRC_IO})
-
-
-
+	
 
 
 set(SRC
@@ -458,6 +456,10 @@ set(SRC
 	# Sets
 	study/sets.h
 	study/sets.hxx
+	
+	# variable selection
+	study/variable-print-info.h
+	study/variable-print-info.cpp
 )
 
 

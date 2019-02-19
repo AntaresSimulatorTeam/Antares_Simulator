@@ -318,6 +318,7 @@ for ( PdtHebdo = PremierPdtDeLIntervalle , PdtJour  = 0 ; PdtHebdo < DernierPdtD
 
 			
 			Var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeNiveau[Pays];
+			ProblemeHebdo->ResultatsHoraires[Pays]->niveauxHoraires[PdtHebdo] = 0.0;
 			if (Var >= 0)
 			{
 				Xmin[Var] = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->NiveauHoraireInf[PdtHebdo];

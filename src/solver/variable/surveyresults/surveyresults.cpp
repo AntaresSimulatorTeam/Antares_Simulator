@@ -562,8 +562,10 @@ namespace Variable
 	// TOFIX - MBO 02/06/2014 nombre de colonnes fonction du nombre de variables
 	SurveyResults::SurveyResults(uint maxVars, const Data::Study& s, const String& o, uint year) :
 		data(s, o, year),
-		maxVariables(Math::Max<uint>(maxVars, 3*s.runtime->maxThermalClustersForSingleArea)),
-		yearByYearResults(false)
+		maxVariables(Math::Max<uint>(maxVars, 3 * s.runtime->maxThermalClustersForSingleArea)),
+		yearByYearResults(false),
+		isCurrentVarNA(nullptr),
+		isPrinted(nullptr)
 	{
 		variableCaption.reserve(10);
 
@@ -591,6 +593,11 @@ namespace Variable
 		precision = new PrecisionType[maxVariables];
 		for (uint i = 0; i != maxVariables; ++i)
 			precision[i] = PrecisionToPrintfFormat<0>::Value();
+
+		// non applicable status
+		nonApplicableStatus = new bool[maxVariables];
+		for (uint i = 0; i != maxVariables; ++i)
+			nonApplicableStatus[i] = false;
 	}
 
 
@@ -606,6 +613,7 @@ namespace Variable
 		for (uint i = 0; i != captionCount; ++i)
 			delete[] captions[i];
 		delete[] precision;
+		delete[] nonApplicableStatus;
 	}
 
 
@@ -655,15 +663,6 @@ namespace Variable
 		conversionBuffer[0] = '\t';
 		int sizePrintf;
 
-		// Mapping results matrix column indices to non applicable variables status
-		std::map<uint, bool> colIdx_to_nonApplicableStatus;
-		for (uint x = 0; x != data.columnIndex; ++x)
-		{
-			if (std::find(data.nonApplicableColIdx.begin(), data.nonApplicableColIdx.end(), x) != data.nonApplicableColIdx.end())
-				colIdx_to_nonApplicableStatus[x] = true;
-			else
-				colIdx_to_nonApplicableStatus[x] = false;
-		}
 
 		auto end = data.rowCaptions.end();
 		uint y = 0;
@@ -675,18 +674,12 @@ namespace Variable
 			data.fileBuffer << '\t' << *j;
 
 			// Loop over results matrix columns
-			uint i = 0;
-			bool isNotApplicable = false;
-			std::map<uint, bool>::iterator it = colIdx_to_nonApplicableStatus.begin();
-			for (; it != colIdx_to_nonApplicableStatus.end(); ++it)
+			for (uint i = 0; i != data.columnIndex; ++i)
 			{
-				i = it->first;
-				isNotApplicable = it->second;
-				// asserts
 				assert(i < maxVariables && "i greater can not be greater than maxVariables");
 				assert(y < maxHoursInAYear && "y can not be greater than maxHoursInAYear");
 
-				if (isNotApplicable)
+				if (nonApplicableStatus[i])
 				{
 					data.fileBuffer.append("\tN/A", 4);
 					continue;
@@ -718,11 +711,7 @@ namespace Variable
 		data.fileBuffer.append("\n\n", 2);
 
 		out << data.fileBuffer;
-
-		// Clearing the collection of indices related to non applicable variables
-		data.nonApplicableColIdx.clear();
 	}
-
 
 
 
@@ -730,8 +719,6 @@ namespace Variable
 	{
 		Private::InternalExportDigestLinksMatrix(data.study, data.originalOutput, data.output, title, data.fileBuffer, data.matrix);
 	}
-
-
 
 
 
@@ -770,7 +757,6 @@ namespace Variable
 		// Space
 		data.fileBuffer += '\n';
 
-		// Writing all captions
 		if (data.area)
 		{
 			auto& areaname = data.area->name;
@@ -794,17 +780,6 @@ namespace Variable
 		for (uint x = 0; x != data.columnIndex; ++x)
 			assert(not precision[x].empty() && "invalid precision");
 		# endif
-
-		// Mapping results matrix column indices to non applicable variables status
-		std::map<uint, bool> colIdx_to_nonApplicableStatus;
-		for (uint x = 0; x != data.columnIndex; ++x)
-		{
-			if (std::find(data.nonApplicableColIdx.begin(), data.nonApplicableColIdx.end(), x) != data.nonApplicableColIdx.end())
-				colIdx_to_nonApplicableStatus[x] = true;
-			else
-				colIdx_to_nonApplicableStatus[x] = false;
-		}
-
 		
 		if (fileLevel & Category::mc)
 		{			
@@ -820,14 +795,8 @@ namespace Variable
 				// Each column
 				assert(data.columnIndex <= data.matrix.width);
 
-				// Loop over results matrix columns
-				uint x = 0;
-				std::map<uint, bool>::iterator it = colIdx_to_nonApplicableStatus.begin();
-				for (; it != colIdx_to_nonApplicableStatus.end(); ++it)
-				{
-					x = it->first;
-					AppendDoubleValue(error, data.matrix[x][y], data.fileBuffer, conversionBuffer, precision[x], not it->second);
-				}
+				for (uint x = 0; x != data.columnIndex; ++x)
+					AppendDoubleValue(error, data.matrix[x][y], data.fileBuffer, conversionBuffer, precision[x], false);
 
 				// End of line
 				data.fileBuffer += '\n';
@@ -846,23 +815,15 @@ namespace Variable
 				// Each column
 				assert(data.columnIndex <= maxVariables);
 
-				// Loop over results matrix columns
-				uint x = 0;
-				std::map<uint, bool>::iterator it = colIdx_to_nonApplicableStatus.begin();
-				for (; it != colIdx_to_nonApplicableStatus.end(); ++it)
-				{
-					x = it->first;
-					AppendDoubleValue(error, values[x][y], data.fileBuffer, conversionBuffer, precision[x], not it->second);
-				}
+				for (uint x = 0; x != data.columnIndex; ++x)
+					AppendDoubleValue(error, values[x][y], data.fileBuffer, conversionBuffer, precision[x], not nonApplicableStatus[x]);
+
 				// End of line
 				data.fileBuffer += '\n';
 			}
 		}
 
 		IOFileSetContent(data.filename, data.fileBuffer);
-
-		// Clearing the collection of indices related to non applicable variables
-		data.nonApplicableColIdx.clear();
 	}
 
 
@@ -904,9 +865,6 @@ namespace Variable
 	{
 		data.exportGridInfosAreas(folder);
 	}
-
-
-
 
 
 

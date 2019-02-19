@@ -33,6 +33,8 @@
 #include <antares/study/study.h>
 #include <antares/study/memory-usage.h>
 #include "../../../../../solver/variable/economy/all.h"
+#include "variable-collector.h"
+
 
 using namespace Yuni;
 
@@ -46,114 +48,6 @@ namespace OutputViewer
 {
 namespace Provider
 {
-
-
-	namespace // anonymous namespace
-	{
-
-		class VariableCollector
-		{
-		public:
-			//! Spotlight (alias)
-			typedef Antares::Component::Spotlight Spotlight;
-
-		public:
-			VariableCollector(Spotlight::IItem::Vector& out, const Spotlight::SearchToken::Vector& tokens,
-				wxBitmap* bmp, wxBitmap* thermalBmp, const String& selection) :
-				pOut(out),
-				pTokens(tokens),
-				pBmp(bmp),
-				pThermalBmp(thermalBmp),
-				pCurrentSelection(selection)
-			{
-			}
-
-
-			void add(const AnyString& name, const AnyString& /*unit*/, const AnyString& /*comments*/)
-			{
-				if (!pTokens.empty())
-				{
-					Spotlight::SearchToken::Vector::const_iterator end = pTokens.end();
-					Spotlight::SearchToken::Vector::const_iterator i = pTokens.begin();
-					bool gotcha = false;
-					for (; i != end; ++i)
-					{
-						const String& text = (*i)->text;
-						if (name.icontains(text))
-						{
-							gotcha = true;
-							break;
-						}
-					}
-					if (!gotcha)
-						return;
-				}
-
-				Spotlight::IItem* item = new Spotlight::IItem();
-				if (item)
-				{
-					item->caption(name);
-					item->group("Variables");
-					if (pBmp)
-						item->image(*pBmp);
-					if (pCurrentSelection == name)
-						item->select();
-					pOut.push_back(item);
-				}
-			}
-
-			void addCluster(const String& name)
-			{
-				if (!pTokens.empty())
-				{
-					Spotlight::SearchToken::Vector::const_iterator end = pTokens.end();
-					Spotlight::SearchToken::Vector::const_iterator i = pTokens.begin();
-					bool gotcha = false;
-					for (; i != end; ++i)
-					{
-						const String& text = (*i)->text;
-						if (name.icontains(text))
-						{
-							gotcha = true;
-							break;
-						}
-					}
-					if (!gotcha)
-						return;
-				}
-
-				Spotlight::IItem* item = new Spotlight::IItem();
-				if (item)
-				{
-					item->caption(name);
-					item->group("Clusters");
-					if (pThermalBmp)
-						item->image(*pThermalBmp);
-					if (pCurrentSelection == name)
-						item->select();
-					pOut.push_back(item);
-				}
-			}
-
-
-		private:
-			//! The results
-			Spotlight::IItem::Vector& pOut;
-			//! Search tokens
-			const Spotlight::SearchToken::Vector& pTokens;
-			//! Bitmap
-			wxBitmap* pBmp;
-			wxBitmap* pThermalBmp;
-			//!
-			const String& pCurrentSelection;
-
-		}; // class VariableCollector
-
-
-	} // anonymous namespace
-
-
-
 
 
 	Variables::Variables(Component* com) :
@@ -226,11 +120,6 @@ namespace Provider
 		Dispatcher::GUI::Post(pComponent, &Component::updateGlobalSelection);
 		return true;
 	}
-
-
-
-
-
 
 
 } // namespace Provider

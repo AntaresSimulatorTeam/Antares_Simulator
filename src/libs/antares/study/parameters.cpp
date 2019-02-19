@@ -37,6 +37,8 @@
 #include "../logs.h"
 #include "load-options.h"
 #include <limits.h>
+#include <antares/study/memory-usage.h>
+#include "../solver/variable/economy/all.h"
 
 
 using namespace Yuni;
@@ -196,6 +198,14 @@ namespace Data
 		expansion			   = false;
 		// Calendar
 		horizon                = nullptr;
+
+		// Reset output variables print info tool
+		variablesPrintInfo.clear();
+		variablePrintInfoCollector collector(&variablesPrintInfo);
+		Antares::Solver::Variable::Economy::AllVariables::RetrieveVariableList(collector);
+		variablesPrintInfo.resetInfoIterator();
+		userVariableSelection = false;
+
 		nbYears                = 1;
 		delete[] yearsFilter;
 		yearsFilter            = nullptr;
@@ -693,6 +703,26 @@ namespace Data
 							}
 						}
 					}
+					if (key == "selected_vars_reset")
+					{
+						bool mode = value.to<bool>();
+						if (mode)
+						{
+							for (uint i = 0; i != d.variablesPrintInfo.size(); ++i)
+								d.variablesPrintInfo[i]->enablePrint(true);
+						}
+						else
+						{
+							for (uint i = 0; i != d.variablesPrintInfo.size(); ++i)
+								d.variablesPrintInfo[i]->enablePrint(false);
+						}
+						return true;
+					}
+					if (key == "select_var +")
+						return d.variablesPrintInfo.setPrintStatus(value.to<string>(), true);
+					if (key == "select_var -")
+						return d.variablesPrintInfo.setPrintStatus(value.to<string>(), false);
+
 					return false;
 				}
 			case 'p':
@@ -809,6 +839,9 @@ namespace Data
 	{
 		if (key == "user-playlist")
 			return value.to<bool>(d.userPlaylist);
+
+		if (key == "user-var-selection")
+			return value.to<bool>(d.userVariableSelection);
 
 		if (key == "unit-commitment-mode") //after 5.0
 		{
@@ -950,6 +983,7 @@ namespace Data
 			}
 			nbYears = options.nbYears;
 		}
+
 
 		if (version < 400)
 		{
@@ -1103,6 +1137,7 @@ namespace Data
 		{
 			yearByYear = false;
 			userPlaylist = false;
+			userVariableSelection = false;
 		}
 
 		if (derated && userPlaylist)
@@ -1150,6 +1185,10 @@ namespace Data
 					logs.info() << "  " << effectiveNbYears << " years in the user's playlist";
 			}
 		}
+
+		// Prepare output variables print info before the simulation (used to initialize output variables)
+		variablesPrintInfo.prepareForSimulation(userVariableSelection);
+		
 
 		switch (mode)
 		{
@@ -1256,6 +1295,8 @@ namespace Data
 			logs.info() << "  :: enabling the 'derated' mode";
 		if (userPlaylist)
 			logs.info() << "  :: enabling the user playlist";
+		if (userVariableSelection)
+			logs.info() << "  :: enabling the user variable selection";
 		if (useCustomTSNumbers)
 			logs.info() << "  :: enabling the custom build mode";
 		if (filtering)
@@ -1344,6 +1385,7 @@ namespace Data
 			section->add("derated",                 derated);
 			section->add("custom-ts-numbers",       useCustomTSNumbers);
 			section->add("user-playlist",           userPlaylist);
+			section->add("user-var-selection",		userVariableSelection);
 			section->add("filtering",               filtering);
 			if (not activeRulesScenario.empty())
 				section->add("active-rules-scenario",   activeRulesScenario);
@@ -1468,6 +1510,41 @@ namespace Data
 					{
 						if (not yearsFilter[i])
 							section->add("playlist_year -", i);
+					}
+				}
+			}
+		}
+
+		// Variable selection
+		{
+			assert(!variablesPrintInfo.isEmpty());
+			uint nb_tot_vars = (uint) variablesPrintInfo.size();
+			uint selected_vars = 0;
+
+			for (uint i = 0; i != nb_tot_vars; ++i)
+			{
+				if (variablesPrintInfo[i]->isPrinted())
+					++selected_vars;
+			}
+			if (selected_vars != nb_tot_vars)
+			{
+				// We have something to write !
+				auto* section = ini.addSection("variables selection");
+				if (selected_vars <= (nb_tot_vars / 2))
+				{
+					section->add("selected_vars_reset", "false");
+					for (uint i = 0; i != nb_tot_vars; ++i)
+					{
+						if (variablesPrintInfo[i]->isPrinted())
+							section->add("select_var +", variablesPrintInfo[i]->name());
+					}
+				}
+				else
+				{
+					for (uint i = 0; i != nb_tot_vars; ++i)
+					{
+						if (not variablesPrintInfo[i]->isPrinted())
+							section->add("select_var -", variablesPrintInfo[i]->name());
 					}
 				}
 			}

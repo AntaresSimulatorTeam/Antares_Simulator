@@ -233,6 +233,9 @@ namespace AllYears
 			// Precision
 			report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<VCardT::decimal>::Value();
 
+			// Non applicability
+			report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
+
 			// Values
 			double* target = report.values[report.data.columnIndex];
 			// A mere copy
@@ -289,6 +292,9 @@ namespace AllYears
 
 			// Precision
 			report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<VCardT::decimal>::Value();
+
+			// Non applicability
+			report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
 			(void)::memcpy(report.data.matrix[report.data.columnIndex], array, Size * sizeof(double));
 

@@ -156,6 +156,8 @@ namespace AllYears
 				report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<VCardT::decimal>::Value();
 				// Value
 				report.values[report.data.columnIndex][report.data.area->index] = andAllYears;
+				// Non applicability
+				report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
 				++(report.data.columnIndex);
 			}
@@ -213,6 +215,8 @@ namespace AllYears
 			report.captions[2][report.data.columnIndex] = "values";
 			// Precision
 			report.precision[report.data.columnIndex] = Solver::Variable::PrecisionToPrintfFormat<VCardT::decimal>::Value();
+			// Non applicability
+			report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
 			const double ratio = 1. / pNbYears;
 
@@ -250,6 +254,9 @@ namespace AllYears
 
 			// Precision
 			report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<VCardT::decimal>::Value();
+
+			// Non applicability
+			report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
 			(void)::memcpy(report.data.matrix[report.data.columnIndex], array, pNbYears * sizeof(double));
 

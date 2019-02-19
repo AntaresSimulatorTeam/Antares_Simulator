@@ -143,8 +143,6 @@ namespace Container
 				else
 					RunAnnual(list, results, numSpace);
 
-				// results.data.nonApplicableColIdx.clear(); // gp : to be removed
-
 				// The survey type
 				typedef SurveyReportBuilderFile<GlobalT, NextT, CDataLevel, nextFileLevel> SurveyRBFileType;
 				// Go to the next data level
@@ -253,12 +251,10 @@ namespace Container
 					// Digest file : areas part
 					list.buildDigest(results, Category::digestAllYears, Category::area);
 					results.exportDigestAllYears();
-					// results.data.nonApplicableColIdx.clear(); // gp : to be removed
 
 					// Degest file : districts part
 					list.buildDigest(results, Category::digestAllYears, Category::setOfAreas);
 					results.exportDigestAllYears();
-					// results.data.nonApplicableColIdx.clear(); // gp : to be removed
 
 					if (results.data.study.parameters.mode != Data::stdmAdequacyDraft)
 					{

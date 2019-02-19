@@ -101,6 +101,9 @@ namespace AllYears
 		uint decimalPrec = (recommendedPrecision < (int)VCardT::decimal)
 			? (uint) recommendedPrecision : (uint) VCardT::decimal;
 
+		// Non applicability
+		report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
+
 		Solver::Variable::AssignPrecisionToPrintfFormat(report.precision[report.data.columnIndex], decimalPrec);
 
 		// Values
@@ -126,6 +129,9 @@ namespace AllYears
 		report.captions[2][report.data.columnIndex] = (OpInferior ? "min" : "max");
 		// Precision
 		Solver::Variable::AssignPrecisionToPrintfFormat(report.precision[report.data.columnIndex], VCardT::decimal);
+
+		// Non applicability
+		report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
 		// Values
 		double* v = report.values[report.data.columnIndex];

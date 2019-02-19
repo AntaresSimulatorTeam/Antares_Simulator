@@ -75,6 +75,8 @@ namespace Antares
 						spatialAggregatePostProcessing = 0,
 						//! Intermediate values
 						hasIntermediateValues = 1,
+						//! Can this variable be non applicable (0 : no, 1 : yes)
+						isPossiblyNonApplicable = 0,
 					};
 
 					typedef IntermediateValues IntermediateValuesType;
@@ -120,10 +122,23 @@ namespace Antares
 
 
 				public:
+					~LoopFlow()
+					{
+						delete[] isNotApplicable;
+						delete[] isPrinted;
+					}
+
 					void initializeFromStudy(Data::Study& study)
 					{
 						// Average on all years
 						InitializeResultsFromStudy(AncestorType::pResults, study);
+
+						// current variable output behavior container
+						isNotApplicable = new bool[VCardType::columnCount];
+						isPrinted = new bool[VCardType::columnCount];
+
+						// Setting print info for current variable
+						setPrintInfo(study);
 
 						// Intermediate values
 						pValuesForTheCurrentYear.initializeFromStudy(study);
@@ -167,6 +182,17 @@ namespace Antares
 					{
 						// Next
 						NextType::initializeFromThermalCluster(study, area, cluster);
+					}
+
+					bool* getPrintStatus() const { return isPrinted; }
+
+					bool* getNonApplicableStatus() const { return isNotApplicable; }
+
+					void setPrintInfo(Data::Study& study)
+					{
+						study.parameters.variablesPrintInfo.find(VCardType::Caption());
+						isNotApplicable[0] = study.parameters.variablesPrintInfo.isNotApplicable();
+						isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted();
 					}
 
 					void simulationBegin()
@@ -267,16 +293,27 @@ namespace Antares
 
 					void localBuildAnnualSurveyReport(SurveyResults& results, int fileLevel, int precision, uint) const
 					{
-						// Write the data for the current year
-						results.variableCaption = VCardType::Caption();
-						pValuesForTheCurrentYear.template
-							buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+						// Initializing external pointer on current variable non applicable status
+						results.isCurrentVarNA = isNotApplicable;
+
+						if (isPrinted[0])
+						{
+							// Write the data for the current year
+							results.variableCaption = VCardType::Caption();
+							pValuesForTheCurrentYear.template
+								buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+						}
 					}
 
 
 				private:
 					//! Intermediate values for each year
 					typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
+					//! Is variable not applicable ?
+					//! Meaning : do we print N/A in output files regarding the current variable ?
+					bool* isNotApplicable;
+					// Do we print results regarding the current variable in output files ? Or do we skip them ?
+					bool* isPrinted;
 
 				}; // class LoopFlow
 
