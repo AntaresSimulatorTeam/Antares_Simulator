@@ -113,11 +113,24 @@ namespace AdequacyDraft
 		};
 
 	public:
+		~MaxDepth_CN()
+		{
+			delete[] isNotApplicable;
+			delete[] isPrinted;
+		}
+
 		void initializeFromStudy(Data::Study& study)
 		{
 			// Average on all years
 			AncestorType::pResults.initializeFromStudy(study);
 			AncestorType::pResults.reset();
+
+			// current variable output behavior container
+			isNotApplicable = new bool[VCardType::columnCount];
+			isPrinted = new bool[VCardType::columnCount];
+
+			// Setting print info for current variable
+			setPrintInfo(study);
 
 			// Next
 			NextType::initializeFromStudy(study);
@@ -142,8 +155,14 @@ namespace AdequacyDraft
 			NextType::initializeFromThermalCluster(study, area, cluster);
 		}
 
-		bool* getPrintStatus() const { return nullptr; }
-		bool* getNonApplicableStatus() const { return nullptr; }
+		bool* getPrintStatus() const { return isPrinted; }
+		bool* getNonApplicableStatus() const { return isNotApplicable; }
+
+		void setPrintInfo(Data::Study& study)
+		{
+			isNotApplicable[0] = false;
+			isPrinted[0] = true;
+		}
 
 		void simulationBegin()
 		{
@@ -231,6 +250,11 @@ namespace AdequacyDraft
 
 	private:
 		double pMargin;
+		//! Is variable not applicable ?
+		//! Meaning : do we print N/A in output files regarding the current variable ?
+		bool* isNotApplicable;
+		// Do we print results regarding the current variable in output files ? Or do we skip them ?
+		bool* isPrinted;
 
 	}; // class MaxDepth_CN
 

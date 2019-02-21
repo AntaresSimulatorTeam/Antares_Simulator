@@ -421,9 +421,9 @@ namespace Variable
 
 	template<class StringT, class ConvertT, class PrecisionT>
 	inline void
-	SurveyResults::AppendDoubleValue(uint& error, double v, StringT& buffer, ConvertT& conversionBuffer, const PrecisionT& precision, const bool available)
+	SurveyResults::AppendDoubleValue(uint& error, double v, StringT& buffer, ConvertT& conversionBuffer, const PrecisionT& precision, const bool isNotApplicable)
 	{
-		if (!available)
+		if (isNotApplicable)
 		{
 			buffer.append("\tN/A", 4);
 			return;
@@ -816,7 +816,7 @@ namespace Variable
 				assert(data.columnIndex <= maxVariables);
 
 				for (uint x = 0; x != data.columnIndex; ++x)
-					AppendDoubleValue(error, values[x][y], data.fileBuffer, conversionBuffer, precision[x], not nonApplicableStatus[x]);
+					AppendDoubleValue(error, values[x][y], data.fileBuffer, conversionBuffer, precision[x], nonApplicableStatus[x]);
 
 				// End of line
 				data.fileBuffer += '\n';

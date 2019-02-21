@@ -154,7 +154,7 @@ namespace Variable
 		void exportGridInfosAreas(const Yuni::String& folder);
 
 		template<class StringT, class ConvertT, class PrecisionT>
-		void AppendDoubleValue(uint& error, const double v, StringT& buffer, ConvertT& conversionBuffer, const PrecisionT& precision, const bool available);
+		void AppendDoubleValue(uint& error, const double v, StringT& buffer, ConvertT& conversionBuffer, const PrecisionT& precision, const bool isNotApplicable);
 
 		void writeDateToFileDescriptor(uint row, int fileLevel, int precisionLevel);
 
