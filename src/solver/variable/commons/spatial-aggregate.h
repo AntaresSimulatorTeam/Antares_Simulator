@@ -187,6 +187,7 @@ namespace Common
 			// Current variable output behavior container
 			pColumnCount = VCardType::columnCount > 1 ? VCardType::columnCount : 1;	// Dimension -1 is avoided
 			isNotApplicable = new bool[pColumnCount];
+			isLocallyNonApplicable = new bool[pColumnCount];
 			isPrinted = new bool[pColumnCount];
 
 			// Setting print info for current variable
@@ -204,7 +205,7 @@ namespace Common
 		}
 
 		void initializeFromArea(Data::Study* study, Data::Area* area)
-		{
+		{	
 			// Next
 			NextType::initializeFromArea(study, area);
 		}
@@ -252,6 +253,22 @@ namespace Common
 					isPrinted[i] = study.parameters.variablesPrintInfo.isPrinted();
 				}
 			}
+		}
+
+		void makeAnnualReportNonApplicable(bool applyNonApplicable)
+		{
+			if (VCardType::VCardOrigin::isPossiblyNonApplicable != 0 && applyNonApplicable)
+			{
+				for (uint i = 0; i != pColumnCount; ++i)
+					isLocallyNonApplicable[i] = true;
+			}
+			else
+			{
+				for (uint i = 0; i != pColumnCount; ++i)
+					isLocallyNonApplicable[i] = false;
+			}
+			
+			NextType::makeAnnualReportNonApplicable(applyNonApplicable);
 		}
 
 		void simulationBegin()
@@ -387,7 +404,7 @@ namespace Common
 			{				
 				// Initializing pointer on variable non applicable and print stati arrays to beginning
 				results.isPrinted = isPrinted;
-				results.isCurrentVarNA = isNotApplicable;
+				results.isCurrentVarNA = isLocallyNonApplicable;
 				
 				typedef VariableAccessor<typename VCardType::IntermediateValuesBaseType, VCardType::columnCount>  VAType;
 				VAType::template
@@ -491,7 +508,10 @@ namespace Common
 		unsigned int pNbYearsParallel;
 		//! Is variable not applicable ?
 		//! Meaning : do we print N/A in output files regarding the current variable ?
+		//! ... Not applicability for over all years results (statistics, digest, ...)
 		bool* isNotApplicable;
+		//! ... Not applicability for annual results
+		bool* isLocallyNonApplicable;
 		// Do we print results regarding the current variable in output files ? Or do we skip them ?
 		bool* isPrinted;
 		// Positive column count (original column count can be < 0 for some variable [see variables "by plant"])

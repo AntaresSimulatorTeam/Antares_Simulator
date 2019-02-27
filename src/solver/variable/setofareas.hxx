@@ -88,6 +88,20 @@ namespace Variable
 			// From the study
 			n->initializeFromStudy(study);
 
+			// Possibly make specific variables non applicable in annual spatial aggregates
+			bool applyNonApplicable = false;
+			std::set<Data::Area*, Data::CompareAreaName> & _set_ = sets[setIndex];
+			std::set<Data::Area*, Data::CompareAreaName>::iterator it_area;
+			for (it_area = _set_.begin(); it_area != _set_.end(); it_area++)
+			{
+				if (not (*it_area)->hydro.reservoirManagement)
+				{
+					applyNonApplicable = true;
+					break;
+				}
+			}
+			n->makeAnnualReportNonApplicable(applyNonApplicable);
+
 			// Adding the variables for the area in the list
 			pSetsOfAreas.push_back(n);
 			auto* originalSet = &sets[setIndex];

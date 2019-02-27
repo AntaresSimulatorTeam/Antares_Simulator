@@ -90,6 +90,7 @@ namespace Container
 
 		bool* getPrintStatus() const { return nullptr; }
 		bool* getNonApplicableStatus() const { return nullptr; }
+		void makeAnnualReportNonApplicable(bool applyNonApplicable) {}
 
 		static void simulationBegin() {}
 

@@ -133,6 +133,7 @@ namespace Antares
 					{
 						delete[] pValuesForTheCurrentYear;
 						delete[] isNotApplicable;
+						delete[] isLocallyNonApplicable;
 						delete[] isPrinted;
 					}
 
@@ -147,6 +148,7 @@ namespace Antares
 
 						// current variable output behavior container
 						isNotApplicable = new bool[VCardType::columnCount];
+						isLocallyNonApplicable = new bool[VCardType::columnCount];
 						isPrinted = new bool[VCardType::columnCount];
 
 						// Setting print info for current variable
@@ -171,6 +173,8 @@ namespace Antares
 
 					void initializeFromArea(Data::Study* study, Data::Area* area)
 					{
+						isLocallyNonApplicable[0] = not area->hydro.reservoirManagement;
+
 						// Next
 						NextType::initializeFromArea(study, area);
 					}
@@ -196,6 +200,7 @@ namespace Antares
 					{
 						study.parameters.variablesPrintInfo.find(VCardType::Caption());
 						isNotApplicable[0] = study.parameters.variablesPrintInfo.isNotApplicable();
+						isLocallyNonApplicable[0] = false;	// Initialization
 						isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted();
 					}
 
@@ -297,7 +302,7 @@ namespace Antares
 					void localBuildAnnualSurveyReport(SurveyResults& results, int fileLevel, int precision, unsigned int numSpace) const
 					{
 						// Initializing external pointer on current variable non applicable status
-						results.isCurrentVarNA = isNotApplicable;
+						results.isCurrentVarNA = isLocallyNonApplicable;
 
 						if (isPrinted[0])
 						{
@@ -309,46 +314,16 @@ namespace Antares
 					}
 
 
-					//void buildSurveyReport(SurveyResults& results, int dataLevel, int fileLevel, int precision) const
-					//{
-					//	// Generating value for the area
-					//	// Only if there are some results to export...
-					//	if (0 != ResultsType::count)
-					//	{
-					//		// And only if we match the current data level _and_ precision level
-					//		if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
-					//			&& (precision & VCardType::precision))
-					//		{
-					//			if (isNotApplicable)
-					//			{
-					//				// Only min and max have to be printed in id-{precision}.txt
-					//				if (fileLevel & Category::id)
-					//					for (int i = 0; i < 2; i++)
-					//						results.data.nonApplicableColIdx.push_back(results.data.columnIndex + i);
-					//				// All variable results are printed (see ResultsType) in other output files
-					//				else
-					//					for (int i = 0; i < ResultsType::count; i++)
-					//						results.data.nonApplicableColIdx.push_back(results.data.columnIndex + i);
-					//			}
-
-					//			VariableAccessorType::template
-					//				BuildSurveyReport<VCardType>(results, AncestorType::pResults, dataLevel, fileLevel, precision);
-					//		}
-
-					//	}
-					//	// Ask to the next item in the static list to export
-					//	// its results as well
-					//	NextType::buildSurveyReport(results, dataLevel, fileLevel, precision);
-					//}
-
-
 				private:
 					//! Intermediate values for each year
 					typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
 					unsigned int pNbYearsParallel;
 					//! Is variable not applicable ?
 					//! Meaning : do we print N/A in output files regarding the current variable ?
+					//! ... Not applicability for over all years results (statistics, digest, ...)
 					bool* isNotApplicable;
+					//! ... Not applicability for annual results
+					bool* isLocallyNonApplicable;
 					// Do we print results regarding the current variable in output files ? Or do we skip them ?
 					bool* isPrinted;
 
