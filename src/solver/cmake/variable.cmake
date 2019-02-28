@@ -29,6 +29,7 @@ source_group("variable" FILES ${SRC_VARIABLE})
 set(SRC_VARIABLE_STORAGE
 		# Storage
 		variable/storage/intermediate.h
+		variable/storage/intermediate.hxx
 		variable/storage/intermediate.cpp
 		variable/storage/results.h
 		variable/storage/empty.h

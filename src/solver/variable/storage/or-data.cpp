@@ -45,7 +45,8 @@ namespace AllYears
 
 	OrData::OrData()
 		:hourly(nullptr),
-		year(nullptr)
+		year(nullptr),
+		allYears(0.)
 	{}
 
 

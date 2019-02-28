@@ -71,6 +71,7 @@ namespace AllYears
 		And()
 		{
 			andHourly = nullptr;
+			andAllYears = 0.;
 		}
 
 		~And()

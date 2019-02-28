@@ -45,7 +45,8 @@ namespace AllYears
 
 	RawData::RawData()
 		:hourly(nullptr),
-		year(nullptr)
+		year(nullptr),
+		allYears(0.)
 	{}
 
 

@@ -49,7 +49,8 @@ namespace AllYears
 		:hourly(nullptr),
 		year(nullptr),
 		nbYearsCapacity(0),
-		ratio(0.)
+		ratio(0.),
+		allYears(0.)
 	{
 	}
 
