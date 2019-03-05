@@ -358,7 +358,6 @@ namespace Variable
 		// Ask to the next item in the static list to export
 		// its results as well
 		NextType::buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
-
 	}
 
 

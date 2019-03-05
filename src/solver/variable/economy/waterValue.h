@@ -133,7 +133,7 @@ namespace Economy
 		{
 			delete[] pValuesForTheCurrentYear;
 			delete[] isNotApplicable;
-			delete[] isLocallyNonApplicable;
+			delete[] isNonApplicableAnnually;
 			delete[] isPrinted;
 		}
 
@@ -148,7 +148,7 @@ namespace Economy
 
 			// current variable output behavior container
 			isNotApplicable = new bool[VCardType::columnCount];
-			isLocallyNonApplicable = new bool[VCardType::columnCount];
+			isNonApplicableAnnually = new bool[VCardType::columnCount];
 			isPrinted = new bool[VCardType::columnCount];
 
 			// Setting print info for current variable
@@ -173,7 +173,7 @@ namespace Economy
 
 		void initializeFromArea(Data::Study* study, Data::Area* area)
 		{
-			isLocallyNonApplicable[0] = not area->hydro.reservoirManagement;
+			isNonApplicableAnnually[0] = not area->hydro.reservoirManagement;
 
 			// Next
 			NextType::initializeFromArea(study, area);
@@ -200,7 +200,7 @@ namespace Economy
 		{
 			study.parameters.variablesPrintInfo.find(VCardType::Caption());
 			isNotApplicable[0] = study.parameters.variablesPrintInfo.isNotApplicable();
-			isLocallyNonApplicable[0] = false;	// Initialization
+			isNonApplicableAnnually[0] = false;	// Initialization
 			isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted();
 		}
 
@@ -301,7 +301,7 @@ namespace Economy
 		void localBuildAnnualSurveyReport(SurveyResults& results, int fileLevel, int precision, unsigned int numSpace) const
 		{
 			// Initializing external pointer on current variable non applicable status
-			results.isCurrentVarNA = isLocallyNonApplicable;
+			results.isCurrentVarNA = isNonApplicableAnnually;
 
 			if (isPrinted[0])
 			{
@@ -323,7 +323,7 @@ namespace Economy
 		//! ... Not applicability for over all years results (statistics, digest, ...)
 		bool* isNotApplicable;
 		//! ... Not applicability for annual results
-		bool* isLocallyNonApplicable;
+		bool* isNonApplicableAnnually;
 		// Do we print results regarding the current variable in output files ? Or do we skip them ?
 		bool* isPrinted;
 

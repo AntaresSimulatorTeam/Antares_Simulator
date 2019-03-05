@@ -165,7 +165,16 @@ namespace Common
 			};
 		};
 
-	public:		
+	public:
+		SpatialAggregate()
+		{
+			// Current variable output behavior container
+			pColumnCount = VCardType::columnCount > 1 ? VCardType::columnCount : 1;	// Dimension -1 is avoided
+			isNotApplicable = new bool[pColumnCount];
+			isNonApplicableAnnually = new bool[pColumnCount];
+			isPrinted = new bool[pColumnCount];
+		}
+
 		~SpatialAggregate()
 		{
 			delete[] pValuesForTheCurrentYear;
@@ -183,12 +192,6 @@ namespace Common
 			pValuesForTheCurrentYear = new IntermediateValuesBaseType[pNbYearsParallel];
 			for(unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
 				 VariableAccessorType::InitializeAndReset(pValuesForTheCurrentYear[numSpace], study);
-
-			// Current variable output behavior container
-			pColumnCount = VCardType::columnCount > 1 ? VCardType::columnCount : 1;	// Dimension -1 is avoided
-			isNotApplicable = new bool[pColumnCount];
-			isLocallyNonApplicable = new bool[pColumnCount];
-			isPrinted = new bool[pColumnCount];
 
 			// Setting print info for current variable
 			setPrintInfo(study);
@@ -260,12 +263,12 @@ namespace Common
 			if (VCardType::VCardOrigin::isPossiblyNonApplicable != 0 && applyNonApplicable)
 			{
 				for (uint i = 0; i != pColumnCount; ++i)
-					isLocallyNonApplicable[i] = true;
+					isNonApplicableAnnually[i] = true;
 			}
 			else
 			{
 				for (uint i = 0; i != pColumnCount; ++i)
-					isLocallyNonApplicable[i] = false;
+					isNonApplicableAnnually[i] = false;
 			}
 			
 			NextType::makeAnnualReportNonApplicable(applyNonApplicable);
@@ -423,7 +426,7 @@ namespace Common
 			{				
 				// Initializing pointer on variable non applicable and print stati arrays to beginning
 				results.isPrinted = isPrinted;
-				results.isCurrentVarNA = isLocallyNonApplicable;
+				results.isCurrentVarNA = isNonApplicableAnnually;
 				
 				typedef VariableAccessor<typename VCardType::IntermediateValuesBaseType, VCardType::columnCount>  VAType;
 				VAType::template
@@ -530,7 +533,7 @@ namespace Common
 		//! ... Not applicability for over all years results (statistics, digest, ...)
 		bool* isNotApplicable;
 		//! ... Not applicability for annual results
-		bool* isLocallyNonApplicable;
+		bool* isNonApplicableAnnually;
 		// Do we print results regarding the current variable in output files ? Or do we skip them ?
 		bool* isPrinted;
 		// Positive column count (original column count can be < 0 for some variable [see variables "by plant"])
