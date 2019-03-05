@@ -161,14 +161,6 @@ namespace Variable
 	}
 
 	template<class ChildT, class NextT, class VCardT>
-	bool*
-	IVariable<ChildT, NextT, VCardT>::getNonApplicableStatus() const
-	{ 
-		// Default function (draft mode)
-		return nullptr;
-	}
-
-	template<class ChildT, class NextT, class VCardT>
 	inline void
 	IVariable<ChildT,NextT,VCardT>::simulationBegin()
 	{
@@ -373,7 +365,7 @@ namespace Variable
 		{
 			// Initializing pointer on variable non applicable and print stati arrays to beginning
 			results.isPrinted = static_cast<const ChildT*>(this)->getPrintStatus();
-			results.isCurrentVarNA = static_cast<const ChildT*>(this)->getNonApplicableStatus();
+			results.isCurrentVarNA = isNonApplicableOverAllYears;
 
 			VariableAccessorType::template BuildDigest<VCardT>(results, pResults, digestLevel, dataLevel);
 		}

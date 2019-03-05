@@ -162,9 +162,7 @@ namespace Variable
 		void makeOverAllYearsReportNonApplicable(bool applyNonApplicable);
 
 		bool* getPrintStatus() const;
-
-		bool* getNonApplicableStatus() const;
-
+		
 		//! \name Simulation
 		//@{
 		/*!
@@ -330,7 +328,9 @@ namespace Variable
 	protected:
 		//! All the results about this variable
 		StoredResultType pResults;
-		//! Does current output variable appears non applicable in over all years output files for areas (not districts)
+		//! Does current output variable appears non applicable in areas' yearly output files
+		// bool* isNonApplicableAnnually;	// gp : for later
+		//! Does current output variable appears non applicable in areas' over all years output files
 		bool* isNonApplicableOverAllYears;
 		// Positive column count (original column count can be < 0 for some variable [see variables "by plant"])
 		uint pColumnCount;

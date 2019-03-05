@@ -170,7 +170,6 @@ namespace Common
 		{
 			// Current variable output behavior container
 			pColumnCount = VCardType::columnCount > 1 ? VCardType::columnCount : 1;	// Dimension -1 is avoided
-			isNotApplicable = new bool[pColumnCount];
 			isNonApplicableAnnually = new bool[pColumnCount];
 			isPrinted = new bool[pColumnCount];
 		}
@@ -178,7 +177,6 @@ namespace Common
 		~SpatialAggregate()
 		{
 			delete[] pValuesForTheCurrentYear;
-			delete[] isNotApplicable;
 			delete[] isPrinted;
 		}
 
@@ -231,17 +229,11 @@ namespace Common
 			return isPrinted;
 		}
 
-		inline bool* getNonApplicableStatus() const
-		{
-			return isNotApplicable;
-		}
-
 		void setPrintInfo(Data::Study& study)
 		{
 			if (pColumnCount == 1)
 			{
 				study.parameters.variablesPrintInfo.find(VCardType::Caption());
-				isNotApplicable[0] = study.parameters.variablesPrintInfo.isNotApplicable();
 				isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted();
 			}
 
@@ -252,7 +244,6 @@ namespace Common
 					// Shifting (inside the variables print info collection) to the current variable print info
 					study.parameters.variablesPrintInfo.find(VCardType::Multiple::Caption(i));
 					// And then getting the non applicable and print status
-					isNotApplicable[i] = study.parameters.variablesPrintInfo.isNotApplicable();
 					isPrinted[i] = study.parameters.variablesPrintInfo.isPrinted();
 				}
 			}
@@ -411,7 +402,7 @@ namespace Common
 			{	
 				// Initializing pointer on variable non applicable and print stati arrays to beginning
 				results.isPrinted = isPrinted;
-				results.isCurrentVarNA = isNotApplicable;
+				results.isCurrentVarNA = isNonApplicableOverAllYears;
 				VariableAccessorType::
 					template BuildDigest<typename VCardType::VCardOrigin>(results, AncestorType::pResults, digestLevel, dataLevel);
 			}
@@ -530,8 +521,6 @@ namespace Common
 		unsigned int pNbYearsParallel;
 		//! Is variable not applicable ?
 		//! Meaning : do we print N/A in output files regarding the current variable ?
-		//! ... Not applicability for over all years results (statistics, digest, ...)
-		bool* isNotApplicable;
 		//! ... Not applicability for annual results
 		bool* isNonApplicableAnnually;
 		// Do we print results regarding the current variable in output files ? Or do we skip them ?
