@@ -100,6 +100,9 @@ namespace Variable
 			n.initializeFromStudy(study);
 			// From the area
 			n.initializeFromArea(&study, currentArea);
+			// Does current output variable appears non applicable
+			// in over all years output files for areas (not districts)
+			n.makeOverAllYearsReportNonApplicable(not currentArea->hydro.reservoirManagement);
 
 			// It is needed that the whole memory is flushed to swap
 			// Some intermediate are not flush and it may lead

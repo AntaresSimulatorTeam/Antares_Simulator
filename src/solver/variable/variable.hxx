@@ -37,8 +37,6 @@ namespace Solver
 {
 namespace Variable
 {
-
-
 	template<class ChildT, class NextT, class VCardT>
 	inline void IVariable<ChildT,NextT,VCardT>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
 	{
@@ -75,8 +73,21 @@ namespace Variable
 		// Initialization
 		// You should prefer the methods initializeFromStudy() or similiar
 		// to initialize the internal variables
+
+		// Number of column, where dimension -1 (dynamic) is avoided
+		pColumnCount = VCardType::columnCount > 1 ? VCardType::columnCount : 1;
+
+		// Allocation
+		//! Does current output variable appears non applicable in over all years output files for areas (not districts)
+		isNonApplicableOverAllYears = new bool[pColumnCount];
+
 	}
 
+	template<class ChildT, class NextT, class VCardT>
+	inline  IVariable<ChildT, NextT, VCardT>::~IVariable()
+	{
+		delete[] isNonApplicableOverAllYears;
+	}
 
 
 	template<class ChildT, class NextT, class VCardT>
@@ -121,6 +132,24 @@ namespace Variable
 	{
 		// Next
 		NextType::initializeFromThermalCluster(study, area, cluster);
+	}
+
+	template<class ChildT, class NextT, class VCardT>
+	inline void
+	IVariable<ChildT, NextT, VCardT>::makeOverAllYearsReportNonApplicable(bool applyNonApplicable)
+	{
+		if (VCardType::isPossiblyNonApplicable != 0 && applyNonApplicable)
+		{
+			for (uint i = 0; i != pColumnCount; ++i)
+				isNonApplicableOverAllYears[i] = true;
+		}
+		else
+		{
+			for (uint i = 0; i != pColumnCount; ++i)
+				isNonApplicableOverAllYears[i] = false;
+		}
+
+		NextType::makeOverAllYearsReportNonApplicable(applyNonApplicable);
 	}
 
 	template<class ChildT, class NextT, class VCardT>
@@ -296,7 +325,7 @@ namespace Variable
 			{
 				// Initializing pointer on variable non applicable and print stati arrays to beginning
 				results.isPrinted = static_cast<const ChildT*>(this)->getPrintStatus();
-				results.isCurrentVarNA = static_cast<const ChildT*>(this)->getNonApplicableStatus();
+				results.isCurrentVarNA = isNonApplicableOverAllYears;
 
 				VariableAccessorType::template
 					BuildSurveyReport<VCardType>(results, pResults, dataLevel, fileLevel, precision);

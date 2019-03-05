@@ -122,6 +122,8 @@ namespace Variable
 		IVariable();
 		//@}
 
+		~IVariable();
+
 
 		//! \name Initialize the variable
 		//@{
@@ -157,6 +159,7 @@ namespace Variable
 		*/
 		void initializeFromThermalCluster(Data::Study* study, Data::Area* area, Data::ThermalCluster* cluster);
 		//@}
+		void makeOverAllYearsReportNonApplicable(bool applyNonApplicable);
 
 		bool* getPrintStatus() const;
 
@@ -327,6 +330,10 @@ namespace Variable
 	protected:
 		//! All the results about this variable
 		StoredResultType pResults;
+		//! Does current output variable appears non applicable in over all years output files for areas (not districts)
+		bool* isNonApplicableOverAllYears;
+		// Positive column count (original column count can be < 0 for some variable [see variables "by plant"])
+		uint pColumnCount;
 
 	}; // class Variable
 

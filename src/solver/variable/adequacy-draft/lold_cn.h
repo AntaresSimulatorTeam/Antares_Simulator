@@ -76,6 +76,8 @@ namespace AdequacyDraft
 			spatialAggregate = Category::spatialAggregateSum,
 			//! Intermediate values
 			hasIntermediateValues = 1,
+			//! Can this variable be non applicable (0 : no, 1 : yes)
+			isPossiblyNonApplicable = 0,
 		};
 	}; // class VCard
 

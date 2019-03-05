@@ -271,6 +271,25 @@ namespace Common
 			NextType::makeAnnualReportNonApplicable(applyNonApplicable);
 		}
 
+		void makeOverAllYearsReportNonApplicable(bool applyNonApplicable)
+		{
+			// Recall that SpatialAggregate class inherits from IVariable.
+			// The non applicable status for overall years spatial aggregates reports is set here
+			// but is defined and used in IVariable class. 
+			if (VCardType::VCardOrigin::isPossiblyNonApplicable != 0 && applyNonApplicable)
+			{
+				for (uint i = 0; i != pColumnCount; ++i)
+					isNonApplicableOverAllYears[i] = true;
+			}
+			else
+			{
+				for (uint i = 0; i != pColumnCount; ++i)
+					isNonApplicableOverAllYears[i] = false;
+			}
+
+			NextType::makeOverAllYearsReportNonApplicable(applyNonApplicable);
+		}
+
 		void simulationBegin()
 		{
 			// Next
