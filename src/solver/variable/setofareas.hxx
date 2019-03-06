@@ -102,10 +102,8 @@ namespace Variable
 					break;
 				}
 			}
-			// Annual spatial aggregates reports
-			n->makeAnnualReportNonApplicable(applyNonApplicable);
-			// Over all years spatial aggregates statistics reports
-			n->makeOverAllYearsReportNonApplicable(applyNonApplicable);
+			// Broadcasting the non applicable status over all variables regarding the set of areas
+			n->broadcastNonApplicability(applyNonApplicable);
 
 			// Adding the variables for the area in the list
 			pSetsOfAreas.push_back(n);

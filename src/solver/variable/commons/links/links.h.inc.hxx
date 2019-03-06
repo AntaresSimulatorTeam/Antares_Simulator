@@ -133,7 +133,7 @@ namespace LINK_NAMESPACE
 		void initializeFromThermalCluster(Data::Study*, Data::Area*, Data::ThermalCluster*);
 		void initializeFromAreaLink(Data::Study*, Data::AreaLink*);
 
-		void makeOverAllYearsReportNonApplicable(bool applyNonApplicable);
+		void broadcastNonApplicability(bool applyNonApplicable);
 
 		void simulationBegin();
 		void simulationEnd();

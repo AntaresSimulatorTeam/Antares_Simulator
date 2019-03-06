@@ -79,14 +79,14 @@ namespace Variable
 
 		// Allocation
 		//! Does current output variable appears non applicable in over all years output files for areas (not districts)
-		isNonApplicableOverAllYears = new bool[pColumnCount];
+		isNonApplicable = new bool[pColumnCount];
 
 	}
 
 	template<class ChildT, class NextT, class VCardT>
 	inline  IVariable<ChildT, NextT, VCardT>::~IVariable()
 	{
-		delete[] isNonApplicableOverAllYears;
+		delete[] isNonApplicable;
 	}
 
 
@@ -136,20 +136,20 @@ namespace Variable
 
 	template<class ChildT, class NextT, class VCardT>
 	inline void
-	IVariable<ChildT, NextT, VCardT>::makeOverAllYearsReportNonApplicable(bool applyNonApplicable)
+		IVariable<ChildT, NextT, VCardT>::broadcastNonApplicability(bool applyNonApplicable)
 	{
 		if (VCardType::isPossiblyNonApplicable != 0 && applyNonApplicable)
 		{
 			for (uint i = 0; i != pColumnCount; ++i)
-				isNonApplicableOverAllYears[i] = true;
+				isNonApplicable[i] = true;
 		}
 		else
 		{
 			for (uint i = 0; i != pColumnCount; ++i)
-				isNonApplicableOverAllYears[i] = false;
+				isNonApplicable[i] = false;
 		}
 
-		NextType::makeOverAllYearsReportNonApplicable(applyNonApplicable);
+		NextType::broadcastNonApplicability(applyNonApplicable);
 	}
 
 	template<class ChildT, class NextT, class VCardT>
@@ -317,7 +317,7 @@ namespace Variable
 			{
 				// Initializing pointer on variable non applicable and print stati arrays to beginning
 				results.isPrinted = static_cast<const ChildT*>(this)->getPrintStatus();
-				results.isCurrentVarNA = isNonApplicableOverAllYears;
+				results.isCurrentVarNA = isNonApplicable;
 
 				VariableAccessorType::template
 					BuildSurveyReport<VCardType>(results, pResults, dataLevel, fileLevel, precision);
@@ -365,7 +365,7 @@ namespace Variable
 		{
 			// Initializing pointer on variable non applicable and print stati arrays to beginning
 			results.isPrinted = static_cast<const ChildT*>(this)->getPrintStatus();
-			results.isCurrentVarNA = isNonApplicableOverAllYears;
+			results.isCurrentVarNA = isNonApplicable;
 
 			VariableAccessorType::template BuildDigest<VCardT>(results, pResults, digestLevel, dataLevel);
 		}

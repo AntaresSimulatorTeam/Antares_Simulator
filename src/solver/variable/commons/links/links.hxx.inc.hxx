@@ -64,11 +64,11 @@ namespace LINK_NAMESPACE
 		// This method should not be called at this stage
 	}
 
-	inline void Links::makeOverAllYearsReportNonApplicable(bool applyNonApplicable)
+
+	inline void Links::broadcastNonApplicability(bool applyNonApplicable)
 	{
 		for (uint i = 0; i != pLinkCount; ++i)
-			pLinks[i].makeOverAllYearsReportNonApplicable(applyNonApplicable);
-
+			pLinks[i].broadcastNonApplicability(applyNonApplicable);
 		// Flush all memory into the swap files
 		// (only if the support is available)
 		if (Antares::Memory::swapSupport)

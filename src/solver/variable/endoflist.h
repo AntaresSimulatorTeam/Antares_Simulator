@@ -89,9 +89,8 @@ namespace Container
 		static void initializeFromAreaLink(Data::Study*, Data::AreaLink*) {}
 
 		bool* getPrintStatus() const { return nullptr; }
-		bool* getNonApplicableStatus() const { return nullptr; }
-		void makeAnnualReportNonApplicable(bool applyNonApplicable) {}
-		void makeOverAllYearsReportNonApplicable(bool applyNonApplicable) {}
+		
+		void broadcastNonApplicability(bool applyNonApplicable) {}
 
 		static void simulationBegin() {}
 

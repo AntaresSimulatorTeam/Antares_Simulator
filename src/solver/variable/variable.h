@@ -159,7 +159,8 @@ namespace Variable
 		*/
 		void initializeFromThermalCluster(Data::Study* study, Data::Area* area, Data::ThermalCluster* cluster);
 		//@}
-		void makeOverAllYearsReportNonApplicable(bool applyNonApplicable);
+
+		void broadcastNonApplicability(bool applyNonApplicable);
 
 		bool* getPrintStatus() const;
 		
@@ -328,10 +329,11 @@ namespace Variable
 	protected:
 		//! All the results about this variable
 		StoredResultType pResults;
-		//! Does current output variable appears non applicable in areas' yearly output files
-		// bool* isNonApplicableAnnually;	// gp : for later
-		//! Does current output variable appears non applicable in areas' over all years output files
-		bool* isNonApplicableOverAllYears;
+		// Does current output variable appears non applicable in all output files.
+		// Following is an array of size :
+		// + 1 if variable is a single variable
+		// + > 1 if variable is a multi-variable
+		bool* isNonApplicable;
 		// Positive column count (original column count can be < 0 for some variable [see variables "by plant"])
 		uint pColumnCount;
 

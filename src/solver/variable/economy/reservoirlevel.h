@@ -132,8 +132,7 @@ namespace Antares
 					~ReservoirLevel()
 					{
 						delete[] pValuesForTheCurrentYear;
-						delete[] isNotApplicable;
-						delete[] isNonApplicableAnnually;
+						delete[] isNonApplicableAnnually; // gp : a factoriser
 						delete[] isPrinted;
 					}
 
@@ -144,8 +143,7 @@ namespace Antares
 						InitializeResultsFromStudy(AncestorType::pResults, study);
 
 						// current variable output behavior container
-						isNotApplicable = new bool[VCardType::columnCount];
-						isNonApplicableAnnually = new bool[VCardType::columnCount];
+						isNonApplicableAnnually = new bool[VCardType::columnCount];  // gp : a factoriser
 						isPrinted = new bool[VCardType::columnCount];
 
 						// Setting print info for current variable
@@ -173,7 +171,7 @@ namespace Antares
 
 					void initializeFromArea(Data::Study* study, Data::Area* area)
 					{	
-						isNonApplicableAnnually[0] = not area->hydro.reservoirManagement;
+						isNonApplicableAnnually[0] = not area->hydro.reservoirManagement; // gp : a factoriser
 
 						// Next
 						NextType::initializeFromArea(study, area);
@@ -194,13 +192,10 @@ namespace Antares
 
 					bool* getPrintStatus() const { return isPrinted; }
 
-					bool* getNonApplicableStatus() const { return isNotApplicable; }
-
 					void setPrintInfo(Data::Study& study)
 					{
 						study.parameters.variablesPrintInfo.find(VCardType::Caption());
-						isNotApplicable[0] = study.parameters.variablesPrintInfo.isNotApplicable();
-						isNonApplicableAnnually[0] = false;	// Initialization
+						isNonApplicableAnnually[0] = false;	// Initialization  // gp : a factoriser
 						isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted();
 					}
 
@@ -302,7 +297,8 @@ namespace Antares
 					void localBuildAnnualSurveyReport(SurveyResults& results, int fileLevel, int precision, unsigned int numSpace) const
 					{
 						// Initializing external pointer on current variable non applicable status
-						results.isCurrentVarNA = isNonApplicableAnnually;
+						// results.isCurrentVarNA = isNonApplicableAnnually;  // gp : a factoriser
+					    results.isCurrentVarNA = AncestorType::isNonApplicable; // gp : try
 
 						if (isPrinted[0])
 						{
@@ -321,10 +317,8 @@ namespace Antares
 					unsigned int pNbYearsParallel;
 					//! Is variable not applicable ?
 					//! Meaning : do we print N/A in output files regarding the current variable ?
-					//! ... Not applicability for over all years results (statistics, digest, ...)
-					bool* isNotApplicable;
 					//! ... Not applicability for annual results
-					bool* isNonApplicableAnnually;
+					bool* isNonApplicableAnnually; // gp : a factoriser
 					// Do we print results regarding the current variable in output files ? Or do we skip them ?
 					bool* isPrinted;
 

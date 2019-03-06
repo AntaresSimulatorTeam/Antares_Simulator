@@ -115,7 +115,7 @@ namespace Common
 			//! Intermediate values
 			hasIntermediateValues = 1,
 			//! Can this variable be non applicable (0 : no, 1 : yes)
-			isPossiblyNonApplicable = 0,
+			isPossiblyNonApplicable = VCardOrigin::isPossiblyNonApplicable,
 		};
 
 		struct Multiple
@@ -170,7 +170,6 @@ namespace Common
 		{
 			// Current variable output behavior container
 			pColumnCount = VCardType::columnCount > 1 ? VCardType::columnCount : 1;	// Dimension -1 is avoided
-			isNonApplicableAnnually = new bool[pColumnCount];
 			isPrinted = new bool[pColumnCount];
 		}
 
@@ -247,41 +246,6 @@ namespace Common
 					isPrinted[i] = study.parameters.variablesPrintInfo.isPrinted();
 				}
 			}
-		}
-
-		void makeAnnualReportNonApplicable(bool applyNonApplicable)
-		{
-			if (VCardType::VCardOrigin::isPossiblyNonApplicable != 0 && applyNonApplicable)
-			{
-				for (uint i = 0; i != pColumnCount; ++i)
-					isNonApplicableAnnually[i] = true;
-			}
-			else
-			{
-				for (uint i = 0; i != pColumnCount; ++i)
-					isNonApplicableAnnually[i] = false;
-			}
-			
-			NextType::makeAnnualReportNonApplicable(applyNonApplicable);
-		}
-
-		void makeOverAllYearsReportNonApplicable(bool applyNonApplicable)
-		{
-			// Recall that SpatialAggregate class inherits from IVariable.
-			// The non applicable status for overall years spatial aggregates reports is set here
-			// but is defined and used in IVariable class. 
-			if (VCardType::VCardOrigin::isPossiblyNonApplicable != 0 && applyNonApplicable)
-			{
-				for (uint i = 0; i != pColumnCount; ++i)
-					isNonApplicableOverAllYears[i] = true;
-			}
-			else
-			{
-				for (uint i = 0; i != pColumnCount; ++i)
-					isNonApplicableOverAllYears[i] = false;
-			}
-
-			NextType::makeOverAllYearsReportNonApplicable(applyNonApplicable);
 		}
 
 		void simulationBegin()
@@ -402,7 +366,7 @@ namespace Common
 			{	
 				// Initializing pointer on variable non applicable and print stati arrays to beginning
 				results.isPrinted = isPrinted;
-				results.isCurrentVarNA = isNonApplicableOverAllYears;
+				results.isCurrentVarNA = isNonApplicable;
 				VariableAccessorType::
 					template BuildDigest<typename VCardType::VCardOrigin>(results, AncestorType::pResults, digestLevel, dataLevel);
 			}
@@ -417,7 +381,7 @@ namespace Common
 			{				
 				// Initializing pointer on variable non applicable and print stati arrays to beginning
 				results.isPrinted = isPrinted;
-				results.isCurrentVarNA = isNonApplicableAnnually;
+				results.isCurrentVarNA = isNonApplicable;
 				
 				typedef VariableAccessor<typename VCardType::IntermediateValuesBaseType, VCardType::columnCount>  VAType;
 				VAType::template
@@ -519,10 +483,6 @@ namespace Common
 		double pRatioMonth;
 		double pRatioWeek;
 		unsigned int pNbYearsParallel;
-		//! Is variable not applicable ?
-		//! Meaning : do we print N/A in output files regarding the current variable ?
-		//! ... Not applicability for annual results
-		bool* isNonApplicableAnnually;
 		// Do we print results regarding the current variable in output files ? Or do we skip them ?
 		bool* isPrinted;
 		// Positive column count (original column count can be < 0 for some variable [see variables "by plant"])
