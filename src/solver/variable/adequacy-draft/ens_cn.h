@@ -122,7 +122,6 @@ namespace AdequacyDraft
 	public:
 		~ENS_CN()
 		{
-			delete[] isNotApplicable;
 			delete[] isPrinted;
 		}
 
@@ -134,7 +133,6 @@ namespace AdequacyDraft
 			AncestorType::pResults.averageMaxValue(study.runtime->rangeLimits.year[Data::rangeCount]);
 
 			// current variable output behavior container
-			isNotApplicable = new bool[VCardType::columnCount];
 			isPrinted = new bool[VCardType::columnCount];
 
 			// Setting print info for current variable
@@ -167,11 +165,9 @@ namespace AdequacyDraft
 		}
 
 		bool* getPrintStatus() const { return isPrinted; }
-		bool* getNonApplicableStatus() const { return isNotApplicable; }
 
 		void setPrintInfo(Data::Study& study)
 		{
-			isNotApplicable[0] = false;
 			isPrinted[0] = true;
 		}
 
@@ -275,9 +271,6 @@ namespace AdequacyDraft
 	private:
 		//! Intermediate values for each year
 		IntermediateValues pValuesForTheCurrentYear;
-		//! Is variable not applicable ?
-		//! Meaning : do we print N/A in output files regarding the current variable ?
-		bool* isNotApplicable;
 		// Do we print results regarding the current variable in output files ? Or do we skip them ?
 		bool* isPrinted;
 

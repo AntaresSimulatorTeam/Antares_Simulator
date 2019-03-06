@@ -135,7 +135,6 @@ namespace Economy
 		~NonProportionalCost()
 		{
 			delete[] pValuesForTheCurrentYear;
-			delete[] isNotApplicable;
 			delete[] isPrinted;
 		}
 
@@ -146,7 +145,6 @@ namespace Economy
 			InitializeResultsFromStudy(AncestorType::pResults, study);
 
 			// current variable output behavior container
-			isNotApplicable = new bool[VCardType::columnCount];
 			isPrinted = new bool[VCardType::columnCount];
 
 			// Setting print info for current variable
@@ -191,12 +189,9 @@ namespace Economy
 
 		bool* getPrintStatus() const { return isPrinted; }
 
-		bool* getNonApplicableStatus() const { return isNotApplicable; }
-
 		void setPrintInfo(Data::Study& study)
 		{
 			study.parameters.variablesPrintInfo.find(VCardType::Caption());
-			isNotApplicable[0] = study.parameters.variablesPrintInfo.isNotApplicable();
 			isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted();
 		}
 
@@ -304,7 +299,7 @@ namespace Economy
 		void localBuildAnnualSurveyReport(SurveyResults& results, int fileLevel, int precision, unsigned int numSpace) const
 		{
 			// Initializing external pointer on current variable non applicable status
-			results.isCurrentVarNA = isNotApplicable;
+			results.isCurrentVarNA = AncestorType::isNonApplicable;
 
 			if (isPrinted[0])
 			{
@@ -319,9 +314,6 @@ namespace Economy
 		//! Intermediate values for each year
 		typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
 		unsigned int pNbYearsParallel;
-		//! Is variable not applicable ?
-		//! Meaning : do we print N/A in output files regarding the current variable ?
-		bool* isNotApplicable;
 		// Do we print results regarding the current variable in output files ? Or do we skip them ?
 		bool* isPrinted;
 

@@ -151,7 +151,6 @@ namespace Economy
 		~DispatchableGeneration()
 		{
 			delete[] pValuesForTheCurrentYear;
-			delete[] isNotApplicable;
 			delete[] isPrinted;
 		}
 
@@ -162,7 +161,6 @@ namespace Economy
 			InitializeResultsFromStudy(AncestorType::pResults, study);
 
 			// current variable output behavior container
-			isNotApplicable = new bool[VCardType::columnCount];
 			isPrinted = new bool[VCardType::columnCount];
 
 			// Setting print info for current variable
@@ -213,16 +211,13 @@ namespace Economy
 
 		bool* getPrintStatus() const { return isPrinted; }
 
-		bool* getNonApplicableStatus() const { return isNotApplicable; }
-
 		void setPrintInfo(Data::Study& study)
 		{
 			for (uint i = 0; i != VCardType::columnCount; ++i)
 			{
 				// Shifting (inside the variables print info collection) to the current variable print info
 				study.parameters.variablesPrintInfo.find(VCardType::Multiple::Caption(i));
-				// And then getting the non applicable and print status
-				isNotApplicable[i] = study.parameters.variablesPrintInfo.isNotApplicable();
+				// And then getting the print status
 				isPrinted[i] = study.parameters.variablesPrintInfo.isPrinted();
 			}
 		}
@@ -323,8 +318,7 @@ namespace Economy
 		void localBuildAnnualSurveyReport(SurveyResults& results, int fileLevel, int precision, unsigned int numSpace) const
 		{
 			// The current variable is actually a multiple-variable.
-			// Initializing external pointer on internal variables' non applicable status array to beginning
-			results.isCurrentVarNA = isNotApplicable;
+			results.isCurrentVarNA = AncestorType::isNonApplicable;
 			
 			for (uint i = 0; i != VCardType::columnCount; ++i)
 			{
@@ -344,9 +338,6 @@ namespace Economy
 		//! Intermediate values for each year
 		typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
 		unsigned int pNbYearsParallel;
-		//! Are internal variables not applicable ?
-		//! Meaning : do we print N/A in output files regarding the current variable ?
-		bool* isNotApplicable;
 		// Do we print results regarding internal variables in output files ? Or do we skip them ?
 		bool* isPrinted;
 
