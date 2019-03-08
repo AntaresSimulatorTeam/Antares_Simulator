@@ -157,8 +157,7 @@ namespace Economy
 	public:
 		NbOfDispatchedUnitsByPlant() :
 			pValuesForTheCurrentYear(NULL),
-			pSize(0),
-			isPrinted(nullptr)
+			pSize(0)
 		{
 		}
 
@@ -167,17 +166,10 @@ namespace Economy
 			for(unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
 				delete[] pValuesForTheCurrentYear[numSpace];
 			delete[] pValuesForTheCurrentYear;
-			delete[] isPrinted;
 		}
 
 		void initializeFromStudy(Data::Study& study)
 		{
-			// current variable output behavior container
-			isPrinted = new bool[1];		// Constant dynamicColumns (= -1) cannot be used to allocate
-
-			// Setting print info for current variable
-			setPrintInfo(study);
-
 			// Next
 			NextType::initializeFromStudy(study);
 		}
@@ -238,14 +230,6 @@ namespace Economy
 		{
 			// Next
 			NextType::initializeFromThermalCluster(study, area, cluster);
-		}
-
-		bool* getPrintStatus() const { return isPrinted; }
-
-		void setPrintInfo(Data::Study& study)
-		{
-			study.parameters.variablesPrintInfo.find(VCardType::Caption());
-			isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted();
 		}
 
 		void simulationBegin()
@@ -377,7 +361,7 @@ namespace Economy
 			// Initializing external pointer on current variable non applicable status
 			results.isCurrentVarNA = AncestorType::isNonApplicable;
 			
-			if(isPrinted[0])
+			if(AncestorType::isPrinted[0])
 			{
 				assert(NULL != results.data.area);
 				const auto& thermal = results.data.area->thermal;
@@ -398,8 +382,6 @@ namespace Economy
 		typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
 		unsigned int pSize;
 		unsigned int pNbYearsParallel;
-		// Do we print results regarding the current variable in output files ? Or do we skip them ?
-		bool* isPrinted;
 
 	}; // class NbOfDispatchedUnitsByPlant
 

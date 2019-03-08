@@ -88,7 +88,7 @@ namespace Variable
 			// From the study
 			n->initializeFromStudy(study);
 
-			// Possibly make specific variables non applicable in :
+			// Possibly set specific variables non applicable in :
 			// - annual spatial aggregates reports
 			// - over all years spatial aggregates statistics reports
 			bool applyNonApplicable = false;
@@ -104,6 +104,10 @@ namespace Variable
 			}
 			// Broadcasting the non applicable status over all variables regarding the set of areas
 			n->broadcastNonApplicability(applyNonApplicable);
+
+			// For each current set's variable, getting the print status, that is :
+			// is variable's column(s) printed in output (set of areas) reports ?
+			n->getPrintStatusFromStudy(study);
 
 			// Adding the variables for the area in the list
 			pSetsOfAreas.push_back(n);

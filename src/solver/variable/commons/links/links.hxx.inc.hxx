@@ -74,6 +74,16 @@ namespace LINK_NAMESPACE
 		if (Antares::Memory::swapSupport)
 			Antares::memory.flushAll();
 	}
+
+	inline void Links::getPrintStatusFromStudy(Data::Study& study)
+	{
+		for (uint i = 0; i != pLinkCount; ++i)
+			pLinks[i].getPrintStatusFromStudy(study);
+		// Flush all memory into the swap files
+		// (only if the support is available)
+		if (Antares::Memory::swapSupport)
+			Antares::memory.flushAll();
+	}
 	
 	inline void Links::yearBegin(uint year, unsigned int numSpace)
 	{

@@ -115,10 +115,7 @@ namespace AdequacyDraft
 		};
 
 	public:
-		~LOLP_IS()
-		{
-			delete[] isPrinted;
-		}
+		~LOLP_IS() {}
 
 		void initializeFromStudy(Data::Study& study)
 		{
@@ -126,12 +123,6 @@ namespace AdequacyDraft
 			gotFailureForTheCurrentYearIS = false;
 			AncestorType::pResults.initializeFromStudy(study);
 			AncestorType::pResults.reset();
-
-			// current variable output behavior container
-			isPrinted = new bool[VCardType::columnCount];
-
-			// Setting print info for current variable
-			setPrintInfo(study);
 
 			// Next
 			NextType::initializeFromStudy(study);
@@ -154,13 +145,6 @@ namespace AdequacyDraft
 		{
 			// Next
 			NextType::initializeFromThermalCluster(study, area, cluster);
-		}
-
-		bool* getPrintStatus() const { return isPrinted; }
-
-		void setPrintInfo(Data::Study& study)
-		{
-			isPrinted[0] = true;
 		}
 
 		void simulationBegin()
@@ -258,8 +242,6 @@ namespace AdequacyDraft
 
 	public:
 		bool gotFailureForTheCurrentYearIS;
-		// Do we print results regarding the current variable in output files ? Or do we skip them ?
-		bool* isPrinted;
 
 	}; // class LOLP_IS
 

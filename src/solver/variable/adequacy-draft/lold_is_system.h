@@ -113,10 +113,7 @@ namespace AdequacyDraft
 		};
 
 	public:
-		~LOLD_IS_System()
-		{
-			delete[] isPrinted;
-		}
+		~LOLD_IS_System() {	}
 
 		void initializeFromStudy(Data::Study& study)
 		{
@@ -124,12 +121,6 @@ namespace AdequacyDraft
 			pRatio = 1. / study.runtime->rangeLimits.year[Data::rangeCount];
 			AncestorType::pResults.initializeFromStudy(study);
 			AncestorType::pResults.reset();
-
-			// current variable output behavior container
-			isPrinted = new bool[VCardType::columnCount];
-
-			// Setting print info for current variable
-			setPrintInfo(study);
 
 			// Next
 			NextType::initializeFromStudy(study);
@@ -152,13 +143,6 @@ namespace AdequacyDraft
 		{
 			// Next
 			NextType::initializeFromThermalCluster(study, area, cluster);
-		}
-
-		bool* getPrintStatus() const { return isPrinted; }
-
-		void setPrintInfo(Data::Study& study)
-		{
-			isPrinted[0] = true;
 		}
 
 		void simulationBegin()
@@ -247,8 +231,6 @@ namespace AdequacyDraft
 
 	private:
 		double pRatio;
-		// Do we print results regarding the current variable in output files ? Or do we skip them ?
-		bool* isPrinted;
 
 	}; // class LOLD_IS_System
 

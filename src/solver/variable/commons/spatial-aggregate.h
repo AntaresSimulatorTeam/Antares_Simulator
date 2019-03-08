@@ -166,17 +166,11 @@ namespace Common
 		};
 
 	public:
-		SpatialAggregate()
-		{
-			// Current variable output behavior container
-			pColumnCount = VCardType::columnCount > 1 ? VCardType::columnCount : 1;	// Dimension -1 is avoided
-			isPrinted = new bool[pColumnCount];
-		}
+		SpatialAggregate() {}
 
 		~SpatialAggregate()
 		{
 			delete[] pValuesForTheCurrentYear;
-			delete[] isPrinted;
 		}
 
 		void initializeFromStudy(Data::Study& study)
@@ -189,9 +183,6 @@ namespace Common
 			pValuesForTheCurrentYear = new IntermediateValuesBaseType[pNbYearsParallel];
 			for(unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
 				 VariableAccessorType::InitializeAndReset(pValuesForTheCurrentYear[numSpace], study);
-
-			// Setting print info for current variable
-			setPrintInfo(study);
 
 			auto& limits = study.runtime->rangeLimits;
 
@@ -216,36 +207,10 @@ namespace Common
 			NextType::initializeFromAreaLink(study, link);
 		}
 
-
 		void initializeFromThermalCluster(Data::Study* study, Data::Area* area, Data::ThermalCluster* cluster)
 		{
 			// Next
 			NextType::initializeFromThermalCluster(study, area, cluster);
-		}
-
-		inline bool* getPrintStatus() const
-		{
-			return isPrinted;
-		}
-
-		void setPrintInfo(Data::Study& study)
-		{
-			if (pColumnCount == 1)
-			{
-				study.parameters.variablesPrintInfo.find(VCardType::Caption());
-				isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted();
-			}
-
-			if (pColumnCount > 1)
-			{
-				for (uint i = 0; i != pColumnCount; ++i)
-				{
-					// Shifting (inside the variables print info collection) to the current variable print info
-					study.parameters.variablesPrintInfo.find(VCardType::Multiple::Caption(i));
-					// And then getting the non applicable and print status
-					isPrinted[i] = study.parameters.variablesPrintInfo.isPrinted();
-				}
-			}
 		}
 
 		void simulationBegin()
@@ -258,7 +223,6 @@ namespace Common
 		{
 			NextType::simulationEnd();
 		}
-
 
 		void yearBegin(uint year)
 		{
@@ -365,8 +329,8 @@ namespace Common
 				&& (VCardType::categoryDataLevel & Category::setOfAreas))
 			{	
 				// Initializing pointer on variable non applicable and print stati arrays to beginning
-				results.isPrinted = isPrinted;
-				results.isCurrentVarNA = isNonApplicable;
+				results.isPrinted = AncestorType::isPrinted;
+				results.isCurrentVarNA = AncestorType::isNonApplicable;
 				VariableAccessorType::
 					template BuildDigest<typename VCardType::VCardOrigin>(results, AncestorType::pResults, digestLevel, dataLevel);
 			}
@@ -380,8 +344,8 @@ namespace Common
 			if (VCardType::columnCount != 0 && (VCardType::categoryDataLevel & Category::setOfAreas) )
 			{				
 				// Initializing pointer on variable non applicable and print stati arrays to beginning
-				results.isPrinted = isPrinted;
-				results.isCurrentVarNA = isNonApplicable;
+				results.isPrinted = AncestorType::isPrinted;
+				results.isCurrentVarNA = AncestorType::isNonApplicable;
 				
 				typedef VariableAccessor<typename VCardType::IntermediateValuesBaseType, VCardType::columnCount>  VAType;
 				VAType::template
@@ -483,15 +447,8 @@ namespace Common
 		double pRatioMonth;
 		double pRatioWeek;
 		unsigned int pNbYearsParallel;
-		// Do we print results regarding the current variable in output files ? Or do we skip them ?
-		bool* isPrinted;
-		// Positive column count (original column count can be < 0 for some variable [see variables "by plant"])
-		uint pColumnCount;
 
 	}; // class SpatialAggregate
-
-
-
 
 
 

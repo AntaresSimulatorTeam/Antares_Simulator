@@ -78,8 +78,11 @@ namespace Variable
 		pColumnCount = VCardType::columnCount > 1 ? VCardType::columnCount : 1;
 
 		// Allocation
-		//! Does current output variable appears non applicable in over all years output files for areas (not districts)
+		// Does current output variable appear non applicable in all output reports (of any kind :
+		// area or district reports, annual or over all years reports, digest, ...) ?
 		isNonApplicable = new bool[pColumnCount];
+		// Does current output variable column(s) appear in all reports ?
+		isPrinted = new bool[pColumnCount];
 
 	}
 
@@ -87,6 +90,7 @@ namespace Variable
 	inline  IVariable<ChildT, NextT, VCardT>::~IVariable()
 	{
 		delete[] isNonApplicable;
+		delete[] isPrinted;
 	}
 
 
@@ -136,7 +140,7 @@ namespace Variable
 
 	template<class ChildT, class NextT, class VCardT>
 	inline void
-		IVariable<ChildT, NextT, VCardT>::broadcastNonApplicability(bool applyNonApplicable)
+	IVariable<ChildT, NextT, VCardT>::broadcastNonApplicability(bool applyNonApplicable)
 	{
 		if (VCardType::isPossiblyNonApplicable != 0 && applyNonApplicable)
 		{
@@ -152,12 +156,59 @@ namespace Variable
 		NextType::broadcastNonApplicability(applyNonApplicable);
 	}
 
+	// The class GetPrintStatusHelper is used to make a different Do(...) treatment depending on current VCardType::columnCount.
+	// Recall that a variable can be single, dynamic or multiple.
+	namespace // anonymous
+	{
+		// Case : the variable is multiple
+		template<int ColumnT, class VCardT>
+		class GetPrintStatusHelper
+		{
+		public:
+			static void Do(Data::Study& study, bool* isPrinted)
+			{
+				for (uint i = 0; i != VCardT::columnCount; ++i)
+				{
+					// Shifting (inside the variables print info collection) to the current variable print info
+					study.parameters.variablesPrintInfo.find(VCardT::Multiple::Caption(i));
+					// And then getting the non applicable and print status
+					isPrinted[i] = study.parameters.variablesPrintInfo.isPrinted();
+				}
+			}
+		};
+
+		// Case : the variable is single
+		template<class VCardT>
+		class GetPrintStatusHelper<1, VCardT>
+		{
+		public:
+			static void Do(Data::Study& study, bool* isPrinted)
+			{
+				study.parameters.variablesPrintInfo.find(VCardT::Caption());
+				isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted();
+			}
+		};
+
+		// Case : the variable is dynamic
+		template<class VCardT>
+		class GetPrintStatusHelper<-1, VCardT>
+		{
+		public:
+			static void Do(Data::Study& study, bool* isPrinted)
+			{
+				study.parameters.variablesPrintInfo.find(VCardT::Caption());
+				isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted();
+			}
+		};
+	}
+
 	template<class ChildT, class NextT, class VCardT>
-	bool* 
-	IVariable<ChildT, NextT, VCardT>::getPrintStatus() const
-	{ 
-		// Default function (draft mode)
-		return nullptr;
+	inline void
+	IVariable<ChildT, NextT, VCardT>::getPrintStatusFromStudy(Data::Study& study)
+	{
+		GetPrintStatusHelper<VCardType::columnCount, VCardType>::Do(study, isPrinted);
+		// Go to the next variable
+		NextType::getPrintStatusFromStudy(study);
 	}
 
 	template<class ChildT, class NextT, class VCardT>
@@ -316,7 +367,8 @@ namespace Variable
 			if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel) && (precision & VCardType::precision))
 			{
 				// Initializing pointer on variable non applicable and print stati arrays to beginning
-				results.isPrinted = static_cast<const ChildT*>(this)->getPrintStatus();
+				// results.isPrinted = static_cast<const ChildT*>(this)->getPrintStatus();
+				results.isPrinted = isPrinted;
 				results.isCurrentVarNA = isNonApplicable;
 
 				VariableAccessorType::template
@@ -364,7 +416,8 @@ namespace Variable
 				|| VCardType::categoryDataLevel & Category::link))
 		{
 			// Initializing pointer on variable non applicable and print stati arrays to beginning
-			results.isPrinted = static_cast<const ChildT*>(this)->getPrintStatus();
+			// results.isPrinted = static_cast<const ChildT*>(this)->getPrintStatus();
+			results.isPrinted = isPrinted;
 			results.isCurrentVarNA = isNonApplicable;
 
 			VariableAccessorType::template BuildDigest<VCardT>(results, pResults, digestLevel, dataLevel);
@@ -588,7 +641,9 @@ namespace Variable
 		return pResults;
 	}
 
-
+	// class RetrieveVariableListHelper goes with function RetrieveVariableList(...).
+	// This class is used to make a different Do(...) treatment depending on current VCardType::columnCount.
+	// Recall that a variable can be single, dynamic or multiple. 
 	namespace // anonymous
 	{
 

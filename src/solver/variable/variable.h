@@ -162,7 +162,7 @@ namespace Variable
 
 		void broadcastNonApplicability(bool applyNonApplicable);
 
-		bool* getPrintStatus() const;
+		void getPrintStatusFromStudy(Data::Study& study);
 		
 		//! \name Simulation
 		//@{
@@ -334,14 +334,12 @@ namespace Variable
 		// + 1 if variable is a single variable
 		// + > 1 if variable is a multi-variable
 		bool* isNonApplicable;
+		// Do we print results regarding the current variable in output files ? Or do we skip them ?
+		bool* isPrinted;
 		// Positive column count (original column count can be < 0 for some variable [see variables "by plant"])
 		uint pColumnCount;
 
 	}; // class Variable
-
-
-
-
 
 
 } // namespace Variable

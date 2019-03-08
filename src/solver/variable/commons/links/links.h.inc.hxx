@@ -134,6 +134,7 @@ namespace LINK_NAMESPACE
 		void initializeFromAreaLink(Data::Study*, Data::AreaLink*);
 
 		void broadcastNonApplicability(bool applyNonApplicable);
+		void getPrintStatusFromStudy(Data::Study& study);
 
 		void simulationBegin();
 		void simulationEnd();

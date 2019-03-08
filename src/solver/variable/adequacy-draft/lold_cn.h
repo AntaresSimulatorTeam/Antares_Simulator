@@ -119,10 +119,7 @@ namespace AdequacyDraft
 		};
 
 	public:
-		~LOLD_CN()
-		{
-			delete[] isPrinted;
-		}
+		~LOLD_CN() {}
 
 		void initializeFromStudy(Data::Study& study)
 		{			
@@ -130,12 +127,6 @@ namespace AdequacyDraft
 			AncestorType::pResults.initializeFromStudy(study);
 			AncestorType::pResults.reset();
 			AncestorType::pResults.averageMaxValue(study.runtime->rangeLimits.year[Data::rangeCount]);
-
-			// current variable output behavior container
-			isPrinted = new bool[VCardType::columnCount];
-
-			// Setting print info for current variable
-			setPrintInfo(study);
 
 			// Intermediate values
 			pValuesForTheCurrentYear.initializeFromStudy(study);
@@ -161,13 +152,6 @@ namespace AdequacyDraft
 		{
 			// Next
 			NextType::initializeFromThermalCluster(study, area, cluster);
-		}
-
-		bool* getPrintStatus() const { return isPrinted; }
-
-		void setPrintInfo(Data::Study& study)
-		{
-			isPrinted[0] = true;
 		}
 
 		void simulationBegin()
@@ -268,8 +252,6 @@ namespace AdequacyDraft
 	private:
 		//! Intermediate values for each year
 		IntermediateValues pValuesForTheCurrentYear;
-		// Do we print results regarding the current variable in output files ? Or do we skip them ?
-		bool* isPrinted;
 	}; // class LOLD_CN
 
 

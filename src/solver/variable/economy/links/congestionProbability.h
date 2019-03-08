@@ -141,7 +141,6 @@ namespace Economy
 		{
 			delete[] pValuesForTheCurrentYear;
 			delete[] pValuesForYearLocalReport;
-			delete[] isPrinted;
 		}
 
 		void initializeFromStudy(Data::Study& study)
@@ -156,12 +155,6 @@ namespace Economy
 				AncestorType::pResults[i].initializeFromStudy(study);
 				AncestorType::pResults[i].reset();
 			}
-
-			// current variable output behavior container
-			isPrinted = new bool[VCardType::columnCount];
-
-			// Setting print info for current variable
-			setPrintInfo(study);
 
 			pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
 			for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; ++numSpace)
@@ -194,19 +187,6 @@ namespace Economy
 		{
 			// Next
 			NextType::initializeFromThermalCluster(study, area, cluster);
-		}
-
-		bool* getPrintStatus() const { return isPrinted; }
-
-		void setPrintInfo(Data::Study& study)
-		{
-			for (uint i = 0; i != VCardType::columnCount; ++i)
-			{
-				// Shifting (inside the variables print info collection) to the current variable print info
-				study.parameters.variablesPrintInfo.find(VCardType::Multiple::Caption(i));
-				// And then getting the print status
-				isPrinted[i] = study.parameters.variablesPrintInfo.isPrinted();
-			}
 		}
 
 		void simulationBegin()
@@ -361,7 +341,7 @@ namespace Economy
 
 			for (uint i = 0; i != VCardType::columnCount; ++i)
 			{				
-				if(isPrinted[i])
+				if(AncestorType::isPrinted[i])
 				{
 					// Write the data for the current year
 					results.variableCaption = VCardType::Multiple::Caption(i);
@@ -379,8 +359,6 @@ namespace Economy
 		typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
 		typename VCardType::IntermediateValuesType pValuesForYearLocalReport;
 		unsigned int pNbYearsParallel;
-		// Do we print results regarding internal variables in output files ? Or do we skip them ?
-		bool* isPrinted;
 
 	}; // class CongestionProbability
 

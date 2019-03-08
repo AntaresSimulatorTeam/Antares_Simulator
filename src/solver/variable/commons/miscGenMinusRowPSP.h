@@ -131,7 +131,6 @@ namespace Economy
 		~MiscGenMinusRowPSP()
 		{
 			delete[] pValuesForTheCurrentYear;
-			delete[] isPrinted;
 		}
 
 		void initializeFromStudy(Data::Study& study)
@@ -140,12 +139,6 @@ namespace Economy
 			
 			// Average on all years
 			InitializeResultsFromStudy(AncestorType::pResults, study);
-
-			// current variable output behavior container
-			isPrinted = new bool[VCardType::columnCount];
-
-			// Setting print info for current variable
-			setPrintInfo(study);
 
 			// Intermediate values
 			pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
@@ -198,14 +191,6 @@ namespace Economy
 		{
 			VariableAccessorType::InitializeAndReset(results, study);
 			results.averageMaxValue(study.runtime->rangeLimits.year[Data::rangeCount]);
-		}
-
-		bool* getPrintStatus() const { return isPrinted; }
-
-		void setPrintInfo(Data::Study& study)
-		{
-			study.parameters.variablesPrintInfo.find(VCardType::Caption());
-			isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted();
 		}
 
 		void simulationBegin()
@@ -296,7 +281,7 @@ namespace Economy
 			// Initializing external pointer on current variable non applicable status
 			results.isCurrentVarNA = AncestorType::isNonApplicable;
 			
-			if (isPrinted[0])
+			if (AncestorType::isPrinted[0])
 			{
 				// Write the data for the current year
 				results.variableCaption = VCardType::Caption();
@@ -309,8 +294,6 @@ namespace Economy
 		//! Intermediate values for each year
 		typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
 		unsigned int pNbYearsParallel;
-		// Do we print results regarding the current variable in output files ? Or do we skip them ?
-		bool* isPrinted;
 
 	}; // class MiscGenMinusRowPSP
 

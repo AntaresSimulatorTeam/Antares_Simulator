@@ -104,6 +104,10 @@ namespace Variable
 			// Note that digest gather area and district results.
 			n.broadcastNonApplicability(not currentArea->hydro.reservoirManagement);
 
+			// For each current area's variable, getting the print status, that is :
+			// is variable's column(s) printed in output (areas) reports ?
+			n.getPrintStatusFromStudy(study);
+
 			// It is needed that the whole memory is flushed to swap
 			// Some intermediate are not flush and it may lead
 			// to an excessive unused amount of memory
