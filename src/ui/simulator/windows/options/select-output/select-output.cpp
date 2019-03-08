@@ -273,6 +273,7 @@ namespace Options
 		pStatus->SetValue(b);
 		sizer.Layout();
 		Thaw();
+		Refresh();
 	}
 
 

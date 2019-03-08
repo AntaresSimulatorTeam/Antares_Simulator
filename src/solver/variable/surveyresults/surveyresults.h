@@ -133,9 +133,6 @@ namespace Variable
 		//! Flag to known if we are in the year-by-year mode
 		bool yearByYearResults;
 
-		// All variables print info
-		// Antares::Data::AllVariablesPrintInfo * allvarsinfo;
-
 		//! When looping over output variables, is current variable non applicable ?
 		//! In the static type list of variables, there is a need to convey the non applicable status to variables
 		//! statistic results through an instance of the current class.

@@ -148,9 +148,6 @@ namespace Antares
 						NextType::initializeFromStudy(study);
 					}
 
-					// Is current variable non applicable ?
-					// static const bool isPossiblyNonApplicable() { return true; }
-
 					template<class R>
 					static void InitializeResultsFromStudy(R& results, Data::Study& study)
 					{

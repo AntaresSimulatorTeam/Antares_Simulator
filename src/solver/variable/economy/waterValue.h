@@ -134,9 +134,6 @@ namespace Economy
 			delete[] pValuesForTheCurrentYear;
 		}
 
-		// Is current variable non applicable ?
-		// static const bool isPossiblyNonApplicable() { return true; }
-
 		void initializeFromStudy(Data::Study& study)
 		{
 			pNbYearsParallel = study.maxNbYearsInParallel;
