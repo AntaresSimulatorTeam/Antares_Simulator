@@ -32,16 +32,11 @@ namespace Data
 		uint getDataLevel() { return dataLevel; }
 		uint getFileLevel() { return fileLevel; }
 
-		bool isNonApplicable() { return is_non_applicable; }
-		void setNonApplicableStatus(bool na) { is_non_applicable = na; }
-
 	private:
 		// Current variable's name
 		AnyString varname;
 		// Is the variable printed ?
 		bool to_be_printed;
-		// Non applicability
-		bool is_non_applicable;
 
 		// All this useful to compute the max number of colums any report can contain
 		// ... maximum number of columns taken by variable in the output files
@@ -57,7 +52,7 @@ namespace Data
 	{
 	public:
 		variablePrintInfoCollector(AllVariablesPrintInfo * allvarsprintinfo);
-		void add(const AnyString& name, uint nbGlobalResults, uint dataLevel, uint fileLevel, bool possibly_non_applicable);
+		void add(const AnyString& name, uint nbGlobalResults, uint dataLevel, uint fileLevel/*, bool possibly_non_applicable*/);
 	private:
 		AllVariablesPrintInfo * allvarsinfo;
 	};
@@ -83,31 +78,21 @@ namespace Data
 		
 		bool setPrintStatus(string varname, bool printStatus);
 
-		void addPossiblyNonApplicable(VariablePrintInfo* v);
 		inline VariablePrintInfo* getLast() { return allVarsPrintInfo.back(); }
 		inline VariablePrintInfo* getCurrentPrintInfo() { return *it_info; }
 
-		void setToNonApplicable(bool na);
-
 		void prepareForSimulation(bool userSelection);
-
-		void setNonApplicableStatusForEachVariable();
 
 		void find(string var_name);
 
 		// Get a flag inside the variable object pointed by the iterator
-		inline bool isNotApplicable() { return (*it_info)->isNonApplicable(); };
 		inline bool isPrinted() { return (*it_info)->isPrinted(); };
 
-		// inline void increaseColumnsCount(uint varcount) { columnsCount += varcount; }
 		uint getColumnsCount() { return columnsCount; }
 
 	private:
 		// Contains print info for all variables
 		vector<VariablePrintInfo*> allVarsPrintInfo;
-
-		// List of variables that can be non applicable
-		vector<VariablePrintInfo*> varsPossiblyNonApplicable;
 		
 		// Iterator on variable print info list
 		vector<VariablePrintInfo*>::iterator it_info;

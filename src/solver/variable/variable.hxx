@@ -664,8 +664,7 @@ namespace Variable
 					printInfoCollector.add(	VCardT::Multiple::Caption(i),
 											VCardT::ResultsType::count,
 											VCardT::categoryDataLevel,
-											VCardT::categoryFileLevel,
-											VCardT::isPossiblyNonApplicable);
+											VCardT::categoryFileLevel);
 				}
 			}
 
@@ -685,8 +684,7 @@ namespace Variable
 				printInfoCollector.add(	VCardT::Caption(),
 										VCardT::ResultsType::count,
 										VCardT::categoryDataLevel,
-										VCardT::categoryFileLevel,
-										VCardT::isPossiblyNonApplicable);
+										VCardT::categoryFileLevel);
 			}
 		};
 
@@ -703,8 +701,7 @@ namespace Variable
 				printInfoCollector.add(	VCardT::Caption(),
 										VCardT::ResultsType::count,
 										VCardT::categoryDataLevel,
-										VCardT::categoryFileLevel,
-										VCardT::isPossiblyNonApplicable);
+										VCardT::categoryFileLevel);
 			}
 		};
 
