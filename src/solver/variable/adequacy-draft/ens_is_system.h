@@ -124,7 +124,7 @@ namespace AdequacyDraft
 			AncestorType::pResults.reset();
 			pRatio = 1. / study.runtime->rangeLimits.year[Data::rangeCount];
 
-			// Special draft variable : non applicability is set here, but should be set in ancester class
+			// Special draft variable : non applicability is set here, not in ancester class
 			AncestorType::isNonApplicable[0] = false;
 
 			// Next

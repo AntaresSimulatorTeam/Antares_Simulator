@@ -158,39 +158,6 @@ namespace Variable
 	}
 	
 
-	/* -- Trash for further devs --
-	namespace // anonymous
-	{
-		template<int categoryDataLevel, class NextType, class VCardType>
-		class GetNonApplicabilityHelper
-		{
-		public:
-			static void Do(bool* isNonApplicable, bool applyNonApplicable, uint columnCount)
-			{
-				if (VCardType::isPossiblyNonApplicable != 0 && applyNonApplicable)
-				{
-					for (uint i = 0; i != columnCount; ++i)
-						isNonApplicable[i] = true;
-				}
-				else
-				{
-					for (uint i = 0; i != columnCount; ++i)
-						isNonApplicable[i] = false;
-				}
-
-				NextType::broadcastNonApplicability(applyNonApplicable);
-			}
-		};
-	}
-
-	template<class ChildT, class NextT, class VCardT>
-	static void
-	IVariable<ChildT, NextT, VCardT>::broadcastNonApplicability(bool applyNonApplicable)
-	{
-		GetNonApplicabilityHelper<VCardType::categoryDataLevel, NextT, VCardT>::Do(isNonApplicable, applyNonApplicable, pColumnCount);
-	}
-	*/
-
 	// The class GetPrintStatusHelper is used to make a different Do(...) treatment depending on current VCardType::columnCount.
 	// Recall that a variable can be single, dynamic or multiple.
 	namespace // anonymous
