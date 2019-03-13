@@ -50,7 +50,7 @@ namespace Data
 	string VariablePrintInfo::name() { return varname.to<string>(); }
 	void VariablePrintInfo::enablePrint(bool b) { to_be_printed = b; }
 	bool VariablePrintInfo::isPrinted() { return to_be_printed; }
-	uint VariablePrintInfo::getColumnsCount() { return maxNumberColumns; }
+	uint VariablePrintInfo::getMaxColumnsCount() { return maxNumberColumns; }
 
 	// ============================================================
 	// Variables print information collector
@@ -59,7 +59,7 @@ namespace Data
 		: allvarsinfo(allvarsprintinfo)
 	{}
 
-	void variablePrintInfoCollector::add(const AnyString& name, uint nbGlobalResults, uint dataLevel, uint fileLevel/*, bool possibly_non_applicable*/)
+	void variablePrintInfoCollector::add(const AnyString& name, uint nbGlobalResults, uint dataLevel, uint fileLevel)
 	{
 		allvarsinfo->add(new VariablePrintInfo(name, nbGlobalResults, dataLevel, fileLevel));
 	}
@@ -68,7 +68,7 @@ namespace Data
 	// All variables print information
 	// ============================================================
 	AllVariablesPrintInfo::AllVariablesPrintInfo()
-		: columnsCount(0)
+		: maxColumnsCount(0)
 	{	
 		// Re-initializing the iterator
 		it_info = allVarsPrintInfo.begin();
@@ -86,15 +86,14 @@ namespace Data
 		// Destroying objects in lists
 		// ---------------------------
 		// Deleting variable' print info objects pointed in the list
-		for (it_info = allVarsPrintInfo.begin(); it_info != allVarsPrintInfo.end(); ++it_info)
-			delete *it_info;
+		vector<VariablePrintInfo*>::iterator it = allVarsPrintInfo.begin();
+		for (it = allVarsPrintInfo.begin(); it != allVarsPrintInfo.end(); ++it)
+			delete *it;
 		
 		// After destroying objects in list, clearing lists
 		// ------------------------------------------------
 		// Clearing variables' print info list
 		allVarsPrintInfo.clear();
-		
-		resetInfoIterator();
 	}
 
 
@@ -105,10 +104,16 @@ namespace Data
 	bool AllVariablesPrintInfo::isEmpty() const { return size() == 0; }
 
 	// Resetting iterator at the beginning of the list of all variables' print info
-	void AllVariablesPrintInfo::resetInfoIterator() { it_info = allVarsPrintInfo.begin(); }
+	void AllVariablesPrintInfo::resetInfoIterator() const { it_info = allVarsPrintInfo.begin(); }
 
 	bool AllVariablesPrintInfo::setPrintStatus(string varname, bool printStatus)
 	{
+		/*
+			From the position of the iterator on the print info collection, shifting right until
+			reaching the print info associated to 'varname' argument. Then setting the good print info object
+			with 'printStatus' argument.
+			If searched variable print info not found, returning 'false' meaing we have an error.
+		*/
 		std::transform(varname.begin(), varname.end(), varname.begin(), ::toupper);
 
 		for (; it_info != allVarsPrintInfo.end(); it_info++)
@@ -133,44 +138,54 @@ namespace Data
 				allVarsPrintInfo[i]->enablePrint(true);
 		}
 
-		
+		/*
+			Among all reports a study can create, which is the one that contains the largest
+			number of columns and especially what is this number ?
+			If we do not select some variables, the previous number is reduced.
+			This number os a rough up estimation, not the exact maximum number a report can contain.
+		*/
+
 		uint CFileLevel = 1;
 		uint CDataLevel = 1;
 
+		// Looping over all kinds of data levels (area report, link reports, districts reports, thermal reports,...) and file levels
+		// (values reports, years ids reports, details reports, ...) the code can produce.
+		// For one particular kind of report, looping over (selected) output variables it contains, and incrementing
+		// a counter with as many columns as the current variable can take up at most in a report. 
 		while (CDataLevel <= Category::maxDataLevel && CFileLevel <= Category::maxFileLevel)
 		{
 			uint currentColumnsCount = 0;
 
-			// Computing the max number of columns for an output file 
-			it_info = allVarsPrintInfo.begin();
-			for (; it_info != allVarsPrintInfo.end(); it_info++)
+			vector<VariablePrintInfo*>::iterator it = allVarsPrintInfo.begin();
+			for (; it != allVarsPrintInfo.end(); it++)
 			{
-				if ( (*it_info)->isPrinted() && (*it_info)->getFileLevel() & CFileLevel && (*it_info)->getDataLevel() & CDataLevel )
-					currentColumnsCount += (*it_info)->getColumnsCount();
+				if ( (*it)->isPrinted() && (*it)->getFileLevel() & CFileLevel && (*it)->getDataLevel() & CDataLevel )
+					currentColumnsCount += (*it)->getMaxColumnsCount();
 			}
 
-			if (currentColumnsCount > columnsCount)
-				columnsCount = currentColumnsCount;
+			if (currentColumnsCount > maxColumnsCount)
+				maxColumnsCount = currentColumnsCount;
 
 			CFileLevel = (CFileLevel * 2 > (int)Category::maxFileLevel) ? 1 : CFileLevel * 2;
 			CDataLevel = (CFileLevel * 2 > (int)Category::maxFileLevel) ? CDataLevel * 2 : CDataLevel;
 		}
-
-		// Reset iterator on variables print info list after reading ini file
-		resetInfoIterator();
 	}
-
-	void AllVariablesPrintInfo::find(string var_name)
+	
+	bool AllVariablesPrintInfo::isPrinted(string var_name) const
 	{
 		for (; it_info != allVarsPrintInfo.end(); it_info++)
 		{
 			if ((*it_info)->name() == var_name)
 			{
-				// Now the iterator is pointing the searched variable
-				break;
+				return (*it_info)->isPrinted();
 			}
 		}
+
+		// This is the case where we have an adequacy-draft variable
+		resetInfoIterator();
+		return true;
 	}
+
 
 } // namespace Data
 } // namespace Antares

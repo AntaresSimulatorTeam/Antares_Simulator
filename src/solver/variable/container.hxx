@@ -377,7 +377,7 @@ namespace Container
 		// auto* survey = new SurveyResults(maxColumnsNeededForExportation, *pStudy, output);
 
 		// Getting the any report's max number of columns 
-		uint nbColumnsNeededForExportation = pStudy->parameters.variablesPrintInfo.getColumnsCount();
+		uint nbColumnsNeededForExportation = pStudy->parameters.variablesPrintInfo.getMaxColumnsCount();
 		logs.debug() << "  (for " << nbColumnsNeededForExportation << " columns)";
 		
 		auto* survey = new SurveyResults(nbColumnsNeededForExportation, *pStudy, output);

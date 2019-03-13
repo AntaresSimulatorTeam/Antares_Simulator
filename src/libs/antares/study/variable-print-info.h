@@ -43,19 +43,22 @@ namespace Antares
 {
 namespace Data
 {
-
+	// Represents an output variable (wears the same name) and mainly answers the question :
+	// Is the real variable printed in all output reports ? Or is it not printed in any report ?  
 	class VariablePrintInfo
 	{
 	public:
 		VariablePrintInfo(AnyString vname, uint maxNbCols, uint dataLvl, uint fileLvl);
 		~VariablePrintInfo() {};
 
+		// Getting name of the (represented) output variable
 		string name();
 
+		// Do we enable or disable variable's print in output reports ?
 		void enablePrint(bool b);
 		bool isPrinted();
 
-		uint getColumnsCount();
+		uint getMaxColumnsCount();
 		uint getDataLevel() { return dataLevel; }
 		uint getFileLevel() { return fileLevel; }
 
@@ -66,7 +69,7 @@ namespace Data
 		bool to_be_printed;
 
 		// All this useful to compute the max number of colums any report can contain
-		// ... maximum number of columns taken by variable in the output files
+		// ... maximum number of columns taken up by variable in the output files
 		uint maxNumberColumns;
 		// ... data and file levels
 		uint dataLevel;
@@ -79,15 +82,13 @@ namespace Data
 	{
 	public:
 		variablePrintInfoCollector(AllVariablesPrintInfo * allvarsprintinfo);
-		void add(const AnyString& name, uint nbGlobalResults, uint dataLevel, uint fileLevel/*, bool possibly_non_applicable*/);
+		void add(const AnyString& name, uint nbGlobalResults, uint dataLevel, uint fileLevel);
 	private:
 		AllVariablesPrintInfo * allvarsinfo;
 	};
 
-	// gp : var select :
-	// gp : - mot clé const ?
-	// gp : - mot clé inline ?
-	// gp : - autres ?
+	// Variables print info collection. Mainly a vector of pointers to print info.
+	// This collection is filled with as many print info as we can find output variables in the output variables Antares's static list.
 	class AllVariablesPrintInfo
 	{
 	public:
@@ -101,30 +102,27 @@ namespace Data
 		size_t size() const;
 		bool isEmpty() const;
 
-		void resetInfoIterator();
+		void resetInfoIterator() const;
 		
 		bool setPrintStatus(string varname, bool printStatus);
 
-		inline VariablePrintInfo* getLast() { return allVarsPrintInfo.back(); }
-		inline VariablePrintInfo* getCurrentPrintInfo() { return *it_info; }
-
 		void prepareForSimulation(bool userSelection);
 
-		void find(string var_name);
-
 		// Get a flag inside the variable object pointed by the iterator
-		inline bool isPrinted() { return (*it_info)->isPrinted(); };
+		bool isPrinted(string var_name) const;
 
-		uint getColumnsCount() { return columnsCount; }
+		uint getMaxColumnsCount() const { return maxColumnsCount; }
 
 	private:
 		// Contains print info for all variables
 		vector<VariablePrintInfo*> allVarsPrintInfo;
 		
-		// Iterator on variable print info list
-		vector<VariablePrintInfo*>::iterator it_info;
-
-		uint columnsCount;
+		// Const iterator on variable print info list, that cannot change current object.
+		mutable vector<VariablePrintInfo*>::const_iterator it_info;
+		
+		// Max columns count a report of any kind can contain, depending on the number of selected variables.
+		// The less variables are selected, the smallest this count is.
+		uint maxColumnsCount;
 	};
 
 } // namespace Data

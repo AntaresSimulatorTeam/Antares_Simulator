@@ -138,6 +138,7 @@ namespace Variable
 		NextType::initializeFromThermalCluster(study, area, cluster);
 	}
 
+	
 	template<class ChildT, class NextT, class VCardT>
 	inline void
 	IVariable<ChildT, NextT, VCardT>::broadcastNonApplicability(bool applyNonApplicable)
@@ -155,6 +156,40 @@ namespace Variable
 
 		NextType::broadcastNonApplicability(applyNonApplicable);
 	}
+	
+
+	/* -- Trash for further devs --
+	namespace // anonymous
+	{
+		template<int categoryDataLevel, class NextType, class VCardType>
+		class GetNonApplicabilityHelper
+		{
+		public:
+			static void Do(bool* isNonApplicable, bool applyNonApplicable, uint columnCount)
+			{
+				if (VCardType::isPossiblyNonApplicable != 0 && applyNonApplicable)
+				{
+					for (uint i = 0; i != columnCount; ++i)
+						isNonApplicable[i] = true;
+				}
+				else
+				{
+					for (uint i = 0; i != columnCount; ++i)
+						isNonApplicable[i] = false;
+				}
+
+				NextType::broadcastNonApplicability(applyNonApplicable);
+			}
+		};
+	}
+
+	template<class ChildT, class NextT, class VCardT>
+	static void
+	IVariable<ChildT, NextT, VCardT>::broadcastNonApplicability(bool applyNonApplicable)
+	{
+		GetNonApplicabilityHelper<VCardType::categoryDataLevel, NextT, VCardT>::Do(isNonApplicable, applyNonApplicable, pColumnCount);
+	}
+	*/
 
 	// The class GetPrintStatusHelper is used to make a different Do(...) treatment depending on current VCardType::columnCount.
 	// Recall that a variable can be single, dynamic or multiple.
@@ -169,10 +204,9 @@ namespace Variable
 			{
 				for (uint i = 0; i != VCardT::columnCount; ++i)
 				{
-					// Shifting (inside the variables print info collection) to the current variable print info
-					study.parameters.variablesPrintInfo.find(VCardT::Multiple::Caption(i));
-					// And then getting the non applicable and print status
-					isPrinted[i] = study.parameters.variablesPrintInfo.isPrinted();
+					// Shifting inside the variables print info collection until reaching the print info associated
+					// with the current name, and then getting its print status.
+					isPrinted[i] = study.parameters.variablesPrintInfo.isPrinted(VCardT::Multiple::Caption(i));
 				}
 			}
 		};
@@ -184,8 +218,9 @@ namespace Variable
 		public:
 			static void Do(Data::Study& study, bool* isPrinted)
 			{
-				study.parameters.variablesPrintInfo.find(VCardT::Caption());
-				isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted();
+				// Shifting inside the variables print info collection until reaching the print info associated
+				// with the current name, and then getting its print status.
+				isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted(VCardT::Caption());
 			}
 		};
 
@@ -196,8 +231,9 @@ namespace Variable
 		public:
 			static void Do(Data::Study& study, bool* isPrinted)
 			{
-				study.parameters.variablesPrintInfo.find(VCardT::Caption());
-				isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted();
+				// Shifting inside the variables print info collection until reaching the print info associated
+				// with the current name, and then getting its print status.
+				isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted(VCardT::Caption());
 			}
 		};
 	}
@@ -367,7 +403,6 @@ namespace Variable
 			if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel) && (precision & VCardType::precision))
 			{
 				// Initializing pointer on variable non applicable and print stati arrays to beginning
-				// results.isPrinted = static_cast<const ChildT*>(this)->getPrintStatus();
 				results.isPrinted = isPrinted;
 				results.isCurrentVarNA = isNonApplicable;
 
@@ -416,7 +451,6 @@ namespace Variable
 				|| VCardType::categoryDataLevel & Category::link))
 		{
 			// Initializing pointer on variable non applicable and print stati arrays to beginning
-			// results.isPrinted = static_cast<const ChildT*>(this)->getPrintStatus();
 			results.isPrinted = isPrinted;
 			results.isCurrentVarNA = isNonApplicable;
 
@@ -657,6 +691,8 @@ namespace Variable
 					predicate.add(VCardT::Multiple::Caption(i), VCardT::Unit(), VCardT::Description());
 			}
 
+			// Function used to build the collection of variables print info from the static variables list.
+			// Multiple variable function version.
 			static void Do(Data::variablePrintInfoCollector& printInfoCollector)
 			{
 				for (int i = 0; i < VCardT::columnCount; ++i)
@@ -679,6 +715,8 @@ namespace Variable
 				predicate.add(VCardT::Caption(), VCardT::Unit(), VCardT::Description());
 			}
 
+			// Function used to build the collection of variables print info from the static variables list.
+			// Single variable function version.
 			static void Do(Data::variablePrintInfoCollector& printInfoCollector)
 			{
 				printInfoCollector.add(	VCardT::Caption(),
@@ -695,7 +733,8 @@ namespace Variable
 			template<class PredicateT> static void Do(PredicateT&)
 			{}
 
-			// We want variable with columnCount = dynamicColumns to be selected if needed
+			// Function used to build the collection of variables print info from the static variables list.
+			// Dynamic variable function version.
 			static void Do(Data::variablePrintInfoCollector& printInfoCollector)
 			{
 				printInfoCollector.add(	VCardT::Caption(),

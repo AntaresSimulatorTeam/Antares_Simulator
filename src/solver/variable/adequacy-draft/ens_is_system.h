@@ -71,6 +71,8 @@ namespace AdequacyDraft
 			spatialAggregate = Category::spatialAggregateSum,
 			//! Intermediate values
 			hasIntermediateValues = 0,
+			//! Can this variable be non applicable (0 : no, 1 : yes)
+			isPossiblyNonApplicable = 0,
 		};
 
 	}; // class VCard
@@ -121,6 +123,9 @@ namespace AdequacyDraft
 			AncestorType::pResults.initializeFromStudy(study);
 			AncestorType::pResults.reset();
 			pRatio = 1. / study.runtime->rangeLimits.year[Data::rangeCount];
+
+			// Special draft variable : non applicability is set here, but should be set in ancester class
+			AncestorType::isNonApplicable[0] = false;
 
 			// Next
 			NextType::initializeFromStudy(study);
