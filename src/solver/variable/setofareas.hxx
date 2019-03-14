@@ -88,22 +88,10 @@ namespace Variable
 			// From the study
 			n->initializeFromStudy(study);
 
-			// Possibly set specific variables non applicable in :
-			// - annual spatial aggregates reports
-			// - over all years spatial aggregates statistics reports
-			bool applyNonApplicable = false;
-			std::set<Data::Area*, Data::CompareAreaName> & _set_ = sets[setIndex];
-			std::set<Data::Area*, Data::CompareAreaName>::iterator it_area;
-			for (it_area = _set_.begin(); it_area != _set_.end(); it_area++)
-			{
-				if (not (*it_area)->hydro.reservoirManagement)
-				{
-					applyNonApplicable = true;
-					break;
-				}
-			}
-			// Broadcasting the non applicable status over all variables regarding the set of areas
-			n->broadcastNonApplicability(applyNonApplicable);
+			// Making specific variables non applicable in following output reports :
+			// - annual district reports
+			// - over all years district statistics reports
+			n->broadcastNonApplicability(true);
 
 			// For each current set's variable, getting the print status, that is :
 			// is variable's column(s) printed in output (set of areas) reports ?
