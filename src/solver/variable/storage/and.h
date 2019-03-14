@@ -157,7 +157,7 @@ namespace AllYears
 				// Value
 				report.values[report.data.columnIndex][report.data.area->index] = andAllYears;
 				// Non applicability
-				report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
+				report.digestNonApplicableStatus[report.data.rowIndex][report.data.columnIndex] = *report.isCurrentVarNA;
 
 				++(report.data.columnIndex);
 			}

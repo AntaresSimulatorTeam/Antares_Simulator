@@ -331,6 +331,7 @@ namespace Common
 				// Initializing pointer on variable non applicable and print stati arrays to beginning
 				results.isPrinted = AncestorType::isPrinted;
 				results.isCurrentVarNA = AncestorType::isNonApplicable;
+
 				VariableAccessorType::
 					template BuildDigest<typename VCardType::VCardOrigin>(results, AncestorType::pResults, digestLevel, dataLevel);
 			}

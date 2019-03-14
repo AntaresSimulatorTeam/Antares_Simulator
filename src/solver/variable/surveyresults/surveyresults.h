@@ -126,6 +126,9 @@ namespace Variable
 
 		//! Non applicable status for each column (in the printf format)
 		bool* nonApplicableStatus;
+		// Digest file non applicable status ( dim : nb vars x max(nb areas, nb sets of areas) )
+		uint digestSize; // Useful dimension for digest file non applicable statut management. 
+		bool** digestNonApplicableStatus;
 
 		//! The total number of variables
 		const uint maxVariables;

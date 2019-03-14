@@ -598,6 +598,18 @@ namespace Variable
 		nonApplicableStatus = new bool[maxVariables];
 		for (uint i = 0; i != maxVariables; ++i)
 			nonApplicableStatus[i] = false;
+
+		
+		uint nbAreas = s.areas.size();
+		uint nbSetsOfAreas = s.areas.size();
+		digestSize = (nbAreas > nbSetsOfAreas) ? nbAreas : nbSetsOfAreas;
+		digestNonApplicableStatus = new bool*[digestSize];
+		for (uint i = 0; i < digestSize; i++)
+		{
+			digestNonApplicableStatus[i] = new bool[maxVariables];
+			for (uint v = 0; v < maxVariables; v++)
+				digestNonApplicableStatus[i][v] = false;
+		}
 	}
 
 
@@ -614,6 +626,9 @@ namespace Variable
 			delete[] captions[i];
 		delete[] precision;
 		delete[] nonApplicableStatus;
+		for (uint i = 0; i < digestSize; i++)
+			delete[] digestNonApplicableStatus[i];
+		delete[] digestNonApplicableStatus;
 	}
 
 
@@ -679,7 +694,7 @@ namespace Variable
 				assert(i < maxVariables && "i greater can not be greater than maxVariables");
 				assert(y < maxHoursInAYear && "y can not be greater than maxHoursInAYear");
 
-				if (nonApplicableStatus[i])
+				if (digestNonApplicableStatus[y][i])
 				{
 					data.fileBuffer.append("\tN/A", 4);
 					continue;
