@@ -56,6 +56,7 @@
 # include <yuni/core/system/windows.hdr.h>
 # include <winsock2.h>
 # include <iphlpapi.h>
+# include <intrin.h>
 # pragma comment(lib, "IPHLPAPI.lib")
 #endif
 
