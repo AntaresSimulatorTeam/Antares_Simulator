@@ -1,7 +1,17 @@
+Antares Changelog
+=================
 
-Antares_Simulator Changelog
-===========================
 
+v7.0.1 (04/2019)
+-------------------- 
+
+### Features
+
+ - Time-series analysis: in "detrended mode", extended perimeter
+   to raw data including periods with no meaningful signal 
+   (e.g. solar production at night) 
+ - Hydro-storage modelling: added ability to optimize pumping along
+   with generation in mode "use heuristic target without leeway"
 
 v7.0.0 (12/2018)
 -------------------- 
