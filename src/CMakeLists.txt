@@ -4,8 +4,8 @@ cmake_minimum_required(VERSION 2.8)
 # Version
 set(ANTARES_VERSION_HI	      7)
 set(ANTARES_VERSION_LO	      0)
-set(ANTARES_VERSION_REVISION  0)
-set(ANTARES_VERSION_YEAR      2018)
+set(ANTARES_VERSION_REVISION  1)
+set(ANTARES_VERSION_YEAR      2019)
 
 set(ANTARES_PUBLISHER	   "RTE France")
 set(ANTARES_WEBSITE	   	   "https://antares.rte-france.com")
