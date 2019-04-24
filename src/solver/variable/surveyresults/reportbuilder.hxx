@@ -258,17 +258,23 @@ namespace Container
 
 					if (results.data.study.parameters.mode != Data::stdmAdequacyDraft)
 					{
-						// Digest: Flow linear
-						logs.debug() << " . Digest, flow linear";
-						results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
-						list.buildDigest(results, Category::digestFlowLinear, Category::area);
-						results.exportDigestMatrix("Links (FLOW LIN.)");
+						// Digest: Flow linear (only if selected by user)
+						if (results.data.study.parameters.variablesPrintInfo.isPrinted("FLOW LIN."))
+						{
+							logs.debug() << " . Digest, flow linear";
+							results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
+							list.buildDigest(results, Category::digestFlowLinear, Category::area);
+							results.exportDigestMatrix("Links (FLOW LIN.)");
+						}
 
-						// Digest: Flow Quad
-						logs.debug() << " . Digest, flow quad";
-						results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
-						list.buildDigest(results, Category::digestFlowQuad, Category::area);
-						results.exportDigestMatrix("Links (FLOW QUAD.)");
+						// Digest: Flow Quad (only if selected by user)
+						if (results.data.study.parameters.variablesPrintInfo.isPrinted("FLOW QUAD."))
+						{
+							logs.debug() << " . Digest, flow quad";
+							results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
+							list.buildDigest(results, Category::digestFlowQuad, Category::area);
+							results.exportDigestMatrix("Links (FLOW QUAD.)");
+						}
 					}
 
 					if (Antares::Memory::swapSupport)

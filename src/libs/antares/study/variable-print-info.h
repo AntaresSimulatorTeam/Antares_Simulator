@@ -108,7 +108,9 @@ namespace Data
 
 		void prepareForSimulation(bool userSelection);
 
-		// Get a flag inside the variable object pointed by the iterator
+		// Incremental search for the variable, then get the print status.
+		bool searchIncrementally_getPrintStatus(string var_name) const;
+		// Classic search, then get the print status
 		bool isPrinted(string var_name) const;
 
 		uint getMaxColumnsCount() const { return maxColumnsCount; }

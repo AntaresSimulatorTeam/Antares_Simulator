@@ -171,8 +171,16 @@ namespace Data
 		}
 	}
 	
-	bool AllVariablesPrintInfo::isPrinted(string var_name) const
+	bool AllVariablesPrintInfo::searchIncrementally_getPrintStatus(string var_name) const
 	{
+		// Finds out if an output variable is selected for print or not. 
+		// The search for the variable in the print info list is incremental :
+		// it resumes where it was left at the previous call.
+		// This function is meant to be called over the whole list of variables,
+		// not to find the print status of one isolated variable.
+		// We want to avoid to search from the start of the print info list at each call.
+
+		resetInfoIterator();
 		for (; it_info != allVarsPrintInfo.end(); it_info++)
 		{
 			if ((*it_info)->name() == var_name)
@@ -181,8 +189,27 @@ namespace Data
 			}
 		}
 
-		// This is the case where we have an adequacy-draft variable
+		// This is the case where we have an adequacy-draft variable :
+		// in the case of other study modes, we never get here.
 		resetInfoIterator();
+		return true;
+	}
+
+	bool AllVariablesPrintInfo::isPrinted(string var_name) const
+	{
+		// Finds out if an output variable selected for print or not. 
+		// The search for a variable starts from the beginning of the variable print info list.
+
+		for (; it_info != allVarsPrintInfo.end(); it_info++)
+		{
+			if ((*it_info)->name() == var_name)
+			{
+				return (*it_info)->isPrinted();
+			}
+		}
+
+		// This point is not supposed to be reached (except in draft mode),
+		// because the searched variables should be found.
 		return true;
 	}
 
