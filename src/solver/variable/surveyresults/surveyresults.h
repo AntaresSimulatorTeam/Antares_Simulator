@@ -97,6 +97,9 @@ namespace Variable
 
 		bool createDigestFile();
 
+		// Reset a line of values to zero.
+		void resetValuesAtLine(uint);
+
 		/*!
 		** \brief Export the digest file
 		*/

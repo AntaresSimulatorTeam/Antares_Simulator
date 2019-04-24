@@ -631,6 +631,11 @@ namespace Variable
 		delete[] digestNonApplicableStatus;
 	}
 
+	void SurveyResults::resetValuesAtLine(uint j)
+	{
+		for (uint i = 0; i < maxVariables; i++)
+			values[i][j] = 0.;
+	}
 
 	bool SurveyResults::createDigestFile()
 	{

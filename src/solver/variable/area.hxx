@@ -180,6 +180,7 @@ namespace Variable
 					results.data.rowIndex    = index;
 					results.data.rowCaptions[index] = results.data.area->id;
 					results.data.columnIndex = 0;
+					results.resetValuesAtLine(i);
 					pAreas[i].buildDigest(results, digestLevel, dataLevel);
 				}
 			}
