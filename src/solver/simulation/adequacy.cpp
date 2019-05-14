@@ -152,10 +152,11 @@ namespace Simulation
 					- valgen.HydrauliqueModulableQuotidien[dayInTheYear] / 24.;
 				
 				if (quantity > 0.)
-					return true;
+					return true;   // Call to the solver is required to find an optimal solution 
 			}
 		}
-		return false;
+	
+		return false; // No need to call the solver to exhibit an optimal solution
 	}
 
 
@@ -185,7 +186,8 @@ namespace Simulation
 			
 			::SIM_RenseignementProblemeHebdo(*pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
 
-			if ((state.simplexHasBeenRan = simplexIsRequired(hourInTheYear, numSpace)))
+			state.simplexHasBeenRan = (w==0)||simplexIsRequired(hourInTheYear, numSpace);
+			if (state.simplexHasBeenRan)  // Call to Solver is mandatory for the first week and optional otherwise 
 			{
 				uint nbAreas = study.areas.size();
 				for (uint ar = 0; ar != nbAreas; ++ar)
