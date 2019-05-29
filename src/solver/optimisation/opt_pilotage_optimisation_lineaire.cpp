@@ -59,9 +59,9 @@ ProblemeHebdo->OptimisationMUTetMDT = OUI_ANTARES;
  
  
 ProblemeHebdo->SolveurDuProblemeLineaire = ANTARES_SIMPLEXE;
-if ( ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES && ProblemeHebdo->Expansion == NON_ANTARES) {
+if (0 && ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES && ProblemeHebdo->Expansion == NON_ANTARES) {
   ProblemeHebdo->SolveurDuProblemeLineaire = ANTARES_PNE;
-}
+} // disable call to PNE until presolve and scaling issues are fixed
 
 
  

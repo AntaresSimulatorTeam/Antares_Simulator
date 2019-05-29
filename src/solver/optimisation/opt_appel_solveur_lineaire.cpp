@@ -172,7 +172,10 @@ Probleme.SecondMembre                          = ProblemeAResoudre->SecondMembre
 Probleme.ChoixDeLAlgorithme = SPX_DUAL;
 
 Probleme.TypeDePricing               = PRICING_STEEPEST_EDGE ;
-Probleme.FaireDuScaling              = OUI_SPX ;
+
+if (PremierPassage == NON_ANTARES) Probleme.FaireDuScaling = NON_SPX;
+if (PremierPassage == OUI_ANTARES) Probleme.FaireDuScaling = OUI_SPX;
+
 Probleme.StrategieAntiDegenerescence = AGRESSIF;
 
 Probleme.PositionDeLaVariable       = ProblemeAResoudre->PositionDeLaVariable;
@@ -207,11 +210,15 @@ if ( ProblemeHebdo->ExportMPS == OUI_ANTARES) OPT_EcrireJeuDeDonneesLineaireAuFo
 
 ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
 
+
+
 if ( ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage == OUI_ANTARES && ProbSpx != NULL ) {
   if ( ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE ) {
     
 	  SPX_LibererProbleme( ProbSpx );
-	  
+	  logs.info() << " Solver: Standard resolution failed"; 
+	  logs.info() << " Solver: Retry in safe mode";			//second trial w/o scaling 
+	 
 	  if (Logs::Verbosity::Debug::enabled)
 	  {
 	  
@@ -231,6 +238,10 @@ if ( ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage == OU
 }
 
 if ( ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX ) {
+	if (PremierPassage == NON_ANTARES)
+	{
+		logs.info() << " Solver: Safe resolution succeeded";
+	}
   CoutOpt = 0.0;
 	
 	for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ ) {
@@ -255,6 +266,10 @@ if ( ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX ) {
 	}
 }
 else {
+	if (PremierPassage == NON_ANTARES)
+	{
+		logs.info() << " Solver: Safe resolution failed";
+	}
 	logs.error() << "Infeasible linear problem encountered. Possible causes:";
 	logs.error() << "* binding constraints,";
 	logs.error() << "* last resort shedding status,";
@@ -336,7 +351,7 @@ ProblemePourPne.SortirLesDonneesDuProbleme = NON_PNE;
 ProblemePourPne.AlgorithmeDeResolution     = SIMPLEXE;   
 ProblemePourPne.CoupesLiftAndProject       = NON_PNE; 
 ProblemePourPne.AffichageDesTraces = NON_PNE;
-ProblemePourPne.FaireDuPresolve = OUI_PNE ;
+ProblemePourPne.FaireDuPresolve = OUI_PNE ; 
 if ( ProblemeAResoudre->NumeroDOptimisation == DEUXIEME_OPTIMISATION ) {
   ProblemePourPne.FaireDuPresolve = NON_PNE; 
 
