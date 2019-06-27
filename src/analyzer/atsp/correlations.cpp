@@ -55,19 +55,28 @@ namespace Antares
 		// The real number of areas
 		const uint realAreaCount = pEnabledAreaCount;
 
-		// stockage d'une matrice mensuelle de correlations inter-zones
+		// stockage d'une matrice mensuelle de correlations inter-zones, signal nul inclus
+		Matrix<> CORR_MNPZ;
+		CORR_MNPZ.reset(realAreaCount, realAreaCount);
+		// stockage de la matrice annuelle obtenue par moyenne des correlations mensuelles, signal nul inclus
+		Matrix<> CORR_YNPZ;
+		CORR_YNPZ.reset(realAreaCount, realAreaCount);
+
+		// stockage d'une matrice mensuelle de correlations inter-zones, zeros exclus
 		Matrix<> CORR_MNP;
 		CORR_MNP.reset(realAreaCount, realAreaCount);
-		// stockage de la matrice annuelle obtenue par moyenne des correlations mensuelles
+		// stockage de la matrice annuelle obtenue par moyenne des correlations mensuelles, zeros exclus 
 		Matrix<> CORR_YNP;
 		CORR_YNP.reset(realAreaCount, realAreaCount);
 
 		Matrix<> ID;
 		ID.reset(realAreaCount, realAreaCount);
 		ID.fillUnit();
+		
 
 		Matrix<> resultNDP;
 		resultNDP.reset(realAreaCount, realAreaCount);
+		
 		Matrix<> tmpNDP;
 		tmpNDP.reset(realAreaCount, realAreaCount);
 
@@ -95,10 +104,12 @@ namespace Antares
 		//
 		size_t sizePerMatrix = 744 * pTimeseriesCount * sizeof(double);
 
-		int Ni  = 0; // local counter used to remove the contribution of hours hidden by zeroes  
-		int Nj  = 0; // local counter used to remove the contribution of hours hidden by zeroes  
-		int Nij = 0; // local counter used to remove the contribution of hours hidden by zeroes  
-		int NZR = 0; // local counter used to remove the contribution of hours hidden by zeroes
+		int Ni  = 0;		// local counter used to remove the contribution of hours hidden by zeroes  
+		int Nj  = 0;		// local counter used to remove the contribution of hours hidden by zeroes  
+		int Nij = 0;		// local counter used to remove the contribution of hours hidden by zeroes  
+		int NZR = 0;		// local counter used to remove the contribution of hours hidden by zeroes
+
+		double shrink;		// matrix adjustment factor to ensure sdp 
 
 		for (uint m = 0; m < 12; ++m)
 		{
@@ -146,7 +157,8 @@ namespace Antares
 					}
 				}
 
-				CORR_MNP.entry[iZ][iZ] = 1.;
+				CORR_MNP.entry[iZ][iZ]  = 1.;
+				CORR_MNPZ.entry[iZ][iZ] = 1.;
 				for (uint jZ = iZ + 1; jZ < realAreaCount; ++jZ)
 				{
 					const uint j = mapping[jZ];
@@ -175,18 +187,29 @@ namespace Antares
 					{
 						Extrait_col(buffer_n, SERIE_N, durmois[m], q);
 						Extrait_col(buffer_p, SERIE_P, durmois[m], q);
+
+	/*					The following expression suits better data including inter-annual oscillations
+	                    (such data is out of  the scope of the built-in generators that might be used afterwards)
+
 						const double xx = Correlation(buffer_n, buffer_p, durmois[m],
 							moments_centr_raw[i].data[m][0], moments_centr_raw[j].data[m][0],
 							moments_centr_raw[i].data[m][1], moments_centr_raw[j].data[m][1], 1);
-	//					const double xx = Correlation(buffer_n, buffer_p, durmois[m],
-	//						0,0,0,0,0);
+	*/
+
+	/*					The following expression suits better data with recurrent annual behaviour
+						(such data is within the scope of the built-in generators that might be used afterwards)
+	*/
+						const double xx = Correlation(buffer_n, buffer_p, durmois[m],
+							0,0,0,0,0);
 						coeff += xx / NBS;
 					}
 
 					// The rounding must be done later, otherwise CORR_YNP will
 					// be rounding as well
-					CORR_MNP.entry[iZ][jZ] = coeff;
-					CORR_MNP.entry[jZ][iZ] = coeff;
+					CORR_MNPZ.entry[iZ][jZ] = coeff;
+					CORR_MNPZ.entry[jZ][iZ] = coeff;
+					CORR_MNP.entry[iZ][jZ]  = coeff;
+					CORR_MNP.entry[jZ][iZ]  = coeff;
 
 					// The contribution of hidden hours (structural zeroes) in the time-series
 					// needs to be removed
@@ -211,8 +234,8 @@ namespace Antares
 						coeff  = (24. - double(Ni))*(24. - double(Nj));
 						coeff  = sqrt(coeff);
 						coeff /= double(NZR);
-						CORR_MNP.entry[iZ][jZ] *= coeff;
-						CORR_MNP.entry[jZ][iZ] *= coeff;
+						CORR_MNP.entry[iZ][jZ] = coeff*CORR_MNPZ.entry[iZ][jZ];
+						CORR_MNP.entry[jZ][iZ] = coeff*CORR_MNPZ.entry[jZ][iZ];
 					}
 					
 				}
@@ -225,8 +248,15 @@ namespace Antares
 				for (uint j = 0; j < realAreaCount; ++j)
 					outcol[j] += col[j] / 12.;
 			}
+			for (uint i = 0; i < realAreaCount; ++i)
+			{
+				Matrix<>::ColumnType& outcol = CORR_YNPZ.entry[i];
+				const Matrix<>::ColumnType& col = CORR_MNPZ.entry[i];
+				for (uint j = 0; j < realAreaCount; ++j)
+					outcol[j] += col[j] / 12.;
+			}
 
-			// Rounding monthly correlation coefficients (matrix trimming)
+			// Rounding monthly correlation coefficients (matrix trimming) -zero -excluded
 			for (uint i = 1; i < CORR_MNP.width; ++i)
 			{
 				auto& column = CORR_MNP[i];
@@ -249,29 +279,101 @@ namespace Antares
 					}
 				}
 			}
+			// Rounding monthly correlation coefficients (matrix trimming) - zeros -included
+			for (uint i = 1; i < CORR_MNPZ.width; ++i)
+			{
+				auto& column = CORR_MNPZ[i];
+				for (uint j = 0; j < i; ++j)
+				{
+					if (Math::Abs(column[j]) < RTZ)
+					{
+						column[j] = 0.;
+						CORR_MNPZ[j][i] = 0.;
+					}
+					else if (column[j] > 1.)
+					{
+						column[j] = 1.;
+						CORR_MNPZ[j][i] = 1.;
+					}
+					else if (column[j] < -1.)
+					{
+						column[j] = -1.;
+						CORR_MNPZ[j][i] = -1.;
+					}
+				}
+			}
 
-			// Writing the monthly correlation coefficients
-			resultNDP.zero();
 
-			pStr.clear() << pTemp << SEP << tsName << SEP << "origin-correlation-m";
+
+			// Writing the monthly correlation coefficients,including zeroes,  before sdp check
+		
+			pStr.clear() << pTemp << SEP << tsName << SEP << "origin-corr-zero_in-m";
+			if (m < 10)
+				pStr << '0';
+			pStr << m << ".txt";
+			CORR_MNPZ.saveToCSVFile(pStr);
+		
+			// Writing the monthly correlation coefficients, excluding zeroes, before sdp check
+			pStr.clear() << pTemp << SEP << tsName << SEP << "origin-corr-zero_no-m";
 			if (m < 10)
 				pStr << '0';
 			pStr << m << ".txt";
 			CORR_MNP.saveToCSVFile(pStr);
 
-
-			// Converting into an admissible matrix
-			double ret = Solver::MatrixDPMake<double>(tmpNDP.entry, CORR_MNP.entry, resultNDP.entry, ID.entry, ID.width, tmpArray);
-			if (ret < 1.)
+			// Converting original matrix with zero signal into an admissible matrix
+			resultNDP.zero();
+			shrink = Solver::MatrixDPMake<double>(tmpNDP.entry, CORR_MNPZ.entry, resultNDP.entry, ID.entry, ID.width, tmpArray);
+			if (shrink < 1.)
 			{
-				if (ret <= -1.)
+				if (shrink <= -1.)
 				{
 					logs.error() << "invalid data, can not be processed";
 				}
 				else
 				{
-					logs.warning() << "TS-Analyzer: " << Date::MonthToString(m) << ": correlation matrix was shrinked by " << ret
-						<< ". Trimming threshold may be too high";
+					logs.warning() << "TS-Analyzer: " << Date::MonthToString(m) << ": correlation matrix was shrinked by " << shrink
+						<< ". to reach admissibility (stage 1)- Consider using lower trimming threshold";
+				}
+			}
+			// Replace original matrix with zero by the admissible matrix
+			for (uint y = 1; y < resultNDP.height; ++y)
+			{
+				for (uint x = 0; x < y; ++x)
+					resultNDP[x][y] = resultNDP[y][x];
+			}
+			for (uint i = 1; i < CORR_MNPZ.width; ++i)
+			{
+				for (uint j = 0; j < i; ++j)
+				{
+					CORR_MNPZ[j][i] = resultNDP[j][i];
+				}
+			}
+
+
+			// Converting original matrix without zero signal into an admissible matrix
+
+			resultNDP.zero();
+			shrink = Solver::MatrixDPMake<double>(tmpNDP.entry, CORR_MNP.entry, resultNDP.entry, CORR_MNPZ.entry, CORR_MNPZ.width, tmpArray);
+			if (shrink < 1.)
+			{
+				if (shrink <= -1.) // CORR_MNPZ is too close to sdp boundary, shrink CORR_MNP instead
+					               // Note : this default code should be replaced by proper eigen value analysis (see Higham 2002 / Strabic 2016)  
+				{
+					shrink = Solver::MatrixDPMake<double>(tmpNDP.entry, CORR_MNP.entry, resultNDP.entry, ID.entry, ID.width, tmpArray);
+					if (shrink <= -1.)
+					{
+						logs.error() << "invalid data, can not be processed";
+					}
+					else
+					{
+						logs.warning() << "TS-Analyzer: " << Date::MonthToString(m) << ": correlation matrix was shrinked by " << shrink
+							<< ". to reach admissibility (stage 2) - Time-series may involve too many hours with no signal";
+					}
+				}
+				else
+				{
+					logs.info() << "TS-Analyzer: " << Date::MonthToString(m) << ": some terms of the correlation matrix were shrinked by " << shrink
+						<< ". to reach admissibility (hidden signal padding)";
 				}
 			}
 
@@ -295,13 +397,14 @@ namespace Antares
 		SERIE_P.clear();
 		SERIE_Q.clear();
 		CORR_MNP.clear();
+		CORR_MNPZ.clear();
 		moments_centr_net.clear();
 		moments_centr_raw.clear();
 		hidden_hours.clear();
 		cacheDestroy();
 
 
-		// Rounding annual correlation coefficients
+		// Rounding annual correlation coefficients -zero excluded
 		for (uint i = 1; i < CORR_YNP.width; ++i)
 		{
 			auto& column = CORR_YNP[i];
@@ -324,24 +427,92 @@ namespace Antares
 				}
 			}
 		}
-
-		// Annual correlation coefficients
-		pStr.clear() << pTemp << SEP << tsName << SEP << "origin-correlation-year.txt";
+		// Rounding annual correlation coefficients -zero included
+		for (uint i = 1; i < CORR_YNPZ.width; ++i)
+		{
+			auto& column = CORR_YNPZ[i];
+			for (uint j = 0; j < i; ++j)
+			{
+				if (Math::Abs(column[j]) < RTZ)
+				{
+					column[j] = 0.;
+					CORR_YNPZ[j][i] = 0.;
+				}
+				else if (column[j] > 1.)
+				{
+					column[j] = 1.;
+					CORR_YNPZ[j][i] = 1.;
+				}
+				else if (column[j] < -1.)
+				{
+					column[j] = -1.;
+					CORR_YNPZ[j][i] = -1.;
+				}
+			}
+		}
+		// Annual correlation coefficients -zero excluded
+		pStr.clear() << pTemp << SEP << tsName << SEP << "origin-corr-zero_no-year.txt";
 		CORR_YNP.saveToCSVFile(pStr);
 
-		// Converting into an admissible matrix
-		double ret = Solver::MatrixDPMake<double>(tmpNDP.entry, CORR_YNP.entry, resultNDP.entry, ID.entry, ID.width, tmpArray);
-		if (ret < 1.)
+		// Annual correlation coefficients -zero included
+		pStr.clear() << pTemp << SEP << tsName << SEP << "origin-corr-zero_in-year.txt";
+		CORR_YNPZ.saveToCSVFile(pStr);
+
+		// Converting original matrix without zero signal into an admissible matrix
+	
+		shrink = Solver::MatrixDPMake<double>(tmpNDP.entry, CORR_YNPZ.entry, resultNDP.entry, ID.entry, ID.width, tmpArray);
+		if (shrink < 1.)
 		{
-			if (ret <= -1.)
+			if (shrink <= -1.)
 			{
 				logs.error() << "invalid data, can not be processed";
 			}
 			else
 			{
-				logs.warning() << "TS-Analyzer: annual: correlation matrix was shrinked by "
-					<< ret << ". Trimming threshold may be too high";
+				logs.warning() << "TS-Analyzer: annual: correlation matrix was shrinked by " << shrink
+				<< ". to reach admissibility (stage 1)- Consider using lower trimming threshold";
 			}
+		}
+		
+		// Replace original matrix with zero by the admissible matrix
+		for (uint y = 1; y < resultNDP.height; ++y)
+		{
+			for (uint x = 0; x < y; ++x)
+				resultNDP[x][y] = resultNDP[y][x];
+		}
+		for (uint i = 1; i < CORR_YNPZ.width; ++i)
+		{
+			for (uint j = 0; j < i; ++j)
+			{
+				CORR_YNPZ[j][i] = resultNDP[j][i];
+			}
+		}
+
+		
+		// Converting original matrix without zero signal into an admissible matrix
+		shrink = Solver::MatrixDPMake<double>(tmpNDP.entry, CORR_YNP.entry, resultNDP.entry, CORR_YNPZ.entry, CORR_YNPZ.width, tmpArray);
+		if (shrink < 1.)
+		{
+			if (shrink <= -1.) // CORR_YNP is too close to sdp boundary, shrink CORR_YNP instead
+							   // Note : this default code should be replaced by proper eigen value analysis (see Higham 2002 / Strabic 2016)  
+			{
+				shrink = Solver::MatrixDPMake<double>(tmpNDP.entry, CORR_YNP.entry, resultNDP.entry, ID.entry, ID.width, tmpArray);
+				if (shrink <= -1.)
+				{
+					logs.error() << "invalid data, can not be processed";
+				}
+				else
+				{
+					logs.warning() << "TS-Analyzer: annual: correlation matrix was shrinked by " << shrink
+						<< ". to reach admissibility (stage 2) - Time-series may involve too many hours with no signal";
+				}
+			}
+			else
+			{
+				logs.info() << "TS-Analyzer: annual: some terms of the correlation matrix were shrinked by " << shrink
+					<< ". to reach admissibility (hidden signal padding)";
+			}
+			
 		}
 		for (uint y = 1; y < resultNDP.height; ++y)
 		{
@@ -388,6 +559,7 @@ namespace Antares
 				}
 				f << '\n';
 				CORR_YNP.clear();
+				CORR_YNPZ.clear();
 
 				for (uint m = 0; m != 12; ++m)
 				{
