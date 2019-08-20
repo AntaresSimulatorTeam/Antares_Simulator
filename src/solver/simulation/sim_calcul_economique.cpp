@@ -985,7 +985,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem, Antares::Solver::Va
 				if (problem.CaracteristiquesHydrauliques[k]->PresenceDePompageModulable == OUI_ANTARES)
 				{
 
-					if (area.hydro.reservoirManagement && area.hydro.useWaterValue)
+					if (area.hydro.reservoirManagement ) /* No need to include the condition "use water value" */
 					{
 						if (not area.hydro.useHeuristicTarget)
 						{
