@@ -37,8 +37,7 @@
 # include "../simulation/sim_extern_variables_globales.h"
 
 # include "opt_fonctions.h"  
-#include <iostream>
-
+# include <iostream>
 
 
 
@@ -47,7 +46,9 @@ void OPT_RestaurerLesDonneesSelonManoeuvrabilite_1( PROBLEME_HEBDO * ProblemeHeb
 {
 	int Pays        ; int Interco; int Pdt ; int DernierPasDeTemps; int Jour   ;  int Palier;
 	int CntCouplante; double PmaxHydEcretee  ; int Intervalle       ; int Semaine;
+	double PmaxHydUplift; // Hydro generating power required to make use of energy stored from pumps
 	
+
 	CONSOMMATIONS_ABATTUES              * ConsommationsAbattues;
 	CONSOMMATIONS_ABATTUES              * ConsommationsAbattuesRef;
 	VALEURS_DE_NTC_ET_RESISTANCES       * ValeursDeNTC;
@@ -141,8 +142,20 @@ void OPT_RestaurerLesDonneesSelonManoeuvrabilite_1( PROBLEME_HEBDO * ProblemeHeb
 			Jour = NumeroDeJourDuPasDeTemps[Pdt];
 			PmaxHydEcretee = CaracteristiquesHydrauliques->CntEnergieH2OParJour[Jour]; 		
 			PmaxHydEcretee *= ProblemeHebdo->CoefficientEcretementPMaxHydraulique[Pays];  			
-			PmaxHydEcretee /= (double) ProblemeHebdo->NombreDePasDeTempsDUneJournee;
-			
+			PmaxHydEcretee /= (double) ProblemeHebdo->NombreDePasDeTempsDUneJournee; 
+			// The primary generating power allowance may need to be uplifted to match pumping power allowance
+			if (CaracteristiquesHydrauliques->PresenceDePompageModulable == OUI_ANTARES)
+			{
+				PmaxHydUplift  = CaracteristiquesHydrauliques->ContrainteDePmaxPompageHoraire[Pdt]; 
+				PmaxHydUplift *= ProblemeHebdo->CoefficientEcretementPMaxHydraulique[Pays];
+			// The uplifted energy  cannot, throughout the week, exceed the remaining stock 
+				if (PmaxHydUplift*double(168) > CaracteristiquesHydrauliques->NiveauInitialReservoir)
+				{
+					PmaxHydUplift = CaracteristiquesHydrauliques->NiveauInitialReservoir /double(168);
+				}
+				if (PmaxHydEcretee < PmaxHydUplift) PmaxHydEcretee = PmaxHydUplift;
+			}
+			// The generating power allowance cannot exceed the maximum available generating power  
 			if ( PmaxHydEcretee < CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraire[Pdt] ) {
 				CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraire[Pdt] = PmaxHydEcretee;
 			}
