@@ -359,20 +359,20 @@ namespace Data
 				// NTC
 				buffer.clear() << folder << SEP << link.with->id
 					<< SEP << "direct." << study.inputExtension;
-				ret = tmp.loadFromCSVFile(buffer, 1, 8760, Matrix<>::optFixedSize | Matrix<>::optImmediate) && ret;
-				link.data.pasteToColumn(fhlNTCDirect, tmp[0]);
+ret = tmp.loadFromCSVFile(buffer, 1, 8760, Matrix<>::optFixedSize | Matrix<>::optImmediate) && ret;
+link.data.pasteToColumn(fhlNTCDirect, tmp[0]);
 
-				buffer.clear() << folder << SEP << link.with->id
-					<< SEP << "indirect." << study.inputExtension;
-				ret = tmp.loadFromCSVFile(buffer, 1, 8760, Matrix<>::optFixedSize | Matrix<>::optImmediate) && ret;
-				link.data.pasteToColumn(fhlNTCIndirect, tmp[0]);
+buffer.clear() << folder << SEP << link.with->id
+<< SEP << "indirect." << study.inputExtension;
+ret = tmp.loadFromCSVFile(buffer, 1, 8760, Matrix<>::optFixedSize | Matrix<>::optImmediate) && ret;
+link.data.pasteToColumn(fhlNTCIndirect, tmp[0]);
 
-				buffer.clear() << folder << SEP << link.with->id
-					<< SEP << "impedances." << study.inputExtension;
-				ret = tmp.loadFromCSVFile(buffer, 1, 8760, Matrix<>::optFixedSize | Matrix<>::optImmediate) && ret;
-				link.data.pasteToColumn(fhlImpedances, tmp[0]);
+buffer.clear() << folder << SEP << link.with->id
+<< SEP << "impedances." << study.inputExtension;
+ret = tmp.loadFromCSVFile(buffer, 1, 8760, Matrix<>::optFixedSize | Matrix<>::optImmediate) && ret;
+link.data.pasteToColumn(fhlImpedances, tmp[0]);
 
-				link.data.markAsModified();
+link.data.markAsModified();
 			}
 			else if (study.header.version < 630)
 			{
@@ -386,7 +386,7 @@ namespace Data
 				ret = link.data.loadFromCSVFile(buffer, 5, HOURS_PER_YEAR,
 					Matrix<>::optFixedSize) && ret;
 				double temp[5][HOURS_PER_YEAR];
-				
+
 				auto& TCD = link.data[fhlNTCDirect];
 				auto& TCI = link.data[fhlNTCIndirect];
 				auto& impedances = link.data[2];
@@ -424,42 +424,62 @@ namespace Data
 				{
 					switch (colNum)
 					{
-					case Data::fhlNTCDirect:
+						case Data::fhlNTCDirect:
 						{
 							auto& col = link.data[colNum];
 							auto& colLoopFlow = link.data[Data::fhlLoopFlow];
 							for (int i = 0; i < HOURS_PER_YEAR; i++)
 							{
-								// if ((col[i] < 1.) || (col[i] < colLoopFlow[i]))
 								if ((col[i] < 0.) || (col[i] < colLoopFlow[i]))
 								{
 									fatal = true;
 									break;
-									//logs.error() << "Wrong value of Trans. Capacity Direct in link from " << link.from->name << " to " << link.with->name << " at line " << i +1;
 								}
 							}
 							break;
 						}
-					case Data::fhlNTCIndirect:
+						case Data::fhlNTCIndirect:
 						{
-							auto& col = link.data[colNum];//
+							auto& col = link.data[colNum];
 							auto& colLoopFlow = link.data[Data::fhlLoopFlow];
 							for (int i = 0; i < HOURS_PER_YEAR; i++)
 							{
-								// if ((col[i] < 1.) || ((col[i] + colLoopFlow[i]) <= 0))
 								if ((col[i] < 0.) || ((col[i] + colLoopFlow[i]) < 0))
 								{
 									fatal = true;
 									break;
-									//logs.error() << "Wrong value of Trans. Capacity Indirect in link from " << link.from->name << " to " << link.with->name << " at line " << i + 1;
 								}
 							}
 							break;
 						}
-						case 2:
+						case Data::fhlHurdlesCostDirect:
+						{
+							auto& col = link.data[colNum];
+							auto& colHurdleCostsIndirect = link.data[Data::fhlHurdlesCostIndirect];
+							for (int i = 0; i < HOURS_PER_YEAR; i++)
+							{
+								if (col[i] + colHurdleCostsIndirect[i] < 0)
+								{
+									fatal = true;
+									break;
+								}
+							}
 							break;
-						case 3:
+						}
+						case Data::fhlHurdlesCostIndirect:
+						{
+							auto& col = link.data[colNum];
+							auto& colHurdleCostsDirect = link.data[Data::fhlHurdlesCostDirect];
+							for (int i = 0; i < HOURS_PER_YEAR; i++)
+							{
+								if (col[i] + colHurdleCostsDirect[i] < 0)
+								{
+									fatal = true;
+									break;
+								}
+							}
 							break;
+						}
 						case 4:
 							break;
 						case 5:
@@ -476,7 +496,6 @@ namespace Data
 								{
 									fatal = true;
 									break;
-									//logs.error() << "Wrong value of Pshift- in link from " << link.from->name << " to " << link.with->name << " at line " << i + 1;
 								}
 							}
 							break;
