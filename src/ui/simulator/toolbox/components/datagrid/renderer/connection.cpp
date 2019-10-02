@@ -104,11 +104,11 @@ namespace Renderer
 			case 1:
 				break;
 			case 2:
-				break;
+				return (cellvalue < 0.) ? IRenderer::cellStyleWarning : Renderer::Matrix<>::cellStyle(col, row);
 			case 3:
-				break;
+				return (cellvalue < 0.) ? IRenderer::cellStyleWarning : Renderer::Matrix<>::cellStyle(col, row);
 			case Data::fhlImpedances:
-				return (cellvalue < 0.) ? IRenderer::cellStyleWarning: Renderer::Matrix<>::cellStyle(col, row);
+				return (cellvalue < 0.) ? IRenderer::cellStyleWarning : Renderer::Matrix<>::cellStyle(col, row);
 			case Data::fhlLoopFlow:
 			{	
 				double ntcDirect = cellNumericValue(Data::fhlNTCDirect, row);
@@ -167,22 +167,51 @@ namespace Renderer
 
 	bool Connection::cellValue(int x, int y, const Yuni::String& value)
 	{
-		if (x <= 2)
-		{
-			double v;
-			if (!value.to(v))
-				return false;
-			if (v < 0.)
-				return Renderer::Matrix<>::cellValue(x, y, "0");
+		switch(x)
+		{ 
+			case Data::fhlNTCDirect:
+			case Data::fhlNTCIndirect:
+			{
+				double v;
+				if (!value.to(v))
+					return false;
+				if (v < 0.)
+					return Renderer::Matrix<>::cellValue(x, y, "0");
+				break;
+			}
+			case Data::fhlHurdlesCostDirect:
+			{
+				double v;
+				if (!value.to(v))
+					return false;
+
+				double w = Renderer::Matrix<>::cellNumericValue(x + 1, y);
+				if (v + w < 0.)
+					return Renderer::Matrix<>::cellValue(x, y, "0");
+				break;
+			}
+			case Data::fhlHurdlesCostIndirect:
+			{
+				double w;
+				if (!value.to(w))
+					return false;
+
+				double v = Renderer::Matrix<>::cellNumericValue(x - 1, y);
+				if (v + w < 0.)
+					return Renderer::Matrix<>::cellValue(x, y, "0");
+				break;
+			}
+			default:
+			{
+				double v;
+				if (!value.to(v))
+					return false;
+				if (Math::Abs(v) < LINK_MINIMAL_HURDLE_COSTS_NOT_NULL)
+					return Renderer::Matrix<>::cellValue(x, y, "0");
+				break;
+			}
 		}
-		else
-		{
-			double v;
-			if (!value.to(v))
-				return false;
-			if (Math::Abs(v) < LINK_MINIMAL_HURDLE_COSTS_NOT_NULL)
-				return Renderer::Matrix<>::cellValue(x, y, "0");
-		}
+		
 		return Renderer::Matrix<>::cellValue(x, y, value);
 	}
 
