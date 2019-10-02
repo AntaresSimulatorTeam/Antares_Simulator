@@ -38,6 +38,7 @@
 # include "../categories.h"
 # include "../surveyresults.h"
 # include "../info.h"
+# include <antares/study/filter.h>
 # include <limits>
 
 
@@ -318,8 +319,15 @@ namespace Container
 					// No link for now
 					results.data.link = nullptr;
 
+					// Skipping the creation of a result directory if it is meant to be empty.
+					bool printingSynthesis = GlobalT;	// Are we printing synthesis or year-by-year results ?
+					bool filterAllYearByYear = !(area.filterYearByYear & Data::filterAll);
+					bool filterAllSynthesis = !(area.filterSynthesis & Data::filterAll);
+					// ... Skipping the current area's result directory ?
+					bool skipDirectory = (!printingSynthesis && filterAllYearByYear) || (printingSynthesis && filterAllSynthesis);
+
 					// Generating the report for each area
-					if (CDataLevel & Category::area)
+					if (CDataLevel & Category::area && !skipDirectory)
 					{
 						logs.info() << "Exporting results : " << area.name;
 						// The new output
@@ -393,26 +401,38 @@ namespace Container
 					for (auto i = area.links.begin(); i != end; ++i)
 					{
 						// The link
-						results.data.link = i->second;
-						Antares::logs.info() << "Exporting results : " << area.name
-							<< " - " << results.data.link->with->name;
-						// The new output
-						results.data.output.clear();
-						results.data.output << results.data.originalOutput << SEP
-							<< "links" << SEP
-							<< area.id
-							<< " - " << results.data.link->with->id;
-						// Creating the directory
-						if (IO::Directory::Create(results.data.output))
-						{
-							// Generating the report for each thermal cluster
-							SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
-						}
-						else
-							logs.error() << "I/O Error: '" << results.data.output << "': impossible to create the folder";
+						auto & link = *(i->second);
+						results.data.link = &link;
 
-						if (Antares::Memory::swapSupport)
-							Antares::memory.flushAll();
+						// Skipping the creation of a result directory if it is meant to be empty.
+						bool printingSynthesis = GlobalT;	// Are we printing synthesis or year-by-year results ?
+						bool filterAllYearByYear = !(link.filterYearByYear & Data::filterAll);
+						bool filterAllSynthesis = !(link.filterSynthesis & Data::filterAll);
+						// ... Skipping the current link's result directory ?
+						bool skipDirectory = (!printingSynthesis && filterAllYearByYear) || (printingSynthesis && filterAllSynthesis);
+
+						if (!skipDirectory)
+						{
+							Antares::logs.info() << "Exporting results : " << area.name
+								<< " - " << results.data.link->with->name;
+							// The new output
+							results.data.output.clear();
+							results.data.output << results.data.originalOutput << SEP
+								<< "links" << SEP
+								<< area.id
+								<< " - " << results.data.link->with->id;
+							// Creating the directory
+							if (IO::Directory::Create(results.data.output))
+							{
+								// Generating the report for each thermal cluster
+								SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
+							}
+							else
+								logs.error() << "I/O Error: '" << results.data.output << "': impossible to create the folder";
+
+							if (Antares::Memory::swapSupport)
+								Antares::memory.flushAll();
+						}
 
 					}
 				}
