@@ -102,7 +102,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study, PROBLEME_HEBDO& problem
 	
 	problem.hydroHotStart = (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart);
 
-	
+	problem.WaterValueAccurate = OUI_ANTARES; /* OUI_ANTARES  :: NON_ANTARES */ 
+	/* todo : set problem.WaterValueAccurate by advanced parameter  "Hydro Pricing Mode (fast /accurate)" */
 	SIM_AllocationProblemeHebdo(problem, NombreDePasDeTemps);
 
 	
@@ -199,8 +200,18 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study, PROBLEME_HEBDO& problem
 		
 		problem.CaracteristiquesHydrauliques[i]->SuiviNiveauHoraire = 
 			((area.hydro.reservoirManagement && !area.hydro.useHeuristicTarget) ? OUI_ANTARES : NON_ANTARES);
-
 		
+		problem.CaracteristiquesHydrauliques[i]->AccurateWaterValue = NON_ANTARES;		
+		if (problem.WaterValueAccurate == OUI_ANTARES &&
+			problem.CaracteristiquesHydrauliques[i]->TurbinageEntreBornes == OUI_ANTARES)
+			problem.CaracteristiquesHydrauliques[i]->AccurateWaterValue    = OUI_ANTARES; 
+		
+		problem.CaracteristiquesHydrauliques[i]->DirectLevelAccess = NON_ANTARES;
+		if (problem.WaterValueAccurate == OUI_ANTARES &&
+			problem.CaracteristiquesHydrauliques[i]->SuiviNiveauHoraire   == OUI_ANTARES)
+			problem.CaracteristiquesHydrauliques[i]->DirectLevelAccess     = OUI_ANTARES; 
+
+
 		problem.CaracteristiquesHydrauliques[i]->TailleReservoir = area.hydro.reservoirCapacity;
 
 		
@@ -510,6 +521,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem, Antares::Solver::Va
 		{
 			
 			problem.CaracteristiquesHydrauliques[k]->NiveauInitialReservoir = problem.previousSimulationFinalLevel[k];
+			problem.CaracteristiquesHydrauliques[k]->LevelForTimeInterval = problem.CaracteristiquesHydrauliques[k]->NiveauInitialReservoir; /*for first 24-hour optim*/  
 			double nivInit = problem.CaracteristiquesHydrauliques[k]->NiveauInitialReservoir;
 			if (nivInit < 0.)
 			{
@@ -579,6 +591,17 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem, Antares::Solver::Va
 					}
 				}
 			}
+			if (problem.CaracteristiquesHydrauliques[k]->AccurateWaterValue == OUI_ANTARES) 
+			{
+				for (uint layerindex = 0; layerindex < 100; layerindex++)					
+				{
+			
+					problem.CaracteristiquesHydrauliques[k]->WaterLayerValues[layerindex] =
+						0.5 * (area.hydro.waterValues[layerindex][weekFirstDay + 7] + area.hydro.waterValues[layerindex + 1][weekFirstDay + 7]);
+				}
+				
+			}															
+
 		}
 	}
 
@@ -972,8 +995,11 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem, Antares::Solver::Va
 				for (uint j = 0; j < 7; ++j)
 				{
 					uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
+					problem.CaracteristiquesHydrauliques[k]->InflowForTimeInterval[j] = srcinflows[day];  
 					for (int h = 0; h < 24; h++)
+					{
 						problem.CaracteristiquesHydrauliques[k]->ApportNaturelHoraire[j * 24 + h] = srcinflows[day] / 24;
+					}
 				}
 
 				
