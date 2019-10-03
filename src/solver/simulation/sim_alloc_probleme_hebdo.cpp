@@ -90,6 +90,16 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 	problem.NumeroDeContrainteMaxEnergieHydraulique = (int *)				  MemAlloc( nbPays * sizeof(int) );
 	problem.NumeroDeContrainteMaxPompage			= (int *)				  MemAlloc( nbPays * sizeof(int) );
 	problem.NumeroDeContrainteDeSoldeDEchange       = (int *)                 MemAlloc( nbPays * sizeof(int) );
+	
+	problem.NumeroDeContrainteBorneStockFinal       = (int *)				  MemAlloc( nbPays * sizeof(int) );  
+	problem.NumeroDeContrainteEquivalenceStockFinal	= (int *)				  MemAlloc( nbPays * sizeof(int) );  
+	problem.NumeroDeContrainteExpressionStockFinal	= (int *)				  MemAlloc( nbPays * sizeof(int) );  
+
+	problem.NumeroDeVariableStockFinal				= (int *)				  MemAlloc( nbPays * sizeof(int) );  
+	problem.NumeroDeVariableDeTrancheDeStock		= (int **)				  MemAlloc( nbPays * sizeof(int*));  
+	for (uint p = 0; p < nbPays; ++p)																			 
+		problem.NumeroDeVariableDeTrancheDeStock[p] = (int *)				  MemAlloc( 100    * sizeof(int) );  
+
 	problem.ValeursDeNTC                            = (VALEURS_DE_NTC_ET_RESISTANCES **)           MemAlloc( NombreDePasDeTemps * sizeof(void *) );
 	problem.ValeursDeNTCRef                         = (VALEURS_DE_NTC_ET_RESISTANCES **)           MemAlloc( NombreDePasDeTemps * sizeof(void *) );
 	problem.ConsommationsAbattues                   = (CONSOMMATIONS_ABATTUES **)                  MemAlloc( NombreDePasDeTemps * sizeof(void *) );
@@ -325,6 +335,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 		problem.CaracteristiquesHydrauliques[k]->NiveauHoraireInf						 = (double *) MemAllocMemset( NombreDePasDeTemps * sizeof(double) );
 		problem.CaracteristiquesHydrauliques[k]->ApportNaturelHoraire					 = (double *) MemAllocMemset( NombreDePasDeTemps * sizeof(double) );
 
+		problem.CaracteristiquesHydrauliques[k]->WaterLayerValues						 = (double *) MemAllocMemset( 100 * sizeof(double) );   
+		problem.CaracteristiquesHydrauliques[k]->InflowForTimeInterval					 = (double *) MemAllocMemset( 100 * sizeof(double) );   
+		
 		problem.CaracteristiquesHydrauliques[k]->MaxEnergiePompageParIntervalleOptimise	 = (double *) MemAllocMemset( 7 * sizeof(double) );
 		problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxPompageHoraire			 = (double *) MemAllocMemset( NombreDePasDeTemps * sizeof(double) );
 		
@@ -577,10 +590,12 @@ void SIM_DesallocationProblemeHebdo( PROBLEME_HEBDO& problem )
 		MemFree( problem.CaracteristiquesHydrauliques[k]->MaxEnergiePompageParIntervalleOptimise );
 		MemFree( problem.CaracteristiquesHydrauliques[k]->ContrainteDePmaxPompageHoraire );
 
-		MemFree( problem.CaracteristiquesHydrauliques[k]->NiveauHoraireSup );
-		MemFree( problem.CaracteristiquesHydrauliques[k]->NiveauHoraireInf );
-		MemFree( problem.CaracteristiquesHydrauliques[k]->ApportNaturelHoraire );
-
+		MemFree( problem.CaracteristiquesHydrauliques[k]->NiveauHoraireSup );			
+		MemFree( problem.CaracteristiquesHydrauliques[k]->NiveauHoraireInf );			
+		MemFree( problem.CaracteristiquesHydrauliques[k]->ApportNaturelHoraire );		
+	
+		MemFree( problem.CaracteristiquesHydrauliques[k]->WaterLayerValues );			
+		MemFree( problem.CaracteristiquesHydrauliques[k]->InflowForTimeInterval);		
 		MemFree( problem.CaracteristiquesHydrauliques[k] );
 		
 
@@ -665,7 +680,14 @@ void SIM_DesallocationProblemeHebdo( PROBLEME_HEBDO& problem )
 	MemFree( problem.NumeroDeContrainteMaxPompage );
 	MemFree( problem.NumeroDeContrainteDeSoldeDEchange );
 
-	
+	MemFree(problem.NumeroDeContrainteBorneStockFinal);			
+	MemFree(problem.NumeroDeContrainteEquivalenceStockFinal);	
+	MemFree(problem.NumeroDeContrainteExpressionStockFinal);	
+	MemFree(problem.NumeroDeVariableStockFinal);				
+	for (uint p = 0; p < nbPays; ++p)						    
+		MemFree(problem.NumeroDeVariableDeTrancheDeStock[p]);	
+	MemFree(problem.NumeroDeVariableDeTrancheDeStock);			
+
 	MemFree(problem.DefaillanceNegativeUtiliserConsoAbattue);
 	MemFree(problem.DefaillanceNegativeUtiliserHydro);
 	MemFree(problem.DefaillanceNegativeUtiliserPMinThermique);

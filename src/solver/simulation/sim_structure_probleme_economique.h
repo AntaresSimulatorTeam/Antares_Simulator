@@ -125,6 +125,8 @@ typedef struct {
 	int *	NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique;
 	int *	NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique;
 	int *	NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique;
+
+	
 		
 																			
 		
@@ -150,6 +152,8 @@ typedef struct {
 	int * NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne; 	
 		
 	int * NumeroDeContrainteDesNiveauxPays;    
+
+	
 
 } CORRESPONDANCES_DES_CONTRAINTES;
 
@@ -393,8 +397,12 @@ typedef struct {
 	double	 PumpingRatio;												
 
 	double	 WeeklyGeneratingModulation;								
-	double	 WeeklyPumpingModulation;									
-
+	double	 WeeklyPumpingModulation;	
+	char	 DirectLevelAccess;		/*  determines the type of constraints bearing on the final stok level*/  
+	char	 AccurateWaterValue;	/*  determines the type of modelling used for water budget*/
+	double   LevelForTimeInterval;	/*  value computed by the simulator in water-value based modes*/
+	double * WaterLayerValues;		/*  reference costs for the last time step (caution : dimension set to 100, should be made dynamic)*/
+	double * InflowForTimeInterval;	/*  Energy input to the reservoir, used to in the bounding constraint on final level*/   
 } ENERGIES_ET_PUISSANCES_HYDRAULIQUES;
 
 
@@ -535,6 +543,7 @@ typedef struct {
 								
   double * debordementsHoraires;
   
+  
   double * CoutsMarginauxHoraires;
   PRODUCTION_THERMIQUE_OPTIMALE ** ProductionThermique;
 } RESULTATS_HORAIRES;
@@ -619,7 +628,8 @@ struct PROBLEME_HEBDO {
 
 	
 	char ExportMPS; 
-
+	
+	char WaterValueAccurate;	/* OUI_ANTARES /NON_ANTARES*/ 
 	
  	char OptimisationAvecCoutsDeDemarrage; 
 	int NbTermesContraintesPourLesCoutsDeDemarrage;
@@ -836,6 +846,7 @@ struct PROBLEME_HEBDO {
 	
 	bool hydroHotStart;
 	
+	
 	double * previousYearFinalLevels;
 
 
@@ -879,11 +890,20 @@ struct PROBLEME_HEBDO {
 	int * NumeroDeContrainteEnergieHydraulique; 
 	int * NumeroDeContrainteMinEnergieHydraulique;							
 	int * NumeroDeContrainteMaxEnergieHydraulique;							
-	int * NumeroDeContrainteMaxPompage;										
+	int * NumeroDeContrainteMaxPompage;		
+
+
+
+	
 
 	int * NumeroDeContrainteDeSoldeDEchange;    
 
-	
+	int * NumeroDeContrainteBorneStockFinal;		
+	int * NumeroDeContrainteEquivalenceStockFinal;	
+	int * NumeroDeContrainteExpressionStockFinal;	
+
+	int *   NumeroDeVariableStockFinal;				
+	int	**	NumeroDeVariableDeTrancheDeStock;		
 	
 	RESULTATS_HORAIRES ** ResultatsHoraires; 
 	
