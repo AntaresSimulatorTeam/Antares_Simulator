@@ -109,8 +109,12 @@ static void optimisationAllocateProblem( PROBLEME_HEBDO * ProblemeHebdo, const i
 	
 	NbTermes += 3 * ProblemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation;	 
 	NbTermes += ProblemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation * 4;     
-	NbTermes += ProblemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation * 5; 	 
+	NbTermes += ProblemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation * 5;
 
+	
+	NbTermes += ProblemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation * 2; /*inequality constraint on final hydros level*/
+	NbTermes += 1; /* constraint includes hydro generation, pumping and final level */ 
+	NbTermes += 101; /* constraint expressing final level as a sum of stock layers */
 	
 	
 	NbTermes += ProblemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage;

@@ -89,6 +89,18 @@ void OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser( PROBLEME_HEBD
 	}
 	ProblemeAResoudre->NombreDeVariables *= NombreDePasDeTempsPourUneOptimisation;
 
+	
+	for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+		{
+			if (ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->AccurateWaterValue == OUI_ANTARES)
+			{
+				ProblemeAResoudre->NombreDeVariables += 1;		/* Final Stock Level */
+				ProblemeAResoudre->NombreDeVariables += 100;    /* Reservoir layers  */
+			}
+		}
+
+	
+
 	ProblemeAResoudre->NombreDeContraintes = ProblemeHebdo->NombreDePays;   
 
 	ProblemeAResoudre->NombreDeContraintes += ProblemeHebdo->NombreDePays;  
@@ -235,6 +247,20 @@ void OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser( PROBLEME_HEBD
 			}
 		}
 	}
+
+
+	
+	for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+	{
+		if (ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->AccurateWaterValue == OUI_ANTARES)
+		{
+			ProblemeAResoudre->NombreDeContraintes += 2; /* Final Stock Level : (1 bound cnt or 1 equivalence cnt)+ 1 expression cnt */
+		
+		}
+	}
+
+	
+
 	*MxPalierThermique = MxPaliers;
 
 	if ( ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES ) {
