@@ -75,6 +75,7 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise( PROBL
 	double * CntEnergieH2OParIntervalleOptimise;
 	double * CntEnergieH2OParIntervalleOptimiseRef;
 	double * CntEnergieH2OParJour;
+	double InflowSum;	
 
 	NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation; 
 
@@ -161,6 +162,22 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise( PROBL
 			MaxEnergiePompageParIntervalleOptimise[i] = MaxPompageParIntervalle;
 		}
 	}
+	
+	double * InflowForTimeInterval;
 
+	for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+	{
+		InflowForTimeInterval = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->InflowForTimeInterval;
+		Jour = 0;
+		for (i = 0; i < NbIntervallesOptimises; i++) {
+			
+			InflowSum = 0.;
+			for (j = 0; j < NombreDeJoursParIntervalle; j++, Jour++)
+				InflowSum += InflowForTimeInterval[Jour];
+
+			InflowForTimeInterval[i] = InflowSum;
+		}
+	}
+	
 	return;
 }

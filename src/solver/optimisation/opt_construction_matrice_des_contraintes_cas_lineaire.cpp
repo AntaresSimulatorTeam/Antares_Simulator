@@ -42,9 +42,10 @@
 #include "../simulation/sim_structure_donnees.h"
 
 
+
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * ProblemeHebdo, uint numSpace)
 {
-	int Interco; int Index; int Pays; int Pdt; int Var; int Palier;
+	int Interco; int Index; int Pays; int Pdt; int Var; int Palier; int layerindex;   
 	int NbInterco, NbClusters; int CntCouplante; double Poids; int NombreDeTermes; int PdtDebut;
 	int NombreDePasDeTempsDUneJournee; int NombreDePasDeTempsPourUneOptimisation;
 	int Jour; int Semaine; int * NumeroDeJourDuPasDeTemps; int Pdt1; int Var1;
@@ -961,6 +962,107 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 			else
 				CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesNiveauxPays[Pays] = -1;
 		}
+	}
+	
+	/* For each area with ad hoc properties, two possible sets of two additional constraints */
+	for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+	{
+		char PumpAvailable = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDePompageModulable;
+		if (   ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->AccurateWaterValue == OUI_ANTARES  
+			&& ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->DirectLevelAccess  == NON_ANTARES)
+			/*  bounding constraint : StockFinal- efficiency*sum(Pump) +sum(Gen) <= InflowsForTimeInterval + LevelForTimeInterval*/
+		{
+			NombreDeTermes = 0;
+			Var = ProblemeHebdo->NumeroDeVariableStockFinal[Pays];
+			if (Var >= 0)   
+			{
+				Pi[NombreDeTermes] = 1.0;
+				Colonne[NombreDeTermes] = Var;
+				NombreDeTermes++;
+			}
+
+			for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
+			{
+				Var = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt]->NumeroDeVariablesDeLaProdHyd[Pays];
+				if (Var >= 0)
+				{
+					Pi[NombreDeTermes] = 1.0;
+					Colonne[NombreDeTermes] = Var;
+					NombreDeTermes++;
+				}
+			}
+			if (PumpAvailable == OUI_ANTARES)
+			{
+
+
+				for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
+				{
+					Var = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt]->NumeroDeVariablesDePompage[Pays];
+					if (Var >= 0)
+					{
+						Pi[NombreDeTermes] = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PumpingRatio;
+						Pi[NombreDeTermes] *= -1.0;
+						Colonne[NombreDeTermes] = Var;
+						NombreDeTermes++;
+					}
+				}
+			}
+
+			ProblemeHebdo->NumeroDeContrainteBorneStockFinal[Pays] = ProblemeAResoudre->NombreDeContraintes;
+
+			OPT_ChargerLaContrainteDansLaMatriceDesContraintes(ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '<');
+		}
+		if (   ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->AccurateWaterValue == OUI_ANTARES  
+			&& ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->DirectLevelAccess  == OUI_ANTARES)
+			/*  equivalence constraint : StockFinal- Niveau[T]= 0*/
+		{
+			NombreDeTermes = 0;
+			Var = ProblemeHebdo->NumeroDeVariableStockFinal[Pays];
+			if (Var >= 0)    
+			{
+				Pi[NombreDeTermes] = 1.0;
+				Colonne[NombreDeTermes] = Var;
+				NombreDeTermes++;
+			}
+			Var = ProblemeHebdo->CorrespondanceVarNativesVarOptim[NombreDePasDeTempsPourUneOptimisation - 1]->NumeroDeVariablesDeNiveau[Pays];
+			if (Var >= 0)
+			{
+				Pi[NombreDeTermes] = -1.0;
+				Colonne[NombreDeTermes] = Var;
+				NombreDeTermes++;
+			}
+			ProblemeHebdo->NumeroDeContrainteEquivalenceStockFinal[Pays] = ProblemeAResoudre->NombreDeContraintes;
+
+			OPT_ChargerLaContrainteDansLaMatriceDesContraintes(ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=');
+		}
+		if (ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->AccurateWaterValue == OUI_ANTARES)
+			/*  expression constraint : - StockFinal +sum (stocklayers) = 0*/
+		{
+			NombreDeTermes = 0;
+			Var = ProblemeHebdo->NumeroDeVariableStockFinal[Pays];
+			if (Var >= 0)  
+			{
+				Pi[NombreDeTermes] = -1.0;
+				Colonne[NombreDeTermes] = Var;
+				NombreDeTermes++;
+			} 
+			for (layerindex = 0; layerindex <100; layerindex++)
+			{
+				Var = ProblemeHebdo->NumeroDeVariableDeTrancheDeStock[Pays][layerindex];  
+	
+				if (Var >= 0)
+				{
+					Pi[NombreDeTermes] = 1.0;
+					Colonne[NombreDeTermes] = Var;
+					NombreDeTermes++;
+				}
+			}
+			
+			ProblemeHebdo->NumeroDeContrainteExpressionStockFinal[Pays] = ProblemeAResoudre->NombreDeContraintes;
+
+			OPT_ChargerLaContrainteDansLaMatriceDesContraintes(ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=');
+		}
+
 	}
 	
 
