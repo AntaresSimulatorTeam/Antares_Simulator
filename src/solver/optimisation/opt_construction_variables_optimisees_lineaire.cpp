@@ -191,10 +191,35 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire( PROBLEME_HEB
 				CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeNiveau[Pays] = -1;	
 				CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeDebordement[Pays] = -1;	
 			}
-				
+
 		}
 	}    
-
+	
+	for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+	{
+		if (ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->AccurateWaterValue == OUI_ANTARES)
+		{
+			ProblemeHebdo->NumeroDeVariableStockFinal[Pays] = NombreDeVariables;
+			ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_NON_BORNEE;
+			NombreDeVariables++;
+			
+			for (uint nblayer = 0; nblayer < 100; nblayer++)
+			{
+			ProblemeHebdo->NumeroDeVariableDeTrancheDeStock[Pays][nblayer] = NombreDeVariables;
+			ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+			NombreDeVariables++;
+			}
+		}
+		else
+		{
+			ProblemeHebdo->NumeroDeVariableStockFinal[Pays] = -1;
+			for (uint nblayer = 0; nblayer < 100; nblayer++)
+			{
+				ProblemeHebdo->NumeroDeVariableDeTrancheDeStock[Pays][nblayer] = -1;
+			}
+		}
+	}
+	
 	ProblemeAResoudre->NombreDeVariables = NombreDeVariables;
 
 	if ( ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES ) {
