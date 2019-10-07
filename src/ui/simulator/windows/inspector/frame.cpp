@@ -742,7 +742,7 @@ namespace Inspector
 		// -----
 		pPGAreaSeparator->Hide(hide);
 		pPGAreaGeneral->Hide(hide);
-		pPGAreaFilteringStatus->Hide(!(!hide and &study and study.parameters.filtering));
+		pPGAreaFilteringStatus->Hide(!(!hide and &study and study.parameters.filteringByFile));
 		if (!hide)
 		{
 			pPGAreaName->Hide(multiple);
@@ -798,7 +798,7 @@ namespace Inspector
 		hide = !data || data->links.empty();
 		multiple = (data and data->links.size() > 1);
 		pPGLinkSeparator->Hide(hide);
-		pPGLinkFilteringStatus->Hide(!(!hide and &study and study.parameters.filtering));
+		pPGLinkFilteringStatus->Hide(!(!hide and &study and study.parameters.filteringByFile));
 		p = PROPERTY("link.title");
 		p->Hide(hide);
 		if (!hide)

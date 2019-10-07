@@ -213,7 +213,7 @@ namespace Data
 		derated                = false;
 		useCustomTSNumbers     = false;
 		userPlaylist           = false;
-		filtering              = false;
+		filteringByFile        = false;
 		simulationDays.first   = 0;
 		simulationDays.end     = 365;
 		dayOfThe1stJanuary     = monday;
@@ -396,8 +396,8 @@ namespace Data
 
 	static bool SGDIntLoadFamily_F(Parameters& d, const String& key, const String& value, uint)
 	{
-		if (key == "filtering")
-			return value.to<bool>(d.filtering);
+		if (key == "filtering-by-file")
+			return value.to<bool>(d.filteringByFile);
 		if (key == "first-month-in-year")
 			return Date::StringToMonth(d.firstMonthInYear, value);
 		if (key == "first.weekday")
@@ -1299,8 +1299,8 @@ namespace Data
 			logs.info() << "  :: enabling the user variable selection";
 		if (useCustomTSNumbers)
 			logs.info() << "  :: enabling the custom build mode";
-		if (filtering)
-			logs.info() << "  :: enabling filtering";
+		if (filteringByFile)
+			logs.info() << "  :: enabling filtering by file";
 
 		if (!include.constraints)
 			logs.info() << "  :: ignoring binding constraints";
@@ -1386,7 +1386,7 @@ namespace Data
 			section->add("custom-ts-numbers",       useCustomTSNumbers);
 			section->add("user-playlist",           userPlaylist);
 			section->add("user-var-selection",		userVariableSelection);
-			section->add("filtering",               filtering);
+			section->add("filtering-by-file",		filteringByFile);
 			if (not activeRulesScenario.empty())
 				section->add("active-rules-scenario",   activeRulesScenario);
 

@@ -216,8 +216,11 @@ namespace Data
 		//! The number of years that will be really performed
 		// Computed automatically from the number of MC years and the playlist
 		uint effectiveNbYears;
-		//! Enable/Disable Filtering for areas and links
-		bool filtering;
+		//! Enable/Disable filtering by files :
+		//!		for an area or a link, print (or not) a file associated to :
+		//!		- a time division (hourly results, daily results, weekly results, ...),
+		//!		- a kind of result (year by year result or a synthesis result).
+		bool filteringByFile;
 		//@}
 
 

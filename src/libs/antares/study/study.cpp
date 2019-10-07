@@ -669,7 +669,7 @@ namespace Data
 		// ForEach area
 		areas.each([&] (Data::Area& area)
 		{
-			if (not parameters.filtering)
+			if (not parameters.filteringByFile)
 			{
 				// reset filtering
 				area.filterSynthesis  = (uint) filterAll;

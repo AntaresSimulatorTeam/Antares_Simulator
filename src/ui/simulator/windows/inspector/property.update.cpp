@@ -1295,14 +1295,14 @@ namespace Inspector
 				case 0: // none
 					{
 						for (; i != end; ++i)
-							(*i)->parameters.filtering = false;
+							(*i)->parameters.filteringByFile = false;
 						OnStudySimulationSettingsChanged();
 						return true;
 					}
 				case 1: // custom
 					{
 						for (; i != end; ++i)
-							(*i)->parameters.filtering = true;
+							(*i)->parameters.filteringByFile = true;
 						OnStudySimulationSettingsChanged();
 						return true;
 					}

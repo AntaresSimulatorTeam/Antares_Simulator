@@ -427,7 +427,7 @@ namespace Inspector
 		typedef bool Type;
 		static Type Value(const Data::Study::Ptr& study)
 		{
-			return !(!study) ? study->parameters.filtering : false;
+			return !(!study) ? study->parameters.filteringByFile : false;
 		}
 		static wxString ConvertToString(const Type v)
 		{
