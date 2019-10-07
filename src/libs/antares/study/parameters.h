@@ -209,7 +209,7 @@ namespace Data
 		bool* yearsFilter;
 
 		//! Custom variable selection (each variable will be manually selected for print by the user)
-		bool userVariableSelection;
+		bool filteringByVar;
 		//! List of all output variables print info
 		mutable AllVariablesPrintInfo variablesPrintInfo;
 

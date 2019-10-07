@@ -118,7 +118,12 @@ namespace Inspector
 		wxT("Automatic"), wxT("Custom"), nullptr
 	};
 
-	static const wxChar* filteringOptions[] =
+	static const wxChar* filteringByFileOptions[] =
+	{
+		wxT("None"), wxT("Custom"), nullptr
+	};
+
+	static const wxChar* filteringByVarOptions[] =
 	{
 		wxT("None"), wxT("Custom"), nullptr
 	};
@@ -422,12 +427,25 @@ namespace Inspector
 	};
 
 
-	struct PStudyFiltering
+	struct PStudyFilteringByFile
 	{
 		typedef bool Type;
 		static Type Value(const Data::Study::Ptr& study)
 		{
 			return !(!study) ? study->parameters.filteringByFile : false;
+		}
+		static wxString ConvertToString(const Type v)
+		{
+			return (!v) ? wxT("None") : wxT("Custom");
+		}
+	};
+
+	struct PStudyFilteringByVar
+	{
+		typedef bool Type;
+		static Type Value(const Data::Study::Ptr& study)
+		{
+			return !(!study) ? study->parameters.filteringByVar : false;
 		}
 		static wxString ConvertToString(const Type v)
 		{

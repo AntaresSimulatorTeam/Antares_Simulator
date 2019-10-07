@@ -1287,7 +1287,7 @@ namespace Inspector
 			OnStudySimulationSettingsChanged();
 			return true;
 		}
-		if (name == "study.filtering")
+		if (name == "study.filteringbyfile")
 		{
 			uint d = value.GetLong();
 			switch (d)
@@ -1306,6 +1306,28 @@ namespace Inspector
 						OnStudySimulationSettingsChanged();
 						return true;
 					}
+			}
+			return false;
+		}
+		if (name == "study.filteringbyvar")
+		{
+			uint d = value.GetLong();
+			switch (d)
+			{
+				case 0: // none
+				{
+					for (; i != end; ++i)
+						(*i)->parameters.filteringByVar = false;
+					OnStudySimulationSettingsChanged();
+					return true;
+				}
+				case 1: // custom
+				{
+					for (; i != end; ++i)
+						(*i)->parameters.filteringByVar = true;
+					OnStudySimulationSettingsChanged();
+					return true;
+				}
 			}
 			return false;
 		}

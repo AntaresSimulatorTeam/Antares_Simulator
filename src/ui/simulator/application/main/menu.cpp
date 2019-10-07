@@ -373,8 +373,8 @@ namespace Forms
 		wxMenuItem* it;
 
 		Menu::CreateItem(pMenuOptions, mnIDOptionConfigureSelectOutputvariables,
-				wxT("Filters on simulation results\tctrl+alt+f"), "images/16x16/filter.png",
-				wxT("Configure Filters on simulation results"));
+				wxT("Filters on results by column\tctrl+alt+f"), "images/16x16/filter.png",
+				wxT("Configure Filters on results by column"));
 		it = Menu::CreateItem(pMenuOptions, mnIDOptionConfigureDistricts,
 				wxT("Geographic districts\tctrl+alt+d"), "images/16x16/filter.png",
 				wxT("Configure geographic districts"));

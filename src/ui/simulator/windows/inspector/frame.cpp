@@ -388,7 +388,8 @@ namespace Inspector
 		pPGStudyOutputProfile       = Category(pg, wxT("Output profile"), wxT("study.output_profile"));
 		pPGStudySimulationSynthesis = P_BOOL("Simulation synthesis", "study.simsynthesis");
 		pPGStudyYearByYear          = P_BOOL("Year-by-year", "study.yearbyyear");
-		pPGStudyFiltering           = P_ENUM("Results filtering", "study.filtering", filteringOptions);
+		pPGFilteringByFile			= P_ENUM("Filter results by file", "study.filteringbyfile", filteringByFileOptions);
+		pPGFilteringByVar			= P_ENUM("Filter results by column", "study.filteringbyvar", filteringByVarOptions);
 		pPGStudyUseMCScenarios      = P_BOOL("MC Scenarios", "study.scenarios");
 
 
@@ -706,23 +707,24 @@ namespace Inspector
 		if (!hide)
 		{
 			// Context
-			Accumulator<PStudyMode>         :: Apply(pPGStudyMode, data->studies);
-			Accumulator<PStudyHorizon>      :: Apply(pPGStudyHorizon, data->studies);
-			Accumulator<PStudyCalendarMonth>:: Apply(pPGStudyCalendarMonth, data->studies);
-			Accumulator<PStudyCalendarWeek> :: Apply(pPGStudyCalendarWeek, data->studies);
-			Accumulator<PStudyLeapYear>     :: Apply(pPGStudyLeapYear, data->studies);
-			Accumulator<PStudy1stJanuary>   :: Apply(pPGStudy1rstJanuary, data->studies);
-			Accumulator<PStudyCalBegin>     :: Apply(pPGStudyCalendarBegin, data->studies);
-			Accumulator<PStudyCalEnd>       :: Apply(pPGStudyCalendarEnd, data->studies);
+			Accumulator<PStudyMode>				:: Apply(pPGStudyMode, data->studies);
+			Accumulator<PStudyHorizon>			:: Apply(pPGStudyHorizon, data->studies);
+			Accumulator<PStudyCalendarMonth>	:: Apply(pPGStudyCalendarMonth, data->studies);
+			Accumulator<PStudyCalendarWeek>		:: Apply(pPGStudyCalendarWeek, data->studies);
+			Accumulator<PStudyLeapYear>			:: Apply(pPGStudyLeapYear, data->studies);
+			Accumulator<PStudy1stJanuary>		:: Apply(pPGStudy1rstJanuary, data->studies);
+			Accumulator<PStudyCalBegin>			:: Apply(pPGStudyCalendarBegin, data->studies);
+			Accumulator<PStudyCalEnd>			:: Apply(pPGStudyCalendarEnd, data->studies);
 			// Monte-Carlo scenarios
-			Accumulator<PStudyYears>        :: Apply(pPGStudyYears, data->studies);
-			Accumulator<PStudyBuildingMode> :: Apply(pPGStudyBuildMode, data->studies);
-			Accumulator<PStudyPlaylist>     :: Apply(pPGStudyPlaylist, data->studies);
+			Accumulator<PStudyYears>			:: Apply(pPGStudyYears, data->studies);
+			Accumulator<PStudyBuildingMode>		:: Apply(pPGStudyBuildMode, data->studies);
+			Accumulator<PStudyPlaylist>			:: Apply(pPGStudyPlaylist, data->studies);
 			// Output profile
-			Accumulator<PStudySynthesis>    :: Apply(pPGStudySimulationSynthesis, data->studies);
-			Accumulator<PStudyYearByYear>   :: Apply(pPGStudyYearByYear, data->studies);
-			Accumulator<PStudyFiltering>    :: Apply(pPGStudyFiltering, data->studies);
-			Accumulator<PStudyMCScenarios>  :: Apply(pPGStudyUseMCScenarios, data->studies);
+			Accumulator<PStudySynthesis>		:: Apply(pPGStudySimulationSynthesis, data->studies);
+			Accumulator<PStudyYearByYear>		:: Apply(pPGStudyYearByYear, data->studies);
+			Accumulator<PStudyFilteringByFile>	:: Apply(pPGFilteringByFile, data->studies);
+			Accumulator<PStudyFilteringByVar>	:: Apply(pPGFilteringByVar, data->studies);
+			Accumulator<PStudyMCScenarios>		:: Apply(pPGStudyUseMCScenarios, data->studies);
 		}
 
 		// AREAS

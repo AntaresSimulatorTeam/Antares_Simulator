@@ -236,7 +236,7 @@ namespace Options
 
 		auto& d = study.parameters;
 		
-		if (d.userVariableSelection)
+		if (d.filteringByVar)
 		{
 			uint v = 0;
 			for (uint i = 0; i != d.variablesPrintInfo.size(); ++i)
@@ -262,7 +262,7 @@ namespace Options
 		auto& study = *studyptr;
 
 		Freeze();
-		bool b = study.parameters.userVariableSelection;
+		bool b = study.parameters.filteringByVar;
 
 		updateCaption();
 		wxSizer& sizer = *GetSizer();
@@ -286,7 +286,7 @@ namespace Options
 		{
 			bool v = evt.IsChecked();
 			auto& d = studyptr->parameters;
-			d.userVariableSelection = v;
+			d.filteringByVar = v;
 		}
 		onUpdateStatus();
 		OnStudySimulationSettingsChanged();

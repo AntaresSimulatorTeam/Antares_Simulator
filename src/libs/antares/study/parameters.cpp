@@ -204,7 +204,7 @@ namespace Data
 		variablePrintInfoCollector collector(&variablesPrintInfo);
 		Antares::Solver::Variable::Economy::AllVariables::RetrieveVariableList(collector);
 		variablesPrintInfo.resetInfoIterator();
-		userVariableSelection = false;
+		filteringByVar = false;
 
 		nbYears                = 1;
 		delete[] yearsFilter;
@@ -398,6 +398,8 @@ namespace Data
 	{
 		if (key == "filtering-by-file")
 			return value.to<bool>(d.filteringByFile);
+		if (key == "filtering-by-variable")
+			return value.to<bool>(d.filteringByVar);
 		if (key == "first-month-in-year")
 			return Date::StringToMonth(d.firstMonthInYear, value);
 		if (key == "first.weekday")
@@ -840,9 +842,6 @@ namespace Data
 		if (key == "user-playlist")
 			return value.to<bool>(d.userPlaylist);
 
-		if (key == "user-var-selection")
-			return value.to<bool>(d.userVariableSelection);
-
 		if (key == "unit-commitment-mode") //after 5.0
 		{
 			auto ucommitment = StringToUnitCommitmentMode(value);
@@ -1137,7 +1136,7 @@ namespace Data
 		{
 			yearByYear = false;
 			userPlaylist = false;
-			userVariableSelection = false;
+			filteringByVar = false;
 		}
 
 		if (derated && userPlaylist)
@@ -1187,7 +1186,7 @@ namespace Data
 		}
 
 		// Prepare output variables print info before the simulation (used to initialize output variables)
-		variablesPrintInfo.prepareForSimulation(userVariableSelection);
+		variablesPrintInfo.prepareForSimulation(filteringByVar);
 		
 
 		switch (mode)
@@ -1295,7 +1294,7 @@ namespace Data
 			logs.info() << "  :: enabling the 'derated' mode";
 		if (userPlaylist)
 			logs.info() << "  :: enabling the user playlist";
-		if (userVariableSelection)
+		if (filteringByVar)
 			logs.info() << "  :: enabling the user variable selection";
 		if (useCustomTSNumbers)
 			logs.info() << "  :: enabling the custom build mode";
@@ -1385,7 +1384,7 @@ namespace Data
 			section->add("derated",                 derated);
 			section->add("custom-ts-numbers",       useCustomTSNumbers);
 			section->add("user-playlist",           userPlaylist);
-			section->add("user-var-selection",		userVariableSelection);
+			section->add("filtering-by-variable",	filteringByVar);
 			section->add("filtering-by-file",		filteringByFile);
 			if (not activeRulesScenario.empty())
 				section->add("active-rules-scenario",   activeRulesScenario);
