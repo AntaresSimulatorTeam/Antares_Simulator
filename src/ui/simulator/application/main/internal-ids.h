@@ -131,6 +131,7 @@ namespace Forms
 		mnIDOptionTempFolder,
 		mnIDOptionConfigurePrefetch,
 		mnIDOptionConfigureSelectOutputvariables,
+		mnIDOptionConfigureFilterByFile,
 		mnIDOptionConfigureDistricts,
 		mnIDOptionConfigureMCScenarioBuilder,
 		mnIDOptionConfigureMCScenarioPlaylist,
