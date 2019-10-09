@@ -70,14 +70,14 @@ namespace Renderer
 	{
 		switch (colIndx)
 		{
-			case Data::fhlNTCDirect            :return wxT(" TRANS. CAPACITY \nDirect   ");
-			case Data::fhlNTCIndirect          :return wxT(" TRANS. CAPACITY \nIndirect");
-			case Data::fhlHurdlesCostDirect    :return wxT(" HURDLES COST \nDirect");
-			case Data::fhlHurdlesCostIndirect  :return wxT(" HURDLES COST \nIndirect");
-			case Data::fhlImpedances		   :return wxT(" IMPEDANCES ");
-			case Data::fhlLoopFlow			   :return wxT(" LOOP FLOW ");
-			case Data::fhlPShiftMinus		:return wxT(" P.SHIFT MIN ");
-			case Data::fhlPShiftPlus		   :return wxT(" P.SHIFT MAX ");
+			case Data::fhlNTCDirect				:return wxT(" TRANS. CAPACITY \nDirect   ");
+			case Data::fhlNTCIndirect			:return wxT(" TRANS. CAPACITY \nIndirect");
+			case Data::fhlHurdlesCostDirect		:return wxT(" HURDLES COST \nDirect");
+			case Data::fhlHurdlesCostIndirect	:return wxT(" HURDLES COST \nIndirect");
+			case Data::fhlImpedances			:return wxT(" IMPEDANCES ");
+			case Data::fhlLoopFlow				:return wxT(" LOOP FLOW ");
+			case Data::fhlPShiftMinus			:return wxT(" P.SHIFT MIN ");
+			case Data::fhlPShiftPlus			:return wxT(" P.SHIFT MAX ");
 		}
 		return wxString();
 	}
@@ -99,14 +99,30 @@ namespace Renderer
 		double cellvalue = cellNumericValue(col, row);
 		switch (col)
 		{
-			case 0:
+			case Data::fhlNTCDirect:
 				break;
-			case 1:
+			case Data::fhlNTCIndirect:
 				break;
-			case 2:
-				return (cellvalue < 0.) ? IRenderer::cellStyleWarning : Renderer::Matrix<>::cellStyle(col, row);
-			case 3:
-				return (cellvalue < 0.) ? IRenderer::cellStyleWarning : Renderer::Matrix<>::cellStyle(col, row);
+			case Data::fhlHurdlesCostDirect:
+			{
+				double cellvalueHrdlCostIndirect = cellNumericValue(col + 1, row);
+				double sumCellValues = cellvalue + cellvalueHrdlCostIndirect;
+				if (sumCellValues < 0.)
+					return IRenderer::cellStyleError;
+				if (sumCellValues >= 0. && cellvalue < 0.)
+					return IRenderer::cellStyleWarning;
+				break;
+			}
+			case Data::fhlHurdlesCostIndirect:
+			{
+				double cellvalueHrdlCostDirect = cellNumericValue(col - 1, row);
+				double sumCellValues = cellvalueHrdlCostDirect + cellvalue;
+				if (sumCellValues < 0.)
+					return IRenderer::cellStyleError;
+				if (sumCellValues >= 0. && cellvalue < 0.)
+					return IRenderer::cellStyleWarning;
+				break;
+			}
 			case Data::fhlImpedances:
 				return (cellvalue < 0.) ? IRenderer::cellStyleWarning : Renderer::Matrix<>::cellStyle(col, row);
 			case Data::fhlLoopFlow:
@@ -180,27 +196,7 @@ namespace Renderer
 				break;
 			}
 			case Data::fhlHurdlesCostDirect:
-			{
-				double v;
-				if (!value.to(v))
-					return false;
-
-				double w = Renderer::Matrix<>::cellNumericValue(x + 1, y);
-				if (v + w < 0.)
-					return Renderer::Matrix<>::cellValue(x, y, "0");
-				break;
-			}
 			case Data::fhlHurdlesCostIndirect:
-			{
-				double w;
-				if (!value.to(w))
-					return false;
-
-				double v = Renderer::Matrix<>::cellNumericValue(x - 1, y);
-				if (v + w < 0.)
-					return Renderer::Matrix<>::cellValue(x, y, "0");
-				break;
-			}
 			default:
 			{
 				double v;
