@@ -104,6 +104,34 @@ namespace Data
 		return "";
 	}
 
+	HydroPricingMode StringToHydroPricingMode(const AnyString& text)
+	{
+		if (!text)
+			return hpUnknown;
+
+		CString<24, false> s = text;
+		s.trim();
+		s.toLower();
+		if (s == "fast")
+			return hpHeuristic;
+		if (s == "accurate") //mixed integer linear problem
+			return hpMILP;
+
+		return hpUnknown;
+	}
+
+
+	const char* HydroPricingModeToCString(HydroPricingMode hpm)
+	{
+		switch (hpm)
+		{
+		case hpHeuristic:       return "fast";
+		case hpMILP:            return "accurate";// (slow)
+		case hpUnknown:         return "";
+		}
+		return "";
+	}
+
 	PowerFluctuations  StringToPowerFluctuations(const AnyString& text)
 	{
 		if (!text)

@@ -417,6 +417,12 @@ namespace Data
 			//! Initial reservoir levels
 			InitialReservoirLevels  iniLevels;
 		} initialReservoirLevels;
+
+		struct
+		{
+			//! Hydro Pricing Mode
+			HydroPricingMode  hpMode;
+		} hydroPricing;
 		
 		// In case of hydro hot start and MC years simultaneous run
 		// ... Answers the question : do all sets of simultaneous years have the same size ?

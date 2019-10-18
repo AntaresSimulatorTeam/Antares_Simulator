@@ -82,6 +82,10 @@ namespace Options
 		void onSelectHotStart(wxCommandEvent& evt);
 		void onSelectColdStart(wxCommandEvent& evt);
 
+		void onHydroPricingMode(Component::Button&, wxMenu& menu, void*);
+		void onSelectHPHeuristic(wxCommandEvent& evt);
+		void onSelectHPMixedIntegerLinearProblem(wxCommandEvent& evt);
+
 		void onPowerFluctuations(Component::Button&, wxMenu&, void*);
 		void onSelectMinimizeRamping(wxCommandEvent& evt);
 		void onSelectMinimizeExcursions(wxCommandEvent& evt);
@@ -112,6 +116,7 @@ namespace Options
 		Component::Button* pBtnNumericQualitySolar;
 		Component::Button* pBtnPowerFluctuations;
 		Component::Button* pBtnInitialReservoirLevels;
+		Component::Button* pBtnHydroPricing;
 		Component::Button* pBtnSheddingPolicy;
 		Component::Button* pBtnMultiNodalMarginalPrices;
 		Component::Button* pBtnUnitCommitment;

@@ -177,6 +177,18 @@ namespace Options
 			s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 			pBtnInitialReservoirLevels = button;
 		}
+		// Hydro Pricing Mode
+		{
+			label = Component::CreateLabel(this, wxT("Hydro Pricing Mode"));
+			button = new Component::Button(this, wxT("Fast"), "images/16x16/tag.png");
+			button->SetBackgroundColour(bgColor);
+			button->menu(true);
+			onPopup.bind(this, &AdvancedParameters::onHydroPricingMode);
+			button->onPopupMenu(onPopup);
+			s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+			s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+			pBtnHydroPricing = button;
+		}
 		// Power Fluctuations
 		{
 			label  = Component::CreateLabel(this, wxT("Power fluctuations"));
@@ -327,13 +339,14 @@ namespace Options
 			parameters.timeSeriesAccuracyOnCorrelation &= ~ Data::timeSeriesWind;
 			parameters.timeSeriesAccuracyOnCorrelation &= ~ Data::timeSeriesSolar;
 
+			parameters.initialReservoirLevels.iniLevels = Data::irlColdStart;
+			parameters.hydroPricing.hpMode = Data::hpHeuristic;
 			parameters.power.fluctuations  = Data::lssFreeModulations;
-			//parameters.shedding.strategy = Data::shsShareMargins;
+			// parameters.shedding.strategy = Data::shsShareMargins;
 			parameters.shedding.policy     = Data::shpShavePeaks;
 			parameters.reserveManagement.daMode = Data::daGlobal;
 			parameters.unitCommitment.ucMode = Data::ucHeuristic;
 			parameters.nbCores.ncMode = Data::ncAvg;
-			parameters.initialReservoirLevels.iniLevels = Data::irlColdStart;
 
 			refresh();
 			MarkTheStudyAsModified();
@@ -378,6 +391,9 @@ namespace Options
 		text = wxStringFromUTF8(InitialReservoirLevelsToCString(study.parameters.initialReservoirLevels.iniLevels));
 		pBtnInitialReservoirLevels->caption(text);
 
+		text = wxStringFromUTF8(HydroPricingModeToCString(study.parameters.hydroPricing.hpMode));
+		pBtnHydroPricing->caption(text);
+		
 		text = wxStringFromUTF8(PowerFluctuationsToCString(study.parameters.power.fluctuations));
 		pBtnPowerFluctuations->caption(text);
 
@@ -542,6 +558,53 @@ namespace Options
 		}
 	}
 
+	// ... Hydro Pricing ... 
+	void AdvancedParameters::onHydroPricingMode(Component::Button&, wxMenu& menu, void*)
+	{
+		wxMenuItem* it;
+		wxString text;
+
+		text = wxStringFromUTF8(HydroPricingModeToCString(Data::hpHeuristic)); // Fast
+		text << wxT("   [default]");
+		it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
+		menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
+			wxCommandEventHandler(AdvancedParameters::onSelectHPHeuristic), nullptr, this);
+
+		text.clear();
+		text = wxStringFromUTF8(HydroPricingModeToCString(Data::hpMILP)); // Accurate
+		text << wxT("   (slow)");
+		it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
+		menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
+			wxCommandEventHandler(AdvancedParameters::onSelectHPMixedIntegerLinearProblem), nullptr, this);
+	}
+
+	void AdvancedParameters::onSelectHPHeuristic(wxCommandEvent& evt)
+	{
+		auto& study = *Data::Study::Current::Get();
+		if (not Data::Study::Current::Valid())
+			return;
+
+		if (study.parameters.hydroPricing.hpMode != Data::hpHeuristic)
+		{
+			study.parameters.hydroPricing.hpMode = Data::hpHeuristic;
+			MarkTheStudyAsModified();
+			refresh();
+		}
+	}
+
+	void AdvancedParameters::onSelectHPMixedIntegerLinearProblem(wxCommandEvent& evt)
+	{
+		if (not Data::Study::Current::Valid())
+			return;
+		auto& study = *Data::Study::Current::Get();
+
+		if (study.parameters.hydroPricing.hpMode != Data::hpMILP)
+		{
+			study.parameters.hydroPricing.hpMode = Data::hpMILP;
+			MarkTheStudyAsModified();
+			refresh();
+		}
+	}
 
 	void AdvancedParameters::onPowerFluctuations(Component::Button&, wxMenu& menu, void*)
 	{
@@ -700,6 +763,20 @@ namespace Options
 		}
 	}
 
+	void AdvancedParameters::onSelectUCMixedIntegerLinearProblem(wxCommandEvent& evt)
+	{
+		if (not Data::Study::Current::Valid())
+			return;
+		auto& study = *Data::Study::Current::Get();
+
+		if (study.parameters.unitCommitment.ucMode != Data::ucMILP)
+		{
+			study.parameters.unitCommitment.ucMode = Data::ucMILP;
+			MarkTheStudyAsModified();
+			refresh();
+		}
+	}
+
 	
 	void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*)
 	{
@@ -808,21 +885,6 @@ namespace Options
 		if (study.parameters.nbCores.ncMode != Data::ncMax)
 		{
 			study.parameters.nbCores.ncMode = Data::ncMax;
-			MarkTheStudyAsModified();
-			refresh();
-		}
-	}
-	
-
-	void AdvancedParameters::onSelectUCMixedIntegerLinearProblem(wxCommandEvent& evt)
-	{
-		if (not Data::Study::Current::Valid())
-			return;
-		auto& study = *Data::Study::Current::Get();
-
-		if (study.parameters.unitCommitment.ucMode != Data::ucMILP)
-		{
-			study.parameters.unitCommitment.ucMode = Data::ucMILP;
 			MarkTheStudyAsModified();
 			refresh();
 		}

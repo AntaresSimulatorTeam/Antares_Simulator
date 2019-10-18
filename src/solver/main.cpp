@@ -156,8 +156,16 @@ bool SolverApplication::prepare(int argc, char* argv[])
 		return false;
 
 	
-	// LISTE DE CHECKS
-	// CHECK incompatible de choix simultané des options « simplex range= daily » et « unit-commitment= MILP ». 
+	// LISTE DE CHECKS ...
+
+	// CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing = MILP ». 
+	if ((pParameters->simplexOptimizationRange == Antares::Data::SimplexOptimization::sorDay) && (pParameters->hydroPricing.hpMode == Antares::Data::HydroPricingMode::hpMILP))
+	{
+		logs.error() << "Simplexe optimization range and hydro pricing mode : values are not compatible ";
+		return false;
+	}
+
+	// CHECK incompatible de choix simultané des options « simplex range= daily » et « unit-commitment = MILP ». 
 	if ((pParameters->simplexOptimizationRange == Antares::Data::SimplexOptimization::sorDay) && (pParameters->unitCommitment.ucMode == Antares::Data::UnitCommitmentMode::ucMILP))
 	{
 		logs.error()<<"Simplexe optimization range and unit commitment mode : values are not compatible ";

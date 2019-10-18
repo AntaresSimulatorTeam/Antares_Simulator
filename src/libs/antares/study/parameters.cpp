@@ -254,6 +254,8 @@ namespace Data
 
 		// Initial reservoir levels
 		initialReservoirLevels.iniLevels = irlColdStart;
+		// Hydro pricing
+		hydroPricing.hpMode = hpHeuristic;
 		allSetsHaveSameSize = true;
 
 
@@ -422,13 +424,26 @@ namespace Data
 	}
 
 
-	static bool SGDIntLoadFamily_H(Parameters& d, const String& key, const String&, const String& rawvalue, uint)
+	static bool SGDIntLoadFamily_H(Parameters& d, const String& key, const String& value, const String& rawvalue, uint)
 	{
 		if (key == "horizon")
 		{
 			d.horizon = rawvalue;
 			d.horizon.trim(" \t\n\r");
 			return true;
+		}
+		if (key == "hydro-pricing-mode")
+		{
+			auto hpricing = StringToHydroPricingMode(value);
+			if (hpricing != ucUnknown)
+			{
+				d.hydroPricing.hpMode = hpricing;
+				return true;
+			}
+			logs.warning() << "parameters: invalid unit commitment mode. Got '" << value
+				<< "'. reset to fast mode";
+			d.unitCommitment.ucMode = ucHeuristic;
+			return false;
 		}
 		// Error
 		return false;
@@ -1465,13 +1480,14 @@ namespace Data
 		// Other preferences
 		{
 			auto* section = ini.addSection("other preferences");
-			section->add("initial-reservoir-levels",			 InitialReservoirLevelsToCString(initialReservoirLevels.iniLevels));
-			section->add("power-fluctuations",           PowerFluctuationsToCString(power.fluctuations));
-			section->add("shedding-strategy",            SheddingStrategyToCString(shedding.strategy));
-			section->add("shedding-policy",              SheddingPolicyToCString(shedding.policy));
-			section->add("unit-commitment-mode",         UnitCommitmentModeToCString(unitCommitment.ucMode));
-			section->add("number-of-cores-mode",         NumberOfCoresModeToCString(nbCores.ncMode));
-			section->add("day-ahead-reserve-management", DayAheadReserveManagementModeToCString(reserveManagement.daMode));
+			section->add("initial-reservoir-levels",		InitialReservoirLevelsToCString(initialReservoirLevels.iniLevels));
+			section->add("hydro-pricing-mode",				HydroPricingModeToCString(hydroPricing.hpMode));
+			section->add("power-fluctuations",				PowerFluctuationsToCString(power.fluctuations));
+			section->add("shedding-strategy",				SheddingStrategyToCString(shedding.strategy));
+			section->add("shedding-policy",					SheddingPolicyToCString(shedding.policy));
+			section->add("unit-commitment-mode",			UnitCommitmentModeToCString(unitCommitment.ucMode));
+			section->add("number-of-cores-mode",			NumberOfCoresModeToCString(nbCores.ncMode));
+			section->add("day-ahead-reserve-management",	DayAheadReserveManagementModeToCString(reserveManagement.daMode));
 		}
 
 		// Advanced parameters

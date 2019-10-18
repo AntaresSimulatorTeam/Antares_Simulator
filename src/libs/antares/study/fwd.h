@@ -315,6 +315,25 @@ namespace Data
 	*/
 	InitialReservoirLevels  StringToInitialReservoirLevels(const AnyString& text);
 
+	// ... Hydro Pricing ...
+	enum HydroPricingMode
+	{
+		hpHeuristic = 0,
+		hpMILP, //mixed integer linear problem
+		hpUnknown,
+	};
+
+	/*!
+	** \brief Convert a hyfro pricing mode into a text
+	*/
+	const char* HydroPricingModeToCString(HydroPricingMode hpm);
+
+	/*!
+	** \brief Convert a text into a hydro pricing mode
+	*/
+	HydroPricingMode  StringToHydroPricingMode(const AnyString& text);
+
+	// ... Power fluctuations ...
 	enum PowerFluctuations
 	{
 		lssFreeModulations = 0,
