@@ -113,9 +113,11 @@ namespace Data
 		switch (v)
 		{
 			case versionFutur:    return ">7.0";
+			case version710:      return "7.1";
 			case version700:      return "7.0";
-			case version650:      return "6.5";			
+			
 			// older versions
+			case version650:      return "6.5";
 			case version640:      return "6.4";
 			case version630:      return "6.3";
 			case version620:      return "6.2";
@@ -153,38 +155,39 @@ namespace Data
 		// The list should remain ordered in the reverse order for performance reasons
 		switch (v)
 		{
-			case versionFutur:    return L">7.0";
-			case version700:    return L"7.0";
-			case version650:      return L"6.5";
-			
+			case versionFutur:		return L">7.0";
+			case version710:		return L"7.1";
+			case version700:		return L"7.0";
+						
 			// older versions
-			case version640:      return L"6.4";
-			case version630:      return L"6.3";
-			case version620:      return L"6.2";
-			case version610:      return L"6.1";
-			case version600:      return L"6.0";
-			case version500:      return L"5.0";
-			case version510:      return L"5.1";
-			case version450:      return L"4.5";
-			case version440:      return L"4.4";
-			case version430:      return L"4.3";
-			case version420:      return L"4.2";
-			case version410:      return L"4.1";
-			case version400:      return L"4.0";
-			case version390:      return L"3.9";
-			case version380:      return L"3.8";
-			case version370:      return L"3.7";
-			case version360:      return L"3.6";
-			case version350:      return L"3.5";
-			case version340:      return L"3.4";
-			case version330:      return L"3.3";
-			case version320:      return L"3.2";
-			case version310:      return L"3.1";
-			case version300:      return L"3.0";
-			case version210:      return L"2.1";
-			case version200:      return L"2.0";
-			case version1xx:      return L"1.0";
-			case versionUnknown:  return L"0";
+			case version650:		return L"6.5";
+			case version640:		return L"6.4";
+			case version630:		return L"6.3";
+			case version620:		return L"6.2";
+			case version610:		return L"6.1";
+			case version600:		return L"6.0";
+			case version500:		return L"5.0";
+			case version510:		return L"5.1";
+			case version450:		return L"4.5";
+			case version440:		return L"4.4";
+			case version430:		return L"4.3";
+			case version420:		return L"4.2";
+			case version410:		return L"4.1";
+			case version400:		return L"4.0";
+			case version390:		return L"3.9";
+			case version380:		return L"3.8";
+			case version370:		return L"3.7";
+			case version360:		return L"3.6";
+			case version350:		return L"3.5";
+			case version340:		return L"3.4";
+			case version330:		return L"3.3";
+			case version320:		return L"3.2";
+			case version310:		return L"3.1";
+			case version300:		return L"3.0";
+			case version210:		return L"2.1";
+			case version200:		return L"2.0";
+			case version1xx:		return L"1.0";
+			case versionUnknown:	return L"0";
 		}
 		return L"0.0";
 	}
@@ -195,6 +198,7 @@ namespace Data
 		// The list should remain ordered in the reverse order for performance reasons
 		switch (version)
 		{
+			case 710: return version710;
 			case 700: return version700;
 			case 650: return version650;
 			case 640: return version640;
