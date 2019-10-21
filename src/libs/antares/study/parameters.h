@@ -209,7 +209,7 @@ namespace Data
 		bool* yearsFilter;
 
 		//! Custom variable selection (each variable will be manually selected for print by the user)
-		bool filteringByVar;
+		bool thematicTrimming;
 		//! List of all output variables print info
 		mutable AllVariablesPrintInfo variablesPrintInfo;
 
@@ -220,7 +220,7 @@ namespace Data
 		//!		for an area or a link, print (or not) a file associated to :
 		//!		- a time division (hourly results, daily results, weekly results, ...),
 		//!		- a kind of result (year by year result or a synthesis result).
-		bool filteringByFile;
+		bool geographicTrimming;
 		//@}
 
 

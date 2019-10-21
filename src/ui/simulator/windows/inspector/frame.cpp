@@ -388,8 +388,8 @@ namespace Inspector
 		pPGStudyOutputProfile       = Category(pg, wxT("Output profile"), wxT("study.output_profile"));
 		pPGStudySimulationSynthesis = P_BOOL("Simulation synthesis", "study.simsynthesis");
 		pPGStudyYearByYear          = P_BOOL("Year-by-year", "study.yearbyyear");
-		pPGFilteringByFile			= P_ENUM("Filter results by file", "study.filteringbyfile", filteringByFileOptions);
-		pPGFilteringByVar			= P_ENUM("Filter results by column", "study.filteringbyvar", filteringByVarOptions);
+		pPGGeographicTrimming		= P_ENUM("Geographic trimming", "study.geographictrimming", geographicTrimming);
+		pPGThematicTrimming			= P_ENUM("Thematic trimming", "study.thematictrimming", thematicTrimming);
 		pPGStudyUseMCScenarios      = P_BOOL("MC Scenarios", "study.scenarios");
 
 
@@ -707,24 +707,24 @@ namespace Inspector
 		if (!hide)
 		{
 			// Context
-			Accumulator<PStudyMode>				:: Apply(pPGStudyMode, data->studies);
-			Accumulator<PStudyHorizon>			:: Apply(pPGStudyHorizon, data->studies);
-			Accumulator<PStudyCalendarMonth>	:: Apply(pPGStudyCalendarMonth, data->studies);
-			Accumulator<PStudyCalendarWeek>		:: Apply(pPGStudyCalendarWeek, data->studies);
-			Accumulator<PStudyLeapYear>			:: Apply(pPGStudyLeapYear, data->studies);
-			Accumulator<PStudy1stJanuary>		:: Apply(pPGStudy1rstJanuary, data->studies);
-			Accumulator<PStudyCalBegin>			:: Apply(pPGStudyCalendarBegin, data->studies);
-			Accumulator<PStudyCalEnd>			:: Apply(pPGStudyCalendarEnd, data->studies);
+			Accumulator<PStudyMode>					:: Apply(pPGStudyMode, data->studies);
+			Accumulator<PStudyHorizon>				:: Apply(pPGStudyHorizon, data->studies);
+			Accumulator<PStudyCalendarMonth>		:: Apply(pPGStudyCalendarMonth, data->studies);
+			Accumulator<PStudyCalendarWeek>			:: Apply(pPGStudyCalendarWeek, data->studies);
+			Accumulator<PStudyLeapYear>				:: Apply(pPGStudyLeapYear, data->studies);
+			Accumulator<PStudy1stJanuary>			:: Apply(pPGStudy1rstJanuary, data->studies);
+			Accumulator<PStudyCalBegin>				:: Apply(pPGStudyCalendarBegin, data->studies);
+			Accumulator<PStudyCalEnd>				:: Apply(pPGStudyCalendarEnd, data->studies);
 			// Monte-Carlo scenarios
-			Accumulator<PStudyYears>			:: Apply(pPGStudyYears, data->studies);
-			Accumulator<PStudyBuildingMode>		:: Apply(pPGStudyBuildMode, data->studies);
-			Accumulator<PStudyPlaylist>			:: Apply(pPGStudyPlaylist, data->studies);
+			Accumulator<PStudyYears>				:: Apply(pPGStudyYears, data->studies);
+			Accumulator<PStudyBuildingMode>			:: Apply(pPGStudyBuildMode, data->studies);
+			Accumulator<PStudyPlaylist>				:: Apply(pPGStudyPlaylist, data->studies);
 			// Output profile
-			Accumulator<PStudySynthesis>		:: Apply(pPGStudySimulationSynthesis, data->studies);
-			Accumulator<PStudyYearByYear>		:: Apply(pPGStudyYearByYear, data->studies);
-			Accumulator<PStudyFilteringByFile>	:: Apply(pPGFilteringByFile, data->studies);
-			Accumulator<PStudyFilteringByVar>	:: Apply(pPGFilteringByVar, data->studies);
-			Accumulator<PStudyMCScenarios>		:: Apply(pPGStudyUseMCScenarios, data->studies);
+			Accumulator<PStudySynthesis>			:: Apply(pPGStudySimulationSynthesis, data->studies);
+			Accumulator<PStudyYearByYear>			:: Apply(pPGStudyYearByYear, data->studies);
+			Accumulator<PStudyGeographicTrimming>	:: Apply(pPGGeographicTrimming, data->studies);
+			Accumulator<PStudyThematicTrimming>		:: Apply(pPGThematicTrimming, data->studies);
+			Accumulator<PStudyMCScenarios>			:: Apply(pPGStudyUseMCScenarios, data->studies);
 		}
 
 		// AREAS
@@ -744,7 +744,7 @@ namespace Inspector
 		// -----
 		pPGAreaSeparator->Hide(hide);
 		pPGAreaGeneral->Hide(hide);
-		pPGAreaFilteringStatus->Hide(!(!hide and &study and study.parameters.filteringByFile));
+		pPGAreaFilteringStatus->Hide(!(!hide and &study and study.parameters.geographicTrimming));
 		if (!hide)
 		{
 			pPGAreaName->Hide(multiple);
@@ -800,7 +800,7 @@ namespace Inspector
 		hide = !data || data->links.empty();
 		multiple = (data and data->links.size() > 1);
 		pPGLinkSeparator->Hide(hide);
-		pPGLinkFilteringStatus->Hide(!(!hide and &study and study.parameters.filteringByFile));
+		pPGLinkFilteringStatus->Hide(!(!hide and &study and study.parameters.geographicTrimming));
 		p = PROPERTY("link.title");
 		p->Hide(hide);
 		if (!hide)

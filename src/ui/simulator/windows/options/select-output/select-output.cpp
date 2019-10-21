@@ -236,7 +236,7 @@ namespace Options
 
 		auto& d = study.parameters;
 		
-		if (d.filteringByVar)
+		if (d.thematicTrimming)
 		{
 			uint v = 0;
 			for (uint i = 0; i != d.variablesPrintInfo.size(); ++i)
@@ -262,7 +262,7 @@ namespace Options
 		auto& study = *studyptr;
 
 		Freeze();
-		bool b = study.parameters.filteringByVar;
+		bool b = study.parameters.thematicTrimming;
 
 		updateCaption();
 		wxSizer& sizer = *GetSizer();
@@ -286,7 +286,7 @@ namespace Options
 		{
 			bool v = evt.IsChecked();
 			auto& d = studyptr->parameters;
-			d.filteringByVar = v;
+			d.thematicTrimming = v;
 		}
 		onUpdateStatus();
 		OnStudySimulationSettingsChanged();

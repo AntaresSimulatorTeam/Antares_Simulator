@@ -165,8 +165,8 @@ namespace Inspector
 		wxPGProperty* pPGStudyPlaylist;
 		wxPGProperty* pPGStudySimulationSynthesis;
 		wxPGProperty* pPGStudyYearByYear;
-		wxPGProperty* pPGFilteringByFile;
-		wxPGProperty* pPGFilteringByVar;
+		wxPGProperty* pPGGeographicTrimming;
+		wxPGProperty* pPGThematicTrimming;
 		wxPGProperty* pPGStudyUseMCScenarios;
 
 		// About Areas

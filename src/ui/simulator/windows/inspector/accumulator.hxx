@@ -118,12 +118,12 @@ namespace Inspector
 		wxT("Automatic"), wxT("Custom"), nullptr
 	};
 
-	static const wxChar* filteringByFileOptions[] =
+	static const wxChar* geographicTrimming[] =
 	{
 		wxT("None"), wxT("Custom"), nullptr
 	};
 
-	static const wxChar* filteringByVarOptions[] =
+	static const wxChar* thematicTrimming[] =
 	{
 		wxT("None"), wxT("Custom"), nullptr
 	};
@@ -427,12 +427,12 @@ namespace Inspector
 	};
 
 
-	struct PStudyFilteringByFile
+	struct PStudyGeographicTrimming
 	{
 		typedef bool Type;
 		static Type Value(const Data::Study::Ptr& study)
 		{
-			return !(!study) ? study->parameters.filteringByFile : false;
+			return !(!study) ? study->parameters.geographicTrimming : false;
 		}
 		static wxString ConvertToString(const Type v)
 		{
@@ -440,12 +440,12 @@ namespace Inspector
 		}
 	};
 
-	struct PStudyFilteringByVar
+	struct PStudyThematicTrimming
 	{
 		typedef bool Type;
 		static Type Value(const Data::Study::Ptr& study)
 		{
-			return !(!study) ? study->parameters.filteringByVar : false;
+			return !(!study) ? study->parameters.thematicTrimming : false;
 		}
 		static wxString ConvertToString(const Type v)
 		{

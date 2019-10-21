@@ -573,7 +573,7 @@ namespace Data
 		if (Antares::Memory::swapSupport)
 			Antares::memory.flushAll();
 
-		if (not gd.filteringByFile)
+		if (not gd.geographicTrimming)
 			disableAllFilters(study);
 
 		logs.info();
@@ -583,7 +583,7 @@ namespace Data
 		logs.info() << "     thermal clusters: " << thermalPlantTotalCount;
 		logs.info() << "     thermal clusters (must-run): " << thermalPlantTotalCountMustRun;
 		logs.info() << "     binding constraints: " << bindingConstraintCount;
-		logs.info() << "     filtering by file:" << (gd.filteringByFile ? "true" : "false");
+		logs.info() << "     geographic trimming:" << (gd.geographicTrimming ? "true" : "false");
 		logs.info() << "     memory : " << ((study.memoryUsage()) / 1024 / 1024) << "Mo";
 		logs.info();
 

@@ -204,24 +204,24 @@ namespace Data
 		variablePrintInfoCollector collector(&variablesPrintInfo);
 		Antares::Solver::Variable::Economy::AllVariables::RetrieveVariableList(collector);
 		variablesPrintInfo.resetInfoIterator();
-		filteringByVar = false;
+		thematicTrimming = false;
 
-		nbYears                = 1;
+		nbYears					= 1;
 		delete[] yearsFilter;
-		yearsFilter            = nullptr;
-		yearByYear             = false;
-		derated                = false;
-		useCustomTSNumbers     = false;
-		userPlaylist           = false;
-		filteringByFile        = false;
-		simulationDays.first   = 0;
-		simulationDays.end     = 365;
-		dayOfThe1stJanuary     = monday;
-		firstWeekday           = monday;
-		firstMonthInYear       = january;
-		leapYear               = false;
+		yearsFilter				= nullptr;
+		yearByYear				= false;
+		derated					= false;
+		useCustomTSNumbers		= false;
+		userPlaylist			= false;
+		geographicTrimming		= false;
+		simulationDays.first	= 0;
+		simulationDays.end		= 365;
+		dayOfThe1stJanuary		= monday;
+		firstWeekday			= monday;
+		firstMonthInYear		= january;
+		leapYear				= false;
 
-		effectiveNbYears       = 0;
+		effectiveNbYears		= 0;
 
 		// TimeSeries
 		nbTimeSeriesLoad       = 1;
@@ -396,10 +396,6 @@ namespace Data
 
 	static bool SGDIntLoadFamily_F(Parameters& d, const String& key, const String& value, uint)
 	{
-		if (key == "filtering-by-file")
-			return value.to<bool>(d.filteringByFile);
-		if (key == "filtering-by-variable")
-			return value.to<bool>(d.filteringByVar);
 		if (key == "first-month-in-year")
 			return Date::StringToMonth(d.firstMonthInYear, value);
 		if (key == "first.weekday")
@@ -415,6 +411,8 @@ namespace Data
 
 	static bool SGDIntLoadFamily_G(Parameters& d, const String& key, const String& value, uint)
 	{
+		if (key == "geographic-trimming")
+			return value.to<bool>(d.geographicTrimming);
 		if (key == "generate")
 			return ConvertCStrToListTimeSeries(value, d.timeSeriesToGenerate);
 		// Error
@@ -816,6 +814,8 @@ namespace Data
 
 	static bool SGDIntLoadFamily_T(Parameters& d, const String& key, const String& value, uint)
 	{
+		if (key == "thematic-trimming")
+			return value.to<bool>(d.thematicTrimming);
 		if (key == "transmission-capacities")
 		{
 			CString<64,false> v = value;
@@ -1136,7 +1136,7 @@ namespace Data
 		{
 			yearByYear = false;
 			userPlaylist = false;
-			filteringByVar = false;
+			thematicTrimming = false;
 		}
 
 		if (derated && userPlaylist)
@@ -1186,7 +1186,7 @@ namespace Data
 		}
 
 		// Prepare output variables print info before the simulation (used to initialize output variables)
-		variablesPrintInfo.prepareForSimulation(filteringByVar);
+		variablesPrintInfo.prepareForSimulation(thematicTrimming);
 		
 
 		switch (mode)
@@ -1294,11 +1294,11 @@ namespace Data
 			logs.info() << "  :: enabling the 'derated' mode";
 		if (userPlaylist)
 			logs.info() << "  :: enabling the user playlist";
-		if (filteringByVar)
+		if (thematicTrimming)
 			logs.info() << "  :: enabling the user variable selection";
 		if (useCustomTSNumbers)
 			logs.info() << "  :: enabling the custom build mode";
-		if (filteringByFile)
+		if (geographicTrimming)
 			logs.info() << "  :: enabling filtering by file";
 
 		if (!include.constraints)
@@ -1384,8 +1384,8 @@ namespace Data
 			section->add("derated",                 derated);
 			section->add("custom-ts-numbers",       useCustomTSNumbers);
 			section->add("user-playlist",           userPlaylist);
-			section->add("filtering-by-variable",	filteringByVar);
-			section->add("filtering-by-file",		filteringByFile);
+			section->add("thematic-trimming",		thematicTrimming);
+			section->add("geographic-trimming",		geographicTrimming);
 			if (not activeRulesScenario.empty())
 				section->add("active-rules-scenario",   activeRulesScenario);
 

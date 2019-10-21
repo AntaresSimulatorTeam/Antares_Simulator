@@ -1287,7 +1287,7 @@ namespace Inspector
 			OnStudySimulationSettingsChanged();
 			return true;
 		}
-		if (name == "study.filteringbyfile")
+		if (name == "study.geographictrimming")
 		{
 			uint d = value.GetLong();
 			switch (d)
@@ -1295,21 +1295,21 @@ namespace Inspector
 				case 0: // none
 					{
 						for (; i != end; ++i)
-							(*i)->parameters.filteringByFile = false;
+							(*i)->parameters.geographicTrimming = false;
 						OnStudySimulationSettingsChanged();
 						return true;
 					}
 				case 1: // custom
 					{
 						for (; i != end; ++i)
-							(*i)->parameters.filteringByFile = true;
+							(*i)->parameters.geographicTrimming = true;
 						OnStudySimulationSettingsChanged();
 						return true;
 					}
 			}
 			return false;
 		}
-		if (name == "study.filteringbyvar")
+		if (name == "study.thematictrimming")
 		{
 			uint d = value.GetLong();
 			switch (d)
@@ -1317,14 +1317,14 @@ namespace Inspector
 				case 0: // none
 				{
 					for (; i != end; ++i)
-						(*i)->parameters.filteringByVar = false;
+						(*i)->parameters.thematicTrimming = false;
 					OnStudySimulationSettingsChanged();
 					return true;
 				}
 				case 1: // custom
 				{
 					for (; i != end; ++i)
-						(*i)->parameters.filteringByVar = true;
+						(*i)->parameters.thematicTrimming = true;
 					OnStudySimulationSettingsChanged();
 					return true;
 				}

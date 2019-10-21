@@ -130,12 +130,11 @@ namespace Forms
 		//@{
 		mnIDOptionTempFolder,
 		mnIDOptionConfigurePrefetch,
-		mnIDOptionConfigureSelectOutputvariables,
-		mnIDOptionConfigureFilterByFile,
+		mnIDOptionConfigureThematicTrimming,
+		mnIDOptionConfigureGeographicTrimming,
 		mnIDOptionConfigureDistricts,
 		mnIDOptionConfigureMCScenarioBuilder,
 		mnIDOptionConfigureMCScenarioPlaylist,
-		mnIDOptionConfigureFiltersResults,
 		mnIDOptionOptimizationPrefs,
 		mnIDOptionAdvanced,
 		//@}

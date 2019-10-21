@@ -372,12 +372,12 @@ namespace Forms
 		pMenuOptions = new wxMenu();
 		wxMenuItem* it;
 
-		Menu::CreateItem(pMenuOptions, mnIDOptionConfigureSelectOutputvariables,
-				wxT("Filters on results by column\tctrl+alt+f"), "images/16x16/filter.png",
-				wxT("Configure Filters on results by column"));
-		it = Menu::CreateItem(pMenuOptions, mnIDOptionConfigureFilterByFile,
-				wxT("Filters on results by file\tctrl+alt+f"), "images/16x16/filter.png",
-				wxT("Configure Filters on results by file"));
+		Menu::CreateItem(pMenuOptions, mnIDOptionConfigureThematicTrimming,
+				wxT("Thematic trimming\tctrl+alt+f"), "images/16x16/filter.png",
+				wxT("Configure Thematic trimming"));
+		it = Menu::CreateItem(pMenuOptions, mnIDOptionConfigureGeographicTrimming,
+				wxT("Geographic trimming\tctrl+alt+f"), "images/16x16/filter.png",
+				wxT("Configure Geographic trimming"));
 		it->Enable(false);
 		it = Menu::CreateItem(pMenuOptions, mnIDOptionConfigureDistricts,
 				wxT("Geographic districts\tctrl+alt+d"), "images/16x16/filter.png",

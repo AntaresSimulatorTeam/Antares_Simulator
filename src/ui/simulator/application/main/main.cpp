@@ -160,7 +160,7 @@ namespace Forms
 
 		// Options
 		EVT_MENU(mnIDOptionTempFolder, ApplWnd::evtOnOptionsTempFolder)
-		EVT_MENU(mnIDOptionConfigureSelectOutputvariables, ApplWnd::evtOnOptionsSelectOutput)
+		EVT_MENU(mnIDOptionConfigureThematicTrimming, ApplWnd::evtOnOptionsSelectOutput)
 		EVT_MENU(mnIDOptionConfigureDistricts, ApplWnd::evtOnOptionsDistricts)
 		EVT_MENU(mnIDOptionConfigureMCScenarioPlaylist, ApplWnd::evtOnOptionsMCPlaylist)
 		EVT_MENU(mnIDOptionConfigureMCScenarioBuilder, ApplWnd::evtOnOptionsMCScenarioBuilder)
