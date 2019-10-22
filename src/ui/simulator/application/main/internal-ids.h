@@ -121,9 +121,7 @@ namespace Forms
 		//! \name Tools
 		//@{
 		mnIDCleanAStudyFolder,
-		mnIDScriptsOpenEditor,
 		mnIDToolsStudyManager,
-		mnIDToolsGrapher,
 		//@}
 
 		//! \name Options

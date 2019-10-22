@@ -245,7 +245,6 @@ namespace Forms
 		pMenuOutput(nullptr),
 		pMenuSimulation(nullptr),
 		pMenuOptions(nullptr),
-		pMenuScripts(nullptr),
 		pMenuWindow(nullptr),
 		pMenuTools(nullptr),
 		pMenuHelp(nullptr),

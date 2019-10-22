@@ -65,8 +65,6 @@ namespace Forms
 		ret->Append(this->createMenuSimulation(), wxT("&Run"));
 		// Options
 		ret->Append(this->createMenuOptions(), wxT("&Configure"));
-		// Scripts
-		ret->Append(this->createMenuScripts(), wxT("&Scripts"));
 		// Tools
 		ret->Append(this->createMenuTools(), wxT("&Tools"));
 		// Window
@@ -380,18 +378,15 @@ namespace Forms
 				wxT("Configure Geographic trimming"));
 		it->Enable(false);
 		it = Menu::CreateItem(pMenuOptions, mnIDOptionConfigureDistricts,
-				wxT("Geographic districts\tctrl+alt+d"), "images/16x16/filter.png",
-				wxT("Configure geographic districts"));
+				wxT("Regional districts\tctrl+alt+d"), "images/16x16/filter.png",
+				wxT("Configure regional districts"));
 		Menu::CreateItem(pMenuOptions, mnIDOptionConfigureMCScenarioBuilder,
 				wxT("MC Scenario Builder"), "images/16x16/scenariobuilder.png",
 				wxT("Configure MC Scenario Builder"));
 		Menu::CreateItem(pMenuOptions, mnIDOptionConfigureMCScenarioPlaylist,
 				wxT("MC Scenario playlist"), "images/16x16/orderedlist.png",
 				wxT("Configure MC Scenario playlist"));
-		it = Menu::CreateItem(pMenuOptions, wxID_ANY,
-				wxT("Antares' Objects custom properties"), "images/16x16/optimization-prefs.png",
-				wxT("Set antares'objects custom properties"));
-		it->Enable(false);
+
 		pMenuOptions->AppendSeparator();
 
 		Menu::CreateItem(pMenuOptions, mnIDOptionOptimizationPrefs,
@@ -406,21 +401,6 @@ namespace Forms
 	}
 
 
-	wxMenu* ApplWnd::createMenuScripts()
-	{
-		delete pMenuScripts;
-		pMenuScripts = new wxMenu();
-		wxMenuItem* it;
-
-		it = Menu::CreateItem(pMenuScripts, wxID_ANY,
-				wxT("(no script available)"), nullptr,
-				wxT(""));
-		it->Enable(false);
-
-		return pMenuScripts;
-	}
-
-
 	wxMenu* ApplWnd::createMenuTools()
 	{
 		delete pMenuTools;
@@ -430,21 +410,6 @@ namespace Forms
 		it = Menu::CreateItem(pMenuTools, mnIDToolsStudyManager,
 				wxT("Study Manager  \tCtrl+M"), "images/16x16/studymanager.png",
 				wxT("Open the scripts editor"));
-		it->Enable(false);
-
-		it = Menu::CreateItem(pMenuTools, mnIDToolsGrapher,
-				wxT("Grapher  \tCtrl+G"), "images/16x16/grapher.png",
-				wxT("Open the scripts editor"));
-		it->Enable(false);
-
-		it = Menu::CreateItem(pMenuTools, mnIDScriptsOpenEditor,
-				wxT("Scripts Editor  \tCtrl+E"), "images/16x16/script.png",
-				wxT("Open the scripts editor"));
-		it->Enable(false);
-
-		it = Menu::CreateItem(pMenuTools, wxID_ANY,
-				wxT("CSV Viewer"), "images/16x16/script.png",
-				wxT("Open the CSV Viewer"));
 		it->Enable(false);
 
 		pMenuTools->AppendSeparator();

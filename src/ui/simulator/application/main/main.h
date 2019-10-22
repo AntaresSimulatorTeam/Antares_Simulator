@@ -432,8 +432,6 @@ namespace Forms
 		wxMenu* createMenuSimulation();
 		//! Create menu: Options
 		wxMenu* createMenuOptions();
-		//! Create menu: Scripts
-		wxMenu* createMenuScripts();
 		//! Create menu: Tools
 		wxMenu* createMenuTools();
 		//! Create menu: Window
@@ -718,8 +716,6 @@ namespace Forms
 		wxMenu* pMenuSimulation;
 		//! Menu: Options
 		wxMenu* pMenuOptions;
-		//! Menu: Scripts
-		wxMenu* pMenuScripts;
 		//! Menu: Window
 		wxMenu* pMenuWindow;
 		//! Menu: Tools
