@@ -92,8 +92,42 @@ namespace OutputViewerData
 	}
 
 
+	template<class MapT>
+	static inline bool TryLinkListFileExtraction(const AnyString& path, MapT& content)
+	{
+		String filename;
+		filename << path << SEP << "about-the-study" << SEP << "links.txt";
 
+		typename MapT::key_type source_name;	// temporary name
+		typename MapT::key_type target_name;	// temporary name
+		typename MapT::key_type link_name;		// temporary name
 
+		return (IO::File::ReadLineByLine(filename, [&](const String & line)
+		{
+			if (line.first() != '\t')
+			{
+				// This is the first area of a link
+				source_name.clear();
+				TransformNameIntoID(line, source_name);
+			}
+			else
+			{
+				// This is the other area of a link previously initialized with an area
+				// ... Retrieving target area name from file's line
+				target_name.clear();
+				String trimmedLine = line;
+				trimmedLine.trim();
+				TransformNameIntoID(trimmedLine, target_name);
+
+				// ... Building link name
+				link_name.clear();
+				link_name = source_name;
+				link_name += " - ";
+				link_name += target_name;
+				content.insert(link_name);
+			}
+		}));
+	}
 
 
 	Job::Job(Antares::Window::OutputViewer::Component& component, const AnyString& path) :
@@ -143,8 +177,13 @@ namespace OutputViewerData
 				if (canceling())
 					return;
 
-				pathTmp.clear() << i.filename() << SEP << "mc-all" << SEP << "links";
-				Browse(pathTmp, pContent->economy.links);
+				// Trying to use the file about-the-study/links.txt first,
+				// otherwise we will analyze the directory structure
+				if (not TryLinkListFileExtraction(pPath, pContent->economy.links))
+				{
+					pathTmp.clear() << i.filename() << SEP << "mc-all" << SEP << "links";
+					Browse(pathTmp, pContent->economy.links);
+				}
 
 				// Year-by-year
 				gatherInfosAboutYearByYearData(i.filename());
