@@ -1,6 +1,65 @@
 Antares Changelog
 =================
 
+v7.1.0 (12/2019)
+-------------------- 
+
+### Features
+
+ - Simulation Dashboard: A new option "Thematic Trimming"
+   is available in the "Output Profile" Section. This option
+   now makes it possible to define precisely the content of
+   output files so as to include only variables of interest
+   
+ - Optimization: a new parameter "Hydro Pricing mode" is   
+   available in the "advanced parameters" section, with two
+   possible values (fast, accurate): 
+   In mode "fast", water value is, in the course of optimization,
+   taken to be constant throughout the (daily or weekly)
+   optimization period, and equal to that found for the exact
+   day and level at which the optimization begins. Water values
+   are reassessed afterwards, for each hour, on the basis of
+   relevant time and level. 
+   In mode "accurate", the variations of water value along with 
+   the reservoir level are taken into account in the course of 
+   the (weekly) optimization. Reference (level-dependent) values
+   are those attached to the end of the week. Water values
+   are reassessed afterwards, for each hour, on the basis of
+   relevant time and level. 
+   
+ - Documentation: updated reference guide
+
+ - Documentation: updated optimization problem formulation
+   (modelling of hydro pricing options)
+   
+ - Usage metrics: added reference key for this version    
+   
+### Bug fixes
+
+ - Output file "mc-all/grid/digest.txt": replaced "NaN" values 
+   by zeroes, where appropriate
+
+ - Output file "mc-all/grid/digest.txt": replaced "0" values 
+   by N/A, where appropriate (especially, hydro reservoir-related
+   variables, when the "reservoir management" area attribute is set
+   to "No")
+
+ - Output GUI: fixed a display bug regarding missing items in the
+   "links" panel, in the case where simulation parameters are set
+   so as not to produce synthetic results
+   
+ - Links GUI: improved integrity control regarding hurdle costs.
+   Negative values are allowed in either direct or indirect 
+   orientation, provided that the sum of both is non-negative
+  
+ - General GUI: removed redundant items and renamed option menu
+   "Geographic District" as "Regional District" to avoid confusion
+   with new "Trimming" options 
+   
+ - Output: when simulation results are trimmed so as not to produce
+   any data for given Areas or Links, avoid creation of empty folders
+   named after said Areas or Links   
+
 
 v7.0.1 (04/2019)
 -------------------- 
