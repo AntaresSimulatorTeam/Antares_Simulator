@@ -394,8 +394,10 @@ namespace Data
 	}
 
 
-	static bool SGDIntLoadFamily_F(Parameters& d, const String& key, const String& value, uint)
+	static bool SGDIntLoadFamily_F(Parameters& d, const String& key, const String& value, uint version)
 	{
+		if (key == "filtering" && version < 710)
+			return value.to<bool>(d.geographicTrimming);
 		if (key == "first-month-in-year")
 			return Date::StringToMonth(d.firstMonthInYear, value);
 		if (key == "first.weekday")
