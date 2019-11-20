@@ -102,8 +102,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study, PROBLEME_HEBDO& problem
 	
 	problem.hydroHotStart = (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart);
 
-	problem.WaterValueAccurate = OUI_ANTARES; /* OUI_ANTARES  :: NON_ANTARES */ 
-	/* todo : set problem.WaterValueAccurate by advanced parameter  "Hydro Pricing Mode (fast /accurate)" */
+	problem.WaterValueAccurate = (study.parameters.hydroPricing.hpMode == Antares::Data::HydroPricingMode::hpMILP) ? OUI_ANTARES : NON_ANTARES;
+
 	SIM_AllocationProblemeHebdo(problem, NombreDePasDeTemps);
 
 	
