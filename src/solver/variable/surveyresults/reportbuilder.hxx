@@ -306,6 +306,10 @@ namespace Container
 			static void RunForEachArea(const ListType& list, SurveyResults& results, unsigned int numSpace)
 			{
 				using namespace Yuni;
+
+				// No need to do anything for any area here if no zonal variables were selected.
+				uint selectedZonalVarsCount = results.data.study.parameters.variablesPrintInfo.getNbSelectedZonalVars();
+
 				// All values related to an area
 				// Note: A thermal cluster is attached to an area
 				auto end = results.data.study.areas.end();
@@ -320,11 +324,18 @@ namespace Container
 					results.data.link = nullptr;
 
 					// Skipping the creation of a result directory if it is meant to be empty.
+					// ... Getting few indicators value before deciding if we skip the results directory creation.
 					bool printingSynthesis = GlobalT;	// Are we printing synthesis or year-by-year results ?
 					bool filterAllYearByYear = !(area.filterYearByYear & Data::filterAll);
 					bool filterAllSynthesis = !(area.filterSynthesis & Data::filterAll);
-					// ... Skipping the current area's result directory ?
+
+					// ... Do we skip the current area's result directory creation because no results were asked
+					//	   in the inspector for the current area ?
 					bool skipDirectory = (!printingSynthesis && filterAllYearByYear) || (printingSynthesis && filterAllSynthesis);
+
+					// ... Or do we skip the current area's result directory creation because no zonal
+					//	   variables were selected ?
+					skipDirectory = skipDirectory || !selectedZonalVarsCount;
 
 					// Generating the report for each area
 					if (CDataLevel & Category::area && !skipDirectory)
@@ -393,6 +404,11 @@ namespace Container
 			static void RunForEachLink(const ListType& list, SurveyResults& results, unsigned int numSpace)
 			{
 				using namespace Yuni;
+			
+				// No need to do anything for any link here if no link variables were selected.
+				uint selectedLinkVarsCount = results.data.study.parameters.variablesPrintInfo.getNbSelectedLinkVars();
+				if (!selectedLinkVarsCount)
+					return;
 
 				if (VariablesStatsByDataLevel<NextT, Category::link>::count)
 				{
@@ -405,10 +421,13 @@ namespace Container
 						results.data.link = &link;
 
 						// Skipping the creation of a result directory if it is meant to be empty.
+						// ... Getting few indicators value before deciding if we skip the results directory creation.
 						bool printingSynthesis = GlobalT;	// Are we printing synthesis or year-by-year results ?
 						bool filterAllYearByYear = !(link.filterYearByYear & Data::filterAll);
 						bool filterAllSynthesis = !(link.filterSynthesis & Data::filterAll);
-						// ... Skipping the current link's result directory ?
+
+						// ... Do we skip the current link's result directory creation because no results were asked
+						//	   in the inspector for the current link ?
 						bool skipDirectory = (!printingSynthesis && filterAllYearByYear) || (printingSynthesis && filterAllSynthesis);
 
 						if (!skipDirectory)
@@ -443,6 +462,11 @@ namespace Container
 			{
 				using namespace ::Antares;
 				using namespace ::Yuni;
+
+				// No need to do anything for any district (set of areas) here if no zonal variables were selected.
+				uint selectedZonalVarsCount = results.data.study.parameters.variablesPrintInfo.getNbSelectedZonalVars();
+				if (!selectedZonalVarsCount)
+					return;
 
 				results.data.area           = nullptr;
 				results.data.thermalCluster = nullptr;

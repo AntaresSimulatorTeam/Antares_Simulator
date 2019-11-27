@@ -144,8 +144,9 @@ namespace Variable
 		//! statistic results through an instance of the current class.
 		//! Furthermore, some unusual variables are actually "multi-variables", that is they contain actually
 		//! several variables.
-		//! Therefore, the following is a pointer on the current ouput variable's non applicable status,
-		//! and in case of a multi-variable, on the current sub-variable's non applicable status.
+		//! Therefore, the following is a pointer on the current output variable's non applicable status.
+		//! In case of a multi-variable, it is a pointer on the current sub-variable's non applicable status.
+		//! This pointer references a TEMPORARY boolean value. It is NEVER used to allocate a table.
 		bool* isCurrentVarNA;
 		//! Same thing for print status (do we print the current output variable ?)
 		bool* isPrinted;

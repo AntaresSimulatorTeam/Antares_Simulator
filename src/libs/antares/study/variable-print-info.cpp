@@ -68,7 +68,9 @@ namespace Data
 	// All variables print information
 	// ============================================================
 	AllVariablesPrintInfo::AllVariablesPrintInfo()
-		: maxColumnsCount(0)
+		: maxColumnsCount(0),
+		numberSelectedAreaVariables(0),
+		numberSelectedLinkVariables(0)
 	{	
 		// Re-initializing the iterator
 		it_info = allVarsPrintInfo.begin();
@@ -132,43 +134,17 @@ namespace Data
 	void AllVariablesPrintInfo::prepareForSimulation(bool userSelection)
 	{
 		assert(!isEmpty() && "The variable print info list must not be empty at this point");
+
+		// Initializing output variables status
 		if (!userSelection)
-		{
-			for (uint i = 0; i < size(); ++i)
-				allVarsPrintInfo[i]->enablePrint(true);
-		}
+			setAllPrintStatusesTo(true);
 
-		/*
-			Among all reports a study can create, which is the one that contains the largest
-			number of columns and especially what is this number ?
-			If we do not select some variables, the previous number is reduced.
-			This number os a rough up estimation, not the exact maximum number a report can contain.
-		*/
+		// Computing the max number columns a report of any kind can contain.
+		computeMaxColumnsCountInReports();
 
-		uint CFileLevel = 1;
-		uint CDataLevel = 1;
-
-		// Looping over all kinds of data levels (area report, link reports, districts reports, thermal reports,...) and file levels
-		// (values reports, years ids reports, details reports, ...) the code can produce.
-		// For one particular kind of report, looping over (selected) output variables it contains, and incrementing
-		// a counter with as many columns as the current variable can take up at most in a report. 
-		while (CDataLevel <= Category::maxDataLevel && CFileLevel <= Category::maxFileLevel)
-		{
-			uint currentColumnsCount = 0;
-
-			vector<VariablePrintInfo*>::iterator it = allVarsPrintInfo.begin();
-			for (; it != allVarsPrintInfo.end(); it++)
-			{
-				if ( (*it)->isPrinted() && (*it)->getFileLevel() & CFileLevel && (*it)->getDataLevel() & CDataLevel )
-					currentColumnsCount += (*it)->getMaxColumnsCount();
-			}
-
-			if (currentColumnsCount > maxColumnsCount)
-				maxColumnsCount = currentColumnsCount;
-
-			CFileLevel = (CFileLevel * 2 > (int)Category::maxFileLevel) ? 1 : CFileLevel * 2;
-			CDataLevel = (CFileLevel * 2 > (int)Category::maxFileLevel) ? CDataLevel * 2 : CDataLevel;
-		}
+		// Counting zonal and link output selected variables
+		countSelectedAreaVars();
+		countSelectedLinkVars();
 	}
 	
 	bool AllVariablesPrintInfo::searchIncrementally_getPrintStatus(string var_name) const
@@ -211,6 +187,67 @@ namespace Data
 		// This point is not supposed to be reached (except in draft mode),
 		// because the searched variables should be found.
 		return true;
+	}
+
+	void AllVariablesPrintInfo::setAllPrintStatusesTo(bool b)
+	{
+		for (uint i = 0; i < size(); ++i)
+			allVarsPrintInfo[i]->enablePrint(b);
+	}
+
+	void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
+	{
+		/*
+			Among all reports a study can create, which is the one that contains the largest
+			number of columns and especially what is this number ?
+			If there are some unselected variables, the previous number is reduced.
+			This number is a rough over-estimation, not the exact maximum number a report can contain.
+		*/
+
+		uint CFileLevel = 1;
+		uint CDataLevel = 1;
+
+		// Looping over all kinds of data levels (area report, link reports, districts reports, thermal reports,...) and file levels
+		// (values reports, years ids reports, details reports, ...) the code can produce.
+		// For one particular kind of report, looping over (selected) output variables it contains, and incrementing
+		// a counter with as many columns as the current variable can take up at most in a report. 
+		while (CDataLevel <= Category::maxDataLevel && CFileLevel <= Category::maxFileLevel)
+		{
+			uint currentColumnsCount = 0;
+
+			vector<VariablePrintInfo*>::iterator it = allVarsPrintInfo.begin();
+			for (; it != allVarsPrintInfo.end(); it++)
+			{
+				if ((*it)->isPrinted() && (*it)->getFileLevel() & CFileLevel && (*it)->getDataLevel() & CDataLevel)
+					currentColumnsCount += (*it)->getMaxColumnsCount();
+			}
+
+			if (currentColumnsCount > maxColumnsCount)
+				maxColumnsCount = currentColumnsCount;
+
+			CFileLevel = (CFileLevel * 2 > (int)Category::maxFileLevel) ? 1 : CFileLevel * 2;
+			CDataLevel = (CFileLevel * 2 > (int)Category::maxFileLevel) ? CDataLevel * 2 : CDataLevel;
+		}
+	}
+
+	void AllVariablesPrintInfo::countSelectedAreaVars()
+	{
+		resetInfoIterator();
+		for (; it_info != allVarsPrintInfo.end(); it_info++)
+		{
+			if ((*it_info)->isPrinted() && (*it_info)->getDataLevel() == Category::area)
+				numberSelectedAreaVariables++;
+		}
+	}
+
+	void AllVariablesPrintInfo::countSelectedLinkVars()
+	{
+		resetInfoIterator();
+		for (; it_info != allVarsPrintInfo.end(); it_info++)
+		{
+			if ((*it_info)->isPrinted() && (*it_info)->getDataLevel() == Category::link)
+				numberSelectedLinkVariables++;
+		}
 	}
 
 

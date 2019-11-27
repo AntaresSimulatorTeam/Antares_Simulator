@@ -114,6 +114,15 @@ namespace Data
 		bool isPrinted(string var_name) const;
 
 		uint getMaxColumnsCount() const { return maxColumnsCount; }
+		
+		uint getNbSelectedZonalVars() const { return numberSelectedAreaVariables; }
+		uint getNbSelectedLinkVars() const { return numberSelectedLinkVariables; }
+
+	private:
+		void setAllPrintStatusesTo(bool b);
+		void computeMaxColumnsCountInReports();
+		void countSelectedAreaVars();
+		void countSelectedLinkVars();
 
 	private:
 		// Contains print info for all variables
@@ -125,6 +134,11 @@ namespace Data
 		// Max columns count a report of any kind can contain, depending on the number of selected variables.
 		// The less variables are selected, the smallest this count is.
 		uint maxColumnsCount;
+
+		// Number of selected zonal variables
+		uint numberSelectedAreaVariables;
+		// Number of selected link variables
+		uint numberSelectedLinkVariables;
 	};
 
 } // namespace Data
