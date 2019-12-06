@@ -84,6 +84,10 @@ namespace Variable
 		// Does current output variable column(s) appear in all reports ?
 		isPrinted = new bool[pColumnCount];
 
+		// Initializing default print to true
+		for (uint i = 0; i < pColumnCount; i++)
+			isPrinted[i] = true;
+
 	}
 
 	template<class ChildT, class NextT, class VCardT>
