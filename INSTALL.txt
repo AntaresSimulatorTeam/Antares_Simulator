@@ -71,7 +71,7 @@ git submodule update --init --recursive
 =============================================================
 
 Requirements :
-* Visual Studio - 2015 Update 2
+* Visual Studio (2015 Update 2 or 2019)
 * Perl - Strawberry Perl
 
 Warning : make sure that the perl version available is Strawberry perl and not one shipped along with Git.
@@ -82,8 +82,10 @@ Notice: launching  nmake requires the execution of "vcvars64.bat" (as described 
 
 Open a command line console and run:
 
-
+Run the environment MSVC script "vcvars64.bat", wherever it is located on your machine.
+For example, you can type :
 "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\amd64\vcvars64.bat"
+Then :
 cd ${ANTARES}\src\ext\openssl
 perl Configure VC-WIN64A --prefix=vc-release-x86_64 no-shared
 ms\do_win64a
@@ -101,12 +103,15 @@ Requirements :
 Warning : make sure that the perl version available is Strawberry perl and not one shipped along with Git.
 If needed, remove temporarily "...\Git\usr\bin" from the environment variables (and put it back afterwards)
 
-Notice: launching  nmake requires the execution of "vcvars64.bat" (as descibed below), 
+Notice: launching  nmake requires the execution of "vcvars32.bat" (as descibed below), 
 which updates environment variables for the current session.
 
 Open a command line console and run:
 
+Run the environment MSVC script "vcvars32.bat", wherever it is located on your machine.
+For example, you can type :
 "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\vcvars32.bat"
+Then :
 cd ${ANTARES}\src\ext\openssl
 perl Configure VC-WIN32 no-asm --prefix=vc-release-x86 no-shared
 ms\do_ms
@@ -138,7 +143,10 @@ make install
 
 Open a command line console and run:
 
+Run the environment MSVC script "vcvars64.bat", wherever it is located on your machine.
+For example, you can type :
 "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\amd64\vcvars64.bat"
+Then :
 cd ${ANTARES}\src\ext\libcurl\winbuild
 nmake /f Makefile.vc mode=static VC=14 WITH_SSL=static WITH_DEVEL=../../openssl/vc-release-x86_64 ENABLE_SSPI=no ENABLE_IDN=no ENABLE_WINSSL=no GEN_PDB=no DEBUG=no MACHINE=x64
 
@@ -148,6 +156,8 @@ nmake /f Makefile.vc mode=static VC=14 WITH_SSL=static WITH_DEVEL=../../openssl/
 
 Open a command line console and run:
 
+Run the environment MSVC script "vcvars32.bat", wherever it is located on your machine.
+For example, you can type :
 "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\vcvars32.bat"
 cd ${ANTARES}\src\ext\libcurl\winbuild
 nmake /f Makefile.vc mode=static VC=14 WITH_SSL=static WITH_DEVEL=../../openssl/vc-release-x86 ENABLE_SSPI=no ENABLE_IDN=no ENABLE_WINSSL=no GEN_PDB=no DEBUG=no MACHINE=x86
@@ -194,6 +204,7 @@ open "wx_vc12.sln" (double-click to launch  Visual Studio)
 * Configure compilation parameters (Debug/Release/x64/Win32)
 
 * Compile
+	It is important that you compile WxWidget in the same mode (release / debug) that you are about to compile Antares.
 
 1.5.2 Compiling WxWidget for Linux 
 ==================================
@@ -226,13 +237,13 @@ make
 
 If required, do not hesitate to clean up your local repository either:
 
-* before cloning the sources
+* After a checkout (changing of branch, commit or tag) and before a new compilation
 * between successive 64 bits and 32 bits compilation 
 
-Cleaning the Git repository can be achieved by runing the following command, which resets the local
+Cleaning the Git repository can be achieved by running the following command, which resets the local
 repository to zero (no cached or temporary files remaining):
 
-git clean -xdf # 
+git clean -xdf
 
 If the version tag (X.Y.z) needs to be updated, this should be made in the file :
 
@@ -272,6 +283,10 @@ or
 
 cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_BUILD_TYPE=release .
 
+or
+
+cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_BUILD_TYPE=release .
+
 2.3 Compiling for Windows : Running the compiler
 ------------------------------------------------
 
@@ -286,12 +301,12 @@ cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_BUILD_TYPE=release .
 3.1 Preliminary step : get a clean environment
 ----------------------------------------------
 
-Do not hesitate to clean up your local repository before cloning the sources 
+Do not hesitate to clean up your local repository before a checkout
 
 Cleaning the Git repository can be achieved by runing the following command, which resets the local
 repository to zero (no cached or temporary files remaining):
 
-git clean -xdf # 
+git clean -xdf
 
 If the version tag (X.Y.z) needs to be updated, this should be made in the file :
 
