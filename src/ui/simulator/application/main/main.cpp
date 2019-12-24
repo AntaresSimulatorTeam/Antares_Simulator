@@ -247,6 +247,7 @@ namespace Forms
 		pMenuOutput(nullptr),
 		pMenuSimulation(nullptr),
 		pMenuOptions(nullptr),
+		pMenuGeographicTrimming(nullptr),
 		pMenuWindow(nullptr),
 		pMenuTools(nullptr),
 		pMenuHelp(nullptr),
@@ -546,6 +547,7 @@ namespace Forms
 
 			RefreshListOfOutputsForTheCurrentStudy();
 			refreshMenuInput();
+			refreshMenuOptions();
 		}
 
 		// Loading data from the current study, if any

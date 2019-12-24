@@ -259,6 +259,11 @@ namespace Forms
 		void refreshMenuOutput();
 
 		/*!
+		** \brief Refresh the simulation options
+		*/
+		void refreshMenuOptions();
+
+		/*!
 		** \brief Assign the focus to this form and refresh it
 		*/
 		void forceFocus();
@@ -720,6 +725,8 @@ namespace Forms
 		wxMenu* pMenuSimulation;
 		//! Menu: Options
 		wxMenu* pMenuOptions;
+		//! SubMenu: Options > Geographic trimming
+		wxMenuItem* pMenuGeographicTrimming;
 		//! Menu: Window
 		wxMenu* pMenuWindow;
 		//! Menu: Tools

@@ -374,12 +374,12 @@ namespace Forms
 				wxT("Thematic trimming\tctrl+alt+t"), "images/16x16/filter.png",
 				wxT("Configure thematic trimming"));
 
-		it = pMenuOptions->AppendSubMenu(new wxMenu(), wxT("Geographic trimming..."));
-		wxMenu* menu = it->GetSubMenu();
-		Menu::CreateItem(menu, mnIDOptionConfigureAreasTrimming, wxT("Areas"), "images/16x16/filter.png", wxT("Configure areas trimming"));
-		Menu::CreateItem(menu, mnIDOptionConfigureLinksTrimming, wxT("Links"), "images/16x16/filter.png", wxT("Configure links trimming"));
+		delete pMenuGeographicTrimming;
+		pMenuGeographicTrimming = pMenuOptions->AppendSubMenu(new wxMenu(), wxT("Geographic trimming..."));
 
-		// it->Enable(false);
+		wxMenu* geoTrimSubMenu = pMenuGeographicTrimming->GetSubMenu();
+		Menu::CreateItem(geoTrimSubMenu, mnIDOptionConfigureAreasTrimming, wxT("Areas"), "images/16x16/filter.png", wxT("Configure areas trimming"));
+		Menu::CreateItem(geoTrimSubMenu, mnIDOptionConfigureLinksTrimming, wxT("Links"), "images/16x16/filter.png", wxT("Configure links trimming"));
 
 		it = Menu::CreateItem(pMenuOptions, mnIDOptionConfigureDistricts,
 				wxT("Regional districts\tctrl+alt+d"), "images/16x16/filter.png",
