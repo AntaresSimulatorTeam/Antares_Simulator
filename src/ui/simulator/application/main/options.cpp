@@ -52,6 +52,16 @@ namespace Forms
 			Dispatcher::GUI::CreateAndShowModal<Window::Options::SelectOutput>(this);
 	}
 
+	void ApplWnd::evtOnOptionsSelectAreasTrimming(wxCommandEvent&)
+	{
+
+	}
+
+	void ApplWnd::evtOnOptionsSelectLinksTrimming(wxCommandEvent&)
+	{
+
+	}
+
 	void ApplWnd::evtOnOptionsMCPlaylist(wxCommandEvent&)
 	{
 		Forms::Disabler<ApplWnd> disabler(*this);
