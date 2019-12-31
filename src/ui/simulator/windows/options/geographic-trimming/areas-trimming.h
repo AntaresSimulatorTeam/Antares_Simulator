@@ -31,7 +31,6 @@ namespace Options
 	private:
 		Component::Datagrid::Component* pGrid;
 		wxWindow* pPanel;
-		wxWindow* pInfo;
 
 		DECLARE_EVENT_TABLE()
 

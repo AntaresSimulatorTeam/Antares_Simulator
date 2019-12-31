@@ -51,15 +51,24 @@ namespace Options
 
 		sizer->AddSpacer(20);
 
+		if (study->parameters.geographicTrimming)
+		{
+			// Grid renderer
+			auto* renderer = new Component::Datagrid::Renderer::areasTrimmingGrid();
+			renderer->study = study;
 
-		// Grid renderer
-		auto* renderer = new Component::Datagrid::Renderer::areasTrimmingGrid();
-		renderer->study = study;
+			auto* grid = new Component::Datagrid::Component(this, renderer, wxEmptyString, false, true, true);
 
-		auto* grid = new Component::Datagrid::Component(this, renderer, wxEmptyString, false, true, true);
-
-		sizer->Add(grid, 1, wxALIGN_CENTER_HORIZONTAL);
-		renderer->control(grid);
+			sizer->Add(grid, 1, wxALIGN_CENTER_HORIZONTAL);
+			renderer->control(grid);
+			grid->forceRefresh();
+		}
+		else
+		{
+			wxString s = wxT("All geographic results will be printed on disk");
+			wxWindow*  info = Component::CreateLabel(this, s, false, true);
+			sizer->Add(info, 1, wxLEFT | wxRIGHT | wxEXPAND | wxALIGN_TOP, 25);
+		}
 		
 		sizer->AddSpacer(5);
 		sizer->Add(new wxStaticLine(this, wxID_ANY), 0, wxALL | wxEXPAND, 8);
@@ -81,9 +90,6 @@ namespace Options
 		Centre(wxBOTH);
 
 		SetAutoLayout(true);
-		
-
-		grid->forceRefresh();
 	}
 
 	areasTrimming::~areasTrimming()
