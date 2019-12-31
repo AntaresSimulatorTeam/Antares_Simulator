@@ -59,6 +59,8 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS
 		toolbox/components/datagrid/renderer/connection.cpp
 		toolbox/components/datagrid/renderer/simulation.h
 		toolbox/components/datagrid/renderer/simulation.cpp
+		toolbox/components/datagrid/renderer/areas-trimming-grid.h
+		toolbox/components/datagrid/renderer/areas-trimming-grid.cpp
 		toolbox/components/datagrid/renderer/select-variables.h
 		toolbox/components/datagrid/renderer/select-variables.cpp
 		toolbox/components/datagrid/renderer/mc-playlist.cpp

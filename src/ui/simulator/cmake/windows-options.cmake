@@ -4,6 +4,8 @@ set(SRC_UI_WINDOWS_OPTIONS
 	# Options
 	windows/options/temp-folder/temp-folder.h
 	windows/options/temp-folder/temp-folder.cpp
+	windows/options/geographic-trimming/areas-trimming.h
+	windows/options/geographic-trimming/areas-trimming.cpp
 	windows/options/select-output/select-output.h
 	windows/options/select-output/select-output.cpp
 	windows/options/playlist/playlist.h

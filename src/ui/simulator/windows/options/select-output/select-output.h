@@ -47,7 +47,7 @@ namespace Options
 		void mouseMoved(wxMouseEvent& evt);
 
 	protected:
-		//! Select all MC Years
+		//! Select all output variables
 		void onSelectAll(void*);
 		void onUnselectAll(void*);
 		void onToggle(void*);
