@@ -65,8 +65,8 @@ namespace Options
 		}
 		else
 		{
-			wxString s = wxT("All geographic results will be printed on disk");
-			wxWindow*  info = Component::CreateLabel(this, s, false, true);
+			wxString s = wxT("All geographic results will be printed on disk.");
+			wxWindow*  info = Component::CreateLabel(this, s, true, true, +1);
 			sizer->Add(info, 1, wxLEFT | wxRIGHT | wxEXPAND | wxALIGN_TOP, 25);
 		}
 		

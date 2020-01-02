@@ -329,9 +329,6 @@ namespace Forms
 	{
 		if (not Data::Study::Current::Valid() or IsGUIAboutToQuit())
 			return;
-		
-		auto& study = *Data::Study::Current::Get();
-		pMenuGeographicTrimming->Enable(study.parameters.geographicTrimming);
 	}
 
 	void ApplWnd::forceRefresh()
