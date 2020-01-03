@@ -57,7 +57,7 @@ namespace Options
 			auto* renderer = new Component::Datagrid::Renderer::areasTrimmingGrid();
 			renderer->study = study;
 
-			auto* grid = new Component::Datagrid::Component(this, renderer, wxEmptyString, false, true, true);
+			auto* grid = new Component::Datagrid::Component(this, renderer);
 
 			sizer->Add(grid, 1, wxALIGN_CENTER_HORIZONTAL);
 			renderer->control(grid);
