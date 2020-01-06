@@ -1,19 +1,11 @@
 
 #include "areas-trimming.h"
-// #include <wx/sizer.h> // gp : used for CreateButton ?
-// #include <wx/settings.h> // gp : used for CreateButton ?
 #include <wx/statline.h>
-
-// #include <antares/study/finder.h> // gp : used for CreateButton ?
-// #include "../../../toolbox/resources.h" // gp : used for CreateButton ?
 #include "../../../application/study.h"
 #include "../../../application/main.h"
-// #include "../../../toolbox/resources.h" // gp : used for CreateButton ?
 #include "../../../toolbox/create.h"
-// #include "../../../application/wait.h" // gp : used for CreateButton ?
 #include "../../../toolbox/components/wizardheader.h"
 #include "../../../toolbox/components/datagrid/renderer/areas-trimming-grid.h"
-// #include "../../message.h" // gp : used for CreateButton ?
 
 using namespace Yuni;
 

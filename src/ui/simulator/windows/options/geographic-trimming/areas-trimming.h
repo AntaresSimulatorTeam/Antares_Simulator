@@ -1,10 +1,8 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREAS_TRIMMING_H__
 # define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREAS_TRIMMING_H__
 
-// # include <antares/wx-wrapper.h> // gp : used for CreateButton ?
 # include "../../../toolbox/components/datagrid/component.h"
 # include <wx/dialog.h>
-// # include <wx/checkbox.h> // gp : used for CreateButton ?
 
 
 namespace Antares
