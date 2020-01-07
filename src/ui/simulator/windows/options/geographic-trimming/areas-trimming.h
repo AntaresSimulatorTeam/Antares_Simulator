@@ -2,6 +2,7 @@
 # define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREAS_TRIMMING_H__
 
 # include "../../../toolbox/components/datagrid/component.h"
+# include "../../../toolbox/components/datagrid/renderer/areas-trimming-grid.h"
 # include <wx/dialog.h>
 
 
@@ -12,26 +13,28 @@ namespace Window
 namespace Options
 {
 	
-	class areasTrimming final : public wxDialog
+	class geographicTrimming : public wxDialog
 	{
 	public:
-		areasTrimming(wxFrame* parent);
-		virtual ~areasTrimming();
+		geographicTrimming(wxFrame* parent, Component::Datagrid::Renderer::areasTrimmingGrid* renderer);
+		virtual ~geographicTrimming();
 
 	protected:
 		void mouseMoved(wxMouseEvent& evt);
-
-	protected:
 		void onClose(void*);
-		void updateCaption();
-		void onBlabla(void *);
 
 	private:
-		Component::Datagrid::Component* pGrid;
-		wxWindow* pPanel;
+		Component::Datagrid::Renderer::areasTrimmingGrid* pRenderer;
 
 		DECLARE_EVENT_TABLE()
 
+	}; // class geographicTrimming
+
+
+	class areasTrimming final : public geographicTrimming
+	{
+	public:
+		areasTrimming(wxFrame* parent);
 	}; // class areasTrimming
 
 

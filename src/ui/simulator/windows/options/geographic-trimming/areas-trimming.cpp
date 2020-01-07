@@ -18,14 +18,18 @@ namespace Window
 namespace Options
 {
 
-	BEGIN_EVENT_TABLE(areasTrimming, wxDialog)
-		EVT_MOTION(areasTrimming::mouseMoved)
+	BEGIN_EVENT_TABLE(geographicTrimming, wxDialog)
+		EVT_MOTION(geographicTrimming::mouseMoved)
 	END_EVENT_TABLE()
 
 
-	areasTrimming::areasTrimming(wxFrame* parent) :
-		wxDialog(parent, wxID_ANY, wxT("Areas trimming"), wxDefaultPosition, wxSize(1000, 400), wxCLOSE_BOX | wxCAPTION)
+	geographicTrimming::geographicTrimming(
+			wxFrame* parent,
+			Component::Datagrid::Renderer::areasTrimmingGrid* renderer) 
+			: wxDialog(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(1000, 400), wxCLOSE_BOX | wxCAPTION)
 	{
+		pRenderer = new Component::Datagrid::Renderer::areasTrimmingGrid();
+		
 		assert(parent);
 
 		// The current study
@@ -46,13 +50,13 @@ namespace Options
 		if (study->parameters.geographicTrimming)
 		{
 			// Grid renderer
-			auto* renderer = new Component::Datagrid::Renderer::areasTrimmingGrid();
-			renderer->study = study;
+			pRenderer = renderer;
+			pRenderer->study = study;
 
-			auto* grid = new Component::Datagrid::Component(this, renderer);
+			auto* grid = new Component::Datagrid::Component(this, pRenderer);
 
 			sizer->Add(grid, 1, wxALIGN_CENTER_HORIZONTAL);
-			renderer->control(grid);
+			pRenderer->control(grid);
 			grid->forceRefresh();
 		}
 		else
@@ -68,7 +72,7 @@ namespace Options
 		wxButton* btn;
 		wxSizer* hz = new wxBoxSizer(wxHORIZONTAL);
 
-		btn = Component::CreateButton(this, wxT("  Close  "), this, &areasTrimming::onClose);
+		btn = Component::CreateButton(this, wxT("  Close  "), this, &geographicTrimming::onClose);
 		hz->AddStretchSpacer();
 		hz->Add(btn, 0, wxEXPAND | wxALL);
 		hz->Add(20, 5);
@@ -84,27 +88,27 @@ namespace Options
 		SetAutoLayout(true);
 	}
 
-	areasTrimming::~areasTrimming()
-	{
-	}
+	geographicTrimming::~geographicTrimming() {}
 
-	void areasTrimming::onClose(void*)
+	void geographicTrimming::onClose(void*)
 	{
 		Dispatcher::GUI::Close(this);
 	}
 
-	void areasTrimming::mouseMoved(wxMouseEvent&)
+	void geographicTrimming::mouseMoved(wxMouseEvent&)
 	{
 		// Notify other components as well
 		Antares::Component::Panel::OnMouseMoveFromExternalComponent();
 	}
 
-	void areasTrimming::updateCaption()
+
+	areasTrimming::areasTrimming(wxFrame* parent) :
+		geographicTrimming(parent, new Component::Datagrid::Renderer::areasTrimmingGrid())
 	{
-
+		// Title of the Form
+		SetLabel(wxT("Areas trimming"));
+		SetTitle(GetLabel());
 	}
-
-	void areasTrimming::onBlabla(void *) {}
 
 
 } // namespace Options
