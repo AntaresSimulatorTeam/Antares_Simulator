@@ -35,7 +35,7 @@ namespace Renderer
 
 	int geographicTrimmingGrid::height() const
 	{
-		return (not study) ? 0 : (int)study->areas.size();
+		return (not study) ? 0 : gridSize();
 	}
 
 	wxString geographicTrimmingGrid::columnCaption(int colIndx) const
@@ -59,18 +59,18 @@ namespace Renderer
 
 	wxString geographicTrimmingGrid::rowCaption(int rowIndx) const
 	{
-		return (!(!study) && (uint)rowIndx < study->areas.size())
-			? wxStringFromUTF8(study->areas.byIndex[rowIndx]->name)
+		return (!(!study) && (uint)rowIndx < gridSize())
+			? wxStringFromUTF8(getName(rowIndx))
 			: wxString();
 	}
 
 	// Setting cell value
 	bool geographicTrimmingGrid::cellValue(int col, int row, const Yuni::String& value)
 	{
-		if (!(!study) && (uint)row < study->areas.size())
+		if (!(!study) && (uint)row < gridSize())
 		{
 			// year-by-year trimming or synthesis trimming ?
-			uint& filterToModify = (col < 5) ? study->areas.byIndex[row]->filterYearByYear : study->areas.byIndex[row]->filterSynthesis;
+			uint& filterToModify = (col < 5) ? getYearByYearFilter(row) : getSynthesisFilter(row);
 			
 			// Hourly ? Daily ? weekly ? ...
 			uint flag = Data::filterIndexToFilter(col % 5);
@@ -102,10 +102,10 @@ namespace Renderer
 
 	double geographicTrimmingGrid::cellNumericValue(int col, int row) const
 	{
-		if (!(!study) && (uint)row < study->areas.size())
+		if (!(!study) && (uint)row < gridSize())
 		{
 			// year-by-year trimming or synthesis trimming ?
-			uint& filter = (col < 5) ? study->areas.byIndex[row]->filterYearByYear : study->areas.byIndex[row]->filterSynthesis;
+			uint& filter = (col < 5) ? getYearByYearFilter(row) : getSynthesisFilter(row);
 
 			return  (0 != (filter & Data::filterIndexToFilter(col % 5)));
 		}
@@ -116,10 +116,10 @@ namespace Renderer
 	// Getting cell value
 	wxString geographicTrimmingGrid::cellValue(int col, int row) const
 	{
-		if (!(!study) && (uint)row < study->areas.size())
+		if (!(!study) && (uint)row < gridSize())
 		{
 			// year-by-year trimming or synthesis trimming ?
-			uint& filter = (col < 5) ? study->areas.byIndex[row]->filterYearByYear : study->areas.byIndex[row]->filterSynthesis;
+			uint& filter = (col < 5) ? getYearByYearFilter(row) : getSynthesisFilter(row);
 
 			return  (0 != (filter & Data::filterIndexToFilter(col % 5))) ? wxT("True") : wxT("False");
 		}
@@ -129,10 +129,10 @@ namespace Renderer
 
 	IRenderer::CellStyle geographicTrimmingGrid::cellStyle(int col, int row) const
 	{
-		if (!(!study) && (uint)row < study->areas.size())
+		if (!(!study) && (uint)row < gridSize())
 		{
 			// year-by-year trimming or synthesis trimming ?
-			uint& filter = (col < 5) ? study->areas.byIndex[row]->filterYearByYear : study->areas.byIndex[row]->filterSynthesis;
+			uint& filter = (col < 5) ? getYearByYearFilter(row) : getSynthesisFilter(row);
 
 			if (col < 5)
 				return  (0 != (filter & Data::filterIndexToFilter(col % 5))) ? 
@@ -146,7 +146,22 @@ namespace Renderer
 
 	uint areasTrimmingGrid::gridSize() const
 	{
-		return 0;
+		return study->areas.size();
+	}
+
+	AreaLinkName areasTrimmingGrid::getName(int index) const
+	{
+		return study->areas.byIndex[index]->name;
+	}
+
+	uint& areasTrimmingGrid::getSynthesisFilter(int index) const
+	{
+		return study->areas.byIndex[index]->filterSynthesis;
+	}
+
+	uint& areasTrimmingGrid::getYearByYearFilter(int index) const
+	{
+		return study->areas.byIndex[index]->filterYearByYear;
 	}
 
 } // namespace Renderer

@@ -3,6 +3,9 @@
 
 # include "../renderer.h"
 # include "../../../../application/study.h"
+# include <antares/study/fwd.h>
+
+using namespace Antares::Data;
 
 namespace Antares
 {
@@ -43,6 +46,12 @@ namespace Renderer
 
 		void control(wxWindow* control) { pControl = control; }
 
+	private:
+		virtual uint gridSize() const = 0;
+		virtual AreaLinkName getName(int index) const = 0;
+		virtual uint& getSynthesisFilter(int index) const = 0;
+		virtual uint& getYearByYearFilter(int index) const = 0;
+
 	public:
 		//! An item has been updated
 		Yuni::Bind<void()> onTriggerUpdate;
@@ -61,6 +70,10 @@ namespace Renderer
 
 	private:
 		uint gridSize() const;
+		AreaLinkName getName(int index) const;
+		uint& getSynthesisFilter(int index) const;
+		uint& getYearByYearFilter(int index) const;
+
 	};	// class areasTrimmingGrid
 
 
