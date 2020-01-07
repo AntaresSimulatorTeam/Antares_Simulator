@@ -31,12 +31,21 @@ namespace Options
 	}; // class geographicTrimming
 
 
+
 	class areasTrimming final : public geographicTrimming
 	{
 	public:
 		areasTrimming(wxFrame* parent);
 	}; // class areasTrimming
 
+
+	/**/
+	class linksTrimming final : public geographicTrimming
+	{
+	public:
+		linksTrimming(wxFrame* parent);
+	}; // class areasTrimming
+	/**/
 
 } // namespace Options
 } // namespace Window

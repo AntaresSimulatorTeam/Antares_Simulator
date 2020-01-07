@@ -102,6 +102,7 @@ namespace Options
 	}
 
 
+
 	areasTrimming::areasTrimming(wxFrame* parent) :
 		geographicTrimming(parent, new Component::Datagrid::Renderer::areasTrimmingGrid())
 	{
@@ -109,6 +110,17 @@ namespace Options
 		SetLabel(wxT("Areas trimming"));
 		SetTitle(GetLabel());
 	}
+
+
+	/**/
+	linksTrimming::linksTrimming(wxFrame* parent) :
+		geographicTrimming(parent, new Component::Datagrid::Renderer::linksTrimmingGrid())
+	{
+		// Title of the Form
+		SetLabel(wxT("Links trimming"));
+		SetTitle(GetLabel());
+	}
+	/**/
 
 
 } // namespace Options

@@ -62,7 +62,9 @@ namespace Forms
 
 	void ApplWnd::evtOnOptionsSelectLinksTrimming(wxCommandEvent&)
 	{
-
+		Forms::Disabler<ApplWnd> disabler(*this);
+		if (Data::Study::Current::Valid())
+			Dispatcher::GUI::CreateAndShowModal<Window::Options::linksTrimming>(this);
 	}
 
 	void ApplWnd::evtOnOptionsMCPlaylist(wxCommandEvent&)

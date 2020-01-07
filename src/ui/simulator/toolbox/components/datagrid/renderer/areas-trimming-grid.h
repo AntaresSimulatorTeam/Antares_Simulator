@@ -76,6 +76,23 @@ namespace Renderer
 
 	};	// class areasTrimmingGrid
 
+	/**/
+	class linksTrimmingGrid : public geographicTrimmingGrid
+	{
+	public:
+		linksTrimmingGrid() {};
+		~linksTrimmingGrid() {};
+
+	private:
+		uint gridSize() const;
+		AreaLinkName getName(int index) const;
+		uint& getSynthesisFilter(int index) const;
+		uint& getYearByYearFilter(int index) const;
+
+	};	// class areasTrimmingGrid
+	/**/
+
+
 
 } // namespace Renderer
 } // namespace Datagrid

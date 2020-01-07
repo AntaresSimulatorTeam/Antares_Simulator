@@ -19,11 +19,9 @@ namespace Renderer
 	{
 	}
 
-
 	geographicTrimmingGrid::~geographicTrimmingGrid()
 	{
 	}
-
 
 	bool geographicTrimmingGrid::valid() const
 	{
@@ -31,7 +29,6 @@ namespace Renderer
 			std::cout << "not valid ! \n";
 		return !(!study);
 	}
-
 
 	int geographicTrimmingGrid::height() const
 	{
@@ -55,7 +52,6 @@ namespace Renderer
 		}
 		return wxEmptyString;
 	}
-
 
 	wxString geographicTrimmingGrid::rowCaption(int rowIndx) const
 	{
@@ -99,7 +95,6 @@ namespace Renderer
 		return false;
 	}
 
-
 	double geographicTrimmingGrid::cellNumericValue(int col, int row) const
 	{
 		if (!(!study) && (uint)row < gridSize())
@@ -126,7 +121,6 @@ namespace Renderer
 		return wxEmptyString;
 	}
 
-
 	IRenderer::CellStyle geographicTrimmingGrid::cellStyle(int col, int row) const
 	{
 		if (!(!study) && (uint)row < gridSize())
@@ -143,6 +137,9 @@ namespace Renderer
 		}
 		return IRenderer::cellStyleFilterUndefined;
 	}
+
+
+
 
 	uint areasTrimmingGrid::gridSize() const
 	{
@@ -163,6 +160,36 @@ namespace Renderer
 	{
 		return study->areas.byIndex[index]->filterYearByYear;
 	}
+
+
+
+	/**/
+	uint linksTrimmingGrid::gridSize() const
+	{
+		return study->uiinfo->linkCount();
+	}
+
+	AreaLinkName linksTrimmingGrid::getName(int index) const
+	{
+		auto* link = study->uiinfo->link((uint)(index));
+		
+		AreaLinkName to_return = link->from->id;
+		to_return += " / ";
+		to_return += link->with->id;
+
+		return to_return;
+	}
+
+	uint& linksTrimmingGrid::getSynthesisFilter(int index) const
+	{
+		return study->uiinfo->link((uint)(index))->filterSynthesis;
+	}
+
+	uint& linksTrimmingGrid::getYearByYearFilter(int index) const
+	{
+		return study->uiinfo->link((uint)(index))->filterYearByYear;
+	}
+	/**/
 
 } // namespace Renderer
 } // namespace Datagrid
