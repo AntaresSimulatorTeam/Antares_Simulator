@@ -14,18 +14,18 @@ namespace Renderer
 {
 
 
-	areasTrimmingGrid::areasTrimmingGrid() :
+	geographicTrimmingGrid::geographicTrimmingGrid() :
 		pControl(nullptr)
 	{
 	}
 
 
-	areasTrimmingGrid::~areasTrimmingGrid()
+	geographicTrimmingGrid::~geographicTrimmingGrid()
 	{
 	}
 
 
-	bool areasTrimmingGrid::valid() const
+	bool geographicTrimmingGrid::valid() const
 	{
 		if (!study)
 			std::cout << "not valid ! \n";
@@ -33,12 +33,12 @@ namespace Renderer
 	}
 
 
-	int areasTrimmingGrid::height() const
+	int geographicTrimmingGrid::height() const
 	{
 		return (not study) ? 0 : (int)study->areas.size();
 	}
 
-	wxString areasTrimmingGrid::columnCaption(int colIndx) const
+	wxString geographicTrimmingGrid::columnCaption(int colIndx) const
 	{
 		switch (colIndx)
 		{
@@ -57,7 +57,7 @@ namespace Renderer
 	}
 
 
-	wxString areasTrimmingGrid::rowCaption(int rowIndx) const
+	wxString geographicTrimmingGrid::rowCaption(int rowIndx) const
 	{
 		return (!(!study) && (uint)rowIndx < study->areas.size())
 			? wxStringFromUTF8(study->areas.byIndex[rowIndx]->name)
@@ -65,7 +65,7 @@ namespace Renderer
 	}
 
 	// Setting cell value
-	bool areasTrimmingGrid::cellValue(int col, int row, const Yuni::String& value)
+	bool geographicTrimmingGrid::cellValue(int col, int row, const Yuni::String& value)
 	{
 		if (!(!study) && (uint)row < study->areas.size())
 		{
@@ -100,7 +100,7 @@ namespace Renderer
 	}
 
 
-	double areasTrimmingGrid::cellNumericValue(int col, int row) const
+	double geographicTrimmingGrid::cellNumericValue(int col, int row) const
 	{
 		if (!(!study) && (uint)row < study->areas.size())
 		{
@@ -114,7 +114,7 @@ namespace Renderer
 	}
 
 	// Getting cell value
-	wxString areasTrimmingGrid::cellValue(int col, int row) const
+	wxString geographicTrimmingGrid::cellValue(int col, int row) const
 	{
 		if (!(!study) && (uint)row < study->areas.size())
 		{
@@ -127,7 +127,7 @@ namespace Renderer
 	}
 
 
-	IRenderer::CellStyle areasTrimmingGrid::cellStyle(int col, int row) const
+	IRenderer::CellStyle geographicTrimmingGrid::cellStyle(int col, int row) const
 	{
 		if (!(!study) && (uint)row < study->areas.size())
 		{
@@ -144,7 +144,10 @@ namespace Renderer
 		return IRenderer::cellStyleFilterUndefined;
 	}
 
-
+	uint areasTrimmingGrid::gridSize() const
+	{
+		return 0;
+	}
 
 } // namespace Renderer
 } // namespace Datagrid

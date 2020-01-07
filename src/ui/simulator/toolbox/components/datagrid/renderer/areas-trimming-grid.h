@@ -12,11 +12,11 @@ namespace Datagrid
 {
 namespace Renderer
 {
-	class areasTrimmingGrid : public IRenderer
+	class geographicTrimmingGrid : public IRenderer
 	{
 	public:
-		areasTrimmingGrid();
-		virtual ~areasTrimmingGrid();
+		geographicTrimmingGrid();
+		virtual ~geographicTrimmingGrid();
 
 		virtual int width() const { return 10; }
 		virtual int height() const;
@@ -50,7 +50,18 @@ namespace Renderer
 	protected:
 		wxWindow* pControl;
 
-	}; // class areasTrimmingGrid
+	}; // class geographicTrimmingGrid
+
+
+	class areasTrimmingGrid : public geographicTrimmingGrid
+	{
+	public:
+		areasTrimmingGrid() {};
+		~areasTrimmingGrid() {};
+
+	private:
+		uint gridSize() const;
+	};	// class areasTrimmingGrid
 
 
 } // namespace Renderer

@@ -16,7 +16,7 @@ namespace Options
 	class geographicTrimming : public wxDialog
 	{
 	public:
-		geographicTrimming(wxFrame* parent, Component::Datagrid::Renderer::areasTrimmingGrid* renderer);
+		geographicTrimming(wxFrame* parent, Component::Datagrid::Renderer::geographicTrimmingGrid* renderer);
 		virtual ~geographicTrimming();
 
 	protected:
@@ -24,7 +24,7 @@ namespace Options
 		void onClose(void*);
 
 	private:
-		Component::Datagrid::Renderer::areasTrimmingGrid* pRenderer;
+		Component::Datagrid::Renderer::geographicTrimmingGrid* pRenderer;
 
 		DECLARE_EVENT_TABLE()
 

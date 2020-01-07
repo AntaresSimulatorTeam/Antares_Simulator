@@ -25,7 +25,7 @@ namespace Options
 
 	geographicTrimming::geographicTrimming(
 			wxFrame* parent,
-			Component::Datagrid::Renderer::areasTrimmingGrid* renderer) 
+			Component::Datagrid::Renderer::geographicTrimmingGrid* renderer)
 			: wxDialog(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(1000, 400), wxCLOSE_BOX | wxCAPTION)
 	{
 		pRenderer = new Component::Datagrid::Renderer::areasTrimmingGrid();
