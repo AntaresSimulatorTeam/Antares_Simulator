@@ -76,7 +76,7 @@ namespace Renderer
 
 	};	// class areasTrimmingGrid
 
-	/**/
+
 	class linksTrimmingGrid : public geographicTrimmingGrid
 	{
 	public:
@@ -90,7 +90,6 @@ namespace Renderer
 		uint& getYearByYearFilter(int index) const;
 
 	};	// class areasTrimmingGrid
-	/**/
 
 
 

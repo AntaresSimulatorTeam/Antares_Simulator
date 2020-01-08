@@ -2,7 +2,7 @@
 # define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREAS_TRIMMING_H__
 
 # include "../../../toolbox/components/datagrid/component.h"
-# include "../../../toolbox/components/datagrid/renderer/areas-trimming-grid.h"
+# include "../../../toolbox/components/datagrid/renderer/geographic-trimming-grid.h"
 # include <wx/dialog.h>
 
 
@@ -24,7 +24,7 @@ namespace Options
 		void onClose(void*);
 
 	private:
-		Component::Datagrid::Renderer::geographicTrimmingGrid* pRenderer;
+	 	Component::Datagrid::Renderer::geographicTrimmingGrid* pRenderer;
 
 		DECLARE_EVENT_TABLE()
 
@@ -39,13 +39,12 @@ namespace Options
 	}; // class areasTrimming
 
 
-	/**/
+
 	class linksTrimming final : public geographicTrimming
 	{
 	public:
 		linksTrimming(wxFrame* parent);
 	}; // class areasTrimming
-	/**/
 
 } // namespace Options
 } // namespace Window

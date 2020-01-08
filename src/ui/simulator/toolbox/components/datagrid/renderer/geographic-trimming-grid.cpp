@@ -1,4 +1,4 @@
-#include "areas-trimming-grid.h"
+#include "geographic-trimming-grid.h"
 #include <antares/study/filter.h>
 #include "../../../../windows/inspector.h"
 
@@ -163,7 +163,7 @@ namespace Renderer
 
 
 
-	/**/
+
 	uint linksTrimmingGrid::gridSize() const
 	{
 		return study->uiinfo->linkCount();
@@ -189,7 +189,6 @@ namespace Renderer
 	{
 		return study->uiinfo->link((uint)(index))->filterYearByYear;
 	}
-	/**/
 
 } // namespace Renderer
 } // namespace Datagrid

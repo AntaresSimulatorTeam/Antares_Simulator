@@ -1,11 +1,11 @@
 
-#include "areas-trimming.h"
+#include "geographic-trimming.h"
 #include <wx/statline.h>
 #include "../../../application/study.h"
 #include "../../../application/main.h"
 #include "../../../toolbox/create.h"
 #include "../../../toolbox/components/wizardheader.h"
-#include "../../../toolbox/components/datagrid/renderer/areas-trimming-grid.h"
+#include "../../../toolbox/components/datagrid/renderer/geographic-trimming-grid.h"
 
 using namespace Yuni;
 
@@ -112,7 +112,7 @@ namespace Options
 	}
 
 
-	/**/
+
 	linksTrimming::linksTrimming(wxFrame* parent) :
 		geographicTrimming(parent, new Component::Datagrid::Renderer::linksTrimmingGrid())
 	{
@@ -120,7 +120,6 @@ namespace Options
 		SetLabel(wxT("Links trimming"));
 		SetTitle(GetLabel());
 	}
-	/**/
 
 
 } // namespace Options
