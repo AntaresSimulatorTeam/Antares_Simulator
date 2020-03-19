@@ -1471,10 +1471,14 @@ namespace Antares
 
 		if (height and width)
 		{
+			#ifndef TESTING
 			Clob data;
+			#endif
+
 			internalSaveToFileDescriptor(data, precision, addHint, predicate);
 			Statistics::HasWrittenToDisk(data.size());
 
+			#ifndef TESTING
 			IO::File::Stream file;
 			if (not file.openRW(filename))
 			{
@@ -1482,7 +1486,9 @@ namespace Antares
 				return false;
 			}
 			file << data;
+			#endif
 		}
+		#ifndef TESTING
 		else
 		{
 			IO::File::Stream file;
@@ -1493,7 +1499,7 @@ namespace Antares
 			}
 			// write nothing
 		}
-
+		#endif
 		// When the swap support is enabled, releasing some memory
 		flush();
 

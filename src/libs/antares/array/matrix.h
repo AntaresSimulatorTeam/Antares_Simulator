@@ -37,6 +37,7 @@
 # include "../study/fwd.h"
 # include "autoflush.h"
 
+# include <yuni/core/string.h>
 
 
 namespace Antares
@@ -441,6 +442,10 @@ namespace Antares
 		mutable ColumnType* entry;
 		//! Just-in-time informations
 		mutable JIT::Informations* jit;
+
+		#ifdef TESTING
+		mutable Yuni::Clob data;
+		#endif
 
 
 	private:

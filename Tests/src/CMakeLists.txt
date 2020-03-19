@@ -1,0 +1,51 @@
+
+# To be used as follows :
+# + First create a dirctory named "build" next to this script
+# + Go to "build"
+# 	> cd build
+# + Execute cmake command :
+# 	> cmake .. -DBOOST_PATH=D:/Users/pierregui/Desktop/Tests-U/boost_1_72_0
+
+
+cmake_minimum_required(VERSION 3.10)
+
+project(test_antares VERSION 1.0)
+
+message("Root CMakeLists - BOOST_PATH : ${BOOST_PATH}")
+if(NOT DEFINED BOOST_PATH OR NOT EXISTS ${BOOST_PATH})
+	message(FATAL_ERROR "Root CMakeLists - Path to Boost library does not exist. Use -DBOOST_PATH option.")
+endif()
+
+# Common definitions and setings
+include(cmake/common-settings.cmake)
+
+# Setting and checking on "libantares-core" location
+set(ANTARES_LIBS_DIR "${ANTARES_BIN}/${BUILD_TYPE_LOW_CASE}/${BUILD_TYPE_UP_CASE}")
+find_library(ANTARES_CORE_LIB NAME libantares-core PATHS "${ANTARES_LIBS_DIR}")
+if(NOT ANTARES_CORE_LIB)
+	message(FATAL_ERROR "Root CMakeLists - libantares-core does not exist")
+else()
+	message("Root CMakeLists - ANTARES_CORE_LIB : ${ANTARES_CORE_LIB} - found")
+endif()
+
+# A try to replace a block by a macro / function : does not work because of arg 2 
+# library_exists_in_dir(ANTARES_CORE_LIB libantares-core "${ANTARES_LIBS_DIR}")
+
+
+# Setting and checking on "yuni-static-core" location
+set(YUNI_STATIC_CORE_LIB_DIR "${ANTARES_SRC}/ext/yuni/src/build/${BUILD_TYPE_LOW_CASE}/lib/${BUILD_TYPE_UP_CASE}")
+find_library(YUNI_STATIC_CORE_LIB NAME yuni-static-core PATHS "${YUNI_STATIC_CORE_LIB_DIR}")
+if(NOT YUNI_STATIC_CORE_LIB)
+	message(FATAL_ERROR "Root CMakeLists - libantares-core does not exist")
+else()
+	message("Root CMakeLists - YUNI_STATIC_CORE_LIB : ${YUNI_STATIC_CORE_LIB} - found")
+endif()
+
+
+# General actions
+add_definitions(-DTESTING)
+include_directories("${BOOST_PATH}")
+include_directories("${ANTARES_SRC}/ext/yuni/src")
+
+# Look for CMakeLists.txt in underneath directory
+add_subdirectory(libs)
