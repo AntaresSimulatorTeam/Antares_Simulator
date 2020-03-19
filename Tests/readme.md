@@ -6,5 +6,5 @@ To be used as follows :
 	```
 - Execute cmake command :
 	```bash
-	> cmake .. -DBOOST_PATH=D:/Users/pierregui/Desktop/Tests-U/boost_1_72_0 -DCMAKE_BUILD_TYPE=Release/Debug
+	> cmake .. -DBOOST_PATH=/path/to/your/boost/library -DCMAKE_BUILD_TYPE=Release/Debug
 	```
