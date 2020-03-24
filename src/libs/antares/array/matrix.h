@@ -37,6 +37,7 @@
 # include "../study/fwd.h"
 # include "autoflush.h"
 
+# include <yuni/core/string.h>
 
 
 namespace Antares
@@ -50,7 +51,7 @@ namespace Antares
 	** \tparam ReadWriteT The type to use when reading/saving the matrix
 	*/
 	template<class T = double, class ReadWriteT = T>
-	class Matrix final
+	class Matrix /*final*/
 	{
 	public:
 		//! Type
@@ -162,11 +163,10 @@ namespace Antares
 		** \param buffer An optional buffer for reading the file
 		** \return True if the operation succeeded
 		*/
-		bool loadFromCSVFile(const AnyString& filename, uint minWidth, uint maxHeight,
+		virtual bool loadFromCSVFile(const AnyString& filename, uint minWidth, uint maxHeight,
 			uint options = optNone, BufferType* buffer = NULL);
 
-		bool loadFromCSVFile(const AnyString& filename, uint minWidth, uint maxHeight,
-			BufferType* buffer);
+		bool loadFromCSVFile(const AnyString& filename, uint minWidth, uint maxHeight, BufferType* buffer);
 
 		bool loadFromCSVFile(const AnyString& filename);
 
@@ -441,6 +441,10 @@ namespace Antares
 		mutable ColumnType* entry;
 		//! Just-in-time informations
 		mutable JIT::Informations* jit;
+
+		#ifdef TESTING
+		mutable Yuni::Clob data;
+		#endif
 
 
 	private:
