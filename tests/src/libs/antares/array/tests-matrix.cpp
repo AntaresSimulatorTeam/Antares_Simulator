@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_SUITE(jit)
 BOOST_AUTO_TEST_CASE(JIT_enabler_built__jit_also_built)
 {
 	{
-		global_JIT_on global_JIT_to_on;
+		global_JIT_manager global_JIT_to(true);
 		BOOST_CHECK(JIT::enabled);
 	}
 	BOOST_CHECK(not JIT::enabled);
@@ -155,7 +155,7 @@ BOOST_AUTO_TEST_CASE(global_JIT_off___matrix_built_with_any_constructor_or_reset
 
 BOOST_AUTO_TEST_CASE(global_JIT_on___matrix_built_with_any_constructor____jit_not_built)
 {
-	global_JIT_on global_JIT_to_on;
+	global_JIT_manager global_JIT_to(true);
 	Matrix_load_bypass<double, double> mtx_1, mtx_2(2, 2);
 	BOOST_CHECK(not mtx_1.jit);
 	BOOST_CHECK(not mtx_2.jit);
@@ -165,7 +165,7 @@ BOOST_AUTO_TEST_CASE(global_JIT_on___matrix_built_with_any_constructor____jit_no
 
 BOOST_AUTO_TEST_CASE(global_JIT_on___matrix_built_with_reset____jit_built)
 {
-	global_JIT_on global_JIT_to_on;
+	global_JIT_manager global_JIT_to(true);
 	Matrix_load_bypass<double, double> mtx;
 	mtx.reset(2, 2, true);
 	BOOST_CHECK(mtx.jit);
@@ -173,7 +173,7 @@ BOOST_AUTO_TEST_CASE(global_JIT_on___matrix_built_with_reset____jit_built)
 
 BOOST_AUTO_TEST_CASE(global_JIT_ON__reset__save____no_load_done)
 {
-	global_JIT_on global_JIT_to_on;
+	global_JIT_manager global_JIT_to(true);
 	Matrix_load_bypass<double, double> mtx;
 	mtx.reset(2, 2, true);
 	mtx.saveToCSVFile("path/to/an/output/file", 3, false);
@@ -184,7 +184,7 @@ BOOST_AUTO_TEST_CASE(global_JIT_ON__reset__save____no_load_done)
 
 BOOST_AUTO_TEST_CASE(global_JIT_ON__reset__save__force_loadData_to_ON____no_load_done)
 {
-	global_JIT_on global_JIT_to_on;
+	global_JIT_manager global_JIT_to(true);
 	Matrix_load_bypass<double, double> mtx;
 	mtx.reset(2, 2, true);
 	mtx.jit->loadDataIfNotAlreadyDone = true;
@@ -196,7 +196,7 @@ BOOST_AUTO_TEST_CASE(global_JIT_ON__reset__save__force_loadData_to_ON____no_load
 
 BOOST_AUTO_TEST_CASE(global_JIT_ON__reset__save__force_loadData_to_ON__alreadyLoaded_to_OFF____no_load_done)
 {
-	global_JIT_on global_JIT_to_on;
+	global_JIT_manager global_JIT_to(true);
 	Matrix_load_bypass<double, double> mtx;
 	mtx.reset(2, 2, true);
 	mtx.jit->loadDataIfNotAlreadyDone = true;
@@ -209,7 +209,7 @@ BOOST_AUTO_TEST_CASE(global_JIT_ON__reset__save__force_loadData_to_ON__alreadyLo
 
 BOOST_AUTO_TEST_CASE(matrix_not_empty_cleared_BEFORE_it_can_be_saved)
 {
-	global_JIT_on global_JIT_to_on;
+	global_JIT_manager global_JIT_to(true);
 	Matrix_load_bypass<double, double> mtx(2, 2, { 1.99, 2.44, -3.999, -1.51 });
 	mtx.jit = JIT::Reset(mtx.jit);
 	mtx.jit->modified = false;

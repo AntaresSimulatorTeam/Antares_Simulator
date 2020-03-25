@@ -16,14 +16,14 @@ struct TSNumbersPredicate
 	}
 };
 
-class global_JIT_on
+class global_JIT_manager
 {
 public:
-	global_JIT_on() : JIT_initial(JIT::enabled)
+	global_JIT_manager(bool turn_to) : JIT_initial(JIT::enabled)
 	{
-		JIT::enabled = true;
+		JIT::enabled = turn_to;
 	}
-	~global_JIT_on() { JIT::enabled = JIT_initial; }
+	~global_JIT_manager() { JIT::enabled = JIT_initial; }
 private:
 	bool JIT_initial;
 };

@@ -71,3 +71,10 @@ src/license/keys/rsakey2code
 src/script/v8/libs/*
 /src/antares.VC.VC.opendb
 /src/antares.VC.db
+*.db
+/tests/src/build/.vs/test_antares/v16/*.opendb
+/tests/src/build/.vs/test_antares/v16/*.db-shm
+*.testlog
+*.db-wal
+*.manifest
+*.ipch
