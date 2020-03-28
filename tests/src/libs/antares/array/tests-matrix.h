@@ -38,7 +38,7 @@ public:
 	Matrix_enhanced(uint height, uint width, const vector<T>& vec)	: Matrix<T, ReadWriteT>()
 	{
 		BOOST_REQUIRE_EQUAL(height * width, vec.size());
-		reset(height, width, true);
+		reset(width, height, true);
 		uint count = 0;
 		for (uint j = 0; j < height; j++)
 			for (uint i = 0; i < width; i++)

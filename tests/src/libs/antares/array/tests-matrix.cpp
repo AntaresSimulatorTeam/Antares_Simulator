@@ -13,7 +13,8 @@ namespace utf = boost::unit_test;
 // ===  Matrix<double, double>  ===
 // ================================
 BOOST_AUTO_TEST_SUITE(coeffs_are_double__save_into_double)
-BOOST_AUTO_TEST_CASE(matrix_only_0s_and_no_print_dim___result_is_empty)
+
+BOOST_AUTO_TEST_CASE(matrix_only_0s_and__no_print_dim___result_is_empty)
 {
 	Matrix_enhanced<double, double> mtx;
 	mtx.reset(2, 2, true);
@@ -21,7 +22,7 @@ BOOST_AUTO_TEST_CASE(matrix_only_0s_and_no_print_dim___result_is_empty)
 	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "");
 }
 
-BOOST_AUTO_TEST_CASE(matrix_only_0s_print_dim__get_only_a_title_and_the_0s)
+BOOST_AUTO_TEST_CASE(matrix_only_0s__print_dim___get_only_a_title_and_the_0s)
 {
 	Matrix_enhanced<double, double> mtx;
 	mtx.reset(2, 2, true);
@@ -29,18 +30,18 @@ BOOST_AUTO_TEST_CASE(matrix_only_0s_print_dim__get_only_a_title_and_the_0s)
 	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "size:2x2\n0\t0\n0\t0\n");
 }
 
-BOOST_AUTO_TEST_CASE(coeffs_have_int_values__no_zeros_after_decimal_point)
+BOOST_AUTO_TEST_CASE(coeffs_have_int_values___no_zeros_after_decimal_point)
 {
-	Matrix_enhanced<double, double> mtx(2, 2, {1, 0, 0, 2});
+	Matrix_enhanced<double, double> mtx(2, 2, {1, 0, 0, -2});
 	mtx.saveToCSVFile("path/to/an/output/file");
-	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "1\t0\n0\t2\n");
+	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "1\t0\n0\t-2\n");
 }
 
-BOOST_AUTO_TEST_CASE(precision_is_3__get_3_nbs_after_decimal_point)
+BOOST_AUTO_TEST_CASE(precision_is_3___get_3_nbs_after_decimal_point)
 {
-	Matrix_enhanced<double, double> mtx(2, 2, {1.5, 2.44444, 3.66666, 0});
+	Matrix_enhanced<double, double> mtx(2, 2, {1.5, -2.44444, 3.66666, 0});
 	mtx.saveToCSVFile("path/to/an/output/file", 3, false);
-	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "1.500\t2.444\n3.667\t0\n");
+	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "1.500\t-2.444\n3.667\t0\n");
 }
 
 BOOST_AUTO_TEST_CASE(precision_has_no_effect_on_integer_values)
@@ -51,7 +52,7 @@ BOOST_AUTO_TEST_CASE(precision_has_no_effect_on_integer_values)
 	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "1\t5\n0\t3\n");
 }
 
-BOOST_AUTO_TEST_CASE(add_predicate__each_coeff_is_one_incremented)
+BOOST_AUTO_TEST_CASE(add_predicate___each_coeff_is_one_incremented)
 {
 	Matrix_enhanced<double, double> mtx(2, 2, {1, 0, 0, 2});
 	TSNumbersPredicate predicate;
@@ -59,7 +60,7 @@ BOOST_AUTO_TEST_CASE(add_predicate__each_coeff_is_one_incremented)
 	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "2\t1\n1\t3\n");
 }
 
-BOOST_AUTO_TEST_CASE(TS_nb_predicate_suits_int_matrices__It_converts_double_into_unsigned_ints)
+BOOST_AUTO_TEST_CASE(TS_nb_predicate_suits_int_matrices___It_converts_double_into_unsigned_ints)
 {
 	// Negative numbers are turned into strange positive numbers because the TS number
 	// predicate converted them into unsigned int
@@ -69,6 +70,7 @@ BOOST_AUTO_TEST_CASE(TS_nb_predicate_suits_int_matrices__It_converts_double_into
 	string res = mtx.data.to<string>();
 	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "2\t4294967294\n1\t3\n");
 }
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
@@ -77,12 +79,21 @@ BOOST_AUTO_TEST_SUITE_END()
 // ===  Matrix<int, double>  ===
 // =============================
 BOOST_AUTO_TEST_SUITE(coeffs_are_int__save_into_double)
-BOOST_AUTO_TEST_CASE(matrix_only_0s_and_no_print_dim___result_is_empty)
+
+BOOST_AUTO_TEST_CASE(matrix_only_0s_and__no_print_dim___result_is_empty)
 {
 	Matrix_enhanced<int, double> mtx(2, 2);
 	mtx.reset(2, 2, true);
 	mtx.saveToCSVFile("path/to/an/output/file");
 	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "");
+}
+
+BOOST_AUTO_TEST_CASE(matrix_only_0s__print_dim___get_only_a_title_and_the_0s)
+{
+	Matrix_enhanced<int, double> mtx;
+	mtx.reset(2, 2, true);
+	mtx.saveToCSVFile("path/to/an/output/file", 0, true);
+	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "size:2x2\n0\t0\n0\t0\n");
 }
 
 BOOST_AUTO_TEST_CASE(any_whole_number_is_printed_without_decimal_point)
@@ -91,6 +102,29 @@ BOOST_AUTO_TEST_CASE(any_whole_number_is_printed_without_decimal_point)
 	mtx.saveToCSVFile("path/to/an/output/file");
 	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "10\t500\n0\t3\n");
 }
+
+BOOST_AUTO_TEST_CASE(add_predicate__print_dim___each_coeff_is_one_incremented)
+{
+	Matrix_enhanced<int, double> mtx(2, 3, { 1, 2, 3, 4, 5, 6 });
+	TSNumbersPredicate predicate;
+	mtx.saveToCSVFile("path/to/an/output/file", 2, true, predicate);
+	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "size:3x2\n2\t3\t4\n5\t6\t7\n");
+}
+
+BOOST_AUTO_TEST_CASE(negative_int___printed_correctly)
+{
+	Matrix_enhanced<int, double> mtx(2, 3, { 1, -2, 3, -4, -5, 6 });
+	mtx.saveToCSVFile("path/to/an/output/file", 2, true);
+	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "size:3x2\n1\t-2\t3\n-4\t-5\t6\n");
+}
+
+BOOST_AUTO_TEST_CASE(precision_has_no_effect_on_int_coeffs)
+{
+	Matrix_enhanced<int, double> mtx(3, 2, { 1, -2, 3, -4, -5, 6 });
+	mtx.saveToCSVFile("path/to/an/output/file", 5, true);
+	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "size:2x3\n1\t-2\n3\t-4\n-5\t6\n");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
@@ -99,6 +133,7 @@ BOOST_AUTO_TEST_SUITE_END()
 // ===  Matrix<int, int>  ===
 // ==========================
 BOOST_AUTO_TEST_SUITE(coeffs_are_int__save_into_int)
+
 BOOST_AUTO_TEST_CASE(matrix_only_0s_and_no_print_dim___result_is_empty)
 {
 	Matrix_enhanced<int, int> mtx(2, 2);
@@ -107,12 +142,36 @@ BOOST_AUTO_TEST_CASE(matrix_only_0s_and_no_print_dim___result_is_empty)
 	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "");
 }
 
-BOOST_AUTO_TEST_CASE(first_matrix__int_to_int)
+BOOST_AUTO_TEST_CASE(matrix_only_0s__print_dim___dim_and_0s_are_printed)
+{
+	Matrix_enhanced<int, int> mtx(3, 1); // Normal Matrix constuctor : 3 columns x 1 row
+	mtx.zero();
+	mtx.saveToCSVFile("path/to/an/output/file", 0, true);
+	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "size:3x1\n0\t0\t0\n");
+}
+
+BOOST_AUTO_TEST_CASE(first_matrix___int_to_int)
 {
 	Matrix_enhanced<int, int> mtx(2, 2, {1000, -5000, 0, 3000});
 	mtx.saveToCSVFile("path/to/an/output/file");
 	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "1000\t-5000\n0\t3000\n");
 }
+
+BOOST_AUTO_TEST_CASE(add_predicate__print_dim__negative_int___each_coeff_is_one_incremented)
+{
+	Matrix_enhanced<int, int> mtx(2, 3, { -1, 2, -3, 4, -5, 6 });
+	TSNumbersPredicate predicate;
+	mtx.saveToCSVFile("path/to/an/output/file", 2, true, predicate);
+	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "size:3x2\n0\t3\t-2\n5\t-4\t7\n");
+}
+
+BOOST_AUTO_TEST_CASE(precision_has_no_effect_on_int_coeffs)
+{
+	Matrix_enhanced<int, int> mtx(3, 2, { 1, -2, 3, -4, -5, 6 });
+	mtx.saveToCSVFile("path/to/an/output/file", 5, true);
+	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "size:2x3\n1\t-2\n3\t-4\n-5\t6\n");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
@@ -120,12 +179,38 @@ BOOST_AUTO_TEST_SUITE_END()
 // ===  Matrix<double, int>  ===
 // =============================
 BOOST_AUTO_TEST_SUITE(coeffs_are_double__save_into_int)
+
+BOOST_AUTO_TEST_CASE(coeffs_only_0s__no_print_dim___result_empty)
+{
+	Matrix_enhanced<double, int> mtx(2, 2);
+	mtx.zero();
+	mtx.saveToCSVFile("path/to/an/output/file", 3, false);
+	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "");
+}
+
+BOOST_AUTO_TEST_CASE(coeffs_only_0s__print_dim___get_dim_and_0s_in_output)
+{
+	Matrix_enhanced<double, int> mtx(1, 3);
+	mtx.zero();
+	mtx.saveToCSVFile("path/to/an/output/file", 3, true);
+	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "size:1x3\n0\n0\n0\n");
+}
+
 BOOST_AUTO_TEST_CASE(precision_is_3__get_coeffs_floor_integers)
 {
 	Matrix_enhanced<double, int> mtx(2, 2, {1.99, 2.44, -3.999, -1.51});
 	mtx.saveToCSVFile("path/to/an/output/file", 3, false);
 	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "1\t2\n-3\t-1\n");
 }
+
+
+BOOST_AUTO_TEST_CASE(precision_has_no_effect_on_int_coeffs)
+{
+	Matrix_enhanced<double, int> mtx(3, 2, { 1.99, -2.49, 3, -4.99, -5, 6.99 });
+	mtx.saveToCSVFile("path/to/an/output/file", 5, true);
+	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "size:2x3\n1\t-2\n3\t-4\n-5\t6\n");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
