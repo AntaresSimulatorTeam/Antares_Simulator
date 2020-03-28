@@ -151,3 +151,11 @@ void JIT::just_in_time_manager::record_current_jit_state(uint width, uint height
 		jit_record_->maxHeight = jit_->maxHeight;
 	}
 }
+
+bool JIT::just_in_time_manager::do_we_force_matrix_load_from_disk()
+{
+	// Force the load of the current matrix from disk, for example when we are making a "save as" of a study into a new one.
+	// The study "save" operation (after a change in GUI) does not need such an enforcement, as the matrix is lying in memory
+	// and not on disk.
+	return jit_->loadDataIfNotAlreadyDone;
+}

@@ -59,7 +59,7 @@ void JIT::just_in_time_manager::clear_matrix(const Antares::Matrix<T, ReadWriteT
 }
 
 template<class T, class ReadWriteT>
-void JIT::just_in_time_manager::unload_matrix_properly(const Antares::Matrix<T, ReadWriteT>* mtx)
+void JIT::just_in_time_manager::unload_matrix_properly_from_memory(const Antares::Matrix<T, ReadWriteT>* mtx)
 {
 	using namespace Antares;
 
@@ -87,6 +87,28 @@ void JIT::just_in_time_manager::unload_matrix_properly(const Antares::Matrix<T, 
 		jit_->options = jit_recorded_state()->options;
 		mtx_not_const->clear();
 	}
+}
+
+
+template<class T, class ReadWriteT>
+void JIT::just_in_time_manager::load_matrix(const Antares::Matrix<T, ReadWriteT>* mtx)
+{
+	if (not jit_->alreadyLoaded)
+	{
+		auto* mtx_not_const = const_cast<Antares::Matrix<T, ReadWriteT>*>(mtx);
+
+		logs.debug() << " Force loading of " << jit_->sourceFilename;
+		const bool modi = jit_->modified;
+
+		mtx_not_const->loadFromCSVFile(
+				jit_->sourceFilename, 
+				jit_->minWidth,
+				jit_->maxHeight,
+				jit_->options | Matrix<T, ReadWriteT>::optImmediate);
+
+		jit_->modified = modi;
+	}
+	jit_->loadDataIfNotAlreadyDone = false;
 }
 
 #endif // __ANTARES_LIBS_JUST_IN_TIME_INFORMATIONS_HXX__

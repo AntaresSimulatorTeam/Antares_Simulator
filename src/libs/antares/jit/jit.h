@@ -81,12 +81,16 @@ public:
 		inline JIT::Informations* jit_recorded_state() { return jit_record_; }
 		bool matrix_content_in_memory_is_same_as_on_disk() { return not jit_->modified; }
 		bool jit_activated() { return jit_; }
+		bool do_we_force_matrix_load_from_disk();
 
+		template<class T, class ReadWriteT>
+		void load_matrix(const Antares::Matrix<T, ReadWriteT>* mtx);
+		
 		template<class T, class ReadWriteT>
 		void clear_matrix(const Antares::Matrix<T, ReadWriteT> * mtx);
 
 		template<class T, class ReadWriteT>
-		void unload_matrix_properly(const Antares::Matrix<T, ReadWriteT>* mtx);
+		void unload_matrix_properly_from_memory(const Antares::Matrix<T, ReadWriteT>* mtx);
 
 	private:
 		JIT::Informations* jit_;

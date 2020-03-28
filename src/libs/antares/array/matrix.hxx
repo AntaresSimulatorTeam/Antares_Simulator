@@ -1424,12 +1424,8 @@ namespace Antares
 	bool Matrix<T,ReadWriteT>::internalSaveCSVFile(const AnyString& filename, uint precision,
 		bool addHint, PredicateT& predicate) const
 	{
-		using namespace Yuni;
-
-		// Ugly const_cast but it is to preserve a good public API
-		auto& thisNotConst = const_cast<Matrix&>(*this);
-
 		JIT::just_in_time_manager jit_mgr(jit, filename);
+
 		jit_mgr.record_current_jit_state(width, height);
 
 		if (jit_mgr.jit_activated() && jit_mgr.matrix_content_in_memory_is_same_as_on_disk())
@@ -1440,22 +1436,8 @@ namespace Antares
 			return true;
 		}
 		
-		if (jit_mgr.jit_activated())
-		{
-			if (jit->loadDataIfNotAlreadyDone)
-			{
-				if (not jit->alreadyLoaded)
-				{
-					logs.debug() << " Force loading of " << jit->sourceFilename;
-					const bool modi = jit->modified;
-
-					thisNotConst.loadFromCSVFile(jit->sourceFilename, jit->minWidth, jit->maxHeight,
-						jit->options | Matrix<T,ReadWriteT>::optImmediate);
-					jit->modified = modi;
-				}
-				jit->loadDataIfNotAlreadyDone = false;
-			}
-		}
+		if (jit_mgr.jit_activated() && jit_mgr.do_we_force_matrix_load_from_disk())
+			jit_mgr.load_matrix(this);
 
 		# ifndef NDEBUG
 		// Attempt to open the file, and to write data
@@ -1503,7 +1485,7 @@ namespace Antares
 		logs.debug() << "  :: [end] writing `" << filename << "' (" << width << 'x' << height << ')';
 		# endif
 
-		jit_mgr.unload_matrix_properly(this);
+		jit_mgr.unload_matrix_properly_from_memory(this);
 
 		return true;
 	}
