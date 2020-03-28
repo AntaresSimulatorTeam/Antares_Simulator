@@ -48,5 +48,45 @@ inline void JIT::Informations::markAsModified()
 
 
 
+template<class T, class ReadWriteT>
+void JIT::just_in_time_manager::clear_matrix(const Antares::Matrix<T, ReadWriteT>* mtx)
+{
+	JIT::MarkAsNotLoaded(jit_);
+
+	// Ugly const_cast but it is to preserve a good public Matrix class API :
+	auto * mtx_not_const = const_cast<Antares::Matrix<T, ReadWriteT>*>(mtx);
+	mtx_not_const->clear();
+}
+
+template<class T, class ReadWriteT>
+void JIT::just_in_time_manager::unload_matrix_properly(const Antares::Matrix<T, ReadWriteT>* mtx)
+{
+	using namespace Antares;
+
+	auto* mtx_not_const = const_cast<Antares::Matrix<T, ReadWriteT>*>(mtx);
+
+	// - jit activated :
+	//		If JIT (Just-In-Time) is activated, we have to unload data to keep the memory for the solver.
+	//		The old width must only be kept when the matrix has fixed dimension.
+	//
+	// - JIT::enabled and jit not activated :
+	//		If the matrix is not ready for just-in-time (not activated), but JIT is enabled, like it would be the case 
+	//		from the GUI, we have to activate jit.
+	//		2 reasons for this :
+	//		- To reserve the memory for the study
+	//		- To reload data in case of preprocessor data have been written to
+	//		  the input folder
+
+	if (jit_ or JIT::enabled)
+	{
+		String buffer = file_name_;
+		jit_ = JIT::Reset(jit_, buffer);
+		JIT::MarkAsNotLoaded(jit_);
+		jit_->minWidth = (0 != (jit_recorded_state()->options & Matrix<T, ReadWriteT>::optFixedSize)) ? jit_recorded_state()->minWidth : 1;
+		jit_->maxHeight = jit_recorded_state()->maxHeight;
+		jit_->options = jit_recorded_state()->options;
+		mtx_not_const->clear();
+	}
+}
 
 #endif // __ANTARES_LIBS_JUST_IN_TIME_INFORMATIONS_HXX__

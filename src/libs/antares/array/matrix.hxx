@@ -1429,18 +1429,19 @@ namespace Antares
 		// Ugly const_cast but it is to preserve a good public API
 		auto& thisNotConst = const_cast<Matrix&>(*this);
 
-		// Old values
-		// These values are _mandatory_ especially for empty matrices
-		uint oldOpts   = optNone;
-		uint oldWidth  = (width != 0) ? width : 1;
-		uint oldHeight = height;
+		JIT::just_in_time_manager jit_mgr(jit, filename);
+		jit_mgr.record_current_jit_state(width, height);
 
-		if (jit)
+		if (jit_mgr.jit_activated() && jit_mgr.matrix_content_in_memory_is_same_as_on_disk())
 		{
-			oldOpts   = jit->options;
-			oldWidth  = jit->minWidth;
-			oldHeight = jit->maxHeight;
-
+			// No difference between actual matrix content in memory and matrix on disk, so we don't need to save on disk.
+			// Besides, as jit is on, we do not need it in memory, and matrix is cleared.
+			jit_mgr.clear_matrix(this);
+			return true;
+		}
+		
+		if (jit_mgr.jit_activated())
+		{
 			if (jit->loadDataIfNotAlreadyDone)
 			{
 				if (not jit->alreadyLoaded)
@@ -1453,13 +1454,6 @@ namespace Antares
 					jit->modified = modi;
 				}
 				jit->loadDataIfNotAlreadyDone = false;
-			}
-			// No modification, we should avoid writting the file to HDD
-			if (not jit->modified)
-			{
-				JIT::MarkAsNotLoaded(jit);
-				thisNotConst.clear();
-				return true;
 			}
 		}
 
@@ -1509,48 +1503,8 @@ namespace Antares
 		logs.debug() << "  :: [end] writing `" << filename << "' (" << width << 'x' << height << ')';
 		# endif
 
-		if (jit)
-		{
-			// The HIT mode must be enabled if a JIT structure is present
-			assert(JIT::enabled);
+		jit_mgr.unload_matrix_properly(this);
 
-			// If JIT (Just-In-Time) is enabled, we have to unload data
-			// to keep the memory for the solver
-			// The old width must only be kept when the matrix has fixed dimension
-			String buffer = filename;
-			jit = JIT::Reset(jit, buffer);
-			JIT::MarkAsNotLoaded(jit);
-			jit->minWidth  = (0 != (oldOpts & optFixedSize)) ? oldWidth : 1;
-			jit->maxHeight = oldHeight;
-			jit->options   = oldOpts;
-			thisNotConst.clear();
-			return true;
-		}
-		else
-		{
-			// If the matrix is not ready for JIT, but the feature is enabled,
-			// like it would be the case from the interface, we have to make the
-			// matrix ready for JIT. Two reasons :
-			//  - To reserve the memory for the study
-			//  - To reload data in case of preprocessor data have been written to
-			//    the input folder
-			//
-			if (JIT::enabled)
-			{
-				// We have to use a temporary buffer
-				// To avoid undefined behavior when `filename` = `m->jit->sourceFilename`
-				// The old width must only be kept when the matrix has fixed dimension
-				String buffer = filename;
-				jit = JIT::Reset(jit, buffer);
-				//jit->minWidth  = oldWidth;
-				jit->minWidth  = (0 != (oldOpts & optFixedSize)) ? oldWidth : 1;
-				jit->maxHeight = oldHeight;
-				jit->options   = oldOpts;
-				thisNotConst.clear();
-				JIT::MarkAsNotLoaded(jit);
-				return true;
-			}
-		}
 		return true;
 	}
 
@@ -2040,7 +1994,6 @@ namespace Antares
 		assert(Memory::RawPointer(entry[n]));
 		return entry[n];
 	}
-
 
 
 

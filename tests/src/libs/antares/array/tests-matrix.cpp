@@ -13,7 +13,7 @@ namespace utf = boost::unit_test;
 // ===  Matrix<double, double>  ===
 // ================================
 BOOST_AUTO_TEST_SUITE(coeffs_are_double__save_into_double)
-BOOST_AUTO_TEST_CASE(matrix_only_0s_and_no_addHint___result_is_empty)
+BOOST_AUTO_TEST_CASE(matrix_only_0s_and_no_print_dim___result_is_empty)
 {
 	Matrix_enhanced<double, double> mtx;
 	mtx.reset(2, 2, true);
@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_CASE(matrix_only_0s_and_no_addHint___result_is_empty)
 	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "");
 }
 
-BOOST_AUTO_TEST_CASE(matrix_only_0s_addHint__get_only_a_title_and_the_0s)
+BOOST_AUTO_TEST_CASE(matrix_only_0s_print_dim__get_only_a_title_and_the_0s)
 {
 	Matrix_enhanced<double, double> mtx;
 	mtx.reset(2, 2, true);
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_SUITE_END()
 // ===  Matrix<int, double>  ===
 // =============================
 BOOST_AUTO_TEST_SUITE(coeffs_are_int__save_into_double)
-BOOST_AUTO_TEST_CASE(matrix_only_0s_and_no_addHint___result_is_empty)
+BOOST_AUTO_TEST_CASE(matrix_only_0s_and_no_print_dim___result_is_empty)
 {
 	Matrix_enhanced<int, double> mtx(2, 2);
 	mtx.reset(2, 2, true);
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_SUITE_END()
 // ===  Matrix<int, int>  ===
 // ==========================
 BOOST_AUTO_TEST_SUITE(coeffs_are_int__save_into_int)
-BOOST_AUTO_TEST_CASE(matrix_only_0s_and_no_addHint___result_is_empty)
+BOOST_AUTO_TEST_CASE(matrix_only_0s_and_no_print_dim___result_is_empty)
 {
 	Matrix_enhanced<int, int> mtx(2, 2);
 	mtx.reset(2, 2, true);
@@ -206,7 +206,6 @@ BOOST_AUTO_TEST_CASE(global_JIT_ON__reset__save__force_loadData_to_ON__alreadyLo
 	BOOST_CHECK(not mtx.jit->loadDataIfNotAlreadyDone);
 }
 
-
 BOOST_AUTO_TEST_CASE(matrix_not_empty_cleared_BEFORE_it_can_be_saved)
 {
 	global_JIT_manager global_JIT_to(true);
@@ -217,4 +216,31 @@ BOOST_AUTO_TEST_CASE(matrix_not_empty_cleared_BEFORE_it_can_be_saved)
 	BOOST_CHECK(not mtx.loadFromCSVFile_called);
 	BOOST_CHECK(mtx.empty());
 }
+
+BOOST_AUTO_TEST_CASE(global_JIT_ON___matrix_saved_and_cleared)
+{
+	global_JIT_manager global_JIT_to(true);
+	Matrix_load_bypass<double, double> mtx(2, 2, { 1.99, 2.44, -3.999, -1.51 });
+	mtx.saveToCSVFile("path/to/an/output/file", 3, false);
+	BOOST_CHECK(mtx.empty());
+}
+
+BOOST_AUTO_TEST_CASE(global_JIT_OFF_jit_off___matrix_never_cleared)
+{
+	global_JIT_manager global_JIT_to(false);
+	Matrix_load_bypass<double, double> mtx(2, 2, { 1.99, 2.44, -3.999, -1.51 });
+	mtx.saveToCSVFile("path/to/an/output/file", 3, false);
+	BOOST_CHECK(not mtx.empty());
+}
+
+BOOST_AUTO_TEST_CASE(global_JIT_ON_jit_off___matrix_cleared)
+{
+	global_JIT_manager global_JIT_to(true);
+	Matrix_load_bypass<double, double> mtx(2, 2, { 1.99, 2.44, -3.999, -1.51 });
+	delete mtx.jit; // Turning jit off 
+	mtx.jit = nullptr;
+	mtx.saveToCSVFile("path/to/an/output/file", 3, false);
+	BOOST_CHECK(mtx.empty());
+}
+
 BOOST_AUTO_TEST_SUITE_END()
