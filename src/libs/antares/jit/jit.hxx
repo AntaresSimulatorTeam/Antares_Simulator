@@ -46,24 +46,24 @@ inline void JIT::Informations::markAsModified()
 	alreadyLoaded = true;
 }
 
-
+using namespace Antares;
 
 template<class T, class ReadWriteT>
-void JIT::just_in_time_manager::clear_matrix(const Antares::Matrix<T, ReadWriteT>* mtx)
+void JIT::just_in_time_manager::clear_matrix(const Matrix<T, ReadWriteT>* mtx)
 {
 	JIT::MarkAsNotLoaded(jit_);
 
 	// Ugly const_cast but it is to preserve a good public Matrix class API :
-	auto * mtx_not_const = const_cast<Antares::Matrix<T, ReadWriteT>*>(mtx);
+	auto * mtx_not_const = const_cast<Matrix<T, ReadWriteT>*>(mtx);
 	mtx_not_const->clear();
 }
 
 template<class T, class ReadWriteT>
-void JIT::just_in_time_manager::unload_matrix_properly_from_memory(const Antares::Matrix<T, ReadWriteT>* mtx)
+void JIT::just_in_time_manager::unload_matrix_properly_from_memory(const Matrix<T, ReadWriteT>* mtx)
 {
 	using namespace Antares;
 
-	auto* mtx_not_const = const_cast<Antares::Matrix<T, ReadWriteT>*>(mtx);
+	auto* mtx_not_const = const_cast<Matrix<T, ReadWriteT>*>(mtx);
 
 	// - jit activated :
 	//		If JIT (Just-In-Time) is activated, we have to unload data to keep the memory for the solver.
@@ -82,7 +82,8 @@ void JIT::just_in_time_manager::unload_matrix_properly_from_memory(const Antares
 		String buffer = file_name_;
 		jit_ = JIT::Reset(jit_, buffer);
 		JIT::MarkAsNotLoaded(jit_);
-		jit_->minWidth = (0 != (jit_recorded_state()->options & Matrix<T, ReadWriteT>::optFixedSize)) ? jit_recorded_state()->minWidth : 1;
+		jit_->minWidth = (0 != (jit_recorded_state()->options & Matrix<T, ReadWriteT>::optFixedSize)) ? 
+								jit_recorded_state()->minWidth : 1;
 		jit_->maxHeight = jit_recorded_state()->maxHeight;
 		jit_->options = jit_recorded_state()->options;
 		mtx_not_const->clear();
@@ -91,13 +92,13 @@ void JIT::just_in_time_manager::unload_matrix_properly_from_memory(const Antares
 
 
 template<class T, class ReadWriteT>
-void JIT::just_in_time_manager::load_matrix(const Antares::Matrix<T, ReadWriteT>* mtx)
+void JIT::just_in_time_manager::load_matrix(const Matrix<T, ReadWriteT>* mtx)
 {
 	if (not jit_->alreadyLoaded)
 	{
-		auto* mtx_not_const = const_cast<Antares::Matrix<T, ReadWriteT>*>(mtx);
+		auto* mtx_not_const = const_cast<Matrix<T, ReadWriteT>*>(mtx);
 
-		logs.debug() << " Force loading of " << jit_->sourceFilename;
+		Antares::logs.debug() << " Force loading of " << jit_->sourceFilename;
 		const bool modi = jit_->modified;
 
 		mtx_not_const->loadFromCSVFile(
