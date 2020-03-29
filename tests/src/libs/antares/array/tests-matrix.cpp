@@ -67,8 +67,14 @@ BOOST_AUTO_TEST_CASE(TS_nb_predicate_suits_int_matrices___It_converts_double_int
 	Matrix_enhanced<double, double> mtx(2, 2, {1.5, -3.552, 0.66, 2.3});
 	TSNumbersPredicate predicate;
 	mtx.saveToCSVFile("path/to/an/output/file", 2, false, predicate);
-	string res = mtx.data.to<string>();
 	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "2\t4294967294\n1\t3\n");
+}
+
+BOOST_AUTO_TEST_CASE(one_column__3_rows)
+{
+	Matrix_enhanced<double, double> mtx(3, 1, { 1.5, -3.552, 0.66 });
+	mtx.saveToCSVFile("path/to/an/output/file", 2, true);
+	BOOST_REQUIRE_EQUAL(mtx.data.to<string>(), "size:1x3\n1.50\n-3.55\n0.66\n");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
