@@ -443,19 +443,19 @@ namespace Antares
 
 
 	template<class T, class ReadWriteT>
-	bool Matrix<T,ReadWriteT>::saveToCSVFile(const AnyString& filename, uint precision, bool addHint) const
+	bool Matrix<T,ReadWriteT>::saveToCSVFile(const AnyString& filename, uint precision, bool print_dimensions) const
 	{
 		PredicateIdentity predicate;
-		return internalSaveCSVFile(filename, precision, addHint, predicate);
+		return internalSaveCSVFile(filename, precision, print_dimensions, predicate);
 	}
 
 
 	template<class T, class ReadWriteT>
 	template<class PredicateT>
 	bool Matrix<T,ReadWriteT>::saveToCSVFile(const AnyString& filename, uint precision,
-		bool addHint, PredicateT& predicate) const
+		bool print_dimensions, PredicateT& predicate) const
 	{
-		return internalSaveCSVFile(filename, precision, addHint, predicate);
+		return internalSaveCSVFile(filename, precision, print_dimensions, predicate);
 	}
 
 
@@ -1331,7 +1331,7 @@ namespace Antares
 	template<class T, class ReadWriteT>
 	template<class PredicateT>
 	void Matrix<T,ReadWriteT>::internalSaveToFileDescriptor(Yuni::Clob& data,
-		uint precision, bool addHint, PredicateT& predicate) const
+		uint precision, bool print_dimensions, PredicateT& predicate) const
 	{
 		using namespace Yuni;
 		enum
@@ -1340,7 +1340,7 @@ namespace Antares
 			isDecimal = Static::Type::IsDecimal<ReadWriteType>::Yes,
 		};
 
-		if (not addHint and containsOnlyZero(predicate))
+		if (not print_dimensions and containsOnlyZero(predicate))
 			// Does nothing if the matrix only contains zero
 			return;
 
@@ -1363,7 +1363,7 @@ namespace Antares
 		data.reserve(width * height * 6); // average
 
 		// Adding a hint about the height of the matrix
-		if (addHint)
+		if (print_dimensions)
 			data << "size:" << width << 'x' << height << '\n';
 
 		if (width == 1)
@@ -1422,7 +1422,7 @@ namespace Antares
 	template<class T, class ReadWriteT>
 	template<class PredicateT>
 	bool Matrix<T,ReadWriteT>::internalSaveCSVFile(const AnyString& filename, uint precision,
-		bool addHint, PredicateT& predicate) const
+		bool print_dimensions, PredicateT& predicate) const
 	{
 		JIT::just_in_time_manager jit_mgr(jit, filename);
 
@@ -1451,7 +1451,7 @@ namespace Antares
 			Clob data;
 			#endif
 
-			internalSaveToFileDescriptor(data, precision, addHint, predicate);
+			internalSaveToFileDescriptor(data, precision, print_dimensions, predicate);
 			Statistics::HasWrittenToDisk(data.size());
 
 			#ifndef TESTING
