@@ -33,17 +33,11 @@
 # include "../logs.h"
 # include "../string-to-double.h"
 # include "../io/statistics.h"
+# include "matrix-to-buffer.h"
 
-
-# ifdef YUNI_OS_MSVC
-#	define ANTARES_MATRIX_SNPRINTF  sprintf_s
-# else
-#	define ANTARES_MATRIX_SNPRINTF  snprintf
-# endif
 
 # define ANTARES_MATRIX_CSV_COMMA      "\t;,"
 # define ANTARES_MATRIX_CSV_SEPARATORS "\t\r\n;,"
-
 
 
 
@@ -1168,122 +1162,6 @@ namespace Antares
 
 
 
-
-
-	namespace // anonymous
-	{
-
-		template<class T>
-		struct MatrixScalar
-		{
-			static inline void Append(Yuni::Clob& file, T v)
-			{
-				if (Yuni::Math::Zero(v))
-					file.append('0');
-				else
-					file.append(v);
-			}
-
-			static inline void Append(Yuni::Clob& file, T v, const char* const)
-			{
-				Append(file, v);
-			}
-		};
-
-
-		template<>
-		struct MatrixScalar<double>
-		{
-			static void Append(Yuni::Clob& file, double v)
-			{
-				if (Yuni::Math::Zero(v))
-				{
-					file += '0';
-				}
-				else
-				{
-					char ConversionBuffer[128];
-					const int sizePrintf = ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), "%.0f", v);
-
-					if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
-						file.write((const char*) ConversionBuffer, sizePrintf);
-					else
-						file += "ERR";
-				}
-			}
-
-			static void Append(Yuni::Clob& file, double v, const char* const format)
-			{
-				if (Yuni::Math::Zero(v))
-				{
-					file += '0';
-				}
-				else
-				{
-					char ConversionBuffer[128];
-					const int sizePrintf =
-						(Yuni::Math::Zero(v - floor(v)))
-						? ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), "%.0f", v)
-						: ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), format, v);
-
-					if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
-						file.write((const char*) ConversionBuffer, sizePrintf);
-					else
-						file += "ERR";
-				}
-			}
-		};
-
-
-		template<>
-		struct MatrixScalar<float>
-		{
-			static void Append(Yuni::Clob& file, float v)
-			{
-				if (Yuni::Math::Zero(v))
-				{
-					file += '0';
-				}
-				else
-				{
-					char ConversionBuffer[128];
-					const int sizePrintf = ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), "%.0f", (double)v);
-
-					if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
-						file.write((const char*) ConversionBuffer, sizePrintf);
-					else
-						file += "ERR";
-				}
-			}
-
-			static void Append(Yuni::Clob& file, float v, const char* const format)
-			{
-				if (Yuni::Math::Zero(v))
-				{
-					file += '0';
-				}
-				else
-				{
-					char ConversionBuffer[128];
-					const int sizePrintf =
-						(Yuni::Math::Zero(v - floor(v)))
-						? ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), "%.0f", (double)v)
-						: ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), format, (double)v);
-
-					if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
-						file.write((const char*) ConversionBuffer, sizePrintf);
-					else
-						file += "ERR";
-				}
-			}
-		};
-
-	} // anonymous namespace
-
-
-
-
-
 	template<class T, class ReadWriteT>
 	bool Matrix<T,ReadWriteT>::containsOnlyZero() const
 	{
@@ -1343,77 +1221,24 @@ namespace Antares
 		if (not print_dimensions and containsOnlyZero(predicate))
 			// Does nothing if the matrix only contains zero
 			return;
+		
+		matrix_to_buffer_dumper_factory mtx_to_buffer_dumper_factory(isDecimal, precision);
+
+		I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>* mtx_to_buffer_dpr =  
+			mtx_to_buffer_dumper_factory.get_dumper<T, ReadWriteT, PredicateT>(this, data, predicate);
 
 		// Determining the string format to use according the given precision
-		const char* format = nullptr;
-		if (isDecimal and precision)
-		{
-			static const char* const sfmt[] =
-			{
-				"%.0f",  "%.1f",  "%.2f", "%.3f",  "%.4f",  "%.5f",  "%.6f",
-				"%.7f",	 "%.8f",  "%.9f", "%.10f", "%.11f", "%.12f", "%.13f",
-				"%.14f", "%.15f", "%.16f",
-			};
-			assert(precision <= 16);
-			format = sfmt[precision];
-		}
+		mtx_to_buffer_dpr->set_print_format(isDecimal, precision);
 
-		// pre-allocate, should be enough in nearly all cases
-		// data.clear(), the buffer is already empty
-		data.reserve(width * height * 6); // average
+
+		// Pre-allocate memory in the buffer. It should be enough in nearly all cases.
+		data.reserve(width * height * 6);
 
 		// Adding a hint about the height of the matrix
 		if (print_dimensions)
 			data << "size:" << width << 'x' << height << '\n';
 
-		if (width == 1)
-		{
-			if (not isDecimal or not precision)
-			{
-				for (uint y = 0; y != height; ++y)
-				{
-					MatrixScalar<ReadWriteT>::Append(data, (ReadWriteT) predicate(entry[0][y]));
-					data += '\n';
-				}
-			}
-			else
-			{
-				for (uint y = 0; y != height; ++y)
-				{
-					MatrixScalar<ReadWriteT>::Append(data, (ReadWriteT) predicate(entry[0][y]), format);
-					data += '\n';
-				}
-			}
-		}
-		else
-		{
-			if (not isDecimal or not precision)
-			{
-				for (uint y = 0; y < height; ++y)
-				{
-					MatrixScalar<ReadWriteT>::Append(data, (ReadWriteT) predicate(entry[0][y]));
-					for (uint x = 1; x < width; ++x)
-					{
-						data += '\t';
-						MatrixScalar<ReadWriteT>::Append(data, (ReadWriteT) predicate(entry[x][y]));
-					}
-					data += '\n';
-				}
-			}
-			else
-			{
-				for (uint y = 0; y != height; ++y)
-				{
-					MatrixScalar<ReadWriteT>::Append(data, (ReadWriteT) predicate(entry[0][y]), format);
-					for (uint x = 1; x < width; ++x)
-					{
-						data += '\t';
-						MatrixScalar<ReadWriteT>::Append(data, (ReadWriteT) predicate(entry[x][y]), format);
-					}
-					data += '\n';
-				}
-			}
-		}
+		mtx_to_buffer_dpr->run();
 	}
 
 
@@ -1980,7 +1805,5 @@ namespace Antares
 
 
 } // namespace Antares
-
-# undef ANTARES_MATRIX_SNPRINTF
 
 #endif // __ANTARES_LIBS_ARRAY_MATRIX_HXX__

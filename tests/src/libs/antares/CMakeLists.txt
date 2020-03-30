@@ -8,6 +8,8 @@ message("lis/antares/CMakeLists.txt - src_libs_antares : ${src_libs_antares}")
 set(SRC_MATRIX_LIB
 	${src_libs_antares}/array/matrix.h
 	${src_libs_antares}/array/matrix.hxx
+	${src_libs_antares}/array/matrix-to-buffer.h
+	${src_libs_antares}/array/matrix-to-buffer.hxx
 	${src_libs_antares}/jit/jit.cpp
 	${src_libs_antares}/logs/logs.cpp
 	${src_libs_antares}/io/statistics.cpp

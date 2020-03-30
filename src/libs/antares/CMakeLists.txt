@@ -28,6 +28,8 @@ source_group("object" FILES ${SRC_OBJECT})
 set(SRC_MATRIX
 	array/array1d.h
 	array/array1d.cpp
+	array/matrix-to-buffer.h
+	array/matrix-to-buffer.hxx
 	array/matrix.h
 	array/matrix.cpp
 	array/matrix.hxx
