@@ -16,19 +16,35 @@ set(SRC_MATRIX_LIB
 	${src_libs_antares}/string-to-double.cpp
 	)
 
-add_library(matrix ${SRC_MATRIX_LIB})
-set_target_properties(matrix PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${UNIT_LIBRARIES_DIR}")
+add_library(lib-matrix ${SRC_MATRIX_LIB})
+set_target_properties(lib-matrix PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${UNIT_LIBRARIES_DIR}")
 
 
-# Building tests on class Matrix
-set(SRC_TEST_MATRIX
+# Building tests on Matrix save operations
+set(SRC_TEST_MATRIX_SAVE
 	${src_libs_antares}/array/matrix.h
 	${src_libs_antares}/array/matrix.hxx
-	array/tests-matrix.h
-	array/tests-matrix.cpp
+	array/tests-matrix-save.h
+	array/tests-matrix-save.cpp
 	)
 	
 include_directories("${src_libs_antares}/array")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/array")
-add_executable(tests-on-Matrix ${SRC_TEST_MATRIX})
-target_link_libraries(tests-on-Matrix matrix ${YUNI_STATIC_CORE_LIB})
+add_executable(tests-matrix-save ${SRC_TEST_MATRIX_SAVE})
+target_link_libraries(tests-matrix-save lib-matrix ${YUNI_STATIC_CORE_LIB})
+
+
+# Building tests on Matrix load operations
+set(SRC_TEST_MATRIX_LOAD
+	${src_libs_antares}/array/matrix.h
+	${src_libs_antares}/array/matrix.hxx
+	array/tests-matrix-load.h
+	array/tests-matrix-load.cpp
+	)
+	
+include_directories("${src_libs_antares}/array")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/array")
+add_executable(tests-matrix-load ${SRC_TEST_MATRIX_LOAD})
+target_link_libraries(tests-matrix-load lib-matrix ${YUNI_STATIC_CORE_LIB})
+
+

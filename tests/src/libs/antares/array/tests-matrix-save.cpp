@@ -4,7 +4,7 @@
 
 #include <boost/test/included/unit_test.hpp>
 
-#include<tests-matrix.h>
+#include<tests-matrix-save.h>
 
 namespace utf = boost::unit_test;
 
