@@ -1,15 +1,6 @@
-# include<matrix.h>
-#include<fill-matrix.h>
-#include<yuni/core/system/stdint.h>
+# include<matrix-bypass-load.h>
+# include<yuni/core/system/stdint.h>
 
 
-struct PredicateIdentity
-{
-	template<class U> inline U operator () (const U& value) const
-	{
-		return value;
-	}
-};
-
-
-
+// Includes could go down to associated .cpp et the file could be removed.
+// We leave it here for any further purpose.

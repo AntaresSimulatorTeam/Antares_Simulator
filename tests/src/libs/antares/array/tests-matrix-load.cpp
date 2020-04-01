@@ -20,14 +20,16 @@ BOOST_AUTO_TEST_SUITE(test_suite_1)
 
 BOOST_AUTO_TEST_CASE(test_1)
 {
-	// Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-	Matrix_easy_to_fill<double, double> mtx0(2, 2, {1.5, -2.44444, 3.66666, 0});
-	Clob * buffer = new Clob;
-	PredicateIdentity predicate;
-	mtx0.saveToBuffer(*buffer, 2, false, predicate);
+	
+	Matrix_mock_load_to_buffer<double, double> mtx(2, 2);
 
-	Matrix<double, double> mtx(2, 2);
-	mtx.error_ = IO::errNone;
+	// Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
+	mtx.fake_matrix_to_load(2, 2, { 1.5, -2.44444, 3.66666, 0 });
+	mtx.fake_mtx_to_be_loaded__set_precision(2);
+	mtx.fake_mtx_to_be_loaded__print_dimensions(false);
+	mtx.error_when_loading_fake_mtx(IO::errNone);
+
+	Clob* buffer = new Clob;
 	mtx.loadFromCSVFile("path/to/a/file", 2, 2, Matrix<double, double>::optNone, buffer);
 
 	BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 1.5);

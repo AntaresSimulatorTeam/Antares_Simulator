@@ -285,7 +285,7 @@ BOOST_AUTO_TEST_CASE(global_JIT_ON__reset__save__force_loadData_to_ON____no_load
 	BOOST_CHECK(not mtx.jit->alreadyLoaded);
 }
 
-BOOST_AUTO_TEST_CASE(global_JIT_ON__reset__save__force_loadData_to_ON__alreadyLoaded_to_OFF____no_load_done)
+BOOST_AUTO_TEST_CASE(global_JIT_ON__reset__save__force_loadData_to_ON__alreadyLoaded_to_OFF____load_done)
 {
 	global_JIT_manager global_JIT_to(true);
 	Matrix_load_bypass<double, double> mtx;
