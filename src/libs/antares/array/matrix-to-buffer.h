@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#ifndef __ANTARES_LIBS_IO_MATRIX_TO_BUFFER_SENDER_H__
-# define __ANTARES_LIBS_IO_MATRIX_TO_BUFFER_SENDER_H__
+#ifndef __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_H__
+# define __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_H__
 
 # include <yuni/core/string.h>
 
@@ -131,4 +131,4 @@ namespace Antares
 
 #include "matrix-to-buffer.hxx"
 
-#endif	// __ANTARES_LIBS_IO_MATRIX_TO_BUFFER_SENDER_H__
+#endif	// __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_H__

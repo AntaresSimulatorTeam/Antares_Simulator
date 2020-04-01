@@ -198,6 +198,16 @@ namespace Antares
 		bool saveToCSVFile(const AnyString& filename, uint precision, bool print_dimensions, PredicateT& predicate) const;
 		//@}
 
+		#ifdef TESTING
+		template<class PredicateT>
+		void saveToBuffer(	Yuni::Clob& data,
+							uint precision,
+							bool print_dimensions,
+							PredicateT& predicate) const
+		{
+			internalSaveToFileDescriptor(data, precision, print_dimensions, predicate);
+		}
+		#endif
 
 		//! \name Operations on columns and rows
 		//@{
@@ -443,7 +453,10 @@ namespace Antares
 		mutable JIT::Informations* jit;
 
 		#ifdef TESTING
+		// Testing saveToCSVFile(...)
 		mutable Yuni::Clob data;
+		// Testing loadFromCSVFile(...)
+		Yuni::IO::Error error_;
 		#endif
 
 

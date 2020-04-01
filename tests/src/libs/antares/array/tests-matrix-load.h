@@ -1,13 +1,15 @@
-#include<matrix.h>
-// #include<yuni/core/system/stdint.h>
+# include<matrix.h>
+#include<enhanced-matrix.h>
+#include<yuni/core/system/stdint.h>
 
-// #include<string>
-// #include<vector>
 
-// using namespace std;
-// using namespace Yuni;
-// using namespace Antares;
-
+struct PredicateIdentity
+{
+	template<class U> inline U operator () (const U& value) const
+	{
+		return value;
+	}
+};
 
 
 

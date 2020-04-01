@@ -1070,7 +1070,11 @@ namespace Antares
 		if (not buffer)
 			buffer = new BufferType();
 
+		#ifdef TESTING
+		switch(error_)
+		#else
 		switch (IO::File::LoadFromFile(*buffer, filename, filesizeHardLimit))
+		#endif
 		{
 			case IO::errNone:
 				{
