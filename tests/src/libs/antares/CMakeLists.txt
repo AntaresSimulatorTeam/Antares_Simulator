@@ -24,7 +24,8 @@ set_target_properties(lib-matrix PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${UNIT_LIB
 set(SRC_TEST_MATRIX_SAVE
 	${src_libs_antares}/array/matrix.h
 	${src_libs_antares}/array/matrix.hxx
-	array/enhanced-matrix.h
+	array/fill-matrix.h
+	array/matrix-bypass-load.h
 	array/tests-matrix-save.h
 	array/tests-matrix-save.cpp
 	)
@@ -39,7 +40,8 @@ target_link_libraries(tests-matrix-save lib-matrix ${YUNI_STATIC_CORE_LIB})
 set(SRC_TEST_MATRIX_LOAD
 	${src_libs_antares}/array/matrix.h
 	${src_libs_antares}/array/matrix.hxx
-	array/enhanced-matrix.h
+	array/fill-matrix.h
+	array/matrix-bypass-load.h
 	array/tests-matrix-load.h
 	array/tests-matrix-load.cpp
 	)
