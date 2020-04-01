@@ -1,5 +1,5 @@
-#include<matrix.h>
-#include<enhanced-matrix.h>
+#include<fill-matrix.h>
+#include<matrix-bypass-load.h>
 #include<yuni/core/system/stdint.h>
 
 #include<string>
@@ -30,36 +30,5 @@ private:
 };
 
 
-template<class T = double, class ReadWriteT = T>
-class Matrix_load_bypass : public Matrix_enhanced<T, ReadWriteT>
-{
-public:
-	Matrix_load_bypass() :
-		Matrix_enhanced(),
-		loadFromCSVFile_called(false) 
-	{};
 
-	Matrix_load_bypass(uint height, uint width) :
-		Matrix_enhanced<T, ReadWriteT>(height, width),
-		loadFromCSVFile_called(false)
-	{};
-
-	Matrix_load_bypass(uint height, uint width, const vector<T>& vec) :
-		Matrix_enhanced<T, ReadWriteT>(height, width, vec),
-		loadFromCSVFile_called(false)
-	{};
-
-	virtual bool loadFromCSVFile(
-		const AnyString& filename,
-		uint minWidth, uint maxHeight, 
-		uint options = optNone,
-		BufferType* buffer = NULL)
-	{
-		loadFromCSVFile_called = true;
-		return true;
-	}
-
-public:
-	bool loadFromCSVFile_called;
-};
 

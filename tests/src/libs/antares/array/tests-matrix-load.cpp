@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_SUITE(test_suite_1)
 BOOST_AUTO_TEST_CASE(test_1)
 {
 	// Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-	Matrix_enhanced<double, double> mtx0(2, 2, {1.5, -2.44444, 3.66666, 0});
+	Matrix_easy_to_fill<double, double> mtx0(2, 2, {1.5, -2.44444, 3.66666, 0});
 	Clob * buffer = new Clob;
 	PredicateIdentity predicate;
 	mtx0.saveToBuffer(*buffer, 2, false, predicate);
