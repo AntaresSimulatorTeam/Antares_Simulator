@@ -200,9 +200,9 @@ namespace Antares
 
 
 		virtual
-		Yuni::IO::Error saveToBuffer(BufferType& buffer, const AnyString& filename, unsigned long long hardlimit) const
+		Yuni::IO::Error loadFromFileToBuffer(BufferType& buffer, const AnyString& filename, unsigned long long hardlimit) const
 		{
-			return IO::File::LoadFromFile(buffer, filename, filesizeHardLimit);
+			return Yuni::IO::File::LoadFromFile(buffer, filename, filesizeHardLimit);
 		}
 
 		template<class PredicateT>

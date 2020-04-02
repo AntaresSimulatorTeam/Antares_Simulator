@@ -89,7 +89,7 @@ public:
 		fake_mtx_error_when_loading_(IO::errNone)
 	{};
 	
-	virtual IO::Error saveToBuffer(BufferType & buffer, const AnyString& filename, uint64 hardlimit) const
+	virtual IO::Error loadFromFileToBuffer(BufferType & buffer, const AnyString& filename, uint64 hardlimit) const
 	{
 		Matrix_easy_to_fill<double, double> fake_mtx(fake_mtx_heigth_, fake_mtx_width_, fake_mtx_vec_);
 		Antares::UnitTests::PredicateIdentity predicate;
