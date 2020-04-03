@@ -11,9 +11,10 @@ set(SRC_MATRIX_LIB
 	${src_libs_antares}/array/matrix-to-buffer.h
 	${src_libs_antares}/array/matrix-to-buffer.hxx
 	${src_libs_antares}/jit/jit.cpp
-	${src_libs_antares}/logs/logs.cpp
 	${src_libs_antares}/io/statistics.cpp
 	${src_libs_antares}/string-to-double.cpp
+	logs/fake-logs.h
+	logs/fake-logs.cpp
 	)
 
 add_library(lib-matrix ${SRC_MATRIX_LIB})
@@ -31,7 +32,7 @@ set(SRC_TEST_MATRIX_SAVE
 	)
 	
 include_directories("${src_libs_antares}/array")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/array")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 add_executable(tests-matrix-save ${SRC_TEST_MATRIX_SAVE})
 target_link_libraries(tests-matrix-save lib-matrix ${YUNI_STATIC_CORE_LIB})
 

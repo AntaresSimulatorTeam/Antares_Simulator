@@ -1,5 +1,5 @@
-#include<fill-matrix.h>
-#include<matrix-bypass-load.h>
+#include<array/fill-matrix.h>
+#include<array/matrix-bypass-load.h>
 #include<yuni/core/system/stdint.h>
 
 #include<string>

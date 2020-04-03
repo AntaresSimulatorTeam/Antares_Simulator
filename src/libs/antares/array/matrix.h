@@ -37,8 +37,6 @@
 # include "../study/fwd.h"
 # include "autoflush.h"
 
-# include <yuni/core/string.h>
-
 
 namespace Antares
 {
