@@ -19,7 +19,8 @@ set(SRC_MATRIX_LIB
 
 add_library(lib-matrix ${SRC_MATRIX_LIB})
 set_target_properties(lib-matrix PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${UNIT_LIBRARIES_DIR}")
-
+target_include_directories(lib-matrix PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(lib-matrix PRIVATE "${ANTARES_SRC}/ext/yuni/src")
 
 # Building tests on Matrix save operations
 set(SRC_TEST_MATRIX_SAVE
@@ -31,9 +32,12 @@ set(SRC_TEST_MATRIX_SAVE
 	array/tests-matrix-save.cpp
 	)
 	
-include_directories("${src_libs_antares}/array")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
+
 add_executable(tests-matrix-save ${SRC_TEST_MATRIX_SAVE})
+target_include_directories(tests-matrix-save PRIVATE "${src_libs_antares}/array")
+target_include_directories(tests-matrix-save PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(tests-matrix-save PRIVATE "${BOOST_PATH}")
+target_include_directories(tests-matrix-save PRIVATE "${ANTARES_SRC}/ext/yuni/src")
 target_link_libraries(tests-matrix-save lib-matrix ${YUNI_STATIC_CORE_LIB})
 
 
@@ -47,9 +51,12 @@ set(SRC_TEST_MATRIX_LOAD
 	array/tests-matrix-load.cpp
 	)
 	
-include_directories("${src_libs_antares}/array")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/array")
+
 add_executable(tests-matrix-load ${SRC_TEST_MATRIX_LOAD})
+target_include_directories(tests-matrix-load PRIVATE "${src_libs_antares}/array")
+target_include_directories(tests-matrix-load PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(tests-matrix-load PRIVATE "${BOOST_PATH}")
+target_include_directories(tests-matrix-load PRIVATE "${ANTARES_SRC}/ext/yuni/src")
 target_link_libraries(tests-matrix-load lib-matrix ${YUNI_STATIC_CORE_LIB})
 
 
