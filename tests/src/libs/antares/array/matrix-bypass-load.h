@@ -66,6 +66,8 @@ public:
 		buffer_print_dimensions_(false)
 	{}
 
+	~fake_fuffer_factory() {};
+
 	void matrix_to_build_buffer_with(Matrix_easy_to_fill<T, ReadWriteT> * mtx) { mtx_to_build_buffer_with_ = mtx; }
 	void set_precision(uint precision) { buffer_precision_ = precision; }
 	void print_dimensions(bool print_dims) { buffer_print_dimensions_ = print_dims; }

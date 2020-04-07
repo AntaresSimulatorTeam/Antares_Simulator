@@ -1078,7 +1078,7 @@ namespace Antares
 					if (buffer->empty())
 					{
 						if (maxHeight and minWidth)
-							reset((minWidth != 0 ? minWidth : 1), maxHeight);
+							reset((minWidth != 0 ? minWidth : 1), maxHeight); // gp : minWidth always != 0 here ==> Refactoring
 						else
 							clear();
 						result = true;

@@ -1,6 +1,7 @@
 #include<array/fill-matrix.h>
 #include<array/matrix-bypass-load.h>
 #include<yuni/core/system/stdint.h>
+#include<jit/global_JIT_manager.h>
 
 #include<string>
 #include<vector>
@@ -16,19 +17,5 @@ struct TSNumbersPredicate
 		return value + 1;
 	}
 };
-
-class global_JIT_manager
-{
-public:
-	global_JIT_manager(bool turn_to) : JIT_initial(JIT::enabled)
-	{
-		JIT::enabled = turn_to;
-	}
-	~global_JIT_manager() { JIT::enabled = JIT_initial; }
-private:
-	bool JIT_initial;
-};
-
-
 
 
