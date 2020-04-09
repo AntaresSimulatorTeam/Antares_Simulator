@@ -748,6 +748,7 @@ namespace Antares
 		size_t bom = 0;
 		if (not DetectEncoding(filename, data, bom))
 		{
+			// gp : dead code - can never be reached
 			reset((minWidth > 0 ? minWidth : 1), maxHeight);
 			return false;
 		}
@@ -773,6 +774,7 @@ namespace Antares
 				else
 					++maxHeight;
 			}
+			// gp : dead code - can never be reached
 			// The first occurence of the carriage return
 			YString::Size max = data.find('\n');
 			if (max == BufferType::npos)
@@ -896,6 +898,7 @@ namespace Antares
 							}
 							else
 							{
+								// gp : dead code - can never be reached
 								// Looking for the new matrix width
 								uint newOffset = offset;
 								uint newWidth = width + 1;

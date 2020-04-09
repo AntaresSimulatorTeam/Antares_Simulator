@@ -26,6 +26,8 @@ namespace Antares
 
 			void clear() { buffer_.clear(); }
 			string content() { return buffer_.to<string>(); }
+			bool contains(string sub_string) { return buffer_.contains(sub_string); }
+			bool empty() { return buffer_.empty(); }
 		private:
 			Yuni::CString<1024> buffer_;
 		};

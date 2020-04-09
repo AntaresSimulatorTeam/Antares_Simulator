@@ -114,7 +114,7 @@ public:
 
 	void error_when_loading_from_file(IO::Error err) { fake_mtx_error_when_loading_ = err; }
 
-public:
+private:
 	IO::Error fake_mtx_error_when_loading_;
 };
 
