@@ -53,8 +53,8 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "t
 	set(ANTARES_VERSION_TARGET "release")
 
 	if(NOT WIN32)
-		set(CMAKE_CXX_FLAGS_RELEASE "${COMMON_GCC_FLAGS} -flto -O3 -funroll-loops -frerun-cse-after-loop -frerun-loop-opt -finline-functions")
-		set(CMAKE_C_FLAGS_RELEASE   "${COMMON_GCC_FLAGS} -flto -O3 -funroll-loops -frerun-cse-after-loop -frerun-loop-opt -finline-functions ${ADDITIONAL_C_FLAGS}")
+		set(CMAKE_CXX_FLAGS_RELEASE "${COMMON_GCC_FLAGS} -O3 -funroll-loops -frerun-cse-after-loop -frerun-loop-opt -finline-functions")
+		set(CMAKE_C_FLAGS_RELEASE   "${COMMON_GCC_FLAGS} -O3 -funroll-loops -frerun-cse-after-loop -frerun-loop-opt -finline-functions ${ADDITIONAL_C_FLAGS}")
 	endif(NOT WIN32)
 	add_definitions("-DNDEBUG") # Remove asserts
 
