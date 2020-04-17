@@ -19,10 +19,7 @@ jobs:
     - name: Install libraries
       run: |
            sudo apt-get update --fix-missing
-           sudo apt-get install libuuid1 uuid-dev libssh2-1 libssh2-1-dev libidn2-dev libidn11 libidn11-dev gtk2.0 wxGTK3-devel libcurl-devel libb64-devel
-
-    - name: Submodule update openssl
-      run: git submodule update --init --recursive -- src/ext/openssl
+           sudo apt-get install libuuid1 uuid-dev libssh2-1 libssh2-1-dev libidn2-dev libidn11 libidn11-dev gtk2.0 wxwidgets3.0-dev curl-dev libb64-dev
 
     - name: Configure
       run: |
