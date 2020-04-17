@@ -10,8 +10,6 @@ if(NOT MSVC)
   add_definitions(-DCURL_STATICLIB)
 endif()
 
-include_directories("${ANTARES_OSSL_INCLUDE}")
-include_directories("${ANTARES_CURL_INCLUDE}")
 
 add_library(libantares-license
 	license.h
@@ -25,5 +23,7 @@ add_library(libantares-license
 	getstarttime.h
 	
 )
-	target_link_libraries(libantares-license ${ANTARES_OSSL_LIBS} ${ANTARES_CURL_LIBS} base64)
+
+#TODO : OPENSSL and CURL removed but link still OK ?
+#target_link_libraries(libantares-license ${ANTARES_OSSL_LIBS} ${ANTARES_CURL_LIBS} base64)
 

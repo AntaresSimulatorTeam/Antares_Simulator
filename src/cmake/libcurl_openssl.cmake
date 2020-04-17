@@ -47,29 +47,9 @@ else()
 	set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 
 	#libcurl
-	find_package(CURL 7.51.0)
+	find_package(CURL REQUIRED)
 
-	if (CURL_FOUND)
-		set(ANTARES_CURL_INCLUDE "${CURL_INCLUDE_DIRS}/curl" "${CURL_INCLUDE_DIRS}")
-		set(ANTARES_CURL_LINK "${CURL_LIBRARIES}")
-		set(ANTARES_CURL_LIBS "${ANTARES_CURL_LINK}")
-	else()	
-		OERROR("libcurl-dev is required")
-	endif()
-
-	#openssl
-	if(NOT OPENSSL_ROOT_DIR)
-		set(OPENSSL_ROOT_DIR "/") # default value
-	endif()
-	
-	find_package(OpenSSL 1.0.2)
-	
-	if (OPENSSL_FOUND)
-		set(ANTARES_OSSL_INCLUDE "${OPENSSL_INCLUDE_DIR}/openssl" "${OPENSSL_INCLUDE_DIR}")		
-		set(ANTARES_OSSL_LINK "${OPENSSL_LIBRARIES}")
-		set(ANTARES_OSSL_LIBS "${ANTARES_OSSL_LINK}")		
-	else()
-		OERROR("libssl-dev is required")
-	endif()
+	#openssl	
+	find_package(OpenSSL REQUIRED)
 
 endif()

@@ -55,7 +55,7 @@ target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer
 		yuni-static-core
 		${wxWidgets_LIBRARIES} ${CMAKE_THREADS_LIBS_INIT})
 if(NOT WIN32)
-	target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer z dl ssh2 idn idn2 rt)
+	target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer dl  rt)
 endif(NOT WIN32)
 
 

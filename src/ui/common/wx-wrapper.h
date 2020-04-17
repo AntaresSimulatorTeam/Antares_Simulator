@@ -34,7 +34,7 @@
 # endif
 
 
-# if defined(__cplusplus) && defined(WX_SUPPORT)
+# if defined(__cplusplus)
 
 
 //// For compilers that support precompilation, includes "wx/wx.h".
@@ -57,6 +57,7 @@ class wxScrolledWindow;
 #include <wx/utils.h>
 #include <wx/stream.h>
 #include <wx/memory.h>
+#include <wx/window.h>
 
 #include "wx/validate.h"
 

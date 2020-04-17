@@ -110,11 +110,11 @@ macro(solver_app name swap)
 		main.h main.hxx main.cpp
 	)
 
-	set(ANTARES_SOLVER_LIBS
+
+	#TODO : yuni-static-uuid  and yuni-static-core removed for link order
+	set(ANTARES_SOLVER_LIBS		
 		libantares-core-calendar
-		libantares-license
-		yuni-static-core
-		yuni-static-uuid
+		libantares-license		
 		${CMAKE_THREADS_LIBS_INIT}
 	)
 
@@ -154,11 +154,14 @@ macro(solver_app name swap)
 	endif()
 
 	if(NOT MSVC)
-		#-Wl,--start-group ${ANTARES_SOLVER_LIBS} -Wl,--end-group)
-		target_link_libraries(${exec_name} ${ANTARES_SOLVER_LIBS} uuid)
-		target_link_libraries(${exec_name}  z uuid dl ssh2 idn idn2 rt)
+		target_link_libraries(${exec_name} ${ANTARES_SOLVER_LIBS} )
+
+		#Add uuid last so link can be done for yuni-static-uuid
+		target_link_libraries(${exec_name}  dl  curl rt crypto b64 yuni-static-uuid yuni-static-core uuid)
 	else()
-		target_link_libraries(${exec_name} ${ANTARES_SOLVER_LIBS})
+		#TODO : ANTARES_SOLVER_LIBS change but changes not tested on Windows
+		#Add uuid last so link can be done for yuni-static-uuid
+		target_link_libraries(${exec_name} ${ANTARES_SOLVER_LIBS} yuni-static-uuid yuni-static-core uuid)
 		target_link_libraries(${exec_name} ole32 rpcrt4) # uuid
 	endif()
 
@@ -166,9 +169,6 @@ macro(solver_app name swap)
 	executable_strip(${exec_name})
 
 endmacro()
-
-
-
 
 solver_app("solver"      false)
 solver_app("solver-swap" true)

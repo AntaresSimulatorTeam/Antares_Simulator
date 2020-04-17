@@ -37,15 +37,12 @@ include("cmake/inputs.cmake")
 include("cmake/messages.cmake")
 include("cmake/resources.cmake")
 
+#wxWidget includes
+find_package(wxWidgets REQUIRED COMPONENTS net gl core base richtext propgrid aui)
+include(${wxWidgets_USE_FILE})
 
-
-
-
-
-
+#define sources files
 set(SRCS
-		# wxWidgets
-		${wxWidgets_USE_FILE}
 		# Config
 		config.h
 
@@ -140,7 +137,6 @@ include_directories("../../libs")
 OMESSAGE("  :: application ${execname}")
 add_executable(${execname} WIN32 ${SRCS})
 
-
 set(ANTARES_LIBS
 		libantares-ui-application
 		libantares-ui-windows-inspector
@@ -172,8 +168,7 @@ set(ANTARES_LIBS
 		libantares-core-calendar
 		libantares-license
 		yuni-static-core
-		yuni-static-uuid
-		${wxWidgets_LIBRARIES}
+		yuni-static-uuid		
 		${CMAKE_THREADS_LIBS_INIT}
 	)
 
@@ -181,11 +176,13 @@ set(ANTARES_LIBS
 		message(STATUS "wxWidgets: CMAKE_THREADS_LIBS_INIT:     ${CMAKE_THREADS_LIBS_INIT}")
 	
 if(NOT MSVC)
+
 	target_link_libraries(${execname}
-		-Wl,--start-group ${ANTARES_LIBS} uuid dl ssh2 idn idn2 rt -Wl,--end-group)
+		-Wl,--start-group ${ANTARES_LIBS} uuid dl rt -Wl,--end-group ${wxWidgets_LIBRARIES} curl rt crypto b64)
+
 else()
 	# required for uuid
-	target_link_libraries(${execname} ${ANTARES_LIBS} ole32 rpcrt4)
+	target_link_libraries(${execname} ${ANTARES_LIBS} ${wxWidgets_LIBRARIES} ole32 rpcrt4)
 		
 endif()
 

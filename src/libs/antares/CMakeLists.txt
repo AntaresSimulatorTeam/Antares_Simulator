@@ -281,8 +281,6 @@ set(SRC_LOGS
 	)
 source_group("misc\\logs" FILES ${SRC_LOGS})
 
-include_directories("${ANTARES_OSSL_INCLUDE}")
-include_directories("${ANTARES_CURL_INCLUDE}")
 set(SRC_PROXY
 	proxy.h
 	proxy/proxy.h
