@@ -29,5 +29,5 @@ jobs:
     - name: Build
       run: |
            cd src
-           make antares-7.1-solver
+           make
 
