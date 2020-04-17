@@ -41,7 +41,6 @@
 
 //#include <wx/utils.h>
 #include <wx/dirdlg.h>
-#include <wx/generic/dirdlgg.h>
 
 #include <wx/sizer.h>
 #include <wx/button.h>

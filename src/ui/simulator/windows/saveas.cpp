@@ -31,7 +31,6 @@
 #include <wx/stattext.h>
 #include <wx/button.h>
 #include <wx/dirdlg.h>
-#include <wx/generic/dirdlgg.h>
 #include <wx/frame.h>
 
 #include "../toolbox/validator.h"
