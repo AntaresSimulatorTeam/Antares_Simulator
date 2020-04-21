@@ -20,6 +20,9 @@ source_group("constraints-builder" FILES ${SRC_CBUILDER})
 #
 add_library(libantares-solver-constraints-builder
 		${SRC_CBUILDER} )
+
+
+target_link_libraries(libantares-solver-constraints-builder PRIVATE libantares-core)
 		
 set_target_properties(libantares-solver-constraints-builder PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
 

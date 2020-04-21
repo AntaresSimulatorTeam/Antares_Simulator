@@ -221,18 +221,7 @@ source_group("Notebook" FILES ${SRC_TOOLBOX_COM_NOTEBOOK})
 
 
 
-
-
-# wxPropGrid
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../common/component/propgrid/include" "${CMAKE_CURRENT_SOURCE_DIR}/../common/component")
-
-
-
-
-
-
-
-add_library(libantares-ui-components STATIC
+add_library(libantares-ui-components
 	# WIP Panel (Work In progress)
 	${SRC_TOOLBOX_COM_WIPPANEL}
 	# Datagrid
@@ -248,5 +237,9 @@ add_library(libantares-ui-components STATIC
 	# Notebook
 	${SRC_TOOLBOX_COM_NOTEBOOK}
 	)
+
+
+target_link_libraries(libantares-ui-components PUBLIC ${wxWidgets_LIBRARIES})
+target_link_libraries(libantares-ui-components PRIVATE libantares-core libantares-ui-common)
 
 

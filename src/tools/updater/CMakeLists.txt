@@ -26,9 +26,9 @@ set(UPDATER_LIBS
 		)
 
 if (WIN32 OR WIN64)
-	target_link_libraries(${execname} ${UPDATER_LIBS})
+	target_link_libraries(${execname} PRIVATE ${UPDATER_LIBS})
 else()
-	target_link_libraries(${execname} -Wl,--start-group ${UPDATER_LIBS} -Wl,--end-group)
+	target_link_libraries(${execname} PRIVATE -Wl,--start-group ${UPDATER_LIBS} -Wl,--end-group)
 endif()
 
 

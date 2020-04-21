@@ -30,9 +30,9 @@ set(CLEANER_LIBS
 )
 
 if (WIN32 OR WIN64)
-	target_link_libraries(${execname} ${CLEANER_LIBS})
+	target_link_libraries(${execname} PRIVATE ${CLEANER_LIBS})
 else()
-	target_link_libraries(${execname} -Wl,--start-group ${CLEANER_LIBS} -Wl,--end-group)
+	target_link_libraries(${execname} PRIVATE -Wl,--start-group ${CLEANER_LIBS} -Wl,--end-group)
 endif()
 
 import_std_libs(${execname})

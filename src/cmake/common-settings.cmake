@@ -1,10 +1,3 @@
-
-# no RPATH at all
-#set(CMAKE_SKIP_RPATH true)
-#set(CMAKE_SKIP_BUILD_RPATH true)
-#set(CMAKE_BUILD_WITH_INSTALL_RPATH 0)
-
-
 #
 # Common FLAGS for all compilers
 #
@@ -78,7 +71,6 @@ else()
 	set(ANTARES_VERSION_TARGET "debug")
 	set(ANTARES_INSTALLER_EXTENSION "-debug")
 
-
 	if(NOT WIN32)
 
 		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_GCC_FLAGS} -g3 -ggdb3 -feliminate-unused-debug-symbols")
@@ -99,7 +91,7 @@ endif()
 
 
 
-
+#TODO : check these definitions
 # UNICODE
 if(WIN32 OR WIN64)
 	add_definitions("-DUNICODE")
@@ -174,14 +166,15 @@ if (NOT MSVC)
 	endif()
 endif()
 
+
+#TODO : check why theses definition  are needed
 if(WIN32)
 	add_definitions("-DANT_WINDOWS")
 	add_definitions("/D_CRT_SECURE_NO_WARNINGS")
 endif()
 
 # Thread safety
-add_definitions("-D_REENTRANT -DXUSE_MTSAFE_API -DCURL_STATICLIB")
-
+add_definitions("-D_REENTRANT -DXUSE_MTSAFE_API")
 
 # ICC Optimizations
 if (ICC)
@@ -191,32 +184,7 @@ if (ICC)
 endif()
 
 
-#
-# SQLite
-#
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/ext/sqlite/src")
-add_definitions("-DSQLITE_THREADSAFE=1")
-add_definitions("-D_LARGEFILE_SOURCE=1")
-
-
-#
-# Yuni
-#
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/ext/yuni/src")
-
-#
-# Antares libs
-#
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/libs")
-
-
-# wxWidgets
-# if(ANTARES_GUI)
-	# include("../FindWXWidgets.cmake")
-# endif()
-
-
-
+#TODO : check these macro
 macro(import_std_libs  TARGET)
 	if(MSVC10)
 		# WinSock
@@ -255,7 +223,7 @@ macro(library_strip TARGET)
 endmacro()
 
 
-
+#TODO : remove this YUNI_FROM_ANTARES_CXX_FLAGS
 if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
 	set(YUNI_FROM_ANTARES_CXX_FLAGS "${CMAKE_CXX_FLAGS_RELEASE}")
 else()

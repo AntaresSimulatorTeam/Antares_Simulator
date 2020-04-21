@@ -15,10 +15,6 @@ Include(../../cmake/common-settings.cmake)
 # Le main
 set(SRCS  main.cpp)
 
-
-# The new ant library
-include_directories("../../libs")
-
 if(WIN32)
 	FILE(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/win32/batchrun.o")
 	CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/win32/batchrun.rc.cmake"
@@ -40,9 +36,9 @@ set(BATCHRUN_LIBS
 )
 
 if (WIN32 OR WIN64)
-	target_link_libraries(${execname} ${BATCHRUN_LIBS})
+	target_link_libraries(${execname} PRIVATE ${BATCHRUN_LIBS})
 else()
-	target_link_libraries(${execname}
+	target_link_libraries(${execname} PRIVATE
 		-Wl,--start-group
 		${BATCHRUN_LIBS}
 		-Wl,--end-group)

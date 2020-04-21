@@ -1,15 +1,6 @@
 
-
-if(ANTARES_GUI)
-
+#Define executable name
 set(execname "antares-${ANTARES_PRG_VERSION}-ui-simulator")
-
-
-
-include_directories("../..")
-add_definitions(-DANTARES_GUI)
-add_definitions(-DWX_SUPPORT)
-
 
 # WxCore
 include("cmake/wxcore.cmake")
@@ -36,10 +27,6 @@ include("cmake/copy-paste.cmake")
 include("cmake/inputs.cmake")
 include("cmake/messages.cmake")
 include("cmake/resources.cmake")
-
-#wxWidget includes
-find_package(wxWidgets REQUIRED COMPONENTS net gl core base richtext propgrid aui)
-include(${wxWidgets_USE_FILE})
 
 #define sources files
 set(SRCS
@@ -127,13 +114,6 @@ if(WIN32)
 	endif()
 endif()
 
-
-# For <antares/...>
-include_directories("../../libs")
-
-
-
-
 OMESSAGE("  :: application ${execname}")
 add_executable(${execname} WIN32 ${SRCS})
 
@@ -164,21 +144,16 @@ set(ANTARES_LIBS
 		libantares-ui-common
 		libantares-solver-constraints-builder
 		libantares-solver-variable-info-swap
-		libantares-core-swap
+		libantares-core-swap #TODO : why no libantares-core ?
 		libantares-core-calendar
 		libantares-license
 		yuni-static-core
-		yuni-static-uuid		
-		${CMAKE_THREADS_LIBS_INIT}
+		yuni-static-uuid	
 	)
-
-		message(STATUS "wxWidgets: wxWidgets_LIBRARIES: 	${wxWidgets_LIBRARIES}")
-		message(STATUS "wxWidgets: CMAKE_THREADS_LIBS_INIT:     ${CMAKE_THREADS_LIBS_INIT}")
 	
 if(NOT MSVC)
 
-	target_link_libraries(${execname}
-		-Wl,--start-group ${ANTARES_LIBS} uuid dl rt -Wl,--end-group ${wxWidgets_LIBRARIES} curl rt crypto b64)
+	target_link_libraries(${execname} PRIVATE ${ANTARES_LIBS})
 
 else()
 	# required for uuid
@@ -188,7 +163,6 @@ endif()
 
 import_std_libs(${execname})
 executable_strip(${execname})
-
 
 # Embedding the manifest file into the executable
 if(WIN32)
@@ -210,7 +184,4 @@ if(WIN32)
 		"resources/win32/manifest.antares-win32.manifest"
 		"${execname}.exe")
 endif()
-
-
-endif(ANTARES_GUI)
 

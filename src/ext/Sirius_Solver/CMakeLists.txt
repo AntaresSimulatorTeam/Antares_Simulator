@@ -434,9 +434,11 @@ set(SRC_SOLVER
 	${RTESOLVER_MEM}
 )
 
-add_library(libsolver_antares STATIC  ${SRC_SOLVER})
+add_library(libsolver_antares  ${SRC_SOLVER})
+target_include_directories(libsolver_antares PUBLIC .)
 
-add_library(libsolver_antares-swap STATIC  ${SRC_SOLVER})
+add_library(libsolver_antares-swap  ${SRC_SOLVER})
+target_include_directories(libsolver_antares-swap PUBLIC .)
 
 set_target_properties(libsolver_antares-swap
 	PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")

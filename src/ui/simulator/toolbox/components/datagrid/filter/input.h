@@ -30,7 +30,7 @@
 # include <antares/wx-wrapper.h>
 # include <wx/choice.h>
 # include "filter.h"
-# include "panel.h"
+# include "component/panel.h"
 
 
 

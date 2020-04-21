@@ -13,7 +13,8 @@ set(SRC_UI_INPUTS
 		toolbox/input/bindingconstraint/bindingconstraint.h
 		toolbox/input/bindingconstraint/bindingconstraint.cpp
 )
-add_Library(libantares-ui-inputs STATIC  ${SRC_UI_INPUTS})
+add_Library(libantares-ui-inputs  ${SRC_UI_INPUTS})
 
 
-target_link_libraries(libantares-ui-inputs  ${wxWidgets_LIBRARIES})
+target_link_libraries(libantares-ui-inputs PUBLIC ${wxWidgets_LIBRARIES})
+target_link_libraries(libantares-ui-inputs PRIVATE libantares-core libantares-ui-common)

@@ -35,6 +35,7 @@ add_library(yuni-static-uuid STATIC
 	uuid/fwd.h
 	yuni.h
 )
+target_link_libraries(yuni-static-uuid PRIVATE uuid)
 
 # Setting output path
 SET_TARGET_PROPERTIES(yuni-static-uuid PROPERTIES

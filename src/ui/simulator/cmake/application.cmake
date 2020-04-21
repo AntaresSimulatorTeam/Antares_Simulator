@@ -64,8 +64,9 @@ SET(SRC_APPLICATION
 
 
 
-add_library(libantares-ui-application STATIC
+add_library(libantares-ui-application
 	${SRC_APPLICATION})
 
-target_link_libraries(libantares-ui-application  ${wxWidgets_LIBRARIES})
+target_link_libraries(libantares-ui-application PRIVATE ${wxWidgets_LIBRARIES})
+target_link_libraries(libantares-ui-application PRIVATE libantares-ui-common)
 

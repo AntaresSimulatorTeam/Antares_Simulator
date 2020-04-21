@@ -1,7 +1,7 @@
 
 
 
-add_library(libantares-ui-toolbox-spotlight STATIC
+add_library(libantares-ui-toolbox-spotlight
 		toolbox/spotlight/area.cpp
 		toolbox/spotlight/area.h
 		toolbox/spotlight/constraint.cpp
@@ -9,5 +9,6 @@ add_library(libantares-ui-toolbox-spotlight STATIC
 	)
 
 
-target_link_libraries(libantares-ui-toolbox-spotlight  ${wxWidgets_LIBRARIES})
+target_link_libraries(libantares-ui-toolbox-spotlight PRIVATE ${wxWidgets_LIBRARIES})
+target_link_libraries(libantares-ui-toolbox-spotlight PRIVATE libantares-ui-common)
 

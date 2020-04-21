@@ -1,13 +1,11 @@
 project(AntaresAnalyzer)
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
 include(../cmake/messages.cmake)
 OMESSAGE("antares-analyzer")
 
 include(../cmake/common-settings.cmake)
-
-
 
 
 # Le main
@@ -21,11 +19,6 @@ Set(SRCS 	main.cpp
 			atsp/correlations.cpp
 			atsp/cache.cpp
 			)
-
-
-# The new ant library
-include_directories("..")
-
 
 
 if(WIN32)
@@ -49,15 +42,12 @@ endif(WIN32)
 add_executable(antares-${ANTARES_PRG_VERSION}-analyzer  ${SRCS})
 
 target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer
+		PRIVATE
 		libantares-license
 		libantares-core
 		libantares-core-calendar
 		yuni-static-core
 		${wxWidgets_LIBRARIES} ${CMAKE_THREADS_LIBS_INIT})
-if(NOT WIN32)
-	target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer dl  rt)
-endif(NOT WIN32)
-
 
 import_std_libs(antares-${ANTARES_PRG_VERSION}-analyzer)
 executable_strip(antares-${ANTARES_PRG_VERSION}-analyzer)

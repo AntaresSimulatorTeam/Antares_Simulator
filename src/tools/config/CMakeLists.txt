@@ -30,9 +30,9 @@ set(CONFIG_LIBS
 )
 
 if (WIN32 OR WIN64)
-	target_link_libraries(${execname} ${CONFIG_LIBS})
+	target_link_libraries(${execname} PRIVATE ${CONFIG_LIBS})
 else()
-	target_link_libraries(${execname} -Wl,--start-group ${CONFIG_LIBS} -Wl,--end-group)
+	target_link_libraries(${execname} PRIVATE -Wl,--start-group ${CONFIG_LIBS} -Wl,--end-group)
 endif()
 
 

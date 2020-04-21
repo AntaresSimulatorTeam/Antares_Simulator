@@ -36,8 +36,9 @@ set(SRC_UI_WINDOWS_STUDYPARTS
 		windows/options/scenario-builder/scenario-builder.h
 		windows/options/scenario-builder/scenario-builder.cpp
 )
-add_Library(libantares-ui-windows-studyparts STATIC  ${SRC_UI_WINDOWS_STUDYPARTS})
+add_Library(libantares-ui-windows-studyparts  ${SRC_UI_WINDOWS_STUDYPARTS})
 
 
-target_link_libraries(libantares-ui-windows-studyparts  ${wxWidgets_LIBRARIES})
+target_link_libraries(libantares-ui-windows-studyparts PUBLIC ${wxWidgets_LIBRARIES})
+target_link_libraries(libantares-ui-windows-studyparts PRIVATE libantares-ui-common)
 

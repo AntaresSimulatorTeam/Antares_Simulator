@@ -25,9 +25,9 @@ set(FINDER_LIBS
 )
 
 if (WIN32 OR WIN64)
-	target_link_libraries(${execname} ${FINDER_LIBS})
+	target_link_libraries(${execname} PRIVATE ${FINDER_LIBS})
 else()
-	target_link_libraries(${execname} -Wl,--start-group ${FINDER_LIBS} -Wl,--end-group)
+	target_link_libraries(${execname} PRIVATE -Wl,--start-group ${FINDER_LIBS} -Wl,--end-group)
 endif()
 
 

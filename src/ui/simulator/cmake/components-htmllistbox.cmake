@@ -1,8 +1,4 @@
-
-
-
-
-add_library(libantares-ui-component-htmllistbox STATIC
+add_library(libantares-ui-component-htmllistbox
 		# HTMLListbox
 		toolbox/components/htmllistbox/component.h
 		toolbox/components/htmllistbox/component.hxx
@@ -40,4 +36,5 @@ add_library(libantares-ui-component-htmllistbox STATIC
 	)
 
 
-target_link_libraries(libantares-ui-component-htmllistbox  ${wxWidgets_LIBRARIES})
+target_link_libraries(libantares-ui-component-htmllistbox  PUBLIC ${wxWidgets_LIBRARIES})
+target_link_libraries(libantares-ui-component-htmllistbox PRIVATE libantares-core libantares-ui-common)

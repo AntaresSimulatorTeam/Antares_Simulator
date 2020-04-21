@@ -11,14 +11,24 @@ set(SRC_SOLVER_MAIN_ADEQUACY       main/adequacy.cpp)
 
 
 
-add_library(libantares-solver-main-adequacy-draft STATIC ${SRC_SOLVER_MAIN_ADEQUACY_DRAFT})
-add_library(libantares-solver-main-adequacy STATIC ${SRC_SOLVER_MAIN_ADEQUACY})
-add_library(libantares-solver-main-economy  STATIC ${SRC_SOLVER_MAIN_ECONOMY})
+add_library(libantares-solver-main-adequacy-draft  ${SRC_SOLVER_MAIN_ADEQUACY_DRAFT})
+target_link_libraries(libantares-solver-main-adequacy-draft PRIVATE libantares-core)
+
+add_library(libantares-solver-main-adequacy  ${SRC_SOLVER_MAIN_ADEQUACY})
+target_link_libraries(libantares-solver-main-adequacy PRIVATE libantares-core)
+
+add_library(libantares-solver-main-economy   ${SRC_SOLVER_MAIN_ECONOMY})
+target_link_libraries(libantares-solver-main-economy PRIVATE libantares-core)
 
 
-add_library(libantares-solver-main-adequacy-draft-swap STATIC ${SRC_SOLVER_MAIN_ADEQUACY_DRAFT})
-add_library(libantares-solver-main-adequacy-swap STATIC ${SRC_SOLVER_MAIN_ADEQUACY})
-add_library(libantares-solver-main-economy-swap  STATIC ${SRC_SOLVER_MAIN_ECONOMY})
+add_library(libantares-solver-main-adequacy-draft-swap  ${SRC_SOLVER_MAIN_ADEQUACY_DRAFT})
+target_link_libraries(libantares-solver-main-adequacy-draft-swap PRIVATE libantares-core-swap)
+
+add_library(libantares-solver-main-adequacy-swap  ${SRC_SOLVER_MAIN_ADEQUACY})
+target_link_libraries(libantares-solver-main-adequacy-swap PRIVATE libantares-core-swap)
+
+add_library(libantares-solver-main-economy-swap   ${SRC_SOLVER_MAIN_ECONOMY})
+target_link_libraries(libantares-solver-main-economy-swap PRIVATE libantares-core-swap)
 
 
 set_target_properties(libantares-solver-main-adequacy-draft-swap

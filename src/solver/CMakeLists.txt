@@ -1,58 +1,20 @@
-
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-PROJECT(PNE)
-
 OMESSAGE("Antares Solver")
 
-
-
-
+#TODO : see to add bigobj support
 
 if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
-else(MSVC)
-	link_libraries("m")
 endif(MSVC)
 
 
-
-
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/mps")
-include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/branchAndBound")
-include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/simplexe/lu")
-include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/presolve")
-include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/simplexe")
-include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/pne")
-include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/branchAndBound")
-include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/allocateur")
-include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/pointInterieur")
-
 include("cmake/solver.cmake")
 include("cmake/hydro.cmake")
-
-
 include("cmake/main.cmake")
 include("cmake/variable.cmake")
 include("cmake/randomness.cmake")
 include("cmake/simulation.cmake")
 include("cmake/ts-generator.cmake")
 include("cmake/constraints-builder.cmake")
-# Pour trouver les fonctions dans libs/*
-include_directories("../libs")
-
-
-
-#
-# Enable the whole capabilities of the solver
-#
-# As some old pieces of the solver use static variables for nothing
-# we use a define to remove those useful parts (for Antares)
-# Uncomment the define to re-enable then
-#
-#ADD_DEFINITIONS("-DSOLVER_DECLARE_ALL_SYMBOLS")
-
-
-
 
 #
 # Resource file for Windows
@@ -73,9 +35,6 @@ if(WIN32)
 		set(SRCS ${SRCS} "win32/solver.rc")
 	endif()
 endif()
-
-
-
 
 
 macro(solver_app name swap)
@@ -109,15 +68,16 @@ macro(solver_app name swap)
 		${SRCS}
 		main.h main.hxx main.cpp
 	)
-
-
-	#TODO : yuni-static-uuid  and yuni-static-core removed for link order
+	
 	set(ANTARES_SOLVER_LIBS		
 		libantares-core-calendar
-		libantares-license		
+		libantares-license
+		yuni-static-uuid
+		yuni-static-core		
 		${CMAKE_THREADS_LIBS_INIT}
 	)
 
+	#TODO : check for windows
 	if(WIN32)
 		set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS} wsock32)
 	endif()
@@ -132,7 +92,6 @@ macro(solver_app name swap)
 			libantares-solver-variable-swap
 			libantares-solver-simulation-swap
 			libantares-solver-ts-generator-swap
-#			libantares-rtesolver-swap
 			libmodel_antares-swap
 			libsolver_antares-swap
 			libantares-core-swap)
@@ -147,22 +106,16 @@ macro(solver_app name swap)
 			libantares-solver-variable
 			libantares-solver-simulation
 			libantares-solver-ts-generator
-#			libantares-rtesolver
 			libmodel_antares 
 			libsolver_antares			
 			libantares-core)
 	endif()
 
 	if(NOT MSVC)
-		target_link_libraries(${exec_name} ${ANTARES_SOLVER_LIBS} )
-
-		#Add uuid last so link can be done for yuni-static-uuid
-		target_link_libraries(${exec_name}  dl  curl rt crypto b64 yuni-static-uuid yuni-static-core uuid)
+		target_link_libraries(${exec_name} PRIVATE ${ANTARES_SOLVER_LIBS} )
 	else()
 		#TODO : ANTARES_SOLVER_LIBS change but changes not tested on Windows
-		#Add uuid last so link can be done for yuni-static-uuid
-		target_link_libraries(${exec_name} ${ANTARES_SOLVER_LIBS} yuni-static-uuid yuni-static-core uuid)
-		target_link_libraries(${exec_name} ole32 rpcrt4) # uuid
+		target_link_libraries(${exec_name} PRIVATE ${ANTARES_SOLVER_LIBS} )
 	endif()
 
 	import_std_libs(${exec_name})
