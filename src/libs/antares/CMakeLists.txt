@@ -506,6 +506,7 @@ macro(ADD_ANTARES_CORE name)
 		PUBLIC
 		yuni-static-core
 		yuni-static-uuid
+		libantares-license
 		libantares-core-calendar
 		libantares-solver-variable-info${name}
 		)
