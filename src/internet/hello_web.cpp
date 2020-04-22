@@ -168,7 +168,8 @@ namespace License
 		curl_easy_setopt(x, CURLOPT_VERBOSE, 1); 
 		curl_easy_setopt(x, CURLOPT_STDERR, pFile); 
 		auto code = curl_easy_perform(x);
-		fclose(pFile);
+		//TODO : removed because cause crashes on windows (maybe related to curl version tested (7.53.1) : does curl close file handle ?
+		//fclose(pFile);
 		std::ifstream filestream(tempname);
 		string ligne;
 		if (filestream)  // si l'ouverture a fonctionné
