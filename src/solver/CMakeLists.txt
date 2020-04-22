@@ -111,13 +111,8 @@ macro(solver_app name swap)
 			libantares-core)
 	endif()
 
-	if(NOT MSVC)
-		target_link_libraries(${exec_name} PRIVATE ${ANTARES_SOLVER_LIBS} )
-	else()
-		#TODO : ANTARES_SOLVER_LIBS change but changes not tested on Windows
-		target_link_libraries(${exec_name} PRIVATE ${ANTARES_SOLVER_LIBS} )
-	endif()
-
+	target_link_libraries(${exec_name} PRIVATE ${ANTARES_SOLVER_LIBS})
+	
 	import_std_libs(${exec_name})
 	executable_strip(${exec_name})
 
