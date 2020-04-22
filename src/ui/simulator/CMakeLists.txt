@@ -150,16 +150,10 @@ set(ANTARES_LIBS
 		yuni-static-core
 		yuni-static-uuid	
 	)
-	
-if(NOT MSVC)
 
 	target_link_libraries(${execname} PRIVATE ${ANTARES_LIBS})
 
-else()
-	# required for uuid
-	target_link_libraries(${execname} ${ANTARES_LIBS} ${wxWidgets_LIBRARIES} ole32 rpcrt4)
-		
-endif()
+
 
 import_std_libs(${execname})
 executable_strip(${execname})
@@ -180,8 +174,9 @@ if(WIN32)
 			"-outputresource:antares.exe;1"
 			COMMENT "Embedding the manifest into the executable 'antares.exe'")
 	endif()
-	EMBED_MANIFEST(
-		"resources/win32/manifest.antares-win32.manifest"
-		"${execname}.exe")
+    #TODO : removed because macro doesn't work with CMake 3.x
+	#EMBED_MANIFEST(
+	#	"resources/win32/manifest.antares-win32.manifest"
+	#	"${execname}")
 endif()
 
