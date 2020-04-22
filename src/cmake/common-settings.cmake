@@ -188,9 +188,9 @@ endif()
 macro(import_std_libs  TARGET)
 	if(MSVC10)
 		# WinSock
-		target_link_libraries(${TARGET}  wsock32.lib)
+		target_link_libraries(${TARGET} PRIVATE wsock32.lib)
 	elseif(WIN32)
-		target_link_libraries(${TARGET}  wsock32.lib legacy_stdio_definitions.lib)
+		target_link_libraries(${TARGET}  PRIVATE wsock32.lib legacy_stdio_definitions.lib)
 	endif()
 endmacro()
 
