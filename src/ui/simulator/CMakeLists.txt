@@ -181,3 +181,9 @@ if(WIN32)
 	#	"${execname}")
 endif()
 
+#Copy resources files
+FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/help/" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/help/")
+FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/images/" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/images/")
+FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/animations/" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/animations/")
+FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/icons/" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/icons/")
+
