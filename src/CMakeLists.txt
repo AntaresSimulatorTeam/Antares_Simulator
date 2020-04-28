@@ -151,6 +151,7 @@ include(cmake/common-settings.cmake)
 
 # Configure config.h with current ANTARES version
 configure_file("config.h.cmake" "${CMAKE_CURRENT_BINARY_DIR}/config.h")
+configure_file("config.h.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/config.h")
 
 # Yuni Framework
 configure_file("cmake/ProfileBuild.template.cmake" "ext/yuni/src/ProfileBuild.cmake")
