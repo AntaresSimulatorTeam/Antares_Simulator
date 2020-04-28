@@ -144,9 +144,6 @@ find_package(CURL REQUIRED)
 #openssl	
 find_package(OpenSSL REQUIRED)
 
-#zlib
-find_package(ZLIB REQUIRED)
-
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 
 # TODO : review Standard Settings
