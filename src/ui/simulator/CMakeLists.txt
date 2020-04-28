@@ -93,10 +93,10 @@ if(WIN32)
 	# Antares.rc
 	FILE(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/antares.o")
 	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/antares.rc.cmake"
-		"${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/antares.rc")
+		"${CMAKE_CURRENT_BINARY_DIR}/resources/win32/antares.rc")
 	# antares.manifest
 	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/manifest.cmake"
-		"${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/manifest.antares-win32.manifest")
+		"${CMAKE_CURRENT_BINARY_DIR}/resources/win32/manifest.antares-win32.manifest")
 
 
 	if(MINGW)
@@ -110,7 +110,8 @@ if(WIN32)
 		SET(SRCS ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/resources/win32/antares.o")
 
 	else()
-		SET(SRCS ${SRCS} "resources/win32/antares.rc")
+        FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/antares.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/win32/")
+		SET(SRCS ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/resources/win32/antares.rc")
 	endif()
 endif()
 

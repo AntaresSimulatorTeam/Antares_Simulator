@@ -37,8 +37,9 @@ include_directories("../..")
 if(WIN32 OR WIN64)
 	FILE(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/win32/ybyaggregator.o")
 	CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/win32/ybyaggregator.rc.cmake"
-		"${CMAKE_CURRENT_SOURCE_DIR}/win32/ybyaggregator.rc")
-	SET(SRCS ${SRCS} "win32/ybyaggregator.rc")
+		"${CMAKE_CURRENT_BINARY_DIR}/win32/ybyaggregator.rc")
+	FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/win32/ybyaggregator.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/win32/")
+	SET(SRCS ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/win32/ybyaggregator.rc")
 endif()
 
 

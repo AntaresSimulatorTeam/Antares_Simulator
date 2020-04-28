@@ -18,8 +18,9 @@ set(SRCS  main.cpp)
 if(WIN32)
 	FILE(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/win32/batchrun.o")
 	CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/win32/batchrun.rc.cmake"
-		"${CMAKE_CURRENT_SOURCE_DIR}/win32/batchrun.rc")
-	SET(SRCS ${SRCS} "win32/batchrun.rc")
+		"${CMAKE_CURRENT_BINARY_DIR}/win32/batchrun.rc")
+	FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/win32/batchrun.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/win32/")
+	SET(SRCS ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/win32/batchrun.rc")
 endif(WIN32)
 
 

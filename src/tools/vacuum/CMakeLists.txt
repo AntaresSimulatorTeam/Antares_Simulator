@@ -17,8 +17,9 @@ set(SRCS
 if(WIN32)
 	FILE(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/win32/vacuum.o")
 	CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/win32/vacuum.rc.cmake"
-		"${CMAKE_CURRENT_SOURCE_DIR}/win32/vacuum.rc")
-	SET(SRCS ${SRCS} "win32/vacuum.rc")
+		"${CMAKE_CURRENT_BINARY_DIR}/win32/vacuum.rc")
+	FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/win32/vacuum.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/win32/")
+	SET(SRCS ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/win32/vacuum.rc")
 endif(WIN32)
 
 

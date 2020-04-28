@@ -14,8 +14,9 @@ include_directories("../..")
 if(WIN32 OR WIN64)
 	FILE(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/win32/cleaner.o")
 	CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/win32/cleaner.rc.cmake"
-		"${CMAKE_CURRENT_SOURCE_DIR}/win32/cleaner.rc")
-	SET(SRCS ${SRCS} "win32/cleaner.rc")
+		"${CMAKE_CURRENT_BINARY_DIR}/win32/cleaner.rc")
+	FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/win32/cleaner.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/win32/")
+	SET(SRCS ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/win32/cleaner.rc")
 endif()
 
 

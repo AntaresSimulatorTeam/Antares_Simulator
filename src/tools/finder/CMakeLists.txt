@@ -10,8 +10,9 @@ set(SRCS 	main.cpp)
 if(WIN32)
 	FILE(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/win32/finder.o")
 	CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/win32/finder.rc.cmake"
-		"${CMAKE_CURRENT_SOURCE_DIR}/win32/finder.rc")
-	SET(SRCS ${SRCS} "win32/finder.rc")
+		"${CMAKE_CURRENT_BINARY_DIR}/win32/finder.rc")
+	FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/win32/finder.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/win32/")
+	SET(SRCS ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/win32/finder.rc")
 endif(WIN32)
 
 

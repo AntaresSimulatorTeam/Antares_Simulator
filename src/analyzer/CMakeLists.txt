@@ -24,7 +24,7 @@ Set(SRCS 	main.cpp
 if(WIN32)
 	file(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/win32/analyzer.o")
 	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/win32/analyzer.rc.cmake"
-		"${CMAKE_CURRENT_SOURCE_DIR}/win32/analyzer.rc")
+		"${CMAKE_CURRENT_BINARY_DIR}/win32/analyzer.rc")
 
 	if(MINGW)
 		# resource compilation for mingw
@@ -34,7 +34,8 @@ if(WIN32)
 			-o "${CMAKE_CURRENT_BINARY_DIR}/win32/analyzer.o")
 		SET(SRCS ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/win32/analyzer.o")
 	else(MINGW)
-		SET(SRCS ${SRCS} "win32/analyzer.rc")
+        FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/win32/analyzer.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/win32/")
+		SET(SRCS ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/win32/analyzer.rc")
 	endif(MINGW)
 endif(WIN32)
 

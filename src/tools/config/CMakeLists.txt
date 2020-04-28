@@ -14,8 +14,9 @@ include_directories("../../libs")
 if(WIN32)
 	FILE(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/win32/config.o")
 	CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/win32/config.rc.cmake"
-		"${CMAKE_CURRENT_SOURCE_DIR}/win32/config.rc")
-	SET(SRCS ${SRCS} "win32/config.rc")
+		"${CMAKE_CURRENT_BINARY_DIR}/win32/config.rc")
+	FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/win32/config.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/win32/")
+	SET(SRCS ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/win32/config.rc")
 endif(WIN32)
 
 
