@@ -136,6 +136,7 @@ endif()
 #set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/${YUNI_TARGET_MODE})
 
 
+
 # Define needed external library
 
 #libcurl
@@ -145,6 +146,8 @@ find_package(CURL REQUIRED)
 find_package(OpenSSL REQUIRED)
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
+#Add cmake directory to CMAKE_MODULE_PATH to use specific FindwxWidgets package needed for vcpkg
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 
 # TODO : review Standard Settings
 include(cmake/common-settings.cmake)
