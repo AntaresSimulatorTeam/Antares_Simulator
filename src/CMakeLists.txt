@@ -145,11 +145,9 @@ find_package(CURL REQUIRED)
 #openssl	
 find_package(OpenSSL REQUIRED)
 
+#Required for wxWidget with vcpkg use
 find_package(jpeg REQUIRED)
-
-
 find_package(tiff REQUIRED)
-
 find_package(png REQUIRED)
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
