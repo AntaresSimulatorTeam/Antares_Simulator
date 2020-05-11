@@ -145,6 +145,13 @@ find_package(CURL REQUIRED)
 #openssl	
 find_package(OpenSSL REQUIRED)
 
+find_package(jpeg REQUIRED)
+
+
+find_package(tiff REQUIRED)
+
+find_package(png REQUIRED)
+
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 #Add cmake directory to CMAKE_MODULE_PATH to use specific FindwxWidgets package needed for vcpkg
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")

@@ -25,5 +25,5 @@ target_include_directories(libantares-license PRIVATE ../libs)
 target_link_libraries(libantares-license PRIVATE yuni-static-core)
 
 target_include_directories(libantares-license PUBLIC ${OPENSSL_INCLUDE_DIR} ${CURL_INCLUDE_DIRS})
-target_link_libraries(libantares-license PUBLIC ${CURL_LIBRARIES}  ${OPENSSL_LIBRARIES} base64 )
+target_link_libraries(libantares-license PUBLIC CURL::libcurl  ${OPENSSL_LIBRARIES} base64 )
 
