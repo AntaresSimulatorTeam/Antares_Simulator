@@ -96,9 +96,11 @@ int main(int argc, char* argv[])
 	bool optForce = false;
 	bool optYearByYear = false;
 	bool optNoOutput = false;
+	bool optParallel;
 	Nullable<uint> optYears;
 	Nullable<String> optSolver;
 	Nullable<String> optName;
+	Nullable<uint> optForceParallel;
 
 	// Command Line options
 	{
@@ -130,6 +132,8 @@ int main(int argc, char* argv[])
 
 		options.addParagraph("\nExtras");
 		options.add(optSolver, ' ', "solver", "Specify the antares-solver location");
+		options.addFlag(optParallel, 'p', "parallel", "Enable the parallel computation of MC years");
+		options.add(optForceParallel, ' ', "force-parallel", "Override the max number of years computed simultaneously");
 		options.addFlag(optSwap, 's', "swap", "Swap mode");
 		options.remainingArguments(optInput);
 		// Version
@@ -261,6 +265,10 @@ int main(int argc, char* argv[])
 				cmd << " --no-ts-import";
 			if (optIgnoreAllConstraints)
 				cmd << " --no-constraints";
+			if (optParallel)
+				cmd << " --parallel";
+			if (!(!optForceParallel))
+				cmd << " --force-parallel=" << *optForceParallel;
 			cmd << " \"" << studypath << "\"";
 
 			// Changing the current working directory
