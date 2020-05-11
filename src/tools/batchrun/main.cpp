@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
 	bool optForce = false;
 	bool optYearByYear = false;
 	bool optNoOutput = false;
-	bool optParallel;
+	bool optParallel = false;
 	Nullable<uint> optYears;
 	Nullable<String> optSolver;
 	Nullable<String> optName;
