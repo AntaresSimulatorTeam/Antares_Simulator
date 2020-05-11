@@ -40,10 +40,9 @@
 #include <antares/study/memory-usage.h>
 #include "../solver/variable/economy/all.h"
 
+#include <antares/Enum.hxx>
 
 using namespace Yuni;
-
-
 
 namespace Antares
 {
@@ -286,6 +285,9 @@ namespace Data
 		simplexOptimizationRange       = sorWeek;
 
 		include.exportMPS              = false;
+		
+		//TODO JMK : confirm default value
+		include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_DRY;
 
 		timeSeriesAccuracyOnCorrelation = 0;
 
@@ -495,6 +497,15 @@ namespace Data
 			d.initialReservoirLevels.iniLevels = irlColdStart;
 			return false;
 		}
+        if (key == "include-unfeasible-problem-behavior")
+        {
+            bool result = true;
+
+            //TODO JMK : Check if value is correct
+			d.include.unfeasibleProblemBehavior = Enum::fromString<UnfeasibleProblemBehavior>(value.to<std::string>());
+
+            return result;
+        }
 
 
 		// Error
@@ -1475,6 +1486,9 @@ namespace Data
 			section->add("include-primaryreserve",    include.reserve.primary);
 
 			section->add("include-exportmps",         include.exportMPS);
+
+            // Unfeasible problem behavior
+			section->add("include-unfeasible-problem-behavior", Enum::toString(include.unfeasibleProblemBehavior));
 		}
 
 		// Other preferences

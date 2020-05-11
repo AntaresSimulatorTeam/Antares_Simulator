@@ -37,13 +37,14 @@
 # include "fwd.h"
 # include "variable-print-info.h"
 
+#include <antares/study/UnfeasibleProblemBehavior.hpp>
+
 using namespace std;
 
 namespace Antares
 {
 namespace Data
-{
-
+{   
 	/*!
 	** \brief General data for a study
 	**
@@ -382,6 +383,11 @@ namespace Data
 
 			//! a flag to export all mps files
 			bool exportMPS;
+
+			//TODO JMK : confirm documentation syntax
+			//!Enum to define unfeasible problem behavior \see UnfeasibleProblemBehavior
+			UnfeasibleProblemBehavior unfeasibleProblemBehavior;
+
 		} include;
 
 		// Shedding

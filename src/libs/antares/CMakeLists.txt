@@ -247,6 +247,9 @@ set(SRC_STUDY_PARAMETERS
 	study/parameters.h
 	study/parameters.hxx
 	study/parameters.cpp
+	study/UnfeasibleProblemBehavior.cpp
+    # TODO JMK : should be in a target_include_directories : but need to remove all .h from all SRC
+    study/UnfeasibleProblemBehavior.hpp
 	)
 source_group("study\\general data" FILES ${SRC_STUDY_PARAMETERS})
 
@@ -460,10 +463,12 @@ set(SRC
 	# variable selection
 	study/variable-print-info.h
 	study/variable-print-info.cpp
+    
+    # Enum 
+    # TODO JMK : should be in a target_include_directories : but need to remove all .h from all SRC
+    Enum.hpp
+    Enum.hxx
 )
-
-
-
 
 add_library( libantares-core-calendar STATIC
 	# separated target to reduce multiple unit compilations introduced by swap mode
@@ -471,8 +476,6 @@ add_library( libantares-core-calendar STATIC
 	date/date.h
 	date/date.cpp
 )
-
-
 
 macro(ADD_ANTARES_CORE name)
 	add_library(libantares-core${name} STATIC
