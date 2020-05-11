@@ -26,36 +26,6 @@
 */
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include <math.h>
 #include "opt_structure_probleme_a_resoudre.h"
 
@@ -77,25 +47,27 @@ using namespace Antares::Data;
 
 
 
-
 bool OPT_OptimisationHebdomadaire( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace )
 {
-if ( ProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE ) {
-	if (!OPT_PilotageOptimisationLineaire( ProblemeHebdo, numSpace )) {
+	if ( ProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE )
+	{
+		if (!OPT_PilotageOptimisationLineaire( ProblemeHebdo, numSpace ))
+		{
+			return false;
+		}
+		return true;
+	}
+
+	if ( ProblemeHebdo->TypeDOptimisation != OPTIMISATION_QUADRATIQUE )
+	{
+		logs.fatal() << "Bug: TypeDOptimisation, OPTIMISATION_LINEAIRE ou OPTIMISATION_QUADRATIQUE non initialise";
+		AntaresSolverEmergencyShutdown(); 
 		return false;
 	}
-	return true;
-}
 
-if ( ProblemeHebdo->TypeDOptimisation != OPTIMISATION_QUADRATIQUE ) {
-	logs.fatal() << "Bug: TypeDOptimisation, OPTIMISATION_LINEAIRE ou OPTIMISATION_QUADRATIQUE non initialise";
-	AntaresSolverEmergencyShutdown(); 
-	return false;
-}
+	OPT_LiberationProblemesSimplexe( ProblemeHebdo );
 
-OPT_LiberationProblemesSimplexe( ProblemeHebdo );
-
-return OPT_PilotageOptimisationQuadratique( ProblemeHebdo );
+	return OPT_PilotageOptimisationQuadratique( ProblemeHebdo );
 }
 
 
