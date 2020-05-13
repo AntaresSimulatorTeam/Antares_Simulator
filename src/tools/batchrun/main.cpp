@@ -69,11 +69,8 @@ namespace // anonymous
 } // anonymous namespace
 
 
-String sendToNullWhenSilent(bool verbose)
+String sendToNull()
 {
-	if (verbose)
-		return "";
-
 	#ifdef __linux__ 
 	return " > /dev/null";
 	#elif _WIN32
@@ -286,7 +283,9 @@ int main(int argc, char* argv[])
 				cmd << " --parallel";
 			if (!(!optForceParallel))
 				cmd << " --force-parallel=" << *optForceParallel;
-			cmd << " \"" << studypath << "\"" << sendToNullWhenSilent(optVerbose);
+			cmd << " \"" << studypath << "\"";
+			if (!optVerbose)
+				cmd << sendToNull();
 
 			// Changing the current working directory
 			IO::Directory::Current::Set(dirname);
