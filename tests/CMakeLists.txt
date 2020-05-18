@@ -1,7 +1,10 @@
 # To be used as follows :
 # + Go to Antares root directory
 # + Execute cmake command :
+#	debug :
 #	> cmake -DBOOST_PATH=D:/Users/pierregui/Desktop/Tests-U/boost_1_72_0 -A x64 -S tests -B tests/build
+#	release :
+#	> cmake -DBOOST_PATH=D:/Users/pierregui/Desktop/Tests-U/boost_1_72_0 -A x64 -DCMAKE_BUILD_TYPE=release -S tests -B tests/build
 
 cmake_minimum_required(VERSION 3.10)
 
