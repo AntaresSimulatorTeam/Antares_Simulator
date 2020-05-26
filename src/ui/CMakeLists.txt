@@ -1,6 +1,6 @@
 
 #wxWidget required
-find_package(wxWidgets REQUIRED COMPONENTS net gl core base richtext propgrid aui adv html)
+find_package(wxWidgets REQUIRED COMPONENTS net gl core base richtext propgrid aui adv html xml)
 include(${wxWidgets_USE_FILE})
 
 # TODO : remove ADD_DEFINITIONS Swap support
