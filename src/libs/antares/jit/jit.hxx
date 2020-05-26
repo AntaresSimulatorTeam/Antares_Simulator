@@ -79,7 +79,7 @@ void JIT::just_in_time_manager::unload_matrix_properly_from_memory(const Matrix<
 
 	if (jit_ or JIT::enabled)
 	{
-		String buffer = file_name_;
+		Yuni::String buffer = file_name_;
 		jit_ = JIT::Reset(jit_, buffer);
 		JIT::MarkAsNotLoaded(jit_);
 		jit_->minWidth = (0 != (jit_recorded_state()->options & Matrix<T, ReadWriteT>::optFixedSize)) ? 
