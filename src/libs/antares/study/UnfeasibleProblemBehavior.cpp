@@ -28,6 +28,7 @@
 #include <initializer_list>
 #include <string>
 
+#include <antares/exception/AssertionError.hpp>
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 
 #include <antares/Enum.hpp>
@@ -36,25 +37,35 @@ namespace Antares {
     
 namespace Data {
 
-    const char* getIcon(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior) {
-        //TODO JMK : define icon
+    bool exportMPS(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior) {
         switch (unfeasibleProblemBehavior) {
         case UnfeasibleProblemBehavior::WARNING_DRY:
-            return "images/16x16/light_green.png";
-        case UnfeasibleProblemBehavior::WARNING_MPS:
-            return "images/16x16/light_green.png";
         case UnfeasibleProblemBehavior::ERROR_DRY:
-            return "images/16x16/light_orange.png";
+            return false;
+        case UnfeasibleProblemBehavior::WARNING_MPS:
         case UnfeasibleProblemBehavior::ERROR_MPS:
-            return "images/16x16/light_orange.png";
+            return true;
         default:
-            //TODO JMK : throw exception
+            throw AssertionError("Invalid UnfeasibleProblemBehavior " + std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
             return "";
         }
     }
 
+    bool stopSimulation(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior) {
+        switch (unfeasibleProblemBehavior) {
+        case UnfeasibleProblemBehavior::WARNING_DRY:
+        case UnfeasibleProblemBehavior::WARNING_MPS:
+            return false;
+        case UnfeasibleProblemBehavior::ERROR_MPS:
+        case UnfeasibleProblemBehavior::ERROR_DRY:
+            return true;
+        default:
+            throw AssertionError("Invalid UnfeasibleProblemBehavior " + std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
+            return "";
+        }
+    }    
+
     std::string getDisplayName(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior) {
-        //TODO JMK : define display name
         switch (unfeasibleProblemBehavior) {
         case UnfeasibleProblemBehavior::WARNING_DRY:
             return "Warning Dry";
@@ -65,8 +76,9 @@ namespace Data {
         case UnfeasibleProblemBehavior::ERROR_MPS:
             return "Error MPS";
         default:
-            //TODO JMK : throw exception
+            throw AssertionError("Invalid UnfeasibleProblemBehavior " + std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
             return "";
+
         }
     }
 

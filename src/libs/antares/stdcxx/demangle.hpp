@@ -24,43 +24,41 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef ANTARES_DATA_ENUM_HPP
-#define ANTARES_DATA_ENUM_HPP
+#ifndef ANTARES_STDCXX_DEMANGLE_HPP
+#define ANTARES_STDCXX_DEMANGLE_HPP
 
-#include <initializer_list>
 #include <string>
-#include <type_traits>
+#include <typeinfo>
 
-namespace Antares {
+namespace stdcxx {
 
-namespace Data {
+std::string demangle(const char* name);
 
-namespace Enum {
-
-template <typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
-const std::initializer_list<std::string>& getNames();
-
-template <typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
-std::string toString(const E& value);
-
-template <typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
-bool isValid(const std::string& name);
-
-template <typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
-E fromString(const std::string& name);
-
-}  // namespace Enum
-
-template <typename E>
-inline typename std::enable_if<std::is_enum<E>::value, std::ostream&>::type operator<<(std::ostream& stream, const E& value) {
-    stream << Data::Enum::toString(value);
-    return stream;
+template <typename T>
+std::string demangle() {
+    return demangle(typeid(T).name());
 }
 
-}  // namespace Data
+template <typename T>
+std::string demangle(const T& type) {
+    return demangle(typeid(type).name());
+}
 
-}  // namespace Antares
+template <>
+std::string demangle(const std::type_info& type);
 
-#include <antares/Enum.hxx>
+std::string simpleClassName(const char* className);
 
-#endif  // ANTARES_DATA_ENUM_HPP
+template <typename T>
+std::string simpleClassName() {
+    return simpleClassName(typeid(T).name());
+}
+
+template <typename T>
+std::string simpleClassName(const T& type) {
+    return simpleClassName(typeid(type).name());
+}
+
+}  // namespace stdcxx
+
+#endif  // ANTARES_STDCXX_DEMANGLE_HPP

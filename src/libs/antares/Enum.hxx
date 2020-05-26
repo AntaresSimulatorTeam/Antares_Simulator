@@ -28,6 +28,9 @@
 #ifndef ANTARES_DATA_ENUM_HXX
 #define ANTARES_DATA_ENUM_HXX
 
+#include <antares/exception/AssertionError.hpp>
+#include <antares/stdcxx/demangle.hpp>
+
 #include <antares/Enum.hpp>
 
 namespace Antares
@@ -42,12 +45,22 @@ E fromString(const std::string& name) {
     const auto& names = getNames<E>();
     const auto& it = std::find(names.begin(), names.end(), name);
     if (it == names.end()) {
-        //TODO JMK : define Exception for Antares::Data namespace
-        //TODO JMK : define logging method
-        //throw powsybl::AssertionError(powsybl::logging::format("Unexpected %1% name: %2%", stdcxx::simpleClassName<E>(), name));
+        throw AssertionError("Unexpected " + stdcxx::simpleClassName<E>() + " name " +name);
     }
 
     return static_cast<E>(it - names.begin());
+}
+
+template <typename E, typename>
+bool isValid(const std::string& name) {
+    bool result = true;
+    const auto& names = getNames<E>();
+    const auto& it = std::find(names.begin(), names.end(), name);
+    if (it == names.end()) {
+        result = false;
+    }
+
+    return result;
 }
 
 template <typename E, typename>
@@ -55,9 +68,7 @@ std::string toString(const E& value) {
     auto index = static_cast<unsigned long>(value);
     const auto& names = getNames<E>();
     if (index >= names.size()) {
-        //TODO JMK : define Exception for Antares::Data namespace
-        //TODO JMK : define logging method
-        //throw throw powsybl::AssertionError(powsybl::logging::format("Unexpected %1% value: %2%", stdcxx::simpleClassName<E>(), index));
+        throw AssertionError("Unexpected " +  stdcxx::simpleClassName<E>() + " value " + std::to_string(index));
     }
     return *(names.begin() + index);
 }

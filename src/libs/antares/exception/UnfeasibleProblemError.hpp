@@ -24,43 +24,24 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef ANTARES_DATA_ENUM_HPP
-#define ANTARES_DATA_ENUM_HPP
+#ifndef ANTARES_DATA_UNFEASIBLEPROBLEMERROR_HPP
+#define ANTARES_DATA_UNFEASIBLEPROBLEMERROR_HPP
 
-#include <initializer_list>
-#include <string>
-#include <type_traits>
+#include <stdexcept>
 
 namespace Antares {
 
 namespace Data {
 
-namespace Enum {
+class UnfeasibleProblemError : public std::runtime_error {
+public:
+    explicit UnfeasibleProblemError(const std::string& message);
 
-template <typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
-const std::initializer_list<std::string>& getNames();
-
-template <typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
-std::string toString(const E& value);
-
-template <typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
-bool isValid(const std::string& name);
-
-template <typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
-E fromString(const std::string& name);
-
-}  // namespace Enum
-
-template <typename E>
-inline typename std::enable_if<std::is_enum<E>::value, std::ostream&>::type operator<<(std::ostream& stream, const E& value) {
-    stream << Data::Enum::toString(value);
-    return stream;
-}
+    ~UnfeasibleProblemError() noexcept override = default;
+};
 
 }  // namespace Data
 
 }  // namespace Antares
 
-#include <antares/Enum.hxx>
-
-#endif  // ANTARES_DATA_ENUM_HPP
+#endif  // ANTARES_DATA_UNFEASIBLEPROBLEMERROR_HPP

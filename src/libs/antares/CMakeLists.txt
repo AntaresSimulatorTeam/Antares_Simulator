@@ -332,6 +332,22 @@ set(SRC_IO
 source_group("io" FILES ${SRC_IO})
 	
 
+set(SRC_EXCEPTION
+	exception/AssertionError.cpp
+    # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
+	exception/AssertionError.hpp
+	exception/UnfeasibleProblemError.cpp
+    # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
+	exception/UnfeasibleProblemError.hpp
+	)
+source_group("exception" FILES ${SRC_EXCEPTION})
+
+set(SRC_STDCXX
+	stdcxx/demangle.cpp
+    # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
+	stdcxx/demangle.hpp
+	)
+source_group("stdcxx" FILES ${SRC_STDCXX})
 
 set(SRC
 	config.h  constants.h
@@ -465,7 +481,7 @@ set(SRC
 	study/variable-print-info.cpp
     
     # Enum 
-    # TODO JMK : should be in a target_include_directories : but need to remove all .h from all SRC
+    # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
     Enum.hpp
     Enum.hxx
 )
@@ -505,6 +521,8 @@ macro(ADD_ANTARES_CORE name)
 		${SRC_STUDY_PART_HYDRO}
 		${SRC_STUDY_PART_THERMAL}
 		${SRC_STUDY_SCENARIO_BUILDER}
+        ${SRC_EXCEPTION}
+        ${SRC_STDCXX}
 		${SRC}
 	)
 	target_link_libraries(libantares-core${name}

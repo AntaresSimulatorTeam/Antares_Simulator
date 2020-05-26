@@ -41,11 +41,29 @@ enum class UnfeasibleProblemBehavior : unsigned char {
 	ERROR_MPS    /*! Stop simulation with MPS export */
 };
 
-//TODO JMK : see for documentation syntax
-const char* getIcon(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
-
-//TODO JMK : see for documentation syntax
+/*!
+*  \brief Get display name from UnfeasibleProblemBehavior enum
+*
+*  \param unfeasibleProblemBehavior : UnfeasibleProblemBehavior enum
+*  \return displayName
+*/
  std::string getDisplayName(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
+
+ /*!
+*  \brief Define if MPS must be exported in case of unfeasible problem
+*
+*  \param unfeasibleProblemBehavior : UnfeasibleProblemBehavior enum
+*  \return true if MPS must be exported, false otherwise
+*/
+ bool exportMPS(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
+
+ /*!
+*  \brief Define if simulation must be stopped in case of unfeasible problem
+*
+*  \param unfeasibleProblemBehavior : UnfeasibleProblemBehavior enum
+*  \return true if simulation must be stopped, false otherwise
+*/
+ bool stopSimulation(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
 
 }  // namespace Data
 
