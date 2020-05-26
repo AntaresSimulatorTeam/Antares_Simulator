@@ -384,7 +384,6 @@ namespace Data
 			//! a flag to export all mps files
 			bool exportMPS;
 
-			//TODO JMK : confirm documentation syntax
 			//!Enum to define unfeasible problem behavior \see UnfeasibleProblemBehavior
 			UnfeasibleProblemBehavior unfeasibleProblemBehavior;
 

@@ -286,8 +286,7 @@ namespace Data
 
 		include.exportMPS              = false;
 		
-		//TODO JMK : confirm default value
-		include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_DRY;
+		include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
 
 		timeSeriesAccuracyOnCorrelation = 0;
 
@@ -500,9 +499,19 @@ namespace Data
         if (key == "include-unfeasible-problem-behavior")
         {
             bool result = true;
+			const std::string& string = value.to<std::string>();
 
-            //TODO JMK : Check if value is correct
-			d.include.unfeasibleProblemBehavior = Enum::fromString<UnfeasibleProblemBehavior>(value.to<std::string>());
+			if (Enum::isValid<UnfeasibleProblemBehavior>(string))
+			{
+				d.include.unfeasibleProblemBehavior = Enum::fromString<UnfeasibleProblemBehavior>(string);
+			}
+			else
+			{
+				result = false;
+				d.include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
+				logs.warning() << "parameters: invalid unfeasible problem behavior. Got '" << value
+					<< "'. reset to " << Enum::toString<UnfeasibleProblemBehavior>(d.include.unfeasibleProblemBehavior);
+			}
 
             return result;
         }
