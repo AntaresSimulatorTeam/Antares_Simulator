@@ -101,8 +101,14 @@ endif()
 
 
 if(MSVC)
-	set(CMAKE_C_FLAGS_DEBUG   "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1")
-	set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1 /fp:except")
+
+	if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
+		set(CMAKE_C_FLAGS_DEBUG   "${COMMON_MSVC_FLAGS} /MTd /GR /Ot /Od /EHsc /RTC1")
+		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_MSVC_FLAGS} /MTd /GR /Ot /Od /EHsc /RTC1 /fp:except")
+    else()
+		set(CMAKE_C_FLAGS_DEBUG   "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1")
+		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1 /fp:except")
+	endif()
 
 	# RELEASE
 	set(CMAKE_EXE_LINKER_FLAGS_RELEASE)
@@ -123,9 +129,13 @@ if(MSVC)
 	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /GS-")
 	# Intrinsic functions
 	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /Oi")
-	# Multithreaded DLL
-	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /MD")
 
+	# Multithreaded DLL
+    if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
+	    set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /MT")
+    else()		
+	    set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /MD")
+    endif()
 
 	# linker: Link time code generation
 	#set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")

@@ -150,6 +150,7 @@ if(WIN32 OR WIN64)
 find_package(jpeg REQUIRED)
 find_package(tiff REQUIRED)
 find_package(png REQUIRED)
+find_package(expat REQUIRED)
 endif()
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
