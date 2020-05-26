@@ -29,6 +29,8 @@
 #include <antares/study/memory-usage.h>
 #include "adequacy.h"
 #include <antares/study.h>
+#include <antares/exception/UnfeasibleProblemError.hpp>
+#include <antares/exception/AssertionError.hpp>
 #include <yuni/core/math.h>
 #include "simulation.h"
 #include "../optimisation/opt_fonctions.h"
@@ -164,10 +166,11 @@ namespace Simulation
 							Variable::State& state, 
 							uint numSpace,
 							yearRandomNumbers & randomForYear,
-							uint & failedWeek
+							std::list<uint> & failedWeekList
 					   )
 	{
-		
+		//No failed week at year start
+		failedWeekList.clear();
 		
 		
 		PrepareRandomNumbers(study, *pProblemesHebdo[numSpace], randomForYear);
@@ -176,15 +179,19 @@ namespace Simulation
 		state.startANewYear();
 		
 		int hourInTheYear = pStartTime;
+		bool reinitOptim  = true;
 
 		for (uint w = 0; w != pNbWeeks; ++w)
 		{
 			state.hourInTheYear = hourInTheYear;
 			state.study.runtime->weekInTheYear[numSpace] = state.weekInTheYear = w;
 			pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
-
 			
 			::SIM_RenseignementProblemeHebdo(*pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
+
+			//Reinit optimisation if needed
+			pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim ? OUI_ANTARES : NON_ANTARES;
+			reinitOptim = false;
 
 			state.simplexHasBeenRan = (w==0)||simplexIsRequired(hourInTheYear, numSpace);
 			if (state.simplexHasBeenRan)  // Call to Solver is mandatory for the first week and optional otherwise 
@@ -223,28 +230,38 @@ namespace Simulation
 					area.reserves.flush();
 				}
 				
-				if (not ::OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace))
+				try
 				{
-					
-					
-					failedWeek = w;
+					OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);					
+
+					computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
+
+					RemixHydroForAllAreas(study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
+
+					computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, true);
+
+				}
+				catch (Data::AssertionError& ex)
+				{
+					failedWeekList.push_back(w + 1);
+					//Stop simulation
+					logs.error("Assertion error for week " + std::to_string(w + 1) + " simulation is stopped : " + ex.what());
 					return false;
 				}
-
-				
-				
-				computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
-
-				
-				if (not RemixHydroForAllAreas(study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek))
+				catch (Data::UnfeasibleProblemError& ex)
 				{
-					failedWeek = w;
-					return false;
-				}
+					//need to clean next problemeHebdo
+					reinitOptim = true;
 
-				
-				computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, true);
-				
+					//Indicate failed week in list (add 1 to indicate real week number)
+					failedWeekList.push_back(w+1);
+
+					//Define if simulation must be stopped
+					if (Data::stopSimulation(study.parameters.include.unfeasibleProblemBehavior))
+					{
+						return false;
+					}
+				}
 			}
 			else
 			{

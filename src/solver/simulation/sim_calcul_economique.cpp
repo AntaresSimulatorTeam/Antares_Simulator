@@ -120,6 +120,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study, PROBLEME_HEBDO& problem
 
 	
 	problem.ExportMPS					  = study.parameters.include.exportMPS; 
+	problem.exportMPSOnError			  = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 
 	
 	problem.OptimisationAvecCoutsDeDemarrage = (study.parameters.unitCommitment.ucMode == Antares::Data::UnitCommitmentMode::ucMILP) ? OUI_ANTARES : NON_ANTARES ;
@@ -408,10 +409,6 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem, Antares::Solver::Va
 		problem.coutOptimalSolution1[opt] = 0.;
 		problem.coutOptimalSolution2[opt] = 0.;
 	}
-
-
-	
-	problem.ReinitOptimisation = (study.runtime->weekInTheYear[numSpace]==0) ? OUI_ANTARES : NON_ANTARES;
 
 	for (uint k = 0; k < studyruntime.interconnectionsCount; ++k)
 	{

@@ -36,6 +36,7 @@
 #include "opt_fonctions.h"
 #include <antares/emergency.h>
 #include <antares/logs.h>
+#include <antares/exception/UnfeasibleProblemError.hpp>
 
 extern "C"
 {
@@ -47,27 +48,28 @@ using namespace Antares::Data;
 
 
 
-bool OPT_OptimisationHebdomadaire( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace )
+void OPT_OptimisationHebdomadaire( PROBLEME_HEBDO * pProblemeHebdo, uint numSpace )
 {
-	if ( ProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE )
+	if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE )
 	{
-		if (!OPT_PilotageOptimisationLineaire( ProblemeHebdo, numSpace ))
+		if (!OPT_PilotageOptimisationLineaire(pProblemeHebdo, numSpace ))
 		{
-			return false;
+			throw UnfeasibleProblemError("Linear optimization failed");
 		}
-		return true;
 	}
-
-	if ( ProblemeHebdo->TypeDOptimisation != OPTIMISATION_QUADRATIQUE )
+	else if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_QUADRATIQUE)
+	{
+		OPT_LiberationProblemesSimplexe(pProblemeHebdo);
+		if (!OPT_PilotageOptimisationQuadratique(pProblemeHebdo))
+		{
+			throw UnfeasibleProblemError("Quadratic optimization failed");
+		}
+	}
+	else
 	{
 		logs.fatal() << "Bug: TypeDOptimisation, OPTIMISATION_LINEAIRE ou OPTIMISATION_QUADRATIQUE non initialise";
-		AntaresSolverEmergencyShutdown(); 
-		return false;
-	}
-
-	OPT_LiberationProblemesSimplexe( ProblemeHebdo );
-
-	return OPT_PilotageOptimisationQuadratique( ProblemeHebdo );
+		AntaresSolverEmergencyShutdown();
+	}	
 }
 
 

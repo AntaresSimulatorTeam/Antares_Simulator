@@ -308,8 +308,8 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 			logs.info() << LOG_UI_DISPLAY_MESSAGES_ON;
 		}
 
-	
-		if ( ProblemeHebdo->ExportMPS == NON_ANTARES)
+		//Write MPS only if exportMPSOnError is activated and MPS weren't exported before with ExportMPS option
+		if ( ProblemeHebdo->ExportMPS == NON_ANTARES && ProblemeHebdo->exportMPSOnError)
 		{
 			OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &Probleme, numSpace, ANTARES_SIMPLEXE );
 		}
@@ -366,7 +366,6 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 
 
 	PNE_Solveur( &ProblemePourPne );
-
 
 	if ( ProblemeHebdo->ExportMPS == OUI_ANTARES)
 		OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &ProblemePourPne, numSpace, ANTARES_PNE );
@@ -467,7 +466,8 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 			logs.info() << LOG_UI_DISPLAY_MESSAGES_ON;
 		}
 
-		if ( ProblemeHebdo->ExportMPS == NON_ANTARES)
+		//Write MPS only if exportMPSOnError is activated and MPS weren't exported before with ExportMPS option
+		if ( ProblemeHebdo->ExportMPS == NON_ANTARES && ProblemeHebdo->exportMPSOnError)
 		{	
 			OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &ProblemePourPne, numSpace, ANTARES_PNE );	
 		}
