@@ -28,6 +28,8 @@
 #ifndef ANTARES_DATA_ENUM_HXX
 #define ANTARES_DATA_ENUM_HXX
 
+#include <algorithm>
+
 #include <antares/exception/AssertionError.hpp>
 #include <antares/stdcxx/demangle.hpp>
 
