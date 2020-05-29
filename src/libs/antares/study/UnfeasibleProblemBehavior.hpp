@@ -42,6 +42,14 @@ enum class UnfeasibleProblemBehavior : unsigned char {
 };
 
 /*!
+*  \brief Get icon from UnfeasibleProblemBehavior enum
+*
+*  \param unfeasibleProblemBehavior : UnfeasibleProblemBehavior enum
+*  \return icon
+*/
+const char* getIcon(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
+
+/*!
 *  \brief Get display name from UnfeasibleProblemBehavior enum
 *
 *  \param unfeasibleProblemBehavior : UnfeasibleProblemBehavior enum

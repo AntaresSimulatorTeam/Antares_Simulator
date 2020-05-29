@@ -37,6 +37,22 @@ namespace Antares {
     
 namespace Data {
 
+    const char* getIcon(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior) {
+        switch (unfeasibleProblemBehavior) {
+        case UnfeasibleProblemBehavior::WARNING_DRY:
+            return "images/16x16/light_green.png";
+        case UnfeasibleProblemBehavior::WARNING_MPS:
+            return "images/16x16/light_green.png";
+        case UnfeasibleProblemBehavior::ERROR_DRY:
+            return "images/16x16/light_orange.png";
+        case UnfeasibleProblemBehavior::ERROR_MPS:
+            return "images/16x16/light_orange.png";
+        default:
+            throw AssertionError("Invalid UnfeasibleProblemBehavior " + std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
+            return "";
+        }
+    }
+
     bool exportMPS(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior) {
         switch (unfeasibleProblemBehavior) {
         case UnfeasibleProblemBehavior::WARNING_DRY:

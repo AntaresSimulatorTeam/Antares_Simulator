@@ -289,7 +289,7 @@ namespace Options
             label  = Component::CreateLabel(this, wxT("Unfeasible problem behavior"));
 
 			const Data::UnfeasibleProblemBehavior& defaultValue = Data::UnfeasibleProblemBehavior::ERROR_DRY;
-            button = new Component::Button(this, Data::getDisplayName(defaultValue));
+            button = new Component::Button(this, Data::getDisplayName(defaultValue), Data::getIcon(defaultValue));
             button->SetBackgroundColour(bgColor);
             button->menu(true);
             onPopup.bind(this, &Optimization::onPopupMenuUnfeasibleBehavior);
@@ -448,6 +448,7 @@ namespace Options
 		ResetButtonSpecify(pBtnExportMPS, study.parameters.include.exportMPS);
 
 		//Unfeasible problem behavior
+		pBtnUnfeasibleProblemBehavior->image(Data::getIcon(study.parameters.include.unfeasibleProblemBehavior));
 		pBtnUnfeasibleProblemBehavior->caption(Data::getDisplayName(study.parameters.include.unfeasibleProblemBehavior));
 				
 		// Simplex Optimization Range
@@ -528,7 +529,7 @@ namespace Options
 		//Warning dry
 		{
 			const Data::UnfeasibleProblemBehavior& value = Data::UnfeasibleProblemBehavior::WARNING_DRY;
-			wxMenuItem* it = Menu::CreateItem(&menu, wxID_ANY, Data::getDisplayName(value));
+			wxMenuItem* it = Menu::CreateItem(&menu, wxID_ANY, Data::getDisplayName(value), Data::getIcon(value), wxEmptyString);
 			menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
 						 wxCommandEventHandler(Optimization::onSelectUnfeasibleBehaviorWarningDry), nullptr, this);
 		}
@@ -536,14 +537,14 @@ namespace Options
         //Warning mps
 		{
 			const Data::UnfeasibleProblemBehavior& value = Data::UnfeasibleProblemBehavior::WARNING_MPS;
-			wxMenuItem* it = Menu::CreateItem(&menu, wxID_ANY, Data::getDisplayName(value));
+			wxMenuItem* it = Menu::CreateItem(&menu, wxID_ANY, Data::getDisplayName(value), Data::getIcon(value), wxEmptyString);
 			menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
 				wxCommandEventHandler(Optimization::onSelectUnfeasibleBehaviorWarningMps), nullptr, this);
 		}
         //Error dry
 		{
 			const Data::UnfeasibleProblemBehavior& value = Data::UnfeasibleProblemBehavior::ERROR_DRY;
-			wxMenuItem* it = Menu::CreateItem(&menu, wxID_ANY, Data::getDisplayName(value));
+			wxMenuItem* it = Menu::CreateItem(&menu, wxID_ANY, Data::getDisplayName(value), Data::getIcon(value), wxEmptyString);
 			menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
 				wxCommandEventHandler(Optimization::onSelectUnfeasibleBehaviorErrorDry), nullptr, this);
 		}
@@ -551,7 +552,7 @@ namespace Options
         //Error mps
 		{
 			const Data::UnfeasibleProblemBehavior& value = Data::UnfeasibleProblemBehavior::ERROR_MPS;
-			wxMenuItem* it = Menu::CreateItem(&menu, wxID_ANY, Data::getDisplayName(value));
+			wxMenuItem* it = Menu::CreateItem(&menu, wxID_ANY, Data::getDisplayName(value), Data::getIcon(value), wxEmptyString);
 			menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
 				wxCommandEventHandler(Optimization::onSelectUnfeasibleBehaviorErrorMps), nullptr, this);
 		}
