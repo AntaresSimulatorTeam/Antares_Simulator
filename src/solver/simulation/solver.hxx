@@ -102,6 +102,39 @@ namespace Simulation
 			bool hydroHotStart;
 
 		private:
+
+			/*
+			** \brief Log failed week
+			**
+			** \param y     MC Year
+			** \param study The Antares study
+			** \param failedWeek List of failing week
+			*/
+			void logFailedWeek(int y, const Data::Study& study, const std::list<int>& failedWeekList)
+			{
+				if (failedWeekList.size() != 0)
+				{
+					std::stringstream failedWeekStr;
+					std::copy(failedWeekList.begin(), failedWeekList.end(), std::ostream_iterator<int>(failedWeekStr, " "));
+
+					std::string s = failedWeekStr.str();
+					s = s.substr(0, s.length() - 1);  // get rid of the trailing space
+
+					std::string failedStr = failedWeekList.size() != 1 ? " failed at weeks " : " failed at week ";
+
+					logs.info(); // empty line
+
+					if (Data::stopSimulation(study.parameters.include.unfeasibleProblemBehavior))
+					{
+						logs.fatal() << "Year " << y + 1 << failedStr << s << ".";
+					}
+					else
+					{
+						logs.warning() << "Year " << y + 1 << failedStr << s << ".";
+					}
+				}
+			}
+
 			virtual void onExecute() override
 			{
 				if(isFirstPerformedYearOfASet[y])
@@ -169,27 +202,7 @@ namespace Simulation
 					}
 
 					//Log failing weeks
-					if (failedWeekList.size() != 0)
-					{
-						std::stringstream failedWeekStr;
-						std::copy(failedWeekList.begin(), failedWeekList.end(), std::ostream_iterator<int>(failedWeekStr, " "));
-
-						std::string s = failedWeekStr.str();
-						s = s.substr(0, s.length() - 1);  // get rid of the trailing space
-
-						std::string failedStr = failedWeekList.size() != 1 ? " failed at weeks " : " failed at week ";
-						
-						logs.info(); // empty line
-
-						if (Data::stopSimulation(study.parameters.include.unfeasibleProblemBehavior))
-						{
-							logs.fatal() << "Year " << y + 1 << failedStr << s << ".";
-						}
-						else
-						{
-							logs.warning() << "Year " << y + 1 << failedStr << s << ".";
-						}
-					}
+					logFailedWeek(y, study, failedWeekList);					
 
 					// 6.5 - Flush all memory into the swap files
 					// This is mandatory for big studies, with numerous areas and thermal clusters
