@@ -110,7 +110,7 @@ namespace Simulation
 			** \param study The Antares study
 			** \param failedWeek List of failing week
 			*/
-			void logFailedWeek(int y, const Data::Study& study, const std::list<int>& failedWeekList)
+			void logFailedWeek(int y, const Data::Study& study, const std::list<uint>& failedWeekList)
 			{
 				if (failedWeekList.size() != 0)
 				{
