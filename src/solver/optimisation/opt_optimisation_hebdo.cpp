@@ -54,6 +54,7 @@ void OPT_OptimisationHebdomadaire( PROBLEME_HEBDO * pProblemeHebdo, uint numSpac
 	{
 		if (!OPT_PilotageOptimisationLineaire(pProblemeHebdo, numSpace ))
 		{
+            logs.error() << "Linear optimization failed";
 			throw UnfeasibleProblemError("Linear optimization failed");
 		}
 	}
@@ -62,6 +63,7 @@ void OPT_OptimisationHebdomadaire( PROBLEME_HEBDO * pProblemeHebdo, uint numSpac
 		OPT_LiberationProblemesSimplexe(pProblemeHebdo);
 		if (!OPT_PilotageOptimisationQuadratique(pProblemeHebdo))
 		{
+            logs.error() << "Quadratic optimization failed";
 			throw UnfeasibleProblemError("Quadratic optimization failed");
 		}
 	}
