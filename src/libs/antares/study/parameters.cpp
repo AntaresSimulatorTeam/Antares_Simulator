@@ -510,7 +510,7 @@ namespace Data
 				result = false;
 				d.include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
 				logs.warning() << "parameters: invalid unfeasible problem behavior. Got '" << value
-					<< "'. reset to " << Enum::toString<UnfeasibleProblemBehavior>(d.include.unfeasibleProblemBehavior);
+					<< "'. reset to " << Enum::toString(d.include.unfeasibleProblemBehavior);
 			}
 
             return result;
