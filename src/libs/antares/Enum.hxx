@@ -54,18 +54,6 @@ E fromString(const std::string& name) {
 }
 
 template <typename E, typename>
-bool isValid(const std::string& name) {
-    bool result = true;
-    const auto& names = getNames<E>();
-    const auto& it = std::find(names.begin(), names.end(), name);
-    if (it == names.end()) {
-        result = false;
-    }
-
-    return result;
-}
-
-template <typename E, typename>
 std::string toString(const E& value) {
     auto index = static_cast<unsigned long>(value);
     const auto& names = getNames<E>();

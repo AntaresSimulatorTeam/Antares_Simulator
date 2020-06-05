@@ -40,6 +40,7 @@
 #include <antares/study/memory-usage.h>
 #include "../solver/variable/economy/all.h"
 
+#include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hxx>
 
 using namespace Yuni;
@@ -501,12 +502,14 @@ namespace Data
             bool result = true;
 			const std::string& string = value.to<std::string>();
 
-			if (Enum::isValid<UnfeasibleProblemBehavior>(string))
+			try
 			{
 				d.include.unfeasibleProblemBehavior = Enum::fromString<UnfeasibleProblemBehavior>(string);
 			}
-			else
+			catch(AssertionError& ex)
 			{
+				logs.warning() << "Assertion error for unfeasible problem behavior from string conversion : " << ex.what();
+
 				result = false;
 				d.include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
 				logs.warning() << "parameters: invalid unfeasible problem behavior. Got '" << value

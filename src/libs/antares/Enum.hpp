@@ -44,9 +44,6 @@ template <typename E, typename = typename std::enable_if<std::is_enum<E>::value>
 std::string toString(const E& value);
 
 template <typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
-bool isValid(const std::string& name);
-
-template <typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
 E fromString(const std::string& name);
 
 }  // namespace Enum
