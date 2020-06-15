@@ -18,10 +18,6 @@ source_group("dispatcher" FILES ${SRC_COMMON_DISPATCHER})
 add_library(libantares-ui-dispatcher ${SRC_COMMON_DISPATCHER})
 target_link_libraries(libantares-ui-dispatcher PUBLIC ${wxWidgets_LIBRARIES} libantares-core)
 
-# Add link library for static use of wxWidgets
-if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
-    target_link_libraries(libantares-ui-dispatcher PUBLIC ${PNG_LIBRARIES} ${JPEG_LIBRARIES} ${TIFF_LIBRARIES} ${EXPAT_LIBRARIES})
-endif()
 
 # Common
 set(SRC_UI_COMMON
@@ -37,10 +33,7 @@ target_include_directories(libantares-ui-common PUBLIC .)
 target_include_directories(libantares-ui-common PUBLIC ../..)
 target_link_libraries(libantares-ui-common PUBLIC ${wxWidgets_LIBRARIES} libantares-core)
 
-# Add link library for static use of wxWidgets
-if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
-    target_link_libraries(libantares-ui-common PUBLIC ${PNG_LIBRARIES} ${JPEG_LIBRARIES} ${TIFF_LIBRARIES} ${EXPAT_LIBRARIES})
-endif()
+
 
 # Components
 set(SRC_UI_SPOTLIGHT
@@ -76,10 +69,6 @@ add_library(libantares-ui-component-spotlight ${SRC_UI_SPOTLIGHT})
 target_link_libraries(libantares-ui-component-spotlight PUBLIC ${wxWidgets_LIBRARIES})
 target_link_libraries(libantares-ui-component-spotlight PRIVATE libantares-core libantares-ui-common)
 
-# Add link library for static use of wxWidgets
-if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
-    target_link_libraries(libantares-ui-component-spotlight PUBLIC ${PNG_LIBRARIES} ${JPEG_LIBRARIES} ${TIFF_LIBRARIES} ${EXPAT_LIBRARIES})
-endif()
 
 # Component panel
 set(SRC_COMPONENT_PANEL
@@ -94,10 +83,6 @@ add_library(libantares-ui-component-panel  ${SRC_COMPONENT_PANEL})
 target_link_libraries(libantares-ui-component-panel PUBLIC ${wxWidgets_LIBRARIES} )
 target_link_libraries(libantares-ui-component-panel PRIVATE libantares-core)
 
-# Add link library for static use of wxWidgets
-if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
-    target_link_libraries(libantares-ui-component-panel PUBLIC ${PNG_LIBRARIES} ${JPEG_LIBRARIES} ${TIFF_LIBRARIES} ${EXPAT_LIBRARIES})
-endif()
 
 # Component frame
 set(SRC_COMPONENT_FRAME
@@ -111,10 +96,7 @@ add_library(libantares-ui-component-frame  ${SRC_COMPONENT_FRAME})
 target_link_libraries(libantares-ui-component-frame PUBLIC ${wxWidgets_LIBRARIES})
 target_link_libraries(libantares-ui-component-frame PRIVATE libantares-core)
 
-# Add link library for static use of wxWidgets
-if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
-    target_link_libraries(libantares-ui-component-frame PUBLIC ${PNG_LIBRARIES} ${JPEG_LIBRARIES} ${TIFF_LIBRARIES} ${EXPAT_LIBRARIES})
-endif()
+
 
 # Scrollbox
 set(SRC_SCROLLBOX
@@ -127,8 +109,5 @@ add_library(libantares-ui-component-wxscrollbox ${SRC_SCROLLBOX})
 target_link_libraries(libantares-ui-component-wxscrollbox PUBLIC ${wxWidgets_LIBRARIES})
 target_link_libraries(libantares-ui-component-wxscrollbox PRIVATE libantares-core libantares-ui-common)
 
-# Add link library for static use of wxWidgets
-if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
-    target_link_libraries(libantares-ui-component-wxscrollbox PUBLIC ${PNG_LIBRARIES} ${JPEG_LIBRARIES} ${TIFF_LIBRARIES} ${EXPAT_LIBRARIES})
-endif()
+
 
