@@ -42,7 +42,7 @@ endif()
 if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
 	set(ANTARES_TARGET "${CMAKE_BUILD_TYPE}")
 else()
-	set(CMAKE_BUILD_TYPE "debug")
+	set(CMAKE_BUILD_TYPE "Debug")
 	set(ANTARES_TARGET  "debug")
 endif()
 
