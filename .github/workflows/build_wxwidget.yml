@@ -3,7 +3,6 @@ name: C/C++ CI with dependency compilation (wxWidgets only)
 on:
   push:
     branches:
-      - NO_EXTLIB_BUILD
       - feature/cmake_build_dependency_option
 
 jobs:
