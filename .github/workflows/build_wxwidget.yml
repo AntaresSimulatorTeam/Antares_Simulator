@@ -1,0 +1,37 @@
+name: C/C++ CI with dependency compilation (wxWidgets only)
+
+on:
+  push:
+    branches:
+      - NO_EXTLIB_BUILD
+      - feature/cmake_build_dependency_option
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-16.04]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install libraries
+      run: |
+           sudo apt-get update --fix-missing
+           sudo apt-get install libuuid1 uuid-dev libssh2-1 libssh2-1-dev libidn2-dev libidn11 libidn11-dev libcurl4-openssl-dev libb64-dev
+
+    - name: Configure
+      run: |
+           cd src
+           mkdir _build
+           cd _build
+           cmake -DBUILD_DEPS=ON ..
+
+    - name: Build
+      run: |
+           cd src
+           cd _build
+           make
+

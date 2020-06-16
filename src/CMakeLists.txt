@@ -23,6 +23,10 @@ include(CheckIncludeFiles)
 include(CheckIncludeFileCXX)
 include(CheckCXXCompilerFlag)
 
+
+#CMake function to build dependancy from git
+include("cmake/utils.cmake")
+
 #CMake Macro to display message
 include("cmake/messages.cmake")
 
@@ -135,8 +139,24 @@ endif()
 # TODO : removed to be confirmed : old fashion CMake All libraries will be stored in /bin directory
 #set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/${YUNI_TARGET_MODE})
 
+option(BUILD_DEPS "Build all dependencies" OFF)
+message(STATUS "Build all dependencies: ${BUILD_DEPS}")
 
+# IF BUILD_DEPS=ON THEN Force all BUILD_*=ON
+include(CMakeDependentOption)
+CMAKE_DEPENDENT_OPTION(BUILD_wxWidgets "Build the wxWidgets dependency Library" OFF
+  "NOT BUILD_DEPS" ON)
+message(STATUS "Build wxWidgets: ${BUILD_wxWidgets}")
 
+# Build Needed dependencies
+add_subdirectory(cmake/dependencies dependencies)
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install)
+
+if(BUILD_wxWidgets)
+  # Define wxWidgets_ROOT_DIR
+  set(wxWidgets_ROOT_DIR ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install)
+endif()
+  
 # Define needed external library
 
 #libcurl
@@ -145,17 +165,14 @@ find_package(CURL REQUIRED)
 #openssl	
 find_package(OpenSSL REQUIRED)
 
-#Required for wxWidget with vcpkg use
-if(WIN32 OR WIN64)
-find_package(jpeg REQUIRED)
-find_package(tiff REQUIRED)
-find_package(png REQUIRED)
-find_package(expat REQUIRED)
-endif()
+#zlib
+find_package(ZLIB REQUIRED)
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
-#Add cmake directory to CMAKE_MODULE_PATH to use specific FindwxWidgets package needed for vcpkg
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
+if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 
+    #Add cmake directory to CMAKE_MODULE_PATH to use specific FindwxWidgets package needed for vcpkg
+    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/wxWidgets")
+endif()
 
 # TODO : review Standard Settings
 include(cmake/common-settings.cmake)
