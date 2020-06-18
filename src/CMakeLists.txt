@@ -144,18 +144,18 @@ message(STATUS "Build all dependencies: ${BUILD_DEPS}")
 
 # IF BUILD_DEPS=ON THEN Force all BUILD_*=ON
 include(CMakeDependentOption)
-CMAKE_DEPENDENT_OPTION(BUILD_wxWidgets "Build the wxWidgets dependency Library" OFF
+
+CMAKE_DEPENDENT_OPTION(BUILD_wxWidgets "Build wxWidgets dependency Library" OFF
   "NOT BUILD_DEPS" ON)
 message(STATUS "Build wxWidgets: ${BUILD_wxWidgets}")
+
+CMAKE_DEPENDENT_OPTION(BUILD_OPENSSL "Build OpenSSL dependency Library" OFF
+  "NOT BUILD_DEPS" ON)
+message(STATUS "Build BUILD_OPENSSL: ${BUILD_OPENSSL}")
 
 # Build Needed dependencies
 add_subdirectory(cmake/dependencies dependencies)
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install)
-
-if(BUILD_wxWidgets)
-  # Define wxWidgets_ROOT_DIR
-  set(wxWidgets_ROOT_DIR ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install)
-endif()
   
 # Define needed external library
 

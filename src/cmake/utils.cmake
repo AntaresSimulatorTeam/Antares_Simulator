@@ -9,6 +9,9 @@
 # TAG: tag of the dependency
 # APPLY_PATCH: apply patch
 # CMAKE_ARGS: List of specific CMake args to add
+# CONFIGURE_COMMAND : Command used for configure (default empty and default CMake configure use)
+# BUILD_COMMAND : Command used for build (default empty and default CMake build use)
+# INSTALL_COMMAND) : Command used for install (default empty and default CMake instal use)
 #
 # build_dependency(
 #   NAME
@@ -22,7 +25,7 @@
 # )
 function(build_git_dependency)
   set(options "")
-  set(oneValueArgs NAME REPOSITORY TAG APPLY_PATCH)
+  set(oneValueArgs NAME REPOSITORY TAG APPLY_PATCH CONFIGURE_COMMAND BUILD_COMMAND INSTALL_COMMAND)
   set(multiValueArgs CMAKE_ARGS)
   cmake_parse_arguments(GIT_DEP
     "${options}"
@@ -36,7 +39,26 @@ function(build_git_dependency)
     set(PATCH_CMD "git apply \"${GIT_DEP_APPLY_PATCH}\"")
   else()
     set(PATCH_CMD "\"\"")
+  endif() 
+
+  if(GIT_DEP_CONFIGURE_COMMAND)
+    set(CONFIGURE_COMMAND ${GIT_DEP_CONFIGURE_COMMAND})
+  else()
+    set(CONFIGURE_COMMAND "\"\"")
   endif()
+  
+  if(GIT_DEP_BUILD_COMMAND)
+    set(BUILD_COMMAND ${GIT_DEP_BUILD_COMMAND})
+  else()
+    set(BUILD_COMMAND "\"\"")
+  endif()
+  
+  if(GIT_DEP_INSTALL_COMMAND)
+    set(INSTALL_COMMAND ${GIT_DEP_INSTALL_COMMAND})
+  else()
+    set(INSTALL_COMMAND "\"\"")
+  endif()
+  
   configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt.in
     ${CMAKE_CURRENT_BINARY_DIR}/${GIT_DEP_NAME}/CMakeLists.txt @ONLY)
