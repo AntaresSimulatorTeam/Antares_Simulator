@@ -153,14 +153,37 @@ CMAKE_DEPENDENT_OPTION(BUILD_OPENSSL "Build OpenSSL dependency Library" OFF
   "NOT BUILD_DEPS" ON)
 message(STATUS "Build BUILD_OPENSSL: ${BUILD_OPENSSL}")
 
+CMAKE_DEPENDENT_OPTION(BUILD_curl "Build curl dependency Library" OFF
+  "NOT BUILD_DEPS" ON)
+message(STATUS "Build BUILD_curl: ${BUILD_curl}")
+
 # Build Needed dependencies
 add_subdirectory(cmake/dependencies dependencies)
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install)
+
+
+if(BUILD_wxWidgets)
+	# Define wxWidgets_ROOT_DIR
+	set(wxWidgets_ROOT_DIR ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install)  
+endif()
+
   
 # Define needed external library
 
 #libcurl
 find_package(CURL REQUIRED)
+
+if(BUILD_curl)
+	# ADD CURL_STATICLIB definition 
+	add_definitions(-DCURL_STATICLIB) 
+	
+	if(WIN32 OR WIN64)
+		#TODO : linking not working on windows need to add several system dependency	
+		SET(CURL_LIBRARIES ${CURL_LIBRARIES} "Ws2_32.Lib" "Wldap32.Lib" "Crypt32.Lib")		
+		
+		MESSAGE(STATUS "CURL_LIBRARIES: ${CURL_LIBRARIES}")
+	endif()	 
+endif()
 
 #openssl	
 find_package(OpenSSL REQUIRED)
