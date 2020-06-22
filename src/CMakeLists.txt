@@ -157,6 +157,10 @@ CMAKE_DEPENDENT_OPTION(BUILD_curl "Build curl dependency Library" OFF
   "NOT BUILD_DEPS" ON)
 message(STATUS "Build BUILD_curl: ${BUILD_curl}")
 
+CMAKE_DEPENDENT_OPTION(BUILD_zlib "Build zlib dependency Library" OFF
+  "NOT BUILD_DEPS" ON)
+message(STATUS "Build BUILD_zlib: ${BUILD_zlib}")
+
 # Build Needed dependencies
 add_subdirectory(cmake/dependencies dependencies)
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install)
@@ -178,10 +182,13 @@ if(BUILD_curl)
 	add_definitions(-DCURL_STATICLIB) 
 	
 	if(WIN32 OR WIN64)
-		#TODO : linking not working on windows need to add several system dependency	
-		SET(CURL_LIBRARIES ${CURL_LIBRARIES} "Ws2_32.Lib" "Wldap32.Lib" "Crypt32.Lib")		
+		#TODO : linking not working on windows need to add several system dependency
+		SET(CURL_LIBRARIES ${CURL_LIBRARIES} "Ws2_32.Lib" "Wldap32.Lib" "Crypt32.Lib")
 		
 		MESSAGE(STATUS "CURL_LIBRARIES: ${CURL_LIBRARIES}")
+    else()
+		SET(CURL_LIBRARIES ${CURL_LIBRARIES} ${ZLIB_LIBRARIES})
+    
 	endif()	 
 endif()
 
