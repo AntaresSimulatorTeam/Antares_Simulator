@@ -12,9 +12,11 @@ if(WIN32 OR WIN64)
 	endif()
 	
 	set(CONFIGURE_CALL "perl <SOURCE_DIR>/Configure")
+    set(MAKE_COMMAND "nmake")
 
 else()
-	set(CONFIGURE_CALL "config")	
+	set(CONFIGURE_CALL "sh <SOURCE_DIR>/config")
+    set(MAKE_COMMAND "make")
 endif()
 
 build_git_dependency(
@@ -27,9 +29,9 @@ build_git_dependency(
 	CONFIGURE_COMMAND
 	   "${CONFIGURE_CALL} ${OPENSSL_ARCH} no-asm no-shared --prefix=${CMAKE_CURRENT_BINARY_DIR}/install/ --openssldir=${CMAKE_CURRENT_BINARY_DIR}/install/"
 	BUILD_COMMAND
-	   "nmake"
+	   "${CMAKE_MAKE_PROGRAM}"
 	INSTALL_COMMAND
-	   "nmake install_sw"	   
+	   "${CMAKE_MAKE_PROGRAM}  install_sw"	   
   )
 endif()
 
@@ -63,9 +65,9 @@ if(WIN32 OR WIN64)
 	set(INSTALL_CALL "echo libcurl installation done with WITH_PREFIX compile option")
 	
 else()
-	set(CONFIGURE_CALL 	"configure")	
-	set(BUILD_CALL 		"make")	
-	set(INSTALL_CALL 	"make_install")
+	set(CONFIGURE_CALL 	"sh <SOURCE_DIR>/buildconf COMMAND <SOURCE_DIR>/configure --disable-shared --prefix=${CMAKE_CURRENT_BINARY_DIR}/install/")	
+	set(BUILD_CALL 		"${CMAKE_MAKE_PROGRAM}")	
+	set(INSTALL_CALL 	"${CMAKE_MAKE_PROGRAM} install")
 endif()
 
 
@@ -81,7 +83,8 @@ build_git_dependency(
 	BUILD_COMMAND
 	   "${BUILD_CALL}"	   
 	INSTALL_COMMAND
-	   "${INSTALL_CALL}"   
+	   "${INSTALL_CALL}"
+    INSOURCE_BUILD ON
   )
   
   #Need to rename libcurl_a.lib to libcurl.lib for find_package(CURL)

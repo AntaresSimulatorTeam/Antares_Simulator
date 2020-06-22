@@ -11,7 +11,8 @@
 # CMAKE_ARGS: List of specific CMake args to add
 # CONFIGURE_COMMAND : Command used for configure (default empty and default CMake configure use)
 # BUILD_COMMAND : Command used for build (default empty and default CMake build use)
-# INSTALL_COMMAND) : Command used for install (default empty and default CMake instal use)
+# INSTALL_COMMAND : Command used for install (default empty and default CMake instal use)
+# INSOURCE_BUILD : If option ON , compilation is done in source directory
 #
 # build_dependency(
 #   NAME
@@ -25,7 +26,7 @@
 # )
 function(build_git_dependency)
   set(options "")
-  set(oneValueArgs NAME REPOSITORY TAG APPLY_PATCH CONFIGURE_COMMAND BUILD_COMMAND INSTALL_COMMAND)
+  set(oneValueArgs NAME REPOSITORY TAG APPLY_PATCH CONFIGURE_COMMAND BUILD_COMMAND INSTALL_COMMAND INSOURCE_BUILD)
   set(multiValueArgs CMAKE_ARGS)
   cmake_parse_arguments(GIT_DEP
     "${options}"
@@ -57,6 +58,12 @@ function(build_git_dependency)
     set(INSTALL_COMMAND "INSTALL_COMMAND ${GIT_DEP_INSTALL_COMMAND}")
   else()
     set(INSTALL_COMMAND "#INSTALL_COMMAND")
+  endif()
+  
+  if (GIT_DEP_INSOURCE_BUILD)  
+   set (BINARY_DIR "BUILD_IN_SOURCE 1")
+  else()
+   set (BINARY_DIR "BINARY_DIR ""@CMAKE_CURRENT_BINARY_DIR@/${PROJECT_NAME}/build"" ")
   endif()
   
   configure_file(
