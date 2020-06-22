@@ -87,8 +87,10 @@ build_git_dependency(
     INSOURCE_BUILD ON
   )
   
-  #Need to rename libcurl_a.lib to libcurl.lib for find_package(CURL)
-  file(RENAME ${CMAKE_CURRENT_BINARY_DIR}/install/lib/libcurl_a.lib ${CMAKE_CURRENT_BINARY_DIR}/install/lib/libcurl.lib)
+if(WIN32 OR WIN64)
+    #Need to rename libcurl_a.lib to libcurl.lib for find_package(CURL)
+    file(RENAME ${CMAKE_CURRENT_BINARY_DIR}/install/lib/libcurl_a.lib ${CMAKE_CURRENT_BINARY_DIR}/install/lib/libcurl.lib)
+endif()
   
 endif()
 
