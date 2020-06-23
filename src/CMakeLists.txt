@@ -177,26 +177,35 @@ endif()
 #libcurl
 find_package(CURL REQUIRED)
 
-if(BUILD_curl)
-	# ADD CURL_STATICLIB definition 
-	add_definitions(-DCURL_STATICLIB) 
-	
-	if(WIN32 OR WIN64)
-		#TODO : linking not working on windows need to add several system dependency
-		SET(CURL_LIBRARIES ${CURL_LIBRARIES} "Ws2_32.Lib" "Wldap32.Lib" "Crypt32.Lib")
-		
-		MESSAGE(STATUS "CURL_LIBRARIES: ${CURL_LIBRARIES}")
-    else()
-		SET(CURL_LIBRARIES ${CURL_LIBRARIES} ${ZLIB_LIBRARIES})
-    
-	endif()	 
-endif()
-
 #openssl	
 find_package(OpenSSL REQUIRED)
 
 #zlib
 find_package(ZLIB REQUIRED)
+
+#Add specific definition in case of dependencies build
+
+if(BUILD_curl)
+	# ADD CURL_STATICLIB definition 
+	add_definitions(-DCURL_STATICLIB) 
+	
+	if(WIN32 OR WIN64)
+		#Linking not working on windows need to add several system dependency
+		SET(CURL_LIBRARIES ${CURL_LIBRARIES} "Ws2_32.Lib" "Wldap32.Lib" "Crypt32.Lib")
+        else()
+		#find_package(CURL) doesn't indicate ZLIB dependencies
+		SET(CURL_LIBRARIES ${CURL_LIBRARIES} ${ZLIB_LIBRARIES})    
+	endif()	 
+endif()
+
+if(BUILD_OPENSSL)
+	
+	if(WIN32 OR WIN64)
+    	else()
+		#find_package(OpenSSL doesn't indicate -ldl option
+		SET(OPENSSL_LIBRARIES ${OPENSSL_LIBRARIES} "dl")    
+	endif()	 
+endif()
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 
