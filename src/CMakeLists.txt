@@ -188,11 +188,12 @@ find_package(ZLIB REQUIRED)
 if(BUILD_curl)
 	# ADD CURL_STATICLIB definition 
 	add_definitions(-DCURL_STATICLIB) 
-	
 	if(WIN32 OR WIN64)
 		#Linking not working on windows need to add several system dependency
 		SET(CURL_LIBRARIES ${CURL_LIBRARIES} "Ws2_32.Lib" "Wldap32.Lib" "Crypt32.Lib")
         else()
+		add_definitions(-static) 
+	
 		#find_package(CURL) doesn't indicate ZLIB dependencies
 		SET(CURL_LIBRARIES ${CURL_LIBRARIES} ${ZLIB_LIBRARIES})    
 	endif()	 
