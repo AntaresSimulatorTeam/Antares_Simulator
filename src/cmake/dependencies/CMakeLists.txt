@@ -65,7 +65,7 @@ if(WIN32 OR WIN64)
 	set(INSTALL_CALL "echo libcurl installation done with WITH_PREFIX compile option")
 	
 else()
-	set(CONFIGURE_CALL 	"sh <SOURCE_DIR>/buildconf COMMAND <SOURCE_DIR>/configure --disable-shared --prefix=${CMAKE_CURRENT_BINARY_DIR}/install/")	
+	set(CONFIGURE_CALL 	"sh <SOURCE_DIR>/buildconf COMMAND <SOURCE_DIR>/configure --disable-shared --enable-static --without-libidn --prefix=${CMAKE_CURRENT_BINARY_DIR}/install/")	
 	set(BUILD_CALL 		"${CMAKE_MAKE_PROGRAM}")	
 	set(INSTALL_CALL 	"${CMAKE_MAKE_PROGRAM} install")
 endif()
