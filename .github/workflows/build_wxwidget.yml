@@ -5,20 +5,8 @@ on:
     branches:
       - feature/cmake_build_dependency_option
 
-jobs:
-
-  librairies-install:
-
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, ubuntu-16.04]
-        
-    steps:
-    
-    - name: Install libraries
-      run: |
-           sudo apt-get install libuuid1 uuid-dev libssh2-1 libssh2-1-dev libidn2-0 libidn2-dev libidn11 libidn11-dev gtk2.0 libb64-dev        
+jobs:     
+         
   build:
 
     runs-on: ${{ matrix.os }}
@@ -27,7 +15,12 @@ jobs:
         os: [ubuntu-latest, ubuntu-16.04, windows-latest]
 
     steps:
-    - uses: actions/checkout@v2    
+    - uses: actions/checkout@v2 
+
+    - name: Install libraries
+      if: matrix.os == "ubuntu-latest" || matrix.os == "ubuntu-16.04"
+      run: |
+           sudo apt-get install libuuid1 uuid-dev libssh2-1 libssh2-1-dev libidn2-0 libidn2-dev libidn11 libidn11-dev gtk2.0 libb64-dev       
 
     - name: Configure
       run: |
