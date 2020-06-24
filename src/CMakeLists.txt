@@ -164,14 +164,13 @@ message(STATUS "Build BUILD_zlib: ${BUILD_zlib}")
 # Build Needed dependencies
 add_subdirectory(cmake/dependencies dependencies)
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install)
-
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install/libs/pkgconfig)
 
 if(BUILD_wxWidgets)
 	# Define wxWidgets_ROOT_DIR
 	set(wxWidgets_ROOT_DIR ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install)  
 endif()
 
-  
 # Define needed external library
 
 #libcurl
