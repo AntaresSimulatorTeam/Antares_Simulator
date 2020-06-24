@@ -193,8 +193,8 @@ if(BUILD_curl)
         else()
 		add_definitions(-static) 
 	
-		#find_package(CURL) doesn't indicate ZLIB dependencies
-		SET(CURL_LIBRARIES ${CURL_LIBRARIES} ${ZLIB_LIBRARIES})    
+		#find_package(CURL) doesn't indicate ZLIB and idn2 dependencies (idn2 used even with --without-libidn option in configure)
+		SET(CURL_LIBRARIES ${CURL_LIBRARIES} ${ZLIB_LIBRARIES} idn2)    
 	endif()	 
 endif()
 
