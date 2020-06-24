@@ -29,9 +29,9 @@ build_git_dependency(
 	CONFIGURE_COMMAND
 	   "${CONFIGURE_CALL} ${OPENSSL_ARCH} no-asm no-shared --prefix=${CMAKE_CURRENT_BINARY_DIR}/install/ --openssldir=${CMAKE_CURRENT_BINARY_DIR}/install/"
 	BUILD_COMMAND
-	   "${CMAKE_MAKE_PROGRAM}"
+	   "${MAKE_COMMAND}"
 	INSTALL_COMMAND
-	   "${CMAKE_MAKE_PROGRAM}  install_sw"	   
+	   "${MAKE_COMMAND}  install_sw"	   
   )
 endif()
 
