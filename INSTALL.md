@@ -1,5 +1,8 @@
-﻿# Antares Simulator CMake Build Instructions
+# Antares Simulator CMake Build Instructions
 
+[Environnement](#environment) | [Dependencies](#dependencies) | [Building](#building-antares-solution)
+
+## C/I status
 | OS     | System librairies | VCPKG | Built in libraries |
 |:-------|-----|--------|------|
 | Linux  | [![Status][linux_system_svg]][linux_system_link] | Not tested | [![Status][linux_deps_build_svg]][linux_deps_build_link] |
@@ -68,7 +71,7 @@ You must install the corresponding [vcpkg-triplet](https://vcpkg.readthedocs.io/
 
 The vcpkg-triplet used will be named [vcpg-triplet] later in this document.
 
-#### Install vcpkg 
+#### 1 Install vcpkg 
 
 vcpkg can be installed anywhere on your computer :
 
@@ -80,7 +83,7 @@ cd vcpkg
 
 Note : all vcpkg command further described must be launch from vcpkg folder. This folder will be named [vcpkg_root] later in this document.
 
-#### Install dependencies
+#### 2 Install dependencies
 ```
 cd [vcpkg_root]
 vcpkg install openssl:[vcpg-triplet] 
@@ -114,7 +117,7 @@ Dependency can be built  at configure time using the option `-DBUILD_DEPS=ON` (`
 
 Librairies are compiled with static option. When `BUILD_CURL` option is used, `BUILD_OPENSSL` option is added.
 
-## Building Antares Solution
+## [Building Antares Solution](#build)
 Antares source directory is named [antares_src] in all commands.
 
 Build can be done 'out of source'.
@@ -133,7 +136,7 @@ cmake -DCMAKE_BUILD_TYPE=debug ..
 Note that these are not the standard CMAKE_BUILD_TYPE. CMake files must be updated.
 
 ### Linux using system libs (recommanded)
-- Install dependencies using package manager.
+- Install dependencies [using package manager](#using-a-package-manager).
 - Create build dir (optionnal but recommanded)
 ```
 cd [antares_src]
@@ -155,7 +158,7 @@ make -j8
 Note : compilation can be done on several processor with ```-j``` option.
 
 ### Window using vcpkg (recommanded)
-- Install dependencies using VCPKG.
+- Install dependencies [using VCPKG](#using-vcpkg).
 - Choose [vcpkg-triplet]
 - Create build dir (optionnal but recommanded)
 ```
