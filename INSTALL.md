@@ -1,7 +1,7 @@
 ﻿# Antares Simulator CMake Build Instructions
 
 | OS     | System librairies | VCPKG | Built in libraries |
-|:-------|-----|--------|------|------|
+|:-------|-----|--------|------|
 | Linux  | [![Status][linux_system_svg]][linux_system_link] | Not tested | [![Status][linux_deps_build_svg]][linux_deps_build_link] |
 | Windows  | Not available| Tested (C/I must be implemented)| [![Status][windows_deps_build_svg]][windows_deps_build_link] |
 
