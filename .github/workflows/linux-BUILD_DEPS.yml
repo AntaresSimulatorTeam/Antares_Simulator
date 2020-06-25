@@ -1,4 +1,4 @@
-name: C/C++ CI with dependency compilation
+name: Linux CI (deps. compilation)
 
 on:
   push:
@@ -32,28 +32,6 @@ jobs:
       run: |
            cd src
            cd _build
-           cmake --build .
-  windows:
-
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest]
-
-    steps:
-    - uses: actions/checkout@v2      
-
-    - name: Configure
-      run: |
-           cd src
-           mkdir _build
-           cd _build
-           cmake -DBUILD_DEPS=ON ..
-
-    - name: Build
-      run: |
-           cd src
-           cd _build
-           cmake --build .          
+           cmake --build .     
            
 

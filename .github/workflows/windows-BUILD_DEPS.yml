@@ -1,0 +1,33 @@
+name: Windows CI (deps. compilation)
+
+on:
+  push:
+    branches:
+      - feature/cmake_build_dependency_option
+
+jobs:
+
+  windows:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+
+    steps:
+    - uses: actions/checkout@v2      
+
+    - name: Configure
+      run: |
+           cd src
+           mkdir _build
+           cd _build
+           cmake -DBUILD_DEPS=ON ..
+
+    - name: Build
+      run: |
+           cd src
+           cd _build
+           cmake --build .          
+           
+

@@ -1,17 +1,16 @@
-name: C/C++ CI
+name: Linux CI (system libs)
 
 on:
   push:
     branches:
-      - NO_EXTLIB_BUILD
-
+      - feature/cmake_build_dependency_option
 jobs:
   build:
 
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, ubuntu-16.04]
+        os: [ubuntu-latest]
 
     steps:
     - uses: actions/checkout@v2
@@ -24,10 +23,13 @@ jobs:
     - name: Configure
       run: |
            cd src
-           cmake .
+           mkdir _build
+           cd _build
+           cmake ..
 
     - name: Build
       run: |
            cd src
-           make
+           cd _build
+           cmake --build .
 
