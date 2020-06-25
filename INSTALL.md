@@ -2,12 +2,25 @@
 
 | OS     | System librairies | VCPKG | Built in libraries |
 |:-------|-----|--------|------|------|
-| Linux  | [![Status][cpp_linux_svg]][cpp_linux_link] | [![Status][python_linux_svg]][python_linux_link] | [![Status][java_linux_svg]][java_linux_link] |
-| Windows  | [![Status][cpp_win_svg]][cpp_win_link] | [![Status][python_win_svg]][python_win_link] | [![Status][java_win_svg]][java_win_link] |
+| Linux  | [![Status][linux_system_svg]][linux_system_link] | Not tested | [![Status][linux_deps_build_svg]][linux_deps_build_link] |
+| Windows  | Not available| Tested (C/I must be implemented)| [![Status][windows_deps_build_svg]][windows_deps_build_link] |
+
+
+[linux_system_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Linux%20CI%20(system%20libs)/badge.svg?branch=feature%2Fcmake_build_dependency_option
+
+[linux_system_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Linux%20CI%20(system%20libs)"
+
+[linux_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Linux%20CI%20(deps.%20compilation)/badge.svg?branch=feature%2Fcmake_build_dependency_option
+
+[linux_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Linux%20CI%20(deps.%20compilation)"
+
+[windows_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(deps.%20compilation)/badge.svg?branch=feature%2Fcmake_build_dependency_option
+
+[windows_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(deps.%20compilation)"
 
 ## [Environment](#env)
 ANTARES Solver/Simulator is a cross-platform project using components compatible
-with many 32 bits and 64 bits OS (Windows, Linux, Unix) 
+with many 32 bits and 64 bits OS (Windows, Linux, Unix). 
 
 The source distribution accompanying this file has been tested for successful build on:
 
@@ -16,10 +29,6 @@ The source distribution accompanying this file has been tested for successful bu
 - Linux CentOS  6
 - RHEL 7.3
 - Ubuntu 18.04
-
-[linux_system]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Linux CI%20(system%20libs)/badge.svg?branch=feature%2Fcmake_build_dependency_option
-
-[cpp_linux_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Linux CI%20(system%20libs)"
 
 ## Note on End-Of-Line convention
 If the origin of the source folder accompanying this file is a check-out 
@@ -42,7 +51,7 @@ Note that Visual Studio may carry out auto-reformating.
 
 This section describes install procedures for the third-party Open source libraries used by ANTARES :
 - Using VCPKG (Only tested on windows)
-- Using a package manager
+- Using a package manager (Only available on linux)
 - Automatic librairies compilation from git
 
 
@@ -78,7 +87,7 @@ vcpkg install openssl:[vcpg-triplet]
 vcpkg install curl:[vcpg-triplet] 
 vcpkg install wxwidgets:[vcpg-triplet] 
 ```
-### [Using a package manager](#unix_manager)
+### [Using a package manager](#linux_manager)
 On linux you can use a package manger to download the precompiled librairies.
 
 #### Ubuntu
@@ -106,94 +115,83 @@ Dependency can be built  at configure time using the option `-DBUILD_DEPS=ON` (`
 Librairies are compiled with static option. When `BUILD_CURL` option is used, `BUILD_OPENSSL` option is added.
 
 ## Building Antares Solution
- 
-2.2.1 32 bits version
----------------------
+Antares source directory is named [antares_src] in all commands.
 
-cmake -G "Visual Studio 10" -DCMAKE_BUILD_TYPE=release -DCMAKE_TOOLCHAIN_FILE=[vcpkg_root]/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=<vcpkg-triplet> .
+Build can be done 'out of source'.
 
-or
+You can define build type with ```-DCMAKE_BUILD_TYPE``` option.
 
-cmake -G "Visual Studio 14 2015" -DCMAKE_BUILD_TYPE=release -DCMAKE_TOOLCHAIN_FILE=[vcpkg_root]/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=<vcpkg-triplet> .
+release
 
+```
+cmake -DCMAKE_BUILD_TYPE=release ..
+```
+ debug
+ ```
+cmake -DCMAKE_BUILD_TYPE=debug ..
+```
+Note that these are not the standard CMAKE_BUILD_TYPE. CMake files must be updated.
 
-2.2.2 64 bits version
----------------------
+### Linux using system libs (recommanded)
+- Install dependencies using package manager.
+- Create build dir (optionnal but recommanded)
+```
+cd [antares_src]
+mkdir _build
+```
+- Configure build with cmake
 
-cmake -G "Visual Studio 10 Win64" -DCMAKE_BUILD_TYPE=release -DCMAKE_TOOLCHAIN_FILE=[vcpkg_root]/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=<vcpkg-triplet> .
+```
+cd [antares_src]
+cd _build
+cmake ..
+```
+- Build
+ ```
+cd [antares_src]
+cd _build
+make -j8
+```
+Note : compilation can be done on several processor with ```-j``` option.
 
+### Window using vcpkg (recommanded)
+- Install dependencies using VCPKG.
+- Choose [vcpkg-triplet]
+- Create build dir (optionnal but recommanded)
+```
+cd [antares_src]
+mkdir _build
+```
+- Configure build with cmake
 
-or
+```
+cd [antares_src]
+cd _build
+cmake -DCMAKE_TOOLCHAIN_FILE=[vcpkg_root]/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=[vcpkg-triplet] ..
+```
+- Build
+ ```
+cd [antares_src]
+cd _build
+make
+```
 
-cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_BUILD_TYPE=release -DCMAKE_TOOLCHAIN_FILE=[vcpkg_root]/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=<vcpkg-triplet> .
+### Linux/Window building external librairies
+- Create build dir (optionnal but recommanded)
+```
+cd [antares_src]
+mkdir _build
+```
+- Configure build with CMake with ```BUILD_DEPS``` option.
 
-or
-
-cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_BUILD_TYPE=release -DCMAKE_TOOLCHAIN_FILE=[vcpkg_root]/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=<vcpkg-triplet> .
-
-2.3 Compiling for Windows : Running the compiler
-------------------------------------------------
-
-# Open the solution @src/antares.sln@ with Visual Studio 10 or Visual Studio 15
-# Choose the target "Release"
-# Generate the solution 
-
-# Or compile from command line
-cmake --build . --config Release
-
-3. Building Antares for Linux
-=============================
-
-3.1 Preliminary step : get a clean environment
-----------------------------------------------
-
-Do not hesitate to clean up your local repository before a checkout
-
-Cleaning the Git repository can be achieved by runing the following command, which resets the local
-repository to zero (no cached or temporary files remaining):
-
-git clean -xdf
-
-If the version tag (X.Y.z) needs to be updated, this should be made in the file :
-
- @src/CMakeLists.txt@ :
-
-
-# Version
-set(ANTARES_VERSION_HI	      5) # major index 		X
-set(ANTARES_VERSION_LO	      0) # minor index 		Y
-set(ANTARES_VERSION_REVISION  0) # revision number 	z
-
-3.2 Compiling for Linux
------------------------
-
-3.2.1 Set the path
-------------------
-
-$ cd ${ANTARES}
-
-* Set the compiler to use if the default one is not compatible with C++11
-* For instance, to use gcc-4.8, use :
-
-export CC=/usr/local/gcc/4.8/bin/gcc-4.8
-export CXX=/usr/local/gcc/4.8/bin/g++-4.8
-
-3.2.2 Generate the makefiles
-----------------------------
-
-In debug mode:
-$ cmake .
-
-Or in release mode:
-$ cmake . -DCMAKE_BUILD_TYPE=release
-
-3.2.3 Compile Antares
----------------------
-
-$ make
-
-Tips : If you have more than one processor/core, you can run more than one job :
-  $ make -j X
-  where X is the number of jobs to run simultaneously.
-
-Tips : `make VERBOSE=1` to see the real commands
+```
+cd [antares_src]
+cd _build
+cmake -DBUILD_DEPS=ON ..
+```
+- Build
+ ```
+cd [antares_src]
+cd _build
+make
+```
