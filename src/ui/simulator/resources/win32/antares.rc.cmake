@@ -2,8 +2,8 @@
 // first icon in the executable and the icons are sorted both by their order
 // (Win9x) and by alphabetically (!) (NT), so put this icon first and give it
 // a name starting with "a"
-aaaaa    ICON  "resources\\win32\\antares.ico"
-antares  ICON  "resources\\win32\\antares.ico"
+aaaaa    ICON  "@CMAKE_CURRENT_BINARY_DIR@/resources/win32/antares.ico"
+antares  ICON  "@CMAKE_CURRENT_BINARY_DIR@/resources/win32/antares.ico"
 
 1 VERSIONINFO
 FILEVERSION  @ANTARES_VERSION_HI@,@ANTARES_VERSION_LO@,@ANTARES_VERSION_REVISION@,0
