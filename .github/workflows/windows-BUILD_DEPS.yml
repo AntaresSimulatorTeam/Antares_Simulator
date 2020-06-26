@@ -38,7 +38,7 @@ jobs:
            
     - name: Installer creation
       uses: actions/upload-artifact@v2
-       with:
+      with:
         name: antares-installer-64bits
         path: _build/rte-antares-7.1.0-installer-64bits.exe          
            
