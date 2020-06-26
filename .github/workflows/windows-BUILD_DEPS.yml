@@ -28,7 +28,7 @@ jobs:
       run: |
            cd src
            cd _build
-           cmake --build . --config release
+           cmake --build .
 
     - name: Installer creation
       run: |
