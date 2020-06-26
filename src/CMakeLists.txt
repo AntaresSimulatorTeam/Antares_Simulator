@@ -180,6 +180,12 @@ find_package(CURL REQUIRED)
 find_package(OpenSSL REQUIRED)
 
 
+#TODO : Add ZLIB if  VCPKG used why is this needed
+if (VCPKG_TOOLCHAIN) 
+    #zlib
+    find_package(ZLIB REQUIRED)
+endif()
+
 
 #Add specific definition in case of dependencies build
 
