@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest]
-        buildtype: [Release]
+        buildtype: [release]
         include:
           - os: windows-latest
             triplet: x64-windows
@@ -30,20 +30,13 @@ jobs:
         vcpkgTriplet: '${{ matrix.triplet }}'
         vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
         vcpkgGitCommitId: '${{ matrix.vcpkgCommitId }}'
-    - name: Prints outputs of run-vcpkg task
-      run: echo "'${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}' '${{  steps.runvcpkg.outputs.RUNVCPKG_VCPKG_TRIPLET_OUT }}' "
         
-    - name: Configure
-      run: |
-           cd src
-           mkdir _build
-           cd _build
-           cmake -DCMAKE_TOOLCHAIN_FILE=${{  steps.runvcpkg.outputs.RUNVCPKG_VCPKG_TRIPLET_OUT }}/scripts/buildsystems/vcpkg.cmake --DVCPKG_TARGET_TRIPLET=${{  steps.runvcpkg.outputs.RUNVCPKG_VCPKG_TRIPLET_OUT }} ..
-
-    - name: Build
-      run: |
-           cd src
-           cd _build
-           cmake --build .          
+    - name: Building with CMake
+      uses: lukka/run-cmake@v2
+      with:
+          useVcpkgToolchainFile: true
+          cmakeListsTxtPath: '${{ github.workspace }}/src/CMakeLists.txt'
+          buildDirectory: ${{ github.workspace }}/src/_build
+          cmakeBuildType: ${{ matrix.buildtype }}       
            
 
