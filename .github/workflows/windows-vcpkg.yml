@@ -1,0 +1,50 @@
+name: Windows CI (deps. compilation)
+
+on:
+  push:
+    branches:
+      - feature/cmake_build_dependency_option
+
+jobs:
+
+  windows:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+        buildtype: [Release]
+        include:
+          - os: windows-latest
+            triplet: x64-windows
+            vcpkgCommitId: 'ee17a685087a6886e5681e355d36cd784f0dd2c8'
+            vcpkgPackages: openssl curl wxwidgets
+
+    steps:
+    - uses: actions/checkout@v2 
+
+    - name : Install deps with VCPKG
+       uses: lukka/run-vcpkg@master
+        with:
+          vcpkgArguments: '${{ matrix.vcpkgPackages }}'
+          vcpkgTriplet: '${{ matrix.triplet }}'
+          vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
+          vcpkgGitCommitId: '${{ matrix.vcpkgCommitId }}'
+          
+    - name: Prints outputs of run-vcpkg task
+        run: echo "'${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}' '${{  steps.runvcpkg.outputs.RUNVCPKG_VCPKG_TRIPLET_OUT }}' "
+        
+    - name: Configure
+      run: |
+           cd src
+           mkdir _build
+           cd _build
+           cmake -DCMAKE_TOOLCHAIN_FILE=${{  steps.runvcpkg.outputs.RUNVCPKG_VCPKG_TRIPLET_OUT }}/scripts/buildsystems/vcpkg.cmake --DVCPKG_TARGET_TRIPLET=${{  steps.runvcpkg.outputs.RUNVCPKG_VCPKG_TRIPLET_OUT }} ..
+
+    - name: Build
+      run: |
+           cd src
+           cd _build
+           cmake --build .          
+           
+
