@@ -1,0 +1,583 @@
+; Antares Setup Script
+; --------------------
+
+; NO VERBOSE !!!
+!verbose 3
+
+!define ANTARES_BUILD_DIR "@CMAKE_CURRENT_BINARY_DIR@"
+
+!include "${ANTARES_BUILD_DIR}\distrib\win32\version.nsh"
+!include "@PROJECT_SOURCE_DIR@\distrib\win32\extension.nsh"
+!include "${ANTARES_BUILD_DIR}\distrib\win32\build.nsh"
+!include "x64.nsh"
+!include "Sections.nsh"
+!include "LogicLib.nsh"
+!include "Memento.nsh"
+!include "WordFunc.nsh"
+
+
+!define PRODUCT_SIMPLE_VERSION  '${CMAKE_SIMPLE_VERSION}'
+!define PRODUCT_ARCH            '${ANTARES_ARCH}'
+!define PRODUCT_VERSION         '${CMAKE_SIMPLE_VERSION}'
+!define PRODUCT_BUILD           '${CMAKE_VERSION_BUILD}'
+!define PRODUCT_NAME            "Antares ${CMAKE_VERSION}"
+!define PRODUCT_PUBLISHER       "${CMAKE_PUBLISHER}"
+!define PRODUCT_WEB_SITE        "${CMAKE_WEBSITE}"
+
+!define PRODUCT_DIR_REGKEY "SOFTWARE\rte\antares\${CMAKE_SIMPLE_VERSION}\${PRODUCT_BUILD}"
+!define PRODUCT_UNINST_KEY "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
+
+!define PRODUCT_ID "{a4266b10-4916-11df-ae16-0830200c9a66}"
+
+BrandingText "      Antares_Simulator for Windows  "
+
+!define ANTARES_BIN "antares-${CMAKE_SIMPLE_VERSION}-ui-simulator.exe"
+
+
+
+
+
+; =============================================================================
+
+; Compressor
+SetCompressor /SOLID /FINAL lzma
+SetCompressorDictSize 8 ; seems the same results 8 or 32
+
+!include "MUI2.nsh"
+!include "@PROJECT_SOURCE_DIR@\distrib\win32\ui.nsh"
+!insertmacro MUI_LANGUAGE "English" ;first language is the default language
+;!insertmacro MUI_LANGUAGE "French"
+;!insertmacro MUI_LANGUAGE "German"
+;!insertmacro MUI_LANGUAGE "Spanish"
+;!insertmacro MUI_LANGUAGE "Japanese"
+;!insertmacro MUI_LANGUAGE "Italian"
+;!insertmacro MUI_LANGUAGE "Russian"
+
+
+; Version INFORMATION
+; -------------------
+Name    "Antares_Simulator"
+Caption "Antares_Simulator ${PRODUCT_VERSION}.${PRODUCT_BUILD}-${PRODUCT_ARCH} Installer"
+
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "${PRODUCT_NAME} ${PRODUCT_ARCH}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" ""
+VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "${PRODUCT_PUBLISHER}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalTrademarks" "Antares_Simulator is a trademark of RTE"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© ${PRODUCT_PUBLISHER}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "${PRODUCT_NAME}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${PRODUCT_VERSION}"
+VIProductVersion "${CMAKE_VERSION}.0"
+
+; Execution privileges
+RequestExecutionLevel highest
+; CRC Check
+CRCCheck on
+; XP Style
+XPStyle on
+
+
+
+
+;Installer / Uninstaller log file management
+;--------------------------------
+
+!define UninstLog "uninstall.log"
+Var UninstLog
+
+; Uninstall log file missing.
+LangString UninstLogMissing ${LANG_ENGLISH} "${UninstLog} not found !$\r$\nUninstallation cannot proceed!"
+;LangString UninstLogMissing ${LANG_FRENCH} "${UninstLog} non trouve !$\r$\nLa desinstallation ne peut poursuivre."
+
+
+
+; File macro
+!macro File FilePath FileName
+	IfFileExists "$OUTDIR\${FileName}" +2
+		FileWrite $UninstLog "$OUTDIR\${FileName}$\r$\n"
+	File "${FilePath}\${FileName}"
+!macroend
+!define File "!insertmacro File"
+
+
+; Copy files macro
+!macro CopyFiles SourcePath DestPath
+	IfFileExists "${DestPath}" +2
+		FileWrite $UninstLog "${DestPath}$\r$\n"
+	CopyFiles "${SourcePath}" "${DestPath}"
+!macroend
+!define CopyFiles "!insertmacro CopyFiles"
+
+
+; Rename macro
+!macro Rename SourcePath DestPath
+	IfFileExists "${DestPath}" +2
+		FileWrite $UninstLog "${DestPath}$\r$\n"
+	Rename "${SourcePath}" "${DestPath}"
+!macroend
+!define Rename "!insertmacro Rename"
+
+
+; CreateDirectory macro
+!macro CreateDirectory Path
+	CreateDirectory "${Path}"
+	FileWrite $UninstLog "${Path}$\r$\n"
+!macroend
+!define CreateDirectory "!insertmacro CreateDirectory"
+
+
+; SetOutPath macro
+!macro SetOutPath Path
+	SetOutPath "${Path}"
+	FileWrite $UninstLog "${Path}$\r$\n"
+!macroend
+!define SetOutPath "!insertmacro SetOutPath"
+
+
+; WriteUninstaller macro
+!macro WriteUninstaller Path
+	WriteUninstaller "${Path}"
+	FileWrite $UninstLog "${Path}$\r$\n"
+!macroend
+!define WriteUninstaller "!insertmacro WriteUninstaller"
+
+
+section -openlogfile
+	CreateDirectory "$INSTDIR"
+	IfFileExists "$INSTDIR\${UninstLog}" +3
+		FileOpen $UninstLog "$INSTDIR\${UninstLog}" w
+	goto +4
+		SetFileAttributes "$INSTDIR\${UninstLog}" NORMAL
+		FileOpen $UninstLog "$INSTDIR\${UninstLog}" a
+		FileSeek $UninstLog 0 END
+sectionend
+
+
+
+
+
+;--------------------------------
+;Configuration
+
+!ifdef OUTFILE
+	OutFile "${OUTFILE}"
+!else
+	OutFile rte-antares-${CMAKE_VERSION}${CMAKE_INSTALLER_RC}${CMAKE_INSTALLER_BETA}${CMAKE_INSTALLER_EXTENSION}-installer-${ANTARES_ARCH}.exe
+!endif
+
+
+InstallDir "$PROGRAMFILES\RTE\Antares\${PRODUCT_VERSION}.${PRODUCT_BUILD}\"
+InstallDirRegKey HKLM ${PRODUCT_DIR_REGKEY} ""
+
+ShowInstDetails   nevershow
+ShowUnInstDetails nevershow ; hide
+
+InstType "$(LngInstallFull)"
+InstType "$(LngInstallLite)"
+
+
+
+;--------------------------------
+;Functions
+
+!ifdef VER_MAJOR & VER_MINOR & VER_REVISION & VER_BUILD
+	!insertmacro VersionCompare
+!endif
+
+;--------------------------------
+;Definitions
+
+!define SHCNE_ASSOCCHANGED 0x8000000
+!define SHCNF_IDLIST 0
+
+;--------------------------------
+
+
+
+;Function LaunchLink
+;	ExecShell "" "$INSTDIR\${ANTARES_BIN}"
+;FunctionEnd
+
+
+
+; Specific macro/functions depending on the compiler
+;!include "${COMPILER_INCLUDE}.nsi"
+
+
+
+LangString LngWelcome ${LANG_ENGLISH} "Welcome to the Antares_Simulator ${PRODUCT_VERSION} Setup Wizard"
+;LangString LngWelcome ${LANG_FRENCH} "Bienvenue à l'assistant d'installation d'Antares ${PRODUCT_VERSION}"
+
+LangString LngWelcomeT ${LANG_ENGLISH} "This wizard will guide you through the installation of Antares_Simulator ${PRODUCT_VERSION}.$\r$\n$\r$\n$_CLICK"
+;LangString LngWelcomeT ${LANG_FRENCH} "Cet assistant va vous guider au court de l'installation d'Antares ${PRODUCT_VERSION}.$\r$\n$\r$\n$_CLICK"
+
+
+
+
+LangString LngCoreFiles ${LANG_ENGLISH} "Antares_Simulator Core Files v${PRODUCT_SIMPLE_VERSION} for Windows ${ANTARES_ARCH}"
+;LangString LngCoreFiles ${LANG_FRENCH}  "Antares Core v${PRODUCT_SIMPLE_VERSION} (requis)"
+
+
+; We use the same text for all entries because we only will see the installation
+; of the study examples (which is a long running operation in the process)
+
+LangString LngResInstallCoreFiles ${LANG_ENGLISH}  "Extracting Antares_Simulator files..."
+;LangString LngResInstallCoreFiles ${LANG_FRENCH}  "Installation d'Antares..."
+
+
+LangString LngResInstallFiles ${LANG_ENGLISH} "Extracting Antares_Simulator files..."
+;LangString LngResInstallFiles ${LANG_FRENCH}  "Installation d'Antares..."
+
+
+LangString LngResExamples ${LANG_ENGLISH} "Examples"
+;LangString LngResExamples ${LANG_FRENCH}  "Exemples"
+
+LangString LngResInstallExamples ${LANG_ENGLISH} "Extracting Antares_Simulator files..."
+;LangString LngResInstallExamples ${LANG_FRENCH}  "Installation d'Antares..."
+
+LangString LngResSources ${LANG_ENGLISH} "Source files"
+;LangString LngResSources ${LANG_FRENCH}  "Fichiers sources"
+
+LangString LngResInstallSources ${LANG_ENGLISH} "Extracting Antares_Simulator source files..."
+;LangString LngResInstallSources ${LANG_FRENCH}  "Installation des sources d'Antares..."
+
+LangString LngDesktopLink ${LANG_ENGLISH} "Desktop Shortcut"
+;LangString LngDesktopLink ${LANG_FRENCH}  "Raccourci sur le bureau"
+
+LangString LngResInstallDesktopLink ${LANG_ENGLISH} "Creating a Desktop Shortcut..."
+;LangString LngResInstallDesktopLink ${LANG_FRENCH}  "Création d'un Raccourci sur le bureau..."
+
+LangString LngResInstallMenuLink ${LANG_ENGLISH} "Creating a Menu Shortcut..."
+;LangString LngResInstallMenuLink ${LANG_FRENCH}  "Création d'un Raccourci dans le menu..."
+
+
+
+
+LangString LngInstallFull ${LANG_ENGLISH}  "Full (Recommended)"
+;LangString LngInstallFull ${LANG_FRENCH}   "Complet (Recommandé)"
+
+LangString LngInstallLite ${LANG_ENGLISH}  "Lite"
+;LangString LngInstallLite ${LANG_FRENCH}   "Minimum"
+
+
+
+
+
+
+
+;--------------------------------
+;Installer Sections
+
+
+${MementoSection} "$(LngCoreFiles)" SecCore
+	SetShellVarContext all
+	SetDetailsPrint textonly
+	DetailPrint "$(LngResInstallCoreFiles)"
+	SetDetailsPrint listonly
+
+	SectionIn 1 2 3 4 RO
+	${SetOutPath} $INSTDIR
+
+	SetOverwrite on
+	${File} "@PROJECT_SOURCE_DIR@\distrib\"    "changelog.txt"
+;	!insertmacro AppendCoreFiles
+
+	${SetOutPath} "$INSTDIR\bin"
+	${File} "${ANTARES_BUILD_DIR}\ui\simulator\${TARGET}"         "antares-${CMAKE_SIMPLE_VERSION}-ui-simulator.exe"
+	
+	;TODO : see how this can be dependant on type of  build
+	;${File} "${ANTARES_BUILD_DIR}\ui\simulator\${TARGET}"         "*.dll"
+	
+	${File} "${ANTARES_BUILD_DIR}\solver\${TARGET}"               "antares-${CMAKE_SIMPLE_VERSION}-solver.exe"
+	${File} "${ANTARES_BUILD_DIR}\solver\${TARGET}"               "antares-${CMAKE_SIMPLE_VERSION}-solver-swap.exe"
+	${File} "${ANTARES_BUILD_DIR}\analyzer\${TARGET}"             "antares-${CMAKE_SIMPLE_VERSION}-analyzer.exe"
+	${File} "${ANTARES_BUILD_DIR}\tools\yby-aggregator\${TARGET}" "antares-${CMAKE_SIMPLE_VERSION}-ybyaggregator.exe"
+	${File} "${ANTARES_BUILD_DIR}\tools\batchrun\${TARGET}"       "antares-${CMAKE_SIMPLE_VERSION}-batchrun.exe"
+	${File} "${ANTARES_BUILD_DIR}\tools\finder\${TARGET}"         "antares-${CMAKE_SIMPLE_VERSION}-study-finder.exe"
+	${File} "${ANTARES_BUILD_DIR}\tools\updater\${TARGET}"        "antares-${CMAKE_SIMPLE_VERSION}-study-updater.exe"
+	${File} "${ANTARES_BUILD_DIR}\tools\cleaner\${TARGET}"        "antares-${CMAKE_SIMPLE_VERSION}-study-cleaner.exe"
+	${File} "${ANTARES_BUILD_DIR}\tools\config\${TARGET}"         "antares-${CMAKE_SIMPLE_VERSION}-config.exe"
+	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\icons"   "study.ico"
+	
+	;TODO : for now no redist in installer
+	;${File} "@PROJECT_SOURCE_DIR@\distrib\win32\redist\${ANTARES_REDIST_ARCH}" "*.dll"
+	
+;	!insertmacro AppendCoreFiles
+
+	${SetOutPath} "$INSTDIR\Resources\Animations"
+	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\animations" "*.gif"
+
+	${SetOutPath} "$INSTDIR\Resources\Icons"
+	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\icons" "*.ico"
+	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\icons" "*.png"
+	${SetOutPath} "$INSTDIR\Resources\Images"
+	${SetOutPath} "$INSTDIR\Resources\Images\128x128"
+	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\128x128" "*.png"
+	${SetOutPath} "$INSTDIR\Resources\Images\64x64"
+	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\64x64" "*.png"
+	${SetOutPath} "$INSTDIR\Resources\Images\32x32"
+	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\32x32" "*.png"
+	${SetOutPath} "$INSTDIR\Resources\Images\48x48"
+	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\48x48" "*.png"
+	${SetOutPath} "$INSTDIR\Resources\Images\16x16"
+	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\16x16" "*.png"
+	${SetOutPath} "$INSTDIR\Resources\Images\Misc"
+	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\misc" "*.png"
+	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\misc" "*.gif"
+	${SetOutPath} "$INSTDIR\Resources\Help"
+	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\help\"   "antares-general-reference-guide.pdf"
+	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\help\"   "system-map-editor-reference-guide.pdf"
+	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\help\"   "antares-examples-library.pdf"
+	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\help\"   "optimization-problems-formulation.pdf"
+	
+	${SetOutPath} "$INSTDIR\Documentation"
+	CreateShortCut "$INSTDIR\Documentation\General reference guide (PDF).lnk" "$INSTDIR\Resources\Help\antares-general-reference-guide.pdf" "" ""
+	CreateShortCut "$INSTDIR\Documentation\System Map Editor reference guide (PDF).lnk" "$INSTDIR\Resources\Help\system-map-editor-reference-guide.pdf" "" ""
+	CreateShortCut "$INSTDIR\\Documentation\Examples library (PDF).lnk" "$INSTDIR\Resources\Help\antares-examples-library.pdf" "" ""
+	CreateShortCut "$INSTDIR\Documentation\Optimization problem formulation (PDF).lnk" "$INSTDIR\Resources\Help\optimization-problems-formulation.pdf" "" ""
+
+	${registerExtension} "$INSTDIR\bin\${ANTARES_BIN}" ".antares" "Antares Study ${CMAKE_SIMPLE_VERSION}"
+	${registerExtension} "$INSTDIR\bin\${ANTARES_BIN}" ".antares-output" "Antares Study Results ${CMAKE_SIMPLE_VERSION}"
+
+	CreateShortCut "$INSTDIR\antares-${CMAKE_SIMPLE_VERSION}-ui-simulator.lnk" "$INSTDIR\bin\${ANTARES_BIN}" "" ""
+${Mementosectionend}
+
+
+
+${MementoSection} "$(LngResExamples)" SecExamples
+	SetShellVarContext all
+	SetDetailsPrint textonly
+	DetailPrint "$(LngResInstallExamples)"
+	SetDetailsPrint listonly
+
+	SectionIn 1
+
+	SetOverwrite on
+	#!include "examplesfiles.inc.nsh"
+${Mementosectionend}
+
+${MementoSection} "$(LngResSources)" SecSources
+	SetShellVarContext all
+	SetDetailsPrint textonly
+	DetailPrint "$(LngResInstallSources)"
+	SetDetailsPrint listonly
+
+	SectionIn 1
+
+	SetOverwrite on
+	#!include "sourcefiles.inc.nsh"
+${Mementosectionend}
+
+
+
+${MementoSection} "$(LngDesktopLink)" SecDekstopShortcuts
+	SetShellVarContext all
+	SetDetailsPrint textonly
+	DetailPrint "$(LngResInstallDesktopLink)"
+	SetDetailsPrint listonly
+	CreateShortCut "$DESKTOP\Antares ${CMAKE_VERSION}.lnk" "$INSTDIR\bin\${ANTARES_BIN}" "" "$INSTDIR\Resources\Icons\study.ico"
+${Mementosectionend}
+
+
+${MementoSection} "Menu Shortcuts" SecMenuShortcuts
+	SetShellVarContext all
+	SetDetailsPrint textonly
+	DetailPrint "$(LngResInstallMenuLink)"
+	SetDetailsPrint listonly
+
+	SectionIn 1 2
+
+	CreateDirectory "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}"
+	CreateDirectory "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation"
+	${SetOutPath} "$INSTDIR\"
+	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Antares Simulator ${PRODUCT_VERSION}.lnk" "$INSTDIR\bin\${ANTARES_BIN}" "" "$INSTDIR\Resources\Icons\study.ico"
+	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\General reference guide (PDF).lnk" "$INSTDIR\Resources\Help\antares-general-reference-guide.pdf" "" ""
+	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Data Organizer reference guide (PDF).lnk" "$INSTDIR\Resources\Help\data-organizer-reference-guide.pdf" "" ""
+	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Data Organizer troubleshooting (PDF).lnk" "$INSTDIR\Resources\Help\data-organizer-troubleshooting.pdf" "" ""
+	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\System Map Editor reference guide (PDF).lnk" "$INSTDIR\Resources\Help\system-map-editor-reference-guide.pdf" "" ""
+	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Examples library (PDF).lnk" "$INSTDIR\Resources\Help\antares-examples-library.pdf" "" ""
+	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Software License Agreement (PDF).lnk" "$INSTDIR\Resources\Help\software-license-agreement.pdf" "" ""
+${Mementosectionend}
+
+
+${MementoSectionDone}
+
+
+section -post
+	SetShellVarContext all
+
+	${WriteUninstaller} "$INSTDIR\uninstall-${CMAKE_SIMPLE_VERSION}.exe"
+
+	WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "InstallDir" $INSTDIR
+	WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "Version" "${PRODUCT_VERSION}"
+	WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\bin\${ANTARES_BIN}"
+
+	WriteRegStr HKLM "${PRODUCT_UNINST_KEY}" "DisplayName" "${PRODUCT_NAME}"
+	WriteRegStr HKLM "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\uninstall-${CMAKE_SIMPLE_VERSION}.exe"
+	WriteRegStr HKLM "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\bin\${ANTARES_BIN}"
+	WriteRegStr HKLM "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
+	#WriteRegStr HKLM "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
+	WriteRegStr HKLM "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
+
+sectionend
+
+
+
+
+
+
+;--------------------------------
+;Descriptions
+
+!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
+!insertmacro MUI_DESCRIPTION_TEXT ${SecCore} "The core files required by Antares"
+#!insertmacro MUI_DESCRIPTION_TEXT ${SecExamples} "Examples"
+#!insertmacro MUI_DESCRIPTION_TEXT ${SecSources} "Source files"
+!insertmacro MUI_DESCRIPTION_TEXT ${SecMenuShortcuts} "Create a shortcut in the Start Menu"
+!insertmacro MUI_DESCRIPTION_TEXT ${SecDekstopShortcuts} "Create a shortcut to the Desktop"
+!insertmacro MUI_FUNCTION_DESCRIPTION_END
+
+;--------------------------------
+;Installer Functions
+
+Function .onInit
+	${If} ${RunningX64}
+		${EnableX64FSRedirection}
+		SetRegView 64
+		StrCpy $INSTDIR "$PROGRAMFILES64\RTE\Antares\${PRODUCT_VERSION}.${PRODUCT_BUILD}\"
+	${Else}
+		${If} ${ANTARES_REDIST_ARCH} == "x64"
+			MessageBox MB_OK "This installer requires Windows 64-bit. Please use the 32-bit version."
+			Abort
+		${EndIf}
+	${EndIf}
+
+	${MementoSectionRestore}
+FunctionEnd
+
+!ifdef VER_MAJOR & VER_MINOR & VER_REVISION & VER_BUILD
+
+# TODO Make a reInstall function
+
+!endif # VER_MAJOR & VER_MINOR & VER_REVISION & VER_BUILD
+
+
+
+;Function ShowReleaseNotes
+;	ExecShell "open" "${PRODUCT_WEB_SITE}"
+;FunctionEnd
+
+section -closelogfile
+	fileclose $UninstLog
+	SetFileAttributes "$INSTDIR\${UninstLog}" READONLY|SYSTEM|HIDDEN
+sectionend
+
+
+
+
+
+
+section Uninstall
+	SetShellVarContext all
+	SetDetailsPrint textonly
+	DetailPrint "Uninstalling Antares..."
+	SetDetailsPrint listonly
+
+
+	;Can't uninstall if uninstall log is missing!
+	iffileexists "$INSTDIR\${UninstLog}" +3
+		MessageBox MB_OK|MB_ICONSTOP "$(UninstLogMissing)"
+			Abort
+
+	; deleting all examples manually
+	; NSIS may not delete these files in the good order
+	; And the progress bar does not advance smoothly
+	DetailPrint "Deleting Antares files..."
+	!include "@PROJECT_SOURCE_DIR@\distrib\win32\uninstall-folders.inc.nsh"
+
+
+	SetDetailsPrint textonly
+	DetailPrint "Searching for additional Antares files..."
+	SetDetailsPrint listonly
+
+	push $R0
+	push $R1
+	push $R2
+	SetFileAttributes "$INSTDIR\${UninstLog}" NORMAL
+	FileOpen $UninstLog "$INSTDIR\${UninstLog}" r
+	StrCpy $R1 -1
+
+	GetLineCount:
+		ClearErrors
+		FileRead $UninstLog $R0
+		IntOp $R1 $R1 + 1
+		StrCpy $R0 $R0 -2
+		push $R0
+		IfErrors 0 GetLineCount
+
+	Pop $R0
+
+	LoopRead:
+		StrCmp $R1 0 LoopDone
+		Pop $R0
+
+		IfFileExists "$R0\*.*" 0 +1
+			rmdir $R0
+			Delete $R0 # is file
+
+		#IfFileExists "$R0\*.*" 0 +3
+		#	rmdir $R0  #is dir
+		#goto +4
+		#IfFileExists $R0 0 +3
+		#	Delete $R0 #is file
+		#goto +1
+
+		IntOp $R1 $R1 - 1
+		goto LoopRead
+	LoopDone:
+	FileClose $UninstLog
+	Pop $R2
+	Pop $R1
+	Pop $R0
+
+
+	delete "$INSTDIR\${UninstLog}"
+	delete "$INSTDIR\bin\${ANTARES_BIN}"
+	delete "$INSTDIR\antares-${CMAKE_SIMPLE_VERSION}-ui-simulator.lnk"
+	delete "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Antares Simulator ${PRODUCT_VERSION}.lnk"
+	delete "$INSTDIR\Documentation\General reference guide (PDF).lnk"
+	delete "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\General reference guide (PDF).lnk"
+	delete "$INSTDIR\Documentation\Data Organizer reference guide (PDF).lnk"
+	delete "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Data Organizer reference guide (PDF).lnk"
+	delete "$INSTDIR\Documentation\Data Organizer troubleshooting (PDF).lnk"
+	delete "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Data Organizer troubleshooting (PDF).lnk"
+	delete "$INSTDIR\Documentation\System Map Editor reference guide (PDF).lnk"
+	delete "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\System Map Editor reference guide (PDF).lnk"
+	delete "$INSTDIR\Documentation\Examples library (PDF).lnk"
+	delete "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Examples library (PDF).lnk"
+	delete "$INSTDIR\Documentation\Software License Agreement (PDF).lnk"
+	delete "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Software License Agreement (PDF).lnk"
+	delete "$INSTDIR\Documentation\Flexnet License Administration (PDF).lnk"
+	
+	delete "$DESKTOP\Antares ${CMAKE_VERSION}.lnk"
+
+	rmdir "$INSTDIR\Documentation"
+	rmdir "$INSTDIR\Resources\Examples"
+	rmdir "$INSTDIR\Resources"
+	rmdir "$INSTDIR\bin"
+	rmdir "$INSTDIR"
+
+	rmdir "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation"
+	rmdir "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}"
+
+	# removing keys from the registry
+	DetailPrint "Removing registry keys for Antares..."
+	DeleteRegKey HKLM "${PRODUCT_UNINST_KEY}"
+	DeleteRegKey HKLM "${PRODUCT_DIR_REGKEY}"
+
+	SetDetailsPrint both
+
+sectionend
+
+
+
+

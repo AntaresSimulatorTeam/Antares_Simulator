@@ -266,9 +266,38 @@ if(WIN32 OR WIN64)
 		set(COMPILER_MARK "m")
 		set(COMPILER_INCLUDE "mingw")
 	endif(MSVC)
-	configure_file("distrib/win32/version.cmake" "distrib/win32/version.nsh")
-	configure_file("distrib/win32/build.template.cmake" "distrib/win32/build.nsh")
-	configure_file("distrib/win32/make-zip-from-installer.cmake" "distrib/win32/make-zip-from-installer.bat")
+	
+	set(CPACK_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32 ${CPACK_MODULE_PATH})
+
+	# Configure file with custom definitions for NSIS.
+	configure_file(
+		${PROJECT_SOURCE_DIR}/distrib/win32/version.cmake
+		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/version.nsh
+	)
+	
+	configure_file(
+		${PROJECT_SOURCE_DIR}/distrib/win32/build.template.cmake
+		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/build.nsh
+	)
+	
+	configure_file(
+		${PROJECT_SOURCE_DIR}/distrib/win32/make-zip-from-installer.cmake
+		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/make-zip-from-installer.bat
+	)
+	
+	SET(ANTARES_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
+	
+	configure_file(
+		${PROJECT_SOURCE_DIR}/distrib/win32/NSIS.template.in
+		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/NSIS.template.in
+		@ONLY
+	)
+	
+	#TODO : get package name from CMake and antares variables
+	set(CPACK_PACKAGE_FILE_NAME "rte-antares-7.1.0-installer-64bits")
+	OMESSAGE("CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_FILE_NAME}")
+	# Load packaging facilities.
+	include(CPack)
 else()
 	configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
 endif()
