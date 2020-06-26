@@ -98,7 +98,8 @@ if(WIN32)
 	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/manifest.cmake"
 		"${CMAKE_CURRENT_BINARY_DIR}/resources/win32/manifest.antares-win32.manifest")
 
-
+        FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/antares.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/win32/")
+	
 	if(MINGW)
 		# resource compilation for mingw
 		add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/resources/win32/antares.o"
@@ -108,9 +109,7 @@ if(WIN32)
 			DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/antares.rc.cmake"
 			COMMENT "Generating the resource file...")
 		SET(SRCS ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/resources/win32/antares.o")
-
 	else()
-        FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/antares.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/win32/")
 		SET(SRCS ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/resources/win32/antares.rc")
 	endif()
 endif()
