@@ -21,6 +21,7 @@ include("cmake/constraints-builder.cmake")
 #
 if(WIN32)
 	file(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/win32/solver.o")
+	FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/win32/solver.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/win32/")
 	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/win32/solver.rc.cmake"
 		"${CMAKE_CURRENT_SOURCE_DIR}/win32/solver.rc")
 
