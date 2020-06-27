@@ -22,13 +22,13 @@ jobs:
            cd src
            mkdir _build
            cd _build
-           cmake -DBUILD_DEPS=ON ..
+           cmake -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release ..
 
     - name: Build
       run: |
            cd src
            cd _build
-           cmake --build .
+           cmake --build . --config=release
 
     - name: Installer creation
       run: |
