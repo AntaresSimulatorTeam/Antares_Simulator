@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest]
-        buildtype: [release]
         include:
           - os: windows-latest
             triplet: x64-windows
@@ -36,8 +35,10 @@ jobs:
       with:
           useVcpkgToolchainFile: true
           cmakeListsTxtPath: '${{ github.workspace }}/src/CMakeLists.txt'
-          buildDirectory: ${{ github.workspace }}/src/_build
-          cmakeBuildType: ${{ matrix.buildtype }}
+          buildDirectory: ${{ github.workspace }}/src/_build          
+          cmakeBuildType: release
+          buildWithCMakeArgs: "--config release"
+          buildWithCMake: true
           
     - name: Installer creation
       run: |
