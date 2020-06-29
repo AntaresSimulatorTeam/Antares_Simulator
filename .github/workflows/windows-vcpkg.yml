@@ -45,6 +45,11 @@ jobs:
            cd _build
            cpack -GNSIS
            
+    - name: The job has failed
+      if: ${{ failure() }}
+      run: |
+        type D:/a/Antares_Simulator/Antares_Simulator/src/_build/_CPack_Packages/win64/NSIS/NSISOutput.log
+           
     - name: Installer upload
       uses: actions/upload-artifact@v2
       with:
