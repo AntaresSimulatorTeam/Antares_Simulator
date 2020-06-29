@@ -33,7 +33,7 @@ jobs:
     - name: Building with CMake
       uses: lukka/run-cmake@v2
       with:
-          cmakeGenerator: 'Visual Studio 16 2019'
+          cmakeGenerator: "Visual Studio 16 2019"
           useVcpkgToolchainFile: true
           cmakeListsTxtPath: '${{ github.workspace }}/src/CMakeLists.txt'
           buildDirectory: ${{ github.workspace }}/src/_build          
