@@ -98,6 +98,13 @@ LangString UninstLogMissing ${LANG_ENGLISH} "${UninstLog} not found !$\r$\nUnins
 !macroend
 !define File "!insertmacro File"
 
+; File optionnal macro
+!macro FileOptionnal FilePath FileName
+	IfFileExists "$OUTDIR\${FileName}" +2
+		FileWrite $UninstLog "$OUTDIR\${FileName}$\r$\n"
+	File /nonfatal "${FilePath}\${FileName}"
+!macroend
+!define FileOptionnal "!insertmacro FileOptionnal"
 
 ; Copy files macro
 !macro CopyFiles SourcePath DestPath
@@ -284,8 +291,8 @@ ${MementoSection} "$(LngCoreFiles)" SecCore
 	${SetOutPath} "$INSTDIR\bin"
 	${File} "${ANTARES_BUILD_DIR}\ui\simulator\${TARGET}"         "antares-${CMAKE_SIMPLE_VERSION}-ui-simulator.exe"
 	
-	;TODO : see how this can be dependant on type of  build
-	;${File} "${ANTARES_BUILD_DIR}\ui\simulator\${TARGET}"         "*.dll"
+	;.ddl are available only with shared dependencies link FileOptionnal used
+	${FileOptionnal} "${ANTARES_BUILD_DIR}\ui\simulator\${TARGET}"         "*.dll"
 	
 	${File} "${ANTARES_BUILD_DIR}\solver\${TARGET}"               "antares-${CMAKE_SIMPLE_VERSION}-solver.exe"
 	${File} "${ANTARES_BUILD_DIR}\solver\${TARGET}"               "antares-${CMAKE_SIMPLE_VERSION}-solver-swap.exe"

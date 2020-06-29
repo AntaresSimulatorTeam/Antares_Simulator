@@ -36,7 +36,7 @@ jobs:
            cd _build
            cpack -GNSIS
            
-    - name: Installer creation
+    - name: Installer upload
       uses: actions/upload-artifact@v2
       with:
         name: antares-installer-64bits

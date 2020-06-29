@@ -1,4 +1,4 @@
-name: Windows CI (VCPKG)
+name: Linux CI (VCPKG)
 
 on:
   push:
@@ -7,16 +7,16 @@ on:
 
 jobs:
 
-  windows:
+  linux:
 
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [ubtuntu-latest]
         buildtype: [release]
         include:
-          - os: windows-latest
-            triplet: x64-windows
+          - os: linux-latest
+            triplet: x64-linux
             vcpkgCommitId: 'ee17a685087a6886e5681e355d36cd784f0dd2c8'
             vcpkgPackages: openssl curl wxwidgets
 
@@ -37,18 +37,6 @@ jobs:
           useVcpkgToolchainFile: true
           cmakeListsTxtPath: '${{ github.workspace }}/src/CMakeLists.txt'
           buildDirectory: ${{ github.workspace }}/src/_build
-          cmakeBuildType: ${{ matrix.buildtype }}
-          
-    - name: Installer creation
-      run: |
-           cd src
-           cd _build
-           cpack -GNSIS
-           
-    - name: Installer upload
-      uses: actions/upload-artifact@v2
-      with:
-        name: antares-installer-64bits
-        path: src/_build/rte-antares-7.1.0-installer-64bits.exe            
+          cmakeBuildType: ${{ matrix.buildtype }}       
            
 

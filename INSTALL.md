@@ -1,12 +1,12 @@
-# Antares Simulator CMake Build Instructions
+﻿# Antares Simulator CMake Build Instructions
 
 [Environnement](#environment) | [Dependencies](#dependencies) | [Building](#building-antares-solution)
 
 ## C/I status
 | OS     | System librairies | VCPKG | Built in libraries |
 |:-------|-----|--------|------|
-| Linux  | [![Status][linux_system_svg]][linux_system_link] | Not tested | [![Status][linux_deps_build_svg]][linux_deps_build_link] |
-| Windows  | Not available| Tested (C/I must be implemented)| [![Status][windows_deps_build_svg]][windows_deps_build_link] |
+| Linux  | [![Status][linux_system_svg]][linux_system_link] | [![Status][linux_vcpkg_svg]][linux_vcpkg_link]  | [![Status][linux_deps_build_svg]][linux_deps_build_link] |
+| Windows  | Not available|  [![Status][windows_vcpkg_svg]][windows_vcpkg_link] | [![Status][windows_deps_build_svg]][windows_deps_build_link] |
 
 
 [linux_system_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Linux%20CI%20(system%20libs)/badge.svg?branch=feature%2Fcmake_build_dependency_option
@@ -20,6 +20,14 @@
 [windows_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(deps.%20compilation)/badge.svg?branch=feature%2Fcmake_build_dependency_option
 
 [windows_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(deps.%20compilation)"
+
+[windows_vcpkg_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(VCPKG)/badge.svg?branch=feature%2Fcmake_build_dependency_option
+
+[windows_vcpkg_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Linux%20CI%20(VCPKG)"
+
+[linux_vcpkg_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Linux%20CI%20(VCPKG)/badge.svg?branch=feature%2Fcmake_build_dependency_option
+
+[linux_vcpkg_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Linux%20CI%20(VCPKG)"
 
 ## [Environment](#env)
 ANTARES Solver/Simulator is a cross-platform project using components compatible
