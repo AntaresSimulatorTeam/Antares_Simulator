@@ -12,10 +12,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubtuntu-latest]
+        os: [ubuntu-latest]
         buildtype: [release]
         include:
-          - os: linux-latest
+          - os: ubuntu-latest
             triplet: x64-linux
             vcpkgCommitId: 'ee17a685087a6886e5681e355d36cd784f0dd2c8'
             vcpkgPackages: openssl curl wxwidgets
