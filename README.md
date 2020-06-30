@@ -54,8 +54,6 @@ For installation instructions, please visit [INSTALL.md](INSTALL.md)
 * [README](README.md)             - This file.
 * [ROADMAP](ROADMAP.txt)            - Main orientations for further developements 
 * [THANKS](THANKS.txt)             - Attribution notices for external libraries and contributors.
-* [bin/](bin)               - Antares_Simulator binaries.
-* [doc/](doc)              - Miscellaneous documentation.
 * [resources/](resources)	 - Free sample data sets. 
 * [src/analyzer/](src/analyzer)      - source code for the statistical analysis of historical time-series.
 * [src/cmake/](src/cmake)        - files for initializing a solution ready for compilation. 
@@ -63,6 +61,6 @@ For installation instructions, please visit [INSTALL.md](INSTALL.md)
 * [src/ext/](src/ext)     	 - third party libraries used by Antares_Simulator: libYuni, Sirius_Solver.
 * [src/libs/](src/libs)		   - miscellaneous Antares_Simulator libraries.
 * [src/internet/](src/internet)      - web access (check for updates, usage metrics, data exchange).
-* [src/simulator/](src/simulato)     - Time-series generation, Monte-Carlo simulation and weekly optimization modelling.
+* [src/simulator/](src/simulator)     - Time-series generation, Monte-Carlo simulation and weekly optimization modelling.
 * [src/tools/](src/tools)        - miscellaneous tools for dataset management. 
 * [src/ui/](src/ui)           - Graphic user interface. 
