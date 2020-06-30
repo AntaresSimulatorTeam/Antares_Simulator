@@ -25,20 +25,29 @@ jobs:
 
     - name : Install deps with VCPKG
       uses: lukka/run-vcpkg@master
+      id: runvcpkg
       with:
         vcpkgArguments: '${{ matrix.vcpkgPackages }}'
         vcpkgTriplet: '${{ matrix.triplet }}'
         vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
         vcpkgGitCommitId: '${{ matrix.vcpkgCommitId }}'
-        
-    - name: Building with CMake
-      uses: lukka/run-cmake@v2
-      with:
-          useVcpkgToolchainFile: true
-          cmakeListsTxtPath: '${{ github.workspace }}/src/CMakeLists.txt'
-          buildDirectory: ${{ github.workspace }}/src/_build
-          cmakeBuildType: ${{ matrix.buildtype }}
           
+    - name: Prints output of run-vcpkg's task
+      run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_TRIPLET_OUT }}' "
+        
+    - name: Configure
+      run: |
+           cd src
+           mkdir _build
+           cd _build
+           cmake -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_TRIPLET_OUT }} -DCMAKE_BUILD_TYPE=release .. 
+    
+    - name: Build
+      run: |
+           cd src
+           cd _build
+           cmake --build . --config release
+           
     - name: Installer creation
       run: |
            cd src

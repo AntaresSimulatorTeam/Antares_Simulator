@@ -5,7 +5,7 @@
 ## C/I status
 | OS     | System librairies | VCPKG | Built in libraries |
 |:-------|-----|--------|------|
-| Linux  | [![Status][linux_system_svg]][linux_system_link] | [![Status][linux_vcpkg_svg]][linux_vcpkg_link]  | [![Status][linux_deps_build_svg]][linux_deps_build_link] |
+| Linux  | [![Status][linux_system_svg]][linux_system_link] |Not available  | [![Status][linux_deps_build_svg]][linux_deps_build_link] |
 | Windows  | Not available|  [![Status][windows_vcpkg_svg]][windows_vcpkg_link] | [![Status][windows_deps_build_svg]][windows_deps_build_link] |
 
 
@@ -25,9 +25,7 @@
 
 [windows_vcpkg_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Linux%20CI%20(VCPKG)"
 
-[linux_vcpkg_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Linux%20CI%20(VCPKG)/badge.svg?branch=feature%2Fcmake_build_dependency_option
-
-[linux_vcpkg_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Linux%20CI%20(VCPKG)"
+Note : Linux with VCPKG is not available due to issue in Find_wxWidgets.cmake with VCPKG use in linux.
 
 ## [Environment](#env)
 ANTARES Solver/Simulator is a cross-platform project using components compatible
