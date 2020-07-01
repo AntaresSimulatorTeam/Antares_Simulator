@@ -299,6 +299,14 @@ if(WIN32 OR WIN64)
 	# Load packaging facilities.
 	include(CPack)
 else()
+
+	#TODO : for now only test deb, need to define several CPACK variable
+	set(CPACK_PROJECT_NAME "antares-deb-test")
+	set(CPACK_DEBIAN_PACKAGE_MAINTAINER "RTE")
+
 	configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
+
+	# Load packaging facilities.
+	include(CPack)
 endif()
 

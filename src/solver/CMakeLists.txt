@@ -44,6 +44,7 @@ macro(solver_app name swap)
 	else()
 		OMESSAGE("  :: application ${name}")
 	endif()
+
 	set(exec_name "antares-${ANTARES_PRG_VERSION}-solver")
 	if(${swap})
 		set(exec_name "${exec_name}-swap")
@@ -121,4 +122,8 @@ endmacro()
 
 solver_app("solver"      false)
 solver_app("solver-swap" true)
+
+#TODO : not working inside macro
+install(TARGETS "antares-${ANTARES_PRG_VERSION}-solver" DESTINATION bin)
+install(TARGETS "antares-${ANTARES_PRG_VERSION}-solver-swap" DESTINATION bin)
 

@@ -23,6 +23,7 @@ endif(WIN32)
 
 set(execname "antares-${ANTARES_PRG_VERSION}-config")
 add_executable(${execname} ${SRCS})
+install(TARGETS ${execname} DESTINATION bin)
 
 set(CONFIG_LIBS
 		libantares-core

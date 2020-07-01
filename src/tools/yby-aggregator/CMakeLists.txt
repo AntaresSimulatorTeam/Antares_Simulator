@@ -45,6 +45,7 @@ endif()
 
 set(execname "antares-${ANTARES_PRG_VERSION}-ybyaggregator")
 add_executable(${execname}  ${SRCS})
+install(TARGETS ${execname} DESTINATION bin)
 
 
 set(YBY_AGGREGATOR_LIBS

@@ -22,6 +22,7 @@ endif()
 
 set(execname "antares-${ANTARES_PRG_VERSION}-study-cleaner")
 add_executable(${execname}  ${SRCS})
+install(TARGETS ${execname} DESTINATION bin)
 
 set(CLEANER_LIBS
 	libantares-core

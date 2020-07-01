@@ -28,6 +28,8 @@ endif(WIN32)
 set(execname "antares-${ANTARES_PRG_VERSION}-batchrun")
 add_executable(${execname} ${SRCS})
 
+install(TARGETS ${execname} DESTINATION bin)
+
 set(BATCHRUN_LIBS
 		libantares-core
 		libantares-core-calendar
