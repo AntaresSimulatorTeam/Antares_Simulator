@@ -303,6 +303,12 @@ else()
 	#TODO : for now only test deb, need to define several CPACK variable
 	set(CPACK_PROJECT_NAME "antares-deb-test")
 	set(CPACK_DEBIAN_PACKAGE_MAINTAINER "RTE")
+	set(CPACK_DEBIAN_PACKAGE_NAME "antares")
+	set(CPACK_PACKAGE_VERSION_MAJOR 7)
+	set(CPACK_PACKAGE_VERSION_MINOR 1)
+	set(CPACK_PACKAGE_VERSION_PATCH 0)
+
+	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libuuid1, libcurl4, libwxgtk3.0")
 
 	configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
 
