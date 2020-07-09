@@ -36,7 +36,7 @@ extern "C"
 {
 # endif
 
-# include "simplexe/spx_constantes_externes.h"
+# include "spx_constantes_externes.h"
 
 # ifdef __cplusplus
 }

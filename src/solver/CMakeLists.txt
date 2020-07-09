@@ -95,7 +95,6 @@ macro(solver_app name swap)
 			libantares-solver-simulation-swap
 			libantares-solver-ts-generator-swap
 			libmodel_antares-swap
-			libsolver_antares-swap
 			libantares-core-swap)
 		set_target_properties(${exec_name} PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
 	else()
@@ -109,7 +108,6 @@ macro(solver_app name swap)
 			libantares-solver-simulation
 			libantares-solver-ts-generator
 			libmodel_antares 
-			libsolver_antares			
 			libantares-core)
 	endif()
 
