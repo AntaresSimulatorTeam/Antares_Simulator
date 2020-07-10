@@ -102,17 +102,18 @@ On linux you can use a package manger to download the precompiled librairies.
 #### Ubuntu
 
 ```
-sudo yum install openssl
-sudo yum install curl
-sudo yum install wxwidgets
+sudo apt-get install libuuid1 uuid-dev
+sudo apt-get install libcurl4-openssl-dev
+sudo apt-get install libssl-dev
+sudo apt-get install libwxgtk3.0-dev
 ```
 
 #### RHEL / Centos
 
 ```
-sudo apt-get install openssl
-sudo apt-get install curl
-sudo apt-get install wxwidgets
+sudo yum install openssl
+sudo yum install curl
+sudo yum install wxGTK3-devel
 ```
 ### [Automatic librairies compilation from git](#git_compil)
 Dependency can be built  at configure time using the option `-DBUILD_DEPS=ON` (`OFF` by default) or you can compile few of them using the options below.
