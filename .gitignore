@@ -71,3 +71,8 @@ src/license/keys/rsakey2code
 src/script/v8/libs/*
 /src/antares.VC.VC.opendb
 /src/antares.VC.db
+
+_build*
+buildDebian
+.vscode/
+*.dll

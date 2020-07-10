@@ -142,29 +142,66 @@ cmake -DCMAKE_BUILD_TYPE=debug ..
 ```
 Note that these are not the standard CMAKE_BUILD_TYPE. CMake files must be updated.
 
+### Windows building external librairies (recommanded)
+
+- create a work directory (recommanded)
+
+
+```bash
+mkdir  Antares_workdir
+cd Antares_workdir
+```
+
+Then use the following commands to configure, build and install Sirius, Ortools and finaly Antares (solver only for now).  
+If you want to use a specific version of the compiler, use the -G option of cmake: ```-G"Visual Studio 15 2017 Win64``` for instance
+
+```bash
+git clone https://github.com/rte-france/sirius-solver.git -b Antares_VCPKG Sirius
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="installSirius" -B Sirius/build -S Sirius/src
+cmake --build Sirius/build/ --config Release --target install -j4
+
+git clone https://github.com/rte-france/or-tools.git -b rte_dev_sirius ortools
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="installOrtools" -B ortools/build -S ortools/ -DUSE_SIRIUS=ON -DUSE_COINOR=ON -DBUILD_PYTHON=OFF -DBUILD_TESTING=OFF -DBUILD_DEPS=ON -Dsirius_solver_ROOT=installSirius
+cmake --build ortools/build/ --config Release --target install -j4
+
+git clone https://github.com/rte-france/Antares_Simulator.git -b feature/Sirius_extraction Antares_Simulator
+cmake -B Antares_Simulator/build -DCMAKE_BUILD_TYPE=release -S Antares_Simulator/src -Dsirius_solver_ROOT=installSirius -DBUILD_DEPS=ON -Dortools_ROOT=installOrtools
+cmake --build Antares_Simulator/build --config Release --target antares-7.1-solver -j4
+```
+
+Note : ```-j``` option should be adapted to your computer's number of cpu/cores.
+
 ### Linux using system libs (recommanded)
 - Install dependencies [using package manager](#using-a-package-manager).
-- Create build dir (optionnal but recommanded)
+- Create a work directory (recommanded)
+```bash
+mkdir  Antares_workdir
+cd Antares_workdir
 ```
-cd [antares_src]
-mkdir _build
-```
-- Configure build with cmake
 
+Then use the following commands to configure, build and install Sirius, Ortools and finaly Antares (solver only for now).  
+For windows, if you want to use a specific version of the compiler, use the -G option of cmake: ```-G"Visual Studio 15 2017 Win64``` for instance
+
+```bash
+git clone https://github.com/rte-france/sirius-solver.git -b Antares_VCPKG Sirius
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="installSirius" -B Sirius/build -S Sirius/src
+cmake --build Sirius/build/ --config Release --target install
+
+git clone https://github.com/rte-france/or-tools.git -b rte_dev_sirius ortools
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="installOrtools" -B ortools/build -S ortools/ -DUSE_SIRIUS=ON -DUSE_COINOR=ON -DBUILD_PYTHON=OFF -DBUILD_TESTING=OFF -DBUILD_DEPS=ON -Dsirius_solver_ROOT=installSirius
+cmake --build ortools/build/ --config Release --target install
+
+git clone https://github.com/rte-france/Antares_Simulator.git -b feature/Sirius_extraction Antares_Simulator
+cmake -B Antares_Simulator/build -DCMAKE_BUILD_TYPE=release -S Antares_Simulator/src -Dsirius_solver_ROOT=installSirius -Dortools_ROOT=installOrtools
+cmake --build Antares_Simulator/build --config Release --target antares-7.1-solver
 ```
-cd [antares_src]
-cd _build
-cmake ..
-```
-- Build
- ```
-cd [antares_src]
-cd _build
-make -j8
-```
+
 Note : compilation can be done on several processor with ```-j``` option.
 
-### Window using vcpkg (recommanded)
+### Window using vcpkg (not recommanded)
+
+__Using or even installing VCPK with global intergration will break the way find_package works and is not compatible with this or-tools version__
+
 - Install dependencies [using VCPKG](#using-vcpkg).
 - Choose [vcpkg-triplet]
 - Create build dir (optionnal but recommanded)
@@ -178,26 +215,6 @@ mkdir _build
 cd [antares_src]
 cd _build
 cmake -DCMAKE_TOOLCHAIN_FILE=[vcpkg_root]/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=[vcpkg-triplet] ..
-```
-- Build
- ```
-cd [antares_src]
-cd _build
-make
-```
-
-### Linux/Window building external librairies
-- Create build dir (optionnal but recommanded)
-```
-cd [antares_src]
-mkdir _build
-```
-- Configure build with CMake with ```BUILD_DEPS``` option.
-
-```
-cd [antares_src]
-cd _build
-cmake -DBUILD_DEPS=ON ..
 ```
 - Build
  ```
