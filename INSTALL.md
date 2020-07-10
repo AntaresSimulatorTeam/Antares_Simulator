@@ -143,14 +143,16 @@ Note that these are not the standard CMAKE_BUILD_TYPE. CMake files must be updat
 
 ### Windows building external librairies (recommanded)
 
-create a work directory (recommanded)
+- create a work directory (recommanded)
+
+
 ```bash
 mkdir  Antares_workdir
 cd Antares_workdir
 ```
 
 Then use the following commands to configure, build and install Sirius, Ortools and finaly Antares (solver only for now).  
-For windows, if you want to use a specific version of the compiler, use the -G option of cmake: ```-G"Visual Studio 15 2017 Win64``` for instance
+If you want to use a specific version of the compiler, use the -G option of cmake: ```-G"Visual Studio 15 2017 Win64``` for instance
 
 ```bash
 git clone https://github.com/rte-france/sirius-solver.git -b Antares_VCPKG Sirius
@@ -170,8 +172,7 @@ Note : ```-j``` option should be adapted to your computer's number of cpu/cores.
 
 ### Linux using system libs (recommanded)
 - Install dependencies [using package manager](#using-a-package-manager).
-- 
-create a work directory (recommanded)
+- Create a work directory (recommanded)
 ```bash
 mkdir  Antares_workdir
 cd Antares_workdir
@@ -196,7 +197,10 @@ cmake --build Antares_Simulator/build --config Release --target antares-7.1-solv
 
 Note : compilation can be done on several processor with ```-j``` option.
 
-### Window using vcpkg (recommanded)
+### Window using vcpkg (not recommanded)
+
+__Using or even installing VCPK with global intergration will break the way find_package works and is not compatible with this or-tools version__
+
 - Install dependencies [using VCPKG](#using-vcpkg).
 - Choose [vcpkg-triplet]
 - Create build dir (optionnal but recommanded)
