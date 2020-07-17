@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/cmake_build_dependency_option
+      - feature/ANT-457--cmake-with-ctest
 
 jobs:     
          
