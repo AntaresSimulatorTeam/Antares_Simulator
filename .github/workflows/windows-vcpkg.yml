@@ -37,6 +37,12 @@ jobs:
           useVcpkgToolchainFile: true
           cmakeListsTxtPath: '${{ github.workspace }}/src/CMakeLists.txt'
           buildDirectory: ${{ github.workspace }}/src/_build
-          cmakeBuildType: ${{ matrix.buildtype }}       
-           
+          cmakeBuildType: ${{ matrix.buildtype }}
+
+    - name: Running unit tests
+      run: |
+           cd src
+           cd build
+           ctest -C ${{ matrix.buildtype }}
+
 

@@ -249,6 +249,25 @@ add_subdirectory(analyzer)	#antares analyser
 # Tools
 add_subdirectory(tools)	#All antares tools
 
+# Tests
+# 	Not setting BUILD_TESTING as a command line argument is equivalent to use -DBUILD_TESTING=OFF
+# 	To build tests, use -DBUILD_TESTING=ON
+if(BUILD_TESTING)
+	set(ANTARES_SRC ${CMAKE_CURRENT_LIST_DIR})
+	# include(CTest) # calls enable_testing() and turns BUILD_TESTING to ON by default (among other useful things)
+	enable_testing()
+	
+	CMAKE_DEPENDENT_OPTION(BUILD_BOOST_TEST "Download and build boost.test" OFF "NOT BUILD_DEPS" ON)
+	
+	if(BUILD_BOOST_TEST)
+		# Setting CMAKE_PREFIX_PATH so that find_package(boost.test...) finds "${FizzBuzz current path}/ext" boost.test
+		list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/tests/ext")
+	endif()
+		
+	add_subdirectory(tests)
+endif()
+
+
 OMESSAGE("")
 
 # Informations for NSIS

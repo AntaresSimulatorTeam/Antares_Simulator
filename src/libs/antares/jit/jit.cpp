@@ -135,5 +135,27 @@ void JIT::Invalidate(JIT::Informations* jit)
 }
 
 
+void JIT::just_in_time_manager::record_current_jit_state(uint width, uint height)
+{
+	jit_record_ = new JIT::Informations();
 
+	// These values are _mandatory_ especially for empty matrices
+	jit_record_->options = 0; // = optNone
+	jit_record_->minWidth = (width != 0) ? width : 1;
+	jit_record_->maxHeight = height;
 
+	if (jit_)
+	{
+		jit_record_->options = jit_->options;
+		jit_record_->minWidth = jit_->minWidth;
+		jit_record_->maxHeight = jit_->maxHeight;
+	}
+}
+
+bool JIT::just_in_time_manager::do_we_force_matrix_load_from_disk()
+{
+	// Force the load of the current matrix from disk, for example when we are making a "save as" of a study into a new one.
+	// The study "save" operation (after a change in GUI) does not need such an enforcement, as the matrix is lying in memory
+	// and not on disk.
+	return jit_->loadDataIfNotAlreadyDone;
+}

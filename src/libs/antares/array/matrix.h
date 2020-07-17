@@ -38,7 +38,6 @@
 # include "autoflush.h"
 
 
-
 namespace Antares
 {
 
@@ -50,7 +49,7 @@ namespace Antares
 	** \tparam ReadWriteT The type to use when reading/saving the matrix
 	*/
 	template<class T = double, class ReadWriteT = T>
-	class Matrix final
+	class Matrix /*final*/
 	{
 	public:
 		//! Type
@@ -162,11 +161,10 @@ namespace Antares
 		** \param buffer An optional buffer for reading the file
 		** \return True if the operation succeeded
 		*/
-		bool loadFromCSVFile(const AnyString& filename, uint minWidth, uint maxHeight,
+		virtual bool loadFromCSVFile(const AnyString& filename, uint minWidth, uint maxHeight,
 			uint options = optNone, BufferType* buffer = NULL);
 
-		bool loadFromCSVFile(const AnyString& filename, uint minWidth, uint maxHeight,
-			BufferType* buffer);
+		bool loadFromCSVFile(const AnyString& filename, uint minWidth, uint maxHeight, BufferType* buffer);
 
 		bool loadFromCSVFile(const AnyString& filename);
 
@@ -181,7 +179,7 @@ namespace Antares
 		** \param filename The file where to write data
 		** \return A non-zero value if the operation succeeded, 0 otherwise
 		*/
-		bool saveToCSVFile(const AnyString& filename, uint precision = 6, bool addHint = false) const;
+		bool saveToCSVFile(const AnyString& filename, uint precision = 6, bool print_dimensions = false) const;
 
 		/*!
 		** \brief Write the content of a matrix into a single file
@@ -195,9 +193,21 @@ namespace Antares
 		** \return A non-zero value if the operation succeeded, 0 otherwise
 		*/
 		template<class PredicateT>
-		bool saveToCSVFile(const AnyString& filename, uint precision, bool addHint, PredicateT& predicate) const;
+		bool saveToCSVFile(const AnyString& filename, uint precision, bool print_dimensions, PredicateT& predicate) const;
 		//@}
 
+
+		virtual
+		Yuni::IO::Error loadFromFileToBuffer(BufferType& buffer, const AnyString& filename, unsigned long long hardlimit) const
+		{
+			return Yuni::IO::File::LoadFromFile(buffer, filename, filesizeHardLimit);
+		}
+
+		template<class PredicateT>
+		void saveToFileDescriptor(Yuni::Clob& data, uint precision, bool print_dimensions, PredicateT& predicate) const
+		{
+			internalSaveToFileDescriptor(data, precision, print_dimensions, predicate);
+		}
 
 		//! \name Operations on columns and rows
 		//@{
@@ -442,6 +452,11 @@ namespace Antares
 		//! Just-in-time informations
 		mutable JIT::Informations* jit;
 
+		#ifdef TESTING
+		// Testing saveToCSVFile(...)
+		mutable Yuni::Clob data;
+		#endif
+
 
 	private:
 		struct PredicateIdentity
@@ -467,12 +482,12 @@ namespace Antares
 		** \brief Save data to a CSV file
 		*/
 		template<class PredicateT>
-		bool internalSaveCSVFile(const AnyString& filename, uint precision, bool addHint,
+		bool internalSaveCSVFile(const AnyString& filename, uint precision, bool print_dimensions,
 			PredicateT& predicate) const;
 
 		template<class PredicateT>
 		void internalSaveToFileDescriptor(Yuni::Clob& data, uint precision,
-			bool addHint, PredicateT& predicate) const;
+			bool print_dimensions, PredicateT& predicate) const;
 
 		bool loadFromBuffer(const AnyString& filename, BufferType& data,
 			uint minWidth, uint maxHeight, const int fixedSize, uint options);

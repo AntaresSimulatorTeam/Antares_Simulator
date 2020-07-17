@@ -17,18 +17,24 @@ jobs:
     steps:
     - uses: actions/checkout@v2      
 
-    - name: Configure
+    - name: Configure with cmake
       run: |
            cd src
            mkdir _build
            cd _build
            cmake -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release ..
 
-    - name: Build
+    - name: Build with cmake
       run: |
            cd src
            cd _build
            cmake --build . --config release
+
+    - name: Test
+      run: |
+           cd src
+           cd _build
+           ctest -C ${{ matrix.buildtype }}
 
     - name: Installer creation
       run: |
