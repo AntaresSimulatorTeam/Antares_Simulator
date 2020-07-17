@@ -28,7 +28,7 @@ jobs:
            cd src
            mkdir _build
            cd _build
-           cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} -DBUILD_DEPS=ON ..
+           cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} -DBUILD_DEPS=ON -DBUILD_TESTING=ON ..
 
     - name: Build with cmake
       run: |

@@ -18,14 +18,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2      
 
-    - name: Configure with cmake
+    - name: Configuring with cmake
       run: |
            cd src
            mkdir _build
            cd _build
-           cmake -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release ..
+           cmake -DCMAKE_BUILD_TYPE=release -DBUILD_DEPS=ON -DBUILD_TESTING=ON ..
 
-    - name: Build with cmake
+    - name: Building with cmake
       run: |
            cd src
            cd _build

@@ -32,13 +32,18 @@ jobs:
         vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
         vcpkgGitCommitId: '${{ matrix.vcpkgCommitId }}'
         
-    - name: Building with CMake
-      uses: lukka/run-cmake@v2
-      with:
-          useVcpkgToolchainFile: true
-          cmakeListsTxtPath: '${{ github.workspace }}/src/CMakeLists.txt'
-          buildDirectory: ${{ github.workspace }}/src/_build
-          cmakeBuildType: ${{ matrix.buildtype }}
+    - name: Configuring with CMake
+      run: |
+           cd src
+           mkdir _build
+           cd _build
+           cmake -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON ..
+
+    - name: Building with cmake
+      run: |
+           cd src
+           cd _build
+           cmake --build . --config release
 
     - name: Running unit tests
       run: |
