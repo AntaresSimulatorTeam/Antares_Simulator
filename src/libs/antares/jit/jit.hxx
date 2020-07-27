@@ -27,6 +27,8 @@
 #ifndef __ANTARES_LIBS_JUST_IN_TIME_INFORMATIONS_HXX__
 # define __ANTARES_LIBS_JUST_IN_TIME_INFORMATIONS_HXX__
 
+using namespace Yuni;
+using namespace Antares;
 
 inline bool JIT::IsReady(JIT::Informations* j)
 {
@@ -98,7 +100,7 @@ void JIT::just_in_time_manager::load_matrix(const Matrix<T, ReadWriteT>* mtx)
 	{
 		auto* mtx_not_const = const_cast<Matrix<T, ReadWriteT>*>(mtx);
 
-		Antares::logs.debug() << " Force loading of " << jit_->sourceFilename;
+		logs.debug() << " Force loading of " << jit_->sourceFilename;
 		const bool modi = jit_->modified;
 
 		mtx_not_const->loadFromCSVFile(
