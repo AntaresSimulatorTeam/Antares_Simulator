@@ -25,7 +25,7 @@ build_git_dependency(
     REPOSITORY
       "https://github.com/openssl/openssl.git"
     TAG
-      "OpenSSL_1_1_1g "
+      "OpenSSL_1_1_1g"
 	CONFIGURE_COMMAND
 	   "${CONFIGURE_CALL} ${OPENSSL_ARCH} no-asm no-shared --prefix=${CMAKE_CURRENT_BINARY_DIR}/install/ --openssldir=${CMAKE_CURRENT_BINARY_DIR}/install/"
 	BUILD_COMMAND
