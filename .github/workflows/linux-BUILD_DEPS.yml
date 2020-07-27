@@ -32,6 +32,21 @@ jobs:
       run: |
            cd src
            cd _build
-           cmake --build .     
+           cmake --build .
+    - name: Installer .deb creation
+      run: |
+           cd src
+           cd _build
+           cpack -G DEB .
+    - name: Installer .tar.gz creation
+      run: |
+           cd src
+           cd _build
+           cpack -G TGZ .
+    - name: Installer upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: antares-installer-64bits
+        path: src/_build/antares-*.*.*-Linux.*
            
 
