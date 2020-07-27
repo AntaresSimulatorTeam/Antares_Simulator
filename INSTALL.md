@@ -1,6 +1,6 @@
 ﻿# Antares Simulator CMake Build Instructions
 
-[Environnement](#environment) | [Dependencies](#dependencies) | [Building](#building-antares-solution)
+[Environnement](#environment) | [Dependencies](#dependencies) | [Building](#building-antares-solution)|Installer creation (experimental)(#installer)
 
 ## C/I status
 | OS     | System librairies | VCPKG | Built in libraries |
@@ -206,4 +206,32 @@ cmake -DBUILD_DEPS=ON ..
 cd [antares_src]
 cd _build
 cmake -build .
+```
+
+## [Installer creation (experimental)](#installer)
+CPack can be used to create installer after build depending on operating system.
+
+### Window using NSIS
+ ```
+cd [antares_src]
+cd _build
+cpack -GNSIS
+```
+Currently missing in NSIS installer :
+- Sources
+- External librairies sources
+- Examples
+
+## Ubuntu .deb
+ ```
+cd [antares_src]
+cd _build
+cpack -G DEB .
+```
+
+## Linux .tar.gz
+ ```
+cd [antares_src]
+cd _build
+cpack -G TGZ .
 ```
