@@ -300,20 +300,20 @@ if(WIN32 OR WIN64)
 		@ONLY
 	)
 	
-	#TODO : get package name from CMake and antares variables
-	set(CPACK_PACKAGE_FILE_NAME "rte-antares-7.1.0-installer-64bits")
-	OMESSAGE("CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_FILE_NAME}")
-	# Load packaging facilities.
+	#Set package name from CMake and antares variables
+	set(CPACK_PACKAGE_FILE_NAME "rte-antares-${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}-installer-${ANTARES_INSTALLER_ARCH}")
+    
+	#Load packaging facilities.
 	include(CPack)
 else()
 
-	#TODO : for now only test deb, need to define several CPACK variable
+	#For now only test deb, need to define several CPACK variable
 	set(CPACK_PROJECT_NAME "antares-deb-test")
 	set(CPACK_DEBIAN_PACKAGE_MAINTAINER "RTE")
 	set(CPACK_DEBIAN_PACKAGE_NAME "antares")
-	set(CPACK_PACKAGE_VERSION_MAJOR 7)
-	set(CPACK_PACKAGE_VERSION_MINOR 1)
-	set(CPACK_PACKAGE_VERSION_PATCH 0)
+	set(CPACK_PACKAGE_VERSION_MAJOR ${ANTARES_VERSION_HI})
+	set(CPACK_PACKAGE_VERSION_MINOR ${ANTARES_VERSION_LO})
+	set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION})
 
 	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libuuid1, libcurl4, libwxgtk3.0")
 
