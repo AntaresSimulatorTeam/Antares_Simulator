@@ -142,6 +142,8 @@ cmake -DCMAKE_BUILD_TYPE=debug ..
 ```
 Note that these are not the standard CMAKE_BUILD_TYPE. CMake files must be updated.
 
+Antares Simulator UI application compilation can be disabled at configure time using the option `-DBUILD_UI=OFF` (`ON` by default)
+
 ### Linux using system libs (recommanded)
 - Install dependencies [using package manager](#using-a-package-manager).
 - Create build dir (optionnal but recommanded)
@@ -183,7 +185,7 @@ cmake -DCMAKE_TOOLCHAIN_FILE=[vcpkg_root]/scripts/buildsystems/vcpkg.cmake -DVCP
  ```
 cd [antares_src]
 cd _build
-make
+cmake -build .
 ```
 
 ### Linux/Window building external librairies
@@ -203,5 +205,5 @@ cmake -DBUILD_DEPS=ON ..
  ```
 cd [antares_src]
 cd _build
-make
+cmake -build .
 ```

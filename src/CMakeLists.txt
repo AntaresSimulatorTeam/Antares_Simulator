@@ -139,6 +139,9 @@ endif()
 # TODO : removed to be confirmed : old fashion CMake All libraries will be stored in /bin directory
 #set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/${YUNI_TARGET_MODE})
 
+option(BUILD_UI "Build antares ui simulator" ON)
+message(STATUS "Build antares ui simulator: ${BUILD_UI}")
+
 option(BUILD_DEPS "Build all dependencies" OFF)
 message(STATUS "Build all dependencies: ${BUILD_DEPS}")
 
@@ -242,7 +245,11 @@ OMESSAGE("") # empty line
 # Sub Directories
 add_subdirectory(libs) 		#antares-core fswalker
 add_subdirectory(internet) 	#libantares-license base64 keys
-add_subdirectory(ui)		#all antares ui libs + antares simulator
+
+if(BUILD_UI)
+	add_subdirectory(ui)		#all antares ui libs + antares simulator
+endif()
+
 add_subdirectory(solver)	#antares solver and all associated libs
 add_subdirectory(analyzer)	#antares analyser
 
