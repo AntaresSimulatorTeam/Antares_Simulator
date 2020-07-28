@@ -27,7 +27,8 @@
 #ifndef __ANTARES_LIBS_JUST_IN_TIME_INFORMATIONS_HXX__
 # define __ANTARES_LIBS_JUST_IN_TIME_INFORMATIONS_HXX__
 
-using namespace Yuni;
+#include "../logs.h"
+
 using namespace Antares;
 
 inline bool JIT::IsReady(JIT::Informations* j)
