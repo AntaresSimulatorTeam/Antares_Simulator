@@ -1276,7 +1276,7 @@ namespace Antares
 		if (height and width)
 		{
 			#ifndef TESTING
-			Clob data;
+			Yuni::Clob data;
 			#endif
 
 			internalSaveToFileDescriptor(data, precision, print_dimensions, predicate);
