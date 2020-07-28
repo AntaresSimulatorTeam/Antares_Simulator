@@ -25,6 +25,7 @@ namespace Antares
 template<class T = double, class ReadWriteT = T>
 class Matrix_load_bypass : public Matrix_easy_to_fill<T, ReadWriteT>
 {
+	using BufferType = typename Matrix<T, ReadWriteT>::BufferType;
 public:
 	Matrix_load_bypass() :
 		Matrix_easy_to_fill(),
@@ -45,7 +46,7 @@ public:
 		const AnyString& filename,
 		uint minWidth, uint maxHeight,
 		uint options = Matrix<T, ReadWriteT>::optNone,
-		Matrix<T, ReadWriteT>::BufferType* buffer = NULL)
+		BufferType* buffer = NULL)
 	{
 		loadFromCSVFile_called = true;
 		return true;
