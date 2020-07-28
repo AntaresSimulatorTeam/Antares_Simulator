@@ -1252,6 +1252,8 @@ namespace Antares
 	bool Matrix<T,ReadWriteT>::internalSaveCSVFile(const AnyString& filename, uint precision,
 		bool print_dimensions, PredicateT& predicate) const
 	{
+		using namespace Yuni;
+
 		JIT::just_in_time_manager jit_mgr(jit, filename);
 
 		jit_mgr.record_current_jit_state(width, height);
@@ -1276,7 +1278,7 @@ namespace Antares
 		if (height and width)
 		{
 			#ifndef TESTING
-			Yuni::Clob data;
+			Clob data;
 			#endif
 
 			internalSaveToFileDescriptor(data, precision, print_dimensions, predicate);
