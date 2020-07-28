@@ -28,7 +28,7 @@ class Matrix_load_bypass : public Matrix_easy_to_fill<T, ReadWriteT>
 	using BufferType = typename Matrix<T, ReadWriteT>::BufferType;
 public:
 	Matrix_load_bypass() :
-		Matrix_easy_to_fill(),
+		Matrix_easy_to_fill<T, ReadWriteT>(),
 		loadFromCSVFile_called(false)
 	{};
 
