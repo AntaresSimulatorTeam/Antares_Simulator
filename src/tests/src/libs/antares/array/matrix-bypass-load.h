@@ -25,6 +25,7 @@ namespace Antares
 template<class T = double, class ReadWriteT = T>
 class Matrix_load_bypass : public Matrix_easy_to_fill<T, ReadWriteT>
 {
+	using Matrix_easy_to_fill<T, ReadWriteT>::Matrix<T, ReadWriteT>::BufferType;
 public:
 	Matrix_load_bypass() :
 		Matrix_easy_to_fill(),

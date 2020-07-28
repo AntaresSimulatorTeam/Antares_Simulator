@@ -34,7 +34,7 @@ jobs:
       run: |
            cd src
            cd _build
-           cmake --build . --config ${{ matrix.buildtype }}
+           cmake --build . --config ${{ matrix.buildtype }} --parallel 4
 
     - name: Runnning unit tests
       run: |

@@ -33,7 +33,7 @@ jobs:
       run: |
            cd src
            cd _build
-           cmake --build . --config Release
+           cmake --build . --config Release --parallel 4
 
     - name: Run unit tests
       run: |
