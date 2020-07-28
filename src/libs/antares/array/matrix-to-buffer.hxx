@@ -196,50 +196,50 @@ namespace Antares
 	template<class T, class ReadWriteT, class PredicateT>
 	void one_column__no_decimal__dumper<T, ReadWriteT, PredicateT>::run()
 	{
-		for (uint y = 0; y != I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::mtx_->height; ++y)
+		for (uint y = 0; y != (this->mtx_)->height; ++y)
 		{
-			MatrixScalar<ReadWriteT>::Append(buffer_, (ReadWriteT)predicate_(I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::mtx_->entry[0][y]));
-			buffer_ += '\n';
+			MatrixScalar<ReadWriteT>::Append(this->buffer_, (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]));
+			this->buffer_ += '\n';
 		}
 	}
 
 	template<class T, class ReadWriteT, class PredicateT>
 	void one_column__decimals__dumper<T, ReadWriteT, PredicateT>::run()
 	{
-		for (uint y = 0; y != I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::mtx_->height; ++y)
+		for (uint y = 0; y != (this->mtx_)->height; ++y)
 		{
-			MatrixScalar<ReadWriteT>::Append(buffer_, (ReadWriteT)predicate_(I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::mtx_->entry[0][y]), format_);
-			buffer_ += '\n';
+			MatrixScalar<ReadWriteT>::Append(this->buffer_, (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]), this->format_);
+			this->buffer_ += '\n';
 		}
 	}
 
 	template<class T, class ReadWriteT, class PredicateT>
 	void multiple_columns__no_decimal__dumper<T, ReadWriteT, PredicateT>::run()
 	{
-		for (uint y = 0; y < I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::mtx_->height; ++y)
+		for (uint y = 0; y < (this->mtx_)->height; ++y)
 		{
-			MatrixScalar<ReadWriteT>::Append(buffer_, (ReadWriteT)predicate_(I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::mtx_->entry[0][y]));
-			for (uint x = 1; x < I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::mtx_->width; ++x)
+			MatrixScalar<ReadWriteT>::Append(this->buffer_, (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]));
+			for (uint x = 1; x < (this->mtx_)->width; ++x)
 			{
-				buffer_ += '\t';
-				MatrixScalar<ReadWriteT>::Append(buffer_, (ReadWriteT)predicate_(I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::mtx_->entry[x][y]));
+				this->buffer_ += '\t';
+				MatrixScalar<ReadWriteT>::Append(this->buffer_, (ReadWriteT)this->predicate_((this->mtx_)->entry[x][y]));
 			}
-			buffer_ += '\n';
+			this->buffer_ += '\n';
 		}
 	}
 
 	template<class T, class ReadWriteT, class PredicateT>
 	void multiple_columns__decimals__dumper<T, ReadWriteT, PredicateT>::run()
 	{
-		for (uint y = 0; y < I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::mtx_->height; ++y)
+		for (uint y = 0; y < (this->mtx_)->height; ++y)
 		{
-			MatrixScalar<ReadWriteT>::Append(buffer_, (ReadWriteT)predicate_(I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::mtx_->entry[0][y]), format_);
-			for (uint x = 1; x < I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::mtx_->width; ++x)
+			MatrixScalar<ReadWriteT>::Append(this->buffer_, (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]), this->format_);
+			for (uint x = 1; x < (this->mtx_)->width; ++x)
 			{
-				buffer_ += '\t';
-				MatrixScalar<ReadWriteT>::Append(buffer_, (ReadWriteT)predicate_(I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::mtx_->entry[x][y]), format_);
+				this->buffer_ += '\t';
+				MatrixScalar<ReadWriteT>::Append(this->buffer_, (ReadWriteT)this->predicate_((this->mtx_)->entry[x][y]), this->format_);
 			}
-			buffer_ += '\n';
+			this->buffer_ += '\n';
 		}
 	}
 
