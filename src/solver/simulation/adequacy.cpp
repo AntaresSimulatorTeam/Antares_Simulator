@@ -243,7 +243,9 @@ namespace Simulation
 				}
 				catch (Data::AssertionError& ex)
 				{
+					//Indicate failed week list (first week of the year is "week number one" for the user but w=0 for the loop)
 					failedWeekList.push_back(w + 1);
+
 					//Stop simulation
 					logs.error("Assertion error for week " + std::to_string(w + 1) + " simulation is stopped : " + ex.what());
 					return false;
@@ -253,7 +255,7 @@ namespace Simulation
 					//need to clean next problemeHebdo
 					reinitOptim = true;
 
-					//Indicate failed week in list (add 1 to indicate real week number)
+					//Indicate failed week list (first week of the year is "week number one" for the user but w=0 for the loop)
 					failedWeekList.push_back(w+1);
 
 					//Define if simulation must be stopped

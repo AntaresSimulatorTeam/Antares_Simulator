@@ -68,31 +68,18 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * , uint , int );
 
 bool OPT_AppelDuSolveurLineaire( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int NumIntervalle )
 {
+	bool result = false;
 
 	if ( ProblemeHebdo->SolveurDuProblemeLineaire == ANTARES_SIMPLEXE )
 	{
-		if ( OPT_AppelDuSimplexe( ProblemeHebdo, numSpace, NumIntervalle ) == true )
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		result = OPT_AppelDuSimplexe(ProblemeHebdo, numSpace, NumIntervalle);
 	}
 	else
 	{
-		if ( OPT_AppelDuSolveurPne( ProblemeHebdo, numSpace, NumIntervalle ) == true )
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		result = OPT_AppelDuSolveurPne(ProblemeHebdo, numSpace, NumIntervalle);
 	}
 
-	return true;
+	return result;
 }
 
 
@@ -278,35 +265,6 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 		logs.error() << "* last resort shedding status,";
 		logs.error() << "* negative hurdle costs on lines with infinite capacity,";
 		logs.error() << "* Hydro reservoir impossible to manage with cumulative options \"hard bounds without heuristic\"";
-	
-	
-		if (0)
-		{
-			logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
-			logs.info() << "Here is the trace:";
-
-			for (Cnt = 0 ; Cnt < ProblemeAResoudre->NombreDeContraintes; ++Cnt)
-			{
-				logs.info().appendFormat(
-						"Constraint %ld sens %c B %e",
-						Cnt,ProblemeAResoudre->Sens[Cnt],ProblemeAResoudre->SecondMembre[Cnt]);
-
-				il = ProblemeAResoudre->IndicesDebutDeLigne[Cnt];
-				ilMax = il + ProblemeAResoudre->NombreDeTermesDesLignes[Cnt];
-				while (il < ilMax)
-				{
-					Var = ProblemeAResoudre->IndicesColonnes[il];
-					logs.info().appendFormat("      il %ld coeff %e var %ld xmin %e xmax %e type %ld cout %e",
-							il,  ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il],
-							Var, ProblemeAResoudre->Xmin[Var],
-							ProblemeAResoudre->Xmax[Var],
-							ProblemeAResoudre->TypeDeVariable[Var], ProblemeAResoudre->CoutLineaire[Var]);
-					il++;
-				}
-			}
-
-			logs.info() << LOG_UI_DISPLAY_MESSAGES_ON;
-		}
 
 		//Write MPS only if exportMPSOnError is activated and MPS weren't exported before with ExportMPS option
 		if ( ProblemeHebdo->ExportMPS == NON_ANTARES && ProblemeHebdo->exportMPSOnError)
@@ -750,6 +708,4 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( void * Prob, uint numSpace, char
 	free ( Nombre );
 
 	fclose( Flot );
-
-	return;
 }
