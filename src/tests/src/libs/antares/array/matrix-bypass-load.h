@@ -93,8 +93,6 @@ private:
 template<class T = double, class ReadWriteT = T>
 class Matrix_mock_load_to_buffer : public Matrix<T, ReadWriteT>
 {
-	using BufferType = typename Matrix<T, ReadWriteT>::BufferType;
-
 public:
 	Matrix_mock_load_to_buffer() :
 		Matrix<T, ReadWriteT>(),
@@ -111,7 +109,7 @@ public:
 		fake_mtx_error_when_loading_(IO::errNone)
 	{};
 	
-	virtual IO::Error loadFromFileToBuffer(BufferType & buffer, const AnyString& filename, uint64 hardlimit) const
+	IO::Error loadFromFileToBuffer(typename Matrix<T,ReadWriteT>::BufferType & buffer, const AnyString& filename, unsigned long long hardlimit) const override
 	{
 		return fake_mtx_error_when_loading_;
 	}
