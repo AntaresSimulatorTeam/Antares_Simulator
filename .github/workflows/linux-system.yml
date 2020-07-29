@@ -39,5 +39,5 @@ jobs:
       run: |
            cd src
            cd _build
-           ctest
+           ctest --output-on-failure
 

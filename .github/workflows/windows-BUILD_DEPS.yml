@@ -36,7 +36,7 @@ jobs:
       run: |
            cd src
            cd _build
-           ctest -C ${{ matrix.buildtype }}
+           ctest -C ${{ matrix.buildtype }} --output-on-failure
 
     - name: Installer creation
       run: |
