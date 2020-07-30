@@ -1,6 +1,46 @@
-Antares Changelog
+﻿Antares Changelog
 =================
 
+
+v7.2.0 (06/2020)
+-------------------- 
+
+### Features
+
+ - Simulation dashboard: A new  "Geographic Trimming" option
+   is now available in the "Configure" menu. This option makes
+   it possible to  filter the simulation's output content so as
+   to include only results regarding Areas and Links of interest
+   
+ - Optimization:  a new parameter "Unfeasible Problems Behavior"
+   is available in the "advanced preferences" section of the 
+   "Configure" menu, with four possible values:	
+     (Error Dry, Error Verbose, Warning Dry, Warning Verbose)
+   The first two options make the simulation stop right after 
+   encountering the first mathematically unfeasible problem, if any
+   The last two options make the simulation skip all unfeasible 
+   problems, if any  
+   "Verbose" options print faulty problems in the “mps” format
+   "Dry" options only report the time frame (MC year, week) for which
+   an unfeasible problem was detected   
+   
+ - Documentation: updated reference guide
+   
+ - Usage metrics: added reference key for this version     
+    
+### Bug fixes
+
+ - Time Series Generation: writing down large numbers of generated
+   8760-hour time-series (e.g. 1000 TS/Area in a 200-Area system)
+   could take a lot of time in previous versions and is now much faster
+   
+ - GUI of the "Thematic trimming" option: Window size was readjusted
+   to improve readability 
+   
+ - Auxiliary "Batchrun" tool: two options previously missing in the
+   command line syntax have been introduced and now make it possible
+   to launch a sequence of simulations to run in parallel
+	
 v7.1.0 (12/2019)
 -------------------- 
 
@@ -59,7 +99,6 @@ v7.1.0 (12/2019)
  - Output: when simulation results are trimmed so as not to produce
    any data for given Areas or Links, avoid creation of empty folders
    named after said Areas or Links   
-
 
 v7.0.1 (04/2019)
 -------------------- 
@@ -252,15 +291,6 @@ v6.1.2 (11/2017)
    (Matrix, right hand side, costs)
 
 
-v6.1.2 (11/2017)
----------------- 
-	
-### Features
-
- - Solver, Simplexe package: Improvement of the Scaling stage
-   (Matrix, right hand side, costs)
-
-
 v6.1.1 (11/2017)
 ---------------- 
 	
@@ -349,7 +379,7 @@ v6.0.2 (06/2017)
 
   - Optimization : To help discriminate between equivalent economic
     solutions, random noises on hydro hourly prices are more regularly 
-	spread out (absolute values) in the interval (5 e-4 ,1 e-3)€/MWh 
+	spread out (absolute values) in the interval (5 e-4 ,1 e-3)Euros/MWh 
 	
 ### Bug fixes
 
@@ -402,9 +432,9 @@ v6.0.0 (04/2017)
 	in multiple Antares sessions
    	 
   - Simulation: Introduction of a flexible multi-threaded mode for the processing
-    of  heavy problems: Antares “Monte-Carlo years” can be be distributed on a
+    of  heavy problems: Antares "Monte-Carlo years" can be be distributed on a
 	number of CPU cores freely set by the user. This parameter appears as a new
-	tunable item of the  “advanced parameters” list  attached to any Antares Study. 
+	tunable item of the  "advanced parameters" list  attached to any Antares Study. 
 	Five values are available in the [1, N] interval,  N being the number of CPU
 	cores of the machine (virtual or physical) Antares is run on 
    
@@ -708,7 +738,7 @@ v4.5.0 (04/2014)
 
 
  - Identical upper and lower bounds have been set for the absolute values of all
-   non-zero system costs ( max = 5 10^4 €/MWh ; min = 5 10^-3 €/MWh)  
+   non-zero system costs ( max = 5 10^4 Euros/MWh ; min = 5 10^-3 Euros/MWh)  
   
 
 ### Bug fixes
@@ -1071,5 +1101,4 @@ From V1 to V2 (all versions)
 ----------------------------
 
  - Refer to project development archives (TRAC thread)
-
 
