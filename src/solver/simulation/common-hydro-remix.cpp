@@ -55,6 +55,7 @@
 #include <yuni/core/math.h>
 #include <antares/study/study.h>
 #include <antares/study/memory-usage.h>
+#include <antares/exception/AssertionError.hpp>
 #include "common-eco-adq.h"
 #include <antares/logs.h>
 #include <cassert>
@@ -263,32 +264,35 @@ namespace Simulation
 
 
 
-	bool RemixHydroForAllAreas(const Data::Study& study, PROBLEME_HEBDO& problem, uint numSpace, uint hourInYear, uint nbHour)
+	void RemixHydroForAllAreas(const Data::Study& study, PROBLEME_HEBDO& problem, uint numSpace, uint hourInYear, uint nbHour)
 	{
 		assert(nbHour == 168 && "endHour seems invalid");
 		(void) nbHour;
 		assert(study.parameters.mode != Data::stdmAdequacyDraft);
 
-		if (study.parameters.shedding.policy != Data::shpShavePeaks)
-			return true;
-
-		switch (study.parameters.simplexOptimizationRange)
+		if (study.parameters.shedding.policy == Data::shpShavePeaks)
 		{
+			bool result = true;
+
+			switch (study.parameters.simplexOptimizationRange)
+			{
 			case Data::sorWeek:
-				return Remix<  168 >(study, problem, numSpace, hourInYear);
+				result =  Remix<  168 >(study, problem, numSpace, hourInYear);
+				break;
 			case Data::sorDay:
-				return Remix<   24 >(study, problem, numSpace, hourInYear);
+				result = Remix<   24 >(study, problem, numSpace, hourInYear);
+				break;
 			case Data::sorUnknown:
 				logs.fatal() << "invalid simplex optimization range";
 				break;
+			}
+
+			if (!result)
+			{
+				throw new Data::AssertionError("Error in simplex optimisation. Check logs for more details.");
+			}
 		}
-		return false;
 	}
-
-
-
-
-
 } 
 } 
 } 

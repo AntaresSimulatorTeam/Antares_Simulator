@@ -29,6 +29,8 @@
 #include <antares/study/memory-usage.h>
 #include "economy.h"
 #include <antares/study.h>
+#include <antares/exception/UnfeasibleProblemError.hpp>
+#include <antares/exception/AssertionError.hpp>
 #include <yuni/core/math.h>
 #include "simulation.h"
 #include "../optimisation/opt_fonctions.h"
@@ -124,17 +126,19 @@ namespace Simulation
 						Variable::State& state, 
 						uint numSpace,
 						yearRandomNumbers & randomForYear,
-						uint & failedWeek
+						std::list<uint>& failedWeekList
 					  )
 	{
 		
-		
-		PrepareRandomNumbers(study, *pProblemesHebdo[numSpace], randomForYear);
+		//No failed week at year start
+		failedWeekList.clear();
 
+		PrepareRandomNumbers(study, *pProblemesHebdo[numSpace], randomForYear);
 		
 		state.startANewYear();
 		
 		int hourInTheYear = pStartTime;
+		bool reinitOptim = true;
 
 		for (uint w = 0; w != pNbWeeks; ++w)
 		{
@@ -144,74 +148,84 @@ namespace Simulation
 
 			
 			::SIM_RenseignementProblemeHebdo(*pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
-
 			
-			if (not ::OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace))
+			//Reinit optimisation if needed
+			pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim ? OUI_ANTARES : NON_ANTARES;
+			reinitOptim = false;
+
+			try
 			{
-				
-				
-				failedWeek = w;
+				OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
+				DispatchableMarginForAllAreas(study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
+
+
+
+				computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
+
+				RemixHydroForAllAreas(study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
+
+				computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, true);
+
+				interpolateWaterValue(study, *pProblemesHebdo[numSpace], state, hourInTheYear, nbHoursInAWeek);
+
+				updatingWeeklyFinalHydroLevel(study, *pProblemesHebdo[numSpace], nbHoursInAWeek);
+
+
+				variables.weekBegin(state);
+				uint previousHourInTheYear = state.hourInTheYear;
+
+				for (uint hw = 0; hw != nbHoursInAWeek; ++hw, ++state.hourInTheYear, ++state.hourInTheSimulation)
+				{
+
+					state.hourInTheWeek = hw;
+
+					state.ntc = pProblemesHebdo[numSpace]->ValeursDeNTC[hw];
+
+
+					variables.hourBegin(state.hourInTheYear);
+
+
+
+					variables.hourForEachArea(state, numSpace);
+
+					variables.hourEnd(state, state.hourInTheYear);
+				}
+
+				state.hourInTheYear = previousHourInTheYear;
+				variables.weekForEachArea(state, numSpace);
+				variables.weekEnd(state);
+
+
+				for (int opt = 0; opt < 7; opt++)
+				{
+					state.optimalSolutionCost1 += pProblemesHebdo[numSpace]->coutOptimalSolution1[opt];
+					state.optimalSolutionCost2 += pProblemesHebdo[numSpace]->coutOptimalSolution2[opt];
+				}
+
+			}
+			catch (Data::AssertionError& ex)
+			{
+				//Indicate failed week list (first week of the year is "week number one" for the user but w=0 for the loop)
+				failedWeekList.push_back(w + 1);
+
+				//Stop simulation
+				logs.error("Assertion error for week " + std::to_string(w + 1) + " simulation is stopped : " + ex.what());
 				return false;
 			}
-
-			
-			
-			if (not DispatchableMarginForAllAreas(study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek))
+			catch (Data::UnfeasibleProblemError& ex)
 			{
-				failedWeek = w;
-				return false;
+				//need to clean next problemeHebdo
+				reinitOptim = true;
+
+				//Indicate failed week list (first week of the year is "week number one" for the user but w=0 for the loop)
+				failedWeekList.push_back(w+1);
+
+				//Define if simulation must be stopped
+				if (Data::stopSimulation(study.parameters.include.unfeasibleProblemBehavior))
+				{
+					return false;
+				}
 			}
-
-			
-			
-			computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
-
-			
-			if (not RemixHydroForAllAreas(study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek))
-			{
-				failedWeek = w;
-				return false;
-			}
-
-			
-			computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, true);
-
-			interpolateWaterValue(study, *pProblemesHebdo[numSpace], state, hourInTheYear, nbHoursInAWeek);
-
-			updatingWeeklyFinalHydroLevel(study, *pProblemesHebdo[numSpace], nbHoursInAWeek);
-			
-
-			variables.weekBegin(state);
-			uint previousHourInTheYear = state.hourInTheYear;
-
-			for (uint hw = 0; hw != nbHoursInAWeek ; ++hw, ++state.hourInTheYear, ++state.hourInTheSimulation)
-			{
-				
-				state.hourInTheWeek = hw;
-				
-				state.ntc = pProblemesHebdo[numSpace]->ValeursDeNTC[hw];
-
-				
-				variables.hourBegin(state.hourInTheYear);
-				
-				
-				
-				variables.hourForEachArea(state, numSpace);
-				
-				variables.hourEnd(state, state.hourInTheYear);
-			}
-
-			state.hourInTheYear = previousHourInTheYear; 
-			variables.weekForEachArea(state, numSpace);
-			variables.weekEnd(state);
-
-			
-			for (int opt = 0; opt < 7; opt++)
-			{
-				state.optimalSolutionCost1 += pProblemesHebdo[numSpace]->coutOptimalSolution1[opt];
-				state.optimalSolutionCost2 += pProblemesHebdo[numSpace]->coutOptimalSolution2[opt];
-			}
-
 			
 			hourInTheYear += nbHoursInAWeek;
 
