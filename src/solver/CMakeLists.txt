@@ -79,11 +79,6 @@ macro(solver_app name swap)
 		${CMAKE_THREADS_LIBS_INIT}
 	)
 
-	#TODO : check for windows
-	if(WIN32)
-		set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS} wsock32)
-	endif()
-
 	if(${swap})
 		set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
 			libantares-solver-main-economy-swap
