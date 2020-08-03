@@ -110,4 +110,37 @@ if(BUILD_wxWidgets)
   ) 
 endif()
 
+#####################
+##  Sirius solver  ##
+#####################
+if(BUILD_sirius)
+build_git_dependency(
+    NAME
+      sirius
+    REPOSITORY
+      "https://github.com/AntaresSimulatorTeam/sirius-solver.git"
+    TAG
+      "Antares_VCPKG"
+    SOURCE_SUBDIR
+      "src"
+  )
+endif()
+
+#####################
+##  ORTOOLS  ##
+#####################
+if(BUILD_ortools)
+build_git_dependency(
+    NAME
+      ortools
+    REPOSITORY
+      "https://github.com/AntaresSimulatorTeam/or-tools.git"
+    TAG
+      "rte_dev_sirius"
+    CMAKE_ARGS
+      "-DUSE_SIRIUS=ON -DUSE_COINOR=ON -DBUILD_PYTHON=OFF -DBUILD_TESTING=OFF -DBUILD_DEPS=ON"
+  )
+endif()
+
+
 

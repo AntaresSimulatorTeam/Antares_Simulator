@@ -3,7 +3,7 @@ name: Linux CI (system libs)
 on:
   push:
     branches:
-      - feature/cmake_build_dependency_option
+      - feature/ortools-integration
 jobs:
   build:
 
@@ -25,7 +25,7 @@ jobs:
            cd src
            mkdir _build
            cd _build
-           cmake ..
+           cmake -DBUILD_sirius=ON -DBUILD_ortools=ON ..
 
     - name: Build
       run: |

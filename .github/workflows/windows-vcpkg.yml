@@ -3,7 +3,7 @@ name: Windows CI (VCPKG)
 on:
   push:
     branches:
-      - feature/cmake_build_dependency_option
+      - feature/ortools-integration
 
 jobs:
 
@@ -39,7 +39,7 @@ jobs:
            cd src
            mkdir _build
            cd _build
-           cmake -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release .. 
+           cmake -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_sirius=ON -DBUILD_ortools=ON .. 
     
     - name: Build
       run: |

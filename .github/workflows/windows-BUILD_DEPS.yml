@@ -3,7 +3,7 @@ name: Windows CI (deps. compilation)
 on:
   push:
     branches:
-      - feature/cmake_build_dependency_option
+      - feature/ortools-integration
 
 jobs:
 

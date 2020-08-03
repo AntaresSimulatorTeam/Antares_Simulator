@@ -148,6 +148,14 @@ message(STATUS "Build all dependencies: ${BUILD_DEPS}")
 # IF BUILD_DEPS=ON THEN Force all BUILD_*=ON
 include(CMakeDependentOption)
 
+CMAKE_DEPENDENT_OPTION(BUILD_sirius "Build sirius solver dependency Library" ON
+  "NOT BUILD_DEPS" ON)
+message(STATUS "Build sirius solver: ${BUILD_sirius}")
+
+CMAKE_DEPENDENT_OPTION(BUILD_ortools "Build BUILD_ortools dependency Library" ON
+  "NOT BUILD_DEPS" ON)
+message(STATUS "Build ortools: ${BUILD_ortools}")
+
 CMAKE_DEPENDENT_OPTION(BUILD_wxWidgets "Build wxWidgets dependency Library" OFF
   "NOT BUILD_DEPS" ON)
 message(STATUS "Build wxWidgets: ${BUILD_wxWidgets}")
@@ -240,6 +248,11 @@ add_subdirectory("ext/yuni/src")
 #Sirius solver
 if(POLICY CMP0074)
   cmake_policy(SET CMP0074 NEW)
+endif()
+
+if (VCPKG_TOOLCHAIN) 
+    list(APPEND CMAKE_PREFIX_PATH "${sirius_solver_ROOT}")
+	list(APPEND CMAKE_PREFIX_PATH "${ortools_ROOT}")
 endif()
 
 find_package(sirius_solver CONFIG REQUIRED)
