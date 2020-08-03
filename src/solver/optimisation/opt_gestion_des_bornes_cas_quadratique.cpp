@@ -59,7 +59,7 @@
 
 #include "opt_fonctions.h"
 
-#include "../ext/Sirius_Solver/pointInterieur/pi_constantes_externes.h"
+#include "pi_constantes_externes.h"
 
 #include <math.h>
 #include <yuni/core/math.h>

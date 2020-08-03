@@ -238,7 +238,11 @@ configure_file("cmake/ProfileBuild.template.cmake" "ext/yuni/src/ProfileBuild.cm
 add_subdirectory("ext/yuni/src")
 
 #Sirius solver
-add_subdirectory("ext/Sirius_Solver" "ext/Sirius_Solver")
+if(POLICY CMP0074)
+  cmake_policy(SET CMP0074 NEW)
+endif()
+
+find_package(sirius_solver CONFIG REQUIRED)
 
 OMESSAGE("") # empty line
 

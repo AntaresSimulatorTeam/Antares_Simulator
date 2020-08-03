@@ -68,8 +68,7 @@ macro(add_solver_hydro  suffix)
 	target_link_libraries(libantares-solver-hydro${suffix} 
 		PRIVATE
 		libmodel_antares${suffix} 
-		libsolver_antares${suffix}
-		libantares-solver-variable${suffix})
+		libantares-solver-variable${suffix} PUBLIC sirius_solver)
 
 
 endmacro()
