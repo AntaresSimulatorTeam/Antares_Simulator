@@ -56,12 +56,14 @@ Note that Visual Studio may carry out auto-reformating.
  - [OpenSSL](https://github.com/openssl/openssl)
  - [CURL](https://github.com/curl/curl)
  - [wxWidgets](https://github.com/wxWidgets/wxWidgets)
- (Only for Antares Simulator)
+ (Only for the complete Antares Simulator solution with GUI)
 
-This section describes install procedures for the third-party Open source libraries used by ANTARES :
-- Using VCPKG (Only tested on windows)
-- Using a package manager (Only available on linux)
-- Automatic librairies compilation from git
+This section describes the install procedures for the third-party Open source libraries used by ANTARES.
+The install procedure can be done
+- by compiling the sources after cloning the official git repository
+- by using a package manager. Depending on the OS we propose a solution
+  - using VCPKG (Only tested on windows)
+  - using the official package manager of the linux distribution
 
 
 ### [Using VCPKG](#vcpkg)
@@ -87,7 +89,9 @@ cd vcpkg
 .\bootstrap-vcpkg.bat
 ```
 
-Note : all vcpkg command further described must be launch from vcpkg folder. This folder will be named [vcpkg_root] later in this document.
+Note :
+> all vcpkg command further described must be run from vcpkg folder. This folder will be named [vcpkg_root] later in this document.
+
 
 #### 2 Install dependencies
 ```
@@ -122,10 +126,13 @@ Dependency can be built  at configure time using the option `-DBUILD_DEPS=ON` (`
 * CURL (`BUILD_CURL`)
 * wxWidgets (`BUILD_wxWidgets`)
 
-Librairies are compiled with static option. When `BUILD_CURL` option is used, `BUILD_OPENSSL` option is added.
+Librairies are compiled with static option.
+
+When `BUILD_CURL` option is used, `BUILD_OPENSSL` option is added.
 
 ## [Building Antares Solution](#build)
-Antares source directory is named [antares_src] in all commands.
+### Complete solution including GUI
+Antares source directory is named `[antares_src]` in all commands.
 
 Build can be done 'out of source'.
 
@@ -141,6 +148,8 @@ cmake -DCMAKE_BUILD_TYPE=release ..
 cmake -DCMAKE_BUILD_TYPE=debug ..
 ```
 Note that these are not the standard CMAKE_BUILD_TYPE. CMake files must be updated.
+
+### Antares Solver and other command line tools (w/o GUI)
 
 Antares Simulator UI application compilation can be disabled at configure time using the option `-DBUILD_UI=OFF` (`ON` by default)
 
