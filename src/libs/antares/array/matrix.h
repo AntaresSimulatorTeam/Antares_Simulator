@@ -49,7 +49,7 @@ namespace Antares
 	** \tparam ReadWriteT The type to use when reading/saving the matrix
 	*/
 	template<class T = double, class ReadWriteT = T>
-	class Matrix /*final*/
+	class Matrix
 	{
 	public:
 		//! Type

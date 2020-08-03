@@ -43,11 +43,11 @@ public:
 		loadFromCSVFile_called(false)
 	{};
 
-	virtual bool loadFromCSVFile(
+	bool loadFromCSVFile(
 		const AnyString& filename,
 		uint minWidth, uint maxHeight,
 		uint options = Matrix<T, ReadWriteT>::optNone,
-		BufferType* buffer = NULL)
+		BufferType* buffer = NULL) override
 	{
 		loadFromCSVFile_called = true;
 		return true;
@@ -60,15 +60,15 @@ public:
 
 
 template<class T = double, class ReadWriteT = T>
-class fake_fuffer_factory
+class fake_buffer_factory
 {
 public:
-	fake_fuffer_factory() :
+	fake_buffer_factory() :
 		buffer_precision_(0),
 		buffer_print_dimensions_(false)
 	{}
 
-	~fake_fuffer_factory() {};
+	~fake_buffer_factory() {};
 
 	void matrix_to_build_buffer_with(Matrix_easy_to_fill<T, ReadWriteT> * mtx) { mtx_to_build_buffer_with_ = mtx; }
 	void set_precision(uint precision) { buffer_precision_ = precision; }

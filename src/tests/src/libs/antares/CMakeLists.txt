@@ -1,4 +1,4 @@
-set(src_libs_antares "${ANTARES_SRC}/libs/antares")
+set(src_libs_antares "${CMAKE_SOURCE_DIR}/libs/antares")
 
 
 # Adding a library embedding all Antares sources useful to test class Matrix
@@ -16,7 +16,7 @@ set(SRC_MATRIX_LIB
 
 add_library(lib-matrix ${SRC_MATRIX_LIB})
 target_include_directories(lib-matrix PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
-target_include_directories(lib-matrix PRIVATE "${ANTARES_SRC}/ext/yuni/src")
+target_include_directories(lib-matrix PRIVATE "${CMAKE_SOURCE_DIR}/ext/yuni/src")
 
 
 # Building tests on Matrix save operations
@@ -32,7 +32,7 @@ set(SRC_TEST_MATRIX_SAVE
 add_executable(tests-matrix-save ${SRC_TEST_MATRIX_SAVE})
 target_include_directories(tests-matrix-save PRIVATE "${src_libs_antares}/array")
 target_include_directories(tests-matrix-save PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
-target_include_directories(tests-matrix-save PRIVATE "${ANTARES_SRC}/ext/yuni/src")
+target_include_directories(tests-matrix-save PRIVATE "${CMAKE_SOURCE_DIR}/ext/yuni/src")
 target_link_libraries(tests-matrix-save
 			lib-matrix
 			yuni-static-core
@@ -54,7 +54,7 @@ set(SRC_TEST_MATRIX_LOAD
 add_executable(tests-matrix-load ${SRC_TEST_MATRIX_LOAD})
 target_include_directories(tests-matrix-load PRIVATE "${src_libs_antares}/array")
 target_include_directories(tests-matrix-load PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
-target_include_directories(tests-matrix-load PRIVATE "${ANTARES_SRC}/ext/yuni/src")
+target_include_directories(tests-matrix-load PRIVATE "${CMAKE_SOURCE_DIR}/ext/yuni/src")
 target_link_libraries(tests-matrix-load
 			lib-matrix
 			yuni-static-core

@@ -91,6 +91,7 @@ public:
 
 		template<class T, class ReadWriteT>
 		void unload_matrix_properly_from_memory(const Antares::Matrix<T, ReadWriteT>* mtx);
+		~just_in_time_manager() { delete jit_record_; }
 
 	private:
 		JIT::Informations* jit_;

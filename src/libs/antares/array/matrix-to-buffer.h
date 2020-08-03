@@ -85,46 +85,24 @@ namespace Antares
 		const char* format_;
 	};
 
-
 	template<class T, class ReadWriteT, class PredicateT>
-	class one_column__no_decimal__dumper : public I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>
+	class one_column__dumper : public I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>
 	{
 	public:
-		one_column__no_decimal__dumper(const Matrix<T, ReadWriteT>* mtx, Yuni::Clob& data, PredicateT& predicate) :
+		one_column__dumper(const Matrix<T, ReadWriteT>* mtx, Yuni::Clob& data, PredicateT& predicate) :
 			I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate)
 		{}
-		virtual void run();
-	};
-
-
-	template<class T, class ReadWriteT, class PredicateT>
-	class one_column__decimals__dumper : public I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>
-	{
-	public:
-		one_column__decimals__dumper(const Matrix<T, ReadWriteT>* mtx, Yuni::Clob& data, PredicateT& predicate) :
-			I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate)
-		{}
-		virtual void run();
+		void run() override;
 	};
 
 	template<class T, class ReadWriteT, class PredicateT>
-	class multiple_columns__no_decimal__dumper : public I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>
+	class multiple_columns__dumper : public I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>
 	{
 	public:
-		multiple_columns__no_decimal__dumper(const Matrix<T, ReadWriteT>* mtx, Yuni::Clob& data, PredicateT& predicate) :
+		multiple_columns__dumper(const Matrix<T, ReadWriteT>* mtx, Yuni::Clob& data, PredicateT& predicate) :
 			I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate)
 		{}
-		virtual void run();
-	};
-
-	template<class T, class ReadWriteT, class PredicateT>
-	class multiple_columns__decimals__dumper : public I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>
-	{
-	public:
-		multiple_columns__decimals__dumper(const Matrix<T, ReadWriteT>* mtx, Yuni::Clob& data, PredicateT& predicate) :
-			I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate)
-		{}
-		virtual void run();
+		void run() override;
 	};
 
 }	// namespace Antares

@@ -252,8 +252,8 @@ add_subdirectory(tools)	#All antares tools
 # Tests
 # 	Not setting BUILD_TESTING as a command line argument is equivalent to use -DBUILD_TESTING=OFF
 # 	To build tests, use -DBUILD_TESTING=ON
+option(BUILD_TESTING "Activates unit tests building" OFF)
 if(BUILD_TESTING)
-	set(ANTARES_SRC ${CMAKE_CURRENT_LIST_DIR})
 	# include(CTest) # calls enable_testing() and turns BUILD_TESTING to ON by default (among other useful things)
 	enable_testing()
 	

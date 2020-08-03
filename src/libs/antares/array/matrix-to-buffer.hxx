@@ -43,7 +43,7 @@ namespace Antares
 		template<class T>
 		struct MatrixScalar
 		{
-			static inline void Append(Yuni::Clob& file, T v)
+			static inline void Append(Yuni::Clob& file, T v, const char* const)
 			{
 				if (Yuni::Math::Zero(v))
 					file.append('0');
@@ -51,34 +51,12 @@ namespace Antares
 					file.append(v);
 			}
 
-			static inline void Append(Yuni::Clob& file, T v, const char* const)
-			{
-				Append(file, v);
-			}
 		};
 
 
 		template<>
 		struct MatrixScalar<double>
 		{
-			static void Append(Yuni::Clob& file, double v)
-			{
-				if (Yuni::Math::Zero(v))
-				{
-					file += '0';
-				}
-				else
-				{
-					char ConversionBuffer[128];
-					const int sizePrintf = ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), "%.0f", v);
-
-					if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
-						file.write((const char*)ConversionBuffer, sizePrintf);
-					else
-						file += "ERR";
-				}
-			}
-
 			static void Append(Yuni::Clob& file, double v, const char* const format)
 			{
 				if (Yuni::Math::Zero(v))
@@ -105,24 +83,6 @@ namespace Antares
 		template<>
 		struct MatrixScalar<float>
 		{
-			static void Append(Yuni::Clob& file, float v)
-			{
-				if (Yuni::Math::Zero(v))
-				{
-					file += '0';
-				}
-				else
-				{
-					char ConversionBuffer[128];
-					const int sizePrintf = ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), "%.0f", (double)v);
-
-					if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
-						file.write((const char*)ConversionBuffer, sizePrintf);
-					else
-						file += "ERR";
-				}
-			}
-
 			static void Append(Yuni::Clob& file, float v, const char* const format)
 			{
 				if (Yuni::Math::Zero(v))
@@ -156,22 +116,10 @@ namespace Antares
 						Yuni::Clob& data, 
 						PredicateT& predicate)
 	{
-		if(mtx->width == 1)
-		{
-			if (not any_decimal_)
-				return new one_column__no_decimal__dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate);
-			else
-				return new one_column__decimals__dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate);
-		}
+		if (mtx->width == 1)
+			return new one_column__dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate);
 		else
-		{
-			if (not any_decimal_)
-				return new multiple_columns__no_decimal__dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate);
-			else
-				return new multiple_columns__decimals__dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate);
-		}
-
-		// return nullptr;
+			return new multiple_columns__dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate);
 	}
 
 
@@ -179,6 +127,8 @@ namespace Antares
 	void I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::set_print_format(bool isDecimal, uint precision)
 	{
 		// Determining the string format to use according the given precision
+		format_ = "%.0f";
+
 		if (isDecimal and precision)
 		{
 			const char* const sfmt[] =
@@ -194,17 +144,7 @@ namespace Antares
 
 
 	template<class T, class ReadWriteT, class PredicateT>
-	void one_column__no_decimal__dumper<T, ReadWriteT, PredicateT>::run()
-	{
-		for (uint y = 0; y != (this->mtx_)->height; ++y)
-		{
-			MatrixScalar<ReadWriteT>::Append(this->buffer_, (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]));
-			this->buffer_ += '\n';
-		}
-	}
-
-	template<class T, class ReadWriteT, class PredicateT>
-	void one_column__decimals__dumper<T, ReadWriteT, PredicateT>::run()
+	void one_column__dumper<T, ReadWriteT, PredicateT>::run()
 	{
 		for (uint y = 0; y != (this->mtx_)->height; ++y)
 		{
@@ -214,22 +154,7 @@ namespace Antares
 	}
 
 	template<class T, class ReadWriteT, class PredicateT>
-	void multiple_columns__no_decimal__dumper<T, ReadWriteT, PredicateT>::run()
-	{
-		for (uint y = 0; y < (this->mtx_)->height; ++y)
-		{
-			MatrixScalar<ReadWriteT>::Append(this->buffer_, (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]));
-			for (uint x = 1; x < (this->mtx_)->width; ++x)
-			{
-				this->buffer_ += '\t';
-				MatrixScalar<ReadWriteT>::Append(this->buffer_, (ReadWriteT)this->predicate_((this->mtx_)->entry[x][y]));
-			}
-			this->buffer_ += '\n';
-		}
-	}
-
-	template<class T, class ReadWriteT, class PredicateT>
-	void multiple_columns__decimals__dumper<T, ReadWriteT, PredicateT>::run()
+	void multiple_columns__dumper<T, ReadWriteT, PredicateT>::run()
 	{
 		for (uint y = 0; y < (this->mtx_)->height; ++y)
 		{
