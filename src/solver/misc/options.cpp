@@ -43,6 +43,7 @@
 #include "../../config.h"
 
 #include <antares/memory/memory.h>
+#include "utils/ortools_utils.h"
 
 
 using namespace Yuni;
@@ -96,6 +97,17 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
 	// --force-parallel
 	getopt.add(options.maxNbYearsInParallel, ' ', "force-parallel", "Override the max number of years computed simultaneously");
 
+
+	bool useOrtools = false;
+
+	//add option for ortools use
+    // --use-ortools
+    getopt.addFlag(useOrtools, ' ', "use-ortools", "Use ortools library to launch solver");
+
+    //TODO JMK (WIP) : add option define ortools solver used
+    std::string ortoolsSolver = "sirius";
+    //--ortools-solver
+    getopt.add(ortoolsSolver, ' ', "ortools-solver", "Ortools solver used for simulation (only available with use-ortools");
 
 	getopt.addParagraph("\nParameters");
 	// --name
@@ -247,6 +259,10 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
 				}
 		}
 	}
+
+	//define ortools global values
+    withOrtool          = useOrtools;
+    ortoolsSolverUsed   = ortoolsSolver;
 
 	// The study folder
 	if (not optStudyFolder.empty())

@@ -7,6 +7,7 @@ extern "C"
 }
 
 extern bool withOrtool;
+extern std::string ortoolsSolverUsed;
 
 size_t current_memory_usage(std::string const & message);
 

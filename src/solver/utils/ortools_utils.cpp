@@ -7,8 +7,10 @@
 
 using namespace operations_research;
 
-bool withOrtool = true;
+bool withOrtool = false;
 int withOrtool_c = (withOrtool ? 1 : 0);
+
+std::string ortoolsSolverUsed = "sirius";
 
 /**
  * Retourne la consommation actuelle de memoire
@@ -86,11 +88,30 @@ void transferMatrix(operations_research::MPSolver * solver, int * indexRows, int
 }
 
 MPSolver * convert_to_MPSolver(PROBLEME_SIMPLEXE * problemeSimplexe) {
+
+    MPSolver::OptimizationProblemType solverType = MPSolver::SIRIUS_LINEAR_PROGRAMMING;
+
+    //TODO JMK : define solver used depending on global solver option
+    if (ortoolsSolverUsed == "sirius")
+    {
+        solverType = MPSolver::SIRIUS_LINEAR_PROGRAMMING;
+    }
+    /*
+    else if (ortoolsSolverUsed == "cplex")
+    {
+        solverType = MPSolver::CPLEX_LINEAR_PROGRAMMING;
+    }
+    */
+    else if (ortoolsSolverUsed == "clp")
+    {
+        solverType = MPSolver::CLP_LINEAR_PROGRAMMING;
+    }
+    else if (ortoolsSolverUsed == "glop")
+    {
+        solverType = MPSolver::GLOP_LINEAR_PROGRAMMING;
+    }
 	// Create the linear solver instance
-	//MPSolver * solver = new MPSolver("simple_lp_program", MPSolver::CPLEX_LINEAR_PROGRAMMING);
-	//MPSolver * solver = new MPSolver("simple_lp_program", MPSolver::CLP_LINEAR_PROGRAMMING);
-	//MPSolver * solver = new MPSolver("simple_lp_program", MPSolver::GLOP_LINEAR_PROGRAMMING);
-	MPSolver * solver = new MPSolver("simple_lp_program", MPSolver::SIRIUS_LINEAR_PROGRAMMING);
+	MPSolver * solver = new MPSolver("simple_lp_program", solverType);
 
 	// Create the variables and set objective cost.
 	transferVariables(solver, problemeSimplexe->Xmin, problemeSimplexe->Xmax, problemeSimplexe->CoutLineaire,  problemeSimplexe->NombreDeVariables);
@@ -103,6 +124,9 @@ MPSolver * convert_to_MPSolver(PROBLEME_SIMPLEXE * problemeSimplexe) {
 }
 
 MPSolver * convert_to_MPSolver(PROBLEME_A_RESOUDRE * problemeAResoudre) {
+
+    //TODO JMK : create specific solver
+
 	// Create the linear solver instance
 	//MPSolver * solver = new MPSolver("simple_lp_program", MPSolver::CPLEX_LINEAR_PROGRAMMING);
 	//MPSolver * solver = new MPSolver("simple_lp_program", MPSolver::CLP_LINEAR_PROGRAMMING);
