@@ -1,0 +1,71 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: 
+        - master
+        - develop
+        - feature/*
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-16.04]
+
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Install libraries
+      run: |
+           sudo apt-get update --fix-missing
+           sudo apt-get install libuuid1 uuid-dev libssh2-1 libssh2-1-dev libidn2-dev libidn11 libidn11-dev gtk2.0
+           
+    - name: Submodule update openssl
+      run: git submodule update --init --recursive -- src/ext/openssl
+      
+    - name: Install openssl
+      run: |
+           cd src/ext/openssl 
+           ./config --prefix=$PWD/release-x86_64 no-asm no-mdc2 no-rc5 no-shared 
+           make depend 
+           make 
+           make install
+           
+    - name: Submodule update curl
+      run: git submodule update --init --recursive -- src/ext/libcurl
+      
+    - name: Install curl
+      run: |
+           cd src
+           ANTARES_SRC=`pwd`
+           cd ext/libcurl
+           ./buildconf
+           export LIBS="-ldl -lpthread" 
+           ./configure --disable-shared --disable-ldap --with-ssl="$ANTARES_SRC/ext/openssl/release-x86_64" --without-libidn --without-libssh2 --without-zlib
+           make
+           
+    - name: Submodule update wxwidgets
+      run: git submodule update --init --recursive -- src/ext/wxwidgets
+      
+    - name: Install wxwidgets
+      run: |
+           cd src/ext/wxwidgets
+           mkdir build_gtk
+           cd build_gtk
+           ../configure --with-gtk --disable-shared
+           make
+ 
+    - name: Configure
+      run: |
+           cd src
+           cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_AR=/usr/bin/gcc-ar -DCMAKE_RANLIB=/usr/bin/gcc-ranlib .
+           
+    - name: Build
+      run: |
+           cd src
+           make

@@ -40,10 +40,10 @@
 #include <antares/study/memory-usage.h>
 #include "../solver/variable/economy/all.h"
 
+#include <antares/exception/AssertionError.hpp>
+#include <antares/Enum.hxx>
 
 using namespace Yuni;
-
-
 
 namespace Antares
 {
@@ -286,6 +286,8 @@ namespace Data
 		simplexOptimizationRange       = sorWeek;
 
 		include.exportMPS              = false;
+		
+		include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
 
 		timeSeriesAccuracyOnCorrelation = 0;
 
@@ -495,6 +497,27 @@ namespace Data
 			d.initialReservoirLevels.iniLevels = irlColdStart;
 			return false;
 		}
+        if (key == "include-unfeasible-problem-behavior")
+        {
+            bool result = true;
+			const std::string& string = value.to<std::string>();
+
+			try
+			{
+				d.include.unfeasibleProblemBehavior = Enum::fromString<UnfeasibleProblemBehavior>(string);
+			}
+			catch(AssertionError& ex)
+			{
+				logs.warning() << "Assertion error for unfeasible problem behavior from string conversion : " << ex.what();
+
+				result = false;
+				d.include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
+				logs.warning() << "parameters: invalid unfeasible problem behavior. Got '" << value
+					<< "'. reset to " << Enum::toString(d.include.unfeasibleProblemBehavior);
+			}
+
+            return result;
+        }
 
 
 		// Error
@@ -1475,6 +1498,9 @@ namespace Data
 			section->add("include-primaryreserve",    include.reserve.primary);
 
 			section->add("include-exportmps",         include.exportMPS);
+
+            // Unfeasible problem behavior
+			section->add("include-unfeasible-problem-behavior", Enum::toString(include.unfeasibleProblemBehavior));
 		}
 
 		// Other preferences
