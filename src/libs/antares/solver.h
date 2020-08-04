@@ -44,8 +44,6 @@ namespace Solver
 		withSwapFiles,
 		//! The solver with years computed in parallel 
 		parallel,
-		//! Ortools solver
-		ortools,
 	};
 
 	/*!

@@ -87,7 +87,6 @@ namespace Solver
 		{
 			case Solver::parallel:
 			case Solver::standard:
-            case Solver::ortools:
 				success = searchpaths.find(s, "solver");
 				break;
 			case Solver::withSwapFiles:
