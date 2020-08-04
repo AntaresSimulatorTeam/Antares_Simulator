@@ -104,8 +104,10 @@ namespace Antares
 	** \param simuComments Comments for the simulation
 	** \param ignoreWarnings True if warnings can be silently ignored
 	*/
+	//TODO JMK : update comments
 	void RunSimulationOnTheStudy(Data::Study::Ptr study, const YString& simuName, const YString& simuComments,
-		bool ignoreWarnings, Solver::Feature features = Solver::standard, bool preproOnly = false);
+		bool ignoreWarnings, Solver::Feature features = Solver::standard, bool preproOnly = false,
+		bool useOrtools = false, const std::string& ortoolsSolver = "sirius");
 
 
 	/*!

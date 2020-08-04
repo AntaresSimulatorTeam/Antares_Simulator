@@ -41,6 +41,7 @@
 #include <wx/filename.h>
 #include <wx/statline.h>
 #include <wx/utils.h>
+#include <wx/checkbox.h>
 
 #include "../../toolbox/components/wizardheader.h"
 #include "../../toolbox/components/button.h"
@@ -316,6 +317,11 @@ namespace Simulation
 		gridAppend(*s, wxT("RESOURCES"), wxT("Solver : "), btn);
 		pBtnMode = btn;
 		pFeatureIndex = 0;
+
+		//Ortools use
+		auto* ortoolsCheckBox = new wxCheckBox (pBigDaddy,wxID_ANY, wxT(""));
+        gridAppend(*s, wxT("Ortools use : "), ortoolsCheckBox);
+        pOrtoolsCheckBox = ortoolsCheckBox;
 
 		// When opening the Run window, the solver mode is default.
 		// Therefore, the number of cores must be set (back) to the value associated with default mode (== 1).
@@ -764,7 +770,8 @@ namespace Simulation
 		RunSimulationOnTheStudy(Data::Study::Current::Get(), simulationName, commentFile,
 			pIgnoreWarnings->GetValue(),    // Ignore warnings
 			featuresAlias[pFeatureIndex],   // Features
-			pPreproOnly->GetValue());       // Prepro Only ?
+			pPreproOnly->GetValue(),        // Prepro Only ?
+			pOrtoolsCheckBox->IsChecked()); //Ortools use
 
 		// Remove the temporary file
 		if (not commentFile.empty())

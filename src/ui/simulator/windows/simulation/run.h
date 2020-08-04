@@ -122,6 +122,7 @@ namespace Simulation
 		wxWindow* pBigDaddy;
 		//! Solver mode
 		Antares::Component::Button* pBtnMode;
+		wxCheckBox* pOrtoolsCheckBox;
 
 		wxTextCtrl* pSimulationName;
 		wxTextCtrl* pSimulationComments;
