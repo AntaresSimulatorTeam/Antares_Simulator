@@ -1242,8 +1242,17 @@ namespace Antares
 				if (features == Solver::parallel)
 					cmd << " --parallel";
 
+                // Ortools used
+                if (features == Solver::ortools)
+                    cmd << " --use-ortools";
+                    
+                //TODO JMK : need to pass  solver used if ortools used
+
+
+
 				// Go go go !
-				logs.debug() << "running " << cmd;
+				//TODO JMK : change log to debug()
+				logs.info() << "running " << cmd;
 				wxString shellCmd = wxStringFromUTF8(cmd);
 				exec->command(shellCmd);
 			}

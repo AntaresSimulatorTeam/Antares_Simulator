@@ -71,7 +71,7 @@ namespace Simulation
 
 	enum
 	{
-		featuresCount = 3,
+		featuresCount = 4,
 		timerInterval = 3500 // ms
 	};
 
@@ -79,14 +79,16 @@ namespace Simulation
 	{
 		wxT(" Default  "),
 		wxT(" Swap  "),
-		wxT(" Parallel ")
+		wxT(" Parallel "),
+        wxT(" Ortools ")
 	};
 
 	static const Solver::Feature featuresAlias[featuresCount] =
 	{
 		Solver::standard,
 		Solver::withSwapFiles,
-		Solver::parallel
+		Solver::parallel,
+		Solver::ortools
 	};
 
 
@@ -461,6 +463,7 @@ namespace Simulation
 			{
 				case Solver::parallel:
 				case Solver::standard:
+                case Solver::ortools:
 					break;
 				case Solver::withSwapFiles:
 					m.swappingSupport = true;
@@ -487,6 +490,7 @@ namespace Simulation
 			{
 				case Solver::parallel:
 				case Solver::standard:
+                case Solver::ortools:
 					{
 						s << wxT(" < ");
 						BytesToStringW(s, m.requiredDiskSpace);
