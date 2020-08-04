@@ -1,6 +1,6 @@
 ﻿# Antares Simulator CMake Build Instructions
 
-[Environnement](#environment) | [Dependencies](#dependencies) | [Building](#building-antares-solution)
+[Environnement](#environment) | [Dependencies](#dependencies) | [Building](#building-antares-solution)|Installer creation (experimental)(#installer)
 
 ## C/I status
 | OS     | System librairies | VCPKG | Built in libraries |
@@ -55,13 +55,17 @@ Note that Visual Studio may carry out auto-reformating.
  ANTARES depends on severals mandatory libraries. 
  - [OpenSSL](https://github.com/openssl/openssl)
  - [CURL](https://github.com/curl/curl)
+ - [Sirius Solver](https://github.com/AntaresSimulatorTeam/sirius-solver/tree/Antares_VCPKG) (fork from [RTE](https://github.com/rte-france/sirius-solver/tree/Antares_VCPKG))
+ - [OrTools](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) (fork from [RTE](https://github.com/rte-france/or-tools/tree/rte_dev_sirius) based on official Ortools github)
  - [wxWidgets](https://github.com/wxWidgets/wxWidgets)
- (Only for Antares Simulator)
+ (Only for the complete Antares Simulator solution with GUI)
 
-This section describes install procedures for the third-party Open source libraries used by ANTARES :
-- Using VCPKG (Only tested on windows)
-- Using a package manager (Only available on linux)
-- Automatic librairies compilation from git
+This section describes the install procedures for the third-party Open source libraries used by ANTARES.
+The install procedure can be done
+- by compiling the sources after cloning the official git repository
+- by using a package manager. Depending on the OS we propose a solution
+  - using VCPKG (Only tested on windows)
+  - using the official package manager of the linux distribution
 
 
 ### [Using VCPKG](#vcpkg)
@@ -87,7 +91,9 @@ cd vcpkg
 .\bootstrap-vcpkg.bat
 ```
 
-Note : all vcpkg command further described must be launch from vcpkg folder. This folder will be named [vcpkg_root] later in this document.
+Note :
+> all vcpkg command further described must be run from vcpkg folder. This folder will be named [vcpkg_root] later in this document.
+
 
 #### 2 Install dependencies
 ```
@@ -121,11 +127,22 @@ Dependency can be built  at configure time using the option `-DBUILD_DEPS=ON` (`
 * OPENSSL (`BUILD_OPENSSL`)
 * CURL (`BUILD_CURL`)
 * wxWidgets (`BUILD_wxWidgets`)
+* Sirius solver (`BUILD_sirius`) (ON by default)
+* OrTools (`BUILD_ortools`) (ON by default)
 
-Librairies are compiled with static option. When `BUILD_CURL` option is used, `BUILD_OPENSSL` option is added.
+Librairies are compiled with static option.
+
+When `BUILD_CURL` option is used, `BUILD_OPENSSL` option is added.
+
+
+ You specify previously dependencies install directory with `CMAKE_PREFIX_PATH` :
+```
+cmake -DCMAKE_PREFIX_PATH=<previous_build_dir>/dependencies/install
+````
 
 ## [Building Antares Solution](#build)
-Antares source directory is named [antares_src] in all commands.
+### Complete solution including GUI
+Antares source directory is named `[antares_src]` in all commands.
 
 Build can be done 'out of source'.
 
@@ -142,66 +159,48 @@ cmake -DCMAKE_BUILD_TYPE=debug ..
 ```
 Note that these are not the standard CMAKE_BUILD_TYPE. CMake files must be updated.
 
-### Windows building external librairies (recommanded)
+### Antares Solver and other command line tools (w/o GUI)
 
-- create a work directory (recommanded)
+Antares Simulator UI application compilation can be disabled at configure time using the option `-DBUILD_UI=OFF` (`ON` by default)
 
+### Sirius solver and ortools linking
 
-```bash
-mkdir  Antares_workdir
-cd Antares_workdir
+By default Sirius solver and ortools are compiled with Antares Solution.
+You can disable compilation with `-DBUILD_sirius=OFF -DBUILD_ortools=OFF` when you configure build with cmake.
+
+In this case you can specify librairies path with :
+
+* librairies root directories :
 ```
-
-Then use the following commands to configure, build and install Sirius, Ortools and finaly Antares (solver only for now).  
-If you want to use a specific version of the compiler, use the -G option of cmake: ```-G"Visual Studio 15 2017 Win64``` for instance
-
-```bash
-git clone https://github.com/rte-france/sirius-solver.git -b Antares_VCPKG Sirius
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="installSirius" -B Sirius/build -S Sirius/src
-cmake --build Sirius/build/ --config Release --target install -j4
-
-git clone https://github.com/rte-france/or-tools.git -b rte_dev_sirius ortools
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="installOrtools" -B ortools/build -S ortools/ -DUSE_SIRIUS=ON -DUSE_COINOR=ON -DBUILD_PYTHON=OFF -DBUILD_TESTING=OFF -DBUILD_DEPS=ON -Dsirius_solver_ROOT=installSirius
-cmake --build ortools/build/ --config Release --target install -j4
-
-git clone https://github.com/rte-france/Antares_Simulator.git -b feature/Sirius_extraction Antares_Simulator
-cmake -B Antares_Simulator/build -DCMAKE_BUILD_TYPE=release -S Antares_Simulator/src -Dsirius_solver_ROOT=installSirius -DBUILD_DEPS=ON -Dortools_ROOT=installOrtools
-cmake --build Antares_Simulator/build --config Release --target antares-7.1-solver -j4
+cmake -Dsirius_solver_ROOT=<sirius_install_dir> -Dortools_ROOT=<ortools_install_dir>
 ```
-
-Note : ```-j``` option should be adapted to your computer's number of cpu/cores.
-
+* previous build directory :
+```
+cmake -DCMAKE_PREFIX_PATH=<previous_build_dir>/dependencies/install
+````
 ### Linux using system libs (recommanded)
 - Install dependencies [using package manager](#using-a-package-manager).
-- Create a work directory (recommanded)
-```bash
-mkdir  Antares_workdir
-cd Antares_workdir
+- Create build dir (optionnal but recommanded)
 ```
-
-Then use the following commands to configure, build and install Sirius, Ortools and finaly Antares (solver only for now).  
-For windows, if you want to use a specific version of the compiler, use the -G option of cmake: ```-G"Visual Studio 15 2017 Win64``` for instance
-
-```bash
-git clone https://github.com/rte-france/sirius-solver.git -b Antares_VCPKG Sirius
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="installSirius" -B Sirius/build -S Sirius/src
-cmake --build Sirius/build/ --config Release --target install
-
-git clone https://github.com/rte-france/or-tools.git -b rte_dev_sirius ortools
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="installOrtools" -B ortools/build -S ortools/ -DUSE_SIRIUS=ON -DUSE_COINOR=ON -DBUILD_PYTHON=OFF -DBUILD_TESTING=OFF -DBUILD_DEPS=ON -Dsirius_solver_ROOT=installSirius
-cmake --build ortools/build/ --config Release --target install
-
-git clone https://github.com/rte-france/Antares_Simulator.git -b feature/Sirius_extraction Antares_Simulator
-cmake -B Antares_Simulator/build -DCMAKE_BUILD_TYPE=release -S Antares_Simulator/src -Dsirius_solver_ROOT=installSirius -Dortools_ROOT=installOrtools
-cmake --build Antares_Simulator/build --config Release --target antares-7.1-solver
+cd [antares_src]
+mkdir _build
 ```
+- Configure build with cmake
 
+```
+cd [antares_src]
+cd _build
+cmake ..
+```
+- Build
+ ```
+cd [antares_src]
+cd _build
+make -j8
+```
 Note : compilation can be done on several processor with ```-j``` option.
 
-### Window using vcpkg (not recommanded)
-
-__Using or even installing VCPK with global intergration will break the way find_package works and is not compatible with this or-tools version__
-
+### Window using vcpkg (recommanded)
 - Install dependencies [using VCPKG](#using-vcpkg).
 - Choose [vcpkg-triplet]
 - Create build dir (optionnal but recommanded)
@@ -220,5 +219,53 @@ cmake -DCMAKE_TOOLCHAIN_FILE=[vcpkg_root]/scripts/buildsystems/vcpkg.cmake -DVCP
  ```
 cd [antares_src]
 cd _build
-make
+cmake -build .
+```
+
+### Linux/Window building external librairies
+- Create build dir (optionnal but recommanded)
+```
+cd [antares_src]
+mkdir _build
+```
+- Configure build with CMake with ```BUILD_DEPS``` option.
+
+```
+cd [antares_src]
+cd _build
+cmake -DBUILD_DEPS=ON ..
+```
+- Build
+ ```
+cd [antares_src]
+cd _build
+cmake -build .
+```
+
+## [Installer creation (experimental)](#installer)
+CPack can be used to create installer after build depending on operating system.
+
+### Window using NSIS
+ ```
+cd [antares_src]
+cd _build
+cpack -GNSIS
+```
+Currently missing in NSIS installer :
+- Sources
+- External librairies sources
+- Examples
+
+## Ubuntu .deb
+ ```
+cd [antares_src]
+cd _build
+cpack -G DEB .
+```
+
+## Linux .tar.gz
+ ```
+cd [antares_src]
+cd _build
+cpack -G TGZ .
 ```
