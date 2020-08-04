@@ -135,7 +135,7 @@ Librairies are compiled with static option.
 When `BUILD_CURL` option is used, `BUILD_OPENSSL` option is added.
 
 
- You specify previously dependencies install directory with `CMAKE_PREFIX_PATH` :
+You can specify previously dependencies install directory with `CMAKE_PREFIX_PATH` :
 ```
 cmake -DCMAKE_PREFIX_PATH=<previous_build_dir>/dependencies/install
 ````
