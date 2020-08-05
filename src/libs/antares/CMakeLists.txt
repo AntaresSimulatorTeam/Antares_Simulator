@@ -486,12 +486,14 @@ add_library( libantares-core-calendar
 #TODO : needed for include yuni : why yuni must be include first ???
 target_include_directories(libantares-core-calendar PRIVATE ../../ext/yuni/src/)
 
+#TODO : needed for include
+target_include_directories(libantares-core-calendar PRIVATE ../../libs)
+
 
 
 macro(ADD_ANTARES_CORE name)
 	add_library(libantares-core${name}
 		antares.h
-		${SRC_STUDY_PARAMETERS}
 		${SRC}
 		${SRC_LOGS}
 		${SRC_MEMORY}
@@ -511,6 +513,7 @@ macro(ADD_ANTARES_CORE name)
 		${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_LINK}
 		${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_CONSTRAINT}
 		${SRC_STUDY_UI}
+		${SRC_STUDY_PARAMETERS}
 		${SRC_STUDY_FINDER}
 		${SRC_STUDY_BINDING_CONSTRAINT}
 		${SRC_STUDY_PART_WIND}
