@@ -1256,6 +1256,11 @@ namespace Antares
 		return true;
 	}
 
+	template<class T, class ReadWriteT>
+	void Matrix<T, ReadWriteT>::saveBufferToFile(Yuni::Clob & buffer, Yuni::IO::File::Stream & f) const
+	{
+		f << buffer;
+	}
 
 	template<class T, class ReadWriteT>
 	template<class PredicateT>
@@ -1289,16 +1294,12 @@ namespace Antares
 
 		if (height and width)
 		{
-			#ifndef TESTING
-			Clob data;
-			#endif
+			Clob buffer;
 
-			saveToBuffer(data, precision, print_dimensions, predicate);
-			Statistics::HasWrittenToDisk(data.size());
+			saveToBuffer(buffer, precision, print_dimensions, predicate);
+			Statistics::HasWrittenToDisk(buffer.size());
 
-			#ifndef TESTING
-			file << data;
-			#endif
+			saveBufferToFile(buffer, file);
 		}
 
 		// When the swap support is enabled, releasing some memory

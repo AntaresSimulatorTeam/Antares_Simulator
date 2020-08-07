@@ -177,6 +177,8 @@ namespace Antares
 		*/
 		virtual bool openFile(Yuni::IO::File::Stream& file, const AnyString& filename) const;
 
+		virtual void saveBufferToFile(Yuni::Clob & buffer, Yuni::IO::File::Stream & f) const;
+
 		/*!
 		** \brief Write the content of a matrix into a single file
 		**
@@ -459,10 +461,6 @@ namespace Antares
 		mutable ColumnType* entry;
 		//! Just-in-time informations
 		mutable JIT::Informations* jit;
-
-		#ifdef TESTING
-		mutable Yuni::Clob data;
-		#endif
 
 
 	private:

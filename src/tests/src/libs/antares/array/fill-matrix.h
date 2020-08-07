@@ -30,6 +30,10 @@ public:
 	}
 
 	bool openFile(Yuni::IO::File::Stream& file, const AnyString& filename) const override { return true; }
+	void saveBufferToFile(Yuni::Clob& buffer, Yuni::IO::File::Stream& f) const override { data = buffer; }
+
+public:
+	mutable Yuni::Clob data;
 };
 
 #endif	// __ANTARES_LIBS_ARRAY_MATRIX_FILL_MTX_H__
