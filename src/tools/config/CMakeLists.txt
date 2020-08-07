@@ -8,8 +8,6 @@ OMESSAGE("antares-config")
 set(SRCS  main.cpp)
 
 
-# The new ant library
-include_directories("../../libs")
 
 if(WIN32)
 	FILE(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/win32/config.o")
@@ -31,6 +29,11 @@ set(CONFIG_LIBS
 		${CMAKE_THREADS_LIBS_INIT}
 )
 
+# The new ant library
+target_include_directories(${execname}
+		PRIVATE
+			"${CMAKE_CURRENT_SOURCE_DIR}/libs"
+		)
 
 target_link_libraries(${execname}
 		PRIVATE

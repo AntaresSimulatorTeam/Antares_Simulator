@@ -484,12 +484,12 @@ add_library( libantares-core-calendar
 	date/date.cpp
 )
 #TODO : needed for include yuni : why yuni must be include first ???
-target_include_directories(libantares-core-calendar PRIVATE ${CMAKE_SOURCE_DIR}/ext/yuni/src/)
-
 #TODO : needed for include
-target_include_directories(libantares-core-calendar PRIVATE ${CMAKE_SOURCE_DIR}/libs)
-
-
+target_include_directories(libantares-core-calendar
+		PRIVATE
+			${CMAKE_SOURCE_DIR}/ext/yuni/src/
+			${CMAKE_SOURCE_DIR}/libs
+		)
 
 macro(ADD_ANTARES_CORE name)
 	add_library(libantares-core${name}
@@ -522,7 +522,6 @@ macro(ADD_ANTARES_CORE name)
 		${SRC_STUDY_SCENARIO_BUILDER}
         ${SRC_EXCEPTION}
         ${SRC_STDCXX}
-		${SRC}
 	)
 
 

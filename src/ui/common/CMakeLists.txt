@@ -32,8 +32,12 @@ set(SRC_UI_COMMON
 	fwd.h
 )
 add_library(libantares-ui-common ${SRC_UI_COMMON})
-target_include_directories(libantares-ui-common PUBLIC .)
-target_include_directories(libantares-ui-common PUBLIC ${CMAKE_SOURCE_DIR})
+target_include_directories(libantares-ui-common
+		PUBLIC
+			.
+			${CMAKE_SOURCE_DIR}
+		)
+
 target_link_libraries(libantares-ui-common
 		PUBLIC
 			${wxWidgets_LIBRARIES}
