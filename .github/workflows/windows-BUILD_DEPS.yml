@@ -24,7 +24,7 @@ jobs:
 
     - name: Build
       run: |
-           cmake --build _build --config release
+           cmake --build _build --config release -j2
 
     - name: Installer creation
       run: |
