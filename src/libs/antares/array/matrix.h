@@ -168,6 +168,14 @@ namespace Antares
 
 		bool loadFromCSVFile(const AnyString& filename);
 
+		/*!
+		** \brief Trying to open a file
+		**
+		** \param file The file object 
+		** \param filename The full path of the file we try to open
+		** \return True if file could be opened, False otherwise (no enough permission or wrong path)
+		*/
+		virtual bool openFile(Yuni::IO::File::Stream& file, const AnyString& filename) const;
 
 		/*!
 		** \brief Write the content of a matrix into a single file
@@ -206,7 +214,7 @@ namespace Antares
 		template<class PredicateT>
 		void saveToFileDescriptor(Yuni::Clob& data, uint precision, bool print_dimensions, PredicateT& predicate) const
 		{
-			internalSaveToFileDescriptor(data, precision, print_dimensions, predicate);
+			saveToBuffer(data, precision, print_dimensions, predicate);
 		}
 
 		//! \name Operations on columns and rows
@@ -453,7 +461,6 @@ namespace Antares
 		mutable JIT::Informations* jit;
 
 		#ifdef TESTING
-		// Testing saveToCSVFile(...)
 		mutable Yuni::Clob data;
 		#endif
 
@@ -486,7 +493,7 @@ namespace Antares
 			PredicateT& predicate) const;
 
 		template<class PredicateT>
-		void internalSaveToFileDescriptor(Yuni::Clob& data, uint precision,
+		void saveToBuffer(Yuni::Clob& data, uint precision,
 			bool print_dimensions, PredicateT& predicate) const;
 
 		bool loadFromBuffer(const AnyString& filename, BufferType& data,

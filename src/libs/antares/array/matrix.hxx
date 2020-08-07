@@ -1211,7 +1211,7 @@ namespace Antares
 
 	template<class T, class ReadWriteT>
 	template<class PredicateT>
-	void Matrix<T,ReadWriteT>::internalSaveToFileDescriptor(Yuni::Clob& data,
+	void Matrix<T,ReadWriteT>::saveToBuffer(Yuni::Clob& data,
 		uint precision, bool print_dimensions, PredicateT& predicate) const
 	{
 		using namespace Yuni;
@@ -1245,6 +1245,16 @@ namespace Antares
 	}
 
 
+	template<class T, class ReadWriteT>
+	bool Matrix<T, ReadWriteT>::openFile(Yuni::IO::File::Stream & file, const AnyString& filename) const
+	{
+		if (not file.openRW(filename))
+		{
+			logs.error() << "I/O error: " << filename << ": Impossible to write the file (not enough permission ?)";
+			return false;
+		}
+		return true;
+	}
 
 
 	template<class T, class ReadWriteT>
@@ -1252,8 +1262,6 @@ namespace Antares
 	bool Matrix<T,ReadWriteT>::internalSaveCSVFile(const AnyString& filename, uint precision,
 		bool print_dimensions, PredicateT& predicate) const
 	{
-		using namespace Yuni;
-
 		JIT::just_in_time_manager jit_mgr(jit, filename);
 
 		jit_mgr.record_current_jit_state(width, height);
@@ -1275,37 +1283,24 @@ namespace Antares
 		logs.debug() << "  :: writing `" << filename << "' (" << width << 'x' << height << ')';
 		# endif
 
+		Yuni::IO::File::Stream file;
+		if (not openFile(file, filename))
+			return false;
+
 		if (height and width)
 		{
 			#ifndef TESTING
 			Clob data;
 			#endif
 
-			internalSaveToFileDescriptor(data, precision, print_dimensions, predicate);
+			saveToBuffer(data, precision, print_dimensions, predicate);
 			Statistics::HasWrittenToDisk(data.size());
 
 			#ifndef TESTING
-			IO::File::Stream file;
-			if (not file.openRW(filename))
-			{
-				logs.error() << "I/O error: " << filename << ": Impossible to write the file (not enough permission ?)";
-				return false;
-			}
 			file << data;
 			#endif
 		}
-		#ifndef TESTING
-		else
-		{
-			IO::File::Stream file;
-			if (not file.openRW(filename))
-			{
-				logs.error() << "I/O error: " << filename << ": Impossible to write the file (not enough permission ?)";
-				return false;
-			}
-			// write nothing
-		}
-		#endif
+
 		// When the swap support is enabled, releasing some memory
 		flush();
 

@@ -28,6 +28,8 @@ public:
 				count++;
 			}
 	}
+
+	bool openFile(Yuni::IO::File::Stream& file, const AnyString& filename) const override { return true; }
 };
 
 #endif	// __ANTARES_LIBS_ARRAY_MATRIX_FILL_MTX_H__
