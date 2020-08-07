@@ -31,11 +31,13 @@ jobs:
            
     - name: Installer .deb creation
       run: |
-           cpack -G DEB _build
+           cd _build
+           cpack -G DEB
            
     - name: Installer .tar.gz creation
       run: |
-           cpack -G TGZ _build
+           cd _build
+           cpack -G TGZ
            
     - name: Installer upload
       uses: actions/upload-artifact@v2

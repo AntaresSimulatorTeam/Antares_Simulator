@@ -45,7 +45,8 @@ jobs:
            
     - name: Installer creation
       run: |
-           cpack -GNSIS _build
+           cd _build
+           cpack -GNSIS
            
     - name: Installer upload
       uses: actions/upload-artifact@v2
