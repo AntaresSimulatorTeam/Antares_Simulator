@@ -48,7 +48,7 @@ target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer
 		libantares-core
 		libantares-core-calendar
 		yuni-static-core
-		${wxWidgets_LIBRARIES} ${CMAKE_THREADS_LIBS_INIT})
+		${CMAKE_THREADS_LIBS_INIT})
 
 import_std_libs(antares-${ANTARES_PRG_VERSION}-analyzer)
 executable_strip(antares-${ANTARES_PRG_VERSION}-analyzer)

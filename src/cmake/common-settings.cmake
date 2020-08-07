@@ -220,28 +220,6 @@ macro(executable_strip TARGET)
 	endif()
 endmacro()
 
-
-macro(library_strip TARGET)
-	if(NOT MSVC AND "${CMAKE_BUILD_TYPE}" STREQUAL "release")
-		if(WIN32)
-			add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_STRIP} ${TARGET}.dll
-				COMMENT "Stripping the library '${TARGET}.dll'")
-		else()
-			add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_STRIP} --strip-all lib${TARGET}.so
-				COMMENT "Stripping the library 'lib${TARGET}.so'")
-		endif()
-	endif()
-endmacro()
-
-
-#TODO : remove this YUNI_FROM_ANTARES_CXX_FLAGS
-if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
-	set(YUNI_FROM_ANTARES_CXX_FLAGS "${CMAKE_CXX_FLAGS_RELEASE}")
-else()
-	set(YUNI_FROM_ANTARES_CXX_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
-endif()
-
-
 if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_RELEASE}")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS_RELEASE}")

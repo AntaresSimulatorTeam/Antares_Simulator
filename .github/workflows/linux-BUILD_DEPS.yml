@@ -24,30 +24,24 @@ jobs:
 
     - name: Configure
       run: |
-           cd src
-           mkdir _build
-           cd _build
-           cmake -DBUILD_DEPS=ON ..
+           cmake -B _build -S src -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release
 
     - name: Build
       run: |
-           cd src
-           cd _build
-           cmake --build .
+           cmake --build _build --config release
+
     - name: Installer .deb creation
       run: |
-           cd src
-           cd _build
-           cpack -G DEB .
+           cpack -G DEB _build
+
     - name: Installer .tar.gz creation
       run: |
-           cd src
-           cd _build
-           cpack -G TGZ .
+           cpack -G TGZ _build
+
     - name: Installer upload
       uses: actions/upload-artifact@v2
       with:
         name: antares-installer-64bits
-        path: src/_build/antares-*.*.*-Linux.*
+        path: _build/antares-*.*.*-Linux.*
            
 

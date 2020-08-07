@@ -46,7 +46,10 @@ endif()
 if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
 	set(ANTARES_TARGET "${CMAKE_BUILD_TYPE}")
 else()
+	#Define CMAKE_BUILD_TYPE as Debug for external library use
 	set(CMAKE_BUILD_TYPE "Debug")
+
+	#TODO : Antares Target is debug instead of Debug YUNI and Antares CMakeLists.txt to be reviewed to change debug to Debug
 	set(ANTARES_TARGET  "debug")
 endif()
 
