@@ -17,10 +17,10 @@ add_library(libantares-license
 )
 
 #TODO : needed for include yuni : why yuni must be include first ???
-target_include_directories(libantares-license PRIVATE ../ext/yuni/src)
+target_include_directories(libantares-license PRIVATE ${CMAKE_SOURCE_DIR}/ext/yuni/src)
 
 #TODO : needed for include antares core
-target_include_directories(libantares-license PRIVATE ../libs)
+target_include_directories(libantares-license PRIVATE ${CMAKE_SOURCE_DIR}/libs)
 
 target_link_libraries(libantares-license PRIVATE yuni-static-core)
 

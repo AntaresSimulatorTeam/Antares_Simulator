@@ -30,7 +30,7 @@ set(SRC_UI_COMMON
 )
 add_library(libantares-ui-common ${SRC_UI_COMMON})
 target_include_directories(libantares-ui-common PUBLIC .)
-target_include_directories(libantares-ui-common PUBLIC ../..)
+target_include_directories(libantares-ui-common PUBLIC ${CMAKE_SOURCE_DIR})
 target_link_libraries(libantares-ui-common PUBLIC ${wxWidgets_LIBRARIES} libantares-core)
 
 
@@ -59,11 +59,6 @@ set(SRC_UI_SPOTLIGHT
 )
 
 add_library(libantares-ui-component-spotlight ${SRC_UI_SPOTLIGHT})
-
-#TODO : needed for include yuni : why yuni must be include first ???
-#target_include_directories(libantares-ui-component-spotlight PRIVATE ../../ext/yuni/src)
-
-#target_include_directories(libantares-ui-component-spotlight PRIVATE ../../libs)
 
 #TODO : see if wxWidget is really PUBLIC 
 target_link_libraries(libantares-ui-component-spotlight PUBLIC ${wxWidgets_LIBRARIES})
