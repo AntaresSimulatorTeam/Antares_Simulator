@@ -527,18 +527,20 @@ macro(ADD_ANTARES_CORE name)
 
 
 	#TODO : needed for include yuni : why yuni must be include first ??? cheat : made it public so everybody will have this include (should be done in yuni)
-	target_include_directories(libantares-core${name} PUBLIC ${CMAKE_SOURCE_DIR}/ext/yuni/src)
-
 	#TODO : needed for include
-	target_include_directories(libantares-core${name} PUBLIC ${CMAKE_SOURCE_DIR}/libs)
+	target_include_directories(libantares-core${name}
+			PUBLIC
+				${CMAKE_SOURCE_DIR}/ext/yuni/src
+				${CMAKE_SOURCE_DIR}/libs
+			)
 
 	target_link_libraries(libantares-core${name}
 		PUBLIC
-		yuni-static-core
-		yuni-static-uuid
-		libantares-license
-		libantares-core-calendar
-		libantares-solver-variable-info${name}
+			yuni-static-core
+			yuni-static-uuid
+			libantares-license
+			libantares-core-calendar
+			libantares-solver-variable-info${name}
 		)
 endmacro()
 

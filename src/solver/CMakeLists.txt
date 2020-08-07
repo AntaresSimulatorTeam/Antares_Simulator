@@ -108,7 +108,10 @@ macro(solver_app name swap)
 			libantares-core)
 	endif()
 
-	target_link_libraries(${exec_name} PRIVATE ${ANTARES_SOLVER_LIBS})
+	target_link_libraries(${exec_name}
+			PRIVATE
+				${ANTARES_SOLVER_LIBS}
+			)
 	
 	import_std_libs(${exec_name})
 	executable_strip(${exec_name})

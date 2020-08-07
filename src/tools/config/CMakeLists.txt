@@ -31,12 +31,11 @@ set(CONFIG_LIBS
 		${CMAKE_THREADS_LIBS_INIT}
 )
 
-if (WIN32 OR WIN64)
-	target_link_libraries(${execname} PRIVATE ${CONFIG_LIBS})
-else()
-	target_link_libraries(${execname} PRIVATE -Wl,--start-group ${CONFIG_LIBS} -Wl,--end-group)
-endif()
 
+target_link_libraries(${execname}
+		PRIVATE
+			${CONFIG_LIBS}
+		)
 
 import_std_libs(${execname})
 executable_strip(${execname})

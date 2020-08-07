@@ -151,7 +151,10 @@ set(ANTARES_LIBS
 		yuni-static-uuid	
 	)
 
-	target_link_libraries(${execname} PRIVATE ${ANTARES_LIBS})
+	target_link_libraries(${execname}
+			PRIVATE
+				${ANTARES_LIBS}
+			)
 
 
 install(TARGETS ${execname} DESTINATION bin)

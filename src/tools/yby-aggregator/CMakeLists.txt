@@ -55,11 +55,10 @@ set(YBY_AGGREGATOR_LIBS
 	libantares-license
 	${wxWidgets_LIBRARIES} ${CMAKE_THREADS_LIBS_INIT})
 
-if (WIN32 OR WIN64)
-	target_link_libraries(${execname} PRIVATE ${YBY_AGGREGATOR_LIBS})
-else()
-	target_link_libraries(${execname} PRIVATE -Wl,--start-group ${YBY_AGGREGATOR_LIBS} -Wl,--end-group)
-endif()
+target_link_libraries(${execname}
+		PRIVATE
+			${YBY_AGGREGATOR_LIBS}
+		)
 
 set_target_properties(${execname} PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
 

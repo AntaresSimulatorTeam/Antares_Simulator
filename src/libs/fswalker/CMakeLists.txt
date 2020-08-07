@@ -20,4 +20,6 @@ target_include_directories(libantares-fswalker PRIVATE ${CMAKE_SOURCE_DIR}/ext/y
 target_include_directories(libantares-fswalker PRIVATE ${CMAKE_SOURCE_DIR}/libs)
 
 target_link_libraries(libantares-fswalker
-	yuni-static-core)
+		PRIVATE
+			yuni-static-core
+		)
