@@ -67,6 +67,9 @@
 #include <antares/emergency.h>
 #include <antares/logs.h>
 
+//TODO : update include when update from develop is done
+#include  "../utils/ortools_utils.h"
+
 extern "C"
 {
 #include "spx_fonctions.h"
@@ -97,8 +100,14 @@ if (ProblemeAResoudre) {
 		for ( i = 0 ; i < ProblemeHebdo->NombreDeClassesDeManoeuvrabiliteActives ; i++ ) {
 			for ( NumIntervalle = 0 ; NumIntervalle < NbIntervalles ; NumIntervalle++ ) {
 				ProbSpx = (PROBLEME_SPX *) ((ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[i])->ProblemeSpx[NumIntervalle]);
-				if ( ProbSpx != NULL ) {
-					SPX_LibererProbleme( ProbSpx );
+				if (ProbSpx != NULL) {
+
+					if (withOrtool) {
+						ORTOOLS_LibererProbleme(ProbSpx);
+					}
+					else {
+						SPX_LibererProbleme(ProbSpx);
+					}
 					(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[i])->ProblemeSpx[NumIntervalle] = NULL;
 				}
 			}
