@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/ortools-integration
+      - develop
 
 jobs:
 
@@ -19,20 +20,14 @@ jobs:
 
     - name: Configure
       run: |
-           cd src
-           mkdir _build
-           cd _build
-           cmake -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release ..
+           cmake -B _build -S src -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release
 
     - name: Build
       run: |
-           cd src
-           cd _build
-           cmake --build . --config release
+           cmake --build _build --config release -j2
 
     - name: Installer creation
       run: |
-           cd src
            cd _build
            cpack -GNSIS
            
@@ -40,6 +35,6 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: antares-installer-64bits
-        path: src/_build/rte-antares-*.*.*-installer-*.exe          
+        path: _build/rte-antares-*.*.*-installer-*.exe
            
 

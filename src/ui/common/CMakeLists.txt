@@ -16,8 +16,11 @@ set(SRC_COMMON_DISPATCHER
 		)
 source_group("dispatcher" FILES ${SRC_COMMON_DISPATCHER})
 add_library(libantares-ui-dispatcher ${SRC_COMMON_DISPATCHER})
-target_link_libraries(libantares-ui-dispatcher PUBLIC ${wxWidgets_LIBRARIES} libantares-core)
-
+target_link_libraries(libantares-ui-dispatcher
+		PUBLIC
+			${wxWidgets_LIBRARIES}
+			libantares-core
+		)
 
 # Common
 set(SRC_UI_COMMON
@@ -29,9 +32,17 @@ set(SRC_UI_COMMON
 	fwd.h
 )
 add_library(libantares-ui-common ${SRC_UI_COMMON})
-target_include_directories(libantares-ui-common PUBLIC .)
-target_include_directories(libantares-ui-common PUBLIC ../..)
-target_link_libraries(libantares-ui-common PUBLIC ${wxWidgets_LIBRARIES} libantares-core)
+target_include_directories(libantares-ui-common
+		PUBLIC
+			.
+			${CMAKE_SOURCE_DIR}
+		)
+
+target_link_libraries(libantares-ui-common
+		PUBLIC
+			${wxWidgets_LIBRARIES}
+			libantares-core
+		)
 
 
 
@@ -60,15 +71,14 @@ set(SRC_UI_SPOTLIGHT
 
 add_library(libantares-ui-component-spotlight ${SRC_UI_SPOTLIGHT})
 
-#TODO : needed for include yuni : why yuni must be include first ???
-#target_include_directories(libantares-ui-component-spotlight PRIVATE ../../ext/yuni/src)
-
-#target_include_directories(libantares-ui-component-spotlight PRIVATE ../../libs)
-
 #TODO : see if wxWidget is really PUBLIC 
-target_link_libraries(libantares-ui-component-spotlight PUBLIC ${wxWidgets_LIBRARIES})
-target_link_libraries(libantares-ui-component-spotlight PRIVATE libantares-core libantares-ui-common)
-
+target_link_libraries(libantares-ui-component-spotlight
+		PUBLIC
+			${wxWidgets_LIBRARIES}
+		PRIVATE
+			libantares-core
+			libantares-ui-common
+		)
 
 # Component panel
 set(SRC_COMPONENT_PANEL
@@ -80,9 +90,12 @@ set(SRC_COMPONENT_PANEL
 )
 add_library(libantares-ui-component-panel  ${SRC_COMPONENT_PANEL})
 
-target_link_libraries(libantares-ui-component-panel PUBLIC ${wxWidgets_LIBRARIES} )
-target_link_libraries(libantares-ui-component-panel PRIVATE libantares-core)
-
+target_link_libraries(libantares-ui-component-panel
+		PUBLIC
+			${wxWidgets_LIBRARIES}
+		PRIVATE
+			libantares-core
+		)
 
 # Component frame
 set(SRC_COMPONENT_FRAME
@@ -93,10 +106,12 @@ set(SRC_COMPONENT_FRAME
 	component/frame/registry.h
 )
 add_library(libantares-ui-component-frame  ${SRC_COMPONENT_FRAME})
-target_link_libraries(libantares-ui-component-frame PUBLIC ${wxWidgets_LIBRARIES})
-target_link_libraries(libantares-ui-component-frame PRIVATE libantares-core)
-
-
+target_link_libraries(libantares-ui-component-frame
+		PUBLIC
+			${wxWidgets_LIBRARIES}
+		PRIVATE
+			libantares-core
+		)
 
 # Scrollbox
 set(SRC_SCROLLBOX
@@ -106,8 +121,10 @@ set(SRC_SCROLLBOX
 source_group("component\\scrollbox" FILES ${SRC_SCROLLBOX})
 
 add_library(libantares-ui-component-wxscrollbox ${SRC_SCROLLBOX})
-target_link_libraries(libantares-ui-component-wxscrollbox PUBLIC ${wxWidgets_LIBRARIES})
-target_link_libraries(libantares-ui-component-wxscrollbox PRIVATE libantares-core libantares-ui-common)
-
-
-
+target_link_libraries(libantares-ui-component-wxscrollbox
+		PUBLIC
+			${wxWidgets_LIBRARIES}
+		PRIVATE
+			libantares-core
+			libantares-ui-common
+		)

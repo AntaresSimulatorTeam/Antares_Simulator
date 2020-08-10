@@ -5,6 +5,7 @@
 !verbose 3
 
 !define ANTARES_BUILD_DIR "@CMAKE_CURRENT_BINARY_DIR@"
+!define ANTARES_SRC_DIR   "@CMAKE_CURRENT_SOURCE_DIR@"
 
 !include "${ANTARES_BUILD_DIR}\distrib\win32\version.nsh"
 !include "@PROJECT_SOURCE_DIR@\distrib\win32\extension.nsh"

@@ -99,7 +99,7 @@ if(WIN32)
 		"${CMAKE_CURRENT_BINARY_DIR}/resources/win32/manifest.antares-win32.manifest")
 
         FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/antares.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/win32/")
-	
+
 	if(MINGW)
 		# resource compilation for mingw
 		add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/resources/win32/antares.o"
@@ -149,10 +149,14 @@ set(ANTARES_LIBS
 		libantares-license
 		yuni-static-core
 		yuni-static-uuid
+		yuni-static-uuid
 		libmodel_antares-swap #TODO : why no libmodel_antares ? link librairies added for ortools_utils.h
 	)
 
-	target_link_libraries(${execname} PRIVATE ${ANTARES_LIBS})
+	target_link_libraries(${execname}
+			PRIVATE
+				${ANTARES_LIBS}
+			)
 
 
 install(TARGETS ${execname} DESTINATION bin)
@@ -160,6 +164,7 @@ install(TARGETS ${execname} DESTINATION bin)
 
 import_std_libs(${execname})
 executable_strip(${execname})
+
 
 # Embedding the manifest file into the executable
 if(WIN32)

@@ -46,8 +46,8 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "t
 	set(ANTARES_VERSION_TARGET "release")
 
 	if(NOT WIN32)
-		set(CMAKE_CXX_FLAGS_RELEASE "${COMMON_GCC_FLAGS} -flto -O3 -funroll-loops -frerun-cse-after-loop -frerun-loop-opt -finline-functions")
-		set(CMAKE_C_FLAGS_RELEASE   "${COMMON_GCC_FLAGS} -flto -O3 -funroll-loops -frerun-cse-after-loop -frerun-loop-opt -finline-functions ${ADDITIONAL_C_FLAGS}")
+		set(CMAKE_CXX_FLAGS_RELEASE "${COMMON_GCC_FLAGS} -O3 -funroll-loops -frerun-cse-after-loop -frerun-loop-opt -finline-functions")
+		set(CMAKE_C_FLAGS_RELEASE   "${COMMON_GCC_FLAGS} -O3 -funroll-loops -frerun-cse-after-loop -frerun-loop-opt -finline-functions ${ADDITIONAL_C_FLAGS}")
 	endif(NOT WIN32)
 	add_definitions("-DNDEBUG") # Remove asserts
 
@@ -101,7 +101,7 @@ endif()
 
 
 if(MSVC)
-
+	#Compile option must be updated if VPCKG static is used (can't mix different compile option)
 	if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
 		set(CMAKE_C_FLAGS_DEBUG   "${COMMON_MSVC_FLAGS} /MTd /GR /Ot /Od /EHsc /RTC1")
 		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_MSVC_FLAGS} /MTd /GR /Ot /Od /EHsc /RTC1 /fp:except")
@@ -131,6 +131,7 @@ if(MSVC)
 	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /Oi")
 
 	# Multithreaded DLL
+	#Compile option must be updated if VPCKG static is used (can't mix different compile option)
     if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
 	    set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /MT")
     else()		
@@ -218,28 +219,6 @@ macro(executable_strip TARGET)
 		endif()
 	endif()
 endmacro()
-
-
-macro(library_strip TARGET)
-	if(NOT MSVC AND "${CMAKE_BUILD_TYPE}" STREQUAL "release")
-		if(WIN32)
-			add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_STRIP} ${TARGET}.dll
-				COMMENT "Stripping the library '${TARGET}.dll'")
-		else()
-			add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_STRIP} --strip-all lib${TARGET}.so
-				COMMENT "Stripping the library 'lib${TARGET}.so'")
-		endif()
-	endif()
-endmacro()
-
-
-#TODO : remove this YUNI_FROM_ANTARES_CXX_FLAGS
-if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
-	set(YUNI_FROM_ANTARES_CXX_FLAGS "${CMAKE_CXX_FLAGS_RELEASE}")
-else()
-	set(YUNI_FROM_ANTARES_CXX_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
-endif()
-
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_RELEASE}")

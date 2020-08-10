@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/ortools-integration
+      - develop
 
 jobs:
 
@@ -36,20 +37,14 @@ jobs:
         
     - name: Configure
       run: |
-           cd src
-           mkdir _build
-           cd _build
-           cmake -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_sirius=ON -DBUILD_ortools=ON .. 
-    
+           cmake -B _build -S src -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_sirius=ON -DBUILD_ortools=ON
+
     - name: Build
       run: |
-           cd src
-           cd _build
-           cmake --build . --config release
-           
+           cmake --build _build --config release -j2
+
     - name: Installer creation
       run: |
-           cd src
            cd _build
            cpack -GNSIS
            
@@ -57,6 +52,6 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: antares-installer-64bits
-        path: src/_build/rte-antares-*.*.*-installer-*.exe            
+        path: _build/rte-antares-*.*.*-installer-*.exe
            
 

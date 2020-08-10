@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 
 # Version
 set(ANTARES_VERSION_HI	      7)
-set(ANTARES_VERSION_LO	      1)
+set(ANTARES_VERSION_LO	      2)
 set(ANTARES_VERSION_REVISION  0)
 set(ANTARES_VERSION_YEAR      2019)
 
@@ -46,7 +46,10 @@ endif()
 if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
 	set(ANTARES_TARGET "${CMAKE_BUILD_TYPE}")
 else()
+	#Define CMAKE_BUILD_TYPE as Debug for external library use
 	set(CMAKE_BUILD_TYPE "Debug")
+
+	#TODO : Antares Target is debug instead of Debug YUNI and Antares CMakeLists.txt to be reviewed to change debug to Debug
 	set(ANTARES_TARGET  "debug")
 endif()
 
@@ -61,6 +64,7 @@ include("cmake/changelog.cmake")
 
 #Check compiler version
 include("cmake/checks.cmake")
+
 
 
 if (ANTARES_LICENSE)
@@ -125,6 +129,9 @@ else()
 	OMESSAGE("{antares} Build Configuration: DEBUG")
 endif()
 
+
+
+
 #
 # Yuni Framework
 #
@@ -149,11 +156,11 @@ message(STATUS "Build all dependencies: ${BUILD_DEPS}")
 include(CMakeDependentOption)
 
 CMAKE_DEPENDENT_OPTION(BUILD_sirius "Build sirius solver dependency Library" ON
-  "NOT BUILD_DEPS" ON)
+		"NOT BUILD_DEPS" ON)
 message(STATUS "Build sirius solver: ${BUILD_sirius}")
 
 CMAKE_DEPENDENT_OPTION(BUILD_ortools "Build BUILD_ortools dependency Library" ON
-  "NOT BUILD_DEPS" ON)
+		"NOT BUILD_DEPS" ON)
 message(STATUS "Build ortools: ${BUILD_ortools}")
 
 CMAKE_DEPENDENT_OPTION(BUILD_wxWidgets "Build wxWidgets dependency Library" OFF
@@ -179,7 +186,7 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install/l
 
 if(BUILD_wxWidgets)
 	# Define wxWidgets_ROOT_DIR
-	set(wxWidgets_ROOT_DIR ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install)  
+	set(wxWidgets_ROOT_DIR ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install)
 endif()
 
 # Define needed external library
@@ -187,49 +194,60 @@ endif()
 #libcurl
 find_package(CURL REQUIRED)
 
-#openssl	
+#openssl
 find_package(OpenSSL REQUIRED)
 
 
 #TODO : Add ZLIB if  VCPKG used why is this needed
-if (VCPKG_TOOLCHAIN) 
+if (VCPKG_TOOLCHAIN)
     #zlib
     find_package(ZLIB REQUIRED)
 endif()
 
+#Sirius solver
+if(POLICY CMP0074)
+	cmake_policy(SET CMP0074 NEW)
+endif()
+
+if (VCPKG_TOOLCHAIN)
+	list(APPEND CMAKE_PREFIX_PATH "${sirius_solver_ROOT}")
+	list(APPEND CMAKE_PREFIX_PATH "${ortools_ROOT}")
+endif()
+
+find_package(sirius_solver CONFIG REQUIRED)
 
 #Add specific definition in case of dependencies build
 
 if(BUILD_curl)
 
-	# ADD CURL_STATICLIB definition 
-	add_definitions(-DCURL_STATICLIB) 
-	
+	# ADD CURL_STATICLIB definition
+	add_definitions(-DCURL_STATICLIB)
+
 	if(WIN32 OR WIN64)
-	
+
 		#Linking not working on windows need to add several system dependency
 		SET(CURL_LIBRARIES ${CURL_LIBRARIES} "Ws2_32.Lib" "Wldap32.Lib" "Crypt32.Lib")
     else()
-		
+
 		#zlib
 		find_package(ZLIB REQUIRED)
-	
+
 		#find_package(CURL) doesn't indicate ZLIB and idn2 dependencies (idn2 used even with --without-libidn option in configure)
-		SET(CURL_LIBRARIES ${CURL_LIBRARIES} ${ZLIB_LIBRARIES} idn2)    
-	endif()	 
+		SET(CURL_LIBRARIES ${CURL_LIBRARIES} ${ZLIB_LIBRARIES} idn2)
+	endif()
 endif()
 
 if(BUILD_OPENSSL)
-	
+
 	if(WIN32 OR WIN64)
     	else()
 		#find_package(OpenSSL doesn't indicate -ldl option
-		SET(OPENSSL_LIBRARIES ${OPENSSL_LIBRARIES} "dl")    
-	endif()	 
+		SET(OPENSSL_LIBRARIES ${OPENSSL_LIBRARIES} "dl")
+	endif()
 endif()
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
-if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 
+if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets)
     #Add cmake directory to CMAKE_MODULE_PATH to use specific FindwxWidgets package needed for vcpkg
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/wxWidgets")
 endif()
@@ -244,18 +262,6 @@ configure_file("config.h.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/config.h")
 # Yuni Framework
 configure_file("cmake/ProfileBuild.template.cmake" "ext/yuni/src/ProfileBuild.cmake")
 add_subdirectory("ext/yuni/src")
-
-#Sirius solver
-if(POLICY CMP0074)
-  cmake_policy(SET CMP0074 NEW)
-endif()
-
-if (VCPKG_TOOLCHAIN) 
-    list(APPEND CMAKE_PREFIX_PATH "${sirius_solver_ROOT}")
-	list(APPEND CMAKE_PREFIX_PATH "${ortools_ROOT}")
-endif()
-
-find_package(sirius_solver CONFIG REQUIRED)
 
 OMESSAGE("") # empty line
 
@@ -290,7 +296,7 @@ if(WIN32 OR WIN64)
 		set(COMPILER_MARK "m")
 		set(COMPILER_INCLUDE "mingw")
 	endif(MSVC)
-	
+
 	set(CPACK_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32 ${CPACK_MODULE_PATH})
 
 	# Configure file with custom definitions for NSIS.
@@ -298,28 +304,28 @@ if(WIN32 OR WIN64)
 		${PROJECT_SOURCE_DIR}/distrib/win32/version.cmake
 		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/version.nsh
 	)
-	
+
 	configure_file(
 		${PROJECT_SOURCE_DIR}/distrib/win32/build.template.cmake
 		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/build.nsh
 	)
-	
+
 	configure_file(
 		${PROJECT_SOURCE_DIR}/distrib/win32/make-zip-from-installer.cmake
 		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/make-zip-from-installer.bat
 	)
-	
+
 	SET(ANTARES_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
-	
+
 	configure_file(
 		${PROJECT_SOURCE_DIR}/distrib/win32/NSIS.template.in
 		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/NSIS.template.in
 		@ONLY
 	)
-	
+
 	#Set package name from CMake and antares variables
 	set(CPACK_PACKAGE_FILE_NAME "rte-antares-${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}-installer-${ANTARES_INSTALLER_ARCH}")
-    
+
 	#Load packaging facilities.
 	include(CPack)
 else()

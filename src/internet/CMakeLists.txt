@@ -17,21 +17,29 @@ add_library(libantares-license
 )
 
 #TODO : needed for include yuni : why yuni must be include first ???
-target_include_directories(libantares-license PRIVATE ../ext/yuni/src)
-
 #TODO : needed for include antares core
-target_include_directories(libantares-license PRIVATE ../libs)
+target_include_directories(libantares-license
+		PRIVATE
+			${CMAKE_SOURCE_DIR}/ext/yuni/src
+			${CMAKE_SOURCE_DIR}/libs
+		PUBLIC
+			${OPENSSL_INCLUDE_DIR}
+			${CURL_INCLUDE_DIRS}
+		)
 
-target_link_libraries(libantares-license PRIVATE yuni-static-core)
-
-target_include_directories(libantares-license PUBLIC ${OPENSSL_INCLUDE_DIR} ${CURL_INCLUDE_DIRS})
-
-
+target_link_libraries(libantares-license
+		PRIVATE
+			yuni-static-core
+		PUBLIC
+			${CURL_LIBRARIES}
+			${OPENSSL_LIBRARIES}
+			base64
+		)
 if(WIN32 OR WIN64)
-#VCPKG define CURL::libcurl / need to add ${CURL_LIBRARIES} in case of BUILD_DEPS option ON
-target_link_libraries(libantares-license PUBLIC CURL::libcurl  ${OPENSSL_LIBRARIES} base64 ${CURL_LIBRARIES})
-else()
-#CMake on linux define CURL_LIBRARIES
-target_link_libraries(libantares-license PUBLIC ${CURL_LIBRARIES}  ${OPENSSL_LIBRARIES} base64 )
+#VCPKG define CURL::libcurl
+target_link_libraries(libantares-license
+		PUBLIC
+			CURL::libcurl
+		)
 endif()
 

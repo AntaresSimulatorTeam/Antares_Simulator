@@ -66,13 +66,14 @@ function(build_git_dependency)
   else()
     set(SOURCE_SUBDIR "#SOURCE_SUBDIR")
   endif()
-  
+
   if (GIT_DEP_INSOURCE_BUILD)  
    set (BINARY_DIR "BUILD_IN_SOURCE 1")
   else()
    set (BINARY_DIR "BINARY_DIR ""@CMAKE_CURRENT_BINARY_DIR@/${GIT_DEP_NAME}/build"" ")
   endif()
-  	
+
+
   configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt.in
     ${CMAKE_CURRENT_BINARY_DIR}/${GIT_DEP_NAME}/CMakeLists.txt @ONLY)

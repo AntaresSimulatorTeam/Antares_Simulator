@@ -57,7 +57,7 @@ set(RTESOLVER_OPT
 		optimisation/opt_nombre_min_groupes_demarres_couts_demarrage.cpp
 
 		optimisation/renseigner_donnees_couts_demarrage.cpp
-		
+
 		utils/ortools_utils.cpp
 
 	)

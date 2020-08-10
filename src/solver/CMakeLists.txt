@@ -70,19 +70,14 @@ macro(solver_app name swap)
 		${SRCS}
 		main.h main.hxx main.cpp
 	)
-	
-	set(ANTARES_SOLVER_LIBS		
+
+	set(ANTARES_SOLVER_LIBS
 		libantares-core-calendar
 		libantares-license
 		yuni-static-uuid
-		yuni-static-core		
+		yuni-static-core
 		${CMAKE_THREADS_LIBS_INIT}
 	)
-
-	#TODO : check for windows
-	if(WIN32)
-		set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS} wsock32)
-	endif()
 
 	if(${swap})
 		set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
@@ -107,12 +102,15 @@ macro(solver_app name swap)
 			libantares-solver-variable
 			libantares-solver-simulation
 			libantares-solver-ts-generator
-			libmodel_antares 
+			libmodel_antares
 			libantares-core)
 	endif()
 
-	target_link_libraries(${exec_name} PRIVATE ${ANTARES_SOLVER_LIBS})
-	
+	target_link_libraries(${exec_name}
+			PRIVATE
+				${ANTARES_SOLVER_LIBS}
+			)
+
 	import_std_libs(${exec_name})
 	executable_strip(${exec_name})
 

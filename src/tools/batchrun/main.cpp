@@ -69,7 +69,15 @@ namespace // anonymous
 } // anonymous namespace
 
 
-
+String sendToNull()
+{
+	#ifdef __linux__ 
+	return " > /dev/null";
+	#elif _WIN32
+	return " > nul";
+	#else
+	#endif
+}
 
 
 
@@ -96,9 +104,12 @@ int main(int argc, char* argv[])
 	bool optForce = false;
 	bool optYearByYear = false;
 	bool optNoOutput = false;
+	bool optParallel = false;
+	bool optVerbose = false;
 	Nullable<uint> optYears;
 	Nullable<String> optSolver;
 	Nullable<String> optName;
+	Nullable<uint> optForceParallel;
 
 	// Command Line options
 	{
@@ -130,12 +141,15 @@ int main(int argc, char* argv[])
 
 		options.addParagraph("\nExtras");
 		options.add(optSolver, ' ', "solver", "Specify the antares-solver location");
+		options.addFlag(optParallel, 'p', "parallel", "Enable the parallel computation of MC years");
+		options.add(optForceParallel, ' ', "force-parallel", "Override the max number of years computed simultaneously");
 		options.addFlag(optSwap, 's', "swap", "Swap mode");
 		options.remainingArguments(optInput);
 		// Version
 		options.addParagraph("\nMisc.");
 		bool optVersion = false;
 		options.addFlag(optVersion, 'v', "version", "Print the version and exit");
+		options.addFlag(optVerbose, ' ', "verbose", "Displays study runs outputs");
 
 		if (not options(argc, argv))
 			return options.errors() ? 1 : 0;
@@ -229,11 +243,15 @@ int main(int argc, char* argv[])
 		foreach (auto& studypath, finder.list)
 		{
 			++studyIndx;
+
 			logs.info();
-			logs.info();
+			if (optVerbose)
+				logs.info();
+
 			logs.checkpoint() << "Running simulation: `" << studypath << "` ("
 				<< studyIndx << '/' << (uint)finder.list.size() << ')';
-			logs.debug();
+			if (optVerbose)
+				logs.debug();
 
 			cmd.clear();
 			if (not System::windows)
@@ -261,15 +279,29 @@ int main(int argc, char* argv[])
 				cmd << " --no-ts-import";
 			if (optIgnoreAllConstraints)
 				cmd << " --no-constraints";
+			if (optParallel)
+				cmd << " --parallel";
+			if (!(!optForceParallel))
+				cmd << " --force-parallel=" << *optForceParallel;
 			cmd << " \"" << studypath << "\"";
+			if (!optVerbose)
+				cmd << sendToNull();
 
 			// Changing the current working directory
 			IO::Directory::Current::Set(dirname);
 			// Executing the converter
-			logs.info() << "Executing " << cmd;
+			if (optVerbose)
+				logs.info() << "Executing " << cmd;
 
 			// Execute the command
-			if (-1 == system(cmd.c_str()))
+			int cmd_return_code = system(cmd.c_str());
+
+			if (cmd_return_code != 0)
+				logs.error() << "An error occured.";
+			else
+				logs.info() << "Success.";
+
+			if (cmd_return_code == -1)
 			{
 				# ifdef YUNI_OS_WINDOWS
 				switch (errno)
@@ -295,8 +327,11 @@ int main(int argc, char* argv[])
 
 
 		// Time interval
-		logs.debug();
-		logs.debug();
+		if (optVerbose)
+		{
+			logs.debug();
+			logs.debug();
+		}
 	}
 	else
 	{

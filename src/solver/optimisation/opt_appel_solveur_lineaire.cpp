@@ -71,100 +71,75 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * , uint, int );
 bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * , uint , int );
 
 
-
-
-
 bool OPT_AppelDuSolveurLineaire( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int NumIntervalle )
 {
+	bool result = false;
 
-
-
-
-if ( ProblemeHebdo->SolveurDuProblemeLineaire == ANTARES_SIMPLEXE ) {
-  if ( OPT_AppelDuSimplexe( ProblemeHebdo, numSpace, NumIntervalle ) == true ) {
-	  return true;
+	if ( ProblemeHebdo->SolveurDuProblemeLineaire == ANTARES_SIMPLEXE )
+	{
+		result = OPT_AppelDuSimplexe(ProblemeHebdo, numSpace, NumIntervalle);
 	}
-	else {
-	  return false;
+	else
+	{
+		result = OPT_AppelDuSolveurPne(ProblemeHebdo, numSpace, NumIntervalle);
 	}
-}
-else {
-  if ( OPT_AppelDuSolveurPne( ProblemeHebdo, numSpace, NumIntervalle ) == true ) {
-	  return true;
-	}
-	else {
-	  return false;
-	}
-}
 
-return true;
+	return result;
 }
 
 
 
 bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int NumIntervalle )
 {
-int Var; int Cnt; double * pt; int il; int ilMax; int Classe; char PremierPassage;
-double CoutOpt; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre; PROBLEME_SIMPLEXE Probleme;
-void * ProbSpx;
+	int Var; int Cnt; double * pt; int il; int ilMax; int Classe; char PremierPassage;
+	double CoutOpt; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre; PROBLEME_SIMPLEXE Probleme;
+	PROBLEME_SPX * ProbSpx;
+	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+	PremierPassage = OUI_ANTARES;
+	Classe = ProblemeAResoudre->NumeroDeClasseDeManoeuvrabiliteActiveEnCours;
+	ProbSpx = (PROBLEME_SPX *) ((ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[(int) NumIntervalle]);
 
+	RESOLUTION:
 
-
-
-
-ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-
-PremierPassage = OUI_ANTARES;
-
-Classe = ProblemeAResoudre->NumeroDeClasseDeManoeuvrabiliteActiveEnCours;
-ProbSpx = ((ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[(int) NumIntervalle]);
-
-RESOLUTION:
-
-if ( ProbSpx == NULL ) {
-	Probleme.Contexte            = SIMPLEXE_SEUL;
-	Probleme.BaseDeDepartFournie = NON_SPX;
-}
-else {
-
-  if (ProblemeHebdo->ReinitOptimisation == OUI_ANTARES ) {	
-    if ( ProbSpx != NULL ) {
-		if (withOrtool) {
-			ORTOOLS_LibererProbleme( ProbSpx );
-		}
-		else {
-			SPX_LibererProbleme((PROBLEME_SPX *)ProbSpx);
-		}
-      (ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[(int) NumIntervalle] = NULL;			
-    }	
-		ProbSpx                      = NULL;
-  		Probleme.Contexte            = SIMPLEXE_SEUL;
-		Probleme.BaseDeDepartFournie = NON_SPX;	
+	if ( ProbSpx == NULL )
+	{
+		Probleme.Contexte            = SIMPLEXE_SEUL;
+		Probleme.BaseDeDepartFournie = NON_SPX;
 	}
-	
-	else {
-	  
-	  Probleme.Contexte            = BRANCH_AND_BOUND_OU_CUT_NOEUD;
-	  
-	  Probleme.BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
+	else
+	{
+		if (ProblemeHebdo->ReinitOptimisation == OUI_ANTARES )
+		{
+			if ( ProbSpx != NULL )
+			{
+				if (withOrtool) {
+			        ORTOOLS_LibererProbleme( ProbSpx );
+		        }
+		        else {
+			        SPX_LibererProbleme((PROBLEME_SPX *)ProbSpx);
+		        }
+				(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[(int) NumIntervalle] = NULL;
+			}
+			ProbSpx  = NULL;
+			Probleme.Contexte = SIMPLEXE_SEUL;
+			Probleme.BaseDeDepartFournie = NON_SPX;
+		}
+		else
+		{
+			Probleme.Contexte            = BRANCH_AND_BOUND_OU_CUT_NOEUD;
+			Probleme.BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
 
-	  
-	  
-	  
-	  if (withOrtool) {
-		  ORTOOLS_ModifierLeVecteurCouts(ProbSpx, ProblemeAResoudre->CoutLineaire, ProblemeAResoudre->NombreDeVariables);
-		  ORTOOLS_ModifierLeVecteurSecondMembre(ProbSpx, ProblemeAResoudre->SecondMembre, ProblemeAResoudre->Sens, ProblemeAResoudre->NombreDeContraintes);
-		  ORTOOLS_CorrigerLesBornes(ProbSpx, ProblemeAResoudre->Xmin, ProblemeAResoudre->Xmax, ProblemeAResoudre->TypeDeVariable, ProblemeAResoudre->NombreDeVariables, &Probleme);
-	  }
-	  else {
-		  SPX_ModifierLeVecteurCouts((PROBLEME_SPX *)ProbSpx, ProblemeAResoudre->CoutLineaire, ProblemeAResoudre->NombreDeVariables);
-		  SPX_ModifierLeVecteurSecondMembre((PROBLEME_SPX *)ProbSpx, ProblemeAResoudre->SecondMembre, ProblemeAResoudre->Sens, ProblemeAResoudre->NombreDeContraintes);
-	  }
-	  
-	  
+			if (withOrtool) {
+		        ORTOOLS_ModifierLeVecteurCouts(ProbSpx, ProblemeAResoudre->CoutLineaire, ProblemeAResoudre->NombreDeVariables);
+		        ORTOOLS_ModifierLeVecteurSecondMembre(ProbSpx, ProblemeAResoudre->SecondMembre, ProblemeAResoudre->Sens, ProblemeAResoudre->NombreDeContraintes);
+		        ORTOOLS_CorrigerLesBornes(ProbSpx, ProblemeAResoudre->Xmin, ProblemeAResoudre->Xmax, ProblemeAResoudre->TypeDeVariable, ProblemeAResoudre->NombreDeVariables, &Probleme);
+	        }
+	        else {
+		        SPX_ModifierLeVecteurCouts((PROBLEME_SPX *)ProbSpx, ProblemeAResoudre->CoutLineaire, ProblemeAResoudre->NombreDeVariables);
+		        SPX_ModifierLeVecteurSecondMembre((PROBLEME_SPX *)ProbSpx, ProblemeAResoudre->SecondMembre, ProblemeAResoudre->Sens, ProblemeAResoudre->NombreDeContraintes);
+	        }
+		}
 	}
-	
-}
 
 
 Probleme.NombreMaxDIterations = -1; 
@@ -232,7 +207,7 @@ else
 current_memory_usage("after resolution");
 
 if ( ProbSpx != NULL ) {  
-	(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[NumIntervalle] = ProbSpx;
+	(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[NumIntervalle] = (void *) ProbSpx;
 }
 
 if (ProblemeHebdo->ExportMPS == OUI_ANTARES) {
@@ -246,6 +221,8 @@ if (ProblemeHebdo->ExportMPS == OUI_ANTARES) {
 
 ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
 
+
+
 if ( ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage == OUI_ANTARES && ProbSpx != NULL ) {
   if ( ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE ) {
     
@@ -255,9 +232,10 @@ if ( ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage == OU
 	  else {
 		  SPX_LibererProbleme((PROBLEME_SPX *)ProbSpx);
 	  }
-	  logs.info() << " Solver: Standard resolution failed"; 
-	  logs.info() << " Solver: Retry in safe mode";			//second trial w/o scaling
 
+	  logs.info() << " Solver: Standard resolution failed"; 
+	  logs.info() << " Solver: Retry in safe mode";			//second trial w/o scaling 
+	 
 	  if (Logs::Verbosity::Debug::enabled)
 	  {
 	  
@@ -401,6 +379,13 @@ if ( ProblemeAResoudre->NumeroDOptimisation == DEUXIEME_OPTIMISATION ) {
 ProblemePourPne.TempsDExecutionMaximum       = 0;  
 ProblemePourPne.NombreMaxDeSolutionsEntieres = -1;   
 ProblemePourPne.ToleranceDOptimalite         = 1.e-4; 
+
+
+
+
+
+
+
 if (withOrtool) {
 
 	ORTOOLS_Simplexe_PNE(&ProblemePourPne, NULL);
@@ -412,7 +397,6 @@ if (withOrtool) {
 	if ( ProblemeHebdo->ExportMPS == OUI_ANTARES) OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &ProblemePourPne, numSpace, ANTARES_PNE );
 
 }
-
 ProblemeAResoudre->ExistenceDUneSolution = ProblemePourPne.ExistenceDUneSolution;
 
 if ( ProblemeAResoudre->ExistenceDUneSolution == ARRET_CAR_ERREUR_INTERNE ) {

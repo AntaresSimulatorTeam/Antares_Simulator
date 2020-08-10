@@ -26,10 +26,6 @@
 */
 
 
-
-
-
-
 # include "opt_structure_probleme_a_resoudre.h"
 
 # include "../simulation/simulation.h"
@@ -43,136 +39,122 @@
 
 
 
-
 bool OPT_PilotageOptimisationLineaire( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace)
 {
-int i; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre; CLASSE_DE_MANOEUVRABILITE Classe;
-char CalculerLesPmin; char CalculerLesPmax; char FaireDerniereOptimisation;
+	int i; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre; CLASSE_DE_MANOEUVRABILITE Classe;
+	char CalculerLesPmin; char CalculerLesPmax; char FaireDerniereOptimisation;
 
-CONTRAINTES_COUPLANTES * MatriceDesContraintesCouplantes; int iMx; int CntCouplante;
-int * OffsetTemporelSurLInterco;  int Pays; double x; int ix; int OnReboucle;
+	CONTRAINTES_COUPLANTES * MatriceDesContraintesCouplantes; int iMx; int CntCouplante;
+	int * OffsetTemporelSurLInterco;  int Pays; double x; int ix; int OnReboucle;
 
-
-ProblemeHebdo->OptimisationMUTetMDT = OUI_ANTARES;
-
-
+	ProblemeHebdo->OptimisationMUTetMDT = OUI_ANTARES;
  
- 
-ProblemeHebdo->SolveurDuProblemeLineaire = ANTARES_SIMPLEXE;
-if (0 && ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES && ProblemeHebdo->Expansion == NON_ANTARES) {
-  ProblemeHebdo->SolveurDuProblemeLineaire = ANTARES_PNE;
-} // disable call to PNE until presolve and scaling issues are fixed
+	ProblemeHebdo->SolveurDuProblemeLineaire = ANTARES_SIMPLEXE;
+	if (0 && ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES && ProblemeHebdo->Expansion == NON_ANTARES) {
+		ProblemeHebdo->SolveurDuProblemeLineaire = ANTARES_PNE;
+	} // disable call to PNE until presolve and scaling issues are fixed
 
 
- 
+	if (ProblemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES )
+	{
+		if (ProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
+		{	
+			ProblemeHebdo->NombreDeZonesDeReserveJMoins1 = ProblemeHebdo->NombreDePays;
+			for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ ) {
+				ProblemeHebdo->NumeroDeZoneDeReserveJMoins1[Pays] = Pays;
+				ProblemeHebdo->CoutDeDefaillanceEnReserve[Pays] = 1.e+6;			
+			}
 
+			ProblemeHebdo->ContrainteDeReserveJMoins1ParZone = NON_ANTARES;		
+			ProblemeHebdo->NombreDePasDeTempsRef            = ProblemeHebdo->NombreDePasDeTemps;
+			ProblemeHebdo->NombreDePasDeTempsDUneJourneeRef = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
+			ProblemeHebdo->NombreDeJours = (int) (ProblemeHebdo->NombreDePasDeTemps / ProblemeHebdo->NombreDePasDeTempsDUneJournee);
 
-
-if (ProblemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES ) {
-	if (ProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE) {	
+			if ( ProblemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES )
+			{
+				ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
+			}
+			else
+			{
+				ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTemps; 
+			}
 		
+			OPT_AllocDuProblemeAOptimiser( ProblemeHebdo );
 		
-		
-
-
-
-
-
-
- 		
-		
-		
-    ProblemeHebdo->NombreDeZonesDeReserveJMoins1 = ProblemeHebdo->NombreDePays;
-	  for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ ) {
-		  ProblemeHebdo->NumeroDeZoneDeReserveJMoins1[Pays] = Pays;
-      ProblemeHebdo->CoutDeDefaillanceEnReserve[Pays] = 1.e+6;			
+			OPT_ChainagesDesIntercoPartantDUnNoeud( ProblemeHebdo );
 		}
-    ProblemeHebdo->ContrainteDeReserveJMoins1ParZone = NON_ANTARES;		
- 		
-				
-		ProblemeHebdo->NombreDePasDeTempsRef            = ProblemeHebdo->NombreDePasDeTemps;
-		ProblemeHebdo->NombreDePasDeTempsDUneJourneeRef = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
-		ProblemeHebdo->NombreDeJours = (int) (ProblemeHebdo->NombreDePasDeTemps / ProblemeHebdo->NombreDePasDeTempsDUneJournee);
-		if ( ProblemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES ) {
-			ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
-		}
-		else {
-			ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTemps; 
-		}
-		
-		OPT_AllocDuProblemeAOptimiser( ProblemeHebdo );
-		
-		OPT_ChainagesDesIntercoPartantDUnNoeud( ProblemeHebdo );
+
+		ProblemeHebdo->LeProblemeADejaEteInstancie = OUI_ANTARES;
 	}
 
-	ProblemeHebdo->LeProblemeADejaEteInstancie = OUI_ANTARES;
-}
+	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
-ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+	OPT_VerifierPresenceReserveJmoins1( ProblemeHebdo );
 
-OPT_VerifierPresenceReserveJmoins1( ProblemeHebdo );
+	CalculerLesPmin = OUI_ANTARES;
+	CalculerLesPmax = OUI_ANTARES;
 
+	OPT_SauvegarderLesPmaxThermiques( ProblemeHebdo );
 
-CalculerLesPmin = OUI_ANTARES;
-CalculerLesPmax = OUI_ANTARES;
-
-OPT_SauvegarderLesPmaxThermiques( ProblemeHebdo );
-
-if ( ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES ) FaireDerniereOptimisation = NON_ANTARES;
-else FaireDerniereOptimisation = OUI_ANTARES;
+	if ( ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES )
+		FaireDerniereOptimisation = NON_ANTARES;
+	else
+		FaireDerniereOptimisation = OUI_ANTARES;
 
 
+	OPT_InitialiserLesPminHebdo( ProblemeHebdo );
 
+	OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise( ProblemeHebdo );
 
-OPT_InitialiserLesPminHebdo( ProblemeHebdo );
+	OPT_MaxDesPmaxHydrauliques( ProblemeHebdo );
 
-OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise( ProblemeHebdo );
+	if ( ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES )
+	{
+		 OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage( ProblemeHebdo );
+	}
 
-OPT_MaxDesPmaxHydrauliques( ProblemeHebdo );
+	if ( ProblemeHebdo->OptimisationMUTetMDT == NON_ANTARES )
+	{
+		for ( i = 0 ; i < ProblemeHebdo->NombreDeClassesDeManoeuvrabiliteActives ; i++ )
+		{
+			ProblemeAResoudre->NumeroDeClasseDeManoeuvrabiliteActiveEnCours = i;
+			Classe = ProblemeHebdo->ClasseDeManoeuvrabiliteActive[i];
 
+			if (!OPT_OptimisationLineaire( ProblemeHebdo, numSpace, Classe, CalculerLesPmin, CalculerLesPmax, FaireDerniereOptimisation ))
+				return false;
+		}
 
-if ( ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES ) {
-  OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage( ProblemeHebdo );
-}
-
-if ( ProblemeHebdo->OptimisationMUTetMDT == NON_ANTARES ) {
-  for ( i = 0 ; i < ProblemeHebdo->NombreDeClassesDeManoeuvrabiliteActives ; i++ ) {
-	  ProblemeAResoudre->NumeroDeClasseDeManoeuvrabiliteActiveEnCours = i;
-	  Classe = ProblemeHebdo->ClasseDeManoeuvrabiliteActive[i];
+		if ( ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES )
+		{
+			CalculerLesPmin = NON_ANTARES;
+			CalculerLesPmax = OUI_ANTARES;
+    
+			OPT_RestaurerLesPmaxThermiques( ProblemeHebdo ); 
+			OPT_RestaurerLesPminThermiques( ProblemeHebdo );		 
 	  
-	  if (!OPT_OptimisationLineaire( ProblemeHebdo, numSpace, Classe, CalculerLesPmin, CalculerLesPmax, FaireDerniereOptimisation )) return false;
-  }
+			ProblemeHebdo->YaDeLaReserveJmoins1	= NON_ANTARES;
+			FaireDerniereOptimisation = NON_ANTARES;
 
-  if ( ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES ) {
-    
-    CalculerLesPmin = NON_ANTARES;
-    CalculerLesPmax = OUI_ANTARES;
-    
-    OPT_RestaurerLesPmaxThermiques( ProblemeHebdo ); 
-    
-
-
-	  OPT_RestaurerLesPminThermiques( ProblemeHebdo );		 
-	  
-    ProblemeHebdo->YaDeLaReserveJmoins1	= NON_ANTARES;
-    FaireDerniereOptimisation = NON_ANTARES;
-    for ( i = 0 ; i < ProblemeHebdo->NombreDeClassesDeManoeuvrabiliteActives ; i++ ) {
-	    ProblemeAResoudre->NumeroDeClasseDeManoeuvrabiliteActiveEnCours = i;
-	    Classe = ProblemeHebdo->ClasseDeManoeuvrabiliteActive[i];
+			for ( i = 0 ; i < ProblemeHebdo->NombreDeClassesDeManoeuvrabiliteActives ; i++ )
+			{
+				ProblemeAResoudre->NumeroDeClasseDeManoeuvrabiliteActiveEnCours = i;
+				Classe = ProblemeHebdo->ClasseDeManoeuvrabiliteActive[i];
 	    
-	    if (!OPT_OptimisationLineaire( ProblemeHebdo, numSpace, Classe, CalculerLesPmin, CalculerLesPmax, FaireDerniereOptimisation  )) return false;
-    }
-  }
-}
-else {
-  
-	i = ProblemeHebdo->NombreDeClassesDeManoeuvrabiliteActives - 1;
-  ProblemeAResoudre->NumeroDeClasseDeManoeuvrabiliteActiveEnCours = i;
-	Classe = ProblemeHebdo->ClasseDeManoeuvrabiliteActive[i];
+				if ( ! OPT_OptimisationLineaire( ProblemeHebdo, numSpace, Classe, CalculerLesPmin, CalculerLesPmax, FaireDerniereOptimisation) )
+					return false;
+			}
+		}
+	}
+	else
+	{
+		i = ProblemeHebdo->NombreDeClassesDeManoeuvrabiliteActives - 1;
+		ProblemeAResoudre->NumeroDeClasseDeManoeuvrabiliteActiveEnCours = i;
+		Classe = ProblemeHebdo->ClasseDeManoeuvrabiliteActive[i];
 	
-	if (!OPT_OptimisationLineaire( ProblemeHebdo, numSpace, Classe, CalculerLesPmin, CalculerLesPmax, FaireDerniereOptimisation )) return false;
-}
+		if (!OPT_OptimisationLineaire( ProblemeHebdo, numSpace, Classe, CalculerLesPmin, CalculerLesPmax, FaireDerniereOptimisation )) 
+			return false;
+	}
 
-return true;
+	return true;
 }
 

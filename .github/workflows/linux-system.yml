@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/ortools-integration
+      - develop
 jobs:
   build:
 
@@ -22,32 +23,25 @@ jobs:
 
     - name: Configure
       run: |
-           cd src
-           mkdir _build
-           cd _build
-           cmake -DBUILD_sirius=ON -DBUILD_ortools=ON ..
+           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_sirius=ON -DBUILD_ortools=ON
 
     - name: Build
       run: |
-           cd src
-           cd _build
-           cmake --build .
-           
+           cmake --build _build --config release -j2
+
     - name: Installer .deb creation
       run: |
-           cd src
            cd _build
-           cpack -G DEB .
-           
+           cpack -G DEB
+
     - name: Installer .tar.gz creation
       run: |
-           cd src
            cd _build
-           cpack -G TGZ .
+           cpack -G TGZ
            
     - name: Installer upload
       uses: actions/upload-artifact@v2
       with:
         name: antares-installer-64bits
-        path: src/_build/antares-*.*.*-Linux.*
+        path: _build/antares-*.*.*-Linux.*
 
