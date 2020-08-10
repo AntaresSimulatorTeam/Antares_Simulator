@@ -96,20 +96,11 @@ MPSolver * convert_to_MPSolver(PROBLEME_SIMPLEXE * problemeSimplexe) {
     {
         solverType = MPSolver::SIRIUS_LINEAR_PROGRAMMING;
     }
-    /*
-    else if (ortoolsSolverUsed == "cplex")
-    {
-        solverType = MPSolver::CPLEX_LINEAR_PROGRAMMING;
-    }
-    */
     else if (ortoolsSolverUsed == "clp")
     {
         solverType = MPSolver::CLP_LINEAR_PROGRAMMING;
     }
-    else if (ortoolsSolverUsed == "glop")
-    {
-        solverType = MPSolver::GLOP_LINEAR_PROGRAMMING;
-    }
+
 	// Create the linear solver instance
 	MPSolver * solver = new MPSolver("simple_lp_program", solverType);
 
@@ -125,13 +116,19 @@ MPSolver * convert_to_MPSolver(PROBLEME_SIMPLEXE * problemeSimplexe) {
 
 MPSolver * convert_to_MPSolver(PROBLEME_A_RESOUDRE * problemeAResoudre) {
 
-    //TODO JMK : create specific solver
+    //TODO JMK : define solver used depending on global solver option
+    MPSolver::OptimizationProblemType solverType = MPSolver::SIRIUS_MIXED_INTEGER_PROGRAMMING;
 
-	// Create the linear solver instance
-	//MPSolver * solver = new MPSolver("simple_lp_program", MPSolver::CPLEX_LINEAR_PROGRAMMING);
-	//MPSolver * solver = new MPSolver("simple_lp_program", MPSolver::CLP_LINEAR_PROGRAMMING);
-	//MPSolver * solver = new MPSolver("simple_lp_program", MPSolver::GLOP_LINEAR_PROGRAMMING);
-	MPSolver * solver = new MPSolver("simple_lp_program", MPSolver::SIRIUS_MIXED_INTEGER_PROGRAMMING);
+    if (ortoolsSolverUsed == "sirius")
+    {
+        solverType = MPSolver::SIRIUS_MIXED_INTEGER_PROGRAMMING;
+    }
+    else if (ortoolsSolverUsed == "clp")
+    {
+        solverType = MPSolver::CBC_MIXED_INTEGER_PROGRAMMING;
+    }
+
+	MPSolver * solver = new MPSolver("simple_lp_program",solverType);
 
 	// Create the variables and set objective cost.
 	transferVariables(solver, problemeAResoudre->Xmin, problemeAResoudre->Xmax, problemeAResoudre->CoutLineaire,  problemeAResoudre->NombreDeVariables);
@@ -234,6 +231,16 @@ std::string getRunName(std::string const & prefix, size_t numSpace, int numInter
 	std::stringstream buffer;
 	buffer << prefix << " for year=" << year << ", week=" << week << ", interval="<< numInterval << ", optimisation=" << numOptim;
 	return buffer.str();
+}
+
+std::list<std::string> GetOrtoolsSolverNames() {
+
+    std::list<std::string> solverList;
+
+    solverList.push_back("sirius");
+    solverList.push_back("clp");
+
+    return solverList;
 }
 
 bool solveAndManageStatus(operations_research::MPSolver * solver, int & resultStatus, MPSolverParameters& params) {

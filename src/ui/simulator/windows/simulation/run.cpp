@@ -57,6 +57,8 @@
 #include "../../toolbox/system/diskfreespace.hxx"
 #include <antares/config.h>
 
+#include <solver/utils/ortools_utils.h>
+
 
 using namespace Yuni;
 
@@ -322,6 +324,15 @@ namespace Simulation
 		auto* ortoolsCheckBox = new wxCheckBox (pBigDaddy,wxID_ANY, wxT(""));
         gridAppend(*s, wxT("Ortools use : "), ortoolsCheckBox);
         pOrtoolsCheckBox = ortoolsCheckBox;
+
+        //Ortools solver
+        pOrtoolsSolverCombox = new wxComboBox(pBigDaddy, wxID_ANY);
+        std::list<std::string> ortoolsSolverList = GetOrtoolsSolverNames();
+        for (const std::string& ortoolsSolver : ortoolsSolverList)
+        {
+            pOrtoolsSolverCombox->Append(ortoolsSolver);
+        }
+        gridAppend(*s, wxT("Ortools solver : "), pOrtoolsSolverCombox);
 
 		// When opening the Run window, the solver mode is default.
 		// Therefore, the number of cores must be set (back) to the value associated with default mode (== 1).
@@ -771,7 +782,8 @@ namespace Simulation
 			pIgnoreWarnings->GetValue(),    // Ignore warnings
 			featuresAlias[pFeatureIndex],   // Features
 			pPreproOnly->GetValue(),        // Prepro Only ?
-			pOrtoolsCheckBox->IsChecked()); //Ortools use
+			pOrtoolsCheckBox->IsChecked(), //Ortools use
+			pOrtoolsSolverCombox->GetValue()); //Ortools solver
 
 		// Remove the temporary file
 		if (not commentFile.empty())

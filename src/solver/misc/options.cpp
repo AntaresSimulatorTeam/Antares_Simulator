@@ -105,7 +105,7 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
     getopt.addFlag(useOrtools, ' ', "use-ortools", "Use ortools library to launch solver");
 
     //TODO JMK (WIP) : add option define ortools solver used
-    std::string ortoolsSolver = "sirius";
+    std::string ortoolsSolver;
     //--ortools-solver
     getopt.add(ortoolsSolver, ' ', "ortools-solver", "Ortools solver used for simulation (only available with use-ortools");
 
@@ -262,6 +262,12 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
 
 	//define ortools global values
     withOrtool          = useOrtools;
+
+	//ortools solver
+    if(ortoolsSolver.empty())
+    {
+        ortoolsSolver = "sirius";
+    }
     ortoolsSolverUsed   = ortoolsSolver;
 
 	// The study folder

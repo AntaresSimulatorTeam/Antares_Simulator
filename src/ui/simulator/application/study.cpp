@@ -1244,10 +1244,12 @@ namespace Antares
 					cmd << " --parallel";
 
                 // Use ortools ?
-                if (useOrtools)
+                if (useOrtools) {
                     cmd << " --use-ortools";
 
-                //TODO JMK : add solver name for ortools
+                    //add solver name for ortools
+                    cmd << " --ortools-solver=" << ortoolsSolver;
+                }
 
 				// Go go go !
 				//TODO JMK : set to debug() log when ortools is fully integrated

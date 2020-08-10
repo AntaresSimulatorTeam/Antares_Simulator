@@ -34,6 +34,7 @@
 # include <wx/dialog.h>
 # include <wx/sizer.h>
 # include <wx/checkbox.h>
+# include <wx/combobox.h>
 # include <wx/choice.h>
 # include <wx/stattext.h>
 # include <wx/timer.h>
@@ -123,6 +124,7 @@ namespace Simulation
 		//! Solver mode
 		Antares::Component::Button* pBtnMode;
 		wxCheckBox* pOrtoolsCheckBox;
+		wxComboBox* pOrtoolsSolverCombox;
 
 		wxTextCtrl* pSimulationName;
 		wxTextCtrl* pSimulationComments;
