@@ -783,7 +783,7 @@ namespace Simulation
 			featuresAlias[pFeatureIndex],   // Features
 			pPreproOnly->GetValue(),        // Prepro Only ?
 			pOrtoolsCheckBox->IsChecked(), //Ortools use
-			pOrtoolsSolverCombox->GetValue()); //Ortools solver
+			pOrtoolsSolverCombox->GetValue().ToStdString()); //Ortools solver
 
 		// Remove the temporary file
 		if (not commentFile.empty())
