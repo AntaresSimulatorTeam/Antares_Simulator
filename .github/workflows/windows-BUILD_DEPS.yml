@@ -1,0 +1,39 @@
+name: Windows CI (deps. compilation)
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+
+  windows:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+
+    steps:
+    - uses: actions/checkout@v2      
+
+    - name: Configure
+      run: |
+           cmake -B _build -S src -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release
+
+    - name: Build
+      run: |
+           cmake --build _build --config release -j2
+
+    - name: Installer creation
+      run: |
+           cd _build
+           cpack -GNSIS
+           
+    - name: Installer upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: antares-installer-64bits
+        path: _build/rte-antares-*.*.*-installer-*.exe          
+           
+

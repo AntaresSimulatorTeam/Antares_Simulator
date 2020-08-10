@@ -4,15 +4,6 @@ OMESSAGE("License")
 add_subdirectory(base64)
 add_subdirectory(keys)
 
-
-
-if(NOT MSVC)
-  add_definitions(-DCURL_STATICLIB)
-endif()
-
-include_directories("${ANTARES_OSSL_INCLUDE}")
-include_directories("${ANTARES_CURL_INCLUDE}")
-
 add_library(libantares-license
 	license.h
 	hello_web.cpp
@@ -22,8 +13,33 @@ add_library(libantares-license
 	licensetimer.cpp
 	licensetimer.h
 	getstarttime.cpp
-	getstarttime.h
-
+	getstarttime.h	
 )
-	target_link_libraries(libantares-license ${ANTARES_CURL_LIBS} ${ANTARES_OSSL_LIBS} base64)
+
+#TODO : needed for include yuni : why yuni must be include first ???
+#TODO : needed for include antares core
+target_include_directories(libantares-license
+		PRIVATE
+			${CMAKE_SOURCE_DIR}/ext/yuni/src
+			${CMAKE_SOURCE_DIR}/libs
+		PUBLIC
+			${OPENSSL_INCLUDE_DIR}
+			${CURL_INCLUDE_DIRS}
+		)
+
+target_link_libraries(libantares-license
+		PRIVATE
+			yuni-static-core
+		PUBLIC
+			${CURL_LIBRARIES}
+			${OPENSSL_LIBRARIES}
+			base64
+		)
+if(WIN32 OR WIN64)
+#VCPKG define CURL::libcurl
+target_link_libraries(libantares-license
+		PUBLIC
+			CURL::libcurl
+		)
+endif()
 

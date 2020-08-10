@@ -28,22 +28,18 @@ set(SRCS
 		progress.cpp
 			)
 
-
-# The new ant library
-include_directories("../..")
-
-
-
 if(WIN32 OR WIN64)
 	FILE(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/win32/ybyaggregator.o")
 	CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/win32/ybyaggregator.rc.cmake"
-		"${CMAKE_CURRENT_SOURCE_DIR}/win32/ybyaggregator.rc")
-	SET(SRCS ${SRCS} "win32/ybyaggregator.rc")
+		"${CMAKE_CURRENT_BINARY_DIR}/win32/ybyaggregator.rc")
+	FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/win32/ybyaggregator.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/win32/")
+	SET(SRCS ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/win32/ybyaggregator.rc")
 endif()
 
 
 set(execname "antares-${ANTARES_PRG_VERSION}-ybyaggregator")
 add_executable(${execname}  ${SRCS})
+install(TARGETS ${execname} DESTINATION bin)
 
 
 set(YBY_AGGREGATOR_LIBS
@@ -53,11 +49,16 @@ set(YBY_AGGREGATOR_LIBS
 	libantares-license
 	${wxWidgets_LIBRARIES} ${CMAKE_THREADS_LIBS_INIT})
 
-if (WIN32 OR WIN64)
-	target_link_libraries(${execname} ${YBY_AGGREGATOR_LIBS})
-else()
-	target_link_libraries(${execname} -Wl,--start-group ${YBY_AGGREGATOR_LIBS} -Wl,--end-group)
-endif()
+# The new ant library
+target_include_directories(${execname}
+		PRIVATE
+			"${CMAKE_CURRENT_SOURCE_DIR}/libs"
+		)
+
+target_link_libraries(${execname}
+		PRIVATE
+			${YBY_AGGREGATOR_LIBS}
+		)
 
 set_target_properties(${execname} PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
 

@@ -182,8 +182,15 @@ if(MINGW)
 endif()
 
 if(MSVC)
-	set(CMAKE_C_FLAGS_DEBUG   "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1")
-	set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1 /fp:except")
+
+	#Compile option must be updated if VPCKG static is used (can't mix different compile option)
+	if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
+		set(CMAKE_C_FLAGS_DEBUG   "${COMMON_MSVC_FLAGS} /MTd /GR /Ot /Od /EHsc /RTC1")
+		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_MSVC_FLAGS} /MTd /GR /Ot /Od /EHsc /RTC1 /fp:except")
+    else()
+		set(CMAKE_C_FLAGS_DEBUG   "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1")
+		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1 /fp:except")
+	endif()
 
 	set(MSVC_RELEASE_FLAGS)
 
@@ -206,7 +213,12 @@ if(MSVC)
 	# Intrinsic functions
 	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /Oi")
 	# Multithreaded DLL
-	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /MD")
+	#Compile option must be updated if VPCKG static is used (can't mix different compile option)
+    if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
+	    set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /MT")
+    else()		
+	    set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /MD")
+    endif()
 
 	set(CMAKE_CXX_FLAGS_RELEASE  "${CMAKE_CXX_FLAGS_RELEASE} ${MSVC_RELEASE_FLAGS}")
 	set(CMAKE_C_FLAGS_RELEASE    "${CMAKE_C_FLAGS_RELEASE} ${MSVC_RELEASE_FLAGS}")

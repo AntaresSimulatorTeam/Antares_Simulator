@@ -35,6 +35,14 @@ add_library(yuni-static-uuid STATIC
 	uuid/fwd.h
 	yuni.h
 )
+target_link_libraries(yuni-static-uuid PUBLIC uuid)
+
+if (WIN32 OR WIN64)
+	# -lrpcrt4
+	target_link_libraries(yuni-static-uuid PUBLIC rpcrt4)
+	# -lole32
+	target_link_libraries(yuni-static-uuid PUBLIC ole32)
+endif()
 
 # Setting output path
 SET_TARGET_PROPERTIES(yuni-static-uuid PROPERTIES

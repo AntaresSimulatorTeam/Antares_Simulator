@@ -23,8 +23,8 @@ SET(SRC_WINDOW_INSPECTOR
 
 
 
-add_library(libantares-ui-windows-inspector STATIC
-	${SRC_WINDOW_INSPECTOR})
+add_library(libantares-ui-windows-inspector	${SRC_WINDOW_INSPECTOR})
 
-target_link_libraries(libantares-ui-windows-inspector  ${wxWidgets_LIBRARIES})
+target_link_libraries(libantares-ui-windows-inspector PUBLIC  ${wxWidgets_LIBRARIES})
+target_link_libraries(libantares-ui-windows-inspector PRIVATE libantares-ui-common)
 

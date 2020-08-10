@@ -35,7 +35,6 @@
 #include <wx/utils.h>
 #include <wx/msgdlg.h>
 #include <wx/dirdlg.h>
-#include <wx/generic/dirdlgg.h>
 #include <wx/config.h>
 #include <antares/memory/memory.h>
 #include <antares/logs.h>

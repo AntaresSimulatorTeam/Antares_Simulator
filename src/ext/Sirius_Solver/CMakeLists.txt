@@ -1,19 +1,9 @@
 if(NOT MSVC)
 	set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS} -Wno-unused-variable")
 	set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} -Wno-unused-variable")
-else()
-	#set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
-	#set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 endif()
 
-include_directories("branchAndBound")
-include_directories("simplexe/lu")
-include_directories("presolve")
-include_directories("simplexe")
-include_directories("pne")
-include_directories("branchAndBound")
-include_directories("allocateur")
-include_directories("pointInterieur")
+
 
 set(RTESOLVER_PI
 		pointInterieur/pi_alloc_matrice.c
@@ -434,9 +424,29 @@ set(SRC_SOLVER
 	${RTESOLVER_MEM}
 )
 
-add_library(libsolver_antares STATIC  ${SRC_SOLVER})
+add_library(libsolver_antares  ${SRC_SOLVER})
+target_include_directories(libsolver_antares PUBLIC .)
+target_include_directories(libsolver_antares PUBLIC "branchAndBound")
+target_include_directories(libsolver_antares PUBLIC "simplexe/lu")
+target_include_directories(libsolver_antares PUBLIC "presolve")
+target_include_directories(libsolver_antares PUBLIC "simplexe")
+target_include_directories(libsolver_antares PUBLIC "pne")
+target_include_directories(libsolver_antares PUBLIC "branchAndBound")
+target_include_directories(libsolver_antares PUBLIC "allocateur")
+target_include_directories(libsolver_antares PUBLIC "pointInterieur")
 
-add_library(libsolver_antares-swap STATIC  ${SRC_SOLVER})
+add_library(libsolver_antares-swap  ${SRC_SOLVER})
+target_include_directories(libsolver_antares-swap PUBLIC .)
+
+target_include_directories(libsolver_antares-swap PUBLIC "branchAndBound")
+target_include_directories(libsolver_antares-swap PUBLIC "simplexe/lu")
+target_include_directories(libsolver_antares-swap PUBLIC "presolve")
+target_include_directories(libsolver_antares-swap PUBLIC "simplexe")
+target_include_directories(libsolver_antares-swap PUBLIC "pne")
+target_include_directories(libsolver_antares-swap PUBLIC "branchAndBound")
+target_include_directories(libsolver_antares-swap PUBLIC "allocateur")
+target_include_directories(libsolver_antares-swap PUBLIC "pointInterieur")
+
 
 set_target_properties(libsolver_antares-swap
 	PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")

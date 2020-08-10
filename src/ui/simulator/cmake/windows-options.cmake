@@ -13,6 +13,7 @@ set(SRC_UI_WINDOWS_OPTIONS
 	windows/options/advanced/advanced.h
 	windows/options/advanced/advanced.cpp
 )
-add_Library(libantares-ui-windows-options STATIC  ${SRC_UI_WINDOWS_OPTIONS})
+add_Library(libantares-ui-windows-options ${SRC_UI_WINDOWS_OPTIONS})
 
-target_link_libraries(libantares-ui-windows-options  ${wxWidgets_LIBRARIES})
+target_link_libraries(libantares-ui-windows-options PUBLIC ${wxWidgets_LIBRARIES})
+target_link_libraries(libantares-ui-windows-options PRIVATE libantares-ui-common)

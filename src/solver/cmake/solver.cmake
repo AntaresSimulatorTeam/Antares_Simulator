@@ -1,4 +1,5 @@
 
+#TODO : define flags with CMake way
 if(NOT MSVC)
 	set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS} -Wno-unused-variable")
 	set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} -Wno-unused-variable")
@@ -62,10 +63,12 @@ set(RTESOLVER_OPT
 set(SRC_MODEL
 	${RTESOLVER_OPT}
 )
-add_subdirectory("${PROJECT_SOURCE_DIR}/../ext/Sirius_Solver" "${PROJECT_SOURCE_DIR}/../ext/Sirius_Solver")
-add_library(libmodel_antares STATIC  ${SRC_MODEL})
 
-add_library(libmodel_antares-swap STATIC  ${SRC_MODEL})
+add_library(libmodel_antares ${SRC_MODEL})
+target_link_libraries(libmodel_antares PUBLIC libantares-core)
+
+add_library(libmodel_antares-swap ${SRC_MODEL})
+target_link_libraries(libmodel_antares-swap PUBLIC libantares-core-swap)
 
 set_target_properties(libmodel_antares-swap
 	PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")

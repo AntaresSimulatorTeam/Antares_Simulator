@@ -6,8 +6,8 @@ set(SRC_UI_WINDOWS_STARTUP_WIZARD
 	windows/proxy/proxysetup.cpp
 	windows/proxy/proxysetup.h
 )
-add_Library(libantares-ui-windows-startupwizard STATIC  ${SRC_UI_WINDOWS_STARTUP_WIZARD})
+add_Library(libantares-ui-windows-startupwizard ${SRC_UI_WINDOWS_STARTUP_WIZARD})
 
-target_link_libraries(libantares-ui-windows-startupwizard  ${wxWidgets_LIBRARIES} libantares-license)
-
-include_directories("${ANTARES_CURL_INCLUDE}")
+target_link_libraries(libantares-ui-windows-startupwizard PRIVATE ${wxWidgets_LIBRARIES})
+target_link_libraries(libantares-ui-windows-startupwizard PRIVATE libantares-license)
+target_link_libraries(libantares-ui-windows-startupwizard PRIVATE libantares-ui-common)

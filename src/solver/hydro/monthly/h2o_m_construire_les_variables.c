@@ -36,7 +36,7 @@ extern "C"
 {
 # endif
 
-# include "../ext/Sirius_Solver/simplexe/spx_constantes_externes.h"
+# include "simplexe/spx_constantes_externes.h"
 
 # ifdef __cplusplus
 }

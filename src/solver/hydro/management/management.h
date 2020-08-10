@@ -31,9 +31,17 @@
 # include <antares/study/fwd.h>
 # include <antares/mersenne-twister/mersenne-twister.h>
 
-
 namespace Antares
 {
+
+namespace Solver
+{
+	namespace Variable
+	{
+		class State;
+	}
+}
+
 
 	class HydroManagement final
 	{

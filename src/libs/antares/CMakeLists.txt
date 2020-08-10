@@ -1,10 +1,6 @@
 
 OMESSAGE("Antares Core library")
 
-
-
-
-
 set(SRC_MEMORY
 	memory/memory.h
 	memory/memory.hxx
@@ -270,10 +266,6 @@ set(SRC_STUDY_BINDING_CONSTRAINT
 	)
 source_group("study\\constraint" FILES ${SRC_STUDY_BINDING_CONSTRAINT})
 
-
-
-
-
 set(SRC_LOGS
 	logs.h
 	logs/logs.h
@@ -284,8 +276,6 @@ set(SRC_LOGS
 	)
 source_group("misc\\logs" FILES ${SRC_LOGS})
 
-include_directories("${ANTARES_OSSL_INCLUDE}")
-include_directories("${ANTARES_CURL_INCLUDE}")
 set(SRC_PROXY
 	proxy.h
 	proxy/proxy.h
@@ -330,7 +320,6 @@ set(SRC_IO
 	io/file.cpp
 	)
 source_group("io" FILES ${SRC_IO})
-	
 
 set(SRC_EXCEPTION
 	exception/AssertionError.cpp
@@ -479,23 +468,33 @@ set(SRC
 	# variable selection
 	study/variable-print-info.h
 	study/variable-print-info.cpp
-    
-    # Enum 
+
+    # Enum
     # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
     Enum.hpp
     Enum.hxx
 )
 
-add_library( libantares-core-calendar STATIC
+
+
+add_library( libantares-core-calendar
 	# separated target to reduce multiple unit compilations introduced by swap mode
 	date.h
 	date/date.h
 	date/date.cpp
 )
+#TODO : needed for include yuni : why yuni must be include first ???
+#TODO : needed for include
+target_include_directories(libantares-core-calendar
+		PRIVATE
+			${CMAKE_SOURCE_DIR}/ext/yuni/src/
+			${CMAKE_SOURCE_DIR}/libs
+		)
 
 macro(ADD_ANTARES_CORE name)
-	add_library(libantares-core${name} STATIC
+	add_library(libantares-core${name}
 		antares.h
+		${SRC}
 		${SRC_LOGS}
 		${SRC_MEMORY}
 		${SRC_OBJECT}
@@ -523,25 +522,31 @@ macro(ADD_ANTARES_CORE name)
 		${SRC_STUDY_SCENARIO_BUILDER}
         ${SRC_EXCEPTION}
         ${SRC_STDCXX}
-		${SRC}
 	)
+
+
+	#TODO : needed for include yuni : why yuni must be include first ??? cheat : made it public so everybody will have this include (should be done in yuni)
+	#TODO : needed for include
+	target_include_directories(libantares-core${name}
+			PUBLIC
+				${CMAKE_SOURCE_DIR}/ext/yuni/src
+				${CMAKE_SOURCE_DIR}/libs
+			)
+
 	target_link_libraries(libantares-core${name}
-		yuni-static-core
-		yuni-static-uuid
-		libantares-core-calendar
+		PUBLIC
+			yuni-static-core
+			yuni-static-uuid
+			libantares-license
+			libantares-core-calendar
+			libantares-solver-variable-info${name}
 		)
-
-	if(WIN32 OR WIN64)
-		target_link_libraries(libantares-core${exec_name} ole32 rpcrt4 ) # uuid
-	else()
-		target_link_libraries(libantares-core${exec_name} uuid)
-	endif()
-
 endmacro()
 
 ADD_ANTARES_CORE("")
 ADD_ANTARES_CORE("-swap")
 
+#Add specific swap support for libantares-core-swap
 set_target_properties(libantares-core-swap PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
 
 

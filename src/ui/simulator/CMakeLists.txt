@@ -1,15 +1,6 @@
 
-
-if(ANTARES_GUI)
-
+#Define executable name
 set(execname "antares-${ANTARES_PRG_VERSION}-ui-simulator")
-
-
-
-include_directories("../..")
-add_definitions(-DANTARES_GUI)
-add_definitions(-DWX_SUPPORT)
-
 
 # WxCore
 include("cmake/wxcore.cmake")
@@ -37,15 +28,8 @@ include("cmake/inputs.cmake")
 include("cmake/messages.cmake")
 include("cmake/resources.cmake")
 
-
-
-
-
-
-
+#define sources files
 set(SRCS
-		# wxWidgets
-		${wxWidgets_USE_FILE}
 		# Config
 		config.h
 
@@ -109,12 +93,13 @@ if(WIN32)
 	# Antares.rc
 	FILE(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/antares.o")
 	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/antares.rc.cmake"
-		"${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/antares.rc")
+		"${CMAKE_CURRENT_BINARY_DIR}/resources/win32/antares.rc")
 	# antares.manifest
 	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/manifest.cmake"
-		"${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/manifest.antares-win32.manifest")
+		"${CMAKE_CURRENT_BINARY_DIR}/resources/win32/manifest.antares-win32.manifest")
 
-
+        FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/antares.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/win32/")
+	
 	if(MINGW)
 		# resource compilation for mingw
 		add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/resources/win32/antares.o"
@@ -124,22 +109,13 @@ if(WIN32)
 			DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/antares.rc.cmake"
 			COMMENT "Generating the resource file...")
 		SET(SRCS ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/resources/win32/antares.o")
-
 	else()
-		SET(SRCS ${SRCS} "resources/win32/antares.rc")
+		SET(SRCS ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/resources/win32/antares.rc")
 	endif()
 endif()
 
-
-# For <antares/...>
-include_directories("../../libs")
-
-
-
-
 OMESSAGE("  :: application ${execname}")
 add_executable(${execname} WIN32 ${SRCS})
-
 
 set(ANTARES_LIBS
 		libantares-ui-application
@@ -168,30 +144,24 @@ set(ANTARES_LIBS
 		libantares-ui-common
 		libantares-solver-constraints-builder
 		libantares-solver-variable-info-swap
-		libantares-core-swap
+		libantares-core-swap #TODO : why no libantares-core ?
 		libantares-core-calendar
 		libantares-license
 		yuni-static-core
-		yuni-static-uuid
-		${wxWidgets_LIBRARIES}
-		${CMAKE_THREADS_LIBS_INIT}
+		yuni-static-uuid	
 	)
 
-		message(STATUS "wxWidgets: wxWidgets_LIBRARIES: 	${wxWidgets_LIBRARIES}")
-		message(STATUS "wxWidgets: CMAKE_THREADS_LIBS_INIT:     ${CMAKE_THREADS_LIBS_INIT}")
-	
-if(NOT MSVC)
 	target_link_libraries(${execname}
-		-Wl,--start-group ${ANTARES_LIBS} uuid dl ssh2 idn idn2 rt -Wl,--end-group)
-else()
-	# required for uuid
-	target_link_libraries(${execname} ${ANTARES_LIBS} ole32 rpcrt4)
-		
-endif()
+			PRIVATE
+				${ANTARES_LIBS}
+			)
+
+
+install(TARGETS ${execname} DESTINATION bin)
+
 
 import_std_libs(${execname})
 executable_strip(${execname})
-
 
 # Embedding the manifest file into the executable
 if(WIN32)
@@ -209,11 +179,22 @@ if(WIN32)
 			"-outputresource:antares.exe;1"
 			COMMENT "Embedding the manifest into the executable 'antares.exe'")
 	endif()
-	EMBED_MANIFEST(
-		"resources/win32/manifest.antares-win32.manifest"
-		"${execname}.exe")
+    #TODO : removed because macro doesn't work with CMake 3.x
+	#EMBED_MANIFEST(
+	#	"resources/win32/manifest.antares-win32.manifest"
+	#	"${execname}")
 endif()
 
+#Copy resources files
+FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/help/" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/help/")
+FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/images/" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/images/")
+FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/animations/" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/animations/")
+FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/icons/" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/icons/")
 
-endif(ANTARES_GUI)
+#resources are loaded from /usr/share/antares/ANTARES_VERSION/resources
+install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/help/" 	DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/help")
+install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/images/" 	DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/images")
+install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/animations/" 	DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/animations")
+install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/icons/" 	DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/icons")
+
 

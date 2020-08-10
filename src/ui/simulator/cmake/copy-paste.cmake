@@ -19,8 +19,9 @@ set(SRC_UI_COPYPASTE
 		toolbox/ext-source/action-panel.h
 		toolbox/ext-source/action-panel.cpp
 )
-add_Library(libantares-ui-copy-paste STATIC  ${SRC_UI_COPYPASTE})
+add_Library(libantares-ui-copy-paste ${SRC_UI_COPYPASTE})
 
 
-target_link_libraries(libantares-ui-copy-paste  ${wxWidgets_LIBRARIES})
+target_link_libraries(libantares-ui-copy-paste PRIVATE ${wxWidgets_LIBRARIES})
+target_link_libraries(libantares-ui-copy-paste PRIVATE libantares-ui-common)
 

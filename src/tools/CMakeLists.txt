@@ -1,10 +1,3 @@
-
-# The new ant library
-include_directories("../libs")
-
-
-
-
 add_subdirectory(batchrun)
 add_subdirectory(finder)
 add_subdirectory(updater)
