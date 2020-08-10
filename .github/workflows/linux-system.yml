@@ -3,7 +3,6 @@ name: Linux CI (system libs)
 on:
   push:
     branches:
-      - feature/cmake_build_dependency_option
       - develop
 jobs:
   build:
