@@ -30,12 +30,13 @@ target_include_directories(libantares-license
 target_link_libraries(libantares-license
 		PRIVATE
 			yuni-static-core
+		PUBLIC
+			${CURL_LIBRARIES}
 			${OPENSSL_LIBRARIES}
 			base64
-			${CURL_LIBRARIES}
 		)
 if(WIN32 OR WIN64)
-#VCPKG define CURL::libcurl / need to add ${CURL_LIBRARIES} in case of BUILD_DEPS option ON
+#VCPKG define CURL::libcurl
 target_link_libraries(libantares-license
 		PUBLIC
 			CURL::libcurl
