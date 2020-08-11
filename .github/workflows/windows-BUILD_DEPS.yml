@@ -27,7 +27,7 @@ jobs:
       run: |
            cmake --build _build --config release -j2
 
-   - name: Test
+    - name: Test
       run: |
            cd src
            cd _build
