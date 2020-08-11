@@ -1294,7 +1294,7 @@ namespace Antares
 
 		if (height and width)
 		{
-			Clob buffer;
+			Yuni::Clob buffer;
 
 			saveToBuffer(buffer, precision, print_dimensions, predicate);
 			Statistics::HasWrittenToDisk(buffer.size());
