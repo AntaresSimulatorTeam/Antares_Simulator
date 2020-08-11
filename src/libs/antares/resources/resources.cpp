@@ -67,6 +67,7 @@ namespace Resources
 			{
 				tmp.clear() << SearchPaths[i] << filename;
 				IO::Normalize(out, tmp);
+
 				if (IO::File::Exists(out))
 					return true;
 			}
@@ -163,7 +164,10 @@ namespace Resources
 			IO::Normalize(tt, p);
 			SearchPaths.push_back(tt);
 			# else
-			p.clear() << "/usr/share/antares/" << ANTARES_VERSION << "/resources";
+			p.clear() << "/usr/share/antares/" << ANTARES_VERSION << "/resources/";
+			SearchPaths.push_back(p);
+
+			p.clear() << RootFolder << SEP << "../share/antares/" << ANTARES_VERSION << "/resources/";
 			SearchPaths.push_back(p);
 			# endif
 

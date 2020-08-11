@@ -3,6 +3,7 @@ name: Windows CI (deps. compilation)
 on:
   push:
     branches:
+      - develop
       - feature/cmake_build_dependency_option
       - feature/ANT-457--cmake-with-ctest
 
@@ -14,40 +15,31 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest]
-        buildtype: [release]
 
     steps:
     - uses: actions/checkout@v2      
 
-    - name: Configuring with cmake
+    - name: Configure
       run: |
-           cd src
-           mkdir _build
-           cd _build
-           cmake -DCMAKE_BUILD_TYPE=release -DBUILD_DEPS=ON -DBUILD_TESTING=ON ..
+           cmake -B _build -S src -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release
 
-    - name: Building with cmake
+    - name: Build
       run: |
-           cd src
-           cd _build
-           cmake --build . --config release --parallel 4
+           cmake --build _build --config release -j2
 
-    - name: Test
+   - name: Test
       run: |
            cd src
            cd _build
-           ctest -C ${{ matrix.buildtype }} --output-on-failure
+           ctest -C Release --output-on-failure
 
     - name: Installer creation
       run: |
-           cd src
            cd _build
            cpack -GNSIS
            
-    - name: Installer creation
+    - name: Installer upload
       uses: actions/upload-artifact@v2
       with:
         name: antares-installer-64bits
-        path: src/_build/rte-antares-7.1.0-installer-64bits.exe          
-           
-
+        path: _build/rte-antares-*.*.*-installer-*.exe

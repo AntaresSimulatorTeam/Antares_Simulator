@@ -2,6 +2,63 @@
 =================
 
 
+v7.2.0 (06/2020)
+-------------------- 
+
+### Features
+
+ - Simulation dashboard: A new  "Geographic Trimming" option
+   is now available in the "Configure" menu. This option makes
+   it possible to  filter the simulation's output content so as
+   to include only results regarding Areas and Links of interest
+   
+ - Optimization:  a new parameter "Unfeasible Problems Behavior"
+   is available in the "advanced preferences" section of the 
+   "Configure" menu, with four possible values:	
+     (Error Dry, Error Verbose, Warning Dry, Warning Verbose)
+   The first two options make the simulation stop right after 
+   encountering the first mathematically unfeasible problem, if any
+   The last two options make the simulation skip all unfeasible 
+   problems, if any  
+   "Verbose" options print faulty problems in the “mps” format
+   "Dry" options only report the time frame (MC year, week) for which
+   an unfeasible problem was detected
+   
+ - Compilation and cmake tree :
+   Updates were made for more modern CMake use.
+   Git submodules (extern dependencies : curl, openssl, wxwidget) are no more in use.
+   These external dependencies can be retrieved :
+   - either from a library manager : vcpkg for Windows, classic package
+     repositories for Linux. With this way to proceed, an installation of external 
+     dependencies is required once for all.
+   - or thanks to an automatic download : at Antares' cmake configure step,
+     all needed downloads, compilation and installation are done.
+
+ - Unit tests :
+   unit tests around class Matrix are now available.
+   They can be compiled (on demand) during Antares' cmake build step
+   and run either with ctest or in the classic way.
+   Boost.Test is required and can be priorily retrieved and installed in the
+   same way as the other external dependencies.   
+ 
+ - Continuous integration : yaml files for github actions allow the run of
+   all build chain and unit tests on several environment (Windows and Ubuntu).
+   The 2 ways of getting external dependencies are also tested.
+   
+ - Documentation: updated reference guide
+   
+ - Usage metrics: added reference key for this version     
+    
+### Bug fixes
+
+ - GUI of the "Thematic trimming" option: Window size is naturally readjusted
+   to improve readability by upgrading wxwidgets (3.1.3 and above).
+   
+ - Auxiliary "Batchrun" tool: two options previously missing in the
+   command line syntax have been introduced and now make it possible
+   to launch a sequence of simulations to run in parallel
+
+
 v7.1.0 (12/2019)
 -------------------- 
 

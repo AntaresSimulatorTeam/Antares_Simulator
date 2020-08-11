@@ -17,6 +17,7 @@ endif(WIN32)
 
 set(execname "antares-${ANTARES_PRG_VERSION}-study-updater")
 add_executable(${execname}  ${SRCS})
+install(TARGETS ${execname} DESTINATION bin)
 
 set(UPDATER_LIBS
 		libantares-core
@@ -25,12 +26,10 @@ set(UPDATER_LIBS
 		${CMAKE_THREADS_LIBS_INIT}
 		)
 
-if (WIN32 OR WIN64)
-	target_link_libraries(${execname} PRIVATE ${UPDATER_LIBS})
-else()
-	target_link_libraries(${execname} PRIVATE -Wl,--start-group ${UPDATER_LIBS} -Wl,--end-group)
-endif()
-
+target_link_libraries(${execname}
+		PRIVATE
+			${UPDATER_LIBS}
+		)
 
 import_std_libs(${execname})
 executable_strip(${execname})

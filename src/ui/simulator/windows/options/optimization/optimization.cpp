@@ -40,16 +40,12 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
 namespace Window
 {
 namespace Options
 {
-
-
 	static void ResetButton(Component::Button* button, bool value)
 	{
 		assert(button != NULL);
@@ -288,6 +284,21 @@ namespace Options
 			pBtnExportMPS = button;
 		}
 
+		//Unfeasible problem behavior
+        {
+            label  = Component::CreateLabel(this, wxT("Unfeasible problem behavior"));
+
+			const Data::UnfeasibleProblemBehavior& defaultValue = Data::UnfeasibleProblemBehavior::ERROR_DRY;
+            button = new Component::Button(this, Data::getDisplayName(defaultValue), Data::getIcon(defaultValue));
+            button->SetBackgroundColour(bgColor);
+            button->menu(true);
+            onPopup.bind(this, &Optimization::onPopupMenuUnfeasibleBehavior);
+            button->onPopupMenu(onPopup);
+            s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+            s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+            pBtnUnfeasibleProblemBehavior = button;
+        }
+
 		// Simplex optimization range
 		{
 			label  = Component::CreateLabel(this, wxT("Simplex optimization range"));
@@ -389,6 +400,8 @@ namespace Options
 				study.parameters.include.exportMPS              = false;
 				study.parameters.simplexOptimizationRange       = Data::sorWeek;
 
+				study.parameters.include.unfeasibleProblemBehavior = Data::UnfeasibleProblemBehavior::ERROR_MPS;
+
 				refresh();
 				MarkTheStudyAsModified();
 				return;
@@ -434,6 +447,10 @@ namespace Options
 		// Export mps
 		ResetButtonSpecify(pBtnExportMPS, study.parameters.include.exportMPS);
 
+		//Unfeasible problem behavior
+		pBtnUnfeasibleProblemBehavior->image(Data::getIcon(study.parameters.include.unfeasibleProblemBehavior));
+		pBtnUnfeasibleProblemBehavior->caption(Data::getDisplayName(study.parameters.include.unfeasibleProblemBehavior));
+				
 		// Simplex Optimization Range
 		if (Data::sorDay == study.parameters.simplexOptimizationRange)
 		{
@@ -506,6 +523,40 @@ namespace Options
 		menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
 			wxCommandEventHandler(Optimization::onSelectTransCapInfinite), nullptr, this);
 	}
+
+    void Optimization::onPopupMenuUnfeasibleBehavior(Component::Button&, wxMenu& menu, void*)
+    {
+		//Warning dry
+		{
+			const Data::UnfeasibleProblemBehavior& value = Data::UnfeasibleProblemBehavior::WARNING_DRY;
+			wxMenuItem* it = Menu::CreateItem(&menu, wxID_ANY, Data::getDisplayName(value), Data::getIcon(value), wxEmptyString);
+			menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
+						 wxCommandEventHandler(Optimization::onSelectUnfeasibleBehaviorWarningDry), nullptr, this);
+		}
+        
+        //Warning mps
+		{
+			const Data::UnfeasibleProblemBehavior& value = Data::UnfeasibleProblemBehavior::WARNING_MPS;
+			wxMenuItem* it = Menu::CreateItem(&menu, wxID_ANY, Data::getDisplayName(value), Data::getIcon(value), wxEmptyString);
+			menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
+				wxCommandEventHandler(Optimization::onSelectUnfeasibleBehaviorWarningMps), nullptr, this);
+		}
+        //Error dry
+		{
+			const Data::UnfeasibleProblemBehavior& value = Data::UnfeasibleProblemBehavior::ERROR_DRY;
+			wxMenuItem* it = Menu::CreateItem(&menu, wxID_ANY, Data::getDisplayName(value), Data::getIcon(value), wxEmptyString);
+			menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
+				wxCommandEventHandler(Optimization::onSelectUnfeasibleBehaviorErrorDry), nullptr, this);
+		}
+
+        //Error mps
+		{
+			const Data::UnfeasibleProblemBehavior& value = Data::UnfeasibleProblemBehavior::ERROR_MPS;
+			wxMenuItem* it = Menu::CreateItem(&menu, wxID_ANY, Data::getDisplayName(value), Data::getIcon(value), wxEmptyString);
+			menu.Connect(it->GetId(), wxEVT_COMMAND_MENU_SELECTED,
+				wxCommandEventHandler(Optimization::onSelectUnfeasibleBehaviorErrorMps), nullptr, this);
+		}
+    }
 
 
 	void Optimization::onSelectModeInclude(wxCommandEvent&)
@@ -649,8 +700,39 @@ namespace Options
 		}
 	}
 
+	void Optimization::onSelectUnfeasibleBehavior(const  Data::UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
+	{
+		auto study = Data::Study::Current::Get();
+		if (!(!study))
+		{
+			if (study->parameters.include.unfeasibleProblemBehavior != unfeasibleProblemBehavior)
+			{
+				study->parameters.include.unfeasibleProblemBehavior = unfeasibleProblemBehavior;
+				refresh();
+				MarkTheStudyAsModified();
+			}
+		}
+	}
 
+    void Optimization::onSelectUnfeasibleBehaviorWarningDry(wxCommandEvent& )
+    {
+		onSelectUnfeasibleBehavior(Data::UnfeasibleProblemBehavior::WARNING_DRY);
+    }
 
+    void Optimization::onSelectUnfeasibleBehaviorWarningMps(wxCommandEvent& )
+    {
+		onSelectUnfeasibleBehavior(Data::UnfeasibleProblemBehavior::WARNING_MPS);
+    }
+
+    void Optimization::onSelectUnfeasibleBehaviorErrorDry(wxCommandEvent& )
+    {
+		onSelectUnfeasibleBehavior(Data::UnfeasibleProblemBehavior::ERROR_DRY);
+    }
+
+    void Optimization::onSelectUnfeasibleBehaviorErrorMps(wxCommandEvent& )
+    {
+		onSelectUnfeasibleBehavior(Data::UnfeasibleProblemBehavior::ERROR_MPS);
+    }
 
 } // namespace Options
 } // namespace Window

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 
 # Version
 set(ANTARES_VERSION_HI	      7)
-set(ANTARES_VERSION_LO	      1)
+set(ANTARES_VERSION_LO	      2)
 set(ANTARES_VERSION_REVISION  0)
 set(ANTARES_VERSION_YEAR      2019)
 
@@ -46,7 +46,10 @@ endif()
 if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
 	set(ANTARES_TARGET "${CMAKE_BUILD_TYPE}")
 else()
+	#Define CMAKE_BUILD_TYPE as Debug for external library use
 	set(CMAKE_BUILD_TYPE "Debug")
+
+	#TODO : Antares Target is debug instead of Debug YUNI and Antares CMakeLists.txt to be reviewed to change debug to Debug
 	set(ANTARES_TARGET  "debug")
 endif()
 
@@ -138,6 +141,9 @@ endif()
 
 # TODO : removed to be confirmed : old fashion CMake All libraries will be stored in /bin directory
 #set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/${YUNI_TARGET_MODE})
+
+option(BUILD_UI "Build antares ui simulator" ON)
+message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 
 option(BUILD_DEPS "Build all dependencies" OFF)
 message(STATUS "Build all dependencies: ${BUILD_DEPS}")
@@ -242,7 +248,11 @@ OMESSAGE("") # empty line
 # Sub Directories
 add_subdirectory(libs) 		#antares-core fswalker
 add_subdirectory(internet) 	#libantares-license base64 keys
-add_subdirectory(ui)		#all antares ui libs + antares simulator
+
+if(BUILD_UI)
+	add_subdirectory(ui)		#all antares ui libs + antares simulator
+endif()
+
 add_subdirectory(solver)	#antares solver and all associated libs
 add_subdirectory(analyzer)	#antares analyser
 
@@ -266,7 +276,6 @@ if(BUILD_TESTING)
 		
 	add_subdirectory(tests)
 endif()
-
 
 OMESSAGE("")
 
@@ -312,12 +321,26 @@ if(WIN32 OR WIN64)
 		@ONLY
 	)
 	
-	#TODO : get package name from CMake and antares variables
-	set(CPACK_PACKAGE_FILE_NAME "rte-antares-7.1.0-installer-64bits")
-	OMESSAGE("CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_FILE_NAME}")
-	# Load packaging facilities.
+	#Set package name from CMake and antares variables
+	set(CPACK_PACKAGE_FILE_NAME "rte-antares-${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}-installer-${ANTARES_INSTALLER_ARCH}")
+    
+	#Load packaging facilities.
 	include(CPack)
 else()
+
+	#For now only test deb, need to define several CPACK variable
+	set(CPACK_PROJECT_NAME "antares-deb-test")
+	set(CPACK_DEBIAN_PACKAGE_MAINTAINER "RTE")
+	set(CPACK_DEBIAN_PACKAGE_NAME "antares")
+	set(CPACK_PACKAGE_VERSION_MAJOR ${ANTARES_VERSION_HI})
+	set(CPACK_PACKAGE_VERSION_MINOR ${ANTARES_VERSION_LO})
+	set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION})
+
+	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libuuid1, libcurl4, libwxgtk3.0")
+
 	configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
+
+	# Load packaging facilities.
+	include(CPack)
 endif()
 

@@ -151,8 +151,13 @@ set(ANTARES_LIBS
 		yuni-static-uuid	
 	)
 
-	target_link_libraries(${execname} PRIVATE ${ANTARES_LIBS})
+	target_link_libraries(${execname}
+			PRIVATE
+				${ANTARES_LIBS}
+			)
 
+
+install(TARGETS ${execname} DESTINATION bin)
 
 
 import_std_libs(${execname})
@@ -185,4 +190,11 @@ FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/help/" DESTINATION "${CMAKE_CUR
 FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/images/" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/images/")
 FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/animations/" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/animations/")
 FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/icons/" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/icons/")
+
+#resources are loaded from /usr/share/antares/ANTARES_VERSION/resources
+install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/help/" 	DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/help")
+install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/images/" 	DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/images")
+install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/animations/" 	DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/animations")
+install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/icons/" 	DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/icons")
+
 

@@ -76,7 +76,7 @@ namespace Simulation
 					Variable::State& state, 
 					uint numSpace,
 					yearRandomNumbers & randomForYear,
-					uint & failedWeek
+					std::list<uint> & failedWeekList
 				 );
 		void simulationEnd();
 

@@ -32,7 +32,7 @@
 # include "../simulation/sim_structure_donnees.h"
 
 
-bool OPT_OptimisationHebdomadaire( PROBLEME_HEBDO *, uint);
+void OPT_OptimisationHebdomadaire( PROBLEME_HEBDO *, uint);
 void OPT_NumeroDeJourDuPasDeTemps( PROBLEME_HEBDO * );
 void OPT_NumeroDIntervalleOptimiseDuPasDeTemps( PROBLEME_HEBDO * );
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire( PROBLEME_HEBDO * );

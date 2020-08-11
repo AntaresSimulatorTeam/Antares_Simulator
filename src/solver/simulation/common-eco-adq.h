@@ -99,7 +99,7 @@ namespace Simulation
 	** \param hourInYear The hour in the year of the first hour in the current week
 	** \param nbHours The number of hour for a week
 	*/
-	bool RemixHydroForAllAreas(const Data::Study& study, PROBLEME_HEBDO& problem, uint numSpace, uint hourInYear, uint nbHours);
+	void RemixHydroForAllAreas(const Data::Study& study, PROBLEME_HEBDO& problem, uint numSpace, uint hourInYear, uint nbHours);
 
 	/*
 	** \brief Computing levels from hydro generation, natural and pumping inflows
@@ -117,7 +117,7 @@ namespace Simulation
 	** \param hourInYear The hour in the year of the first hour in the current week
 	** \param nbHours The number of hour for a week
 	*/
-	bool DispatchableMarginForAllAreas(	const Data::Study& study,
+	void DispatchableMarginForAllAreas(	const Data::Study& study,
 										PROBLEME_HEBDO& problem, 
 										uint numSpace,
 										uint hourInYear, 

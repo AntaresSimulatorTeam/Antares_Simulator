@@ -53,16 +53,16 @@ if(WIN32 OR WIN64)
 	#Need to create curl include install dir for correct installation
 	file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/install/include/curl")
 	
-	#TODO : define VC version for now hard coded with VC=14
+	#TODO : define VC version, at the moment it is hard coded with VC=14
 	#TODO : see for better WITH_PREFIX use
 
 	#Remarks : WITH_PREFIX compile option must use \ (backslash). Need to add multiple backslash because two backslashes (\\1) are required in CMake code to get a backslash through argument parsing
-	#We need 4 backslash because the BUILD_COMMAND option is passed to build_git_dependency then to another function inside
+	#We need 4 backslash because the BUILD_COMMAND option is passed to build_git_dependency then to another function inside: 
 
 	set(BUILD_CALL "cd <SOURCE_DIR>/winbuild COMMAND nmake Makefile.vc mode=static VC=14 WITH_SSL=static WITH_DEVEL=${CMAKE_CURRENT_BINARY_DIR}/install/ WITH_PREFIX=..\\\\..\\\\..\\\\install ENABLE_SSPI=no ENABLE_IDN=no ENABLE_WINSSL=no GEN_PDB=no DEBUG=no MACHINE=x64")
 	
-	#No install command, done with WITH_PREFIX compile option
-	set(INSTALL_CALL "echo libcurl installation done with WITH_PREFIX compile option")
+	#No install command; the install is done using WITH_PREFIX compile option
+	set(INSTALL_CALL "echo libcurl installation is done with WITH_PREFIX compile option")
 	
 else()
 	set(CONFIGURE_CALL 	"sh <SOURCE_DIR>/buildconf COMMAND <SOURCE_DIR>/configure --disable-shared --enable-static --without-libidn --prefix=${CMAKE_CURRENT_BINARY_DIR}/install/")	
@@ -88,7 +88,7 @@ build_git_dependency(
   )
   
 if(WIN32 OR WIN64)
-    #Need to rename libcurl_a.lib to libcurl.lib for find_package(CURL)
+    #We need to rename libcurl_a.lib to libcurl.lib for find_package(CURL)
     file(RENAME ${CMAKE_CURRENT_BINARY_DIR}/install/lib/libcurl_a.lib ${CMAKE_CURRENT_BINARY_DIR}/install/lib/libcurl.lib)
 endif()
   

@@ -28,6 +28,8 @@ endif(WIN32)
 set(execname "antares-${ANTARES_PRG_VERSION}-batchrun")
 add_executable(${execname} ${SRCS})
 
+install(TARGETS ${execname} DESTINATION bin)
+
 set(BATCHRUN_LIBS
 		libantares-core
 		libantares-core-calendar
@@ -36,15 +38,10 @@ set(BATCHRUN_LIBS
 		${CMAKE_THREADS_LIBS_INIT}
 )
 
-if (WIN32 OR WIN64)
-	target_link_libraries(${execname} PRIVATE ${BATCHRUN_LIBS})
-else()
-	target_link_libraries(${execname} PRIVATE
-		-Wl,--start-group
-		${BATCHRUN_LIBS}
-		-Wl,--end-group)
-endif()
-
+target_link_libraries(${execname}
+		PRIVATE
+			${BATCHRUN_LIBS}
+		)
 
 import_std_libs(${execname})
 executable_strip(${execname})

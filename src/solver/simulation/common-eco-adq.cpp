@@ -30,6 +30,8 @@
 #include <antares/study/study.h>
 #include <antares/study/area/scratchpad.h>
 #include <antares/study/memory-usage.h>
+#include <antares/exception/UnfeasibleProblemError.hpp>
+
 #include "common-eco-adq.h"
 #include <antares/logs.h>
 #include <cassert>
@@ -84,12 +86,15 @@ namespace Simulation
 			}
 		}
 
-		if (not OPT_OptimisationHebdomadaire(&problem, 0))
+		try
 		{
-			
-			
-			study.runtime->quadraticOptimizationHasFailed = true;
+			OPT_OptimisationHebdomadaire(&problem, 0);
 		}
+		catch (Data::UnfeasibleProblemError& ex)
+		{
+			study.runtime->quadraticOptimizationHasFailed = true;
+		}	
+		
 
 		for (uint i = 0; i < (uint) problem.NombreDePasDeTemps; ++i)
 		{

@@ -3,6 +3,7 @@ name: Windows CI (VCPKG)
 on:
   push:
     branches:
+      - develop
       - feature/cmake_build_dependency_option
       - feature/ANT-457--cmake-with-ctest
 
@@ -19,7 +20,7 @@ jobs:
           - os: windows-latest
             triplet: x64-windows
             vcpkgCommitId: 'ee17a685087a6886e5681e355d36cd784f0dd2c8'
-            vcpkgPackages: openssl curl wxwidgets boost-test
+            vcpkgPackages: openssl curl wxwidgets
 
     steps:
     - uses: actions/checkout@v2 
@@ -32,24 +33,31 @@ jobs:
         vcpkgTriplet: '${{ matrix.triplet }}'
         vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
         vcpkgGitCommitId: '${{ matrix.vcpkgCommitId }}'
+          
+    - name: Prints output of run-vcpkg's task
+      run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_TRIPLET_OUT }}' "
         
-    - name: Configuring with CMake
+    - name: Configure
       run: |
-           cd src
-           mkdir _build
-           cd _build
-           cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DBUILD_TESTING=ON ..
-
-    - name: Building with cmake
+           cmake -B _build -S src -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release 
+    
+    - name: Build
       run: |
-           cd src
-           cd _build
-           cmake --build . --config release --parallel 4
+           cmake --build _build --config release -j2
 
     - name: Running unit tests
       run: |
            cd src
            cd _build
            ctest -C ${{ matrix.buildtype }} --output-on-failure
-
-
+           
+    - name: Installer creation
+      run: |
+           cd _build
+           cpack -GNSIS
+           
+    - name: Installer upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: antares-installer-64bits
+        path: _build/rte-antares-*.*.*-installer-*.exe

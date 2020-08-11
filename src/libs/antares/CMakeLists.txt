@@ -24,8 +24,6 @@ source_group("object" FILES ${SRC_OBJECT})
 set(SRC_MATRIX
 	array/array1d.h
 	array/array1d.cpp
-	array/matrix-to-buffer.h
-	array/matrix-to-buffer.hxx
 	array/matrix.h
 	array/matrix.cpp
 	array/matrix.hxx
@@ -245,6 +243,9 @@ set(SRC_STUDY_PARAMETERS
 	study/parameters.h
 	study/parameters.hxx
 	study/parameters.cpp
+	study/UnfeasibleProblemBehavior.cpp
+    # TODO JMK : should be in a target_include_directories : but need to remove all .h from all SRC
+    study/UnfeasibleProblemBehavior.hpp
 	)
 source_group("study\\general data" FILES ${SRC_STUDY_PARAMETERS})
 
@@ -319,6 +320,23 @@ set(SRC_IO
 	io/file.cpp
 	)
 source_group("io" FILES ${SRC_IO})
+
+set(SRC_EXCEPTION
+	exception/AssertionError.cpp
+    # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
+	exception/AssertionError.hpp
+	exception/UnfeasibleProblemError.cpp
+    # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
+	exception/UnfeasibleProblemError.hpp
+	)
+source_group("exception" FILES ${SRC_EXCEPTION})
+
+set(SRC_STDCXX
+	stdcxx/demangle.cpp
+    # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
+	stdcxx/demangle.hpp
+	)
+source_group("stdcxx" FILES ${SRC_STDCXX})
 
 set(SRC
 	config.h  constants.h
@@ -450,26 +468,32 @@ set(SRC
 	# variable selection
 	study/variable-print-info.h
 	study/variable-print-info.cpp
+
+    # Enum
+    # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
+    Enum.hpp
+    Enum.hxx
 )
 
 
 
-
-add_library( libantares-core-calendar 
+add_library( libantares-core-calendar
 	# separated target to reduce multiple unit compilations introduced by swap mode
 	date.h
 	date/date.h
 	date/date.cpp
 )
-#TODO : needed for include yuni : why yuni must be include first ??? 
-target_include_directories(libantares-core-calendar PRIVATE ../../ext/yuni/src/)
-
-
+#TODO : needed for include yuni : why yuni must be include first ???
+#TODO : needed for include
+target_include_directories(libantares-core-calendar
+		PRIVATE
+			${CMAKE_SOURCE_DIR}/ext/yuni/src/
+			${CMAKE_SOURCE_DIR}/libs
+		)
 
 macro(ADD_ANTARES_CORE name)
 	add_library(libantares-core${name}
 		antares.h
-		${SRC_STUDY_PARAMETERS}
 		${SRC}
 		${SRC_LOGS}
 		${SRC_MEMORY}
@@ -489,28 +513,33 @@ macro(ADD_ANTARES_CORE name)
 		${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_LINK}
 		${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_CONSTRAINT}
 		${SRC_STUDY_UI}
+		${SRC_STUDY_PARAMETERS}
 		${SRC_STUDY_FINDER}
 		${SRC_STUDY_BINDING_CONSTRAINT}
 		${SRC_STUDY_PART_WIND}
 		${SRC_STUDY_PART_HYDRO}
 		${SRC_STUDY_PART_THERMAL}
-		${SRC_STUDY_SCENARIO_BUILDER}		
+		${SRC_STUDY_SCENARIO_BUILDER}
+        ${SRC_EXCEPTION}
+        ${SRC_STDCXX}
 	)
 
 
 	#TODO : needed for include yuni : why yuni must be include first ??? cheat : made it public so everybody will have this include (should be done in yuni)
-	target_include_directories(libantares-core${name} PUBLIC ../../ext/yuni/src)
+	#TODO : needed for include
+	target_include_directories(libantares-core${name}
+			PUBLIC
+				${CMAKE_SOURCE_DIR}/ext/yuni/src
+				${CMAKE_SOURCE_DIR}/libs
+			)
 
-	#TODO : needed for include 
-	target_include_directories(libantares-core${name} PUBLIC ../../libs)
-	
 	target_link_libraries(libantares-core${name}
 		PUBLIC
-		yuni-static-core
-		yuni-static-uuid
-		libantares-license
-		libantares-core-calendar
-		libantares-solver-variable-info${name}
+			yuni-static-core
+			yuni-static-uuid
+			libantares-license
+			libantares-core-calendar
+			libantares-solver-variable-info${name}
 		)
 endmacro()
 

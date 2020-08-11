@@ -67,8 +67,7 @@ namespace Solver
 namespace Simulation
 {
 
-
-	bool DispatchableMarginForAllAreas(	const Data::Study& study, 
+	void DispatchableMarginForAllAreas(	const Data::Study& study, 
 										PROBLEME_HEBDO& problem,
 										uint numSpace,
 										uint hourInYear, 
@@ -108,7 +107,6 @@ namespace Simulation
 				}
 			}
 		});
-		return true;
 	}
 
 

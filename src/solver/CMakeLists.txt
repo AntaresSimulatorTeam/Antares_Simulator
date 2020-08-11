@@ -44,6 +44,7 @@ macro(solver_app name swap)
 	else()
 		OMESSAGE("  :: application ${name}")
 	endif()
+
 	set(exec_name "antares-${ANTARES_PRG_VERSION}-solver")
 	if(${swap})
 		set(exec_name "${exec_name}-swap")
@@ -78,11 +79,6 @@ macro(solver_app name swap)
 		${CMAKE_THREADS_LIBS_INIT}
 	)
 
-	#TODO : check for windows
-	if(WIN32)
-		set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS} wsock32)
-	endif()
-
 	if(${swap})
 		set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
 			libantares-solver-main-economy-swap
@@ -112,7 +108,10 @@ macro(solver_app name swap)
 			libantares-core)
 	endif()
 
-	target_link_libraries(${exec_name} PRIVATE ${ANTARES_SOLVER_LIBS})
+	target_link_libraries(${exec_name}
+			PRIVATE
+				${ANTARES_SOLVER_LIBS}
+			)
 	
 	import_std_libs(${exec_name})
 	executable_strip(${exec_name})
@@ -121,4 +120,8 @@ endmacro()
 
 solver_app("solver"      false)
 solver_app("solver-swap" true)
+
+#TODO : not working inside macro
+install(TARGETS "antares-${ANTARES_PRG_VERSION}-solver" DESTINATION bin)
+install(TARGETS "antares-${ANTARES_PRG_VERSION}-solver-swap" DESTINATION bin)
 
