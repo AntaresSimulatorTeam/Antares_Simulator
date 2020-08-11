@@ -39,7 +39,6 @@
 #include <wx/statline.h>
 #include <wx/textctrl.h>
 #include <wx/dirdlg.h>
-#include <wx/generic/dirdlgg.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
 #include <wx/valtext.h>

@@ -1,0 +1,61 @@
+cmake_minimum_required(VERSION 3.5)
+
+project(boost_test)
+
+include(ExternalProject)
+
+# Useful directory settings
+set(BOOST_DEST @CMAKE_CURRENT_SOURCE_DIR@/boost)
+
+set(booststrap_script)
+set(b2)
+if (WIN32 OR WIN64)
+	set(booststrap_script	"./bootstrap.bat")
+	set(b2 "./b2.exe")
+else()
+	set(booststrap_script	"./bootstrap.sh")
+	set(b2 "./b2")
+endif()
+
+ExternalProject_Add(
+	boost-test-proj
+	SOURCE_DIR			"${BOOST_DEST}"
+	BINARY_DIR			"${BOOST_DEST}"
+
+	GIT_REPOSITORY "https://github.com/boostorg/boost.git"
+	GIT_TAG "boost-1.73.0"
+	GIT_SUBMODULES	tools/boost_install
+					tools/build
+					libs/config
+					libs/headers
+					libs/predef
+					libs/test
+					libs/type_traits
+					libs/function
+					libs/smart_ptr
+					libs/preprocessor
+					libs/core
+					libs/throw_exception
+					libs/assert
+					libs/utility
+					libs/integer
+					libs/detail
+					libs/static_assert
+					libs/move
+					libs/type_index
+					libs/container_hash
+					libs/bind
+					libs/io
+					libs/iterator
+					libs/mpl
+					libs/algorithm
+					libs/exception
+					libs/numeric/conversion
+					libs/range
+	
+	# We set the following commands content (even with an empty string) : otherwise a default non convenient command is run.
+	UPDATE_COMMAND		${booststrap_script}
+	CONFIGURE_COMMAND	""
+	BUILD_COMMAND		${b2} address-model=64 architecture=x86 link=static --prefix=. install
+	INSTALL_COMMAND		""
+)

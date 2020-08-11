@@ -28,7 +28,6 @@
 # define __ANTARES_LIBS_STUDY_RUNTIME_RUNTIME_INFOS_H__
 
 # include "../study.h"
-# include "../../../solver/variable/state.h"
 # include "../../mersenne-twister/mersenne-twister.h"
 
 

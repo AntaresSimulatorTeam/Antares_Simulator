@@ -58,16 +58,18 @@ set(SRC_MANAGEMENT
 
 
 macro(add_solver_hydro  suffix)
+
 	add_library(libantares-solver-hydro${suffix}
 		${SRC_EXT_SOLVER_H2O_DAILY}
 		${SRC_EXT_SOLVER_H2O_MONTHLY}
 		${SRC_EXT_SOLVER_H2O2_DAILY}
 		${SRC_MANAGEMENT} )
 
-	target_link_libraries(libantares-solver-hydro${suffix}
-#		libantares-rtesolver${suffix}
+	target_link_libraries(libantares-solver-hydro${suffix} 
+		PRIVATE
 		libmodel_antares${suffix} 
-		libsolver_antares${suffix})
+		libsolver_antares${suffix}
+		libantares-solver-variable${suffix})
 
 
 endmacro()

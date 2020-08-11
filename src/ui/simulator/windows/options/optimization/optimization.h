@@ -31,9 +31,11 @@
 # include "../../../toolbox/components/button.h"
 # include <wx/dialog.h>
 
+#include <antares/study/UnfeasibleProblemBehavior.hpp>
 
 namespace Antares
 {
+
 namespace Window
 {
 namespace Options
@@ -86,11 +88,19 @@ namespace Options
 		void onSelectLinkTypeLocal(wxCommandEvent& evt);
 		void onSelectLinkTypeAC(wxCommandEvent& evt);
 
+        void onSelectUnfeasibleBehaviorWarningDry(wxCommandEvent& evt);
+        void onSelectUnfeasibleBehaviorWarningMps(wxCommandEvent& evt);
+        void onSelectUnfeasibleBehaviorErrorDry(wxCommandEvent& evt);
+        void onSelectUnfeasibleBehaviorErrorMps(wxCommandEvent& evt);
+		void onSelectUnfeasibleBehavior(const Data::UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
+
+
 		void onPopupMenu(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
 		void onPopupMenuSimplex(Component::Button&, wxMenu& menu, void*);
 		void onPopupMenuSpecify(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
 		void onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*);
 		void onPopupMenuLinkType(Component::Button&, wxMenu& menu, void*);
+        void onPopupMenuUnfeasibleBehavior(Component::Button&, wxMenu& menu, void*);
 
 		void onInternalMotion(wxMouseEvent&);
 
@@ -108,8 +118,10 @@ namespace Options
 		Component::Button* pBtnSimplexOptimizationRange;
 
 		Component::Button* pBtnExportMPS;
+        Component::Button* pBtnUnfeasibleProblemBehavior;
 		bool* pTargetRef;
 
+		
 	}; // class Optimization
 
 

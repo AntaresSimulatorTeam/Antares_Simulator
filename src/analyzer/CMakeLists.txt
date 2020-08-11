@@ -1,13 +1,11 @@
 project(AntaresAnalyzer)
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
 include(../cmake/messages.cmake)
 OMESSAGE("antares-analyzer")
 
 include(../cmake/common-settings.cmake)
-
-
 
 
 # Le main
@@ -23,15 +21,10 @@ Set(SRCS 	main.cpp
 			)
 
 
-# The new ant library
-include_directories("..")
-
-
-
 if(WIN32)
 	file(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/win32/analyzer.o")
 	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/win32/analyzer.rc.cmake"
-		"${CMAKE_CURRENT_SOURCE_DIR}/win32/analyzer.rc")
+		"${CMAKE_CURRENT_BINARY_DIR}/win32/analyzer.rc")
 
 	if(MINGW)
 		# resource compilation for mingw
@@ -41,7 +34,8 @@ if(WIN32)
 			-o "${CMAKE_CURRENT_BINARY_DIR}/win32/analyzer.o")
 		SET(SRCS ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/win32/analyzer.o")
 	else(MINGW)
-		SET(SRCS ${SRCS} "win32/analyzer.rc")
+        FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/win32/analyzer.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/win32/")
+		SET(SRCS ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/win32/analyzer.rc")
 	endif(MINGW)
 endif(WIN32)
 
@@ -49,15 +43,13 @@ endif(WIN32)
 add_executable(antares-${ANTARES_PRG_VERSION}-analyzer  ${SRCS})
 
 target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer
-		libantares-license
-		libantares-core
-		libantares-core-calendar
-		yuni-static-core
-		${wxWidgets_LIBRARIES} ${CMAKE_THREADS_LIBS_INIT})
-if(NOT WIN32)
-	target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer z dl ssh2 idn idn2 rt)
-endif(NOT WIN32)
-
+		PRIVATE
+			libantares-license
+			libantares-core
+			libantares-core-calendar
+			yuni-static-core
+			${CMAKE_THREADS_LIBS_INIT}
+		)
 
 import_std_libs(antares-${ANTARES_PRG_VERSION}-analyzer)
 executable_strip(antares-${ANTARES_PRG_VERSION}-analyzer)

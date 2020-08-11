@@ -35,7 +35,7 @@
 # include "../gridhelper.h"
 # include "filter.h"
 # include <antares/date.h>
-# include "panel.h"
+# include "component/panel.h"
 
 
 

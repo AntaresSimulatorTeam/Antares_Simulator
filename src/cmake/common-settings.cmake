@@ -1,10 +1,3 @@
-
-# no RPATH at all
-#set(CMAKE_SKIP_RPATH true)
-#set(CMAKE_SKIP_BUILD_RPATH true)
-#set(CMAKE_BUILD_WITH_INSTALL_RPATH 0)
-
-
 #
 # Common FLAGS for all compilers
 #
@@ -53,8 +46,8 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "t
 	set(ANTARES_VERSION_TARGET "release")
 
 	if(NOT WIN32)
-		set(CMAKE_CXX_FLAGS_RELEASE "${COMMON_GCC_FLAGS} -flto -O3 -funroll-loops -frerun-cse-after-loop -frerun-loop-opt -finline-functions")
-		set(CMAKE_C_FLAGS_RELEASE   "${COMMON_GCC_FLAGS} -flto -O3 -funroll-loops -frerun-cse-after-loop -frerun-loop-opt -finline-functions ${ADDITIONAL_C_FLAGS}")
+		set(CMAKE_CXX_FLAGS_RELEASE "${COMMON_GCC_FLAGS} -O3 -funroll-loops -frerun-cse-after-loop -frerun-loop-opt -finline-functions")
+		set(CMAKE_C_FLAGS_RELEASE   "${COMMON_GCC_FLAGS} -O3 -funroll-loops -frerun-cse-after-loop -frerun-loop-opt -finline-functions ${ADDITIONAL_C_FLAGS}")
 	endif(NOT WIN32)
 	add_definitions("-DNDEBUG") # Remove asserts
 
@@ -78,7 +71,6 @@ else()
 	set(ANTARES_VERSION_TARGET "debug")
 	set(ANTARES_INSTALLER_EXTENSION "-debug")
 
-
 	if(NOT WIN32)
 
 		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_GCC_FLAGS} -g3 -ggdb3 -feliminate-unused-debug-symbols")
@@ -99,7 +91,7 @@ endif()
 
 
 
-
+#TODO : check these definitions
 # UNICODE
 if(WIN32 OR WIN64)
 	add_definitions("-DUNICODE")
@@ -109,8 +101,22 @@ endif()
 
 
 if(MSVC)
-	set(CMAKE_C_FLAGS_DEBUG   "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1")
-	set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1 /fp:except")
+	#Compile option must be updated if VPCKG static is used (can't mix different compile option)
+	if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
+		set(CMAKE_C_FLAGS_DEBUG   "${COMMON_MSVC_FLAGS} /MTd /GR /Ot /Od /EHsc /RTC1")
+		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_MSVC_FLAGS} /MTd /GR /Ot /Od /EHsc /RTC1 /fp:except")
+    else()
+		set(CMAKE_C_FLAGS_DEBUG   "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1")
+		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1 /fp:except")
+	endif()
+
+	if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
+		set(CMAKE_C_FLAGS_DEBUG   "${COMMON_MSVC_FLAGS} /MTd /GR /Ot /Od /EHsc /RTC1")
+		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_MSVC_FLAGS} /MTd /GR /Ot /Od /EHsc /RTC1 /fp:except")
+    else()
+		set(CMAKE_C_FLAGS_DEBUG   "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1")
+		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1 /fp:except")
+	endif()
 
 	# RELEASE
 	set(CMAKE_EXE_LINKER_FLAGS_RELEASE)
@@ -131,9 +137,14 @@ if(MSVC)
 	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /GS-")
 	# Intrinsic functions
 	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /Oi")
-	# Multithreaded DLL
-	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /MD")
 
+	# Multithreaded DLL
+	#Compile option must be updated if VPCKG static is used (can't mix different compile option)
+    if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
+	    set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /MT")
+    else()		
+	    set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /MD")
+    endif()
 
 	# linker: Link time code generation
 	#set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
@@ -174,14 +185,15 @@ if (NOT MSVC)
 	endif()
 endif()
 
+
+#TODO : check why theses definition  are needed
 if(WIN32)
 	add_definitions("-DANT_WINDOWS")
 	add_definitions("/D_CRT_SECURE_NO_WARNINGS")
 endif()
 
 # Thread safety
-add_definitions("-D_REENTRANT -DXUSE_MTSAFE_API -DCURL_STATICLIB")
-
+add_definitions("-D_REENTRANT -DXUSE_MTSAFE_API")
 
 # ICC Optimizations
 if (ICC)
@@ -191,38 +203,13 @@ if (ICC)
 endif()
 
 
-#
-# SQLite
-#
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/ext/sqlite/src")
-add_definitions("-DSQLITE_THREADSAFE=1")
-add_definitions("-D_LARGEFILE_SOURCE=1")
-
-
-#
-# Yuni
-#
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/ext/yuni/src")
-
-#
-# Antares libs
-#
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/libs")
-
-
-# wxWidgets
-# if(ANTARES_GUI)
-	# include("../FindWXWidgets.cmake")
-# endif()
-
-
-
+#TODO : check these macro
 macro(import_std_libs  TARGET)
 	if(MSVC10)
 		# WinSock
-		target_link_libraries(${TARGET}  wsock32.lib)
+		target_link_libraries(${TARGET} PRIVATE wsock32.lib)
 	elseif(WIN32)
-		target_link_libraries(${TARGET}  wsock32.lib legacy_stdio_definitions.lib)
+		target_link_libraries(${TARGET}  PRIVATE wsock32.lib legacy_stdio_definitions.lib)
 	endif()
 endmacro()
 
@@ -240,28 +227,6 @@ macro(executable_strip TARGET)
 		endif()
 	endif()
 endmacro()
-
-
-macro(library_strip TARGET)
-	if(NOT MSVC AND "${CMAKE_BUILD_TYPE}" STREQUAL "release")
-		if(WIN32)
-			add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_STRIP} ${TARGET}.dll
-				COMMENT "Stripping the library '${TARGET}.dll'")
-		else()
-			add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_STRIP} --strip-all lib${TARGET}.so
-				COMMENT "Stripping the library 'lib${TARGET}.so'")
-		endif()
-	endif()
-endmacro()
-
-
-
-if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
-	set(YUNI_FROM_ANTARES_CXX_FLAGS "${CMAKE_CXX_FLAGS_RELEASE}")
-else()
-	set(YUNI_FROM_ANTARES_CXX_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
-endif()
-
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_RELEASE}")

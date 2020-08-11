@@ -1,28 +1,24 @@
 
+#wxWidget required
+find_package(wxWidgets REQUIRED COMPONENTS net core base richtext propgrid aui adv html xml)
+include(${wxWidgets_USE_FILE})
 
-
-# Location where cmake first looks for cmake modules.
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
-
-
-set(ANTARES_GUI true)
-#include(../cmake/common-settings.cmake)
-include(../cmake/wxWidgets.cmake)
-
-#
-# Thanks to wx 2.8, which is not really a friend of gcc >=4.x ...
-#
-if(NOT MSVC)
-#	Set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-strict-aliasing")
-endif(NOT MSVC)
-
-# Swap support
+# TODO : remove ADD_DEFINITIONS Swap support
 ADD_DEFINITIONS("-DANTARES_SWAP_SUPPORT=1")
 
+# Add link library for static use of wxWidgets
+if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
 
-if(ANTARES_GUI)
-	add_subdirectory(common)
+	#Need to also manualy add find package
+	find_package(jpeg REQUIRED)
+	find_package(tiff REQUIRED)
+	find_package(png REQUIRED)
+	find_package(expat REQUIRED)
+
+    SET(wxWidgets_LIBRARIES ${wxWidgets_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARIES} ${TIFF_LIBRARIES} ${EXPAT_LIBRARIES})
+	
 endif()
 
-add_subdirectory(simulator)
+add_subdirectory(common)	#All UI libraries
+add_subdirectory(simulator)	#Simulator application
 

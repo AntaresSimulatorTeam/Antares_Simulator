@@ -1,64 +1,27 @@
-
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-PROJECT(PNE)
-
 OMESSAGE("Antares Solver")
 
-
-
-
+#TODO : see to add bigobj support
 
 if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
-else(MSVC)
-	link_libraries("m")
 endif(MSVC)
 
 
-
-
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/mps")
-include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/branchAndBound")
-include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/simplexe/lu")
-include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/presolve")
-include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/simplexe")
-include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/pne")
-include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/branchAndBound")
-include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/allocateur")
-include_directories("${CMAKE_SOURCE_DIR}/ext/Sirius_Solver/pointInterieur")
-
 include("cmake/solver.cmake")
 include("cmake/hydro.cmake")
-
-
 include("cmake/main.cmake")
 include("cmake/variable.cmake")
 include("cmake/randomness.cmake")
 include("cmake/simulation.cmake")
 include("cmake/ts-generator.cmake")
 include("cmake/constraints-builder.cmake")
-# Pour trouver les fonctions dans libs/*
-include_directories("../libs")
-
-
-
-#
-# Enable the whole capabilities of the solver
-#
-# As some old pieces of the solver use static variables for nothing
-# we use a define to remove those useful parts (for Antares)
-# Uncomment the define to re-enable then
-#
-#ADD_DEFINITIONS("-DSOLVER_DECLARE_ALL_SYMBOLS")
-
-
-
 
 #
 # Resource file for Windows
 #
 if(WIN32)
 	file(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/win32/solver.o")
+	FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/win32/solver.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/win32/")
 	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/win32/solver.rc.cmake"
 		"${CMAKE_CURRENT_SOURCE_DIR}/win32/solver.rc")
 
@@ -75,15 +38,13 @@ if(WIN32)
 endif()
 
 
-
-
-
 macro(solver_app name swap)
 	if(${swap})
 		OMESSAGE("  :: application ${name} (with swap support)")
 	else()
 		OMESSAGE("  :: application ${name}")
 	endif()
+
 	set(exec_name "antares-${ANTARES_PRG_VERSION}-solver")
 	if(${swap})
 		set(exec_name "${exec_name}-swap")
@@ -109,18 +70,14 @@ macro(solver_app name swap)
 		${SRCS}
 		main.h main.hxx main.cpp
 	)
-
-	set(ANTARES_SOLVER_LIBS
+	
+	set(ANTARES_SOLVER_LIBS		
 		libantares-core-calendar
 		libantares-license
-		yuni-static-core
 		yuni-static-uuid
+		yuni-static-core		
 		${CMAKE_THREADS_LIBS_INIT}
 	)
-
-	if(WIN32)
-		set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS} wsock32)
-	endif()
 
 	if(${swap})
 		set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
@@ -132,7 +89,6 @@ macro(solver_app name swap)
 			libantares-solver-variable-swap
 			libantares-solver-simulation-swap
 			libantares-solver-ts-generator-swap
-#			libantares-rtesolver-swap
 			libmodel_antares-swap
 			libsolver_antares-swap
 			libantares-core-swap)
@@ -147,29 +103,25 @@ macro(solver_app name swap)
 			libantares-solver-variable
 			libantares-solver-simulation
 			libantares-solver-ts-generator
-#			libantares-rtesolver
 			libmodel_antares 
 			libsolver_antares			
 			libantares-core)
 	endif()
 
-	if(NOT MSVC)
-		#-Wl,--start-group ${ANTARES_SOLVER_LIBS} -Wl,--end-group)
-		target_link_libraries(${exec_name} ${ANTARES_SOLVER_LIBS} uuid)
-		target_link_libraries(${exec_name}  z uuid dl ssh2 idn idn2 rt)
-	else()
-		target_link_libraries(${exec_name} ${ANTARES_SOLVER_LIBS})
-		target_link_libraries(${exec_name} ole32 rpcrt4) # uuid
-	endif()
-
+	target_link_libraries(${exec_name}
+			PRIVATE
+				${ANTARES_SOLVER_LIBS}
+			)
+	
 	import_std_libs(${exec_name})
 	executable_strip(${exec_name})
 
 endmacro()
 
-
-
-
 solver_app("solver"      false)
 solver_app("solver-swap" true)
+
+#TODO : not working inside macro
+install(TARGETS "antares-${ANTARES_PRG_VERSION}-solver" DESTINATION bin)
+install(TARGETS "antares-${ANTARES_PRG_VERSION}-solver-swap" DESTINATION bin)
 

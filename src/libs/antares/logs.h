@@ -27,6 +27,10 @@
 #ifndef __ANTARES_LIBS_LOGS_H__
 # define __ANTARES_LIBS_LOGS_H__
 
+#ifdef TESTING
+#include "logs/fake-logs.h"
+#else
 # include "logs/logs.h"
+#endif
 
 #endif /* __ANTARES_LIBS_LOGS_H__ */

@@ -27,6 +27,9 @@
 #ifndef __ANTARES_LIBS_JUST_IN_TIME_INFORMATIONS_HXX__
 # define __ANTARES_LIBS_JUST_IN_TIME_INFORMATIONS_HXX__
 
+#include "../logs.h"
+
+using namespace Antares;
 
 inline bool JIT::IsReady(JIT::Informations* j)
 {
@@ -46,7 +49,70 @@ inline void JIT::Informations::markAsModified()
 	alreadyLoaded = true;
 }
 
+using namespace Antares;
+
+template<class T, class ReadWriteT>
+void JIT::just_in_time_manager::clear_matrix(const Matrix<T, ReadWriteT>* mtx)
+{
+	JIT::MarkAsNotLoaded(jit_);
+
+	// Ugly const_cast but it is to preserve a good public Matrix class API :
+	auto * mtx_not_const = const_cast<Matrix<T, ReadWriteT>*>(mtx);
+	mtx_not_const->clear();
+}
+
+template<class T, class ReadWriteT>
+void JIT::just_in_time_manager::unload_matrix_properly_from_memory(const Matrix<T, ReadWriteT>* mtx)
+{
+	using namespace Antares;
+
+	auto* mtx_not_const = const_cast<Matrix<T, ReadWriteT>*>(mtx);
+
+	// - jit activated :
+	//		If JIT (Just-In-Time) is activated, we have to unload data to keep the memory for the solver.
+	//		The old width must only be kept when the matrix has fixed dimension.
+	//
+	// - JIT::enabled and jit not activated :
+	//		If the matrix is not ready for just-in-time (not activated), but JIT is enabled, like it would be the case 
+	//		from the GUI, we have to activate jit.
+	//		2 reasons for this :
+	//		- To reserve the memory for the study
+	//		- To reload data in case of preprocessor data have been written to
+	//		  the input folder
+
+	if (jit_ or JIT::enabled)
+	{
+		Yuni::String buffer = file_name_;
+		jit_ = JIT::Reset(jit_, buffer);
+		JIT::MarkAsNotLoaded(jit_);
+		jit_->minWidth = (0 != (jit_recorded_state()->options & Matrix<T, ReadWriteT>::optFixedSize)) ? 
+								jit_recorded_state()->minWidth : 1;
+		jit_->maxHeight = jit_recorded_state()->maxHeight;
+		jit_->options = jit_recorded_state()->options;
+		mtx_not_const->clear();
+	}
+}
 
 
+template<class T, class ReadWriteT>
+void JIT::just_in_time_manager::load_matrix(const Matrix<T, ReadWriteT>* mtx)
+{
+	if (not jit_->alreadyLoaded)
+	{
+		auto* mtx_not_const = const_cast<Matrix<T, ReadWriteT>*>(mtx);
+
+		logs.debug() << " Force loading of " << jit_->sourceFilename;
+		const bool modi = jit_->modified;
+
+		mtx_not_const->loadFromCSVFile(
+				jit_->sourceFilename, 
+				jit_->minWidth,
+				jit_->maxHeight,
+				jit_->options | Matrix<T, ReadWriteT>::optImmediate);
+
+		jit_->modified = modi;
+	}
+	jit_->loadDataIfNotAlreadyDone = false;
+}
 
 #endif // __ANTARES_LIBS_JUST_IN_TIME_INFORMATIONS_HXX__

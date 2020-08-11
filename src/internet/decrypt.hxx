@@ -32,6 +32,7 @@
 #include "base64/cdecode.h"
 #include <openssl/err.h>
 #include <openssl/ssl.h>
+#include <openssl/evp.h>
 
 #include <yuni/core/system/cpu.h>
 #include <yuni/core/system/memory.h>
@@ -100,9 +101,10 @@ namespace Antares {
 		template<class StringT>
 		static bool Encrypt(StringT& out, const AnyString& in, const EncryptionKey& key)
 		{
-			EVP_CIPHER_CTX ctx;
-			EVP_CIPHER_CTX_init(&ctx);
-			EVP_EncryptInit(&ctx, EVP_bf_cbc(), (const uchar*)key.key.c_str(), (const uchar*)key.iv.c_str());
+			EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
+			EVP_CIPHER_CTX_init(ctx);
+
+			EVP_EncryptInit(ctx, EVP_bf_cbc(), (const uchar*)key.key.c_str(), (const uchar*)key.iv.c_str());
 
 			enum
 			{
@@ -110,21 +112,21 @@ namespace Antares {
 			};
 			out.reserve(in.size() + paddingLength);
 			int olen;
-			if (EVP_EncryptUpdate(&ctx, (uchar*)out.data(), &olen, (const uchar*)in.c_str(), in.size()) == 1)
+			if (EVP_EncryptUpdate(ctx, (uchar*)out.data(), &olen, (const uchar*)in.c_str(), in.size()) == 1)
 			{
 				int tlen;
-				if (EVP_EncryptFinal(&ctx, (uchar*)out.data() + olen, &tlen) == 1)
+				if (EVP_EncryptFinal(ctx, (uchar*)out.data() + olen, &tlen) == 1)
 				{
 					olen += tlen;
 					assert((uint)olen < out.capacity());
 					out.resize(olen);
 
-					EVP_CIPHER_CTX_cleanup(&ctx);
+					EVP_CIPHER_CTX_free(ctx);
 					return true;
 				}
 			}
 
-			EVP_CIPHER_CTX_cleanup(&ctx);
+			EVP_CIPHER_CTX_free(ctx);
 			out.clear();
 			return false;
 		}
@@ -138,9 +140,9 @@ namespace Antares {
 				return true;
 			}
 
-			EVP_CIPHER_CTX ctx;
-			EVP_CIPHER_CTX_init(&ctx);
-			EVP_DecryptInit(&ctx, EVP_bf_cbc(), (const uchar*)key.key.c_str(), (const uchar*)key.iv.c_str());
+			EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
+			EVP_CIPHER_CTX_init(ctx);
+			EVP_DecryptInit(ctx, EVP_bf_cbc(), (const uchar*)key.key.c_str(), (const uchar*)key.iv.c_str());
 
 			enum
 			{
@@ -148,21 +150,21 @@ namespace Antares {
 			};
 			out.reserve(in.size() + paddingLength);
 			int olen;
-			if (EVP_DecryptUpdate(&ctx, (uchar*)out.data(), &olen, (const uchar*)in.c_str(), in.size()) == 1)
+			if (EVP_DecryptUpdate(ctx, (uchar*)out.data(), &olen, (const uchar*)in.c_str(), in.size()) == 1)
 			{
 				int tlen;
-				if (EVP_DecryptFinal(&ctx, (uchar*)out.data() + olen, &tlen) == 1)
+				if (EVP_DecryptFinal(ctx, (uchar*)out.data() + olen, &tlen) == 1)
 				{
 					olen += tlen;
 					assert((uint)olen < out.capacity());
 					out.resize(olen);
 
-					EVP_CIPHER_CTX_cleanup(&ctx);
+					EVP_CIPHER_CTX_free(ctx);
 					return true;
 				}
 			}
 
-			EVP_CIPHER_CTX_cleanup(&ctx);
+			EVP_CIPHER_CTX_free(ctx);
 			out.clear();
 			return false;
 		}

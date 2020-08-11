@@ -33,17 +33,11 @@
 # include "../logs.h"
 # include "../string-to-double.h"
 # include "../io/statistics.h"
+# include "matrix-to-buffer.h"
 
-
-# ifdef YUNI_OS_MSVC
-#	define ANTARES_MATRIX_SNPRINTF  sprintf_s
-# else
-#	define ANTARES_MATRIX_SNPRINTF  snprintf
-# endif
 
 # define ANTARES_MATRIX_CSV_COMMA      "\t;,"
 # define ANTARES_MATRIX_CSV_SEPARATORS "\t\r\n;,"
-
 
 
 
@@ -443,19 +437,19 @@ namespace Antares
 
 
 	template<class T, class ReadWriteT>
-	bool Matrix<T,ReadWriteT>::saveToCSVFile(const AnyString& filename, uint precision, bool addHint) const
+	bool Matrix<T,ReadWriteT>::saveToCSVFile(const AnyString& filename, uint precision, bool print_dimensions) const
 	{
 		PredicateIdentity predicate;
-		return internalSaveCSVFile(filename, precision, addHint, predicate);
+		return internalSaveCSVFile(filename, precision, print_dimensions, predicate);
 	}
 
 
 	template<class T, class ReadWriteT>
 	template<class PredicateT>
 	bool Matrix<T,ReadWriteT>::saveToCSVFile(const AnyString& filename, uint precision,
-		bool addHint, PredicateT& predicate) const
+		bool print_dimensions, PredicateT& predicate) const
 	{
-		return internalSaveCSVFile(filename, precision, addHint, predicate);
+		return internalSaveCSVFile(filename, precision, print_dimensions, predicate);
 	}
 
 
@@ -754,6 +748,7 @@ namespace Antares
 		size_t bom = 0;
 		if (not DetectEncoding(filename, data, bom))
 		{
+			// gp : dead code - can never be reached
 			reset((minWidth > 0 ? minWidth : 1), maxHeight);
 			return false;
 		}
@@ -779,6 +774,7 @@ namespace Antares
 				else
 					++maxHeight;
 			}
+			// gp : dead code - can never be reached
 			// The first occurence of the carriage return
 			YString::Size max = data.find('\n');
 			if (max == BufferType::npos)
@@ -902,6 +898,7 @@ namespace Antares
 							}
 							else
 							{
+								// gp : dead code - can never be reached
 								// Looking for the new matrix width
 								uint newOffset = offset;
 								uint newWidth = width + 1;
@@ -1076,7 +1073,7 @@ namespace Antares
 		if (not buffer)
 			buffer = new BufferType();
 
-		switch (IO::File::LoadFromFile(*buffer, filename, filesizeHardLimit))
+		switch (loadFromFileToBuffer(*buffer, filename, filesizeHardLimit))
 		{
 			case IO::errNone:
 				{
@@ -1084,7 +1081,7 @@ namespace Antares
 					if (buffer->empty())
 					{
 						if (maxHeight and minWidth)
-							reset((minWidth != 0 ? minWidth : 1), maxHeight);
+							reset((minWidth != 0 ? minWidth : 1), maxHeight); // gp : minWidth always != 0 here ==> Refactoring
 						else
 							clear();
 						result = true;
@@ -1168,122 +1165,6 @@ namespace Antares
 
 
 
-
-
-	namespace // anonymous
-	{
-
-		template<class T>
-		struct MatrixScalar
-		{
-			static inline void Append(Yuni::Clob& file, T v)
-			{
-				if (Yuni::Math::Zero(v))
-					file.append('0');
-				else
-					file.append(v);
-			}
-
-			static inline void Append(Yuni::Clob& file, T v, const char* const)
-			{
-				Append(file, v);
-			}
-		};
-
-
-		template<>
-		struct MatrixScalar<double>
-		{
-			static void Append(Yuni::Clob& file, double v)
-			{
-				if (Yuni::Math::Zero(v))
-				{
-					file += '0';
-				}
-				else
-				{
-					char ConversionBuffer[128];
-					const int sizePrintf = ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), "%.0f", v);
-
-					if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
-						file.write((const char*) ConversionBuffer, sizePrintf);
-					else
-						file += "ERR";
-				}
-			}
-
-			static void Append(Yuni::Clob& file, double v, const char* const format)
-			{
-				if (Yuni::Math::Zero(v))
-				{
-					file += '0';
-				}
-				else
-				{
-					char ConversionBuffer[128];
-					const int sizePrintf =
-						(Yuni::Math::Zero(v - floor(v)))
-						? ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), "%.0f", v)
-						: ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), format, v);
-
-					if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
-						file.write((const char*) ConversionBuffer, sizePrintf);
-					else
-						file += "ERR";
-				}
-			}
-		};
-
-
-		template<>
-		struct MatrixScalar<float>
-		{
-			static void Append(Yuni::Clob& file, float v)
-			{
-				if (Yuni::Math::Zero(v))
-				{
-					file += '0';
-				}
-				else
-				{
-					char ConversionBuffer[128];
-					const int sizePrintf = ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), "%.0f", (double)v);
-
-					if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
-						file.write((const char*) ConversionBuffer, sizePrintf);
-					else
-						file += "ERR";
-				}
-			}
-
-			static void Append(Yuni::Clob& file, float v, const char* const format)
-			{
-				if (Yuni::Math::Zero(v))
-				{
-					file += '0';
-				}
-				else
-				{
-					char ConversionBuffer[128];
-					const int sizePrintf =
-						(Yuni::Math::Zero(v - floor(v)))
-						? ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), "%.0f", (double)v)
-						: ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), format, (double)v);
-
-					if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
-						file.write((const char*) ConversionBuffer, sizePrintf);
-					else
-						file += "ERR";
-				}
-			}
-		};
-
-	} // anonymous namespace
-
-
-
-
-
 	template<class T, class ReadWriteT>
 	bool Matrix<T,ReadWriteT>::containsOnlyZero() const
 	{
@@ -1330,8 +1211,8 @@ namespace Antares
 
 	template<class T, class ReadWriteT>
 	template<class PredicateT>
-	void Matrix<T,ReadWriteT>::internalSaveToFileDescriptor(Yuni::Clob& data,
-		uint precision, bool addHint, PredicateT& predicate) const
+	void Matrix<T,ReadWriteT>::saveToBuffer(Yuni::Clob& data,
+		uint precision, bool print_dimensions, PredicateT& predicate) const
 	{
 		using namespace Yuni;
 		enum
@@ -1340,128 +1221,66 @@ namespace Antares
 			isDecimal = Static::Type::IsDecimal<ReadWriteType>::Yes,
 		};
 
-		if (not addHint and containsOnlyZero(predicate))
+		if (not print_dimensions and containsOnlyZero(predicate))
 			// Does nothing if the matrix only contains zero
 			return;
+		
+		matrix_to_buffer_dumper_factory mtx_to_buffer_dumper_factory(isDecimal, precision);
+
+		I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>* mtx_to_buffer_dpr =  
+			mtx_to_buffer_dumper_factory.get_dumper<T, ReadWriteT, PredicateT>(this, data, predicate);
 
 		// Determining the string format to use according the given precision
-		const char* format = nullptr;
-		if (isDecimal and precision)
-		{
-			static const char* const sfmt[] =
-			{
-				"%.0f",  "%.1f",  "%.2f", "%.3f",  "%.4f",  "%.5f",  "%.6f",
-				"%.7f",	 "%.8f",  "%.9f", "%.10f", "%.11f", "%.12f", "%.13f",
-				"%.14f", "%.15f", "%.16f",
-			};
-			assert(precision <= 16);
-			format = sfmt[precision];
-		}
+		mtx_to_buffer_dpr->set_print_format(isDecimal, precision);
 
-		// pre-allocate, should be enough in nearly all cases
-		// data.clear(), the buffer is already empty
-		data.reserve(width * height * 6); // average
+
+		// Pre-allocate memory in the buffer. It should be enough in nearly all cases.
+		data.reserve(width * height * 6);
 
 		// Adding a hint about the height of the matrix
-		if (addHint)
+		if (print_dimensions)
 			data << "size:" << width << 'x' << height << '\n';
 
-		if (width == 1)
-		{
-			if (not isDecimal or not precision)
-			{
-				for (uint y = 0; y != height; ++y)
-				{
-					MatrixScalar<ReadWriteT>::Append(data, (ReadWriteT) predicate(entry[0][y]));
-					data += '\n';
-				}
-			}
-			else
-			{
-				for (uint y = 0; y != height; ++y)
-				{
-					MatrixScalar<ReadWriteT>::Append(data, (ReadWriteT) predicate(entry[0][y]), format);
-					data += '\n';
-				}
-			}
-		}
-		else
-		{
-			if (not isDecimal or not precision)
-			{
-				for (uint y = 0; y < height; ++y)
-				{
-					MatrixScalar<ReadWriteT>::Append(data, (ReadWriteT) predicate(entry[0][y]));
-					for (uint x = 1; x < width; ++x)
-					{
-						data += '\t';
-						MatrixScalar<ReadWriteT>::Append(data, (ReadWriteT) predicate(entry[x][y]));
-					}
-					data += '\n';
-				}
-			}
-			else
-			{
-				for (uint y = 0; y != height; ++y)
-				{
-					MatrixScalar<ReadWriteT>::Append(data, (ReadWriteT) predicate(entry[0][y]), format);
-					for (uint x = 1; x < width; ++x)
-					{
-						data += '\t';
-						MatrixScalar<ReadWriteT>::Append(data, (ReadWriteT) predicate(entry[x][y]), format);
-					}
-					data += '\n';
-				}
-			}
-		}
+		mtx_to_buffer_dpr->run();
 	}
 
 
+	template<class T, class ReadWriteT>
+	bool Matrix<T, ReadWriteT>::openFile(Yuni::IO::File::Stream & file, const AnyString& filename) const
+	{
+		if (not file.openRW(filename))
+		{
+			logs.error() << "I/O error: " << filename << ": Impossible to write the file (not enough permission ?)";
+			return false;
+		}
+		return true;
+	}
 
+	template<class T, class ReadWriteT>
+	void Matrix<T, ReadWriteT>::saveBufferToFile(Yuni::Clob & buffer, Yuni::IO::File::Stream & f) const
+	{
+		f << buffer;
+	}
 
 	template<class T, class ReadWriteT>
 	template<class PredicateT>
 	bool Matrix<T,ReadWriteT>::internalSaveCSVFile(const AnyString& filename, uint precision,
-		bool addHint, PredicateT& predicate) const
+		bool print_dimensions, PredicateT& predicate) const
 	{
-		using namespace Yuni;
+		JIT::just_in_time_manager jit_mgr(jit, filename);
 
-		// Ugly const_cast but it is to preserve a good public API
-		auto& thisNotConst = const_cast<Matrix&>(*this);
+		jit_mgr.record_current_jit_state(width, height);
 
-		// Old values
-		// These values are _mandatory_ especially for empty matrices
-		uint oldOpts   = optNone;
-		uint oldWidth  = (width != 0) ? width : 1;
-		uint oldHeight = height;
-
-		if (jit)
+		if (jit_mgr.jit_activated() && jit_mgr.matrix_content_in_memory_is_same_as_on_disk())
 		{
-			oldOpts   = jit->options;
-			oldWidth  = jit->minWidth;
-			oldHeight = jit->maxHeight;
-
-			if (jit->loadDataIfNotAlreadyDone)
-			{
-				if (not jit->alreadyLoaded)
-				{
-					logs.debug() << " Force loading of " << jit->sourceFilename;
-					const bool modi = jit->modified;
-
-					thisNotConst.loadFromCSVFile(jit->sourceFilename, jit->minWidth, jit->maxHeight,
-						jit->options | Matrix<T,ReadWriteT>::optImmediate);
-					jit->modified = modi;
-				}
-				jit->loadDataIfNotAlreadyDone = false;
-			}
-			// No modification, we should avoid writting the file to HDD
-			if (not jit->modified)
-			{
-				JIT::MarkAsNotLoaded(jit);
-				thisNotConst.clear();
-				return true;
-			}
+			// No difference between actual matrix content in memory and matrix on disk, so we don't need to save on disk.
+			// Besides, as jit is on, we do not need it in memory, and matrix is cleared.
+			jit_mgr.clear_matrix(this);
+			return true;
 		}
+		
+		if (jit_mgr.jit_activated() && jit_mgr.do_we_force_matrix_load_from_disk())
+			jit_mgr.load_matrix(this);
 
 		# ifndef NDEBUG
 		// Attempt to open the file, and to write data
@@ -1469,29 +1288,18 @@ namespace Antares
 		logs.debug() << "  :: writing `" << filename << "' (" << width << 'x' << height << ')';
 		# endif
 
+		Yuni::IO::File::Stream file;
+		if (not openFile(file, filename))
+			return false;
+
 		if (height and width)
 		{
-			Clob data;
-			internalSaveToFileDescriptor(data, precision, addHint, predicate);
-			Statistics::HasWrittenToDisk(data.size());
+			Yuni::Clob buffer;
 
-			IO::File::Stream file;
-			if (not file.openRW(filename))
-			{
-				logs.error() << "I/O error: " << filename << ": Impossible to write the file (not enough permission ?)";
-				return false;
-			}
-			file << data;
-		}
-		else
-		{
-			IO::File::Stream file;
-			if (not file.openRW(filename))
-			{
-				logs.error() << "I/O error: " << filename << ": Impossible to write the file (not enough permission ?)";
-				return false;
-			}
-			// write nothing
+			saveToBuffer(buffer, precision, print_dimensions, predicate);
+			Statistics::HasWrittenToDisk(buffer.size());
+
+			saveBufferToFile(buffer, file);
 		}
 
 		// When the swap support is enabled, releasing some memory
@@ -1503,48 +1311,8 @@ namespace Antares
 		logs.debug() << "  :: [end] writing `" << filename << "' (" << width << 'x' << height << ')';
 		# endif
 
-		if (jit)
-		{
-			// The HIT mode must be enabled if a JIT structure is present
-			assert(JIT::enabled);
+		jit_mgr.unload_matrix_properly_from_memory(this);
 
-			// If JIT (Just-In-Time) is enabled, we have to unload data
-			// to keep the memory for the solver
-			// The old width must only be kept when the matrix has fixed dimension
-			String buffer = filename;
-			jit = JIT::Reset(jit, buffer);
-			JIT::MarkAsNotLoaded(jit);
-			jit->minWidth  = (0 != (oldOpts & optFixedSize)) ? oldWidth : 1;
-			jit->maxHeight = oldHeight;
-			jit->options   = oldOpts;
-			thisNotConst.clear();
-			return true;
-		}
-		else
-		{
-			// If the matrix is not ready for JIT, but the feature is enabled,
-			// like it would be the case from the interface, we have to make the
-			// matrix ready for JIT. Two reasons :
-			//  - To reserve the memory for the study
-			//  - To reload data in case of preprocessor data have been written to
-			//    the input folder
-			//
-			if (JIT::enabled)
-			{
-				// We have to use a temporary buffer
-				// To avoid undefined behavior when `filename` = `m->jit->sourceFilename`
-				// The old width must only be kept when the matrix has fixed dimension
-				String buffer = filename;
-				jit = JIT::Reset(jit, buffer);
-				//jit->minWidth  = oldWidth;
-				jit->minWidth  = (0 != (oldOpts & optFixedSize)) ? oldWidth : 1;
-				jit->maxHeight = oldHeight;
-				jit->options   = oldOpts;
-				thisNotConst.clear();
-				JIT::MarkAsNotLoaded(jit);
-				return true;
-			}
-		}
 		return true;
 	}
 
@@ -2037,9 +1805,6 @@ namespace Antares
 
 
 
-
 } // namespace Antares
-
-# undef ANTARES_MATRIX_SNPRINTF
 
 #endif // __ANTARES_LIBS_ARRAY_MATRIX_HXX__

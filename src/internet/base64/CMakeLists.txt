@@ -1,7 +1,7 @@
 
 
 
-add_library(base64 STATIC
+add_library(base64
 	cdecode.h
 	cencode.h
 	decode.h

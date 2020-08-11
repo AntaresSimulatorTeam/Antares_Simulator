@@ -17,13 +17,15 @@ set(SRCS
 if(WIN32)
 	FILE(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/win32/vacuum.o")
 	CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/win32/vacuum.rc.cmake"
-		"${CMAKE_CURRENT_SOURCE_DIR}/win32/vacuum.rc")
-	SET(SRCS ${SRCS} "win32/vacuum.rc")
+		"${CMAKE_CURRENT_BINARY_DIR}/win32/vacuum.rc")
+	FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/win32/vacuum.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/win32/")
+	SET(SRCS ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/win32/vacuum.rc")
 endif(WIN32)
 
 
 set(execname "antares-${ANTARES_PRG_VERSION}-vacuum")
 add_executable(${execname}  ${SRCS})
+install(TARGETS ${execname} DESTINATION bin)
 
 set(VACUUM_LIBS
 	libantares-core
@@ -33,12 +35,10 @@ set(VACUUM_LIBS
 	${CMAKE_THREADS_LIBS_INIT}
 )
 
-if (WIN32 OR WIN64)
-	target_link_libraries(${execname} ${VACUUM_LIBS})
-else()
-	target_link_libraries(${execname} -Wl,--start-group ${VACUUM_LIBS} -Wl,--end-group)
-endif()
-
+target_link_libraries(${execname}
+		PRIVATE
+			${VACUUM_LIBS}
+		)
 
 import_std_libs(${execname})
 executable_strip(${execname})

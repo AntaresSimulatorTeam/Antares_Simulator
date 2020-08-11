@@ -38,6 +38,7 @@
 #include "../daily2/h2o2_j_fonctions.h"
 #include "../../simulation/sim_extern_variables_globales.h"
 #include <cassert>
+#include <variable/state.h>
 
 using namespace Yuni;
 

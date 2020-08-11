@@ -31,6 +31,12 @@
 # include <yuni/core/string.h>
 
 
+namespace Antares
+{
+	template<class T, class ReadWriteT>
+	class Matrix;
+}
+
 class JIT final
 {
 public:
@@ -63,6 +69,35 @@ public:
 	*/
 	static bool IsReady(Informations* j);
 
+public:
+	class just_in_time_manager
+	{
+	public:
+		just_in_time_manager(JIT::Informations* jit, const AnyString filename) : 
+			jit_(jit),
+			file_name_(filename) 
+		{}
+		void record_current_jit_state(uint width, uint height);
+		inline JIT::Informations* jit_recorded_state() { return jit_record_; }
+		bool matrix_content_in_memory_is_same_as_on_disk() { return not jit_->modified; }
+		bool jit_activated() { return jit_; }
+		bool do_we_force_matrix_load_from_disk();
+
+		template<class T, class ReadWriteT>
+		void load_matrix(const Antares::Matrix<T, ReadWriteT>* mtx);
+		
+		template<class T, class ReadWriteT>
+		void clear_matrix(const Antares::Matrix<T, ReadWriteT> * mtx);
+
+		template<class T, class ReadWriteT>
+		void unload_matrix_properly_from_memory(const Antares::Matrix<T, ReadWriteT>* mtx);
+		~just_in_time_manager() { delete jit_record_; }
+
+	private:
+		JIT::Informations* jit_;
+		JIT::Informations* jit_record_;
+		AnyString file_name_;
+	};
 
 public:
 	/*!
