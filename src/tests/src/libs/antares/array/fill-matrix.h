@@ -9,6 +9,15 @@
 using namespace std;
 using namespace Antares;
 
+namespace Antares
+{
+	namespace Statistics
+	{
+		void HasWrittenToDisk(Yuni::uint64 size) {}
+	}
+}
+
+
 template<class T = double, class ReadWriteT = T>
 class Matrix_easy_to_fill : public Matrix<T, ReadWriteT>
 {

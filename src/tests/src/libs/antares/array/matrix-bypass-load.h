@@ -22,6 +22,14 @@ namespace Antares
 	}
 }
 
+namespace Antares
+{
+	namespace Statistics
+	{
+		void HasReadFromDisk(Yuni::uint64 size) {}
+	}
+}
+
 template<class T = double, class ReadWriteT = T>
 class Matrix_load_bypass : public Matrix_easy_to_fill<T, ReadWriteT>
 {
