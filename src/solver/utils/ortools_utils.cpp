@@ -96,7 +96,7 @@ MPSolver * convert_to_MPSolver(PROBLEME_SIMPLEXE * problemeSimplexe) {
     {
         solverType = MPSolver::SIRIUS_LINEAR_PROGRAMMING;
     }
-    else if (ortoolsSolverUsed == "clp")
+    else if (ortoolsSolverUsed == "coin")
     {
         solverType = MPSolver::CLP_LINEAR_PROGRAMMING;
     }
@@ -123,7 +123,7 @@ MPSolver * convert_to_MPSolver(PROBLEME_A_RESOUDRE * problemeAResoudre) {
     {
         solverType = MPSolver::SIRIUS_MIXED_INTEGER_PROGRAMMING;
     }
-    else if (ortoolsSolverUsed == "clp")
+    else if (ortoolsSolverUsed == "coin")
     {
         solverType = MPSolver::CBC_MIXED_INTEGER_PROGRAMMING;
     }
@@ -238,7 +238,7 @@ std::list<std::string> GetOrtoolsSolverNames() {
     std::list<std::string> solverList;
 
     solverList.push_back("sirius");
-    solverList.push_back("clp");
+    solverList.push_back("coin");
 
     return solverList;
 }
