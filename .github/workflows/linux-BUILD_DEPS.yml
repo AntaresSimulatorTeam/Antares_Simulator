@@ -34,7 +34,6 @@ jobs:
 
     - name: Runnning unit tests
       run: |
-           cd src
            cd _build
            ctest -C Release --output-on-failure
 
