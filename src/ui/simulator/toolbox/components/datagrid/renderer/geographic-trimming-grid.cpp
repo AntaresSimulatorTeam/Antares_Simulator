@@ -1,6 +1,6 @@
 #include "geographic-trimming-grid.h"
 #include <antares/study/filter.h>
-#include "../../../../windows/inspector.h"
+#include "windows/inspector.h"
 
 using namespace Yuni;
 

@@ -28,7 +28,7 @@
 #include "../main.h"
 #include "../study.h"
 #include "../../windows/options/temp-folder/temp-folder.h"
-#include "../../windows\options/geographic-trimming/geographic-trimming.h"
+#include "../../windows/options/geographic-trimming/geographic-trimming.h"
 #include "../../windows/options/select-output/select-output.h"
 #include "../../windows/options/playlist/playlist.h"
 #include "../../windows/options/optimization/optimization.h"

@@ -2,7 +2,7 @@
 # define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREAS_TRIMMING_GRID_H__
 
 # include "../renderer.h"
-# include "../../../../application/study.h"
+# include "application/study.h"
 # include <antares/study/fwd.h>
 
 using namespace Antares::Data;
