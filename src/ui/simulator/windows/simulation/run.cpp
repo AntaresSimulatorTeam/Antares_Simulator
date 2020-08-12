@@ -56,6 +56,7 @@
 #include "../../windows/message.h"
 #include "../../toolbox/system/diskfreespace.hxx"
 #include <antares/config.h>
+#include <antares/Enum.hpp>
 
 #include <solver/utils/ortools_utils.h>
 
@@ -321,18 +322,31 @@ namespace Simulation
 		pFeatureIndex = 0;
 
 		//Ortools use
-		auto* ortoolsCheckBox = new wxCheckBox (pBigDaddy,wxID_ANY, wxT(""));
-        gridAppend(*s, wxT("Ortools use : "), ortoolsCheckBox);
-        pOrtoolsCheckBox = ortoolsCheckBox;
-
-        //Ortools solver
-        pOrtoolsSolverCombox = new wxComboBox(pBigDaddy, wxID_ANY);
-        std::list<std::string> ortoolsSolverList = GetOrtoolsSolverNames();
-        for (const std::string& ortoolsSolver : ortoolsSolverList)
         {
-            pOrtoolsSolverCombox->Append(ortoolsSolver);
+            //TODO JMK : set ortools solver choice visibility depending on ortools use
+            auto *ortoolsCheckBox = new wxCheckBox(pBigDaddy, wxID_ANY, wxT(""));
+
+            Connect(ortoolsCheckBox->GetId(), wxEVT_COMMAND_CHECKBOX_CLICKED,
+                    wxCommandEventHandler(Run::onOrtoolsCheckboxChanged));
+
+
+            gridAppend(*s, wxT("Ortools use : "), ortoolsCheckBox);
+            pOrtoolsCheckBox = ortoolsCheckBox;
+
+            //Ortools solver
+            //TODO JMK : check if we can use a button with menu instead of combobox
+            pOrtoolsSolverCombox = new wxComboBox(pBigDaddy, wxID_ANY);
+            std::list<std::string> ortoolsSolverList = Data::Enum::getNames<Data::OrtoolsSolver>();
+            for (const std::string &ortoolsSolver : ortoolsSolverList) {
+                pOrtoolsSolverCombox->Append(ortoolsSolver);
+            }
+            pTitleOrtoolsSolverCombox = Antares::Component::CreateLabel(pBigDaddy, wxT("Ortools solver : "));
+            gridAppend(*s, pTitleOrtoolsSolverCombox, pOrtoolsSolverCombox);
+
+            // Ortools solver field disable by default
+            pTitleOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
+            pOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
         }
-        gridAppend(*s, wxT("Ortools solver : "), pOrtoolsSolverCombox);
 
 		// When opening the Run window, the solver mode is default.
 		// Therefore, the number of cores must be set (back) to the value associated with default mode (== 1).
@@ -966,8 +980,19 @@ namespace Simulation
 		Antares::Component::Panel::OnMouseMoveFromExternalComponent();
 	}
 
+    void Run::onOrtoolsCheckboxChanged(wxCommandEvent& WXUNUSED(event))
+    {
+	    pTitleOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
+        pOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
 
-
+        //TODO JMK : factorize layout update : not working
+        auto* sizer = pBigDaddy->GetSizer();
+        if (sizer)
+            sizer->Layout();
+        sizer = GetSizer();
+        if (sizer)
+            sizer->Layout();
+    }
 
 
 } // namespace Simulation

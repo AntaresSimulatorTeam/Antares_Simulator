@@ -7,7 +7,6 @@ extern "C"
 }
 
 extern bool withOrtool;
-extern std::string ortoolsSolverUsed;
 
 size_t current_memory_usage(std::string const & message);
 
@@ -17,3 +16,40 @@ std::list<std::string> GetOrtoolsSolverNames();
 std::string getRunName(std::string const & prefix, size_t numSpace, int numInterval, int numOptim);
 
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(operations_research::MPSolver * solver, size_t numSpace, int const n);
+
+
+namespace Antares {
+
+    namespace Data {
+
+        using namespace operations_research;
+
+        /*! Enum class to define ortools solvers used */
+        enum class OrtoolsSolver : unsigned char {
+            sirius, /*! Sirius solver  */
+            coin    /*! Cpl and Cbc coin solver */
+        };
+
+        //TODO JMK : where should we store this information
+        //Ortool solver used for simulation
+        extern OrtoolsSolver OrtoolsEnumUsed;
+
+        /*!
+        *  \brief Get ortools optimization probleme type for simplex from OrtoolsSolver enum
+        *
+        *  \param ortoolsSolver : OrtoolsSolver enum
+        *  \return MPSolver::OptimizationProblemType
+        */
+        MPSolver::OptimizationProblemType getSimplexOptimProblemType(const OrtoolsSolver& ortoolsSolver);
+
+        /*!
+        *  \brief Get ortools optimization probleme type for PNE from OrtoolsSolver enum
+        *
+        *  \param ortoolsSolver : OrtoolsSolver enum
+        *  \return MPSolver::OptimizationProblemType
+        */
+        MPSolver::OptimizationProblemType getPNEOptimProblemType(const OrtoolsSolver& ortoolsSolver);
+
+    }  // namespace Data
+
+}  // namespace Antares

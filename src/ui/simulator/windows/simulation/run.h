@@ -118,12 +118,15 @@ namespace Simulation
 		//! Mouse move
 		void onInternalMotion(wxMouseEvent&);
 
+        void onOrtoolsCheckboxChanged(wxCommandEvent& event);
+
 	private:
 		//! The main control parent
 		wxWindow* pBigDaddy;
 		//! Solver mode
 		Antares::Component::Button* pBtnMode;
 		wxCheckBox* pOrtoolsCheckBox;
+        wxStaticText* pTitleOrtoolsSolverCombox;
 		wxComboBox* pOrtoolsSolverCombox;
 
 		wxTextCtrl* pSimulationName;
@@ -138,7 +141,8 @@ namespace Simulation
 		wxCheckBox* pPreproOnly;
 		wxStaticText* pMonteCarloYears;
 		wxButton* pBtnRun;
-		wxSizerItem *pOptionSpacer;
+        wxSizerItem *pOptionSpacer;
+        wxSizerItem *pOrtoolsSolverOptionSpacer;
 
 		wxTimer* pTimer;
 		bool pWarnAboutMemoryLimit;

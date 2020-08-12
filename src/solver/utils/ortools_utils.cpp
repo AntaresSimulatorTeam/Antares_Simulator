@@ -2,6 +2,8 @@
 
 #include <antares/logs.h>
 #include <antares/study.h>
+#include <antares/exception/AssertionError.hpp>
+#include <antares/Enum.hpp>
 
 #include <yuni/core/system/memory.h>
 
@@ -9,8 +11,6 @@ using namespace operations_research;
 
 bool withOrtool = false;
 int withOrtool_c = (withOrtool ? 1 : 0);
-
-std::string ortoolsSolverUsed = "sirius";
 
 /**
  * Retourne la consommation actuelle de memoire
@@ -89,17 +89,8 @@ void transferMatrix(operations_research::MPSolver * solver, int * indexRows, int
 
 MPSolver * convert_to_MPSolver(PROBLEME_SIMPLEXE * problemeSimplexe) {
 
-    MPSolver::OptimizationProblemType solverType = MPSolver::SIRIUS_LINEAR_PROGRAMMING;
-
     //TODO JMK : define solver used depending on global solver option
-    if (ortoolsSolverUsed == "sirius")
-    {
-        solverType = MPSolver::SIRIUS_LINEAR_PROGRAMMING;
-    }
-    else if (ortoolsSolverUsed == "coin")
-    {
-        solverType = MPSolver::CLP_LINEAR_PROGRAMMING;
-    }
+    MPSolver::OptimizationProblemType solverType = Antares::Data::getSimplexOptimProblemType(Antares::Data::OrtoolsEnumUsed);
 
 	// Create the linear solver instance
 	MPSolver * solver = new MPSolver("simple_lp_program", solverType);
@@ -117,16 +108,7 @@ MPSolver * convert_to_MPSolver(PROBLEME_SIMPLEXE * problemeSimplexe) {
 MPSolver * convert_to_MPSolver(PROBLEME_A_RESOUDRE * problemeAResoudre) {
 
     //TODO JMK : define solver used depending on global solver option
-    MPSolver::OptimizationProblemType solverType = MPSolver::SIRIUS_MIXED_INTEGER_PROGRAMMING;
-
-    if (ortoolsSolverUsed == "sirius")
-    {
-        solverType = MPSolver::SIRIUS_MIXED_INTEGER_PROGRAMMING;
-    }
-    else if (ortoolsSolverUsed == "coin")
-    {
-        solverType = MPSolver::CBC_MIXED_INTEGER_PROGRAMMING;
-    }
+    MPSolver::OptimizationProblemType solverType = Antares::Data::getPNEOptimProblemType(Antares::Data::OrtoolsEnumUsed);
 
 	MPSolver * solver = new MPSolver("simple_lp_program",solverType);
 
@@ -340,3 +322,50 @@ void ORTOOLS_LibererProbleme(void * ProbSpx) {
 }
 
 }
+
+
+namespace Antares {
+    namespace Data {
+
+		OrtoolsSolver OrtoolsEnumUsed = OrtoolsSolver::sirius;
+
+        MPSolver::OptimizationProblemType getSimplexOptimProblemType(const OrtoolsSolver& ortoolsSolver) {
+            switch (ortoolsSolver) {
+                case OrtoolsSolver::sirius:
+                    return MPSolver::OptimizationProblemType::SIRIUS_LINEAR_PROGRAMMING;
+                case OrtoolsSolver::coin:
+                    return MPSolver::OptimizationProblemType::CLP_LINEAR_PROGRAMMING;
+                default:
+                    throw AssertionError("Invalid OrtoolsSolver " + std::to_string(static_cast<unsigned long>(ortoolsSolver)));
+                    return MPSolver::OptimizationProblemType::SIRIUS_LINEAR_PROGRAMMING;
+            }
+        }
+
+        MPSolver::OptimizationProblemType getPNEOptimProblemType(const OrtoolsSolver& ortoolsSolver) {
+            switch (ortoolsSolver) {
+                case OrtoolsSolver::sirius:
+                    return MPSolver::OptimizationProblemType::SIRIUS_LINEAR_PROGRAMMING;
+                case OrtoolsSolver::coin:
+                    return MPSolver::OptimizationProblemType::CLP_LINEAR_PROGRAMMING;
+                default:
+                    throw AssertionError("Invalid OrtoolsSolver " + std::to_string(static_cast<unsigned long>(ortoolsSolver)));
+                    return MPSolver::OptimizationProblemType::SIRIUS_LINEAR_PROGRAMMING;
+            }
+        }
+
+        namespace Enum {
+
+            template <>
+            const std::initializer_list<std::string>& getNames<OrtoolsSolver>() {
+
+                //Enum must be stored in lower case and without spaces because values  are trimmed and lowered in ini load
+                static std::initializer_list<std::string> s_ortoolsSolverNames{
+                        "sirius",
+                        "coin"
+                };
+                return s_ortoolsSolverNames;
+            }
+        } // namespace Enum
+
+    } // namespace Data
+} // namespace Antares

@@ -43,6 +43,9 @@
 #include "../../config.h"
 
 #include <antares/memory/memory.h>
+#include <antares/exception/AssertionError.hpp>
+#include <antares/Enum.hpp>
+
 #include "utils/ortools_utils.h"
 
 
@@ -104,7 +107,7 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
     // --use-ortools
     getopt.addFlag(useOrtools, ' ', "use-ortools", "Use ortools library to launch solver");
 
-    //TODO JMK (WIP) : add option define ortools solver used
+    //add option for ortools solver used
     std::string ortoolsSolver;
     //--ortools-solver
     getopt.add(ortoolsSolver, ' ', "ortools-solver", "Ortools solver used for simulation (only available with use-ortools");
@@ -264,11 +267,21 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
     withOrtool          = useOrtools;
 
 	//ortools solver
-    if(ortoolsSolver.empty())
+	Antares::Data::OrtoolsEnumUsed = Antares::Data::OrtoolsSolver::sirius;
+
+    if(!ortoolsSolver.empty())
     {
-        ortoolsSolver = "sirius";
+        try
+        {
+            Antares::Data::OrtoolsEnumUsed = Antares::Data::Enum::fromString<Antares::Data::OrtoolsSolver>(ortoolsSolver);
+        }
+        catch(Antares::Data::AssertionError& ex)
+        {
+            logs.warning() << "Assertion error for ortools solver from string conversion : " << ex.what();
+            logs.warning() << "invalid ortools-solver option. Got '" << ortoolsSolver
+                           << "'. reset to " << Enum::toString(Antares::Data::OrtoolsEnumUsed);
+        }
     }
-    ortoolsSolverUsed   = ortoolsSolver;
 
 	// The study folder
 	if (not optStudyFolder.empty())
