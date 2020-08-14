@@ -360,7 +360,7 @@ ${MementoSection} "$(LngResExamples)" SecExamples
 	SectionIn 1
 
 	SetOverwrite on
-	#!include "examplesfiles.inc.nsh"
+	!include "@PROJECT_SOURCE_DIR@\distrib\win32\examplesfiles.inc.nsh"
 ${Mementosectionend}
 
 ${MementoSection} "$(LngResSources)" SecSources
@@ -372,7 +372,7 @@ ${MementoSection} "$(LngResSources)" SecSources
 	SectionIn 1
 
 	SetOverwrite on
-	#!include "sourcefiles.inc.nsh"
+	!include "@PROJECT_SOURCE_DIR@\distrib\win32\sourcefiles.inc.nsh"
 ${Mementosectionend}
 
 
