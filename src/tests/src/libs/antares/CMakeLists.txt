@@ -2,10 +2,11 @@ set(src_libs_antares "${CMAKE_SOURCE_DIR}/libs/antares")
 
 
 # Adding a library embedding all Antares sources useful to test class Matrix
+
 set(SRC_MATRIX_LIB
 	# For confort in IDE, but not necessary
-	# ${src_libs_antares}/array/matrix.h
-	# ${src_libs_antares}/array/matrix.hxx
+	${src_libs_antares}/array/matrix.h
+	${src_libs_antares}/array/matrix.hxx
 	# ${src_libs_antares}/array/matrix-to-buffer.h
 	# ${src_libs_antares}/array/matrix-to-buffer.hxx
 	# logs/fake-logs.h
@@ -36,19 +37,20 @@ set(SRC_TEST_MATRIX_SAVE
 add_executable(tests-matrix-save ${SRC_TEST_MATRIX_SAVE})
 target_include_directories(tests-matrix-save
 								PRIVATE
-									"${CMAKE_CURRENT_SOURCE_DIR}/array" # gp : added
 									"${src_libs_antares}/array"
 									"${CMAKE_CURRENT_SOURCE_DIR}"
 									"${CMAKE_SOURCE_DIR}/ext/yuni/src"
 )
 
 target_link_libraries(tests-matrix-save
-			lib-matrix
-			yuni-static-core
-			Boost::unit_test_framework
-			)
+						PRIVATE
+							lib-matrix
+							yuni-static-core
+							Boost::unit_test_framework
+)
 
 add_test(NAME save-matrix COMMAND tests-matrix-save)
+
 
 # Building tests on Matrix load operations
 set(SRC_TEST_MATRIX_LOAD
@@ -61,18 +63,17 @@ set(SRC_TEST_MATRIX_LOAD
 add_executable(tests-matrix-load ${SRC_TEST_MATRIX_LOAD})
 target_include_directories(tests-matrix-load
 								PRIVATE
-									"${CMAKE_CURRENT_SOURCE_DIR}/array" # gp : added
 									"${src_libs_antares}/array"
 									"${CMAKE_CURRENT_SOURCE_DIR}"
 									"${CMAKE_SOURCE_DIR}/ext/yuni/src"
 )
 
+
 target_link_libraries(tests-matrix-load
-			lib-matrix
-			yuni-static-core
-			Boost::unit_test_framework
-			)
+						PRIVATE
+							lib-matrix
+							yuni-static-core
+							Boost::unit_test_framework
+)
 
 add_test(NAME load-matrix COMMAND tests-matrix-load)
-
-

@@ -27,9 +27,6 @@
 #ifndef __ANTARES_LIBS_MEMORY_MEMORY_HXX__
 # define __ANTARES_LIBS_MEMORY_MEMORY_HXX__
 
-# include "../logs.h"
-
-
 # ifdef ANTARES_SWAP_SUPPORT
 
 #	define ANTARES_SWAP_ACQUIRE_PTR  \
