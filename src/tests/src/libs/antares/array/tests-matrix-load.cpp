@@ -4,7 +4,7 @@
 
 #include <boost/test/included/unit_test.hpp>
 
-#include<array/tests-matrix-load.h>
+#include "tests-matrix-load.h"
 
 #include <iostream>
 #include <stdio.h>
