@@ -110,7 +110,7 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
     //add option for ortools solver used
     std::string ortoolsSolver;
     //--ortools-solver
-    getopt.add(ortoolsSolver, ' ', "ortools-solver", "Ortools solver used for simulation (only available with use-ortools");
+    getopt.add(ortoolsSolver, ' ', "ortools-solver", "Ortools solver used for simulation (only available with use-ortools)");
 
 	getopt.addParagraph("\nParameters");
 	// --name

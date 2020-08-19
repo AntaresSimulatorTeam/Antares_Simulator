@@ -329,15 +329,115 @@ namespace Antares {
 
 		OrtoolsSolver OrtoolsEnumUsed = OrtoolsSolver::sirius;
 
+
+        bool isOrtoolsSolverAvailable(OrtoolsSolver ortoolsSolver) {
+            bool result = false;
+
+			try
+			{
+				result = MPSolver::SupportsProblemType(getSimplexOptimProblemType(ortoolsSolver));
+				result &= MPSolver::SupportsProblemType(getPNEOptimProblemType(ortoolsSolver));
+			}
+			catch (AssertionError& ex)
+			{
+				result = false;
+			}
+
+            return result;
+        }
+
+        std::list<OrtoolsSolver> getAvailableOrtoolsSolver() {
+
+            std::list<OrtoolsSolver> result;
+
+            std::list<OrtoolsSolver> solverList = Enum::enumList<Antares::Data::OrtoolsSolver>();
+
+            for  (OrtoolsSolver solver : solverList)
+            {
+                if (isOrtoolsSolverAvailable(solver)){
+                    result.push_back(solver);
+                }
+            }
+
+            return result;
+        }
+
+        std::list<std::string> getAvailableOrtoolsSolverName() {
+            std::list<std::string> result;
+
+            std::list<OrtoolsSolver> solverList = getAvailableOrtoolsSolver();
+
+            for  (OrtoolsSolver solver : solverList)
+            {
+                result.push_back(Enum::toString(solver));
+            }
+
+            return result;
+        }
+
         MPSolver::OptimizationProblemType getSimplexOptimProblemType(const OrtoolsSolver& ortoolsSolver) {
             switch (ortoolsSolver) {
                 case OrtoolsSolver::sirius:
                     return MPSolver::OptimizationProblemType::SIRIUS_LINEAR_PROGRAMMING;
+
+                    /* TODO JMK : see how we can get optimization problem type with current ortools branches
                 case OrtoolsSolver::coin:
                     return MPSolver::OptimizationProblemType::CLP_LINEAR_PROGRAMMING;
+                case OrtoolsSolver::xpress:
+                    return MPSolver::OptimizationProblemType::XPRESS_LINEAR_PROGRAMMING;
+                case OrtoolsSolver::glop_scip:
+                    return MPSolver::OptimizationProblemType::GLOP_LINEAR_PROGRAMMING;
+                case OrtoolsSolver::cplex:
+                    return MPSolver::OptimizationProblemType::CPLEX_LINEAR_PROGRAMMING;
+                case OrtoolsSolver::gurobi:
+                    return MPSolver::OptimizationProblemType::GUROBI_MIXED_INTEGER_PROGRAMMING;
+                case OrtoolsSolver::glpk:
+                    return MPSolver::OptimizationProblemType::GLPK_LINEAR_PROGRAMMING;
+                     */
+                case OrtoolsSolver::coin:
+                case OrtoolsSolver::xpress:
+                case OrtoolsSolver::glop_scip:
+                case OrtoolsSolver::cplex:
+                case OrtoolsSolver::gurobi:
+                case OrtoolsSolver::glpk:
+                {
+                    MPSolver::OptimizationProblemType result;
+                    if (MPSolver::ParseSolverType(getSimplexOrtoolsSolverName(ortoolsSolver), &result))
+                    {
+                        return result;
+                    }
+                    else
+                    {
+                        throw AssertionError("Unsupported OrtoolsSolver " + std::to_string(static_cast<unsigned long>(ortoolsSolver)));
+                        return MPSolver::OptimizationProblemType::SIRIUS_LINEAR_PROGRAMMING;
+                    }
+                }
                 default:
                     throw AssertionError("Invalid OrtoolsSolver " + std::to_string(static_cast<unsigned long>(ortoolsSolver)));
                     return MPSolver::OptimizationProblemType::SIRIUS_LINEAR_PROGRAMMING;
+            }
+        }
+
+
+        std::string getSimplexOrtoolsSolverName(const OrtoolsSolver& ortoolsSolver) {
+            switch (ortoolsSolver) {
+                case OrtoolsSolver::sirius:
+                    return "NOT_DEFINED"; //TODO JMK : not defined in current ortools branch. Won't be used in current version
+                case OrtoolsSolver::coin:
+                    return "clp";
+                case OrtoolsSolver::xpress:
+                    return "xpress_lp";
+                case OrtoolsSolver::glop_scip:
+                    return "glop";
+                case OrtoolsSolver::cplex:
+                    return "NOT_DEFINED"; //TODO JMK : not defined in current ortools branch. CPLEX can't be used in current version
+                case OrtoolsSolver::gurobi:
+                    return "gurobi_lp";
+                case OrtoolsSolver::glpk:
+                    return "glpk_lp";
+                default:
+                    throw AssertionError("Invalid OrtoolsSolver " + std::to_string(static_cast<unsigned long>(ortoolsSolver)));
+                    return "";
             }
         }
 
@@ -345,27 +445,84 @@ namespace Antares {
             switch (ortoolsSolver) {
                 case OrtoolsSolver::sirius:
                     return MPSolver::OptimizationProblemType::SIRIUS_LINEAR_PROGRAMMING;
+                    /* TODO JMK : see how we can get optimization problem type with current ortools branches
                 case OrtoolsSolver::coin:
                     return MPSolver::OptimizationProblemType::CLP_LINEAR_PROGRAMMING;
+                case OrtoolsSolver::xpress:
+                    return MPSolver::OptimizationProblemType::XPRESS_MIXED_INTEGER_PROGRAMMING;
+                case OrtoolsSolver::glop_scip:
+                    return MPSolver::OptimizationProblemType::SCIP_MIXED_INTEGER_PROGRAMMING;
+                case OrtoolsSolver::cplex:
+                    return MPSolver::OptimizationProblemType::CPLEX_MIXED_INTEGER_PROGRAMMING;
+                case OrtoolsSolver::gurobi:
+                    return MPSolver::OptimizationProblemType::GUROBI_MIXED_INTEGER_PROGRAMMING;
+                case OrtoolsSolver::glpk:
+                    return MPSolver::OptimizationProblemType::GLPK_MIXED_INTEGER_PROGRAMMING;
+                     */
+                case OrtoolsSolver::coin:
+                case OrtoolsSolver::xpress:
+                case OrtoolsSolver::glop_scip:
+                case OrtoolsSolver::cplex:
+                case OrtoolsSolver::gurobi:
+                case OrtoolsSolver::glpk: {
+                    MPSolver::OptimizationProblemType result;
+                    if (MPSolver::ParseSolverType(getPNEOrtoolsSolverName(ortoolsSolver), &result)) {
+                        return result;
+                    } else {
+                        throw AssertionError("Unsupported OrtoolsSolver " +
+                                             std::to_string(static_cast<unsigned long>(ortoolsSolver)));
+                        return MPSolver::OptimizationProblemType::SIRIUS_LINEAR_PROGRAMMING;
+                    }
+                }
                 default:
-                    throw AssertionError("Invalid OrtoolsSolver " + std::to_string(static_cast<unsigned long>(ortoolsSolver)));
+                    throw AssertionError(
+                            "Invalid OrtoolsSolver " + std::to_string(static_cast<unsigned long>(ortoolsSolver)));
                     return MPSolver::OptimizationProblemType::SIRIUS_LINEAR_PROGRAMMING;
             }
         }
 
-        namespace Enum {
-
-            template <>
-            const std::initializer_list<std::string>& getNames<OrtoolsSolver>() {
-
-                //Enum must be stored in lower case and without spaces because values  are trimmed and lowered in ini load
-                static std::initializer_list<std::string> s_ortoolsSolverNames{
-                        "sirius",
-                        "coin"
-                };
-                return s_ortoolsSolverNames;
+        std::string getPNEOrtoolsSolverName(const OrtoolsSolver& ortoolsSolver) {
+            switch (ortoolsSolver) {
+                case OrtoolsSolver::sirius:
+                    return "NOT_DEFINED"; //TODO JMK : not defined in current ortools branch. Won't be used in current version
+                case OrtoolsSolver::coin:
+                    return "cbc";
+                case OrtoolsSolver::xpress:
+                    return "xpress_mip";
+                case OrtoolsSolver::glop_scip:
+                    return "scip";
+                case OrtoolsSolver::cplex:
+                    return "NOT_DEFINED"; //TODO JMK : not defined in current ortools branch. CPLEX can't be used in current version
+                case OrtoolsSolver::gurobi:
+                    return "gurobi_mip";
+                case OrtoolsSolver::glpk:
+                    return "glpk_mip";
+                default:
+                    throw AssertionError("Invalid OrtoolsSolver " + std::to_string(static_cast<unsigned long>(ortoolsSolver)));
+                    return "";
             }
-        } // namespace Enum
+        }
 
-    } // namespace Data
+
+    namespace Enum {
+
+        template <>
+        const std::initializer_list<std::string>& getNames<OrtoolsSolver>() {
+
+            //Enum must be stored in lower case and without spaces because values  are trimmed and lowered in ini load
+            static std::initializer_list<std::string> s_ortoolsSolverNames{
+                    "sirius",
+                    "coin",
+                    "xpress",
+                    "glop-scip",
+                    "cplex",
+                    "gurobi",
+                    "glpk"
+            };
+
+            return s_ortoolsSolverNames;
+        }
+    } // namespace Enum
+
+} // namespace Data
 } // namespace Antares
