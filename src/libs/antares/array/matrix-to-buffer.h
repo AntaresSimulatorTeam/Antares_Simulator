@@ -55,7 +55,7 @@ namespace Antares
 		~matrix_to_buffer_dumper_factory() {}
 
 		template<class T, class ReadWriteT, class PredicateT>
-		I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>* get_dumper(const Matrix<T, ReadWriteT>* mtx, Yuni::Clob& data, PredicateT& predicate);
+		I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>* get_dumper(const Matrix<T, ReadWriteT>* mtx, std::string & data, PredicateT& predicate);
 
 	private:
 		bool any_decimal_;
@@ -67,7 +67,7 @@ namespace Antares
 	class I_mtx_to_buffer_dumper
 	{
 	public:
-		I_mtx_to_buffer_dumper(const Matrix<T, ReadWriteT>* mtx, Yuni::Clob& data, PredicateT& predicate) :
+		I_mtx_to_buffer_dumper(const Matrix<T, ReadWriteT>* mtx, std::string & data, PredicateT& predicate) :
 			mtx_(mtx),
 			buffer_(data),
 			predicate_(predicate),
@@ -80,7 +80,7 @@ namespace Antares
 
 	protected:
 		const Matrix<T, ReadWriteT>* mtx_;
-		Yuni::Clob& buffer_;
+		std::string & buffer_;
 		PredicateT& predicate_;
 		const char* format_;
 	};
@@ -89,7 +89,7 @@ namespace Antares
 	class one_column__dumper : public I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>
 	{
 	public:
-		one_column__dumper(const Matrix<T, ReadWriteT>* mtx, Yuni::Clob& data, PredicateT& predicate) :
+		one_column__dumper(const Matrix<T, ReadWriteT>* mtx, std::string & data, PredicateT& predicate) :
 			I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate)
 		{}
 		void run() override;
@@ -99,7 +99,7 @@ namespace Antares
 	class multiple_columns__dumper : public I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>
 	{
 	public:
-		multiple_columns__dumper(const Matrix<T, ReadWriteT>* mtx, Yuni::Clob& data, PredicateT& predicate) :
+		multiple_columns__dumper(const Matrix<T, ReadWriteT>* mtx, std::string & data, PredicateT& predicate) :
 			I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate)
 		{}
 		void run() override;

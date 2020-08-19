@@ -84,8 +84,12 @@ public:
 	Clob* build_buffer()
 	{
 		Clob* buffer_to_return = new Clob;
+		std::string buffer;
 		Antares::UnitTests::PredicateIdentity predicate;
-		mtx_to_build_buffer_with_->saveToFileDescriptor(*buffer_to_return, buffer_precision_, buffer_print_dimensions_, predicate);
+
+		mtx_to_build_buffer_with_->saveToFileDescriptor(buffer, buffer_precision_, buffer_print_dimensions_, predicate);
+
+		buffer_to_return->append(buffer);
 
 		return buffer_to_return;
 	}
