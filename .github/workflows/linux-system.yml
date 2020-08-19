@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - develop
-      - feature/cmake_build_dependency_option
-      - feature/ANT-457--cmake-with-ctest
-      
+      - feature/ANT-325--improve-export-TS
+
 jobs:
+
   build:
 
     runs-on: ${{ matrix.os }}
