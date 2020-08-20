@@ -1,4 +1,4 @@
-name: Linux CI (system libs)
+name: Linux CI (deps. compilation)
 
 on:
   push:
@@ -7,8 +7,9 @@ on:
       - fix/unit-tests-not-found-on-github-actions
       - release/v7.2-rc1
 
-jobs:
-  build:
+jobs:     
+         
+  linux:
 
     runs-on: ${{ matrix.os }}
     strategy:
@@ -16,42 +17,38 @@ jobs:
         os: [ubuntu-latest]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v2 
 
     - name: Install libraries
       run: |
-           sudo apt-get update --fix-missing
-           sudo apt-get install libuuid1 uuid-dev libssh2-1 libssh2-1-dev libidn2-dev libidn11 libidn11-dev gtk2.0 libwxgtk3.0-dev libcurl4-openssl-dev libb64-dev
-           sudo apt-get install libboost-all-dev
+           sudo apt-get install libuuid1 uuid-dev libssh2-1 libssh2-1-dev libidn2-0 libidn2-dev libidn11 libidn11-dev gtk2.0 libb64-dev       
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
+           cmake -B _build -S src -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
 
     - name: Build
       run: |
-           ls -1
            cmake --build _build --config release -j2
 
-    - name: Run unit tests
+
+    - name: Runnning unit tests
       run: |
-           ls -1
            cd _build
            ctest -C Release --output-on-failure
-           
+
     - name: Installer .deb creation
       run: |
            cd _build
            cpack -G DEB
-           
+
     - name: Installer .tar.gz creation
       run: |
            cd _build
            cpack -G TGZ
-           
+
     - name: Installer upload
       uses: actions/upload-artifact@v2
       with:
         name: antares-installer-64bits
         path: _build/antares-*.*.*-Linux.*
-

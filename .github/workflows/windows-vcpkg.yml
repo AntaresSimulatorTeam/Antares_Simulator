@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - fix/unit-tests-not-found-on-github-actions
+      - release/v7.2-rc1
 
 jobs:
 
@@ -43,7 +44,7 @@ jobs:
     - name: Build
       run: |
            dir
-           cmake --build _build --config release -j2 --target tests-matrix-load tests-matrix-save
+           cmake --build _build --config release -j2
 
 
     - name: Running unit tests
@@ -52,13 +53,13 @@ jobs:
            cd _build
            ctest -C ${{ matrix.buildtype }} --output-on-failure
            
-#     - name: Installer creation
-#       run: |
-#            cd _build
-#            cpack -GNSIS
-#            
-#     - name: Installer upload
-#       uses: actions/upload-artifact@v2
-#       with:
-#         name: antares-installer-64bits
-#         path: _build/rte-antares-*.*.*-installer-*.exe
+    - name: Installer creation
+      run: |
+           cd _build
+           cpack -GNSIS
+           
+    - name: Installer upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: antares-installer-64bits
+        path: _build/rte-antares-*.*.*-installer-*.exe
