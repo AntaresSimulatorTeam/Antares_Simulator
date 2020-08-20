@@ -29,10 +29,12 @@ jobs:
 
     - name: Build
       run: |
-           cmake --build _build --config release -j2
+           ls -1
+           cmake --build _build --config release -j2 --target tests-matrix-load tests-matrix-save
 
     - name: Run unit tests
       run: |
+           ls -1
            cd _build
            ctest -C Release --output-on-failure
            
@@ -41,14 +43,14 @@ jobs:
            cd _build
            cpack -G DEB
            
-    - name: Installer .tar.gz creation
-      run: |
-           cd _build
-           cpack -G TGZ
-           
-    - name: Installer upload
-      uses: actions/upload-artifact@v2
-      with:
-        name: antares-installer-64bits
-        path: _build/antares-*.*.*-Linux.*
+#     - name: Installer .tar.gz creation
+#       run: |
+#            cd _build
+#            cpack -G TGZ
+#            
+#     - name: Installer upload
+#       uses: actions/upload-artifact@v2
+#       with:
+#         name: antares-installer-64bits
+#         path: _build/antares-*.*.*-Linux.*
 

@@ -43,20 +43,23 @@ jobs:
     
     - name: Build
       run: |
-           cmake --build _build --config release -j2
+           ls -1
+           cmake --build _build --config release -j2 --target tests-matrix-load tests-matrix-save
+
 
     - name: Running unit tests
       run: |
+           ls -1
            cd _build
            ctest -C ${{ matrix.buildtype }} --output-on-failure
            
-    - name: Installer creation
-      run: |
-           cd _build
-           cpack -GNSIS
-           
-    - name: Installer upload
-      uses: actions/upload-artifact@v2
-      with:
-        name: antares-installer-64bits
-        path: _build/rte-antares-*.*.*-installer-*.exe
+#     - name: Installer creation
+#       run: |
+#            cd _build
+#            cpack -GNSIS
+#            
+#     - name: Installer upload
+#       uses: actions/upload-artifact@v2
+#       with:
+#         name: antares-installer-64bits
+#         path: _build/rte-antares-*.*.*-installer-*.exe
