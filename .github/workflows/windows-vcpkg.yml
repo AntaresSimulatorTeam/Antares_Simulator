@@ -38,17 +38,17 @@ jobs:
         
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release 
+           cmake -B _build -S src -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
     
     - name: Build
       run: |
-           ls -1
+           dir
            cmake --build _build --config release -j2 --target tests-matrix-load tests-matrix-save
 
 
     - name: Running unit tests
       run: |
-           ls -1
+           dir
            cd _build
            ctest -C ${{ matrix.buildtype }} --output-on-failure
            
