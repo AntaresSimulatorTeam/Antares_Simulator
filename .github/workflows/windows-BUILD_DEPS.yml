@@ -36,6 +36,7 @@ jobs:
       run: |
            cd _build
            cpack -GNSIS
+           more _CPack_Packages\win64\NSIS\NSISOutput.log
            
     - name: Installer upload
       uses: actions/upload-artifact@v2
