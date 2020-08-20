@@ -34,7 +34,7 @@
 ;!insertmacro MUI_PAGE_LICENSE "COPYING-University-of-Strathclyde.txt"
 ;!insertmacro MUI_PAGE_LICENSE "COPYING-Elia.txt"
 ;!insertmacro MUI_PAGE_LICENSE "COPYING-Trial.txt"
-!insertmacro MUI_PAGE_LICENSE "../../../../../COPYING.txt"
+!insertmacro MUI_PAGE_LICENSE "../../../../COPYING.txt"
 
 !insertmacro MUI_PAGE_COMPONENTS
 
