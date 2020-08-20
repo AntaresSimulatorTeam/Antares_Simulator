@@ -325,6 +325,8 @@ if(WIN32 OR WIN64)
 	#Set package name from CMake and antares variables
 	set(CPACK_PACKAGE_FILE_NAME "rte-antares-${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}-installer-${ANTARES_INSTALLER_ARCH}")
     
+	set(CPACK_INSTALL_SCRIPT ${PROJECT_SOURCE_DIR}/distrib/CMakeLists.txt)
+	
 	#Load packaging facilities.
 	include(CPack)
 else()
