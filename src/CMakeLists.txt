@@ -113,7 +113,7 @@ else()
 endif()
 
 if(${ANTARES_RC})
-	set(ANTARES_INSTALLER_RC "rc${ANTARES_RC}")
+	set(ANTARES_INSTALLER_RC "-rc${ANTARES_RC}")
 else()
 	set(ANTARES_INSTALLER_RC "")
 endif()
