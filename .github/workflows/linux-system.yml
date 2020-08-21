@@ -12,6 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
+        use_rte_ortools : ["ON","OFF"]
 
     steps:
     - uses: actions/checkout@v2
@@ -23,7 +24,7 @@ jobs:
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_sirius=ON -DBUILD_ortools=ON
+           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_sirius=ON -DBUILD_ortools=ON -USE_RTE_ORTOOLS_BRANCH=${{ matrix.use_rte_ortools }}
 
     - name: Build
       run: |

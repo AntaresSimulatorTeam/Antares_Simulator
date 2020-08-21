@@ -130,16 +130,31 @@ endif()
 ##  ORTOOLS  ##
 #####################
 if(BUILD_ortools)
+
+set(REPOSITORY "https://github.com/google/or-tools.git")
+set(TAG "v7.8")
+set(CMAKE_ARGS "")
+
+if (USE_RTE_ORTOOLS_BRANCH)
+
+    set(REPOSITORY "https://github.com/AntaresSimulatorTeam/or-tools.git")
+    set(TAG "rte_dev_sirius")
+    set(CMAKE_ARGS "-DUSE_SIRIUS=ON")
+
+endif()
+
+
 build_git_dependency(
     NAME
       ortools
     REPOSITORY
-      "https://github.com/AntaresSimulatorTeam/or-tools.git"
+      ${REPOSITORY}
     TAG
-      "rte_dev_sirius"
+      ${TAG}
     CMAKE_ARGS
-      "-DUSE_SIRIUS=ON -DUSE_COINOR=ON -DBUILD_PYTHON=OFF -DBUILD_TESTING=OFF -DBUILD_DEPS=ON"
+      "${CMAKE_ARGS} -DUSE_COINOR=ON -DBUILD_PYTHON=OFF -DBUILD_TESTING=OFF -DBUILD_DEPS=ON"
   )
+  
 endif()
 
 
