@@ -457,11 +457,10 @@ namespace BindingConstraint
 
 		default:
 		{
-			//return IRenderer::cellStyleCustom;
 			if (study->uiinfo->cluster(y - 5)->enabled && !study->uiinfo->cluster(y - 5)->mustrun)
 				return IRenderer::cellStyleCustom;
 			else
-				return IRenderer::cellStyleWarning;
+				return IRenderer::cellStyleDisabled;
 		}
 		}
 	}

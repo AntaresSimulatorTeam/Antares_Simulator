@@ -96,6 +96,7 @@ namespace Datagrid
 			// Disabled
 			pStyles[CellStyle::cellStyleDisabled]->SetBackgroundColour(wxColour(245, 224, 213));
 			pStyles[CellStyle::cellStyleDisabled]->SetTextColour(wxColour(50, 50, 60));
+			pStyles[CellStyle::cellStyleDisabled]->SetReadOnly(true);
 			// Warning
 			pStyles[CellStyle::cellStyleWarning]->SetBackgroundColour(wxColour(255, 184, 62));
 			pStyles[CellStyle::cellStyleWarning]->SetTextColour(wxColour(98, 47, 1));
