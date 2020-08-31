@@ -316,6 +316,19 @@ if(WIN32 OR WIN64)
 	
 	SET(ANTARES_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
 	
+	# Define system libraries so NSIS can package these files
+	include (InstallRequiredSystemLibraries)
+	
+	#Convert to native and add double quote to be used in NSIS package
+	foreach(SYSTEM_RUNTIME_LIB ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS})
+		file(TO_NATIVE_PATH ${SYSTEM_RUNTIME_LIB} SYSTEM_RUNTIME_LIB_NATIVE)
+		
+		list(APPEND SYSTEM_RUNTIME_LIBS_NATIVE \"${SYSTEM_RUNTIME_LIB_NATIVE}\")
+	endforeach()
+	
+	#Replace ; by space so SYSTEM_RUNTIME_LIBS_STR can be used in File function in NSIS file
+	string (REPLACE ";" " " SYSTEM_RUNTIME_LIBS_STR "${SYSTEM_RUNTIME_LIBS_NATIVE}")
+	
 	configure_file(
 		${PROJECT_SOURCE_DIR}/distrib/win32/NSIS.template.in
 		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/NSIS.template.in
