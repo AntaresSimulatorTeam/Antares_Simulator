@@ -1233,18 +1233,18 @@ namespace // anonymous
 
 			// Elapsed time
 			p = CreateStdInfo(parent, wxT("Elapsed time: 0s"));
-			spg->Add(p.first, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT);
+			spg->Add(p.first, 1, wxALL|/*wxALIGN_CENTER_VERTICAL|*/wxALIGN_LEFT);
 			pElapsedTimeText = p.second;
 
 			// Remaining time
 			p = CreateStdInfo(parent, wxEmptyString); // "Remaining time: estimating..."
 			pRemainingSizer = p.first;
-			spg->Add(p.first, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT);
+			spg->Add(p.first, 1, wxALL|/*wxALIGN_CENTER_VERTICAL|*/wxALIGN_LEFT);
 			pRemainingTimeText = p.second;
 
 			// Elapsed time
 			p = CreateStdInfo(parent, wxT("Read: 0 byte   Write: 0 byte"));
-			spg->Add(p.first, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT);
+			spg->Add(p.first, 1, wxALL|/*wxALIGN_CENTER_VERTICAL|*/wxALIGN_LEFT);
 			pReadWriteStats = p.second;
 
 			// Extra space for beauty

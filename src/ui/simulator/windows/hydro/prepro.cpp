@@ -80,22 +80,15 @@ namespace Hydro
 
 		const wxSize ourDefaultSize(55, wxDefaultSize.GetHeight());
 
-		enum
-		{
-			right = wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL,
-			left  = wxLEFT  | wxALIGN_LEFT  | wxALIGN_CENTER_VERTICAL,
-		};
-
-
 		wxBoxSizer* sizerH = new wxBoxSizer(wxHORIZONTAL);
 		sizer->Add(sizerH, 0, wxALL | wxEXPAND | wxFIXED_MINSIZE, 15);
 		// Options
 		{
-			sizerH->Add(Component::CreateLabel(pSupport, wxT("Options"), false, true), 0, right);
+			sizerH->Add(Component::CreateLabel(pSupport, wxT("Options"), false, true), 0, wxRIGHT | wxALIGN_CENTER_VERTICAL);
 		}
 		// Intermonthly correlation
 		{
-			sizerH->Add(Component::CreateLabel(pSupport, wxT("  Inter-monthly correlation")), 0, right);
+			sizerH->Add(Component::CreateLabel(pSupport, wxT("  Inter-monthly correlation")), 0, wxRIGHT | wxALIGN_CENTER_VERTICAL);
 
 			auto* edit = new wxTextCtrl(pSupport, wxID_ANY, wxT("0.0"),
 				wxDefaultPosition, ourDefaultSize, 0, Toolbox::Validator::Numeric());

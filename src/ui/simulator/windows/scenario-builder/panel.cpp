@@ -101,7 +101,7 @@ namespace ScenarioBuilder
 
 		Component::AddVerticalSeparator(sub, hz);
 
-		hz->Add(Component::CreateLabel(sub, wxT("   Active :"), true), 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL, 4);
+		hz->Add(Component::CreateLabel(sub, wxT("   Active :"), true), 0, wxRIGHT /*| wxALIGN_RIGHT*/ | wxALIGN_CENTER_VERTICAL, 4);
 		btn = new Component::Button(sub, wxT("loading..."), "images/16x16/bullet.png");
 		btn->menu(true);
 		btn->onPopupMenu(this, &Panel::onActiveMenu);

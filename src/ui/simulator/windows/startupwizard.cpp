@@ -550,7 +550,7 @@ namespace Window
 				// Title
 				lblTitle = Component::CreateLabel(bigPanel, title);
 				lblTitle->SetFont(wxFont(wxFont(10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD)));
-				sizer->Add(lblTitle, 0, wxALL|wxALIGN_CENTER_VERTICAL);
+				sizer->Add(lblTitle, 0, wxALL/*|wxALIGN_CENTER_VERTICAL*/);
 			}
 
 			mainSizer->Add(sizer, 1, wxALL|wxEXPAND);
