@@ -5,7 +5,7 @@ There is currently no ortools API to get a list of available solver.
 
 We will be using name and enum defined in `linear_solver/linear_solver.cc`
 
-### Integer optimisation
+### Linear optimisation
 | Ortools solver name| Enum| Licence |Website|
 |:-------|-------|-----|------|
 | `clp`| CLP_LINEAR_PROGRAMMING|Open source|https://github.com/coin-or/Clp|
@@ -35,19 +35,19 @@ We will be using name and enum defined in `linear_solver/linear_solver.cc`
 
 ## Solver available for antares-solver
 We need 2 types of solver :
-* Integer
+* Linear
 * Mixed real integer
 
 Here are the solver used depending on antares-solver command line option ortools-solver:
 
-|ortools-solver|Integer solver|Mixed real integer|
+|ortools-solver|Linear solver|Mixed real integer|
 |:-------|-----|--------|
 |`sirius` (default)|SIRIUS_LINEAR_PROGRAMMING|SIRIUS_MIXED_INTEGER_PROGRAMMING|
 |`coin`|CLP_LINEAR_PROGRAMMING|CBC_MIXED_INTEGER_PROGRAMMING|
 
 5 more solvers will be added when ortools is updated :
 
-|ortools-solver|Integer solver|Mixed real integer|Waiting for|
+|ortools-solver|Linear solver|Mixed real integer|Waiting for|
 |:-------|-----|--------|--------|
 |`xpress`|XPRESS_LINEAR_PROGRAMMING|XPRESS_MIXED_INTEGER_PROGRAMMING| Update ortools building process for XPRESS support|
 |`glop-scip`|GLOP_LINEAR_PROGRAMMING|SCIP_MIXED_INTEGER_PROGRAMMING|Merging of 7.8 ortools version in rte ortools fork|
