@@ -177,23 +177,26 @@ cmake -DCMAKE_PREFIX_PATH=<previous_build_dir>/dependencies/install
 ````
 
 ## [Building Antares Solution](#build)
-### Complete solution including GUI
+
 Antares source directory is named `[antares_src]` in all commands.
 
-Build can be done 'out of source'.
+Note :
+> cpack NSIS installer creation need a 'out of source build'. The build directory must be outside `[antares_src]` directory
+
+### Complete solution including GUI
 
 You can define build type with ```-DCMAKE_BUILD_TYPE``` and ```--config``` option.
 
 - release
 
 ```
-cmake -DCMAKE_BUILD_TYPE=release ..
-cmake --build . --config release
+cmake -B _build -S [antares_src] -DCMAKE_BUILD_TYPE=release
+cmake --build _build --config release
 ```
 -  debug
  ```
-cmake -DCMAKE_BUILD_TYPE=debug ..
-cmake --build . --config debug
+cmake -B _build -S [antares_src] -DCMAKE_BUILD_TYPE=debug
+cmake --build _build --config debug
 ```
 Note :
 > These are not the standard ``CMAKE_BUILD_TYPE``. CMake files must be updated.
@@ -204,23 +207,14 @@ Antares Simulator UI application compilation can be disabled at configure time u
 
 ### Linux using system libs (recommanded)
 - Install dependencies [using package manager](#using-a-package-manager).
-- Create build dir (optionnal but recommanded)
-```
-cd [antares_src]
-mkdir _build
-```
-- Configure build with cmake
 
+- Configure build with cmake
 ```
-cd [antares_src]
-cd _build
-cmake -DCMAKE_BUILD_TYPE=release ..
+cmake -B _build -S [antares_src] -DCMAKE_BUILD_TYPE=release
 ```
 - Build
  ```
-cd [antares_src]
-cd _build
-cmake --build . --config release -j8
+cmake --build _build --config release -j8
 ```
 Note :
 >Compilation can be done on several processor with ```-j``` option.
@@ -228,44 +222,28 @@ Note :
 ### Window using vcpkg (recommanded)
 - Install dependencies [using VCPKG](#using-vcpkg).
 - Choose [vcpkg-triplet]
-- Create build dir (optionnal but recommanded)
-```
-cd [antares_src]
-mkdir _build
-```
+
 - Configure build with cmake
 
 ```
-cd [antares_src]
-cd _build
-cmake -DCMAKE_TOOLCHAIN_FILE=[vcpkg_root]/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=[vcpkg-triplet] -DCMAKE_BUILD_TYPE=release ..
+cmake -B _build -S [antares_src] -DCMAKE_TOOLCHAIN_FILE=[vcpkg_root]/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=[vcpkg-triplet] -DCMAKE_BUILD_TYPE=release
 ```
 - Build
  ```
-cd [antares_src]
-cd _build
-cmake --build . --config release -j8
+cmake --build _build --config release -j8
 ```
 Note :
 > Compilation can be done on several processor with ```-j``` option.
 ### Linux/Window building external librairies
-- Create build dir (optionnal but recommanded)
-```
-cd [antares_src]
-mkdir _build
-```
+
 - Configure build with CMake with ```BUILD_DEPS``` option.
 
 ```
-cd [antares_src]
-cd _build
-cmake -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release ..
+cmake -B _build -S [antares_src] -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release ..
 ```
 - Build
  ```
-cd [antares_src]
-cd _build
-cmake --build . --config release -j8
+cmake --build _build --config release -j8
 ```
 Note :
 > Compilation can be done on several processor with ```-j``` option.
@@ -279,7 +257,6 @@ Note :
 
 After build, unit tests can be run with ``ctest`` :
  ```
-cd [antares_src]
 cd _build
 ctest -C Release --output-on-failure
 ```
@@ -289,7 +266,6 @@ CPack can be used to create installer after build depending on operating system.
 
 ### Window using NSIS
  ```
-cd [antares_src]
 cd _build
 cpack -GNSIS
 ```
@@ -298,14 +274,12 @@ Currently missing in NSIS installer :
 
 ## Ubuntu .deb (Experimental)
  ```
-cd [antares_src]
 cd _build
 cpack -G DEB .
 ```
 
 ## Linux .tar.gz
  ```
-cd [antares_src]
 cd _build
 cpack -G TGZ .
 ```
