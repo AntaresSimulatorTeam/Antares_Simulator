@@ -114,7 +114,7 @@ endif()
 ##############
 if(BUILD_wxWidgets)
 
-#Check if CURL is not already available
+#Check if wxWidgets is not already available
 find_package(wxWidgets)
 
 if (NOT wxWidgets_FOUND)
