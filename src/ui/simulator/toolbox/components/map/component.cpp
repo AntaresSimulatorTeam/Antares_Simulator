@@ -333,7 +333,7 @@ namespace Map
 		pInfosAreaCount = Antares::Component::CreateLabel(panelHeader, wxT("0 area"));
 		pInfosAreaCount->SetForegroundColour(wxColour(62, 141, 94));
 		pMapLayer->setpInfosAreaCount(pInfosAreaCount);
-		hs->Add(pInfosAreaCount, 0, wxRIGHT /*| wxALIGN_RIGHT*/ | wxALIGN_CENTER_VERTICAL);
+		hs->Add(pInfosAreaCount, 0, wxRIGHT | wxALIGN_CENTER_VERTICAL);
 
 		// N connexions
 		pInfosConnxCount = Antares::Component::CreateLabel(panelHeader, wxT("0 link"));

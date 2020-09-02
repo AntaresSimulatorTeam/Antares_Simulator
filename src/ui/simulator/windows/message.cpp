@@ -113,7 +113,7 @@ namespace Window
 
 		auto* textSizer = new wxBoxSizer(wxHORIZONTAL);
 		textSizer->AddSpacer(20);
-		textSizer->Add(Resources::StaticBitmapLoadFromFile(this, wxID_ANY, icon), 0, wxALL|wxALIGN_TOP/*|wxALIGN_CENTER_HORIZONTAL*/);
+		textSizer->Add(Resources::StaticBitmapLoadFromFile(this, wxID_ANY, icon), 0, wxALL | wxALIGN_TOP);
 		textSizer->AddSpacer(15);
 
 		auto* v = new wxBoxSizer(wxVERTICAL);
@@ -121,13 +121,13 @@ namespace Window
 		{
 			wxStaticText* sub = Component::CreateLabel(this, subtitle, true);
 			sub->Wrap(600);
-			v->Add(sub, 0, wxLEFT /*| wxALIGN_CENTER_VERTICAL*/);
+			v->Add(sub, 0, wxLEFT);
 			v->AddSpacer(10);
 		}
 
 		auto* lbl = Component::CreateLabel(this, msg);
 		lbl->Wrap(600);
-		v->Add(lbl, 0, wxLEFT /*| wxALIGN_CENTER_VERTICAL*/);
+		v->Add(lbl, 0, wxLEFT);
 
 		if (not subtitle.empty())
 			textSizer->Add(v, 0, wxALL | wxLEFT | wxTOP);

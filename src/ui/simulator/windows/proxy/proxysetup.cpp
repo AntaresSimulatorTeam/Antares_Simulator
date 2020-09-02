@@ -85,7 +85,7 @@ namespace Window
 
 		auto* hz = new wxBoxSizer(wxHORIZONTAL);
 		hz->AddSpacer(30);
-		hz->Add(Resources::StaticBitmapLoadFromFile(this, wxID_ANY, "images/64x64/server.png"), 0, wxALL|wxALIGN_TOP /*|wxALIGN_CENTER_HORIZONTAL*/);
+		hz->Add(Resources::StaticBitmapLoadFromFile(this, wxID_ANY, "images/64x64/server.png"), 0, wxALL|wxALIGN_TOP);
 		sizer->Add(hz, 1, wxALL|wxEXPAND);
 
 		auto* contentSizer = new wxBoxSizer(wxVERTICAL);
@@ -105,9 +105,9 @@ namespace Window
 
 		auto* subtitlespacer = new wxBoxSizer(wxVERTICAL);
 		subtitlespacer->AddStretchSpacer();
-		subtitlespacer->Add(title, 0, /*wxALIGN_CENTER_VERTICAL|*/wxLEFT);
+		subtitlespacer->Add(title, 0, wxLEFT);
 		subtitlespacer->AddSpacer(3);
-		subtitlespacer->Add(subtitle, 0, /*wxALIGN_CENTER_VERTICAL|*/wxLEFT);
+		subtitlespacer->Add(subtitle, 0, wxLEFT);
 		subtitlespacer->AddStretchSpacer();
 		titlespacer->AddSpacer(10);
 		titlespacer->Add(subtitlespacer, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxLEFT);
