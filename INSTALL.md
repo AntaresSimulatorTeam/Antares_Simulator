@@ -112,7 +112,7 @@ You must install the corresponding [vcpkg-triplet](https://vcpkg.readthedocs.io/
 - ``x64-windows``        : 64 bits version with dynamic librairies load
 - ``x86-windows``        : 32 bits version with dynamic librairies load
 - ``x64-windows-static`` : 64 bits version with static librairies load
-- ``x86-windows-static`` : 32 bis version with static librairies load
+- ``x86-windows-static`` : 32 bits version with static librairies load
 
 The vcpkg-triplet used will be named [vcpg-triplet] later in this document.
 
