@@ -12,7 +12,7 @@ set(ANTARES_WEBSITE	   "https://antares.rte-france.com")
 
 # Beta release
 set(ANTARES_BETA 0)
-#set(ANTARES_RC 1)
+set(ANTARES_RC 1)
 
 # CMAKE - Suppress useless features
 set(CMAKE_SKIP_PREPROCESSED_SOURCE_RULES true)
@@ -113,7 +113,7 @@ else()
 endif()
 
 if(${ANTARES_RC})
-	set(ANTARES_INSTALLER_RC "rc${ANTARES_RC}")
+	set(ANTARES_INSTALLER_RC "-rc${ANTARES_RC}")
 else()
 	set(ANTARES_INSTALLER_RC "")
 endif()
@@ -322,8 +322,7 @@ if(WIN32 OR WIN64)
 	)
 	
 	#Set package name from CMake and antares variables
-	set(CPACK_PACKAGE_FILE_NAME "rte-antares-${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}-installer-${ANTARES_INSTALLER_ARCH}")
-    
+	set(CPACK_PACKAGE_FILE_NAME "rte-antares-${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG}-installer-${ANTARES_INSTALLER_ARCH}")
 	#Load packaging facilities.
 	include(CPack)
 else()

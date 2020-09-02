@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - develop
-      - feature/cmake_build_dependency_option
-      - feature/ANT-457--cmake-with-ctest
+      - fix/unit-tests-not-found-on-github-actions
+      - release/v7.2-rc1
 
 jobs:
 
@@ -20,7 +20,7 @@ jobs:
           - os: windows-latest
             triplet: x64-windows
             vcpkgCommitId: 'ee17a685087a6886e5681e355d36cd784f0dd2c8'
-            vcpkgPackages: openssl curl wxwidgets
+            vcpkgPackages: openssl curl wxwidgets boost-test
 
     steps:
     - uses: actions/checkout@v2 
@@ -39,11 +39,12 @@ jobs:
         
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release 
+           cmake -B _build -S src -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
     
     - name: Build
       run: |
            cmake --build _build --config release -j2
+
 
     - name: Running unit tests
       run: |
@@ -54,7 +55,7 @@ jobs:
       run: |
            cd _build
            cpack -GNSIS
-           
+
     - name: Installer upload
       uses: actions/upload-artifact@v2
       with:

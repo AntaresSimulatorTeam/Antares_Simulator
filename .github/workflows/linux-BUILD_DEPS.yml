@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - develop
-      - feature/cmake_build_dependency_option
-      - feature/ANT-457--cmake-with-ctest
+      - fix/unit-tests-not-found-on-github-actions
+      - release/v7.2-rc1
 
 jobs:     
          
@@ -25,7 +25,7 @@ jobs:
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release
+           cmake -B _build -S src -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
 
     - name: Build
       run: |
