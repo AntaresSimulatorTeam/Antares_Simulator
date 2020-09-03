@@ -4,9 +4,7 @@ on:
   push:
     branches:
       - develop
-      - fix/unit-tests-not-found-on-github-actions
-      - release/v7.2-rc1
-
+      - feature/*
 jobs:
 
   windows:
