@@ -15,7 +15,7 @@ endif()
 
 # Define submodule tag
 
-execute_process(COMMAND ${GIT_EXECUTABLE} checkout ${ANTARES_EXAMPLES_TAG} .
+execute_process(COMMAND ${GIT_EXECUTABLE} checkout ${ANTARES_EXAMPLES_TAG}
 				WORKING_DIRECTORY @PROJECT_SOURCE_DIR@/../resources/examples
 				RESULT_VARIABLE GIT_SUBMOD_RESULT)
 if(NOT GIT_SUBMOD_RESULT EQUAL "0")
