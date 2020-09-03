@@ -1,9 +1,9 @@
 name: Windows CI and release upload (VCPKG)
 
 on:
-  push:
+  create:
     tag:      
-      - v*
+      - 'v*'
 jobs:
 
   windows:
@@ -77,6 +77,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: _build/rte-antares-*.*.*-installer-*.exe
+        asset_path: _build/rte-antares-7.2.0-rc2-installer-64bits.exe
         asset_name: rte-antares-installer-{ github.ref }.exe
         asset_content_type: application/exe
