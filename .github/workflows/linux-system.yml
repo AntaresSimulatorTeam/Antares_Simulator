@@ -5,7 +5,6 @@ on:
     branches:
       - develop
       - feature/*
-      
 jobs:
   build:
 
@@ -21,13 +20,15 @@ jobs:
       run: |
            sudo apt-get update --fix-missing
            sudo apt-get install libuuid1 uuid-dev libssh2-1 libssh2-1-dev libidn2-dev libidn11 libidn11-dev gtk2.0 libwxgtk3.0-dev libcurl4-openssl-dev libb64-dev
+           sudo apt-get install libboost-all-dev
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release
+           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
 
     - name: Build
       run: |
+           ls -1
            cmake --build _build --config release -j2
 
     - name: Run unit tests
