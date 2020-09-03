@@ -336,7 +336,13 @@ if(WIN32 OR WIN64)
 	)
 	
   #Define cpack install script to checkout examples
-  set(CPACK_INSTALL_SCRIPT ${PROJECT_SOURCE_DIR}/distrib/CMakeLists.txt)
+  configure_file(
+		${PROJECT_SOURCE_DIR}/distrib/CMakeLists.txt.in
+		${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt
+		@ONLY
+	)
+	
+  set(CPACK_INSTALL_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt)
   
 	#Set package name from CMake and antares variables
 	set(CPACK_PACKAGE_FILE_NAME "rte-antares-${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG}-installer-${ANTARES_INSTALLER_ARCH}")
