@@ -335,20 +335,19 @@ if(WIN32 OR WIN64)
 		@ONLY
 	)
 	
-  #Define cpack install script to checkout examples
-  configure_file(
+	#Define cpack install script to checkout examples
+	configure_file(
 		${PROJECT_SOURCE_DIR}/distrib/CMakeLists.txt.in
 		${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt
 		@ONLY
 	)
 	
-  set(CPACK_INSTALL_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt)
+	set(CPACK_INSTALL_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt)
   
 	#Set package name from CMake and antares variables
 	set(CPACK_PACKAGE_FILE_NAME "rte-antares-${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG}-installer-${ANTARES_INSTALLER_ARCH}")
 
-	#Load packaging facilities.
-	include(CPack)
+
 else()
 
 	#For now only test deb, need to define several CPACK variable
@@ -363,7 +362,9 @@ else()
 
 	configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
 
-	# Load packaging facilities.
-	include(CPack)
+	
 endif()
+
+# Load packaging facilities.
+include(CPack)
 
