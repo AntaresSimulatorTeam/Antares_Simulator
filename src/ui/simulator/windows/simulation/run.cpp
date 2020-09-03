@@ -336,7 +336,7 @@ namespace Simulation
             //Ortools solver
             //TODO JMK : check if we can use a button with menu instead of combobox
             pOrtoolsSolverCombox = new wxComboBox(pBigDaddy, wxID_ANY);
-            std::list<std::string> ortoolsSolverList = Data::getAvailableOrtoolsSolverName();
+            std::list<std::string> ortoolsSolverList = Data::OrtoolsUtils().getAvailableOrtoolsSolverName();
             for (const std::string &ortoolsSolver : ortoolsSolverList) {
                 pOrtoolsSolverCombox->Append(ortoolsSolver);
             }

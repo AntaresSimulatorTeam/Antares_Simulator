@@ -1,17 +1,16 @@
 #pragma once
 
+#include <map>
+
 #include "ortools/linear_solver/linear_solver.h"
 extern "C"
 {
 # include "ortools_wrapper.h"
 }
 
-extern bool withOrtool;
+
 
 size_t current_memory_usage(std::string const & message);
-
-//TODO JMK : to be updated when develop is merged with feature/cmake_build_dependency
-std::list<std::string> GetOrtoolsSolverNames();
 
 std::string getRunName(std::string const & prefix, size_t numSpace, int numInterval, int numOptim);
 
@@ -29,61 +28,83 @@ namespace Antares {
             sirius,     /*! Sirius solver  */
             coin,       /*! Cpl and Cbc coin solver */
             xpress,     /*! Xpress solver : licence needed, depends on ortools link */
-            glop_scip,  /*! Glop and SCIP coin solver */
-            cplex,      /*! CPlex solver */
-            gurobi,     /*! Gurobi solver */
-            glpk        /*! GLPK solver */
+            glop_scip,  /*! Glop and SCIP solver */
+            cplex,      /*! CPlex solver  : licence needed, depends on ortools link*/
+            gurobi,     /*! Gurobi solver : licence needed, depends on ortools link*/
+            glpk,       /*! GLPK solver */
+            glop_cbc    /*! Glop and Cbc coin solver */
         };
 
-        //TODO JMK : where should we store this information
-        //Ortool solver used for simulation
-        extern OrtoolsSolver OrtoolsEnumUsed;
+        class OrtoolsUtils
+        {
+        public:
 
-        /*!
-        *  \brief Return list of available ortools solver
-        *
-        *  \return List of available ortools solver
-        */
-        std::list<OrtoolsSolver> getAvailableOrtoolsSolver();
+            OrtoolsUtils();
 
-        /*!
-        *  \brief Return list of available ortools solver name
-        *
-        *  \return List of available ortools solver name
-        */
-        std::list<std::string> getAvailableOrtoolsSolverName();
+            //Ortool is used for simulation
+            static bool OrtoolsUsed;
 
-        /*!
-        *  \brief Is ortools solver available with current linked ortools
-        *
-        *  \param ortoolsSolver : OrtoolsSolver enum
-        *  \return true if ortools solver is  available
-        */
-        bool isOrtoolsSolverAvailable(OrtoolsSolver ortoolsSolver);
+            //Ortool solver used for simulation
+            static OrtoolsSolver OrtoolsEnumUsed;
 
-        /*!
-        *  \brief Get ortools optimization probleme type for simplex from OrtoolsSolver enum
-        *
-        *  \param ortoolsSolver : OrtoolsSolver enum
-        *  \return MPSolver::OptimizationProblemType
-        */
-        MPSolver::OptimizationProblemType getSimplexOptimProblemType(const OrtoolsSolver& ortoolsSolver);
+            /*!
+            *  \brief Is ortools solver available with current linked ortools
+            *
+            *  \param ortoolsSolver : OrtoolsSolver enum
+            *  \return true if ortools solver is  available
+            */
+            bool isOrtoolsSolverAvailable(OrtoolsSolver ortoolsSolver);
 
-        //TODO JMK : returned values must be adequacy with kOptimizationProblemTypeNames for ortools linear_solver/linear_solver.cc file
-        //This is a temporary workaround before a ortools branch update
-        std::string getSimplexOrtoolsSolverName(const OrtoolsSolver& ortoolsSolver);
+            /*!
+            *  \brief Return list of available ortools solver
+            *
+            *  \return List of available ortools solver
+            */
+            std::list<OrtoolsSolver> getAvailableOrtoolsSolver();
 
-        /*!
-        *  \brief Get ortools optimization probleme type for PNE from OrtoolsSolver enum
-        *
-        *  \param ortoolsSolver : OrtoolsSolver enum
-        *  \return MPSolver::OptimizationProblemType
-        */
-        MPSolver::OptimizationProblemType getPNEOptimProblemType(const OrtoolsSolver& ortoolsSolver);
+            /*!
+            *  \brief Return list of available ortools solver name
+            *
+            *  \return List of available ortools solver name
+            */
+            std::list<std::string> getAvailableOrtoolsSolverName();
 
-        //TODO JMK : returned values must be adequacy with kOptimizationProblemTypeNames for ortools linear_solver/linear_solver.cc file
-        //This is a temporary workaround before a ortools branch update
-        std::string getPNEOrtoolsSolverName(const OrtoolsSolver& ortoolsSolver);
+            /*!
+            *  \brief Get ortools optimization probleme type for linear problem from OrtoolsSolver enum
+            *
+            *  \param ortoolsSolver : OrtoolsSolver enum
+            *  \return MPSolver::OptimizationProblemType
+            */
+            MPSolver::OptimizationProblemType getLinearOptimProblemType(const OrtoolsSolver& ortoolsSolver);
+
+            /*!
+            *  \brief Get ortools optimization probleme type for mixed integer problem from OrtoolsSolver enum
+            *
+            *  \param ortoolsSolver : OrtoolsSolver enum
+            *  \return MPSolver::OptimizationProblemType
+            */
+            MPSolver::OptimizationProblemType getMixedIntegerOptimProblemType(const OrtoolsSolver& ortoolsSolver);
+
+        private:
+
+            //TODO JMK : for now we need to use a string because we can't get all optimization problem type with current ortools RTE branch :
+            // can't use enum because of compile switch
+            std::map<OrtoolsSolver, std::string> _solverLinearProblemOptimStringMap;
+            std::map<OrtoolsSolver, std::string> _solverMixedIntegerProblemOptimStringMap;
+
+            /*
+            std::map<OrtoolsSolver, MPSolver::OptimizationProblemType> _solverLinearProblemOptimMap;
+            std::map<OrtoolsSolver, MPSolver::OptimizationProblemType> _solverMixedIntegerProblemOptimMap;
+             */
+        };
+
+
+
+
+
+
+
+
 
 
 

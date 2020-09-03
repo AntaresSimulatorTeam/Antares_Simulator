@@ -9,8 +9,6 @@
 
 # include "../optimisation/opt_structure_probleme_a_resoudre.h"
 
-extern int withOrtool_c;
-
 void * ORTOOLS_Simplexe(PROBLEME_SIMPLEXE * Probleme, void * ProbSpx);
 void * ORTOOLS_Simplexe_PNE(PROBLEME_A_RESOUDRE * Probleme, void * ProbSpx);
 void ORTOOLS_ModifierLeVecteurCouts(void * ProbSpx, double * costs, int nbVar);

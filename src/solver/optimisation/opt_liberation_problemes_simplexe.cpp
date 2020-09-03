@@ -102,7 +102,7 @@ if (ProblemeAResoudre) {
 				ProbSpx = (PROBLEME_SPX *) ((ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[i])->ProblemeSpx[NumIntervalle]);
 				if (ProbSpx != NULL) {
 
-					if (withOrtool) {
+					if (Data::OrtoolsUtils::OrtoolsUsed) {
 						ORTOOLS_LibererProbleme(ProbSpx);
 					}
 					else {

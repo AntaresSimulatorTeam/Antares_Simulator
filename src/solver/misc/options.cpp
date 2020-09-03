@@ -264,22 +264,22 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
 	}
 
 	//define ortools global values
-    withOrtool          = useOrtools;
+    Antares::Data::OrtoolsUtils::OrtoolsUsed          = useOrtools;
 
 	//ortools solver
-	Antares::Data::OrtoolsEnumUsed = Antares::Data::OrtoolsSolver::sirius;
+	Antares::Data::OrtoolsUtils::OrtoolsEnumUsed = Antares::Data::OrtoolsSolver::sirius;
 
     if(!ortoolsSolver.empty())
     {
         try
         {
-            Antares::Data::OrtoolsEnumUsed = Antares::Data::Enum::fromString<Antares::Data::OrtoolsSolver>(ortoolsSolver);
+            Antares::Data::OrtoolsUtils::OrtoolsEnumUsed = Antares::Data::Enum::fromString<Antares::Data::OrtoolsSolver>(ortoolsSolver);
         }
         catch(Antares::Data::AssertionError& ex)
         {
             logs.warning() << "Assertion error for ortools solver from string conversion : " << ex.what();
             logs.warning() << "invalid ortools-solver option. Got '" << ortoolsSolver
-                           << "'. reset to " << Enum::toString(Antares::Data::OrtoolsEnumUsed);
+                           << "'. reset to " << Enum::toString(Antares::Data::OrtoolsUtils::OrtoolsEnumUsed);
         }
     }
 

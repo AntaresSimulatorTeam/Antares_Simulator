@@ -112,7 +112,7 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 		{
 			if ( ProbSpx != NULL )
 			{
-				if (withOrtool) {
+				if (OrtoolsUtils::OrtoolsUsed) {
 			        ORTOOLS_LibererProbleme( ProbSpx );
 		        }
 		        else {
@@ -129,7 +129,7 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 			Probleme.Contexte            = BRANCH_AND_BOUND_OU_CUT_NOEUD;
 			Probleme.BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
 
-			if (withOrtool) {
+			if (OrtoolsUtils::OrtoolsUsed) {
 		        ORTOOLS_ModifierLeVecteurCouts(ProbSpx, ProblemeAResoudre->CoutLineaire, ProblemeAResoudre->NombreDeVariables);
 		        ORTOOLS_ModifierLeVecteurSecondMembre(ProbSpx, ProblemeAResoudre->SecondMembre, ProblemeAResoudre->Sens, ProblemeAResoudre->NombreDeContraintes);
 		        ORTOOLS_CorrigerLesBornes(ProbSpx, ProblemeAResoudre->Xmin, ProblemeAResoudre->Xmax, ProblemeAResoudre->TypeDeVariable, ProblemeAResoudre->NombreDeVariables, &Probleme);
@@ -192,7 +192,7 @@ Probleme.NombreDeContraintesCoupes = 0;
 
 
 MPSolver * solver = NULL;
-if (withOrtool) {
+if (OrtoolsUtils::OrtoolsUsed) {
 	solver = (MPSolver *) ORTOOLS_Simplexe(&Probleme, ProbSpx);
 	ProbSpx = solver;
 }
@@ -211,7 +211,7 @@ if ( ProbSpx != NULL ) {
 }
 
 if (ProblemeHebdo->ExportMPS == OUI_ANTARES) {
-	if (withOrtool) {
+	if (OrtoolsUtils::OrtoolsUsed) {
 		int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
 		ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
 	}
@@ -226,7 +226,7 @@ ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
 if ( ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage == OUI_ANTARES && ProbSpx != NULL ) {
   if ( ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE ) {
     
-	  if (withOrtool) {
+	  if (OrtoolsUtils::OrtoolsUsed) {
 		  ORTOOLS_LibererProbleme( ProbSpx );
 	  }
 	  else {
@@ -386,7 +386,7 @@ ProblemePourPne.ToleranceDOptimalite         = 1.e-4;
 
 
 
-if (withOrtool) {
+if (OrtoolsUtils::OrtoolsUsed) {
 
 	ORTOOLS_Simplexe_PNE(&ProblemePourPne, NULL);
 
