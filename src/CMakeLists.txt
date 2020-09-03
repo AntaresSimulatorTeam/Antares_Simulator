@@ -59,6 +59,9 @@ OMESSAGE("A New Tool for Adequacy Reporting of Electric Systems (RTE France)")
 OMESSAGE_BOLD("Configuring...")
 OMESSAGE("")
 
+# Making gatherings of several projects under a project folder in IDEs
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 # Copy changelog
 include("cmake/changelog.cmake")
 
