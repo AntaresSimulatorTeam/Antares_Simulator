@@ -67,7 +67,6 @@
 #include <antares/emergency.h>
 #include <antares/logs.h>
 
-//TODO : update include when update from develop is done
 #include  "../utils/ortools_utils.h"
 
 extern "C"

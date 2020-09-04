@@ -85,10 +85,6 @@ namespace Data
 		//! A non-zero value if the data will be used for a simulation
 		bool usedByTheSolver;
 
-		//TODO JMK : we may need to add the ortools option in this class
-		//TODO JMK : we may need to add the ortools solver option in this class
-		//TODO JMK : this will be needed if the study can define the solver in his parameters
-
 		//! Temporary string for passing log message
 		mutable Yuni::String logMessage;
 		//! Porgression, tick count

@@ -1255,8 +1255,7 @@ namespace Antares
                 }
 
 				// Go go go !
-				//TODO JMK : set to debug() log when ortools is fully integrated
-				logs.info() << "running " << cmd;
+				logs.debug() << "running " << cmd;
 				wxString shellCmd = wxStringFromUTF8(cmd);
 				exec->command(shellCmd);
 			}

@@ -36,6 +36,7 @@
 #include <cassert>
 #include <string.h>
 #include <limits>
+#include <algorithm>
 
 #include "options.h"
 #include "../config.h"
@@ -279,18 +280,23 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
     Antares::Data::OrtoolsUtils::OrtoolsUsed          = useOrtools;
 
 	//ortools solver
-	Antares::Data::OrtoolsUtils::OrtoolsEnumUsed = Antares::Data::OrtoolsSolver::sirius;
-
-    if(!ortoolsSolver.empty() && useOrtools)
+    if(useOrtools)
     {
-        try
+        if(availableSolverList.empty())
         {
-            Antares::Data::OrtoolsUtils::OrtoolsEnumUsed = Antares::Data::Enum::fromString<Antares::Data::OrtoolsSolver>(ortoolsSolver);
+            logs.error() << "No ortools solvers available. Can't use '" << ortoolsSolver << "'.";
+            return false;
         }
-        catch(Antares::Data::AssertionError& ex)
+
+        //Default is first available solver
+        Antares::Data::OrtoolsUtils::OrtoolsEnumUsed = Antares::Data::Enum::fromString<Antares::Data::OrtoolsSolver>(availableSolverList.front());
+
+        //Check if solver is available
+        bool found = (std::find(availableSolverList.begin(), availableSolverList.end(), ortoolsSolver) != availableSolverList.end());
+
+        if (!found)
         {
-            logs.warning() << "Assertion error for ortools solver from string conversion : " << ex.what();
-            logs.warning() << "invalid ortools-solver option. Got '" << ortoolsSolver
+            logs.warning() << "Invalid ortools-solver option. Got '" << ortoolsSolver
                            << "'. reset to " << Enum::toString(Antares::Data::OrtoolsUtils::OrtoolsEnumUsed);
         }
     }

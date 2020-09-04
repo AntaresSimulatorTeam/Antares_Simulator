@@ -336,7 +336,6 @@ namespace Simulation
             //Ortools solver selection
             pTitleOrtoolsSolverCombox = Antares::Component::CreateLabel(pBigDaddy, wxT("Ortools solver : "));
 
-            //TODO JMK : check if we can use a button with menu instead of combobox
             pOrtoolsSolverCombox = new wxComboBox(pBigDaddy, wxID_ANY);
             std::list<std::string> ortoolsSolverList = Data::OrtoolsUtils().getAvailableOrtoolsSolverName();
             for (const std::string &ortoolsSolver : ortoolsSolverList) {
@@ -1009,7 +1008,7 @@ namespace Simulation
 	    pTitleOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
         pOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
 
-        //TODO JMK : factorize layout update : not working
+        //Layout update
         auto* sizer = pBigDaddy->GetSizer();
         if (sizer)
             sizer->Fit(pBigDaddy);
