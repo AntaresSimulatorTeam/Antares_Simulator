@@ -110,6 +110,14 @@ if(MSVC)
 		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1 /fp:except")
 	endif()
 
+	if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
+		set(CMAKE_C_FLAGS_DEBUG   "${COMMON_MSVC_FLAGS} /MTd /GR /Ot /Od /EHsc /RTC1")
+		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_MSVC_FLAGS} /MTd /GR /Ot /Od /EHsc /RTC1 /fp:except")
+    else()
+		set(CMAKE_C_FLAGS_DEBUG   "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1")
+		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1 /fp:except")
+	endif()
+
 	# RELEASE
 	set(CMAKE_EXE_LINKER_FLAGS_RELEASE)
 	set(MSVC_RELEASE_FLAGS)

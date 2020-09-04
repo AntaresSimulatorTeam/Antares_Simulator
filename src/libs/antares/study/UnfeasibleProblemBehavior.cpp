@@ -86,11 +86,11 @@ namespace Data {
         case UnfeasibleProblemBehavior::WARNING_DRY:
             return "Warning Dry";
         case UnfeasibleProblemBehavior::WARNING_MPS:
-            return "Warning MPS";
+            return "Warning Verbose";
         case UnfeasibleProblemBehavior::ERROR_DRY:
             return "Error Dry";
         case UnfeasibleProblemBehavior::ERROR_MPS:
-            return "Error MPS";
+            return "Error Verbose";
         default:
             throw AssertionError("Invalid UnfeasibleProblemBehavior " + std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
             return "";
@@ -106,9 +106,9 @@ namespace Enum {
         //Enum must be stored in lower case and without spaces because values  are trimmed and lowered in ini load
         static std::initializer_list<std::string> s_unfeasibleProblemBehaviorNames{
             "warning-dry",
-            "warning-mps",
+            "warning-verbose",
             "error-dry",
-            "error-mps"
+            "error-verbose"
         };
         return s_unfeasibleProblemBehaviorNames;
     }

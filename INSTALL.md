@@ -1,6 +1,7 @@
-﻿# Antares Simulator CMake Build Instructions
+﻿<<<<<<<<< Temporary merge branch 1
+# Antares Simulator CMake Build Instructions
 
-[Environnement](#environment) | [Dependencies](#dependencies) | [Building](#building-antares-solution)|Installer creation (experimental)(#installer)
+[Environnement](#environment) | [CMake version](#cmake-version) | [Dependencies](#dependencies) | [Building](#building-antares-solution) | [Unit tests](#unit-tests) | [Installer creation](#installer-creation)
 
 ## C/I status
 | OS     | System librairies | VCPKG | Built in libraries |
@@ -9,21 +10,21 @@
 | Windows  | Not available|  [![Status][windows_vcpkg_svg]][windows_vcpkg_link] | [![Status][windows_deps_build_svg]][windows_deps_build_link] |
 
 
-[linux_system_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Linux%20CI%20(system%20libs)/badge.svg?branch=feature%2Fcmake_build_dependency_option
+[linux_system_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Linux%20CI%20(system%20libs)/badge.svg
 
 [linux_system_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Linux%20CI%20(system%20libs)"
 
-[linux_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Linux%20CI%20(deps.%20compilation)/badge.svg?branch=feature%2Fcmake_build_dependency_option
+[linux_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Linux%20CI%20(deps.%20compilation)/badge.svg
 
 [linux_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Linux%20CI%20(deps.%20compilation)"
 
-[windows_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(deps.%20compilation)/badge.svg?branch=feature%2Fcmake_build_dependency_option
+[windows_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(deps.%20compilation)/badge.svg
 
 [windows_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(deps.%20compilation)"
 
-[windows_vcpkg_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(VCPKG)/badge.svg?branch=feature%2Fcmake_build_dependency_option
+[windows_vcpkg_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(VCPKG)/badge.svg
 
-[windows_vcpkg_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Linux%20CI%20(VCPKG)"
+[windows_vcpkg_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(VCPKG)"
 
 Note : Linux with VCPKG is not available due to issue in Find_wxWidgets.cmake with VCPKG use in linux.
 
@@ -50,6 +51,42 @@ the OS the package is designed for
 To build on Windows system, please change end-of-line style to appropriate standard 
 Note that Visual Studio may carry out auto-reformating. 
  
+## [CMake version](#cmake-version)
+CMake 3.x must be used.
+On some OS it is not available by default on the system.
+
+### Ubuntu
+There are several ways to get CMake 3.x on your system.
+
+#### Using snap
+```
+sudo snap install cmake --classic
+```
+#### Compiling from sources
+
+```
+sudo apt install build-essential libssl-dev
+wget https://github.com/Kitware/CMake/releases/download/v3.16.5/cmake-3.18.1.tar.gz
+tar -zxvf cmake-3.18.1.tar.gz
+cd cmake-3.18.1
+./bootstrap
+make 
+sudo make install
+```
+Note:
+> You can use a different version of CMake. Check CMake website for available version and chang ``wget`` url.
+
+You can then tell Ubuntu that a new version of cmake should be used :
+```
+sudo update-alternatives --install /usr/bin/cmake cmake /usr/local/bin/cmake 1 --force
+```
+
+### RHEL / Centos
+```
+sudo yum install cmake3
+```
+Note:
+> All ``cmake``  command must be replaced by ``cmake3``.
 
 ## [Dependencies](#deps)
  ANTARES depends on severals mandatory libraries. 
@@ -59,6 +96,7 @@ Note that Visual Studio may carry out auto-reformating.
  - [OrTools](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) (fork from [RTE](https://github.com/rte-france/or-tools/tree/rte_dev_sirius) based on official Ortools github)
  - [wxWidgets](https://github.com/wxWidgets/wxWidgets)
  (Only for the complete Antares Simulator solution with GUI)
+ - Boost test (Only for unit tests)
 
 This section describes the install procedures for the third-party Open source libraries used by ANTARES.
 The install procedure can be done
@@ -74,10 +112,10 @@ For Windows we will use [vcpkg](https://github.com/microsoft/vcpkg) to download 
 
 You must install the corresponding [vcpkg-triplet](https://vcpkg.readthedocs.io/en/latest/users/integration/#triplet-selection) depending on Antares version and libraries load:
 
-- x64-windows        : 64 bits version with dynamic librairies load
-- x86-windows        : 32 bits version with dynamic librairies load
-- x64-windows-static : 64 bits version with static librairies load
-- x86-windows-static : 32 bits version with static librairies load
+- ``x64-windows``        : 64 bits version with dynamic librairies load
+- ``x86-windows``        : 32 bits version with dynamic librairies load
+- ``x64-windows-static`` : 64 bits version with static librairies load
+- ``x86-windows-static`` : 32 bits version with static librairies load
 
 The vcpkg-triplet used will be named [vcpg-triplet] later in this document.
 
@@ -101,6 +139,7 @@ cd [vcpkg_root]
 vcpkg install openssl:[vcpg-triplet] 
 vcpkg install curl:[vcpg-triplet] 
 vcpkg install wxwidgets:[vcpg-triplet] 
+vcpkg install boost-test:[vcpg-triplet] 
 ```
 ### [Using a package manager](#linux_manager)
 On linux you can use a package manger to download the precompiled librairies.
@@ -112,6 +151,7 @@ sudo apt-get install libuuid1 uuid-dev
 sudo apt-get install libcurl4-openssl-dev
 sudo apt-get install libssl-dev
 sudo apt-get install libwxgtk3.0-dev
+sudo apt-get install libboost-test-dev
 ```
 
 #### RHEL / Centos
@@ -120,6 +160,7 @@ sudo apt-get install libwxgtk3.0-dev
 sudo yum install openssl
 sudo yum install curl
 sudo yum install wxGTK3-devel
+sudo yum install boost-test
 ```
 ### [Automatic librairies compilation from git](#git_compil)
 Dependency can be built  at configure time using the option `-DBUILD_DEPS=ON` (`OFF` by default) or you can compile few of them using the options below.
@@ -129,11 +170,11 @@ Dependency can be built  at configure time using the option `-DBUILD_DEPS=ON` (`
 * wxWidgets (`BUILD_wxWidgets`)
 * Sirius solver (`BUILD_sirius`) (ON by default)
 * OrTools (`BUILD_ortools`) (ON by default)
+* Boost test (`BUILD_BOOST_TEST`) : only available with unit tests compilation (cmake option `-DBUILD_TESTING=ON`)
 
 Librairies are compiled with static option.
 
 When `BUILD_CURL` option is used, `BUILD_OPENSSL` option is added.
-
 
 You can specify previously dependencies install directory with `CMAKE_PREFIX_PATH` :
 ```
@@ -141,23 +182,29 @@ cmake -DCMAKE_PREFIX_PATH=<previous_build_dir>/dependencies/install
 ````
 
 ## [Building Antares Solution](#build)
-### Complete solution including GUI
+
 Antares source directory is named `[antares_src]` in all commands.
 
-Build can be done 'out of source'.
+Note :
+> cpack NSIS installer creation need a 'out of source build'. The build directory must be outside `[antares_src]` directory
 
-You can define build type with ```-DCMAKE_BUILD_TYPE``` option.
+### Complete solution including GUI
 
-release
+You can define build type with ```-DCMAKE_BUILD_TYPE``` and ```--config``` option.
+
+- release
 
 ```
-cmake -DCMAKE_BUILD_TYPE=release ..
+cmake -B _build -S [antares_src] -DCMAKE_BUILD_TYPE=release
+cmake --build _build --config release
 ```
- debug
+-  debug
  ```
-cmake -DCMAKE_BUILD_TYPE=debug ..
+cmake -B _build -S [antares_src] -DCMAKE_BUILD_TYPE=debug
+cmake --build _build --config debug
 ```
-Note that these are not the standard CMAKE_BUILD_TYPE. CMake files must be updated.
+Note :
+> These are not the standard ``CMAKE_BUILD_TYPE``. CMake files must be updated.
 
 ### Antares Solver and other command line tools (w/o GUI)
 
@@ -180,92 +227,79 @@ cmake -DCMAKE_PREFIX_PATH=<previous_build_dir>/dependencies/install
 ````
 ### Linux using system libs (recommanded)
 - Install dependencies [using package manager](#using-a-package-manager).
-- Create build dir (optionnal but recommanded)
-```
-cd [antares_src]
-mkdir _build
-```
-- Configure build with cmake
 
+- Configure build with cmake
 ```
-cd [antares_src]
-cd _build
-cmake ..
+cmake -B _build -S [antares_src] -DCMAKE_BUILD_TYPE=release
 ```
 - Build
  ```
-cd [antares_src]
-cd _build
-make -j8
+cmake --build _build --config release -j8
 ```
-Note : compilation can be done on several processor with ```-j``` option.
+Note :
+>Compilation can be done on several processor with ```-j``` option.
 
 ### Window using vcpkg (recommanded)
 - Install dependencies [using VCPKG](#using-vcpkg).
 - Choose [vcpkg-triplet]
-- Create build dir (optionnal but recommanded)
-```
-cd [antares_src]
-mkdir _build
-```
+
 - Configure build with cmake
 
 ```
-cd [antares_src]
-cd _build
-cmake -DCMAKE_TOOLCHAIN_FILE=[vcpkg_root]/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=[vcpkg-triplet] ..
+cmake -B _build -S [antares_src] -DCMAKE_TOOLCHAIN_FILE=[vcpkg_root]/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=[vcpkg-triplet] -DCMAKE_BUILD_TYPE=release
 ```
 - Build
  ```
-cd [antares_src]
-cd _build
-cmake -build .
+cmake --build _build --config release -j8
 ```
-
+Note :
+> Compilation can be done on several processor with ```-j``` option.
 ### Linux/Window building external librairies
-- Create build dir (optionnal but recommanded)
-```
-cd [antares_src]
-mkdir _build
-```
+
 - Configure build with CMake with ```BUILD_DEPS``` option.
 
 ```
-cd [antares_src]
-cd _build
-cmake -DBUILD_DEPS=ON ..
+cmake -B _build -S [antares_src] -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release ..
 ```
 - Build
  ```
-cd [antares_src]
+cmake --build _build --config release -j8
+```
+Note :
+> Compilation can be done on several processor with ```-j``` option.
+
+## [Unit tests](#unit-tests)
+
+Unit tests compilation  can be enabled at configure time using the option `-DBUILD_TESTING=ON` (`OFF` by default)
+
+Note :
+> Boost  test librairie compilation (``BUILD_BOOST_TEST``) can be enabled only if ``BUILD_TESTING=ON``
+
+After build, unit tests can be run with ``ctest`` :
+ ```
 cd _build
-cmake -build .
+ctest -C Release --output-on-failure
 ```
 
-## [Installer creation (experimental)](#installer)
+## [Installer creation](#installer)
 CPack can be used to create installer after build depending on operating system.
 
 ### Window using NSIS
  ```
-cd [antares_src]
 cd _build
 cpack -GNSIS
 ```
 Currently missing in NSIS installer :
-- Sources
 - External librairies sources
-- Examples
 
-## Ubuntu .deb
+## Ubuntu .deb (Experimental)
  ```
-cd [antares_src]
 cd _build
 cpack -G DEB .
 ```
 
 ## Linux .tar.gz
  ```
-cd [antares_src]
 cd _build
 cpack -G TGZ .
 ```

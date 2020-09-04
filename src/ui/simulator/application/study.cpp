@@ -839,6 +839,7 @@ namespace Antares
 
 		OnStudyChanged(study);
 		mainFrm.refreshMenuInput();
+		mainFrm.refreshMenuOptions();
 		mainFrm.requestUpdateGUIAfterStudyIO(true);
 
 		OnStudySaved();
@@ -921,6 +922,7 @@ namespace Antares
 		RefreshListOfOutputsForTheCurrentStudy();
 
 		mainFrm.refreshMenuInput();
+		mainFrm.refreshMenuOptions();
 		mainFrm.refreshStudyLogs();
 
 		return svsSaved;
@@ -986,6 +988,7 @@ namespace Antares
 		RefreshListOfOutputsForTheCurrentStudy();
 
 		mainFrm.refreshMenuInput();
+		mainFrm.refreshMenuOptions();
 		mainFrm.refreshStudyLogs();
 
 		return svsSaved;

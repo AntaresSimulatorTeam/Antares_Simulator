@@ -156,6 +156,26 @@ namespace Datagrid
 				pStyles[CellStyle::cellStyleLayerDisabled]->SetAlignment(wxALIGN_CENTRE, wxALIGN_CENTRE);
 				pStyles[CellStyle::cellStyleLayerDisabled]->SetReadOnly(true);
 			}
+			// Geographic trimming
+			{
+				pStyles[CellStyle::cellStyleFilterYearByYearOn]->SetAlignment(wxALIGN_CENTRE, wxALIGN_CENTRE);
+				pStyles[CellStyle::cellStyleFilterYearByYearOn]->SetTextColour(wxColour(0, 128, 0));
+
+				pStyles[CellStyle::cellStyleFilterYearByYearOff]->SetAlignment(wxALIGN_CENTRE, wxALIGN_CENTRE);
+				pStyles[CellStyle::cellStyleFilterYearByYearOff]->SetTextColour(wxColour(204, 51, 0));
+
+				pStyles[CellStyle::cellStyleFilterSynthesisOn]->SetBackgroundColour(wxColour(221, 221, 221));
+				pStyles[CellStyle::cellStyleFilterSynthesisOn]->SetAlignment(wxALIGN_CENTRE, wxALIGN_CENTRE);
+				pStyles[CellStyle::cellStyleFilterSynthesisOn]->SetTextColour(wxColour(0, 128, 0));
+
+				pStyles[CellStyle::cellStyleFilterSynthesisOff]->SetBackgroundColour(wxColour(221, 221, 221));
+				pStyles[CellStyle::cellStyleFilterSynthesisOff]->SetAlignment(wxALIGN_CENTRE, wxALIGN_CENTRE);
+				pStyles[CellStyle::cellStyleFilterSynthesisOff]->SetTextColour(wxColour(204, 51, 0));
+
+				// Undefined geographic trimming
+				pStyles[CellStyle::cellStyleFilterUndefined]->SetBackgroundColour(wxColour(255, 155, 0));
+				pStyles[CellStyle::cellStyleFilterUndefined]->SetAlignment(wxALIGN_CENTRE, wxALIGN_CENTRE);
+			}
 		}
 
 
@@ -256,6 +276,11 @@ namespace Datagrid
 			internalAppendCSSCode(s, CellStyle::cellStyleConstraintWeight);
 			internalAppendCSSCode(s, CellStyle::cellStyleConstraintNoWeight);
 			internalAppendCSSCode(s, CellStyle::cellStyleConstraintWeightCount);
+			internalAppendCSSCode(s, CellStyle::cellStyleFilterYearByYearOn);
+			internalAppendCSSCode(s, CellStyle::cellStyleFilterYearByYearOff);
+			internalAppendCSSCode(s, CellStyle::cellStyleFilterSynthesisOn);
+			internalAppendCSSCode(s, CellStyle::cellStyleFilterSynthesisOff);
+			internalAppendCSSCode(s, CellStyle::cellStyleFilterUndefined);
 		}
 
 
@@ -287,6 +312,11 @@ namespace Datagrid
 			internalAppendCSSCode(s, CellStyle::cellStyleConstraintWeight);
 			internalAppendCSSCode(s, CellStyle::cellStyleConstraintNoWeight);
 			internalAppendCSSCode(s, CellStyle::cellStyleConstraintWeightCount);
+			internalAppendCSSCode(s, CellStyle::cellStyleFilterYearByYearOn);
+			internalAppendCSSCode(s, CellStyle::cellStyleFilterYearByYearOff);
+			internalAppendCSSCode(s, CellStyle::cellStyleFilterSynthesisOn);
+			internalAppendCSSCode(s, CellStyle::cellStyleFilterSynthesisOff);
+			internalAppendCSSCode(s, CellStyle::cellStyleFilterUndefined);
 		}
 
 

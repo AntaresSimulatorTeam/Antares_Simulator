@@ -3,9 +3,8 @@ name: Windows CI (VCPKG)
 on:
   push:
     branches:
-      - feature/ortools-integration
       - develop
-
+      - feature/*
 jobs:
 
   windows:
@@ -14,11 +13,12 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest]
+        buildtype: [release]
         include:
           - os: windows-latest
             triplet: x64-windows
             vcpkgCommitId: 'ee17a685087a6886e5681e355d36cd784f0dd2c8'
-            vcpkgPackages: openssl curl wxwidgets
+            vcpkgPackages: openssl curl wxwidgets boost-test
         use_rte_ortools : ["ON","OFF"]
 
     steps:
@@ -38,21 +38,26 @@ jobs:
         
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_sirius=ON -DBUILD_ortools=ON -USE_RTE_ORTOOLS_BRANCH=${{ matrix.use_rte_ortools }}
-
+           cmake -B _build -S src -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -USE_RTE_ORTOOLS_BRANCH=${{ matrix.use_rte_ortools }}
+    
     - name: Build
       run: |
            cmake --build _build --config release -j2
+
+
+    - name: Running unit tests
+      run: |
+           cd _build
+           ctest -C ${{ matrix.buildtype }} --output-on-failure
+
 
     - name: Installer creation
       run: |
            cd _build
            cpack -GNSIS
-           
+
     - name: Installer upload
       uses: actions/upload-artifact@v2
       with:
         name: antares-installer-64bits
         path: _build/rte-antares-*.*.*-installer-*.exe
-           
-

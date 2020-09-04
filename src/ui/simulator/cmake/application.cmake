@@ -64,9 +64,16 @@ SET(SRC_APPLICATION
 
 
 
-add_library(libantares-ui-application
-	${SRC_APPLICATION})
+add_library(libantares-ui-application ${SRC_APPLICATION})
 
-target_link_libraries(libantares-ui-application PRIVATE ${wxWidgets_LIBRARIES})
-target_link_libraries(libantares-ui-application PRIVATE libantares-ui-common)
+target_include_directories(libantares-ui-application
+							PRIVATE
+								"${CMAKE_SOURCE_DIR}/ui/simulator"
+)
+
+target_link_libraries(libantares-ui-application
+						PRIVATE
+							${wxWidgets_LIBRARIES}
+							libantares-ui-common
+)
 

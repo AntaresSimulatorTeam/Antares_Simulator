@@ -99,7 +99,7 @@ if(WIN32)
 		"${CMAKE_CURRENT_BINARY_DIR}/resources/win32/manifest.antares-win32.manifest")
 
         FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/antares.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/win32/")
-
+	
 	if(MINGW)
 		# resource compilation for mingw
 		add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/resources/win32/antares.o"
@@ -149,7 +149,6 @@ set(ANTARES_LIBS
 		libantares-license
 		yuni-static-core
 		yuni-static-uuid
-		yuni-static-uuid
 		libmodel_antares-swap #TODO : why no libmodel_antares ? link librairies added for ortools_utils.h
 	)
 
@@ -164,7 +163,6 @@ install(TARGETS ${execname} DESTINATION bin)
 
 import_std_libs(${execname})
 executable_strip(${execname})
-
 
 # Embedding the manifest file into the executable
 if(WIN32)
@@ -189,15 +187,15 @@ if(WIN32)
 endif()
 
 #Copy resources files
-FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/help/" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/help/")
-FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/images/" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/images/")
-FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/animations/" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/animations/")
-FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/icons/" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/icons/")
+FILE(COPY "${PROJECT_SOURCE_DIR}/../docs/ref_guides/"  			DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/help/" FILES_MATCHING PATTERN "*.pdf")
+FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/images/" 		DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/images/")
+FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/animations/" 	DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/animations/")
+FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/icons/" 		DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/icons/")
 
 #resources are loaded from /usr/share/antares/ANTARES_VERSION/resources
-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/help/" 	DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/help")
-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/images/" 	DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/images")
+install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/help/" 		DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/help")
+install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/images/" 		DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/images")
 install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/animations/" 	DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/animations")
-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/icons/" 	DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/icons")
+install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/icons/" 		DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/icons")
 
 

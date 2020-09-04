@@ -59,6 +59,8 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS
 		toolbox/components/datagrid/renderer/connection.cpp
 		toolbox/components/datagrid/renderer/simulation.h
 		toolbox/components/datagrid/renderer/simulation.cpp
+		toolbox/components/datagrid/renderer/geographic-trimming-grid.h
+		toolbox/components/datagrid/renderer/geographic-trimming-grid.cpp
 		toolbox/components/datagrid/renderer/select-variables.h
 		toolbox/components/datagrid/renderer/select-variables.cpp
 		toolbox/components/datagrid/renderer/mc-playlist.cpp
@@ -238,8 +240,16 @@ add_library(libantares-ui-components
 	${SRC_TOOLBOX_COM_NOTEBOOK}
 	)
 
+target_include_directories(libantares-ui-components
+							PRIVATE
+								"${CMAKE_SOURCE_DIR}/ui/simulator"
+)
 
-target_link_libraries(libantares-ui-components PUBLIC ${wxWidgets_LIBRARIES})
-target_link_libraries(libantares-ui-components PRIVATE libantares-core libantares-ui-common)
-
+target_link_libraries(libantares-ui-components
+						PUBLIC
+							${wxWidgets_LIBRARIES}
+						PRIVATE
+							libantares-core
+							libantares-ui-common
+)
 

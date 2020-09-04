@@ -325,6 +325,11 @@ namespace Forms
 	}
 
 
+	void ApplWnd::refreshMenuOptions()
+	{
+		if (not Data::Study::Current::Valid() or IsGUIAboutToQuit())
+			return;
+	}
 
 	void ApplWnd::forceRefresh()
 	{

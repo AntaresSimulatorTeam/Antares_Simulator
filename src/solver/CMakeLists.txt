@@ -70,12 +70,12 @@ macro(solver_app name swap)
 		${SRCS}
 		main.h main.hxx main.cpp
 	)
-
-	set(ANTARES_SOLVER_LIBS
+	
+	set(ANTARES_SOLVER_LIBS		
 		libantares-core-calendar
 		libantares-license
 		yuni-static-uuid
-		yuni-static-core
+		yuni-static-core		
 		${CMAKE_THREADS_LIBS_INIT}
 	)
 
@@ -112,12 +112,12 @@ macro(solver_app name swap)
 			)
 
 	import_std_libs(${exec_name})
-	executable_strip(${exec_name})	
-	
+	executable_strip(${exec_name})
+
 	if( MSVC )
 		# If done properly and if the dependency has a correct config file, IMPORTED_LOCATION_RELEASE should be defined
 		get_target_property( DEP_SHARED_LIB_PATH sirius_solver IMPORTED_LOCATION_RELEASE )
-		
+
 		# Copy the shared lib file
 		add_custom_command(TARGET ${exec_name} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${DEP_SHARED_LIB_PATH} $<TARGET_FILE_DIR:${exec_name}>)
 	endif()

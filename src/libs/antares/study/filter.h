@@ -61,7 +61,10 @@ namespace Data
 	*/
 	uint StringToFilter(const AnyString& string);
 
-
+	/*!
+	** \brief Convert a filter indices into filter flags
+	*/
+	uint filterIndexToFilter(const uint index);
 
 
 

@@ -77,6 +77,28 @@ namespace Data
 		return flag;
 	}
 
+	uint filterIndexToFilter(const uint index)
+	{
+		uint flag = 0;
+		switch (index)
+		{
+		case 0:
+			return flag |= filterHourly;
+		case 1:
+			return flag |= filterDaily;
+		case 2:
+			return flag |= filterWeekly;
+		case 3:
+			return flag |= filterMonthly;
+		case 4:
+			return flag |= filterAnnual;
+		default:
+			return filterNone;
+		}
+
+		return flag;
+	}
+
 
 
 

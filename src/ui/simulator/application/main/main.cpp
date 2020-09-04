@@ -161,6 +161,8 @@ namespace Forms
 		// Options
 		EVT_MENU(mnIDOptionTempFolder, ApplWnd::evtOnOptionsTempFolder)
 		EVT_MENU(mnIDOptionConfigureThematicTrimming, ApplWnd::evtOnOptionsSelectOutput)
+		EVT_MENU(mnIDOptionConfigureAreasTrimming, ApplWnd::evtOnOptionsSelectAreasTrimming)
+		EVT_MENU(mnIDOptionConfigureLinksTrimming, ApplWnd::evtOnOptionsSelectLinksTrimming)
 		EVT_MENU(mnIDOptionConfigureDistricts, ApplWnd::evtOnOptionsDistricts)
 		EVT_MENU(mnIDOptionConfigureMCScenarioPlaylist, ApplWnd::evtOnOptionsMCPlaylist)
 		EVT_MENU(mnIDOptionConfigureMCScenarioBuilder, ApplWnd::evtOnOptionsMCScenarioBuilder)
@@ -245,6 +247,7 @@ namespace Forms
 		pMenuOutput(nullptr),
 		pMenuSimulation(nullptr),
 		pMenuOptions(nullptr),
+		pMenuGeographicTrimming(nullptr),
 		pMenuWindow(nullptr),
 		pMenuTools(nullptr),
 		pMenuHelp(nullptr),
@@ -544,6 +547,7 @@ namespace Forms
 
 			RefreshListOfOutputsForTheCurrentStudy();
 			refreshMenuInput();
+			refreshMenuOptions();
 		}
 
 		// Loading data from the current study, if any

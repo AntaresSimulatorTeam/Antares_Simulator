@@ -359,20 +359,20 @@ namespace Data
 				// NTC
 				buffer.clear() << folder << SEP << link.with->id
 					<< SEP << "direct." << study.inputExtension;
-ret = tmp.loadFromCSVFile(buffer, 1, 8760, Matrix<>::optFixedSize | Matrix<>::optImmediate) && ret;
-link.data.pasteToColumn(fhlNTCDirect, tmp[0]);
+				ret = tmp.loadFromCSVFile(buffer, 1, 8760, Matrix<>::optFixedSize | Matrix<>::optImmediate) && ret;
+				link.data.pasteToColumn(fhlNTCDirect, tmp[0]);
 
-buffer.clear() << folder << SEP << link.with->id
-<< SEP << "indirect." << study.inputExtension;
-ret = tmp.loadFromCSVFile(buffer, 1, 8760, Matrix<>::optFixedSize | Matrix<>::optImmediate) && ret;
-link.data.pasteToColumn(fhlNTCIndirect, tmp[0]);
+				buffer.clear() << folder << SEP << link.with->id
+				<< SEP << "indirect." << study.inputExtension;
+				ret = tmp.loadFromCSVFile(buffer, 1, 8760, Matrix<>::optFixedSize | Matrix<>::optImmediate) && ret;
+				link.data.pasteToColumn(fhlNTCIndirect, tmp[0]);
 
-buffer.clear() << folder << SEP << link.with->id
-<< SEP << "impedances." << study.inputExtension;
-ret = tmp.loadFromCSVFile(buffer, 1, 8760, Matrix<>::optFixedSize | Matrix<>::optImmediate) && ret;
-link.data.pasteToColumn(fhlImpedances, tmp[0]);
+				buffer.clear() << folder << SEP << link.with->id
+				<< SEP << "impedances." << study.inputExtension;
+				ret = tmp.loadFromCSVFile(buffer, 1, 8760, Matrix<>::optFixedSize | Matrix<>::optImmediate) && ret;
+				link.data.pasteToColumn(fhlImpedances, tmp[0]);
 
-link.data.markAsModified();
+				link.data.markAsModified();
 			}
 			else if (study.header.version < 630)
 			{

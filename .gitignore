@@ -30,7 +30,6 @@ Release
 *.layout
 src/.vs
 
-resources/examples*
 resources/antares-open*
 bin/debug
 bin/release

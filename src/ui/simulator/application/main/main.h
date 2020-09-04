@@ -259,6 +259,11 @@ namespace Forms
 		void refreshMenuOutput();
 
 		/*!
+		** \brief Refresh the simulation options
+		*/
+		void refreshMenuOptions();
+
+		/*!
 		** \brief Assign the focus to this form and refresh it
 		*/
 		void forceFocus();
@@ -594,6 +599,10 @@ namespace Forms
 		void evtOnOptionsTempFolder(wxCommandEvent& evt);
 		//! Selecting output
 		void evtOnOptionsSelectOutput(wxCommandEvent& evt);
+		//! Selecting areas trimming
+		void evtOnOptionsSelectAreasTrimming(wxCommandEvent& evt);
+		//! Selecting links trimming
+		void evtOnOptionsSelectLinksTrimming(wxCommandEvent& evt);
 		//! MC districts
 		void evtOnOptionsDistricts(wxCommandEvent& evt);
 		//! MC Playlist
@@ -716,6 +725,8 @@ namespace Forms
 		wxMenu* pMenuSimulation;
 		//! Menu: Options
 		wxMenu* pMenuOptions;
+		//! SubMenu: Options > Geographic trimming
+		wxMenuItem* pMenuGeographicTrimming;
 		//! Menu: Window
 		wxMenu* pMenuWindow;
 		//! Menu: Tools

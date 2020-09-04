@@ -28,6 +28,7 @@
 #include "../main.h"
 #include "../study.h"
 #include "../../windows/options/temp-folder/temp-folder.h"
+#include "../../windows/options/geographic-trimming/geographic-trimming.h"
 #include "../../windows/options/select-output/select-output.h"
 #include "../../windows/options/playlist/playlist.h"
 #include "../../windows/options/optimization/optimization.h"
@@ -50,6 +51,20 @@ namespace Forms
 		Forms::Disabler<ApplWnd> disabler(*this);
 		if (Data::Study::Current::Valid())
 			Dispatcher::GUI::CreateAndShowModal<Window::Options::SelectOutput>(this);
+	}
+
+	void ApplWnd::evtOnOptionsSelectAreasTrimming(wxCommandEvent&)
+	{
+		Forms::Disabler<ApplWnd> disabler(*this);
+		if (Data::Study::Current::Valid())
+			Dispatcher::GUI::CreateAndShowModal<Window::Options::areasTrimming>(this);
+	}
+
+	void ApplWnd::evtOnOptionsSelectLinksTrimming(wxCommandEvent&)
+	{
+		Forms::Disabler<ApplWnd> disabler(*this);
+		if (Data::Study::Current::Valid())
+			Dispatcher::GUI::CreateAndShowModal<Window::Options::linksTrimming>(this);
 	}
 
 	void ApplWnd::evtOnOptionsMCPlaylist(wxCommandEvent&)

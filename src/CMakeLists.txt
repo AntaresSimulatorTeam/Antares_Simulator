@@ -12,7 +12,7 @@ set(ANTARES_WEBSITE	   "https://antares.rte-france.com")
 
 # Beta release
 set(ANTARES_BETA 0)
-#set(ANTARES_RC 1)
+set(ANTARES_RC 2)
 
 # CMAKE - Suppress useless features
 set(CMAKE_SKIP_PREPROCESSED_SOURCE_RULES true)
@@ -66,7 +66,6 @@ include("cmake/changelog.cmake")
 include("cmake/checks.cmake")
 
 
-
 if (ANTARES_LICENSE)
 	OMESSAGE("{antares}  License : ${ANTARES_LICENSE}")
 endif()
@@ -114,7 +113,7 @@ else()
 endif()
 
 if(${ANTARES_RC})
-	set(ANTARES_INSTALLER_RC "rc${ANTARES_RC}")
+	set(ANTARES_INSTALLER_RC "-rc${ANTARES_RC}")
 else()
 	set(ANTARES_INSTALLER_RC "")
 endif()
@@ -128,9 +127,6 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "t
 else()
 	OMESSAGE("{antares} Build Configuration: DEBUG")
 endif()
-
-
-
 
 #
 # Yuni Framework
@@ -183,13 +179,14 @@ CMAKE_DEPENDENT_OPTION(BUILD_zlib "Build zlib dependency Library" OFF
 message(STATUS "Build BUILD_zlib: ${BUILD_zlib}")
 
 # Build Needed dependencies
-add_subdirectory(cmake/dependencies dependencies)
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install)
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install/libs/pkgconfig)
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/build_deps/install)
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/build_deps/install/libs/pkgconfig)
+
+add_subdirectory(cmake/dependencies ${CMAKE_CURRENT_SOURCE_DIR}/build_deps)
 
 if(BUILD_wxWidgets)
 	# Define wxWidgets_ROOT_DIR
-	set(wxWidgets_ROOT_DIR ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install)
+	set(wxWidgets_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build_deps/install)
 endif()
 
 # Define needed external library
@@ -197,15 +194,17 @@ endif()
 #libcurl
 find_package(CURL REQUIRED)
 
-#openssl
+#openssl	
 find_package(OpenSSL REQUIRED)
 
 
 #TODO : Add ZLIB if  VCPKG used why is this needed
-if (VCPKG_TOOLCHAIN)
+if (VCPKG_TOOLCHAIN) 
     #zlib
     find_package(ZLIB REQUIRED)
 endif()
+
+
 
 #Sirius solver
 if(POLICY CMP0074)
@@ -223,34 +222,34 @@ find_package(sirius_solver CONFIG REQUIRED)
 
 if(BUILD_curl)
 
-	# ADD CURL_STATICLIB definition
-	add_definitions(-DCURL_STATICLIB)
-
+	# ADD CURL_STATICLIB definition 
+	add_definitions(-DCURL_STATICLIB) 
+	
 	if(WIN32 OR WIN64)
-
+	
 		#Linking not working on windows need to add several system dependency
 		SET(CURL_LIBRARIES ${CURL_LIBRARIES} "Ws2_32.Lib" "Wldap32.Lib" "Crypt32.Lib")
     else()
-
+		
 		#zlib
 		find_package(ZLIB REQUIRED)
-
+	
 		#find_package(CURL) doesn't indicate ZLIB and idn2 dependencies (idn2 used even with --without-libidn option in configure)
-		SET(CURL_LIBRARIES ${CURL_LIBRARIES} ${ZLIB_LIBRARIES} idn2)
-	endif()
+		SET(CURL_LIBRARIES ${CURL_LIBRARIES} ${ZLIB_LIBRARIES} idn2)    
+	endif()	 
 endif()
 
 if(BUILD_OPENSSL)
-
+	
 	if(WIN32 OR WIN64)
     	else()
 		#find_package(OpenSSL doesn't indicate -ldl option
-		SET(OPENSSL_LIBRARIES ${OPENSSL_LIBRARIES} "dl")
-	endif()
+		SET(OPENSSL_LIBRARIES ${OPENSSL_LIBRARIES} "dl")    
+	endif()	 
 endif()
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
-if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets)
+if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 
     #Add cmake directory to CMAKE_MODULE_PATH to use specific FindwxWidgets package needed for vcpkg
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/wxWidgets")
 endif()
@@ -282,6 +281,24 @@ add_subdirectory(analyzer)	#antares analyser
 # Tools
 add_subdirectory(tools)	#All antares tools
 
+# Tests
+# 	Not setting BUILD_TESTING as a command line argument is equivalent to use -DBUILD_TESTING=OFF
+# 	To build tests, use -DBUILD_TESTING=ON
+option(BUILD_TESTING "Activates unit tests building" OFF)
+if(BUILD_TESTING)
+	# include(CTest) # calls enable_testing() and turns BUILD_TESTING to ON by default (among other useful things)
+	enable_testing()
+
+	CMAKE_DEPENDENT_OPTION(BUILD_BOOST_TEST "Download and build boost.test" OFF "NOT BUILD_DEPS" ON)
+
+	if(BUILD_BOOST_TEST)
+		# Setting CMAKE_PREFIX_PATH so that find_package(boost.test...) finds "${FizzBuzz current path}/ext" boost.test
+		list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/tests/ext")
+	endif()
+
+	add_subdirectory(tests)
+endif()
+
 OMESSAGE("")
 
 # Informations for NSIS
@@ -299,7 +316,7 @@ if(WIN32 OR WIN64)
 		set(COMPILER_MARK "m")
 		set(COMPILER_INCLUDE "mingw")
 	endif(MSVC)
-
+	
 	set(CPACK_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32 ${CPACK_MODULE_PATH})
 
 	# Configure file with custom definitions for NSIS.
@@ -307,30 +324,51 @@ if(WIN32 OR WIN64)
 		${PROJECT_SOURCE_DIR}/distrib/win32/version.cmake
 		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/version.nsh
 	)
-
+	
 	configure_file(
 		${PROJECT_SOURCE_DIR}/distrib/win32/build.template.cmake
 		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/build.nsh
 	)
-
+	
 	configure_file(
 		${PROJECT_SOURCE_DIR}/distrib/win32/make-zip-from-installer.cmake
 		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/make-zip-from-installer.bat
 	)
-
+	
 	SET(ANTARES_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
+
+	# Define system libraries so NSIS can package these files
+	include (InstallRequiredSystemLibraries)
+
+	#Convert to native and add double quote to be used in NSIS package
+	foreach(SYSTEM_RUNTIME_LIB ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS})
+		file(TO_NATIVE_PATH ${SYSTEM_RUNTIME_LIB} SYSTEM_RUNTIME_LIB_NATIVE)
+
+		list(APPEND SYSTEM_RUNTIME_LIBS_NATIVE \"${SYSTEM_RUNTIME_LIB_NATIVE}\")
+	endforeach()
+
+	#Replace ; by space so SYSTEM_RUNTIME_LIBS_STR can be used in File function in NSIS file
+	string (REPLACE ";" " " SYSTEM_RUNTIME_LIBS_STR "${SYSTEM_RUNTIME_LIBS_NATIVE}")
 
 	configure_file(
 		${PROJECT_SOURCE_DIR}/distrib/win32/NSIS.template.in
 		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/NSIS.template.in
 		@ONLY
 	)
+	
+	#Define cpack install script to checkout examples
+	configure_file(
+		${PROJECT_SOURCE_DIR}/distrib/CMakeLists.txt.in
+		${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt
+		@ONLY
+	)
+
+	set(CPACK_INSTALL_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt)
 
 	#Set package name from CMake and antares variables
-	set(CPACK_PACKAGE_FILE_NAME "rte-antares-${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}-installer-${ANTARES_INSTALLER_ARCH}")
+	set(CPACK_PACKAGE_FILE_NAME "rte-antares-${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG}-installer-${ANTARES_INSTALLER_ARCH}")
 
-	#Load packaging facilities.
-	include(CPack)
+
 else()
 
 	#For now only test deb, need to define several CPACK variable
@@ -345,7 +383,9 @@ else()
 
 	configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
 
-	# Load packaging facilities.
-	include(CPack)
+
 endif()
+
+# Load packaging facilities.
+include(CPack)
 

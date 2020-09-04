@@ -3,9 +3,8 @@ name: Windows CI (deps. compilation)
 on:
   push:
     branches:
-      - feature/ortools-integration
       - develop
-
+      - feature/*
 jobs:
 
   windows:
@@ -21,11 +20,16 @@ jobs:
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release -USE_RTE_ORTOOLS_BRANCH=${{ matrix.use_rte_ortools }}
+           cmake -B _build -S src -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON-USE_RTE_ORTOOLS_BRANCH=${{ matrix.use_rte_ortools }}
 
     - name: Build
       run: |
            cmake --build _build --config release -j2
+
+    - name: Test
+      run: |
+           cd _build
+           ctest -C Release --output-on-failure
 
     - name: Installer creation
       run: |
@@ -37,5 +41,3 @@ jobs:
       with:
         name: antares-installer-64bits
         path: _build/rte-antares-*.*.*-installer-*.exe
-           
-

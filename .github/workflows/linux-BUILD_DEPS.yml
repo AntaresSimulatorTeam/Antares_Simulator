@@ -4,8 +4,7 @@ on:
   push:
     branches:
       - develop
-      - feature/ortools-integration
-
+      - feature/*
 jobs:     
          
   linux:
@@ -25,11 +24,17 @@ jobs:
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release -USE_RTE_ORTOOLS_BRANCH=${{ matrix.use_rte_ortools }}
+           cmake -B _build -S src -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -USE_RTE_ORTOOLS_BRANCH=${{ matrix.use_rte_ortools }}
 
     - name: Build
       run: |
            cmake --build _build --config release -j2
+
+
+    - name: Runnning unit tests
+      run: |
+           cd _build
+           ctest -C Release --output-on-failure
 
     - name: Installer .deb creation
       run: |
@@ -46,5 +51,5 @@ jobs:
       with:
         name: antares-installer-64bits
         path: _build/antares-*.*.*-Linux.*
-           
+
 

@@ -86,6 +86,11 @@ namespace Renderer
 			cellStyleConstraintOperator,
 			cellStyleConstraintType,
 			cellStyleLayerDisabled,
+			cellStyleFilterYearByYearOn,
+			cellStyleFilterYearByYearOff,
+			cellStyleFilterSynthesisOn,
+			cellStyleFilterSynthesisOff,
+			cellStyleFilterUndefined,
 
 			cellStyleMax /* Max items in the list */
 		};
