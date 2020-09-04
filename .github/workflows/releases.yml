@@ -80,8 +80,8 @@ jobs:
       uses: actions/upload-release-asset@v1.0.2
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: _build/$DEB_NAME
-        asset_name: $DEB_NAME
+        asset_path: _build/${{env.DEB_NAME}}
+        asset_name: ${{env.DEB_NAME}}
         asset_content_type: application/octet-stream
         
     - name: Upload NSIS installer
@@ -89,7 +89,7 @@ jobs:
       uses: actions/upload-release-asset@v1.0.2
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: _build/$NSIS_NAME
-        asset_name: $NSIS_NAME
+        asset_path: _build/${{env.NSIS_NAME}}
+        asset_name: ${{env.NSIS_NAME}}
         asset_content_type: application/octet-stream
     
