@@ -1,4 +1,3 @@
-﻿<<<<<<<<< Temporary merge branch 1
 # Antares Simulator CMake Build Instructions
 
 [Environnement](#environment) | [CMake version](#cmake-version) | [Dependencies](#dependencies) | [Building](#building-antares-solution) | [Unit tests](#unit-tests) | [Installer creation](#installer-creation)
