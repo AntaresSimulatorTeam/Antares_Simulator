@@ -63,21 +63,25 @@ jobs:
       if: matrix.os == 'windows-latest'
       run: |
            cd _build
-           cpack -GNSIS   
+           cpack -GNSIS  
+           export NSIS_NAME=$(ls *.exe)
+           echo "::set-env name=NSIS_NAME::$NSIS_NAME" 
         
     - name: Installer .deb creation
       if: matrix.os == 'ubuntu-latest'
       run: |
            cd _build
            cpack -G DEB
+           export DEB_NAME=$(ls *.deb)
+           echo "::set-env name=DEB_NAME::$DEB_NAME"
            
     - name: Upload .deb
       if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-release-asset@v1.0.2
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: _build/antares-7.2.0-Linux.deb
-        asset_name: antares-7.2.0-Linux.deb
+        asset_path: _build/$DEB_NAME
+        asset_name: $DEB_NAME
         asset_content_type: application/octet-stream
         
     - name: Upload .deb
@@ -85,7 +89,7 @@ jobs:
       uses: actions/upload-release-asset@v1.0.2
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: _build/rte-antares-7.2.0-rc2-installer-64bits.exe
-        asset_name: rte-antares-7.2.0-rc2-installer-64bits.exe
+        asset_path: _build/$NSIS_NAME
+        asset_name: $NSIS_NAME
         asset_content_type: application/octet-stream
     
