@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        use_rte_ortools : ["ON","OFF"]
+        use_rte_ortools : ["OFF"]
 
     steps:
     - uses: actions/checkout@v2 
