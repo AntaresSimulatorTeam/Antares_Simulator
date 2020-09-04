@@ -20,7 +20,7 @@ jobs:
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON-USE_RTE_ORTOOLS_BRANCH=${{ matrix.use_rte_ortools }}
+           cmake -B _build -S src -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DUSE_RTE_ORTOOLS_BRANCH=${{ matrix.use_rte_ortools }}
 
     - name: Build
       run: |
