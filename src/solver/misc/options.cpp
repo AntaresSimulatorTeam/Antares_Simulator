@@ -109,8 +109,20 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
 
     //add option for ortools solver used
     std::string ortoolsSolver;
+
+	//Define available solver list
+    std::list<std::string> availableSolverList = Antares::Data::OrtoolsUtils().getAvailableOrtoolsSolverName();
+    std::string availableSolverListStr;
+    for(auto it = availableSolverList.begin(); it != availableSolverList.end(); it++)
+    {
+        availableSolverListStr += *it + ";";
+    }
+    //Remove last ;
+    if (!availableSolverListStr.empty())
+        availableSolverListStr.pop_back();
+
     //--ortools-solver
-    getopt.add(ortoolsSolver, ' ', "ortools-solver", "Ortools solver used for simulation (only available with use-ortools)");
+    getopt.add(ortoolsSolver, ' ', "ortools-solver", "Ortools solver used for simulation (only available with use-ortools option)\nAvailable solver list : " + availableSolverListStr);
 
 	getopt.addParagraph("\nParameters");
 	// --name
@@ -269,7 +281,7 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
 	//ortools solver
 	Antares::Data::OrtoolsUtils::OrtoolsEnumUsed = Antares::Data::OrtoolsSolver::sirius;
 
-    if(!ortoolsSolver.empty())
+    if(!ortoolsSolver.empty() && useOrtools)
     {
         try
         {

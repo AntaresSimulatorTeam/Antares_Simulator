@@ -50,6 +50,9 @@
 #include "misc/system-memory.h"
 //#include <antares/proxy/proxy.h>
 
+#include <antares/Enum.hpp>
+#include "utils/ortools_utils.h"
+
 
 
 #ifdef YUNI_OS_WINDOWS
@@ -141,6 +144,15 @@ bool SolverApplication::prepare(int argc, char* argv[])
 	// Logs
 	Resources::WriteRootFolderToLogs();
 	logs.info()   << "  :: log filename: " << logs.logfile();
+
+	//Indicate ortools solver used. Must be done outside grab option function because log filename is not set otherwise and the log won't be displayed in antares simulator ui
+    if (Data::OrtoolsUtils::OrtoolsUsed)
+    {
+        logs.info();
+        logs.info() << "  :: ortools solver " << Data::Enum::toString(Data::OrtoolsUtils::OrtoolsEnumUsed) << " used for problem resolution";
+        logs.info();
+    }
+
 	// Temporary use a callback to count the number of errors and warnings
 	logs.callback.connect(this, &SolverApplication::onLogMessage);
 
@@ -158,14 +170,14 @@ bool SolverApplication::prepare(int argc, char* argv[])
 	
 	// LISTE DE CHECKS ...
 
-	// CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing = MILP ». 
+	// CHECK incompatible de choix simultanÃ© des options Â« simplex range= daily Â» et Â« hydro-pricing = MILP Â». 
 	if ((pParameters->simplexOptimizationRange == Antares::Data::SimplexOptimization::sorDay) && (pParameters->hydroPricing.hpMode == Antares::Data::HydroPricingMode::hpMILP))
 	{
 		logs.error() << "Simplexe optimization range and hydro pricing mode : values are not compatible ";
 		return false;
 	}
 
-	// CHECK incompatible de choix simultané des options « simplex range= daily » et « unit-commitment = MILP ». 
+	// CHECK incompatible de choix simultanÃ© des options Â« simplex range= daily Â» et Â« unit-commitment = MILP Â». 
 	if ((pParameters->simplexOptimizationRange == Antares::Data::SimplexOptimization::sorDay) && (pParameters->unitCommitment.ucMode == Antares::Data::UnitCommitmentMode::ucMILP))
 	{
 		logs.error()<<"Simplexe optimization range and unit commitment mode : values are not compatible ";
