@@ -12,7 +12,7 @@ set(ANTARES_WEBSITE	   "https://antares.rte-france.com")
 
 # Beta release
 set(ANTARES_BETA 0)
-#set(ANTARES_RC 1)
+set(ANTARES_RC 2)
 
 # CMAKE - Suppress useless features
 set(CMAKE_SKIP_PREPROCESSED_SOURCE_RULES true)
@@ -113,7 +113,7 @@ else()
 endif()
 
 if(${ANTARES_RC})
-	set(ANTARES_INSTALLER_RC "rc${ANTARES_RC}")
+	set(ANTARES_INSTALLER_RC "-rc${ANTARES_RC}")
 else()
 	set(ANTARES_INSTALLER_RC "")
 endif()
@@ -168,13 +168,14 @@ CMAKE_DEPENDENT_OPTION(BUILD_zlib "Build zlib dependency Library" OFF
 message(STATUS "Build BUILD_zlib: ${BUILD_zlib}")
 
 # Build Needed dependencies
-add_subdirectory(cmake/dependencies dependencies)
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install)
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install/libs/pkgconfig)
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/build_deps/install)
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/build_deps/install/libs/pkgconfig)
+
+add_subdirectory(cmake/dependencies ${CMAKE_CURRENT_SOURCE_DIR}/build_deps)
 
 if(BUILD_wxWidgets)
 	# Define wxWidgets_ROOT_DIR
-	set(wxWidgets_ROOT_DIR ${CMAKE_CURRENT_BINARY_DIR}/dependencies/install)  
+	set(wxWidgets_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build_deps/install)  
 endif()
 
 # Define needed external library
@@ -315,17 +316,38 @@ if(WIN32 OR WIN64)
 	
 	SET(ANTARES_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
 	
+	# Define system libraries so NSIS can package these files
+	include (InstallRequiredSystemLibraries)
+	
+	#Convert to native and add double quote to be used in NSIS package
+	foreach(SYSTEM_RUNTIME_LIB ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS})
+		file(TO_NATIVE_PATH ${SYSTEM_RUNTIME_LIB} SYSTEM_RUNTIME_LIB_NATIVE)
+		
+		list(APPEND SYSTEM_RUNTIME_LIBS_NATIVE \"${SYSTEM_RUNTIME_LIB_NATIVE}\")
+	endforeach()
+	
+	#Replace ; by space so SYSTEM_RUNTIME_LIBS_STR can be used in File function in NSIS file
+	string (REPLACE ";" " " SYSTEM_RUNTIME_LIBS_STR "${SYSTEM_RUNTIME_LIBS_NATIVE}")
+	
 	configure_file(
 		${PROJECT_SOURCE_DIR}/distrib/win32/NSIS.template.in
 		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/NSIS.template.in
 		@ONLY
 	)
 	
+	#Define cpack install script to checkout examples
+	configure_file(
+		${PROJECT_SOURCE_DIR}/distrib/CMakeLists.txt.in
+		${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt
+		@ONLY
+	)
+	
+	set(CPACK_INSTALL_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt)
+  
 	#Set package name from CMake and antares variables
-	set(CPACK_PACKAGE_FILE_NAME "rte-antares-${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}-installer-${ANTARES_INSTALLER_ARCH}")
-    
-	#Load packaging facilities.
-	include(CPack)
+	set(CPACK_PACKAGE_FILE_NAME "rte-antares-${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG}-installer-${ANTARES_INSTALLER_ARCH}")
+
+
 else()
 
 	#For now only test deb, need to define several CPACK variable
@@ -340,7 +362,9 @@ else()
 
 	configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
 
-	# Load packaging facilities.
-	include(CPack)
+	
 endif()
+
+# Load packaging facilities.
+include(CPack)
 

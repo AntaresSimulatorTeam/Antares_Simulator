@@ -143,7 +143,7 @@ namespace InputSelector
 		toolSZ->AddStretchSpacer();
 
 		pTotalMW = Component::CreateLabel(this, wxT("Total : 0 MW"));
-		toolSZ->Add(pTotalMW, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+		toolSZ->Add(pTotalMW, 0, wxRIGHT | wxALIGN_CENTER_VERTICAL);
 		toolSZ->AddSpacer(15);
 		toolSZ->Layout();
 

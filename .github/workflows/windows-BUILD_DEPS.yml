@@ -4,13 +4,12 @@ on:
   push:
     branches:
       - develop
-      - feature/unit-tests--remove-TESTING
-
 jobs:
 
   windows:
 
     runs-on: ${{ matrix.os }}
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       matrix:
         os: [windows-latest]
@@ -20,7 +19,7 @@ jobs:
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release
+           cmake -B _build -S src -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
 
     - name: Build
       run: |
