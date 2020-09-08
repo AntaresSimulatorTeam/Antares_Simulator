@@ -70,6 +70,8 @@ namespace AllYears
 		double* year;
 		mutable double allYears;
 		unsigned int nbYearsCapacity;
+
+        //TODO JMK : ratio should take into account MC year weight
 		double pRatio;
 
 	}; // class OrData

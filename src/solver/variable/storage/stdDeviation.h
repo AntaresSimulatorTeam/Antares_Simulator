@@ -71,7 +71,6 @@ namespace AllYears
 
 	public:
 		StdDeviation()
-			:pRatio(0.)
 		{
 			using namespace Yuni;
 			stdDeviationHourly = nullptr;
@@ -82,21 +81,16 @@ namespace AllYears
 			Antares::Memory::Release(stdDeviationHourly);
 		}
 
-
-		template<class U> inline void stdDeviationMaxValue(const U v)
-		{
-			pRatio = (Yuni::Math::Zero<U>(v))
-				? (std::numeric_limits<double>::infinity())
-				: (1. / (double)v);
-		}
-
 	protected:
 		void initializeFromStudy(Antares::Data::Study& study)
 		{
 			Antares::Memory::Allocate<double>(stdDeviationHourly, maxHoursInAYear);
 			// Next
 			NextType::initializeFromStudy(study);
-		}
+
+            yearsWeight     = study.parameters.getYearsWeight();
+            yearsWeightSum  = study.parameters.getYearsWeightSum();
+        }
 
 		void reset()
 		{
@@ -112,6 +106,9 @@ namespace AllYears
 
 		void merge(unsigned int year, const IntermediateValues& rhs)
 		{
+            //Ratio take into account MC year weight
+            double pRatio = (double) yearsWeight[year] / (double) yearsWeightSum;
+
 			unsigned int i;
 			// StdDeviation value for each hour throughout all years
 			for (i = 0; i != maxHoursInAYear; ++i)
@@ -303,9 +300,10 @@ namespace AllYears
 		}
 
 	private:
-		//! 1. / nb hours
-		double pRatio;
 
+        std::vector<int>    yearsWeight;
+        int                 yearsWeightSum;
+        
 	}; // class StdDeviation
 
 

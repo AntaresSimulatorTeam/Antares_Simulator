@@ -64,6 +64,8 @@ namespace AllYears
 		year = new double[nbYearsCapacity];
 
 		unsigned int count = study.runtime->rangeLimits.year[Data::rangeCount];
+
+		//TODO JMK : ratio should take into account MC year weight
 		pRatio  = 1. / count;
 	}
 
@@ -81,6 +83,8 @@ namespace AllYears
 
 	void OrData::merge(unsigned int y, const IntermediateValues& rhs)
 	{
+        //TODO JMK : ratio should take into account MC year weight
+
 		unsigned int i;
 		for (i = 0; i != maxHoursInAYear; ++i)
 			hourly[i] += rhs.hour[i] * pRatio;

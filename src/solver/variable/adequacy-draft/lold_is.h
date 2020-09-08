@@ -128,7 +128,6 @@ namespace AdequacyDraft
 			// Average on all years
 			AncestorType::pResults.initializeFromStudy(study);
 			AncestorType::pResults.reset();
-			AncestorType::pResults.averageMaxValue(study.runtime->rangeLimits.year[Data::rangeCount]);
 
 			// Intermediate values
 			pValuesForTheCurrentYear.initializeFromStudy(study);

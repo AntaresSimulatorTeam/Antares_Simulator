@@ -267,6 +267,7 @@ namespace Options
 		auto& d = study.parameters;
 		bool b = d.userPlaylist and d.nbYears > 1;
 
+		//TODO JMK : update caption with MC year weight sum ?
 		if (b)
 		{
 			uint y = 0;

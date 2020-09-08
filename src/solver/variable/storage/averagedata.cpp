@@ -49,7 +49,6 @@ namespace AllYears
 		:hourly(nullptr),
 		year(nullptr),
 		nbYearsCapacity(0),
-		ratio(0.),
 		allYears(0.)
 	{
 	}
@@ -77,12 +76,19 @@ namespace AllYears
 		Antares::Memory::Allocate<double>(hourly, maxHoursInAYear);
 		nbYearsCapacity = study.runtime->rangeLimits.year[Data::rangeEnd] + 1;
 		year = new double[nbYearsCapacity];
+
+        yearsWeight     = study.parameters.getYearsWeight();
+        yearsWeightSum  = study.parameters.getYearsWeightSum();
 	}
 
 
 	void AverageData::merge(unsigned int y, const IntermediateValues& rhs)
 	{
 		unsigned int i;
+
+        //Ratio take into account MC year weight
+		double ratio = (double) yearsWeight[y] / (double) yearsWeightSum;
+
 		// Average value for each hour throughout all years
 		for (i = 0; i != maxHoursInAYear; ++i)
 			hourly[i] += rhs.hour[i] * ratio;

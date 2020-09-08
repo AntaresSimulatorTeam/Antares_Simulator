@@ -209,6 +209,9 @@ namespace Data
 		nbYears					= 1;
 		delete[] yearsFilter;
 		yearsFilter				= nullptr;
+
+		resetYearWeigth();
+
 		yearByYear				= false;
 		derated					= false;
 		useCustomTSNumbers		= false;
@@ -1021,6 +1024,11 @@ namespace Data
 				}
 			}
 			nbYears = options.nbYears;
+
+			//TODO JMK : see what is this option 
+			//We may just resize years weight (add or remove item)
+			//Define default MC weight
+            resetYearWeigth();
 		}
 
 
@@ -1092,6 +1100,8 @@ namespace Data
 				yearsFilter = new bool[1];
 				yearsFilter[0] = true;
 			}
+
+			resetYearWeigth();
 		}
 		else
 		{
@@ -1151,7 +1161,56 @@ namespace Data
 		}
 	}
 
+	void Parameters::resetYearWeigth()
+    {
+	    yearsWeight.clear();
+        yearsWeight.assign(nbYears,1);
+    }
 
+    std::vector<int> Parameters::getYearsWeight() const
+    {
+        std::vector<int> result;
+
+        if (userPlaylist)
+        {
+            result = yearsWeight;
+        }
+        else
+        {
+            result.assign(nbYears, 1);
+        }
+
+        return result;
+    }
+    int Parameters::getYearsWeightSum() const
+    {
+        int result = 0;
+
+        if (userPlaylist)
+        {
+            //must take into account inactive years
+            for (uint i = 0; i < nbYears; ++i)
+            {
+                if (yearsFilter[i] )
+                {
+                    result += yearsWeight[i];
+                }
+            }
+        }
+        else
+        {
+            //if no user playlist, nbYears
+            result = nbYears;
+        }
+
+        return result;
+    }
+
+    void Parameters::setYearWeight(int year, int weight)
+    {
+        assert(year < yearsWeight.size());
+        yearsWeight[year] = weight;
+    }
 
 	void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 	{
@@ -1224,6 +1283,8 @@ namespace Data
 					logs.info() << "  " << effectiveNbYears << " years in the user's playlist";
 			}
 		}
+
+		//TODO JMK : should we display something in log for MC year weight
 
 		// Prepare output variables print info before the simulation (used to initialize output variables)
 		variablesPrintInfo.prepareForSimulation(thematicTrimming);
@@ -1381,6 +1442,8 @@ namespace Data
 			for (uint i = 0; i != nbYears; ++i)
 				yearsFilter[i] = true;
 		}
+
+		resetYearWeigth();
 	}
 
 
@@ -1534,6 +1597,9 @@ namespace Data
 				if (yearsFilter[i])
 					++effNbYears;
 			}
+
+			//TODO JMK : now we must write even if effNbYears is equal to nbYears so we can add MC year weight
+			//See if we can also test MC weight to avoid to write section if not used
 			if (effNbYears != nbYears)
 			{
 				// We have something to write !
@@ -1555,6 +1621,14 @@ namespace Data
 							section->add("playlist_year -", i);
 					}
 				}
+
+				//TODO JMK : not tested
+                for (uint i = 0; i != nbYears; ++i)
+                {
+                    std::string val = std::to_string(i) + "," + std::to_string(yearsWeight[i]);
+
+                    section->add("playlist_year_weight",  val);
+                }
 			}
 		}
 

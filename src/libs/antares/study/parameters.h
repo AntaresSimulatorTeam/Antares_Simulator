@@ -27,6 +27,8 @@
 #ifndef __ANTARES_LIBS_STUDY_PARAMETERS_H__
 # define __ANTARES_LIBS_STUDY_PARAMETERS_H__
 
+#include <vector>
+
 # include <yuni/yuni.h>
 # include <yuni/core/string.h>
 # include "../constants.h"
@@ -160,6 +162,14 @@ namespace Data
 		** \brief Get the amount of memory used by the general data
 		*/
 		Yuni::uint64 memoryUsage() const;
+
+		//TODO JMK : add comments
+		void resetYearWeigth();
+
+		std::vector<int> getYearsWeight() const;
+		int              getYearsWeightSum() const;
+
+		void setYearWeight(int year, int weight);
 
 	public:
 		//! \name Mode
@@ -475,6 +485,9 @@ namespace Data
 		bool loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options);
 		//! Save the internal settings into an INI file
 		void saveToINI(IniFile& ini) const;
+
+        //! MC year weight for MC synthesis
+        std::vector<int> yearsWeight;
 
 	}; // class Parameters
 

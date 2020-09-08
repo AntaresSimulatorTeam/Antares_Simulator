@@ -163,7 +163,6 @@ namespace Adequacy
 		static void InitializeResultsFromStudy(R& results, Data::Study& study)
 		{
 			VariableAccessorType::InitializeAndReset(results, study);
-			results.averageMaxValue(study.runtime->rangeLimits.year[Data::rangeCount]);
 		}
 
 

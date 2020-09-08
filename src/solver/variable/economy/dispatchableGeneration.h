@@ -172,13 +172,10 @@ namespace Economy
 		template<class R>
 		static void InitializeResultsFromStudy(R& results, Data::Study& study)
 		{
-			const unsigned int years = study.runtime->rangeLimits.year[Data::rangeCount];
 			for (unsigned int i = 0; i != VCardType::columnCount; ++i)
 			{
 				results[i].initializeFromStudy(study);
 				results[i].reset();
-				results[i].averageMaxValue(years);
-				results[i].stdDeviationMaxValue(years);
 			}
 		}
 
