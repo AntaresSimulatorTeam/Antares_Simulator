@@ -76,6 +76,9 @@ endmacro()
 
 
 add_solver_hydro("")
+
+if(BUILD_SWAP)
 add_solver_hydro("-swap")
 
 set_target_properties(libantares-solver-hydro-swap PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
+endif()

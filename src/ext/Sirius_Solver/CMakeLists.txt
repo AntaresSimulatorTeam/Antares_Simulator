@@ -435,6 +435,7 @@ target_include_directories(libsolver_antares PUBLIC "branchAndBound")
 target_include_directories(libsolver_antares PUBLIC "allocateur")
 target_include_directories(libsolver_antares PUBLIC "pointInterieur")
 
+if(BUILD_SWAP)
 add_library(libsolver_antares-swap  ${SRC_SOLVER})
 target_include_directories(libsolver_antares-swap PUBLIC .)
 
@@ -450,3 +451,4 @@ target_include_directories(libsolver_antares-swap PUBLIC "pointInterieur")
 
 set_target_properties(libsolver_antares-swap
 	PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
+endif()

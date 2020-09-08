@@ -207,12 +207,12 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
 		for (uint y = 0; y != heightAfterAggregation; ++y)
 		{
 			buffer << '\t' << (1 + y) << '\t';
-			if (columns[0].rows.valid())
+			//if (columns[0].rows.valid())
 				AppendToBuffer(buffer, columns[0].rows[y]);
 			for (uint x = 1; x < width; ++x)
 			{
 				buffer << '\t';
-				if (columns[x].rows.valid())
+				//if (columns[x].rows.valid())
 					AppendToBuffer(buffer, columns[x].rows[y]);
 
 				if (buffer.size() > 1024 * 1024 * 8)

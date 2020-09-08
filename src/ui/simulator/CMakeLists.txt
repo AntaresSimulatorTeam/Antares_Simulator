@@ -143,8 +143,8 @@ set(ANTARES_LIBS
 		libantares-ui-dispatcher
 		libantares-ui-common
 		libantares-solver-constraints-builder
-		libantares-solver-variable-info-swap
-		libantares-core-swap #TODO : why no libantares-core ?
+		libantares-solver-variable-info
+		libantares-core
 		libantares-core-calendar
 		libantares-license
 		yuni-static-core

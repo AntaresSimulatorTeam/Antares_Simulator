@@ -3,8 +3,6 @@
 find_package(wxWidgets REQUIRED COMPONENTS net core base richtext propgrid aui adv html xml)
 include(${wxWidgets_USE_FILE})
 
-# TODO : remove ADD_DEFINITIONS Swap support
-ADD_DEFINITIONS("-DANTARES_SWAP_SUPPORT=1")
 
 # Add link library for static use of wxWidgets
 if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")

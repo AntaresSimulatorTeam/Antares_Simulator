@@ -145,6 +145,9 @@ endif()
 option(BUILD_UI "Build antares ui simulator" ON)
 message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 
+option(BUILD_SWAP "Build antares solver with swap support (developpement option)" ON)
+message(STATUS "Build antares solver with swap support: ${BUILD_SWAP}")
+
 option(BUILD_DEPS "Build all dependencies" OFF)
 message(STATUS "Build all dependencies: ${BUILD_DEPS}")
 

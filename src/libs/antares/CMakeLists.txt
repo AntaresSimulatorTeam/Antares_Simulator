@@ -544,9 +544,13 @@ macro(ADD_ANTARES_CORE name)
 endmacro()
 
 ADD_ANTARES_CORE("")
+
+if(BUILD_SWAP)
+
 ADD_ANTARES_CORE("-swap")
 
 #Add specific swap support for libantares-core-swap
 set_target_properties(libantares-core-swap PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
 
+endif()
 

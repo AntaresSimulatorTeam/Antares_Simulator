@@ -175,6 +175,7 @@ add_library(libantares-solver-variable
 target_include_directories(libantares-solver-variable PUBLIC .)
 target_link_libraries(libantares-solver-variable PRIVATE libantares-core)
 
+if(BUILD_SWAP)
 add_library(libantares-solver-variable-swap
 		${SRC_VARIABLE}
 		${SRC_VARIABLE_COMMON}
@@ -185,6 +186,9 @@ add_library(libantares-solver-variable-swap
 
 target_include_directories(libantares-solver-variable-swap PUBLIC .)
 target_link_libraries(libantares-solver-variable-swap PRIVATE libantares-core-swap)
+set_target_properties(libantares-solver-variable-swap PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
+
+endif()
 
 add_library(libantares-solver-variable-info
 		variable/adequacy-draft/all.h
@@ -200,6 +204,7 @@ add_library(libantares-solver-variable-info
 )
 target_link_libraries(libantares-solver-variable-info PRIVATE libantares-core)
 
+if(BUILD_SWAP)
 add_library(libantares-solver-variable-info-swap
 		variable/adequacy-draft/all.h
 		variable/adequacy/all.h
@@ -214,8 +219,8 @@ add_library(libantares-solver-variable-info-swap
 )
 
 target_link_libraries(libantares-solver-variable-info-swap PRIVATE libantares-core-swap)
-
-
-set_target_properties(libantares-solver-variable-swap PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
 set_target_properties(libantares-solver-variable-info-swap PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
+
+endif()
+
 
