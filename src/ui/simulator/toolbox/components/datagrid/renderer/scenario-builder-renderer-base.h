@@ -27,6 +27,7 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SCENARIO_BUILDER_H__
 # define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SCENARIO_BUILDER_H__
 
+// gp : what is useless must be removed
 # include <antares/wx-wrapper.h>
 # include "../renderer.h"
 # include "../../../../application/study.h"
@@ -42,9 +43,11 @@ namespace Datagrid
 {
 namespace Renderer
 {
+	// gp : added
+	uint fromStringToInt(const Yuni::String& value);
 
 
-	class ScenarioBuilder : public IRenderer
+	class ScBuilderRendererBase : public IRenderer
 	{
 	public:
 		//! \name Constructors & Destructor
@@ -52,13 +55,12 @@ namespace Renderer
 		/*!
 		** \brief Constructor with a given timeseries
 		*/
-		ScenarioBuilder(enum Data::TimeSeries ts);
+		ScBuilderRendererBase();
 		/*!
 		** \brief Constructor for thermal
 		*/
-		ScenarioBuilder(Toolbox::InputSelector::Area* notifier);
 		//! Destructor
-		virtual ~ScenarioBuilder();
+		virtual ~ScBuilderRendererBase();
 		//@}
 
 		virtual int width() const;
@@ -70,9 +72,9 @@ namespace Renderer
 
 		virtual wxString cellValue(int x, int y) const;
 
-		virtual double cellNumericValue(int x, int y) const;
+		virtual double cellNumericValue(int x, int y) const = 0;
 
-		virtual bool cellValue(int x, int y, const Yuni::String& value);
+		virtual bool cellValue(int x, int y, const Yuni::String& value) = 0;
 
 		virtual void resetColors(int, int, wxColour&, wxColour&) const
 		{
@@ -96,14 +98,10 @@ namespace Renderer
 
 	protected:
 		wxWindow* pControl;
-		Data::TimeSeries pTimeseries;
 		Data::Area* pArea;
 		Data::ScenarioBuilder::Rules::Ptr pRules;
 
-	}; // class ScenarioBuilder
-
-
-
+	}; // class ScBuilderRendererBase
 
 
 } // namespace Renderer

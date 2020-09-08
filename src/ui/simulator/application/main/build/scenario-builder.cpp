@@ -28,13 +28,19 @@
 #include "../main.h"
 #include "../../../toolbox/input/area.h"
 #include "../../../toolbox/components/datagrid/component.h"
-#include "../../../toolbox/components/datagrid/renderer/scenario-builder.h"
 #include "standard-page.hxx"
 #include "../../../windows/scenario-builder/panel.h"
 #include "../../../windows/output/output.h"
 
+#include "../../../toolbox/components/datagrid/renderer/scenario-builder-renderer-base.h"
+#include "../../../toolbox/components/datagrid/renderer/scenario-builder-load-renderer.h"
+#include "../../../toolbox/components/datagrid/renderer/scenario-builder-thermal-renderer.h"
+#include "../../../toolbox/components/datagrid/renderer/scenario-builder-hydro-renderer.h"
+#include "../../../toolbox/components/datagrid/renderer/scenario-builder-wind-renderer.h"
+#include "../../../toolbox/components/datagrid/renderer/scenario-builder-solar-renderer.h"
 
 using namespace Yuni;
+using namespace Component::Datagrid;
 
 
 namespace Antares
@@ -49,7 +55,6 @@ namespace Forms
 		{
 		protected:
 			typedef Component::Datagrid::Component  DatagridType;
-			typedef Component::Datagrid::Renderer::ScenarioBuilder  RendererType;
 
 		public:
 			basicScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook)
@@ -59,7 +64,7 @@ namespace Forms
 			virtual void create()
 			{
 				createRenderer();
-				control_->updateRules.connect(renderer_, &RendererType::onRulesChanged);
+				control_->updateRules.connect(renderer_, &Renderer::ScBuilderRendererBase::onRulesChanged);
 				createGrid();
 				addToNotebook();
 				renderer_->control(grid_);
@@ -73,7 +78,7 @@ namespace Forms
 		protected:
 			Window::ScenarioBuilder::Panel* control_;
 			Component::Notebook* notebook_;
-			RendererType* renderer_;
+			Renderer::ScBuilderRendererBase* renderer_;
 			DatagridType* grid_;
 		};
 
@@ -84,11 +89,14 @@ namespace Forms
 			loadScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) : basicScBuilderGrid(control, notebook) {}
 
 		private:
-			void createRenderer() { renderer_ = new RendererType(Data::timeSeriesLoad); } // gp : this will have to be specialized
+			void createRenderer()
+			{ 
+				renderer_ = new Renderer::loadScBuilderRenderer();
+			}
 			void addToNotebook() { notebook_->add(grid_, wxT("load"), wxT("Load")); }
 		};
 
-
+		
 		// Hydro ...
 		class hydroScBuilderGrid : public basicScBuilderGrid
 		{
@@ -96,11 +104,11 @@ namespace Forms
 			hydroScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) : basicScBuilderGrid(control, notebook) {}
 
 		private:
-			void createRenderer() { renderer_ = new RendererType(Data::timeSeriesHydro); }
+			void createRenderer() { renderer_ = new Renderer::hydroScBuilderRenderer(); }
 			void addToNotebook() { notebook_->add(grid_, wxT("hydro"), wxT("Hydro")); }
 		};
 
-
+		
 		// Wind ...
 		class windScBuilderGrid : public basicScBuilderGrid
 		{
@@ -108,11 +116,10 @@ namespace Forms
 			windScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) : basicScBuilderGrid(control, notebook) {}
 
 		private:
-			void createRenderer() { renderer_ = new RendererType(Data::timeSeriesWind); }
+			void createRenderer() { renderer_ = new Renderer::windScBuilderRenderer(); }
 			void addToNotebook() { notebook_->add(grid_, wxT("wind"), wxT("Wind")); }
 		};
 		
-
 		// Solar ...
 		class solarScBuilderGrid : public basicScBuilderGrid
 		{
@@ -120,10 +127,9 @@ namespace Forms
 			solarScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) : basicScBuilderGrid(control, notebook) {}
 
 		private:
-			void createRenderer() { renderer_ = new RendererType(Data::timeSeriesSolar); }
+			void createRenderer() { renderer_ = new Renderer::solarScBuilderRenderer(); }
 			void addToNotebook() { notebook_->add(grid_, wxT("solar"), wxT("Solar")); }
 		};
-
 
 		// Thermal ...
 		class thermalScBuilderGrid : public basicScBuilderGrid
@@ -135,13 +141,13 @@ namespace Forms
 			{
 				page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(notebook_, wxT("thermal"), wxT("Thermal"));
 				createRenderer();
-				control_->updateRules.connect(renderer_, &RendererType::onRulesChanged);
+				control_->updateRules.connect(renderer_, &Renderer::thermalScBuilderRenderer::onRulesChanged);
 				createGrid();
 				addToNotebook();
 			}
 
 		private:
-			void createRenderer() { renderer_ = new RendererType(page_.second); }
+			void createRenderer() { renderer_ = new Renderer::thermalScBuilderRenderer(page_.second); }
 			void createGrid() { grid_ = new DatagridType(page_.first, renderer_); }
 			void addToNotebook()
 			{
@@ -188,6 +194,7 @@ namespace Forms
 			wxT("  Back to input data"));
 		pScenarioBuilderNotebook->addSeparator();
 
+		// Creating scenario builder notebook's tabs
 		loadScBuilderGrid loadScBuilder(control, pScenarioBuilderNotebook);
 		loadScBuilder.create();
 

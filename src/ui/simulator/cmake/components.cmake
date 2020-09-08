@@ -67,8 +67,18 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS
 		toolbox/components/datagrid/renderer/mc-playlist.h
 		toolbox/components/datagrid/renderer/logfile.cpp
 		toolbox/components/datagrid/renderer/logfile.h
-		toolbox/components/datagrid/renderer/scenario-builder.cpp
-		toolbox/components/datagrid/renderer/scenario-builder.h
+		toolbox/components/datagrid/renderer/scenario-builder-renderer-base.cpp
+		toolbox/components/datagrid/renderer/scenario-builder-renderer-base.h
+		toolbox/components/datagrid/renderer/scenario-builder-load-renderer.cpp
+		toolbox/components/datagrid/renderer/scenario-builder-load-renderer.h
+		toolbox/components/datagrid/renderer/scenario-builder-thermal-renderer.cpp
+		toolbox/components/datagrid/renderer/scenario-builder-thermal-renderer.h
+		toolbox/components/datagrid/renderer/scenario-builder-hydro-renderer.cpp
+		toolbox/components/datagrid/renderer/scenario-builder-hydro-renderer.h
+		toolbox/components/datagrid/renderer/scenario-builder-wind-renderer.cpp
+		toolbox/components/datagrid/renderer/scenario-builder-wind-renderer.h
+		toolbox/components/datagrid/renderer/scenario-builder-solar-renderer.cpp
+		toolbox/components/datagrid/renderer/scenario-builder-solar-renderer.h
 		toolbox/components/datagrid/renderer/layers.cpp
 		toolbox/components/datagrid/renderer/layers.h
 		)
