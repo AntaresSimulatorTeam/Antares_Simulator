@@ -296,7 +296,10 @@ ${MementoSection} "$(LngCoreFiles)" SecCore
 	${FileOptionnal} "${ANTARES_BUILD_DIR}\ui\simulator\${TARGET}"         "*.dll"
 	
 	${File} "${ANTARES_BUILD_DIR}\solver\${TARGET}"               "antares-${CMAKE_SIMPLE_VERSION}-solver.exe"
-	${File} "${ANTARES_BUILD_DIR}\solver\${TARGET}"               "antares-${CMAKE_SIMPLE_VERSION}-solver-swap.exe"
+	
+	;swap is optionnal for faster CI
+	${FileOptionnal} "${ANTARES_BUILD_DIR}\solver\${TARGET}"      "antares-${CMAKE_SIMPLE_VERSION}-solver-swap.exe"
+	
 	${File} "${ANTARES_BUILD_DIR}\analyzer\${TARGET}"             "antares-${CMAKE_SIMPLE_VERSION}-analyzer.exe"
 	${File} "${ANTARES_BUILD_DIR}\tools\yby-aggregator\${TARGET}" "antares-${CMAKE_SIMPLE_VERSION}-ybyaggregator.exe"
 	${File} "${ANTARES_BUILD_DIR}\tools\batchrun\${TARGET}"       "antares-${CMAKE_SIMPLE_VERSION}-batchrun.exe"
