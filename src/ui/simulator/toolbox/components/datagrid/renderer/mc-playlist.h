@@ -48,7 +48,7 @@ namespace Renderer
 		MCPlaylist();
 		virtual ~MCPlaylist();
 
-		virtual int width() const {return 1;}
+		virtual int width() const {return 2;}
 		virtual int height() const;
 
 		virtual wxString columnCaption(int colIndx) const;

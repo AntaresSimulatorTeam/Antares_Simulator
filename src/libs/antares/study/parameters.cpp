@@ -24,7 +24,7 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-
+#include <sstream>
 #include <yuni/yuni.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -648,6 +648,41 @@ namespace Data
 			}
 			return false;
 		}
+
+        if (key == "playlist_year_weight")
+        {
+            //Get year index and weight from  string
+
+            //TODO JMK : use of yuni to split string
+            std::vector<int> values;
+            value.split(values, ",");
+
+            /*
+            std::vector <String> strings;
+            std::istringstream f(value.to<string>());
+            std::string s;
+            while (std::getline(f, s, ';')) {
+                strings.push_back(string(s));
+            }
+             */
+            if (values.size() == 2)
+            {
+                int y = values[0];
+                int weight = values[1];
+
+                //TODO JMK : maybe add log if invalid index ?
+                if (y < d.nbYears)
+                    d.setYearWeight(y,weight);
+                return true;
+            }
+            else
+            {
+                //TODO JMK add log maybe ?
+                return false;
+            }
+            return false;
+        }
+
 		if (key == "power-fluctuations")
 		{
 			auto fluctuations = StringToPowerFluctuations(value);
