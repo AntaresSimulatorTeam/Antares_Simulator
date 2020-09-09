@@ -51,7 +51,7 @@ namespace Economy
 
 		//! The expecte results
 		typedef Results<
-			R::AllYears::Or<      // The average values throughout all years
+			R::AllYears::Average<      // The average values throughout all years
 			> >  ResultsType;
 
 		//! The VCard to look for for calculating spatial aggregates

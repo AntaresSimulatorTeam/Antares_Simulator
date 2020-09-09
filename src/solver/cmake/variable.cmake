@@ -37,10 +37,6 @@ set(SRC_VARIABLE_STORAGE
 		variable/storage/raw.hxx
 		variable/storage/rawdata.h
 		variable/storage/rawdata.cpp
-		variable/storage/or-data.h
-		variable/storage/or-data.cpp
-		variable/storage/or.h
-		variable/storage/or.hxx
 		variable/storage/minmax.h
 		variable/storage/minmax.hxx
 		variable/storage/minmax-data.h
