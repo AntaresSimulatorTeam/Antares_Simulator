@@ -70,9 +70,8 @@ namespace Renderer
 	{
         switch (i)
         {
-            //TODO JMK : see for enum use to define available columns
-            case 0			:return wxT("   Status   ");
-            case 1			:return wxT("   Weight   ");
+            case MCPlaylistCol::STATUS			:return wxT("   Status   ");
+            case MCPlaylistCol::WEIGHT			:return wxT("   Weight   ");
         }
         return wxString();
 
@@ -95,19 +94,23 @@ namespace Renderer
 
             switch (x)
             {
-                //TODO JMK : see for enum use to define available columns
-                case 0			:
+                case MCPlaylistCol::STATUS			:
                 {
                     bool v = s.to<bool>() || s == "active" || s == "enabled";
                     assert(study->parameters.yearsFilter);
                     study->parameters.yearsFilter[y] = v;
                 }
-                case 1			:
+                case MCPlaylistCol::WEIGHT			:
                 {
-                    uint weight;
-                    if (value.to<uint>(weight))
+                    int weight;
+                    if (value.to<int>(weight))
                     {
-                        study->parameters.setYearWeight(y,weight);
+                        if (weight >= 1) {
+                            study->parameters.setYearWeight(y, weight);
+                        }
+                        else {
+                            return false;
+                        }
                     }
                 }
             }
@@ -126,13 +129,12 @@ namespace Renderer
 		{
             switch (x)
             {
-                //TODO JMK : see for enum use to define available columns
-                case 0			:
+                case MCPlaylistCol::STATUS:
                 {
                     assert(study->parameters.yearsFilter);
                     return study->parameters.yearsFilter[y];
                 }
-                case 1			:
+                case MCPlaylistCol::WEIGHT:
                 {
                     std::vector<int> yearsWeight = study->parameters.getYearsWeight();
                     assert(y < yearsWeight.size());
@@ -150,13 +152,12 @@ namespace Renderer
 		{
             switch (x)
             {
-                //TODO JMK : see for enum use to define available columns
-                case 0			:
+                case MCPlaylistCol::STATUS:
                 {
                     assert(study->parameters.yearsFilter);
                     return study->parameters.yearsFilter[y] ? wxT("Active") : wxT("skip");
                 }
-                case 1			:
+                case MCPlaylistCol::WEIGHT:
                 {
                     std::vector<int> yearsWeight = study->parameters.getYearsWeight();
                     assert(y < yearsWeight.size());

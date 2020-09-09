@@ -45,6 +45,13 @@ namespace Renderer
 	class MCPlaylist : public IRenderer
 	{
 	public:
+
+	    enum MCPlaylistCol
+        {
+	        STATUS,
+	        WEIGHT
+        };
+
 		MCPlaylist();
 		virtual ~MCPlaylist();
 

@@ -163,12 +163,31 @@ namespace Data
 		*/
 		Yuni::uint64 memoryUsage() const;
 
-		//TODO JMK : add comments
+        /*!
+        ** \brief Reset MC year weight to 1 for all years
+        */
 		void resetYearWeigth();
 
+        /*!
+        ** \brief Get MC years weight dependending on playlist configuration
+        **
+        ** \return std::vector<int> with weight for each MC year
+        */
 		std::vector<int> getYearsWeight() const;
+
+        /*!
+        ** \brief Get MC years weight sum dependending on playlist configuration
+        **
+        ** \return weigth sum (nbYears if playlist disabled)
+        */
 		int              getYearsWeightSum() const;
 
+        /*!
+        ** \brief Define weight for a MC year
+        **
+		** \param year MC year index
+		** \param weight MC year weight
+        */
 		void setYearWeight(int year, int weight);
 
 	public:

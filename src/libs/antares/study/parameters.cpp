@@ -24,7 +24,6 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include <sstream>
 #include <yuni/yuni.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -653,31 +652,42 @@ namespace Data
         {
             //Get year index and weight from  string
 
-            //TODO JMK : use of yuni to split string
+            //Use of yuni to split string
             std::vector<int> values;
             value.split(values, ",");
 
-            /*
-            std::vector <String> strings;
-            std::istringstream f(value.to<string>());
-            std::string s;
-            while (std::getline(f, s, ';')) {
-                strings.push_back(string(s));
-            }
-             */
             if (values.size() == 2)
             {
                 int y = values[0];
                 int weight = values[1];
 
-                //TODO JMK : maybe add log if invalid index ?
-                if (y < d.nbYears)
-                    d.setYearWeight(y,weight);
+                //Check values
+				bool valid = true;
+                if (y > d.nbYears)
+                {
+					valid = false;
+                    logs.warning() << "parameters: invalid MC year index for MC year weight definition. Got '" << y
+                                   << "'. Value not used";
+                }
+
+                if (weight < 1)
+                {
+					valid = false;
+                    logs.warning() << "parameters: invalid MC year weight.Got '" << weight
+                                   << "'. Value not used";
+                }
+
+				if (valid)
+				{
+					d.setYearWeight(y, weight);
+				}
+
                 return true;
             }
             else
             {
-                //TODO JMK add log maybe ?
+                logs.warning() << "parameters: invalid MC year index and weight definition. Must be defined by [year],[weight] Got '" << value
+                               << "'. Value not used";
                 return false;
             }
             return false;
@@ -1317,9 +1327,9 @@ namespace Data
 				default:
 					logs.info() << "  " << effectiveNbYears << " years in the user's playlist";
 			}
-		}
 
-		//TODO JMK : should we display something in log for MC year weight
+            //TODO JMK : should we display something in log for MC year weight
+		}
 
 		// Prepare output variables print info before the simulation (used to initialize output variables)
 		variablesPrintInfo.prepareForSimulation(thematicTrimming);
@@ -1627,15 +1637,20 @@ namespace Data
 		{
 			assert(yearsFilter);
 			uint effNbYears = 0;
+			int weightSum = 0;
 			for (uint i = 0; i != nbYears; ++i)
 			{
 				if (yearsFilter[i])
 					++effNbYears;
+				weightSum += yearsWeight[i];
 			}
 
-			//TODO JMK : now we must write even if effNbYears is equal to nbYears so we can add MC year weight
-			//See if we can also test MC weight to avoid to write section if not used
-			if (effNbYears != nbYears)
+
+			//Playlist section must be added if at least one year is disable or one MC year weight sum is not equal to nbYears
+			bool addPlayListSection = effNbYears != nbYears;
+			addPlayListSection |= weightSum != nbYears;
+
+			if (addPlayListSection)
 			{
 				// We have something to write !
 				auto* section = ini.addSection("playlist");
@@ -1657,7 +1672,6 @@ namespace Data
 					}
 				}
 
-				//TODO JMK : not tested
                 for (uint i = 0; i != nbYears; ++i)
                 {
                     std::string val = std::to_string(i) + "," + std::to_string(yearsWeight[i]);
