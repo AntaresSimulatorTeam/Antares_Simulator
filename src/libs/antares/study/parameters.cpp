@@ -1070,12 +1070,12 @@ namespace Data
 			}
 			nbYears = options.nbYears;
 
-			//TODO JMK : see what is this option 
-			//We may just resize years weight (add or remove item)
-			//Define default MC weight
-            resetYearWeigth();
+            //Resize years weight (add or remove item)
+			if (yearsWeight.size() !=  nbYears)
+            {
+                yearsWeight.resize(nbYears, 1);
+            }
 		}
-
 
 		if (version < 400)
 		{
