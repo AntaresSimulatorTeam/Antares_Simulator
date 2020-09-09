@@ -25,7 +25,7 @@ jobs:
     - uses: actions/checkout@v2 
 
     - name : Install deps with VCPKG
-      uses: lukka/run-vcpkg@master
+      uses: lukka/run-vcpkg@v4
       id: runvcpkg
       with:
         vcpkgArguments: '${{ matrix.vcpkgPackages }}'
