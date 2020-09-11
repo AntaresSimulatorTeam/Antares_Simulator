@@ -27,6 +27,11 @@
 #include <yuni/yuni.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <algorithm>
+#include <iostream>
+
+#include <sstream>
+
 #ifndef YUNI_OS_MSVC
 # include <unistd.h>
 #endif
@@ -1328,7 +1333,37 @@ namespace Data
 					logs.info() << "  " << effectiveNbYears << " years in the user's playlist";
 			}
 
-            //TODO JMK : should we display something in log for MC year weight
+			//Add log in case of MC year weight different from 1
+			std::vector<int> maximumWeightYearsList;
+			int nbYearsDifferentFrom1		= 0;
+			int maximumWeight				= *std::max_element(yearsWeight.begin(), yearsWeight.end());
+			for (int i =0 ; i< yearsWeight.size();i++)
+            {
+			    int weight = yearsWeight[i];
+			    if (weight != 1)
+                {
+                    nbYearsDifferentFrom1++;
+			        if  (weight == maximumWeight)
+                    {
+			            maximumWeightYearsList.push_back(i);
+                    }
+                }
+            }
+
+			if (nbYearsDifferentFrom1 != 0)
+            {
+
+                logs.info() << "  " << nbYearsDifferentFrom1 << " years with weight !=1 in the user's playlist";
+
+				//Transform maximum value years to string
+                std::stringstream ss;
+                copy( maximumWeightYearsList.begin(), maximumWeightYearsList.end(), std::ostream_iterator<int>(ss, ","));
+                std::string s = ss.str();
+                s = s.substr(0, s.length()-1);  // get rid of the trailing ,
+
+                logs.info() << "  maximum weight " << maximumWeight << " for year(s) " << s;
+
+            }
 		}
 
 		// Prepare output variables print info before the simulation (used to initialize output variables)
