@@ -1,0 +1,25 @@
+#TODO : see to add bigobj support
+
+if(MSVC)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
+endif(MSVC)
+
+add_executable(tests-simple-study
+			simple-study.cpp)
+
+target_link_libraries(tests-simple-study
+						PRIVATE
+						libantares-core
+						libantares-solver-main-economy
+						libantares-solver-main-adequacy-draft
+						libantares-solver-main-adequacy
+						libantares-solver-hydro
+						libantares-solver-aleatoire
+						libantares-solver-variable
+						libantares-solver-simulation
+						libantares-solver-ts-generator
+			)
+
+add_test(NAME end-to-end-simple-study COMMAND tests-simple-study)
+
+

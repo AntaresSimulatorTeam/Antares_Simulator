@@ -42,6 +42,10 @@ target_link_libraries(tests-matrix-save
 			yuni-static-core
 			Boost::unit_test_framework
 			)
+			
+# Defining TESTING preprocessor variable at compile time
+# This variable will soon be useless and droped. 
+target_compile_definitions(tests-matrix-save PRIVATE -DTESTING)
 
 add_test(NAME save-matrix COMMAND tests-matrix-save)
 
@@ -66,6 +70,10 @@ target_link_libraries(tests-matrix-load
 			yuni-static-core
 			Boost::unit_test_framework
 			)
+
+# Defining TESTING preprocessor variable at compile time
+# This variable will soon be useless and droped. 
+target_compile_definitions(tests-matrix-load PRIVATE -DTESTING)
 
 add_test(NAME load-matrix COMMAND tests-matrix-load)
 
