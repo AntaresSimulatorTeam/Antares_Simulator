@@ -46,6 +46,10 @@ Area* addArea(Study::Ptr pStudy, const std::string& areaName, int load, int nbTS
 
 	BOOST_CHECK(pArea != NULL);
 
+	//Need to add unsupplied energy cost constraint so load is respected
+	pArea->thermal.unsuppliedEnergyCost = 10000.0;
+	pArea->spreadUnsuppliedEnergyCost	= 0.01;
+
 	//Define default load
 	pArea->load.series->series.resize(nbTS, HOURS_PER_YEAR);
 	pArea->load.series->series.fill(load);
@@ -55,7 +59,7 @@ Area* addArea(Study::Ptr pStudy, const std::string& areaName, int load, int nbTS
 	return pArea;
 }
 
-ThermalCluster* addCluster(Study::Ptr pStudy, Area* pArea, double power, int nbTS)
+ThermalCluster* addCluster(Study::Ptr pStudy, Area* pArea, double availablePower, double cost, int nbTS)
 {
 	ThermalCluster* pCluster = new ThermalCluster(pArea, pStudy->maxNbYearsInParallel);
 	pCluster->name("cluster");
@@ -63,17 +67,20 @@ ThermalCluster* addCluster(Study::Ptr pStudy, Area* pArea, double power, int nbT
 
 	//Only one unit, nominal capacity alway power *10.0
 	pCluster->unitCount = 1;
-	pCluster->nominalCapacity = power * 10.0;
+	pCluster->nominalCapacity = availablePower * 10.0;
 
-	//Power cost always 1
-	pCluster->marginalCost = 1.0;
+	//Power cost
+	pCluster->marginalCost	= cost;
 
-	//Must define  min stable power always power /2.0
-	pCluster->minStablePower = power / 2;
+	//TODO JMK Must define merket bid cost otherwise all production is used
+	pCluster->marketBidCost = cost;
+
+	//Must define  min stable power always 0.0
+	pCluster->minStablePower = 0.0;
 
 	//Define power consumption
 	pCluster->series->series.resize(nbTS, HOURS_PER_YEAR);
-	pCluster->series->series.fill(power);
+	pCluster->series->series.fill(availablePower);
 
 	//No modulation on cost
 	pCluster->modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
@@ -116,14 +123,17 @@ BOOST_AUTO_TEST_CASE(very_simple_test)
 
 	//Prepare study
 	prepareStudy(pStudy, nbYears);
+	pStudy->parameters.nbTimeSeriesLoad		= nbTS;
+	pStudy->parameters.nbTimeSeriesThermal	= nbTS;
 
 	//Create area
-	int load = 10;
+	int load = 7;
 	Area*  pArea = addArea(pStudy,"Area 1",load, nbTS);	
 
 	//Add thermal  cluster
-	double power = 5.0;
-	ThermalCluster* pCluster = addCluster(pStudy, pArea, power, nbTS);
+	double availablePower	= 10.0;
+	double cost				= 2.0;
+	ThermalCluster* pCluster = addCluster(pStudy, pArea, availablePower,cost, nbTS);
 
 	// Runtime data dedicated for the solver
 	BOOST_CHECK(pStudy->initializeRuntimeInfos());	
@@ -151,9 +161,9 @@ BOOST_AUTO_TEST_CASE(very_simple_test)
 	//TODO JMK : allYears is not calculated, need to call SurveyResults (to be checked)
 	BOOST_CHECK(overallCost->avgdata.nbYearsCapacity == nbYears);
 
-	BOOST_CHECK(overallCost->avgdata.hourly[0]== power );
-	BOOST_CHECK(overallCost->avgdata.daily[0] == power  * 24);
-	BOOST_CHECK(overallCost->avgdata.weekly[0] == power * 24 * 7);
+	BOOST_CHECK(overallCost->avgdata.hourly[0]	== load * cost);
+	BOOST_CHECK(overallCost->avgdata.daily[0]	== load * cost * 24);
+	BOOST_CHECK(overallCost->avgdata.weekly[0]	== load * cost * 24 * 7);
 
 	//TODO JMK : monthly and year values depends on nbDays in month and nbDays in year
 	//To be checked after
