@@ -149,11 +149,8 @@ template<typename VCard,class T>
 void checkVariable(Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation, Area* pArea,
 				   T expectedHourlyValue)
 {
-	// Define variable tested
-	//typedef Solver::Variable::Economy::<VCard> VariableVCard;
-	typedef Solver::Variable::Storage<VCard>::ResultsType  VariableResults;
-
-	VariableResults* result = nullptr;
+	//Get value
+	Solver::Variable::Storage<VCard>::ResultsType* result = nullptr;
 	simulation->variables.retrieveResultsForArea<VCard>(&result, pArea);
 
 	//TODO JMK : allYears is not calculated, need to call SurveyResults (to be checked)
