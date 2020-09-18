@@ -52,22 +52,20 @@ Area* addArea(Study::Ptr pStudy, const std::string& areaName, int load, int nbTS
 
 	//Define default load
 	pArea->load.series->series.resize(nbTS, HOURS_PER_YEAR);
-	pArea->load.series->series.fill(load);
-	//pArea->load.series->series.multiplyColumnBy(0, 1);
-	//pArea->load.series->series.multiplyColumnBy(1, 200);
+	pArea->load.series->series.fill(0.0);
 
 	return pArea;
 }
 
-ThermalCluster* addCluster(Study::Ptr pStudy, Area* pArea, double availablePower, double cost, int nbTS)
+
+ThermalCluster* addCluster(Study::Ptr pStudy, Area* pArea, const std::string& clusterName, double maximumPower, double cost, int nbTS, int unitCount = 1)
 {
 	ThermalCluster* pCluster = new ThermalCluster(pArea, pStudy->maxNbYearsInParallel);
-	pCluster->name("cluster");
+	pCluster->name(clusterName);
 	pCluster->reset();
-
-	//Only one unit, nominal capacity alway power *10.0
-	pCluster->unitCount = 1;
-	pCluster->nominalCapacity = availablePower * 10.0;
+	
+	pCluster->unitCount			= unitCount;
+	pCluster->nominalCapacity	= maximumPower;
 
 	//Power cost
 	pCluster->marginalCost	= cost;
@@ -80,7 +78,7 @@ ThermalCluster* addCluster(Study::Ptr pStudy, Area* pArea, double availablePower
 
 	//Define power consumption
 	pCluster->series->series.resize(nbTS, HOURS_PER_YEAR);
-	pCluster->series->series.fill(availablePower);
+	pCluster->series->series.fill(0.0);
 
 	//No modulation on cost
 	pCluster->modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
@@ -111,13 +109,71 @@ ThermalCluster* addCluster(Study::Ptr pStudy, Area* pArea, double availablePower
 }
 
 
+Solver::Simulation::ISimulation< Solver::Simulation::Economy >* runSimulation(Study::Ptr pStudy)
+{
+	// Runtime data dedicated for the solver
+	BOOST_CHECK(pStudy->initializeRuntimeInfos());
+
+	Settings pSettings;
+	pSettings.tsGeneratorsOnly = false;
+	pSettings.noOutput = false;
+
+	//Launch simulation
+	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = new Solver::Simulation::ISimulation< Solver::Simulation::Economy >(*pStudy, pSettings);
+
+	// Allocate all arrays
+	SIM_AllocationTableaux();
+
+	// Let's go
+	simulation->run();
+
+	return simulation;
+}
+
+void cleanSimulation(Study::Ptr pStudy, Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation)
+{
+	// simulation
+	SIM_DesallocationTableaux();
+
+	delete simulation;
+
+	// release all reference to the current study held by this class
+	pStudy->clear();
+
+	pStudy = nullptr;
+	// removed any global reference
+	Data::Study::Current::Set(nullptr);
+}
+
+template<typename VCard,class T>
+void checkVariable(Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation, Area* pArea,
+				   T expectedHourlyValue)
+{
+	// Define variable tested
+	//typedef Solver::Variable::Economy::<VCard> VariableVCard;
+	typedef Solver::Variable::Storage<VCard>::ResultsType  VariableResults;
+
+	VariableResults* result = nullptr;
+	simulation->variables.retrieveResultsForArea<VCard>(&result, pArea);
+
+	//TODO JMK : allYears is not calculated, need to call SurveyResults (to be checked)
+	BOOST_CHECK(result->avgdata.hourly[0] == expectedHourlyValue);
+	BOOST_CHECK(result->avgdata.daily[0]  == expectedHourlyValue * 24);
+	BOOST_CHECK(result->avgdata.weekly[0] == expectedHourlyValue * 24 * 7);
+
+	//TODO JMK : monthly and year values depends on nbDays in month and nbDays in year
+	//To be checked after
+	//BOOST_CHECK(overallCost->avgdata.monthly[0] == power * 24 * 31);
+	//BOOST_CHECK(overallCost->avgdata.year[0] == power * 24 * 365);
+}
+
 //Very simple test with one area and one load and one year
-BOOST_AUTO_TEST_CASE(very_simple_test)
+BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 {
 	//Create study
 	Study::Ptr pStudy = new Study(true /* for the solver */);
 
-	//TODO JMK :for now only tested with one year and one TS
+	//On year  and one TS
 	int nbYears = 1;
 	int  nbTS	= 1;
 
@@ -130,77 +186,73 @@ BOOST_AUTO_TEST_CASE(very_simple_test)
 	int load = 7;
 	Area*  pArea = addArea(pStudy,"Area 1",load, nbTS);	
 
+	//Initialize time series
+	pArea->load.series->series.fillColumn(0, load);
+
 	//Add thermal  cluster
 	double availablePower	= 10.0;
 	double cost				= 2.0;
-	ThermalCluster* pCluster = addCluster(pStudy, pArea, availablePower,cost, nbTS);
+	double maximumPower		= 100.0;
+	ThermalCluster* pCluster = addCluster(pStudy, pArea,"Cluster 1", maximumPower,cost, nbTS);
 
-	// Runtime data dedicated for the solver
-	BOOST_CHECK(pStudy->initializeRuntimeInfos());	
-
-	Settings pSettings;
-	pSettings.tsGeneratorsOnly = false;
-	pSettings.noOutput		   = false;
+	//Initialize time series
+	pCluster->series->series.fillColumn(0, availablePower);
 
 	//Launch simulation
-	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = new Solver::Simulation::ISimulation< Solver::Simulation::Economy >(*pStudy, pSettings);
+	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+		
+	//Overall cost must be load * cost by MW
+	checkVariable< Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, load * cost);
 
-	// Allocate all arrays
-	SIM_AllocationTableaux();
+	//Load must be load
+	checkVariable< Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
 
-	// Let's go
-	simulation->run();
+	//Clean simulation
+	cleanSimulation(pStudy, simulation);	
+}
 
-	// Define variable tested
-	typedef Solver::Variable::Economy::VCardOverallCost OverallCostVCard;
-	typedef Solver::Variable::Storage<OverallCostVCard>::ResultsType  OverallCostResults;
+//Very simple test with one area and one load and two year
+BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
+{
+	//Create study
+	Study::Ptr pStudy = new Study(true /* for the solver */);
 
-	OverallCostResults* overallCost = nullptr;
-	simulation->variables.retrieveResultsForArea<OverallCostVCard>(&overallCost, pArea);
+	//On year  and one TS
+	int nbYears = 2;
+	int  nbTS	= 1;
 
-	//TODO JMK : allYears is not calculated, need to call SurveyResults (to be checked)
-	BOOST_CHECK(overallCost->avgdata.nbYearsCapacity == nbYears);
+	//Prepare study
+	prepareStudy(pStudy, nbYears);
+	pStudy->parameters.nbTimeSeriesLoad = nbTS;
+	pStudy->parameters.nbTimeSeriesThermal = nbTS;
 
-	BOOST_CHECK(overallCost->avgdata.hourly[0]	== load * cost);
-	BOOST_CHECK(overallCost->avgdata.daily[0]	== load * cost * 24);
-	BOOST_CHECK(overallCost->avgdata.weekly[0]	== load * cost * 24 * 7);
+	//Create area
+	int load = 7;
+	Area* pArea = addArea(pStudy, "Area 1", load, nbTS);
 
-	//TODO JMK : monthly and year values depends on nbDays in month and nbDays in year
-	//To be checked after
-	//BOOST_CHECK(overallCost->avgdata.monthly[0] == power * 24 * 31);
-	//BOOST_CHECK(overallCost->avgdata.year[0] == power * 24 * 365);	
+	//Initialize time series
+	pArea->load.series->series.fillColumn(0, load);
 
+	//Add thermal  cluster
+	double availablePower	= 10.0;
+	double cost				= 2.0;
+	double maximumPower		= 100.0;
+	ThermalCluster* pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
 
-	// Define variable tested
-	typedef Solver::Variable::Economy::VCardTimeSeriesValuesLoad TimeSeriesValuesLoadVCard;
-	typedef Solver::Variable::Storage<TimeSeriesValuesLoadVCard>::ResultsType  TimeSeriesValuesLoadResults;
+	//Initialize time series
+	pCluster->series->series.fillColumn(0, availablePower);
 
-	TimeSeriesValuesLoadResults* timeSeriesLoad = nullptr;
-	simulation->variables.retrieveResultsForArea<TimeSeriesValuesLoadVCard>(&timeSeriesLoad, pArea);
+	//Launch simulation
+	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
 
-	//TODO JMK : allYears is not calculated, need to call SurveyResults (to be checked)
-	BOOST_CHECK(timeSeriesLoad->avgdata.nbYearsCapacity == nbYears);
+	//Overall cost must be load * cost by MW
+	checkVariable< Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, load * cost);
 
-	BOOST_CHECK(timeSeriesLoad->avgdata.hourly[0] == load);
-	BOOST_CHECK(timeSeriesLoad->avgdata.daily[0] == load * 24);
-	BOOST_CHECK(timeSeriesLoad->avgdata.weekly[0] == load * 24 * 7);
+	//Load must be load
+	checkVariable< Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
 
-	//TODO JMK : monthly and year values depends on nbDays in month and nbDays in year
-	//To be checked after
-	//BOOST_CHECK(timeSeriesLoad->avgdata.monthly[0] == load * 24 * 31);
-	//BOOST_CHECK(timeSeriesLoad->avgdata.year[0] == load * 24 * 365);	
-
-	// simulation
-	SIM_DesallocationTableaux();
-
-	delete simulation;
-	
-	// release all reference to the current study held by this class
-	pStudy->clear();
-
-	pStudy = nullptr;
-	// removed any global reference
-	Data::Study::Current::Set(nullptr);
+	//Clean simulation
+	cleanSimulation(pStudy, simulation);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
