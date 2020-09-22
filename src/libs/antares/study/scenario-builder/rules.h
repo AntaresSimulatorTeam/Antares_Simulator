@@ -30,7 +30,8 @@
 # include <yuni/yuni.h>
 # include <yuni/core/string.h>
 # include "../fwd.h"
-# include "timeseries.h"
+// # include "timeseries.h" // gp : removed
+# include "TSnumberData.h"	// gp : added
 # include <map>
 
 
@@ -106,6 +107,8 @@ namespace ScenarioBuilder
 		void apply(const Study& study);
 
 	public:
+		// gp : removed
+		/*
 		//! Load
 		TSNumberRules  load;
 		//! Solar
@@ -116,6 +119,18 @@ namespace ScenarioBuilder
 		TSNumberRules  wind;
 		//! Thermal (array [0..pAreaCount - 1])
 		TSNumberRules* thermal;
+		*/
+
+		//! Load
+		loadTSNumberData  load;
+		//! Solar
+		solarTSNumberData  solar;
+		//! Hydro
+		hydroTSNumberData  hydro;
+		//! Wind
+		windTSNumberData  wind;
+		//! Thermal (array [0..pAreaCount - 1])
+		thermalTSNumberData* thermal;
 
 	private:
 		//! Total number of areas

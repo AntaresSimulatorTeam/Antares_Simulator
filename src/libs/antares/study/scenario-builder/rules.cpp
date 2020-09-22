@@ -41,11 +41,11 @@ namespace ScenarioBuilder
 {
 
 	Rules::Rules() :
-		load(timeSeriesLoad),
-		solar(timeSeriesSolar),
-		hydro(timeSeriesHydro),
-		wind(timeSeriesWind),
-		thermal(nullptr),
+		load(),
+		solar(),
+		hydro(),
+		wind(),
+		thermal(),
 		pAreaCount(0)
 	{
 	}
@@ -68,7 +68,7 @@ namespace ScenarioBuilder
 
 		delete[] thermal;
 		pAreaCount = study.areas.size();
-		thermal = new TSNumberRules[pAreaCount];
+		thermal = new thermalTSNumberData[pAreaCount];
 		for (uint i = 0; i != pAreaCount; ++i)
 		{
 			thermal[i].attachArea(study.areas.byIndex[i]);
@@ -114,7 +114,7 @@ namespace ScenarioBuilder
 		wind.reset(study);
 
 		delete[] thermal;
-		thermal = new TSNumberRules[pAreaCount];
+		thermal = new thermalTSNumberData[pAreaCount];
 
 		for (uint i = 0; i != pAreaCount; ++i)
 		{
