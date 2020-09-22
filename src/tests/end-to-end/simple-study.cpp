@@ -5,6 +5,7 @@
 #include <boost/test/included/unit_test.hpp>
 
 #include <antares/study/study.h>
+#include <antares/study/scenario-builder/sets.h>
 
 #include <simulation/simulation.h>
 #include <simulation/solver.h>
@@ -187,7 +188,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 	pArea->load.series->series.fillColumn(0, load);
 
 	//Add thermal  cluster
-	double availablePower	= 10.0;
+	double availablePower	= 50.0;
 	double cost				= 2.0;
 	double maximumPower		= 100.0;
 	ThermalCluster* pCluster = addCluster(pStudy, pArea,"Cluster 1", maximumPower,cost, nbTS);
@@ -247,6 +248,119 @@ BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
 
 	//Load must be load
 	checkVariable< Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
+
+	//Clean simulation
+	cleanSimulation(pStudy, simulation);
+}
+
+
+//Very simple test with one area and one load and two year and two identical TS
+BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
+{
+	//Create study
+	Study::Ptr pStudy = new Study(true /* for the solver */);
+
+	//On year  and one TS
+	int nbYears = 2;
+	int  nbTS	= 2;
+
+	//Prepare study
+	prepareStudy(pStudy, nbYears);
+	pStudy->parameters.nbTimeSeriesLoad = nbTS;
+	pStudy->parameters.nbTimeSeriesThermal = nbTS;
+
+	//Create area
+	int load = 7;
+	Area* pArea = addArea(pStudy, "Area 1", load, nbTS);
+
+	//Initialize time series
+	pArea->load.series->series.fillColumn(0, load);
+	pArea->load.series->series.fillColumn(1, load);
+
+	//Add thermal  cluster
+	double availablePower = 10.0;
+	double cost = 2.0;
+	double maximumPower = 100.0;
+	ThermalCluster* pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
+
+	//Initialize time series
+	pCluster->series->series.fillColumn(0, availablePower);
+	pCluster->series->series.fillColumn(1, availablePower);
+
+	//Launch simulation
+	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+
+	//Overall cost must be load * cost by MW
+	checkVariable< Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, load * cost);
+
+	//Load must be load
+	checkVariable< Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
+
+	//Clean simulation
+	cleanSimulation(pStudy, simulation);
+}
+
+//Very simple test with one area and one load and two year and two TS with different load
+BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
+{
+	//Create study
+	Study::Ptr pStudy = new Study(true /* for the solver */);
+
+	//On year  and one TS
+	int nbYears = 2;
+	int  nbTS = 2;
+
+	//Prepare study
+	prepareStudy(pStudy, nbYears);
+	pStudy->parameters.nbTimeSeriesLoad = nbTS;
+	pStudy->parameters.nbTimeSeriesThermal = nbTS;
+
+	//Create area
+	int load = 5;
+	Area* pArea = addArea(pStudy, "Area 1", load, nbTS);
+
+	//Initialize time series
+	pArea->load.series->series.fillColumn(0, load);
+	pArea->load.series->series.fillColumn(1, load * 2 );
+
+	double averageLoad = load * 1.5;
+
+	//Add thermal  cluster
+	double availablePower	= 20.0;
+	double cost				= 1.0;
+	double maximumPower		= 100.0;
+	ThermalCluster* pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
+
+	//Initialize time series
+	pCluster->series->series.fillColumn(0, availablePower);
+	pCluster->series->series.fillColumn(1, availablePower);
+
+	//Create scenario rules to force use of TS otherwise the TS used is random
+	pStudy->scenarioRulesCreate();
+	ScenarioBuilder::Sets* p_sets = pStudy->scenarioRules;
+	
+	
+	if (p_sets && !p_sets->empty())
+	{
+		ScenarioBuilder::Rules::Ptr pRules = p_sets->createNew("Custom");
+		pRules->load.set(pArea->index, 1, 1);
+		pRules->load.set(pArea->index, 2, 2);
+
+		pStudy->parameters.useCustomTSNumbers = true;
+		pStudy->parameters.activeRulesScenario = "Custom";
+	}
+
+
+	//Launch simulation
+	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+
+	//Overall cost must be load * cost by MW
+	//TODO JMK : for now we can check with several disctinct MC years because we can't use ScenarioBuilder (always using study parameters from file : not available with end to end test which are done in memory)
+	//checkVariable< Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, averageLoad * cost);
+
+	//Load must be load
+	//TODO JMK : for now we can check with several disctinct MC years because we can't use ScenarioBuilder (always using study parameters from file : not available with end to end test which are done in memory)
+	//checkVariable< Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, averageLoad);
 
 	//Clean simulation
 	cleanSimulation(pStudy, simulation);
