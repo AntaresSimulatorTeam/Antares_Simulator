@@ -148,8 +148,8 @@ message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 option(BUILD_DEPS "Build all dependencies" OFF)
 message(STATUS "Build all dependencies: ${BUILD_DEPS}")
 
-option(USE_RTE_ORTOOLS_BRANCH "Use RTE ortools branch for ortools Sirius support" OFF)
-message(STATUS "Use RTE ortools branch for ortools Sirius support: ${USE_RTE_ORTOOLS_BRANCH}")
+option(USE_ORTOOLS_STABLE "Use ortools stable instead of RTE ortools branch with Sirius support" OFF)
+message(STATUS "Use ortools stable instead of RTE ortools branch with Sirius support: ${USE_ORTOOLS_STABLE}")
 
 # IF BUILD_DEPS=ON THEN Force all BUILD_*=ON
 include(CMakeDependentOption)
