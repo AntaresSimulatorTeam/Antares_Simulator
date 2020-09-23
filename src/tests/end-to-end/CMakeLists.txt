@@ -19,6 +19,11 @@ target_link_libraries(tests-simple-study
 						libantares-solver-simulation
 						libantares-solver-ts-generator
 			)
+			
+target_include_directories(tests-simple-study
+							PRIVATE
+							${CMAKE_SOURCE_DIR}/solver
+							)
 
 add_test(NAME end-to-end-simple-study COMMAND tests-simple-study)
 

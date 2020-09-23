@@ -531,7 +531,6 @@ macro(ADD_ANTARES_CORE name)
 			PUBLIC
 				${CMAKE_SOURCE_DIR}/ext/yuni/src
 				${CMAKE_SOURCE_DIR}/libs
-				${CMAKE_SOURCE_DIR}/solver
 				
 			)
 
