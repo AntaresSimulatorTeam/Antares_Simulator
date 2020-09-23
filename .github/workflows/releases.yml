@@ -30,7 +30,7 @@ jobs:
     
     - name : Install deps with VCPKG
       if: matrix.os == 'windows-latest'
-      uses: lukka/run-vcpkg@master
+      uses: lukka/run-vcpkg@v4
       id: runvcpkg
       with:
         vcpkgArguments: '${{ matrix.vcpkgPackages }}'
