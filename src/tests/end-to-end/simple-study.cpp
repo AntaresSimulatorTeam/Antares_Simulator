@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_SUITE(simple_test)
 
 void prepareStudy(Study::Ptr pStudy, int nbYears)
 {
-	//TODO : define study parameters
+	//Define study parameters
 	pStudy->parameters.reset();
 	pStudy->parameters.years(nbYears);
 
@@ -58,7 +58,7 @@ void prepareStudy(Study::Ptr pStudy, int nbYears)
 	Data::Study::Current::Set(pStudy);
 }
 
-Area* addArea(Study::Ptr pStudy, const std::string& areaName, int load, int nbTS)
+Area* addArea(Study::Ptr pStudy, const std::string& areaName, int nbTS)
 {
 	Area* pArea = pStudy->areaAdd(areaName);
 
@@ -88,7 +88,7 @@ ThermalCluster* addCluster(Study::Ptr pStudy, Area* pArea, const std::string& cl
 	//Power cost
 	pCluster->marginalCost	= cost;
 
-	//TODO JMK Must define merket bid cost otherwise all production is used
+	//Must define market bid cost otherwise all production is used
 	pCluster->marketBidCost = cost;
 
 	//Must define  min stable power always 0.0
@@ -182,7 +182,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 
 	//Create area
 	int load = 7;
-	Area*  pArea = addArea(pStudy,"Area 1",load, nbTS);	
+	Area*  pArea = addArea(pStudy,"Area 1", nbTS);	
 
 	//Initialize time series
 	pArea->load.series->series.fillColumn(0, load);
@@ -226,7 +226,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
 
 	//Create area
 	int load = 7;
-	Area* pArea = addArea(pStudy, "Area 1", load, nbTS);
+	Area* pArea = addArea(pStudy, "Area 1", nbTS);
 
 	//Initialize time series
 	pArea->load.series->series.fillColumn(0, load);
@@ -271,7 +271,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
 
 	//Create area
 	int load = 7;
-	Area* pArea = addArea(pStudy, "Area 1", load, nbTS);
+	Area* pArea = addArea(pStudy, "Area 1", nbTS);
 
 	//Initialize time series
 	pArea->load.series->series.fillColumn(0, load);
@@ -317,7 +317,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
 
 	//Create area
 	int load = 5;
-	Area* pArea = addArea(pStudy, "Area 1", load, nbTS);
+	Area* pArea = addArea(pStudy, "Area 1", nbTS);
 
 	//Initialize time series
 	pArea->load.series->series.fillColumn(0, load);
@@ -355,11 +355,11 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
 	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
 
 	//Overall cost must be load * cost by MW
-	//TODO JMK : for now we can check with several disctinct MC years because we can't use ScenarioBuilder (always using study parameters from file : not available with end to end test which are done in memory)
+	//For now we can't check with several distincts MC years because we can't use ScenarioBuilder (always using study parameters from file : not available with end to end test which are done in memory)
 	//CHECK_VARIABLE( Solver::Variable::Economy::VCardOverallCost,simulation, pArea, averageLoad * cost);
 
 	//Load must be load
-	//TODO JMK : for now we can check with several disctinct MC years because we can't use ScenarioBuilder (always using study parameters from file : not available with end to end test which are done in memory)
+	//For now we can't check with several distincts MC years because we can't use ScenarioBuilder (always using study parameters from file : not available with end to end test which are done in memory)
 	//CHECK_VARIABLE(Solver::Variable::Economy::VCardTimeSeriesValuesLoad,simulation, pArea, averageLoad);
 
 	//Clean simulation

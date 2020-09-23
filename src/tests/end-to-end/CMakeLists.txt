@@ -1,5 +1,4 @@
-#TODO : see to add bigobj support
-
+#bigobj support needed for windows compilation
 if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
 endif(MSVC)
