@@ -21,6 +21,23 @@ using namespace Antares::Data;
 
 BOOST_AUTO_TEST_SUITE(simple_test)
 
+//CHECK_VARIABLE(VCard, simulation, pArea, expectedHourlyVal)
+//Check variable value from VCard
+//params :
+//VCard			: VCard defining variable (Solver::Variable::Economy::VCardOverallCost for example)
+//simulation 		: Simulation object containing results
+//area			: Area to be checked
+//expectedHourlyValue	: Expected hourly value
+#define CHECK_VARIABLE(VCard, simulation, pArea, expectedHourlyValue)		\
+{										\
+	/*Get value*/								\
+	Solver::Variable::Storage<VCard>::ResultsType* result = nullptr;	\
+	simulation->variables.retrieveResultsForArea<VCard>(&result, pArea);	\
+	BOOST_CHECK(result->avgdata.hourly[0] == expectedHourlyValue);		\
+	BOOST_CHECK(result->avgdata.daily[0]  == expectedHourlyValue * 24);	\
+	BOOST_CHECK(result->avgdata.weekly[0] == expectedHourlyValue * 24 * 7);	\
+}										\
+
 void prepareStudy(Study::Ptr pStudy, int nbYears)
 {
 	//TODO : define study parameters
@@ -146,24 +163,7 @@ void cleanSimulation(Study::Ptr pStudy, Solver::Simulation::ISimulation< Solver:
 	Data::Study::Current::Set(nullptr);
 }
 
-template<typename VCard,class T>
-void checkVariable(Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation, Area* pArea,
-				   T expectedHourlyValue)
-{
-	//Get value
-	Solver::Variable::Storage<VCard>::ResultsType* result = nullptr;
-	simulation->variables.retrieveResultsForArea<VCard>(&result, pArea);
 
-	//TODO JMK : allYears is not calculated, need to call SurveyResults (to be checked)
-	BOOST_CHECK(result->avgdata.hourly[0] == expectedHourlyValue);
-	BOOST_CHECK(result->avgdata.daily[0]  == expectedHourlyValue * 24);
-	BOOST_CHECK(result->avgdata.weekly[0] == expectedHourlyValue * 24 * 7);
-
-	//TODO JMK : monthly and year values depends on nbDays in month and nbDays in year
-	//To be checked after
-	//BOOST_CHECK(overallCost->avgdata.monthly[0] == power * 24 * 31);
-	//BOOST_CHECK(overallCost->avgdata.year[0] == power * 24 * 365);
-}
 
 //Very simple test with one area and one load and one year
 BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
@@ -200,10 +200,10 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
 		
 	//Overall cost must be load * cost by MW
-	checkVariable< Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, load * cost);
+	CHECK_VARIABLE(Solver::Variable::Economy::VCardOverallCost,simulation, pArea, load * cost);
 
 	//Load must be load
-	checkVariable< Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
+	CHECK_VARIABLE(Solver::Variable::Economy::VCardTimeSeriesValuesLoad,simulation, pArea, load);
 
 	//Clean simulation
 	cleanSimulation(pStudy, simulation);	
@@ -244,10 +244,10 @@ BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
 	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
 
 	//Overall cost must be load * cost by MW
-	checkVariable< Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, load * cost);
+	CHECK_VARIABLE( Solver::Variable::Economy::VCardOverallCost,simulation, pArea, load * cost);
 
 	//Load must be load
-	checkVariable< Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
+	CHECK_VARIABLE( Solver::Variable::Economy::VCardTimeSeriesValuesLoad,simulation, pArea, load);
 
 	//Clean simulation
 	cleanSimulation(pStudy, simulation);
@@ -291,10 +291,10 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
 	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
 
 	//Overall cost must be load * cost by MW
-	checkVariable< Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, load * cost);
+	CHECK_VARIABLE(Solver::Variable::Economy::VCardOverallCost,simulation, pArea, load * cost);
 
 	//Load must be load
-	checkVariable< Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
+	CHECK_VARIABLE(Solver::Variable::Economy::VCardTimeSeriesValuesLoad,simulation, pArea, load);
 
 	//Clean simulation
 	cleanSimulation(pStudy, simulation);
@@ -356,11 +356,11 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
 
 	//Overall cost must be load * cost by MW
 	//TODO JMK : for now we can check with several disctinct MC years because we can't use ScenarioBuilder (always using study parameters from file : not available with end to end test which are done in memory)
-	//checkVariable< Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, averageLoad * cost);
+	//CHECK_VARIABLE( Solver::Variable::Economy::VCardOverallCost,simulation, pArea, averageLoad * cost);
 
 	//Load must be load
 	//TODO JMK : for now we can check with several disctinct MC years because we can't use ScenarioBuilder (always using study parameters from file : not available with end to end test which are done in memory)
-	//checkVariable< Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, averageLoad);
+	//CHECK_VARIABLE(Solver::Variable::Economy::VCardTimeSeriesValuesLoad,simulation, pArea, averageLoad);
 
 	//Clean simulation
 	cleanSimulation(pStudy, simulation);
