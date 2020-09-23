@@ -346,29 +346,9 @@ namespace Simulation
             pTitleOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
             pOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
 
-            //TODO JMK : option to display on one row for ortools option
-#if 0
-            // Grid
-            wxFlexGridSizer* grid = new wxFlexGridSizer(3, 1, 0);
-            grid->Add(pOrtoolsCheckBox, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-            grid->Add(pTitleOrtoolsSolverCombox, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-            grid->Add(pOrtoolsSolverCombox, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
-            //Add to main grid
-            //Title
-            s->AddStretchSpacer();
-
-            // Key
-            wxStaticText* keyLbl = Antares::Component::CreateLabel(pBigDaddy, wxT("Ortools use : "));
-            s->Add(keyLbl, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
-            // Value
-            s->Add(grid, 0, wxRIGHT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-#else
-            //TODO JMK : option to display 2 rows for ortools option
+			//Display 2 rows for ortools option
             gridAppend(*s, wxT("Ortools use : "), ortoolsCheckBox);
             gridAppend(*s, pTitleOrtoolsSolverCombox, pOrtoolsSolverCombox);
-#endif
         }
 
 		// When opening the Run window, the solver mode is default.

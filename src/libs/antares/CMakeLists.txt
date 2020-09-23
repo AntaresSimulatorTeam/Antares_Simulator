@@ -492,7 +492,7 @@ target_include_directories(libantares-core-calendar
 		)
 
 macro(ADD_ANTARES_CORE name)
-	add_library(libantares-core${name} STATIC
+	add_library(libantares-core${name}
 		antares.h
 		${SRC}
 		${SRC_LOGS}
