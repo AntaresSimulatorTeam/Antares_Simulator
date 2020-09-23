@@ -3,6 +3,11 @@
 ##############
 if(BUILD_OPENSSL)
 
+#Check if OpenSSL is not already available
+find_package(OpenSSL)
+
+if (NOT OPENSSL_FOUND)
+
 #TODO : get architecture for windows (can propably be done in a better way)
 if(WIN32 OR WIN64)
 	if(ANTARES_x86_64)
@@ -33,6 +38,9 @@ build_git_dependency(
 	INSTALL_COMMAND
 	   "${MAKE_COMMAND}  install_sw"	   
   )
+  
+endif()
+
 endif()
 
 ##############
@@ -40,6 +48,10 @@ endif()
 ##############
 if(BUILD_curl)
 
+#Check if CURL is not already available
+find_package(CURL)
+
+if (NOT CURL_FOUND)
 
 if(WIN32 OR WIN64)
 	if(ANTARES_x86_64)
@@ -91,6 +103,9 @@ if(WIN32 OR WIN64)
     #We need to rename libcurl_a.lib to libcurl.lib for find_package(CURL)
     file(RENAME ${CMAKE_CURRENT_BINARY_DIR}/install/lib/libcurl_a.lib ${CMAKE_CURRENT_BINARY_DIR}/install/lib/libcurl.lib)
 endif()
+
+  
+endif()
   
 endif()
 
@@ -98,6 +113,12 @@ endif()
 ##  wxWidgets  ##
 ##############
 if(BUILD_wxWidgets)
+
+#Check if wxWidgets is not already available
+find_package(wxWidgets)
+
+if (NOT wxWidgets_FOUND)
+
   build_git_dependency(
     NAME
       wxWidgets
@@ -108,6 +129,9 @@ if(BUILD_wxWidgets)
     CMAKE_ARGS
       -DwxBUILD_SHARED=OFF
   ) 
+  
+endif()
+
 endif()
 
 

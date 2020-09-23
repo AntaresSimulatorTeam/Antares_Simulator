@@ -306,8 +306,8 @@ ${MementoSection} "$(LngCoreFiles)" SecCore
 	${File} "${ANTARES_BUILD_DIR}\tools\config\${TARGET}"         "antares-${CMAKE_SIMPLE_VERSION}-config.exe"
 	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\icons"   "study.ico"
 	
-	;TODO : for now no redist in installer
-	;${File} "@PROJECT_SOURCE_DIR@\distrib\win32\redist\${ANTARES_REDIST_ARCH}" "*.dll"
+	;Add system runtime libs (defined in src/CMakeList.txt)
+	File @SYSTEM_RUNTIME_LIBS_STR@
 	
 ;	!insertmacro AppendCoreFiles
 
@@ -360,7 +360,7 @@ ${MementoSection} "$(LngResExamples)" SecExamples
 	SectionIn 1
 
 	SetOverwrite on
-	#!include "examplesfiles.inc.nsh"
+	!include "@PROJECT_SOURCE_DIR@\distrib\win32\examplesfiles.inc.nsh"
 ${Mementosectionend}
 
 ${MementoSection} "$(LngResSources)" SecSources
@@ -372,7 +372,7 @@ ${MementoSection} "$(LngResSources)" SecSources
 	SectionIn 1
 
 	SetOverwrite on
-	#!include "sourcefiles.inc.nsh"
+	!include "@PROJECT_SOURCE_DIR@\distrib\win32\sourcefiles.inc.nsh"
 ${Mementosectionend}
 
 

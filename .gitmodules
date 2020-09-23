@@ -1,0 +1,3 @@
+[submodule "resources/examples"]
+	path = resources/examples
+	url = https://github.com/AntaresSimulatorTeam/Antares_Simulator_Examples.git
