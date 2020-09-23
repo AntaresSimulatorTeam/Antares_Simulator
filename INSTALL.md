@@ -179,6 +179,9 @@ You can specify previously dependencies install directory with `CMAKE_PREFIX_PAT
 ```
 cmake -DCMAKE_PREFIX_PATH=<previous_build_dir>/dependencies/install
 ````
+#### Choose OrTools branch
+OrTools stable branch can be used with `-DUSE_ORTOOLS_STABLE=ON` (`OFF` by default).
+Otherwise a [fork from RTE](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) is used.
 
 ## [Building Antares Solution](#build)
 
