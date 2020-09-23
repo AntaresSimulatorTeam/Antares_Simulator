@@ -335,10 +335,10 @@ bool JobFileReader::storeResults()
 		const TemporaryColumnData& ref = pTmpResults[v];
 
 		// Allocate the memory for the result data
-		//if (Memory::Null(store.rows))
+		if (Memory::Null(store.rows))
 			Memory::Allocate(store.rows, pLineCount);
-		//else
-		//	logs.error() << "internal error";
+		else
+			logs.error() << "internal error";
 
 		// Copy
 		store.height = pLineCount;

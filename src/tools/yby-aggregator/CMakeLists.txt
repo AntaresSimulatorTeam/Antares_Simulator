@@ -43,7 +43,7 @@ install(TARGETS ${execname} DESTINATION bin)
 
 
 set(YBY_AGGREGATOR_LIBS
-	libantares-core
+	libantares-core-swap
 	libantares-core-calendar
 	yuni-static-core
 	libantares-license
@@ -59,6 +59,8 @@ target_link_libraries(${execname}
 		PRIVATE
 			${YBY_AGGREGATOR_LIBS}
 		)
+
+set_target_properties(${execname} PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
 
 import_std_libs(${execname})
 executable_strip(${execname})
