@@ -4,12 +4,12 @@ on:
   push:
     branches:
       - develop
-
 jobs:
 
   windows:
 
     runs-on: ${{ matrix.os }}
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       matrix:
         os: [windows-latest]
