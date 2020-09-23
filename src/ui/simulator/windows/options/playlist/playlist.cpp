@@ -259,14 +259,9 @@ namespace Options
         if (!studyptr)
             return;
         auto& study = *studyptr;
-
-        Freeze();
+        
         study.parameters.resetYearWeigth();
-        pGrid->forceRefresh();
-        updateCaption();
-        Dispatcher::GUI::Refresh(pGrid);
-        MarkTheStudyAsModified();
-        Thaw();
+		onUpdateStatus();
     }
 
 	void MCPlaylist::mouseMoved(wxMouseEvent&)
@@ -320,6 +315,9 @@ namespace Options
 		}
 		else
 			pStatus->SetLabel(wxT(" Use a custom playlist  "));
+
+		wxSizer& sizer = *GetSizer();
+		sizer.Layout();
 	}
 
 
