@@ -20,6 +20,8 @@ target_include_directories(lib-matrix
 									"${CMAKE_SOURCE_DIR}/ext/yuni/src"
 )
 
+# Storing lib-matrix under the folder Unit-tests in the IDE
+set_target_properties(lib-matrix PROPERTIES FOLDER Unit-tests)
 
 # Building tests on Matrix save operations
 set(SRC_TEST_MATRIX_SAVE
@@ -42,6 +44,9 @@ target_link_libraries(tests-matrix-save
 			yuni-static-core
 			Boost::unit_test_framework
 			)
+
+# Storing tests-matrix-save under the folder Unit-tests in the IDE
+set_target_properties(tests-matrix-save PROPERTIES FOLDER Unit-tests)
 
 add_test(NAME save-matrix COMMAND tests-matrix-save)
 
@@ -66,6 +71,9 @@ target_link_libraries(tests-matrix-load
 			yuni-static-core
 			Boost::unit_test_framework
 			)
+
+# Storing tests-matrix-load under the folder Unit-tests in the IDE
+set_target_properties(tests-matrix-load PROPERTIES FOLDER Unit-tests)
 
 add_test(NAME load-matrix COMMAND tests-matrix-load)
 
