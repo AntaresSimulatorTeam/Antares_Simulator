@@ -104,7 +104,7 @@ namespace ScenarioBuilder
 	}
 
 
-	void Rules::loadFromInstrs( Study& study, const AreaName::Vector& instrs, uint value)
+	void Rules::loadFromInstrs(Study& study, const AreaName::Vector& instrs, String value)
 	{
 		assert(instrs.size() > 2);
 

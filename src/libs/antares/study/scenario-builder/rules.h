@@ -30,8 +30,7 @@
 # include <yuni/yuni.h>
 # include <yuni/core/string.h>
 # include "../fwd.h"
-// # include "timeseries.h" // gp : removed
-# include "TSnumberData.h"	// gp : added
+# include "TSnumberData.h"
 # include <map>
 
 
@@ -79,7 +78,7 @@ namespace ScenarioBuilder
 		/*!
 		** \brief Load information from a single line (extracted from an INI file)
 		*/
-		void loadFromInstrs(Study& study, const AreaName::Vector& instrs, uint value);
+		void loadFromInstrs(Study& study, const AreaName::Vector& instrs, String value);
 
 		/*!
 		** \brief Export the data into a mere INI file

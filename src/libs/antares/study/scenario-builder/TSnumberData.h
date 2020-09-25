@@ -73,7 +73,7 @@ namespace ScenarioBuilder
 		** \param year  A year
 		** \param value The new TS number
 		*/
-		void set(uint index, uint year, uint value);
+		void set(uint index, uint year, String value);
 		//@}
 
 		//! Get the overlay matrix
@@ -102,11 +102,11 @@ namespace ScenarioBuilder
 		return pTSNumberRules;
 	}
 
-	inline void TSNumberData::set(uint areaindex, uint year, uint value)
+	inline void TSNumberData::set(uint areaindex, uint year, String value)
 	{
 		assert(areaindex < pTSNumberRules.width);
 		if (year < pTSNumberRules.height)
-			pTSNumberRules[areaindex][year] = value;
+			pTSNumberRules[areaindex][year] = value.to<uint>();
 	}
 
 
@@ -172,7 +172,7 @@ namespace ScenarioBuilder
 
 		void attachArea(const Area* area) { pArea = area; }
 
-		void set(const Antares::Data::ThermalCluster* cluster, const uint year, uint value);
+		void set(const Antares::Data::ThermalCluster* cluster, const uint year, String value);
 		uint get(const Antares::Data::ThermalCluster* cluster, const uint year) const;
 		void apply(const Study& study);
 		CString<512, false> get_prefix() const;
@@ -185,13 +185,13 @@ namespace ScenarioBuilder
 		std::map<const ThermalCluster*, uint> clusterIndexMap;
 	};
 
-	inline void thermalTSNumberData::set(const Antares::Data::ThermalCluster* cluster, const uint year, uint value)
+	inline void thermalTSNumberData::set(const Antares::Data::ThermalCluster* cluster, const uint year, String value)
 	{
 		assert(cluster != nullptr);
 		if (clusterIndexMap.find(cluster) == clusterIndexMap.end())
 			clusterIndexMap[cluster] = cluster->areaWideIndex;
 		if (year < pTSNumberRules.height)
-			pTSNumberRules[clusterIndexMap[cluster]][year] = value;
+			pTSNumberRules[clusterIndexMap[cluster]][year] = value.to<uint>();
 	}
 
 	inline uint thermalTSNumberData::get(const Antares::Data::ThermalCluster* cluster, const uint year) const

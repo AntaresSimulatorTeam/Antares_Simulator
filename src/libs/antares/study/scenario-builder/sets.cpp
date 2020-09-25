@@ -200,13 +200,9 @@ namespace ScenarioBuilder
 
 			for (auto* p = section.firstProperty; p != nullptr; p = p->next)
 			{
-				uint value = p->value.to<uint>();
-				if (value)
-				{
-					p->key.split(instrs, ",", true, false);
-					if (instrs.size() > 2)
-						ruleset.loadFromInstrs(*pStudy, instrs, value);
-				}
+				p->key.split(instrs, ",", true, false);
+				if (instrs.size() > 2)
+					ruleset.loadFromInstrs(*pStudy, instrs, p->value);
 			}
 		});
 		return true;

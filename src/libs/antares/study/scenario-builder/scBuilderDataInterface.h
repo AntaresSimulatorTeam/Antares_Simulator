@@ -45,10 +45,6 @@ namespace ScenarioBuilder
 	class dataInterface : private Yuni::NonCopyable<dataInterface>
 	{
 	public:
-		//! Matrix
-		typedef Matrix<Yuni::uint32> MatrixType;
-
-	public:
 		//! \name Data manupulation
 		//@{
 		/*!
@@ -62,11 +58,6 @@ namespace ScenarioBuilder
 		*/
 		virtual
 		void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const = 0;
-
-		//! Get the overlay matrix
-		virtual
-		MatrixType & overlay() = 0;
-		//@}
 
 		/*!
 		** \brief Apply the changes to the study corresponding data (time series, hydro levels, ...)

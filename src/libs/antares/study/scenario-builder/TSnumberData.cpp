@@ -84,8 +84,7 @@ namespace ScenarioBuilder
 	{
 
 		template<class D>
-		static inline bool
-			CheckValidity(uint value, const D& data, uint tsGenMax)
+		static inline bool CheckValidity(uint value, const D& data, uint tsGenMax)
 		{
 			// When the TS-Generators are not used
 			return (!tsGenMax)
@@ -93,8 +92,7 @@ namespace ScenarioBuilder
 		}
 
 		template<>
-		inline bool
-			CheckValidity<Data::DataSeriesHydro>(uint value, const Data::DataSeriesHydro& data, uint tsGenMax)
+		inline bool CheckValidity<Data::DataSeriesHydro>(uint value, const Data::DataSeriesHydro& data, uint tsGenMax)
 		{
 			// When the TS-Generators are not used
 			return (!tsGenMax)
@@ -104,7 +102,7 @@ namespace ScenarioBuilder
 
 		template<class StringT, class D>
 		static void
-		ApplyToMatrix(uint& errors, StringT& logprefix, D& data, const dataInterface::MatrixType::ColumnType& years, uint tsGenMax)
+		ApplyToMatrix(uint& errors, StringT& logprefix, D& data, const TSNumberData::MatrixType::ColumnType& years, uint tsGenMax)
 		{
 			// In this case, m.height represents the total number of years
 			const uint nbYears = data.timeseriesNumbers.height;
