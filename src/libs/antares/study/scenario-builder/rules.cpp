@@ -57,27 +57,6 @@ namespace ScenarioBuilder
 	}
 
 
-
-	bool Rules::loadFromStudy(const Study& study)
-	{
-		logs.info() << "  Loading data for the scenario builder overlay";
-		load.loadFromStudy(study);
-		solar.loadFromStudy(study);
-		hydro.loadFromStudy(study);
-		wind.loadFromStudy(study);
-
-		delete[] thermal;
-		pAreaCount = study.areas.size();
-		thermal = new thermalTSNumberData[pAreaCount];
-		for (uint i = 0; i != pAreaCount; ++i)
-		{
-			thermal[i].attachArea(study.areas.byIndex[i]);
-			thermal[i].loadFromStudy(study);
-		}
-		return true;
-	}
-
-
 	void Rules::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
 	{
 		file << "[" << pName << "]\n";
@@ -169,7 +148,8 @@ namespace ScenarioBuilder
 					}
 					else
 						if (not updaterMode) 
-							logs.warning() << "cluster " << area->id << " / " << clustername << " (size:" << clustername.size() << ") not found: it may not exist or it is disabled";
+							logs.warning() << "cluster " << area->id << " / " << clustername << " (size:" 
+										   << clustername.size() << ") not found: it may not exist or it is disabled";
 					break;
 				}
 			case 'l':

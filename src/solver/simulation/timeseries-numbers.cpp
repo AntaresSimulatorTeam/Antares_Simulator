@@ -157,9 +157,6 @@ namespace Solver
 {
 
 
-	
-
-
 	static void ApplyCustomTSNumbers(Data::Study& study)
 	{
 		
@@ -321,9 +318,6 @@ namespace Solver
 
 
 
-	
-
-
 	static bool GenerateDeratedMode(Data::Study& study)
 	{
 		logs.info() <<  "  :: using the `derated` mode";
@@ -351,37 +345,18 @@ namespace Solver
 	}
 
 
-
-
-
-
-
 	bool TimeSeriesNumbers::Generate(Data::Study& study)
 	{
 		
 		logs.info() << "Preparing time-series numbers...";
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
-
 		
 		auto& parameters = study.parameters;
 
-		
 		if (parameters.derated)
 			return GenerateDeratedMode(study);
 
-		
 		const unsigned int years = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
 
-		
 		const bool intramodal[Data::timeSeriesCount] =
 		{
 			0 != (Data::timeSeriesLoad    & parameters.intraModal),
@@ -477,17 +452,6 @@ namespace Solver
 							parameters.nbTimeSeriesThermal);
 					}
 				}
-				
-
-
-
-
-
-
-
-
-
-
 
 			}); 
 		} 
@@ -555,8 +519,6 @@ namespace Solver
 
 				
 				
-				
-				
 				Matrix<uint32>* tsNumbers = nullptr;
 				if (intermodal[TS_INDEX(Data::timeSeriesLoad)])
 					tsNumbers = &(area.load.series->timeseriesNumbers);
@@ -622,9 +584,6 @@ namespace Solver
 
 		return true;
 	}
-
-
-
 
 
 } 

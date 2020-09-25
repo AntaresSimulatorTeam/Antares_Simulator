@@ -27,9 +27,6 @@
 
 #include "TSnumberData.h"
 
-using namespace Yuni; // gp : useful ?
-
-
 
 namespace Antares
 {
@@ -119,8 +116,7 @@ namespace ScenarioBuilder
 
 		template<class StringT, class D>
 		static void
-			ApplyToMatrix(uint& errors, StringT& logprefix, D& data,
-				const dataInterface::MatrixType::ColumnType& years, uint tsGenMax)
+		ApplyToMatrix(uint& errors, StringT& logprefix, D& data, const dataInterface::MatrixType::ColumnType& years, uint tsGenMax)
 		{
 			// In this case, m.height represents the total number of years
 			const uint nbYears = data.timeseriesNumbers.height;

@@ -27,11 +27,7 @@
 #ifndef __LIBS_STUDY_SCENARIO_BUILDER_DATA_TS_NUMBER_H__
 # define __LIBS_STUDY_SCENARIO_BUILDER_DATA_TS_NUMBER_H__
 
-// # include <yuni/yuni.h>
-// # include "../../array/matrix.h"
-// # include "../fwd.h"
-#include "../study.h"
-// # include <yuni/core/noncopyable.h>
+
 # include "scBuilderDataInterface.h"
 
 using namespace Yuni;
@@ -95,13 +91,6 @@ namespace ScenarioBuilder
 		MatrixType& overlay();
 		//@}
 
-		/*!
-		** \brief Apply the changes to the timeseries number matrices
-		**
-		** This method is only useful when launched from the solver.
-		*/
-		// virtual
-		// void apply(const Study& study) = 0;
 
 	protected:
 		virtual

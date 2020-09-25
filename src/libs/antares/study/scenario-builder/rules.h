@@ -77,11 +77,6 @@ namespace ScenarioBuilder
 		bool reset(const Study& study);
 
 		/*!
-		** \brief Load data from the study
-		*/
-		bool loadFromStudy(const Study& study);
-
-		/*!
 		** \brief Load information from a single line (extracted from an INI file)
 		*/
 		void loadFromInstrs(Study& study, const AreaName::Vector& instrs, uint value, bool updaterMode);
@@ -107,20 +102,6 @@ namespace ScenarioBuilder
 		void apply(const Study& study);
 
 	public:
-		// gp : removed
-		/*
-		//! Load
-		TSNumberRules  load;
-		//! Solar
-		TSNumberRules  solar;
-		//! Hydro
-		TSNumberRules  hydro;
-		//! Wind
-		TSNumberRules  wind;
-		//! Thermal (array [0..pAreaCount - 1])
-		TSNumberRules* thermal;
-		*/
-
 		//! Load
 		loadTSNumberData  load;
 		//! Solar

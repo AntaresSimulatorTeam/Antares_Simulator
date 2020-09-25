@@ -176,10 +176,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study, PROBLEME_HEBDO& problem
 			(area.scratchpad[numSpace]->hydroHasMod ? OUI_ANTARES : NON_ANTARES);
 
 		
-		
-		
-		
-		
 		problem.CaracteristiquesHydrauliques[i]->PresenceDePompageModulable = 
 			( 
 			  (	
