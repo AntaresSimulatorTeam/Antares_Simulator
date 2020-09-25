@@ -63,14 +63,6 @@ namespace ScenarioBuilder
 		virtual
 		void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const = 0;
 
-		//! \name Rules matrix
-		//@{
-		/*!
-		** \brief Resize to a given number of years
-		*/
-		virtual
-		void resize(uint nbYears) = 0;
-
 		//! Get the overlay matrix
 		virtual
 		MatrixType & overlay() = 0;

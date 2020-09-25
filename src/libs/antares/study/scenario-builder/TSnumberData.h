@@ -63,6 +63,7 @@ namespace ScenarioBuilder
 		/*!
 		** \brief Export the data into a mere INI file
 		*/
+		virtual
 		void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
 
 		/*!
@@ -74,13 +75,6 @@ namespace ScenarioBuilder
 		*/
 		void set(uint index, uint year, uint value);
 		//@}
-
-		//! \name Rules matrix
-		//@{
-		/*!
-		** \brief Resize to a given number of years
-		*/
-		void resize(uint nbYears);
 
 		//! Get the overlay matrix
 		MatrixType& overlay();
@@ -100,11 +94,8 @@ namespace ScenarioBuilder
 
 	}; // class TSNumberData
 
+	
 	// class TSNumberData : inline functions
-	inline void TSNumberData::resize(uint nbYears)
-	{
-		pTSNumberRules.resize(pTSNumberRules.height, nbYears);
-	}
 
 	inline TSNumberData::MatrixType& TSNumberData::overlay()
 	{
