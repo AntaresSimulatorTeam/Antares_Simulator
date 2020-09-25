@@ -42,6 +42,8 @@ set(SRC_STUDY_SCENARIO_BUILDER
 	study/scenario-builder/scBuilderDataInterface.h
 	study/scenario-builder/TSnumberData.h
 	study/scenario-builder/TSnumberData.cpp
+	# study/scenario-builder/hydroLevelsData.h
+	# study/scenario-builder/hydroLevelsData.cpp
 	# study/scenario-builder/ThermalTSnumberData.h
 	# study/scenario-builder/ThermalTSnumberData.cpp
 	#

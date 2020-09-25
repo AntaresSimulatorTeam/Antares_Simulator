@@ -61,11 +61,6 @@ namespace ScenarioBuilder
 		bool reset(const Study& study);
 
 		/*!
-		** \brief Load data from the study
-		*/
-		bool loadFromStudy(const Study& study);
-
-		/*!
 		** \brief Export the data into a mere INI file
 		*/
 		void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
@@ -182,7 +177,6 @@ namespace ScenarioBuilder
 		thermalTSNumberData() : pArea(NULL) {}
 
 		bool reset(const Study& study);
-		bool loadFromStudy(const Study& study);
 		void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
 
 		void attachArea(const Area* area) { pArea = area; }

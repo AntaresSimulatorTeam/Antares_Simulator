@@ -58,12 +58,6 @@ namespace ScenarioBuilder
 		bool reset(const Study& study) = 0;
 
 		/*!
-		** \brief Load data from the study
-		*/
-		virtual
-		bool loadFromStudy(const Study& study) = 0;
-
-		/*!
 		** \brief Export the data into a mere INI file
 		*/
 		virtual

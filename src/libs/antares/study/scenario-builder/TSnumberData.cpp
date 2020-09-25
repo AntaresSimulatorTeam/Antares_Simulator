@@ -52,18 +52,6 @@ namespace ScenarioBuilder
 		return true;
 	}
 
-
-	bool TSNumberData::loadFromStudy(const Study& study)
-	{
-		assert(&study != nullptr);
-
-		const uint nbYears = study.parameters.nbYears;
-		// Standard timeseries (load, wind, ...)
-		pTSNumberRules.reset(study.areas.size(), nbYears);
-		return true;
-	}
-
-
 	void TSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
 	{
 		// Prefix
@@ -190,6 +178,7 @@ namespace ScenarioBuilder
 	}
 
 
+
 	// Wind ...
 	uint windTSNumberData::get_tsGenCount(const Study& study) const
 	{
@@ -223,6 +212,7 @@ namespace ScenarioBuilder
 			ApplyToMatrix(errors, logprefix, *area.wind.series, col, tsGenCountWind);
 		}
 	}
+
 
 
 	// Solar ...
@@ -260,6 +250,7 @@ namespace ScenarioBuilder
 	}
 
 
+
 	// Hydro ...
 	uint hydroTSNumberData::get_tsGenCount(const Study& study) const
 	{
@@ -295,6 +286,7 @@ namespace ScenarioBuilder
 	}
 
 
+
 	// Thermal ...
 	bool thermalTSNumberData::reset(const Study& study)
 	{
@@ -311,24 +303,6 @@ namespace ScenarioBuilder
 		uint clusterCount = (study.usedByTheSolver)
 			? (pArea->thermal.list.size() + pArea->thermal.mustrunList.size())
 			: pArea->thermal.list.size();
-
-		// Resize
-		pTSNumberRules.reset(clusterCount, nbYears);
-		return true;
-	}
-
-	bool thermalTSNumberData::loadFromStudy(const Study& study)
-	{
-		assert(&study != nullptr);
-
-		const uint nbYears = study.parameters.nbYears;
-		assert(pArea != nullptr);
-
-		// If an area is available, it can only be an overlay for thermal timeseries
-		// WARNING: The total number of clusters may vary if used from the
-		//   solver or not.
-		const uint clusterCount = (study.usedByTheSolver)
-			? pArea->thermal.clusterCount : pArea->thermal.list.size();
 
 		// Resize
 		pTSNumberRules.reset(clusterCount, nbYears);

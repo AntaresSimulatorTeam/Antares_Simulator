@@ -82,6 +82,8 @@ namespace Forms
 			DatagridType* grid_;
 		};
 
+
+
 		// Load ...
 		class loadScBuilderGrid : public basicScBuilderGrid
 		{
@@ -97,6 +99,7 @@ namespace Forms
 		};
 
 		
+
 		// Hydro ...
 		class hydroScBuilderGrid : public basicScBuilderGrid
 		{
@@ -109,6 +112,7 @@ namespace Forms
 		};
 
 		
+
 		// Wind ...
 		class windScBuilderGrid : public basicScBuilderGrid
 		{
@@ -120,6 +124,8 @@ namespace Forms
 			void addToNotebook() { notebook_->add(grid_, wxT("wind"), wxT("Wind")); }
 		};
 		
+
+
 		// Solar ...
 		class solarScBuilderGrid : public basicScBuilderGrid
 		{
@@ -130,6 +136,8 @@ namespace Forms
 			void createRenderer() { renderer_ = new Renderer::solarScBuilderRenderer(); }
 			void addToNotebook() { notebook_->add(grid_, wxT("solar"), wxT("Solar")); }
 		};
+
+
 
 		// Thermal ...
 		class thermalScBuilderGrid : public basicScBuilderGrid
@@ -159,6 +167,23 @@ namespace Forms
 		private:
 			std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page_;
 		};
+
+
+		// Hydro levels ...
+		/*
+		class hydroLevelsScBuilderGrid : public basicScBuilderGrid
+		{
+		public:
+			hydroLevelsScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) : basicScBuilderGrid(control, notebook) {}
+
+		private:
+			void createRenderer()
+			{
+				renderer_ = new Renderer::loadScBuilderRenderer();
+			}
+			void addToNotebook() { notebook_->add(grid_, wxT("load"), wxT("Load")); }
+		};
+		*/
 
 	} // anonymous namespace
 
