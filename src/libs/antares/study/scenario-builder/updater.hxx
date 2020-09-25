@@ -51,7 +51,6 @@ namespace Antares
 
 				if (study.scenarioRules)
 				{
-					study.scenarioRules->inUpdaterMode = true;
 					logs.debug() << "[scenario-builder] updater mode ON";
 
 					logs.debug() << "[scenario-builder] writing data to a temporary file before structure changes";
@@ -75,7 +74,6 @@ namespace Antares
 						logs.debug() << "[scenario-builder] reloading data from a temporary file";
 						pStudy.scenarioRules->loadFromINIFile(pTempFile);
 
-						pStudy.scenarioRules->inUpdaterMode = false;
 						logs.debug() << "[scenario-builder] updater mode OFF";
 					}
 					// Removing the temporary file
