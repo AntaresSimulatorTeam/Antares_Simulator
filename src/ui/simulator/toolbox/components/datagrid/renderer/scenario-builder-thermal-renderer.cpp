@@ -80,14 +80,12 @@ namespace Renderer
 	{
 		if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears)
 		{
-			uint d = fromStringToInt(value);
-
 			if (pArea && (uint)y < pArea->thermal.list.size())
 			{
 				assert(pArea->index < pRules->areaCount());
-				assert((uint)y < pRules->thermal[pArea->index].overlay().width);
-				assert((uint)x < pRules->thermal[pArea->index].overlay().height);
-				pRules->thermal[pArea->index].set(pArea->thermal.list.byIndex[y], x, d);
+				assert((uint)y < pRules->thermal[pArea->index].width());
+				assert((uint)x < pRules->thermal[pArea->index].height());
+				pRules->thermal[pArea->index].set(pArea->thermal.list.byIndex[y], x, value);
 				return true;
 			}
 		}
@@ -100,9 +98,9 @@ namespace Renderer
 		{
 			if (pArea && (uint)y < pArea->thermal.list.size())
 			{
-				assert((uint)y < pRules->thermal[pArea->index].overlay().width);
-				assert((uint)x < pRules->thermal[pArea->index].overlay().height);
-				return pRules->thermal[pArea->index].overlay().entry[y][x];
+				assert((uint)y < pRules->thermal[pArea->index].width());
+				assert((uint)x < pRules->thermal[pArea->index].height());
+				return pRules->thermal[pArea->index].get_value(x, y);
 			}
 		}
 		return 0.;

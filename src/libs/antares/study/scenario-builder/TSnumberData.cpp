@@ -40,6 +40,27 @@ namespace ScenarioBuilder
 		maxErrors = 20,
 	};
 
+	uint fromStringToInt(const Yuni::String& value)
+	{
+		double dbl;
+		uint d;
+		if (!value.to(dbl))
+			d = 0;
+		else
+		{
+			if (dbl < 0.)
+				d = 0;
+			else
+			{
+				if (dbl > 10000.)
+					d = 10000;
+				else
+					d = (uint)dbl;
+			}
+		}
+		return d;
+	}
+
 
 	bool TSNumberData::reset(const Study& study)
 	{
@@ -78,6 +99,11 @@ namespace ScenarioBuilder
 
 	}
 
+	void TSNumberData::add_value(uint x, uint y, String value)
+	{
+		uint d = fromStringToInt(value);
+		pTSNumberRules.entry[y][x] = d;
+	}
 
 
 	namespace // anonymous
@@ -340,6 +366,17 @@ namespace ScenarioBuilder
 					<< " = " << val << '\n';
 			}
 		}
+	}
+
+	void thermalTSNumberData::set(const Antares::Data::ThermalCluster* cluster, const uint year, String value)
+	{
+		uint d = fromStringToInt(value);
+
+		assert(cluster != nullptr);
+		if (clusterIndexMap.find(cluster) == clusterIndexMap.end())
+			clusterIndexMap[cluster] = cluster->areaWideIndex;
+		if (year < pTSNumberRules.height)
+			pTSNumberRules[clusterIndexMap[cluster]][year] = d;
 	}
 
 	void thermalTSNumberData::apply(const Study& study)

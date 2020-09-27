@@ -30,6 +30,7 @@
 #include "../study.h"
 # include <yuni/core/noncopyable.h>
 
+using namespace Yuni;
 
 namespace Antares
 {
@@ -53,11 +54,20 @@ namespace ScenarioBuilder
 		virtual
 		bool reset(const Study& study) = 0;
 
+		virtual
+		void set(uint index, uint year, String value) = 0;
+
 		/*!
 		** \brief Export the data into a mere INI file
 		*/
 		virtual
 		void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const = 0;
+
+		virtual
+		uint width() const = 0;
+
+		virtual
+		uint height() const = 0;
 
 		/*!
 		** \brief Apply the changes to the study corresponding data (time series, hydro levels, ...)

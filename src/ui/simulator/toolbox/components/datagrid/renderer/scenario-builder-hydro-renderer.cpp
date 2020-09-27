@@ -48,13 +48,11 @@ namespace Renderer
 	{
 		if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears)
 		{
-			uint d = fromStringToInt(value);
-
 			if ((uint)y < study->areas.size())
 			{
-				assert((uint)y < pRules->hydro.overlay().width);
-				assert((uint)x < pRules->hydro.overlay().height);
-				pRules->hydro.overlay().entry[y][x] = d;
+				assert((uint)y < pRules->hydro.width());
+				assert((uint)x < pRules->hydro.height());
+				pRules->hydro.add_value(x, y, value);
 				return true;
 			}
 		}
@@ -67,9 +65,9 @@ namespace Renderer
 		{
 			if ((uint)y < study->areas.size())
 			{
-				assert((uint)y < pRules->hydro.overlay().width);
-				assert((uint)x < pRules->hydro.overlay().height);
-				return (pRules->hydro.overlay().entry[y][x]);
+				assert((uint)y < pRules->hydro.width());
+				assert((uint)x < pRules->hydro.height());
+				return pRules->hydro.get_value(x, y);
 			}
 		}
 		return 0.;

@@ -48,13 +48,11 @@ namespace Renderer
 	{
 		if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears)
 		{
-			uint d = fromStringToInt(value);
-
 			if ((uint)y < study->areas.size())
 			{
-				assert((uint)y < pRules->load.overlay().width);
-				assert((uint)x < pRules->load.overlay().height);
-				pRules->load.overlay().entry[y][x] = d;
+				assert((uint)y < pRules->load.width());
+				assert((uint)x < pRules->load.height());
+				pRules->load.add_value(x, y, value);
 				return true;
 			}
 		}
@@ -67,9 +65,9 @@ namespace Renderer
 		{
 			if ((uint)y < study->areas.size())
 			{
-				assert((uint)y < pRules->load.overlay().width);
-				assert((uint)x < pRules->load.overlay().height);
-				return (pRules->load.overlay().entry[y][x]);
+				assert((uint)y < pRules->load.width());
+				assert((uint)x < pRules->load.height());
+				return pRules->load.get_value(x, y);
 			}
 		}
 		return 0.;

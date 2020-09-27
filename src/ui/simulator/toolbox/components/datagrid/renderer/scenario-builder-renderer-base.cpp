@@ -42,28 +42,7 @@ namespace Component
 namespace Datagrid
 {
 namespace Renderer
-{
-	uint fromStringToInt(const Yuni::String& value)
-	{
-		double dbl;
-		uint d;
-		if (!value.to(dbl))
-			d = 0;
-		else
-		{
-			if (dbl < 0.)
-				d = 0;
-			else
-			{
-				if (dbl > 10000.)
-					d = 10000;
-				else
-					d = (uint)dbl;
-			}
-		}
-		return d;
-	}
-	
+{	
 	
 	ScBuilderRendererBase::ScBuilderRendererBase() :
 		pControl(nullptr),

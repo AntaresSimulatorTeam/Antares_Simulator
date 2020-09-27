@@ -30,7 +30,6 @@
 
 # include "scBuilderDataInterface.h"
 
-using namespace Yuni;
 
 namespace Antares
 {
@@ -76,10 +75,17 @@ namespace ScenarioBuilder
 		void set(uint index, uint year, String value);
 		//@}
 
-		//! Get the overlay matrix
-		MatrixType& overlay();
-		//@}
+		uint width() const;
+		uint height() const;
 
+		double get_value(uint x, uint y) const;
+		void add_value(uint x, uint y, String value);
+
+		/*
+		** Give the study an access to TS numbers scenarii
+		*/
+		virtual
+		void apply(const Study& study) = 0;
 
 	protected:
 		virtual
@@ -97,11 +103,6 @@ namespace ScenarioBuilder
 	
 	// class TSNumberData : inline functions
 
-	inline TSNumberData::MatrixType& TSNumberData::overlay()
-	{
-		return pTSNumberRules;
-	}
-
 	inline void TSNumberData::set(uint areaindex, uint year, String value)
 	{
 		assert(areaindex < pTSNumberRules.width);
@@ -109,8 +110,15 @@ namespace ScenarioBuilder
 			pTSNumberRules[areaindex][year] = value.to<uint>();
 	}
 
+	inline uint TSNumberData::width() const { return pTSNumberRules.width;  }
+
+	inline uint TSNumberData::height() const { return pTSNumberRules.height; }
+
+	inline double TSNumberData::get_value(uint x, uint y) const { return pTSNumberRules.entry[y][x]; }
+
 
 	// =============== TSNumberData derived classes ===============
+
 
 	// Load ...
 	class loadTSNumberData : public TSNumberData
@@ -184,15 +192,6 @@ namespace ScenarioBuilder
 		//! The map between clusters and there line index
 		std::map<const ThermalCluster*, uint> clusterIndexMap;
 	};
-
-	inline void thermalTSNumberData::set(const Antares::Data::ThermalCluster* cluster, const uint year, String value)
-	{
-		assert(cluster != nullptr);
-		if (clusterIndexMap.find(cluster) == clusterIndexMap.end())
-			clusterIndexMap[cluster] = cluster->areaWideIndex;
-		if (year < pTSNumberRules.height)
-			pTSNumberRules[clusterIndexMap[cluster]][year] = value.to<uint>();
-	}
 
 	inline uint thermalTSNumberData::get(const Antares::Data::ThermalCluster* cluster, const uint year) const
 	{
