@@ -46,6 +46,7 @@ namespace ScenarioBuilder
 		hydro(),
 		wind(),
 		thermal(),
+		hydroLevels(),
 		pAreaCount(0)
 	{
 	}
@@ -73,6 +74,8 @@ namespace ScenarioBuilder
 			// Thermal, each area
 			for (uint i = 0; i != pAreaCount; ++i)
 				thermal[i].saveToINIFile(study, file);
+			// hydro levels
+			hydroLevels.saveToINIFile(study, file);
 		}
 		file << '\n';
 	}
@@ -100,6 +103,8 @@ namespace ScenarioBuilder
 			thermal[i].attachArea(study.areas.byIndex[i]);
 			thermal[i].reset(study);
 		}
+
+		hydroLevels.reset(study);
 		return true;
 	}
 
@@ -157,6 +162,9 @@ namespace ScenarioBuilder
 			case 's':
 				solar.set(area->index, year, value);
 				return;
+			case 'v':
+				hydroLevels.set(area->index, year, value);
+				return;
 		}
 		return;
 	}
@@ -173,6 +181,7 @@ namespace ScenarioBuilder
 			wind.apply(study);
 			for (uint i = 0; i != pAreaCount; ++i)
 				thermal[i].apply(study);
+			hydroLevels.apply(study);
 		}
 	}
 

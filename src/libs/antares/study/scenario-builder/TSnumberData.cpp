@@ -96,7 +96,6 @@ namespace ScenarioBuilder
 				file << prefix << study.areas.byIndex[index]->id << ',' << y << " = " << value << '\n';
 			}
 		}
-
 	}
 
 	void TSNumberData::add_value(uint x, uint y, String value)

@@ -31,6 +31,7 @@
 # include <yuni/core/string.h>
 # include "../fwd.h"
 # include "TSnumberData.h"
+# include "hydroLevelsData.h"
 # include <map>
 
 
@@ -111,6 +112,8 @@ namespace ScenarioBuilder
 		windTSNumberData  wind;
 		//! Thermal (array [0..pAreaCount - 1])
 		thermalTSNumberData* thermal;
+
+		hydroLevelsData hydroLevels;
 
 	private:
 		//! Total number of areas

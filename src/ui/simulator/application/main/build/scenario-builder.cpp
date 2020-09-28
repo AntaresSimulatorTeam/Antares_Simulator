@@ -38,6 +38,8 @@
 #include "../../../toolbox/components/datagrid/renderer/scenario-builder-hydro-renderer.h"
 #include "../../../toolbox/components/datagrid/renderer/scenario-builder-wind-renderer.h"
 #include "../../../toolbox/components/datagrid/renderer/scenario-builder-solar-renderer.h"
+#include "../../../toolbox/components/datagrid/renderer/scenario-builder-hydro-levels-renderer.h"
+
 
 using namespace Yuni;
 using namespace Component::Datagrid;
@@ -170,7 +172,6 @@ namespace Forms
 
 
 		// Hydro levels ...
-		/*
 		class hydroLevelsScBuilderGrid : public basicScBuilderGrid
 		{
 		public:
@@ -179,11 +180,11 @@ namespace Forms
 		private:
 			void createRenderer()
 			{
-				renderer_ = new Renderer::loadScBuilderRenderer();
+				renderer_ = new Renderer::hydroLevelsScBuilderRenderer();
 			}
-			void addToNotebook() { notebook_->add(grid_, wxT("load"), wxT("Load")); }
+			void addToNotebook() { notebook_->add(grid_, wxT("hydro levels"), wxT("Hydro Levels")); }
 		};
-		*/
+		
 
 	} // anonymous namespace
 
@@ -234,6 +235,11 @@ namespace Forms
 
 		solarScBuilderGrid solarScBuilder(control, pScenarioBuilderNotebook);
 		solarScBuilder.create();
+
+		pScenarioBuilderNotebook->addSeparator();
+
+		hydroLevelsScBuilderGrid hydroLevelsScBuilder(control, pScenarioBuilderNotebook);
+		hydroLevelsScBuilder.create();
 	}
 
 
