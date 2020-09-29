@@ -175,7 +175,6 @@ namespace Solver
 			Data::ScenarioBuilder::Rules::Ptr rules = study.scenarioRules->find(id);
 			if (!(!rules))
 			{
-				
 				rules->apply(study);
 			}
 			else

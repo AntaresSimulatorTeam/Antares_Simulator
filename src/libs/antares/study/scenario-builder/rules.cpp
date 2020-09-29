@@ -171,7 +171,7 @@ namespace ScenarioBuilder
 
 
 
-	void Rules::apply(const Study& study)
+	void Rules::apply(Study& study)
 	{
 		if (pAreaCount)
 		{

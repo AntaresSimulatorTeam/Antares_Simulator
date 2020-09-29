@@ -81,7 +81,7 @@ namespace ScenarioBuilder
 		** This method is only useful when launched from the solver.
 		*/
 		virtual
-		void apply(const Study& study) = 0;
+		void apply(Study& study) = 0;
 
 	}; // class dataInterface
 

@@ -82,7 +82,7 @@ namespace ScenarioBuilder
 
 		void add_value(uint x, uint y, String value);
 
-		void apply(const Study& study);
+		void apply(Study& study);
 
 	private:
 		//! Hydro levels overlay (0 if auto)

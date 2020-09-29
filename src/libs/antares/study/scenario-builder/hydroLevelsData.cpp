@@ -108,8 +108,9 @@ namespace ScenarioBuilder
 		pHydroLevelsRules.entry[y][x] = d / 100.;
 	}
 
-	void hydroLevelsData::apply(const Study& study)
+	void hydroLevelsData::apply(Study& study)
 	{
+		study.scenarioHydroLevels.copyFrom(pHydroLevelsRules);
 	}
 
 } // namespace ScenarioBuilder

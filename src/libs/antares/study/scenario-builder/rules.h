@@ -99,7 +99,7 @@ namespace ScenarioBuilder
 		**
 		** This method is only useful when launched from the solver.
 		*/
-		void apply(const Study& study);
+		void apply(Study& study);
 
 	public:
 		//! Load

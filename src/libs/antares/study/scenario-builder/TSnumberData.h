@@ -85,7 +85,7 @@ namespace ScenarioBuilder
 		** Give the study an access to TS numbers scenarii
 		*/
 		virtual
-		void apply(const Study& study) = 0;
+		void apply(Study& study) = 0;
 
 	protected:
 		virtual
@@ -124,7 +124,7 @@ namespace ScenarioBuilder
 	class loadTSNumberData : public TSNumberData
 	{
 	public:
-		void apply(const Study& study);
+		void apply(Study& study);
 		CString<512, false> get_prefix() const;
 		uint get_tsGenCount(const Study& study) const;
 	};
@@ -137,7 +137,7 @@ namespace ScenarioBuilder
 	class windTSNumberData : public TSNumberData
 	{
 	public:
-		void apply(const Study& study);
+		void apply(Study& study);
 		CString<512, false> get_prefix() const;
 		uint get_tsGenCount(const Study& study) const;
 	};
@@ -149,7 +149,7 @@ namespace ScenarioBuilder
 	class solarTSNumberData : public TSNumberData
 	{
 	public:
-		void apply(const Study& study);
+		void apply(Study& study);
 		CString<512, false> get_prefix() const;
 		uint get_tsGenCount(const Study& study) const;
 	};
@@ -161,7 +161,7 @@ namespace ScenarioBuilder
 	class hydroTSNumberData : public TSNumberData
 	{
 	public:
-		void apply(const Study& study);
+		void apply(Study& study);
 		CString<512, false> get_prefix() const;
 		uint get_tsGenCount(const Study& study) const;
 	};
@@ -182,7 +182,7 @@ namespace ScenarioBuilder
 
 		void set(const Antares::Data::ThermalCluster* cluster, const uint year, String value);
 		uint get(const Antares::Data::ThermalCluster* cluster, const uint year) const;
-		void apply(const Study& study);
+		void apply(Study& study);
 		CString<512, false> get_prefix() const;
 		uint get_tsGenCount(const Study& study) const;
 

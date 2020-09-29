@@ -176,7 +176,7 @@ namespace ScenarioBuilder
 		return tsGenLoad ? parameters.nbTimeSeriesLoad : 0u;
 	}
 
-	void loadTSNumberData::apply(const Study& study)
+	void loadTSNumberData::apply(Study& study)
 	{
 		CString<512, false> logprefix;
 		// Errors
@@ -212,7 +212,7 @@ namespace ScenarioBuilder
 		return tsGenWind ? parameters.nbTimeSeriesWind : 0u;
 	}
 
-	void windTSNumberData::apply(const Study& study)
+	void windTSNumberData::apply(/*const*/Study& study)
 	{
 		CString<512, false> logprefix;
 		// Errors
@@ -248,7 +248,7 @@ namespace ScenarioBuilder
 		return tsGenSolar ? parameters.nbTimeSeriesSolar : 0u;
 	}
 
-	void solarTSNumberData::apply(const Study& study)
+	void solarTSNumberData::apply(Study& study)
 	{
 		CString<512, false> logprefix;
 		// Errors
@@ -284,7 +284,7 @@ namespace ScenarioBuilder
 		return tsGenHydro ? parameters.nbTimeSeriesHydro : 0u;
 	}
 
-	void hydroTSNumberData::apply(const Study& study)
+	void hydroTSNumberData::apply(Study& study)
 	{
 		CString<512, false> logprefix;
 		// Errors
@@ -378,7 +378,7 @@ namespace ScenarioBuilder
 			pTSNumberRules[clusterIndexMap[cluster]][year] = d;
 	}
 
-	void thermalTSNumberData::apply(const Study& study)
+	void thermalTSNumberData::apply(Study& study)
 	{
 		CString<512, false> logprefix;
 		// Errors
