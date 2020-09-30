@@ -452,6 +452,11 @@ namespace Antares
 			uint firstDaySimu = study.parameters.simulationDays.first;
 			state.problemeHebdo->previousSimulationFinalLevel[z] = valgen.NiveauxReservoirsDebutJours[firstDaySimu] * reservoirCapacity;
 
+			// Level from scenario builder
+			double levelFromSceanrioBuilder = study.scenarioHydroLevels[z][y];
+			if(study.parameters.useCustomTSNumbers and levelFromSceanrioBuilder > 0)
+				state.problemeHebdo->previousSimulationFinalLevel[z] = levelFromSceanrioBuilder * reservoirCapacity;
+
 			# if HYDRO_DAILY_SOLVER_DEBUG != 0
 			{
 				String folder;
