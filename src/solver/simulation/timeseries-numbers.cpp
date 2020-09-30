@@ -156,37 +156,6 @@ namespace Antares
 namespace Solver
 {
 
-
-	static void ApplyCustomTSNumbers(Data::Study& study)
-	{
-		
-		auto& parameters = study.parameters;
-
-		auto& rulename = parameters.activeRulesScenario;
-		logs.info() << "Preparing time-series numbers... (" << rulename << ')';
-		logs.info() << "  :: Scenario Builder, active target: " << rulename;
-		Data::RulesScenarioName id = rulename;
-		id.toLower();
-
-		
-		study.scenarioRulesCreate(parameters.activeRulesScenario);
-		if (study.scenarioRules)
-		{
-			Data::ScenarioBuilder::Rules::Ptr rules = study.scenarioRules->find(id);
-			if (!(!rules))
-			{
-				rules->apply(study);
-			}
-			else
-				logs.error() << "Scenario Builder: Impossible to find the active ruleset '" << rulename << "'";
-		}
-
-		
-		study.scenarioRulesDestroy();
-		logs.info(); 
-	}
-
-
 	template<enum Data::TimeSeries TimeSeriesT>
 	static unsigned int CheckMatricesWidth(const Data::Study& study)
 	{
@@ -300,23 +269,6 @@ namespace Solver
 	}
 
 
-	static void StoreTimeseriesIntoOuput(Data::Study& study)
-	{
-		using namespace Antares::Data;
-		
-		if (study.parameters.storeTimeseriesNumbers)
-		{
-			study.storeTimeSeriesNumbers<timeSeriesLoad>();
-			study.storeTimeSeriesNumbers<timeSeriesSolar>();
-			study.storeTimeSeriesNumbers<timeSeriesHydro>();
-			study.storeTimeSeriesNumbers<timeSeriesWind>();
-			study.storeTimeSeriesNumbers<timeSeriesThermal>();
-		}
-	}
-
-
-
-
 	static bool GenerateDeratedMode(Data::Study& study)
 	{
 		logs.info() <<  "  :: using the `derated` mode";
@@ -338,8 +290,6 @@ namespace Solver
 			}
 		});
 
-		
-		StoreTimeseriesIntoOuput(study);
 		return true;
 	}
 
@@ -574,14 +524,22 @@ namespace Solver
 			}
 		}
 
-		
-		if (parameters.useCustomScenario)
-			ApplyCustomTSNumbers(study);
-
-		
-		StoreTimeseriesIntoOuput(study);
-
 		return true;
+	}
+
+
+	void TimeSeriesNumbers::StoreTimeseriesIntoOuput(Data::Study& study)
+	{
+		using namespace Antares::Data;
+
+		if (study.parameters.storeTimeseriesNumbers)
+		{
+			study.storeTimeSeriesNumbers<timeSeriesLoad>();
+			study.storeTimeSeriesNumbers<timeSeriesSolar>();
+			study.storeTimeSeriesNumbers<timeSeriesHydro>();
+			study.storeTimeSeriesNumbers<timeSeriesWind>();
+			study.storeTimeSeriesNumbers<timeSeriesThermal>();
+		}
 	}
 
 
