@@ -514,6 +514,12 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem, Antares::Solver::Va
 		{
 			
 			problem.CaracteristiquesHydrauliques[k]->NiveauInitialReservoir = problem.previousSimulationFinalLevel[k];
+
+			// Possibly upadte the intial level from scenario builder
+			double levelFromSceanrioBuilder = study.scenarioHydroLevels[k][state.year];
+			if (study.parameters.useCustomTSNumbers and levelFromSceanrioBuilder > 0)
+				problem.CaracteristiquesHydrauliques[k]->NiveauInitialReservoir = levelFromSceanrioBuilder * area.hydro.reservoirCapacity;
+
 			problem.CaracteristiquesHydrauliques[k]->LevelForTimeInterval = problem.CaracteristiquesHydrauliques[k]->NiveauInitialReservoir; /*for first 24-hour optim*/  
 			double nivInit = problem.CaracteristiquesHydrauliques[k]->NiveauInitialReservoir;
 			if (nivInit < 0.)
