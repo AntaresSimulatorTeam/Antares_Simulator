@@ -320,7 +320,7 @@ namespace Solver
 	static bool GenerateDeratedMode(Data::Study& study)
 	{
 		logs.info() <<  "  :: using the `derated` mode";
-		if (study.parameters.useCustomTSNumbers)
+		if (study.parameters.useCustomScenario)
 			logs.warning() << "The derated mode is enabled. The custom building mode will be ignored";
 
 		study.areas.each([&] (Data::Area& area)
@@ -575,7 +575,7 @@ namespace Solver
 		}
 
 		
-		if (parameters.useCustomTSNumbers)
+		if (parameters.useCustomScenario)
 			ApplyCustomTSNumbers(study);
 
 		
