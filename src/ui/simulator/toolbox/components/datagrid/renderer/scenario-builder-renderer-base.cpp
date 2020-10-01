@@ -25,10 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-// gp : what is useless must be removed 
+
 #include "scenario-builder-renderer-base.h"
-#include <yuni/core/math.h>
-#include <antares/study/scenario-builder/sets.h>
 #include "../../refresh.h"
 
 

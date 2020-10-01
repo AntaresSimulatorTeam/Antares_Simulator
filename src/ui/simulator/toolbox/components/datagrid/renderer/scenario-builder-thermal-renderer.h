@@ -28,6 +28,7 @@
 # define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_THERMAL_SCENARIO_BUILDER_H__
 
 #include "scenario-builder-renderer-base.h"
+# include "../../../../toolbox/input/area.h"
 
 
 namespace Antares

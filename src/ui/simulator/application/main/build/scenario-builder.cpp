@@ -25,20 +25,19 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "../main.h"
-#include "../../../toolbox/input/area.h"
-#include "../../../toolbox/components/datagrid/component.h"
+#include "application/main/main.h"
+#include "toolbox/components/datagrid/component.h"
 #include "standard-page.hxx"
-#include "../../../windows/scenario-builder/panel.h"
-#include "../../../windows/output/output.h"
+#include "windows/scenario-builder/panel.h"
+#include "windows/output/output.h"
 
-#include "../../../toolbox/components/datagrid/renderer/scenario-builder-renderer-base.h"
-#include "../../../toolbox/components/datagrid/renderer/scenario-builder-load-renderer.h"
-#include "../../../toolbox/components/datagrid/renderer/scenario-builder-thermal-renderer.h"
-#include "../../../toolbox/components/datagrid/renderer/scenario-builder-hydro-renderer.h"
-#include "../../../toolbox/components/datagrid/renderer/scenario-builder-wind-renderer.h"
-#include "../../../toolbox/components/datagrid/renderer/scenario-builder-solar-renderer.h"
-#include "../../../toolbox/components/datagrid/renderer/scenario-builder-hydro-levels-renderer.h"
+#include "toolbox/components/datagrid/renderer/scenario-builder-renderer-base.h"
+#include "toolbox/components/datagrid/renderer/scenario-builder-load-renderer.h"
+#include "toolbox/components/datagrid/renderer/scenario-builder-thermal-renderer.h"
+#include "toolbox/components/datagrid/renderer/scenario-builder-hydro-renderer.h"
+#include "toolbox/components/datagrid/renderer/scenario-builder-wind-renderer.h"
+#include "toolbox/components/datagrid/renderer/scenario-builder-solar-renderer.h"
+#include "toolbox/components/datagrid/renderer/scenario-builder-hydro-levels-renderer.h"
 
 
 using namespace Yuni;
@@ -162,7 +161,7 @@ namespace Forms
 			void addToNotebook()
 			{
 				page_.first->add(grid_, wxT("thermal"), wxT("Thermal"));
-				renderer_->control(grid_); // gp : Shouldn't that be inside create() ?
+				renderer_->control(grid_); // Shouldn't that be inside create() ?
 				page_.first->select(wxT("thermal"));
 			}
 

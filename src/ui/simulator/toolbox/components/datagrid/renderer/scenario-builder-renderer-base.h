@@ -27,11 +27,7 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SCENARIO_BUILDER_H__
 # define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SCENARIO_BUILDER_H__
 
-// gp : what is useless must be removed
-# include <antares/wx-wrapper.h>
 # include "../renderer.h"
-# include "../../../../application/study.h"
-# include "../../../../toolbox/input/area.h"
 # include <antares/study/scenario-builder/rules.h>
 
 
@@ -43,9 +39,6 @@ namespace Datagrid
 {
 namespace Renderer
 {
-	// gp : added
-	uint fromStringToInt(const Yuni::String& value);
-
 
 	class ScBuilderRendererBase : public IRenderer
 	{
