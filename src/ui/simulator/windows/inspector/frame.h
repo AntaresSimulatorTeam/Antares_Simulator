@@ -27,9 +27,11 @@
 #ifndef __ANTARES_WINDOWS_INSPECTOR_FRAME_H__
 # define __ANTARES_WINDOWS_INSPECTOR_FRAME_H__
 
+
+#include <wx/propgrid/propgrid.h>
+
 # include <antares/wx-wrapper.h>
 # include <antares/study.h>
-# include "editor-arealinks.h"
 # include "../notes.h"
 # include "data.h"
 # include <ui/common/component/panel.h>
