@@ -1,0 +1,57 @@
+name: Release asset upload (Windows)
+
+on:
+  push:
+    branches:
+      - feature/add_32bits_installer_in_release
+
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+  
+jobs:
+
+  windows:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+        architecture: [x64,x86]
+        include:
+          - os: windows-latest
+            triplet: x64-windows
+            vcpkgCommitId: 'ee17a685087a6886e5681e355d36cd784f0dd2c8'
+            vcpkgPackages: openssl curl wxwidgets boost-test
+
+    steps:
+    - uses: actions/checkout@v2 
+    
+    - name : Install deps with VCPKG
+      uses: lukka/run-vcpkg@v4
+      id: runvcpkg
+      with:
+        vcpkgArguments: '${{ matrix.vcpkgPackages }}'
+        vcpkgTriplet: '${{ matrix.architecture }}-windows'
+        vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
+        vcpkgGitCommitId: '${{ matrix.vcpkgCommitId }}'
+        
+    - name: Configure with VCPKG    
+      if: matrix.architecture == 'x64'
+      run: |
+           cmake -B _build -S src -A x64 -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.architecture }}-windows -DCMAKE_BUILD_TYPE=release
+      if: matrix.architecture == 'x86'
+      run: |
+           cmake -B _build -S src -A Win32 -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.architecture }}-windows -DCMAKE_BUILD_TYPE=release
+
+    - name: Build
+      run: |
+           cmake --build _build --config release -j2    
+           
+    - name: NSIS Installer creation
+      run: |
+           cd _build
+           cpack -GNSIS  
+           $NSIS_NAME=dir *.exe
+           $NSIS_NAME=Split-Path $NSIS_NAME -Leaf
+           echo "::set-env name=NSIS_NAME::$NSIS_NAME"
+    
