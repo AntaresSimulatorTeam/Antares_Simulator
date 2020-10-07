@@ -431,9 +431,7 @@ namespace Inspector
 
 		pPGAreaDeps             = Category(pg, wxT("Dependencies"), wxT("area.deps"));
 		pPGAreaLinks            = P_UINT("links", "area.link_count");
-		pg->SetPropertyEditor(pPGAreaLinks, wxPG_EDITOR(AreaLinksBtnEditor));
 		pPGAreaPlants           = P_UINT("thermal clusters", "area.cluster_count");
-		pg->SetPropertyEditor(pPGAreaPlants, wxPG_EDITOR(AreaThermalClustersBtnEditor));
 
 
 		// --- LINK ---
