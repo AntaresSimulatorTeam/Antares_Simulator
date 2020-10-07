@@ -35,8 +35,6 @@
 #include <antares/study/study.h>
 #include <antares/study/area/constants.h>
 #include "../../application/study.h"
-#include "editor-arealinks.h"
-#include "editor-area-thermal-clusters.h"
 #include "editor-calendar.h"
 #include "../../toolbox/resources.h"
 #include "../../toolbox/components/map/component.h"
@@ -92,8 +90,6 @@ namespace Inspector
 
 
 	// wx stuff
-	WX_PG_IMPLEMENT_INTERNAL_EDITOR_CLASS(AreaLinksBtnEditor, AreaLinksBtnEditor, wxPGTextCtrlEditor)
-	WX_PG_IMPLEMENT_INTERNAL_EDITOR_CLASS(AreaThermalClustersBtnEditor, AreaThermalClustersBtnEditor, wxPGTextCtrlEditor)
 	WX_PG_IMPLEMENT_INTERNAL_EDITOR_CLASS(StudyCalendarBtnEditor, StudyCalendarBtnEditor, wxPGTextCtrlEditor)
 
 
@@ -270,11 +266,6 @@ namespace Inspector
 			if (!alreadyRegistered)
 			{
 				alreadyRegistered = true;
-				//IMPLEMENT_DYNAMIC_CLASS(AreaLinksBtnEditor, wxPGTextCtrlEditor);
-				wxPGEditor_AreaLinksBtnEditor = wxPropertyGrid::DoRegisterEditorClass(
-					new AreaLinksBtnEditor(), "AreaLinksBtnEditor");
-				wxPGEditor_AreaThermalClustersBtnEditor = wxPropertyGrid::DoRegisterEditorClass(
-					new AreaThermalClustersBtnEditor(), "AreaThermalClustersBtnEditor");
 				wxPGEditor_StudyCalendarBtnEditor = wxPropertyGrid::DoRegisterEditorClass(
 					new StudyCalendarBtnEditor(), "StudyCalendarBtnEditor");
 			}
@@ -431,9 +422,7 @@ namespace Inspector
 
 		pPGAreaDeps             = Category(pg, wxT("Dependencies"), wxT("area.deps"));
 		pPGAreaLinks            = P_UINT("links", "area.link_count");
-		pg->SetPropertyEditor(pPGAreaLinks, wxPG_EDITOR(AreaLinksBtnEditor));
 		pPGAreaPlants           = P_UINT("thermal clusters", "area.cluster_count");
-		pg->SetPropertyEditor(pPGAreaPlants, wxPG_EDITOR(AreaThermalClustersBtnEditor));
 
 
 		// --- LINK ---
