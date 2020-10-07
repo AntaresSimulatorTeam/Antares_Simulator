@@ -35,10 +35,12 @@ jobs:
         vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
         vcpkgGitCommitId: '${{ matrix.vcpkgCommitId }}'
         
-    - name: Configure with VCPKG    
+    - name: Configure with VCPKG (x64)   
       if: matrix.architecture == 'x64'
       run: |
            cmake -B _build -S src -A x64 -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.architecture }}-windows -DCMAKE_BUILD_TYPE=release
+    
+    - name: Configure with VCPKG (x86)
       if: matrix.architecture == 'x86'
       run: |
            cmake -B _build -S src -A Win32 -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.architecture }}-windows -DCMAKE_BUILD_TYPE=release
