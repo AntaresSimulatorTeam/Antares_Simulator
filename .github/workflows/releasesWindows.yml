@@ -1,9 +1,8 @@
 name: Release asset upload (Windows)
 
 on:
-  push:
-    branches:
-      - feature/add_32bits_installer_in_release
+  release:
+    types: [created]
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
@@ -26,6 +25,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2 
     
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.2.0
+    
     - name : Install deps with VCPKG
       uses: lukka/run-vcpkg@v4
       id: runvcpkg
@@ -35,15 +38,11 @@ jobs:
         vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
         vcpkgGitCommitId: '${{ matrix.vcpkgCommitId }}'
         
-    - name: Configure with VCPKG (x64)   
-      if: matrix.architecture == 'x64'
+    - name: Configure with VCPKG
       run: |
-           cmake -B _build -S src -A x64 -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.architecture }}-windows -DCMAKE_BUILD_TYPE=release
-    
-    - name: Configure with VCPKG (x86)
-      if: matrix.architecture == 'x86'
-      run: |
-           cmake -B _build -S src -A Win32 -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.architecture }}-windows -DCMAKE_BUILD_TYPE=release
+           $ARCH='x64'
+           If(${{ matrix.architecture }} -eq 'x86') {$ARCH='Win32'}
+           cmake -B _build -S src -A $ARCH -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.architecture }}-windows -DCMAKE_BUILD_TYPE=release
 
     - name: Build
       run: |
@@ -57,10 +56,12 @@ jobs:
            $NSIS_NAME=Split-Path $NSIS_NAME -Leaf
            echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
            
-    - name: Installer upload
-      uses: actions/upload-artifact@v2
+    - name: Upload NSIS installer
+      uses: actions/upload-release-asset@v1.0.2
       with:
-        name: antares-installer-${{ matrix.architecture }}
-        path: _build/rte-antares-*.*.*-installer-*.exe
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: _build/${{env.NSIS_NAME}}
+        asset_name: ${{env.NSIS_NAME}}
+        asset_content_type: application/octet-stream
 
     
