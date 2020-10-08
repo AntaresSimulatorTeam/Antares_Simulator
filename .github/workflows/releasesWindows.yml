@@ -47,7 +47,7 @@ jobs:
 
     - name: Build
       run: |
-           cmake --build _build --config release -j2    
+           cmake --build _build --config release -j2
            
     - name: NSIS Installer creation
       run: |
@@ -55,5 +55,12 @@ jobs:
            cpack -GNSIS  
            $NSIS_NAME=dir *.exe
            $NSIS_NAME=Split-Path $NSIS_NAME -Leaf
-           echo "::set-env name=NSIS_NAME::$NSIS_NAME"
+           echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
+           
+    - name: Installer upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: antares-installer-${{ matrix.architecture }}
+        path: _build/rte-antares-*.*.*-installer-*.exe
+
     

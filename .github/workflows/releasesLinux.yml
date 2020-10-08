@@ -42,7 +42,7 @@ jobs:
            cd _build
            cpack -G DEB
            export DEB_NAME=$(ls *.deb)
-           echo "::set-env name=DEB_NAME::$DEB_NAME"
+           echo "DEB_NAME=$DEB_NAME" >> $GITHUB_ENV
            
     - name: Upload .deb
       uses: actions/upload-release-asset@v1.0.2
