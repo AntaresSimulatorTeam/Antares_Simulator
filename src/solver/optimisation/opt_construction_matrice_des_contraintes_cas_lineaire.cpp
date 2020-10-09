@@ -43,7 +43,7 @@
 #include <antares/study/area/scratchpad.h>
 #include "../simulation/sim_structure_donnees.h"
 
-
+using namespace Antares::Data;
 
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * ProblemeHebdo, uint numSpace)
 {
@@ -67,7 +67,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 
 	double * Pi; int * Colonne; double X;
 
-	bool exportStructure = false;
+	bool exportStructure = ProblemeHebdo->ExportStructure;
 
 	if (exportStructure)
 	{
@@ -92,17 +92,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 	ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;	
 	
 
-	std::vector<std::string> varname;
-	std::vector<std::string> conname;
-
-	//TODO JMK : can't pre define nb variables and nb constraints because we are defining these parameters in this function
+	//For now only variable are exported, can't define name for constraints export
 	int nvars = ProblemeAResoudre->NombreDeVariables;
-	int ncons = ProblemeAResoudre->NombreDeContraintes;
-
+	std::vector<std::string> varname;
 	varname.assign(nvars, "");
-	conname.assign(ncons, "");
 
-	auto& study = *Antares::Data::Study::Current::Get();
+	auto& study = *Study::Current::Get();
 	
 	for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++) {
 
@@ -124,7 +119,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 					Colonne[NombreDeTermes] = Var;
 					NombreDeTermes++;
 
-					if (exportStructure) OPT_Export_add_variable(varname, Var, Antares::Data::Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite, Pays, Interco, ts);
+					if (exportStructure) OPT_Export_add_variable(varname, Var, Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite, Pays, Interco, ts);
 				}
 				Interco = ProblemeHebdo->IndexSuivantIntercoOrigine[Interco];
 			}
@@ -135,6 +130,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 					Pi[NombreDeTermes] = -1.0;
 					Colonne[NombreDeTermes] = Var;
 					NombreDeTermes++;
+
+					if (exportStructure) OPT_Export_add_variable(varname, Var, Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite, Pays, Interco, ts);
 				}
 				Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
 			}
@@ -148,6 +145,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 					Pi[NombreDeTermes] = -1.0;
 					Colonne[NombreDeTermes] = Var;
 					NombreDeTermes++;
+
+					if (exportStructure) OPT_Export_add_variable(varname, Var, Enum::ExportStructDict::PalierThermique, Pays, Palier, ts);
 				}
 			}
 
@@ -157,6 +156,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 				Pi[NombreDeTermes] = -1.0;
 				Colonne[NombreDeTermes] = Var;
 				NombreDeTermes++;
+
+				if (exportStructure) OPT_Export_add_variable(varname, Var, Enum::ExportStructDict::ProdHyd, Pays, ts);
 			}
 
 			
@@ -173,12 +174,16 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 				Pi[NombreDeTermes] = -1.0;
 				Colonne[NombreDeTermes] = Var;
 				NombreDeTermes++;
+
+				if (exportStructure) OPT_Export_add_variable(varname, Var, Enum::ExportStructDict::DefaillancePositive, Pays, ts);
 			}
 			Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[Pays];
 			if (Var >= 0) {
 				Pi[NombreDeTermes] = 1.0;
 				Colonne[NombreDeTermes] = Var;
 				NombreDeTermes++;
+
+				if (exportStructure) OPT_Export_add_variable(varname, Var, Enum::ExportStructDict::DefaillanceNegative, Pays, ts);
 			}
 
 			
@@ -200,6 +205,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 					Pi[NombreDeTermes] = -1.0;
 					Colonne[NombreDeTermes] = Var;
 					NombreDeTermes++;
+
+					if (exportStructure) OPT_Export_add_variable(varname, Var, Enum::ExportStructDict::PalierThermique, Pays, Palier, ts);
 				}
 			}
 
@@ -211,6 +218,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 				Pi[NombreDeTermes] = -ProblemeHebdo->DefaillanceNegativeUtiliserHydro[Pays];
 				Colonne[NombreDeTermes] = Var;
 				NombreDeTermes++;
+
+				if (exportStructure) OPT_Export_add_variable(varname, Var, Enum::ExportStructDict::ProdHyd, Pays, ts);
 			}
 
 			
@@ -219,6 +228,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 				Pi[NombreDeTermes] = 1.0;
 				Colonne[NombreDeTermes] = Var;
 				NombreDeTermes++;
+
+				if (exportStructure) OPT_Export_add_variable(varname, Var, Enum::ExportStructDict::DefaillanceNegative, Pays, ts);
 			}
 
 			
@@ -277,18 +288,24 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 						Pi[NombreDeTermes] = 1.0;
 						Colonne[NombreDeTermes] = Var;
 						NombreDeTermes++;
+
+						if (exportStructure) OPT_Export_add_variable(varname, Var, Enum::ExportStructDict::DefaillanceNegative, Pays, ts, ts);
 					}
 					Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
 					if (Var >= 0) {
 						Pi[NombreDeTermes] = -1.0;
 						Colonne[NombreDeTermes] = Var;
 						NombreDeTermes++;
+
+						if (exportStructure) OPT_Export_add_variable(varname, Var, Enum::ExportStructDict::CoutOrigineVersExtremiteDeLInterconnexion, Interco, ts);
 					}
 					Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
 					if (Var >= 0) {
 						Pi[NombreDeTermes] = 1.0;
 						Colonne[NombreDeTermes] = Var;
 						NombreDeTermes++;
+
+						if (exportStructure) OPT_Export_add_variable(varname, Var, Enum::ExportStructDict::CoutExtremiteVersOrigineDeLInterconnexion, Interco, ts);
 					}
 					
 					CorrespondanceCntNativesCntOptim->NumeroDeContrainteDeDissociationDeFlux[Interco] = ProblemeAResoudre->NombreDeContraintes;
@@ -367,6 +384,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 						Pi[NombreDeTermes] = Poids;
 						Colonne[NombreDeTermes] = Var;
 						NombreDeTermes++;
+
+
+						if (exportStructure) OPT_Export_add_variable(varname, Var, Enum::ExportStructDict::CorrespondanceVarNativesVarOptim, Palier, Pdt1);
 					}
 				}
 
@@ -1025,14 +1045,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 		OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(ProblemeHebdo, Simulation);
 	}
 
-	//TODO JMK : export structure
+	//Export structure
+	if(exportStructure)
 	{
-		FILE * Flot = study.createFileIntoOutputWithExtension("variables", "txt", numSpace);
-		for (auto const & line : varname) {
-			fprintf(Flot, "%s\n", line.c_str());
-
-		}
-		fclose(Flot);
+		OPT_ExportVariables(varname, numSpace);
 	}
 
 

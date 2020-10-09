@@ -68,7 +68,8 @@ namespace Data {
 				"DefaillanceNegative"
 				"BilansPays",
 				"CoutOrigineVersExtremiteDeLInterconnexion",
-				"CoutExtremiteVersOrigineDeLInterconnexion"
+				"CoutExtremiteVersOrigineDeLInterconnexion",
+				"CorrespondanceVarNativesVarOptim"
 			};
 			return s_exportStructDictNames;
 		}
@@ -92,11 +93,6 @@ void OPT_ExportInterco(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace)
 			);
 		}
 		fclose(Flot);
-		Flot = study.createFileIntoOutputWithExtension("area", "txt", numSpace);
-		for (int i(0); i < study.areas.size(); ++i) {
-			fprintf(Flot, "%s\n", study.areas[i]->name.c_str());
-		}
-		fclose(Flot);
 	}
 }
 
@@ -114,18 +110,43 @@ void OPT_ExportAreaName(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace)
 	}
 }
 
-void OPT_Export_add_variable(std::vector<std::string>& varname, int Var, Antares::Data::Enum::ExportStructDict structDict, int Pays, int Interco, int ts)
+void OPT_Export_add_variable(std::vector<std::string>& varname, int Var, Antares::Data::Enum::ExportStructDict structDict, int firstVal, int secondVal, int ts)
 {
 	if (varname.size() > Var && varname[Var].empty())
 	{
 		std::stringstream buffer;
 		buffer << Var << " ";
 		buffer << Antares::Data::Enum::toString(structDict) << " ";
-		buffer << Pays << " ";
-		buffer << Interco << " ";
+		buffer << firstVal << " ";
+		buffer << secondVal << " ";
 		buffer << ts << " ";
 		varname[Var] = buffer.str();
 	}
+}
+
+void OPT_Export_add_variable(std::vector<std::string>& varname, int Var, Antares::Data::Enum::ExportStructDict structDict, int firstVal,  int ts)
+{
+	if (varname.size() > Var && varname[Var].empty())
+	{
+		std::stringstream buffer;
+		buffer << Var << " ";
+		buffer << Antares::Data::Enum::toString(structDict) << " ";
+		buffer << firstVal << " ";
+		buffer << ts << " ";
+		varname[Var] = buffer.str();
+	}
+}
+
+void OPT_ExportVariables(const std::vector<std::string>& varname, uint numSpace)
+{
+	auto& study = *Antares::Data::Study::Current::Get();
+
+	FILE* Flot = study.createFileIntoOutputWithExtension("variables", "txt", numSpace);
+	for (auto const& line : varname) {
+		fprintf(Flot, "%s\n", line.c_str());
+
+	}
+	fclose(Flot);
 }
 
 void OPT_ExporterLaStrcutureDuProblemeLineaire(PROBLEME_HEBDO * ProblemeHebdo, uint numSpace)

@@ -384,6 +384,9 @@ namespace Data
 			//! a flag to export all mps files
 			bool exportMPS;
 
+			//! a flag to export structure needed for Antares XPansion
+			bool exportStructure;
+
 			//!Enum to define unfeasible problem behavior \see UnfeasibleProblemBehavior
 			UnfeasibleProblemBehavior unfeasibleProblemBehavior;
 
