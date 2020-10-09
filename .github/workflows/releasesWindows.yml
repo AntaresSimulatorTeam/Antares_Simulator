@@ -53,7 +53,7 @@ jobs:
            cpack -GNSIS  
            $NSIS_NAME=dir *.exe
            $NSIS_NAME=Split-Path $NSIS_NAME -Leaf
-           echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
+           echo "::set-env name=NSIS_NAME::$NSIS_NAME"
            
     - name: Upload NSIS installer
       uses: actions/upload-release-asset@v1.0.2
