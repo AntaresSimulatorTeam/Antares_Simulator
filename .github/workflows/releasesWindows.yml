@@ -1,0 +1,67 @@
+name: Release asset upload (Windows)
+
+on:
+  release:
+    types: [created]
+
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+  
+jobs:
+
+  windows:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+        architecture: [x64,x86]
+        include:
+          - os: windows-latest
+            triplet: x64-windows
+            vcpkgCommitId: 'ee17a685087a6886e5681e355d36cd784f0dd2c8'
+            vcpkgPackages: openssl curl wxwidgets boost-test
+
+    steps:
+    - uses: actions/checkout@v2 
+    
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.2.0
+    
+    - name : Install deps with VCPKG
+      uses: lukka/run-vcpkg@v4
+      id: runvcpkg
+      with:
+        vcpkgArguments: '${{ matrix.vcpkgPackages }}'
+        vcpkgTriplet: '${{ matrix.architecture }}-windows'
+        vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
+        vcpkgGitCommitId: '${{ matrix.vcpkgCommitId }}'
+        
+    - name: Configure with VCPKG
+      run: |
+           $ARCH='x64'
+           If(${{ matrix.architecture }} -eq 'x86') {$ARCH='Win32'}
+           cmake -B _build -S src -A $ARCH -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.architecture }}-windows -DCMAKE_BUILD_TYPE=release
+
+    - name: Build
+      run: |
+           cmake --build _build --config release -j2
+           
+    - name: NSIS Installer creation
+      run: |
+           cd _build
+           cpack -GNSIS  
+           $NSIS_NAME=dir *.exe
+           $NSIS_NAME=Split-Path $NSIS_NAME -Leaf
+           echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
+           
+    - name: Upload NSIS installer
+      uses: actions/upload-release-asset@v1.0.2
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: _build/${{env.NSIS_NAME}}
+        asset_name: ${{env.NSIS_NAME}}
+        asset_content_type: application/octet-stream
+
+    
