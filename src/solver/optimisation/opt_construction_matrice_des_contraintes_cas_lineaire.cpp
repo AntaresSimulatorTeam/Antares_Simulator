@@ -25,8 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 # include <math.h>
+#include <sstream>
 
 #include "opt_structure_probleme_a_resoudre.h"
+#include "opt_export_structure.h"
 
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
@@ -63,70 +65,15 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 	CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES  * CorrespondanceCntNativesCntOptimJournalieres;
 	CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES * CorrespondanceCntNativesCntOptimHebdomadaires;
 
-	double * Pi; int * Colonne; char PiegerDonnees; double X;
+	double * Pi; int * Colonne; double X;
 
-	
-	PiegerDonnees = 0;
-	if (PiegerDonnees == 1) {
-		Pays = 5;
-		
-		auto& study = *Antares::Data::Study::Current::Get();
-		for (uint i = 0; i != study.areas.size(); ++i) {
-			if (i != (uint)Pays) continue;
-			
-			auto& area = *study.areas[i];
-			
-			auto& scratchpad = *(area.scratchpad[numSpace]);
+	bool exportStructure = false;
 
-			
-			auto& matrixload = scratchpad.ts.load;
-			
-			
-			
-			auto& tsIndex = *NumeroChroniquesTireesParPays[0][i];
-			
-			auto& load = matrixload[tsIndex.Consommation];
-			for (uint hour = 0; hour != 8760; ++hour) {
-				
-				
-				  
-
-
-
-
-
-
-
-
-			}
-			printf("conso: zone: %s\n", area.name.c_str());
-			Pdt = 0;
-			while (Pdt < 8760) {
-				X = -100000;
-				for (Var = 0; Var < 24; Var++) {
-					if (load[Pdt] > X) X = load[Pdt];
-					Pdt++;
-				}
-				printf("%f;", X);
-			}
-		}
-		
-		PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
-		printf("\n");
-		printf("NBMOYENS\n");
-		printf("%d\n", PaliersThermiquesDuPays->NombreDePaliersThermiques);
-		for (Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++) {
-			X = PaliersThermiquesDuPays->TailleUnitaireDUnGroupeDuPalierThermique[Palier];
-			printf("NBENTITES\n");
-			
-			printf("%d\n", (int)(PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Palier]->PuissanceDisponibleDuPalierThermique[0] / X));
-			printf("PUISSANCE_JETON\n");
-			printf("%f\n", X);
-		}
-
-		exit(0);
-	}
-	
+	if (exportStructure)
+	{
+		OPT_ExportInterco(ProblemeHebdo, numSpace);
+		OPT_ExportAreaName(ProblemeHebdo, numSpace);
+	}	
 
 	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 	NombreDeZonesDeReserveJMoins1 = ProblemeHebdo->NombreDeZonesDeReserveJMoins1;
@@ -142,20 +89,25 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 
 	
 	ProblemeAResoudre->NombreDeContraintes = 0;
-	ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
-
+	ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;	
 	
 
+	std::vector<std::string> varname;
+	std::vector<std::string> conname;
 
+	//TODO JMK : can't pre define nb variables and nb constraints because we are defining these parameters in this function
+	int nvars = ProblemeAResoudre->NombreDeVariables;
+	int ncons = ProblemeAResoudre->NombreDeContraintes;
 
+	varname.assign(nvars, "");
+	conname.assign(ncons, "");
 
-
-
-
-
-
+	auto& study = *Antares::Data::Study::Current::Get();
 	
 	for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++) {
+
+		int ts = study.runtime->weekInTheYear[numSpace] * 168 + Pdt;
+
 		CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
 		CorrespondanceCntNativesCntOptim = ProblemeHebdo->CorrespondanceCntNativesCntOptim[Pdt];
 
@@ -171,6 +123,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 					Pi[NombreDeTermes] = 1.0;
 					Colonne[NombreDeTermes] = Var;
 					NombreDeTermes++;
+
+					if (exportStructure) OPT_Export_add_variable(varname, Var, Antares::Data::Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite, Pays, Interco, ts);
 				}
 				Interco = ProblemeHebdo->IndexSuivantIntercoOrigine[Interco];
 			}
@@ -1070,6 +1024,17 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 		Simulation = NON_ANTARES;
 		OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(ProblemeHebdo, Simulation);
 	}
+
+	//TODO JMK : export structure
+	{
+		FILE * Flot = study.createFileIntoOutputWithExtension("variables", "txt", numSpace);
+		for (auto const & line : varname) {
+			fprintf(Flot, "%s\n", line.c_str());
+
+		}
+		fclose(Flot);
+	}
+
 
 	return;
 }
