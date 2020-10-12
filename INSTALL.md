@@ -1,6 +1,6 @@
 # Antares Simulator CMake Build Instructions
 
-[Environnement](#environment) | [CMake version](#cmake-version) | [Dependencies](#dependencies) | [Building](#building-antares-solution) | [Unit tests](#unit-tests) | [Installer creation](#installer-creation)
+[Environnement](#environment) | [CMake version](#cmake-version) | [Git version](#git-version) | [Dependencies](#dependencies) | [Building](#building-antares-solution) | [Unit tests](#unit-tests) | [Installer creation](#installer-creation)
 
 ## C/I status
 | OS     | System librairies | VCPKG | Built in libraries |
@@ -86,6 +86,9 @@ sudo yum install cmake3
 ```
 Note:
 > All ``cmake``  command must be replaced by ``cmake3``.
+
+## [Git version](#git-version)
+Git version must be above 2.15 for external dependencies build because `--ignore-whitespace` is not used by default and we have an issue with ortools compilation of ZLib and application of patch on Windows (see https://github.com/google/or-tools/issues/1193).
 
 ## [Dependencies](#deps)
  ANTARES depends on severals mandatory libraries. 
