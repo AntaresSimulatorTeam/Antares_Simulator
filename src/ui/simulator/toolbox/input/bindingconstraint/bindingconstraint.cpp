@@ -158,7 +158,7 @@ namespace InputSelector
 				}
 
 				auto* item = new Toolbox::Spotlight::ItemConstraint(&constraint);
-				if (constraint.enabled())
+				if (constraint.enabled() && (constraint.linkCount() > 0 || constraint.enabledClusterCount() > 0))
 				{
 					if (pBmpOn)
 						item->image(*pBmpOn);
