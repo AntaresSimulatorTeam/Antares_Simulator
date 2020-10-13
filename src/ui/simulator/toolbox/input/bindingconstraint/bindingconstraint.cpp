@@ -131,8 +131,8 @@ namespace InputSelector
 			Data::BindConstList::iterator j;
 			Data::BindConstList::iterator endJ;
 
-				j = layerFilteredItems.begin();
-				endJ = layerFilteredItems.end();
+			j = layerFilteredItems.begin();
+			endJ = layerFilteredItems.end();
 			
 
 			for (; j != endJ; ++j)

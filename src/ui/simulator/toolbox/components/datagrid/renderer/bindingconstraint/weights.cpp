@@ -116,7 +116,7 @@ namespace BindingConstraint
 					{
 						if ((study->uiinfo->constraint(x))->enabled())
 						{
-							if (((study->uiinfo->constraint(x))->linkCount() > 0 || (study->uiinfo->constraint(x))->clusterCount() > 0))
+							if (((study->uiinfo->constraint(x))->linkCount() > 0 || (study->uiinfo->constraint(x))->enabledClusterCount() > 0))
 								return wxT("   Yes   ");
 							return wxT("   Skipped   ");
 						}
@@ -161,7 +161,7 @@ namespace BindingConstraint
 				return IRenderer::cellStyleConstraintWeightCount;
 			case 3:
 				return ((study->uiinfo->constraint(x))->enabled() &&
-					((study->uiinfo->constraint(x))->linkCount() > 0 || (study->uiinfo->constraint(x))->clusterCount() > 0))
+					((study->uiinfo->constraint(x))->linkCount() > 0 || (study->uiinfo->constraint(x))->enabledClusterCount() > 0))
 					? IRenderer::cellStyleConstraintEnabled
 					: IRenderer::cellStyleConstraintDisabled;
 			case 4:
@@ -404,7 +404,7 @@ namespace BindingConstraint
 			{
 				if ((study->uiinfo->constraint(x))->enabled())
 				{
-					if (((study->uiinfo->constraint(x))->linkCount() > 0 || (study->uiinfo->constraint(x))->clusterCount() > 0))
+					if (((study->uiinfo->constraint(x))->linkCount() > 0 || (study->uiinfo->constraint(x))->enabledClusterCount() > 0))
 						return wxT("   Yes   ");
 					return wxT("   Skipped   ");
 				}
@@ -413,6 +413,14 @@ namespace BindingConstraint
 			}
 			return wxEmptyString;
 		}
+
+		// Cluster is must-run : this cluster state is printed in the grid
+		if (study->uiinfo->cluster(y - 5)->mustrun)
+			return wxT("   must-run   ");
+		
+		// Cluster is disabled : this cluster state is printed in the grid
+		if(not study->uiinfo->cluster(y - 5)->enabled)
+			return wxT("   disabled   ");
 
 		const double d = cellNumericValue(x, y);
 		if (!Math::Zero(d))
@@ -449,7 +457,7 @@ namespace BindingConstraint
 			return IRenderer::cellStyleConstraintWeightCount;
 		case 3:
 			return ((study->uiinfo->constraint(x))->enabled() &&
-				((study->uiinfo->constraint(x))->linkCount() > 0 || (study->uiinfo->constraint(x))->clusterCount() > 0))
+				((study->uiinfo->constraint(x))->linkCount() > 0 || (study->uiinfo->constraint(x))->enabledClusterCount() > 0))
 				? IRenderer::cellStyleConstraintEnabled
 				: IRenderer::cellStyleConstraintDisabled;
 		case 4:
@@ -525,7 +533,7 @@ namespace BindingConstraint
 			double d;
 			if (value.to(d))
 			{
-				if (clusterIndex < uiinfo.clusterCount())
+				if (clusterIndex < uiinfo.clusterCount() && uiinfo.cluster(clusterIndex)->enabled && not uiinfo.cluster(clusterIndex)->mustrun)
 				{
 					constraint->weight(uiinfo.cluster(clusterIndex), d);
 					if (pControl)

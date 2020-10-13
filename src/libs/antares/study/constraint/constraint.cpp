@@ -1243,9 +1243,7 @@ namespace Data
 				s << " + ";
 			SNPRINTF(tmp, sizeof(tmp), "%.2f", i->second);
 
-			s << '(' << (const char*)tmp << " x "
-				<< (i->first)->getName();
-			//<< (i->first)->from->name << '.' << (i->first)->with->name;
+			s << '(' << (const char*)tmp << " x " << (i->first)->getName();
 
 			auto at = pLinkOffsets.find(i->first);
 			if(at != pLinkOffsets.end())
@@ -1280,6 +1278,9 @@ namespace Data
 				if (o < 0)
 					s << " x (t - " << Math::Abs(pClusterOffsets.find(i->first)->second) << ')';
 			}
+
+			if (not (i->first)->enabled || (i->first)->mustrun)
+				s << " x N/A";
 
 			s << ')';
 			first = false;
