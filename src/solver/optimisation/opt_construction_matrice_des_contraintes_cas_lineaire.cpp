@@ -1048,7 +1048,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 	//Export structure
 	if(exportStructure)
 	{
-		OPT_ExportVariables(varname, numSpace);
+		OPT_ExportVariables(varname,"variables","txt", numSpace);
+
+		//TODO : for now empty constraints.txt file needed
+		std::vector<std::string> conname;
+		OPT_ExportVariables(conname, "constraints", "txt", numSpace);
 	}
 
 

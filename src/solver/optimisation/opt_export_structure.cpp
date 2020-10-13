@@ -137,11 +137,11 @@ void OPT_Export_add_variable(std::vector<std::string>& varname, int Var, Antares
 	}
 }
 
-void OPT_ExportVariables(const std::vector<std::string>& varname, uint numSpace)
+void OPT_ExportVariables(const std::vector<std::string>& varname,const std::string& fileName, const std::string& fileExtension, uint numSpace)
 {
 	auto& study = *Antares::Data::Study::Current::Get();
 
-	FILE* Flot = study.createFileIntoOutputWithExtension("variables", "txt", numSpace);
+	FILE* Flot = study.createFileIntoOutputWithExtension(fileName, fileExtension, numSpace);
 	for (auto const& line : varname) {
 		fprintf(Flot, "%s\n", line.c_str());
 
