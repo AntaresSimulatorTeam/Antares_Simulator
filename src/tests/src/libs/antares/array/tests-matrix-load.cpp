@@ -222,10 +222,9 @@ BOOST_AUTO_TEST_CASE(binary_file___detect_encoding_when_loading_buffer_is_KO_and
 
 	Matrix<double, double> mtx;
 	BOOST_CHECK(not mtx.loadFromCSVFile("text.txt", 2, 2, Matrix<>::optNone, fake_buffer));
+	BOOST_CHECK(not fake_buffer->empty());
 
 	delete fake_buffer;
-
-	BOOST_CHECK(not fake_buffer->empty());
 
 	remove("text.txt");
 }
