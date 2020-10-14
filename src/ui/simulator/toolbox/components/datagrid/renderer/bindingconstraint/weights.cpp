@@ -529,11 +529,15 @@ namespace BindingConstraint
 		{
 			uint clusterIndex = y - 5;
 			assert(clusterIndex < uiinfo.clusterCount());
+			bool clusterEnabled = uiinfo.cluster(clusterIndex)->enabled;
+			bool clusterMustRun = uiinfo.cluster(clusterIndex)->mustrun;
+			if (not clusterEnabled || clusterMustRun)
+				return true;
 
 			double d;
 			if (value.to(d))
 			{
-				if (clusterIndex < uiinfo.clusterCount() && uiinfo.cluster(clusterIndex)->enabled && not uiinfo.cluster(clusterIndex)->mustrun)
+				if (clusterIndex < uiinfo.clusterCount())
 				{
 					constraint->weight(uiinfo.cluster(clusterIndex), d);
 					if (pControl)
