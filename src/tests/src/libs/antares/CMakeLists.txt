@@ -7,9 +7,6 @@ set(SRC_MATRIX_LIB
 	# For confort in IDE, but not necessary
 	${src_libs_antares}/array/matrix.h
 	${src_libs_antares}/array/matrix.hxx
-	# ${src_libs_antares}/array/matrix-to-buffer.h
-	# ${src_libs_antares}/array/matrix-to-buffer.hxx
-	# logs/logs.h
 	
 	# Necessary cpp files
 	${src_libs_antares}/jit/jit.cpp

@@ -531,7 +531,7 @@ macro(ADD_ANTARES_CORE name)
 			PUBLIC
 				${CMAKE_SOURCE_DIR}/ext/yuni/src
 				${CMAKE_SOURCE_DIR}/libs
-				${CMAKE_CURRENT_SOURCE_DIR}/logs
+				${CMAKE_SOURCE_DIR}/libs/antares/logs
 			)
 
 	target_link_libraries(libantares-core${name}
