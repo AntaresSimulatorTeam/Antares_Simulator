@@ -30,7 +30,7 @@
 # include <yuni/yuni.h>
 # include <yuni/core/string.h>
 # include <yuni/core/math.h>
-# include "../logs.h"
+# include <logs.h>
 # include "../string-to-double.h"
 # include "../io/statistics.h"
 # include "matrix-to-buffer.h"

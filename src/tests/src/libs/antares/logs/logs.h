@@ -1,3 +1,7 @@
+
+#ifndef __TESTS_ANTARES_LIBS_LOGS_FAKE_H__
+# define __TESTS_ANTARES_LIBS_LOGS_FAKE_H__
+
 #include<string>
 #include<yuni/core/string/string.h>
 
@@ -57,4 +61,5 @@ namespace Antares
 
 }	// Antares
 
+#endif	// __TESTS_ANTARES_LIBS_LOGS_FAKE_H__
 
