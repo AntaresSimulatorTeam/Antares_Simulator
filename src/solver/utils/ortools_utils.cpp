@@ -433,7 +433,7 @@ namespace Antares {
 
             if (!MPSolver::ParseSolverType(_solverLinearProblemOptimStringMap.at(ortoolsSolver), &result))
             {
-                throw AssertionError("Unsupported OrtoolsSolver " + std::to_string(static_cast<unsigned long>(ortoolsSolver)));
+                throw AssertionError("Unsupported Linear OrtoolsSolver for solver " + Enum::toString(ortoolsSolver));
             }
 
             return result;
@@ -450,7 +450,7 @@ namespace Antares {
 
             if (!MPSolver::ParseSolverType(_solverMixedIntegerProblemOptimStringMap[ortoolsSolver], &result))
             {
-                throw AssertionError("Unsupported OrtoolsSolver " +  std::to_string(static_cast<unsigned long>(ortoolsSolver)));
+				throw AssertionError("Unsupported Mixed Integer OrtoolsSolver for solver " + Enum::toString(ortoolsSolver));
             }
 
             return result;
