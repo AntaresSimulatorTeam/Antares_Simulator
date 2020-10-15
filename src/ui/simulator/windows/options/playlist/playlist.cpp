@@ -133,9 +133,9 @@ namespace Options
 		btn = Component::CreateButton(pPanel, wxT("Reverse"), this, &MCPlaylist::onToggle);
 		rightSizer->Add(btn, 0, wxEXPAND|wxLEFT|wxRIGHT);
 
-        // Reset weight
+        // Reset weights
         rightSizer->AddSpacer(10);
-        btn = Component::CreateButton(pPanel, wxT("Reset weight"), this, &MCPlaylist::onResetYearsWeight);
+        btn = Component::CreateButton(pPanel, wxT("Reset weights"), this, &MCPlaylist::onResetYearsWeight);
         rightSizer->Add(btn, 0, wxEXPAND|wxLEFT|wxRIGHT);
 
 		// Datagrid
@@ -260,7 +260,7 @@ namespace Options
             return;
         auto& study = *studyptr;
         
-        study.parameters.resetYearWeigth();
+        study.parameters.resetYearsWeigth();
 		onUpdateStatus();
     }
 
@@ -302,10 +302,15 @@ namespace Options
 			}
 
 			wxString yearWeightLabel;
-			if (nbYearsDifferentFrom1 != 0)
-            {
-				yearWeightLabel = wxString("\n(") << nbYearsDifferentFrom1 << " year(s) with custom weight)";
-            }
+
+			if (nbYearsDifferentFrom1 == 1)
+			{
+				yearWeightLabel = wxString("\n(") << nbYearsDifferentFrom1 << " year with custom weight)";
+			}
+			if (nbYearsDifferentFrom1 > 1)
+			{
+				yearWeightLabel = wxString("\n(") << nbYearsDifferentFrom1 << " years with custom weight)";
+			}
 
 			if (y < 2)
 				pStatus->SetLabel(wxString() << wxT(" Use a custom playlist with ") << y << wxT(" year  ") << yearWeightLabel);

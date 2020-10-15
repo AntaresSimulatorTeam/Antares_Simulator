@@ -166,7 +166,7 @@ namespace Data
         /*!
         ** \brief Reset MC year weight to 1 for all years
         */
-		void resetYearWeigth();
+		void resetYearsWeigth();
 
         /*!
         ** \brief Get MC years weight dependending on playlist configuration

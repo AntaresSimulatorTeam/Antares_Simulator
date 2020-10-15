@@ -214,7 +214,7 @@ namespace Data
 		delete[] yearsFilter;
 		yearsFilter				= nullptr;
 
-		resetYearWeigth();
+		resetYearsWeigth();
 
 		yearByYear				= false;
 		derated					= false;
@@ -1151,7 +1151,7 @@ namespace Data
 				yearsFilter[0] = true;
 			}
 
-			resetYearWeigth();
+			resetYearsWeigth();
 		}
 		else
 		{
@@ -1211,7 +1211,7 @@ namespace Data
 		}
 	}
 
-	void Parameters::resetYearWeigth()
+	void Parameters::resetYearsWeigth()
     {
 	    yearsWeight.clear();
         yearsWeight.assign(nbYears,1);
@@ -1523,7 +1523,7 @@ namespace Data
 				yearsFilter[i] = true;
 		}
 
-		resetYearWeigth();
+		resetYearsWeigth();
 	}
 
 
@@ -1709,9 +1709,12 @@ namespace Data
 
                 for (uint i = 0; i != nbYears; ++i)
                 {
-                    std::string val = std::to_string(i) + "," + std::to_string(yearsWeight[i]);
-
-                    section->add("playlist_year_weight",  val);
+					//Only write weight different from 1 to limit .ini file size and readability
+					if (yearsWeight[i] != 1)
+					{
+						std::string val = std::to_string(i) + "," + std::to_string(yearsWeight[i]);
+						section->add("playlist_year_weight", val);
+					}
                 }
 			}
 		}
