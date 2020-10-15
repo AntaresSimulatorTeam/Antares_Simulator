@@ -161,7 +161,7 @@ set(CMAKE_ARGS "-DUSE_SIRIUS=ON")
 
 if (USE_ORTOOLS_STABLE)
 	set(REPOSITORY "https://github.com/google/or-tools.git")
-	set(TAG "stable")
+	set(TAG "v7.8")
 	set(CMAKE_ARGS "")
 endif()
 
