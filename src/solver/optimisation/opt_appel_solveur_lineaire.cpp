@@ -142,195 +142,195 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 	}
 
 
-Probleme.NombreMaxDIterations = -1; 
-Probleme.DureeMaxDuCalcul     = -1.;
+	Probleme.NombreMaxDIterations = -1; 
+	Probleme.DureeMaxDuCalcul     = -1.;
 
-Probleme.CoutLineaire      = ProblemeAResoudre->CoutLineaire;
-Probleme.X                 = ProblemeAResoudre->X;
-Probleme.Xmin              = ProblemeAResoudre->Xmin;
-Probleme.Xmax              = ProblemeAResoudre->Xmax;
-Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
-Probleme.TypeDeVariable    = ProblemeAResoudre->TypeDeVariable;
+	Probleme.CoutLineaire      = ProblemeAResoudre->CoutLineaire;
+	Probleme.X                 = ProblemeAResoudre->X;
+	Probleme.Xmin              = ProblemeAResoudre->Xmin;
+	Probleme.Xmax              = ProblemeAResoudre->Xmax;
+	Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
+	Probleme.TypeDeVariable    = ProblemeAResoudre->TypeDeVariable;
 
-Probleme.NombreDeContraintes                   = ProblemeAResoudre->NombreDeContraintes;
-Probleme.IndicesDebutDeLigne                   = ProblemeAResoudre->IndicesDebutDeLigne;
-Probleme.NombreDeTermesDesLignes               = ProblemeAResoudre->NombreDeTermesDesLignes;
-Probleme.IndicesColonnes                       = ProblemeAResoudre->IndicesColonnes;
-Probleme.CoefficientsDeLaMatriceDesContraintes = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes;
-Probleme.Sens                                  = ProblemeAResoudre->Sens;
-Probleme.SecondMembre                          = ProblemeAResoudre->SecondMembre;
+	Probleme.NombreDeContraintes                   = ProblemeAResoudre->NombreDeContraintes;
+	Probleme.IndicesDebutDeLigne                   = ProblemeAResoudre->IndicesDebutDeLigne;
+	Probleme.NombreDeTermesDesLignes               = ProblemeAResoudre->NombreDeTermesDesLignes;
+	Probleme.IndicesColonnes                       = ProblemeAResoudre->IndicesColonnes;
+	Probleme.CoefficientsDeLaMatriceDesContraintes = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes;
+	Probleme.Sens                                  = ProblemeAResoudre->Sens;
+	Probleme.SecondMembre                          = ProblemeAResoudre->SecondMembre;
 
-Probleme.ChoixDeLAlgorithme = SPX_DUAL;
+	Probleme.ChoixDeLAlgorithme = SPX_DUAL;
 
-Probleme.TypeDePricing               = PRICING_STEEPEST_EDGE ;
+	Probleme.TypeDePricing               = PRICING_STEEPEST_EDGE ;
 
-if (PremierPassage == NON_ANTARES) Probleme.FaireDuScaling = NON_SPX;
-if (PremierPassage == OUI_ANTARES) Probleme.FaireDuScaling = OUI_SPX;
+	if (PremierPassage == NON_ANTARES) Probleme.FaireDuScaling = NON_SPX;
+	if (PremierPassage == OUI_ANTARES) Probleme.FaireDuScaling = OUI_SPX;
 
-Probleme.StrategieAntiDegenerescence = AGRESSIF;
+	Probleme.StrategieAntiDegenerescence = AGRESSIF;
 
-Probleme.PositionDeLaVariable       = ProblemeAResoudre->PositionDeLaVariable;
-Probleme.NbVarDeBaseComplementaires = 0; 
-Probleme.ComplementDeLaBase         = ProblemeAResoudre->ComplementDeLaBase;
+	Probleme.PositionDeLaVariable       = ProblemeAResoudre->PositionDeLaVariable;
+	Probleme.NbVarDeBaseComplementaires = 0; 
+	Probleme.ComplementDeLaBase         = ProblemeAResoudre->ComplementDeLaBase;
 
-Probleme.LibererMemoireALaFin = NON_SPX;
+	Probleme.LibererMemoireALaFin = NON_SPX;
 
-Probleme.UtiliserCoutMax = NON_SPX;
-Probleme.CoutMax = 0.0;
+	Probleme.UtiliserCoutMax = NON_SPX;
+	Probleme.CoutMax = 0.0;
 
-Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes;
-Probleme.CoutsReduits                 = ProblemeAResoudre->CoutsReduits;
+	Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes;
+	Probleme.CoutsReduits                 = ProblemeAResoudre->CoutsReduits;
 
-# ifndef NDEBUG
-  if ( PremierPassage == OUI_ANTARES ) Probleme.AffichageDesTraces = NON_SPX;
-  else Probleme.AffichageDesTraces = OUI_SPX;
-# else
-  Probleme.AffichageDesTraces = NON_SPX;
-# endif
+	# ifndef NDEBUG
+	  if ( PremierPassage == OUI_ANTARES ) Probleme.AffichageDesTraces = NON_SPX;
+	  else Probleme.AffichageDesTraces = OUI_SPX;
+	# else
+	  Probleme.AffichageDesTraces = NON_SPX;
+	# endif
 
-Probleme.NombreDeContraintesCoupes = 0;
+	Probleme.NombreDeContraintesCoupes = 0;
 
 
-MPSolver * solver = NULL;
-if (OrtoolsUtils::OrtoolsUsed) {
-	solver = (MPSolver *) ORTOOLS_Simplexe(&Probleme, ProbSpx);
-	ProbSpx = solver;
-}
-else
-{
-	Probleme.AffichageDesTraces = NON_SPX;
-	//SPX_PARAMS * spx_params = newDefaultSpxParams();
-
-	ProbSpx = SPX_Simplexe(&Probleme, (PROBLEME_SPX *)ProbSpx);// , spx_params);
-}
-
-current_memory_usage("after resolution");
-
-if ( ProbSpx != NULL ) {  
-	(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[NumIntervalle] = (void *) ProbSpx;
-}
-
-if (ProblemeHebdo->ExportMPS == OUI_ANTARES) {
+	MPSolver * solver = NULL;
 	if (OrtoolsUtils::OrtoolsUsed) {
-		int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
-		ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
+		solver = (MPSolver *) ORTOOLS_Simplexe(&Probleme, ProbSpx);
+		ProbSpx = solver;
 	}
 	else
-		OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void *)&Probleme, numSpace, ANTARES_SIMPLEXE);
-}
+	{
+		Probleme.AffichageDesTraces = NON_SPX;
+		//SPX_PARAMS * spx_params = newDefaultSpxParams();
 
-ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
+		ProbSpx = SPX_Simplexe(&Probleme, (PROBLEME_SPX *)ProbSpx);// , spx_params);
+	}
+
+	current_memory_usage("after resolution");
+
+	if ( ProbSpx != NULL ) {  
+		(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[NumIntervalle] = (void *) ProbSpx;
+	}
+
+	if (ProblemeHebdo->ExportMPS == OUI_ANTARES) {
+		if (OrtoolsUtils::OrtoolsUsed) {
+			int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
+			ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
+		}
+		else
+			OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void *)&Probleme, numSpace, ANTARES_SIMPLEXE);
+	}
+
+	ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
 
 
 
-if ( ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage == OUI_ANTARES && ProbSpx != NULL ) {
-  if ( ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE ) {
+	if ( ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage == OUI_ANTARES && ProbSpx != NULL ) {
+	  if ( ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE ) {
     
-	  if (OrtoolsUtils::OrtoolsUsed) {
-		  ORTOOLS_LibererProbleme( ProbSpx );
-	  }
-	  else {
-		  SPX_LibererProbleme((PROBLEME_SPX *)ProbSpx);
-	  }
+		  if (OrtoolsUtils::OrtoolsUsed) {
+			  ORTOOLS_LibererProbleme( ProbSpx );
+		  }
+		  else {
+			  SPX_LibererProbleme((PROBLEME_SPX *)ProbSpx);
+		  }
 
-	  logs.info() << " Solver: Standard resolution failed"; 
-	  logs.info() << " Solver: Retry in safe mode";			//second trial w/o scaling 
+		  logs.info() << " Solver: Standard resolution failed"; 
+		  logs.info() << " Solver: Retry in safe mode";			//second trial w/o scaling 
 	 
-	  if (Logs::Verbosity::Debug::enabled)
-	  {
+		  if (Logs::Verbosity::Debug::enabled)
+		  {
 	  
-		logs.info() << " solver: resetting";
-	  }
-	  ProbSpx = NULL;
-	  PremierPassage = NON_ANTARES;
-	  goto RESOLUTION;
+			logs.info() << " solver: resetting";
+		  }
+		  ProbSpx = NULL;
+		  PremierPassage = NON_ANTARES;
+		  goto RESOLUTION;
+		}
+		else {
+		  logs.info(); 
+		  logs.error() << "Internal error: insufficient memory";
+		  logs.info(); 
+		  AntaresSolverEmergencyShutdown();
+		  return false;
+		}
 	}
-	else {
-	  logs.info(); 
-	  logs.error() << "Internal error: insufficient memory";
-	  logs.info(); 
-	  AntaresSolverEmergencyShutdown();
-	  return false;
-	}
-}
 
-if ( ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX ) {
-	if (PremierPassage == NON_ANTARES)
-	{
-		logs.info() << " Solver: Safe resolution succeeded";
-	}
-  CoutOpt = 0.0;
+	if ( ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX ) {
+		if (PremierPassage == NON_ANTARES)
+		{
+			logs.info() << " Solver: Safe resolution succeeded";
+		}
+	  CoutOpt = 0.0;
 	
-	for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ ) {
+		for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ ) {
 	  
-    CoutOpt+= ProblemeAResoudre->CoutLineaire[Var] * ProblemeAResoudre->X[Var];		
+		CoutOpt+= ProblemeAResoudre->CoutLineaire[Var] * ProblemeAResoudre->X[Var];		
 		
-		pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
-		if ( pt != NULL ) *pt = ProblemeAResoudre->X[Var];
-		pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var];
-		if ( pt != NULL ) *pt = ProblemeAResoudre->CoutsReduits[Var];
-	}
-
-	if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION)
-		ProblemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
-	else
-		ProblemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
-
-	
-	for ( Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++ ) {
-		pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt];
-		if ( pt != NULL ) *pt = ProblemeAResoudre->CoutsMarginauxDesContraintes[Cnt];
-	}
-}
-else {
-	if (PremierPassage == NON_ANTARES)
-	{
-		logs.info() << " Solver: Safe resolution failed";
-	}
-	logs.error() << "Infeasible linear problem encountered. Possible causes:";
-	logs.error() << "* binding constraints,";
-	logs.error() << "* last resort shedding status,";
-	logs.error() << "* negative hurdle costs on lines with infinite capacity,";
-	logs.error() << "* Hydro reservoir impossible to manage with cumulative options \"hard bounds without heuristic\"";
-	
-	
-	
-	
-	if (0)
-	{
-		logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
-		logs.info() << "Here is the trace:";
-		for (Cnt = 0 ; Cnt < ProblemeAResoudre->NombreDeContraintes; ++Cnt) {
-			
-			logs.info().appendFormat("Constraint %ld sens %c B %e",
-				Cnt,ProblemeAResoudre->Sens[Cnt],ProblemeAResoudre->SecondMembre[Cnt]);
-
-			il = ProblemeAResoudre->IndicesDebutDeLigne[Cnt];
-			ilMax = il + ProblemeAResoudre->NombreDeTermesDesLignes[Cnt];
-			while (il < ilMax) {
-				Var = ProblemeAResoudre->IndicesColonnes[il];
-				logs.info().appendFormat("      il %ld coeff %e var %ld xmin %e xmax %e type %ld cout %e",
-						il,  ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il],
-						Var, ProblemeAResoudre->Xmin[Var],
-						ProblemeAResoudre->Xmax[Var],
-						ProblemeAResoudre->TypeDeVariable[Var], ProblemeAResoudre->CoutLineaire[Var]);
-				il++;
-			}
+			pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
+			if ( pt != NULL ) *pt = ProblemeAResoudre->X[Var];
+			pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var];
+			if ( pt != NULL ) *pt = ProblemeAResoudre->CoutsReduits[Var];
 		}
 
-		
-		logs.info() << LOG_UI_DISPLAY_MESSAGES_ON;
-	}
+		if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION)
+			ProblemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
+		else
+			ProblemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
 
 	
-  if ( ProblemeHebdo->ExportMPS == NON_ANTARES) {
-	  OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &Probleme, numSpace, ANTARES_SIMPLEXE );
+		for ( Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++ ) {
+			pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt];
+			if ( pt != NULL ) *pt = ProblemeAResoudre->CoutsMarginauxDesContraintes[Cnt];
+		}
+	}
+	else {
+		if (PremierPassage == NON_ANTARES)
+		{
+			logs.info() << " Solver: Safe resolution failed";
+		}
+		logs.error() << "Infeasible linear problem encountered. Possible causes:";
+		logs.error() << "* binding constraints,";
+		logs.error() << "* last resort shedding status,";
+		logs.error() << "* negative hurdle costs on lines with infinite capacity,";
+		logs.error() << "* Hydro reservoir impossible to manage with cumulative options \"hard bounds without heuristic\"";
+	
+	
+	
+	
+		if (0)
+		{
+			logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+			logs.info() << "Here is the trace:";
+			for (Cnt = 0 ; Cnt < ProblemeAResoudre->NombreDeContraintes; ++Cnt) {
+			
+				logs.info().appendFormat("Constraint %ld sens %c B %e",
+					Cnt,ProblemeAResoudre->Sens[Cnt],ProblemeAResoudre->SecondMembre[Cnt]);
+
+				il = ProblemeAResoudre->IndicesDebutDeLigne[Cnt];
+				ilMax = il + ProblemeAResoudre->NombreDeTermesDesLignes[Cnt];
+				while (il < ilMax) {
+					Var = ProblemeAResoudre->IndicesColonnes[il];
+					logs.info().appendFormat("      il %ld coeff %e var %ld xmin %e xmax %e type %ld cout %e",
+							il,  ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il],
+							Var, ProblemeAResoudre->Xmin[Var],
+							ProblemeAResoudre->Xmax[Var],
+							ProblemeAResoudre->TypeDeVariable[Var], ProblemeAResoudre->CoutLineaire[Var]);
+					il++;
+				}
+			}
+
+		
+			logs.info() << LOG_UI_DISPLAY_MESSAGES_ON;
+		}
+
+	
+	  if ( ProblemeHebdo->ExportMPS == NON_ANTARES) {
+		  OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &Probleme, numSpace, ANTARES_SIMPLEXE );
+		}
+
+		return false;
 	}
 
-	return false;
-}
-
-return true;
+	return true;
 
 }
 
