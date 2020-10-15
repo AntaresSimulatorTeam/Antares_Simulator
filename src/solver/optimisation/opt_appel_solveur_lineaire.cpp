@@ -109,7 +109,7 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 	else
 	{
 		if (ProblemeHebdo->ReinitOptimisation == OUI_ANTARES )
-		{
+		{	
 			if (OrtoolsUtils::OrtoolsUsed) {
 			    ORTOOLS_LibererProbleme( ProbSpx );
 		    }
@@ -120,7 +120,7 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 
 			ProbSpx  = NULL;
 			Probleme.Contexte = SIMPLEXE_SEUL;
-			Probleme.BaseDeDepartFournie = NON_SPX;
+			Probleme.BaseDeDepartFournie = NON_SPX;	
 		}
 		else
 		{
@@ -162,8 +162,10 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 
 	Probleme.TypeDePricing               = PRICING_STEEPEST_EDGE ;
 
-	if (PremierPassage == NON_ANTARES) Probleme.FaireDuScaling = NON_SPX;
-	if (PremierPassage == OUI_ANTARES) Probleme.FaireDuScaling = OUI_SPX;
+	if (PremierPassage == NON_ANTARES)
+		Probleme.FaireDuScaling = NON_SPX;
+	if (PremierPassage == OUI_ANTARES)
+		Probleme.FaireDuScaling = OUI_SPX;
 
 	Probleme.StrategieAntiDegenerescence = AGRESSIF;
 
@@ -180,10 +182,12 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 	Probleme.CoutsReduits                 = ProblemeAResoudre->CoutsReduits;
 
 	# ifndef NDEBUG
-	  if ( PremierPassage == OUI_ANTARES ) Probleme.AffichageDesTraces = NON_SPX;
-	  else Probleme.AffichageDesTraces = OUI_SPX;
+	if ( PremierPassage == OUI_ANTARES )
+		Probleme.AffichageDesTraces = NON_SPX;
+	else
+		Probleme.AffichageDesTraces = OUI_SPX;
 	# else
-	  Probleme.AffichageDesTraces = NON_SPX;
+	Probleme.AffichageDesTraces = NON_SPX;
 	# endif
 
 	Probleme.NombreDeContraintesCoupes = 0;
@@ -196,19 +200,18 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 	}
 	else
 	{
-		Probleme.AffichageDesTraces = NON_SPX;
-		//SPX_PARAMS * spx_params = newDefaultSpxParams();
 
-		ProbSpx = SPX_Simplexe(&Probleme, (PROBLEME_SPX *)ProbSpx);// , spx_params);
+		ProbSpx = SPX_Simplexe(&Probleme, (PROBLEME_SPX *)ProbSpx);
 	}
 
 	current_memory_usage("after resolution");
 
-	if ( ProbSpx != NULL ) {  
+	if ( ProbSpx != NULL )
+	{  
 		(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[NumIntervalle] = (void *) ProbSpx;
 	}
 
-	if (ProblemeHebdo->ExportMPS == OUI_ANTARES) {
+	if ( ProblemeHebdo->ExportMPS == OUI_ANTARES)
 		if (OrtoolsUtils::OrtoolsUsed) {
 			int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
 			ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
@@ -221,52 +224,57 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 
 
 
-	if ( ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage == OUI_ANTARES && ProbSpx != NULL ) {
-	  if ( ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE ) {
-    
-		  if (OrtoolsUtils::OrtoolsUsed) {
-			  ORTOOLS_LibererProbleme( ProbSpx );
-		  }
-		  else {
-			  SPX_LibererProbleme((PROBLEME_SPX *)ProbSpx);
-		  }
+	if ( ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage == OUI_ANTARES && ProbSpx != NULL )
+	{
+		if ( ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE )
+		{
+		   if (OrtoolsUtils::OrtoolsUsed) {
+	 		  ORTOOLS_LibererProbleme( ProbSpx );
+		   }
+		   else {
+		 	  SPX_LibererProbleme((PROBLEME_SPX *)ProbSpx);
+		   }
 
-		  logs.info() << " Solver: Standard resolution failed"; 
-		  logs.info() << " Solver: Retry in safe mode";			//second trial w/o scaling 
-	 
-		  if (Logs::Verbosity::Debug::enabled)
-		  {
-	  
-			logs.info() << " solver: resetting";
-		  }
-		  ProbSpx = NULL;
-		  PremierPassage = NON_ANTARES;
-		  goto RESOLUTION;
+		    logs.info() << " Solver: Standard resolution failed"; 
+			logs.info() << " Solver: Retry in safe mode";			//second trial w/o scaling
+
+			if (Logs::Verbosity::Debug::enabled)
+			{
+				logs.info() << " solver: resetting";
+			}
+			ProbSpx = NULL;
+			PremierPassage = NON_ANTARES;
+			goto RESOLUTION;
 		}
-		else {
-		  logs.info(); 
-		  logs.error() << "Internal error: insufficient memory";
-		  logs.info(); 
-		  AntaresSolverEmergencyShutdown();
-		  return false;
+
+		else
+		{
+			logs.info(); 
+			logs.error() << "Internal error: insufficient memory";
+			logs.info(); 
+			AntaresSolverEmergencyShutdown();
+			return false;
 		}
 	}
 
-	if ( ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX ) {
+	if ( ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX )
+	{
 		if (PremierPassage == NON_ANTARES)
 		{
 			logs.info() << " Solver: Safe resolution succeeded";
 		}
 		CoutOpt = 0.0;
 	
-		for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ ) {
-	  
+		for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ )
+		{
 			CoutOpt+= ProblemeAResoudre->CoutLineaire[Var] * ProblemeAResoudre->X[Var];		
 		
 			pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
-			if ( pt != NULL ) *pt = ProblemeAResoudre->X[Var];
+			if ( pt != NULL )
+				*pt = ProblemeAResoudre->X[Var];
 			pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var];
-			if ( pt != NULL ) *pt = ProblemeAResoudre->CoutsReduits[Var];
+			if ( pt != NULL )
+				*pt = ProblemeAResoudre->CoutsReduits[Var];
 		}
 
 		if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION)
@@ -275,12 +283,16 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 			ProblemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
 
 	
-		for ( Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++ ) {
+		for ( Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++ )
+		{
 			pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt];
-			if ( pt != NULL ) *pt = ProblemeAResoudre->CoutsMarginauxDesContraintes[Cnt];
+			if ( pt != NULL )
+				*pt = ProblemeAResoudre->CoutsMarginauxDesContraintes[Cnt];
 		}
 	}
-	else {
+
+	else
+	{
 		if (PremierPassage == NON_ANTARES)
 		{
 			logs.info() << " Solver: Safe resolution failed";
@@ -291,9 +303,11 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 		logs.error() << "* negative hurdle costs on lines with infinite capacity,";
 		logs.error() << "* Hydro reservoir impossible to manage with cumulative options \"hard bounds without heuristic\"";
 
-	
-	  if ( ProblemeHebdo->ExportMPS == NON_ANTARES) {
-		  OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &Probleme, numSpace, ANTARES_SIMPLEXE );
+		//Write MPS only if exportMPSOnError is activated and MPS weren't exported before with ExportMPS option
+		if ( ProblemeHebdo->ExportMPS == NON_ANTARES && ProblemeHebdo->exportMPSOnError)
+		{
+		  //TODO JMK : write with ortools if ortools used
+			OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &Probleme, numSpace, ANTARES_SIMPLEXE );
 		}
 
 		return false;
@@ -312,9 +326,10 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 	int * TypeEntierOuReel; PROBLEME_A_RESOUDRE ProblemePourPne; double u;
 
 	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+	TypeEntierOuReel = (int *) ProblemeAResoudre->CoutsReduits;
 
-	TypeEntierOuReel = (int *) ProblemeAResoudre->CoutsReduits; 
-	for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ ) TypeEntierOuReel[Var] = REEL;
+	for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ )
+		TypeEntierOuReel[Var] = REEL;
 
 
 
@@ -338,8 +353,9 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 	ProblemePourPne.CoupesLiftAndProject       = NON_PNE; 
 	ProblemePourPne.AffichageDesTraces = NON_PNE;
 	ProblemePourPne.FaireDuPresolve = OUI_PNE ; 
-	if ( ProblemeAResoudre->NumeroDOptimisation == DEUXIEME_OPTIMISATION ) {
-	  ProblemePourPne.FaireDuPresolve = NON_PNE; 
+	if ( ProblemeAResoudre->NumeroDOptimisation == DEUXIEME_OPTIMISATION )
+	{
+	  ProblemePourPne.FaireDuPresolve = NON_PNE;
 
 	}
 
@@ -350,6 +366,7 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 	ProblemePourPne.ToleranceDOptimalite         = 1.e-4; 
 
 
+	PNE_Solveur( &ProblemePourPne );
 
 
 
@@ -358,6 +375,8 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 	if (OrtoolsUtils::OrtoolsUsed) {
 
 		ORTOOLS_Simplexe_PNE(&ProblemePourPne, NULL);
+		
+		//TODO JMK : see if we write MPS with ortools
 
 	} else {
 
@@ -368,7 +387,8 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 	}
 	ProblemeAResoudre->ExistenceDUneSolution = ProblemePourPne.ExistenceDUneSolution;
 
-	if ( ProblemeAResoudre->ExistenceDUneSolution == ARRET_CAR_ERREUR_INTERNE ) {
+	if ( ProblemeAResoudre->ExistenceDUneSolution == ARRET_CAR_ERREUR_INTERNE )
+	{
 		logs.info(); 
 		logs.error() << "Internal error: insufficient memory";
 		logs.info(); 
@@ -379,31 +399,36 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 
 	bool sol_opt_trouvee = (ProblemeAResoudre->ExistenceDUneSolution == SOLUTION_OPTIMALE_TROUVEE);
 	sol_opt_trouvee = (sol_opt_trouvee || ProblemeAResoudre->ExistenceDUneSolution == SOLUTION_OPTIMALE_TROUVEE_MAIS_QUELQUES_CONTRAINTES_SONT_VIOLEES);
-	if (sol_opt_trouvee) {
+	if (sol_opt_trouvee)
+	{
 		CoutOpt = 0.0;
 	
+		for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ )
+			ProblemeAResoudre->CoutsReduits[Var] = ProblemeAResoudre->CoutLineaire[Var];
 
-	
-		for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ ) ProblemeAResoudre->CoutsReduits[Var] = ProblemeAResoudre->CoutLineaire[Var];
-		for ( Cnt = 0 ; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++ ) {
+		for ( Cnt = 0 ; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++ )
+		{
 			il = ProblemeAResoudre->IndicesDebutDeLigne[Cnt];
 			ilMax = il + ProblemeAResoudre->NombreDeTermesDesLignes[Cnt];
 			u = ProblemeAResoudre->CoutsMarginauxDesContraintes[Cnt];
-			while ( il < ilMax ) {
+			while ( il < ilMax )
+			{
 				Var = ProblemeAResoudre->IndicesColonnes[il];
 				ProblemeAResoudre->CoutsReduits[Var] -= u * ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il];
-  				il++;
+				il++;
 			}
 		}
 	
-		for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ ) {
-	  
+		for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ )
+		{
 			CoutOpt+= ProblemeAResoudre->CoutLineaire[Var] * ProblemeAResoudre->X[Var];		
 		
 			pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
-			if ( pt != NULL ) *pt = ProblemeAResoudre->X[Var];
+			if ( pt != NULL )
+				*pt = ProblemeAResoudre->X[Var];
 			pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var];
-			if ( pt != NULL ) *pt = ProblemeAResoudre->CoutsReduits[Var];
+			if ( pt != NULL )
+				*pt = ProblemeAResoudre->CoutsReduits[Var];
 		}
 
 		if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION)
@@ -412,21 +437,51 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 			ProblemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
 
 	
-		for ( Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++ ) {
+		for ( Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++ )
+		{
 			pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt];
-			if ( pt != NULL ) *pt = ProblemeAResoudre->CoutsMarginauxDesContraintes[Cnt];
+			if ( pt != NULL )
+				*pt = ProblemeAResoudre->CoutsMarginauxDesContraintes[Cnt];
 		}
 	
 	}
-	else {
+	else
+	{
 		logs.error() << "Infeasible linear problem encountered. Possible causes:";
 		logs.error() << "* binding constraints,";
 		logs.error() << "* last resort shedding status,";
 		logs.error() << "* negative hurdle costs on lines with infinite capacity,";
-		logs.error() << "* Hydro reservoir impossible to manage with cumulative options \"hard bounds without heuristic\"";	
+		logs.error() << "* Hydro reservoir impossible to manage with cumulative options \"hard bounds without heuristic\"";
 
+		if (0)
+		{
+			logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+			logs.info() << "Here is the trace:";
+			for (Cnt = 0 ; Cnt < ProblemeAResoudre->NombreDeContraintes; ++Cnt)
+			{
+				logs.info().appendFormat("Constraint %ld sens %c B %e",
+					Cnt, ProblemeAResoudre->Sens[Cnt], ProblemeAResoudre->SecondMembre[Cnt]);
+
+				il = ProblemeAResoudre->IndicesDebutDeLigne[Cnt];
+				ilMax = il + ProblemeAResoudre->NombreDeTermesDesLignes[Cnt];
+				while (il < ilMax)
+				{
+					Var = ProblemeAResoudre->IndicesColonnes[il];
+					logs.info().appendFormat("      il %ld coeff %e var %ld xmin %e xmax %e type %ld cout %e",
+							il,  ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il],
+							Var, ProblemeAResoudre->Xmin[Var],
+							ProblemeAResoudre->Xmax[Var],
+							ProblemeAResoudre->TypeDeVariable[Var], ProblemeAResoudre->CoutLineaire[Var]);
+					il++;
+				}
+			}
+		
+			logs.info() << LOG_UI_DISPLAY_MESSAGES_ON;
+		}
 	
-		if ( ProblemeHebdo->ExportMPS == NON_ANTARES) {	
+		//Write MPS only if exportMPSOnError is activated and MPS weren't exported before with ExportMPS option
+		if ( ProblemeHebdo->ExportMPS == NON_ANTARES && ProblemeHebdo->exportMPSOnError)
+		{	
 			OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &ProblemePourPne, numSpace, ANTARES_PNE );	
 		}
 	
@@ -467,269 +522,246 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void * Prob, uint numSpace, 
 
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( void * Prob, uint numSpace, char Type )
 {
-FILE * Flot; int Cnt; int Var; int il; int ilk; int ilMax; char * Nombre;
-int * Cder; int * Cdeb; int * NumeroDeContrainte; int * Csui; double CoutOpt;
-PROBLEME_SIMPLEXE * Probleme; PROBLEME_A_RESOUDRE * ProblemePourPne;
+	FILE * Flot; int Cnt; int Var; int il; int ilk; int ilMax; char * Nombre;
+	int * Cder; int * Cdeb; int * NumeroDeContrainte; int * Csui; double CoutOpt;
+	PROBLEME_SIMPLEXE * Probleme; PROBLEME_A_RESOUDRE * ProblemePourPne;
 
 
-int NombreDeVariables; int * TypeDeBorneDeLaVariable;
-double * Xmax; double * Xmin; double * CoutLineaire; int NombreDeContraintes;
-double * SecondMembre; char * Sens; int * IndicesDebutDeLigne;
-int * NombreDeTermesDesLignes;	double * CoefficientsDeLaMatriceDesContraintes;
-int * IndicesColonnes; int ExistenceDUneSolution; double * X;
+	int NombreDeVariables; int * TypeDeBorneDeLaVariable;
+	double * Xmax; double * Xmin; double * CoutLineaire; int NombreDeContraintes;
+	double * SecondMembre; char * Sens; int * IndicesDebutDeLigne;
+	int * NombreDeTermesDesLignes;	double * CoefficientsDeLaMatriceDesContraintes;
+	int * IndicesColonnes; int ExistenceDUneSolution; double * X;
 
 
-if ( Type == ANTARES_SIMPLEXE ) {
-  Probleme = (PROBLEME_SIMPLEXE *) Prob;
+	if ( Type == ANTARES_SIMPLEXE )
+	{
+		Probleme = (PROBLEME_SIMPLEXE *) Prob;
 
-  ExistenceDUneSolution	  = Probleme->ExistenceDUneSolution;            
-  if ( ExistenceDUneSolution == OUI_SPX ) ExistenceDUneSolution = OUI_ANTARES;	
+		ExistenceDUneSolution	  = Probleme->ExistenceDUneSolution;            
+		if ( ExistenceDUneSolution == OUI_SPX )
+			ExistenceDUneSolution = OUI_ANTARES;	
 
-  NombreDeVariables       = Probleme->NombreDeVariables;
-  TypeDeBorneDeLaVariable = Probleme->TypeDeVariable;
-  Xmax                    = Probleme->Xmax;
-  Xmin                    = Probleme->Xmin;
-  X                       = Probleme->X;
-  CoutLineaire            = Probleme->CoutLineaire;
-  NombreDeContraintes                   = Probleme->NombreDeContraintes;
-  SecondMembre                          = Probleme->SecondMembre;
-  Sens                                  = Probleme->Sens;
-  IndicesDebutDeLigne                   = Probleme->IndicesDebutDeLigne;
-  NombreDeTermesDesLignes               = Probleme->NombreDeTermesDesLignes;
-  CoefficientsDeLaMatriceDesContraintes = Probleme->CoefficientsDeLaMatriceDesContraintes;
-  IndicesColonnes                       = Probleme->IndicesColonnes;
-}
-else {
+		NombreDeVariables       = Probleme->NombreDeVariables;
+		TypeDeBorneDeLaVariable = Probleme->TypeDeVariable;
+		Xmax                    = Probleme->Xmax;
+		Xmin                    = Probleme->Xmin;
+		X                       = Probleme->X;
+		CoutLineaire            = Probleme->CoutLineaire;
+		NombreDeContraintes                   = Probleme->NombreDeContraintes;
+		SecondMembre                          = Probleme->SecondMembre;
+		Sens                                  = Probleme->Sens;
+		IndicesDebutDeLigne                   = Probleme->IndicesDebutDeLigne;
+		NombreDeTermesDesLignes               = Probleme->NombreDeTermesDesLignes;
+		CoefficientsDeLaMatriceDesContraintes = Probleme->CoefficientsDeLaMatriceDesContraintes;
+		IndicesColonnes                       = Probleme->IndicesColonnes;
+	}
   
-  ProblemePourPne = (PROBLEME_A_RESOUDRE *) Prob;
+	else
+	{
+		ProblemePourPne = (PROBLEME_A_RESOUDRE *) Prob;
 
-  ExistenceDUneSolution	  = ProblemePourPne->ExistenceDUneSolution;            
-  if ( ExistenceDUneSolution == SOLUTION_OPTIMALE_TROUVEE ) ExistenceDUneSolution = OUI_ANTARES;
+		ExistenceDUneSolution	  = ProblemePourPne->ExistenceDUneSolution;            
+		if ( ExistenceDUneSolution == SOLUTION_OPTIMALE_TROUVEE )
+			ExistenceDUneSolution = OUI_ANTARES;
 
-  NombreDeVariables       = ProblemePourPne->NombreDeVariables;
-  TypeDeBorneDeLaVariable = ProblemePourPne->TypeDeBorneDeLaVariable; 
-  Xmax                    = ProblemePourPne->Xmax;
-  Xmin                    = ProblemePourPne->Xmin;
-  X                       = ProblemePourPne->X;
-  CoutLineaire            = ProblemePourPne->CoutLineaire;
-  NombreDeContraintes                   = ProblemePourPne->NombreDeContraintes;
-  SecondMembre                          = ProblemePourPne->SecondMembre;
-  Sens                                  = ProblemePourPne->Sens;
-  IndicesDebutDeLigne                   = ProblemePourPne->IndicesDebutDeLigne;
-  NombreDeTermesDesLignes               = ProblemePourPne->NombreDeTermesDesLignes;
-  CoefficientsDeLaMatriceDesContraintes = ProblemePourPne->CoefficientsDeLaMatriceDesContraintes;
-  IndicesColonnes                       = ProblemePourPne->IndicesColonnes;	
-}
-
-
-if ( ExistenceDUneSolution == OUI_ANTARES ) {
-  CoutOpt = 0;
-	for ( Var = 0 ; Var < NombreDeVariables ; Var++ ) CoutOpt += CoutLineaire[Var] * X[Var];
-	
-}
+		NombreDeVariables       = ProblemePourPne->NombreDeVariables;
+		TypeDeBorneDeLaVariable = ProblemePourPne->TypeDeBorneDeLaVariable; 
+		Xmax                    = ProblemePourPne->Xmax;
+		Xmin                    = ProblemePourPne->Xmin;
+		X                       = ProblemePourPne->X;
+		CoutLineaire            = ProblemePourPne->CoutLineaire;
+		NombreDeContraintes                   = ProblemePourPne->NombreDeContraintes;
+		SecondMembre                          = ProblemePourPne->SecondMembre;
+		Sens                                  = ProblemePourPne->Sens;
+		IndicesDebutDeLigne                   = ProblemePourPne->IndicesDebutDeLigne;
+		NombreDeTermesDesLignes               = ProblemePourPne->NombreDeTermesDesLignes;
+		CoefficientsDeLaMatriceDesContraintes = ProblemePourPne->CoefficientsDeLaMatriceDesContraintes;
+		IndicesColonnes                       = ProblemePourPne->IndicesColonnes;	
+	}
 
 
-for ( ilMax = -1 , Cnt = 0 ; Cnt < NombreDeContraintes; Cnt++ ) {
-  if ( ( IndicesDebutDeLigne[Cnt] + NombreDeTermesDesLignes[Cnt] - 1 ) > ilMax ) {
-    ilMax = IndicesDebutDeLigne[Cnt] + NombreDeTermesDesLignes[Cnt] - 1;
-  }
-}
-ilMax+= NombreDeContraintes; 
-
-Cder               = (int *) malloc( NombreDeVariables * sizeof( int ) );
-Cdeb               = (int *) malloc( NombreDeVariables * sizeof( int ) );
-NumeroDeContrainte = (int *) malloc( ilMax             * sizeof( int ) );
-Csui               = (int *) malloc( ilMax             * sizeof( int ) );
-Nombre             = (char *) malloc( 1024 );
-if ( Cder == NULL || Cdeb == NULL || NumeroDeContrainte == NULL || Csui == NULL || Nombre == NULL ) {
-	logs.fatal() << "Not enough memory";
-	AntaresSolverEmergencyShutdown();
-}
-
-for ( Var = 0 ; Var < NombreDeVariables ; Var++ ) Cdeb[Var] = -1;
-for ( Cnt = 0 ; Cnt < NombreDeContraintes ; Cnt++ ) {
-  il    = IndicesDebutDeLigne[Cnt];
-  ilMax = il + NombreDeTermesDesLignes[Cnt];
-  while ( il < ilMax ) {
-    Var = IndicesColonnes[il];
-    if ( Cdeb[Var] < 0 ) {
-      Cdeb              [Var] = il;
-      NumeroDeContrainte[il]  = Cnt;
-      Csui              [il]  = -1;
-      Cder              [Var] = il;
-    }
-    else {
-      ilk                     = Cder[Var];
-      Csui              [ilk] = il;
-      NumeroDeContrainte[il]  = Cnt;
-      Csui              [il]  = -1;
-      Cder              [Var] = il;
-    }
-    il++;
-  }
-}
-free( Cder );
+	if ( ExistenceDUneSolution == OUI_ANTARES )
+	{
+		CoutOpt = 0;
+		for ( Var = 0 ; Var < NombreDeVariables ; Var++ )
+			CoutOpt += CoutLineaire[Var] * X[Var];
+	}
 
 
+	for ( ilMax = -1 , Cnt = 0 ; Cnt < NombreDeContraintes; Cnt++ )
+	{
+		if ( ( IndicesDebutDeLigne[Cnt] + NombreDeTermesDesLignes[Cnt] - 1 ) > ilMax )
+		{
+			ilMax = IndicesDebutDeLigne[Cnt] + NombreDeTermesDesLignes[Cnt] - 1;
+		}
+	}
+
+	ilMax+= NombreDeContraintes; 
+
+	Cder               = (int *) malloc( NombreDeVariables * sizeof( int ) );
+	Cdeb               = (int *) malloc( NombreDeVariables * sizeof( int ) );
+	NumeroDeContrainte = (int *) malloc( ilMax             * sizeof( int ) );
+	Csui               = (int *) malloc( ilMax             * sizeof( int ) );
+	Nombre             = (char *) malloc( 1024 );
+
+	if ( Cder == NULL || Cdeb == NULL || NumeroDeContrainte == NULL || Csui == NULL || Nombre == NULL )
+	{
+		logs.fatal() << "Not enough memory";
+		AntaresSolverEmergencyShutdown();
+	}
 
 
+	for ( Var = 0 ; Var < NombreDeVariables ; Var++ )
+		Cdeb[Var] = -1;
+
+	for ( Cnt = 0 ; Cnt < NombreDeContraintes ; Cnt++ )
+	{
+		il    = IndicesDebutDeLigne[Cnt];
+		ilMax = il + NombreDeTermesDesLignes[Cnt];
+		while ( il < ilMax )
+		{
+			Var = IndicesColonnes[il];
+			if ( Cdeb[Var] < 0 )
+			{
+				Cdeb              [Var] = il;
+				NumeroDeContrainte[il]  = Cnt;
+				Csui              [il]  = -1;
+				Cder              [Var] = il;
+			}
+			else
+			{
+				ilk                     = Cder[Var];
+				Csui              [ilk] = il;
+				NumeroDeContrainte[il]  = Cnt;
+				Csui              [il]  = -1;
+				Cder              [Var] = il;
+			}
+
+			il++;
+		}
+	}
+
+	free( Cder );
+
+	auto& study = *Data::Study::Current::Get();
+	Flot = study.createMPSFileIntoOutput(numSpace);
+
+	if (!Flot)
+		exit(2);
+
+	fprintf(Flot, "* Number of variables:   %d\n", NombreDeVariables);
+	fprintf(Flot, "* Number of constraints: %d\n", NombreDeContraintes);
+	fprintf(Flot, "NAME          Pb Solve\n");
+	fprintf(Flot, "ROWS\n");
+	fprintf(Flot, " N  OBJECTIF\n");
+
+	for ( Cnt = 0 ; Cnt < NombreDeContraintes ; Cnt++ )
+	{
+		if ( Sens[Cnt] == '=' )
+		{
+			fprintf(Flot, " E  R%07d\n", Cnt);
+		}
+		else if (  Sens[Cnt] == '<' )
+		{
+			fprintf(Flot, " L  R%07d\n",Cnt);
+		}
+		else if (  Sens[Cnt] == '>' )
+		{
+			fprintf(Flot, " G  R%07d\n", Cnt);
+		}
+		else
+		{
+			fprintf(Flot, "PNE_EcrireJeuDeDonneesMPS : le sens de la contrainte %c ne fait pas partie des sens reconnus\n", Sens[Cnt]);
+			AntaresSolverEmergencyShutdown(); 
+			exit(0);
+		}
+	}
 
 
+	fprintf(Flot, "COLUMNS\n");
+	for ( Var = 0 ; Var < NombreDeVariables ; Var++ )
+	{
+		if ( CoutLineaire[Var] != 0.0 )
+		{
+			SNPRINTF(Nombre, 1024, "%-.10lf", CoutLineaire[Var]);
+			fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, Nombre);
+		}
 
+		il = Cdeb[Var];
+		while ( il >= 0 )
+		{
+			SNPRINTF(Nombre, 1024, "%-.10lf", CoefficientsDeLaMatriceDesContraintes[il]);
+			fprintf(Flot, "    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il],Nombre);
+			il = Csui[il];
+		}
+	}
 
+	fprintf(Flot, "RHS\n");
+	for ( Cnt = 0 ; Cnt < NombreDeContraintes ; Cnt++ )
+	{
+		if ( SecondMembre[Cnt] != 0.0 )
+		{
+			SNPRINTF(Nombre, 1024, "%-.9lf",SecondMembre[Cnt]);
+			fprintf(Flot, "    RHSVAL    R%07d  %s\n", Cnt, Nombre);
+		}
+	}
 
+	fprintf(Flot, "BOUNDS\n");
 
-
-
-
-
-
-
-
-auto& study = *Data::Study::Current::Get();
-Flot = study.createMPSFileIntoOutput(numSpace);
-if (!Flot)
-	exit(2);
-
-
-fprintf(Flot,"* Number of variables:   %d\n",NombreDeVariables);
-fprintf(Flot,"* Number of constraints: %d\n",NombreDeContraintes);
-
-
-
-
-
-
-
-
-
-
-
-
-fprintf(Flot,"NAME          Pb Solve\n");
-
-
-fprintf(Flot,"ROWS\n");
-
-
-
-
-
-
-
-
-
-
-
-fprintf(Flot," N  OBJECTIF\n");
-
-for ( Cnt = 0 ; Cnt < NombreDeContraintes ; Cnt++ ) {
-  if ( Sens[Cnt] == '=' ) {
-    fprintf(Flot," E  R%07d\n",Cnt);
-  }
-  else if (  Sens[Cnt] == '<' ) {
-    fprintf(Flot," L  R%07d\n",Cnt);
-  }
-  else if (  Sens[Cnt] == '>' ) {
-    fprintf(Flot," G  R%07d\n",Cnt);
-  }
-  else {
-    fprintf(Flot,"PNE_EcrireJeuDeDonneesMPS : le sens de la contrainte %c ne fait pas partie des sens reconnus\n",
-            Sens[Cnt]);
-	AntaresSolverEmergencyShutdown(); 
-    exit(0);
-  }
-}
-
-
-fprintf(Flot,"COLUMNS\n");
-for ( Var = 0 ; Var < NombreDeVariables ; Var++ ) {
-  if ( CoutLineaire[Var] != 0.0 ) {
-    SNPRINTF(Nombre,1024,"%-.10lf",CoutLineaire[Var]);
+	for ( Var = 0 ; Var < NombreDeVariables ; Var++ )
+	{
+		if ( TypeDeBorneDeLaVariable[Var] == VARIABLE_FIXE )
+		{
+			SNPRINTF(Nombre, 1024, "%-.9lf", Xmin[Var]);
      
-    fprintf(Flot,"    C%07d  OBJECTIF  %s\n",Var,Nombre);
-  }
-  il = Cdeb[Var];
-  while ( il >= 0 ) {
-    SNPRINTF(Nombre,1024,"%-.10lf",CoefficientsDeLaMatriceDesContraintes[il]);
-     
-    fprintf(Flot,"    C%07d  R%07d  %s\n",Var,NumeroDeContrainte[il],Nombre);
-    il = Csui[il];
-  }
-}
-
-
-fprintf(Flot,"RHS\n");
-for ( Cnt = 0 ; Cnt < NombreDeContraintes ; Cnt++ ) {
-  if ( SecondMembre[Cnt] != 0.0 ) {
-    SNPRINTF(Nombre,1024,"%-.9lf",SecondMembre[Cnt]);
-     
-    fprintf(Flot,"    RHSVAL    R%07d  %s\n",Cnt,Nombre);
-  }
-}
-
-
-fprintf(Flot,"BOUNDS\n");
-
-
-
-
-
-
-
-
-
-
-
-
-for ( Var = 0 ; Var < NombreDeVariables ; Var++ ) {
-  if ( TypeDeBorneDeLaVariable[Var] == VARIABLE_FIXE ) {
-    SNPRINTF(Nombre,1024,"%-.9lf",Xmin[Var]);
-     
-    fprintf(Flot," FX BNDVALUE  C%07d  %s\n",Var,Nombre);
-    continue;
-  }
+			fprintf(Flot, " FX BNDVALUE  C%07d  %s\n", Var, Nombre);
+			continue;
+		}
   
-  
-  if ( TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_DES_DEUX_COTES ) {
-    if ( Xmin[Var] != 0.0 ) {
-      SNPRINTF(Nombre,1024,"%-.9lf",Xmin[Var]);
-       
-      fprintf(Flot," LO BNDVALUE  C%07d  %s\n",Var,Nombre);
-    }
-    SNPRINTF(Nombre,1024,"%-.9lf",Xmax[Var]);
-     
-    fprintf(Flot," UP BNDVALUE  C%07d  %s\n",Var,Nombre);
-  }
-  if ( TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_INFERIEUREMENT ) {
-    if ( Xmin[Var] != 0.0 ) {
-      SNPRINTF(Nombre,1024,"%-.9lf",Xmin[Var]);
-       
-      fprintf(Flot," LO BNDVALUE  C%07d  %s\n",Var,Nombre);
-    }
-  }
-  if ( TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_SUPERIEUREMENT ) {
-    fprintf(Flot," MI BNDVALUE  C%07d\n",Var);
-    if ( Xmax[Var] != 0.0 ) {
-      SNPRINTF(Nombre,1024,"%-.9lf",Xmax[Var]);
-       
-      fprintf(Flot," UP BNDVALUE  C%07d  %s\n",Var,Nombre);
-    }
-  }
-  if ( TypeDeBorneDeLaVariable[Var] == VARIABLE_NON_BORNEE ) {
-    fprintf(Flot," FR BNDVALUE  C%07d\n",Var);
-  }
-}
+		if ( TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_DES_DEUX_COTES )
+		{
+			if ( Xmin[Var] != 0.0 )
+			{
+				SNPRINTF(Nombre, 1024, "%-.9lf", Xmin[Var]);
+				fprintf(Flot," LO BNDVALUE  C%07d  %s\n",Var,Nombre);
+			}
 
+			SNPRINTF(Nombre, 1024, "%-.9lf", Xmax[Var]);
+			fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, Nombre);
+		}
+		
+		if ( TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_INFERIEUREMENT )
+		{
+			if ( Xmin[Var] != 0.0 )
+			{
+				SNPRINTF(Nombre, 1024, "%-.9lf", Xmin[Var]);
+				fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, Nombre);
+			}
+		}
 
-fprintf(Flot,"ENDATA\n");
+		if ( TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_SUPERIEUREMENT )
+		{
+			fprintf(Flot, " MI BNDVALUE  C%07d\n", Var);
+			if ( Xmax[Var] != 0.0 )
+			{
+				SNPRINTF(Nombre, 1024, "%-.9lf", Xmax[Var]);
+				fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, Nombre);
+			}
+		}
 
-free ( Cdeb );
-free ( NumeroDeContrainte );
-free ( Csui );
-free ( Nombre );
+		if ( TypeDeBorneDeLaVariable[Var] == VARIABLE_NON_BORNEE )
+		{
+			fprintf(Flot, " FR BNDVALUE  C%07d\n", Var);
+		}
+	}
 
-fclose( Flot );
+	fprintf(Flot, "ENDATA\n");
 
-return;
+	free ( Cdeb );
+	free ( NumeroDeContrainte );
+	free ( Csui );
+	free ( Nombre );
+
+	fclose( Flot );
 }
