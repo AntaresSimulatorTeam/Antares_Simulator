@@ -110,16 +110,14 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 	{
 		if (ProblemeHebdo->ReinitOptimisation == OUI_ANTARES )
 		{
-			if ( ProbSpx != NULL )
-			{
-				if (OrtoolsUtils::OrtoolsUsed) {
-			        ORTOOLS_LibererProbleme( ProbSpx );
-		        }
-		        else {
-			        SPX_LibererProbleme((PROBLEME_SPX *)ProbSpx);
-		        }
-				(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[(int) NumIntervalle] = NULL;
-			}
+			if (OrtoolsUtils::OrtoolsUsed) {
+			    ORTOOLS_LibererProbleme( ProbSpx );
+		    }
+		    else {
+			    SPX_LibererProbleme((PROBLEME_SPX *)ProbSpx);
+		    }
+			(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[(int) NumIntervalle] = NULL;
+
 			ProbSpx  = NULL;
 			Probleme.Contexte = SIMPLEXE_SEUL;
 			Probleme.BaseDeDepartFournie = NON_SPX;
