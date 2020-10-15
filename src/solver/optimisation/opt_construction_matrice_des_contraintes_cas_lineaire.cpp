@@ -72,7 +72,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 	if (exportStructure)
 	{
 		OPT_ExportInterco(ProblemeHebdo, numSpace);
-		OPT_ExportAreaName(ProblemeHebdo, numSpace);
+		OPT_ExportAreaName(numSpace);
 	}	
 
 	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
