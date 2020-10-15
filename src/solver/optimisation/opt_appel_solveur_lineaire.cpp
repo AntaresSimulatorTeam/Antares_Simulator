@@ -309,8 +309,14 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 		//Write MPS only if exportMPSOnError is activated and MPS weren't exported before with ExportMPS option
 		if ( ProblemeHebdo->ExportMPS == NON_ANTARES && ProblemeHebdo->exportMPSOnError)
 		{
-		  //TODO JMK : write with ortools if ortools used
-			OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &Probleme, numSpace, ANTARES_SIMPLEXE );
+			if (OrtoolsUtils::OrtoolsUsed) {
+				int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
+				ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
+			}
+			else
+			{
+				OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace, ANTARES_SIMPLEXE);
+			}
 		}
 
 		return false;
@@ -368,22 +374,20 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 	ProblemePourPne.NombreMaxDeSolutionsEntieres = -1;   
 	ProblemePourPne.ToleranceDOptimalite         = 1.e-4; 
 
-
-	PNE_Solveur( &ProblemePourPne );
-
-
-
-
-
+	MPSolver* solver = NULL;
 	if (OrtoolsUtils::OrtoolsUsed) {
 
-		ORTOOLS_Simplexe_PNE(&ProblemePourPne, NULL);
+		solver = (MPSolver*) ORTOOLS_Simplexe_PNE(&ProblemePourPne, NULL);
 		
-		//TODO JMK : see if we write MPS with ortools
+		if (ProblemeHebdo->ExportMPS == OUI_ANTARES)
+		{
+			int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
+			ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
+		}
 
 	} else {
 
-		PNE_Solveur(&ProblemePourPne);// , NULL);
+		PNE_Solveur(&ProblemePourPne);
 
 		if ( ProblemeHebdo->ExportMPS == OUI_ANTARES) OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &ProblemePourPne, numSpace, ANTARES_PNE );
 
@@ -482,8 +486,15 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 		}
 		//Write MPS only if exportMPSOnError is activated and MPS weren't exported before with ExportMPS option
 		if ( ProblemeHebdo->ExportMPS == NON_ANTARES && ProblemeHebdo->exportMPSOnError)
-		{	
-			OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &ProblemePourPne, numSpace, ANTARES_PNE );	
+		{
+			if (OrtoolsUtils::OrtoolsUsed) {
+				int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
+				ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
+			}
+			else
+			{
+				OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&ProblemePourPne, numSpace, ANTARES_PNE);
+			}
 		}
 	
 		return false;
