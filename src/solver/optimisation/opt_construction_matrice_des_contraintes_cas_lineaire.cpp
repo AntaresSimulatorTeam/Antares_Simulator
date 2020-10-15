@@ -65,7 +65,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 	CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES  * CorrespondanceCntNativesCntOptimJournalieres;
 	CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES * CorrespondanceCntNativesCntOptimHebdomadaires;
 
-	double * Pi; int * Colonne; double X;
+	double * Pi; int * Colonne;
 
 	bool exportStructure = ProblemeHebdo->ExportStructure;
 

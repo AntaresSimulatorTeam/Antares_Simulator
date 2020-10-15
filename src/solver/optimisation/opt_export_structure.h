@@ -30,7 +30,6 @@
 #include <vector>
 #include <string>
 
-#include <stdint.h>
 #include <yuni/yuni.h>
 
 #include <antares/Enum.hpp>
