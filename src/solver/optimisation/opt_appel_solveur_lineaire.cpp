@@ -257,11 +257,11 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 		{
 			logs.info() << " Solver: Safe resolution succeeded";
 		}
-	  CoutOpt = 0.0;
+		CoutOpt = 0.0;
 	
 		for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ ) {
 	  
-		CoutOpt+= ProblemeAResoudre->CoutLineaire[Var] * ProblemeAResoudre->X[Var];		
+			CoutOpt+= ProblemeAResoudre->CoutLineaire[Var] * ProblemeAResoudre->X[Var];		
 		
 			pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
 			if ( pt != NULL ) *pt = ProblemeAResoudre->X[Var];
@@ -290,35 +290,6 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 		logs.error() << "* last resort shedding status,";
 		logs.error() << "* negative hurdle costs on lines with infinite capacity,";
 		logs.error() << "* Hydro reservoir impossible to manage with cumulative options \"hard bounds without heuristic\"";
-	
-	
-	
-	
-		if (0)
-		{
-			logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
-			logs.info() << "Here is the trace:";
-			for (Cnt = 0 ; Cnt < ProblemeAResoudre->NombreDeContraintes; ++Cnt) {
-			
-				logs.info().appendFormat("Constraint %ld sens %c B %e",
-					Cnt,ProblemeAResoudre->Sens[Cnt],ProblemeAResoudre->SecondMembre[Cnt]);
-
-				il = ProblemeAResoudre->IndicesDebutDeLigne[Cnt];
-				ilMax = il + ProblemeAResoudre->NombreDeTermesDesLignes[Cnt];
-				while (il < ilMax) {
-					Var = ProblemeAResoudre->IndicesColonnes[il];
-					logs.info().appendFormat("      il %ld coeff %e var %ld xmin %e xmax %e type %ld cout %e",
-							il,  ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il],
-							Var, ProblemeAResoudre->Xmin[Var],
-							ProblemeAResoudre->Xmax[Var],
-							ProblemeAResoudre->TypeDeVariable[Var], ProblemeAResoudre->CoutLineaire[Var]);
-					il++;
-				}
-			}
-
-		
-			logs.info() << LOG_UI_DISPLAY_MESSAGES_ON;
-		}
 
 	
 	  if ( ProblemeHebdo->ExportMPS == NON_ANTARES) {
@@ -337,161 +308,132 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 
 bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int NumIntervalle )
 {
-int Var; int Cnt; double * pt; int il; int ilMax; double CoutOpt; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
-int * TypeEntierOuReel; PROBLEME_A_RESOUDRE ProblemePourPne; double u;
+	int Var; int Cnt; double * pt; int il; int ilMax; double CoutOpt; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
+	int * TypeEntierOuReel; PROBLEME_A_RESOUDRE ProblemePourPne; double u;
 
-ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
-TypeEntierOuReel = (int *) ProblemeAResoudre->CoutsReduits; 
-for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ ) TypeEntierOuReel[Var] = REEL;
-
-
-
-ProblemePourPne.NombreDeVariables       = ProblemeAResoudre->NombreDeVariables;
-ProblemePourPne.TypeDeVariable          = TypeEntierOuReel;
-ProblemePourPne.TypeDeBorneDeLaVariable = ProblemeAResoudre->TypeDeVariable; 
-ProblemePourPne.X                       = ProblemeAResoudre->X;
-ProblemePourPne.Xmax                    = ProblemeAResoudre->Xmax;
-ProblemePourPne.Xmin                    = ProblemeAResoudre->Xmin;
-ProblemePourPne.CoutLineaire            = ProblemeAResoudre->CoutLineaire;
-ProblemePourPne.NombreDeContraintes                   = ProblemeAResoudre->NombreDeContraintes;
-ProblemePourPne.SecondMembre                          = ProblemeAResoudre->SecondMembre;
-ProblemePourPne.Sens                                  = ProblemeAResoudre->Sens;
-ProblemePourPne.IndicesDebutDeLigne                   = ProblemeAResoudre->IndicesDebutDeLigne;
-ProblemePourPne.NombreDeTermesDesLignes               = ProblemeAResoudre->NombreDeTermesDesLignes;
-ProblemePourPne.CoefficientsDeLaMatriceDesContraintes = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes;
-ProblemePourPne.IndicesColonnes                       = ProblemeAResoudre->IndicesColonnes;
-ProblemePourPne.VariablesDualesDesContraintes         = ProblemeAResoudre->CoutsMarginauxDesContraintes;
-ProblemePourPne.SortirLesDonneesDuProbleme = NON_PNE;
-ProblemePourPne.AlgorithmeDeResolution     = SIMPLEXE;   
-ProblemePourPne.CoupesLiftAndProject       = NON_PNE; 
-ProblemePourPne.AffichageDesTraces = NON_PNE;
-ProblemePourPne.FaireDuPresolve = OUI_PNE ; 
-if ( ProblemeAResoudre->NumeroDOptimisation == DEUXIEME_OPTIMISATION ) {
-  ProblemePourPne.FaireDuPresolve = NON_PNE; 
-
-}
+	TypeEntierOuReel = (int *) ProblemeAResoudre->CoutsReduits; 
+	for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ ) TypeEntierOuReel[Var] = REEL;
 
 
 
-ProblemePourPne.TempsDExecutionMaximum       = 0;  
-ProblemePourPne.NombreMaxDeSolutionsEntieres = -1;   
-ProblemePourPne.ToleranceDOptimalite         = 1.e-4; 
+	ProblemePourPne.NombreDeVariables       = ProblemeAResoudre->NombreDeVariables;
+	ProblemePourPne.TypeDeVariable          = TypeEntierOuReel;
+	ProblemePourPne.TypeDeBorneDeLaVariable = ProblemeAResoudre->TypeDeVariable; 
+	ProblemePourPne.X                       = ProblemeAResoudre->X;
+	ProblemePourPne.Xmax                    = ProblemeAResoudre->Xmax;
+	ProblemePourPne.Xmin                    = ProblemeAResoudre->Xmin;
+	ProblemePourPne.CoutLineaire            = ProblemeAResoudre->CoutLineaire;
+	ProblemePourPne.NombreDeContraintes                   = ProblemeAResoudre->NombreDeContraintes;
+	ProblemePourPne.SecondMembre                          = ProblemeAResoudre->SecondMembre;
+	ProblemePourPne.Sens                                  = ProblemeAResoudre->Sens;
+	ProblemePourPne.IndicesDebutDeLigne                   = ProblemeAResoudre->IndicesDebutDeLigne;
+	ProblemePourPne.NombreDeTermesDesLignes               = ProblemeAResoudre->NombreDeTermesDesLignes;
+	ProblemePourPne.CoefficientsDeLaMatriceDesContraintes = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes;
+	ProblemePourPne.IndicesColonnes                       = ProblemeAResoudre->IndicesColonnes;
+	ProblemePourPne.VariablesDualesDesContraintes         = ProblemeAResoudre->CoutsMarginauxDesContraintes;
+	ProblemePourPne.SortirLesDonneesDuProbleme = NON_PNE;
+	ProblemePourPne.AlgorithmeDeResolution     = SIMPLEXE;   
+	ProblemePourPne.CoupesLiftAndProject       = NON_PNE; 
+	ProblemePourPne.AffichageDesTraces = NON_PNE;
+	ProblemePourPne.FaireDuPresolve = OUI_PNE ; 
+	if ( ProblemeAResoudre->NumeroDOptimisation == DEUXIEME_OPTIMISATION ) {
+	  ProblemePourPne.FaireDuPresolve = NON_PNE; 
 
-
-
-
-
-
-
-if (OrtoolsUtils::OrtoolsUsed) {
-
-	ORTOOLS_Simplexe_PNE(&ProblemePourPne, NULL);
-
-} else {
-
-	PNE_Solveur(&ProblemePourPne);// , NULL);
-
-	if ( ProblemeHebdo->ExportMPS == OUI_ANTARES) OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &ProblemePourPne, numSpace, ANTARES_PNE );
-
-}
-ProblemeAResoudre->ExistenceDUneSolution = ProblemePourPne.ExistenceDUneSolution;
-
-if ( ProblemeAResoudre->ExistenceDUneSolution == ARRET_CAR_ERREUR_INTERNE ) {
-  logs.info(); 
-  logs.error() << "Internal error: insufficient memory";
-  logs.info(); 
-  AntaresSolverEmergencyShutdown();
-  return false;
-}
-
-
-bool sol_opt_trouvee = (ProblemeAResoudre->ExistenceDUneSolution == SOLUTION_OPTIMALE_TROUVEE);
-sol_opt_trouvee = (sol_opt_trouvee || ProblemeAResoudre->ExistenceDUneSolution == SOLUTION_OPTIMALE_TROUVEE_MAIS_QUELQUES_CONTRAINTES_SONT_VIOLEES);
-if (sol_opt_trouvee) {
-  CoutOpt = 0.0;
-	
-
-	
-	for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ ) ProblemeAResoudre->CoutsReduits[Var] = ProblemeAResoudre->CoutLineaire[Var];
-  for ( Cnt = 0 ; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++ ) {
-	  il = ProblemeAResoudre->IndicesDebutDeLigne[Cnt];
-		ilMax = il + ProblemeAResoudre->NombreDeTermesDesLignes[Cnt];
-		u = ProblemeAResoudre->CoutsMarginauxDesContraintes[Cnt];
-		while ( il < ilMax ) {
-      Var = ProblemeAResoudre->IndicesColonnes[il];
-			ProblemeAResoudre->CoutsReduits[Var] -= u * ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il];
-  	  il++;
-		}
-	}
-	
-	for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ ) {
-	  
-    CoutOpt+= ProblemeAResoudre->CoutLineaire[Var] * ProblemeAResoudre->X[Var];		
-		
-		pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
-		if ( pt != NULL ) *pt = ProblemeAResoudre->X[Var];
-		pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var];
-		if ( pt != NULL ) *pt = ProblemeAResoudre->CoutsReduits[Var];
 	}
 
-	if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION)
-		ProblemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
-	else
-		ProblemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
 
-	
-	for ( Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++ ) {
-		pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt];
-		if ( pt != NULL ) *pt = ProblemeAResoudre->CoutsMarginauxDesContraintes[Cnt];
+
+	ProblemePourPne.TempsDExecutionMaximum       = 0;  
+	ProblemePourPne.NombreMaxDeSolutionsEntieres = -1;   
+	ProblemePourPne.ToleranceDOptimalite         = 1.e-4; 
+
+
+
+
+
+
+
+	if (OrtoolsUtils::OrtoolsUsed) {
+
+		ORTOOLS_Simplexe_PNE(&ProblemePourPne, NULL);
+
+	} else {
+
+		PNE_Solveur(&ProblemePourPne);// , NULL);
+
+		if ( ProblemeHebdo->ExportMPS == OUI_ANTARES) OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &ProblemePourPne, numSpace, ANTARES_PNE );
+
 	}
+	ProblemeAResoudre->ExistenceDUneSolution = ProblemePourPne.ExistenceDUneSolution;
+
+	if ( ProblemeAResoudre->ExistenceDUneSolution == ARRET_CAR_ERREUR_INTERNE ) {
+		logs.info(); 
+		logs.error() << "Internal error: insufficient memory";
+		logs.info(); 
+		AntaresSolverEmergencyShutdown();
+		return false;
+	}
+
+
+	bool sol_opt_trouvee = (ProblemeAResoudre->ExistenceDUneSolution == SOLUTION_OPTIMALE_TROUVEE);
+	sol_opt_trouvee = (sol_opt_trouvee || ProblemeAResoudre->ExistenceDUneSolution == SOLUTION_OPTIMALE_TROUVEE_MAIS_QUELQUES_CONTRAINTES_SONT_VIOLEES);
+	if (sol_opt_trouvee) {
+		CoutOpt = 0.0;
 	
-}
-else {
-	logs.error() << "Infeasible linear problem encountered. Possible causes:";
-	logs.error() << "* binding constraints,";
-	logs.error() << "* last resort shedding status,";
-	logs.error() << "* negative hurdle costs on lines with infinite capacity,";
-	logs.error() << "* Hydro reservoir impossible to manage with cumulative options \"hard bounds without heuristic\"";
 
 	
-	
-	
-	if (0)
-	{
-		logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
-		logs.info() << "Here is the trace:";
-		for (Cnt = 0 ; Cnt < ProblemeAResoudre->NombreDeContraintes; ++Cnt) {
-			
-			logs.info().appendFormat("Constraint %ld sens %c B %e",
-				Cnt,ProblemeAResoudre->Sens[Cnt],ProblemeAResoudre->SecondMembre[Cnt]);
-
+		for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ ) ProblemeAResoudre->CoutsReduits[Var] = ProblemeAResoudre->CoutLineaire[Var];
+		for ( Cnt = 0 ; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++ ) {
 			il = ProblemeAResoudre->IndicesDebutDeLigne[Cnt];
 			ilMax = il + ProblemeAResoudre->NombreDeTermesDesLignes[Cnt];
-			while (il < ilMax) {
+			u = ProblemeAResoudre->CoutsMarginauxDesContraintes[Cnt];
+			while ( il < ilMax ) {
 				Var = ProblemeAResoudre->IndicesColonnes[il];
-				logs.info().appendFormat("      il %ld coeff %e var %ld xmin %e xmax %e type %ld cout %e",
-						il,  ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il],
-						Var, ProblemeAResoudre->Xmin[Var],
-						ProblemeAResoudre->Xmax[Var],
-						ProblemeAResoudre->TypeDeVariable[Var], ProblemeAResoudre->CoutLineaire[Var]);
-				il++;
+				ProblemeAResoudre->CoutsReduits[Var] -= u * ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il];
+  				il++;
 			}
 		}
-
+	
+		for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ ) {
+	  
+			CoutOpt+= ProblemeAResoudre->CoutLineaire[Var] * ProblemeAResoudre->X[Var];		
 		
-		logs.info() << LOG_UI_DISPLAY_MESSAGES_ON;
-	}
+			pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
+			if ( pt != NULL ) *pt = ProblemeAResoudre->X[Var];
+			pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var];
+			if ( pt != NULL ) *pt = ProblemeAResoudre->CoutsReduits[Var];
+		}
+
+		if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION)
+			ProblemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
+		else
+			ProblemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
 
 	
-  if ( ProblemeHebdo->ExportMPS == NON_ANTARES) {	
-	 OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &ProblemePourPne, numSpace, ANTARES_PNE );	
-	}
+		for ( Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++ ) {
+			pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt];
+			if ( pt != NULL ) *pt = ProblemeAResoudre->CoutsMarginauxDesContraintes[Cnt];
+		}
 	
-	return false;
-}
+	}
+	else {
+		logs.error() << "Infeasible linear problem encountered. Possible causes:";
+		logs.error() << "* binding constraints,";
+		logs.error() << "* last resort shedding status,";
+		logs.error() << "* negative hurdle costs on lines with infinite capacity,";
+		logs.error() << "* Hydro reservoir impossible to manage with cumulative options \"hard bounds without heuristic\"";	
 
-return true;
+	
+		if ( ProblemeHebdo->ExportMPS == NON_ANTARES) {	
+			OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &ProblemePourPne, numSpace, ANTARES_PNE );	
+		}
+	
+		return false;
+	}
+
+	return true;
 }
 
 
