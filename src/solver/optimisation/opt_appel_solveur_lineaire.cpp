@@ -212,12 +212,15 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 	}
 
 	if ( ProblemeHebdo->ExportMPS == OUI_ANTARES)
+	{
 		if (OrtoolsUtils::OrtoolsUsed) {
 			int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
 			ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
 		}
 		else
-			OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void *)&Probleme, numSpace, ANTARES_SIMPLEXE);
+		{
+			OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace, ANTARES_SIMPLEXE);
+		}
 	}
 
 	ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
@@ -402,7 +405,6 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 	if (sol_opt_trouvee)
 	{
 		CoutOpt = 0.0;
-	
 		for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ )
 			ProblemeAResoudre->CoutsReduits[Var] = ProblemeAResoudre->CoutLineaire[Var];
 
@@ -478,7 +480,6 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 		
 			logs.info() << LOG_UI_DISPLAY_MESSAGES_ON;
 		}
-	
 		//Write MPS only if exportMPSOnError is activated and MPS weren't exported before with ExportMPS option
 		if ( ProblemeHebdo->ExportMPS == NON_ANTARES && ProblemeHebdo->exportMPSOnError)
 		{	
@@ -509,7 +510,6 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void * Prob, uint numSpace, 
 	Flot = study.createCriterionFileIntoOutput(numSpace);
 	if (!Flot)
 		exit(2);
-
 	
 	fprintf(Flot,"* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);	
 
@@ -556,7 +556,6 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( void * Prob, uint numSpace, char
 		CoefficientsDeLaMatriceDesContraintes = Probleme->CoefficientsDeLaMatriceDesContraintes;
 		IndicesColonnes                       = Probleme->IndicesColonnes;
 	}
-  
 	else
 	{
 		ProblemePourPne = (PROBLEME_A_RESOUDRE *) Prob;
