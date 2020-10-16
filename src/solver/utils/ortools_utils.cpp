@@ -9,24 +9,6 @@
 
 using namespace operations_research;
 
-
-/**
- * Retourne la consommation actuelle de memoire
- */
-size_t current_memory_usage(std::string const & message)
-{
-	Yuni::System::Memory::Usage memory;
-	memory.available /= 1024 * 1024; // Mib
-	memory.total   /= 1024 * 1024; // Mib
-
-	Antares::logs.info() << message << ", system memory report: "
-		<< memory.available << " Mib / "
-		<< memory.total  << " Mib,  "
-		<< (100. / memory.total * memory.available) << "% free";
-
-	return memory.total - memory.available;
-}
-
 template<typename T_PROBLEM>
 operations_research::MPSolver * convert_to_MPSolver(T_PROBLEM * problemeSimplexe);
 

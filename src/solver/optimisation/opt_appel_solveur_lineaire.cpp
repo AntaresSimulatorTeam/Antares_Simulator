@@ -207,8 +207,6 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 		ProbSpx = SPX_Simplexe(&Probleme, (PROBLEME_SPX *)ProbSpx);
 	}
 
-	current_memory_usage("after resolution");
-
 	if ( ProbSpx != NULL )
 	{  
 		(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[NumIntervalle] = (void *) ProbSpx;
