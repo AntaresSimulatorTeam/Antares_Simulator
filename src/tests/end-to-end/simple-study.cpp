@@ -39,7 +39,7 @@ void CHECK_VARIABLE(
 
 { 
 	/*Get value*/
-	Antares::Solver::Variable::Storage<VCard>::ResultsType* result = nullptr;
+	typename Antares::Solver::Variable::Storage<VCard>::ResultsType* result = nullptr;
 	simulation->variables.retrieveResultsForArea<VCard>(&result, pArea);
 	BOOST_CHECK(result->avgdata.hourly[0] == expectedHourlyValue);
 	BOOST_CHECK(result->avgdata.daily[0]  == expectedHourlyValue * 24);
