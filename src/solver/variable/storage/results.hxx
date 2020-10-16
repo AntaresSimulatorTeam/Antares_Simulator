@@ -60,8 +60,6 @@ namespace Variable
 	inline void
 	Results<FirstDecoratorT,DecoratorForSpatialAggregateT>::merge(uint year, const IntermediateValues& data)
 	{
-		for (uint i = 0; i != maxHoursInAYear; ++i)
-			DecoratorType::mergeHourInYear(year, i, data.hour[i]);
 		DecoratorType::merge(year, data);
 		data.flush();
 	}

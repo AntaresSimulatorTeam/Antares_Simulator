@@ -94,12 +94,6 @@ namespace AllYears
 			NextType::merge(year, rhs);
 		}
 
-		void mergeHourInYear(uint year, uint hour, const double value)
-		{
-			// Next
-			NextType::mergeHourInYear(year, hour, value);
-		}
-
 
 		template<class S, class VCardT>
 		void buildSurveyReport(SurveyResults& report, const S& results, int dataLevel, int fileLevel, int precision) const
