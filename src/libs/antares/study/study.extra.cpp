@@ -64,11 +64,14 @@ namespace Data
 
 	void Study::scenarioRulesCreate(const RulesScenarioName& /*thisoneonly*/)
 	{
-		// releasing the previous instance of the scenario builder
-		delete scenarioRules;
-		// When ran from the solver, the scenario builder must be present
-		scenarioRules = new ScenarioBuilder::Sets();
-		scenarioRules->loadFromStudy(*this);
+		if (!scenarioRules)
+		{
+			// releasing the previous instance of the scenario builder
+			//delete scenarioRules;
+			// When ran from the solver, the scenario builder must be present
+			scenarioRules = new ScenarioBuilder::Sets();
+			scenarioRules->loadFromStudy(*this);
+		}
 	}
 
 
