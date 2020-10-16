@@ -12,7 +12,6 @@ extern "C"
 
 using namespace operations_research;
 
-size_t current_memory_usage(std::string const & message);
 
 std::string getRunName(std::string const & prefix, size_t numSpace, int numInterval, int numOptim);
 

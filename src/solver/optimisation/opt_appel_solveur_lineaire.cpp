@@ -93,18 +93,21 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 {
 	int Var; int Cnt; double * pt; int il; int ilMax; int Classe; char PremierPassage;
 	double CoutOpt; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre; PROBLEME_SIMPLEXE Probleme;
-	void * ProbSpx;
+	PROBLEME_SPX* ProbSpx;
 	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 	PremierPassage = OUI_ANTARES;
 	Classe = ProblemeAResoudre->NumeroDeClasseDeManoeuvrabiliteActiveEnCours;
-	ProbSpx = ((ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[(int) NumIntervalle]);
+	MPSolver* solver;
+
+	ProbSpx = (PROBLEME_SPX*) ((ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[(int) NumIntervalle]);
+	solver  = (MPSolver*)((ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[(int)NumIntervalle]);
 
 	auto& study			= *Data::Study::Current::Get();
 	bool ortoolsUsed	= study.parameters.ortoolsUsed;
 
 	RESOLUTION:
 
-	if ( ProbSpx == NULL )
+	if ( ProbSpx == NULL && solver == NULL)
 	{
 		Probleme.Contexte            = SIMPLEXE_SEUL;
 		Probleme.BaseDeDepartFournie = NON_SPX;
@@ -113,15 +116,16 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 	{
 		if (ProblemeHebdo->ReinitOptimisation == OUI_ANTARES )
 		{	
-			if (ortoolsUsed) {
-			    ORTOOLS_LibererProbleme( ProbSpx );
+			if (ortoolsUsed && solver!=NULL ) {
+			    ORTOOLS_LibererProbleme(solver);
 		    }
-		    else {
-			    SPX_LibererProbleme((PROBLEME_SPX *)ProbSpx);
+		    else if(ProbSpx != NULL) {
+			    SPX_LibererProbleme(ProbSpx);
 		    }
 			(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[(int) NumIntervalle] = NULL;
 
 			ProbSpx  = NULL;
+			solver = NULL;
 			Probleme.Contexte = SIMPLEXE_SEUL;
 			Probleme.BaseDeDepartFournie = NON_SPX;	
 		}
@@ -131,13 +135,13 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 			Probleme.BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
 
 			if (ortoolsUsed) {
-		        ORTOOLS_ModifierLeVecteurCouts(ProbSpx, ProblemeAResoudre->CoutLineaire, ProblemeAResoudre->NombreDeVariables);
-		        ORTOOLS_ModifierLeVecteurSecondMembre(ProbSpx, ProblemeAResoudre->SecondMembre, ProblemeAResoudre->Sens, ProblemeAResoudre->NombreDeContraintes);
-		        ORTOOLS_CorrigerLesBornes(ProbSpx, ProblemeAResoudre->Xmin, ProblemeAResoudre->Xmax, ProblemeAResoudre->TypeDeVariable, ProblemeAResoudre->NombreDeVariables, &Probleme);
+		        ORTOOLS_ModifierLeVecteurCouts(solver, ProblemeAResoudre->CoutLineaire, ProblemeAResoudre->NombreDeVariables);
+		        ORTOOLS_ModifierLeVecteurSecondMembre(solver, ProblemeAResoudre->SecondMembre, ProblemeAResoudre->Sens, ProblemeAResoudre->NombreDeContraintes);
+		        ORTOOLS_CorrigerLesBornes(solver, ProblemeAResoudre->Xmin, ProblemeAResoudre->Xmax, ProblemeAResoudre->TypeDeVariable, ProblemeAResoudre->NombreDeVariables, &Probleme);
 	        }
 	        else {
-		        SPX_ModifierLeVecteurCouts((PROBLEME_SPX *)ProbSpx, ProblemeAResoudre->CoutLineaire, ProblemeAResoudre->NombreDeVariables);
-		        SPX_ModifierLeVecteurSecondMembre((PROBLEME_SPX *)ProbSpx, ProblemeAResoudre->SecondMembre, ProblemeAResoudre->Sens, ProblemeAResoudre->NombreDeContraintes);
+		        SPX_ModifierLeVecteurCouts(ProbSpx, ProblemeAResoudre->CoutLineaire, ProblemeAResoudre->NombreDeVariables);
+		        SPX_ModifierLeVecteurSecondMembre(ProbSpx, ProblemeAResoudre->SecondMembre, ProblemeAResoudre->Sens, ProblemeAResoudre->NombreDeContraintes);
 	        }
 		}
 	}
@@ -195,22 +199,22 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 
 	Probleme.NombreDeContraintesCoupes = 0;
 
-
-	MPSolver * solver = NULL;
+	
 	if (ortoolsUsed) {
-		solver = (MPSolver *) ORTOOLS_Simplexe(&Probleme, ProbSpx);
-		ProbSpx = solver;
+		solver = ORTOOLS_Simplexe(&Probleme,solver);
+		if (solver != NULL)
+		{
+			(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[NumIntervalle] = (void*)solver;
+		}
 	}
 	else
 	{
-
-		ProbSpx = SPX_Simplexe(&Probleme, (PROBLEME_SPX *)ProbSpx);
-	}
-
-	if ( ProbSpx != NULL )
-	{  
-		(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[NumIntervalle] = (void *) ProbSpx;
-	}
+		ProbSpx = SPX_Simplexe(&Probleme,ProbSpx);
+		if (ProbSpx != NULL)
+		{
+			(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
+		}
+	}	
 
 	if ( ProblemeHebdo->ExportMPS == OUI_ANTARES)
 	{
@@ -228,15 +232,15 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 
 
 
-	if ( ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage == OUI_ANTARES && ProbSpx != NULL )
+	if ( ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage == OUI_ANTARES)
 	{
 		if ( ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE )
 		{
-		   if (ortoolsUsed) {
-	 		  ORTOOLS_LibererProbleme( ProbSpx );
+		   if (ortoolsUsed && solver != NULL) {
+	 		  ORTOOLS_LibererProbleme(solver);
 		   }
-		   else {
-		 	  SPX_LibererProbleme((PROBLEME_SPX *)ProbSpx);
+		   else if (ProbSpx != NULL) {
+		 	  SPX_LibererProbleme(ProbSpx);
 		   }
 
 		    logs.info() << " Solver: Standard resolution failed"; 
@@ -247,6 +251,7 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 				logs.info() << " solver: resetting";
 			}
 			ProbSpx = NULL;
+			solver  = NULL;
 			PremierPassage = NON_ANTARES;
 			goto RESOLUTION;
 		}
@@ -381,7 +386,7 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 	MPSolver* solver = NULL;
 	if (ortoolsUsed) {
 
-		solver = (MPSolver*) ORTOOLS_Simplexe_PNE(&ProblemePourPne, NULL);
+		solver = ORTOOLS_Simplexe_PNE(&ProblemePourPne, NULL);
 		
 		if (ProblemeHebdo->ExportMPS == OUI_ANTARES)
 		{
@@ -500,8 +505,18 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 				OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&ProblemePourPne, numSpace, ANTARES_PNE);
 			}
 		}
+		
+		if (solver != NULL)
+		{			
+			ORTOOLS_LibererProbleme(solver);
+		}
 	
 		return false;
+	}
+	
+	if (solver != NULL)
+	{			
+		ORTOOLS_LibererProbleme(solver);
 	}
 
 	return true;

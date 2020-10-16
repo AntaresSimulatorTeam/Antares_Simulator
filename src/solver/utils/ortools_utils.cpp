@@ -10,16 +10,16 @@
 using namespace operations_research;
 
 template<typename T_PROBLEM>
-operations_research::MPSolver * convert_to_MPSolver(T_PROBLEM * problemeSimplexe);
+MPSolver * convert_to_MPSolver(T_PROBLEM * problemeSimplexe);
 
-void extract_from_MPSolver(operations_research::MPSolver * solver, PROBLEME_SIMPLEXE * problemeSimplexe);
-void extract_from_MPSolver(operations_research::MPSolver * solver, PROBLEME_A_RESOUDRE * problemeSimplexe);
+void extract_from_MPSolver(MPSolver * solver, PROBLEME_SIMPLEXE * problemeSimplexe);
+void extract_from_MPSolver(MPSolver * solver, PROBLEME_A_RESOUDRE * problemeSimplexe);
 
-void change_MPSolver_objective(operations_research::MPSolver * solver, double * costs, int nbVar);
-void change_MPSolver_rhs(operations_research::MPSolver * solver, double * rhs, char * sens, int nbRow);
-void change_MPSolver_variables_bounds(operations_research::MPSolver * solver, double * bMin, double * bMax, int nbVar, PROBLEME_SIMPLEXE * problemeSimplexe);
+void change_MPSolver_objective(MPSolver * solver, double * costs, int nbVar);
+void change_MPSolver_rhs(MPSolver * solver, double * rhs, char * sens, int nbRow);
+void change_MPSolver_variables_bounds(MPSolver * solver, double * bMin, double * bMax, int nbVar, PROBLEME_SIMPLEXE * problemeSimplexe);
 
-void transferVariables(operations_research::MPSolver * solver, double * bMin, double * bMax, double * costs, int nbVar) {
+void transferVariables(MPSolver * solver, double * bMin, double * bMax, double * costs, int nbVar) {
 	MPObjective* const objective = solver->MutableObjective();
 	for (int idxVar = 0; idxVar < nbVar; ++idxVar) {
 		std::ostringstream oss;
@@ -34,7 +34,7 @@ void transferVariables(operations_research::MPSolver * solver, double * bMin, do
 	}
 }
 
-void transferRows(operations_research::MPSolver * solver, double * rhs, char * sens, int nbRow) {
+void transferRows(MPSolver * solver, double * rhs, char * sens, int nbRow) {
 	for (int idxRow = 0; idxRow < nbRow; ++idxRow) {
 		double bMin = -MPSolver::infinity(), bMax = MPSolver::infinity();
 		if (sens[idxRow] == '=') {
@@ -52,7 +52,7 @@ void transferRows(operations_research::MPSolver * solver, double * rhs, char * s
 	}
 }
 
-void transferMatrix(operations_research::MPSolver * solver, int * indexRows, int * terms, int * indexCols, double * coeffs, int nbRow) {
+void transferMatrix(MPSolver * solver, int * indexRows, int * terms, int * indexCols, double * coeffs, int nbRow) {
 	auto variables = solver->variables();
 	auto constraints = solver->constraints();
 
@@ -179,7 +179,7 @@ void change_MPSolver_rhs(MPSolver * solver, double * rhs, char * sens, int nbRow
 	}
 }
 
-void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(operations_research::MPSolver * solver, size_t numSpace, int const n) {
+void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver * solver, size_t numSpace, int const n) {
 		auto& study = *Antares::Data::Study::Current::Get();
 
 		int const year = study.runtime->currentYear[numSpace] + 1;
@@ -199,7 +199,7 @@ std::string getRunName(std::string const & prefix, size_t numSpace, int numInter
 	return buffer.str();
 }
 
-bool solveAndManageStatus(operations_research::MPSolver * solver, int & resultStatus, MPSolverParameters& params) {
+bool solveAndManageStatus(MPSolver * solver, int & resultStatus, MPSolverParameters& params) {
 	auto status = solver->Solve(params);
 
 	if (status == MPSolver::OPTIMAL || status == MPSolver::FEASIBLE) {
@@ -212,16 +212,12 @@ bool solveAndManageStatus(operations_research::MPSolver * solver, int & resultSt
 	return resultStatus == OUI_SPX;
 }
 
-void * solveProblem(PROBLEME_SIMPLEXE * Probleme, void * ProbSpx) {
+MPSolver* solveProblem(PROBLEME_SIMPLEXE * Probleme, MPSolver* ProbSpx) {
 
-	operations_research::MPSolver * solver = nullptr;
+	MPSolver * solver = ProbSpx;
 
-	if (ProbSpx == NULL) {
+	if (solver == NULL) {
 		solver = convert_to_MPSolver(Probleme);
-		//solver->EnableOutput();
-	}
-	else {
-		solver = (MPSolver *)ProbSpx;
 	}
 
 	MPSolverParameters params;
@@ -233,16 +229,12 @@ void * solveProblem(PROBLEME_SIMPLEXE * Probleme, void * ProbSpx) {
 	return solver;
 }
 
-void * solveProblem(PROBLEME_A_RESOUDRE * Probleme, void * ProbSpx) {
+MPSolver* solveProblem(PROBLEME_A_RESOUDRE * Probleme, MPSolver* ProbSpx) {
 
-	operations_research::MPSolver * solver = nullptr;
+	MPSolver * solver = ProbSpx;
 
-	if (ProbSpx == NULL) {
+	if (solver == NULL) {
 		solver = convert_to_MPSolver(Probleme);
-		//solver->EnableOutput();
-	}
-	else {
-		solver = (MPSolver *)ProbSpx;
 	}
 
 	MPSolverParameters params;
@@ -258,40 +250,35 @@ void * solveProblem(PROBLEME_A_RESOUDRE * Probleme, void * ProbSpx) {
 		extract_from_MPSolver(solver, Probleme);
 	}
 
-	delete solver;
-	solver = nullptr;
-
 	return solver;
 }
 
 extern "C" {
 
-void * ORTOOLS_Simplexe(PROBLEME_SIMPLEXE * Probleme, void * ProbSpx) {
+MPSolver* ORTOOLS_Simplexe(PROBLEME_SIMPLEXE * Probleme, MPSolver* ProbSpx) {
 	return solveProblem(Probleme, ProbSpx);
 }
 
-void * ORTOOLS_Simplexe_PNE(PROBLEME_A_RESOUDRE * Probleme, void * ProbSpx) {
+MPSolver* ORTOOLS_Simplexe_PNE(PROBLEME_A_RESOUDRE * Probleme, MPSolver* ProbSpx) {
 	return solveProblem(Probleme, ProbSpx);
 }
 
-void ORTOOLS_ModifierLeVecteurCouts(void * ProbSpx, double * costs, int nbVar) {
-	MPSolver * solver = (MPSolver *)ProbSpx;
+void ORTOOLS_ModifierLeVecteurCouts(MPSolver* solver, double * costs, int nbVar) {
+	
 	change_MPSolver_objective(solver, costs, nbVar);
 }
 
-void ORTOOLS_ModifierLeVecteurSecondMembre(void * ProbSpx, double * rhs, char * sens, int nbRow) {
-	MPSolver * solver = (MPSolver *)ProbSpx;
+void ORTOOLS_ModifierLeVecteurSecondMembre(MPSolver* solver, double * rhs, char * sens, int nbRow) {
 	change_MPSolver_rhs(solver, rhs, sens, nbRow);
 }
 
-void ORTOOLS_CorrigerLesBornes(void * ProbSpx, double * bMin, double * bMax, int * typeVar, int nbVar, PROBLEME_SIMPLEXE * Probleme) {
-	MPSolver * solver = (MPSolver *)ProbSpx;
+void ORTOOLS_CorrigerLesBornes(MPSolver* solver, double * bMin, double * bMax, int * typeVar, int nbVar, PROBLEME_SIMPLEXE * Probleme) {
+	
 	Probleme->TypeDeVariable = typeVar;
 	change_MPSolver_variables_bounds(solver, bMin, bMax, nbVar, Probleme);
 }
 
-void ORTOOLS_LibererProbleme(void * ProbSpx) {
-	MPSolver * solver = (MPSolver *)ProbSpx;
+void ORTOOLS_LibererProbleme(MPSolver* solver) {
 	delete solver;
 }
 

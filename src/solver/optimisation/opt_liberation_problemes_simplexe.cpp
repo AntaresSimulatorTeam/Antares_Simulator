@@ -82,6 +82,7 @@ void OPT_LiberationProblemesSimplexe( PROBLEME_HEBDO * ProblemeHebdo )
 {
 int i; PROBLEME_SPX * ProbSpx; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
 int NbIntervalles; int NumIntervalle; int NombreDePasDeTempsPourUneOptimisation;
+MPSolver* solver;
 
 if ( ProblemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES ) {
 	NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
@@ -102,17 +103,18 @@ if (ProblemeAResoudre) {
 		
 		for ( i = 0 ; i < ProblemeHebdo->NombreDeClassesDeManoeuvrabiliteActives ; i++ ) {
 			for ( NumIntervalle = 0 ; NumIntervalle < NbIntervalles ; NumIntervalle++ ) {
-				ProbSpx = (PROBLEME_SPX *) ((ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[i])->ProblemeSpx[NumIntervalle]);
-				if (ProbSpx != NULL) {
 
-					if (ortoolsUsed) {
-						ORTOOLS_LibererProbleme(ProbSpx);
-					}
-					else {
-						SPX_LibererProbleme(ProbSpx);
-					}
-					(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[i])->ProblemeSpx[NumIntervalle] = NULL;
+				ProbSpx = (PROBLEME_SPX*) ((ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[i])->ProblemeSpx[NumIntervalle]);
+				solver  = (MPSolver*)((ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[i])->ProblemeSpx[NumIntervalle]);			
+
+				if (ortoolsUsed && solver != NULL) {
+					ORTOOLS_LibererProbleme(solver);
 				}
+				else if(ProbSpx != NULL) {
+					SPX_LibererProbleme( ProbSpx);
+				}
+
+				(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[i])->ProblemeSpx[NumIntervalle] = NULL;
 			}
 		}
 	}

@@ -9,11 +9,13 @@
 
 # include "../optimisation/opt_structure_probleme_a_resoudre.h"
 
-void * ORTOOLS_Simplexe(PROBLEME_SIMPLEXE * Probleme, void * ProbSpx);
-void * ORTOOLS_Simplexe_PNE(PROBLEME_A_RESOUDRE * Probleme, void * ProbSpx);
-void ORTOOLS_ModifierLeVecteurCouts(void * ProbSpx, double * costs, int nbVar);
-void ORTOOLS_ModifierLeVecteurSecondMembre(void * ProbSpx, double * rhs, char * sens, int nbRow);
-void ORTOOLS_CorrigerLesBornes(void * ProbSpx, double * bMin, double * bMax, int * typeVar, int nbVar, PROBLEME_SIMPLEXE * Probleme);
-void ORTOOLS_LibererProbleme(void * ProbSpx);
+using namespace operations_research;
+
+MPSolver* ORTOOLS_Simplexe(PROBLEME_SIMPLEXE * Probleme, MPSolver* ProbSpx);
+MPSolver* ORTOOLS_Simplexe_PNE(PROBLEME_A_RESOUDRE * Probleme, MPSolver* ProbSpx);
+void ORTOOLS_ModifierLeVecteurCouts(MPSolver* ProbSpx, double * costs, int nbVar);
+void ORTOOLS_ModifierLeVecteurSecondMembre(MPSolver* ProbSpx, double * rhs, char * sens, int nbRow);
+void ORTOOLS_CorrigerLesBornes(MPSolver* ProbSpx, double * bMin, double * bMax, int * typeVar, int nbVar, PROBLEME_SIMPLEXE * Probleme);
+void ORTOOLS_LibererProbleme(MPSolver* ProbSpx);
 
 # endif

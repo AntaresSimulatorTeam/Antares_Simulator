@@ -337,7 +337,7 @@ namespace Simulation
             pTitleOrtoolsSolverCombox = Antares::Component::CreateLabel(pBigDaddy, wxT("Ortools solver : "));
 
             pOrtoolsSolverCombox = new wxComboBox(pBigDaddy, wxID_ANY);
-            std::list<std::string> ortoolsSolverList = Data::OrtoolsUtils().getAvailableOrtoolsSolverName();
+            std::list<std::string> ortoolsSolverList = OrtoolsUtils().getAvailableOrtoolsSolverName();
             for (const std::string &ortoolsSolver : ortoolsSolverList) {
                 pOrtoolsSolverCombox->Append(ortoolsSolver);
             }
