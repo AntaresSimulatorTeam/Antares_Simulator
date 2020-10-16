@@ -1,6 +1,15 @@
 ﻿Antares Changelog
 =================
 
+v7.3.0 (xx/2020)
+-------------------- 
+
+### Features
+
+ - Ortools integration :
+   add command line option in antares-solver to define ortools use and ortools solver (option --use-ortools and --ortools-solver=<solver>)
+   add GUI option in run simulation to define antares-solver launch with ortools option
+
 
 v7.2.0 (06/2020)
 -------------------- 
