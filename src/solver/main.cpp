@@ -50,9 +50,6 @@
 #include "misc/system-memory.h"
 //#include <antares/proxy/proxy.h>
 
-#include <antares/Enum.hpp>
-#include "utils/ortools_utils.h"
-
 
 
 #ifdef YUNI_OS_WINDOWS
@@ -144,9 +141,6 @@ bool SolverApplication::prepare(int argc, char* argv[])
 	// Logs
 	Resources::WriteRootFolderToLogs();
 	logs.info()   << "  :: log filename: " << logs.logfile();
-
-	
-
 	// Temporary use a callback to count the number of errors and warnings
 	logs.callback.connect(this, &SolverApplication::onLogMessage);
 
@@ -160,17 +154,18 @@ bool SolverApplication::prepare(int argc, char* argv[])
 	// Loading the study
 	if (not readDataForTheStudy(options))
 		return false;
+
 	
 	// LISTE DE CHECKS ...
 
-	// CHECK incompatible de choix simultanÃ© des options Â« simplex range= daily Â» et Â« hydro-pricing = MILP Â». 
+	// CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing = MILP ». 
 	if ((pParameters->simplexOptimizationRange == Antares::Data::SimplexOptimization::sorDay) && (pParameters->hydroPricing.hpMode == Antares::Data::HydroPricingMode::hpMILP))
 	{
 		logs.error() << "Simplexe optimization range and hydro pricing mode : values are not compatible ";
 		return false;
 	}
 
-	// CHECK incompatible de choix simultanÃ© des options Â« simplex range= daily Â» et Â« unit-commitment = MILP Â». 
+	// CHECK incompatible de choix simultané des options « simplex range= daily » et « unit-commitment = MILP ». 
 	if ((pParameters->simplexOptimizationRange == Antares::Data::SimplexOptimization::sorDay) && (pParameters->unitCommitment.ucMode == Antares::Data::UnitCommitmentMode::ucMILP))
 	{
 		logs.error()<<"Simplexe optimization range and unit commitment mode : values are not compatible ";
