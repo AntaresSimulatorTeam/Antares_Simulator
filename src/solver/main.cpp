@@ -145,13 +145,7 @@ bool SolverApplication::prepare(int argc, char* argv[])
 	Resources::WriteRootFolderToLogs();
 	logs.info()   << "  :: log filename: " << logs.logfile();
 
-	//Indicate ortools solver used. Must be done outside grab option function because log filename is not set otherwise and the log won't be displayed in antares simulator ui
-    if (Data::OrtoolsUtils::OrtoolsUsed)
-    {
-        logs.info();
-        logs.info() << "  :: ortools solver " << Data::Enum::toString(Data::OrtoolsUtils::OrtoolsEnumUsed) << " used for problem resolution";
-        logs.info();
-    }
+	
 
 	// Temporary use a callback to count the number of errors and warnings
 	logs.callback.connect(this, &SolverApplication::onLogMessage);
@@ -166,7 +160,6 @@ bool SolverApplication::prepare(int argc, char* argv[])
 	// Loading the study
 	if (not readDataForTheStudy(options))
 		return false;
-
 	
 	// LISTE DE CHECKS ...
 

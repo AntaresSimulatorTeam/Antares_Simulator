@@ -99,6 +99,9 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 	Classe = ProblemeAResoudre->NumeroDeClasseDeManoeuvrabiliteActiveEnCours;
 	ProbSpx = ((ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[(int) NumIntervalle]);
 
+	auto& study			= *Data::Study::Current::Get();
+	bool ortoolsUsed	= study.parameters.ortoolsUsed;
+
 	RESOLUTION:
 
 	if ( ProbSpx == NULL )
@@ -110,7 +113,7 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 	{
 		if (ProblemeHebdo->ReinitOptimisation == OUI_ANTARES )
 		{	
-			if (OrtoolsUtils::OrtoolsUsed) {
+			if (ortoolsUsed) {
 			    ORTOOLS_LibererProbleme( ProbSpx );
 		    }
 		    else {
@@ -127,7 +130,7 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 			Probleme.Contexte            = BRANCH_AND_BOUND_OU_CUT_NOEUD;
 			Probleme.BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
 
-			if (OrtoolsUtils::OrtoolsUsed) {
+			if (ortoolsUsed) {
 		        ORTOOLS_ModifierLeVecteurCouts(ProbSpx, ProblemeAResoudre->CoutLineaire, ProblemeAResoudre->NombreDeVariables);
 		        ORTOOLS_ModifierLeVecteurSecondMembre(ProbSpx, ProblemeAResoudre->SecondMembre, ProblemeAResoudre->Sens, ProblemeAResoudre->NombreDeContraintes);
 		        ORTOOLS_CorrigerLesBornes(ProbSpx, ProblemeAResoudre->Xmin, ProblemeAResoudre->Xmax, ProblemeAResoudre->TypeDeVariable, ProblemeAResoudre->NombreDeVariables, &Probleme);
@@ -194,7 +197,7 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 
 
 	MPSolver * solver = NULL;
-	if (OrtoolsUtils::OrtoolsUsed) {
+	if (ortoolsUsed) {
 		solver = (MPSolver *) ORTOOLS_Simplexe(&Probleme, ProbSpx);
 		ProbSpx = solver;
 	}
@@ -213,7 +216,7 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 
 	if ( ProblemeHebdo->ExportMPS == OUI_ANTARES)
 	{
-		if (OrtoolsUtils::OrtoolsUsed) {
+		if (ortoolsUsed) {
 			int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
 			ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
 		}
@@ -231,7 +234,7 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 	{
 		if ( ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE )
 		{
-		   if (OrtoolsUtils::OrtoolsUsed) {
+		   if (ortoolsUsed) {
 	 		  ORTOOLS_LibererProbleme( ProbSpx );
 		   }
 		   else {
@@ -309,7 +312,7 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 		//Write MPS only if exportMPSOnError is activated and MPS weren't exported before with ExportMPS option
 		if ( ProblemeHebdo->ExportMPS == NON_ANTARES && ProblemeHebdo->exportMPSOnError)
 		{
-			if (OrtoolsUtils::OrtoolsUsed) {
+			if (ortoolsUsed) {
 				int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
 				ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
 			}
@@ -374,8 +377,11 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 	ProblemePourPne.NombreMaxDeSolutionsEntieres = -1;   
 	ProblemePourPne.ToleranceDOptimalite         = 1.e-4; 
 
+	auto& study = *Data::Study::Current::Get();
+	bool ortoolsUsed = study.parameters.ortoolsUsed;
+
 	MPSolver* solver = NULL;
-	if (OrtoolsUtils::OrtoolsUsed) {
+	if (ortoolsUsed) {
 
 		solver = (MPSolver*) ORTOOLS_Simplexe_PNE(&ProblemePourPne, NULL);
 		
@@ -487,7 +493,7 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 		//Write MPS only if exportMPSOnError is activated and MPS weren't exported before with ExportMPS option
 		if ( ProblemeHebdo->ExportMPS == NON_ANTARES && ProblemeHebdo->exportMPSOnError)
 		{
-			if (OrtoolsUtils::OrtoolsUsed) {
+			if (ortoolsUsed) {
 				int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
 				ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
 			}

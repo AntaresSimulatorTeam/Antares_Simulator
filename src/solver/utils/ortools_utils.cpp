@@ -87,8 +87,10 @@ void transferMatrix(operations_research::MPSolver * solver, int * indexRows, int
 
 MPSolver * convert_to_MPSolver(PROBLEME_SIMPLEXE * problemeSimplexe) {
 
-    //Define solver used depending on global solver option
-    MPSolver::OptimizationProblemType solverType = Antares::Data::OrtoolsUtils().getLinearOptimProblemType(Antares::Data::OrtoolsUtils::OrtoolsEnumUsed);
+	auto& study = *Data::Study::Current::Get();
+
+    //Define solver used depending on study option
+    MPSolver::OptimizationProblemType solverType = OrtoolsUtils().getLinearOptimProblemType(study.parameters.ortoolsEnumUsed);
 
 	// Create the linear solver instance
 	MPSolver * solver = new MPSolver("simple_lp_program", solverType);
@@ -105,8 +107,10 @@ MPSolver * convert_to_MPSolver(PROBLEME_SIMPLEXE * problemeSimplexe) {
 
 MPSolver * convert_to_MPSolver(PROBLEME_A_RESOUDRE * problemeAResoudre) {
 
-    //Define solver used depending on global solver option
-    MPSolver::OptimizationProblemType solverType = Antares::Data::OrtoolsUtils().getMixedIntegerOptimProblemType(Antares::Data::OrtoolsUtils::OrtoolsEnumUsed);
+	auto& study = *Data::Study::Current::Get();
+
+    //Define solver used depending on study option
+    MPSolver::OptimizationProblemType solverType = OrtoolsUtils().getMixedIntegerOptimProblemType(study.parameters.ortoolsEnumUsed);
 
 	MPSolver * solver = new MPSolver("simple_lp_program",solverType);
 
@@ -312,170 +316,141 @@ void ORTOOLS_LibererProbleme(void * ProbSpx) {
 }
 
 
-namespace Antares {
-    namespace Data {
+
+using namespace Antares::Data;
+
+OrtoolsUtils::OrtoolsUtils()
+{
+	//TODO JMK : Values must be adequacy with kOptimizationProblemTypeNames for ortools linear_solver/linear_solver.cc file
+
+	_solverLinearProblemOptimStringMap[OrtoolsSolver::sirius]       = "sirius_lp";  //TODO JMK : not defined in current ortools RTE branch.
+	_solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::sirius] = "sirius_mip"; //TODO JMK : not defined in current ortools RTE branch.
+
+	_solverLinearProblemOptimStringMap[OrtoolsSolver::coin]       = "clp";
+	_solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::coin] = "cbc";
+
+	_solverLinearProblemOptimStringMap[OrtoolsSolver::xpress]       = "xpress_lp";
+	_solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::xpress] = "xpress_mip";
+
+	_solverLinearProblemOptimStringMap[OrtoolsSolver::glop_scip]       = "glop";
+	_solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::glop_scip] = "scip";
+
+	_solverLinearProblemOptimStringMap[OrtoolsSolver::cplex]       = "cplex_lp";  //TODO JMK : not defined in current ortools RTE branch.
+	_solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::cplex] = "cplex_mip"; //TODO JMK : not defined in current ortools RTE branch.
+
+	_solverLinearProblemOptimStringMap[OrtoolsSolver::gurobi]       = "gurobi_lp";
+	_solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::gurobi] = "gurobi_mip";
+
+	_solverLinearProblemOptimStringMap[OrtoolsSolver::glpk]       = "glpk_lp";
+	_solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::glpk] = "glpk_mip";
+
+	_solverLinearProblemOptimStringMap[OrtoolsSolver::glop_cbc]       = "glop";
+	_solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::glop_cbc] = "cbc";
+
+	/* TODO JMK : see how we can get optimization problem type with current ortools RTE branch (can't use enum because of compile switch)
+
+	_solverLinearProblemOptimMap[OrtoolsSolver::sirius]       = MPSolver::OptimizationProblemType::SIRIUS_LINEAR_PROGRAMMING;
+	_solverMixedIntegerProblemOptimMap[OrtoolsSolver::sirius] = MPSolver::OptimizationProblemType::SIRIUS_MIXED_INTEGER_PROGRAMMING;
+
+	_solverLinearProblemOptimMap[OrtoolsSolver::coin]       = MPSolver::OptimizationProblemType::CLP_LINEAR_PROGRAMMING;
+	_solverMixedIntegerProblemOptimMap[OrtoolsSolver::coin] = MPSolver::OptimizationProblemType::CBC_MIXED_INTEGER_PROGRAMMING;
+
+	_solverLinearProblemOptimMap[OrtoolsSolver::xpress]       = MPSolver::OptimizationProblemType::XPRESS_LINEAR_PROGRAMMING;
+	_solverMixedIntegerProblemOptimMap[OrtoolsSolver::xpress] = MPSolver::OptimizationProblemType::XPRESS_MIXED_INTEGER_PROGRAMMING;
+
+	_solverLinearProblemOptimMap[OrtoolsSolver::glop_scip]       = MPSolver::OptimizationProblemType::GLOP_LINEAR_PROGRAMMING;
+	_solverMixedIntegerProblemOptimMap[OrtoolsSolver::glop_scip] = MPSolver::OptimizationProblemType::SCIP_MIXED_INTEGER_PROGRAMMING;
+
+	_solverLinearProblemOptimMap[OrtoolsSolver::cplex]       = MPSolver::OptimizationProblemType::CPLEX_LINEAR_PROGRAMMING;
+	_solverMixedIntegerProblemOptimMap[OrtoolsSolver::cplex] = MPSolver::OptimizationProblemType::CPLEX_MIXED_INTEGER_PROGRAMMING;
+
+	_solverLinearProblemOptimMap[OrtoolsSolver::gurobi]       = MPSolver::OptimizationProblemType::GUROBI_LINEAR_PROGRAMMING;
+	_solverMixedIntegerProblemOptimMap[OrtoolsSolver::gurobi] = MPSolver::OptimizationProblemType::GUROBI_MIXED_INTEGER_PROGRAMMING;
+
+	_solverLinearProblemOptimMap[OrtoolsSolver::glpk]       = MPSolver::OptimizationProblemType::GLPK_LINEAR_PROGRAMMING;
+	_solverMixedIntegerProblemOptimMap[OrtoolsSolver::glpk] = MPSolver::OptimizationProblemType::GLPK_MIXED_INTEGER_PROGRAMMING;
+
+	_solverLinearProblemOptimMap[OrtoolsSolver::glop_cbc]       = MPSolver::OptimizationProblemType::GLOP_LINEAR_PROGRAMMING;
+	_solverMixedIntegerProblemOptimMap[OrtoolsSolver::glop_cbc] = MPSolver::OptimizationProblemType::CBC_MIXED_INTEGER_PROGRAMMING;
+
+		*/
+}
+
+bool OrtoolsUtils::isOrtoolsSolverAvailable(OrtoolsSolver ortoolsSolver) {
+	bool result = false;
+
+	try
+	{
+		result = MPSolver::SupportsProblemType(getLinearOptimProblemType(ortoolsSolver));
+		result &= MPSolver::SupportsProblemType(getMixedIntegerOptimProblemType(ortoolsSolver));
+	}
+	catch (AssertionError& ex)
+	{
+		result = false;
+	}
+
+	return result;
+}
+
+std::list<OrtoolsSolver> OrtoolsUtils::getAvailableOrtoolsSolver() {
+
+	std::list<OrtoolsSolver> result;
+
+	std::list<OrtoolsSolver> solverList = Enum::enumList<Antares::Data::OrtoolsSolver>();
+
+	for  (OrtoolsSolver solver : solverList)
+	{
+		if (isOrtoolsSolverAvailable(solver)){
+			result.push_back(solver);
+		}
+	}
+
+	return result;
+}
+
+std::list<std::string> OrtoolsUtils::getAvailableOrtoolsSolverName() {
+	std::list<std::string> result;
+
+	std::list<OrtoolsSolver> solverList = getAvailableOrtoolsSolver();
+
+	for  (OrtoolsSolver solver : solverList)
+	{
+		result.push_back(Enum::toString(solver));
+	}
+
+	return result;
+}
+
+MPSolver::OptimizationProblemType OrtoolsUtils::getLinearOptimProblemType(const OrtoolsSolver& ortoolsSolver) {
+
+	//TODO JMK : see how we can get optimization problem type with current ortools RTE branch (can't use enum because of compile switch)
+	//MPSolver::OptimizationProblemType result = _solverLinearProblemOptimMap.at(ortoolsSolver)
+
+	//For now we are using string to get optimization problem type
+	MPSolver::OptimizationProblemType result = MPSolver::OptimizationProblemType::GLOP_LINEAR_PROGRAMMING;
 
 
-        bool OrtoolsUtils::OrtoolsUsed = false;
-		OrtoolsSolver OrtoolsUtils::OrtoolsEnumUsed = OrtoolsSolver::sirius;
+	if (!MPSolver::ParseSolverType(_solverLinearProblemOptimStringMap.at(ortoolsSolver), &result))
+	{
+		throw AssertionError("Unsupported Linear OrtoolsSolver for solver " + Enum::toString(ortoolsSolver));
+	}
+
+	return result;
+}
+
+MPSolver::OptimizationProblemType OrtoolsUtils::getMixedIntegerOptimProblemType(const OrtoolsSolver& ortoolsSolver) {
+
+	//TODO JMK : see how we can get optimization problem type with current ortools RTE branch (can't use enum because of compile switch)
+	//MPSolver::OptimizationProblemType result = _solverMixedIntegerProblemOptimMap.at(ortoolsSolver)
+
+	//For now we are using string to get optimization problem type
+	MPSolver::OptimizationProblemType result = MPSolver::OptimizationProblemType::GLOP_LINEAR_PROGRAMMING;
 
 
-        OrtoolsUtils::OrtoolsUtils()
-        {
-            //TODO JMK : Values must be adequacy with kOptimizationProblemTypeNames for ortools linear_solver/linear_solver.cc file
+	if (!MPSolver::ParseSolverType(_solverMixedIntegerProblemOptimStringMap[ortoolsSolver], &result))
+	{
+		throw AssertionError("Unsupported Mixed Integer OrtoolsSolver for solver " + Enum::toString(ortoolsSolver));
+	}
 
-            _solverLinearProblemOptimStringMap[OrtoolsSolver::sirius]       = "sirius_lp";  //TODO JMK : not defined in current ortools RTE branch.
-            _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::sirius] = "sirius_mip"; //TODO JMK : not defined in current ortools RTE branch.
-
-            _solverLinearProblemOptimStringMap[OrtoolsSolver::coin]       = "clp";
-            _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::coin] = "cbc";
-
-            _solverLinearProblemOptimStringMap[OrtoolsSolver::xpress]       = "xpress_lp";
-            _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::xpress] = "xpress_mip";
-
-            _solverLinearProblemOptimStringMap[OrtoolsSolver::glop_scip]       = "glop";
-            _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::glop_scip] = "scip";
-
-            _solverLinearProblemOptimStringMap[OrtoolsSolver::cplex]       = "cplex_lp";  //TODO JMK : not defined in current ortools RTE branch.
-            _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::cplex] = "cplex_mip"; //TODO JMK : not defined in current ortools RTE branch.
-
-            _solverLinearProblemOptimStringMap[OrtoolsSolver::gurobi]       = "gurobi_lp";
-            _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::gurobi] = "gurobi_mip";
-
-            _solverLinearProblemOptimStringMap[OrtoolsSolver::glpk]       = "glpk_lp";
-            _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::glpk] = "glpk_mip";
-
-            _solverLinearProblemOptimStringMap[OrtoolsSolver::glop_cbc]       = "glop";
-            _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::glop_cbc] = "cbc";
-
-            /* TODO JMK : see how we can get optimization problem type with current ortools RTE branch (can't use enum because of compile switch)
-
-            _solverLinearProblemOptimMap[OrtoolsSolver::sirius]       = MPSolver::OptimizationProblemType::SIRIUS_LINEAR_PROGRAMMING;
-            _solverMixedIntegerProblemOptimMap[OrtoolsSolver::sirius] = MPSolver::OptimizationProblemType::SIRIUS_MIXED_INTEGER_PROGRAMMING;
-
-            _solverLinearProblemOptimMap[OrtoolsSolver::coin]       = MPSolver::OptimizationProblemType::CLP_LINEAR_PROGRAMMING;
-            _solverMixedIntegerProblemOptimMap[OrtoolsSolver::coin] = MPSolver::OptimizationProblemType::CBC_MIXED_INTEGER_PROGRAMMING;
-
-            _solverLinearProblemOptimMap[OrtoolsSolver::xpress]       = MPSolver::OptimizationProblemType::XPRESS_LINEAR_PROGRAMMING;
-            _solverMixedIntegerProblemOptimMap[OrtoolsSolver::xpress] = MPSolver::OptimizationProblemType::XPRESS_MIXED_INTEGER_PROGRAMMING;
-
-            _solverLinearProblemOptimMap[OrtoolsSolver::glop_scip]       = MPSolver::OptimizationProblemType::GLOP_LINEAR_PROGRAMMING;
-            _solverMixedIntegerProblemOptimMap[OrtoolsSolver::glop_scip] = MPSolver::OptimizationProblemType::SCIP_MIXED_INTEGER_PROGRAMMING;
-
-            _solverLinearProblemOptimMap[OrtoolsSolver::cplex]       = MPSolver::OptimizationProblemType::CPLEX_LINEAR_PROGRAMMING;
-            _solverMixedIntegerProblemOptimMap[OrtoolsSolver::cplex] = MPSolver::OptimizationProblemType::CPLEX_MIXED_INTEGER_PROGRAMMING;
-
-            _solverLinearProblemOptimMap[OrtoolsSolver::gurobi]       = MPSolver::OptimizationProblemType::GUROBI_LINEAR_PROGRAMMING;
-            _solverMixedIntegerProblemOptimMap[OrtoolsSolver::gurobi] = MPSolver::OptimizationProblemType::GUROBI_MIXED_INTEGER_PROGRAMMING;
-
-            _solverLinearProblemOptimMap[OrtoolsSolver::glpk]       = MPSolver::OptimizationProblemType::GLPK_LINEAR_PROGRAMMING;
-            _solverMixedIntegerProblemOptimMap[OrtoolsSolver::glpk] = MPSolver::OptimizationProblemType::GLPK_MIXED_INTEGER_PROGRAMMING;
-
-            _solverLinearProblemOptimMap[OrtoolsSolver::glop_cbc]       = MPSolver::OptimizationProblemType::GLOP_LINEAR_PROGRAMMING;
-            _solverMixedIntegerProblemOptimMap[OrtoolsSolver::glop_cbc] = MPSolver::OptimizationProblemType::CBC_MIXED_INTEGER_PROGRAMMING;
-
-             */
-        }
-
-        bool OrtoolsUtils::isOrtoolsSolverAvailable(OrtoolsSolver ortoolsSolver) {
-            bool result = false;
-
-			try
-			{
-				result = MPSolver::SupportsProblemType(getLinearOptimProblemType(ortoolsSolver));
-				result &= MPSolver::SupportsProblemType(getMixedIntegerOptimProblemType(ortoolsSolver));
-			}
-			catch (AssertionError& ex)
-			{
-				result = false;
-			}
-
-            return result;
-        }
-
-        std::list<OrtoolsSolver> OrtoolsUtils::getAvailableOrtoolsSolver() {
-
-            std::list<OrtoolsSolver> result;
-
-            std::list<OrtoolsSolver> solverList = Enum::enumList<Antares::Data::OrtoolsSolver>();
-
-            for  (OrtoolsSolver solver : solverList)
-            {
-                if (isOrtoolsSolverAvailable(solver)){
-                    result.push_back(solver);
-                }
-            }
-
-            return result;
-        }
-
-        std::list<std::string> OrtoolsUtils::getAvailableOrtoolsSolverName() {
-            std::list<std::string> result;
-
-            std::list<OrtoolsSolver> solverList = getAvailableOrtoolsSolver();
-
-            for  (OrtoolsSolver solver : solverList)
-            {
-                result.push_back(Enum::toString(solver));
-            }
-
-            return result;
-        }
-
-        MPSolver::OptimizationProblemType OrtoolsUtils::getLinearOptimProblemType(const OrtoolsSolver& ortoolsSolver) {
-
-            //TODO JMK : see how we can get optimization problem type with current ortools RTE branch (can't use enum because of compile switch)
-            //MPSolver::OptimizationProblemType result = _solverLinearProblemOptimMap.at(ortoolsSolver)
-
-            //For now we are using string to get optimization problem type
-            MPSolver::OptimizationProblemType result = MPSolver::OptimizationProblemType::GLOP_LINEAR_PROGRAMMING;
-
-
-            if (!MPSolver::ParseSolverType(_solverLinearProblemOptimStringMap.at(ortoolsSolver), &result))
-            {
-                throw AssertionError("Unsupported Linear OrtoolsSolver for solver " + Enum::toString(ortoolsSolver));
-            }
-
-            return result;
-        }
-
-        MPSolver::OptimizationProblemType OrtoolsUtils::getMixedIntegerOptimProblemType(const OrtoolsSolver& ortoolsSolver) {
-
-            //TODO JMK : see how we can get optimization problem type with current ortools RTE branch (can't use enum because of compile switch)
-            //MPSolver::OptimizationProblemType result = _solverMixedIntegerProblemOptimMap.at(ortoolsSolver)
-
-            //For now we are using string to get optimization problem type
-            MPSolver::OptimizationProblemType result = MPSolver::OptimizationProblemType::GLOP_LINEAR_PROGRAMMING;
-
-
-            if (!MPSolver::ParseSolverType(_solverMixedIntegerProblemOptimStringMap[ortoolsSolver], &result))
-            {
-				throw AssertionError("Unsupported Mixed Integer OrtoolsSolver for solver " + Enum::toString(ortoolsSolver));
-            }
-
-            return result;
-        }
-
-    namespace Enum {
-
-        template <>
-        const std::initializer_list<std::string>& getNames<OrtoolsSolver>() {
-
-            //Enum must be stored in lower case and without spaces because values  are trimmed and lowered in ini load
-            static std::initializer_list<std::string> s_ortoolsSolverNames{
-                    "sirius",
-                    "coin",
-                    "xpress",
-                    "glop-scip",
-                    "cplex",
-                    "gurobi",
-                    "glpk",
-                    "glop-cbc"
-            };
-
-            return s_ortoolsSolverNames;
-        }
-    } // namespace Enum
-
-} // namespace Data
-} // namespace Antares
+	return result;
+}

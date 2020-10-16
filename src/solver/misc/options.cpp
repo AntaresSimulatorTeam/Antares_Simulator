@@ -112,7 +112,7 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
     std::string ortoolsSolver;
 
 	//Define available solver list
-    std::list<std::string> availableSolverList = Antares::Data::OrtoolsUtils().getAvailableOrtoolsSolverName();
+    std::list<std::string> availableSolverList = OrtoolsUtils().getAvailableOrtoolsSolverName();
     std::string availableSolverListStr;
     for(auto it = availableSolverList.begin(); it != availableSolverList.end(); it++)
     {
@@ -277,7 +277,7 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
 	}
 
 	//define ortools global values
-    Antares::Data::OrtoolsUtils::OrtoolsUsed          = useOrtools;
+	options.ortoolsUsed = useOrtools;
 
 	//ortools solver
     if(useOrtools)
@@ -289,16 +289,20 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
         }
 
         //Default is first available solver
-        Antares::Data::OrtoolsUtils::OrtoolsEnumUsed = Antares::Data::Enum::fromString<Antares::Data::OrtoolsSolver>(availableSolverList.front());
+        options.ortoolsEnumUsed= Antares::Data::Enum::fromString<Antares::Data::OrtoolsSolver>(availableSolverList.front());
 
         //Check if solver is available
         bool found = (std::find(availableSolverList.begin(), availableSolverList.end(), ortoolsSolver) != availableSolverList.end());
 
-        if (!found)
+        if (found)
         {
-            logs.warning() << "Invalid ortools-solver option. Got '" << ortoolsSolver
-                           << "'. reset to " << Enum::toString(Antares::Data::OrtoolsUtils::OrtoolsEnumUsed);
+			options.ortoolsEnumUsed = Antares::Data::Enum::fromString<Antares::Data::OrtoolsSolver>(ortoolsSolver);
         }
+		else
+		{
+			logs.warning() << "Invalid ortools-solver option. Got '" << ortoolsSolver
+				<< "'. reset to " << Enum::toString(options.ortoolsEnumUsed);
+		}
     }
 
 	// The study folder

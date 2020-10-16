@@ -25,49 +25,39 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "load-options.h"
-#include "../logs.h"
+#include <initializer_list>
+#include <string>
 
+#include <antares/exception/AssertionError.hpp>
+#include <antares/study/OrtoolsSolver.hpp>
 
-namespace Antares
-{
-namespace Data
-{
+#include <antares/Enum.hpp>
 
-	StudyLoadOptions::StudyLoadOptions() :
-		nbYears(0),
-		prepareOutput(false),
-		loadOnlyNeeded(false),
-		forceYearByYear(false),
-		forceDerated(false),
-		noTimeseriesImportIntoInput(false),
-		simplexOptimizationRange(sorUnknown),
-		ignoreConstraints(false),
-		forceMode(stdmUnknown),
-		enableParallel(false),
-		forceParallel(false),
-		maxNbYearsInParallel(0),
-		usedByTheSolver(false),
-		mpsToExport(false),
-		ortoolsUsed(false),
-		ortoolsEnumUsed(OrtoolsSolver::sirius)
-	{}
+namespace Antares {
+    
+namespace Data {
 
+namespace Enum {
 
-	void StudyLoadOptions::pushProgressLogs() const
-	{
-		if (loadOnlyNeeded && progressTicks)
-		{
-			uint percent = progressTicks * 100 / progressTickCount;
-			if (percent < 100)
-				logs.info() << logMessage << "  " << percent << '%';
-		}
-	}
+    template <>
+    const std::initializer_list<std::string>& getNames<OrtoolsSolver>() {
 
+        //Enum must be stored in lower case and without spaces because values  are trimmed and lowered in ini load
+        static std::initializer_list<std::string> s_ortoolsSolverNames{
+                "sirius",
+                "coin",
+                "xpress",
+                "glop-scip",
+                "cplex",
+                "gurobi",
+                "glpk",
+                "glop-cbc"
+        };
 
-
-
+        return s_ortoolsSolverNames;
+    }
+} // namespace Enum
+   
 } // namespace Data
+
 } // namespace Antares
-
-

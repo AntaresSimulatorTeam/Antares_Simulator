@@ -31,6 +31,8 @@
 # include <yuni/core/string.h>
 # include "parameters.h"
 
+#include <antares/study/OrtoolsSolver.hpp>
+
 
 namespace Antares
 {
@@ -84,6 +86,12 @@ namespace Data
 
 		//! A non-zero value if the data will be used for a simulation
 		bool usedByTheSolver;
+
+		//!Force ortools use
+		bool ortoolsUsed;
+
+		//!Ortool solver used for simulation
+		OrtoolsSolver ortoolsEnumUsed;
 
 		//! Temporary string for passing log message
 		mutable Yuni::String logMessage;

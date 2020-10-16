@@ -91,8 +91,12 @@ else {
 }
 NbIntervalles = (int) (ProblemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation );
 
+
 ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 if (ProblemeAResoudre) {
+
+	auto& study = *Data::Study::Current::Get();
+	bool ortoolsUsed = study.parameters.ortoolsUsed;
 	
 	if ( ProblemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES ) {
 		
@@ -101,7 +105,7 @@ if (ProblemeAResoudre) {
 				ProbSpx = (PROBLEME_SPX *) ((ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[i])->ProblemeSpx[NumIntervalle]);
 				if (ProbSpx != NULL) {
 
-					if (Data::OrtoolsUtils::OrtoolsUsed) {
+					if (ortoolsUsed) {
 						ORTOOLS_LibererProbleme(ProbSpx);
 					}
 					else {

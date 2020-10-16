@@ -25,49 +25,28 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "load-options.h"
-#include "../logs.h"
+#ifndef ANTARES_DATA_ORTOOLSSOLVER_HPP
+#define ANTARES_DATA_ORTOOLSSOLVER_HPP
+
+namespace Antares {
+
+namespace Data {
 
 
-namespace Antares
-{
-namespace Data
-{
+/*! Enum class to define ortools solvers used */
+enum class OrtoolsSolver : unsigned char {
+    sirius,     /*! Sirius solver  */
+    coin,       /*! Cpl and Cbc coin solver */
+    xpress,     /*! Xpress solver : licence needed, depends on ortools link */
+    glop_scip,  /*! Glop and SCIP solver */
+    cplex,      /*! CPlex solver  : licence needed, depends on ortools link*/
+    gurobi,     /*! Gurobi solver : licence needed, depends on ortools link*/
+    glpk,       /*! GLPK solver */
+    glop_cbc    /*! Glop and Cbc coin solver */
+};
 
-	StudyLoadOptions::StudyLoadOptions() :
-		nbYears(0),
-		prepareOutput(false),
-		loadOnlyNeeded(false),
-		forceYearByYear(false),
-		forceDerated(false),
-		noTimeseriesImportIntoInput(false),
-		simplexOptimizationRange(sorUnknown),
-		ignoreConstraints(false),
-		forceMode(stdmUnknown),
-		enableParallel(false),
-		forceParallel(false),
-		maxNbYearsInParallel(0),
-		usedByTheSolver(false),
-		mpsToExport(false),
-		ortoolsUsed(false),
-		ortoolsEnumUsed(OrtoolsSolver::sirius)
-	{}
+}  // namespace Data
 
+}  // namespace Antares
 
-	void StudyLoadOptions::pushProgressLogs() const
-	{
-		if (loadOnlyNeeded && progressTicks)
-		{
-			uint percent = progressTicks * 100 / progressTickCount;
-			if (percent < 100)
-				logs.info() << logMessage << "  " << percent << '%';
-		}
-	}
-
-
-
-
-} // namespace Data
-} // namespace Antares
-
-
+#endif  // ANTARES_DATA_ORTOOLSSOLVER_HPP
