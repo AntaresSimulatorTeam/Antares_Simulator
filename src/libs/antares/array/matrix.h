@@ -177,7 +177,7 @@ namespace Antares
 		*/
 		virtual bool openFile(Yuni::IO::File::Stream& file, const AnyString& filename) const;
 
-		virtual void saveBufferToFile(Yuni::Clob & buffer, Yuni::IO::File::Stream & f) const;
+		virtual void saveBufferToFile(std::string & buffer, Yuni::IO::File::Stream & f) const;
 
 		/*!
 		** \brief Write the content of a matrix into a single file
@@ -214,7 +214,7 @@ namespace Antares
 		}
 
 		template<class PredicateT>
-		void saveToFileDescriptor(Yuni::Clob& data, uint precision, bool print_dimensions, PredicateT& predicate) const
+		void saveToFileDescriptor(std::string & data, uint precision, bool print_dimensions, PredicateT& predicate) const
 		{
 			saveToBuffer(data, precision, print_dimensions, predicate);
 		}
@@ -491,8 +491,7 @@ namespace Antares
 			PredicateT& predicate) const;
 
 		template<class PredicateT>
-		void saveToBuffer(Yuni::Clob& data, uint precision,
-			bool print_dimensions, PredicateT& predicate) const;
+		void saveToBuffer(std::string & data, uint precision, bool print_dimensions, PredicateT& predicate) const;
 
 		bool loadFromBuffer(const AnyString& filename, BufferType& data,
 			uint minWidth, uint maxHeight, const int fixedSize, uint options);

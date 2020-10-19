@@ -27,7 +27,7 @@
 #ifndef __ANTARES_LIBS_JUST_IN_TIME_INFORMATIONS_HXX__
 # define __ANTARES_LIBS_JUST_IN_TIME_INFORMATIONS_HXX__
 
-#include "../logs.h"
+#include <logs.h>
 
 using namespace Antares;
 

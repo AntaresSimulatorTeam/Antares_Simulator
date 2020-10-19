@@ -1,7 +1,7 @@
-#include<array/fill-matrix.h>
-#include<array/matrix-bypass-load.h>
-#include<yuni/core/system/stdint.h>
-#include<jit/global_JIT_manager.h>
+#include "fill-matrix.h"
+#include "matrix-bypass-load.h"
+#include <yuni/core/system/stdint.h>
+#include <global_JIT_manager.h>
 
 #include<string>
 #include<vector>

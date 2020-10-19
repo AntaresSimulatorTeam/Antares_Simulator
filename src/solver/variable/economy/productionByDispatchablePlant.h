@@ -211,7 +211,6 @@ namespace Economy
 				for (unsigned int i = 0; i != pSize; ++i)
 				{
 					AncestorType::pResults[i].initializeFromStudy(*study);
-					AncestorType::pResults[i].averageMaxValue(study->runtime->rangeLimits.year[Data::rangeCount]);
 					AncestorType::pResults[i].reset();
 
 					if (!--autoflush)

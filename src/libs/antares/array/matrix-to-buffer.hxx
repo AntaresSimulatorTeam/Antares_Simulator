@@ -43,12 +43,12 @@ namespace Antares
 		template<class T>
 		struct MatrixScalar
 		{
-			static inline void Append(Yuni::Clob& file, T v, const char* const)
+			static inline void Append(std::string & file, T v, const char* const)
 			{
 				if (Yuni::Math::Zero(v))
-					file.append('0');
+					file.append(std::to_string(0));
 				else
-					file.append(v);
+					file.append(std::to_string(v));
 			}
 
 		};
@@ -57,7 +57,7 @@ namespace Antares
 		template<>
 		struct MatrixScalar<double>
 		{
-			static void Append(Yuni::Clob& file, double v, const char* const format)
+			static void Append(std::string & file, double v, const char* const format)
 			{
 				if (Yuni::Math::Zero(v))
 				{
@@ -72,7 +72,7 @@ namespace Antares
 						: ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), format, v);
 
 					if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
-						file.write((const char*)ConversionBuffer, sizePrintf);
+						file += (const char*)ConversionBuffer;
 					else
 						file += "ERR";
 				}
@@ -83,7 +83,7 @@ namespace Antares
 		template<>
 		struct MatrixScalar<float>
 		{
-			static void Append(Yuni::Clob& file, float v, const char* const format)
+			static void Append(std::string & file, float v, const char* const format)
 			{
 				if (Yuni::Math::Zero(v))
 				{
@@ -98,7 +98,7 @@ namespace Antares
 						: ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), format, (double)v);
 
 					if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
-						file.write((const char*)ConversionBuffer, sizePrintf);
+						file += (const char*)ConversionBuffer;
 					else
 						file += "ERR";
 				}
@@ -113,7 +113,7 @@ namespace Antares
 	I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>* 
 		matrix_to_buffer_dumper_factory::
 			get_dumper(	const Matrix<T, ReadWriteT>* mtx, 
-						Yuni::Clob& data, 
+						std::string & data, 
 						PredicateT& predicate)
 	{
 		if (mtx->width == 1)

@@ -24,10 +24,14 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-
 #include <yuni/yuni.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <algorithm>
+#include <iostream>
+
+#include <sstream>
+
 #ifndef YUNI_OS_MSVC
 # include <unistd.h>
 #endif
@@ -209,6 +213,9 @@ namespace Data
 		nbYears					= 1;
 		delete[] yearsFilter;
 		yearsFilter				= nullptr;
+
+		resetYearsWeigth();
+
 		yearByYear				= false;
 		derated					= false;
 		useCustomTSNumbers		= false;
@@ -648,6 +655,52 @@ namespace Data
 			}
 			return false;
 		}
+
+        if (key == "playlist_year_weight")
+        {
+            //Get year index and weight from  string
+
+            //Use of yuni to split string
+            std::vector<int> values;
+            value.split(values, ",");
+
+            if (values.size() == 2)
+            {
+                int y = values[0];
+                int weight = values[1];
+
+                //Check values
+				bool valid = true;
+                if (y > d.nbYears)
+                {
+					valid = false;
+                    logs.warning() << "parameters: invalid MC year index for MC year weight definition. Got '" << y
+                                   << "'. Value not used";
+                }
+
+                if (weight < 1)
+                {
+					valid = false;
+                    logs.warning() << "parameters: invalid MC year weight.Got '" << weight
+                                   << "'. Value not used";
+                }
+
+				if (valid)
+				{
+					d.setYearWeight(y, weight);
+				}
+
+                return true;
+            }
+            else
+            {
+                logs.warning() << "parameters: invalid MC year index and weight definition. Must be defined by [year],[weight] Got '" << value
+                               << "'. Value not used";
+                return false;
+            }
+            return false;
+        }
+
 		if (key == "power-fluctuations")
 		{
 			auto fluctuations = StringToPowerFluctuations(value);
@@ -1024,8 +1077,13 @@ namespace Data
 				}
 			}
 			nbYears = options.nbYears;
-		}
 
+            //Resize years weight (add or remove item)
+			if (yearsWeight.size() !=  nbYears)
+            {
+                yearsWeight.resize(nbYears, 1);
+            }
+		}
 
 		if (version < 400)
 		{
@@ -1100,6 +1158,8 @@ namespace Data
 				yearsFilter = new bool[1];
 				yearsFilter[0] = true;
 			}
+
+			resetYearsWeigth();
 		}
 		else
 		{
@@ -1159,7 +1219,56 @@ namespace Data
 		}
 	}
 
+	void Parameters::resetYearsWeigth()
+    {
+	    yearsWeight.clear();
+        yearsWeight.assign(nbYears,1);
+    }
 
+    std::vector<int> Parameters::getYearsWeight() const
+    {
+        std::vector<int> result;
+
+        if (userPlaylist)
+        {
+            result = yearsWeight;
+        }
+        else
+        {
+            result.assign(nbYears, 1);
+        }
+
+        return result;
+    }
+    int Parameters::getYearsWeightSum() const
+    {
+        int result = 0;
+
+        if (userPlaylist)
+        {
+            //must take into account inactive years
+            for (uint i = 0; i < nbYears; ++i)
+            {
+                if (yearsFilter[i] )
+                {
+                    result += yearsWeight[i];
+                }
+            }
+        }
+        else
+        {
+            //if no user playlist, nbYears
+            result = nbYears;
+        }
+
+        return result;
+    }
+
+    void Parameters::setYearWeight(int year, int weight)
+    {
+        assert(year < yearsWeight.size());
+        yearsWeight[year] = weight;
+    }
 
 	void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 	{
@@ -1231,6 +1340,38 @@ namespace Data
 				default:
 					logs.info() << "  " << effectiveNbYears << " years in the user's playlist";
 			}
+
+			//Add log in case of MC year weight different from 1
+			std::vector<int> maximumWeightYearsList;
+			int nbYearsDifferentFrom1		= 0;
+			int maximumWeight				= *std::max_element(yearsWeight.begin(), yearsWeight.end());
+			for (int i =0 ; i< yearsWeight.size();i++)
+            {
+			    int weight = yearsWeight[i];
+			    if (weight != 1)
+                {
+                    nbYearsDifferentFrom1++;
+			        if  (weight == maximumWeight)
+                    {
+			            maximumWeightYearsList.push_back(i);
+                    }
+                }
+            }
+
+			if (nbYearsDifferentFrom1 != 0)
+            {
+
+                logs.info() << "  " << nbYearsDifferentFrom1 << " years with weight !=1 in the user's playlist";
+
+				//Transform maximum value years to string
+                std::stringstream ss;
+                copy( maximumWeightYearsList.begin(), maximumWeightYearsList.end(), std::ostream_iterator<int>(ss, ","));
+                std::string s = ss.str();
+                s = s.substr(0, s.length()-1);  // get rid of the trailing ,
+
+                logs.info() << "  maximum weight " << maximumWeight << " for year(s) " << s;
+
+            }
 		}
 
 		// Prepare output variables print info before the simulation (used to initialize output variables)
@@ -1395,6 +1536,8 @@ namespace Data
 			for (uint i = 0; i != nbYears; ++i)
 				yearsFilter[i] = true;
 		}
+
+		resetYearsWeigth();
 	}
 
 
@@ -1543,12 +1686,20 @@ namespace Data
 		{
 			assert(yearsFilter);
 			uint effNbYears = 0;
+			int weightSum = 0;
 			for (uint i = 0; i != nbYears; ++i)
 			{
 				if (yearsFilter[i])
 					++effNbYears;
+				weightSum += yearsWeight[i];
 			}
-			if (effNbYears != nbYears)
+
+
+			//Playlist section must be added if at least one year is disable or one MC year weight sum is not equal to nbYears
+			bool addPlayListSection = effNbYears != nbYears;
+			addPlayListSection |= weightSum != nbYears;
+
+			if (addPlayListSection)
 			{
 				// We have something to write !
 				auto* section = ini.addSection("playlist");
@@ -1569,6 +1720,16 @@ namespace Data
 							section->add("playlist_year -", i);
 					}
 				}
+
+                for (uint i = 0; i != nbYears; ++i)
+                {
+					//Only write weight different from 1 to limit .ini file size and readability
+					if (yearsWeight[i] != 1)
+					{
+						std::string val = std::to_string(i) + "," + std::to_string(yearsWeight[i]);
+						section->add("playlist_year_weight", val);
+					}
+                }
 			}
 		}
 

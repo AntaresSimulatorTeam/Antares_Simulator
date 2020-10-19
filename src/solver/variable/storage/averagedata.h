@@ -81,8 +81,9 @@ namespace AllYears
 		double* year;
 		mutable double allYears; // FIX MEEE - Remove the mutable as soon as possible
 		unsigned int nbYearsCapacity;
-		//! 1. / nb hours
-		double ratio;
+
+		std::vector<int>    yearsWeight;
+		int                 yearsWeightSum;
 
 	}; // class AverageData
 

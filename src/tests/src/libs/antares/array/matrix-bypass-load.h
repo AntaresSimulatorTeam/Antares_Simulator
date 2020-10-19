@@ -4,7 +4,7 @@
 # define __ANTARES_LIBS_ARRAY_MATRIX_BYPASS_LOAD_H__
 
 
-#include<array/fill-matrix.h>
+# include "fill-matrix.h"
 
 using namespace Yuni;
 
@@ -84,8 +84,12 @@ public:
 	Clob* build_buffer()
 	{
 		Clob* buffer_to_return = new Clob;
+		std::string buffer;
 		Antares::UnitTests::PredicateIdentity predicate;
-		mtx_to_build_buffer_with_->saveToFileDescriptor(*buffer_to_return, buffer_precision_, buffer_print_dimensions_, predicate);
+
+		mtx_to_build_buffer_with_->saveToFileDescriptor(buffer, buffer_precision_, buffer_print_dimensions_, predicate);
+
+		buffer_to_return->append(buffer);
 
 		return buffer_to_return;
 	}

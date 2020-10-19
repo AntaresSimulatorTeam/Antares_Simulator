@@ -6,6 +6,7 @@ on:
       - develop
       - feature/*
 jobs:
+
   build:
 
     runs-on: ${{ matrix.os }}
