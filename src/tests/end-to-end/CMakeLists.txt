@@ -17,6 +17,7 @@ target_link_libraries(tests-simple-study
 						libantares-solver-variable
 						libantares-solver-simulation
 						libantares-solver-ts-generator
+						Boost::unit_test_framework
 			)
 			
 target_include_directories(tests-simple-study
