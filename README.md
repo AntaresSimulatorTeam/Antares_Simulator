@@ -1,6 +1,10 @@
 # Antares Simulator
 [![Status][linux_system_svg]][linux_system_link]  [![Status][windows_vcpkg_svg]][windows_vcpkg_link]
 
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
+
+
 Antares Simulator is an open source power system simulator meant to be
 used by anybody placing value in quantifying the adequacy or the 
 economic performance of interconnected power systems, at short or 

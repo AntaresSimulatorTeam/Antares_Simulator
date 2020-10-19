@@ -31,7 +31,7 @@
 #include <yuni/io/file.h>
 
 #include "matrix.h"
-#include "../logs.h"
+#include <logs.h>
 #include <math.h>
 #include "../timeelapsed.h"
 #include "../study/memory-usage.h"
