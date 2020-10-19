@@ -73,7 +73,6 @@ target_include_directories(tests-matrix-load
 									"${CMAKE_SOURCE_DIR}/ext/yuni/src"
 )
 
-add_test(NAME load-matrix COMMAND tests-matrix-load)
 
 target_link_libraries(tests-matrix-load
 						PRIVATE
