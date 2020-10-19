@@ -1,6 +1,12 @@
 ﻿Antares Changelog
 =================
 
+v7.3.0 (xx/2020)
+-------------------- 
+
+### Features
+
+ - MC Scenario Playlist : Add option to define weight for each MC years. In this case ratio use for each MC years depends on weight (weight MC Year / sum of weights)
 
 v7.2.0 (06/2020)
 -------------------- 

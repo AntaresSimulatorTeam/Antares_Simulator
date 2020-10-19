@@ -71,15 +71,6 @@ namespace AllYears
 		Average()
 		{}
 
-		template<class U> inline void averageMaxValue(const U v)
-		{
-			avgdata.ratio = (Yuni::Math::Zero<U>(v))
-				? (std::numeric_limits<double>::infinity())
-				: (1. / (double)v);
-			if (Yuni::Math::Zero(avgdata.ratio))
-				avgdata.ratio = 0.;
-		}
-
 	protected:
 		void initializeFromStudy(Antares::Data::Study& study)
 		{
@@ -101,12 +92,6 @@ namespace AllYears
 			avgdata.merge(year, rhs);
 			// Next
 			NextType::merge(year, rhs);
-		}
-
-		void mergeHourInYear(uint year, uint hour, const double value)
-		{
-			// Next
-			NextType::mergeHourInYear(year, hour, value);
 		}
 
 

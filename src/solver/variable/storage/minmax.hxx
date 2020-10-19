@@ -62,16 +62,6 @@ namespace AllYears
 		NextType::reset();
 	}
 
-
-	template<bool OpInferior, class NextT>
-	inline void
-	MinMaxBase<OpInferior,NextT>::mergeHourInYear(uint year, uint hour, const double value)
-	{
-		// Next
-		NextType::mergeHourInYear(year, hour, value);
-	}
-
-
 	template<bool OpInferior, class NextT>
 	inline void MinMaxBase<OpInferior,NextT>::merge(uint year, const IntermediateValues& rhs)
 	{

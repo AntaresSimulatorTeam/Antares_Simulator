@@ -66,9 +66,15 @@ namespace Renderer
 		return (not study) ? 0 : (int) study->parameters.nbYears;
 	}
 
-	wxString MCPlaylist::columnCaption(int) const
+	wxString MCPlaylist::columnCaption(int i) const
 	{
-		return wxT("   Status   ");
+        switch (i)
+        {
+            case MCPlaylistCol::STATUS			:return wxT("   Status   ");
+            case MCPlaylistCol::WEIGHT			:return wxT("   Weight   ");
+        }
+        return wxString();
+
 	}
 
 
@@ -78,16 +84,37 @@ namespace Renderer
 	}
 
 
-	bool MCPlaylist::cellValue(int, int y, const Yuni::String& value)
+	bool MCPlaylist::cellValue(int x, int y, const Yuni::String& value)
 	{
 		if (!(!study) && (uint) y < study->parameters.nbYears)
 		{
-			String s = value;
-			s.trim();
-			s.toLower();
-			bool v = s.to<bool>() || s == "active" || s == "enabled";
-			assert(study->parameters.yearsFilter);
-			study->parameters.yearsFilter[y] = v;
+            String s = value;
+            s.trim();
+            s.toLower();
+
+            switch (x)
+            {
+                case MCPlaylistCol::STATUS			:
+                {
+                    bool v = s.to<bool>() || s == "active" || s == "enabled";
+                    assert(study->parameters.yearsFilter);
+                    study->parameters.yearsFilter[y] = v;
+                }
+                case MCPlaylistCol::WEIGHT			:
+                {
+                    int weight;
+                    if (value.to<int>(weight))
+                    {
+                        if (weight >= 1) {
+                            study->parameters.setYearWeight(y, weight);
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+                }
+            }
+
 			onTriggerUpdate();
 			Dispatcher::GUI::Refresh(pControl);
 			return true;
@@ -96,23 +123,47 @@ namespace Renderer
 	}
 
 
-	double MCPlaylist::cellNumericValue(int, int y) const
+	double MCPlaylist::cellNumericValue(int x, int y) const
 	{
 		if (!(!study) && (uint) y < study->parameters.nbYears)
 		{
-			assert(study->parameters.yearsFilter);
-			return study->parameters.yearsFilter[y];
+            switch (x)
+            {
+                case MCPlaylistCol::STATUS:
+                {
+                    assert(study->parameters.yearsFilter);
+                    return study->parameters.yearsFilter[y];
+                }
+                case MCPlaylistCol::WEIGHT:
+                {
+                    std::vector<int> yearsWeight = study->parameters.getYearsWeight();
+                    assert(y < yearsWeight.size());
+                    return yearsWeight[y];
+                }
+            }
 		}
 		return 0.;
 	}
 
 
-	wxString MCPlaylist::cellValue(int, int y) const
+	wxString MCPlaylist::cellValue(int x, int y) const
 	{
 		if (!(!study) && static_cast<uint>(y) < study->parameters.nbYears)
 		{
-			assert(study->parameters.yearsFilter);
-			return study->parameters.yearsFilter[y] ? wxT("Active") : wxT("skip");
+            switch (x)
+            {
+                case MCPlaylistCol::STATUS:
+                {
+                    assert(study->parameters.yearsFilter);
+                    return study->parameters.yearsFilter[y] ? wxT("Active") : wxT("skip");
+                }
+                case MCPlaylistCol::WEIGHT:
+                {
+                    std::vector<int> yearsWeight = study->parameters.getYearsWeight();
+                    assert(y < yearsWeight.size());
+                    return wxString::Format(wxT("%i"), yearsWeight[y]);
+                }
+            }
 		}
 		return wxEmptyString;
 	}

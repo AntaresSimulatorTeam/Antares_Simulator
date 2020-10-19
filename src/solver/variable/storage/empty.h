@@ -64,11 +64,6 @@ namespace Variable
 			// Does nothing
 		}
 
-		static void mergeHourInYear(unsigned int /*year*/, unsigned int /*hour*/, const double /*value*/)
-		{
-			// Does nothing
-		}
-
 		template<class S, class VCardT>
 		static void buildSurveyReport(SurveyResults&, const S&, int, int, int)
 		{

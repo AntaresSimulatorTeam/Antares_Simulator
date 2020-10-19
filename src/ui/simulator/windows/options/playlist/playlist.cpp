@@ -128,11 +128,15 @@ namespace Options
 		btn = Component::CreateButton(pPanel, wxT("Disable all"), this, &MCPlaylist::onUnselectAll);
 		rightSizer->Add(btn, 0, wxEXPAND|wxLEFT|wxRIGHT);
 
-		// Unselect all
+		// Reverse status
 		rightSizer->AddSpacer(10);
 		btn = Component::CreateButton(pPanel, wxT("Reverse"), this, &MCPlaylist::onToggle);
 		rightSizer->Add(btn, 0, wxEXPAND|wxLEFT|wxRIGHT);
 
+        // Reset weights
+        rightSizer->AddSpacer(10);
+        btn = Component::CreateButton(pPanel, wxT("Reset weights"), this, &MCPlaylist::onResetYearsWeight);
+        rightSizer->Add(btn, 0, wxEXPAND|wxLEFT|wxRIGHT);
 
 		// Datagrid
 		auto* renderer = new Component::Datagrid::Renderer::MCPlaylist();
@@ -249,6 +253,16 @@ namespace Options
 		Thaw();
 	}
 
+    void MCPlaylist::onResetYearsWeight(void*)
+    {
+        auto studyptr = Data::Study::Current::Get();
+        if (!studyptr)
+            return;
+        auto& study = *studyptr;
+        
+        study.parameters.resetYearsWeigth();
+		onUpdateStatus();
+    }
 
 	void MCPlaylist::mouseMoved(wxMouseEvent&)
 	{
@@ -269,19 +283,46 @@ namespace Options
 
 		if (b)
 		{
+			//Check if weight is !=1 for one year
+			std::vector<int> yearWeight = d.getYearsWeight();
+		    
+		    int nbYearsDifferentFrom1 = 0;
 			uint y = 0;
 			for (uint i = 0; i != d.nbYears; ++i)
 			{
 				if (d.yearsFilter[i])
-					++y;
+				{
+                    ++y;
+
+                    int weight = yearWeight[i];
+                    if (weight != 1) {
+                        nbYearsDifferentFrom1++;
+                    }
+                }
 			}
+
+			wxString yearWeightLabel;
+
+			if (nbYearsDifferentFrom1 == 1)
+			{
+				yearWeightLabel = wxString("\n(") << nbYearsDifferentFrom1 << " year with custom weight)";
+			}
+			if (nbYearsDifferentFrom1 > 1)
+			{
+				yearWeightLabel = wxString("\n(") << nbYearsDifferentFrom1 << " years with custom weight)";
+			}
+
 			if (y < 2)
-				pStatus->SetLabel(wxString() << wxT(" Use a custom playlist with ") << y << wxT(" year  "));
+				pStatus->SetLabel(wxString() << wxT(" Use a custom playlist with ") << y << wxT(" year  ") << yearWeightLabel);
 			else
-				pStatus->SetLabel(wxString() << wxT(" Use a custom playlist with ") << y << wxT(" years  "));
+				pStatus->SetLabel(wxString() << wxT(" Use a custom playlist with ") << y << wxT(" years  ") << yearWeightLabel);
+
 		}
 		else
 			pStatus->SetLabel(wxT(" Use a custom playlist  "));
+
+		wxSizer& sizer = *GetSizer();
+		sizer.Layout();
 	}
 
 
