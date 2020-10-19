@@ -6,3 +6,5 @@ project(unit_tests_antares VERSION 1.0)
 add_subdirectory(ext)
 
 add_subdirectory(src)
+
+add_subdirectory(end-to-end)
