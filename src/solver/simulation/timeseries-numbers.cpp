@@ -172,7 +172,7 @@ namespace Solver
 		id.toLower();
 
 		
-		study.scenarioRulesCreate(parameters.activeRulesScenario);
+		study.scenarioRulesLoadIfNotAvailable();
 		if (study.scenarioRules)
 		{
 			Data::ScenarioBuilder::Rules::Ptr rules = study.scenarioRules->find(id);
