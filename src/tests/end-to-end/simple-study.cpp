@@ -216,7 +216,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 	pStudy->parameters.nbTimeSeriesThermal	= nbTS;
 
 	//Create area
-	int load = 7;
+	double load = 7.0;
 	Area*  pArea = addArea(pStudy,"Area 1", nbTS);	
 
 	//Initialize time series
@@ -260,7 +260,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
 	pStudy->parameters.nbTimeSeriesThermal = nbTS;
 
 	//Create area
-	int load = 7;
+	double load = 7.0;
 	Area* pArea = addArea(pStudy, "Area 1", nbTS);
 
 	//Initialize time series
@@ -305,7 +305,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
 	pStudy->parameters.nbTimeSeriesThermal = nbTS;
 
 	//Create area
-	int load = 7;
+	double load = 7.0;
 	Area* pArea = addArea(pStudy, "Area 1", nbTS);
 
 	//Initialize time series
@@ -353,7 +353,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
 	pStudy->parameters.nbTimeSeriesThermal = nbTS;
 
 	//Create area
-	int load = 5;
+	double load = 5.0;
 	Area* pArea = addArea(pStudy, "Area 1", nbTS);
 
 	//Initialize time series
@@ -373,18 +373,14 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
 	pCluster->series->series.fillColumn(1, availablePower);
 
 	//Create scenario rules to force use of TS otherwise the TS used is random
-	pStudy->scenarioRulesCreate();
-	ScenarioBuilder::Sets* p_sets = pStudy->scenarioRules;
-	
-	
-	if (p_sets && !p_sets->empty())
-	{
-		ScenarioBuilder::Rules::Ptr pRules = p_sets->createNew("Custom");
-		pRules->load.set(pArea->index, 0, 1);
-		pRules->load.set(pArea->index, 1, 2);
+	std::vector<int> areaLoadTS;
+	areaLoadTS.assign(nbYears, 1);
+	areaLoadTS[0] = 1;	areaLoadTS[1] = 2;
 
-		pStudy->parameters.useCustomTSNumbers = true;
-		pStudy->parameters.activeRulesScenario = "Custom";
+	ScenarioBuilder::Rules::Ptr pRules = createScenarioRules(pStudy);
+	for (int i = 0; i < nbYears; i++)
+	{
+		pRules->load.set(pArea->index, i, areaLoadTS[i]);
 	}
 
 	//Launch simulation
@@ -420,8 +416,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_different_weight)
     //Define years weight
 	std::vector<int> yearsWeight;
 	yearsWeight.assign(nbYears, 1);
-	yearsWeight[0] = 4;
-	yearsWeight[1] = 10;
+	yearsWeight[0] = 4;	yearsWeight[1] = 10;
 
 	int yearSum = defineYearsWeight(pStudy,yearsWeight);	
 
@@ -452,7 +447,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_different_weight)
 	//Create scenario rules to force use of TS otherwise the TS used is random
 	std::vector<int> areaLoadTS;
 	areaLoadTS.assign(nbYears, 1);
-	areaLoadTS[1] = 2;
+	areaLoadTS[0] = 1;	areaLoadTS[1] = 2;
 
 	ScenarioBuilder::Rules::Ptr pRules = createScenarioRules(pStudy);
 	for (int i = 0; i < nbYears; i++)
@@ -460,11 +455,11 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_different_weight)
 		pRules->load.set(pArea->index, i, areaLoadTS[i]);
 	}
 
+	//Calculate average load with mc years weight
 	double averageLoad = 0.0;
-
 	for (int i = 0; i < nbYears; i++)
 	{
-		averageLoad += loadList[areaLoadTS[i] -1 ] * yearsWeight[i] / yearSum;
+		averageLoad += loadList[areaLoadTS[i] - 1 ] * yearsWeight[i] / yearSum;
 	}
 
 	//Launch simulation
