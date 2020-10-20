@@ -164,6 +164,8 @@ install(TARGETS ${execname} DESTINATION bin)
 import_std_libs(${execname})
 executable_strip(${execname})
 
+copy_dependency(sirius_solver ${execname})
+
 # Embedding the manifest file into the executable
 if(WIN32)
 	if(NOT MSVC)

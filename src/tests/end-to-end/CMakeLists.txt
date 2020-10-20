@@ -17,6 +17,7 @@ target_link_libraries(tests-simple-study
 						libantares-solver-variable
 						libantares-solver-simulation
 						libantares-solver-ts-generator
+                        libmodel_antares
 						Boost::unit_test_framework
 			)
 			
@@ -26,5 +27,7 @@ target_include_directories(tests-simple-study
 							)
 
 add_test(NAME end-to-end-simple-study COMMAND tests-simple-study)
+
+copy_dependency(sirius_solver tests-simple-study)
 
 

@@ -112,15 +112,9 @@ macro(solver_app name swap)
 			)
 
 	import_std_libs(${exec_name})
-	executable_strip(${exec_name})
-
-	if( MSVC )
-		# If done properly and if the dependency has a correct config file, IMPORTED_LOCATION_RELEASE should be defined
-		get_target_property( DEP_SHARED_LIB_PATH sirius_solver IMPORTED_LOCATION_RELEASE )
-
-		# Copy the shared lib file
-		add_custom_command(TARGET ${exec_name} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${DEP_SHARED_LIB_PATH} $<TARGET_FILE_DIR:${exec_name}>)
-	endif()
+	executable_strip(${exec_name})	
+	
+	copy_dependency(sirius_solver ${exec_name})	
 
 endmacro()
 
