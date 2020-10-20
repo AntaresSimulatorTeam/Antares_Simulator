@@ -73,7 +73,7 @@ namespace ScenarioBuilder
 		double get_value(uint x, uint y) const = 0;
 
 		virtual
-		void add_value(uint x, uint y, String value) = 0;
+		void set_value(uint x, uint y, String value) = 0;
 
 		/*!
 		** \brief Apply the changes to the study corresponding data (time series, hydro levels, ...)

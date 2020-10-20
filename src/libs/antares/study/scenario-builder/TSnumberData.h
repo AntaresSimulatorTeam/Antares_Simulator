@@ -79,7 +79,7 @@ namespace ScenarioBuilder
 		uint height() const;
 
 		double get_value(uint x, uint y) const;
-		void add_value(uint x, uint y, String value);
+		void set_value(uint x, uint y, String value);
 
 		/*
 		** Give the study an access to TS numbers scenarii

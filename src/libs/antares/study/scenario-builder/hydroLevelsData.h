@@ -80,7 +80,7 @@ namespace ScenarioBuilder
 
 		double get_value(uint x, uint y) const;
 
-		void add_value(uint x, uint y, String value);
+		void set_value(uint x, uint y, String value);
 
 		void apply(Study& study);
 

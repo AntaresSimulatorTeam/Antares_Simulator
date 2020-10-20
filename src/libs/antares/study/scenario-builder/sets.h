@@ -52,6 +52,10 @@ namespace ScenarioBuilder
 		typedef Rules::Map::const_iterator  const_iterator;
 
 	public:
+		//! Update mode, indicates wether we are called from with a ScenarioBuilderUpdater instance or not
+		bool inUpdaterMode;
+
+	public:
 		//! \name Constructor & Destructor
 		//@{
 		/*!

@@ -98,7 +98,7 @@ namespace ScenarioBuilder
 		}
 	}
 
-	void TSNumberData::add_value(uint x, uint y, String value)
+	void TSNumberData::set_value(uint x, uint y, String value)
 	{
 		uint d = fromStringToInt(value);
 		pTSNumberRules.entry[y][x] = d;

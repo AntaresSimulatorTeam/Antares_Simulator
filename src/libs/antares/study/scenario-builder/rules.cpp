@@ -109,7 +109,7 @@ namespace ScenarioBuilder
 	}
 
 
-	void Rules::loadFromInstrs(Study& study, const AreaName::Vector& instrs, String value)
+	void Rules::loadFromInstrs(Study& study, const AreaName::Vector& instrs, String value, bool updaterMode = false)
 	{
 		assert(instrs.size() > 2);
 
@@ -124,7 +124,10 @@ namespace ScenarioBuilder
 		Data::Area* area = pStudy->areas.find(areaname);
 		if (!area)
 		{
-			logs.warning() << "[scenario-builder] The area '" << areaname << "' has not been found";	
+			// silently ignore the error
+			if (not updaterMode)
+				logs.warning() << "[scenario-builder] The area '" << areaname << "' has not been found";
+
 			return;
 		}
 		
@@ -146,8 +149,9 @@ namespace ScenarioBuilder
 					if (cluster)
 						thermal[area->index].set(cluster, year, value);
 					else
-						logs.warning() << "cluster " << area->id << " / " << clustername << " (size:" 
-									   << clustername.size() << ") not found: it may not exist or it is disabled";
+						if (not updaterMode)
+							logs.warning() << "cluster " << area->id << " / " << clustername << " (size:" << clustername.size() 
+										   << ") not found: it may not exist or it is disabled";
 					break;
 				}
 			case 'l':

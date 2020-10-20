@@ -68,7 +68,7 @@ namespace Renderer
 			{
 				assert((uint)y < pRules->hydroLevels.width());
 				assert((uint)x < pRules->hydroLevels.height());
-				pRules->hydroLevels.add_value(x, y, value);
+				pRules->hydroLevels.set_value(x, y, value);
 				return true;
 			}
 		}

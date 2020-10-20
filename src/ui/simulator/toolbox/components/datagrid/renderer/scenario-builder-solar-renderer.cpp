@@ -52,7 +52,7 @@ namespace Renderer
 			{
 				assert((uint)y < pRules->solar.width());
 				assert((uint)x < pRules->solar.height());
-				pRules->solar.add_value(x, y, value);
+				pRules->solar.set_value(x, y, value);
 				return true;
 			}
 		}

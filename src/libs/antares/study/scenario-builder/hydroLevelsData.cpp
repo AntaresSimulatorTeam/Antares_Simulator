@@ -102,7 +102,7 @@ namespace ScenarioBuilder
 		}
 	}
 
-	void hydroLevelsData::add_value(uint x, uint y, String value)
+	void hydroLevelsData::set_value(uint x, uint y, String value)
 	{
 		double d = fromStringToDouble(value);
 		pHydroLevelsRules.entry[y][x] = d / 100.;

@@ -79,7 +79,7 @@ namespace ScenarioBuilder
 		/*!
 		** \brief Load information from a single line (extracted from an INI file)
 		*/
-		void loadFromInstrs(Study& study, const AreaName::Vector& instrs, String value);
+		void loadFromInstrs(Study& study, const AreaName::Vector& instrs, String value, bool updaterMode);
 
 		/*!
 		** \brief Export the data into a mere INI file

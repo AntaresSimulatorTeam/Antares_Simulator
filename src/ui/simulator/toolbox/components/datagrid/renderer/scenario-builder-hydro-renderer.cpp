@@ -52,7 +52,7 @@ namespace Renderer
 			{
 				assert((uint)y < pRules->hydro.width());
 				assert((uint)x < pRules->hydro.height());
-				pRules->hydro.add_value(x, y, value);
+				pRules->hydro.set_value(x, y, value);
 				return true;
 			}
 		}
