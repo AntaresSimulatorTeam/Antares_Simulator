@@ -47,6 +47,29 @@ namespace Renderer
 		return stream.str();
 	}
 
+	double fromStringToDouble(const Yuni::String& value)
+	{
+		double dbl;
+		double d;
+		if (!value.to(dbl))
+			d = -1.;
+		else
+		{
+			if (dbl < 0.)
+				d = -1.;
+			else
+			{
+				if (dbl > 100.)
+					d = 100.;
+				else
+					d = dbl;
+			}
+		}
+		return d;
+	}
+
+
+
 	hydroLevelsScBuilderRenderer::hydroLevelsScBuilderRenderer() : ScBuilderRendererBase() {}
 
 	hydroLevelsScBuilderRenderer::~hydroLevelsScBuilderRenderer() {}
@@ -68,7 +91,8 @@ namespace Renderer
 			{
 				assert((uint)y < pRules->hydroLevels.width());
 				assert((uint)x < pRules->hydroLevels.height());
-				pRules->hydroLevels.set_value(x, y, value);
+				double val = fromStringToDouble(value) / 100.;
+				pRules->hydroLevels.set_value(x, y, val);
 				return true;
 			}
 		}
@@ -83,7 +107,7 @@ namespace Renderer
 			{
 				assert((uint)y < pRules->hydroLevels.width());
 				assert((uint)x < pRules->hydroLevels.height());
-				return pRules->hydroLevels.get_value(x, y);
+				return pRules->hydroLevels.get_value(x, y) * 100.;
 			}
 		}
 		return 0.;

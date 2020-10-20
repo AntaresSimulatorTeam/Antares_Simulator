@@ -36,28 +36,6 @@ namespace Data
 namespace ScenarioBuilder
 {
 
-	double fromStringToDouble(const Yuni::String& value)
-	{
-		double dbl;
-		double d;
-		if (!value.to(dbl))
-			d = -1.;
-		else
-		{
-			if (dbl < 0.)
-				d = -1.;
-			else
-			{
-				if (dbl > 100.)
-					d = 100.;
-				else
-					d = dbl;
-			}
-		}
-		return d;
-	}
-
-
 	bool hydroLevelsData::reset(const Study& study)
 	{
 		assert(&study != nullptr);
@@ -102,10 +80,9 @@ namespace ScenarioBuilder
 		}
 	}
 
-	void hydroLevelsData::set_value(uint x, uint y, String value)
+	void hydroLevelsData::set_value(uint x, uint y, double value)
 	{
-		double d = fromStringToDouble(value);
-		pHydroLevelsRules.entry[y][x] = d / 100.;
+		pHydroLevelsRules.entry[y][x] = value;
 	}
 
 	void hydroLevelsData::apply(Study& study)

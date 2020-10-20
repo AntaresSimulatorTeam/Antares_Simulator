@@ -80,7 +80,7 @@ namespace ScenarioBuilder
 
 		double get_value(uint x, uint y) const;
 
-		void set_value(uint x, uint y, String value);
+		void set_value(uint x, uint y, double value);
 
 		void apply(Study& study);
 
@@ -103,7 +103,7 @@ namespace ScenarioBuilder
 
 	inline uint hydroLevelsData::height() const { return pHydroLevelsRules.height; }
 
-	inline double hydroLevelsData::get_value(uint x, uint y) const { return pHydroLevelsRules.entry[y][x] * 100.; }
+	inline double hydroLevelsData::get_value(uint x, uint y) const { return pHydroLevelsRules.entry[y][x]; }
 
 
 } // namespace ScenarioBuilder
