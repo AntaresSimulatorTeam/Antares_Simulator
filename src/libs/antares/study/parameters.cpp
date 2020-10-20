@@ -360,8 +360,13 @@ namespace Data
 		// Same time-series
 		if (key == "correlateddraws")
 			return ConvertCStrToListTimeSeries(value, d.intraModal);
+
+		// Scenario builder
+		if (key == "custom-ts-numbers")
+			return value.to<bool>(d.useCustomScenario);
 		if (key == "custom-scenario")
 			return value.to<bool>(d.useCustomScenario);
+
 		// Custom set
 		if (key == "customset")
 			return true; // value ignored

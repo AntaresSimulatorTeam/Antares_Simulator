@@ -75,7 +75,7 @@ namespace ScenarioBuilder
 	{
 		// Prefix
 		CString<512, false> prefix;
-		prefix += "v,";
+		prefix += "hl,";
 		
 		// Turning values into strings (precision 4)
 		std::ostringstream value_into_string;

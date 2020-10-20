@@ -113,13 +113,14 @@ namespace ScenarioBuilder
 	{
 		assert(instrs.size() > 2);
 
-		const AreaName& kind = instrs[0];
-		if (kind.size() != 1)
-			return;
-		const char kindc = kind[0];
-
-		// The current area name
+		const AreaName& kind_of_scenario = instrs[0];	// load, thermal, hydro, ..., hydro levels, ... ?
+		const uint year = instrs[2].to<uint>();
 		const AreaName& areaname = instrs[1];
+		const ThermalClusterName& clustername = (instrs.size() == 4) ? instrs[3] : "";
+
+		if (kind_of_scenario.size() > 2)
+			return;
+
 		auto pStudy = &study;
 		Data::Area* area = pStudy->areas.find(areaname);
 		if (!area)
@@ -132,45 +133,37 @@ namespace ScenarioBuilder
 		}
 		
 
-		// Year
-		const uint year = instrs[2].to<uint>();
-
-		switch (kindc)
+		if (kind_of_scenario == "t")
 		{
-			case 't':
-				{
-					if (instrs.size() != 4)
-						return;
-					const ThermalClusterName& clustername = instrs[3];
-					const ThermalCluster* cluster = area->thermal.list.find(clustername);
-					if (not cluster)
-						cluster = area->thermal.mustrunList.find(clustername);
+			if (clustername.empty())
+				return;
 
-					if (cluster)
-						thermal[area->index].set(cluster, year, value);
-					else
-						if (not updaterMode)
-							logs.warning() << "cluster " << area->id << " / " << clustername << " (size:" << clustername.size() 
-										   << ") not found: it may not exist or it is disabled";
-					break;
-				}
-			case 'l':
-				load.set(area->index, year, value);
-				return;
-			case 'w':
-				wind.set(area->index, year, value);
-				return;
-			case 'h':
-				hydro.set(area->index, year, value);
-				return;
-			case 's':
-				solar.set(area->index, year, value);
-				return;
-			case 'v':
-				hydroLevels.set(area->index, year, value);
-				return;
+			const ThermalCluster* cluster = area->thermal.list.find(clustername);
+			if (not cluster)
+				cluster = area->thermal.mustrunList.find(clustername);
+
+			if (cluster)
+				thermal[area->index].set(cluster, year, value);
+			else
+				if (not updaterMode)
+					logs.warning() << "cluster " << area->id << " / " << clustername << " (size:" << clustername.size() 
+								   << ") not found: it may not exist or it is disabled";
 		}
-		return;
+			
+		if (kind_of_scenario == "l")
+			load.set(area->index, year, value);
+
+		if (kind_of_scenario == "w")
+			wind.set(area->index, year, value);
+
+		if (kind_of_scenario == "h")
+			hydro.set(area->index, year, value);
+
+		if (kind_of_scenario == "s")
+			solar.set(area->index, year, value);
+
+		if (kind_of_scenario == "hl")
+			hydroLevels.set(area->index, year, value);
 	}
 
 
