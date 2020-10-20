@@ -23,6 +23,10 @@ include(CheckIncludeFiles)
 include(CheckIncludeFileCXX)
 include(CheckCXXCompilerFlag)
 
+if (DEFINED VCPKG_ROOT)
+    include(${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
+endif()
+
 
 #CMake function to build dependancy from git
 include("cmake/utils.cmake")

@@ -253,6 +253,15 @@ Note :
 ```
 cmake -B _build -S [antares_src] -DCMAKE_TOOLCHAIN_FILE=[vcpkg_root]/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=[vcpkg-triplet] -DCMAKE_BUILD_TYPE=release
 ```
+
+or 
+
+```
+cmake -B _build -S [antares_src] -DVCPKG_ROOT=[vcpkg_root] -DVCPKG_TARGET_TRIPLET=[vcpkg-triplet] -DCMAKE_BUILD_TYPE=release
+```
+Note :
+> Configure with ```-DVCPKG_ROOT``` option remove some CMake warnings (mainly [CMP0012](https://cmake.org/cmake/help/v3.0/policy/CMP0012.html) policy warnings)
+
 - Build
  ```
 cmake --build _build --config release -j8
