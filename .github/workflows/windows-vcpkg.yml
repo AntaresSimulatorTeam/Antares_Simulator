@@ -39,7 +39,7 @@ jobs:
         
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DUSE_ORTOOLS_STABLE=${{ matrix.use_ortools_stable }}
+           cmake -B _build -S src -DVCPKG_ROOT=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }} -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DUSE_ORTOOLS_STABLE=${{ matrix.use_ortools_stable }}
     
     - name: Build
       run: |
