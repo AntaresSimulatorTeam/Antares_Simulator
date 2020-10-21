@@ -28,6 +28,10 @@ target_include_directories(tests-simple-study
 
 add_test(NAME end-to-end-simple-study COMMAND tests-simple-study)
 
+
 copy_dependency(sirius_solver tests-simple-study)
+
+# Storing tests-simple-study under the folder Unit-tests in the IDE
+set_target_properties(tests-simple-study PROPERTIES FOLDER Unit-tests)
 
 
