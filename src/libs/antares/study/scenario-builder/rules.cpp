@@ -151,19 +151,29 @@ namespace ScenarioBuilder
 		}
 			
 		if (kind_of_scenario == "l")
+		{
 			load.set(area->index, year, value);
+		}
 
 		if (kind_of_scenario == "w")
+		{
 			wind.set(area->index, year, value);
+		}
 
 		if (kind_of_scenario == "h")
+		{
 			hydro.set(area->index, year, value);
+		}
 
 		if (kind_of_scenario == "s")
+		{
 			solar.set(area->index, year, value);
+		}
 
 		if (kind_of_scenario == "hl")
+		{
 			hydroLevels.set(area->index, year, value);
+		}
 	}
 
 

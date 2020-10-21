@@ -28,7 +28,9 @@
 #include "scenario-builder-hydro-levels-renderer.h"
 #include <sstream>
 #include <iomanip>
+#include "antares/study/scenario-builder/scBuilderUtils.h"
 
+using namespace Antares::Data::ScenarioBuilder;
 
 namespace Antares
 {
@@ -38,38 +40,7 @@ namespace Datagrid
 {
 namespace Renderer
 {
-
-	string doubleToString(double d)
-	{
-		std::ostringstream stream;
-		stream << std::setprecision(4);
-		stream << d;
-		return stream.str();
-	}
-
-	double fromStringToDouble(const Yuni::String& value)
-	{
-		double dbl;
-		double d;
-		if (!value.to(dbl))
-			d = -1.;
-		else
-		{
-			if (dbl < 0.)
-				d = -1.;
-			else
-			{
-				if (dbl > 100.)
-					d = 100.;
-				else
-					d = dbl;
-			}
-		}
-		return d;
-	}
-
-
-
+	
 	hydroLevelsScBuilderRenderer::hydroLevelsScBuilderRenderer() : ScBuilderRendererBase() {}
 
 	hydroLevelsScBuilderRenderer::~hydroLevelsScBuilderRenderer() {}
@@ -80,7 +51,7 @@ namespace Renderer
 
 		return (d < 0.)
 			? wxString() << wxT("rand")
-			: wxString() << doubleToString(d);
+			: wxString() << fromHydroLevelToString(d);
 	}
 
 	bool hydroLevelsScBuilderRenderer::cellValue(int x, int y, const Yuni::String& value)
@@ -91,7 +62,7 @@ namespace Renderer
 			{
 				assert((uint)y < pRules->hydroLevels.width());
 				assert((uint)x < pRules->hydroLevels.height());
-				double val = fromStringToDouble(value) / 100.;
+				double val = fromStringToHydroLevel(value) / 100.;
 				pRules->hydroLevels.set_value(x, y, val);
 				return true;
 			}

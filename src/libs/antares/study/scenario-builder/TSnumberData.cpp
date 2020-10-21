@@ -26,6 +26,7 @@
 */
 
 #include "TSnumberData.h"
+#include "scBuilderUtils.h"
 
 
 namespace Antares
@@ -39,34 +40,6 @@ namespace ScenarioBuilder
 	{
 		maxErrors = 20,
 	};
-
-	uint fromStringToTSnumber(const Yuni::String& value)
-	{
-		uint result;
-		const uint maxTSnumber = 10000;
-		double result_dbl;
-
-		std::string val = value.to<std::string>();
-		try
-		{
-			result_dbl = stod(val);
-		}
-		catch (std::invalid_argument &)
-		{
-			return 0;
-		}
-
-		if (result_dbl < 0.)
-			result = 0;
-		else
-		{
-			if (result_dbl > maxTSnumber)
-				result = maxTSnumber;
-			else
-				result = (uint)result_dbl;
-		}
-		return result;
-	}
 
 
 	bool TSNumberData::reset(const Study& study)

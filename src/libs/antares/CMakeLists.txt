@@ -47,7 +47,9 @@ set(SRC_STUDY_SCENARIO_BUILDER
 	study/scenario-builder/sets.h
 	study/scenario-builder/sets.hxx
 	study/scenario-builder/sets.cpp
-	study/scenario-builder/updater.hxx)
+	study/scenario-builder/updater.hxx
+	study/scenario-builder/scBuilderUtils.h
+	study/scenario-builder/scBuilderUtils.cpp)
 source_group("study\\scenario builder" FILES ${SRC_MATRIX})
 
 set(SRC_STUDY_ACTIONS
