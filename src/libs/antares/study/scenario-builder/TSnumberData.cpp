@@ -40,25 +40,32 @@ namespace ScenarioBuilder
 		maxErrors = 20,
 	};
 
-	uint fromStringToInt(const Yuni::String& value)
+	uint fromStringToTSnumber(const Yuni::String& value)
 	{
-		double dbl;
-		uint d;
-		if (!value.to(dbl))
-			d = 0;
+		uint result;
+		const uint maxTSnumber = 10000;
+		double result_dbl;
+
+		std::string val = value.to<std::string>();
+		try
+		{
+			result_dbl = stod(val);
+		}
+		catch (std::invalid_argument &)
+		{
+			return 0;
+		}
+
+		if (result_dbl < 0.)
+			result = 0;
 		else
 		{
-			if (dbl < 0.)
-				d = 0;
+			if (result_dbl > maxTSnumber)
+				result = maxTSnumber;
 			else
-			{
-				if (dbl > 10000.)
-					d = 10000;
-				else
-					d = (uint)dbl;
-			}
+				result = (uint)result_dbl;
 		}
-		return d;
+		return result;
 	}
 
 
@@ -67,8 +74,8 @@ namespace ScenarioBuilder
 		assert(&study != nullptr);
 
 		const uint nbYears = study.parameters.nbYears;
-		// Standard timeseries (load, wind, ...)
 
+		// Standard timeseries (load, wind, ...)
 		pTSNumberRules.reset(study.areas.size(), nbYears);
 		return true;
 	}
@@ -98,9 +105,19 @@ namespace ScenarioBuilder
 		}
 	}
 
+	void TSNumberData::set(uint areaindex, uint year, String value)
+	{
+		assert(areaindex < pTSNumberRules.width);
+		if (year < pTSNumberRules.height)
+		{
+			uint val = fromStringToTSnumber(value);
+			pTSNumberRules[areaindex][year] = val;
+		}
+	}
+
 	void TSNumberData::set_value(uint x, uint y, String value)
 	{
-		uint d = fromStringToInt(value);
+		uint d = fromStringToTSnumber(value);
 		pTSNumberRules.entry[y][x] = d;
 	}
 
@@ -369,7 +386,7 @@ namespace ScenarioBuilder
 
 	void thermalTSNumberData::set(const Antares::Data::ThermalCluster* cluster, const uint year, String value)
 	{
-		uint d = fromStringToInt(value);
+		uint d = fromStringToTSnumber(value);
 
 		assert(cluster != nullptr);
 		if (clusterIndexMap.find(cluster) == clusterIndexMap.end())

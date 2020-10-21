@@ -103,13 +103,6 @@ namespace ScenarioBuilder
 	
 	// class TSNumberData : inline functions
 
-	inline void TSNumberData::set(uint areaindex, uint year, String value)
-	{
-		assert(areaindex < pTSNumberRules.width);
-		if (year < pTSNumberRules.height)
-			pTSNumberRules[areaindex][year] = value.to<uint>();
-	}
-
 	inline uint TSNumberData::width() const { return pTSNumberRules.width;  }
 
 	inline uint TSNumberData::height() const { return pTSNumberRules.height; }
