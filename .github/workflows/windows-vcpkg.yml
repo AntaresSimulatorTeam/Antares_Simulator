@@ -19,7 +19,7 @@ jobs:
           - os: windows-latest
             triplet: x64-windows
             vcpkgCommitId: 'ee17a685087a6886e5681e355d36cd784f0dd2c8'
-            vcpkgPackages: openssl curl wxwidgets boost-test
+            vcpkgPackages: openssl curl wxwidgets boost-test boost-process boost-filesystem boost-dll
 
     steps:
     - uses: actions/checkout@v2 

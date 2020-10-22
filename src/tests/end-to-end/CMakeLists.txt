@@ -31,3 +31,20 @@ add_test(NAME end-to-end-simple-study COMMAND tests-simple-study)
 set_target_properties(tests-simple-study PROPERTIES FOLDER Unit-tests)
 
 
+find_package(Boost COMPONENTS filesystem REQUIRED)
+
+add_executable(tests-solver-call
+			solver-call.cpp)
+            
+target_link_libraries(tests-solver-call
+            PRIVATE
+            Boost::unit_test_framework
+            Boost::filesystem
+)
+            
+add_test(NAME end-to-end-solver-call COMMAND tests-solver-call)
+
+# Storing tests-solver-call under the folder Unit-tests in the IDE
+set_target_properties(tests-solver-call PROPERTIES FOLDER Unit-tests)
+
+
