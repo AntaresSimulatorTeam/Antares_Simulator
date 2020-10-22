@@ -26,9 +26,10 @@
 */
 
 #include "scenario-builder-thermal-renderer.h"
-
+#include "antares/study/scenario-builder/scBuilderUtils.h"
 
 using namespace Yuni;
+using namespace Antares::Data::ScenarioBuilder;
 
 
 namespace Antares
@@ -85,7 +86,8 @@ namespace Renderer
 				assert(pArea->index < pRules->areaCount());
 				assert((uint)y < pRules->thermal[pArea->index].width());
 				assert((uint)x < pRules->thermal[pArea->index].height());
-				pRules->thermal[pArea->index].set(pArea->thermal.list.byIndex[y], x, value);
+				uint val = fromStringToTSnumber(value);
+				pRules->thermal[pArea->index].set(pArea->thermal.list.byIndex[y], x, val);
 				return true;
 			}
 		}

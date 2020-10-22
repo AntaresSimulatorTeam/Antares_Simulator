@@ -71,7 +71,7 @@ namespace ScenarioBuilder
 		** \param year  A year
 		** \param value The new hydro level
 		*/
-		void set(uint index, uint year, String value);
+		void set(uint index, uint year, double value);
 		//@}
 
 		uint width() const;
@@ -92,11 +92,11 @@ namespace ScenarioBuilder
 
 	// class hydroLevelsData : inline functions
 
-	inline void hydroLevelsData::set(uint areaindex, uint year, String value)
+	inline void hydroLevelsData::set(uint areaindex, uint year, double value)
 	{
 		assert(areaindex < pHydroLevelsRules.width);
 		if (year < pHydroLevelsRules.height)
-			pHydroLevelsRules[areaindex][year] = value.to<double>();
+			pHydroLevelsRules[areaindex][year] = value;
 	}
 
 	inline uint hydroLevelsData::width() const { return pHydroLevelsRules.width; }

@@ -26,9 +26,11 @@
 */
 
 #include "scenario-builder-wind-renderer.h"
+#include "antares/study/scenario-builder/scBuilderUtils.h"
 
 
 using namespace Yuni;
+using namespace Antares::Data::ScenarioBuilder;
 
 
 namespace Antares
@@ -52,7 +54,8 @@ namespace Renderer
 			{
 				assert((uint)y < pRules->wind.width());
 				assert((uint)x < pRules->wind.height());
-				pRules->wind.set_value(x, y, value);
+				uint val = fromStringToTSnumber(value);
+				pRules->wind.set_value(x, y, val);
 				return true;
 			}
 		}

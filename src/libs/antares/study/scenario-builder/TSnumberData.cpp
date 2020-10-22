@@ -78,20 +78,16 @@ namespace ScenarioBuilder
 		}
 	}
 
-	void TSNumberData::set(uint areaindex, uint year, String value)
+	void TSNumberData::set(uint areaindex, uint year, uint value)
 	{
 		assert(areaindex < pTSNumberRules.width);
 		if (year < pTSNumberRules.height)
-		{
-			uint val = fromStringToTSnumber(value);
-			pTSNumberRules[areaindex][year] = val;
-		}
+			pTSNumberRules[areaindex][year] = value;
 	}
 
-	void TSNumberData::set_value(uint x, uint y, String value)
+	void TSNumberData::set_value(uint x, uint y, uint value)
 	{
-		uint d = fromStringToTSnumber(value);
-		pTSNumberRules.entry[y][x] = d;
+		pTSNumberRules.entry[y][x] = value;
 	}
 
 
@@ -357,15 +353,13 @@ namespace ScenarioBuilder
 		}
 	}
 
-	void thermalTSNumberData::set(const Antares::Data::ThermalCluster* cluster, const uint year, String value)
+	void thermalTSNumberData::set(const Antares::Data::ThermalCluster* cluster, const uint year, uint value)
 	{
-		uint d = fromStringToTSnumber(value);
-
 		assert(cluster != nullptr);
 		if (clusterIndexMap.find(cluster) == clusterIndexMap.end())
 			clusterIndexMap[cluster] = cluster->areaWideIndex;
 		if (year < pTSNumberRules.height)
-			pTSNumberRules[clusterIndexMap[cluster]][year] = d;
+			pTSNumberRules[clusterIndexMap[cluster]][year] = value;
 	}
 
 	void thermalTSNumberData::apply(Study& study)

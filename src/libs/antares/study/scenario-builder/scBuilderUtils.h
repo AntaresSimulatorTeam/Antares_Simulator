@@ -41,7 +41,7 @@ namespace ScenarioBuilder
 {
 
 	string fromHydroLevelToString(double d);
-	double fromStringToHydroLevel(const Yuni::String& value);
+	double fromStringToHydroLevel(const Yuni::String& value, const double maxLevel);
 
 	uint fromStringToTSnumber(const Yuni::String& value);
 

@@ -26,8 +26,6 @@
 */
 
 #include "scenario-builder-hydro-levels-renderer.h"
-#include <sstream>
-#include <iomanip>
 #include "antares/study/scenario-builder/scBuilderUtils.h"
 
 using namespace Antares::Data::ScenarioBuilder;
@@ -62,7 +60,7 @@ namespace Renderer
 			{
 				assert((uint)y < pRules->hydroLevels.width());
 				assert((uint)x < pRules->hydroLevels.height());
-				double val = fromStringToHydroLevel(value) / 100.;
+				double val = fromStringToHydroLevel(value, 100.) / 100.;
 				pRules->hydroLevels.set_value(x, y, val);
 				return true;
 			}

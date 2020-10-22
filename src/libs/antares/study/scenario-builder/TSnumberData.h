@@ -72,14 +72,14 @@ namespace ScenarioBuilder
 		** \param year  A year
 		** \param value The new TS number
 		*/
-		void set(uint index, uint year, String value);
+		void set(uint index, uint year, uint value);
 		//@}
 
 		uint width() const;
 		uint height() const;
 
 		double get_value(uint x, uint y) const;
-		void set_value(uint x, uint y, String value);
+		void set_value(uint x, uint y, uint value);
 
 		/*
 		** Give the study an access to TS numbers scenarii
@@ -173,7 +173,7 @@ namespace ScenarioBuilder
 
 		void attachArea(const Area* area) { pArea = area; }
 
-		void set(const Antares::Data::ThermalCluster* cluster, const uint year, String value);
+		void set(const Antares::Data::ThermalCluster* cluster, const uint year, uint value);
 		uint get(const Antares::Data::ThermalCluster* cluster, const uint year) const;
 		void apply(Study& study);
 		CString<512, false> get_prefix() const;

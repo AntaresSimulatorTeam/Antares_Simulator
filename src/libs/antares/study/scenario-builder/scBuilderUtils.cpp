@@ -47,10 +47,9 @@ namespace ScenarioBuilder
 	}
 
 
-	double fromStringToHydroLevel(const Yuni::String& value)
+	double fromStringToHydroLevel(const Yuni::String& value, const double maxLevel)
 	{
 		double result;
-		const double maxLevel = 100.;
 		double result_tmp;
 
 		std::string val = value.to<std::string>();

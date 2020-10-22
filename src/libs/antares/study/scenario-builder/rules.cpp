@@ -28,6 +28,7 @@
 #include "rules.h"
 #include "../study.h"
 #include "../../logs.h"
+#include "scBuilderUtils.h"
 
 
 using namespace Yuni;
@@ -143,7 +144,10 @@ namespace ScenarioBuilder
 				cluster = area->thermal.mustrunList.find(clustername);
 
 			if (cluster)
-				thermal[area->index].set(cluster, year, value);
+			{
+				uint val = fromStringToTSnumber(value);
+				thermal[area->index].set(cluster, year, val);
+			}
 			else
 				if (not updaterMode)
 					logs.warning() << "cluster " << area->id << " / " << clustername << " (size:" << clustername.size() 
@@ -152,27 +156,32 @@ namespace ScenarioBuilder
 			
 		if (kind_of_scenario == "l")
 		{
-			load.set(area->index, year, value);
+			uint val = fromStringToTSnumber(value);
+			load.set(area->index, year, val);
 		}
 
 		if (kind_of_scenario == "w")
 		{
-			wind.set(area->index, year, value);
+			uint val = fromStringToTSnumber(value);
+			wind.set(area->index, year, val);
 		}
 
 		if (kind_of_scenario == "h")
 		{
-			hydro.set(area->index, year, value);
+			uint val = fromStringToTSnumber(value);
+			hydro.set(area->index, year, val);
 		}
 
 		if (kind_of_scenario == "s")
 		{
-			solar.set(area->index, year, value);
+			uint val = fromStringToTSnumber(value);
+			solar.set(area->index, year, val);
 		}
 
 		if (kind_of_scenario == "hl")
 		{
-			hydroLevels.set(area->index, year, value);
+			double val = fromStringToHydroLevel(value, 1.);
+			hydroLevels.set(area->index, year, val);
 		}
 	}
 

@@ -54,9 +54,6 @@ namespace ScenarioBuilder
 		virtual
 		bool reset(const Study& study) = 0;
 
-		virtual
-		void set(uint index, uint year, String value) = 0;
-
 		/*!
 		** \brief Export the data into a mere INI file
 		*/
@@ -68,9 +65,6 @@ namespace ScenarioBuilder
 
 		virtual
 		uint height() const = 0;
-
-		virtual
-		double get_value(uint x, uint y) const = 0;
 
 		/*!
 		** \brief Apply the changes to the study corresponding data (time series, hydro levels, ...)

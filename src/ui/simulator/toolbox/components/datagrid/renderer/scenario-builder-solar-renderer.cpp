@@ -26,9 +26,10 @@
 */
 
 #include "scenario-builder-solar-renderer.h"
-
+#include "antares/study/scenario-builder/scBuilderUtils.h"
 
 using namespace Yuni;
+using namespace Antares::Data::ScenarioBuilder;
 
 
 namespace Antares
@@ -52,7 +53,8 @@ namespace Renderer
 			{
 				assert((uint)y < pRules->solar.width());
 				assert((uint)x < pRules->solar.height());
-				pRules->solar.set_value(x, y, value);
+				uint val = fromStringToTSnumber(value);
+				pRules->solar.set_value(x, y, val);
 				return true;
 			}
 		}
