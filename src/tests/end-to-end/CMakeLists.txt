@@ -35,11 +35,12 @@ find_package(Boost COMPONENTS filesystem REQUIRED)
 
 add_executable(tests-solver-call
 			solver-call.cpp)
-            
+
 target_link_libraries(tests-solver-call
             PRIVATE
             Boost::unit_test_framework
             Boost::filesystem
+	    ${CMAKE_DL_LIBS}
 )
             
 add_test(NAME end-to-end-solver-call COMMAND tests-solver-call)

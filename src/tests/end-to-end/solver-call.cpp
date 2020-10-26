@@ -43,10 +43,12 @@ void launchSolver(const std::string& studyPath)
 	std::vector<filesystem::path> paths;
 	paths.push_back(filesystem::path(dll::program_location().parent_path().string() + "/../../../solver/Debug"));
 	paths.push_back(filesystem::path(dll::program_location().parent_path().string() + "/../../../solver/Release"));
+	paths.push_back(filesystem::path(dll::program_location().parent_path().string() + "/../../solver"));
 
 	filesystem::path solverPath = process::search_path("antares-7.2-solver", paths);
 
 	std::string solverLaunchCommand = solverPath.string() + " -i \"" + studyPath + "\"";
+	std::cout << solverLaunchCommand << std::endl;
 
 	//Launch solver with study
 	int result = process::system(solverLaunchCommand);
@@ -60,7 +62,7 @@ void checkIntegrityFile(const std::string& studyOutputPath, const std::vector<do
 	//Parse checkIntegrity.txt file to check objective functions result
 	optional<filesystem::path> checkIntegrityFilePath = find_file(studyOutputPath, "checkIntegrity.txt");
 
-	BOOST_REQUIRE_MESSAGE(checkIntegrityFilePath.has_value(), "Can't find checkIntegrity.txt file in output folder '" << studyOutputPath << "'");
+	BOOST_REQUIRE_MESSAGE(checkIntegrityFilePath, "Can't find checkIntegrity.txt file in output folder '" << studyOutputPath << "'");
 	
 	ifstream checkIntegrityFile;
 	checkIntegrityFile.open(checkIntegrityFilePath.value().string());
@@ -88,7 +90,7 @@ void checkIntegrityFile(const std::string& studyOutputPath, const std::vector<do
 //Test free data sample study objective functions result
 BOOST_AUTO_TEST_CASE(free_data_sample)
 {
-	const std::string& studyPath		= dll::program_location().parent_path().string() + "/../../data/free_data_sample/";
+	const std::string& studyPath		= dll::program_location().parent_path().string() + "/../data/free_data_sample/";
 
 	const std::vector<double>& checkIntegrityExpectedValues = { 2.85657392370263e+11,
 																0.00000000000000e+00,
