@@ -31,8 +31,22 @@ optional<filesystem::path> find_file(const filesystem::path& dir_path, const fil
 	return it == end ? optional<filesystem::path>() : it->path();
 }
 
+std::string getBuildDirectory()
+{
+	std::string result = dll::program_location().parent_path().string();
+
+#if defined(_WIN32) || defined(WIN32)
+	result += "/../../..";
+#else
+	result += "/../..";
+#endif
+
+	return result;
+}
+
 void launchSolver(const std::string& studyPath)
 {
+	std::string buildDir = getBuildDirectory();
 	std::string studyOutputPath = studyPath + "output/";
 
 	//Remove any available output and logs
@@ -41,14 +55,13 @@ void launchSolver(const std::string& studyPath)
 
 	//Get solver path
 	std::vector<filesystem::path> paths;
-	paths.push_back(filesystem::path(dll::program_location().parent_path().string() + "/../../../solver/Debug"));
-	paths.push_back(filesystem::path(dll::program_location().parent_path().string() + "/../../../solver/Release"));
-	paths.push_back(filesystem::path(dll::program_location().parent_path().string() + "/../../solver"));
+	paths.push_back(filesystem::path(buildDir + "/solver/Debug"));
+	paths.push_back(filesystem::path(buildDir + "/solver/Release"));
+	paths.push_back(filesystem::path(buildDir + "/solver"));
 
 	filesystem::path solverPath = process::search_path("antares-7.2-solver", paths);
 
 	std::string solverLaunchCommand = solverPath.string() + " -i \"" + studyPath + "\"";
-	std::cout << solverLaunchCommand << std::endl;
 
 	//Launch solver with study
 	int result = process::system(solverLaunchCommand);
@@ -90,7 +103,7 @@ void checkIntegrityFile(const std::string& studyOutputPath, const std::vector<do
 //Test free data sample study objective functions result
 BOOST_AUTO_TEST_CASE(free_data_sample)
 {
-	const std::string& studyPath		= dll::program_location().parent_path().string() + "/../data/free_data_sample/";
+	const std::string& studyPath		= getBuildDirectory() + "/tests/data/free_data_sample/";
 
 	const std::vector<double>& checkIntegrityExpectedValues = { 2.85657392370263e+11,
 																0.00000000000000e+00,
