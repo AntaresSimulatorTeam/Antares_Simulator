@@ -57,6 +57,7 @@ ExternalProject_Add(
 					libs/process
 					libs/dll
 					libs/concept_check
+					libs/tokenizer
 	
 	# We set the following commands content (even with an empty string) : otherwise a default non convenient command is run.
 	UPDATE_COMMAND		${booststrap_script}
