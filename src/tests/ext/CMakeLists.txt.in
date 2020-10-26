@@ -60,6 +60,7 @@ ExternalProject_Add(
 					libs/tokenizer
 					libs/winapi
 					libs/optional
+					libs/fusion
 	
 	# We set the following commands content (even with an empty string) : otherwise a default non convenient command is run.
 	UPDATE_COMMAND		${booststrap_script}
