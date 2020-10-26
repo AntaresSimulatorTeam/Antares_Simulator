@@ -271,10 +271,10 @@ if(BUILD_TESTING)
 	# include(CTest) # calls enable_testing() and turns BUILD_TESTING to ON by default (among other useful things)
 	enable_testing()
 	
-	CMAKE_DEPENDENT_OPTION(BUILD_BOOST_TEST "Download and build boost.test" OFF "NOT BUILD_DEPS" ON)
+	CMAKE_DEPENDENT_OPTION(BUILD_BOOST "Download and build boost needed libraries" OFF "NOT BUILD_DEPS" ON)
 	
-	if(BUILD_BOOST_TEST)
-		# Setting CMAKE_PREFIX_PATH so that find_package(boost.test...) finds "${FizzBuzz current path}/ext" boost.test
+	if(BUILD_BOOST)
+		# Setting CMAKE_PREFIX_PATH so that find_package(boost...) finds "${current path}/ext" boost
 		list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/tests/ext")
 	endif()
 		

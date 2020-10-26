@@ -93,7 +93,7 @@ Note:
  - [CURL](https://github.com/curl/curl)
  - [wxWidgets](https://github.com/wxWidgets/wxWidgets)
  (Only for the complete Antares Simulator solution with GUI)
- - Boost test (Only for unit tests)
+ - Boost librairies : test process filesystem dll (Only for unit tests)
 
 This section describes the install procedures for the third-party Open source libraries used by ANTARES.
 The install procedure can be done
@@ -136,7 +136,10 @@ cd [vcpkg_root]
 vcpkg install openssl:[vcpg-triplet] 
 vcpkg install curl:[vcpg-triplet] 
 vcpkg install wxwidgets:[vcpg-triplet] 
-vcpkg install boost-test:[vcpg-triplet] 
+vcpkg install boost-test:[vcpg-triplet]
+vcpkg install boost-filesystem:[vcpg-triplet]
+vcpkg install boost-process[vcpg-triplet]
+vcpkg install boost-dll:[vcpg-triplet]
 ```
 ### [Using a package manager](#linux_manager)
 On linux you can use a package manger to download the precompiled librairies.
@@ -148,7 +151,7 @@ sudo apt-get install libuuid1 uuid-dev
 sudo apt-get install libcurl4-openssl-dev
 sudo apt-get install libssl-dev
 sudo apt-get install libwxgtk3.0-dev
-sudo apt-get install libboost-test-dev
+sudo apt-get install libboost-test-dev libboost-filesystem-dev libboost-dev
 ```
 
 #### RHEL / Centos
@@ -157,7 +160,7 @@ sudo apt-get install libboost-test-dev
 sudo yum install openssl
 sudo yum install curl
 sudo yum install wxGTK3-devel
-sudo yum install boost-test
+sudo yum install boost-test boost-filesystem boost-devel
 ```
 ### [Automatic librairies compilation from git](#git_compil)
 Dependency can be built  at configure time using the option `-DBUILD_DEPS=ON` (`OFF` by default) or you can compile few of them using the options below.
@@ -253,7 +256,7 @@ Note :
 Unit tests compilation  can be enabled at configure time using the option `-DBUILD_TESTING=ON` (`OFF` by default)
 
 Note :
-> Boost  test librairie compilation (``BUILD_BOOST_TEST``) can be enabled only if ``BUILD_TESTING=ON``
+> Boost librairie compilation (``BUILD_BOOST``) can be enabled only if ``BUILD_TESTING=ON``
 
 After build, unit tests can be run with ``ctest`` :
  ```

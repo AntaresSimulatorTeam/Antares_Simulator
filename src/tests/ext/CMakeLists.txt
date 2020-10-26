@@ -1,11 +1,11 @@
 
-if(BUILD_BOOST_TEST)
+if(BUILD_BOOST)
 	message("")
 	message("**********************************************************************")
-	message("** Download, build and installation of Boost Test...")
+	message("** Download, build and installation of Boost ...")
 	message("**********************************************************************")
 
-	# Creating the cmake file that is about to download, build and install boost.test
+	# Creating the cmake file that is about to download, build and install boost
 	configure_file(
 		${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt.in
 		${CMAKE_CURRENT_BINARY_DIR}/CMakeLists.txt @ONLY
@@ -32,15 +32,16 @@ if(BUILD_BOOST_TEST)
 	endif()
 
 	message("**********************************************************************")
-	message("** Finished download, build and installation of Boost Test.")
+	message("** Finished download, build and installation of Boost.")
 	message("**********************************************************************")
 	message("")
 endif()
 
 
-find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+find_package(Boost COMPONENTS unit_test_framework filesystem REQUIRED)
 
 # Make found targets globally available.
 if (Boost_FOUND)
 	set_target_properties(Boost::unit_test_framework PROPERTIES IMPORTED_GLOBAL TRUE)
+	set_target_properties(Boost::filesystem PROPERTIES IMPORTED_GLOBAL TRUE)
 endif()
