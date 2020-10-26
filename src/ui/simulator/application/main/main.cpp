@@ -716,6 +716,9 @@ namespace Forms
 			SystemParameterHaveChanged = false;
 		}
 
+		if (page.name() == wxT("bindingconstraints"))
+			OnStudyConstraintModified(nullptr);
+
 		// Notify any subscriber that the selection of the main notebook
 		// has changed.
 		OnMainNotebookChanged();
