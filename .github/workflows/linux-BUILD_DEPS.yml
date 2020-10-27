@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - develop
+jobs:
 
-jobs:     
-         
   linux:
 
     runs-on: ${{ matrix.os }}

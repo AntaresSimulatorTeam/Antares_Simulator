@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - develop
-      - "#47-initial-levels-in-sc-builder"
-      
+      - feature/*
 jobs:
+
   build:
 
     runs-on: ${{ matrix.os }}
