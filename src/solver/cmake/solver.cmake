@@ -51,10 +51,12 @@ set(RTESOLVER_OPT
 		optimisation/opt_gestion_second_membre_couts_demarrage.cpp
 		optimisation/opt_gestion_second_membre_couts_demarrage.cpp
 		optimisation/opt_decompte_variables_et_contraintes_couts_demarrage.cpp
-    optimisation/opt_init_minmax_groupes_couts_demarrage.cpp
-    optimisation/opt_nombre_min_groupes_demarres_couts_demarrage.cpp
+        optimisation/opt_init_minmax_groupes_couts_demarrage.cpp
+        optimisation/opt_nombre_min_groupes_demarres_couts_demarrage.cpp
 
 		optimisation/renseigner_donnees_couts_demarrage.cpp
+		optimisation/opt_export_structure.h
+		optimisation/opt_export_structure.cpp
 
 	)
 
