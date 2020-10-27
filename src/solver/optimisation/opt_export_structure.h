@@ -59,9 +59,9 @@ struct PROBLEME_HEBDO;
 void OPT_Export_add_variable(std::vector<std::string>& varname, int Var, Antares::Data::Enum::ExportStructDict structDict, int firstVal, int secondVal, int ts);
 void OPT_Export_add_variable(std::vector<std::string>& varname, int Var, Antares::Data::Enum::ExportStructDict structDict, int firstVal, int ts);
 
-void OPT_ExportInterco(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace);
-void OPT_ExportAreaName(uint numSpace);
-void OPT_ExportVariables(const std::vector<std::string>& varname, const std::string& fileName, const std::string& fileExtension, uint numSpace);
+void OPT_ExportInterco(const Antares::Data::Study& study, PROBLEME_HEBDO* ProblemeHebdo, uint numSpace);
+void OPT_ExportAreaName(const Antares::Data::Study& study, uint numSpace);
+void OPT_ExportVariables(const Antares::Data::Study& study, const std::vector<std::string>& varname, const std::string& fileName, const std::string& fileExtension, uint numSpace);
 
 
 

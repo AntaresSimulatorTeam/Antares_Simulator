@@ -61,10 +61,10 @@ namespace Data {
 } // namespace Data
 } // namespace Antares
 
-void OPT_ExportInterco(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace)
-{
-	auto& study = *Antares::Data::Study::Current::Get();
 
+
+void OPT_ExportInterco(const Antares::Data::Study& study, PROBLEME_HEBDO* ProblemeHebdo, uint numSpace)
+{
 	//Interco are exported only once for first year
 	if (study.runtime->currentYear[numSpace] == 0 && study.runtime->weekInTheYear[numSpace] == 0) {
 		FILE* Flot = study.createFileIntoOutputWithExtension("interco", "txt", numSpace);
@@ -80,10 +80,8 @@ void OPT_ExportInterco(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace)
 	}
 }
 
-void OPT_ExportAreaName(uint numSpace)
+void OPT_ExportAreaName(const Antares::Data::Study& study, uint numSpace)
 {
-	auto& study = *Antares::Data::Study::Current::Get();
-
 	//Area name are exported only once for first year
 	if (study.runtime->currentYear[numSpace] == 0 && study.runtime->weekInTheYear[numSpace] == 0) {
 		FILE* Flot = study.createFileIntoOutputWithExtension("area", "txt", numSpace);
@@ -121,10 +119,8 @@ void OPT_Export_add_variable(std::vector<std::string>& varname, int Var, Antares
 	}
 }
 
-void OPT_ExportVariables(const std::vector<std::string>& varname,const std::string& fileName, const std::string& fileExtension, uint numSpace)
+void OPT_ExportVariables(const Antares::Data::Study& study, const std::vector<std::string>& varname,const std::string& fileName, const std::string& fileExtension, uint numSpace)
 {
-	auto& study = *Antares::Data::Study::Current::Get();
-
 	FILE* Flot = study.createFileIntoOutputWithExtension(fileName, fileExtension, numSpace);
 	for (auto const& line : varname) {
 		fprintf(Flot, "%s\n", line.c_str());

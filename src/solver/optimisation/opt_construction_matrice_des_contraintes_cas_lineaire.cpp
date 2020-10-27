@@ -67,12 +67,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 
 	double * Pi; int * Colonne;
 
+	auto& study = *Study::Current::Get();
 	bool exportStructure = ProblemeHebdo->ExportStructure;
 
 	if (exportStructure)
 	{
-		OPT_ExportInterco(ProblemeHebdo, numSpace);
-		OPT_ExportAreaName(numSpace);
+		OPT_ExportInterco(study, ProblemeHebdo, numSpace);
+		OPT_ExportAreaName(study,numSpace);
 	}	
 
 	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
@@ -97,7 +98,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 	std::vector<std::string> varname;
 	varname.assign(nvars, "");
 
-	auto& study = *Study::Current::Get();
 	
 	for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++) {
 
@@ -236,45 +236,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 			CorrespondanceCntNativesCntOptim->NumeroDeContraintePourEviterLesChargesFictives[Pays] = ProblemeAResoudre->NombreDeContraintes;
 			
 			OPT_ChargerLaContrainteDansLaMatriceDesContraintes(ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '<');
-
-			
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		}
 
 		
@@ -1048,11 +1009,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO * Pr
 	//Export structure
 	if(exportStructure)
 	{
-		OPT_ExportVariables(varname,"variables","txt", numSpace);
+		OPT_ExportVariables(study, varname,"variables","txt", numSpace);
 
 		//TODO : for now empty constraints.txt file needed
 		std::vector<std::string> conname;
-		OPT_ExportVariables(conname, "constraints", "txt", numSpace);
+		OPT_ExportVariables(study, conname, "constraints", "txt", numSpace);
 	}
 
 
