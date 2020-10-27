@@ -44,14 +44,14 @@ target_link_libraries(tests-solver-call
             PRIVATE
             Boost::unit_test_framework
             Boost::filesystem
-	    {CMAKE_DL_LIBS}
+	    ${CMAKE_DL_LIBS}
 )
 
 if (BUILD_BOOST)
   find_package(Threads REQUIRED)
   target_link_libraries(tests-solver-call
 	  PRIVATE
-	  {CMAKE_THREADS_LIBS_INIT}
+	  ${CMAKE_THREADS_LIBS_INIT}
 	  Threads::Treads)
 endif()
             
