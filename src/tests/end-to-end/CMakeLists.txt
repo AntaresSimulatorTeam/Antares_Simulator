@@ -52,7 +52,7 @@ if (BUILD_BOOST)
   target_link_libraries(tests-solver-call
 	  PRIVATE
 	  ${CMAKE_THREADS_LIBS_INIT}
-	  Threads::Treads)
+	  Threads::Threads)
 endif()
             
 add_test(NAME end-to-end-solver-call COMMAND tests-solver-call)
