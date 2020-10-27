@@ -51,6 +51,8 @@ namespace Antares {
 				CorrespondanceVarNativesVarOptim
 			};
 		}
+
+		class Study;
 	}
 }
 
