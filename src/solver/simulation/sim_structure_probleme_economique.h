@@ -629,6 +629,7 @@ struct PROBLEME_HEBDO {
 	
 	char ExportMPS;
 	bool exportMPSOnError;
+	bool ExportStructure;
 	
 	char WaterValueAccurate;	/* OUI_ANTARES /NON_ANTARES*/ 
 	

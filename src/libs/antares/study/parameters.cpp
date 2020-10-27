@@ -293,6 +293,7 @@ namespace Data
 		simplexOptimizationRange       = sorWeek;
 
 		include.exportMPS              = false;
+		include.exportStructure		   = false;
 		
 		include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
 
@@ -494,6 +495,8 @@ namespace Data
 			return value.to<bool>(d.include.reserve.primary);
 		if (key == "include-exportmps")
 			return value.to<bool>(d.include.exportMPS);
+		if (key == "include-exportstructure")
+			return value.to<bool>(d.include.exportStructure);
 		if (key == "initial-reservoir-levels")
 		{
 			auto iniLevels = StringToInitialReservoirLevels(value);
@@ -1506,6 +1509,8 @@ namespace Data
 			logs.info() << "  :: ignoring min up/down time for thermal clusters";
 		if (!include.exportMPS)
 			logs.info() << "  :: ignoring export mps";
+		if (!include.exportStructure)
+			logs.info() << "  :: ignoring export structure";
 		if (!include.hurdleCosts)
 			logs.info() << "  :: ignoring hurdle costs";
 
@@ -1655,6 +1660,7 @@ namespace Data
 			section->add("include-primaryreserve",    include.reserve.primary);
 
 			section->add("include-exportmps",         include.exportMPS);
+			section->add("include-exportstructure",	  include.exportStructure);
 
             // Unfeasible problem behavior
 			section->add("include-unfeasible-problem-behavior", Enum::toString(include.unfeasibleProblemBehavior));

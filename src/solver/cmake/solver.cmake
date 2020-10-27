@@ -45,7 +45,6 @@ set(RTESOLVER_OPT
 		optimisation/opt_liberation_problemes_simplexe.cpp
 		optimisation/opt_restaurer_les_donnees_selon_manoeuvrabilite_1.cpp
 		optimisation/opt_gestion_des_couts_cas_quadratique.cpp
-
 		optimisation/opt_construction_contraintes_couts_demarrage.cpp 
 		optimisation/opt_construction_variables_couts_demarrages.cpp
 		optimisation/opt_gestion_des_bornes_couts_demarrage.cpp
@@ -55,8 +54,9 @@ set(RTESOLVER_OPT
 		optimisation/opt_decompte_variables_et_contraintes_couts_demarrage.cpp
 		optimisation/opt_init_minmax_groupes_couts_demarrage.cpp
 		optimisation/opt_nombre_min_groupes_demarres_couts_demarrage.cpp
-
 		optimisation/renseigner_donnees_couts_demarrage.cpp
+		optimisation/opt_export_structure.h
+		optimisation/opt_export_structure.cpp
 
 		utils/ortools_utils.cpp
 
