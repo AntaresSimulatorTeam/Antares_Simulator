@@ -79,7 +79,6 @@ namespace Window
 		void onEdit(void*);
 		void onDeleteAll(void*);
 		void onEditFromMouse(wxMouseEvent&);
-		void onBuild(void*);
 		
 	private:
 		Component::Notebook::Page* pPageList;

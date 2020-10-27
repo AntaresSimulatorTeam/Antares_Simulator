@@ -191,7 +191,7 @@ namespace Window
 
 
 
-		class BindingConstraintWeightsPanel final :
+	class BindingConstraintWeightsPanel final :
 		public Component::Panel,
 		public Yuni::IEventObserver<BindingConstraintWeightsPanel>
 	{
