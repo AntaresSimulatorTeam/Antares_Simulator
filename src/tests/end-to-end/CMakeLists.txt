@@ -33,7 +33,7 @@ set_target_properties(tests-simple-study PROPERTIES FOLDER Unit-tests)
 add_executable(tests-solver-call
 			solver-call.cpp)
 			
-target_include_librairies(tests-solver-call
+target_include_directories(tests-solver-call
             PRIVATE
             ${Boost_INCLUDE_DIRS}
 )
