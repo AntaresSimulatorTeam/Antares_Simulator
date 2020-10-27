@@ -256,7 +256,7 @@ Note :
 Unit tests compilation  can be enabled at configure time using the option `-DBUILD_TESTING=ON` (`OFF` by default)
 
 Note :
-> Boost librairie compilation (``BUILD_BOOST``) can be enabled only if ``BUILD_TESTING=ON``
+> Boost libraries compilation (``BUILD_BOOST``) can be enabled only if ``BUILD_TESTING=ON``
 
 After build, unit tests can be run with ``ctest`` :
  ```

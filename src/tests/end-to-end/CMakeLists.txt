@@ -47,6 +47,7 @@ target_link_libraries(tests-solver-call
 	    ${CMAKE_DL_LIBS}
 )
 
+# Need to add some link_libraries when using compiled boost libraries
 if (BUILD_BOOST)
   find_package(Threads REQUIRED)
   target_link_libraries(tests-solver-call

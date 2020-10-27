@@ -35,6 +35,7 @@ std::string getBuildDirectory()
 {
 	std::string result = dll::program_location().parent_path().string();
 
+    //For windows debug or release directory is added
 #if defined(_WIN32) || defined(WIN32)
 	result += "/../../..";
 #else
@@ -55,10 +56,15 @@ void launchSolver(const std::string& studyPath)
 
 	//Get solver path
 	std::vector<filesystem::path> paths;
+    
+    //For windows debug or release directory is added
 	paths.push_back(filesystem::path(buildDir + "/solver/Debug"));
 	paths.push_back(filesystem::path(buildDir + "/solver/Release"));
+    
+    //For linux no directory is added
 	paths.push_back(filesystem::path(buildDir + "/solver"));
 
+	//TODO : need to find a way to get any solver version
 	filesystem::path solverPath = process::search_path("antares-7.2-solver", paths);
 
 	std::string solverLaunchCommand = solverPath.string() + " -i \"" + studyPath + "\"";
