@@ -30,7 +30,7 @@ add_test(NAME end-to-end-simple-study COMMAND tests-simple-study)
 # Storing tests-simple-study under the folder Unit-tests in the IDE
 set_target_properties(tests-simple-study PROPERTIES FOLDER Unit-tests)
 
-find_package( Threads )
+
 
 add_executable(tests-solver-call
 			solver-call.cpp)
@@ -42,12 +42,18 @@ target_include_directories(tests-solver-call
 
 target_link_libraries(tests-solver-call
             PRIVATE
-            ${Boost_LIBRARIES}
             Boost::unit_test_framework
             Boost::filesystem
-	    ${CMAKE_DL_LIBS}
-	    ${CMAKE_THREADS_LIBS_INIT}
 )
+
+if (BUILD_BOOST)
+  find_package(Threads REQUIRED)
+  target_link_libraries(tests-solver-call
+	  PRIVATE
+	  {CMAKE_DL_LIBS}
+	  {CMAKE_THREADS_LIBS_INIT}
+	  Threads::Treads)
+endif()
             
 add_test(NAME end-to-end-solver-call COMMAND tests-solver-call)
 
