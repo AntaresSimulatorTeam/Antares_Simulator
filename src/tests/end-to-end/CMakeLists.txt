@@ -32,11 +32,15 @@ set_target_properties(tests-simple-study PROPERTIES FOLDER Unit-tests)
 
 add_executable(tests-solver-call
 			solver-call.cpp)
+			
+target_include_librairies(tests-solver-call
+            PRIVATE
+            ${Boost_INCLUDE_DIRS}
+)
 
 target_link_libraries(tests-solver-call
             PRIVATE
-            Boost::unit_test_framework
-            Boost::filesystem
+            ${Boost_LIBRARIES}
 	    ${CMAKE_DL_LIBS}
 )
             
