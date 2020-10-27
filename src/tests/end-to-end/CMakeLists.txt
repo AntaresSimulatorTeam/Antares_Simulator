@@ -44,6 +44,7 @@ target_link_libraries(tests-solver-call
             Boost::unit_test_framework
             Boost::filesystem
 	    ${CMAKE_DL_LIBS}
+	    ${CMAKE_THREADS_LIBS_INIT}
 )
             
 add_test(NAME end-to-end-solver-call COMMAND tests-solver-call)
