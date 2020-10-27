@@ -30,6 +30,8 @@ add_test(NAME end-to-end-simple-study COMMAND tests-simple-study)
 # Storing tests-simple-study under the folder Unit-tests in the IDE
 set_target_properties(tests-simple-study PROPERTIES FOLDER Unit-tests)
 
+find_package( Threads )
+
 add_executable(tests-solver-call
 			solver-call.cpp)
 			
