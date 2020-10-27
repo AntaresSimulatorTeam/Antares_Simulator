@@ -41,6 +41,8 @@ target_include_directories(tests-solver-call
 target_link_libraries(tests-solver-call
             PRIVATE
             ${Boost_LIBRARIES}
+            Boost::unit_test_framework
+            Boost::filesystem
 	    ${CMAKE_DL_LIBS}
 )
             
