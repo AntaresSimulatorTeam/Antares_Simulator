@@ -18,8 +18,6 @@ if (Boost_FOUND)
 endif()
 
 
-message(${Boost_LIBRARIES})
-
 add_subdirectory(src)
 
 add_subdirectory(end-to-end)
