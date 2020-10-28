@@ -138,8 +138,6 @@ namespace Economy
 			// Average on all years
 			AncestorType::pResults.initializeFromStudy(study);
 			AncestorType::pResults.reset();
-			AncestorType::pResults.averageMaxValue(study.runtime->rangeLimits.year[Data::rangeCount]);
-			AncestorType::pResults.stdDeviationMaxValue(study.runtime->rangeLimits.year[Data::rangeCount]);
 
 			// Intermediate values
 			pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];

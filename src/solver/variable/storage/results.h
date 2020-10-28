@@ -133,6 +133,5 @@ namespace Variable
 # include "average.h"
 # include "stdDeviation.h"
 # include "and.h"
-# include "or.h"
 
 #endif // __SOLVER_VARIABLE_STORAGE_RESULTS_H__

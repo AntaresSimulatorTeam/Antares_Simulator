@@ -77,6 +77,7 @@ namespace Options
 		void onSelectAll(void*);
 		void onUnselectAll(void*);
 		void onToggle(void*);
+        void onResetYearsWeight(void*);
 		//! Event: Close the window
 		void onClose(void*);
 		void onUpdateStatus();

@@ -30,7 +30,7 @@
 # include <yuni/yuni.h>
 # include <yuni/core/string.h>
 # include <yuni/core/math.h>
-# include "../logs.h"
+# include <logs.h>
 # include "../string-to-double.h"
 # include "../io/statistics.h"
 # include "matrix-to-buffer.h"
@@ -1211,8 +1211,10 @@ namespace Antares
 
 	template<class T, class ReadWriteT>
 	template<class PredicateT>
-	void Matrix<T,ReadWriteT>::saveToBuffer(Yuni::Clob& data,
-		uint precision, bool print_dimensions, PredicateT& predicate) const
+	void Matrix<T,ReadWriteT>::saveToBuffer(std::string & data,
+											uint precision,
+											bool print_dimensions,
+											PredicateT& predicate) const
 	{
 		using namespace Yuni;
 		enum
@@ -1237,9 +1239,8 @@ namespace Antares
 		// Pre-allocate memory in the buffer. It should be enough in nearly all cases.
 		data.reserve(width * height * 6);
 
-		// Adding a hint about the height of the matrix
 		if (print_dimensions)
-			data << "size:" << width << 'x' << height << '\n';
+			data += "size:" + std::to_string(width) + 'x' + std::to_string(height) + '\n';
 
 		mtx_to_buffer_dpr->run();
 	}
@@ -1257,7 +1258,7 @@ namespace Antares
 	}
 
 	template<class T, class ReadWriteT>
-	void Matrix<T, ReadWriteT>::saveBufferToFile(Yuni::Clob & buffer, Yuni::IO::File::Stream & f) const
+	void Matrix<T, ReadWriteT>::saveBufferToFile(std::string & buffer, Yuni::IO::File::Stream & f) const
 	{
 		f << buffer;
 	}
@@ -1294,7 +1295,7 @@ namespace Antares
 
 		if (height and width)
 		{
-			Yuni::Clob buffer;
+			std::string buffer;
 
 			saveToBuffer(buffer, precision, print_dimensions, predicate);
 			Statistics::HasWrittenToDisk(buffer.size());

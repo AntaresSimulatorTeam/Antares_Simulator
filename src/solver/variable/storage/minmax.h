@@ -136,7 +136,6 @@ namespace AllYears
 
 		void merge(uint year, const IntermediateValues& rhs);
 
-		void mergeHourInYear(uint year, uint hour, const double value);
 
 		Yuni::uint64 memoryUsage() const
 		{
