@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - feature/*
+      - "#47-initial-levels-in-sc-builder"
 jobs:
 
   build:

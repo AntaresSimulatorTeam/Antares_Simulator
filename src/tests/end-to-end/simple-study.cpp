@@ -145,7 +145,7 @@ ScenarioBuilder::Rules::Ptr createScenarioRules(Study::Ptr pStudy)
 	{
 		pRules = p_sets->createNew("Custom");
 
-		pStudy->parameters.useCustomTSNumbers  = true;
+		pStudy->parameters.useCustomScenario  = true;
 		pStudy->parameters.activeRulesScenario = "Custom";
 	}
 
