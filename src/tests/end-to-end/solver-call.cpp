@@ -8,6 +8,7 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/dll/runtime_symbol_info.hpp>
 #include <boost/optional.hpp>
+#include <boost/regex.hpp>
 
 #include <iostream>
 #include <stdio.h>
@@ -15,7 +16,7 @@
 using namespace boost;
 
 namespace utf = boost::unit_test;
-namespace tt = boost::test_tools;
+namespace tt  = boost::test_tools;
 
 using namespace std;
 
@@ -29,6 +30,34 @@ optional<filesystem::path> find_file(const filesystem::path& dir_path, const fil
 			return e.path().filename() == file_name;
 		});
 	return it == end ? optional<filesystem::path>() : it->path();
+}
+
+optional<filesystem::path> find_file(const filesystem::path& dir_path, const boost::regex my_filter) {
+	const filesystem::recursive_directory_iterator end;
+	boost::smatch what;
+	const auto it = find_if(filesystem::recursive_directory_iterator(dir_path), end,
+		[&my_filter, &what](const filesystem::directory_entry& e) {
+			return boost::regex_match(e.path().filename().string(), what, my_filter);
+		});
+	return it == end ? optional<filesystem::path>() : it->path();
+}
+
+optional<filesystem::path> find_file(const std::vector<filesystem::path>& paths, const boost::regex my_filter) {
+
+	optional<filesystem::path> result;
+
+	for (const filesystem::path& path : paths) {
+
+		if (filesystem::is_directory(path))
+		{
+			result = find_file(path, my_filter);
+			if (result) {
+				break;
+			}
+		}
+	}
+
+	return result;
 }
 
 std::string getBuildDirectory()
@@ -64,10 +93,12 @@ void launchSolver(const std::string& studyPath)
     //For linux no directory is added
 	paths.push_back(filesystem::path(buildDir + "/solver"));
 
-	//TODO : need to find a way to get any solver version
-	filesystem::path solverPath = process::search_path("antares-7.2-solver", paths);
+	const boost::regex filter("antares-[0-9]*.[0-9]*-solver.*");
+	optional<filesystem::path> solverPath = find_file(paths, filter);
 
-	std::string solverLaunchCommand = solverPath.string() + " -i \"" + studyPath + "\"";
+	BOOST_REQUIRE_MESSAGE(solverPath, "Can't find antares solver application");
+
+	std::string solverLaunchCommand = solverPath.value().string() + " -i \"" + studyPath + "\"";
 
 	//Launch solver with study
 	int result = process::system(solverLaunchCommand);

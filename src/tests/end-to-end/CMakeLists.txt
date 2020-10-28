@@ -44,6 +44,7 @@ target_link_libraries(tests-solver-call
             PRIVATE
             Boost::unit_test_framework
             Boost::filesystem
+            Boost::regex
 	    ${CMAKE_DL_LIBS}
 )
 
