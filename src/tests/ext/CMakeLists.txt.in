@@ -62,6 +62,7 @@ ExternalProject_Add(
 					libs/optional
 					libs/fusion
 					libs/asio
+					libs/regex
 	
 	# We set the following commands content (even with an empty string) : otherwise a default non convenient command is run.
 	UPDATE_COMMAND		${booststrap_script}

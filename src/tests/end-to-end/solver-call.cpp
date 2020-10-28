@@ -93,7 +93,7 @@ void launchSolver(const std::string& studyPath)
     //For linux no directory is added
 	paths.push_back(filesystem::path(buildDir + "/solver"));
 
-	const boost::regex filter("antares-[0-9]*.[0-9]*-solver.*");
+	const boost::regex filter("antares\-[0-9]*\.[0-9]*\-solver.*");
 	optional<filesystem::path> solverPath = find_file(paths, filter);
 
 	BOOST_REQUIRE_MESSAGE(solverPath, "Can't find antares solver application");

@@ -93,7 +93,7 @@ Note:
  - [CURL](https://github.com/curl/curl)
  - [wxWidgets](https://github.com/wxWidgets/wxWidgets)
  (Only for the complete Antares Simulator solution with GUI)
- - Boost librairies : test process filesystem dll (Only for unit tests)
+ - Boost librairies : test process filesystem regex dll (Only for unit tests)
 
 This section describes the install procedures for the third-party Open source libraries used by ANTARES.
 The install procedure can be done
@@ -140,6 +140,7 @@ vcpkg install boost-test:[vcpg-triplet]
 vcpkg install boost-filesystem:[vcpg-triplet]
 vcpkg install boost-process[vcpg-triplet]
 vcpkg install boost-dll:[vcpg-triplet]
+vcpkg install boost-regex:[vcpg-triplet]
 ```
 ### [Using a package manager](#linux_manager)
 On linux you can use a package manger to download the precompiled librairies.
@@ -151,7 +152,7 @@ sudo apt-get install libuuid1 uuid-dev
 sudo apt-get install libcurl4-openssl-dev
 sudo apt-get install libssl-dev
 sudo apt-get install libwxgtk3.0-dev
-sudo apt-get install libboost-test-dev libboost-filesystem-dev libboost-dev
+sudo apt-get install libboost-test-dev libboost-filesystem-dev libboost-regex-dev libboost-dev
 ```
 
 #### RHEL / Centos
@@ -160,7 +161,7 @@ sudo apt-get install libboost-test-dev libboost-filesystem-dev libboost-dev
 sudo yum install openssl
 sudo yum install curl
 sudo yum install wxGTK3-devel
-sudo yum install boost-test boost-filesystem boost-devel
+sudo yum install boost-test boost-filesystem boost-regex boost-devel
 ```
 ### [Automatic librairies compilation from git](#git_compil)
 Dependency can be built  at configure time using the option `-DBUILD_DEPS=ON` (`OFF` by default) or you can compile few of them using the options below.
