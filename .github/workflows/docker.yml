@@ -18,7 +18,7 @@ jobs:
            yum update -y
            yum install git cmake3 gcc gcc-c++ make -y
            yum install epel-release -y
-           yum install unzip openssl-devel libcurl-devel wxGTK3-devel libuuid-devel boost-test -y
+           yum install unzip openssl-devel libcurl-devel wxGTK3-devel libuuid-devel boost-devel boost-test -y
     
     - name: Configure
       run: |
