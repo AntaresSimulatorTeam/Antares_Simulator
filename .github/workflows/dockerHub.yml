@@ -1,0 +1,45 @@
+name: CI docker hub
+
+on: 
+  push:
+    branches:
+      - ci/*
+
+jobs:
+  centos:
+  
+    runs-on: ubuntu-latest
+    container: jmkerloch/rte-antares:centos8
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Add boost-devel
+      run: |
+           yum install boost-devel -y
+    
+    - name: Configure
+      run: |
+           mkdir _build
+           cd _build
+           cmake3 ../src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
+
+    - name: Build
+      run: |           
+           cmake3 --build _build --config release
+
+    - name: Run unit tests
+      run: |
+           cd _build
+           ctest -C Release --output-on-failure           
+
+           
+    - name: Installer .tar.gz creation
+      run: |
+           cd _build
+           cpack -G TGZ
+           
+    - name: Installer upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: antares-installer-64bits
+        path: _build/antares-*.*.*-Linux.*
