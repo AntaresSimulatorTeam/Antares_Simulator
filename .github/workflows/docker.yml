@@ -14,20 +14,20 @@ jobs:
     
     - name: Install libraries
       run: |
-           sudo yum update
-           sudo yum install openssl
-           sudo yum install curl
-           sudo yum install wxGTK-devel
-           sudo yum install boost-test
+           yum update -y
+           yum install git cmake3 gcc gcc-c++ make -y
+           yum install epel-release -y
+           yum install unzip openssl-devel libcurl-devel wxGTK3-devel libuuid-devel boost-test -y
     
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
+           mkdir _build
+           cd _build
+           cmake3 .. -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
 
     - name: Build
-      run: |
-           ls -1
-           cmake --build _build --config release -j2
+      run: |           
+           cmake3 --build _build --config release
 
     - name: Run unit tests
       run: |
