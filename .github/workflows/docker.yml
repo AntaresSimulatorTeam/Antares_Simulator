@@ -1,0 +1,47 @@
+name: CI
+
+on: push
+    branches:
+      - ci/*
+
+jobs:
+  centos:
+  
+    runs-on: ubuntu-latest
+    container: centos:latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install libraries
+      run: |
+           sudo yum update
+           sudo yum install openssl
+           sudo yum install curl
+           sudo yum install wxGTK-devel
+           sudo yum install boost-test
+    
+    - name: Configure
+      run: |
+           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
+
+    - name: Build
+      run: |
+           ls -1
+           cmake --build _build --config release -j2
+
+    - name: Run unit tests
+      run: |
+           cd _build
+           ctest -C Release --output-on-failure           
+
+           
+    - name: Installer .tar.gz creation
+      run: |
+           cd _build
+           cpack -G TGZ
+           
+    - name: Installer upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: antares-installer-64bits
+        path: _build/antares-*.*.*-Linux.*
