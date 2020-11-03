@@ -47,7 +47,7 @@ RUN git clone https://github.com/AntaresSimulatorTeam/or-tools.git -b rte_dev_si
 # Ortools compilation
 RUN mkdir ortools-build &&\
     cd ortools-build &&\
-    cmake ../or-tools -DUSE_COINOR=ON -DBUILD_PYTHON=OFF -DBUILD_TESTING=OFF -Dsirius_solver_ROOT=/sirius_install -DUSE_SIRIUS=ON -DBUILD_DEPS=ON &&\
+    cmake ../or-tools -DUSE_COINOR=ON -DBUILD_PYTHON=OFF -DBUILD_TESTING=OFF -Dsirius_solver_ROOT=/sirius-install -DUSE_SIRIUS=ON -DBUILD_DEPS=ON &&\
     cmake --build . --target install
     
 # Remove ortools build and compile directory
