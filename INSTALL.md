@@ -147,14 +147,14 @@ On linux you can use a package manger to download the precompiled librairies.
 
 #### Ubuntu
 
-### 20.04 (Focal)
+##### 20.04 (Focal)
 ```
 sudo apt install uuid-dev libcurl4-openssl-dev libssl-dev libwxgtk3.0-gtk3-dev libboost-test-dev
 ```
 
-### 16.04 (Xenial) and 18.04 (Bionic)
+##### 16.04 (Xenial) and 18.04 (Bionic)
 ```
-sudo apt-get install libuuid1 uuid-dev libcurl4-openssl-dev libssl-dev libwxgtk3.0-dev libboost-test-dev
+sudo apt-get install uuid-dev libcurl4-openssl-dev libssl-dev libwxgtk3.0-dev libboost-test-dev
 ```
 
 #### RHEL / Centos
