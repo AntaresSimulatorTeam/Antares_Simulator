@@ -44,44 +44,20 @@ void OPT_SauvegarderLesPmaxThermiques( PROBLEME_HEBDO * ProblemeHebdo )
 	PALIERS_THERMIQUES * PaliersThermiquesDuPays;
   PDISP_ET_COUTS_HORAIRES_PAR_PALIER * PuissanceDisponibleEtCout; 
 
-	for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ ) {
+	for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ )
+	{
 		PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
-		for ( Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++ ) {
+
+		for ( Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++ )
+		{
 			PuissanceDisponibleEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Palier];
 			PuissanceDisponibleDuPalierThermiqueRef    = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef;
 			PuissanceDisponibleDuPalierThermiqueRef_SV = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef_SV;
 			
 			memcpy( (char *) PuissanceDisponibleDuPalierThermiqueRef_SV, (char *) PuissanceDisponibleDuPalierThermiqueRef,
-							ProblemeHebdo->NombreDePasDeTempsRef * sizeof( double ) );
+					ProblemeHebdo->NombreDePasDeTempsRef * sizeof( double ) );
 			
 		}		
 	}
 	return;
 }
-
-
-
-
-void OPT_RestaurerLesPmaxThermiques( PROBLEME_HEBDO * ProblemeHebdo )  
-{
-	int Pays; int Palier; double * PuissanceDisponibleDuPalierThermiqueRef;
-	double * PuissanceDisponibleDuPalierThermiqueRef_SV;
-	
-	PALIERS_THERMIQUES * PaliersThermiquesDuPays;
-  PDISP_ET_COUTS_HORAIRES_PAR_PALIER * PuissanceDisponibleEtCout; 
-
-	for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ ) {
-		PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
-		for ( Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++ ) {
-			PuissanceDisponibleEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Palier];
-			PuissanceDisponibleDuPalierThermiqueRef    = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef;
-			PuissanceDisponibleDuPalierThermiqueRef_SV = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef_SV;
-			
-			memcpy( (char *) PuissanceDisponibleDuPalierThermiqueRef, (char *) PuissanceDisponibleDuPalierThermiqueRef_SV,
-							ProblemeHebdo->NombreDePasDeTempsRef * sizeof( double ) );
-			
-		}
-	}
-	return;
-}
-

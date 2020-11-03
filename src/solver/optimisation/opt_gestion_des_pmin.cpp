@@ -44,35 +44,25 @@
 void OPT_InitialiserLesPminHebdo( PROBLEME_HEBDO * ProblemeHebdo )
 {
 	int Pays; int Palier; int Pdt; PALIERS_THERMIQUES * PaliersThermiquesDuPays;
-  PDISP_ET_COUTS_HORAIRES_PAR_PALIER ** PuissanceDisponibleEtCout;
-  double * PuissanceMinDuPalierThermique; double * PuissanceMinDuPalierThermique_SV;
+	PDISP_ET_COUTS_HORAIRES_PAR_PALIER ** PuissanceDisponibleEtCout;
+	double * PuissanceMinDuPalierThermique; double * PuissanceMinDuPalierThermique_SV;
 	int NombreDePasDeTempsProblemeHebdo;
 
 
-
+	NombreDePasDeTempsProblemeHebdo = ProblemeHebdo->NombreDePasDeTempsRef;
 	
-	
-
-  NombreDePasDeTempsProblemeHebdo = ProblemeHebdo->NombreDePasDeTempsRef;
-	
-	for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ ) {	
+	for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ )
+	{	
 		PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
 		PuissanceDisponibleEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
-		for ( Palier = 0 ; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques ; Palier++ ) {
-		  PuissanceMinDuPalierThermique    = PuissanceDisponibleEtCout[Palier]->PuissanceMinDuPalierThermique;
+		for ( Palier = 0 ; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques ; Palier++ )
+		{
+			PuissanceMinDuPalierThermique    = PuissanceDisponibleEtCout[Palier]->PuissanceMinDuPalierThermique;
 			PuissanceMinDuPalierThermique_SV = PuissanceDisponibleEtCout[Palier]->PuissanceMinDuPalierThermique_SV;
 			
-			for ( Pdt = 0 ; Pdt < NombreDePasDeTempsProblemeHebdo ; Pdt++ ) {
-			  
-
-			
-
-
-				
-				
-				
+			for ( Pdt = 0 ; Pdt < NombreDePasDeTempsProblemeHebdo ; Pdt++ )
+			{
 				PuissanceMinDuPalierThermique_SV[Pdt] = PuissanceMinDuPalierThermique[Pdt];
-				
 			}
 		}
 	}
@@ -80,79 +70,5 @@ void OPT_InitialiserLesPminHebdo( PROBLEME_HEBDO * ProblemeHebdo )
 	return;
 }
 
-
-
-
-void OPT_CalculMaxPminJour( PROBLEME_HEBDO * ProblemeHebdo ,
-                            PALIERS_THERMIQUES * PaliersThermiquesDuPays,
-														PRODUCTION_THERMIQUE_OPTIMALE ** ProductionThermiqueOptimale,
-														double * TailleUnitaireDUnGroupeDuPalierThermique,
-														int     Palier,
-                            double * MaxPminJour )														
-{
-int j  ; int NombreDeJoursProblemeHebdo      ; int PdtHebdo; double Pmin ; int Jour     ;
-double P; int * NumeroDeJourDuPasDeTemps      ; double NbGroupesEquivalents                ;
-int NombreDePasDeTempsProblemeHebdo           ; double * PminDuPalierThermiquePendantUnJour;
-double * PminDuPalierThermiquePendantUneSemaine;
-
-NombreDePasDeTempsProblemeHebdo = ProblemeHebdo->NombreDePasDeTemps;
-NombreDeJoursProblemeHebdo      = ProblemeHebdo->NombreDeJours;
-NumeroDeJourDuPasDeTemps        = ProblemeHebdo->NumeroDeJourDuPasDeTemps;
-
-PminDuPalierThermiquePendantUnJour       = PaliersThermiquesDuPays->PminDuPalierThermiquePendantUnJour;		
-PminDuPalierThermiquePendantUneSemaine   = PaliersThermiquesDuPays->PminDuPalierThermiquePendantUneSemaine;
-
-for ( j = 0; j < NombreDeJoursProblemeHebdo ; j++ ) MaxPminJour[j] = 0.0;
-
-for ( PdtHebdo = 0; PdtHebdo < NombreDePasDeTempsProblemeHebdo ; PdtHebdo++ ) {
-  P = ProductionThermiqueOptimale[PdtHebdo]->ProductionThermiqueDuPalier[Palier];
-	
-  if ( fabs( P ) <= ZERO ) continue;
-  
-  Jour = NumeroDeJourDuPasDeTemps[PdtHebdo];
-	if ( TailleUnitaireDUnGroupeDuPalierThermique[Palier] > 0 ) {
-	  NbGroupesEquivalents = P / TailleUnitaireDUnGroupeDuPalierThermique[Palier];
-	}
-	else {
-		NbGroupesEquivalents = P;
-	}
-	
-	NbGroupesEquivalents = ceil( NbGroupesEquivalents );
-	
-	Pmin = PminDuPalierThermiquePendantUnJour[Palier] * NbGroupesEquivalents;            
-	if ( Pmin > MaxPminJour[Jour] ) MaxPminJour[Jour] = Pmin;
-  
-  Pmin = PminDuPalierThermiquePendantUneSemaine[Palier] * NbGroupesEquivalents;
-	for ( j = 0 ; j < NombreDeJoursProblemeHebdo ; j++ ) {
-    if ( Pmin > MaxPminJour[j] ) MaxPminJour[j] = Pmin;
-	}
-}
-
-return;
-}
-
-
-
-void OPT_RestaurerLesPminThermiques( PROBLEME_HEBDO * ProblemeHebdo )  
-{
-	int Pays; int Index; double * PuissanceMinDuPalierThermique;  
-	double * PuissanceMinDuPalierThermique_SV;
-	
-	PALIERS_THERMIQUES * PaliersThermiquesDuPays;
-  PDISP_ET_COUTS_HORAIRES_PAR_PALIER * PuissanceDisponibleEtCout;
-
-	for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ ) {
-		PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
-		for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++) {
-			PuissanceDisponibleEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Index];
-			PuissanceMinDuPalierThermique    = PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique;
-			PuissanceMinDuPalierThermique_SV = PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique_SV;					
-			memcpy( (char *) PuissanceMinDuPalierThermique, (char *) PuissanceMinDuPalierThermique_SV,
-							ProblemeHebdo->NombreDePasDeTempsRef * sizeof( double ) );
-			
-		}
-	}
-	return;
-}
 
 
