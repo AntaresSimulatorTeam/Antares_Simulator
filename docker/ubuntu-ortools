@@ -1,23 +1,15 @@
-FROM centos:latest
+FROM ubuntu:latest
 
 # Install requirements
-RUN yum update -y &&\
-    yum install git gcc gcc-c++ make -y &&\
-    yum install wget -y &&\
-    yum install epel-release -y &&\
-    yum install unzip openssl-devel libcurl-devel wxGTK3-devel libuuid-devel boost-devel boost-test -y
+RUN export DEBIAN_FRONTEND=noninteractive &&\
+    apt-get update -y &&\
+    apt-get install build-essential git cmake -y &&\
+    apt-get install wget -y &&\
+    apt-get install unzip -y &&\
+    apt-get install libssl-dev libuuid1 uuid-dev libssh2-1 libssh2-1-dev libidn2-dev libidn11 libidn11-dev libcurl4-openssl-dev libb64-dev -y &&\
+    apt-get install libboost-test-dev libboost-filesystem-dev libboost-dev -y
 
-# Install CMake3
-RUN wget https://github.com/Kitware/CMake/releases/download/v3.17.3/cmake-3.17.3.tar.gz &&\
-    tar -zxvf cmake-3.17.3.tar.gz &&\
-    cd cmake-3.17.3 &&\
-    ./bootstrap &&\
-    make &&\
-    make install &&\
-    cd ..  &&\
-    rm -rf cmake-3.17.3 &&\
-    rm cmake-3.17.3.tar.gz
-    
+
 # Install xpansion requirements
 RUN git clone https://github.com/google/googletest.git &&\
     cd googletest &&\
@@ -25,7 +17,7 @@ RUN git clone https://github.com/google/googletest.git &&\
     cmake --build . --target install &&\
     cd .. &&\
     rm -rf googletest &&\
-    yum install jsoncpp-devel -y
+    apt-get install libjsoncpp-dev libgtest-dev libboost-mpi-dev -y
     
 # Sirius checkout
 RUN  git clone https://github.com/AntaresSimulatorTeam/sirius-solver.git -b Antares_VCPKG sirius
@@ -51,9 +43,4 @@ RUN mkdir ortools-build &&\
     
 # Remove ortools build and compile directory
 RUN rm -rf ortools-build &&\
-    rm -rf or-tools    
-    
-# Install xpansion requirements -2
-RUN yum install 'dnf-command(config-manager)' -y &&\
-    yum config-manager --set-enabled PowerTools &&\    
-    yum install boost-openmpi-devel -y
+    rm -rf or-tools
