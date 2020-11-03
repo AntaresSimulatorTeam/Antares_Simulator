@@ -3,12 +3,10 @@ FROM centos:latest
 # Install requirements
 RUN yum update -y &&\
     yum install git gcc gcc-c++ make -y &&\
+    yum install wget -y &&\
     yum install epel-release -y &&\
     yum install unzip openssl-devel libcurl-devel wxGTK3-devel libuuid-devel boost-devel boost-test -y
 
-# Install requirements -2 
-RUN yum install wget -y
-    
 # Install CMake3
 RUN wget https://github.com/Kitware/CMake/releases/download/v3.17.3/cmake-3.17.3.tar.gz &&\
     tar -zxvf cmake-3.17.3.tar.gz &&\
@@ -17,7 +15,8 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v3.17.3/cmake-3.17.3
     make &&\
     make install &&\
     cd ..  &&\
-    rm -rf cmake-3.17.3
+    rm -rf cmake-3.17.3 &&\
+    rm cmake-3.17.3.tar.gz
     
 # Install xpansion requirements
 RUN git clone https://github.com/google/googletest.git &&\
