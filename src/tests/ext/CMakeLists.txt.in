@@ -52,6 +52,17 @@ ExternalProject_Add(
 					libs/exception
 					libs/numeric/conversion
 					libs/range
+					libs/system
+					libs/filesystem
+					libs/process
+					libs/dll
+					libs/concept_check
+					libs/tokenizer
+					libs/winapi
+					libs/optional
+					libs/fusion
+					libs/asio
+					libs/regex
 	
 	# We set the following commands content (even with an empty string) : otherwise a default non convenient command is run.
 	UPDATE_COMMAND		${booststrap_script}
