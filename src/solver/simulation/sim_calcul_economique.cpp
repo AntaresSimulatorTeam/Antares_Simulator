@@ -346,11 +346,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study, PROBLEME_HEBDO& problem
 
 	
 	problem.OptimisationAuPasHebdomadaire =
-		(parameters.simplexOptimizationRange == Data::sorWeek) ? OUI_ANTARES : NON_ANTARES;
-
-	
-	problem.OptimisationMUTetMDT = OUI_ANTARES;
-	
+		(parameters.simplexOptimizationRange == Data::sorWeek) ? OUI_ANTARES : NON_ANTARES;	
 }
 
 

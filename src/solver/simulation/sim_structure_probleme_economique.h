@@ -610,21 +610,8 @@ struct PROBLEME_HEBDO {
 															
 	char UnitCommitmentExact;								
 
-												
-	
-
-
-
 
 	char TypeDeLissageHydraulique;
-
-	
-
-
-
-
-
-	char OptimisationMUTetMDT;
 
 	
 	char ExportMPS;
@@ -636,14 +623,6 @@ struct PROBLEME_HEBDO {
  	char OptimisationAvecCoutsDeDemarrage; 
 	int NbTermesContraintesPourLesCoutsDeDemarrage;
 
-	
-
-
-
-
-
-
-  
 
 	char BorneDeLaDefaillancePositive;
 	
