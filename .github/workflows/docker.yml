@@ -1,4 +1,4 @@
-name: CI
+name: Docker images push
 
 on: 
   push:
@@ -6,43 +6,18 @@ on:
       - ci/*
 
 jobs:
-  centos:
+  docker:
   
     runs-on: ubuntu-latest
-    container: centos:latest
+    
     steps:
     - uses: actions/checkout@v2
     
-    - name: Install libraries
+    - name: Build centos 8 image
       run: |
-           yum update -y
-           yum install git cmake3 gcc gcc-c++ make -y
-           yum install epel-release -y
-           yum install unzip openssl-devel libcurl-devel wxGTK3-devel libuuid-devel boost-devel boost-test -y
-    
-    - name: Configure
-      run: |
-           mkdir _build
-           cd _build
-           cmake3 ../src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
+           cd docker
+           docker build -f centos8-ortools -t jmkerloch/rte-antares:centos8-ortools .
 
-    - name: Build
+    - name: Push centos 8 image
       run: |           
-           cmake3 --build _build --config release
-
-    - name: Run unit tests
-      run: |
-           cd _build
-           ctest -C Release --output-on-failure           
-
-           
-    - name: Installer .tar.gz creation
-      run: |
-           cd _build
-           cpack -G TGZ
-           
-    - name: Installer upload
-      uses: actions/upload-artifact@v2
-      with:
-        name: antares-installer-64bits
-        path: _build/antares-*.*.*-Linux.*
+           docker push jmkerloch/rte-antares:centos8-ortools

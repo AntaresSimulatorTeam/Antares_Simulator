@@ -1,0 +1,55 @@
+FROM centos:latest
+
+# Install requirements
+RUN yum update -y &&\
+    yum install git gcc gcc-c++ make -y &&\
+    yum install epel-release -y &&\
+    yum install unzip openssl-devel libcurl-devel wxGTK3-devel libuuid-devel boost-devel boost-test -y
+
+# Install requirements -2 
+RUN yum install wget -y
+    
+# Install CMake3
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.17.3/cmake-3.17.3.tar.gz &&\
+    tar -zxvf cmake-3.17.3.tar.gz &&\
+    cd cmake-3.17.3 &&\
+    ./bootstrap &&\
+    make &&\
+    make install &&\
+    cd ..  &&\
+    rm -rf cmake-3.17.3
+    
+# Install xpansion requirements
+RUN git clone https://github.com/google/googletest.git &&\
+    cd googletest &&\
+    cmake . &&\
+    cmake --build . --target install &&\
+    cd .. &&\
+    rm -rf googletest &&\
+    yum install jsoncpp-devel -y
+    
+# Sirius checkout
+RUN  git clone https://github.com/AntaresSimulatorTeam/sirius-solver.git -b Antares_VCPKG sirius
+
+# Sirius compilation
+RUN mkdir sirius-build &&\
+    cd sirius-build &&\
+    cmake ../sirius/src &&\
+    cmake --build . --target install
+    
+# Remove sirius build and compile directory
+RUN rm -rf sirius-build &&\
+    rm -rf sirius
+
+# Ortools checkout
+RUN git clone https://github.com/AntaresSimulatorTeam/or-tools.git -b rte_dev_sirius or-tools
+    
+# Ortools compilation
+RUN mkdir ortools-build &&\
+    cd ortools-build &&\
+    cmake ../or-tools -DUSE_COINOR=ON -DBUILD_PYTHON=OFF -DBUILD_TESTING=OFF -DUSE_SIRIUS=ON -DBUILD_DEPS=ON &&\
+    cmake --build . --target install
+    
+# Remove ortools build and compile directory
+RUN rm -rf ortools-build &&\
+    rm -rf or-tools
