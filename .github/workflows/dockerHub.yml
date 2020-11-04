@@ -3,7 +3,8 @@ name: CI docker hub
 on: 
   push:
     branches:
-      - ci/*
+      - develop
+      - feature/*
 
 jobs:
   linux:
