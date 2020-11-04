@@ -105,11 +105,7 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 	{
 		if (ProblemeHebdo->ReinitOptimisation == OUI_ANTARES )
 		{	
-			if ( ProbSpx != NULL )
-			{
-				SPX_LibererProbleme( ProbSpx );
-				(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[(int) NumIntervalle] = NULL;			
-			}	
+			SPX_LibererProbleme( ProbSpx );
 			ProbSpx  = NULL;
 			Probleme.Contexte = SIMPLEXE_SEUL;
 			Probleme.BaseDeDepartFournie = NON_SPX;	
@@ -178,11 +174,6 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 
 	ProbSpx = SPX_Simplexe( &Probleme , ProbSpx );
 
-
-	if ( ProbSpx != NULL )
-	{  
-		(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[NumIntervalle] = (void *) ProbSpx;
-	}
 
 	if ( ProblemeHebdo->ExportMPS == OUI_ANTARES)
 		OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &Probleme, numSpace, ANTARES_SIMPLEXE );
