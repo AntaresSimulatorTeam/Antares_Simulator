@@ -2,10 +2,10 @@ FROM centos:latest
 
 # Install requirements
 RUN yum update -y &&\
-    yum install git gcc gcc-c++ make -y &&\
-    yum install wget -y &&\
-    yum install epel-release -y &&\
-    yum install unzip openssl-devel libcurl-devel wxGTK3-devel libuuid-devel boost-devel boost-test -y
+    yum install -y git gcc gcc-c++ make &&\
+    yum install -y wget &&\
+    yum install -y epel-release &&\
+    yum install -y unzip openssl-devel libcurl-devel wxGTK3-devel libuuid-devel boost-devel boost-test 
 
 # Install CMake3
 RUN wget https://github.com/Kitware/CMake/releases/download/v3.17.3/cmake-3.17.3.tar.gz &&\
@@ -25,7 +25,7 @@ RUN git clone https://github.com/google/googletest.git --single-branch &&\
     cmake --build . --target install &&\
     cd .. &&\
     rm -rf googletest &&\
-    yum install jsoncpp-devel -y
+    yum install -y jsoncpp-devel
     
 # Sirius checkout
 RUN  git clone https://github.com/AntaresSimulatorTeam/sirius-solver.git --single-branch -b Antares_VCPKG sirius
@@ -54,6 +54,6 @@ RUN rm -rf ortools-build &&\
     rm -rf or-tools    
     
 # Install xpansion requirements -2
-RUN yum install 'dnf-command(config-manager)' -y &&\
+RUN yum install -y 'dnf-command(config-manager)' &&\
     yum config-manager --set-enabled PowerTools &&\    
-    yum install boost-openmpi-devel -y
+    yum install -y boost-openmpi-devel 
