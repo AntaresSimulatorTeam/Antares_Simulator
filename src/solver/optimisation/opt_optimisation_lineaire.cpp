@@ -76,7 +76,7 @@ bool OPT_OptimisationLineaire(	PROBLEME_HEBDO * ProblemeHebdo,
 
 	OPT_NumeroDIntervalleOptimiseDuPasDeTemps( ProblemeHebdo );
 
-	OPT_GenererLesDonneesSelonLePasDeTempsDeLaClasseDeManoeuvrabilite( ProblemeHebdo );
+	OPT_RestaurerLesDonnees( ProblemeHebdo );
 
 	OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire( ProblemeHebdo );
 

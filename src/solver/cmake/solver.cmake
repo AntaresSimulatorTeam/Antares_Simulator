@@ -35,7 +35,6 @@ set(RTESOLVER_OPT
 		optimisation/opt_construction_matrice_des_contraintes_cas_quadratique.cpp
 		optimisation/opt_construction_matrice_des_contraintes_cas_lineaire.cpp
 		optimisation/opt_construction_matrice_des_contraintes_outils.cpp
-		optimisation/opt_generer_donnees_selon_manoeuvrabilite.cpp
 		optimisation/opt_gestion_des_bornes_cas_lineaire.cpp
 		optimisation/opt_verification_presence_reserve_jmoins1.cpp
 		optimisation/opt_init_contraintes_hydrauliques.cpp
