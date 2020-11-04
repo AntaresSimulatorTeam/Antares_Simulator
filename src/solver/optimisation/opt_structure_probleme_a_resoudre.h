@@ -131,7 +131,8 @@ typedef struct {
 				   SPX_MATRICE_DE_BASE_SINGULIERE si on n'a pas pu construire de matrice de base reguliere,
 				                                  et dans ce cas il n'y a pas de solution
 			        */
-  PROBLEMES_SIMPLEXE ** ProblemesSpxDUneClasseDeManoeuvrabilite;
+
+  PROBLEMES_SIMPLEXE * ProblemesSpx;
 
   int * PositionDeLaVariable;  /* Vecteur a passer au Simplexe pour recuperer la base optimale */
   int * ComplementDeLaBase;   	/* Vecteur a passer au Simplexe pour recuperer la base optimale */

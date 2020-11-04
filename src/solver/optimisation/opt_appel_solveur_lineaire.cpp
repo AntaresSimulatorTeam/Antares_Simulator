@@ -86,13 +86,12 @@ bool OPT_AppelDuSolveurLineaire( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, 
 
 bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int NumIntervalle )
 {
-	int Var; int Cnt; double * pt; int il; int ilMax; int Classe; char PremierPassage;
+	int Var; int Cnt; double * pt; int il; int ilMax; char PremierPassage;
 	double CoutOpt; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre; PROBLEME_SIMPLEXE Probleme;
 	PROBLEME_SPX * ProbSpx;
 	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 	PremierPassage = OUI_ANTARES;
-	Classe = ProblemeAResoudre->NumeroDeClasseDeManoeuvrabiliteActiveEnCours;
-	ProbSpx = (PROBLEME_SPX *) ((ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[(int) NumIntervalle]);
+	ProbSpx = (PROBLEME_SPX*)((ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[(int)NumIntervalle]);
 
 	RESOLUTION:
 

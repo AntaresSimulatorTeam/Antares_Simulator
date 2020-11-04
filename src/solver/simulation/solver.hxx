@@ -967,7 +967,6 @@ namespace Simulation
 		requiredMemoryForOptPb += 2 * szNbContDouble;
 		requiredMemoryForOptPb += 2 * NombreDeVariables   * sizeof( void * );
 		requiredMemoryForOptPb += NombreDeContraintes * sizeof( void * );
-		requiredMemoryForOptPb += NombreDeClassesDeManoeuvrabiliteActives * sizeof( void * );
 
 		requiredMemoryForOptPb += NombreDeClassesDeManoeuvrabiliteActives * NbIntervalles * sizeof( void * );
 		requiredMemoryForOptPb += NombreDeClassesDeManoeuvrabiliteActives * sizeof( PROBLEMES_SIMPLEXE );

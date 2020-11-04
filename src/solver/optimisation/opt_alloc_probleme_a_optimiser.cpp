@@ -59,7 +59,7 @@ static void optimisationAllocateProblem( PROBLEME_HEBDO * ProblemeHebdo, const i
 	int Sparsity;  
 	
 	PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
-	PROBLEMES_SIMPLEXE ** ProblemesSpxDUneClasseDeManoeuvrabilite;
+	PROBLEMES_SIMPLEXE * ProblemesSpx;
 
 	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
@@ -155,24 +155,12 @@ static void optimisationAllocateProblem( PROBLEME_HEBDO * ProblemeHebdo, const i
 	ProblemeAResoudre->CoutsReduits                 = (double *) MemAlloc(szNbVarsDouble);
 
 	
-  NbIntervalles = (int) (ProblemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation );
-
-	ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite =
-		(PROBLEMES_SIMPLEXE **) MemAlloc(ProblemeHebdo->NombreDeClassesDeManoeuvrabiliteActives * sizeof( void * ));
-
-	ProblemesSpxDUneClasseDeManoeuvrabilite = ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite;
-
-	if ( ProblemesSpxDUneClasseDeManoeuvrabilite != NULL) {
-		for ( i = 0; i < ProblemeHebdo->NombreDeClassesDeManoeuvrabiliteActives; i++ ) {
-
-			ProblemesSpxDUneClasseDeManoeuvrabilite[i] = (PROBLEMES_SIMPLEXE*) MemAlloc( sizeof( PROBLEMES_SIMPLEXE ));
-
-			ProblemesSpxDUneClasseDeManoeuvrabilite[i]->ProblemeSpx = (void **) MemAlloc(NbIntervalles * sizeof( void * ));
-			for ( NumIntervalle = 0; NumIntervalle < NbIntervalles ; NumIntervalle++ ) {
-				ProblemesSpxDUneClasseDeManoeuvrabilite[i]->ProblemeSpx[NumIntervalle] = NULL;
-			}
-		}
-	}
+	NbIntervalles = (int) (ProblemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation );
+	
+	ProblemeAResoudre->ProblemesSpx = (PROBLEMES_SIMPLEXE*)MemAlloc(sizeof(PROBLEMES_SIMPLEXE));
+	ProblemeAResoudre->ProblemesSpx->ProblemeSpx = (void**)MemAlloc(NbIntervalles * sizeof(void*));
+	for (NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
+		ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = NULL;
 
 	
 	ProblemeAResoudre->PositionDeLaVariable = (int *) MemAlloc( ProblemeAResoudre->NombreDeVariables   * sizeof( int ) );
@@ -265,12 +253,10 @@ if (ProblemeAResoudre)
 	MemFree(ProblemeAResoudre->CoutsMarginauxDesContraintes);
 	MemFree(ProblemeAResoudre->CoutsReduits);
 
-	if (ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite) {
-		for ( i = 0; i < ProblemeHebdo->NombreDeClassesDeManoeuvrabiliteActives; ++i) {
-			MemFree(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[i]->ProblemeSpx);
-			MemFree(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[i]);
-		}
-		MemFree(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite);
+	if (ProblemeAResoudre->ProblemesSpx)
+	{
+		MemFree(ProblemeAResoudre->ProblemesSpx->ProblemeSpx);
+		MemFree(ProblemeAResoudre->ProblemesSpx);
 	}
 	
 	MemFree( ProblemeAResoudre->PositionDeLaVariable );
