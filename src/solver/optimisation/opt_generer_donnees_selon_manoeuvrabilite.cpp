@@ -29,13 +29,7 @@
 # include "../simulation/sim_extern_variables_globales.h"
 # include "opt_fonctions.h"  
 
-void OPT_GenererLesDonneesSelonLePasDeTempsDeLaClasseDeManoeuvrabilite(
-					PROBLEME_HEBDO * ProblemeHebdo,
-					const CLASSE_DE_MANOEUVRABILITE ClasseDeManoeuvrabilite )
+void OPT_GenererLesDonneesSelonLePasDeTempsDeLaClasseDeManoeuvrabilite(PROBLEME_HEBDO * ProblemeHebdo)
 {
-	if (ClasseDeManoeuvrabilite == 1) 
-	{
-		OPT_RestaurerLesDonneesSelonManoeuvrabilite_1( ProblemeHebdo );		
-		return;
-	}
+	OPT_RestaurerLesDonneesSelonManoeuvrabilite_1(ProblemeHebdo);
 }

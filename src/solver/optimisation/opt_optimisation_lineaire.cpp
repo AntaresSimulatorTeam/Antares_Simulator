@@ -48,18 +48,15 @@ using namespace Yuni;
 
 bool OPT_OptimisationLineaire(	PROBLEME_HEBDO * ProblemeHebdo,
 								uint numSpace,
-								CLASSE_DE_MANOEUVRABILITE ClasseDeManoeuvrabilite,
 								char CalculerLesPmin,
 								char CalculerLesPmax,
 								char FaireDerniereOptimisation )
 {
 	int PdtHebdo; int PremierPdtDeLIntervalle; int DernierPdtDeLIntervalle;
-	int NumeroDeLIntervalle; int LongueurDuPasDeTemps  ; int NombreDePasDeTempsPourUneOptimisation;
+	int NumeroDeLIntervalle; int NombreDePasDeTempsPourUneOptimisation;
 
-	LongueurDuPasDeTemps = (int) ClasseDeManoeuvrabilite;
-
-	ProblemeHebdo->NombreDePasDeTemps            = ProblemeHebdo->NombreDePasDeTempsRef            / LongueurDuPasDeTemps;
-	ProblemeHebdo->NombreDePasDeTempsDUneJournee = ProblemeHebdo->NombreDePasDeTempsDUneJourneeRef / LongueurDuPasDeTemps;
+	ProblemeHebdo->NombreDePasDeTemps            = ProblemeHebdo->NombreDePasDeTempsRef;
+	ProblemeHebdo->NombreDePasDeTempsDUneJournee = ProblemeHebdo->NombreDePasDeTempsDUneJourneeRef;
 
 	if ( ProblemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES )
 	{
@@ -79,7 +76,7 @@ bool OPT_OptimisationLineaire(	PROBLEME_HEBDO * ProblemeHebdo,
 
 	OPT_NumeroDIntervalleOptimiseDuPasDeTemps( ProblemeHebdo );
 
-	OPT_GenererLesDonneesSelonLePasDeTempsDeLaClasseDeManoeuvrabilite( ProblemeHebdo, ClasseDeManoeuvrabilite );
+	OPT_GenererLesDonneesSelonLePasDeTempsDeLaClasseDeManoeuvrabilite( ProblemeHebdo );
 
 	OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire( ProblemeHebdo );
 

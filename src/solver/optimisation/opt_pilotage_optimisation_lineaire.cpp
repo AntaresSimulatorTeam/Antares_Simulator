@@ -110,10 +110,8 @@ bool OPT_PilotageOptimisationLineaire( PROBLEME_HEBDO * ProblemeHebdo, uint numS
 	{
 		 OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage( ProblemeHebdo );
 	}
-
-	Classe = Classe01;
 	
-	if (!OPT_OptimisationLineaire( ProblemeHebdo, numSpace, Classe, CalculerLesPmin, CalculerLesPmax, FaireDerniereOptimisation )) 
+	if (!OPT_OptimisationLineaire( ProblemeHebdo, numSpace, CalculerLesPmin, CalculerLesPmax, FaireDerniereOptimisation )) 
 		return false;
 
 	return true;

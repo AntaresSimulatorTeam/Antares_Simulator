@@ -63,9 +63,9 @@ bool OPT_PilotageOptimisationQuadratique( PROBLEME_HEBDO * );
 */
 bool OPT_AppelDuSolveurLineaire( PROBLEME_HEBDO *, uint, const int );
 void OPT_LiberationProblemesSimplexe( PROBLEME_HEBDO * );
-bool OPT_OptimisationLineaire( PROBLEME_HEBDO *, uint, CLASSE_DE_MANOEUVRABILITE, char, char, char );
+bool OPT_OptimisationLineaire( PROBLEME_HEBDO *, uint, char, char, char );
 void OPT_SauvegarderLesPmaxThermiques( PROBLEME_HEBDO * );
-void OPT_GenererLesDonneesSelonLePasDeTempsDeLaClasseDeManoeuvrabilite( PROBLEME_HEBDO *, const CLASSE_DE_MANOEUVRABILITE);
+void OPT_GenererLesDonneesSelonLePasDeTempsDeLaClasseDeManoeuvrabilite( PROBLEME_HEBDO *);
 void OPT_RestaurerLesDonneesSelonManoeuvrabilite_1( PROBLEME_HEBDO * );
 /*------------------------------*/
 
