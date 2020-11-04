@@ -35,9 +35,6 @@ namespace Antares
 {
 namespace Solver
 {
-	// void StoreTimeseriesIntoOuput(Data::Study& study);
-	// void ApplyCustomScenario(Data::Study& study);
-
 	namespace TimeSeriesNumbers
 	{
 
