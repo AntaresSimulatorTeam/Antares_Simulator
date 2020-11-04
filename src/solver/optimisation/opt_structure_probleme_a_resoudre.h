@@ -63,14 +63,11 @@
 
 /* Les problemes Simplexe */
 typedef struct {
-  void ** ProblemeSpx; /* Pour chaque classe de manoeuvrabilite, plusieurs problemes simplexe: 1 par jour */
+  void ** ProblemeSpx;
 } PROBLEMES_SIMPLEXE;
 
 /* Le probleme a resoudre */
 typedef struct {
-
-  /* Cas des classes de manoeuvrabilite (pas de temps variable) */
-  char *   PremiereResolutionDuNumeroDeClasseDeManoeuvrabilite; /* OUI_SIM ou NON_SIM */
 
   /* Pour la prise en compte des PMIN */
   char     NumeroDOptimisation; /* Vaut	PREMIERE_OPTIMISATION ou DEUXIEME_OPTIMISATION */

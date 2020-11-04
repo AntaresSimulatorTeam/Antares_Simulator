@@ -36,42 +36,7 @@
 # define GROSSES_VARIABLES  NON_ANTARES 
 # define COEFF_GROSSES_VARIABLES 100
 
-# include <yuni/core/math.h>	
-
-
-
-typedef enum {
-	Classe01 =  1 , Classe02 =  2 , Classe03 =  3 , Classe04 =  4 , Classe05 =  5 , Classe06 =  6 ,
-	Classe07 =  7 , Classe08 =  8 , Classe09 =  9 , Classe10 = 10 , Classe11 = 11 , Classe12 = 12 ,
-	Classe13 = 13 , Classe14 = 14 , Classe15 = 15 , Classe16 = 16 , Classe17 = 17 , Classe18 = 18 ,
-	Classe19 = 19 , Classe20 = 20 , Classe21 = 21 , Classe22 = 22 , Classe23 = 23 , Classe24 = 24 ,
-	Classe25 = 25 , Classe26 = 26 , Classe27 = 27 , Classe28 = 28 , Classe29 = 29 , Classe30 = 30 ,
-	Classe31 = 31 , Classe32 = 32 , Classe33 = 33 , Classe34 = 34 , Classe35 = 35 , Classe36 = 36 ,
-	Classe37 = 37 , Classe38 = 38 , Classe39 = 39 , Classe40 = 40 , Classe41 = 41 , Classe42 = 42 ,
-	Classe43 = 43 , Classe44 = 44 , Classe45 = 45 , Classe46 = 46 , Classe47 = 47 , Classe48 = 48 ,
-	Classe49 = 49 , Classe50 = 50 , Classe51 = 51 , Classe52 = 52 , Classe53 = 53 , Classe54 = 54 ,
-	Classe55 = 55 , Classe56 = 56 , Classe57 = 57 , Classe58 = 58 , Classe59 = 59 , Classe60 = 60 ,
-	Classe61 = 61 , Classe62 = 62 , Classe63 = 63 , Classe64 = 64 , Classe65 = 65 , Classe66 = 66 ,
-	Classe67 = 67 , Classe68 = 68 , Classe69 = 69 , Classe70 = 70 , Classe71 = 71 , Classe72 = 72 ,
-	Classe73 = 73 , Classe74 = 74 , Classe75 = 75 , Classe76 = 76 , Classe77 = 77 , Classe78 = 78 ,
-	Classe79 = 79 , Classe80 = 80 , Classe81 = 81 , Classe82 = 82 , Classe83 = 83 , Classe84 = 84 ,
-	Classe85 = 85 , Classe86 = 86 , Classe87 = 87 , Classe88 = 88 , Classe89 = 89 , Classe90 = 90 ,
-	Classe91 = 91 , Classe92 = 92 , Classe93 = 93 , Classe94 = 94 , Classe95 = 95 , Classe96 = 96 ,
-	Classe97 = 97 , Classe98 = 98 , Classe99 = 99 , Classe100 = 100, Classe101 = 101 , Classe102 = 102 ,
-	Classe103 = 103 , Classe104 = 104 , Classe105 = 105 , Classe106 = 106 , Classe107 = 107 , Classe108 = 108 ,
-	Classe109 = 109 , Classe110 = 110 , Classe111 = 111 , Classe112 = 112 , Classe113 = 113 , Classe114 = 114 ,
-	Classe115 = 115 , Classe116 = 116 , Classe117 = 117 , Classe118 = 118 , Classe119 = 119 , Classe120 = 120 ,
-	Classe121 = 121 , Classe122 = 122 , Classe123 = 123 , Classe124 = 124 , Classe125 = 125 , Classe126 = 126 ,
-	Classe127 = 127 , Classe128 = 128 , Classe129 = 129 , Classe130 = 130 , Classe131 = 131 , Classe132 = 132 ,
-	Classe133 = 133 , Classe134 = 134 , Classe135 = 135 , Classe136 = 136 , Classe137 = 137 , Classe138 = 138 ,
-	Classe139 = 139 , Classe140 = 140 , Classe141 = 141 , Classe142 = 142 , Classe143 = 143 , Classe144 = 144 ,
-	Classe145 = 145 , Classe146 = 146 , Classe147 = 147 , Classe148 = 148 , Classe149 = 149 , Classe150 = 150 ,
-	Classe151 = 151 , Classe152 = 152 , Classe153 = 153 , Classe154 = 154 , Classe155 = 155 , Classe156 = 156 ,
-	Classe157 = 157 , Classe158 = 158 , Classe159 = 159 , Classe160 = 160 , Classe161 = 161 , Classe162 = 162 ,
-	Classe163 = 163 , Classe164 = 164 , Classe165 = 165 , Classe166 = 166 , Classe167 = 167 , Classe168 = 168
-}
-CLASSE_DE_MANOEUVRABILITE;
-
+# include <yuni/core/math.h>
 
 
 
