@@ -71,10 +71,10 @@ typedef struct {
 
   /* Cas des classes de manoeuvrabilite (pas de temps variable) */
   char *   PremiereResolutionDuNumeroDeClasseDeManoeuvrabilite; /* OUI_SIM ou NON_SIM */
-  /* Numero de la classe de manoeuvrabilite active en cours */
-  int     NumeroDeClasseDeManoeuvrabiliteActiveEnCours;
+
   /* Pour la prise en compte des PMIN */
   char     NumeroDOptimisation; /* Vaut	PREMIERE_OPTIMISATION ou DEUXIEME_OPTIMISATION */
+
   /* La matrice des contraintes */
   int     NombreDeVariables;
   int     NombreDeContraintes; /* Il est egal a :

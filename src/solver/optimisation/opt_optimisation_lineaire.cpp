@@ -102,14 +102,7 @@ bool OPT_OptimisationLineaire(	PROBLEME_HEBDO * ProblemeHebdo,
 		ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle]++;
 	
 		if (!OPT_AppelDuSolveurLineaire( ProblemeHebdo, numSpace, NumeroDeLIntervalle ))
-		{
-			logs.debug().appendFormat(
-								"Flexibility level: %ld",
-	                            ProblemeHebdo->ClasseDeManoeuvrabiliteActive[
-															(ProblemeHebdo->ProblemeAResoudre)->NumeroDeClasseDeManoeuvrabiliteActiveEnCours
-															]);
 			return false;
-		}
 
 		if ( ProblemeHebdo->ExportMPS == OUI_ANTARES || ProblemeHebdo->Expansion == OUI_ANTARES)
 			OPT_EcrireResultatFonctionObjectiveAuFormatTXT((void *) ProblemeHebdo, numSpace, NumeroDeLIntervalle);

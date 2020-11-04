@@ -763,13 +763,7 @@ struct PROBLEME_HEBDO {
 	int * IndexDebutIntercoExtremite;   
 	int * IndexSuivantIntercoExtremite; 
 
-			
-
-		
-
 	
-	
-	int   NombreDeClassesDeManoeuvrabiliteActives;
 	CLASSE_DE_MANOEUVRABILITE * ClasseDeManoeuvrabiliteActive; 
 	
 	  

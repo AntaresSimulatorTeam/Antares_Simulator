@@ -97,7 +97,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study, PROBLEME_HEBDO& problem
 			}
 		}
 	}
-	problem.NombreDeClassesDeManoeuvrabiliteActives = NombreClassesActives;
 
 	
 	problem.hydroHotStart = (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart);

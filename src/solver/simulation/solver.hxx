@@ -748,7 +748,6 @@ namespace Simulation
 		int NombreDeVariables = 0;
 		int	NombreDeContraintes = 0;
 		int NbTermesContraintesPourLesCoutsDeDemarrage = 0;
-		int NombreDeClassesDeManoeuvrabiliteActives = 1;
 		int NombreDePasDeTemps = 168;
 		int NombreDeJoursDansUnIntervalleOptimise = 0;
 		int mxPaliers = 0;
@@ -968,8 +967,7 @@ namespace Simulation
 		requiredMemoryForOptPb += 2 * NombreDeVariables   * sizeof( void * );
 		requiredMemoryForOptPb += NombreDeContraintes * sizeof( void * );
 
-		requiredMemoryForOptPb += NombreDeClassesDeManoeuvrabiliteActives * NbIntervalles * sizeof( void * );
-		requiredMemoryForOptPb += NombreDeClassesDeManoeuvrabiliteActives * sizeof( PROBLEMES_SIMPLEXE );
+		requiredMemoryForOptPb += sizeof( PROBLEMES_SIMPLEXE );
 
 
 		// ================================================
