@@ -19,7 +19,7 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v3.17.3/cmake-3.17.3
     rm cmake-3.17.3.tar.gz
     
 # Install xpansion requirements
-RUN git clone https://github.com/google/googletest.git &&\
+RUN git clone https://github.com/google/googletest.git --single-branch &&\
     cd googletest &&\
     cmake . &&\
     cmake --build . --target install &&\
@@ -28,7 +28,7 @@ RUN git clone https://github.com/google/googletest.git &&\
     yum install jsoncpp-devel -y
     
 # Sirius checkout
-RUN  git clone https://github.com/AntaresSimulatorTeam/sirius-solver.git -b Antares_VCPKG sirius
+RUN  git clone https://github.com/AntaresSimulatorTeam/sirius-solver.git --single-branch -b Antares_VCPKG sirius
 
 # Sirius compilation
 RUN mkdir sirius-build &&\
@@ -41,7 +41,7 @@ RUN rm -rf sirius-build &&\
     rm -rf sirius
 
 # Ortools checkout
-RUN git clone https://github.com/AntaresSimulatorTeam/or-tools.git -b rte_dev_sirius or-tools
+RUN git clone https://github.com/AntaresSimulatorTeam/or-tools.git --single-branch -b rte_dev_sirius or-tools
     
 # Ortools compilation
 RUN mkdir ortools-build &&\

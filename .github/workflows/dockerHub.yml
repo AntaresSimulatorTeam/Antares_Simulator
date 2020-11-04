@@ -16,6 +16,7 @@ jobs:
         - 'jmkerloch/rte-antares:ubuntu-ortools'
   
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     container: ${{ matrix.container }}
     steps:
     - uses: actions/checkout@v2
