@@ -22,7 +22,7 @@ jobs:
     
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_ortools=OFF -DBUILD_sirius=OFF
+           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -Dsirius_solver_ROOT=/sirius-install -DBUILD_ortools=OFF -DBUILD_sirius=OFF
 
     - name: Build
       run: |           
