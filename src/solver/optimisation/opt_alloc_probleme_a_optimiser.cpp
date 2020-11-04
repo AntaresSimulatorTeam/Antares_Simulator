@@ -52,14 +52,13 @@ using namespace Antares;
 
 static void optimisationAllocateProblem( PROBLEME_HEBDO * ProblemeHebdo, const int mxPaliers )
 {
-	int NbTermes; int NbIntervalles; int NumIntervalle; int i;
+	int NbTermes; int NbIntervalles; int NumIntervalle;
 	size_t szNbVarsDouble; size_t szNbVarsint; size_t szNbContint;
 	int NombreDePasDeTempsPourUneOptimisation;
 	int Adder;     
 	int Sparsity;  
 	
 	PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
-	PROBLEMES_SIMPLEXE * ProblemesSpx;
 
 	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
@@ -229,7 +228,7 @@ void OPT_AugmenterLaTailleDeLaMatriceDesContraintes( PROBLEME_ANTARES_A_RESOUDRE
 
 void OPT_LiberationMemoireDuProblemeAOptimiser( PROBLEME_HEBDO * ProblemeHebdo )
 {
-int i; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
+PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
 
 ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 

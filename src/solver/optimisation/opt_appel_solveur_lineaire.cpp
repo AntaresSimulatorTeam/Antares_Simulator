@@ -86,7 +86,7 @@ bool OPT_AppelDuSolveurLineaire( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, 
 
 bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int NumIntervalle )
 {
-	int Var; int Cnt; double * pt; int il; int ilMax; char PremierPassage;
+	int Var; int Cnt; double * pt; char PremierPassage;
 	double CoutOpt; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre; PROBLEME_SIMPLEXE Probleme;
 	PROBLEME_SPX * ProbSpx;
 	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;

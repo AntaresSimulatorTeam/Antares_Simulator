@@ -41,11 +41,10 @@
 
 bool OPT_PilotageOptimisationLineaire( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace)
 {
-	int i; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre; CLASSE_DE_MANOEUVRABILITE Classe;
+	PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
 	char CalculerLesPmin; char CalculerLesPmax; char FaireDerniereOptimisation;
 
-	CONTRAINTES_COUPLANTES * MatriceDesContraintesCouplantes; int iMx; int CntCouplante;
-	int * OffsetTemporelSurLInterco;  int Pays; double x; int ix; int OnReboucle;
+	int Pays;
  
 	ProblemeHebdo->SolveurDuProblemeLineaire = ANTARES_SIMPLEXE;
 	if (0 && ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES && ProblemeHebdo->Expansion == NON_ANTARES) {

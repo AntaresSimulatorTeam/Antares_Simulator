@@ -49,7 +49,7 @@ using namespace Antares;
 
 void OPT_LiberationProblemesSimplexe( PROBLEME_HEBDO * ProblemeHebdo )
 {
-	int i; PROBLEME_SPX * ProbSpx; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
+	PROBLEME_SPX * ProbSpx; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
 	int NbIntervalles; int NumIntervalle; int NombreDePasDeTempsPourUneOptimisation;
 
 	if ( ProblemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES ) {
