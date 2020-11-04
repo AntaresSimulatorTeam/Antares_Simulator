@@ -48,9 +48,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 	uint nbPays = study.areas.size();
 	
 	uint linkCount = study.runtime->interconnectionsCount;
-
-	problem.manoeuvrabilite.reserve(nbPays, linkCount);
-
 	
 	problem.DefaillanceNegativeUtiliserPMinThermique = (char*) MemAlloc(nbPays * sizeof(char));
 	problem.DefaillanceNegativeUtiliserHydro         = (char*) MemAlloc(nbPays * sizeof(char));
@@ -730,23 +727,3 @@ void PROBLEME_HEBDO::MatriceContraintes::reserve(uint c)
 		columns = (int*) MemRealloc(columns, sizeof(int) * pCapacity);
 	}
 }
-
-PROBLEME_HEBDO::Manoeuvrabilite::Manoeuvrabilite()
-	:sumOversE(NULL), sumEversO(NULL), sum(NULL)
-{}
-
-PROBLEME_HEBDO::Manoeuvrabilite::~Manoeuvrabilite()
-{
-	MemFree(sumOversE);
-	MemFree(sumEversO);
-	MemFree(sum);
-}
-
-void PROBLEME_HEBDO::Manoeuvrabilite::reserve(uint nbAreas, uint nbLinks)
-{
-	sumOversE = (double*) MemRealloc(sumOversE, sizeof(double) * nbLinks);
-	sumEversO = (double*) MemRealloc(sumEversO, sizeof(double) * nbLinks);
-	sum       = (double*) MemRealloc(sum,       sizeof(double) * nbAreas);
-}
-
-

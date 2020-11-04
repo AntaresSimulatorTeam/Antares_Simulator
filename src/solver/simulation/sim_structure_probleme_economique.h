@@ -925,31 +925,6 @@ struct PROBLEME_HEBDO {
 	MatriceContraintes  matriceContraintes;
 
 	PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
-
-	class Manoeuvrabilite
-	{
-	public:
-		
-		
-		
-		Manoeuvrabilite();
-		
-		~Manoeuvrabilite();
-		
-
-		double* sumOversE;
-		double* sumEversO;
-		double* sum;
-
-		
-
-
-		void reserve(unsigned int nbAreas, unsigned int nbLinks);
-
-	}; 
-
-	Manoeuvrabilite manoeuvrabilite;
-
 	
 	double maxPminThermiqueByDay[366];
 

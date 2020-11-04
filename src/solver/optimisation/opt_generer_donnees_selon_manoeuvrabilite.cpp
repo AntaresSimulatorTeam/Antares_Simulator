@@ -39,6 +39,3 @@ void OPT_GenererLesDonneesSelonLePasDeTempsDeLaClasseDeManoeuvrabilite(
 		return;
 	}
 }
-
-
-
