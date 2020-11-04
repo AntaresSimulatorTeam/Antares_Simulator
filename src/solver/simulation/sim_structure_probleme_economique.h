@@ -761,11 +761,7 @@ struct PROBLEME_HEBDO {
 	int * IndexDebutIntercoOrigine;     
 	int * IndexSuivantIntercoOrigine;   
 	int * IndexDebutIntercoExtremite;   
-	int * IndexSuivantIntercoExtremite; 
-
-	
-	CLASSE_DE_MANOEUVRABILITE * ClasseDeManoeuvrabiliteActive; 
-	
+	int * IndexSuivantIntercoExtremite;	
 	  
 	
 	int   NombreDePasDeTemps;

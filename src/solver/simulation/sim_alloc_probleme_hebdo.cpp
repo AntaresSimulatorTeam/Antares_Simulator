@@ -421,7 +421,6 @@ void SIM_DesallocationProblemeHebdo( PROBLEME_HEBDO& problem )
 	MemFree( problem.IndexDebutIntercoExtremite );
 	MemFree( problem.IndexSuivantIntercoOrigine );
 	MemFree( problem.IndexSuivantIntercoExtremite );
-	MemFree( problem.ClasseDeManoeuvrabiliteActive );
 	MemFree( problem.NumeroDeJourDuPasDeTemps );
 	MemFree( problem.NumeroDIntervalleOptimiseDuPasDeTemps );
 	MemFree( problem.NbGrpCourbeGuide );

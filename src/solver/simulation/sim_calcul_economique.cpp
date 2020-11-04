@@ -50,54 +50,13 @@ using namespace Yuni;
 
 void SIM_InitialisationProblemeHebdo(Data::Study& study, PROBLEME_HEBDO& problem, int NombreDePasDeTemps, uint numSpace)
 {
-	int NombreClassesActives;
 	int NombrePaliers;
 	CONTRAINTES_COUPLANTES   * PtMat;
-	char                       ClasseDefinie[168 + 1];
-
 	
 	auto& parameters = study.parameters;
 
 	
 	problem.Expansion = parameters.expansion ? OUI_ANTARES : NON_ANTARES;
-
-	for (uint i = 0; i < 169; i++)
-		ClasseDefinie[i] = NON_ANTARES;
-
-	
-	NombreClassesActives = 1;
-	ClasseDefinie[1] = OUI_ANTARES;
-
-	for (uint i = 0; i != study.areas.size(); i++)
-	{
-		
-		auto& area = *(study.areas.byIndex[i]);
-
-		for (uint j = 0; j < area.thermal.list.size(); j++) 
-		{
-			const uint minUpDownTime = area.thermal.list.byIndex[j]->minUpDownTime;
-			if (ClasseDefinie[minUpDownTime] == NON_ANTARES) 
-			{
-				ClasseDefinie[minUpDownTime] = OUI_ANTARES;
-				++NombreClassesActives;
-			}
-		}
-	}
-
-	problem.ClasseDeManoeuvrabiliteActive = (CLASSE_DE_MANOEUVRABILITE *) MemAlloc(NombreClassesActives * sizeof(int));
-
-	{
-		int j = 0;
-		for (int k = 168; k >= 0; k--)
-		{
-			if (ClasseDefinie[k] == OUI_ANTARES)
-			{
-				problem.ClasseDeManoeuvrabiliteActive[j] = (CLASSE_DE_MANOEUVRABILITE) k;
-				++j;
-			}
-		}
-	}
-
 	
 	problem.hydroHotStart = (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart);
 
