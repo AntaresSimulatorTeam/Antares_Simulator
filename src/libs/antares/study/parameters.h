@@ -231,8 +231,8 @@ namespace Data
 		bool yearByYear;
 		//! Derated
 		bool derated;
-		//! Custom TS Numbers
-		bool useCustomTSNumbers;
+		//! Custom scenario
+		bool useCustomScenario;
 		//! Custom playlist (each year will be manually selected by the user)
 		bool userPlaylist;
 		//! Flag to perform the calculations or not from the solver

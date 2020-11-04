@@ -218,7 +218,7 @@ namespace Data
 
 		yearByYear				= false;
 		derated					= false;
-		useCustomTSNumbers		= false;
+		useCustomScenario		= false;
 		userPlaylist			= false;
 		geographicTrimming		= false;
 		simulationDays.first	= 0;
@@ -368,8 +368,13 @@ namespace Data
 		// Same time-series
 		if (key == "correlateddraws")
 			return ConvertCStrToListTimeSeries(value, d.intraModal);
+
+		// Scenario builder
 		if (key == "custom-ts-numbers")
-			return value.to<bool>(d.useCustomTSNumbers);
+			return value.to<bool>(d.useCustomScenario);
+		if (key == "custom-scenario")
+			return value.to<bool>(d.useCustomScenario);
+
 		// Custom set
 		if (key == "customset")
 			return true; // value ignored
@@ -1296,14 +1301,14 @@ namespace Data
 			userPlaylist = false;
 			logs.warning() << "The user's playlist will be ignored";
 		}
-		if (derated && useCustomTSNumbers)
+		if (derated && useCustomScenario)
 		{
-			useCustomTSNumbers = false;
+			useCustomScenario = false;
 			logs.warning() << "The custom build mode can not be used with the derated option";
 		}
-		if (useCustomTSNumbers && activeRulesScenario.empty())
+		if (useCustomScenario && activeRulesScenario.empty())
 		{
-			useCustomTSNumbers = false;
+			useCustomScenario = false;
 			logs.warning() << "The custom build mode will be ignored (no active ruleset)";
 		}
 
@@ -1480,7 +1485,7 @@ namespace Data
 			logs.info() << "  :: enabling the user playlist";
 		if (thematicTrimming)
 			logs.info() << "  :: enabling the user variable selection";
-		if (useCustomTSNumbers)
+		if (useCustomScenario)
 			logs.info() << "  :: enabling the custom build mode";
 		if (geographicTrimming)
 			logs.info() << "  :: enabling filtering by file";
@@ -1570,7 +1575,7 @@ namespace Data
 			// Simulation
 			section->add("year-by-year",            yearByYear);
 			section->add("derated",                 derated);
-			section->add("custom-ts-numbers",       useCustomTSNumbers);
+			section->add("custom-scenario",			useCustomScenario);
 			section->add("user-playlist",           userPlaylist);
 			section->add("thematic-trimming",		thematicTrimming);
 			section->add("geographic-trimming",		geographicTrimming);

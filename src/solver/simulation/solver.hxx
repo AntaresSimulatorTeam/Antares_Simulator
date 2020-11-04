@@ -35,6 +35,7 @@
 # include <antares/timeelapsed.h>
 # include "../aleatoire/alea_fonctions.h"
 # include "timeseries-numbers.h"
+# include "apply-scenario.h"
 # include <antares/emergency.h>
 # include "../ts-generator/generator.h"
 # include <antares/memory/memory.h>
@@ -357,6 +358,11 @@ namespace Simulation
 				AntaresSolverEmergencyShutdown(); // will never return
 				return;
 			}
+
+			if (parameters.useCustomScenario)
+				ApplyCustomScenario(study);
+
+			TimeSeriesNumbers::StoreTimeseriesIntoOuput(study);
 
 			// Launching the simulation for all years
 			logs.info() << "MC-Years : ["

@@ -20,6 +20,9 @@ set(SRC_SIMULATION
 		simulation/solver.hxx
 		simulation/timeseries-numbers.h
 		simulation/timeseries-numbers.cpp
+		simulation/apply-scenario.h
+		simulation/apply-scenario.cpp
+		
 
 		# Solver
 		simulation/solver.utils.h

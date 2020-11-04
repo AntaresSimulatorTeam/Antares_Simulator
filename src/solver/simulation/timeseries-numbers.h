@@ -35,18 +35,17 @@ namespace Antares
 {
 namespace Solver
 {
-namespace TimeSeriesNumbers
-{
+	namespace TimeSeriesNumbers
+	{
 
 	/*!
 	** \brief Generate all time-series numbers for a given set
 	*/
 	bool Generate(Data::Study& study);
 
+	void StoreTimeseriesIntoOuput(Data::Study& study);
 
-
-
-} // namespace TimeSeriesNumbers
+	} // namespace TimeSeriesNumbers
 } // namespace Solver
 } // namespace Antares
 

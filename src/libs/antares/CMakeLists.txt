@@ -36,16 +36,20 @@ source_group("array" FILES ${SRC_MATRIX})
 
 
 set(SRC_STUDY_SCENARIO_BUILDER
-	study/scenario-builder/timeseries.cpp
-	study/scenario-builder/timeseries.h
-	study/scenario-builder/timeseries.hxx
+	study/scenario-builder/scBuilderDataInterface.h
+	study/scenario-builder/TSnumberData.h
+	study/scenario-builder/TSnumberData.cpp
+	study/scenario-builder/hydroLevelsData.h
+	study/scenario-builder/hydroLevelsData.cpp
 	study/scenario-builder/rules.h
 	study/scenario-builder/rules.hxx
 	study/scenario-builder/rules.cpp
 	study/scenario-builder/sets.h
 	study/scenario-builder/sets.hxx
 	study/scenario-builder/sets.cpp
-	study/scenario-builder/updater.hxx)
+	study/scenario-builder/updater.hxx
+	study/scenario-builder/scBuilderUtils.h
+	study/scenario-builder/scBuilderUtils.cpp)
 source_group("study\\scenario builder" FILES ${SRC_MATRIX})
 
 set(SRC_STUDY_ACTIONS

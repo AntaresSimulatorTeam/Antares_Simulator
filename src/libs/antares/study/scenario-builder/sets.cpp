@@ -45,7 +45,7 @@ namespace ScenarioBuilder
 	Sets::Sets() :
 		pStudy(nullptr)
 	{
-		inUpdaterMode=false;
+		inUpdaterMode = false;
 	}
 
 
@@ -201,13 +201,9 @@ namespace ScenarioBuilder
 
 			for (auto* p = section.firstProperty; p != nullptr; p = p->next)
 			{
-				uint value = p->value.to<uint>();
-				if (value)
-				{
-					p->key.split(instrs, ",", true, false);
-					if (instrs.size() > 2)
-						ruleset.loadFromInstrs(*pStudy, instrs, value, inUpdaterMode);
-				}
+				p->key.split(instrs, ",", true, false);
+				if (instrs.size() > 2)
+					ruleset.loadFromInstrs(*pStudy, instrs, p->value, inUpdaterMode);
 			}
 		});
 		return true;

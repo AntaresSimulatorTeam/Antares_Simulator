@@ -311,7 +311,7 @@ namespace Inspector
 				auto& parameters = study->parameters;
 				if (parameters.derated)
 					return 2;
-				if (parameters.useCustomTSNumbers)
+				if (parameters.useCustomScenario)
 					return 1;
 			}
 			return 0;
