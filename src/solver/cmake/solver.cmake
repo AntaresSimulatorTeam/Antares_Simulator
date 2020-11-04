@@ -41,7 +41,7 @@ set(RTESOLVER_OPT
 		optimisation/opt_init_contraintes_hydrauliques.cpp
 		optimisation/opt_appel_solveur_lineaire.cpp
 		optimisation/opt_liberation_problemes_simplexe.cpp
-		optimisation/opt_restaurer_les_donnees_selon_manoeuvrabilite_1.cpp
+		optimisation/opt_restaurer_les_donnees.cpp
 		optimisation/opt_gestion_des_couts_cas_quadratique.cpp
 
 		optimisation/opt_construction_contraintes_couts_demarrage.cpp 

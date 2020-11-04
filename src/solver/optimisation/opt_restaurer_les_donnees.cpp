@@ -42,7 +42,7 @@
 
 
 
-void OPT_RestaurerLesDonneesSelonManoeuvrabilite_1( PROBLEME_HEBDO * ProblemeHebdo )
+void OPT_RestaurerLesDonnees( PROBLEME_HEBDO * ProblemeHebdo )
 {
 	int Pays        ; int Interco; int Pdt ; int DernierPasDeTemps; int Jour   ;  int Palier;
 	int CntCouplante; double PmaxHydEcretee  ; int Intervalle       ; int Semaine;

@@ -31,5 +31,5 @@
 
 void OPT_GenererLesDonneesSelonLePasDeTempsDeLaClasseDeManoeuvrabilite(PROBLEME_HEBDO * ProblemeHebdo)
 {
-	OPT_RestaurerLesDonneesSelonManoeuvrabilite_1(ProblemeHebdo);
+	OPT_RestaurerLesDonnees(ProblemeHebdo);
 }

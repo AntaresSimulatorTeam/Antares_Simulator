@@ -66,7 +66,7 @@ void OPT_LiberationProblemesSimplexe( PROBLEME_HEBDO * );
 bool OPT_OptimisationLineaire( PROBLEME_HEBDO *, uint, char, char, char );
 void OPT_SauvegarderLesPmaxThermiques( PROBLEME_HEBDO * );
 void OPT_GenererLesDonneesSelonLePasDeTempsDeLaClasseDeManoeuvrabilite( PROBLEME_HEBDO *);
-void OPT_RestaurerLesDonneesSelonManoeuvrabilite_1( PROBLEME_HEBDO * );
+void OPT_RestaurerLesDonnees( PROBLEME_HEBDO * );
 /*------------------------------*/
 
 void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT( PROBLEME_HEBDO * );
