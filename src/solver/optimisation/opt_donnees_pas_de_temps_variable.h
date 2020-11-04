@@ -43,7 +43,7 @@ CLASSE_DE_MANOEUVRABILITE;
 typedef struct {
   int     NombreDePaliersThermiques;
   /* Ajout */
-  CLASSE_DE_MANOEUVRABILITE * ClasseDeManoeuvrabilite; /* Classe de manoeuvrabilite du palier thermique */
+  int * minUpDownTime;
   /* Fin ajout */
   double * TailleUnitaireDUnGroupeDuPalierThermique;
   double * PminDuPalierThermiquePendantUneHeure;

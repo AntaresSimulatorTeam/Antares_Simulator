@@ -321,7 +321,7 @@ typedef struct {
 typedef struct {
   int      NombreDePaliersThermiques;
   
-  CLASSE_DE_MANOEUVRABILITE * ClasseDeManoeuvrabilite; 
+  int* minUpDownTime;
   
   double * TailleUnitaireDUnGroupeDuPalierThermique;
   double * PminDuPalierThermiquePendantUneHeure;

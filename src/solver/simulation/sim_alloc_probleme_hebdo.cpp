@@ -304,7 +304,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 		problem.ReserveJMoins1[k]               = (RESERVE_JMOINS1 *)                     MemAlloc( sizeof(RESERVE_JMOINS1) );
 		problem.ResultatsHoraires[k]            = (RESULTATS_HORAIRES *)                  MemAlloc( sizeof(RESULTATS_HORAIRES) );
 
-		problem.PaliersThermiquesDuPays[k]->ClasseDeManoeuvrabilite                         = (CLASSE_DE_MANOEUVRABILITE *) MemAlloc( nbPaliers * sizeof(CLASSE_DE_MANOEUVRABILITE) );
+		problem.PaliersThermiquesDuPays[k]->minUpDownTime									= (int *) MemAlloc( nbPaliers * sizeof(int) );
 		problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure            = (double *) MemAlloc( nbPaliers * sizeof(double));
 		problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneSemaine          = (double *) MemAlloc( nbPaliers * sizeof(double));
 		problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUnJour              = (double *) MemAlloc( nbPaliers * sizeof(double));
@@ -561,7 +561,7 @@ void SIM_DesallocationProblemeHebdo( PROBLEME_HEBDO& problem )
 		MemFree( problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure );
 		MemFree( problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneSemaine );
 		MemFree( problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUnJour );
-		MemFree( problem.PaliersThermiquesDuPays[k]->ClasseDeManoeuvrabilite );
+		MemFree( problem.PaliersThermiquesDuPays[k]->minUpDownTime );
 		MemFree( problem.PaliersThermiquesDuPays[k]->TailleUnitaireDUnGroupeDuPalierThermique );
 		MemFree( problem.PaliersThermiquesDuPays[k]->NumeroDuPalierDansLEnsembleDesPaliersThermiques );
 

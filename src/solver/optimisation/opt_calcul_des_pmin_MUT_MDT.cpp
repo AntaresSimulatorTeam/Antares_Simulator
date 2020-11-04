@@ -111,7 +111,7 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT( PROBLEME_HEBDO * Problem
 	PRODUCTION_THERMIQUE_OPTIMALE **     ProductionThermiqueOptimale; 
 	PDISP_ET_COUTS_HORAIRES_PAR_PALIER * PuissanceDispoEtCout ;
 	PALIERS_THERMIQUES *                 PaliersThermiquesDuPays;
-	CLASSE_DE_MANOEUVRABILITE *          ClasseDeManoeuvrabilite;
+	int * minUpDownTime;
   
 	NombreDePasDeTemps = ProblemeHebdo->NombreDePasDeTemps;
 	NbGrpCourbeGuide   = ProblemeHebdo->NbGrpCourbeGuide;
@@ -123,7 +123,7 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT( PROBLEME_HEBDO * Problem
 		PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
 		PminDuPalierThermiquePendantUneHeure     = PaliersThermiquesDuPays->PminDuPalierThermiquePendantUneHeure;
 		TailleUnitaireDUnGroupeDuPalierThermique = PaliersThermiquesDuPays->TailleUnitaireDUnGroupeDuPalierThermique;
-		ClasseDeManoeuvrabilite                  = PaliersThermiquesDuPays->ClasseDeManoeuvrabilite;
+		minUpDownTime = PaliersThermiquesDuPays->minUpDownTime;
 
 		ProductionThermiqueOptimale = ResultatsHoraires->ProductionThermique;
 
@@ -153,7 +153,7 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT( PROBLEME_HEBDO * Problem
 				
     
 			EcartOpt = LINFINI_ANTARES;
-			MUTetMDT = (int) ClasseDeManoeuvrabilite[Palier];
+			MUTetMDT = minUpDownTime[Palier];
 	
 			iOpt     = -1;
     
