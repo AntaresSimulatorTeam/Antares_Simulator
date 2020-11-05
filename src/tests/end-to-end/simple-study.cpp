@@ -215,6 +215,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 	prepareStudy(pStudy, nbYears);
 	pStudy->parameters.nbTimeSeriesLoad		= nbTS;
 	pStudy->parameters.nbTimeSeriesThermal	= nbTS;
+    /*
 
 	//Create area
 	double load = 7.0;
@@ -231,6 +232,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 
 	//Initialize time series
 	pCluster->series->series.fillColumn(0, availablePower);
+    */
 
 	//Launch simulation
 	//Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
