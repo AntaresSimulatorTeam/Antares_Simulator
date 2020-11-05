@@ -187,6 +187,7 @@ Solver::Simulation::ISimulation< Solver::Simulation::Economy >* runSimulation(St
 
 void cleanSimulation(Study::Ptr pStudy, Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation)
 {
+    /*
 	// simulation
 	SIM_DesallocationTableaux();
 
@@ -198,6 +199,8 @@ void cleanSimulation(Study::Ptr pStudy, Solver::Simulation::ISimulation< Solver:
 	pStudy = nullptr;
 	// removed any global reference
 	Data::Study::Current::Set(nullptr);
+    
+    */
 }
 
 //Very simple test with one area and one load and one year
