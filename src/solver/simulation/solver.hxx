@@ -378,12 +378,17 @@ namespace Simulation
 			uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
 			loopThroughYears<true>(0, finalYear, state);
 
+
+			logs.info() << " TSGenerator destroy";
 			// Destroy the TS Generators if any
 			// It will export the time-series into the output in the same time
 			Solver::TSGenerator::DestroyAll(study);
 
 			// Post operations
+			logs.info() << " simulation end";
 			ImplementationType:: simulationEnd();
+
+			logs.info() << " variable siumulation end";
 			ImplementationType:: variables.simulationEnd();
 
 			// Spatial clusters
