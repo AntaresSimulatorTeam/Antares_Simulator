@@ -242,7 +242,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 	//checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
 
 	//Clean simulation
-	cleanSimulation(pStudy, simulation);	
+	//cleanSimulation(pStudy, simulation);	
 }
 
 //Very simple test with one area and one load and two year
