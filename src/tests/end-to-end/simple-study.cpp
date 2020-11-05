@@ -233,7 +233,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 	pCluster->series->series.fillColumn(0, availablePower);
 
 	//Launch simulation
-	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+	//Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
 		
 	//Overall cost must be load * cost by MW
 	//checkVariable<Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, load * cost);
