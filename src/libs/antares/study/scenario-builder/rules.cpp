@@ -227,7 +227,7 @@ namespace ScenarioBuilder
 			if (nbScenariiForCluster > 10)
 				listScenarii += "..." + to_string(scenariiForCurrentCluster[nbScenariiForCluster - 1]);
 
-			logs.warning() << "Cluster " << it->first << " not found: it may be disabled, though needed for scenario of year(s) :";
+			logs.warning() << "Cluster " << it->first << " not found: it may be disabled, though given TS numbers in sc builder for year(s) :";
 			logs.warning() << listScenarii;
 		}
 	}
