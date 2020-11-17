@@ -204,9 +204,7 @@ void cleanSimulation(Study::Ptr pStudy, Solver::Simulation::ISimulation< Solver:
 BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 {    
 	//Create study
-	Study::Ptr pStudy = new Study(true); // for the solver    
-    
-    /*
+	Study::Ptr pStudy = new Study(true); // for the solver 
 
 	//On year  and one TS
 	int nbYears = 1;
@@ -232,25 +230,23 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 
 	//Initialize time series
 	pCluster->series->series.fillColumn(0, availablePower);
-    */
 
 	//Launch simulation
-	//Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
 		
 	//Overall cost must be load * cost by MW
-	//checkVariable<Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, load * cost);
+	checkVariable<Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, load * cost);
 
 	//Load must be load
-	//checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
+	checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
 
 	//Clean simulation
-	//cleanSimulation(pStudy, simulation);	
+	cleanSimulation(pStudy, simulation);	
 }
 
 //Very simple test with one area and one load and two year
 BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
 {
-    /*
 	//Create study
 	Study::Ptr pStudy = new Study(true); // for the solver
 
@@ -290,14 +286,12 @@ BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
 
 	//Clean simulation
 	cleanSimulation(pStudy, simulation);
-    */
 }
 
 
 //Very simple test with one area and one load and two year and two identical TS
 BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
 {
-    /*
 	//Create study
 	Study::Ptr pStudy = new Study(true); // for the solver
 
@@ -339,7 +333,6 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
 
 	//Clean simulation
 	cleanSimulation(pStudy, simulation);
-    */
 }
 
 
@@ -347,7 +340,6 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
 //Very simple test with one area and one load and two year and two TS with different load
 BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
 {
-    /*
 	//Create study
 	Study::Ptr pStudy = new Study(true); // for the solver
 
@@ -402,7 +394,6 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
 
 	//Clean simulation
 	cleanSimulation(pStudy, simulation);
-    */
 }
 
 
@@ -410,7 +401,6 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
 //Very simple test with one area and one load and two year with different load and weight
 BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_different_weight)
 {
-    /*
 	//Create study
 	Study::Ptr pStudy = new Study(true); // for the solver
 
@@ -483,8 +473,6 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_different_weight)
 
 	//Clean simulation
 	cleanSimulation(pStudy, simulation);
-    
-    */
 }
 
 BOOST_AUTO_TEST_SUITE_END()

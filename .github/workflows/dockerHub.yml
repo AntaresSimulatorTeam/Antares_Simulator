@@ -13,7 +13,6 @@ jobs:
       fail-fast: false
       matrix:
         container:
-        - 'jmkerloch/rte-antares:centos8-ortools'
         - 'jmkerloch/rte-antares:ubuntu-ortools'
   
     runs-on: ubuntu-latest
