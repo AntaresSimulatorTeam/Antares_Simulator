@@ -1,16 +1,16 @@
 FROM ubuntu:latest
 
-# Install requirements
+# Install requirements : update repo
 RUN export DEBIAN_FRONTEND=noninteractive &&\
     apt-get update -y
     
-# Install requirements -2
+# Install requirements
 RUN export DEBIAN_FRONTEND=noninteractive &&\
     apt-get install -y build-essential git cmake &&\
     apt-get install -y wget  &\
     apt-get install -y unzip &&\
     apt-get install -y libssl-dev libuuid1 uuid-dev libssh2-1 libssh2-1-dev libidn2-dev libidn11 libidn11-dev libwxgtk3.0-gtk3-dev libcurl4-openssl-dev libb64-dev &&\
-    apt-get install -y libboost-test-dev libboost-filesystem-dev libboost-dev
+    apt-get install -y libboost-test-dev libboost-filesystem-dev libboost-regex-dev libboost-dev
 
 
 # Install xpansion requirements
@@ -29,7 +29,7 @@ RUN  git clone https://github.com/AntaresSimulatorTeam/sirius-solver.git --singl
 RUN mkdir sirius-build &&\
     cd sirius-build &&\
     cmake ../sirius/src -DCMAKE_INSTALL_PREFIX=/sirius-install &&\
-    cmake --build . --target install
+    cmake --build . -j8 --target install
     
 # Remove sirius build and compile directory
 RUN rm -rf sirius-build &&\
@@ -42,7 +42,7 @@ RUN git clone https://github.com/AntaresSimulatorTeam/or-tools.git --single-bran
 RUN mkdir ortools-build &&\
     cd ortools-build &&\
     cmake ../or-tools -DUSE_COINOR=ON -DBUILD_PYTHON=OFF -DBUILD_TESTING=OFF -Dsirius_solver_ROOT=/sirius-install -DUSE_SIRIUS=ON -DBUILD_DEPS=ON &&\
-    cmake --build . --target install
+    cmake --build . -j8 --target install
     
 # Remove ortools build and compile directory
 RUN rm -rf ortools-build &&\

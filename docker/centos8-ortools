@@ -1,11 +1,13 @@
 FROM centos:latest
 
+# Install requirements : update repo
+RUN yum update -y
+
 # Install requirements
-RUN yum update -y &&\
-    yum install -y git gcc gcc-c++ make &&\
+RUN yum install -y git gcc gcc-c++ make &&\
     yum install -y wget &&\
     yum install -y epel-release &&\
-    yum install -y unzip openssl-devel libcurl-devel wxGTK3-devel libuuid-devel boost-devel boost-test 
+    yum install -y unzip openssl-devel libcurl-devel wxGTK3-devel libuuid-devel boost-devel boost-test boost-filesystem boost-regex
 
 # Install CMake3
 RUN wget https://github.com/Kitware/CMake/releases/download/v3.17.3/cmake-3.17.3.tar.gz &&\
@@ -25,7 +27,10 @@ RUN git clone https://github.com/google/googletest.git --single-branch &&\
     cmake --build . --target install &&\
     cd .. &&\
     rm -rf googletest &&\
-    yum install -y jsoncpp-devel
+    yum install -y jsoncpp-devel &&\
+    yum install -y 'dnf-command(config-manager)' &&\
+    yum config-manager --set-enabled PowerTools &&\    
+    yum install -y boost-openmpi-devel
     
 # Sirius checkout
 RUN  git clone https://github.com/AntaresSimulatorTeam/sirius-solver.git --single-branch -b Antares_VCPKG sirius
@@ -34,7 +39,7 @@ RUN  git clone https://github.com/AntaresSimulatorTeam/sirius-solver.git --singl
 RUN mkdir sirius-build &&\
     cd sirius-build &&\
     cmake ../sirius/src -DCMAKE_INSTALL_PREFIX=/sirius-install &&\
-    cmake --build . --target install
+    cmake --build . -j8 --target install
     
 # Remove sirius build and compile directory
 RUN rm -rf sirius-build &&\
@@ -47,13 +52,9 @@ RUN git clone https://github.com/AntaresSimulatorTeam/or-tools.git --single-bran
 RUN mkdir ortools-build &&\
     cd ortools-build &&\
     cmake ../or-tools -DUSE_COINOR=ON -DBUILD_PYTHON=OFF -DBUILD_TESTING=OFF -Dsirius_solver_ROOT=/sirius-install -DUSE_SIRIUS=ON -DBUILD_DEPS=ON &&\
-    cmake --build . --target install
+    cmake --build . -j8 --target install
     
 # Remove ortools build and compile directory
 RUN rm -rf ortools-build &&\
     rm -rf or-tools    
     
-# Install xpansion requirements -2
-RUN yum install -y 'dnf-command(config-manager)' &&\
-    yum config-manager --set-enabled PowerTools &&\    
-    yum install -y boost-openmpi-devel 
