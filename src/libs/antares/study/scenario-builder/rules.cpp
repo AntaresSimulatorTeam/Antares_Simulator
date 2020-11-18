@@ -225,7 +225,7 @@ namespace ScenarioBuilder
 
 			// Adding last scenarii to he list
 			if (nbScenariiForCluster > 10)
-				listScenarii += "..." + to_string(scenariiForCurrentCluster[nbScenariiForCluster - 1]);
+				listScenarii += "..." + to_string(scenariiForCurrentCluster.back());
 
 			logs.warning() << "Cluster " << it->first << " not found: it may be disabled, though given TS numbers in sc builder for year(s) :";
 			logs.warning() << listScenarii;

@@ -33,6 +33,7 @@
 #include "../../toolbox/components/refresh.h"
 #include "../../../common/lock.h"
 #include <yuni/datetime/timestamp.h>
+#include "internal-ids.h"
 
 
 using namespace Yuni;
@@ -325,10 +326,17 @@ namespace Forms
 	}
 
 
-	void ApplWnd::refreshMenuOptions()
+	void ApplWnd::refreshMenuOptions(Data::Study::Ptr study)
 	{
 		if (not Data::Study::Current::Valid() or IsGUIAboutToQuit())
 			return;
+
+		// Enabling the Configure menu scenario builder item after loading a study 
+		// whether building mode is turned to Custom or not.
+		auto* menu = GetMenuBar();
+		auto* sc_builder_menu_item = menu->FindItem(Antares::Forms::mnIDOptionConfigureMCScenarioBuilder);
+		if (not study->parameters.useCustomScenario)
+			sc_builder_menu_item->Enable(false);
 	}
 
 	void ApplWnd::forceRefresh()
