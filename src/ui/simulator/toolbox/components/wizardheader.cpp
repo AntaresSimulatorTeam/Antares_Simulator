@@ -93,7 +93,7 @@ namespace Components
 	void WizardHeader::onDraw(wxPaintEvent&)
 	{
 		// The DC
-		wxAutoBufferedPaintDC dc(this);
+		wxClientDC dc(this);
 		// Shifts the device origin so we don't have to worry
 		// about the current scroll position ourselves
 		PrepareDC(dc);
