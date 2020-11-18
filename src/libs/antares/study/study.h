@@ -740,6 +740,7 @@ namespace Data
 		ScenarioBuilder::Sets* scenarioRules;
 		//@}
 
+		Matrix<double> scenarioHydroLevels;
 
 		/*!
 		** \brief Runtime informations

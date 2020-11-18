@@ -98,7 +98,7 @@ Git version must be above 2.15 for external dependencies build because `--ignore
  - [OrTools](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) (fork from [RTE](https://github.com/rte-france/or-tools/tree/rte_dev_sirius) based on official Ortools github)
  - [wxWidgets](https://github.com/wxWidgets/wxWidgets)
  (Only for the complete Antares Simulator solution with GUI)
- - Boost test (Only for unit tests)
+ - Boost librairies : test process filesystem regex dll (Only for unit tests)
 
 This section describes the install procedures for the third-party Open source libraries used by ANTARES.
 The install procedure can be done
@@ -141,19 +141,25 @@ cd [vcpkg_root]
 vcpkg install openssl:[vcpg-triplet] 
 vcpkg install curl:[vcpg-triplet] 
 vcpkg install wxwidgets:[vcpg-triplet] 
-vcpkg install boost-test:[vcpg-triplet] 
+vcpkg install boost-test:[vcpg-triplet]
+vcpkg install boost-filesystem:[vcpg-triplet]
+vcpkg install boost-process[vcpg-triplet]
+vcpkg install boost-dll:[vcpg-triplet]
+vcpkg install boost-regex:[vcpg-triplet]
 ```
 ### [Using a package manager](#linux_manager)
 On linux you can use a package manger to download the precompiled librairies.
 
 #### Ubuntu
 
+##### 20.04 (Focal)
 ```
-sudo apt-get install libuuid1 uuid-dev
-sudo apt-get install libcurl4-openssl-dev
-sudo apt-get install libssl-dev
-sudo apt-get install libwxgtk3.0-dev
-sudo apt-get install libboost-test-dev
+sudo apt install uuid-dev libcurl4-openssl-dev libssl-dev libwxgtk3.0-gtk3-dev libboost-test-dev
+```
+
+##### 16.04 (Xenial) and 18.04 (Bionic)
+```
+sudo apt-get install uuid-dev libcurl4-openssl-dev libssl-dev libwxgtk3.0-dev libboost-test-dev
 ```
 
 #### RHEL / Centos
@@ -162,7 +168,7 @@ sudo apt-get install libboost-test-dev
 sudo yum install openssl
 sudo yum install curl
 sudo yum install wxGTK3-devel
-sudo yum install boost-test
+sudo yum install boost-test boost-filesystem boost-regex boost-devel
 ```
 ### [Automatic librairies compilation from git](#git_compil)
 Dependency can be built  at configure time using the option `-DBUILD_DEPS=ON` (`OFF` by default) or you can compile few of them using the options below.
@@ -287,7 +293,7 @@ Note :
 Unit tests compilation  can be enabled at configure time using the option `-DBUILD_TESTING=ON` (`OFF` by default)
 
 Note :
-> Boost  test librairie compilation (``BUILD_BOOST_TEST``) can be enabled only if ``BUILD_TESTING=ON``
+> Boost libraries compilation (``BUILD_BOOST``) can be enabled only if ``BUILD_TESTING=ON``
 
 After build, unit tests can be run with ``ctest`` :
  ```

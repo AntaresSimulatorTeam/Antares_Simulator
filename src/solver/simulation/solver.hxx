@@ -35,6 +35,7 @@
 # include <antares/timeelapsed.h>
 # include "../aleatoire/alea_fonctions.h"
 # include "timeseries-numbers.h"
+# include "apply-scenario.h"
 # include <antares/emergency.h>
 # include "../ts-generator/generator.h"
 # include <antares/memory/memory.h>
@@ -357,6 +358,11 @@ namespace Simulation
 				AntaresSolverEmergencyShutdown(); // will never return
 				return;
 			}
+
+			if (parameters.useCustomScenario)
+				ApplyCustomScenario(study);
+
+			TimeSeriesNumbers::StoreTimeseriesIntoOuput(study);
 
 			// Launching the simulation for all years
 			logs.info() << "MC-Years : ["
@@ -688,7 +694,7 @@ namespace Simulation
 			requiredMemoryForWeeklyPb += sizeof(COUTS_MARGINAUX_ZONES_DE_RESERVE);
 			requiredMemoryForWeeklyPb += sizeof(RESERVE_JMOINS1);
 			requiredMemoryForWeeklyPb += sizeof(RESULTATS_HORAIRES);
-			requiredMemoryForWeeklyPb += nbPaliers * sizeof(CLASSE_DE_MANOEUVRABILITE);
+			requiredMemoryForWeeklyPb += nbPaliers * sizeof(int);
 			requiredMemoryForWeeklyPb += 30 * nbPaliers * sizeof(double);
 			requiredMemoryForWeeklyPb += 6 * nbPaliers * sizeof(int);
 			requiredMemoryForWeeklyPb += nbPaliers * sizeof(void *);
@@ -750,7 +756,6 @@ namespace Simulation
 		int NombreDeVariables = 0;
 		int	NombreDeContraintes = 0;
 		int NbTermesContraintesPourLesCoutsDeDemarrage = 0;
-		int NombreDeClassesDeManoeuvrabiliteActives = 1;
 		int NombreDePasDeTemps = 168;
 		int NombreDeJoursDansUnIntervalleOptimise = 0;
 		int mxPaliers = 0;
@@ -969,10 +974,8 @@ namespace Simulation
 		requiredMemoryForOptPb += 2 * szNbContDouble;
 		requiredMemoryForOptPb += 2 * NombreDeVariables   * sizeof( void * );
 		requiredMemoryForOptPb += NombreDeContraintes * sizeof( void * );
-		requiredMemoryForOptPb += NombreDeClassesDeManoeuvrabiliteActives * sizeof( void * );
 
-		requiredMemoryForOptPb += NombreDeClassesDeManoeuvrabiliteActives * NbIntervalles * sizeof( void * );
-		requiredMemoryForOptPb += NombreDeClassesDeManoeuvrabiliteActives * sizeof( PROBLEMES_SIMPLEXE );
+		requiredMemoryForOptPb += sizeof( PROBLEMES_SIMPLEXE );
 
 
 		// ================================================

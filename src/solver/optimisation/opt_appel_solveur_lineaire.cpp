@@ -91,16 +91,15 @@ bool OPT_AppelDuSolveurLineaire( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, 
 
 bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int NumIntervalle )
 {
-	int Var; int Cnt; double * pt; int il; int ilMax; int Classe; char PremierPassage;
+	int Var; int Cnt; double * pt; char PremierPassage;
 	double CoutOpt; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre; PROBLEME_SIMPLEXE Probleme;
 	PROBLEME_SPX* ProbSpx;
 	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 	PremierPassage = OUI_ANTARES;
-	Classe = ProblemeAResoudre->NumeroDeClasseDeManoeuvrabiliteActiveEnCours;
 	MPSolver* solver;
 
-	ProbSpx = (PROBLEME_SPX*) ((ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[(int) NumIntervalle]);
-	solver  = (MPSolver*)((ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[(int)NumIntervalle]);
+	ProbSpx = (PROBLEME_SPX*) ((ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[(int)NumIntervalle]);
+	solver  = (MPSolver*)((ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[(int)NumIntervalle]);
 
 	auto& study			= *Data::Study::Current::Get();
 	bool ortoolsUsed	= study.parameters.ortoolsUsed;
@@ -121,9 +120,9 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 		    }
 		    else if(ProbSpx != NULL) {
 			    SPX_LibererProbleme(ProbSpx);
-		    }
-			(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[(int) NumIntervalle] = NULL;
-
+		    }			
+			(ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = NULL;
+      
 			ProbSpx  = NULL;
 			solver = NULL;
 			Probleme.Contexte = SIMPLEXE_SEUL;
@@ -198,13 +197,12 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 	# endif
 
 	Probleme.NombreDeContraintesCoupes = 0;
-
 	
 	if (ortoolsUsed) {
 		solver = ORTOOLS_Simplexe(&Probleme,solver);
 		if (solver != NULL)
 		{
-			(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[NumIntervalle] = (void*)solver;
+			(ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = (void*)solver;
 		}
 	}
 	else
@@ -212,9 +210,10 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 		ProbSpx = SPX_Simplexe(&Probleme,ProbSpx);
 		if (ProbSpx != NULL)
 		{
-			(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
+			(ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
 		}
 	}	
+
 
 	if ( ProblemeHebdo->ExportMPS == OUI_ANTARES)
 	{

@@ -63,19 +63,11 @@ bool OPT_PilotageOptimisationQuadratique( PROBLEME_HEBDO * );
 */
 bool OPT_AppelDuSolveurLineaire( PROBLEME_HEBDO *, uint, const int );
 void OPT_LiberationProblemesSimplexe( PROBLEME_HEBDO * );
-bool OPT_OptimisationLineaire( PROBLEME_HEBDO *, uint, CLASSE_DE_MANOEUVRABILITE, char, char, char );
+bool OPT_OptimisationLineaire( PROBLEME_HEBDO *, uint, char, char, char );
 void OPT_SauvegarderLesPmaxThermiques( PROBLEME_HEBDO * );
-void OPT_RestaurerLesPmaxThermiques( PROBLEME_HEBDO * );
-void OPT_AjusterLesPmaxThermiques( PROBLEME_HEBDO *, CLASSE_DE_MANOEUVRABILITE );
-void OPT_GenererLesDonneesSelonLePasDeTempsDeLaClasseDeManoeuvrabilite( PROBLEME_HEBDO *, const CLASSE_DE_MANOEUVRABILITE);
-void OPT_RestaurerLesDonneesSelonManoeuvrabilite_1( PROBLEME_HEBDO * );
+void OPT_RestaurerLesDonnees( PROBLEME_HEBDO * );
 /*------------------------------*/
 
-void OPT_AjusterLesPminThermiques( PROBLEME_HEBDO * );
-void OPT_CalculMaxPminJour( PROBLEME_HEBDO * , PALIERS_THERMIQUES * , PRODUCTION_THERMIQUE_OPTIMALE ** ,
-														double * , int , double * );
-void OPT_SauvegarderLesPminThermiques( PROBLEME_HEBDO * );
-void OPT_RestaurerLesPminThermiques( PROBLEME_HEBDO * );
 void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT( PROBLEME_HEBDO * );
 double OPT_CalculerAireMaxPminJour( int , int , int , int , int * , int * );
 

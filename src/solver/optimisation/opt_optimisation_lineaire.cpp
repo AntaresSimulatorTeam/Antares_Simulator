@@ -48,18 +48,15 @@ using namespace Yuni;
 
 bool OPT_OptimisationLineaire(	PROBLEME_HEBDO * ProblemeHebdo,
 								uint numSpace,
-								CLASSE_DE_MANOEUVRABILITE ClasseDeManoeuvrabilite,
 								char CalculerLesPmin,
 								char CalculerLesPmax,
 								char FaireDerniereOptimisation )
 {
 	int PdtHebdo; int PremierPdtDeLIntervalle; int DernierPdtDeLIntervalle;
-	int NumeroDeLIntervalle; int LongueurDuPasDeTemps  ; int NombreDePasDeTempsPourUneOptimisation;
+	int NumeroDeLIntervalle; int NombreDePasDeTempsPourUneOptimisation;
 
-	LongueurDuPasDeTemps = (int) ClasseDeManoeuvrabilite;
-
-	ProblemeHebdo->NombreDePasDeTemps            = ProblemeHebdo->NombreDePasDeTempsRef            / LongueurDuPasDeTemps;
-	ProblemeHebdo->NombreDePasDeTempsDUneJournee = ProblemeHebdo->NombreDePasDeTempsDUneJourneeRef / LongueurDuPasDeTemps;
+	ProblemeHebdo->NombreDePasDeTemps            = ProblemeHebdo->NombreDePasDeTempsRef;
+	ProblemeHebdo->NombreDePasDeTempsDUneJournee = ProblemeHebdo->NombreDePasDeTempsDUneJourneeRef;
 
 	if ( ProblemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES )
 	{
@@ -79,7 +76,7 @@ bool OPT_OptimisationLineaire(	PROBLEME_HEBDO * ProblemeHebdo,
 
 	OPT_NumeroDIntervalleOptimiseDuPasDeTemps( ProblemeHebdo );
 
-	OPT_GenererLesDonneesSelonLePasDeTempsDeLaClasseDeManoeuvrabilite( ProblemeHebdo, ClasseDeManoeuvrabilite );
+	OPT_RestaurerLesDonnees( ProblemeHebdo );
 
 	OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire( ProblemeHebdo );
 
@@ -102,14 +99,7 @@ bool OPT_OptimisationLineaire(	PROBLEME_HEBDO * ProblemeHebdo,
 		ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle]++;
 	
 		if (!OPT_AppelDuSolveurLineaire( ProblemeHebdo, numSpace, NumeroDeLIntervalle ))
-		{
-			logs.debug().appendFormat(
-								"Flexibility level: %ld",
-	                            ProblemeHebdo->ClasseDeManoeuvrabiliteActive[
-															(ProblemeHebdo->ProblemeAResoudre)->NumeroDeClasseDeManoeuvrabiliteActiveEnCours
-															]);
 			return false;
-		}
 
 		if ( ProblemeHebdo->ExportMPS == OUI_ANTARES || ProblemeHebdo->Expansion == OUI_ANTARES)
 			OPT_EcrireResultatFonctionObjectiveAuFormatTXT((void *) ProblemeHebdo, numSpace, NumeroDeLIntervalle);
@@ -120,60 +110,27 @@ bool OPT_OptimisationLineaire(	PROBLEME_HEBDO * ProblemeHebdo,
 	}
 
 
-	if ( ProblemeHebdo->OptimisationMUTetMDT == OUI_ANTARES )
-	{
-		if ( (ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation == PREMIERE_OPTIMISATION )
-		{	
-			if ( ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES )
-			{
-				OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT( ProblemeHebdo );
-			}
-			else if ( ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES ) 
-			{
-				OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage( ProblemeHebdo );
-			}
-			else
-				printf("BUG: l'indicateur ProblemeHebdo->OptimisationAvecCoutsDeDemarrage doit etre initialise a OUI_ANTARES ou NON_ANTARES\n");
-
-			(ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation = DEUXIEME_OPTIMISATION;
-
-			if (ProblemeHebdo->Expansion == NON_ANTARES)
-				goto OptimisationHebdo;
-		}
-		
-		return true;
-	}
-
-	/* L'optimisation hebdomadaire est terminee, on peut fixer la Pmax de la classe de manoeuvrabilite en cours
-	   si celle-ci est differente de Classe01 */
-	if ( (ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation == PREMIERE_OPTIMISATION && ClasseDeManoeuvrabilite != Classe01)
-	{
-		if ( CalculerLesPmax == OUI_ANTARES ) {
-			OPT_AjusterLesPmaxThermiques( ProblemeHebdo, ClasseDeManoeuvrabilite );
-		}
-	}
-
-	/* Ajustement des Pmin pour approcher des durees min de marche */
-	if ( (ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation == PREMIERE_OPTIMISATION && ClasseDeManoeuvrabilite == Classe01 )
-	{
-		if ( CalculerLesPmin == OUI_ANTARES )
+	if ( (ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation == PREMIERE_OPTIMISATION )
+	{	
+		if ( ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES )
 		{
-			OPT_AjusterLesPminThermiques( ProblemeHebdo );
-			if ( FaireDerniereOptimisation == NON_ANTARES )
-			{
-				/* Sera utilise dans la 2eme volee des optimisations */
-				OPT_SauvegarderLesPminThermiques( ProblemeHebdo );
-			}
-			else
-			{
-				/* Cas sans reserve J-1: on vient de calculer les Pmin et on fait une reoptimisation avec ces Pmin */
-				(ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation = DEUXIEME_OPTIMISATION;
-				goto OptimisationHebdo;
-			}
+			OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT( ProblemeHebdo );
 		}
-	}
+		else if ( ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES ) 
+		{
+			OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage( ProblemeHebdo );
+		}
+		else
+			printf("BUG: l'indicateur ProblemeHebdo->OptimisationAvecCoutsDeDemarrage doit etre initialise a OUI_ANTARES ou NON_ANTARES\n");
 
+		(ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation = DEUXIEME_OPTIMISATION;
+
+		if (ProblemeHebdo->Expansion == NON_ANTARES)
+			goto OptimisationHebdo;
+	}
+		
 	return true;
+
 }
 
 

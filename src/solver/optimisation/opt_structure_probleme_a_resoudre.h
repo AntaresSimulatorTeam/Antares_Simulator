@@ -63,18 +63,15 @@
 
 /* Les problemes Simplexe */
 typedef struct {
-  void ** ProblemeSpx; /* Pour chaque classe de manoeuvrabilite, plusieurs problemes simplexe: 1 par jour */
+  void ** ProblemeSpx;
 } PROBLEMES_SIMPLEXE;
 
 /* Le probleme a resoudre */
 typedef struct {
 
-  /* Cas des classes de manoeuvrabilite (pas de temps variable) */
-  char *   PremiereResolutionDuNumeroDeClasseDeManoeuvrabilite; /* OUI_SIM ou NON_SIM */
-  /* Numero de la classe de manoeuvrabilite active en cours */
-  int     NumeroDeClasseDeManoeuvrabiliteActiveEnCours;
   /* Pour la prise en compte des PMIN */
   char     NumeroDOptimisation; /* Vaut	PREMIERE_OPTIMISATION ou DEUXIEME_OPTIMISATION */
+
   /* La matrice des contraintes */
   int     NombreDeVariables;
   int     NombreDeContraintes; /* Il est egal a :
@@ -131,7 +128,8 @@ typedef struct {
 				   SPX_MATRICE_DE_BASE_SINGULIERE si on n'a pas pu construire de matrice de base reguliere,
 				                                  et dans ce cas il n'y a pas de solution
 			        */
-  PROBLEMES_SIMPLEXE ** ProblemesSpxDUneClasseDeManoeuvrabilite;
+
+  PROBLEMES_SIMPLEXE * ProblemesSpx;
 
   int * PositionDeLaVariable;  /* Vecteur a passer au Simplexe pour recuperer la base optimale */
   int * ComplementDeLaBase;   	/* Vecteur a passer au Simplexe pour recuperer la base optimale */

@@ -30,7 +30,8 @@
 # include <yuni/yuni.h>
 # include <yuni/core/string.h>
 # include "../fwd.h"
-# include "timeseries.h"
+# include "TSnumberData.h"
+# include "hydroLevelsData.h"
 # include <map>
 
 
@@ -76,14 +77,9 @@ namespace ScenarioBuilder
 		bool reset(const Study& study);
 
 		/*!
-		** \brief Load data from the study
-		*/
-		bool loadFromStudy(const Study& study);
-
-		/*!
 		** \brief Load information from a single line (extracted from an INI file)
 		*/
-		void loadFromInstrs(Study& study, const AreaName::Vector& instrs, uint value, bool updaterMode);
+		void loadFromInstrs(Study& study, const AreaName::Vector& instrs, String value, bool updaterMode);
 
 		/*!
 		** \brief Export the data into a mere INI file
@@ -103,19 +99,21 @@ namespace ScenarioBuilder
 		**
 		** This method is only useful when launched from the solver.
 		*/
-		void apply(const Study& study);
+		void apply(Study& study);
 
 	public:
 		//! Load
-		TSNumberRules  load;
+		loadTSNumberData  load;
 		//! Solar
-		TSNumberRules  solar;
+		solarTSNumberData  solar;
 		//! Hydro
-		TSNumberRules  hydro;
+		hydroTSNumberData  hydro;
 		//! Wind
-		TSNumberRules  wind;
+		windTSNumberData  wind;
 		//! Thermal (array [0..pAreaCount - 1])
-		TSNumberRules* thermal;
+		thermalTSNumberData* thermal;
+
+		hydroLevelsData hydroLevels;
 
 	private:
 		//! Total number of areas

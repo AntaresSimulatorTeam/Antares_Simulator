@@ -141,7 +141,7 @@ namespace AllYears
 
 				report.captions[0][report.data.columnIndex] = report.variableCaption;
 				report.captions[1][report.data.columnIndex] = VCardT::Unit();
-				report.captions[2][report.data.columnIndex] = "EXP";
+				report.captions[2][report.data.columnIndex] = (report.variableCaption == "LOLP") ? "values" : "EXP";
 
 				// Precision
 				report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<VCardT::decimal>::Value();
@@ -192,7 +192,7 @@ namespace AllYears
 			// Caption
 			report.captions[0][report.data.columnIndex] = report.variableCaption;
 			report.captions[1][report.data.columnIndex] = VCardT::Unit();
-			report.captions[2][report.data.columnIndex] = "EXP";
+			report.captions[2][report.data.columnIndex] = (report.variableCaption == "LOLP") ? "values" : "EXP";
 			// Precision
 			report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<VCardT::decimal>::Value();
 			// Non applicability

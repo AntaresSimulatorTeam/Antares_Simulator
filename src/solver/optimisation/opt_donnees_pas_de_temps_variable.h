@@ -31,19 +31,11 @@
 /* Construction de la matrice des contraintes a pas fin (horaire) */
 /* Optimisations */
 
-/* Definition des classes de manoeuvrabilite */
-typedef enum  {
-  Classe01 =  1 , Classe02 =  2 , Classe03 =  3 , Classe04 =  4 , Classe05 =  5 , Classe06 =  6 ,
-  Classe07 =  7 , Classe08 =  8 , Classe09 =  9 , Classe10 = 10 , Classe11 = 11 , Classe12 = 12 ,
-  Classe13 = 13 , Classe14 = 14 , Classe15 = 15 , Classe16 = 16 , Classe17 = 17 , Classe18 = 18 ,
-  Classe19 = 19 , Classe20 = 20 , Classe21 = 21 , Classe22 = 22 , Classe23 = 23 , Classe24 = 24
-}
-CLASSE_DE_MANOEUVRABILITE;
 
 typedef struct {
   int     NombreDePaliersThermiques;
   /* Ajout */
-  CLASSE_DE_MANOEUVRABILITE * ClasseDeManoeuvrabilite; /* Classe de manoeuvrabilite du palier thermique */
+  int * minUpDownTime;
   /* Fin ajout */
   double * TailleUnitaireDUnGroupeDuPalierThermique;
   double * PminDuPalierThermiquePendantUneHeure;

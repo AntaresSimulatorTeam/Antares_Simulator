@@ -48,9 +48,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 	uint nbPays = study.areas.size();
 	
 	uint linkCount = study.runtime->interconnectionsCount;
-
-	problem.manoeuvrabilite.reserve(nbPays, linkCount);
-
 	
 	problem.DefaillanceNegativeUtiliserPMinThermique = (char*) MemAlloc(nbPays * sizeof(char));
 	problem.DefaillanceNegativeUtiliserHydro         = (char*) MemAlloc(nbPays * sizeof(char));
@@ -307,7 +304,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 		problem.ReserveJMoins1[k]               = (RESERVE_JMOINS1 *)                     MemAlloc( sizeof(RESERVE_JMOINS1) );
 		problem.ResultatsHoraires[k]            = (RESULTATS_HORAIRES *)                  MemAlloc( sizeof(RESULTATS_HORAIRES) );
 
-		problem.PaliersThermiquesDuPays[k]->ClasseDeManoeuvrabilite                         = (CLASSE_DE_MANOEUVRABILITE *) MemAlloc( nbPaliers * sizeof(CLASSE_DE_MANOEUVRABILITE) );
+		problem.PaliersThermiquesDuPays[k]->minUpDownTime									= (int *) MemAlloc( nbPaliers * sizeof(int) );
 		problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure            = (double *) MemAlloc( nbPaliers * sizeof(double));
 		problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneSemaine          = (double *) MemAlloc( nbPaliers * sizeof(double));
 		problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUnJour              = (double *) MemAlloc( nbPaliers * sizeof(double));
@@ -424,7 +421,6 @@ void SIM_DesallocationProblemeHebdo( PROBLEME_HEBDO& problem )
 	MemFree( problem.IndexDebutIntercoExtremite );
 	MemFree( problem.IndexSuivantIntercoOrigine );
 	MemFree( problem.IndexSuivantIntercoExtremite );
-	MemFree( problem.ClasseDeManoeuvrabiliteActive );
 	MemFree( problem.NumeroDeJourDuPasDeTemps );
 	MemFree( problem.NumeroDIntervalleOptimiseDuPasDeTemps );
 	MemFree( problem.NbGrpCourbeGuide );
@@ -565,7 +561,7 @@ void SIM_DesallocationProblemeHebdo( PROBLEME_HEBDO& problem )
 		MemFree( problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure );
 		MemFree( problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneSemaine );
 		MemFree( problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUnJour );
-		MemFree( problem.PaliersThermiquesDuPays[k]->ClasseDeManoeuvrabilite );
+		MemFree( problem.PaliersThermiquesDuPays[k]->minUpDownTime );
 		MemFree( problem.PaliersThermiquesDuPays[k]->TailleUnitaireDUnGroupeDuPalierThermique );
 		MemFree( problem.PaliersThermiquesDuPays[k]->NumeroDuPalierDansLEnsembleDesPaliersThermiques );
 
@@ -730,23 +726,3 @@ void PROBLEME_HEBDO::MatriceContraintes::reserve(uint c)
 		columns = (int*) MemRealloc(columns, sizeof(int) * pCapacity);
 	}
 }
-
-PROBLEME_HEBDO::Manoeuvrabilite::Manoeuvrabilite()
-	:sumOversE(NULL), sumEversO(NULL), sum(NULL)
-{}
-
-PROBLEME_HEBDO::Manoeuvrabilite::~Manoeuvrabilite()
-{
-	MemFree(sumOversE);
-	MemFree(sumEversO);
-	MemFree(sum);
-}
-
-void PROBLEME_HEBDO::Manoeuvrabilite::reserve(uint nbAreas, uint nbLinks)
-{
-	sumOversE = (double*) MemRealloc(sumOversE, sizeof(double) * nbLinks);
-	sumEversO = (double*) MemRealloc(sumEversO, sizeof(double) * nbLinks);
-	sum       = (double*) MemRealloc(sum,       sizeof(double) * nbAreas);
-}
-
-
