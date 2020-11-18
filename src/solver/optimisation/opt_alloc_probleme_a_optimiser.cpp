@@ -52,14 +52,13 @@ using namespace Antares;
 
 static void optimisationAllocateProblem( PROBLEME_HEBDO * ProblemeHebdo, const int mxPaliers )
 {
-	int NbTermes; int NbIntervalles; int NumIntervalle; int i;
+	int NbTermes; int NbIntervalles; int NumIntervalle;
 	size_t szNbVarsDouble; size_t szNbVarsint; size_t szNbContint;
 	int NombreDePasDeTempsPourUneOptimisation;
 	int Adder;     
 	int Sparsity;  
 	
 	PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
-	PROBLEMES_SIMPLEXE ** ProblemesSpxDUneClasseDeManoeuvrabilite;
 
 	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
@@ -155,24 +154,12 @@ static void optimisationAllocateProblem( PROBLEME_HEBDO * ProblemeHebdo, const i
 	ProblemeAResoudre->CoutsReduits                 = (double *) MemAlloc(szNbVarsDouble);
 
 	
-  NbIntervalles = (int) (ProblemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation );
-
-	ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite =
-		(PROBLEMES_SIMPLEXE **) MemAlloc(ProblemeHebdo->NombreDeClassesDeManoeuvrabiliteActives * sizeof( void * ));
-
-	ProblemesSpxDUneClasseDeManoeuvrabilite = ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite;
-
-	if ( ProblemesSpxDUneClasseDeManoeuvrabilite != NULL) {
-		for ( i = 0; i < ProblemeHebdo->NombreDeClassesDeManoeuvrabiliteActives; i++ ) {
-
-			ProblemesSpxDUneClasseDeManoeuvrabilite[i] = (PROBLEMES_SIMPLEXE*) MemAlloc( sizeof( PROBLEMES_SIMPLEXE ));
-
-			ProblemesSpxDUneClasseDeManoeuvrabilite[i]->ProblemeSpx = (void **) MemAlloc(NbIntervalles * sizeof( void * ));
-			for ( NumIntervalle = 0; NumIntervalle < NbIntervalles ; NumIntervalle++ ) {
-				ProblemesSpxDUneClasseDeManoeuvrabilite[i]->ProblemeSpx[NumIntervalle] = NULL;
-			}
-		}
-	}
+	NbIntervalles = (int) (ProblemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation );
+	
+	ProblemeAResoudre->ProblemesSpx = (PROBLEMES_SIMPLEXE*)MemAlloc(sizeof(PROBLEMES_SIMPLEXE));
+	ProblemeAResoudre->ProblemesSpx->ProblemeSpx = (void**)MemAlloc(NbIntervalles * sizeof(void*));
+	for (NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
+		ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = NULL;
 
 	
 	ProblemeAResoudre->PositionDeLaVariable = (int *) MemAlloc( ProblemeAResoudre->NombreDeVariables   * sizeof( int ) );
@@ -241,7 +228,7 @@ void OPT_AugmenterLaTailleDeLaMatriceDesContraintes( PROBLEME_ANTARES_A_RESOUDRE
 
 void OPT_LiberationMemoireDuProblemeAOptimiser( PROBLEME_HEBDO * ProblemeHebdo )
 {
-int i; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
+PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
 
 ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
@@ -265,12 +252,10 @@ if (ProblemeAResoudre)
 	MemFree(ProblemeAResoudre->CoutsMarginauxDesContraintes);
 	MemFree(ProblemeAResoudre->CoutsReduits);
 
-	if (ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite) {
-		for ( i = 0; i < ProblemeHebdo->NombreDeClassesDeManoeuvrabiliteActives; ++i) {
-			MemFree(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[i]->ProblemeSpx);
-			MemFree(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[i]);
-		}
-		MemFree(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite);
+	if (ProblemeAResoudre->ProblemesSpx)
+	{
+		MemFree(ProblemeAResoudre->ProblemesSpx->ProblemeSpx);
+		MemFree(ProblemeAResoudre->ProblemesSpx);
 	}
 	
 	MemFree( ProblemeAResoudre->PositionDeLaVariable );

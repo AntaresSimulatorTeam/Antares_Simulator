@@ -86,13 +86,12 @@ bool OPT_AppelDuSolveurLineaire( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, 
 
 bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int NumIntervalle )
 {
-	int Var; int Cnt; double * pt; int il; int ilMax; int Classe; char PremierPassage;
+	int Var; int Cnt; double * pt; char PremierPassage;
 	double CoutOpt; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre; PROBLEME_SIMPLEXE Probleme;
 	PROBLEME_SPX * ProbSpx;
 	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 	PremierPassage = OUI_ANTARES;
-	Classe = ProblemeAResoudre->NumeroDeClasseDeManoeuvrabiliteActiveEnCours;
-	ProbSpx = (PROBLEME_SPX *) ((ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[(int) NumIntervalle]);
+	ProbSpx = (PROBLEME_SPX*)((ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[(int)NumIntervalle]);
 
 	RESOLUTION:
 
@@ -105,11 +104,8 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 	{
 		if (ProblemeHebdo->ReinitOptimisation == OUI_ANTARES )
 		{	
-			if ( ProbSpx != NULL )
-			{
-				SPX_LibererProbleme( ProbSpx );
-				(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[(int) NumIntervalle] = NULL;			
-			}	
+			SPX_LibererProbleme( ProbSpx );
+			(ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = NULL;
 			ProbSpx  = NULL;
 			Probleme.Contexte = SIMPLEXE_SEUL;
 			Probleme.BaseDeDepartFournie = NON_SPX;	
@@ -178,11 +174,11 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 
 	ProbSpx = SPX_Simplexe( &Probleme , ProbSpx );
 
-
-	if ( ProbSpx != NULL )
-	{  
-		(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[Classe])->ProblemeSpx[NumIntervalle] = (void *) ProbSpx;
+	if (ProbSpx != NULL)
+	{
+		(ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
 	}
+
 
 	if ( ProblemeHebdo->ExportMPS == OUI_ANTARES)
 		OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &Probleme, numSpace, ANTARES_SIMPLEXE );
