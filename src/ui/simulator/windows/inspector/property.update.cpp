@@ -1176,7 +1176,7 @@ namespace Inspector
 						for (; i != end; ++i)
 						{
 							(*i)->parameters.derated = false;
-							(*i)->parameters.useCustomTSNumbers = false;
+							(*i)->parameters.useCustomScenario = false;
 						}
 						return true;
 					}
@@ -1185,7 +1185,7 @@ namespace Inspector
 						for (; i != end; ++i)
 						{
 							(*i)->parameters.derated = false;
-							(*i)->parameters.useCustomTSNumbers = true;
+							(*i)->parameters.useCustomScenario = true;
 						}
 						return true;
 					}
@@ -1200,7 +1200,7 @@ namespace Inspector
 								shouldReloadNbYears = true;
 								ScenarioBuilderUpdater updater(*(*i));
 								(*i)->parameters.derated = true;
-								(*i)->parameters.useCustomTSNumbers = false;
+								(*i)->parameters.useCustomScenario = false;
 								(*i)->parameters.nbYears = 1u;
 								// scenario build updater
 							}
@@ -1209,7 +1209,7 @@ namespace Inspector
 								// As long as we modify the number of years, we should
 								// update the scenario builder as well
 								(*i)->parameters.derated = true;
-								(*i)->parameters.useCustomTSNumbers = false;
+								(*i)->parameters.useCustomScenario = false;
 							}
 
 							// in derated mode, the user playlist should be disabled since

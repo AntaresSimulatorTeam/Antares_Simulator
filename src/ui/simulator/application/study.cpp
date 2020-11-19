@@ -1112,7 +1112,8 @@ namespace Antares
 
 
 	void RunSimulationOnTheStudy(Data::Study::Ptr study, const String& simuName, const String& commentFile, bool ignoreWarnings,
-		Solver::Feature features, bool preproOnly)
+		Solver::Feature features, bool preproOnly,
+        bool useOrtools, const std::string& ortoolsSolver)
 	{
 		if (not study) // A valid study would be better
 		{
@@ -1244,6 +1245,14 @@ namespace Antares
 				// Parallel mode chosen ?
 				if (features == Solver::parallel)
 					cmd << " --parallel";
+
+                // Use ortools ?
+                if (useOrtools) {
+                    cmd << " --use-ortools";
+
+                    //add solver name for ortools
+                    cmd << " --ortools-solver=" << ortoolsSolver;
+                }
 
 				// Go go go !
 				logs.debug() << "running " << cmd;

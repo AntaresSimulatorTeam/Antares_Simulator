@@ -103,9 +103,12 @@ namespace Antares
 	** \param simuName User-Name of the simulation
 	** \param simuComments Comments for the simulation
 	** \param ignoreWarnings True if warnings can be silently ignored
+	** \param useOrtools True if ortools must be used by antares-solver
+	** \param ortoolsSolver Ortools solver used in case of ortools use by antares-solver
 	*/
 	void RunSimulationOnTheStudy(Data::Study::Ptr study, const YString& simuName, const YString& simuComments,
-		bool ignoreWarnings, Solver::Feature features = Solver::standard, bool preproOnly = false);
+		bool ignoreWarnings, Solver::Feature features = Solver::standard, bool preproOnly = false,
+		bool useOrtools = false, const std::string& ortoolsSolver = "sirius");
 
 
 	/*!

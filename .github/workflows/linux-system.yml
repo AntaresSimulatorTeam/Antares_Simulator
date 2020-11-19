@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - feature/*
+      - fix/*
 jobs:
 
   build:
@@ -14,6 +15,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
+        use_ortools_stable : ["ON","OFF"]
 
     steps:
     - uses: actions/checkout@v2
@@ -22,11 +24,11 @@ jobs:
       run: |
            sudo apt-get update --fix-missing
            sudo apt-get install libuuid1 uuid-dev libssh2-1 libssh2-1-dev libidn2-dev libidn11 libidn11-dev gtk2.0 libwxgtk3.0-dev libcurl4-openssl-dev libb64-dev
-           sudo apt-get install libboost-test-dev
+           sudo apt-get install libboost-test-dev libboost-filesystem-dev libboost-regex-dev libboost-dev
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
+           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DUSE_ORTOOLS_STABLE=${{ matrix.use_ortools_stable }}
 
     - name: Build
       run: |
@@ -37,7 +39,8 @@ jobs:
       run: |
            cd _build
            ctest -C Release --output-on-failure
-           
+
+
     - name: Installer .deb creation
       run: |
            cd _build

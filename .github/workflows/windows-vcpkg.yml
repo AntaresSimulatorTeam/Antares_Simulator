@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - feature/*
+      - fix/*
 jobs:
 
   windows:
@@ -19,7 +20,8 @@ jobs:
           - os: windows-latest
             triplet: x64-windows
             vcpkgCommitId: 'ee17a685087a6886e5681e355d36cd784f0dd2c8'
-            vcpkgPackages: openssl curl wxwidgets boost-test
+            vcpkgPackages: openssl curl wxwidgets boost-test boost-process boost-filesystem boost-dll boost-regex
+        use_ortools_stable : ["ON","OFF"]
 
     steps:
     - uses: actions/checkout@v2 
@@ -38,7 +40,7 @@ jobs:
         
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
+           cmake -B _build -S src -DVCPKG_ROOT=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }} -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DUSE_ORTOOLS_STABLE=${{ matrix.use_ortools_stable }}
     
     - name: Build
       run: |
@@ -49,7 +51,8 @@ jobs:
       run: |
            cd _build
            ctest -C ${{ matrix.buildtype }} --output-on-failure
-           
+
+
     - name: Installer creation
       run: |
            cd _build

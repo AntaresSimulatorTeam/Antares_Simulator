@@ -34,20 +34,17 @@
 
 # include "opt_fonctions.h"
 
-# include "../ext/Sirius_Solver/simplexe/spx_definition_arguments.h"
-# include "../ext/Sirius_Solver/simplexe/spx_fonctions.h"
+# include "spx_definition_arguments.h"
+# include "spx_fonctions.h"
 
 
 
 bool OPT_PilotageOptimisationLineaire( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace)
 {
-	int i; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre; CLASSE_DE_MANOEUVRABILITE Classe;
+	PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
 	char CalculerLesPmin; char CalculerLesPmax; char FaireDerniereOptimisation;
 
-	CONTRAINTES_COUPLANTES * MatriceDesContraintesCouplantes; int iMx; int CntCouplante;
-	int * OffsetTemporelSurLInterco;  int Pays; double x; int ix; int OnReboucle;
-
-	ProblemeHebdo->OptimisationMUTetMDT = OUI_ANTARES;
+	int Pays;
  
 	ProblemeHebdo->SolveurDuProblemeLineaire = ANTARES_SIMPLEXE;
 	if (0 && ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES && ProblemeHebdo->Expansion == NON_ANTARES) {
@@ -112,48 +109,9 @@ bool OPT_PilotageOptimisationLineaire( PROBLEME_HEBDO * ProblemeHebdo, uint numS
 	{
 		 OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage( ProblemeHebdo );
 	}
-
-	if ( ProblemeHebdo->OptimisationMUTetMDT == NON_ANTARES )
-	{
-		for ( i = 0 ; i < ProblemeHebdo->NombreDeClassesDeManoeuvrabiliteActives ; i++ )
-		{
-			ProblemeAResoudre->NumeroDeClasseDeManoeuvrabiliteActiveEnCours = i;
-			Classe = ProblemeHebdo->ClasseDeManoeuvrabiliteActive[i];
-
-			if (!OPT_OptimisationLineaire( ProblemeHebdo, numSpace, Classe, CalculerLesPmin, CalculerLesPmax, FaireDerniereOptimisation ))
-				return false;
-		}
-
-		if ( ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES )
-		{
-			CalculerLesPmin = NON_ANTARES;
-			CalculerLesPmax = OUI_ANTARES;
-    
-			OPT_RestaurerLesPmaxThermiques( ProblemeHebdo ); 
-			OPT_RestaurerLesPminThermiques( ProblemeHebdo );		 
-	  
-			ProblemeHebdo->YaDeLaReserveJmoins1	= NON_ANTARES;
-			FaireDerniereOptimisation = NON_ANTARES;
-
-			for ( i = 0 ; i < ProblemeHebdo->NombreDeClassesDeManoeuvrabiliteActives ; i++ )
-			{
-				ProblemeAResoudre->NumeroDeClasseDeManoeuvrabiliteActiveEnCours = i;
-				Classe = ProblemeHebdo->ClasseDeManoeuvrabiliteActive[i];
-	    
-				if ( ! OPT_OptimisationLineaire( ProblemeHebdo, numSpace, Classe, CalculerLesPmin, CalculerLesPmax, FaireDerniereOptimisation) )
-					return false;
-			}
-		}
-	}
-	else
-	{
-		i = ProblemeHebdo->NombreDeClassesDeManoeuvrabiliteActives - 1;
-		ProblemeAResoudre->NumeroDeClasseDeManoeuvrabiliteActiveEnCours = i;
-		Classe = ProblemeHebdo->ClasseDeManoeuvrabiliteActive[i];
 	
-		if (!OPT_OptimisationLineaire( ProblemeHebdo, numSpace, Classe, CalculerLesPmin, CalculerLesPmax, FaireDerniereOptimisation )) 
-			return false;
-	}
+	if (!OPT_OptimisationLineaire( ProblemeHebdo, numSpace, CalculerLesPmin, CalculerLesPmax, FaireDerniereOptimisation )) 
+		return false;
 
 	return true;
 }

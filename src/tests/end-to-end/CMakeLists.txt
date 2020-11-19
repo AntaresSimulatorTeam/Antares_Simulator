@@ -17,6 +17,7 @@ target_link_libraries(tests-simple-study
 						libantares-solver-variable
 						libantares-solver-simulation
 						libantares-solver-ts-generator
+						libmodel_antares
 						Boost::unit_test_framework
 			)
 			
@@ -27,7 +28,44 @@ target_include_directories(tests-simple-study
 
 add_test(NAME end-to-end-simple-study COMMAND tests-simple-study)
 
+
+copy_dependency(sirius_solver tests-simple-study)
+
 # Storing tests-simple-study under the folder Unit-tests in the IDE
 set_target_properties(tests-simple-study PROPERTIES FOLDER Unit-tests)
+
+
+
+add_executable(tests-solver-call
+			solver-call.cpp)
+			
+target_include_directories(tests-solver-call
+            PRIVATE
+            ${Boost_INCLUDE_DIRS}
+			${CMAKE_SOURCE_DIR}/solver
+)
+
+target_link_libraries(tests-solver-call
+            PRIVATE
+            libmodel_antares
+            Boost::unit_test_framework
+            Boost::filesystem
+            Boost::regex
+	    ${CMAKE_DL_LIBS}
+)
+
+# Need to add some link_libraries when using compiled boost libraries
+if (BUILD_BOOST)
+  find_package(Threads REQUIRED)
+  target_link_libraries(tests-solver-call
+	  PRIVATE
+	  ${CMAKE_THREADS_LIBS_INIT}
+	  Threads::Threads)
+endif()
+            
+add_test(NAME end-to-end-solver-call COMMAND tests-solver-call)
+
+# Storing tests-solver-call under the folder Unit-tests in the IDE
+set_target_properties(tests-solver-call PROPERTIES FOLDER Unit-tests)
 
 

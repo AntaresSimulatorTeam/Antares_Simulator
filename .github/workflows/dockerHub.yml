@@ -5,25 +5,28 @@ on:
     branches:
       - develop
       - feature/*
+      - fix/*
 
 jobs:
   linux:
   
     strategy:
+      fail-fast: false
       matrix:
         container:
-        - 'jmkerloch/rte-antares:centos8-ortools'
         - 'jmkerloch/rte-antares:ubuntu-ortools'
   
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
+
     container: ${{ matrix.container }}
     steps:
     - uses: actions/checkout@v2
     
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
+           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -Dsirius_solver_ROOT=/sirius-install -DBUILD_ortools=OFF -DBUILD_sirius=OFF
+
 
     - name: Build
       run: |           

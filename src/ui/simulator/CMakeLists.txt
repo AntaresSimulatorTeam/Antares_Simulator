@@ -148,7 +148,8 @@ set(ANTARES_LIBS
 		libantares-core-calendar
 		libantares-license
 		yuni-static-core
-		yuni-static-uuid	
+		yuni-static-uuid
+		libmodel_antares-swap #TODO : why no libmodel_antares ? link librairies added for ortools_utils.h
 	)
 
 	target_link_libraries(${execname}
@@ -162,6 +163,8 @@ install(TARGETS ${execname} DESTINATION bin)
 
 import_std_libs(${execname})
 executable_strip(${execname})
+
+copy_dependency(sirius_solver ${execname})
 
 # Embedding the manifest file into the executable
 if(WIN32)

@@ -48,7 +48,9 @@ namespace Data
 		forceParallel(false),
 		maxNbYearsInParallel(0),
 		usedByTheSolver(false),
-		mpsToExport(false)
+		mpsToExport(false),
+		ortoolsUsed(false),
+		ortoolsEnumUsed(OrtoolsSolver::sirius)
 	{}
 
 

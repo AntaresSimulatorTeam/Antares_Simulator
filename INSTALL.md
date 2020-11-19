@@ -1,6 +1,6 @@
-﻿# Antares Simulator CMake Build Instructions
+# Antares Simulator CMake Build Instructions
 
-[Environnement](#environment) | [CMake version](#cmake-version) | [Dependencies](#dependencies) | [Building](#building-antares-solution) | [Unit tests](#unit-tests) | [Installer creation](#installer-creation)
+[Environnement](#environment) | [CMake version](#cmake-version) | [Git version](#git-version) | [Dependencies](#dependencies) | [Building](#building-antares-solution) | [Unit tests](#unit-tests) | [Installer creation](#installer-creation)
 
 ## C/I status
 | OS     | System librairies | VCPKG | Built in libraries |
@@ -87,13 +87,18 @@ sudo yum install cmake3
 Note:
 > All ``cmake``  command must be replaced by ``cmake3``.
 
+## [Git version](#git-version)
+Git version must be above 2.15 for external dependencies build because `--ignore-whitespace` is not used by default and we have an issue with OR-Tools compilation of ZLib and application of patch on Windows (see https://github.com/google/or-tools/issues/1193).
+
 ## [Dependencies](#deps)
  ANTARES depends on severals mandatory libraries. 
  - [OpenSSL](https://github.com/openssl/openssl)
  - [CURL](https://github.com/curl/curl)
+ - [Sirius Solver](https://github.com/AntaresSimulatorTeam/sirius-solver/tree/Antares_VCPKG) (fork from [RTE](https://github.com/rte-france/sirius-solver/tree/Antares_VCPKG))
+ - [OR-Tools](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) (fork from [RTE](https://github.com/rte-france/or-tools/tree/rte_dev_sirius) based on official OR-Tools github)
  - [wxWidgets](https://github.com/wxWidgets/wxWidgets)
  (Only for the complete Antares Simulator solution with GUI)
- - Boost test (Only for unit tests)
+ - Boost librairies : test process filesystem regex dll (Only for unit tests)
 
 This section describes the install procedures for the third-party Open source libraries used by ANTARES.
 The install procedure can be done
@@ -136,19 +141,25 @@ cd [vcpkg_root]
 vcpkg install openssl:[vcpg-triplet] 
 vcpkg install curl:[vcpg-triplet] 
 vcpkg install wxwidgets:[vcpg-triplet] 
-vcpkg install boost-test:[vcpg-triplet] 
+vcpkg install boost-test:[vcpg-triplet]
+vcpkg install boost-filesystem:[vcpg-triplet]
+vcpkg install boost-process[vcpg-triplet]
+vcpkg install boost-dll:[vcpg-triplet]
+vcpkg install boost-regex:[vcpg-triplet]
 ```
 ### [Using a package manager](#linux_manager)
 On linux you can use a package manger to download the precompiled librairies.
 
 #### Ubuntu
 
+##### 20.04 (Focal)
 ```
-sudo apt-get install libuuid1 uuid-dev
-sudo apt-get install libcurl4-openssl-dev
-sudo apt-get install libssl-dev
-sudo apt-get install libwxgtk3.0-dev
-sudo apt-get install libboost-test-dev
+sudo apt install uuid-dev libcurl4-openssl-dev libssl-dev libwxgtk3.0-gtk3-dev libboost-test-dev
+```
+
+##### 16.04 (Xenial) and 18.04 (Bionic)
+```
+sudo apt-get install uuid-dev libcurl4-openssl-dev libssl-dev libwxgtk3.0-dev libboost-test-dev
 ```
 
 #### RHEL / Centos
@@ -157,7 +168,7 @@ sudo apt-get install libboost-test-dev
 sudo yum install openssl
 sudo yum install curl
 sudo yum install wxGTK3-devel
-sudo yum install boost-test
+sudo yum install boost-test boost-filesystem boost-regex boost-devel
 ```
 ### [Automatic librairies compilation from git](#git_compil)
 Dependency can be built  at configure time using the option `-DBUILD_DEPS=ON` (`OFF` by default) or you can compile few of them using the options below.
@@ -165,6 +176,8 @@ Dependency can be built  at configure time using the option `-DBUILD_DEPS=ON` (`
 * OPENSSL (`BUILD_OPENSSL`)
 * CURL (`BUILD_CURL`)
 * wxWidgets (`BUILD_wxWidgets`)
+* Sirius solver (`BUILD_sirius`) (ON by default)
+* OR-Tools (`BUILD_ortools`) (ON by default)
 * Boost test (`BUILD_BOOST_TEST`) : only available with unit tests compilation (cmake option `-DBUILD_TESTING=ON`)
 
 Librairies are compiled with static option.
@@ -175,6 +188,9 @@ You can specify previously dependencies install directory with `CMAKE_PREFIX_PAT
 ```
 cmake -DCMAKE_PREFIX_PATH=<previous_build_dir>/dependencies/install
 ````
+#### Choose OR-Tools branch
+OR-Tools stable branch can be used with `-DUSE_ORTOOLS_STABLE=ON` (`OFF` by default).
+Otherwise a [fork from RTE](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) is used.
 
 ## [Building Antares Solution](#build)
 
@@ -205,6 +221,21 @@ Note :
 
 Antares Simulator UI application compilation can be disabled at configure time using the option `-DBUILD_UI=OFF` (`ON` by default)
 
+### Sirius solver and OR-Tools linking
+
+By default Sirius solver and OR-Tools are compiled with Antares Solution.
+You can disable compilation with `-DBUILD_sirius=OFF -DBUILD_ortools=OFF` when you configure build with cmake.
+
+In this case you can specify librairies path with :
+
+* librairies root directories :
+```
+cmake -Dsirius_solver_ROOT=<sirius_install_dir> -Dortools_ROOT=<ortools_install_dir>
+```
+* previous build directory :
+```
+cmake -DCMAKE_PREFIX_PATH=<previous_build_dir>/dependencies/install
+````
 ### Linux using system libs (recommanded)
 - Install dependencies [using package manager](#using-a-package-manager).
 
@@ -228,6 +259,15 @@ Note :
 ```
 cmake -B _build -S [antares_src] -DCMAKE_TOOLCHAIN_FILE=[vcpkg_root]/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=[vcpkg-triplet] -DCMAKE_BUILD_TYPE=release
 ```
+
+or 
+
+```
+cmake -B _build -S [antares_src] -DVCPKG_ROOT=[vcpkg_root] -DVCPKG_TARGET_TRIPLET=[vcpkg-triplet] -DCMAKE_BUILD_TYPE=release
+```
+Note :
+> Configure with ```-DVCPKG_ROOT``` option remove some CMake warnings (mainly [CMP0012](https://cmake.org/cmake/help/v3.0/policy/CMP0012.html) policy warnings)
+
 - Build
  ```
 cmake --build _build --config release -j8
@@ -253,7 +293,7 @@ Note :
 Unit tests compilation  can be enabled at configure time using the option `-DBUILD_TESTING=ON` (`OFF` by default)
 
 Note :
-> Boost  test librairie compilation (``BUILD_BOOST_TEST``) can be enabled only if ``BUILD_TESTING=ON``
+> Boost libraries compilation (``BUILD_BOOST``) can be enabled only if ``BUILD_TESTING=ON``
 
 After build, unit tests can be run with ``ctest`` :
  ```

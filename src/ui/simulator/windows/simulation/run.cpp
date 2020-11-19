@@ -41,6 +41,7 @@
 #include <wx/filename.h>
 #include <wx/statline.h>
 #include <wx/utils.h>
+#include <wx/checkbox.h>
 
 #include "../../toolbox/components/wizardheader.h"
 #include "../../toolbox/components/button.h"
@@ -55,6 +56,9 @@
 #include "../../windows/message.h"
 #include "../../toolbox/system/diskfreespace.hxx"
 #include <antares/config.h>
+#include <antares/Enum.hpp>
+
+#include <solver/utils/ortools_utils.h>
 
 
 using namespace Yuni;
@@ -316,6 +320,36 @@ namespace Simulation
 		gridAppend(*s, wxT("RESOURCES"), wxT("Solver : "), btn);
 		pBtnMode = btn;
 		pFeatureIndex = 0;
+
+		//Ortools use
+        {
+
+
+            //Ortools use
+            auto *ortoolsCheckBox = new wxCheckBox(pBigDaddy, wxID_ANY, wxT(""));
+            ortoolsCheckBox->SetValue(false);
+
+            Connect(ortoolsCheckBox->GetId(), wxEVT_COMMAND_CHECKBOX_CLICKED,
+                    wxCommandEventHandler(Run::onOrtoolsCheckboxChanged));
+            pOrtoolsCheckBox = ortoolsCheckBox;
+
+            //Ortools solver selection
+            pTitleOrtoolsSolverCombox = Antares::Component::CreateLabel(pBigDaddy, wxT("Ortools solver : "));
+
+            pOrtoolsSolverCombox = new wxComboBox(pBigDaddy, wxID_ANY);
+            std::list<std::string> ortoolsSolverList = OrtoolsUtils().getAvailableOrtoolsSolverName();
+            for (const std::string &ortoolsSolver : ortoolsSolverList) {
+                pOrtoolsSolverCombox->Append(ortoolsSolver);
+            }
+
+            // Ortools solver selection visibility
+            pTitleOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
+            pOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
+
+			//Display 2 rows for ortools option
+            gridAppend(*s, wxT("Ortools use : "), ortoolsCheckBox);
+            gridAppend(*s, pTitleOrtoolsSolverCombox, pOrtoolsSolverCombox);
+        }
 
 		// When opening the Run window, the solver mode is default.
 		// Therefore, the number of cores must be set (back) to the value associated with default mode (== 1).
@@ -764,7 +798,9 @@ namespace Simulation
 		RunSimulationOnTheStudy(Data::Study::Current::Get(), simulationName, commentFile,
 			pIgnoreWarnings->GetValue(),    // Ignore warnings
 			featuresAlias[pFeatureIndex],   // Features
-			pPreproOnly->GetValue());       // Prepro Only ?
+			pPreproOnly->GetValue(),        // Prepro Only ?
+			pOrtoolsCheckBox->IsChecked(), //Ortools use
+			pOrtoolsSolverCombox->GetValue().ToStdString()); //Ortools solver
 
 		// Remove the temporary file
 		if (not commentFile.empty())
@@ -947,8 +983,19 @@ namespace Simulation
 		Antares::Component::Panel::OnMouseMoveFromExternalComponent();
 	}
 
+    void Run::onOrtoolsCheckboxChanged(wxCommandEvent& WXUNUSED(event))
+    {
+	    pTitleOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
+        pOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
 
-
+        //Layout update
+        auto* sizer = pBigDaddy->GetSizer();
+        if (sizer)
+            sizer->Fit(pBigDaddy);
+        sizer = GetSizer();
+        if (sizer)
+            sizer->Fit(this);
+    }
 
 
 } // namespace Simulation

@@ -40,6 +40,7 @@
 # include "variable-print-info.h"
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
+#include <antares/study/OrtoolsSolver.hpp>
 
 using namespace std;
 
@@ -231,8 +232,8 @@ namespace Data
 		bool yearByYear;
 		//! Derated
 		bool derated;
-		//! Custom TS Numbers
-		bool useCustomTSNumbers;
+		//! Custom scenario
+		bool useCustomScenario;
 		//! Custom playlist (each year will be manually selected by the user)
 		bool userPlaylist;
 		//! Flag to perform the calculations or not from the solver
@@ -501,6 +502,13 @@ namespace Data
 		uint seed[seedMax];
 		//@}
 
+		//! \name Ortools configuration
+		//@{
+		//! Define if ortools is used
+		bool ortoolsUsed;
+		//!Ortool solver used for simulation
+		OrtoolsSolver ortoolsEnumUsed;
+		//@}
 
 	private:
 		//! Load data from an INI file

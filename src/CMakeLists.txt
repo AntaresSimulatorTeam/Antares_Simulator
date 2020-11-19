@@ -12,7 +12,7 @@ set(ANTARES_WEBSITE	   "https://antares.rte-france.com")
 
 # Beta release
 set(ANTARES_BETA 0)
-set(ANTARES_RC 2)
+# set(ANTARES_RC 3)
 
 # CMAKE - Suppress useless features
 set(CMAKE_SKIP_PREPROCESSED_SOURCE_RULES true)
@@ -22,6 +22,10 @@ include(CheckCXXSourceCompiles)
 include(CheckIncludeFiles)
 include(CheckIncludeFileCXX)
 include(CheckCXXCompilerFlag)
+
+if (DEFINED VCPKG_ROOT)
+    include(${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
+endif()
 
 
 #CMake function to build dependancy from git
@@ -151,8 +155,19 @@ message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 option(BUILD_DEPS "Build all dependencies" OFF)
 message(STATUS "Build all dependencies: ${BUILD_DEPS}")
 
+option(USE_ORTOOLS_STABLE "Use OR-Tools stable instead of RTE OR-Tools branch with Sirius support" OFF)
+message(STATUS "Use OR-Tools stable instead of RTE OR-Tools branch with Sirius support: ${USE_ORTOOLS_STABLE}")
+
 # IF BUILD_DEPS=ON THEN Force all BUILD_*=ON
 include(CMakeDependentOption)
+
+CMAKE_DEPENDENT_OPTION(BUILD_sirius "Build sirius solver dependency Library" ON
+		"NOT BUILD_DEPS" ON)
+message(STATUS "Build sirius solver: ${BUILD_sirius}")
+
+CMAKE_DEPENDENT_OPTION(BUILD_ortools "Build BUILD_ortools dependency Library" ON
+		"NOT BUILD_DEPS" ON)
+message(STATUS "Build OR-Tools: ${BUILD_ortools}")
 
 CMAKE_DEPENDENT_OPTION(BUILD_wxWidgets "Build wxWidgets dependency Library" OFF
   "NOT BUILD_DEPS" ON)
@@ -178,7 +193,7 @@ add_subdirectory(cmake/dependencies ${CMAKE_CURRENT_SOURCE_DIR}/build_deps)
 
 if(BUILD_wxWidgets)
 	# Define wxWidgets_ROOT_DIR
-	set(wxWidgets_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build_deps/install)  
+	set(wxWidgets_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build_deps/install)
 endif()
 
 # Define needed external library
@@ -196,6 +211,19 @@ if (VCPKG_TOOLCHAIN)
     find_package(ZLIB REQUIRED)
 endif()
 
+
+
+#Sirius solver
+if(POLICY CMP0074)
+	cmake_policy(SET CMP0074 NEW)
+endif()
+
+if (VCPKG_TOOLCHAIN)
+	list(APPEND CMAKE_PREFIX_PATH "${sirius_solver_ROOT}")
+	list(APPEND CMAKE_PREFIX_PATH "${ortools_ROOT}")
+endif()
+
+find_package(sirius_solver CONFIG REQUIRED)
 
 #Add specific definition in case of dependencies build
 
@@ -244,9 +272,6 @@ configure_file("config.h.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/config.h")
 configure_file("cmake/ProfileBuild.template.cmake" "ext/yuni/src/ProfileBuild.cmake")
 add_subdirectory("ext/yuni/src")
 
-#Sirius solver
-add_subdirectory("ext/Sirius_Solver" "ext/Sirius_Solver")
-
 OMESSAGE("") # empty line
 
 # Sub Directories
@@ -271,13 +296,13 @@ if(BUILD_TESTING)
 	# include(CTest) # calls enable_testing() and turns BUILD_TESTING to ON by default (among other useful things)
 	enable_testing()
 	
-	CMAKE_DEPENDENT_OPTION(BUILD_BOOST_TEST "Download and build boost.test" OFF "NOT BUILD_DEPS" ON)
+	CMAKE_DEPENDENT_OPTION(BUILD_BOOST "Download and build boost needed libraries" OFF "NOT BUILD_DEPS" ON)
 	
-	if(BUILD_BOOST_TEST)
-		# Setting CMAKE_PREFIX_PATH so that find_package(boost.test...) finds "${FizzBuzz current path}/ext" boost.test
+	if(BUILD_BOOST)
+		# Setting CMAKE_PREFIX_PATH so that find_package(boost...) finds "${current path}/ext" boost
 		list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/tests/ext")
 	endif()
-		
+
 	add_subdirectory(tests)
 endif()
 
@@ -318,20 +343,20 @@ if(WIN32 OR WIN64)
 	)
 	
 	SET(ANTARES_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
-	
+
 	# Define system libraries so NSIS can package these files
 	include (InstallRequiredSystemLibraries)
-	
+
 	#Convert to native and add double quote to be used in NSIS package
 	foreach(SYSTEM_RUNTIME_LIB ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS})
 		file(TO_NATIVE_PATH ${SYSTEM_RUNTIME_LIB} SYSTEM_RUNTIME_LIB_NATIVE)
-		
+
 		list(APPEND SYSTEM_RUNTIME_LIBS_NATIVE \"${SYSTEM_RUNTIME_LIB_NATIVE}\")
 	endforeach()
-	
+
 	#Replace ; by space so SYSTEM_RUNTIME_LIBS_STR can be used in File function in NSIS file
 	string (REPLACE ";" " " SYSTEM_RUNTIME_LIBS_STR "${SYSTEM_RUNTIME_LIBS_NATIVE}")
-	
+
 	configure_file(
 		${PROJECT_SOURCE_DIR}/distrib/win32/NSIS.template.in
 		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/NSIS.template.in
@@ -344,9 +369,9 @@ if(WIN32 OR WIN64)
 		${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt
 		@ONLY
 	)
-	
+
 	set(CPACK_INSTALL_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt)
-  
+
 	#Set package name from CMake and antares variables
 	set(CPACK_PACKAGE_FILE_NAME "rte-antares-${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG}-installer-${ANTARES_INSTALLER_ARCH}")
 
@@ -365,7 +390,7 @@ else()
 
 	configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
 
-	
+
 endif()
 
 # Load packaging facilities.

@@ -28,6 +28,7 @@
 #define ANTARES_DATA_ENUM_HPP
 
 #include <initializer_list>
+#include <list>
 #include <string>
 #include <type_traits>
 
@@ -45,6 +46,9 @@ std::string toString(const E& value);
 
 template <typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
 E fromString(const std::string& name);
+
+template <typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
+std::list<E> enumList();
 
 }  // namespace Enum
 

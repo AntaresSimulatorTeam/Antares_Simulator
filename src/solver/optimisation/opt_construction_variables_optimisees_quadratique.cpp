@@ -58,7 +58,7 @@
 
 # include "opt_fonctions.h"
 
-# include "../ext/Sirius_Solver/pointInterieur/pi_constantes_externes.h"
+# include "pi_constantes_externes.h"
 
 
 

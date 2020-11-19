@@ -50,55 +50,13 @@ using namespace Yuni;
 
 void SIM_InitialisationProblemeHebdo(Data::Study& study, PROBLEME_HEBDO& problem, int NombreDePasDeTemps, uint numSpace)
 {
-	int NombreClassesActives;
 	int NombrePaliers;
 	CONTRAINTES_COUPLANTES   * PtMat;
-	char                       ClasseDefinie[168 + 1];
-
 	
 	auto& parameters = study.parameters;
 
 	
 	problem.Expansion = parameters.expansion ? OUI_ANTARES : NON_ANTARES;
-
-	for (uint i = 0; i < 169; i++)
-		ClasseDefinie[i] = NON_ANTARES;
-
-	
-	NombreClassesActives = 1;
-	ClasseDefinie[1] = OUI_ANTARES;
-
-	for (uint i = 0; i != study.areas.size(); i++)
-	{
-		
-		auto& area = *(study.areas.byIndex[i]);
-
-		for (uint j = 0; j < area.thermal.list.size(); j++) 
-		{
-			const uint minUpDownTime = area.thermal.list.byIndex[j]->minUpDownTime;
-			if (ClasseDefinie[minUpDownTime] == NON_ANTARES) 
-			{
-				ClasseDefinie[minUpDownTime] = OUI_ANTARES;
-				++NombreClassesActives;
-			}
-		}
-	}
-
-	problem.ClasseDeManoeuvrabiliteActive = (CLASSE_DE_MANOEUVRABILITE *) MemAlloc(NombreClassesActives * sizeof(int));
-
-	{
-		int j = 0;
-		for (int k = 168; k >= 0; k--)
-		{
-			if (ClasseDefinie[k] == OUI_ANTARES)
-			{
-				problem.ClasseDeManoeuvrabiliteActive[j] = (CLASSE_DE_MANOEUVRABILITE) k;
-				++j;
-			}
-		}
-	}
-	problem.NombreDeClassesDeManoeuvrabiliteActives = NombreClassesActives;
-
 	
 	problem.hydroHotStart = (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart);
 
@@ -176,10 +134,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study, PROBLEME_HEBDO& problem
 		problem.CaracteristiquesHydrauliques[i]->PresenceDHydrauliqueModulable =
 			(area.scratchpad[numSpace]->hydroHasMod ? OUI_ANTARES : NON_ANTARES);
 
-		
-		
-		
-		
 		
 		problem.CaracteristiquesHydrauliques[i]->PresenceDePompageModulable = 
 			( 
@@ -321,7 +275,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study, PROBLEME_HEBDO& problem
 			pbPalier.PminDuPalierThermiquePendantUneHeure[l]            = cluster.minStablePower;
 			pbPalier.PminDuPalierThermiquePendantUnJour[l]              = 0; 
 			pbPalier.PminDuPalierThermiquePendantUneSemaine[l]          = 0; 
-			pbPalier.ClasseDeManoeuvrabilite[l]                       = (CLASSE_DE_MANOEUVRABILITE) cluster.minUpDownTime;
+			pbPalier.minUpDownTime[l]									= cluster.minUpDownTime;
 			
 			
 			 	pbPalier.CoutDeDemarrageDUnGroupeDuPalierThermique[l]			= cluster.startupCost;
@@ -346,11 +300,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study, PROBLEME_HEBDO& problem
 
 	
 	problem.OptimisationAuPasHebdomadaire =
-		(parameters.simplexOptimizationRange == Data::sorWeek) ? OUI_ANTARES : NON_ANTARES;
-
-	
-	problem.OptimisationMUTetMDT = OUI_ANTARES;
-	
+		(parameters.simplexOptimizationRange == Data::sorWeek) ? OUI_ANTARES : NON_ANTARES;	
 }
 
 
@@ -519,6 +469,15 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem, Antares::Solver::Va
 		{
 			
 			problem.CaracteristiquesHydrauliques[k]->NiveauInitialReservoir = problem.previousSimulationFinalLevel[k];
+
+			// Possibly update the intial level from scenario builder
+			if (study.parameters.useCustomScenario)
+			{
+				double levelFromScenarioBuilder = study.scenarioHydroLevels[k][state.year];
+				if(levelFromScenarioBuilder > 0.)
+					problem.CaracteristiquesHydrauliques[k]->NiveauInitialReservoir = levelFromScenarioBuilder * area.hydro.reservoirCapacity;
+			}
+
 			problem.CaracteristiquesHydrauliques[k]->LevelForTimeInterval = problem.CaracteristiquesHydrauliques[k]->NiveauInitialReservoir; /*for first 24-hour optim*/  
 			double nivInit = problem.CaracteristiquesHydrauliques[k]->NiveauInitialReservoir;
 			if (nivInit < 0.)
