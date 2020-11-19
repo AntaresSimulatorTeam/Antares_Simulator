@@ -23,6 +23,6 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         workdir: docker
-        dockerfile:${{ matrix.container }}
-        cache:true
-        tags:${{ matrix.container }}
+        dockerfile: ${{ matrix.container }}
+        cache: true
+        tags: ${{ matrix.container }}
