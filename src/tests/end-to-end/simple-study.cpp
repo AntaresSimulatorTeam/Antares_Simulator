@@ -202,9 +202,9 @@ void cleanSimulation(Study::Ptr pStudy, Solver::Simulation::ISimulation< Solver:
 
 //Very simple test with one area and one load and one year
 BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
-{    
+{
 	//Create study
-	Study::Ptr pStudy = new Study(true); // for the solver 
+	Study::Ptr pStudy = new Study(true); // for the solver
 
 	//On year  and one TS
 	int nbYears = 1;
