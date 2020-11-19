@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - feature/*
       - fix/*
 jobs:
 
