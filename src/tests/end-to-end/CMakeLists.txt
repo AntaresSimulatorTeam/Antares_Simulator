@@ -42,10 +42,12 @@ add_executable(tests-solver-call
 target_include_directories(tests-solver-call
             PRIVATE
             ${Boost_INCLUDE_DIRS}
+			${CMAKE_SOURCE_DIR}/solver
 )
 
 target_link_libraries(tests-solver-call
             PRIVATE
+            libmodel_antares
             Boost::unit_test_framework
             Boost::filesystem
             Boost::regex

@@ -167,7 +167,7 @@ find_package(ortools)
 
 if(NOT ortools_FOUND)
 
-set(REPOSITORY "https://github.com/rte-france/or-tools.git")
+set(REPOSITORY "https://github.com/AntaresSimulatorTeam/or-tools.git")
 set(TAG "rte_dev_sirius")
 set(CMAKE_ARGS "-DUSE_SIRIUS=ON")
 
