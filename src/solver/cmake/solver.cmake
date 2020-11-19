@@ -8,7 +8,9 @@ else()
 	#set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 endif()
 
-
+set(GFLAGS_USE_TARGET_NAMESPACE TRUE)
+find_package(gflags REQUIRED)
+find_package(ortools REQUIRED)
 
 set(RTESOLVER_OPT
 		optimisation/opt_optimisation_hebdo.cpp
@@ -42,7 +44,6 @@ set(RTESOLVER_OPT
 		optimisation/opt_liberation_problemes_simplexe.cpp
 		optimisation/opt_restaurer_les_donnees.cpp
 		optimisation/opt_gestion_des_couts_cas_quadratique.cpp
-
 		optimisation/opt_construction_contraintes_couts_demarrage.cpp 
 		optimisation/opt_construction_variables_couts_demarrages.cpp
 		optimisation/opt_gestion_des_bornes_couts_demarrage.cpp
@@ -50,12 +51,13 @@ set(RTESOLVER_OPT
 		optimisation/opt_gestion_second_membre_couts_demarrage.cpp
 		optimisation/opt_gestion_second_membre_couts_demarrage.cpp
 		optimisation/opt_decompte_variables_et_contraintes_couts_demarrage.cpp
-        optimisation/opt_init_minmax_groupes_couts_demarrage.cpp
-        optimisation/opt_nombre_min_groupes_demarres_couts_demarrage.cpp
-
+		optimisation/opt_init_minmax_groupes_couts_demarrage.cpp
+		optimisation/opt_nombre_min_groupes_demarres_couts_demarrage.cpp
 		optimisation/renseigner_donnees_couts_demarrage.cpp
 		optimisation/opt_export_structure.h
 		optimisation/opt_export_structure.cpp
+
+		utils/ortools_utils.cpp
 
 	)
 
@@ -66,10 +68,10 @@ set(SRC_MODEL
 )
 
 add_library(libmodel_antares ${SRC_MODEL})
-target_link_libraries(libmodel_antares PUBLIC libantares-core)
+target_link_libraries(libmodel_antares PUBLIC libantares-core ortools::ortools sirius_solver)
 
 add_library(libmodel_antares-swap ${SRC_MODEL})
-target_link_libraries(libmodel_antares-swap PUBLIC libantares-core-swap)
+target_link_libraries(libmodel_antares-swap PUBLIC libantares-core-swap ortools::ortools sirius_solver)
 
 set_target_properties(libmodel_antares-swap
 	PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")

@@ -1,0 +1,47 @@
+name: CI docker hub
+
+on: 
+  push:
+    branches:
+      - develop
+      - feature/*
+      - fix/*
+
+jobs:
+  linux:
+  
+    strategy:
+      fail-fast: false
+      matrix:
+        container:
+        - 'jmkerloch/rte-antares:ubuntu-ortools'
+  
+    runs-on: ubuntu-latest
+    container: ${{ matrix.container }}
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Configure
+      run: |
+           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -Dsirius_solver_ROOT=/sirius-install -DBUILD_ortools=OFF -DBUILD_sirius=OFF
+
+    - name: Build
+      run: |           
+           cmake --build _build --config release -j2
+
+    - name: Run unit tests
+      run: |
+           cd _build
+           ldd tests/end-to-end/tests-simple-study
+           ctest -C Release --output-on-failure
+           
+    - name: Installer .tar.gz creation
+      run: |
+           cd _build
+           cpack -G TGZ
+           
+    - name: Installer upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: antares-installer-64bits
+        path: _build/antares-*.*.*-Linux.*

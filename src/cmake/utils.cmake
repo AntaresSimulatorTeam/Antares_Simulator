@@ -13,6 +13,7 @@
 # BUILD_COMMAND : Command used for build (default empty and default CMake build use)
 # INSTALL_COMMAND : Command used for install (default empty and default CMake instal use)
 # INSOURCE_BUILD : If option ON , compilation is done in source directory
+# SOURCE_SUBDIR : Indicate where to find CMakeList.txt
 #
 # build_dependency(
 #   NAME
@@ -26,7 +27,7 @@
 # )
 function(build_git_dependency)
   set(options "")
-  set(oneValueArgs NAME REPOSITORY TAG APPLY_PATCH CONFIGURE_COMMAND BUILD_COMMAND INSTALL_COMMAND INSOURCE_BUILD)
+  set(oneValueArgs NAME REPOSITORY TAG APPLY_PATCH CONFIGURE_COMMAND BUILD_COMMAND INSTALL_COMMAND INSOURCE_BUILD SOURCE_SUBDIR)
   set(multiValueArgs CMAKE_ARGS)
   cmake_parse_arguments(GIT_DEP
     "${options}"
@@ -60,12 +61,19 @@ function(build_git_dependency)
     set(INSTALL_COMMAND "#INSTALL_COMMAND")
   endif()
   
+  if(GIT_DEP_SOURCE_SUBDIR)
+    set(SOURCE_SUBDIR "SOURCE_SUBDIR ${GIT_DEP_SOURCE_SUBDIR}")
+  else()
+    set(SOURCE_SUBDIR "#SOURCE_SUBDIR")
+  endif()
+
   if (GIT_DEP_INSOURCE_BUILD)  
    set (BINARY_DIR "BUILD_IN_SOURCE 1")
   else()
-   set (BINARY_DIR "BINARY_DIR ""@CMAKE_CURRENT_BINARY_DIR@/${GIT_DEP_NAME}/build"" ")
+   set (BINARY_DIR "BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/${GIT_DEP_NAME}/build")
   endif()
-  
+
+
   configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt.in
     ${CMAKE_CURRENT_BINARY_DIR}/${GIT_DEP_NAME}/CMakeLists.txt @ONLY)
@@ -89,3 +97,19 @@ function(build_git_dependency)
   message(STATUS "Building ${GIT_DEP_NAME}: ...DONE")
 endfunction()
 
+macro(copy_dependency deps target)
+
+    if( MSVC )
+        if("${CMAKE_BUILD_TYPE}" STREQUAL "release")
+
+            get_target_property( DEP_SHARED_LIB_PATH ${deps} IMPORTED_LOCATION_RELEASE )
+        else()
+
+            get_target_property( DEP_SHARED_LIB_PATH ${deps} IMPORTED_LOCATION_DEBUG )
+        endif()
+
+        # Copy the shared lib file
+        add_custom_command(TARGET ${target} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${DEP_SHARED_LIB_PATH} $<TARGET_FILE_DIR:${target}>)
+    endif()
+
+endmacro()

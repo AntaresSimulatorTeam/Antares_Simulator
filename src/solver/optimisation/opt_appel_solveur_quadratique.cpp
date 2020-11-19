@@ -62,9 +62,9 @@
 
 extern "C"
 {
-# include "../ext/Sirius_Solver/pointInterieur/pi_define.h"
-# include "../ext/Sirius_Solver/pointInterieur/pi_definition_arguments.h"
-# include "../ext/Sirius_Solver/pointInterieur/pi_fonctions.h"
+# include "pi_define.h"
+# include "pi_definition_arguments.h"
+# include "pi_fonctions.h"
 }
 
 #include <antares/logs.h>

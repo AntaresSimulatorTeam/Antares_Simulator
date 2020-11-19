@@ -40,7 +40,7 @@
 
 extern "C"
 {
-#include "../ext/Sirius_Solver/simplexe/spx_fonctions.h"
+#include "spx_fonctions.h"
 }
 
 using namespace Antares;

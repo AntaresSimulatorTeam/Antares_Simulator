@@ -36,6 +36,7 @@
 #include <cassert>
 #include <string.h>
 #include <limits>
+#include <algorithm>
 
 #include "options.h"
 #include "../config.h"
@@ -43,6 +44,10 @@
 #include "../../config.h"
 
 #include <antares/memory/memory.h>
+#include <antares/exception/AssertionError.hpp>
+#include <antares/Enum.hpp>
+
+#include "utils/ortools_utils.h"
 
 
 using namespace Yuni;
@@ -96,6 +101,29 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
 	// --force-parallel
 	getopt.add(options.maxNbYearsInParallel, ' ', "force-parallel", "Override the max number of years computed simultaneously");
 
+
+	bool useOrtools = false;
+
+	//add option for ortools use
+    // --use-ortools
+    getopt.addFlag(useOrtools, ' ', "use-ortools", "Use ortools library to launch solver");
+
+    //add option for ortools solver used
+    std::string ortoolsSolver;
+
+	//Define available solver list
+    std::list<std::string> availableSolverList = OrtoolsUtils().getAvailableOrtoolsSolverName();
+    std::string availableSolverListStr;
+    for(auto it = availableSolverList.begin(); it != availableSolverList.end(); it++)
+    {
+        availableSolverListStr += *it + ";";
+    }
+    //Remove last ;
+    if (!availableSolverListStr.empty())
+        availableSolverListStr.pop_back();
+
+    //--ortools-solver
+    getopt.add(ortoolsSolver, ' ', "ortools-solver", "Ortools solver used for simulation (only available with use-ortools option)\nAvailable solver list : " + availableSolverListStr);
 
 	getopt.addParagraph("\nParameters");
 	// --name
@@ -247,6 +275,35 @@ bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
 				}
 		}
 	}
+
+	//define ortools global values
+	options.ortoolsUsed = useOrtools;
+
+	//ortools solver
+    if(useOrtools)
+    {
+        if(availableSolverList.empty())
+        {
+            logs.error() << "No ortools solvers available. Can't use '" << ortoolsSolver << "'.";
+            return false;
+        }
+
+        //Default is first available solver
+        options.ortoolsEnumUsed= Antares::Data::Enum::fromString<Antares::Data::OrtoolsSolver>(availableSolverList.front());
+
+        //Check if solver is available
+        bool found = (std::find(availableSolverList.begin(), availableSolverList.end(), ortoolsSolver) != availableSolverList.end());
+
+        if (found)
+        {
+			options.ortoolsEnumUsed = Antares::Data::Enum::fromString<Antares::Data::OrtoolsSolver>(ortoolsSolver);
+        }
+		else
+		{
+			logs.warning() << "Invalid ortools-solver option. Got '" << ortoolsSolver
+				<< "'. reset to " << Enum::toString(options.ortoolsEnumUsed);
+		}
+    }
 
 	// The study folder
 	if (not optStudyFolder.empty())

@@ -29,6 +29,7 @@
 #define ANTARES_DATA_ENUM_HXX
 
 #include <algorithm>
+#include <list>
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/stdcxx/demangle.hpp>
@@ -61,6 +62,18 @@ std::string toString(const E& value) {
         throw AssertionError("Unexpected " +  stdcxx::simpleClassName<E>() + " value " + std::to_string(index));
     }
     return *(names.begin() + index);
+}
+
+template <typename E, typename>
+std::list<E> enumList() {
+    std::list<E> result;
+    const auto& names = getNames<E>();
+    for (auto name : names)
+    {
+        result.push_back(fromString<E>(name));
+    }
+
+    return result;
 }
 
 } // namespace Enum

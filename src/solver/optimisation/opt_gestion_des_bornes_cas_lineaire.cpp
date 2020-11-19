@@ -38,7 +38,7 @@
 #include <yuni/core/math.h>
 #include <limits.h>
 
-#include "../ext/Sirius_Solver/simplexe/spx_constantes_externes.h"
+#include "spx_constantes_externes.h"
 
 #define EPSILON_DEFAILLANCE   1e-3
 #include <antares/logs.h>

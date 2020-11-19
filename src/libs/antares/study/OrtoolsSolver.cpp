@@ -25,69 +25,39 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <initializer_list>
+#include <string>
 
+#include <antares/exception/AssertionError.hpp>
+#include <antares/study/OrtoolsSolver.hpp>
 
+#include <antares/Enum.hpp>
 
+namespace Antares {
+    
+namespace Data {
 
+namespace Enum {
 
+    template <>
+    const std::initializer_list<std::string>& getNames<OrtoolsSolver>() {
 
+        //Enum must be stored in lower case and without spaces because values  are trimmed and lowered in ini load
+        static std::initializer_list<std::string> s_ortoolsSolverNames{
+                "sirius",
+                "coin",
+                "xpress",
+                "glop-scip",
+                "cplex",
+                "gurobi",
+                "glpk",
+                "glop-cbc"
+        };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# include "opt_structure_probleme_a_resoudre.h"
- 
-# include "../simulation/simulation.h"
-# include "../simulation/sim_structure_donnees.h"
-# include "../simulation/sim_extern_variables_globales.h"
-
-# include "opt_fonctions.h"
-
-# include "spx_definition_arguments.h"
-# include "spx_fonctions.h"
-
-
-
-void OPT_VerifierPresenceReserveJmoins1( PROBLEME_HEBDO * ProblemeHebdo )  
-{
-int Pays; int Pdt; double * ReserveHoraireJMoins1Ref;
-RESERVE_JMOINS1 ** ReserveJMoins1;
-
-ProblemeHebdo->YaDeLaReserveJmoins1 = NON_ANTARES;
-if ( RESERVE_J_MOINS_1 == NON_ANTARES ) return;
-
-ReserveJMoins1 = ProblemeHebdo->ReserveJMoins1;
-
-for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ ) {
-  ReserveHoraireJMoins1Ref = ReserveJMoins1[Pays]->ReserveHoraireJMoins1Ref;
-  for ( Pdt = 0 ; Pdt < ProblemeHebdo->NombreDePasDeTempsRef ; Pdt++) {
-    if ( fabs( ReserveHoraireJMoins1Ref[Pdt] ) > ZERO_RESERVE_J_MOINS1 ) {
-      ProblemeHebdo->YaDeLaReserveJmoins1 = OUI_ANTARES;
-	    return;
+        return s_ortoolsSolverNames;
     }
-  }
-}
+} // namespace Enum
+   
+} // namespace Data
 
-return;
-}
+} // namespace Antares

@@ -34,6 +34,7 @@
 # include <wx/dialog.h>
 # include <wx/sizer.h>
 # include <wx/checkbox.h>
+# include <wx/combobox.h>
 # include <wx/choice.h>
 # include <wx/stattext.h>
 # include <wx/timer.h>
@@ -117,11 +118,16 @@ namespace Simulation
 		//! Mouse move
 		void onInternalMotion(wxMouseEvent&);
 
+        void onOrtoolsCheckboxChanged(wxCommandEvent& event);
+
 	private:
 		//! The main control parent
 		wxWindow* pBigDaddy;
 		//! Solver mode
 		Antares::Component::Button* pBtnMode;
+		wxCheckBox* pOrtoolsCheckBox;
+        wxStaticText* pTitleOrtoolsSolverCombox;
+		wxComboBox* pOrtoolsSolverCombox;
 
 		wxTextCtrl* pSimulationName;
 		wxTextCtrl* pSimulationComments;
@@ -135,7 +141,8 @@ namespace Simulation
 		wxCheckBox* pPreproOnly;
 		wxStaticText* pMonteCarloYears;
 		wxButton* pBtnRun;
-		wxSizerItem *pOptionSpacer;
+        wxSizerItem *pOptionSpacer;
+        wxSizerItem *pOrtoolsSolverOptionSpacer;
 
 		wxTimer* pTimer;
 		bool pWarnAboutMemoryLimit;

@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - feature/*
       - fix/*
 jobs:
 
@@ -14,6 +15,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
+        use_ortools_stable : ["ON","OFF"]
 
     steps:
     - uses: actions/checkout@v2
@@ -26,7 +28,7 @@ jobs:
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
+           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DUSE_ORTOOLS_STABLE=${{ matrix.use_ortools_stable }}
 
     - name: Build
       run: |
@@ -37,7 +39,8 @@ jobs:
       run: |
            cd _build
            ctest -C Release --output-on-failure
-           
+
+
     - name: Installer .deb creation
       run: |
            cd _build

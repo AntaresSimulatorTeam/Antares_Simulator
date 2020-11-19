@@ -38,9 +38,11 @@
 #include <antares/emergency.h>
 #include <antares/logs.h>
 
+#include  "../utils/ortools_utils.h"
+
 extern "C"
 {
-#include "../ext/Sirius_Solver/simplexe/spx_fonctions.h"
+#include "spx_fonctions.h"
 }
 
 using namespace Antares;
@@ -51,6 +53,7 @@ void OPT_LiberationProblemesSimplexe( PROBLEME_HEBDO * ProblemeHebdo )
 {
 	PROBLEME_SPX * ProbSpx; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
 	int NbIntervalles; int NumIntervalle; int NombreDePasDeTempsPourUneOptimisation;
+  MPSolver* solver;
 
 	if ( ProblemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES ) {
 		NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
@@ -63,18 +66,25 @@ void OPT_LiberationProblemesSimplexe( PROBLEME_HEBDO * ProblemeHebdo )
 	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 	if (ProblemeAResoudre)
 	{
+    auto& study = *Data::Study::Current::Get();
+	  bool ortoolsUsed = study.parameters.ortoolsUsed;
+    
 		if ( ProblemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES )
 		{
 			for (NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
-			{
+			{        
 				ProbSpx = (PROBLEME_SPX*)((ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle]);
-				if (ProbSpx != NULL)
-				{
-					SPX_LibererProbleme(ProbSpx);
-					ProbSpx = NULL;
+        solver  = (MPSolver*)((ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle]);
+        
+        if (ortoolsUsed && solver != NULL) {
+					ORTOOLS_LibererProbleme(solver);
+          solver = NULL;
 				}
+				else if(ProbSpx != NULL) {
+					SPX_LibererProbleme( ProbSpx);
+					ProbSpx = NULL;
+        }
 			}
-
 		}
 	}
 

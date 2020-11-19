@@ -301,6 +301,9 @@ namespace Data
 
 		activeRulesScenario.clear();
 
+		ortoolsUsed		= false;
+		ortoolsEnumUsed = OrtoolsSolver::sirius;
+
 		// Initialize all seeds
 		resetSeeds();
 	}
@@ -1127,6 +1130,11 @@ namespace Data
 		if (options.forceDerated)
 			derated = true;
 
+
+		//Define ortools parameters from options
+		ortoolsUsed		= options.ortoolsUsed;
+		ortoolsEnumUsed = options.ortoolsEnumUsed;	
+
 		// Attempt to fix bad values if any
 		fixBadValues();
 
@@ -1510,6 +1518,12 @@ namespace Data
 			logs.info() << "  :: ignoring export structure";
 		if (!include.hurdleCosts)
 			logs.info() << "  :: ignoring hurdle costs";
+
+		//Indicate ortools solver used
+		if (ortoolsUsed)
+		{
+			logs.info() << "  :: ortools solver " << Enum::toString(ortoolsEnumUsed) << " used for problem resolution";
+		}
 	}
 
 

@@ -1,4 +1,4 @@
-
+cmake_policy(SET CMP0054 NEW)
 
 #
 # This variable must only be enabled when compiling

@@ -59,7 +59,7 @@
 
 # include "opt_fonctions.h"
 
-# include "../ext/Sirius_Solver/simplexe/spx_constantes_externes.h"
+# include "spx_constantes_externes.h"
 #include "../simulation/sim_structure_probleme_adequation.h"
 
 

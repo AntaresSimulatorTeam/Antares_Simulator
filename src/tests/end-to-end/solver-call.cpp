@@ -13,6 +13,8 @@
 #include <iostream>
 #include <stdio.h>
 
+#include <utils/ortools_utils.h>
+
 using namespace boost;
 
 namespace utf = boost::unit_test;
@@ -74,7 +76,7 @@ std::string getBuildDirectory()
 	return result;
 }
 
-void launchSolver(const std::string& studyPath)
+void launchSolver(const std::string& studyPath, bool useOrtools = false, const std::string& ortoolsSolver = "sirius" )
 {
 	std::string buildDir = getBuildDirectory();
 	std::string studyOutputPath = studyPath + "output/";
@@ -99,6 +101,11 @@ void launchSolver(const std::string& studyPath)
 	BOOST_REQUIRE_MESSAGE(solverPath, "Can't find antares solver application");
 
 	std::string solverLaunchCommand = solverPath.value().string() + " -i \"" + studyPath + "\"";
+    
+    if (useOrtools)
+    {
+        solverLaunchCommand += " --use-ortools --ortools-solver=" +ortoolsSolver;
+    }
 
 	//Launch solver with study
 	int result = process::system(solverLaunchCommand);
@@ -152,6 +159,36 @@ BOOST_AUTO_TEST_CASE(free_data_sample)
 																2.85657544872729e+11 };
 
 	launchSolver(studyPath);
+
+	std::string studyOutputPath = studyPath + "output/";
+	checkIntegrityFile(studyOutputPath, checkIntegrityExpectedValues);
+
+	//Remove any available output and logs
+	filesystem::remove_all(studyOutputPath);
+	filesystem::remove_all(studyPath + "logs/");
+}
+
+//Test free data sample study objective functions result
+BOOST_AUTO_TEST_CASE(free_data_sample_ortools_sirius)
+{
+	//First check if sirius is available with ortools
+	if (!OrtoolsUtils().isOrtoolsSolverAvailable(Antares::Data::OrtoolsSolver::sirius))
+	{
+		return;
+	}
+
+	const std::string& studyPath		= getBuildDirectory() + "/tests/data/free_data_sample/";
+
+	const std::vector<double>& checkIntegrityExpectedValues = { 2.85657392370263e+11,
+																0.00000000000000e+00,
+																2.85657392370263e+11,
+																2.85657392370263e+11,
+																2.85657544872729e+11,
+																0.00000000000000e+00,
+																2.85657544872729e+11,
+																2.85657544872729e+11 };
+
+	launchSolver(studyPath,true,"sirius");
 
 	std::string studyOutputPath = studyPath + "output/";
 	checkIntegrityFile(studyOutputPath, checkIntegrityExpectedValues);

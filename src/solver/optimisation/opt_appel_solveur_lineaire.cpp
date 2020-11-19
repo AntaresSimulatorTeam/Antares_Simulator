@@ -39,17 +39,22 @@
 
 extern "C"
 {
-# include "../ext/Sirius_Solver/simplexe/spx_definition_arguments.h"
-# include "../ext/Sirius_Solver/simplexe/spx_fonctions.h"
+#include "spx_definition_arguments.h"
+#include "spx_fonctions.h"
 
-# include "../ext/Sirius_Solver/pne/pne_definition_arguments.h"
-# include "../ext/Sirius_Solver/pne/pne_fonctions.h"
+#include "pne_definition_arguments.h"
+#include "pne_fonctions.h"
+#include "srs_api.h"
 
 }
 
 #include <antares/logs.h>
 #include <antares/study.h>
 #include <antares/emergency.h>
+
+#include "../utils/ortools_utils.h"
+
+using namespace operations_research;
 
 
 using namespace Antares;
@@ -88,14 +93,20 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 {
 	int Var; int Cnt; double * pt; char PremierPassage;
 	double CoutOpt; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre; PROBLEME_SIMPLEXE Probleme;
-	PROBLEME_SPX * ProbSpx;
+	PROBLEME_SPX* ProbSpx;
 	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 	PremierPassage = OUI_ANTARES;
-	ProbSpx = (PROBLEME_SPX*)((ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[(int)NumIntervalle]);
+	MPSolver* solver;
+
+	ProbSpx = (PROBLEME_SPX*) ((ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[(int)NumIntervalle]);
+	solver  = (MPSolver*)((ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[(int)NumIntervalle]);
+
+	auto& study			= *Data::Study::Current::Get();
+	bool ortoolsUsed	= study.parameters.ortoolsUsed;
 
 	RESOLUTION:
 
-	if ( ProbSpx == NULL )
+	if ( ProbSpx == NULL && solver == NULL)
 	{
 		Probleme.Contexte            = SIMPLEXE_SEUL;
 		Probleme.BaseDeDepartFournie = NON_SPX;
@@ -104,9 +115,16 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 	{
 		if (ProblemeHebdo->ReinitOptimisation == OUI_ANTARES )
 		{	
-			SPX_LibererProbleme( ProbSpx );
+			if (ortoolsUsed && solver!=NULL ) {
+			    ORTOOLS_LibererProbleme(solver);
+		    }
+		    else if(ProbSpx != NULL) {
+			    SPX_LibererProbleme(ProbSpx);
+		    }			
 			(ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = NULL;
+      
 			ProbSpx  = NULL;
+			solver = NULL;
 			Probleme.Contexte = SIMPLEXE_SEUL;
 			Probleme.BaseDeDepartFournie = NON_SPX;	
 		}
@@ -114,8 +132,16 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 		{
 			Probleme.Contexte            = BRANCH_AND_BOUND_OU_CUT_NOEUD;
 			Probleme.BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
-			SPX_ModifierLeVecteurCouts( ProbSpx, ProblemeAResoudre->CoutLineaire, ProblemeAResoudre->NombreDeVariables );
-			SPX_ModifierLeVecteurSecondMembre( ProbSpx, ProblemeAResoudre->SecondMembre, ProblemeAResoudre->Sens, ProblemeAResoudre->NombreDeContraintes );
+
+			if (ortoolsUsed) {
+		        ORTOOLS_ModifierLeVecteurCouts(solver, ProblemeAResoudre->CoutLineaire, ProblemeAResoudre->NombreDeVariables);
+		        ORTOOLS_ModifierLeVecteurSecondMembre(solver, ProblemeAResoudre->SecondMembre, ProblemeAResoudre->Sens, ProblemeAResoudre->NombreDeContraintes);
+		        ORTOOLS_CorrigerLesBornes(solver, ProblemeAResoudre->Xmin, ProblemeAResoudre->Xmax, ProblemeAResoudre->TypeDeVariable, ProblemeAResoudre->NombreDeVariables, &Probleme);
+	        }
+	        else {
+		        SPX_ModifierLeVecteurCouts(ProbSpx, ProblemeAResoudre->CoutLineaire, ProblemeAResoudre->NombreDeVariables);
+		        SPX_ModifierLeVecteurSecondMembre(ProbSpx, ProblemeAResoudre->SecondMembre, ProblemeAResoudre->Sens, ProblemeAResoudre->NombreDeContraintes);
+	        }
 		}
 	}
 
@@ -139,6 +165,7 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 	Probleme.SecondMembre                          = ProblemeAResoudre->SecondMembre;
 
 	Probleme.ChoixDeLAlgorithme = SPX_DUAL;
+
 	Probleme.TypeDePricing               = PRICING_STEEPEST_EDGE ;
 
 	if (PremierPassage == NON_ANTARES)
@@ -170,29 +197,52 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 	# endif
 
 	Probleme.NombreDeContraintesCoupes = 0;
-
-
-	ProbSpx = SPX_Simplexe( &Probleme , ProbSpx );
-
-	if (ProbSpx != NULL)
-	{
-		(ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
+	
+	if (ortoolsUsed) {
+		solver = ORTOOLS_Simplexe(&Probleme,solver);
+		if (solver != NULL)
+		{
+			(ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = (void*)solver;
+		}
 	}
+	else
+	{
+		ProbSpx = SPX_Simplexe(&Probleme,ProbSpx);
+		if (ProbSpx != NULL)
+		{
+			(ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
+		}
+	}	
 
 
 	if ( ProblemeHebdo->ExportMPS == OUI_ANTARES)
-		OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &Probleme, numSpace, ANTARES_SIMPLEXE );
+	{
+		if (ortoolsUsed) {
+			int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
+			ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
+		}
+		else
+		{
+			OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace, ANTARES_SIMPLEXE);
+		}
+	}
 
 	ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
 
 
 
-	if ( ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage == OUI_ANTARES && ProbSpx != NULL )
+	if ( ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage == OUI_ANTARES)
 	{
 		if ( ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE )
 		{
-			SPX_LibererProbleme( ProbSpx );
-			logs.info() << " Solver: Standard resolution failed"; 
+		   if (ortoolsUsed && solver != NULL) {
+	 		  ORTOOLS_LibererProbleme(solver);
+		   }
+		   else if (ProbSpx != NULL) {
+		 	  SPX_LibererProbleme(ProbSpx);
+		   }
+
+		    logs.info() << " Solver: Standard resolution failed"; 
 			logs.info() << " Solver: Retry in safe mode";			//second trial w/o scaling
 
 			if (Logs::Verbosity::Debug::enabled)
@@ -200,6 +250,7 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 				logs.info() << " solver: resetting";
 			}
 			ProbSpx = NULL;
+			solver  = NULL;
 			PremierPassage = NON_ANTARES;
 			goto RESOLUTION;
 		}
@@ -229,7 +280,6 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 			pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
 			if ( pt != NULL )
 				*pt = ProblemeAResoudre->X[Var];
-
 			pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var];
 			if ( pt != NULL )
 				*pt = ProblemeAResoudre->CoutsReduits[Var];
@@ -255,7 +305,6 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 		{
 			logs.info() << " Solver: Safe resolution failed";
 		}
-
 		logs.error() << "Infeasible linear problem encountered. Possible causes:";
 		logs.error() << "* binding constraints,";
 		logs.error() << "* last resort shedding status,";
@@ -265,13 +314,21 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 		//Write MPS only if exportMPSOnError is activated and MPS weren't exported before with ExportMPS option
 		if ( ProblemeHebdo->ExportMPS == NON_ANTARES && ProblemeHebdo->exportMPSOnError)
 		{
-			OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &Probleme, numSpace, ANTARES_SIMPLEXE );
+			if (ortoolsUsed) {
+				int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
+				ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
+			}
+			else
+			{
+				OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace, ANTARES_SIMPLEXE);
+			}
 		}
 
 		return false;
 	}
 
 	return true;
+
 }
 
 
@@ -281,6 +338,7 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 {
 	int Var; int Cnt; double * pt; int il; int ilMax; double CoutOpt; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
 	int * TypeEntierOuReel; PROBLEME_A_RESOUDRE ProblemePourPne; double u;
+
 	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 	TypeEntierOuReel = (int *) ProblemeAResoudre->CoutsReduits;
 
@@ -312,18 +370,36 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 	if ( ProblemeAResoudre->NumeroDOptimisation == DEUXIEME_OPTIMISATION )
 	{
 	  ProblemePourPne.FaireDuPresolve = NON_PNE;
+
 	}
+
+
 
 	ProblemePourPne.TempsDExecutionMaximum       = 0;  
 	ProblemePourPne.NombreMaxDeSolutionsEntieres = -1;   
 	ProblemePourPne.ToleranceDOptimalite         = 1.e-4; 
 
+	auto& study = *Data::Study::Current::Get();
+	bool ortoolsUsed = study.parameters.ortoolsUsed;
 
-	PNE_Solveur( &ProblemePourPne );
+	MPSolver* solver = NULL;
+	if (ortoolsUsed) {
 
-	if ( ProblemeHebdo->ExportMPS == OUI_ANTARES)
-		OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &ProblemePourPne, numSpace, ANTARES_PNE );
+		solver = ORTOOLS_Simplexe_PNE(&ProblemePourPne, NULL);
+		
+		if (ProblemeHebdo->ExportMPS == OUI_ANTARES)
+		{
+			int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
+			ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
+		}
 
+	} else {
+
+		PNE_Solveur(&ProblemePourPne);
+
+		if ( ProblemeHebdo->ExportMPS == OUI_ANTARES) OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &ProblemePourPne, numSpace, ANTARES_PNE );
+
+	}
 	ProblemeAResoudre->ExistenceDUneSolution = ProblemePourPne.ExistenceDUneSolution;
 
 	if ( ProblemeAResoudre->ExistenceDUneSolution == ARRET_CAR_ERREUR_INTERNE )
@@ -341,7 +417,6 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 	if (sol_opt_trouvee)
 	{
 		CoutOpt = 0.0;
-
 		for ( Var = 0 ; Var < ProblemeAResoudre->NombreDeVariables ; Var++ )
 			ProblemeAResoudre->CoutsReduits[Var] = ProblemeAResoudre->CoutLineaire[Var];
 
@@ -365,12 +440,10 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 			pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
 			if ( pt != NULL )
 				*pt = ProblemeAResoudre->X[Var];
-
 			pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var];
 			if ( pt != NULL )
 				*pt = ProblemeAResoudre->CoutsReduits[Var];
 		}
-
 
 		if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION)
 			ProblemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
@@ -419,14 +492,30 @@ bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int N
 		
 			logs.info() << LOG_UI_DISPLAY_MESSAGES_ON;
 		}
-
 		//Write MPS only if exportMPSOnError is activated and MPS weren't exported before with ExportMPS option
 		if ( ProblemeHebdo->ExportMPS == NON_ANTARES && ProblemeHebdo->exportMPSOnError)
-		{	
-			OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( (void *) &ProblemePourPne, numSpace, ANTARES_PNE );	
+		{
+			if (ortoolsUsed) {
+				int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
+				ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
+			}
+			else
+			{
+				OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&ProblemePourPne, numSpace, ANTARES_PNE);
+			}
+		}
+		
+		if (solver != NULL)
+		{			
+			ORTOOLS_LibererProbleme(solver);
 		}
 	
 		return false;
+	}
+	
+	if (solver != NULL)
+	{			
+		ORTOOLS_LibererProbleme(solver);
 	}
 
 	return true;
@@ -450,7 +539,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void * Prob, uint numSpace, 
 	Flot = study.createCriterionFileIntoOutput(numSpace);
 	if (!Flot)
 		exit(2);
-
+	
 	fprintf(Flot,"* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);	
 
 	fclose( Flot );
@@ -496,7 +585,6 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( void * Prob, uint numSpace, char
 		CoefficientsDeLaMatriceDesContraintes = Probleme->CoefficientsDeLaMatriceDesContraintes;
 		IndicesColonnes                       = Probleme->IndicesColonnes;
 	}
-
 	else
 	{
 		ProblemePourPne = (PROBLEME_A_RESOUDRE *) Prob;

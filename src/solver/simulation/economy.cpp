@@ -70,7 +70,7 @@ namespace Simulation
 				SIM_DesallocationProblemeHebdo(*pProblemesHebdo[numSpace]);
 				delete pProblemesHebdo[numSpace];
 			}
-			delete pProblemesHebdo;
+			delete[] pProblemesHebdo;
 		}
 	}
 
