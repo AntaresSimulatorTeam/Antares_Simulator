@@ -13,10 +13,6 @@ SET(SRC_WINDOW_INSPECTOR
 	windows/inspector/data.h
 	windows/inspector/data.hxx
 	windows/inspector/data.cpp
-	windows/inspector/editor-arealinks.h
-	windows/inspector/editor-arealinks.cpp
-	windows/inspector/editor-area-thermal-clusters.h
-	windows/inspector/editor-area-thermal-clusters.cpp
 	windows/inspector/editor-calendar.cpp
 	windows/inspector/editor-calendar.h
 )
