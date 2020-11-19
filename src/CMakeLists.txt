@@ -155,8 +155,8 @@ message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 option(BUILD_DEPS "Build all dependencies" OFF)
 message(STATUS "Build all dependencies: ${BUILD_DEPS}")
 
-option(USE_ORTOOLS_STABLE "Use ortools stable instead of RTE ortools branch with Sirius support" OFF)
-message(STATUS "Use ortools stable instead of RTE ortools branch with Sirius support: ${USE_ORTOOLS_STABLE}")
+option(USE_ORTOOLS_STABLE "Use OR-Tools stable instead of RTE OR-Tools branch with Sirius support" OFF)
+message(STATUS "Use OR-Tools stable instead of RTE OR-Tools branch with Sirius support: ${USE_ORTOOLS_STABLE}")
 
 # IF BUILD_DEPS=ON THEN Force all BUILD_*=ON
 include(CMakeDependentOption)
@@ -167,7 +167,7 @@ message(STATUS "Build sirius solver: ${BUILD_sirius}")
 
 CMAKE_DEPENDENT_OPTION(BUILD_ortools "Build BUILD_ortools dependency Library" ON
 		"NOT BUILD_DEPS" ON)
-message(STATUS "Build ortools: ${BUILD_ortools}")
+message(STATUS "Build OR-Tools: ${BUILD_ortools}")
 
 CMAKE_DEPENDENT_OPTION(BUILD_wxWidgets "Build wxWidgets dependency Library" OFF
   "NOT BUILD_DEPS" ON)
