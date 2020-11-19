@@ -3,7 +3,7 @@ name: CI docker hub publich
 on: 
   push:
     branches:
-      - ci/docker_use
+      - develop
 
 jobs:
   docker_hub_publish:
