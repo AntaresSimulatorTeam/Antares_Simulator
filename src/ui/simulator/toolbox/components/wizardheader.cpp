@@ -92,6 +92,11 @@ namespace Components
 
 	void WizardHeader::onDraw(wxPaintEvent&)
 	{
+		onDraw();
+	}
+
+	void WizardHeader::onDraw()
+	{
 		// The DC
 		wxClientDC dc(this);
 		// Shifts the device origin so we don't have to worry
@@ -178,9 +183,9 @@ namespace Components
 		if (customDraw)
 		{
 			WizardHeader* pnl = new WizardHeader(parent, img, caption, help);
+			//Need to force draw to get sizeNeeded
+			pnl->onDraw();
 			p = pnl;
-			wxPaintEvent evt(pnl->GetId());
-			pnl->onDraw(evt);
 			p->SetSize(100, pnl->sizeNeeded);
 		}
 		else
