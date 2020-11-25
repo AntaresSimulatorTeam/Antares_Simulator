@@ -8,10 +8,6 @@ else()
 	#set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 endif()
 
-set(GFLAGS_USE_TARGET_NAMESPACE TRUE)
-find_package(gflags REQUIRED)
-find_package(ortools REQUIRED)
-
 set(RTESOLVER_OPT
 		optimisation/opt_optimisation_hebdo.cpp
 		optimisation/opt_appel_solveur_quadratique.cpp

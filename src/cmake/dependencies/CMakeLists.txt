@@ -32,7 +32,7 @@ build_git_dependency(
     TAG
       "OpenSSL_1_1_1g"
 	CONFIGURE_COMMAND
-	   "${CONFIGURE_CALL} ${OPENSSL_ARCH} no-asm no-shared --prefix=${CMAKE_CURRENT_BINARY_DIR}/install/ --openssldir=${CMAKE_CURRENT_BINARY_DIR}/install/"
+	   "${CONFIGURE_CALL} ${OPENSSL_ARCH} no-asm no-shared --prefix=${DEPS_INSTALL_DIR} --openssldir=${DEPS_INSTALL_DIR}"
 	BUILD_COMMAND
 	   "${MAKE_COMMAND}"
 	INSTALL_COMMAND
@@ -71,13 +71,13 @@ if(WIN32 OR WIN64)
 	#Remarks : WITH_PREFIX compile option must use \ (backslash). Need to add multiple backslash because two backslashes (\\1) are required in CMake code to get a backslash through argument parsing
 	#We need 4 backslash because the BUILD_COMMAND option is passed to build_git_dependency then to another function inside:
 
-	set(BUILD_CALL "cd <SOURCE_DIR>/winbuild COMMAND nmake Makefile.vc mode=static VC=14 WITH_SSL=static WITH_DEVEL=${CMAKE_CURRENT_BINARY_DIR}/install/ WITH_PREFIX=..\\\\..\\\\..\\\\install ENABLE_SSPI=no ENABLE_IDN=no ENABLE_WINSSL=no GEN_PDB=no DEBUG=no MACHINE=x64")
+	set(BUILD_CALL "cd <SOURCE_DIR>/winbuild COMMAND nmake Makefile.vc mode=static VC=14 WITH_SSL=static WITH_DEVEL=${DEPS_INSTALL_DIR} WITH_PREFIX=${DEPS_INSTALL_DIR} ENABLE_SSPI=no ENABLE_IDN=no ENABLE_WINSSL=no GEN_PDB=no DEBUG=no MACHINE=x64")
 
 	#No install command; the install is done using WITH_PREFIX compile option
 	set(INSTALL_CALL "echo libcurl installation is done with WITH_PREFIX compile option")
 	
 else()
-	set(CONFIGURE_CALL 	"sh <SOURCE_DIR>/buildconf COMMAND <SOURCE_DIR>/configure --disable-shared --enable-static --without-libidn --prefix=${CMAKE_CURRENT_BINARY_DIR}/install/")	
+	set(CONFIGURE_CALL 	"sh <SOURCE_DIR>/buildconf COMMAND <SOURCE_DIR>/configure --disable-shared --enable-static --without-libidn --prefix=${DEPS_INSTALL_DIR}")	
 	set(BUILD_CALL 		"${CMAKE_MAKE_PROGRAM}")	
 	set(INSTALL_CALL 	"${CMAKE_MAKE_PROGRAM} install")
 endif()
@@ -101,7 +101,7 @@ build_git_dependency(
   
 if(WIN32 OR WIN64)
     #We need to rename libcurl_a.lib to libcurl.lib for find_package(CURL)
-    file(RENAME ${CMAKE_CURRENT_BINARY_DIR}/install/lib/libcurl_a.lib ${CMAKE_CURRENT_BINARY_DIR}/install/lib/libcurl.lib)
+    file(RENAME ${DEPS_INSTALL_DIR}/lib/libcurl_a.lib ${DEPS_INSTALL_DIR}/lib/libcurl.lib)
 endif()
 
   
