@@ -25,7 +25,7 @@ jobs:
     
     - name: Remove dependency compilation directory
       run: |
-           rm -R _build/build_deps
+           rm -R ./_build/build_deps
            
     - name: Build
       run: |
