@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - develop
-      - feature/define_deps_install_dir
 jobs:
 
   windows:
