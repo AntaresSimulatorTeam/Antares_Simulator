@@ -1,0 +1,28 @@
+name: CI docker hub publich
+
+on: 
+  push:
+    branches:
+      - develop
+
+jobs:
+  docker_hub_publish:
+    strategy:
+      matrix:
+        container:
+        - 'centos8-ortools'
+        - 'ubuntu-ortools'
+        
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: jmkerloch/rte-antares
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        workdir: docker
+        dockerfile: ${{ matrix.container }}
+        cache: true
+        tags: ${{ matrix.container }}

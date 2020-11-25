@@ -17,6 +17,8 @@ jobs:
         - 'jmkerloch/rte-antares:ubuntu-ortools'
   
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+
     container: ${{ matrix.container }}
     steps:
     - uses: actions/checkout@v2
@@ -25,6 +27,7 @@ jobs:
       run: |
            cmake -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -Dsirius_solver_ROOT=/sirius-install -DBUILD_ortools=OFF -DBUILD_sirius=OFF
 
+
     - name: Build
       run: |           
            cmake --build _build --config release -j2
@@ -32,7 +35,6 @@ jobs:
     - name: Run unit tests
       run: |
            cd _build
-           ldd tests/end-to-end/tests-simple-study
            ctest -C Release --output-on-failure
            
     - name: Installer .tar.gz creation
