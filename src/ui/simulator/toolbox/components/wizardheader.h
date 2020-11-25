@@ -74,6 +74,9 @@ namespace Components
 		int sizeNeeded;
 
 	private:
+
+		void onDraw();
+
 		wxString pText;
 		wxString pSubText;
 		wxBitmap* pIcon;
