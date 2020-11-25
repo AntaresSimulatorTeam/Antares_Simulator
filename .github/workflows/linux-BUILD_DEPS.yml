@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - feature/define_deps_install_dir
 jobs:
 
   linux:
@@ -26,6 +27,10 @@ jobs:
     - name: Configure
       run: |
            cmake -B _build -S src -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DUSE_ORTOOLS_STABLE=${{ matrix.use_ortools_stable }}
+    
+    - name: Remove dependency compilation directory
+      run: |
+           rm -rf _build/build_deps
 
     - name: Build
       run: |

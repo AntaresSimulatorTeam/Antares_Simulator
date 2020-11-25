@@ -41,8 +41,12 @@ jobs:
       run: |
            $ARCH='${{ matrix.architecture }}'
            If($ARCH -eq 'x86') {$ARCH='Win32'}
-           cmake -B _build -S src -A $ARCH -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.architecture }}-windows -DCMAKE_BUILD_TYPE=release
-
+           cmake -B _build -S src -DBUILD_ortools=ON -DBUILD_sirius=ON -A $ARCH -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.architecture }}-windows -DCMAKE_BUILD_TYPE=release
+    
+    - name: Remove dependency compilation directory
+      run: |
+           rm -R _build/build_deps
+           
     - name: Build
       run: |
            cmake --build _build --config release -j2
