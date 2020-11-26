@@ -47,3 +47,8 @@ RUN mkdir ortools-build &&\
 # Remove ortools build and compile directory
 RUN rm -rf ortools-build &&\
     rm -rf or-tools
+    
+# Add python and pip installation for antares-xpansion
+RUN apt-get install -y python3-pip &&\
+    python3 -m pip install --upgrade pip &&\
+    pip install pyinstaller &&\
