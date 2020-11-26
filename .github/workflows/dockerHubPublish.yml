@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: OR-Tools and sirius build : Publish to Registry
+    - name: OR-Tools and sirius build
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: antaresrte/rte-antares
@@ -29,7 +29,7 @@ jobs:
         cache: true
         tags: ${{ matrix.container }}-ortools
         
-    - name: Antares Simulator build : Publish to Registry
+    - name: Antares Simulator build
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: antaresrte/rte-antares
