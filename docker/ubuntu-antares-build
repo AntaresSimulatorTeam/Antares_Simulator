@@ -6,7 +6,7 @@ RUN  git clone https://github.com/AntaresSimulatorTeam/Antares_Simulator.git --s
 # Antares Simulator compilation
 RUN mkdir antares-simulator-build &&\
     cd antares-simulator-build &&\
-    cmake ../antares-simulator-build/src -DCMAKE_INSTALL_PREFIX=/rte-antares-deps-Release -Dsirius_solver_ROOT=/sirius-install &&\
+    cmake ../antares-simulator/src -DCMAKE_INSTALL_PREFIX=/rte-antares-deps-Release -Dsirius_solver_ROOT=/sirius-install &&\
     cmake --build . -j8 --target install
     
 # Remove Antares Simulator build and compile directory
