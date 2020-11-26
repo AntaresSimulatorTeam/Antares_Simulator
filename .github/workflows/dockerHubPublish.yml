@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - feature/update_docker_hub_repo
 
 jobs:
   docker_hub_publish:
@@ -19,7 +20,7 @@ jobs:
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        name: jmkerloch/rte-antares
+        name: antaresrte/rte-antares
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         workdir: docker
