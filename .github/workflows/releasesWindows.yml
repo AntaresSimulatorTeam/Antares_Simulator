@@ -43,6 +43,10 @@ jobs:
            wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v1.0.0/rte-antares-deps-${{matrix.os}}-${{matrix.architecture}}-Release-OFF.zip
            Expand-Archive ./rte-antares-deps-${{matrix.os}}-${{matrix.architecture}}-Release-OFF.zip -DestinationPath .
            rm rte-antares-deps-${{matrix.os}}-${{matrix.architecture}}-Release-OFF.zip
+           
+    - name: Init submodule
+      run: |
+           git submodule update --init --recursive src
         
     - name: Configure with VCPKG
       run: |
