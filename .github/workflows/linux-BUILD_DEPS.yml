@@ -25,9 +25,9 @@ jobs:
            
     - name: Download pre-compiled librairies
       run: |
-           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v1.0.0/rte-antares-deps-${{matrix.os}}-Release-ON.tar.gz
-           tar -xvf rte-antares-deps-${{matrix.os}}-Release-ON.tar.gz
-           rm -rf rte-antares-deps-${{matrix.os}}-Release-ON.tar.gz
+           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v1.0.0/rte-antares-deps-${{matrix.os}}-Release-all.tar.gz
+           tar -xvf rte-antares-deps-${{matrix.os}}-Release-all.tar.gz
+           rm -rf rte-antares-deps-${{matrix.os}}-Release-all.tar.gz
            
     - name: Init submodule
       run: |
