@@ -52,7 +52,7 @@ jobs:
       run: |
            $ARCH='${{ matrix.architecture }}'
            If($ARCH -eq 'x86') {$ARCH='Win32'}
-           cmake -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -A $ARCH -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.architecture }}-windows -DCMAKE_BUILD_TYPE=release
+           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -A $ARCH -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.architecture }}-windows -DCMAKE_BUILD_TYPE=release
            
     - name: Build
       run: |

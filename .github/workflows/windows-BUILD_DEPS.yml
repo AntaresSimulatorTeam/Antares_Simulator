@@ -31,7 +31,7 @@ jobs:
     - name: Configure
       run: |
            ls
-           cmake -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
+           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
            
     - name: Build
       run: |
