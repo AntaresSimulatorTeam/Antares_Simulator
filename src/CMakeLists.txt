@@ -196,6 +196,15 @@ if (VCPKG_TOOLCHAIN)
 endif()
 
 
+if(BUILD_UI)
+    find_package(wxWidgets)
+    
+    #If wxWidgets is not found it could mean that precompiled librairies are used : Define wxWidgets_ROOT_DIR
+    if (NOT wxWidgets_FOUND)
+        set(wxWidgets_ROOT_DIR ${DEPS_INSTALL_DIR})    
+    endif()
+endif()
+
 find_package(sirius_solver)
 
 if (NOT sirius_solver_FOUND)
