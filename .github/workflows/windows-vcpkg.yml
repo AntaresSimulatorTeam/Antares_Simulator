@@ -11,7 +11,6 @@ jobs:
   windows:
 
     runs-on: ${{ matrix.os }}
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       matrix:
         os: [windows-latest]
@@ -40,7 +39,12 @@ jobs:
         
     - name: Configure
       run: |
-           cmake -B _build -S src -DVCPKG_ROOT=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }} -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DUSE_ORTOOLS_STABLE=${{ matrix.use_ortools_stable }}
+           cmake -B _build -S src -DBUILD_ortools=ON -DBUILD_sirius=ON -DVCPKG_ROOT=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }} -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DUSE_ORTOOLS_STABLE=${{ matrix.use_ortools_stable }}
+    
+    - name: Remove dependency compilation directory
+      uses: JesseTG/rm@v1.0.2
+      with:
+        path: _build/build_deps
     
     - name: Build
       run: |

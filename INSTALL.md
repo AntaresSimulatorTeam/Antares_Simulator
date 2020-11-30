@@ -1,4 +1,4 @@
-# Antares Simulator CMake Build Instructions
+﻿# Antares Simulator CMake Build Instructions
 
 [Environnement](#environment) | [CMake version](#cmake-version) | [Git version](#git-version) | [Dependencies](#dependencies) | [Building](#building-antares-solution) | [Unit tests](#unit-tests) | [Installer creation](#installer-creation)
 
@@ -176,18 +176,23 @@ Dependency can be built  at configure time using the option `-DBUILD_DEPS=ON` (`
 * OPENSSL (`BUILD_OPENSSL`)
 * CURL (`BUILD_CURL`)
 * wxWidgets (`BUILD_wxWidgets`)
-* Sirius solver (`BUILD_sirius`) (ON by default)
-* OR-Tools (`BUILD_ortools`) (ON by default)
+* Sirius solver (`BUILD_sirius`)
+* OR-Tools (`BUILD_ortools`)
 * Boost test (`BUILD_BOOST_TEST`) : only available with unit tests compilation (cmake option `-DBUILD_TESTING=ON`)
 
-Librairies are compiled with static option.
+Librairies are compiled with static option (except for Sirius solver).
 
 When `BUILD_CURL` option is used, `BUILD_OPENSSL` option is added.
 
-You can specify previously dependencies install directory with `CMAKE_PREFIX_PATH` :
-```
-cmake -DCMAKE_PREFIX_PATH=<previous_build_dir>/dependencies/install
-````
+
+#### Defining dependency install directory
+When using multiple directories for antares development with multiple branches it can be useful to have a common dependency install directory.
+
+Dependency install directory can be specified with `DEPS_INSTALL_DIR`. By default install directory is `<antares_checkout_dir>/../rte-antares-deps-<build_type>`
+
+Note :
+> `DEPS_INSTALL_DIR` is added to `CMAKE_PREFIX_PATH`
+
 #### Choose OR-Tools branch
 OR-Tools stable branch can be used with `-DUSE_ORTOOLS_STABLE=ON` (`OFF` by default).
 Otherwise a [fork from RTE](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) is used.
@@ -223,18 +228,19 @@ Antares Simulator UI application compilation can be disabled at configure time u
 
 ### Sirius solver and OR-Tools linking
 
-By default Sirius solver and OR-Tools are compiled with Antares Solution.
-You can disable compilation with `-DBUILD_sirius=OFF -DBUILD_ortools=OFF` when you configure build with cmake.
+By default Sirius solver and OR-Tools are NOT compiled with Antares Solution.
+You can enable compilation with `-DBUILD_sirius=ON -DBUILD_ortools=ON` when you configure build with cmake.
 
-In this case you can specify librairies path with :
+We recommand you to use `-DDEPS_INSTALL_DIR` option so you can use these builds in another antares checkout directory.
 
-* librairies root directories :
+In this case you can specify dependency install directory with :
+
 ```
-cmake -Dsirius_solver_ROOT=<sirius_install_dir> -Dortools_ROOT=<ortools_install_dir>
+cmake -DCMAKE_PREFIX_PATH=<deps_install_dir>
+````
+or 
 ```
-* previous build directory :
-```
-cmake -DCMAKE_PREFIX_PATH=<previous_build_dir>/dependencies/install
+cmake -DDEPS_INSTALL_DIR=<deps_install_dir>
 ````
 ### Linux using system libs (recommanded)
 - Install dependencies [using package manager](#using-a-package-manager).

@@ -31,8 +31,12 @@ jobs:
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release
+           cmake -B _build -S src -DBUILD_ortools=ON -DBUILD_sirius=ON -DCMAKE_BUILD_TYPE=release
     
+    - name: Remove dependency compilation directory
+      run: |
+           rm -rf _build/build_deps
+           
     - name: Build
       run: |
            cmake --build _build --config release -j2    

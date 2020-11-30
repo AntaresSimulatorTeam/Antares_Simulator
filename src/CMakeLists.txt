@@ -161,11 +161,11 @@ message(STATUS "Use OR-Tools stable instead of RTE OR-Tools branch with Sirius s
 # IF BUILD_DEPS=ON THEN Force all BUILD_*=ON
 include(CMakeDependentOption)
 
-CMAKE_DEPENDENT_OPTION(BUILD_sirius "Build sirius solver dependency Library" ON
+CMAKE_DEPENDENT_OPTION(BUILD_sirius "Build sirius solver dependency Library" OFF
 		"NOT BUILD_DEPS" ON)
 message(STATUS "Build sirius solver: ${BUILD_sirius}")
 
-CMAKE_DEPENDENT_OPTION(BUILD_ortools "Build BUILD_ortools dependency Library" ON
+CMAKE_DEPENDENT_OPTION(BUILD_ortools "Build BUILD_ortools dependency Library" OFF
 		"NOT BUILD_DEPS" ON)
 message(STATUS "Build OR-Tools: ${BUILD_ortools}")
 
@@ -185,15 +185,19 @@ CMAKE_DEPENDENT_OPTION(BUILD_zlib "Build zlib dependency Library" OFF
   "NOT BUILD_DEPS" ON)
 message(STATUS "Build BUILD_zlib: ${BUILD_zlib}")
 
-# Build Needed dependencies
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/build_deps/install)
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/build_deps/install/libs/pkgconfig)
+#Define install directory
+if (NOT DEPS_INSTALL_DIR)
+    SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../rte-antares-deps-${CMAKE_BUILD_TYPE})
+endif()
 
-add_subdirectory(cmake/dependencies ${CMAKE_CURRENT_SOURCE_DIR}/build_deps)
+# Build Needed dependencies
+list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR})
+
+add_subdirectory(cmake/dependencies ${CMAKE_CURRENT_BINARY_DIR}/build_deps)
 
 if(BUILD_wxWidgets)
 	# Define wxWidgets_ROOT_DIR
-	set(wxWidgets_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build_deps/install)
+	set(wxWidgets_ROOT_DIR ${DEPS_INSTALL_DIR})
 endif()
 
 # Define needed external library
@@ -223,7 +227,22 @@ if (VCPKG_TOOLCHAIN)
 	list(APPEND CMAKE_PREFIX_PATH "${ortools_ROOT}")
 endif()
 
-find_package(sirius_solver CONFIG REQUIRED)
+
+find_package(sirius_solver)
+
+if (NOT sirius_solver_FOUND)
+	message (FATAL_ERROR "Sirius solver not found. Sirius solver can be compiled with -DBUILD_sirius=ON or you can specify previous dependency install directory with -DCMAKE_PREFIX_PATH or -DDEPS_INSTALL_DIR")
+endif()
+
+
+find_package(ortools)
+if(NOT ortools_FOUND)
+	message (FATAL_ERROR "OR-Tools not found. OR-Tools can be compiled with -DBUILD_ortools=ON or you can specify previous dependency install directory with -DCMAKE_PREFIX_PATH or -DDEPS_INSTALL_DIR")
+endif()
+
+#gflags needed for ortools
+set(GFLAGS_USE_TARGET_NAMESPACE TRUE)
+find_package(gflags REQUIRED)
 
 #Add specific definition in case of dependencies build
 

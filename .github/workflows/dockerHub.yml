@@ -25,8 +25,11 @@ jobs:
     
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -Dsirius_solver_ROOT=/sirius-install -DBUILD_ortools=OFF -DBUILD_sirius=OFF
+           cmake -B _build -S src -DBUILD_ortools=ON -DBUILD_sirius=ON -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -Dsirius_solver_ROOT=/sirius-install -DBUILD_ortools=OFF -DBUILD_sirius=OFF
 
+    - name: Remove dependency compilation directory
+      run: |
+           rm -rf _build/build_deps
 
     - name: Build
       run: |           
