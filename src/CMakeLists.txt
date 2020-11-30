@@ -156,7 +156,7 @@ if (NOT DEPS_INSTALL_DIR)
 
 else()
     if(NOT IS_ABSOLUTE ${DEPS_INSTALL_DIR})
-        SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${DEPS_INSTALL_DIR})
+        SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../${DEPS_INSTALL_DIR})
     endif()    
 endif()
 
@@ -165,6 +165,7 @@ endif()
 add_subdirectory (antares-deps)
 
 list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR})
+message(STATUS "CMAKE_PREFIX_PATH : ${CMAKE_PREFIX_PATH}")
 
 
 # Define needed external library
