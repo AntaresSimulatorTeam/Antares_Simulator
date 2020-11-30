@@ -150,7 +150,9 @@ endif()
 # TODO : removed to be confirmed : old fashion CMake All libraries will be stored in /bin directory
 #set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/${YUNI_TARGET_MODE})
 
-message(STATUS "DEPS_INSTALL_DIR : ${DEPS_INSTALL_DIR}")
+option(BUILD_UI "Build antares ui simulator" ON)
+message(STATUS "Build antares ui simulator: ${BUILD_UI}")
+
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
     SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../rte-antares-deps-${CMAKE_BUILD_TYPE})
@@ -161,11 +163,8 @@ else()
     endif()    
 endif()
 
-message(STATUS "DEPS_INSTALL_DIR : ${DEPS_INSTALL_DIR}")
-
 # Build Needed dependencies
-add_subdirectory (antares-deps)
-message(STATUS "DEPS_INSTALL_DIR : ${DEPS_INSTALL_DIR}")
+include (antares-deps OPTIONAL)
 
 list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR})
 message(STATUS "CMAKE_PREFIX_PATH : ${CMAKE_PREFIX_PATH}")

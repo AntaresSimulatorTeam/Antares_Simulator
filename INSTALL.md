@@ -171,18 +171,19 @@ sudo yum install wxGTK3-devel
 sudo yum install boost-test boost-filesystem boost-regex boost-devel
 ```
 ### [Automatic librairies compilation from git](#git_compil)
-Dependency can be built  at configure time using the option `-DBUILD_DEPS=ON` (`OFF` by default) or you can compile few of them using the options below.
+[Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps) can be used as a git submodule for automatic librairies compilation from git.
+```
+git submodule update --init src/antares-deps
+```
 
-* OPENSSL (`BUILD_OPENSSL`)
-* CURL (`BUILD_CURL`)
-* wxWidgets (`BUILD_wxWidgets`)
-* Sirius solver (`BUILD_sirius`)
-* OR-Tools (`BUILD_ortools`)
-* Boost test (`BUILD_BOOST_TEST`) : only available with unit tests compilation (cmake option `-DBUILD_TESTING=ON`)
+In this case, dependency can be built at configure time using the option `-DBUILD_ALL=ON` (`OFF` by default). For a list of available option see [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps).
 
-Librairies are compiled with static option (except for Sirius solver).
+We recommand you to define the options below at your first antares simulator checkout :
 
-When `BUILD_CURL` option is used, `BUILD_OPENSSL` option is added.
+* Sirius solver (`-DBUILD_sirius=ON`)
+* OR-Tools (`-DBUILD_ortools=ON`)
+
+This allow the compilation of the librairies that are not available in package manager.
 
 
 #### Defining dependency install directory
@@ -192,10 +193,6 @@ Dependency install directory can be specified with `DEPS_INSTALL_DIR`. By defaul
 
 Note :
 > `DEPS_INSTALL_DIR` is added to `CMAKE_PREFIX_PATH`
-
-#### Choose OR-Tools branch
-OR-Tools stable branch can be used with `-DUSE_ORTOOLS_STABLE=ON` (`OFF` by default).
-Otherwise a [fork from RTE](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) is used.
 
 ## [Building Antares Solution](#build)
 
