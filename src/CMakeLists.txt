@@ -164,6 +164,15 @@ else()
 endif()
 
 # Build Needed dependencies
+if(BUILD_wxWidgets)
+    find_package(wxWidgets)
+    
+    #If wxWidgets is not found it could mean that precompiled librairies are used : Define wxWidgets_ROOT_DIR
+    if (NOT wxWidgets_FOUND)
+        set(wxWidgets_ROOT_DIR ${DEPS_INSTALL_DIR})
+    endif()
+endif()
+
 include (antares-deps OPTIONAL)
 
 list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR})
@@ -193,16 +202,6 @@ endif()
 if (VCPKG_TOOLCHAIN)
 	list(APPEND CMAKE_PREFIX_PATH "${sirius_solver_ROOT}")
 	list(APPEND CMAKE_PREFIX_PATH "${ortools_ROOT}")
-endif()
-
-
-if(BUILD_UI)
-    find_package(wxWidgets)
-    
-    #If wxWidgets is not found it could mean that precompiled librairies are used : Define wxWidgets_ROOT_DIR
-    if (NOT wxWidgets_FOUND)
-        set(wxWidgets_ROOT_DIR ${DEPS_INSTALL_DIR})    
-    endif()
 endif()
 
 find_package(sirius_solver)
