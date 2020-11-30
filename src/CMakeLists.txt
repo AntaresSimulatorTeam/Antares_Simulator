@@ -164,7 +164,7 @@ else()
 endif()
 
 # Build Needed dependencies
-include (antares-deps OPTIONAL)
+add_subdirectory(antares-deps)
 
 list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR})
 message(STATUS "CMAKE_PREFIX_PATH : ${CMAKE_PREFIX_PATH}")
