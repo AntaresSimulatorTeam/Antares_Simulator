@@ -447,6 +447,9 @@ namespace Forms
 	{
 		assert(wxIsMainThread() == true and "Must be ran from the main thread");
 
+		// Get the study, for any purpose
+		auto study = Data::Study::Current::Get();
+
 		// No UI controls
 		if (not pBigDaddy)
 			return;
@@ -547,11 +550,10 @@ namespace Forms
 
 			RefreshListOfOutputsForTheCurrentStudy();
 			refreshMenuInput();
-			refreshMenuOptions();
+			refreshMenuOptions(study);
 		}
 
 		// Loading data from the current study, if any
-		auto study = Data::Study::Current::Get();
 		if (not aboutToQuit and !(!study))
 		{
 			// Attach the study to the map

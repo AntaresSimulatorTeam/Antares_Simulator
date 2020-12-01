@@ -839,7 +839,7 @@ namespace Antares
 
 		OnStudyChanged(study);
 		mainFrm.refreshMenuInput();
-		mainFrm.refreshMenuOptions();
+		mainFrm.refreshMenuOptions(studyptr);
 		mainFrm.requestUpdateGUIAfterStudyIO(true);
 
 		OnStudySaved();
@@ -922,7 +922,7 @@ namespace Antares
 		RefreshListOfOutputsForTheCurrentStudy();
 
 		mainFrm.refreshMenuInput();
-		mainFrm.refreshMenuOptions();
+		mainFrm.refreshMenuOptions(&study);
 		mainFrm.refreshStudyLogs();
 
 		return svsSaved;
@@ -988,7 +988,7 @@ namespace Antares
 		RefreshListOfOutputsForTheCurrentStudy();
 
 		mainFrm.refreshMenuInput();
-		mainFrm.refreshMenuOptions();
+		mainFrm.refreshMenuOptions(&study);
 		mainFrm.refreshStudyLogs();
 
 		return svsSaved;
@@ -1077,8 +1077,7 @@ namespace Antares
 			auto& study = *Data::Study::Current::Get();
 			if (not study.folder.empty())
 			{
-				Menu::AddRecentFile(mainFrm.menuRecentFiles(),
-					wxStringFromUTF8(study.header.caption), wxStringFromUTF8(study.folder));
+				Menu::AddRecentFile(mainFrm.menuRecentFiles(), wxStringFromUTF8(study.header.caption), wxStringFromUTF8(study.folder));
 			}
 		}
 		// Lock the window to prevent flickering

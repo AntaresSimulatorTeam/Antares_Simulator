@@ -205,6 +205,8 @@ namespace ScenarioBuilder
 				if (instrs.size() > 2)
 					ruleset.loadFromInstrs(*pStudy, instrs, p->value, inUpdaterMode);
 			}
+
+			ruleset.sendWarningsForDisabledClusters();
 		});
 		return true;
 	}
