@@ -207,8 +207,9 @@ namespace ScenarioBuilder
 
 	void Rules::sendWarningsForDisabledClusters()
 	{
-		map < string, vector<uint> >::iterator it = disabledClustersOnRuleActive.begin();
-		for (; it != disabledClustersOnRuleActive.end(); it++)
+		for (map < string, vector<uint> >::iterator it = disabledClustersOnRuleActive.begin();
+			it != disabledClustersOnRuleActive.end();
+			it++)
 		{
 			vector<uint>& scenariiForCurrentCluster = it->second;
 			int nbScenariiForCluster = (int)scenariiForCurrentCluster.size();
@@ -223,7 +224,7 @@ namespace ScenarioBuilder
 			for (; itv != scenariiForCurrentCluster.end(); itv++)
 				listScenarii += ", " + to_string(*itv + 1);
 
-			// Adding last scenarii to he list
+			// Adding last scenario to the list
 			if (nbScenariiForCluster > 10)
 				listScenarii += "..." + to_string(scenariiForCurrentCluster.back());
 

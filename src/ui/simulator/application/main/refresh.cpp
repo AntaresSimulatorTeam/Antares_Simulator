@@ -331,10 +331,14 @@ namespace Forms
 		if (not Data::Study::Current::Valid() or IsGUIAboutToQuit())
 			return;
 
-		// Enabling the Configure menu scenario builder item after loading a study 
-		// whether building mode is turned to Custom or not.
+		// Disabling the Configure menu's scenario builder item after loading a study 
+		// when building mode is not Custom.
+
 		auto* menu = GetMenuBar();
 		auto* sc_builder_menu_item = menu->FindItem(Antares::Forms::mnIDOptionConfigureMCScenarioBuilder);
+		if (not sc_builder_menu_item)
+			return;
+
 		if (not study->parameters.useCustomScenario)
 			sc_builder_menu_item->Enable(false);
 	}
