@@ -178,6 +178,8 @@ find_package(CURL REQUIRED)
 #openssl	
 find_package(OpenSSL REQUIRED)
 
+#Add needed definition in case of external dependencies compilation
+include (antares-deps/cmake/additionnal-definitions.cmake)
 
 #TODO : Add ZLIB if  VCPKG used why is this needed
 if (VCPKG_TOOLCHAIN) 
