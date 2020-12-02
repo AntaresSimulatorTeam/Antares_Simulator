@@ -171,12 +171,9 @@ sudo yum install wxGTK3-devel
 sudo yum install boost-test boost-filesystem boost-regex boost-devel
 ```
 ### [Automatic librairies compilation from git](#git_compil)
-[Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps) can be used as a git submodule for automatic librairies compilation from git.
-```
-git submodule update --init src/antares-deps
-```
+[Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps) is used as a git submodule for automatic librairies compilation from git.
 
-In this case, dependency can be built at configure time using the option `-DBUILD_ALL=ON` (`OFF` by default). For a list of available option see [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps).
+Dependency can be built at configure time using the option `-DBUILD_ALL=ON` (`OFF` by default). For a list of available option see [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps).
 
 We recommand you to define the options below at your first antares simulator checkout :
 
@@ -197,6 +194,11 @@ Note :
 ## [Building Antares Solution](#build)
 
 Antares source directory is named `[antares_src]` in all commands.
+
+First you need to update git submodule for dependency build :
+```
+git submodule update --init [antares_src]/antares-deps
+```
 
 Note :
 > cpack NSIS installer creation need a 'out of source build'. The build directory must be outside `[antares_src]` directory
@@ -231,11 +233,6 @@ You can enable compilation with `-DBUILD_sirius=ON -DBUILD_ortools=ON` when you 
 We recommand you to use `-DDEPS_INSTALL_DIR` option so you can use these builds in another antares checkout directory.
 
 In this case you can specify dependency install directory with :
-
-```
-cmake -DCMAKE_PREFIX_PATH=<deps_install_dir>
-````
-or 
 ```
 cmake -DDEPS_INSTALL_DIR=<deps_install_dir>
 ````
@@ -294,9 +291,6 @@ Note :
 ## [Unit tests](#unit-tests)
 
 Unit tests compilation  can be enabled at configure time using the option `-DBUILD_TESTING=ON` (`OFF` by default)
-
-Note :
-> Boost libraries compilation (``BUILD_BOOST``) can be enabled only if ``BUILD_TESTING=ON``
 
 After build, unit tests can be run with ``ctest`` :
  ```
