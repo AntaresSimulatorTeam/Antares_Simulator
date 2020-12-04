@@ -33,6 +33,7 @@
 #include <antares/study/area/constants.h>
 #include <ui/common/lock.h>
 #include <wx/sizer.h>
+#include <wx/menu.h>
 #include "../../application/main.h"
 #include "../../application/study.h"
 #include "../../toolbox/components/map/component.h"
