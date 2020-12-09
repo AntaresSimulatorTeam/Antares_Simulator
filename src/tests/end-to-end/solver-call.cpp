@@ -25,28 +25,28 @@ using namespace std;
 
 BOOST_AUTO_TEST_SUITE(solver_call)
 
-optional<filesystem::path> find_file(const filesystem::path& dir_path, const filesystem::path& file_name) {
+boost::optional<filesystem::path> find_file(const filesystem::path& dir_path, const filesystem::path& file_name) {
 	const filesystem::recursive_directory_iterator end;
 	const auto it = find_if(filesystem::recursive_directory_iterator(dir_path), end,
 		[&file_name](const filesystem::directory_entry& e) {
 			return e.path().filename() == file_name;
 		});
-	return it == end ? optional<filesystem::path>() : it->path();
+	return it == end ? boost::optional<filesystem::path>() : it->path();
 }
 
-optional<filesystem::path> find_file(const filesystem::path& dir_path, const boost::regex my_filter) {
+boost::optional<filesystem::path> find_file(const filesystem::path& dir_path, const boost::regex my_filter) {
 	const filesystem::recursive_directory_iterator end;
 	boost::smatch what;
 	const auto it = find_if(filesystem::recursive_directory_iterator(dir_path), end,
 		[&my_filter, &what](const filesystem::directory_entry& e) {
 			return boost::regex_match(e.path().filename().string(), what, my_filter);
 		});
-	return it == end ? optional<filesystem::path>() : it->path();
+	return it == end ? boost::optional<filesystem::path>() : it->path();
 }
 
-optional<filesystem::path> find_file(const std::vector<filesystem::path>& paths, const boost::regex my_filter) {
+boost::optional<filesystem::path> find_file(const std::vector<filesystem::path>& paths, const boost::regex my_filter) {
 
-	optional<filesystem::path> result;
+	boost::optional<filesystem::path> result;
 
 	for (const filesystem::path& path : paths) {
 
@@ -96,7 +96,7 @@ void launchSolver(const std::string& studyPath, bool useOrtools = false, const s
 	paths.push_back(filesystem::path(buildDir + "/solver"));
 
 	const boost::regex filter("antares\-[0-9]*\.[0-9]*\-solver.*");
-	optional<filesystem::path> solverPath = find_file(paths, filter);
+	boost::optional<filesystem::path> solverPath = find_file(paths, filter);
 
 	BOOST_REQUIRE_MESSAGE(solverPath, "Can't find antares solver application");
 
@@ -117,7 +117,7 @@ void checkIntegrityFile(const std::string& studyOutputPath, const std::vector<do
 	BOOST_REQUIRE_MESSAGE(checkIntegrityExpectedValues.size() == 8 , "invalid checkIntegrity expected values size. 8 values needed");
 
 	//Parse checkIntegrity.txt file to check objective functions result
-	optional<filesystem::path> checkIntegrityFilePath = find_file(studyOutputPath, "checkIntegrity.txt");
+	boost::optional<filesystem::path> checkIntegrityFilePath = find_file(studyOutputPath, "checkIntegrity.txt");
 
 	BOOST_REQUIRE_MESSAGE(checkIntegrityFilePath, "Can't find checkIntegrity.txt file in output folder '" << studyOutputPath << "'");
 	
