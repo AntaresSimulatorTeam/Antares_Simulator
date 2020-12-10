@@ -65,13 +65,7 @@ public:
 
 private:
 
-    //TODO JMK : for now we need to use a string because we can't get all optimization problem type with current ortools RTE branch :
-    // can't use enum because of compile switch
-    std::map<OrtoolsSolver, std::string> _solverLinearProblemOptimStringMap;
-    std::map<OrtoolsSolver, std::string> _solverMixedIntegerProblemOptimStringMap;
-
-    /*
     std::map<OrtoolsSolver, MPSolver::OptimizationProblemType> _solverLinearProblemOptimMap;
     std::map<OrtoolsSolver, MPSolver::OptimizationProblemType> _solverMixedIntegerProblemOptimMap;
-        */
+    
 };
