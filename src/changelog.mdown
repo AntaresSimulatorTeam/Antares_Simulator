@@ -7,14 +7,22 @@ v8.0.0 (12/2020)
 ### Features
 
  - OR-Tools integration :
-   - add command line option in antares-solver to define OR-Tools use and OR-Tools solver (option --use-ortools and --ortools-solver=<solver>)<br/>
+   - add command line option in antares-solver to define OR-Tools use and OR-Tools solver (option --use-ortools and --ortools-solver='solver')
    - add GUI option in run simulation to define antares-solver launch with OR-Tools option
 
  - External dependencies :
+   - use of new repository [antares-deps](https://github.com/AntaresSimulatorTeam/antares-deps) for external dependencies compilation
    
- - Expansion :
+ - antares-xpansion :
+   - add option `include-exportstructure` in `generaldata.ini` to export .txt files needed for antares-xpansion
 
- - continuous integration : dockers
+ - docker image :
+   - create of dockerfile for docker image creation
+   
+ - continuous integration : 
+   - use docker images in CI
+   - use of antares-deps release artifact in CI
+   - push of docker image to dockerHub in [antaresrte/rte-antares repository](https://hub.docker.com/repository/docker/antaresrte/rte-antares)
 
  - Scenario builder and hydraulic level :<br/>
    Adding an hydraulic starting level tab in the scenario builder.<br/>
