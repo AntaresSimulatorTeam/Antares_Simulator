@@ -47,7 +47,7 @@ If the source folder was distributed along with the binary form of the code
 within an Antares_Simulator installer package, the end-of-line style is that of
 the OS the package is designed for
 
-To build on Windows system, please change end-of-line style to appropriate standard 
+To build on Windows system, please change end-of-line style to appropriate standard. 
 Note that Visual Studio may carry out auto-reformating. 
  
 ## [CMake version](#cmake-version)
@@ -73,7 +73,7 @@ make
 sudo make install
 ```
 Note:
-> You can use a different version of CMake. Check CMake website for available version and chang ``wget`` url.
+> You can use a different version of CMake. Check CMake website for available version and change the ``wget`` url.
 
 You can then tell Ubuntu that a new version of cmake should be used :
 ```
@@ -85,10 +85,10 @@ sudo update-alternatives --install /usr/bin/cmake cmake /usr/local/bin/cmake 1 -
 sudo yum install cmake3
 ```
 Note:
-> All ``cmake``  command must be replaced by ``cmake3``.
+> All ``cmake``  commands must be replaced by ``cmake3``.
 
 ## [Git version](#git-version)
-Git version must be above 2.15 for external dependencies build because `--ignore-whitespace` is not used by default and we have an issue with OR-Tools compilation of ZLib and application of patch on Windows (see https://github.com/google/or-tools/issues/1193).
+Git version must be above 2.15 for external dependencies build because `--ignore-whitespace` is not used by default and this option is needed during the OR-Tools compilation of ZLib to apply a patch on Windows (see https://github.com/google/or-tools/issues/1193).
 
 ## [Dependencies](#deps)
  ANTARES depends on severals mandatory libraries. 
@@ -132,7 +132,7 @@ cd vcpkg
 ```
 
 Note :
-> all vcpkg command further described must be run from vcpkg folder. This folder will be named [vcpkg_root] later in this document.
+> all vcpkg further described commands must be run from the vcpkg folder. This folder will be named [vcpkg_root] later in this document.
 
 
 #### 2 Install dependencies
@@ -175,7 +175,7 @@ sudo yum install boost-test boost-filesystem boost-regex boost-devel
 
 Dependency can be built at configure time using the option `-DBUILD_ALL=ON` (`OFF` by default). For a list of available option see [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps).
 
-We recommand you to define the options below at your first antares simulator checkout :
+We recommend you to define the options below at your first antares simulator checkout :
 
 * Sirius solver (`-DBUILD_sirius=ON`)
 * OR-Tools (`-DBUILD_ortools=ON`)
@@ -193,7 +193,7 @@ Note :
 
 ## [Building Antares Solution](#build)
 
-Antares source directory is named `[antares_src]` in all commands.
+Antares source directory is named `[antares_src]` in all following commands.
 
 First you need to update git submodule for dependency build :
 ```
@@ -201,7 +201,7 @@ git submodule update --init [antares_src]/antares-deps
 ```
 
 Note :
-> cpack NSIS installer creation need a 'out of source build'. The build directory must be outside `[antares_src]` directory
+> cpack NSIS installer creation need an 'out of source build'. The build directory must be outside `[antares_src]` directory
 
 ### Complete solution including GUI
 
@@ -219,7 +219,7 @@ cmake -B _build -S [antares_src] -DCMAKE_BUILD_TYPE=debug
 cmake --build _build --config debug
 ```
 Note :
-> These are not the standard ``CMAKE_BUILD_TYPE``. CMake files must be updated.
+> These are not the standard ``CMAKE_BUILD_TYPE``. Antares CMake files might need future updates.
 
 ### Antares Solver and other command line tools (w/o GUI)
 
@@ -230,13 +230,13 @@ Antares Simulator UI application compilation can be disabled at configure time u
 By default Sirius solver and OR-Tools are NOT compiled with Antares Solution.
 You can enable compilation with `-DBUILD_sirius=ON -DBUILD_ortools=ON` when you configure build with cmake.
 
-We recommand you to use `-DDEPS_INSTALL_DIR` option so you can use these builds in another antares checkout directory.
+We recommend you to use `-DDEPS_INSTALL_DIR` option so you can use these builds in another antares checkout directory.
 
 In this case you can specify dependency install directory with :
 ```
 cmake -DDEPS_INSTALL_DIR=<deps_install_dir>
 ````
-### Linux using system libs (recommanded)
+### Linux using system libs (recommended)
 - Install dependencies [using package manager](#using-a-package-manager).
 
 - Configure build with cmake
@@ -250,7 +250,7 @@ cmake --build _build --config release -j8
 Note :
 >Compilation can be done on several processor with ```-j``` option.
 
-### Window using vcpkg (recommanded)
+### Window using vcpkg (recommended)
 - Install dependencies [using VCPKG](#using-vcpkg).
 - Choose [vcpkg-triplet]
 
@@ -266,7 +266,7 @@ or
 cmake -B _build -S [antares_src] -DVCPKG_ROOT=[vcpkg_root] -DVCPKG_TARGET_TRIPLET=[vcpkg-triplet] -DCMAKE_BUILD_TYPE=release
 ```
 Note :
-> Configure with ```-DVCPKG_ROOT``` option remove some CMake warnings (mainly [CMP0012](https://cmake.org/cmake/help/v3.0/policy/CMP0012.html) policy warnings)
+> Configuring with the ```-DVCPKG_ROOT``` option, removeq some CMake warnings (mainly [CMP0012](https://cmake.org/cmake/help/v3.0/policy/CMP0012.html) policy warnings)
 
 - Build
  ```
@@ -276,7 +276,7 @@ Note :
 > Compilation can be done on several processor with ```-j``` option.
 ### Linux/Window building external librairies
 
-- Configure build with CMake with ```BUILD_DEPS``` option.
+- Configure build with CMake using ```BUILD_DEPS``` option.
 
 ```
 cmake -B _build -S [antares_src] -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release ..
@@ -286,7 +286,7 @@ cmake -B _build -S [antares_src] -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=release ..
 cmake --build _build --config release -j8
 ```
 Note :
-> Compilation can be done on several processor with ```-j``` option.
+> Compilation can be done on several processors with ```-j``` option.
 
 ## [Unit tests](#unit-tests)
 
@@ -299,7 +299,7 @@ ctest -C Release --output-on-failure
 ```
 
 ## [Installer creation](#installer)
-CPack can be used to create installer after build depending on operating system.
+CPack can be used to create the installer after the build pahse, depending on operating system.
 
 ### Window using NSIS
  ```
