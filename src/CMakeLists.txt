@@ -209,15 +209,6 @@ if(NOT ortools_FOUND)
 	message (FATAL_ERROR "OR-Tools not found. OR-Tools can be compiled with -DBUILD_ortools=ON or you can specify previous dependency install directory with -DCMAKE_PREFIX_PATH or -DDEPS_INSTALL_DIR")
 endif()
 
-#glags not needed with or-tools stable
-if (NOT USE_ORTOOLS_STABLE)
-    #gflags needed for ortools
-    set(GFLAGS_USE_TARGET_NAMESPACE TRUE)
-    find_package(gflags REQUIRED)
-endif()
-
-
-
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 
     #Add cmake directory to CMAKE_MODULE_PATH to use specific FindwxWidgets package needed for vcpkg
