@@ -22,15 +22,18 @@ def get_integrity_check_values(output : Path) -> np.array :
     assert len(output_values) == 8
     return output_values
 
-def launch_solver(study_path, use_ortools = False, ortools_solver = "sirius"):
-    # Find solver executable
+def find_solver_path():
     search_result = list()
     for path in Path.cwd().parent.parent.parent.rglob('solver/antares-*.*-solver*'):
         search_result.append(path)
     # Eliminate swap version
     solver = list(filter(lambda x: "swap" not in str(x), search_result))
     assert len(solver) == 1
-    solver_path = str(solver[0])
+    return str(solver[0])
+
+def launch_solver(study_path, use_ortools = False, ortools_solver = "sirius"):
+    # Find solver executable
+    solver_path = find_solver_path()
 
     command = [solver_path, "-i", str(study_path)]
     if use_ortools:
