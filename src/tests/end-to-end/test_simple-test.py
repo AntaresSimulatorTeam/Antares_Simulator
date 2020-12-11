@@ -13,14 +13,14 @@ def find_integrity_path(output_dir):
     assert len(op) == 1
     return op[0]
 
-def check_integrity(output : Path, expected_values : np.array):
-    assert len(expected_values) == 8
+def get_interity_check_values(output : Path) -> np.array :
     integrity_path = find_integrity_path(output)
     integrity_file = open(str(integrity_path), 'r')
     output_values = list()
     for x in integrity_file:
         output_values.append(float(x))
-    np.testing.assert_equal(expected_values, output_values)
+    assert len(output_values) == 8
+    return output_values
 
 def launch_solver(study_path, use_ortools = False, ortools_solver = "sirius"):
     # Find solver executable
