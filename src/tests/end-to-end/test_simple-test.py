@@ -13,7 +13,7 @@ def find_integrity_path(output_dir):
     assert len(op) == 1
     return op[0]
 
-def get_interity_check_values(output : Path) -> np.array :
+def get_integrity_check_values(output : Path) -> np.array :
     integrity_path = find_integrity_path(output)
     integrity_file = open(str(integrity_path), 'r')
     output_values = list()
@@ -60,7 +60,8 @@ def test_free_data_sample_no_ortools(tmp_path):
 				2.85657544872729e+11,
 				2.85657544872729e+11])
     output_path = Path(study_path) / 'output'
-    check_integrity(output_path, expected_values)
+    output_values = get_integrity_check_values(output_path)
+    np.testing.assert_equal(expected_values, output_values)
 
 def test_free_data_sample_ortools(tmp_path):
     # Study copied to temporary directory
@@ -79,4 +80,5 @@ def test_free_data_sample_ortools(tmp_path):
 				2.85657544872729e+11,
 				2.85657544872729e+11])
     output_path = Path(study_path) / 'output'
-    check_integrity(output_path, expected_values)
+    output_values = get_integrity_check_values(output_path)
+    np.testing.assert_equal(expected_values, output_values)
