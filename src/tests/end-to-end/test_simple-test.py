@@ -31,7 +31,7 @@ def launch_solver(study_path, use_ortools = False, ortools_solver = "sirius"):
     solver = list(filter(lambda x: "swap" not in str(x), search_result))
     assert len(solver) == 1
     solver_path = str(solver[0])
-    
+
     command = [solver_path, "-i", str(study_path)]
     if use_ortools:
         command.append('--use-ortools')
@@ -41,7 +41,7 @@ def launch_solver(study_path, use_ortools = False, ortools_solver = "sirius"):
 
     # TODO check return value
     assert "Solver returned error" not in output[0].decode('utf-8')
-    
+
 
 def test_free_data_sample_no_ortools(tmp_path):
     # Study copied to temporary directory
