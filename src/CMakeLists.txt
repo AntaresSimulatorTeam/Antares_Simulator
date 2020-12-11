@@ -22,13 +22,14 @@ include(CheckCXXSourceCompiles)
 include(CheckIncludeFiles)
 include(CheckIncludeFileCXX)
 include(CheckCXXCompilerFlag)
+include(CMakeDependentOption)
 
 if (DEFINED VCPKG_ROOT)
     include(${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
 endif()
 
 
-#CMake function to build dependancy from git
+#CMake function
 include("cmake/utils.cmake")
 
 #CMake Macro to display message
@@ -152,53 +153,22 @@ endif()
 option(BUILD_UI "Build antares ui simulator" ON)
 message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 
-option(BUILD_DEPS "Build all dependencies" OFF)
-message(STATUS "Build all dependencies: ${BUILD_DEPS}")
-
-option(USE_ORTOOLS_STABLE "Use OR-Tools stable instead of RTE OR-Tools branch with Sirius support" OFF)
-message(STATUS "Use OR-Tools stable instead of RTE OR-Tools branch with Sirius support: ${USE_ORTOOLS_STABLE}")
-
-# IF BUILD_DEPS=ON THEN Force all BUILD_*=ON
-include(CMakeDependentOption)
-
-CMAKE_DEPENDENT_OPTION(BUILD_sirius "Build sirius solver dependency Library" OFF
-		"NOT BUILD_DEPS" ON)
-message(STATUS "Build sirius solver: ${BUILD_sirius}")
-
-CMAKE_DEPENDENT_OPTION(BUILD_ortools "Build BUILD_ortools dependency Library" OFF
-		"NOT BUILD_DEPS" ON)
-message(STATUS "Build OR-Tools: ${BUILD_ortools}")
-
-CMAKE_DEPENDENT_OPTION(BUILD_wxWidgets "Build wxWidgets dependency Library" OFF
-  "NOT BUILD_DEPS" ON)
-message(STATUS "Build wxWidgets: ${BUILD_wxWidgets}")
-
-CMAKE_DEPENDENT_OPTION(BUILD_OPENSSL "Build OpenSSL dependency Library" OFF
-  "NOT BUILD_DEPS" ON)
-message(STATUS "Build BUILD_OPENSSL: ${BUILD_OPENSSL}")
-
-CMAKE_DEPENDENT_OPTION(BUILD_curl "Build curl dependency Library" OFF
-  "NOT BUILD_DEPS" ON)
-message(STATUS "Build BUILD_curl: ${BUILD_curl}")
-
-CMAKE_DEPENDENT_OPTION(BUILD_zlib "Build zlib dependency Library" OFF
-  "NOT BUILD_DEPS" ON)
-message(STATUS "Build BUILD_zlib: ${BUILD_zlib}")
-
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
     SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../rte-antares-deps-${CMAKE_BUILD_TYPE})
+
+else()
+    if(NOT IS_ABSOLUTE ${DEPS_INSTALL_DIR})
+        SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../${DEPS_INSTALL_DIR})
+    endif()    
 endif()
 
 # Build Needed dependencies
+add_subdirectory(antares-deps)
+
 list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR})
+message(STATUS "CMAKE_PREFIX_PATH : ${CMAKE_PREFIX_PATH}")
 
-add_subdirectory(cmake/dependencies ${CMAKE_CURRENT_BINARY_DIR}/build_deps)
-
-if(BUILD_wxWidgets)
-	# Define wxWidgets_ROOT_DIR
-	set(wxWidgets_ROOT_DIR ${DEPS_INSTALL_DIR})
-endif()
 
 # Define needed external library
 
@@ -208,14 +178,14 @@ find_package(CURL REQUIRED)
 #openssl	
 find_package(OpenSSL REQUIRED)
 
+#Add needed definition in case of external dependencies compilation
+include (antares-deps/cmake/additionnal-definitions.cmake)
 
 #TODO : Add ZLIB if  VCPKG used why is this needed
 if (VCPKG_TOOLCHAIN) 
     #zlib
     find_package(ZLIB REQUIRED)
 endif()
-
-
 
 #Sirius solver
 if(POLICY CMP0074)
@@ -226,7 +196,6 @@ if (VCPKG_TOOLCHAIN)
 	list(APPEND CMAKE_PREFIX_PATH "${sirius_solver_ROOT}")
 	list(APPEND CMAKE_PREFIX_PATH "${ortools_ROOT}")
 endif()
-
 
 find_package(sirius_solver)
 
@@ -247,35 +216,7 @@ if (NOT USE_ORTOOLS_STABLE)
     find_package(gflags REQUIRED)
 endif()
 
-#Add specific definition in case of dependencies build
 
-if(BUILD_curl)
-
-	# ADD CURL_STATICLIB definition 
-	add_definitions(-DCURL_STATICLIB) 
-	
-	if(WIN32 OR WIN64)
-	
-		#Linking not working on windows need to add several system dependency
-		SET(CURL_LIBRARIES ${CURL_LIBRARIES} "Ws2_32.Lib" "Wldap32.Lib" "Crypt32.Lib")
-    else()
-		
-		#zlib
-		find_package(ZLIB REQUIRED)
-	
-		#find_package(CURL) doesn't indicate ZLIB and idn2 dependencies (idn2 used even with --without-libidn option in configure)
-		SET(CURL_LIBRARIES ${CURL_LIBRARIES} ${ZLIB_LIBRARIES} idn2)    
-	endif()	 
-endif()
-
-if(BUILD_OPENSSL)
-	
-	if(WIN32 OR WIN64)
-    	else()
-		#find_package(OpenSSL doesn't indicate -ldl option
-		SET(OPENSSL_LIBRARIES ${OPENSSL_LIBRARIES} "dl")    
-	endif()	 
-endif()
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 
@@ -317,13 +258,6 @@ option(BUILD_TESTING "Activates unit tests building" OFF)
 if(BUILD_TESTING)
 	# include(CTest) # calls enable_testing() and turns BUILD_TESTING to ON by default (among other useful things)
 	enable_testing()
-	
-	CMAKE_DEPENDENT_OPTION(BUILD_BOOST "Download and build boost needed libraries" OFF "NOT BUILD_DEPS" ON)
-	
-	if(BUILD_BOOST)
-		# Setting CMAKE_PREFIX_PATH so that find_package(boost...) finds "${current path}/ext" boost
-		list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/tests/ext")
-	endif()
 
 	add_subdirectory(tests)
 endif()

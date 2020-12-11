@@ -37,15 +37,22 @@ jobs:
         vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
         vcpkgGitCommitId: '${{ matrix.vcpkgCommitId }}'
         
+    - name: Download pre-compiled librairies
+      run: |
+           choco install wget
+           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v1.0.0/rte-antares-deps-${{matrix.os}}-${{matrix.architecture}}-Release-solver.zip
+           Expand-Archive ./rte-antares-deps-${{matrix.os}}-${{matrix.architecture}}-Release-solver.zip -DestinationPath .
+           rm rte-antares-deps-${{matrix.os}}-${{matrix.architecture}}-Release-solver.zip
+           
+    - name: Init submodule
+      run: |
+           git submodule update --init --recursive src
+        
     - name: Configure with VCPKG
       run: |
            $ARCH='${{ matrix.architecture }}'
            If($ARCH -eq 'x86') {$ARCH='Win32'}
-           cmake -B _build -S src -DBUILD_ortools=ON -DBUILD_sirius=ON -A $ARCH -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.architecture }}-windows -DCMAKE_BUILD_TYPE=release
-    
-    - name: Remove dependency compilation directory
-      run: |
-           rm -R ./_build/build_deps
+           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -A $ARCH -DCMAKE_TOOLCHAIN_FILE=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.architecture }}-windows -DCMAKE_BUILD_TYPE=release
            
     - name: Build
       run: |
