@@ -33,6 +33,7 @@
 #include <antares/study/area/constants.h>
 #include <ui/common/lock.h>
 #include <wx/sizer.h>
+#include <wx/menu.h>
 #include "../../application/main.h"
 #include "../../application/study.h"
 #include "../../toolbox/components/map/component.h"
@@ -42,6 +43,7 @@
 #include <antares/study/scenario-builder/updater.hxx>
 #include <antares/study/area/constants.h>
 #include "../message.h"
+#include "../../application/main/internal-ids.h"
 
 using namespace Yuni;
 
@@ -1168,6 +1170,11 @@ namespace Inspector
 
 		if (name == "study.buildingmode")
 		{
+			// Gets menu Configure's scenario builder item
+			auto& mainFrm = *Antares::Forms::ApplWnd::Instance();
+			auto* menu = mainFrm.GetMenuBar();
+			auto* sc_builder_menu_item = menu->FindItem(Antares::Forms::mnIDOptionConfigureMCScenarioBuilder);
+			
 			uint d = value.GetLong();
 			switch (d)
 			{
@@ -1178,6 +1185,10 @@ namespace Inspector
 							(*i)->parameters.derated = false;
 							(*i)->parameters.useCustomScenario = false;
 						}
+
+						if (sc_builder_menu_item)
+							sc_builder_menu_item->Enable(false);
+
 						return true;
 					}
 				case 1: // manual
@@ -1187,6 +1198,10 @@ namespace Inspector
 							(*i)->parameters.derated = false;
 							(*i)->parameters.useCustomScenario = true;
 						}
+
+						if (sc_builder_menu_item)
+							sc_builder_menu_item->Enable(true);
+
 						return true;
 					}
 				case 2: // derated
@@ -1220,6 +1235,9 @@ namespace Inspector
 								shouldReloadPlaylist = true;
 							}
 						}
+
+						if (sc_builder_menu_item)
+							sc_builder_menu_item->Enable(false);
 
 						// Updating the number of years
 						if (shouldReloadNbYears)

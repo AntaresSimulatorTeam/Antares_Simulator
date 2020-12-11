@@ -25,6 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <algorithm>
 #include "rules.h"
 #include "../study.h"
 #include "../../logs.h"
@@ -86,7 +87,6 @@ namespace ScenarioBuilder
 	{
 		// Alias to the current study
 		assert(&study != nullptr);
-		pStudy = &study;
 
 		// The new area count
 		pAreaCount = study.areas.size();
@@ -122,8 +122,7 @@ namespace ScenarioBuilder
 		if (kind_of_scenario.size() > 2)
 			return;
 
-		auto pStudy = &study;
-		Data::Area* area = pStudy->areas.find(areaname);
+		Data::Area* area = study.areas.find(areaname);
 		if (!area)
 		{
 			// silently ignore the error
@@ -149,9 +148,14 @@ namespace ScenarioBuilder
 				thermal[area->index].set(cluster, year, val);
 			}
 			else
-				if (not updaterMode)
-					logs.warning() << "cluster " << area->id << " / " << clustername << " (size:" << clustername.size() 
-								   << ") not found: it may not exist or it is disabled";
+			{
+				bool isTheActiveRule = (pName.toLower() == study.parameters.activeRulesScenario.toLower());
+				if (not updaterMode and isTheActiveRule)
+				{
+					string clusterId = (area->id).to<string>() + "." + clustername.to<string>();
+					disabledClustersOnRuleActive[clusterId].push_back(year);
+				}
+			}
 		}
 			
 		if (kind_of_scenario == "l")
@@ -198,6 +202,34 @@ namespace ScenarioBuilder
 			for (uint i = 0; i != pAreaCount; ++i)
 				thermal[i].apply(study);
 			hydroLevels.apply(study);
+		}
+	}
+
+	void Rules::sendWarningsForDisabledClusters()
+	{
+		for (map < string, vector<uint> >::iterator it = disabledClustersOnRuleActive.begin();
+			it != disabledClustersOnRuleActive.end();
+			it++)
+		{
+			vector<uint>& scenariiForCurrentCluster = it->second;
+			int nbScenariiForCluster = (int)scenariiForCurrentCluster.size();
+			vector<uint>::iterator itv = scenariiForCurrentCluster.begin();
+
+			int nbScenariiLimit = min(nbScenariiForCluster, 10);
+
+			// Listing the 10 first scenarii numbers (years numbers) where current cluster is refered to.
+			// Notice that these scenarii could be less then 10, but are at least 1.
+			string listScenarii = to_string(*itv + 1);
+			itv++;
+			for (; itv != scenariiForCurrentCluster.end(); itv++)
+				listScenarii += ", " + to_string(*itv + 1);
+
+			// Adding last scenario to the list
+			if (nbScenariiForCluster > 10)
+				listScenarii += "..." + to_string(scenariiForCurrentCluster.back());
+
+			logs.warning() << "Cluster " << it->first << " not found: it may be disabled, though given TS numbers in sc builder for year(s) :";
+			logs.warning() << listScenarii;
 		}
 	}
 

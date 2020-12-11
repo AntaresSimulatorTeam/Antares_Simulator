@@ -9,6 +9,7 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include <string>
 #include "../string.h"
 #include <cassert>
 
@@ -50,11 +51,11 @@ namespace GetOptImpl
 	};
 
 
-	template<class C, class Traits, class Alloc>
-	class Value<std::basic_string<C, Traits, Alloc> >
+	template<class C>
+	class Value<std::basic_string<C> >
 	{
 	public:
-		static bool Add(std::basic_string<C,Traits,Alloc>& out, const char* c_str, const String::size_type len)
+		static bool Add(std::basic_string<C>& out, const char* c_str, const String::size_type len)
 		{
 			if (len)
 				out += c_str;
@@ -92,11 +93,11 @@ namespace GetOptImpl
 	};
 
 
-	template<template<class, class> class L, class C, class Traits, class AllocS, class Alloc>
-	class Value<L<std::basic_string<C, Traits, AllocS>, Alloc> >
+	template<template<class, class> class L, class C, class Alloc>
+	class Value<L<std::basic_string<C>, Alloc> >
 	{
 	public:
-		static bool Add(L<std::basic_string<C, Traits, AllocS>, Alloc>& out, const char* c_str, const String::size_type len)
+		static bool Add(L<std::basic_string<C>, Alloc>& out, const char* c_str, const String::size_type len)
 		{
 			if (len)
 				out.push_back(std::string(c_str, len));
@@ -197,11 +198,11 @@ namespace GetOptImpl
 	};
 
 
-	template<class C, class Traits, class Alloc>
-	class Flag<std::basic_string<C, Traits, Alloc> >
+	template<class C>
+	class Flag<std::basic_string<C> >
 	{
 	public:
-		static void Enable(std::basic_string<C,Traits,Alloc>& out)
+		static void Enable(std::basic_string<C>& out)
 		{
 			out = "true";
 		}
@@ -230,11 +231,11 @@ namespace GetOptImpl
 
 
 
-	template<template<class, class> class L, class C, class Traits, class AllocS, class Alloc>
-	class Flag<L<std::basic_string<C, Traits, AllocS>, Alloc> >
+	template<template<class, class> class L, class C, class Alloc>
+	class Flag<L<std::basic_string<C>, Alloc> >
 	{
 	public:
-		static void Enable(L<std::basic_string<C, Traits, AllocS>, Alloc>& out)
+		static void Enable(L<std::basic_string<C>, Alloc>& out)
 		{
 			out.push_back("true");
 		}

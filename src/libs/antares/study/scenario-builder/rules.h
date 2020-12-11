@@ -101,6 +101,9 @@ namespace ScenarioBuilder
 		*/
 		void apply(Study& study);
 
+		// When current rule is the active one, sends warnings for disabled clusters.
+		void sendWarningsForDisabledClusters();
+
 	public:
 		//! Load
 		loadTSNumberData  load;
@@ -112,7 +115,7 @@ namespace ScenarioBuilder
 		windTSNumberData  wind;
 		//! Thermal (array [0..pAreaCount - 1])
 		thermalTSNumberData* thermal;
-
+		//! hydro levels
 		hydroLevelsData hydroLevels;
 
 	private:
@@ -120,8 +123,8 @@ namespace ScenarioBuilder
 		uint pAreaCount;
 		//! Name of the rules
 		RulesScenarioName pName;
-		//! Alias to the study, provided by the class Sets
-		const Study* pStudy;
+		// Disabled clusters when current rule is active (useful for sending warnings)
+		map < string, vector<uint> > disabledClustersOnRuleActive;
 		// Friend !
 		friend class Sets;
 
