@@ -11,7 +11,7 @@ set(ANTARES_PUBLISHER	   "RTE France")
 set(ANTARES_WEBSITE	   "https://antares.rte-france.com")
 
 # Beta release
-#set(ANTARES_BETA 0)
+set(ANTARES_BETA 0)
 set(ANTARES_RC 1)
 
 # CMAKE - Suppress useless features
