@@ -203,6 +203,9 @@ if (NOT sirius_solver_FOUND)
 	message (FATAL_ERROR "Sirius solver not found. Sirius solver can be compiled with -DBUILD_sirius=ON or you can specify previous dependency install directory with -DCMAKE_PREFIX_PATH or -DDEPS_INSTALL_DIR")
 endif()
 
+#gflags needed for ortools
+set(GFLAGS_USE_TARGET_NAMESPACE TRUE) 
+find_package(gflags)
 
 find_package(ortools)
 if(NOT ortools_FOUND)
