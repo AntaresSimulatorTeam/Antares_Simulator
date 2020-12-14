@@ -57,12 +57,12 @@ jobs:
            cmake --build _build --config release -j2
            
     - name: NSIS Installer creation
+      shell: bash
       run: |
            cd _build
-           cpack -GNSIS  
-           $NSIS_NAME=dir *.exe
-           $NSIS_NAME=Split-Path $NSIS_NAME -Leaf
-           echo "::set-env name=NSIS_NAME::$NSIS_NAME"
+           cpack -GNSIS
+           export NSIS_NAME=$(ls *.exe)
+           echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
            
     - name: Upload NSIS installer
       uses: actions/upload-release-asset@v1.0.2
