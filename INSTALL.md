@@ -29,7 +29,7 @@ Note : Linux with VCPKG is not available due to issue in Find_wxWidgets.cmake wi
 
 ## [Environment](#env)
 ANTARES Solver/Simulator is a cross-platform project using components compatible
-with many 32 bits and 64 bits OS (Windows, Linux, Unix). 
+with many 64 bits OS (Windows, Linux, Unix). 
 
 The source distribution accompanying this file has been tested for successful build on:
 
@@ -115,9 +115,7 @@ For Windows we will use [vcpkg](https://github.com/microsoft/vcpkg) to download 
 You must install the corresponding [vcpkg-triplet](https://vcpkg.readthedocs.io/en/latest/users/integration/#triplet-selection) depending on Antares version and libraries load:
 
 - ``x64-windows``        : 64 bits version with dynamic librairies load
-- ``x86-windows``        : 32 bits version with dynamic librairies load
 - ``x64-windows-static`` : 64 bits version with static librairies load
-- ``x86-windows-static`` : 32 bits version with static librairies load
 
 The vcpkg-triplet used will be named [vcpg-triplet] later in this document.
 
