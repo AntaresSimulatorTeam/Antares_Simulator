@@ -34,8 +34,6 @@
 #include <list>
 #include "../../../../application/main.h"
 
-
-
 namespace Antares
 {
 namespace Component
@@ -46,123 +44,101 @@ namespace Datasource
 {
 namespace BindingConstraints
 {
+typedef Data::BindingConstraint BindingConstraintFromLib;
+typedef std::list<BindingConstraintFromLib*> BindingConstraintList;
 
-	typedef Data::BindingConstraint  BindingConstraintFromLib;
-	typedef std::list<BindingConstraintFromLib*> BindingConstraintList;
+namespace // anonymous
+{
+struct SortAlphaOrder
+{
+    inline bool operator()(const Data::BindingConstraint* a, const Data::BindingConstraint* b)
+    {
+        return a->name() < b->name();
+    }
+};
 
+struct SortAlphaReverseOrder
+{
+    inline bool operator()(const Data::BindingConstraint* a, const Data::BindingConstraint* b)
+    {
+        return a->name() > b->name();
+    }
+};
 
-	namespace // anonymous
-	{
+void GetBindingConstraintList(Data::Study& study, BindingConstraintList& l, const wxString& search)
+{
+    Data::BindConstList::iterator end = study.bindingConstraints.end();
+    for (Data::BindConstList::iterator i = study.bindingConstraints.begin(); i != end; ++i)
+    {
+        if (search.empty())
+            l.push_back(*i);
+    }
+}
 
-		struct SortAlphaOrder
-		{
-			inline bool operator() (const Data::BindingConstraint* a, const Data::BindingConstraint* b)
-			{
-				return a->name() < b->name();
-			}
-		};
+} // anonymous namespace
 
-		struct SortAlphaReverseOrder
-		{
-			inline bool operator() (const Data::BindingConstraint* a, const Data::BindingConstraint* b)
-			{
-				return a->name() > b->name();
-			}
-		};
+ByAlphaOrder::ByAlphaOrder(HTMLListbox::Component& parent) : IDatasource(parent)
+{
+}
 
+//! Destructor
+ByAlphaOrder::~ByAlphaOrder()
+{
+    destroyBoundEvents();
+}
 
-		void GetBindingConstraintList(Data::Study& study, BindingConstraintList& l, const wxString& search)
-		{
-			Data::BindConstList::iterator end = study.bindingConstraints.end();
-			for (Data::BindConstList::iterator i = study.bindingConstraints.begin(); i != end; ++i)
-			{
-				if (search.empty())
-					l.push_back(*i);
-			}
-		}
+void ByAlphaOrder::refresh(const wxString& search)
+{
+    pParent.clear();
 
-	} // anonymous namespace
+    if (Data::Study::Current::Valid())
+    {
+        BindingConstraintList l;
+        GetBindingConstraintList(*Data::Study::Current::Get(), l, search);
+        if (!l.empty())
+        {
+            l.sort(SortAlphaOrder());
+            // Added the area as a result
+            auto jend = l.end();
+            for (auto j = l.begin(); j != jend; ++j)
+                pParent.add(new Antares::Component::HTMLListbox::Item::BindingConstraint(*j));
+        }
+    }
+    pParent.invalidate();
+}
 
+ByAlphaReverseOrder::ByAlphaReverseOrder(HTMLListbox::Component& parent) : IDatasource(parent)
+{
+}
 
+//! Destructor
+ByAlphaReverseOrder::~ByAlphaReverseOrder()
+{
+    destroyBoundEvents();
+}
 
+void ByAlphaReverseOrder::refresh(const wxString& search)
+{
+    pParent.clear();
 
-
-	ByAlphaOrder::ByAlphaOrder(HTMLListbox::Component& parent)
-		:IDatasource(parent)
-	{
-	}
-
-	//! Destructor
-	ByAlphaOrder::~ByAlphaOrder()
-	{
-		destroyBoundEvents();
-	}
-
-
-	void ByAlphaOrder::refresh(const wxString& search)
-	{
-		pParent.clear();
-
-		if (Data::Study::Current::Valid())
-		{
-			BindingConstraintList l;
-			GetBindingConstraintList(*Data::Study::Current::Get(), l, search);
-			if (!l.empty())
-			{
-				l.sort(SortAlphaOrder());
-				// Added the area as a result
-				auto jend = l.end();
-				for (auto j = l.begin(); j != jend; ++j)
-					pParent.add(new Antares::Component::HTMLListbox::Item::BindingConstraint(*j));
-			}
-		}
-		pParent.invalidate();
-	}
-
-
-
-
-
-
-	ByAlphaReverseOrder::ByAlphaReverseOrder(HTMLListbox::Component& parent)
-		:IDatasource(parent)
-	{
-	}
-
-	//! Destructor
-	ByAlphaReverseOrder::~ByAlphaReverseOrder()
-	{
-		destroyBoundEvents();
-	}
-
-	void ByAlphaReverseOrder::refresh(const wxString& search)
-	{
-		pParent.clear();
-
-		if (Data::Study::Current::Valid())
-		{
-			BindingConstraintList l;
-			GetBindingConstraintList(*Data::Study::Current::Get(), l, search);
-			if (!l.empty())
-			{
-				l.sort(SortAlphaReverseOrder());
-				// Added the area as a result
-				BindingConstraintList::iterator jend = l.end();
-				for (BindingConstraintList::iterator j = l.begin(); j != jend; ++j)
-					pParent.add(new Antares::Component::HTMLListbox::Item::BindingConstraint(*j));
-			}
-		}
-		pParent.invalidate();
-	}
-
-
-
-
-
+    if (Data::Study::Current::Valid())
+    {
+        BindingConstraintList l;
+        GetBindingConstraintList(*Data::Study::Current::Get(), l, search);
+        if (!l.empty())
+        {
+            l.sort(SortAlphaReverseOrder());
+            // Added the area as a result
+            BindingConstraintList::iterator jend = l.end();
+            for (BindingConstraintList::iterator j = l.begin(); j != jend; ++j)
+                pParent.add(new Antares::Component::HTMLListbox::Item::BindingConstraint(*j));
+        }
+    }
+    pParent.invalidate();
+}
 
 } // namespace BindingConstraints
 } // namespace Datasource
 } // namespace HTMLListbox
 } // namespace Component
 } // namespace Antares
-

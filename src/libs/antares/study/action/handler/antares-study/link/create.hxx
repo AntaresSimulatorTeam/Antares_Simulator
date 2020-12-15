@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_LINK_CREATE_HXX__
-# define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_LINK_CREATE_HXX__
-
+#define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_LINK_CREATE_HXX__
 
 namespace Antares
 {
@@ -36,14 +35,10 @@ namespace AntaresStudy
 {
 namespace Link
 {
-
-
-	inline bool Create::allowUpdate() const
-	{
-		return true;
-	}
-
-
+inline bool Create::allowUpdate() const
+{
+    return true;
+}
 
 } // namespace Link
 } // namespace AntaresStudy

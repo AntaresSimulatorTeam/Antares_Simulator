@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_DATA_HXX__
-# define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_DATA_HXX__
-
+#define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_DATA_HXX__
 
 namespace Antares
 {
@@ -36,20 +35,15 @@ namespace AntaresStudy
 {
 namespace Constraint
 {
+template<class StringT>
+inline Data::Data(const StringT& name) : pOriginalConstraintName(name)
+{
+    pInfos.caption << "Bounds/RHS";
+}
 
-
-	template<class StringT>
-	inline Data::Data(const StringT& name)
-		:pOriginalConstraintName(name)
-	{
-		pInfos.caption << "Bounds/RHS";
-	}
-
-
-	inline Data::~Data()
-	{}
-
-
+inline Data::~Data()
+{
+}
 
 } // namespace Constraint
 } // namespace AntaresStudy

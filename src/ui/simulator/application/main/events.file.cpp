@@ -54,194 +54,193 @@
 
 using namespace Yuni;
 
-
-
-
-
 namespace Antares
 {
 namespace Window
 {
+class ItemWindow : public Component::Spotlight::IItem
+{
+public:
+    //! Smart ptr
+    typedef Yuni::SmartPtr<ItemWindow> Ptr;
 
+    explicit ItemWindow(const Yuni::String& title, int id) : title(title), id(id)
+    {
+        caption(title);
+    };
 
-	class ItemWindow : public Component::Spotlight::IItem
-	{
-	public:
-		//! Smart ptr
-		typedef Yuni::SmartPtr<ItemWindow> Ptr;
+public:
+    Yuni::String title;
+    int id;
+};
 
-		explicit ItemWindow(const Yuni::String& title, int id) : title(title), id(id) { caption(title); };
+class SpotlightProviderWindows : public Component::Spotlight::IProvider
+{
+public:
+    typedef Antares::Component::Spotlight Spotlight;
 
-	public:
-		Yuni::String title;
-		int id;
-	};
+public:
+    SpotlightProviderWindows()
+    {
+    }
 
+    virtual ~SpotlightProviderWindows()
+    {
+    }
 
-	class SpotlightProviderWindows : public Component::Spotlight::IProvider
-	{
-	public:
-		typedef Antares::Component::Spotlight  Spotlight;
+    virtual void search(Spotlight::IItem::Vector& out,
+                        const Spotlight::SearchToken::Vector& tokens,
+                        const Yuni::String& text = "")
+    {
+        auto& framelist = Component::Frame::Registry::List();
+        int elemIdx = -1;
 
-	public:
-		SpotlightProviderWindows()
-		{
-		}
+        foreach (auto* frame, framelist)
+        {
+            ++elemIdx;
+            if (frame->excludeFromMenu())
+                continue; // -> framelist foreach
 
-		virtual ~SpotlightProviderWindows()
-		{
-		}
+            if (tokens.empty())
+            {
+                out.push_back(new ItemWindow(frame->frameTitle(), elemIdx));
+            }
+            else
+            {
+                for (uint si = 0; si != tokens.size(); ++si)
+                {
+                    if (frame->frameTitle().icontains(tokens[si]->text))
+                    {
+                        out.push_back(new ItemWindow(frame->frameTitle(), elemIdx));
+                        break; // -> tokens foreach
+                    }
+                } // tokens foreach
+            }
+        } // framelist foreach
+    }
 
-		virtual void search(Spotlight::IItem::Vector& out, const Spotlight::SearchToken::Vector& tokens, const Yuni::String& text = "")
-		{
-			auto& framelist = Component::Frame::Registry::List();
-			int elemIdx = -1;
+    virtual bool onSelect(Spotlight::IItem::Ptr& item)
+    {
+        ItemWindow::Ptr itemwin = Spotlight::IItem::Ptr::DynamicCast<ItemWindow::Ptr>(item);
+        if (!itemwin)
+            return false;
 
-			foreach (auto* frame, framelist)
-			{
-				++elemIdx;
-				if (frame->excludeFromMenu())
-					continue; // -> framelist foreach
+        auto& framelist = Component::Frame::Registry::List();
+        if ((uint)itemwin->id < framelist.size())
+        {
+            auto* frame = framelist[itemwin->id];
+            if (frame->frameTitle() == itemwin->title)
+            {
+                frame->frameRaise();
+                return true;
+            }
+        }
 
-				if (tokens.empty())
-				{
-					out.push_back(new ItemWindow(frame->frameTitle(), elemIdx));
-				}
-				else
-				{
-					for (uint si = 0; si != tokens.size(); ++si)
-					{
-						if (frame->frameTitle().icontains(tokens[si]->text))
-						{
-							out.push_back(new ItemWindow(frame->frameTitle(), elemIdx));
-							break; // -> tokens foreach
-						}
-					} // tokens foreach
-				}
-			} // framelist foreach
+        ::wxMessageBox(wxT("Invalid Window, it may have already been closed."),
+                       wxT("Invalid Window"),
+                       wxOK | wxICON_ERROR);
+        return true;
+    }
 
-		}
+    virtual bool onSelect(const Spotlight::IItem::Vector&)
+    {
+        return true;
+    }
 
-		virtual bool onSelect(Spotlight::IItem::Ptr& item)
-		{
-			ItemWindow::Ptr itemwin = Spotlight::IItem::Ptr::DynamicCast<ItemWindow::Ptr>(item);
-			if (!itemwin)
-				return false;
+}; // class SpotlightProviderWindows
 
-			auto& framelist = Component::Frame::Registry::List();
-			if ((uint) itemwin->id < framelist.size())
-			{
-				auto* frame = framelist[itemwin->id];
-				if (frame->frameTitle() == itemwin->title)
-				{
-					frame->frameRaise();
-					return true;
-				}
-			}
+class RaiseWindowBox : public wxDialog
+{
+public:
+    RaiseWindowBox(wxWindow* parent);
+    virtual ~RaiseWindowBox()
+    {
+    }
 
-			::wxMessageBox(wxT("Invalid Window, it may have already been closed."),
-				wxT("Invalid Window"),wxOK|wxICON_ERROR);
-			return true;
-		}
+private:
+    //! Event: the user requested to close the window
+    void onClose(void*);
 
-		virtual bool onSelect(const Spotlight::IItem::Vector&)
-		{
-			return true;
-		}
+}; // class RaiseWindowBox
 
-	}; // class SpotlightProviderWindows
+RaiseWindowBox::RaiseWindowBox(wxWindow* parent) :
+ wxDialog(parent,
+          wxID_ANY,
+          wxT("Raise Window Box"),
+          wxDefaultPosition,
+          wxDefaultSize,
+          wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+{
+    // Informations about the study
+    wxColour defaultBgColor = GetBackgroundColour();
+    SetBackgroundColour(wxColour(255, 255, 255));
 
+    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
+    sizer->AddSpacer(10);
 
+    {
+        Component::Spotlight* spotlight = new Component::Spotlight(this, 0);
+        spotlight->provider(new SpotlightProviderWindows());
+        wxBoxSizer* hz = new wxBoxSizer(wxHORIZONTAL);
+        hz->AddSpacer(5);
+        hz->Add(spotlight, 1, wxALL | wxEXPAND);
+        hz->AddSpacer(5);
+        sizer->Add(hz, 1, wxALL | wxEXPAND);
+    }
 
-	class RaiseWindowBox : public wxDialog
-	{
-	public:
-		RaiseWindowBox(wxWindow* parent);
-		virtual ~RaiseWindowBox() {}
+    sizer->AddSpacer(5);
 
+    sizer->Add(new wxStaticLine(this), 0, wxALL | wxEXPAND);
 
-	private:
-		//! Event: the user requested to close the window
-		void onClose(void*);
+    auto* panel = new Antares::Component::Panel(this);
+    wxBoxSizer* sizerBar = new wxBoxSizer(wxHORIZONTAL);
+    sizerBar->AddStretchSpacer();
+    panel->SetSizer(sizerBar);
+    panel->SetBackgroundColour(defaultBgColor);
+    wxPanel* pPanel = panel;
+    wxBoxSizer* pPanelSizer = new wxBoxSizer(wxHORIZONTAL);
 
-	}; // class RaiseWindowBox
+    sizerBar->Add(pPanelSizer, 0, wxALL | wxEXPAND, 8);
+    sizerBar->Add(15, 5);
 
+    sizer->AddSpacer(50);
+    sizer->Add(new wxStaticLine(this), 0, wxALL | wxEXPAND);
+    sizer->Add(panel, 0, wxALL | wxEXPAND);
 
-	RaiseWindowBox::RaiseWindowBox(wxWindow* parent) :
-		wxDialog(parent, wxID_ANY, wxT("Raise Window Box"), wxDefaultPosition, wxDefaultSize,wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER)
-	{
-		// Informations about the study
-		wxColour defaultBgColor = GetBackgroundColour();
-		SetBackgroundColour(wxColour(255, 255, 255));
+    sizer->Layout();
+    SetSizer(sizer);
 
-		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+    // Close button
+    {
+        auto* btn
+          = Component::CreateButton(pPanel, wxT("   Close   "), this, &RaiseWindowBox::onClose);
+        pPanelSizer->Add(btn, 0, wxFIXED_MINSIZE | wxALIGN_CENTRE_VERTICAL | wxALL);
+        pPanelSizer->Add(5, 2);
+        btn->SetDefault();
+        btn->SetFocus();
+    }
 
-		sizer->AddSpacer(10);
+    GetSizer()->Fit(this);
+    wxSize p = GetSize();
+    p.SetWidth(p.GetWidth() + 20);
+    if (p.GetWidth() < 390)
+        p.SetWidth(390);
+    else
+    {
+        if (p.GetWidth() > 600)
+            p.SetWidth(600);
+    }
+    p.SetHeight(400);
+    SetSize(p);
 
-		{
-			Component::Spotlight* spotlight = new Component::Spotlight(this, 0);
-			spotlight->provider(new SpotlightProviderWindows());
-			wxBoxSizer* hz = new wxBoxSizer(wxHORIZONTAL);
-			hz->AddSpacer(5);
-			hz->Add(spotlight, 1, wxALL|wxEXPAND);
-			hz->AddSpacer(5);
-			sizer->Add(hz,1,wxALL|wxEXPAND);
-		}
+    Centre(wxBOTH);
+}
 
-		sizer->AddSpacer(5);
-
-		sizer->Add(new wxStaticLine(this), 0, wxALL|wxEXPAND);
-
-		auto* panel = new Antares::Component::Panel(this);
-		wxBoxSizer* sizerBar = new wxBoxSizer(wxHORIZONTAL);
-		sizerBar->AddStretchSpacer();
-		panel->SetSizer(sizerBar);
-		panel->SetBackgroundColour(defaultBgColor);
-		wxPanel* pPanel = panel;
-		wxBoxSizer* pPanelSizer = new wxBoxSizer(wxHORIZONTAL);
-
-		sizerBar->Add(pPanelSizer, 0, wxALL|wxEXPAND, 8);
-		sizerBar->Add(15, 5);
-
-		sizer->AddSpacer(50);
-		sizer->Add(new wxStaticLine(this), 0, wxALL|wxEXPAND);
-		sizer->Add(panel, 0, wxALL|wxEXPAND);
-
-		sizer->Layout();
-		SetSizer(sizer);
-
-		// Close button
-		{
-			auto* btn = Component::CreateButton(pPanel, wxT("   Close   "), this, &RaiseWindowBox::onClose);
-			pPanelSizer->Add(btn, 0, wxFIXED_MINSIZE|wxALIGN_CENTRE_VERTICAL|wxALL);
-			pPanelSizer->Add(5, 2);
-			btn->SetDefault();
-			btn->SetFocus();
-		}
-
-		GetSizer()->Fit(this);
-		wxSize p = GetSize();
-		p.SetWidth(p.GetWidth() + 20);
-		if (p.GetWidth() < 390)
-			p.SetWidth(390);
-		else
-		{
-			if (p.GetWidth() > 600)
-				p.SetWidth(600);
-		}
-		p.SetHeight(400);
-		SetSize(p);
-
-		Centre(wxBOTH);
-	}
-
-
-	void RaiseWindowBox::onClose(void*)
-	{
-		Dispatcher::GUI::Close(this);
-	}
-
+void RaiseWindowBox::onClose(void*)
+{
+    Dispatcher::GUI::Close(this);
+}
 
 } // namespace Window
 } // namespace Antares
@@ -252,236 +251,218 @@ namespace Antares
 {
 namespace Forms
 {
+static inline bool IsCurrentStudyReadonly()
+{
+    auto study = Data::Study::Current::Get();
+    return !(!study) && study->parameters.readonly;
+}
 
-	static inline bool IsCurrentStudyReadonly()
-	{
-		auto study = Data::Study::Current::Get();
-		return !(!study) && study->parameters.readonly;
-	}
+wxString ApplWnd::openStudyFolder(bool autoLoad)
+{
+    Forms::Disabler<ApplWnd> disabler(*this);
 
+    wxString folder;
+    if (gLastOpenedStudyFolder.IsEmpty())
+        wxGetHomeDir(&folder); // Home sweet home
+    else
+        folder = gLastOpenedStudyFolder;
 
+    // The dialog window
+    auto* dlg = new wxDirDialog(
+      this, wxT("Open a study"), folder, wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+    if (wxID_OK == dlg->ShowModal())
+    {
+        // It is quite better to delete the windows before loading the study
+        const wxString path = dlg->GetPath();
+        delete dlg;
 
+        if (!path.empty())
+        {
+            if (!wouldYouLikeToSaveTheStudy())
+                return wxEmptyString;
+            // Load the study
+            if (autoLoad)
+            {
+                String t;
+                wxStringToString(path, t);
+                Dispatcher::StudyOpen(t, true);
+            }
+        }
+        return path;
+    }
+    delete dlg;
+    return wxEmptyString;
+}
 
-	wxString ApplWnd::openStudyFolder(bool autoLoad)
-	{
-		Forms::Disabler<ApplWnd> disabler(*this);
+void ApplWnd::evtOnNewStudy(wxCommandEvent&)
+{
+    if (GUIIsLock())
+        return;
+    Dispatcher::StudyNew();
+}
 
-		wxString folder;
-		if (gLastOpenedStudyFolder.IsEmpty())
-			wxGetHomeDir(&folder); // Home sweet home
-		else
-			folder = gLastOpenedStudyFolder;
+void MainFormData::onToolbarNewStudy(void*)
+{
+    Dispatcher::StudyNew();
+}
 
-		// The dialog window
-		auto* dlg = new wxDirDialog(this, wxT("Open a study"), folder, wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
-		if (wxID_OK == dlg->ShowModal())
-		{
-			// It is quite better to delete the windows before loading the study
-			const wxString path = dlg->GetPath();
-			delete dlg;
+void ApplWnd::evtOnOpenStudy(wxCommandEvent&)
+{
+    if (GUIIsLock())
+        return;
+    openStudyFolder();
+}
 
-			if (!path.empty())
-			{
-				if (!wouldYouLikeToSaveTheStudy())
-					return wxEmptyString;
-				// Load the study
-				if (autoLoad)
-				{
-					String t;
-					wxStringToString(path, t);
-					Dispatcher::StudyOpen(t, true);
-				}
-			}
-			return path;
-		}
-		delete dlg;
-		return wxEmptyString;
-	}
+void MainFormData::onToolbarOpenLocalStudy(void*)
+{
+    pMainForm.openStudyFolder();
+}
 
+void ApplWnd::evtOnSave(wxCommandEvent&)
+{
+    if (GUIIsLock())
+        return;
+    if (Data::Study::Current::Valid())
+    {
+        if (IsCurrentStudyReadonly())
+        {
+            Window::Message message(ApplWnd::Instance(),
+                                    wxT("Save changes"),
+                                    wxT("Impossible to save the study"),
+                                    wxT("The study is read-only. Use 'Save as' instead."),
+                                    "images/misc/error.png");
+            message.add(Window::Message::btnCancel);
+            message.showModal();
+        }
+        else
+            Dispatcher::GUI::Post(this, &ApplWnd::saveStudy, 80 /*ms*/);
+    }
+}
 
-	void ApplWnd::evtOnNewStudy(wxCommandEvent&)
-	{
-		if (GUIIsLock())
-			return;
-		Dispatcher::StudyNew();
-	}
+void MainFormData::onToolbarSave(void*)
+{
+    if (GUIIsLock())
+        return;
 
+    if (Data::Study::Current::Valid())
+    {
+        if (IsCurrentStudyReadonly())
+        {
+            Window::Message message(ApplWnd::Instance(),
+                                    wxT("Save changes"),
+                                    wxT("Impossible to save the study"),
+                                    wxT("The study is read-only. Use 'Save as' instead."),
+                                    "images/misc/error.png");
+            message.add(Window::Message::btnCancel);
+            message.showModal();
+        }
+        else
+            Dispatcher::GUI::Post(&pMainForm, &ApplWnd::saveStudy, 80 /*ms*/);
+    }
+}
 
-	void MainFormData::onToolbarNewStudy(void*)
-	{
-		Dispatcher::StudyNew();
-	}
+void ApplWnd::evtOnSaveAs(wxCommandEvent&)
+{
+    if (GUIIsLock())
+        return;
 
+    // Save the current study
+    if (Data::Study::Current::Valid())
+        Dispatcher::GUI::CreateAndShowModal<Window::SaveAs>(this);
+}
 
-	void ApplWnd::evtOnOpenStudy(wxCommandEvent&)
-	{
-		if (GUIIsLock())
-			return;
-		openStudyFolder();
-	}
+void ApplWnd::evtOnExportMap(wxCommandEvent&)
+{
+    if (GUIIsLock())
+        return;
 
+    // Export the current study map
+    if (Data::Study::Current::Valid())
+        Dispatcher::GUI::CreateAndShowModal<Window::ExportMap>(this);
+}
 
-	void MainFormData::onToolbarOpenLocalStudy(void*)
-	{
-		pMainForm.openStudyFolder();
-	}
+void ApplWnd::evtOnQuickOpenStudy(wxCommandEvent& evt)
+{
+    if (GUIIsLock())
+        return;
 
+    const int indx = evt.GetId() - mnIDOpenRecents_0;
+    if (indx >= 0 && indx < (int)RecentFiles::Max)
+    {
+        RecentFiles::ListPtr lst = RecentFiles::Get();
+        int ci = 0;
+        auto end = lst->end();
+        for (auto i = lst->begin(); i != end; ++i)
+        {
+            if (ci == indx)
+            {
+                String t;
+                wxStringToString(i->first, t);
+                Dispatcher::StudyOpen(t);
+                return;
+            }
+            ++ci;
+        }
+    }
+}
 
-	void ApplWnd::evtOnSave(wxCommandEvent&)
-	{
-		if (GUIIsLock())
-			return;
-		if (Data::Study::Current::Valid())
-		{
-			if (IsCurrentStudyReadonly())
-			{
-				Window::Message message(ApplWnd::Instance(), wxT("Save changes"),
-					wxT("Impossible to save the study"),
-					wxT("The study is read-only. Use 'Save as' instead."),
-					"images/misc/error.png");
-				message.add(Window::Message::btnCancel);
-				message.showModal();
-			}
-			else
-				Dispatcher::GUI::Post(this, &ApplWnd::saveStudy, 80 /*ms*/);
-		}
-	}
+void ApplWnd::evtOnRaiseWindow(wxCommandEvent& evt)
+{
+    if (GUIIsLock())
+        return;
 
+    if (evt.GetId() == mnIDWindowRaise_Other)
+    {
+        // not yet implemented
+        Forms::Disabler<ApplWnd> disabler(*this);
+        Window::RaiseWindowBox openother(this);
+        openother.ShowModal();
+        return;
+    }
 
-	void MainFormData::onToolbarSave(void*)
-	{
-		if (GUIIsLock())
-			return;
+    auto& framelist = Component::Frame::Registry::List();
 
-		if (Data::Study::Current::Valid())
-		{
-			if (IsCurrentStudyReadonly())
-			{
-				Window::Message message(ApplWnd::Instance(), wxT("Save changes"),
-					wxT("Impossible to save the study"),
-					wxT("The study is read-only. Use 'Save as' instead."),
-					"images/misc/error.png");
-				message.add(Window::Message::btnCancel);
-				message.showModal();
-			}
-			else
-				Dispatcher::GUI::Post(&pMainForm, &ApplWnd::saveStudy, 80 /*ms*/);
-		}
-	}
+    uint indx = (uint)(evt.GetId() - mnIDWindowRaise_0);
+    if (indx < framelist.size())
+        framelist[indx]->frameRaise();
+}
 
+void ApplWnd::evtOnCloseStudy(wxCommandEvent&)
+{
+    if (GUIIsLock())
+        return;
+    Dispatcher::StudyClose();
+}
 
-	void ApplWnd::evtOnSaveAs(wxCommandEvent&)
-	{
-		if (GUIIsLock())
-			return;
+void ApplWnd::evtOnDropDownRecents(wxAuiToolBarEvent& evt)
+{
+    if (evt.IsDropDownClicked())
+    {
+        wxAuiToolBar* tb = static_cast<wxAuiToolBar*>(evt.GetEventObject());
 
-		// Save the current study
-		if (Data::Study::Current::Valid())
-			Dispatcher::GUI::CreateAndShowModal<Window::SaveAs>(this);
-	}
+        tb->SetToolSticky(evt.GetId(), true);
 
-	void ApplWnd::evtOnExportMap(wxCommandEvent&)
-	{
-		if (GUIIsLock())
-			return;
+        // create the popup menu
+        wxMenu menuPopup;
 
-		// Export the current study map
-		if (Data::Study::Current::Valid())
-			Dispatcher::GUI::CreateAndShowModal<Window::ExportMap>(this);
-	}
+        Menu::RebuildRecentFiles(&menuPopup, true);
 
+        // line up our menu with the button
+        wxRect rect = tb->GetToolRect(evt.GetId());
+        wxPoint pt = tb->ClientToScreen(rect.GetBottomLeft());
+        pt = ScreenToClient(pt);
 
-	void ApplWnd::evtOnQuickOpenStudy(wxCommandEvent& evt)
-	{
-		if (GUIIsLock())
-			return;
+        PopupMenu(&menuPopup, pt);
 
-		const int indx = evt.GetId() - mnIDOpenRecents_0;
-		if (indx >= 0 && indx < (int)RecentFiles::Max)
-		{
-			RecentFiles::ListPtr lst = RecentFiles::Get();
-			int ci = 0;
-			auto end = lst->end();
-			for (auto i = lst->begin(); i != end; ++i)
-			{
-				if (ci == indx)
-				{
-					String t;
-					wxStringToString(i->first, t);
-					Dispatcher::StudyOpen(t);
-					return;
-				}
-				++ci;
-			}
-		}
-	}
+        // make sure the button is "un-stuck"
+        tb->SetToolSticky(evt.GetId(), false);
+    }
+}
 
-
-	void ApplWnd::evtOnRaiseWindow(wxCommandEvent& evt)
-	{
-		if (GUIIsLock())
-			return;
-
-		if (evt.GetId() == mnIDWindowRaise_Other)
-		{
-			// not yet implemented
-			Forms::Disabler<ApplWnd> disabler(*this);
-			Window::RaiseWindowBox openother(this);
-			openother.ShowModal();
-			return;
-		}
-
-		auto& framelist = Component::Frame::Registry::List();
-
-		uint indx = (uint)(evt.GetId() - mnIDWindowRaise_0);
-		if (indx < framelist.size())
-			framelist[indx]->frameRaise();
-	}
-
-
-	void ApplWnd::evtOnCloseStudy(wxCommandEvent&)
-	{
-		if (GUIIsLock())
-			return;
-		Dispatcher::StudyClose();
-	}
-
-
-	void ApplWnd::evtOnDropDownRecents(wxAuiToolBarEvent& evt)
-	{
-		if (evt.IsDropDownClicked())
-		{
-			wxAuiToolBar* tb = static_cast<wxAuiToolBar*>(evt.GetEventObject());
-
-			tb->SetToolSticky(evt.GetId(), true);
-
-			// create the popup menu
-			wxMenu menuPopup;
-
-			Menu::RebuildRecentFiles(&menuPopup, true);
-
-			// line up our menu with the button
-			wxRect rect = tb->GetToolRect(evt.GetId());
-			wxPoint pt = tb->ClientToScreen(rect.GetBottomLeft());
-			pt = ScreenToClient(pt);
-
-			PopupMenu(&menuPopup, pt);
-
-			// make sure the button is "un-stuck"
-			tb->SetToolSticky(evt.GetId(), false);
-		}
-	}
-
-
-	void MainFormData::onToolbarOpenRecentMenu(Component::Button&, wxMenu& menu, void*)
-	{
-		Menu::RebuildRecentFiles(&menu, true);
-	}
-
-
-
-
+void MainFormData::onToolbarOpenRecentMenu(Component::Button&, wxMenu& menu, void*)
+{
+    Menu::RebuildRecentFiles(&menu, true);
+}
 
 } // namespace Forms
 } // namespace Antares
-

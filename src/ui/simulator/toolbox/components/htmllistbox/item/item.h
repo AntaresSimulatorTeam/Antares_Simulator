@@ -25,11 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_H__
-# define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_H__
+#define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_H__
 
-# include <antares/wx-wrapper.h>
-
-
+#include <antares/wx-wrapper.h>
 
 namespace Antares
 {
@@ -37,98 +35,89 @@ namespace Component
 {
 namespace HTMLListbox
 {
-
-	// Forward declaration
-	struct ISortPredicate;
-
+// Forward declaration
+struct ISortPredicate;
 
 namespace Item
 {
+/*!
+** \brief Single item for an Input (abstract)
+**
+** An input is often an item list (list of areas, list of interconnections...)
+** but this list may be heterogenous (for example `areas + groups`)
+** This class a merely a simple wrapper to bring commons display operations
+*/
+class IItem
+{
+public:
+    //! The most suitable smartptr for this class
+    typedef Yuni::SmartPtr<IItem> Ptr;
+    //! Item list
+    typedef std::vector<Ptr> List;
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    IItem();
+    //! Destructor
+    virtual ~IItem();
+    //@}
 
-	/*!
-	** \brief Single item for an Input (abstract)
-	**
-	** An input is often an item list (list of areas, list of interconnections...)
-	** but this list may be heterogenous (for example `areas + groups`)
-	** This class a merely a simple wrapper to bring commons display operations
-	*/
-	class IItem
-	{
-	public:
-		//! The most suitable smartptr for this class
-		typedef Yuni::SmartPtr<IItem>  Ptr;
-		//! Item list
-		typedef std::vector<Ptr>  List;
+    /*!
+    ** \brief Get the HTML Content for the item
+    **
+    ** \param searchString The current string to highlight
+    */
+    virtual wxString htmlContent(const wxString& searchString) = 0;
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		IItem();
-		//! Destructor
-		virtual ~IItem();
-		//@}
+    /*!
+    ** \brief Get if the item is highlighted
+    **
+    ** An item may be highlighted by an user's research. The variable
+    ** is updated when the method `htmlContent()` is called.
+    */
+    bool highlighted() const;
 
-		/*!
-		** \brief Get the HTML Content for the item
-		**
-		** \param searchString The current string to highlight
-		*/
-		virtual wxString htmlContent(const wxString& searchString) = 0;
+    //! Get if the item is visible
+    bool visible() const;
+    //! Set if the item is visible
+    void visible(bool v);
 
-		/*!
-		** \brief Get if the item is highlighted
-		**
-		** An item may be highlighted by an user's research. The variable
-		** is updated when the method `htmlContent()` is called.
-		*/
-		bool highlighted() const;
+    /*!
+    ** \brief Get the item is interactive (can be clicked by the user)
+    */
+    virtual bool interactive() const;
 
-		//! Get if the item is visible
-		bool visible() const;
-		//! Set if the item is visible
-		void visible(bool v);
+protected:
+    //! Is the item highlighted
+    bool pHighlighted;
+    //! Visible
+    bool pVisible;
 
-		/*!
-		** \brief Get the item is interactive (can be clicked by the user)
-		*/
-		virtual bool interactive() const;
+}; // class IItem
 
-	protected:
-		//! Is the item highlighted
-		bool pHighlighted;
-		//! Visible
-		bool pVisible;
+/*!
+** \brief Hightlight a sub part of a string (with HTML Code)
+**
+** \param s The String to modify
+** \param toHighlight The string to highlight for the user
+*/
+bool HTMLCodeHighlightString(wxString& s, const wxString& toHighlight);
 
-	}; // class IItem
-
-
-
-	/*!
-	** \brief Hightlight a sub part of a string (with HTML Code)
-	**
-	** \param s The String to modify
-	** \param toHighlight The string to highlight for the user
-	*/
-	bool HTMLCodeHighlightString(wxString& s, const wxString& toHighlight);
-
-	/*!
-	** \brief Make a color darker
-	*/
-	wxColour ColorDarker(int r, int g, int b, int level = 40);
-	wxColour ColorDarker(const wxColour& c, int level = 40);
-
-
-
+/*!
+** \brief Make a color darker
+*/
+wxColour ColorDarker(int r, int g, int b, int level = 40);
+wxColour ColorDarker(const wxColour& c, int level = 40);
 
 } // namespace Item
 } // namespace HTMLListbox
 } // namespace Component
 } // namespace Antares
 
-# include "item.hxx"
+#include "item.hxx"
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_H__

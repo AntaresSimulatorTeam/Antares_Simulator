@@ -1,85 +1,72 @@
 #ifndef __YUNI_DOCMAKE_INDEXES_H__
-# define __YUNI_DOCMAKE_INDEXES_H__
+#define __YUNI_DOCMAKE_INDEXES_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-# include <yuni/io/file.h>
-# include "article.h"
-# include "dictionary.h"
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+#include <yuni/io/file.h>
+#include "article.h"
+#include "dictionary.h"
 
 namespace DocIndex
 {
+//! Article ID
+typedef Yuni::sint64 ArticleID;
 
-	//! Article ID
-	typedef Yuni::sint64  ArticleID;
+bool Open();
 
+void Close();
 
-	bool Open();
+void Write(ArticleData& article);
 
-	void Close();
+void RemoveNonExistingEntries();
 
-	void Write(ArticleData& article);
+void Vacuum();
 
+bool AppendArticleTitleFromPath(Yuni::String& out, const Yuni::String& path);
 
-	void RemoveNonExistingEntries();
+void BuildDirectoryIndex(Yuni::Clob& out, const Yuni::String& path);
 
-	void Vacuum();
+Yuni::sint64 ArticleLastModificationTimeFromCache(const Yuni::String& filename);
 
+/*!
+** \brief Build a sitemap
+**
+** \see http://en.wikipedia.org/wiki/Site_map
+** \see http://en.wikipedia.org/wiki/Google_Sitemaps
+**
+** This method must be ran from the main thread
+*/
+void BuildSitemap();
 
-	bool AppendArticleTitleFromPath(Yuni::String& out, const Yuni::String& path);
+/*!
+** \brief Register a term in the database
+**
+** \return The ID in the database
+*/
+int RegisterWordReference(const Dictionary::Word& term);
 
+void RegisterWordIDsForASingleArticle(Yuni::sint64 articleid,
+                                      const int* termid,
+                                      const int* countInArticle,
+                                      const float* weights,
+                                      unsigned int count);
 
-	void BuildDirectoryIndex(Yuni::Clob& out, const Yuni::String& path);
+void UpdateAllSEOWeights();
 
+int FindArticleID(const Yuni::String& href);
 
-	Yuni::sint64 ArticleLastModificationTimeFromCache(const Yuni::String& filename);
+void AppendChildrenList(Yuni::String& text, const Yuni::String& path, const Yuni::String& current);
 
+/*!
+** \brief Retrieve the tag list of a single article
+*/
+void RetrieveTagList(ArticleData& article);
 
-	/*!
-	** \brief Build a sitemap
-	**
-	** \see http://en.wikipedia.org/wiki/Site_map
-	** \see http://en.wikipedia.org/wiki/Google_Sitemaps
-	**
-	** This method must be ran from the main thread
-	*/
-	void BuildSitemap();
+void BuildSEOTermReference(Yuni::Clob& data);
 
+void BuildSEOArticlesReference();
 
-	/*!
-	** \brief Register a term in the database
-	**
-	** \return The ID in the database
-	*/
-	int RegisterWordReference(const Dictionary::Word& term);
-
-	void RegisterWordIDsForASingleArticle(Yuni::sint64 articleid, const int* termid,
-		const int* countInArticle,
-		const float* weights,
-		unsigned int count);
-
-
-	void UpdateAllSEOWeights();
-
-
-	int FindArticleID(const Yuni::String& href);
-
-	void AppendChildrenList(Yuni::String& text, const Yuni::String& path, const Yuni::String& current);
-
-	/*!
-	** \brief Retrieve the tag list of a single article
-	*/
-	void RetrieveTagList(ArticleData& article);
-
-	void BuildSEOTermReference(Yuni::Clob& data);
-
-	void BuildSEOArticlesReference();
-
-
-	void* DatabaseHandle();
-
-
+void* DatabaseHandle();
 
 } // namespace DocIndex
 

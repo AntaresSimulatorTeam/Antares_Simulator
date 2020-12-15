@@ -33,177 +33,152 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
 namespace Data
 {
+namespace // anonymous namespace
+{
+class MyIterator final : public IO::Directory::IIterator<true>
+{
+public:
+    typedef IO::Directory::IIterator<true> IteratorType;
+    typedef IO::Flow Flow;
 
+public:
+    MyIterator(StudyFinder& finder) : pFinder(finder)
+    {
+    }
+    virtual ~MyIterator()
+    {
+        // For code robustness and to avoid corrupt vtable
+        stop();
+    }
 
-	namespace // anonymous namespace
-	{
+protected:
+    virtual bool onStart(const String& filename)
+    {
+        return (IO::flowContinue == onBeginFolder(filename, filename, filename));
+    }
 
-		class MyIterator final : public IO::Directory::IIterator<true>
-		{
-		public:
-			typedef IO::Directory::IIterator<true> IteratorType;
-			typedef IO::Flow Flow;
+    virtual Flow onBeginFolder(const String& filename, const String&, const String&)
+    {
+        const Version versionFound = StudyTryToFindTheVersion(filename);
+        switch (versionFound)
+        {
+        case version1xx: // skipped
+            return IO::flowSkip;
+        case versionFutur:
+            return IO::flowSkip;
+        case versionUnknown:
+            return IO::flowContinue;
+        default:
+        {
+            // We have found a study !
+            pFinder.onStudyFound(filename, versionFound);
+            return IO::flowSkip;
+        }
+        }
+        return IO::flowSkip;
+    }
 
-		public:
-			MyIterator(StudyFinder& finder)
-				:pFinder(finder)
-			{}
-			virtual ~MyIterator()
-			{
-				// For code robustness and to avoid corrupt vtable
-				stop();
-			}
+    virtual void onTerminate()
+    {
+        pFinder.onLookupFinished();
+    }
 
-		protected:
-			virtual bool onStart(const String& filename)
-			{
-				return (IO::flowContinue == onBeginFolder(filename, filename, filename));
-			}
+    virtual void onAbort()
+    {
+        pFinder.onLookupAborted();
+    }
 
-			virtual Flow onBeginFolder(const String& filename, const String&, const String&)
-			{
-				const Version versionFound = StudyTryToFindTheVersion(filename);
-				switch (versionFound)
-				{
-					case version1xx:   // skipped
-						return IO::flowSkip;
-					case versionFutur:
-						return IO::flowSkip;
-					case versionUnknown:
-						return IO::flowContinue;
-					default:
-						{
-							// We have found a study !
-							pFinder.onStudyFound(filename, versionFound);
-							return IO::flowSkip;
-						}
-				}
-				return IO::flowSkip;
-			}
+public:
+    StudyFinder& pFinder;
+};
 
+} // anonymous namespace
 
-			virtual void onTerminate()
-			{
-				pFinder.onLookupFinished();
-			}
+StudyFinder::StudyFinder() : pLycos(nullptr)
+{
+}
 
-			virtual void onAbort()
-			{
-				pFinder.onLookupAborted();
-			}
+StudyFinder::StudyFinder(const StudyFinder&) : ThreadingPolicy(), pLycos(nullptr)
+{
+}
 
-		public:
-			StudyFinder& pFinder;
-		};
+StudyFinder::~StudyFinder()
+{
+    if (pLycos)
+    {
+        stop();
+        delete pLycos;
+    }
+}
 
+void StudyFinder::stop(uint timeout)
+{
+    ThreadingPolicy::MutexLocker locker(*this);
+    if (pLycos)
+        pLycos->stop(timeout);
+}
 
-	} // anonymous namespace
+void StudyFinder::wait()
+{
+    ThreadingPolicy::MutexLocker locker(*this);
+    if (pLycos)
+        pLycos->wait();
+}
 
+void StudyFinder::wait(uint timeout)
+{
+    ThreadingPolicy::MutexLocker locker(*this);
+    if (pLycos)
+        pLycos->wait(timeout);
+}
 
+void StudyFinder::lookup(const Yuni::String::Vector& folder)
+{
+    ThreadingPolicy::MutexLocker locker(*this);
+    if (pLycos)
+        pLycos->stop(10000);
+    else
+        pLycos = new MyIterator(*this);
 
+    pLycos->clear();
+    const Yuni::String::Vector::const_iterator end = folder.end();
+    for (Yuni::String::Vector::const_iterator i = folder.begin(); i != end; ++i)
+        pLycos->add(*i);
 
+    pLycos->start();
+}
 
-	StudyFinder::StudyFinder() :
-		pLycos(nullptr)
-	{
-	}
+void StudyFinder::lookup(const Yuni::String::List& folder)
+{
+    ThreadingPolicy::MutexLocker locker(*this);
+    if (pLycos)
+        pLycos->stop(10000);
+    else
+        pLycos = new MyIterator(*this);
 
+    pLycos->clear();
+    const Yuni::String::List::const_iterator end = folder.end();
+    for (Yuni::String::List::const_iterator i = folder.begin(); i != end; ++i)
+        pLycos->add(*i);
+    pLycos->start();
+}
 
-	StudyFinder::StudyFinder(const StudyFinder&) :
-		ThreadingPolicy(), pLycos(nullptr)
-	{
-	}
+void StudyFinder::lookup(const String& folder)
+{
+    ThreadingPolicy::MutexLocker locker(*this);
+    if (pLycos)
+        pLycos->stop(10000);
+    else
+        pLycos = new MyIterator(*this);
 
-
-	StudyFinder::~StudyFinder()
-	{
-		if (pLycos)
-		{
-			stop();
-			delete pLycos;
-		}
-	}
-
-
-	void StudyFinder::stop(uint timeout)
-	{
-		ThreadingPolicy::MutexLocker locker(*this);
-		if (pLycos)
-			pLycos->stop(timeout);
-	}
-
-
-	void StudyFinder::wait()
-	{
-		ThreadingPolicy::MutexLocker locker(*this);
-		if (pLycos)
-			pLycos->wait();
-	}
-
-
-	void StudyFinder::wait(uint timeout)
-	{
-		ThreadingPolicy::MutexLocker locker(*this);
-		if (pLycos)
-			pLycos->wait(timeout);
-	}
-
-
-	void StudyFinder::lookup(const Yuni::String::Vector& folder)
-	{
-		ThreadingPolicy::MutexLocker locker(*this);
-		if (pLycos)
-			pLycos->stop(10000);
-		else
-			pLycos = new MyIterator(*this);
-
-		pLycos->clear();
-		const Yuni::String::Vector::const_iterator end = folder.end();
-		for (Yuni::String::Vector::const_iterator i = folder.begin(); i != end; ++i)
-			pLycos->add(*i);
-
-		pLycos->start();
-	}
-
-
-	void StudyFinder::lookup(const Yuni::String::List& folder)
-	{
-		ThreadingPolicy::MutexLocker locker(*this);
-		if (pLycos)
-			pLycos->stop(10000);
-		else
-			pLycos = new MyIterator(*this);
-
-		pLycos->clear();
-		const Yuni::String::List::const_iterator end = folder.end();
-		for (Yuni::String::List::const_iterator i = folder.begin(); i != end; ++i)
-			pLycos->add(*i);
-		pLycos->start();
-	}
-
-
-	void StudyFinder::lookup(const String& folder)
-	{
-		ThreadingPolicy::MutexLocker locker(*this);
-		if (pLycos)
-			pLycos->stop(10000);
-		else
-			pLycos = new MyIterator(*this);
-
-		pLycos->clear();
-		pLycos->add(folder);
-		pLycos->start();
-	}
-
-
-
+    pLycos->clear();
+    pLycos->add(folder);
+    pLycos->start();
+}
 
 } // namespace Data
 } // namespace Antares
-

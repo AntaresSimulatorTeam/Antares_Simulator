@@ -36,8 +36,6 @@
 #include <ui/common/lock.h>
 #include "../wait.h"
 
-
-
 #define SEP IO::Separator
 
 using namespace Yuni;
@@ -46,226 +44,209 @@ namespace Antares
 {
 namespace Forms
 {
-	namespace //anonymous
-	{
-		class JobBuildConstraints final : public Toolbox::Jobs::Job
-		{
-		public:
-			JobBuildConstraints(const String& filename, Data::Study::Ptr study)
-				:Toolbox::Jobs::Job(wxT("Constraints Builder"), wxT("Build the network constraints"),
-				"images/32x32/run.png"), study(study)
-			{
-				// reset IO statistics
-				Statistics::Reset();
+namespace // anonymous
+{
+class JobBuildConstraints final : public Toolbox::Jobs::Job
+{
+public:
+    JobBuildConstraints(const String& filename, Data::Study::Ptr study) :
+     Toolbox::Jobs::Job(wxT("Constraints Builder"),
+                        wxT("Build the network constraints"),
+                        "images/32x32/run.png"),
+     study(study)
+    {
+        // reset IO statistics
+        Statistics::Reset();
 
-				// The main form
-				Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
+        // The main form
+        Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
 
-				// Normalize the folder
-				IO::Normalize(pFilename, filename);
-			}
+        // Normalize the folder
+        IO::Normalize(pFilename, filename);
+    }
 
-			//! Destructor
-			virtual ~JobBuildConstraints() {}
+    //! Destructor
+    virtual ~JobBuildConstraints()
+    {
+    }
 
-			template<class StringT> void filename(const StringT& f) {pFilename = f;}
+    template<class StringT>
+    void filename(const StringT& f)
+    {
+        pFilename = f;
+    }
 
-		protected:
-			/*!
-			* \brief Run the constraints builder
-			*/
-			virtual bool executeTask()
-			{
-				// Logs
-				logs.notice() << "Launching the constraints builder...";
-				logs.info() << "Location of ini file: " << pFilename;
-				
-				// making sure that all internal data are allocated
-				study->ensureDataAreAllInitialized();
+protected:
+    /*!
+     * \brief Run the constraints builder
+     */
+    virtual bool executeTask()
+    {
+        // Logs
+        logs.notice() << "Launching the constraints builder...";
+        logs.info() << "Location of ini file: " << pFilename;
 
-				// The swap memory MUST not be flushed. This can happen since we are not
-				// in the main thread
-				MemoryFlushLocker memoryLocker;
+        // making sure that all internal data are allocated
+        study->ensureDataAreAllInitialized();
 
-				
-				// Constraint Generator
-				CBuilder exec(study);
+        // The swap memory MUST not be flushed. This can happen since we are not
+        // in the main thread
+        MemoryFlushLocker memoryLocker;
 
-				
-				//assert(exec.loadFromINIFile(pFilename));
-				exec.completeFromStudy();
-				//exec.deletePreviousConstraints();
-				exec.completeCBuilderFromFile(pFilename);
+        // Constraint Generator
+        CBuilder exec(study);
 
-				const bool result = exec.runConstraintsBuilder(pFilename);
+        // assert(exec.loadFromINIFile(pFilename));
+        exec.completeFromStudy();
+        // exec.deletePreviousConstraints();
+        exec.completeCBuilderFromFile(pFilename);
 
-				if (result)
-				{
-					//pGrid->markTheStudyAsModified();
-					/*const SaveResult r = ::Antares::SaveStudy();
-					if (!(r == svsDiscard or r == svsSaved))
-					{
-					Enable(false);
-					return;
-					}*/
-					study->uiinfo->reloadBindingConstraints();
+        const bool result = exec.runConstraintsBuilder(pFilename);
 
-					OnStudyConstraintAdded(nullptr);
+        if (result)
+        {
+            // pGrid->markTheStudyAsModified();
+            /*const SaveResult r = ::Antares::SaveStudy();
+            if (!(r == svsDiscard or r == svsSaved))
+            {
+            Enable(false);
+            return;
+            }*/
+            study->uiinfo->reloadBindingConstraints();
 
-					//MarkTheStudyAsModified();
-					/**/
+            OnStudyConstraintAdded(nullptr);
 
-				}
+            // MarkTheStudyAsModified();
+            /**/
+        }
 
-				// The task is complete
-				return true;
-			}
+        // The task is complete
+        return true;
+    }
 
+private:
+    //! The .ini filename
+    String pFilename;
+    //! Our study
+    String pTitle;
+    // reference to the study
+    Data::Study::Ptr study;
 
-		private:
-			//! The .ini filename
-			String pFilename;
-			//! Our study
-			String pTitle;
-			// reference to the study
-			Data::Study::Ptr study;
+}; // class JobSaveStudy
 
-		}; // class JobSaveStudy
+} // anonymous namespace
 
+void ApplWnd::evtLaunchConstraintsBuilder(wxCommandEvent& evt)
+{
+    // We assume here that the study is already saved
 
-	} // anonymous namespace
-	
+    auto& mainFrm = *Forms::ApplWnd::Instance();
+    Forms::Disabler<Forms::ApplWnd> disabler(mainFrm);
 
+    // Checking for orphan swap files
+    // mainFrm.timerCleanSwapFiles(100 /*ms*/);
 
+    // Getting when the process was launched
+    const wxDateTime startTime = wxDateTime::Now();
 
-	void ApplWnd::evtLaunchConstraintsBuilder(wxCommandEvent& evt)
-	{
-		// We assume here that the study is already saved
+    const wxString wfilename = evt.GetString();
+    if (wfilename.empty())
+        return;
+    String filename;
+    wxStringToString(wfilename, filename);
 
-		auto& mainFrm = *Forms::ApplWnd::Instance();
-		Forms::Disabler<Forms::ApplWnd> disabler(mainFrm);
+    auto study = Data::Study::Current::Get();
 
-		// Checking for orphan swap files
-		//mainFrm.timerCleanSwapFiles(100 /*ms*/);
+    if (!study) // A valid study would be better
+    {
+        logs.fatal() << "Internal error: Please provide a valid study";
+        OnStudyEndUpdate();
+        IO::File::Delete(filename);
+        return;
+    }
 
-		// Getting when the process was launched
-		const wxDateTime startTime = wxDateTime::Now();
+    // Ok ! We're good to go !
+    GUILocker locker;
+    logs.notice() << "Launching the constraint generator...";
+    WIP::Locker wip;
+    StudyUpdateLocker studylocker;
 
-		const wxString wfilename = evt.GetString();
-		if (wfilename.empty())
-			return;
-		String filename;
-		wxStringToString(wfilename, filename);
+    mainFrm.SetStatusText(wxString() << wxT("  Building Network Constraints "));
 
-		auto study = Data::Study::Current::Get();
+    // Building Network Constraints (in background)
+    auto* job = new JobBuildConstraints(filename, study);
+    const bool result = job->run();
+    job->Destroy();
 
-		if (!study) // A valid study would be better
-		{
-			logs.fatal() << "Internal error: Please provide a valid study";
-			OnStudyEndUpdate();
-			IO::File::Delete(filename);
-			return;
-		}
+    // Forms::Disabler<Forms::ApplWnd> disabler(mainFrm);
+    {
+        // Lock the window to prevent flickering
+        wxWindowUpdateLocker updater(&mainFrm);
 
-		// Ok ! We're good to go !
-		GUILocker locker;
-		logs.notice() << "Launching the constraint generator...";
-		WIP::Locker wip;
-		StudyUpdateLocker studylocker;
+        // Refreshing the output
+        RefreshListOfOutputsForTheCurrentStudy();
 
-		mainFrm.SetStatusText(wxString() << wxT("  Building Network Constraints "));
+        // The refresh is important. This is the way to force the reloading
+        // some data (mainly wxGrid)
+        mainFrm.refreshStudyLogs();
 
+        // The study is not modified anymore
+        // ResetTheModifierState(false);
 
+        if (result)
+        {
+            logs.info() << "The constraint generator has finished.";
+        }
+        // Reload all data
+        logs.info() << "Updating the study data...";
 
-		// Building Network Constraints (in background)
-		auto* job = new JobBuildConstraints(filename, study);
-		const bool result = job->run();
-		job->Destroy();
+        // The binding constraints data must be reloaded since the current
+        // code is not able to dynamically reload it by itself
+        study->ensureDataAreLoadedForAllBindingConstraints();
 
+        // Reload runtime info about the study (Paranoid, should not be required)
+        if (study->uiinfo)
+            study->uiinfo->reloadAll();
 
-		
+        GUIFlagInvalidateAreas = true;
+        OnStudyEndUpdate();
+        OnStudyChanged(*study);
+        OnStudySettingsChanged();
+        OnStudyAreasChanged();
 
-		//Forms::Disabler<Forms::ApplWnd> disabler(mainFrm);
-		{
+        // Reset the status bar
+        mainFrm.resetDefaultStatusBarText();
 
-			// Lock the window to prevent flickering
-			wxWindowUpdateLocker updater(&mainFrm);
+        mainFrm.forceRefresh();
+    }
 
-			// Refreshing the output
-			RefreshListOfOutputsForTheCurrentStudy();
+    // Checking for orphan swap files
+    // We may have to clean the cache folder
+    mainFrm.timerCleanSwapFiles(5000 /*ms*/);
 
-			// The refresh is important. This is the way to force the reloading
-			// some data (mainly wxGrid)
-			mainFrm.refreshStudyLogs();
+    // Remove the temporary file
+    IO::File::Delete(filename);
 
-			// The study is not modified anymore
-			// ResetTheModifierState(false);
+    // How long did the generation take ?
+    const wxTimeSpan timeSpan = wxDateTime::Now() - startTime;
 
-			if (result)
-			{
-				logs.info() << "The constraint generator has finished.";
-			}
-			// Reload all data
-			logs.info() << "Updating the study data...";
-			
-			// The binding constraints data must be reloaded since the current
-			// code is not able to dynamically reload it by itself
-			study->ensureDataAreLoadedForAllBindingConstraints();
+    Window::Message message(&mainFrm,
+                            wxT("Constraint Generator"),
+                            wxT("The constraint generator has finished"),
+                            wxString() << wxT("Elapsed time : ") << timeSpan.Format());
+    message.add(Window::Message::btnContinue);
+    message.showModal();
+}
 
-			// Reload runtime info about the study (Paranoid, should not be required)
-			if (study->uiinfo)
-				study->uiinfo->reloadAll();
-			
-			
-			GUIFlagInvalidateAreas = true;
-			OnStudyEndUpdate();
-			OnStudyChanged(*study);
-			OnStudySettingsChanged();
-			OnStudyAreasChanged();
-			
-
-			// Reset the status bar
-			mainFrm.resetDefaultStatusBarText();
-
-			mainFrm.forceRefresh();
-		
-		}
-		
-		
-
-		// Checking for orphan swap files
-		// We may have to clean the cache folder
-		mainFrm.timerCleanSwapFiles(5000 /*ms*/);
-
-		// Remove the temporary file
-		IO::File::Delete(filename);
-
-		// How long did the generation take ?
-		const wxTimeSpan timeSpan = wxDateTime::Now() - startTime;
-
-		Window::Message message(&mainFrm, wxT("Constraint Generator"),
-			wxT("The constraint generator has finished"),
-			wxString() << wxT("Elapsed time : ") << timeSpan.Format());
-		message.add(Window::Message::btnContinue);
-		message.showModal();
-
-
-	}
-
-
-	
-
-
-	void ApplWnd::launchConstraintsBuilder(const String& filename)
-	{
-		if (not filename.empty())
-		{
-			wxCommandEvent evt(wxEVT_COMMAND_MENU_SELECTED, mnIDLaunchConstraintsBuilder);
-			evt.SetString(wxStringFromUTF8(filename));
-			AddPendingEvent(evt);
-		}
-	}
+void ApplWnd::launchConstraintsBuilder(const String& filename)
+{
+    if (not filename.empty())
+    {
+        wxCommandEvent evt(wxEVT_COMMAND_MENU_SELECTED, mnIDLaunchConstraintsBuilder);
+        evt.SetString(wxStringFromUTF8(filename));
+        AddPendingEvent(evt);
+    }
+}
 
 } // namespace Forms
 } // namespace Antares
-

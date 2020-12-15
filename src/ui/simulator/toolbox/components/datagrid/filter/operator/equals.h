@@ -25,10 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_FILTER_OPERATOR_NOT_EQUALS_H__
-# define __ANTARES_TOOLBOX_FILTER_OPERATOR_NOT_EQUALS_H__
+#define __ANTARES_TOOLBOX_FILTER_OPERATOR_NOT_EQUALS_H__
 
-# include "../operator.h"
-
+#include "../operator.h"
 
 namespace Antares
 {
@@ -38,34 +37,32 @@ namespace Filter
 {
 namespace Operator
 {
+class EqualsTo : public AOperator
+{
+public:
+    EqualsTo(AFilterBase* parent) : AOperator(parent, wxT("="), wxT("="))
+    {
+    }
+    virtual ~EqualsTo()
+    {
+    }
 
+    virtual bool compute(const int a) const
+    {
+        return a == parameters[0].value.asInt;
+    }
 
-	class EqualsTo : public AOperator
-	{
-	public:
-		EqualsTo(AFilterBase* parent)
-			:AOperator(parent, wxT("="), wxT("="))
-		{}
-		virtual ~EqualsTo() {}
+    virtual bool compute(const double a) const
+    {
+        return fabs(a - parameters[0].value.asDouble) < 0.00001;
+    }
 
-		virtual bool compute(const int a) const
-		{
-			return a == parameters[0].value.asInt;
-		}
+    virtual bool compute(const wxString& a) const
+    {
+        return a == parameters[0].value.asString;
+    }
 
-		virtual bool compute(const double a) const
-		{
-			return fabs(a - parameters[0].value.asDouble) < 0.00001;
-		}
-
-		virtual bool compute(const wxString& a) const
-		{
-			return a == parameters[0].value.asString;
-		}
-
-	}; // class EqualsTo
-
-
+}; // class EqualsTo
 
 } // namespace Operator
 } // namespace Filter

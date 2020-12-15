@@ -25,14 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_THERMAL_SUMMARY_SINGLE_AREA_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_THERMAL_SUMMARY_SINGLE_AREA_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_THERMAL_SUMMARY_SINGLE_AREA_H__
 
-# include <antares/wx-wrapper.h>
-# include "../../renderer.h"
-# include "../../../../input/area.h"
-# include <antares/study/parts/thermal/cluster.h>
-
-
+#include <antares/wx-wrapper.h>
+#include "../../renderer.h"
+#include "../../../../input/area.h"
+#include <antares/study/parts/thermal/cluster.h>
 
 namespace Antares
 {
@@ -42,53 +40,62 @@ namespace Datagrid
 {
 namespace Renderer
 {
+class ThermalClusterSummarySingleArea : public IRenderer
+{
+public:
+    ThermalClusterSummarySingleArea(wxWindow* control, Toolbox::InputSelector::Area* notifier);
 
+    virtual ~ThermalClusterSummarySingleArea();
 
+    virtual int width() const
+    {
+        return 14;
+    }
+    virtual int height() const
+    {
+        return (pArea) ? pArea->thermal.list.size() : 0;
+    }
 
-	class ThermalClusterSummarySingleArea : public IRenderer
-	{
-	public:
-		ThermalClusterSummarySingleArea(wxWindow* control, Toolbox::InputSelector::Area* notifier);
+    virtual wxString columnCaption(int colIndx) const;
 
-		virtual ~ThermalClusterSummarySingleArea();
+    virtual wxString rowCaption(int rowIndx) const;
 
-		virtual int width() const {return 14;}
-		virtual int height() const {return (pArea) ? pArea->thermal.list.size() : 0;}
+    virtual wxString cellValue(int x, int y) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual double cellNumericValue(int x, int y) const;
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual bool cellValue(int x, int y, const Yuni::String& v);
 
-		virtual wxString cellValue(int x, int y) const;
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    { /*Do nothing*/
+    }
 
-		virtual double cellNumericValue(int x, int y) const;
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
 
-		virtual bool cellValue(int x, int y, const Yuni::String& v);
+    virtual uint maxWidthResize() const
+    {
+        return 0;
+    }
+    virtual uint maxHeightResize() const
+    {
+        return 0;
+    }
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{/*Do nothing*/}
+    virtual bool valid() const
+    {
+        return (pArea != NULL);
+    }
 
-		virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+protected:
+    virtual void onAreaChanged(Antares::Data::Area* area);
+    virtual void onStudyClosed() override;
+    void onStudyAreaDelete(Antares::Data::Area* area);
 
-		virtual uint maxWidthResize() const {return 0;}
-		virtual uint maxHeightResize() const {return 0;}
-
-		virtual bool valid() const {return (pArea != NULL);}
-
-
-	protected:
-		virtual void onAreaChanged(Antares::Data::Area* area);
-		virtual void onStudyClosed() override;
-		void onStudyAreaDelete(Antares::Data::Area* area);
-
-	private:
-		Antares::Data::Area* pArea;
-		wxWindow* pControl;
-		Toolbox::InputSelector::Area* pAreaNotifier;
-	}; // class ThermalClusterPrepro
-
-
-
+private:
+    Antares::Data::Area* pArea;
+    wxWindow* pControl;
+    Toolbox::InputSelector::Area* pAreaNotifier;
+}; // class ThermalClusterPrepro
 
 } // namespace Renderer
 } // namespace Datagrid

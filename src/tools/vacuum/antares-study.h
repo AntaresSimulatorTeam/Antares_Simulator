@@ -25,40 +25,41 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_STUDY_H__
-# define __ANTARES_STUDY_H__
+#define __ANTARES_STUDY_H__
 
-# include <yuni/yuni.h>
-# include <fswalker/fswalker.h>
-
+#include <yuni/yuni.h>
+#include <fswalker/fswalker.h>
 
 class AntaresStudy : public FSWalker::IExtension
 {
 public:
-	AntaresStudy(yint64 dateLimit);
-	virtual ~AntaresStudy() {}
+    AntaresStudy(yint64 dateLimit);
+    virtual ~AntaresStudy()
+    {
+    }
 
-	virtual const char* caption() const;
+    virtual const char* caption() const;
 
-	virtual FSWalker::OnDirectoryEvent directoryEvent();
+    virtual FSWalker::OnDirectoryEvent directoryEvent();
 
-	virtual int priority() const {return 9999;} // must be first
+    virtual int priority() const
+    {
+        return 9999;
+    } // must be first
 
-	virtual void* userdataCreate(FSWalker::DispatchJobEvent& queue);
+    virtual void* userdataCreate(FSWalker::DispatchJobEvent& queue);
 
-	virtual void userdataDestroy(void* userdata);
-
+    virtual void userdataDestroy(void* userdata);
 
 public:
-	yuint64 bytesDeleted;
-	yuint64 filesDeleted;
-	yuint64 foldersDeleted;
+    yuint64 bytesDeleted;
+    yuint64 filesDeleted;
+    yuint64 foldersDeleted;
 
 private:
-	Yuni::Mutex pMutex;
-	yint64 pDateLimit;
+    Yuni::Mutex pMutex;
+    yint64 pDateLimit;
 
 }; // class AntaresStudy
-
-
 
 #endif // __ANTARES_STUDY_H__

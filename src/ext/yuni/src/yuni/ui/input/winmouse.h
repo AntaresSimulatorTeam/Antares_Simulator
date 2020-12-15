@@ -17,34 +17,41 @@ namespace Yuni
 {
 namespace Input
 {
+//! Mouse input management under Windows
+class WinMouse : public IMouse
+{
+public:
+    //! Constructor
+    WinMouse()
+    {
+        POINT p;
+        ::GetCursorPos(&p);
+        pPos(p.x, p.y);
+        pLastPos(pPos);
+        pDragPos(pPos);
+    }
 
+    //! Virtual destructor
+    virtual ~WinMouse()
+    {
+    }
 
-	//! Mouse input management under Windows
-	class WinMouse : public IMouse
-	{
-	public:
-		//! Constructor
-		WinMouse()
-		{
-			POINT p;
-			::GetCursorPos(&p);
-			pPos(p.x, p.y);
-			pLastPos(pPos);
-			pDragPos(pPos);
-		}
+    virtual void showCursor()
+    {
+        ::ShowCursor(true);
+    }
 
-		//! Virtual destructor
-		virtual ~WinMouse() {}
+    virtual void hideCursor()
+    {
+        ::ShowCursor(false);
+    }
 
-		virtual void showCursor() { ::ShowCursor(true); }
+    virtual void showCursor(bool visible)
+    {
+        ::ShowCursor(visible);
+    }
 
-		virtual void hideCursor() { ::ShowCursor(false); }
-
-		virtual void showCursor(bool visible) { ::ShowCursor(visible); }
-
-	}; // class WinMouse
-
-
+}; // class WinMouse
 
 } // namespace Input
 } // namespace Yuni

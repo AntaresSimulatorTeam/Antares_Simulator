@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_WINDOWS_OUTPUT_CONTENT_HXX__
-# define __ANTARES_WINDOWS_OUTPUT_CONTENT_HXX__
-
+#define __ANTARES_WINDOWS_OUTPUT_CONTENT_HXX__
 
 namespace Antares
 {
@@ -34,32 +33,25 @@ namespace Private
 {
 namespace OutputViewerData
 {
+inline Content::Content() : hasYearByYear(false), hasConcatenedYbY(false)
+{
+    ybyInterval[0] = (uint)-1;
+    ybyInterval[1] = 0;
+}
 
-	inline Content::Content() :
-		hasYearByYear(false),
-		hasConcatenedYbY(false)
-	{
-		ybyInterval[0] = (uint) -1;
-		ybyInterval[1] = 0;
-	}
+inline Content::~Content()
+{
+}
 
+inline bool Content::SimulationType::empty() const
+{
+    return areas.empty() && links.empty();
+}
 
-	inline Content::~Content()
-	{}
-
-
-	inline bool Content::SimulationType::empty() const
-	{
-		return areas.empty() && links.empty();
-	}
-
-
-	inline bool Content::empty() const
-	{
-		return economy.empty() && adequacy.empty();
-	}
-
-
+inline bool Content::empty() const
+{
+    return economy.empty() && adequacy.empty();
+}
 
 } // namespace OutputViewerData
 } // namespace Private

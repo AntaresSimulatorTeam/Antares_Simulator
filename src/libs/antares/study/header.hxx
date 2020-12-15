@@ -25,27 +25,20 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_HEADER_HXX__
-# define __ANTARES_LIBS_STUDY_HEADER_HXX__
-
+#define __ANTARES_LIBS_STUDY_HEADER_HXX__
 
 namespace Antares
 {
 namespace Data
 {
+inline StudyHeader::StudyHeader()
+{
+    reset();
+}
 
-
-	inline StudyHeader::StudyHeader()
-	{
-		reset();
-	}
-
-
-	inline StudyHeader::~StudyHeader()
-	{}
-
-
-
-
+inline StudyHeader::~StudyHeader()
+{
+}
 
 } // namespace Data
 } // namespace Antares

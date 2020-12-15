@@ -25,127 +25,141 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_MAP_BINDING_CONSTRAINT_H__
-# define __ANTARES_TOOLBOX_MAP_BINDING_CONSTRAINT_H__
+#define __ANTARES_TOOLBOX_MAP_BINDING_CONSTRAINT_H__
 
-# include <antares/wx-wrapper.h>
-# include "item.h"
-
+#include <antares/wx-wrapper.h>
+#include "item.h"
 
 namespace Antares
 {
 namespace Map
 {
+class BindingConstraint final : public Item
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    BindingConstraint(Manager& manager);
+    /*!
+    ** \brief Destructor
+    */
+    virtual ~BindingConstraint();
+    //@}
 
+    /*!
+    ** \brief Type
+    */
+    virtual Type type() const
+    {
+        return tyBindingConstraint;
+    }
 
-	class BindingConstraint final : public Item
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		BindingConstraint(Manager& manager);
-		/*!
-		** \brief Destructor
-		*/
-		virtual ~BindingConstraint();
-		//@}
+    //! \name Selection
+    //@{
+    virtual bool selected() const
+    {
+        return pSelected;
+    }
+    virtual void selected(bool v);
+    //@}
 
-		/*!
-		** \brief Type
-		*/
-		virtual Type type() const {return tyBindingConstraint;}
+    //! \name Cache
+    //@{
+    /*!
+    ** \brief Refresh the cache (even if not invalidated)
+    */
+    virtual void refreshCache(wxDC& dc);
+    //@}
 
-		//! \name Selection
-		//@{
-		virtual bool selected() const {return pSelected;}
-		virtual void selected(bool v);
-		//@}
+    //! \name Misc
+    //@{
+    /*!
+    ** \brief Get if the drawing representation of the node contains the point (x,y)
+    */
+    virtual bool contains(const int, const int, double& distance)
+    {
+        return false;
+    }
 
+    /*!
+    ** \brief Get if the drawing representation of the node is contained inside a bounding box
+    **
+    ** This method is used to know if the mouse if over a node or not
+    */
+    virtual bool isContained(const int, const int, const int, const int) const
+    {
+        return false;
+    }
 
-		//! \name Cache
-		//@{
-		/*!
-		** \brief Refresh the cache (even if not invalidated)
-		*/
-		virtual void refreshCache(wxDC& dc);
-		//@}
+    /*!
+    ** \brief Draw the node
+    */
+    virtual void draw(DrawingContext& dc);
+    virtual void drawExternalDrawer(DrawingContext& dc);
+    //@}
 
+    /*!
+    ** \brief Extends the bounding box
+    */
+    virtual void extendBoundingBox(wxPoint&, wxPoint&)
+    {
+    }
 
-		//! \name Misc
-		//@{
-		/*!
-		** \brief Get if the drawing representation of the node contains the point (x,y)
-		*/
-		virtual bool contains(const int, const int, double& distance) {return false;}
+    void clear();
 
-		/*!
-		** \brief Get if the drawing representation of the node is contained inside a bounding box
-		**
-		** This method is used to know if the mouse if over a node or not
-		*/
-		virtual bool isContained(const int, const int, const int, const int) const {return false;}
+    bool empty() const
+    {
+        return pConnections.empty();
+    }
+    uint count() const
+    {
+        return (uint)pConnections.size();
+    }
 
-		/*!
-		** \brief Draw the node
-		*/
-		virtual void draw(DrawingContext& dc);
-		virtual void drawExternalDrawer(DrawingContext& dc);
-		//@}
+    void add(Item* item);
 
-		/*!
-		** \brief Extends the bounding box
-		*/
-		virtual void extendBoundingBox(wxPoint&, wxPoint&) {}
+    bool remove(Item* item);
 
+private:
+    struct Infos
+    {
+    public:
+        Infos() : weight(1.), selected(false)
+        {
+        }
+        Infos(const Infos& c) : weight(c.weight), selected(false)
+        {
+        }
+        double weight;
+        bool selected;
+    };
 
-		void clear();
+    typedef std::map<Connection*, Infos> Connections;
+    Connections pConnections;
 
-		bool empty() const {return pConnections.empty();}
-		uint count() const {return (uint) pConnections.size();}
+    struct TextPart
+    {
+        TextPart() : text(), color(0, 0, 0), size(0, 0)
+        {
+        }
+        TextPart(const wxString& s, const int r, const int g, const int b) : text(s), color(r, g, b)
+        {
+        }
+        wxString text;
+        wxColour color;
+        wxSize size;
 
-		void add(Item* item);
+        void refreshCache(wxDC& dc);
+    };
 
-		bool remove(Item* item);
+    std::vector<TextPart> pTextParts;
 
+}; // class BindingConstraint
 
-	private:
-		struct Infos
-		{
-		public:
-			Infos() :weight(1.), selected(false) {}
-			Infos(const Infos& c) :weight(c.weight), selected(false) {}
-			double weight;
-			bool selected;
-		};
-
-		typedef std::map<Connection*, Infos>  Connections;
-		Connections pConnections;
-
-		struct TextPart
-		{
-			TextPart() :text(), color(0,0,0), size(0,0){}
-			TextPart(const wxString& s, const int r, const int g, const int b)
-				:text(s), color(r,g,b)
-			{
-			}
-			wxString text;
-			wxColour color;
-			wxSize   size;
-
-			void refreshCache(wxDC& dc);
-		};
-
-		std::vector<TextPart>  pTextParts;
-
-	}; // class BindingConstraint
-
-
-
-
-
-} // namespace Item
+} // namespace Map
 } // namespace Antares
 
 #endif // __ANTARES_TOOLBOX_MAP_BINDING_CONSTRAINT_H__

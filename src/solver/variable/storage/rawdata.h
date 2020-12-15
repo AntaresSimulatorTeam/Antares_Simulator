@@ -25,12 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_STORAGE_RAWDATA_H__
-# define __SOLVER_VARIABLE_STORAGE_RAWDATA_H__
+#define __SOLVER_VARIABLE_STORAGE_RAWDATA_H__
 
-# include <yuni/yuni.h>
-# include <antares/study.h>
-# include "intermediate.h"
-
+#include <yuni/yuni.h>
+#include <antares/study.h>
+#include "intermediate.h"
 
 namespace Antares
 {
@@ -42,39 +41,34 @@ namespace R
 {
 namespace AllYears
 {
+class RawData
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    RawData();
+    //! Destructor
+    ~RawData();
+    //@}
 
+public:
+    void initializeFromStudy(const Data::Study& study);
+    void reset();
+    void merge(unsigned int year, const IntermediateValues& rhs);
 
-	class RawData
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		RawData();
-		//! Destructor
-		~RawData();
-		//@}
+public:
+    double monthly[maxMonths];
+    double weekly[maxWeeksInAYear];
+    double daily[maxDaysInAYear];
+    Antares::Memory::Stored<double>::Type hourly;
+    double* year;
+    mutable double allYears;
+    unsigned int nbYearsCapacity;
 
-	public:
-		void initializeFromStudy(const Data::Study& study);
-		void reset();
-		void merge(unsigned int year, const IntermediateValues& rhs);
-
-	public:
-		double monthly[maxMonths];
-		double weekly[maxWeeksInAYear];
-		double daily[maxDaysInAYear];
-		Antares::Memory::Stored<double>::Type hourly;
-		double* year;
-		mutable double allYears;
-		unsigned int nbYearsCapacity;
-
-	}; // class RawData
-
-
-
+}; // class RawData
 
 } // namespace AllYears
 } // namespace R

@@ -10,60 +10,68 @@
 */
 #pragma once
 
-
 namespace Yuni
 {
 namespace Result
 {
+template<typename T>
+struct Or final
+{
+public:
+    //! Type of the result
+    typedef bool ResultType;
 
+public:
+    //! \name Constructors
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    Or() : pValue(false)
+    {
+    }
+    Or(bool defaultValue) : pValue(defaultValue)
+    {
+    }
+    /*!
+    ** \brief Copy constructor
+    */
+    Or(const Or& rhs) : pValue(rhs.pValue)
+    {
+    }
+    //@}
 
-	template<typename T>
-	struct Or final
-	{
-	public:
-		//! Type of the result
-		typedef bool ResultType;
+    //! Take into account a new value
+    void operator()(const T& v)
+    {
+        pValue = (pValue || v);
+    }
 
-	public:
-		//! \name Constructors
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		Or()
-			:pValue(false)
-		{}
-		Or(bool defaultValue)
-			:pValue(defaultValue)
-		{}
-		/*!
-		** \brief Copy constructor
-		*/
-		Or(const Or& rhs) :pValue(rhs.pValue) {}
-		//@}
+    /*!
+    ** \brief The Final result
+    */
+    ResultType result() const
+    {
+        return pValue;
+    }
 
-		//! Take into account a new value
-		void operator () (const T& v) { pValue = (pValue || v);}
+    /*!
+    ** \brief Reset the internal counter
+    */
+    void reset()
+    {
+        pValue = false;
+    }
+    void reset(bool v)
+    {
+        pValue = v;
+    }
 
-		/*!
-		** \brief The Final result
-		*/
-		ResultType result() const {return pValue;}
+private:
+    //! The internal counter
+    bool pValue;
 
-		/*!
-		** \brief Reset the internal counter
-		*/
-		void reset() {pValue = false;}
-		void reset(bool v) {pValue = v;}
-
-	private:
-		//! The internal counter
-		bool pValue;
-
-	}; // class Or
-
-
-
+}; // class Or
 
 } // namespace Result
 } // namespace Yuni

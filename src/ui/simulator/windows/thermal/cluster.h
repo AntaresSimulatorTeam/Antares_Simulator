@@ -25,16 +25,14 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_WINDOW_THERMAL_COMMON_H__
-# define __ANTARES_APPLICATION_WINDOW_THERMAL_COMMON_H__
+#define __ANTARES_APPLICATION_WINDOW_THERMAL_COMMON_H__
 
-# include <antares/wx-wrapper.h>
-# include <ui/common/component/panel.h>
-# include "../../toolbox/components/datagrid/component.h"
-# include "../../toolbox/input/thermal-cluster.h"
-# include "../../toolbox/validator.h"
-# include "../../windows/inspector/data.h"
-
-
+#include <antares/wx-wrapper.h>
+#include <ui/common/component/panel.h>
+#include "../../toolbox/components/datagrid/component.h"
+#include "../../toolbox/input/thermal-cluster.h"
+#include "../../toolbox/validator.h"
+#include "../../windows/inspector/data.h"
 
 namespace Antares
 {
@@ -42,45 +40,39 @@ namespace Window
 {
 namespace Thermal
 {
+class CommonProperties : public Component::Panel, public Yuni::IEventObserver<CommonProperties>
+{
+public:
+    CommonProperties(wxWindow* parent, Toolbox::InputSelector::ThermalCluster* notifier);
+    virtual ~CommonProperties();
 
+private:
+    void onThermalClusterChanged(Data::ThermalCluster* cluster);
 
-	class CommonProperties : public Component::Panel, public Yuni::IEventObserver<CommonProperties>
-	{
-	public:
-		CommonProperties(wxWindow* parent, Toolbox::InputSelector::ThermalCluster* notifier);
-		virtual ~CommonProperties();
+    void onUpdAggregateListDueToGroupChange();
 
-	private:
-		void onThermalClusterChanged(Data::ThermalCluster* cluster);
+    void thermalEventConnect();
+    void thermalEventDisconnect();
 
-		void onUpdAggregateListDueToGroupChange();
+    void onStudyThermalClusterRenamed(Data::ThermalCluster* cluster);
 
-		void thermalEventConnect();
-		void thermalEventDisconnect();
+    void thermalSettingsChanged();
 
-		void onStudyThermalClusterRenamed(Data::ThermalCluster* cluster);
+    void onStudyClosed();
 
-		void thermalSettingsChanged();
+private:
+    //! The main sizer
+    wxSizer* pMainSizer;
+    Data::ThermalCluster* pAggregate;
+    Toolbox::InputSelector::ThermalCluster* pNotifier;
+    bool pGroupHasChanged;
 
-		void onStudyClosed();
+    Yuni::Bind<void(const Window::Inspector::InspectorData::Ptr&)> pUpdateInfoAboutPlant;
 
-	private:
-		//! The main sizer
-		wxSizer* pMainSizer;
-		Data::ThermalCluster* pAggregate;
-		Toolbox::InputSelector::ThermalCluster* pNotifier;
-		bool pGroupHasChanged;
-
-		Yuni::Bind<void (const Window::Inspector::InspectorData::Ptr&)> pUpdateInfoAboutPlant;
-
-	}; // class Aggregate
-
-
-
+}; // class Aggregate
 
 } // namespace Thermal
 } // namespace Window
 } // namespace Antares
-
 
 #endif // __ANTARES_APPLICATION_WINDOW_THERMAL_COMMON_H__

@@ -32,8 +32,6 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
 namespace Component
@@ -44,169 +42,164 @@ namespace Renderer
 {
 namespace Links
 {
+Summary::Summary(wxWindow* control) : pControl(control)
+{
+}
 
+Summary::~Summary()
+{
+    destroyBoundEvents();
+}
 
-	Summary::Summary(wxWindow* control) :
-		pControl(control)
-	{
-	}
+wxString Summary::rowCaption(int rowIndx) const
+{
+    auto study = Data::Study::Current::Get();
+    if (!(!study))
+    {
+        auto* lnk = study->uiinfo->link((uint)(rowIndx));
+        assert(lnk);
+        assert(lnk->from);
+        assert(lnk->with);
 
+        wxString s;
+        s << wxStringFromUTF8(lnk->from->id);
+        s << wxT(" / ") << wxStringFromUTF8(lnk->with->id);
+        return s;
+    }
+    return wxEmptyString;
+}
 
-	Summary::~Summary()
-	{
-		destroyBoundEvents();
-	}
+double Summary::cellNumericValue(int x, int y) const
+{
+    auto study = Data::Study::Current::Get();
+    if (!study)
+        return 0;
 
+    assert(study->uiinfo);
+    auto& uiinfo = *(study->uiinfo);
+    Data::AreaLink* link = (uint)y < uiinfo.linkCount() ? uiinfo.link((uint)y) : nullptr;
+    if (!link)
+        return 0.;
+    switch (x)
+    {
+    case 0:
+        return (link->useHurdlesCost) ? 1. : 0.;
+    case 1:
+        return (link->transmissionCapacities == Data::tncEnabled) ? 1. : 0.;
+    }
+    return 0.;
+}
 
-	wxString Summary::rowCaption(int rowIndx) const
-	{
-		auto study = Data::Study::Current::Get();
-		if (!(!study))
-		{
-			auto* lnk = study->uiinfo->link((uint)(rowIndx));
-			assert(lnk);
-			assert(lnk->from);
-			assert(lnk->with);
+wxString Summary::cellValue(int x, int y) const
+{
+    if (not Data::Study::Current::Valid())
+        return wxEmptyString;
+    assert(Data::Study::Current::Get()->uiinfo);
+    auto& uiinfo = *(Data::Study::Current::Get()->uiinfo);
+    auto* link = (uint)y < uiinfo.linkCount() ? uiinfo.link((uint)y) : nullptr;
+    if (not link)
+        return wxEmptyString;
+    switch (x)
+    {
+    case 0:
+        return (link->useHurdlesCost) ? wxT("enabled") : wxT("ignore");
+    case 1:
+        switch (link->transmissionCapacities)
+        {
+        case Data::tncEnabled:
+            return wxT("enabled");
+        case Data::tncIgnore:
+            return wxT("set to null");
+        case Data::tncInfinite:
+            return wxT("set to infinite");
+        }
+    }
+    return wxEmptyString;
+}
 
-			wxString s;
-			s << wxStringFromUTF8(lnk->from->id);
-			s << wxT(" / ") << wxStringFromUTF8(lnk->with->id);
-			return s;
-		}
-		return wxEmptyString;
-	}
+wxString Summary::columnCaption(int x) const
+{
+    switch (x)
+    {
+    case 0:
+        return wxT("  Hurdles Cost   ");
+    case 1:
+        return wxT("   Transmission capacities   ");
+    default:
+        return wxEmptyString;
+    }
+    return wxEmptyString;
+}
 
+IRenderer::CellStyle Summary::cellStyle(int x, int y) const
+{
+    if (not Data::Study::Current::Valid())
+        return IRenderer::cellStyleDefault;
+    assert(Data::Study::Current::Get()->uiinfo);
+    auto& uiinfo = *(Data::Study::Current::Get()->uiinfo);
+    Data::AreaLink* link = (uint)y < uiinfo.linkCount() ? uiinfo.link((uint)y) : nullptr;
+    if (!link)
+        return IRenderer::cellStyleDefault;
 
-	double Summary::cellNumericValue(int x, int y) const
-	{
-		auto study = Data::Study::Current::Get();
-		if (!study)
-			return 0;
+    switch (x)
+    {
+    case 0:
+        return (not link->useHurdlesCost) ? IRenderer::cellStyleConstraintWeight
+                                          : IRenderer::cellStyleDefault;
+    case 1:
+        return (link->transmissionCapacities != Data::tncEnabled)
+                 ? IRenderer::cellStyleConstraintWeight
+                 : IRenderer::cellStyleDefault;
+    }
+    return IRenderer::cellStyleDefault;
+}
 
-		assert(study->uiinfo);
-		auto& uiinfo = *(study->uiinfo);
-		Data::AreaLink* link = (uint) y < uiinfo.linkCount() ? uiinfo.link((uint) y) : nullptr;
-		if (!link)
-			return 0.;
-		switch (x)
-		{
-			case 0:
-				return (link->useHurdlesCost) ? 1. : 0.;
-			case 1:
-				return (link->transmissionCapacities == Data::tncEnabled) ? 1. : 0.;
-		}
-		return 0.;
-	}
+bool Summary::cellValue(int x, int y, const String& value)
+{
+    if (not Data::Study::Current::Valid())
+        return false;
+    assert(Data::Study::Current::Get()->uiinfo);
+    auto& uiinfo = *(Data::Study::Current::Get()->uiinfo);
+    auto* link = (uint)y < uiinfo.linkCount() ? uiinfo.link((uint)y) : nullptr;
+    if (not link)
+        return false;
 
+    CString<10, false> pTmp = value;
+    pTmp.trim();
+    pTmp.toLower();
+    bool v = pTmp.to<bool>();
 
-	wxString Summary::cellValue(int x, int y) const
-	{
-		if (not Data::Study::Current::Valid())
-			return wxEmptyString;
-		assert(Data::Study::Current::Get()->uiinfo);
-		auto& uiinfo = *(Data::Study::Current::Get()->uiinfo);
-		auto* link = (uint) y < uiinfo.linkCount() ? uiinfo.link((uint) y) : nullptr;
-		if (not link)
-			return wxEmptyString;
-		switch (x)
-		{
-			case 0:
-				return (link->useHurdlesCost) ? wxT("enabled") : wxT("ignore");
-			case 1:
-				switch (link->transmissionCapacities)
-				{
-					case Data::tncEnabled:  return wxT("enabled");
-					case Data::tncIgnore:   return wxT("set to null");
-					case Data::tncInfinite: return wxT("set to infinite");
-				}
-		}
-		return wxEmptyString;
-	}
+    switch (x)
+    {
+    case 0:
+        link->useHurdlesCost = v;
+        OnInspectorRefresh(nullptr);
+        MarkTheStudyAsModified();
+        return true;
+    case 1:
+        if (pTmp == "enabled" || pTmp == "e")
+            link->transmissionCapacities = Data::tncEnabled;
+        else if (pTmp == "infinite" || pTmp == "set to infinite" || pTmp == "inf" || pTmp == "i")
+            link->transmissionCapacities = Data::tncInfinite;
+        else if (pTmp == "0" || pTmp == "zero" || pTmp == "null" || pTmp == "set to null"
+                 || pTmp == "n")
+            link->transmissionCapacities = Data::tncIgnore;
 
+        OnInspectorRefresh(nullptr);
+        MarkTheStudyAsModified();
+        return true;
+    }
+    return false;
+}
 
-	wxString Summary::columnCaption(int x) const
-	{
-		switch (x)
-		{
-			case 0: return wxT("  Hurdles Cost   ");
-			case 1: return wxT("   Transmission capacities   ");
-			default: return wxEmptyString;
-		}
-		return wxEmptyString;
-	}
-
-
-	IRenderer::CellStyle Summary::cellStyle(int x, int y) const
-	{
-		if (not Data::Study::Current::Valid())
-			return IRenderer::cellStyleDefault;
-		assert(Data::Study::Current::Get()->uiinfo);
-		auto& uiinfo = *(Data::Study::Current::Get()->uiinfo);
-		Data::AreaLink* link = (uint) y < uiinfo.linkCount() ? uiinfo.link((uint) y) : nullptr;
-		if (!link)
-			return IRenderer::cellStyleDefault;
-
-		switch (x)
-		{
-			case 0: return (not link->useHurdlesCost)
-				? IRenderer::cellStyleConstraintWeight : IRenderer::cellStyleDefault;
-			case 1: return (link->transmissionCapacities != Data::tncEnabled)
-				? IRenderer::cellStyleConstraintWeight : IRenderer::cellStyleDefault;
-		}
-		return IRenderer::cellStyleDefault;
-	}
-
-
-	bool Summary::cellValue(int x, int y, const String& value)
-	{
-		if (not Data::Study::Current::Valid())
-			return false;
-		assert(Data::Study::Current::Get()->uiinfo);
-		auto& uiinfo = *(Data::Study::Current::Get()->uiinfo);
-		auto* link = (uint) y < uiinfo.linkCount() ? uiinfo.link((uint) y) : nullptr;
-		if (not link)
-			return false;
-
-		CString<10, false> pTmp = value;
-		pTmp.trim();
-		pTmp.toLower();
-		bool v = pTmp.to<bool>();
-
-		switch (x)
-		{
-			case 0:
-				link->useHurdlesCost = v;
-				OnInspectorRefresh(nullptr);
-				MarkTheStudyAsModified();
-				return true;
-			case 1:
-				if (pTmp == "enabled" || pTmp == "e")
-					link->transmissionCapacities = Data::tncEnabled;
-				else if (pTmp == "infinite" || pTmp == "set to infinite" || pTmp == "inf" || pTmp == "i")
-					link->transmissionCapacities = Data::tncInfinite;
-				else if (pTmp == "0" || pTmp == "zero" || pTmp == "null" || pTmp == "set to null" || pTmp == "n")
-					link->transmissionCapacities = Data::tncIgnore;
-
-				OnInspectorRefresh(nullptr);
-				MarkTheStudyAsModified();
-				return true;
-		}
-		return false;
-	}
-
-
-	int Summary::height() const
-	{
-		auto study = Data::Study::Current::Get();
-		return !study ? 0 : study->uiinfo->linkCount();
-	}
-
-
-
+int Summary::height() const
+{
+    auto study = Data::Study::Current::Get();
+    return !study ? 0 : study->uiinfo->linkCount();
+}
 
 } // namespace Links
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
 } // namespace Antares
-

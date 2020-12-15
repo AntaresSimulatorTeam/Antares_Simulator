@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_MAIN_H__
-# define __ANTARES_APPLICATION_MAIN_H__
+#define __ANTARES_APPLICATION_MAIN_H__
 
-# include "main/main.h"
+#include "main/main.h"
 
 #endif // __ANTARES_APPLICATION_MAIN_H__

@@ -25,19 +25,19 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_SIMULATION_SOLVER_H__
-# define __SOLVER_SIMULATION_SOLVER_H__
+#define __SOLVER_SIMULATION_SOLVER_H__
 
-# include <antares/study/memory-usage.h>
-# include <antares/study.h>
-# include <antares/logs.h>
-# include <yuni/core/string.h>
-# include "../variable/state.h"
-# include "../misc/options.h"
-# include "solver.data.h"
-# include "solver.utils.h"
-# include "../hydro/management/management.h"
+#include <antares/study/memory-usage.h>
+#include <antares/study.h>
+#include <antares/logs.h>
+#include <yuni/core/string.h>
+#include "../variable/state.h"
+#include "../misc/options.h"
+#include "solver.data.h"
+#include "solver.utils.h"
+#include "../hydro/management/management.h"
 
-# include "../../libs/antares/study/fwd.h"	// Added for definition of type PowerFluctuations
+#include "../../libs/antares/study/fwd.h" // Added for definition of type PowerFluctuations
 
 namespace Antares
 {
@@ -45,135 +45,139 @@ namespace Solver
 {
 namespace Simulation
 {
+template<class Impl>
+class yearJob;
 
-	template<class Impl> class yearJob;
-	
-	template<class Impl>
-	class ISimulation : public Impl
-	{
-		friend class yearJob<Impl>;
-	public:
-		//! The real implementation for the simulation
-		typedef Impl ImplementationType;
+template<class Impl>
+class ISimulation : public Impl
+{
+    friend class yearJob<Impl>;
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor (with a given study)
-		*/
-		ISimulation(Data::Study& study, const ::Settings& settings);
-		//! Destructor
-		~ISimulation();
-		//@}
+public:
+    //! The real implementation for the simulation
+    typedef Impl ImplementationType;
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor (with a given study)
+    */
+    ISimulation(Data::Study& study, const ::Settings& settings);
+    //! Destructor
+    ~ISimulation();
+    //@}
 
-		/*!
-		** \brief Run the simulation
-		*/
-		void run();
+    /*!
+    ** \brief Run the simulation
+    */
+    void run();
 
-		/*!
-		** \brief Export the results to disk
-		**
-		** \tparam ResultsForYearByYear False to write down the rglobal esults of the simulation,
-		**   true for the results of the current year (year-by-year mode)
-		** \param year The current year, if applicable
-		*/
-		void writeResults(bool synthesis, uint year = 0, uint numSpace = 9999);
+    /*!
+    ** \brief Export the results to disk
+    **
+    ** \tparam ResultsForYearByYear False to write down the rglobal esults of the simulation,
+    **   true for the results of the current year (year-by-year mode)
+    ** \param year The current year, if applicable
+    */
+    void writeResults(bool synthesis, uint year = 0, uint numSpace = 9999);
 
-		static void estimateMemoryUsage(Antares::Data::StudyMemoryUsage& u);
-		static void estimateMemoryForRandomNumbers(Antares::Data::StudyMemoryUsage& u);
-		static void estimateMemoryForWeeklyPb(Antares::Data::StudyMemoryUsage& u);
-		static void estimateMemoryForOptimizationPb(Antares::Data::StudyMemoryUsage& u, int & nbVars, int & nbConstraints);
-		static void estimateMemoryForSplxPb(Antares::Data::StudyMemoryUsage& u, int & nbVars, int & nbConstraints);
+    static void estimateMemoryUsage(Antares::Data::StudyMemoryUsage& u);
+    static void estimateMemoryForRandomNumbers(Antares::Data::StudyMemoryUsage& u);
+    static void estimateMemoryForWeeklyPb(Antares::Data::StudyMemoryUsage& u);
+    static void estimateMemoryForOptimizationPb(Antares::Data::StudyMemoryUsage& u,
+                                                int& nbVars,
+                                                int& nbConstraints);
+    static void estimateMemoryForSplxPb(Antares::Data::StudyMemoryUsage& u,
+                                        int& nbVars,
+                                        int& nbConstraints);
 
-	public:
-		//! Reference to the current study
-		Data::Study& study;
-		//! The global settings
-		const ::Settings& settings;
+public:
+    //! Reference to the current study
+    Data::Study& study;
+    //! The global settings
+    const ::Settings& settings;
 
+private:
+    /*!
+    ** \brief Regenerate time-series if required for a given year
+    */
+    template<bool PreproOnly>
+    void regenerateTimeSeries(uint year);
 
-	private:
-		/*!
-		** \brief Regenerate time-series if required for a given year
-		*/
-		template<bool PreproOnly> void regenerateTimeSeries(uint year);
+    /*!
+    ** \brief Builds sets of parallel years
+    **
+    ** \return The max number of years in a set of parallel years (to be executed or not)
+    */
+    template<bool PerformCalculationsT>
+    uint buildSetsOfParallelYears(uint firstYear,
+                                  uint endYear,
+                                  std::vector<setOfParallelYears>& setsOfParallelYears);
 
-		/*!
-		** \brief Builds sets of parallel years
-		**
-		** \return The max number of years in a set of parallel years (to be executed or not)
-		*/
-		template<bool PerformCalculationsT>
-		uint buildSetsOfParallelYears(	uint firstYear,
-										uint endYear, 
-										std::vector<setOfParallelYears> & setsOfParallelYears
-										);
+    /*!
+    ** \brief Allocate storage for random numbers of parallel years
+    **
+    ** \param	randomParallelYears	... to be finished ...
+    */
+    void allocateMemoryForRandomNumbers(randomNumbers& randomForParallelYears);
 
-		/*!
-		** \brief Allocate storage for random numbers of parallel years
-		**
-		** \param	randomParallelYears	... to be finished ...
-		*/		
-		void allocateMemoryForRandomNumbers(randomNumbers & randomForParallelYears);
+    /*!
+    ** \brief Computes random numbers for each years of a list
+    **
+    ** \param	randomForYears	Storage for random numbers for years in the list
+    ** \param	years			List of years
+    */
+    void computeRandomNumbers(randomNumbers& randomForYears,
+                              std::vector<uint>& years,
+                              std::map<unsigned int, bool>& isYearPerformed);
 
-		/*!
-		** \brief Computes random numbers for each years of a list
-		**
-		** \param	randomForYears	Storage for random numbers for years in the list
-		** \param	years			List of years	
-		*/
-		void computeRandomNumbers(	randomNumbers & randomForYears,
-									std::vector<uint> & years,
-									std::map<unsigned int, bool> & isYearPerformed	);
+    /*!
+    ** \brief Computes statistics on annual (system and solution) costs, to be printed in output
+    *into separate files
+    **
+    ** Adds the contributions of each performed year contained in the current set to annual system
+    *and solution costs averages over all years.
+    ** These average costs are meant to be printed in output into separate files.
+    ** Same thing for min and max costs over all years.
+    ** Storing these costs to compute std deviation later.
+    */
+    void computeAnnualCostsStatistics(std::vector<Variable::State>& state,
+                                      std::vector<setOfParallelYears>::iterator& set_it);
 
-		/*!
-		** \brief Computes statistics on annual (system and solution) costs, to be printed in output into separate files
-		**
-		** Adds the contributions of each performed year contained in the current set to annual system and solution costs averages over all years.
-		** These average costs are meant to be printed in output into separate files.
-		** Same thing for min and max costs over all years.
-		** Storing these costs to compute std deviation later.
-		*/
-		void computeAnnualCostsStatistics(	std::vector<Variable::State> & state,
-											std::vector<setOfParallelYears>::iterator & set_it	);
+    /*!
+    ** \brief Iterate through all MC years
+    **
+    ** \param firstYear The first real MC year
+    ** \param endYear   The last MC year
+    */
+    template<bool PerformCalculationsT>
+    void loopThroughYears(uint firstYear, uint endYear, std::vector<Variable::State>& state);
 
-		/*!
-		** \brief Iterate through all MC years
-		**
-		** \param firstYear The first real MC year
-		** \param endYear   The last MC year
-		*/
-		template<bool PerformCalculationsT>
-		void loopThroughYears(uint firstYear, uint endYear, std::vector<Variable::State> & state);
+private:
+    //! Some temporary to avoid performing useless complex checks
+    Solver::Private::Simulation::CacheData pData;
+    //!
+    uint pNbYearsReallyPerformed;
+    //! Max number of years performed in parallel
+    uint pNbMaxPerformedYearsInParallel;
+    //! Year by year output results
+    bool pYearByYear;
+    //! Hydro management
+    HydroManagement pHydroManagement;
+    //! Hydro hot start
+    bool pHydroHotStart;
+    //! The first set of parallel year(s) was already run ?
+    bool pFirstSetParallelWasRun;
 
-
-	private:
-		//! Some temporary to avoid performing useless complex checks
-		Solver::Private::Simulation::CacheData pData;
-		//!
-		uint pNbYearsReallyPerformed;
-		//! Max number of years performed in parallel
-		uint pNbMaxPerformedYearsInParallel;
-		//! Year by year output results
-		bool pYearByYear;
-		//! Hydro management
-		HydroManagement pHydroManagement;
-		//! Hydro hot start
-		bool pHydroHotStart;
-		//! The first set of parallel year(s) was already run ? 
-		bool pFirstSetParallelWasRun;
-
-		//! Statistics about annual (system and solution) costs
-		annualCostsStatistics pAnnualCostsStatistics;
-	}; // class ISimulation
+    //! Statistics about annual (system and solution) costs
+    annualCostsStatistics pAnnualCostsStatistics;
+}; // class ISimulation
 
 } // namespace Simulation
 } // namespace Solver
 } // namespace Antares
 
-# include "solver.hxx"
+#include "solver.hxx"
 
 #endif // __SOLVER_SIMULATION_SOLVER_H__

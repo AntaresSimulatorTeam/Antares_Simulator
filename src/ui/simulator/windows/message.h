@@ -25,201 +25,189 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_MESSAGE_H__
-# define __ANTARES_APPLICATION_MESSAGE_H__
+#define __ANTARES_APPLICATION_MESSAGE_H__
 
-# include <antares/wx-wrapper.h>
-# include <yuni/thread/thread.h>
-# include <wx/dialog.h>
-# include <ui/common/component/spotlight.h>
-
-
+#include <antares/wx-wrapper.h>
+#include <yuni/thread/thread.h>
+#include <wx/dialog.h>
+#include <ui/common/component/spotlight.h>
 
 namespace Antares
 {
 namespace Window
 {
+/*!
+** \brief Standard message Box for Antares
+**
+** \code
+** // The main form
+** Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
+**
+** // Creating the message dialog
+** Window::Message message(&mainFrm, wxT("Title of the form"),
+**		wxT("Main message (in bold)"),
+**		wxT("Hello World !"));
+**
+** // Adding some buttons
+** message.add(Window::Message::btnUpgrade);
+** message.add(Window::Message::btnSaveAs, false, 15);
+** message.add(Window::Message::btnCancel, true);
+**
+** // Display the message
+** switch (message.showModal())
+** {
+**	case Window::Message::btnUpgrade: do something; break;
+**	case Window::Message::btnSaveAs : ...; break;
+** }
+** \endcode
+**
+** \note The method `showModal()` should be used instead of `ShowModal()`
+*/
+class Message final : public wxDialog
+{
+public:
+    enum DefaultButtonType
+    {
+        //! constant
+        btnStartID = 100000,
+        //! Standard button: Ok
+        btnOk,
+        //! Standard button: Yes
+        btnYes,
+        //! Standard button: No
+        btnNo,
+        //! Standard button: retry
+        btnRetry,
+        //! Standard button: Discard
+        btnDiscard,
+        //! Quit without saving
+        btnQuitWithoutSaving,
+        //! Standard button: Save changes
+        btnSaveChanges,
+        //! Standard button: Cancel
+        btnCancel,
+        //! Standard button: Save as...
+        btnSaveAs,
+        //! Standard button: Upgrade
+        btnUpgrade,
+        //! Standard button: continue
+        btnContinue,
+        //! Standard button: quit
+        btnQuit
+    };
+    //! Array of items
+    typedef std::vector<Component::Spotlight::IItem::Ptr> ItemList;
 
-	/*!
-	** \brief Standard message Box for Antares
-	**
-	** \code
-	** // The main form
-	** Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
-	**
-	** // Creating the message dialog
-	** Window::Message message(&mainFrm, wxT("Title of the form"),
-	**		wxT("Main message (in bold)"),
-	**		wxT("Hello World !"));
-	**
-	** // Adding some buttons
-	** message.add(Window::Message::btnUpgrade);
-	** message.add(Window::Message::btnSaveAs, false, 15);
-	** message.add(Window::Message::btnCancel, true);
-	**
-	** // Display the message
-	** switch (message.showModal())
-	** {
-	**	case Window::Message::btnUpgrade: do something; break;
-	**	case Window::Message::btnSaveAs : ...; break;
-	** }
-	** \endcode
-	**
-	** \note The method `showModal()` should be used instead of `ShowModal()`
-	*/
-	class Message final : public wxDialog
-	{
-	public:
-		enum DefaultButtonType
-		{
-			//! constant
-			btnStartID = 100000,
-			//! Standard button: Ok
-			btnOk,
-			//! Standard button: Yes
-			btnYes,
-			//! Standard button: No
-			btnNo,
-			//! Standard button: retry
-			btnRetry,
-			//! Standard button: Discard
-			btnDiscard,
-			//! Quit without saving
-			btnQuitWithoutSaving,
-			//! Standard button: Save changes
-			btnSaveChanges,
-			//! Standard button: Cancel
-			btnCancel,
-			//! Standard button: Save as...
-			btnSaveAs,
-			//! Standard button: Upgrade
-			btnUpgrade,
-			//! Standard button: continue
-			btnContinue,
-			//! Standard button: quit
-			btnQuit
-		};
-		//! Array of items
-		typedef std::vector<Component::Spotlight::IItem::Ptr> ItemList;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    Message(wxWindow* parent,
+            const wxString& title,
+            const wxString& subtitle = wxEmptyString,
+            const wxString& msg = wxEmptyString,
+            const char* icon = "images/misc/book.png");
+    //! Destructor
+    virtual ~Message();
+    //@}
 
+    //! \name Buttons
+    //@{
+    /*!
+    ** \brief Add a new custom button
+    **
+    ** \param caption Caption of the button
+    ** \param value An arbitrary unique identifier for this button. It should be less than
+    **    btnStartID.
+    ** \param defaultButton True to make it the default result
+    ** \param space The space to add after before this button
+    */
+    void add(const wxString& caption, uint value, bool defaultButton = false, int space = 3);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		Message(wxWindow* parent, const wxString& title, const wxString& subtitle = wxEmptyString,
-			const wxString& msg = wxEmptyString,
-			const char* icon = "images/misc/book.png");
-		//! Destructor
-		virtual ~Message();
-		//@}
+    /*!
+    ** \brief Add a predefined button
+    **
+    ** \param btn The predefined button ID
+    ** \param defaultButton True to make it the default result
+    ** \param space The space to add after before this button
+    */
+    void add(DefaultButtonType btn, bool defaultButton = false, int space = 3);
+    //@}
 
+    //! \name List
+    //@{
+    /*!
+    ** \brief Add an item in the list
+    */
+    void add(Component::Spotlight::IItem::Ptr item);
+    /*!
+    ** \brief Add an error
+    */
+    void appendError(const AnyString& text);
+    /*!
+    ** \brief Add a warning
+    */
+    void appendWarning(const AnyString& text);
 
-		//! \name Buttons
-		//@{
-		/*!
-		** \brief Add a new custom button
-		**
-		** \param caption Caption of the button
-		** \param value An arbitrary unique identifier for this button. It should be less than
-		**    btnStartID.
-		** \param defaultButton True to make it the default result
-		** \param space The space to add after before this button
-		*/
-		void add(const wxString& caption, uint value, bool defaultButton = false, int space = 3);
+    //! \see add(Component::Spotlight::IItem::Ptr)
+    Message& operator+=(Component::Spotlight::IItem::Ptr item);
+    //@}
 
-		/*!
-		** \brief Add a predefined button
-		**
-		** \param btn The predefined button ID
-		** \param defaultButton True to make it the default result
-		** \param space The space to add after before this button
-		*/
-		void add(DefaultButtonType btn, bool defaultButton = false, int space = 3);
-		//@}
+    //! \name Show
+    //@{
+    /*!
+    ** \brief Display the message box
+    */
+    uint showModal();
 
+    /*!
+    ** \brief Display the message box (async)
+    */
+    void showModalAsync();
+    //@}
 
-		//! \name List
-		//@{
-		/*!
-		** \brief Add an item in the list
-		*/
-		void add(Component::Spotlight::IItem::Ptr item);
-		/*!
-		** \brief Add an error
-		*/
-		void appendError(const AnyString& text);
-		/*!
-		** \brief Add a warning
-		*/
-		void appendWarning(const AnyString& text);
+    //! \name Extras
+    //@{
+    /*!
+    ** \brief Set the recommended width of the dialog box
+    **
+    ** A value of 0 means `automatic`. This value will be used
+    ** only if the message list is not empty
+    */
+    void recommendedWidth(uint w);
+    //@}
 
-		//! \see add(Component::Spotlight::IItem::Ptr)
-		Message& operator += (Component::Spotlight::IItem::Ptr item);
-		//@}
+private:
+    //! Event: A button has been clicked
+    void onButtonClick(void* userdata);
+    //
+    void prepareShowModal();
 
+private:
+    //! The parent window for the user's buttons
+    wxPanel* pPanel;
+    //! The sizer for the text
+    wxBoxSizer* pPanelSizer;
+    //! Item list
+    ItemList pItemList;
+    //! Spotlight
+    Component::Spotlight* pSpotlight;
+    //! Sizer where the spotlight component will be found
+    wxSizer* pListSizer;
+    //! The return status code
+    uint pReturnStatus;
+    //! Recommended width
+    uint pRecommendedWidth;
+    //! Empty panel
+    wxPanel* pSpace;
 
-		//! \name Show
-		//@{
-		/*!
-		** \brief Display the message box
-		*/
-		uint showModal();
-
-		/*!
-		** \brief Display the message box (async)
-		*/
-		void showModalAsync();
-		//@}
-
-
-		//! \name Extras
-		//@{
-		/*!
-		** \brief Set the recommended width of the dialog box
-		**
-		** A value of 0 means `automatic`. This value will be used
-		** only if the message list is not empty
-		*/
-		void recommendedWidth(uint w);
-		//@}
-
-
-	private:
-		//! Event: A button has been clicked
-		void onButtonClick(void* userdata);
-		//
-		void prepareShowModal();
-
-	private:
-		//! The parent window for the user's buttons
-		wxPanel* pPanel;
-		//! The sizer for the text
-		wxBoxSizer* pPanelSizer;
-		//! Item list
-		ItemList pItemList;
-		//! Spotlight
-		Component::Spotlight* pSpotlight;
-		//! Sizer where the spotlight component will be found
-		wxSizer* pListSizer;
-		//! The return status code
-		uint pReturnStatus;
-		//! Recommended width
-		uint pRecommendedWidth;
-		//! Empty panel
-		wxPanel* pSpace;
-
-	}; // class Message
-
-
-
-
-
+}; // class Message
 
 } // namespace Window
 } // namespace Antares
 
-# include "message.hxx"
+#include "message.hxx"
 
 #endif // __ANTARES_APPLICATION_MESSAGE_H__

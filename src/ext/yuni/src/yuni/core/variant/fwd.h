@@ -10,19 +10,16 @@
 */
 #pragma once
 
-
-
 namespace Yuni
 {
-	class Variant;
+class Variant;
 
 namespace Private
 {
 namespace Variant
 {
-	class IDataConverter;
-	class IDataHolder;
-
+class IDataConverter;
+class IDataHolder;
 
 } // namespace Variant
 } // namespace Private

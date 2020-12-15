@@ -8,138 +8,132 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-# include "framebuffer.h"
+#include "framebuffer.h"
 
 namespace Yuni
 {
 namespace Gfx3D
 {
+static GLenum UsageToGLUsage(FrameBuffer::Usage usage)
+{
+    switch (usage)
+    {
+    case FrameBuffer::fbDraw:
+    case FrameBuffer::fbPingPong:
+        return GL_DRAW_FRAMEBUFFER;
+        break;
+    case FrameBuffer::fbRead:
+        return GL_READ_FRAMEBUFFER;
+    case FrameBuffer::fbReadDraw:
+        return GL_FRAMEBUFFER;
+        break;
+    }
+    return GL_FRAMEBUFFER;
+}
 
-	static GLenum UsageToGLUsage(FrameBuffer::Usage usage)
-	{
-		switch (usage)
-		{
-			case FrameBuffer::fbDraw:
-			case FrameBuffer::fbPingPong:
-				return GL_DRAW_FRAMEBUFFER;
-				break;
-			case FrameBuffer::fbRead:
-				return GL_READ_FRAMEBUFFER;
-			case FrameBuffer::fbReadDraw:
-				return GL_FRAMEBUFFER;
-				break;
-		}
-		return GL_FRAMEBUFFER;
-	}
+bool FrameBuffer::initialize(Usage usage, UI::MultiSampling::Type msType, Texture::DataType type)
+{
+    if (not pSize.x || not pSize.y)
+        return false;
 
+    pUsage = usage;
+    if (UI::MultiSampling::msNone == msType)
+    {
+        // Screen texture 1
+        pTexture = Texture::New(pSize.x, pSize.y, 4 /* RGBA */, type, nullptr, false);
+        if (fbPingPong == pUsage)
+            // Screen texture 2
+            pBackTexture = Texture::New(pSize.x, pSize.y, 4 /* RGBA */, type, nullptr, false);
+    }
+    else
+    {
+        uint samples = UI::MultiSampling::Multiplier(msType);
+        // Screen texture 1
+        pTexture = Texture::NewMS(pSize.x, pSize.y, 4 /* RGBA */, type, samples, nullptr);
+        if (fbPingPong == pUsage)
+            // Screen texture 2
+            pBackTexture = Texture::NewMS(pSize.x, pSize.y, 4 /* RGBA */, type, samples, nullptr);
+    }
 
-	bool FrameBuffer::initialize(Usage usage, UI::MultiSampling::Type msType, Texture::DataType type)
-	{
-		if (not pSize.x || not pSize.y)
-			return false;
+    auto textureType
+      = UI::MultiSampling::msNone == msType ? GL_TEXTURE_2D : GL_TEXTURE_2D_MULTISAMPLE;
+    // Unbind
+    ::glBindTexture(textureType, 0);
 
-		pUsage = usage;
-		if (UI::MultiSampling::msNone == msType)
-		{
-			// Screen texture 1
-			pTexture = Texture::New(pSize.x, pSize.y, 4 /* RGBA */, type, nullptr, false);
-			if (fbPingPong == pUsage)
-				// Screen texture 2
-				pBackTexture = Texture::New(pSize.x, pSize.y, 4 /* RGBA */, type, nullptr, false);
-		}
-		else
-		{
-			uint samples = UI::MultiSampling::Multiplier(msType);
-			// Screen texture 1
-			pTexture = Texture::NewMS(pSize.x, pSize.y, 4 /* RGBA */, type, samples, nullptr);
-			if (fbPingPong == pUsage)
-				// Screen texture 2
-				pBackTexture = Texture::NewMS(pSize.x, pSize.y, 4 /* RGBA */, type, samples, nullptr);
-		}
+    // Depth buffer
+    uint id;
+    ::glGenRenderbuffers(1, &id);
+    ::glBindRenderbuffer(GL_RENDERBUFFER, id);
+    ::glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, pSize.x, pSize.y);
+    ::glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    pDepth = id;
 
-		auto textureType = UI::MultiSampling::msNone == msType ? GL_TEXTURE_2D : GL_TEXTURE_2D_MULTISAMPLE;
-		// Unbind
-		::glBindTexture(textureType, 0);
+    GLenum frameBufferUsage = UsageToGLUsage(pUsage);
 
-		// Depth buffer
-		uint id;
-		::glGenRenderbuffers(1, &id);
-		::glBindRenderbuffer(GL_RENDERBUFFER, id);
-		::glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, pSize.x, pSize.y);
-		::glBindRenderbuffer(GL_RENDERBUFFER, 0);
-		pDepth = id;
+    // Framebuffer to link everything together
+    ::glGenFramebuffers(1, &id);
+    GLTestError("glGenFramebuffers frame buffer creation");
+    ::glBindFramebuffer(frameBufferUsage, id);
+    GLTestError("glBindFramebuffers frame buffer binding");
+    ::glFramebufferTexture2D(
+      frameBufferUsage, GL_COLOR_ATTACHMENT0, textureType, pTexture->id(), 0);
+    GLTestError("glFramebufferTexture2D frame buffer color attachment");
+    ::glFramebufferRenderbuffer(frameBufferUsage, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, pDepth);
+    GLTestError("glFramebufferRenderbuffer depth buffer attachment");
+    ::glBindFramebuffer(frameBufferUsage, 0);
+    pID = id;
 
-		GLenum frameBufferUsage = UsageToGLUsage(pUsage);
+    GLenum status;
+    if ((status = ::glCheckFramebufferStatus(frameBufferUsage)) != GL_FRAMEBUFFER_COMPLETE)
+    {
+        std::cerr << "Framebuffer failed to load: error " << status << std::endl;
+        pTexture = nullptr;
+        ::glDeleteRenderbuffers(1, (uint*)&pDepth);
+        pDepth = -1;
+        ::glDeleteFramebuffers(1, (uint*)&pID);
+        pID = -1;
+        return false;
+    }
 
-		// Framebuffer to link everything together
-		::glGenFramebuffers(1, &id);
-		GLTestError("glGenFramebuffers frame buffer creation");
-		::glBindFramebuffer(frameBufferUsage, id);
-		GLTestError("glBindFramebuffers frame buffer binding");
-		::glFramebufferTexture2D(frameBufferUsage, GL_COLOR_ATTACHMENT0, textureType, pTexture->id(), 0);
-		GLTestError("glFramebufferTexture2D frame buffer color attachment");
-		::glFramebufferRenderbuffer(frameBufferUsage, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, pDepth);
-		GLTestError("glFramebufferRenderbuffer depth buffer attachment");
-		::glBindFramebuffer(frameBufferUsage, 0);
-		pID = id;
+    return true;
+}
 
-		GLenum status;
-		if ((status = ::glCheckFramebufferStatus(frameBufferUsage)) != GL_FRAMEBUFFER_COMPLETE)
-		{
-			std::cerr << "Framebuffer failed to load: error " << status << std::endl;
-			pTexture = nullptr;
-			::glDeleteRenderbuffers(1, (uint*)&pDepth);
-			pDepth = -1;
-			::glDeleteFramebuffers(1, (uint*)&pID);
-			pID = -1;
-			return false;
-		}
+void FrameBuffer::activate() const
+{
+    if (not valid())
+        return;
+    ::glBindFramebuffer(UsageToGLUsage(pUsage), pID);
+    GLTestError("glBindFrameBuffer() binding");
+}
 
-		return true;
-	}
+void FrameBuffer::deactivate() const
+{
+    // Unbind
+    ::glBindFramebuffer(UsageToGLUsage(pUsage), 0);
+    GLTestError("glBindFrameBuffer() unbinding");
+}
 
+void FrameBuffer::resize(uint width, uint height)
+{
+    if (not pSize.x || not pSize.y)
+        return;
 
-	void FrameBuffer::activate() const
-	{
-		if (not valid())
-			return;
-		::glBindFramebuffer(UsageToGLUsage(pUsage), pID);
-		GLTestError("glBindFrameBuffer() binding");
-	}
+    // Update the size internally
+    pSize(width, height);
 
+    // If the FB is not properly initialized, just update the size internally
+    // for future use by initialize(), but do nothing else
+    if (not valid())
+        return;
 
-	void FrameBuffer::deactivate() const
-	{
-		// Unbind
-		::glBindFramebuffer(UsageToGLUsage(pUsage), 0);
-		GLTestError("glBindFrameBuffer() unbinding");
-	}
-
-
-
-	void FrameBuffer::resize(uint width, uint height)
-	{
-		if (not pSize.x || not pSize.y)
-			return;
-
-		// Update the size internally
-		pSize(width, height);
-
-		// If the FB is not properly initialized, just update the size internally
-		// for future use by initialize(), but do nothing else
-		if (not valid())
-			return;
-
-		// Resize the texture
-		pTexture->resize(pSize.x, pSize.y);
-		GLTestError("glTexSubImage2D() texture resizing");
-		::glBindRenderbuffer(GL_RENDERBUFFER, pDepth);
-		::glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, pSize.x, pSize.y);
-		::glBindRenderbuffer(GL_RENDERBUFFER, 0);
-		GLTestError("glRenderBufferStorage() resizing");
-	}
-
-
+    // Resize the texture
+    pTexture->resize(pSize.x, pSize.y);
+    GLTestError("glTexSubImage2D() texture resizing");
+    ::glBindRenderbuffer(GL_RENDERBUFFER, pDepth);
+    ::glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, pSize.x, pSize.y);
+    ::glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    GLTestError("glRenderBufferStorage() resizing");
+}
 
 } // namespace Gfx3D
 } // namespace Yuni

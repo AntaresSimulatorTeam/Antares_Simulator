@@ -9,7 +9,7 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_CORE_TREE_N_CHILD_ITERATOR_H__
-# define __YUNI_CORE_TREE_N_CHILD_ITERATOR_H__
+#define __YUNI_CORE_TREE_N_CHILD_ITERATOR_H__
 
 namespace Yuni
 {
@@ -19,95 +19,90 @@ namespace Core
 {
 namespace Tree
 {
+template<class NodeT>
+class ChildIterator
+{
+public:
+    typedef ChildIterator<NodeT> Type;
 
+    typedef typename NodeT::Ptr NodePtr;
 
-	template<class NodeT>
-	class ChildIterator
-	{
-	public:
-		typedef ChildIterator<NodeT>  Type;
+    typedef NodeT value_type;
+    typedef int difference_type;
+    typedef value_type& reference;
+    typedef const value_type& const_reference;
+    typedef value_type* pointer;
+    typedef const value_type* const_pointer;
 
-		typedef typename NodeT::Ptr NodePtr;
+public:
+    enum
+    {
+        canGoForward = true,
+        canGoBackward = true,
+    };
 
-		typedef NodeT  value_type;
-		typedef int  difference_type;
-		typedef value_type&  reference;
-		typedef const value_type&  const_reference;
-		typedef value_type*  pointer;
-		typedef const value_type*  const_pointer;
+public:
+    //! \name Constructors
+    //@{
+    ChildIterator();
 
-	public:
-		enum
-		{
-			canGoForward = true,
-			canGoBackward = true,
-		};
+    ChildIterator(const Type& it);
 
-	public:
-		//! \name Constructors
-		//@{
-		ChildIterator();
+    template<class N>
+    ChildIterator(const ChildIterator<N>& p);
 
-		ChildIterator(const Type& it);
+    ChildIterator(const NodePtr& p);
+    //@}
 
-		template<class N>
-		ChildIterator(const ChildIterator<N>& p);
+    //! \name Static overloads from IIterator
+    //@{
+    void forward();
 
-		ChildIterator(const NodePtr& p);
-		//@}
+    void forward(difference_type n);
 
-		//! \name Static overloads from IIterator
-		//@{
-		void forward();
+    void backward();
 
-		void forward(difference_type n);
+    void backward(difference_type n);
 
-		void backward();
+    void advance(difference_type n);
 
-		void backward(difference_type n);
+    template<class N>
+    bool equals(const ChildIterator<N>& rhs) const;
 
-		void advance(difference_type n);
+    template<class N>
+    void reset(const ChildIterator<N>& rhs);
 
-		template<class N>
-		bool equals(const ChildIterator<N>& rhs) const;
+    template<class N>
+    difference_type distance(const ChildIterator<N>& rhs) const;
+    //@}
 
-		template<class N>
-		void reset(const ChildIterator<N>& rhs);
+    //! \name Operator overloads
+    //@{
 
-		template<class N>
-		difference_type distance(const ChildIterator<N>& rhs) const;
-		//@}
+    //! The operator `*`
+    reference operator*();
 
+    //! The operator `*`
+    const_reference operator*() const;
 
-		//! \name Operator overloads
-		//@{
+    //! The operator `->`
+    pointer operator->();
 
-		//! The operator `*`
-		reference operator * ();
+    //! The operator `->`
+    const_pointer operator->() const;
 
-		//! The operator `*`
-		const_reference operator * () const;
+    //@}
 
-		//! The operator `->`
-		pointer operator -> ();
-
-		//! The operator `->`
-		const_pointer operator -> () const;
-
-		//@}
-
-	private:
-		//! The actual data
-		NodePtr pNode;
-	};
-
-
+private:
+    //! The actual data
+    NodePtr pNode;
+};
 
 } // namespace Tree
 } // namespace Core
 } // namespace Private
 } // namespace Yuni
 
-# include "childiterator.hxx"
+#include "childiterator.hxx"
 
 #endif // __YUNI_CORE_TREE_N_CHILD_ITERATOR_H__

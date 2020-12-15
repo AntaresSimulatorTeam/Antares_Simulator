@@ -27,23 +27,28 @@
 
 #include "drawingcontext.h"
 
-
 namespace Antares
 {
 namespace Map
 {
-
-
-	DrawingContext::DrawingContext(wxDC& dc, const wxPoint& origin,
-		const wxPoint& offset, const wxPoint& scroll,
-		const wxPoint& clientSize, const wxPoint& btRight, const size_t& layer, bool forFileExport)
-		:pDC(dc), pOrigin(origin),
-		pOffsetForSelectedNodes(offset),
-		pScroll(scroll), pClientSize(clientSize), pBottomRight(btRight), layerId(layer), pForFileExport(forFileExport)
-	{}
-
-
-
+DrawingContext::DrawingContext(wxDC& dc,
+                               const wxPoint& origin,
+                               const wxPoint& offset,
+                               const wxPoint& scroll,
+                               const wxPoint& clientSize,
+                               const wxPoint& btRight,
+                               const size_t& layer,
+                               bool forFileExport) :
+ pDC(dc),
+ pOrigin(origin),
+ pOffsetForSelectedNodes(offset),
+ pScroll(scroll),
+ pClientSize(clientSize),
+ pBottomRight(btRight),
+ layerId(layer),
+ pForFileExport(forFileExport)
+{
+}
 
 } // namespace Map
 } // namespace Antares

@@ -33,7 +33,6 @@
 
 using namespace Yuni;
 
-
 namespace Antares
 {
 namespace Component
@@ -44,209 +43,184 @@ namespace Renderer
 {
 namespace ConstraintsBuilder
 {
+void Links::initializeFromStudy()
+{
+    if (!(!study))
+    {
+        pRecord.mutex.lock();
 
-	void Links::initializeFromStudy()
-	{
-		if (!(!study))
-		{
-			pRecord.mutex.lock();
-			
-			uint indx = 0;
-			uint countLinks =0; // to do : create function study->getNLinks();
-			const Data::Area::Map::iterator end = study->areas.end();
-			for (Data::Area::Map::iterator i = study->areas.begin(); i != end; ++i)
-			{
-				Data::Area& area = *(i->second);
-				const Data::AreaLink::Map::iterator end = area.links.end();
-				for (Data::AreaLink::Map::iterator i = area.links.begin(); i != end; ++i)
-				{
-					++countLinks;
-				}
-			}
-			pRecord.array.resize(countLinks);
+        uint indx = 0;
+        uint countLinks = 0; // to do : create function study->getNLinks();
+        const Data::Area::Map::iterator end = study->areas.end();
+        for (Data::Area::Map::iterator i = study->areas.begin(); i != end; ++i)
+        {
+            Data::Area& area = *(i->second);
+            const Data::AreaLink::Map::iterator end = area.links.end();
+            for (Data::AreaLink::Map::iterator i = area.links.begin(); i != end; ++i)
+            {
+                ++countLinks;
+            }
+        }
+        pRecord.array.resize(countLinks);
 
-	
+        for (Data::Area::Map::iterator i = study->areas.begin(); i != end; ++i)
+        {
+            // Reference to the area
+            Data::Area& area1 = *(i->second);
 
-			for (Data::Area::Map::iterator i = study->areas.begin(); i != end; ++i)
-			{
-				// Reference to the area
-				Data::Area& area1 = *(i->second);
+            // For each Interconnection for the area
+            const Data::AreaLink::Map::iterator end = area1.links.end();
+            for (Data::AreaLink::Map::iterator i = area1.links.begin(); i != end; ++i)
+            {
+                Data::AreaLink* lnk = i->second;
 
-				// For each Interconnection for the area
-				const Data::AreaLink::Map::iterator end = area1.links.end();
-				for (Data::AreaLink::Map::iterator i = area1.links.begin(); i != end; ++i)
-				{
-					Data::AreaLink* lnk = i->second;
+                assert(indx < pRecord.size());
+                // assert(area.load.prepro);
 
-					assert(indx < pRecord.size());
-					//assert(area.load.prepro);
+                typedef ConstraintsBuilder::Links::Record Record;
 
-					typedef ConstraintsBuilder::Links::Record Record;
+                Record& record = pRecord.array[indx];
+                record.enabled = true;
+                record.areaFromId = lnk->from->id;
+                record.areaWithId = lnk->with->id;
 
-					Record& record      = pRecord.array[indx];
-					record.enabled      = true;
-					record.areaFromId   = lnk->from->id;
-					record.areaWithId   = lnk->with->id;
+                record.wxLinkName = wxStringFromUTF8("");
+                record.wxLinkName << wxStringFromUTF8(lnk->from->name) + wxStringFromUTF8(" / ")
+                                       + wxStringFromUTF8(lnk->with->name);
+                // record.wxLinkName   << wxStringFromUTF8(lnk->with->name);
 
-					record.wxLinkName   = wxStringFromUTF8("");
-					record.wxLinkName   << wxStringFromUTF8(lnk->from->name) + wxStringFromUTF8(" / ") + wxStringFromUTF8(lnk->with->name);
-					//record.wxLinkName   << wxStringFromUTF8(lnk->with->name);
+                record.type = Antares::Data::atAC;
+                record.mWidth = (uint)-1;
+                record.mHeight = (uint)-1;
+                ++indx;
+            }
+        }
+    }
 
-					record.type			= Antares::Data::atAC;
-					record.mWidth       = (uint) -1;
-					record.mHeight      = (uint) -1;
-					++indx;
-				}
-			}
-		}
+    pRecord.mutex.unlock();
+}
 
-		pRecord.mutex.unlock();
-	}
+Links::~Links()
+{
+    destroyBoundEvents();
+}
 
+wxString Links::columnCaption(int colIndx) const
+{
+    static const wxChar* const names[] = {/*wxT("Cost"),*/
+                                          wxT("Minimum spanning tree"),
+                                          wxT("Minimum cycle Basis")};
+    if (colIndx < 2)
+        return names[colIndx];
+    return wxEmptyString;
+}
 
+wxString Links::rowCaption(int rowIndx) const
+{
+    if (rowIndx < pCBuilder->linkCount())
+        return pCBuilder->getLink(rowIndx)->getName().to<std::string>();
+    return wxEmptyString;
+}
 
-	Links::~Links()
-	{
-		destroyBoundEvents();
-	}
+IRenderer::CellStyle Links::cellStyle(int col, int row) const
+{
+    auto record = pCBuilder->getLink(row);
 
+    if (!record->enabled)
+    {
+        return IRenderer::cellStyleDefaultDisabled;
+    }
+    else if (record->type != Antares::Data::atAC && record->type != Antares::Data::atDC)
+    {
+        if (col == 2 || col == 3)
+        {
+            return IRenderer::cellStyleDefaultDisabled;
+        }
+    }
 
-	wxString Links::columnCaption(int colIndx) const
-	{
-		static const wxChar* const names[] =
-		{
-			/*wxT("Cost"),*/
-			wxT("Minimum spanning tree"),
-			wxT("Minimum cycle Basis")
-		};
-		if (colIndx < 2)
-			return names[colIndx];
-		return wxEmptyString;
-	}
+    return IRenderer::cellStyleDefault;
+}
 
+wxColour Links::cellBackgroundColor(int, int) const
+{
+    return wxColour();
+}
 
-	wxString Links::rowCaption(int rowIndx) const
-	{
-		if(rowIndx < pCBuilder->linkCount())
-			return pCBuilder->getLink(rowIndx)->getName().to<std::string>();
-		return wxEmptyString;
-	}
+wxColour Links::cellTextColor(int, int) const
+{
+    return wxColour();
+}
 
+wxString Links::cellValue(int x, int y) const
+{
+    if (!pCBuilder->getUpToDate())
+        return "?";
 
-	IRenderer::CellStyle Links::cellStyle(int col, int row) const
-	{
+    auto record = pCBuilder->getLink(y);
 
-		auto record = pCBuilder->getLink(row);
+    switch (x)
+    {
+    /*case 0:
+            {
+                    const double d = record->getWeightWithImpedance();;
+                    return DoubleToWxString(d);
+            }*/
+    case 0:
+        return pCBuilder->isCycleDriver(record) ? "0" : "1";
 
-		if (!record->enabled)
-		{
-			return IRenderer::cellStyleDefaultDisabled;
-		}
-		else if (record->type != Antares::Data::atAC && record->type != Antares::Data::atDC)
-		{
-			if (col == 2 || col ==3)
-			{
-				return IRenderer::cellStyleDefaultDisabled;
-			}
-		}
+    case 1:
+    {
+        const uint i = pCBuilder->cycleCount(record);
+        return wxString::Format(wxT("%u"), i);
+    }
+    case 2:
+    {
+        const double d = cellNumericValue(x, y);
+        return DoubleToWxString(d);
+    }
+    }
+    return wxEmptyString;
+}
 
-		return IRenderer::cellStyleDefault;
-	}
+double Links::cellNumericValue(int x, int y) const
+{
+    if (!pCBuilder->getUpToDate())
+        return -1;
+    auto record = pCBuilder->getLink(y);
 
+    switch (x)
+    {
+    case 0:
+    {
+        return record->getWeightWithImpedance();
+    }
+    case 1:
+        return pCBuilder->isCycleDriver(record) ? 0 : 1;
 
-	wxColour Links::cellBackgroundColor(int, int) const
-	{
-		return wxColour();
-	}
+    case 2:
+    {
+        return pCBuilder->cycleCount(record);
+    }
+    case 3:
+    {
+        return cellNumericValue(x, y);
+    }
+    }
+    return 0.;
+}
 
+bool Links::cellValue(int x, int y, const String& value)
+{
+    return false;
+}
 
-	wxColour Links::cellTextColor(int, int) const
-	{
-		return wxColour();
-	}
+bool Links::valid() const
+{
+    return pCBuilder != nullptr;
+}
 
-
-	wxString Links::cellValue(int x, int y) const
-	{
-		if (! pCBuilder->getUpToDate())
-			return "?";
-
-
-		auto record = pCBuilder->getLink(y);
-
-		switch (x)
-		{
-			/*case 0:
-				{
-					const double d = record->getWeightWithImpedance();;
-					return DoubleToWxString(d);
-				}*/
-			case 0:
-				return pCBuilder->isCycleDriver(record) ? "0" : "1";
-
-			case 1:		
-				{
-					const uint i = pCBuilder->cycleCount(record);
-					return wxString::Format(wxT("%u"), i);
-				}
-			case 2:
-				{
-					const double d = cellNumericValue(x, y);
-					return DoubleToWxString(d);
-				}
-		}
-		return wxEmptyString;
-	}
-
-
-	double Links::cellNumericValue(int x,int y) const
-	{
-		if (!pCBuilder->getUpToDate())
-			return -1;
-		auto record = pCBuilder->getLink(y);
-
-		switch (x)
-		{
-			case 0:
-			{
-				return record->getWeightWithImpedance();
-				
-			}
-			case 1:
-				return pCBuilder->isCycleDriver(record) ? 0 : 1;
-
-			case 2:
-			{
-				return pCBuilder->cycleCount(record);
-				
-			}
-			case 3:
-			{
-				return cellNumericValue(x, y);
-
-			}
-		}
-		return 0.;
-	}
-
-	
-
-	bool Links::cellValue(int x, int y, const String& value)
-	{
-		return false;
-	}
-
-
-	bool Links::valid() const
-	{
-		return pCBuilder!=nullptr;
-	}
-
-
-
-} // namespace ConstaintBuilder
+} // namespace ConstraintsBuilder
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
 } // namespace Antares
-

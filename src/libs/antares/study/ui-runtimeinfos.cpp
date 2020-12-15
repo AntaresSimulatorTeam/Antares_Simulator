@@ -31,175 +31,159 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
 namespace Data
 {
+UIRuntimeInfo::UIRuntimeInfo(Study& study) : pStudy(study)
+{
+    reloadAll();
+}
 
+void UIRuntimeInfo::reloadAll()
+{
+    reload();
+    reloadBindingConstraints();
+}
 
-	UIRuntimeInfo::UIRuntimeInfo(Study& study) :
-		pStudy(study)
-	{
-		reloadAll();
-	}
+void UIRuntimeInfo::reload()
+{
+    // Reseting all variables
+    pLink.clear();
+    pClusters.clear();
+    pClusterCount = 0;
+    pLinkCount = 0;
+    orderedAreasAndLinks.clear();
 
+    // Building an ordered list of areas then links
+    {
+        const Area::Map::iterator end = pStudy.areas.end();
+        for (Area::Map::iterator i = pStudy.areas.begin(); i != end; ++i)
+        {
+            // Reference to the area
+            Area* area = i->second;
+            assert(area && "Invalid area");
 
-	void UIRuntimeInfo::reloadAll()
-	{
-		reload();
-		reloadBindingConstraints();
-	}
+            // Ordered by its color
+            assert(area->ui && "Invalid area UI");
+            (area->ui)->rebuildCache();
 
+            // Reference to the set
+            // This variable is not within the condition that follows this expression
+            // to create an empty set even if no link is present.
+            AreaLink::Set& set = orderedAreasAndLinks[area];
 
-	void UIRuntimeInfo::reload()
-	{
-		// Reseting all variables
-		pLink.clear();
-		pClusters.clear();
-		pClusterCount = 0;
-		pLinkCount = 0;
-		orderedAreasAndLinks.clear();
+            if (!area->links.empty())
+            {
+                const AreaLink::Map::iterator end = area->links.end();
+                for (AreaLink::Map::iterator i = area->links.begin(); i != end; ++i)
+                    set.insert(i->second);
+            }
 
-		// Building an ordered list of areas then links
-		{
-			const Area::Map::iterator end = pStudy.areas.end();
-			for (Area::Map::iterator i = pStudy.areas.begin(); i != end; ++i)
-			{
-				// Reference to the area
-				Area* area = i->second;
-				assert(area && "Invalid area");
+            for (auto j = 0; j < area->thermal.clusterCount; ++j)
+            {
+                ThermalCluster* cluster = area->thermal.clusters[j];
+                pClusters.push_back(cluster);
+            }
+        }
+    }
 
-				// Ordered by its color
-				assert(area->ui && "Invalid area UI");
-				(area->ui)->rebuildCache();
+    pClusterCount = pClusters.size();
 
-				// Reference to the set
-				// This variable is not within the condition that follows this expression
-				// to create an empty set even if no link is present.
-				AreaLink::Set& set = orderedAreasAndLinks[area];
+    // Sorting the links between the areas as well
+    {
+        Area::LinkMap::const_iterator end = orderedAreasAndLinks.end();
+        Area::LinkMap::const_iterator i = orderedAreasAndLinks.begin();
+        for (; i != end; ++i)
+        {
+            AreaLink::Set::const_iterator jend = i->second.end();
+            AreaLink::Set::const_iterator j = i->second.begin();
+            for (; j != jend; ++j)
+            {
+                pLink.push_back(*j);
+                ++pLinkCount;
+            }
+        }
+        std::sort(pLink.begin(), pLink.end(), CompareLinkName());
+    }
+}
 
-				if (!area->links.empty())
-				{
-					const AreaLink::Map::iterator end = area->links.end();
-					for (AreaLink::Map::iterator i = area->links.begin(); i != end; ++i)
-						set.insert(i->second);
-				}
+void UIRuntimeInfo::reloadBindingConstraints()
+{
+    orderedConstraint.clear();
+    pConstraint.clear();
+    byOperator.clear();
 
-				for (auto j = 0; j < area->thermal.clusterCount; ++j)
-				{
-					ThermalCluster* cluster = area->thermal.clusters[j];
-					pClusters.push_back(cluster);
-				}
-			}
-		}
+    {
+        const BindConstList::iterator end = pStudy.bindingConstraints.end();
+        BindConstList::iterator i = pStudy.bindingConstraints.begin();
+        for (; i != end; ++i)
+            orderedConstraint.insert(*i);
+    }
+    {
+        const BindingConstraint::Set::const_iterator end = orderedConstraint.end();
+        BindingConstraint::Set::const_iterator i = orderedConstraint.begin();
+        for (; i != end; ++i)
+        {
+            pConstraint.push_back(*i);
+            switch ((*i)->operatorType())
+            {
+            case BindingConstraint::opBoth:
+            {
+                byOperator[BindingConstraint::opLess][(*i)->type()].push_back(*i);
+                byOperator[BindingConstraint::opGreater][(*i)->type()].push_back(*i);
+                break;
+            }
+            default:
+            {
+                byOperator[(*i)->operatorType()][(*i)->type()].push_back(*i);
+                break;
+            }
+            }
+        }
+    }
+}
 
+uint64 UIRuntimeInfo::memoryUsage() const
+{
+    return sizeof(UIRuntimeInfo) + sizeof(AreaLink*) * pLink.size();
+}
 
-		pClusterCount = pClusters.size();
+uint UIRuntimeInfo::countItems(BindingConstraint::Operator op, BindingConstraint::Type type)
+{
+    ByOperatorAndType::const_iterator i = byOperator.find(op);
+    if (i != byOperator.end())
+    {
+        VectorByType::const_iterator j = i->second.find(type);
+        if (j != i->second.end())
+            return (uint)j->second.size();
+    }
+    return 0;
+}
 
-		// Sorting the links between the areas as well
-		{
-			Area::LinkMap::const_iterator end = orderedAreasAndLinks.end();
-			Area::LinkMap::const_iterator i   = orderedAreasAndLinks.begin();
-			for (; i != end; ++i)
-			{
-				AreaLink::Set::const_iterator jend = i->second.end();
-				AreaLink::Set::const_iterator j    = i->second.begin();
-				for (; j != jend; ++j)
-				{
-					pLink.push_back(*j);
-					++pLinkCount;
-				}
-			}
-			std::sort(pLink.begin(), pLink.end(), CompareLinkName());
-		}
-	}
+uint UIRuntimeInfo::visibleClustersCount(uint layerID)
+{
+    int count = 0;
+    auto cEnd = pClusters.end();
+    for (auto cluster = pClusters.begin(); cluster != cEnd; cluster++)
+    {
+        if ((*cluster)->isVisibleOnLayer(layerID))
+            count++;
+    }
+    return count;
+}
 
-
-	void UIRuntimeInfo::reloadBindingConstraints()
-	{
-		orderedConstraint.clear();
-		pConstraint.clear();
-		byOperator.clear();
-
-		{
-			const BindConstList::iterator end = pStudy.bindingConstraints.end();
-			BindConstList::iterator i = pStudy.bindingConstraints.begin();
-			for (; i != end; ++i)
-				orderedConstraint.insert(*i);
-		}
-		{
-			const BindingConstraint::Set::const_iterator end = orderedConstraint.end();
-			BindingConstraint::Set::const_iterator i = orderedConstraint.begin();
-			for (; i != end; ++i)
-			{
-				pConstraint.push_back(*i);
-				switch ((*i)->operatorType())
-				{
-					case BindingConstraint::opBoth:
-						{
-							byOperator[BindingConstraint::opLess][(*i)->type()].push_back(*i);
-							byOperator[BindingConstraint::opGreater][(*i)->type()].push_back(*i);
-							break;
-						}
-					default:
-						{
-							byOperator[(*i)->operatorType()][(*i)->type()].push_back(*i);
-							break;
-						}
-				}
-			}
-		}
-	}
-
-
-	uint64 UIRuntimeInfo::memoryUsage() const
-	{
-		return sizeof(UIRuntimeInfo) + sizeof(AreaLink*) * pLink.size();
-	}
-
-
-	uint UIRuntimeInfo::countItems(BindingConstraint::Operator op, BindingConstraint::Type type)
-	{
-		ByOperatorAndType::const_iterator i = byOperator.find(op);
-		if (i != byOperator.end())
-		{
-			VectorByType::const_iterator j = i->second.find(type);
-			if (j != i->second.end())
-				return (uint) j->second.size();
-		}
-		return 0;
-	}
-
-	uint UIRuntimeInfo::visibleClustersCount(uint layerID)
-	{
-		int count = 0;
-		auto cEnd = pClusters.end();
-		for (auto cluster = pClusters.begin(); cluster != cEnd; cluster++)
-		{
-			if ((*cluster)->isVisibleOnLayer(layerID))
-				count++;
-		}
-		return count;
-	}
-
-	uint UIRuntimeInfo::visibleLinksCount(uint layerID)
-	{
-		int count = 0;
-		auto lEnd = pLink.end();
-		for (auto link = pLink.begin(); link != lEnd; link++)
-		{
-			if ((*link)->isVisibleOnLayer(layerID))
-				count++;
-		}
-		return count;
-	}
-
-
-
-
+uint UIRuntimeInfo::visibleLinksCount(uint layerID)
+{
+    int count = 0;
+    auto lEnd = pLink.end();
+    for (auto link = pLink.begin(); link != lEnd; link++)
+    {
+        if ((*link)->isVisibleOnLayer(layerID))
+            count++;
+    }
+    return count;
+}
 
 } // namespace Data
 } // namespace Antares
-

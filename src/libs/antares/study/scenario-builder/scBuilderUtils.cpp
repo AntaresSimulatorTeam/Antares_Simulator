@@ -37,72 +37,68 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
+string fromHydroLevelToString(double d)
+{
+    std::ostringstream stream;
+    stream << std::setprecision(4);
+    stream << d;
+    return stream.str();
+}
 
-	string fromHydroLevelToString(double d)
-	{
-		std::ostringstream stream;
-		stream << std::setprecision(4);
-		stream << d;
-		return stream.str();
-	}
+double fromStringToHydroLevel(const Yuni::String& value, const double maxLevel)
+{
+    double result;
+    double result_tmp;
 
+    std::string val = value.to<std::string>();
+    try
+    {
+        result_tmp = stod(val);
+    }
+    catch (std::invalid_argument&)
+    {
+        return -1.;
+    }
 
-	double fromStringToHydroLevel(const Yuni::String& value, const double maxLevel)
-	{
-		double result;
-		double result_tmp;
+    if (result_tmp < 0.)
+        result = -1.;
+    else
+    {
+        if (result_tmp > maxLevel)
+            result = maxLevel;
+        else
+            result = result_tmp;
+    }
+    return result;
+}
 
-		std::string val = value.to<std::string>();
-		try
-		{
-			result_tmp = stod(val);
-		}
-		catch (std::invalid_argument&)
-		{
-			return -1.;
-		}
+uint fromStringToTSnumber(const Yuni::String& value)
+{
+    uint result;
+    const uint maxTSnumber = 10000;
+    double result_dbl;
 
-		if (result_tmp < 0.)
-			result = -1.;
-		else
-		{
-			if (result_tmp > maxLevel)
-				result = maxLevel;
-			else
-				result = result_tmp;
-		}
-		return result;
-	}
+    std::string val = value.to<std::string>();
+    try
+    {
+        result_dbl = stod(val);
+    }
+    catch (std::invalid_argument&)
+    {
+        return 0;
+    }
 
-
-	uint fromStringToTSnumber(const Yuni::String& value)
-	{
-		uint result;
-		const uint maxTSnumber = 10000;
-		double result_dbl;
-
-		std::string val = value.to<std::string>();
-		try
-		{
-			result_dbl = stod(val);
-		}
-		catch (std::invalid_argument&)
-		{
-			return 0;
-		}
-
-		if (result_dbl < 0.)
-			result = 0;
-		else
-		{
-			if (result_dbl > maxTSnumber)
-				result = maxTSnumber;
-			else
-				result = (uint)result_dbl;
-		}
-		return result;
-	}
-
+    if (result_dbl < 0.)
+        result = 0;
+    else
+    {
+        if (result_dbl > maxTSnumber)
+            result = maxTSnumber;
+        else
+            result = (uint)result_dbl;
+    }
+    return result;
+}
 
 } // namespace ScenarioBuilder
 } // namespace Data

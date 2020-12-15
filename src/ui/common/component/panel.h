@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_COMMON_PANEL_H__
-# define __ANTARES_COMMON_PANEL_H__
+#define __ANTARES_COMMON_PANEL_H__
 
-# include "panel/panel.h"
+#include "panel/panel.h"
 
 #endif // __ANTARES_COMMON_PANEL_H__

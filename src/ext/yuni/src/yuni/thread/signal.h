@@ -13,114 +13,101 @@
 #include "../core/smartptr.h"
 #include "pthread.h"
 
-
-
 namespace Yuni
 {
 namespace Thread
 {
+/*!
+** \brief Mecanism for notifying a waiting thread of the occurrence of a particular event
+*/
+class YUNI_DECL Signal final
+{
+public:
+    //! Most suitable smart pointer for the class
+    typedef Yuni::SmartPtr<Signal> Ptr;
 
-	/*!
-	** \brief Mecanism for notifying a waiting thread of the occurrence of a particular event
-	*/
-	class YUNI_DECL Signal final
-	{
-	public:
-		//! Most suitable smart pointer for the class
-		typedef Yuni::SmartPtr<Signal> Ptr;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    Signal();
+    //! Copy constructor
+    Signal(const Signal&);
+#ifdef YUNI_HAS_CPP_MOVE
+    // Like mutexes, a signal must have invariant address and thus can not be moved
+    Signal(Signal&&) = delete;
+#endif
+    //! Destructor
+    ~Signal();
+    //@}
 
+    //! \name Signal
+    //@{
+    /*!
+    ** \brief Reset the internal state
+    */
+    bool reset();
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		Signal();
-		//! Copy constructor
-		Signal(const Signal&);
-		# ifdef YUNI_HAS_CPP_MOVE
-		// Like mutexes, a signal must have invariant address and thus can not be moved
-		Signal(Signal&&) = delete;
-		#endif
-		//! Destructor
-		~Signal();
-		//@}
+    /*!
+    ** \brief Wait for being notified
+    */
+    void wait();
 
+    /*!
+    ** \brief Wait for being notified
+    **
+    ** \param timeout A timeout, in milliseconds
+    ** \return True if the signal has been notified, false if the timeout has been reached
+    */
+    bool wait(uint timeout);
 
-		//! \name Signal
-		//@{
-		/*!
-		** \brief Reset the internal state
-		*/
-		bool reset();
+    /*!
+    ** \brief Wait for being notified and atomically reset for reuse
+    */
+    void waitAndReset();
 
-		/*!
-		** \brief Wait for being notified
-		*/
-		void wait();
+    /*!
+    ** \brief Notify the waiter
+    */
+    bool notify();
 
-		/*!
-		** \brief Wait for being notified
-		**
-		** \param timeout A timeout, in milliseconds
-		** \return True if the signal has been notified, false if the timeout has been reached
-		*/
-		bool wait(uint timeout);
+    /*!
+    ** \brief Get if the signal is valid
+    */
+    bool valid() const;
+    //@}
 
-		/*!
-		** \brief Wait for being notified and atomically reset for reuse
-		*/
-		void waitAndReset();
+    //! \name Operators
+    //@{
+    //! Operator !
+    bool operator!() const;
+    //! Operator =
+    Signal& operator=(const Signal&);
 
-		/*!
-		** \brief Notify the waiter
-		*/
-		bool notify();
+#ifdef YUNI_HAS_CPP_MOVE
+    // Like mutexes, a signal must have invariant address and thus can not be moved
+    Signal& operator=(Signal&&) = delete;
+#endif
 
+    //@}
 
-		/*!
-		** \brief Get if the signal is valid
-		*/
-		bool valid() const;
-		//@}
+private:
+#ifndef YUNI_NO_THREAD_SAFE
+#ifdef YUNI_OS_WINDOWS
+    //! Event handle (HANDLE)
+    void* pHandle;
+#else
+    pthread_mutex_t pMutex;
+    pthread_cond_t pCondition;
+    volatile bool pSignalled;
+#endif
+#endif
 
-
-		//! \name Operators
-		//@{
-		//! Operator !
-		bool operator ! () const;
-		//! Operator =
-		Signal& operator = (const Signal&);
-
-		# ifdef YUNI_HAS_CPP_MOVE
-		// Like mutexes, a signal must have invariant address and thus can not be moved
-		Signal& operator = (Signal&&) = delete;
-		#endif
-
-		//@}
-
-
-	private:
-		#ifndef YUNI_NO_THREAD_SAFE
-		# ifdef YUNI_OS_WINDOWS
-		//! Event handle (HANDLE)
-		void* pHandle;
-		# else
-		pthread_mutex_t pMutex;
-		pthread_cond_t  pCondition;
-		volatile bool pSignalled;
-		# endif
-		#endif
-
-	}; // class Signal
-
-
-
-
+}; // class Signal
 
 } // namespace Thread
 } // namespace Yuni
 
-# include "signal.hxx"
-
+#include "signal.hxx"

@@ -11,204 +11,170 @@
 #pragma once
 #include "string.h"
 
-
-
 namespace Yuni
 {
-
 //! \name Operator overload for stream printing
 //@{
-std::ostream& operator << (std::ostream& out, const AnyString& rhs);
-std::ostream& operator << (std::ostream& out, const Yuni::String& rhs);
-std::ostream& operator << (std::ostream& out, const Yuni::Clob& rhs);
-std::ostream& operator << (std::ostream& out, const Yuni::ShortString16& rhs);
-std::ostream& operator << (std::ostream& out, const Yuni::ShortString32& rhs);
-std::ostream& operator << (std::ostream& out, const Yuni::ShortString64& rhs);
-std::ostream& operator << (std::ostream& out, const Yuni::ShortString128& rhs);
-std::ostream& operator << (std::ostream& out, const Yuni::ShortString256& rhs);
-std::ostream& operator << (std::ostream& out, const Yuni::ShortString512& rhs);
+std::ostream& operator<<(std::ostream& out, const AnyString& rhs);
+std::ostream& operator<<(std::ostream& out, const Yuni::String& rhs);
+std::ostream& operator<<(std::ostream& out, const Yuni::Clob& rhs);
+std::ostream& operator<<(std::ostream& out, const Yuni::ShortString16& rhs);
+std::ostream& operator<<(std::ostream& out, const Yuni::ShortString32& rhs);
+std::ostream& operator<<(std::ostream& out, const Yuni::ShortString64& rhs);
+std::ostream& operator<<(std::ostream& out, const Yuni::ShortString128& rhs);
+std::ostream& operator<<(std::ostream& out, const Yuni::ShortString256& rhs);
+std::ostream& operator<<(std::ostream& out, const Yuni::ShortString512& rhs);
 
-std::ostream& operator << (std::ostream& out, const Yuni::UTF8::Char& rhs);
-
+std::ostream& operator<<(std::ostream& out, const Yuni::UTF8::Char& rhs);
 
 template<class CharT, class TraitsT, uint SizeT, bool ExpT>
-inline std::basic_istream<CharT, TraitsT>& operator >> (std::basic_istream<CharT, TraitsT>& stream, Yuni::CString<SizeT,ExpT>& string)
+inline std::basic_istream<CharT, TraitsT>& operator>>(std::basic_istream<CharT, TraitsT>& stream,
+                                                      Yuni::CString<SizeT, ExpT>& string)
 {
-	string.clear();
-	while (stream.good())
-	{
-		char c;
-		stream.get(c);
-		if (c == ' ' || c == '\t' || c == '\r' || c == '\n')
-			break;
-		string.append(c);
-	}
-	return stream;
+    string.clear();
+    while (stream.good())
+    {
+        char c;
+        stream.get(c);
+        if (c == ' ' || c == '\t' || c == '\r' || c == '\n')
+            break;
+        string.append(c);
+    }
+    return stream;
 }
 
-}
-
-
-
-
-
+} // namespace Yuni
 
 template<uint SizeT, bool ExpT>
-inline Yuni::CString<SizeT,ExpT>
-operator + (const Yuni::CString<SizeT,ExpT>& rhs, const char* const u)
+inline Yuni::CString<SizeT, ExpT> operator+(const Yuni::CString<SizeT, ExpT>& rhs,
+                                            const char* const u)
 {
-	return Yuni::CString<SizeT,ExpT>(rhs) += u;
+    return Yuni::CString<SizeT, ExpT>(rhs) += u;
 }
 
 template<uint SizeT, bool ExpT>
-inline Yuni::CString<SizeT,ExpT>
-operator + (const Yuni::CString<SizeT,ExpT>& rhs, const wchar_t* u)
+inline Yuni::CString<SizeT, ExpT> operator+(const Yuni::CString<SizeT, ExpT>& rhs, const wchar_t* u)
 {
-	return Yuni::CString<SizeT,ExpT>(rhs) += u;
+    return Yuni::CString<SizeT, ExpT>(rhs) += u;
 }
 
 template<uint SizeT, bool ExpT>
-inline Yuni::CString<SizeT,ExpT>
-operator + (const Yuni::CString<SizeT,ExpT>& rhs, const char u)
+inline Yuni::CString<SizeT, ExpT> operator+(const Yuni::CString<SizeT, ExpT>& rhs, const char u)
 {
-	return Yuni::CString<SizeT,ExpT>(rhs) += u;
+    return Yuni::CString<SizeT, ExpT>(rhs) += u;
 }
 
 template<uint SizeT, bool ExpT>
-inline Yuni::CString<SizeT,ExpT>
-operator + (const Yuni::CString<SizeT,ExpT>& rhs, const wchar_t u)
+inline Yuni::CString<SizeT, ExpT> operator+(const Yuni::CString<SizeT, ExpT>& rhs, const wchar_t u)
 {
-	return Yuni::CString<SizeT,ExpT>(rhs) += u;
-}
-
-
-
-template<uint SizeT, bool ExpT>
-inline Yuni::CString<SizeT,ExpT>
-operator + (const wchar_t* u, const Yuni::CString<SizeT,ExpT>& rhs)
-{
-	return Yuni::CString<SizeT,ExpT>(u) += rhs;
+    return Yuni::CString<SizeT, ExpT>(rhs) += u;
 }
 
 template<uint SizeT, bool ExpT>
-inline Yuni::CString<SizeT,ExpT>
-operator + (const char* const u, const Yuni::CString<SizeT,ExpT>& rhs)
+inline Yuni::CString<SizeT, ExpT> operator+(const wchar_t* u, const Yuni::CString<SizeT, ExpT>& rhs)
 {
-	return Yuni::CString<SizeT,ExpT>(u) += rhs;
+    return Yuni::CString<SizeT, ExpT>(u) += rhs;
 }
 
 template<uint SizeT, bool ExpT>
-inline Yuni::CString<SizeT,ExpT>
-operator + (const char u, const Yuni::CString<SizeT,ExpT>& rhs)
+inline Yuni::CString<SizeT, ExpT> operator+(const char* const u,
+                                            const Yuni::CString<SizeT, ExpT>& rhs)
 {
-	return Yuni::CString<SizeT,ExpT>(u) += rhs;
+    return Yuni::CString<SizeT, ExpT>(u) += rhs;
 }
 
 template<uint SizeT, bool ExpT>
-inline Yuni::CString<SizeT,ExpT>
-operator + (const wchar_t u, const Yuni::CString<SizeT,ExpT>& rhs)
+inline Yuni::CString<SizeT, ExpT> operator+(const char u, const Yuni::CString<SizeT, ExpT>& rhs)
 {
-	return Yuni::CString<SizeT,ExpT>(u) += rhs;
+    return Yuni::CString<SizeT, ExpT>(u) += rhs;
 }
 
-
-
+template<uint SizeT, bool ExpT>
+inline Yuni::CString<SizeT, ExpT> operator+(const wchar_t u, const Yuni::CString<SizeT, ExpT>& rhs)
+{
+    return Yuni::CString<SizeT, ExpT>(u) += rhs;
+}
 
 template<uint SizeT, bool ExpT, class TraitsT, class AllocT>
-inline Yuni::CString<SizeT,ExpT>
-operator + (const std::basic_string<char,TraitsT,AllocT>& u, const Yuni::CString<SizeT,ExpT>& rhs)
+inline Yuni::CString<SizeT, ExpT> operator+(const std::basic_string<char, TraitsT, AllocT>& u,
+                                            const Yuni::CString<SizeT, ExpT>& rhs)
 {
-	return Yuni::CString<SizeT,ExpT>(u) += rhs;
+    return Yuni::CString<SizeT, ExpT>(u) += rhs;
 }
-
 
 template<uint SizeT, bool ExpT, class TraitsT, class AllocT>
-inline Yuni::CString<SizeT,ExpT>
-operator + (const Yuni::CString<SizeT,ExpT>& rhs, const std::basic_string<char,TraitsT,AllocT>& u)
+inline Yuni::CString<SizeT, ExpT> operator+(const Yuni::CString<SizeT, ExpT>& rhs,
+                                            const std::basic_string<char, TraitsT, AllocT>& u)
 {
-	return Yuni::CString<SizeT,ExpT>(rhs) += u;
-}
-
-
-template<uint SizeT, bool ExpT>
-inline bool
-operator == (const char* lhs, const Yuni::CString<SizeT,ExpT>& rhs)
-{
-	return rhs == lhs;
+    return Yuni::CString<SizeT, ExpT>(rhs) += u;
 }
 
 template<uint SizeT, bool ExpT>
-inline bool
-operator != (const char* lhs, const Yuni::CString<SizeT,ExpT>& rhs)
+inline bool operator==(const char* lhs, const Yuni::CString<SizeT, ExpT>& rhs)
 {
-	return rhs != lhs;
+    return rhs == lhs;
+}
+
+template<uint SizeT, bool ExpT>
+inline bool operator!=(const char* lhs, const Yuni::CString<SizeT, ExpT>& rhs)
+{
+    return rhs != lhs;
 }
 
 template<int N, uint SizeT, bool ExpT>
-inline bool
-operator == (const char lhs[N], const Yuni::CString<SizeT,ExpT>& rhs)
+inline bool operator==(const char lhs[N], const Yuni::CString<SizeT, ExpT>& rhs)
 {
-	return rhs == lhs;
+    return rhs == lhs;
 }
 
 template<int N, uint SizeT, bool ExpT>
-inline bool
-operator != (const char lhs[N], const Yuni::CString<SizeT,ExpT>& rhs)
+inline bool operator!=(const char lhs[N], const Yuni::CString<SizeT, ExpT>& rhs)
 {
-	return rhs != lhs;
+    return rhs != lhs;
 }
 
 template<class TraitsT, class AllocT, uint SizeT, bool ExpT>
-inline bool
-operator == (const std::basic_string<char,TraitsT,AllocT>& lhs, const Yuni::CString<SizeT,ExpT>& rhs)
+inline bool operator==(const std::basic_string<char, TraitsT, AllocT>& lhs,
+                       const Yuni::CString<SizeT, ExpT>& rhs)
 {
-	return rhs == lhs;
+    return rhs == lhs;
 }
 
 template<class TraitsT, class AllocT, uint SizeT, bool ExpT>
-inline bool
-operator != (const std::basic_string<char,TraitsT,AllocT>& lhs, const Yuni::CString<SizeT,ExpT>& rhs)
+inline bool operator!=(const std::basic_string<char, TraitsT, AllocT>& lhs,
+                       const Yuni::CString<SizeT, ExpT>& rhs)
 {
-	return rhs != lhs;
+    return rhs != lhs;
 }
 
-
-inline bool
-operator == (const AnyString& mbs, Yuni::UTF8::Char c)
+inline bool operator==(const AnyString& mbs, Yuni::UTF8::Char c)
 {
-	return c.size() == mbs.size() && c == mbs.utf8begin().value();
+    return c.size() == mbs.size() && c == mbs.utf8begin().value();
 }
 
-inline bool
-operator != (const AnyString& mbs, Yuni::UTF8::Char c)
+inline bool operator!=(const AnyString& mbs, Yuni::UTF8::Char c)
 {
-	return c.size() != mbs.size() || c == mbs.utf8begin().value();
+    return c.size() != mbs.size() || c == mbs.utf8begin().value();
 }
 
 //@}
 
-
-
-
-
-
-
-# ifdef YUNI_HAS_STL_HASH
+#ifdef YUNI_HAS_STL_HASH
 
 namespace std
 {
-	template<uint SizeT, bool ExpT>
-	struct YUNI_DECL hash<Yuni::CString<SizeT, ExpT> >
-	{
-		typedef Yuni::CString<SizeT, ExpT> argument_type;
-		typedef std::size_t result_type;
+template<uint SizeT, bool ExpT>
+struct YUNI_DECL hash<Yuni::CString<SizeT, ExpT>>
+{
+    typedef Yuni::CString<SizeT, ExpT> argument_type;
+    typedef std::size_t result_type;
 
-		result_type operator() (const argument_type& string) const
-		{
-			return string.hash();
-		}
-	};
+    result_type operator()(const argument_type& string) const
+    {
+        return string.hash();
+    }
+};
 
 } // namespace std
 
-# endif // YUNI_HAS_STL_HASH
+#endif // YUNI_HAS_STL_HASH

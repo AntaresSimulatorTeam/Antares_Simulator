@@ -25,122 +25,101 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_SIMULATION_ADE_STRUCTS_H__
-# define __SOLVER_SIMULATION_ADE_STRUCTS_H__
-
-
-
+#define __SOLVER_SIMULATION_ADE_STRUCTS_H__
 
 typedef struct
 {
-	double  MargeHorsReseau;
-	double  MargeAvecReseau;
-	double  Offre;
-	char    DefaillanceHorsReseau;
-	char    DefaillanceAvecReseau;
+    double MargeHorsReseau;
+    double MargeAvecReseau;
+    double Offre;
+    char DefaillanceHorsReseau;
+    char DefaillanceAvecReseau;
 } RESULTATS_HORAIRES_ADEQUATION;
 
-
-
-
 typedef struct
 {
-	double  PuissanceThermiqueCumulee;
-	double  Consommation;
-	double  Reserve;
+    double PuissanceThermiqueCumulee;
+    double Consommation;
+    double Reserve;
 } DONNEES_ADEQUATION;
 
-
-
-
 typedef struct
 {
-	DONNEES_ADEQUATION **            DonneesParPays;
-	RESULTATS_HORAIRES_ADEQUATION ** ResultatsParPays;
-	char                             DefaillanceEuropeenneHorsReseau; /* vaut OUI_SIM ou NON_SIM */
-	char                             DefaillanceEuropeenneAvecReseau; /* vaut OUI_SIM ou NON_SIM */
-	long                    *        IndicesDesVoisins;               /* indice par PointeurSurIndices */
-	long                    *        PointeurSurIndices;              /* PointeurSurIndices[p] indique ou chercher le numero du premier voisin de p dans IndicesDesVoisins   */
-	                                                                  /* PointeurSurIndices[p+1]-1-PointeurSurIndices[p] donne donc le nombre de noeuds auxquels p est relie */
-	                                                                  /* IndicesDesVoisins[PointeurSurIndices[p]] ... IndicesDesVoisins[PointeurSurIndices[p+1]-1] sont donc */
-	                                                                  /* les pays auxquels p est relie                                                                       */
-	long                    *        RangDansVoisinage;               /* est aussi indice par PointeurSurIndice ; n'est en realite rien de plus que :                        */
-	                                                                  /* for(q = PointeurSurIndices[p] ; q < PointeurSurIndices[p+1] ; q++)                                  */
-	                                                                  /*   RangDansVoisinage[q] = q - PointeurSurIndices[p] ;                                                */
-	double                  *        QuellesNTCPrendre;               /* Indice par NombreDElementsChainage : contient le numero de l'interconnexion correspondante */
-	double                  *        ValeursEffectivesNTC;            /* vraies valeurs recuperees en utilisant QuellesNTCPrendre                                   */
-	long                             NombreDElementsChainage;
-	/* Utilise par l'algorithme de flot */
-	double                  *        FluxDeSecours;
-	double                  *        NTCDeReference;
-	long                    *        A;
-	long                    *        B;
-	long                    *        X;
-	double                  *        S;
+    DONNEES_ADEQUATION** DonneesParPays;
+    RESULTATS_HORAIRES_ADEQUATION** ResultatsParPays;
+    char DefaillanceEuropeenneHorsReseau; /* vaut OUI_SIM ou NON_SIM */
+    char DefaillanceEuropeenneAvecReseau; /* vaut OUI_SIM ou NON_SIM */
+    long* IndicesDesVoisins;              /* indice par PointeurSurIndices */
+    long* PointeurSurIndices; /* PointeurSurIndices[p] indique ou chercher le numero du premier
+                                 voisin de p dans IndicesDesVoisins   */
+    /* PointeurSurIndices[p+1]-1-PointeurSurIndices[p] donne donc le nombre de noeuds auxquels p est
+     * relie */
+    /* IndicesDesVoisins[PointeurSurIndices[p]] ... IndicesDesVoisins[PointeurSurIndices[p+1]-1]
+     * sont donc */
+    /* les pays auxquels p est relie */
+    long* RangDansVoisinage; /* est aussi indice par PointeurSurIndice ; n'est en realite rien de
+                                plus que :                        */
+    /* for(q = PointeurSurIndices[p] ; q < PointeurSurIndices[p+1] ; q++) */
+    /*   RangDansVoisinage[q] = q - PointeurSurIndices[p] ; */
+    double* QuellesNTCPrendre;    /* Indice par NombreDElementsChainage : contient le numero de
+                                     l'interconnexion correspondante */
+    double* ValeursEffectivesNTC; /* vraies valeurs recuperees en utilisant QuellesNTCPrendre */
+    long NombreDElementsChainage;
+    /* Utilise par l'algorithme de flot */
+    double* FluxDeSecours;
+    double* NTCDeReference;
+    long* A;
+    long* B;
+    long* X;
+    double* S;
 
 } PROBLEME_HORAIRE_ADEQUATION;
 
-
-
-
-
 typedef struct
 {
-	double * Consommation;
-	double * PuissanceThermiqueCumulee;
-	double * Reserve;
+    double* Consommation;
+    double* PuissanceThermiqueCumulee;
+    double* Reserve;
 
 } VALEURS_ANNUELLES;
 
-
-
-
-
-
-
 typedef struct
 {
-	double   EENSGWHorsReseau;
-	double   LOLEHorsReseau;
-	double   LOLPHorsReseau;
-	double   LOLPHorsReseauTemporaire;
-	double * LOLPHoraireHorsReseau;
-	double * EENSHoraireHorsReseau;
-	long   * LOLEAnnuelleHorsReseau;
-	double * MargeMinAnnuelleHorsReseau;
-	double   EENSGWAvecReseau;
-	double   LOLEAvecReseau;
-	double   LOLPAvecReseau;
-	double   LOLPAvecReseauTemporaire;
-	double * LOLPHoraireAvecReseau;
-	double * EENSHoraireAvecReseau;
-	long   * LOLEAnnuelleAvecReseau;
-	double * MargeMinAnnuelleAvecReseau;
+    double EENSGWHorsReseau;
+    double LOLEHorsReseau;
+    double LOLPHorsReseau;
+    double LOLPHorsReseauTemporaire;
+    double* LOLPHoraireHorsReseau;
+    double* EENSHoraireHorsReseau;
+    long* LOLEAnnuelleHorsReseau;
+    double* MargeMinAnnuelleHorsReseau;
+    double EENSGWAvecReseau;
+    double LOLEAvecReseau;
+    double LOLPAvecReseau;
+    double LOLPAvecReseauTemporaire;
+    double* LOLPHoraireAvecReseau;
+    double* EENSHoraireAvecReseau;
+    long* LOLEAnnuelleAvecReseau;
+    double* MargeMinAnnuelleAvecReseau;
 } RESULTATS_PAR_PAYS_ADEQUATION;
 
-
-
-
-
 typedef struct
 {
-	RESULTATS_PAR_PAYS_ADEQUATION ** AdequationParPays;
-	double                        *  LOLPEuropeenneHoraireHorsReseau;
-	double                        *  LOLPEuropeenneHoraireAvecReseau;
-	double                        *  EENSEuropeenneHoraireHorsReseau;
-	double                        *  EENSEuropeenneHoraireAvecReseau;
-	long                          *  LOLEEuropeenneAnnuelleHorsReseau;
-	long                          *  LOLEEuropeenneAnnuelleAvecReseau;
-	long                             NombreTotalHeuresTraitees;
-	double                           LOLEEuropeenneHorsReseau;
-	double                           LOLPEuropeenneHorsReseau;
-	double                           LOLPEuropeenneHorsReseauTemporaire;
-	double                           LOLEEuropeenneAvecReseau;
-	double                           LOLPEuropeenneAvecReseau;
-	double                           LOLPEuropeenneAvecReseauTemporaire;
+    RESULTATS_PAR_PAYS_ADEQUATION** AdequationParPays;
+    double* LOLPEuropeenneHoraireHorsReseau;
+    double* LOLPEuropeenneHoraireAvecReseau;
+    double* EENSEuropeenneHoraireHorsReseau;
+    double* EENSEuropeenneHoraireAvecReseau;
+    long* LOLEEuropeenneAnnuelleHorsReseau;
+    long* LOLEEuropeenneAnnuelleAvecReseau;
+    long NombreTotalHeuresTraitees;
+    double LOLEEuropeenneHorsReseau;
+    double LOLPEuropeenneHorsReseau;
+    double LOLPEuropeenneHorsReseauTemporaire;
+    double LOLEEuropeenneAvecReseau;
+    double LOLPEuropeenneAvecReseau;
+    double LOLPEuropeenneAvecReseauTemporaire;
 
 } RESULTATS_ADEQUATION;
-
-
-
 
 #endif /* __SOLVER_SIMULATION_ADE_STRUCTS_H__ */

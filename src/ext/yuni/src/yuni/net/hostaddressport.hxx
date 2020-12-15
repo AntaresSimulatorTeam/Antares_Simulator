@@ -9,29 +9,22 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_NET_HOST_ADDRESS_PORT_HXX__
-# define __YUNI_NET_HOST_ADDRESS_PORT_HXX__
-
+#define __YUNI_NET_HOST_ADDRESS_PORT_HXX__
 
 namespace Yuni
 {
 namespace Net
 {
+inline void HostAddressPort::reset()
+{
+    address.clear();
+    port = nullptr;
+}
 
-
-	inline void HostAddressPort::reset()
-	{
-		address.clear();
-		port = nullptr;
-	}
-
-
-	inline bool HostAddressPort::operator < (const HostAddressPort& rhs) const
-	{
-		return (port < rhs.port) and (address < rhs.address);
-	}
-
-
-
+inline bool HostAddressPort::operator<(const HostAddressPort& rhs) const
+{
+    return (port < rhs.port) and (address < rhs.address);
+}
 
 } // namespace Net
 } // namespace Yuni

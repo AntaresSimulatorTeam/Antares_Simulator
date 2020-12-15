@@ -27,51 +27,39 @@
 
 #include "data.h"
 
-
-
 namespace Antares
 {
 namespace Window
 {
 namespace Inspector
 {
+InspectorData::InspectorData(Antares::Data::Study& s) : study(s), empty(true)
+{
+}
 
+InspectorData::~InspectorData()
+{
+}
 
-	InspectorData::InspectorData(Antares::Data::Study& s) :
-		study(s),
-		empty(true)
-	{
-	}
+void InspectorData::clear()
+{
+    if (not empty)
+    {
+        areas.clear();
+        links.clear();
+        clusters.clear();
+        constraints.clear();
+        studies.clear();
+        empty = true;
+    }
+}
 
-
-	InspectorData::~InspectorData()
-	{
-	}
-
-
-	void InspectorData::clear()
-	{
-		if (not empty)
-		{
-			areas.clear();
-			links.clear();
-			clusters.clear();
-			constraints.clear();
-			studies.clear();
-			empty = true;
-		}
-	}
-
-
-	uint InspectorData::totalNbOfItems() const
-	{
-		return (uint) areas.size() + (uint) links.size()
-			+ (uint) clusters.size() + (uint) constraints.size();
-	}
-
-
+uint InspectorData::totalNbOfItems() const
+{
+    return (uint)areas.size() + (uint)links.size() + (uint)clusters.size()
+           + (uint)constraints.size();
+}
 
 } // namespace Inspector
 } // namespace Window
 } // namespace Antares
-

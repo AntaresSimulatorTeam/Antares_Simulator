@@ -11,62 +11,49 @@
 #pragma once
 #include "default.h"
 
-
-
 namespace Yuni
 {
 namespace Math
 {
 namespace Random
 {
+inline void Default::reset()
+{
+    // Initializing the random generator with a standard seed
+    ::srand((uint)::time(NULL));
+    // Compute a random number for nothing, to avoid the first generated number
+    ::rand();
+}
 
+inline void Default::reset(uint seed)
+{
+    // Initializing the random generator with the given seed
+    ::srand(seed);
+    // Compute a random number for nothing, to avoid the first generated number
+    ::rand();
+}
 
-	inline void Default::reset()
-	{
-		// Initializing the random generator with a standard seed
-		::srand((uint) ::time(NULL));
-		// Compute a random number for nothing, to avoid the first generated number
-		::rand();
-	}
+inline Default::Value Default::next()
+{
+    return rand();
+}
 
+inline Default::Value Default::min()
+{
+    return 0;
+}
 
-	inline void Default::reset(uint seed)
-	{
-		// Initializing the random generator with the given seed
-		::srand(seed);
-		// Compute a random number for nothing, to avoid the first generated number
-		::rand();
-	}
+inline Default::Value Default::max()
+{
+    return RAND_MAX;
+}
 
-
-	inline Default::Value Default::next()
-	{
-		return rand();
-	}
-
-
-	inline Default::Value Default::min()
-	{
-		return 0;
-	}
-
-
-	inline Default::Value Default::max()
-	{
-		return RAND_MAX;
-	}
-
-
-	template<class U>
-	inline Default& Default::operator >> (U& u)
-	{
-		u = next();
-		return *this;
-	}
-
-
-
-
+template<class U>
+inline Default& Default::operator>>(U& u)
+{
+    u = next();
+    return *this;
+}
 
 } // namespace Random
 } // namespace Math

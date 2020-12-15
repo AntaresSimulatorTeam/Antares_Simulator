@@ -25,10 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_STORAGE_MINMAX_H__
-# define __SOLVER_VARIABLE_STORAGE_MINMAX_H__
+#define __SOLVER_VARIABLE_STORAGE_MINMAX_H__
 
-# include "minmax-data.h"
-
+#include "minmax-data.h"
 
 namespace Antares
 {
@@ -40,189 +39,191 @@ namespace R
 {
 namespace AllYears
 {
+template<class NextT = Empty>
+class Min;
+template<class NextT = Empty>
+class Max;
 
-	template<class NextT = Empty> class Min;
-	template<class NextT = Empty> class Max;
+template<bool OpInferior, class NextT>
+struct MinMaxBase : public NextT
+{
+public:
+    //! Type of the net item in the list
+    typedef NextT NextType;
 
+    enum
+    {
+        //! The count if item in the list
+        count = 1 + NextT::count,
 
-	template<bool OpInferior, class NextT>
-	struct MinMaxBase : public NextT
-	{
-	public:
-		//! Type of the net item in the list
-		typedef NextT NextType;
+        categoryFile = NextT::categoryFile | Variable::Category::allFile,
+    };
 
-		enum
-		{
-			//! The count if item in the list
-			count = 1 + NextT::count,
+    //! Name of the filter
+    static const char* Name()
+    {
+        return "minmaxbase";
+    }
 
-			categoryFile = NextT::categoryFile | Variable::Category::allFile,
-		};
+public:
+    MinMaxBase()
+    {
+    }
 
+    ~MinMaxBase()
+    {
+    }
 
-		//! Name of the filter
-		static const char* Name() {return "minmaxbase";}
+protected:
+    void initializeFromStudy(Data::Study& study);
 
-	public:
-		MinMaxBase()
-		{
-		}
+    template<class S, class VCardT>
+    void buildSurveyReport(SurveyResults& report,
+                           const S& results,
+                           int dataLevel,
+                           int fileLevel,
+                           int precision) const
+    {
+        switch (fileLevel)
+        {
+        case Category::mc:
+            break;
+        case Category::id:
+        {
+            switch (precision)
+            {
+            case Category::hourly:
+                InternalExportIndices<maxHoursInAYear, VCardT>(
+                  report, Memory::RawPointer(minmax.hourly), fileLevel);
+                break;
+            case Category::daily:
+                InternalExportIndices<maxDaysInAYear, VCardT>(report, minmax.daily, fileLevel);
+                break;
+            case Category::weekly:
+                InternalExportIndices<maxWeeksInAYear, VCardT>(report, minmax.weekly, fileLevel);
+                break;
+            case Category::monthly:
+                InternalExportIndices<maxMonths, VCardT>(report, minmax.monthly, fileLevel);
+                break;
+            case Category::annual:
+                InternalExportIndices<1, VCardT>(report, &minmax.annual, fileLevel);
+                break;
+            }
+            break;
+        }
+        default:
+        {
+            switch (precision)
+            {
+            case Category::hourly:
+                InternalExportValues<maxHoursInAYear, VCardT>(report,
+                                                              Memory::RawPointer(minmax.hourly));
+                break;
+            case Category::daily:
+                InternalExportValues<maxDaysInAYear, VCardT>(report, minmax.daily);
+                break;
+            case Category::weekly:
+                InternalExportValues<maxWeeksInAYear, VCardT>(report, minmax.weekly);
+                break;
+            case Category::monthly:
+                InternalExportValues<maxMonths, VCardT>(report, minmax.monthly);
+                break;
+            case Category::annual:
+                InternalExportValues<1, VCardT>(report, &minmax.annual);
+                break;
+            }
+        }
+        }
+        // Next
+        NextType::template buildSurveyReport<S, VCardT>(
+          report, results, dataLevel, fileLevel, precision);
+    }
 
-		~MinMaxBase()
-		{
-		}
+    void reset();
 
-	protected:
-		void initializeFromStudy(Data::Study& study);
+    void merge(uint year, const IntermediateValues& rhs);
 
-		template<class S, class VCardT>
-		void buildSurveyReport(SurveyResults& report, const S& results, int dataLevel, int fileLevel, int precision) const
-		{
-			switch (fileLevel)
-			{
-				case Category::mc:
-					break;
-				case Category::id:
-					{
-						switch (precision)
-						{
-							case Category::hourly:
-								InternalExportIndices<maxHoursInAYear, VCardT>(report, Memory::RawPointer(minmax.hourly), fileLevel);
-								break;
-							case Category::daily:
-								InternalExportIndices<maxDaysInAYear, VCardT>(report, minmax.daily, fileLevel);
-								break;
-							case Category::weekly:
-								InternalExportIndices<maxWeeksInAYear, VCardT>(report, minmax.weekly, fileLevel);
-								break;
-							case Category::monthly:
-								InternalExportIndices<maxMonths, VCardT>(report, minmax.monthly, fileLevel);
-								break;
-							case Category::annual:
-								InternalExportIndices<1, VCardT>(report, &minmax.annual, fileLevel);
-								break;
-						}
-						break;
-					}
-				default:
-					{
-						switch (precision)
-						{
-							case Category::hourly:
-								InternalExportValues<maxHoursInAYear, VCardT>(report, Memory::RawPointer(minmax.hourly));
-								break;
-							case Category::daily:
-								InternalExportValues<maxDaysInAYear, VCardT>(report, minmax.daily);
-								break;
-							case Category::weekly:
-								InternalExportValues<maxWeeksInAYear, VCardT>(report, minmax.weekly);
-								break;
-							case Category::monthly:
-								InternalExportValues<maxMonths, VCardT>(report, minmax.monthly);
-								break;
-							case Category::annual:
-								InternalExportValues<1, VCardT>(report, &minmax.annual);
-								break;
-						}
-					}
-			}
-			// Next
-			NextType::template buildSurveyReport<S,VCardT>(report, results, dataLevel, fileLevel, precision);
-		}
+    Yuni::uint64 memoryUsage() const
+    {
+        return
+#ifdef ANTARES_SWAP_SUPPORT
+          0
+#else
+          sizeof(double) * maxHoursInAYear
+#endif
+          + NextType::memoryUsage();
+    }
 
+    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u)
+    {
+        Antares::Memory::EstimateMemoryUsage(sizeof(MinMaxData::Data), maxHoursInAYear, u, false);
+        u.takeIntoConsiderationANewTimeserieForDiskOutput(true);
+        NextType::EstimateMemoryUsage(u);
+    }
 
-		void reset();
+    template<template<class> class DecoratorT>
+    Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
+    {
+        return NextType::template hourlyValuesForSpatialAggregate<DecoratorT>();
+    }
 
-		void merge(uint year, const IntermediateValues& rhs);
+protected:
+    MinMaxData minmax;
 
+private:
+    template<uint Size, class VCardT>
+    static void InternalExportIndices(SurveyResults& report,
+                                      const MinMaxData::Data* array,
+                                      int fileLevel);
 
-		Yuni::uint64 memoryUsage() const
-		{
-			return
-			# ifdef ANTARES_SWAP_SUPPORT
-				0
-			# else
-				sizeof(double) * maxHoursInAYear
-			# endif
-				+ NextType::memoryUsage();
+    template<uint Size, class VCardT>
+    static void InternalExportValues(SurveyResults& report, const MinMaxData::Data* array);
 
-		}
+}; // class MinMaxBase
 
-		static void EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-		{
-			Antares::Memory::EstimateMemoryUsage(sizeof(MinMaxData::Data), maxHoursInAYear, u, false);
-			u.takeIntoConsiderationANewTimeserieForDiskOutput(true);
-			NextType::EstimateMemoryUsage(u);
+template<class NextT>
+class Min : public MinMaxBase<true, NextT>
+{
+public:
+    //! Implementation
+    typedef MinMaxBase<true, NextT> MinMaxImplementationType;
+    //! Type of the net item in the list
+    typedef NextT NextType;
 
-		}
+public:
+    //! Name of the filter
+    static const char* Name()
+    {
+        return "min";
+    }
+    enum
+    {
+        //! The count if item in the list
+        count = MinMaxImplementationType::count,
+    };
+};
 
-		template<template<class> class DecoratorT>
-		Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
-		{
-			return NextType::template hourlyValuesForSpatialAggregate<DecoratorT>();
-		}
+template<class NextT>
+class Max : public MinMaxBase<false, NextT>
+{
+public:
+    //! Implementation
+    typedef MinMaxBase<false, NextT> MinMaxImplementationType;
+    //! Type of the net item in the list
+    typedef NextT NextType;
 
-	protected:
-		MinMaxData minmax;
-
-	private:
-		template<uint Size, class VCardT>
-		static void InternalExportIndices(SurveyResults& report, const MinMaxData::Data* array, int fileLevel);
-
-		template<uint Size, class VCardT>
-		static void InternalExportValues(SurveyResults& report, const MinMaxData::Data* array);
-
-	}; // class MinMaxBase
-
-
-
-
-
-
-
-	template<class NextT>
-	class Min : public MinMaxBase<true, NextT>
-	{
-	public:
-		//! Implementation
-		typedef MinMaxBase<true,NextT> MinMaxImplementationType;
-		//! Type of the net item in the list
-		typedef NextT NextType;
-
-	public:
-		//! Name of the filter
-		static const char* Name() {return "min";}
-		enum
-		{
-			//! The count if item in the list
-			count = MinMaxImplementationType::count,
-		};
-	};
-
-	template<class NextT>
-	class Max : public MinMaxBase<false, NextT>
-	{
-	public:
-		//! Implementation
-		typedef MinMaxBase<false,NextT> MinMaxImplementationType;
-		//! Type of the net item in the list
-		typedef NextT NextType;
-
-	public:
-		//! Name of the filter
-		static const char* Name() {return "max";}
-		enum
-		{
-			//! The count if item in the list
-			count = MinMaxImplementationType::count,
-		};
-	};
-
-
-
-
-
+public:
+    //! Name of the filter
+    static const char* Name()
+    {
+        return "max";
+    }
+    enum
+    {
+        //! The count if item in the list
+        count = MinMaxImplementationType::count,
+    };
+};
 
 } // namespace AllYears
 } // namespace R
@@ -230,6 +231,6 @@ namespace AllYears
 } // namespace Solver
 } // namespace Antares
 
-# include "minmax.hxx"
+#include "minmax.hxx"
 
 #endif // __SOLVER_VARIABLE_STORAGE_MINMAX_H__

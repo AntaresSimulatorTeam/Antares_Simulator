@@ -26,7 +26,6 @@
 */
 #include "info.h"
 
-
 namespace Antares
 {
 namespace Component
@@ -35,33 +34,22 @@ namespace HTMLListbox
 {
 namespace Item
 {
+Info::Info(const wxString& text) : pText(text)
+{
+}
 
+Info::~Info()
+{
+}
 
-	Info::Info(const wxString& text)
-		:pText(text)
-	{
-	}
-
-
-	Info::~Info()
-	{
-	}
-
-
-
-	wxString Info::htmlContent(const wxString&)
-	{
-		return wxString() << wxT("<table cellpadding=10><tr><td><font size=\"-1\" color=\"")
-			<< wxT("#888888")
-			<< wxT("\"><i>") << pText
-			<< wxT("</i></font></td></tr></table>");
-	}
-
-
-
+wxString Info::htmlContent(const wxString&)
+{
+    return wxString() << wxT("<table cellpadding=10><tr><td><font size=\"-1\" color=\"")
+                      << wxT("#888888") << wxT("\"><i>") << pText
+                      << wxT("</i></font></td></tr></table>");
+}
 
 } // namespace Item
 } // namespace HTMLListbox
 } // namespace Component
 } // namespace Antares
-

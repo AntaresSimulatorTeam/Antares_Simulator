@@ -32,31 +32,24 @@
 #include <yuni/core/atomic/int.h>
 #include <antares/logs.h>
 
-
 namespace Antares
 {
 namespace WIP
 {
+void Enter(bool immediate)
+{
+    Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
+    if (immediate)
+        mainFrm.showWIP();
+    else
+        Dispatcher::GUI::Post(&mainFrm, &Forms::ApplWnd::showWIP);
+}
 
-
-	void Enter(bool immediate)
-	{
-		Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
-		if (immediate)
-			mainFrm.showWIP();
-		else
-			Dispatcher::GUI::Post(&mainFrm, &Forms::ApplWnd::showWIP);
-	}
-
-
-	void Leave()
-	{
-		Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
-		Dispatcher::GUI::Post(&mainFrm, &Forms::ApplWnd::hideWIP);
-	}
-
-
+void Leave()
+{
+    Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
+    Dispatcher::GUI::Post(&mainFrm, &Forms::ApplWnd::hideWIP);
+}
 
 } // namespace WIP
 } // namespace Antares
-

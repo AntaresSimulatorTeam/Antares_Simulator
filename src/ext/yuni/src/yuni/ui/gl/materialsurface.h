@@ -9,117 +9,123 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_GFX3D_MATERIALSURFACE_H__
-# define __YUNI_GFX3D_MATERIALSURFACE_H__
+#define __YUNI_GFX3D_MATERIALSURFACE_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/smartptr.h>
-# include <yuni/core/string.h>
-# include <yuni/core/color/rgba.h>
-# include <vector>
-# include "texture.h"
-# include "shaderprogram.h"
+#include <yuni/yuni.h>
+#include <yuni/core/smartptr.h>
+#include <yuni/core/string.h>
+#include <yuni/core/color/rgba.h>
+#include <vector>
+#include "texture.h"
+#include "shaderprogram.h"
 
 namespace Yuni
 {
 namespace Gfx3D
 {
+/*!
+** \name A material surface is an abstract base for various ways of coloring in a material
+*/
+class MaterialSurface
+{
+public:
+    //! Smart pointer
+    typedef SmartPtr<MaterialSurface> Ptr;
 
+public:
+    //! Virtual destructor
+    virtual ~MaterialSurface()
+    {
+    }
 
-	/*!
-	** \name A material surface is an abstract base for various ways of coloring in a material
-	*/
-	class MaterialSurface
-	{
-	public:
-		//! Smart pointer
-		typedef SmartPtr<MaterialSurface>  Ptr;
+    //! Activate this surface
+    virtual void activate(const ShaderProgram::Ptr& shaders, int index) = 0;
 
-	public:
-		//! Virtual destructor
-		virtual ~MaterialSurface() {}
+}; // class MaterialSurface
 
-		//! Activate this surface
-		virtual void activate(const ShaderProgram::Ptr& shaders, int index) = 0;
+/*!
+** \name Textured surface
+*/
+class MaterialSurfaceTextured : public MaterialSurface
+{
+public:
+    //! Constructor
+    MaterialSurfaceTextured(const Texture::Ptr& texture) : pTexture(texture)
+    {
+    }
 
-	}; // class MaterialSurface
+    //! Virtual destructor
+    virtual ~MaterialSurfaceTextured()
+    {
+    }
 
+    //! Activate this surface
+    virtual void activate(const ShaderProgram::Ptr& shaders, int index) override;
 
-	/*!
-	** \name Textured surface
-	*/
-	class MaterialSurfaceTextured: public MaterialSurface
-	{
-	public:
-		//! Constructor
-		MaterialSurfaceTextured(const Texture::Ptr& texture):
-			pTexture(texture)
-		{}
+    //! Texture used on this surface
+    const Texture::Ptr& texture() const
+    {
+        return pTexture;
+    }
 
-		//! Virtual destructor
-		virtual ~MaterialSurfaceTextured() {}
+private:
+    //! Texture used on this surface
+    Texture::Ptr pTexture;
 
-		//! Activate this surface
-		virtual void activate(const ShaderProgram::Ptr& shaders, int index) override;
+}; // class MaterialSurfaceTextured
 
-		//! Texture used on this surface
-		const Texture::Ptr& texture() const { return pTexture; }
+/*!
+** \name Singly-colored material surface
+*/
+class MaterialSurfaceColored : public MaterialSurface
+{
+public:
+    template<class T>
+    MaterialSurfaceColored(const AnyString& uniformName, T r, T g, T b) :
+     pUniformName(uniformName), pColor(r, g, b)
+    {
+    }
 
-	private:
-		//! Texture used on this surface
-		Texture::Ptr pTexture;
+    template<class T>
+    MaterialSurfaceColored(const AnyString& uniformName, T r, T g, T b, T a) :
+     pUniformName(uniformName), pColor(r, g, b, a)
+    {
+    }
 
-	}; // class MaterialSurfaceTextured
+    template<class T>
+    MaterialSurfaceColored(const AnyString& uniformName, const Color::RGB<T>& color) :
+     pUniformName(uniformName), pColor(color)
+    {
+    }
 
+    template<class T>
+    MaterialSurfaceColored(const AnyString& uniformName, const Color::RGBA<T>& color) :
+     pUniformName(uniformName), pColor(color)
+    {
+    }
 
-	/*!
-	** \name Singly-colored material surface
-	*/
-	class MaterialSurfaceColored: public MaterialSurface
-	{
-	public:
-		template<class T>
-		MaterialSurfaceColored(const AnyString& uniformName, T r, T g, T b):
-			pUniformName(uniformName),
-			pColor(r, g, b)
-		{}
+    //! Virtual destructor
+    virtual ~MaterialSurfaceColored()
+    {
+    }
 
-		template<class T>
-		MaterialSurfaceColored(const AnyString& uniformName, T r, T g, T b, T a):
-			pUniformName(uniformName),
-			pColor(r, g, b, a)
-		{}
+    //! Activate this surface
+    virtual void activate(const ShaderProgram::Ptr& shaders, int index) override;
 
-		template<class T>
-		MaterialSurfaceColored(const AnyString& uniformName, const Color::RGB<T>& color):
-			pUniformName(uniformName),
-			pColor(color)
-		{}
+    //! Surface color
+    const Color::RGBA<float>& color() const
+    {
+        return pColor;
+    }
 
-		template<class T>
-		MaterialSurfaceColored(const AnyString& uniformName, const Color::RGBA<T>& color):
-			pUniformName(uniformName),
-			pColor(color)
-		{}
+private:
+    //! Name of the corresponding uniform in the shaders
+    String pUniformName;
 
-		//! Virtual destructor
-		virtual ~MaterialSurfaceColored() {}
+    //! Color used for this surface
+    Color::RGBA<float> pColor;
 
-		//! Activate this surface
-		virtual void activate(const ShaderProgram::Ptr& shaders, int index) override;
-
-		//! Surface color
-		const Color::RGBA<float>& color() const { return pColor; }
-
-	private:
-		//! Name of the corresponding uniform in the shaders
-		String pUniformName;
-
-		//! Color used for this surface
-		Color::RGBA<float> pColor;
-
-	}; // class MaterialSurfaceColored
-
-
+}; // class MaterialSurfaceColored
 
 } // namespace Gfx3D
 } // namespace Yuni

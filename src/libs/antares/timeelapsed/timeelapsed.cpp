@@ -33,40 +33,31 @@
 
 using namespace Yuni;
 
-
-
 static inline sint64 MilliSecTimer()
 {
-	Yuni::timeval tv;
-	YUNI_SYSTEM_GETTIMEOFDAY(&tv, NULL);
-	return tv.tv_sec * 1000 + tv.tv_usec / 1000;
+    Yuni::timeval tv;
+    YUNI_SYSTEM_GETTIMEOFDAY(&tv, NULL);
+    return tv.tv_sec * 1000 + tv.tv_usec / 1000;
 }
 
 inline static sint64 usec_timer()
 {
-	Yuni::timeval tv;
-	YUNI_SYSTEM_GETTIMEOFDAY(&tv, NULL);
-	return tv.tv_sec * 1000000 + tv.tv_usec;
+    Yuni::timeval tv;
+    YUNI_SYSTEM_GETTIMEOFDAY(&tv, NULL);
+    return tv.tv_sec * 1000000 + tv.tv_usec;
 }
 
-
-
-
-TimeElapsed::TimeElapsed() :
-	pStartTime(MilliSecTimer())
+TimeElapsed::TimeElapsed() : pStartTime(MilliSecTimer())
 {
 }
-
 
 void TimeElapsed::reset()
 {
-	pStartTime = MilliSecTimer();
+    pStartTime = MilliSecTimer();
 }
-
 
 TimeElapsed::~TimeElapsed()
 {
-	Antares::logs.info() << " Elapsed time: " << text << ": "
-		<< (MilliSecTimer() - pStartTime) << "ms";
+    Antares::logs.info() << " Elapsed time: " << text << ": " << (MilliSecTimer() - pStartTime)
+                         << "ms";
 }
-

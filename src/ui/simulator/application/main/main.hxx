@@ -25,47 +25,36 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_MAIN_MAIN_HXX__
-# define __ANTARES_APPLICATION_MAIN_MAIN_HXX__
-
+#define __ANTARES_APPLICATION_MAIN_MAIN_HXX__
 
 namespace Antares
 {
 namespace Forms
 {
+inline wxMenuItem* ApplWnd::menuRecentFiles() const
+{
+    return pMenuFileRecents;
+}
 
-	inline wxMenuItem* ApplWnd::menuRecentFiles() const
-	{
-		return pMenuFileRecents;
-	}
+inline Map::Component* ApplWnd::map() const
+{
+    return pMainMap;
+}
 
+inline Component::MainPanel* ApplWnd::mainPanel() const
+{
+    return pMainPanel;
+}
 
-	inline Map::Component* ApplWnd::map() const
-	{
-		return pMainMap;
-	}
+inline MainFormData* ApplWnd::data()
+{
+    return pData;
+}
 
-
-	inline Component::MainPanel* ApplWnd::mainPanel() const
-	{
-		return pMainPanel;
-	}
-
-
-	inline MainFormData* ApplWnd::data()
-	{
-		return pData;
-	}
-
-
-	inline const MainFormData* ApplWnd::data() const
-	{
-		return pData;
-	}
-
-
-
-
-
+inline const MainFormData* ApplWnd::data() const
+{
+    return pData;
+}
 
 } // namespace Forms
 } // namespace Antares

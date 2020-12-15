@@ -25,19 +25,15 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_CLEANER_VERSION_H__
-# define __ANTARES_LIBS_STUDY_CLEANER_VERSION_H__
-
+#define __ANTARES_LIBS_STUDY_CLEANER_VERSION_H__
 
 namespace Antares
 {
 namespace Data
 {
-
-	bool PreflightVersion20(StudyCleaningInfos* infos);
-
+bool PreflightVersion20(StudyCleaningInfos* infos);
 
 } // namespace Data
 } // namespace Antares
-
 
 #endif // __ANTARES_LIBS_STUDY_CLEANER_VERSION_H__

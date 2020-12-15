@@ -25,44 +25,39 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-# include "apply-scenario.h"
+#include "apply-scenario.h"
 #include <antares/study/scenario-builder/sets.h>
-
 
 namespace Antares
 {
 namespace Solver
 {
-	
-	void ApplyCustomScenario(Data::Study& study)
-	{
+void ApplyCustomScenario(Data::Study& study)
+{
+    auto& parameters = study.parameters;
 
-		auto& parameters = study.parameters;
+    auto& rulename = parameters.activeRulesScenario;
+    logs.info() << "Preparing time-series numbers... (" << rulename << ')';
+    logs.info() << "  :: Scenario Builder, active target: " << rulename;
+    Data::RulesScenarioName id = rulename;
+    id.toLower();
 
-		auto& rulename = parameters.activeRulesScenario;
-		logs.info() << "Preparing time-series numbers... (" << rulename << ')';
-		logs.info() << "  :: Scenario Builder, active target: " << rulename;
-		Data::RulesScenarioName id = rulename;
-		id.toLower();
+    study.scenarioRulesLoadIfNotAvailable();
+    if (study.scenarioRules)
+    {
+        Data::ScenarioBuilder::Rules::Ptr rules = study.scenarioRules->find(id);
+        if (!(!rules))
+        {
+            rules->apply(study);
+        }
+        else
+            logs.error() << "Scenario Builder: Impossible to find the active ruleset '" << rulename
+                         << "'";
+    }
 
-
-		study.scenarioRulesLoadIfNotAvailable();
-		if (study.scenarioRules)
-		{
-			Data::ScenarioBuilder::Rules::Ptr rules = study.scenarioRules->find(id);
-			if (!(!rules))
-			{
-				rules->apply(study);
-			}
-			else
-				logs.error() << "Scenario Builder: Impossible to find the active ruleset '" << rulename << "'";
-		}
-
-
-		study.scenarioRulesDestroy();
-		logs.info();
-	}
-
-
+    study.scenarioRulesDestroy();
+    logs.info();
 }
-}
+
+} // namespace Solver
+} // namespace Antares

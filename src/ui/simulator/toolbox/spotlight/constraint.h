@@ -25,12 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_SPOTLIGHT_CONSTRAINT_H__
-# define __ANTARES_TOOLBOX_SPOTLIGHT_CONSTRAINT_H__
+#define __ANTARES_TOOLBOX_SPOTLIGHT_CONSTRAINT_H__
 
-# include <yuni/yuni.h>
-# include <ui/common/component/spotlight.h>
-# include <antares/study.h>
-
+#include <yuni/yuni.h>
+#include <ui/common/component/spotlight.h>
+#include <antares/study.h>
 
 namespace Antares
 {
@@ -38,31 +37,26 @@ namespace Toolbox
 {
 namespace Spotlight
 {
+class ItemConstraint : public Component::Spotlight::IItem
+{
+public:
+    //! Smart ptr
+    typedef Yuni::SmartPtr<ItemConstraint> Ptr;
 
-	class ItemConstraint : public Component::Spotlight::IItem
-	{
-	public:
-		//! Smart ptr
-		typedef Yuni::SmartPtr<ItemConstraint> Ptr;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    explicit ItemConstraint(Data::BindingConstraint* a);
+    //! Destructor
+    virtual ~ItemConstraint();
+    //@}
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		explicit ItemConstraint(Data::BindingConstraint* a);
-		//! Destructor
-		virtual ~ItemConstraint();
-		//@}
-
-	public:
-		Data::BindingConstraint* constraint;
-	};
-
-
-
-
+public:
+    Data::BindingConstraint* constraint;
+};
 
 } // namespace Spotlight
 } // namespace Toolbox

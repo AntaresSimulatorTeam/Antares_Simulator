@@ -25,13 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_WINDOWS_OUTPUT_PROVIDER_COMPARISON_H__
-# define __ANTARES_WINDOWS_OUTPUT_PROVIDER_COMPARISON_H__
+#define __ANTARES_WINDOWS_OUTPUT_PROVIDER_COMPARISON_H__
 
-# include <antares/wx-wrapper.h>
-# include <ui/common/component/spotlight.h>
-# include "../fwd.h"
-# include <wx/bitmap.h>
-
+#include <antares/wx-wrapper.h>
+#include <ui/common/component/spotlight.h>
+#include "../fwd.h"
+#include <wx/bitmap.h>
 
 namespace Antares
 {
@@ -41,53 +40,46 @@ namespace OutputViewer
 {
 namespace Provider
 {
+class Comparison final : public Antares::Component::Spotlight::IProvider
+{
+public:
+    //! The spotlight component (alias)
+    typedef Antares::Component::Spotlight Spotlight;
 
-	class Comparison final : public Antares::Component::Spotlight::IProvider
-	{
-	public:
-		//! The spotlight component (alias)
-		typedef Antares::Component::Spotlight Spotlight;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    Comparison(Component& com);
+    //! Destructor
+    virtual ~Comparison();
+    //@}
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		Comparison(Component& com);
-		//! Destructor
-		virtual ~Comparison();
-		//@}
+    /*!
+    ** \brief Perform a new search
+    */
+    virtual void search(Spotlight::IItem::Vector& out,
+                        const Spotlight::SearchToken::Vector& tokens,
+                        const Yuni::String& text = "") override;
 
-		/*!
-		** \brief Perform a new search
-		*/
-		virtual void search(Spotlight::IItem::Vector& out, const Spotlight::SearchToken::Vector& tokens, const Yuni::String& text = "") override;
+    /*!
+    ** \brief An item has been selected
+    */
+    virtual bool onSelect(Spotlight::IItem::Ptr& item) override;
 
-		/*!
-		** \brief An item has been selected
-		*/
-		virtual bool onSelect(Spotlight::IItem::Ptr& item) override;
+private:
+    //! The parent component
+    Component& pComponent;
 
+    wxBitmap* pBmpSum;
+    wxBitmap* pBmpAverage;
+    wxBitmap* pBmpMin;
+    wxBitmap* pBmpMax;
+    wxBitmap* pBmpDiff;
 
-	private:
-		//! The parent component
-		Component& pComponent;
-
-		wxBitmap* pBmpSum;
-		wxBitmap* pBmpAverage;
-		wxBitmap* pBmpMin;
-		wxBitmap* pBmpMax;
-		wxBitmap* pBmpDiff;
-
-	}; // class Layer
-
-
-
-
-
-
-
+}; // class Layer
 
 } // namespace Provider
 } // namespace OutputViewer

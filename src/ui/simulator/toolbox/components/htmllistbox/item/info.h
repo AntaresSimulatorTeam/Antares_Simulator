@@ -25,10 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_INFO_H__
-# define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_INFO_H__
+#define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_INFO_H__
 
-# include "item.h"
-
+#include "item.h"
 
 namespace Antares
 {
@@ -38,27 +37,23 @@ namespace HTMLListbox
 {
 namespace Item
 {
+class Info : public IItem
+{
+public:
+    Info(const wxString& text);
+    virtual ~Info();
 
+    virtual wxString htmlContent(const wxString& searchString);
 
-	class Info : public IItem
-	{
-	public:
-		Info(const wxString& text);
-		virtual ~Info();
-
-		virtual wxString htmlContent(const wxString& searchString);
-
-	public:
-		wxString pText;
-	};
-
-
+public:
+    wxString pText;
+};
 
 } // namespace Item
 } // namespace HTMLListbox
 } // namespace Component
 } // namespace Antares
 
-# include "item.hxx"
+#include "item.hxx"
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_H__

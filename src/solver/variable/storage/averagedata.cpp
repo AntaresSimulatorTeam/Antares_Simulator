@@ -32,7 +32,6 @@
 
 using namespace Yuni;
 
-
 namespace Antares
 {
 namespace Solver
@@ -43,75 +42,60 @@ namespace R
 {
 namespace AllYears
 {
+AverageData::AverageData() : hourly(nullptr), year(nullptr), nbYearsCapacity(0), allYears(0.)
+{
+}
 
+AverageData::~AverageData()
+{
+    Antares::Memory::Release(hourly);
+    delete[] year;
+}
 
-	AverageData::AverageData()
-		:hourly(nullptr),
-		year(nullptr),
-		nbYearsCapacity(0),
-		allYears(0.)
-	{
-	}
+void AverageData::reset()
+{
+    Antares::Memory::Zero(maxHoursInAYear, hourly);
+    (void)::memset(monthly, 0, sizeof(double) * maxMonths);
+    (void)::memset(weekly, 0, sizeof(double) * maxWeeksInAYear);
+    (void)::memset(daily, 0, sizeof(double) * maxDaysInAYear);
+    (void)::memset(year, 0, sizeof(double) * nbYearsCapacity);
+}
 
+void AverageData::initializeFromStudy(Data::Study& study)
+{
+    Antares::Memory::Allocate<double>(hourly, maxHoursInAYear);
+    nbYearsCapacity = study.runtime->rangeLimits.year[Data::rangeEnd] + 1;
+    year = new double[nbYearsCapacity];
 
-	AverageData::~AverageData()
-	{
-		Antares::Memory::Release(hourly);
-		delete[] year;
-	}
+    yearsWeight = study.parameters.getYearsWeight();
+    yearsWeightSum = study.parameters.getYearsWeightSum();
+}
 
+void AverageData::merge(unsigned int y, const IntermediateValues& rhs)
+{
+    unsigned int i;
 
-	void AverageData::reset()
-	{
-		Antares::Memory::Zero(maxHoursInAYear, hourly);
-		(void)::memset(monthly, 0, sizeof(double) * maxMonths);
-		(void)::memset(weekly,  0, sizeof(double) * maxWeeksInAYear);
-		(void)::memset(daily,   0, sizeof(double) * maxDaysInAYear);
-		(void)::memset(year,    0, sizeof(double) * nbYearsCapacity);
-	}
+    // Ratio take into account MC year weight
+    double ratio = (double)yearsWeight[y] / (double)yearsWeightSum;
 
-
-	void AverageData::initializeFromStudy(Data::Study& study)
-	{
-		Antares::Memory::Allocate<double>(hourly, maxHoursInAYear);
-		nbYearsCapacity = study.runtime->rangeLimits.year[Data::rangeEnd] + 1;
-		year = new double[nbYearsCapacity];
-
-        yearsWeight     = study.parameters.getYearsWeight();
-        yearsWeightSum  = study.parameters.getYearsWeightSum();
-	}
-
-
-	void AverageData::merge(unsigned int y, const IntermediateValues& rhs)
-	{
-		unsigned int i;
-
-        //Ratio take into account MC year weight
-		double ratio = (double) yearsWeight[y] / (double) yearsWeightSum;
-
-		// Average value for each hour throughout all years
-		for (i = 0; i != maxHoursInAYear; ++i)
-			hourly[i] += rhs.hour[i] * ratio;
-		// Average value for each day throughout all years
-		for (i = 0; i != maxDaysInAYear; ++i)
-			daily[i] += rhs.day[i] * ratio;
-		// Average value for each week throughout all years
-		for (i = 0; i != maxWeeksInAYear; ++i)
-			weekly[i] += rhs.week[i] * ratio;
-		// Average value for each month throughout all years
-		for (i = 0; i != maxMonths; ++i)
-			monthly[i] += rhs.month[i] * ratio;
-		// Average value throughout all years
-		year[y] += rhs.year * ratio;
-	}
-
-
-
-
+    // Average value for each hour throughout all years
+    for (i = 0; i != maxHoursInAYear; ++i)
+        hourly[i] += rhs.hour[i] * ratio;
+    // Average value for each day throughout all years
+    for (i = 0; i != maxDaysInAYear; ++i)
+        daily[i] += rhs.day[i] * ratio;
+    // Average value for each week throughout all years
+    for (i = 0; i != maxWeeksInAYear; ++i)
+        weekly[i] += rhs.week[i] * ratio;
+    // Average value for each month throughout all years
+    for (i = 0; i != maxMonths; ++i)
+        monthly[i] += rhs.month[i] * ratio;
+    // Average value throughout all years
+    year[y] += rhs.year * ratio;
+}
 
 } // namespace AllYears
 } // namespace R
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
-

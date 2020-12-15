@@ -25,27 +25,22 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_MISC_SYSTEM_MEMORY_H__
-# define __SOLVER_MISC_SYSTEM_MEMORY_H__
+#define __SOLVER_MISC_SYSTEM_MEMORY_H__
 
-# include <yuni/yuni.h>
-# include <yuni/thread/timer.h>
-
-
+#include <yuni/yuni.h>
+#include <yuni/thread/timer.h>
 
 class SystemMemoryLogger : public Yuni::Thread::Timer
 {
 public:
-	SystemMemoryLogger();
-	virtual ~SystemMemoryLogger();
+    SystemMemoryLogger();
+    virtual ~SystemMemoryLogger();
 
 protected:
-	virtual bool onInterval(uint);
+    virtual bool onInterval(uint);
 
-	virtual bool onStarting();
+    virtual bool onStarting();
 
 }; // class SystemMemoryLogguer
-
-
-
 
 #endif /* __SOLVER_MISC_SYSTEM_MEMORY_H__ */

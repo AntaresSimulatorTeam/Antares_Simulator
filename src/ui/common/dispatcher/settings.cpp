@@ -33,12 +33,9 @@ namespace Dispatcher
 {
 namespace Settings
 {
-
-	wxWindow* WindowForPendingDispatchers;
-	int IDForWxDispatcher;
-
+wxWindow* WindowForPendingDispatchers;
+int IDForWxDispatcher;
 
 } // namespace Settings
 } // namespace Dispatcher
 } // namespace Antares
-

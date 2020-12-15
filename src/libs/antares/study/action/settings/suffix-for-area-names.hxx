@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_SETTINGS_SUFFIXAREA_NAME_HXX__
-# define __ANTARES_LIBS_STUDY_ACTION_SETTINGS_SUFFIXAREA_NAME_HXX__
-
+#define __ANTARES_LIBS_STUDY_ACTION_SETTINGS_SUFFIXAREA_NAME_HXX__
 
 namespace Antares
 {
@@ -34,40 +33,32 @@ namespace Action
 {
 namespace Settings
 {
+template<class StringT>
+inline SuffixAreaName::SuffixAreaName(const StringT& value, bool enabled) : pValue(value)
+{
+    pInfos.caption = "Suffix for area names";
+    if (!enabled)
+        pInfos.behavior = bhSkip;
+}
 
+inline SuffixAreaName::~SuffixAreaName()
+{
+}
 
-	template<class StringT>
-	inline SuffixAreaName::SuffixAreaName(const StringT& value, bool enabled)
-		:pValue(value)
-	{
-		pInfos.caption = "Suffix for area names";
-		if (!enabled)
-			pInfos.behavior = bhSkip;
-	}
+inline bool SuffixAreaName::performWL(Context&)
+{
+    return true;
+}
 
+inline bool SuffixAreaName::autoExpand() const
+{
+    return false;
+}
 
-	inline SuffixAreaName::~SuffixAreaName()
-	{}
-
-
-	inline bool SuffixAreaName::performWL(Context&)
-	{
-		return true;
-	}
-
-
-	inline bool SuffixAreaName::autoExpand() const
-	{
-		return false;
-	}
-
-
-	inline bool SuffixAreaName::shouldPrepareRootNode() const
-	{
-		return true;
-	}
-
-
+inline bool SuffixAreaName::shouldPrepareRootNode() const
+{
+    return true;
+}
 
 } // namespace Settings
 } // namespace Action

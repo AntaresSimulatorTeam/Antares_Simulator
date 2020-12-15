@@ -25,23 +25,19 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_VERSION_H__
-# define __ANTARES_LIBS_VERSION_H__
-
-
+#define __ANTARES_LIBS_VERSION_H__
 
 namespace Antares
 {
+/*!
+** \brief Get the version of Antares in a C-string format
+*/
+const char* VersionToCString();
 
-	/*!
-	** \brief Get the version of Antares in a C-string format
-	*/
-	const char* VersionToCString();
-
-	/*!
-	** \brief Print the version of Antares on the standard output
-	*/
-	void PrintVersionToStdCout();
-
+/*!
+** \brief Print the version of Antares on the standard output
+*/
+void PrintVersionToStdCout();
 
 } // namespace Antares
 

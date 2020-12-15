@@ -25,62 +25,50 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_RESOURCE_H__
-# define __ANTARES_LIBS_RESOURCE_H__
+#define __ANTARES_LIBS_RESOURCE_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
 namespace Antares
 {
 namespace Resources
 {
+/*!
+** \brief Write the root folder into the log file
+*/
+void WriteRootFolderToLogs();
 
-	/*!
-	** \brief Write the root folder into the log file
-	*/
-	void WriteRootFolderToLogs();
+/*!
+** \brief Get the full path of a resource file
+**
+** \param relFileName The filename of the resource, relative to the resource folder
+** \return The full path of the resource file if found, an empty string otherwise
+*/
+bool FindFile(YString& out, const AnyString& filename);
 
+/*!
+** \brief Get the full path of a resource file
+**
+** \param relFileName The filename of the resource, relative to the resource folder
+** \return The full path of the resource file if found, an empty string otherwise
+*/
+bool FindFirstOf(YString& out, const char* const* const list);
 
-	/*!
-	** \brief Get the full path of a resource file
-	**
-	** \param relFileName The filename of the resource, relative to the resource folder
-	** \return The full path of the resource file if found, an empty string otherwise
-	*/
-	bool FindFile(YString& out, const AnyString& filename);
+/*!
+** \brief Try to find the examples folder
+*/
+bool FindExampleFolder(YString& folder);
 
+/*!
+** \brief Initialize variables about resource handling
+*/
+void Initialize(int argc, char* argv[], bool initializeSearchPath = false);
 
-	/*!
-	** \brief Get the full path of a resource file
-	**
-	** \param relFileName The filename of the resource, relative to the resource folder
-	** \return The full path of the resource file if found, an empty string otherwise
-	*/
-	bool FindFirstOf(YString& out, const char* const * const list);
-
-
-	/*!
-	** \brief Try to find the examples folder
-	*/
-	bool FindExampleFolder(YString& folder);
-
-
-	/*!
-	** \brief Initialize variables about resource handling
-	*/
-	void Initialize(int argc, char* argv[], bool initializeSearchPath = false);
-
-
-	/*!
-	** \brief Copy the root folder
-	*/
-	void GetRootFolder(YString& out);
-
-
-
-
+/*!
+** \brief Copy the root folder
+*/
+void GetRootFolder(YString& out);
 
 } // namespace Resources
 } // namespace Antares

@@ -25,10 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_AREA_H__
-# define __SOLVER_VARIABLE_AREA_H__
+#define __SOLVER_VARIABLE_AREA_H__
 
-# include "state.h"
-
+#include "state.h"
 
 namespace Antares
 {
@@ -36,198 +35,202 @@ namespace Solver
 {
 namespace Variable
 {
+struct VCardAllAreas
+{
+    //! Caption
+    static const char* Caption()
+    {
+        return "Areas";
+    }
+    //! Unit
+    static const char* Unit()
+    {
+        return "";
+    }
 
-	struct VCardAllAreas
-	{
-		//! Caption
-		static const char* Caption() {return "Areas";}
-		//! Unit
-		static const char* Unit() {return "";}
+    //! The short description of the variable
+    static const char* Description()
+    {
+        return "";
+    }
 
-		//! The short description of the variable
-		static const char* Description() {return "";}
+    //! The expecte results
+    typedef Results<> ResultsType;
 
-		//! The expecte results
-		typedef Results<>  ResultsType;
+    enum
+    {
+        //! Data Level
+        categoryDataLevel = Category::area,
+        //! File level (provided by the type of the results)
+        categoryFileLevel = ResultsType::categoryFile & Category::de,
+        //! Indentation (GUI)
+        nodeDepthForGUI = +1,
+        //! Number of columns used by the variable (One ResultsType per column)
+        columnCount = 0,
+        //! The Spatial aggregation
+        spatialAggregate = Category::noSpatialAggregate,
+        //! Intermediate values
+        hasIntermediateValues = 0,
+    };
 
-		enum
-		{
-			//! Data Level
-			categoryDataLevel = Category::area,
-			//! File level (provided by the type of the results)
-			categoryFileLevel = ResultsType::categoryFile & Category::de,
-			//! Indentation (GUI)
-			nodeDepthForGUI = +1,
-			//! Number of columns used by the variable (One ResultsType per column)
-			columnCount = 0,
-			//! The Spatial aggregation
-			spatialAggregate = Category::noSpatialAggregate,
-			//! Intermediate values
-			hasIntermediateValues = 0,
-		};
+}; // class VCard
 
-	}; // class VCard
+template<class NextT = Container::EndOfList>
+class Areas //: public Variable::IVariable<Areas<NextT>, NextT, VCardAllAreas>
+{
+public:
+    //! Type of the next static variable
+    typedef NextT NextType;
+    //! VCard
+    typedef VCardAllAreas VCardType;
+    //! Ancestor
+    // typedef Variable::IVariable<Areas<NextT>, NextT, VCardType> AncestorType;
 
+    //! List of expected results
+    typedef typename VCardType::ResultsType ResultsType;
 
+    enum
+    {
+        //! How many items have we got
+        count = NextT::count,
+    };
 
+    template<int CDataLevel, int CFile>
+    struct Statistics
+    {
+        enum
+        {
+            count = NextType::template Statistics<CDataLevel, CFile>::count
+        };
+    };
 
-	template<class NextT = Container::EndOfList>
-	class Areas //: public Variable::IVariable<Areas<NextT>, NextT, VCardAllAreas>
-	{
-	public:
-		//! Type of the next static variable
-		typedef NextT NextType;
-		//! VCard
-		typedef VCardAllAreas VCardType;
-		//! Ancestor
-		//typedef Variable::IVariable<Areas<NextT>, NextT, VCardType> AncestorType;
+public:
+    /*!
+    ** \brief Try to estimate the memory footprint that the solver will require to make a simulation
+    */
+    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u);
 
-		//! List of expected results
-		typedef typename VCardType::ResultsType ResultsType;
+    /*!
+    ** \brief Retrieve the list of all individual variables
+    **
+    ** The predicate must implement the method `add(name, unit, comment)`.
+    */
+    template<class PredicateT>
+    static void RetrieveVariableList(PredicateT& predicate);
 
-		enum
-		{
-			//! How many items have we got
-			count = NextT::count,
-		};
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    Areas();
+    //! Destructor
+    ~Areas();
+    //@}
 
-		template<int CDataLevel, int CFile>
-		struct Statistics
-		{
-			enum
-			{
-				count = NextType::template Statistics<CDataLevel, CFile>::count
-			};
-		};
+    void initializeFromStudy(Data::Study& study);
+    void initializeFromArea(Data::Study*, Data::Area*);
+    void initializeFromThermalCluster(Data::Study*, Data::Area*, Data::ThermalCluster*);
+    void initializeFromAreaLink(Data::Study*, Data::AreaLink*);
 
-	public:
-		/*!
-		** \brief Try to estimate the memory footprint that the solver will require to make a simulation
-		*/
-		static void EstimateMemoryUsage(Data::StudyMemoryUsage& u);
+    void simulationBegin();
+    void simulationEnd();
 
-		/*!
-		** \brief Retrieve the list of all individual variables
-		**
-		** The predicate must implement the method `add(name, unit, comment)`.
-		*/
-		template<class PredicateT> static void RetrieveVariableList(PredicateT& predicate);
+    void yearBegin(uint year, uint numSpace);
+    //	void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year);
+    //	void yearEndBuildForEachThermalCluster(State& state, uint year);
 
+    void yearEndBuild(State& state, uint year, uint numSpace);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		Areas();
-		//! Destructor
-		~Areas();
-		//@}
+    void yearEnd(uint year, uint numSpace);
 
-		void initializeFromStudy(Data::Study& study);
-		void initializeFromArea(Data::Study*, Data::Area*);
-		void initializeFromThermalCluster(Data::Study*, Data::Area*, Data::ThermalCluster*);
-		void initializeFromAreaLink(Data::Study*, Data::AreaLink*);
+    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
+                        unsigned int nbYearsForCurrentSummary);
 
+    void hourBegin(uint hourInTheYear);
 
-		void simulationBegin();
-		void simulationEnd();
+    void hourForEachArea(State& state, uint numSpace);
+    void hourForEachLink(State& state, uint numSpace);
+    void hourForEachThermalCluster(State& state, uint numSpace);
 
-		void yearBegin(uint year, uint numSpace);
-			//	void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year);
-			//	void yearEndBuildForEachThermalCluster(State& state, uint year);
+    void hourEnd(State& state, uint hourInTheYear);
 
-		void yearEndBuild(State& state, uint year, uint numSpace);
+    void weekBegin(State& state);
+    void weekForEachArea(State& state, uint numSpace);
+    void weekEnd(State& state);
 
-		void yearEnd(uint year, uint numSpace);	
+    void buildSurveyReport(SurveyResults& results,
+                           int dataLevel,
+                           int fileLevel,
+                           int precision) const;
 
-		void computeSummary(std::map<unsigned int, unsigned int> & numSpaceToYear, unsigned int nbYearsForCurrentSummary);
+    void buildAnnualSurveyReport(SurveyResults& results,
+                                 int dataLevel,
+                                 int fileLevel,
+                                 int precision,
+                                 uint numSpace) const;
 
-		void hourBegin(uint hourInTheYear);
-		
-		
-		void hourForEachArea(State& state, uint numSpace);
-		void hourForEachLink(State& state, uint numSpace);
-		void hourForEachThermalCluster(State& state, uint numSpace);
+    void buildDigest(SurveyResults&, int digestLevel, int dataLevel) const;
 
+    void beforeYearByYearExport(uint year, uint numSpace);
 
-		void hourEnd(State& state, uint hourInTheYear);
+    Yuni::uint64 memoryUsage() const;
 
-		void weekBegin(State& state);
-		void weekForEachArea(State& state, uint numSpace);
-		void weekEnd(State& state);
+    template<class I>
+    static void provideInformations(I& infos);
 
-		void buildSurveyReport(SurveyResults& results, int dataLevel, int fileLevel, int precision) const;
+    template<class V>
+    void yearEndSpatialAggregates(V&, uint, uint)
+    {
+        // do nothing
+    }
 
-		void buildAnnualSurveyReport(SurveyResults& results, int dataLevel, int fileLevel, int precision, uint numSpace) const;
+    template<class V>
+    void computeSpatialAggregatesSummary(V&, std::map<unsigned int, unsigned int>&, unsigned int)
+    {
+        // do nothing
+    }
 
-		void buildDigest(SurveyResults&, int digestLevel, int dataLevel) const;
+    template<class V>
+    void simulationEndSpatialAggregates(V&)
+    {
+        // do nothing
+    }
 
-		void beforeYearByYearExport(uint year, uint numSpace);
+    template<class VCardSearchT, class O>
+    void computeSpatialAggregateWith(O& out);
 
-		Yuni::uint64 memoryUsage() const;
+    template<class VCardSearchT, class O>
+    void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace);
 
+    template<class VCardToFindT>
+    const double* retrieveHourlyResultsForCurrentYear() const;
 
-		template<class I> static void provideInformations(I& infos);
+    template<class VCardToFindT>
+    void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
+                                const Data::Area* area);
 
-		template<class V>
-		void yearEndSpatialAggregates(V&, uint, uint)
-		{
-			// do nothing
-		}
+    template<class VCardToFindT>
+    void retrieveResultsForThermalCluster(typename Storage<VCardToFindT>::ResultsType** result,
+                                          const Data::ThermalCluster* cluster);
 
-		template<class V>
-		void computeSpatialAggregatesSummary(V&, std::map<unsigned int, unsigned int> &, unsigned int)
-		{
-			// do nothing
-		}
+    template<class VCardToFindT>
+    void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
+                                const Data::AreaLink* link);
 
+private:
+    //! Area list
+    NextType* pAreas;
+    //! The number of areas
+    uint pAreaCount;
 
-		template<class V>
-		void simulationEndSpatialAggregates(V&)
-		{
-			// do nothing
-		}
-
-
-
-		template<class VCardSearchT, class O>
-		void computeSpatialAggregateWith(O& out);
-
-		template<class VCardSearchT, class O>
-		void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace);
-
-		template<class VCardToFindT>
-		const double* retrieveHourlyResultsForCurrentYear() const;
-
-		template<class VCardToFindT>
-		void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result, const Data::Area* area);
-
-		template<class VCardToFindT>
-		void retrieveResultsForThermalCluster(typename Storage<VCardToFindT>::ResultsType** result, const Data::ThermalCluster* cluster);
-
-		template<class VCardToFindT>
-		void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result, const Data::AreaLink* link);
-
-
-	private:
-		//! Area list
-		NextType* pAreas;
-		//! The number of areas
-		uint pAreaCount;
-
-	}; // class Areas
-
-
-
-
-
+}; // class Areas
 
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
 
-# include "area.hxx"
+#include "area.hxx"
 
 #endif // __SOLVER_VARIABLE_AREA_H__

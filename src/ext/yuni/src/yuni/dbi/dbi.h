@@ -9,8 +9,8 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_DBI_DBI_H__
-# define __YUNI_DBI_DBI_H__
+#define __YUNI_DBI_DBI_H__
 
-# include "connector-pool.h"
+#include "connector-pool.h"
 
 #endif // __YUNI_DBI_DBI_H__

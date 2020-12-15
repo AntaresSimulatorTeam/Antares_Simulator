@@ -25,10 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_FILTER_OPERATOR_GREATER_THAN_H__
-# define __ANTARES_TOOLBOX_FILTER_OPERATOR_GREATER_THAN_H__
+#define __ANTARES_TOOLBOX_FILTER_OPERATOR_GREATER_THAN_H__
 
-# include "../operator.h"
-
+#include "../operator.h"
 
 namespace Antares
 {
@@ -38,33 +37,31 @@ namespace Filter
 {
 namespace Operator
 {
+class GreaterThan : public AOperator
+{
+public:
+    GreaterThan(AFilterBase* parent) : AOperator(parent, wxT(">"), wxT(">"))
+    {
+    }
+    virtual ~GreaterThan()
+    {
+    }
 
+    virtual bool compute(const int a) const
+    {
+        return a > parameters[0].value.asInt;
+    }
 
-	class GreaterThan : public AOperator
-	{
-	public:
-		GreaterThan(AFilterBase* parent)
-			:AOperator(parent, wxT(">"), wxT(">"))
-		{}
-		virtual ~GreaterThan() {}
+    virtual bool compute(const double a) const
+    {
+        return a > parameters[0].value.asDouble;
+    }
+    virtual bool compute(const wxString& a) const
+    {
+        return a > parameters[0].value.asString;
+    }
 
-		virtual bool compute(const int a) const
-		{
-			return a > parameters[0].value.asInt;
-		}
-
-		virtual bool compute(const double a) const
-		{
-			return a > parameters[0].value.asDouble;
-		}
-		virtual bool compute(const wxString& a) const
-		{
-			return a > parameters[0].value.asString;
-		}
-
-	}; // class GreaterThan
-
-
+}; // class GreaterThan
 
 } // namespace Operator
 } // namespace Filter

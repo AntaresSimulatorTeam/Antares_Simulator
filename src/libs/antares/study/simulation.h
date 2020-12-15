@@ -25,62 +25,58 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_SIMULATION_H__
-# define __ANTARES_LIBS_STUDY_SIMULATION_H__
+#define __ANTARES_LIBS_STUDY_SIMULATION_H__
 
-# include <yuni/yuni.h>
-# include "fwd.h"
-
+#include <yuni/yuni.h>
+#include "fwd.h"
 
 namespace Antares
 {
 namespace Data
 {
+/*!
+** \brief Set of settings for a simulation
+*/
+class Simulation final
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    Simulation(Study& study);
+    //! Destructor
+    ~Simulation()
+    {
+    }
+    //@}
 
-	/*!
-	** \brief Set of settings for a simulation
-	*/
-	class Simulation final
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		Simulation(Study& study);
-		//! Destructor
-		~Simulation() {}
-		//@}
+    /*!
+    ** \brief Load a simulation from a folder
+    **
+    ** \return A non-zero value if succeeded, 0 otherwise
+    */
+    bool loadFromFolder(const StudyLoadOptions& options);
 
-		/*!
-		** \brief Load a simulation from a folder
-		**
-		** \return A non-zero value if succeeded, 0 otherwise
-		*/
-		bool loadFromFolder(const StudyLoadOptions& options);
+    /*!
+    ** \brief Save settings to the appropriate folder
+    */
+    bool saveToFolder(const AnyString& folder) const;
 
-		/*!
-		** \brief Save settings to the appropriate folder
-		*/
-		bool saveToFolder(const AnyString& folder) const;
+    //! Get (in bytes) the amount of memory used by the class
+    Yuni::uint64 memoryUsage() const;
 
-		//! Get (in bytes) the amount of memory used by the class
-		Yuni::uint64 memoryUsage() const;
+public:
+    //! Comments
+    YString comments;
+    //! name
+    YString name;
 
-	public:
-		//! Comments
-		YString comments;
-		//! name
-		YString name;
+private:
+    Study& pStudy;
 
-	private:
-		Study& pStudy;
-
-	}; // class Simulation
-
-
-
-
+}; // class Simulation
 
 } // namespace Data
 } // namespace Antares

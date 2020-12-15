@@ -25,12 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_COMMON_COMPONENTS_FRAME_FRAME_H__
-# define __ANTARES_COMMON_COMPONENTS_FRAME_FRAME_H__
+#define __ANTARES_COMMON_COMPONENTS_FRAME_FRAME_H__
 
-# include <yuni/yuni.h>
-# include <yuni/string.h>
-# include <vector>
-
+#include <yuni/yuni.h>
+#include <yuni/string.h>
+#include <vector>
 
 namespace Antares
 {
@@ -38,40 +37,34 @@ namespace Component
 {
 namespace Frame
 {
+/*!
+** \brief Interface for all registered frames, external or not
+*/
+class IFrame
+{
+public:
+    //! Vector
+    typedef std::vector<IFrame*> Vector;
 
-	/*!
-	** \brief Interface for all registered frames, external or not
-	*/
-	class IFrame
-	{
-	public:
-		//! Vector
-		typedef std::vector<IFrame*> Vector;
+public:
+    /*!
+    ** \brief Raise the frame to the top level
+    */
+    virtual void frameRaise() = 0;
 
+    /*!
+    ** \brief Get the frame title
+    */
+    virtual Yuni::String frameTitle() const = 0;
 
-	public:
-		/*!
-		** \brief Raise the frame to the top level
-		*/
-		virtual void frameRaise() = 0;
+    /*!
+    ** \brief
+    */
+    virtual bool excludeFromMenu() = 0;
+    virtual void updateOpenWindowsMenu() = 0;
+    virtual int frameID() const = 0;
 
-		/*!
-		** \brief Get the frame title
-		*/
-		virtual Yuni::String frameTitle() const = 0;
-
-		/*!
-		** \brief
-		*/
-		virtual bool excludeFromMenu() = 0;
-		virtual void updateOpenWindowsMenu() = 0;
-		virtual int frameID() const = 0;
-
-	}; // class IFrame
-
-
-
-
+}; // class IFrame
 
 } // namespace Frame
 } // namespace Component

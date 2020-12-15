@@ -11,12 +11,10 @@
 #pragma once
 #include "hexdump.h"
 
-
 namespace Yuni
 {
 namespace Core
 {
-
 /*!
 ** \brief Misc. utility functions
 **
@@ -27,7 +25,6 @@ namespace Core
 */
 namespace Utils
 {
-
 } // namespace Utils
 } // namespace Core
 } // namespace Yuni

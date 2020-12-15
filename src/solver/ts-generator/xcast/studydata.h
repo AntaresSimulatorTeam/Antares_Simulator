@@ -25,12 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_SOLVER_TS_GENERATOR_XCAST_STUDY_DATA_H__
-# define __ANTARES_SOLVER_TS_GENERATOR_XCAST_STUDY_DATA_H__
+#define __ANTARES_SOLVER_TS_GENERATOR_XCAST_STUDY_DATA_H__
 
-# include <yuni/yuni.h>
-# include <antares/study/xcast/xcast.h>
-# include <antares/array/correlation.h>
-
+#include <yuni/yuni.h>
+#include <antares/study/xcast/xcast.h>
+#include <antares/array/correlation.h>
 
 namespace Antares
 {
@@ -40,83 +39,78 @@ namespace TSGenerator
 {
 namespace XCast
 {
+class StudyData final
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief
+    */
+    StudyData();
+    /*!
+    ** \brief Destructor
+    */
+    ~StudyData();
+    //@}
 
+    /*!
+    ** \brief Load all informations from a study and a predicate
+    **
+    ** Example of a predicate:
+    ** \code
+    ** struct WindPredicate
+    ** {
+    ** 	bool operator () (const Area&) const
+    ** 	{
+    ** 		return true;
+    ** 	}
+    **
+    ** 	Data::XCast* retrieveXCastData(const Area* area) const
+    ** 	{
+    ** 		return area->wind.prepro->xcast;
+    ** 	}
+    ** };
+    ** \endcode
+    **
+    ** All areas excluded from the list will see their time-series matrix reset to 1x8760.
+    **
+    ** \param study A study
+    ** \param predicate Predicate to determine whether the specified object meets some criteria
+    **   and to retrive some specific data from the area
+    */
+    template<class PredicateT>
+    void loadFromStudy(Data::Study& study,
+                       const Data::Correlation& correlation,
+                       PredicateT& predicate);
 
-	class StudyData final
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief
-		*/
-		StudyData();
-		/*!
-		** \brief Destructor
-		*/
-		~StudyData();
-		//@}
+public:
+    //! List of all areas (sub-set of the complete list)
+    Data::Area::Vector localareas;
+    //! Correlation coefficients for each month
+    const Matrix<float>* correlation[12];
+    /*!
+    ** \brief Correlation mode (monthly / annual)
+    **
+    ** \internal This value is a copy from the correlation data and
+    **   it's used to properly delete the coefficient matrices.
+    */
+    Data::Correlation::Mode mode;
 
-		/*!
-		** \brief Load all informations from a study and a predicate
-		**
-		** Example of a predicate:
-		** \code
-		** struct WindPredicate
-		** {
-		** 	bool operator () (const Area&) const
-		** 	{
-		** 		return true;
-		** 	}
-		**
-		** 	Data::XCast* retrieveXCastData(const Area* area) const
-		** 	{
-		** 		return area->wind.prepro->xcast;
-		** 	}
-		** };
-		** \endcode
-		**
-		** All areas excluded from the list will see their time-series matrix reset to 1x8760.
-		**
-		** \param study A study
-		** \param predicate Predicate to determine whether the specified object meets some criteria
-		**   and to retrive some specific data from the area
-		*/
-		template<class PredicateT>
-		void loadFromStudy(Data::Study& study, const Data::Correlation& correlation, PredicateT& predicate);
+private:
+    //! Delete
+    //! Rebuild data from our own area list
+    void reloadDataFromAreaList(const Data::Correlation& correlation);
 
-	public:
-		//! List of all areas (sub-set of the complete list)
-		Data::Area::Vector localareas;
-		//! Correlation coefficients for each month
-		const Matrix<float>* correlation[12];
-		/*!
-		** \brief Correlation mode (monthly / annual)
-		**
-		** \internal This value is a copy from the correlation data and
-		**   it's used to properly delete the coefficient matrices.
-		*/
-		Data::Correlation::Mode mode;
+    void prepareMatrix(Matrix<float>& m, const Matrix<float>& source) const;
 
-	private:
-		//! Delete
-		//! Rebuild data from our own area list
-		void reloadDataFromAreaList(const Data::Correlation& correlation);
-
-		void prepareMatrix(Matrix<float>& m, const Matrix<float>& source) const;
-
-	}; // class StudyData
-
-
-
-
-
+}; // class StudyData
 
 } // namespace XCast
 } // namespace TSGenerator
 } // namespace Solver
 } // namespace Antares
 
-# include "studydata.hxx"
+#include "studydata.hxx"
 
 #endif // __ANTARES_SOLVER_TS_GENERATOR_XCAST_STUDY_DATA_H__

@@ -31,50 +31,40 @@
 
 using namespace Yuni;
 
-
 namespace Antares
 {
 namespace Toolbox
 {
 namespace Spotlight
 {
+ItemConstraint::ItemConstraint(Data::BindingConstraint* a) : constraint(a)
+{
+    assert(a != NULL);
 
+    caption(a->name());
+    group("Constraint");
 
-	ItemConstraint::ItemConstraint(Data::BindingConstraint* a) :
-		constraint(a)
-	{
-		assert(a != NULL);
+    String tmp;
+    tmp.clear();
+    tmp << '(';
+    tmp << Data::BindingConstraint::OperatorToShortCString(a->operatorType());
+    tmp << ", ";
+    tmp << Data::BindingConstraint::TypeToCString(a->type());
+    tmp << ")  ";
+    if (!a->comments())
+        a->buildFormula(tmp);
+    else
+        tmp << a->comments();
+    subcaption(tmp);
 
-		caption(a->name());
-		group("Constraint");
+    // Tag
+    addTag(" Bc ", 137, 157, 199);
+}
 
-		String tmp;
-		tmp.clear();
-		tmp << '(';
-		tmp << Data::BindingConstraint::OperatorToShortCString(a->operatorType());
-		tmp << ", ";
-		tmp << Data::BindingConstraint::TypeToCString(a->type());
-		tmp << ")  ";
-		if (!a->comments())
-			a->buildFormula(tmp);
-		else
-			tmp << a->comments();
-		subcaption(tmp);
-
-		// Tag
-		addTag(" Bc ", 137, 157, 199);
-	}
-
-
-	ItemConstraint::~ItemConstraint()
-	{
-	}
-
-
-
-
+ItemConstraint::~ItemConstraint()
+{
+}
 
 } // namespace Spotlight
 } // namespace Toolbox
 } // namespace Antares
-

@@ -12,32 +12,32 @@
 #include "../../yuni.h"
 #include "remove.h"
 
-
 /*!
-** \brief Macro for implementing a check for Determining whether a class has a specific typedef or not
+** \brief Macro for implementing a check for Determining whether a class has a specific typedef or
+*not
 */
-#define YUNI_IMPL_STATIC_HAS_TYPEDEF(TYPEDEF)  \
-		template<class T> \
-		class TYPEDEF final \
-		{ \
-			typedef typename ::Yuni::Static::Remove::All<T>::Type  Type; \
-			typedef struct {char a[2];}   TrueType; \
-			typedef char  FalseType; \
-			template<class C> static TrueType  deduce(typename C::TYPEDEF const *); \
-			template<class C> static FalseType deduce(...); \
-		\
-		public: \
-			enum \
-			{ \
-				yes = sizeof(deduce<Type>(0)) == sizeof(TrueType), \
-				no = !yes, \
-			}; \
-		} /* class */
-
-
-
-
-
+#define YUNI_IMPL_STATIC_HAS_TYPEDEF(TYPEDEF)                       \
+    template<class T>                                               \
+    class TYPEDEF final                                             \
+    {                                                               \
+        typedef typename ::Yuni::Static::Remove::All<T>::Type Type; \
+        typedef struct                                              \
+        {                                                           \
+            char a[2];                                              \
+        } TrueType;                                                 \
+        typedef char FalseType;                                     \
+        template<class C>                                           \
+        static TrueType deduce(typename C::TYPEDEF const*);         \
+        template<class C>                                           \
+        static FalseType deduce(...);                               \
+                                                                    \
+    public:                                                         \
+        enum                                                        \
+        {                                                           \
+            yes = sizeof(deduce<Type>(0)) == sizeof(TrueType),      \
+            no = !yes,                                              \
+        };                                                          \
+    } /* class */
 
 namespace Yuni
 {
@@ -45,35 +45,29 @@ namespace Static
 {
 namespace HasTypedef
 {
+/*!
+** \brief Determine whether a class has the typedef `Ptr` or not
+**
+** \code
+** std::cout << Static::HasTypedef::Ptr<MyClass>::yes << std::endl;
+** \endcode
+*/
+YUNI_IMPL_STATIC_HAS_TYPEDEF(Ptr);
 
-	/*!
-	** \brief Determine whether a class has the typedef `Ptr` or not
-	**
-	** \code
-	** std::cout << Static::HasTypedef::Ptr<MyClass>::yes << std::endl;
-	** \endcode
-	*/
-	YUNI_IMPL_STATIC_HAS_TYPEDEF(Ptr);
+/*!
+** \brief Determine whether a class has the typedef `IntrusiveSmartPtrType` or not
+**
+** This test is mainly used to prevent misuse of some incompatible smartptr.
+*/
+YUNI_IMPL_STATIC_HAS_TYPEDEF(IntrusiveSmartPtrType);
 
+/*!
+** \brief Determine whether a class has the typedef `CStringType` or not
+**
+** This test is mainly used to detect Yuni string where templates can not be used.
+*/
+YUNI_IMPL_STATIC_HAS_TYPEDEF(CStringType);
 
-	/*!
-	** \brief Determine whether a class has the typedef `IntrusiveSmartPtrType` or not
-	**
-	** This test is mainly used to prevent misuse of some incompatible smartptr.
-	*/
-	YUNI_IMPL_STATIC_HAS_TYPEDEF(IntrusiveSmartPtrType);
-
-
-	/*!
-	** \brief Determine whether a class has the typedef `CStringType` or not
-	**
-	** This test is mainly used to detect Yuni string where templates can not be used.
-	*/
-	YUNI_IMPL_STATIC_HAS_TYPEDEF(CStringType);
-
-
-
-
-} // namespace HasMethod
+} // namespace HasTypedef
 } // namespace Static
 } // namespace Yuni

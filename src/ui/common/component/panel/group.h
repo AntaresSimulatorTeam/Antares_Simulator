@@ -25,56 +25,50 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_COMMON_COMPONENTS_PANEL_GROUP_H__
-# define __ANTARES_COMMON_COMPONENTS_PANEL_GROUP_H__
+#define __ANTARES_COMMON_COMPONENTS_PANEL_GROUP_H__
 
-# include <yuni/yuni.h>
-# include "../../wx-wrapper.h"
-# include "panel.h"
-
+#include <yuni/yuni.h>
+#include "../../wx-wrapper.h"
+#include "panel.h"
 
 namespace Antares
 {
 namespace Component
 {
+/*!
+** \brief Panel implementation
+*/
+class PanelGroup : public Panel
+{
+public:
+    /*!
+    ** \brief Set the background color of a component used in a PanelGroup
+    */
+    static void SetDarkBackgroundColor(wxWindow* ctrl, int lightModifier = 0);
 
+    /*!
+    ** \brief Set the background color of a component used in a PanelGroup
+    */
+    static void SetLighterBackgroundColor(wxWindow* ctrl, int lightModifier = 0);
 
-	/*!
-	** \brief Panel implementation
-	*/
-	class PanelGroup : public Panel
-	{
-	public:
-		/*!
-		** \brief Set the background color of a component used in a PanelGroup
-		*/
-		static void SetDarkBackgroundColor(wxWindow* ctrl, int lightModifier = 0);
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    PanelGroup(wxWindow* parent, const char* image = NULL);
+    //! Destructor
+    virtual ~PanelGroup();
+    //@}
 
-		/*!
-		** \brief Set the background color of a component used in a PanelGroup
-		*/
-		static void SetLighterBackgroundColor(wxWindow* ctrl, int lightModifier = 0);
+public:
+    //! Subpanel
+    Panel* subpanel;
+    //! The leftSizer
+    wxSizer* leftSizer;
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		PanelGroup(wxWindow* parent, const char* image = NULL);
-		//! Destructor
-		virtual ~PanelGroup();
-		//@}
-
-	public:
-		//! Subpanel
-		Panel* subpanel;
-		//! The leftSizer
-		wxSizer* leftSizer;
-
-	}; // class PanelGroup
-
-
-
+}; // class PanelGroup
 
 } // namespace Component
 } // namespace Antares

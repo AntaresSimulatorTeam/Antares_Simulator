@@ -25,21 +25,21 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_SIMULATION_H__
-# define __SOLVER_SIMULATION_H__
+#define __SOLVER_SIMULATION_H__
 
-# include "../config.h"
-# include <antares/study/study.h>
-# include "sim_structure_donnees.h"
-# include "sim_structure_probleme_economique.h"
-# include "../variable/state.h"
+#include "../config.h"
+#include <antares/study/study.h>
+#include "sim_structure_donnees.h"
+#include "sim_structure_probleme_economique.h"
+#include "../variable/state.h"
 
-# define OUI_ANTARES 1
-# define NON_ANTARES 0
-# define LINFINI_ANTARES 1.e+80
-# define LINFINI_ENTIER  20000000
+#define OUI_ANTARES 1
+#define NON_ANTARES 0
+#define LINFINI_ANTARES 1.e+80
+#define LINFINI_ENTIER 20000000
 
-# define OPTIMISATION_LINEAIRE    1
-# define OPTIMISATION_QUADRATIQUE 2
+#define OPTIMISATION_LINEAIRE 1
+#define OPTIMISATION_QUADRATIQUE 2
 
 #define ZERO_PMAX 0.0
 #define ZERO_PMIN 1.e-2
@@ -56,11 +56,17 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 /*!
 ** \brief Alloue et initialise un probleme hebdo
 */
-void SIM_InitialisationProblemeHebdo(Antares::Data::Study& study, PROBLEME_HEBDO& problem, int NombreDePasDeTemps, uint numSpace);
+void SIM_InitialisationProblemeHebdo(Antares::Data::Study& study,
+                                     PROBLEME_HEBDO& problem,
+                                     int NombreDePasDeTemps,
+                                     uint numSpace);
 
 void SIM_PreallocationTableaux(void);
 
-void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem, Antares::Solver::Variable::State & state, uint numSpace, const int);
+void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
+                                    Antares::Solver::Variable::State& state,
+                                    uint numSpace,
+                                    const int);
 
 void SIM_RenseignementProblemeHoraireAdequation(long);
 
@@ -83,7 +89,5 @@ void SIM_DesallocationTableaux(void);
 void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem);
 
 void SIM_InitialisationResultats(void);
-
-
 
 #endif /* __SOLVER_SIMULATION_H__ */

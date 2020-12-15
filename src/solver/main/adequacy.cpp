@@ -30,15 +30,12 @@
 #include "../simulation/adequacy.h"
 #include <antares/logs.h>
 
-
 using namespace Antares;
-
 
 void SolverApplication::runSimulationInAdequacyMode()
 {
-	// Type of the simulation
-	typedef Solver::Simulation::ISimulation< Solver::Simulation::Adequacy >  SimulationType;
+    // Type of the simulation
+    typedef Solver::Simulation::ISimulation<Solver::Simulation::Adequacy> SimulationType;
 
-	runSimulation<SimulationType>();
+    runSimulation<SimulationType>();
 }
-

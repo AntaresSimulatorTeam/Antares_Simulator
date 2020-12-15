@@ -25,108 +25,100 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_WINDOWS_OPTIONS_OPTIMIZATION_PREFS_H__
-# define __ANTARES_APPLICATION_WINDOWS_OPTIONS_OPTIMIZATION_PREFS_H__
+#define __ANTARES_APPLICATION_WINDOWS_OPTIONS_OPTIMIZATION_PREFS_H__
 
-# include <antares/wx-wrapper.h>
-# include "../../../toolbox/components/button.h"
-# include <wx/dialog.h>
+#include <antares/wx-wrapper.h>
+#include "../../../toolbox/components/button.h"
+#include <wx/dialog.h>
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 
 namespace Antares
 {
-
 namespace Window
 {
 namespace Options
 {
+/*!
+** \brief Startup Wizard User Interface
+*/
+class Optimization final : public wxDialog
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    **
+    ** \param parent The parent window
+    */
+    Optimization(wxWindow* parent);
+    //! Destructor
+    virtual ~Optimization();
+    //@}
 
-	/*!
-	** \brief Startup Wizard User Interface
-	*/
-	class Optimization final : public wxDialog
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		**
-		** \param parent The parent window
-		*/
-		Optimization(wxWindow* parent);
-		//! Destructor
-		virtual ~Optimization();
-		//@}
+private:
+    class PopupInfo final
+    {
+    public:
+        PopupInfo(bool& r, const wxChar* const t) : rval(r), text(t)
+        {
+        }
+        bool& rval;
+        const wxChar* const text;
+    };
 
+private:
+    void refresh();
+    void onClose(void*);
+    void onResetToDefault(void*);
 
-	private:
-		class PopupInfo final
-		{
-		public:
-			PopupInfo(bool& r, const wxChar* const t) :
-				rval(r), text(t)
-			{}
-			bool& rval;
-			const wxChar* const text;
-		};
+    void onSelectModeInclude(wxCommandEvent& evt);
+    void onSelectModeIgnore(wxCommandEvent& evt);
+    void onSelectSimplexDay(wxCommandEvent& evt);
+    void onSelectSimplexWeek(wxCommandEvent& evt);
 
-	private:
-		void refresh();
-		void onClose(void*);
-		void onResetToDefault(void*);
+    void onSelectTransCapInclude(wxCommandEvent&);
+    void onSelectTransCapIgnore(wxCommandEvent&);
+    void onSelectTransCapInfinite(wxCommandEvent&);
 
-		void onSelectModeInclude(wxCommandEvent& evt);
-		void onSelectModeIgnore(wxCommandEvent& evt);
-		void onSelectSimplexDay(wxCommandEvent& evt);
-		void onSelectSimplexWeek(wxCommandEvent& evt);
+    void onSelectLinkTypeLocal(wxCommandEvent& evt);
+    void onSelectLinkTypeAC(wxCommandEvent& evt);
 
-		void onSelectTransCapInclude(wxCommandEvent&);
-		void onSelectTransCapIgnore(wxCommandEvent&);
-		void onSelectTransCapInfinite(wxCommandEvent&);
-		
-		void onSelectLinkTypeLocal(wxCommandEvent& evt);
-		void onSelectLinkTypeAC(wxCommandEvent& evt);
+    void onSelectUnfeasibleBehaviorWarningDry(wxCommandEvent& evt);
+    void onSelectUnfeasibleBehaviorWarningMps(wxCommandEvent& evt);
+    void onSelectUnfeasibleBehaviorErrorDry(wxCommandEvent& evt);
+    void onSelectUnfeasibleBehaviorErrorMps(wxCommandEvent& evt);
+    void onSelectUnfeasibleBehavior(
+      const Data::UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
 
-        void onSelectUnfeasibleBehaviorWarningDry(wxCommandEvent& evt);
-        void onSelectUnfeasibleBehaviorWarningMps(wxCommandEvent& evt);
-        void onSelectUnfeasibleBehaviorErrorDry(wxCommandEvent& evt);
-        void onSelectUnfeasibleBehaviorErrorMps(wxCommandEvent& evt);
-		void onSelectUnfeasibleBehavior(const Data::UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
+    void onPopupMenu(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
+    void onPopupMenuSimplex(Component::Button&, wxMenu& menu, void*);
+    void onPopupMenuSpecify(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
+    void onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*);
+    void onPopupMenuLinkType(Component::Button&, wxMenu& menu, void*);
+    void onPopupMenuUnfeasibleBehavior(Component::Button&, wxMenu& menu, void*);
 
+    void onInternalMotion(wxMouseEvent&);
 
-		void onPopupMenu(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
-		void onPopupMenuSimplex(Component::Button&, wxMenu& menu, void*);
-		void onPopupMenuSpecify(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
-		void onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*);
-		void onPopupMenuLinkType(Component::Button&, wxMenu& menu, void*);
-        void onPopupMenuUnfeasibleBehavior(Component::Button&, wxMenu& menu, void*);
+private:
+    Component::Button* pBtnConstraints;
+    Component::Button* pBtnHurdleCosts;
+    Component::Button* pBtnTransmissionCapacities;
+    Component::Button* pBtnLinkType;
+    Component::Button* pBtnThermalClusterMinStablePower;
+    Component::Button* pBtnThermalClusterMinUPTime;
+    Component::Button* pBtnDayAheadReserve;
+    Component::Button* pBtnStrategicReserve;
+    Component::Button* pBtnPrimaryReserve;
+    Component::Button* pBtnSpinningReserve;
+    Component::Button* pBtnSimplexOptimizationRange;
 
-		void onInternalMotion(wxMouseEvent&);
+    Component::Button* pBtnExportMPS;
+    Component::Button* pBtnUnfeasibleProblemBehavior;
+    bool* pTargetRef;
 
-	private:
-		Component::Button* pBtnConstraints;
-		Component::Button* pBtnHurdleCosts;
-		Component::Button* pBtnTransmissionCapacities;
-		Component::Button* pBtnLinkType;
-		Component::Button* pBtnThermalClusterMinStablePower;
-		Component::Button* pBtnThermalClusterMinUPTime;
-		Component::Button* pBtnDayAheadReserve;
-		Component::Button* pBtnStrategicReserve;
-		Component::Button* pBtnPrimaryReserve;
-		Component::Button* pBtnSpinningReserve;
-		Component::Button* pBtnSimplexOptimizationRange;
-
-		Component::Button* pBtnExportMPS;
-        Component::Button* pBtnUnfeasibleProblemBehavior;
-		bool* pTargetRef;
-
-		
-	}; // class Optimization
-
-
-
-
+}; // class Optimization
 
 } // namespace Options
 } // namespace Window

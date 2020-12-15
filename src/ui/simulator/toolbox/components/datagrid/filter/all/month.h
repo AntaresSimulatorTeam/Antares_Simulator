@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_MONTH_H__
-# define __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_MONTH_H__
+#define __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_MONTH_H__
 
-# include <antares/wx-wrapper.h>
-# include "../filter.h"
-
+#include <antares/wx-wrapper.h>
+#include "../filter.h"
 
 namespace Antares
 {
@@ -37,40 +36,54 @@ namespace Toolbox
 {
 namespace Filter
 {
+class Month : public AFilterBase
+{
+public:
+    static const wxChar* Name()
+    {
+        return wxT("month");
+    }
+    static const wxChar* Caption()
+    {
+        return wxT("Month");
+    }
+    static Date::Precision Precision()
+    {
+        return Date::monthly;
+    }
 
+public:
+    Month(Input* parent) : AFilterBase(parent)
+    {
+        operators.addStdMonth();
+    }
 
+    virtual ~Month()
+    {
+    }
 
-	class Month : public AFilterBase
-	{
-	public:
-		static const wxChar* Name()    {return wxT("month");}
-		static const wxChar* Caption() {return wxT("Month");}
-		static Date::Precision Precision() {return Date::monthly;}
+    virtual Date::Precision precision() const
+    {
+        return Month::Precision();
+    }
 
-	public:
-		Month(Input* parent) :
-			AFilterBase(parent)
-		{
-			operators.addStdMonth();
-		}
+    virtual bool checkOnRowsLabels() const
+    {
+        return true;
+    }
 
-		virtual ~Month() {}
+    virtual const wxChar* name() const
+    {
+        return Month::Name();
+    }
+    virtual const wxChar* caption() const
+    {
+        return Month::Caption();
+    }
 
-		virtual Date::Precision precision() const {return Month::Precision();}
+    virtual bool rowIsValid(int row) const;
 
-		virtual bool checkOnRowsLabels() const {return true;}
-
-		virtual const wxChar* name() const {return Month::Name();}
-		virtual const wxChar* caption() const {return Month::Caption();}
-
-
-		virtual bool rowIsValid(int row) const;
-
-	}; // class HourYear
-
-
-
-
+}; // class HourYear
 
 } // namespace Filter
 } // namespace Toolbox

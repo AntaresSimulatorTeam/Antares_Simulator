@@ -25,13 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_MAP_CONTROLS_ADD_TOOLS_H__
-# define __ANTARES_TOOLBOX_MAP_CONTROLS_ADD_TOOLS_H__
+#define __ANTARES_TOOLBOX_MAP_CONTROLS_ADD_TOOLS_H__
 
-# include <antares/wx-wrapper.h>
-# include "../tools/tool.h"
-# include "../manager.h"
-
-
+#include <antares/wx-wrapper.h>
+#include "../tools/tool.h"
+#include "../manager.h"
 
 namespace Antares
 {
@@ -39,61 +37,59 @@ namespace Map
 {
 namespace Private
 {
+class AddingToolsHelper final
+{
+public:
+    AddingToolsHelper(Manager& manager,
+                      Tool::List& list,
+                      const int selectedCount,
+                      const int connectionSelectedCount,
+                      const wxPoint& top,
+                      const wxPoint& bottom);
 
+    void operator()();
 
-	class AddingToolsHelper final
-	{
-	public:
-		AddingToolsHelper(Manager& manager, Tool::List& list,
-			const int selectedCount, const int connectionSelectedCount,
-			const wxPoint& top, const wxPoint& bottom);
+private:
+    template<class T>
+    T* createInstance()
+    {
+        T* t = new T(pManager);
+        pList.push_back(t);
+        return t;
+    }
 
+    template<class T>
+    T* createToolToTheLeft()
+    {
+        T* t = createInstance<T>();
+        t->x(pTop.x - t->width());
+        t->y(pTop.y);
+        pTop.y += t->height();
+        return t;
+    }
 
-		void operator () ();
+    template<class T>
+    T* createToolToTheBottom()
+    {
+        T* t = createInstance<T>();
+        t->x(pBottom.x);
+        t->y(pBottom.y);
+        pBottom.x += t->width();
+        return t;
+    }
 
-	private:
-		template<class T>
-		T* createInstance()
-		{
-			T* t = new T(pManager);
-			pList.push_back(t);
-			return t;
-		}
+    void createToolsForRealNodes();
+    void createToolsForConnections();
+    void createCommonTools(const bool haveRealNodes, const bool haveConnections);
 
-		template<class T>
-		T* createToolToTheLeft()
-		{
-			T* t = createInstance<T>();
-			t->x(pTop.x - t->width());
-			t->y(pTop.y);
-			pTop.y += t->height();
-			return t;
-		}
-
-		template<class T>
-		T* createToolToTheBottom()
-		{
-			T* t = createInstance<T>();
-			t->x(pBottom.x);
-			t->y(pBottom.y);
-			pBottom.x += t->width();
-			return t;
-		}
-
-		void createToolsForRealNodes();
-		void createToolsForConnections();
-		void createCommonTools(const bool haveRealNodes, const bool haveConnections);
-
-	private:
-		Manager& pManager;
-		Tool::List& pList;
-		const int pSelectedCount;
-		const int pConnectionsSelectedCount;
-		wxPoint pTop;
-		wxPoint pBottom;
-	};
-
-
+private:
+    Manager& pManager;
+    Tool::List& pList;
+    const int pSelectedCount;
+    const int pConnectionsSelectedCount;
+    wxPoint pTop;
+    wxPoint pBottom;
+};
 
 } // namespace Private
 } // namespace Map

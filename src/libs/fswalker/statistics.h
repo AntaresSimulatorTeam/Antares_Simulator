@@ -25,45 +25,38 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_FS_WALKER_STATISTICS_H__
-# define __ANTARES_FS_WALKER_STATISTICS_H__
+#define __ANTARES_FS_WALKER_STATISTICS_H__
 
-# include <yuni/yuni.h>
-
+#include <yuni/yuni.h>
 
 namespace FSWalker
 {
+class Statistics
+{
+public:
+    Statistics() : fileCount(0), folderCount(0), bytesCopied(0), aborted(true)
+    {
+    }
 
-	class Statistics
-	{
-	public:
-		Statistics() :
-			fileCount(0), folderCount(0),
-			bytesCopied(0), aborted(true)
-		{}
+    void reset()
+    {
+        fileCount = 0;
+        folderCount = 0;
+        bytesCopied = 0;
+        aborted = true;
+    }
 
-		void reset()
-		{
-			fileCount = 0;
-			folderCount = 0;
-			bytesCopied = 0;
-			aborted = true;
-		}
+public:
+    //! The number of file encountered
+    yuint64 fileCount;
+    //! The number of folders encountered
+    yuint64 folderCount;
+    //! The amount of bytes that has been copied
+    yuint64 bytesCopied;
+    //! Flag to determine whether the operation has been aborted or not
+    bool aborted;
 
-	public:
-		//! The number of file encountered
-		yuint64 fileCount;
-		//! The number of folders encountered
-		yuint64 folderCount;
-		//! The amount of bytes that has been copied
-		yuint64 bytesCopied;
-		//! Flag to determine whether the operation has been aborted or not
-		bool aborted;
-
-	}; // class Statistics
-
-
-
-
+}; // class Statistics
 
 } // namespace FSWalker
 

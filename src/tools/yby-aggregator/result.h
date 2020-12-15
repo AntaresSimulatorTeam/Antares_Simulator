@@ -25,99 +25,88 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __STUDY_RESULT_AGGREGATOR_RESULT_H__
-# define __STUDY_RESULT_AGGREGATOR_RESULT_H__
+#define __STUDY_RESULT_AGGREGATOR_RESULT_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-# include <map>
-# include <antares/memory/memory.h>
-# include "datafile.h"
-# include "studydata.h"
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+#include <map>
+#include <antares/memory/memory.h>
+#include "datafile.h"
+#include "studydata.h"
 
 using namespace Yuni;
 
 enum
 {
-	maxSizePerCell = 42,
+    maxSizePerCell = 42,
 };
 
 //! A single cell
-typedef char  CellData[maxSizePerCell];
-
+typedef char CellData[maxSizePerCell];
 
 //! A single column
 class CellColumnData final
 {
 public:
-	//! \name Constructors & Destructor
-	//@{
-	/*!
-	** \brief Default constructor
-	*/
-	CellColumnData();
-	//! Copy constructor
-	CellColumnData(const CellColumnData&);
-	//! Destructor
-	~CellColumnData();
-	//@}
+    //! \name Constructors & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    CellColumnData();
+    //! Copy constructor
+    CellColumnData(const CellColumnData&);
+    //! Destructor
+    ~CellColumnData();
+    //@}
 
 public:
-	//! All rows
-	Antares::Memory::Stored<CellData>::Type   rows;
-	//! The height of the column
-	uint height;
+    //! All rows
+    Antares::Memory::Stored<CellData>::Type rows;
+    //! The height of the column
+    uint height;
 
 }; // class CellColumnData
-
-
 
 class ResultMatrix final
 {
 public:
-	//! \name Constructor & Destructor
-	//@{
-	/*!
-	** \brief Default constructor
-	*/
-	ResultMatrix();
-	//! Copy constructor
-	ResultMatrix(const ResultMatrix&);
-	//! Destructor
-	~ResultMatrix();
-	//@}
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    ResultMatrix();
+    //! Copy constructor
+    ResultMatrix(const ResultMatrix&);
+    //! Destructor
+    ~ResultMatrix();
+    //@}
 
-	/*!
-	** \brief Resize the pseudo matrix
-	*/
-	void resize(uint i);
+    /*!
+    ** \brief Resize the pseudo matrix
+    */
+    void resize(uint i);
 
-	/*!
-	** \brief Export the content of the matrix into a CSV file
-	*/
-	bool saveToCSVFile(const Yuni::String& filename) const;
-
+    /*!
+    ** \brief Export the content of the matrix into a CSV file
+    */
+    bool saveToCSVFile(const Yuni::String& filename) const;
 
 public:
-	CellColumnData* columns;
-	//! Width of the matrix
-	uint width;
-	//! Valid Height found after aggregation
-	uint heightAfterAggregation;
+    CellColumnData* columns;
+    //! Width of the matrix
+    uint width;
+    //! Valid Height found after aggregation
+    uint heightAfterAggregation;
 
 }; // class ResultMatrix
 
+typedef std::vector<ResultMatrix> ResultsAllVars;
 
+typedef std::map<DataFile::ShortString, ResultsAllVars> ResultsForAllTimeLevels;
+typedef std::map<DataFile::ShortString, ResultsForAllTimeLevels> ResultsForAllDataLevels;
 
-
-typedef std::vector<ResultMatrix>  ResultsAllVars;
-
-typedef std::map<DataFile::ShortString, ResultsAllVars>  ResultsForAllTimeLevels;
-typedef std::map<DataFile::ShortString, ResultsForAllTimeLevels>  ResultsForAllDataLevels;
-
-typedef std::map<StudyData::ShortString512, ResultsForAllDataLevels>  ResultsForAllStudyItems;
-
-
-
+typedef std::map<StudyData::ShortString512, ResultsForAllDataLevels> ResultsForAllStudyItems;
 
 #endif // __STUDY_RESULT_AGGREGATOR_RESULT_H__

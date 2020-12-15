@@ -25,66 +25,25 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include "sim_structure_donnees.h"
 #include "sim_structure_probleme_economique.h"
 #include "sim_structure_probleme_adequation.h"
 
+DONNEES_PAR_PAYS** DonneesParPays;
 
+char* Positionnement;
+char* PositionnementSV;
+char* LigneACompter;
+char* LigneLue;
+char AppelEnModeSimulateur;
 
+VALEURS_GENEREES_PAR_PAYS*** ValeursGenereesParPays;
+NUMERO_CHRONIQUES_TIREES_PAR_PAYS*** NumeroChroniquesTireesParPays;
 
-DONNEES_PAR_PAYS **                   DonneesParPays;
+PROBLEME_HORAIRE_ADEQUATION ProblemeHoraireAdequation;
+VALEURS_ANNUELLES** ValeursAnnuellesAdequation;
 
+RESULTATS_PAR_INTERCONNEXION** ResultatsParInterconnexion;
+RESULTATS_PAR_CONTRAINTE_COUPLANTE** ResultatsParContrainteCouplante;
 
-char *                                Positionnement;
-char *                                PositionnementSV;
-char *                                LigneACompter;
-char *                                LigneLue;
-char                                  AppelEnModeSimulateur;
-
-VALEURS_GENEREES_PAR_PAYS	***		ValeursGenereesParPays;
-NUMERO_CHRONIQUES_TIREES_PAR_PAYS	***	NumeroChroniquesTireesParPays;
-
-
-
-
-
-
-PROBLEME_HORAIRE_ADEQUATION           ProblemeHoraireAdequation;
-VALEURS_ANNUELLES **                  ValeursAnnuellesAdequation;
-
-
-RESULTATS_PAR_INTERCONNEXION **       ResultatsParInterconnexion;
-RESULTATS_PAR_CONTRAINTE_COUPLANTE ** ResultatsParContrainteCouplante;
-
-
-COMPTE_RENDU                          CompteRendu;
-
-
-
-
+COMPTE_RENDU CompteRendu;

@@ -25,56 +25,25 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "opt_structure_probleme_a_resoudre.h"
 
+#include "../simulation/simulation.h"
+#include "../simulation/sim_extern_variables_globales.h"
 
+#include "opt_fonctions.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# include "opt_structure_probleme_a_resoudre.h"
-
-# include "../simulation/simulation.h"
-# include "../simulation/sim_extern_variables_globales.h"
-
-# include "opt_fonctions.h"
-
-
-
-
-
-
-
-void OPT_InitialiserLeSecondMembreDuProblemeQuadratique( PROBLEME_HEBDO * ProblemeHebdo, int PdtHebdo )
+void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO* ProblemeHebdo, int PdtHebdo)
 {
-	int Cnt; int Pays; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
+    int Cnt;
+    int Pays;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
-	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
-	for (Pays = 0; Pays < ProblemeHebdo->NombreDePays - 1; Pays++)
-	{
-		Cnt = ProblemeHebdo->NumeroDeContrainteDeSoldeDEchange[Pays];
-		ProblemeAResoudre->SecondMembre[Cnt] = ProblemeHebdo->SoldeMoyenHoraire[PdtHebdo]->SoldeMoyenDuPays[Pays];		
-	}
+    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays - 1; Pays++)
+    {
+        Cnt = ProblemeHebdo->NumeroDeContrainteDeSoldeDEchange[Pays];
+        ProblemeAResoudre->SecondMembre[Cnt]
+          = ProblemeHebdo->SoldeMoyenHoraire[PdtHebdo]->SoldeMoyenDuPays[Pays];
+    }
 }
-
-

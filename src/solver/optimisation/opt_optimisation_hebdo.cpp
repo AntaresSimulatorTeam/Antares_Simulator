@@ -25,7 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
 #include <math.h>
 #include "opt_structure_probleme_a_resoudre.h"
 
@@ -46,32 +45,29 @@ extern "C"
 using namespace Antares;
 using namespace Antares::Data;
 
-
-
-void OPT_OptimisationHebdomadaire( PROBLEME_HEBDO * pProblemeHebdo, uint numSpace )
+void OPT_OptimisationHebdomadaire(PROBLEME_HEBDO* pProblemeHebdo, uint numSpace)
 {
-	if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE )
-	{
-		if (!OPT_PilotageOptimisationLineaire(pProblemeHebdo, numSpace ))
-		{
+    if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
+    {
+        if (!OPT_PilotageOptimisationLineaire(pProblemeHebdo, numSpace))
+        {
             logs.error() << "Linear optimization failed";
-			throw UnfeasibleProblemError("Linear optimization failed");
-		}
-	}
-	else if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_QUADRATIQUE)
-	{
-		OPT_LiberationProblemesSimplexe(pProblemeHebdo);
-		if (!OPT_PilotageOptimisationQuadratique(pProblemeHebdo))
-		{
+            throw UnfeasibleProblemError("Linear optimization failed");
+        }
+    }
+    else if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_QUADRATIQUE)
+    {
+        OPT_LiberationProblemesSimplexe(pProblemeHebdo);
+        if (!OPT_PilotageOptimisationQuadratique(pProblemeHebdo))
+        {
             logs.error() << "Quadratic optimization failed";
-			throw UnfeasibleProblemError("Quadratic optimization failed");
-		}
-	}
-	else
-	{
-		logs.fatal() << "Bug: TypeDOptimisation, OPTIMISATION_LINEAIRE ou OPTIMISATION_QUADRATIQUE non initialise";
-		AntaresSolverEmergencyShutdown();
-	}	
+            throw UnfeasibleProblemError("Quadratic optimization failed");
+        }
+    }
+    else
+    {
+        logs.fatal() << "Bug: TypeDOptimisation, OPTIMISATION_LINEAIRE ou OPTIMISATION_QUADRATIQUE "
+                        "non initialise";
+        AntaresSolverEmergencyShutdown();
+    }
 }
-
-

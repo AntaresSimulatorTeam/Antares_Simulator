@@ -25,12 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_TS_GENERATOR_XCAST_PREDICATE_HXX__
-# define __SOLVER_TS_GENERATOR_XCAST_PREDICATE_HXX__
+#define __SOLVER_TS_GENERATOR_XCAST_PREDICATE_HXX__
 
-# include <yuni/yuni.h>
-# include <antares/study/area.h>
-# include <yuni/core/math.h>
-
+#include <yuni/yuni.h>
+#include <antares/study/area.h>
+#include <yuni/core/math.h>
 
 namespace Antares
 {
@@ -40,144 +39,134 @@ namespace TSGenerator
 {
 namespace Predicate
 {
+class Wind final
+{
+public:
+    static bool preproDataIsReader(const Data::Area& area)
+    {
+        return area.wind.prepro != NULL;
+    }
 
-	class Wind final
-	{
-	public:
-		static bool preproDataIsReader(const Data::Area& area)
-		{
-			return area.wind.prepro != NULL;
-		}
+    static const char* timeSeriesName()
+    {
+        return "wind";
+    }
 
-		static const char* timeSeriesName()
-		{
-			return "wind";
-		}
+    bool accept(const Data::Area& area) const
+    {
+        assert(area.wind.prepro != NULL);
+        return !Yuni::Math::Zero(area.wind.prepro->xcast.capacity);
+    }
 
-		bool accept(const Data::Area& area) const
-		{
-			assert(area.wind.prepro != NULL);
-			return !Yuni::Math::Zero(area.wind.prepro->xcast.capacity);
-		}
+    Matrix<double, Yuni::sint32>& matrix(Data::Area& area) const
+    {
+        assert(area.wind.series != NULL);
+        return area.wind.series->series;
+    }
 
-		Matrix<double, Yuni::sint32>& matrix(Data::Area& area) const
-		{
-			assert(area.wind.series != NULL);
-			return area.wind.series->series;
-		}
+    Data::XCast& xcastData(Data::Area& area) const
+    {
+        assert(area.wind.prepro != NULL);
+        return area.wind.prepro->xcast;
+    }
 
-		Data::XCast& xcastData(Data::Area& area) const
-		{
-			assert(area.wind.prepro != NULL);
-			return area.wind.prepro->xcast;
-		}
+    static const Data::Correlation& correlation(const Data::Study& study)
+    {
+        return study.preproWindCorrelation;
+    }
 
-		static const Data::Correlation& correlation(const Data::Study& study)
-		{
-			return study.preproWindCorrelation;
-		}
+    uint timeSeriesToGenerate(const Data::Study& study) const
+    {
+        return study.parameters.nbTimeSeriesWind;
+    }
 
-		uint timeSeriesToGenerate(const Data::Study& study) const
-		{
-			return study.parameters.nbTimeSeriesWind;
-		}
+}; // class Wind
 
-	}; // class Wind
+class Load final
+{
+public:
+    static bool preproDataIsReader(const Data::Area& area)
+    {
+        return area.load.prepro != NULL;
+    }
 
+    static const char* timeSeriesName()
+    {
+        return "load";
+    }
 
+    bool accept(const Data::Area& area) const
+    {
+        assert(area.load.prepro != NULL);
+        return !Yuni::Math::Zero(area.load.prepro->xcast.capacity);
+    }
 
-	class Load final
-	{
-	public:
-		static bool preproDataIsReader(const Data::Area& area)
-		{
-			return area.load.prepro != NULL;
-		}
+    Matrix<double, Yuni::sint32>& matrix(Data::Area& area) const
+    {
+        assert(area.load.series != NULL);
+        return area.load.series->series;
+    }
 
-		static const char* timeSeriesName()
-		{
-			return "load";
-		}
+    Data::XCast& xcastData(Data::Area& area) const
+    {
+        assert(area.load.prepro != NULL);
+        return area.load.prepro->xcast;
+    }
 
-		bool accept(const Data::Area& area) const
-		{
-			assert(area.load.prepro != NULL);
-			return !Yuni::Math::Zero(area.load.prepro->xcast.capacity);
-		}
+    static const Data::Correlation& correlation(const Data::Study& study)
+    {
+        return study.preproLoadCorrelation;
+    }
 
-		Matrix<double, Yuni::sint32>& matrix(Data::Area& area) const
-		{
-			assert(area.load.series != NULL);
-			return area.load.series->series;
-		}
+    uint timeSeriesToGenerate(const Data::Study& study) const
+    {
+        return study.parameters.nbTimeSeriesLoad;
+    }
 
-		Data::XCast& xcastData(Data::Area& area) const
-		{
-			assert(area.load.prepro != NULL);
-			return area.load.prepro->xcast;
-		}
+}; // class Load
 
-		static const Data::Correlation& correlation(const Data::Study& study)
-		{
-			return study.preproLoadCorrelation;
-		}
+class Solar final
+{
+public:
+    static bool preproDataIsReader(const Data::Area& area)
+    {
+        return area.solar.prepro != NULL;
+    }
 
-		uint timeSeriesToGenerate(const Data::Study& study) const
-		{
-			return study.parameters.nbTimeSeriesLoad;
-		}
+    static const char* timeSeriesName()
+    {
+        return "solar";
+    }
 
-	}; // class Load
+    bool accept(const Data::Area& area) const
+    {
+        assert(area.solar.prepro != NULL);
+        return !Yuni::Math::Zero(area.solar.prepro->xcast.capacity);
+    }
 
+    Matrix<double, Yuni::sint32>& matrix(Data::Area& area) const
+    {
+        assert(area.solar.series != NULL);
+        return area.solar.series->series;
+    }
 
+    Data::XCast& xcastData(Data::Area& area) const
+    {
+        assert(area.solar.prepro != NULL);
+        return area.solar.prepro->xcast;
+    }
 
-	class Solar final
-	{
-	public:
-		static bool preproDataIsReader(const Data::Area& area)
-		{
-			return area.solar.prepro != NULL;
-		}
+    static const Data::Correlation& correlation(const Data::Study& study)
+    {
+        return study.preproSolarCorrelation;
+    }
 
-		static const char* timeSeriesName()
-		{
-			return "solar";
-		}
+    uint timeSeriesToGenerate(const Data::Study& study) const
+    {
+        return study.parameters.nbTimeSeriesSolar;
+    }
 
-		bool accept(const Data::Area& area) const
-		{
-			assert(area.solar.prepro != NULL);
-			return !Yuni::Math::Zero(area.solar.prepro->xcast.capacity);
-		}
-
-		Matrix<double, Yuni::sint32>& matrix(Data::Area& area) const
-		{
-			assert(area.solar.series != NULL);
-			return area.solar.series->series;
-		}
-
-		Data::XCast& xcastData(Data::Area& area) const
-		{
-			assert(area.solar.prepro != NULL);
-			return area.solar.prepro->xcast;
-		}
-
-		static const Data::Correlation& correlation(const Data::Study& study)
-		{
-			return study.preproSolarCorrelation;
-		}
-
-		uint timeSeriesToGenerate(const Data::Study& study) const
-		{
-			return study.parameters.nbTimeSeriesSolar;
-		}
-
-	}; // class Solar
-
-
-
-
-
+}; // class Solar
 
 } // namespace Predicate
 } // namespace TSGenerator

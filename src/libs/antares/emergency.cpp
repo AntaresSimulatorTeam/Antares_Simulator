@@ -30,40 +30,35 @@
 #include "study/study.h"
 #include <yuni/core/system/suspend.h>
 
-
 using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
 
-
 void AntaresSolverEmergencyShutdown(int code)
 {
-	{
-		// Releasing all locks held by the study
-		auto currentStudy = Data::Study::Current::Get();
-		if (!(!currentStudy))
-			currentStudy->releaseAllLocks();
+    {
+        // Releasing all locks held by the study
+        auto currentStudy = Data::Study::Current::Get();
+        if (!(!currentStudy))
+            currentStudy->releaseAllLocks();
 
-		// Releasing all swap files held by the program
-		Antares::memory.releaseAll();
+        // Releasing all swap files held by the program
+        Antares::memory.releaseAll();
 
-		// Importing logs
-		if (!logs.logfile())
-		{
-			logs.fatal()   << "Aborting now. (warning: no file log available)";
-			logs.warning() << "No log file available";
-		}
-		else
-		{
-			if (!(!currentStudy))
-				currentStudy->importLogsToOutputFolder();
-			logs.error() << "Aborting now. See logs for more details";
-		}
-		// release currentStudy
-	}
+        // Importing logs
+        if (!logs.logfile())
+        {
+            logs.fatal() << "Aborting now. (warning: no file log available)";
+            logs.warning() << "No log file available";
+        }
+        else
+        {
+            if (!(!currentStudy))
+                currentStudy->importLogsToOutputFolder();
+            logs.error() << "Aborting now. See logs for more details";
+        }
+        // release currentStudy
+    }
 
-	exit(code);
+    exit(code);
 }
-
-
-

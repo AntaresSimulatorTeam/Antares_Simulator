@@ -42,165 +42,154 @@
 #include <wx/window.h>
 #include <wx/stattext.h>
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
 namespace Window
 {
+namespace // anonymous
+{
+class ValueDialog final : public wxDialog
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    ValueDialog(wxWindow* parent,
+                const wxString& out,
+                const wxString& title,
+                const wxString& caption);
+    //! Destructor
+    virtual ~ValueDialog()
+    {
+    }
+    //@}
 
+public:
+    bool canceled;
+    wxString value;
 
-	namespace // anonymous
-	{
+private:
+    void onCancel(void*);
+    void onPerform(void*);
 
-		class ValueDialog final : public wxDialog
-		{
-		public:
-			//! \name Constructor & Destructor
-			//@{
-			/*!
-			** \brief Constructor
-			*/
-			ValueDialog(wxWindow* parent, const wxString& out, const wxString& title, const wxString& caption);
-			//! Destructor
-			virtual ~ValueDialog() {}
-			//@}
+private:
+    wxFlexGridSizer* pGridSizer;
+    wxTextCtrl* pTextInput;
 
-		public:
-			bool canceled;
-			wxString value;
+}; // class ValueDialog
 
-		private:
-			void onCancel(void*);
-			void onPerform(void*);
+//! The previous value entered by the user (persistence)
+static wxString gPreviousValue;
 
-		private:
-			wxFlexGridSizer* pGridSizer;
-			wxTextCtrl* pTextInput;
+ValueDialog::ValueDialog(wxWindow* parent,
+                         const wxString& out,
+                         const wxString& title,
+                         const wxString& caption) :
+ wxDialog(parent,
+          wxID_ANY,
+          title,
+          wxDefaultPosition,
+          wxDefaultSize,
+          wxCLOSE_BOX | wxCAPTION | wxSYSTEM_MENU | wxCLIP_CHILDREN)
+{
+    canceled = true;
 
-		}; // class ValueDialog
+    auto* sizer = new wxBoxSizer(wxVERTICAL);
 
+    sizer->Add(Toolbox::Components::WizardHeader::Create(
+                 this, title, "images/32x32/resize-matrix.png", wxEmptyString, 200),
+               0,
+               wxALL | wxEXPAND);
 
+    sizer->AddSpacer(10);
 
-		//! The previous value entered by the user (persistence)
-		static wxString gPreviousValue;
+    pGridSizer = new wxFlexGridSizer(2, 0, 0);
+    pGridSizer->AddGrowableCol(1);
 
+    {
+        wxStaticText* t = Component::CreateLabel(this, caption, true);
+        wxSizer* hz = new wxBoxSizer(wxHORIZONTAL);
+        hz->Add(t, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        hz->AddSpacer(5);
+        pGridSizer->Add(hz, 0, wxALL | wxEXPAND);
 
+        wxString s;
+        if (gPreviousValue.empty() || !out.empty())
+            s << out;
+        else
+            s << gPreviousValue;
+        pTextInput = new wxTextCtrl(this, wxID_ANY, s, wxDefaultPosition, wxDefaultSize);
+        pGridSizer->Add(pTextInput, 1, wxALL | wxEXPAND, 1);
+    }
 
-		ValueDialog::ValueDialog(wxWindow* parent, const wxString& out, const wxString& title, const wxString& caption) :
-			wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize,
-				wxCLOSE_BOX|wxCAPTION|wxSYSTEM_MENU|wxCLIP_CHILDREN)
-		{
-			canceled = true;
+    sizer->Add(pGridSizer, 1, wxALL | wxEXPAND, 20);
 
-			auto* sizer = new wxBoxSizer(wxVERTICAL);
+    sizer->AddSpacer(25);
 
-			sizer->Add(Toolbox::Components::WizardHeader::Create(this,
-					title,
-					"images/32x32/resize-matrix.png",
-					wxEmptyString,
-					200), 0, wxALL|wxEXPAND);
+    wxBoxSizer* pnlBtns = new wxBoxSizer(wxHORIZONTAL);
+    pnlBtns->AddStretchSpacer();
 
-			sizer->AddSpacer(10);
+    // Cancel
+    auto* pBtnCancel = Component::CreateButton(this, wxT("Cancel"), this, &ValueDialog::onCancel);
+    pnlBtns->Add(pBtnCancel);
+    pnlBtns->AddSpacer(5);
 
-			pGridSizer = new wxFlexGridSizer(2, 0, 0);
-			pGridSizer->AddGrowableCol(1);
+    // Gogogo !
+    auto* pBtnSave = Component::CreateButton(this, wxT("Continue"), this, &ValueDialog::onPerform);
+    pnlBtns->Add(pBtnSave);
+    pBtnSave->SetDefault();
 
-			{
-				wxStaticText* t = Component::CreateLabel(this, caption, true);
-				wxSizer* hz = new wxBoxSizer(wxHORIZONTAL);
-				hz->Add(t, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-				hz->AddSpacer(5);
-				pGridSizer->Add(hz, 0, wxALL|wxEXPAND);
+    pnlBtns->AddSpacer(20);
+    sizer->Add(pnlBtns, 0, wxALL | wxEXPAND);
+    sizer->AddSpacer(10);
 
-				wxString s;
-				if (gPreviousValue.empty() || !out.empty())
-					s << out;
-				else
-					s << gPreviousValue;
-				pTextInput = new wxTextCtrl(this, wxID_ANY, s, wxDefaultPosition, wxDefaultSize);
-				pGridSizer->Add(pTextInput, 1, wxALL| wxEXPAND, 1);
-			}
+    sizer->Layout();
 
-			sizer->Add(pGridSizer, 1, wxALL|wxEXPAND, 20);
+    SetSizer(sizer);
 
+    GetSizer()->Fit(this);
+    wxSize p = GetSize();
+    p.SetWidth(380);
+    SetSize(p);
+    Centre(wxBOTH);
 
-			sizer->AddSpacer(25);
+    pTextInput->SetSelection(-1, -1);
+    pTextInput->SetFocus();
+}
 
-			wxBoxSizer* pnlBtns = new wxBoxSizer(wxHORIZONTAL);
-			pnlBtns->AddStretchSpacer();
+void ValueDialog::onCancel(void*)
+{
+    value.clear();
+    Dispatcher::GUI::Close(this);
+}
 
-			// Cancel
-			auto* pBtnCancel = Component::CreateButton(this, wxT("Cancel"), this, &ValueDialog::onCancel);
-			pnlBtns->Add(pBtnCancel);
-			pnlBtns->AddSpacer(5);
+void ValueDialog::onPerform(void*)
+{
+    assert(pTextInput);
 
-			// Gogogo !
-			auto* pBtnSave = Component::CreateButton(this, wxT("Continue"), this, &ValueDialog::onPerform);
-			pnlBtns->Add(pBtnSave);
-			pBtnSave->SetDefault();
+    value = pTextInput->GetValue();
+    gPreviousValue = value;
+    canceled = false;
+    Dispatcher::GUI::Close(this);
+}
 
-			pnlBtns->AddSpacer(20);
-			sizer->Add(pnlBtns, 0, wxALL|wxEXPAND);
-			sizer->AddSpacer(10);
+} // anonymous namespace
 
-			sizer->Layout();
-
-			SetSizer(sizer);
-
-			GetSizer()->Fit(this);
-			wxSize p = GetSize();
-			p.SetWidth(380);
-			SetSize(p);
-			Centre(wxBOTH);
-
-			pTextInput->SetSelection(-1, -1);
-			pTextInput->SetFocus();
-		}
-
-
-		void ValueDialog::onCancel(void*)
-		{
-			value.clear();
-			Dispatcher::GUI::Close(this);
-		}
-
-
-		void ValueDialog::onPerform(void*)
-		{
-			assert(pTextInput);
-
-			value = pTextInput->GetValue();
-			gPreviousValue = value;
-			canceled = false;
-			Dispatcher::GUI::Close(this);
-		}
-
-	} // anonymous namespace
-
-
-
-
-
-
-
-	bool AskForInput(wxString& out, const wxString& title, const wxString& caption)
-	{
-		ValueDialog dlg(Antares::Forms::ApplWnd::Instance(), out, title, caption);
-		dlg.ShowModal();
-		if (not dlg.canceled)
-		{
-			out = dlg.value;
-			return true;
-		}
-		return false;
-	}
-
-
-
-
+bool AskForInput(wxString& out, const wxString& title, const wxString& caption)
+{
+    ValueDialog dlg(Antares::Forms::ApplWnd::Instance(), out, title, caption);
+    dlg.ShowModal();
+    if (not dlg.canceled)
+    {
+        out = dlg.value;
+        return true;
+    }
+    return false;
+}
 
 } // namespace Window
 } // namespace Antares

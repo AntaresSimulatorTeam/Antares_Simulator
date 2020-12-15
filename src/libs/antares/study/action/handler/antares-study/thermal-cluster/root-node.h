@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_PLANT_ROOT_NODE_H__
-# define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_PLANT_ROOT_NODE_H__
+#define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_PLANT_ROOT_NODE_H__
 
-# include <yuni/yuni.h>
-# include "../../../action.h"
-
+#include <yuni/yuni.h>
+#include "../../../action.h"
 
 namespace Antares
 {
@@ -39,47 +38,42 @@ namespace AntaresStudy
 {
 namespace ThermalCluster
 {
+class RootNode : public IAction
+{
+public:
+    //! The most suitable smart ptr for the class
+    typedef IAction::Ptr Ptr;
+    //! The threading policy
+    typedef IAction::ThreadingPolicy ThreadingPolicy;
 
-	class RootNode : public IAction
-	{
-	public:
-		//! The most suitable smart ptr for the class
-		typedef IAction::Ptr  Ptr;
-		//! The threading policy
-		typedef IAction::ThreadingPolicy  ThreadingPolicy;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    explicit RootNode(const AnyString& areaname);
+    //! Destructor
+    virtual ~RootNode();
+    //@}
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		explicit RootNode(const AnyString& areaname);
-		//! Destructor
-		virtual ~RootNode();
-		//@}
+    virtual bool allowUpdate() const;
 
-		virtual bool allowUpdate() const;
+protected:
+    virtual void prepareSkipWL(Context& ctx);
+    virtual bool prepareWL(Context& ctx);
+    virtual bool performWL(Context& ctx);
 
-	protected:
-		virtual void prepareSkipWL(Context& ctx);
-		virtual bool prepareWL(Context& ctx);
-		virtual bool performWL(Context& ctx);
+private:
+    Data::AreaName pOriginalAreaName;
 
-	private:
-		Data::AreaName pOriginalAreaName;
-
-	}; // class IAction
-
-
-
-
+}; // class IAction
 
 } // namespace ThermalCluster
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
 
-# include "root-node.hxx"
+#include "root-node.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_PLANT_ROOT_NODE_H__

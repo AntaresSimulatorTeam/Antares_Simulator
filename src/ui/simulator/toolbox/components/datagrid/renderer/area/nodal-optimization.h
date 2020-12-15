@@ -25,14 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_NODAL_OPTIMIZATION_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_NODAL_OPTIMIZATION_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_NODAL_OPTIMIZATION_H__
 
-# include <antares/wx-wrapper.h>
-# include "../../gridhelper.h"
-# include "../../renderer.h"
-# include <antares/study.h>
-# include <yuni/core/event.h>
-
+#include <antares/wx-wrapper.h>
+#include "../../gridhelper.h"
+#include "../../renderer.h"
+#include <antares/study.h>
+#include <yuni/core/event.h>
 
 namespace Antares
 {
@@ -42,59 +41,55 @@ namespace Datagrid
 {
 namespace Renderer
 {
+class NodalOptimization : public Renderer::IRenderer
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    NodalOptimization(wxWindow* parent);
 
+    //! Destructor
+    virtual ~NodalOptimization();
+    //@}
 
-	class NodalOptimization : public Renderer::IRenderer
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		NodalOptimization(wxWindow* parent);
+    virtual int width() const;
 
-		//! Destructor
-		virtual ~NodalOptimization();
-		//@}
+    virtual int height() const;
 
-		virtual int width() const;
+    virtual wxString columnCaption(int colIndx) const;
 
-		virtual int height() const;
+    virtual wxString rowCaption(int rowIndx) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual wxString cellValue(int, int) const;
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual double cellNumericValue(int, int) const;
 
-		virtual wxString cellValue(int, int) const;
+    virtual bool cellValue(int x, int y, const Yuni::String& value);
 
-		virtual double cellNumericValue(int,int) const;
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    { /*Do nothing*/
+    }
 
-		virtual bool cellValue(int x, int y, const Yuni::String& value);
+    virtual void applyLayerFiltering(size_t layerID, VGridHelper* gridHelper);
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{/*Do nothing*/}
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
 
-		virtual void applyLayerFiltering(size_t layerID, VGridHelper* gridHelper);
+    virtual bool valid() const;
 
-		virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+protected:
+    virtual void onUpdate()
+    {
+    }
+    void onAreaRenamed(Data::Area* area);
+    void onNodalOptimizationExternalChanged();
 
-		virtual bool valid() const;
+private:
+    wxWindow* pControl;
 
-
-	protected:
-		virtual void onUpdate() {}
-		void onAreaRenamed(Data::Area* area);
-		void onNodalOptimizationExternalChanged();
-
-	private:
-		wxWindow* pControl;
-
-	}; // class NodalOptimization
-
-
-
-
+}; // class NodalOptimization
 
 } // namespace Renderer
 } // namespace Datagrid

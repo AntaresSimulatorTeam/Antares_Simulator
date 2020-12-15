@@ -25,14 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_HYDRO_ALLOCATION_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_HYDRO_ALLOCATION_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_HYDRO_ALLOCATION_H__
 
-# include <antares/wx-wrapper.h>
-# include <antares/date.h>
-# include <antares/study/parts/wind/prepro.h>
-# include "../../../renderer.h"
-
-
+#include <antares/wx-wrapper.h>
+#include <antares/date.h>
+#include <antares/study/parts/wind/prepro.h>
+#include "../../../renderer.h"
 
 namespace Antares
 {
@@ -42,50 +40,50 @@ namespace Datagrid
 {
 namespace Renderer
 {
+class HydroAllocation final : public virtual Renderer::IRenderer
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    HydroAllocation();
+    //! Destructor
+    virtual ~HydroAllocation();
+    //@}
 
+    virtual int width() const;
+    virtual int height() const;
 
-	class HydroAllocation final : public virtual Renderer::IRenderer
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		HydroAllocation();
-		//! Destructor
-		virtual ~HydroAllocation();
-		//@}
+    virtual wxString columnCaption(int colIndx) const;
 
-		virtual int width() const;
-		virtual int height() const;
+    virtual wxString rowCaption(int rowIndx) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual wxString cellValue(int x, int y) const;
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual double cellNumericValue(int x, int y) const;
 
-		virtual wxString cellValue(int x, int y) const;
+    virtual bool cellValue(int, int, const Yuni::String&);
 
-		virtual double cellNumericValue(int x, int y) const;
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    { /*Do nothing*/
+    }
 
-		virtual bool cellValue(int, int, const Yuni::String&);
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{/*Do nothing*/}
+    virtual bool valid() const;
 
-		virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+    virtual uint maxWidthResize() const
+    {
+        return 0;
+    }
+    virtual uint maxHeightResize() const
+    {
+        return 0;
+    }
 
-		virtual bool valid() const;
-
-		virtual uint maxWidthResize() const {return 0;}
-		virtual uint maxHeightResize() const {return 0;}
-
-	}; // class HydroAllocation
-
-
-
-
-
+}; // class HydroAllocation
 
 } // namespace Renderer
 } // namespace Datagrid

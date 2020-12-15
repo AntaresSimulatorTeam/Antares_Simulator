@@ -25,32 +25,26 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_WINDOWS_SAVEAS_HXX__
-# define __ANTARES_APPLICATION_WINDOWS_SAVEAS_HXX__
-
+#define __ANTARES_APPLICATION_WINDOWS_SAVEAS_HXX__
 
 namespace Antares
 {
 namespace Window
 {
+inline Data::Study::Ptr SaveAs::study()
+{
+    return pStudy;
+}
 
-	inline Data::Study::Ptr SaveAs::study()
-	{
-		return pStudy;
-	}
+inline const Data::Study::Ptr SaveAs::study() const
+{
+    return pStudy;
+}
 
-	inline const Data::Study::Ptr SaveAs::study() const
-	{
-		return pStudy;
-	}
-
-
-	inline SaveResult SaveAs::result() const
-	{
-		return pResult;
-	}
-
-
-
+inline SaveResult SaveAs::result() const
+{
+    return pResult;
+}
 
 } // namespace Window
 } // namespace Antares

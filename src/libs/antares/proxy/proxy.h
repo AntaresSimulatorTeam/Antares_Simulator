@@ -25,50 +25,44 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __LIB_ANTARES_PROXY_PROXY_H__
-# define __LIB_ANTARES_PROXY_PROXY_H__
+#define __LIB_ANTARES_PROXY_PROXY_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
-
-#define FAIL    -1
+#define FAIL -1
 
 namespace Antares
 {
+class ProxySettings
+{
+public:
+    ProxySettings() : enabled(false), port(8080)
+    {
+    }
 
-	class ProxySettings
-	{
-	public:
-		ProxySettings() :
-			enabled(false),
-			port(8080)
-		{
-		}
+public:
+    bool check();
 
-	public:
-		bool check();
+    bool loadProxyFile();
 
-		bool loadProxyFile();
+    bool saveProxyFile();
 
-		bool saveProxyFile();
+public:
+    //! Enabled or not
+    bool enabled;
+    //! Proxy host name
+    YString host;
+    //! Port
+    YString port;
+    //! Login
+    YString login;
+    //! Password
+    YString password;
+    // coding type
+    YString codingType;
 
-	public:
-		//! Enabled or not
-		bool enabled;
-		//! Proxy host name
-		YString host;
-		//! Port
-		YString port;
-		//! Login
-		YString login;
-		//! Password
-		YString password;
-		//coding type
-		YString codingType;
-
-	}; // class ProxySettings
-
-
+}; // class ProxySettings
 
 } // namespace Antares
 

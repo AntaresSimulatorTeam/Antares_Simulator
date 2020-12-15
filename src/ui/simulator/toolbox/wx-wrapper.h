@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_WX_WRAPPER_H__
-# define __ANTARES_TOOLBOX_WX_WRAPPER_H__
+#define __ANTARES_TOOLBOX_WX_WRAPPER_H__
 
-# include <ui/common/wx-wrapper.h>
+#include <ui/common/wx-wrapper.h>
 
 #endif // __ANTARES_TOOLBOX_WX_WRAPPER_H__

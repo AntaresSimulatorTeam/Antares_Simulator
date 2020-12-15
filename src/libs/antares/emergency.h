@@ -25,31 +25,27 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIB_EMERGENCY_H__
-# define __ANTARES_LIB_EMERGENCY_H__
+#define __ANTARES_LIB_EMERGENCY_H__
 
-# include <yuni/yuni.h>
+#include <yuni/yuni.h>
 
-
-
-# ifdef __cplusplus
+#ifdef __cplusplus
 extern "C"
 {
-# endif
+#endif
 
+    /*!
+    ** \brief Perform critical actions before exiting
+    **
+    ** Some special operations must be performed before exiting, like releasing
+    ** the locks held by the study.
+    ** Just before exiting, the log entry "Aborting now" will be emitted.
+    ** This routine will call exit() and will never return.
+    */
+    void AntaresSolverEmergencyShutdown(int code = 1) YUNI_NORETURN;
 
-/*!
-** \brief Perform critical actions before exiting
-**
-** Some special operations must be performed before exiting, like releasing
-** the locks held by the study.
-** Just before exiting, the log entry "Aborting now" will be emitted.
-** This routine will call exit() and will never return.
-*/
-void AntaresSolverEmergencyShutdown(int code = 1) YUNI_NORETURN;
-
-
-# ifdef __cplusplus
+#ifdef __cplusplus
 }
-# endif
+#endif
 
 #endif // __ANTARES_LIB_EMERGENCY_H__

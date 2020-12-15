@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_TIMEELAPSED_H__
-# define __ANTARES_LIBS_TIMEELAPSED_H__
+#define __ANTARES_LIBS_TIMEELAPSED_H__
 
-# include "timeelapsed/timeelapsed.h"
+#include "timeelapsed/timeelapsed.h"
 
 #endif // __ANTARES_LIBS_TIMEELAPSED_H__
