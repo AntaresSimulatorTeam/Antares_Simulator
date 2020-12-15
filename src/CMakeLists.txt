@@ -330,6 +330,12 @@ if(WIN32 OR WIN64)
 
 else()
 
+    if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+        get_linux_lsb_release_information()
+        message(STATUS "Linux ${LSB_RELEASE_ID_SHORT} ${LSB_RELEASE_VERSION_SHORT} ${LSB_RELEASE_CODENAME_SHORT}")
+        set(CPACK_SYSTEM_NAME "${LSB_RELEASE_ID_SHORT}-${LSB_RELEASE_VERSION_SHORT}") 
+    endif()
+
 	#For now only test deb, need to define several CPACK variable
 	set(CPACK_PROJECT_NAME "antares-deb-test")
 	set(CPACK_DEBIAN_PACKAGE_MAINTAINER "RTE")
