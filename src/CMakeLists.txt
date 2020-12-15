@@ -18,6 +18,8 @@ set(ANTARES_RC 1)
 set(CMAKE_SKIP_PREPROCESSED_SOURCE_RULES true)
 set(CMAKE_SKIP_ASSEMBLY_SOURCE_RULES true)
 
+set(CMAKE_INSTALL_RPATH 		$ORIGIN)
+
 include(CheckCXXSourceCompiles)
 include(CheckIncludeFiles)
 include(CheckIncludeFileCXX)
