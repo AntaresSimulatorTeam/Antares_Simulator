@@ -208,7 +208,7 @@ namespace Antares
 
 
 		virtual
-		Yuni::IO::Error loadFromFileToBuffer(BufferType& buffer, const AnyString& filename, unsigned long long hardlimit) const
+		Yuni::IO::Error loadFromFileToBuffer(BufferType& buffer, const AnyString& filename) const
 		{
 			return Yuni::IO::File::LoadFromFile(buffer, filename, filesizeHardLimit);
 		}

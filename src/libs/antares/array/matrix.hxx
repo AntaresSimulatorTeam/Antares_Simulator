@@ -1073,7 +1073,7 @@ namespace Antares
 		if (not buffer)
 			buffer = new BufferType();
 
-		switch (loadFromFileToBuffer(*buffer, filename, filesizeHardLimit))
+		switch (loadFromFileToBuffer(*buffer, filename))
 		{
 			case IO::errNone:
 				{

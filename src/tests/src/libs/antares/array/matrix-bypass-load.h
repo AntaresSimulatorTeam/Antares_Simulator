@@ -121,7 +121,7 @@ public:
 		fake_mtx_error_when_loading_(IO::errNone)
 	{};
 	
-	IO::Error loadFromFileToBuffer(typename Matrix<T,ReadWriteT>::BufferType & buffer, const AnyString& filename, unsigned long long hardlimit) const override
+	IO::Error loadFromFileToBuffer(typename Matrix<T,ReadWriteT>::BufferType & buffer, const AnyString& filename) const override
 	{
 		return fake_mtx_error_when_loading_;
 	}
