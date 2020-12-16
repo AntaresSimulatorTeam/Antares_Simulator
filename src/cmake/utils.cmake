@@ -12,6 +12,9 @@ macro(copy_dependency deps target)
 
             # Copy the shared lib file
             add_custom_command(TARGET ${target} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${DEP_SHARED_LIB_PATH} $<TARGET_FILE_DIR:${target}>)
+            
+            # Add to install
+            install(FILES ${DEP_SHARED_LIB_PATH} TYPE BIN)
 
 	endif()
 
