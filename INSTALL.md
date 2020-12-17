@@ -152,21 +152,18 @@ On linux you can use a package manger to download the precompiled librairies.
 
 ##### 20.04 (Focal)
 ```
-sudo apt install uuid-dev libcurl4-openssl-dev libssl-dev libwxgtk3.0-gtk3-dev libboost-test-dev
+sudo apt install uuid-dev libcurl4-openssl-dev libssl-dev libwxgtk3.0-gtk3-dev libboost-test-dev libboost-filesystem-dev libboost-regex-dev libboost-dev
 ```
 
 ##### 16.04 (Xenial) and 18.04 (Bionic)
 ```
-sudo apt-get install uuid-dev libcurl4-openssl-dev libssl-dev libwxgtk3.0-dev libboost-test-dev
+sudo apt-get install uuid-dev libcurl4-openssl-dev libssl-dev libwxgtk3.0-dev libboost-test-dev libboost-filesystem-dev libboost-regex-dev libboost-dev
 ```
 
 #### RHEL / Centos
 
 ```
-sudo yum install openssl
-sudo yum install curl
-sudo yum install wxGTK3-devel
-sudo yum install boost-test boost-filesystem boost-regex boost-devel
+sudo yum install redhat-lsb-core openssl curl wxGTK3-devel boost-test boost-filesystem boost-regex boost-devel 
 ```
 ### [Automatic librairies compilation from git](#git_compil)
 [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps) is used as a git submodule for automatic librairies compilation from git.
