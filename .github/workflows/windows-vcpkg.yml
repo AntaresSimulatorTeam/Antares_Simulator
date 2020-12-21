@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - feature/*
+      - features/*
       - fix/*
 jobs:
 
@@ -66,7 +67,7 @@ jobs:
     - name: Running unit tests
       run: |
            cd _build
-           ctest -C ${{ matrix.buildtype }} --output-on-failure
+           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end|short|medium"
 
 
     - name: Installer creation

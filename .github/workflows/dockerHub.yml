@@ -48,7 +48,7 @@ jobs:
     - name: Run unit tests
       run: |
            cd _build
-           ctest -C Release --output-on-failure
+           ctest -C Release --output-on-failure -L "unit|end-to-end|short|medium"
            
     - name: Installer .tar.gz creation
       run: |
