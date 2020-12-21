@@ -2,6 +2,7 @@ from pathlib import Path
 import urllib.request
 import zipfile
 import os
+import sys
 import glob
 import shutil
 
@@ -48,7 +49,10 @@ def get_integrity_check_values(output : Path) -> np.array :
 def find_solver_path():
     search_result = list()
     def is_exe(fpath):
-        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+        if sys.platform == 'linux':
+            return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+        elif sys.platform == 'win32':
+            return fpath.endswith('.exe')
 
     for path in Path.cwd().parent.parent.parent.rglob('solver/antares-*.*-solver*'):
         search_result.append(path)

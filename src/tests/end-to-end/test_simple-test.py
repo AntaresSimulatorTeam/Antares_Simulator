@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 import tempfile as tpf
 from distutils.dir_util import copy_tree
@@ -25,7 +26,10 @@ def get_integrity_check_values(output : Path) -> np.array :
 
 def find_solver_path():
     def is_exe(fpath):
-        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+        if sys.platform == 'linux':
+            return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+        elif sys.platform == 'win32':
+            return fpath.endswith('.exe')
 
     search_result = list()
     for path in Path.cwd().parent.parent.parent.rglob('solver/antares-*.*-solver*'):
