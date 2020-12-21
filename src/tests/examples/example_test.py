@@ -47,10 +47,13 @@ def get_integrity_check_values(output : Path) -> np.array :
 
 def find_solver_path():
     search_result = list()
+    def is_exe(fpath):
+        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
     for path in Path.cwd().parent.parent.parent.rglob('solver/antares-*.*-solver*'):
         search_result.append(path)
     # Eliminate swap version
-    solver = list(filter(lambda x: "swap" not in str(x), search_result))
+    solver = list(filter(lambda x: "swap" not in str(x) and is_exe(x), search_result))
     assert len(solver) == 1
     return str(solver[0])
 
