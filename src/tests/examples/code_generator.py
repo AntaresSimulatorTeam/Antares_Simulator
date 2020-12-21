@@ -105,5 +105,6 @@ for tab, name in [(SHORT_TESTS, 'short'), (MEDIUM_TESTS, 'medium'), (LONG_TESTS,
         print(f"def test_{format_function_name(tab[i])}(use_ortools, ortools_solver):")
         print(f"    study_path = ALL_STUDIES_PATH / \"{name}-tests\" / \"{tab[i]}\"")
         print(f"    run_study(study_path, use_ortools, ortools_solver)")
-        print(f"    check_integrity(study_path)\n")
+        print(f"    check_integrity_first_opt(study_path)")
+        print(f"    check_integrity_second_opt(study_path)\n")
 
