@@ -9,7 +9,7 @@ on:
       - fix/*
 jobs:
 
-  setup:
+  build:
 
     runs-on: ${{ matrix.os }}
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
@@ -19,6 +19,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
     - name: Install libraries
       run: |
            sudo apt-get update --fix-missing
@@ -41,56 +42,24 @@ jobs:
           python -m pip install --upgrade pip
           pip3 install -r src/tests/examples/requirements.txt
            
-
-           
-  build:
-    
-    needs: setup
-    runs-on: ${{ matrix.os }}
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    strategy:
-      matrix:
-        os: [ubuntu-20.04]
-    
-    steps:
-    - uses: actions/checkout@v2 
-      
     - name: Init submodule
       run: |
            git submodule update --init --recursive src
-           
+
     - name: Configure
       run: |
            cmake -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
            
     - name: Build
-      run: |           
+      run: |
+           ls -1
            cmake --build _build --config release -j2
-  test:
-    
-    needs: build
-    runs-on: ${{ matrix.os }}
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    strategy:
-      matrix:
-        os: [ubuntu-20.04]
-    
-    steps:
+
     - name: Run unit tests
       run: |
            cd _build
            ctest -C Release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
-           
-  installer:
-    
-    needs: build
-    runs-on: ${{ matrix.os }}
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    strategy:
-      matrix:
-        os: [ubuntu-20.04]
-    
-    steps:
+
 
     - name: Installer .deb creation
       run: |
