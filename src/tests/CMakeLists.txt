@@ -61,18 +61,23 @@ if(Python3_Interpreter_FOUND)
                 SET(LONG_EXAMPLES_NAME long-examples-ortools-${ortools_solver})
                 
                 set(ADDITIONNAL_LABELS ortools ${ortools_solver})
+                
+                set(${use_ortools_option} "--use-ortools")
             else()
                 SET(SHORT_EXAMPLES_NAME short-examples-sirius)
                 SET(MEDIUM_EXAMPLES_NAME medium-examples-sirius)
                 SET(LONG_EXAMPLES_NAME long-examples-sirius)
                                 
-                set(ADDITIONNAL_LABELS sirius)                
+                set(ADDITIONNAL_LABELS sirius)
+                
+                set(${use_ortools_option} "")
+                
             endif()
         
             # Short tests
             add_test(
                 NAME ${SHORT_EXAMPLES_NAME}
-                COMMAND Python3::Interpreter -m pytest -m short --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver> --use-ortools=${use_ortools} --ortools-solver=${ortools_solver} example_test.py
+                COMMAND Python3::Interpreter -m pytest -m short --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver> ${use_ortools_option} --ortools-solver=${ortools_solver} example_test.py
                 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples"
             )
             set_property(TEST ${SHORT_EXAMPLES_NAME} PROPERTY LABELS short-examples ${ADDITIONNAL_LABELS})
@@ -80,7 +85,7 @@ if(Python3_Interpreter_FOUND)
             # Medium tests
             add_test(
                 NAME ${MEDIUM_EXAMPLES_NAME}
-                COMMAND Python3::Interpreter -m pytest -m medium --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver> --use-ortools=${use_ortools} --ortools-solver=${ortools_solver} example_test.py
+                COMMAND Python3::Interpreter -m pytest -m medium --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver> ${use_ortools_option} --ortools-solver=${ortools_solver} example_test.py
                 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples"
             )
             set_property(TEST ${MEDIUM_EXAMPLES_NAME} PROPERTY LABELS medium-examples ${ADDITIONNAL_LABELS})
@@ -88,7 +93,7 @@ if(Python3_Interpreter_FOUND)
             # Long tests
             add_test(
                 NAME ${LONG_EXAMPLES_NAME}
-                COMMAND Python3::Interpreter -m pytest -m long --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver> --use-ortools=${use_ortools} --ortools-solver=${ortools_solver} example_test.py
+                COMMAND Python3::Interpreter -m pytest -m long --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver> ${use_ortools_option} --ortools-solver=${ortools_solver} example_test.py
                 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples"
             )
             set_property(TEST ${LONG_EXAMPLES_NAME} PROPERTY LABELS long-examples ${ADDITIONNAL_LABELS})
