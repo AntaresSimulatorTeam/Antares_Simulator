@@ -19,7 +19,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
     - name: Install libraries
       run: |
            sudo apt-get update --fix-missing
@@ -42,9 +41,7 @@ jobs:
           python -m pip install --upgrade pip
           pip3 install -r src/tests/examples/requirements.txt
            
-    - name: Init submodule
-      run: |
-           git submodule update --init --recursive src
+
            
   build:
     
@@ -56,6 +53,12 @@ jobs:
         os: [ubuntu-20.04]
     
     steps:
+    - uses: actions/checkout@v2 
+      
+    - name: Init submodule
+      run: |
+           git submodule update --init --recursive src
+           
     - name: Configure
       run: |
            cmake -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
