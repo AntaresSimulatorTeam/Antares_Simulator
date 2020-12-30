@@ -18,6 +18,8 @@ set(ANTARES_RC 1)
 set(CMAKE_SKIP_PREPROCESSED_SOURCE_RULES true)
 set(CMAKE_SKIP_ASSEMBLY_SOURCE_RULES true)
 
+set(CMAKE_INSTALL_RPATH 		$ORIGIN)
+
 include(CheckCXXSourceCompiles)
 include(CheckIncludeFiles)
 include(CheckIncludeFileCXX)
@@ -258,6 +260,9 @@ endif()
 
 OMESSAGE("")
 
+
+
+  
 # Informations for NSIS
 if(WIN32 OR WIN64)
 	if(MSVC)
@@ -328,15 +333,21 @@ if(WIN32 OR WIN64)
 
 else()
 
+    if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+        get_linux_lsb_release_information()
+        message(STATUS "Linux ${LSB_RELEASE_ID_SHORT} ${LSB_RELEASE_VERSION_SHORT} ${LSB_RELEASE_CODENAME_SHORT}")
+        set(CPACK_SYSTEM_NAME "${LSB_RELEASE_ID_SHORT}-${LSB_RELEASE_VERSION_SHORT}") 
+    endif()
+
 	#For now only test deb, need to define several CPACK variable
 	set(CPACK_PROJECT_NAME "antares-deb-test")
 	set(CPACK_DEBIAN_PACKAGE_MAINTAINER "RTE")
 	set(CPACK_DEBIAN_PACKAGE_NAME "antares")
 	set(CPACK_PACKAGE_VERSION_MAJOR ${ANTARES_VERSION_HI})
 	set(CPACK_PACKAGE_VERSION_MINOR ${ANTARES_VERSION_LO})
-	set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION})
-
-	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libuuid1, libcurl4, libwxgtk3.0")
+	set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION})	
+	
+	set(CPACK_DEBIAN_PACKAGE_DEPENDS "uuid-dev, libcurl4-openssl-dev, libssl-dev, libwxgtk3.0-gtk3-dev")
 
 	configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
 

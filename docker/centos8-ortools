@@ -7,7 +7,7 @@ RUN yum update -y
 RUN yum install -y epel-release 
 
 # Install requirements
-RUN yum install -y git gcc gcc-c++ make \
+RUN yum install -y git redhat-lsb-core gcc gcc-c++ make \
     wget \
     unzip openssl-devel libcurl-devel wxGTK3-devel libuuid-devel boost-devel boost-test boost-filesystem boost-regex
 
@@ -31,7 +31,7 @@ RUN git clone https://github.com/google/googletest.git --single-branch &&\
     rm -rf googletest &&\
     yum install -y jsoncpp-devel &&\
     yum install -y dnf-plugins-core &&\
-    yum config-manager --set-enabled PowerTools &&\    
+    yum config-manager --set-enabled powertools &&\    
     yum install -y boost-openmpi-devel
     
 # Sirius checkout

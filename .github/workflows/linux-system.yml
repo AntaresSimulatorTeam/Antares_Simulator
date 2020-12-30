@@ -15,7 +15,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-20.04]
 
     steps:
     - uses: actions/checkout@v2
@@ -23,7 +23,7 @@ jobs:
     - name: Install libraries
       run: |
            sudo apt-get update --fix-missing
-           sudo apt-get install libuuid1 uuid-dev libssh2-1 libssh2-1-dev libidn2-dev libidn11 libidn11-dev gtk2.0 libwxgtk3.0-dev libcurl4-openssl-dev libb64-dev
+           sudo apt-get install uuid-dev libcurl4-openssl-dev libssl-dev libwxgtk3.0-gtk3-dev
            sudo apt-get install libboost-test-dev libboost-filesystem-dev libboost-regex-dev libboost-dev
            
     - name: Download pre-compiled librairies
@@ -31,6 +31,16 @@ jobs:
            wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v1.0.0/rte-antares-deps-${{matrix.os}}-Release-solver.tar.gz
            tar -xvf rte-antares-deps-${{matrix.os}}-Release-solver.tar.gz
            rm -rf rte-antares-deps-${{matrix.os}}-Release-solver.tar.gz
+           
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+          
+    - name: Install dependencies
+      run: |
+          python -m pip install --upgrade pip
+          pip3 install -r src/tests/examples/requirements.txt
            
     - name: Init submodule
       run: |
@@ -48,7 +58,7 @@ jobs:
     - name: Run unit tests
       run: |
            cd _build
-           ctest -C Release --output-on-failure
+           ctest -C Release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
 
 
     - name: Installer .deb creation
@@ -65,5 +75,5 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: antares-installer-64bits
-        path: _build/antares-*.*.*-Linux.*
+        path: _build/antares-*.*.*-*-*.*.*
 
