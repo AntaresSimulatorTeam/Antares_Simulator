@@ -1,6 +1,6 @@
 ﻿# Antares Simulator CMake Build Instructions
 
-[Environnement](#environment) | [CMake version](#cmake-version) | [Git version](#git-version) | [Dependencies](#dependencies) | [Building](#building-antares-solution) | [Unit tests](#unit-tests) | [Installer creation](#installer-creation)
+[Environnement](#environment) | [CMake version](#cmake-version) | [Git version](#git-version) | [Dependencies](#dependencies) | [Building](#building-antares-solution) | [Tests](#tests) | [Installer creation](#installer-creation)
 
 ## C/I status
 | OS     | System librairies | VCPKG | Built in libraries |
@@ -283,18 +283,56 @@ cmake --build _build --config release -j8
 Note :
 > Compilation can be done on several processors with ```-j``` option.
 
-## [Unit tests](#unit-tests)
+## [Tests](#tests)
 
-Unit tests compilation  can be enabled at configure time using the option `-DBUILD_TESTING=ON` (`OFF` by default)
+Tests compilation  can be enabled at configure time using the option `-DBUILD_TESTING=ON` (`OFF` by default)
 
-After build, unit tests can be run with ``ctest`` :
+After build, tests can be run with ``ctest`` :
  ```
 cd _build
 ctest -C Release --output-on-failure
 ```
 
+
+All tests are associated to a label and multiple labels can be defined. You can choose which tests will be executed at ctest run.
+
+This is the list of the availables labels :
+
+| Label     | Description |
+|:-------|-----|
+| `units`  | Units tests|
+| `end-to-end`  | End to end tests with antares study creation|
+| `short-examples`  | Short duration pytest with antares solver call and objective function result vérification|
+| `medium-examples`  | Medium duration pytest with antares solver call and objective function result vérification|
+| `long-examples`  | Long duration pytest with antares solver call and objective function result vérification|
+| `sirius`  | Sirius related pytest|
+| `coin`  | coin related pytest|
+| `ortools`  | OR-Tools related pytest|
+
+Note :
+> Use `ctest -N` to see all available tests
+
+Here is an example for running only units tests:
+```
+ctest -C Release --output-on-failure -L units
+```` 
+
+Here is an example for running only sirius tests without OR-Tools used:
+```
+ctest -C Release --output-on-failure -L sirius -LE ortools
+```` 
+
+Here is an example for running only short sirius tests without OR-Tools used:
+```
+ctest -C Release --output-on-failure -R "short-examples.*sirius" -LE "ortools"
+```` 
+Note :
+> In this case the regex is on name (`-R`) so only short-examples are executed.
+
+For more information on `ctest` call see [documentation](https://cmake.org/cmake/help/latest/manual/ctest.1.html)
+
 ## [Installer creation](#installer)
-CPack can be used to create the installer after the build pahse, depending on operating system.
+CPack can be used to create the installer after the build phase, depending on operating system.
 
 ### Window using NSIS
  ```

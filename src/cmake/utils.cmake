@@ -40,3 +40,24 @@ function(get_linux_lsb_release_information)
     endif()
     
 endfunction()
+
+
+function(find_python_module module)
+
+    find_package(Python3 COMPONENTS Interpreter)
+
+    if(Python3_Interpreter_FOUND)
+        execute_process(
+            COMMAND ${Python3_EXECUTABLE} -c "import ${module}"
+            RESULT_VARIABLE EXIT_CODE
+            OUTPUT_QUIET
+            ERROR_QUIET
+        )
+        
+        if (${EXIT_CODE} EQUAL 0)
+            set(PYTHON_MODULE_${module}_FOUND "true" PARENT_SCOPE)
+        endif()
+        
+    endif()
+    
+endfunction()
