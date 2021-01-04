@@ -41,6 +41,7 @@
 #include <antares/logs.h>
 #include <antares/study.h>
 #include <antares/emergency.h>
+#include "measure_time.h"
 
 using namespace Antares;
 using namespace Yuni;
@@ -50,7 +51,9 @@ bool OPT_OptimisationLineaire(	PROBLEME_HEBDO * ProblemeHebdo,
 								uint numSpace,
 								char CalculerLesPmin,
 								char CalculerLesPmax,
-								char FaireDerniereOptimisation )
+								char FaireDerniereOptimisation,
+								measure_time & mt
+							 )
 {
 	int PdtHebdo; int PremierPdtDeLIntervalle; int DernierPdtDeLIntervalle;
 	int NumeroDeLIntervalle; int NombreDePasDeTempsPourUneOptimisation;
@@ -98,7 +101,7 @@ bool OPT_OptimisationLineaire(	PROBLEME_HEBDO * ProblemeHebdo,
 
 		ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle]++;
 	
-		if (!OPT_AppelDuSolveurLineaire( ProblemeHebdo, numSpace, NumeroDeLIntervalle ))
+		if (!OPT_AppelDuSolveurLineaire( ProblemeHebdo, numSpace, NumeroDeLIntervalle, mt ))
 			return false;
 
 		if ( ProblemeHebdo->ExportMPS == OUI_ANTARES || ProblemeHebdo->Expansion == OUI_ANTARES)

@@ -30,9 +30,10 @@
 # include "../config.h"
 # include "opt_structure_probleme_a_resoudre.h"
 # include "../simulation/sim_structure_donnees.h"
+#include "measure_time.h"
 
 
-void OPT_OptimisationHebdomadaire( PROBLEME_HEBDO *, uint);
+void OPT_OptimisationHebdomadaire( PROBLEME_HEBDO *, uint, measure_time & mt);
 void OPT_NumeroDeJourDuPasDeTemps( PROBLEME_HEBDO * );
 void OPT_NumeroDIntervalleOptimiseDuPasDeTemps( PROBLEME_HEBDO * );
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire( PROBLEME_HEBDO * );
@@ -52,7 +53,7 @@ void OPT_ControleDesPminPmaxThermiques( PROBLEME_HEBDO * );
 
 bool OPT_AppelDuSolveurQuadratique( PROBLEME_ANTARES_A_RESOUDRE *, const int );
 
-bool OPT_PilotageOptimisationLineaire( PROBLEME_HEBDO *, uint );
+bool OPT_PilotageOptimisationLineaire( PROBLEME_HEBDO *, uint, measure_time& );
 void OPT_VerifierPresenceReserveJmoins1( PROBLEME_HEBDO * );
 bool OPT_PilotageOptimisationQuadratique( PROBLEME_HEBDO * );
 
@@ -61,9 +62,9 @@ bool OPT_PilotageOptimisationQuadratique( PROBLEME_HEBDO * );
 **
 ** \return True si l'operation s'est bien deroulee, false si le probleme n'a pas de solution
 */
-bool OPT_AppelDuSolveurLineaire( PROBLEME_HEBDO *, uint, const int );
+bool OPT_AppelDuSolveurLineaire( PROBLEME_HEBDO *, uint, const int, measure_time& );
 void OPT_LiberationProblemesSimplexe( PROBLEME_HEBDO * );
-bool OPT_OptimisationLineaire( PROBLEME_HEBDO *, uint, char, char, char );
+bool OPT_OptimisationLineaire( PROBLEME_HEBDO *, uint, char, char, char, measure_time& );
 void OPT_SauvegarderLesPmaxThermiques( PROBLEME_HEBDO * );
 void OPT_RestaurerLesDonnees( PROBLEME_HEBDO * );
 /*------------------------------*/

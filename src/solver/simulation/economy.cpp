@@ -35,6 +35,7 @@
 #include "simulation.h"
 #include "../optimisation/opt_fonctions.h"
 #include "common-eco-adq.h"
+#include "../optimisation/measure_time.h"
 
 
 using namespace Yuni;
@@ -140,6 +141,8 @@ namespace Simulation
 		int hourInTheYear = pStartTime;
 		bool reinitOptim = true;
 
+		measure_time mt;
+
 		for (uint w = 0; w != pNbWeeks; ++w)
 		{
 			state.hourInTheYear = hourInTheYear;
@@ -155,7 +158,7 @@ namespace Simulation
 
 			try
 			{
-				OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
+				OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace, mt);
 				DispatchableMarginForAllAreas(study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
 
 
@@ -232,7 +235,14 @@ namespace Simulation
 			++progression;
 		}	
 
-		
+		logs.info();
+		logs.info() << "Time for year " << state.year << " :";
+		logs.info() << "  -- conversion optim 1 : " << mt.conv_optim_1;
+		logs.info() << "  -- conversion optim 2 : " << mt.conv_optim_2;
+		logs.info() << "  -- optim 1 : " << mt.optim_1;
+		logs.info() << "  -- optim 2 : " << mt.optim_2;
+		logs.info();
+
 		updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
 
 		return true;

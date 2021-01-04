@@ -54,6 +54,9 @@ extern "C"
 
 #include "../utils/ortools_utils.h"
 
+#include "measure_time.h"
+#include <time.h>
+
 using namespace operations_research;
 
 
@@ -67,17 +70,17 @@ using namespace Yuni;
 #	define SNPRINTF snprintf
 # endif
 
-bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * , uint, int );
+bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * , uint, int, measure_time& );
 bool OPT_AppelDuSolveurPne( PROBLEME_HEBDO * , uint , int );
 
 
-bool OPT_AppelDuSolveurLineaire( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int NumIntervalle )
+bool OPT_AppelDuSolveurLineaire( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int NumIntervalle, measure_time & mt )
 {
 	bool result = false;
 
 	if ( ProblemeHebdo->SolveurDuProblemeLineaire == ANTARES_SIMPLEXE )
 	{
-		result = OPT_AppelDuSimplexe(ProblemeHebdo, numSpace, NumIntervalle);
+		result = OPT_AppelDuSimplexe(ProblemeHebdo, numSpace, NumIntervalle, mt);
 	}
 	else
 	{
@@ -89,7 +92,7 @@ bool OPT_AppelDuSolveurLineaire( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, 
 
 
 
-bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int NumIntervalle )
+bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int NumIntervalle, measure_time & mt )
 {
 	int Var; int Cnt; double * pt; char PremierPassage;
 	double CoutOpt; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre; PROBLEME_SIMPLEXE Probleme;
@@ -103,6 +106,9 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 
 	auto& study			= *Data::Study::Current::Get();
 	bool ortoolsUsed	= study.parameters.ortoolsUsed;
+
+	clock_t start;
+	double duration;
 
 	RESOLUTION:
 
@@ -132,6 +138,9 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 		{
 			Probleme.Contexte            = BRANCH_AND_BOUND_OU_CUT_NOEUD;
 			Probleme.BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
+			// Probleme.BaseDeDepartFournie = NON_SPX;
+
+			start = clock();
 
 			if (ortoolsUsed) {
 		        ORTOOLS_ModifierLeVecteurCouts(solver, ProblemeAResoudre->CoutLineaire, ProblemeAResoudre->NombreDeVariables);
@@ -142,6 +151,12 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 		        SPX_ModifierLeVecteurCouts(ProbSpx, ProblemeAResoudre->CoutLineaire, ProblemeAResoudre->NombreDeVariables);
 		        SPX_ModifierLeVecteurSecondMembre(ProbSpx, ProblemeAResoudre->SecondMembre, ProblemeAResoudre->Sens, ProblemeAResoudre->NombreDeContraintes);
 	        }
+
+			duration = (clock() - start) / (double)CLOCKS_PER_SEC;
+			if (ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION)
+				mt.conv_optim_1 += duration;
+			else
+				mt.conv_optim_2 += duration;
 		}
 	}
 
@@ -198,6 +213,8 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 
 	Probleme.NombreDeContraintesCoupes = 0;
 	
+	start = clock();
+
 	if (ortoolsUsed) {
 		solver = ORTOOLS_Simplexe(&Probleme,solver);
 		if (solver != NULL)
@@ -212,7 +229,13 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 		{
 			(ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
 		}
-	}	
+	}
+
+	duration = (clock() - start) / (double)CLOCKS_PER_SEC;
+	if (ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION)
+		mt.optim_1 += duration;
+	else
+		mt.optim_2 += duration;
 
 
 	if ( ProblemeHebdo->ExportMPS == OUI_ANTARES)

@@ -36,6 +36,7 @@
 #include "../optimisation/opt_fonctions.h"
 #include "common-eco-adq.h"
 #include "sim_structure_probleme_economique.h"
+#include "../optimisation/measure_time.h"
 
 using namespace Yuni;
 
@@ -181,6 +182,8 @@ namespace Simulation
 		int hourInTheYear = pStartTime;
 		bool reinitOptim  = true;
 
+		measure_time mt;
+
 		for (uint w = 0; w != pNbWeeks; ++w)
 		{
 			state.hourInTheYear = hourInTheYear;
@@ -232,7 +235,7 @@ namespace Simulation
 				
 				try
 				{
-					OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);					
+					OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace, mt);					
 
 					computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
 

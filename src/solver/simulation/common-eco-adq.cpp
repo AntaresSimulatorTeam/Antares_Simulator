@@ -37,6 +37,7 @@
 #include <cassert>
 #include "simulation.h"
 #include "../aleatoire/alea_fonctions.h"
+#include "../optimisation/measure_time.h"
 
 
 using namespace Yuni;
@@ -88,7 +89,8 @@ namespace Simulation
 
 		try
 		{
-			OPT_OptimisationHebdomadaire(&problem, 0);
+			measure_time mt;
+			OPT_OptimisationHebdomadaire(&problem, 0, mt);
 		}
 		catch (Data::UnfeasibleProblemError& ex)
 		{

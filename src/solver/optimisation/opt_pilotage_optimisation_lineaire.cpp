@@ -36,10 +36,11 @@
 
 # include "spx_definition_arguments.h"
 # include "spx_fonctions.h"
+#include "measure_time.h"
 
 
 
-bool OPT_PilotageOptimisationLineaire( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace)
+bool OPT_PilotageOptimisationLineaire( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, measure_time & mt)
 {
 	PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
 	char CalculerLesPmin; char CalculerLesPmax; char FaireDerniereOptimisation;
@@ -110,7 +111,7 @@ bool OPT_PilotageOptimisationLineaire( PROBLEME_HEBDO * ProblemeHebdo, uint numS
 		 OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage( ProblemeHebdo );
 	}
 	
-	if (!OPT_OptimisationLineaire( ProblemeHebdo, numSpace, CalculerLesPmin, CalculerLesPmax, FaireDerniereOptimisation )) 
+	if (!OPT_OptimisationLineaire( ProblemeHebdo, numSpace, CalculerLesPmin, CalculerLesPmax, FaireDerniereOptimisation, mt )) 
 		return false;
 
 	return true;

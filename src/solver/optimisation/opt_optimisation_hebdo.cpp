@@ -37,6 +37,7 @@
 #include <antares/emergency.h>
 #include <antares/logs.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
+#include "measure_time.h"
 
 extern "C"
 {
@@ -48,11 +49,11 @@ using namespace Antares::Data;
 
 
 
-void OPT_OptimisationHebdomadaire( PROBLEME_HEBDO * pProblemeHebdo, uint numSpace )
+void OPT_OptimisationHebdomadaire( PROBLEME_HEBDO * pProblemeHebdo, uint numSpace, measure_time & mt)
 {
 	if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE )
 	{
-		if (!OPT_PilotageOptimisationLineaire(pProblemeHebdo, numSpace ))
+		if (!OPT_PilotageOptimisationLineaire(pProblemeHebdo, numSpace, mt ))
 		{
             logs.error() << "Linear optimization failed";
 			throw UnfeasibleProblemError("Linear optimization failed");
