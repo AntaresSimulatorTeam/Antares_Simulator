@@ -62,7 +62,7 @@ if(Python3_Interpreter_FOUND)
                 
                 set(ADDITIONNAL_LABELS ortools ${ortools_solver})
                 
-                set(${use_ortools_option} "--use-ortools")
+                set(use_ortools_option "--use-ortools=True")
             else()
                 SET(SHORT_EXAMPLES_NAME short-examples-sirius)
                 SET(MEDIUM_EXAMPLES_NAME medium-examples-sirius)
@@ -70,7 +70,7 @@ if(Python3_Interpreter_FOUND)
                                 
                 set(ADDITIONNAL_LABELS sirius)
                 
-                set(${use_ortools_option} "")
+                set(use_ortools_option "--use-ortools=False")
                 
             endif()
         
