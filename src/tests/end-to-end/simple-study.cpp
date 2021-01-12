@@ -152,7 +152,7 @@ ScenarioBuilder::Rules::Ptr createScenarioRules(Study::Ptr pStudy)
 	return pRules;
 }
 
-int defineYearsWeight(Study::Ptr pStudy, const std::vector<int>& yearsWeight)
+float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight)
 {
 	pStudy->parameters.userPlaylist = true;
 
@@ -414,11 +414,11 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_different_weight)
 	pStudy->parameters.nbTimeSeriesThermal = nbTS;
 
     //Define years weight
-	std::vector<int> yearsWeight;
+	std::vector<float> yearsWeight;
 	yearsWeight.assign(nbYears, 1);
-	yearsWeight[0] = 4;	yearsWeight[1] = 10;
+	yearsWeight[0] = 4.0;	yearsWeight[1] = 10.0;
 
-	int yearSum = defineYearsWeight(pStudy,yearsWeight);	
+	float yearSum = defineYearsWeight(pStudy,yearsWeight);
 
 	//Create area
 	double load = 5.0;

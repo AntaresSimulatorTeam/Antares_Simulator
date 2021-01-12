@@ -284,7 +284,7 @@ namespace Options
 		if (b)
 		{
 			//Check if weight is !=1 for one year
-			std::vector<int> yearWeight = d.getYearsWeight();
+			std::vector<float> yearWeight = d.getYearsWeight();
 		    
 		    int nbYearsDifferentFrom1 = 0;
 			uint y = 0;
@@ -294,7 +294,7 @@ namespace Options
 				{
                     ++y;
 
-                    int weight = yearWeight[i];
+					float weight = yearWeight[i];
                     if (weight != 1) {
                         nbYearsDifferentFrom1++;
                     }

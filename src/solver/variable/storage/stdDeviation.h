@@ -294,8 +294,8 @@ namespace AllYears
 
 	private:
 
-        std::vector<int>    yearsWeight;
-        int                 yearsWeightSum;
+        std::vector<float>    yearsWeight;
+		float                 yearsWeightSum;
         
 	}; // class StdDeviation
 
