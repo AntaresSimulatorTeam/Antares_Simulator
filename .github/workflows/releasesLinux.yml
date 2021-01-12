@@ -57,7 +57,7 @@ jobs:
       run: |
            cmake --build _build --config release -j2    
            
-     - name: Running unit tests
+    - name: Running unit tests
       run: |
            cd _build
            ctest -C release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
