@@ -293,6 +293,8 @@ cd _build
 ctest -C Release --output-on-failure
 ```
 
+Note:
+> Tests with output comparison must be enabled using the option `-DBUILD_OUTPUT_TEST=ON` (`OFF` by default)
 
 All tests are associated to a label and multiple labels can be defined. You can choose which tests will be executed at ctest run.
 
@@ -302,9 +304,10 @@ This is the list of the availables labels :
 |:-------|-----|
 | `units`  | Units tests|
 | `end-to-end`  | End to end tests with antares study creation|
-| `short-examples`  | Short duration pytest with antares solver call and objective function result vérification|
-| `medium-examples`  | Medium duration pytest with antares solver call and objective function result vérification|
-| `long-examples`  | Long duration pytest with antares solver call and objective function result vérification|
+| `short-examples`  | Short duration pytest with antares solver call and objective function result check|
+| `medium-examples`  | Medium duration pytest with antares solver call and objective function result check|
+| `long-examples`  | Long duration pytest with antares solver call and objective function result check|
+| `short-output`  | Short duration pytest with antares solver call and simulation output comparison|
 | `sirius`  | Sirius related pytest|
 | `coin`  | coin related pytest|
 | `ortools`  | OR-Tools related pytest|
