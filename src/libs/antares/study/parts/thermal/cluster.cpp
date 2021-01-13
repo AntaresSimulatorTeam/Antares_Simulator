@@ -1057,7 +1057,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                     //	it->minStablePower =
                     //		Math::Max(it->hourlyMinimumCapacity,
                     //			Math::Max(it->dailyMinimumCapacity,
-                    //it->weeklyMinimumCapacity));
+                    // it->weeklyMinimumCapacity));
                 }
                 // Backward compatibility
                 // switch (it->minUpDownTime)
@@ -1079,7 +1079,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                 //		break;
                 //	default:
                 //		logs.error() << "Invalid 'Min. Up/Down time' for the cluster '" <<
-                //it->name() << "'"; 		it->hourlyMinimumCapacity = it->minStablePower;
+                // it->name() << "'"; 		it->hourlyMinimumCapacity = it->minStablePower;
                 //		it->dailyMinimumCapacity  = 0;
                 //		it->weeklyMinimumCapacity = 0;
                 // }

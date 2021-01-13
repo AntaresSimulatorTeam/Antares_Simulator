@@ -196,8 +196,10 @@ bool NSGLWindow::loop()
     id event;
     do
     {
-        // 			event = [NSApp nextEventMatchingMask:NSAnyEventMask untilDate:[NSDate
-        // distantPast] 					 inMode:NSDefaultRunLoopMode dequeue:YES];
+        // 			event = [NSApp nextEventMatchingMask:NSAnyEventMask
+        // untilDate:[NSDate
+        // distantPast] 					 inMode:NSDefaultRunLoopMode
+        // dequeue:YES];
         event = cmacs_next_event_msgSend(NSApp, sel_getUid("nextEventMatchingMask"), 0, 0, true);
         // Convert the cocoa events to something useful here and add them to your own event queue
 

@@ -186,8 +186,9 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
                   / daysPerMonthDecals[month]); // Total march power / number of days in march
                 int diff
                   = col[realMonth]
-                    - res * daysPerMonthDecals[month]; // Possible difference, always positive and
-                                                       // inferior to the number of days in the month
+                    - res
+                        * daysPerMonthDecals[month]; // Possible difference, always positive and
+                                                     // inferior to the number of days in the month
                 for (uint day = firstDayMonth[month]; day < firstDayMonth[month + 1];
                      day++) // First day of march is 0 to < 31
                 {

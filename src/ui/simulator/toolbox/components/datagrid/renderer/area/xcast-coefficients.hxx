@@ -136,7 +136,7 @@ inline bool XCastCoefficients<T>::cellValue(int x, int y, const Yuni::String& va
         {
             // if (v > xcast.data.entry[XCast::dataCoeffDelta][y])
             //	return MatrixAncestorType::cellValue(x, y,
-            //String(xcast.data.entry[XCast::dataCoeffDelta][y]));
+            // String(xcast.data.entry[XCast::dataCoeffDelta][y]));
             break;
         }
         case XCast::dtBeta:
@@ -160,7 +160,7 @@ inline bool XCastCoefficients<T>::cellValue(int x, int y, const Yuni::String& va
         {
             // if (v < xcast.data.entry[XCast::dataCoeffGamma][y])
             //	return MatrixAncestorType::cellValue(x, y,
-            //xcast.data.entry[XCast::dataCoeffGamma][y]);
+            // xcast.data.entry[XCast::dataCoeffGamma][y]);
             break;
         }
         case XCast::dtBeta:

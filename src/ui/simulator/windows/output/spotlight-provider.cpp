@@ -441,8 +441,9 @@ void SpotlightProviderGlobalSelection::search(Spotlight::IItem::Vector& out,
                                     << wxStringFromUTF8((*itLink)->with->name))
                           .MakeLower();
                     if (arealink->id
-                        == std::string(outputStyledName.mb_str())) // this link is in the study (it
-                                                                   // is visible at least on layer 0)
+                        == std::string(
+                          outputStyledName.mb_str())) // this link is in the study (it
+                                                      // is visible at least on layer 0)
                     {
                         foundInALayer = true;
                         break;

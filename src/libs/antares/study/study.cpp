@@ -521,10 +521,10 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
 
         // We build a new set of parallel years if one of these conditions is fulfilled :
         //	- We have to refresh (or regenerate) some or all time series before running the
-        //current year
+        // current year
         //	- This is the first year after the previous set is full with years to be actually
-        //executed (not skipped). 	  That is : in the previous set filled, the max number of years to
-        //be actually run is reached.
+        // executed (not skipped). 	  That is : in the previous set filled, the max number of
+        // years to be actually run is reached.
         if (buildNewSet)
         {
             std::vector<uint> setToCreate;
@@ -554,8 +554,8 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
     }
 
     // GUI : storing minimum number of parallel years (in a set of parallel years).
-    //		 Useful in the run window's simulation cores field in case parallel mode is enabled by
-    //user.
+    //		 Useful in the run window's simulation cores field in case parallel mode is enabled
+    //by user.
     minNbYearsInParallel_save = minNbYearsInParallel;
 
     // The max number of years to run in parallel is limited by the max number years in a set of

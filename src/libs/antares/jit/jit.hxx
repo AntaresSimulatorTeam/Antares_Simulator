@@ -67,12 +67,13 @@ void JIT::just_in_time_manager::unload_matrix_properly_from_memory(const Matrix<
     auto* mtx_not_const = const_cast<Matrix<T, ReadWriteT>*>(mtx);
 
     // - jit activated :
-    //		If JIT (Just-In-Time) is activated, we have to unload data to keep the memory for the
-    //solver. 		The old width must only be kept when the matrix has fixed dimension.
+    //		If JIT (Just-In-Time) is activated, we have to unload data to keep the memory for
+    //the solver. 		The old width must only be kept when the matrix has fixed dimension.
     //
     // - JIT::enabled and jit not activated :
-    //		If the matrix is not ready for just-in-time (not activated), but JIT is enabled, like it
-    //would be the case 		from the GUI, we have to activate jit. 		2 reasons for this :
+    //		If the matrix is not ready for just-in-time (not activated), but JIT is enabled, like
+    //it would be the case 		from the GUI, we have to activate jit. 		2 reasons
+    // for this :
     //		- To reserve the memory for the study
     //		- To reload data in case of preprocessor data have been written to
     //		  the input folder

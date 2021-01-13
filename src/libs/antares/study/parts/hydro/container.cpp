@@ -173,9 +173,10 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                            << area.id << '.' << study.inputExtension;
 
             //	GUI part patch :
-            //		We need to know, when estimating the RAM required by the solver, if the current
-            //area 		is hydro modulable. Therefore, reading the area's daily max power at this stage
-            //is 		necessary.
+            //		We need to know, when estimating the RAM required by the solver, if the
+            //current
+            // area 		is hydro modulable. Therefore, reading the area's daily max power at this
+            // stage is 		necessary.
             if (!study.usedByTheSolver)
             {
                 bool enabledModeIsChanged = false;

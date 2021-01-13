@@ -377,13 +377,13 @@ void Panel::onFileMenu(Antares::Component::Button&, wxMenu& menu, void*)
             // wxMenuItem* itSubDelete = Menu::CreateItem(deleteSub, wxNewId(), str, img,
             // wxEmptyString, 	wxITEM_NORMAL); deleteSub->Connect(itSubDelete->GetId(),
             // wxEVT_COMMAND_MENU_SELECTED, 	wxCommandEventHandler(Panel::onFileDelete), nullptr,
-            //this);
+            // this);
 
             // Rename
             // wxMenuItem* itSubRename = Menu::CreateItem(renameSub, wxNewId(), str, img,
             // wxEmptyString, 	wxITEM_NORMAL); renameSub->Connect(itSubRename->GetId(),
             // wxEVT_COMMAND_MENU_SELECTED, 	wxCommandEventHandler(Panel::onFileRename), nullptr,
-            //this);
+            // this);
 
             // pRenameList[itSubRename->GetId()] = rules;
             // pDeleteList[itSubDelete->GetId()] = rules;

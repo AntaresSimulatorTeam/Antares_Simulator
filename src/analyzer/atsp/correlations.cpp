@@ -188,9 +188,9 @@ bool ATSP::computeMonthlyCorrelations()
                     Extrait_col(buffer_n, SERIE_N, durmois[m], q);
                     Extrait_col(buffer_p, SERIE_P, durmois[m], q);
 
-                    /*					The following expression suits better data including inter-annual
-                       oscillations (such data is out of  the scope of the built-in generators that
-                       might be used afterwards)
+                    /*					The following expression suits better data
+                       including inter-annual oscillations (such data is out of  the scope of the
+                       built-in generators that might be used afterwards)
 
                                                             const double xx = Correlation(buffer_n,
                        buffer_p, durmois[m], moments_centr_raw[i].data[m][0],
@@ -198,9 +198,9 @@ bool ATSP::computeMonthlyCorrelations()
                        moments_centr_raw[j].data[m][1], 1);
                     */
 
-                    /*					The following expression suits better data with recurrent annual
-                       behaviour (such data is within the scope of the built-in generators that
-                       might be used afterwards)
+                    /*					The following expression suits better data
+                       with recurrent annual behaviour (such data is within the scope of the
+                       built-in generators that might be used afterwards)
                     */
                     const double xx = Correlation(buffer_n, buffer_p, durmois[m], 0, 0, 0, 0, 0);
                     coeff += xx / NBS;

@@ -330,7 +330,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex,
                     }
                     else*/
                     //	ON_min[h] = static_cast<uint>(Math::Ceil(thermalClusterProduction /
-                    //currentCluster->nominalCapacityWithSpinning)); // code 5.0.3b<7
+                    // currentCluster->nominalCapacityWithSpinning)); // code 5.0.3b<7
                     // 5.0.3b7
                     if (currentCluster->pminOfAGroup[numSpace] > 0.)
                     {
@@ -441,7 +441,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex,
                     {
                         ON_opt[h] = ON_min[h]; // la puissance appelée après h ne justifie pas de
                                                // maintenir des groupes appelés au-delà du minimum
-                        ++h; // on progresse d'exactement une heure
+                        ++h;                   // on progresse d'exactement une heure
                     }
                     else
                     {

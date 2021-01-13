@@ -367,7 +367,8 @@ public:
     yearRandomNumbers* pYears;
 
     // Associates :
-    //		year number (0, ..., total nb of years to compute - 1) --> index of the year's space (0,
+    //		year number (0, ..., total nb of years to compute - 1) --> index of the year's space
+    //(0,
     //..., max nb of parallel years - 1)
     std::map<uint, uint> yearNumberToIndex;
 };

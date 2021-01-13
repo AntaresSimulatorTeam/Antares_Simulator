@@ -25,105 +25,67 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "h2o2_j_donnees_mensuelles.h"
 
-
-
-
-
-# include "h2o2_j_donnees_mensuelles.h"
-  
-
-
-void H2O2_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES_ETENDUES * DonneesMensuelles, int NumeroDeProbleme )
+void H2O2_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles,
+                                      int NumeroDeProbleme)
 {
+    PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
+    PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
+    double* SecondMembre;
 
-	PROBLEME_HYDRAULIQUE_ETENDU * ProblemeHydrauliqueEtendu;
-	PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE * ProblemeLineairePartieVariable;
-	double * SecondMembre;
-	
-	ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
-	ProblemeLineairePartieVariable = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[NumeroDeProbleme];
-	SecondMembre = ProblemeLineairePartieVariable->SecondMembre;
+    ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
+    ProblemeLineairePartieVariable
+      = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[NumeroDeProbleme];
+    SecondMembre = ProblemeLineairePartieVariable->SecondMembre;
 
-	int NbPdt, Pdt, Cnt;
+    int NbPdt, Pdt, Cnt;
 
-	
-	NbPdt = ProblemeHydrauliqueEtendu->NbJoursDUnProbleme[NumeroDeProbleme];
+    NbPdt = ProblemeHydrauliqueEtendu->NbJoursDUnProbleme[NumeroDeProbleme];
 
-	Cnt = 0; 
+    Cnt = 0;
 
-	
-	
-	
-	
-	
-	
-	SecondMembre[Cnt] = DonneesMensuelles->NiveauInitialDuMois + DonneesMensuelles->apports[0];
-	Cnt++;
-	
-	
-	for (Pdt = 1; Pdt < NbPdt; Pdt++)
-	{
-		SecondMembre[Cnt] = DonneesMensuelles->apports[Pdt];
-		Cnt++;
-	}
+    SecondMembre[Cnt] = DonneesMensuelles->NiveauInitialDuMois + DonneesMensuelles->apports[0];
+    Cnt++;
 
-	
-	
-	
-	SecondMembre[Cnt] = DonneesMensuelles->TurbineDuMois;
-	Cnt++;
+    for (Pdt = 1; Pdt < NbPdt; Pdt++)
+    {
+        SecondMembre[Cnt] = DonneesMensuelles->apports[Pdt];
+        Cnt++;
+    }
 
-	
-	
-	
-	
-	for (Pdt = 0; Pdt < NbPdt; Pdt++)
-	{
-		SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt];
-		Cnt++;
-	}
+    SecondMembre[Cnt] = DonneesMensuelles->TurbineDuMois;
+    Cnt++;
 
-	
-	
-	
-	
-	for (Pdt = 0; Pdt < NbPdt; Pdt++)
-	{
-		SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt];
-		Cnt++;
-	}
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt];
+        Cnt++;
+    }
 
-	
-	
-	
-	
-	for (Pdt = 0; Pdt < NbPdt; Pdt++)
-	{
-		SecondMembre[Cnt] = 0.;
-		Cnt++;
-	}
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt];
+        Cnt++;
+    }
 
-	
-	
-	
-	
-	for (Pdt = 0; Pdt < NbPdt; Pdt++)
-	{
-		SecondMembre[Cnt] = DonneesMensuelles->niveauBas[Pdt];
-		Cnt++;
-	}
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        SecondMembre[Cnt] = 0.;
+        Cnt++;
+    }
 
-	
-	
-	
-	
-	for (Pdt = 0; Pdt < NbPdt; Pdt++)
-	{
-		SecondMembre[Cnt] = 0.;
-		Cnt++;
-	}
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        SecondMembre[Cnt] = DonneesMensuelles->niveauBas[Pdt];
+        Cnt++;
+    }
 
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        SecondMembre[Cnt] = 0.;
+        Cnt++;
+    }
 
-	return;
+    return;
 }

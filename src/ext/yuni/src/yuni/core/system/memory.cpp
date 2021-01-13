@@ -47,7 +47,7 @@ enum
     //! The default amount of available physical memory
     defaultAvailable = 1024 * 1024 * 512, // 512Mo
                                           //! The default amount of total physical memory
-    defaultTotal = 1024 * 1024 * 1024, // 1Go
+    defaultTotal = 1024 * 1024 * 1024,    // 1Go
 };
 
 #ifdef YUNI_OS_WINDOWS

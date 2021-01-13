@@ -25,94 +25,94 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
-
-
-
-
-
-# ifdef __CPLUSPLUS
-  extern "C"
-  {
-# endif
-
-# include "spx_definition_arguments.h"
-# include "spx_fonctions.h"
-
-# ifdef __CPLUSPLUS
-  }
-# endif
-
-# include "h2o2_j_donnees_mensuelles.h"
-# include "h2o2_j_fonctions.h"
-
-
-
-void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES * DonneesMensuelles )
+#ifdef __CPLUSPLUS
+extern "C"
 {
-int i; int NombreDeProblemes; PROBLEME_SPX * ProbSpx;
+#endif
 
-PROBLEME_HYDRAULIQUE_ETENDU * ProblemeHydrauliqueEtendu;
+#include "spx_definition_arguments.h"
+#include "spx_fonctions.h"
 
-ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
-NombreDeProblemes   = ProblemeHydrauliqueEtendu->NombreDeProblemes;
- 
-for ( i = 0 ; i < NombreDeProblemes ; i++ ) {
-
-	free( (ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i])->NumeroVar_Turbine );
-	free( (ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i])->NumeroVar_niveauxFinJours );
-	free( (ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i])->NumeroVar_overflow );
-	free( (ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i])->NumeroVar_deviations );
-	free( (ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i])->NumeroVar_violations );
-	free( ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i] );
-		
-	free( (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])->CoutLineaire );
-	free( (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])->TypeDeVariable );
-	free( (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])->Sens );
-	free( (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])->IndicesDebutDeLigne );
-	free( (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])->NombreDeTermesDesLignes );
-	free( (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])->CoefficientsDeLaMatriceDesContraintes );
-	free( (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])->IndicesColonnes );
-	free( ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i] );
-	
-	free( (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->Xmin );
-	free( (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->Xmax );
-	free( (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->SecondMembre );
-	free( (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->AdresseOuPlacerLaValeurDesVariablesOptimisees );
-	free( (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->X );
-	free( (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->PositionDeLaVariable );
-	free( (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->ComplementDeLaBase );
-	free( (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->CoutsReduits );
-	free( (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->CoutsMarginauxDesContraintes );
-	free( ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i] );
-
-	ProbSpx = (PROBLEME_SPX *) ProblemeHydrauliqueEtendu->ProblemeSpx[i];
-	if ( ProbSpx != NULL ) {
-		SPX_LibererProbleme( ProbSpx );
-	}
-				
+#ifdef __CPLUSPLUS
 }
+#endif
 
-free( ProblemeHydrauliqueEtendu->NbJoursDUnProbleme );
-free( ProblemeHydrauliqueEtendu->CorrespondanceDesVariables );
-free( ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe );
-free( ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable );
-free( ProblemeHydrauliqueEtendu->ProblemeSpx );
-free( ProblemeHydrauliqueEtendu->Probleme );
-free( ProblemeHydrauliqueEtendu );
- 
-free( DonneesMensuelles->TurbineMax );
-free( DonneesMensuelles->TurbineCible );
-free( DonneesMensuelles->Turbine );
+#include "h2o2_j_donnees_mensuelles.h"
+#include "h2o2_j_fonctions.h"
 
-free(DonneesMensuelles->niveauBas);
-free(DonneesMensuelles->niveauxFinJours);
-free(DonneesMensuelles->apports);
-free(DonneesMensuelles->overflows);
-free(DonneesMensuelles->deviations);
-free(DonneesMensuelles->violations);
+void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
+{
+    int i;
+    int NombreDeProblemes;
+    PROBLEME_SPX* ProbSpx;
 
-free( DonneesMensuelles );
+    PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
 
-return;	
+    ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
+    NombreDeProblemes = ProblemeHydrauliqueEtendu->NombreDeProblemes;
+
+    for (i = 0; i < NombreDeProblemes; i++)
+    {
+        free((ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i])->NumeroVar_Turbine);
+        free((ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i])->NumeroVar_niveauxFinJours);
+        free((ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i])->NumeroVar_overflow);
+        free((ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i])->NumeroVar_deviations);
+        free((ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i])->NumeroVar_violations);
+        free(ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i]);
+
+        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])->CoutLineaire);
+        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])->TypeDeVariable);
+        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])->Sens);
+        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])->IndicesDebutDeLigne);
+        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])
+               ->NombreDeTermesDesLignes);
+        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])
+               ->CoefficientsDeLaMatriceDesContraintes);
+        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])->IndicesColonnes);
+        free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i]);
+
+        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->Xmin);
+        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->Xmax);
+        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->SecondMembre);
+        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])
+               ->AdresseOuPlacerLaValeurDesVariablesOptimisees);
+        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->X);
+        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])
+               ->PositionDeLaVariable);
+        free(
+          (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->ComplementDeLaBase);
+        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->CoutsReduits);
+        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])
+               ->CoutsMarginauxDesContraintes);
+        free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i]);
+
+        ProbSpx = (PROBLEME_SPX*)ProblemeHydrauliqueEtendu->ProblemeSpx[i];
+        if (ProbSpx != NULL)
+        {
+            SPX_LibererProbleme(ProbSpx);
+        }
+    }
+
+    free(ProblemeHydrauliqueEtendu->NbJoursDUnProbleme);
+    free(ProblemeHydrauliqueEtendu->CorrespondanceDesVariables);
+    free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe);
+    free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable);
+    free(ProblemeHydrauliqueEtendu->ProblemeSpx);
+    free(ProblemeHydrauliqueEtendu->Probleme);
+    free(ProblemeHydrauliqueEtendu);
+
+    free(DonneesMensuelles->TurbineMax);
+    free(DonneesMensuelles->TurbineCible);
+    free(DonneesMensuelles->Turbine);
+
+    free(DonneesMensuelles->niveauBas);
+    free(DonneesMensuelles->niveauxFinJours);
+    free(DonneesMensuelles->apports);
+    free(DonneesMensuelles->overflows);
+    free(DonneesMensuelles->deviations);
+    free(DonneesMensuelles->violations);
+
+    free(DonneesMensuelles);
+
+    return;
 }

@@ -470,7 +470,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
 
                 //	Note: if there were a single optimization run instead of two; the following
-                //could be used: 	AdresseDuResultat =
+                // could be used: 	AdresseDuResultat =
                 //&(ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->LevelForTimeInterval);
                 //	AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
 
