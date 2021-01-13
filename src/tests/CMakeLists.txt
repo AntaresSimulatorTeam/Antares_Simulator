@@ -62,7 +62,7 @@ if(Python3_Interpreter_FOUND)
                 
                 set(ADDITIONNAL_LABELS ortools ${ortools_solver})
                 
-                set(use_ortools_option "--use-ortools=True")
+                set(use_ortools_option "--use-ortools")
             else()
                 SET(SHORT_EXAMPLES_NAME short-examples-sirius)
                 SET(MEDIUM_EXAMPLES_NAME medium-examples-sirius)
@@ -70,7 +70,7 @@ if(Python3_Interpreter_FOUND)
                                 
                 set(ADDITIONNAL_LABELS sirius)
                 
-                set(use_ortools_option "--use-ortools=False")
+                set(use_ortools_option "")
                 
             endif()
         
@@ -106,12 +106,12 @@ if(Python3_Interpreter_FOUND)
                 SET(SHORT_NAME short-output-ortools-${ortools_solver})                
                 set(ADDITIONNAL_LABELS ortools ${ortools_solver})
                 
-                set(use_ortools_option "--use-ortools=True")
+                set(use_ortools_option "--use-ortools")
             else()
                 SET(SHORT_NAME short-output-sirius)                                
                 set(ADDITIONNAL_LABELS sirius)
                 
-                set(use_ortools_option "--use-ortools=False")
+                set(use_ortools_option "")
                 
             endif()
         
