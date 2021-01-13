@@ -416,7 +416,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_different_weight)
     //Define years weight
 	std::vector<float> yearsWeight;
 	yearsWeight.assign(nbYears, 1);
-	yearsWeight[0] = 4.0;	yearsWeight[1] = 10.0;
+	yearsWeight[0] = 4.f;	yearsWeight[1] = 10.f;
 
 	float yearSum = defineYearsWeight(pStudy,yearsWeight);
 

@@ -686,7 +686,7 @@ namespace Data
                                    << "'. Value not used";
                 }
 
-                if (weight < 0.0)
+                if (weight < 0.f)
                 {
 					valid = false;
                     logs.warning() << "parameters: invalid MC year weight.Got '" << weight
@@ -1089,7 +1089,7 @@ namespace Data
             //Resize years weight (add or remove item)
 			if (yearsWeight.size() !=  nbYears)
             {
-                yearsWeight.resize(nbYears, 1.0);
+                yearsWeight.resize(nbYears, 1.f);
             }
 		}
 
@@ -1230,7 +1230,7 @@ namespace Data
 	void Parameters::resetYearsWeigth()
     {
 	    yearsWeight.clear();
-        yearsWeight.assign(nbYears,1.0);
+        yearsWeight.assign(nbYears,1.f);
     }
 
     std::vector<float> Parameters::getYearsWeight() const
@@ -1243,14 +1243,14 @@ namespace Data
         }
         else
         {
-            result.assign(nbYears, 1.0);
+            result.assign(nbYears, 1.f);
         }
 
         return result;
     }
 	float Parameters::getYearsWeightSum() const
     {
-		float result = 0.0;
+		float result = 0.f;
 
         if (userPlaylist)
         {
@@ -1264,9 +1264,9 @@ namespace Data
             }
 
 			//Check if value is 0.0 then return 1.0 to avoid division by 0
-			if (result == 0.0)
+			if (result == 0.f)
 			{
-				result = 1.0;
+				result = 1.f;
 			}
         }
         else
@@ -1362,7 +1362,7 @@ namespace Data
 			for (int i =0 ; i< yearsWeight.size();i++)
             {
 			    float weight = yearsWeight[i];
-			    if (weight != 1.0)
+			    if (weight != 1.f)
                 {
                     nbYearsDifferentFrom1++;
 			        if  (weight == maximumWeight)
@@ -1741,7 +1741,7 @@ namespace Data
                 for (uint i = 0; i != nbYears; ++i)
                 {
 					//Only write weight different from 1.0 to limit .ini file size and readability
-					if (yearsWeight[i] != 1.0)
+					if (yearsWeight[i] != 1.f)
 					{
 						std::string val = std::to_string(i) + "," + std::to_string(yearsWeight[i]);
 						section->add("playlist_year_weight", val);

@@ -105,7 +105,7 @@ namespace Renderer
                     float weight;
                     if (value.to<float>(weight))
                     {
-                        if (weight >= 0.0) {
+                        if (weight >= 0.f) {
                             study->parameters.setYearWeight(y, weight);
                         }
                         else {
