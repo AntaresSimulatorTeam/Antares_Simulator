@@ -27,22 +27,16 @@
 
 #include "grid.h"
 
-
-
 namespace Antares
 {
 namespace Window
 {
 namespace Inspector
 {
-
-	BEGIN_EVENT_TABLE(InspectorGrid, wxPropertyGrid)
-		EVT_PG_CHANGING(wxID_ANY, InspectorGrid::OnPropertyChanging)
-	END_EVENT_TABLE()
-
-
+BEGIN_EVENT_TABLE(InspectorGrid, wxPropertyGrid)
+EVT_PG_CHANGING(wxID_ANY, InspectorGrid::OnPropertyChanging)
+END_EVENT_TABLE()
 
 } // namespace Inspector
 } // namespace Window
 } // namespace Antares
-

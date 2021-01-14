@@ -25,10 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_HYDRO_SCENARIO_BUILDER_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_HYDRO_SCENARIO_BUILDER_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_HYDRO_SCENARIO_BUILDER_H__
 
 #include "scenario-builder-renderer-base.h"
-
 
 namespace Antares
 {
@@ -38,16 +37,14 @@ namespace Datagrid
 {
 namespace Renderer
 {
-	class hydroScBuilderRenderer : public ScBuilderRendererBase
-	{
-	public:
-		hydroScBuilderRenderer();
-		~hydroScBuilderRenderer();
-		bool cellValue(int x, int y, const Yuni::String& value);
-		double cellNumericValue(int x, int y) const;
-	}; // class hydroScBuilderRenderer
-
-
+class hydroScBuilderRenderer : public ScBuilderRendererBase
+{
+public:
+    hydroScBuilderRenderer();
+    ~hydroScBuilderRenderer();
+    bool cellValue(int x, int y, const Yuni::String& value);
+    double cellNumericValue(int x, int y) const;
+}; // class hydroScBuilderRenderer
 
 } // namespace Renderer
 } // namespace Datagrid
@@ -55,4 +52,3 @@ namespace Renderer
 } // namespace Antares
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_HYDRO_SCENARIO_BUILDER_H__
-

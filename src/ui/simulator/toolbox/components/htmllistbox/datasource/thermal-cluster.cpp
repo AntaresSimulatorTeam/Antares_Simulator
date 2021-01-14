@@ -34,9 +34,7 @@
 #include <list>
 #include "../../../../application/main.h"
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
@@ -48,182 +46,166 @@ namespace Datasource
 {
 namespace ThermalClusters
 {
+typedef Data::ThermalCluster ThermalClusterFromLib;
+typedef std::list<ThermalClusterFromLib*> ThermalClusterList;
+typedef std::map<wxString, ThermalClusterList> ThermalClusterMap;
 
-	typedef Data::ThermalCluster  ThermalClusterFromLib;
-	typedef std::list<ThermalClusterFromLib*> ThermalClusterList;
-	typedef std::map<wxString, ThermalClusterList> ThermalClusterMap;
+namespace // anonymous
+{
+struct SortAlphaOrder
+{
+    inline bool operator()(const Data::ThermalCluster* a, const Data::ThermalCluster* b)
+    {
+        return a->name() < b->name();
+    }
+};
 
+struct SortAlphaReverseOrder
+{
+    inline bool operator()(const Data::ThermalCluster* a, const Data::ThermalCluster* b)
+    {
+        return a->name() > b->name();
+    }
+};
 
-	namespace // anonymous
-	{
+void GetThermalClusterMap(Data::Area* area, ThermalClusterMap& l, const wxString& search)
+{
+    wxString grp;
 
-		struct SortAlphaOrder
-		{
-			inline bool operator() (const Data::ThermalCluster* a, const Data::ThermalCluster* b)
-			{
-				return a->name() < b->name();
-			}
-		};
+    const Data::ThermalClusterList::iterator end = area->thermal.list.end();
+    for (Data::ThermalClusterList::iterator i = area->thermal.list.begin(); i != end; ++i)
+    {
+        Data::ThermalCluster* cluster = i->second;
 
-		struct SortAlphaReverseOrder
-		{
-			inline bool operator() (const Data::ThermalCluster* a, const Data::ThermalCluster* b)
-			{
-				return a->name() > b->name();
-			}
-		};
+        if (search.empty())
+        {
+            grp = wxStringFromUTF8(cluster->group());
+            grp.MakeLower();
+            l[grp].push_back(cluster);
+        }
+    }
+}
 
+} // anonymous namespace
 
-		void GetThermalClusterMap(Data::Area* area, ThermalClusterMap& l, const wxString& search)
-		{
-			wxString grp;
+ByAlphaOrder::ByAlphaOrder(HTMLListbox::Component& parent) : IDatasource(parent), pArea(nullptr)
+{
+    OnStudyAreasChanged.connect(this, &ByAlphaOrder::onInvalidateAllAreas);
+    Forms::ApplWnd::Instance()->onApplicationQuit.connect(this,
+                                                          &ByAlphaOrder::onInvalidateAllAreas);
+}
 
-			const Data::ThermalClusterList::iterator end = area->thermal.list.end();
-			for (Data::ThermalClusterList::iterator i = area->thermal.list.begin(); i != end; ++i)
-			{
-				Data::ThermalCluster* cluster = i->second;
+//! Destructor
+ByAlphaOrder::~ByAlphaOrder()
+{
+    destroyBoundEvents();
+}
 
-				if (search.empty())
-				{
-					grp = wxStringFromUTF8(cluster->group());
-					grp.MakeLower();
-					l[grp].push_back(cluster);
-				}
-			}
-		}
+void ByAlphaOrder::refresh(const wxString& search)
+{
+    pParent.clear();
 
-	} // anonymous namespace
+    if (pArea)
+    {
+        ThermalClusterMap l;
+        GetThermalClusterMap(pArea, l, search);
+        if (!l.empty())
+        {
+            ThermalClusterMap::iterator end = l.end();
+            for (ThermalClusterMap::iterator i = l.begin(); i != end; ++i)
+            {
+                wxString s;
+                s << wxStringFromUTF8(pArea->name);
+                if (s.size() > 43)
+                {
+                    s.resize(40);
+                    s += wxT("...");
+                }
+                if (i->first.empty())
+                    pParent.add(new Antares::Component::HTMLListbox::Item::Group(
+                      s << wxT(" / <i>* no group *</i>")));
+                else
+                    pParent.add(new Antares::Component::HTMLListbox::Item::Group(s << wxT(" / ")
+                                                                                   << i->first));
 
+                // Added the area as a result
+                ThermalClusterList::iterator jend = i->second.end();
+                i->second.sort(SortAlphaOrder());
+                for (ThermalClusterList::iterator j = i->second.begin(); j != jend; ++j)
+                    pParent.add(new Antares::Component::HTMLListbox::Item::ThermalCluster(*j));
+            }
+        }
+    }
+    pParent.invalidate();
+}
 
+void ByAlphaOrder::onAreaChanged(Data::Area* area)
+{
+    pArea = area;
+}
 
-	ByAlphaOrder::ByAlphaOrder(HTMLListbox::Component& parent)
-		:IDatasource(parent), pArea(nullptr)
-	{
-		OnStudyAreasChanged.connect(this, &ByAlphaOrder::onInvalidateAllAreas);
-		Forms::ApplWnd::Instance()->onApplicationQuit.connect(this, &ByAlphaOrder::onInvalidateAllAreas);
-	}
+void ByAlphaOrder::onInvalidateAllAreas()
+{
+    pArea = nullptr;
+}
 
-	//! Destructor
-	ByAlphaOrder::~ByAlphaOrder()
-	{
-		destroyBoundEvents();
-	}
+ByAlphaReverseOrder::ByAlphaReverseOrder(HTMLListbox::Component& parent) :
+ IDatasource(parent), pArea(nullptr)
+{
+    OnStudyAreasChanged.connect(this, &ByAlphaReverseOrder::onInvalidateAllAreas);
+    Forms::ApplWnd::Instance()->onApplicationQuit.connect(
+      this, &ByAlphaReverseOrder::onInvalidateAllAreas);
+}
 
+//! Destructor
+ByAlphaReverseOrder::~ByAlphaReverseOrder()
+{
+    destroyBoundEvents();
+}
 
-	void ByAlphaOrder::refresh(const wxString& search)
-	{
-		pParent.clear();
+void ByAlphaReverseOrder::refresh(const wxString& search)
+{
+    pParent.clear();
 
-		if (pArea)
-		{
-			ThermalClusterMap l;
-			GetThermalClusterMap(pArea, l, search);
-			if (!l.empty())
-			{
-				ThermalClusterMap::iterator end = l.end();
-				for (ThermalClusterMap::iterator i = l.begin(); i != end; ++i)
-				{
-					wxString s;
-					s << wxStringFromUTF8(pArea->name);
-					if (s.size() > 43)
-					{
-						s.resize(40);
-						s += wxT("...");
-					}
-					if (i->first.empty())
-						pParent.add(new Antares::Component::HTMLListbox::Item::Group(s << wxT(" / <i>* no group *</i>")));
-					else
-						pParent.add(new Antares::Component::HTMLListbox::Item::Group(s << wxT(" / ") << i->first));
+    if (pArea)
+    {
+        ThermalClusterMap l;
+        GetThermalClusterMap(pArea, l, search);
+        if (!l.empty())
+        {
+            ThermalClusterMap::iterator end = l.end();
+            for (ThermalClusterMap::iterator i = l.begin(); i != end; ++i)
+            {
+                if (i->first.empty())
+                    pParent.add(new Antares::Component::HTMLListbox::Item::Group(
+                      wxString() << wxStringFromUTF8(pArea->name)
+                                 << wxT(" / <i>* no group *</i>")));
+                else
+                    pParent.add(new Antares::Component::HTMLListbox::Item::Group(
+                      wxString() << wxStringFromUTF8(pArea->name) << wxT(" / ") << i->first));
+                // Added the area as a result
+                ThermalClusterList::iterator jend = i->second.end();
+                i->second.sort(SortAlphaReverseOrder());
+                for (ThermalClusterList::iterator j = i->second.begin(); j != jend; ++j)
+                    pParent.add(new Antares::Component::HTMLListbox::Item::ThermalCluster(*j));
+            }
+        }
+    }
+    pParent.invalidate();
+}
 
-					// Added the area as a result
-					ThermalClusterList::iterator jend = i->second.end();
-					i->second.sort(SortAlphaOrder());
-					for (ThermalClusterList::iterator j = i->second.begin(); j != jend; ++j)
-						pParent.add(new Antares::Component::HTMLListbox::Item::ThermalCluster(*j));
-				}
+void ByAlphaReverseOrder::onAreaChanged(Data::Area* area)
+{
+    pArea = area;
+}
 
-			}
-		}
-		pParent.invalidate();
-	}
-
-
-	void ByAlphaOrder::onAreaChanged(Data::Area* area)
-	{
-		pArea = area;
-	}
-
-	void ByAlphaOrder::onInvalidateAllAreas()
-	{
-		pArea = nullptr;
-	}
-
-
-
-
-
-
-	ByAlphaReverseOrder::ByAlphaReverseOrder(HTMLListbox::Component& parent)
-		:IDatasource(parent),
-		pArea(nullptr)
-	{
-		OnStudyAreasChanged.connect(this, &ByAlphaReverseOrder::onInvalidateAllAreas);
-		Forms::ApplWnd::Instance()->onApplicationQuit.connect(this, &ByAlphaReverseOrder::onInvalidateAllAreas);
-	}
-
-
-	//! Destructor
-	ByAlphaReverseOrder::~ByAlphaReverseOrder()
-	{
-		destroyBoundEvents();
-	}
-
-
-	void ByAlphaReverseOrder::refresh(const wxString& search)
-	{
-		pParent.clear();
-
-		if (pArea)
-		{
-			ThermalClusterMap l;
-			GetThermalClusterMap(pArea, l, search);
-			if (!l.empty())
-			{
-				ThermalClusterMap::iterator end = l.end();
-				for (ThermalClusterMap::iterator i = l.begin(); i != end; ++i)
-				{
-					if (i->first.empty())
-						pParent.add(new Antares::Component::HTMLListbox::Item::Group(wxString() << wxStringFromUTF8(pArea->name) << wxT(" / <i>* no group *</i>")));
-					else
-						pParent.add(new Antares::Component::HTMLListbox::Item::Group(wxString() << wxStringFromUTF8(pArea->name) << wxT(" / ") << i->first));
-					// Added the area as a result
-					ThermalClusterList::iterator jend = i->second.end();
-					i->second.sort(SortAlphaReverseOrder());
-					for (ThermalClusterList::iterator j = i->second.begin(); j != jend; ++j)
-						pParent.add(new Antares::Component::HTMLListbox::Item::ThermalCluster(*j));
-				}
-			}
-		}
-		pParent.invalidate();
-	}
-
-
-	void ByAlphaReverseOrder::onAreaChanged(Data::Area* area)
-	{
-		pArea = area;
-	}
-
-
-	void ByAlphaReverseOrder::onInvalidateAllAreas()
-	{
-		pArea = nullptr;
-	}
-
-
+void ByAlphaReverseOrder::onInvalidateAllAreas()
+{
+    pArea = nullptr;
+}
 
 } // namespace ThermalClusters
 } // namespace Datasource
 } // namespace HTMLListbox
 } // namespace Component
 } // namespace Antares
-

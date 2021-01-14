@@ -25,15 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_WINDOWS_OPTIONS_ADVANCED_PARAMETERS_H__
-# define __ANTARES_APPLICATION_WINDOWS_OPTIONS_ADVANCED_PARAMETERS_H__
+#define __ANTARES_APPLICATION_WINDOWS_OPTIONS_ADVANCED_PARAMETERS_H__
 
-# include <antares/wx-wrapper.h>
-# include "../../../toolbox/components/button.h"
-# include <wx/dialog.h>
-# include <wx/textctrl.h>
-# include <antares/study/fwd.h>
-
-
+#include <antares/wx-wrapper.h>
+#include "../../../toolbox/components/button.h"
+#include <wx/dialog.h>
+#include <wx/textctrl.h>
+#include <antares/study/fwd.h>
 
 namespace Antares
 {
@@ -41,97 +39,91 @@ namespace Window
 {
 namespace Options
 {
+/*!
+** \brief Startup Wizard User Interface
+*/
+class AdvancedParameters final : public wxDialog
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    **
+    ** \param parent The parent window
+    */
+    AdvancedParameters(wxWindow* parent);
+    //! Destructor
+    virtual ~AdvancedParameters();
+    //@}
 
-	/*!
-	** \brief Startup Wizard User Interface
-	*/
-	class AdvancedParameters final : public wxDialog
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		**
-		** \param parent The parent window
-		*/
-		AdvancedParameters(wxWindow* parent);
-		//! Destructor
-		virtual ~AdvancedParameters();
-		//@}
+private:
+    void refresh();
+    void onClose(void*);
+    void onResetToDefault(void*);
 
+    void onInternalMotion(wxMouseEvent&);
 
-	private:
-		void refresh();
-		void onClose(void*);
-		void onResetToDefault(void*);
+    wxTextCtrl* insertEdit(wxWindow* parent,
+                           wxSizer* sizer,
+                           const wxString& text,
+                           wxObjectEventFunction);
 
-		void onInternalMotion(wxMouseEvent&);
+    void onEditSeedTSDraws(wxCommandEvent&);
 
-		wxTextCtrl* insertEdit(wxWindow* parent, wxSizer* sizer, const wxString& text,
-			wxObjectEventFunction);
+    void onNumericQuality(Component::Button&, wxMenu&, void*, Data::TimeSeries ts);
+    void onSelectNumericQualityStandard(wxCommandEvent& evt);
+    void onSelectNumericQualityHigh(wxCommandEvent& evt);
 
+    void onInitialReservoirLevels(Component::Button&, wxMenu&, void*);
+    void onSelectHotStart(wxCommandEvent& evt);
+    void onSelectColdStart(wxCommandEvent& evt);
 
-		void onEditSeedTSDraws(wxCommandEvent&);
+    void onHydroPricingMode(Component::Button&, wxMenu& menu, void*);
+    void onSelectHPHeuristic(wxCommandEvent& evt);
+    void onSelectHPMixedIntegerLinearProblem(wxCommandEvent& evt);
 
-		void onNumericQuality(Component::Button&, wxMenu&, void*, Data::TimeSeries ts);
-		void onSelectNumericQualityStandard(wxCommandEvent& evt);
-		void onSelectNumericQualityHigh(wxCommandEvent& evt);
+    void onPowerFluctuations(Component::Button&, wxMenu&, void*);
+    void onSelectMinimizeRamping(wxCommandEvent& evt);
+    void onSelectMinimizeExcursions(wxCommandEvent& evt);
+    void onSelectFreeModulations(wxCommandEvent& evt);
 
-		void onInitialReservoirLevels(Component::Button&, wxMenu&, void*);
-		void onSelectHotStart(wxCommandEvent& evt);
-		void onSelectColdStart(wxCommandEvent& evt);
+    void onSheddingPolicy(Component::Button&, wxMenu&, void*);
+    void onSelectSHPShavePeaks(wxCommandEvent& evt);
+    void onSelectSHPMinimizeDuration(wxCommandEvent& evt);
 
-		void onHydroPricingMode(Component::Button&, wxMenu& menu, void*);
-		void onSelectHPHeuristic(wxCommandEvent& evt);
-		void onSelectHPMixedIntegerLinearProblem(wxCommandEvent& evt);
+    void onUnitCommitmentMode(Component::Button&, wxMenu& menu, void*);
+    void onSelectUCHeuristic(wxCommandEvent& evt);
+    void onSelectUCMixedIntegerLinearProblem(wxCommandEvent& evt);
 
-		void onPowerFluctuations(Component::Button&, wxMenu&, void*);
-		void onSelectMinimizeRamping(wxCommandEvent& evt);
-		void onSelectMinimizeExcursions(wxCommandEvent& evt);
-		void onSelectFreeModulations(wxCommandEvent& evt);
+    void onNumberOfCores(Component::Button&, wxMenu& menu, void*);
+    void onSelectNCmin(wxCommandEvent& evt);
+    void onSelectNClow(wxCommandEvent& evt);
+    void onSelectNCaverage(wxCommandEvent& evt);
+    void onSelectNChigh(wxCommandEvent& evt);
+    void onSelectNCmax(wxCommandEvent& evt);
 
-		void onSheddingPolicy(Component::Button&, wxMenu&, void*);
-		void onSelectSHPShavePeaks(wxCommandEvent& evt);
-		void onSelectSHPMinimizeDuration(wxCommandEvent& evt);
+    void onDAReserveAllocationMode(Component::Button&, wxMenu& menu, void*);
+    void onSelectDAGlobal(wxCommandEvent& evt);
+    void onSelectDALocal(wxCommandEvent& evt);
 
-		void onUnitCommitmentMode(Component::Button&, wxMenu& menu, void*);
-		void onSelectUCHeuristic(wxCommandEvent& evt);
-		void onSelectUCMixedIntegerLinearProblem(wxCommandEvent& evt);
+private:
+    Component::Button* pBtnNumericQualityLoad;
+    Component::Button* pBtnNumericQualityWind;
+    Component::Button* pBtnNumericQualitySolar;
+    Component::Button* pBtnPowerFluctuations;
+    Component::Button* pBtnInitialReservoirLevels;
+    Component::Button* pBtnHydroPricing;
+    Component::Button* pBtnSheddingPolicy;
+    Component::Button* pBtnMultiNodalMarginalPrices;
+    Component::Button* pBtnUnitCommitment;
+    Component::Button* pBtnNumberOfCores;
+    Component::Button* pBtnDARreserveManagement;
+    wxTextCtrl* pEditSeeds[Data::seedMax];
+    // Only used for menus
+    Data::TimeSeries pCurrentTS;
 
-		void onNumberOfCores(Component::Button&, wxMenu& menu, void*);
-		void onSelectNCmin(wxCommandEvent& evt);
-		void onSelectNClow(wxCommandEvent& evt);
-		void onSelectNCaverage(wxCommandEvent& evt);
-		void onSelectNChigh(wxCommandEvent& evt);
-		void onSelectNCmax(wxCommandEvent& evt);
-
-		void onDAReserveAllocationMode(Component::Button&, wxMenu& menu, void*);
-		void onSelectDAGlobal(wxCommandEvent& evt);
-		void onSelectDALocal(wxCommandEvent& evt);
-
-	private:
-		Component::Button* pBtnNumericQualityLoad;
-		Component::Button* pBtnNumericQualityWind;
-		Component::Button* pBtnNumericQualitySolar;
-		Component::Button* pBtnPowerFluctuations;
-		Component::Button* pBtnInitialReservoirLevels;
-		Component::Button* pBtnHydroPricing;
-		Component::Button* pBtnSheddingPolicy;
-		Component::Button* pBtnMultiNodalMarginalPrices;
-		Component::Button* pBtnUnitCommitment;
-		Component::Button* pBtnNumberOfCores;
-		Component::Button* pBtnDARreserveManagement;
-		wxTextCtrl* pEditSeeds[Data::seedMax];
-		// Only used for menus
-		Data::TimeSeries pCurrentTS;
-
-	}; // class AdvancedParameters
-
-
-
-
-
+}; // class AdvancedParameters
 
 } // namespace Options
 } // namespace Window

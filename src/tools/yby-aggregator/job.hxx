@@ -25,18 +25,14 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __STUDY_JOB_AGGREGATOR_JOB_HXX__
-# define __STUDY_JOB_AGGREGATOR_JOB_HXX__
-
-
+#define __STUDY_JOB_AGGREGATOR_JOB_HXX__
 
 inline void JobFileReader::resizeJumpTable(uint newsize)
 {
-	pJumpTable.clear();
-	pJumpTable.resize(newsize);
-	for (uint i = 0; i != newsize; ++i)
-		pJumpTable[i] = (uint) -1;
+    pJumpTable.clear();
+    pJumpTable.resize(newsize);
+    for (uint i = 0; i != newsize; ++i)
+        pJumpTable[i] = (uint)-1;
 }
-
-
 
 #endif // __STUDY_JOB_AGGREGATOR_JOB_HXX__

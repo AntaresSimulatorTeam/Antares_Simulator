@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_WEEK_H__
-# define __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_WEEK_H__
+#define __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_WEEK_H__
 
-# include <antares/wx-wrapper.h>
-# include "../filter.h"
-
+#include <antares/wx-wrapper.h>
+#include "../filter.h"
 
 namespace Antares
 {
@@ -37,35 +36,50 @@ namespace Toolbox
 {
 namespace Filter
 {
+class Week : public AFilterBase
+{
+public:
+    static const wxChar* Name()
+    {
+        return wxT("week");
+    }
+    static const wxChar* Caption()
+    {
+        return wxT("Week");
+    }
+    static Date::Precision Precision()
+    {
+        return Date::weekly;
+    }
 
+public:
+    Week(Input* parent);
+    virtual ~Week()
+    {
+    }
 
+    virtual Date::Precision precision() const
+    {
+        return Week::Precision();
+    }
 
-	class Week : public AFilterBase
-	{
-	public:
-		static const wxChar* Name()    {return wxT("week");}
-		static const wxChar* Caption() {return wxT("Week");}
-		static Date::Precision Precision() {return Date::weekly;}
+    virtual bool checkOnRowsLabels() const
+    {
+        return true;
+    }
 
-	public:
-		Week(Input* parent);
-		virtual ~Week() {}
+    virtual const wxChar* name() const
+    {
+        return Week::Name();
+    }
+    virtual const wxChar* caption() const
+    {
+        return Week::Caption();
+    }
 
-		virtual Date::Precision precision() const {return Week::Precision();}
+    virtual bool rowIsValid(int row) const;
 
-		virtual bool checkOnRowsLabels() const {return true;}
-
-		virtual const wxChar* name() const {return Week::Name();}
-		virtual const wxChar* caption() const {return Week::Caption();}
-
-
-		virtual bool rowIsValid(int row) const;
-
-	}; // class Week
-
-
-
-
+}; // class Week
 
 } // namespace Filter
 } // namespace Toolbox

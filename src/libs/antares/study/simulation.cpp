@@ -34,69 +34,55 @@
 #include "simulation.h"
 #include "../logs.h"
 
-
 using namespace Yuni;
 
-
 #define SEP IO::Separator
-
 
 namespace Antares
 {
 namespace Data
 {
+Simulation::Simulation(Study& study) : pStudy(study)
+{
+}
 
+bool Simulation::saveToFolder(const AnyString& folder) const
+{
+    String b;
+    b.reserve(folder.size() + 20);
+    b = folder;
 
-	Simulation::Simulation(Study& study) :
-		pStudy(study)
-	{}
+    // Ensure that the folder has been created
+    if (!IO::Directory::Create(b))
+    {
+        logs.error() << "I/O: impossible to create the directory " << b;
+        return false;
+    }
 
+    // Save the comments
+    b = folder;
+    b << SEP << "comments.txt";
+    if (IO::File::SetContent(b, comments))
+        return true;
+    logs.error() << "I/O: impossible to write " << b;
+    return false;
+}
 
-	bool Simulation::saveToFolder(const AnyString& folder) const
-	{
-		String b;
-		b.reserve(folder.size() + 20);
-		b = folder;
+bool Simulation::loadFromFolder(const StudyLoadOptions& options)
+{
+    if (!options.loadOnlyNeeded)
+    {
+        pStudy.buffer.clear() << pStudy.folderSettings << SEP << "comments.txt";
+        if (IO::errNone != IO::File::LoadFromFile(comments, pStudy.buffer))
+            logs.warning() << pStudy.buffer << ": Impossible to read the file";
+    }
+    return true;
+}
 
-		// Ensure that the folder has been created
-		if (!IO::Directory::Create(b))
-		{
-			logs.error() << "I/O: impossible to create the directory " << b;
-			return false;
-		}
-
-		// Save the comments
-		b = folder;
-		b << SEP << "comments.txt";
-		if (IO::File::SetContent(b, comments))
-			return true;
-		logs.error() << "I/O: impossible to write " << b;
-		return false;
-	}
-
-
-
-	bool Simulation::loadFromFolder(const StudyLoadOptions& options)
-	{
-		if (!options.loadOnlyNeeded)
-		{
-			pStudy.buffer.clear() << pStudy.folderSettings << SEP << "comments.txt";
-			if (IO::errNone != IO::File::LoadFromFile(comments, pStudy.buffer))
-				logs.warning() << pStudy.buffer << ": Impossible to read the file";
-		}
-		return true;
-	}
-
-
-	Yuni::uint64 Simulation::memoryUsage() const
-	{
-		return name.capacity() + comments.capacity();
-	}
-
-
-
-
+Yuni::uint64 Simulation::memoryUsage() const
+{
+    return name.capacity() + comments.capacity();
+}
 
 } // namespace Data
 } // namespace Antares
-

@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_COMMENTS_H__
-# define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_COMMENTS_H__
+#define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_COMMENTS_H__
 
-# include <yuni/yuni.h>
-# include "../../../action.h"
-
+#include <yuni/yuni.h>
+#include "../../../action.h"
 
 namespace Antares
 {
@@ -39,46 +38,42 @@ namespace AntaresStudy
 {
 namespace Constraint
 {
+class Comments : public IAction
+{
+public:
+    //! The most suitable smart ptr for the class
+    typedef IAction::Ptr Ptr;
+    //! The threading policy
+    typedef IAction::ThreadingPolicy ThreadingPolicy;
 
-	class Comments : public IAction
-	{
-	public:
-		//! The most suitable smart ptr for the class
-		typedef IAction::Ptr  Ptr;
-		//! The threading policy
-		typedef IAction::ThreadingPolicy  ThreadingPolicy;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    template<class StringT>
+    Comments(const StringT& name);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		template<class StringT>
-		Comments(const StringT& name);
+    //! Destructor
+    virtual ~Comments();
+    //@}
 
-		//! Destructor
-		virtual ~Comments();
-		//@}
+protected:
+    virtual bool prepareWL(Context& ctx);
+    virtual bool performWL(Context& ctx);
 
-	protected:
-		virtual bool prepareWL(Context& ctx);
-		virtual bool performWL(Context& ctx);
+private:
+    //! From
+    Antares::Data::ConstraintName pOriginalConstraintName;
 
-	private:
-		//! From
-		Antares::Data::ConstraintName pOriginalConstraintName;
-
-	}; // class IAction
-
-
-
+}; // class IAction
 
 } // namespace Constraint
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
 
-# include "comments.hxx"
+#include "comments.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_COMMENTS_H__

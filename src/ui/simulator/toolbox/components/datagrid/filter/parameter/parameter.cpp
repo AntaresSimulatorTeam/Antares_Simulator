@@ -34,7 +34,6 @@
 #include "../operator.h"
 #include <antares/logs.h>
 
-
 namespace Antares
 {
 namespace Toolbox
@@ -43,177 +42,183 @@ namespace Filter
 {
 namespace Operator
 {
+Parameter::Parameter(AOperator& parent) :
+ pOperator(parent), dataType(DataType::dtNone), pSizer(NULL)
+{
+}
 
-	Parameter::Parameter(AOperator& parent)
-		:pOperator(parent), dataType(DataType::dtNone), pSizer(NULL)
-	{}
+Parameter::Parameter(const Parameter& copy) :
+ wxEvtHandler(),
+ pOperator(copy.pOperator),
+ caption(copy.caption),
+ postCaption(copy.postCaption),
+ dataType(copy.dataType),
+ defaultValues(copy.defaultValues),
+ value(copy.value),
+ pSizer(NULL)
+{
+}
 
-	Parameter::Parameter(const Parameter& copy)
-		:wxEvtHandler(), pOperator(copy.pOperator), caption(copy.caption),
-		postCaption(copy.postCaption),
-		dataType(copy.dataType), defaultValues(copy.defaultValues),
-		value(copy.value), pSizer(NULL)
-	{}
+Parameter::~Parameter()
+{
+}
 
+Parameter& Parameter::operator=(const Parameter& copy)
+{
+    caption = copy.caption;
+    postCaption = copy.postCaption;
+    dataType = copy.dataType;
+    defaultValues = copy.defaultValues;
+    value = copy.value;
+    return *this;
+}
 
-	Parameter::~Parameter()
-	{}
+wxSizer* Parameter::sizer(wxWindow* parent)
+{
+    if (NULL == pSizer)
+    {
+        pSizer = new wxBoxSizer(wxHORIZONTAL);
 
+        // Adding the caption
+        if (!caption.IsEmpty())
+            pSizer->Add(
+              new wxStaticText(parent, wxID_ANY, caption), 0, wxALIGN_CENTER_VERTICAL | wxALL);
 
-	Parameter& Parameter::operator = (const Parameter& copy)
-	{
-		caption = copy.caption;
-		postCaption = copy.postCaption;
-		dataType = copy.dataType;
-		defaultValues = copy.defaultValues;
-		value = copy.value;
-		return *this;
-	}
+        // Creating controls according the real type
+        switch (dataType)
+        {
+        case DataType::dtList:
+        {
+            wxChoice* ch = new wxChoice(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 22));
+            uint max = (uint)defaultValues.size();
+            for (uint i = 0; i < max; ++i)
+                ch->Insert(defaultValues[i], i);
+            if (max)
+                ch->SetSelection(0);
+            pSizer->Add(ch, 0, wxALL | wxEXPAND);
 
+            ch->Connect(ch->GetId(),
+                        wxEVT_COMMAND_CHOICE_SELECTED,
+                        wxCommandEventHandler(Parameter::onListChanged),
+                        NULL,
+                        this);
+            break;
+        }
+        default:
+        {
+            // Default value
+            wxString defVal;
+            switch (dataType)
+            {
+            case DataType::dtInt:
+                defVal = wxT("0");
+                break;
+            case DataType::dtFloat:
+                defVal = wxT("0.0");
+                break;
+            default:;
+            }
+            wxTextCtrl* edit = new wxTextCtrl(parent,
+                                              wxID_ANY,
+                                              defVal,
+                                              wxDefaultPosition,
+                                              wxSize(-1, 22),
+                                              0,
+                                              Toolbox::Validator::Numeric());
+            pSizer->Add(edit, 0, wxALL | wxEXPAND);
 
-	wxSizer* Parameter::sizer(wxWindow* parent)
-	{
-		if (NULL == pSizer)
-		{
-			pSizer = new wxBoxSizer(wxHORIZONTAL);
+            edit->Connect(edit->GetId(),
+                          wxEVT_COMMAND_TEXT_UPDATED,
+                          wxCommandEventHandler(Parameter::onChange),
+                          NULL,
+                          this);
+        }
+        }
 
-			// Adding the caption
-			if (!caption.IsEmpty())
-				pSizer->Add(new wxStaticText(parent, wxID_ANY, caption), 0, wxALIGN_CENTER_VERTICAL|wxALL);
+        // Post caption
+        if (!postCaption.IsEmpty())
+            pSizer->Add(
+              new wxStaticText(parent, wxID_ANY, postCaption), 0, wxALIGN_CENTER_VERTICAL | wxALL);
 
+        // Relayout
+        pSizer->Layout();
+    }
+    return pSizer;
+}
 
-			// Creating controls according the real type
-			switch (dataType)
-			{
-				case DataType::dtList:
-					{
-						wxChoice* ch = new wxChoice(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 22));
-						uint max = (uint) defaultValues.size();
-						for (uint i = 0; i < max; ++i)
-							ch->Insert(defaultValues[i], i);
-						if (max)
-							ch->SetSelection(0);
-						pSizer->Add(ch, 0, wxALL|wxEXPAND);
+Parameter& Parameter::presetInt()
+{
+    // logs.debug() << "  preset int";
+    caption.clear();
+    postCaption.clear();
+    dataType = DataType::dtInt;
+    return *this;
+}
 
-						ch->Connect(ch->GetId(), wxEVT_COMMAND_CHOICE_SELECTED,
-							wxCommandEventHandler(Parameter::onListChanged), NULL, this);
-						break;
-					}
-				default:
-					{
-						// Default value
-						wxString defVal;
-						switch (dataType)
-						{
-							case DataType::dtInt:   defVal = wxT("0");break;
-							case DataType::dtFloat: defVal = wxT("0.0");break;
-							default: ;
-						}
-						wxTextCtrl* edit = new wxTextCtrl(parent, wxID_ANY, defVal,
-							wxDefaultPosition, wxSize(-1, 22), 0, Toolbox::Validator::Numeric());
-						pSizer->Add(edit, 0, wxALL|wxEXPAND);
+Parameter& Parameter::presetWeekDay()
+{
+    // logs.debug() << "  preset week day";
+    caption.clear();
+    postCaption.clear();
+    dataType = DataType::dtList;
+    for (int i = 0; i != 7; ++i)
+        defaultValues.push_back(wxStringFromUTF8(Date::WeekdayToString(i)));
+    return *this;
+}
 
-						edit->Connect(edit->GetId(), wxEVT_COMMAND_TEXT_UPDATED,
-							wxCommandEventHandler(Parameter::onChange), NULL, this);
-					}
-			}
+Parameter& Parameter::presetHourYear()
+{
+    // logs.debug() << "  preset hour year";
+    caption.clear();
+    postCaption.clear();
+    dataType = DataType::dtInt;
+    return *this;
+}
 
-			// Post caption
-			if (!postCaption.IsEmpty())
-				pSizer->Add(new wxStaticText(parent, wxID_ANY, postCaption), 0, wxALIGN_CENTER_VERTICAL|wxALL);
+Parameter& Parameter::presetHourDay()
+{
+    // logs.debug() << "  preset hour day";
+    caption.clear();
+    postCaption.clear();
+    dataType = DataType::dtInt;
+    return *this;
+}
 
-			// Relayout
-			pSizer->Layout();
-		}
-		return pSizer;
-	}
+Parameter& Parameter::presetWeek()
+{
+    // logs.debug() << "  preset week";
+    caption.clear();
+    postCaption.clear();
+    dataType = DataType::dtInt;
+    return *this;
+}
 
+Parameter& Parameter::presetModuloAddon()
+{
+    // logs.debug() << "  preset module addon";
+    caption = wxT(" = ");
+    dataType = DataType::dtInt;
+    return *this;
+}
 
+void Parameter::onChange(wxCommandEvent& evt)
+{
+    value.reset(evt.GetString());
+    refreshAttachedGrid();
+}
 
-	Parameter& Parameter::presetInt()
-	{
-		//logs.debug() << "  preset int";
-		caption.clear();
-		postCaption.clear();
-		dataType = DataType::dtInt;
-		return *this;
-	}
+void Parameter::onListChanged(wxCommandEvent& evt)
+{
+    value.reset(evt.GetSelection());
+    refreshAttachedGrid();
+}
 
-
-	Parameter& Parameter::presetWeekDay()
-	{
-		//logs.debug() << "  preset week day";
-		caption.clear();
-		postCaption.clear();
-		dataType = DataType::dtList;
-		for (int i = 0; i != 7; ++i)
-			defaultValues.push_back(wxStringFromUTF8(Date::WeekdayToString(i)));
-		return *this;
-	}
-
-
-	Parameter& Parameter::presetHourYear()
-	{
-		//logs.debug() << "  preset hour year";
-		caption.clear();
-		postCaption.clear();
-		dataType = DataType::dtInt;
-		return *this;
-	}
-
-
-	Parameter& Parameter::presetHourDay()
-	{
-		//logs.debug() << "  preset hour day";
-		caption.clear();
-		postCaption.clear();
-		dataType = DataType::dtInt;
-		return *this;
-	}
-
-
-	Parameter& Parameter::presetWeek()
-	{
-		//logs.debug() << "  preset week";
-		caption.clear();
-		postCaption.clear();
-		dataType = DataType::dtInt;
-		return *this;
-	}
-
-
-	Parameter& Parameter::presetModuloAddon()
-	{
-		//logs.debug() << "  preset module addon";
-		caption = wxT(" = ");
-		dataType = DataType::dtInt;
-		return *this;
-	}
-
-
-
-	void Parameter::onChange(wxCommandEvent& evt)
-	{
-		value.reset(evt.GetString());
-		refreshAttachedGrid();
-	}
-
-	void Parameter::onListChanged(wxCommandEvent& evt)
-	{
-		value.reset(evt.GetSelection());
-		refreshAttachedGrid();
-	}
-
-	void Parameter::refreshAttachedGrid()
-	{
-		pOperator.refreshAttachedGrid();
-	}
-
-
-
+void Parameter::refreshAttachedGrid()
+{
+    pOperator.refreshAttachedGrid();
+}
 
 } // namespace Operator
 } // namespace Filter
 } // namespace Toolbox
 } // namespace Antares
-

@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_THERMAL_SCENARIO_BUILDER_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_THERMAL_SCENARIO_BUILDER_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_THERMAL_SCENARIO_BUILDER_H__
 
 #include "scenario-builder-renderer-base.h"
-# include "../../../../toolbox/input/area.h"
-
+#include "../../../../toolbox/input/area.h"
 
 namespace Antares
 {
@@ -39,19 +38,17 @@ namespace Datagrid
 {
 namespace Renderer
 {
-	
-	class thermalScBuilderRenderer : public ScBuilderRendererBase
-	{
-	public:
-		thermalScBuilderRenderer(Toolbox::InputSelector::Area* notifier);
-		bool valid() const;
-		~thermalScBuilderRenderer();
-		bool cellValue(int x, int y, const Yuni::String& value);
-		int height() const;
-		wxString rowCaption(int rowIndx) const;
-		double cellNumericValue(int x, int y) const;
-	}; // class thermalScBuilderRenderer
-
+class thermalScBuilderRenderer : public ScBuilderRendererBase
+{
+public:
+    thermalScBuilderRenderer(Toolbox::InputSelector::Area* notifier);
+    bool valid() const;
+    ~thermalScBuilderRenderer();
+    bool cellValue(int x, int y, const Yuni::String& value);
+    int height() const;
+    wxString rowCaption(int rowIndx) const;
+    double cellNumericValue(int x, int y) const;
+}; // class thermalScBuilderRenderer
 
 } // namespace Renderer
 } // namespace Datagrid

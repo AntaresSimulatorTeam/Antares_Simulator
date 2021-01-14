@@ -25,13 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_BINDINGCONSTRAINTS_H__
-# define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_BINDINGCONSTRAINTS_H__
+#define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_BINDINGCONSTRAINTS_H__
 
-# include "datasource.h"
-# include <yuni/core/event.h>
-# include <antares/study/constraint.h>
-
-
+#include "datasource.h"
+#include <yuni/core/event.h>
+#include <antares/study/constraint.h>
 
 namespace Antares
 {
@@ -43,45 +41,51 @@ namespace Datasource
 {
 namespace BindingConstraints
 {
+class ByAlphaOrder : public Yuni::IEventObserver<ByAlphaOrder>, public IDatasource
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    //! Default Constructor
+    ByAlphaOrder(HTMLListbox::Component& parent);
+    //! Destructor
+    virtual ~ByAlphaOrder();
+    //@}
 
-	class ByAlphaOrder : public Yuni::IEventObserver<ByAlphaOrder>, public IDatasource
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		//! Default Constructor
-		ByAlphaOrder(HTMLListbox::Component& parent);
-		//! Destructor
-		virtual ~ByAlphaOrder();
-		//@}
+    virtual wxString name() const
+    {
+        return wxT("Binding constraints in alphabetical order");
+    }
+    virtual const char* icon() const
+    {
+        return "images/16x16/sort_alphabet.png";
+    }
+    virtual void refresh(const wxString& search = wxEmptyString);
 
-		virtual wxString name() const {return wxT("Binding constraints in alphabetical order");}
-		virtual const char* icon() const {return "images/16x16/sort_alphabet.png";}
-		virtual void refresh(const wxString& search = wxEmptyString);
+}; // class ByAlphaOrder
 
-	}; // class ByAlphaOrder
+class ByAlphaReverseOrder : public Yuni::IEventObserver<ByAlphaReverseOrder>, public IDatasource
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    //! Default Constructor
+    ByAlphaReverseOrder(HTMLListbox::Component& parent);
+    //! Destructor
+    virtual ~ByAlphaReverseOrder();
+    //@}
 
+    virtual wxString name() const
+    {
+        return wxT("Binding constraints in reverse alphabetical order");
+    }
+    virtual const char* icon() const
+    {
+        return "images/16x16/sort_alphabet_descending.png";
+    }
+    virtual void refresh(const wxString& search = wxEmptyString);
 
-	class ByAlphaReverseOrder : public Yuni::IEventObserver<ByAlphaReverseOrder>, public IDatasource
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		//! Default Constructor
-		ByAlphaReverseOrder(HTMLListbox::Component& parent);
-		//! Destructor
-		virtual ~ByAlphaReverseOrder();
-		//@}
-
-		virtual wxString name() const {return wxT("Binding constraints in reverse alphabetical order");}
-		virtual const char* icon() const {return "images/16x16/sort_alphabet_descending.png";}
-		virtual void refresh(const wxString& search = wxEmptyString);
-
-	}; // class ByAlphaReverseOrder
-
-
-
-
+}; // class ByAlphaReverseOrder
 
 } // namespace BindingConstraints
 } // namespace Datasource

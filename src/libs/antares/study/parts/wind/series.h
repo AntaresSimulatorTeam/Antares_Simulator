@@ -25,86 +25,75 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_PARTS_WIND_TIMESERIES_H__
-# define __ANTARES_LIBS_STUDY_PARTS_WIND_TIMESERIES_H__
+#define __ANTARES_LIBS_STUDY_PARTS_WIND_TIMESERIES_H__
 
-# include "../../../array/matrix.h"
-# include "../../fwd.h"
-
-
-
+#include "../../../array/matrix.h"
+#include "../../fwd.h"
 
 namespace Antares
 {
 namespace Data
 {
+/*!
+** \brief Data series (Wind)
+*/
+class DataSeriesWind
+{
+public:
+    void estimateMemoryUsage(StudyMemoryUsage&) const;
 
-	/*!
-	** \brief Data series (Wind)
-	*/
-	class DataSeriesWind
-	{
-	public:
-		void estimateMemoryUsage(StudyMemoryUsage&) const;
+    bool invalidate(bool reload = false) const;
 
-		bool invalidate(bool reload = false) const;
+    void markAsModified() const;
 
-		void markAsModified() const;
+public:
+    /*!
+    ** \brief Time series (MW)
+    **
+    ** Merely a matrix of TimeSeriesCount * 8760 values
+    */
+    Matrix<double, Yuni::sint32> series;
 
-	public:
-		/*!
-		** \brief Time series (MW)
-		**
-		** Merely a matrix of TimeSeriesCount * 8760 values
-		*/
-		Matrix<double, Yuni::sint32> series;
+    /*!
+    ** \brief Monte-Carlo
+    */
+    Matrix<Yuni::uint32> timeseriesNumbers;
 
-		/*!
-		** \brief Monte-Carlo
-		*/
-		Matrix<Yuni::uint32> timeseriesNumbers;
+}; /* class DataSeriesWind */
 
-	}; /* class DataSeriesWind */
+/*!
+** \brief Load wind data series from a file
+** \ingroup windseries
+**
+** \param d Data series
+** \param areaID The ID of the area associated to the data series
+** \param folder The source folder
+** \return A non-zero value if the operation succeeded, 0 otherwise
+*/
+int DataSeriesWindLoadFromFolder(Study& s,
+                                 DataSeriesWind* d,
+                                 const AreaName& areaID,
+                                 const char folder[]);
 
+/*!
+** \brief Save wind data series from a file
+** \ingroup windseries
+**
+** \param d Data series
+** \param areaID The ID of the area associated to the data series
+** \param folder The target folder
+** \return A non-zero value if the operation succeeded, 0 otherwise
+*/
+int DataSeriesWindSaveToFolder(DataSeriesWind* d, const AreaName& areaID, const char folder[]);
 
-
-
-	/*!
-	** \brief Load wind data series from a file
-	** \ingroup windseries
-	**
-	** \param d Data series
-	** \param areaID The ID of the area associated to the data series
-	** \param folder The source folder
-	** \return A non-zero value if the operation succeeded, 0 otherwise
-	*/
-	int DataSeriesWindLoadFromFolder(Study& s, DataSeriesWind* d, const AreaName& areaID, const char folder[]);
-
-
-
-	/*!
-	** \brief Save wind data series from a file
-	** \ingroup windseries
-	**
-	** \param d Data series
-	** \param areaID The ID of the area associated to the data series
-	** \param folder The target folder
-	** \return A non-zero value if the operation succeeded, 0 otherwise
-	*/
-	int DataSeriesWindSaveToFolder(DataSeriesWind* d, const AreaName& areaID, const char folder[]);
-
-
-	/*!
-	** \brief Get the size (bytes) in memory occupied by a `DataSeriesWind` structure
-	*/
-	Yuni::uint64 DataSeriesWindMemoryUsage(DataSeriesWind* w);
-
-
-
-
+/*!
+** \brief Get the size (bytes) in memory occupied by a `DataSeriesWind` structure
+*/
+Yuni::uint64 DataSeriesWindMemoryUsage(DataSeriesWind* w);
 
 } // namespace Data
 } // namespace Antares
 
-# include "series.hxx"
+#include "series.hxx"
 
 #endif /* __ANTARES_LIBS_STUDY_PARTS_WIND_TIMESERIES_H__ */

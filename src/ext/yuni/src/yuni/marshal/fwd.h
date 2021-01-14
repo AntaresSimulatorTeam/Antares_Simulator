@@ -10,18 +10,14 @@
 */
 #pragma once
 
-
 namespace Yuni
 {
 namespace Marshal
 {
+// all forwarded objects
 
-	// all forwarded objects
-
-	class Document;
-	class Object;
-
-
+class Document;
+class Object;
 
 } // namespace Marshal
 } // namespace Yuni

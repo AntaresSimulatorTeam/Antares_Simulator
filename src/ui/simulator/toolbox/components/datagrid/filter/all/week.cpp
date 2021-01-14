@@ -29,72 +29,63 @@
 #include <antares/date.h>
 #include <antares/study/study.h>
 
-
-
 namespace Antares
 {
 namespace Toolbox
 {
 namespace Filter
 {
+Week::Week(Input* parent) : AFilterBase(parent)
+{
+    operators.addStdArithmetic();
+}
 
-	Week::Week(Input* parent) :
-		AFilterBase(parent)
-	{
-		operators.addStdArithmetic();
-	}
+bool Week::rowIsValid(int row) const
+{
+    // TODO Do not use global study
+    auto studyptr = Data::Study::Current::Get();
+    if (!studyptr)
+        return false;
+    auto& study = *studyptr;
+    auto& calendar = study.calendar;
 
-
-	bool Week::rowIsValid(int row) const
-	{
-		// TODO Do not use global study
-		auto studyptr = Data::Study::Current::Get();
-		if (!studyptr)
-			return false;
-		auto& study = *studyptr;
-		auto& calendar = study.calendar;
-
-		switch (pDataGridPrecision)
-		{
-			case Date::hourly:
-				{
-					if (row < study.calendar.maxHoursInYear)
-					{
-						uint weekindex = calendar.hours[row].week;
-						uint userweek  = calendar.weeks[weekindex].userweek;
-						return currentOperator->compute((int) userweek);
-					}
-					break;
-				}
-			case Date::daily:
-				{
-					if (row < study.calendar.maxDaysInYear)
-					{
-						uint weekindex = calendar.days[row].week;
-						uint userweek  = calendar.weeks[weekindex].userweek;
-						return currentOperator->compute((int) userweek);
-					}
-					break;
-				}
-			case Date::weekly:
-				{
-					if (row < study.calendar.maxWeeksInYear)
-					{
-						uint userweek  = calendar.weeks[row].userweek;
-						return currentOperator->compute((int) userweek);
-					}
-					break;
-				}
-			default:
-				break;
-		}
-		return false;
-	}
-
-
-
+    switch (pDataGridPrecision)
+    {
+    case Date::hourly:
+    {
+        if (row < study.calendar.maxHoursInYear)
+        {
+            uint weekindex = calendar.hours[row].week;
+            uint userweek = calendar.weeks[weekindex].userweek;
+            return currentOperator->compute((int)userweek);
+        }
+        break;
+    }
+    case Date::daily:
+    {
+        if (row < study.calendar.maxDaysInYear)
+        {
+            uint weekindex = calendar.days[row].week;
+            uint userweek = calendar.weeks[weekindex].userweek;
+            return currentOperator->compute((int)userweek);
+        }
+        break;
+    }
+    case Date::weekly:
+    {
+        if (row < study.calendar.maxWeeksInYear)
+        {
+            uint userweek = calendar.weeks[row].userweek;
+            return currentOperator->compute((int)userweek);
+        }
+        break;
+    }
+    default:
+        break;
+    }
+    return false;
+}
 
 } // namespace Filter
 } // namespace Toolbox
 } // namespace Antares
-

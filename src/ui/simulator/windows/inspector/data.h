@@ -25,13 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_WINDOWS_INSPECTOR_DATA_H__
-# define __ANTARES_WINDOWS_INSPECTOR_DATA_H__
+#define __ANTARES_WINDOWS_INSPECTOR_DATA_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/smartptr.h>
-# include <antares/study.h>
-
-
+#include <yuni/yuni.h>
+#include <yuni/core/smartptr.h>
+#include <antares/study.h>
 
 namespace Antares
 {
@@ -39,70 +37,62 @@ namespace Window
 {
 namespace Inspector
 {
+/*!
+** \brief Collection of items to view/edit from an inspector
+**
+** \note This class should be renamed
+*/
+class InspectorData final
+{
+public:
+    //! The most suitable smart pointer for the class
+    typedef Yuni::SmartPtr<InspectorData> Ptr;
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    explicit InspectorData(Data::Study& study);
+    //! Destructor
+    ~InspectorData();
+    //@}
 
-	/*!
-	** \brief Collection of items to view/edit from an inspector
-	**
-	** \note This class should be renamed
-	*/
-	class InspectorData final
-	{
-	public:
-		//! The most suitable smart pointer for the class
-		typedef Yuni::SmartPtr<InspectorData> Ptr;
+    void clear();
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		explicit InspectorData(Data::Study& study);
-		//! Destructor
-		~InspectorData();
-		//@}
+    void determineEmpty();
 
-		void clear();
+    /*!
+    ** \brief Get the total number of items in this set
+    */
+    uint totalNbOfItems() const;
 
-		void determineEmpty();
+public:
+    //! Reference to the study
+    Data::Study& study;
+    //! Flag to fastly know if the selection is empty
+    bool empty;
+    //! All selected areas
+    Data::Area::Set areas;
+    //! All selected links
+    Data::AreaLink::Set links;
+    //! All selected thermal clusters
+    Data::ThermalCluster::Set clusters;
+    //! All selected binding constraints
+    Data::BindingConstraint::Set constraints;
+    //! All studies
+    Data::Study::Set studies;
 
-		/*!
-		** \brief Get the total number of items in this set
-		*/
-		uint totalNbOfItems() const;
+}; // class InspectorData
 
-
-	public:
-		//! Reference to the study
-		Data::Study& study;
-		//! Flag to fastly know if the selection is empty
-		bool empty;
-		//! All selected areas
-		Data::Area::Set areas;
-		//! All selected links
-		Data::AreaLink::Set links;
-		//! All selected thermal clusters
-		Data::ThermalCluster::Set clusters;
-		//! All selected binding constraints
-		Data::BindingConstraint::Set constraints;
-		//! All studies
-		Data::Study::Set studies;
-
-	}; // class InspectorData
-
-
-
-
-
-	// Singleton
-	extern InspectorData::Ptr gData;
-
+// Singleton
+extern InspectorData::Ptr gData;
 
 } // namespace Inspector
 } // namespace Window
 } // namespace Antares
 
-# include "data.hxx"
+#include "data.hxx"
 
 #endif // __ANTARES_WINDOWS_INSPECTOR_DATA_H__

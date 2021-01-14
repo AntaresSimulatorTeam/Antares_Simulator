@@ -11,19 +11,15 @@
 #pragma once
 #include "math.h"
 
-
 namespace Yuni
 {
 namespace Math
 {
-
-	/*!
-	** \brief The exponential function
-	*/
-	template<class T> YUNI_DECL T Exp(T x);
-
-
-
+/*!
+** \brief The exponential function
+*/
+template<class T>
+YUNI_DECL T Exp(T x);
 
 } // namespace Math
 } // namespace Yuni

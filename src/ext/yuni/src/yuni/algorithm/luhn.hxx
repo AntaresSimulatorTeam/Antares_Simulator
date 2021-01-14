@@ -11,20 +11,14 @@
 #pragma once
 #include "luhn.h"
 
-
-
 namespace Yuni
 {
 namespace Algorithm
 {
-
-
-	inline bool Luhn::IsValidCreditCardNumber(const AnyString& s)
-	{
-		return (Mod10(s) == 0);
-	}
-
-
+inline bool Luhn::IsValidCreditCardNumber(const AnyString& s)
+{
+    return (Mod10(s) == 0);
+}
 
 } // namespace Algorithm
 } // namespace Yuni

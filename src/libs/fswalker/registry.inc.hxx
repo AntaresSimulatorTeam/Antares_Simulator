@@ -25,135 +25,126 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_FS_WALKER_REGISTRY_H__
-# define __ANTARES_FS_WALKER_REGISTRY_H__
+#define __ANTARES_FS_WALKER_REGISTRY_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/noncopyable.h>
-# include <vector>
-
-
+#include <yuni/yuni.h>
+#include <yuni/core/noncopyable.h>
+#include <vector>
 
 namespace FSWalker
 {
+class EventsRegistry : private Yuni::NonCopyable<EventsRegistry>
+{
+public:
+    typedef std::vector<OnDirectoryEvent> OnDirectoryEventList;
+    typedef std::vector<OnFileEvent> OnFileEventList;
+    typedef std::vector<uint> IndexList;
+    typedef std::vector<void*> UserDataList;
 
-	class EventsRegistry : private Yuni::NonCopyable<EventsRegistry>
-	{
-	public:
-		typedef std::vector<OnDirectoryEvent>  OnDirectoryEventList;
-		typedef std::vector<OnFileEvent>  OnFileEventList;
-		typedef std::vector<uint> IndexList;
-		typedef std::vector<void*> UserDataList;
+public:
+    EventsRegistry()
+    {
+    }
+    ~EventsRegistry();
+    void initialize(const IExtension::Vector& exts, DispatchJobEvent& queue);
+    void finalize();
 
-	public:
-		EventsRegistry() {}
-		~EventsRegistry();
-		void initialize(const IExtension::Vector& exts, DispatchJobEvent& queue);
-		void finalize();
+    struct
+    {
+        OnDirectoryEventList enter;
+        IndexList indexes;
+        UserDataList userdata;
+    } directory;
 
-		struct
-		{
-			OnDirectoryEventList enter;
-			IndexList indexes;
-			UserDataList userdata;
-		}
-		directory;
+    struct
+    {
+        OnFileEventList access;
+        IndexList indexes;
+        UserDataList userdata;
+    } file;
 
-		struct
-		{
-			OnFileEventList access;
-			IndexList indexes;
-			UserDataList userdata;
-		}
-		file;
+    //! Extensions
+    IExtension::Vector extensions;
+    //! Unique user data per extension
+    UserDataList uniqueUserdata;
 
-		//! Extensions
-		IExtension::Vector extensions;
-		//! Unique user data per extension
-		UserDataList uniqueUserdata;
+}; // class EventsRegistry
 
-	}; // class EventsRegistry
+inline EventsRegistry::~EventsRegistry()
+{
+    finalize();
+}
 
+void EventsRegistry::finalize()
+{
+    if (extensions.empty())
+        return;
 
-	inline EventsRegistry::~EventsRegistry()
-	{
-		finalize();
-	}
+    for (uint i = 0; i != extensions.size(); ++i)
+    {
+        void* userdata = uniqueUserdata[i];
+        if (!userdata)
+            continue;
+        auto& extension = *(extensions[i]);
 
+        // release ressources
+        extension.userdataDestroy(userdata);
+        uniqueUserdata[i] = nullptr;
+    }
 
-	void EventsRegistry::finalize()
-	{
-		if (extensions.empty())
-			return;
+    file.indexes.clear();
+    file.access.clear();
+    file.userdata.clear();
 
-		for (uint i = 0; i != extensions.size(); ++i)
-		{
-			void* userdata  = uniqueUserdata[i];
-			if (!userdata)
-				continue;
-			auto& extension = *(extensions[i]);
+    directory.indexes.clear();
+    directory.enter.clear();
+    directory.userdata.clear();
 
-			// release ressources
-			extension.userdataDestroy(userdata);
-			uniqueUserdata[i] = nullptr;
-		}
+    extensions.clear();
+}
 
-		file.indexes.clear();
-		file.access.clear();
-		file.userdata.clear();
+void EventsRegistry::initialize(const IExtension::Vector& exts, DispatchJobEvent& queue)
+{
+    // release all previously acquired ressources
+    finalize();
+    // Keeping a reference on each extension
+    extensions = exts;
+    uniqueUserdata.resize(extensions.size());
 
-		directory.indexes.clear();
-		directory.enter.clear();
-		directory.userdata.clear();
+    for (uint i = 0; i != extensions.size(); ++i)
+    {
+        auto& extension = *(extensions[i]);
 
-		extensions.clear();
-	}
+        // File access
+        auto access = extension.fileEvent();
+        // Directory access
+        auto directoryEnter = extension.directoryEvent();
 
+        if (!access && !directoryEnter)
+        {
+            uniqueUserdata[i] = nullptr;
+            continue;
+        }
 
-	void EventsRegistry::initialize(const IExtension::Vector& exts, DispatchJobEvent& queue)
-	{
-		// release all previously acquired ressources
-		finalize();
-		// Keeping a reference on each extension
-		extensions = exts;
-		uniqueUserdata.resize(extensions.size());
+        void* userdata = extension.userdataCreate(queue);
+        uniqueUserdata[i] = userdata;
 
-		for (uint i = 0; i != extensions.size(); ++i)
-		{
-			auto& extension = *(extensions[i]);
+        if (access)
+        {
+            file.indexes.push_back(i);
+            file.access.push_back(access);
+            file.userdata.push_back(userdata);
+        }
 
-			// File access
-			auto access = extension.fileEvent();
-			// Directory access
-			auto directoryEnter = extension.directoryEvent();
+        if (directoryEnter)
+        {
+            directory.indexes.push_back(i);
+            directory.enter.push_back(directoryEnter);
+            directory.userdata.push_back(userdata);
+        }
 
-			if (!access && !directoryEnter)
-			{
-				uniqueUserdata[i] = nullptr;
-				continue;
-			}
-
-			void* userdata = extension.userdataCreate(queue);
-			uniqueUserdata[i] = userdata;
-
-			if (access)
-			{
-				file.indexes.push_back(i);
-				file.access.push_back(access);
-				file.userdata.push_back(userdata);
-			}
-
-			if (directoryEnter)
-			{
-				directory.indexes.push_back(i);
-				directory.enter.push_back(directoryEnter);
-				directory.userdata.push_back(userdata);
-			}
-
-		} // each extension
-	}
-
-
-
+    } // each extension
+}
 
 } // namespace FSWalker
 

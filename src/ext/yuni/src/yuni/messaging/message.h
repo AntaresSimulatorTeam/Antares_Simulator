@@ -9,43 +9,38 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_MESSAGING_MESSAGE_H__
-# define __YUNI_MESSAGING_MESSAGE_H__
+#define __YUNI_MESSAGING_MESSAGE_H__
 
-# include "../yuni.h"
-# include "../core/dictionary.h"
-
+#include "../yuni.h"
+#include "../core/dictionary.h"
 
 namespace Yuni
 {
 namespace Messaging
 {
+class Message final
+{
+public:
+    Message() : httpStatus(200)
+    {
+    }
 
-	class Message final
-	{
-	public:
-		Message() :
-			httpStatus(200)
-		{}
+public:
+    // returned message
+    Clob body;
+    // HTTP Error
+    uint httpStatus;
+    // parameters
+    KeyValueStore params;
+    // Name of the method invoked
+    AnyString method;
+    // Schema
+    AnyString schema;
 
-	public:
-		// returned message
-		Clob body;
-		// HTTP Error
-		uint httpStatus;
-		// parameters
-		KeyValueStore params;
-		// Name of the method invoked
-		AnyString method;
-		// Schema
-		AnyString schema;
+    //! Temporary string provided for convenient uses (to reduce memory reallocation)
+    String key;
 
-		//! Temporary string provided for convenient uses (to reduce memory reallocation)
-		String key;
-
-	}; // class Message
-
-
-
+}; // class Message
 
 } // namespace Messaging
 } // namespace Yuni

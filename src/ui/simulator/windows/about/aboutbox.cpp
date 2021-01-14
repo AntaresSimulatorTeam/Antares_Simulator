@@ -110,10 +110,8 @@ Special thanks are due to a few Authors without whom Antares_Simulator would not
 	Sylvain		Marandon		(also author of the Antares_Data_Organizer application) \n\
 	Michel 		Doquet		(project initiator)";
 
-
-
 const char* AntaresLicense =
-R"(
+  R"(
 Valid-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 
 License-Text:
@@ -167,7 +165,7 @@ conditions of the MPL-2.0 on this library.
 )";
 
 const char* AntaresLicense1 =
-R"(
+  R"(
 ### GNU GENERAL PUBLIC LICENSE
 
 Version 3, 29 June 2007
@@ -415,9 +413,8 @@ in an aggregate does not cause this License to apply to the other
 parts of the aggregate.
 )";
 
-
 const char* AntaresLicense2 =
-R"(
+  R"(
 #### 6. Conveying Non-Source Forms.
 
 You may convey a covered work in object code form under the terms of
@@ -708,7 +705,7 @@ otherwise be available to you under applicable patent law.
 )";
 
 const char* AntaresLicense3 =
-R"(
+  R"(
 #### 12. No Surrender of Others' Freedom.
 
 If conditions are imposed on you (whether by court order, agreement or
@@ -855,192 +852,207 @@ namespace Antares
 {
 namespace Window
 {
+namespace // anonymous
+{
+enum
+{
+    is64Bits = (sizeof(void*) > 4),
+};
 
-	namespace // anonymous
-	{
+} // anonymous namespace
 
-		enum
-		{
-			is64Bits = (sizeof(void*) > 4),
-		};
+AboutBox::AboutBox(wxWindow* parent) :
+ wxDialog(parent, wxID_ANY, wxT("About Antares_Simulator"), wxDefaultPosition, wxDefaultSize)
+{
+    // Informations about the study
+    wxColour defaultBgColor = GetBackgroundColour();
+    SetBackgroundColour(wxColour(255, 255, 255));
 
+    auto* sizer = new wxBoxSizer(wxVERTICAL);
 
-	} // anonymous namespace
+#ifdef ANTARES_BETA
+    sizer->Add(Resources::StaticBitmapLoadFromFile(this, wxID_ANY, "images/misc/beta.gif"),
+               0,
+               wxALIGN_LEFT | wxALIGN_TOP);
+#elif ANTARES_RC != 0
+    sizer->Add(Resources::StaticBitmapLoadFromFile(this, wxID_ANY, "images/misc/rc.gif"),
+               0,
+               wxALIGN_LEFT | wxALIGN_TOP);
+#else
+    sizer->AddSpacer(10);
+#endif
 
+    auto* textSizer = new wxBoxSizer(wxHORIZONTAL);
+    textSizer->AddSpacer(20);
+    textSizer->Add(
+      Resources::StaticBitmapLoadFromFile(this, wxID_ANY, "images/128x128/antares.png"),
+      0,
+      wxALL | wxALIGN_TOP | wxALIGN_CENTER_HORIZONTAL);
+    textSizer->AddSpacer(15);
 
+    auto* sv = new wxBoxSizer(wxVERTICAL);
 
+    // About - TEXT
+    // title
+    auto* antares = Component::CreateLabel(this, wxT("Antares_Simulator"), true, false, +8);
+    antares->SetForegroundColour(wxColour(0, 0, 0));
+    antares->SetBackgroundColour(wxColour(255, 255, 255));
+    sv->Add(antares, 0, wxALL | wxEXPAND);
 
-	AboutBox::AboutBox(wxWindow* parent) :
-		wxDialog(parent, wxID_ANY, wxT("About Antares_Simulator"), wxDefaultPosition, wxDefaultSize)
-	{
-		// Informations about the study
-		wxColour defaultBgColor = GetBackgroundColour();
-		SetBackgroundColour(wxColour(255, 255, 255));
+    sv->AddSpacer(2);
 
-		auto* sizer = new wxBoxSizer(wxVERTICAL);
+    // subtitle
+    auto* what = Component::CreateLabel(
+      this, wxT("A New Tool for Adequacy Reports and Economic Studies"), false, false);
+    what->SetBackgroundColour(wxColour(255, 255, 255));
+    what->SetForegroundColour(wxColour(0, 0, 0));
+    sv->Add(what, 0, wxALL | wxEXPAND);
 
-		# ifdef ANTARES_BETA
-		sizer->Add(Resources::StaticBitmapLoadFromFile(this, wxID_ANY, "images/misc/beta.gif"), 0, wxALIGN_LEFT | wxALIGN_TOP);
-		# elif ANTARES_RC != 0
-		sizer->Add(Resources::StaticBitmapLoadFromFile(this, wxID_ANY, "images/misc/rc.gif"), 0, wxALIGN_LEFT | wxALIGN_TOP);
-		# else
-		sizer->AddSpacer(10);
-		# endif
+    sv->AddSpacer(15);
 
-		
+    // copyright date
+    auto* copyright = Component::CreateLabel(
+      this, wxString() << wxT("Copyright RTE 2007 - ") << ANTARES_VERSION_YEAR);
+    copyright->SetBackgroundColour(wxColour(255, 255, 255));
+    copyright->SetForegroundColour(wxColour(0, 0, 0));
+    sv->Add(copyright, 0, wxALL | wxEXPAND);
 
-		auto* textSizer = new wxBoxSizer(wxHORIZONTAL);
-		textSizer->AddSpacer(20);
-		textSizer->Add(Resources::StaticBitmapLoadFromFile(this, wxID_ANY, "images/128x128/antares.png"),
-			0, wxALL|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL);
-		textSizer->AddSpacer(15);
+    // Website url
+    if (0) // disabled because the url will change in a near future...
+    {
+        auto* url = Component::CreateLabel(this, wxT(ANTARES_WEBSITE), false, true);
+        url->SetBackgroundColour(wxColour(255, 255, 255));
+        url->SetForegroundColour(wxColour(90, 90, 90));
+        sv->Add(url, 0, wxALL | wxEXPAND);
+    }
 
-		auto* sv = new wxBoxSizer(wxVERTICAL);
+    sv->AddSpacer(1);
 
-		// About - TEXT
-		// title
-		auto* antares = Component::CreateLabel(this, wxT("Antares_Simulator"), true, false, +8);
-		antares->SetForegroundColour(wxColour(0, 0, 0));
-		antares->SetBackgroundColour(wxColour(255, 255, 255));
-		sv->Add(antares, 0, wxALL|wxEXPAND);
-
-		sv->AddSpacer(2);
-
-		// subtitle
-		auto* what = Component::CreateLabel(this, wxT("A New Tool for Adequacy Reports and Economic Studies"), false, false);
-		what->SetBackgroundColour(wxColour(255, 255, 255));
-		what->SetForegroundColour(wxColour(0, 0, 0));
-		sv->Add(what, 0, wxALL|wxEXPAND);
-
-		sv->AddSpacer(15);
-
-		// copyright date
-		auto* copyright = Component::CreateLabel(this, wxString() << wxT("Copyright RTE 2007 - ") << ANTARES_VERSION_YEAR);
-		copyright->SetBackgroundColour(wxColour(255, 255, 255));
-		copyright->SetForegroundColour(wxColour(0, 0, 0));
-		sv->Add(copyright, 0, wxALL|wxEXPAND);
-
-		// Website url
-		if (0) // disabled because the url will change in a near future...
-		{
-			auto* url = Component::CreateLabel(this, wxT(ANTARES_WEBSITE), false, true);
-			url->SetBackgroundColour(wxColour(255, 255, 255));
-			url->SetForegroundColour(wxColour(90, 90, 90));
-			sv->Add(url, 0, wxALL|wxEXPAND);
-		}
-
-		sv->AddSpacer(1);
-
-		// version
-		wxString vstr;
-		vstr << wxT("Version ") << wxT(ANTARES_VERSION_STR);
-		#if ANTARES_RC != 0
-			vstr << wxT("rc") << int(ANTARES_RC);
-		#endif
-		vstr << wxT("  ") << (is64Bits ? wxT("[64bits] ") : wxT("[32bits] "));
-		vstr << wxT("compiled on " __DATE__ " with ");
+    // version
+    wxString vstr;
+    vstr << wxT("Version ") << wxT(ANTARES_VERSION_STR);
+#if ANTARES_RC != 0
+    vstr << wxT("rc") << int(ANTARES_RC);
+#endif
+    vstr << wxT("  ") << (is64Bits ? wxT("[64bits] ") : wxT("[32bits] "));
+    vstr << wxT("compiled on " __DATE__ " with ");
 #define STRING2(x) #x
 #define STRING(x) STRING2(x)
 
-#ifdef YUNI_OS_MSVC 
-		vstr << wxT("MSVC"STRING(_MSC_VER)" compiler");
+#ifdef YUNI_OS_MSVC
+    vstr << wxT("MSVC" STRING(_MSC_VER) " compiler");
 #endif
 #ifdef YUNI_OS_GCC
-		vstr << wxT("GCC"STRING(YUNI_OS_GCC_VERSION)" compiler");
+    vstr << wxT("GCC" STRING(YUNI_OS_GCC_VERSION) " compiler");
 #endif
 #ifdef YUNI_OS_MINGW
-		vstr << wxT("MINGW"STRING(YUNI_OS_GCC_VERSION)" compiler");
+    vstr << wxT("MINGW" STRING(YUNI_OS_GCC_VERSION) " compiler");
 #endif
 
-		wxStaticText* version = Component::CreateLabel(this, vstr, false, true);
-		version->SetBackgroundColour(wxColour(255, 255, 255));
-		version->SetForegroundColour(wxColour(90, 90, 90));
-		sv->Add(version, 0, wxALL | wxEXPAND);
+    wxStaticText* version = Component::CreateLabel(this, vstr, false, true);
+    version->SetBackgroundColour(wxColour(255, 255, 255));
+    version->SetForegroundColour(wxColour(90, 90, 90));
+    sv->Add(version, 0, wxALL | wxEXPAND);
 
-		sv->AddSpacer(20);
+    sv->AddSpacer(20);
 
-		//Notebook
+    // Notebook
 
-		auto myNotebook = new wxNotebook(this, -1, wxDefaultPosition, wxSize(500, 200));
-		auto MainEditBox = new wxTextCtrl(myNotebook, -1, Authors, wxDefaultPosition, wxDefaultSize,
-			wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL, wxDefaultValidator, wxTextCtrlNameStr);
-		myNotebook->AddPage(MainEditBox, L"Authors");
+    auto myNotebook = new wxNotebook(this, -1, wxDefaultPosition, wxSize(500, 200));
+    auto MainEditBox = new wxTextCtrl(myNotebook,
+                                      -1,
+                                      Authors,
+                                      wxDefaultPosition,
+                                      wxDefaultSize,
+                                      wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL,
+                                      wxDefaultValidator,
+                                      wxTextCtrlNameStr);
+    myNotebook->AddPage(MainEditBox, L"Authors");
 
-		MainEditBox = new wxTextCtrl(myNotebook, -1, Thanks, wxDefaultPosition, wxDefaultSize,
-			wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL, wxDefaultValidator, wxTextCtrlNameStr);
-		myNotebook->AddPage(MainEditBox, L"Thanks");
+    MainEditBox = new wxTextCtrl(myNotebook,
+                                 -1,
+                                 Thanks,
+                                 wxDefaultPosition,
+                                 wxDefaultSize,
+                                 wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL,
+                                 wxDefaultValidator,
+                                 wxTextCtrlNameStr);
+    myNotebook->AddPage(MainEditBox, L"Thanks");
 
-		MainEditBox = new wxTextCtrl(myNotebook, -1, wxString::FromUTF8(AntaresLicense) + wxString::FromUTF8(AntaresLicense1) + wxString::FromUTF8(AntaresLicense2) + wxString::FromUTF8(AntaresLicense3), wxDefaultPosition, wxDefaultSize,
-			wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL, wxDefaultValidator, wxTextCtrlNameStr);
-		myNotebook->AddPage(MainEditBox, L"License");
-		//myNotebook->Layout();
-		sv->Add(myNotebook, 0, wxALL | wxEXPAND);
+    MainEditBox = new wxTextCtrl(
+      myNotebook,
+      -1,
+      wxString::FromUTF8(AntaresLicense) + wxString::FromUTF8(AntaresLicense1)
+        + wxString::FromUTF8(AntaresLicense2) + wxString::FromUTF8(AntaresLicense3),
+      wxDefaultPosition,
+      wxDefaultSize,
+      wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL,
+      wxDefaultValidator,
+      wxTextCtrlNameStr);
+    myNotebook->AddPage(MainEditBox, L"License");
+    // myNotebook->Layout();
+    sv->Add(myNotebook, 0, wxALL | wxEXPAND);
 
-		// ---
+    // ---
 
-		textSizer->Add(sv, 0, wxALL|wxEXPAND);
-		textSizer->AddSpacer(15);
+    textSizer->Add(sv, 0, wxALL | wxEXPAND);
+    textSizer->AddSpacer(15);
 
-		# ifdef ANTARES_BETA
-		sizer->AddSpacer(16);
-		# endif
+#ifdef ANTARES_BETA
+    sizer->AddSpacer(16);
+#endif
 
-		sizer->Add(textSizer, 0, wxALL|wxEXPAND);
+    sizer->Add(textSizer, 0, wxALL | wxEXPAND);
 
-		sizer->AddSpacer(5);
+    sizer->AddSpacer(5);
 
-		auto* panel = new Antares::Component::Panel(this);
-		auto* sizerBar = new wxBoxSizer(wxHORIZONTAL);
-		sizerBar->AddStretchSpacer();
-		panel->SetSizer(sizerBar);
-		panel->SetBackgroundColour(defaultBgColor);
-		auto* pPanel = panel;
-		auto* pPanelSizer = new wxBoxSizer(wxHORIZONTAL);
+    auto* panel = new Antares::Component::Panel(this);
+    auto* sizerBar = new wxBoxSizer(wxHORIZONTAL);
+    sizerBar->AddStretchSpacer();
+    panel->SetSizer(sizerBar);
+    panel->SetBackgroundColour(defaultBgColor);
+    auto* pPanel = panel;
+    auto* pPanelSizer = new wxBoxSizer(wxHORIZONTAL);
 
-		sizerBar->Add(pPanelSizer, 0, wxALL|wxEXPAND, 8);
-		sizerBar->Add(15, 5);
+    sizerBar->Add(pPanelSizer, 0, wxALL | wxEXPAND, 8);
+    sizerBar->Add(15, 5);
 
-		sizer->AddSpacer(50);
-		sizer->Add(new wxStaticLine(this), 0, wxALL|wxEXPAND);
-		sizer->Add(panel, 0, wxALL|wxEXPAND);
+    sizer->AddSpacer(50);
+    sizer->Add(new wxStaticLine(this), 0, wxALL | wxEXPAND);
+    sizer->Add(panel, 0, wxALL | wxEXPAND);
 
-		sizer->Layout();
-		SetSizer(sizer);
+    sizer->Layout();
+    SetSizer(sizer);
 
-		// Close button
-		{
-			auto* btn = Component::CreateButton(pPanel, wxT("   Close   "), this, &AboutBox::onClose);
-			pPanelSizer->Add(btn, 0, wxFIXED_MINSIZE|wxALIGN_CENTRE_VERTICAL|wxALL);
-			pPanelSizer->Add(5, 2);
-			btn->SetDefault();
-			btn->SetFocus();
-		}
+    // Close button
+    {
+        auto* btn = Component::CreateButton(pPanel, wxT("   Close   "), this, &AboutBox::onClose);
+        pPanelSizer->Add(btn, 0, wxFIXED_MINSIZE | wxALIGN_CENTRE_VERTICAL | wxALL);
+        pPanelSizer->Add(5, 2);
+        btn->SetDefault();
+        btn->SetFocus();
+    }
 
-		GetSizer()->Fit(this);
-		wxSize p = GetSize();
-		p.SetWidth(p.GetWidth() + 20);
-		if (p.GetWidth() < 390)
-		{
-			p.SetWidth(390);
-		}
-		else
-		{
-			if (p.GetWidth() > 600)
-				p.SetWidth(600);
-		}
-		SetSize(p);
-		Centre(wxBOTH);
-	}
+    GetSizer()->Fit(this);
+    wxSize p = GetSize();
+    p.SetWidth(p.GetWidth() + 20);
+    if (p.GetWidth() < 390)
+    {
+        p.SetWidth(390);
+    }
+    else
+    {
+        if (p.GetWidth() > 600)
+            p.SetWidth(600);
+    }
+    SetSize(p);
+    Centre(wxBOTH);
+}
 
-
-	void AboutBox::onClose(void*)
-	{
-		Dispatcher::GUI::Close(this);
-	}
-
-
-
-
+void AboutBox::onClose(void*)
+{
+    Dispatcher::GUI::Close(this);
+}
 
 } // namespace Window
 } // namespace Antares

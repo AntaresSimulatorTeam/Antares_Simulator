@@ -25,95 +25,98 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_MAIN_PANEL_H__
-# define __ANTARES_TOOLBOX_COMPONENT_MAIN_PANEL_H__
+#define __ANTARES_TOOLBOX_COMPONENT_MAIN_PANEL_H__
 
-# include <antares/wx-wrapper.h>
-# include <wx/dc.h>
-# include <ui/common/component/panel.h>
-
+#include <antares/wx-wrapper.h>
+#include <wx/dc.h>
+#include <ui/common/component/panel.h>
 
 namespace Antares
 {
 namespace Component
 {
+class MainPanel final : public Panel, public Yuni::IEventObserver<MainPanel>
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    ** \param parent The parent control
+    */
+    MainPanel(wxWindow* parent);
+    //! Destructor
+    virtual ~MainPanel();
+    //@}
 
+    //! \name Caption
+    //@{
+    //! Get the caption/title of the study
+    const wxString& studyCaption() const
+    {
+        return pStudyCaption;
+    }
+    //! Set the caption/title of the study
+    void studyCaption(const wxString& s);
+    //@}
 
-	class MainPanel final : public Panel, public Yuni::IEventObserver<MainPanel>
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		** \param parent The parent control
-		*/
-		MainPanel(wxWindow* parent);
-		//! Destructor
-		virtual ~MainPanel();
-		//@}
+    //! \name Author
+    //@{
+    //! Get the author
+    const wxString& author() const
+    {
+        return pAuthor;
+    }
+    //! Set the author
+    void author(const wxString& s);
+    //@}
 
-		//! \name Caption
-		//@{
-		//! Get the caption/title of the study
-		const wxString& studyCaption() const {return pStudyCaption;}
-		//! Set the caption/title of the study
-		void studyCaption(const wxString& s);
-		//@}
+    void refreshFromStudy();
 
-		//! \name Author
-		//@{
-		//! Get the author
-		const wxString& author() const {return pAuthor;}
-		//! Set the author
-		void author(const wxString& s);
-		//@}
+private:
+    /*!
+    ** \brief Event: The panel has to draw itself
+    */
+    void onDraw(wxPaintEvent& evt);
 
+    /*!
+    ** \brief UI Event: Erase background
+    */
+    void onEraseBackground(wxEraseEvent&)
+    {
+    }
 
-		void refreshFromStudy();
+    /*!
+    ** \brief Add a property (pair key/value)
+    **
+    ** \param dc      The device context
+    ** \param caption The caption of the property
+    ** \param text    The text associated to the property
+    */
+    void addProperty(wxDC& dc,
+                     const wxString& caption,
+                     const wxString& text,
+                     const wxSize& size,
+                     int& posY) const;
 
-	private:
-		/*!
-		** \brief Event: The panel has to draw itself
-		*/
-		void onDraw(wxPaintEvent& evt);
+    void onStudyChanged(Antares::Data::Study& study);
+    void onStudyChanged();
 
-		/*!
-		** \brief UI Event: Erase background
-		*/
-		void onEraseBackground(wxEraseEvent&) {}
+private:
+    //! Caption
+    wxString pStudyCaption;
+    //! Author
+    wxString pAuthor;
+    //! The best height for the panel
+    int pCachedSizeY;
+    //! Beta image
+    wxBitmap* pBeta;
+    //! RC image
+    wxBitmap* pRC;
 
-		/*!
-		** \brief Add a property (pair key/value)
-		**
-		** \param dc      The device context
-		** \param caption The caption of the property
-		** \param text    The text associated to the property
-		*/
-		void addProperty(wxDC& dc, const wxString& caption, const wxString& text, const wxSize& size,
-			int& posY) const;
+    DECLARE_EVENT_TABLE()
 
-		void onStudyChanged(Antares::Data::Study& study);
-		void onStudyChanged();
-
-	private:
-		//! Caption
-		wxString pStudyCaption;
-		//! Author
-		wxString pAuthor;
-		//! The best height for the panel
-		int pCachedSizeY;
-		//! Beta image
-		wxBitmap* pBeta;
-		//! RC image
-		wxBitmap* pRC;
-
-		DECLARE_EVENT_TABLE()
-
-	}; // class MainPanel
-
-
-
-
+}; // class MainPanel
 
 } // namespace Component
 } // namespace Antares

@@ -32,96 +32,86 @@
 #include "../../study.h"
 #include "../../memory-usage.h"
 
-
 using namespace Yuni;
 
 #define SEP IO::Separator
-
 
 namespace Antares
 {
 namespace Data
 {
+int DataSeriesSolarLoadFromFolder(Study& study,
+                                  DataSeriesSolar* s,
+                                  const AreaName& areaID,
+                                  const char* folder)
+{
+    /* Assert */
+    assert(s);
+    assert(folder);
+    assert('\0' != *folder);
 
+    Yuni::String& buffer = study.buffer;
 
-	int DataSeriesSolarLoadFromFolder(Study& study, DataSeriesSolar* s, const AreaName& areaID, const char* folder)
-	{
-		/* Assert */
-		assert(s);
-		assert(folder);
-		assert('\0' != *folder);
+    int ret = 1;
+    /* Solar the matrix */
+    if (study.header.version >= 330)
+    {
+        buffer.clear() << folder << SEP << "solar_" << areaID << '.' << study.inputExtension;
+        ret = s->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
 
-		Yuni::String& buffer = study.buffer;
+        if (study.usedByTheSolver && study.parameters.derated)
+            s->series.averageTimeseries();
+    }
+    else
+        s->series.reset(1, HOURS_PER_YEAR);
 
-		int ret = 1;
-		/* Solar the matrix */
-		if (study.header.version >= 330)
-		{
-			buffer.clear() << folder << SEP << "solar_" << areaID << '.' << study.inputExtension;
-			ret = s->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
+    s->timeseriesNumbers.clear();
+    s->series.flush();
 
-			if (study.usedByTheSolver && study.parameters.derated)
-				s->series.averageTimeseries();
-		}
-		else
-			s->series.reset(1, HOURS_PER_YEAR);
+    return ret;
+}
 
+int DataSeriesSolarSaveToFolder(DataSeriesSolar* s, const AreaName& areaID, const char folder[])
+{
+    if (!s)
+        return 1;
 
-		s->timeseriesNumbers.clear();
-		s->series.flush();
+    /* Assert */
+    assert(folder);
+    assert('\0' != *folder);
 
-		return ret;
-	}
+    if (IO::Directory::Create(folder))
+    {
+        int res = 1;
 
+        String buffer;
+        buffer.clear() << folder << SEP << "solar_" << areaID << ".txt";
+        res = s->series.saveToCSVFile(buffer, /*decimal*/ 0) && res;
 
-	int DataSeriesSolarSaveToFolder(DataSeriesSolar* s, const AreaName& areaID, const char folder[])
-	{
-		if (!s)
-			return 1;
+        return res;
+    }
+    return 0;
+}
 
-		/* Assert */
-		assert(folder);
-		assert('\0' != *folder);
+bool DataSeriesSolar::invalidate(bool reload) const
+{
+    return series.invalidate(reload);
+}
 
-		if (IO::Directory::Create(folder))
-		{
-			int res = 1;
+void DataSeriesSolar::markAsModified() const
+{
+    series.markAsModified();
+}
 
-			String buffer;
-			buffer.clear() << folder << SEP << "solar_" << areaID << ".txt";
-			res = s->series.saveToCSVFile(buffer, /*decimal*/ 0) && res;
-
-			return res;
-		}
-		return 0;
-	}
-
-
-
-	bool DataSeriesSolar::invalidate(bool reload) const
-	{
-		return series.invalidate(reload);
-	}
-
-
-	void DataSeriesSolar::markAsModified() const
-	{
-		series.markAsModified();
-	}
-
-
-	void DataSeriesSolar::estimateMemoryUsage(StudyMemoryUsage& u) const
-	{
-		u.requiredMemoryForInput += sizeof(DataSeriesSolar);
-		timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
-		series.estimateMemoryUsage(u,
-			0 != (timeSeriesSolar & u.study.parameters.timeSeriesToGenerate),
-			u.study.parameters.nbTimeSeriesSolar, HOURS_PER_YEAR);
-	}
-
-
-
+void DataSeriesSolar::estimateMemoryUsage(StudyMemoryUsage& u) const
+{
+    u.requiredMemoryForInput += sizeof(DataSeriesSolar);
+    timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
+    series.estimateMemoryUsage(u,
+                               0 != (timeSeriesSolar & u.study.parameters.timeSeriesToGenerate),
+                               u.study.parameters.nbTimeSeriesSolar,
+                               HOURS_PER_YEAR);
+}
 
 } // namespace Data
 } // namespace Antares
-

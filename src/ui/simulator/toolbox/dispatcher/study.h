@@ -25,42 +25,31 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_DISPATCHER_STUDY_H__
-# define __ANTARES_TOOLBOX_DISPATCHER_STUDY_H__
+#define __ANTARES_TOOLBOX_DISPATCHER_STUDY_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
 namespace Antares
 {
 namespace Dispatcher
 {
+/*!
+** \brief Create a new study
+*/
+void StudyNew(bool force = false);
 
+/*!
+** \brief Open a study
+*/
+void StudyOpen(const Yuni::String& folder, bool force = false);
 
-	/*!
-	** \brief Create a new study
-	*/
-	void StudyNew(bool force = false);
-
-
-	/*!
-	** \brief Open a study
-	*/
-	void StudyOpen(const Yuni::String& folder, bool force = false);
-
-
-	/*!
-	** \brief Close the study
-	*/
-	void StudyClose(bool force = false, bool closeMainFrm = false);
-
-
-
-
-
+/*!
+** \brief Close the study
+*/
+void StudyClose(bool force = false, bool closeMainFrm = false);
 
 } // namespace Dispatcher
 } // namespace Antares
-
 
 #endif // __ANTARES_TOOLBOX_DISPATCHER_STUDY_H__

@@ -25,9 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_SORT_H__
-# define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_SORT_H__
+#define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_SORT_H__
 
-# include "item/item.h"
+#include "item/item.h"
 
 namespace Antares
 {
@@ -35,22 +35,21 @@ namespace Component
 {
 namespace HTMLListbox
 {
+/*!
+** \brief A virtual Sorting predicate
+*/
+struct ISortPredicate
+{
+public:
+    ISortPredicate()
+    {
+    }
+    virtual ~ISortPredicate()
+    {
+    }
 
-
-	/*!
-	** \brief A virtual Sorting predicate
-	*/
-	struct ISortPredicate
-	{
-	public:
-		ISortPredicate() {}
-		virtual ~ISortPredicate() {}
-
-		virtual bool operator () (const Item::IItem::Ptr a, const Item::IItem::Ptr b) = 0;
-	};
-
-
-
+    virtual bool operator()(const Item::IItem::Ptr a, const Item::IItem::Ptr b) = 0;
+};
 
 } // namespace HTMLListbox
 } // namespace Component

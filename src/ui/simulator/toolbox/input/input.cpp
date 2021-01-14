@@ -27,37 +27,27 @@
 
 #include "input.h"
 
-
 namespace Antares
 {
 namespace Toolbox
 {
 namespace InputSelector
 {
+AInput::AInput(wxWindow* parent) : Antares::Component::Panel(parent)
+{
+}
 
+AInput::~AInput()
+{
+}
 
-	AInput::AInput(wxWindow* parent) :
-		Antares::Component::Panel(parent)
-	{
-	}
+void AInput::updateInnerData(const wxString&)
+{
+}
 
-
-	AInput::~AInput()
-	{
-	}
-
-
-	void AInput::updateInnerData(const wxString&)
-	{
-	}
-
-
-	void AInput::updateRowContent()
-	{
-	}
-
-
-
+void AInput::updateRowContent()
+{
+}
 
 } // namespace InputSelector
 } // namespace Toolbox

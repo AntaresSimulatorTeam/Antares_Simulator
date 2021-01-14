@@ -38,49 +38,50 @@ namespace Datagrid
 {
 namespace Renderer
 {
-	
-	hydroLevelsScBuilderRenderer::hydroLevelsScBuilderRenderer() : ScBuilderRendererBase() {}
+hydroLevelsScBuilderRenderer::hydroLevelsScBuilderRenderer() : ScBuilderRendererBase()
+{
+}
 
-	hydroLevelsScBuilderRenderer::~hydroLevelsScBuilderRenderer() {}
+hydroLevelsScBuilderRenderer::~hydroLevelsScBuilderRenderer()
+{
+}
 
-	wxString hydroLevelsScBuilderRenderer::cellValue(int x, int y) const
-	{
-		const double d = cellNumericValue(x, y);
+wxString hydroLevelsScBuilderRenderer::cellValue(int x, int y) const
+{
+    const double d = cellNumericValue(x, y);
 
-		return (d < 0.)
-			? wxString() << wxT("rand")
-			: wxString() << fromHydroLevelToString(d);
-	}
+    return (d < 0.) ? wxString() << wxT("rand") : wxString() << fromHydroLevelToString(d);
+}
 
-	bool hydroLevelsScBuilderRenderer::cellValue(int x, int y, const Yuni::String& value)
-	{
-		if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears)
-		{
-			if ((uint)y < study->areas.size())
-			{
-				assert((uint)y < pRules->hydroLevels.width());
-				assert((uint)x < pRules->hydroLevels.height());
-				double val = fromStringToHydroLevel(value, 100.) / 100.;
-				pRules->hydroLevels.set_value(x, y, val);
-				return true;
-			}
-		}
-		return false;
-	}
+bool hydroLevelsScBuilderRenderer::cellValue(int x, int y, const Yuni::String& value)
+{
+    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears)
+    {
+        if ((uint)y < study->areas.size())
+        {
+            assert((uint)y < pRules->hydroLevels.width());
+            assert((uint)x < pRules->hydroLevels.height());
+            double val = fromStringToHydroLevel(value, 100.) / 100.;
+            pRules->hydroLevels.set_value(x, y, val);
+            return true;
+        }
+    }
+    return false;
+}
 
-	double hydroLevelsScBuilderRenderer::cellNumericValue(int x, int y) const
-	{
-		if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears)
-		{
-			if ((uint)y < study->areas.size())
-			{
-				assert((uint)y < pRules->hydroLevels.width());
-				assert((uint)x < pRules->hydroLevels.height());
-				return pRules->hydroLevels.get_value(x, y) * 100.;
-			}
-		}
-		return 0.;
-	}
+double hydroLevelsScBuilderRenderer::cellNumericValue(int x, int y) const
+{
+    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears)
+    {
+        if ((uint)y < study->areas.size())
+        {
+            assert((uint)y < pRules->hydroLevels.width());
+            assert((uint)x < pRules->hydroLevels.height());
+            return pRules->hydroLevels.get_value(x, y) * 100.;
+        }
+    }
+    return 0.;
+}
 
 } // namespace Renderer
 } // namespace Datagrid

@@ -30,15 +30,12 @@
 #include "../simulation/economy.h"
 #include <antares/logs.h>
 
-
 using namespace Antares;
-
 
 void SolverApplication::runSimulationInEconomicMode()
 {
-	// Type of the simulation
-	typedef Solver::Simulation::ISimulation< Solver::Simulation::Economy >  SimulationType;
+    // Type of the simulation
+    typedef Solver::Simulation::ISimulation<Solver::Simulation::Economy> SimulationType;
 
-	runSimulation<SimulationType>();
+    runSimulation<SimulationType>();
 }
-

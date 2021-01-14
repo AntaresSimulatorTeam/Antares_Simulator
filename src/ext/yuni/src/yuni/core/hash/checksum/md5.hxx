@@ -11,28 +11,21 @@
 #pragma once
 #include "md5.h"
 
-
-
 namespace Yuni
 {
 namespace Hash
 {
 namespace Checksum
 {
+inline String MD5::FromString(const String& s)
+{
+    return MD5().fromString(s);
+}
 
-	inline String MD5::FromString(const String& s)
-	{
-		return MD5().fromString(s);
-	}
-
-
-	inline String MD5::FromRawData(const void* rawdata, uint64 size)
-	{
-		return MD5().fromRawData(rawdata, size);
-	}
-
-
-
+inline String MD5::FromRawData(const void* rawdata, uint64 size)
+{
+    return MD5().fromRawData(rawdata, size);
+}
 
 } // namespace Checksum
 } // namespace Hash

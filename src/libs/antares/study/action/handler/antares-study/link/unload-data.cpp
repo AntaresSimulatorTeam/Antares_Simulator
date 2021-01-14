@@ -27,7 +27,6 @@
 
 #include "unload-data.h"
 
-
 namespace Antares
 {
 namespace Action
@@ -36,69 +35,58 @@ namespace AntaresStudy
 {
 namespace Link
 {
+UnloadData::UnloadData(const AnyString& fromarea, const AnyString& toarea) :
+ pOriginalFromAreaName(fromarea), pOriginalToAreaName(toarea)
+{
+    pInfos.caption << "Unload Data from memory";
+}
 
+UnloadData::~UnloadData()
+{
+}
 
-	UnloadData::UnloadData(const AnyString& fromarea, const AnyString& toarea) :
-		pOriginalFromAreaName(fromarea),
-		pOriginalToAreaName(toarea)
-	{
-		pInfos.caption << "Unload Data from memory";
-	}
+bool UnloadData::prepareWL(Context&)
+{
+    pInfos.message.clear();
+    pInfos.state = stReady;
+    switch (pInfos.behavior)
+    {
+    case bhOverwrite:
+        pInfos.message << "The UnloadData will be copied";
+        break;
+    default:
+        pInfos.state = stNothingToDo;
+        break;
+    }
 
+    return true;
+}
 
-	UnloadData::~UnloadData()
-	{}
+bool UnloadData::performWL(Context& ctx)
+{
+    if (ctx.link && ctx.extStudy)
+    {
+        Data::AreaName idFrom;
+        Data::AreaName idTo;
+        TransformNameIntoID(pOriginalFromAreaName, idFrom);
+        TransformNameIntoID(pOriginalToAreaName, idTo);
 
+        Data::AreaLink* source;
+        if (pOriginalFromAreaName < pOriginalToAreaName)
+            source = ctx.extStudy->areas.findLink(idFrom, idTo);
+        else
+            source = ctx.extStudy->areas.findLink(idTo, idFrom);
 
-
-	bool UnloadData::prepareWL(Context&)
-	{
-		pInfos.message.clear();
-		pInfos.state = stReady;
-		switch (pInfos.behavior)
-		{
-			case bhOverwrite:
-				pInfos.message << "The UnloadData will be copied";
-				break;
-			default:
-				pInfos.state = stNothingToDo;
-				break;
-		}
-
-		return true;
-	}
-
-
-	bool UnloadData::performWL(Context& ctx)
-	{
-		if (ctx.link && ctx.extStudy)
-		{
-			Data::AreaName idFrom;
-			Data::AreaName idTo;
-			TransformNameIntoID(pOriginalFromAreaName, idFrom);
-			TransformNameIntoID(pOriginalToAreaName,   idTo);
-
-			Data::AreaLink* source;
-			if (pOriginalFromAreaName < pOriginalToAreaName)
-				source = ctx.extStudy->areas.findLink(idFrom, idTo);
-			else
-				source = ctx.extStudy->areas.findLink(idTo, idFrom);
-
-			if (source && source != ctx.link)
-			{
-				source->data.unloadFromMemory();
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-
-
+        if (source && source != ctx.link)
+        {
+            source->data.unloadFromMemory();
+            return true;
+        }
+    }
+    return false;
+}
 
 } // namespace Link
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
-

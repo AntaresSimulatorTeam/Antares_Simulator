@@ -25,16 +25,15 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_INPUT_AREA_H__
-# define __ANTARES_TOOLBOX_INPUT_AREA_H__
+#define __ANTARES_TOOLBOX_INPUT_AREA_H__
 
-# include <antares/wx-wrapper.h>
-# include <yuni/core/event.h>
-# include <wx/panel.h>
-# include <antares/study/study.h>
-# include "input.h"
-# include <wx/arrstr.h>
-# include "../components/htmllistbox/component.h"
-
+#include <antares/wx-wrapper.h>
+#include <yuni/core/event.h>
+#include <wx/panel.h>
+#include <antares/study/study.h>
+#include "input.h"
+#include <wx/arrstr.h>
+#include "../components/htmllistbox/component.h"
 
 namespace Antares
 {
@@ -42,74 +41,71 @@ namespace Toolbox
 {
 namespace InputSelector
 {
+/*!
+** \brief Visual Component for displaying all available areas (and groups)
+*/
+class Area : public AInput, public Yuni::IEventObserver<Area>
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    ** \param parent The parent window
+    */
+    Area(wxWindow* parent);
+    //! Destructor
+    virtual ~Area();
+    //@}
 
+    virtual wxPoint recommendedSize() const
+    {
+        return wxPoint(230, 70);
+    }
 
-	/*!
-	** \brief Visual Component for displaying all available areas (and groups)
-	*/
-	class Area : public AInput, public Yuni::IEventObserver<Area>
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default Constructor
-		** \param parent The parent window
-		*/
-		Area(wxWindow* parent);
-		//! Destructor
-		virtual ~Area();
-		//@}
+    /*!
+    ** \brief Get the last area selected by the component
+    */
+    static Data::Area* lastArea();
 
-		virtual wxPoint recommendedSize() const {return wxPoint(230, 70);}
+    void reloadLastArea();
 
-		/*!
-		** \brief Get the last area selected by the component
-		*/
-		static Data::Area* lastArea();
+    virtual void update();
 
-		void reloadLastArea();
+public:
+    /*!
+    ** \brief Public event, triggered when the selected area has changed
+    */
+    static Yuni::Event<void(Data::Area*)> onAreaChanged;
 
-		virtual void update();
+protected:
+    virtual void internalBuildSubControls();
 
-	public:
-		/*!
-		** \brief Public event, triggered when the selected area has changed
-		*/
-		static Yuni::Event<void (Data::Area*)> onAreaChanged;
+    /*!
+    ** \brief Clear the control and broadcast a change in the current selected area
+    */
+    void clear();
 
-	protected:
-		virtual void internalBuildSubControls();
+    //! Callback: draw event
+    void onDraw(wxPaintEvent& evt);
 
-		/*!
-		** \brief Clear the control and broadcast a change in the current selected area
-		*/
-		void clear();
+    //! The study has been updated
+    void onStudyEndUpdate();
 
-		//! Callback: draw event
-		void onDraw(wxPaintEvent& evt);
+private:
+    void internalSelectionChanged();
+    void onApplicationOnQuit();
+    void onStudyClosed();
 
-		//! The study has been updated
-		void onStudyEndUpdate();
+private:
+    //! Panel
+    static wxPanel* pSharedSupport;
+    //! The listbox, which will contains all items
+    // static Component::HTMLListbox::Component* pAreaListbox;
+    // Event table
+    DECLARE_EVENT_TABLE()
 
-	private:
-		void internalSelectionChanged();
-		void onApplicationOnQuit();
-		void onStudyClosed();
-
-	private:
-		//! Panel
-		static wxPanel* pSharedSupport;
-		//! The listbox, which will contains all items
-		//static Component::HTMLListbox::Component* pAreaListbox;
-		// Event table
-		DECLARE_EVENT_TABLE()
-
-	}; // class Area
-
-
-
-
+}; // class Area
 
 } // namespace InputSelector
 } // namespace Toolbox

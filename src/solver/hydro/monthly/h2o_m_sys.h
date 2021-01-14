@@ -24,17 +24,17 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-# ifndef __SOLVER_H2O_M_SYS__
-# define __SOLVER_H2O_M_SYS__
+#ifndef __SOLVER_H2O_M_SYS__
+#define __SOLVER_H2O_M_SYS__
 
-# include <math.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <signal.h>
-# include <setjmp.h>
-# include <stddef.h>
-# include <string.h>
-# include <memory.h>
-# include <time.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <setjmp.h>
+#include <stddef.h>
+#include <string.h>
+#include <memory.h>
+#include <time.h>
 
-# endif /* __SOLVER_H2O_M_SYS__ */
+#endif /* __SOLVER_H2O_M_SYS__ */

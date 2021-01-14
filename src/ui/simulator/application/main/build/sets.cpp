@@ -28,25 +28,19 @@
 #include "../main.h"
 #include "../../../windows/sets.h"
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
 namespace Forms
 {
+void ApplWnd::createNBSets()
+{
+    assert(NULL != pNotebook);
 
-	void ApplWnd::createNBSets()
-	{
-		assert(NULL != pNotebook);
-
-		pSets = new Window::Sets(pNotebook);
-		pNotebook->add(pSets, wxT("sets"), wxT(""));
-	}
-
-
+    pSets = new Window::Sets(pNotebook);
+    pNotebook->add(pSets, wxT("sets"), wxT(""));
+}
 
 } // namespace Forms
 } // namespace Antares
-

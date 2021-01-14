@@ -25,125 +25,129 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_LAYERS_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_LAYERS_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_LAYERS_H__
 
-# include <antares/wx-wrapper.h>
-# include "../renderer.h"
-# include "../../../../application/study.h"
-# include "../../../../toolbox/input/area.h"
-# include <antares/study/scenario-builder/rules.h>
-
+#include <antares/wx-wrapper.h>
+#include "../renderer.h"
+#include "../../../../application/study.h"
+#include "../../../../toolbox/input/area.h"
+#include <antares/study/scenario-builder/rules.h>
 
 namespace Antares
 {
-	namespace Component
-	{
-		namespace Datagrid
-		{
-			namespace Renderer
-			{
+namespace Component
+{
+namespace Datagrid
+{
+namespace Renderer
+{
+/*Per area layers ui grid renderer*/
+class LayersUI : public IRenderer
+{
+public:
+    /*!
+    ** \brief Constructor for Layers from area selection notifier
+    */
+    LayersUI(Toolbox::InputSelector::Area* notifier);
+    //! Destructor
+    virtual ~LayersUI();
+    //@}
 
-				/*Per area layers ui grid renderer*/
-				class LayersUI : public IRenderer
-				{
-				public:
+    virtual int width() const;
+    virtual int height() const;
 
-					/*!
-					** \brief Constructor for Layers from area selection notifier
-					*/
-					LayersUI(Toolbox::InputSelector::Area* notifier);
-					//! Destructor
-					virtual ~LayersUI();
-					//@}
+    virtual wxString columnCaption(int colIndx) const;
 
-					virtual int width() const;
-					virtual int height() const;
+    virtual wxString rowCaption(int rowIndx) const;
 
-					virtual wxString columnCaption(int colIndx) const;
+    virtual wxString cellValue(int x, int y) const;
 
-					virtual wxString rowCaption(int rowIndx) const;
+    virtual double cellNumericValue(int x, int y) const;
 
-					virtual wxString cellValue(int x, int y) const;
+    virtual bool cellValue(int x, int y, const Yuni::String& value);
 
-					virtual double cellNumericValue(int x, int y) const;
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    {
+        // Do nothing
+    }
 
-					virtual bool cellValue(int x, int y, const Yuni::String& value);
+    virtual bool valid() const;
 
-					virtual void resetColors(int, int, wxColour&, wxColour&) const
-					{
-						// Do nothing
-					}
+    virtual uint maxWidthResize() const
+    {
+        return 0;
+    }
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
 
-					virtual bool valid() const;
+    void control(Antares::Component::Datagrid::Component* control)
+    {
+        pControl = control;
+    }
 
-					virtual uint maxWidthResize() const { return 0; }
-					virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+protected:
+    void onAreaChanged(Data::Area* area);
+    virtual void onStudyClosed();
 
-					void control(Antares::Component::Datagrid::Component* control) { pControl = control; }
+protected:
+    Antares::Component::Datagrid::Component* pControl;
+    Data::Area* pArea;
 
+}; // class LayersUI
 
-				protected:
-					void onAreaChanged(Data::Area* area);
-					virtual void onStudyClosed();
+/*General layer visibility grid renderer*/
+class LayersVisibility : public IRenderer
+{
+public:
+    /*!
+    ** \brief Constructor for Layers from area selection notifier
+    */
+    LayersVisibility();
+    //! Destructor
+    virtual ~LayersVisibility();
+    //@}
 
-				protected:
-					Antares::Component::Datagrid::Component* pControl;
-					Data::Area* pArea;
+    virtual int width() const;
+    virtual int height() const;
 
-				}; // class LayersUI
+    virtual wxString columnCaption(int colIndx) const;
 
-				/*General layer visibility grid renderer*/
-				class LayersVisibility : public IRenderer
-				{
-				public:
+    virtual wxString rowCaption(int rowIndx) const;
 
-					/*!
-					** \brief Constructor for Layers from area selection notifier
-					*/
-					LayersVisibility();
-					//! Destructor
-					virtual ~LayersVisibility();
-					//@}
+    virtual wxString cellValue(int x, int y) const;
 
-					virtual int width() const;
-					virtual int height() const;
+    virtual double cellNumericValue(int x, int y) const;
 
-					virtual wxString columnCaption(int colIndx) const;
+    virtual bool cellValue(int x, int y, const Yuni::String& value);
 
-					virtual wxString rowCaption(int rowIndx) const;
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    {
+        // Do nothing
+    }
 
-					virtual wxString cellValue(int x, int y)const;
+    virtual bool valid() const;
 
-					virtual double cellNumericValue(int x, int y)const;
+    virtual uint maxWidthResize() const
+    {
+        return 0;
+    }
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
 
-					virtual bool cellValue(int x, int y, const Yuni::String& value);
+    void control(Antares::Component::Datagrid::Component* control)
+    {
+        pControl = control;
+    }
 
-					virtual void resetColors(int, int, wxColour&, wxColour&) const
-					{
-						// Do nothing
-					}
+protected:
+    virtual void onStudyClosed();
 
-					virtual bool valid() const;
+protected:
+    Antares::Component::Datagrid::Component* pControl;
 
-					virtual uint maxWidthResize() const { return 0; }
-					virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+}; // class Layers
 
-					void control(Antares::Component::Datagrid::Component* control) { pControl = control; }
-
-
-				protected:
-					virtual void onStudyClosed();
-
-				protected:
-					Antares::Component::Datagrid::Component* pControl;
-
-				}; // class Layers
-
-
-			} // namespace Renderer
-		} // namespace Datagrid
-	} // namespace Component
+} // namespace Renderer
+} // namespace Datagrid
+} // namespace Component
 } // namespace Antares
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_LAYERS_H__
-

@@ -25,14 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_WINDOWS_HYDRO_PREPRO_H__
-# define __ANTARES_APPLICATION_WINDOWS_HYDRO_PREPRO_H__
+#define __ANTARES_APPLICATION_WINDOWS_HYDRO_PREPRO_H__
 
-# include <antares/wx-wrapper.h>
-# include "../../toolbox/input/area.h"
-# include "../../toolbox/components/notebook/notebook.h"
-# include <ui/common/component/panel.h>
-
-
+#include <antares/wx-wrapper.h>
+#include "../../toolbox/input/area.h"
+#include "../../toolbox/components/notebook/notebook.h"
+#include <ui/common/component/panel.h>
 
 namespace Antares
 {
@@ -40,40 +38,34 @@ namespace Window
 {
 namespace Hydro
 {
+class Series : public Component::Panel, public Yuni::IEventObserver<Series>
+{
+public:
+    //! name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    Series(wxWindow* parent, Toolbox::InputSelector::Area* notifier = NULL);
+    //! Destructor
+    virtual ~Series();
+    //@}
 
-	class Series : public Component::Panel, public Yuni::IEventObserver<Series>
-	{
-	public:
-		//! name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		Series(wxWindow* parent, Toolbox::InputSelector::Area* notifier = NULL);
-		//! Destructor
-		virtual ~Series();
-		//@}
+private:
+    void onStudyLoaded();
+    void onStudyClosed();
 
+private:
+    //! Event: An area has been selected
+    void onAreaChanged(Data::Area* area);
+    //! Area notifier
+    Toolbox::InputSelector::Area* pNotifier;
+    //! The last selected area
+    Data::Area* pLastArea;
+    //! Page
+    Component::Notebook::Page* pPageFatal;
 
-	private:
-		void onStudyLoaded();
-		void onStudyClosed();
-
-	private:
-		//! Event: An area has been selected
-		void onAreaChanged(Data::Area* area);
-		//! Area notifier
-		Toolbox::InputSelector::Area* pNotifier;
-		//! The last selected area
-		Data::Area* pLastArea;
-		//! Page
-		Component::Notebook::Page* pPageFatal;
-
-	}; // class Series
-
-
-
-
+}; // class Series
 
 } // namespace Hydro
 } // namespace Window

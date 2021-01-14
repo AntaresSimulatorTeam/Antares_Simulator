@@ -25,64 +25,58 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_SYS_MEM_WRAPPER_H__
-# define __ANTARES_LIBS_SYS_MEM_WRAPPER_H__
+#define __ANTARES_LIBS_SYS_MEM_WRAPPER_H__
 
-# include <yuni/yuni.h>
-# include <stdlib.h>
+#include <yuni/yuni.h>
+#include <stdlib.h>
 
-
-# ifdef __cplusplus
+#ifdef __cplusplus
 extern "C"
 {
-# endif
+#endif
 
+    /*!
+    ** \brief Allocate unused space and fill it with zeros
+    **
+    ** The routine ensures that you have a valid pointer.
+    **
+    ** \code
+    ** void* p = malloc(size);
+    ** memset(p, 0, size);
+    ** \endcode
+    **
+    ** \param blocksize Size of the block to allocate
+    ** \return A pointer to the allocated block
+    */
+    void* MemAllocMemset(const size_t blocksize);
 
-/*!
-** \brief Allocate unused space and fill it with zeros
-**
-** The routine ensures that you have a valid pointer.
-**
-** \code
-** void* p = malloc(size);
-** memset(p, 0, size);
-** \endcode
-**
-** \param blocksize Size of the block to allocate
-** \return A pointer to the allocated block
-*/
-void* MemAllocMemset(const size_t blocksize);
+    /*!
+    ** \brief Allocate unused space
+    **
+    ** The routine ensures that you have a valid pointer.
+    **
+    ** The block will not be initialized with zero values
+    ** (consequently it has the same behavior than malloc())
+    **
+    ** Equivalent code :
+    ** \code
+    ** malloc(size);
+    ** \endcode
+    **
+    ** \param blocksize Size of the block to allocate
+    ** \return A pointer to the allocated block
+    */
+    void* MemAlloc(const size_t blocksize);
 
-
-/*!
-** \brief Allocate unused space
-**
-** The routine ensures that you have a valid pointer.
-**
-** The block will not be initialized with zero values
-** (consequently it has the same behavior than malloc())
-**
-** Equivalent code :
-** \code
-** malloc(size);
-** \endcode
-**
-** \param blocksize Size of the block to allocate
-** \return A pointer to the allocated block
-*/
-void* MemAlloc(const size_t blocksize);
-
-
-
-/*!
-** \brief Change the size of an allocated space
-**
-** The routine ensures that you have a valid pointer.
-**
-** \param p The original pointer allocated by MemAlloc()
-** \param blsize Its new size
-*/
-void* MemRealloc(void* p, const size_t blsize);
-
+    /*!
+    ** \brief Change the size of an allocated space
+    **
+    ** The routine ensures that you have a valid pointer.
+    **
+    ** \param p The original pointer allocated by MemAlloc()
+    ** \param blsize Its new size
+    */
+    void* MemRealloc(void* p, const size_t blsize);
 
 /*!
 ** \brief Release a resource previously allocated by MEM_Malloc()
@@ -90,12 +84,10 @@ void* MemRealloc(void* p, const size_t blsize);
 ** \see MemAlloc()
 ** \see MemRealloc()
 */
-# define MemFree(P) ::free(P)
+#define MemFree(P) ::free(P)
 
-
-
-# ifdef __cplusplus
+#ifdef __cplusplus
 }
-# endif
+#endif
 
 #endif /* __ANTARES_LIBS_SYS_MEM_WRAPPER_H__ */

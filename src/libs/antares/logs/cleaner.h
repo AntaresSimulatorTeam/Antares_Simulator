@@ -25,27 +25,22 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LOGS_CLEANER_H__
-# define __ANTARES_LOGS_CLEANER_H__
+#define __ANTARES_LOGS_CLEANER_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
 namespace Antares
 {
+enum
+{
+    defaultRetentionTime = (60 * 60 * 24) * 31,
+};
 
-	enum
-	{
-		defaultRetentionTime = (60 * 60 * 24) * 31,
-	};
-
-
-	/*!
-	** \brief Purge all log files
-	*/
-	void PurgeLogFiles(const AnyString& path, uint retention = defaultRetentionTime);
-
-
+/*!
+** \brief Purge all log files
+*/
+void PurgeLogFiles(const AnyString& path, uint retention = defaultRetentionTime);
 
 } // namespace Antares
 

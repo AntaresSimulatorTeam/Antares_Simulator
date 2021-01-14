@@ -32,9 +32,7 @@
 
 using namespace Yuni;
 
-# define SEP Yuni::IO::Separator
-
-
+#define SEP Yuni::IO::Separator
 
 namespace Antares
 {
@@ -42,325 +40,305 @@ namespace Private
 {
 namespace OutputViewerData
 {
+template<class MapT>
+static inline void Browse(const AnyString& path, MapT& content)
+{
+    typedef IO::Directory::Info DirInfo;
 
+    DirInfo dirinfo(path);
+    typename MapT::key_type name;
 
+    auto end = dirinfo.folder_end();
+    for (auto i = dirinfo.folder_begin(); i != end; ++i)
+    {
+        name = *i;
+        name.toLower();
+        content.insert(name);
+    }
+}
 
-	template<class MapT>
-	static inline void Browse(const AnyString& path, MapT& content)
-	{
-		typedef IO::Directory::Info  DirInfo;
+template<class MapT>
+static inline bool TryAreaListFileExtraction(const AnyString& path, MapT& content)
+{
+    String filename;
+    filename << path << SEP << "about-the-study" << SEP << "areas.txt";
 
-		DirInfo dirinfo(path);
-		typename MapT::key_type name;
+    typename MapT::key_type name; // temporary name
 
-		auto end = dirinfo.folder_end();
-		for (auto i = dirinfo.folder_begin(); i != end; ++i)
-		{
-			name = *i;
-			name.toLower();
-			content.insert(name);
-		}
-	}
+    return (IO::File::ReadLineByLine(filename, [&](const String& line) {
+        if (line.first() != '@')
+        {
+            // This is an area
+            name.clear();
+            TransformNameIntoID(line, name);
+            content.insert(name);
+        }
+        else
+        {
+            // This is a group
+            name = line;
+            name.trim();
+            name.toLower();
+            content.insert(name);
+        }
+    }));
+}
 
+template<class MapT>
+static inline bool TryLinkListFileExtraction(const AnyString& path, MapT& content)
+{
+    String filename;
+    filename << path << SEP << "about-the-study" << SEP << "links.txt";
 
-	template<class MapT>
-	static inline bool TryAreaListFileExtraction(const AnyString& path, MapT& content)
-	{
-		String filename;
-		filename << path << SEP << "about-the-study" << SEP << "areas.txt";
+    typename MapT::key_type source_name; // temporary name
+    typename MapT::key_type target_name; // temporary name
+    typename MapT::key_type link_name;   // temporary name
 
-		typename MapT::key_type name; // temporary name
+    return (IO::File::ReadLineByLine(filename, [&](const String& line) {
+        if (line.first() != '\t')
+        {
+            // This is the first area of a link
+            source_name.clear();
+            TransformNameIntoID(line, source_name);
+        }
+        else
+        {
+            // This is the other area of a link previously initialized with an area
+            // ... Retrieving target area name from file's line
+            target_name.clear();
+            String trimmedLine = line;
+            trimmedLine.trim();
+            TransformNameIntoID(trimmedLine, target_name);
 
-		return (IO::File::ReadLineByLine(filename, [&] (const String& line)
-		{
-			if (line.first() != '@')
-			{
-				// This is an area
-				name.clear();
-				TransformNameIntoID(line, name);
-				content.insert(name);
-			}
-			else
-			{
-				// This is a group
-				name = line;
-				name.trim();
-				name.toLower();
-				content.insert(name);
-			}
-		}));
-	}
+            // ... Building link name
+            link_name.clear();
+            link_name = source_name;
+            link_name += " - ";
+            link_name += target_name;
+            content.insert(link_name);
+        }
+    }));
+}
 
+Job::Job(Antares::Window::OutputViewer::Component& component, const AnyString& path) :
+ Yuni::Job::IJob(), pComponent(component), pPath(path), pContent(nullptr)
+{
+}
 
-	template<class MapT>
-	static inline bool TryLinkListFileExtraction(const AnyString& path, MapT& content)
-	{
-		String filename;
-		filename << path << SEP << "about-the-study" << SEP << "links.txt";
+Job::~Job()
+{
+    delete pContent;
+}
 
-		typename MapT::key_type source_name;	// temporary name
-		typename MapT::key_type target_name;	// temporary name
-		typename MapT::key_type link_name;		// temporary name
+void Job::onExecute()
+{
+    // It is important to check from time to time if the job is still valid to stop
+    // as soon as possible
+    if (canceling())
+        return;
 
-		return (IO::File::ReadLineByLine(filename, [&](const String & line)
-		{
-			if (line.first() != '\t')
-			{
-				// This is the first area of a link
-				source_name.clear();
-				TransformNameIntoID(line, source_name);
-			}
-			else
-			{
-				// This is the other area of a link previously initialized with an area
-				// ... Retrieving target area name from file's line
-				target_name.clear();
-				String trimmedLine = line;
-				trimmedLine.trim();
-				TransformNameIntoID(trimmedLine, target_name);
+    // Temporary variables
+    logs.info() << "[output-viewer] running analyzis on " << pPath;
+    pContent = new Content();
 
-				// ... Building link name
-				link_name.clear();
-				link_name = source_name;
-				link_name += " - ";
-				link_name += target_name;
-				content.insert(link_name);
-			}
-		}));
-	}
+    typedef IO::Directory::Info DirInfo;
+    DirInfo dirinfo(pPath);
 
+    // Looking for economy / adequacy
+    String pathTmp;
 
-	Job::Job(Antares::Window::OutputViewer::Component& component, const AnyString& path) :
-		Yuni::Job::IJob(),
-		pComponent(component),
-		pPath(path),
-		pContent(nullptr)
-	{}
+    auto end = dirinfo.folder_end();
+    for (auto i = dirinfo.folder_begin(); i != end; ++i)
+    {
+        if ((*i).equalsInsensitive("economy"))
+        {
+            // Trying to use the file about-the-study/areas.txt first,
+            // otherwise we will analyze the directory structure
+            if (not TryAreaListFileExtraction(pPath, pContent->economy.areas))
+            {
+                pathTmp.clear() << i.filename() << SEP << "mc-all" << SEP << "areas";
+                Browse(pathTmp, pContent->economy.areas);
+            }
 
+            if (canceling())
+                return;
 
-	Job::~Job()
-	{
-		delete pContent;
-	}
+            // Trying to use the file about-the-study/links.txt first,
+            // otherwise we will analyze the directory structure
+            if (not TryLinkListFileExtraction(pPath, pContent->economy.links))
+            {
+                pathTmp.clear() << i.filename() << SEP << "mc-all" << SEP << "links";
+                Browse(pathTmp, pContent->economy.links);
+            }
 
+            // Year-by-year
+            gatherInfosAboutYearByYearData(i.filename());
 
-	void Job::onExecute()
-	{
-		// It is important to check from time to time if the job is still valid to stop
-		// as soon as possible
-		if (canceling())
-			return;
+            // Gather informations about the thermal clusters
+            gatherInfosAboutThermalClusters(i.filename());
+            break;
+        }
+        if ((*i).equalsInsensitive("adequacy"))
+        {
+            // Trying to use the file about-the-study/areas.txt first,
+            // otherwise we will analyze the directory structure
+            if (not TryAreaListFileExtraction(pPath, pContent->adequacy.areas))
+            {
+                pathTmp.clear() << i.filename() << SEP << "mc-all" << SEP << "areas";
+                Browse(pathTmp, pContent->adequacy.areas);
+            }
 
-		// Temporary variables
-		logs.info() << "[output-viewer] running analyzis on " << pPath;
-		pContent = new Content();
+            if (canceling())
+                return;
 
-		typedef IO::Directory::Info  DirInfo;
-		DirInfo  dirinfo(pPath);
+            pathTmp.clear() << i.filename() << SEP << "mc-all" << SEP << "links";
+            Browse(pathTmp, pContent->adequacy.links);
 
-		// Looking for economy / adequacy
-		String pathTmp;
+            // Year-by-year
+            gatherInfosAboutYearByYearData(i.filename());
 
-		auto end = dirinfo.folder_end();
-		for (auto i = dirinfo.folder_begin(); i != end; ++i)
-		{
-			if ((*i).equalsInsensitive("economy"))
-			{
-				// Trying to use the file about-the-study/areas.txt first,
-				// otherwise we will analyze the directory structure
-				if (not TryAreaListFileExtraction(pPath, pContent->economy.areas))
-				{
-					pathTmp.clear() << i.filename() << SEP << "mc-all" << SEP << "areas";
-					Browse(pathTmp, pContent->economy.areas);
-				}
+            // Gather informations about the thermal clusters
+            gatherInfosAboutThermalClusters(i.filename());
+            break;
+        }
+        if (canceling())
+            return;
+    }
 
-				if (canceling())
-					return;
+    if (canceling() or shouldAbort())
+        return;
 
-				// Trying to use the file about-the-study/links.txt first,
-				// otherwise we will analyze the directory structure
-				if (not TryLinkListFileExtraction(pPath, pContent->economy.links))
-				{
-					pathTmp.clear() << i.filename() << SEP << "mc-all" << SEP << "links";
-					Browse(pathTmp, pContent->economy.links);
-				}
+    // Write the results into the cache
+    pComponent.pMutex.lock();
+    if (not canceling())
+    {
+        Content* c = pContent;
+        pContent = nullptr;
+        pComponent.pAlreadyPreparedContents[pPath] = c;
 
-				// Year-by-year
-				gatherInfosAboutYearByYearData(i.filename());
+        // Cool we can perform the full aggregation !
+        typedef Antares::Window::OutputViewer::Component Component;
+        if (0 == --pComponent.pJobsRemaining)
+        {
+            if (not canceling())
+                Antares::Dispatcher::GUI::Post(&pComponent, &Component::treeDataUpdate);
+        }
+    }
+    pComponent.pMutex.unlock();
+}
 
-				// Gather informations about the thermal clusters
-				gatherInfosAboutThermalClusters(i.filename());
-				break;
-			}
-			if ((*i).equalsInsensitive("adequacy"))
-			{
-				// Trying to use the file about-the-study/areas.txt first,
-				// otherwise we will analyze the directory structure
-				if (not TryAreaListFileExtraction(pPath, pContent->adequacy.areas))
-				{
-					pathTmp.clear() << i.filename() << SEP << "mc-all" << SEP << "areas";
-					Browse(pathTmp, pContent->adequacy.areas);
-				}
+void Job::gatherInfosAboutThermalClusters(const AnyString& path)
+{
+    String filename;
+    filename << path << SEP << "mc-all" << SEP << "grid" << SEP << "thermal.txt";
 
-				if (canceling())
-					return;
+    enum
+    {
+        options = Matrix<>::optImmediate | Matrix<>::optNoWarnIfEmpty | Matrix<>::optQuiet
+                  | Matrix<>::optNeverFails
+    };
 
-				pathTmp.clear() << i.filename() << SEP << "mc-all" << SEP << "links";
-				Browse(pathTmp, pContent->adequacy.links);
+    typedef Antares::Matrix<Yuni::CString<164, false>> MatrixType;
+    MatrixType matrix;
+    if (matrix.loadFromCSVFile(filename, 1, 0, options) and matrix.width > 2)
+    {
+        for (uint y = 1; y < matrix.height; ++y)
+            pContent->clusters[matrix[0][y]].insert(matrix[1][y]);
+    }
+}
 
-				// Year-by-year
-				gatherInfosAboutYearByYearData(i.filename());
+void Job::gatherInfosAboutYearByYearData(const AnyString& path)
+{
+    assert(!(!pContent) and "invalid content");
 
-				// Gather informations about the thermal clusters
-				gatherInfosAboutThermalClusters(i.filename());
-				break;
-			}
-			if (canceling())
-				return;
-		}
+    pContent->hasYearByYear = false;
+    // Making sure that the data are initialized
+    pContent->ybyInterval[0] = (uint)-1;
+    pContent->ybyInterval[1] = 0;
 
-		if (canceling() or shouldAbort())
-			return;
+    if (canceling() or pContent->empty() or path.empty())
+        return;
 
-		// Write the results into the cache
-		pComponent.pMutex.lock();
-		if (not canceling())
-		{
-			Content* c = pContent;
-			pContent = nullptr;
-			pComponent.pAlreadyPreparedContents[pPath] = c;
+    // Since v3.7, the individual years can be found in the folder `mc-ind/<number>`.
+    // Before 3.7, it was in the folder `Economy`, at the same level than `mc-all`.
 
-			// Cool we can perform the full aggregation !
-			typedef Antares::Window::OutputViewer::Component Component;
-			if (0 == --pComponent.pJobsRemaining)
-			{
-				if (not canceling())
-					Antares::Dispatcher::GUI::Post(&pComponent, &Component::treeDataUpdate);
-			}
-		}
-		pComponent.pMutex.unlock();
-	}
+    typedef IO::Directory::Info DirInfo;
 
+    // >= 3.7
+    {
+        String mcindpath;
+        mcindpath << path << SEP << "mc-ind";
+        DirInfo dirinfo(mcindpath);
+        auto end = dirinfo.folder_end();
+        for (auto i = dirinfo.folder_begin(); i != end; ++i)
+        {
+            const String& name = *i;
+            uint year;
+            if (name.to(year) and year and year < 500000)
+            {
+                pContent->hasYearByYear = true;
+                if (year < pContent->ybyInterval[0])
+                    pContent->ybyInterval[0] = year;
+                if (year > pContent->ybyInterval[1])
+                    pContent->ybyInterval[1] = year;
+            }
+        }
+    }
 
-	void Job::gatherInfosAboutThermalClusters(const AnyString& path)
-	{
-		String filename;
-		filename << path << SEP << "mc-all" << SEP << "grid" << SEP << "thermal.txt";
+    // <= 3.6 compatibility, only if individual years have not been found
+    if (not pContent->hasYearByYear)
+    {
+        DirInfo dirinfo(path);
+        auto end = dirinfo.folder_end();
+        for (auto i = dirinfo.folder_begin(); i != end; ++i)
+        {
+            const String& name = *i;
+            if (name.size() > 8 and name[2] == '-' and name.icontains("mc-i"))
+            {
+                AnyString stryear(name.c_str() + 4, name.size() - 4);
+                uint year;
+                if (stryear.to(year) and year and year < 500000)
+                {
+                    pContent->hasYearByYear = true;
+                    if (year < pContent->ybyInterval[0])
+                        pContent->ybyInterval[0] = year;
+                    if (year > pContent->ybyInterval[1])
+                        pContent->ybyInterval[1] = year;
+                }
+            }
+        }
+    }
 
-		enum
-		{
-			options = Matrix<>::optImmediate | Matrix<>::optNoWarnIfEmpty
-				| Matrix<>::optQuiet | Matrix<>::optNeverFails
-		};
+    // Checking for individual years concatened
+    if (pContent->hasYearByYear)
+    {
+        pContent->hasConcatenedYbY = true;
+    }
+    else
+    {
+        String mcindpath;
+        mcindpath << path << SEP << "mc-var";
 
-		typedef Antares::Matrix<Yuni::CString<164,false> >  MatrixType;
-		MatrixType matrix;
-		if (matrix.loadFromCSVFile(filename, 1, 0, options) and matrix.width > 2)
-		{
-			for (uint y = 1; y < matrix.height; ++y)
-				pContent->clusters[matrix[0][y]].insert(matrix[1][y]);
-		}
-	}
+        DirInfo dirinfo(mcindpath);
+        auto end = dirinfo.folder_end();
+        for (auto i = dirinfo.folder_begin(); i != end; ++i)
+        {
+            // We have at least one folder
+            pContent->hasConcatenedYbY = true;
+            break;
+        }
+    }
 
-
-	void Job::gatherInfosAboutYearByYearData(const AnyString& path)
-	{
-		assert(!(!pContent) and "invalid content");
-
-		pContent->hasYearByYear = false;
-		// Making sure that the data are initialized
-		pContent->ybyInterval[0] = (uint) -1;
-		pContent->ybyInterval[1] = 0;
-
-		if (canceling() or pContent->empty() or path.empty())
-			return;
-
-		// Since v3.7, the individual years can be found in the folder `mc-ind/<number>`.
-		// Before 3.7, it was in the folder `Economy`, at the same level than `mc-all`.
-
-		typedef IO::Directory::Info  DirInfo;
-
-		// >= 3.7
-		{
-			String mcindpath;
-			mcindpath << path << SEP << "mc-ind";
-			DirInfo  dirinfo(mcindpath);
-			auto end = dirinfo.folder_end();
-			for (auto i = dirinfo.folder_begin(); i != end; ++i)
-			{
-				const String& name = *i;
-				uint year;
-				if (name.to(year) and year and year < 500000)
-				{
-					pContent->hasYearByYear = true;
-					if (year < pContent->ybyInterval[0])
-						pContent->ybyInterval[0] = year;
-					if (year > pContent->ybyInterval[1])
-						pContent->ybyInterval[1] = year;
-				}
-			}
-		}
-
-		// <= 3.6 compatibility, only if individual years have not been found
-		if (not pContent->hasYearByYear)
-		{
-			DirInfo  dirinfo(path);
-			auto end = dirinfo.folder_end();
-			for (auto i = dirinfo.folder_begin(); i != end; ++i)
-			{
-				const String& name = *i;
-				if (name.size() > 8 and name[2] == '-' and name.icontains("mc-i"))
-				{
-					AnyString stryear(name.c_str() + 4, name.size() - 4);
-					uint year;
-					if (stryear.to(year) and year and year < 500000)
-					{
-						pContent->hasYearByYear = true;
-						if (year < pContent->ybyInterval[0])
-							pContent->ybyInterval[0] = year;
-						if (year > pContent->ybyInterval[1])
-							pContent->ybyInterval[1] = year;
-					}
-				}
-			}
-		}
-
-		// Checking for individual years concatened
-		if (pContent->hasYearByYear)
-		{
-			pContent->hasConcatenedYbY = true;
-		}
-		else
-		{
-			String mcindpath;
-			mcindpath << path << SEP << "mc-var";
-
-			DirInfo  dirinfo(mcindpath);
-			auto end = dirinfo.folder_end();
-			for (auto i = dirinfo.folder_begin(); i != end; ++i)
-			{
-				// We have at least one folder
-				pContent->hasConcatenedYbY = true;
-				break;
-			}
-		}
-
-		# ifndef NDEBUG
-		if (pContent->hasYearByYear)
-		{
-			// We have to ensure that provided values are correct
-			assert(pContent->ybyInterval[0] > 0 and pContent->ybyInterval[0] < 500000);
-			assert(pContent->ybyInterval[1] > 0 and pContent->ybyInterval[1] < 500000);
-		}
-		# endif
-	}
-
-
-
-
-
+#ifndef NDEBUG
+    if (pContent->hasYearByYear)
+    {
+        // We have to ensure that provided values are correct
+        assert(pContent->ybyInterval[0] > 0 and pContent->ybyInterval[0] < 500000);
+        assert(pContent->ybyInterval[1] > 0 and pContent->ybyInterval[1] < 500000);
+    }
+#endif
+}
 
 } // namespace OutputViewerData
 } // namespace Private
 } // namespace Antares
-

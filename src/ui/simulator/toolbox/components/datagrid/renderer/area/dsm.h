@@ -25,15 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_DSM_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_DSM_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_DSM_H__
 
-# include <antares/wx-wrapper.h>
-# include "../area.h"
-# include "../matrix.h"
-# include <antares/date.h>
-# include <antares/study/parts/wind/prepro.h>
-
-
+#include <antares/wx-wrapper.h>
+#include "../area.h"
+#include "../matrix.h"
+#include <antares/date.h>
+#include <antares/study/parts/wind/prepro.h>
 
 namespace Antares
 {
@@ -43,77 +41,86 @@ namespace Datagrid
 {
 namespace Renderer
 {
+class DSM final : public Renderer::Matrix<>, public Renderer::ARendererArea
+{
+public:
+    //! \name Destructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    DSM(wxWindow* control, Toolbox::InputSelector::Area* notifier);
 
+    //! Destructor
+    virtual ~DSM();
+    //@}
 
-	class DSM final : public Renderer::Matrix<>, public Renderer::ARendererArea
-	{
-	public:
-		//! \name Destructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		DSM(wxWindow* control, Toolbox::InputSelector::Area* notifier);
+    virtual int width() const
+    {
+        return Renderer::Matrix<>::width();
+    }
+    virtual int height() const
+    {
+        return Renderer::Matrix<>::height();
+    }
 
-		//! Destructor
-		virtual ~DSM();
-		//@}
+    virtual wxString columnCaption(int colIndx) const;
 
-		virtual int width() const {return Renderer::Matrix<>::width();}
-		virtual int height() const {return Renderer::Matrix<>::height();}
+    virtual wxString rowCaption(int rowIndx) const
+    {
+        return Renderer::Matrix<>::rowCaption(rowIndx);
+    }
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual wxString cellValue(int x, int y) const
+    {
+        return Renderer::Matrix<>::cellValue(x, y);
+    }
 
-		virtual wxString rowCaption(int rowIndx) const {return Renderer::Matrix<>::rowCaption(rowIndx);}
+    virtual double cellNumericValue(int x, int y) const
+    {
+        return Renderer::Matrix<>::cellNumericValue(x, y);
+    }
 
+    virtual bool cellValue(int x, int y, const Yuni::String& value)
+    {
+        return Renderer::Matrix<>::cellValue(x, y, value);
+    }
 
-		virtual wxString cellValue(int x, int y) const
-		{
-			return Renderer::Matrix<>::cellValue(x, y);
-		}
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    { /*Do nothing*/
+    }
 
-		virtual double cellNumericValue(int x, int y) const
-		{
-			return Renderer::Matrix<>::cellNumericValue(x, y);
-		}
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
 
-		virtual bool cellValue(int x, int y, const Yuni::String& value)
-		{
-			return Renderer::Matrix<>::cellValue(x, y, value);
-		}
+    virtual wxColour horizontalBorderColor(int x, int y) const;
 
+    virtual uint maxWidthResize() const
+    {
+        return 0;
+    }
+    virtual bool valid() const
+    {
+        return Renderer::Matrix<>::valid();
+    }
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{/*Do nothing*/}
+    virtual Date::Precision precision()
+    {
+        return Date::hourly;
+    }
 
-		virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+protected:
+    virtual void internalAreaChanged(Antares::Data::Area* area);
 
-		virtual wxColour horizontalBorderColor(int x, int y) const;
+    //! Event: the study has been closed
+    virtual void onStudyClosed() override;
+    //! Event: the study has been loaded
+    virtual void onStudyLoaded() override;
 
-		virtual uint maxWidthResize() const {return 0;}
-		virtual bool valid() const {return Renderer::Matrix<>::valid();}
+private:
+    //! The current area
+    Antares::Data::Area* pArea;
 
-		virtual Date::Precision precision() {return Date::hourly;}
-
-
-	protected:
-		virtual void internalAreaChanged(Antares::Data::Area* area);
-
-		//! Event: the study has been closed
-		virtual void onStudyClosed() override;
-		//! Event: the study has been loaded
-		virtual void onStudyLoaded() override;
-
-	private:
-		//! The current area
-		Antares::Data::Area* pArea;
-
-	}; // class DSM
-
-
-
-
-
+}; // class DSM
 
 } // namespace Renderer
 } // namespace Datagrid

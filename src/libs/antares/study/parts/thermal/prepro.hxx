@@ -25,30 +25,23 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_HXX__
-# define __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_HXX__
-
+#define __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_HXX__
 
 namespace Antares
 {
 namespace Data
 {
+inline void PreproThermal::flush()
+{
+#ifdef ANTARES_SWAP_SUPPORT
+    data.flush();
+#endif
+}
 
-	inline void PreproThermal::flush()
-	{
-		# ifdef ANTARES_SWAP_SUPPORT
-		data.flush();
-		# endif
-	}
-
-
-	inline Yuni::uint64 PreproThermal::memoryUsage() const
-	{
-		return sizeof(PreproThermal);
-	}
-
-
-
-
+inline Yuni::uint64 PreproThermal::memoryUsage() const
+{
+    return sizeof(PreproThermal);
+}
 
 } // namespace Data
 } // namespace Antares

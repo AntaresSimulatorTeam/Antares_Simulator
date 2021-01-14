@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __LIBS_STUDY_SCENARIO_BUILDER_DATA_UTILS_H__
-# define __LIBS_STUDY_SCENARIO_BUILDER_DATA_UTILS_H__
+#define __LIBS_STUDY_SCENARIO_BUILDER_DATA_UTILS_H__
 
 #include <yuni/yuni.h>
 #include <yuni/core/fwd.h>
@@ -39,11 +39,10 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
+string fromHydroLevelToString(double d);
+double fromStringToHydroLevel(const Yuni::String& value, const double maxLevel);
 
-	string fromHydroLevelToString(double d);
-	double fromStringToHydroLevel(const Yuni::String& value, const double maxLevel);
-
-	uint fromStringToTSnumber(const Yuni::String& value);
+uint fromStringToTSnumber(const Yuni::String& value);
 
 } // namespace ScenarioBuilder
 } // namespace Data

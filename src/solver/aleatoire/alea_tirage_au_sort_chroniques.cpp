@@ -38,165 +38,163 @@
 #include <antares/emergency.h>
 #include <cassert>
 
-
 using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
-
 template<bool EconomicModeT>
-static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(double ** thermalNoisesByArea, uint numSpace)
-{	
-	auto& study   = * Data::Study::Current::Get();
-	auto& runtime = * study.runtime;
-
-	uint year = runtime.timeseriesNumberYear[numSpace];
-	
-	const size_t nbDaysPerYearDouble = runtime.nbDaysPerYear * sizeof(double);
-
-	// each area
-	const unsigned int count = study.areas.size();
-	for (unsigned int i = 0; i != count; ++i)
-	{
-		// Variables - the current area
-		NUMERO_CHRONIQUES_TIREES_PAR_PAYS& ptchro  = *NumeroChroniquesTireesParPays[numSpace][i];
-		auto& area                                 = *(study.areas.byIndex[i]);
-		VALEURS_GENEREES_PAR_PAYS& ptvalgen        = *(ValeursGenereesParPays[numSpace][i]);
-
-		// Load
-		{
-			const Data::DataSeriesLoad& data = *area.load.series;
-			assert(year < data.timeseriesNumbers.height);
-			ptchro.Consommation = (data.series.width != 1)
-				? (long) data.timeseriesNumbers[0][year]  : 0; // zero-based
-		}
-		// Solar
-		{
-			const Data::DataSeriesSolar& data = *area.solar.series;
-			assert(year < data.timeseriesNumbers.height);
-			ptchro.Solar = (data.series.width != 1)
-				? (long) data.timeseriesNumbers[0][year]  : 0; // zero-based
-		}
-		// Hydro
-		{
-			const Data::DataSeriesHydro& data = *area.hydro.series;
-			assert(year < data.timeseriesNumbers.height);
-			ptchro.Hydraulique = (data.count != 1)
-				? (long) data.timeseriesNumbers[0][year] : 0; // zero-based
-			// Hydro - mod
-			memset(ptvalgen.HydrauliqueModulableQuotidien, 0, nbDaysPerYearDouble);
-		}
-		// Wind
-		{
-			const Data::DataSeriesWind& data = *area.wind.series;
-			assert(year < data.timeseriesNumbers.height);
-			ptchro.Eolien = (data.series.width != 1)
-				? (long) data.timeseriesNumbers[0][year]  : 0; // zero-based
-		}
-		// Thermal
-		{
-			uint indexCluster = 0;
-			auto end = area.thermal.list.mapping.end();
-			for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
-			{
-				auto* cluster = it->second;
-				// Draw a new random number, whatever the cluster is
-				double rnd = thermalNoisesByArea[i][indexCluster];
-
-				if (!cluster->enabled)
-				{
-					indexCluster++;
-					continue;
-				}
-
-				const Data::DataSeriesThermal& data = *cluster->series;
-				assert(year < data.timeseriesNumbers.height);
-				unsigned int index = cluster->areaWideIndex;
-
-				// the matrix data.series should be properly initialized at this stage
-				// because the ts-generator has already been launched
-				ptchro.ThermiqueParPalier[index] = (data.series.width != 1)
-					? (long) data.timeseriesNumbers[0][year] : 0; // zero-based
-
-				if (EconomicModeT)
-				{
-					//ptvalgen.AleaCoutDeProductionParPalier[index] =
-					//	(rnd - 0.5) * (cluster->spreadCost + 1e-4);
-					// MBO 
-					// 15/04/2014 : bornage du coût thermique
-					// 01/12/2014 : prise en compte du spreadCost non nul
-					
-					if( cluster->spreadCost == 0) // 5e-4 < |AleaCoutDeProductionParPalier| < 6e-4
-					{
-						if (rnd < 0.5)
-							ptvalgen.AleaCoutDeProductionParPalier[index] = 1e-4 * (5+2*rnd);
-						else
-							ptvalgen.AleaCoutDeProductionParPalier[index] = -1e-4 * (5+2*(rnd-0.5));
-					}
-					else
-					{
-						ptvalgen.AleaCoutDeProductionParPalier[index] = (rnd - 0.5) * (cluster->spreadCost);  
-						
-						if ( Math::Abs(ptvalgen.AleaCoutDeProductionParPalier[index]) < 5.e-4)
-						{
-							if ( Math::Abs(ptvalgen.AleaCoutDeProductionParPalier[index]) >= 0) 
-								ptvalgen.AleaCoutDeProductionParPalier[index] += 5.e-4;
-							else 
-								ptvalgen.AleaCoutDeProductionParPalier[index] -= 5.e-4;
-						}
-					}
-				}
-
-				indexCluster++;
-			}
-			/*
-			const unsigned int clusterCount = area.thermal.clusterCount;
-			for (unsigned int k = 0; k != clusterCount; ++k)
-			{
-				// The current thermal dispatchable cluster
-				const Data::ThermalCluster& cluster = *(area.thermal.clusters[k]);
-				const Data::DataSeriesThermal& data = *cluster.series;
-
-				assert(year < data.timeseriesNumbers.height);
-				ptchro.ThermiqueParPalier[cluster.areaWideIndex] = (data.series.width != 1)
-					? (long) data.timeseriesNumbers[0][year] : 0; // zero-based
-
-				if (EconomicModeT)
-				{
-					ptvalgen.AleaCoutDeProductionParPalier[k] =
-						(runtime.random[Data::seedThermalCosts]() - 0.5) * (cluster.spreadCost + 1e-4);
-
-					// This formula was used prior 3.8 :
-					// ((x * 2. - 1.) * cluster.spreadCost) + (x * 1e-4);
-				}
-			} // each thermal cluster
-			*/
-		} // thermal
-	} // each area
-}
-
-
-
-
-
-
-void ALEA_TirageAuSortChroniques(double ** thermalNoisesByArea, uint numSpace)
+static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
+  double** thermalNoisesByArea,
+  uint numSpace)
 {
-	// Time-series numbers
-	if (Data::Study::Current::Get()->runtime->mode != stdmAdequacyDraft)
-	{
-		// Retrieve all time-series numbers
-		// Initialize in the same time the production costs of all thermal clusters.
-		InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost<true>(thermalNoisesByArea, numSpace);
-	}
-	else
-		InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost<false>(thermalNoisesByArea, numSpace);
+    auto& study = *Data::Study::Current::Get();
+    auto& runtime = *study.runtime;
 
-	// Flush all memory into the swap files
-	// (only if the support is available)
-	if (Antares::Memory::swapSupport)
-		Antares::memory.flushAll();
+    uint year = runtime.timeseriesNumberYear[numSpace];
+
+    const size_t nbDaysPerYearDouble = runtime.nbDaysPerYear * sizeof(double);
+
+    // each area
+    const unsigned int count = study.areas.size();
+    for (unsigned int i = 0; i != count; ++i)
+    {
+        // Variables - the current area
+        NUMERO_CHRONIQUES_TIREES_PAR_PAYS& ptchro = *NumeroChroniquesTireesParPays[numSpace][i];
+        auto& area = *(study.areas.byIndex[i]);
+        VALEURS_GENEREES_PAR_PAYS& ptvalgen = *(ValeursGenereesParPays[numSpace][i]);
+
+        // Load
+        {
+            const Data::DataSeriesLoad& data = *area.load.series;
+            assert(year < data.timeseriesNumbers.height);
+            ptchro.Consommation
+              = (data.series.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+        }
+        // Solar
+        {
+            const Data::DataSeriesSolar& data = *area.solar.series;
+            assert(year < data.timeseriesNumbers.height);
+            ptchro.Solar
+              = (data.series.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+        }
+        // Hydro
+        {
+            const Data::DataSeriesHydro& data = *area.hydro.series;
+            assert(year < data.timeseriesNumbers.height);
+            ptchro.Hydraulique
+              = (data.count != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+            // Hydro - mod
+            memset(ptvalgen.HydrauliqueModulableQuotidien, 0, nbDaysPerYearDouble);
+        }
+        // Wind
+        {
+            const Data::DataSeriesWind& data = *area.wind.series;
+            assert(year < data.timeseriesNumbers.height);
+            ptchro.Eolien
+              = (data.series.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+        }
+        // Thermal
+        {
+            uint indexCluster = 0;
+            auto end = area.thermal.list.mapping.end();
+            for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
+            {
+                auto* cluster = it->second;
+                // Draw a new random number, whatever the cluster is
+                double rnd = thermalNoisesByArea[i][indexCluster];
+
+                if (!cluster->enabled)
+                {
+                    indexCluster++;
+                    continue;
+                }
+
+                const Data::DataSeriesThermal& data = *cluster->series;
+                assert(year < data.timeseriesNumbers.height);
+                unsigned int index = cluster->areaWideIndex;
+
+                // the matrix data.series should be properly initialized at this stage
+                // because the ts-generator has already been launched
+                ptchro.ThermiqueParPalier[index] = (data.series.width != 1)
+                                                     ? (long)data.timeseriesNumbers[0][year]
+                                                     : 0; // zero-based
+
+                if (EconomicModeT)
+                {
+                    // ptvalgen.AleaCoutDeProductionParPalier[index] =
+                    //	(rnd - 0.5) * (cluster->spreadCost + 1e-4);
+                    // MBO
+                    // 15/04/2014 : bornage du coût thermique
+                    // 01/12/2014 : prise en compte du spreadCost non nul
+
+                    if (cluster->spreadCost == 0) // 5e-4 < |AleaCoutDeProductionParPalier| < 6e-4
+                    {
+                        if (rnd < 0.5)
+                            ptvalgen.AleaCoutDeProductionParPalier[index] = 1e-4 * (5 + 2 * rnd);
+                        else
+                            ptvalgen.AleaCoutDeProductionParPalier[index]
+                              = -1e-4 * (5 + 2 * (rnd - 0.5));
+                    }
+                    else
+                    {
+                        ptvalgen.AleaCoutDeProductionParPalier[index]
+                          = (rnd - 0.5) * (cluster->spreadCost);
+
+                        if (Math::Abs(ptvalgen.AleaCoutDeProductionParPalier[index]) < 5.e-4)
+                        {
+                            if (Math::Abs(ptvalgen.AleaCoutDeProductionParPalier[index]) >= 0)
+                                ptvalgen.AleaCoutDeProductionParPalier[index] += 5.e-4;
+                            else
+                                ptvalgen.AleaCoutDeProductionParPalier[index] -= 5.e-4;
+                        }
+                    }
+                }
+
+                indexCluster++;
+            }
+            /*
+            const unsigned int clusterCount = area.thermal.clusterCount;
+            for (unsigned int k = 0; k != clusterCount; ++k)
+            {
+                    // The current thermal dispatchable cluster
+                    const Data::ThermalCluster& cluster = *(area.thermal.clusters[k]);
+                    const Data::DataSeriesThermal& data = *cluster.series;
+
+                    assert(year < data.timeseriesNumbers.height);
+                    ptchro.ThermiqueParPalier[cluster.areaWideIndex] = (data.series.width != 1)
+                            ? (long) data.timeseriesNumbers[0][year] : 0; // zero-based
+
+                    if (EconomicModeT)
+                    {
+                            ptvalgen.AleaCoutDeProductionParPalier[k] =
+                                    (runtime.random[Data::seedThermalCosts]() - 0.5) *
+            (cluster.spreadCost + 1e-4);
+
+                            // This formula was used prior 3.8 :
+                            // ((x * 2. - 1.) * cluster.spreadCost) + (x * 1e-4);
+                    }
+            } // each thermal cluster
+            */
+        } // thermal
+    }     // each area
 }
 
+void ALEA_TirageAuSortChroniques(double** thermalNoisesByArea, uint numSpace)
+{
+    // Time-series numbers
+    if (Data::Study::Current::Get()->runtime->mode != stdmAdequacyDraft)
+    {
+        // Retrieve all time-series numbers
+        // Initialize in the same time the production costs of all thermal clusters.
+        InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost<true>(thermalNoisesByArea,
+                                                                           numSpace);
+    }
+    else
+        InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost<false>(thermalNoisesByArea,
+                                                                            numSpace);
 
-
+    // Flush all memory into the swap files
+    // (only if the support is available)
+    if (Antares::Memory::swapSupport)
+        Antares::memory.flushAll();
+}

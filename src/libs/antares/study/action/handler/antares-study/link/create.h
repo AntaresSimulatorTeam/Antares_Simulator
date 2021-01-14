@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_LINK_CREATE_H__
-# define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_LINK_CREATE_H__
+#define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_LINK_CREATE_H__
 
-# include <yuni/yuni.h>
-# include "../../../action.h"
-
+#include <yuni/yuni.h>
+#include "../../../action.h"
 
 namespace Antares
 {
@@ -39,60 +38,57 @@ namespace AntaresStudy
 {
 namespace Link
 {
+class Create : public IAction
+{
+public:
+    //! The most suitable smart ptr for the class
+    typedef IAction::Ptr Ptr;
+    //! The threading policy
+    typedef IAction::ThreadingPolicy ThreadingPolicy;
 
-	class Create : public IAction
-	{
-	public:
-		//! The most suitable smart ptr for the class
-		typedef IAction::Ptr  Ptr;
-		//! The threading policy
-		typedef IAction::ThreadingPolicy  ThreadingPolicy;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    Create(const Data::AreaName& fromarea, const Data::AreaName& toarea);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		Create(const Data::AreaName& fromarea, const Data::AreaName& toarea);
+    Create(const Data::AreaName& fromarea,
+           const Data::AreaName& targetfromarea,
+           const Data::AreaName& toarea,
+           const Data::AreaName& targettoarea);
 
-		Create(const Data::AreaName& fromarea, const Data::AreaName& targetfromarea,
-			const Data::AreaName& toarea, const Data::AreaName& targettoarea);
+    //! Destructor
+    virtual ~Create();
+    //@}
 
-		//! Destructor
-		virtual ~Create();
-		//@}
+    virtual bool allowUpdate() const;
 
+    /*!
+    ** \brief Create all standard actions for copy/pasting an area
+    */
+    void createActionsForAStandardLinkCopy(Context& ctx);
 
-		virtual bool allowUpdate() const;
+protected:
+    virtual bool prepareWL(Context& ctx);
+    virtual bool performWL(Context& ctx);
 
-		/*!
-		** \brief Create all standard actions for copy/pasting an area
-		*/
-		void createActionsForAStandardLinkCopy(Context& ctx);
+private:
+    //! From
+    Data::AreaName pOriginalFromAreaName;
+    Data::AreaName pTargetFromAreaName;
+    //! To
+    Data::AreaName pOriginalToAreaName;
+    Data::AreaName pTargetToAreaName;
 
-	protected:
-		virtual bool prepareWL(Context& ctx);
-		virtual bool performWL(Context& ctx);
-
-	private:
-		//! From
-		Data::AreaName pOriginalFromAreaName;
-		Data::AreaName pTargetFromAreaName;
-		//! To
-		Data::AreaName pOriginalToAreaName;
-		Data::AreaName pTargetToAreaName;
-
-	}; // class IAction
-
-
-
+}; // class IAction
 
 } // namespace Link
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
 
-# include "create.hxx"
+#include "create.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_LINK_CREATE_H__

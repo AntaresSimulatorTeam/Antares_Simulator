@@ -27,7 +27,6 @@
 
 #include "comments.h"
 
-
 namespace Antares
 {
 namespace Action
@@ -36,49 +35,42 @@ namespace AntaresStudy
 {
 namespace Constraint
 {
+bool Comments::prepareWL(Context&)
+{
+    pInfos.message.clear();
+    pInfos.state = stReady;
+    switch (pInfos.behavior)
+    {
+    case bhOverwrite:
+        pInfos.message << "The comments will be copied";
+        break;
+    default:
+        pInfos.state = stNothingToDo;
+        break;
+    }
 
-	bool Comments::prepareWL(Context&)
-	{
-		pInfos.message.clear();
-		pInfos.state = stReady;
-		switch (pInfos.behavior)
-		{
-			case bhOverwrite:
-				pInfos.message << "The comments will be copied";
-				break;
-			default:
-				pInfos.state = stNothingToDo;
-				break;
-		}
+    return true;
+}
 
-		return true;
-	}
+bool Comments::performWL(Context& ctx)
+{
+    if (ctx.constraint && ctx.extStudy)
+    {
+        Antares::Data::ConstraintName id;
+        TransformNameIntoID(pOriginalConstraintName, id);
 
+        Data::BindingConstraint* source = ctx.extStudy->bindingConstraints.find(id);
 
-	bool Comments::performWL(Context& ctx)
-	{
-		if (ctx.constraint && ctx.extStudy)
-		{
-			Antares::Data::ConstraintName id;
-			TransformNameIntoID(pOriginalConstraintName, id);
-
-			Data::BindingConstraint* source = ctx.extStudy->bindingConstraints.find(id);
-
-			if (source && source != ctx.constraint)
-			{
-				ctx.constraint->comments(source->comments());
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-
-
+        if (source && source != ctx.constraint)
+        {
+            ctx.constraint->comments(source->comments());
+            return true;
+        }
+    }
+    return false;
+}
 
 } // namespace Constraint
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
-

@@ -44,8 +44,6 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
 namespace Action
@@ -54,290 +52,277 @@ namespace AntaresStudy
 {
 namespace Area
 {
+Create::Create(const AnyString& areaname) : pOriginalAreaName(areaname)
+{
+    pInfos.behavior = bhOverwrite;
+}
 
-	Create::Create(const AnyString& areaname) :
-		pOriginalAreaName(areaname)
-	{
-		pInfos.behavior = bhOverwrite;
-	}
+Create::Create(const AnyString& areaname, const AnyString& targetname) :
+ pOriginalAreaName(areaname), pTargetAreaName(targetname)
+{
+    pInfos.behavior = bhOverwrite;
+}
 
+Create::~Create()
+{
+}
 
-	Create::Create(const AnyString& areaname, const AnyString& targetname) :
-		pOriginalAreaName(areaname),
-		pTargetAreaName(targetname)
-	{
-		pInfos.behavior = bhOverwrite;
-	}
+void Create::prepareSkipWL(Context& ctx)
+{
+    if (pTargetAreaName.empty())
+        pTargetAreaName = pOriginalAreaName;
 
+    Data::AreaName originalID;
+    TransformNameIntoID(pOriginalAreaName, originalID);
+    // area mapping
+    ctx.areaNameMapping[pOriginalAreaName] = pTargetAreaName;
+    ctx.areaLowerNameMapping[originalID] = pFuturAreaName;
+    ctx.areaForceCreate[pOriginalAreaName] = false;
+    logs.debug() << "  copy/paste: mapping: " << pOriginalAreaName << " -> " << pTargetAreaName;
+    ctx.originalPlant = nullptr;
+}
 
-	Create::~Create()
-	{}
+bool Create::prepareWL(Context& ctx)
+{
+    pInfos.message.clear();
+    ctx.originalPlant = nullptr;
 
+    bool explicitTarget = true;
+    // Assign the area name if not already done
+    // The variable pTargetAreaName may be slighty different from the original
+    // name (changed from the interface for example)
+    if (pTargetAreaName.empty())
+    {
+        pTargetAreaName = pOriginalAreaName;
+        explicitTarget = false;
+    }
+    pFuturAreaName = pTargetAreaName;
 
-	void Create::prepareSkipWL(Context& ctx)
-	{
-		if (pTargetAreaName.empty())
-			pTargetAreaName = pOriginalAreaName;
+    ctx.areaForceCreate[pOriginalAreaName] = false;
 
-		Data::AreaName originalID;
-		TransformNameIntoID(pOriginalAreaName, originalID);
-		// area mapping
-		ctx.areaNameMapping[pOriginalAreaName] = pTargetAreaName;
-		ctx.areaLowerNameMapping[originalID] = pFuturAreaName;
-		ctx.areaForceCreate[pOriginalAreaName] = false;
-		logs.debug() << "  copy/paste: mapping: " << pOriginalAreaName << " -> " << pTargetAreaName;
-		ctx.originalPlant = nullptr;
-	}
+    // The name can not be empty
+    if (pFuturAreaName.empty())
+    {
+        pInfos.caption = "Unknown area";
+        pInfos.message << "The name must not be empty";
+        pInfos.state = stError;
+        // area mapping
+        ctx.areaNameMapping[pOriginalAreaName].clear();
 
+        Data::AreaName originalID;
+        TransformNameIntoID(pOriginalAreaName, originalID);
+        ctx.areaLowerNameMapping[originalID].clear();
+        return false;
+    }
 
-	bool Create::prepareWL(Context& ctx)
-	{
-		pInfos.message.clear();
-		ctx.originalPlant = nullptr;
+    // Computing the futur ID of the area
+    Data::AreaName id;
+    const Antares::Data::Area* areaFound = nullptr;
+    // the suffix
+    const String& suffix = ctx.property["area.name.suffix"];
 
-		bool explicitTarget = true;
-		// Assign the area name if not already done
-		// The variable pTargetAreaName may be slighty different from the original
-		// name (changed from the interface for example)
-		if (pTargetAreaName.empty())
-		{
-			pTargetAreaName = pOriginalAreaName;
-			explicitTarget = false;
-		}
-		pFuturAreaName = pTargetAreaName;
+    if (not suffix.empty() || !explicitTarget)
+    {
+        if (suffix == "<auto>" || !explicitTarget)
+        {
+            TransformNameIntoID(pFuturAreaName, id);
+            areaFound = ctx.study.areas.find(id);
+            if (areaFound)
+            {
+                Data::AreaName::Size sepPos = id.find_last_of('-');
+                if (sepPos != YString::npos)
+                {
+                    Data::AreaName suffixChain(id, sepPos + 1);
+                    int suffixNumber = suffixChain.to<int>();
+                    if (suffixNumber > 0)
+                    {
+                        Data::AreaName suffixLess(pFuturAreaName, 0, sepPos);
+                        pTargetAreaName = suffixLess;
+                    }
+                }
+                unsigned int indx = 1;
+                do
+                {
+                    ++indx;
+                    pFuturAreaName.clear() << pTargetAreaName << "-" << indx;
+                    id.clear();
+                    TransformNameIntoID(pFuturAreaName, id);
+                    areaFound = ctx.study.areas.find(id);
+                } while (areaFound);
+            }
+        }
+        else
+        {
+            pFuturAreaName += suffix;
+            TransformNameIntoID(pFuturAreaName, id);
+            areaFound = ctx.study.areas.find(id);
+        }
+    }
+    else
+    {
+        TransformNameIntoID(pFuturAreaName, id);
+        areaFound = ctx.study.areas.find(id);
+    }
 
-		ctx.areaForceCreate[pOriginalAreaName] = false;
+    // area mapping
+    ctx.areaNameMapping[pOriginalAreaName] = pFuturAreaName;
 
-		// The name can not be empty
-		if (pFuturAreaName.empty())
-		{
-			pInfos.caption = "Unknown area";
-			pInfos.message << "The name must not be empty";
-			pInfos.state = stError;
-			// area mapping
-			ctx.areaNameMapping[pOriginalAreaName].clear();
+    Data::AreaName originalID;
+    TransformNameIntoID(pOriginalAreaName, originalID);
+    ctx.areaLowerNameMapping[originalID] = pFuturAreaName;
+    logs.debug() << "  copy/paste: mapping: " << pOriginalAreaName << " -> " << pFuturAreaName;
 
-			Data::AreaName originalID;
-			TransformNameIntoID(pOriginalAreaName, originalID);
-			ctx.areaLowerNameMapping[originalID].clear();
-			return false;
-		}
+    pInfos.caption.clear() << "Area " << pFuturAreaName;
+    // Default state
+    pInfos.state = stReady;
 
-		// Computing the futur ID of the area
-		Data::AreaName id;
-		const Antares::Data::Area* areaFound = nullptr;
-		// the suffix
-		const String& suffix = ctx.property["area.name.suffix"];
+    if (areaFound)
+    {
+        // The area
+        switch (pInfos.behavior)
+        {
+        case bhMerge:
+            pInfos.message << "The area '" << pFuturAreaName
+                           << "' already exists and will remain untouched";
+            break;
+        case bhOverwrite:
+            pInfos.message << "The area '" << pFuturAreaName << "' will be reset";
+            ctx.areaForceCreate[pOriginalAreaName] = true;
+            break;
+        default:
+            break;
+        }
+    }
+    else
+    {
+        // The area does not exist it will be created then
+        pInfos.message << "The area '" << pFuturAreaName << "' will be created";
+        ctx.areaForceCreate[pOriginalAreaName] = true;
+    }
+    return true;
+}
 
-		if (not suffix.empty() || !explicitTarget)
-		{
-			if (suffix == "<auto>" || !explicitTarget)
-			{
-				TransformNameIntoID(pFuturAreaName, id);
-				areaFound = ctx.study.areas.find(id);
-				if (areaFound)
-				{
-					Data::AreaName::Size sepPos = id.find_last_of('-');
-					if (sepPos != YString::npos)
-					{
-						Data::AreaName suffixChain(id, sepPos+1);
-						int suffixNumber = suffixChain.to<int>();
-						if (suffixNumber > 0)
-						{
-							Data::AreaName suffixLess(pFuturAreaName, 0, sepPos);
-							pTargetAreaName = suffixLess;
-						}
-					}
-					unsigned int indx = 1;
-					do
-					{
-						++indx;
-						pFuturAreaName.clear() << pTargetAreaName << "-" << indx;
-						id.clear();
-						TransformNameIntoID(pFuturAreaName, id);
-						areaFound = ctx.study.areas.find(id);
-					}
-					while (areaFound);
-				}
-			}
-			else
-			{
-				pFuturAreaName += suffix;
-				TransformNameIntoID(pFuturAreaName, id);
-				areaFound = ctx.study.areas.find(id);
-			}
-		}
-		else
-		{
-			TransformNameIntoID(pFuturAreaName, id);
-			areaFound = ctx.study.areas.find(id);
-		}
+bool Create::performWL(Context& ctx)
+{
+    // assert
+    assert(not pFuturAreaName.empty() && "An area name must not be empty");
 
-		// area mapping
-		ctx.areaNameMapping[pOriginalAreaName] = pFuturAreaName;
+    ctx.message.clear() << "Updating the area " << pFuturAreaName;
+    ctx.updateMessageUI(ctx.message);
 
-		Data::AreaName originalID;
-		TransformNameIntoID(pOriginalAreaName, originalID);
-		ctx.areaLowerNameMapping[originalID] = pFuturAreaName;
-		logs.debug() << "  copy/paste: mapping: " << pOriginalAreaName << " -> " << pFuturAreaName;
+    ctx.originalPlant = nullptr;
 
-		pInfos.caption.clear() << "Area " << pFuturAreaName;
-		// Default state
-		pInfos.state = stReady;
+    Data::AreaName id;
+    TransformNameIntoID(pFuturAreaName, id);
+    ctx.area = ctx.study.areas.find(id);
 
-		if (areaFound)
-		{
-			// The area
-			switch (pInfos.behavior)
-			{
-				case bhMerge:
-					pInfos.message << "The area '" << pFuturAreaName << "' already exists and will remain untouched";
-					break;
-				case bhOverwrite:
-					pInfos.message << "The area '" << pFuturAreaName << "' will be reset";
-					ctx.areaForceCreate[pOriginalAreaName] = true;
-					break;
-				default:
-					break;
-			}
-		}
-		else
-		{
-			// The area does not exist it will be created then
-			pInfos.message << "The area '" << pFuturAreaName << "' will be created";
-			ctx.areaForceCreate[pOriginalAreaName] = true;
-		}
-		return true;
-	}
+    // The area
+    if (not ctx.area)
+    {
+        // create the area
+        ctx.area = ctx.study.areaAdd(pFuturAreaName);
+        logs.debug() << "[study-action] The area " << pFuturAreaName << " has been created";
+    }
+    else
+    {
+        logs.debug() << "[study-action] The area " << pFuturAreaName << " has been found";
+        if (pInfos.behavior == bhOverwrite)
+        {
+            logs.debug() << "[study-action] The area " << pFuturAreaName << " has been reset";
+            //(ctx.area)->resetToDefaultValues();
+        }
+    }
+    ctx.autoselectAreas.push_back(ctx.area);
+    return (ctx.area != NULL);
+}
 
+void Create::createActionsForAStandardAreaCopy(Context& ctx, bool copyPosition)
+{
+    // UI
+    // Position
+    auto* p = new Position(pOriginalAreaName);
+    if (!copyPosition)
+        p->behavior(bhSkip);
+    *this += p;
+    // Color
+    auto* c = new Color(pOriginalAreaName);
+    if (copyPosition)
+        c->behavior(bhOverwrite);
 
-	bool Create::performWL(Context& ctx)
-	{
-		// assert
-		assert(not pFuturAreaName.empty() && "An area name must not be empty");
+    *this += c;
 
-		ctx.message.clear() << "Updating the area " << pFuturAreaName;
-		ctx.updateMessageUI(ctx.message);
+    // Nodal optimization
+    *this += new NodalOptimization(pOriginalAreaName);
+    // Reserves
+    *this += new Reserves(pOriginalAreaName);
+    // Misc Gen.
+    *this += new MiscGen(pOriginalAreaName);
+    // Filtering
+    *this += new Filtering(pOriginalAreaName);
 
-		ctx.originalPlant = nullptr;
+    NodeTimeseries* tsNode;
+    DataTSGenerator* prepro;
+    // Load
+    *this += (tsNode = new NodeTimeseries(Data::timeSeriesLoad));
+    *tsNode += new DataTimeseries(Data::timeSeriesLoad, pOriginalAreaName);
+    prepro = new DataTSGenerator(Data::timeSeriesLoad, pOriginalAreaName);
+    *prepro += new Correlation(Data::timeSeriesLoad, pOriginalAreaName);
+    *tsNode += prepro;
 
-		Data::AreaName id;
-		TransformNameIntoID(pFuturAreaName, id);
-		ctx.area = ctx.study.areas.find(id);
+    // Solar
+    *this += (tsNode = new NodeTimeseries(Data::timeSeriesSolar));
+    *tsNode += new DataTimeseries(Data::timeSeriesSolar, pOriginalAreaName);
+    prepro = new DataTSGenerator(Data::timeSeriesSolar, pOriginalAreaName);
+    *prepro += new Correlation(Data::timeSeriesSolar, pOriginalAreaName);
+    *tsNode += prepro;
 
-		// The area
-		if (not ctx.area)
-		{
-			// create the area
-			ctx.area = ctx.study.areaAdd(pFuturAreaName);
-			logs.debug() << "[study-action] The area " << pFuturAreaName << " has been created";
-		}
-		else
-		{
-			logs.debug() << "[study-action] The area " << pFuturAreaName << " has been found";
-			if (pInfos.behavior == bhOverwrite)
-			{
-				logs.debug() << "[study-action] The area " << pFuturAreaName << " has been reset";
-				//(ctx.area)->resetToDefaultValues();
-			}
-		}
-		ctx.autoselectAreas.push_back(ctx.area);
-		return (ctx.area != NULL);
-	}
+    // Wind
+    *this += (tsNode = new NodeTimeseries(Data::timeSeriesWind));
+    *tsNode += new DataTimeseries(Data::timeSeriesWind, pOriginalAreaName);
+    prepro = new DataTSGenerator(Data::timeSeriesWind, pOriginalAreaName);
+    *prepro += new Correlation(Data::timeSeriesWind, pOriginalAreaName);
+    *tsNode += prepro;
 
+    // Hydro
+    *this += (tsNode = new NodeTimeseries(Data::timeSeriesHydro));
+    *tsNode += new DataTimeseries(Data::timeSeriesHydro, pOriginalAreaName);
+    prepro = new DataTSGenerator(Data::timeSeriesHydro, pOriginalAreaName);
+    *prepro += new Correlation(Data::timeSeriesHydro, pOriginalAreaName);
+    *tsNode += prepro;
+    *tsNode += new Action::AntaresStudy::Area::AllocationHydro(pOriginalAreaName);
 
-	void Create::createActionsForAStandardAreaCopy(Context& ctx, bool copyPosition)
-	{
-		// UI
-		// Position
-		auto* p = new Position(pOriginalAreaName);
-		if (!copyPosition)
-			p->behavior(bhSkip);
-		*this += p;
-		// Color
-		auto * c = new Color(pOriginalAreaName);
-		if (copyPosition)
-			c->behavior(bhOverwrite);
+    // Thermal
+    auto* area = ctx.extStudy->areas.findFromName(pOriginalAreaName);
+    if (area)
+    {
+        typedef Antares::Action::AntaresStudy::ThermalCluster::RootNode RootNodePlant;
+        auto* root = new RootNodePlant(pOriginalAreaName);
 
-		*this += c;
+        // browsing each thermal cluster
+        auto end = area->thermal.list.end();
+        for (auto i = area->thermal.list.begin(); i != end; ++i)
+        {
+            *root += StandardActionsToCopyThermalCluster(pOriginalAreaName, i->second->name());
+        }
+        *this += root;
+    }
+}
 
-		// Nodal optimization
-		*this += new NodalOptimization(pOriginalAreaName);
-		// Reserves
-		*this += new Reserves(pOriginalAreaName);
-		// Misc Gen.
-		*this += new MiscGen(pOriginalAreaName);
-		// Filtering
-		*this += new Filtering(pOriginalAreaName);
+IAction* Create::StandardActionsToCopyThermalCluster(const Data::AreaName& area,
+                                                     const Data::ThermalClusterName& name)
+{
+    typedef Antares::Action::AntaresStudy::ThermalCluster::Create NodePlant;
+    typedef Antares::Action::AntaresStudy::ThermalCluster::CommonData NodePlantCommonData;
 
-		NodeTimeseries* tsNode;
-		DataTSGenerator* prepro;
-		// Load
-		*this += (tsNode = new NodeTimeseries(Data::timeSeriesLoad));
-		*tsNode += new DataTimeseries(Data::timeSeriesLoad,   pOriginalAreaName);
-		prepro   = new DataTSGenerator(Data::timeSeriesLoad,  pOriginalAreaName);
-		*prepro += new Correlation(Data::timeSeriesLoad, pOriginalAreaName);
-		*tsNode += prepro;
-
-		// Solar
-		*this += (tsNode = new NodeTimeseries(Data::timeSeriesSolar));
-		*tsNode += new DataTimeseries(Data::timeSeriesSolar,  pOriginalAreaName);
-		prepro   = new DataTSGenerator(Data::timeSeriesSolar, pOriginalAreaName);
-		*prepro += new Correlation(Data::timeSeriesSolar, pOriginalAreaName);
-		*tsNode += prepro;
-
-		// Wind
-		*this += (tsNode = new NodeTimeseries(Data::timeSeriesWind));
-		*tsNode += new DataTimeseries(Data::timeSeriesWind,   pOriginalAreaName);
-		prepro   = new DataTSGenerator(Data::timeSeriesWind,  pOriginalAreaName);
-		*prepro += new Correlation(Data::timeSeriesWind, pOriginalAreaName);
-		*tsNode += prepro;
-
-		// Hydro
-		*this += (tsNode = new NodeTimeseries(Data::timeSeriesHydro));
-		*tsNode += new DataTimeseries(Data::timeSeriesHydro,  pOriginalAreaName);
-		prepro   = new DataTSGenerator(Data::timeSeriesHydro, pOriginalAreaName);
-		*prepro += new Correlation(Data::timeSeriesHydro, pOriginalAreaName);
-		*tsNode += prepro;
-		*tsNode += new Action::AntaresStudy::Area::AllocationHydro(pOriginalAreaName);
-
-		// Thermal
-		auto* area = ctx.extStudy->areas.findFromName(pOriginalAreaName);
-		if (area)
-		{
-			typedef Antares::Action::AntaresStudy::ThermalCluster::RootNode  RootNodePlant;
-			auto* root = new RootNodePlant(pOriginalAreaName);
-
-			// browsing each thermal cluster
-			auto end = area->thermal.list.end();
-			for (auto i = area->thermal.list.begin(); i != end; ++i)
-			{
-				*root += StandardActionsToCopyThermalCluster(pOriginalAreaName, i->second->name());
-			}
-			*this += root;
-		}
-	}
-
-
-	IAction* Create::StandardActionsToCopyThermalCluster(const Data::AreaName& area, const Data::ThermalClusterName& name)
-	{
-		typedef Antares::Action::AntaresStudy::ThermalCluster::Create  NodePlant;
-		typedef Antares::Action::AntaresStudy::ThermalCluster::CommonData  NodePlantCommonData;
-
-		auto* cluster = new NodePlant(area, name);
-		// TS
-		*cluster += new NodePlantCommonData();
-		*cluster += new DataTimeseries(Data::timeSeriesThermal,  area);
-		*cluster += new DataTSGenerator(Data::timeSeriesThermal, area);
-		return cluster;
-	}
-
-
-
-
+    auto* cluster = new NodePlant(area, name);
+    // TS
+    *cluster += new NodePlantCommonData();
+    *cluster += new DataTimeseries(Data::timeSeriesThermal, area);
+    *cluster += new DataTSGenerator(Data::timeSeriesThermal, area);
+    return cluster;
+}
 
 } // namespace Area
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
-

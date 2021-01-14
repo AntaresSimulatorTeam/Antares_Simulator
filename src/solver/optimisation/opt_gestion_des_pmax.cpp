@@ -25,39 +25,40 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-# include "opt_structure_probleme_a_resoudre.h"
+#include "opt_structure_probleme_a_resoudre.h"
 
-# include "../simulation/simulation.h"
-# include "../simulation/sim_structure_donnees.h"
-# include "../simulation/sim_extern_variables_globales.h"
+#include "../simulation/simulation.h"
+#include "../simulation/sim_structure_donnees.h"
+#include "../simulation/sim_extern_variables_globales.h"
 
-# include "opt_fonctions.h"
+#include "opt_fonctions.h"
 
-
-
-
-void OPT_SauvegarderLesPmaxThermiques( PROBLEME_HEBDO * ProblemeHebdo )  
+void OPT_SauvegarderLesPmaxThermiques(PROBLEME_HEBDO* ProblemeHebdo)
 {
-	int Pays; int Palier; double * PuissanceDisponibleDuPalierThermiqueRef;
-	double * PuissanceDisponibleDuPalierThermiqueRef_SV;
-	
-	PALIERS_THERMIQUES * PaliersThermiquesDuPays;
-  PDISP_ET_COUTS_HORAIRES_PAR_PALIER * PuissanceDisponibleEtCout; 
+    int Pays;
+    int Palier;
+    double* PuissanceDisponibleDuPalierThermiqueRef;
+    double* PuissanceDisponibleDuPalierThermiqueRef_SV;
 
-	for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ )
-	{
-		PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+    PALIERS_THERMIQUES* PaliersThermiquesDuPays;
+    PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout;
 
-		for ( Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++ )
-		{
-			PuissanceDisponibleEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Palier];
-			PuissanceDisponibleDuPalierThermiqueRef    = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef;
-			PuissanceDisponibleDuPalierThermiqueRef_SV = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef_SV;
-			
-			memcpy( (char *) PuissanceDisponibleDuPalierThermiqueRef_SV, (char *) PuissanceDisponibleDuPalierThermiqueRef,
-					ProblemeHebdo->NombreDePasDeTempsRef * sizeof( double ) );
-			
-		}		
-	}
-	return;
+    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    {
+        PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+
+        for (Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++)
+        {
+            PuissanceDisponibleEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Palier];
+            PuissanceDisponibleDuPalierThermiqueRef
+              = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef;
+            PuissanceDisponibleDuPalierThermiqueRef_SV
+              = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef_SV;
+
+            memcpy((char*)PuissanceDisponibleDuPalierThermiqueRef_SV,
+                   (char*)PuissanceDisponibleDuPalierThermiqueRef,
+                   ProblemeHebdo->NombreDePasDeTempsRef * sizeof(double));
+        }
+    }
+    return;
 }

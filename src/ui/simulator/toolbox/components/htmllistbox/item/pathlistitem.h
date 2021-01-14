@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_PATHLIST_ITEM_H__
-# define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_PATHLIST_ITEM_H__
+#define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_PATHLIST_ITEM_H__
 
-# include "item.h"
-# include <antares/paths/list.h>
-
+#include "item.h"
+#include <antares/paths/list.h>
 
 namespace Antares
 {
@@ -39,49 +38,52 @@ namespace HTMLListbox
 {
 namespace Item
 {
+/*!
+** \brief Single item for an Input
+*/
+class PathListItem : public IItem
+{
+public:
+    //! The smartptr
+    typedef Yuni::SmartPtr<PathListItem> Ptr;
 
+public:
+    static bool HtmlContent(wxString& out,
+                            wxString name,
+                            const wxString& searchString,
+                            bool isFolder,
+                            Yuni::uint64 size);
 
-	/*!
-	** \brief Single item for an Input
-	*/
-	class PathListItem : public IItem
-	{
-	public:
-		//! The smartptr
-		typedef Yuni::SmartPtr<PathListItem> Ptr;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    PathListItem(const Yuni::Clob& a, const PathList::FileInfo& opts);
+    //! Destructor
+    virtual ~PathListItem()
+    {
+    }
+    //@}
 
-	public:
-		static bool HtmlContent(wxString& out, wxString name, const wxString& searchString, bool isFolder, Yuni::uint64 size);
+    /*!
+    ** \brief Get the HTML Content for the item
+    */
+    virtual wxString htmlContent(const wxString& searchString);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		PathListItem(const Yuni::Clob& a, const PathList::FileInfo& opts);
-		//! Destructor
-		virtual ~PathListItem() {}
-		//@}
+    virtual bool interactive() const
+    {
+        return true;
+    }
 
-		/*!
-		** \brief Get the HTML Content for the item
-		*/
-		virtual wxString htmlContent(const wxString& searchString);
+protected:
+    //! Additional text
+    const wxString pText;
+    Yuni::uint64 pSize;
+    bool pIsFolder;
 
-		virtual bool interactive() const {return true;}
-
-	protected:
-		//! Additional text
-		const wxString pText;
-		Yuni::uint64 pSize;
-		bool pIsFolder;
-
-	}; // class PathListItem
-
-
-
-
+}; // class PathListItem
 
 } // namespace Item
 } // namespace HTMLListbox

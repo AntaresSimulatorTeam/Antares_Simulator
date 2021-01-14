@@ -25,11 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __LIBS_STUDY_SCENARIO_BUILDER_DATA_HYDRO_LEVELS_H__
-# define __LIBS_STUDY_SCENARIO_BUILDER_DATA_HYDRO_LEVELS_H__
+#define __LIBS_STUDY_SCENARIO_BUILDER_DATA_HYDRO_LEVELS_H__
 
-
-# include "scBuilderDataInterface.h"
-
+#include "scBuilderDataInterface.h"
 
 namespace Antares
 {
@@ -37,78 +35,82 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
+/*!
+** \brief Rules for hydro levels, for all years and areas
+*/
+class hydroLevelsData final : public dataInterface
+{
+public:
+    //! Matrix
+    typedef Matrix<double> MatrixType;
 
+public:
+    // We use default constructor and destructor
 
-	/*!
-	** \brief Rules for hydro levels, for all years and areas
-	*/
-	class hydroLevelsData final : public dataInterface
-	{
-	public:
-		//! Matrix
-		typedef Matrix<double> MatrixType;
+    //! \name Data manupulation
+    //@{
+    /*!
+    ** \brief Reset data from the study
+    */
+    bool reset(const Study& study);
 
-	public:
+    /*!
+    ** \brief Export the data into a mere INI file
+    */
+    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
 
-		// We use default constructor and destructor 
+    /*!
+    ** \brief Assign a single value
+    **
+    ** \param index An area index
+    ** \param year  A year
+    ** \param value The new hydro level
+    */
+    void set(uint index, uint year, double value);
+    //@}
 
-		//! \name Data manupulation
-		//@{
-		/*!
-		** \brief Reset data from the study
-		*/
-		bool reset(const Study& study);
+    uint width() const;
 
-		/*!
-		** \brief Export the data into a mere INI file
-		*/
-		void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
+    uint height() const;
 
-		/*!
-		** \brief Assign a single value
-		**
-		** \param index An area index
-		** \param year  A year
-		** \param value The new hydro level
-		*/
-		void set(uint index, uint year, double value);
-		//@}
+    double get_value(uint x, uint y) const;
 
-		uint width() const;
+    void set_value(uint x, uint y, double value);
 
-		uint height() const;
+    void apply(Study& study);
 
-		double get_value(uint x, uint y) const;
+private:
+    //! Hydro levels overlay (0 if auto)
+    MatrixType pHydroLevelsRules;
 
-		void set_value(uint x, uint y, double value);
+}; // class hydroLevelsData
 
-		void apply(Study& study);
+// class hydroLevelsData : inline functions
 
-	private:
-		//! Hydro levels overlay (0 if auto)
-		MatrixType pHydroLevelsRules;
+inline void hydroLevelsData::set(uint areaindex, uint year, double value)
+{
+    assert(areaindex < pHydroLevelsRules.width);
+    if (year < pHydroLevelsRules.height)
+        pHydroLevelsRules[areaindex][year] = value;
+}
 
-	}; // class hydroLevelsData
+inline uint hydroLevelsData::width() const
+{
+    return pHydroLevelsRules.width;
+}
 
-	// class hydroLevelsData : inline functions
+inline uint hydroLevelsData::height() const
+{
+    return pHydroLevelsRules.height;
+}
 
-	inline void hydroLevelsData::set(uint areaindex, uint year, double value)
-	{
-		assert(areaindex < pHydroLevelsRules.width);
-		if (year < pHydroLevelsRules.height)
-			pHydroLevelsRules[areaindex][year] = value;
-	}
-
-	inline uint hydroLevelsData::width() const { return pHydroLevelsRules.width; }
-
-	inline uint hydroLevelsData::height() const { return pHydroLevelsRules.height; }
-
-	inline double hydroLevelsData::get_value(uint x, uint y) const { return pHydroLevelsRules.entry[y][x]; }
-
+inline double hydroLevelsData::get_value(uint x, uint y) const
+{
+    return pHydroLevelsRules.entry[y][x];
+}
 
 } // namespace ScenarioBuilder
 } // namespace Data
 } // namespace Antares
-
 
 #endif // __LIBS_STUDY_SCENARIO_BUILDER_DATA_HYDRO_LEVELS_H__

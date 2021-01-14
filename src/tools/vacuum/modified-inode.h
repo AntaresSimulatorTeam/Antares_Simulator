@@ -25,39 +25,37 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __MODIFIED_INODE_H__
-# define __MODIFIED_INODE_H__
+#define __MODIFIED_INODE_H__
 
-# include <yuni/yuni.h>
-# include <fswalker/fswalker.h>
-
+#include <yuni/yuni.h>
+#include <fswalker/fswalker.h>
 
 class ModifiedINode : public FSWalker::IExtension
 {
 public:
-	ModifiedINode(yint64 dateLimit);
-	virtual ~ModifiedINode() {}
+    ModifiedINode(yint64 dateLimit);
+    virtual ~ModifiedINode()
+    {
+    }
 
-	virtual const char* caption() const;
+    virtual const char* caption() const;
 
-	virtual FSWalker::OnDirectoryEvent directoryEvent();
-	virtual FSWalker::OnFileEvent fileEvent();
+    virtual FSWalker::OnDirectoryEvent directoryEvent();
+    virtual FSWalker::OnFileEvent fileEvent();
 
-	virtual void* userdataCreate(FSWalker::DispatchJobEvent& queue);
-	virtual void userdataDestroy(void* userdata);
-
+    virtual void* userdataCreate(FSWalker::DispatchJobEvent& queue);
+    virtual void userdataDestroy(void* userdata);
 
 public:
-	yuint64 bytesDeleted;
-	yuint64 filesDeleted;
-	yuint64 foldersDeleted;
+    yuint64 bytesDeleted;
+    yuint64 filesDeleted;
+    yuint64 foldersDeleted;
 
 private:
-	Yuni::Mutex pMutex;
-	yint64 pDateLimit;
-	FSWalker::DispatchJobEvent pQueue;
+    Yuni::Mutex pMutex;
+    yint64 pDateLimit;
+    FSWalker::DispatchJobEvent pQueue;
 
 }; // class ModifiedINode
-
-
 
 #endif // __MODIFIED_INODE_H__

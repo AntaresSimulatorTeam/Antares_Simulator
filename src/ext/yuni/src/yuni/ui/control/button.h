@@ -9,13 +9,13 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_UI_CONTROL_BUTTON_H__
-# define __YUNI_UI_CONTROL_BUTTON_H__
+#define __YUNI_UI_CONTROL_BUTTON_H__
 
-# include "../../yuni.h"
-# include "control.h"
-# include "../font.h"
-# include "../displaymode.h"
-# include "../theme.h"
+#include "../../yuni.h"
+#include "control.h"
+#include "../font.h"
+#include "../displaymode.h"
+#include "../theme.h"
 
 namespace Yuni
 {
@@ -23,170 +23,236 @@ namespace UI
 {
 namespace Control
 {
+//! A button is a clickable control that triggers an event
+class Button : public IControl
+{
+public:
+    //! Smart pointer
+    typedef Ancestor::SmartPtrType<Button>::Ptr Ptr;
+    //! Type of bind for the button callback
+    typedef Yuni::Bind<EventPropagation(IControl*)> Callback;
 
+public:
+    //! Callback for button click
+    Callback onClick;
 
-	//! A button is a clickable control that triggers an event
-	class Button: public IControl
-	{
-	public:
-		//! Smart pointer
-		typedef Ancestor::SmartPtrType<Button>::Ptr  Ptr;
-		//! Type of bind for the button callback
-		typedef Yuni::Bind<EventPropagation (IControl*)>  Callback;
+public:
+    Button() :
+     pBeingClicked(false),
+     pOffsetX(0),
+     pOffsetY(0),
+     pTextColor(Theme::Current()->textColor),
+     pBackColor(Theme::Current()->buttonColor),
+     pFillColor(0.0f, 0.0f, 0.0f, 1.0f),
+     pDisplay(dmNone)
+    {
+    }
 
-	public:
-		//! Callback for button click
-		Callback onClick;
+    Button(float x, float y, float width, float height) :
+     IControl(x, y, width, height),
+     pBeingClicked(false),
+     pOffsetX(0),
+     pOffsetY(0),
+     pTextColor(Theme::Current()->textColor),
+     pBackColor(Theme::Current()->buttonColor),
+     pFillColor(0.0f, 0.0f, 0.0f, 1.0f),
+     pDisplay(dmNone)
+    {
+    }
 
-	public:
-		Button():
-			pBeingClicked(false),
-			pOffsetX(0),
-			pOffsetY(0),
-			pTextColor(Theme::Current()->textColor),
-			pBackColor(Theme::Current()->buttonColor),
-			pFillColor(0.0f, 0.0f, 0.0f, 1.0f),
-			pDisplay(dmNone)
-		{}
+    Button(const Point2D<float>& position, const Point2D<float>& size) :
+     IControl(position, size),
+     pBeingClicked(false),
+     pOffsetX(0),
+     pOffsetY(0),
+     pTextColor(Theme::Current()->textColor),
+     pBackColor(Theme::Current()->buttonColor),
+     pFillColor(0.0f, 0.0f, 0.0f, 1.0f),
+     pDisplay(dmNone)
+    {
+    }
 
-		Button(float x, float y, float width, float height):
-			IControl(x, y, width, height),
-			pBeingClicked(false),
-			pOffsetX(0),
-			pOffsetY(0),
-			pTextColor(Theme::Current()->textColor),
-			pBackColor(Theme::Current()->buttonColor),
-			pFillColor(0.0f, 0.0f, 0.0f, 1.0f),
-			pDisplay(dmNone)
-		{}
+    //! Virtual destructor
+    virtual ~Button()
+    {
+    }
 
-		Button(const Point2D<float>& position, const Point2D<float>& size):
-			IControl(position, size),
-			pBeingClicked(false),
-			pOffsetX(0),
-			pOffsetY(0),
-			pTextColor(Theme::Current()->textColor),
-			pBackColor(Theme::Current()->buttonColor),
-			pFillColor(0.0f, 0.0f, 0.0f, 1.0f),
-			pDisplay(dmNone)
-		{}
+    const String& text() const
+    {
+        return pText;
+    }
+    void text(const AnyString& text)
+    {
+        pText = text;
+        invalidate();
+    }
 
-		//! Virtual destructor
-		virtual ~Button() {}
+    //! Launch a click event
+    void click()
+    {
+        onClick(this);
+    }
 
-		const String& text() const { return pText; }
-		void text(const AnyString& text) { pText = text; invalidate(); }
+    //! Draw the button on the surface
+    virtual void draw(DrawingSurface::Ptr& surface, float xOffset, float yOffset) const override;
 
-		//! Launch a click event
-		void click() { onClick(this); }
+    //! Image shown on the button
+    void image(const Gfx3D::Texture::Ptr& image)
+    {
+        pImage = image;
+        invalidate();
+    }
 
-		//! Draw the button on the surface
-		virtual void draw(DrawingSurface::Ptr& surface, float xOffset, float yOffset) const override;
+    //! Image displayed while clicking (same as standard image if `null`)
+    void imageClicking(const Gfx3D::Texture::Ptr& image)
+    {
+        pImageClicking = image;
+        invalidate();
+    }
 
-		//! Image shown on the button
-		void image(const Gfx3D::Texture::Ptr& image) { pImage = image; invalidate(); }
+    //! Image displayed while hovering (same as standard image if `null`)
+    void imageHovering(const Gfx3D::Texture::Ptr& image)
+    {
+        pImageHovering = image;
+        invalidate();
+    }
 
-		//! Image displayed while clicking (same as standard image if `null`)
-		void imageClicking(const Gfx3D::Texture::Ptr& image) { pImageClicking = image; invalidate(); }
+    //! On mouse button down
+    virtual EventPropagation mouseDown(Input::IMouse::Button btn, float, float) override
+    {
+        if (btn != Input::IMouse::ButtonLeft)
+            return epStop;
 
-		//! Image displayed while hovering (same as standard image if `null`)
-		void imageHovering(const Gfx3D::Texture::Ptr& image) { pImageHovering = image; invalidate(); }
+        pBeingClicked = true;
+        if (!(!pImageClicking))
+            invalidate();
+        return epStop;
+    }
 
-		//! On mouse button down
-		virtual EventPropagation mouseDown(Input::IMouse::Button btn, float, float) override
-		{
-			if (btn != Input::IMouse::ButtonLeft)
-				return epStop;
+    //! On mouse button up
+    virtual EventPropagation mouseUp(Input::IMouse::Button btn, float, float) override
+    {
+        if (btn != Input::IMouse::ButtonLeft)
+            return epStop;
 
-			pBeingClicked = true;
-			if (!(!pImageClicking))
-				invalidate();
-			return epStop;
-		}
+        if (pBeingClicked)
+            onClick(this);
+        pBeingClicked = false;
+        invalidate();
+        return epStop;
+    }
 
-		//! On mouse button up
-		virtual EventPropagation mouseUp(Input::IMouse::Button btn, float, float) override
-		{
-			if (btn != Input::IMouse::ButtonLeft)
-				return epStop;
+    //! Get the text color
+    const Color::RGBA<float>& textColor() const
+    {
+        return pTextColor;
+    }
+    //! Set the text color
+    void textColor(const Color::RGBA<float>& color)
+    {
+        pTextColor = color;
+        invalidate();
+    }
 
-			if (pBeingClicked)
-				onClick(this);
-			pBeingClicked = false;
-			invalidate();
-			return epStop;
-		}
+    //! Get the back color
+    const Color::RGBA<float>& backColor() const
+    {
+        return pBackColor;
+    }
+    //! Set the back color
+    void backColor(const Color::RGBA<float>& color)
+    {
+        pBackColor = color;
+        invalidate();
+    }
 
-		//! Get the text color
-		const Color::RGBA<float>& textColor() const { return pTextColor; }
-		//! Set the text color
-		void textColor(const Color::RGBA<float>& color) { pTextColor = color; invalidate(); }
+    //! Get the fill color
+    const Color::RGBA<float>& fillColor() const
+    {
+        return pFillColor;
+    }
+    //! Set the fill color
+    void fillColor(const Color::RGBA<float>& color)
+    {
+        pFillColor = color;
+        invalidate();
+    }
 
-		//! Get the back color
-		const Color::RGBA<float>& backColor() const { return pBackColor; }
-		//! Set the back color
-		void backColor(const Color::RGBA<float>& color) { pBackColor = color; invalidate(); }
+    //! Current display mode
+    DisplayMode display() const
+    {
+        return pDisplay;
+    }
+    //! Set display mode to Fit
+    void fit()
+    {
+        pDisplay = dmFit;
+        invalidate();
+    }
+    //! Set display mode to Fill
+    void fill()
+    {
+        pDisplay = dmFill;
+        invalidate();
+    }
+    //! Set display mode to Center
+    void center()
+    {
+        pDisplay = dmCenter;
+        invalidate();
+    }
+    //! Set display mode to Stretch
+    void stretch()
+    {
+        pDisplay = dmStretch;
+        invalidate();
+    }
+    //! Set display mode to Offset and set offset values
+    void offset(float x, float y)
+    {
+        pDisplay = dmOffset;
+        pOffsetX = x;
+        pOffsetY = y;
+        invalidate();
+    }
+    //! Get current offset (might not be used if display mode is not podOffset)
+    Point2D<float> offset() const
+    {
+        return Point2D<float>(pOffsetX, pOffsetY);
+    }
 
-		//! Get the fill color
-		const Color::RGBA<float>& fillColor() const { return pFillColor; }
-		//! Set the fill color
-		void fillColor(const Color::RGBA<float>& color) { pFillColor = color; invalidate(); }
+private:
+    String pText;
 
-		//! Current display mode
-		DisplayMode display() const { return pDisplay; }
-		//! Set display mode to Fit
-		void fit() { pDisplay = dmFit; invalidate(); }
-		//! Set display mode to Fill
-		void fill() { pDisplay = dmFill; invalidate(); }
-		//! Set display mode to Center
-		void center() { pDisplay = dmCenter; invalidate(); }
-		//! Set display mode to Stretch
-		void stretch() { pDisplay = dmStretch; invalidate(); }
-		//! Set display mode to Offset and set offset values
-		void offset(float x, float y)
-		{
-			pDisplay = dmOffset;
-			pOffsetX = x;
-			pOffsetY = y;
-			invalidate();
-		}
-		//! Get current offset (might not be used if display mode is not podOffset)
-		Point2D<float> offset() const { return Point2D<float>(pOffsetX, pOffsetY); }
+    String pHoverText;
 
-	private:
-		String pText;
+    Gfx3D::Texture::Ptr pImage;
 
-		String pHoverText;
+    Gfx3D::Texture::Ptr pImageClicking;
 
-		Gfx3D::Texture::Ptr pImage;
+    Gfx3D::Texture::Ptr pImageHovering;
 
-		Gfx3D::Texture::Ptr pImageClicking;
+    bool pBeingClicked;
 
-		Gfx3D::Texture::Ptr pImageHovering;
+    //! Offset of the rectangle over the image in X (only used in Offset display mode)
+    float pOffsetX;
 
-		bool pBeingClicked;
+    //! Offset of the rectangle over the image in Y (only used in Offset display mode)
+    float pOffsetY;
 
-		//! Offset of the rectangle over the image in X (only used in Offset display mode)
-		float pOffsetX;
+    //! Text color: Use the theme color by default
+    Color::RGBA<float> pTextColor;
 
-		//! Offset of the rectangle over the image in Y (only used in Offset display mode)
-		float pOffsetY;
+    //! Background color : Use the theme color by default
+    Color::RGBA<float> pBackColor;
 
-		//! Text color: Use the theme color by default
-		Color::RGBA<float> pTextColor;
+    //! Fill color for when a part of the overlay is empty
+    Color::RGBA<float> pFillColor;
 
-		//! Background color : Use the theme color by default
-		Color::RGBA<float> pBackColor;
+    //! Type of display of the image inside the rectangle
+    DisplayMode pDisplay;
 
-		//! Fill color for when a part of the overlay is empty
-		Color::RGBA<float> pFillColor;
-
-		//! Type of display of the image inside the rectangle
-		DisplayMode pDisplay;
-
-	}; // class Button
-
-
+}; // class Button
 
 } // namespace Control
 } // namespace UI

@@ -35,73 +35,64 @@ using namespace Yuni;
 
 #define SEP IO::Separator
 
-
-
 namespace Antares
 {
 namespace Data
 {
+int DataSeriesWindLoadFromFolder(Study& s,
+                                 DataSeriesWind* d,
+                                 const AreaName& areaID,
+                                 const char folder[])
+{
+    if (!d)
+        return 1;
+    String& buffer = s.bufferLoadingTS;
 
+    int ret = 1;
+    buffer.clear() << folder << SEP << "wind_" << areaID << '.' << s.inputExtension;
+    ret = d->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
 
-	int DataSeriesWindLoadFromFolder(Study& s, DataSeriesWind* d, const AreaName& areaID, const char folder[])
-	{
-		if (!d)
-			return 1;
-		String& buffer = s.bufferLoadingTS;
+    if (s.usedByTheSolver && s.parameters.derated)
+        d->series.averageTimeseries();
 
-		int ret = 1;
-		buffer.clear() << folder << SEP << "wind_" << areaID << '.' << s.inputExtension;
-		ret = d->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+    d->timeseriesNumbers.clear();
+    d->series.flush();
 
-		if (s.usedByTheSolver && s.parameters.derated)
-			d->series.averageTimeseries();
+    return ret;
+}
 
-		d->timeseriesNumbers.clear();
-		d->series.flush();
+int DataSeriesWindSaveToFolder(DataSeriesWind* d, const AreaName& areaID, const char folder[])
+{
+    if (!d)
+        return 1;
 
-		return ret;
-	}
+    Clob buffer;
+    int ret = 1;
+    buffer.clear() << folder << SEP << "wind_" << areaID << ".txt";
+    ret = d->series.saveToCSVFile(buffer, 0) && ret;
 
+    return ret;
+}
 
+bool DataSeriesWind::invalidate(bool reload) const
+{
+    return series.invalidate(reload);
+}
 
-	int DataSeriesWindSaveToFolder(DataSeriesWind* d, const AreaName& areaID, const char folder[])
-	{
-		if (!d)
-			return 1;
+void DataSeriesWind::markAsModified() const
+{
+    series.markAsModified();
+}
 
-		Clob buffer;
-		int ret = 1;
-		buffer.clear() << folder << SEP << "wind_" << areaID << ".txt";
-		ret = d->series.saveToCSVFile(buffer, 0) && ret;
-
-		return ret;
-	}
-
-
-
-	bool DataSeriesWind::invalidate(bool reload) const
-	{
-		return series.invalidate(reload);
-	}
-
-
-	void DataSeriesWind::markAsModified() const
-	{
-		series.markAsModified();
-	}
-
-
-	void DataSeriesWind::estimateMemoryUsage(StudyMemoryUsage& u) const
-	{
-		u.requiredMemoryForInput += sizeof(DataSeriesWind);
-		timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
-		series.estimateMemoryUsage(u,
-			0 != (timeSeriesWind & u.study.parameters.timeSeriesToGenerate),
-			u.study.parameters.nbTimeSeriesWind, HOURS_PER_YEAR);
-	}
-
-
-
+void DataSeriesWind::estimateMemoryUsage(StudyMemoryUsage& u) const
+{
+    u.requiredMemoryForInput += sizeof(DataSeriesWind);
+    timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
+    series.estimateMemoryUsage(u,
+                               0 != (timeSeriesWind & u.study.parameters.timeSeriesToGenerate),
+                               u.study.parameters.nbTimeSeriesWind,
+                               HOURS_PER_YEAR);
+}
 
 } // namespace Data
 } // namespace Antares

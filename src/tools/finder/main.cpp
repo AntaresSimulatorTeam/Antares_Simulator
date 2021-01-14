@@ -36,89 +36,85 @@
 using namespace Yuni;
 using namespace Antares;
 
-
-
 class MyStudyFinder : public Data::StudyFinder
 {
 public:
-	MyStudyFinder() :
-		extra(false), csv(false)
-	{}
+    MyStudyFinder() : extra(false), csv(false)
+    {
+    }
 
-	virtual ~MyStudyFinder()
-	{}
+    virtual ~MyStudyFinder()
+    {
+    }
 
-	void onStudyFound(const String& folder, Data::Version version)
-	{
-		std::cout << folder;
-		if (extra)
-		{
-			if (csv)
-				std::cout << ";" << Data::VersionToCStr(version);
-			else
-				std::cout << " (" << Data::VersionToCStr(version) << ')';
-		}
-		std::cout << '\n';
-	}
+    void onStudyFound(const String& folder, Data::Version version)
+    {
+        std::cout << folder;
+        if (extra)
+        {
+            if (csv)
+                std::cout << ";" << Data::VersionToCStr(version);
+            else
+                std::cout << " (" << Data::VersionToCStr(version) << ')';
+        }
+        std::cout << '\n';
+    }
 
 public:
-	//! Print extra informations, such as the study version
-	bool extra;
-	//! Print in CSV mode
-	bool csv;
+    //! Print extra informations, such as the study version
+    bool extra;
+    //! Print in CSV mode
+    bool csv;
 };
-
-
-
-
 
 int main(int argc, char* argv[])
 {
-	// locale
-	InitializeDefaultLocale();
+    // locale
+    InitializeDefaultLocale();
 
-	logs.applicationName("finder");
-	argv = AntaresGetUTF8Arguments(argc, argv);
+    logs.applicationName("finder");
+    argv = AntaresGetUTF8Arguments(argc, argv);
 
-	Yuni::String::Vector optInput;
-	bool optExtra = false;
-	bool optCSV = false;
+    Yuni::String::Vector optInput;
+    bool optExtra = false;
+    bool optCSV = false;
 
-	// Command Line options
-	{
-		// Parser
-		GetOpt::Parser options;
-		//
-		options.addParagraph(Yuni::String()
-			<< "Antares Finder v" << VersionToCString() << "\n");
-		// Input
-		options.remainingArguments(optInput);
-		// Output
-		options.add(optInput, 'i', "input", "Add an input folder where to look for studies. When no input folder is given, the current one is used.");
+    // Command Line options
+    {
+        // Parser
+        GetOpt::Parser options;
+        //
+        options.addParagraph(Yuni::String() << "Antares Finder v" << VersionToCString() << "\n");
+        // Input
+        options.remainingArguments(optInput);
+        // Output
+        options.add(optInput,
+                    'i',
+                    "input",
+                    "Add an input folder where to look for studies. When no input folder is given, "
+                    "the current one is used.");
 
-		options.addFlag(optExtra, 'e', "extra", "Print the version of the study");
-		options.addFlag(optCSV, ' ', "csv", "Print in a CSV format (semicolon)");
+        options.addFlag(optExtra, 'e', "extra", "Print the version of the study");
+        options.addFlag(optCSV, ' ', "csv", "Print in a CSV format (semicolon)");
 
-		// Version
-		bool optVersion = false;
-		options.addFlag(optVersion, 'v', "version", "Print the version and exit");
+        // Version
+        bool optVersion = false;
+        options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
-		if (!options(argc, argv))
-			return options.errors() ? 1 : 0;
+        if (!options(argc, argv))
+            return options.errors() ? 1 : 0;
 
-		if (optVersion)
-		{
-			PrintVersionToStdCout();
-			return 0;
-		}
-	}
+        if (optVersion)
+        {
+            PrintVersionToStdCout();
+            return 0;
+        }
+    }
 
-
-	MyStudyFinder finder;
-	finder.extra = optExtra;
-	finder.csv = optCSV;
-	finder.lookup(optInput);
-	finder.wait();
-	return 0;
+    MyStudyFinder finder;
+    finder.extra = optExtra;
+    finder.csv = optCSV;
+    finder.lookup(optInput);
+    finder.wait();
+    return 0;
 }
-

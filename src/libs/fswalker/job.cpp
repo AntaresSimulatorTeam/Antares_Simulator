@@ -27,32 +27,23 @@
 
 #include "job.h"
 
-
-
 namespace FSWalker
 {
+void IJob::decrementCounter()
+{
+    auto counter = pJobCounter;
+    if (!(!counter))
+    {
+        --(*counter);
+        pJobCounter = nullptr;
+    }
+}
 
-	void IJob::decrementCounter()
-	{
-		auto counter = pJobCounter;
-		if (!(!counter))
-		{
-			--(*counter);
-			pJobCounter = nullptr;
-		}
-	}
-
-
-	IJob::~IJob()
-	{
-		InternalJobCounter counter = pJobCounter;
-		if (!(!counter))
-			--(*counter);
-	}
-
-
-
+IJob::~IJob()
+{
+    InternalJobCounter counter = pJobCounter;
+    if (!(!counter))
+        --(*counter);
+}
 
 } // namespace FSWalker
-
-

@@ -25,15 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STRING_TO_DOUBLE_H__
-# define __ANTARES_LIBS_STRING_TO_DOUBLE_H__
-
-
-
+#define __ANTARES_LIBS_STRING_TO_DOUBLE_H__
 
 /*!
 ** \brief Convert a C-String into a double
 */
 double mystrtod(const char* string, char** endPtr);
-
 
 #endif // __ANTARES_LIBS_STRING_TO_DOUBLE_H__

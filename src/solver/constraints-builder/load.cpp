@@ -33,50 +33,41 @@
 //#include <wx/wx.h> // bourrin -> à modifier
 //#include "../../ui/simulator/application/study.h"
 
-
 using namespace Yuni;
 
-#define SEP  Yuni::IO::Separator
-
-
+#define SEP Yuni::IO::Separator
 
 namespace Antares
 {
+bool CBuilder::completeFromStudy()
+{
+    uint nCount(1);
+    const Data::Area::Map::iterator end = pStudy->areas.end();
+    for (Data::Area::Map::iterator i = pStudy->areas.begin(); i != end; ++i)
+    {
+        Data::Area& area = *(i->second);
+        const Data::AreaLink::Map::iterator end = area.links.end();
+        for (Data::AreaLink::Map::iterator j = area.links.begin(); j != end; ++j)
+        {
+            // for all links of the study
+            // check if it has been enabled in the INI File
+            linkInfo* k = findLinkInfoFromNodeNames(j->second->from->id, j->second->with->id);
+            if (!k && j->second->isVisibleOnLayer(pStudy->activeLayerID))
+            {
+                k = new linkInfo();
 
+                logs.info() << "Read data (link " << nCount << "/" << NLinks << ")";
+                // if Yes, complete the linkInfo
+                // load the pointer
+                k->ptr = j->second;
+                k->type = k->ptr->assetType;
 
+                pLink.push_back(k);
+            }
+        }
+    }
 
-	bool CBuilder::completeFromStudy()
-	{	
-		uint nCount(1);
-		const Data::Area::Map::iterator end = pStudy->areas.end();
-		for (Data::Area::Map::iterator i = pStudy->areas.begin(); i != end; ++i)
-		{
-			Data::Area& area = *(i->second);
-			const Data::AreaLink::Map::iterator end = area.links.end();
-			for (Data::AreaLink::Map::iterator j = area.links.begin(); j != end; ++j)
-			{
-				// for all links of the study
-				// check if it has been enabled in the INI File
-				linkInfo * k = findLinkInfoFromNodeNames(j->second->from->id, j->second->with->id);
-				if(!k && j->second->isVisibleOnLayer(pStudy->activeLayerID))
-				{
-					k = new linkInfo();
+    return true;
+}
 
-					logs.info() << "Read data (link " << nCount << "/" << NLinks <<")" ;
-					// if Yes, complete the linkInfo
-					// load the pointer
-					k->ptr = j->second;
-					k->type = k->ptr->assetType;
-
-					
-
-					pLink.push_back(k);
-				} 
-			}
-		}
-
-		return true;
-	}
-
-
-} //namespace Antares
+} // namespace Antares

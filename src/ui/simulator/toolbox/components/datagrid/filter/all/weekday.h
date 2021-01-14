@@ -25,13 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_WEEKDAY_H__
-# define __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_WEEKDAY_H__
+#define __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_WEEKDAY_H__
 
-# include <antares/wx-wrapper.h>
-# include "../filter.h"
-# include <antares/date.h>
-# include <antares/study/study.h>
-
+#include <antares/wx-wrapper.h>
+#include "../filter.h"
+#include <antares/date.h>
+#include <antares/study/study.h>
 
 namespace Antares
 {
@@ -39,74 +38,87 @@ namespace Toolbox
 {
 namespace Filter
 {
+class Weekday : public AFilterBase
+{
+public:
+    static const wxChar* Name()
+    {
+        return wxT("weekday");
+    }
+    static const wxChar* Caption()
+    {
+        return wxT("WeekDay");
+    }
+    static Date::Precision Precision()
+    {
+        return Date::daily;
+    }
 
+public:
+    Weekday(Input* parent) : AFilterBase(parent)
+    {
+        operators.addStdWeekday();
+    }
 
+    virtual ~Weekday()
+    {
+    }
 
-	class Weekday : public AFilterBase
-	{
-	public:
-		static const wxChar* Name()    {return wxT("weekday");}
-		static const wxChar* Caption() {return wxT("WeekDay");}
-		static Date::Precision Precision() {return Date::daily;}
+    virtual Date::Precision precision() const
+    {
+        return Weekday::Precision();
+    }
 
-	public:
-		Weekday(Input* parent) :
-			AFilterBase(parent)
-		{
-			operators.addStdWeekday();
-		}
+    virtual bool checkOnRowsLabels() const
+    {
+        return true;
+    }
 
-		virtual ~Weekday() {}
+    virtual const wxChar* name() const
+    {
+        return Weekday::Name();
+    }
+    virtual const wxChar* caption() const
+    {
+        return Weekday::Caption();
+    }
 
-		virtual Date::Precision precision() const {return Weekday::Precision();}
+    virtual bool rowIsValid(int row) const
+    {
+        // TODO Do not use global study
+        auto studyptr = Data::Study::Current::Get();
+        if (!studyptr)
+            return false;
+        auto& study = *studyptr;
+        auto& calendar = study.calendar;
 
-		virtual bool checkOnRowsLabels() const {return true;}
+        switch (pDataGridPrecision)
+        {
+        case Date::hourly:
+        {
+            if (row < study.calendar.maxHoursInYear)
+            {
+                uint w = calendar.hours[row].weekday;
+                return currentOperator->compute((int)w);
+            }
+            break;
+        }
+        case Date::daily:
+        {
+            if (row < study.calendar.maxDaysInYear)
+            {
+                uint w = calendar.days[row].weekday;
+                return currentOperator->compute((int)w);
+            }
+            break;
+        }
+        default:
+            break;
+        }
+        return false;
+    }
 
-		virtual const wxChar* name() const {return Weekday::Name();}
-		virtual const wxChar* caption() const {return Weekday::Caption();}
-
-
-		virtual bool rowIsValid(int row) const
-		{
-			// TODO Do not use global study
-			auto studyptr = Data::Study::Current::Get();
-			if (!studyptr)
-				return false;
-			auto& study = *studyptr;
-			auto& calendar = study.calendar;
-
-			switch (pDataGridPrecision)
-			{
-				case Date::hourly:
-					{
-						if (row < study.calendar.maxHoursInYear)
-						{
-							uint w = calendar.hours[row].weekday;
-							return currentOperator->compute((int) w);
-						}
-						break;
-					}
-				case Date::daily:
-					{
-						if (row < study.calendar.maxDaysInYear)
-						{
-							uint w = calendar.days[row].weekday;
-							return currentOperator->compute((int) w);
-						}
-						break;
-					}
-				default:
-					break;
-			}
-			return false;
-
-		}
-
-	}; // class HourYear
-
-
-
-
+}; // class HourYear
 
 } // namespace Filter
 } // namespace Toolbox

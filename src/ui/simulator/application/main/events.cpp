@@ -51,190 +51,169 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
 namespace Forms
 {
+void ApplWnd::evtOnQuit(wxCommandEvent&)
+{
+    logs.notice() << LOG_UI << "Exiting";
+    SetStatusText(wxT("Exiting"));
+    Dispatcher::GUI::Close(this);
+}
 
+void ApplWnd::evtOnMemoryUsedByTheStudy(wxCommandEvent&)
+{
+    Dispatcher::GUI::CreateAndShowModal<Window::MemoryStatistics>(this);
+}
 
-	void ApplWnd::evtOnQuit(wxCommandEvent&)
-	{
-		logs.notice() << LOG_UI << "Exiting";
-		SetStatusText(wxT("Exiting"));
-		Dispatcher::GUI::Close(this);
-	}
+void ApplWnd::evtOnWizard(wxCommandEvent&)
+{
+    Window::StartupWizard::Show();
+}
 
+void MainFormData::onToolbarWizard(void*)
+{
+    Window::StartupWizard::Show();
+}
 
-	void ApplWnd::evtOnMemoryUsedByTheStudy(wxCommandEvent&)
-	{
-		Dispatcher::GUI::CreateAndShowModal<Window::MemoryStatistics>(this);
-	}
+void ApplWnd::evtOnFullscreen(wxCommandEvent&)
+{
+    Yuni::Bind<void()> callback;
+    callback.bind(pData, &MainFormData::onToolbarFullscreen, nullptr);
+    Dispatcher::GUI::Post(callback, 20 /*ms*/);
+}
 
+void MainFormData::onToolbarFullscreen(void*)
+{
+    pMainForm.ShowFullScreen(!pMainForm.IsFullScreen(),
+                             wxFULLSCREEN_NOBORDER | wxFULLSCREEN_NOCAPTION);
+    pMainForm.pAUIManager.Update();
+    Dispatcher::GUI::Refresh(&pMainForm);
+}
 
-	void ApplWnd::evtOnWizard(wxCommandEvent&)
-	{
-		Window::StartupWizard::Show();
-	}
+void MainFormData::onToolbarInspector(void*)
+{
+    if (Data::Study::Current::Valid())
+        Antares::Window::Inspector::Show();
+}
 
+void MainFormData::onToolbarOptimizationPreferences(void*)
+{
+    wxCommandEvent dummy;
+    pMainForm.evtOnOptionsOptimizationPrefs(dummy);
+}
 
-	void MainFormData::onToolbarWizard(void*)
-	{
-		Window::StartupWizard::Show();
-	}
+void ApplWnd::evtOnInspector(wxCommandEvent&)
+{
+    if (Data::Study::Current::Valid())
+        Antares::Window::Inspector::Show();
+}
 
+void ApplWnd::evtOnSetStudyInfos(wxCommandEvent& evt)
+{
+    auto study = Data::Study::Current::Get();
+    if (!study)
+        return;
 
-	void ApplWnd::evtOnFullscreen(wxCommandEvent&)
-	{
-		Yuni::Bind<void ()> callback;
-		callback.bind(pData, &MainFormData::onToolbarFullscreen, nullptr);
-		Dispatcher::GUI::Post(callback, 20 /*ms*/);
-	}
+    Forms::Disabler<ApplWnd> disabler(*this);
+    switch (evt.GetId())
+    {
+    case mnIDStudyEditTitle:
+    {
+        wxTextEntryDialog dialog(this,
+                                 wxT("Please enter the new name of the study :"),
+                                 wxT("Name of the study"),
+                                 wxStringFromUTF8(study->header.caption),
+                                 wxOK | wxCANCEL);
 
+        if (dialog.ShowModal() == wxID_OK)
+        {
+            MarkTheStudyAsModified();
+            pMainPanel->studyCaption(dialog.GetValue());
+            title(dialog.GetValue());
+            String stdText;
+            wxStringToString(dialog.GetValue(), stdText);
+            logs.info() << "Renamed the study's title to '" << stdText << "'";
+            study->header.caption = stdText;
+        }
+        break;
+    }
+    case mnIDStudyEditAuthors:
+    {
+        wxTextEntryDialog dialog(this,
+                                 wxT("Please enter the new author(s) of the study :"),
+                                 wxT("Author(s) of the study"),
+                                 wxStringFromUTF8(study->header.author),
+                                 wxOK | wxCANCEL);
 
-	void MainFormData::onToolbarFullscreen(void*)
-	{
-		pMainForm.ShowFullScreen(!pMainForm.IsFullScreen(), wxFULLSCREEN_NOBORDER|wxFULLSCREEN_NOCAPTION);
-		pMainForm.pAUIManager.Update();
-		Dispatcher::GUI::Refresh(&pMainForm);
-	}
+        if (dialog.ShowModal() == wxID_OK)
+        {
+            MarkTheStudyAsModified();
+            pMainPanel->author(dialog.GetValue());
+            String stdText;
+            wxStringToString(dialog.GetValue(), stdText);
+            logs.info() << "Renamed the study's authors to '" << stdText << "'";
+            study->header.author = stdText;
+        }
+        break;
+    }
+    }
+}
 
+void ApplWnd::evtOnFrameClose(wxCloseEvent& evt)
+{
+    logs.debug() << "  Event: main frame: OnClose";
 
-	void MainFormData::onToolbarInspector(void*)
-	{
-		if (Data::Study::Current::Valid())
-			Antares::Window::Inspector::Show();
-	}
+    if (IsGUIAboutToQuit())
+    {
+        evt.Skip();
+    }
+    else
+    {
+        // Change the focus - to avoid race condition with wxGrid or any other
+        // component
+        SetFocus();
+        // Notifying that the interface is about to exit
+        GUIIsAboutToQuit();
 
+        // Close any opened windows
+        Component::Spotlight::FrameClose();
 
-	void MainFormData::onToolbarOptimizationPreferences(void*)
-	{
-		wxCommandEvent dummy;
-		pMainForm.evtOnOptionsOptimizationPrefs(dummy);
-	}
+        // !! It is extremly important to wait for all jobs to finish
+        // In the contrary, it may appen a race condition with another thread
+        // and the swap mode. It would be possible to flush all variables
+        // while accessing them
+        Dispatcher::Wait();
 
+        // Closing the study if any then quitting the application
+        Dispatcher::StudyClose(false, true);
 
-	void ApplWnd::evtOnInspector(wxCommandEvent&)
-	{
-		if (Data::Study::Current::Valid())
-			Antares::Window::Inspector::Show();
-	}
+        // Canceling the event
+        evt.Veto();
+    }
+}
 
+void ApplWnd::internalFrameClose()
+{
+    logs.debug() << "quitting the application. Triggerring event onApplicationQuit";
+    onApplicationQuit();
+    Destroy();
+}
 
-	void ApplWnd::evtOnSetStudyInfos(wxCommandEvent& evt)
-	{
-		auto study = Data::Study::Current::Get();
-		if (!study)
-			return;
+void ApplWnd::evtOnStudySessions(wxCommandEvent&)
+{
+}
 
-		Forms::Disabler<ApplWnd> disabler(*this);
-		switch (evt.GetId())
-		{
-			case mnIDStudyEditTitle:
-				{
-					wxTextEntryDialog dialog(this,
-						wxT("Please enter the new name of the study :"),
-						wxT("Name of the study"),
-						wxStringFromUTF8(study->header.caption),
-						wxOK | wxCANCEL);
+void ApplWnd::evtOnStudyLogs(wxCommandEvent&)
+{
+    showStudyLogs();
+}
 
-					if (dialog.ShowModal() == wxID_OK)
-					{
-						MarkTheStudyAsModified();
-						pMainPanel->studyCaption(dialog.GetValue());
-						title(dialog.GetValue());
-						String stdText;
-						wxStringToString(dialog.GetValue(), stdText);
-						logs.info() << "Renamed the study's title to '" << stdText << "'";
-						study->header.caption = stdText;
-					}
-					break;
-				}
-			case mnIDStudyEditAuthors:
-				{
-					wxTextEntryDialog dialog(this,
-						wxT("Please enter the new author(s) of the study :"),
-						wxT("Author(s) of the study"),
-						wxStringFromUTF8(study->header.author),
-						wxOK | wxCANCEL);
-
-					if (dialog.ShowModal() == wxID_OK)
-					{
-						MarkTheStudyAsModified();
-						pMainPanel->author(dialog.GetValue());
-						String stdText;
-						wxStringToString(dialog.GetValue(), stdText);
-						logs.info() << "Renamed the study's authors to '" << stdText << "'";
-						study->header.author = stdText;
-					}
-					break;
-				}
-		}
-	}
-
-
-	void ApplWnd::evtOnFrameClose(wxCloseEvent& evt)
-	{
-		logs.debug() << "  Event: main frame: OnClose";
-
-		if (IsGUIAboutToQuit())
-		{
-			evt.Skip();
-		}
-		else
-		{
-			// Change the focus - to avoid race condition with wxGrid or any other
-			// component
-			SetFocus();
-			// Notifying that the interface is about to exit
-			GUIIsAboutToQuit();
-
-			// Close any opened windows
-			Component::Spotlight::FrameClose();
-
-			// !! It is extremly important to wait for all jobs to finish
-			// In the contrary, it may appen a race condition with another thread
-			// and the swap mode. It would be possible to flush all variables
-			// while accessing them
-			Dispatcher::Wait();
-
-			// Closing the study if any then quitting the application
-			Dispatcher::StudyClose(false, true);
-
-			// Canceling the event
-			evt.Veto();
-		}
-	}
-
-
-	void ApplWnd::internalFrameClose()
-	{
-		logs.debug() << "quitting the application. Triggerring event onApplicationQuit";
-		onApplicationQuit();
-		Destroy();
-	}
-
-
-	void ApplWnd::evtOnStudySessions(wxCommandEvent&)
-	{
-	}
-
-
-	void ApplWnd::evtOnStudyLogs(wxCommandEvent&)
-	{
-		showStudyLogs();
-	}
-
-
-	void MainFormData::onToolbarLogs(void*)
-	{
-		pMainForm.showStudyLogs();
-	}
-
-
-
-
+void MainFormData::onToolbarLogs(void*)
+{
+    pMainForm.showStudyLogs();
+}
 
 } // namespace Forms
 } // namespace Antares

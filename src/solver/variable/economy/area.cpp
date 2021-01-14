@@ -28,5 +28,5 @@
 #include <antares/study/memory-usage.h>
 #include "all.h"
 
-#define NEXTTYPE  Economy::VariablesPerArea
+#define NEXTTYPE Economy::VariablesPerArea
 #include "../area.inc.hxx"

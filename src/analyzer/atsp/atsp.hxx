@@ -25,26 +25,19 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __PREPROCESSOR_ATSP_HXX__
-# define __PREPROCESSOR_ATSP_HXX__
-
-
+#define __PREPROCESSOR_ATSP_HXX__
 
 namespace Antares
 {
-
-
-	inline bool ATSP::cacheFetch(uint index, Matrix<>& out) const
-	{
-		if (pCacheMatrix[index].width > 0)
-		{
-			out = pCacheMatrix[index];
-			return true;
-		}
-		return false;
-	}
-
-
-
+inline bool ATSP::cacheFetch(uint index, Matrix<>& out) const
+{
+    if (pCacheMatrix[index].width > 0)
+    {
+        out = pCacheMatrix[index];
+        return true;
+    }
+    return false;
+}
 
 } // namespace Antares
 

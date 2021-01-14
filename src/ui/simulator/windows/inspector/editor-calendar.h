@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_WINDOWS_INSPECTOR_EDITOR_STUDY_CALENDAR_H__
-# define __ANTARES_WINDOWS_INSPECTOR_EDITOR_STUDY_CALENDAR_H__
+#define __ANTARES_WINDOWS_INSPECTOR_EDITOR_STUDY_CALENDAR_H__
 
 #include <antares/wx-wrapper.h>
 #include <wx/menu.h>
@@ -34,40 +34,34 @@
 #include <wx/propgrid/manager.h>
 #include <wx/propgrid/editors.h>
 
-
-
-
 namespace Antares
 {
 namespace Window
 {
 namespace Inspector
 {
+class StudyCalendarBtnEditor : public wxPGTextCtrlEditor
+{
+    DECLARE_DYNAMIC_CLASS(StudyCalendarBtnEditor)
+public:
+    StudyCalendarBtnEditor();
+    virtual ~StudyCalendarBtnEditor();
 
+    virtual wxPGWindowList CreateControls(wxPropertyGrid* propgrid,
+                                          wxPGProperty* property,
+                                          const wxPoint& pos,
+                                          const wxSize& size) const;
 
-	class StudyCalendarBtnEditor : public wxPGTextCtrlEditor
-	{
-		DECLARE_DYNAMIC_CLASS(StudyCalendarBtnEditor)
-	public:
-		StudyCalendarBtnEditor();
-		virtual ~StudyCalendarBtnEditor();
+    virtual wxString GetName() const;
 
-		virtual wxPGWindowList CreateControls(wxPropertyGrid* propgrid,
-			wxPGProperty* property,
-			const wxPoint& pos,
-			const wxSize& size) const;
+    virtual bool OnEvent(wxPropertyGrid* grid,
+                         wxPGProperty* property,
+                         wxWindow* ctrl,
+                         wxEvent& event) const;
 
-		virtual wxString GetName() const;
+}; // class StudyCalendarBtnEditor
 
-		virtual bool OnEvent( wxPropertyGrid* grid,
-			wxPGProperty* property, wxWindow* ctrl, wxEvent& event ) const;
-
-	}; // class StudyCalendarBtnEditor
-
-
-	WX_PG_DECLARE_EDITOR(StudyCalendarBtnEditor)
-
-
+WX_PG_DECLARE_EDITOR(StudyCalendarBtnEditor)
 
 } // namespace Inspector
 } // namespace Window

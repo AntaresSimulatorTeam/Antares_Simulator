@@ -27,50 +27,53 @@
 
 #include <antares/stdcxx/demangle.hpp>
 
-namespace stdcxx {
+namespace stdcxx
+{
+std::string demangle(const char* name)
+{
+    // TODO : for now no boost include, no demangle of class name
+    /*
+    #if defined(_WIN32) || defined(WIN32)
+        // under windows typeid(T).name() does not return a mangled name, but returns :
+        //  - "class T" if T is a class
+        //  - "struct T" if T is a struct
+        //  - "enum T" if T is an enum
+        //  - "union T" if T is an union
+        // so remove this useless prefix by removing everything found before the last ' ' character
+        std::string simplifiedName = name;
+        std::size_t index = simplifiedName.rfind(' ');
+        if (index != std::string::npos) {
+            simplifiedName = simplifiedName.substr(index + 1);
+        }
 
-std::string demangle(const char* name) {
-    
-    //TODO : for now no boost include, no demangle of class name
-/*
-#if defined(_WIN32) || defined(WIN32)
-    // under windows typeid(T).name() does not return a mangled name, but returns :
-    //  - "class T" if T is a class
-    //  - "struct T" if T is a struct
-    //  - "enum T" if T is an enum
-    //  - "union T" if T is an union
-    // so remove this useless prefix by removing everything found before the last ' ' character
-    std::string simplifiedName = name;
-    std::size_t index = simplifiedName.rfind(' ');
-    if (index != std::string::npos) {
-        simplifiedName = simplifiedName.substr(index + 1);
-    }
-
-    return boost::core::demangle(simplifiedName.c_str());
-#else
-    return boost::core::demangle(name);
-#endif
-*/
+        return boost::core::demangle(simplifiedName.c_str());
+    #else
+        return boost::core::demangle(name);
+    #endif
+    */
 
     return name;
 }
 
-template <>
-std::string demangle(const std::type_info& type) {
+template<>
+std::string demangle(const std::type_info& type)
+{
     return demangle(type.name());
 }
 
-
-std::string simpleClassName(const char* className) {    
+std::string simpleClassName(const char* className)
+{
     const std::string& strClassName = demangle(className);
     std::size_t index = strClassName.find_last_of("::");
 
-    return (index == std::string::npos) ? strClassName : strClassName.substr(index + 1, strClassName.size());
+    return (index == std::string::npos) ? strClassName
+                                        : strClassName.substr(index + 1, strClassName.size());
 }
 
-template <>
-std::string simpleClassName(const std::type_info& type) {
+template<>
+std::string simpleClassName(const std::type_info& type)
+{
     return simpleClassName(type.name());
 }
 
-}  // namespace stdcxx
+} // namespace stdcxx

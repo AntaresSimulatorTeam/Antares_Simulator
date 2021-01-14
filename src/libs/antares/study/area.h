@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_AREA_H__
-# define __ANTARES_LIBS_STUDY_AREA_H__
+#define __ANTARES_LIBS_STUDY_AREA_H__
 
-# include "area/area.h"
+#include "area/area.h"
 
 #endif // __ANTARES_LIBS_STUDY_AREA_H__

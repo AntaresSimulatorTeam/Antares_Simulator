@@ -25,32 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
 #include "simulation.h"
@@ -59,144 +33,135 @@
 #include "sim_structure_probleme_adequation.h"
 #include "sim_extern_variables_globales.h"
 
-
 using namespace Antares;
-
-
-
 
 static void AllocateResultsForEconomicMode(void)
 {
-	auto& study = * Data::Study::Current::Get();
-	const size_t sizeOfLongHours   = study.runtime->nbHoursPerYear  * sizeof(int);
-	const size_t sizeOfDoubleHours = study.runtime->nbHoursPerYear  * sizeof(double);
-	RESULTATS_PAR_INTERCONNEXION* rpNtc;
+    auto& study = *Data::Study::Current::Get();
+    const size_t sizeOfLongHours = study.runtime->nbHoursPerYear * sizeof(int);
+    const size_t sizeOfDoubleHours = study.runtime->nbHoursPerYear * sizeof(double);
+    RESULTATS_PAR_INTERCONNEXION* rpNtc;
 
-	uint i;
+    uint i;
 
-	ResultatsParInterconnexion = (RESULTATS_PAR_INTERCONNEXION **) MemAlloc((1+study.runtime->interconnectionsCount) * sizeof(void *));
-	for (i = 0; i != study.runtime->interconnectionsCount; i++)
-	{
-		rpNtc = (RESULTATS_PAR_INTERCONNEXION *) MemAlloc(sizeof(RESULTATS_PAR_INTERCONNEXION));
-		ResultatsParInterconnexion[i] = rpNtc;
+    ResultatsParInterconnexion = (RESULTATS_PAR_INTERCONNEXION**)MemAlloc(
+      (1 + study.runtime->interconnectionsCount) * sizeof(void*));
+    for (i = 0; i != study.runtime->interconnectionsCount; i++)
+    {
+        rpNtc = (RESULTATS_PAR_INTERCONNEXION*)MemAlloc(sizeof(RESULTATS_PAR_INTERCONNEXION));
+        ResultatsParInterconnexion[i] = rpNtc;
 
-		rpNtc->TransitMoyen                    = (double *) MemAlloc(sizeOfDoubleHours);
-		rpNtc->TransitMinimum                  = (double *) MemAlloc(sizeOfDoubleHours);
-		rpNtc->TransitMinimumNo                = (int *)    MemAlloc(sizeOfLongHours);
-		rpNtc->TransitMaximum                  = (double *) MemAlloc(sizeOfDoubleHours);
-		rpNtc->TransitMaximumNo                = (int *)    MemAlloc(sizeOfLongHours);
-		rpNtc->TransitStdDev                   = (double *) MemAlloc(sizeOfDoubleHours);
-		rpNtc->TransitAnnuel                   = (double *) MemAlloc(study.runtime->nbYears * sizeof(double));
-		rpNtc->TransitMoyenRecalculQuadratique = (double *) MemAlloc(sizeOfDoubleHours);
-		rpNtc->VariablesDualesMoyennes         = (double *) MemAlloc(sizeOfDoubleHours);
-		rpNtc->RenteHoraire                    = (double *) MemAlloc(sizeOfDoubleHours);
-	}
+        rpNtc->TransitMoyen = (double*)MemAlloc(sizeOfDoubleHours);
+        rpNtc->TransitMinimum = (double*)MemAlloc(sizeOfDoubleHours);
+        rpNtc->TransitMinimumNo = (int*)MemAlloc(sizeOfLongHours);
+        rpNtc->TransitMaximum = (double*)MemAlloc(sizeOfDoubleHours);
+        rpNtc->TransitMaximumNo = (int*)MemAlloc(sizeOfLongHours);
+        rpNtc->TransitStdDev = (double*)MemAlloc(sizeOfDoubleHours);
+        rpNtc->TransitAnnuel = (double*)MemAlloc(study.runtime->nbYears * sizeof(double));
+        rpNtc->TransitMoyenRecalculQuadratique = (double*)MemAlloc(sizeOfDoubleHours);
+        rpNtc->VariablesDualesMoyennes = (double*)MemAlloc(sizeOfDoubleHours);
+        rpNtc->RenteHoraire = (double*)MemAlloc(sizeOfDoubleHours);
+    }
 
-	ResultatsParContrainteCouplante = (RESULTATS_PAR_CONTRAINTE_COUPLANTE **)
-		MemAlloc(study.runtime->bindingConstraintCount * sizeof(void *));
-	for (i = 0; i != study.runtime->bindingConstraintCount; ++i)
-	{
-		ResultatsParContrainteCouplante[i] = (RESULTATS_PAR_CONTRAINTE_COUPLANTE *)
-			MemAlloc(sizeof(RESULTATS_PAR_CONTRAINTE_COUPLANTE));
-		ResultatsParContrainteCouplante[i]->VariablesDualesMoyennes = (double *) MemAlloc(sizeOfDoubleHours);
-	}
+    ResultatsParContrainteCouplante = (RESULTATS_PAR_CONTRAINTE_COUPLANTE**)MemAlloc(
+      study.runtime->bindingConstraintCount * sizeof(void*));
+    for (i = 0; i != study.runtime->bindingConstraintCount; ++i)
+    {
+        ResultatsParContrainteCouplante[i] = (RESULTATS_PAR_CONTRAINTE_COUPLANTE*)MemAlloc(
+          sizeof(RESULTATS_PAR_CONTRAINTE_COUPLANTE));
+        ResultatsParContrainteCouplante[i]->VariablesDualesMoyennes
+          = (double*)MemAlloc(sizeOfDoubleHours);
+    }
 }
-
-
-
-
 
 void SIM_AllocationTableaux()
 {
-	uint i;
-	auto& study = * Data::Study::Current::Get();
+    uint i;
+    auto& study = *Data::Study::Current::Get();
 
-	DonneesParPays = (DONNEES_PAR_PAYS **) MemAlloc(study.areas.size() * sizeof(DONNEES_PAR_PAYS*));
-	for (i = 0; i < study.areas.size(); ++i)
-		DonneesParPays[i] = (DONNEES_PAR_PAYS *) MemAlloc(sizeof(DONNEES_PAR_PAYS));
+    DonneesParPays = (DONNEES_PAR_PAYS**)MemAlloc(study.areas.size() * sizeof(DONNEES_PAR_PAYS*));
+    for (i = 0; i < study.areas.size(); ++i)
+        DonneesParPays[i] = (DONNEES_PAR_PAYS*)MemAlloc(sizeof(DONNEES_PAR_PAYS));
 
-	
-	
+    ValeursGenereesParPays
+      = (VALEURS_GENEREES_PAR_PAYS***)MemAlloc(study.maxNbYearsInParallel * sizeof(void*));
+    NumeroChroniquesTireesParPays
+      = (NUMERO_CHRONIQUES_TIREES_PAR_PAYS***)MemAlloc(study.maxNbYearsInParallel * sizeof(void*));
 
-	
-	ValeursGenereesParPays        =	(VALEURS_GENEREES_PAR_PAYS ***) MemAlloc(study.maxNbYearsInParallel * sizeof(void *));
-	NumeroChroniquesTireesParPays = (NUMERO_CHRONIQUES_TIREES_PAR_PAYS ***) MemAlloc(study.maxNbYearsInParallel * sizeof(void *));
+    for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
+    {
+        ValeursGenereesParPays[numSpace]
+          = (VALEURS_GENEREES_PAR_PAYS**)MemAlloc(study.areas.size() * sizeof(void*));
+        NumeroChroniquesTireesParPays[numSpace]
+          = (NUMERO_CHRONIQUES_TIREES_PAR_PAYS**)MemAlloc(study.areas.size() * sizeof(void*));
+        for (i = 0; i < study.areas.size(); ++i)
+        {
+            auto& area = *study.areas.byIndex[i];
 
-	for(uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
-	{
-		ValeursGenereesParPays[numSpace]        = (VALEURS_GENEREES_PAR_PAYS **) MemAlloc(study.areas.size() * sizeof(void *));
-		NumeroChroniquesTireesParPays[numSpace] = (NUMERO_CHRONIQUES_TIREES_PAR_PAYS **) MemAlloc(study.areas.size() * sizeof(void *));
-		for (i = 0; i < study.areas.size(); ++i)
-		{
-			auto& area = *study.areas.byIndex[i];
+            NumeroChroniquesTireesParPays[numSpace][i]
+              = (NUMERO_CHRONIQUES_TIREES_PAR_PAYS*)MemAlloc(
+                sizeof(NUMERO_CHRONIQUES_TIREES_PAR_PAYS));
+            ValeursGenereesParPays[numSpace][i]
+              = (VALEURS_GENEREES_PAR_PAYS*)MemAlloc(sizeof(VALEURS_GENEREES_PAR_PAYS));
 
-			NumeroChroniquesTireesParPays[numSpace][i] = (NUMERO_CHRONIQUES_TIREES_PAR_PAYS *) MemAlloc(sizeof(NUMERO_CHRONIQUES_TIREES_PAR_PAYS));
-			ValeursGenereesParPays[numSpace][i]        = (VALEURS_GENEREES_PAR_PAYS *) MemAlloc(sizeof(VALEURS_GENEREES_PAR_PAYS));
+            NumeroChroniquesTireesParPays[numSpace][i]->ThermiqueParPalier
+              = (int*)MemAlloc(area.thermal.clusterCount * sizeof(int));
+            ValeursGenereesParPays[numSpace][i]->HydrauliqueModulableQuotidien
+              = (double*)MemAlloc(study.runtime->nbDaysPerYear * sizeof(double));
+            ValeursGenereesParPays[numSpace][i]->AleaCoutDeProductionParPalier
+              = (double*)MemAlloc(area.thermal.clusterCount * sizeof(double));
+            if (area.hydro.reservoirManagement)
+            {
+                ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsDebutJours
+                  = (double*)MemAlloc(study.runtime->nbDaysPerYear * sizeof(double));
+                ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsFinJours
+                  = (double*)MemAlloc(study.runtime->nbDaysPerYear * sizeof(double));
+            }
+        }
+    }
 
-			NumeroChroniquesTireesParPays[numSpace][i]->ThermiqueParPalier      = (int *)    MemAlloc(area.thermal.clusterCount * sizeof(int));
-			ValeursGenereesParPays[numSpace][i]->HydrauliqueModulableQuotidien  = (double *) MemAlloc(study.runtime->nbDaysPerYear * sizeof(double));
-			ValeursGenereesParPays[numSpace][i]->AleaCoutDeProductionParPalier  = (double *) MemAlloc(area.thermal.clusterCount * sizeof(double));
-			if (area.hydro.reservoirManagement)
-			{
-				ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsDebutJours	= (double *)MemAlloc(study.runtime->nbDaysPerYear * sizeof(double));
-				ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsFinJours		= (double *)MemAlloc(study.runtime->nbDaysPerYear * sizeof(double));
-			}
-		}
-	}
-
-	if (not study.parameters.adequacyDraft())
-	{
-		
-		AllocateResultsForEconomicMode();
-	}
+    if (not study.parameters.adequacyDraft())
+    {
+        AllocateResultsForEconomicMode();
+    }
 }
-
-
-
-
-
-
-
 
 void SIM_DesallocationTableaux()
 {
-	auto studyptr = Data::Study::Current::Get();
-	if (!(!studyptr))
-	{
-		auto& study = *studyptr;
-		for (uint i = 0; i < study.areas.size(); ++i) 
-			MemFree(DonneesParPays[i]);
+    auto studyptr = Data::Study::Current::Get();
+    if (!(!studyptr))
+    {
+        auto& study = *studyptr;
+        for (uint i = 0; i < study.areas.size(); ++i)
+            MemFree(DonneesParPays[i]);
 
-		for(uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
-		{
-			for (uint i = 0; i < study.areas.size(); ++i)
-			{
-				auto& area = *study.areas.byIndex[i];
+        for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
+        {
+            for (uint i = 0; i < study.areas.size(); ++i)
+            {
+                auto& area = *study.areas.byIndex[i];
 
-				MemFree(NumeroChroniquesTireesParPays[numSpace][i]->ThermiqueParPalier);
-				MemFree(NumeroChroniquesTireesParPays[numSpace][i]);
-				MemFree(ValeursGenereesParPays[numSpace][i]->HydrauliqueModulableQuotidien);
+                MemFree(NumeroChroniquesTireesParPays[numSpace][i]->ThermiqueParPalier);
+                MemFree(NumeroChroniquesTireesParPays[numSpace][i]);
+                MemFree(ValeursGenereesParPays[numSpace][i]->HydrauliqueModulableQuotidien);
 
-				if (area.hydro.reservoirManagement)
-				{
-					MemFree(ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsDebutJours);
-					MemFree(ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsFinJours);
-				}
+                if (area.hydro.reservoirManagement)
+                {
+                    MemFree(ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsDebutJours);
+                    MemFree(ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsFinJours);
+                }
 
-				MemFree(ValeursGenereesParPays[numSpace][i]);
-			}
-			MemFree(NumeroChroniquesTireesParPays[numSpace]);
-			MemFree(ValeursGenereesParPays[numSpace]);
-		}
-	}
-	MemFree(NumeroChroniquesTireesParPays);
-	MemFree(ValeursGenereesParPays);
-	NumeroChroniquesTireesParPays = NULL;
-	ValeursGenereesParPays        = NULL;
+                MemFree(ValeursGenereesParPays[numSpace][i]);
+            }
+            MemFree(NumeroChroniquesTireesParPays[numSpace]);
+            MemFree(ValeursGenereesParPays[numSpace]);
+        }
+    }
+    MemFree(NumeroChroniquesTireesParPays);
+    MemFree(ValeursGenereesParPays);
+    NumeroChroniquesTireesParPays = NULL;
+    ValeursGenereesParPays = NULL;
 
-	MemFree(DonneesParPays);
-	DonneesParPays = NULL;
+    MemFree(DonneesParPays);
+    DonneesParPays = NULL;
 }
-
-
-

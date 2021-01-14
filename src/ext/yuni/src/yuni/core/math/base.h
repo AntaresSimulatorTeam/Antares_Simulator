@@ -10,61 +10,58 @@
 */
 #pragma once
 
-
-
 namespace Yuni
 {
 namespace Math
 {
 namespace Base
 {
+template<int Nth = 10>
+struct N final
+{
+    //! Digits
+    static const char* Digit()
+    {
+        return "0123456789abcdefghijklmnopqrstuvwxyz";
+    }
+    enum
+    {
+        //! the nth power of b
+        n = Nth,
+    };
+};
 
+typedef N<10> Decimal;
+typedef N<8> Octal;
+typedef N<16> Hexa;
 
-	template<int Nth = 10>
-	struct N final
-	{
-		//! Digits
-		static const char* Digit() {return "0123456789abcdefghijklmnopqrstuvwxyz";}
-		enum
-		{
-			//! the nth power of b
-			n = Nth,
-		};
-	};
+struct HexaLowercase final
+{
+    //! Digits
+    static const char* Digit()
+    {
+        return "0123456789abcdef";
+    }
+    enum
+    {
+        //! the nth power of b
+        n = 16,
+    };
+};
 
-
-	typedef N<10>  Decimal;
-	typedef N<8>   Octal;
-	typedef N<16>  Hexa;
-
-
-
-	struct HexaLowercase final
-	{
-		//! Digits
-		static const char* Digit() {return "0123456789abcdef";}
-		enum
-		{
-			//! the nth power of b
-			n = 16,
-		};
-	};
-
-
-	struct HexaUppercase final
-	{
-		//! Digits
-		static const char* Digit() {return "0123456789ABCDEF";}
-		enum
-		{
-			//! the nth power of b
-			n = 16,
-		};
-	};
-
-
-
-
+struct HexaUppercase final
+{
+    //! Digits
+    static const char* Digit()
+    {
+        return "0123456789ABCDEF";
+    }
+    enum
+    {
+        //! the nth power of b
+        n = 16,
+    };
+};
 
 } // namespace Base
 } // namespace Math

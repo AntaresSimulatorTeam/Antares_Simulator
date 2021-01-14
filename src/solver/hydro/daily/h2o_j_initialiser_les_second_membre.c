@@ -25,49 +25,48 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "h2o_j_donnees_mensuelles.h"
 
-
-
-
-
-# include "h2o_j_donnees_mensuelles.h"
-  
-
-
-void H2O_J_InitialiserLeSecondMembre( DONNEES_MENSUELLES * DonneesMensuelles, int NumeroDeProbleme )
+void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
 {
-int Pdt; int Cnt; int NbPdt; double * TurbineCible; 
+    int Pdt;
+    int Cnt;
+    int NbPdt;
+    double* TurbineCible;
 
-PROBLEME_HYDRAULIQUE * ProblemeHydraulique; 
-CORRESPONDANCE_DES_CONTRAINTES * CorrespondanceDesContraintes;
-PROBLEME_LINEAIRE_PARTIE_VARIABLE * ProblemeLineairePartieVariable;
+    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
+    CORRESPONDANCE_DES_CONTRAINTES* CorrespondanceDesContraintes;
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
 
-int NumeroDeContrainteDEnergieMensuelle; int * NumeroDeContrainteSurXi; double * SecondMembre;
+    int NumeroDeContrainteDEnergieMensuelle;
+    int* NumeroDeContrainteSurXi;
+    double* SecondMembre;
 
-TurbineCible = DonneesMensuelles->TurbineCible;
+    TurbineCible = DonneesMensuelles->TurbineCible;
 
-ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
+    ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
-NbPdt = ProblemeHydraulique->NbJoursDUnProbleme[NumeroDeProbleme];
+    NbPdt = ProblemeHydraulique->NbJoursDUnProbleme[NumeroDeProbleme];
 
-CorrespondanceDesContraintes = ProblemeHydraulique->CorrespondanceDesContraintes[NumeroDeProbleme];
+    CorrespondanceDesContraintes
+      = ProblemeHydraulique->CorrespondanceDesContraintes[NumeroDeProbleme];
 
-NumeroDeContrainteDEnergieMensuelle = CorrespondanceDesContraintes->NumeroDeContrainteDEnergieMensuelle;
+    NumeroDeContrainteDEnergieMensuelle
+      = CorrespondanceDesContraintes->NumeroDeContrainteDEnergieMensuelle;
 
-ProblemeLineairePartieVariable = ProblemeHydraulique->ProblemeLineairePartieVariable[NumeroDeProbleme];
-SecondMembre = ProblemeLineairePartieVariable->SecondMembre;
+    ProblemeLineairePartieVariable
+      = ProblemeHydraulique->ProblemeLineairePartieVariable[NumeroDeProbleme];
+    SecondMembre = ProblemeLineairePartieVariable->SecondMembre;
 
+    SecondMembre[NumeroDeContrainteDEnergieMensuelle] = DonneesMensuelles->TurbineDuMois;
 
-SecondMembre[NumeroDeContrainteDEnergieMensuelle] = DonneesMensuelles->TurbineDuMois;
+    NumeroDeContrainteSurXi = CorrespondanceDesContraintes->NumeroDeContrainteSurXi;
 
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        Cnt = NumeroDeContrainteSurXi[Pdt];
+        SecondMembre[Cnt] = TurbineCible[Pdt];
+    }
 
-NumeroDeContrainteSurXi = CorrespondanceDesContraintes->NumeroDeContrainteSurXi;
-
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-  
-  Cnt = NumeroDeContrainteSurXi[Pdt];	
-  SecondMembre[Cnt] = TurbineCible[Pdt];		
-}
-
-return;
+    return;
 }

@@ -25,14 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_WINDOWS_OUTPUT_SPOTLIGHT_PROVIDER_H__
-# define __ANTARES_WINDOWS_OUTPUT_SPOTLIGHT_PROVIDER_H__
+#define __ANTARES_WINDOWS_OUTPUT_SPOTLIGHT_PROVIDER_H__
 
-# include <antares/wx-wrapper.h>
-# include <ui/common/component/spotlight.h>
-# include "fwd.h"
-# include "layer.h"
-# include <wx/bitmap.h>
-
+#include <antares/wx-wrapper.h>
+#include <ui/common/component/spotlight.h>
+#include "fwd.h"
+#include "layer.h"
+#include <wx/bitmap.h>
 
 namespace Antares
 {
@@ -40,171 +39,173 @@ namespace Window
 {
 namespace OutputViewer
 {
+class SpotlightProvider final : public Antares::Component::Spotlight::IProvider
+{
+public:
+    //! The spotlight component (alias)
+    typedef Antares::Component::Spotlight Spotlight;
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    SpotlightProvider(Component* com, Layer* layer);
+    //! Destructor
+    virtual ~SpotlightProvider();
+    //@}
 
-	class SpotlightProvider final : public Antares::Component::Spotlight::IProvider
-	{
-	public:
-		//! The spotlight component (alias)
-		typedef Antares::Component::Spotlight Spotlight;
+    /*!
+    ** \brief Perform a new search
+    */
+    virtual void search(Spotlight::IItem::Vector& out,
+                        const Spotlight::SearchToken::Vector& tokens,
+                        const Yuni::String& text = "") override;
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		SpotlightProvider(Component* com, Layer* layer);
-		//! Destructor
-		virtual ~SpotlightProvider();
-		//@}
+    /*!
+    ** \brief An item has been selected
+    */
+    virtual bool onSelect(Spotlight::IItem::Ptr& item) override;
 
-		/*!
-		** \brief Perform a new search
-		*/
-		virtual void search(Spotlight::IItem::Vector& out, const Spotlight::SearchToken::Vector& tokens, const Yuni::String& text = "") override;
+private:
+    void appendAreaName(Spotlight::IItem::Vector& out, const Yuni::String& name);
+    void appendLinkName(Spotlight::IItem::Vector& out, const Yuni::String& name);
 
-		/*!
-		** \brief An item has been selected
-		*/
-		virtual bool onSelect(Spotlight::IItem::Ptr& item) override;
+private:
+    //! The parent component
+    Component* pComponent;
+    //! The current layer
+    Layer* pLayer;
 
-	private:
-		void appendAreaName(Spotlight::IItem::Vector& out, const Yuni::String& name);
-		void appendLinkName(Spotlight::IItem::Vector& out, const Yuni::String& name);
+    //! Bitmap re-attach
+    wxBitmap* pBmpReattach;
+    //! Bitmap area
+    wxBitmap* pBmpArea;
+    //! Bitmap group
+    wxBitmap* pBmpGroup;
+    //! Bitmap link
+    wxBitmap* pBmpLink;
 
-	private:
-		//! The parent component
-		Component* pComponent;
-		//! The current layer
-		Layer* pLayer;
+}; // class Layer
 
-		//! Bitmap re-attach
-		wxBitmap* pBmpReattach;
-		//! Bitmap area
-		wxBitmap* pBmpArea;
-		//! Bitmap group
-		wxBitmap* pBmpGroup;
-		//! Bitmap link
-		wxBitmap* pBmpLink;
+class SpotlightProviderGlobalSelection : public Antares::Component::Spotlight::IProvider
+{
+public:
+    //! The spotlight component (alias)
+    typedef Antares::Component::Spotlight Spotlight;
 
-	}; // class Layer
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    SpotlightProviderGlobalSelection(Component* com);
+    //! Destructor
+    virtual ~SpotlightProviderGlobalSelection();
+    //@}
 
+    size_t getSelectedLayerID(const Yuni::String& layerName);
 
+    /*!
+    ** \brief Perform a new search
+    */
+    virtual void search(Spotlight::IItem::Vector& out,
+                        const Spotlight::SearchToken::Vector& tokens,
+                        const Yuni::String& text = "");
 
-	class SpotlightProviderGlobalSelection : public Antares::Component::Spotlight::IProvider
-	{
-	public:
-		//! The spotlight component (alias)
-		typedef Antares::Component::Spotlight Spotlight;
+    virtual void search(Spotlight::IItem::Vector& out,
+                        const Spotlight::SearchToken::Vector& tokens,
+                        Spotlight::IItem::Vector& in);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		SpotlightProviderGlobalSelection(Component* com);
-		//! Destructor
-		virtual ~SpotlightProviderGlobalSelection();
-		//@}
+    /*!
+    ** \brief An item has been selected
+    */
+    virtual bool onSelect(Spotlight::IItem::Ptr& item);
 
-		size_t getSelectedLayerID(const Yuni::String& layerName);
+    void addEconomy();
+    void addAdequacy();
+    void addNoCommonItem();
 
-		/*!
-		** \brief Perform a new search
-		*/
-		virtual void search(Spotlight::IItem::Vector& out, const Spotlight::SearchToken::Vector& tokens, const Yuni::String& text = "");
+    void addText(const Yuni::String& name);
+    void addAreaName(const Yuni::String& name);
+    void addSetName(const Yuni::String& name);
+    void addLinkName(const Yuni::String& name);
 
-		virtual void search(Spotlight::IItem::Vector& out, const Spotlight::SearchToken::Vector& tokens, Spotlight::IItem::Vector& in);
+    void addUncommonAreaName(const Yuni::String& name);
+    void addUncommonLinkName(const Yuni::String& name);
 
-		/*!
-		** \brief An item has been selected
-		*/
-		virtual bool onSelect(Spotlight::IItem::Ptr& item);
+public:
+    Spotlight::IItem::Vector items;
 
-		void addEconomy();
-		void addAdequacy();
-		void addNoCommonItem();
+private:
+    void appendSetName(Spotlight::IItem::Vector& out,
+                       const Yuni::String& name,
+                       const char* grp = "DISTRICTS");
+    void appendAreaName(Spotlight::IItem::Vector& out,
+                        const Yuni::String& name,
+                        const char* grp = "AREAS");
+    void appendLinkName(Spotlight::IItem::Vector& out,
+                        const Yuni::String& name,
+                        const char* grp = "LINKS");
 
-		void addText(const Yuni::String& name);
-		void addAreaName(const Yuni::String& name);
-		void addSetName(const Yuni::String& name);
-		void addLinkName(const Yuni::String& name);
+private:
+    //! The parent component
+    Component* pComponent;
 
-		void addUncommonAreaName(const Yuni::String& name);
-		void addUncommonLinkName(const Yuni::String& name);
+    //! Bitmap re-attach
+    wxBitmap* pBmpReattach;
+    //! Bitmap area
+    wxBitmap* pBmpArea;
+    //! Bitmap group
+    wxBitmap* pBmpGroup;
+    //! Bitmap link
+    wxBitmap* pBmpLink;
 
-	public:
-		Spotlight::IItem::Vector items;
+    Spotlight::IItem::Ptr pCurrentAreaOrLink;
 
+}; // class SpotlightProviderGlobalSelection
 
-	private:
-		void appendSetName(Spotlight::IItem::Vector& out, const Yuni::String& name, const char* grp  = "DISTRICTS");
-		void appendAreaName(Spotlight::IItem::Vector& out, const Yuni::String& name, const char* grp = "AREAS");
-		void appendLinkName(Spotlight::IItem::Vector& out, const Yuni::String& name, const char* grp = "LINKS");
+class SpotlightProviderMCAll : public Antares::Component::Spotlight::IProvider
+{
+public:
+    //! The spotlight component (alias)
+    typedef Antares::Component::Spotlight Spotlight;
 
-	private:
-		//! The parent component
-		Component* pComponent;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    SpotlightProviderMCAll(Component* com);
+    //! Destructor
+    virtual ~SpotlightProviderMCAll();
+    //@}
 
-		//! Bitmap re-attach
-		wxBitmap* pBmpReattach;
-		//! Bitmap area
-		wxBitmap* pBmpArea;
-		//! Bitmap group
-		wxBitmap* pBmpGroup;
-		//! Bitmap link
-		wxBitmap* pBmpLink;
+    /*!
+    ** \brief Perform a new search
+    */
+    virtual void search(Spotlight::IItem::Vector& out,
+                        const Spotlight::SearchToken::Vector& tokens,
+                        const Yuni::String& text = "");
 
-		Spotlight::IItem::Ptr pCurrentAreaOrLink;
+    /*!
+    ** \brief An item has been selected
+    */
+    virtual bool onSelect(Spotlight::IItem::Ptr& item);
 
-	}; // class SpotlightProviderGlobalSelection
+private:
+    //! The parent component
+    Component* pComponent;
 
+    //! Bitmap re-attach
+    wxBitmap* pBmpReattach;
+    //! Bitmap area
+    wxBitmap* pBmpVariable;
 
-
-
-	class SpotlightProviderMCAll : public Antares::Component::Spotlight::IProvider
-	{
-	public:
-		//! The spotlight component (alias)
-		typedef Antares::Component::Spotlight Spotlight;
-
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		SpotlightProviderMCAll(Component* com);
-		//! Destructor
-		virtual ~SpotlightProviderMCAll();
-		//@}
-
-		/*!
-		** \brief Perform a new search
-		*/
-		virtual void search(Spotlight::IItem::Vector& out, const Spotlight::SearchToken::Vector& tokens, const Yuni::String& text = "");
-
-		/*!
-		** \brief An item has been selected
-		*/
-		virtual bool onSelect(Spotlight::IItem::Ptr& item);
-
-	private:
-		//! The parent component
-		Component* pComponent;
-
-		//! Bitmap re-attach
-		wxBitmap* pBmpReattach;
-		//! Bitmap area
-		wxBitmap* pBmpVariable;
-
-	}; // class SpotlightProviderMCAll
-
-
-
-
+}; // class SpotlightProviderMCAll
 
 } // namespace OutputViewer
 } // namespace Window

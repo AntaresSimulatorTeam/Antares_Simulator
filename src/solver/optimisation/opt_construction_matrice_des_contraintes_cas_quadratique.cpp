@@ -25,31 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include "opt_structure_probleme_a_resoudre.h"
 
 #include "../simulation/simulation.h"
@@ -57,55 +32,62 @@
 #include "../simulation/sim_extern_variables_globales.h"
 #include "opt_fonctions.h"
 
-void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique( PROBLEME_HEBDO * ProblemeHebdo )
+void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* ProblemeHebdo)
 {
-	int Interco; int Pays; int Var; int NombreDeTermes;	double * Pi; int * Colonne;
-	CORRESPONDANCES_DES_VARIABLES * CorrespondanceVarNativesVarOptim; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;	
+    int Interco;
+    int Pays;
+    int Var;
+    int NombreDeTermes;
+    double* Pi;
+    int* Colonne;
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
-	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
-	Pi      = (double *) MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
-	Colonne = (int *)    MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int   ));
+    Pi = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
+    Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
 
-	
-	ProblemeAResoudre->NombreDeContraintes = 0;
-	ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
-	CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0];
+    ProblemeAResoudre->NombreDeContraintes = 0;
+    ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
+    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0];
 
-	
-	for (Pays = 0 ; Pays < ProblemeHebdo->NombreDePays - 1 ; Pays++) {
-		
-		NombreDeTermes = 0;
+    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays - 1; Pays++)
+    {
+        NombreDeTermes = 0;
 
-		Interco = ProblemeHebdo->IndexDebutIntercoOrigine[Pays];
-		while (Interco >= 0) {
-			Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-			if (Var >= 0) {
-				Pi     [NombreDeTermes] = 1.0;
-				Colonne[NombreDeTermes] = Var;
-				NombreDeTermes++;
-			}
-			Interco = ProblemeHebdo->IndexSuivantIntercoOrigine[Interco];
-		}
-		Interco = ProblemeHebdo->IndexDebutIntercoExtremite[Pays];
-		while (Interco >= 0 ) {
-			Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-			if (Var >= 0 ) {
-				Pi     [NombreDeTermes] = -1.0;
-				Colonne[NombreDeTermes] = Var;
-				NombreDeTermes++;
-			}
-			Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
-		}
+        Interco = ProblemeHebdo->IndexDebutIntercoOrigine[Pays];
+        while (Interco >= 0)
+        {
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+            if (Var >= 0)
+            {
+                Pi[NombreDeTermes] = 1.0;
+                Colonne[NombreDeTermes] = Var;
+                NombreDeTermes++;
+            }
+            Interco = ProblemeHebdo->IndexSuivantIntercoOrigine[Interco];
+        }
+        Interco = ProblemeHebdo->IndexDebutIntercoExtremite[Pays];
+        while (Interco >= 0)
+        {
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+            if (Var >= 0)
+            {
+                Pi[NombreDeTermes] = -1.0;
+                Colonne[NombreDeTermes] = Var;
+                NombreDeTermes++;
+            }
+            Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
+        }
 
-		
-		ProblemeHebdo->NumeroDeContrainteDeSoldeDEchange[Pays] = ProblemeAResoudre->NombreDeContraintes;
-		
-		OPT_ChargerLaContrainteDansLaMatriceDesContraintes( ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=' );
-	}
+        ProblemeHebdo->NumeroDeContrainteDeSoldeDEchange[Pays]
+          = ProblemeAResoudre->NombreDeContraintes;
 
-	MemFree(Pi);
-	MemFree(Colonne);
+        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+          ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=');
+    }
+
+    MemFree(Pi);
+    MemFree(Colonne);
 }
-
-

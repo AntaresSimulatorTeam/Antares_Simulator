@@ -13,22 +13,21 @@
 #include "../directory.h"
 #include "../../core/system/windows.hdr.h"
 #ifndef YUNI_OS_WINDOWS
-# ifdef YUNI_HAS_STDLIB_H
-#	include <stdlib.h>
-# endif
-# include <unistd.h>
+#ifdef YUNI_HAS_STDLIB_H
+#include <stdlib.h>
+#endif
+#include <unistd.h>
 #else
-# include <direct.h>
+#include <direct.h>
 #endif
 #include <sys/stat.h>
 #include <fstream>
 #include <errno.h>
 #ifndef YUNI_OS_MSVC
-# include <dirent.h>
+#include <dirent.h>
 #endif
 #include <fcntl.h>
 
-
 #ifndef S_ISDIR
-# define S_ISDIR(mode) ( (mode & S_IFMT) == S_IFDIR)
+#define S_ISDIR(mode) ((mode & S_IFMT) == S_IFDIR)
 #endif

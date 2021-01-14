@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_SIMULATION_SOLVER_DATA_H__
-# define __SOLVER_SIMULATION_SOLVER_DATA_H__
+#define __SOLVER_SIMULATION_SOLVER_DATA_H__
 
-# include <yuni/yuni.h>
-# include <antares/study/fwd.h>
-
+#include <yuni/yuni.h>
+#include <antares/study/fwd.h>
 
 namespace Antares
 {
@@ -39,43 +38,38 @@ namespace Private
 {
 namespace Simulation
 {
+class CacheData
+{
+public:
+    /*!
+    ** \brief Re-Initialize the inner variables
+    */
+    void initialize(const Antares::Data::Parameters& parameters);
 
-	class CacheData
-	{
-	public:
-		/*!
-		** \brief Re-Initialize the inner variables
-		*/
-		void initialize(const Antares::Data::Parameters& parameters);
+public:
+    //! True if the prepro `load` must be used
+    bool haveToRefreshTSLoad;
+    //! True if the prepro `solar` must be used
+    bool haveToRefreshTSSolar;
+    //! True if the prepro `wind` must be used
+    bool haveToRefreshTSWind;
+    //! True if the prepro `hydro` must be used
+    bool haveToRefreshTSHydro;
+    //! True if the prepro `thermal` must be used
+    bool haveToRefreshTSThermal;
 
-	public:
-		//! True if the prepro `load` must be used
-		bool haveToRefreshTSLoad;
-		//! True if the prepro `solar` must be used
-		bool haveToRefreshTSSolar;
-		//! True if the prepro `wind` must be used
-		bool haveToRefreshTSWind;
-		//! True if the prepro `hydro` must be used
-		bool haveToRefreshTSHydro;
-		//! True if the prepro `thermal` must be used
-		bool haveToRefreshTSThermal;
+    //! Refresh time interval for Load
+    unsigned int refreshIntervalLoad;
+    //! Refresh time interval for Solar
+    unsigned int refreshIntervalSolar;
+    //! Refresh time interval for Hydro
+    unsigned int refreshIntervalHydro;
+    //! Refresh time interval for wind
+    unsigned int refreshIntervalWind;
+    //! Refresh time interval for thermal
+    unsigned int refreshIntervalThermal;
 
-		//! Refresh time interval for Load
-		unsigned int refreshIntervalLoad;
-		//! Refresh time interval for Solar
-		unsigned int refreshIntervalSolar;
-		//! Refresh time interval for Hydro
-		unsigned int refreshIntervalHydro;
-		//! Refresh time interval for wind
-		unsigned int refreshIntervalWind;
-		//! Refresh time interval for thermal
-		unsigned int refreshIntervalThermal;
-
-	}; // class CacheData
-
-
-
-
+}; // class CacheData
 
 } // namespace Simulation
 } // namespace Private

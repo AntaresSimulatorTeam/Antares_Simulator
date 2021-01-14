@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENTS_DATAGRID__GRID_HELPER_HXX__
-# define __ANTARES_TOOLBOX_COMPONENTS_DATAGRID__GRID_HELPER_HXX__
-
+#define __ANTARES_TOOLBOX_COMPONENTS_DATAGRID__GRID_HELPER_HXX__
 
 namespace Antares
 {
@@ -34,66 +33,52 @@ namespace Component
 {
 namespace Datagrid
 {
+inline int VGridHelper::GetNumberRows()
+{
+    return virtualSize.y;
+}
 
+inline int VGridHelper::GetNumberCols()
+{
+    return virtualSize.x;
+}
 
-	inline int VGridHelper::GetNumberRows()
-	{
-		return virtualSize.y;
-	}
+inline double VGridHelper::GetValueAsDouble(int row, int col)
+{
+    return GetNumericValue(row, col);
+}
 
+inline bool VGridHelper::GetValueAsBool(int row, int col)
+{
+    return !Yuni::Math::Zero(GetValueAsDouble(row, col));
+}
 
-	inline int VGridHelper::GetNumberCols()
-	{
-		return virtualSize.x;
-	}
+inline bool VGridHelper::IsEmptyCell(int, int)
+{
+    return false;
+}
 
+inline int VGridHelper::realCol(uint col) const
+{
+    assert(col < (uint)indicesCols.size());
+    return indicesCols[col];
+}
 
-	inline double VGridHelper::GetValueAsDouble(int row, int col)
-	{
-		return GetNumericValue(row, col);
-	}
+inline int VGridHelper::realRow(uint row) const
+{
+    assert(row < (uint)indicesRows.size());
+    return indicesRows[row];
+}
 
+inline bool VGridHelper::CanValueAs(int, int, const wxString&)
+{
+    return true;
+}
 
-	inline bool VGridHelper::GetValueAsBool(int row, int col)
-	{
-		return !Yuni::Math::Zero(GetValueAsDouble(row, col));
-	}
-
-
-	inline bool VGridHelper::IsEmptyCell(int, int)
-	{
-		return false;
-	}
-
-
-	inline int VGridHelper::realCol(uint col) const
-	{
-		assert(col < (uint) indicesCols.size());
-		return indicesCols[col];
-	}
-
-
-	inline int VGridHelper::realRow(uint row) const
-	{
-		assert(row < (uint) indicesRows.size());
-		return indicesRows[row];
-	}
-
-
-	inline bool VGridHelper::CanValueAs(int, int, const wxString&)
-	{
-		return true;
-	}
-
-
-	inline Renderer::IRenderer* VGridHelper::renderer() const
-	{
-		return pRenderer;
-	}
-
-
-
-
+inline Renderer::IRenderer* VGridHelper::renderer() const
+{
+    return pRenderer;
+}
 
 } // namespace Datagrid
 } // namespace Component

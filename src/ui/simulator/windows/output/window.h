@@ -25,12 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_WINDOWS_OUTPUT_WINDOW_H__
-# define __ANTARES_WINDOWS_OUTPUT_WINDOW_H__
+#define __ANTARES_WINDOWS_OUTPUT_WINDOW_H__
 
-# include <antares/wx-wrapper.h>
-# include "output.h"
-# include <ui/common/component/frame/local-frame.h>
-
+#include <antares/wx-wrapper.h>
+#include "output.h"
+#include <ui/common/component/frame/local-frame.h>
 
 namespace Antares
 {
@@ -38,42 +37,36 @@ namespace Window
 {
 namespace OutputViewer
 {
+/*!
+** \brief Window for output viewer
+*/
+class Window : public Antares::Component::Frame::WxLocalFrame
+{
+public:
+    // \name Constructors & Destructor
+    //@{
+    /*!
+    ** \brief Constructor with a parent window and a study
+    */
+    Window(wxFrame* parent, const OutputViewer::Component* viewer);
+    //! Destructor
+    virtual ~Window();
+    //@}
 
-	/*!
-	** \brief Window for output viewer
-	*/
-	class Window : public Antares::Component::Frame::WxLocalFrame
-	{
-	public:
-		// \name Constructors & Destructor
-		//@{
-		/*!
-		** \brief Constructor with a parent window and a study
-		*/
-		Window(wxFrame* parent, const OutputViewer::Component* viewer);
-		//! Destructor
-		virtual ~Window();
-		//@}
+private:
+    /*!
+    ** \brief The Window has been closed
+    */
+    void onClose(wxCloseEvent& evt);
 
-	private:
-		/*!
-		** \brief The Window has been closed
-		*/
-		void onClose(wxCloseEvent& evt);
+private:
+    // Event Table
+    DECLARE_EVENT_TABLE()
 
-	private:
-		// Event Table
-		DECLARE_EVENT_TABLE()
-
-	}; // class Window
-
-
-
-
+}; // class Window
 
 } // namespace OutputViewer
 } // namespace Window
 } // namespace Antares
-
 
 #endif // __ANTARES_WINDOWS_OUTPUT_WINDOW_H__

@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_PARTS_SOLAR_CONTAINER_H__
-# define __ANTARES_LIBS_STUDY_PARTS_SOLAR_CONTAINER_H__
+#define __ANTARES_LIBS_STUDY_PARTS_SOLAR_CONTAINER_H__
 
-# include "prepro.h"
-# include "series.h"
-
+#include "prepro.h"
+#include "series.h"
 
 namespace Antares
 {
@@ -37,51 +36,46 @@ namespace Data
 {
 namespace Solar
 {
+class Container
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    Container();
+    //! Destructor
+    ~Container();
+    //@}
 
-	class Container
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		Container();
-		//! Destructor
-		~Container();
-		//@}
+    /*!
+    ** \brief Reset to default values
+    */
+    void resetToDefault();
 
-		/*!
-		** \brief Reset to default values
-		*/
-		void resetToDefault();
+    /*!
+    ** \brief Make sure that all data are loaded
+    */
+    bool invalidate(bool reload = false) const;
 
-		/*!
-		** \brief Make sure that all data are loaded
-		*/
-		bool invalidate(bool reload = false) const;
+    /*!
+    ** \brief Mark all data as modified
+    */
+    void markAsModified() const;
 
-		/*!
-		** \brief Mark all data as modified
-		*/
-		void markAsModified() const;
+    /*!
+    ** \brief Get the amount of memory currently used by the class
+    */
+    Yuni::uint64 memoryUsage() const;
 
-		/*!
-		** \brief Get the amount of memory currently used by the class
-		*/
-		Yuni::uint64 memoryUsage() const;
+public:
+    //! Data for the pre-processor
+    Data::Solar::Prepro* prepro;
+    /*! Data for time-series */
+    DataSeriesSolar* series;
 
-	public:
-		//! Data for the pre-processor
-		Data::Solar::Prepro* prepro;
-		/*! Data for time-series */
-		DataSeriesSolar* series;
-
-	}; // class Container
-
-
-
-
+}; // class Container
 
 } // namespace Solar
 } // namespace Data

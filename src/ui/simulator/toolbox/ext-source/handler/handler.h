@@ -25,13 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_EXT_SOURCE_HANDLER_HANDLER_H__
-# define __ANTARES_TOOLBOX_EXT_SOURCE_HANDLER_HANDLER_H__
+#define __ANTARES_TOOLBOX_EXT_SOURCE_HANDLER_HANDLER_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-# include <antares/study/study.h>
-# include <map>
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+#include <antares/study/study.h>
+#include <map>
 
 namespace Antares
 {
@@ -39,24 +38,22 @@ namespace ExtSource
 {
 namespace Handler
 {
+//! A single key
+typedef Yuni::CString<50, false> Key;
+//! A single value
+typedef Yuni::String Value;
 
-	//! A single key
-	typedef Yuni::CString<50,false> Key;
-	//! A single value
-	typedef Yuni::String  Value;
+//! Map of properties
+typedef std::map<Key, Value> PropertyMap;
 
-	//! Map of properties
-	typedef std::map<Key, Value>  PropertyMap;
-
-
-
-	/*!
-	** \brief Paste from the clipboard items from an Antares Study
-	*/
-	void AntaresStudy(Data::Study& target, const Yuni::String& content, uint offset, PropertyMap& map,
-		bool forceDialog);
-
-
+/*!
+** \brief Paste from the clipboard items from an Antares Study
+*/
+void AntaresStudy(Data::Study& target,
+                  const Yuni::String& content,
+                  uint offset,
+                  PropertyMap& map,
+                  bool forceDialog);
 
 } // namespace Handler
 } // namespace ExtSource

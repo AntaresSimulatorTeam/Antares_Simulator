@@ -30,8 +30,6 @@
 #include "filter.h"
 #include <antares/date.h>
 
-
-
 namespace Antares
 {
 namespace Toolbox
@@ -40,153 +38,139 @@ namespace Filter
 {
 namespace Operator
 {
+List::List(AFilterBase* parent) : pParentFilter(parent)
+{
+}
 
+List::~List()
+{
+    this->clear();
+}
 
-	List::List(AFilterBase* parent)
-		:pParentFilter(parent)
-	{}
+void List::addStdArithmetic(bool withModulo)
+{
+    pItems.push_back(new Operator::EqualsTo(pParentFilter));
+    pItems.push_back(new Operator::NotEqualsTo(pParentFilter));
+    pItems.push_back(new Operator::LessThan(pParentFilter));
+    pItems.push_back(new Operator::LessThanOrEqualsTo(pParentFilter));
+    pItems.push_back(new Operator::GreaterThan(pParentFilter));
+    pItems.push_back(new Operator::GreaterThanOrEqualsTo(pParentFilter));
+    if (withModulo)
+        pItems.push_back(new Operator::Modulo(pParentFilter));
+}
 
+template<class T>
+static inline T* WeekDayOp(AFilterBase* parent)
+{
+    T* t = new T(parent);
+    Parameter& p = t->parameters[0];
+    p.dataType = DataType::dtList;
+    for (int i = 0; i < 7; ++i)
+        p.defaultValues.push_back(wxStringFromUTF8(Date::WeekdayToString(i)));
+    return t;
+}
 
-	List::~List()
-	{
-		this->clear();
-	}
+void List::addStdWeekday(bool withModulo)
+{
+    pItems.push_back(WeekDayOp<Operator::EqualsTo>(pParentFilter));
+    pItems.push_back(WeekDayOp<Operator::NotEqualsTo>(pParentFilter));
+    pItems.push_back(WeekDayOp<Operator::LessThan>(pParentFilter));
+    pItems.push_back(WeekDayOp<Operator::LessThanOrEqualsTo>(pParentFilter));
+    pItems.push_back(WeekDayOp<Operator::GreaterThan>(pParentFilter));
+    pItems.push_back(WeekDayOp<Operator::GreaterThanOrEqualsTo>(pParentFilter));
+    if (withModulo)
+        pItems.push_back(WeekDayOp<Operator::Modulo>(pParentFilter));
+}
 
+template<class T>
+static inline T* MonthOp(AFilterBase* parent)
+{
+    auto* t = new T(parent);
+    Parameter& p = t->parameters[0];
+    p.dataType = DataType::dtList;
+    for (int i = 0; i < 12; ++i)
+        p.defaultValues.push_back(wxStringFromUTF8(Date::MonthToString(i)));
+    return t;
+}
 
-	void List::addStdArithmetic(bool withModulo)
-	{
-		pItems.push_back(new Operator::EqualsTo(pParentFilter));
-		pItems.push_back(new Operator::NotEqualsTo(pParentFilter));
-		pItems.push_back(new Operator::LessThan(pParentFilter));
-		pItems.push_back(new Operator::LessThanOrEqualsTo(pParentFilter));
-		pItems.push_back(new Operator::GreaterThan(pParentFilter));
-		pItems.push_back(new Operator::GreaterThanOrEqualsTo(pParentFilter));
-		if (withModulo)
-			pItems.push_back(new Operator::Modulo(pParentFilter));
-	}
+void List::addStdMonth(bool withModulo)
+{
+    pItems.push_back(MonthOp<Operator::EqualsTo>(pParentFilter));
+    pItems.push_back(MonthOp<Operator::NotEqualsTo>(pParentFilter));
+    pItems.push_back(MonthOp<Operator::LessThan>(pParentFilter));
+    pItems.push_back(MonthOp<Operator::LessThanOrEqualsTo>(pParentFilter));
+    pItems.push_back(MonthOp<Operator::GreaterThan>(pParentFilter));
+    pItems.push_back(MonthOp<Operator::GreaterThanOrEqualsTo>(pParentFilter));
+    if (withModulo)
+        pItems.push_back(MonthOp<Operator::Modulo>(pParentFilter));
+}
 
+bool List::add(const wxString& name)
+{
+    switch (name.size())
+    {
+    case 1:
+    {
+        if (wxT("<") == name)
+        {
+            pItems.push_back(new Operator::LessThan(pParentFilter));
+            return true;
+        }
+        if (wxT(">") == name)
+        {
+            pItems.push_back(new Operator::GreaterThan(pParentFilter));
+            return true;
+        }
+        if (wxT("=") == name)
+        {
+            pItems.push_back(new Operator::EqualsTo(pParentFilter));
+            return true;
+        }
+        if (wxT("%") == name)
+        {
+            pItems.push_back(new Operator::Modulo(pParentFilter));
+            return true;
+        }
+        break;
+    }
+    case 2:
+    {
+        if (wxT("<=") == name)
+        {
+            pItems.push_back(new Operator::LessThanOrEqualsTo(pParentFilter));
+            return true;
+        }
+        if (wxT(">=") == name)
+        {
+            pItems.push_back(new Operator::GreaterThanOrEqualsTo(pParentFilter));
+            return true;
+        }
+        if (wxT("!=") == name)
+        {
+            pItems.push_back(new Operator::NotEqualsTo(pParentFilter));
+            return true;
+        }
+        break;
+    }
+    default:
+        return false;
+    }
+    return false;
+}
 
-	template<class T>
-	static inline T* WeekDayOp(AFilterBase* parent)
-	{
-		T* t = new T(parent);
-		Parameter& p = t->parameters[0];
-		p.dataType = DataType::dtList;
-		for (int i = 0; i < 7; ++i)
-			p.defaultValues.push_back(wxStringFromUTF8(Date::WeekdayToString(i)));
-		return t;
-	}
-
-
-	void List::addStdWeekday(bool withModulo)
-	{
-		pItems.push_back(WeekDayOp<Operator::EqualsTo>(pParentFilter));
-		pItems.push_back(WeekDayOp<Operator::NotEqualsTo>(pParentFilter));
-		pItems.push_back(WeekDayOp<Operator::LessThan>(pParentFilter));
-		pItems.push_back(WeekDayOp<Operator::LessThanOrEqualsTo>(pParentFilter));
-		pItems.push_back(WeekDayOp<Operator::GreaterThan>(pParentFilter));
-		pItems.push_back(WeekDayOp<Operator::GreaterThanOrEqualsTo>(pParentFilter));
-		if (withModulo)
-			pItems.push_back(WeekDayOp<Operator::Modulo>(pParentFilter));
-	}
-
-
-	template<class T>
-	static inline T* MonthOp(AFilterBase* parent)
-	{
-		auto* t = new T(parent);
-		Parameter& p = t->parameters[0];
-		p.dataType = DataType::dtList;
-		for (int i = 0; i < 12; ++i)
-			p.defaultValues.push_back(wxStringFromUTF8(Date::MonthToString(i)));
-		return t;
-	}
-
-
-	void List::addStdMonth(bool withModulo)
-	{
-		pItems.push_back(MonthOp<Operator::EqualsTo>(pParentFilter));
-		pItems.push_back(MonthOp<Operator::NotEqualsTo>(pParentFilter));
-		pItems.push_back(MonthOp<Operator::LessThan>(pParentFilter));
-		pItems.push_back(MonthOp<Operator::LessThanOrEqualsTo>(pParentFilter));
-		pItems.push_back(MonthOp<Operator::GreaterThan>(pParentFilter));
-		pItems.push_back(MonthOp<Operator::GreaterThanOrEqualsTo>(pParentFilter));
-		if (withModulo)
-			pItems.push_back(MonthOp<Operator::Modulo>(pParentFilter));
-	}
-
-
-	bool List::add(const wxString& name)
-	{
-		switch (name.size())
-		{
-			case 1:
-				{
-					if (wxT("<") == name)
-					{
-						pItems.push_back(new Operator::LessThan(pParentFilter));
-						return true;
-					}
-					if (wxT(">") == name)
-					{
-						pItems.push_back(new Operator::GreaterThan(pParentFilter));
-						return true;
-					}
-					if (wxT("=") == name)
-					{
-						pItems.push_back(new Operator::EqualsTo(pParentFilter));
-						return true;
-					}
-					if (wxT("%") == name)
-					{
-						pItems.push_back(new Operator::Modulo(pParentFilter));
-						return true;
-					}
-					break;
-				}
-			case 2:
-				{
-					if (wxT("<=") == name)
-					{
-						pItems.push_back(new Operator::LessThanOrEqualsTo(pParentFilter));
-						return true;
-					}
-					if (wxT(">=") == name)
-					{
-						pItems.push_back(new Operator::GreaterThanOrEqualsTo(pParentFilter));
-						return true;
-					}
-					if (wxT("!=") == name)
-					{
-						pItems.push_back(new Operator::NotEqualsTo(pParentFilter));
-						return true;
-					}
-					break;
-				}
-			default: return false;
-		}
-		return false;
-	}
-
-
-	void List::clear()
-	{
-		if (!pItems.empty())
-		{
-			// Delete all operators
-			auto end = pItems.end();
-			for (auto i = pItems.begin(); i != end; ++i)
-				delete *i;
-			// Clear the back-end container
-			OperatorList empty; // swap idiom
-			pItems.swap(empty);
-		}
-	}
-
-
-
-
-
+void List::clear()
+{
+    if (!pItems.empty())
+    {
+        // Delete all operators
+        auto end = pItems.end();
+        for (auto i = pItems.begin(); i != end; ++i)
+            delete *i;
+        // Clear the back-end container
+        OperatorList empty; // swap idiom
+        pItems.swap(empty);
+    }
+}
 
 } // namespace Operator
 } // namespace Filter

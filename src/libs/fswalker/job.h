@@ -25,46 +25,40 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_FS_WALKER_JOB_H__
-# define __ANTARES_FS_WALKER_JOB_H__
+#define __ANTARES_FS_WALKER_JOB_H__
 
-# include <yuni/yuni.h>
-# include <yuni/job/job.h>
-
+#include <yuni/yuni.h>
+#include <yuni/job/job.h>
 
 namespace FSWalker
 {
+// Forward declaration
+class Walker;
+class WalkerThread;
 
-	// Forward declaration
-	class Walker;
-	class WalkerThread;
+//! Internal job counter
+typedef Yuni::SmartPtr<Yuni::Atomic::Int<32>> InternalJobCounter;
 
-	//! Internal job counter
-	typedef Yuni::SmartPtr<Yuni::Atomic::Int<32> > InternalJobCounter;
+class IJob : public Yuni::Job::IJob
+{
+public:
+    //! The most suitable smart pointer for the class
+    // typedef Yuni::SmartPtr<IJob> Ptr;
+    typedef Yuni::Job::IJob::Ptr::Promote<IJob>::Ptr Ptr;
 
+public:
+    IJob()
+    {
+    }
+    virtual ~IJob();
 
+protected:
+    void decrementCounter();
 
-	class IJob : public Yuni::Job::IJob
-	{
-	public:
-		//! The most suitable smart pointer for the class
-		//typedef Yuni::SmartPtr<IJob> Ptr;
-		typedef Yuni::Job::IJob::Ptr::Promote<IJob>::Ptr Ptr;
-
-	public:
-		IJob() {}
-		virtual ~IJob();
-
-	protected:
-		void decrementCounter();
-
-	protected:
-		InternalJobCounter pJobCounter;
-		friend class WalkerThread;
-	};
-
-
-
-
+protected:
+    InternalJobCounter pJobCounter;
+    friend class WalkerThread;
+};
 
 } // namespace FSWalker
 

@@ -28,7 +28,6 @@
 #include "allocation-hydro.h"
 #include "allocation-hydro-post.h"
 
-
 namespace Antares
 {
 namespace Action
@@ -37,57 +36,46 @@ namespace AntaresStudy
 {
 namespace Area
 {
+AllocationHydro::AllocationHydro(const AnyString& areaname) : pOriginalAreaName(areaname)
+{
+    pInfos.caption = "Hydro Allocation";
+}
 
-	AllocationHydro::AllocationHydro(const AnyString& areaname) :
-		pOriginalAreaName(areaname)
-	{
-		pInfos.caption = "Hydro Allocation";
-	}
+AllocationHydro::~AllocationHydro()
+{
+}
 
+bool AllocationHydro::prepareWL(Context&)
+{
+    pInfos.message.clear();
+    pInfos.state = stReady;
+    switch (pInfos.behavior)
+    {
+    case bhOverwrite:
+        pInfos.message << "The hydro allocation coefficients will be copied";
+        break;
+    default:
+        pInfos.state = stNothingToDo;
+        break;
+    }
 
-	AllocationHydro::~AllocationHydro()
-	{}
+    return true;
+}
 
+bool AllocationHydro::performWL(Context&)
+{
+    // Nothing to do
+    return true;
+}
 
-	bool AllocationHydro::prepareWL(Context&)
-	{
-		pInfos.message.clear();
-		pInfos.state = stReady;
-		switch (pInfos.behavior)
-		{
-			case bhOverwrite:
-				pInfos.message << "The hydro allocation coefficients will be copied";
-				break;
-			default:
-				pInfos.state = stNothingToDo;
-				break;
-		}
-
-		return true;
-	}
-
-
-	bool AllocationHydro::performWL(Context&)
-	{
-		// Nothing to do
-		return true;
-	}
-
-
-	void AllocationHydro::createPostActionsWL(const IAction::Ptr& node)
-	{
-		// all actions on hydro allocation coefficients must be delayed
-		// (we must have all areas, thus it must be done at the end of the merge)
-		*node += new AllocationHydroPost(this,  pOriginalAreaName);
-	}
-
-
-
-
-
+void AllocationHydro::createPostActionsWL(const IAction::Ptr& node)
+{
+    // all actions on hydro allocation coefficients must be delayed
+    // (we must have all areas, thus it must be done at the end of the merge)
+    *node += new AllocationHydroPost(this, pOriginalAreaName);
+}
 
 } // namespace Area
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
-

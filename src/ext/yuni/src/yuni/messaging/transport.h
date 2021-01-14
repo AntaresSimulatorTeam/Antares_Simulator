@@ -9,10 +9,8 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_MESSAGE_TRANSPORT_H__
-# define __YUNI_MESSAGE_TRANSPORT_H__
+#define __YUNI_MESSAGE_TRANSPORT_H__
 
-
-# include "transport/transport.h"
-
+#include "transport/transport.h"
 
 #endif // __YUNI_MESSAGE_TRANSPORT_H__

@@ -25,57 +25,48 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_ARRAY_CORRELATION_HXX__
-# define __ANTARES_LIBS_ARRAY_CORRELATION_HXX__
-
+#define __ANTARES_LIBS_ARRAY_CORRELATION_HXX__
 
 namespace Antares
 {
 namespace Data
 {
+inline void InterAreaCorrelationResetMatrix(Matrix<>* m, AreaList* l)
+{
+    assert(NULL != m);
+    assert(NULL != l);
+    m->resize(l->size(), l->size());
+    m->fillUnit();
+}
 
-	inline void InterAreaCorrelationResetMatrix(Matrix<>* m, AreaList* l)
-	{
-		assert(NULL != m); assert(NULL != l);
-		m->resize(l->size(), l->size());
-		m->fillUnit();
-	}
+inline void Correlation::mode(Correlation::Mode mode)
+{
+    pMode = mode;
+}
 
+inline Correlation::Mode Correlation::mode() const
+{
+    return pMode;
+}
 
-	inline void Correlation::mode(Correlation::Mode mode)
-	{
-		pMode = mode;
-	}
+inline bool Correlation::loadFromINI(Study& study, const IniFile& ini, bool warnings, int version)
+{
+    return internalLoadFromINI(study, ini, warnings, version);
+}
 
+template<class StringT>
+inline void Correlation::set(Matrix<>& m, const Area& from, const Area& to, const StringT& value)
+{
+    double d;
+    if (!value.template to<double>(d))
+    {
+        Antares::logs.error() << correlationName << ": Invalid decimal value for '" << from.name
+                              << "' / '" << to.name << "'  (got '" << value << "')";
+        return;
+    }
 
-	inline Correlation::Mode Correlation::mode() const
-	{
-		return pMode;
-	}
-
-
-	inline bool Correlation::loadFromINI(Study& study, const IniFile& ini, bool warnings, int version)
-	{
-		return internalLoadFromINI(study, ini, warnings, version);
-	}
-
-
-	template<class StringT>
-	inline void Correlation::set(Matrix<>& m, const Area& from, const Area& to, const StringT& value)
-	{
-		double d;
-		if (!value.template to<double>(d))
-		{
-			Antares::logs.error() << correlationName << ": Invalid decimal value for '" << from.name
-				<< "' / '" << to.name << "'  (got '" << value << "')";
-			return;
-		}
-
-		set(m, from, to, d);
-	}
-
-
-
-
+    set(m, from, to, d);
+}
 
 } // namespace Data
 } // namespace Antares

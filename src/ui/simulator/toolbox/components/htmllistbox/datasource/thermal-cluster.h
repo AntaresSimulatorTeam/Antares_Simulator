@@ -25,13 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_THERMAL_PLANTS_H__
-# define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_THERMAL_PLANTS_H__
+#define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_THERMAL_PLANTS_H__
 
-# include "datasource.h"
-# include <yuni/core/event.h>
-# include <antares/study.h>
-
-
+#include "datasource.h"
+#include <yuni/core/event.h>
+#include <antares/study.h>
 
 namespace Antares
 {
@@ -43,60 +41,63 @@ namespace Datasource
 {
 namespace ThermalClusters
 {
+class ByAlphaOrder : public Yuni::IEventObserver<ByAlphaOrder>, public IDatasource
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    //! Default Constructor
+    ByAlphaOrder(HTMLListbox::Component& parent);
+    //! Destructor
+    virtual ~ByAlphaOrder();
+    //@}
 
-	class ByAlphaOrder : public Yuni::IEventObserver<ByAlphaOrder>, public IDatasource
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		//! Default Constructor
-		ByAlphaOrder(HTMLListbox::Component& parent);
-		//! Destructor
-		virtual ~ByAlphaOrder();
-		//@}
+    virtual wxString name() const
+    {
+        return wxT("Thermal clusters in alphabetical order");
+    }
+    virtual const char* icon() const
+    {
+        return "images/16x16/sort_alphabet.png";
+    }
+    virtual void refresh(const wxString& search = wxEmptyString);
 
-		virtual wxString name() const {return wxT("Thermal clusters in alphabetical order");}
-		virtual const char* icon() const {return "images/16x16/sort_alphabet.png";}
-		virtual void refresh(const wxString& search = wxEmptyString);
+    void onAreaChanged(Data::Area* area);
+    void onInvalidateAllAreas();
 
-		void onAreaChanged(Data::Area* area);
-		void onInvalidateAllAreas();
+private:
+    Data::Area* pArea;
 
-	private:
-		Data::Area* pArea;
+}; // class ByAlphaOrder
 
-	}; // class ByAlphaOrder
+class ByAlphaReverseOrder : public Yuni::IEventObserver<ByAlphaReverseOrder>, public IDatasource
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    //! Default Constructor
+    ByAlphaReverseOrder(HTMLListbox::Component& parent);
+    //! Destructor
+    virtual ~ByAlphaReverseOrder();
+    //@}
 
+    virtual wxString name() const
+    {
+        return wxT("Thermal clusters in reverse alphabetical order");
+    }
+    virtual const char* icon() const
+    {
+        return "images/16x16/sort_alphabet_descending.png";
+    }
+    virtual void refresh(const wxString& search = wxEmptyString);
 
+    void onAreaChanged(Data::Area* area);
+    void onInvalidateAllAreas();
 
-	class ByAlphaReverseOrder : public Yuni::IEventObserver<ByAlphaReverseOrder>, public IDatasource
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		//! Default Constructor
-		ByAlphaReverseOrder(HTMLListbox::Component& parent);
-		//! Destructor
-		virtual ~ByAlphaReverseOrder();
-		//@}
+private:
+    Data::Area* pArea;
 
-		virtual wxString name() const {return wxT("Thermal clusters in reverse alphabetical order");}
-		virtual const char* icon() const {return "images/16x16/sort_alphabet_descending.png";}
-		virtual void refresh(const wxString& search = wxEmptyString);
-
-		void onAreaChanged(Data::Area* area);
-		void onInvalidateAllAreas();
-
-	private:
-		Data::Area* pArea;
-
-	}; // class ByAlphaReverseOrder
-
-
-
-
-
-
+}; // class ByAlphaReverseOrder
 
 } // namespace ThermalClusters
 } // namespace Datasource

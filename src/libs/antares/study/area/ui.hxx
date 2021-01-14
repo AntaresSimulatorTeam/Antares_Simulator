@@ -25,35 +25,26 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_UI_HXX__
-# define __ANTARES_LIBS_STUDY_UI_HXX__
-
+#define __ANTARES_LIBS_STUDY_UI_HXX__
 
 namespace Antares
 {
 namespace Data
 {
+inline Yuni::uint64 AreaUI::memoryUsage() const
+{
+    return sizeof(AreaUI);
+}
 
+inline bool AreaUI::modified() const
+{
+    return pModified;
+}
 
-	inline Yuni::uint64 AreaUI::memoryUsage() const
-	{
-		return sizeof(AreaUI);
-	}
-
-
-	inline bool AreaUI::modified() const
-	{
-		return pModified;
-	}
-
-
-	inline void AreaUI::markAsModified()
-	{
-		pModified = true;
-	}
-
-
-
-
+inline void AreaUI::markAsModified()
+{
+    pModified = true;
+}
 
 } // namespace Data
 } // namespace Antares

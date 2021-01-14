@@ -25,12 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_WINDOWS_OUTPUT_LAYER_H__
-# define __ANTARES_WINDOWS_OUTPUT_LAYER_H__
+#define __ANTARES_WINDOWS_OUTPUT_LAYER_H__
 
-# include <antares/wx-wrapper.h>
-# include "../../application/study.h"
-# include "fwd.h"
-
+#include <antares/wx-wrapper.h>
+#include "../../application/study.h"
+#include "fwd.h"
 
 namespace Antares
 {
@@ -38,71 +37,63 @@ namespace Window
 {
 namespace OutputViewer
 {
+class Layer
+{
+public:
+    //! Array
+    typedef std::vector<Layer*> Vector;
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    Layer(LayerType t = ltOutput);
+    /*!
+    ** \brief Copy constructor
+    */
+    Layer(const Layer& rhs);
+    //! Destructor
+    ~Layer();
+    //@}
 
-	class Layer
-	{
-	public:
-		//! Array
-		typedef std::vector<Layer*> Vector;
+    /*!
+    ** \brief Get the alternative caption (for virtual layers)
+    */
+    const wxString& alternativeCaption() const;
 
+    //! Get if the layer is virtual
+    bool isVirtual() const;
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		Layer(LayerType t = ltOutput);
-		/*!
-		** \brief Copy constructor
-		*/
-		Layer(const Layer& rhs);
-		//! Destructor
-		~Layer();
-		//@}
+public:
+    //! Index of the output
+    uint index;
+    //! The output
+    Data::Output::Ptr selection;
+    //! Type of the layer
+    const LayerType type;
 
-		/*!
-		** \brief Get the alternative caption (for virtual layers)
-		*/
-		const wxString& alternativeCaption() const;
+    //! Flag to know if the selection of the layer is detached from the global selection
+    bool detached;
+    //! Custom selection type (only valid if detached)
+    SelectionType customSelectionType;
+    //! Custom area / link selection (only valid if detached)
+    Yuni::String customAreaOrLink;
 
-		//! Get if the layer is virtual
-		bool isVirtual() const;
+private:
+    void resetAlternativeCaption();
 
+private:
+    //! Alternative Caption (for virtual layer)
+    wxString pAlternativeCaption;
 
-	public:
-		//! Index of the output
-		uint index;
-		//! The output
-		Data::Output::Ptr selection;
-		//! Type of the layer
-		const LayerType type;
-
-		//! Flag to know if the selection of the layer is detached from the global selection
-		bool detached;
-		//! Custom selection type (only valid if detached)
-		SelectionType customSelectionType;
-		//! Custom area / link selection (only valid if detached)
-		Yuni::String customAreaOrLink;
-
-	private:
-		void resetAlternativeCaption();
-
-	private:
-		//! Alternative Caption (for virtual layer)
-		wxString pAlternativeCaption;
-
-	}; // class Layer
-
-
-
-
+}; // class Layer
 
 } // namespace OutputViewer
 } // namespace Window
 } // namespace Antares
 
-# include "layer.hxx"
+#include "layer.hxx"
 
 #endif // __ANTARES_WINDOWS_OUTPUT_LAYER_H__

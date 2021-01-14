@@ -25,12 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_FILTER_ALL_HOUR_YEAR_H__
-# define __ANTARES_TOOLBOX_FILTER_ALL_HOUR_YEAR_H__
+#define __ANTARES_TOOLBOX_FILTER_ALL_HOUR_YEAR_H__
 
-# include <antares/wx-wrapper.h>
-# include "../filter.h"
-
-
+#include <antares/wx-wrapper.h>
+#include "../filter.h"
 
 namespace Antares
 {
@@ -38,43 +36,57 @@ namespace Toolbox
 {
 namespace Filter
 {
+class HourYear : public AFilterBase
+{
+public:
+    static const wxChar* Name()
+    {
+        return wxT("houryear");
+    }
+    static const wxChar* Caption()
+    {
+        return wxT("Hour Year");
+    }
+    static Date::Precision Precision()
+    {
+        return Date::hourly;
+    }
 
+public:
+    HourYear(Input* parent) : AFilterBase(parent)
+    {
+        operators.addStdArithmetic();
+    }
 
+    virtual ~HourYear()
+    {
+    }
 
-	class HourYear : public AFilterBase
-	{
-	public:
-		static const wxChar* Name()    {return wxT("houryear");}
-		static const wxChar* Caption() {return wxT("Hour Year");}
-		static Date::Precision Precision() {return Date::hourly;}
+    virtual Date::Precision precision() const
+    {
+        return HourYear::Precision();
+    }
 
-	public:
-		HourYear(Input* parent)
-			:AFilterBase(parent)
-		{
-			operators.addStdArithmetic();
-		}
+    virtual bool checkOnRowsLabels() const
+    {
+        return true;
+    }
 
-		virtual ~HourYear() {}
+    virtual const wxChar* name() const
+    {
+        return HourYear::Name();
+    }
+    virtual const wxChar* caption() const
+    {
+        return HourYear::Caption();
+    }
 
-		virtual Date::Precision precision() const {return HourYear::Precision();}
+    virtual bool rowIsValid(int row) const
+    {
+        return currentOperator->compute(row + 1);
+    }
 
-		virtual bool checkOnRowsLabels() const {return true;}
-
-		virtual const wxChar* name() const {return HourYear::Name();}
-		virtual const wxChar* caption() const {return HourYear::Caption();}
-
-
-		virtual bool rowIsValid(int row) const
-		{
-			return currentOperator->compute(row + 1);
-		}
-
-	}; // class HourYear
-
-
-
-
+}; // class HourYear
 
 } // namespace Filter
 } // namespace Toolbox

@@ -25,150 +25,125 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-# include "statistics.h"
-# include <yuni/core/atomic/int.h>
-# include "../logs.h"
-
+#include "statistics.h"
+#include <yuni/core/atomic/int.h>
+#include "../logs.h"
 
 using namespace Yuni;
-
 
 namespace Antares
 {
 namespace Statistics
 {
+namespace // anonymous namespace
+{
+static uint64 gReadFromDisk;
+static uint64 gWrittenToDisk;
+static uint64 gReadFromNetwork;
+static uint64 gWrittenToNetwork;
 
+static uint64 gReadFromDiskSinceStartup;
+static uint64 gWrittenToDiskSinceStartup;
+static uint64 gReadFromNetworkSinceStartup;
+static uint64 gWrittenToNetworkSinceStartup;
 
-	namespace // anonymous namespace
-	{
+static Yuni::Mutex gMutex;
 
-		static uint64  gReadFromDisk;
-		static uint64  gWrittenToDisk;
-		static uint64  gReadFromNetwork;
-		static uint64  gWrittenToNetwork;
+} // anonymous namespace
 
+uint64 ReadFromDisk()
+{
+    Yuni::MutexLocker locker(gMutex);
+    return (uint64)gReadFromDisk;
+}
 
-		static uint64  gReadFromDiskSinceStartup;
-		static uint64  gWrittenToDiskSinceStartup;
-		static uint64  gReadFromNetworkSinceStartup;
-		static uint64  gWrittenToNetworkSinceStartup;
+uint64 WrittenToDisk()
+{
+    Yuni::MutexLocker locker(gMutex);
+    return (uint64)gWrittenToDisk;
+}
 
-		static Yuni::Mutex gMutex;
+uint64 ReadFromDiskSinceStartup()
+{
+    Yuni::MutexLocker locker(gMutex);
+    return (uint64)gReadFromDiskSinceStartup;
+}
 
-	} // anonymous namespace
+uint64 WrittenToDiskSinceStartup()
+{
+    Yuni::MutexLocker locker(gMutex);
+    return (uint64)((sint64)gWrittenToDiskSinceStartup);
+}
 
+uint64 ReadFromNetwork()
+{
+    Yuni::MutexLocker locker(gMutex);
+    return (uint64)gReadFromNetwork;
+}
 
-	uint64  ReadFromDisk()
-	{
-		Yuni::MutexLocker locker(gMutex);
-		return (uint64) gReadFromDisk;
-	}
+uint64 WrittenToNetwork()
+{
+    Yuni::MutexLocker locker(gMutex);
+    return (uint64)gWrittenToNetwork;
+}
 
+uint64 ReadFromNetworkSinceStartup()
+{
+    Yuni::MutexLocker locker(gMutex);
+    return (uint64)gReadFromNetworkSinceStartup;
+}
 
-	uint64  WrittenToDisk()
-	{
-		Yuni::MutexLocker locker(gMutex);
-		return (uint64) gWrittenToDisk;
-	}
+uint64 WrittenToNetworkSinceStartup()
+{
+    Yuni::MutexLocker locker(gMutex);
+    return (uint64)gWrittenToNetworkSinceStartup;
+}
 
+void Reset()
+{
+    Yuni::MutexLocker locker(gMutex);
+    gReadFromDisk = 0;
+    gReadFromNetwork = 0;
+    gWrittenToDisk = 0;
+    gWrittenToNetwork = 0;
+}
 
-	uint64  ReadFromDiskSinceStartup()
-	{
-		Yuni::MutexLocker locker(gMutex);
-		return (uint64) gReadFromDiskSinceStartup;
-	}
+void DumpToLogs()
+{
+    Yuni::MutexLocker locker(gMutex);
+    logs.info() << "[statistics] disk: read: " << (gReadFromDisk / 1024)
+                << " ko, written: " << (gWrittenToDisk / 1024) << " ko";
+    logs.info() << "[statistics] network: read: " << (gReadFromNetwork / 1024)
+                << " ko, written: " << (gWrittenToNetwork / 1024) << " ko";
+}
 
+void HasReadFromDisk(Yuni::uint64 size)
+{
+    Yuni::MutexLocker locker(gMutex);
+    gReadFromDisk += size;
+    gReadFromDiskSinceStartup += size;
+}
 
-	uint64  WrittenToDiskSinceStartup()
-	{
-		Yuni::MutexLocker locker(gMutex);
-		return (uint64) ((sint64) gWrittenToDiskSinceStartup);
-	}
+void HasWrittenToDisk(Yuni::uint64 size)
+{
+    Yuni::MutexLocker locker(gMutex);
+    gWrittenToDisk += size;
+    gWrittenToDiskSinceStartup += size;
+}
 
+void HasReadFromNetwork(Yuni::uint64 size)
+{
+    Yuni::MutexLocker locker(gMutex);
+    gReadFromNetwork += size;
+    gReadFromNetworkSinceStartup += size;
+}
 
-	uint64  ReadFromNetwork()
-	{
-		Yuni::MutexLocker locker(gMutex);
-		return (uint64) gReadFromNetwork;
-	}
-
-
-	uint64  WrittenToNetwork()
-	{
-		Yuni::MutexLocker locker(gMutex);
-		return (uint64) gWrittenToNetwork;
-	}
-
-
-	uint64  ReadFromNetworkSinceStartup()
-	{
-		Yuni::MutexLocker locker(gMutex);
-		return (uint64) gReadFromNetworkSinceStartup;
-	}
-
-
-	uint64  WrittenToNetworkSinceStartup()
-	{
-		Yuni::MutexLocker locker(gMutex);
-		return (uint64) gWrittenToNetworkSinceStartup;
-	}
-
-
-	void Reset()
-	{
-		Yuni::MutexLocker locker(gMutex);
-		gReadFromDisk     = 0;
-		gReadFromNetwork  = 0;
-		gWrittenToDisk    = 0;
-		gWrittenToNetwork = 0;
-	}
-
-
-	void DumpToLogs()
-	{
-		Yuni::MutexLocker locker(gMutex);
-		logs.info() << "[statistics] disk: read: " << (gReadFromDisk / 1024)
-			<< " ko, written: " << (gWrittenToDisk / 1024) << " ko";
-		logs.info() << "[statistics] network: read: " << (gReadFromNetwork / 1024)
-			<< " ko, written: " << (gWrittenToNetwork / 1024) << " ko";
-	}
-
-
-	void HasReadFromDisk(Yuni::uint64 size)
-	{
-		Yuni::MutexLocker locker(gMutex);
-		gReadFromDisk += size;
-		gReadFromDiskSinceStartup += size;
-	}
-
-
-	void HasWrittenToDisk(Yuni::uint64 size)
-	{
-		Yuni::MutexLocker locker(gMutex);
-		gWrittenToDisk += size;
-		gWrittenToDiskSinceStartup += size;
-	}
-
-
-	void HasReadFromNetwork(Yuni::uint64 size)
-	{
-		Yuni::MutexLocker locker(gMutex);
-		gReadFromNetwork += size;
-		gReadFromNetworkSinceStartup += size;
-	}
-
-
-	void HasWrittenToNetwork(Yuni::uint64 size)
-	{
-		Yuni::MutexLocker locker(gMutex);
-		gWrittenToNetwork += size;
-		gWrittenToNetworkSinceStartup += size;
-	}
-
-
-
-
+void HasWrittenToNetwork(Yuni::uint64 size)
+{
+    Yuni::MutexLocker locker(gMutex);
+    gWrittenToNetwork += size;
+    gWrittenToNetworkSinceStartup += size;
+}
 
 } // namespace Statistics
 } // namespace Antares
-

@@ -25,42 +25,36 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_H__
-# define __ANTARES_APPLICATION_H__
+#define __ANTARES_APPLICATION_H__
 
-# include "../toolbox/wx-wrapper.h"
+#include "../toolbox/wx-wrapper.h"
 
 namespace Antares
 {
+class Application final : public wxApp
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
 
+    /*!
+    ** \brief Default constructor
+    */
+    Application();
 
-	class Application final : public wxApp
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
+    /*!
+    ** \brief Destructor
+    */
+    virtual ~Application();
 
-		/*!
-		** \brief Default constructor
-		*/
-		Application();
+    //@}
 
-		/*!
-		** \brief Destructor
-		*/
-		virtual ~Application();
+    /*!
+    ** \brief Initialize the application
+    */
+    bool OnInit();
 
-		//@}
-
-		/*!
-		** \brief Initialize the application
-		*/
-		bool OnInit();
-
-	}; // class Application
-
-
-
-
+}; // class Application
 
 } // namespace Antares
 
