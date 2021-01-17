@@ -382,7 +382,7 @@ namespace Simulation
 			logs.info() << " Starting the simulation";
 			TimeElapsed time("MC Years");
 			uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
-			loopThroughYears<true>(0, finalYear, state);
+			loopThroughYears(0, finalYear, state);
 
 
 			// Destroy the TS Generators if any
@@ -1042,7 +1042,6 @@ namespace Simulation
 
 
 	template<class Impl>
-	template<bool PerformCalculationsT>
 	uint ISimulation<Impl>::buildSetsOfParallelYears(	uint firstYear, 
 														uint endYear, 
 														std::vector<setOfParallelYears> & setsOfParallelYears
@@ -1062,7 +1061,7 @@ namespace Simulation
 		for (uint y = firstYear; y < endYear; ++y)
 		{
 			unsigned int indexSpace = 999999;
-			bool performCalculations = PerformCalculationsT && yearsFilter[y];
+			bool performCalculations = yearsFilter[y];
 			
 			// Do we refresh just before this year ? If yes a new set of parallel years has to be created
 			bool refreshing = false;
@@ -1428,7 +1427,6 @@ namespace Simulation
 
 
 	template<class Impl>
-	template<bool PerformCalculationsT>
 	void ISimulation<Impl>::loopThroughYears(uint firstYear, uint endYear, std::vector<Variable::State> & state)
 	{
 		// (only if the support is available)
@@ -1445,10 +1443,8 @@ namespace Simulation
 		// The variable "maxNbYearsPerformedInAset" is the maximum numbers of years to be actually executed in a set.
 		// A set contains some years to be actually executed (at most "pNbMaxPerformedYearsInParallel" years) and some others
 		// to skip.
-		uint maxNbYearsPerformedInAset = buildSetsOfParallelYears<PerformCalculationsT>(	firstYear, 
-																							endYear, 
-																							setsOfParallelYears
-																						);
+		uint maxNbYearsPerformedInAset = buildSetsOfParallelYears(	firstYear, endYear, setsOfParallelYears);
+
 		// Related to annual costs statistics (printed in output into separate files)
 		pAnnualCostsStatistics.setNbPerformedYears(pNbYearsReallyPerformed);
 
