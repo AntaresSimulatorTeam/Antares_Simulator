@@ -109,7 +109,8 @@ namespace Simulation
 								Variable::State& state, 
 								uint numSpace,
 								yearRandomNumbers &, 
-								std::list<uint> &  
+								std::list<uint> &,
+								bool
 							)
 	{
 		

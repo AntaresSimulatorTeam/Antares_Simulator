@@ -126,7 +126,8 @@ namespace Simulation
 						Variable::State& state, 
 						uint numSpace,
 						yearRandomNumbers & randomForYear,
-						std::list<uint>& failedWeekList
+						std::list<uint>& failedWeekList,
+						bool isFirstPerformedYearOfSimulation
 					  )
 	{
 		
@@ -138,6 +139,8 @@ namespace Simulation
 		state.startANewYear();
 		
 		int hourInTheYear = pStartTime;
+		if (isFirstPerformedYearOfSimulation)
+			pProblemesHebdo[numSpace]->firstWeekOfSimulation = true;
 		bool reinitOptim = true;
 
 		for (uint w = 0; w != pNbWeeks; ++w)
@@ -228,6 +231,8 @@ namespace Simulation
 			}
 			
 			hourInTheYear += nbHoursInAWeek;
+
+			pProblemesHebdo[numSpace]->firstWeekOfSimulation = false;
 
 			++progression;
 		}	

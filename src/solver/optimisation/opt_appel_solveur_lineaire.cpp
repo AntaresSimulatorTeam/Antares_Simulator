@@ -196,6 +196,13 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 	Probleme.AffichageDesTraces = NON_SPX;
 	# endif
 
+	// Xpansion : dumping fixed and changing part of the optimization problem, into the MPS format.
+	//		- Only for first optimization
+	//		- If mode Xpansion is asked
+	//		- For time beeing, only for simplex, without use of ortools
+
+
+
 	Probleme.NombreDeContraintesCoupes = 0;
 	
 	if (ortoolsUsed) {

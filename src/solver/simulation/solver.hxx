@@ -191,8 +191,16 @@ namespace Simulation
 						Antares::memory.flushAll();
 					
 					// 6 - The Solver itself
+					bool isFirstPerformedYearOfSimulation = isFirstPerformedYearOfASet[y] && not firstSetParallelWasRun;
 					std::list<uint> failedWeekList;
-					if ( not simulationObj-> year(progression, state[numSpace], numSpace, randomForCurrentYear, failedWeekList) )
+					if ( not simulationObj-> year(	progression,
+													state[numSpace],
+													numSpace,
+													randomForCurrentYear,
+													failedWeekList,
+													isFirstPerformedYearOfSimulation
+												 ) 
+					   )
 					{
 						// Something goes wrong with this year. We have to restarting it
 						yearFailed[y] = true;

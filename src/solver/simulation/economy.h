@@ -80,7 +80,8 @@ namespace Simulation
 					Variable::State& state,
 					uint numSpace,
 					yearRandomNumbers & randomForYear,
-					std::list<uint> & failedWeekList
+					std::list<uint> & failedWeekList,
+					bool isFirstPerformedYearOfSimulation
 				 );
 
 		void incrementProgression(Progression::Task & progression);
