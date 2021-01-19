@@ -1264,7 +1264,7 @@ namespace Simulation
 				if (study.parameters.useCustomScenario)
 				{
 					double levelFromScenarioBuilder = study.scenarioHydroLevels[areaIndex][y];
-					if(levelFromScenarioBuilder > 0.)
+					if(levelFromScenarioBuilder >= 0.)
 						randomLevel = levelFromScenarioBuilder;
 				}
 				
