@@ -47,7 +47,7 @@ namespace Renderer
 	{
 		const double d = cellNumericValue(x, y);
 
-		return (d < 0.)
+		return (is_not_a_double(d))
 			? wxString() << wxT("rand")
 			: wxString() << fromHydroLevelToString(d);
 	}

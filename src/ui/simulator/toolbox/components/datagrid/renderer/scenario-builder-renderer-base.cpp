@@ -127,6 +127,8 @@ namespace Renderer
 
 	IRenderer::CellStyle ScBuilderRendererBase::cellStyle(int x, int y) const
 	{
+		double blabla = cellNumericValue(x, y);
+		double blibli = Math::Zero(cellNumericValue(x, y));
 		bool valid = (!(!study) && !(!pRules) && Math::Zero(cellNumericValue(x, y)));
 		if (valid)
 		{

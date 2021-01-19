@@ -28,6 +28,7 @@
 #include <sstream>
 #include <iomanip>
 #include "hydroLevelsData.h"
+#include "scBuilderUtils.h"
 
 namespace Antares
 {
@@ -43,7 +44,7 @@ namespace ScenarioBuilder
 		const uint nbYears = study.parameters.nbYears;
 
 		pHydroLevelsRules.reset(study.areas.size(), nbYears);
-		pHydroLevelsRules.fill(-1.);
+		pHydroLevelsRules.fill(default_value());
 
 		return true;
 	}
@@ -70,7 +71,7 @@ namespace ScenarioBuilder
 			{
 				const MatrixType::Type  value = col[y];
 				// Equals to zero means 'auto', which is the default mode
-				if (value < 0.)
+				if (value == default_value())
 					continue;
 				assert(index < study.areas.size());
 				value_into_string << value;
