@@ -601,3 +601,59 @@ def test_075_kcg_on_four_areas_02(use_ortools, ortools_solver, solver_path):
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     enable_study_output(study_path, False)
     check_output_values(study_path)
+    
+@pytest.mark.short
+def test_playlist_0(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "playlist-0"
+    enable_study_output(study_path, True)
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    enable_study_output(study_path, False)
+    check_output_values(study_path)
+
+@pytest.mark.short
+def test_playlist_1(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "playlist-1"
+    enable_study_output(study_path, True)
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    enable_study_output(study_path, False)
+    check_output_values(study_path)
+
+@pytest.mark.short
+def test_playlist_2(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "playlist-2"
+    enable_study_output(study_path, True)
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    enable_study_output(study_path, False)
+    check_output_values(study_path)
+
+@pytest.mark.short
+def test_playlist_3(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "playlist-3"
+    enable_study_output(study_path, True)
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    enable_study_output(study_path, False)
+    check_output_values(study_path)
+    
+@pytest.mark.short
+def test_playlist_12(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "playlist-12"
+    enable_study_output(study_path, True)
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    enable_study_output(study_path, False)
+    check_output_values(study_path)
+    
+@pytest.mark.short
+def test_playlist_13(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "playlist-13"
+    enable_study_output(study_path, True)
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    enable_study_output(study_path, False)
+    check_output_values(study_path)
+    
+@pytest.mark.short
+def test_playlist_23(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "playlist-23"
+    enable_study_output(study_path, True)
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    enable_study_output(study_path, False)
+    check_output_values(study_path)
