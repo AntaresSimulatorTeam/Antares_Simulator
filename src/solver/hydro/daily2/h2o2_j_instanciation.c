@@ -342,7 +342,7 @@ DONNEES_MENSUELLES_ETENDUES * H2O2_J_Instanciation( void )
 
 		
 		
-		ProblemeLineaireEtenduPartieFixe[i]->CoutLineaire[CorrespondanceDesVariables[i]->NumeroVar_waste] = 32 * 68 + 1;
+		ProblemeLineaireEtenduPartieFixe[i]->CoutLineaire[CorrespondanceDesVariables[i]->NumeroVar_waste] = 34.0;
 
 		
 		ProblemeLineaireEtenduPartieFixe[i]->CoutLineaire[CorrespondanceDesVariables[i]->NumeroVar_deviationMax] = 2.0;
