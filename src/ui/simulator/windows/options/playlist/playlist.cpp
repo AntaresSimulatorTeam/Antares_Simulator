@@ -207,6 +207,10 @@ namespace Options
 		Freeze();
 		for (uint i = 0; i != study.parameters.nbYears; ++i)
 			study.parameters.yearsFilter[i] = true;
+
+
+		onUpdateStatus();
+
 		pGrid->forceRefresh();
 		updateCaption();
 		Dispatcher::GUI::Refresh(pGrid);
@@ -225,6 +229,9 @@ namespace Options
 		Freeze();
 		for (uint i = 0; i != study.parameters.nbYears; ++i)
 			study.parameters.yearsFilter[i] = false;
+
+		onUpdateStatus();
+
 		pGrid->forceRefresh();
 		updateCaption();
 		Dispatcher::GUI::Refresh(pGrid);
@@ -246,6 +253,9 @@ namespace Options
 			study.parameters.yearsFilter[i] =
 				!study.parameters.yearsFilter[i];
 		}
+
+		onUpdateStatus();
+
 		pGrid->forceRefresh();
 		updateCaption();
 		Dispatcher::GUI::Refresh(pGrid);

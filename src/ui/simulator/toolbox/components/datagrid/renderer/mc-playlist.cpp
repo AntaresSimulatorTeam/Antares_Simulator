@@ -99,6 +99,7 @@ namespace Renderer
                     bool v = s.to<bool>() || s == "active" || s == "enabled";
                     assert(study->parameters.yearsFilter);
                     study->parameters.yearsFilter[y] = v;
+                    break;
                 }
                 case MCPlaylistCol::WEIGHT			:
                 {
@@ -112,6 +113,7 @@ namespace Renderer
                             return false;
                         }
                     }
+                    break;
                 }
             }
 
