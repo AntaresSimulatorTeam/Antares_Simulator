@@ -1,5 +1,6 @@
 
 message(STATUS "wxWidgets_ROOT_DIR : ${wxWidgets_ROOT_DIR}")
+message(STATUS "wxWidgets_USE_STATIC : ${wxWidgets_USE_STATIC}")
 
 
 #wxWidget required
