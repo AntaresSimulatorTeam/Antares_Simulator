@@ -186,6 +186,8 @@ Dependency install directory can be specified with `DEPS_INSTALL_DIR`. By defaul
 Note :
 > `DEPS_INSTALL_DIR` is added to `CMAKE_PREFIX_PATH`
 
+> If the dependency install directory contains CURL, OPENSSL or wxWidgets pre-compiled libraries an additionnal option must be used at configure time `-DUSE_PRECOMPILED_EXT=ON`
+
 ## [Building Antares Solution](#build)
 
 Antares source directory is named `[antares_src]` in all following commands.

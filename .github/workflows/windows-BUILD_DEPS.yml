@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - release/*
+      - fix/*
 jobs:
 
   windows:
@@ -30,7 +31,7 @@ jobs:
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OPENSSL=ON -DBUILD_curl=ON -DBUILD_wxWidgets=ON
+           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DUSE_PRECOMPILED_EXT=ON
            
     - name: Build
       run: |
