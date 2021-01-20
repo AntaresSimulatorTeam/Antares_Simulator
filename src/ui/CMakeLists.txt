@@ -2,6 +2,10 @@
 message(STATUS "wxWidgets_ROOT_DIR : ${wxWidgets_ROOT_DIR}")
 message(STATUS "wxWidgets_USE_STATIC : ${wxWidgets_USE_STATIC}")
 
+if (USE_PRECOMPILED_EXT AND UNIX)
+set (wxWidgets_CONFIG_EXECUTABLE ${DEPS_INSTALL_DIR}/bin/wx-config)
+message(STATUS "wxWidgets_CONFIG_EXECUTABLE : ${wxWidgets_CONFIG_EXECUTABLE}")
+endif()
 
 #wxWidget required
 find_package(wxWidgets REQUIRED COMPONENTS net core base richtext propgrid aui adv html xml)
