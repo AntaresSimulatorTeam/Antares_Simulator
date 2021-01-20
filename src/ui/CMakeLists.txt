@@ -1,4 +1,7 @@
 
+message(STATUS "wxWidgets_ROOT_DIR : ${wxWidgets_ROOT_DIR}")
+
+
 #wxWidget required
 find_package(wxWidgets REQUIRED COMPONENTS net core base richtext propgrid aui adv html xml)
 include(${wxWidgets_USE_FILE})
