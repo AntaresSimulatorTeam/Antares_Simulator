@@ -25,6 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <sstream>
+#include <iomanip>
+#include <string>
 #include "mc-playlist.h"
 #include <yuni/core/math.h>
 
@@ -161,7 +164,12 @@ namespace Renderer
                 {
                     std::vector<float> yearsWeight = study->parameters.getYearsWeight();
                     assert(y < yearsWeight.size());
-                    return wxString::Format(wxT("%.3f"), yearsWeight[y]);
+
+                    std::ostringstream stream;
+                    stream << std::setprecision(3);
+                    stream << yearsWeight[y];
+
+                    return stream.str();
                 }
             }
 		}
