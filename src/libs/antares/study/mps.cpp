@@ -102,9 +102,10 @@ namespace Data
 			importLogsToOutputFolder();
 			return nullptr;
 		}
+
 		logs.info();
-                return fd;
-        }
+        return fd;
+	}
 
 
 

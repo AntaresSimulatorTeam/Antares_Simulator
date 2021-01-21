@@ -87,8 +87,9 @@ bool OPT_AppelDuSolveurLineaire( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, 
 	return result;
 }
 
-void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Probleme, uint numSpace);
-void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE* Probleme, uint numSpace);
+void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE*, uint);
+void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE*, uint);
+
 
 bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int NumIntervalle )
 {
@@ -547,7 +548,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void * Prob, uint numSpace, 
 	
 	
 	auto& study = *Data::Study::Current::Get();
-	Flot = study.createCriterionFileIntoOutput(numSpace);
+	Flot = study.createFileIntoOutputWithExtension("criterion", "txt", numSpace);
 	if (!Flot)
 		exit(2);
 	
@@ -586,7 +587,6 @@ void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
 		AntaresSolverEmergencyShutdown();
 	}
 
-
 	for (Var = 0; Var < Pb->NombreDeVariables; Var++)
 		Cdeb[Var] = -1;
 
@@ -620,7 +620,7 @@ void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
 	free( Cder );
 
 	auto& study = *Data::Study::Current::Get();
-	Flot = study.create_fixed_part_MPS_file(numSpace);
+	Flot = study.createFileIntoOutputWithExtension("fixed-part", "mps", numSpace);
 
 	if (!Flot)
 		exit(2);
@@ -690,7 +690,7 @@ void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE * Pb, uint numSpace)
 
 	// gp : to be changed
 	auto& study = *Data::Study::Current::Get();
-	Flot = study.create_variable_part_MPS_file(numSpace);
+	Flot = study.createFileIntoOutputWithExtension("variable-part", "mps", numSpace);
 
 	if (!Flot)
 		exit(2);
@@ -900,7 +900,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( void * Prob, uint numSpace, char
 	free( Cder );
 
 	auto& study = *Data::Study::Current::Get();
-	Flot = study.createMPSFileIntoOutput(numSpace);
+	Flot = study.createFileIntoOutputWithExtension("problem", "mps", numSpace);
 
 	if (!Flot)
 		exit(2);
