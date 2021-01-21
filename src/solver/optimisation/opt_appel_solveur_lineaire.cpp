@@ -656,12 +656,6 @@ void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
 	fprintf(Flot, "COLUMNS\n");
 	for (Var = 0; Var < Pb->NombreDeVariables; Var++)
 	{
-		if (Pb->CoutLineaire[Var] != 0.0)
-		{
-			SNPRINTF(Nombre, 1024, "%-.10lf", Pb->CoutLineaire[Var]);
-			fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, Nombre);
-		}
-
 		il = Cdeb[Var];
 		while (il >= 0)
 		{
@@ -682,9 +676,103 @@ void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
 }
 
 
-void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE * Probleme, uint numSpace)
+void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE * Pb, uint numSpace)
 {
+	FILE* Flot; int Cnt; int Var; char* Nombre;
 
+	Nombre = (char*) malloc(1024);
+
+	if (Nombre == NULL)
+	{
+		logs.fatal() << "Not enough memory";
+		AntaresSolverEmergencyShutdown();
+	}
+
+	// gp : to be changed
+	auto& study = *Data::Study::Current::Get();
+	Flot = study.create_variable_part_MPS_file(numSpace);
+
+	if (!Flot)
+		exit(2);
+
+	fprintf(Flot, "* Number of variables:   %d\n", Pb->NombreDeVariables);
+	fprintf(Flot, "* Number of constraints: %d\n", Pb->NombreDeContraintes);
+	fprintf(Flot, "NAME          Pb Solve\n");
+
+	fprintf(Flot, "COLUMNS\n");
+	for (Var = 0; Var < Pb->NombreDeVariables; Var++)
+	{
+		if (Pb->CoutLineaire[Var] != 0.0)
+		{
+			SNPRINTF(Nombre, 1024, "%-.10lf", Pb->CoutLineaire[Var]);
+			fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, Nombre);
+		}
+	}
+
+	fprintf(Flot, "RHS\n");
+	for (Cnt = 0; Cnt < Pb->NombreDeContraintes; Cnt++)
+	{
+		if (Pb->SecondMembre[Cnt] != 0.0)
+		{
+			SNPRINTF(Nombre, 1024, "%-.9lf", Pb->SecondMembre[Cnt]);
+			fprintf(Flot, "    RHSVAL    R%07d  %s\n", Cnt, Nombre);
+		}
+	}
+
+	fprintf(Flot, "BOUNDS\n");
+
+	for (Var = 0; Var < Pb->NombreDeVariables; Var++)
+	{
+		if (Pb->TypeDeVariable[Var] == VARIABLE_FIXE)
+		{
+			SNPRINTF(Nombre, 1024, "%-.9lf", Pb->Xmin[Var]);
+
+			fprintf(Flot, " FX BNDVALUE  C%07d  %s\n", Var, Nombre);
+			continue;
+		}
+
+		if (Pb->TypeDeVariable[Var] == VARIABLE_BORNEE_DES_DEUX_COTES)
+		{
+			if (Pb->Xmin[Var] != 0.0)
+			{
+				SNPRINTF(Nombre, 1024, "%-.9lf", Pb->Xmin[Var]);
+				fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, Nombre);
+			}
+
+			SNPRINTF(Nombre, 1024, "%-.9lf", Pb->Xmax[Var]);
+			fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, Nombre);
+		}
+
+		if (Pb->TypeDeVariable[Var] == VARIABLE_BORNEE_INFERIEUREMENT)
+		{
+			if (Pb->Xmin[Var] != 0.0)
+			{
+				SNPRINTF(Nombre, 1024, "%-.9lf", Pb->Xmin[Var]);
+				fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, Nombre);
+			}
+		}
+
+		if (Pb->TypeDeVariable[Var] == VARIABLE_BORNEE_SUPERIEUREMENT)
+		{
+			fprintf(Flot, " MI BNDVALUE  C%07d\n", Var);
+			if (Pb->Xmax[Var] != 0.0)
+			{
+				SNPRINTF(Nombre, 1024, "%-.9lf", Pb->Xmax[Var]);
+				fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, Nombre);
+			}
+		}
+
+		if (Pb->TypeDeVariable[Var] == VARIABLE_NON_BORNEE)
+		{
+			fprintf(Flot, " FR BNDVALUE  C%07d\n", Var);
+		}
+	}
+
+	fprintf(Flot, "ENDATA\n");
+
+	free(Nombre);
+
+	fclose(Flot);
 }
 
 

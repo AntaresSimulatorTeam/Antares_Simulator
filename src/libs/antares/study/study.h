@@ -530,6 +530,8 @@ namespace Data
 
 		FILE* create_fixed_part_MPS_file(uint numSpace) const { return createFileIntoOutputWithExtension("fixed-part", "mps", numSpace); }
 
+		FILE* create_variable_part_MPS_file(uint numSpace) const { return createFileIntoOutputWithExtension("variable-part", "mps", numSpace); }
+
 		/*!
 		** \brief Create and open (`w+`) a file into the output for dumping the current linear problem
 		**
