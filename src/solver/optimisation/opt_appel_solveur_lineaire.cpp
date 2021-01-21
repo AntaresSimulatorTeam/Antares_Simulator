@@ -87,7 +87,8 @@ bool OPT_AppelDuSolveurLineaire( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, 
 	return result;
 }
 
-
+void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Probleme, uint numSpace);
+void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE* Probleme, uint numSpace);
 
 bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int NumIntervalle )
 {
@@ -197,6 +198,16 @@ bool OPT_AppelDuSimplexe( PROBLEME_HEBDO * ProblemeHebdo, uint numSpace, int Num
 	# endif
 
 	Probleme.NombreDeContraintesCoupes = 0;
+
+	// To do : updating this variable from outside (for instance from problemHebdo)
+	bool isFirstSimulationWeek = true;
+	if (ProblemeHebdo->Expansion)
+	{
+		if (isFirstSimulationWeek)
+			OPT_dump_spx_fixed_part(&Probleme, numSpace);
+
+		OPT_dump_spx_variable_part(&Probleme, numSpace);
+	}
 	
 	if (ortoolsUsed) {
 		solver = ORTOOLS_Simplexe(&Probleme,solver);
@@ -547,6 +558,134 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void * Prob, uint numSpace, 
 	return;
 }
 
+
+void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
+{
+	FILE* Flot; int Cnt; int Var; int il; int ilk; int ilMax; char* Nombre;
+	int* Cder; int* Cdeb; int* NumeroDeContrainte; int* Csui;
+
+	for (ilMax = -1, Cnt = 0; Cnt < Pb->NombreDeContraintes; Cnt++)
+	{
+		if ((Pb->IndicesDebutDeLigne[Cnt] + Pb->NombreDeTermesDesLignes[Cnt] - 1) > ilMax)
+		{
+			ilMax = Pb->IndicesDebutDeLigne[Cnt] + Pb->NombreDeTermesDesLignes[Cnt] - 1;
+		}
+	}
+
+	ilMax += Pb->NombreDeContraintes;
+
+	Cder =					(int*) malloc(Pb->NombreDeVariables * sizeof(int));
+	Cdeb =					(int*) malloc(Pb->NombreDeVariables * sizeof(int));
+	NumeroDeContrainte =	(int*) malloc(ilMax * sizeof(int));
+	Csui =					(int*) malloc(ilMax * sizeof(int));
+	Nombre =				(char*) malloc(1024);
+
+	if (Cder == NULL || Cdeb == NULL || NumeroDeContrainte == NULL || Csui == NULL || Nombre == NULL)
+	{
+		logs.fatal() << "Not enough memory";
+		AntaresSolverEmergencyShutdown();
+	}
+
+
+	for (Var = 0; Var < Pb->NombreDeVariables; Var++)
+		Cdeb[Var] = -1;
+
+	for (Cnt = 0; Cnt < Pb->NombreDeContraintes; Cnt++)
+	{
+		il = Pb->IndicesDebutDeLigne[Cnt];
+		ilMax = il + Pb->NombreDeTermesDesLignes[Cnt];
+		while (il < ilMax)
+		{
+			Var = Pb->IndicesColonnes[il];
+			if (Cdeb[Var] < 0)
+			{
+				Cdeb[Var] = il;
+				NumeroDeContrainte[il] = Cnt;
+				Csui[il] = -1;
+				Cder[Var] = il;
+			}
+			else
+			{
+				ilk = Cder[Var];
+				Csui[ilk] = il;
+				NumeroDeContrainte[il] = Cnt;
+				Csui[il] = -1;
+				Cder[Var] = il;
+			}
+
+			il++;
+		}
+	}
+
+	free( Cder );
+
+	auto& study = *Data::Study::Current::Get();
+	Flot = study.create_fixed_part_MPS_file(numSpace);
+
+	if (!Flot)
+		exit(2);
+
+	fprintf(Flot, "* Number of variables:   %d\n", Pb->NombreDeVariables);
+	fprintf(Flot, "* Number of constraints: %d\n", Pb->NombreDeContraintes);
+	fprintf(Flot, "NAME          Pb Solve\n");
+	fprintf(Flot, "ROWS\n");
+	fprintf(Flot, " N  OBJECTIF\n");
+
+	for (Cnt = 0; Cnt < Pb->NombreDeContraintes; Cnt++)
+	{
+		if (Pb->Sens[Cnt] == '=')
+		{
+			fprintf(Flot, " E  R%07d\n", Cnt);
+		}
+		else if (Pb->Sens[Cnt] == '<')
+		{
+			fprintf(Flot, " L  R%07d\n", Cnt);
+		}
+		else if (Pb->Sens[Cnt] == '>')
+		{
+			fprintf(Flot, " G  R%07d\n", Cnt);
+		}
+		else
+		{
+			fprintf(Flot, "Writing fixed part of MPS data : le sens de la contrainte %c ne fait pas partie des sens reconnus\n", Pb->Sens[Cnt]);
+			AntaresSolverEmergencyShutdown();
+			exit(0);
+		}
+	}
+
+	fprintf(Flot, "COLUMNS\n");
+	for (Var = 0; Var < Pb->NombreDeVariables; Var++)
+	{
+		if (Pb->CoutLineaire[Var] != 0.0)
+		{
+			SNPRINTF(Nombre, 1024, "%-.10lf", Pb->CoutLineaire[Var]);
+			fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, Nombre);
+		}
+
+		il = Cdeb[Var];
+		while (il >= 0)
+		{
+			SNPRINTF(Nombre, 1024, "%-.10lf", Pb->CoefficientsDeLaMatriceDesContraintes[il]);
+			fprintf(Flot, "    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il], Nombre);
+			il = Csui[il];
+		}
+	}
+
+	fprintf(Flot, "ENDATA\n");
+
+	free(Cdeb);
+	free(NumeroDeContrainte);
+	free(Csui);
+	free(Nombre);
+
+	fclose(Flot);
+}
+
+
+void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE * Probleme, uint numSpace)
+{
+
+}
 
 
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS( void * Prob, uint numSpace, char Type )
