@@ -4,4 +4,4 @@
 [submodule "src/antares-deps"]
 	path = src/antares-deps
 	url = https://github.com/AntaresSimulatorTeam/antares-deps.git
-	branch = fix/new_option_for_precompiled_use
+	branch = v1.0.1
