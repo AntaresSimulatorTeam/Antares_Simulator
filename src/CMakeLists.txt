@@ -207,7 +207,7 @@ endif()
 
 #gflags needed for ortools
 set(GFLAGS_USE_TARGET_NAMESPACE TRUE) 
-find_package(gflags REQUIRED)
+find_package(gflags)
 
 find_package(ortools)
 if(NOT ortools_FOUND)
