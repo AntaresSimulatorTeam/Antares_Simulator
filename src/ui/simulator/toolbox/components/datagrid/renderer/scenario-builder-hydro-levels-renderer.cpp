@@ -47,7 +47,7 @@ namespace Renderer
 	{
 		const double d = cellNumericValue(x, y);
 
-		return (is_not_a_double(d))
+		return (std::isnan(d))
 			? wxString() << wxT("rand")
 			: wxString() << fromHydroLevelToString(d);
 	}

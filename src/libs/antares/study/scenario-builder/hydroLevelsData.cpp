@@ -44,7 +44,7 @@ namespace ScenarioBuilder
 		const uint nbYears = study.parameters.nbYears;
 
 		pHydroLevelsRules.reset(study.areas.size(), nbYears);
-		pHydroLevelsRules.fill(default_value());
+		pHydroLevelsRules.fill(std::nan(""));
 
 		return true;
 	}
@@ -71,7 +71,7 @@ namespace ScenarioBuilder
 			{
 				const MatrixType::Type  value = col[y];
 				// Equals to zero means 'auto', which is the default mode
-				if (value == default_value())
+				if (std::isnan(value))
 					continue;
 				assert(index < study.areas.size());
 				value_into_string << value;

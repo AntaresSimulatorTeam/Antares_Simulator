@@ -39,12 +39,6 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
-	const double NOT_A_DOUBLE = 12345;
-
-	double not_a_double();
-	bool is_not_a_double(double d);
-	double default_value();
-
 	string fromHydroLevelToString(double d);
 	double fromStringToHydroLevel(const Yuni::String& value, const double maxLevel);
 

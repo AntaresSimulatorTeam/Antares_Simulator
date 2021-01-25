@@ -38,11 +38,6 @@ namespace Data
 namespace ScenarioBuilder
 {
 
-	double not_a_double() { return NOT_A_DOUBLE; }
-	double default_value() { return NOT_A_DOUBLE / 100.; }
-
-	bool is_not_a_double(double d) { return d == NOT_A_DOUBLE ? true : false; }
-
 	string fromHydroLevelToString(double d)
 	{
 		std::ostringstream stream;
@@ -64,7 +59,7 @@ namespace ScenarioBuilder
 		}
 		catch (std::invalid_argument&)
 		{
-			return not_a_double();
+			return std::nan("");
 		}
 
 		if (result_tmp < 0.)
