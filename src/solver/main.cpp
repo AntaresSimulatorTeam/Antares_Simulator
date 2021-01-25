@@ -158,10 +158,10 @@ bool SolverApplication::prepare(int argc, char* argv[])
 	
 	// LISTE DE CHECKS ...
 
-	if (pStudy->header.version < Data::versionLatest)
+	if (pStudy->header.version < Data::versionLatestMinor)
 	{
 		logs.error() << "The study must be upgraded to the v"
-			<< Data::VersionToCStr((Data::Version)Data::versionLatest)
+			<< Data::VersionToCStr((Data::Version)Data::versionLatestMinor)
 			<< " format before launching the solver";
 		return false;
 	}

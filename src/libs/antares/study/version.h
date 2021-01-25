@@ -123,6 +123,11 @@ namespace Data
 		versionLatest = version800,
 	};
 
+	enum
+	{
+		//! The latest minor version
+		versionLatestMinor = version800,
+	};
 
 
 
