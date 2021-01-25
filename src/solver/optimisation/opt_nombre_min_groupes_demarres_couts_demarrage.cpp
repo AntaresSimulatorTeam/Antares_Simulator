@@ -685,113 +685,64 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
       NbTermesMatrice);
 #endif
 
-    if (ProblemeHebdo->SolveurDuProblemeLineaire == ANTARES_SIMPLEXE)
+    Probleme.Contexte = SIMPLEXE_SEUL;
+    Probleme.BaseDeDepartFournie = NON_SPX;
+
+    Probleme.NombreMaxDIterations = -1;
+    Probleme.DureeMaxDuCalcul = -1.;
+
+    Probleme.CoutLineaire = CoutLineaire;
+    Probleme.X = Xsolution;
+    Probleme.Xmin = Xmin;
+    Probleme.Xmax = Xmax;
+    Probleme.NombreDeVariables = NombreDeVariables;
+    Probleme.TypeDeVariable = TypeDeVariable;
+
+    Probleme.NombreDeContraintes = NombreDeContraintes;
+    Probleme.IndicesDebutDeLigne = IndicesDebutDeLigne;
+    Probleme.NombreDeTermesDesLignes = NombreDeTermesDesLignes;
+    Probleme.IndicesColonnes = IndicesColonnes;
+    Probleme.CoefficientsDeLaMatriceDesContraintes = CoefficientsDeLaMatriceDesContraintes;
+    Probleme.Sens = Sens;
+    Probleme.SecondMembre = SecondMembre;
+
+    Probleme.ChoixDeLAlgorithme = SPX_DUAL;
+
+    Probleme.TypeDePricing = PRICING_STEEPEST_EDGE;
+    Probleme.FaireDuScaling = OUI_SPX;
+    Probleme.StrategieAntiDegenerescence = AGRESSIF;
+
+    Probleme.PositionDeLaVariable = PositionDeLaVariable;
+    Probleme.NbVarDeBaseComplementaires = 0;
+    Probleme.ComplementDeLaBase = ComplementDeLaBase;
+
+    Probleme.LibererMemoireALaFin = OUI_SPX;
+
+    Probleme.UtiliserCoutMax = NON_SPX;
+    Probleme.CoutMax = 0.0;
+
+    Probleme.CoutsMarginauxDesContraintes = NULL;
+    Probleme.CoutsReduits = NULL;
+
+    Probleme.AffichageDesTraces = NON_SPX;
+
+    Probleme.NombreDeContraintesCoupes = 0;
+
+    ProbSpx = NULL;
+    ProbSpx = SPX_Simplexe(&Probleme, ProbSpx);
+
+    if (Probleme.ExistenceDUneSolution == OUI_SPX)
     {
-        Probleme.Contexte = SIMPLEXE_SEUL;
-        Probleme.BaseDeDepartFournie = NON_SPX;
-
-        Probleme.NombreMaxDIterations = -1;
-        Probleme.DureeMaxDuCalcul = -1.;
-
-        Probleme.CoutLineaire = CoutLineaire;
-        Probleme.X = Xsolution;
-        Probleme.Xmin = Xmin;
-        Probleme.Xmax = Xmax;
-        Probleme.NombreDeVariables = NombreDeVariables;
-        Probleme.TypeDeVariable = TypeDeVariable;
-
-        Probleme.NombreDeContraintes = NombreDeContraintes;
-        Probleme.IndicesDebutDeLigne = IndicesDebutDeLigne;
-        Probleme.NombreDeTermesDesLignes = NombreDeTermesDesLignes;
-        Probleme.IndicesColonnes = IndicesColonnes;
-        Probleme.CoefficientsDeLaMatriceDesContraintes = CoefficientsDeLaMatriceDesContraintes;
-        Probleme.Sens = Sens;
-        Probleme.SecondMembre = SecondMembre;
-
-        Probleme.ChoixDeLAlgorithme = SPX_DUAL;
-
-        Probleme.TypeDePricing = PRICING_STEEPEST_EDGE;
-        Probleme.FaireDuScaling = OUI_SPX;
-        Probleme.StrategieAntiDegenerescence = AGRESSIF;
-
-        Probleme.PositionDeLaVariable = PositionDeLaVariable;
-        Probleme.NbVarDeBaseComplementaires = 0;
-        Probleme.ComplementDeLaBase = ComplementDeLaBase;
-
-        Probleme.LibererMemoireALaFin = OUI_SPX;
-
-        Probleme.UtiliserCoutMax = NON_SPX;
-        Probleme.CoutMax = 0.0;
-
-        Probleme.CoutsMarginauxDesContraintes = NULL;
-        Probleme.CoutsReduits = NULL;
-
-        Probleme.AffichageDesTraces = NON_SPX;
-
-        Probleme.NombreDeContraintesCoupes = 0;
-
-        ProbSpx = NULL;
-        ProbSpx = SPX_Simplexe(&Probleme, ProbSpx);
-
-        if (Probleme.ExistenceDUneSolution == OUI_SPX)
+        for (Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
         {
-            for (Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
-            {
-                NbMinOptDeGroupesEnMarche[Pdt] = (int)ceil(Xsolution[NumeroDeVariableDeM[Pdt]]);
-            }
-        }
-        else
-        {
-#ifdef TRACES
-            printf("Pas de solution au probleme auxiliaire\n");
-#endif
+            NbMinOptDeGroupesEnMarche[Pdt] = (int)ceil(Xsolution[NumeroDeVariableDeM[Pdt]]);
         }
     }
     else
     {
-        ProblemePourPne.CoutLineaire = CoutLineaire;
-        ProblemePourPne.X = Xsolution;
-        ProblemePourPne.Xmin = Xmin;
-        ProblemePourPne.Xmax = Xmax;
-        ProblemePourPne.NombreDeVariables = NombreDeVariables;
-        ProblemePourPne.TypeDeVariable = TypeEntierOuReel;
-        ProblemePourPne.TypeDeBorneDeLaVariable = TypeDeVariable;
-        ProblemePourPne.NombreDeContraintes = NombreDeContraintes;
-        ProblemePourPne.IndicesDebutDeLigne = IndicesDebutDeLigne;
-        ProblemePourPne.NombreDeTermesDesLignes = NombreDeTermesDesLignes;
-        ProblemePourPne.IndicesColonnes = IndicesColonnes;
-        ProblemePourPne.CoefficientsDeLaMatriceDesContraintes
-          = CoefficientsDeLaMatriceDesContraintes;
-        ProblemePourPne.Sens = Sens;
-        ProblemePourPne.SecondMembre = SecondMembre;
-        ProblemePourPne.VariablesDualesDesContraintes = NULL;
-        ProblemePourPne.SortirLesDonneesDuProbleme = NON_PNE;
-        ProblemePourPne.AlgorithmeDeResolution = SIMPLEXE;
-        ProblemePourPne.CoupesLiftAndProject = NON_PNE;
-        ProblemePourPne.AffichageDesTraces = NON_PNE;
-        ProblemePourPne.FaireDuPresolve = OUI_PNE;
-        if (ProblemePourPne.FaireDuPresolve == NON_PNE)
-            printf("!!!!!!!!!!!!!!  Attention pas de presolve dans les problemes auxiliaires   "
-                   "!!!!!!!!!\n");
-        ProblemePourPne.TempsDExecutionMaximum = 0;
-        ProblemePourPne.NombreMaxDeSolutionsEntieres = -1;
-        ProblemePourPne.ToleranceDOptimalite = 1.e-4;
-
-        PNE_Solveur(&ProblemePourPne);
-
-        if (ProblemePourPne.ExistenceDUneSolution == SOLUTION_OPTIMALE_TROUVEE)
-        {
-            for (Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
-            {
-                NbMinOptDeGroupesEnMarche[Pdt] = (int)ceil(Xsolution[NumeroDeVariableDeM[Pdt]]);
-            }
-        }
-        else
-        {
 #ifdef TRACES
-            printf("Pas de solution au probleme auxiliaire\n");
+        printf("Pas de solution au probleme auxiliaire\n");
 #endif
-        }
     }
 
     MemFree(NumeroDeVariableDeM);

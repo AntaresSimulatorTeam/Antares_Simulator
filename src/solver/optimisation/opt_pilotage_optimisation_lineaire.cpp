@@ -45,8 +45,6 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo, uint numSpa
 
     int Pays;
 
-    ProblemeHebdo->SolveurDuProblemeLineaire = ANTARES_SIMPLEXE;
-
     if (ProblemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
     {
         if (ProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)

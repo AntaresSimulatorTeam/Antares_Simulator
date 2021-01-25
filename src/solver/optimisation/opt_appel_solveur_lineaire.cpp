@@ -332,7 +332,6 @@ RESOLUTION:
     return true;
 }
 
-
 void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
                                                     uint numSpace,
                                                     int NumeroDeLIntervalle)
