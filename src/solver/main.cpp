@@ -158,6 +158,14 @@ bool SolverApplication::prepare(int argc, char* argv[])
 	
 	// LISTE DE CHECKS ...
 
+	if (pStudy->header.version < Data::versionLatest)
+	{
+		logs.error() << "The study must be upgraded to the v"
+			<< Data::VersionToCStr((Data::Version)Data::versionLatest)
+			<< " format before launching the solver";
+		return false;
+	}
+
 	// CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing = MILP ». 
 	if ((pParameters->simplexOptimizationRange == Antares::Data::SimplexOptimization::sorDay) && (pParameters->hydroPricing.hpMode == Antares::Data::HydroPricingMode::hpMILP))
 	{
