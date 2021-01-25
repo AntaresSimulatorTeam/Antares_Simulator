@@ -137,18 +137,18 @@ namespace Data
 			// Nothing to refresh
 			parameters.timeSeriesToRefresh = 0;
 
-		// We can not run the simulation if the study folder is not in the latest
-		// version and that we would like to re-importe the generated timeseries
+		// We can not run the simulation if the study folder is not in the latest minor version
 		if (usedByTheSolver)
 		{
-			// We have time-series to import
-			if (parameters.timeSeriesToImport and (uint)header.version != (uint)versionLatest)
-			{
-				logs.error() << "The study must be upgraded to store the generated timeseries into the input folder";
-				gotFatalError = true;
-				// it is useless to continue at this point
-				return false;
-			}
+            if (header.version < Data::versionLatestMinor)
+            {
+                logs.error() << "The study must be upgraded to the v"
+                                << Data::VersionToCStr((Data::Version)Data::versionLatestMinor)
+                                << " format before launching the solver";
+                gotFatalError = true;
+                // it is useless to continue at this point
+                return false;
+            }
 		}
 
 		
