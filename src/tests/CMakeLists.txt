@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.10)
 
 project(unit_tests_antares VERSION 1.0)
 
-#copy test data to build directory
-FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/data/" 		DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/data/")
-
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 # Make found targets globally available.
