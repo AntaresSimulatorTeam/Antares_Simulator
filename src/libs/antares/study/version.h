@@ -123,9 +123,6 @@ namespace Data
 		versionLatest = version800,
 	};
 
-
-
-
 	/*!
 	** \brief Try to determine the version of a study
 	** \ingroup study

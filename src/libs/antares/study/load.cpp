@@ -138,18 +138,20 @@ namespace Data
 			parameters.timeSeriesToRefresh = 0;
 
 		// We can not run the simulation if the study folder is not in the latest
-		// version and that we would like to re-importe the generated timeseries
-		if (usedByTheSolver)
-		{
-			// We have time-series to import
-			if (parameters.timeSeriesToImport and (uint)header.version != (uint)versionLatest)
-			{
-				logs.error() << "The study must be upgraded to store the generated timeseries into the input folder";
-				gotFatalError = true;
-				// it is useless to continue at this point
-				return false;
-			}
-		}
+        // version and that we would like to re-importe the generated timeseries
+        if (usedByTheSolver)
+        {
+            // We have time-series to import
+            if (parameters.timeSeriesToImport
+                and (uint) header.version != (uint)versionLatest)
+            {
+                logs.error() << "Stochastic TS stored in input : study must be upgraded to "
+                             << Data::VersionToCStr((Data::Version)Data::versionLatest);
+                gotFatalError = true;
+                // it is useless to continue at this point
+                return false;
+            }
+        }
 
 		
 		// This settings can only be enabled from the solver
