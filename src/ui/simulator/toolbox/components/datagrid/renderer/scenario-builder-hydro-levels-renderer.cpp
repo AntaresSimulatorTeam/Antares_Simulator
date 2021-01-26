@@ -82,6 +82,14 @@ namespace Renderer
 		return 0.;
 	}
 
+	IRenderer::CellStyle hydroLevelsScBuilderRenderer::cellStyle(int x, int y) const
+	{
+		bool valid = (!(!study) && !(!pRules) && std::isnan(cellNumericValue(x, y)));
+		return (valid)
+			? cellStyleDefaultCenterDisabled
+			: cellStyleDefaultCenter;
+	}
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
