@@ -39,7 +39,6 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
-
 	string fromHydroLevelToString(double d);
 	double fromStringToHydroLevel(const Yuni::String& value, const double maxLevel);
 

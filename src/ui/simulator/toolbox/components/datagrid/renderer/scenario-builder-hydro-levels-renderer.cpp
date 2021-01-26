@@ -47,7 +47,7 @@ namespace Renderer
 	{
 		const double d = cellNumericValue(x, y);
 
-		return (d < 0.)
+		return (std::isnan(d))
 			? wxString() << wxT("rand")
 			: wxString() << fromHydroLevelToString(d);
 	}
@@ -80,6 +80,14 @@ namespace Renderer
 			}
 		}
 		return 0.;
+	}
+
+	IRenderer::CellStyle hydroLevelsScBuilderRenderer::cellStyle(int x, int y) const
+	{
+		bool valid = (!(!study) && !(!pRules) && std::isnan(cellNumericValue(x, y)));
+		return (valid)
+			? cellStyleDefaultCenterDisabled
+			: cellStyleDefaultCenter;
 	}
 
 } // namespace Renderer
