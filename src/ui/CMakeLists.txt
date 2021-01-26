@@ -1,4 +1,9 @@
 
+
+if (USE_PRECOMPILED_EXT AND UNIX)
+    set (wxWidgets_CONFIG_EXECUTABLE ${DEPS_INSTALL_DIR}/bin/wx-config)
+endif()
+
 #wxWidget required
 find_package(wxWidgets REQUIRED COMPONENTS net core base richtext propgrid aui adv html xml)
 include(${wxWidgets_USE_FILE})

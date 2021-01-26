@@ -25,6 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <sstream>
+#include <iomanip>
+#include <string>
 #include "mc-playlist.h"
 #include <yuni/core/math.h>
 
@@ -99,19 +102,21 @@ namespace Renderer
                     bool v = s.to<bool>() || s == "active" || s == "enabled";
                     assert(study->parameters.yearsFilter);
                     study->parameters.yearsFilter[y] = v;
+                    break;
                 }
                 case MCPlaylistCol::WEIGHT			:
                 {
-                    int weight;
-                    if (value.to<int>(weight))
+                    float weight;
+                    if (value.to<float>(weight))
                     {
-                        if (weight >= 1) {
+                        if (weight >= 0.f) {
                             study->parameters.setYearWeight(y, weight);
                         }
                         else {
                             return false;
                         }
                     }
+                    break;
                 }
             }
 
@@ -136,7 +141,7 @@ namespace Renderer
                 }
                 case MCPlaylistCol::WEIGHT:
                 {
-                    std::vector<int> yearsWeight = study->parameters.getYearsWeight();
+                    std::vector<float> yearsWeight = study->parameters.getYearsWeight();
                     assert(y < yearsWeight.size());
                     return yearsWeight[y];
                 }
@@ -159,9 +164,14 @@ namespace Renderer
                 }
                 case MCPlaylistCol::WEIGHT:
                 {
-                    std::vector<int> yearsWeight = study->parameters.getYearsWeight();
+                    std::vector<float> yearsWeight = study->parameters.getYearsWeight();
                     assert(y < yearsWeight.size());
-                    return wxString::Format(wxT("%i"), yearsWeight[y]);
+
+                    std::ostringstream stream;
+                    stream << std::setprecision(3);
+                    stream << yearsWeight[y];
+
+                    return stream.str();
                 }
             }
 		}
