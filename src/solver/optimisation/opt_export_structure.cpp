@@ -49,7 +49,7 @@ namespace Data {
 				"PalierThermique",
 				"ProdHyd",
 				"DefaillancePositive", 
-				"DefaillanceNegative"
+				"DefaillanceNegative",
 				"BilansPays",
 				"CoutOrigineVersExtremiteDeLInterconnexion",
 				"CoutExtremiteVersOrigineDeLInterconnexion",
