@@ -46,7 +46,7 @@ namespace Renderer
 		wxString cellValue(int x, int y) const;
 		bool cellValue(int x, int y, const Yuni::String& value);
 		double cellNumericValue(int x, int y) const;
-		IRenderer::CellStyle hydroLevelsScBuilderRenderer::cellStyle(int x, int y) const;
+		IRenderer::CellStyle cellStyle(int x, int y) const;
 	}; // class hydroLevelsScBuilderRenderer
 
 
