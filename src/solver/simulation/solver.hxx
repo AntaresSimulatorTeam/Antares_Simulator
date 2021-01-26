@@ -1259,6 +1259,14 @@ namespace Simulation
 				int firstDayOfMonth = study.calendar.months[initResLevelOnSimMonth].daysYear.first;
 
 				double randomLevel = pHydroManagement.randomReservoirLevel(min[firstDayOfMonth], avg[firstDayOfMonth], max[firstDayOfMonth]);
+
+				// Possibly update the intial level from scenario builder
+				if (study.parameters.useCustomScenario)
+				{
+					double levelFromScenarioBuilder = study.scenarioHydroLevels[areaIndex][y];
+					if(levelFromScenarioBuilder >= 0.)
+						randomLevel = levelFromScenarioBuilder;
+				}
 				
 				if (pHydroHotStart)
 				{
