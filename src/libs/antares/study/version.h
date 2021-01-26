@@ -123,14 +123,6 @@ namespace Data
 		versionLatest = version800,
 	};
 
-	enum
-	{
-		//! The latest minor version
-		versionLatestMinor = version800,
-	};
-
-
-
 	/*!
 	** \brief Try to determine the version of a study
 	** \ingroup study
