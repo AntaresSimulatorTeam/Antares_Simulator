@@ -25,43 +25,39 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_STATE_H__
-# define __ANTARES_LIBS_STUDY_ACTION_STATE_H__
-
+#define __ANTARES_LIBS_STUDY_ACTION_STATE_H__
 
 namespace Antares
 {
 namespace Action
 {
+/*!
+** \brief State of the action
+*/
+enum State
+{
+    //! Unknown
+    stUnknown = 0,
+    //! Disabled
+    stDisabled,
+    //! Error
+    stError,
+    //! Nothing to do
+    stNothingToDo,
+    //! Ready for execution
+    stReady,
+    //! A conflict has been found
+    stConflict,
 
-	/*!
-	** \brief State of the action
-	*/
-	enum State
-	{
-		//! Unknown
-		stUnknown = 0,
-		//! Disabled
-		stDisabled,
-		//! Error
-		stError,
-		//! Nothing to do
-		stNothingToDo,
-		//! Ready for execution
-		stReady,
-		//! A conflict has been found
-		stConflict,
+    //! The maximum number of states
+    stMax
 
-		//! The maximum number of states
-		stMax
+}; // enum State
 
-	}; // enum State
-
-
-	/*!
-	** \brief Convert a state into its human string representation
-	*/
-	const char* StateToString(State state);
-
+/*!
+** \brief Convert a state into its human string representation
+*/
+const char* StateToString(State state);
 
 } // namespace Action
 } // namespace Antares

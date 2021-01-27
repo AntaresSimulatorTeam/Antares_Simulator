@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENTS_BUTTON_H__
-# define __ANTARES_TOOLBOX_COMPONENTS_BUTTON_H__
+#define __ANTARES_TOOLBOX_COMPONENTS_BUTTON_H__
 
-# include "button/button.h"
+#include "button/button.h"
 
 #endif // __ANTARES_TOOLBOX_COMPONENTS_BUTTON_H__

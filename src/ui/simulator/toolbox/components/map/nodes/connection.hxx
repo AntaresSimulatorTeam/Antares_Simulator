@@ -25,31 +25,26 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_MAP_CONNECTION_HXX__
-# define __ANTARES_TOOLBOX_MAP_CONNECTION_HXX__
+#define __ANTARES_TOOLBOX_MAP_CONNECTION_HXX__
 
 namespace Antares
 {
 namespace Map
 {
+inline Item::Type Connection::type() const
+{
+    return tyConnection;
+}
 
-	inline Item::Type Connection::type() const
-	{
-		return tyConnection;
-	}
+inline bool Connection::selected() const
+{
+    return pSelected;
+}
 
-
-	inline bool Connection::selected() const
-	{
-		return pSelected;
-	}
-
-
-	inline Antares::Data::AreaLink* Connection::attachedAreaLink() const
-	{
-		return pAttachedAreaLink;
-	}
-
-
+inline Antares::Data::AreaLink* Connection::attachedAreaLink() const
+{
+    return pAttachedAreaLink;
+}
 
 } // namespace Map
 } // namespace Antares

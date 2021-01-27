@@ -25,198 +25,184 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_LINKS_H__
-# define __ANTARES_LIBS_STUDY_LINKS_H__
+#define __ANTARES_LIBS_STUDY_LINKS_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/noncopyable.h>
-# include <yuni/core/string.h>
-# include "../fwd.h"
-# include "../../array/matrix.h"
-# include <set>
+#include <yuni/yuni.h>
+#include <yuni/core/noncopyable.h>
+#include <yuni/core/string.h>
+#include "../fwd.h"
+#include "../../array/matrix.h"
+#include <set>
 
 //! The minimal allowed value for hurdle costs when not null
-# define LINK_MINIMAL_HURDLE_COSTS_NOT_NULL  0.005
-
+#define LINK_MINIMAL_HURDLE_COSTS_NOT_NULL 0.005
 
 namespace Antares
 {
 namespace Data
 {
+struct CompareLinkName;
 
+/*!
+** \brief Definition of a link between two areas (Interconnection)
+**
+** \ingroup area
+*/
+class AreaLink final : public Yuni::NonCopyable<AreaLink>
+{
+public:
+    //! Vector of links
+    typedef std::vector<AreaLink*> Vector;
+    //! Set of links
+    typedef std::set<AreaLink*, CompareLinkName> Set;
+    //! Map of links
+    typedef std::map<AreaName, AreaLink*> Map;
 
-	struct CompareLinkName;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    AreaLink();
+    //! Destructor
+    ~AreaLink();
+    //@}
 
+    //! \name Area
+    //@{
+    /*!
+    ** \brief Detach the link from the areas
+    */
+    void detach();
+    //@}
 
+    //! \name Data management
+    //@{
+    /*!
+    ** \brief Reverse the link
+    **
+    ** Be careful, this method does not invert the sign of the weight
+    ** for binding constraints.
+    */
+    void reverse();
 
-	/*!
-	** \brief Definition of a link between two areas (Interconnection)
-	**
-	** \ingroup area
-	*/
-	class AreaLink final : public Yuni::NonCopyable<AreaLink>
-	{
-	public:
-		//! Vector of links
-		typedef std::vector<AreaLink*> Vector;
-		//! Set of links
-		typedef std::set<AreaLink*, CompareLinkName> Set;
-		//! Map of links
-		typedef std::map<AreaName, AreaLink*> Map;
+    void resetToDefaultValues();
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		AreaLink();
-		//! Destructor
-		~AreaLink();
-		//@}
+    /*!
+    ** \brief Invalidate all matrices
+    **
+    ** \param reload True to load all missing data
+    */
+    bool invalidate(bool reload = false) const;
 
+    /*!
+    ** \brief Mark the data associated to the link as modified
+    */
+    void markAsModified() const;
+    //@}
 
-		//! \name Area
-		//@{
-		/*!
-		** \brief Detach the link from the areas
-		*/
-		void detach();
-		//@}
+    //! \name Memory management
+    //@{
+    /*!
+    ** \brief Get the size (bytes) in memory occupied by a `AreaLink` structure
+    */
+    Yuni::uint64 memoryUsage() const;
+    /*!
+    ** \brief Try to estimate the amount of memory required by the area for a simulation
+    */
+    void estimateMemoryUsage(StudyMemoryUsage& u) const;
+    //@}
 
+    bool isVisibleOnLayer(const size_t& layerID) const;
 
-		//! \name Data management
-		//@{
-		/*!
-		** \brief Reverse the link
-		**
-		** Be careful, this method does not invert the sign of the weight
-		** for binding constraints.
-		*/
-		void reverse();
+    Yuni::String getName() const;
 
-		void resetToDefaultValues();
+public:
+    //! \name Graph
+    //@{
+    //! The orginal Area
+    Area* from;
+    //! The other area | Hash ID: with->id
+    Area* with;
+    //@}
 
-		/*!
-		** \brief Invalidate all matrices
-		**
-		** \param reload True to load all missing data
-		*/
-		bool invalidate(bool reload = false) const;
+    //! \name Data
+    //@{
+    /*!
+    ** \brief Data related to the link
+    **
+    ** \see enum LinkDataIndex
+    */
+    Matrix<> data;
 
-		/*!
-		** \brief Mark the data associated to the link as modified
-		*/
-		void markAsModified() const;
-		//@}
+    //! Flag for using loop flow
+    bool useLoopFlow;
 
+    //! Flag for using the phase shifter
+    bool usePST;
 
-		//! \name Memory management
-		//@{
-		/*!
-		** \brief Get the size (bytes) in memory occupied by a `AreaLink` structure
-		*/
-		Yuni::uint64 memoryUsage() const;
-		/*!
-		** \brief Try to estimate the amount of memory required by the area for a simulation
-		*/
-		void estimateMemoryUsage(StudyMemoryUsage& u) const;
-		//@}
+    //! Flag for using hurdles cost
+    bool useHurdlesCost;
 
-		bool isVisibleOnLayer(const size_t& layerID)const;
+    //! Flag for the transmission capacities (NTC +infinite)
+    // previously called copper plate
+    TransmissionCapacities transmissionCapacities;
+    //@}
 
-		Yuni::String getName()const;
+    //! Flag for the asset type (AC/DC/Other)
+    AssetType assetType;
 
-	public:
-		//! \name Graph
-		//@{
-		//! The orginal Area
-		Area* from;
-		//! The other area | Hash ID: with->id
-		Area* with;
-		//@}
+    //! \name Indexes
+    //@{
+    /*!
+    ** \brief Index of the link in the entire list if Interconnections
+    **
+    ** \internal This variable must only be used when runtime data are
+    ** available
+    */
+    uint index;
+    /*!
+    ** \brief Index of the link in the list of interconnection of the main area
+    **
+    ** \internal This variable must only be used when runtime data are
+    ** available
+    */
+    uint indexForArea;
+    //@}
 
+    //! \name Comments
+    //@{
+    //! Comments
+    Yuni::String comments;
+    //! Flag for displaying comments
+    bool displayComments;
+    //@}
 
-		//! \name Data
-		//@{
-		/*!
-		** \brief Data related to the link
-		**
-		** \see enum LinkDataIndex
-		*/
-		Matrix<> data;
+    //! \name Output filtering
+    //@{
+    //! Print results for the area in the simulation synthesis
+    uint filterSynthesis;
+    //! Print results for the area in the year-by-year mode
+    uint filterYearByYear;
+    //@}
 
-		//! Flag for using loop flow
-		bool useLoopFlow;
+    //! Colors
+    int color[3];
+    //! Style
+    StyleType style;
+    //! link width
+    int linkWidth;
 
-		//! Flag for using the phase shifter
-		bool usePST;
+}; // class AreaLink
 
-		//! Flag for using hurdles cost
-		bool useHurdlesCost;
-
-		//! Flag for the transmission capacities (NTC +infinite)
-		// previously called copper plate
-		TransmissionCapacities transmissionCapacities;
-		//@}
-
-		//! Flag for the asset type (AC/DC/Other)
-		AssetType assetType;
-
-		//! \name Indexes
-		//@{
-		/*!
-		** \brief Index of the link in the entire list if Interconnections
-		**
-		** \internal This variable must only be used when runtime data are
-		** available
-		*/
-		uint index;
-		/*!
-		** \brief Index of the link in the list of interconnection of the main area
-		**
-		** \internal This variable must only be used when runtime data are
-		** available
-		*/
-		uint indexForArea;
-		//@}
-
-
-		//! \name Comments
-		//@{
-		//! Comments
-		Yuni::String comments;
-		//! Flag for displaying comments
-		bool displayComments;
-		//@}
-
-
-		//! \name Output filtering
-		//@{
-		//! Print results for the area in the simulation synthesis
-		uint filterSynthesis;
-		//! Print results for the area in the year-by-year mode
-		uint filterYearByYear;
-		//@}
-
-		//! Colors
-		int color[3];
-		//! Style
-		StyleType style;
-		//! link width
-		int linkWidth;
-
-	}; // class AreaLink
-
-	struct CompareLinkName final
-	{
-		inline bool operator()(const AreaLink* s1, const AreaLink* s2) const
-		{
-			return (s1->getName().toLower() < s2->getName().toLower());
-		}
-	};
-
-
-
+struct CompareLinkName final
+{
+    inline bool operator()(const AreaLink* s1, const AreaLink* s2) const
+    {
+        return (s1->getName().toLower() < s2->getName().toLower());
+    }
+};
 
 } // namespace Data
 } // namespace Antares

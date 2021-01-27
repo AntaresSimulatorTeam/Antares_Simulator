@@ -25,12 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_DBGRID_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_DBGRID_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_DBGRID_H__
 
-# include <antares/wx-wrapper.h>
-# include <wx/grid.h>
-
-
+#include <antares/wx-wrapper.h>
+#include <wx/grid.h>
 
 namespace Antares
 {
@@ -38,99 +36,109 @@ namespace Component
 {
 namespace Datagrid
 {
+// Forward declaration
+class Component;
 
-	// Forward declaration
-	class Component;
+class DBGrid final : public wxGrid
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    DBGrid(Component* parent);
+    //! Destructor
+    virtual ~DBGrid();
+    //@}
 
+    const wxPoint& currentPosition() const
+    {
+        return pCurrentPosition;
+    }
 
+    Component* component() const
+    {
+        return pParentComponent;
+    }
 
-	class DBGrid final : public wxGrid
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		DBGrid(Component* parent);
-		//! Destructor
-		virtual ~DBGrid();
-		//@}
+    void copyToClipboard();
+    void copyAllToClipboard();
+    void pasteFromClipboard();
 
-		const wxPoint& currentPosition() const {return pCurrentPosition;}
+    void ensureDataAreLoaded();
 
-		Component* component() const {return pParentComponent;}
+    void resizeAllHeaders(bool nodelay = false);
 
-		void copyToClipboard();
-		void copyAllToClipboard();
-		void pasteFromClipboard();
+    /*!
+    ** \brief Allow refresh
+    */
+    void enableRefresh(bool enabled)
+    {
+        pAllowRefresh = enabled;
+    }
 
-		void ensureDataAreLoaded();
+    bool canRefresh() const
+    {
+        return pAllowRefresh;
+    }
 
-		void resizeAllHeaders(bool nodelay = false);
+    void DrawColLabel(wxDC& dc, int col, uint& offset);
+    void DrawRowLabel(wxDC& dc, int row, uint& offset);
+    void DrawCellHighlight(wxDC& dc, const wxGridCellAttr* attr);
 
-		/*!
-		** \brief Allow refresh
-		*/
-		void enableRefresh(bool enabled) {pAllowRefresh = enabled;}
+    void disableColorMappingForRowLabels()
+    {
+        pColorMappingRowLabels = false;
+    }
 
-		bool canRefresh() const {return pAllowRefresh;}
+private:
+    //! Get if the data are ready for the grid
+    bool dataAreReady() const;
 
-		void DrawColLabel(wxDC& dc, int col, uint& offset);
-		void DrawRowLabel(wxDC& dc, int row, uint& offset);
-		void DrawCellHighlight(wxDC& dc, const wxGridCellAttr *attr);
+    void ensureDataAreLoadedDelayed();
 
-		void disableColorMappingForRowLabels() { pColorMappingRowLabels = false; }
+    /*!
+    ** \\brief Event: Some cells have been selected on the grid
+    */
+    void onGridSelectCell(wxGridEvent& evt);
 
-	private:
-		//! Get if the data are ready for the grid
-		bool dataAreReady() const;
+    /*!
+    ** \brief Event: Some cells have been selected on the grid
+    */
+    void onGridRangeSelect(wxGridRangeSelectEvent& evt);
 
-		void ensureDataAreLoadedDelayed();
+    /*!
+    ** \brief Event: The grid lost its focus
+    */
+    void onGridLeave(wxFocusEvent& evt);
 
-		/*!
-		** \\brief Event: Some cells have been selected on the grid
-		*/
-		void onGridSelectCell(wxGridEvent& evt);
+    void onDraw(wxPaintEvent& evt);
 
-		/*!
-		** \brief Event: Some cells have been selected on the grid
-		*/
-		void onGridRangeSelect(wxGridRangeSelectEvent& evt);
+    void onKeyUp(wxKeyEvent& evt);
 
-		/*!
-		** \brief Event: The grid lost its focus
-		*/
-		void onGridLeave(wxFocusEvent& evt);
+    void evtOnResizeHeaders(wxCommandEvent& evt);
 
-		void onDraw(wxPaintEvent& evt);
+    void evtCornerPaint(wxPaintEvent& evt);
 
-		void onKeyUp(wxKeyEvent& evt);
+    void onEraseBackground(wxEraseEvent&)
+    {
+    }
+    void onDrawColLabels(wxPaintEvent&);
+    void onDrawRowLabels(wxPaintEvent&);
 
-		void evtOnResizeHeaders(wxCommandEvent& evt);
+    void onScroll(wxScrollWinEvent&);
 
-		void evtCornerPaint(wxPaintEvent& evt);
+private:
+    //! Parent component
+    Component* pParentComponent;
+    wxPoint pCurrentPosition;
+    bool pAllowRefresh;
+    bool pColorMappingRowLabels;
 
-		void onEraseBackground(wxEraseEvent&) {}
-		void onDrawColLabels(wxPaintEvent&);
-		void onDrawRowLabels(wxPaintEvent&);
+    DECLARE_EVENT_TABLE();
 
-		void onScroll(wxScrollWinEvent&);
-
-	private:
-		//! Parent component
-		Component* pParentComponent;
-		wxPoint pCurrentPosition;
-		bool pAllowRefresh;
-		bool pColorMappingRowLabels;
-
-		DECLARE_EVENT_TABLE();
-
-	}; // class DBGrid
-
-
-
-
+}; // class DBGrid
 
 } // namespace Datagrid
 } // namespace Component

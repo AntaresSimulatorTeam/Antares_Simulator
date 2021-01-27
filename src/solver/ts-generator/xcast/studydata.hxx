@@ -25,12 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_SOLVER_TS_GENERATOR_XCAST_STUDY_DATA_HXX__
-# define __ANTARES_SOLVER_TS_GENERATOR_XCAST_STUDY_DATA_HXX__
+#define __ANTARES_SOLVER_TS_GENERATOR_XCAST_STUDY_DATA_HXX__
 
-# include <yuni/yuni.h>
-# include <antares/study/xcast/xcast.h>
-# include <antares/logs.h>
-
+#include <yuni/yuni.h>
+#include <antares/study/xcast/xcast.h>
+#include <antares/logs.h>
 
 namespace Antares
 {
@@ -40,36 +39,32 @@ namespace TSGenerator
 {
 namespace XCast
 {
+template<class PredicateT>
+void StudyData::loadFromStudy(Data::Study& study,
+                              const Data::Correlation& correlation,
+                              PredicateT& predicate)
+{
+    // clear our list of areas
+    localareas.clear();
 
-
-	template<class PredicateT>
-	void StudyData::loadFromStudy(Data::Study& study, const Data::Correlation& correlation, PredicateT& predicate)
-	{
-		// clear our list of areas
-		localareas.clear();
-
-		// We will rebuild it using the predicate
-		for (auto i = study.areas.begin(); i != study.areas.end(); ++i)
-		{
-			auto& area = *(i->second);
-			if (predicate.accept(area))
-			{
-				// XCast will have to use this area
-				logs.info() << "  Added the area '" << area.name << "'";
-				localareas.push_back(& area);
-			}
-			else
-			{
-				// resize and set the values for the matrix
-				predicate.matrix(area).reset(1, HOURS_PER_YEAR);
-			}
-		}
-		reloadDataFromAreaList(correlation);
-	}
-
-
-
-
+    // We will rebuild it using the predicate
+    for (auto i = study.areas.begin(); i != study.areas.end(); ++i)
+    {
+        auto& area = *(i->second);
+        if (predicate.accept(area))
+        {
+            // XCast will have to use this area
+            logs.info() << "  Added the area '" << area.name << "'";
+            localareas.push_back(&area);
+        }
+        else
+        {
+            // resize and set the values for the matrix
+            predicate.matrix(area).reset(1, HOURS_PER_YEAR);
+        }
+    }
+    reloadDataFromAreaList(correlation);
+}
 
 } // namespace XCast
 } // namespace TSGenerator

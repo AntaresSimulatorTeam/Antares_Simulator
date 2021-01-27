@@ -8,7 +8,6 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-# ifdef YUNI_UNIT_IMPL
-#	undef YUNI_UNIT_IMPL
-# endif
-
+#ifdef YUNI_UNIT_IMPL
+#undef YUNI_UNIT_IMPL
+#endif

@@ -36,170 +36,147 @@
 #include "settings.h"
 #include <wx/frame.h>
 
-
 using namespace Yuni;
-
-
 
 namespace Antares
 {
 namespace Dispatcher
 {
+namespace // anonymous
+{
+//! The Dispatcher manager
+typedef Yuni::Job::QueueService DispatcherServiceType;
 
+// The Dispatcher Service
+static DispatcherServiceType gDispatcher;
 
-	namespace // anonymous
-	{
-		//! The Dispatcher manager
-		typedef Yuni::Job::QueueService  DispatcherServiceType;
+static LinkedList<Yuni::Job::IJob::Ptr> gGUIDispatcherList;
+static Yuni::Mutex gGUIMutex;
 
-		// The Dispatcher Service
-		static DispatcherServiceType gDispatcher;
+class JobDelay final : public Yuni::Job::IJob
+{
+public:
+    JobDelay(const Job::IJob::Ptr& job, uint delay) : pJob(job), pDelay(delay)
+    {
+    }
+    virtual ~JobDelay()
+    {
+    }
 
-		static LinkedList<Yuni::Job::IJob::Ptr> gGUIDispatcherList;
-		static Yuni::Mutex gGUIMutex;
+protected:
+    virtual void onExecute() override
+    {
+        if (not suspend(pDelay))
+            ::Antares::Dispatcher::GUI::Post(pJob);
+    }
 
+private:
+    Job::IJob::Ptr pJob;
+    uint pDelay;
+};
 
+} // anonymous namespace
 
-		class JobDelay final : public Yuni::Job::IJob
-		{
-		public:
-			JobDelay(const Job::IJob::Ptr& job, uint delay) :
-				pJob(job), pDelay(delay)
-			{
-			}
-			virtual ~JobDelay()
-			{
-			}
+namespace GUI
+{
+void Post(const Yuni::Bind<void()>& job)
+{
+    ::Antares::Dispatcher::GUI::Post(
+      (const Yuni::Job::IJob::Ptr&)new ::Antares::Private::Dispatcher::JobSimpleDispatcher(job));
+}
 
-		protected:
-			virtual void onExecute() override
-			{
-				if (not suspend(pDelay))
-					::Antares::Dispatcher::GUI::Post(pJob);
-			}
+void Post(const Yuni::Job::IJob::Ptr& action, uint delay)
+{
+    ::Antares::Dispatcher::Post((const Yuni::Job::IJob::Ptr&)new JobDelay(action, delay));
+}
 
-		private:
-			Job::IJob::Ptr pJob;
-			uint pDelay;
-		};
+void Post(const Yuni::Job::IJob::Ptr& action)
+{
+    if (Settings::WindowForPendingDispatchers)
+    {
+        gGUIMutex.lock();
+        gGUIDispatcherList.push_back(action);
+        wxCommandEvent evt(wxEVT_COMMAND_MENU_SELECTED, Settings::IDForWxDispatcher);
+        Settings::WindowForPendingDispatchers->GetEventHandler()->AddPendingEvent(evt);
+        gGUIMutex.unlock();
+    }
+    else
+    {
+        // logs.debug() << "impossible to post message. The window is invalid";
+    }
+}
 
-	} // anonymous namespace
+} // namespace GUI
 
+void Post(const Yuni::Job::IJob::Ptr& job)
+{
+    gDispatcher += job;
+}
 
+namespace // anonymous
+{
+class JobPreAllocate final : public Yuni::Job::IJob
+{
+public:
+    JobPreAllocate()
+    {
+    }
+    virtual ~JobPreAllocate()
+    {
+    }
 
+protected:
+    virtual void onExecute() override
+    {
+        ::Antares::memory.ensureOneSwapFile();
+    }
 
-	namespace GUI
-	{
-		void Post(const Yuni::Bind<void()>& job)
-		{
-			::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&)new ::Antares::Private::Dispatcher::JobSimpleDispatcher(job));
-		}
+}; // class JobPreAllocate
 
+} // anonymous namespace
 
-		void Post(const Yuni::Job::IJob::Ptr& action, uint delay)
-		{
-			::Antares::Dispatcher::Post((const Yuni::Job::IJob::Ptr&)new JobDelay(action, delay));
-		}
+bool Start()
+{
+    // Looking for the maximum number of threads
+    {
+        uint cpus = System::CPU::Count();
+        if (cpus > 1)
+            --cpus;
+        if (cpus < 3)
+            cpus = 3; // a minimum is required for concurrent and blocking jobs
+        if (cpus > 5)
+            cpus = 5; // will be good enough
+        gDispatcher.maximumThreadCount(cpus);
+    }
 
-		void Post(const Yuni::Job::IJob::Ptr& action)
-		{
-			if (Settings::WindowForPendingDispatchers)
-			{
-				gGUIMutex.lock();
-				gGUIDispatcherList.push_back(action);
-				wxCommandEvent evt(wxEVT_COMMAND_MENU_SELECTED, Settings::IDForWxDispatcher);
-				Settings::WindowForPendingDispatchers->GetEventHandler()->AddPendingEvent(evt);
-				gGUIMutex.unlock();
-			}
-			else
-			{
-				// logs.debug() << "impossible to post message. The window is invalid";
-			}
-		}
+    logs.info() << "starting worker pool (" << gDispatcher.maximumThreadCount() << " threads)";
+    if (gDispatcher.start())
+    {
+        gDispatcher += new JobPreAllocate();
+        return true;
+    }
+    return false;
+}
 
-	} // namespace GUI
+void Stop(uint timeout)
+{
+    logs.info() << "stopping the worker pool";
+    gDispatcher.stop(timeout);
+}
 
+void Wait()
+{
+    gDispatcher.wait(Yuni::qseIdle);
+}
 
-
-
-	void Post(const Yuni::Job::IJob::Ptr& job)
-	{
-		gDispatcher += job;
-	}
-
-
-
-	namespace // anonymous
-	{
-		class JobPreAllocate final : public Yuni::Job::IJob
-		{
-		public:
-			JobPreAllocate()
-			{}
-			virtual ~JobPreAllocate() {}
-
-		protected:
-			virtual void onExecute() override
-			{
-				::Antares::memory.ensureOneSwapFile();
-			}
-
-		}; // class JobPreAllocate
-
-	} // anonymous namespace
-
-
-
-	bool Start()
-	{
-		// Looking for the maximum number of threads
-		{
-			uint cpus = System::CPU::Count();
-			if (cpus > 1)
-				--cpus;
-			if (cpus < 3)
-				cpus = 3; // a minimum is required for concurrent and blocking jobs
-			if (cpus > 5)
-				cpus = 5; // will be good enough
-			gDispatcher.maximumThreadCount(cpus);
-		}
-
-		logs.info() << "starting worker pool ("
-			<< gDispatcher.maximumThreadCount() << " threads)";
-		if (gDispatcher.start())
-		{
-			gDispatcher += new JobPreAllocate();
-			return true;
-		}
-		return false;
-	}
-
-
-	void Stop(uint timeout)
-	{
-		logs.info() << "stopping the worker pool";
-		gDispatcher.stop(timeout);
-	}
-
-
-	void Wait()
-	{
-		gDispatcher.wait(Yuni::qseIdle);
-	}
-
-
-	bool Empty()
-	{
-		Yuni::MutexLocker locker(Antares::Dispatcher::gGUIMutex);
-		return Antares::Dispatcher::gGUIDispatcherList.empty();
-	}
-
-
-
+bool Empty()
+{
+    Yuni::MutexLocker locker(Antares::Dispatcher::gGUIMutex);
+    return Antares::Dispatcher::gGUIDispatcherList.empty();
+}
 
 } // namespace Dispatcher
 } // namespace Antares
-
 
 namespace Antares
 {
@@ -207,26 +184,22 @@ namespace Dispatcher
 {
 namespace Internal
 {
+void ExecuteQueueDispatcher()
+{
+    // Locking access to the shared resource
+    Antares::Dispatcher::gGUIMutex.lock();
+    // Retrieving the job to execute
+    Job::IJob::Ptr job = Antares::Dispatcher::gGUIDispatcherList.front();
+    // Removing it from the stack
+    Antares::Dispatcher::gGUIDispatcherList.pop_front();
+    // Unlock
+    Antares::Dispatcher::gGUIMutex.unlock();
 
-	void ExecuteQueueDispatcher()
-	{
-		// Locking access to the shared resource
-		Antares::Dispatcher::gGUIMutex.lock();
-		// Retrieving the job to execute
-		Job::IJob::Ptr job = Antares::Dispatcher::gGUIDispatcherList.front();
-		// Removing it from the stack
-		Antares::Dispatcher::gGUIDispatcherList.pop_front();
-		// Unlock
-		Antares::Dispatcher::gGUIMutex.unlock();
-
-		// Execute the event
-		if (!(!job))
-			job->execute(nullptr);
-	}
-
-
+    // Execute the event
+    if (!(!job))
+        job->execute(nullptr);
+}
 
 } // namespace Internal
 } // namespace Dispatcher
 } // namespace Antares
-

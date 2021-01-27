@@ -25,13 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_SOLVER_TIME_SERIES_GENERATOR_H__
-# define __ANTARES_SOLVER_TIME_SERIES_GENERATOR_H__
+#define __ANTARES_SOLVER_TIME_SERIES_GENERATOR_H__
 
-# include <yuni/yuni.h>
-# include <antares/study/fwd.h>
-# include <antares/study/parameters.h>
-# include "xcast/xcast.h"
-
+#include <yuni/yuni.h>
+#include <antares/study/fwd.h>
+#include <antares/study/parameters.h>
+#include "xcast/xcast.h"
 
 namespace Antares
 {
@@ -39,36 +38,27 @@ namespace Solver
 {
 namespace TSGenerator
 {
+/*!
+** \brief Regenerate the time-series
+*/
+template<enum Data::TimeSeries T>
+bool GenerateTimeSeries(Data::Study& study, uint year);
 
+/*!
+** \brief Destroy all TS Generators
+*/
+void DestroyAll(Data::Study& study);
 
-	/*!
-	** \brief Regenerate the time-series
-	*/
-	template<enum Data::TimeSeries T>
-	bool GenerateTimeSeries(Data::Study& study, uint year);
-
-
-	/*!
-	** \brief Destroy all TS Generators
-	*/
-	void DestroyAll(Data::Study& study);
-
-
-	/*!
-	** \brief Destroy a TS generator if it exists and no longer needed
-	*/
-	template<enum Data::TimeSeries T>
-	void Destroy(Data::Study& study, uint year);
-
-
-
-
-
+/*!
+** \brief Destroy a TS generator if it exists and no longer needed
+*/
+template<enum Data::TimeSeries T>
+void Destroy(Data::Study& study, uint year);
 
 } // namespace TSGenerator
 } // namespace Solver
 } // namespace Antares
 
-# include "generator.hxx"
+#include "generator.hxx"
 
 #endif // __ANTARES_SOLVER_TIME_SERIES_GENERATOR_H__

@@ -25,16 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_EXT_SOURCE_ACTION_PANEL_H__
-# define __ANTARES_TOOLBOX_EXT_SOURCE_ACTION_PANEL_H__
+#define __ANTARES_TOOLBOX_EXT_SOURCE_ACTION_PANEL_H__
 
-# include <antares/wx-wrapper.h>
-# include <antares/study/action/action.h>
-# include <wx/menu.h>
-# include <wx/menuitem.h>
-# include <ui/common/component/panel.h>
-
-
-
+#include <antares/wx-wrapper.h>
+#include <antares/study/action/action.h>
+#include <wx/menu.h>
+#include <wx/menuitem.h>
+#include <ui/common/component/panel.h>
 
 namespace Antares
 {
@@ -42,101 +39,97 @@ namespace Private
 {
 namespace Window
 {
+class ActionPanel final : public Antares::Component::Panel
+{
+public:
+    //! Array
+    typedef std::vector<ActionPanel*> Vector;
 
-	class ActionPanel final : public Antares::Component::Panel
-	{
-	public:
-		//! Array
-		typedef std::vector<ActionPanel*> Vector;
+    enum
+    {
+        //! Optimal height for a single item
+        itemHeight = 20,
+    };
 
-		enum
-		{
-			//! Optimal height for a single item
-			itemHeight = 20,
-		};
+    static void DrawBackgroundWithoutItems(wxWindow& obj, wxDC& dc, const wxRect& rect);
 
-		static void DrawBackgroundWithoutItems(wxWindow& obj, wxDC& dc, const wxRect& rect);
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    ActionPanel(wxWindow* parent,
+                ActionPanel* parentPanel,
+                const Antares::Action::Context::Ptr& context,
+                const Antares::Action::IAction::Ptr& action);
+    //! Destructor
+    virtual ~ActionPanel();
+    //@}
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		ActionPanel(wxWindow* parent, ActionPanel* parentPanel, const Antares::Action::Context::Ptr& context,
-			const Antares::Action::IAction::Ptr& action);
-		//! Destructor
-		virtual ~ActionPanel();
-		//@}
+    void expand();
 
+    void collapse();
 
-		void expand();
+    void onDraw(wxPaintEvent&);
 
-		void collapse();
+    void update();
 
+    void forceUpdate();
 
-		void onDraw(wxPaintEvent&);
+    virtual void SetFocus();
 
-		void update();
+private:
+    void onEnter(wxMouseEvent&);
+    void onLeave(wxMouseEvent&);
+    void onMouseDown(wxMouseEvent&);
+    void onMouseDownCollapseExpand();
+    void onMouseDownBehaviorSelect(wxWindow* obj);
+    void drawArrows(wxDC& dc, const wxRect& rect);
 
-		void forceUpdate();
+    void prepareAll(bool force = false);
 
-		virtual void SetFocus();
+    void relayoutAllParents();
+    void computeTotalChildrenCount();
 
-	private:
-		void onEnter(wxMouseEvent&);
-		void onLeave(wxMouseEvent&);
-		void onMouseDown(wxMouseEvent&);
-		void onMouseDownCollapseExpand();
-		void onMouseDownBehaviorSelect(wxWindow* obj);
-		void drawArrows(wxDC& dc, const wxRect& rect);
+    void onBehaviorMerge(wxCommandEvent&);
+    void onBehaviorOverwrite(wxCommandEvent&);
+    void onBehaviorSkip(wxCommandEvent&);
 
-		void prepareAll(bool force = false);
+public:
+    ActionPanel* pParent;
+    Antares::Action::Context::Ptr pContext;
+    Antares::Action::IAction::Ptr pAction;
+    bool pCollapsed;
+    bool pBold;
+    wxColour pBackgroundColor;
+    wxColour pBackgroundColorLight;
+    wxColour pStateColor[Antares::Action::stMax];
+    wxColour pLineColor;
+    uint pDepthSpace;
+    wxString pText;
+    wxString pBehaviorText;
+    wxString pStateText;
+    wxString pComments;
+    bool pHasChildren;
+    bool pCanDoSomething;
+    bool phasCreatedChildren;
+    static ActionPanel* SelectedItem;
 
-		void relayoutAllParents();
-		void computeTotalChildrenCount();
+    bool pDisabled;
+    wxMenu* pPopupMenu;
 
-		void onBehaviorMerge(wxCommandEvent&);
-		void onBehaviorOverwrite(wxCommandEvent&);
-		void onBehaviorSkip(wxCommandEvent&);
+    Antares::Action::State pState;
+    Antares::Action::Behavior pBehavior;
 
-	public:
-		ActionPanel* pParent;
-		Antares::Action::Context::Ptr pContext;
-		Antares::Action::IAction::Ptr pAction;
-		bool pCollapsed;
-		bool pBold;
-		wxColour pBackgroundColor;
-		wxColour pBackgroundColorLight;
-		wxColour pStateColor[Antares::Action::stMax];
-		wxColour pLineColor;
-		uint pDepthSpace;
-		wxString pText;
-		wxString pBehaviorText;
-		wxString pStateText;
-		wxString pComments;
-		bool pHasChildren;
-		bool pCanDoSomething;
-		bool phasCreatedChildren;
-		static ActionPanel*  SelectedItem;
+    Vector pChildren;
+    //! The total of all children for all sub-nodes
+    uint pTotalChildrenCount;
 
-		bool pDisabled;
-		wxMenu* pPopupMenu;
+    // Event table
+    DECLARE_EVENT_TABLE()
 
-		Antares::Action::State pState;
-		Antares::Action::Behavior pBehavior;
-
-		Vector pChildren;
-		//! The total of all children for all sub-nodes
-		uint pTotalChildrenCount;
-
-		// Event table
-		DECLARE_EVENT_TABLE()
-
-	}; // class ActionPanel
-
-
-
+}; // class ActionPanel
 
 } // namespace Window
 } // namespace Private

@@ -25,53 +25,49 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_SOLVER_H__
-# define __ANTARES_LIBS_SOLVER_H__
+#define __ANTARES_LIBS_SOLVER_H__
 
-# include <yuni/yuni.h>
-# include "study/version.h"
-
+#include <yuni/yuni.h>
+#include "study/version.h"
 
 namespace Antares
 {
 namespace Solver
 {
+enum Feature
+{
+    //! The standard solver
+    standard = 0,
+    //! With swap files
+    withSwapFiles,
+    //! The solver with years computed in parallel
+    parallel,
+};
 
-	enum Feature
-	{
-		//! The standard solver
-		standard = 0,
-		//! With swap files
-		withSwapFiles,
-		//! The solver with years computed in parallel 
-		parallel,
-	};
+/*!
+** \brief Find the location of the solver
+** \return A non-empty string if the solver has been found, empty otherwise
+*/
+bool FindLocation(Yuni::String& location,
+                  Data::Version version = Data::versionUnknown,
+                  Feature features = standard);
 
-	/*!
-	** \brief Find the location of the solver
-	** \return A non-empty string if the solver has been found, empty otherwise
-	*/
-	bool FindLocation(Yuni::String& location,
-		Data::Version version = Data::versionUnknown, Feature features = standard);
+/*!
+** \brief Find the location of the analyzer
+** \return A non-empty string if the solver has been found, empty otherwise
+*/
+bool FindAnalyzerLocation(Yuni::String& location);
 
-	/*!
-	** \brief Find the location of the analyzer
-	** \return A non-empty string if the solver has been found, empty otherwise
-	*/
-	bool FindAnalyzerLocation(Yuni::String& location);
+/*!
+** \brief Find the location of the constraints builder
+** \return A non-empty string if the solver has been found, empty otherwise
+*/
+bool FindConstraintsBuilderLocation(Yuni::String& location);
 
-	/*!
-	** \brief Find the location of the constraints builder
-	** \return A non-empty string if the solver has been found, empty otherwise
-	*/
-	bool FindConstraintsBuilderLocation(Yuni::String& location);
-
-	/*!
-	** \brief Try to find the location of `antares-ybyaggregator`
-	*/
-	bool FindYearByYearAggregator(Yuni::String& filename);
-
-
-
+/*!
+** \brief Try to find the location of `antares-ybyaggregator`
+*/
+bool FindYearByYearAggregator(Yuni::String& filename);
 
 } // namespace Solver
 } // namespace Antares

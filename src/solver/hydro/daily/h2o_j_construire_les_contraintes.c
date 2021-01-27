@@ -25,84 +25,72 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
-
-
-
-
-
 #include "h2o_j_donnees_mensuelles.h"
 #include "h2o_j_fonctions.h"
 
-
-
-
-void H2O_J_ConstruireLesContraintes( int NbPdt,
-                                     int * NumeroDeVariableTurbine,
-																		 int   NumeroDeLaVariableMu,
-                                     int   NumeroDeLaVariableXi,																		 
-                                     int * IndicesDebutDeLigne,
-                                     char * Sens,
-                                     int * NombreDeTermesDesLignes,
-                                     double * CoefficientsDeLaMatriceDesContraintes,
-                                     int * IndicesColonnes,
-                                     CORRESPONDANCE_DES_CONTRAINTES * CorrespondanceDesContraintes
-																	 )
+void H2O_J_ConstruireLesContraintes(int NbPdt,
+                                    int* NumeroDeVariableTurbine,
+                                    int NumeroDeLaVariableMu,
+                                    int NumeroDeLaVariableXi,
+                                    int* IndicesDebutDeLigne,
+                                    char* Sens,
+                                    int* NombreDeTermesDesLignes,
+                                    double* CoefficientsDeLaMatriceDesContraintes,
+                                    int* IndicesColonnes,
+                                    CORRESPONDANCE_DES_CONTRAINTES* CorrespondanceDesContraintes)
 {
-int NombreDeContraintes; int il; int Pdt; int NombreDeTermes; int * NumeroDeContrainteSurXi;
+    int NombreDeContraintes;
+    int il;
+    int Pdt;
+    int NombreDeTermes;
+    int* NumeroDeContrainteSurXi;
 
-NumeroDeContrainteSurXi = CorrespondanceDesContraintes->NumeroDeContrainteSurXi;
+    NumeroDeContrainteSurXi = CorrespondanceDesContraintes->NumeroDeContrainteSurXi;
 
-NombreDeContraintes = 0;
-il = 0;
+    NombreDeContraintes = 0;
+    il = 0;
 
+    NombreDeTermes = 0;
+    IndicesDebutDeLigne[NombreDeContraintes] = il;
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt];
+        il++;
+        NombreDeTermes++;
+    }
+    CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+    IndicesColonnes[il] = NumeroDeLaVariableMu;
+    il++;
+    NombreDeTermes++;
 
-NombreDeTermes = 0;
-IndicesDebutDeLigne[NombreDeContraintes] = il;
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) { 	
-	CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-	IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt];
-	il++;
-	NombreDeTermes++;
-}
-CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-IndicesColonnes[il] = NumeroDeLaVariableMu;
-il++;		
-NombreDeTermes++;
+    Sens[NombreDeContraintes] = '=';
+    NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
 
-Sens[NombreDeContraintes] = '=';
-NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
-	
-CorrespondanceDesContraintes->NumeroDeContrainteDEnergieMensuelle = NombreDeContraintes;
-NombreDeContraintes++;		
+    CorrespondanceDesContraintes->NumeroDeContrainteDEnergieMensuelle = NombreDeContraintes;
+    NombreDeContraintes++;
 
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        NombreDeTermes = 0;
+        IndicesDebutDeLigne[NombreDeContraintes] = il;
 
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt];
+        il++;
+        NombreDeTermes++;
 
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = NumeroDeLaVariableXi;
+        il++;
+        NombreDeTermes++;
 
+        Sens[NombreDeContraintes] = '>';
+        NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
 
+        NumeroDeContrainteSurXi[Pdt] = NombreDeContraintes;
+        NombreDeContraintes++;
+    }
 
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-  
-	NombreDeTermes = 0;
-  IndicesDebutDeLigne[NombreDeContraintes] = il;
-
-  CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-  IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt];
-  il++;			
-	NombreDeTermes++;
-	
-  CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-  IndicesColonnes[il] = NumeroDeLaVariableXi;
-  il++;		
-	NombreDeTermes++;
-		
-  Sens[NombreDeContraintes] = '>';
-  NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
-
-  NumeroDeContrainteSurXi[Pdt] = NombreDeContraintes;	
-  NombreDeContraintes++;
-	
-}
-
-return;
+    return;
 }

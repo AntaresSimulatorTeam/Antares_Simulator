@@ -25,75 +25,67 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_SCENARIO_BUILDER_UPDATER_HXX__
-# define __ANTARES_LIBS_STUDY_SCENARIO_BUILDER_UPDATER_HXX__
+#define __ANTARES_LIBS_STUDY_SCENARIO_BUILDER_UPDATER_HXX__
 
-# include <yuni/yuni.h>
-# include "../study.h"
-# include "sets.h"
+#include <yuni/yuni.h>
+#include "../study.h"
+#include "sets.h"
 
-# define SEP IO::Separator
-
+#define SEP IO::Separator
 
 namespace Antares
 {
+namespace // anonymous
+{
+class ScenarioBuilderUpdater
+{
+public:
+    ScenarioBuilderUpdater(Data::Study& study) : pStudy(study)
+    {
+        using namespace Yuni;
+        // We can store the INI files in disk because it may not fit in memory
 
-	namespace // anonymous
-	{
+        if (study.scenarioRules)
+        {
+            study.scenarioRules->inUpdaterMode = true;
+            logs.debug() << "[scenario-builder] updater mode ON";
 
-		class ScenarioBuilderUpdater
-		{
-		public:
-			ScenarioBuilderUpdater(Data::Study& study) :
-				pStudy(study)
-			{
-				using namespace Yuni;
-				// We can store the INI files in disk because it may not fit in memory
+            logs.debug()
+              << "[scenario-builder] writing data to a temporary file before structure changes";
+            pTempFile << memory.cacheFolder() << SEP << "antares-scenbld-save-"
+                      << memory.processID() << '-' << (size_t)(this) << "-scenariobuilder.tmp";
+            // Dump the memory
+            study.scenarioRules->saveToINIFile(pTempFile);
+            study.scenarioRules->clear();
+        }
+    }
 
-				if (study.scenarioRules)
-				{
-					study.scenarioRules->inUpdaterMode = true;
-					logs.debug() << "[scenario-builder] updater mode ON";
+    ~ScenarioBuilderUpdater()
+    {
+        using namespace Yuni;
 
-					logs.debug() << "[scenario-builder] writing data to a temporary file before structure changes";
-					pTempFile << memory.cacheFolder()
-						<< SEP << "antares-scenbld-save-" << memory.processID()
-						<< '-' << (size_t)(this) << "-scenariobuilder.tmp";
-					// Dump the memory
-					study.scenarioRules->saveToINIFile(pTempFile);
-					study.scenarioRules->clear();
-				}
-			}
+        if (not pTempFile.empty())
+        {
+            if (pStudy.scenarioRules)
+            {
+                logs.debug() << "[scenario-builder] reloading data from a temporary file";
+                pStudy.scenarioRules->loadFromINIFile(pTempFile);
 
-			~ScenarioBuilderUpdater()
-			{
-				using namespace Yuni;
+                pStudy.scenarioRules->inUpdaterMode = false;
+                logs.debug() << "[scenario-builder] updater mode OFF";
+            }
+            // Removing the temporary file
+            IO::File::Delete(pTempFile);
+        }
+    }
 
-				if (not pTempFile.empty())
-				{
-					if (pStudy.scenarioRules)
-					{
-						logs.debug() << "[scenario-builder] reloading data from a temporary file";
-						pStudy.scenarioRules->loadFromINIFile(pTempFile);
+private:
+    Data::Study& pStudy;
+    Yuni::String pTempFile;
 
-						pStudy.scenarioRules->inUpdaterMode = false;
-						logs.debug() << "[scenario-builder] updater mode OFF";
-					}
-					// Removing the temporary file
-					IO::File::Delete(pTempFile);
-				}
-			}
+}; // class ScenarioBuilderUpdater
 
-		private:
-			Data::Study& pStudy;
-			Yuni::String pTempFile;
-
-		}; // class ScenarioBuilderUpdater
-
-
-	} // anonymous namespace
-
-
-
+} // anonymous namespace
 
 } // namespace Antares
 

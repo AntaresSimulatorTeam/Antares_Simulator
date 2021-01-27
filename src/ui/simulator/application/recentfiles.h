@@ -25,66 +25,56 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_RECENT_FILES_H__
-# define __ANTARES_APPLICATION_RECENT_FILES_H__
+#define __ANTARES_APPLICATION_RECENT_FILES_H__
 
-# include <yuni/yuni.h>
-# include "../toolbox/wx-wrapper.h"
-# include <list>
-
-
+#include <yuni/yuni.h>
+#include "../toolbox/wx-wrapper.h"
+#include <list>
 
 namespace Antares
 {
 namespace RecentFiles
 {
-	//! The maximum number of recent files
-	enum
-	{
-		Max = 10,
-	};
+//! The maximum number of recent files
+enum
+{
+    Max = 10,
+};
 
+//! List of recent files
+typedef std::list<std::pair<wxString, wxString>> List;
+//! Ptr
+typedef Yuni::SmartPtr<List> ListPtr;
 
-	//! List of recent files
-	typedef std::list< std::pair<wxString, wxString> >  List;
-	//! Ptr
-	typedef Yuni::SmartPtr<List> ListPtr;
+/*!
+** \brief Get the whole list of recent files
+*/
+ListPtr Get();
 
+/*!
+** \brief Insert a recent file
+*/
+void Add(const wxString& path, const wxString& title = wxString());
 
-	/*!
-	** \brief Get the whole list of recent files
-	*/
-	ListPtr Get();
+/*!
+** \brief
+*/
+ListPtr AddAndGet(wxString path, const wxString& title = wxString());
 
+/*!
+** \brief Write the settings about the list of recent files
+*/
+void Write(const ListPtr lst);
 
-	/*!
-	** \brief Insert a recent file
-	*/
-	void Add(const wxString& path, const wxString& title = wxString());
+/*!
+** \brief Set if the path of the studies must be displayed in the menu
+*/
+void ShowPathInMenu(bool value);
 
-	/*!
-	** \brief
-	*/
-	ListPtr AddAndGet(wxString path, const wxString& title = wxString());
-
-	/*!
-	** \brief Write the settings about the list of recent files
-	*/
-	void Write(const ListPtr lst);
-
-
-	/*!
-	** \brief Set if the path of the studies must be displayed in the menu
-	*/
-	void ShowPathInMenu(bool value);
-
-
-	/*!
-	** \brief Get if the path of the studies should be displayed in the menu
-	*/
-	bool ShowPathInMenu();
-
-
-
+/*!
+** \brief Get if the path of the studies should be displayed in the menu
+*/
+bool ShowPathInMenu();
 
 } // namespace RecentFiles
 } // namespace Antares

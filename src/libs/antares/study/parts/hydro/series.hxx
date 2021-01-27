@@ -25,23 +25,18 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_HXX__
-# define __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_HXX__
-
+#define __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_HXX__
 
 namespace Antares
 {
 namespace Data
 {
-
-
-	# ifndef ANTARES_SWAP_SUPPORT
-	inline void DataSeriesHydro::flush()
-	{
-		// do nothing
-	}
-	# endif
-
-
+#ifndef ANTARES_SWAP_SUPPORT
+inline void DataSeriesHydro::flush()
+{
+    // do nothing
+}
+#endif
 
 } // namespace Data
 } // namespace Antares

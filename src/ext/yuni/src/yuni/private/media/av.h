@@ -9,9 +9,9 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_PRIVATE_AUDIO_AV_H__
-# define __YUNI_PRIVATE_AUDIO_AV_H__
+#define __YUNI_PRIVATE_AUDIO_AV_H__
 
-# include "../../yuni.h"
+#include "../../yuni.h"
 
 namespace Yuni
 {
@@ -19,20 +19,16 @@ namespace Private
 {
 namespace Media
 {
+/*!
+** \brief This is a wrapper around the AV* libs from ffmpeg.
+*/
+class AV
+{
+public:
+    //! Initialize ffmpeg
+    static bool Init();
 
-	/*!
-	** \brief This is a wrapper around the AV* libs from ffmpeg.
-	*/
-	class AV
-	{
-	public:
-		//! Initialize ffmpeg
-		static bool Init();
-
-	}; // class AV
-
-
-
+}; // class AV
 
 } // namespace Media
 } // namespace Private

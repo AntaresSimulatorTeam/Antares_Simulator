@@ -25,57 +25,52 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIB_STUDY_FILTER_HXX__
-# define __ANTARES_LIB_STUDY_FILTER_HXX__
-
+#define __ANTARES_LIB_STUDY_FILTER_HXX__
 
 namespace Antares
 {
 namespace Data
 {
-
-	template<class StringT>
-	void AppendFilterToString(StringT& out, uint filter)
-	{
-		if (filter)
-		{
-			bool empty = true;
-			if (0 != (filter & filterHourly))
-			{
-				out << "hourly";
-				empty = false;
-			}
-			if (0 != (filter & filterDaily))
-			{
-				if (!empty)
-					out << ", ";
-				out << "daily";
-				empty = false;
-			}
-			if (0 != (filter & filterWeekly))
-			{
-				if (!empty)
-					out << ", ";
-				out << "weekly";
-				empty = false;
-			}
-			if (0 != (filter & filterMonthly))
-			{
-				if (!empty)
-					out << ", ";
-				out << "monthly";
-				empty = false;
-			}
-			if (0 != (filter & filterAnnual))
-			{
-				if (!empty)
-					out << ", ";
-				out << "annual";
-			}
-		}
-	}
-
-
-
+template<class StringT>
+void AppendFilterToString(StringT& out, uint filter)
+{
+    if (filter)
+    {
+        bool empty = true;
+        if (0 != (filter & filterHourly))
+        {
+            out << "hourly";
+            empty = false;
+        }
+        if (0 != (filter & filterDaily))
+        {
+            if (!empty)
+                out << ", ";
+            out << "daily";
+            empty = false;
+        }
+        if (0 != (filter & filterWeekly))
+        {
+            if (!empty)
+                out << ", ";
+            out << "weekly";
+            empty = false;
+        }
+        if (0 != (filter & filterMonthly))
+        {
+            if (!empty)
+                out << ", ";
+            out << "monthly";
+            empty = false;
+        }
+        if (0 != (filter & filterAnnual))
+        {
+            if (!empty)
+                out << ", ";
+            out << "annual";
+        }
+    }
+}
 
 } // namespace Data
 } // namespace Antares

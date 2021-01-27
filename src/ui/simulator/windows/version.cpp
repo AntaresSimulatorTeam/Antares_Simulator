@@ -29,45 +29,42 @@
 #include "../../../config.h"
 #include "../../../internet/limits.h"
 
-
 namespace Antares
 {
-
-	wxString VersionToWxString(bool copyright)
-	{
-		if (copyright)
-		{
-			if (License::Limits::customerCaption.empty())
-			{
-				return wxString(wxT("Antares v")) << ANTARES_VERSION_HI << wxT('.') << ANTARES_VERSION_LO
-					<< wxT('.') << ANTARES_VERSION_BUILD
-					#if ANTARES_RC != 0
-					<< wxT("rc") << int(ANTARES_RC)
-					#endif
-					;
-			}
-			else
-			{
-				return wxString(wxT("Antares v")) << ANTARES_VERSION_HI << wxT('.') << ANTARES_VERSION_LO
-					<< wxT('.') << ANTARES_VERSION_BUILD
-					#if ANTARES_RC != 0
-					<< wxT("rc") << int(ANTARES_RC)
-					#endif
-					<< wxT(" -  ")
-					<< wxStringFromUTF8(License::Limits::customerCaption);
-			}
-		}
-		else
-		{
-			return wxString(wxT("Antares v")) << ANTARES_VERSION_HI << wxT('.') << ANTARES_VERSION_LO
-				<< wxT('.') << ANTARES_VERSION_BUILD
-				#if ANTARES_RC != 0
-					<< wxT("rc") << int(ANTARES_RC)
-				#endif
-				;
-		}
-	}
-
-
+wxString VersionToWxString(bool copyright)
+{
+    if (copyright)
+    {
+        if (License::Limits::customerCaption.empty())
+        {
+            return wxString(wxT("Antares v"))
+                   << ANTARES_VERSION_HI << wxT('.') << ANTARES_VERSION_LO << wxT('.')
+                   << ANTARES_VERSION_BUILD
+#if ANTARES_RC != 0
+                   << wxT("rc") << int(ANTARES_RC)
+#endif
+              ;
+        }
+        else
+        {
+            return wxString(wxT("Antares v"))
+                   << ANTARES_VERSION_HI << wxT('.') << ANTARES_VERSION_LO << wxT('.')
+                   << ANTARES_VERSION_BUILD
+#if ANTARES_RC != 0
+                   << wxT("rc") << int(ANTARES_RC)
+#endif
+                   << wxT(" -  ") << wxStringFromUTF8(License::Limits::customerCaption);
+        }
+    }
+    else
+    {
+        return wxString(wxT("Antares v")) << ANTARES_VERSION_HI << wxT('.') << ANTARES_VERSION_LO
+                                          << wxT('.') << ANTARES_VERSION_BUILD
+#if ANTARES_RC != 0
+                                          << wxT("rc") << int(ANTARES_RC)
+#endif
+          ;
+    }
+}
 
 } // namespace Antares

@@ -10,64 +10,70 @@
 */
 #pragma once
 
-
-
 namespace Yuni
 {
+/*!
+** \class NonCopyable
+** \brief Prevent objects of a class from being copy-constructed or assigned to each other
+**
+** \code
+** class ClassThatCanNotBeCopied : private NonCopyable<ClassThatCanNotBeCopied>
+** {
+** // ...
+** };
+** \endcode
+*/
+#if defined(YUNI_HAS_CPP_MOVE)
 
-	/*!
-	** \class NonCopyable
-	** \brief Prevent objects of a class from being copy-constructed or assigned to each other
-	**
-	** \code
-	** class ClassThatCanNotBeCopied : private NonCopyable<ClassThatCanNotBeCopied>
-	** {
-	** // ...
-	** };
-	** \endcode
-	*/
-	#if defined(YUNI_HAS_CPP_MOVE)
+template<class T>
+class YUNI_DECL NonCopyable
+{
+public:
+    NonCopyable() = default;
+    // no copy constructor
+    NonCopyable(const NonCopyable&) = delete;
+    // no copy operator
+    template<class U>
+    NonCopyable& operator=(const U&) = delete;
+    NonCopyable& operator=(const NonCopyable&) = delete;
+    // destructor
+    ~NonCopyable() = default;
 
-	template<class T>
-	class YUNI_DECL NonCopyable
-	{
-	public:
-		NonCopyable() = default;
-		// no copy constructor
-		NonCopyable(const NonCopyable&) = delete;
-		// no copy operator
-		template<class U> NonCopyable& operator = (const U&) = delete;
-		NonCopyable& operator = (const NonCopyable&) = delete;
-		// destructor
-		~NonCopyable() = default;
+}; // class NonCopyable
 
-	}; // class NonCopyable
+#else
 
+template<class T>
+class YUNI_DECL NonCopyable
+{
+protected:
+    //! Default constructor
+    NonCopyable()
+    {
+    }
+    //! Protected non-virtual destructor
+    ~NonCopyable()
+    {
+    }
 
-	#else
+private:
+    // Private copy constructor
+    NonCopyable(const NonCopyable&)
+    {
+    }
+    // Private copy operator
+    template<class U>
+    T& operator=(const U&)
+    {
+        return *static_cast<T*>(this);
+    }
+    NonCopyable& operator=(const NonCopyable&)
+    {
+        return *static_cast<T*>(this);
+    }
 
-	template<class T>
-	class YUNI_DECL NonCopyable
-	{
-	protected:
-		//! Default constructor
-		NonCopyable() {}
-		//! Protected non-virtual destructor
-		~NonCopyable() {}
+}; // class NonCopyable
 
-
-	private:
-		// Private copy constructor
-		NonCopyable(const NonCopyable &) {}
-		// Private copy operator
-		template<class U> T& operator = (const U&) {return *static_cast<T*>(this);}
-		NonCopyable& operator = (const NonCopyable&) {return *static_cast<T*>(this);}
-
-	}; // class NonCopyable
-
-	#endif
-
-
-
+#endif
 
 } // namespace Yuni

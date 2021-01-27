@@ -25,13 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_MINIFRAME_H__
-# define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_MINIFRAME_H__
+#define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_MINIFRAME_H__
 
-# include <yuni/yuni.h>
-# include <ui/common/wx-wrapper.h>
-# include <wx/minifram.h>
-# include <wx/frame.h>
-
+#include <yuni/yuni.h>
+#include <ui/common/wx-wrapper.h>
+#include <wx/minifram.h>
+#include <wx/frame.h>
 
 namespace Antares
 {
@@ -39,41 +38,36 @@ namespace Private
 {
 namespace Spotlight
 {
+class SpotlightMiniFrame : public wxFrame
+{
+public:
+    //! Get the current instance (if any) of the frame
+    static SpotlightMiniFrame* Instance();
 
-	class SpotlightMiniFrame : public wxFrame
-	{
-	public:
-		//! Get the current instance (if any) of the frame
-		static SpotlightMiniFrame* Instance();
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    SpotlightMiniFrame(wxWindow* parent);
+    //! Destructor
+    virtual ~SpotlightMiniFrame();
+    //@}
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		SpotlightMiniFrame(wxWindow* parent);
-		//! Destructor
-		virtual ~SpotlightMiniFrame();
-		//@}
+    //! Event: the form is about to be closed
+    void onClose(wxCloseEvent& evt);
 
-		//! Event: the form is about to be closed
-		void onClose(wxCloseEvent& evt);
+    void onKillFocus(wxFocusEvent& evt);
 
-		void onKillFocus(wxFocusEvent& evt);
+private:
+    void removeRefToMySelf();
 
-	private:
-		void removeRefToMySelf();
+protected:
+    // Event Table
+    DECLARE_EVENT_TABLE()
 
-	protected:
-		// Event Table
-		DECLARE_EVENT_TABLE()
-
-	}; // class SpotlightMiniFrame
-
-
-
-
+}; // class SpotlightMiniFrame
 
 } // namespace Spotlight
 } // namespace Private

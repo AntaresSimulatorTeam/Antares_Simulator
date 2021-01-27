@@ -25,18 +25,17 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_VACUUM_IO_H__
-# define __ANTARES_VACUUM_IO_H__
+#define __ANTARES_VACUUM_IO_H__
 
-# include <yuni/yuni.h>
-# include <yuni/io/file.h>
-# ifndef YUNI_OS_WINDOWS
-#	include <unistd.h>
-# else
-#	include <yuni/core/system/windows.hdr.h>
-#	include <yuni/core/string/wstring.h>
-# endif
-# include <unordered_set>
-
+#include <yuni/yuni.h>
+#include <yuni/io/file.h>
+#ifndef YUNI_OS_WINDOWS
+#include <unistd.h>
+#else
+#include <yuni/core/system/windows.hdr.h>
+#include <yuni/core/string/wstring.h>
+#endif
+#include <unordered_set>
 
 //! Flag to determine whether we are in dry mode or not
 extern bool dry;
@@ -49,8 +48,6 @@ extern Yuni::Atomic::Int<> IOFoldersDeleted;
 
 //! All inputs folders, which can not be removed
 extern std::unordered_set<YString> inputFolders;
-
-
 
 /*!
 ** \brief Remove a file
@@ -65,6 +62,5 @@ bool RemoveFile(const YString& filename, yuint64 size);
 ** No I/O operations will be performed if in dry mode
 */
 bool RemoveDirectoryIfEmpty(const YString& folder);
-
 
 #endif // __ANTARES_VACUUM_IO_H__

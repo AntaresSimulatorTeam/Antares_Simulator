@@ -25,29 +25,27 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_ADEQUACY_DRAFT_H__
-# define __SOLVER_VARIABLE_ADEQUACY_DRAFT_H__
+#define __SOLVER_VARIABLE_ADEQUACY_DRAFT_H__
 
-# include "../variable.h"
-# include "../area.h"
-# include "lold_is.h"
-# include "lold_cn.h"
-# include "ens_is.h"
-# include "ens_cn.h"
-# include "lolp_is.h"
-# include "lolp_cn.h"
-# include "maxdepth_is.h"
-# include "maxdepth_cn.h"
-# include "minmarg_is.h"
-# include "minmarg_cn.h"
+#include "../variable.h"
+#include "../area.h"
+#include "lold_is.h"
+#include "lold_cn.h"
+#include "ens_is.h"
+#include "ens_cn.h"
+#include "lolp_is.h"
+#include "lolp_cn.h"
+#include "maxdepth_is.h"
+#include "maxdepth_cn.h"
+#include "minmarg_is.h"
+#include "minmarg_cn.h"
 
-# include "lold_is_system.h"
-# include "lold_cn_system.h"
-# include "lolp_is_system.h"
-# include "lolp_cn_system.h"
-# include "ens_is_system.h"
-# include "ens_cn_system.h"
-
-
+#include "lold_is_system.h"
+#include "lold_cn_system.h"
+#include "lolp_is_system.h"
+#include "lolp_cn_system.h"
+#include "ens_is_system.h"
+#include "ens_cn_system.h"
 
 namespace Antares
 {
@@ -57,45 +55,21 @@ namespace Variable
 {
 namespace AdequacyDraft
 {
+/*!
+** \brief All variables for a single area (adequacy)
+*/
+typedef LOLD_IS<
+  LOLD_CN<LOLP_IS<LOLP_CN<ENS_IS<ENS_CN<MinMarg_IS<MinMarg_CN<MaxDepth_IS<MaxDepth_CN<>>>>>>>>>>
+  VariablesPerArea;
 
+typedef LOLD_IS_System<LOLD_CN_System<
+  LOLP_IS_System<LOLP_CN_System<ENS_IS_System<ENS_CN_System<Variable::Areas<VariablesPerArea>>>>>>>
+  ItemList;
 
-	/*!
-	** \brief All variables for a single area (adequacy)
-	*/
-	typedef LOLD_IS
-			< LOLD_CN
-			< LOLP_IS
-			< LOLP_CN
-			< ENS_IS
-			< ENS_CN
-			< MinMarg_IS
-			< MinMarg_CN
-			< MaxDepth_IS
-			< MaxDepth_CN
-			< > > > > > > > > > >   VariablesPerArea;
-
-	typedef
-		LOLD_IS_System
-		< LOLD_CN_System
-		< LOLP_IS_System
-		< LOLP_CN_System
-		< ENS_IS_System
-		< ENS_CN_System
-		< Variable::Areas <VariablesPerArea>
-		> > > > > >
-		ItemList;
-
-
-
-	/*!
-	** \brief All variables for an simulation in Adequacy mode
-	*/
-	typedef Container::List<ItemList> AllVariables;
-
-
-
-
-
+/*!
+** \brief All variables for an simulation in Adequacy mode
+*/
+typedef Container::List<ItemList> AllVariables;
 
 } // namespace AdequacyDraft
 } // namespace Variable

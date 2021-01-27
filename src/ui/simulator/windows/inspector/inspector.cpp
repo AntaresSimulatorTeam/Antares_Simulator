@@ -40,816 +40,766 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
 namespace Window
 {
 namespace Inspector
 {
-
-	static void DelayedUpdate()
-	{
-		if (gInspector)
-			gInspector->apply(gData);
-	}
-
-
-
-	void Destroy()
-	{
-		gData = nullptr;
-
-		if (gInspector)
-		{
-			gInspector->apply(nullptr);
-			Hide();
-			gInspector->detachFromTheMainForm();
-			gInspector->Destroy();
-			gInspector = nullptr;
-		}
-	}
-
-
-	void Refresh()
-	{
-		Bind<void ()> callback;
-		callback.bind(&DelayedUpdate);
-		Dispatcher::GUI::Post(callback);
-	}
-
-
-	void Unselect()
-	{
-		gData = nullptr;
-		if (gInspector)
-			gInspector->apply(nullptr);
-	}
-
-
-	uint SelectionAreaCount()
-	{
-		return ((!(!gData)) ? (uint) gData->areas.size() : 0);
-	}
-
-	uint SelectionLinksCount()
-	{
-		return ((!(!gData)) ? (uint) gData->links.size() : 0);
-	}
-
-	uint SelectionThermalClusterCount()
-	{
-		return ((!(!gData)) ? (uint) gData->clusters.size() : 0);
-	}
-
-	uint SelectionBindingConstraintCount()
-	{
-		return ((!(!gData)) ? (uint) gData->constraints.size() : 0);
-	}
-
-
-	uint SelectionTotalCount()
-	{
-		return (!(!gData))
-			? (uint) gData->constraints.size() + (uint) gData->clusters.size() + (uint) gData->links.size()
-				+ (uint) gData->areas.size()
-			: 0;
-	}
-
-
-	void Hide()
-	{
-		if (IsGUIAboutToQuit())
-			return;
-
-		if (gInspector)
-		{
-			auto& mainFrm = *Antares::Forms::ApplWnd::Instance();
-			wxAuiPaneInfo& pnl = mainFrm.AUIManager().GetPane(gInspector);
-			pnl.Hide();
-			mainFrm.AUIManager().Update();
-		}
-	}
-
-
-	void Show()
-	{
-		if (IsGUIAboutToQuit())
-			return;
-
-		if (!gInspector)
-		{
-			gInspector = new Frame(Antares::Forms::ApplWnd::Instance(), true);
-			gInspector->attachToTheMainForm();
-
-			auto& mainFrm = *Antares::Forms::ApplWnd::Instance();
-			wxAuiPaneInfo& pnl = mainFrm.AUIManager().GetPane(gInspector);
-			pnl.Show();
-			mainFrm.AUIManager().Update();
-			mainFrm.GetSizer()->Layout();
-			mainFrm.forceRefresh();
-		}
-		else
-		{
-			if (not gInspector->IsShown())
-			{
-				auto& mainFrm = *Antares::Forms::ApplWnd::Instance();
-				auto& pnl = mainFrm.AUIManager().GetPane(gInspector);
-				pnl.Show();
-				mainFrm.AUIManager().Update();
-				mainFrm.GetSizer()->Layout();
-				mainFrm.forceRefresh();
-			}
-		}
-
-		gInspector->apply(gData);
-		gInspector->SetFocus();
-		Antares::Dispatcher::GUI::Refresh(gInspector);
-	}
-
-
-	void SelectStudy(const Data::Study* study)
-	{
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-
-		gData->clear();
-		if (study)
-		{
-			if (gData->studies.insert(const_cast<Data::Study*>(study)).second)
-				gData->empty = false;
-		}
-
-		if (gInspector)
-			gInspector->apply(gData);
-	}
-
-
-	void AddStudy(const Data::Study* study)
-	{
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-
-		if (gData->studies.insert(const_cast<Data::Study*>(study)).second)
-		{
-			gData->empty = false;
-			if (gInspector)
-				gInspector->apply(gData);
-		}
-	}
-
-
-
-	void SelectArea(const Data::Area* area)
-	{
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-
-		gData->clear();
-		if (area)
-		{
-			if (gData->areas.insert(const_cast<Data::Area*>(area)).second)
-				gData->empty = false;
-		}
-
-		if (gInspector)
-			gInspector->apply(gData);
-	}
-
-
-	void AddArea(const Data::Area* area)
-	{
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-
-		if (gData->areas.insert(const_cast<Data::Area*>(area)).second)
-		{
-			gData->empty = false;
-			if (gInspector)
-				gInspector->apply(gData);
-		}
-	}
-
-
-	void AddAreas(const Data::Area::Vector& list)
-	{
-		if (list.empty())
-			return;
-
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-
-		bool notEmpty = false;
-		Data::Area::Vector::const_iterator end = list.end();
-		for (Data::Area::Vector::const_iterator i = list.begin(); i != end; ++i)
-		{
-			Data::Area* area = const_cast<Data::Area*>(*i);
-			if (area)
-				notEmpty = gData->areas.insert(area).second || notEmpty;
-		}
-
-		if (notEmpty)
-		{
-			gData->empty = false;
-			if (gInspector)
-				gInspector->apply(gData);
-		}
-	}
-
-
-	void AddAreas(const Data::Area::Set& list)
-	{
-		if (list.empty())
-			return;
-
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-
-		bool notEmpty = false;
-		Data::Area::Set::const_iterator end = list.end();
-		for (Data::Area::Set::const_iterator i = list.begin(); i != end; ++i)
-		{
-			Data::Area* area = const_cast<Data::Area*>(*i);
-			if (area)
-				notEmpty = gData->areas.insert(area).second || notEmpty;
-		}
-
-		if (notEmpty)
-		{
-			gData->empty = false;
-			if (gInspector)
-				gInspector->apply(gData);
-		}
-	}
-
-
-
-
-	void AddLinks(const Data::AreaLink::Vector& list)
-	{
-		if (list.empty())
-			return;
-
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-
-		bool notEmpty = false;
-		Data::AreaLink::Vector::const_iterator end = list.end();
-		for (Data::AreaLink::Vector::const_iterator i = list.begin(); i != end; ++i)
-			notEmpty = gData->links.insert(const_cast<Data::AreaLink*>(*i)).second || notEmpty;
-
-		if (notEmpty)
-		{
-			gData->empty = false;
-			if (gInspector)
-				gInspector->apply(gData);
-		}
-	}
-
-
-	void AddLinks(const Data::AreaLink::Set& list)
-	{
-		if (list.empty())
-			return;
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-
-		bool notEmpty = false;
-		Data::AreaLink::Set::const_iterator end = list.end();
-		for (Data::AreaLink::Set::const_iterator i = list.begin(); i != end; ++i)
-			notEmpty = gData->links.insert(const_cast<Data::AreaLink*>(*i)).second || notEmpty;
-
-		if (notEmpty)
-		{
-			gData->empty = false;
-			if (gInspector)
-				gInspector->apply(gData);
-		}
-	}
-
-	const Data::AreaLink::Set& getLinks()
-	{
-		return gData->links;
-	}
-
-
-	void AddBindingConstraint(const Data::BindingConstraint* constraint)
-	{
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-		typedef Data::BindingConstraint* ConstraintPtr;
-		if (gData->constraints.insert(const_cast<ConstraintPtr>(constraint)).second)
-		{
-			gData->empty = false;
-			if (gInspector)
-				gInspector->apply(gData);
-		}
-	}
-
-
-	void AddBindingConstraints(const Data::BindingConstraint::Set& list)
-	{
-		if (list.empty())
-			return;
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-
-		typedef Data::BindingConstraint StudyConstraintType;
-		bool notEmpty = false;
-		StudyConstraintType::Set::const_iterator end = list.end();
-		for (StudyConstraintType::Set::const_iterator i = list.begin(); i != end; ++i)
-			notEmpty = gData->constraints.insert(const_cast<StudyConstraintType*>(*i)).second || notEmpty;
-
-		if (notEmpty)
-		{
-			gData->empty = false;
-			if (gInspector)
-				gInspector->apply(gData);
-		}
-	}
-
-
-	void AddLink(const Data::AreaLink* link)
-	{
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-		if (gData->links.insert(const_cast<Data::AreaLink*>(link)).second)
-		{
-			gData->empty = false;
-			if (gInspector)
-				gInspector->apply(gData);
-		}
-	}
-
-
-	void AddThermalCluster(const Data::ThermalCluster* cluster)
-	{
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-		if (gData->clusters.insert(const_cast<Data::ThermalCluster*>(cluster)).second)
-		{
-			gData->empty = false;
-			if (gInspector)
-				gInspector->apply(gData);
-		}
-	}
-
-
-	void AddThermalClusters(const Data::ThermalCluster::Vector& list)
-	{
-		if (list.empty())
-			return;
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-
-		bool notEmpty = false;
-		Data::ThermalCluster::Vector::const_iterator end = list.end();
-		for (Data::ThermalCluster::Vector::const_iterator i = list.begin(); i != end; ++i)
-			notEmpty = gData->clusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
-
-		if (notEmpty)
-		{
-			gData->empty = false;
-			if (gInspector)
-				gInspector->apply(gData);
-		}
-	}
-
-
-	void AddThermalClusters(const Data::ThermalCluster::Set& list)
-	{
-		if (list.empty())
-			return;
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-
-		bool notEmpty = false;
-		Data::ThermalCluster::Set::const_iterator end = list.end();
-		for (Data::ThermalCluster::Set::const_iterator i = list.begin(); i != end; ++i)
-			notEmpty = gData->clusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
-
-		if (notEmpty)
-		{
-			gData->empty = false;
-			if (gInspector)
-				gInspector->apply(gData);
-		}
-	}
-
-
-	void RemoveArea(const Data::Area* area)
-	{
-		if (!(!gData) && gData->areas.erase(const_cast<Data::Area*>(area)))
-		{
-			gData->determineEmpty();
-			if (gInspector)
-				gInspector->apply(gData);
-		}
-	}
-
-
-	void RemoveBindingConstraint(const Data::BindingConstraint* constraint)
-	{
-		if (!(!gData) && gData->constraints.erase(const_cast< Data::BindingConstraint*>(constraint)))
-		{
-			gData->determineEmpty();
-			if (gInspector)
-				gInspector->apply(gData);
-		}
-	}
-
-
-	void RemoveLink(const Data::AreaLink* link)
-	{
-		if (!(!gData) && gData->links.erase(const_cast<Data::AreaLink*>(link)))
-		{
-			gData->determineEmpty();
-			if (gInspector)
-				gInspector->apply(gData);
-		}
-	}
-
-	void RemoveThermalCluster(const Data::ThermalCluster* cluster)
-	{
-		if (!(!gData) && gData->clusters.erase(const_cast<Data::ThermalCluster*>(cluster)))
-		{
-			gData->determineEmpty();
-			if (gInspector)
-				gInspector->apply(gData);
-		}
-	}
-
-
-	void SelectAreas(const Data::Area::Vector& areas)
-	{
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-		gData->clear();
-		if (!areas.empty())
-		{
-			bool notEmpty = false;
-			const Data::Area::Vector::const_iterator end = areas.end();
-			for (Data::Area::Vector::const_iterator i = areas.begin(); i != end; ++i)
-			{
-				Data::Area* area = const_cast<Data::Area*>(*i);
-				if (area)
-					notEmpty = gData->areas.insert(area).second || notEmpty;
-			}
-			if (notEmpty)
-				gData->empty = false;
-		}
-		if (gInspector)
-			gInspector->apply(gData);
-	}
-
-
-	void SelectAreas(const Data::Area::Set& areas)
-	{
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-		gData->clear();
-		if (!areas.empty())
-		{
-			bool notEmpty = false;
-			const Data::Area::Set::const_iterator end = areas.end();
-			for (Data::Area::Set::const_iterator i = areas.begin(); i != end; ++i)
-			{
-				Data::Area* area = const_cast<Data::Area*>(*i);
-				if (area)
-					notEmpty = gData->areas.insert(area).second || notEmpty;
-			}
-			if (notEmpty)
-				gData->empty = false;
-		}
-		if (gInspector)
-			gInspector->apply(gData);
-	}
-
-
-
-	void SelectBindingConstraints(const Data::BindingConstraint::Vector& list)
-	{
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-		gData->clear();
-		if (!list.empty())
-		{
-			typedef Data::BindingConstraint* ConstraintPtr;
-			bool notEmpty = false;
-			const Data::BindingConstraint::Vector::const_iterator end = list.end();
-			for (Data::BindingConstraint::Vector::const_iterator i = list.begin(); i != end; ++i)
-				notEmpty = gData->constraints.insert(const_cast<ConstraintPtr>(*i)).second || notEmpty;
-			if (notEmpty)
-				gData->empty = false;
-		}
-		if (gInspector)
-			gInspector->apply(gData);
-	}
-
-
-	void SelectLink(const Data::AreaLink* lnk)
-	{
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-		gData->clear();
-		if (lnk)
-		{
-			if (gData->links.insert(const_cast<Data::AreaLink*>(lnk)).second)
-				gData->empty = false;
-		}
-		if (gInspector)
-			gInspector->apply(gData);
-	}
-
-
-	void SelectLinks(const Data::AreaLink::Vector& lnks)
-	{
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-		gData->clear();
-		if (!lnks.empty())
-		{
-			bool notEmpty = false;
-			const Data::AreaLink::Vector::const_iterator end = lnks.end();
-			for (Data::AreaLink::Vector::const_iterator i = lnks.begin(); i != end; ++i)
-				notEmpty = gData->links.insert(const_cast<Data::AreaLink*>(*i)).second || notEmpty;
-			if (notEmpty)
-				gData->empty = false;
-		}
-		if (gInspector)
-			gInspector->apply(gData);
-	}
-
-
-	void SelectThermalCluster(const Data::ThermalCluster* cluster)
-	{
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-		gData->clear();
-		if (cluster)
-		{
-			if (gData->clusters.insert(const_cast<Data::ThermalCluster*>(cluster)).second)
-				gData->empty = false;
-		}
-		if (gInspector)
-			gInspector->apply(gData);
-	}
-
-
-	void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters)
-	{
-		if (!gData)
-			gData = new InspectorData(*Data::Study::Current::Get());
-		gData->clear();
-
-		if (not clusters.empty())
-		{
-			bool notEmpty = false;
-			auto end = clusters.end();
-			for (auto i = clusters.begin(); i != end; ++i)
-				notEmpty = (gData->clusters).insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
-
-			if (notEmpty)
-				gData->empty = false;
-		}
-		if (gInspector)
-			gInspector->apply(gData);
-	}
-
-
-
-	uint CopyToClipboard()
-	{
-		auto studyptr = Data::Study::Current::Get();
-		if (not studyptr || not gData)
-			return 0; // nothing was copied
-
-		// alias to the current study
-		auto & study = *studyptr;
-		// string that will be copied into the system clipboard
-		String::Ptr s = new String();
-		auto& text = *s;
-
-		// Header guard
-		text << "antares.study.clipboard;handler=com.rte-france.antares.study;path="
-			<< study.folder << "\n";
-
-		// add a flag to know if the study has been modified just before the copy
-		// antares has to fail when a paster occurs into another instance to prevent
-		// against incomplete data
-		if (StudyHasBeenModified())
-			text += "was-modified: true\n";
-
-		uint count = 0;
-
-		// copying areas if any
-		{
-			auto end = gData->areas.end();
-			for (auto i = gData->areas.begin(); i != end; ++i)
-			{
-				Data::Area* area = *i;
-				if (area)
-				{
-					text << "import-area:" << area->name << "\n";
-					++count;
-				}
-			}
-		}
-
-		// copying thermal plants if any
-		{
-			auto end = gData->clusters.end();
-			for (auto i = gData->clusters.begin(); i != end; ++i)
-			{
-				text << "import-thermal-cluster:" << (*i)->parentArea->name << '@' << (*i)->name() << "\n";
-				++count;
-			}
-		}
-
-		// copying links if any
-		{
-			auto end = gData->links.end();
-			for (auto i = gData->links.begin(); i != end; ++i)
-			{
-				text << "import-link:" << (*i)->from->name << '@' << (*i)->with->name << "\n";
-				++count;
-			}
-		}
-
-		// copying constraints if any
-		{
-			auto end = gData->constraints.end();
-			for (auto i = gData->constraints.begin(); i != end; ++i)
-			{
-				text << "import-constraint:" << (*i)->name() << "\n";
-				++count;
-			}
-		}
-
-		if (count) // at least one item has been selected
-		{
-			Antares::Toolbox::Clipboard clipboard;
-			clipboard.add(s);
-			clipboard.copy();
-			return count;
-		}
-
-		// nothing was copied
-		return 0;
-	}
-
-
-	bool AreasSelected(const Data::Area::NameSet& set, std::map<Antares::Data::AreaName, Antares::Data::AreaName>& nameMap)
-	{
-		if (gData == nullptr || (set.empty() && gData->areas.size()))
-			return false;
-
-		auto end = gData->areas.end();
-		for (auto i = gData->areas.begin(); i != end; ++i)
-		{
-			Data::Area* area = *i;
-			if (area)
-			{
-				if (set.find(area->name) != set.end())
-					nameMap[*set.find(area->name)] = area->name;
-				else
-					return false;
-			}
-		}
-		return true;
-	}
-
-	bool isAreaSelected(Antares::Data::AreaName name)
-	{
-		if (name.empty() || gData == nullptr)
-			return false;
-		auto end = gData->areas.end();
-		for (auto i = gData->areas.begin(); i != end; ++i)
-		{
-			Data::Area* area = *i;
-			if (area->name == name)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
-	bool isConstraintSelected(const Yuni::String& constraintName)
-	{
-		if (constraintName.empty()  || gData == nullptr)
-			return false;
-		auto end = gData->constraints.end();
-		for (auto i = gData->constraints.begin(); i != end; ++i)
-		{
-			Data::BindingConstraint* constraint = *i;
-			if (constraint->name() == constraintName)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
-	bool ConstraintsSelected(const std::set<Yuni::String>& set)
-	{
-		if (gData == nullptr || (set.empty() && gData->constraints.size()))
-			return false;
-		auto end = gData->constraints.end();
-		for (auto i = gData->constraints.begin(); i != end; ++i)
-		{
-			Data::BindingConstraint* constraint = *i;
-			if (set.find(constraint->name()) == set.end())
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
-	bool IsLinkSelected(const Data::AreaName& from, const Data::AreaName& with)
-	{
-		
-		if (gData == nullptr || from.empty() || with.empty())
-			return false;
-
-		auto end = gData->links.end();
-		for (auto i = gData->links.begin(); i != end; ++i)
-		{
-			Antares::Data::AreaLink* link = *i;
-			if (link->from->name == from && link->with->name == with)
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	bool LinksSelected(std::map<Data::AreaName, std::map<Data::AreaName, bool> >& set)
-	{
-		if (gData == nullptr || ( set.empty() && gData->links.size()))
-			return false;
-		auto end = gData->links.end();
-		for (auto i = gData->links.begin(); i != end; ++i)
-		{
-			Data::AreaLink* link = *i;
-			auto from = set.find(link->from->name);
-			if (from != set.end())
-			{
-				auto with = from->second.find(link->with->name);
-
-				if (with != from->second.end() && with->second == true)
-					continue;
-
-				return false;
-			}
-			else
-				return false;
-
-		}
-		return true;
-	}
-
-
-	bool IsThermalClusterSelected(const Data::AreaName& area, const Data::ThermalClusterName& name)
-	{
-		(void) area;
-		(void) name;
-		// FIXME
-		assert(true != true);
-		return false;
-	}
-
-
-	void FirstSelectedArea(Data::AreaName& out)
-	{
-		if (!gData || gData->areas.empty())
-		{
-			out.clear();
-			return;
-		}
-		out = (*(gData->areas.begin()))->name;
-	}
-
-
-	void FirstSelectedAreaLink(Data::AreaLink** link)
-	{
-		if (!gData || gData->links.empty())
-		{
-			*link = nullptr;
-			return;
-		}
-		*link = *(gData->links.begin());
-	}
-
-
-
-
-
+static void DelayedUpdate()
+{
+    if (gInspector)
+        gInspector->apply(gData);
+}
+
+void Destroy()
+{
+    gData = nullptr;
+
+    if (gInspector)
+    {
+        gInspector->apply(nullptr);
+        Hide();
+        gInspector->detachFromTheMainForm();
+        gInspector->Destroy();
+        gInspector = nullptr;
+    }
+}
+
+void Refresh()
+{
+    Bind<void()> callback;
+    callback.bind(&DelayedUpdate);
+    Dispatcher::GUI::Post(callback);
+}
+
+void Unselect()
+{
+    gData = nullptr;
+    if (gInspector)
+        gInspector->apply(nullptr);
+}
+
+uint SelectionAreaCount()
+{
+    return ((!(!gData)) ? (uint)gData->areas.size() : 0);
+}
+
+uint SelectionLinksCount()
+{
+    return ((!(!gData)) ? (uint)gData->links.size() : 0);
+}
+
+uint SelectionThermalClusterCount()
+{
+    return ((!(!gData)) ? (uint)gData->clusters.size() : 0);
+}
+
+uint SelectionBindingConstraintCount()
+{
+    return ((!(!gData)) ? (uint)gData->constraints.size() : 0);
+}
+
+uint SelectionTotalCount()
+{
+    return (!(!gData)) ? (uint)gData->constraints.size() + (uint)gData->clusters.size()
+                           + (uint)gData->links.size() + (uint)gData->areas.size()
+                       : 0;
+}
+
+void Hide()
+{
+    if (IsGUIAboutToQuit())
+        return;
+
+    if (gInspector)
+    {
+        auto& mainFrm = *Antares::Forms::ApplWnd::Instance();
+        wxAuiPaneInfo& pnl = mainFrm.AUIManager().GetPane(gInspector);
+        pnl.Hide();
+        mainFrm.AUIManager().Update();
+    }
+}
+
+void Show()
+{
+    if (IsGUIAboutToQuit())
+        return;
+
+    if (!gInspector)
+    {
+        gInspector = new Frame(Antares::Forms::ApplWnd::Instance(), true);
+        gInspector->attachToTheMainForm();
+
+        auto& mainFrm = *Antares::Forms::ApplWnd::Instance();
+        wxAuiPaneInfo& pnl = mainFrm.AUIManager().GetPane(gInspector);
+        pnl.Show();
+        mainFrm.AUIManager().Update();
+        mainFrm.GetSizer()->Layout();
+        mainFrm.forceRefresh();
+    }
+    else
+    {
+        if (not gInspector->IsShown())
+        {
+            auto& mainFrm = *Antares::Forms::ApplWnd::Instance();
+            auto& pnl = mainFrm.AUIManager().GetPane(gInspector);
+            pnl.Show();
+            mainFrm.AUIManager().Update();
+            mainFrm.GetSizer()->Layout();
+            mainFrm.forceRefresh();
+        }
+    }
+
+    gInspector->apply(gData);
+    gInspector->SetFocus();
+    Antares::Dispatcher::GUI::Refresh(gInspector);
+}
+
+void SelectStudy(const Data::Study* study)
+{
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+
+    gData->clear();
+    if (study)
+    {
+        if (gData->studies.insert(const_cast<Data::Study*>(study)).second)
+            gData->empty = false;
+    }
+
+    if (gInspector)
+        gInspector->apply(gData);
+}
+
+void AddStudy(const Data::Study* study)
+{
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+
+    if (gData->studies.insert(const_cast<Data::Study*>(study)).second)
+    {
+        gData->empty = false;
+        if (gInspector)
+            gInspector->apply(gData);
+    }
+}
+
+void SelectArea(const Data::Area* area)
+{
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+
+    gData->clear();
+    if (area)
+    {
+        if (gData->areas.insert(const_cast<Data::Area*>(area)).second)
+            gData->empty = false;
+    }
+
+    if (gInspector)
+        gInspector->apply(gData);
+}
+
+void AddArea(const Data::Area* area)
+{
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+
+    if (gData->areas.insert(const_cast<Data::Area*>(area)).second)
+    {
+        gData->empty = false;
+        if (gInspector)
+            gInspector->apply(gData);
+    }
+}
+
+void AddAreas(const Data::Area::Vector& list)
+{
+    if (list.empty())
+        return;
+
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+
+    bool notEmpty = false;
+    Data::Area::Vector::const_iterator end = list.end();
+    for (Data::Area::Vector::const_iterator i = list.begin(); i != end; ++i)
+    {
+        Data::Area* area = const_cast<Data::Area*>(*i);
+        if (area)
+            notEmpty = gData->areas.insert(area).second || notEmpty;
+    }
+
+    if (notEmpty)
+    {
+        gData->empty = false;
+        if (gInspector)
+            gInspector->apply(gData);
+    }
+}
+
+void AddAreas(const Data::Area::Set& list)
+{
+    if (list.empty())
+        return;
+
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+
+    bool notEmpty = false;
+    Data::Area::Set::const_iterator end = list.end();
+    for (Data::Area::Set::const_iterator i = list.begin(); i != end; ++i)
+    {
+        Data::Area* area = const_cast<Data::Area*>(*i);
+        if (area)
+            notEmpty = gData->areas.insert(area).second || notEmpty;
+    }
+
+    if (notEmpty)
+    {
+        gData->empty = false;
+        if (gInspector)
+            gInspector->apply(gData);
+    }
+}
+
+void AddLinks(const Data::AreaLink::Vector& list)
+{
+    if (list.empty())
+        return;
+
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+
+    bool notEmpty = false;
+    Data::AreaLink::Vector::const_iterator end = list.end();
+    for (Data::AreaLink::Vector::const_iterator i = list.begin(); i != end; ++i)
+        notEmpty = gData->links.insert(const_cast<Data::AreaLink*>(*i)).second || notEmpty;
+
+    if (notEmpty)
+    {
+        gData->empty = false;
+        if (gInspector)
+            gInspector->apply(gData);
+    }
+}
+
+void AddLinks(const Data::AreaLink::Set& list)
+{
+    if (list.empty())
+        return;
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+
+    bool notEmpty = false;
+    Data::AreaLink::Set::const_iterator end = list.end();
+    for (Data::AreaLink::Set::const_iterator i = list.begin(); i != end; ++i)
+        notEmpty = gData->links.insert(const_cast<Data::AreaLink*>(*i)).second || notEmpty;
+
+    if (notEmpty)
+    {
+        gData->empty = false;
+        if (gInspector)
+            gInspector->apply(gData);
+    }
+}
+
+const Data::AreaLink::Set& getLinks()
+{
+    return gData->links;
+}
+
+void AddBindingConstraint(const Data::BindingConstraint* constraint)
+{
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+    typedef Data::BindingConstraint* ConstraintPtr;
+    if (gData->constraints.insert(const_cast<ConstraintPtr>(constraint)).second)
+    {
+        gData->empty = false;
+        if (gInspector)
+            gInspector->apply(gData);
+    }
+}
+
+void AddBindingConstraints(const Data::BindingConstraint::Set& list)
+{
+    if (list.empty())
+        return;
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+
+    typedef Data::BindingConstraint StudyConstraintType;
+    bool notEmpty = false;
+    StudyConstraintType::Set::const_iterator end = list.end();
+    for (StudyConstraintType::Set::const_iterator i = list.begin(); i != end; ++i)
+        notEmpty
+          = gData->constraints.insert(const_cast<StudyConstraintType*>(*i)).second || notEmpty;
+
+    if (notEmpty)
+    {
+        gData->empty = false;
+        if (gInspector)
+            gInspector->apply(gData);
+    }
+}
+
+void AddLink(const Data::AreaLink* link)
+{
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+    if (gData->links.insert(const_cast<Data::AreaLink*>(link)).second)
+    {
+        gData->empty = false;
+        if (gInspector)
+            gInspector->apply(gData);
+    }
+}
+
+void AddThermalCluster(const Data::ThermalCluster* cluster)
+{
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+    if (gData->clusters.insert(const_cast<Data::ThermalCluster*>(cluster)).second)
+    {
+        gData->empty = false;
+        if (gInspector)
+            gInspector->apply(gData);
+    }
+}
+
+void AddThermalClusters(const Data::ThermalCluster::Vector& list)
+{
+    if (list.empty())
+        return;
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+
+    bool notEmpty = false;
+    Data::ThermalCluster::Vector::const_iterator end = list.end();
+    for (Data::ThermalCluster::Vector::const_iterator i = list.begin(); i != end; ++i)
+        notEmpty = gData->clusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
+
+    if (notEmpty)
+    {
+        gData->empty = false;
+        if (gInspector)
+            gInspector->apply(gData);
+    }
+}
+
+void AddThermalClusters(const Data::ThermalCluster::Set& list)
+{
+    if (list.empty())
+        return;
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+
+    bool notEmpty = false;
+    Data::ThermalCluster::Set::const_iterator end = list.end();
+    for (Data::ThermalCluster::Set::const_iterator i = list.begin(); i != end; ++i)
+        notEmpty = gData->clusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
+
+    if (notEmpty)
+    {
+        gData->empty = false;
+        if (gInspector)
+            gInspector->apply(gData);
+    }
+}
+
+void RemoveArea(const Data::Area* area)
+{
+    if (!(!gData) && gData->areas.erase(const_cast<Data::Area*>(area)))
+    {
+        gData->determineEmpty();
+        if (gInspector)
+            gInspector->apply(gData);
+    }
+}
+
+void RemoveBindingConstraint(const Data::BindingConstraint* constraint)
+{
+    if (!(!gData) && gData->constraints.erase(const_cast<Data::BindingConstraint*>(constraint)))
+    {
+        gData->determineEmpty();
+        if (gInspector)
+            gInspector->apply(gData);
+    }
+}
+
+void RemoveLink(const Data::AreaLink* link)
+{
+    if (!(!gData) && gData->links.erase(const_cast<Data::AreaLink*>(link)))
+    {
+        gData->determineEmpty();
+        if (gInspector)
+            gInspector->apply(gData);
+    }
+}
+
+void RemoveThermalCluster(const Data::ThermalCluster* cluster)
+{
+    if (!(!gData) && gData->clusters.erase(const_cast<Data::ThermalCluster*>(cluster)))
+    {
+        gData->determineEmpty();
+        if (gInspector)
+            gInspector->apply(gData);
+    }
+}
+
+void SelectAreas(const Data::Area::Vector& areas)
+{
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+    gData->clear();
+    if (!areas.empty())
+    {
+        bool notEmpty = false;
+        const Data::Area::Vector::const_iterator end = areas.end();
+        for (Data::Area::Vector::const_iterator i = areas.begin(); i != end; ++i)
+        {
+            Data::Area* area = const_cast<Data::Area*>(*i);
+            if (area)
+                notEmpty = gData->areas.insert(area).second || notEmpty;
+        }
+        if (notEmpty)
+            gData->empty = false;
+    }
+    if (gInspector)
+        gInspector->apply(gData);
+}
+
+void SelectAreas(const Data::Area::Set& areas)
+{
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+    gData->clear();
+    if (!areas.empty())
+    {
+        bool notEmpty = false;
+        const Data::Area::Set::const_iterator end = areas.end();
+        for (Data::Area::Set::const_iterator i = areas.begin(); i != end; ++i)
+        {
+            Data::Area* area = const_cast<Data::Area*>(*i);
+            if (area)
+                notEmpty = gData->areas.insert(area).second || notEmpty;
+        }
+        if (notEmpty)
+            gData->empty = false;
+    }
+    if (gInspector)
+        gInspector->apply(gData);
+}
+
+void SelectBindingConstraints(const Data::BindingConstraint::Vector& list)
+{
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+    gData->clear();
+    if (!list.empty())
+    {
+        typedef Data::BindingConstraint* ConstraintPtr;
+        bool notEmpty = false;
+        const Data::BindingConstraint::Vector::const_iterator end = list.end();
+        for (Data::BindingConstraint::Vector::const_iterator i = list.begin(); i != end; ++i)
+            notEmpty = gData->constraints.insert(const_cast<ConstraintPtr>(*i)).second || notEmpty;
+        if (notEmpty)
+            gData->empty = false;
+    }
+    if (gInspector)
+        gInspector->apply(gData);
+}
+
+void SelectLink(const Data::AreaLink* lnk)
+{
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+    gData->clear();
+    if (lnk)
+    {
+        if (gData->links.insert(const_cast<Data::AreaLink*>(lnk)).second)
+            gData->empty = false;
+    }
+    if (gInspector)
+        gInspector->apply(gData);
+}
+
+void SelectLinks(const Data::AreaLink::Vector& lnks)
+{
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+    gData->clear();
+    if (!lnks.empty())
+    {
+        bool notEmpty = false;
+        const Data::AreaLink::Vector::const_iterator end = lnks.end();
+        for (Data::AreaLink::Vector::const_iterator i = lnks.begin(); i != end; ++i)
+            notEmpty = gData->links.insert(const_cast<Data::AreaLink*>(*i)).second || notEmpty;
+        if (notEmpty)
+            gData->empty = false;
+    }
+    if (gInspector)
+        gInspector->apply(gData);
+}
+
+void SelectThermalCluster(const Data::ThermalCluster* cluster)
+{
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+    gData->clear();
+    if (cluster)
+    {
+        if (gData->clusters.insert(const_cast<Data::ThermalCluster*>(cluster)).second)
+            gData->empty = false;
+    }
+    if (gInspector)
+        gInspector->apply(gData);
+}
+
+void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters)
+{
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+    gData->clear();
+
+    if (not clusters.empty())
+    {
+        bool notEmpty = false;
+        auto end = clusters.end();
+        for (auto i = clusters.begin(); i != end; ++i)
+            notEmpty
+              = (gData->clusters).insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
+
+        if (notEmpty)
+            gData->empty = false;
+    }
+    if (gInspector)
+        gInspector->apply(gData);
+}
+
+uint CopyToClipboard()
+{
+    auto studyptr = Data::Study::Current::Get();
+    if (not studyptr || not gData)
+        return 0; // nothing was copied
+
+    // alias to the current study
+    auto& study = *studyptr;
+    // string that will be copied into the system clipboard
+    String::Ptr s = new String();
+    auto& text = *s;
+
+    // Header guard
+    text << "antares.study.clipboard;handler=com.rte-france.antares.study;path=" << study.folder
+         << "\n";
+
+    // add a flag to know if the study has been modified just before the copy
+    // antares has to fail when a paster occurs into another instance to prevent
+    // against incomplete data
+    if (StudyHasBeenModified())
+        text += "was-modified: true\n";
+
+    uint count = 0;
+
+    // copying areas if any
+    {
+        auto end = gData->areas.end();
+        for (auto i = gData->areas.begin(); i != end; ++i)
+        {
+            Data::Area* area = *i;
+            if (area)
+            {
+                text << "import-area:" << area->name << "\n";
+                ++count;
+            }
+        }
+    }
+
+    // copying thermal plants if any
+    {
+        auto end = gData->clusters.end();
+        for (auto i = gData->clusters.begin(); i != end; ++i)
+        {
+            text << "import-thermal-cluster:" << (*i)->parentArea->name << '@' << (*i)->name()
+                 << "\n";
+            ++count;
+        }
+    }
+
+    // copying links if any
+    {
+        auto end = gData->links.end();
+        for (auto i = gData->links.begin(); i != end; ++i)
+        {
+            text << "import-link:" << (*i)->from->name << '@' << (*i)->with->name << "\n";
+            ++count;
+        }
+    }
+
+    // copying constraints if any
+    {
+        auto end = gData->constraints.end();
+        for (auto i = gData->constraints.begin(); i != end; ++i)
+        {
+            text << "import-constraint:" << (*i)->name() << "\n";
+            ++count;
+        }
+    }
+
+    if (count) // at least one item has been selected
+    {
+        Antares::Toolbox::Clipboard clipboard;
+        clipboard.add(s);
+        clipboard.copy();
+        return count;
+    }
+
+    // nothing was copied
+    return 0;
+}
+
+bool AreasSelected(const Data::Area::NameSet& set,
+                   std::map<Antares::Data::AreaName, Antares::Data::AreaName>& nameMap)
+{
+    if (gData == nullptr || (set.empty() && gData->areas.size()))
+        return false;
+
+    auto end = gData->areas.end();
+    for (auto i = gData->areas.begin(); i != end; ++i)
+    {
+        Data::Area* area = *i;
+        if (area)
+        {
+            if (set.find(area->name) != set.end())
+                nameMap[*set.find(area->name)] = area->name;
+            else
+                return false;
+        }
+    }
+    return true;
+}
+
+bool isAreaSelected(Antares::Data::AreaName name)
+{
+    if (name.empty() || gData == nullptr)
+        return false;
+    auto end = gData->areas.end();
+    for (auto i = gData->areas.begin(); i != end; ++i)
+    {
+        Data::Area* area = *i;
+        if (area->name == name)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool isConstraintSelected(const Yuni::String& constraintName)
+{
+    if (constraintName.empty() || gData == nullptr)
+        return false;
+    auto end = gData->constraints.end();
+    for (auto i = gData->constraints.begin(); i != end; ++i)
+    {
+        Data::BindingConstraint* constraint = *i;
+        if (constraint->name() == constraintName)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool ConstraintsSelected(const std::set<Yuni::String>& set)
+{
+    if (gData == nullptr || (set.empty() && gData->constraints.size()))
+        return false;
+    auto end = gData->constraints.end();
+    for (auto i = gData->constraints.begin(); i != end; ++i)
+    {
+        Data::BindingConstraint* constraint = *i;
+        if (set.find(constraint->name()) == set.end())
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool IsLinkSelected(const Data::AreaName& from, const Data::AreaName& with)
+{
+    if (gData == nullptr || from.empty() || with.empty())
+        return false;
+
+    auto end = gData->links.end();
+    for (auto i = gData->links.begin(); i != end; ++i)
+    {
+        Antares::Data::AreaLink* link = *i;
+        if (link->from->name == from && link->with->name == with)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool LinksSelected(std::map<Data::AreaName, std::map<Data::AreaName, bool>>& set)
+{
+    if (gData == nullptr || (set.empty() && gData->links.size()))
+        return false;
+    auto end = gData->links.end();
+    for (auto i = gData->links.begin(); i != end; ++i)
+    {
+        Data::AreaLink* link = *i;
+        auto from = set.find(link->from->name);
+        if (from != set.end())
+        {
+            auto with = from->second.find(link->with->name);
+
+            if (with != from->second.end() && with->second == true)
+                continue;
+
+            return false;
+        }
+        else
+            return false;
+    }
+    return true;
+}
+
+bool IsThermalClusterSelected(const Data::AreaName& area, const Data::ThermalClusterName& name)
+{
+    (void)area;
+    (void)name;
+    // FIXME
+    assert(true != true);
+    return false;
+}
+
+void FirstSelectedArea(Data::AreaName& out)
+{
+    if (!gData || gData->areas.empty())
+    {
+        out.clear();
+        return;
+    }
+    out = (*(gData->areas.begin()))->name;
+}
+
+void FirstSelectedAreaLink(Data::AreaLink** link)
+{
+    if (!gData || gData->links.empty())
+    {
+        *link = nullptr;
+        return;
+    }
+    *link = *(gData->links.begin());
+}
 
 } // namespace Inspector
 } // namespace Window
 } // namespace Antares
-

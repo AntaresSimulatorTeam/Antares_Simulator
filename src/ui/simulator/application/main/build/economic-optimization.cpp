@@ -32,36 +32,34 @@
 #include "../../../toolbox/components/datagrid/renderer/area/nodal-optimization.h"
 #include "standard-page.hxx"
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
 namespace Forms
 {
+void ApplWnd::createNBNodalOptimization()
+{
+    assert(NULL != pNotebook);
 
+    // Create a standard page with an input selector
+    std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page
+      = createStdNotebookPage<Toolbox::InputSelector::Area>(
+        pNotebook, wxT("nodal"), wxT("Economic Opt."));
 
-	void ApplWnd::createNBNodalOptimization()
-	{
-		assert(NULL != pNotebook);
-
-		// Create a standard page with an input selector
-		std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page =
-			createStdNotebookPage<Toolbox::InputSelector::Area>(pNotebook,
-			wxT("nodal"), wxT("Economic Opt."));
-
-		pageNodalOptim = page.first->add(
-			new Component::Datagrid::Component(page.first,
-			new Component::Datagrid::Renderer::NodalOptimization(page.first), wxEmptyString, true, true,
-				false, false, true),
-			wxT("All areas"));
-		pageNodalOptim->displayExtraControls(false);
-	}
-
-
-
+    pageNodalOptim
+      = page.first->add(new Component::Datagrid::Component(
+                          page.first,
+                          new Component::Datagrid::Renderer::NodalOptimization(page.first),
+                          wxEmptyString,
+                          true,
+                          true,
+                          false,
+                          false,
+                          true),
+                        wxT("All areas"));
+    pageNodalOptim->displayExtraControls(false);
+}
 
 } // namespace Forms
 } // namespace Antares
-

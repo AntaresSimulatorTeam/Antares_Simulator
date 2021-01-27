@@ -25,18 +25,16 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_SURVEY_RESULTS_SURVEY_RESULTS_H__
-# define __SOLVER_VARIABLE_SURVEY_RESULTS_SURVEY_RESULTS_H__
+#define __SOLVER_VARIABLE_SURVEY_RESULTS_SURVEY_RESULTS_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-# include "../constants.h"
-# include <antares/study.h>
-# include "../categories.h"
-# include <antares/timeelapsed/timeelapsed.h>
-# include "data.h"
-# include <antares/study/variable-print-info.h>
-
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+#include "../constants.h"
+#include <antares/study.h>
+#include "../categories.h"
+#include <antares/timeelapsed/timeelapsed.h>
+#include "data.h"
+#include <antares/study/variable-print-info.h>
 
 namespace Antares
 {
@@ -44,130 +42,127 @@ namespace Solver
 {
 namespace Variable
 {
+/*!
+** \brief Class utility for building CSV results files
+*/
+class SurveyResults
+{
+public:
+    //! Precision
+    typedef Yuni::CString<10, false> PrecisionType;
+    //! Caption
+    typedef Yuni::CString<128, false> CaptionType;
 
+    /*!
+    ** \brief Try to estimate theamount of memory required by the class
+    */
+    static void EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u);
 
-	/*!
-	** \brief Class utility for building CSV results files
-	*/
-	class SurveyResults
-	{
-	public:
-		//! Precision
-		typedef Yuni::CString<10,false>  PrecisionType;
-		//! Caption
-		typedef Yuni::CString<128,false> CaptionType;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    **
+    ** \param maxVars The maximum total of variables that we may need for writing
+    **   the report
+    ** \param s Reference to the study
+    ** \param o The output folder
+    ** \param year The current year, if any
+    */
+    SurveyResults(uint maxVars, const Data::Study& s, const Yuni::String& o, uint year = (uint)-1);
+    /*!
+    ** \brief Destructor
+    */
+    ~SurveyResults();
+    //@}
 
-		/*!
-		** \brief Try to estimate theamount of memory required by the class
-		*/
-		static void EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u);
+    /*!
+    ** \brief Write the data into a file
+    */
+    void saveToFile(int dataLevel, int fileLevel, int precisionLevel);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		**
-		** \param maxVars The maximum total of variables that we may need for writing
-		**   the report
-		** \param s Reference to the study
-		** \param o The output folder
-		** \param year The current year, if any
-		*/
-		SurveyResults(uint maxVars, const Data::Study& s, const Yuni::String& o, uint year = (uint)-1);
-		/*!
-		** \brief Destructor
-		*/
-		~SurveyResults();
-		//@}
+    /*!
+    ** \brief Export informations about the current study
+    **
+    ** It is composed by several files to completely describe the system
+    ** and provide a good support for Excel macros.
+    */
+    void exportGridInfos();
 
+    bool createDigestFile();
 
-		/*!
-		** \brief Write the data into a file
-		*/
-		void saveToFile(int dataLevel, int fileLevel, int precisionLevel);
+    // Reset a line of values to zero.
+    void resetValuesAtLine(uint);
 
-		/*!
-		** \brief Export informations about the current study
-		**
-		** It is composed by several files to completely describe the system
-		** and provide a good support for Excel macros.
-		*/
-		void exportGridInfos();
+    /*!
+    ** \brief Export the digest file
+    */
+    void exportDigestAllYears();
 
-		bool createDigestFile();
+    void exportDigestMatrix(const char* title);
 
-		// Reset a line of values to zero.
-		void resetValuesAtLine(uint);
+public:
+    //! Data (not related to the template parameter)
+    Solver::Variable::Private::SurveyResultsData data;
 
-		/*!
-		** \brief Export the digest file
-		*/
-		void exportDigestAllYears();
+    //! Caption for the current variable
+    Yuni::CString<128, false> variableCaption;
 
-		void exportDigestMatrix(const char* title);
+    //! Matrix where to store all results
+    double** values;
 
-	public:
-		//! Data (not related to the template parameter)
-		Solver::Variable::Private::SurveyResultsData data;
+    enum
+    {
+        captionCount = 3,
+    };
+    //! Array to store all variable names
+    CaptionType* captions[captionCount];
 
-		//! Caption for the current variable
-		Yuni::CString<128,false> variableCaption;
+    //! Precision to for each column (in the printf format)
+    PrecisionType* precision;
 
-		//! Matrix where to store all results
-		double** values;
+    //! Non applicable status for each column (in the printf format)
+    bool* nonApplicableStatus;
+    // Digest file non applicable status ( dim : nb vars x max(nb areas, nb sets of areas) )
+    uint digestSize; // Useful dimension for digest file non applicable statut management.
+    bool** digestNonApplicableStatus;
 
-		enum
-		{
-			captionCount = 3,
-		};
-		//! Array to store all variable names
-		CaptionType* captions[captionCount];
+    //! The total number of variables
+    const uint maxVariables;
 
-		//! Precision to for each column (in the printf format)
-		PrecisionType* precision;
+    //! Flag to known if we are in the year-by-year mode
+    bool yearByYearResults;
 
-		//! Non applicable status for each column (in the printf format)
-		bool* nonApplicableStatus;
-		// Digest file non applicable status ( dim : nb vars x max(nb areas, nb sets of areas) )
-		uint digestSize; // Useful dimension for digest file non applicable statut management. 
-		bool** digestNonApplicableStatus;
+    //! When looping over output variables, is current variable non applicable ?
+    //! In the static type list of variables, there is a need to convey the non applicable status to
+    //! variables statistic results through an instance of the current class. Furthermore, some
+    //! unusual variables are actually "multi-variables", that is they contain actually several
+    //! variables. Therefore, the following is a pointer on the current output variable's non
+    //! applicable status. In case of a multi-variable, it is a pointer on the current
+    //! sub-variable's non applicable status. This pointer references a TEMPORARY boolean value. It
+    //! is NEVER used to allocate a table.
+    bool* isCurrentVarNA;
+    //! Same thing for print status (do we print the current output variable ?)
+    bool* isPrinted;
 
-		//! The total number of variables
-		const uint maxVariables;
+private:
+    /*!
+    ** \brief Export informations about each area (and its sub-components - thermal clusters, links)
+    */
+    void exportGridInfosAreas(const Yuni::String& folder);
 
-		//! Flag to known if we are in the year-by-year mode
-		bool yearByYearResults;
+    template<class StringT, class ConvertT, class PrecisionT>
+    void AppendDoubleValue(uint& error,
+                           const double v,
+                           StringT& buffer,
+                           ConvertT& conversionBuffer,
+                           const PrecisionT& precision,
+                           const bool isNotApplicable);
 
-		//! When looping over output variables, is current variable non applicable ?
-		//! In the static type list of variables, there is a need to convey the non applicable status to variables
-		//! statistic results through an instance of the current class.
-		//! Furthermore, some unusual variables are actually "multi-variables", that is they contain actually
-		//! several variables.
-		//! Therefore, the following is a pointer on the current output variable's non applicable status.
-		//! In case of a multi-variable, it is a pointer on the current sub-variable's non applicable status.
-		//! This pointer references a TEMPORARY boolean value. It is NEVER used to allocate a table.
-		bool* isCurrentVarNA;
-		//! Same thing for print status (do we print the current output variable ?)
-		bool* isPrinted;
+    void writeDateToFileDescriptor(uint row, int fileLevel, int precisionLevel);
 
-	private:
-		/*!
-		** \brief Export informations about each area (and its sub-components - thermal clusters, links)
-		*/
-		void exportGridInfosAreas(const Yuni::String& folder);
-
-		template<class StringT, class ConvertT, class PrecisionT>
-		void AppendDoubleValue(uint& error, const double v, StringT& buffer, ConvertT& conversionBuffer, const PrecisionT& precision, const bool isNotApplicable);
-
-		void writeDateToFileDescriptor(uint row, int fileLevel, int precisionLevel);
-
-	}; // class SurveyResults
-
-
-
-
-
+}; // class SurveyResults
 
 } // namespace Variable
 } // namespace Solver

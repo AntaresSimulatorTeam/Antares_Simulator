@@ -25,26 +25,20 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_LOGS_LOGS_H__
-# define __ANTARES_LIBS_LOGS_LOGS_H__
+#define __ANTARES_LIBS_LOGS_LOGS_H__
 
-
-# ifdef __cplusplus
+#ifdef __cplusplus
 extern "C"
 {
-# endif
+#endif
 
+    inline int LogHasErrors(void)
+    {
+        return (LogErrorCount() or LogWarningCount());
+    }
 
-
-inline int LogHasErrors(void)
-{
-	return (LogErrorCount() or LogWarningCount());
+#ifdef __cplusplus
 }
-
-
-# ifdef __cplusplus
-}
-# endif
-
-
+#endif
 
 #endif /* __ANTARES_LIBS_LOGS_LOGS_H__ */

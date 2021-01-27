@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_AREA_HXX__
-# define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_AREA_HXX__
-
+#define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_AREA_HXX__
 
 namespace Antares
 {
@@ -36,14 +35,10 @@ namespace HTMLListbox
 {
 namespace Item
 {
-
-
-	inline Data::Area* Area::area() const
-	{
-		return pArea;
-	}
-
-
+inline Data::Area* Area::area() const
+{
+    return pArea;
+}
 
 } // namespace Item
 } // namespace HTMLListbox

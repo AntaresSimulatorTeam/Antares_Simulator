@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_FWD_H__
-# define __ANTARES_TOOLBOX_FWD_H__
-
+#define __ANTARES_TOOLBOX_FWD_H__
 
 // Wx stuff
 class wxPanel;
@@ -43,26 +42,20 @@ class wxColour;
 class wxSplitterWindow;
 class wxTimer;
 
-
 namespace Antares
 {
 namespace Component
 {
 namespace Datagrid
 {
-
-	// The custom wxGridTableBase used by Component
-	class VGridHelper;
-	class DBGrid;
-	class Component;
-
+// The custom wxGridTableBase used by Component
+class VGridHelper;
+class DBGrid;
+class Component;
 
 } // namespace Datagrid
 } // namespace Component
 } // namespace Antares
-
-
-
 
 namespace Antares
 {
@@ -70,39 +63,31 @@ namespace Component
 {
 namespace HTMLListbox
 {
-
-	class Component;
-
+class Component;
 
 } // namespace HTMLListbox
 } // namespace Component
 } // namespace Antares
 
+namespace Antares
+{
+namespace Component
+{
+class Panel;
+class Button;
+class Notebook;
+class Spotlight;
 
+} // namespace Component
+} // namespace Antares
 
 namespace Antares
 {
 namespace Component
 {
-
-	class Panel;
-	class Button;
-	class Notebook;
-	class Spotlight;
+class MainPanel;
 
 } // namespace Component
 } // namespace Antares
-
-
-namespace Antares
-{
-namespace Component
-{
-
-	class MainPanel;
-
-} // namespace Component
-} // namespace Antares
-
 
 #endif // __ANTARES_TOOLBOX_FWD_H__

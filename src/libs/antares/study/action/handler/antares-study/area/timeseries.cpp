@@ -29,8 +29,6 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
 namespace Action
@@ -39,177 +37,172 @@ namespace AntaresStudy
 {
 namespace Area
 {
+DataTimeseries::DataTimeseries(Data::TimeSeries ts, const AnyString& areaname) :
+ pType(ts), pOriginalAreaName(areaname)
+{
+    switch (ts)
+    {
+    case Data::timeSeriesLoad:
+        pInfos.caption << "Load : Timeseries";
+        break;
+    case Data::timeSeriesSolar:
+        pInfos.caption << "Solar : Timeseries";
+        break;
+    case Data::timeSeriesWind:
+        pInfos.caption << "Wind : Timeseries";
+        break;
+    case Data::timeSeriesHydro:
+        pInfos.caption << "Hydro : Timeseries";
+        break;
+    case Data::timeSeriesThermal:
+        pInfos.caption << "Thermal : Timeseries";
+        break;
+    default:
+        break;
+    }
+}
 
-	DataTimeseries::DataTimeseries(Data::TimeSeries ts, const AnyString& areaname) :
-		pType(ts),
-		pOriginalAreaName(areaname)
-	{
-		switch (ts)
-		{
-			case Data::timeSeriesLoad:
-				pInfos.caption << "Load : Timeseries";
-				break;
-			case Data::timeSeriesSolar:
-				pInfos.caption << "Solar : Timeseries";
-				break;
-			case Data::timeSeriesWind:
-				pInfos.caption << "Wind : Timeseries";
-				break;
-			case Data::timeSeriesHydro:
-				pInfos.caption << "Hydro : Timeseries";
-				break;
-			case Data::timeSeriesThermal:
-				pInfos.caption << "Thermal : Timeseries";
-				break;
-			default:
-				break;
-		}
-	}
+DataTimeseries::DataTimeseries(Data::TimeSeries ts,
+                               const AnyString& areaname,
+                               const AnyString& clustername) :
+ pType(ts), pOriginalAreaName(areaname), pOriginalPlantName(clustername)
+{
+    // With this additional parameter, it can only be related to the thermal data
+    assert(ts == Data::timeSeriesThermal);
 
+    pInfos.caption << "Thermal : Timeseries";
+}
 
-	DataTimeseries::DataTimeseries(Data::TimeSeries ts, const AnyString& areaname, const AnyString& clustername) :
-		pType(ts),
-		pOriginalAreaName(areaname),
-		pOriginalPlantName(clustername)
-	{
-		// With this additional parameter, it can only be related to the thermal data
-		assert(ts == Data::timeSeriesThermal);
+DataTimeseries::~DataTimeseries()
+{
+}
 
-		pInfos.caption << "Thermal : Timeseries";
-	}
+void DataTimeseries::datagridCaption(String& title)
+{
+    ThreadingPolicy::MutexLocker locker(*this);
+    if (pParent)
+        title = pParent->caption();
+}
 
+void DataTimeseries::registerViewsWL(Context& ctx)
+{
+    switch (pType)
+    {
+    case Data::timeSeriesLoad:
+        ctx.view["2:Load"]["1:TS"] = this;
+        break;
+    case Data::timeSeriesSolar:
+        ctx.view["3:Solar"]["1:TS"] = this;
+        break;
+    case Data::timeSeriesWind:
+        ctx.view["4:Wind"]["1:TS"] = this;
+        break;
+    case Data::timeSeriesHydro:
+        ctx.view["5:Hydro"]["1:TS"] = this;
+        break;
+    case Data::timeSeriesThermal:
+        ctx.view["6:Thermal"]["1:TS"] = this;
+        break;
+    default:
+        break;
+    }
+}
 
+bool DataTimeseries::prepareWL(Context&)
+{
+    pInfos.message.clear();
+    pInfos.state = stReady;
+    switch (pInfos.behavior)
+    {
+    case bhOverwrite:
+        pInfos.message << "The time-series will be copied from '" << pOriginalAreaName << '"';
+        break;
+    default:
+        pInfos.state = stNothingToDo;
+    }
+    return true;
+}
 
-	DataTimeseries::~DataTimeseries()
-	{}
+bool DataTimeseries::performWL(Context& ctx)
+{
+    if (ctx.area && ctx.extStudy && ctx.area->ui)
+    {
+        Data::Area* source = ctx.extStudy->areas.findFromName(pOriginalAreaName);
+        // check the pointer + make sure that this is not the same memory area
+        if (source)
+        {
+            if (source != ctx.area)
+            {
+                switch (pType)
+                {
+                case Data::timeSeriesLoad:
+                {
+                    ctx.area->load.series->series = source->load.series->series;
+                    source->load.series->series.unloadFromMemory();
+                    break;
+                }
+                case Data::timeSeriesSolar:
+                {
+                    ctx.area->solar.series->series = source->solar.series->series;
+                    source->solar.series->series.unloadFromMemory();
+                    break;
+                }
+                case Data::timeSeriesWind:
+                {
+                    ctx.area->wind.series->series = source->wind.series->series;
+                    source->wind.series->series.unloadFromMemory();
+                    break;
+                }
+                case Data::timeSeriesHydro:
+                {
+                    ctx.area->hydro.series->ror = source->hydro.series->ror;
+                    ctx.area->hydro.series->storage = source->hydro.series->storage;
 
+                    ctx.area->hydro.series->count = source->hydro.series->count;
 
-	void DataTimeseries::datagridCaption(String& title)
-	{
-		ThreadingPolicy::MutexLocker locker(*this);
-		if (pParent)
-			title = pParent->caption();
-	}
+                    source->hydro.series->ror.unloadFromMemory();
+                    source->hydro.series->storage.unloadFromMemory();
+                    break;
+                }
+                case Data::timeSeriesThermal:
+                {
+                    if (ctx.cluster && ctx.originalPlant && ctx.cluster != ctx.originalPlant)
+                    {
+                        ctx.cluster->series->series = ctx.originalPlant->series->series;
+                        ctx.originalPlant->series->series.unloadFromMemory();
+                    }
+                    break;
+                }
+                default:
+                    break;
+                }
+            }
+            return true;
+        }
+    }
+    return false;
+}
 
-
-	void DataTimeseries::registerViewsWL(Context& ctx)
-	{
-		switch (pType)
-		{
-			case Data::timeSeriesLoad:    ctx.view["2:Load"]["1:TS"]    = this; break;
-			case Data::timeSeriesSolar:   ctx.view["3:Solar"]["1:TS"]   = this; break;
-			case Data::timeSeriesWind:    ctx.view["4:Wind"]["1:TS"]    = this; break;
-			case Data::timeSeriesHydro:   ctx.view["5:Hydro"]["1:TS"]   = this; break;
-			case Data::timeSeriesThermal: ctx.view["6:Thermal"]["1:TS"] = this; break;
-			default: break;
-		}
-	}
-
-
-
-	bool DataTimeseries::prepareWL(Context&)
-	{
-		pInfos.message.clear();
-		pInfos.state = stReady;
-		switch (pInfos.behavior)
-		{
-			case bhOverwrite:
-				pInfos.message << "The time-series will be copied from '" << pOriginalAreaName << '"';
-				break;
-			default:
-				pInfos.state = stNothingToDo;
-		}
-		return true;
-	}
-
-
-	bool DataTimeseries::performWL(Context& ctx)
-	{
-		if (ctx.area && ctx.extStudy && ctx.area->ui)
-		{
-			Data::Area* source = ctx.extStudy->areas.findFromName(pOriginalAreaName);
-			// check the pointer + make sure that this is not the same memory area
-			if (source)
-			{
-				if (source != ctx.area)
-				{
-					switch (pType)
-					{
-						case Data::timeSeriesLoad:
-							{
-								ctx.area->load.series->series = source->load.series->series;
-								source->load.series->series.unloadFromMemory();
-								break;
-							}
-						case Data::timeSeriesSolar:
-							{
-								ctx.area->solar.series->series = source->solar.series->series;
-								source->solar.series->series.unloadFromMemory();
-								break;
-							}
-						case Data::timeSeriesWind:
-							{
-								ctx.area->wind.series->series = source->wind.series->series;
-								source->wind.series->series.unloadFromMemory();
-								break;
-							}
-						case Data::timeSeriesHydro:
-							{
-								ctx.area->hydro.series->ror     = source->hydro.series->ror;
-								ctx.area->hydro.series->storage = source->hydro.series->storage;
-
-								ctx.area->hydro.series->count = source->hydro.series->count;
-
-								source->hydro.series->ror.unloadFromMemory();
-								source->hydro.series->storage.unloadFromMemory();
-								break;
-							}
-						case Data::timeSeriesThermal:
-							{
-								if (ctx.cluster && ctx.originalPlant && ctx.cluster != ctx.originalPlant)
-								{
-									ctx.cluster->series->series = ctx.originalPlant->series->series;
-									ctx.originalPlant->series->series.unloadFromMemory();
-								}
-								break;
-							}
-						default:
-							break;
-					}
-				}
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-
-	void DataTimeseries::behaviorToText(Behavior behavior, String& out)
-	{
-		switch (behavior)
-		{
-			case bhOverwrite:
-				out = "overwrite";
-				break;
-			case bhMerge:
-				out = "merge";
-				break;
-			case bhSkip:
-				out = "skip";
-				break;
-			case bhMax:
-				out.clear();
-				break;
-		}
-	}
-
-
-
-
+void DataTimeseries::behaviorToText(Behavior behavior, String& out)
+{
+    switch (behavior)
+    {
+    case bhOverwrite:
+        out = "overwrite";
+        break;
+    case bhMerge:
+        out = "merge";
+        break;
+    case bhSkip:
+        out = "skip";
+        break;
+    case bhMax:
+        out.clear();
+        break;
+    }
+}
 
 } // namespace Area
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
-

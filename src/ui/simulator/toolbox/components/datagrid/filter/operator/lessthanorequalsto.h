@@ -25,10 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_FILTER_OPERATOR_LESS_THAN_OR_EQUALS_TO_H__
-# define __ANTARES_TOOLBOX_FILTER_OPERATOR_LESS_THAN_OR_EQUALS_TO_H__
+#define __ANTARES_TOOLBOX_FILTER_OPERATOR_LESS_THAN_OR_EQUALS_TO_H__
 
-# include "../operator.h"
-
+#include "../operator.h"
 
 namespace Antares
 {
@@ -38,34 +37,31 @@ namespace Filter
 {
 namespace Operator
 {
+class LessThanOrEqualsTo : public AOperator
+{
+public:
+    LessThanOrEqualsTo(AFilterBase* parent) : AOperator(parent, wxT("<="), wxT("<="))
+    {
+    }
+    virtual ~LessThanOrEqualsTo()
+    {
+    }
 
+    virtual bool compute(const int a) const
+    {
+        return a <= parameters[0].value.asInt;
+    }
 
-	class LessThanOrEqualsTo : public AOperator
-	{
-	public:
-		LessThanOrEqualsTo(AFilterBase* parent)
-			:AOperator(parent, wxT("<="), wxT("<="))
-		{}
-		virtual ~LessThanOrEqualsTo() {}
+    virtual bool compute(const double a) const
+    {
+        return a <= parameters[0].value.asDouble;
+    }
+    virtual bool compute(const wxString& a) const
+    {
+        return a <= parameters[0].value.asString;
+    }
 
-		virtual bool compute(const int a) const
-		{
-			return a <= parameters[0].value.asInt;
-		}
-
-		virtual bool compute(const double a) const
-		{
-			return a <= parameters[0].value.asDouble;
-		}
-		virtual bool compute(const wxString& a) const
-		{
-			return a <= parameters[0].value.asString;
-		}
-
-
-	}; // class LessThanOrEqualsTo
-
-
+}; // class LessThanOrEqualsTo
 
 } // namespace Operator
 } // namespace Filter

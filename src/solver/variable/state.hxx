@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_STATE_HXX__
-# define __SOLVER_VARIABLE_STATE_HXX__
-
+#define __SOLVER_VARIABLE_STATE_HXX__
 
 namespace Antares
 {
@@ -34,69 +33,71 @@ namespace Solver
 {
 namespace Variable
 {
+inline void State::startANewYear()
+{
+    hourInTheSimulation = 0u;
 
+    memset(thermalClusterProductionForYear, 0, sizeof(thermalClusterProductionForYear));
+    memset(thermalClusterOperatingCostForYear, 0, sizeof(thermalClusterOperatingCostForYear));
+    memset(thermalClusterNonProportionalCostForYear,
+           0,
+           sizeof(thermalClusterNonProportionalCostForYear));
+    memset(thermalClusterPMinOfTheClusterForYear, 0, sizeof(thermalClusterPMinOfTheClusterForYear));
+    memset(thermalClusterDispatchedUnitsCountForYear,
+           0,
+           sizeof(thermalClusterDispatchedUnitsCountForYear));
 
-	inline void State::startANewYear()
-	{
-		hourInTheSimulation = 0u;
+    // Re-initializing annual costs (to be printed in output into separate files)
+    annualSystemCost = 0.;
+    optimalSolutionCost1 = 0.;
+    optimalSolutionCost2 = 0.;
+}
 
-		memset(thermalClusterProductionForYear, 0, sizeof(thermalClusterProductionForYear));
-		memset(thermalClusterOperatingCostForYear, 0, sizeof(thermalClusterOperatingCostForYear));
-		memset(thermalClusterNonProportionalCostForYear, 0, sizeof(thermalClusterNonProportionalCostForYear));
-		memset(thermalClusterPMinOfTheClusterForYear, 0, sizeof(thermalClusterPMinOfTheClusterForYear));
-		memset(thermalClusterDispatchedUnitsCountForYear,0, sizeof(thermalClusterDispatchedUnitsCountForYear));
+inline void State::yearEndReset()
+{
+    memset(thermalClusterProductionForYear, 0, sizeof(thermalClusterProductionForYear));
+    memset(thermalClusterOperatingCostForYear, 0, sizeof(thermalClusterOperatingCostForYear));
+    memset(thermalClusterNonProportionalCostForYear,
+           0,
+           sizeof(thermalClusterNonProportionalCostForYear));
+    memset(thermalClusterPMinOfTheClusterForYear, 0, sizeof(thermalClusterPMinOfTheClusterForYear));
+    memset(thermalClusterDispatchedUnitsCountForYear,
+           0,
+           sizeof(thermalClusterDispatchedUnitsCountForYear));
+}
 
-		// Re-initializing annual costs (to be printed in output into separate files)
-		annualSystemCost = 0.;
-		optimalSolutionCost1 = 0.;
-		optimalSolutionCost2 = 0.;
-	}
+inline void State::initFromAreaIndex(const unsigned int areaIndex, uint numSpace)
+{
+    area = study.areas[areaIndex];
+    scratchpad = area->scratchpad[numSpace];
+    cluster = nullptr;
+    timeseriesIndex = NumeroChroniquesTireesParPays[numSpace][areaIndex];
 
-	inline void State::yearEndReset()
-	{
-		memset(thermalClusterProductionForYear, 0, sizeof(thermalClusterProductionForYear));
-		memset(thermalClusterOperatingCostForYear, 0, sizeof(thermalClusterOperatingCostForYear));
-		memset(thermalClusterNonProportionalCostForYear, 0, sizeof(thermalClusterNonProportionalCostForYear));
-		memset(thermalClusterPMinOfTheClusterForYear, 0, sizeof(thermalClusterPMinOfTheClusterForYear));
-		memset(thermalClusterDispatchedUnitsCountForYear,0, sizeof(thermalClusterDispatchedUnitsCountForYear));
-	}
-	
-	inline void State::initFromAreaIndex(const unsigned int areaIndex, uint numSpace)
-	{
-		area            = study.areas[areaIndex];
-		scratchpad      = area->scratchpad[numSpace];
-		cluster         = nullptr;
-		timeseriesIndex = NumeroChroniquesTireesParPays[numSpace][areaIndex];
-
-		switch (studyMode)
-		{
-			case Data::stdmEconomy:
-				{
-					hourlyResults   = problemeHebdo->ResultatsHoraires[areaIndex];
-					break;
-				}
-			case Data::stdmAdequacy:
-				{
-					hourlyResults   = problemeHebdo->ResultatsHoraires[areaIndex];
-					break;
-				}
-			case Data::stdmAdequacyDraft:
-				{
-					hourlyAdequacyResults = ProblemeHoraireAdequation.ResultatsParPays[areaIndex];
-					break;
-				}
-			case Data::stdmUnknown:
-				break;
-			case Data::stdmExpansion:
-				break;
-			case Data::stdmMax:
-				break;
-		}
-	}
-
-
-
-
+    switch (studyMode)
+    {
+    case Data::stdmEconomy:
+    {
+        hourlyResults = problemeHebdo->ResultatsHoraires[areaIndex];
+        break;
+    }
+    case Data::stdmAdequacy:
+    {
+        hourlyResults = problemeHebdo->ResultatsHoraires[areaIndex];
+        break;
+    }
+    case Data::stdmAdequacyDraft:
+    {
+        hourlyAdequacyResults = ProblemeHoraireAdequation.ResultatsParPays[areaIndex];
+        break;
+    }
+    case Data::stdmUnknown:
+        break;
+    case Data::stdmExpansion:
+        break;
+    case Data::stdmMax:
+        break;
+    }
+}
 
 } // namespace Variable
 } // namespace Solver

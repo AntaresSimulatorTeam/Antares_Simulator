@@ -25,11 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __LIBS_STUDY_SCENARIO_BUILDER_DATA_TS_NUMBER_H__
-# define __LIBS_STUDY_SCENARIO_BUILDER_DATA_TS_NUMBER_H__
+#define __LIBS_STUDY_SCENARIO_BUILDER_DATA_TS_NUMBER_H__
 
-
-# include "scBuilderDataInterface.h"
-
+#include "scBuilderDataInterface.h"
 
 namespace Antares
 {
@@ -37,174 +35,186 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
+/*!
+** \brief Rules for TS numbers, for all years and a single timeseries
+*/
+class TSNumberData : public dataInterface
+{
+public:
+    //! Matrix
+    typedef Matrix<Yuni::uint32> MatrixType;
 
+public:
+    // We use default constructor and destructor
 
-	/*!
-	** \brief Rules for TS numbers, for all years and a single timeseries
-	*/
-	class TSNumberData : public dataInterface
-	{
-	public:
-		//! Matrix
-		typedef Matrix<Yuni::uint32> MatrixType;
+    //! \name Data manupulation
+    //@{
+    /*!
+    ** \brief Reset data from the study
+    */
+    bool reset(const Study& study);
 
-	public:
-		
-		// We use default constructor and destructor 
+    /*!
+    ** \brief Export the data into a mere INI file
+    */
+    virtual void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
 
-		//! \name Data manupulation
-		//@{
-		/*!
-		** \brief Reset data from the study
-		*/
-		bool reset(const Study& study);
+    /*!
+    ** \brief Assign a single value
+    **
+    ** \param index An area index or a thermal cluster index
+    ** \param year  A year
+    ** \param value The new TS number
+    */
+    void set(uint index, uint year, uint value);
+    //@}
 
-		/*!
-		** \brief Export the data into a mere INI file
-		*/
-		virtual
-		void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
+    uint width() const;
+    uint height() const;
 
-		/*!
-		** \brief Assign a single value
-		**
-		** \param index An area index or a thermal cluster index
-		** \param year  A year
-		** \param value The new TS number
-		*/
-		void set(uint index, uint year, uint value);
-		//@}
+    double get_value(uint x, uint y) const;
+    void set_value(uint x, uint y, uint value);
 
-		uint width() const;
-		uint height() const;
+    /*
+    ** Give the study an access to TS numbers scenarii
+    */
+    virtual void apply(Study& study) = 0;
 
-		double get_value(uint x, uint y) const;
-		void set_value(uint x, uint y, uint value);
+protected:
+    virtual CString<512, false> get_prefix() const = 0;
 
-		/*
-		** Give the study an access to TS numbers scenarii
-		*/
-		virtual
-		void apply(Study& study) = 0;
+    virtual uint get_tsGenCount(const Study& study) const = 0;
 
-	protected:
-		virtual
-		CString<512, false> get_prefix() const = 0;
+protected:
+    //! All TS number overlay (0 if auto)
+    MatrixType pTSNumberRules;
 
-		virtual
-		uint get_tsGenCount(const Study& study) const = 0;
+}; // class TSNumberData
 
-	protected:
-		//! All TS number overlay (0 if auto)
-		MatrixType pTSNumberRules;
+// class TSNumberData : inline functions
 
-	}; // class TSNumberData
+inline uint TSNumberData::width() const
+{
+    return pTSNumberRules.width;
+}
 
-	
-	// class TSNumberData : inline functions
+inline uint TSNumberData::height() const
+{
+    return pTSNumberRules.height;
+}
 
-	inline uint TSNumberData::width() const { return pTSNumberRules.width;  }
+inline double TSNumberData::get_value(uint x, uint y) const
+{
+    return pTSNumberRules.entry[y][x];
+}
 
-	inline uint TSNumberData::height() const { return pTSNumberRules.height; }
+// =============== TSNumberData derived classes ===============
 
-	inline double TSNumberData::get_value(uint x, uint y) const { return pTSNumberRules.entry[y][x]; }
+// Load ...
+class loadTSNumberData : public TSNumberData
+{
+public:
+    void apply(Study& study);
+    CString<512, false> get_prefix() const;
+    uint get_tsGenCount(const Study& study) const;
+};
 
+inline CString<512, false> loadTSNumberData::get_prefix() const
+{
+    return "l,";
+}
 
-	// =============== TSNumberData derived classes ===============
+// Wind ...
+class windTSNumberData : public TSNumberData
+{
+public:
+    void apply(Study& study);
+    CString<512, false> get_prefix() const;
+    uint get_tsGenCount(const Study& study) const;
+};
 
+inline CString<512, false> windTSNumberData::get_prefix() const
+{
+    return "w,";
+}
 
-	// Load ...
-	class loadTSNumberData : public TSNumberData
-	{
-	public:
-		void apply(Study& study);
-		CString<512, false> get_prefix() const;
-		uint get_tsGenCount(const Study& study) const;
-	};
+// Solar ...
+class solarTSNumberData : public TSNumberData
+{
+public:
+    void apply(Study& study);
+    CString<512, false> get_prefix() const;
+    uint get_tsGenCount(const Study& study) const;
+};
 
-	inline CString<512, false> loadTSNumberData::get_prefix() const { return "l,"; }
+inline CString<512, false> solarTSNumberData::get_prefix() const
+{
+    return "s,";
+}
 
+// Hydro ...
+class hydroTSNumberData : public TSNumberData
+{
+public:
+    void apply(Study& study);
+    CString<512, false> get_prefix() const;
+    uint get_tsGenCount(const Study& study) const;
+};
 
+inline CString<512, false> hydroTSNumberData::get_prefix() const
+{
+    return "h,";
+}
 
-	// Wind ...
-	class windTSNumberData : public TSNumberData
-	{
-	public:
-		void apply(Study& study);
-		CString<512, false> get_prefix() const;
-		uint get_tsGenCount(const Study& study) const;
-	};
+// Thermal ...
+class thermalTSNumberData : public TSNumberData
+{
+public:
+    thermalTSNumberData() : pArea(NULL)
+    {
+    }
 
-	inline CString<512, false> windTSNumberData::get_prefix() const { return "w,"; }
+    bool reset(const Study& study);
+    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
 
+    void attachArea(const Area* area)
+    {
+        pArea = area;
+    }
 
-	// Solar ...
-	class solarTSNumberData : public TSNumberData
-	{
-	public:
-		void apply(Study& study);
-		CString<512, false> get_prefix() const;
-		uint get_tsGenCount(const Study& study) const;
-	};
+    void set(const Antares::Data::ThermalCluster* cluster, const uint year, uint value);
+    uint get(const Antares::Data::ThermalCluster* cluster, const uint year) const;
+    void apply(Study& study);
+    CString<512, false> get_prefix() const;
+    uint get_tsGenCount(const Study& study) const;
 
-	inline CString<512, false> solarTSNumberData::get_prefix() const { return "s,"; }
+private:
+    //! The attached area, if any
+    const Area* pArea;
+    //! The map between clusters and there line index
+    std::map<const ThermalCluster*, uint> clusterIndexMap;
+};
 
+inline uint thermalTSNumberData::get(const Antares::Data::ThermalCluster* cluster,
+                                     const uint year) const
+{
+    assert(cluster != nullptr);
+    if (clusterIndexMap.find(cluster) != clusterIndexMap.end() && year < pTSNumberRules.height)
+    {
+        uint index = clusterIndexMap.at(cluster);
+        return pTSNumberRules[index][year];
+    }
 
-	// Hydro ...
-	class hydroTSNumberData : public TSNumberData
-	{
-	public:
-		void apply(Study& study);
-		CString<512, false> get_prefix() const;
-		uint get_tsGenCount(const Study& study) const;
-	};
+    return 0;
+}
 
-	inline CString<512, false> hydroTSNumberData::get_prefix() const { return "h,"; }
-
-
-	// Thermal ...
-	class thermalTSNumberData : public TSNumberData
-	{
-	public:
-		thermalTSNumberData() : pArea(NULL) {}
-
-		bool reset(const Study& study);
-		void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
-
-		void attachArea(const Area* area) { pArea = area; }
-
-		void set(const Antares::Data::ThermalCluster* cluster, const uint year, uint value);
-		uint get(const Antares::Data::ThermalCluster* cluster, const uint year) const;
-		void apply(Study& study);
-		CString<512, false> get_prefix() const;
-		uint get_tsGenCount(const Study& study) const;
-
-	private:
-		//! The attached area, if any
-		const Area* pArea;
-		//! The map between clusters and there line index
-		std::map<const ThermalCluster*, uint> clusterIndexMap;
-	};
-
-	inline uint thermalTSNumberData::get(const Antares::Data::ThermalCluster* cluster, const uint year) const
-	{
-		assert(cluster != nullptr);
-		if (clusterIndexMap.find(cluster) != clusterIndexMap.end() && year < pTSNumberRules.height)
-		{
-			uint index = clusterIndexMap.at(cluster);
-			return pTSNumberRules[index][year];
-		}
-
-		return 0;
-	}
-
-	inline CString<512, false> thermalTSNumberData::get_prefix() const { return "t,"; }
-
-
+inline CString<512, false> thermalTSNumberData::get_prefix() const
+{
+    return "t,";
+}
 
 } // namespace ScenarioBuilder
 } // namespace Data
 } // namespace Antares
-
 
 #endif // __LIBS_STUDY_SCENARIO_BUILDER_DATA_TS_NUMBER_H__

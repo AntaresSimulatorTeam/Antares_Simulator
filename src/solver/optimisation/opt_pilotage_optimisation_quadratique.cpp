@@ -25,37 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include <math.h>
 #include "opt_structure_probleme_a_resoudre.h"
 
@@ -70,48 +39,39 @@ extern "C"
 #include "spx_fonctions.h"
 }
 
-
-
-
-
-bool OPT_PilotageOptimisationQuadratique( PROBLEME_HEBDO * ProblemeHebdo )
+bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO* ProblemeHebdo)
 {
-int PdtHebdo;
+    int PdtHebdo;
 
+    if (ProblemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
+    {
+        OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(ProblemeHebdo);
 
-if ( ProblemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES ) {
-	
-	OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique( ProblemeHebdo );
-	
-	OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique( ProblemeHebdo );
+        OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(ProblemeHebdo);
 
-	ProblemeHebdo->LeProblemeADejaEteInstancie = OUI_ANTARES;
+        ProblemeHebdo->LeProblemeADejaEteInstancie = OUI_ANTARES;
+    }
+
+    bool result = true;
+    if (ProblemeHebdo->NombreDInterconnexions > 0)
+    {
+        for (PdtHebdo = 0; PdtHebdo < ProblemeHebdo->NombreDePasDeTemps; PdtHebdo++)
+        {
+#ifdef dbgInfos
+            printf("*********** Optimisation quadratique du pas de temps %ld ***********\n",
+                   PdtHebdo);
+#endif
+
+            OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(ProblemeHebdo, PdtHebdo);
+
+            OPT_InitialiserLeSecondMembreDuProblemeQuadratique(ProblemeHebdo, PdtHebdo);
+
+            OPT_InitialiserLesCoutsQuadratiques(ProblemeHebdo, PdtHebdo);
+
+            result
+              = OPT_AppelDuSolveurQuadratique(ProblemeHebdo->ProblemeAResoudre, PdtHebdo) && result;
+        }
+    }
+
+    return result;
 }
-
-
-bool result = true;
-if (ProblemeHebdo->NombreDInterconnexions > 0) {
-	for ( PdtHebdo = 0; PdtHebdo < ProblemeHebdo->NombreDePasDeTemps; PdtHebdo++ ) {
-		
-
-
-
-		#ifdef dbgInfos
-		printf("*********** Optimisation quadratique du pas de temps %ld ***********\n",PdtHebdo);
-		#endif
-		
-		OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique( ProblemeHebdo, PdtHebdo );
-		
-		OPT_InitialiserLeSecondMembreDuProblemeQuadratique( ProblemeHebdo, PdtHebdo );
-		
-		OPT_InitialiserLesCoutsQuadratiques( ProblemeHebdo, PdtHebdo );
-		
-		
-		result = OPT_AppelDuSolveurQuadratique( ProblemeHebdo->ProblemeAResoudre, PdtHebdo ) && result;
-	}
-}
-
-return result;
-}
-
-

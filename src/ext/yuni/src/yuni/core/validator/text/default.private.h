@@ -9,8 +9,7 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_CORE_VALIDATOR_DEFAULT_PRIVATE_H__
-# define __YUNI_CORE_VALIDATOR_DEFAULT_PRIVATE_H__
-
+#define __YUNI_CORE_VALIDATOR_DEFAULT_PRIVATE_H__
 
 namespace Yuni
 {
@@ -20,11 +19,6 @@ namespace ValidatorImpl
 {
 namespace Text
 {
-
-
-
-
-
 } // namespace Text
 } // namespace ValidatorImpl
 } // namespace Private

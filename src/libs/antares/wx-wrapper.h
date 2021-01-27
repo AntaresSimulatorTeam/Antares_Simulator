@@ -25,9 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_WX_WIDGETS_H__
-# define __ANTARES_LIBS_WX_WIDGETS_H__
+#define __ANTARES_LIBS_WX_WIDGETS_H__
 
 // \TODO This header should be removed
-# include "../ui/simulator/toolbox/wx-wrapper.h"
+#include "../ui/simulator/toolbox/wx-wrapper.h"
 
 #endif // __ANTARES_LIBS_WX_WIDGETS_H__

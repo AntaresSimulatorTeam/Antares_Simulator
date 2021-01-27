@@ -33,81 +33,77 @@
 
 using namespace Yuni;
 
-
-
 template<class StringT>
-static inline StringT&  BytesToStringW(StringT& out, uint64 size)
+static inline StringT& BytesToStringW(StringT& out, uint64 size)
 {
-	if (0 == size)
-		return out << L"0 byte";
+    if (0 == size)
+        return out << L"0 byte";
 
-	// bytes
-	if (size < 1024)
-		return out << size << L" bytes";
-	// KiB
-	if (size < 1024 * 1024)
-		return out << (size / 1024) << L" KiB";
-	// MiB
-	if (size < 1024 * 1024 * 1024)
-		return out << (size / (1024 * 1024)) << L" MiB";
+    // bytes
+    if (size < 1024)
+        return out << size << L" bytes";
+    // KiB
+    if (size < 1024 * 1024)
+        return out << (size / 1024) << L" KiB";
+    // MiB
+    if (size < 1024 * 1024 * 1024)
+        return out << (size / (1024 * 1024)) << L" MiB";
 
-	// GiB
-	double s = size / (1024. * 1024 * 1024);
-	return out << Math::Round(s, 1) << L" GiB";
+    // GiB
+    double s = size / (1024. * 1024 * 1024);
+    return out << Math::Round(s, 1) << L" GiB";
 }
 
-
-static inline uint64  DiskFreeSpace(const AnyString& folder)
+static inline uint64 DiskFreeSpace(const AnyString& folder)
 {
-	if (folder.empty())
-		return (yuint64) -1; // error
+    if (folder.empty())
+        return (yuint64)-1; // error
 
-	# ifdef YUNI_OS_WINDOWS
-	unsigned __int64 i64FreeBytesToCaller;
-	//unsigned __int64 i64TotalBytes;
-	//unsigned __int64 i64FreeBytes;
+#ifdef YUNI_OS_WINDOWS
+    unsigned __int64 i64FreeBytesToCaller;
+    // unsigned __int64 i64TotalBytes;
+    // unsigned __int64 i64FreeBytes;
 
-	{
-		Yuni::WString wstr(folder);
-		if (wstr.empty())
-			return (yuint64) -1; // error
+    {
+        Yuni::WString wstr(folder);
+        if (wstr.empty())
+            return (yuint64)-1; // error
 
-		if (GetDiskFreeSpaceExW(wstr.c_str(),
-			(PULARGE_INTEGER)&i64FreeBytesToCaller, nullptr, //(PULARGE_INTEGER)&i64TotalBytes,
-			nullptr/*(PULARGE_INTEGER)&i64FreeBytes*/) != 0)
-		{
-			// +1 to not be strictly equal to 0
-			// It won't change anything anyway
-			return i64FreeBytesToCaller;
-		}
-	}
-	{
-		// the previous call may abort due to the UNC path
-		// retrying with the standard path
-		Yuni::WString wstr(folder);
-		if (wstr.empty())
-			return (yuint64) -1; // error
+        if (GetDiskFreeSpaceExW(wstr.c_str(),
+                                (PULARGE_INTEGER)&i64FreeBytesToCaller,
+                                nullptr, //(PULARGE_INTEGER)&i64TotalBytes,
+                                nullptr /*(PULARGE_INTEGER)&i64FreeBytes*/)
+            != 0)
+        {
+            // +1 to not be strictly equal to 0
+            // It won't change anything anyway
+            return i64FreeBytesToCaller;
+        }
+    }
+    {
+        // the previous call may abort due to the UNC path
+        // retrying with the standard path
+        Yuni::WString wstr(folder);
+        if (wstr.empty())
+            return (yuint64)-1; // error
 
-		if (GetDiskFreeSpaceExW(wstr.c_str(),
-			(PULARGE_INTEGER)&i64FreeBytesToCaller, nullptr, //(PULARGE_INTEGER)&i64TotalBytes,
-			nullptr/*(PULARGE_INTEGER)&i64FreeBytes*/) != 0)
-		{
-			// +1 to not be strictly equal to 0
-			// It won't change anything anyway
-			return i64FreeBytesToCaller;
-		}
-		else
-		{
-			//Antares::logs.error() << "last error : " << GetLastError() << " : " << folder;
-		}
-	}
-	# endif
+        if (GetDiskFreeSpaceExW(wstr.c_str(),
+                                (PULARGE_INTEGER)&i64FreeBytesToCaller,
+                                nullptr, //(PULARGE_INTEGER)&i64TotalBytes,
+                                nullptr /*(PULARGE_INTEGER)&i64FreeBytes*/)
+            != 0)
+        {
+            // +1 to not be strictly equal to 0
+            // It won't change anything anyway
+            return i64FreeBytesToCaller;
+        }
+        else
+        {
+            // Antares::logs.error() << "last error : " << GetLastError() << " : " << folder;
+        }
+    }
+#endif
 
-	(void) folder;
-	return (yuint64) -1; // obviously an error
+    (void)folder;
+    return (yuint64)-1; // obviously an error
 }
-
-
-
-
-

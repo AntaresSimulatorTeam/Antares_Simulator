@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_WINDOWS_OUTPUT_PANEL_PANEL_HXX__
-# define __ANTARES_WINDOWS_OUTPUT_PANEL_PANEL_HXX__
-
+#define __ANTARES_WINDOWS_OUTPUT_PANEL_PANEL_HXX__
 
 namespace Antares
 {
@@ -34,32 +33,25 @@ namespace Private
 {
 namespace OutputViewerData
 {
+inline const Antares::Window::OutputViewer::Layer* Panel::layer() const
+{
+    return pLayer;
+}
 
-	inline const Antares::Window::OutputViewer::Layer* Panel::layer() const
-	{
-		return pLayer;
-	}
+inline Antares::Window::OutputViewer::Layer* Panel::layer()
+{
+    return pLayer;
+}
 
+inline uint Panel::index() const
+{
+    return pIndex;
+}
 
-	inline Antares::Window::OutputViewer::Layer* Panel::layer()
-	{
-		return pLayer;
-	}
-
-
-	inline uint Panel::index() const
-	{
-		return pIndex;
-	}
-
-
-	inline const Yuni::String& Panel::filename() const
-	{
-		return pFilename;
-	}
-
-
-
+inline const Yuni::String& Panel::filename() const
+{
+    return pFilename;
+}
 
 } // namespace OutputViewerData
 } // namespace Private

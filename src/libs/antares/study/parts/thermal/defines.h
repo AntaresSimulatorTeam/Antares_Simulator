@@ -25,20 +25,17 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_DEFINES_H__
-# define __ANTARES_LIBS_STUDY_PARTS_THERMAL_DEFINES_H__
-
+#define __ANTARES_LIBS_STUDY_PARTS_THERMAL_DEFINES_H__
 
 namespace Antares
 {
 namespace Data
 {
-
-	// Forward declaration
-	class ThermalCluster;
-	class ThermalClusterList;
-	class DataSeriesThermal;
-	class PreproThermal;
-
+// Forward declaration
+class ThermalCluster;
+class ThermalClusterList;
+class DataSeriesThermal;
+class PreproThermal;
 
 } // namespace Data
 } // namespace Antares

@@ -9,11 +9,10 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_UI_CONTROL_WINDOW_H__
-# define __YUNI_UI_CONTROL_WINDOW_H__
+#define __YUNI_UI_CONTROL_WINDOW_H__
 
-# include "../../yuni.h"
-# include "control.h"
-
+#include "../../yuni.h"
+#include "control.h"
 
 namespace Yuni
 {
@@ -21,33 +20,31 @@ namespace UI
 {
 namespace Control
 {
+//! A window is a movable control that is meant to contain other controls
+class Window : public IControl
+{
+public:
+    //! Smart pointer
+    typedef Ancestor::SmartPtrType<Window>::Ptr Ptr;
 
+public:
+    Window(float x, float y, float width, float height) : IControl(x, y, width, height)
+    {
+    }
 
-	//! A window is a movable control that is meant to contain other controls
-	class Window: public IControl
-	{
-	public:
-		//! Smart pointer
-		typedef Ancestor::SmartPtrType<Window>::Ptr  Ptr;
+    Window(const Point2D<float>& position, const Point2D<float>& size) : IControl(position, size)
+    {
+    }
 
-	public:
-		Window(float x, float y, float width, float height):
-			IControl(x, y, width, height)
-		{}
+    //! Virtual destructor
+    virtual ~Window()
+    {
+    }
 
-		Window(const Point2D<float>& position, const Point2D<float>& size):
-			IControl(position, size)
-		{}
+    //! Draw the window
+    virtual void draw(DrawingSurface::Ptr& surface, float xOffset, float yOffset) const override;
 
-		//! Virtual destructor
-		virtual ~Window() {}
-
-		//! Draw the window
-		virtual void draw(DrawingSurface::Ptr& surface, float xOffset, float yOffset) const override;
-
-	}; // class Window
-
-
+}; // class Window
 
 } // namespace Control
 } // namespace UI

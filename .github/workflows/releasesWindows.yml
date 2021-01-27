@@ -44,6 +44,16 @@ jobs:
            Expand-Archive ./rte-antares-deps-${{matrix.os}}-${{matrix.architecture}}-Release-solver.zip -DestinationPath .
            rm rte-antares-deps-${{matrix.os}}-${{matrix.architecture}}-Release-solver.zip
            
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+          
+    - name: Install dependencies
+      run: |
+          python -m pip install --upgrade pip
+          pip3 install -r src/tests/examples/requirements.txt
+           
     - name: Init submodule
       run: |
            git submodule update --init --recursive src

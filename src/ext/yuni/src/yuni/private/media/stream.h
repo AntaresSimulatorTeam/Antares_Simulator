@@ -9,32 +9,31 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_PRIVATE_MEDIA_FILE_H__
-# error "Do not include stream.h directly, please include file.h instead !"
+#error "Do not include stream.h directly, please include file.h instead !"
 #endif
 
 #ifndef __YUNI_PRIVATE_MEDIA_STREAM_H__
-# define __YUNI_PRIVATE_MEDIA_STREAM_H__
+#define __YUNI_PRIVATE_MEDIA_STREAM_H__
 
-# include "../../yuni.h"
-# include "../../core/smartptr.h"
-# include <map>
+#include "../../yuni.h"
+#include "../../core/smartptr.h"
+#include <map>
 
-# if (YUNI_OS_GCC_VERSION >= 40102)
-#	pragma GCC diagnostic ignored "-Wconversion"
-#	pragma GCC diagnostic ignored "-Wundef"
-# endif
+#if (YUNI_OS_GCC_VERSION >= 40102)
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wundef"
+#endif
 
 extern "C"
 {
-# include "libavutil/pixfmt.h"
-# include "libavutil/pixdesc.h"
-# include "libavcodec/avcodec.h"
-# include "libavformat/avformat.h"
+#include "libavutil/pixfmt.h"
+#include "libavutil/pixdesc.h"
+#include "libavcodec/avcodec.h"
+#include "libavformat/avformat.h"
 }
 
-# include "streamtype.h"
-# include "frame.h"
-
+#include "streamtype.h"
+#include "frame.h"
 
 namespace Yuni
 {
@@ -42,132 +41,137 @@ namespace Private
 {
 namespace Media
 {
+//! Forward declaration
+class File;
 
-	//! Forward declaration
-	class File;
+/*!
+** \brief A media stream can be either audio or video data encoded with a given codec
+*/
+template<StreamType TypeT>
+class Stream final
+{
+public:
+    enum // anonymous
+    {
+        IsVideo = TypeT == stVideo,
+        IsAudio = TypeT == stAudio
+    };
 
+public:
+    //! Smart pointer
+    typedef SmartPtr<Stream> Ptr;
 
-	/*!
-	** \brief A media stream can be either audio or video data encoded with a given codec
-	*/
-	template<StreamType TypeT>
-	class Stream final
-	{
-	public:
-		enum // anonymous
-		{
-			IsVideo = TypeT == stVideo,
-			IsAudio = TypeT == stAudio
-		};
+    //! Map
+    typedef std::map<uint, Ptr> Map;
 
+    //! Packet queue
+    typedef std::list<AVPacket*> PacketQueue;
 
-	public:
-		//! Smart pointer
-		typedef SmartPtr<Stream>  Ptr;
+public:
+    //! Constructor
+    Stream(File* parent, AVFormatContext* format, AVCodecContext* codec, uint index);
+    //! Destructor
+    ~Stream();
 
-		//! Map
-		typedef std::map<uint, Ptr>  Map;
+    //! Stream index in file
+    uint index() const;
 
-		//! Packet queue
-		typedef std::list<AVPacket*>  PacketQueue;
+    //! Parent file
+    File* parent()
+    {
+        return pParent;
+    }
 
-	public:
-		//! Constructor
-		Stream(File* parent, AVFormatContext* format, AVCodecContext* codec, uint index);
-		//! Destructor
-		~Stream();
+    //! Image width (Video only !)
+    uint width() const;
+    //! Image height (Video only !)
+    uint height() const;
+    //! Color depth, in bits per pixel (Video only !)
+    uint depth() const;
+    //! Number of frames per second (Video only !)
+    float fps() const;
 
-		//! Stream index in file
-		uint index() const;
+    //! Sample rate (Audio only !)
+    uint rate() const;
+    //! Number of channels (Audio only !)
+    uint channels() const;
+    //! Bits per sample (Audio only !)
+    uint bits() const;
 
-		//! Parent file
-		File* parent() { return pParent; }
+    //! Stream duration in seconds
+    uint duration() const;
 
-		//! Image width (Video only !)
-		uint width() const;
-		//! Image height (Video only !)
-		uint height() const;
-		//! Color depth, in bits per pixel (Video only !)
-		uint depth() const;
-		//! Number of frames per second (Video only !)
-		float fps() const;
+    //! Get the stream type
+    StreamType type() const;
 
-		//! Sample rate (Audio only !)
-		uint rate() const;
-		//! Number of channels (Audio only !)
-		uint channels() const;
-		//! Bits per sample (Audio only !)
-		uint bits() const;
+    //! OpenAL audio format (Audio only !)
+    uint alFormat() const
+    {
+        YUNI_STATIC_ASSERT(IsAudio, NotAccessibleInVideo);
+        return pALFormat;
+    }
 
-		//! Stream duration in seconds
-		uint duration() const;
+    /*!
+    ** \brief Get the next frame
+    */
+    Frame::Ptr nextFrame();
 
-		//! Get the stream type
-		StreamType type() const;
+    //! Rewind the stream
+    void rewind();
 
-		//! OpenAL audio format (Audio only !)
-		uint alFormat() const { YUNI_STATIC_ASSERT(IsAudio, NotAccessibleInVideo); return pALFormat; }
+    /*!
+    ** \brief Is the stream ready for decoding ?
+    **
+    ** \note The OpenAL format check is done only for audio
+    */
+    bool valid() const
+    {
+        return nullptr != pCodec && IsAudio == (0 != pALFormat);
+    }
 
-		/*!
-		** \brief Get the next frame
-		*/
-		Frame::Ptr nextFrame();
+private:
+    //! Read a frame from the stream
+    uint readFrame();
 
-		//! Rewind the stream
-		void rewind();
+    //! Get the next packet, either from queue, or from the stream if the queue is empty
+    AVPacket* nextPacket();
 
-		/*!
-		** \brief Is the stream ready for decoding ?
-		**
-		** \note The OpenAL format check is done only for audio
-		*/
-		bool valid() const { return nullptr != pCodec && IsAudio == (0 != pALFormat); }
+private:
+    //! Codec information
+    AVCodecContext* pCodec;
 
-	private:
-		//! Read a frame from the stream
-		uint readFrame();
+    //! Format information
+    AVFormatContext* pFormat;
 
-		//! Get the next packet, either from queue, or from the stream if the queue is empty
-		AVPacket* nextPacket();
+    //! Index in the media file
+    uint pIndex;
 
-	private:
-		//! Codec information
-		AVCodecContext* pCodec;
+    //! Stream format
+    uint pALFormat;
 
-		//! Format information
-		AVFormatContext* pFormat;
+    //! Stream data full size
+    uint64 pSize;
 
-		//! Index in the media file
-		uint pIndex;
+    //! Current presentation time stamp
+    double pCrtPts;
 
-		//! Stream format
-		uint pALFormat;
+    //! Current frame index
+    uint pCrtFrameIndex;
 
-		//! Stream data full size
-		uint64 pSize;
+    //! Currently read frame
+    AVFrame* pFrame;
 
-		//! Current presentation time stamp
-		double pCrtPts;
+    //! Queue for this stream's packets
+    PacketQueue pPackets;
 
-		//! Current frame index
-		uint pCrtFrameIndex;
+    //! Parent file
+    File* pParent;
 
-		//! Currently read frame
-		AVFrame* pFrame;
+private:
+    //! Friend declaration
+    friend class File;
 
-		//! Queue for this stream's packets
-		PacketQueue pPackets;
-
-		//! Parent file
-		File* pParent;
-
-	private:
-		//! Friend declaration
-		friend class File;
-
-	}; // class Stream
-
-
+}; // class Stream
 
 } // namespace Media
 } // namespace Private

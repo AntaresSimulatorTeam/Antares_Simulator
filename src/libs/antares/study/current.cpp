@@ -27,34 +27,26 @@
 
 #include "study.h"
 
-
 namespace Antares
 {
 namespace Data
 {
+static Study::Ptr gGlobalCurrentStudy;
 
-	static Study::Ptr  gGlobalCurrentStudy;
+Study::Ptr Study::Current::Get()
+{
+    return gGlobalCurrentStudy;
+}
 
+void Study::Current::Set(Study::Ptr study)
+{
+    gGlobalCurrentStudy = study;
+}
 
-	Study::Ptr  Study::Current::Get()
-	{
-		return gGlobalCurrentStudy;
-	}
-
-
-	void Study::Current::Set(Study::Ptr study)
-	{
-		gGlobalCurrentStudy = study;
-	}
-
-
-	bool Study::Current::Valid()
-	{
-		return !(!gGlobalCurrentStudy); // double neg
-	}
-
-
-
+bool Study::Current::Valid()
+{
+    return !(!gGlobalCurrentStudy); // double neg
+}
 
 } // namespace Data
 } // namespace Antares

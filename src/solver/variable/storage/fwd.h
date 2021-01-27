@@ -25,10 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_STORAGE_FORWARD_H__
-# define __SOLVER_VARIABLE_STORAGE_FORWARD_H__
+#define __SOLVER_VARIABLE_STORAGE_FORWARD_H__
 
-# include "../categories.h"
-
+#include "../categories.h"
 
 namespace Antares
 {
@@ -36,23 +35,18 @@ namespace Solver
 {
 namespace Variable
 {
-
-
-	// Forward declaration
-	struct Empty;
-
+// Forward declaration
+struct Empty;
 
 namespace R
 {
 namespace AllYears
 {
+template<class NextT = Empty, int FileFilter = Variable::Category::allFile>
+struct Raw;
 
-	template<class NextT = Empty, int FileFilter = Variable::Category::allFile>
-	struct Raw;
-
-	template<class NextT = Empty, int FileFilter = Variable::Category::allFile>
-	struct Or;
-
+template<class NextT = Empty, int FileFilter = Variable::Category::allFile>
+struct Or;
 
 } // namespace AllYears
 } // namespace R

@@ -30,32 +30,24 @@
 #include <iostream>
 #include <antares/logs.h>
 
-
 namespace Antares
 {
 namespace Locale
 {
+char DecimalPoint = '.';
 
-
-	char DecimalPoint = '.';
-
-
-
-	void Init()
-	{
-		DecimalPoint = '.';
-		wxString s = wxLocale::GetInfo(wxLOCALE_DECIMAL_POINT, wxLOCALE_CAT_NUMBER);
-		if (!s.empty())
-		{
-			if (s[0] == wxT(','))
-				DecimalPoint = ',';
-			if (s[0] == wxT('.'))
-				DecimalPoint = '.';
-		}
-	}
-
-
-
+void Init()
+{
+    DecimalPoint = '.';
+    wxString s = wxLocale::GetInfo(wxLOCALE_DECIMAL_POINT, wxLOCALE_CAT_NUMBER);
+    if (!s.empty())
+    {
+        if (s[0] == wxT(','))
+            DecimalPoint = ',';
+        if (s[0] == wxT('.'))
+            DecimalPoint = '.';
+    }
+}
 
 } // namespace Locale
 } // namespace Antares

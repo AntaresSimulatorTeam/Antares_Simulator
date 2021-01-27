@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_STORAGE_INTERMEDIATE_HXX__
-# define __SOLVER_VARIABLE_STORAGE_INTERMEDIATE_HXX__
-
+#define __SOLVER_VARIABLE_STORAGE_INTERMEDIATE_HXX__
 
 namespace Antares
 {
@@ -34,130 +33,118 @@ namespace Solver
 {
 namespace Variable
 {
+inline IntermediateValues::~IntermediateValues()
+{
+    Antares::Memory::Release(hour);
+}
 
+inline void IntermediateValues::flush() const
+{
+    Antares::Memory::Flush(hour);
+}
 
-	inline IntermediateValues::~IntermediateValues()
-	{
-		Antares::Memory::Release(hour);
-	}
+inline void IntermediateValues::reset()
+{
+    Antares::Memory::Zero(maxHoursInAYear, hour);
+    memset(month, 0, sizeof(month));
+    memset(week, 0, sizeof(week));
+    memset(day, 0, sizeof(day));
+}
 
+inline IntermediateValues::Type& IntermediateValues::operator[](const unsigned int index)
+{
+    return hour[index];
+}
 
-	inline void IntermediateValues::flush() const
-	{
-		Antares::Memory::Flush(hour);
-	}
+inline const IntermediateValues::Type& IntermediateValues::operator[](
+  const unsigned int index) const
+{
+    return hour[index];
+}
 
+inline void IntermediateValues::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
+{
+    Antares::Memory::EstimateMemoryUsage(sizeof(double), maxHoursInAYear, u, true);
+}
 
-	inline void IntermediateValues::reset()
-	{
-		Antares::Memory::Zero(maxHoursInAYear, hour);
-		memset(month, 0, sizeof(month));
-		memset(week,  0, sizeof(week));
-		memset(day,   0, sizeof(day));
-	}
+inline Yuni::uint64 IntermediateValues::MemoryUsage()
+{
+    return
+#ifdef ANTARES_SWAP_SUPPORT
+      0
+#else
+      +sizeof(Type) * maxHoursInAYear
+#endif
+      ;
+}
 
+template<class VCardT>
+inline void IntermediateValues::buildAnnualSurveyReport(SurveyResults& report,
+                                                        int fileLevel,
+                                                        int precision) const
+{
+    if (!(fileLevel & Category::id))
+    {
+        if (fileLevel & Category::mc)
+        {
+            // Do nothing
+            // internalExportAnnualValuesMC<1, VCardT>(report, avgdata.year);
+        }
+        else
+        {
+            switch (precision)
+            {
+            case Category::hourly:
+                internalExportAnnualValues<maxHoursInAYear, VCardT>(report, hour, false);
+                break;
+            case Category::daily:
+                internalExportAnnualValues<maxDaysInAYear, VCardT>(report, day, false);
+                break;
+            case Category::weekly:
+                internalExportAnnualValues<maxWeeksInAYear, VCardT>(report, week, false);
+                break;
+            case Category::monthly:
+                internalExportAnnualValues<maxMonths, VCardT>(report, month, false);
+                break;
+            case Category::annual:
+                internalExportAnnualValues<1, VCardT>(report, &year, true);
+                break;
+            }
+        }
+    }
+}
 
-	inline IntermediateValues::Type& IntermediateValues::operator [] (const unsigned int index)
-	{
-		return hour[index];
-	}
+template<unsigned int Size, class VCardT, class A>
+void IntermediateValues::internalExportAnnualValues(SurveyResults& report,
+                                                    const A& array,
+                                                    bool annual) const
+{
+    using namespace Yuni;
+    assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
-	inline const IntermediateValues::Type& IntermediateValues::operator [] (const unsigned int index) const
-	{
-		return hour[index];
-	}
+    // Caption
+    report.captions[0][report.data.columnIndex] = report.variableCaption;
+    report.captions[1][report.data.columnIndex] = VCardT::Unit();
+    report.captions[2][report.data.columnIndex] = nullptr;
+    // Precision
+    report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<VCardT::decimal>::Value();
+    // Non applicability
+    report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
+    // Values
+    if (not annual)
+    {
+        (void)::memcpy(report.values[report.data.columnIndex], array, sizeof(double) * Size);
+    }
+    else
+    {
+        double& target = *(report.values[report.data.columnIndex]);
+        target = year;
+    }
 
-	inline void
-	IntermediateValues::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-	{
-		Antares::Memory::EstimateMemoryUsage(sizeof(double), maxHoursInAYear, u, true);
-	}
-
-
-	inline Yuni::uint64
-	IntermediateValues::MemoryUsage()
-	{
-		return
-		# ifdef ANTARES_SWAP_SUPPORT
-			0
-		# else
-			+ sizeof(Type) * maxHoursInAYear
-		# endif
-			;
-	}
-
-
-	template<class VCardT>
-	inline void
-	IntermediateValues::buildAnnualSurveyReport(SurveyResults& report, int fileLevel, int precision) const
-	{
-		if (!(fileLevel & Category::id))
-		{
-			if (fileLevel & Category::mc)
-			{
-				// Do nothing
-				// internalExportAnnualValuesMC<1, VCardT>(report, avgdata.year);
-			}
-			else
-			{
-				switch (precision)
-				{
-					case Category::hourly:
-						internalExportAnnualValues<maxHoursInAYear, VCardT>(report, hour, false);
-						break;
-					case Category::daily:
-						internalExportAnnualValues<maxDaysInAYear, VCardT>(report, day, false);
-						break;
-					case Category::weekly:
-						internalExportAnnualValues<maxWeeksInAYear, VCardT>(report, week, false);
-						break;
-					case Category::monthly:
-						internalExportAnnualValues<maxMonths, VCardT>(report, month, false);
-						break;
-					case Category::annual:
-						internalExportAnnualValues<1, VCardT>(report, &year, true);
-						break;
-				}
-			}
-		}
-	}
-
-
-
-	template<unsigned int Size, class VCardT, class A>
-	void
-	IntermediateValues::internalExportAnnualValues(SurveyResults& report, const A& array, bool annual) const
-	{
-		using namespace Yuni;
-		assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
-
-		// Caption
-		report.captions[0][report.data.columnIndex] = report.variableCaption;
-		report.captions[1][report.data.columnIndex] = VCardT::Unit();
-		report.captions[2][report.data.columnIndex] = nullptr;
-		// Precision
-		report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<VCardT::decimal>::Value();
-		// Non applicability
-		report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
-
-		// Values
-		if (not annual)
-		{
-			(void)::memcpy(report.values[report.data.columnIndex], array, sizeof(double) * Size);
-		}
-		else
-		{
-			double& target = *(report.values[report.data.columnIndex]);
-			target = year;
-		}
-
-		// Next column index
-		++report.data.columnIndex;
-	}
-
-
-
+    // Next column index
+    ++report.data.columnIndex;
+}
 
 } // namespace Variable
 } // namespace Solver

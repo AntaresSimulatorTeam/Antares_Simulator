@@ -25,9 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_MEMORY_H__
-# define __SOLVER_MEMORY_H__
+#define __SOLVER_MEMORY_H__
 
-# include <antares/logs.h>
-# include <antares/sys/mem-wrapper.h>
+#include <antares/logs.h>
+#include <antares/sys/mem-wrapper.h>
 
 #endif /* __SOLVER_MEMORY_H__ */

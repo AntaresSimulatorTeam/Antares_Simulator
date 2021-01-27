@@ -25,72 +25,65 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __STUDY_JOB_AGGREGATOR_PROGRESS_H__
-# define __STUDY_JOB_AGGREGATOR_PROGRESS_H__
+#define __STUDY_JOB_AGGREGATOR_PROGRESS_H__
 
-# include <yuni/yuni.h>
-# include <yuni/thread/timer.h>
-# include <yuni/core/atomic/int.h>
-# include <antares/logs.h>
-
-
+#include <yuni/yuni.h>
+#include <yuni/thread/timer.h>
+#include <yuni/core/atomic/int.h>
+#include <antares/logs.h>
 
 class Progress final : public Yuni::Thread::Timer
 {
 public:
-	//! The threading policy
-	typedef Yuni::Thread::Timer::ThreadingPolicy ThreadingPolicy;
-	//! Different states related to the progression
-	enum State
-	{
-		stJobs,
-		stWrite,
-		stReading,
-		stSilent,
-	};
+    //! The threading policy
+    typedef Yuni::Thread::Timer::ThreadingPolicy ThreadingPolicy;
+    //! Different states related to the progression
+    enum State
+    {
+        stJobs,
+        stWrite,
+        stReading,
+        stSilent,
+    };
 
 public:
-	//! The number of jobs currently done
-	static Yuni::Atomic::Int<>  Current;
-	//! The total number of jobs to execute
-	static uint Total;
+    //! The number of jobs currently done
+    static Yuni::Atomic::Int<> Current;
+    //! The total number of jobs to execute
+    static uint Total;
 
 public:
-	Progress();
-	virtual ~Progress();
+    Progress();
+    virtual ~Progress();
 
-	/*!
-	** \brief Get if the task is complete
-	*/
-	bool completed() const;
+    /*!
+    ** \brief Get if the task is complete
+    */
+    bool completed() const;
 
-	//! Set the message to display into logs
-	template<class StringT> void message(const StringT& msg);
+    //! Set the message to display into logs
+    template<class StringT>
+    void message(const StringT& msg);
 
 public:
-	//! The current state in the progression
-	State state;
+    //! The current state in the progression
+    State state;
 
 protected:
-	virtual bool onInterval(uint) override;
+    virtual bool onInterval(uint) override;
 
 private:
-	//! Flag to know if the task is complete
-	bool pCompleted;
-	//! The message to display into logs
-	Yuni::String pMessage;
-	//! Last value computed for the percent
-	uint pLastPercent;
+    //! Flag to know if the task is complete
+    bool pCompleted;
+    //! The message to display into logs
+    Yuni::String pMessage;
+    //! Last value computed for the percent
+    uint pLastPercent;
 
 }; // class Progress
 
-
-
-
-
-
 extern Progress progressBar;
 
-
-# include "progress.hxx"
+#include "progress.hxx"
 
 #endif // __STUDY_JOB_AGGREGATOR_PROGRESS_H__

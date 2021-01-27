@@ -37,9 +37,7 @@
 #include <wx/splitter.h>
 #include "cluster.h"
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
@@ -47,170 +45,161 @@ namespace Window
 {
 namespace Thermal
 {
+Panel::Panel(Component::Notebook* parent) :
+ Component::Panel(parent),
+ pageThermalTimeSeries(nullptr),
+ pageThermalPrepro(nullptr),
+ pageThermalCommon(nullptr),
+ pNotebookThermalCluster(nullptr),
+ pAreaForThermalCommonData(nullptr),
+ pAreaSelector(nullptr),
+ pStudyRevisionIncrement((Yuni::uint64)-1)
+{
+    // A sizer for our panel
+    wxSizer* mainsizer = new wxBoxSizer(wxVERTICAL);
 
+    std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page;
 
-	Panel::Panel(Component::Notebook* parent) :
-		Component::Panel(parent),
-		pageThermalTimeSeries(nullptr),
-		pageThermalPrepro(nullptr),
-		pageThermalCommon(nullptr),
-		pNotebookThermalCluster(nullptr), pAreaForThermalCommonData(nullptr),
-		pAreaSelector(nullptr),
-		pStudyRevisionIncrement((Yuni::uint64)-1)
-	{
-		// A sizer for our panel
-		wxSizer* mainsizer = new wxBoxSizer(wxVERTICAL);
+    // First initialization
+    {
+        Component::Notebook* n = new Component::Notebook(this, Component::Notebook::orTop);
+        page.first = n;
+        n->caption(wxT("Thermal dispatchable clusters"));
+        mainsizer->Add(n, 1, wxALL | wxEXPAND);
 
-		std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page;
+        // The input selector for Areas
+        page.second = new Toolbox::InputSelector::Area(n);
+        pAreaSelector = page.second;
 
-		// First initialization
-		{
-			Component::Notebook* n = new Component::Notebook(this, Component::Notebook::orTop);
-			page.first = n;
-			n->caption(wxT("Thermal dispatchable clusters"));
-			mainsizer->Add(n, 1, wxALL|wxEXPAND);
+        {
+            Component::Panel* separator = new Component::Panel(n);
+            separator->SetSize(4, 1);
+            n->addCommonControl(separator, 0, wxPoint(0, 0));
+        }
+        n->addCommonControl(page.second);
+    }
 
-			// The input selector for Areas
-			page.second = new Toolbox::InputSelector::Area(n);
-			pAreaSelector = page.second;
+    // Summary for the area
+    {
+        Component::Datagrid::Component* summary = new Component::Datagrid::Component(
+          page.first,
+          new Component::Datagrid::Renderer::ThermalClusterSummarySingleArea(this, page.second));
+        page.first->add(summary, wxT("Summary for the area"));
+    }
 
-			{
-				Component::Panel* separator = new Component::Panel(n);
-				separator->SetSize(4, 1);
-				n->addCommonControl(separator, 0, wxPoint(0, 0));
-			}
-			n->addCommonControl(page.second);
-		}
+    // Thermal cluster list
+    {
+        // The window splitter
+        pSplitter = new wxSplitterWindow(
+          page.first, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_NOBORDER);
+        pageThermalClusterList = page.first->add(pSplitter, wxT("Thermal cluster list"));
+        pSplitter->SetSashGravity(0.5);
 
-		// Summary for the area
-		{
-			Component::Datagrid::Component* summary = new Component::Datagrid::Component(page.first,
-				new Component::Datagrid::Renderer::ThermalClusterSummarySingleArea(this, page.second));
-			page.first->add(summary, wxT("Summary for the area"));
-		}
+        // Input selector for thermal clusters
+        Toolbox::InputSelector::ThermalCluster* tag
+          = new Toolbox::InputSelector::ThermalCluster(pSplitter, page.second);
 
-		// Thermal cluster list
-		{
-			// The window splitter
-			pSplitter = new wxSplitterWindow(page.first, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_NOBORDER);
-			pageThermalClusterList = page.first->add(pSplitter, wxT("Thermal cluster list"));
-			pSplitter->SetSashGravity(0.5);
+        // Informations about the current thermal cluster
+        Component::Notebook* subbook
+          = new Component::Notebook(pSplitter, Component::Notebook::orTop);
+        pNotebookThermalCluster = subbook;
+        subbook->caption(wxT("Thermal cluster"));
+        subbook->theme(Component::Notebook::themeLight);
 
-			// Input selector for thermal clusters
-			Toolbox::InputSelector::ThermalCluster* tag = new Toolbox::InputSelector::ThermalCluster(pSplitter, page.second);
+        // Common properties of the current thermal cluster
+        pageThermalCommon
+          = subbook->add(new Window::Thermal::CommonProperties(subbook, tag), wxT("Common"));
 
+        // TS-Generator
+        pageThermalPrepro = subbook->add(
+          new Component::Datagrid::Component(
+            subbook, new Component::Datagrid::Renderer::ThermalClusterPrepro(subbook, tag)),
+          wxT("TS generator"));
 
-			// Informations about the current thermal cluster
-			Component::Notebook* subbook = new Component::Notebook(pSplitter, Component::Notebook::orTop);
-			pNotebookThermalCluster = subbook;
-			subbook->caption(wxT("Thermal cluster"));
-			subbook->theme(Component::Notebook::themeLight);
+        // Time Series
+        pageThermalTimeSeries = subbook->add(
+          new Component::Datagrid::Component(
+            subbook, new Component::Datagrid::Renderer::TimeSeriesThermalCluster(subbook, tag)),
+          wxT("Time-Series"));
 
-			// Common properties of the current thermal cluster
-			pageThermalCommon = subbook->add(new Window::Thermal::CommonProperties(subbook, tag),
-				wxT("Common"));
+        // Split the view
+        pSplitter->SetMinimumPaneSize(70);
+        pSplitter->SplitHorizontally(tag, subbook);
 
-			// TS-Generator
-			pageThermalPrepro = subbook->add(new Component::Datagrid::Component(subbook,
-				new Component::Datagrid::Renderer::ThermalClusterPrepro(subbook, tag)),
-				wxT("TS generator"));
+        // event
+        tag->onThermalClusterChanged.connect(this, &Panel::onThermalClusterChanged);
+    }
 
-			// Time Series
-			pageThermalTimeSeries = subbook->add(new Component::Datagrid::Component(subbook,
-				new Component::Datagrid::Renderer::TimeSeriesThermalCluster(subbook, tag)),
-				wxT("Time-Series"));
+    page.second->onAreaChanged.connect(this, &Panel::onAreaChangedForThermalData);
+    page.first->onPageChanged.connect(this, &Panel::onPageChanged);
 
-			// Split the view
-			pSplitter->SetMinimumPaneSize(70);
-			pSplitter->SplitHorizontally(tag, subbook);
+    // Set the global sizer for the panel
+    SetSizer(mainsizer);
 
-			// event
-			tag->onThermalClusterChanged.connect(this, &Panel::onThermalClusterChanged);
-		}
+    // Event: a study has just been loaded or a new study has just been created
+    // This event is used to update the graphical components
+    OnStudyLoaded.connect(this, &Panel::onStudyLoaded);
+}
 
-		page.second->onAreaChanged.connect(this, &Panel::onAreaChangedForThermalData);
-		page.first->onPageChanged.connect(this, &Panel::onPageChanged);
+Panel::~Panel()
+{
+    destroyBoundEvents();
+}
 
-		// Set the global sizer for the panel
-		SetSizer(mainsizer);
+void Panel::onPageChanged(Component::Notebook::Page& page)
+{
+    if (&page == pageThermalClusterList)
+    {
+        Yuni::uint64 revID = StudyInMemoryRevisionID();
+        if (revID != pStudyRevisionIncrement)
+        {
+            Data::Area* area = pAreaForThermalCommonData;
+            pAreaSelector->onAreaChanged(nullptr);
+            pAreaSelector->onAreaChanged(area);
+            pStudyRevisionIncrement = revID;
+        }
+    }
+}
 
-		// Event: a study has just been loaded or a new study has just been created
-		// This event is used to update the graphical components
-		OnStudyLoaded.connect(this, &Panel::onStudyLoaded);
-	}
+void Panel::onThermalClusterChanged(Data::ThermalCluster* cluster)
+{
+    if (pNotebookThermalCluster)
+    {
+        pNotebookThermalCluster->caption(
+          (cluster && cluster->parentArea)
+            ? wxString() << wxStringFromUTF8(cluster->parentArea->name) << wxT(", ")
+                         << wxStringFromUTF8(cluster->name()) << wxT("  ")
+            : wxString());
+    }
+}
 
+void Panel::onAreaChangedForThermalData(Data::Area* area)
+{
+    if (area != pAreaForThermalCommonData)
+        pAreaForThermalCommonData = area;
+}
 
-	Panel::~Panel()
-	{
-		destroyBoundEvents();
-	}
+void Panel::internalOnStudyLoaded()
+{
+    Dispatcher::GUI::Post(this, &Panel::delayedResizeSplitter, 20 /*ms*/);
+}
 
+void Panel::delayedResizeSplitter()
+{
+    if (pSplitter)
+    {
+        const int h = pSplitter->GetSize().GetHeight() / 2;
+        pSplitter->SetSashPosition(h - h / 4);
+    }
+}
 
-	void Panel::onPageChanged(Component::Notebook::Page& page)
-	{
-		if (&page == pageThermalClusterList)
-		{
-			Yuni::uint64 revID = StudyInMemoryRevisionID();
-			if (revID != pStudyRevisionIncrement)
-			{
-				Data::Area* area = pAreaForThermalCommonData;
-				pAreaSelector->onAreaChanged(nullptr);
-				pAreaSelector->onAreaChanged(area);
-				pStudyRevisionIncrement = revID;
-			}
-		}
-	}
-
-
-	void Panel::onThermalClusterChanged(Data::ThermalCluster* cluster)
-	{
-		if (pNotebookThermalCluster)
-		{
-			pNotebookThermalCluster->caption((cluster && cluster->parentArea)
-					? wxString()
-						<< wxStringFromUTF8(cluster->parentArea->name) << wxT(", ")
-						<< wxStringFromUTF8(cluster->name()) << wxT("  ")
-					: wxString());
-		}
-	}
-
-
-	void Panel::onAreaChangedForThermalData(Data::Area* area)
-	{
-		if (area != pAreaForThermalCommonData)
-			pAreaForThermalCommonData = area;
-	}
-
-
-	void Panel::internalOnStudyLoaded()
-	{
-		Dispatcher::GUI::Post(this, &Panel::delayedResizeSplitter, 20 /*ms*/);
-	}
-
-
-	void Panel::delayedResizeSplitter()
-	{
-		if (pSplitter)
-		{
-			const int h = pSplitter->GetSize().GetHeight() / 2;
-			pSplitter->SetSashPosition(h - h / 4);
-		}
-	}
-
-
-	void Panel::onStudyLoaded()
-	{
-		// delayed execution
-		Yuni::Bind<void ()> callback;
-		callback.bind(this, &Panel::internalOnStudyLoaded);
-		Dispatcher::GUI::Post(callback, 50 /*ms*/);
-	}
-
-
-
-
-
-
+void Panel::onStudyLoaded()
+{
+    // delayed execution
+    Yuni::Bind<void()> callback;
+    callback.bind(this, &Panel::internalOnStudyLoaded);
+    Dispatcher::GUI::Post(callback, 50 /*ms*/);
+}
 
 } // namespace Thermal
 } // namespace Window

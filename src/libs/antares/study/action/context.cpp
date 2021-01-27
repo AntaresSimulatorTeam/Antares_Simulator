@@ -27,54 +27,46 @@
 
 #include "context.h"
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
 namespace Action
 {
+Context::Context(Data::Study& targetStudy, const size_t layer) :
+ study(targetStudy),
+ extStudy(nullptr),
+ shouldDestroyExtStudy(false),
+ area(nullptr),
+ cluster(nullptr),
+ link(nullptr),
+ originalPlant(nullptr),
+ constraint(nullptr),
+ layerID(layer)
+{
+}
 
-	Context::Context(Data::Study& targetStudy, const size_t layer) :
-		study(targetStudy),
-		extStudy(nullptr),
-		shouldDestroyExtStudy(false),
-		area(nullptr),
-		cluster(nullptr),
-		link(nullptr),
-		originalPlant(nullptr),
-		constraint(nullptr),
-		layerID(layer)
-	{}
+Context::~Context()
+{
+    if (extStudy && shouldDestroyExtStudy)
+    {
+        delete extStudy;
+        extStudy = nullptr;
+    }
+}
 
+void Context::reset()
+{
+    area = nullptr;
+    cluster = nullptr;
+    link = nullptr;
+    constraint = nullptr;
 
-	Context::~Context()
-	{
-		if (extStudy && shouldDestroyExtStudy)
-		{
-			delete extStudy;
-			extStudy = nullptr;
-		}
-	}
-
-
-	void Context::reset()
-	{
-		area       = nullptr;
-		cluster    = nullptr;
-		link       = nullptr;
-		constraint = nullptr;
-
-		view.clear();
-		property.clear();
-		areaNameMapping.clear();
-		areaLowerNameMapping.clear();
-	}
-
-
-
+    view.clear();
+    property.clear();
+    areaNameMapping.clear();
+    areaLowerNameMapping.clear();
+}
 
 } // namespace Action
 } // namespace Antares
-

@@ -25,15 +25,14 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_CORRELATION_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_CORRELATION_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_CORRELATION_H__
 
-# include <antares/wx-wrapper.h>
-# include "../../renderer.h"
-# include <antares/study.h>
-# include <map>
-# include <yuni/core/bind.h>
-# include <yuni/core/event.h>
-
+#include <antares/wx-wrapper.h>
+#include "../../renderer.h"
+#include <antares/study.h>
+#include <map>
+#include <yuni/core/bind.h>
+#include <yuni/core/event.h>
 
 namespace Antares
 {
@@ -45,135 +44,145 @@ namespace Renderer
 {
 namespace Analyzer
 {
+class Areas final : public virtual Renderer::IRenderer
+{
+public:
+    //! Map of string
+    typedef std::map<Yuni::String, Yuni::String> Map;
+    class Record final
+    {
+    public:
+        enum Status
+        {
+            stWaiting,
+            stNotFound,
+            stReady,
+            stError,
+        };
+        class Vector final
+        {
+        public:
+            typedef std::vector<Record>::iterator iterator;
+            typedef std::vector<Record>::const_iterator const_iterator;
 
+        public:
+            size_t size() const
+            {
+                return array.size();
+            }
 
-	class Areas final : public virtual Renderer::IRenderer
-	{
-	public:
-		//! Map of string
-		typedef std::map<Yuni::String, Yuni::String>  Map;
-		class Record final
-		{
-		public:
-			enum Status
-			{
-				stWaiting,
-				stNotFound,
-				stReady,
-				stError,
-			};
-			class Vector final
-			{
-			public:
-				typedef std::vector<Record>::iterator iterator;
-				typedef std::vector<Record>::const_iterator const_iterator;
+            bool empty() const
+            {
+                return array.empty();
+            }
 
-			public:
-				size_t size() const
-				{
-					return array.size();
-				}
+        public:
+            mutable Yuni::Mutex mutex;
+            std::vector<Record> array;
+            bool canRunAnalyzer;
+        };
 
-				bool empty() const
-				{
-					return array.empty();
-				}
+    public:
+        //! Get if the item is enabled
+        bool enabled;
+        //! Status
+        Status status;
+        //! Index of the area in the study
+        uint areaIndex;
+        //! Name of the area (wx)
+        wxString wxAreaName;
+        //! The file to search in the set
+        Yuni::String fileToSearch;
 
-			public:
-				mutable Yuni::Mutex mutex;
-				std::vector<Record> array;
-				bool canRunAnalyzer;
-			};
+        //! Distribution law
+        Data::XCast::Distribution distribution;
+        //! Absolute
+        bool absolute;
 
-		public:
-			//! Get if the item is enabled
-			bool enabled;
-			//! Status
-			Status status;
-			//! Index of the area in the study
-			uint areaIndex;
-			//! Name of the area (wx)
-			wxString wxAreaName;
-			//! The file to search in the set
-			Yuni::String fileToSearch;
+        //! Width and height of the matrix
+        uint mWidth, mHeight;
+    };
 
-			//! Distribution law
-			Data::XCast::Distribution distribution;
-			//! Absolute
-			bool absolute;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    Areas();
+    //! Destructor
+    virtual ~Areas();
+    //@}
 
-			//! Width and height of the matrix
-			uint mWidth, mHeight;
-		};
+    void mapFile(Map* newMap);
+    Map* mapFile();
 
+    void resetStatus(Record::Status status, bool invalidateSize = true);
+    void resetStatusWaiting(bool invalidateSize = true);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		Areas();
-		//! Destructor
-		virtual ~Areas();
-		//@}
+    Record::Vector& record()
+    {
+        return pRecord;
+    }
 
-		void mapFile(Map* newMap);
-		Map* mapFile();
+    void onBeforeUpdate(const Yuni::Bind<void(int, int)>& b)
+    {
+        pOnBeforeUpdate = b;
+    }
+    void onAfterUpdate(const Yuni::Bind<void(int, int)>& b)
+    {
+        pOnAfterUpdate = b;
+    }
 
-		void resetStatus(Record::Status status, bool invalidateSize = true);
-		void resetStatusWaiting(bool invalidateSize = true);
+    virtual int width() const
+    {
+        return 5;
+    }
 
-		Record::Vector& record() {return pRecord;}
+    virtual int height() const
+    {
+        return (int)pRecord.size();
+    }
 
-		void onBeforeUpdate(const Yuni::Bind<void (int, int)>& b) {pOnBeforeUpdate = b;}
-		void onAfterUpdate(const Yuni::Bind<void (int, int)>& b) {pOnAfterUpdate = b;}
+    virtual wxString columnCaption(int colIndx) const;
 
-		virtual int width() const {return 5;}
+    virtual wxString rowCaption(int rowIndx) const;
 
-		virtual int height() const {return (int)pRecord.size();}
+    virtual wxString cellValue(int, int) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual double cellNumericValue(int, int) const;
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual bool cellValue(int x, int y, const Yuni::String& value);
 
-		virtual wxString cellValue(int, int) const;
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    { /*Do nothing*/
+    }
 
-		virtual double cellNumericValue(int,int) const;
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+    virtual wxColour cellBackgroundColor(int, int) const;
+    virtual wxColour cellTextColor(int, int) const;
 
-		virtual bool cellValue(int x, int y, const Yuni::String& value);
+    virtual bool valid() const;
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{/*Do nothing*/}
+    void reloadDistributionLawsFromStudy(Data::TimeSeries ts);
 
-		virtual IRenderer::CellStyle cellStyle(int col, int row) const;
-		virtual wxColour cellBackgroundColor(int, int) const;
-		virtual wxColour cellTextColor(int, int) const;
+    /*!
+    ** \brief Reset internal variables according the current study
+    */
+    void initializeFromStudy();
 
-		virtual bool valid() const;
+protected:
+    virtual void onUpdate()
+    {
+    }
 
-		void reloadDistributionLawsFromStudy(Data::TimeSeries ts);
+private:
+    Map* pMapFile;
+    Record::Vector pRecord;
+    Yuni::Bind<void(int, int)> pOnBeforeUpdate;
+    Yuni::Bind<void(int, int)> pOnAfterUpdate;
 
-		/*!
-		** \brief Reset internal variables according the current study
-		*/
-		void initializeFromStudy();
-
-	protected:
-		virtual void onUpdate() {}
-
-
-	private:
-		Map* pMapFile;
-		Record::Vector pRecord;
-		Yuni::Bind<void (int, int)> pOnBeforeUpdate;
-		Yuni::Bind<void (int, int)> pOnAfterUpdate;
-
-	}; // class Areas
-
-
-
-
+}; // class Areas
 
 } // namespace Analyzer
 } // namespace Renderer

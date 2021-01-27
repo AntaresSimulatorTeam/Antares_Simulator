@@ -31,9 +31,7 @@
 #include "../../toolbox/components/datagrid/renderer/area/hydro/allocation.h"
 #include <wx/sizer.h>
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
@@ -41,35 +39,26 @@ namespace Window
 {
 namespace Hydro
 {
+Allocation::Allocation(wxWindow* parent) : Component::Panel(parent)
+{
+    auto* com = new Component::Datagrid::Component(this);
+    com->renderer(new Component::Datagrid::Renderer::HydroAllocation());
 
+    auto* sizer = new wxBoxSizer(wxVERTICAL);
+    sizer->Add(com, 1, wxALL | wxEXPAND);
+    SetSizer(sizer);
+}
 
-	Allocation::Allocation(wxWindow* parent) :
-		Component::Panel(parent)
-	{
-		auto* com = new Component::Datagrid::Component(this);
-		com->renderer(new Component::Datagrid::Renderer::HydroAllocation());
-
-		auto* sizer = new wxBoxSizer(wxVERTICAL);
-		sizer->Add(com, 1, wxALL|wxEXPAND);
-		SetSizer(sizer);
-	}
-
-
-	Allocation::~Allocation()
-	{
-		// To avoid corrupt vtable in some rare cases / misuses
-		// (when children try to access to this object for example),
-		// we should destroy all children as soon as possible.
-		auto* sizer = GetSizer();
-		if (sizer)
-			sizer->Clear(true);
-	}
-
-
-
-
+Allocation::~Allocation()
+{
+    // To avoid corrupt vtable in some rare cases / misuses
+    // (when children try to access to this object for example),
+    // we should destroy all children as soon as possible.
+    auto* sizer = GetSizer();
+    if (sizer)
+        sizer->Clear(true);
+}
 
 } // namespace Hydro
 } // namespace Window
 } // namespace Antares
-

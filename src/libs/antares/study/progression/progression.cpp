@@ -35,186 +35,167 @@ namespace Antares
 {
 namespace Solver
 {
+Progression::Task::Task(const Antares::Data::Study& study, Section section) :
+ pProgression(study.progression), pPart(study.progression.begin((uint)-1, section))
+{
+    assert(&pProgression);
+}
 
+Progression::Task::Task(const Antares::Data::Study& study, uint year, Section section) :
+ pProgression(study.progression), pPart(study.progression.begin(year, section))
+{
+    assert(&pProgression);
+}
 
-	Progression::Task::Task(const Antares::Data::Study& study, Section section) :
-		pProgression(study.progression),
-		pPart(study.progression.begin((uint) -1, section))
-	{
-		assert(&pProgression);
-	}
+void Progression::add(uint year, Section section, int nbTicks)
+{
+    // This section is not thread-safe because always called before really launching
+    // the simulation
 
+    Part& part = pProgressMeter.parts[year][section];
+    // reset
+    part.maxTickCount = nbTicks;
+    part.lastTickCount = 0;
 
-	Progression::Task::Task(const Antares::Data::Study& study, uint year, Section section) :
-		pProgression(study.progression),
-		pPart(study.progression.begin(year, section))
-	{
-		assert(&pProgression);
-	}
+    // Caption
+    part.caption.clear() << "task 0 " << SectionToCStr(section) << ", ";
+    if (year != (uint)-1)
+        part.caption << "year: " << year << ", ";
+    else
+        part.caption << "post, ";
+}
 
+void Progression::end(Part& part)
+{
+    // Removing the task from the active task list
+    pProgressMeter.mutex.lock();
 
-	void Progression::add(uint year, Section section, int nbTicks)
-	{
-		// This section is not thread-safe because always called before really launching
-		// the simulation
+#ifndef NDEBUG
+    {
+        bool gotcha = false;
+        const auto end = pProgressMeter.inUse.end();
+        for (auto i = pProgressMeter.inUse.begin(); i != end; ++i)
+        {
+            if (*i == &part)
+            {
+                gotcha = true;
+                break;
+            }
+        }
+        if (not gotcha)
+        {
+            assert(false && "Trying to remove an unknown progression part");
+            pProgressMeter.mutex.unlock();
+            return;
+        }
+    }
+#endif
 
-		Part& part         = pProgressMeter.parts[year][section];
-		// reset
-		part.maxTickCount  = nbTicks;
-		part.lastTickCount = 0;
+    pProgressMeter.inUse.remove(&part);
 
-		// Caption
-		part.caption.clear() << "task 0 " << SectionToCStr(section) << ", ";
-		if (year != (uint) -1)
-			part.caption << "year: " << year << ", ";
-		else
-			part.caption << "post, ";
-	}
+    // 100% - We have to display the '100%' whatever the case to make sure that
+    // the UI is aware that the sub-task is complete
+    if (part.maxTickCount != part.lastTickCount)
+    {
+        pProgressMeter.mutex.unlock();
 
+        // Only if started. This variable has no need to be modified because
+        // never modified after the start of the simulation
+        if (pStarted)
+            logs.progress() << part.caption << "100";
+        return;
+    }
+    else
+        pProgressMeter.mutex.unlock();
+}
 
-	void Progression::end(Part& part)
-	{
-		// Removing the task from the active task list
-		pProgressMeter.mutex.lock();
+bool Progression::Meter::onInterval(uint)
+{
+    uint count = 0;
 
-		# ifndef NDEBUG
-		{
-			bool gotcha = false;
-			const auto end = pProgressMeter.inUse.end();
-			for (auto i = pProgressMeter.inUse.begin(); i != end; ++i)
-			{
-				if (*i == &part)
-				{
-					gotcha = true;
-					break;
-				}
-			}
-			if (not gotcha)
-			{
-				assert(false && "Trying to remove an unknown progression part");
-				pProgressMeter.mutex.unlock();
-				return;
-			}
-		}
-		# endif
+    mutex.lock();
+    if (inUse.empty())
+    {
+        mutex.unlock();
+        return true;
+    }
 
-		pProgressMeter.inUse.remove(&part);
+    {
+        const auto end = inUse.end();
+        for (auto i = inUse.begin(); i != end; ++i)
+        {
+            Part& part = *(*i);
+            if (part.tickCount != part.lastTickCount)
+            {
+                part.lastTickCount = part.tickCount;
+                logsContainer[count].clear()
+                  << part.caption << ((part.lastTickCount * 100.f) / part.maxTickCount);
+                ++count;
+            }
+        }
+    }
+    mutex.unlock();
 
-		// 100% - We have to display the '100%' whatever the case to make sure that
-		// the UI is aware that the sub-task is complete
-		if (part.maxTickCount != part.lastTickCount)
-		{
-			pProgressMeter.mutex.unlock();
+    // Print all logs
+    for (uint i = 0; i != count; ++i)
+        logs.progress() << logsContainer[i];
 
-			// Only if started. This variable has no need to be modified because
-			// never modified after the start of the simulation
-			if (pStarted)
-				logs.progress() << part.caption << "100";
-			return;
-		}
-		else
-			pProgressMeter.mutex.unlock();
-	}
+    // True to continue the execution of the timer
+    return true;
+}
 
+Progression::Progression() : pStarted(false)
+{
+}
 
-	bool Progression::Meter::onInterval(uint)
-	{
-		uint count = 0;
+Progression::~Progression()
+{
+    pProgressMeter.stop();
+}
 
-		mutex.lock();
-		if (inUse.empty())
-		{
-			mutex.unlock();
-			return true;
-		}
+bool Progression::saveToFile(const Yuni::String& filename)
+{
+    MutexLocker locker(pProgressMeter.mutex);
+    {
+        IO::File::Stream file;
+        if (not file.openRW(filename))
+            return false;
 
-		{
-			const auto end = inUse.end();
-			for (auto i = inUse.begin(); i != end; ++i)
-			{
-				Part& part = *(*i);
-				if (part.tickCount != part.lastTickCount)
-				{
-					part.lastTickCount = part.tickCount;
-					logsContainer[count].clear() << part.caption << ((part.lastTickCount * 100.f) / part.maxTickCount);
-					++count;
-				}
-			}
-		}
-		mutex.unlock();
+        uint year;
+        const Part::Map::const_iterator end = pProgressMeter.parts.end();
+        for (Part::Map::const_iterator i = pProgressMeter.parts.begin(); i != end; ++i)
+        {
+            year = i->first;
+            const Part::MapPerSection::const_iterator jend = i->second.end();
+            for (Part::MapPerSection::const_iterator j = i->second.begin(); j != jend; ++j)
+            {
+                if (year != (uint)-1)
+                    file << year;
+                else
+                    file << "post";
+                file << ' ' << SectionToCStr(j->first) << '\n';
+            }
+        }
+        // The file will be closed here
+        // It is important that the file is closed before emitting the log entry
+        // (There is an exclusive lock by default on Windows)
+    }
+    logs.info() << LOG_UI_PROGRESSION_MAP << filename;
+    return true;
+}
 
-		// Print all logs
-		for (uint i = 0; i != count; ++i)
-			logs.progress() << logsContainer[i];
+void Progression::start()
+{
+    pStarted = true;
+    pProgressMeter.interval(1200 /*ms*/);
+    pProgressMeter.start();
+}
 
-		// True to continue the execution of the timer
-		return true;
-	}
-
-
-
-	Progression::Progression() :
-		pStarted(false)
-	{
-	}
-
-
-	Progression::~Progression()
-	{
-		pProgressMeter.stop();
-	}
-
-
-	bool Progression::saveToFile(const Yuni::String& filename)
-	{
-		MutexLocker locker(pProgressMeter.mutex);
-		{
-			IO::File::Stream file;
-			if (not file.openRW(filename))
-				return false;
-
-			uint year;
-			const Part::Map::const_iterator end = pProgressMeter.parts.end();
-			for (Part::Map::const_iterator i = pProgressMeter.parts.begin(); i != end; ++i)
-			{
-				year = i->first;
-				const Part::MapPerSection::const_iterator jend = i->second.end();
-				for (Part::MapPerSection::const_iterator j = i->second.begin(); j != jend; ++j)
-				{
-					if (year != (uint) -1)
-						file << year;
-					else
-						file << "post";
-					file << ' ' << SectionToCStr(j->first) << '\n';
-				}
-			}
-			// The file will be closed here
-			// It is important that the file is closed before emitting the log entry
-			// (There is an exclusive lock by default on Windows)
-		}
-		logs.info() << LOG_UI_PROGRESSION_MAP << filename;
-		return true;
-	}
-
-
-	void Progression::start()
-	{
-		pStarted = true;
-		pProgressMeter.interval(1200 /*ms*/);
-		pProgressMeter.start();
-	}
-
-
-	void Progression::stop()
-	{
-		pProgressMeter.stop();
-		pStarted = false;
-	}
-
-
-
-
+void Progression::stop()
+{
+    pProgressMeter.stop();
+    pStarted = false;
+}
 
 } // namespace Solver
 } // namespace Antares
-

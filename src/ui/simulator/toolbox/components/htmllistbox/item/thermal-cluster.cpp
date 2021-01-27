@@ -30,9 +30,7 @@
 #include "../../../resources.h"
 #include <yuni/core/math.h>
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
@@ -42,115 +40,103 @@ namespace HTMLListbox
 {
 namespace Item
 {
+wxString ThermalCluster::pIconFileEnabled;
+wxString ThermalCluster::pIconFileDisabled;
+wxString ThermalCluster::pIconFileThermal;
 
-	wxString ThermalCluster::pIconFileEnabled;
-	wxString ThermalCluster::pIconFileDisabled;
-	wxString ThermalCluster::pIconFileThermal;
+ThermalCluster::ThermalCluster(Antares::Data::ThermalCluster* a) : pThermalCluster(a)
+{
+    preloadImages();
+}
 
+ThermalCluster::ThermalCluster(Antares::Data::ThermalCluster* a, const wxString& additional) :
+ pThermalCluster(a), pText(additional)
+{
+    preloadImages();
+}
 
+ThermalCluster::~ThermalCluster()
+{
+}
 
-	ThermalCluster::ThermalCluster(Antares::Data::ThermalCluster* a)
-		:pThermalCluster(a)
-	{
-		preloadImages();
-	}
+void ThermalCluster::preloadImages()
+{
+    if (pIconFileEnabled.empty())
+    {
+        String location;
 
+        Resources::FindFile(location, "images/16x16/light_green.png");
+        pIconFileEnabled = wxStringFromUTF8(location);
 
-	ThermalCluster::ThermalCluster(Antares::Data::ThermalCluster* a, const wxString& additional)
-		:pThermalCluster(a), pText(additional)
-	{
-		preloadImages();
-	}
+        Resources::FindFile(location, "images/16x16/light_orange.png");
+        pIconFileDisabled = wxStringFromUTF8(location);
 
+        Resources::FindFile(location, "images/16x16/thermal.png");
+        pIconFileThermal = wxStringFromUTF8(location);
+    }
+}
 
-	ThermalCluster::~ThermalCluster()
-	{}
+bool ThermalCluster::HtmlContent(wxString& out,
+                                 Data::ThermalCluster* th,
+                                 const wxString& searchString)
+{
+    bool highlight = false;
 
+    if (th->enabled)
+    {
+        out << wxT("<td width=30 align=center><img src=\"") << pIconFileEnabled << wxT("\"></td>");
+    }
+    else
+    {
+        out << wxT("<td width=30 align=center><img src=\"") << pIconFileDisabled << wxT("\"></td>");
+    }
 
-	void ThermalCluster::preloadImages()
-	{
-		if (pIconFileEnabled.empty())
-		{
-			String location;
+    out << wxT("<td width=20 align=center><img src=\"") << pIconFileThermal << wxT("\"></td>");
 
-			Resources::FindFile(location, "images/16x16/light_green.png");
-			pIconFileEnabled = wxStringFromUTF8(location);
+    /*
+    out	<< wxT("<td width=16 bgcolor=\"")
+            << wxColour(230, 230, 230).GetAsString(wxC2S_HTML_SYNTAX)
+            << wxT("\" align=center><font size=\"-3\" color=\"")
+            << ColorDarker(230, 230, 230).GetAsString(wxC2S_HTML_SYNTAX)
+            << wxT("\">Th</font></td>");
+            */
 
-			Resources::FindFile(location, "images/16x16/light_orange.png");
-			pIconFileDisabled = wxStringFromUTF8(location);
+    out << wxT("<td width=8></td><td nowrap><font size=\"-1\"");
+    wxString name = wxStringFromUTF8(th->name());
+    if (searchString.empty() || (highlight = HTMLCodeHighlightString(name, searchString)))
+        out << wxT(">") << name << wxT("</font>");
+    else
+        out << wxT(" color=\"#999999\">") << name << wxT("</font>");
+    // Post
+    out << wxT("</td>");
+    return highlight;
+}
 
-			Resources::FindFile(location, "images/16x16/thermal.png");
-			pIconFileThermal = wxStringFromUTF8(location);
-		}
-	}
-
-
-	bool ThermalCluster::HtmlContent(wxString& out, Data::ThermalCluster* th, const wxString& searchString)
-	{
-		bool highlight = false;
-
-		if (th->enabled)
-		{
-			out	<< wxT("<td width=30 align=center><img src=\"") << pIconFileEnabled << wxT("\"></td>");
-		}
-		else
-		{
-			out	<< wxT("<td width=30 align=center><img src=\"") << pIconFileDisabled << wxT("\"></td>");
-		}
-
-		out << wxT("<td width=20 align=center><img src=\"") << pIconFileThermal << wxT("\"></td>");
-
-		/*
-		out	<< wxT("<td width=16 bgcolor=\"")
-			<< wxColour(230, 230, 230).GetAsString(wxC2S_HTML_SYNTAX)
-			<< wxT("\" align=center><font size=\"-3\" color=\"")
-			<< ColorDarker(230, 230, 230).GetAsString(wxC2S_HTML_SYNTAX)
-			<< wxT("\">Th</font></td>");
-			*/
-
-		out
-			<< wxT("<td width=8></td><td nowrap><font size=\"-1\"");
-		wxString name = wxStringFromUTF8(th->name());
-		if (searchString.empty() || (highlight = HTMLCodeHighlightString(name, searchString)))
-			out << wxT(">") << name << wxT("</font>");
-		else
-			out << wxT(" color=\"#999999\">") << name << wxT("</font>");
-		// Post
-		out << wxT("</td>");
-		return highlight;
-	}
-
-
-	wxString ThermalCluster::htmlContent(const wxString& searchString)
-	{
-		if (pThermalCluster)
-		{
-			wxString d;
-			d << wxT("<table border=0 cellpadding=0 cellspacing=0 width=\"100%\"><tr>");
-			pHighlighted = HtmlContent(d, pThermalCluster, searchString);
-			d << wxT("<td nowrap align=right><font size=\"-2\">")
-				<< pThermalCluster->unitCount << wxT("<font color=\"#5555BB\"> u </font>")
-				<< wxT("<font color=\"#5555BB\">* </font>")
-				<< pThermalCluster->nominalCapacity
-				<< wxT(" <font color=\"#5555BB\">MW =</font></font></td>")
-				<< wxT("<td width=64 nowrap align=right><font size=\"-2\">")
-				<< Math::Round(pThermalCluster->nominalCapacity * pThermalCluster->unitCount, 2)
-				<< wxT(" <font color=\"#5555BB\">MW</font></font></td>")
-				<< wxT("<td width=90 nowrap align=right><font size=\"-2\">")
-				<< Math::Round(pThermalCluster->marketBidCost, 3)
-				<< wxT(" <font color=\"#DD3311\">\u20AC/MWh</font></font></td>")
-				<< wxT("<td width=5></td>");
-			// Post
-			d << pText << wxT("</tr></table>");
-			return d;
-		}
-		pHighlighted = false;
-		return wxString();
-	}
-
-
-
-
+wxString ThermalCluster::htmlContent(const wxString& searchString)
+{
+    if (pThermalCluster)
+    {
+        wxString d;
+        d << wxT("<table border=0 cellpadding=0 cellspacing=0 width=\"100%\"><tr>");
+        pHighlighted = HtmlContent(d, pThermalCluster, searchString);
+        d << wxT("<td nowrap align=right><font size=\"-2\">") << pThermalCluster->unitCount
+          << wxT("<font color=\"#5555BB\"> u </font>") << wxT("<font color=\"#5555BB\">* </font>")
+          << pThermalCluster->nominalCapacity
+          << wxT(" <font color=\"#5555BB\">MW =</font></font></td>")
+          << wxT("<td width=64 nowrap align=right><font size=\"-2\">")
+          << Math::Round(pThermalCluster->nominalCapacity * pThermalCluster->unitCount, 2)
+          << wxT(" <font color=\"#5555BB\">MW</font></font></td>")
+          << wxT("<td width=90 nowrap align=right><font size=\"-2\">")
+          << Math::Round(pThermalCluster->marketBidCost, 3)
+          << wxT(" <font color=\"#DD3311\">\u20AC/MWh</font></font></td>")
+          << wxT("<td width=5></td>");
+        // Post
+        d << pText << wxT("</tr></table>");
+        return d;
+    }
+    pHighlighted = false;
+    return wxString();
+}
 
 } // namespace Item
 } // namespace HTMLListbox

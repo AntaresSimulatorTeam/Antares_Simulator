@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_INTERFACE_CONFIG_H__
-# define __ANTARES_INTERFACE_CONFIG_H__
+#define __ANTARES_INTERFACE_CONFIG_H__
 
-# include "../../config.h"
+#include "../../config.h"
 
 #endif // __ANTARES_INTERFACE_CONFIG_H__

@@ -35,9 +35,7 @@
 #include "../../application/menus.h"
 #include <wx/statline.h>
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
@@ -45,104 +43,93 @@ namespace Window
 {
 namespace Hydro
 {
+LevelsAndValues::LevelsAndValues(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
+ Component::Panel(parent),
+ pInputAreaSelector(notifier),
+ pArea(nullptr),
+ pComponentsAreReady(false),
+ pSupport(nullptr)
+{
+    OnStudyClosed.connect(this, &LevelsAndValues::onStudyClosed);
+    if (notifier)
+        notifier->onAreaChanged.connect(this, &LevelsAndValues::onAreaChanged);
+}
 
+void LevelsAndValues::createComponents()
+{
+    if (pComponentsAreReady)
+        return;
+    pComponentsAreReady = true;
 
-	LevelsAndValues::LevelsAndValues(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
-		Component::Panel(parent),
-		pInputAreaSelector(notifier),
-		pArea(nullptr),
-		pComponentsAreReady(false),
-		pSupport(nullptr)
-	{
-		OnStudyClosed.connect(this, &LevelsAndValues::onStudyClosed);
-		if (notifier)
-			notifier->onAreaChanged.connect(this, &LevelsAndValues::onAreaChanged);
-	}
+    {
+        wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+        SetSizer(sizer);
+        pSupport = new Component::Panel(this);
+        sizer->Add(pSupport, 1, wxALL | wxEXPAND);
+    }
 
+    wxBoxSizer* ssGrids = new wxBoxSizer(wxHORIZONTAL);
+    pSupport->SetSizer(ssGrids);
 
-	void LevelsAndValues::createComponents()
-	{
-		if (pComponentsAreReady)
-			return;
-		pComponentsAreReady = true;
+    const wxSize ourDefaultSize(55, wxDefaultSize.GetHeight());
 
-		{
-			wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
-			SetSizer(sizer);
-			pSupport = new Component::Panel(this);
-			sizer->Add(pSupport, 1, wxALL|wxEXPAND);
-		}
+    enum
+    {
+        right = wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL,
+        left = wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
+    };
 
-		wxBoxSizer* ssGrids = new wxBoxSizer(wxHORIZONTAL); 
-		pSupport->SetSizer(ssGrids);
+    ssGrids->Add(new Component::Datagrid::Component(
+                   pSupport,
+                   new Component::Datagrid::Renderer::ReservoirLevels(this, pInputAreaSelector),
+                   wxT("Reservoir levels")),
+                 2,
+                 wxALL | wxEXPAND | wxFIXED_MINSIZE,
+                 5);
 
-		const wxSize ourDefaultSize(55, wxDefaultSize.GetHeight());
+    ssGrids->Add(
+      new wxStaticLine(pSupport, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL),
+      0,
+      wxALL | wxEXPAND);
 
-		enum
-		{
-			right = wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL,
-			left  = wxLEFT  | wxALIGN_LEFT  | wxALIGN_CENTER_VERTICAL,
-		};
+    ssGrids->Add(new Component::Datagrid::Component(
+                   pSupport,
+                   new Component::Datagrid::Renderer::WaterValues(this, pInputAreaSelector),
+                   wxT("Water values")),
+                 3,
+                 wxALL | wxEXPAND | wxFIXED_MINSIZE,
+                 5);
 
+    ssGrids->Layout();
+}
 
-		ssGrids->Add(new Component::Datagrid::Component(pSupport,
-			new Component::Datagrid::Renderer::ReservoirLevels(this, pInputAreaSelector), wxT("Reservoir levels")),
-			2, wxALL|wxEXPAND | wxFIXED_MINSIZE, 5);
+LevelsAndValues::~LevelsAndValues()
+{
+    destroyBoundEvents();
+    // destroy all children as soon as possible to prevent against corrupt vtable
+    DestroyChildren();
+}
 
-		ssGrids->Add(new wxStaticLine(pSupport, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL), 0, wxALL | wxEXPAND);
+void LevelsAndValues::onAreaChanged(Data::Area* area)
+{
+    pArea = area;
+    if (area and area->hydro.prepro)
+    {
+        // create components on-demand
+        if (!pComponentsAreReady)
+            createComponents();
+        else
+            GetSizer()->Show(pSupport, true);
+    }
+}
 
-		ssGrids->Add(new Component::Datagrid::Component(pSupport,
-			new Component::Datagrid::Renderer::WaterValues(this, pInputAreaSelector), wxT("Water values")),
-			3, wxALL | wxEXPAND | wxFIXED_MINSIZE, 5);
+void LevelsAndValues::onStudyClosed()
+{
+    pArea = nullptr;
 
-
-		ssGrids->Layout();
-
-
-	}
-
-
-	LevelsAndValues::~LevelsAndValues()
-	{
-		destroyBoundEvents();
-		// destroy all children as soon as possible to prevent against corrupt vtable
-		DestroyChildren();
-	}
-
-
-
-	void LevelsAndValues::onAreaChanged(Data::Area* area)
-	{
-		pArea = area;
-		if (area and area->hydro.prepro)
-		{
-			// create components on-demand
-			if (!pComponentsAreReady)
-				createComponents();
-			else
-				GetSizer()->Show(pSupport, true);
-
-		}
-	}
-
-
-	
-
-
-	void LevelsAndValues::onStudyClosed()
-	{
-		pArea = nullptr;
-
-		if (GetSizer())
-			GetSizer()->Show(pSupport, false);
-	}
-
-
-
-
-
-
-
+    if (GetSizer())
+        GetSizer()->Show(pSupport, false);
+}
 
 } // namespace Hydro
 } // namespace Window

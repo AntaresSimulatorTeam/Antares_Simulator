@@ -25,12 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_DAYYEAR_H__
-# define __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_DAYYEAR_H__
+#define __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_DAYYEAR_H__
 
-# include <antares/wx-wrapper.h>
-# include "../filter.h"
-# include <antares/date.h>
-
+#include <antares/wx-wrapper.h>
+#include "../filter.h"
+#include <antares/date.h>
 
 namespace Antares
 {
@@ -38,72 +37,86 @@ namespace Toolbox
 {
 namespace Filter
 {
+class DayYear : public AFilterBase
+{
+public:
+    static const wxChar* Name()
+    {
+        return wxT("dayyear");
+    }
+    static const wxChar* Caption()
+    {
+        return wxT("Day of the year");
+    }
+    static Date::Precision Precision()
+    {
+        return Date::daily;
+    }
 
+public:
+    DayYear(Input* parent) : AFilterBase(parent)
+    {
+        operators.addStdArithmetic();
+    }
 
+    virtual ~DayYear()
+    {
+    }
 
-	class DayYear : public AFilterBase
-	{
-	public:
-		static const wxChar* Name()    {return wxT("dayyear");}
-		static const wxChar* Caption() {return wxT("Day of the year");}
-		static Date::Precision Precision() {return Date::daily;}
+    virtual Date::Precision precision() const
+    {
+        return DayYear::Precision();
+    }
 
-	public:
-		DayYear(Input* parent) :
-			AFilterBase(parent)
-		{
-			operators.addStdArithmetic();
-		}
+    virtual bool checkOnRowsLabels() const
+    {
+        return true;
+    }
 
-		virtual ~DayYear() {}
+    virtual const wxChar* name() const
+    {
+        return DayYear::Name();
+    }
+    virtual const wxChar* caption() const
+    {
+        return DayYear::Caption();
+    }
 
-		virtual Date::Precision precision() const {return DayYear::Precision();}
+    virtual bool rowIsValid(int row) const
+    {
+        // TODO Do not use global study
+        auto studyptr = Data::Study::Current::Get();
+        if (!studyptr)
+            return false;
+        auto& study = *studyptr;
+        auto& calendar = study.calendar;
 
-		virtual bool checkOnRowsLabels() const {return true;}
+        switch (pDataGridPrecision)
+        {
+        case Date::hourly:
+        {
+            if (row < study.calendar.maxHoursInYear)
+            {
+                uint dayyear = calendar.hours[row].dayYear + 1;
+                return currentOperator->compute((int)dayyear);
+            }
+            break;
+        }
+        case Date::daily:
+        {
+            if (row < study.calendar.maxDaysInYear)
+            {
+                return currentOperator->compute((int)row + 1);
+            }
+            break;
+        }
+        default:
+            break;
+        }
+        return false;
+    }
 
-		virtual const wxChar* name() const {return DayYear::Name();}
-		virtual const wxChar* caption() const {return DayYear::Caption();}
-
-
-		virtual bool rowIsValid(int row) const
-		{
-			// TODO Do not use global study
-			auto studyptr = Data::Study::Current::Get();
-			if (!studyptr)
-				return false;
-			auto& study = *studyptr;
-			auto& calendar = study.calendar;
-
-			switch (pDataGridPrecision)
-			{
-				case Date::hourly:
-					{
-						if (row < study.calendar.maxHoursInYear)
-						{
-							uint dayyear = calendar.hours[row].dayYear + 1;
-							return currentOperator->compute((int) dayyear);
-						}
-						break;
-					}
-				case Date::daily:
-					{
-						if (row < study.calendar.maxDaysInYear)
-						{
-							return currentOperator->compute((int) row + 1);
-						}
-						break;
-					}
-				default:
-					break;
-			}
-			return false;
-		}
-
-	}; // class HourYear
-
-
-
-
+}; // class HourYear
 
 } // namespace Filter
 } // namespace Toolbox

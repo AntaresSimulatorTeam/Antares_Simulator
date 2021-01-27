@@ -25,15 +25,14 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_CONNECTION_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_CONNECTION_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_CONNECTION_H__
 
-# include <antares/wx-wrapper.h>
-# include "../../../input/connection.h"
-# include "../renderer.h"
-# include <antares/date.h>
-# include "matrix.h"
-# include <yuni/core/event.h>
-
+#include <antares/wx-wrapper.h>
+#include "../../../input/connection.h"
+#include "../renderer.h"
+#include <antares/date.h>
+#include "matrix.h"
+#include <yuni/core/event.h>
 
 namespace Antares
 {
@@ -43,60 +42,67 @@ namespace Datagrid
 {
 namespace Renderer
 {
+class Connection final : public Renderer::Matrix<>
+{
+public:
+    Connection(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
+    virtual ~Connection();
 
+    virtual int width() const
+    {
+        return Renderer::Matrix<>::width();
+    }
+    virtual int height() const
+    {
+        return Renderer::Matrix<>::height();
+    }
 
-	class Connection final : public Renderer::Matrix<>
-	{
-	public:
-		Connection(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
-		virtual ~Connection();
+    virtual wxString columnCaption(int colIndx) const;
 
-		virtual int width() const {return Renderer::Matrix<>::width();}
-		virtual int height() const {return Renderer::Matrix<>::height();}
+    virtual wxString rowCaption(int rowIndx) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual wxString cellValue(int x, int y) const
+    {
+        return Renderer::Matrix<>::cellValue(x, y);
+    }
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual double cellNumericValue(int x, int y) const
+    {
+        return Renderer::Matrix<>::cellNumericValue(x, y);
+    }
 
-		virtual wxString cellValue(int x, int y) const
-		{
-			return Renderer::Matrix<>::cellValue(x, y);
-		}
+    virtual bool cellValue(int x, int y, const Yuni::String& value);
 
-		virtual double cellNumericValue(int x, int y) const
-		{
-			return Renderer::Matrix<>::cellNumericValue(x, y);
-		}
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    {
+        // Do nothing
+    }
 
+    virtual wxColour horizontalBorderColor(int x, int y) const;
 
-		virtual bool cellValue(int x, int y, const Yuni::String& value);
+    virtual bool valid() const
+    {
+        return Renderer::Matrix<>::valid();
+    }
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{
-			// Do nothing
-		}
+    virtual uint maxWidthResize() const
+    {
+        return 0;
+    }
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
 
-		virtual wxColour horizontalBorderColor(int x, int y) const;
+    virtual Date::Precision precision()
+    {
+        return Date::hourly;
+    }
 
-		virtual bool valid() const {return Renderer::Matrix<>::valid();}
+protected:
+    wxWindow* pControl;
 
-		virtual uint maxWidthResize() const {return 0;}
-		virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+private:
+    void onConnectionChanged(Data::AreaLink* link);
 
-		virtual Date::Precision precision() {return Date::hourly;}
-
-
-	protected:
-		wxWindow* pControl;
-
-	private:
-		void onConnectionChanged(Data::AreaLink* link);
-
-	}; // class ARendererArea
-
-
-
-
+}; // class ARendererArea
 
 } // namespace Renderer
 } // namespace Datagrid

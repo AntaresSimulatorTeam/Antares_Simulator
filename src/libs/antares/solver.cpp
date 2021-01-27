@@ -33,190 +33,187 @@
 #include <yuni/io/searchpath.h>
 #include <yuni/io/file.h>
 
-
 using namespace Yuni;
 
-# define SEP Yuni:;IO::Separator
-
+#define SEP \
+    Yuni:;  \
+    IO::Separator
 
 namespace Antares
 {
 namespace Solver
 {
+bool FindLocation(String& location, Data::Version /*version*/, Solver::Feature features)
+{
+    // reset
+    location.clear();
 
+    // The root folder
+    String root;
+    Resources::GetRootFolder(root);
+    String s;
+    s.reserve(root.size() + 30 /*arbitrary*/);
 
-	bool FindLocation(String& location, Data::Version /*version*/, Solver::Feature features)
-	{
-		// reset
-		location.clear();
+    IO::SearchPath searchpaths;
+    searchpaths.prefixes.push_back((s = "antares-" ANTARES_VERSION "-"));
 
-		// The root folder
-		String root;
-		Resources::GetRootFolder(root);
-		String s;
-		s.reserve(root.size() + 30 /*arbitrary*/);
+    if (System::windows)
+    {
+        searchpaths.extensions.push_back(".exe");
 
-		IO::SearchPath searchpaths;
-		searchpaths.prefixes.push_back((s = "antares-" ANTARES_VERSION "-"));
+        searchpaths.directories.push_back((s = root) << "\\..\\bin");
+        searchpaths.directories.push_back((s = root) << "\\Resources\\tools");
+#ifdef NDEBUG
+        searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\solver\\Release"); // msvc
+#else
+        searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\solver\\Debug");   // msvc
+#endif
 
-		if (System::windows)
-		{
-			searchpaths.extensions.push_back(".exe");
+        searchpaths.directories.push_back((s = root) << "\\..\\..\\solver"); // mingw
+        searchpaths.directories.push_back((s = root));
+    }
+    else
+    {
+        searchpaths.directories.push_back(s.clear() << "/usr/local/bin/");
+        searchpaths.directories.push_back(s.clear() << "/usr/bin/");
+        searchpaths.directories.push_back((s = root) << "/../../solver");
+    }
 
-			searchpaths.directories.push_back((s = root) << "\\..\\bin");
-			searchpaths.directories.push_back((s = root) << "\\Resources\\tools");
-			# ifdef NDEBUG
-			searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\solver\\Release"); // msvc
-			# else
-			searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\solver\\Debug"); // msvc
-			# endif
+    bool success = false;
+    s.clear();
+    switch (features)
+    {
+    case Solver::parallel:
+    case Solver::standard:
+        success = searchpaths.find(s, "solver");
+        break;
+    case Solver::withSwapFiles:
+        success = searchpaths.find(s, "solver-swap");
+        break;
+    }
 
-			searchpaths.directories.push_back((s = root) << "\\..\\..\\solver"); // mingw
-			searchpaths.directories.push_back((s = root));
-		}
-		else
-		{
-			searchpaths.directories.push_back(s.clear() << "/usr/local/bin/");
-			searchpaths.directories.push_back(s.clear() << "/usr/bin/");
-			searchpaths.directories.push_back((s = root) << "/../../solver");
-		}
+    if (success)
+    {
+        IO::Normalize(location, s);
+        return true;
+    }
+    return false;
+}
 
-		bool success = false;
-		s.clear();
-		switch (features)
-		{
-			case Solver::parallel:
-			case Solver::standard:
-				success = searchpaths.find(s, "solver");
-				break;
-			case Solver::withSwapFiles:
-				success = searchpaths.find(s, "solver-swap");
-				break;
-		}
+bool FindAnalyzerLocation(String& location)
+{
+    // reset
+    location.clear();
 
-		if (success)
-		{
-			IO::Normalize(location, s);
-			return true;
-		}
-		return false;
-	}
+    // The root folder
+    String root;
+    Resources::GetRootFolder(root);
+    String s;
+    s.reserve(root.size() + 30 /*arbitrary*/);
 
+    IO::SearchPath searchpaths;
+    searchpaths.prefixes.push_back((s = "antares-" ANTARES_VERSION "-"));
 
-	bool FindAnalyzerLocation(String& location)
-	{
-		// reset
-		location.clear();
+    if (System::windows)
+    {
+        searchpaths.extensions.push_back(".exe");
+        searchpaths.directories.push_back((s = root) << "\\..\\bin");
+        searchpaths.directories.push_back((s = root) << "\\Resources\\tools");
+#ifdef NDEBUG
+        searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\analyzer\\Release"); // msvc
+#else
+        searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\analyzer\\Debug"); // msvc
+#endif
+        searchpaths.directories.push_back((s = root) << "\\..\\..\\analyzer"); // mingw
+        searchpaths.directories.push_back((s = root));
+    }
+    else
+    {
+        searchpaths.directories.push_back((s = root) << "/../../analyzer");
+        searchpaths.directories.push_back(s.clear() << "/usr/local/bin/");
+        searchpaths.directories.push_back(s.clear() << "/usr/bin/");
+    }
 
-		// The root folder
-		String root;
-		Resources::GetRootFolder(root);
-		String s;
-		s.reserve(root.size() + 30 /*arbitrary*/);
+    return searchpaths.find(location, "analyzer");
+}
 
-		IO::SearchPath searchpaths;
-		searchpaths.prefixes.push_back((s = "antares-" ANTARES_VERSION "-"));
+bool FindConstraintsBuilderLocation(String& location)
+{
+    // reset
+    location.clear();
 
-		if (System::windows)
-		{
-			searchpaths.extensions.push_back(".exe");
-			searchpaths.directories.push_back((s = root) << "\\..\\bin");
-			searchpaths.directories.push_back((s = root) << "\\Resources\\tools");
-			# ifdef NDEBUG
-			searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\analyzer\\Release"); // msvc
-			# else
-			searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\analyzer\\Debug"); // msvc
-			# endif
-			searchpaths.directories.push_back((s = root) << "\\..\\..\\analyzer"); // mingw
-			searchpaths.directories.push_back((s = root));
-		}
-		else
-		{
-			searchpaths.directories.push_back((s = root) << "/../../analyzer");
-			searchpaths.directories.push_back(s.clear() << "/usr/local/bin/");
-			searchpaths.directories.push_back(s.clear() << "/usr/bin/");
-		}
+    // The root folder
+    String root;
+    Resources::GetRootFolder(root);
+    String s;
+    s.reserve(root.size() + 30 /*arbitrary*/);
 
-		return searchpaths.find(location, "analyzer");
-	}
+    IO::SearchPath searchpaths;
+    searchpaths.prefixes.push_back((s = "antares-" ANTARES_VERSION "-"));
 
-	bool FindConstraintsBuilderLocation(String& location)
-	{
-		// reset
-		location.clear();
+    if (System::windows)
+    {
+        searchpaths.extensions.push_back(".exe");
+        searchpaths.directories.push_back((s = root) << "\\..\\bin");
+        searchpaths.directories.push_back((s = root) << "\\Resources\\tools");
+#ifdef NDEBUG
+        searchpaths.directories.push_back((s = root)
+                                          << "\\..\\..\\..\\constraints-builder\\Release"); // msvc
+#else
+        searchpaths.directories.push_back((s = root)
+                                          << "\\..\\..\\..\\constraints-builder\\Debug"); // msvc
+#endif
+        searchpaths.directories.push_back((s = root) << "\\..\\..\\constraints-builder"); // mingw
+        searchpaths.directories.push_back((s = root));
+    }
+    else
+    {
+        searchpaths.directories.push_back((s = root) << "/../../constraints-builder");
+        searchpaths.directories.push_back(s.clear() << "/usr/local/bin/");
+        searchpaths.directories.push_back(s.clear() << "/usr/bin/");
+    }
 
-		// The root folder
-		String root;
-		Resources::GetRootFolder(root);
-		String s;
-		s.reserve(root.size() + 30 /*arbitrary*/);
+    return searchpaths.find(location, "constraints-builder");
+}
 
-		IO::SearchPath searchpaths;
-		searchpaths.prefixes.push_back((s = "antares-" ANTARES_VERSION "-"));
+bool FindYearByYearAggregator(Yuni::String& location)
+{
+    // reset
+    location.clear();
 
-		if (System::windows)
-		{
-			searchpaths.extensions.push_back(".exe");
-			searchpaths.directories.push_back((s = root) << "\\..\\bin");
-			searchpaths.directories.push_back((s = root) << "\\Resources\\tools");
-			# ifdef NDEBUG
-			searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\constraints-builder\\Release"); // msvc
-			# else
-			searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\constraints-builder\\Debug"); // msvc
-			# endif
-			searchpaths.directories.push_back((s = root) << "\\..\\..\\constraints-builder"); // mingw
-			searchpaths.directories.push_back((s = root));
-		}
-		else
-		{
-			searchpaths.directories.push_back((s = root) << "/../../constraints-builder");
-			searchpaths.directories.push_back(s.clear() << "/usr/local/bin/");
-			searchpaths.directories.push_back(s.clear() << "/usr/bin/");
-		}
+    // The root folder
+    String root;
+    Resources::GetRootFolder(root);
+    String s;
+    s.reserve(root.size() + 30 /*arbitrary*/);
 
-		return searchpaths.find(location, "constraints-builder");
-	}
+    IO::SearchPath searchpaths;
+    searchpaths.prefixes.push_back((s = "antares-" ANTARES_VERSION "-"));
 
-	bool FindYearByYearAggregator(Yuni::String& location)
-	{
-		// reset
-		location.clear();
+    if (System::windows)
+    {
+        searchpaths.extensions.push_back(".exe");
+        searchpaths.directories.push_back((s = root) << "\\..\\bin");
+        searchpaths.directories.push_back((s = root) << "\\Resources\\tools");
+#ifdef NDEBUG
+        searchpaths.directories.push_back(
+          (s = root) << "\\..\\..\\..\\tools\\yby-aggregator\\Release"); // msvc
+#else
+        searchpaths.directories.push_back((s = root)
+                                          << "\\..\\..\\..\\tools\\yby-aggregator\\Debug"); // msvc
+#endif
+        searchpaths.directories.push_back((s = root) << "\\..\\..\\tools\\yby-aggregator"); // mingw
+        searchpaths.directories.push_back((s = root));
+    }
+    else
+    {
+        searchpaths.directories.push_back((s = root) << "/../../tools/yby-aggregator");
+        searchpaths.directories.push_back(s.clear() << "/usr/local/bin/");
+        searchpaths.directories.push_back(s.clear() << "/usr/bin/");
+    }
 
-		// The root folder
-		String root;
-		Resources::GetRootFolder(root);
-		String s;
-		s.reserve(root.size() + 30 /*arbitrary*/);
-
-		IO::SearchPath searchpaths;
-		searchpaths.prefixes.push_back((s = "antares-" ANTARES_VERSION "-"));
-
-		if (System::windows)
-		{
-			searchpaths.extensions.push_back(".exe");
-			searchpaths.directories.push_back((s = root) << "\\..\\bin");
-			searchpaths.directories.push_back((s = root) << "\\Resources\\tools");
-			# ifdef NDEBUG
-			searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\tools\\yby-aggregator\\Release"); // msvc
-			# else
-			searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\tools\\yby-aggregator\\Debug"); // msvc
-			# endif
-			searchpaths.directories.push_back((s = root) << "\\..\\..\\tools\\yby-aggregator"); // mingw
-			searchpaths.directories.push_back((s = root));
-		}
-		else
-		{
-			searchpaths.directories.push_back((s = root) << "/../../tools/yby-aggregator");
-			searchpaths.directories.push_back(s.clear() << "/usr/local/bin/");
-			searchpaths.directories.push_back(s.clear() << "/usr/bin/");
-		}
-
-		return searchpaths.find(location, "ybyaggregator");
-	}
-
-
-
+    return searchpaths.find(location, "ybyaggregator");
+}
 
 } // namespace Solver
 } // namespace Antares
-

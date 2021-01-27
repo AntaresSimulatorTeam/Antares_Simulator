@@ -25,85 +25,72 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_ACTION_HXX__
-# define __ANTARES_LIBS_STUDY_ACTION_ACTION_HXX__
-
+#define __ANTARES_LIBS_STUDY_ACTION_ACTION_HXX__
 
 namespace Antares
 {
 namespace Action
 {
+inline bool IAction::bold() const
+{
+    return false;
+}
 
-	inline bool IAction::bold() const
-	{
-		return false;
-	}
+inline bool IAction::autoExpand() const
+{
+    return false;
+}
 
+inline Behavior IAction::behavior() const
+{
+    ThreadingPolicy::MutexLocker locker(*this);
+    return pInfos.behavior;
+}
 
-	inline bool IAction::autoExpand() const
-	{
-		return false;
-	}
+inline State IAction::state() const
+{
+    ThreadingPolicy::MutexLocker locker(*this);
+    return pInfos.state;
+}
 
+inline bool IAction::canDoSomething() const
+{
+    return true;
+}
 
-	inline Behavior IAction::behavior() const
-	{
-		ThreadingPolicy::MutexLocker locker(*this);
-		return pInfos.behavior;
-	}
+inline bool IAction::allowUpdate() const
+{
+    return false;
+}
 
+inline bool IAction::allowSkip() const
+{
+    return true;
+}
 
-	inline State IAction::state() const
-	{
-		ThreadingPolicy::MutexLocker locker(*this);
-		return pInfos.state;
-	}
+inline bool IAction::allowOverwrite() const
+{
+    return true;
+}
 
+inline bool IAction::shouldPrepareRootNode() const
+{
+    return false;
+}
 
-	inline bool IAction::canDoSomething() const
-	{
-		return true;
-	}
+inline void IAction::datagridCaption(Yuni::String&)
+{
+}
 
+inline bool IAction::visible() const
+{
+    return true;
+}
 
-	inline bool IAction::allowUpdate() const
-	{
-		return false;
-	}
-
-	inline bool IAction::allowSkip() const
-	{
-		return true;
-	}
-
-	inline bool IAction::allowOverwrite() const
-	{
-		return true;
-	}
-
-
-	inline bool IAction::shouldPrepareRootNode() const
-	{
-		return false;
-	}
-
-
-	inline void IAction::datagridCaption(Yuni::String&)
-	{
-	}
-
-
-	inline bool IAction::visible() const
-	{
-		return true;
-	}
-
-
-	inline void IAction::createPostActionsWL(const IAction::Ptr&)
-	{
-		// do nothing
-	}
-
-
+inline void IAction::createPostActionsWL(const IAction::Ptr&)
+{
+    // do nothing
+}
 
 } // namespace Action
 } // namespace Antares

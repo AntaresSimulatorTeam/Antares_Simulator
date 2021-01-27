@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREA_CORRELATION_POST_HXX__
-# define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREA_CORRELATION_POST_HXX__
-
+#define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREA_CORRELATION_POST_HXX__
 
 namespace Antares
 {
@@ -36,13 +35,10 @@ namespace AntaresStudy
 {
 namespace Area
 {
-
-	inline bool CorrelationPost::visible() const
-	{
-		return false;
-	}
-
-
+inline bool CorrelationPost::visible() const
+{
+    return false;
+}
 
 } // namespace Area
 } // namespace AntaresStudy

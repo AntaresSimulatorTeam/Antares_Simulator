@@ -25,118 +25,109 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIB_ASSEMBLY_INTRUSIVEREFERENCE_H__
-# define __ANTARES_LIB_ASSEMBLY_INTRUSIVEREFERENCE_H__
+#define __ANTARES_LIB_ASSEMBLY_INTRUSIVEREFERENCE_H__
 
-# include "../antares.h"
-# include <yuni/core/smartptr.h>
-
+#include "../antares.h"
+#include <yuni/core/smartptr.h>
 
 namespace Antares
 {
+/*!
+** \brief Give to inherited classes an intrusive counting through CRTP.
+**
+** \tparam ChildT Child class type
+** \tparam TP  Threading policy. Set by default for a single thread
+*/
+template<typename ChildT, template<class> class TP = Yuni::Policy::ObjectLevelLockable>
+class IIntrusiveReference : public TP<IIntrusiveReference<ChildT, TP>>
+{
+public:
+    //! Simplified type name of the instance for the current child type & threading policy.
+    typedef IIntrusiveReference<ChildT, TP> IntrusiveRef;
+    //! Threading policy type
+    typedef TP<IntrusiveRef> ThreadingPolicy;
 
-	/*!
-	** \brief Give to inherited classes an intrusive counting through CRTP.
-	**
-	** \tparam ChildT Child class type
-	** \tparam TP  Threading policy. Set by default for a single thread
-	*/
-	template<typename ChildT, template<class> class TP = Yuni::Policy::ObjectLevelLockable>
-	class  IIntrusiveReference : public TP<IIntrusiveReference<ChildT,TP> >
-	{
-	public:
-		//! Simplified type name of the instance for the current child type & threading policy.
-		typedef IIntrusiveReference<ChildT,TP> IntrusiveRef;
-		//! Threading policy type
-		typedef TP<IntrusiveRef> ThreadingPolicy;
+    /*!
+    ** \brief Class Helper to determine the most suitable smart pointer for a class
+    **   according the current threading policy
+    */
+    template<class T>
+    class SmartPtr
+    {
+    public:
+        //! A thread-safe type
+        typedef Yuni::SmartPtr<T, Yuni::Policy::Ownership::COMReferenceCounted> PtrThreadSafe;
+        //! A default type
+        typedef Yuni::SmartPtr<T, Yuni::Policy::Ownership::COMReferenceCounted> PtrSingleThreaded;
+        //! The most suitable smart pointer for T
+        typedef typename Yuni::Static::
+          If<ThreadingPolicy::threadSafe, PtrThreadSafe, PtrSingleThreaded>::ResultType Ptr;
 
-		/*!
-		** \brief Class Helper to determine the most suitable smart pointer for a class
-		**   according the current threading policy
-		*/
-		template<class T>
-		class SmartPtr
-		{
-		public:
-			//! A thread-safe type
-			typedef Yuni::SmartPtr<T, Yuni::Policy::Ownership::COMReferenceCounted>  PtrThreadSafe;
-			//! A default type
-			typedef Yuni::SmartPtr<T, Yuni::Policy::Ownership::COMReferenceCounted>    PtrSingleThreaded;
-			//! The most suitable smart pointer for T
-			typedef typename Yuni::Static::If<ThreadingPolicy::threadSafe, PtrThreadSafe, PtrSingleThreaded>::ResultType Ptr;
+    }; // class SmartPtr
 
-		}; // class SmartPtr
+public:
+    //! \name Pointer management
+    //@{
+    //! Increment the internal reference counter
+    void addRef() const;
+    //! Decrement the internal reference counter
+    bool release() const;
+    //! Get if the object is an unique reference (COW idiom)
+    bool unique() const;
+    //@}
 
+    /*!
+    ** \brief Action to do when the release method is called
+    **
+    ** For now, does nothing.
+    ** Called by children through static polymorphism (CRTP).
+    ** \attention Thread safe
+    */
+    void onRelease();
 
-	public:
-		//! \name Pointer management
-		//@{
-		//! Increment the internal reference counter
-		void addRef() const;
-		//! Decrement the internal reference counter
-		bool release() const;
-		//! Get if the object is an unique reference (COW idiom)
-		bool unique() const;
-		//@}
+protected:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    IIntrusiveReference();
 
+    /*!
+    ** \brief Destructor
+    **
+    ** \internal The keyword 'virtual' is mandatory to have a proper call to the
+    **   destructor
+    */
+    virtual ~IIntrusiveReference();
 
-		/*!
-		** \brief Action to do when the release method is called
-		**
-		** For now, does nothing.
-		** Called by children through static polymorphism (CRTP).
-		** \attention Thread safe
-		*/
-		void onRelease();
+    /*!
+    ** \brief Copy constructor
+    ** \param rhs Copy source
+    */
+    explicit IIntrusiveReference(const IIntrusiveReference& rhs);
+    //@}
 
+    /*!
+    ** \brief Assignment operator
+    ** \param rhs Assignment source
+    ** \return Reference to "this"
+    */
+    IIntrusiveReference& operator=(const IIntrusiveReference& rhs) const;
 
-	protected:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		IIntrusiveReference();
+private:
+    typedef typename ThreadingPolicy::template Volatile<int>::Type ReferenceCounterType;
+    //! Intrusive reference count
+    mutable ReferenceCounterType pRefCount;
 
-		/*!
-		** \brief Destructor
-		**
-		** \internal The keyword 'virtual' is mandatory to have a proper call to the
-		**   destructor
-		*/
-		virtual ~IIntrusiveReference();
+    // debug
+    mutable std::list<std::list<YString>> pTraces;
+    mutable std::list<std::list<YString>> pTracesFree;
 
-		/*!
-		** \brief Copy constructor
-		** \param rhs Copy source
-		*/
-		explicit IIntrusiveReference(const IIntrusiveReference& rhs);
-		//@}
-
-		/*!
-		** \brief Assignment operator
-		** \param rhs Assignment source
-		** \return Reference to "this"
-		*/
-		IIntrusiveReference& operator = (const IIntrusiveReference& rhs) const;
-
-	private:
-		typedef typename ThreadingPolicy::template Volatile<int>::Type ReferenceCounterType;
-		//! Intrusive reference count
-		mutable ReferenceCounterType pRefCount;
-
-		// debug
-		mutable std::list<std::list<YString> > pTraces;
-		mutable std::list<std::list<YString> > pTracesFree;
-
-	}; // class IIntrusiveReference
-
-
-
-
-
+}; // class IIntrusiveReference
 
 } // namespace Antares
 
-# include "intrusive-reference.hxx"
+#include "intrusive-reference.hxx"
 
 #endif // __ANTARES_LIB_ASSEMBLY_INTRUSIVEREFERENCE_H__

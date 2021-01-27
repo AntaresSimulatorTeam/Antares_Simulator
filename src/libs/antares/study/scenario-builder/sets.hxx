@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __LIBS_STUDY_SCENARIO_BUILDER_SETS_HXX__
-# define __LIBS_STUDY_SCENARIO_BUILDER_SETS_HXX__
-
+#define __LIBS_STUDY_SCENARIO_BUILDER_SETS_HXX__
 
 namespace Antares
 {
@@ -34,84 +33,69 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
+inline uint Sets::size() const
+{
+    return (uint)pMap.size();
+}
 
+inline bool Sets::empty() const
+{
+    return pMap.empty();
+}
 
-	inline uint Sets::size() const
-	{
-		return (uint) pMap.size();
-	}
+inline Sets::iterator Sets::begin()
+{
+    return pMap.begin();
+}
 
+inline Sets::const_iterator Sets::begin() const
+{
+    return pMap.begin();
+}
 
-	inline bool  Sets::empty() const
-	{
-		return pMap.empty();
-	}
+inline Sets::iterator Sets::end()
+{
+    return pMap.end();
+}
 
+inline Sets::const_iterator Sets::end() const
+{
+    return pMap.end();
+}
 
+inline bool Sets::exists(const RulesScenarioName& lname) const
+{
+    return pMap.find(lname) != pMap.end();
+}
 
-	inline Sets::iterator  Sets::begin()
-	{
-		return pMap.begin();
-	}
+inline Rules::Ptr Sets::find(const RulesScenarioName& lname) const
+{
+    using namespace Yuni;
+    const_iterator i = pMap.find(lname);
+    if (i != pMap.end())
+        return i->second;
+    return nullptr;
+}
 
+template<class StringT>
+inline bool Sets::saveToINIFile(const StringT& filename)
+{
+    const AnyString adapter(filename);
+    return internalSaveToIniFile(adapter);
+}
 
-	inline Sets::const_iterator  Sets::begin() const
-	{
-		return pMap.begin();
-	}
-
-
-	inline Sets::iterator  Sets::end()
-	{
-		return pMap.end();
-	}
-
-
-	inline Sets::const_iterator  Sets::end() const
-	{
-		return pMap.end();
-	}
-
-
-	inline bool Sets::exists(const RulesScenarioName& lname) const
-	{
-		return pMap.find(lname) != pMap.end();
-	}
-
-
-	inline Rules::Ptr  Sets::find(const RulesScenarioName& lname) const
-	{
-		using namespace Yuni;
-		const_iterator i = pMap.find(lname);
-		if (i != pMap.end())
-			return i->second;
-		return nullptr;
-	}
-
-
-	template<class StringT>
-	inline bool Sets::saveToINIFile(const StringT& filename)
-	{
-		const AnyString adapter(filename);
-		return internalSaveToIniFile(adapter);
-	}
-
-
-	template<class StringT>
-	bool Sets::loadFromINIFile(const StringT& filename)
-	{
-		// If the source code below is changed, please change it in loadFromStudy too
-		const AnyString adapter(filename);
-		bool r = internalLoadFromINIFile(adapter);
-		if (!r)
-			pMap.clear();
-		if (pMap.empty())
-			createNew("Default Ruleset");
-		return r;
-	}
-
-
-
+template<class StringT>
+bool Sets::loadFromINIFile(const StringT& filename)
+{
+    // If the source code below is changed, please change it in loadFromStudy too
+    const AnyString adapter(filename);
+    bool r = internalLoadFromINIFile(adapter);
+    if (!r)
+        pMap.clear();
+    if (pMap.empty())
+        createNew("Default Ruleset");
+    return r;
+}
 
 } // namespace ScenarioBuilder
 } // namespace Data

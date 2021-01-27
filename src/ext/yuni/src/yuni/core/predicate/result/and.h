@@ -10,60 +10,68 @@
 */
 #pragma once
 
-
 namespace Yuni
 {
 namespace Result
 {
+template<typename T>
+struct And final
+{
+public:
+    //! Type of the result
+    typedef bool ResultType;
 
+public:
+    //! \name Constructors
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    And() : pValue(true)
+    {
+    }
+    And(bool defaultValue) : pValue(defaultValue)
+    {
+    }
+    /*!
+    ** \brief Copy constructor
+    */
+    And(const And& rhs) : pValue(rhs.pValue)
+    {
+    }
+    //@}
 
-	template<typename T>
-	struct And final
-	{
-	public:
-		//! Type of the result
-		typedef bool ResultType;
+    //! Take into account a new value
+    void operator()(const T& v)
+    {
+        pValue = (pValue && v);
+    }
 
-	public:
-		//! \name Constructors
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		And()
-			:pValue(true)
-		{}
-		And(bool defaultValue)
-			:pValue(defaultValue)
-		{}
-		/*!
-		** \brief Copy constructor
-		*/
-		And(const And& rhs) :pValue(rhs.pValue) {}
-		//@}
+    /*!
+    ** \brief The Final result
+    */
+    ResultType result() const
+    {
+        return pValue;
+    }
 
-		//! Take into account a new value
-		void operator () (const T& v) { pValue = (pValue && v);}
+    /*!
+    ** \brief Reset the internal counter
+    */
+    void reset()
+    {
+        pValue = true;
+    }
+    void reset(bool v)
+    {
+        pValue = v;
+    }
 
-		/*!
-		** \brief The Final result
-		*/
-		ResultType result() const {return pValue;}
+private:
+    //! The internal counter
+    bool pValue;
 
-		/*!
-		** \brief Reset the internal counter
-		*/
-		void reset() {pValue = true;}
-		void reset(bool v) {pValue = v;}
-
-	private:
-		//! The internal counter
-		bool pValue;
-
-	}; // class And
-
-
-
+}; // class And
 
 } // namespace Result
 } // namespace Yuni

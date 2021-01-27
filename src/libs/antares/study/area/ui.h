@@ -25,100 +25,94 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_UI_H__
-# define __ANTARES_LIBS_STUDY_UI_H__
+#define __ANTARES_LIBS_STUDY_UI_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-# include <map>
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+#include <map>
 
 namespace Antares
 {
 namespace Data
 {
+/*!
+** \brief Information about the Area for the UI
+*/
+class AreaUI final
+{
+public:
+    //! Default constructor
+    AreaUI();
 
-	/*!
-	** \brief Information about the Area for the UI
-	*/
-	class AreaUI final
-	{
-	public:
-		//! Default constructor
-		AreaUI();
+    //! Default constructor
+    ~AreaUI()
+    {
+        mapLayersVisibilityList.clear();
+    }
 
-		//! Default constructor
-		~AreaUI()
-		{
-			mapLayersVisibilityList.clear();
-		}
+    /*!
+    ** \brief (Re)Initialize all properties
+    */
+    void reset();
 
-		/*!
-		** \brief (Re)Initialize all properties
-		*/
-		void reset();
+    /*!
+    ** \brief Load settings from an INI file
+    */
+    bool loadFromFile(const AnyString& filename);
 
-		/*!
-		** \brief Load settings from an INI file
-		*/
-		bool loadFromFile(const AnyString& filename);
+    /*!
+    ** \brief Save the settings into a file
+    **
+    ** \param filename Filename
+    ** \param force True to not rely on the modifier flag
+    */
+    bool saveToFile(const AnyString& filename, bool force = false) const;
 
-		/*!
-		** \brief Save the settings into a file
-		**
-		** \param filename Filename
-		** \param force True to not rely on the modifier flag
-		*/
-		bool saveToFile(const AnyString& filename, bool force = false) const;
+    /*!
+    ** \brief Amount of memory consummed by the instance
+    */
+    Yuni::uint64 memoryUsage() const;
 
-		/*!
-		** \brief Amount of memory consummed by the instance
-		*/
-		Yuni::uint64 memoryUsage() const;
+    /*!
+    ** \brief Get if the structure has been modified
+    */
+    bool modified() const;
 
-		/*!
-		** \brief Get if the structure has been modified
-		*/
-		bool modified() const;
+    /*!
+    ** \brief Mark the structure as modified
+    */
+    void markAsModified();
 
-		/*!
-		** \brief Mark the structure as modified
-		*/
-		void markAsModified();
+    void rebuildCache();
 
-		void rebuildCache();
+public:
+    //! The X-Coordinate
+    int x;
+    std::map<size_t, int> layerX;
+    //! The Y-Coordinate
+    int y;
+    std::map<size_t, int> layerY;
 
-	public:
-		//! The X-Coordinate
-		int x;
-		std::map<size_t, int> layerX;
-		//! The Y-Coordinate
-		int y;
-		std::map<size_t, int> layerY;
+    //! Color of the area (RGB)
+    int color[3];
+    std::map<size_t, int[3]> layerColor;
 
-		//! Color of the area (RGB)
-		int color[3];
-		std::map<size_t, int[3]> layerColor;
+    //! HSV color model (only computed from the interface)
+    // \see UIRuntimeInfo::reload()
+    Yuni::CString<12, false> cacheColorHSV;
 
-		//! HSV color model (only computed from the interface)
-		// \see UIRuntimeInfo::reload()
-		Yuni::CString<12,false> cacheColorHSV;
+    //! The list of layers this Node will appear on
+    std::vector<size_t> mapLayersVisibilityList;
 
-		//! The list of layers this Node will appear on
-		std::vector<size_t> mapLayersVisibilityList;
+private:
+    //! Modifier flag
+    mutable bool pModified;
 
-	private:
-		//! Modifier flag
-		mutable bool pModified;
-
-	}; // class AreaUI
-
-
-
-
+}; // class AreaUI
 
 } // namespace Data
 } // namespace Antares
 
-# include "ui.hxx"
+#include "ui.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_UI_H__

@@ -17,26 +17,28 @@ namespace Yuni
 {
 namespace UI
 {
+//! Forward declaration
+class RenderWindow;
 
+//! Factory for creating platform-specific windows
+class WindowFactory
+{
+public:
+    static RenderWindow* CreateGLWindow(const AnyString& title,
+                                        uint width,
+                                        uint height,
+                                        uint bitDepth,
+                                        bool fullScreen);
 
-	//! Forward declaration
-	class RenderWindow;
+private:
+    WindowFactory()
+    {
+    }
+    WindowFactory(const WindowFactory&)
+    {
+    }
 
+}; // class WindowFactory
 
-	//! Factory for creating platform-specific windows
-	class WindowFactory
-	{
-	public:
-		static RenderWindow* CreateGLWindow(const AnyString& title, uint width,
-			uint height, uint bitDepth, bool fullScreen);
-
-	private:
-		WindowFactory() {}
-		WindowFactory(const WindowFactory&) {}
-
-	}; // class WindowFactory
-
-
-
-} // UI
-} // Yuni
+} // namespace UI
+} // namespace Yuni

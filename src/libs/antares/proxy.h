@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_PROXY_H__
-# define __ANTARES_LIBS_PROXY_H__
+#define __ANTARES_LIBS_PROXY_H__
 
-# include "proxy/proxy.h"
+#include "proxy/proxy.h"
 
 #endif // __ANTARES_LIBS_PROXY_H__

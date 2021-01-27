@@ -25,17 +25,15 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_WX_WIDGETS_H__
-# define __ANTARES_TOOLBOX_WX_WIDGETS_H__
+#define __ANTARES_TOOLBOX_WX_WIDGETS_H__
 
-# if defined(__cplusplus)
-#	include <yuni/yuni.h>
-#	include <yuni/core/string.h>
-#	include <antares/study/fwd.h>
-# endif
+#if defined(__cplusplus)
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+#include <antares/study/fwd.h>
+#endif
 
-
-# if defined(__cplusplus)
-
+#if defined(__cplusplus)
 
 //// For compilers that support precompilation, includes "wx/wx.h".
 //# include "wx/wxprec.h"
@@ -61,25 +59,22 @@ class wxScrolledWindow;
 
 #include "wx/validate.h"
 
-# if !wxUSE_MENUS
-#	error "Requires wxUSE_MENUS=1"
-# endif // wxUSE_MENUS
+#if !wxUSE_MENUS
+#error "Requires wxUSE_MENUS=1"
+#endif // wxUSE_MENUS
 
 /* not all ports have support for EVT_CONTEXT_MENU yet, don't define
 ** USE_CONTEXT_MENU for those which don't
 */
-# if defined(__WXMOTIF__) || defined(__WXPM__) || defined(__WXX11__) || defined(__WXMGL__)
-#	define USE_CONTEXT_MENU 0
-# else
-#	define USE_CONTEXT_MENU 1
-# endif
+#if defined(__WXMOTIF__) || defined(__WXPM__) || defined(__WXX11__) || defined(__WXMGL__)
+#define USE_CONTEXT_MENU 0
+#else
+#define USE_CONTEXT_MENU 1
+#endif
 
-
-
-# ifndef wxUSE_LIBPNG
-#	error "The wxWidgets library must be compiled with the PNG support"
-# endif
-
+#ifndef wxUSE_LIBPNG
+#error "The wxWidgets library must be compiled with the PNG support"
+#endif
 
 /*!
 ** \brief Convert any standard string into a wxString
@@ -98,7 +93,6 @@ wxString wxStringFromUTF8(const Yuni::String& s);
 template<uint ChunkT, bool FixedT>
 wxString wxStringFromUTF8(const Yuni::CString<ChunkT, FixedT>& s);
 
-
 /*!
 ** \brief Convert an Unicode wxString into a standard string from the STL
 */
@@ -113,20 +107,18 @@ wxString DoubleToWxString(double f);
 /*!
 ** \brief Convert a double into a wxString with a given precision (static)
 */
-template<int PrecisionT> wxString DoubleToWxStringS(double f);
+template<int PrecisionT>
+wxString DoubleToWxStringS(double f);
 
 /*!
 ** \brief Convert a double into a wxString with a given precision (dynamic)
 */
 wxString DoubleToWxString(double f, uint precision);
 
-
 /*!
 ** \brief Convert a wxString into a double
 */
 double wxStringToDouble(const wxString& s, double defValue = 0.);
-
-
 
 /*!
 ** \brief Append a text with quotes
@@ -134,23 +126,19 @@ double wxStringToDouble(const wxString& s, double defValue = 0.);
 template<class StringT1, class StringT2>
 void AppendWithQuotes(StringT1& out, const StringT2& text);
 
-
 /*!
 ** \brief Try to find the wxFrame parent of a control
 */
 wxWindow* wxFindFrameParent(wxWindow* control);
 
+#include "wx-wrapper.hxx"
+#include "fwd.h"
+#include "dispatcher.h"
 
+#else /* C++ */
 
-# include "wx-wrapper.hxx"
-# include "fwd.h"
-# include "dispatcher.h"
+#include <yuni/yuni.h>
 
-# else /* C++ */
-
-# include <yuni/yuni.h>
-
-# endif
-
+#endif
 
 #endif /* __ANTARES_TOOLBOX_WX_WIDGETS_H__ */

@@ -10,18 +10,14 @@
 */
 #pragma once
 
-
-
 namespace Yuni
 {
-
-	enum QServiceEvent
-	{
-		//! Event: the queue service has been stopped
-		qseStop,
-		//! Event: the queue service is idle
-		qseIdle
-	};
-
+enum QServiceEvent
+{
+    //! Event: the queue service has been stopped
+    qseStop,
+    //! Event: the queue service is idle
+    qseIdle
+};
 
 } // namespace Yuni

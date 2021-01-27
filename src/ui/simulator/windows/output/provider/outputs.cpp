@@ -37,8 +37,6 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
 namespace Window
@@ -47,195 +45,182 @@ namespace OutputViewer
 {
 namespace Provider
 {
+namespace // anonymous
+{
+class OutputSpotlightItem : public Antares::Component::Spotlight::IItem
+{
+public:
+    //! Ptr
+    typedef Yuni::SmartPtr<OutputSpotlightItem> Ptr;
+    //! Vector of items
+    typedef std::vector<Ptr> Vector;
+    //! Vector Ptr
+    typedef Yuni::SmartPtr<Vector> VectorPtr;
 
+public:
+    OutputSpotlightItem()
+    {
+    }
+    virtual ~OutputSpotlightItem()
+    {
+    }
 
-	namespace // anonymous
-	{
+public:
+    Layer* layer;
+    Data::Output::Ptr output;
 
-		class OutputSpotlightItem : public Antares::Component::Spotlight::IItem
-		{
-		public:
-			//! Ptr
-			typedef Yuni::SmartPtr<OutputSpotlightItem> Ptr;
-			//! Vector of items
-			typedef std::vector<Ptr>  Vector;
-			//! Vector Ptr
-			typedef Yuni::SmartPtr<Vector>  VectorPtr;
+}; // class OutputSpotlightItem
 
-		public:
-			OutputSpotlightItem() {}
-			virtual ~OutputSpotlightItem() {}
+} // anonymous namespace
 
-		public:
-			Layer* layer;
-			Data::Output::Ptr output;
+Outputs::Outputs(Component& com, Layer* layer) : pComponent(com), pLayer(layer)
+{
+    assert(&pComponent);
+    pBmpClose = Resources::BitmapLoadFromFile("images/16x16/close.png");
 
-		}; // class OutputSpotlightItem
+    CString<32, false> filename;
+    for (uint i = 0; i != 10; ++i)
+    {
+        filename.clear() << "images/16x16/" << i << ".png";
+        pBmpNumbers[i] = Resources::BitmapLoadFromFile(filename.c_str());
+    }
+    pBmpMultiple = Resources::BitmapLoadFromFile("images/16x16/000.png");
+    pBmpEmpty = Resources::BitmapLoadFromFile("images/16x16/empty.png");
+}
 
+Outputs::~Outputs()
+{
+    for (uint i = 0; i != 10; ++i)
+        delete pBmpNumbers[i];
+    delete pBmpMultiple;
+    delete pBmpEmpty;
+    delete pBmpClose;
+}
 
-	} // anonymous namespace
+void Outputs::search(Spotlight::IItem::Vector& out,
+                     const Spotlight::SearchToken::Vector& tokens,
+                     const Yuni::String& text)
+{
+    // More than one tab: we would like to be able to close the current one
+    if (pLayer && pComponent.pTabs.size() > 1)
+    {
+        auto* item = new OutputSpotlightItem();
+        item->caption("Close the tab");
+        item->image(pBmpClose);
+        item->tag = -1;
+        item->layer = pLayer;
+        item->countedAsResult(false);
+        out.push_back(item);
+    }
+    if (pLayer && pLayer->isVirtual())
+    {
+    }
+    else
+    {
+        // OutputSpotlightItem
+        if (pLayer && pComponent.pTabs.size() > 1)
+            out.push_back(new Spotlight::Separator());
 
+        Data::Output::Ptr outputSelected;
+        if (pLayer)
+            outputSelected = pLayer->selection;
 
+        Data::Output::MapByTimestampDesc map;
+        foreach (Data::Output::Ptr output, pComponent.pOutputs)
+        {
+            assert(!(!output) && "invalid output");
+            if (!(!output))
+                map[(output->timestamp)] = output;
+        }
 
+        auto end = map.end();
+        auto tend = tokens.end();
 
+        for (auto i = map.begin(); i != end; ++i)
+        {
+            Data::Output::Ptr& output = i->second;
+            assert(!(!output));
 
-	Outputs::Outputs(Component& com, Layer* layer) :
-		pComponent(com),
-		pLayer(layer)
-	{
-		assert(&pComponent);
-		pBmpClose  = Resources::BitmapLoadFromFile("images/16x16/close.png");
+            auto& title = output->title;
 
-		CString<32,false> filename;
-		for (uint i = 0; i != 10; ++i)
-		{
-			filename.clear() << "images/16x16/" << i << ".png";
-			pBmpNumbers[i]  = Resources::BitmapLoadFromFile(filename.c_str());
-		}
-		pBmpMultiple = Resources::BitmapLoadFromFile("images/16x16/000.png");
-		pBmpEmpty    = Resources::BitmapLoadFromFile("images/16x16/empty.png");
-	}
+            if (not tokens.empty())
+            {
+                bool canContinue = false;
+                for (auto ti = tokens.begin(); ti != tend; ++ti)
+                {
+                    if (title.icontains((*ti)->text))
+                    {
+                        canContinue = true;
+                        break;
+                    }
+                }
+                if (not canContinue)
+                    continue;
+            }
 
+            auto* item = new OutputSpotlightItem();
+            if (output->version != (uint)Data::versionLatest)
+            {
+                CString<16, false> text;
+                text << 'v' << Data::VersionToCStr((Data::Version)output->version);
+                item->addRightTag(text, 220, 220, 240);
+            }
+            item->caption(title);
+            item->group("outputs");
+            item->output = output;
+            item->layer = pLayer;
 
-	Outputs::~Outputs()
-	{
-		for (uint i = 0; i != 10; ++i)
-			delete pBmpNumbers[i];
-		delete pBmpMultiple;
-		delete pBmpEmpty;
-		delete pBmpClose;
-	}
+            switch (output->mode)
+            {
+            case Data::stdmEconomy:
+                item->addTag("ECO", 162, 178, 197);
+                break;
+            case Data::stdmAdequacy:
+                item->addTag("ADQ", 220, 192, 245);
+                break;
+            case Data::stdmAdequacyDraft:
+                item->addTag("Draft", 230, 230, 245);
+                break;
+            case Data::stdmUnknown:
+            case Data::stdmMax:
+                item->addTag("...", 213, 213, 213);
+            }
+            int imgIndex = pComponent.imageIndexForOutput(output);
+            switch (imgIndex)
+            {
+            case -1:
+                item->image(pBmpMultiple);
+                break;
+            case -2:
+                item->image(pBmpEmpty);
+                break;
+            default:
+                if (imgIndex < 9)
+                    item->image(pBmpNumbers[imgIndex + 1]);
+                else
+                    item->image(pBmpEmpty);
+            }
+            out.push_back(item);
+        }
+    }
+}
 
+bool Outputs::onSelect(Spotlight::IItem::Ptr& item)
+{
+    OutputSpotlightItem::Ptr withlayer
+      = Spotlight::IItem::Ptr::DynamicCast<OutputSpotlightItem::Ptr>(item);
+    if (!item)
+        return true;
 
-	void Outputs::search(Spotlight::IItem::Vector& out, const Spotlight::SearchToken::Vector& tokens, const Yuni::String& text)
-	{
-		// More than one tab: we would like to be able to close the current one
-		if (pLayer && pComponent.pTabs.size() > 1)
-		{
-			auto* item = new OutputSpotlightItem();
-			item->caption("Close the tab");
-			item->image(pBmpClose);
-			item->tag = -1;
-			item->layer = pLayer;
-			item->countedAsResult(false);
-			out.push_back(item);
-		}
-		if (pLayer && pLayer->isVirtual())
-		{
-		}
-		else
-		{
-			// OutputSpotlightItem
-			if (pLayer && pComponent.pTabs.size() > 1)
-				out.push_back(new Spotlight::Separator());
+    if (not withlayer->output)
+        pComponent.removeOutput(withlayer->layer);
+    else
+        pComponent.selectAnotherOutput(withlayer->output);
 
-			Data::Output::Ptr outputSelected;
-			if (pLayer)
-				outputSelected = pLayer->selection;
-
-			Data::Output::MapByTimestampDesc  map;
-			foreach (Data::Output::Ptr output, pComponent.pOutputs)
-			{
-				assert(!(!output) && "invalid output");
-				if (!(!output))
-					map[(output->timestamp)] = output;
-			}
-
-			auto end =  map.end();
-			auto tend = tokens.end();
-
-			for (auto i = map.begin(); i != end; ++i)
-			{
-				Data::Output::Ptr& output = i->second;
-				assert(!(!output));
-
-				auto& title = output->title;
-
-				if (not tokens.empty())
-				{
-					bool canContinue = false;
-					for (auto ti = tokens.begin(); ti != tend; ++ti)
-					{
-						if (title.icontains((*ti)->text))
-						{
-							canContinue = true;
-							break;
-						}
-					}
-					if (not canContinue)
-						continue;
-				}
-
-				auto* item = new OutputSpotlightItem();
-				if (output->version != (uint) Data::versionLatest)
-				{
-					CString<16,false> text;
-					text << 'v' << Data::VersionToCStr((Data::Version) output->version);
-					item->addRightTag(text, 220, 220, 240);
-				}
-				item->caption(title);
-				item->group("outputs");
-				item->output = output;
-				item->layer = pLayer;
-
-				switch (output->mode)
-				{
-					case Data::stdmEconomy:
-						item->addTag("ECO", 162, 178, 197);
-						break;
-					case Data::stdmAdequacy:
-						item->addTag("ADQ", 220, 192, 245);
-						break;
-					case Data::stdmAdequacyDraft:
-						item->addTag("Draft", 230, 230, 245);
-						break;
-					case Data::stdmUnknown:
-					case Data::stdmMax:
-						item->addTag("...", 213, 213, 213);
-				}
-				int imgIndex = pComponent.imageIndexForOutput(output);
-				switch (imgIndex)
-				{
-					case -1:
-						item->image(pBmpMultiple);
-						break;
-					case -2:
-						item->image(pBmpEmpty);
-						break;
-					default:
-						if (imgIndex < 9)
-							item->image(pBmpNumbers[imgIndex + 1]);
-						else
-							item->image(pBmpEmpty);
-				}
-				out.push_back(item);
-			}
-		}
-	}
-
-
-	bool Outputs::onSelect(Spotlight::IItem::Ptr& item)
-	{
-		OutputSpotlightItem::Ptr withlayer = Spotlight::IItem::Ptr::DynamicCast<OutputSpotlightItem::Ptr>(item);
-		if (! item)
-			return true;
-
-		if (not withlayer->output)
-			pComponent.removeOutput(withlayer->layer);
-		else
-			pComponent.selectAnotherOutput(withlayer->output);
-
-		return true;
-	}
-
-
-
-
-
-
+    return true;
+}
 
 } // namespace Provider
 } // namespace OutputViewer
 } // namespace Window
 } // namespace Antares
-

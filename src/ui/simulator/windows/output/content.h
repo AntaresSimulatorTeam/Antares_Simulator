@@ -25,14 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_WINDOWS_OUTPUT_CONTENT_H__
-# define __ANTARES_WINDOWS_OUTPUT_CONTENT_H__
+#define __ANTARES_WINDOWS_OUTPUT_CONTENT_H__
 
-# include <yuni/yuni.h>
-# include <set>
-# include <map>
-# include "fwd.h"
-# include <antares/study/fwd.h>
-
+#include <yuni/yuni.h>
+#include <set>
+#include <map>
+#include "fwd.h"
+#include <antares/study/fwd.h>
 
 namespace Antares
 {
@@ -40,65 +39,59 @@ namespace Private
 {
 namespace OutputViewerData
 {
+class Content final
+{
+public:
+    typedef std::set<Data::AreaName> AreaNameSet;
+    typedef std::set<Data::AreaLinkName> LinkNameSet;
 
-	class Content final
-	{
-	public:
-		typedef std::set<Data::AreaName>  AreaNameSet;
-		typedef std::set<Data::AreaLinkName>  LinkNameSet;
+    class SimulationType
+    {
+    public:
+        //! Get if the result set is empty
+        bool empty() const;
 
-		class SimulationType
-		{
-		public:
-			//! Get if the result set is empty
-			bool empty() const;
+    public:
+        //! All areas
+        AreaNameSet areas;
+        //! All links
+        LinkNameSet links;
 
-		public:
-			//! All areas
-			AreaNameSet  areas;
-			//! All links
-			LinkNameSet  links;
+    }; // class SimulationType
 
-		}; // class SimulationType
+public:
+    //! Constructor & Destructor
+    //@{
+    //! Default contructor
+    Content();
+    //! Destructor
+    ~Content();
+    //@}
 
-	public:
-		//! Constructor & Destructor
-		//@{
-		//! Default contructor
-		Content();
-		//! Destructor
-		~Content();
-		//@}
+    bool empty() const;
 
+public:
+    //! All areas/links found for economy
+    SimulationType economy;
+    //! All areas/links found for adequacy
+    SimulationType adequacy;
 
-		bool empty() const;
+    //! All available clusters
+    ThermalNameSetPerArea clusters;
 
-	public:
-		//! All areas/links found for economy
-		SimulationType  economy;
-		//! All areas/links found for adequacy
-		SimulationType  adequacy;
+    //! Flag to know if some year-by-year data are presetn
+    bool hasYearByYear;
+    //! Flag to know if concatened individual years are present
+    bool hasConcatenedYbY;
+    //! Year interval for year-by-year data
+    uint ybyInterval[2];
 
-		//! All available clusters
-		ThermalNameSetPerArea clusters;
-
-		//! Flag to know if some year-by-year data are presetn
-		bool hasYearByYear;
-		//! Flag to know if concatened individual years are present
-		bool hasConcatenedYbY;
-		//! Year interval for year-by-year data
-		uint ybyInterval[2];
-
-	}; // class Content
-
-
-
-
+}; // class Content
 
 } // namespace OutputViewerData
 } // namespace Private
 } // namespace Antares
 
-# include "content.hxx"
+#include "content.hxx"
 
 #endif // __ANTARES_WINDOWS_OUTPUT_CONTENT_H__

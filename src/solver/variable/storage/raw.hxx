@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_STORAGE_RAW_HXX__
-# define __SOLVER_VARIABLE_STORAGE_RAW_HXX__
-
+#define __SOLVER_VARIABLE_STORAGE_RAW_HXX__
 
 namespace Antares
 {
@@ -38,19 +37,13 @@ namespace R
 {
 namespace AllYears
 {
-
-
-	template<class NextT, int FileFilter>
-	inline void Raw<NextT, FileFilter>::initializeFromStudy(Antares::Data::Study& study)
-	{
-		rawdata.initializeFromStudy(study);
-		// Next
-		NextType::initializeFromStudy(study);
-	}
-
-
-
-
+template<class NextT, int FileFilter>
+inline void Raw<NextT, FileFilter>::initializeFromStudy(Antares::Data::Study& study)
+{
+    rawdata.initializeFromStudy(study);
+    // Next
+    NextType::initializeFromStudy(study);
+}
 
 } // namespace AllYears
 } // namespace R

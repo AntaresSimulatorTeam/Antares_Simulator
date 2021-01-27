@@ -25,12 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_WINDOWS_SIMULATION_PANEL_H__
-# define __ANTARES_APPLICATION_WINDOWS_SIMULATION_PANEL_H__
+#define __ANTARES_APPLICATION_WINDOWS_SIMULATION_PANEL_H__
 
-# include <antares/wx-wrapper.h>
-# include "../inspector/data.h"
-# include <ui/common/component/panel.h>
-
+#include <antares/wx-wrapper.h>
+#include "../inspector/data.h"
+#include <ui/common/component/panel.h>
 
 namespace Antares
 {
@@ -38,43 +37,37 @@ namespace Window
 {
 namespace Simulation
 {
+/*!
+** \brief Panel to access to the simulation settings
+*/
+class Panel final : public Antares::Component::Panel, public Yuni::IEventObserver<Panel>
+{
+public:
+    //! \name Constructor && Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    **
+    ** \param parent The parent window
+    */
+    Panel(wxWindow* parent);
+    //! Destructor
+    virtual ~Panel();
+    //@}
 
-	/*!
-	** \brief Panel to access to the simulation settings
-	*/
-	class Panel final : public Antares::Component::Panel, public Yuni::IEventObserver<Panel>
-	{
-	public:
-		//! \name Constructor && Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		**
-		** \param parent The parent window
-		*/
-		Panel(wxWindow* parent);
-		//! Destructor
-		virtual ~Panel();
-		//@}
+private:
+    //! A study has been loaded
+    void onStudyLoaded();
+    //! The study has been closed
+    void onStudyClosed();
+    //! A study has been loaded (delayed)
+    void onDelayedStudyLoaded();
+    //!
+    void onUpdatePlaylist();
+    //! local inspector update about the study
+    Yuni::Bind<void(const Window::Inspector::InspectorData::Ptr&)> pUpdateInfoStudy;
 
-	private:
-		//! A study has been loaded
-		void onStudyLoaded();
-		//! The study has been closed
-		void onStudyClosed();
-		//! A study has been loaded (delayed)
-		void onDelayedStudyLoaded();
-		//!
-		void onUpdatePlaylist();
-		//! local inspector update about the study
-		Yuni::Bind<void (const Window::Inspector::InspectorData::Ptr&)> pUpdateInfoStudy;
-
-	}; // class Panel
-
-
-
-
-
+}; // class Panel
 
 } // namespace Simulation
 } // namespace Window

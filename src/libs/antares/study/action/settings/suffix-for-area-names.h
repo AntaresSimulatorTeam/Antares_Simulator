@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_SETTINGS_SUFFIXAREA_NAME_H__
-# define __ANTARES_LIBS_STUDY_ACTION_SETTINGS_SUFFIXAREA_NAME_H__
+#define __ANTARES_LIBS_STUDY_ACTION_SETTINGS_SUFFIXAREA_NAME_H__
 
-# include <yuni/yuni.h>
-# include "../action.h"
-
+#include <yuni/yuni.h>
+#include "../action.h"
 
 namespace Antares
 {
@@ -37,54 +36,49 @@ namespace Action
 {
 namespace Settings
 {
+/*!
+** \brief A dummy action, for displaying some text
+*/
+class SuffixAreaName : public IAction
+{
+public:
+    //! The most suitable smart ptr for the class
+    typedef IAction::Ptr Ptr;
+    //! The threading policy
+    typedef IAction::ThreadingPolicy ThreadingPolicy;
 
-	/*!
-	** \brief A dummy action, for displaying some text
-	*/
-	class SuffixAreaName : public IAction
-	{
-	public:
-		//! The most suitable smart ptr for the class
-		typedef IAction::Ptr  Ptr;
-		//! The threading policy
-		typedef IAction::ThreadingPolicy  ThreadingPolicy;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    template<class StringT>
+    explicit SuffixAreaName(const StringT& value, bool enabled = true);
+    //! Destructor
+    virtual ~SuffixAreaName();
+    //@}
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		template<class StringT> explicit SuffixAreaName(const StringT& value, bool enabled = true);
-		//! Destructor
-		virtual ~SuffixAreaName();
-		//@}
+    virtual bool autoExpand() const;
 
-		virtual bool autoExpand() const;
+    virtual bool shouldPrepareRootNode() const;
 
-		virtual bool shouldPrepareRootNode() const;
+    virtual void behaviorToText(Behavior behavior, Yuni::String& out);
 
-		virtual void behaviorToText(Behavior behavior, Yuni::String& out);
+protected:
+    virtual bool prepareWL(Context& ctx);
+    virtual bool performWL(Context& ctx);
+    virtual void prepareSkipWL(Context& ctx);
 
-	protected:
-		virtual bool prepareWL(Context& ctx);
-		virtual bool performWL(Context& ctx);
-		virtual void prepareSkipWL(Context& ctx);
+private:
+    Yuni::String pValue;
 
-
-	private:
-		Yuni::String pValue;
-
-	}; // class SuffixAreaName
-
-
-
-
+}; // class SuffixAreaName
 
 } // namespace Settings
 } // namespace Action
 } // namespace Antares
 
-# include "suffix-for-area-names.hxx"
+#include "suffix-for-area-names.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_ACTION_SETTINGS_SUFFIXAREA_NAME_H__

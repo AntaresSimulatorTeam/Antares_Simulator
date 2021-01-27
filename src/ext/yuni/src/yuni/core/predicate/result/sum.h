@@ -10,54 +10,61 @@
 */
 #pragma once
 
-
 namespace Yuni
 {
 namespace Result
 {
+template<typename T>
+struct Sum final
+{
+public:
+    //! Type of the result
+    typedef T ResultType;
 
+public:
+    //! \name Constructors
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    Sum() : pValue()
+    {
+    }
+    /*!
+    ** \brief Copy constructor
+    */
+    Sum(const Sum& rhs) : pValue(rhs.pValue)
+    {
+    }
+    //@}
 
-	template<typename T>
-	struct Sum final
-	{
-	public:
-		//! Type of the result
-		typedef T ResultType;
+    //! Take into account a new value
+    void operator()(const T& v)
+    {
+        pValue += v;
+    }
 
-	public:
-		//! \name Constructors
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		Sum() :pValue() {}
-		/*!
-		** \brief Copy constructor
-		*/
-		Sum(const Sum& rhs) :pValue(rhs.pValue) {}
-		//@}
+    /*!
+    ** \brief The Final result
+    */
+    ResultType result() const
+    {
+        return pValue;
+    }
 
-		//! Take into account a new value
-		void operator () (const T& v) { pValue += v;}
+    /*!
+    ** \brief Reset the internal counter
+    */
+    void reset()
+    {
+        pValue = T();
+    }
 
-		/*!
-		** \brief The Final result
-		*/
-		ResultType result() const {return pValue;}
+private:
+    //! The internal counter
+    T pValue;
 
-		/*!
-		** \brief Reset the internal counter
-		*/
-		void reset() {pValue = T();}
-
-	private:
-		//! The internal counter
-		T pValue;
-
-	}; // class Sum
-
-
-
+}; // class Sum
 
 } // namespace Result
 } // namespace Yuni

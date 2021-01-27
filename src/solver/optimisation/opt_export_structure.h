@@ -34,37 +34,53 @@
 
 #include <antares/Enum.hpp>
 
-namespace Antares {
-	namespace Data {
-		namespace Enum {
+namespace Antares
+{
+namespace Data
+{
+namespace Enum
+{
+/*! Enum class to define export structure dictionnary */
+enum class ExportStructDict : unsigned char
+{
+    ValeurDeNTCOrigineVersExtremite,
+    PalierThermique,
+    ProdHyd,
+    DefaillancePositive,
+    DefaillanceNegative,
+    BilansPays,
+    CoutOrigineVersExtremiteDeLInterconnexion,
+    CoutExtremiteVersOrigineDeLInterconnexion,
+    CorrespondanceVarNativesVarOptim
+};
+} // namespace Enum
 
-			/*! Enum class to define export structure dictionnary */
-			enum class ExportStructDict : unsigned char {
-				ValeurDeNTCOrigineVersExtremite,
-				PalierThermique,
-				ProdHyd, 
-				DefaillancePositive,
-				DefaillanceNegative,
-				BilansPays,
-				CoutOrigineVersExtremiteDeLInterconnexion,
-				CoutExtremiteVersOrigineDeLInterconnexion,
-				CorrespondanceVarNativesVarOptim
-			};
-		}
-
-		class Study;
-	}
-}
+class Study;
+} // namespace Data
+} // namespace Antares
 
 struct PROBLEME_HEBDO;
 
-void OPT_Export_add_variable(std::vector<std::string>& varname, int Var, Antares::Data::Enum::ExportStructDict structDict, int firstVal, int secondVal, int ts);
-void OPT_Export_add_variable(std::vector<std::string>& varname, int Var, Antares::Data::Enum::ExportStructDict structDict, int firstVal, int ts);
+void OPT_Export_add_variable(std::vector<std::string>& varname,
+                             int Var,
+                             Antares::Data::Enum::ExportStructDict structDict,
+                             int firstVal,
+                             int secondVal,
+                             int ts);
+void OPT_Export_add_variable(std::vector<std::string>& varname,
+                             int Var,
+                             Antares::Data::Enum::ExportStructDict structDict,
+                             int firstVal,
+                             int ts);
 
-void OPT_ExportInterco(const Antares::Data::Study& study, PROBLEME_HEBDO* ProblemeHebdo, uint numSpace);
+void OPT_ExportInterco(const Antares::Data::Study& study,
+                       PROBLEME_HEBDO* ProblemeHebdo,
+                       uint numSpace);
 void OPT_ExportAreaName(const Antares::Data::Study& study, uint numSpace);
-void OPT_ExportVariables(const Antares::Data::Study& study, const std::vector<std::string>& varname, const std::string& fileName, const std::string& fileExtension, uint numSpace);
-
-
+void OPT_ExportVariables(const Antares::Data::Study& study,
+                         const std::vector<std::string>& varname,
+                         const std::string& fileName,
+                         const std::string& fileExtension,
+                         uint numSpace);
 
 #endif

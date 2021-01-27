@@ -25,13 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_MISC_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_MISC_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_MISC_H__
 
-# include <antares/wx-wrapper.h>
-# include "../area.h"
-# include "../matrix.h"
-
-
+#include <antares/wx-wrapper.h>
+#include "../area.h"
+#include "../matrix.h"
 
 namespace Antares
 {
@@ -41,63 +39,77 @@ namespace Datagrid
 {
 namespace Renderer
 {
+class Misc : public Renderer::Matrix<>, public Renderer::ARendererArea
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
 
+    /*!
+    ** \brief Constructor
+    */
+    Misc(wxWindow* control, Toolbox::InputSelector::Area* notifier);
 
-	class Misc : public Renderer::Matrix<>, public Renderer::ARendererArea
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
+    //! Destructor
+    virtual ~Misc();
+    //@}
 
-		/*!
-		** \brief Constructor
-		*/
-		Misc(wxWindow* control, Toolbox::InputSelector::Area* notifier);
+    virtual int width() const
+    {
+        return Renderer::Matrix<>::width() + 1;
+    }
+    virtual int height() const
+    {
+        return Renderer::Matrix<>::height();
+    }
 
-		//! Destructor
-		virtual ~Misc();
-		//@}
+    virtual wxString columnCaption(int colIndx) const;
 
-		virtual int width() const {return Renderer::Matrix<>::width() + 1;}
-		virtual int height() const {return Renderer::Matrix<>::height();}
+    virtual wxString rowCaption(int rowIndx) const
+    {
+        return Renderer::Matrix<>::rowCaption(rowIndx);
+    }
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual wxString cellValue(int x, int y) const;
 
-		virtual wxString rowCaption(int rowIndx) const {return Renderer::Matrix<>::rowCaption(rowIndx);}
+    virtual double cellNumericValue(int x, int y) const;
 
-		virtual wxString cellValue(int x, int y) const;
+    virtual bool cellValue(int x, int y, const Yuni::String& value)
+    {
+        return Renderer::Matrix<>::cellValue(x, y, value);
+    }
 
-		virtual double cellNumericValue(int x, int y) const;
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    { /*Do nothing*/
+    }
 
-		virtual bool cellValue(int x, int y, const Yuni::String& value) {return Renderer::Matrix<>::cellValue(x,y,value);}
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{/*Do nothing*/}
+    virtual wxColour horizontalBorderColor(int x, int y) const;
+    virtual wxColour verticalBorderColor(int x, int y) const;
 
-		virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+    virtual uint maxWidthResize() const
+    {
+        return 0;
+    }
+    virtual bool valid() const
+    {
+        return Renderer::Matrix<>::valid();
+    }
 
-		virtual wxColour horizontalBorderColor(int x, int y) const;
-		virtual wxColour verticalBorderColor(int x, int y) const;
+    virtual Date::Precision precision()
+    {
+        return Date::hourly;
+    }
 
-		virtual uint maxWidthResize() const {return 0;}
-		virtual bool valid() const {return Renderer::Matrix<>::valid();}
+protected:
+    virtual void internalAreaChanged(Antares::Data::Area* area);
+    //! Event: the study has been closed
+    virtual void onStudyClosed() override;
+    //! Event: the study has been loaded
+    virtual void onStudyLoaded() override;
 
-		virtual Date::Precision precision() {return Date::hourly;}
-
-
-	protected:
-		virtual void internalAreaChanged(Antares::Data::Area* area);
-		//! Event: the study has been closed
-		virtual void onStudyClosed() override;
-		//! Event: the study has been loaded
-		virtual void onStudyLoaded() override;
-
-	}; // class Misc
-
-
-
-
-
+}; // class Misc
 
 } // namespace Renderer
 } // namespace Datagrid
