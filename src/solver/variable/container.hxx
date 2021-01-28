@@ -358,14 +358,16 @@ void List<NextT>::exportSurveyResults(bool global,
         // a big matrix, which will be needed anyway in the worst case.
         // CAUTION :
         //		This total max number of columns over all reports was useful when all output
-        // variables were automatically printed. 		It is no longer used since we've offered
+        // variables were automatically printed. 		It is no longer used since we've
+        // offered the
+        // possibility of selecting the output variables to be printed. 		Note that it
+        // is computed at
+        // compile time using recurrences. 		We keep it here because it is the model of
+        // the newer (runtime) way to compute any report's max number of columns 		in
         // the
-        // possibility of selecting the output variables to be printed. 		Note that it is
-        // computed at
-        // compile time using recurrences. 		We keep it here because it is the model of the
-        // newer (runtime) way to compute any report's max number of columns 		in the
-        //context of a possible user's choice of variables to be printed. 		As this
-        // choice is necessarily made at runtime, this computation has to be made at runtime as well.
+        // context of a possible user's choice of variables to be printed. 		As this
+        // choice is necessarily made at runtime, this computation has to be made at runtime as
+        // well.
         maxColumnsNeededForExportation = BrowseAllVariables<NextType>::maxValue,
     };
 

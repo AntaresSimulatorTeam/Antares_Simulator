@@ -37,94 +37,111 @@
 // Export de la structure des LPs
 ////////////////////////////////////////////////////////////////////
 
-namespace Antares {
-namespace Data {
-	namespace Enum {
-
-		template <>
-		const std::initializer_list<std::string>& getNames<ExportStructDict>() {
-			
-			static std::initializer_list<std::string> s_exportStructDictNames{
-				"ValeurDeNTCOrigineVersExtremite",
-				"PalierThermique",
-				"ProdHyd",
-				"DefaillancePositive", 
-				"DefaillanceNegative",
-				"BilansPays",
-				"CoutOrigineVersExtremiteDeLInterconnexion",
-				"CoutExtremiteVersOrigineDeLInterconnexion",
-				"CorrespondanceVarNativesVarOptim"
-			};
-			return s_exportStructDictNames;
-		}
-	} // namespace Enum
+namespace Antares
+{
+namespace Data
+{
+namespace Enum
+{
+template<>
+const std::initializer_list<std::string>& getNames<ExportStructDict>()
+{
+    static std::initializer_list<std::string> s_exportStructDictNames{
+      "ValeurDeNTCOrigineVersExtremite",
+      "PalierThermique",
+      "ProdHyd",
+      "DefaillancePositive",
+      "DefaillanceNegative",
+      "BilansPays",
+      "CoutOrigineVersExtremiteDeLInterconnexion",
+      "CoutExtremiteVersOrigineDeLInterconnexion",
+      "CorrespondanceVarNativesVarOptim"};
+    return s_exportStructDictNames;
+}
+} // namespace Enum
 } // namespace Data
 } // namespace Antares
 
-
-
-void OPT_ExportInterco(const Antares::Data::Study& study, PROBLEME_HEBDO* ProblemeHebdo, uint numSpace)
+void OPT_ExportInterco(const Antares::Data::Study& study,
+                       PROBLEME_HEBDO* ProblemeHebdo,
+                       uint numSpace)
 {
-	//Interco are exported only once for first year
-	if (study.runtime->currentYear[numSpace] == 0 && study.runtime->weekInTheYear[numSpace] == 0) {
-		FILE* Flot = study.createFileIntoOutputWithExtension("interco", "txt", numSpace);
-		for (int i(0); i < ProblemeHebdo->NombreDInterconnexions; ++i) {
-			fprintf(Flot, "%d %d %d\n"
-				,
-				i,
-				ProblemeHebdo->PaysOrigineDeLInterconnexion[i],
-				ProblemeHebdo->PaysExtremiteDeLInterconnexion[i]
-			);
-		}
-		fclose(Flot);
-	}
+    // Interco are exported only once for first year
+    if (study.runtime->currentYear[numSpace] == 0 && study.runtime->weekInTheYear[numSpace] == 0)
+    {
+        FILE* Flot = study.createFileIntoOutputWithExtension("interco", "txt", numSpace);
+        for (int i(0); i < ProblemeHebdo->NombreDInterconnexions; ++i)
+        {
+            fprintf(Flot,
+                    "%d %d %d\n",
+                    i,
+                    ProblemeHebdo->PaysOrigineDeLInterconnexion[i],
+                    ProblemeHebdo->PaysExtremiteDeLInterconnexion[i]);
+        }
+        fclose(Flot);
+    }
 }
 
 void OPT_ExportAreaName(const Antares::Data::Study& study, uint numSpace)
 {
-	//Area name are exported only once for first year
-	if (study.runtime->currentYear[numSpace] == 0 && study.runtime->weekInTheYear[numSpace] == 0) {
-		FILE* Flot = study.createFileIntoOutputWithExtension("area", "txt", numSpace);
-		for (int i(0); i < study.areas.size(); ++i) {
-			fprintf(Flot, "%s\n", study.areas[i]->name.c_str());
-		}
-		fclose(Flot);
-	}
+    // Area name are exported only once for first year
+    if (study.runtime->currentYear[numSpace] == 0 && study.runtime->weekInTheYear[numSpace] == 0)
+    {
+        FILE* Flot = study.createFileIntoOutputWithExtension("area", "txt", numSpace);
+        for (int i(0); i < study.areas.size(); ++i)
+        {
+            fprintf(Flot, "%s\n", study.areas[i]->name.c_str());
+        }
+        fclose(Flot);
+    }
 }
 
-void OPT_Export_add_variable(std::vector<std::string>& varname, int Var, Antares::Data::Enum::ExportStructDict structDict, int firstVal, int secondVal, int ts)
+void OPT_Export_add_variable(std::vector<std::string>& varname,
+                             int Var,
+                             Antares::Data::Enum::ExportStructDict structDict,
+                             int firstVal,
+                             int secondVal,
+                             int ts)
 {
-	if (varname.size() > Var && varname[Var].empty())
-	{
-		std::stringstream buffer;
-		buffer << Var << " ";
-		buffer << Antares::Data::Enum::toString(structDict) << " ";
-		buffer << firstVal << " ";
-		buffer << secondVal << " ";
-		buffer << ts << " ";
-		varname[Var] = buffer.str();
-	}
+    if (varname.size() > Var && varname[Var].empty())
+    {
+        std::stringstream buffer;
+        buffer << Var << " ";
+        buffer << Antares::Data::Enum::toString(structDict) << " ";
+        buffer << firstVal << " ";
+        buffer << secondVal << " ";
+        buffer << ts << " ";
+        varname[Var] = buffer.str();
+    }
 }
 
-void OPT_Export_add_variable(std::vector<std::string>& varname, int Var, Antares::Data::Enum::ExportStructDict structDict, int firstVal,  int ts)
+void OPT_Export_add_variable(std::vector<std::string>& varname,
+                             int Var,
+                             Antares::Data::Enum::ExportStructDict structDict,
+                             int firstVal,
+                             int ts)
 {
-	if (varname.size() > Var && varname[Var].empty())
-	{
-		std::stringstream buffer;
-		buffer << Var << " ";
-		buffer << Antares::Data::Enum::toString(structDict) << " ";
-		buffer << firstVal << " ";
-		buffer << ts << " ";
-		varname[Var] = buffer.str();
-	}
+    if (varname.size() > Var && varname[Var].empty())
+    {
+        std::stringstream buffer;
+        buffer << Var << " ";
+        buffer << Antares::Data::Enum::toString(structDict) << " ";
+        buffer << firstVal << " ";
+        buffer << ts << " ";
+        varname[Var] = buffer.str();
+    }
 }
 
-void OPT_ExportVariables(const Antares::Data::Study& study, const std::vector<std::string>& varname,const std::string& fileName, const std::string& fileExtension, uint numSpace)
+void OPT_ExportVariables(const Antares::Data::Study& study,
+                         const std::vector<std::string>& varname,
+                         const std::string& fileName,
+                         const std::string& fileExtension,
+                         uint numSpace)
 {
-	FILE* Flot = study.createFileIntoOutputWithExtension(fileName, fileExtension, numSpace);
-	for (auto const& line : varname) {
-		fprintf(Flot, "%s\n", line.c_str());
-
-	}
-	fclose(Flot);
+    FILE* Flot = study.createFileIntoOutputWithExtension(fileName, fileExtension, numSpace);
+    for (auto const& line : varname)
+    {
+        fprintf(Flot, "%s\n", line.c_str());
+    }
+    fclose(Flot);
 }
