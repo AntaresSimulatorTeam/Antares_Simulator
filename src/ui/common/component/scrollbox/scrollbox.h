@@ -25,41 +25,33 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENTS_SCROLLBOX_H__
-# define __ANTARES_TOOLBOX_COMPONENTS_SCROLLBOX_H__
+#define __ANTARES_TOOLBOX_COMPONENTS_SCROLLBOX_H__
 
-# include <antares/wx-wrapper.h>
-# include <wx/scrolwin.h>
-
-
+#include <antares/wx-wrapper.h>
+#include <wx/scrolwin.h>
 
 namespace Antares
 {
 namespace Component
 {
+class Scrollbox : public wxScrolledWindow
+{
+public:
+    Scrollbox();
+    Scrollbox(wxWindow* parent,
+              int id = wxID_ANY,
+              const wxPoint& pos = wxDefaultPosition,
+              const wxSize& size = wxDefaultSize);
 
+    virtual ~Scrollbox();
 
-	class Scrollbox : public wxScrolledWindow
-	{
-	public:
-		Scrollbox();
-		Scrollbox(wxWindow* parent, int id = wxID_ANY, const wxPoint& pos = wxDefaultPosition,
-			const wxSize& size = wxDefaultSize);
+private:
+    DECLARE_DYNAMIC_CLASS(Scrollbox)
+    DECLARE_EVENT_TABLE()
 
-		virtual ~Scrollbox();
-
-
-	private:
-		DECLARE_DYNAMIC_CLASS(Scrollbox)
-		DECLARE_EVENT_TABLE()
-
-	}; // class Scrollbox
-
-
-
-
+}; // class Scrollbox
 
 } // namespace Component
 } // namespace Antares
-
 
 #endif // __ANTARES_TOOLBOX_COMPONENTS_SCROLLBOX_H__

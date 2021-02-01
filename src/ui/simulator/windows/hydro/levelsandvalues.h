@@ -25,14 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_HYDROOW_HYDRO_LEVELSANDVALUES_H__
-# define __ANTARES_APPLICATION_HYDROOW_HYDRO_LEVELSANDVALUES_H__
+#define __ANTARES_APPLICATION_HYDROOW_HYDRO_LEVELSANDVALUES_H__
 
-# include <antares/wx-wrapper.h>
-# include "../../toolbox/components/datagrid/component.h"
-# include "../../toolbox/input/area.h"
-# include <ui/common/component/panel.h>
-# include "../../toolbox/components/button.h"
-
+#include <antares/wx-wrapper.h>
+#include "../../toolbox/components/datagrid/component.h"
+#include "../../toolbox/input/area.h"
+#include <ui/common/component/panel.h>
+#include "../../toolbox/components/button.h"
 
 namespace Antares
 {
@@ -40,39 +39,32 @@ namespace Window
 {
 namespace Hydro
 {
+class LevelsAndValues : public Component::Panel, public Yuni::IEventObserver<LevelsAndValues>
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    LevelsAndValues(wxWindow* parent, Toolbox::InputSelector::Area* notifier);
+    //! Destructor
+    virtual ~LevelsAndValues();
+    //@}
 
+private:
+    void createComponents();
+    void onStudyClosed();
+    void onAreaChanged(Data::Area* area);
 
-	class LevelsAndValues : public Component::Panel, public Yuni::IEventObserver<LevelsAndValues>
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		LevelsAndValues(wxWindow* parent, Toolbox::InputSelector::Area* notifier);
-		//! Destructor
-		virtual ~LevelsAndValues();
-		//@}
+private:
+    //! The input area selector
+    Toolbox::InputSelector::Area* pInputAreaSelector;
+    Data::Area* pArea;
+    bool pComponentsAreReady;
+    Component::Panel* pSupport;
 
-	private:
-		void createComponents();
-		void onStudyClosed();
-		void onAreaChanged(Data::Area* area);
-
-
-	private:
-		//! The input area selector
-		Toolbox::InputSelector::Area*  pInputAreaSelector;
-		Data::Area* pArea;
-		bool pComponentsAreReady;
-		Component::Panel* pSupport;
-
-	}; // class Prepro
-
-
-
-
+}; // class Prepro
 
 } // namespace Hydro
 } // namespace Window

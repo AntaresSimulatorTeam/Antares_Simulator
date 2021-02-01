@@ -25,28 +25,22 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENTS_REFRESH_H__
-# define __ANTARES_TOOLBOX_COMPONENTS_REFRESH_H__
+#define __ANTARES_TOOLBOX_COMPONENTS_REFRESH_H__
 
-# include <antares/wx-wrapper.h>
-
+#include <antares/wx-wrapper.h>
 
 namespace Antares
 {
+/*!
+** \brief Refresh all components in an efficient way
+*/
+void RefreshAllControls(wxWindow* comObj);
 
-	/*!
-	** \brief Refresh all components in an efficient way
-	*/
-	void RefreshAllControls(wxWindow* comObj);
-
-
-
-	/*!
-	** \brief Enable / Disable the refresh for all datagrids contained by a window
-	*/
-	void EnableRefreshForAllDatagrid(wxWindow* comObj, bool enabled);
-
+/*!
+** \brief Enable / Disable the refresh for all datagrids contained by a window
+*/
+void EnableRefreshForAllDatagrid(wxWindow* comObj, bool enabled);
 
 } // namespace Antares
-
 
 #endif // __ANTARES_TOOLBOX_COMPONENTS_REFRESH_H__

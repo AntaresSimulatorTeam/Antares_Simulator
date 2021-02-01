@@ -25,38 +25,40 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_SEPARATOR_H__
-# define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_SEPARATOR_H__
+#define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_SEPARATOR_H__
 
+class Separator final : public IItem
+{
+public:
+    //! Ptr
+    typedef Yuni::SmartPtr<Separator> Ptr;
+    //! Vector of items
+    typedef std::vector<Ptr> Vector;
+    //! Vector Ptr
+    typedef Yuni::SmartPtr<Vector> VectorPtr;
 
-	class Separator final : public IItem
-	{
-	public:
-		//! Ptr
-		typedef Yuni::SmartPtr<Separator> Ptr;
-		//! Vector of items
-		typedef std::vector<Ptr>  Vector;
-		//! Vector Ptr
-		typedef Yuni::SmartPtr<Vector>  VectorPtr;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    Separator();
+    //! Destructor
+    virtual ~Separator();
+    //@}
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		Separator();
-		//! Destructor
-		virtual ~Separator();
-		//@}
+    virtual bool canBeSelected() const
+    {
+        return false;
+    }
 
-		virtual bool canBeSelected() const {return false;}
+    virtual void draw(wxDC& dc,
+                      uint itemHeight,
+                      wxRect& bounds,
+                      bool selected,
+                      const SearchToken::VectorPtr& tokens) const;
 
-		virtual void draw(wxDC& dc, uint itemHeight, wxRect& bounds, bool selected,
-			const SearchToken::VectorPtr& tokens) const;
-
-	}; // class Separator
-
-
-
+}; // class Separator
 
 #endif // __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_SEPARATOR_H__

@@ -9,14 +9,13 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_PRIVATE_MEDIA_FRAME_H__
-# define __YUNI_PRIVATE_MEDIA_FRAME_H__
+#define __YUNI_PRIVATE_MEDIA_FRAME_H__
 
-# include "../../yuni.h"
-# include "../../core/smartptr.h"
-# include "../../core/bind.h"
-# include "streamtype.h"
-# include <queue>
-
+#include "../../yuni.h"
+#include "../../core/smartptr.h"
+#include "../../core/bind.h"
+#include "streamtype.h"
+#include <queue>
 
 namespace Yuni
 {
@@ -24,102 +23,98 @@ namespace Private
 {
 namespace Media
 {
+//! Forward declaration
+class FrameImpl;
 
+/*!
+** \brief A frame contains all the data corresponding to a decoded YCbCr 420 frame
+*/
+class Frame final
+{
+public:
+    //! Smart pointer
+    typedef SmartPtr<Frame> Ptr;
 
-	//! Forward declaration
-	class FrameImpl;
+    //! Frame queue
+    typedef std::list<Ptr> Queue;
 
+public:
+    // This event is triggered when it is time for a new frame to be displayed
+    static Yuni::Bind<void(const Frame::Ptr& frame)> OnFrameChanged;
 
-	/*!
-	** \brief A frame contains all the data corresponding to a decoded YCbCr 420 frame
-	*/
-	class Frame final
-	{
-	public:
-		//! Smart pointer
-		typedef SmartPtr<Frame>  Ptr;
+public:
+    //! Constructor
+    Frame(uint index, double pts);
+    //! Destructor
+    ~Frame();
 
-		//! Frame queue
-		typedef std::list<Ptr>  Queue;
+    //! Is the frame valid ?
+    bool valid() const;
 
-	public:
-		// This event is triggered when it is time for a new frame to be displayed
-		static Yuni::Bind<void (const Frame::Ptr& frame)>  OnFrameChanged;
+    //! Does the frame contain video data ?
+    bool isVideo() const;
 
-	public:
-		//! Constructor
-		Frame(uint index, double pts);
-		//! Destructor
-		~Frame();
+    //! Does the frame contain audio data ?
+    bool isAudio() const;
 
-		//! Is the frame valid ?
-		bool valid() const;
+    //! Image width (Video only !)
+    uint width() const;
+    //! Image height (Video only !)
+    uint height() const;
 
-		//! Does the frame contain video data ?
-		bool isVideo() const;
+    //! Frame index in the stream
+    uint index() const
+    {
+        return pIndex;
+    }
 
-		//! Does the frame contain audio data ?
-		bool isAudio() const;
+    //! Audio data (Audio only !)
+    uint8* audioData();
 
-		//! Image width (Video only !)
-		uint width() const;
-		//! Image height (Video only !)
-		uint height() const;
+    //! Audio data size (Audio only !)
+    uint audioSize() const;
 
-		//! Frame index in the stream
-		uint index() const { return pIndex; }
+    //! Y data (Video only !)
+    uint8* dataY() const;
+    //! Cb data (Video only !)
+    uint8* dataCb() const;
+    //! Cr data (Video only !)
+    uint8* dataCr() const;
 
-		//! Audio data (Audio only !)
-		uint8* audioData();
+    //! Line size for Y data
+    uint lineSizeY() const;
+    //! Line size for Cb data (normally: lineSizeY / 2)
+    uint lineSizeCb() const;
+    //! Line size for Cr data (normally: lineSizeY / 2)
+    uint lineSizeCr() const;
 
-		//! Audio data size (Audio only !)
-		uint audioSize() const;
+    //! Presentation time stamp for this frame
+    double timestamp() const;
 
-		//! Y data (Video only !)
-		uint8* dataY() const;
-		//! Cb data (Video only !)
-		uint8* dataCb() const;
-		//! Cr data (Video only !)
-		uint8* dataCr() const;
+    uint frameNumber() const;
 
-		//! Line size for Y data
-		uint lineSizeY() const;
-		//! Line size for Cb data (normally: lineSizeY / 2)
-		uint lineSizeCb() const;
-		//! Line size for Cr data (normally: lineSizeY / 2)
-		uint lineSizeCr() const;
+private:
+    //! Read a frame from the stream
+    void readFrame();
 
-		//! Presentation time stamp for this frame
-		double timestamp() const;
+    //! Ugly hidden way of setting the frame in our FrameImpl
+    void setData(void* data);
 
-		uint frameNumber() const;
+private:
+    //! Frame number
+    uint pIndex;
 
-	private:
-		//! Read a frame from the stream
-		void readFrame();
+    //! Presentation time stamp
+    double pTimestamp;
 
-		//! Ugly hidden way of setting the frame in our FrameImpl
-		void setData(void* data);
+    //! Internal data (wrapper for the AVFrame)
+    FrameImpl* pImpl;
 
-	private:
-		//! Frame number
-		uint pIndex;
+    //! Friend declaration
+    template<StreamType TypeT>
+    friend class Stream;
 
-		//! Presentation time stamp
-		double pTimestamp;
-
-		//! Internal data (wrapper for the AVFrame)
-		FrameImpl* pImpl;
-
-		//! Friend declaration
-		template<StreamType TypeT> friend class Stream;
-
-	}; // class Frame
-
-
-
-
-
+}; // class Frame
 
 } // namespace Media
 } // namespace Private

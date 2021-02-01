@@ -25,215 +25,207 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_XCAST_XCAST_H__
-# define __ANTARES_LIBS_STUDY_XCAST_XCAST_H__
+#define __ANTARES_LIBS_STUDY_XCAST_XCAST_H__
 
-# include <yuni/yuni.h>
-# include "../../array/matrix.h"
-# include <vector>
-# include "../fwd.h"
-# include <yuni/core/noncopyable.h>
-
+#include <yuni/yuni.h>
+#include "../../array/matrix.h"
+#include <vector>
+#include "../fwd.h"
+#include <yuni/core/noncopyable.h>
 
 namespace Antares
 {
 namespace Data
 {
+class XCast final : private Yuni::NonCopyable<XCast>
+{
+public:
+    //! Vector
+    typedef std::vector<XCast*> Vector;
+    //! Vector with the const qualifier
+    typedef std::vector<const XCast*> VectorConst;
 
+    /*!
+    ** \brief All coefficients
+    */
+    enum
+    {
+        dataCoeffAlpha = 0,
+        dataCoeffBeta,
+        dataCoeffGamma,
+        dataCoeffDelta,
+        dataCoeffTheta,
+        dataCoeffMu,
+        //! The maximum number of coefficients
+        dataMax,
+    };
 
-	class XCast final : private Yuni::NonCopyable<XCast>
-	{
-	public:
-		//! Vector
-		typedef std::vector<XCast*> Vector;
-		//! Vector with the const qualifier
-		typedef std::vector<const XCast*> VectorConst;
+    /*!
+    ** \brief All available probability distribution
+    */
+    enum Distribution
+    {
+        //! None
+        dtNone = 0,
+        //! The uniform distribution
+        dtUniform = 1,
+        //! The Beta distribution
+        dtBeta = 2,
+        //! The normal distribution
+        dtNormal = 3,
+        //! The Weibul distribution, of shape A
+        dtWeibullShapeA = 4,
+        //! The Gamma distribution, of shape A
+        dtGammaShapeA = 5,
+        //! The maximum number of distributions
+        dtMax
+    };
 
-		/*!
-		** \brief All coefficients
-		*/
-		enum
-		{
-			dataCoeffAlpha = 0,
-			dataCoeffBeta,
-			dataCoeffGamma,
-			dataCoeffDelta,
-			dataCoeffTheta,
-			dataCoeffMu,
-			//! The maximum number of coefficients
-			dataMax,
-		};
+    enum
+    {
+        //! Hard limit for the number of points of the transfer function
+        conversionMaxPoints = 100,
+    };
 
-		/*!
-		** \brief All available probability distribution
-		*/
-		enum Distribution
-		{
-			//! None
-			dtNone = 0,
-			//! The uniform distribution
-			dtUniform = 1,
-			//! The Beta distribution
-			dtBeta = 2,
-			//! The normal distribution
-			dtNormal = 3,
-			//! The Weibul distribution, of shape A
-			dtWeibullShapeA = 4,
-			//! The Gamma distribution, of shape A
-			dtGammaShapeA = 5,
-			//! The maximum number of distributions
-			dtMax
-		};
+    enum TSTranslationUse
+    {
+        //! Do not use the time-series average
+        tsTranslationNone = 0,
+        //! Add the time-series average before computing the transfer function
+        tsTranslationBeforeConversion,
+        //! Add the time-series average after computing the transfer function
+        tsTranslationAfterConversion,
+    };
 
-		enum
-		{
-			//! Hard limit for the number of points of the transfer function
-			conversionMaxPoints = 100,
-		};
+public:
+    /*!
+    ** \brief Convert a distribution into its human readable representation
+    */
+    static const char* DistributionToCString(Distribution d);
 
-		enum TSTranslationUse
-		{
-			//! Do not use the time-series average
-			tsTranslationNone = 0,
-			//! Add the time-series average before computing the transfer function
-			tsTranslationBeforeConversion,
-			//! Add the time-series average after computing the transfer function
-			tsTranslationAfterConversion,
-		};
+    /*!
+    ** \brief Convert a CString into a probability distribution
+    */
+    static Distribution StringToDistribution(AnyString str);
 
-	public:
-		/*!
-		** \brief Convert a distribution into its human readable representation
-		*/
-		static const char* DistributionToCString(Distribution d);
+    /*!
+    ** \brief Convert a probability distribution into its string id representation
+    */
+    static const char* DistributionToNameID(Distribution d);
 
-		/*!
-		** \brief Convert a CString into a probability distribution
-		*/
-		static Distribution StringToDistribution(AnyString str);
+    /*!
+    ** \brief How to use the timeseries average
+    */
+    static const char* TSTranslationUseToCString(TSTranslationUse use);
 
-		/*!
-		** \brief Convert a probability distribution into its string id representation
-		*/
-		static const char* DistributionToNameID(Distribution d);
+    static TSTranslationUse CStringToTSTranslationUse(const AnyString& str);
 
-		/*!
-		** \brief How to use the timeseries average
-		*/
-		static const char* TSTranslationUseToCString(TSTranslationUse use);
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    XCast(TimeSeries ts);
+    /*!
+    ** \brief Destructor
+    */
+    ~XCast();
+    //@}
 
-		static TSTranslationUse CStringToTSTranslationUse(const AnyString& str);
+    /*!
+    ** \brief Reset to default values
+    */
+    void resetToDefaultValues();
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		XCast(TimeSeries ts);
-		/*!
-		** \brief Destructor
-		*/
-		~XCast();
-		//@}
+    /*!
+    ** \brief Copy settings from another XCast struct
+    */
+    void copyFrom(const XCast& rhs);
 
-		/*!
-		** \brief Reset to default values
-		*/
-		void resetToDefaultValues();
+    /*!
+    ** \brief Load data from a folder
+    */
+    bool loadFromFolder(Study& study, const AnyString& folder);
 
-		/*!
-		** \brief Copy settings from another XCast struct
-		*/
-		void copyFrom(const XCast& rhs);
+    /*!
+    ** \brief Save data to a folder
+    */
+    bool saveToFolder(const AnyString& folder) const;
 
-		/*!
-		** \brief Load data from a folder
-		*/
-		bool loadFromFolder(Study& study, const AnyString& folder);
+    //! \name Memory management
+    //@{
+    /*!
+    ** \brief Make sure that all data are loaded in memory
+    */
+    bool invalidate(bool reload = false) const;
 
-		/*!
-		** \brief Save data to a folder
-		*/
-		bool saveToFolder(const AnyString& folder) const;
+    /*!
+    ** \brief Mark the load data as modified
+    */
+    void markAsModified() const;
 
+    /*!
+    ** \brief Flush memory to swap files
+    */
+    void flush();
 
-		//! \name Memory management
-		//@{
-		/*!
-		** \brief Make sure that all data are loaded in memory
-		*/
-		bool invalidate(bool reload = false) const;
+    /*!
+    ** \brief Get the amount of memory currently used by the XCast data
+    */
+    Yuni::uint64 memoryUsage() const;
 
-		/*!
-		** \brief Mark the load data as modified
-		*/
-		void markAsModified() const;
+    /*!
+    ** \brief Estimate the amount of memory required by this class for a simulation
+    */
+    void estimateMemoryUsage(StudyMemoryUsage&) const;
+    //@}
 
-		/*!
-		** \brief Flush memory to swap files
-		*/
-		void flush();
+public:
+    /*!
+    ** \brief Data required for XCast: coefficients (coeffMax x 12)
+    */
+    Matrix<float> data;
 
-		/*!
-		** \brief Get the amount of memory currently used by the XCast data
-		*/
-		Yuni::uint64 memoryUsage() const;
+    /*!
+    ** \brief K (12x24)
+    */
+    Matrix<float> K;
 
-		/*!
-		** \brief Estimate the amount of memory required by this class for a simulation
-		*/
-		void estimateMemoryUsage(StudyMemoryUsage&) const;
-		//@}
+    /*!
+    ** \brief Time-series average
+    */
+    Matrix<Yuni::sint32> translation;
 
-	public:
-		/*!
-		** \brief Data required for XCast: coefficients (coeffMax x 12)
-		*/
-		Matrix<float> data;
+    //! How to use the timeseries average
+    TSTranslationUse useTranslation;
 
-		/*!
-		** \brief K (12x24)
-		*/
-		Matrix<float> K;
+    //! The probability distribution to use
+    Distribution distribution;
 
-		/*!
-		** \brief Time-series average
-		*/
-		Matrix<Yuni::sint32> translation;
+    //! The installed capacity
+    double capacity;
 
-		//! How to use the timeseries average
-		TSTranslationUse useTranslation;
+    //! True to use the transfer function after the generation of the time-series
+    bool useConversion;
+    /*!
+    ** \brief The conversion function
+    **
+    ** The first row gives the X-Coordinates, the second one the Y-Coordinates.
+    */
+    Matrix<float> conversion;
 
-		//! The probability distribution to use
-		Distribution distribution;
+    //! The related time-series
+    const TimeSeries timeSeries;
 
-		//! The installed capacity
-		double capacity;
+protected:
+    void resetTransferFunction();
 
-		//! True to use the transfer function after the generation of the time-series
-		bool useConversion;
-		/*!
-		** \brief The conversion function
-		**
-		** The first row gives the X-Coordinates, the second one the Y-Coordinates.
-		*/
-		Matrix<float> conversion;
-
-		//! The related time-series
-		const TimeSeries timeSeries;
-
-	protected:
-		void resetTransferFunction();
-
-	}; // class XCast
-
-
-
-
+}; // class XCast
 
 } // namespace Data
 } // namespace Antares
 
-# include "xcast.hxx"
+#include "xcast.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_XCAST_XCAST_H__

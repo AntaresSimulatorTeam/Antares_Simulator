@@ -10,84 +10,71 @@
 */
 #include "thread.h"
 
-
-
 namespace Yuni
 {
 namespace Private
 {
 namespace QueueService
 {
+inline void QueueThread::notifyEndOfWork()
+{
+    // Notify the scheduler that this thread goes to sleep
+    pQueueService.unregisterWorker(this);
+}
 
+bool QueueThread::onExecute()
+{
+    // Notify the scheduler that this thread has begun its work
+    pQueueService.registerWorker(this);
 
-	inline void QueueThread::notifyEndOfWork()
-	{
-		// Notify the scheduler that this thread goes to sleep
-		pQueueService.unregisterWorker(this);
-	}
+    // Asking for the next job
+    while (pQueueService.pWaitingRoom.pop(pJob))
+    {
+        // Execute the job, via a wrapper for symbol visibility issues
+        Yuni::Private::QueueService::JobAccessor<Yuni::Job::IJob>::Execute(*pJob, this);
 
+        // We must release our pointer to the job here to avoid its destruction
+        // in `pQueueService.nextJob()` (when `pJob` is re-assigned).
+        // This method uses a lock and the destruction of the job may take some time.
+        // Obviously, there is absolutely no guarantee that the job will be destroyed
+        // at this point but we don't really care
+        pJob = nullptr;
 
-	bool QueueThread::onExecute()
-	{
-		// Notify the scheduler that this thread has begun its work
-		pQueueService.registerWorker(this);
+        // Cancellation point
+        if (YUNI_UNLIKELY(
+              shouldAbort())) // We have to stop as soon as possible, no need for hibernation
+            return false;
 
-		// Asking for the next job
-		while (pQueueService.pWaitingRoom.pop(pJob))
-		{
-			// Execute the job, via a wrapper for symbol visibility issues
-			Yuni::Private::QueueService::JobAccessor<Yuni::Job::IJob>::Execute(*pJob, this);
+    } // loop for retrieving jobs to execute
 
-			// We must release our pointer to the job here to avoid its destruction
-			// in `pQueueService.nextJob()` (when `pJob` is re-assigned).
-			// This method uses a lock and the destruction of the job may take some time.
-			// Obviously, there is absolutely no guarantee that the job will be destroyed
-			// at this point but we don't really care
-			pJob = nullptr;
+    // Returning true, for hibernation
+    return true;
+}
 
-			// Cancellation point
-			if (YUNI_UNLIKELY(shouldAbort())) // We have to stop as soon as possible, no need for hibernation
-				return false;
+void QueueThread::onStop()
+{
+    notifyEndOfWork(); // we are done here !
+}
 
-		} // loop for retrieving jobs to execute
+void QueueThread::onPause()
+{
+    notifyEndOfWork(); // we are done here !
+}
 
-		// Returning true, for hibernation
-		return true;
-	}
+void QueueThread::onKill()
+{
+    if (!(!(pJob)))
+    {
+        // Notify the job that it has been killed
+        // (via the wrapper for symbol visibility issues)
+        Yuni::Private::QueueService::JobAccessor<Yuni::Job::IJob>::ThreadHasBeenKilled(*pJob);
+        // Release the pointer, if possible of course
+        pJob = nullptr;
+    }
 
-
-	void QueueThread::onStop()
-	{
-		notifyEndOfWork(); // we are done here !
-	}
-
-
-	void QueueThread::onPause()
-	{
-		notifyEndOfWork(); // we are done here !
-	}
-
-
-	void QueueThread::onKill()
-	{
-		if (!(!(pJob)))
-		{
-			// Notify the job that it has been killed
-			// (via the wrapper for symbol visibility issues)
-			Yuni::Private::QueueService::JobAccessor<Yuni::Job::IJob>::ThreadHasBeenKilled(*pJob);
-			// Release the pointer, if possible of course
-			pJob = nullptr;
-		}
-
-		notifyEndOfWork(); // we are done here !
-	}
-
-
-
-
-
+    notifyEndOfWork(); // we are done here !
+}
 
 } // namespace QueueService
 } // namespace Private
 } // namespace Yuni
-

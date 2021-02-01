@@ -25,14 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_BINDINGCONSTRAINT_DATA_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_BINDINGCONSTRAINT_DATA_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_BINDINGCONSTRAINT_DATA_H__
 
-# include <antares/wx-wrapper.h>
-# include "../../gridhelper.h"
-# include "../../renderer.h"
-# include <yuni/core/event.h>
-# include "../../../../../application/study.h"
-
+#include <antares/wx-wrapper.h>
+#include "../../gridhelper.h"
+#include "../../renderer.h"
+#include <yuni/core/event.h>
+#include "../../../../../application/study.h"
 
 namespace Antares
 {
@@ -44,57 +43,55 @@ namespace Renderer
 {
 namespace BindingConstraint
 {
+class Data final : public virtual IRenderer
+{
+public:
+    Data(wxWindow* parent, const Antares::Data::BindingConstraint::Operator op);
+    virtual ~Data();
 
-	class Data final : public virtual IRenderer
-	{
-	public:
-		Data(wxWindow* parent, const Antares::Data::BindingConstraint::Operator op);
-		virtual ~Data();
+    virtual int width() const;
+    virtual int height() const;
 
-		virtual int width() const;
-		virtual int height() const;
+    virtual wxString columnCaption(int colIndx) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual wxString rowCaption(int rowIndx) const;
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual wxString cellValue(int x, int y) const;
 
-		virtual wxString cellValue(int x, int y) const;
+    virtual double cellNumericValue(int x, int y) const;
 
-		virtual double cellNumericValue(int x, int y) const;
+    virtual bool cellValue(int x, int y, const Yuni::String& value);
 
-		virtual bool cellValue(int x, int y, const Yuni::String& value);
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    {
+        // Do nothing
+    }
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{
-			// Do nothing
-		}
+    virtual void applyLayerFiltering(size_t layerID, VGridHelper* gridHelper);
 
-		virtual void applyLayerFiltering(size_t layerID, VGridHelper* gridHelper);
+    virtual bool valid() const
+    {
+        return (width() > 0);
+    }
 
-		virtual bool valid() const {return (width() > 0);}
+    virtual IRenderer::CellStyle cellStyle(int x, int y) const;
 
-		virtual IRenderer::CellStyle cellStyle(int x, int y) const;
+    virtual wxColour horizontalBorderColor(int x, int y) const;
 
-		virtual wxColour horizontalBorderColor(int x, int y) const;
+    void bindingConstraintTypeChanged(Antares::Data::BindingConstraint::Type type);
 
-		void bindingConstraintTypeChanged(Antares::Data::BindingConstraint::Type type);
+    void onStudyChanged(Antares::Data::Study&);
 
-		void onStudyChanged(Antares::Data::Study&);
+    virtual Date::Precision precision();
 
-		virtual Date::Precision  precision();
+protected:
+    const Antares::Data::BindingConstraint::Operator pOperator;
+    wxWindow* pControl;
+    wxString pZero;
+    Antares::Data::BindingConstraint::Type pType;
+    Antares::Data::BindingConstraint::Column pColumn;
 
-	protected:
-		const Antares::Data::BindingConstraint::Operator pOperator;
-		wxWindow* pControl;
-		wxString pZero;
-		Antares::Data::BindingConstraint::Type pType;
-		Antares::Data::BindingConstraint::Column pColumn;
-
-	}; // class Data
-
-
-
-
+}; // class Data
 
 } // namespace BindingConstraint
 } // namespace Renderer

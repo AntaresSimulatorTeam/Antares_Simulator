@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREAHURDLES_COST_H__
-# define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREAHURDLES_COST_H__
+#define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREAHURDLES_COST_H__
 
-# include <yuni/yuni.h>
-# include "../../../action.h"
-
+#include <yuni/yuni.h>
+#include "../../../action.h"
 
 namespace Antares
 {
@@ -39,43 +38,37 @@ namespace AntaresStudy
 {
 namespace Link
 {
+class HurdlesCost : public IAction
+{
+public:
+    //! The most suitable smart ptr for the class
+    typedef IAction::Ptr Ptr;
+    //! The threading policy
+    typedef IAction::ThreadingPolicy ThreadingPolicy;
 
-	class HurdlesCost : public IAction
-	{
-	public:
-		//! The most suitable smart ptr for the class
-		typedef IAction::Ptr  Ptr;
-		//! The threading policy
-		typedef IAction::ThreadingPolicy  ThreadingPolicy;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    HurdlesCost(const AnyString& fromarea, const AnyString& toarea);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		HurdlesCost(const AnyString& fromarea, const AnyString& toarea);
+    //! Destructor
+    virtual ~HurdlesCost();
+    //@}
 
-		//! Destructor
-		virtual ~HurdlesCost();
-		//@}
+protected:
+    virtual bool prepareWL(Context& ctx);
+    virtual bool performWL(Context& ctx);
 
-	protected:
-		virtual bool prepareWL(Context& ctx);
-		virtual bool performWL(Context& ctx);
+private:
+    //! From
+    Data::AreaName pOriginalFromAreaName;
+    //! To
+    Data::AreaName pOriginalToAreaName;
 
-	private:
-		//! From
-		Data::AreaName pOriginalFromAreaName;
-		//! To
-		Data::AreaName pOriginalToAreaName;
-
-	}; // class IAction
-
-
-
-
-
+}; // class IAction
 
 } // namespace Link
 } // namespace AntaresStudy

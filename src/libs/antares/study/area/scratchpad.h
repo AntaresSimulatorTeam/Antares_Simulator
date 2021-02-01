@@ -25,110 +25,106 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_AREA_SCRATCHPAD_H__
-# define __ANTARES_LIBS_STUDY_AREA_SCRATCHPAD_H__
+#define __ANTARES_LIBS_STUDY_AREA_SCRATCHPAD_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-# include <yuni/core/noncopyable.h>
-# include "../fwd.h"
-# include "../../array/matrix.h"
-# include <vector>
-# include <set>
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+#include <yuni/core/noncopyable.h>
+#include "../fwd.h"
+#include "../../array/matrix.h"
+#include <vector>
+#include <set>
 
 namespace Antares
 {
 namespace Data
 {
+/*!
+** \brief Scratchpad for temporary data performed by the solver
+*/
+class AreaScratchpad final : private Yuni::NonCopyable<AreaScratchpad>
+{
+public:
+    //! Matrix used for time-series
+    typedef Matrix<double, Yuni::sint32> TSMatrix;
 
-	/*!
-	** \brief Scratchpad for temporary data performed by the solver
-	*/
-	class AreaScratchpad final : private Yuni::NonCopyable<AreaScratchpad>
-	{
-	public:
-		//! Matrix used for time-series
-		typedef Matrix<double, Yuni::sint32> TSMatrix;
+public:
+    //! \name Constructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area);
+    //! Destructor
+    ~AreaScratchpad()
+    {
+    }
+    //@}
 
-	public:
-		//! \name Constructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area);
-		//! Destructor
-		~AreaScratchpad() {}
-		//@}
+public:
+    //! Sum of all fatal hors hydro
+    double miscGenSum[HOURS_PER_YEAR];
 
-	public:
-		//! Sum of all fatal hors hydro
-		double miscGenSum[HOURS_PER_YEAR];
+    //! Timeseries
+    struct TimeseriesData
+    {
+        TimeseriesData(Area& area);
+        //! Alias to the load time-series
+        const TSMatrix& load;
+        //! Alias to the solar time-series
+        const TSMatrix& solar;
+        //! Alias to the wind time-series
+        const TSMatrix& wind;
+    };
 
-		//! Timeseries
-		struct TimeseriesData
-		{
-			TimeseriesData(Area& area);
-			//! Alias to the load time-series
-			const TSMatrix& load;
-			//! Alias to the solar time-series
-			const TSMatrix& solar;
-			//! Alias to the wind time-series
-			const TSMatrix& wind;
-		};
+    //! Timeseries
+    TimeseriesData ts;
 
-		//! Timeseries
-		TimeseriesData ts;
+    bool hydroHasMod;
 
-		bool hydroHasMod;
+    //! if sum(365)[pumpMaxP * pumpMaxE] > 0. then pumpHasMod = true
+    //	else pumpHasMod = false
+    bool pumpHasMod;
 
-		//! if sum(365)[pumpMaxP * pumpMaxE] > 0. then pumpHasMod = true
-		//	else pumpHasMod = false
-		bool pumpHasMod;
+    //! Spinning reserve
+    // This variable is initialized once at the begining of the simulation
+    double spinningReserve[HOURS_PER_YEAR];
 
-		//! Spinning reserve
-		// This variable is initialized once at the begining of the simulation
-		double spinningReserve[HOURS_PER_YEAR];
+    //! Sum of all 'must-run' clusters
+    // This variable is initialized every MC-year
+    double mustrunSum[HOURS_PER_YEAR];
 
-		//! Sum of all 'must-run' clusters
-		// This variable is initialized every MC-year
-		double mustrunSum[HOURS_PER_YEAR];
+    //! Sum of all original 'must-run' clusters (adequacy only)
+    // This variable is initialized every MC-year
+    double originalMustrunSum[HOURS_PER_YEAR];
 
-		//! Sum of all original 'must-run' clusters (adequacy only)
-		// This variable is initialized every MC-year
-		double originalMustrunSum[HOURS_PER_YEAR];
+    //! Optimal max power (OPP) - Hydro management
+    double optimalMaxPower[DAYS_PER_YEAR];
 
-		//! Optimal max power (OPP) - Hydro management
-		double optimalMaxPower[DAYS_PER_YEAR];
+    //!
+    double pumpingMaxPower[DAYS_PER_YEAR];
 
-		//! 
-		double pumpingMaxPower[DAYS_PER_YEAR];
+    /*!
+    ** \brief Dispatchable Generation Margin
+    **
+    ** Those values, written by the output, must be calculated before
+    ** running the hydro remix.
+    */
+    double dispatchableGenerationMargin[168];
 
-		/*!
-		** \brief Dispatchable Generation Margin
-		**
-		** Those values, written by the output, must be calculated before
-		** running the hydro remix.
-		*/
-		double dispatchableGenerationMargin[168];
+    /*!
+    ** \brief Temporary variables used to compute the min/max of ConsommationsAbattues
+    ** for the area
+    **
+    ** This value is only valid wthin OPT_InitialiserLesCoutsLineaire().
+    **
+    ** \see opt_gestion_des_couts_cas_linerais.cpp (Cout progressif
+    ** pour placer la defaillance a la pointe)
+    */
+    double consoMin;
+    double consoMax;
 
-		/*!
-		** \brief Temporary variables used to compute the min/max of ConsommationsAbattues
-		** for the area
-		**
-		** This value is only valid wthin OPT_InitialiserLesCoutsLineaire().
-		**
-		** \see opt_gestion_des_couts_cas_linerais.cpp (Cout progressif
-		** pour placer la defaillance a la pointe)
-		*/
-		double consoMin;
-		double consoMax;
-
-	}; // class AreaScratchpad
-
-
-
-
+}; // class AreaScratchpad
 
 } // namespace Data
 } // namespace Antares

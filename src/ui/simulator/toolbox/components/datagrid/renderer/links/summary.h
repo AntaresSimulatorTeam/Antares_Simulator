@@ -25,13 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_LINKS_SUMMARY_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_LINKS_SUMMARY_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_LINKS_SUMMARY_H__
 
-# include <antares/wx-wrapper.h>
-# include "../../renderer.h"
-# include <yuni/core/event.h>
-# include "../../../../../application/study.h"
-
+#include <antares/wx-wrapper.h>
+#include "../../renderer.h"
+#include <yuni/core/event.h>
+#include "../../../../../application/study.h"
 
 namespace Antares
 {
@@ -43,44 +42,44 @@ namespace Renderer
 {
 namespace Links
 {
+class Summary : public virtual IRenderer
+{
+public:
+    Summary(wxWindow* parent);
+    virtual ~Summary();
 
-	class Summary : public virtual IRenderer
-	{
-	public:
-		Summary(wxWindow* parent);
-		virtual ~Summary();
+    virtual int width() const
+    {
+        return 2;
+    }
+    virtual int height() const;
 
-		virtual int width() const {return 2;}
-		virtual int height() const;
+    virtual wxString columnCaption(int colIndx) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual wxString rowCaption(int rowIndx) const;
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual wxString cellValue(int x, int y) const;
 
-		virtual wxString cellValue(int x, int y) const;
+    virtual double cellNumericValue(int x, int y) const;
 
-		virtual double cellNumericValue(int x, int y) const;
+    virtual bool cellValue(int x, int y, const Yuni::String& value);
 
-		virtual bool cellValue(int x, int y, const Yuni::String& value);
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    {
+        // Do nothing
+    }
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{
-			// Do nothing
-		}
+    virtual bool valid() const
+    {
+        return height() > 0;
+    }
 
-		virtual bool valid() const {return height() > 0;}
+    virtual IRenderer::CellStyle cellStyle(int x, int y) const;
 
-		virtual IRenderer::CellStyle cellStyle(int x, int y) const;
+protected:
+    wxWindow* pControl;
 
-
-	protected:
-		wxWindow* pControl;
-
-	}; // class Summary
-
-
-
-
+}; // class Summary
 
 } // namespace Links
 } // namespace Renderer

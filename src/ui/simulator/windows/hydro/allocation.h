@@ -25,12 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_WINDOWS_HYDRO_ALLOCATION_H__
-# define __ANTARES_APPLICATION_WINDOWS_HYDRO_ALLOCATION_H__
+#define __ANTARES_APPLICATION_WINDOWS_HYDRO_ALLOCATION_H__
 
-# include <antares/wx-wrapper.h>
-# include <ui/common/component/panel.h>
-
-
+#include <antares/wx-wrapper.h>
+#include <ui/common/component/panel.h>
 
 namespace Antares
 {
@@ -38,25 +36,20 @@ namespace Window
 {
 namespace Hydro
 {
+class Allocation : public Component::Panel
+{
+public:
+    //! name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    Allocation(wxWindow* parent);
+    //! Destructor
+    virtual ~Allocation();
+    //@}
 
-	class Allocation : public Component::Panel
-	{
-	public:
-		//! name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		Allocation(wxWindow* parent);
-		//! Destructor
-		virtual ~Allocation();
-		//@}
-
-	}; // class Series
-
-
-
-
+}; // class Series
 
 } // namespace Hydro
 } // namespace Window

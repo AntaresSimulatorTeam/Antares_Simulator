@@ -25,60 +25,51 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_FWD_H__
-# define __ANTARES_LIBS_STUDY_ACTION_FWD_H__
+#define __ANTARES_LIBS_STUDY_ACTION_FWD_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-# include "../study.h"
-# include "behavior.h"
-# include "state.h"
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+#include "../study.h"
+#include "behavior.h"
+#include "state.h"
 
 namespace Antares
 {
 namespace Action
 {
+enum LevelOfDetails
+{
+    //! For standard purposes
+    lodStandard = 0,
+    //! For advanced purposes
+    lodAdvanced,
+};
 
+class IAction;
 
-	enum LevelOfDetails
-	{
-		//! For standard purposes
-		lodStandard = 0,
-		//! For advanced purposes
-		lodAdvanced,
-	};
+//! Property map
+typedef std::map<Yuni::String, Yuni::String> PropertyMap;
 
+class ActionInformations
+{
+public:
+    ActionInformations() : behavior(bhOverwrite), state(stUnknown)
+    {
+    }
 
-	class IAction;
+public:
+    //! Behavior of the action
+    Behavior behavior;
+    //! State of the action
+    State state;
+    //! Caption
+    Yuni::String caption;
+    //! Message
+    Yuni::String message;
+    //! Properties
+    PropertyMap property;
 
-	//! Property map
-	typedef std::map<Yuni::String, Yuni::String>  PropertyMap;
-
-
-
-
-	class ActionInformations
-	{
-	public:
-		ActionInformations()
-			:behavior(bhOverwrite), state(stUnknown)
-		{}
-
-	public:
-		//! Behavior of the action
-		Behavior behavior;
-		//! State of the action
-		State state;
-		//! Caption
-		Yuni::String caption;
-		//! Message
-		Yuni::String message;
-		//! Properties
-		PropertyMap  property;
-
-	}; // class ActionInformations
-
-
+}; // class ActionInformations
 
 } // namespace Action
 } // namespace Antares

@@ -29,6 +29,3 @@
 
 /*! Global instance of a MPS problem */
 PROBLEME_MPS Mps;
-
-
-

@@ -29,7 +29,6 @@
 #include "area.h"
 #include <cassert>
 
-
 using namespace Yuni;
 
 namespace Antares
@@ -38,51 +37,44 @@ namespace Solver
 {
 namespace Variable
 {
+template<>
+uint64 Areas<NEXTTYPE>::memoryUsage() const
+{
+    Yuni::uint64 result = 0;
+    for (unsigned int i = 0; i != pAreaCount; ++i)
+    {
+        result += sizeof(NextType) + sizeof(void*); // overhead vector
+        result += pAreas[i].memoryUsage();
+    }
+    return result;
+}
 
-	template<>
-	uint64 Areas<NEXTTYPE>::memoryUsage() const
-	{
-		Yuni::uint64 result = 0;
-		for (unsigned int i = 0; i != pAreaCount; ++i)
-		{
-			result += sizeof(NextType) + sizeof(void*); // overhead vector
-			result += pAreas[i].memoryUsage();
-		}
-		return result;
-	}
+template<>
+void Areas<NEXTTYPE>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
+{
+    auto end = u.study.areas.end();
+    for (auto area = u.study.areas.begin(); area != end; ++area)
+    {
+        u.area = area->second;
 
+        u.requiredMemoryForOutput += sizeof(NextType) + sizeof(void*) /*overhead vector*/;
+        u.overheadDiskSpaceForSingleAreaOrLink();
 
-	template<>
-	void Areas<NEXTTYPE>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-	{
-		auto end = u.study.areas.end();
-		for (auto area = u.study.areas.begin(); area != end; ++area)
-		{
-			u.area = area->second;
-
-			u.requiredMemoryForOutput += sizeof(NextType) + sizeof(void*) /*overhead vector*/;
-			u.overheadDiskSpaceForSingleAreaOrLink();
-
-			// year-by-year
-			if (!u.gatheringInformationsForInput)
-			{
-				if (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft)
-				{
-					for (unsigned int i = 0; i != u.years; ++i)
-						u.overheadDiskSpaceForSingleAreaOrLink();
-				}
-			}
-			// next
-			NextType::EstimateMemoryUsage(u);
-		}
-		u.area = nullptr;
-	}
-
-
-
-
+        // year-by-year
+        if (!u.gatheringInformationsForInput)
+        {
+            if (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft)
+            {
+                for (unsigned int i = 0; i != u.years; ++i)
+                    u.overheadDiskSpaceForSingleAreaOrLink();
+            }
+        }
+        // next
+        NextType::EstimateMemoryUsage(u);
+    }
+    u.area = nullptr;
+}
 
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
-

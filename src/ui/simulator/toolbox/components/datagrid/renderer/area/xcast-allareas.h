@@ -25,13 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_XCAST_ALL_AREAS_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_XCAST_ALL_AREAS_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_XCAST_ALL_AREAS_H__
 
-# include <antares/wx-wrapper.h>
-# include "../../renderer.h"
-# include <antares/study.h>
-# include <yuni/core/event.h>
-
+#include <antares/wx-wrapper.h>
+#include "../../renderer.h"
+#include <antares/study.h>
+#include <yuni/core/event.h>
 
 namespace Antares
 {
@@ -41,64 +40,61 @@ namespace Datagrid
 {
 namespace Renderer
 {
+template<enum Data::TimeSeries T>
+class XCastAllAreas final : public Renderer::IRenderer
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    XCastAllAreas(wxWindow* parent, Toolbox::InputSelector::Area* notifier);
 
+    //! Destructor
+    virtual ~XCastAllAreas();
+    //@}
 
-	template<enum Data::TimeSeries T>
-	class XCastAllAreas final : public Renderer::IRenderer
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		XCastAllAreas(wxWindow* parent, Toolbox::InputSelector::Area* notifier);
+    virtual int width() const;
 
-		//! Destructor
-		virtual ~XCastAllAreas();
-		//@}
+    virtual int height() const;
 
-		virtual int width() const;
+    virtual wxString columnCaption(int colIndx) const;
 
-		virtual int height() const;
+    virtual wxString rowCaption(int rowIndx) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual wxString cellValue(int, int) const;
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual double cellNumericValue(int, int) const;
 
-		virtual wxString cellValue(int, int) const;
+    virtual bool cellValue(int x, int y, const Yuni::String& value);
 
-		virtual double cellNumericValue(int,int) const;
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    { /*Do nothing*/
+    }
 
-		virtual bool cellValue(int x, int y, const Yuni::String& value);
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+    virtual wxColour cellBackgroundColor(int, int) const;
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{/*Do nothing*/}
+    virtual bool valid() const;
 
-		virtual IRenderer::CellStyle cellStyle(int col, int row) const;
-		virtual wxColour cellBackgroundColor(int, int) const;
+protected:
+    virtual void onUpdate()
+    {
+    }
+    void onAreaRenamed(Data::Area* area);
 
-		virtual bool valid() const;
+private:
+    wxWindow* pControl;
+    Toolbox::InputSelector::Area* pNotifier;
 
-	protected:
-		virtual void onUpdate() {}
-		void onAreaRenamed(Data::Area* area);
-
-	private:
-		wxWindow* pControl;
-		Toolbox::InputSelector::Area* pNotifier;
-
-	}; // class XCastAllAreas
-
-
-
-
+}; // class XCastAllAreas
 
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
 } // namespace Antares
 
-# include "xcast-allareas.hxx"
+#include "xcast-allareas.hxx"
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_XCAST_ALL_AREAS_H__

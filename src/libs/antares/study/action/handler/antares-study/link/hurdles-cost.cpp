@@ -28,7 +28,6 @@
 #include "hurdles-cost.h"
 #include "../../../../area/constants.h"
 
-
 namespace Antares
 {
 namespace Action
@@ -37,76 +36,67 @@ namespace AntaresStudy
 {
 namespace Link
 {
+HurdlesCost::HurdlesCost(const AnyString& fromarea, const AnyString& toarea) :
+ pOriginalFromAreaName(fromarea), pOriginalToAreaName(toarea)
+{
+    pInfos.caption << "Hurdles-Cost";
+}
 
-	HurdlesCost::HurdlesCost(const AnyString& fromarea, const AnyString& toarea) :
-		pOriginalFromAreaName(fromarea),
-		pOriginalToAreaName(toarea)
-	{
-		pInfos.caption << "Hurdles-Cost";
-	}
+HurdlesCost::~HurdlesCost()
+{
+}
 
+bool HurdlesCost::prepareWL(Context&)
+{
+    pInfos.message.clear();
+    pInfos.state = stReady;
+    switch (pInfos.behavior)
+    {
+    case bhOverwrite:
+        pInfos.message << "The hurdles-cost will be copied";
+        break;
+    default:
+        pInfos.state = stNothingToDo;
+        break;
+    }
 
-	HurdlesCost::~HurdlesCost()
-	{}
+    return true;
+}
 
+bool HurdlesCost::performWL(Context& ctx)
+{
+    if (ctx.link && ctx.extStudy)
+    {
+        Data::AreaName idFrom;
+        Data::AreaName idTo;
+        TransformNameIntoID(pOriginalFromAreaName, idFrom);
+        TransformNameIntoID(pOriginalToAreaName, idTo);
 
-	bool HurdlesCost::prepareWL(Context&)
-	{
-		pInfos.message.clear();
-		pInfos.state = stReady;
-		switch (pInfos.behavior)
-		{
-			case bhOverwrite:
-				pInfos.message << "The hurdles-cost will be copied";
-				break;
-			default:
-				pInfos.state = stNothingToDo;
-				break;
-		}
+        Data::AreaLink* source;
+        if (pOriginalFromAreaName < pOriginalToAreaName)
+            source = ctx.extStudy->areas.findLink(idFrom, idTo);
+        else
+            source = ctx.extStudy->areas.findLink(idTo, idFrom);
 
-		return true;
-	}
+        if (source && source != ctx.link)
+        {
+            source->data.invalidate(true);
+            ctx.link->data.invalidate(true);
 
+            ctx.link->data.pasteToColumn((uint)Data::fhlHurdlesCostDirect,
+                                         source->data.entry[Data::fhlHurdlesCostDirect]);
+            ctx.link->data.pasteToColumn((uint)Data::fhlHurdlesCostIndirect,
+                                         source->data.entry[Data::fhlHurdlesCostIndirect]);
+            ctx.link->useHurdlesCost = source->useHurdlesCost;
 
-	bool HurdlesCost::performWL(Context& ctx)
-	{
-		if (ctx.link && ctx.extStudy)
-		{
-			Data::AreaName idFrom;
-			Data::AreaName idTo;
-			TransformNameIntoID(pOriginalFromAreaName, idFrom);
-			TransformNameIntoID(pOriginalToAreaName,   idTo);
-
-			Data::AreaLink* source;
-			if (pOriginalFromAreaName < pOriginalToAreaName)
-				source = ctx.extStudy->areas.findLink(idFrom, idTo);
-			else
-				source = ctx.extStudy->areas.findLink(idTo, idFrom);
-
-			if (source && source != ctx.link)
-			{
-				source->data.invalidate(true);
-				ctx.link->data.invalidate(true);
-
-				ctx.link->data.pasteToColumn((uint) Data::fhlHurdlesCostDirect,
-					source->data.entry[Data::fhlHurdlesCostDirect]);
-				ctx.link->data.pasteToColumn((uint) Data::fhlHurdlesCostIndirect,
-					source->data.entry[Data::fhlHurdlesCostIndirect]);
-				ctx.link->useHurdlesCost = source->useHurdlesCost;
-
-				ctx.link->assetType = source->assetType;
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-
-
+            ctx.link->assetType = source->assetType;
+            return true;
+        }
+    }
+    return false;
+}
 
 } // namespace Link
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
-

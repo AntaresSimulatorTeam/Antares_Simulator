@@ -12,141 +12,132 @@
 #include "../../yuni.h"
 #include "../string.h"
 
-
-
 namespace Yuni
 {
 namespace Private
 {
 namespace LogImpl
 {
+// Forward declaration
+template<class LogT, class V, int E = V::enabled>
+class Buffer;
 
-	// Forward declaration
-	template<class LogT, class V, int E = V::enabled> class Buffer;
+/*!
+** \brief The buffer for the message
+**
+** \internal This is an intermediate class that handles a temporary buffer where
+** the message can be built. The message will be dispatched to the static list
+** of handlers when this class is destroyed. The method `internalFlush()` is called
+** , which ensures thread-safety (if required) while the message is passing through
+** the handlers.
+**
+** \tparam V The verbosity level of the message
+** \tparam E A non-zero value if the message must be managed
+*/
+template<class LogT, class V, int E>
+class YUNI_DECL Buffer final
+{
+public:
+    //! Type of the calling logger
+    typedef LogT LoggerType;
 
+public:
+    //! \name Constructos & Destructor
+    //@{
+    inline Buffer(const LoggerType& l) : pLogger(l)
+    {
+    }
 
+    template<typename U>
+    inline Buffer(const LoggerType& l, U u) : pLogger(l)
+    {
+        pBuffer.append(u);
+    }
 
+    ~Buffer()
+    {
+        // Dispatching the messages to the handlers
+        // For example, the buffer will be written to the output
+        pLogger.template dispatchMessageToHandlers<V>(pBuffer);
+    }
+    //@}
 
-	/*!
-	** \brief The buffer for the message
-	**
-	** \internal This is an intermediate class that handles a temporary buffer where
-	** the message can be built. The message will be dispatched to the static list
-	** of handlers when this class is destroyed. The method `internalFlush()` is called
-	** , which ensures thread-safety (if required) while the message is passing through
-	** the handlers.
-	**
-	** \tparam V The verbosity level of the message
-	** \tparam E A non-zero value if the message must be managed
-	*/
-	template<class LogT, class V, int E>
-	class YUNI_DECL Buffer final
-	{
-	public:
-		//! Type of the calling logger
-		typedef LogT LoggerType;
+    template<typename U>
+    Buffer& operator<<(const U& u)
+    {
+        // Appending the piece of message to the buffer
+        pBuffer.append(u);
+        return *this;
+    }
 
-	public:
-		//! \name Constructos & Destructor
-		//@{
-		inline Buffer(const LoggerType& l) :
-			pLogger(l)
-		{}
+    void appendFormat(const char f[], ...)
+    {
+        va_list parg;
+        va_start(parg, f);
+        pBuffer.vappendFormat(f, parg);
+        va_end(parg);
+    }
 
-		template<typename U>
-		inline Buffer(const LoggerType& l, U u) :
-			pLogger(l)
-		{
-			pBuffer.append(u);
-		}
+    void vappendFormat(const char f[], va_list parg)
+    {
+        pBuffer.vappendFormat(f, parg);
+    }
 
-		~Buffer()
-		{
-			// Dispatching the messages to the handlers
-			// For example, the buffer will be written to the output
-			pLogger.template dispatchMessageToHandlers<V>(pBuffer);
-		}
-		//@}
+private:
+    //! Reference to the original logger
+    const LoggerType& pLogger;
 
-		template<typename U> Buffer& operator << (const U& u)
-		{
-			// Appending the piece of message to the buffer
-			pBuffer.append(u);
-			return *this;
-		}
+    /*!
+    ** \brief Buffer that contains the message
+    **
+    ** The chunk size can not be merely the default one; Log entries often
+    ** contain path of filename for example.
+    */
+    Yuni::CString<1024> pBuffer;
 
-		void appendFormat(const char f[], ...)
-		{
-			va_list parg;
-			va_start(parg, f);
-			pBuffer.vappendFormat(f, parg);
-			va_end(parg);
-		}
+}; // class Buffer
 
-		void vappendFormat(const char f[], va_list parg)
-		{
-			pBuffer.vappendFormat(f, parg);
-		}
+// Specialization when a verbosty level is disabled
+template<class LogT, class V>
+class YUNI_DECL Buffer<LogT, V, 0> final
+{
+public:
+    //! Type of the calling logger
+    typedef LogT LoggerType;
 
+public:
+    Buffer(const LoggerType&)
+    {
+    }
 
-	private:
-		//! Reference to the original logger
-		const LoggerType& pLogger;
+    template<typename U>
+    Buffer(const LoggerType&, U)
+    {
+    }
 
-		/*!
-		** \brief Buffer that contains the message
-		**
-		** The chunk size can not be merely the default one; Log entries often
-		** contain path of filename for example.
-		*/
-		Yuni::CString<1024> pBuffer;
+    ~Buffer()
+    {
+    }
 
-	}; // class Buffer
+    template<typename U>
+    const Buffer& operator<<(const U&) const
+    {
+        // Do nothing - Disabled
+        return *this;
+    }
 
+    void appendFormat(const char[], ...)
+    {
+        // Do nothing
+    }
 
+    void vappendFormat(const char[], va_list)
+    {
+        // Do nothing
+    }
 
-
-
-
-	// Specialization when a verbosty level is disabled
-	template<class LogT, class V>
-	class YUNI_DECL Buffer<LogT, V, 0> final
-	{
-	public:
-		//! Type of the calling logger
-		typedef LogT LoggerType;
-
-	public:
-		Buffer(const LoggerType&) {}
-
-		template<typename U> Buffer(const LoggerType&, U) {}
-
-		~Buffer()
-		{}
-
-		template<typename U> const Buffer& operator << (const U&) const
-		{
-			// Do nothing - Disabled
-			return *this;
-		}
-
-		void appendFormat(const char [], ...)
-		{
-			// Do nothing
-		}
-
-		void vappendFormat(const char [], va_list)
-		{
-			// Do nothing
-		}
-
-	}; // class Buffer
-
-
-
-
+}; // class Buffer
 
 } // namespace LogImpl
 } // namespace Private
 } // namespace Yuni
-

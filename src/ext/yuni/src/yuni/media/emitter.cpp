@@ -15,165 +15,152 @@
 #include "../private/media/openal.h"
 #include <iostream>
 
-
 namespace Yuni
 {
 namespace Media
 {
+const float Emitter::DefaultPitch = 1.0f;
+const float Emitter::DefaultGain = 1.0f;
 
-	const float Emitter::DefaultPitch = 1.0f;
-	const float Emitter::DefaultGain  = 1.0f;
+bool Emitter::attachSourceDispatched(Source::Ptr& source)
+{
+    // Check source validity
+    if (!source || !source->valid())
+    {
+        std::cerr << "Invalid Source !" << std::endl;
+        return false;
+    }
 
+    pSource = source;
+    if (!pSource->prepareDispatched(pID))
+    {
+        std::cerr << "Failed loading sources !" << std::endl;
+        return false;
+    }
+    return true;
+}
 
+bool Emitter::detachSourceDispatched()
+{
+    if (!pReady || !pSource)
+        return false;
 
+    stopSourceDispatched();
 
-	bool Emitter::attachSourceDispatched(Source::Ptr& source)
-	{
-		// Check source validity
-		if (!source || !source->valid())
-		{
-			std::cerr << "Invalid Source !" << std::endl;
-			return false;
-		}
+    Private::Media::OpenAL::UnbindBufferFromSource(pID);
+    pSource = nullptr;
+    return true;
+}
 
-		pSource = source;
-		if (!pSource->prepareDispatched(pID))
-		{
-			std::cerr << "Failed loading sources !" << std::endl;
-			return false;
-		}
-		return true;
-	}
+bool Emitter::playSourceDispatched()
+{
+    if (!pSource)
+        return false;
 
+    pPlaying = Private::Media::OpenAL::PlaySource(pID);
+    if (!pPlaying)
+    {
+        std::cerr << "Emitter " << pID << " failed playing !" << std::endl;
+        Private::Media::OpenAL::UnqueueBufferFromSource(pID);
+        return false;
+    }
+    // Store start time
+    Yuni::timeval now;
+    YUNI_SYSTEM_GETTIMEOFDAY(&now, NULL);
+    pStartTime = now.tv_sec;
+    return true;
+}
 
-	bool Emitter::detachSourceDispatched()
-	{
-		if (!pReady || !pSource)
-			return false;
+bool Emitter::playSourceDispatched(Source::Ptr& source)
+{
+    if (!pReady && !prepareDispatched())
+        return false;
 
-		stopSourceDispatched();
+    if (!attachSourceDispatched(source))
+        return false;
 
-		Private::Media::OpenAL::UnbindBufferFromSource(pID);
-		pSource = nullptr;
-		return true;
-	}
+    return playSourceDispatched();
+}
 
+bool Emitter::pauseSourceDispatched()
+{
+    if (!pPlaying)
+        return false;
 
-	bool Emitter::playSourceDispatched()
-	{
-		if (!pSource)
-			return false;
+    Private::Media::OpenAL::PauseSource(pID);
+    return true;
+}
 
-		pPlaying = Private::Media::OpenAL::PlaySource(pID);
-		if (!pPlaying)
-		{
-			std::cerr << "Emitter " << pID << " failed playing !" << std::endl;
-			Private::Media::OpenAL::UnqueueBufferFromSource(pID);
-			return false;
-		}
-		// Store start time
-		Yuni::timeval now;
-		YUNI_SYSTEM_GETTIMEOFDAY(&now, NULL);
-		pStartTime = now.tv_sec;
-		return true;
-	}
+bool Emitter::stopSourceDispatched()
+{
+    if (!pPlaying && !pPaused)
+        return false;
 
+    Private::Media::OpenAL::StopSource(pID);
+    return pSource->rewindDispatched(pID);
+}
 
-	bool Emitter::playSourceDispatched(Source::Ptr& source)
-	{
-		if (!pReady && !prepareDispatched())
-			return false;
+bool Emitter::updateDispatched()
+{
+    if (!pReady)
+        return false;
+    pPlaying = Private::Media::OpenAL::IsSourcePlaying(pID);
+    pPaused = Private::Media::OpenAL::IsSourcePaused(pID);
+    // If not playing, nothing else to do
+    if (!pPlaying)
+        return false;
+    if (pModified)
+    {
+        if (!Private::Media::OpenAL::MoveSource(pID, pPosition, pVelocity, pDirection))
+        {
+            std::cerr << "Source position update failed !" << std::endl;
+            return false;
+        }
+        if (!Private::Media::OpenAL::ModifySource(
+              pID, DefaultPitch, pGain, DefaultAttenuation, false))
+        {
+            std::cerr << "Source characteristics update failed !" << std::endl;
+            return false;
+        }
+    }
+    if (pSource)
+    {
+        if (!pSource->updateDispatched(pID))
+        {
+            if (pLoop)
+            {
+                pSource->rewindDispatched(pID);
+                pSource->updateDispatched(pID);
+            }
+        }
+    }
+    return true;
+}
 
-		if (!attachSourceDispatched(source))
-			return false;
+bool Emitter::prepareDispatched()
+{
+    if (pReady)
+        return true;
 
-		return playSourceDispatched();
-	}
+    unsigned int source = Private::Media::OpenAL::CreateSource(
+      pPosition, pVelocity, pDirection, DefaultPitch, pGain, DefaultAttenuation, pLoop);
 
+    pID = source;
+    pReady = (source > 0);
+    return pReady;
+}
 
-	bool Emitter::pauseSourceDispatched()
-	{
-		if (!pPlaying)
-			return false;
+float Emitter::elapsedTime() const
+{
+    ThreadingPolicy::MutexLocker locker(*this);
 
-		Private::Media::OpenAL::PauseSource(pID);
-		return true;
-	}
-
-
-	bool Emitter::stopSourceDispatched()
-	{
-		if (!pPlaying && !pPaused)
-			return false;
-
-		Private::Media::OpenAL::StopSource(pID);
-		return pSource->rewindDispatched(pID);
-	}
-
-
-	bool Emitter::updateDispatched()
-	{
-		if (!pReady)
-			return false;
-		pPlaying = Private::Media::OpenAL::IsSourcePlaying(pID);
-		pPaused = Private::Media::OpenAL::IsSourcePaused(pID);
-		// If not playing, nothing else to do
-		if (!pPlaying)
-			return false;
-		if (pModified)
-		{
-			if (!Private::Media::OpenAL::MoveSource(pID, pPosition, pVelocity, pDirection))
-			{
-				std::cerr << "Source position update failed !" << std::endl;
-				return false;
-			}
-			if (!Private::Media::OpenAL::ModifySource(pID, DefaultPitch, pGain, DefaultAttenuation, false))
-			{
-				std::cerr << "Source characteristics update failed !" << std::endl;
-				return false;
-			}
-		}
-		if (pSource)
-		{
-			if (!pSource->updateDispatched(pID))
-			{
-				if (pLoop)
-				{
-					pSource->rewindDispatched(pID);
-					pSource->updateDispatched(pID);
-				}
-			}
-		}
-		return true;
-	}
-
-
-	bool Emitter::prepareDispatched()
-	{
-		if (pReady)
-			return true;
-
-		unsigned int source = Private::Media::OpenAL::CreateSource(pPosition, pVelocity,
-			pDirection, DefaultPitch, pGain, DefaultAttenuation, pLoop);
-
-		pID = source;
-		pReady = (source > 0);
-		return pReady;
-	}
-
-
-	float Emitter::elapsedTime() const
-	{
-		ThreadingPolicy::MutexLocker locker(*this);
-
-		if (!pPlaying)
-			return 0;
-		return pSource->elapsedTime();
-		// Yuni::timeval now;
-		// YUNI_SYSTEM_GETTIMEOFDAY(&now, NULL);
-		// return now.tv_sec - pStartTime;
-	}
-
+    if (!pPlaying)
+        return 0;
+    return pSource->elapsedTime();
+    // Yuni::timeval now;
+    // YUNI_SYSTEM_GETTIMEOFDAY(&now, NULL);
+    // return now.tv_sec - pStartTime;
+}
 
 } // namespace Media
 } // namespace Yuni

@@ -11,8 +11,6 @@
 #pragma once
 #include "preprocessor/std.h"
 
-
-
 /*!
 ** \brief foreach..else statement
 ** \ingroup Core
@@ -37,23 +35,32 @@
 **
 ** \note C++11 is required (auto keyword)
 */
-# define YUNI_FOREACH(var, container) \
-		for (bool YUNI_JOIN(yn_continue_, __LINE__) = true; YUNI_JOIN(yn_continue_, __LINE__); ) \
-			for (auto& YUNI_JOIN(yn_list_, __LINE__) = (container); YUNI_JOIN(yn_continue_, __LINE__); YUNI_JOIN(yn_continue_, __LINE__) = false) \
-				if (YUNI_JOIN(yn_list_, __LINE__).size() > 0) \
-					for (auto _yn_each_it = YUNI_JOIN(yn_list_, __LINE__).begin(); YUNI_JOIN(yn_continue_, __LINE__); YUNI_JOIN(yn_continue_, __LINE__) = false) \
-						for (bool _foreach_continue = true; _foreach_continue && _yn_each_it != YUNI_JOIN(yn_list_, __LINE__).end(); ++_yn_each_it) \
-							for (var = *_yn_each_it; !(_foreach_continue = !_foreach_continue); _foreach_continue = false) \
-				/* else statement [optional] */
+#define YUNI_FOREACH(var, container)                                                               \
+    for (bool YUNI_JOIN(yn_continue_, __LINE__) = true; YUNI_JOIN(yn_continue_, __LINE__);)        \
+        for (auto& YUNI_JOIN(yn_list_, __LINE__) = (container); YUNI_JOIN(yn_continue_, __LINE__); \
+             YUNI_JOIN(yn_continue_, __LINE__) = false)                                            \
+            if (YUNI_JOIN(yn_list_, __LINE__).size() > 0)                                          \
+                for (auto _yn_each_it = YUNI_JOIN(yn_list_, __LINE__).begin();                     \
+                     YUNI_JOIN(yn_continue_, __LINE__);                                            \
+                     YUNI_JOIN(yn_continue_, __LINE__) = false)                                    \
+                    for (bool _foreach_continue = true;                                            \
+                         _foreach_continue && _yn_each_it != YUNI_JOIN(yn_list_, __LINE__).end();  \
+                         ++_yn_each_it)                                                            \
+                        for (var = *_yn_each_it; !(_foreach_continue = !_foreach_continue);        \
+                             _foreach_continue = false)                                            \
+    /* else statement [optional] */
 
-
-# define YUNI_REVERSE_FOREACH(var, container) \
-		for (bool YUNI_JOIN(yn_continue_, __LINE__) = true; YUNI_JOIN(yn_continue_, __LINE__); ) \
-			for (auto& YUNI_JOIN(yn_list_, __LINE__) = (container); YUNI_JOIN(yn_continue_, __LINE__); YUNI_JOIN(yn_continue_, __LINE__) = false) \
-				if (YUNI_JOIN(yn_list_, __LINE__).size() > 0) \
-					for (auto _yn_each_it = YUNI_JOIN(yn_list_, __LINE__).rbegin(); YUNI_JOIN(yn_continue_, __LINE__); YUNI_JOIN(yn_continue_, __LINE__) = false) \
-						for (bool _foreach_continue = true; _foreach_continue && _yn_each_it != YUNI_JOIN(yn_list_, __LINE__).rend(); ++_yn_each_it) \
-							for (var = *_yn_each_it; !(_foreach_continue = !_foreach_continue); _foreach_continue = false) \
-				/* else statement [optional] */
-
-
+#define YUNI_REVERSE_FOREACH(var, container)                                                       \
+    for (bool YUNI_JOIN(yn_continue_, __LINE__) = true; YUNI_JOIN(yn_continue_, __LINE__);)        \
+        for (auto& YUNI_JOIN(yn_list_, __LINE__) = (container); YUNI_JOIN(yn_continue_, __LINE__); \
+             YUNI_JOIN(yn_continue_, __LINE__) = false)                                            \
+            if (YUNI_JOIN(yn_list_, __LINE__).size() > 0)                                          \
+                for (auto _yn_each_it = YUNI_JOIN(yn_list_, __LINE__).rbegin();                    \
+                     YUNI_JOIN(yn_continue_, __LINE__);                                            \
+                     YUNI_JOIN(yn_continue_, __LINE__) = false)                                    \
+                    for (bool _foreach_continue = true;                                            \
+                         _foreach_continue && _yn_each_it != YUNI_JOIN(yn_list_, __LINE__).rend(); \
+                         ++_yn_each_it)                                                            \
+                        for (var = *_yn_each_it; !(_foreach_continue = !_foreach_continue);        \
+                             _foreach_continue = false)                                            \
+    /* else statement [optional] */

@@ -25,42 +25,16 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "opt_structure_probleme_a_resoudre.h"
 
+#include "../simulation/simulation.h"
+#include "../simulation/sim_structure_donnees.h"
+#include "../simulation/sim_extern_variables_globales.h"
 
+#include "opt_fonctions.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# include "opt_structure_probleme_a_resoudre.h"
-
-# include "../simulation/simulation.h"
-# include "../simulation/sim_structure_donnees.h"
-# include "../simulation/sim_extern_variables_globales.h"
- 
-# include "opt_fonctions.h"
-
-# include "spx_constantes_externes.h"
-# include "../simulation/sim_structure_probleme_adequation.h"
+#include "spx_constantes_externes.h"
+#include "../simulation/sim_structure_probleme_adequation.h"
 
 #include <antares/logs.h>
 #include <antares/study.h>
@@ -69,78 +43,93 @@ using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
 
-
-
-
-void RenseignerDonneesCoutsDemarrage( PROBLEME_HEBDO * ProblemeHebdo )
+void RenseignerDonneesCoutsDemarrage(PROBLEME_HEBDO* ProblemeHebdo)
 {
-int Pays; int Index; PALIERS_THERMIQUES * PaliersThermiquesDuPays; double X; char Flag;
+    int Pays;
+    int Index;
+    PALIERS_THERMIQUES* PaliersThermiquesDuPays;
+    double X;
+    char Flag;
 
-if ( ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES ) return;
+    if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
+        return;
 
-srand(1);
+    srand(1);
 
-for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ ) {
-	PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
-	
-	for ( Index = 0 ; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques ; Index++ ) {			
-	  
-    PaliersThermiquesDuPays->CoutDeDemarrageDUnGroupeDuPalierThermique[Index] = 10 *
-		  fabs(PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Index]->CoutHoraireDeProductionDuPalierThermiqueRef[1]) *
-			(0.5 * PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Index]->PuissanceDisponibleDuPalierThermique[1]+1);
+    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    {
+        PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
 
+        for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
+        {
+            PaliersThermiquesDuPays->CoutDeDemarrageDUnGroupeDuPalierThermique[Index]
+              = 10
+                * fabs(PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Index]
+                         ->CoutHoraireDeProductionDuPalierThermiqueRef[1])
+                * (0.5
+                     * PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Index]
+                         ->PuissanceDisponibleDuPalierThermique[1]
+                   + 1);
 
-		if ( PaliersThermiquesDuPays->CoutDeDemarrageDUnGroupeDuPalierThermique[Index] > 5.e+4 ) {
-		  PaliersThermiquesDuPays->CoutDeDemarrageDUnGroupeDuPalierThermique[Index] = 5.e+4;
-		}
-			
-    PaliersThermiquesDuPays->CoutDArretDUnGroupeDuPalierThermique[Index] = 0.;	
-		
-	  
-    PaliersThermiquesDuPays->CoutFixeDeMarcheDUnGroupeDuPalierThermique[Index] = 0.1 * 
-		  fabs(PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Index]->CoutHoraireDeProductionDuPalierThermiqueRef[1]) *
-			(1.0 * PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Index]->PuissanceDisponibleDuPalierThermique[1]+1);		
+            if (PaliersThermiquesDuPays->CoutDeDemarrageDUnGroupeDuPalierThermique[Index] > 5.e+4)
+            {
+                PaliersThermiquesDuPays->CoutDeDemarrageDUnGroupeDuPalierThermique[Index] = 5.e+4;
+            }
 
-		PaliersThermiquesDuPays->CoutFixeDeMarcheDUnGroupeDuPalierThermique[Index] = 0.001 * PaliersThermiquesDuPays->CoutDeDemarrageDUnGroupeDuPalierThermique[Index];
+            PaliersThermiquesDuPays->CoutDArretDUnGroupeDuPalierThermique[Index] = 0.;
 
+            PaliersThermiquesDuPays->CoutFixeDeMarcheDUnGroupeDuPalierThermique[Index]
+              = 0.1
+                * fabs(PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Index]
+                         ->CoutHoraireDeProductionDuPalierThermiqueRef[1])
+                * (1.0
+                     * PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Index]
+                         ->PuissanceDisponibleDuPalierThermique[1]
+                   + 1);
 
+            PaliersThermiquesDuPays->CoutFixeDeMarcheDUnGroupeDuPalierThermique[Index]
+              = 0.001 * PaliersThermiquesDuPays->CoutDeDemarrageDUnGroupeDuPalierThermique[Index];
 
-Flag = 0;
-if ( PaliersThermiquesDuPays->TailleUnitaireDUnGroupeDuPalierThermique[Index] > 2.e+3 ) {
-  printf("RenseignerDonneesCoutsDemarrage: Pays %d Index %d TailleUnitaireDUnGroupeDuPalierThermique %e\n",Pays,Index,PaliersThermiquesDuPays->TailleUnitaireDUnGroupeDuPalierThermique[Index]);
-  PaliersThermiquesDuPays->TailleUnitaireDUnGroupeDuPalierThermique[Index] = 2.e+3;
-	Flag = 1;
-}
+            Flag = 0;
+            if (PaliersThermiquesDuPays->TailleUnitaireDUnGroupeDuPalierThermique[Index] > 2.e+3)
+            {
+                printf("RenseignerDonneesCoutsDemarrage: Pays %d Index %d "
+                       "TailleUnitaireDUnGroupeDuPalierThermique %e\n",
+                       Pays,
+                       Index,
+                       PaliersThermiquesDuPays->TailleUnitaireDUnGroupeDuPalierThermique[Index]);
+                PaliersThermiquesDuPays->TailleUnitaireDUnGroupeDuPalierThermique[Index] = 2.e+3;
+                Flag = 1;
+            }
 
+            PaliersThermiquesDuPays->PmaxDUnGroupeDuPalierThermique[Index]
+              = PaliersThermiquesDuPays->TailleUnitaireDUnGroupeDuPalierThermique[Index];
 
-		
-    PaliersThermiquesDuPays->PmaxDUnGroupeDuPalierThermique[Index] = PaliersThermiquesDuPays->TailleUnitaireDUnGroupeDuPalierThermique[Index];
+            PaliersThermiquesDuPays->PminDUnGroupeDuPalierThermique[Index]
+              = 0.1 * PaliersThermiquesDuPays->PmaxDUnGroupeDuPalierThermique[Index];
 
-    PaliersThermiquesDuPays->PminDUnGroupeDuPalierThermique[Index] = 0.1 * PaliersThermiquesDuPays->PmaxDUnGroupeDuPalierThermique[Index];
+            X = rand();
+            X /= RAND_MAX;
+            X *= 48;
+            X += 2;
 
-		
-    X = rand();
-		X /= RAND_MAX;
-		X *= 48;
-		X += 2; 
+            PaliersThermiquesDuPays->DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[Index]
+              = (int)X;
 
-    PaliersThermiquesDuPays->DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[Index] = (int) X;
+            X *= 0.51;
 
-		X *= 0.51;		
+            PaliersThermiquesDuPays->DureeMinimaleDArretDUnGroupeDuPalierThermique[Index] = (int)X;
 
-    PaliersThermiquesDuPays->DureeMinimaleDArretDUnGroupeDuPalierThermique[Index] = (int) X;
+            if (Flag == 1)
+            {
+                PaliersThermiquesDuPays->CoutDeDemarrageDUnGroupeDuPalierThermique[Index] = 0;
+                PaliersThermiquesDuPays->CoutDArretDUnGroupeDuPalierThermique[Index] = 0.;
+                PaliersThermiquesDuPays->CoutFixeDeMarcheDUnGroupeDuPalierThermique[Index] = 0.;
+                PaliersThermiquesDuPays->DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[Index] = 1;
+                PaliersThermiquesDuPays->DureeMinimaleDArretDUnGroupeDuPalierThermique[Index] = 1;
+            }
+        }
+    }
 
-if ( Flag == 1 ) {
-  PaliersThermiquesDuPays->CoutDeDemarrageDUnGroupeDuPalierThermique[Index] = 0;
-  PaliersThermiquesDuPays->CoutDArretDUnGroupeDuPalierThermique[Index] = 0.;	
-  PaliersThermiquesDuPays->CoutFixeDeMarcheDUnGroupeDuPalierThermique[Index] = 0.;
-  PaliersThermiquesDuPays->DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[Index] = 1;
-  PaliersThermiquesDuPays->DureeMinimaleDArretDUnGroupeDuPalierThermique[Index] = 1;	
-}
-		
-		
-	}
-}
-	
-return;
+    return;
 }

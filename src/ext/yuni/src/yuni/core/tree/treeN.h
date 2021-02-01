@@ -9,9 +9,8 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_CORE_TREE_N_H__
-# define __YUNI_CORE_TREE_N_H__
+#define __YUNI_CORE_TREE_N_H__
 
-# include "n/treeN.h"
+#include "n/treeN.h"
 
 #endif // __YUNI_CORE_TREE_N_H__
-

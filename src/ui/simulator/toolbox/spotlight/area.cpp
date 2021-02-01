@@ -31,37 +31,27 @@
 
 using namespace Yuni;
 
-
 namespace Antares
 {
 namespace Toolbox
 {
 namespace Spotlight
 {
+ItemArea::ItemArea(Data::Area* a) : area(a)
+{
+    assert(a != NULL);
 
+    caption(a->name);
+    group("Area");
 
-	ItemArea::ItemArea(Data::Area* a) :
-		area(a)
-	{
-		assert(a != NULL);
+    if (area->ui)
+        addTag(wxT("  "), area->ui->color[0], area->ui->color[1], area->ui->color[2]);
+}
 
-		caption(a->name);
-		group("Area");
-
-		if (area->ui)
-			addTag(wxT("  "), area->ui->color[0], area->ui->color[1], area->ui->color[2]);
-	}
-
-
-	ItemArea::~ItemArea()
-	{
-	}
-
-
-
-
+ItemArea::~ItemArea()
+{
+}
 
 } // namespace Spotlight
 } // namespace Toolbox
 } // namespace Antares
-

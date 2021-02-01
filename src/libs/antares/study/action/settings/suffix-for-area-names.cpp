@@ -27,73 +27,65 @@
 
 #include "suffix-for-area-names.h"
 
-
 namespace Antares
 {
 namespace Action
 {
 namespace Settings
 {
+void SuffixAreaName::prepareSkipWL(Context& ctx)
+{
+    // reset the property
+    ctx.property["area.name.suffix"].clear();
+}
 
+bool SuffixAreaName::prepareWL(Context& ctx)
+{
+    // reset the property
+    ctx.property["area.name.suffix"] = pValue;
 
-	void SuffixAreaName::prepareSkipWL(Context& ctx)
-	{
-		// reset the property
-		ctx.property["area.name.suffix"].clear();
-	}
+    if (pValue.empty())
+    {
+        pInfos.caption = "Suffix for area names";
+        pInfos.state = stDisabled;
+    }
+    else
+    {
+        pInfos.message.clear();
+        pInfos.state = stReady;
+        if (pValue == "<auto>")
+        {
+            pInfos.caption = "Suffix for area names (auto)";
+            pInfos.message << "Make sure there is no collision between area names";
+        }
+        else
+        {
+            pInfos.caption = "Suffix for area names (custom)";
+            pInfos.message << "All area names will be suffixed with \"" << pValue << '"';
+        }
+    }
+    return true;
+}
 
-
-	bool SuffixAreaName::prepareWL(Context& ctx)
-	{
-		// reset the property
-		ctx.property["area.name.suffix"] = pValue;
-
-		if (pValue.empty())
-		{
-			pInfos.caption = "Suffix for area names";
-			pInfos.state = stDisabled;
-		}
-		else
-		{
-			pInfos.message.clear();
-			pInfos.state = stReady;
-			if (pValue == "<auto>")
-			{
-				pInfos.caption = "Suffix for area names (auto)";
-				pInfos.message << "Make sure there is no collision between area names";
-			}
-			else
-			{
-				pInfos.caption = "Suffix for area names (custom)";
-				pInfos.message << "All area names will be suffixed with \"" << pValue << '"';
-			}
-		}
-		return true;
-	}
-
-
-	void SuffixAreaName::behaviorToText(Behavior behavior, Yuni::String& out)
-	{
-		switch (behavior)
-		{
-			case bhOverwrite:
-				out = "enabled";
-				break;
-			case bhMerge:
-				out = "enabled";
-				break;
-			case bhSkip:
-				out = "skip";
-				break;
-			case bhMax:
-				out.clear();
-				break;
-		}
-	}
-
-
+void SuffixAreaName::behaviorToText(Behavior behavior, Yuni::String& out)
+{
+    switch (behavior)
+    {
+    case bhOverwrite:
+        out = "enabled";
+        break;
+    case bhMerge:
+        out = "enabled";
+        break;
+    case bhSkip:
+        out = "skip";
+        break;
+    case bhMax:
+        out.clear();
+        break;
+    }
+}
 
 } // namespace Settings
 } // namespace Action
 } // namespace Antares
-

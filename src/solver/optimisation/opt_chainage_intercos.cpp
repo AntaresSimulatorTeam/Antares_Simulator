@@ -25,65 +25,39 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "opt_structure_probleme_a_resoudre.h"
 
+#include "../simulation/simulation.h"
+#include "../simulation/sim_extern_variables_globales.h"
 
+#include "opt_fonctions.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# include "opt_structure_probleme_a_resoudre.h"
-
-# include "../simulation/simulation.h"
-# include "../simulation/sim_extern_variables_globales.h"
-
-# include "opt_fonctions.h"
-
-
-
-void OPT_ChainagesDesIntercoPartantDUnNoeud( PROBLEME_HEBDO * ProblemeHebdo )
+void OPT_ChainagesDesIntercoPartantDUnNoeud(PROBLEME_HEBDO* ProblemeHebdo)
 {
-int Pays; int Interco; int Index         ;
-int NoeudOrigine      ; int NoeudExtremite;
+    int Pays;
+    int Interco;
+    int Index;
+    int NoeudOrigine;
+    int NoeudExtremite;
 
-for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ ) {
-  ProblemeHebdo->IndexDebutIntercoOrigine  [Pays] = -1;
- 	ProblemeHebdo->IndexDebutIntercoExtremite[Pays] = -1;
+    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    {
+        ProblemeHebdo->IndexDebutIntercoOrigine[Pays] = -1;
+        ProblemeHebdo->IndexDebutIntercoExtremite[Pays] = -1;
+    }
+
+    for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    {
+        NoeudOrigine = ProblemeHebdo->PaysOrigineDeLInterconnexion[Interco];
+        Index = ProblemeHebdo->IndexDebutIntercoOrigine[NoeudOrigine];
+        ProblemeHebdo->IndexDebutIntercoOrigine[NoeudOrigine] = Interco;
+        ProblemeHebdo->IndexSuivantIntercoOrigine[Interco] = Index;
+
+        NoeudExtremite = ProblemeHebdo->PaysExtremiteDeLInterconnexion[Interco];
+        Index = ProblemeHebdo->IndexDebutIntercoExtremite[NoeudExtremite];
+        ProblemeHebdo->IndexDebutIntercoExtremite[NoeudExtremite] = Interco;
+        ProblemeHebdo->IndexSuivantIntercoExtremite[Interco] = Index;
+    }
+
+    return;
 }
-
-for ( Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++ ) {
-	
-	NoeudOrigine = ProblemeHebdo->PaysOrigineDeLInterconnexion[Interco];
-	Index = ProblemeHebdo->IndexDebutIntercoOrigine[NoeudOrigine];
-	ProblemeHebdo->IndexDebutIntercoOrigine  [NoeudOrigine] = Interco;
-	ProblemeHebdo->IndexSuivantIntercoOrigine[Interco]      = Index;
-	
-	NoeudExtremite = ProblemeHebdo->PaysExtremiteDeLInterconnexion[Interco];
-	Index = ProblemeHebdo->IndexDebutIntercoExtremite[NoeudExtremite];
-	ProblemeHebdo->IndexDebutIntercoExtremite  [NoeudExtremite] = Interco;
-	ProblemeHebdo->IndexSuivantIntercoExtremite[Interco]        = Index;
-}
-
-return;
-}
-
-

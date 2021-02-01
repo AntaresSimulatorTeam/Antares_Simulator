@@ -25,12 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_MC_PLAYLIST_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_MC_PLAYLIST_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_MC_PLAYLIST_H__
 
-# include <antares/wx-wrapper.h>
-# include "../renderer.h"
-# include "../../../../application/study.h"
-
+#include <antares/wx-wrapper.h>
+#include "../renderer.h"
+#include "../../../../application/study.h"
 
 namespace Antares
 {
@@ -40,58 +39,60 @@ namespace Datagrid
 {
 namespace Renderer
 {
+class MCPlaylist : public IRenderer
+{
+public:
+    enum MCPlaylistCol
+    {
+        STATUS,
+        WEIGHT
+    };
 
+    MCPlaylist();
+    virtual ~MCPlaylist();
 
-	class MCPlaylist : public IRenderer
-	{
-	public:
+    virtual int width() const
+    {
+        return 2;
+    }
+    virtual int height() const;
 
-	    enum MCPlaylistCol
-        {
-	        STATUS,
-	        WEIGHT
-        };
+    virtual wxString columnCaption(int colIndx) const;
 
-		MCPlaylist();
-		virtual ~MCPlaylist();
+    virtual wxString rowCaption(int rowIndx) const;
 
-		virtual int width() const {return 2;}
-		virtual int height() const;
+    virtual wxString cellValue(int x, int y) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual double cellNumericValue(int x, int y) const;
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual bool cellValue(int x, int y, const Yuni::String& value);
 
-		virtual wxString cellValue(int x, int y) const;
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    {
+        // Do nothing
+    }
 
-		virtual double cellNumericValue(int x, int y) const;
+    virtual bool valid() const;
 
-		virtual bool cellValue(int x, int y, const Yuni::String& value);
+    virtual uint maxWidthResize() const
+    {
+        return 0;
+    }
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{
-			// Do nothing
-		}
+    void control(wxWindow* control)
+    {
+        pControl = control;
+    }
 
-		virtual bool valid() const;
+public:
+    //! An item has been updated
+    Yuni::Bind<void()> onTriggerUpdate;
 
-		virtual uint maxWidthResize() const {return 0;}
-		virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+protected:
+    wxWindow* pControl;
 
-		void control(wxWindow* control) {pControl = control;}
-
-	public:
-		//! An item has been updated
-		Yuni::Bind<void ()> onTriggerUpdate;
-
-	protected:
-		wxWindow* pControl;
-
-	}; // class MCPlaylist
-
-
-
-
+}; // class MCPlaylist
 
 } // namespace Renderer
 } // namespace Datagrid

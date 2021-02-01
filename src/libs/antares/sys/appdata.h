@@ -25,32 +25,26 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_SYS_APPDATA_H__
-# define __ANTARES_LIBS_SYS_APPDATA_H__
+#define __ANTARES_LIBS_SYS_APPDATA_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
 namespace OperatingSystem
 {
+/*!
+** \brief Try to find out the local app data folder
+**
+** \param allusers True to retrieve the folder associated to the `all users`
+*/
+bool FindLocalAppData(YString& out, bool allusers = false);
 
-	/*!
-	** \brief Try to find out the local app data folder
-	**
-	** \param allusers True to retrieve the folder associated to the `all users`
-	*/
-	bool FindLocalAppData(YString& out, bool allusers = false);
-
-
-	/*!
-	** \brief Try to find out the local app data folder
-	**
-	** \param allusers True to retrieve the folder associated to the `all users`
-	*/
-	bool FindAntaresLocalAppData(YString& out, bool allusers = false);
-
-
-
+/*!
+** \brief Try to find out the local app data folder
+**
+** \param allusers True to retrieve the folder associated to the `all users`
+*/
+bool FindAntaresLocalAppData(YString& out, bool allusers = false);
 
 } // namespace OperatingSystem
 

@@ -33,8 +33,6 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
 namespace Solver
@@ -43,160 +41,150 @@ namespace Variable
 {
 namespace Economy
 {
+template<bool WithSimplexT>
+struct SpillageSelector
+{
+    template<class U>
+    static auto Value(const State&, const U& weeklyResults, uint)
+      -> decltype(weeklyResults.ValeursHorairesDeDefaillanceNegative)
+    {
+        return weeklyResults.ValeursHorairesDeDefaillanceNegative;
+    }
+};
 
-	template<bool WithSimplexT>
-	struct SpillageSelector
-	{
-		template<class U>
-		static auto Value(const State&, const U& weeklyResults, uint) -> decltype(weeklyResults.ValeursHorairesDeDefaillanceNegative)
-		{
-			return weeklyResults.ValeursHorairesDeDefaillanceNegative;
-		}
-	};
+template<>
+struct SpillageSelector<false>
+{
+    template<class U>
+    static auto Value(const State& state, const U&, uint index) -> decltype(state.resSpilled[index])
+    {
+        return state.resSpilled[index];
+    }
+};
 
-	template<>
-	struct SpillageSelector<false>
-	{
-		template<class U>
-		static auto Value(const State& state, const U&, uint index) -> decltype(state.resSpilled[index])
-		{
-			return state.resSpilled[index];
-		}
-	};
+template<bool WithSimplexT>
+inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
+{
+    assert(168 + state.hourInTheYear <= HOURS_PER_YEAR);
+    assert(opmrg && "Invalid OP.MRG target");
+    enum
+    {
+        offset = 0,
+        endHour = 168,
+    };
 
+    // current area
+    auto& area = *state.area;
+    // index of the current area
+    auto index = area.index;
+    assert(area.index < 50000 && "seems invalid");
 
+    // current problem
+    auto& problem = *state.problemeHebdo;
+    // Weekly results from solver for the current area
+    auto& weeklyResults = *(problem.ResultatsHoraires[index]);
+    // Unsupplied enery for the current area
+    auto& D = weeklyResults.ValeursHorairesDeDefaillancePositive;
+    // Spillage
+    auto S = SpillageSelector<WithSimplexT>::Value(state, weeklyResults, area.index);
 
+    double OI[168];
 
-	template<bool WithSimplexT>
-	inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
-	{
-		assert(168 + state.hourInTheYear <= HOURS_PER_YEAR);
-		assert(opmrg && "Invalid OP.MRG target");
-		enum
-		{
-			offset  = 0,
-			endHour = 168,
-		};
+    // H.STOR
+    double* H = weeklyResults.TurbinageHoraire;
 
-		// current area
-		auto& area = *state.area;
-		// index of the current area
-		auto index = area.index;
-		assert(area.index < 50000 && "seems invalid");
+    // energie turbinee de la semaine
+    {
+        // DTG MRG
+        const double* M = area.scratchpad[numSpace]->dispatchableGenerationMargin;
 
-		// current problem
-		auto& problem = *state.problemeHebdo;
-		// Weekly results from solver for the current area
-		auto& weeklyResults = *(problem.ResultatsHoraires[index]);
-		// Unsupplied enery for the current area
-		auto& D = weeklyResults.ValeursHorairesDeDefaillancePositive;
-		// Spillage
-		auto  S = SpillageSelector<WithSimplexT>::Value(state, weeklyResults, area.index);
+        double WH = 0.;
+        {
+            // H.STOR
+            auto& H = weeklyResults.TurbinageHoraire;
+            for (uint i = offset; i != endHour; ++i)
+                WH += H[i];
+        }
 
-		double OI[168];
+        if (Math::Zero(WH)) // no hydro
+        {
+            for (uint i = offset; i != endHour; ++i)
+                opmrg[i] = +S[i] + M[i] - D[i];
+            return;
+        }
 
-		// H.STOR
-		double* H = weeklyResults.TurbinageHoraire;
+        // initialisation
+        for (uint i = offset; i != endHour; ++i)
+            OI[i] = +S[i] + M[i] - D[i];
+    }
 
-		// energie turbinee de la semaine
-		{
-			// DTG MRG
-			const double* M = area.scratchpad[numSpace]->dispatchableGenerationMargin;
+    double bottom = +std::numeric_limits<double>::max();
+    double top = 0;
 
-			double WH = 0.;
-			{
-				// H.STOR
-				auto& H = weeklyResults.TurbinageHoraire;
-				for (uint i = offset; i != endHour; ++i)
-					WH += H[i];
-			}
+    for (uint i = offset; i != endHour; ++i)
+    {
+        double oii = OI[i];
+        if (oii > top)
+            top = oii;
+        if (oii < bottom)
+            bottom = oii;
+    }
 
-			if (Math::Zero(WH)) // no hydro
-			{
-				for (uint i = offset; i != endHour; ++i)
-					opmrg[i] = + S[i] + M[i] - D[i];
-				return;
-			}
+    double ecart = 1.;
+    uint loop = 100; // arbitrary - maximum number of iterations
 
-			// initialisation
-			for (uint i = offset; i != endHour; ++i)
-				OI[i] = + S[i] + M[i] - D[i];
-		}
+    // ref to the study calendar
+    auto& calendar = state.study.calendar;
+    // Pmax
+    auto& P = area.hydro.maxPower[Data::PartHydro::genMaxP];
+    // auto& P = problem.CaracteristiquesHydrauliques[index]->ContrainteDePmaxHydrauliqueHoraire;
 
-		double bottom = + std::numeric_limits<double>::max();
-		double top = 0;
+    do
+    {
+        double niveau = (top + bottom) * 0.5;
+        double SP = 0; // S+
+        double SM = 0; // S-
 
-		for (uint i = offset; i != endHour; ++i)
-		{
-			double oii = OI[i];
-			if (oii > top)
-				top = oii;
-			if (oii < bottom)
-				bottom = oii;
-		}
+        for (uint i = offset; i != endHour; ++i)
+        {
+            assert(i < HOURS_PER_YEAR && "calendar overflow");
+            if (niveau > OI[i])
+            {
+                uint dayYear = calendar.hours[i + state.hourInTheYear].dayYear;
+                opmrg[i] = Math::Min(niveau, OI[i] + P[dayYear] - H[i]);
+                SM += opmrg[i] - OI[i];
+            }
+            else
+            {
+                opmrg[i] = Math::Max(niveau, OI[i] - H[i]);
+                SP += OI[i] - opmrg[i];
+            }
+        }
 
-		double ecart = 1.;
-		uint loop = 100; // arbitrary - maximum number of iterations
+        ecart = SP - SM;
+        if (ecart > 0)
+            bottom = niveau;
+        else
+            top = niveau;
 
-		// ref to the study calendar
-		auto& calendar = state.study.calendar;
-		// Pmax
-		auto& P = area.hydro.maxPower[Data::PartHydro::genMaxP];
-		//auto& P = problem.CaracteristiquesHydrauliques[index]->ContrainteDePmaxHydrauliqueHoraire;
+        if (!--loop)
+        {
+            logs.error() << "OP.MRG: " << area.name
+                         << ": infinite loop detected. please check input data";
+            return;
+        }
+    } while (ecart * ecart > 0.25);
+}
 
-		do
-		{
-			double niveau = (top + bottom) * 0.5;
-			double SP = 0; // S+
-			double SM = 0; // S-
-
-			for (uint i = offset; i != endHour; ++i)
-			{
-				assert(i < HOURS_PER_YEAR && "calendar overflow");
-				if (niveau > OI[i])
-				{
-					uint dayYear = calendar.hours[i + state.hourInTheYear].dayYear;
-					opmrg[i] = Math::Min(niveau, OI[i] + P[dayYear] - H[i]);
-					SM += opmrg[i] - OI[i];
-				}
-				else
-				{
-					opmrg[i] = Math::Max(niveau, OI[i] - H[i]);
-					SP += OI[i] - opmrg[i];
-				}
-			}
-
-			ecart = SP - SM;
-			if (ecart > 0)
-				bottom = niveau;
-			else
-				top = niveau;
-
-			if (!--loop)
-			{
-				logs.error() << "OP.MRG: " << area.name << ": infinite loop detected. please check input data";
-				return;
-			}
-		}
-		while (ecart * ecart > 0.25);
-	}
-
-
-
-	void PrepareMaxMRG(const State& state, double* opmrg, uint numSpace)
-	{
-		if (state.simplexHasBeenRan)
-			PrepareMaxMRGFor<true>(state, opmrg, numSpace);
-		else
-			PrepareMaxMRGFor<false>(state, opmrg, numSpace);
-	}
-
-
-
-
+void PrepareMaxMRG(const State& state, double* opmrg, uint numSpace)
+{
+    if (state.simplexHasBeenRan)
+        PrepareMaxMRGFor<true>(state, opmrg, numSpace);
+    else
+        PrepareMaxMRGFor<false>(state, opmrg, numSpace);
+}
 
 } // namespace Economy
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
-

@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_SETTINGS_SUFFIX_CLUSTER_NAME_HXX__
-# define __ANTARES_LIBS_STUDY_ACTION_SETTINGS_SUFFIX_CLUSTER_NAME_HXX__
-
+#define __ANTARES_LIBS_STUDY_ACTION_SETTINGS_SUFFIX_CLUSTER_NAME_HXX__
 
 namespace Antares
 {
@@ -34,41 +33,33 @@ namespace Action
 {
 namespace Settings
 {
+template<class StringT>
+inline SuffixPlantName::SuffixPlantName(const StringT& value, bool enabled) : pValue(value)
+{
+    pInfos.caption = "Suffix for thermal cluster names";
 
+    if (!enabled)
+        pInfos.behavior = bhSkip;
+}
 
-	template<class StringT>
-	inline SuffixPlantName::SuffixPlantName(const StringT& value, bool enabled)
-		:pValue(value)
-	{
-		pInfos.caption = "Suffix for thermal cluster names";
+inline SuffixPlantName::~SuffixPlantName()
+{
+}
 
-		if (!enabled)
-			pInfos.behavior = bhSkip;
-	}
+inline bool SuffixPlantName::performWL(Context&)
+{
+    return true;
+}
 
+inline bool SuffixPlantName::autoExpand() const
+{
+    return false;
+}
 
-	inline SuffixPlantName::~SuffixPlantName()
-	{}
-
-
-	inline bool SuffixPlantName::performWL(Context&)
-	{
-		return true;
-	}
-
-
-	inline bool SuffixPlantName::autoExpand() const
-	{
-		return false;
-	}
-
-
-	inline bool SuffixPlantName::shouldPrepareRootNode() const
-	{
-		return true;
-	}
-
-
+inline bool SuffixPlantName::shouldPrepareRootNode() const
+{
+    return true;
+}
 
 } // namespace Settings
 } // namespace Action

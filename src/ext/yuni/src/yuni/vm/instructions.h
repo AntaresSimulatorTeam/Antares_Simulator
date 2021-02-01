@@ -10,7 +10,6 @@
 */
 #pragma once
 
-
 namespace Yuni
 {
 namespace Private
@@ -19,22 +18,19 @@ namespace VM
 {
 namespace Instruction
 {
-
-	enum Index
-	{
-		exit = 0,
-		intrinsic,
-		add,
-		addu,
-		addi,
-		addui,
-		nop,
-		exitCode,
-		exitCodei,
-		max
-	};
-
-
+enum Index
+{
+    exit = 0,
+    intrinsic,
+    add,
+    addu,
+    addi,
+    addui,
+    nop,
+    exitCode,
+    exitCodei,
+    max
+};
 
 } // namespace Instruction
 } // namespace VM

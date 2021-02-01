@@ -10,5 +10,5 @@
 */
 #pragma once
 #ifdef __cplusplus
-# include "checkpoint.h"
+#include "checkpoint.h"
 #endif

@@ -12,51 +12,48 @@
 #include <iosfwd> // STL
 
 #ifdef None
-# undef None // From X11/X.h
+#undef None // From X11/X.h
 #endif
-
-
 
 namespace Yuni
 {
+//! Type for a default behavior / policy
+struct /*YUNI_DECL*/ Default
+{
+};
 
-	//! Type for a default behavior / policy
-	struct /*YUNI_DECL*/ Default {};
+//! Absence Option
+struct /*YUNI_DECL*/ None
+{
+};
 
-	//! Absence Option
-	struct /*YUNI_DECL*/ None {};
+// Forward declaration for the base class String
+template<uint ChunkSizeT = 128, bool ExpandableT = true>
+class /*YUNI_DECL*/ CString;
 
+//! Standard string implementation
+typedef /*YUNI_DECL*/ CString<> String;
 
-	// Forward declaration for the base class String
-	template<uint ChunkSizeT = 128, bool ExpandableT = true>
-	class /*YUNI_DECL*/ CString;
+//! Character Large Object
+typedef /*YUNI_DECL*/ CString<4096> Clob;
 
-
-	//! Standard string implementation
-	typedef /*YUNI_DECL*/ CString<> String;
-
-	//! Character Large Object
-	typedef /*YUNI_DECL*/ CString<4096>  Clob;
-
-	//! Convenient alias for short string 16 bytes
-	typedef /*YUNI_DECL*/  CString<16,false>  ShortString16;
-	//! Convenient alias for short string 32 bytes
-	typedef /*YUNI_DECL*/  CString<32,false>  ShortString32;
-	//! Convenient alias for short string 64 bytes
-	typedef /*YUNI_DECL*/  CString<64,false>  ShortString64;
-	//! Convenient alias for short string 128 bytes
-	typedef /*YUNI_DECL*/  CString<128,false>  ShortString128;
-	//! Convenient alias for short string 256 bytes
-	typedef /*YUNI_DECL*/  CString<256,false>  ShortString256;
-	//! Convenient alias for short string 512 bytes
-	typedef /*YUNI_DECL*/  CString<512,false>  ShortString512;
-
+//! Convenient alias for short string 16 bytes
+typedef /*YUNI_DECL*/ CString<16, false> ShortString16;
+//! Convenient alias for short string 32 bytes
+typedef /*YUNI_DECL*/ CString<32, false> ShortString32;
+//! Convenient alias for short string 64 bytes
+typedef /*YUNI_DECL*/ CString<64, false> ShortString64;
+//! Convenient alias for short string 128 bytes
+typedef /*YUNI_DECL*/ CString<128, false> ShortString128;
+//! Convenient alias for short string 256 bytes
+typedef /*YUNI_DECL*/ CString<256, false> ShortString256;
+//! Convenient alias for short string 512 bytes
+typedef /*YUNI_DECL*/ CString<512, false> ShortString512;
 
 } // namespace Yuni
 
-
 //! Convenient typedef for cross namespace lookup
-typedef Yuni::String  YString;
+typedef Yuni::String YString;
 
 /*!
 ** \brief String adapters
@@ -81,6 +78,4 @@ typedef Yuni::String  YString;
 ** std::cout << adapter << " (size: " << adapter.size() << ")" << std::endl;
 ** \endcode
 */
-typedef ::Yuni::CString<0, true>  AnyString;
-
-
+typedef ::Yuni::CString<0, true> AnyString;

@@ -25,69 +25,42 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "opt_structure_probleme_a_resoudre.h"
 
+#include "../simulation/simulation.h"
+#include "../simulation/sim_structure_donnees.h"
+#include "../simulation/sim_extern_variables_globales.h"
 
+#include "opt_fonctions.h"
 
+#include "spx_definition_arguments.h"
+#include "spx_fonctions.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# include "opt_structure_probleme_a_resoudre.h"
- 
-# include "../simulation/simulation.h"
-# include "../simulation/sim_structure_donnees.h"
-# include "../simulation/sim_extern_variables_globales.h"
-
-# include "opt_fonctions.h"
-
-# include "spx_definition_arguments.h"
-# include "spx_fonctions.h"
-
-
-
-void OPT_VerifierPresenceReserveJmoins1( PROBLEME_HEBDO * ProblemeHebdo )  
+void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO* ProblemeHebdo)
 {
-int Pays; int Pdt; double * ReserveHoraireJMoins1Ref;
-RESERVE_JMOINS1 ** ReserveJMoins1;
+    int Pays;
+    int Pdt;
+    double* ReserveHoraireJMoins1Ref;
+    RESERVE_JMOINS1** ReserveJMoins1;
 
-ProblemeHebdo->YaDeLaReserveJmoins1 = NON_ANTARES;
-if ( RESERVE_J_MOINS_1 == NON_ANTARES ) return;
+    ProblemeHebdo->YaDeLaReserveJmoins1 = NON_ANTARES;
+    if (RESERVE_J_MOINS_1 == NON_ANTARES)
+        return;
 
-ReserveJMoins1 = ProblemeHebdo->ReserveJMoins1;
+    ReserveJMoins1 = ProblemeHebdo->ReserveJMoins1;
 
-for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ ) {
-  ReserveHoraireJMoins1Ref = ReserveJMoins1[Pays]->ReserveHoraireJMoins1Ref;
-  for ( Pdt = 0 ; Pdt < ProblemeHebdo->NombreDePasDeTempsRef ; Pdt++) {
-    if ( fabs( ReserveHoraireJMoins1Ref[Pdt] ) > ZERO_RESERVE_J_MOINS1 ) {
-      ProblemeHebdo->YaDeLaReserveJmoins1 = OUI_ANTARES;
-	    return;
+    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    {
+        ReserveHoraireJMoins1Ref = ReserveJMoins1[Pays]->ReserveHoraireJMoins1Ref;
+        for (Pdt = 0; Pdt < ProblemeHebdo->NombreDePasDeTempsRef; Pdt++)
+        {
+            if (fabs(ReserveHoraireJMoins1Ref[Pdt]) > ZERO_RESERVE_J_MOINS1)
+            {
+                ProblemeHebdo->YaDeLaReserveJmoins1 = OUI_ANTARES;
+                return;
+            }
+        }
     }
-  }
-}
 
-return;
+    return;
 }

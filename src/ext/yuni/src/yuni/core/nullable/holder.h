@@ -10,165 +10,181 @@
 */
 #pragma once
 
-
-
 namespace Yuni
 {
-
-	template<typename T, class Alloc> class YUNI_DECL Nullable;
-
+template<typename T, class Alloc>
+class YUNI_DECL Nullable;
 
 namespace Private
 {
 namespace NullableImpl
 {
+template<class T>
+struct IsNullable final
+{
+    enum
+    {
+        Yes = 0,
+        No = 1
+    };
+};
 
-	template<class T>
-	struct IsNullable final
-	{
-		enum { Yes = 0, No = 1 };
-	};
+template<class U, class Alloc>
+struct IsNullable<Nullable<U, Alloc>> final
+{
+    enum
+    {
+        Yes = 1,
+        No = 0
+    };
+};
 
-	template<class U, class Alloc>
-	struct IsNullable< Nullable<U, Alloc> > final
-	{
-		enum { Yes = 1, No = 0 };
-	};
+// Forward declaration
+template<class T, int S>
+class YUNI_DECL Holder final
+{
+public:
+    Holder() : pHasData(false)
+    {
+    }
+    Holder(const Holder& rhs) : pData(rhs.pData), pHasData(rhs.pHasData)
+    {
+    }
+    template<typename U>
+    Holder(const U& rhs) : pData(rhs), pHasData(true)
+    {
+    }
 
+    void clear()
+    {
+        pHasData = false;
+    }
 
+    bool empty() const
+    {
+        return !pHasData;
+    }
 
+    T& reference()
+    {
+        if (!pHasData)
+        {
+            pHasData = true;
+            pData = T();
+        }
+        return pData;
+    }
 
+    const T& data() const
+    {
+        return pData;
+    }
+    T& data()
+    {
+        return pData;
+    }
 
-	// Forward declaration
-	template<class T, int S>
-	class YUNI_DECL Holder final
-	{
-	public:
-		Holder() :
-			pHasData(false)
-		{}
-		Holder(const Holder& rhs) :
-			pData(rhs.pData), pHasData(rhs.pHasData)
-		{}
-		template<typename U> Holder(const U& rhs) :
-			pData(rhs), pHasData(true)
-		{}
+    template<class U>
+    void assign(const U& v)
+    {
+        pData = v;
+        pHasData = true;
+    }
 
-		void clear() {pHasData = false;}
+    void assign(const NullPtr&)
+    {
+        pHasData = false;
+    }
 
-		bool empty() const {return !pHasData;}
+    void assign(const Holder& rhs)
+    {
+        pHasData = rhs.pHasData;
+        pData = rhs.pData;
+    }
 
-		T& reference()
-		{
-			if (!pHasData)
-			{
-				pHasData = true;
-				pData = T();
-			}
-			return pData;
-		}
+private:
+    //! The data
+    T pData;
+    //
+    bool pHasData;
+};
 
-		const T& data() const {return pData;}
-		T& data() {return pData;}
+template<class T>
+class YUNI_DECL Holder<T, 0> final
+{
+public:
+    Holder()
+    {
+    }
+    Holder(const Holder& rhs) : pData(rhs.pData)
+    {
+    }
+    template<typename U>
+    Holder(const U& rhs) : pData(new T(rhs))
+    {
+    }
 
-		template<class U>
-		void assign(const U& v)
-		{
-			pData = v;
-			pHasData = true;
-		}
+    void clear()
+    {
+        pData = nullptr;
+    }
 
-		void assign(const NullPtr&)
-		{
-			pHasData = false;
-		}
+    bool empty() const
+    {
+        return !pData;
+    }
 
-		void assign(const Holder& rhs)
-		{
-			pHasData = rhs.pHasData;
-			pData = rhs.pData;
-		}
+    T& reference()
+    {
+        if (!pData)
+            pData = new T();
+        return *pData;
+    }
 
-	private:
-		//! The data
-		T pData;
-		//
-		bool pHasData;
+    const T& data() const
+    {
+        return *pData;
+    }
+    T& data()
+    {
+        return *pData;
+    }
 
-	};
+    template<class U>
+    void assign(const U& v)
+    {
+        if (!pData)
+            pData = new T(v);
+        else
+            *pData = v;
+    }
 
+    void assign(const NullPtr&)
+    {
+        pData = nullptr;
+    }
 
-	template<class T>
-	class YUNI_DECL Holder<T,0> final
-	{
-	public:
-		Holder()
-		{}
-		Holder(const Holder& rhs) :
-			pData(rhs.pData)
-		{}
-		template<typename U> Holder(const U& rhs) :
-			pData(new T(rhs))
-		{}
+    void assign(const Holder& rhs)
+    {
+        pData = rhs.pData;
+    }
 
-		void clear()
-		{
-			pData = nullptr;
-		}
+    void swap(Holder& rhs)
+    {
+        pData.swap(rhs.pData);
+    }
 
-		bool empty() const {return !pData;}
+private:
+    /*!
+    ** \brief Pointer to the data
+    **
+    ** The pointer is actually a smartptr to handle the copy constructor efficiently
+    ** for the class `Holder`.
+    */
+    typename T::Ptr pData;
 
-		T& reference()
-		{
-			if (!pData)
-				pData = new T();
-			return *pData;
-		}
-
-		const T& data() const {return *pData;}
-		T& data() {return *pData;}
-
-		template<class U>
-		void assign(const U& v)
-		{
-			if (!pData)
-				pData = new T(v);
-			else
-				*pData = v;
-		}
-
-		void assign(const NullPtr&)
-		{
-			pData = nullptr;
-		}
-
-
-		void assign(const Holder& rhs)
-		{
-			pData = rhs.pData;
-		}
-
-		void swap(Holder& rhs)
-		{
-			pData.swap(rhs.pData);
-		}
-
-	private:
-		/*!
-		** \brief Pointer to the data
-		**
-		** The pointer is actually a smartptr to handle the copy constructor efficiently
-		** for the class `Holder`.
-		*/
-		typename T::Ptr pData;
-
-	}; // class Holder
-
-
-
-
+}; // class Holder
 
 } // namespace NullableImpl
 } // namespace Private
 } // namespace Yuni
-

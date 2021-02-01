@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_COMMON_ACTION_ACTION_HXX__
-# define __ANTARES_COMMON_ACTION_ACTION_HXX__
+#define __ANTARES_COMMON_ACTION_ACTION_HXX__
 
 #include "action.h"
 
@@ -35,48 +35,42 @@ namespace Private
 {
 namespace Dispatcher
 {
+class JobSimpleDispatcher final : public Yuni::Job::IJob
+{
+public:
+    JobSimpleDispatcher()
+    {
+    }
 
-	class JobSimpleDispatcher final : public Yuni::Job::IJob
-	{
-	public:
-		JobSimpleDispatcher()
-		{}
+    explicit JobSimpleDispatcher(const Yuni::Bind<void()>& bind) : callback(bind)
+    {
+    }
 
-		explicit JobSimpleDispatcher(const Yuni::Bind<void ()>& bind)
-			:callback(bind)
-		{}
+    template<class C>
+    JobSimpleDispatcher(const C* object, void (C::*method)(void))
+    {
+        typedef void (C::*MemberType)();
+        callback.bind(const_cast<C*>(object), reinterpret_cast<MemberType>(method));
+    }
 
-		template<class C>
-		JobSimpleDispatcher(const C* object, void (C::* method)(void))
-		{
-			typedef void (C::* MemberType)();
-			callback.bind(const_cast<C*>(object), reinterpret_cast<MemberType>(method));
-		}
+    virtual ~JobSimpleDispatcher()
+    {
+    }
 
-		virtual ~JobSimpleDispatcher()
-		{}
+protected:
+    virtual void onExecute()
+    {
+        callback();
+    }
 
-	protected:
-		virtual void onExecute()
-		{
-			callback();
-		}
-
-	public:
-		//! Delayed callback
-		Yuni::Bind<void ()> callback;
-	};
-
-
+public:
+    //! Delayed callback
+    Yuni::Bind<void()> callback;
+};
 
 } // namespace Dispatcher
 } // namespace Private
 } // namespace Antares
-
-
-
-
-
 
 namespace Antares
 {
@@ -84,57 +78,55 @@ namespace Dispatcher
 {
 namespace GUI
 {
+template<class C>
+inline void Post(const C* object, void (C::*method)(void))
+{
+    ::Antares::Dispatcher::GUI::Post(
+      (const Yuni::Job::IJob::Ptr&)new
+      typename ::Antares::Private::Dispatcher::JobSimpleDispatcher(object, method));
+}
 
-	template<class C>
-	inline void Post(const C* object, void (C::* method)(void))
-	{
-		::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&)new typename ::Antares::Private::Dispatcher::JobSimpleDispatcher(object, method));
-	}
+template<class C>
+inline void Post(const C* object, void (C::*method)(void), uint delay)
+{
+    typedef typename ::Antares::Private::Dispatcher::JobSimpleDispatcher JobType;
+    JobType* j = new JobType(object, method);
+    ::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&)j, delay);
+}
 
-	template<class C>
-	inline void Post(const C* object, void (C::* method)(void), uint delay)
-	{
-		typedef typename ::Antares::Private::Dispatcher::JobSimpleDispatcher JobType;
-		JobType* j = new JobType(object, method);
-		::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&)j, delay);
-	}
-
-	
-	inline void Post(const Yuni::Bind<void()>& job, uint delay)
-	{
-		::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&)new ::Antares::Private::Dispatcher::JobSimpleDispatcher(job), delay);
-	}
-
+inline void Post(const Yuni::Bind<void()>& job, uint delay)
+{
+    ::Antares::Dispatcher::GUI::Post(
+      (const Yuni::Job::IJob::Ptr&)new ::Antares::Private::Dispatcher::JobSimpleDispatcher(job),
+      delay);
+}
 
 } // namespace GUI
 
-	inline void Post(const Yuni::Bind<void ()>& job)
-	{
-		::Antares::Dispatcher::Post((const Yuni::Job::IJob::Ptr&)new ::Antares::Private::Dispatcher::JobSimpleDispatcher(job));
-	}
+inline void Post(const Yuni::Bind<void()>& job)
+{
+    ::Antares::Dispatcher::Post(
+      (const Yuni::Job::IJob::Ptr&)new ::Antares::Private::Dispatcher::JobSimpleDispatcher(job));
+}
 
+template<class C>
+inline void Post(const C* object, void (C::*method)())
+{
+    ::Antares::Dispatcher::Post(
+      (const Yuni::Job::IJob::Ptr&)new
+      typename ::Antares::Private::Dispatcher::JobSimpleDispatcher(object, method));
+}
 
-	template<class C>
-	inline void Post(const C* object, void (C::* method)())
-	{
-		::Antares::Dispatcher::Post((const Yuni::Job::IJob::Ptr&)new typename ::Antares::Private::Dispatcher::JobSimpleDispatcher(object, method));
-	}
-
-
-	template<class C, class UserDataT>
-	inline void Post(const C* object, void (C::* method)(), const UserDataT& userdata)
-	{
-		::Antares::Dispatcher::Post((const Yuni::Job::IJob::Ptr&)new typename ::Antares::Private::Dispatcher::JobSimpleDispatcher(object, method, userdata));
-	}
-
-
-
+template<class C, class UserDataT>
+inline void Post(const C* object, void (C::*method)(), const UserDataT& userdata)
+{
+    ::Antares::Dispatcher::Post(
+      (const Yuni::Job::IJob::Ptr&)new
+      typename ::Antares::Private::Dispatcher::JobSimpleDispatcher(object, method, userdata));
+}
 
 } // namespace Dispatcher
 } // namespace Antares
-
-
-
 
 namespace Antares
 {
@@ -142,16 +134,13 @@ namespace Dispatcher
 {
 namespace Internal
 {
-
-	/*!
-	** \brief Execute the queue event
-	*/
-	void ExecuteQueueDispatcher();
-
+/*!
+** \brief Execute the queue event
+*/
+void ExecuteQueueDispatcher();
 
 } // namespace Internal
 } // namespace Dispatcher
 } // namespace Antares
-
 
 #endif // __ANTARES_COMMON_ACTION_ACTION_HXX__

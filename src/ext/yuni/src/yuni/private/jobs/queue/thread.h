@@ -13,68 +13,58 @@
 #include "../../../job/queue/service.h"
 #include "../../../thread/signal.h"
 
-
-
 namespace Yuni
 {
 namespace Private
 {
 namespace QueueService
 {
+/*!
+** \brief A single thread for a queue service
+*/
+class YUNI_DECL QueueThread final : public Yuni::Thread::IThread
+{
+public:
+    //! The most suitable smart pointer for the class
+    typedef Yuni::Thread::IThread::Ptr::Promote<QueueThread>::Ptr Ptr;
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    explicit QueueThread(Yuni::Job::QueueService& queueservice);
+    //! Destructor
+    virtual ~QueueThread();
+    //@}
 
-	/*!
-	** \brief A single thread for a queue service
-	*/
-	class YUNI_DECL QueueThread final : public Yuni::Thread::IThread
-	{
-	public:
-		//! The most suitable smart pointer for the class
-		typedef Yuni::Thread::IThread::Ptr::Promote<QueueThread>::Ptr Ptr;
+    /*!
+    ** \brief Get the Job currently running
+    */
+    Yuni::Job::IJob::Ptr currentJob() const;
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		explicit QueueThread(Yuni::Job::QueueService& queueservice);
-		//! Destructor
-		virtual ~QueueThread();
-		//@}
+protected:
+    //! Implementation of the `onExecute` method to run the jobs from the waiting room
+    virtual bool onExecute() override;
+    //! Implementation of the `onKill` method when the thread is killed without mercy
+    virtual void onKill() override;
+    //! Implementation of the `onStop` method when the thread is killed without mercy
+    virtual void onStop() override;
+    //! Implementation of the `onPause` method when the thread is killed without mercy
+    virtual void onPause() override;
 
-		/*!
-		** \brief Get the Job currently running
-		*/
-		Yuni::Job::IJob::Ptr currentJob() const;
+private:
+    //! Notify the queueservice that we have stopped to work
+    void notifyEndOfWork();
 
+private:
+    //! The scheduler
+    Yuni::Job::QueueService& pQueueService;
+    //! The current job
+    Yuni::Job::IJob::Ptr pJob;
 
-	protected:
-		//! Implementation of the `onExecute` method to run the jobs from the waiting room
-		virtual bool onExecute() override;
-		//! Implementation of the `onKill` method when the thread is killed without mercy
-		virtual void onKill() override;
-		//! Implementation of the `onStop` method when the thread is killed without mercy
-		virtual void onStop() override;
-		//! Implementation of the `onPause` method when the thread is killed without mercy
-		virtual void onPause() override;
-
-	private:
-		//! Notify the queueservice that we have stopped to work
-		void notifyEndOfWork();
-
-	private:
-		//! The scheduler
-		Yuni::Job::QueueService& pQueueService;
-		//! The current job
-		Yuni::Job::IJob::Ptr pJob;
-
-	}; // class QueueThread
-
-
-
-
-
+}; // class QueueThread
 
 } // namespace QueueService
 } // namespace Private

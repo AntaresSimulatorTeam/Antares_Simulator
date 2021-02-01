@@ -25,32 +25,26 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_WINDOWS_EXPORTMAP_HXX__
-# define __ANTARES_APPLICATION_WINDOWS_EXPORTMAP_HXX__
-
+#define __ANTARES_APPLICATION_WINDOWS_EXPORTMAP_HXX__
 
 namespace Antares
 {
 namespace Window
 {
+inline Data::Study::Ptr ExportMap::study()
+{
+    return pStudy;
+}
 
-	inline Data::Study::Ptr ExportMap::study()
-	{
-		return pStudy;
-	}
+inline const Data::Study::Ptr ExportMap::study() const
+{
+    return pStudy;
+}
 
-	inline const Data::Study::Ptr ExportMap::study() const
-	{
-		return pStudy;
-	}
-
-
-	inline SaveResult ExportMap::result() const
-	{
-		return pResult;
-	}
-
-
-
+inline SaveResult ExportMap::result() const
+{
+    return pResult;
+}
 
 } // namespace Window
 } // namespace Antares

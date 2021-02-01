@@ -10,8 +10,6 @@
 */
 #pragma once
 
-
-
 namespace Yuni
 {
 namespace Private
@@ -20,89 +18,84 @@ namespace Core
 {
 namespace Tree
 {
+template<class NodeT>
+class DepthInfixIterator
+{
+public:
+    typedef DepthInfixIterator<NodeT> Type;
 
+    typedef typename NodeT::Ptr NodePtr;
 
-	template<class NodeT>
-	class DepthInfixIterator
-	{
-	public:
-		typedef DepthInfixIterator<NodeT>  Type;
+    typedef NodeT value_type;
+    typedef int difference_type;
+    typedef value_type& reference;
+    typedef const value_type& const_reference;
+    typedef value_type* pointer;
+    typedef const value_type* const_pointer;
 
-		typedef typename NodeT::Ptr NodePtr;
+public:
+    enum
+    {
+        canGoForward = true,
+        canGoBackward = true,
+    };
 
-		typedef NodeT  value_type;
-		typedef int  difference_type;
-		typedef value_type&  reference;
-		typedef const value_type&  const_reference;
-		typedef value_type*  pointer;
-		typedef const value_type*  const_pointer;
+public:
+    //! \name Constructors
+    //@{
+    DepthInfixIterator();
 
-	public:
-		enum
-		{
-			canGoForward = true,
-			canGoBackward = true,
-		};
+    DepthInfixIterator(const Type& it);
 
-	public:
-		//! \name Constructors
-		//@{
-		DepthInfixIterator();
+    template<class N>
+    DepthInfixIterator(const DepthInfixIterator<N>& p);
 
-		DepthInfixIterator(const Type& it);
+    DepthInfixIterator(const NodePtr& p);
+    //@}
 
-		template<class N>
-		DepthInfixIterator(const DepthInfixIterator<N>& p);
+    //! \name Static overloads from IIterator
+    //@{
+    void forward();
 
-		DepthInfixIterator(const NodePtr& p);
-		//@}
+    void forward(difference_type n);
 
-		//! \name Static overloads from IIterator
-		//@{
-		void forward();
+    void backward();
 
-		void forward(difference_type n);
+    void backward(difference_type n);
 
-		void backward();
+    void advance(difference_type n);
 
-		void backward(difference_type n);
+    template<class N>
+    bool equals(const DepthInfixIterator<N>& rhs) const;
 
-		void advance(difference_type n);
+    template<class N>
+    void reset(const DepthInfixIterator<N>& rhs);
 
-		template<class N>
-		bool equals(const DepthInfixIterator<N>& rhs) const;
+    template<class N>
+    difference_type distance(const DepthInfixIterator<N>& rhs) const;
+    //@}
 
-		template<class N>
-		void reset(const DepthInfixIterator<N>& rhs);
+    //! \name Operator overloads
+    //@{
 
-		template<class N>
-		difference_type distance(const DepthInfixIterator<N>& rhs) const;
-		//@}
+    //! The operator `*`
+    reference operator*();
 
+    //! The operator `*`
+    const_reference operator*() const;
 
-		//! \name Operator overloads
-		//@{
+    //! The operator `->`
+    pointer operator->();
 
-		//! The operator `*`
-		reference operator * ();
+    //! The operator `->`
+    const_pointer operator->() const;
 
-		//! The operator `*`
-		const_reference operator * () const;
+    //@}
 
-		//! The operator `->`
-		pointer operator -> ();
-
-		//! The operator `->`
-		const_pointer operator -> () const;
-
-		//@}
-
-	private:
-		//! The actual data
-		NodePtr pNode;
-	}; // class DepthInfixIterator
-
-
+private:
+    //! The actual data
+    NodePtr pNode;
+}; // class DepthInfixIterator
 
 } // namespace Tree
 } // namespace Core

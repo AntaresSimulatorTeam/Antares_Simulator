@@ -27,18 +27,17 @@
 #include "getstarttime.h"
 #include <yuni/yuni.h>
 #include <yuni/datetime/timestamp.h>
-# include "../ui/common/dispatcher/action.h"
-
+#include "../ui/common/dispatcher/action.h"
 
 #ifdef YUNI_OS_WINDOWS
 #include <iostream>
 #include <Winbase.h>
 int getstarttime()
 {
-	DWORD miliUptime = GetTickCount();
-	int uptime=miliUptime/1000;
-	int now= Yuni::DateTime::Now();
-	return now-uptime;
+    DWORD miliUptime = GetTickCount();
+    int uptime = miliUptime / 1000;
+    int now = Yuni::DateTime::Now();
+    return now - uptime;
 }
 
 #endif
@@ -47,9 +46,9 @@ int getstarttime()
 
 int getstarttime()
 {
-	struct sysinfo si;
-	sysinfo (&si);
-	int now= Yuni::DateTime::Now();
-	return now-si.uptime;
+    struct sysinfo si;
+    sysinfo(&si);
+    int now = Yuni::DateTime::Now();
+    return now - si.uptime;
 }
 #endif

@@ -26,87 +26,95 @@
 */
 
 #ifndef __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_H__
-# define __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_H__
+#define __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_H__
 
-# include <yuni/core/string.h>
+#include <yuni/core/string.h>
 
 namespace Antares
 {
-	template<class T, class ReadWriteT>
-	class Matrix;
+template<class T, class ReadWriteT>
+class Matrix;
 }
 
 namespace Antares
 {
-	// Forward declarations
-	const char* get_format(bool isDecimal, uint precision);
-	template<class T, class ReadWriteT, class PredicateT>
-	class I_mtx_to_buffer_dumper;
-	
+// Forward declarations
+const char* get_format(bool isDecimal, uint precision);
+template<class T, class ReadWriteT, class PredicateT>
+class I_mtx_to_buffer_dumper;
 
+class matrix_to_buffer_dumper_factory
+{
+public:
+    matrix_to_buffer_dumper_factory(bool isDecimal, uint precision) :
+     any_decimal_(isDecimal and precision)
+    {
+    }
 
-	class matrix_to_buffer_dumper_factory
-	{
-	public:
-		matrix_to_buffer_dumper_factory(bool isDecimal, uint precision) :
-			any_decimal_(isDecimal and precision)
-		{}
+    ~matrix_to_buffer_dumper_factory()
+    {
+    }
 
-		~matrix_to_buffer_dumper_factory() {}
+    template<class T, class ReadWriteT, class PredicateT>
+    I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>* get_dumper(const Matrix<T, ReadWriteT>* mtx,
+                                                                  std::string& data,
+                                                                  PredicateT& predicate);
 
-		template<class T, class ReadWriteT, class PredicateT>
-		I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>* get_dumper(const Matrix<T, ReadWriteT>* mtx, std::string & data, PredicateT& predicate);
+private:
+    bool any_decimal_;
+};
 
-	private:
-		bool any_decimal_;
-	};
+template<class T, class ReadWriteT, class PredicateT>
+class I_mtx_to_buffer_dumper
+{
+public:
+    I_mtx_to_buffer_dumper(const Matrix<T, ReadWriteT>* mtx,
+                           std::string& data,
+                           PredicateT& predicate) :
+     mtx_(mtx), buffer_(data), predicate_(predicate), format_(nullptr)
+    {
+    }
 
+    void set_print_format(bool isDecimal, uint precision);
+    virtual void run() = 0;
+    ~I_mtx_to_buffer_dumper()
+    {
+        delete format_;
+    }
 
+protected:
+    const Matrix<T, ReadWriteT>* mtx_;
+    std::string& buffer_;
+    PredicateT& predicate_;
+    const char* format_;
+};
 
-	template<class T, class ReadWriteT, class PredicateT>
-	class I_mtx_to_buffer_dumper
-	{
-	public:
-		I_mtx_to_buffer_dumper(const Matrix<T, ReadWriteT>* mtx, std::string & data, PredicateT& predicate) :
-			mtx_(mtx),
-			buffer_(data),
-			predicate_(predicate),
-			format_(nullptr)
-		{}
+template<class T, class ReadWriteT, class PredicateT>
+class one_column__dumper : public I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>
+{
+public:
+    one_column__dumper(const Matrix<T, ReadWriteT>* mtx, std::string& data, PredicateT& predicate) :
+     I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate)
+    {
+    }
+    void run() override;
+};
 
-		void set_print_format(bool isDecimal, uint precision);
-		virtual void run() = 0;
-		~I_mtx_to_buffer_dumper() { delete format_; }
+template<class T, class ReadWriteT, class PredicateT>
+class multiple_columns__dumper : public I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>
+{
+public:
+    multiple_columns__dumper(const Matrix<T, ReadWriteT>* mtx,
+                             std::string& data,
+                             PredicateT& predicate) :
+     I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate)
+    {
+    }
+    void run() override;
+};
 
-	protected:
-		const Matrix<T, ReadWriteT>* mtx_;
-		std::string & buffer_;
-		PredicateT& predicate_;
-		const char* format_;
-	};
-
-	template<class T, class ReadWriteT, class PredicateT>
-	class one_column__dumper : public I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>
-	{
-	public:
-		one_column__dumper(const Matrix<T, ReadWriteT>* mtx, std::string & data, PredicateT& predicate) :
-			I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate)
-		{}
-		void run() override;
-	};
-
-	template<class T, class ReadWriteT, class PredicateT>
-	class multiple_columns__dumper : public I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>
-	{
-	public:
-		multiple_columns__dumper(const Matrix<T, ReadWriteT>* mtx, std::string & data, PredicateT& predicate) :
-			I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate)
-		{}
-		void run() override;
-	};
-
-}	// namespace Antares
+} // namespace Antares
 
 #include "matrix-to-buffer.hxx"
 
-#endif	// __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_H__
+#endif // __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_H__

@@ -27,34 +27,28 @@
 
 #include "limits.h"
 
-
 namespace Antares
 {
 namespace License
 {
 namespace Limits
 {
+uint areaCount = 0;
 
-	uint areaCount = 0;
+uint thermalClusterCount = 0;
 
-	uint thermalClusterCount = 0;
+uint tick = 30;
 
-	uint tick=30;
+Yuni::String customerId;
 
-	Yuni::String customerId;
+Yuni::String customerCaption;
 
-	Yuni::String customerCaption;
+Yuni::String hostID;
 
-	Yuni::String hostID;
+Yuni::String expiryDate;
 
-	Yuni::String expiryDate;
-
-	Yuni::String urlLicenseServer;
-
-
+Yuni::String urlLicenseServer;
 
 } // namespace Limits
 } // namespace License
 } // namespace Antares
-
-

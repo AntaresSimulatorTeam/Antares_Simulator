@@ -33,50 +33,43 @@
 #include "../../../toolbox/components/datagrid/renderer/area/xcast-allareas.h"
 #include "standard-page.hxx"
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
 namespace Forms
 {
+void ApplWnd::createNBLoad()
+{
+    assert(NULL != pNotebook);
 
+    // Create a standard page with an input selector
+    std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page
+      = createStdNotebookPage<Toolbox::InputSelector::Area>(pNotebook, wxT("load"), wxT("Load"));
 
-	void ApplWnd::createNBLoad()
-	{
-		assert(NULL != pNotebook);
+    // Correlation matrix
+    pageLoadCorrelation = page.first->add(
+      new Window::CorrelationPanel(page.first, Data::timeSeriesLoad), wxT("Spatial correlation"));
+    pageLoadCorrelation->displayExtraControls(false);
 
-		// Create a standard page with an input selector
-		std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page =
-			createStdNotebookPage<Toolbox::InputSelector::Area>(pNotebook,
-			wxT("load"), wxT("Load"));
+    pageLoadPrepro
+      = page.first->add(new Component::Datagrid::Component(
+                          page.first,
+                          new Component::Datagrid::Renderer::XCastAllAreas<Data::timeSeriesLoad>(
+                            page.first, page.second)),
+                        wxT("Digest"));
+    pageLoadPrepro->displayExtraControls(false);
 
-		// Correlation matrix
-		pageLoadCorrelation = page.first->add(new Window::CorrelationPanel(page.first, Data::timeSeriesLoad), wxT("Spatial correlation"));
-		pageLoadCorrelation->displayExtraControls(false);
+    // TS Generator
+    pageLoadPrepro = page.first->add(
+      new Window::XCast<Data::timeSeriesLoad>(page.first, page.second), wxT("Local data"));
 
-		pageLoadPrepro = page.first->add(
-			new Component::Datagrid::Component(page.first,
-			new Component::Datagrid::Renderer::XCastAllAreas<Data::timeSeriesLoad>(page.first, page.second)),
-			wxT("Digest"));
-		pageLoadPrepro->displayExtraControls(false);
-
-		// TS Generator
-		pageLoadPrepro = page.first->add(new Window::XCast<Data::timeSeriesLoad>(page.first, page.second),
-			wxT("Local data"));
-
-		// Time-series
-		pageLoadTimeSeries = page.first->add(
-			new Component::Datagrid::Component(page.first,
-			new Component::Datagrid::Renderer::TimeSeriesLoad(page.first, page.second)),
-			wxT("Time-series"));
-	}
-
-
-
-
+    // Time-series
+    pageLoadTimeSeries = page.first->add(
+      new Component::Datagrid::Component(
+        page.first, new Component::Datagrid::Renderer::TimeSeriesLoad(page.first, page.second)),
+      wxT("Time-series"));
+}
 
 } // namespace Forms
 } // namespace Antares
-

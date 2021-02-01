@@ -35,16 +35,13 @@ using namespace Yuni;
 using namespace Antares;
 #endif
 
-
-
 void SolverApplication::resetProcessPriority()
 {
-	# ifdef YUNI_OS_WINDOWS
-	if (System::CPU::Count() <= 2)
-	{
-		if (not SetPriorityClass(GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS))
-			logs.info() << "  :: impossible to reset the process priority";
-	}
-	# endif
+#ifdef YUNI_OS_WINDOWS
+    if (System::CPU::Count() <= 2)
+    {
+        if (not SetPriorityClass(GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS))
+            logs.info() << "  :: impossible to reset the process priority";
+    }
+#endif
 }
-

@@ -25,27 +25,42 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-# ifndef __SOLVER_H2O_J_FONCTIONS__
-# define __SOLVER_H2O_J_FONCTIONS__
+#ifndef __SOLVER_H2O_J_FONCTIONS__
+#define __SOLVER_H2O_J_FONCTIONS__
 
-# ifdef __cplusplus
-  extern "C"
-  {
-# endif
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
-DONNEES_MENSUELLES * H2O_J_Instanciation( void );
-void H2O_J_OptimiserUnMois( DONNEES_MENSUELLES * );
-char H2O_J_EcrireJeuDeDonneesLineaireAuFormatMPS( DONNEES_MENSUELLES * , FILE * );
-void H2O_J_Free( DONNEES_MENSUELLES * );		
-void H2O_J_ConstruireLesContraintes( int , int * , int , int , int * , char * , int * , double * , int * , CORRESPONDANCE_DES_CONTRAINTES * );
-void H2O_j_ConstruireLesVariables( int , int * , double * , double * , int * , double ** , CORRESPONDANCE_DES_VARIABLES * );
-void H2O_J_InitialiserLesBornesdesVariables( DONNEES_MENSUELLES * , int );
-void H2O_J_InitialiserLeSecondMembre( DONNEES_MENSUELLES * , int );
-void H2O_J_ResoudreLeProblemeLineaire( DONNEES_MENSUELLES * , int );
-void H2O_J_LisserLesSurTurbines( DONNEES_MENSUELLES * , int );
-	
-# ifdef __cplusplus
-  }
-# endif
+    DONNEES_MENSUELLES* H2O_J_Instanciation(void);
+    void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES*);
+    char H2O_J_EcrireJeuDeDonneesLineaireAuFormatMPS(DONNEES_MENSUELLES*, FILE*);
+    void H2O_J_Free(DONNEES_MENSUELLES*);
+    void H2O_J_ConstruireLesContraintes(int,
+                                        int*,
+                                        int,
+                                        int,
+                                        int*,
+                                        char*,
+                                        int*,
+                                        double*,
+                                        int*,
+                                        CORRESPONDANCE_DES_CONTRAINTES*);
+    void H2O_j_ConstruireLesVariables(int,
+                                      int*,
+                                      double*,
+                                      double*,
+                                      int*,
+                                      double**,
+                                      CORRESPONDANCE_DES_VARIABLES*);
+    void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES*, int);
+    void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES*, int);
+    void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES*, int);
+    void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES*, int);
 
-# endif  /* __SOLVER_H2O_J_FONCTIONS__ */
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __SOLVER_H2O_J_FONCTIONS__ */

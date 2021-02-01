@@ -25,93 +25,80 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "h2o_j_donnees_mensuelles.h"
+#include "h2o_j_fonctions.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# include "h2o_j_donnees_mensuelles.h"
-# include "h2o_j_fonctions.h"
-
-
-
-
-main( int argc , char ** argv )
+main(int argc, char** argv)
 {
-int i; int NbPdt; int NombreDAnnees; int Nb; int Mois; int NbReservoirs; int k;
-FILE * Flot;
-DONNEES_MENSUELLES * DonneesMensuelles;
+    int i;
+    int NbPdt;
+    int NombreDAnnees;
+    int Nb;
+    int Mois;
+    int NbReservoirs;
+    int k;
+    FILE* Flot;
+    DONNEES_MENSUELLES* DonneesMensuelles;
 
-NombreDAnnees = 500;
-NbReservoirs  = 100;
+    NombreDAnnees = 500;
+    NbReservoirs = 100;
 
-DonneesMensuelles = H2O_J_Instanciation( );
+    DonneesMensuelles = H2O_J_Instanciation();
 
-NbPdt = 28;
-for ( Nb = 0 ; Nb < NombreDAnnees ; Nb++ ) {
-  for ( Mois = 0 ; Mois < 12 ; Mois++ ) {
-    if ( NbPdt == 28 ) NbPdt = 29;
-	  else if ( NbPdt == 29 ) NbPdt = 30;
-	  else if ( NbPdt == 30 ) NbPdt = 31;
-	  else if ( NbPdt == 31 ) NbPdt = 28;
-	  else {
-	    printf("BUG\n");
-	  	exit(0);
-	  }
-	
-    DonneesMensuelles->NombreDeJoursDuMois = NbPdt;
+    NbPdt = 28;
+    for (Nb = 0; Nb < NombreDAnnees; Nb++)
+    {
+        for (Mois = 0; Mois < 12; Mois++)
+        {
+            if (NbPdt == 28)
+                NbPdt = 29;
+            else if (NbPdt == 29)
+                NbPdt = 30;
+            else if (NbPdt == 30)
+                NbPdt = 31;
+            else if (NbPdt == 31)
+                NbPdt = 28;
+            else
+            {
+                printf("BUG\n");
+                exit(0);
+            }
 
-		for ( k = 0 ; k < NbReservoirs ; k++ ) {
-      DonneesMensuelles->TurbineDuMois = NbPdt * ( (double) rand() / RAND_MAX );
-	
-      for ( i = 0 ; i < NbPdt ; i++ ) {
-        
-        DonneesMensuelles->TurbineMax[i] = 1.1 * ( DonneesMensuelles->TurbineDuMois / NbPdt );
-        
-        DonneesMensuelles->TurbineCible[i] = DonneesMensuelles->TurbineDuMois / NbPdt;
-      }
+            DonneesMensuelles->NombreDeJoursDuMois = NbPdt;
 
-      H2O_J_OptimiserUnMois( DonneesMensuelles );
-	
-	    if ( DonneesMensuelles->ResultatsValides != OUI ) {
-        printf("Annee %d Mois %d calcul invalide \n",Nb,Mois);
-        Flot = fopen( "Donnees_Probleme_Solveur.mps", "w" ); 
-        if( Flot == NULL ) {
-          printf("Erreur ouverture du fichier pour l'ecriture du jeu de donnees \n");
-          exit(0);
-        }			
-        H2O_J_EcrireJeuDeDonneesLineaireAuFormatMPS( DonneesMensuelles, Flot );
-        H2O_J_Free( DonneesMensuelles );			
-		    exit(0);
-	    }	
-		}
-	}
-	printf("Calcul termine annee %d \n",Nb);
-}
+            for (k = 0; k < NbReservoirs; k++)
+            {
+                DonneesMensuelles->TurbineDuMois = NbPdt * ((double)rand() / RAND_MAX);
 
-H2O_J_Free( DonneesMensuelles );
+                for (i = 0; i < NbPdt; i++)
+                {
+                    DonneesMensuelles->TurbineMax[i]
+                      = 1.1 * (DonneesMensuelles->TurbineDuMois / NbPdt);
 
-exit(0);
+                    DonneesMensuelles->TurbineCible[i] = DonneesMensuelles->TurbineDuMois / NbPdt;
+                }
+
+                H2O_J_OptimiserUnMois(DonneesMensuelles);
+
+                if (DonneesMensuelles->ResultatsValides != OUI)
+                {
+                    printf("Annee %d Mois %d calcul invalide \n", Nb, Mois);
+                    Flot = fopen("Donnees_Probleme_Solveur.mps", "w");
+                    if (Flot == NULL)
+                    {
+                        printf("Erreur ouverture du fichier pour l'ecriture du jeu de donnees \n");
+                        exit(0);
+                    }
+                    H2O_J_EcrireJeuDeDonneesLineaireAuFormatMPS(DonneesMensuelles, Flot);
+                    H2O_J_Free(DonneesMensuelles);
+                    exit(0);
+                }
+            }
+        }
+        printf("Calcul termine annee %d \n", Nb);
+    }
+
+    H2O_J_Free(DonneesMensuelles);
+
+    exit(0);
 }

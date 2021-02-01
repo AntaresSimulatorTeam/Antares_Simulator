@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_ABOUTBOX_H__
-# define __ANTARES_APPLICATION_ABOUTBOX_H__
+#define __ANTARES_APPLICATION_ABOUTBOX_H__
 
-# include "about/aboutbox.h"
+#include "about/aboutbox.h"
 
 #endif // __ANTARES_APPLICATION_ABOUTBOX_H__

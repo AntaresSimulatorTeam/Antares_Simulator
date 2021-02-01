@@ -41,9 +41,7 @@
 #include "../resources.h"
 #include <ui/common/lock.h>
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
@@ -51,378 +49,380 @@ namespace Toolbox
 {
 namespace InputSelector
 {
+class TreeLeaf final : public wxTreeItemData
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    TreeLeaf(Data::AreaLink* lnk) : pLink(lnk)
+    {
+    }
+    //! Destructor
+    virtual ~TreeLeaf()
+    {
+    }
+    //@}
 
-	class TreeLeaf final : public wxTreeItemData
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		TreeLeaf(Data::AreaLink* lnk)
-			:pLink(lnk)
-		{}
-		//! Destructor
-		virtual ~TreeLeaf() {}
-		//@}
+    //! Get the attached link
+    Data::AreaLink* link() const
+    {
+        return pLink;
+    }
 
-		//! Get the attached link
-		Data::AreaLink* link() const {return pLink;}
+private:
+    //! Pointer to an AreaLink
+    Data::AreaLink* pLink;
 
-	private:
-		//! Pointer to an AreaLink
-		Data::AreaLink* pLink;
+}; // class TreeLeaf
 
-	}; // class TreeLeaf
+Connections::Connections(wxWindow* parent) :
+ AInput(parent), pLayerFilter(nullptr), pListbox(nullptr), pLastSelected(nullptr)
+{
+    // Default size
+    SetSize(420, 300);
 
+    // Create all needed controls
+    internalBuildSubControls();
+    // Updating of their values
+    update();
 
+    // Connect to the global event
+    OnStudyAreasChanged.connect(this, &Connections::update);
+    OnStudyAreaRename.connect(this, &Connections::onStudyAreaUpdate);
+    OnStudyAreaDelete.connect(this, &Connections::onStudyAreaUpdate);
+    OnStudyLinkAdded.connect(this, &Connections::onStudyLinkUpdate);
+    OnStudyLinkDelete.connect(this, &Connections::onStudyLinkUpdate);
+    OnStudyClosed.connect(this, &Connections::onStudyClosed);
+    OnStudyEndUpdate.connect(this, &Connections::update);
 
+    OnMapLayerChanged.connect(this, &Connections::onMapLayerChanged);
+    OnMapLayerAdded.connect(this, &Connections::onMapLayerAdded);
+    OnMapLayerRemoved.connect(this, &Connections::onMapLayerRemoved);
+    OnMapLayerRenamed.connect(this, &Connections::onMapLayerRenamed);
+}
 
-	Connections::Connections(wxWindow* parent) :
-		AInput(parent),
-		pLayerFilter(nullptr),
-		pListbox(nullptr),
-		pLastSelected(nullptr)
-	{
-		// Default size
-		SetSize(420, 300);
+Connections::~Connections()
+{
+    destroyBoundEvents();
+    if (pListbox)
+        pListbox->DeleteAllItems();
+}
 
-		// Create all needed controls
-		internalBuildSubControls();
-		// Updating of their values
-		update();
+void Connections::internalBuildSubControls()
+{
+    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+    SetSizer(sizer);
+    sizer->AddSpacer(1);
+    // Layer filter
+    pLayerFilter = new wxComboBox(
+      this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY);
+    pLayerFilter->SetFont(wxFont(wxFontInfo().Bold()));
+    pLayerFilter->AppendString("All");
+    pLayerFilter->SetValue("All");
+    pLayerFilter->Connect(pLayerFilter->GetId(),
+                          wxEVT_COMBOBOX,
+                          wxCommandEventHandler(Connections::layerFilterChanged),
+                          nullptr,
+                          this);
+    sizer->Add(pLayerFilter, 0, wxALL | wxEXPAND);
+    sizer->AddSpacer(2);
+    sizer->Hide(pLayerFilter);
+    // Listbox
+    pListbox
+      = new wxTreeCtrl(this,
+                       wxID_ANY,
+                       wxDefaultPosition,
+                       wxDefaultSize,
+                       wxTR_HIDE_ROOT | wxTR_FULL_ROW_HIGHLIGHT | wxTR_NO_LINES | wxTR_HAS_BUTTONS
+                         | wxTR_FULL_ROW_HIGHLIGHT | wxTR_SINGLE | wxBORDER_NONE);
 
-		// Connect to the global event
-		OnStudyAreasChanged.connect(this, &Connections::update);
-		OnStudyAreaRename.connect(this, &Connections::onStudyAreaUpdate);
-		OnStudyAreaDelete.connect(this, &Connections::onStudyAreaUpdate);
-		OnStudyLinkAdded.connect(this, &Connections::onStudyLinkUpdate);
-		OnStudyLinkDelete.connect(this, &Connections::onStudyLinkUpdate);
-		OnStudyClosed.connect(this, &Connections::onStudyClosed);
-		OnStudyEndUpdate.connect(this, &Connections::update);
+    pListbox->Connect(pListbox->GetId(),
+                      wxEVT_COMMAND_TREE_SEL_CHANGED,
+                      wxTreeEventHandler(Connections::onSelectionChanged),
+                      nullptr,
+                      this);
 
-		OnMapLayerChanged.connect(this, &Connections::onMapLayerChanged);
-		OnMapLayerAdded.connect(this, &Connections::onMapLayerAdded);
-		OnMapLayerRemoved.connect(this, &Connections::onMapLayerRemoved);
-		OnMapLayerRenamed.connect(this, &Connections::onMapLayerRenamed);
-	}
+    // Image List
+    wxImageList* imgList = new wxImageList(16, 16);
 
+    // links
+    {
+        wxBitmap* bmp = Resources::BitmapLoadFromFile("images/16x16/link.png");
+        imgList->Add(*bmp);
+        delete bmp;
+    }
+    // Areas
+    {
+        wxBitmap* bmp = Resources::BitmapLoadFromFile("images/16x16/area.png");
+        imgList->Add(*bmp);
+        delete bmp;
+    }
+    // Areas
+    {
+        wxBitmap* bmp = Resources::BitmapLoadFromFile("images/16x16/blocks.png");
+        imgList->Add(*bmp);
+        delete bmp;
+    }
+    pListbox->AssignImageList(imgList);
 
-	Connections::~Connections()
-	{
-		destroyBoundEvents();
-		if (pListbox)
-			pListbox->DeleteAllItems();
-	}
+    // Update the layout
+    sizer->Add(pListbox, 1, wxALL | wxEXPAND);
+    sizer->Layout();
+}
 
+void Connections::update()
+{
+    assert(pListbox);
 
+    GUILocker locker;
+    if (pLastSelected)
+    {
+        pLastSelected = nullptr;
+        onConnectionChanged(nullptr);
+    }
 
+    if (!pListbox)
+        return;
 
-	void Connections::internalBuildSubControls()
-	{
-		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-		SetSizer(sizer);
-		sizer->AddSpacer(1);
-		//Layer filter
-		pLayerFilter = new wxComboBox(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
-			0, NULL, wxCB_READONLY);
-		pLayerFilter->SetFont(wxFont(wxFontInfo().Bold()));
-		pLayerFilter->AppendString("All");
-		pLayerFilter->SetValue("All");
-		pLayerFilter->Connect(pLayerFilter->GetId(), wxEVT_COMBOBOX,
-			wxCommandEventHandler(Connections::layerFilterChanged), nullptr, this);
-		sizer->Add(pLayerFilter, 0, wxALL | wxEXPAND);
-		sizer->AddSpacer(2);
-		sizer->Hide(pLayerFilter);
-		// Listbox
-		pListbox = new wxTreeCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-				wxTR_HIDE_ROOT|wxTR_FULL_ROW_HIGHLIGHT|wxTR_NO_LINES|wxTR_HAS_BUTTONS
-				|wxTR_FULL_ROW_HIGHLIGHT|wxTR_SINGLE|wxBORDER_NONE);
+    // Set all items at once
+    pListbox->DeleteAllItems();
 
-		pListbox->Connect(pListbox->GetId(), wxEVT_COMMAND_TREE_SEL_CHANGED,
-			wxTreeEventHandler(Connections::onSelectionChanged), nullptr, this);
+    if (not Data::Study::Current::Valid())
+        return;
+    auto& study = *Data::Study::Current::Get();
 
-		// Image List
-		wxImageList* imgList = new wxImageList(16, 16);
+    pListbox->Freeze();
 
-		// links
-		{
-			wxBitmap* bmp = Resources::BitmapLoadFromFile("images/16x16/link.png");
-			imgList->Add(*bmp);
-			delete bmp;
-		}
-		// Areas
-		{
-			wxBitmap* bmp = Resources::BitmapLoadFromFile("images/16x16/area.png");
-			imgList->Add(*bmp);
-			delete bmp;
-		}
-		// Areas
-		{
-			wxBitmap* bmp = Resources::BitmapLoadFromFile("images/16x16/blocks.png");
-			imgList->Add(*bmp);
-			delete bmp;
-		}
-		pListbox->AssignImageList(imgList);
+    String layerName = "";
+    size_t layerID = 0;
+    if (pLayerFilter)
+        layerName = std::string(pLayerFilter->GetValue().mb_str());
+    auto layerListEnd = study.layers.end();
+    for (auto layerIt = study.layers.begin(); layerIt != layerListEnd; layerIt++)
+    {
+        if (layerIt->second == layerName)
+        {
+            layerID = layerIt->first;
+        }
+    }
 
-		// Update the layout
-		sizer->Add(pListbox, 1, wxALL|wxEXPAND);
-		sizer->Layout();
-	}
+    // The current ROOT node ID
+    wxTreeItemId rootId = pListbox->AddRoot(wxString(wxT("Links")));
+    pListbox->SetItemBold(rootId, true);
+    wxTreeItemId localRootId;
 
+    // UPSTREAM / DOWNSTREEAM
+    // Root Node
+    localRootId = pListbox->AppendItem(rootId, wxString(wxT("Upstream / Downstream")), 2);
+    pListbox->SetItemBold(localRootId, true);
+    {
+        const Data::Area::Map::iterator end = study.areas.end();
+        for (Data::Area::Map::iterator i = study.areas.begin(); i != end; ++i)
+        {
+            // Reference to the area
+            Data::Area& area = *(i->second);
+            if (area.isVisibleOnLayer(layerID))
+            {
+                wxTreeItemId id;
+                // Foreach Interconnection for the area
+                const Data::AreaLink::Map::iterator end = area.links.end();
+                for (Data::AreaLink::Map::iterator i = area.links.begin(); i != end; ++i)
+                {
+                    Data::AreaLink* lnk = i->second;
 
-	void Connections::update()
-	{
-		assert(pListbox);
+                    if (lnk->isVisibleOnLayer(layerID))
+                    {
+                        if (!id)
+                        {
+                            // We have to create the item corresponding to the area
+                            id = pListbox->AppendItem(
+                              localRootId,
+                              wxString() << wxT(' ') << wxStringFromUTF8(area.name) << wxT(' '),
+                              1,
+                              1);
+                            pListbox->SetItemBold(id, true);
+                        }
+                        // Adding the item for the interconnection
+                        /* wxTreeItemId itemID = */ pListbox->AppendItem(
+                          id, /*parent*/
+                          // caption
+                          wxString() << wxT(' ') << wxStringFromUTF8(lnk->with->name) << wxT(' '),
+                          0,
+                          0,
+                          new TreeLeaf(lnk));
+                    }
+                }
+            }
+        }
+    }
 
-		GUILocker locker;
-		if (pLastSelected)
-		{
-			pLastSelected = nullptr;
-			onConnectionChanged(nullptr);
-		}
+    // Flat
+    // Root Node
+    localRootId = pListbox->AppendItem(rootId, wxString(wxT("Flat")), 2);
+    pListbox->SetItemBold(localRootId, true);
+    {
+        const Data::Area::Map::iterator end = study.areas.end();
+        for (Data::Area::Map::iterator i = study.areas.begin(); i != end; ++i)
+        {
+            // Reference to the area
+            Data::Area& area = *(i->second);
 
-		if (!pListbox)
-			return;
+            if (area.isVisibleOnLayer(layerID))
+            {
+                // Foreach Interconnection for the area
+                const Data::AreaLink::Map::iterator end = area.links.end();
+                for (Data::AreaLink::Map::iterator i = area.links.begin(); i != end; ++i)
+                {
+                    Data::AreaLink* lnk = i->second;
 
-		// Set all items at once
-		pListbox->DeleteAllItems();
+                    if (lnk->isVisibleOnLayer(layerID))
+                    {
+                        // Adding the item for the interconnection
+                        /*wxTreeItemId itemID = */ pListbox->AppendItem(
+                          localRootId, /*parent*/
+                          // caption
+                          wxString() << wxT(' ') << wxStringFromUTF8(lnk->from->name) << wxT(" / ")
+                                     << wxStringFromUTF8(lnk->with->name) << wxT(' '),
+                          0,
+                          0,
+                          new TreeLeaf(lnk));
+                    }
+                }
+            }
+        }
+    }
 
-		if (not Data::Study::Current::Valid())
-			return;
-		auto& study = *Data::Study::Current::Get();
+    // Expand all items and subitems
+    pListbox->SetQuickBestSize(true);
+    pListbox->ExpandAll();
 
-		pListbox->Freeze();
+    pListbox->Thaw();
+}
 
-		String layerName = "";
-		size_t layerID = 0;
-		if (pLayerFilter)
-			layerName = std::string(pLayerFilter->GetValue().mb_str());
-		auto layerListEnd = study.layers.end();
-		for (auto layerIt = study.layers.begin(); layerIt != layerListEnd; layerIt++)
-		{
-			if (layerIt->second == layerName)
-			{
-				layerID = layerIt->first;
-			}
-		}
+void Connections::onStudyAreaUpdate(Data::Area*)
+{
+    update();
+}
 
-		// The current ROOT node ID
-		wxTreeItemId rootId = pListbox->AddRoot(wxString(wxT("Links")));
-		pListbox->SetItemBold(rootId, true);
-		wxTreeItemId localRootId;
+void Connections::onStudyLinkUpdate(Data::AreaLink*)
+{
+    update();
+}
 
-		// UPSTREAM / DOWNSTREEAM
-		// Root Node
-		localRootId = pListbox->AppendItem(rootId, wxString(wxT("Upstream / Downstream")), 2);
-		pListbox->SetItemBold(localRootId, true);
-		{
-			const Data::Area::Map::iterator end = study.areas.end();
-			for (Data::Area::Map::iterator i = study.areas.begin(); i != end; ++i)
-			{
-				// Reference to the area
-				Data::Area& area = *(i->second);
-				if (area.isVisibleOnLayer(layerID))
-				{
-					wxTreeItemId id;
-					// Foreach Interconnection for the area
-					const Data::AreaLink::Map::iterator end = area.links.end();
-					for (Data::AreaLink::Map::iterator i = area.links.begin(); i != end; ++i)
-					{
-						Data::AreaLink* lnk = i->second;
+void Connections::onStudyClosed()
+{
+    GUILocker locker;
+    pLastSelected = nullptr;
+    onConnectionChanged(nullptr);
+    if (pListbox)
+        pListbox->DeleteAllItems();
+}
 
-						if (lnk->isVisibleOnLayer(layerID))
-						{
-							if (!id)
-							{
-								// We have to create the item corresponding to the area
-								id = pListbox->AppendItem(localRootId, wxString() << wxT(' ') << wxStringFromUTF8(area.name) << wxT(' '),
-									1, 1);
-								pListbox->SetItemBold(id, true);
-							}
-							// Adding the item for the interconnection
-							/* wxTreeItemId itemID = */ pListbox->AppendItem(id, /*parent*/
-								// caption
-								wxString() << wxT(' ') << wxStringFromUTF8(lnk->with->name) << wxT(' '),
-								0, 0, new TreeLeaf(lnk));
-						}
-					}
-				}
-			}
-		}
+void Connections::onSelectionChanged(wxTreeEvent& evt)
+{
+    assert(pListbox);
 
+    GUILocker locker;
+    wxTreeItemId id = evt.GetItem();
+    if (id.IsOk() and pListbox)
+    {
+        wxTreeItemData* data = pListbox->GetItemData(id);
+        if (data)
+        {
+            Yuni::Bind<void()> callback;
+            callback.bind(this, &Connections::delayedSelection, data);
+            Dispatcher::GUI::Post(callback, 10);
+        }
+    }
+}
 
-		// Flat
-		// Root Node
-		localRootId = pListbox->AppendItem(rootId, wxString(wxT("Flat")), 2);
-		pListbox->SetItemBold(localRootId, true);
-		{
-			const Data::Area::Map::iterator end = study.areas.end();
-			for (Data::Area::Map::iterator i = study.areas.begin(); i != end; ++i)
-			{
-				// Reference to the area
-				Data::Area& area = *(i->second);
+void Connections::delayedSelection(wxTreeItemData* data)
+{
+    GUILocker locker;
+    if (data and dynamic_cast<TreeLeaf*>(data))
+    {
+        TreeLeaf* leaf = dynamic_cast<TreeLeaf*>(data);
+        Data::AreaLink* link = leaf->link();
+        if (link != pLastSelected)
+        {
+            // Lock the window to prevent flickering
+            Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
+            wxWindowUpdateLocker updater(&mainFrm);
 
-				if (area.isVisibleOnLayer(layerID))
-				{
-					// Foreach Interconnection for the area
-					const Data::AreaLink::Map::iterator end = area.links.end();
-					for (Data::AreaLink::Map::iterator i = area.links.begin(); i != end; ++i)
-					{
-						Data::AreaLink* lnk = i->second;
+            onConnectionChanged(link);
+            pLastSelected = link;
+            Window::Inspector::SelectLink(pLastSelected);
+        }
+    }
+}
 
-						if (lnk->isVisibleOnLayer(layerID))
-						{
-							// Adding the item for the interconnection
-							/*wxTreeItemId itemID = */ pListbox->AppendItem(localRootId, /*parent*/
-								// caption
-								wxString() << wxT(' ')
-								<< wxStringFromUTF8(lnk->from->name) << wxT(" / ")
-								<< wxStringFromUTF8(lnk->with->name) << wxT(' '),
-								0, 0, new TreeLeaf(lnk));
-						}
-					}
-				}
-			}
-		}
+void Connections::onMapLayerAdded(const wxString* text)
+{
+    // Note: the method ChangeValue does not generate a wexEXT_COMMAND_TEXT_UPDATED
+    // event
+    if (pLayerFilter && pLayerFilter->FindString(*text) == wxNOT_FOUND)
+    {
+        pLayerFilter->AppendString(*text);
+        if (pLayerFilter->GetCount() > 1 && !GetSizer()->IsShown(pLayerFilter))
+            GetSizer()->Show(pLayerFilter);
+    }
+    // wxStringToString(*text, pLastResearch);
+    // Dispatcher::GUI::Post(this, &Spotlight::redoResearch);
+}
 
-		// Expand all items and subitems
-		pListbox->SetQuickBestSize(true);
-		pListbox->ExpandAll();
+void Connections::onMapLayerRemoved(const wxString* text)
+{
+    // Note: the method ChangeValue does not generate a wexEXT_COMMAND_TEXT_UPDATED
+    // event
+    if (pLayerFilter)
+    {
+        auto pos = pLayerFilter->FindString(*text);
+        if (pos != wxNOT_FOUND)
+        {
+            pLayerFilter->Delete(pos);
+            pLayerFilter->Select(0);
+        }
+        if (pLayerFilter->GetCount() == 1 && GetSizer()->IsShown(pLayerFilter))
+            GetSizer()->Hide(pLayerFilter);
+    }
+    /*wxStringToString(*text, pLastResearch);*/
+    Dispatcher::GUI::Post(this, &Connections::update);
+}
 
-		pListbox->Thaw();
-	}
+void Connections::onMapLayerChanged(const wxString* text)
+{
+    // Note: the method ChangeValue does not generate a wexEXT_COMMAND_TEXT_UPDATED
+    // event
+    if (pLayerFilter)
+        pLayerFilter->SetValue(*text);
 
+    // wxStringToString(*text, pLastResearch);
+    Dispatcher::GUI::Post(this, &Connections::update);
+}
 
-	void Connections::onStudyAreaUpdate(Data::Area*)
-	{
-		update();
-	}
+void Connections::onMapLayerRenamed(const wxString* text)
+{
+    // Note: the method ChangeValue does not generate a wexEXT_COMMAND_TEXT_UPDATED
+    // event
+    if (pLayerFilter)
+        pLayerFilter->SetString(pLayerFilter->GetSelection(), *text);
 
+    // wxStringToString(*text, pLastResearch);
+    Dispatcher::GUI::Post(this, &Connections::update);
+}
 
-	void Connections::onStudyLinkUpdate(Data::AreaLink*)
-	{
-		update();
-	}
-
-
-	void Connections::onStudyClosed()
-	{
-		GUILocker locker;
-		pLastSelected = nullptr;
-		onConnectionChanged(nullptr);
-		if (pListbox)
-			pListbox->DeleteAllItems();
-	}
-
-
-	void Connections::onSelectionChanged(wxTreeEvent& evt)
-	{
-		assert(pListbox);
-
-		GUILocker locker;
-		wxTreeItemId id = evt.GetItem();
-		if (id.IsOk() and pListbox)
-		{
-			wxTreeItemData* data = pListbox->GetItemData(id);
-			if (data)
-			{
-				Yuni::Bind<void ()> callback;
-				callback.bind(this, &Connections::delayedSelection, data);
-				Dispatcher::GUI::Post(callback, 10);
-			}
-		}
-	}
-
-
-	void Connections::delayedSelection(wxTreeItemData* data)
-	{
-		GUILocker locker;
-		if (data and dynamic_cast<TreeLeaf*>(data))
-		{
-			TreeLeaf* leaf = dynamic_cast<TreeLeaf*>(data);
-			Data::AreaLink* link = leaf->link();
-			if (link != pLastSelected)
-			{
-				// Lock the window to prevent flickering
-				Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
-				wxWindowUpdateLocker updater(&mainFrm);
-
-				onConnectionChanged(link);
-				pLastSelected = link;
-				Window::Inspector::SelectLink(pLastSelected);
-			}
-		}
-	}
-
-	void Connections::onMapLayerAdded(const wxString* text)
-	{
-		// Note: the method ChangeValue does not generate a wexEXT_COMMAND_TEXT_UPDATED
-		// event
-		if (pLayerFilter && pLayerFilter->FindString(*text) == wxNOT_FOUND)
-		{
-			pLayerFilter->AppendString(*text);
-			if (pLayerFilter->GetCount() > 1 && !GetSizer()->IsShown(pLayerFilter))
-				GetSizer()->Show(pLayerFilter);
-		}
-		//wxStringToString(*text, pLastResearch);
-		//Dispatcher::GUI::Post(this, &Spotlight::redoResearch);
-	}
-
-	void Connections::onMapLayerRemoved(const wxString* text)
-	{
-		// Note: the method ChangeValue does not generate a wexEXT_COMMAND_TEXT_UPDATED
-		// event
-		if (pLayerFilter)
-		{
-			auto pos = pLayerFilter->FindString(*text);
-			if (pos != wxNOT_FOUND)
-			{
-				pLayerFilter->Delete(pos);
-				pLayerFilter->Select(0);
-			}
-			if (pLayerFilter->GetCount() == 1 && GetSizer()->IsShown(pLayerFilter))
-				GetSizer()->Hide(pLayerFilter);
-		}
-		/*wxStringToString(*text, pLastResearch);*/
-		Dispatcher::GUI::Post(this, &Connections::update);
-	}
-
-	void Connections::onMapLayerChanged(const wxString* text)
-	{
-		// Note: the method ChangeValue does not generate a wexEXT_COMMAND_TEXT_UPDATED
-		// event
-		if (pLayerFilter)
-			pLayerFilter->SetValue(*text);
-
-		//wxStringToString(*text, pLastResearch);
-		Dispatcher::GUI::Post(this, &Connections::update);
-	}
-
-	void Connections::onMapLayerRenamed(const wxString* text)
-	{
-		// Note: the method ChangeValue does not generate a wexEXT_COMMAND_TEXT_UPDATED
-		// event
-		if (pLayerFilter)
-			pLayerFilter->SetString(pLayerFilter->GetSelection(), *text);
-
-		//wxStringToString(*text, pLastResearch);
-		Dispatcher::GUI::Post(this, &Connections::update);
-	}
-
-	void Connections::layerFilterChanged(wxCommandEvent& evt)
-	{
-		if (IsGUIAboutToQuit())
-			return;
-		wxString temp = pLayerFilter->GetValue();
-		OnMapLayerChanged(&temp);
-		Dispatcher::GUI::Post(this, &Connections::update);
-	}
-
-
+void Connections::layerFilterChanged(wxCommandEvent& evt)
+{
+    if (IsGUIAboutToQuit())
+        return;
+    wxString temp = pLayerFilter->GetValue();
+    OnMapLayerChanged(&temp);
+    Dispatcher::GUI::Post(this, &Connections::update);
+}
 
 } // namespace InputSelector
 } // namespace Toolbox
 } // namespace Antares
-

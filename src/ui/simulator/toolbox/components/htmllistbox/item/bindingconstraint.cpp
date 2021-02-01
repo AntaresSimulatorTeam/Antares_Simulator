@@ -25,9 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-# include "bindingconstraint.h"
-# include "../../../resources.h"
-
+#include "bindingconstraint.h"
+#include "../../../resources.h"
 
 namespace Antares
 {
@@ -37,103 +36,94 @@ namespace HTMLListbox
 {
 namespace Item
 {
+wxString BindingConstraint::pIconFileEnabled;
+wxString BindingConstraint::pIconFileDisabled;
 
+BindingConstraint::BindingConstraint(Data::BindingConstraint* a) : pBindingConstraint(a)
+{
+    preloadImages();
+}
 
-	wxString BindingConstraint::pIconFileEnabled;
-	wxString BindingConstraint::pIconFileDisabled;
+BindingConstraint::BindingConstraint(Data::BindingConstraint* a, const wxString& additional) :
+ pBindingConstraint(a), pText(additional)
+{
+    preloadImages();
+}
 
+BindingConstraint::~BindingConstraint()
+{
+}
 
+void BindingConstraint::preloadImages()
+{
+    if (pIconFileEnabled.empty())
+    {
+        Yuni::String location;
 
-	BindingConstraint::BindingConstraint(Data::BindingConstraint* a)
-		:pBindingConstraint(a)
-	{
-		preloadImages();
-	}
+        Resources::FindFile(location, "images/16x16/light_green.png");
+        pIconFileEnabled = wxStringFromUTF8(location);
 
-	BindingConstraint::BindingConstraint(Data::BindingConstraint* a, const wxString& additional)
-		:pBindingConstraint(a), pText(additional)
-	{
-		preloadImages();
-	}
+        Resources::FindFile(location, "images/16x16/light_orange.png");
+        pIconFileDisabled = wxStringFromUTF8(location);
+    }
+}
 
+bool BindingConstraint::HtmlContent(wxString& out,
+                                    Data::BindingConstraint* bc,
+                                    const wxString& searchString)
+{
+    bool highlight = false;
 
+    if (bc->enabled() && bc->linkCount() > 0)
+    {
+        out << wxT("<td width=45 align=center><img src=\"") << pIconFileEnabled << wxT("\"></td>");
+    }
+    else
+    {
+        out << wxT("<td width=45 align=center><img src=\"") << pIconFileDisabled << wxT("\"></td>");
+    }
 
-	BindingConstraint::~BindingConstraint()
-	{}
+    out << wxT("<td width=22 bgcolor=\"#7485BE\" align=center><font size=\"-3\" "
+               "color=\"#444E6F\">Bc</font></td>");
 
+    out << wxT("<td width=8></td><td nowrap><font size=\"-1\"");
+    wxString name = wxStringFromUTF8(bc->name());
+    if (searchString.empty() || (highlight = HTMLCodeHighlightString(name, searchString)))
+        out << wxT("><b>") << name << wxT("</b></font>");
+    else
+        out << wxT(" color=\"#999999\">") << name << wxT("</font>");
 
-	void BindingConstraint::preloadImages()
-	{
-		if (pIconFileEnabled.empty())
-		{
-			Yuni::String location;
+    out << wxT("<font size=\"-2\" color=\"#AAAAAA\"><br><i>  (")
+        << wxStringFromUTF8(Data::BindingConstraint::OperatorToShortCString(bc->operatorType()))
+        << wxT(", ") << wxStringFromUTF8(Data::BindingConstraint::TypeToCString(bc->type()))
+        << wxT(")</i></font>");
 
-			Resources::FindFile(location, "images/16x16/light_green.png");
-			pIconFileEnabled = wxStringFromUTF8(location);
+    // Post
+    Yuni::String s;
+    s.reserve(512);
+    bc->buildHTMLFormula(s);
+    out << wxT("<font size=\"-2\"> ") << wxStringFromUTF8(s) << wxT("</font>");
+    if (not bc->comments().empty())
+        out << wxT("<font size=\"-2\" color=\"#363F59\"><br>") << wxStringFromUTF8(bc->comments())
+            << wxT("</font>");
+    out << wxT("</td>");
+    return highlight;
+}
 
-			Resources::FindFile(location, "images/16x16/light_orange.png");
-			pIconFileDisabled = wxStringFromUTF8(location);
-		}
-	}
-
-
-	bool BindingConstraint::HtmlContent(wxString& out, Data::BindingConstraint* bc, const wxString& searchString)
-	{
-		bool highlight = false;
-
-		if (bc->enabled() && bc->linkCount() > 0)
-		{
-			out	<< wxT("<td width=45 align=center><img src=\"") << pIconFileEnabled << wxT("\"></td>");
-		}
-		else
-		{
-			out	<< wxT("<td width=45 align=center><img src=\"") << pIconFileDisabled << wxT("\"></td>");
-		}
-
-		out << wxT("<td width=22 bgcolor=\"#7485BE\" align=center><font size=\"-3\" color=\"#444E6F\">Bc</font></td>");
-
-		out << wxT("<td width=8></td><td nowrap><font size=\"-1\"");
-		wxString name = wxStringFromUTF8(bc->name());
-		if (searchString.empty() || (highlight = HTMLCodeHighlightString(name, searchString)))
-			out << wxT("><b>") << name << wxT("</b></font>");
-		else
-			out << wxT(" color=\"#999999\">") << name << wxT("</font>");
-
-		out << wxT("<font size=\"-2\" color=\"#AAAAAA\"><br><i>  (")
-			<< wxStringFromUTF8(Data::BindingConstraint::OperatorToShortCString(bc->operatorType()))
-			<< wxT(", ")
-			<< wxStringFromUTF8(Data::BindingConstraint::TypeToCString(bc->type()))
-			<< wxT(")</i></font>");
-
-			// Post
-		Yuni::String s;
-		s.reserve(512);
-		bc->buildHTMLFormula(s);
-		out << wxT("<font size=\"-2\"> ") << wxStringFromUTF8(s) << wxT("</font>");
-		if (not bc->comments().empty())
-			out << wxT("<font size=\"-2\" color=\"#363F59\"><br>") << wxStringFromUTF8(bc->comments()) << wxT("</font>");
-		out << wxT("</td>");
-		return highlight;
-	}
-
-
-	wxString BindingConstraint::htmlContent(const wxString& searchString)
-	{
-		if (pBindingConstraint)
-		{
-			wxString d;
-			d << wxT("<table border=0 cellpadding=0 cellspacing=0 width=\"100%\"><tr>");
-			pHighlighted = HtmlContent(d, pBindingConstraint, searchString);
-			// Post
-			d << pText << wxT("</tr></table>");
-			return d;
-		}
-		pHighlighted = false;
-		return wxString();
-	}
-
-
-
+wxString BindingConstraint::htmlContent(const wxString& searchString)
+{
+    if (pBindingConstraint)
+    {
+        wxString d;
+        d << wxT("<table border=0 cellpadding=0 cellspacing=0 width=\"100%\"><tr>");
+        pHighlighted = HtmlContent(d, pBindingConstraint, searchString);
+        // Post
+        d << pText << wxT("</tr></table>");
+        return d;
+    }
+    pHighlighted = false;
+    return wxString();
+}
 
 } // namespace Item
 } // namespace HTMLListbox

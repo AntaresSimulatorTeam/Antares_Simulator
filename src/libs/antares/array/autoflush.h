@@ -25,71 +25,63 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_ARRAY_MATRIX_AUTOFLUSHH__
-# define __ANTARES_LIBS_ARRAY_MATRIX_AUTOFLUSHH__
+#define __ANTARES_LIBS_ARRAY_MATRIX_AUTOFLUSHH__
 
-# include <yuni/yuni.h>
-
+#include <yuni/yuni.h>
 
 namespace Antares
 {
+template<class MatrixT>
+class MatrixAutoFlush final
+{
+public:
+    enum
+    {
+        //! Auto flush
+        autoFlushRowCount = 500,
+    };
 
+public:
+#ifdef ANTARES_SWAP_SUPPORT
+    MatrixAutoFlush(const MatrixT& matrix) : pCount(0), pLastFlush(0), pMatrix(matrix)
+    {
+    }
+#else
+    MatrixAutoFlush(const MatrixT&)
+    {
+    }
+#endif
 
-	template<class MatrixT>
-	class MatrixAutoFlush final
-	{
-	public:
-		enum
-		{
-			//! Auto flush
-			autoFlushRowCount = 500,
-		};
+    MatrixAutoFlush& operator++()
+    {
+#ifdef ANTARES_SWAP_SUPPORT
+        if (++pCount == autoFlushRowCount)
+        {
+            if (pLastFlush != 0)
+            {
+                uint last = pLastFlush + pCount;
+                for (uint i = pLastFlush; i != last; ++i)
+                    pMatrix[i].flush();
+                pLastFlush = last;
+                pCount = 0;
+            }
+            else
+            {
+                pLastFlush = pCount;
+            }
+        }
+#endif
+        return *this;
+    }
 
-	public:
-		# ifdef ANTARES_SWAP_SUPPORT
-		MatrixAutoFlush(const MatrixT& matrix) :
-			pCount(0),
-			pLastFlush(0),
-			pMatrix(matrix)
-		{}
-		# else
-		MatrixAutoFlush(const MatrixT&) {}
-		# endif
+private:
+#ifdef ANTARES_SWAP_SUPPORT
+    uint pCount;
+    uint pLastFlush;
+    const MatrixT& pMatrix;
+#endif
 
-
-		MatrixAutoFlush& operator ++ ()
-		{
-			# ifdef ANTARES_SWAP_SUPPORT
-			if (++pCount == autoFlushRowCount)
-			{
-				if (pLastFlush != 0)
-				{
-					uint last = pLastFlush + pCount;
-					for (uint i = pLastFlush; i != last; ++i)
-						pMatrix[i].flush();
-					pLastFlush = last;
-					pCount = 0;
-				}
-				else
-				{
-					pLastFlush = pCount;
-				}
-			}
-			# endif
-			return *this;
-		}
-
-	private:
-		# ifdef ANTARES_SWAP_SUPPORT
-		uint pCount;
-		uint pLastFlush;
-		const MatrixT& pMatrix;
-		# endif
-
-	}; // class MatrixAutoFlush
-
-
-
-
+}; // class MatrixAutoFlush
 
 } // namespace Antares
 

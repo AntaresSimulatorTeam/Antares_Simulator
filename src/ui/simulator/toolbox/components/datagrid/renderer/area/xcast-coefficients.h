@@ -25,13 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_XCAST_COEFFICIENTS_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_XCAST_COEFFICIENTS_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_XCAST_COEFFICIENTS_H__
 
-# include <antares/wx-wrapper.h>
-# include "../area.h"
-# include "../matrix.h"
-
-
+#include <antares/wx-wrapper.h>
+#include "../area.h"
+#include "../matrix.h"
 
 namespace Antares
 {
@@ -41,70 +39,76 @@ namespace Datagrid
 {
 namespace Renderer
 {
+template<enum Data::TimeSeries T>
+class XCastCoefficients final : public Renderer::Matrix<float>, public Renderer::ARendererArea
+{
+public:
+    //! Ancestor
+    typedef Renderer::Matrix<float> MatrixAncestorType;
 
+public:
+    //! \name Constructor & Destructor
+    //@{
 
-	template<enum Data::TimeSeries T>
-	class XCastCoefficients final : public Renderer::Matrix<float>, public Renderer::ARendererArea
-	{
-	public:
-		//! Ancestor
-		typedef Renderer::Matrix<float>  MatrixAncestorType;
+    /*!
+    ** \brief Constructor
+    */
+    XCastCoefficients(wxWindow* control, Toolbox::InputSelector::Area* notifier);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
+    //! Destructor
+    virtual ~XCastCoefficients();
+    //@}
 
-		/*!
-		** \brief Constructor
-		*/
-		XCastCoefficients(wxWindow* control, Toolbox::InputSelector::Area* notifier);
+    virtual int width() const
+    {
+        return MatrixAncestorType::width();
+    }
+    virtual int height() const
+    {
+        return MatrixAncestorType::height();
+    }
 
-		//! Destructor
-		virtual ~XCastCoefficients();
-		//@}
+    virtual wxString columnCaption(int colIndx) const;
 
-		virtual int width() const {return MatrixAncestorType::width();}
-		virtual int height() const {return MatrixAncestorType::height();}
+    virtual wxString rowCaption(int rowIndx) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual wxString cellValue(int x, int y) const;
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual double cellNumericValue(int x, int y) const;
 
-		virtual wxString cellValue(int x, int y) const;
+    virtual bool cellValue(int x, int y, const Yuni::String& value);
 
-		virtual double cellNumericValue(int x, int y) const;
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    { /*Do nothing*/
+    }
 
-		virtual bool cellValue(int x, int y, const Yuni::String& value);
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{/*Do nothing*/}
+    virtual uint maxWidthResize() const
+    {
+        return 0;
+    }
+    virtual bool valid() const
+    {
+        return MatrixAncestorType::valid();
+    }
 
-		virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+    virtual Date::Precision precision();
 
-		virtual uint maxWidthResize() const {return 0;}
-		virtual bool valid() const {return MatrixAncestorType::valid();}
+protected:
+    virtual void internalAreaChanged(Data::Area* area);
+    //! Event: the study has been closed
+    virtual void onStudyClosed() override;
+    //! Event: the study has been loaded
+    virtual void onStudyLoaded() override;
 
-		virtual Date::Precision precision();
-
-	protected:
-		virtual void internalAreaChanged(Data::Area* area);
-		//! Event: the study has been closed
-		virtual void onStudyClosed() override;
-		//! Event: the study has been loaded
-		virtual void onStudyLoaded() override;
-
-	}; // class XCastCoefficients
-
-
-
-
-
+}; // class XCastCoefficients
 
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
 } // namespace Antares
 
-# include "xcast-coefficients.hxx"
+#include "xcast-coefficients.hxx"
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_XCAST_COEFFICIENTS_H__

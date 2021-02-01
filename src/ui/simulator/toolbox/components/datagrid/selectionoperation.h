@@ -25,12 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_SELECTION_OPERATION_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_SELECTION_OPERATION_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_SELECTION_OPERATION_H__
 
-# include <antares/wx-wrapper.h>
-# include <math.h>
-# include <limits>
-
+#include <antares/wx-wrapper.h>
+#include <math.h>
+#include <limits>
 
 namespace Antares
 {
@@ -40,190 +39,205 @@ namespace Datagrid
 {
 namespace Selection
 {
+class IOperator
+{
+public:
+    IOperator()
+    {
+    }
+    virtual ~IOperator()
+    {
+    }
 
+    /*!
+    ** \brief Caption of the operator
+    */
+    virtual const wxChar* caption() const = 0;
 
-	class IOperator
-	{
-	public:
-		IOperator() {}
-		virtual ~IOperator() {}
+    /*!
+    ** \brief Reset all internal values
+    */
+    virtual void reset() = 0;
 
-		/*!
-		** \brief Caption of the operator
-		*/
-		virtual const wxChar* caption() const = 0;
+    /*!
+    ** \brief Manage a new value
+    */
+    virtual void appendValue(const double v) = 0;
 
-		/*!
-		** \brief Reset all internal values
-		*/
-		virtual void reset() = 0;
+    /*!
+    ** \brief Get the result
+    */
+    virtual double result() const = 0;
 
-		/*!
-		** \brief Manage a new value
-		*/
-		virtual void appendValue(const double v) = 0;
+}; // class IOperator
 
-		/*!
-		** \brief Get the result
-		*/
-		virtual double result() const = 0;
+class Average final : public IOperator
+{
+public:
+    Average() : pValue(0.), pCount(0)
+    {
+    }
 
-	}; // class IOperator
+    virtual ~Average()
+    {
+    }
 
+    virtual const wxChar* caption() const
+    {
+        return wxT("Average");
+    }
 
+    virtual void reset()
+    {
+        pValue = 0.;
+        pCount = 0;
+    }
 
-	class Average final : public IOperator
-	{
-	public:
-		Average()
-			:pValue(0.), pCount(0)
-		{}
+    virtual void appendValue(const double v)
+    {
+        pValue += v;
+        ++pCount;
+    }
 
-		virtual ~Average() {}
+    virtual double result() const
+    {
+        return pValue / (double)pCount;
+    }
 
-		virtual const wxChar* caption() const {return wxT("Average");}
+private:
+    double pValue;
+    uint pCount;
 
-		virtual void reset()
-		{
-			pValue = 0.;
-			pCount = 0;
-		}
+}; // class Average
 
-		virtual void appendValue(const double v)
-		{
-			pValue += v;
-			++pCount;
-		}
+class Sum final : public IOperator
+{
+public:
+    Sum() : pValue(0.)
+    {
+    }
 
-		virtual double result() const
-		{
-			return pValue / (double)pCount;
-		}
+    virtual const wxChar* caption() const
+    {
+        return wxT("Sum");
+    }
 
-	private:
-		double pValue;
-		uint pCount;
+    virtual void reset()
+    {
+        pValue = 0.;
+    }
 
-	}; // class Average
+    virtual void appendValue(const double v)
+    {
+        pValue += v;
+    }
 
+    virtual double result() const
+    {
+        return pValue;
+    }
 
+private:
+    double pValue;
 
-	class Sum final : public IOperator
-	{
-	public:
-		Sum()
-			:pValue(0.)
-		{}
+}; // class Sum
 
-		virtual const wxChar* caption() const {return wxT("Sum");}
+class CellCount final : public IOperator
+{
+public:
+    CellCount() : pCount(0)
+    {
+    }
 
-		virtual void reset()
-		{
-			pValue = 0.;
-		}
+    virtual const wxChar* caption() const
+    {
+        return wxT("Cell Count");
+    }
 
-		virtual void appendValue(const double v)
-		{
-			pValue += v;
-		}
+    virtual void reset()
+    {
+        pCount = 0;
+    }
 
-		virtual double result() const {return pValue;}
+    virtual void appendValue(const double)
+    {
+        ++pCount;
+    }
 
-	private:
-		double pValue;
+    virtual double result() const
+    {
+        return (double)pCount;
+    }
 
-	}; // class Sum
+private:
+    uint pCount;
 
+}; // class Average
 
-	class CellCount final : public IOperator
-	{
-	public:
-		CellCount()
-			:pCount(0)
-		{}
+class Minimum final : public IOperator
+{
+public:
+    Minimum() : pValue(std::numeric_limits<double>::infinity())
+    {
+    }
 
-		virtual const wxChar* caption() const {return wxT("Cell Count");}
+    virtual const wxChar* caption() const
+    {
+        return wxT("Minimum");
+    }
 
-		virtual void reset()
-		{
-			pCount = 0;
-		}
+    virtual void reset()
+    {
+        pValue = std::numeric_limits<double>::infinity();
+    }
 
-		virtual void appendValue(const double)
-		{
-			++pCount;
-		}
+    virtual void appendValue(const double v)
+    {
+        if (v < pValue)
+            pValue = v;
+    }
 
-		virtual double result() const
-		{
-			return (double)pCount;
-		}
+    virtual double result() const
+    {
+        return pValue;
+    }
 
-	private:
-		uint pCount;
+private:
+    double pValue;
 
-	}; // class Average
+}; // class Sum
 
+class Maximum final : public IOperator
+{
+public:
+    Maximum() : pValue(-std::numeric_limits<double>::infinity())
+    {
+    }
 
+    virtual const wxChar* caption() const
+    {
+        return wxT("Maximum");
+    }
+    virtual void reset()
+    {
+        pValue = -std::numeric_limits<double>::infinity();
+    }
 
-	class Minimum final : public IOperator
-	{
-	public:
-		Minimum()
-			:pValue(std::numeric_limits<double>::infinity())
-		{}
+    virtual void appendValue(const double v)
+    {
+        if (v > pValue)
+            pValue = v;
+    }
 
-		virtual const wxChar* caption() const {return wxT("Minimum");}
+    virtual double result() const
+    {
+        return pValue;
+    }
 
-		virtual void reset()
-		{
-			pValue = std::numeric_limits<double>::infinity();
-		}
+private:
+    double pValue;
 
-		virtual void appendValue(const double v)
-		{
-			if (v < pValue)
-				pValue = v;
-		}
-
-		virtual double result() const {return pValue;}
-
-	private:
-		double pValue;
-
-	}; // class Sum
-
-
-
-	class Maximum final : public IOperator
-	{
-	public:
-		Maximum() :
-			pValue(-std::numeric_limits<double>::infinity())
-		{}
-
-		virtual const wxChar* caption() const {return wxT("Maximum");}
-		virtual void reset()
-		{
-			pValue = -std::numeric_limits<double>::infinity();
-		}
-
-		virtual void appendValue(const double v)
-		{
-			if (v > pValue)
-				pValue = v;
-		}
-
-		virtual double result() const {return pValue;}
-
-	private:
-		double pValue;
-
-	}; // class Sum
-
-
-
-
+}; // class Sum
 
 } // namespace Selection
 } // namespace Datagrid

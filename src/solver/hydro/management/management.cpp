@@ -36,299 +36,252 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
+double HydroManagement::GammaVariable(double r)
+{
+    double x = 0.;
+    do
+    {
+        double s = r - 1.;
+        double u = random();
+        double v = random();
+        double w = u * (1. - u);
+        assert(Math::Abs(w) > 1e-12);
+        assert(3. * (r - 0.25) / w > 0.);
+        double y = Math::SquareRootNoCheck(3. * (r - 0.25) / w) * (u - 0.5);
 
-	 double HydroManagement::GammaVariable(double r)
-	{
-		double x = 0.;
-		do
-		{
-			double s = r - 1.;
-			double u = random();
-			double v = random();
-			double w = u * (1. - u);
-			assert(Math::Abs(w) > 1e-12);
-			assert(3. * (r - 0.25) / w > 0.);
-			double y = Math::SquareRootNoCheck(3. * (r - 0.25) / w) * (u - 0.5);
+        x = y + s;
+        if (v < 1e-12)
+            break;
 
-			x = y + s;
-			if (v < 1e-12)
-				break;
+        w *= 4.;
+        v *= w;
+        double z = w * v * v;
 
-			w *= 4.;
-			v *= w;
-			double z =  w * v * v;
+        assert(Math::Abs(s) > 1e-12);
+        assert(z > 0.);
+        assert(z / s > 0.);
+        if (log(z) <= 2. * (s * log(x / s) - y))
+            break;
+    } while (true);
+    return x;
+}
 
-			assert(Math::Abs(s) > 1e-12);
-			assert(z > 0.);
-			assert(z /s > 0.);
-			if (log(z) <= 2. * (s * log(x / s) - y))
-				break;
-		}
-		while (true);
-		return x;
-	}
+inline double HydroManagement::BetaVariable(double a, double b)
+{
+    double y = GammaVariable(a);
+    double z = GammaVariable(b);
+    assert(Math::Abs(y + z) > 1e-12);
+    return y / (y + z);
+}
 
+HydroManagement::HydroManagement(Data::Study& study) : study(study), parameters(study.parameters)
+{
+    pAreas = new PerArea*[study.maxNbYearsInParallel];
+    for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
+        pAreas[numSpace] = new PerArea[study.areas.size()];
 
-	inline double HydroManagement::BetaVariable(double a, double b)
-	{
-		double y = GammaVariable(a);
-		double z = GammaVariable(b);
-		assert(Math::Abs(y + z) > 1e-12);
-		return y / (y + z);
-	}
+    random.reset(study.parameters.seed[Data::seedHydroManagement]);
+}
 
+HydroManagement::~HydroManagement()
+{
+    for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
+        delete[] pAreas[numSpace];
+    delete[] pAreas;
+}
 
+void HydroManagement::prepareInflowsScaling(uint numSpace)
+{
+    auto& calendar = study.calendar;
 
+    study.areas.each([&](Data::Area& area) {
+        uint z = area.index;
 
-	HydroManagement::HydroManagement(Data::Study& study) :
-		study(study),
-		parameters(study.parameters)
-	{
-		
-		pAreas = new PerArea*[study.maxNbYearsInParallel];
-		for(uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
-			pAreas[numSpace] = new PerArea[study.areas.size()];
+        auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
 
-		
-		random.reset(study.parameters.seed[Data::seedHydroManagement]);
-	}
+        auto& inflowsmatrix = area.hydro.series->storage;
+        assert(inflowsmatrix.width && inflowsmatrix.height);
+        auto tsIndex = (uint)ptchro.Hydraulique;
+        auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
 
+        auto& data = pAreas[numSpace][z];
 
-	HydroManagement::~HydroManagement()
-	{
-		for(uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
-			delete[] pAreas[numSpace];
-		delete[] pAreas;
-	}
+        for (uint month = 0; month != 12; ++month)
+        {
+            uint realmonth = calendar.months[month].realmonth;
 
+            double totalMonthInflows = 0;
 
-	void HydroManagement::prepareInflowsScaling(uint numSpace)
-	{
-		auto& calendar = study.calendar;
+            uint firstDayOfMonth = calendar.months[month].daysYear.first;
 
-		study.areas.each([&] (Data::Area& area)
-		{
-			
-			uint z = area.index;
-			
-			auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
-			
-			auto& inflowsmatrix  = area.hydro.series->storage;
-			assert(inflowsmatrix.width && inflowsmatrix.height);
-			auto  tsIndex = (uint) ptchro.Hydraulique;
-			auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
+            uint firstDayOfNextMonth = calendar.months[month].daysYear.end;
 
-			
-			auto& data = pAreas[numSpace][z];
-				
-			
-			for (uint month = 0; month != 12; ++month)
-			{	
-				
-				uint realmonth = calendar.months[month].realmonth;
+            for (uint d = firstDayOfMonth; d != firstDayOfNextMonth; ++d)
+                totalMonthInflows += srcinflows[d];
 
-				double totalMonthInflows = 0;
+            if (not(area.hydro.reservoirCapacity < 1e-4))
+            {
+                if (area.hydro.reservoirManagement)
+                {
+                    data.inflows[realmonth] = totalMonthInflows / (area.hydro.reservoirCapacity);
+                    assert(!Math::NaN(data.inflows[month]) && "nan value detect in inflows");
+                }
+                else
+                    data.inflows[realmonth] = totalMonthInflows;
+            }
+            else
+            {
+                data.inflows[realmonth] = totalMonthInflows;
+            }
+        }
+    });
+}
 
-				
-				uint firstDayOfMonth = calendar.months[month].daysYear.first;
+template<enum Data::StudyMode ModeT>
+void HydroManagement::prepareNetDemand(uint numSpace)
+{
+    study.areas.each([&](Data::Area& area) {
+        uint z = area.index;
 
-				uint firstDayOfNextMonth = calendar.months[month].daysYear.end;
+        auto& scratchpad = *(area.scratchpad[numSpace]);
 
-				for (uint d = firstDayOfMonth; d != firstDayOfNextMonth; ++d)
-					totalMonthInflows += srcinflows[d];
+        auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
 
-				if (not (area.hydro.reservoirCapacity < 1e-4))
-				{
-					if (area.hydro.reservoirManagement)
-					{
-						
-						data.inflows[realmonth] = totalMonthInflows / (area.hydro.reservoirCapacity);
-						assert(!Math::NaN(data.inflows[month]) && "nan value detect in inflows");
-					}
-					else
-						data.inflows[realmonth] = totalMonthInflows;
-				}
-				else
-				{
-					
-					
-					data.inflows[realmonth] = totalMonthInflows;
-				}
-			}
-		});
-	}
+        auto& rormatrix = area.hydro.series->ror;
+        auto tsIndex = (uint)ptchro.Hydraulique;
+        auto& ror = rormatrix[tsIndex < rormatrix.width ? tsIndex : 0];
 
+        auto& data = pAreas[numSpace][z];
 
-	template<enum Data::StudyMode ModeT>
-	void HydroManagement::prepareNetDemand(uint numSpace)
-	{
-		study.areas.each([&] (Data::Area& area)
-		{
-			
-			uint z = area.index;
-			
-			auto& scratchpad =*(area.scratchpad[numSpace]);
+        for (uint hour = 0; hour != 8760; ++hour)
+        {
+            auto month = study.calendar.hours[hour].month;
+            auto realmonth = study.calendar.months[month].realmonth;
+            auto dayYear = study.calendar.hours[hour].dayYear;
 
-			
-			auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
-			
-			auto& rormatrix = area.hydro.series->ror;
-			auto  tsIndex     = (uint) ptchro.Hydraulique;
-			auto& ror         = rormatrix[tsIndex < rormatrix.width ? tsIndex : 0];
-			
-			auto& data = pAreas[numSpace][z];
+            double netdemand
+              = +scratchpad.ts.load[ptchro.Consommation][hour]
+                - scratchpad.ts.wind[ptchro.Eolien][hour] - scratchpad.miscGenSum[hour]
+                - scratchpad.ts.solar[ptchro.Solar][hour] - ror[hour]
+                - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
+                                                 : scratchpad.originalMustrunSum[hour]);
 
-			for (uint hour = 0; hour != 8760; ++hour)
-			{
-				auto month     = study.calendar.hours[hour].month;
-				auto realmonth = study.calendar.months[month].realmonth;
-				auto dayYear   = study.calendar.hours[hour].dayYear;
+            assert(!Math::NaN(netdemand)
+                   && "hydro management: NaN detected when calculating the net demande");
+            data.MLN[realmonth] += netdemand;
+            data.DLN[dayYear] += netdemand;
+        }
+    });
+}
 
-				double netdemand =
-					+ scratchpad.ts.load[ptchro.Consommation][hour]
-					- scratchpad.ts.wind[ptchro.Eolien][hour]
-					- scratchpad.miscGenSum[hour]
-					- scratchpad.ts.solar[ptchro.Solar][hour]
-					- ror[hour]
-					- ((ModeT != Data::stdmAdequacy)
-						? scratchpad.mustrunSum[hour]           
-						: scratchpad.originalMustrunSum[hour]); 
+void HydroManagement::prepareEffectiveDemand(uint numSpace)
+{
+    study.areas.each([&](Data::Area& area) {
+        auto z = area.index;
 
-				assert(!Math::NaN(netdemand)
-					&& "hydro management: NaN detected when calculating the net demande");
-				data.MLN[realmonth] += netdemand;
-				data.DLN[dayYear]   += netdemand;
-			}
-		});
-	}
+        auto& data = pAreas[numSpace][z];
 
+        for (uint day = 0; day != 365; ++day)
+        {
+            auto month = study.calendar.days[day].month;
+            assert(month < 12 && "Invalid month index");
+            auto realmonth = study.calendar.months[month].realmonth;
 
+            double effectiveDemand = 0;
+            area.hydro.allocation.eachNonNull([&](unsigned areaindex, double value) {
+                effectiveDemand += (pAreas[numSpace][areaindex]).DLN[day] * value;
+            });
 
-	void HydroManagement::prepareEffectiveDemand(uint numSpace)
-	{
-		study.areas.each([&] (Data::Area& area)
-		{
-			
-			auto z = area.index;
-			
-			auto& data = pAreas[numSpace][z];
+            assert(!Math::NaN(effectiveDemand) && "nan value detected for effectiveDemand");
+            data.DLE[day] += effectiveDemand;
+            data.MLE[realmonth] += effectiveDemand;
 
-			for (uint day = 0; day != 365; ++day)
-			{
-				auto month = study.calendar.days[day].month;
-				assert(month < 12 && "Invalid month index");
-				auto realmonth = study.calendar.months[month].realmonth;
+            assert(not Math::NaN(data.DLE[day]) && "nan value detected for DLE");
+            assert(not Math::NaN(data.MLE[realmonth]) && "nan value detected for DLE");
+        }
 
-				double effectiveDemand = 0;
-				area.hydro.allocation.eachNonNull([&] (unsigned areaindex, double value)
-				{
-					effectiveDemand += (pAreas[numSpace][areaindex]).DLN[day] * value;
-				});
+        auto minimumYear = std::numeric_limits<double>::infinity();
+        auto dayYear = 0u;
 
-				assert(!Math::NaN(effectiveDemand) && "nan value detected for effectiveDemand");
-				data.DLE[day]       += effectiveDemand;
-				data.MLE[realmonth] += effectiveDemand;
+        for (uint month = 0; month != 12; ++month)
+        {
+            auto minimumMonth = +std::numeric_limits<double>::infinity();
+            auto daysPerMonth = study.calendar.months[month].days;
+            auto realmonth = study.calendar.months[month].realmonth;
 
-				assert(not Math::NaN(data.DLE[day]) && "nan value detected for DLE");
-				assert(not Math::NaN(data.MLE[realmonth]) && "nan value detected for DLE");
-			}
+            for (uint d = 0; d != daysPerMonth; ++d)
+            {
+                auto dYear = d + dayYear;
+                if (data.DLE[dYear] < minimumMonth)
+                    minimumMonth = data.DLE[dYear];
+            }
 
-			
-			auto minimumYear  = std::numeric_limits<double>::infinity();
-			auto dayYear = 0u;
+            if (minimumMonth < 0.)
+            {
+                for (uint d = 0; d != daysPerMonth; ++d)
+                    data.DLE[dayYear + d] -= minimumMonth - 1e-4;
+            }
 
-			for (uint month = 0; month != 12; ++month)
-			{
-				auto minimumMonth = + std::numeric_limits<double>::infinity();
-				auto daysPerMonth = study.calendar.months[month].days;
-				auto realmonth    = study.calendar.months[month].realmonth;
+            if (data.MLE[realmonth] < minimumYear)
+                minimumYear = data.MLE[realmonth];
 
-				for (uint d = 0; d != daysPerMonth; ++d)
-				{
-					auto dYear = d + dayYear;
-					if (data.DLE[dYear] < minimumMonth)
-						minimumMonth = data.DLE[dYear];
-				}
+            dayYear += daysPerMonth;
+        }
 
-				if (minimumMonth < 0.)
-				{
-					for (uint d = 0; d != daysPerMonth; ++d)
-						data.DLE[dayYear + d] -= minimumMonth - 1e-4; 
-				}
+        if (minimumYear < 0.)
+        {
+            for (uint realmonth = 0; realmonth != 12; ++realmonth)
+                data.MLE[realmonth] -= minimumYear - 1e-4;
+        }
+    });
+}
 
-				if (data.MLE[realmonth] < minimumYear)
-					minimumYear = data.MLE[realmonth];
+double HydroManagement::randomReservoirLevel(double min, double avg, double max)
+{
+    if (Math::Equals(min, max))
+        return avg;
+    if (Math::Equals(avg, min) || Math::Equals(avg, max))
+        return avg;
 
-				dayYear += daysPerMonth;
-			}
+    double e = (avg - min) / (max - min);
+    double re = 1. - e;
 
-			
-			if (minimumYear < 0.)
-			{
-				for (uint realmonth = 0; realmonth != 12; ++realmonth)
-					data.MLE[realmonth] -= minimumYear - 1e-4;
-			}
+    assert(Math::Abs(1. + e) > 1e-12);
+    assert(Math::Abs(2. - e) > 1e-12);
 
-		}); 
-	}
+    double v1 = (e * e) * re / (1. + e);
+    double v2 = e * re * re / (2. - e);
+    double v = Math::Min(v1, v2) * .5;
 
+    assert(Math::Abs(v) > 1e-12);
 
-	double HydroManagement::randomReservoirLevel(double min, double avg, double max)
-	{
-		
-		if (Math::Equals(min, max))
-			return avg;
-		if (Math::Equals(avg, min) || Math::Equals(avg, max))
-			return avg;
+    double a = e * (e * re / v - 1.);
+    double b = re * (e * re / v - 1.);
 
-		double e  = (avg - min) / (max - min);
-		double re = 1. - e;
+    double x = BetaVariable(a, b);
+    return x * max + (1. - x) * min;
+}
 
-		assert(Math::Abs(1. + e) > 1e-12);
-		assert(Math::Abs(2. - e) > 1e-12);
+void HydroManagement::operator()(double* randomReservoirLevel,
+                                 Solver::Variable::State& state,
+                                 uint y,
+                                 uint numSpace)
+{
+    memset(pAreas[numSpace], 0, sizeof(PerArea) * study.areas.size());
 
-		double v1 = (e * e) * re / (1. + e);
-		double v2 = e * re * re / (2. - e);
-		double v  = Math::Min(v1, v2) * .5;
+    prepareInflowsScaling(numSpace);
 
-		assert(Math::Abs(v) > 1e-12);
+    if (parameters.adequacy())
+        prepareNetDemand<Data::stdmAdequacy>(numSpace);
+    else
+        prepareNetDemand<Data::stdmEconomy>(numSpace);
 
-		double a = e * (e * re / v - 1.);
-		double b = re * (e * re / v - 1.);
+    prepareEffectiveDemand(numSpace);
 
-		double x = BetaVariable(a, b);
-		return x * max + (1. - x) * min;
-	}
+    prepareMonthlyOptimalGenerations(randomReservoirLevel, y, numSpace);
+    prepareDailyOptimalGenerations(state, y, numSpace);
+}
 
-	void HydroManagement::operator () (double * randomReservoirLevel, Solver::Variable::State & state, uint y, uint numSpace)
-	{
-		
-		memset(pAreas[numSpace], 0, sizeof(PerArea) * study.areas.size());
-
-		
-		prepareInflowsScaling(numSpace);
-
-		
-		if (parameters.adequacy())
-			prepareNetDemand<Data::stdmAdequacy>(numSpace);
-		else
-			prepareNetDemand<Data::stdmEconomy>(numSpace);
-
-		
-		prepareEffectiveDemand(numSpace);
-
-		
-		prepareMonthlyOptimalGenerations(randomReservoirLevel, y, numSpace);
-		prepareDailyOptimalGenerations(state, y, numSpace);
-	}
-
-
-
-
-
-} 
-
+} // namespace Antares

@@ -25,14 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_CONFIG_H__
-# define __SOLVER_CONFIG_H__
-
+#define __SOLVER_CONFIG_H__
 
 /* Logs */
-# include <antares/logs.h>
+#include <antares/logs.h>
 
 /* Memory manager */
-# include "memory/mem.h"
-
+#include "memory/mem.h"
 
 #endif /* __SOLVER_CONFIG_H__ */

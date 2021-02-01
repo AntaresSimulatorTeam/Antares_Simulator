@@ -29,79 +29,71 @@
 #include "../tools/connectioncreator.h"
 #include "../tools/remover.h"
 
-
 namespace Antares
 {
 namespace Map
 {
 namespace Private
 {
+AddingToolsHelper::AddingToolsHelper(Manager& manager,
+                                     Tool::List& list,
+                                     const int selectedCount,
+                                     const int connectionSelectedCount,
+                                     const wxPoint& top,
+                                     const wxPoint& bottom) :
+ pManager(manager),
+ pList(list),
+ pSelectedCount(selectedCount),
+ pConnectionsSelectedCount(connectionSelectedCount),
+ pTop(top),
+ pBottom(bottom)
+{
+}
 
+void AddingToolsHelper::operator()()
+{
+    const bool haveConnections = (pConnectionsSelectedCount != 0);
+    const bool haveRealNodes = (pConnectionsSelectedCount != pSelectedCount);
 
-	AddingToolsHelper::AddingToolsHelper(Manager& manager, Tool::List& list,
-		const int selectedCount, const int connectionSelectedCount,
-		const wxPoint& top, const wxPoint& bottom)
-		:pManager(manager),
-		pList(list),
-		pSelectedCount(selectedCount), pConnectionsSelectedCount(connectionSelectedCount),
-		pTop(top), pBottom(bottom)
-	{}
+    // The common tools
+    createCommonTools(haveRealNodes, haveConnections);
 
+    if (haveRealNodes)
+        createToolsForRealNodes();
+    if (haveConnections)
+        createToolsForConnections();
+}
 
-	void AddingToolsHelper::operator () ()
-	{
-		const bool haveConnections = (pConnectionsSelectedCount != 0);
-		const bool haveRealNodes   = (pConnectionsSelectedCount != pSelectedCount);
+void AddingToolsHelper::createToolsForRealNodes()
+{
+    // To make new connections between items
+    createToolToTheLeft<Tool::ConnectionCreator>();
+}
 
-		// The common tools
-		createCommonTools(haveRealNodes, haveConnections);
+void AddingToolsHelper::createToolsForConnections()
+{
+}
 
-		if (haveRealNodes)
-			createToolsForRealNodes();
-		if (haveConnections)
-			createToolsForConnections();
-	}
+void AddingToolsHelper::createCommonTools(const bool haveRealNodes, const bool haveConnections)
+{
+    // To delete selected items
+    Tool::Remover* t = createToolToTheBottom<Tool::Remover>();
+    if (haveRealNodes && haveConnections)
+        t->icon("images/16x16/cancel.png");
+    else
+    {
+        if (haveRealNodes)
+            t->icon("images/16x16/zone_minus.png");
+        else
+        {
+            if (haveConnections)
+                t->icon("images/16x16/interco_minus.png");
+        }
+    }
 
-
-
-
-	void AddingToolsHelper::createToolsForRealNodes()
-	{
-		// To make new connections between items
-		createToolToTheLeft<Tool::ConnectionCreator>();
-	}
-
-
-
-	void AddingToolsHelper::createToolsForConnections()
-	{
-	}
-
-
-	void AddingToolsHelper::createCommonTools(const bool haveRealNodes, const bool haveConnections)
-	{
-		// To delete selected items
-		Tool::Remover* t = createToolToTheBottom<Tool::Remover>();
-		if (haveRealNodes && haveConnections)
-			t->icon("images/16x16/cancel.png");
-		else
-		{
-			if (haveRealNodes)
-				t->icon("images/16x16/zone_minus.png");
-			else
-			{
-				if (haveConnections)
-					t->icon("images/16x16/interco_minus.png");
-			}
-		}
-
-		pBottom.x += 5;
-	}
-
-
-
+    pBottom.x += 5;
+}
 
 } // namespace Private
 } // namespace Map
 } // namespace Antares
-

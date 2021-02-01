@@ -22,49 +22,49 @@
 #include <objc/runtime.h>
 
 #ifndef CMACS_CMACSTYPES_H
-# define CMACS_CMACSTYPES_H
+#define CMACS_CMACSTYPES_H
 
 typedef struct CMPoint
 {
-	double x;
-	double y;
+    double x;
+    double y;
 } CMPoint;
 
 typedef struct CMSize
 {
-	double width;
-	double height;
+    double width;
+    double height;
 } CMSize;
 
 typedef struct CMRect
 {
-	CMPoint origin;
-	CMSize size;
+    CMPoint origin;
+    CMSize size;
 } CMRect;
 
 typedef struct AppDel
 {
-	Class isa;
-	
-	// Will be an NSWindow later.
-	id window;
+    Class isa;
+
+    // Will be an NSWindow later.
+    id window;
 } AppDelegate;
 
 enum
 {
-	NSBorderlessWindowMask		= 0,
-	NSTitledWindowMask			= 1 << 0,
-	NSClosableWindowMask		= 1 << 1,
-	NSMiniaturizableWindowMask	= 1 << 2,
-	NSResizableWindowMask		= 1 << 3,
+    NSBorderlessWindowMask = 0,
+    NSTitledWindowMask = 1 << 0,
+    NSClosableWindowMask = 1 << 1,
+    NSMiniaturizableWindowMask = 1 << 2,
+    NSResizableWindowMask = 1 << 3,
 };
 
-typedef id(*CMacsSimpleMessage)(id, SEL);
-typedef void(*CMacsVoidMessage)(id, SEL);
-typedef void(*CMacsVoidMessage1)(id, SEL, void *);
-typedef id(*CMacsRectMessage1)(id, SEL, CMRect);
-typedef id(*CMacsWindowInitMessage)(id, SEL, CMRect, int, int, bool);
-typedef id(*CMacsNextEventMessage)(id, SEL, void*, int, bool);
+typedef id (*CMacsSimpleMessage)(id, SEL);
+typedef void (*CMacsVoidMessage)(id, SEL);
+typedef void (*CMacsVoidMessage1)(id, SEL, void*);
+typedef id (*CMacsRectMessage1)(id, SEL, CMRect);
+typedef id (*CMacsWindowInitMessage)(id, SEL, CMRect, int, int, bool);
+typedef id (*CMacsNextEventMessage)(id, SEL, void*, int, bool);
 
 extern CMacsSimpleMessage cmacs_simple_msgSend;
 extern CMacsVoidMessage cmacs_void_msgSend;

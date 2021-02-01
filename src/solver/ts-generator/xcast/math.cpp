@@ -25,35 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include <antares/study/study.h>
 #include "xcast.h"
-
 
 namespace Antares
 {
@@ -63,37 +36,28 @@ namespace TSGenerator
 {
 namespace XCast
 {
+void XCast::normal(float& x, float& y)
+{
+    assert(random != NULL);
 
+    double z;
+    double xd;
+    double yd;
 
+    do
+    {
+        xd = 2. * random->next() - 1.;
+        yd = 2. * random->next() - 1.;
+        z = (xd * xd) + (yd * yd);
+    } while (z > 1.);
 
-	void XCast::normal(float& x, float& y)
-	{
-		assert(random != NULL);
+    const double u = sqrt(-2. * log(z) / z);
 
-		double z;
-		double xd;
-		double yd;
+    x = float(xd * u);
+    y = float(yd * u);
+}
 
-		do
-		{
-			xd = 2. * random->next() - 1.;
-			yd = 2. * random->next() - 1.;
-			z  = (xd * xd) + (yd * yd);
-		}
-		while (z > 1.);
-
-		const double u = sqrt(-2. * log(z) / z);
-
-		x = float(xd * u);
-		y = float(yd * u);
-	}
-
-
-
-
-
-} 
-} 
-} 
-} 
-
+} // namespace XCast
+} // namespace TSGenerator
+} // namespace Solver
+} // namespace Antares

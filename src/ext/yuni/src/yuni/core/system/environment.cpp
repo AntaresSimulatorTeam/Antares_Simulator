@@ -12,11 +12,9 @@
 #include "windows.hdr.h"
 #include "../../string.h"
 #ifdef YUNI_HAS_STDLIB_H
-#	include <stdlib.h>
+#include <stdlib.h>
 #endif
 #include "../string/wstring.h"
-
-
 
 namespace Yuni
 {
@@ -24,156 +22,149 @@ namespace System
 {
 namespace Environment
 {
+namespace // anonymous
+{
+template<class StringT>
+inline bool ReadImpl(const AnyString& name, StringT& out, bool emptyBefore)
+{
+    if (emptyBefore)
+        out.clear();
 
-	namespace // anonymous
-	{
+#ifdef YUNI_OS_WINDOWS
+    {
+        WString nameUTF16(name);
 
-		template<class StringT>
-		inline bool ReadImpl(const AnyString& name, StringT& out, bool emptyBefore)
-		{
-			if (emptyBefore)
-				out.clear();
+        DWORD size = GetEnvironmentVariableW(nameUTF16.c_str(), nullptr, 0);
+        if (size > 0 and size <= 32767) // windows hard-coded value
+        {
+            // allocating a new buffer for receiving the value
+            wchar_t* buffer = (wchar_t*)::malloc(sizeof(wchar_t) * size);
+            if (buffer)
+            {
+                GetEnvironmentVariableW(nameUTF16.c_str(), buffer, size);
+                if (size != 0)
+                {
+                    int sizeRequired
+                      = WideCharToMultiByte(CP_UTF8, 0, buffer, (int)size - 1, NULL, 0, NULL, NULL);
+                    if (sizeRequired > 0)
+                    {
+                        out.reserve(out.size() + sizeRequired);
+                        int sizeRequired = WideCharToMultiByte(CP_UTF8,
+                                                               0,
+                                                               buffer,
+                                                               (int)size - 1,
+                                                               out.data() + out.size(),
+                                                               size,
+                                                               NULL,
+                                                               NULL);
+                        ::free(buffer);
+                        out.resize(out.size() + (uint)sizeRequired);
+                        return true;
+                    }
+                }
+                ::free(buffer);
+            }
+        }
+    }
+#else
+    {
+#ifdef YUNI_HAS_STDLIB_H
+        const char* e = ::getenv(name.c_str());
+        if (e and '\0' != *e)
+        {
+            out += e;
+            return true;
+        }
+        return false;
 
-			#ifdef YUNI_OS_WINDOWS
-			{
-				WString nameUTF16(name);
+#else
+#error missing implementation
+        assert(false and "missing implementation");
+#endif
+    }
+#endif // windows
 
-				DWORD size = GetEnvironmentVariableW(nameUTF16.c_str(), nullptr, 0);
-				if (size > 0 and size <= 32767) // windows hard-coded value
-				{
-					// allocating a new buffer for receiving the value
-					wchar_t* buffer = (wchar_t*)::malloc(sizeof(wchar_t) * size);
-					if (buffer)
-					{
-						GetEnvironmentVariableW(nameUTF16.c_str(), buffer, size);
-						if (size != 0)
-						{
-							int sizeRequired = WideCharToMultiByte(CP_UTF8, 0, buffer, (int) size - 1, NULL, 0, NULL, NULL);
-							if (sizeRequired > 0)
-							{
-								out.reserve(out.size() + sizeRequired);
-								int sizeRequired = WideCharToMultiByte(CP_UTF8, 0, buffer, (int) size - 1, out.data() + out.size(), size, NULL, NULL);
-								::free(buffer);
-								out.resize(out.size() + (uint) sizeRequired);
-								return true;
-							}
-						}
-						::free(buffer);
-					}
-				}
-			}
-			#else
-			{
-				# ifdef YUNI_HAS_STDLIB_H
-				const char* e = ::getenv(name.c_str());
-				if (e and '\0' != *e)
-				{
-					out += e;
-					return true;
-				}
-				return false;
+    return false; // fallback
+}
 
-				# else
-				# error missing implementation
-				assert(false and "missing implementation");
-				# endif
-			}
-			#endif // windows
+} // anonymous namespace
 
-			return false; // fallback
-		}
+bool ReadAsBool(const AnyString& name)
+{
+#ifdef YUNI_OS_WINDOWS
+    {
+        String out;
+        ReadImpl(name, out, false);
+        if (not out.empty())
+            return out.to<bool>();
+    }
+#else
+    {
+#ifdef YUNI_HAS_STDLIB_H
+        AnyString value = ::getenv(name.c_str());
+        if (not value.empty())
+            return value.to<bool>();
+#else
+#error not implemented
+#endif
+    }
+#endif
+    return false;
+}
 
-	} // anonymous namespace
+yint64 ReadAsInt64(const AnyString& name, yint64 defvalue)
+{
+#ifdef YUNI_OS_WINDOWS
+    {
+        String out;
+        ReadImpl(name, out, false);
+        if (not out.empty())
+            return out.to<yint64>();
+    }
+#else
+    {
+#ifdef YUNI_HAS_STDLIB_H
+        AnyString value = ::getenv(name.c_str());
+        if (not value.empty())
+            return value.to<yint64>();
+#else
+#error not implemented
+#endif
+    }
+#endif
+    return defvalue;
+}
 
+String Read(const AnyString& name)
+{
+#ifdef YUNI_OS_WINDOWS
+    {
+        String out;
+        ReadImpl(name, out, false);
+        return out;
+    }
+#else
+    {
+#ifdef YUNI_HAS_STDLIB_H
+        return ::getenv(name.c_str());
+#else
+#error not implemented
+#endif
+    }
+#endif
+    return String(); // fallback
+}
 
+bool Read(const AnyString& name, Clob& out, bool emptyBefore)
+{
+    return ReadImpl(name, out, emptyBefore);
+}
 
-
-	bool ReadAsBool(const AnyString& name)
-	{
-		#ifdef YUNI_OS_WINDOWS
-		{
-			String out;
-			ReadImpl(name, out, false);
-			if (not out.empty())
-				return out.to<bool>();
-		}
-		#else
-		{
-			# ifdef YUNI_HAS_STDLIB_H
-			AnyString value = ::getenv(name.c_str());
-			if (not value.empty())
-				return value.to<bool>();
-			# else
-			#error not implemented
-			# endif
-		}
-		#endif
-		return false;
-	}
-
-
-	yint64 ReadAsInt64(const AnyString& name, yint64 defvalue)
-	{
-		#ifdef YUNI_OS_WINDOWS
-		{
-			String out;
-			ReadImpl(name, out, false);
-			if (not out.empty())
-				return out.to<yint64>();
-		}
-		#else
-		{
-			# ifdef YUNI_HAS_STDLIB_H
-			AnyString value = ::getenv(name.c_str());
-			if (not value.empty())
-				return value.to<yint64>();
-			# else
-			#error not implemented
-			# endif
-		}
-		#endif
-		return defvalue;
-	}
-
-
-	String Read(const AnyString& name)
-	{
-		#ifdef YUNI_OS_WINDOWS
-		{
-			String out;
-			ReadImpl(name, out, false);
-			return out;
-		}
-		#else
-		{
-			# ifdef YUNI_HAS_STDLIB_H
-			return ::getenv(name.c_str());
-			# else
-			#error not implemented
-			# endif
-		}
-		#endif
-		return String(); // fallback
-	}
-
-
-	bool Read(const AnyString& name, Clob& out, bool emptyBefore)
-	{
-		return ReadImpl(name, out, emptyBefore);
-	}
-
-
-	bool Read(const AnyString& name, String& out, bool emptyBefore)
-	{
-		return ReadImpl(name, out, emptyBefore);
-	}
-
-
-
-
-
+bool Read(const AnyString& name, String& out, bool emptyBefore)
+{
+    return ReadImpl(name, out, emptyBefore);
+}
 
 } // namespace Environment
 } // namespace System
 } // namespace Yuni
-

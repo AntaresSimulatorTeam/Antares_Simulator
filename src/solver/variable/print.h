@@ -25,10 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_PRINT_H__
-# define __SOLVER_VARIABLE_PRINT_H__
+#define __SOLVER_VARIABLE_PRINT_H__
 
-# include <yuni/yuni.h>
-
+#include <yuni/yuni.h>
 
 namespace Antares
 {
@@ -36,60 +35,59 @@ namespace Solver
 {
 namespace Variable
 {
+class PrintInfosStdCout final
+{
+public:
+    PrintInfosStdCout() : pIndent(0)
+    {
+    }
 
+    template<class VCardT>
+    void beginNode()
+    {
+        printVCard<VCardT, true>();
+        ++pIndent;
+    }
 
-	class PrintInfosStdCout final
-	{
-	public:
-		PrintInfosStdCout()
-			:pIndent(0)
-		{
-		}
+    template<class VCardT>
+    void addVCard()
+    {
+        printVCard<VCardT, false>();
+    }
 
-		template<class VCardT> void beginNode()
-		{
-			printVCard<VCardT, true>();
-			++pIndent;
-		}
+    void endNode()
+    {
+        --pIndent;
+    }
 
-		template<class VCardT> void addVCard()
-		{
-			printVCard<VCardT, false>();
-		}
+private:
+    template<class VCardT, bool IsNodeT>
+    void printVCard()
+    {
+        pBuffer.clear();
+        pBuffer.resize(1 + pBuffer.size() + pIndent * 4, " ");
+        pBuffer += (IsNodeT ? "+ " : "  ");
+        pBuffer += VCardT::Caption();
+        pBuffer.resize(29, " ");
+        pBuffer += VCardT::Unit();
+        pBuffer.resize(37, " ");
+        pBuffer += VCardT::Description();
+        Antares::logs.info() << pBuffer;
+    }
 
-		void endNode()
-		{
-			--pIndent;
-		}
+    void printIndent()
+    {
+        if (pIndent)
+        {
+            for (uint i = 0; i != pIndent; ++i)
+                pBuffer += "    ";
+        }
+    }
 
-	private:
-		template<class VCardT, bool IsNodeT> void printVCard()
-		{
-			pBuffer.clear();
-			pBuffer.resize(1 + pBuffer.size() + pIndent * 4, " ");
-			pBuffer += (IsNodeT ? "+ " : "  ");
-			pBuffer += VCardT::Caption();
-			pBuffer.resize(29, " ");
-			pBuffer += VCardT::Unit();
-			pBuffer.resize(37, " ");
-			pBuffer += VCardT::Description();
-			Antares::logs.info() << pBuffer;
-		}
-
-		void printIndent()
-		{
-			if (pIndent)
-			{
-				for (uint i = 0; i != pIndent; ++i)
-					pBuffer += "    ";
-			}
-		}
-
-	private:
-		uint pIndent;
-		Yuni::String pBuffer;
-	};
-
+private:
+    uint pIndent;
+    Yuni::String pBuffer;
+};
 
 } // namespace Variable
 } // namespace Solver

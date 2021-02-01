@@ -25,10 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_VALIDATOR_H__
-# define __ANTARES_TOOLBOX_VALIDATOR_H__
+#define __ANTARES_TOOLBOX_VALIDATOR_H__
 
 #include <wx/valtext.h>
-
 
 namespace Antares
 {
@@ -36,38 +35,32 @@ namespace Toolbox
 {
 namespace Validator
 {
+/*!
+** \brief Get a default text validator for wx controls
+**
+** This validator validates these characters :
+**  - Alphanumeric
+**  - space
+**  - '-'
+**  - '_'
+**  - '.'
+*/
+wxTextValidator Default();
 
-	/*!
-	** \brief Get a default text validator for wx controls
-	**
-	** This validator validates these characters :
-	**  - Alphanumeric
-	**  - space
-	**  - '-'
-	**  - '_'
-	**  - '.'
-	*/
-	wxTextValidator Default();
-
-	/*!
-	** \brief Get a text validator for numerical content
-	**
-	** This validator validates these characters :
-	**  - Alphanumeric
-	**  - space
-	**  - '-'
-	**  - '_'
-	**  - '.'
-	*/
-	wxTextValidator Numeric();
-
-
-
+/*!
+** \brief Get a text validator for numerical content
+**
+** This validator validates these characters :
+**  - Alphanumeric
+**  - space
+**  - '-'
+**  - '_'
+**  - '.'
+*/
+wxTextValidator Numeric();
 
 } // namespace Validator
 } // namespace Toolbox
 } // namespace Antares
-
-
 
 #endif // __ANTARES_TOOLBOX_VALIDATOR_H__

@@ -11,58 +11,46 @@
 #pragma once
 #include "monitor.h"
 
-
-
 namespace Yuni
 {
 namespace Device
 {
 namespace Display
 {
+inline Monitor::Handle Monitor::handle() const
+{
+    return pHandle;
+}
 
-	inline Monitor::Handle Monitor::handle() const
-	{
-		return pHandle;
-	}
+inline bool Monitor::valid() const
+{
+    return pHandle != Monitor::InvalidHandle;
+}
 
+inline const String& Monitor::productName() const
+{
+    return pProductName;
+}
 
-	inline bool Monitor::valid() const
-	{
-		return pHandle != Monitor::InvalidHandle;
-	}
+inline const Resolution::Vector& Monitor::resolutions() const
+{
+    return pResolutions;
+}
 
+inline bool Monitor::primary() const
+{
+    return pPrimary;
+}
 
-	inline const String& Monitor::productName() const
-	{
-		return pProductName;
-	}
+inline bool Monitor::hardwareAcceleration() const
+{
+    return pHardwareAcceleration;
+}
 
-
-	inline const Resolution::Vector& Monitor::resolutions() const
-	{
-		return pResolutions;
-	}
-
-
-	inline bool Monitor::primary() const
-	{
-		return pPrimary;
-	}
-
-
-	inline bool Monitor::hardwareAcceleration() const
-	{
-		return pHardwareAcceleration;
-	}
-
-
-	inline bool Monitor::builtin() const
-	{
-		return pBuiltin;
-	}
-
-
-
+inline bool Monitor::builtin() const
+{
+    return pBuiltin;
+}
 
 } // namespace Display
 } // namespace Device

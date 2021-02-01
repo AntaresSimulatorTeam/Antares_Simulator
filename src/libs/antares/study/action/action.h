@@ -25,168 +25,163 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_ACTION_H__
-# define __ANTARES_LIBS_STUDY_ACTION_ACTION_H__
+#define __ANTARES_LIBS_STUDY_ACTION_ACTION_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/tree/treeN.h>
-# include <yuni/core/string.h>
-# include "fwd.h"
-# include "../study.h"
-# include <vector>
-
+#include <yuni/yuni.h>
+#include <yuni/core/tree/treeN.h>
+#include <yuni/core/string.h>
+#include "fwd.h"
+#include "../study.h"
+#include <vector>
 
 namespace Antares
 {
 namespace Action
 {
-	class Context;
+class Context;
 
+class IAction : public Yuni::Core::TreeN<IAction>
+{
+public:
+    //! The ancestor
+    typedef Yuni::Core::TreeN<IAction> AncestorType;
+    //! The most suitable smart ptr for the class
+    typedef AncestorType::Ptr Ptr;
+    //! The threading policy
+    typedef AncestorType::ThreadingPolicy ThreadingPolicy;
 
-	class IAction : public Yuni::Core::TreeN<IAction>
-	{
-	public:
-		//! The ancestor
-		typedef Yuni::Core::TreeN<IAction>  AncestorType;
-		//! The most suitable smart ptr for the class
-		typedef AncestorType::Ptr  Ptr;
-		//! The threading policy
-		typedef AncestorType::ThreadingPolicy  ThreadingPolicy;
+    //! Vector
+    typedef std::vector<Ptr> Vector;
 
-		//! Vector
-		typedef std::vector<Ptr> Vector;
+    //! iterator
+    typedef AncestorType::iterator iterator;
 
-		//! iterator
-		typedef AncestorType::iterator  iterator;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    IAction();
+    //! Destructor
+    virtual ~IAction();
+    //@}
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		IAction();
-		//! Destructor
-		virtual ~IAction();
-		//@}
+    /*!
+    ** \brief Get the caption of the action
+    */
+    Yuni::String caption() const;
 
+    /*!
+    ** \brief Get the message of the action
+    */
+    Yuni::String message() const;
 
-		/*!
-		** \brief Get the caption of the action
-		*/
-		Yuni::String caption() const;
+    /*!
+    ** \brief Make preparations for the execution
+    */
+    bool prepare(Context& ctx);
 
-		/*!
-		** \brief Get the message of the action
-		*/
-		Yuni::String message() const;
+    /*!
+    ** \brief Register if possible the action into the appropriate view
+    */
+    void registerViews(Context& ctx);
 
-		/*!
-		** \brief Make preparations for the execution
-		*/
-		bool prepare(Context& ctx);
+    void datagridCaption(Yuni::String& title);
 
-		/*!
-		** \brief Register if possible the action into the appropriate view
-		*/
-		void registerViews(Context& ctx);
+    /*!
+    ** \brief Look for the root node and make preparations for the execution
+    */
+    bool prepareRootNode(Context& ctx);
 
-		void datagridCaption(Yuni::String& title);
+    /*!
+    ** \brief Perform the action
+    */
+    bool perform(Context& ctx, bool recursive = true);
 
-		/*!
-		** \brief Look for the root node and make preparations for the execution
-		*/
-		bool prepareRootNode(Context& ctx);
+    /*!
+    ** \brief Dump the tree from this node to the stdcout
+    */
+    void dump() const;
 
-		/*!
-		** \brief Perform the action
-		*/
-		bool perform(Context& ctx, bool recursive = true);
+    /*!
+    ** \brief Get if the action should be represented with a bold font
+    */
+    virtual bool bold() const;
 
-		/*!
-		** \brief Dump the tree from this node to the stdcout
-		*/
-		void dump() const;
+    /*!
+    ** \brief Auto-expand
+    */
+    virtual bool autoExpand() const;
 
-		/*!
-		** \brief Get if the action should be represented with a bold font
-		*/
-		virtual bool bold() const;
+    /*!
+    **
+    */
+    virtual bool canDoSomething() const;
 
-		/*!
-		** \brief Auto-expand
-		*/
-		virtual bool autoExpand() const;
+    virtual bool allowUpdate() const;
+    virtual bool allowSkip() const;
+    virtual bool allowOverwrite() const;
+    virtual bool shouldPrepareRootNode() const;
 
-		/*!
-		**
-		*/
-		virtual bool canDoSomething() const;
+    //! Get if the action should be visible to the user
+    virtual bool visible() const;
 
-		virtual bool allowUpdate() const;
-		virtual bool allowSkip() const;
-		virtual bool allowOverwrite() const;
-		virtual bool shouldPrepareRootNode() const;
+    //! \name Behavior
+    //@{
+    //! Get the behavior
+    Behavior behavior() const;
+    //! Set the behavior
+    void behavior(Behavior newBehavior);
+    //@}
 
-		//! Get if the action should be visible to the user
-		virtual bool visible() const;
+    //! Prepare the whole list of actions to execute in the given order
+    bool prepareStack(Vector& vector);
 
-		//! \name Behavior
-		//@{
-		//! Get the behavior
-		Behavior behavior() const;
-		//! Set the behavior
-		void behavior(Behavior newBehavior);
-		//@}
+    //! \name State
+    //@{
+    State state() const;
+    //@}
 
+    //! \name UI
+    //@{
+    virtual void behaviorToText(Behavior behavior, Yuni::String& out);
+    //@}
 
-		//! Prepare the whole list of actions to execute in the given order
-		bool prepareStack(Vector& vector);
+    /*!
+    ** \brief Create post actions if required
+    */
+    void createPostActions(const IAction::Ptr& node);
 
-		//! \name State
-		//@{
-		State state() const;
-		//@}
+protected:
+    //! Prepare the execution
+    virtual bool prepareWL(Context& ctx) = 0;
+    //! Prepare the execution (when the behavior says that the action should be skipped)
+    virtual void prepareSkipWL(Context&)
+    {
+    }
+    //! Perform the action
+    virtual bool performWL(Context& ctx) = 0;
+    //! Register all views
+    virtual void registerViewsWL(Context&)
+    {
+    }
+    //! Create post actions (if any)
+    virtual void createPostActionsWL(const IAction::Ptr& node);
 
-		//! \name UI
-		//@{
-		virtual void behaviorToText(Behavior behavior, Yuni::String& out);
-		//@}
+protected:
+    //! All data related to the action
+    ActionInformations pInfos;
 
+private:
+    void internalDump(Yuni::String& tmp, uint level) const;
 
-		/*!
-		** \brief Create post actions if required
-		*/
-		void createPostActions(const IAction::Ptr& node);
-
-	protected:
-		//! Prepare the execution
-		virtual bool prepareWL(Context& ctx) = 0;
-		//! Prepare the execution (when the behavior says that the action should be skipped)
-		virtual void prepareSkipWL(Context&) {}
-		//! Perform the action
-		virtual bool performWL(Context& ctx) = 0;
-		//! Register all views
-		virtual void registerViewsWL(Context&) {}
-		//! Create post actions (if any)
-		virtual void createPostActionsWL(const IAction::Ptr& node);
-
-	protected:
-		//! All data related to the action
-		ActionInformations pInfos;
-
-	private:
-		void internalDump(Yuni::String& tmp, uint level) const;
-
-	}; // class IAction
-
-
-
-
+}; // class IAction
 
 } // namespace Action
 } // namespace Antares
 
-# include "context.h"
-# include "action.hxx"
+#include "context.h"
+#include "action.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_ACTION_ACTION_H__

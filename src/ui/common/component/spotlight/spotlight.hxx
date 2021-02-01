@@ -25,61 +25,49 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_HXX__
-# define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_HXX__
+#define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_HXX__
 
-# include <wx/dc.h>
-
+#include <wx/dc.h>
 
 namespace Antares
 {
 namespace Component
 {
+inline void Spotlight::IProvider::redoResearch()
+{
+    if (pSpotlightComponent)
+        pSpotlightComponent->redoResearch();
+}
 
-	inline void Spotlight::IProvider::redoResearch()
-	{
-		if (pSpotlightComponent)
-			pSpotlightComponent->redoResearch();
-	}
+inline Spotlight::IProvider::Ptr Spotlight::provider() const
+{
+    return pDataProvider;
+}
 
+inline bool Spotlight::IProvider::onSelect(IItem::Ptr&)
+{
+    return true;
+}
 
-	inline Spotlight::IProvider::Ptr Spotlight::provider() const
-	{
-		return pDataProvider;
-	}
+inline bool Spotlight::IProvider::onDoubleClickSelect(IItem::Ptr&)
+{
+    return true;
+}
 
+inline bool Spotlight::IProvider::onSelect(const IItem::Vector&)
+{
+    return true;
+}
 
-	inline bool Spotlight::IProvider::onSelect(IItem::Ptr&)
-	{
-		return true;
-	}
+inline Spotlight* Spotlight::IProvider::component() const
+{
+    return pSpotlightComponent;
+}
 
-
-	inline bool Spotlight::IProvider::onDoubleClickSelect(IItem::Ptr&)
-	{
-		return true;
-	}
-
-
-	inline bool Spotlight::IProvider::onSelect(const IItem::Vector&)
-	{
-		return true;
-	}
-
-
-	inline Spotlight* Spotlight::IProvider::component() const
-	{
-		return pSpotlightComponent;
-	}
-
-
-	inline uint Spotlight::itemHeight() const
-	{
-		return pItemHeight;
-	}
-
-
-
-
+inline uint Spotlight::itemHeight() const
+{
+    return pItemHeight;
+}
 
 } // namespace Component
 } // namespace Antares

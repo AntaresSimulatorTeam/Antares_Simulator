@@ -25,60 +25,55 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_WINDOWS_CORRELATION_CORRELATION_H__
-# define __ANTARES_WINDOWS_CORRELATION_CORRELATION_H__
+#define __ANTARES_WINDOWS_CORRELATION_CORRELATION_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/event.h>
-# include <antares/wx-wrapper.h>
-# include <antares/study.h>
+#include <yuni/yuni.h>
+#include <yuni/core/event.h>
+#include <antares/wx-wrapper.h>
+#include <antares/study.h>
 
-# include <wx/panel.h>
-# include <wx/sizer.h>
+#include <wx/panel.h>
+#include <wx/sizer.h>
 #include "../../toolbox/components/notebook/notebook.h"
-
 
 namespace Antares
 {
 namespace Window
 {
-	class CorrelationPanelData;
+class CorrelationPanelData;
 
-	class CorrelationPanel final : public wxPanel, public Yuni::IEventObserver<CorrelationPanel>
-	{
-	public:
-		CorrelationPanel(wxWindow* parent, int timeseries);
-		~CorrelationPanel();
+class CorrelationPanel final : public wxPanel, public Yuni::IEventObserver<CorrelationPanel>
+{
+public:
+    CorrelationPanel(wxWindow* parent, int timeseries);
+    ~CorrelationPanel();
 
-		void reload();
+    void reload();
 
-		void selectAllDefaultPages();
+    void selectAllDefaultPages();
 
-	private:
-		void onStudyLoaded();
-		void onStudyClosed();
+private:
+    void onStudyLoaded();
+    void onStudyClosed();
 
-		void onStudyAreaDelete(Data::Area*);
-		void onStudyAreaAdded(Data::Area*);
+    void onStudyAreaDelete(Data::Area*);
+    void onStudyAreaAdded(Data::Area*);
 
-		void onStudyAreasChanged();
+    void onStudyAreasChanged();
 
-		void onSortAlpha(wxCommandEvent&);
-		void onSortAlphaReverse(wxCommandEvent&);
-		void onSortColor(wxCommandEvent&);
+    void onSortAlpha(wxCommandEvent&);
+    void onSortAlphaReverse(wxCommandEvent&);
+    void onSortColor(wxCommandEvent&);
 
-		void updateAllDatasources();
+    void updateAllDatasources();
 
-		void assignMatrices(Data::Correlation* corr);
+    void assignMatrices(Data::Correlation* corr);
 
-	private:
-		CorrelationPanelData* pData;
-		Component::Notebook::Page* pPageAnnual;
+private:
+    CorrelationPanelData* pData;
+    Component::Notebook::Page* pPageAnnual;
 
-	}; // class CorrelationPanel
-
-
-
-
+}; // class CorrelationPanel
 
 } // namespace Window
 } // namespace Antares

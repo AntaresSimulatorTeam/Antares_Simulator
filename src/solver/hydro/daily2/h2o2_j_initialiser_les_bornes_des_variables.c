@@ -25,53 +25,51 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "h2o2_j_donnees_mensuelles.h"
 
-
-
-
-
-# include "h2o2_j_donnees_mensuelles.h"
- 
-
-
-void H2O2_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES_ETENDUES * DonneesMensuelles, int NumeroDeProbleme )
+void H2O2_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles,
+                                             int NumeroDeProbleme)
 {
-	int Pdt; int NbPdt; int Var;
-	double * Xmin;
-	double * Xmax;
+    int Pdt;
+    int NbPdt;
+    int Var;
+    double* Xmin;
+    double* Xmax;
 
-	int * NumeroVar_Turbine;
+    int* NumeroVar_Turbine;
 
-	double * TurbineMax = DonneesMensuelles->TurbineMax;
-	double * Turbine = DonneesMensuelles->Turbine;;
-	double reservoirCapacity = DonneesMensuelles->reservoirCapacity;
+    double* TurbineMax = DonneesMensuelles->TurbineMax;
+    double* Turbine = DonneesMensuelles->Turbine;
+    ;
+    double reservoirCapacity = DonneesMensuelles->reservoirCapacity;
 
-	
-	double ** AdresseOuPlacerLaValeurDesVariablesOptimisees;
+    double** AdresseOuPlacerLaValeurDesVariablesOptimisees;
 
-	PROBLEME_HYDRAULIQUE_ETENDU * ProblemeHydrauliqueEtendu; 
-	CORRESPONDANCE_DES_VARIABLES_PB_ETENDU * CorrespondanceDesVariables;
-	PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE * ProblemeLineaireEtenduPartieVariable;
+    PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
+    CORRESPONDANCE_DES_VARIABLES_PB_ETENDU* CorrespondanceDesVariables;
+    PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE* ProblemeLineaireEtenduPartieVariable;
 
-	ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
+    ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
 
-	NbPdt = ProblemeHydrauliqueEtendu->NbJoursDUnProbleme[NumeroDeProbleme];
+    NbPdt = ProblemeHydrauliqueEtendu->NbJoursDUnProbleme[NumeroDeProbleme];
 
-	CorrespondanceDesVariables = ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[NumeroDeProbleme];
-	ProblemeLineaireEtenduPartieVariable = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[NumeroDeProbleme];
+    CorrespondanceDesVariables
+      = ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[NumeroDeProbleme];
+    ProblemeLineaireEtenduPartieVariable
+      = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[NumeroDeProbleme];
 
-	NumeroVar_Turbine = CorrespondanceDesVariables->NumeroVar_Turbine;
- 
-	Xmin = ProblemeLineaireEtenduPartieVariable->Xmin;
-	Xmax = ProblemeLineaireEtenduPartieVariable->Xmax;
-	AdresseOuPlacerLaValeurDesVariablesOptimisees = ProblemeLineaireEtenduPartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees;
+    NumeroVar_Turbine = CorrespondanceDesVariables->NumeroVar_Turbine;
 
-	for (Pdt = 0; Pdt < NbPdt; Pdt++)
-	{
-		
-		Var = NumeroVar_Turbine[Pdt];
-		Xmax[Var] = TurbineMax[Pdt];
-	}
+    Xmin = ProblemeLineaireEtenduPartieVariable->Xmin;
+    Xmax = ProblemeLineaireEtenduPartieVariable->Xmax;
+    AdresseOuPlacerLaValeurDesVariablesOptimisees
+      = ProblemeLineaireEtenduPartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees;
 
-	return;
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        Var = NumeroVar_Turbine[Pdt];
+        Xmax[Var] = TurbineMax[Pdt];
+    }
+
+    return;
 }

@@ -32,9 +32,7 @@
 #include <wx/app.h>
 #include <wx/sizer.h>
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
@@ -42,115 +40,99 @@ namespace Private
 {
 namespace Spotlight
 {
+namespace // anonymous
+{
+// Global pointer for the frame
+// We may only have one opened frame for the whole process
+static SpotlightMiniFrame* gInstance = nullptr;
 
-	namespace // anonymous
-	{
+class AutoCloseTimer : public wxTimer
+{
+public:
+    AutoCloseTimer()
+    {
+    }
+    virtual ~AutoCloseTimer()
+    {
+    }
 
-		// Global pointer for the frame
-		// We may only have one opened frame for the whole process
-		static SpotlightMiniFrame* gInstance = nullptr;
+    void Notify()
+    {
+        // Thanks wx !!! (ironic of course...)
+        if (gInstance && not gInstance->IsActive())
+            Antares::Dispatcher::GUI::Close(gInstance);
+    }
 
+}; // class AutoCloseTimer
 
+static AutoCloseTimer* gAutoCloseTimer = nullptr;
 
-		class AutoCloseTimer: public wxTimer
-		{
-		public:
-			AutoCloseTimer()
-			{
-			}
-			virtual ~AutoCloseTimer()
-			{
-			}
+} // anonymous namespace
 
-			void Notify()
-			{
-				// Thanks wx !!! (ironic of course...)
-				if (gInstance && not gInstance->IsActive())
-					Antares::Dispatcher::GUI::Close(gInstance);
-			}
+BEGIN_EVENT_TABLE(SpotlightMiniFrame, wxFrame)
+EVT_CLOSE(SpotlightMiniFrame::onClose)
+EVT_KILL_FOCUS(SpotlightMiniFrame::onKillFocus)
+END_EVENT_TABLE()
 
-		}; // class AutoCloseTimer
+SpotlightMiniFrame* SpotlightMiniFrame::Instance()
+{
+    return gInstance;
+}
 
+SpotlightMiniFrame::SpotlightMiniFrame(wxWindow* parent) :
+ wxFrame(parent,
+         wxID_ANY,
+         wxT("Selection"),
+         wxDefaultPosition,
+         wxDefaultSize,
+         wxSTAY_ON_TOP | wxBORDER_NONE | wxFRAME_NO_TASKBAR)
+{
+    SetSize(340, 300);
 
-		static AutoCloseTimer* gAutoCloseTimer = nullptr;
+    if (gInstance && gInstance != this)
+        gInstance->Close();
+    gInstance = this;
 
-	} // anonymous namespace
+    if (!gAutoCloseTimer)
+        gAutoCloseTimer = new AutoCloseTimer();
 
+    gAutoCloseTimer->Start(160, wxTIMER_CONTINUOUS);
+}
 
+SpotlightMiniFrame::~SpotlightMiniFrame()
+{
+    removeRefToMySelf();
+}
 
-	BEGIN_EVENT_TABLE(SpotlightMiniFrame, wxFrame)
-		EVT_CLOSE(SpotlightMiniFrame::onClose)
-		EVT_KILL_FOCUS(SpotlightMiniFrame::onKillFocus)
-	END_EVENT_TABLE()
+void SpotlightMiniFrame::removeRefToMySelf()
+{
+    if (gInstance == this)
+    {
+        gInstance = nullptr;
+        if (gAutoCloseTimer)
+        {
+            gAutoCloseTimer->Stop();
+            Antares::Dispatcher::GUI::Destroy(gAutoCloseTimer);
+            gAutoCloseTimer = nullptr;
+        }
+    }
+}
 
+void SpotlightMiniFrame::onClose(wxCloseEvent&)
+{
+    removeRefToMySelf();
+    Destroy();
+}
 
-	SpotlightMiniFrame* SpotlightMiniFrame::Instance()
-	{
-		return gInstance;
-	}
-
-
-
-	SpotlightMiniFrame::SpotlightMiniFrame(wxWindow* parent) :
-		wxFrame(parent, wxID_ANY, wxT("Selection"),
-			wxDefaultPosition, wxDefaultSize, wxSTAY_ON_TOP | wxBORDER_NONE | wxFRAME_NO_TASKBAR)
-	{
-		SetSize(340, 300);
-
-		if (gInstance && gInstance != this)
-			gInstance->Close();
-		gInstance = this;
-
-		if (!gAutoCloseTimer)
-			gAutoCloseTimer = new AutoCloseTimer();
-
-		gAutoCloseTimer->Start(160, wxTIMER_CONTINUOUS);
-	}
-
-
-	SpotlightMiniFrame::~SpotlightMiniFrame()
-	{
-		removeRefToMySelf();
-	}
-
-
-	void SpotlightMiniFrame::removeRefToMySelf()
-	{
-		if (gInstance == this)
-		{
-			gInstance = nullptr;
-			if (gAutoCloseTimer)
-			{
-				gAutoCloseTimer->Stop();
-				Antares::Dispatcher::GUI::Destroy(gAutoCloseTimer);
-				gAutoCloseTimer = nullptr;
-			}
-		}
-	}
-
-
-	void SpotlightMiniFrame::onClose(wxCloseEvent&)
-	{
-		removeRefToMySelf();
-		Destroy();
-	}
-
-
-	void SpotlightMiniFrame::onKillFocus(wxFocusEvent& evt)
-	{
-		evt.Skip();
-		if (IsActive())
-			return;
-		removeRefToMySelf();
-		Antares::Dispatcher::GUI::Close(this);
-	}
-
-
-
-
-
+void SpotlightMiniFrame::onKillFocus(wxFocusEvent& evt)
+{
+    evt.Skip();
+    if (IsActive())
+        return;
+    removeRefToMySelf();
+    Antares::Dispatcher::GUI::Close(this);
+}
 
 } // namespace Spotlight
 } // namespace Private
 } // namespace Antares
-

@@ -37,81 +37,66 @@
 
 using namespace Yuni;
 
-
 namespace Antares
 {
-	namespace Window
-	{
-		namespace Hydro
-		{
+namespace Window
+{
+namespace Hydro
+{
+Localdatahydro::Localdatahydro(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
+ Component::Panel(parent), pNotifier(notifier), pLastArea(nullptr)
+{
+    auto* notebook = new Component::Notebook(this, Component::Notebook::orTop);
+    notebook->displayTitle(false);
+    notebook->theme(Component::Notebook::themeLight);
 
+    auto* page1 = new Antares::Window::Hydro::Management(notebook, notifier);
+    pPageFatal = notebook->add(page1, wxT("Management Options"));
 
-			Localdatahydro::Localdatahydro(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
-				Component::Panel(parent),
-				pNotifier(notifier),
-				pLastArea(nullptr)
-			{
-				auto* notebook = new Component::Notebook(this, Component::Notebook::orTop);
-				notebook->displayTitle(false);
-				notebook->theme(Component::Notebook::themeLight);
+    auto* page2 = new Antares::Window::Hydro::Prepro(notebook, notifier);
+    pPageFatal = notebook->add(page2, wxT("Inflow Structure"));
 
-				auto* page1 = new Antares::Window::Hydro::Management(notebook, notifier);
-				pPageFatal = notebook->add(page1, wxT("Management Options"));
+    auto* page3 = new Antares::Window::Hydro::Dailypower(notebook, notifier);
+    pPageFatal = notebook->add(page3, wxT("Daily Power and Energy Credits"));
 
-				auto* page2 = new Antares::Window::Hydro::Prepro(notebook, notifier);
-				pPageFatal = notebook->add(page2, wxT("Inflow Structure"));
+    auto* page4 = new Antares::Window::Hydro::LevelsAndValues(notebook, notifier);
+    pPageFatal = notebook->add(page4, wxT("Reservoir levels and water values"));
 
-				auto* page3 = new Antares::Window::Hydro::Dailypower(notebook, notifier);
-				pPageFatal = notebook->add(page3, wxT("Daily Power and Energy Credits"));
+    // Connection to the notifier
+    if (pNotifier)
+        pNotifier->onAreaChanged.connect(this, &Localdatahydro::onAreaChanged);
+    OnStudyClosed.connect(this, &Localdatahydro::onStudyClosed);
 
+    wxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+    sizer->Add(notebook, 1, wxALL | wxEXPAND);
+    SetSizer(sizer);
 
-				auto* page4 = new Antares::Window::Hydro::LevelsAndValues(notebook, notifier);
-				pPageFatal = notebook->add(page4, wxT("Reservoir levels and water values"));
+    OnStudyLoaded.connect(this, &Localdatahydro::onStudyLoaded);
+}
 
-				// Connection to the notifier
-				if (pNotifier)
-					pNotifier->onAreaChanged.connect(this, &Localdatahydro::onAreaChanged);
-				OnStudyClosed.connect(this, &Localdatahydro::onStudyClosed);
+Localdatahydro::~Localdatahydro()
+{
+    destroyBoundEvents();
+}
 
-				wxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
-				sizer->Add(notebook, 1, wxALL | wxEXPAND);
-				SetSizer(sizer);
+void Localdatahydro::onAreaChanged(Data::Area* area)
+{
+    pLastArea = Data::Study::Current::Valid() ? area : nullptr;
+}
 
-				OnStudyLoaded.connect(this, &Localdatahydro::onStudyLoaded);
-			}
+void Localdatahydro::onStudyClosed()
+{
+    pLastArea = nullptr;
+    if (pNotifier)
+        pNotifier->onAreaChanged(nullptr);
+}
 
+void Localdatahydro::onStudyLoaded()
+{
+    if (pPageFatal)
+        pPageFatal->select();
+}
 
-
-			Localdatahydro::~Localdatahydro()
-			{
-				destroyBoundEvents();
-			}
-
-
-			void Localdatahydro::onAreaChanged(Data::Area* area)
-			{
-				pLastArea = Data::Study::Current::Valid() ? area : nullptr;
-			}
-
-
-			void Localdatahydro::onStudyClosed()
-			{
-				pLastArea = nullptr;
-				if (pNotifier)
-					pNotifier->onAreaChanged(nullptr);
-			}
-
-
-			void Localdatahydro::onStudyLoaded()
-			{
-				if (pPageFatal)
-					pPageFatal->select();
-			}
-
-
-
-
-		} // namespace Hydro
-	} // namespace Window
+} // namespace Hydro
+} // namespace Window
 } // namespace Antares
-

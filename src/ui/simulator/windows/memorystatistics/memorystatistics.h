@@ -25,57 +25,47 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_MEMORYSTATISTICS_MEMORYSTATISTICS_H__
-# define __ANTARES_APPLICATION_MEMORYSTATISTICS_MEMORYSTATISTICS_H__
+#define __ANTARES_APPLICATION_MEMORYSTATISTICS_MEMORYSTATISTICS_H__
 
-# include <antares/wx-wrapper.h>
-# include <wx/dialog.h>
-# include "private.h"
-
-
+#include <antares/wx-wrapper.h>
+#include <wx/dialog.h>
+#include "private.h"
 
 namespace Antares
 {
 namespace Window
 {
+class MemoryStatistics final : public wxDialog
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    MemoryStatistics(wxWindow* parent);
 
-	class MemoryStatistics final : public wxDialog
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		MemoryStatistics(wxWindow* parent);
+    //! Destructor
+    virtual ~MemoryStatistics();
+    //@}
 
-		//! Destructor
-		virtual ~MemoryStatistics();
-		//@}
+    /*!
+    ** \brief Refresh information
+    */
+    void refreshInformation();
 
+private:
+    //! User: close the window (via button "close")
+    void onClose(void*);
 
-		/*!
-		** \brief Refresh information
-		*/
-		void refreshInformation();
+private:
+    //! Internal data
+    Antares::Private::Window::MemoryStatisticsData* pData;
+    bool pDisplayLogsOnce;
 
-	private:
-		//! User: close the window (via button "close")
-		void onClose(void*);
-
-	private:
-		//! Internal data
-		Antares::Private::Window::MemoryStatisticsData* pData;
-		bool pDisplayLogsOnce;
-
-	}; // class MemoryStatistics
-
-
-
-
-
+}; // class MemoryStatistics
 
 } // namespace Window
 } // namespace Antares
-
 
 #endif // __ANTARES_APPLICATION_MEMORYSTATISTICS_MEMORYSTATISTICS_H__

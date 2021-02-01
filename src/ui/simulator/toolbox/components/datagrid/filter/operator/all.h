@@ -25,17 +25,16 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_FILTER_OPERATOR_ALL_H__
-# define __ANTARES_TOOLBOX_FILTER_OPERATOR_ALL_H__
+#define __ANTARES_TOOLBOX_FILTER_OPERATOR_ALL_H__
 
-# include "../operator.h"
+#include "../operator.h"
 
-# include "lessthan.h"
-# include "lessthanorequalsto.h"
-# include "greaterthan.h"
-# include "greaterthanorequalsto.h"
-# include "equals.h"
-# include "notequals.h"
-# include "modulo.h"
-
+#include "lessthan.h"
+#include "lessthanorequalsto.h"
+#include "greaterthan.h"
+#include "greaterthanorequalsto.h"
+#include "equals.h"
+#include "notequals.h"
+#include "modulo.h"
 
 #endif // __ANTARES_TOOLBOX_FILTER_OPERATOR_ALL_H__

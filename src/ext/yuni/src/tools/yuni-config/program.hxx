@@ -11,17 +11,11 @@
 #pragma once
 #include "program.h"
 
-
-
 namespace Yuni
 {
-
-
-	inline bool LibConfigProgram::isCoreModule(const String& name) const
-	{
-		return (name == "core" or name == "gfx");
-	}
-
-
+inline bool LibConfigProgram::isCoreModule(const String& name) const
+{
+    return (name == "core" or name == "gfx");
+}
 
 } // namespace Yuni

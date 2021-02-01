@@ -29,25 +29,20 @@
 #include "../../config.h"
 #include <iostream>
 
-
 namespace Antares
 {
+void PrintVersionToStdCout()
+{
+    std::cout << ANTARES_VERSION_STR
+#if ANTARES_RC != 0
+              << "rc" << int(ANTARES_RC)
+#endif
+              << '\n';
+}
 
-	void PrintVersionToStdCout()
-	{
-		std::cout << ANTARES_VERSION_STR
-		#if ANTARES_RC != 0
-		<< "rc" << int(ANTARES_RC)
-		#endif
-		<< '\n';
-	}
-
-
-	const char* VersionToCString()
-	{
-		return ANTARES_VERSION_PUB_STR;
-	}
-
+const char* VersionToCString()
+{
+    return ANTARES_VERSION_PUB_STR;
+}
 
 } // namespace Antares
-

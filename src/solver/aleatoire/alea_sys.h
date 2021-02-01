@@ -25,17 +25,16 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_RANDOM_SYSHDR_H__
-# define __SOLVER_RANDOM_SYSHDR_H__
+#define __SOLVER_RANDOM_SYSHDR_H__
 
-# include <stdlib.h>
-# include <stdio.h>
-# include <math.h>
-# include <string.h>
-# include <memory.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include <string.h>
+#include <memory.h>
 
-# include "../config.h"
-# include <antares/study/study.h>
-# include "../simulation/simulation.h"
-
+#include "../config.h"
+#include <antares/study/study.h>
+#include "../simulation/simulation.h"
 
 #endif /* __SOLVER_RANDOM_SYSHDR_H__ */

@@ -29,31 +29,23 @@
 #include "state.h"
 #include <cassert>
 
-
-
 namespace Antares
 {
 namespace Action
 {
-
-
-	const char* StateToString(State state)
-	{
-		static const char* const str[] =
-		{
-			"unknown",
-			"disabled",
-			"error",
-			"nothing to do",
-			"ready",
-			"conflict",
-		};
-		assert((uint) state < (uint) stMax);
-		return str[(uint) state];
-	}
-
-
+const char* StateToString(State state)
+{
+    static const char* const str[] = {
+      "unknown",
+      "disabled",
+      "error",
+      "nothing to do",
+      "ready",
+      "conflict",
+    };
+    assert((uint)state < (uint)stMax);
+    return str[(uint)state];
+}
 
 } // namespace Action
 } // namespace Antares
-

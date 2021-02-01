@@ -25,186 +25,186 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_WINDOW_ANALYZER_H__
-# define __ANTARES_APPLICATION_WINDOW_ANALYZER_H__
+#define __ANTARES_APPLICATION_WINDOW_ANALYZER_H__
 
-# include <antares/wx-wrapper.h>
-# include <wx/dialog.h>
-# include <wx/checkbox.h>
-# include <wx/radiobut.h>
-# include <wx/timer.h>
-# include "../../toolbox/components/datagrid/component.h"
-# include "../../toolbox/components/datagrid/renderer/analyzer/areas.h"
-# include <ui/common/component/spotlight.h>
-# include <yuni/thread/thread.h>
-# include <yuni/core/event.h>
-
+#include <antares/wx-wrapper.h>
+#include <wx/dialog.h>
+#include <wx/checkbox.h>
+#include <wx/radiobut.h>
+#include <wx/timer.h>
+#include "../../toolbox/components/datagrid/component.h"
+#include "../../toolbox/components/datagrid/renderer/analyzer/areas.h"
+#include <ui/common/component/spotlight.h>
+#include <yuni/thread/thread.h>
+#include <yuni/core/event.h>
 
 namespace Antares
 {
 namespace Window
 {
-	class AnalyzerWizard final : public wxDialog
-	{
-	public:
-		//! File mapping
-		typedef Component::Datagrid::Renderer::Analyzer::Areas::Map FileMapping;
-		//!
-		typedef Component::Datagrid::Renderer::Analyzer::Areas::Record::Vector RecordVector;
-		//! Smartptr for file mapping
-		typedef Yuni::SmartPtr<FileMapping> FileMappingPtr;
+class AnalyzerWizard final : public wxDialog
+{
+public:
+    //! File mapping
+    typedef Component::Datagrid::Renderer::Analyzer::Areas::Map FileMapping;
+    //!
+    typedef Component::Datagrid::Renderer::Analyzer::Areas::Record::Vector RecordVector;
+    //! Smartptr for file mapping
+    typedef Yuni::SmartPtr<FileMapping> FileMappingPtr;
 
-		enum IDs
-		{
-			mnIDCancel = wxID_HIGHEST + 1,
-			mnIDTmpUseDefault,
-			mnIDTmpUseStudyUserDir,
-			mnIDTmpUseCustom,
-			mnIDAutoClean,
-			mnIDUpdateInfo,
-			mnIDUpdateFileMapping,
-			mnIDGridUpdate,
-			mnIDCanRunAnalyzer,
-		};
+    enum IDs
+    {
+        mnIDCancel = wxID_HIGHEST + 1,
+        mnIDTmpUseDefault,
+        mnIDTmpUseStudyUserDir,
+        mnIDTmpUseCustom,
+        mnIDAutoClean,
+        mnIDUpdateInfo,
+        mnIDUpdateFileMapping,
+        mnIDGridUpdate,
+        mnIDCanRunAnalyzer,
+    };
 
-	public:
-		/*!
-		** \brief Reset the address of the last used folder
-		**
-		** The variable will be reset to <current study>/user.
-		*/
-		static void ResetLastFolderToCurrentStudyUser();
+public:
+    /*!
+    ** \brief Reset the address of the last used folder
+    **
+    ** The variable will be reset to <current study>/user.
+    */
+    static void ResetLastFolderToCurrentStudyUser();
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor, with a parent frame
-		*/
-		AnalyzerWizard(wxFrame* parent);
-		//! Destructor
-		virtual ~AnalyzerWizard();
-		//@}
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor, with a parent frame
+    */
+    AnalyzerWizard(wxFrame* parent);
+    //! Destructor
+    virtual ~AnalyzerWizard();
+    //@}
 
-		void info(const Yuni::NullPtr&);
-		void info(const AnyString& text);
+    void info(const Yuni::NullPtr&);
+    void info(const AnyString& text);
 
-		void fileMapping(FileMapping* m);
+    void fileMapping(FileMapping* m);
 
-		/*!
-		** \brief Force the refresh of the grid
-		*/
-		void refreshGrid();
+    /*!
+    ** \brief Force the refresh of the grid
+    */
+    void refreshGrid();
 
-		void enableAnalyzer(bool v);
+    void enableAnalyzer(bool v);
 
-		/*!
-		** \brief Force the analyze of each area
-		*/
-		void recheckEachArea();
+    /*!
+    ** \brief Force the analyze of each area
+    */
+    void recheckEachArea();
 
-		/*!
-		** \brief Export all infos into an INI file
-		*/
-		bool saveToFile(const Yuni::String& filename) const;
+    /*!
+    ** \brief Export all infos into an INI file
+    */
+    bool saveToFile(const Yuni::String& filename) const;
 
-		const Yuni::String& analyzerInfoFile() const {return pInfoFilename;}
+    const Yuni::String& analyzerInfoFile() const
+    {
+        return pInfoFilename;
+    }
 
-		void analyzerInfoFile(const Yuni::String& f) {pInfoFilename = f;}
+    void analyzerInfoFile(const Yuni::String& f)
+    {
+        pInfoFilename = f;
+    }
 
-	private:
-		void onCancel(void*);
-		void onProceed(void*);
+private:
+    void onCancel(void*);
+    void onProceed(void*);
 
-		void onBrowse(void*);
-		void onBrowseMenu(Component::Button&, wxMenu& menu, void*);
-		void onBrowseRefresh(wxCommandEvent&);
-		void onBrowseOpenInExplorer(wxCommandEvent&);
-		void onBrowseReset(wxCommandEvent&);
+    void onBrowse(void*);
+    void onBrowseMenu(Component::Button&, wxMenu& menu, void*);
+    void onBrowseRefresh(wxCommandEvent&);
+    void onBrowseOpenInExplorer(wxCommandEvent&);
+    void onBrowseReset(wxCommandEvent&);
 
-		void onSelectTimeseries(Component::Button&, wxMenu& menu, void*);
-		void onSelectTSLoad(wxCommandEvent&);
-		void onSelectTSWind(wxCommandEvent&);
-		void onSelectTSSolar(wxCommandEvent&);
+    void onSelectTimeseries(Component::Button&, wxMenu& menu, void*);
+    void onSelectTSLoad(wxCommandEvent&);
+    void onSelectTSWind(wxCommandEvent&);
+    void onSelectTSSolar(wxCommandEvent&);
 
-		void onBrowseTemp(void* evt);
-		void evtUpdateInfo(wxCommandEvent& evt);
-		void evtUpdateFileMapping(wxCommandEvent& evt);
-		void evtGridUpdate(wxCommandEvent& evt);
-		void evtCanRunAnalyzer(wxCommandEvent& evt);
-		void evtTemporaryPathSelectorChanged(wxCommandEvent& evt);
-		void evtLimitsChanged(wxCommandEvent& evt);
-		void updateInfoForTempFolder();
-		void updateMaxTimeseries();
+    void onBrowseTemp(void* evt);
+    void evtUpdateInfo(wxCommandEvent& evt);
+    void evtUpdateFileMapping(wxCommandEvent& evt);
+    void evtGridUpdate(wxCommandEvent& evt);
+    void evtCanRunAnalyzer(wxCommandEvent& evt);
+    void evtTemporaryPathSelectorChanged(wxCommandEvent& evt);
+    void evtLimitsChanged(wxCommandEvent& evt);
+    void updateInfoForTempFolder();
+    void updateMaxTimeseries();
 
-		void browseDataFolder(const wxString& p);
+    void browseDataFolder(const wxString& p);
 
-		void enableAll(bool v);
+    void enableAll(bool v);
 
-		void beforeUpdate(int, int);
-		void afterUpdate(int, int);
+    void beforeUpdate(int, int);
+    void afterUpdate(int, int);
 
-	private:
-		Yuni::Event<void (bool, uint)> onUpdateMaxTimeseries;
-		Yuni::Event<void (Data::TimeSeries)> onUpdateTimeseriesType;
+private:
+    Yuni::Event<void(bool, uint)> onUpdateMaxTimeseries;
+    Yuni::Event<void(Data::TimeSeries)> onUpdateTimeseriesType;
 
-		//! \name Filesearch
-		//@{
-		Yuni::Event<void ()> onFileSearchClear;
-		Yuni::Event<void (const Yuni::String&)> onFileSearchAdd;
-		//@}
+    //! \name Filesearch
+    //@{
+    Yuni::Event<void()> onFileSearchClear;
+    Yuni::Event<void(const Yuni::String&)> onFileSearchAdd;
+    //@}
 
-		Yuni::String pInfoFilename;
-		wxTextCtrl* pPath;
-		wxTextCtrl* pPathTemp;
-		wxButton* pBtnRun;
-		wxButton* pBtnBrowseTemp;
-		wxCheckBox* pAutoClean;
-		wxRadioButton* pTmpUseDefault;
-		wxRadioButton* pTmpUseStudyUserDir;
-		wxRadioButton* pTmpUseCustom;
-		wxStaticText* pLblInfo;
-		wxStaticText* pLblCleanInfo;
-		Component::Datagrid::Component* pGrid;
-		wxTimer* pRefreshTimer;
-		wxTimer* pProceedTimer;
+    Yuni::String pInfoFilename;
+    wxTextCtrl* pPath;
+    wxTextCtrl* pPathTemp;
+    wxButton* pBtnRun;
+    wxButton* pBtnBrowseTemp;
+    wxCheckBox* pAutoClean;
+    wxRadioButton* pTmpUseDefault;
+    wxRadioButton* pTmpUseStudyUserDir;
+    wxRadioButton* pTmpUseCustom;
+    wxStaticText* pLblInfo;
+    wxStaticText* pLblCleanInfo;
+    Component::Datagrid::Component* pGrid;
+    wxTimer* pRefreshTimer;
+    wxTimer* pProceedTimer;
 
-		wxCheckBox* pCbMaxTimeseries;
-		wxCheckBox* pCbUpperBound;
-		wxCheckBox* pCbLowerBound;
+    wxCheckBox* pCbMaxTimeseries;
+    wxCheckBox* pCbUpperBound;
+    wxCheckBox* pCbLowerBound;
 
-		wxTextCtrl* pEdShortTermAutoCorr;
-		wxTextCtrl* pEdMediumTermAutoCorr;
-		wxTextCtrl* pEdTrim;
-		wxTextCtrl* pEdMaxTimeseries;
-		wxTextCtrl* pEdLowerBound;
-		wxTextCtrl* pEdUpperBound;
+    wxTextCtrl* pEdShortTermAutoCorr;
+    wxTextCtrl* pEdMediumTermAutoCorr;
+    wxTextCtrl* pEdTrim;
+    wxTextCtrl* pEdMaxTimeseries;
+    wxTextCtrl* pEdLowerBound;
+    wxTextCtrl* pEdUpperBound;
 
-		Yuni::Thread::IThread* pAnalyzeSource;
-		Yuni::Thread::IThread* pCheckRelationship;
-		FileMappingPtr pFileMapping;
+    Yuni::Thread::IThread* pAnalyzeSource;
+    Yuni::Thread::IThread* pCheckRelationship;
+    FileMappingPtr pFileMapping;
 
-		Component::Spotlight* pFileSearch;
+    Component::Spotlight* pFileSearch;
 
-		Data::TimeSeries pTSSelected;
-		Component::Button* pTSSelector;
+    Data::TimeSeries pTSSelected;
+    Component::Button* pTSSelector;
 
-		bool pUpdating;
+    bool pUpdating;
 
-		typedef Component::Datagrid::Renderer::Analyzer::Areas RendererType;
-		RendererType* pRenderer;
+    typedef Component::Datagrid::Renderer::Analyzer::Areas RendererType;
+    RendererType* pRenderer;
 
-		DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 
-	}; // class AnalyzerWizard
-
-
-
-
-
+}; // class AnalyzerWizard
 
 } // namespace Window
 } // namespace Antares
 
-# include "analyzer.hxx"
+#include "analyzer.hxx"
 
 #endif // __ANTARES_APPLICATION_WINDOW_ANALYZER_H__

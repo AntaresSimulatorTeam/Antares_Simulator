@@ -18,7 +18,6 @@
 #include "request.inc.hpp"
 #include "../../../io/filename-manipulation.h"
 
-
 namespace Yuni
 {
 namespace Messaging
@@ -27,192 +26,179 @@ namespace Transport
 {
 namespace REST
 {
+Server::Server() : ITransport(tmServer)
+{
+    pData = new ServerData();
+}
 
+Server::~Server()
+{
+    ServerData* ptr = pData;
+    pData = nullptr;
+    delete ptr;
+}
 
-	Server::Server() :
-		ITransport(tmServer)
-	{
-		pData = new ServerData();
-	}
+Net::Error Server::start()
+{
+    assert(pData and "internal error");
+    pData->service = pService;
+    assert(pService != NULL and "invalid reference to Messaging::Service");
 
+    // stopping mongoose if not alreayd done
+    if (pData->ctx)
+        mg_stop(pData->ctx);
 
-	Server::~Server()
-	{
-		ServerData* ptr = pData;
-		pData = nullptr;
-		delete ptr;
-	}
+    // reset all internal states
+    pData->thread = nullptr;
+    pData->signal.reset();
 
+    // re-create mongoose options
+    pData->prepareOptionsForMongoose(port, 4);
 
-	Net::Error  Server::start()
-	{
-		assert(pData and "internal error");
-		pData->service = pService;
-		assert(pService != NULL and "invalid reference to Messaging::Service");
+    // starting mongoose
+    pData->ctx = mg_start(&TransportRESTCallback, pData, pData->options);
+    if (not pData->ctx)
+        return Net::errStartFailed;
 
-		// stopping mongoose if not alreayd done
-		if (pData->ctx)
-			mg_stop(pData->ctx);
+    return Net::errNone;
+}
 
-		// reset all internal states
-		pData->thread = nullptr;
-		pData->signal.reset();
+void Server::wait()
+{
+    if (YUNI_LIKELY(pData))
+    {
+        // wait for being stopped
+        if (pData->signal.valid())
+        {
+            pData->signal.wait();
+        }
+        else
+        {
+            // the code should never reach this location (unless the signal is invalid)
+            pData->waitWithoutSignal();
+        }
+    }
+}
 
-		// re-create mongoose options
-		pData->prepareOptionsForMongoose(port, 4);
+Net::Error Server::run()
+{
+    assert(pData and "internal error");
 
-		// starting mongoose
-		pData->ctx = mg_start(& TransportRESTCallback, pData, pData->options);
-		if (not pData->ctx)
-			return Net::errStartFailed;
+    // Get the attached thread
+    pData->thread = pAttachedThread;
 
-		return Net::errNone;
-	}
+    // infinite wait, until we receive a message to stop
+    wait();
 
+    // waiting for mongoose to stop
+    mg_stop(pData->ctx);
 
-	void Server::wait()
-	{
-		if (YUNI_LIKELY(pData))
-		{
-			// wait for being stopped
-			if (pData->signal.valid())
-			{
-				pData->signal.wait();
-			}
-			else
-			{
-				// the code should never reach this location (unless the signal is invalid)
-				pData->waitWithoutSignal();
-			}
-		}
-	}
+    pData->ctx = nullptr;
+    pData->thread = nullptr;
+    return Net::errNone;
+}
 
+void Server::stop()
+{
+    assert(pData and "internal error");
+    // notifying that we should stop as soon as possible
+    if (pData->signal.valid())
+    {
+        pData->signal.notify();
+    }
+    else
+    {
+        if (pData->thread)
+            pData->thread->gracefulStop();
+    }
+}
 
-	Net::Error  Server::run()
-	{
-		assert(pData and "internal error");
+void Server::protocol(const Protocol& protocol)
+{
+    DecisionTree* decisionTree = new DecisionTree();
+    String url;
+    String tmp;
+    String httpMethod;
 
-		// Get the attached thread
-		pData->thread = pAttachedThread;
+    // walking through all schemas
+    const Schema::Hash& allSchemas = protocol.allSchemas();
+    Schema::Hash::const_iterator end = allSchemas.end();
+    for (Schema::Hash::const_iterator i = allSchemas.begin(); i != end; ++i)
+    {
+        // relative path access
+        const String& schemaName = i->first;
+        // alias to the current schema
+        const Schema& schema = i->second;
 
-		// infinite wait, until we receive a message to stop
-		wait();
+        API::Method::Hash::const_iterator jend = schema.methods.all().end();
+        for (API::Method::Hash::const_iterator j = schema.methods.all().begin(); j != jend; ++j)
+        {
+            const API::Method& method = j->second;
 
-		// waiting for mongoose to stop
-		mg_stop(pData->ctx);
+            // The method will be ignored is no callback has been provided
+            if (not method.invoke())
+                continue;
 
-		pData->ctx = nullptr;
-		pData->thread = nullptr;
-		return Net::errNone;
-	}
+            httpMethod = method.option("http.method");
+            // using const char* to avoid assert from Yuni::String
+            RequestMethod rqmd = StringToRequestMethod(httpMethod.c_str());
+            if (rqmd == rqmdInvalid)
+                rqmd = rqmdGET;
 
+            // the full url
+            tmp.clear() << '/' << schemaName << '/' << method.name();
+            IO::Normalize(url, tmp);
 
-	void Server::stop()
-	{
-		assert(pData and "internal error");
-		// notifying that we should stop as soon as possible
-		if (pData->signal.valid())
-		{
-			pData->signal.notify();
-		}
-		else
-		{
-			if (pData->thread)
-				pData->thread->gracefulStop();
-		}
-	}
+            // keeping the url somewhere
+            // IMPORTANT: read notes about how urls are stored
+            std::set<String>& mapset = decisionTree->mapset[rqmd];
+            mapset.insert(url);
+            // retrieving the real pointer to the string
+            std::set<String>::const_iterator mapi = mapset.find(url);
+            AnyString urlstr = *mapi;
 
+            // alias to the corresponding method handler
+            DecisionTree::MethodHandler& mhandler = decisionTree->requestMethods[rqmd][urlstr];
 
-	void Server::protocol(const Protocol& protocol)
-	{
-		DecisionTree* decisionTree = new DecisionTree();
-		String url;
-		String tmp;
-		String httpMethod;
+            mhandler.schema = schemaName;
+            mhandler.name = method.name();
+            mhandler.httpMethod = httpMethod;
+            mhandler.invoke = method.invoke();
 
-		// walking through all schemas
-		const Schema::Hash& allSchemas = protocol.allSchemas();
-		Schema::Hash::const_iterator end = allSchemas.end();
-		for (Schema::Hash::const_iterator i = allSchemas.begin(); i != end; ++i)
-		{
-			// relative path access
-			const String& schemaName = i->first;
-			// alias to the current schema
-			const Schema& schema = i->second;
+            // copying parameters
+            const API::Method::Parameter::Hash& parameters = method.params();
+            if (not parameters.empty())
+            {
+                API::Method::Parameter::Hash::const_iterator pend = parameters.end();
+                API::Method::Parameter::Hash::const_iterator pi = parameters.begin();
+                for (; pi != pend; ++pi)
+                {
+                    const API::Method::Parameter& param = pi->second;
+                    if (param.hasDefault)
+                    {
+                        mhandler.parameters[param.name] = param.defvalue;
+                    }
+                    else
+                    {
+                        API::Method::Parameter::Hash::const_iterator defit
+                          = schema.defaults.params().find(param.name);
+                        if (defit != schema.defaults.params().end())
+                            mhandler.parameters[param.name] = defit->second.defvalue;
+                        else
+                            mhandler.parameters[param.name].clear();
+                    }
+                }
+            }
+            else
+                mhandler.parameters.clear();
+        }
+    }
 
-			API::Method::Hash::const_iterator jend = schema.methods.all().end();
-			for (API::Method::Hash::const_iterator j = schema.methods.all().begin(); j != jend; ++j)
-			{
-				const API::Method& method = j->second;
-
-				// The method will be ignored is no callback has been provided
-				if (not method.invoke())
-					continue;
-
-				httpMethod = method.option("http.method");
-				// using const char* to avoid assert from Yuni::String
-				RequestMethod rqmd = StringToRequestMethod(httpMethod.c_str());
-				if (rqmd == rqmdInvalid)
-					rqmd = rqmdGET;
-
-				// the full url
-				tmp.clear() << '/' << schemaName << '/' << method.name();
-				IO::Normalize(url, tmp);
-
-				// keeping the url somewhere
-				// IMPORTANT: read notes about how urls are stored
-				std::set<String>& mapset = decisionTree->mapset[rqmd];
-				mapset.insert(url);
-				// retrieving the real pointer to the string
-				std::set<String>::const_iterator mapi = mapset.find(url);
-				AnyString urlstr = *mapi;
-
-				// alias to the corresponding method handler
-				DecisionTree::MethodHandler& mhandler = decisionTree->requestMethods[rqmd][urlstr];
-
-				mhandler.schema = schemaName;
-				mhandler.name = method.name();
-				mhandler.httpMethod = httpMethod;
-				mhandler.invoke = method.invoke();
-
-				// copying parameters
-				const API::Method::Parameter::Hash& parameters = method.params();
-				if (not parameters.empty())
-				{
-					API::Method::Parameter::Hash::const_iterator pend = parameters.end();
-					API::Method::Parameter::Hash::const_iterator pi = parameters.begin();
-					for (; pi != pend; ++pi)
-					{
-						const API::Method::Parameter& param = pi->second;
-						if (param.hasDefault)
-						{
-							mhandler.parameters[param.name] = param.defvalue;
-						}
-						else
-						{
-							API::Method::Parameter::Hash::const_iterator defit = schema.defaults.params().find(param.name);
-							if (defit != schema.defaults.params().end())
-								mhandler.parameters[param.name] = defit->second.defvalue;
-							else
-								mhandler.parameters[param.name].clear();
-						}
-					}
-				}
-				else
-					mhandler.parameters.clear();
-			}
-		}
-
-		// Switching to the new protocol
-		pData->decisionTree = decisionTree;
-	}
-
-
-
-
+    // Switching to the new protocol
+    pData->decisionTree = decisionTree;
+}
 
 } // namespace REST
 } // namespace Transport
 } // namespace Messaging
 } // namespace Yuni
-

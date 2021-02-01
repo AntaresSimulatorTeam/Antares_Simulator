@@ -25,16 +25,15 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_SIMULATION_APPLY_SCENARIO_H__
-# define __SOLVER_SIMULATION_APPLY_SCENARIO_H__
+#define __SOLVER_SIMULATION_APPLY_SCENARIO_H__
 
-# include <antares/study.h>
-
+#include <antares/study.h>
 
 namespace Antares
 {
 namespace Solver
 {
-	void ApplyCustomScenario(Data::Study& study);
+void ApplyCustomScenario(Data::Study& study);
 } // namespace Solver
 } // namespace Antares
 

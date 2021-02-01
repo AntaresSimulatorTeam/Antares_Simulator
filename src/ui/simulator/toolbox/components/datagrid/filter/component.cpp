@@ -31,9 +31,7 @@
 #include <wx/grid.h>
 #include <antares/logs.h>
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
@@ -41,268 +39,248 @@ namespace Toolbox
 {
 namespace Filter
 {
+Component::Component(wxWindow* parent, Date::Precision precision) :
+ Antares::Component::Panel(parent),
+ pGrid(nullptr),
+ pGridHelper(nullptr),
+ pRefreshBatchCount(0),
+ pPrecision(precision)
+{
+    // Sizer
+    SetSizer(new wxBoxSizer(wxVERTICAL));
 
+    // A default input (-> Any)
+    this->add();
+}
 
-	Component::Component(wxWindow* parent, Date::Precision precision)
-		:Antares::Component::Panel(parent),
-		pGrid(nullptr),
-		pGridHelper(nullptr),
-		pRefreshBatchCount(0),
-		pPrecision(precision)
-	{
-		// Sizer
-		SetSizer(new wxBoxSizer(wxVERTICAL));
+Component::~Component()
+{
+    // Clear all subfilters
+    clear();
+}
 
-		// A default input (-> Any)
-		this->add();
-	}
+Input* Component::add()
+{
+    // Creating the input
+    Input* input = new Input(this);
+    input->precision(pPrecision);
+    input->addStdPreset();
 
+    // Referencing the input
+    pInputs.push_back(input);
 
-	Component::~Component()
-	{
-		// Clear all subfilters
-		clear();
-	}
+    // Adding the input in the GUI
+    if (GetSizer())
+    {
+        GetSizer()->Add(input, 0, wxALL | wxEXPAND, 1);
+        GetSizer()->Layout();
+    }
 
+    if (!pInputs.empty())
+    {
+        Input* p = pInputs.front();
+        if (p)
+            p->showBtnToRemoveFilter(pInputs.size() > 1);
+    }
 
-	Input* Component::add()
-	{
-		// Creating the input
-		Input* input = new Input(this);
-		input->precision(pPrecision);
-		input->addStdPreset();
+    // Force the resize of the parent layout
+    if (GetParent() && GetParent()->GetSizer())
+        GetParent()->GetSizer()->Layout();
+    return input;
+}
 
-		// Referencing the input
-		pInputs.push_back(input);
+bool Component::remove(Input* in)
+{
+    // nullptr object, nothing to do and not considered as an error
+    if (!in)
+        return true;
 
-		// Adding the input in the GUI
-		if (GetSizer())
-		{
-			GetSizer()->Add(input, 0, wxALL|wxEXPAND, 1);
-			GetSizer()->Layout();
-		}
+    // The last input must not be deleted
+    if (pInputs.size() == 1)
+    {
+        // Hiding the button
+        pInputs.front()->showBtnToRemoveFilter(false);
+        return false;
+    }
 
-		if (!pInputs.empty())
-		{
-			Input* p = pInputs.front();
-			if (p)
-				p->showBtnToRemoveFilter(pInputs.size() > 1);
-		}
+    bool result = false;
 
-		// Force the resize of the parent layout
-		if (GetParent() && GetParent()->GetSizer())
-			GetParent()->GetSizer()->Layout();
-		return input;
-	}
+    const InputList::iterator end = pInputs.end();
+    for (InputList::iterator i = pInputs.begin(); i != end; ++i)
+    {
+        if (*i == in)
+        {
+            Input* input = *i;
+            // Remove the item from the list
+            pInputs.erase(i);
+            // Detroy the input
+            GetSizer()->Detach(input);
+            input->Destroy();
+            result = true;
+            break;
+        }
+    }
 
+    // Hiding the last button to remove the input filter
+    if (!pInputs.empty())
+        pInputs.front()->showBtnToRemoveFilter(pInputs.size() > 1);
 
-	bool Component::remove(Input* in)
-	{
-		// nullptr object, nothing to do and not considered as an error
-		if (!in)
-			return true;
+    // The whole grid must be refreshed
+    // Because the columns and/or the rows might have changed
+    refresh();
 
-		// The last input must not be deleted
-		if (pInputs.size() == 1)
-		{
-			// Hiding the button
-			pInputs.front()->showBtnToRemoveFilter(false);
-			return false;
-		}
+    return result;
+}
 
-		bool result = false;
+void Component::remove(int id)
+{
+    const InputList::iterator end = pInputs.end();
+    for (InputList::iterator i = pInputs.begin(); i != end; ++i)
+    {
+        Input* input = *i;
+        if (input->id() == id)
+        {
+            remove(input);
+            return;
+        }
+    }
+}
 
-		const InputList::iterator end = pInputs.end();
-		for (InputList::iterator i = pInputs.begin(); i != end; ++i)
-		{
-			if (*i == in)
-			{
-				Input* input = *i;
-				// Remove the item from the list
-				pInputs.erase(i);
-				// Detroy the input
-				GetSizer()->Detach(input);
-				input->Destroy();
-				result = true;
-				break;
-			}
-		}
+void Component::clear()
+{
+    // Clearing the list
+    pInputs.clear();
+    // Detaching all children from the main sizer
+    wxSizer* sizer = GetSizer();
+    if (sizer)
+        sizer->Clear(true);
+}
 
-		// Hiding the last button to remove the input filter
-		if (!pInputs.empty())
-			pInputs.front()->showBtnToRemoveFilter(pInputs.size() > 1);
+void Component::classifyFilters(InputVector& onRows, InputVector& onCols, InputVector& onCells)
+{
+    const InputList::iterator end = pInputs.end();
+    for (InputList::iterator i = pInputs.begin(); i != end; ++i)
+    {
+        AFilterBase* f = (*i)->selected();
+        if (f)
+        {
+            if (f->checkOnRowsLabels())
+                onRows.push_back(*i);
+            if (f->checkOnColsLabels())
+                onCols.push_back(*i);
+            if (f->checkOnCells())
+                onCells.push_back(*i);
+        }
+    }
+}
 
-		// The whole grid must be refreshed
-		// Because the columns and/or the rows might have changed
-		refresh();
+void Component::refresh()
+{
+    // We count the number of batch, to avoid unnecessary refresh
+    ++pRefreshBatchCount;
+    Dispatcher::GUI::Post(this, &Component::evtRefreshGrid);
+}
 
-		return result;
-	}
+void Component::evtRefreshGrid()
+{
+    --pRefreshBatchCount;
+    if (!pRefreshBatchCount && pGrid)
+    {
+        updateSearchResults();
 
+        // Force the resize of the parent layout
+        if (GetParent() && GetParent()->GetSizer())
+            GetParent()->GetSizer()->Layout();
 
-	void Component::remove(int id)
-	{
-		const InputList::iterator end = pInputs.end();
-		for (InputList::iterator i = pInputs.begin(); i != end; ++i)
-		{
-			Input* input = *i;
-			if (input->id() == id)
-			{
-				remove(input);
-				return;
-			}
-		}
-	}
+        pGrid->ForceRefresh();
+        Refresh();
+    }
+}
 
+void Component::updateSearchResults()
+{
+    if (!pGrid || !pGridHelper)
+        return;
 
-	void Component::clear()
-	{
-		// Clearing the list
-		pInputs.clear();
-		// Detaching all children from the main sizer
-		wxSizer* sizer = GetSizer();
-		if (sizer)
-			sizer->Clear(true);
-	}
+    pGrid->BeginBatch();
+    InputVector onRows;
+    InputVector onCols;
+    InputVector onCells;
 
+    // For efficiency, it would be better if the filters eliminate rows and cols
+    // in this order :
+    // Rows, then cols, then cells
+    classifyFilters(onRows, onCols, onCells);
 
-	void Component::classifyFilters(InputVector& onRows, InputVector& onCols, InputVector& onCells)
-	{
-		const InputList::iterator end = pInputs.end();
-		for (InputList::iterator i = pInputs.begin(); i != end; ++i)
-		{
-			AFilterBase* f = (*i)->selected();
-			if (f)
-			{
-				if (f->checkOnRowsLabels())
-					onRows.push_back(*i);
-				if (f->checkOnColsLabels())
-					onCols.push_back(*i);
-				if (f->checkOnCells())
-					onCells.push_back(*i);
-			}
-		}
-	}
+    // In any cases, all indices must be reset to default
+    // The algorithm may not manage all cases and the default values
+    // are expected
+    pGridHelper->resetIndicesToDefault();
+    onUpdateSearchResults();
+    // Something to do ?
+    if (!onRows.empty() || !onCols.empty() || !onCells.empty())
+    {
+        // Prepare only the arrays
+        /*pGridHelper->resetIndicesToDefaultWithoutInit();
+        onUpdateSearchResults();*/
+        if (!onRows.empty())
+        {
+            int last = 0; /* The count of valid rows */
+            const InputVector::iterator end = onRows.end();
+            bool good;
+            for (int r = 0; r != pGridHelper->virtualSize.y; ++r)
+            {
+                good = true;
+                for (InputVector::iterator i = onRows.begin(); i != end; ++i)
+                {
+                    (*i)->selected()->dataGridPrecision(pDataGridPrecision);
+                    if (!(good = ((*i)->selected() && (*i)->selected()->rowIsValid(r))))
+                        break;
+                }
+                if (good)
+                {
+                    pGridHelper->indicesRows[last] = pGridHelper->indicesRows[r];
+                    ++last;
+                }
+            }
+            pGridHelper->virtualSize.y = last;
+        }
 
+        if (!onCols.empty())
+        {
+            int last = 0; /* The count of valid cols */
+            const InputVector::iterator end = onCols.end();
+            bool good;
+            for (int c = 0; c != pGridHelper->virtualSize.x; ++c)
+            {
+                good = true;
+                for (InputVector::iterator i = onCols.begin(); i != end; ++i)
+                {
+                    (*i)->selected()->dataGridPrecision(pDataGridPrecision);
+                    if (!(good = ((*i)->selected() && (*i)->selected()->colIsValid(c))))
+                        break;
+                }
+                if (good)
+                {
+                    pGridHelper->indicesCols[last] = pGridHelper->indicesCols[c];
+                    ++last;
+                }
+            }
+            pGridHelper->virtualSize.x = last;
+        }
 
-	void Component::refresh()
-	{
-		// We count the number of batch, to avoid unnecessary refresh
-		++pRefreshBatchCount;
-		Dispatcher::GUI::Post(this, &Component::evtRefreshGrid);
-	}
+        if (!onCells.empty())
+        {
+        }
+    }
 
-
-	void Component::evtRefreshGrid()
-	{
-		--pRefreshBatchCount;
-		if (!pRefreshBatchCount && pGrid)
-		{
-			updateSearchResults();
-
-			// Force the resize of the parent layout
-			if (GetParent() && GetParent()->GetSizer())
-				GetParent()->GetSizer()->Layout();
-
-			pGrid->ForceRefresh();
-			Refresh();
-		}
-	}
-
-
-
-	void Component::updateSearchResults()
-	{
-		if (!pGrid || !pGridHelper)
-			return;
-
-		pGrid->BeginBatch();
-		InputVector onRows;
-		InputVector onCols;
-		InputVector onCells;
-
-		// For efficiency, it would be better if the filters eliminate rows and cols
-		// in this order :
-		// Rows, then cols, then cells
-		classifyFilters(onRows, onCols, onCells);
-
-		// In any cases, all indices must be reset to default
-		// The algorithm may not manage all cases and the default values
-		// are expected
-		pGridHelper->resetIndicesToDefault();
-		onUpdateSearchResults();
-		// Something to do ?
-		if (!onRows.empty() || !onCols.empty() || !onCells.empty())
-		{
-			// Prepare only the arrays
-			/*pGridHelper->resetIndicesToDefaultWithoutInit();
-			onUpdateSearchResults();*/
-			if (!onRows.empty())
-			{
-				int last = 0; /* The count of valid rows */
-				const InputVector::iterator end = onRows.end();
-				bool good;
-				for (int r = 0; r != pGridHelper->virtualSize.y; ++r)
-				{
-					good = true;
-					for (InputVector::iterator i = onRows.begin(); i != end; ++i)
-					{
-						(*i)->selected()->dataGridPrecision(pDataGridPrecision);
-						if (!(good = ((*i)->selected() && (*i)->selected()->rowIsValid(r))))
-							break;
-					}
-					if (good)
-					{
-						pGridHelper->indicesRows[last] = pGridHelper->indicesRows[r];
-						++last;
-					}
-				}
-				pGridHelper->virtualSize.y = last;
-			}
-
-			if (!onCols.empty())
-			{
-				int last = 0; /* The count of valid cols */
-				const InputVector::iterator end = onCols.end();
-				bool good;
-				for (int c = 0; c != pGridHelper->virtualSize.x; ++c)
-				{
-					good = true;
-					for (InputVector::iterator i = onCols.begin(); i != end; ++i)
-					{
-						(*i)->selected()->dataGridPrecision(pDataGridPrecision);
-						if (!(good = ((*i)->selected() && (*i)->selected()->colIsValid(c))))
-							break;
-					}
-					if (good)
-					{
-						pGridHelper->indicesCols[last] = pGridHelper->indicesCols[c];
-						++last;
-					}
-				}
-				pGridHelper->virtualSize.x = last;
-			}
-
-			if (!onCells.empty())
-			{
-			}
-
-		}
-
-		// Invalidating the cache of the wxGrid
-		wxGridTableBase* tbl = pGrid->GetTable();
-		if (tbl)
-			pGrid->SetTable(tbl, false);
-		pGrid->EndBatch();
-
-		
-	}
-
-
-
-
+    // Invalidating the cache of the wxGrid
+    wxGridTableBase* tbl = pGrid->GetTable();
+    if (tbl)
+        pGrid->SetTable(tbl, false);
+    pGrid->EndBatch();
+}
 
 } // namespace Filter
 } // namespace Toolbox
 } // namespace Antares
-

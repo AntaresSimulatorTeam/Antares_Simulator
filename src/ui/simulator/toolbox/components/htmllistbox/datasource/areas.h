@@ -25,10 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_AREAS_H__
-# define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_AREAS_H__
+#define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_AREAS_H__
 
-# include "datasource.h"
-
+#include "datasource.h"
 
 namespace Antares
 {
@@ -40,62 +39,74 @@ namespace Datasource
 {
 namespace Areas
 {
+class ByAlphaOrder : public IDatasource
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    //! Default Constructor
+    ByAlphaOrder(HTMLListbox::Component& parent);
+    //! Destructor
+    virtual ~ByAlphaOrder();
+    //@}
 
-	class ByAlphaOrder : public IDatasource
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		//! Default Constructor
-		ByAlphaOrder(HTMLListbox::Component& parent);
-		//! Destructor
-		virtual ~ByAlphaOrder();
-		//@}
+    virtual wxString name() const
+    {
+        return wxT("Areas in alphabetical order");
+    }
+    virtual const char* icon() const
+    {
+        return "images/16x16/sort_alphabet.png";
+    }
+    virtual void refresh(const wxString& search = wxEmptyString);
 
-		virtual wxString name() const {return wxT("Areas in alphabetical order");}
-		virtual const char* icon() const {return "images/16x16/sort_alphabet.png";}
-		virtual void refresh(const wxString& search = wxEmptyString);
+}; // class ByAlphaOrder
 
-	}; // class ByAlphaOrder
+class ByAlphaReverseOrder : public IDatasource
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    //! Default Constructor
+    ByAlphaReverseOrder(HTMLListbox::Component& parent);
+    //! Destructor
+    virtual ~ByAlphaReverseOrder();
+    //@}
 
+    virtual wxString name() const
+    {
+        return wxT("Areas in reverse alphabetical order");
+    }
+    virtual const char* icon() const
+    {
+        return "images/16x16/sort_alphabet_descending.png";
+    }
+    virtual void refresh(const wxString& search = wxEmptyString);
 
-	class ByAlphaReverseOrder : public IDatasource
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		//! Default Constructor
-		ByAlphaReverseOrder(HTMLListbox::Component& parent);
-		//! Destructor
-		virtual ~ByAlphaReverseOrder();
-		//@}
+}; // class ByAlphaReverseOrder
 
-		virtual wxString name() const {return wxT("Areas in reverse alphabetical order");}
-		virtual const char* icon() const {return "images/16x16/sort_alphabet_descending.png";}
-		virtual void refresh(const wxString& search = wxEmptyString);
+class ByColor : public IDatasource
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    //! Default Constructor
+    ByColor(HTMLListbox::Component& parent);
+    //! Destructor
+    virtual ~ByColor();
+    //@}
 
-	}; // class ByAlphaReverseOrder
+    virtual wxString name() const
+    {
+        return wxT("Areas ordered by their color");
+    }
+    virtual const char* icon() const
+    {
+        return "images/16x16/color.png";
+    }
+    virtual void refresh(const wxString& search = wxEmptyString);
 
-	class ByColor : public IDatasource
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		//! Default Constructor
-		ByColor(HTMLListbox::Component& parent);
-		//! Destructor
-		virtual ~ByColor();
-		//@}
-
-		virtual wxString name() const {return wxT("Areas ordered by their color");}
-		virtual const char* icon() const {return "images/16x16/color.png";}
-		virtual void refresh(const wxString& search = wxEmptyString);
-
-	}; // class ByColor
-
-
-
-
+}; // class ByColor
 
 } // namespace Areas
 } // namespace Datasource

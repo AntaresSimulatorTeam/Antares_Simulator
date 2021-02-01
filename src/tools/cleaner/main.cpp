@@ -40,120 +40,112 @@ using namespace Antares;
 
 #define SEP Yuni::IO::Separator
 
-
 static bool onProgress(uint)
 {
-	return true;
+    return true;
 }
-
 
 class StudyFinderCleaner final : public Data::StudyFinder
 {
 public:
-	StudyFinderCleaner() :
-		listOnly(false),
-		mrproper(false)
-	{}
+    StudyFinderCleaner() : listOnly(false), mrproper(false)
+    {
+    }
 
-	void onStudyFound(const String& folder, Data::Version version) override
-	{
-		if ((int)version != (int)Data::versionLatest)
-		{
-			if (version > 100) // do not take care of very old studies
-				logs.warning() << "requires format upgrade, ignoring " << folder;
-			return;
-		}
+    void onStudyFound(const String& folder, Data::Version version) override
+    {
+        if ((int)version != (int)Data::versionLatest)
+        {
+            if (version > 100) // do not take care of very old studies
+                logs.warning() << "requires format upgrade, ignoring " << folder;
+            return;
+        }
 
-		if (listOnly)
-		{
-			logs.info() << folder;
-			return;
-		}
+        if (listOnly)
+        {
+            logs.info() << folder;
+            return;
+        }
 
-		auto* cleaner = new Data::StudyCleaningInfos(folder);
-		cleaner->onProgress.bind(&onProgress);
-		if (cleaner->analyze())
-			cleaner->performCleanup();
-		delete cleaner;
+        auto* cleaner = new Data::StudyCleaningInfos(folder);
+        cleaner->onProgress.bind(&onProgress);
+        if (cleaner->analyze())
+            cleaner->performCleanup();
+        delete cleaner;
 
-		if (mrproper)
-		{
-			String path;
-			path << folder << SEP << "output";
-			IO::Directory::Remove(path);
+        if (mrproper)
+        {
+            String path;
+            path << folder << SEP << "output";
+            IO::Directory::Remove(path);
 
-			path.clear();
-			path << folder << SEP << "logs";
-			IO::Directory::Remove(path);
-		}
-	}
+            path.clear();
+            path << folder << SEP << "logs";
+            IO::Directory::Remove(path);
+        }
+    }
 
 public:
-	bool listOnly;
-	bool mrproper;
+    bool listOnly;
+    bool mrproper;
 
 }; // class StudyFinderCleaner
 
-
-
-
-
 int main(int argc, char* argv[])
 {
-	// locale
-	InitializeDefaultLocale();
+    // locale
+    InitializeDefaultLocale();
 
-	Antares::logs.applicationName("cleaner");
-	argv = AntaresGetUTF8Arguments(argc, argv);
+    Antares::logs.applicationName("cleaner");
+    argv = AntaresGetUTF8Arguments(argc, argv);
 
-	String::Vector optInput;
-	bool optPrintOnly = false;
-	bool optMrProper  = false;
+    String::Vector optInput;
+    bool optPrintOnly = false;
+    bool optMrProper = false;
 
-	// Command Line options
-	{
-		// Parser
-		GetOpt::Parser options;
-		//
-		options.addParagraph(String()
-			<< "Antares Study Cleaner v" << VersionToCString() << "\n");
-		// Input
-		options.remainingArguments(optInput);
-		// Output
-		options.add(optInput, 'i', "input", "An input folder where to look for studies");
-		// Format
-		options.addFlag(optPrintOnly, ' ', "dry", "List the folder only and do nothing");
+    // Command Line options
+    {
+        // Parser
+        GetOpt::Parser options;
+        //
+        options.addParagraph(String() << "Antares Study Cleaner v" << VersionToCString() << "\n");
+        // Input
+        options.remainingArguments(optInput);
+        // Output
+        options.add(optInput, 'i', "input", "An input folder where to look for studies");
+        // Format
+        options.addFlag(optPrintOnly, ' ', "dry", "List the folder only and do nothing");
 
-		options.addFlag(optMrProper, ' ', "mrproper", "Suppress the outputs and logs files");
+        options.addFlag(optMrProper, ' ', "mrproper", "Suppress the outputs and logs files");
 
-		// Version
-		bool optVersion = false;
-		options.addFlag(optVersion, 'v', "version", "Print the version and exit");
+        // Version
+        bool optVersion = false;
+        options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
-		if (!options(argc, argv))
-			return options.errors() ? 1 : 0;
+        if (!options(argc, argv))
+            return options.errors() ? 1 : 0;
 
-		if (optVersion)
-		{
-			PrintVersionToStdCout();
-			return 0;
-		}
-	}
+        if (optVersion)
+        {
+            PrintVersionToStdCout();
+            return 0;
+        }
+    }
 
-	// Load the local policy settings
-	LocalPolicy::Open();
-	LocalPolicy::CheckRootPrefix(argv[0]);
+    // Load the local policy settings
+    LocalPolicy::Open();
+    LocalPolicy::CheckRootPrefix(argv[0]);
 
-	if (not optInput.empty())
-	{
-		StudyFinderCleaner updater;
-		updater.listOnly  = optPrintOnly;
-		updater.mrproper  = optMrProper;
-		updater.lookup(optInput);
-		updater.wait();
-	}
+    if (not optInput.empty())
+    {
+        StudyFinderCleaner updater;
+        updater.listOnly = optPrintOnly;
+        updater.mrproper = optMrProper;
+        updater.lookup(optInput);
+        updater.wait();
+    }
 
-	logs.info() << "done.";
-	LocalPolicy::Close();
-	return 0;
+    logs.info() << "done.";
+    LocalPolicy::Close();
+    return 0;
 }
