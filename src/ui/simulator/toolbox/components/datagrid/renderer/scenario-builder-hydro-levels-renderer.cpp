@@ -50,7 +50,7 @@ wxString hydroLevelsScBuilderRenderer::cellValue(int x, int y) const
 {
     const double d = cellNumericValue(x, y);
 
-    return (d < 0.) ? wxString() << wxT("rand") : wxString() << fromHydroLevelToString(d);
+    return (std::isnan(d)) ? wxString() << wxT("rand") : wxString() << fromHydroLevelToString(d);
 }
 
 bool hydroLevelsScBuilderRenderer::cellValue(int x, int y, const Yuni::String& value)
@@ -81,6 +81,12 @@ double hydroLevelsScBuilderRenderer::cellNumericValue(int x, int y) const
         }
     }
     return 0.;
+}
+
+IRenderer::CellStyle hydroLevelsScBuilderRenderer::cellStyle(int x, int y) const
+{
+    bool valid = (!(!study) && !(!pRules) && std::isnan(cellNumericValue(x, y)));
+    return (valid) ? cellStyleDefaultCenterDisabled : cellStyleDefaultCenter;
 }
 
 } // namespace Renderer

@@ -28,6 +28,7 @@
 #include <sstream>
 #include <iomanip>
 #include "hydroLevelsData.h"
+#include "scBuilderUtils.h"
 
 namespace Antares
 {
@@ -42,7 +43,7 @@ bool hydroLevelsData::reset(const Study& study)
     const uint nbYears = study.parameters.nbYears;
 
     pHydroLevelsRules.reset(study.areas.size(), nbYears);
-    pHydroLevelsRules.fill(-1.);
+    pHydroLevelsRules.fill(std::nan(""));
 
     return true;
 }
@@ -68,7 +69,7 @@ void hydroLevelsData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& 
         {
             const MatrixType::Type value = col[y];
             // Equals to zero means 'auto', which is the default mode
-            if (value < 0.)
+            if (std::isnan(value))
                 continue;
             assert(index < study.areas.size());
             value_into_string << value;

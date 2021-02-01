@@ -637,13 +637,13 @@ static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& v
         // Get year index and weight from  string
 
         // Use of yuni to split string
-        std::vector<int> values;
+        std::vector<float> values;
         value.split(values, ",");
 
         if (values.size() == 2)
         {
             int y = values[0];
-            int weight = values[1];
+            float weight = values[1];
 
             // Check values
             bool valid = true;
@@ -655,7 +655,7 @@ static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& v
                   << "'. Value not used";
             }
 
-            if (weight < 1)
+            if (weight < 0.f)
             {
                 valid = false;
                 logs.warning() << "parameters: invalid MC year weight.Got '" << weight
@@ -1050,7 +1050,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
         // Resize years weight (add or remove item)
         if (yearsWeight.size() != nbYears)
         {
-            yearsWeight.resize(nbYears, 1);
+            yearsWeight.resize(nbYears, 1.f);
         }
     }
 
@@ -1194,12 +1194,12 @@ void Parameters::fixBadValues()
 void Parameters::resetYearsWeigth()
 {
     yearsWeight.clear();
-    yearsWeight.assign(nbYears, 1);
+    yearsWeight.assign(nbYears, 1.f);
 }
 
-std::vector<int> Parameters::getYearsWeight() const
+std::vector<float> Parameters::getYearsWeight() const
 {
-    std::vector<int> result;
+    std::vector<float> result;
 
     if (userPlaylist)
     {
@@ -1207,14 +1207,14 @@ std::vector<int> Parameters::getYearsWeight() const
     }
     else
     {
-        result.assign(nbYears, 1);
+        result.assign(nbYears, 1.f);
     }
 
     return result;
 }
-int Parameters::getYearsWeightSum() const
+float Parameters::getYearsWeightSum() const
 {
-    int result = 0;
+    float result = 0.f;
 
     if (userPlaylist)
     {
@@ -1226,6 +1226,12 @@ int Parameters::getYearsWeightSum() const
                 result += yearsWeight[i];
             }
         }
+
+        // Check if value is 0.0 then return 1.0 to avoid division by 0
+        if (result == 0.f)
+        {
+            result = 1.f;
+        }
     }
     else
     {
@@ -1236,7 +1242,7 @@ int Parameters::getYearsWeightSum() const
     return result;
 }
 
-void Parameters::setYearWeight(int year, int weight)
+void Parameters::setYearWeight(int year, float weight)
 {
     assert(year < yearsWeight.size());
     yearsWeight[year] = weight;
@@ -1313,14 +1319,14 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
             logs.info() << "  " << effectiveNbYears << " years in the user's playlist";
         }
 
-        // Add log in case of MC year weight different from 1
-        std::vector<int> maximumWeightYearsList;
+        // Add log in case of MC year weight different from 1.0
+        std::vector<float> maximumWeightYearsList;
         int nbYearsDifferentFrom1 = 0;
-        int maximumWeight = *std::max_element(yearsWeight.begin(), yearsWeight.end());
+        float maximumWeight = *std::max_element(yearsWeight.begin(), yearsWeight.end());
         for (int i = 0; i < yearsWeight.size(); i++)
         {
-            int weight = yearsWeight[i];
-            if (weight != 1)
+            float weight = yearsWeight[i];
+            if (weight != 1.f)
             {
                 nbYearsDifferentFrom1++;
                 if (weight == maximumWeight)
@@ -1339,7 +1345,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
             std::stringstream ss;
             copy(maximumWeightYearsList.begin(),
                  maximumWeightYearsList.end(),
-                 std::ostream_iterator<int>(ss, ","));
+                 std::ostream_iterator<float>(ss, ","));
             std::string s = ss.str();
             s = s.substr(0, s.length() - 1); // get rid of the trailing ,
 
@@ -1670,7 +1676,7 @@ void Parameters::saveToINI(IniFile& ini) const
     {
         assert(yearsFilter);
         uint effNbYears = 0;
-        int weightSum = 0;
+        float weightSum = 0;
         for (uint i = 0; i != nbYears; ++i)
         {
             if (yearsFilter[i])
@@ -1707,8 +1713,8 @@ void Parameters::saveToINI(IniFile& ini) const
 
             for (uint i = 0; i != nbYears; ++i)
             {
-                // Only write weight different from 1 to limit .ini file size and readability
-                if (yearsWeight[i] != 1)
+                // Only write weight different from 1.0 to limit .ini file size and readability
+                if (yearsWeight[i] != 1.f)
                 {
                     std::string val = std::to_string(i) + "," + std::to_string(yearsWeight[i]);
                     section->add("playlist_year_weight", val);

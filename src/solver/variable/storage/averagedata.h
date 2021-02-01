@@ -77,8 +77,8 @@ public:
     mutable double allYears; // FIX MEEE - Remove the mutable as soon as possible
     unsigned int nbYearsCapacity;
 
-    std::vector<int> yearsWeight;
-    int yearsWeightSum;
+    std::vector<float> yearsWeight;
+    float yearsWeightSum;
 
 }; // class AverageData
 

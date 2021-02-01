@@ -200,6 +200,9 @@ void MCPlaylist::onSelectAll(void*)
     Freeze();
     for (uint i = 0; i != study.parameters.nbYears; ++i)
         study.parameters.yearsFilter[i] = true;
+
+    onUpdateStatus();
+
     pGrid->forceRefresh();
     updateCaption();
     Dispatcher::GUI::Refresh(pGrid);
@@ -217,6 +220,9 @@ void MCPlaylist::onUnselectAll(void*)
     Freeze();
     for (uint i = 0; i != study.parameters.nbYears; ++i)
         study.parameters.yearsFilter[i] = false;
+
+    onUpdateStatus();
+
     pGrid->forceRefresh();
     updateCaption();
     Dispatcher::GUI::Refresh(pGrid);
@@ -236,6 +242,9 @@ void MCPlaylist::onToggle(void*)
     {
         study.parameters.yearsFilter[i] = !study.parameters.yearsFilter[i];
     }
+
+    onUpdateStatus();
+
     pGrid->forceRefresh();
     updateCaption();
     Dispatcher::GUI::Refresh(pGrid);
@@ -273,7 +282,7 @@ void MCPlaylist::updateCaption()
     if (b)
     {
         // Check if weight is !=1 for one year
-        std::vector<int> yearWeight = d.getYearsWeight();
+        std::vector<float> yearWeight = d.getYearsWeight();
 
         int nbYearsDifferentFrom1 = 0;
         uint y = 0;
@@ -283,7 +292,7 @@ void MCPlaylist::updateCaption()
             {
                 ++y;
 
-                int weight = yearWeight[i];
+                float weight = yearWeight[i];
                 if (weight != 1)
                 {
                     nbYearsDifferentFrom1++;

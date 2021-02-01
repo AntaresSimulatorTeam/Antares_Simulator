@@ -555,7 +555,7 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
 
     // GUI : storing minimum number of parallel years (in a set of parallel years).
     //		 Useful in the run window's simulation cores field in case parallel mode is enabled
-    //by user.
+    // by user.
     minNbYearsInParallel_save = minNbYearsInParallel;
 
     // The max number of years to run in parallel is limited by the max number years in a set of

@@ -57,11 +57,11 @@ double fromStringToHydroLevel(const Yuni::String& value, const double maxLevel)
     }
     catch (std::invalid_argument&)
     {
-        return -1.;
+        return std::nan("");
     }
 
     if (result_tmp < 0.)
-        result = -1.;
+        result = 0.;
     else
     {
         if (result_tmp > maxLevel)

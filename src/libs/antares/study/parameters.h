@@ -166,16 +166,17 @@ public:
     /*!
     ** \brief Get MC years weight dependending on playlist configuration
     **
-    ** \return std::vector<int> with weight for each MC year
+    ** \return std::vector<float> with weight for each MC year
     */
-    std::vector<int> getYearsWeight() const;
+    std::vector<float> getYearsWeight() const;
 
     /*!
     ** \brief Get MC years weight sum dependending on playlist configuration
     **
-    ** \return weigth sum (nbYears if playlist disabled)
+    ** \return weigth sum (nbYears if playlist disabled). If playlist is enabled and years weight
+    *sum is null, 1.0 is returned to avoid division by 0
     */
-    int getYearsWeightSum() const;
+    float getYearsWeightSum() const;
 
     /*!
     ** \brief Define weight for a MC year
@@ -183,7 +184,7 @@ public:
     ** \param year MC year index
     ** \param weight MC year weight
     */
-    void setYearWeight(int year, int weight);
+    void setYearWeight(int year, float weight);
 
 public:
     //! \name Mode
@@ -501,7 +502,7 @@ private:
     void saveToINI(IniFile& ini) const;
 
     //! MC year weight for MC synthesis
-    std::vector<int> yearsWeight;
+    std::vector<float> yearsWeight;
 
 }; // class Parameters
 

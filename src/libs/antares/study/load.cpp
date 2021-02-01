@@ -137,8 +137,8 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
         // We have time-series to import
         if (parameters.timeSeriesToImport and (uint) header.version != (uint)versionLatest)
         {
-            logs.error() << "The study must be upgraded to store the generated timeseries into the "
-                            "input folder";
+            logs.error() << "Stochastic TS stored in input : study must be upgraded to "
+                         << Data::VersionToCStr((Data::Version)Data::versionLatest);
             gotFatalError = true;
             // it is useless to continue at this point
             return false;

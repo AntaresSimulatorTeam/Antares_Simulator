@@ -153,18 +153,18 @@ private:
     ** regles particulieres selon les types de lois :
     **
     ** \code
-    ** code loi		a				b			g				d       autres contraintes
-    *Loi marginale
-    ** 1		quelconque     quelconque  g> INFININ/2   d<INFINIP/2			g<=d		 Uniforme
-    *sur l'intervalle	(g,d)
-    ** 2			a>0				b>0    g> INFININ/2   d<INFINIP/2		    g<=d		 Bêta
-    *(a,b)sur l'intervalle (g,d)
+    ** code loi		a				b			g
+    *d autres contraintes Loi marginale
+    ** 1		quelconque     quelconque  g> INFININ/2   d<INFINIP/2			g<=d
+    *Uniforme sur l'intervalle	(g,d)
+    ** 2			a>0				b>0    g> INFININ/2   d<INFINIP/2
+    *g<=d Bêta (a,b)sur l'intervalle (g,d)
     ** 3	    quelconque          b>=0   g=  a-6*b	  d= a+6*b Normale d'espérance a et
     *d'écart-type b
-    ** 4			a>=1		    b>0	   g> INFININ/2   d= gamma_euler(1+1/a)			     Weibull
-    *de forme a, d'échelle b et définie pour x>g
-    ** 5			a>=1			b>0	   g> INFININ/2   d non défini					     Gamma de
-    *forme a, d'échelle b et définie pour x>g
+    ** 4			a>=1		    b>0	   g> INFININ/2   d= gamma_euler(1+1/a)
+    *Weibull de forme a, d'échelle b et définie pour x>g
+    ** 5			a>=1			b>0	   g> INFININ/2   d non défini
+    *Gamma de forme a, d'échelle b et définie pour x>g
     ** \endcode
     */
     bool generateValuesForTheCurrentDay();

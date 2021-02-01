@@ -51,7 +51,7 @@ const std::initializer_list<std::string>& getNames<ExportStructDict>()
       "PalierThermique",
       "ProdHyd",
       "DefaillancePositive",
-      "DefaillanceNegative"
+      "DefaillanceNegative",
       "BilansPays",
       "CoutOrigineVersExtremiteDeLInterconnexion",
       "CoutExtremiteVersOrigineDeLInterconnexion",
