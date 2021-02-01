@@ -7,7 +7,7 @@ import shutil
 import numpy as np
 import subprocess
 
-from study import study
+from study import Study
 
 import pytest
 
@@ -86,7 +86,7 @@ def run_study(solver_path, path, use_ortools, ortools_solver):
     launch_solver(solver_path, path, use_ortools, ortools_solver)
     
 def enable_study_output(study_path, enable):
-    st = study(str(study_path))
+    st = Study(str(study_path))
     st.check_files_existence()
 
     synthesis_value = "true" if enable else "false"

@@ -1,9 +1,9 @@
 import os
 import sys
 
-class study:
+class Study:
 	"""
-		Class study
+		Class Study
 	"""
 	def __init__(self, dir):
 		"""
@@ -23,7 +23,7 @@ class study:
 		"""
 			Checking file existence
 		"""
-		for nickname, file_path in list(self.files_path.items()):
+		for file_path in list(self.files_path.items()):
 			if not os.path.isfile(file_path):
 				print("	File does not exist : %s" % file_path)
 				sys.exit(1)
