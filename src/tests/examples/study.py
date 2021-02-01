@@ -23,7 +23,7 @@ class Study:
 		"""
 			Checking file existence
 		"""
-		for file_path in list(self.files_path.items()):
+		for file_path in self.files_path.values():
 			if not os.path.isfile(file_path):
 				print("	File does not exist : %s" % file_path)
 				sys.exit(1)
