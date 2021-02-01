@@ -1093,10 +1093,10 @@ uint ISimulation<Impl>::buildSetsOfParallelYears(
 
         // We build a new set of parallel years if one of these conditions is fulfilled :
         //	- We have to refresh (or regenerate) some or all time series before running the
-        //current year
+        // current year
         //	- This is the first year (to be executed or not) after the previous set is full with
-        //years to be executed. 	  That is : in the previous set filled, the max number of years to be
-        //actually run is reached.
+        // years to be executed. 	  That is : in the previous set filled, the max number of
+        // years to be actually run is reached.
         buildNewSet = buildNewSet || refreshing;
 
         if (buildNewSet)
