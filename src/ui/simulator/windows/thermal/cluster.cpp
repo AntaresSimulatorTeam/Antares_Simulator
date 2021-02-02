@@ -35,10 +35,7 @@
 #include "../../windows/inspector/frame.h"
 #include <ui/common/dispatcher/gui.h>
 
-
 using namespace Yuni;
-
-
 
 namespace Antares
 {
@@ -46,117 +43,110 @@ namespace Window
 {
 namespace Thermal
 {
+CommonProperties::CommonProperties(wxWindow* parent,
+                                   Toolbox::InputSelector::ThermalCluster* notifier) :
+ Component::Panel(parent),
+ pMainSizer(nullptr),
+ pAggregate(nullptr),
+ pNotifier(notifier),
+ pGroupHasChanged(false)
+{
+    // The main sizer
+    wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+    pMainSizer = sizer;
+    SetSizer(sizer);
 
+    auto* inspector = new Window::Inspector::Frame(this);
+    pUpdateInfoAboutPlant.bind(inspector, &Window::Inspector::Frame::apply);
 
-	CommonProperties::CommonProperties(wxWindow* parent, Toolbox::InputSelector::ThermalCluster* notifier) :
-		Component::Panel(parent),
-		pMainSizer(nullptr),
-		pAggregate(nullptr),
-		pNotifier(notifier),
-		pGroupHasChanged(false)
-	{
-		// The main sizer
-		wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
-		pMainSizer = sizer;
-		SetSizer(sizer);
+    wxBoxSizer* vs = new wxBoxSizer(wxVERTICAL);
+    vs->Add(inspector, 1, wxALL | wxEXPAND);
+    sizer->Add(vs, 0, wxALL | wxEXPAND);
+    sizer->SetItemMinSize(inspector, 280, 50);
 
-		auto* inspector = new Window::Inspector::Frame(this);
-		pUpdateInfoAboutPlant.bind(inspector, &Window::Inspector::Frame::apply);
+    sizer->Add(
+      new Component::Datagrid::Component(
+        this, new Component::Datagrid::Renderer::ThermalClusterCommonModulation(this, notifier)),
+      1,
+      wxALL | wxEXPAND);
 
-		wxBoxSizer* vs = new wxBoxSizer(wxVERTICAL);
-		vs->Add(inspector, 1, wxALL|wxEXPAND);
-		sizer->Add(vs, 0, wxALL|wxEXPAND);
-		sizer->SetItemMinSize(inspector, 280, 50);
+    // Connection with the notifier
+    thermalEventConnect();
 
-		sizer->Add(new Component::Datagrid::Component(this,
-			new Component::Datagrid::Renderer::ThermalClusterCommonModulation(this, notifier)),
-			1, wxALL|wxEXPAND);
+    OnStudyThermalClusterRenamed.connect(this, &CommonProperties::onStudyThermalClusterRenamed);
+    OnStudyThermalClusterCommonSettingsChanged.connect(this,
+                                                       &CommonProperties::thermalSettingsChanged);
+    OnStudyClosed.connect(this, &CommonProperties::onStudyClosed);
+}
 
-		// Connection with the notifier
-		thermalEventConnect();
+CommonProperties::~CommonProperties()
+{
+    pUpdateInfoAboutPlant.clear();
+    destroyBoundEvents();
+}
 
-		OnStudyThermalClusterRenamed.connect(this, &CommonProperties::onStudyThermalClusterRenamed);
-		OnStudyThermalClusterCommonSettingsChanged.connect(this, &CommonProperties::thermalSettingsChanged);
-		OnStudyClosed.connect(this, &CommonProperties::onStudyClosed);
-	}
+void CommonProperties::onThermalClusterChanged(Data::ThermalCluster* cluster)
+{
+    if (cluster)
+    {
+        auto* data = new Window::Inspector::InspectorData(*Data::Study::Current::Get());
+        data->clusters.insert(cluster);
+        pUpdateInfoAboutPlant(data);
+    }
+    else
+        pUpdateInfoAboutPlant(nullptr);
 
+    pGroupHasChanged = false;
+    pAggregate = cluster;
+}
 
-	CommonProperties::~CommonProperties()
-	{
-		pUpdateInfoAboutPlant.clear();
-		destroyBoundEvents();
-	}
+void CommonProperties::onStudyClosed()
+{
+    onThermalClusterChanged(nullptr);
+}
 
+void CommonProperties::onUpdAggregateListDueToGroupChange()
+{
+    if (pGroupHasChanged)
+    {
+        pGroupHasChanged = false;
+        if (pNotifier)
+        {
+            thermalEventDisconnect();
+            pNotifier->update();
+            pNotifier->Refresh();
 
-	void CommonProperties::onThermalClusterChanged(Data::ThermalCluster* cluster)
-	{
-		if (cluster)
-		{
-			auto* data = new Window::Inspector::InspectorData(*Data::Study::Current::Get());
-			data->clusters.insert(cluster);
-			pUpdateInfoAboutPlant(data);
-		}
-		else
-			pUpdateInfoAboutPlant(nullptr);
+            // (Re) Connection with the notifier
+            pNotifier->UpdateWindowUI();
+            thermalEventConnect();
+        }
+    }
+}
 
-		pGroupHasChanged = false;
-		pAggregate = cluster;
-	}
+void CommonProperties::thermalEventConnect()
+{
+    if (pNotifier)
+        pNotifier->onThermalClusterChanged.connect(this,
+                                                   &CommonProperties::onThermalClusterChanged);
+}
 
+void CommonProperties::thermalEventDisconnect()
+{
+    if (pNotifier)
+        pNotifier->onThermalClusterChanged.remove(this);
+}
 
-	void CommonProperties::onStudyClosed()
-	{
-		onThermalClusterChanged(nullptr);
-	}
+void CommonProperties::onStudyThermalClusterRenamed(Data::ThermalCluster* cluster)
+{
+    if (cluster == pAggregate and cluster)
+        onThermalClusterChanged(cluster);
+    Dispatcher::GUI::Refresh(this);
+}
 
-
-	void CommonProperties::onUpdAggregateListDueToGroupChange()
-	{
-		if (pGroupHasChanged)
-		{
-			pGroupHasChanged = false;
-			if (pNotifier)
-			{
-				thermalEventDisconnect();
-				pNotifier->update();
-				pNotifier->Refresh();
-
-				// (Re) Connection with the notifier
-				pNotifier->UpdateWindowUI();
-				thermalEventConnect();
-			}
-		}
-	}
-
-
-	void CommonProperties::thermalEventConnect()
-	{
-		if (pNotifier)
-			pNotifier->onThermalClusterChanged.connect(this, &CommonProperties::onThermalClusterChanged);
-	}
-
-
-	void CommonProperties::thermalEventDisconnect()
-	{
-		if (pNotifier)
-			pNotifier->onThermalClusterChanged.remove(this);
-	}
-
-
-	void CommonProperties::onStudyThermalClusterRenamed(Data::ThermalCluster* cluster)
-	{
-		if (cluster == pAggregate and cluster)
-			onThermalClusterChanged(cluster);
-		Dispatcher::GUI::Refresh(this);
-	}
-
-
-	void CommonProperties::thermalSettingsChanged()
-	{
-		Dispatcher::GUI::Refresh(this);
-	}
-
-
+void CommonProperties::thermalSettingsChanged()
+{
+    Dispatcher::GUI::Refresh(this);
+}
 
 } // namespace Thermal
 } // namespace Window

@@ -32,280 +32,270 @@
 #include <yuni/core/string/wstring.h>
 #include <fstream>
 
-
 using namespace Yuni;
 
 #define SEP IO::Separator
-
-
 
 namespace Antares
 {
 namespace Data
 {
+bool Study::resetFolderIcon() const
+{
+    // Create the Desktop.ini file to show a different icon for Antares study folder
+    {
+        buffer.clear() << folder << SEP << "Desktop.ini";
+        IO::File::Stream file;
+        if (not file.openRW(buffer))
+            return false;
+        buffer.clear() << "[.shellclassinfo]\r\n"
+                       << "iconfile = settings/resources/study.ico\r\n"
+                       << "iconindex = 0\r\n"
+                       << "infotip = Antares Study" << VersionToCStr((Version)header.version)
+                       << ": " << header.caption << "\r\n";
+        file << buffer;
+    }
 
+#ifdef YUNI_OS_WINDOWS
+    {
+        // The file should be closed at this point
+        Yuni::WString wbuffer(folder);
+        if (not wbuffer.empty())
+            SetFileAttributesW(wbuffer.c_str(), FILE_ATTRIBUTE_SYSTEM);
+    }
+#endif
 
-	bool Study::resetFolderIcon() const
-	{
-		// Create the Desktop.ini file to show a different icon for Antares study folder
-		{
-			buffer.clear() << folder << SEP << "Desktop.ini";
-			IO::File::Stream file;
-			if (not file.openRW(buffer))
-				return false;
-			buffer.clear()
-				<< "[.shellclassinfo]\r\n"
-				<< "iconfile = settings/resources/study.ico\r\n"
-				<< "iconindex = 0\r\n"
-				<< "infotip = Antares Study" << VersionToCStr((Version) header.version)
-				<< ": " << header.caption << "\r\n";
-			file << buffer;
-		}
+    return true;
+}
 
-		# ifdef YUNI_OS_WINDOWS
-		{
-			// The file should be closed at this point
-			Yuni::WString wbuffer(folder);
-			if (not wbuffer.empty())
-				SetFileAttributesW(wbuffer.c_str(), FILE_ATTRIBUTE_SYSTEM);
-		}
-		# endif
+bool Study::saveToFolder(const AnyString& newfolder)
+{
+    if (newfolder.empty())
+        return false;
 
-		return true;
-	}
+    logs.notice() << "Exporting the study...";
+    const String location = newfolder;
+    // trying to access to the new location first, before any useless
+    // loading attemp
+    // This should be enough for the next creation (unless there is no
+    // disk space left)
+    if (not IO::Directory::Create(location))
+    {
+        logs.error() << "I/O error: impossible to create the folder '" << location << "'";
+        return false;
+    }
 
+    Statistics::LogsDumper statisticsDumper;
 
+    logs.info() << "Preloading data...";
+    bool ret = true;
+    {
+        uint invalidateCount = 0;
+        ret = areas.preloadAndMarkAsModifiedAllInvalidatedAreas(&invalidateCount);
+        if (invalidateCount > 0)
+        {
+            // if at least one area has been invalidated, all constraints
+            // must be invalidated as well
+            bindingConstraints.invalidate(true);
+            bindingConstraints.markAsModified();
+        }
+    }
 
+    // Trying to create a few important folders
+    logs.info() << "Preparing folders...";
+    {
+        const String backupFolder = this->folder;
+        // Changing the paths
+        relocate(location);
 
-	bool Study::saveToFolder(const AnyString& newfolder)
-	{
-		if (newfolder.empty())
-			return false;
+        // Output
+        if (not IO::Directory::Create(folderInput))
+        {
+            logs.error() << "I/O error: impossible to create the folder '" << folderInput << "'";
+            relocate(backupFolder);
+            return false;
+        }
+        if (not IO::Directory::Create(folderSettings))
+        {
+            logs.error() << "I/O error: impossible to create the folder '" << folderSettings << "'";
+            relocate(backupFolder);
+            return false;
+        }
 
-		logs.notice() << "Exporting the study...";
-		const String location = newfolder;
-		// trying to access to the new location first, before any useless
-		// loading attemp
-		// This should be enough for the next creation (unless there is no
-		// disk space left)
-		if (not IO::Directory::Create(location))
-		{
-			logs.error() << "I/O error: impossible to create the folder '" << location << "'";
-			return false;
-		}
+        if (not IO::Directory::Create(folderOutput))
+        {
+            logs.error() << "I/O error: impossible to create the folder '" << folderOutput << "'";
+            relocate(backupFolder);
+            return false;
+        }
+    }
 
-		Statistics::LogsDumper statisticsDumper;
+    // Checking if the version has changed (aka upgrade)
+    //
+    // In this case, we have to invalidate all matrices to make sure that all
+    // data will be rewritten to avoid data loss
+    // (if filenames have changed for examples)
+    bool versionUpgrade = ((uint)header.version != (uint)versionLatest);
+    if (versionUpgrade)
+    {
+        logs.info() << "  performing a format upgrade";
+        // Invalidate all matrices
+        invalidate(true);
+        markAsModified();
+        // Invalidate the scenario builder data
+        if (not scenarioRules)
+            scenarioRulesCreate();
+    }
 
-		logs.info() << "Preloading data...";
-		bool ret = true;
-		{
-			uint invalidateCount = 0;
-			ret = areas.preloadAndMarkAsModifiedAllInvalidatedAreas(&invalidateCount);
-			if (invalidateCount > 0)
-			{
-				// if at least one area has been invalidated, all constraints
-				// must be invalidated as well
-				bindingConstraints.invalidate(true);
-				bindingConstraints.markAsModified();
-			}
-		}
+    buffer.clear() << folder << Yuni::IO::Separator << "ConstraintBuilder" << Yuni::IO::Separator
+                   << "ConstraintBuilder.ini"; // moving the constraint builder file introduced in
+                                               // version 6.4 if it exists
+    if (IO::File::Exists(buffer))
+    {
+        YString dest;
+        dest << folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator
+             << "constraintbuilder.ini";
 
-		// Trying to create a few important folders
-		logs.info() << "Preparing folders...";
-		{
-			const String backupFolder = this->folder;
-			// Changing the paths
-			relocate(location);
+        IO::File::Copy(buffer, dest);
 
-			// Output
-			if (not IO::Directory::Create(folderInput))
-			{
-				logs.error() << "I/O error: impossible to create the folder '" << folderInput << "'";
-				relocate(backupFolder);
-				return false;
-			}
-			if (not IO::Directory::Create(folderSettings))
-			{
-				logs.error() << "I/O error: impossible to create the folder '" << folderSettings << "'";
-				relocate(backupFolder);
-				return false;
-			}
+        buffer.clear() << folder << Yuni::IO::Separator << "ConstraintBuilder";
+        IO::Directory::Remove(buffer);
+    }
 
-			if (not IO::Directory::Create(folderOutput))
-			{
-				logs.error() << "I/O error: impossible to create the folder '" << folderOutput << "'";
-				relocate(backupFolder);
-				return false;
-			}
-		}
+    buffer.clear() << folder << SEP << "study.antares";
+    header.saveToFile(buffer);
 
-		// Checking if the version has changed (aka upgrade)
-		//
-		// In this case, we have to invalidate all matrices to make sure that all
-		// data will be rewritten to avoid data loss
-		// (if filenames have changed for examples)
-		bool versionUpgrade = ((uint) header.version != (uint) versionLatest);
-		if (versionUpgrade)
-		{
-			logs.info() << "  performing a format upgrade";
-			// Invalidate all matrices
-			invalidate(true);
-			markAsModified();
-			// Invalidate the scenario builder data
-			if (not scenarioRules)
-				scenarioRulesCreate();
-		}
+    // Icon File - For Windows only
+    resetFolderIcon();
 
-		buffer.clear() << folder << Yuni::IO::Separator << "ConstraintBuilder" << Yuni::IO::Separator << "ConstraintBuilder.ini";//moving the constraint builder file introduced in version 6.4 if it exists
-		if (IO::File::Exists(buffer))
-		{
-			YString  dest;
-			dest << folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator << "constraintbuilder.ini";
+    // Simulations
+    buffer.clear() << folder << SEP << "settings" << SEP << "resources";
+    ret = IO::Directory::Create(buffer) and ret;
 
-			IO::File::Copy(buffer,dest);
+    if (not StudyIconFile.empty())
+    {
+        buffer.clear() << folder << SEP << "settings" << SEP << "resources" << SEP << "study.ico";
 
+        std::ifstream src(StudyIconFile.c_str(), std::ios::binary);
+        std::ofstream dst(buffer.c_str(), std::ios::binary);
 
-			buffer.clear() << folder << Yuni::IO::Separator << "ConstraintBuilder";
-			IO::Directory::Remove(buffer);
-		}
+        dst << src.rdbuf();
 
-		buffer.clear() << folder << SEP << "study.antares";
-		header.saveToFile(buffer);
+        dst.close();
+        src.close();
+    }
 
-		// Icon File - For Windows only
-		resetFolderIcon();
+    // User
+    buffer.clear() << folder << SEP << "user";
+    ret = IO::Directory::Create(buffer) and ret;
 
-		// Simulations
-		buffer.clear() << folder << SEP << "settings" << SEP << "resources";
-		ret = IO::Directory::Create(buffer) and ret;
+    // Logs
+    buffer.clear() << folder << SEP << "logs";
+    ret = IO::Directory::Create(buffer) and ret;
 
-		if (not StudyIconFile.empty())
-		{
-			buffer.clear() << folder << SEP << "settings" << SEP << "resources"
-				<< SEP << "study.ico";
+    buffer.clear() << folder << SEP << "input" << SEP << "reserves";
+    ret = IO::Directory::Create(buffer) and ret;
 
-			std::ifstream  src(StudyIconFile.c_str(), std::ios::binary);
-			std::ofstream  dst(buffer.c_str(), std::ios::binary);
+    // Misc-gen
+    buffer.clear() << folder << SEP << "input" << SEP << "misc-gen";
+    ret = IO::Directory::Create(buffer) and ret;
 
-			dst << src.rdbuf();
+    // Hydro
+    buffer.clear() << folder << SEP << "input" << SEP << "hydro" << SEP << "common" << SEP
+                   << "capacity";
+    ret = IO::Directory::Create(buffer) and ret;
 
-			
-			dst.close();
-			src.close();
+    // Settings
+    buffer.clear() << folder << SEP << "settings" << SEP << "simulations";
+    ret = IO::Directory::Create(buffer) and ret;
+    buffer.clear() << folder << SEP << "settings";
+    ret = simulation.saveToFolder(buffer) and ret;
+    buffer.clear() << folder << SEP << "settings" << SEP << "generaldata.ini";
+    ret = parameters.saveToFile(buffer) and ret;
 
-		}
+    // All areas
+    ret = areas.saveToFolder(folder) and ret;
 
-		// User
-		buffer.clear() << folder << SEP << "user";
-		ret = IO::Directory::Create(buffer) and ret;
+    // Layers
+    buffer.clear() << folder << SEP << "layers";
+    ret = IO::Directory::Create(buffer) and ret;
+    buffer.clear() << folder << SEP << "layers" << SEP << "layers.ini";
+    ret = saveLayers(buffer) and ret;
 
-		// Logs
-		buffer.clear() << folder << SEP << "logs";
-		ret = IO::Directory::Create(buffer) and ret;
+    // Binding constraints
+    buffer.clear() << folder << SEP << "input" << SEP << "bindingconstraints";
+    ret = bindingConstraints.saveToFolder(buffer) and ret;
 
-		buffer.clear() << folder << SEP << "input" << SEP << "reserves";
-		ret = IO::Directory::Create(buffer) and ret;
+    // Correlation matrices
+    logs.info() << "Exporting the correlation matrices";
 
-		// Misc-gen
-		buffer.clear() << folder << SEP << "input" << SEP << "misc-gen";
-		ret = IO::Directory::Create(buffer) and ret;
+    logs.info() << "Correlation: Load";
+    buffer.clear() << folder << SEP << "input" << SEP << "load" << SEP << "prepro" << SEP
+                   << "correlation.ini";
+    ret = preproLoadCorrelation.saveToFile(*this, buffer) and ret;
 
-		// Hydro
-		buffer.clear() << folder << SEP << "input" << SEP << "hydro" << SEP << "common" << SEP << "capacity";
-		ret = IO::Directory::Create(buffer) and ret;
+    logs.info() << "Correlation: Solar";
+    buffer.clear() << folder << SEP << "input" << SEP << "solar" << SEP << "prepro" << SEP
+                   << "correlation.ini";
+    ret = preproSolarCorrelation.saveToFile(*this, buffer) and ret;
 
-		// Settings
-		buffer.clear() << folder << SEP << "settings" << SEP << "simulations";
-		ret = IO::Directory::Create(buffer) and ret;
-		buffer.clear() << folder << SEP << "settings";
-		ret = simulation.saveToFolder(buffer) and ret;
-		buffer.clear() << folder << SEP << "settings" << SEP << "generaldata.ini";
-		ret = parameters.saveToFile(buffer) and ret;
+    logs.info() << "Correlation: Wind";
+    buffer.clear() << folder << SEP << "input" << SEP << "wind" << SEP << "prepro" << SEP
+                   << "correlation.ini";
+    ret = preproWindCorrelation.saveToFile(*this, buffer) and ret;
 
-		// All areas
-		ret = areas.saveToFolder(folder) and ret;
+    logs.info() << "Correlation: Hydro";
+    buffer.clear() << folder << SEP << "input" << SEP << "hydro" << SEP << "prepro" << SEP
+                   << "correlation.ini";
+    ret = preproHydroCorrelation.saveToFile(*this, buffer) and ret;
 
-		// Layers
-		buffer.clear() << folder << SEP << "layers";
-		ret = IO::Directory::Create(buffer) and ret;
-		buffer.clear() << folder << SEP << "layers" << SEP << "layers.ini";
-		ret = saveLayers(buffer) and ret;
+    // Sets
+    buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << "sets.ini";
+    ret = setsOfAreas.saveToFile(buffer) and ret;
 
-		// Binding constraints
-		buffer.clear() << folder << SEP << "input" << SEP << "bindingconstraints";
-		ret = bindingConstraints.saveToFolder(buffer) and ret;
+    if (scenarioRules)
+    {
+        buffer.clear() << folder << SEP << "settings" << SEP << "scenariobuilder.dat";
+        ret = scenarioRules->saveToINIFile(buffer) and ret;
+    }
 
-		// Correlation matrices
-		logs.info() << "Exporting the correlation matrices";
+    // Maps
+    buffer.clear() << folder << SEP << "output" << SEP << "maps";
+    ret = IO::Directory::Create(buffer) and ret;
 
-		logs.info() << "Correlation: Load";
-		buffer.clear() << folder << SEP << "input" << SEP << "load" << SEP
-			<< "prepro" << SEP << "correlation.ini";
-		ret = preproLoadCorrelation.saveToFile(*this, buffer) and ret;
+    return ret;
+}
 
-		logs.info() << "Correlation: Solar";
-		buffer.clear() << folder << SEP << "input" << SEP << "solar" << SEP
-			<< "prepro" << SEP << "correlation.ini";
-		ret = preproSolarCorrelation.saveToFile(*this, buffer) and ret;
+bool Study::saveLayers(const AnyString& filename)
+{
+    IO::File::Stream file;
+    if (file.openRW(filename))
+    {
+        CString<256, true> data;
+        data << "[layers]\n";
+        for (std::map<size_t, std::string>::iterator iterator = layers.begin();
+             iterator != layers.end();
+             iterator++)
+        {
+            data << iterator->first << " = " << iterator->second;
+            data << '\n';
+        }
 
-		logs.info() << "Correlation: Wind";
-		buffer.clear() << folder << SEP << "input" << SEP << "wind" << SEP
-			<< "prepro" << SEP << "correlation.ini";
-		ret = preproWindCorrelation.saveToFile(*this, buffer) and ret;
+        data << "[activeLayer]\n";
+        data << "activeLayerID"
+             << " = " << activeLayerID;
+        data << '\n';
+        data << "showAllLayer"
+             << " = " << showAllLayer;
 
-		logs.info() << "Correlation: Hydro";
-		buffer.clear() << folder << SEP << "input" << SEP << "hydro" << SEP
-			<< "prepro" << SEP << "correlation.ini";
-		ret = preproHydroCorrelation.saveToFile(*this, buffer) and ret;
+        file << data;
 
-		// Sets
-		buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << "sets.ini";
-		ret = setsOfAreas.saveToFile(buffer) and ret;
+        return true;
+    }
 
-		if (scenarioRules)
-		{
-			buffer.clear() << folder << SEP << "settings" << SEP << "scenariobuilder.dat";
-			ret = scenarioRules->saveToINIFile(buffer) and ret;
-		}
-
-		// Maps
-		buffer.clear() << folder << SEP << "output" << SEP << "maps";
-		ret = IO::Directory::Create(buffer) and ret;
-		
-		return ret;
-	}
-
-	bool Study::saveLayers(const AnyString& filename) 
-	{
-
-		IO::File::Stream file;
-		if (file.openRW(filename))
-		{
-			CString<256, true> data;
-			data << "[layers]\n";
-			for (std::map<size_t, std::string>::iterator iterator = layers.begin(); iterator != layers.end(); iterator++)
-			{
-				data << iterator->first << " = " << iterator->second;
-				data << '\n';
-			}
-
-			data << "[activeLayer]\n";
-			data << "activeLayerID" << " = " << activeLayerID;
-			data << '\n';
-			data << "showAllLayer" << " = " << showAllLayer;
-
-			file << data;
-
-			return true;
-		}
-
-		logs.error() << "I/O error: impossible to write " << filename;
-		return false;
-	}
-
-	
-
+    logs.error() << "I/O error: impossible to write " << filename;
+    return false;
+}
 
 } // namespace Data
 } // namespace Antares
-

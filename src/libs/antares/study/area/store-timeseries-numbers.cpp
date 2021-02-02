@@ -30,117 +30,103 @@
 #include "../study.h"
 #include "../../logs.h"
 
-
 using namespace Yuni;
 
 #define SEP IO::Separator
-
-
 
 namespace Antares
 {
 namespace Data
 {
+namespace // anonymous
+{
+struct TSNumbersPredicate
+{
+    uint32 operator()(uint32 value) const
+    {
+        return value + 1;
+    }
+};
+} // anonymous namespace
 
+bool Area::storeTimeseriesNumbersForLoad(Study& study)
+{
+    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP << "load";
+    if (!IO::Directory::Create(study.buffer))
+    {
+        logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
+        return false;
+    }
+    TSNumbersPredicate predicate;
+    study.buffer << SEP << this->id << ".txt";
+    return load.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate);
+}
 
-	namespace // anonymous
-	{
-		struct TSNumbersPredicate
-		{
-			uint32 operator () (uint32 value) const
-			{
-				return value + 1;
-			}
-		};
-	} // anonymous namespace
+bool Area::storeTimeseriesNumbersForSolar(Study& study)
+{
+    if (study.header.version >= 330)
+    {
+        // Before 330, the folder for the solar time-series does not exist
+        study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP << "solar";
 
+        if (!IO::Directory::Create(study.buffer))
+        {
+            logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
+            return false;
+        }
+        study.buffer << SEP << this->id << ".txt";
 
-	bool Area::storeTimeseriesNumbersForLoad(Study& study)
-	{
-		study.buffer.clear() << study.folderOutput << SEP << "ts-numbers"
-			<< SEP << "load";
-		if (!IO::Directory::Create(study.buffer))
-		{
-			logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
-			return false;
-		}
-		TSNumbersPredicate predicate;
-		study.buffer << SEP << this->id << ".txt";
-		return load.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate);
-	}
+        TSNumbersPredicate predicate;
+        return solar.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate);
+    }
+    return true;
+}
 
-	bool Area::storeTimeseriesNumbersForSolar(Study& study)
-	{
-		if (study.header.version >= 330)
-		{
-			// Before 330, the folder for the solar time-series does not exist
-			study.buffer.clear() << study.folderOutput << SEP << "ts-numbers"
-				<< SEP << "solar";
+bool Area::storeTimeseriesNumbersForHydro(Study& study)
+{
+    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP << "hydro";
 
-			if (!IO::Directory::Create(study.buffer))
-			{
-				logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
-				return false;
-			}
-			study.buffer << SEP << this->id << ".txt";
+    if (!IO::Directory::Create(study.buffer))
+    {
+        logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
+        return false;
+    }
 
-			TSNumbersPredicate predicate;
-			return solar.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate);
-		}
-		return true;
-	}
+    TSNumbersPredicate predicate;
+    study.buffer << SEP << this->id << ".txt";
+    return hydro.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate);
+}
 
+bool Area::storeTimeseriesNumbersForWind(Study& study)
+{
+    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP << "wind";
 
-	bool Area::storeTimeseriesNumbersForHydro(Study& study)
-	{
-		study.buffer.clear() << study.folderOutput << SEP << "ts-numbers"
-			<< SEP << "hydro";
+    if (!IO::Directory::Create(study.buffer))
+    {
+        logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
+        return false;
+    }
 
-		if (!IO::Directory::Create(study.buffer))
-		{
-			logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
-			return false;
-		}
+    TSNumbersPredicate predicate;
+    study.buffer << SEP << this->id << ".txt";
+    return wind.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate);
+}
 
-		TSNumbersPredicate predicate;
-		study.buffer << SEP << this->id << ".txt";
-		return hydro.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate);
-	}
+bool Area::storeTimeseriesNumbersForThermal(Study& study)
+{
+    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP << "thermal" << SEP
+                         << id;
 
-	bool Area::storeTimeseriesNumbersForWind(Study& study)
-	{
-		study.buffer.clear() << study.folderOutput << SEP << "ts-numbers"
-			<< SEP << "wind";
+    if (!IO::Directory::Create(study.buffer))
+    {
+        logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
+        return false;
+    }
 
-		if (!IO::Directory::Create(study.buffer))
-		{
-			logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
-			return false;
-		}
-
-		TSNumbersPredicate predicate;
-		study.buffer << SEP << this->id << ".txt";
-		return wind.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate);
-	}
-
-	bool Area::storeTimeseriesNumbersForThermal(Study& study)
-	{
-		study.buffer.clear() << study.folderOutput << SEP << "ts-numbers"
-			<< SEP << "thermal" << SEP << id;
-
-		if (!IO::Directory::Create(study.buffer))
-		{
-			logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
-			return false;
-		}
-
-
-		bool ret = thermal.list.storeTimeseriesNumbers(study);
-		ret = thermal.mustrunList.storeTimeseriesNumbers(study) && ret;
-		return ret;
-	}
-
-
+    bool ret = thermal.list.storeTimeseriesNumbers(study);
+    ret = thermal.mustrunList.storeTimeseriesNumbers(study) && ret;
+    return ret;
+}
 
 } // namespace Data
 } // namespace Antares

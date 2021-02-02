@@ -25,126 +25,118 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_WINDOWS_NOTES_H__
-# define __ANTARES_APPLICATION_WINDOWS_NOTES_H__
+#define __ANTARES_APPLICATION_WINDOWS_NOTES_H__
 
-# include <antares/wx-wrapper.h>
-# include <ui/common/component/panel.h>
-# include <wx/richtext/richtextctrl.h>
-# include <wx/richtext/richtextstyles.h>
-
+#include <antares/wx-wrapper.h>
+#include <ui/common/component/panel.h>
+#include <wx/richtext/richtextctrl.h>
+#include <wx/richtext/richtextstyles.h>
 
 namespace Antares
 {
 namespace Window
 {
+/*!
+** \brief `Save As` Dialog
+*/
+class Notes final : public Antares::Component::Panel, public Yuni::IEventObserver<Notes>
+{
+public:
+    enum IDs
+    {
+        mnIDUserNotes = wxID_HIGHEST + 1,
+    };
 
+    /*!
+    ** \brief Event triggered when the user notes are changed
+    */
+    static Yuni::Event<void(Notes* sender)> OnChanged;
 
-	/*!
-	** \brief `Save As` Dialog
-	*/
-	class Notes final : public Antares::Component::Panel, public Yuni::IEventObserver<Notes>
-	{
-	public:
-		enum IDs
-		{
-			mnIDUserNotes = wxID_HIGHEST + 1,
-		};
+public:
+    // \name Constructors & Destructor
+    //@{
+    /*!
+    ** \brief Constructor with a parent window and a study
+    */
+    Notes(wxWindow* parent, uint margin = 18);
+    //! Destructor
+    virtual ~Notes();
+    //@}
 
-		/*!
-		** \brief Event triggered when the user notes are changed
-		*/
-		static Yuni::Event<void (Notes* sender)>  OnChanged;
+    /*!
+    ** \brief Save the comments to the study
+    */
+    void saveToStudy();
 
+    /*!
+    ** \brief Load the comments from the study
+    */
+    void loadFromStudy();
 
-	public:
-		// \name Constructors & Destructor
-		//@{
-		/*!
-		** \brief Constructor with a parent window and a study
-		*/
-		Notes(wxWindow* parent, uint margin = 18);
-		//! Destructor
-		virtual ~Notes();
-		//@}
+    /*!
+    ** \brief Connect to the notification of user notes updates
+    */
+    void connectToNotification();
 
-		/*!
-		** \brief Save the comments to the study
-		*/
-		void saveToStudy();
+    /*!
+    ** \brief Disconnect from the notifications of the user notes updates
+    */
+    void disconnectFromNotification();
 
-		/*!
-		** \brief Load the comments from the study
-		*/
-		void loadFromStudy();
+private:
+    void onBold(void*);
+    void onItalic(void*);
+    void onUnderline(void*);
 
-		/*!
-		** \brief Connect to the notification of user notes updates
-		*/
-		void connectToNotification();
+    void onAlignLeft(void*);
+    void onAlignRight(void*);
+    void onAlignCenter(void*);
 
-		/*!
-		** \brief Disconnect from the notifications of the user notes updates
-		*/
-		void disconnectFromNotification();
+    void onListBullet(void*);
+    void onListNumbered(void*);
 
-	private:
-		void onBold(void*);
-		void onItalic(void*);
-		void onUnderline(void*);
+    void onIndentIncrease(void*);
+    void onIndentDecrease(void*);
 
-		void onAlignLeft(void*);
-		void onAlignRight(void*);
-		void onAlignCenter(void*);
+    void appendStyles();
 
-		void onListBullet(void*);
-		void onListNumbered(void*);
+    void onUserNotesCharacter(wxRichTextEvent& evt);
+    void onUserNotesStyleChanged(wxRichTextEvent& evt);
 
-		void onIndentIncrease(void*);
-		void onIndentDecrease(void*);
+    void onNotesModified(Notes* sender);
 
-		void appendStyles();
+    void notifyChanges();
 
-		void onUserNotesCharacter(wxRichTextEvent& evt);
-		void onUserNotesStyleChanged(wxRichTextEvent& evt);
+    void onStudyClosed();
 
-		void onNotesModified(Notes* sender);
+    /*!
+    ** \brief Initialize temporary files addresses
+    **
+    ** This method must be called whenever pWxTempFile or pTempFile
+    ** are empty (on-demand, to reduce startup time overhead as much
+    ** as possible).
+    */
+    bool initializeTemporaryFile();
 
-		void notifyChanges();
+private:
+    //! Rich edit
+    wxRichTextCtrl* pRichEdit;
+    wxRichTextStyleSheet* pStyleSheet;
+    uint pLocalRevision;
+    uint pUpdatesToSkip;
 
-		void onStudyClosed();
+    /*!
+    ** \brief Temporary file
+    **
+    ** These variables are empty on purpose at the startup. To get a proper
+    ** content, please call initializeTemporaryFile() when needed
+    */
+    YString pTempFile;
 
-		/*!
-		** \brief Initialize temporary files addresses
-		**
-		** This method must be called whenever pWxTempFile or pTempFile
-		** are empty (on-demand, to reduce startup time overhead as much
-		** as possible).
-		*/
-		bool initializeTemporaryFile();
+    // Event Table
+    DECLARE_EVENT_TABLE()
 
-	private:
-		//! Rich edit
-		wxRichTextCtrl* pRichEdit;
-		wxRichTextStyleSheet* pStyleSheet;
-		uint pLocalRevision;
-		uint pUpdatesToSkip;
-
-		/*!
-		** \brief Temporary file
-		**
-		** These variables are empty on purpose at the startup. To get a proper
-		** content, please call initializeTemporaryFile() when needed
-		*/
-		YString pTempFile;
-
-		// Event Table
-		DECLARE_EVENT_TABLE()
-
-	}; // class Notes
-
-
-
-
+}; // class Notes
 
 } // namespace Window
 } // namespace Antares

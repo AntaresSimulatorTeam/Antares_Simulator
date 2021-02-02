@@ -29,59 +29,46 @@
 #include <yuni/core/atomic/int.h>
 #include <cassert>
 
-
 namespace Antares
 {
+static Yuni::Atomic::Int<32> gGUIFlushRefCount = 0;
 
-	static Yuni::Atomic::Int<32> gGUIFlushRefCount = 0;
+static Yuni::Atomic::Int<32> GUIIsAboutToQuitFlag = false;
 
-	static Yuni::Atomic::Int<32> GUIIsAboutToQuitFlag = false;
+bool IsGUIAboutToQuit()
+{
+    return (0 != GUIIsAboutToQuitFlag);
+}
 
+void GUIIsAboutToQuit()
+{
+    GUIIsAboutToQuitFlag = 1;
+}
 
+void GUIIsNoLongerQuitting()
+{
+    GUIIsAboutToQuitFlag = 0;
+}
 
-	bool IsGUIAboutToQuit()
-	{
-		return (0 != GUIIsAboutToQuitFlag);
-	}
+void GUIBeginUpdate()
+{
+    ++gGUIFlushRefCount;
+}
 
+void GUIEndUpdate()
+{
+    assert(gGUIFlushRefCount > 0);
+    gGUIFlushRefCount += -1;
+}
 
-	void GUIIsAboutToQuit()
-	{
-		GUIIsAboutToQuitFlag = 1;
-	}
+bool GUIIsLock()
+{
+    return (0 != gGUIFlushRefCount || GUIIsAboutToQuitFlag);
+}
 
-	void GUIIsNoLongerQuitting()
-	{
-		GUIIsAboutToQuitFlag = 0;
-	}
-
-
-	void GUIBeginUpdate()
-	{
-		++gGUIFlushRefCount;
-	}
-
-
-	void GUIEndUpdate()
-	{
-		assert(gGUIFlushRefCount > 0);
-		gGUIFlushRefCount += -1;
-	}
-
-
-	bool GUIIsLock()
-	{
-		return (0 != gGUIFlushRefCount || GUIIsAboutToQuitFlag);
-	}
-
-
-	uint GUILockRefCount()
-	{
-		return (uint) gGUIFlushRefCount;
-	}
-
-
-
+uint GUILockRefCount()
+{
+    return (uint)gGUIFlushRefCount;
+}
 
 } // namespace Antares
-

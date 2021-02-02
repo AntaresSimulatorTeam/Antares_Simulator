@@ -25,94 +25,86 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_EXT_SOURCE_PERFORMER_H__
-# define __ANTARES_APPLICATION_EXT_SOURCE_PERFORMER_H__
+#define __ANTARES_APPLICATION_EXT_SOURCE_PERFORMER_H__
 
-# include <antares/wx-wrapper.h>
-# include <antares/study.h>
-# include <yuni/thread/thread.h>
-# include <wx/timer.h>
-# include <wx/dialog.h>
-# include <antares/study/action/action.h>
-# include "../components/progressbar.h"
-
-
+#include <antares/wx-wrapper.h>
+#include <antares/study.h>
+#include <yuni/thread/thread.h>
+#include <wx/timer.h>
+#include <wx/dialog.h>
+#include <antares/study/action/action.h>
+#include "../components/progressbar.h"
 
 namespace Antares
 {
 namespace Window
 {
+class PerformerDialog : public wxDialog
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    PerformerDialog(wxWindow* parent,
+                    const Antares::Action::Context::Ptr& context,
+                    const Antares::Action::IAction::Ptr& root);
 
+    //! Destructor
+    virtual ~PerformerDialog();
+    //@}
 
-	class PerformerDialog :public wxDialog
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		PerformerDialog(wxWindow* parent, const Antares::Action::Context::Ptr& context,
-			const Antares::Action::IAction::Ptr& root);
+    /*!
+    ** \brief Open the actions dialog
+    */
+    void closeThenOpenActionsDialog();
 
-		//! Destructor
-		virtual ~PerformerDialog();
-		//@}
+    /*!
+    ** \brief Close the window
+    */
+    void askForClosingTheWindow();
 
-		/*!
-		** \brief Open the actions dialog
-		*/
-		void closeThenOpenActionsDialog();
+    void notifyHasBeenModified();
 
-		/*!
-		** \brief Close the window
-		*/
-		void askForClosingTheWindow();
+    void notifyProgression(int progress, int max);
 
-		void notifyHasBeenModified();
+    void updateGUI();
 
-		void notifyProgression(int progress, int max);
+private:
+    //! Event: The user asked to cancel the operation
+    void onCancel(void*);
 
-		void updateGUI();
+    void delegateUserInfo(const Yuni::String& text);
 
-	private:
-		//! Event: The user asked to cancel the operation
-		void onCancel(void*);
+    void closeWindow();
 
-		void delegateUserInfo(const Yuni::String& text);
+private:
+    //! Flag to know if the study has been modified
+    bool pHasBeenModified;
 
-		void closeWindow();
+    //! The target study
+    Antares::Action::Context::Ptr pContext;
+    //! The tree of the actions to perform
+    Antares::Action::IAction::Ptr pActions;
+    //! Gauge
+    Component::ProgressBar* pGauge;
+    //! Cancel button
+    wxButton* pBtnCancel;
 
-	private:
-		//! Flag to know if the study has been modified
-		bool pHasBeenModified;
+    wxStaticText* pLblMessage;
 
-		//! The target study
-		Antares::Action::Context::Ptr pContext;
-		//! The tree of the actions to perform
-		Antares::Action::IAction::Ptr pActions;
-		//! Gauge
-		Component::ProgressBar* pGauge;
-		//! Cancel button
-		wxButton* pBtnCancel;
+    Yuni::String pNextMessage;
 
-		wxStaticText* pLblMessage;
+    wxTimer* pTimer;
 
-		Yuni::String pNextMessage;
+    Yuni::Thread::IThread* pThread;
+    Yuni::Mutex pMutex;
+    Yuni::Atomic::Int<> pGUINeedRefresh;
+    Yuni::Atomic::Int<> pProgression;
+    Yuni::Atomic::Int<> pProgressionMax;
 
-		wxTimer* pTimer;
-
-		Yuni::Thread::IThread* pThread;
-		Yuni::Mutex pMutex;
-		Yuni::Atomic::Int<> pGUINeedRefresh;
-		Yuni::Atomic::Int<> pProgression;
-		Yuni::Atomic::Int<> pProgressionMax;
-
-	}; // class PerformerDialog
-
-
-
-
-
+}; // class PerformerDialog
 
 } // namespace Window
 } // namespace Antares

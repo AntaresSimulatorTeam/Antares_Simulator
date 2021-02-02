@@ -25,28 +25,26 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_JOB_H__
-# define __ANTARES_TOOLBOX_JOB_H__
+#define __ANTARES_TOOLBOX_JOB_H__
 
-# include <antares/wx-wrapper.h>
-# include <antares/logs.h>
-# include <yuni/core/slist/slist.h>
-# include <yuni/thread/thread.h>
-# include <yuni/thread/timer.h>
+#include <antares/wx-wrapper.h>
+#include <antares/logs.h>
+#include <yuni/core/slist/slist.h>
+#include <yuni/thread/thread.h>
+#include <yuni/thread/timer.h>
 
-# include <wx/dialog.h>
-# include <wx/frame.h>
-# include <wx/animate.h>
-# include <wx/stattext.h>
-# include <wx/timer.h>
-# include <wx/stattext.h>
-# include <wx/regex.h>
-# include "../components/progressbar.h"
-# include "../create.h"
-# include <ui/common/component/panel.h>
+#include <wx/dialog.h>
+#include <wx/frame.h>
+#include <wx/animate.h>
+#include <wx/stattext.h>
+#include <wx/timer.h>
+#include <wx/stattext.h>
+#include <wx/regex.h>
+#include "../components/progressbar.h"
+#include "../create.h"
+#include <ui/common/component/panel.h>
 
-# include <list>
-
-
+#include <list>
 
 namespace Antares
 {
@@ -54,252 +52,269 @@ namespace Toolbox
 {
 namespace Jobs
 {
+// Forward declarations
+class JobThread;
+class TimerElapsedTime;
+class TimerRemainingTime;
+class PartList;
 
-	// Forward declarations
-	class JobThread;
-	class TimerElapsedTime;
-	class TimerRemainingTime;
-	class PartList;
+class Job : public wxDialog, public Yuni::IEventObserver<Job>
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    Job(const wxString& title, const wxString& subTitle, const char* icon);
+    /*!
+    ** \brief Destructor
+    */
+    virtual ~Job();
+    //@}
 
+    //! \name Progression
+    //@{
+    bool displayProgression() const
+    {
+        return pDisplayProgression;
+    }
+    void displayProgression(const bool v)
+    {
+        pDisplayProgression = v;
+    }
+    //@}
 
+    //! \name Cancelation
+    //@{
+    bool canCancel() const
+    {
+        return pCanCancel;
+    }
+    void canCancel(const bool v)
+    {
+        pCanCancel = v;
+    }
+    //@}
 
-	class Job : public wxDialog, public Yuni::IEventObserver<Job>
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		Job(const wxString& title, const wxString& subTitle, const char* icon);
-		/*!
-		** \brief Destructor
-		*/
-		virtual ~Job();
-		//@}
+    //! \name Result
+    //@{
+    bool result() const
+    {
+        return pResult;
+    }
+    void result(const bool v)
+    {
+        pResult = v;
+    }
+    //@}
 
-		//! \name Progression
-		//@{
-		bool displayProgression() const {return pDisplayProgression;}
-		void displayProgression(const bool v) {pDisplayProgression = v;}
-		//@}
+    //! \name Execution flow
+    //@{
 
-		//! \name Cancelation
-		//@{
-		bool canCancel() const {return pCanCancel;}
-		void canCancel(const bool v) {pCanCancel = v;}
-		//@}
+    /*!
+    ** \brief Get if the job is running
+    */
+    bool isRunning() const
+    {
+        return !(!pJobIsRunning);
+    }
 
-		//! \name Result
-		//@{
-		bool result() const {return pResult;}
-		void result(const bool v) {pResult = v;}
-		//@}
+    /*!
+    ** \brief Run the job
+    */
+    bool run();
 
-		//! \name Execution flow
-		//@{
+    /*!
+    ** \brief Stop the job gracefully
+    */
+    void stop();
+    //@}
 
-		/*!
-		** \brief Get if the job is running
-		*/
-		bool isRunning() const {return !(!pJobIsRunning);}
+protected:
+    /*!
+    ** \brief Execute the real task
+    */
+    virtual bool executeTask() = 0; // Please override
 
-		/*!
-		** \brief Run the job
-		*/
-		bool run();
+    /*!
+    ** \brief Update the progress value
+    **
+    ** \param progress The progression in percent
+    */
+    void updateTheProgressValue(double progress);
 
-		/*!
-		** \brief Stop the job gracefully
-		*/
-		void stop();
-		//@}
+    /*!
+    ** \brief Update the message displayed for the user
+    ** \param msg The new message
+    ** \param mustBeInterpreted True if the message must be interpreted (format: `[antares][notice]
+    *msg`)
+    */
+    void updateTheMessage(const wxString& msg, bool mustBeInterpreted = true);
 
+    /*!
+    ** \brief Event: Before the thread is launched
+    **
+    ** This method will be fired before the thread is launched when
+    ** the job is asked to run.
+    ** \see run()
+    */
+    virtual void onBeforeRunning()
+    {
+    }
 
-	protected:
-		/*!
-		** \brief Execute the real task
-		*/
-		virtual bool executeTask() = 0; // Please override
+    /*!
+    ** \brief Event: Ask if the job is allow to run
+    **
+    ** This method is fired before running the job. It is actually thefirst check
+    ** done by the method `run()`
+    ** \see run()
+    */
+    virtual bool onRunQuery()
+    {
+        return true;
+    }
 
-		/*!
-		** \brief Update the progress value
-		**
-		** \param progress The progression in percent
-		*/
-		void updateTheProgressValue(double progress);
+    /*!
+    ** \brief Event: The user ask to cancel the operation
+    */
+    virtual void onCancel()
+    { /* do nothing */
+    }
 
-		/*!
-		** \brief Update the message displayed for the user
-		** \param msg The new message
-		** \param mustBeInterpreted True if the message must be interpreted (format: `[antares][notice] msg`)
-		*/
-		void updateTheMessage(const wxString& msg, bool mustBeInterpreted = true);
+    /*!
+    ** \brief Gracefully Stop all Gui components
+    */
+    void stopAllGuiComponents();
 
+    /*!
+    ** \brief Dispatch a log entry, grabbed from from the standard output
+    */
+    void manageLogLevelMessage(enum LogLevel lvl, const wxString& msg);
 
-		/*!
-		** \brief Event: Before the thread is launched
-		**
-		** This method will be fired before the thread is launched when
-		** the job is asked to run.
-		** \see run()
-		*/
-		virtual void onBeforeRunning() {}
+protected:
+    /*!
+    ** \brief Event: The user asks to cancel the operation
+    */
+    void onCancel(void*);
 
-		/*!
-		** \brief Event: Ask if the job is allow to run
-		**
-		** This method is fired before running the job. It is actually thefirst check
-		** done by the method `run()`
-		** \see run()
-		*/
-		virtual bool onRunQuery() {return true;}
+    void evtOnClose(wxCloseEvent& evt);
 
-		/*!
-		** \brief Event: The user ask to cancel the operation
-		*/
-		virtual void onCancel() {/* do nothing */}
+    void onLogMessage(int, const Yuni::String& message);
 
-		/*!
-		** \brief Gracefully Stop all Gui components
-		*/
-		void stopAllGuiComponents();
+protected:
+    /*!
+    ** \brief Create the main panel, which contains all important controls
+    */
+    wxSizer* createMainPnl(wxWindow* parent);
 
-		/*!
-		** \brief Dispatch a log entry, grabbed from from the standard output
-		*/
-		void manageLogLevelMessage(enum LogLevel lvl, const wxString& msg);
+    /*!
+    ** \brief Create the bottom panel, which contains buttons to cancel and to continue
+    */
+    wxSizer* createPnlButtons(wxWindow* parent);
 
+    wxSizer* createPnlLoading(wxWindow* parent);
 
-	protected:
-		/*!
-		** \brief Event: The user asks to cancel the operation
-		*/
-		void onCancel(void*);
+    /*!
+    ** \brief Display (or not) the gauge
+    */
+    void displayGauge(const bool visible = true);
 
-		void evtOnClose(wxCloseEvent& evt);
+    void displayMessage(const wxString& line);
 
-		void onLogMessage(int, const Yuni::String& message);
+    void onUIUpdateProgression(uint value);
+    void onUIUpdateMessage();
+    void onUIUpdateLabelErrors();
 
-	protected:
-		/*!
-		** \brief Create the main panel, which contains all important controls
-		*/
-		wxSizer* createMainPnl(wxWindow* parent);
+    void onUIUpdateElapsedTime(const Yuni::String& text);
+    void onUIUpdateRemainingTime(const Yuni::String& text);
 
-		/*!
-		** \brief Create the bottom panel, which contains buttons to cancel and to continue
-		*/
-		wxSizer* createPnlButtons(wxWindow* parent);
+    void evtOnInit(wxInitDialogEvent& event);
 
-		wxSizer* createPnlLoading(wxWindow* parent);
+    void deleteAllThreads();
 
-		/*!
-		** \brief Display (or not) the gauge
-		*/
-		void displayGauge(const bool visible = true);
+    void recomputeWindowSize();
 
-		void displayMessage(const wxString& line);
+    void disableAllComponents();
 
+private:
+    //! Title of the window
+    const wxString& pTitle;
+    const wxString& pSubTitle;
+    const char* pIcon;
+    bool pDisplayProgression;
+    bool pCanCancel;
+    bool pResult;
+    long pMemoryFootprint;
 
-		void onUIUpdateProgression(uint value);
-		void onUIUpdateMessage();
-		void onUIUpdateLabelErrors();
+    //! Support for the gauge
+    wxSizer* pGaugeSizer;
+    wxSizer* pGaugeParentSizer;
+    wxSizer* pRemainingSizer;
+    Component::ProgressBar* pGauge;
+    wxSizer* pCancelSizer;
+    //! Text
+    wxStaticText* pProgrText;
+    wxStaticText* pProgrSubText;
+    wxStaticText* pElapsedTimeText;
+    wxStaticText* pRemainingTimeText;
+    wxStaticText* pReadWriteStats;
+    //! List of warning
+    Yuni::String::ListPtr pWarningList;
+    Yuni::String::ListPtr pErrorList;
 
-		void onUIUpdateElapsedTime(const Yuni::String& text);
-		void onUIUpdateRemainingTime(const Yuni::String& text);
+    Yuni::Atomic::Int<> pJobIsRunning;
+    Yuni::Atomic::Int<> pGUICanUpdate;
 
-		void evtOnInit(wxInitDialogEvent& event);
+    // Event table
+    DECLARE_EVENT_TABLE()
 
-		void deleteAllThreads();
+private:
+    //! Timer for refreshing the `elapsed time` since the launch of the job
+    TimerElapsedTime* pTimerElapsedTime;
+    //! Tier for refreshing the estimated`remaining time` to complete the job
+    // (only if a progress is available)
+    TimerRemainingTime* pTimerRemainingTime;
 
-		void recomputeWindowSize();
+    mutable Yuni::Thread::IThread::Ptr pThread;
+    wxAnimationCtrl* pAnim;
+    wxStaticText* pLblErrors;
+    wxString pLastNoticeMessage;
+    wxButton* pBtnCancel;
 
-		void disableAllComponents();
+    wxRegEx pLogRegex;
+    wxString pLogEntryLevelTmp;
+    wxString pLogEntryTmp;
 
-	private:
-		//! Title of the window
-		const wxString& pTitle;
-		const wxString& pSubTitle;
-		const char* pIcon;
-		bool pDisplayProgression;
-		bool pCanCancel;
-		bool pResult;
-		long pMemoryFootprint;
+    bool pCatchLogEvents;
 
-		//! Support for the gauge
-		wxSizer* pGaugeSizer;
-		wxSizer* pGaugeParentSizer;
-		wxSizer* pRemainingSizer;
-		Component::ProgressBar* pGauge;
-		wxSizer* pCancelSizer;
-		//! Text
-		wxStaticText* pProgrText;
-		wxStaticText* pProgrSubText;
-		wxStaticText* pElapsedTimeText;
-		wxStaticText* pRemainingTimeText;
-		wxStaticText* pReadWriteStats;
-		//! List of warning
-		Yuni::String::ListPtr pWarningList;
-		Yuni::String::ListPtr pErrorList;
+    wxString pMessage;
+    wxString pSubMessage;
 
-		Yuni::Atomic::Int<> pJobIsRunning;
-		Yuni::Atomic::Int<> pGUICanUpdate;
+    Yuni::Mutex pMutex;
+    Yuni::Mutex pErrorMutex;
 
-		// Event table
-		DECLARE_EVENT_TABLE()
+    PartList* pPartList;
 
-	private:
-		//! Timer for refreshing the `elapsed time` since the launch of the job
-		TimerElapsedTime*   pTimerElapsedTime;
-		//! Tier for refreshing the estimated`remaining time` to complete the job
-		// (only if a progress is available)
-		TimerRemainingTime* pTimerRemainingTime;
+    wxColour pDefaultBGColor;
+    Component::Panel* pPanelButtons;
+    Component::Panel* pPanelHeader;
 
-		mutable Yuni::Thread::IThread::Ptr pThread;
-		wxAnimationCtrl* pAnim;
-		wxStaticText* pLblErrors;
-		wxString pLastNoticeMessage;
-		wxButton* pBtnCancel;
+    wxWindow* pWndCancelOperation;
 
-		wxRegEx pLogRegex;
-		wxString pLogEntryLevelTmp;
-		wxString pLogEntryTmp;
+    //! Timer for updating labels
+    wxTimer* pTimerMessageUpdater;
+    wxTimer* pTimerReadWriteStats;
 
-		bool pCatchLogEvents;
+    // Our friends !
+    friend class JobThread;
+    friend class TimerElapsedTime;
+    friend class TimerRemainingTime;
 
-		wxString pMessage;
-		wxString pSubMessage;
-
-		Yuni::Mutex pMutex;
-		Yuni::Mutex pErrorMutex;
-
-		PartList* pPartList;
-
-		wxColour pDefaultBGColor;
-		Component::Panel* pPanelButtons;
-		Component::Panel* pPanelHeader;
-
-		wxWindow* pWndCancelOperation;
-
-		//! Timer for updating labels
-		wxTimer* pTimerMessageUpdater;
-		wxTimer* pTimerReadWriteStats;
-
-		// Our friends !
-		friend class JobThread;
-		friend class TimerElapsedTime;
-		friend class TimerRemainingTime;
-
-	}; // class Job
-
-
-
-
+}; // class Job
 
 } // namespace Jobs
 } // namespace Toolbox
 } // namespace Antares
-
 
 #endif // __ANTARES_TOOLBOX_JOB_H__

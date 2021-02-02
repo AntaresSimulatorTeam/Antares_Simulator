@@ -25,37 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include <math.h>
 #include "opt_structure_probleme_a_resoudre.h"
 
@@ -64,27 +33,28 @@
 
 #include "opt_fonctions.h"
 
-
-
-void OPT_NumeroDeJourDuPasDeTemps( PROBLEME_HEBDO * ProblemeHebdo )
+void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO* ProblemeHebdo)
 {
-double X; int PdtHebdo;
-ProblemeHebdo->NombreDeJours = (int) (ProblemeHebdo->NombreDePasDeTemps / ProblemeHebdo->NombreDePasDeTempsDUneJournee);
-for ( PdtHebdo = 0 ; PdtHebdo < ProblemeHebdo->NombreDePasDeTemps ; PdtHebdo++ ) {
-  X = PdtHebdo / ProblemeHebdo->NombreDePasDeTempsDUneJournee;
-	ProblemeHebdo->NumeroDeJourDuPasDeTemps[PdtHebdo] = (int) floor(X);
+    double X;
+    int PdtHebdo;
+    ProblemeHebdo->NombreDeJours
+      = (int)(ProblemeHebdo->NombreDePasDeTemps / ProblemeHebdo->NombreDePasDeTempsDUneJournee);
+    for (PdtHebdo = 0; PdtHebdo < ProblemeHebdo->NombreDePasDeTemps; PdtHebdo++)
+    {
+        X = PdtHebdo / ProblemeHebdo->NombreDePasDeTempsDUneJournee;
+        ProblemeHebdo->NumeroDeJourDuPasDeTemps[PdtHebdo] = (int)floor(X);
+    }
+    return;
 }
-return;
-}
 
-
-
-void OPT_NumeroDIntervalleOptimiseDuPasDeTemps( PROBLEME_HEBDO * ProblemeHebdo )
+void OPT_NumeroDIntervalleOptimiseDuPasDeTemps(PROBLEME_HEBDO* ProblemeHebdo)
 {
-double X; int PdtHebdo;
-for ( PdtHebdo = 0 ; PdtHebdo < ProblemeHebdo->NombreDePasDeTemps ; PdtHebdo++ ) {
-	X = PdtHebdo / ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-	ProblemeHebdo->NumeroDIntervalleOptimiseDuPasDeTemps[PdtHebdo] = (int) floor(X);	
-}
-return;
+    double X;
+    int PdtHebdo;
+    for (PdtHebdo = 0; PdtHebdo < ProblemeHebdo->NombreDePasDeTemps; PdtHebdo++)
+    {
+        X = PdtHebdo / ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+        ProblemeHebdo->NumeroDIntervalleOptimiseDuPasDeTemps[PdtHebdo] = (int)floor(X);
+    }
+    return;
 }

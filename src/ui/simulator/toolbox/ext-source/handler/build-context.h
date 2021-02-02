@@ -25,10 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_EXT_SOURCE_HANDLER_BUILD_CONTEXT_H__
-# define __ANTARES_TOOLBOX_EXT_SOURCE_HANDLER_BUILD_CONTEXT_H__
+#define __ANTARES_TOOLBOX_EXT_SOURCE_HANDLER_BUILD_CONTEXT_H__
 
-# include <antares/study/study.h>
-
+#include <antares/study/study.h>
 
 namespace Antares
 {
@@ -36,56 +35,50 @@ namespace ExtSource
 {
 namespace Handler
 {
+class BuildContext
+{
+public:
+    //! Set of area' names
+    typedef std::set<Data::AreaName> AreaSet;
+    typedef std::map<Data::AreaName, std::map<Data::AreaName, bool>> LinkSet;
+    typedef std::map<Data::AreaName, std::map<Data::ThermalClusterName, bool>> ThermalClusterSet;
+    typedef std::set<Yuni::String> ConstraintSet;
 
+public:
+    //! \name Constructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    BuildContext();
+    //@}
 
-	class BuildContext
-	{
-	public:
-		//! Set of area' names
-		typedef std::set<Data::AreaName> AreaSet;
-		typedef std::map<Data::AreaName, std::map<Data::AreaName, bool> > LinkSet;
-		typedef std::map<Data::AreaName, std::map<Data::ThermalClusterName, bool> > ThermalClusterSet;
-		typedef std::set<Yuni::String>  ConstraintSet;
+    /*!
+    ** \brief Check if the items copied are strictly equivalent to the current user selection
+    */
+    bool checkIdentity();
 
-	public:
-		//! \name Constructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		BuildContext();
-		//@}
+    /*!
+    ** \brief Check if the paste can be done
+    */
+    bool checkIntegrity(bool forceDialog);
 
-		/*!
-		** \brief Check if the items copied are strictly equivalent to the current user selection
-		*/
-		bool checkIdentity() ;
+public:
+    //! All areas
+    Data::Area::NameSet area;
+    LinkSet link;
+    ThermalClusterSet cluster;
+    ConstraintSet constraint;
 
-		/*!
-		** \brief Check if the paste can be done
-		*/
-		bool checkIntegrity(bool forceDialog);
+    std::map<Data::AreaName, Data::AreaName> forceAreaName;
 
-	public:
-		//! All areas
-		Data::Area::NameSet area;
-		LinkSet  link;
-		ThermalClusterSet cluster;
-		ConstraintSet constraint;
+    bool shouldOverwriteArea;
 
-		std::map<Data::AreaName, Data::AreaName> forceAreaName;
+    //! Flag to determine whether the source study was modified when copied
+    // This flag is required to prevent against invalid copy from another instance
+    bool modifiedWhenCopied;
 
-		bool shouldOverwriteArea;
-
-		//! Flag to determine whether the source study was modified when copied
-		// This flag is required to prevent against invalid copy from another instance
-		bool modifiedWhenCopied;
-
-	}; // class BuildContext
-
-
-
-
+}; // class BuildContext
 
 } // namespace Handler
 } // namespace ExtSource

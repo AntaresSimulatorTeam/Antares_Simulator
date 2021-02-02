@@ -24,96 +24,101 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-# ifndef __SOLVER_H2O_M_STRUCTURE_INTERNE__
-# define __SOLVER_H2O_M_STRUCTURE_INTERNE__
+#ifndef __SOLVER_H2O_M_STRUCTURE_INTERNE__
+#define __SOLVER_H2O_M_STRUCTURE_INTERNE__
 
-# include "h2o_m_sys.h"
+#include "h2o_m_sys.h"
 
-# define LINFINI 1.e+80
+#define LINFINI 1.e+80
 
 /*--------------------------------------------------------------------------------------*/
 /* Matrice des contraintes: il y aura une seule instance pour tous les reservoirs */
 /* Dans ce struct il n'y a que des donnees qui sont lues et surtout pas ecrites   */
 /* Ce struct est instancie une seule fois                                         */
-typedef struct {
-  int       NombreDeVariables;
-  double *  CoutLineaire;
-  int *     TypeDeVariable;/* Indicateur du type de variable, il ne doit prendre que les suivantes
-                             (voir le fichier spx_constantes_externes.h mais ne jamais utiliser les valeurs
-			                        explicites des constantes):
-                              VARIABLE_FIXE                  ,
-                              VARIABLE_BORNEE_DES_DEUX_COTES ,
-                              VARIABLE_BORNEE_INFERIEUREMENT ,
-                              VARIABLE_BORNEE_SUPERIEUREMENT ,
-                              VARIABLE_NON_BORNEE
-                                             */
-  /* La matrice des contraintes */
-  int      NombreDeContraintes;
-  char *   Sens;
-  int *    IndicesDebutDeLigne;
-  int *    NombreDeTermesDesLignes;
-  double * CoefficientsDeLaMatriceDesContraintes;
-  int *    IndicesColonnes;
-  int      NombreDeTermesAlloues;
+typedef struct
+{
+    int NombreDeVariables;
+    double* CoutLineaire;
+    int* TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les suivantes
+                           (voir le fichier spx_constantes_externes.h mais ne jamais utiliser les
+                           valeurs explicites des constantes): VARIABLE_FIXE                  ,
+                            VARIABLE_BORNEE_DES_DEUX_COTES ,
+                            VARIABLE_BORNEE_INFERIEUREMENT ,
+                            VARIABLE_BORNEE_SUPERIEUREMENT ,
+                            VARIABLE_NON_BORNEE
+                                           */
+    /* La matrice des contraintes */
+    int NombreDeContraintes;
+    char* Sens;
+    int* IndicesDebutDeLigne;
+    int* NombreDeTermesDesLignes;
+    double* CoefficientsDeLaMatriceDesContraintes;
+    int* IndicesColonnes;
+    int NombreDeTermesAlloues;
 } PROBLEME_LINEAIRE_PARTIE_FIXE;
 
 /* Partie variable renseignee avant le lancement de l'optimisation de chaque reservoir */
-typedef struct {
-  /* Donnees variables de la matrice des contraintes */
-  /* On met quand-meme les bornes dans la partie variable pour le cas ou on voudrait avoir
-	   un jour des bornes min et max variables dans le temps et en fonction des reservoirs */
-  double *  Xmin;
-  double *  Xmax;
-  double *  SecondMembre;
-  /* Tableau de pointeur a des doubles. Ce tableau est parallele a X, il permet
-     de renseigner directement les structures de description du reseau avec les
-     resultats contenus dans X */
-  double ** AdresseOuPlacerLaValeurDesVariablesOptimisees;
-  /* Resultat */
-  double * X;
-  /* En Entree ou en Sortie */
-  int   ExistenceDUneSolution; /* En sortie, vaut :
+typedef struct
+{
+    /* Donnees variables de la matrice des contraintes */
+    /* On met quand-meme les bornes dans la partie variable pour le cas ou on voudrait avoir
+             un jour des bornes min et max variables dans le temps et en fonction des reservoirs */
+    double* Xmin;
+    double* Xmax;
+    double* SecondMembre;
+    /* Tableau de pointeur a des doubles. Ce tableau est parallele a X, il permet
+       de renseigner directement les structures de description du reseau avec les
+       resultats contenus dans X */
+    double** AdresseOuPlacerLaValeurDesVariablesOptimisees;
+    /* Resultat */
+    double* X;
+    /* En Entree ou en Sortie */
+    int ExistenceDUneSolution; /* En sortie, vaut :
                                   OUI_SPX s'il y a une solution,
-				                          NON_SPX s'il n'y a pas de solution admissible
-                                  SPX_ERREUR_INTERNE si probleme a l'execution (saturation memoire par exemple), et 
-				                          dans ce cas il n'y a pas de solution
-				                          SPX_MATRICE_DE_BASE_SINGULIERE si on n'a pas pu construire de matrice de base reguliere,
-				                          et dans ce cas il n'y a pas de solution
-			                         */
+                                                          NON_SPX s'il n'y a pas de solution
+                                  admissible SPX_ERREUR_INTERNE si probleme a l'execution
+                                  (saturation memoire par exemple), et dans ce cas il n'y a pas de
+                                  solution SPX_MATRICE_DE_BASE_SINGULIERE si on n'a pas pu
+                                  construire de matrice de base reguliere, et dans ce cas il n'y a
+                                  pas de solution
+                                                 */
 
-  int * PositionDeLaVariable;            /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-  int * ComplementDeLaBase;            	 /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-	double * CoutsReduits;                 /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
-	double * CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer les couts marginaux */
+    int* PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+    int* ComplementDeLaBase;   /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+    double* CoutsReduits;      /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
+    double* CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer les couts
+                                             marginaux */
 } PROBLEME_LINEAIRE_PARTIE_VARIABLE;
 
 /* Les correspondances des variables */
-typedef struct {
-	int * NumeroDeVariableVolume;  /* Volumes */
-	int * NumeroDeVariableTurbine; /* Turbines */
-	int * NumeroDeVariableDepassementVolumeMax; /* Depassement du volume max */
-	int * NumeroDeVariableDepassementVolumeMin; /* Depassement du volume min */
-	int	  NumeroDeLaVariableViolMaxVolumeMin;	// Depassement max du volume min
-	int * NumeroDeVariableDEcartPositifAuTurbineCible; /* Ecart positif au volume cible */
-	int * NumeroDeVariableDEcartNegatifAuTurbineCible; /* Ecart negatif au volume cible */
-	int   NumeroDeLaVariableXi; /* Variable decrivant l'ecart max au turbine cible */
+typedef struct
+{
+    int* NumeroDeVariableVolume;                      /* Volumes */
+    int* NumeroDeVariableTurbine;                     /* Turbines */
+    int* NumeroDeVariableDepassementVolumeMax;        /* Depassement du volume max */
+    int* NumeroDeVariableDepassementVolumeMin;        /* Depassement du volume min */
+    int NumeroDeLaVariableViolMaxVolumeMin;           // Depassement max du volume min
+    int* NumeroDeVariableDEcartPositifAuTurbineCible; /* Ecart positif au volume cible */
+    int* NumeroDeVariableDEcartNegatifAuTurbineCible; /* Ecart negatif au volume cible */
+    int NumeroDeLaVariableXi; /* Variable decrivant l'ecart max au turbine cible */
 } CORRESPONDANCE_DES_VARIABLES;
 
 /* Structure uniquement exploitee par l'optimisation (donc a ne pas acceder depuis l'exterieur) */
-typedef struct {
-	int NombreDeReservoirs;
-  char LesCoutsOntEteInitialises; /* Vaut OUI ou NON */
+typedef struct
+{
+    int NombreDeReservoirs;
+    char LesCoutsOntEteInitialises; /* Vaut OUI ou NON */
 
-	CORRESPONDANCE_DES_VARIABLES *   CorrespondanceDesVariables;
+    CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables;
 
-  PROBLEME_LINEAIRE_PARTIE_FIXE * ProblemeLineairePartieFixe;
-  PROBLEME_LINEAIRE_PARTIE_VARIABLE * ProblemeLineairePartieVariable;
-	
-  void ** ProblemeSpx; /* Il y en a 1 par reservoir */
-  void *  Probleme;    /* Le probleme en cours passe au simplexe */
+    PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe;
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
 
-  double CoutDeLaSolution;
-	
+    void** ProblemeSpx; /* Il y en a 1 par reservoir */
+    void* Probleme;     /* Le probleme en cours passe au simplexe */
+
+    double CoutDeLaSolution;
+
 } PROBLEME_HYDRAULIQUE;
 
-# endif
+#endif

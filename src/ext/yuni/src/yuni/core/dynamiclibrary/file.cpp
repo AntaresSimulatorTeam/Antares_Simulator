@@ -11,248 +11,219 @@
 #include "../system/windows.hdr.h"
 #include "file.h"
 #ifndef YUNI_OS_WINDOWS
-# include <dlfcn.h>
+#include <dlfcn.h>
 #else
-# include "../../core/string/wstring.h"
+#include "../../core/string/wstring.h"
 #endif
 #include <stdio.h>
 #include "../../io/file.h"
 #include "../../io/directory.h"
 
-
 #ifdef YUNI_OS_WINDOWS
-# define YUNI_DYNLIB_DLOPEN(X)      ::LoadLibraryW(X)
+#define YUNI_DYNLIB_DLOPEN(X) ::LoadLibraryW(X)
 #else
-# define YUNI_DYNLIB_DLOPEN(X,M)    ::dlopen(X,M)
+#define YUNI_DYNLIB_DLOPEN(X, M) ::dlopen(X, M)
 #endif
 
 #ifdef YUNI_OS_WINDOWS
-# define YUNI_DYNLIB_DLCLOSE(X)     ::FreeLibrary(X)
+#define YUNI_DYNLIB_DLCLOSE(X) ::FreeLibrary(X)
 #else
-# define YUNI_DYNLIB_DLCLOSE(X)     ::dlclose(X)
+#define YUNI_DYNLIB_DLCLOSE(X) ::dlclose(X)
 #endif
 
 #ifdef YUNI_OS_WINDOWS
-# define YUNI_DYNLIB_DLSYM(X, Y)    ::GetProcAddress(X,Y)
+#define YUNI_DYNLIB_DLSYM(X, Y) ::GetProcAddress(X, Y)
 #else
-# define YUNI_DYNLIB_DLSYM(X, Y)    ::dlsym(X,Y)
+#define YUNI_DYNLIB_DLSYM(X, Y) ::dlsym(X, Y)
 #endif
-
-
-
 
 namespace Yuni
 {
 namespace DynamicLibrary
 {
+// Implementation of the static variable
+const File::Handle File::NullHandle = nullptr;
 
+namespace // anonymous
+{
+/*!
+** \brief Try to find a file from a single path, a filename and a prefix
+**
+** \param[out] out A temporary string, where to write the absolute filename
+** \param prefix The prefix to use for the filename
+** \return True if the filename in `s` exists and should be loaded, False otherwise
+**/
+template<class StringT>
+static inline bool FindLibraryFile(StringT& out,
+                                   /*const StringT2& path,*/ const AnyString& filename,
+                                   const char* prefix)
+{
+#define TEST_THEN_LOAD(EXT)            \
+    out.clear();                       \
+    /*if (!path.empty()) */            \
+    /*out << path << IO::Separator; */ \
+    out << prefix << filename << EXT;  \
+    if (IO::File::Exists(out))         \
+    return true
 
-	// Implementation of the static variable
-	const File::Handle File::NullHandle = nullptr;
+#ifdef YUNI_OS_DARWIN
+    TEST_THEN_LOAD(".dylib");
+    TEST_THEN_LOAD(".bundle");
+#endif
 
+#ifdef YUNI_OS_AIX
+    TEST_THEN_LOAD(".a");
+#endif
+#ifdef YUNI_OS_HPUX
+    TEST_THEN_LOAD(".sl");
+#endif
 
-	namespace // anonymous
-	{
+#ifdef YUNI_OS_WINDOWS
+    TEST_THEN_LOAD(".dll");
+#else
+    TEST_THEN_LOAD(".so");
+#endif
 
-		/*!
-		** \brief Try to find a file from a single path, a filename and a prefix
-		**
-		** \param[out] out A temporary string, where to write the absolute filename
-		** \param prefix The prefix to use for the filename
-		** \return True if the filename in `s` exists and should be loaded, False otherwise
-		**/
-		template<class StringT>
-		static inline bool FindLibraryFile(StringT& out, /*const StringT2& path,*/ const AnyString& filename, const char* prefix)
-		{
-			# define TEST_THEN_LOAD(EXT) \
-				out.clear(); \
-				/*if (!path.empty()) */ \
-					/*out << path << IO::Separator; */ \
-				out << prefix << filename << EXT; \
-				if (IO::File::Exists(out)) \
-					return true
+    return false;
+#undef TEST_THEN_LOAD
+}
 
-			# ifdef YUNI_OS_DARWIN
-			TEST_THEN_LOAD(".dylib");
-			TEST_THEN_LOAD(".bundle");
-			# endif
+/*!
+** \brief Try to find a file from a list of paths, a filename and a prefix
+**
+** \return True if the filename in `s` exists and should be loaded, False otherwise
+**/
+static inline bool FindLibrary(String& out, const AnyString& filename)
+{
+    return (FindLibraryFile(out, filename, "lib") or FindLibraryFile(out, filename, ""));
+}
 
-			# ifdef YUNI_OS_AIX
-			TEST_THEN_LOAD(".a");
-			# endif
-			# ifdef YUNI_OS_HPUX
-			TEST_THEN_LOAD(".sl");
-			# endif
+} // anonymous namespace
 
-			# ifdef YUNI_OS_WINDOWS
-			TEST_THEN_LOAD(".dll");
-			# else
-			TEST_THEN_LOAD(".so");
-			# endif
+File::File(const AnyString& filename, Relocation relocation, Visibility visibility) :
+ pHandle(NullHandle)
+{
+    (void)loadFromFile(filename, relocation, visibility);
+}
 
-			return false;
-			# undef TEST_THEN_LOAD
-		}
+File::File(const AnyString& filename) : pHandle(NullHandle)
+{
+    (void)loadFromFile(filename, relocationLazy, visibilityDefault);
+}
 
+File::File() : pHandle(NullHandle)
+{
+}
 
-		/*!
-		** \brief Try to find a file from a list of paths, a filename and a prefix
-		**
-		** \return True if the filename in `s` exists and should be loaded, False otherwise
-		**/
-		static inline bool FindLibrary(String& out, const AnyString& filename)
-		{
-			return (FindLibraryFile(out, filename, "lib") or FindLibraryFile(out, filename, ""));
-		}
+File::~File()
+{
+    if (NullHandle != pHandle)
+        YUNI_DYNLIB_DLCLOSE(pHandle);
+}
 
+bool File::loadFromFile(const AnyString& filename, File::Relocation r, File::Visibility v)
+{
+    // No filename
+    if (not filename.empty())
+    {
+        // If the file name is absolute, there is no need for research
+        if (IO::IsAbsolute(filename))
+            return loadFromRawFilename(filename, r, v);
 
-	} // anonymous namespace
+        // A temporary string, where to write the absolute filename
+        String s;
+        s.reserve(512);
 
+        // Search paths
+        // TODO : find a far more efficient way for doing this
+        if (FindLibrary(s, filename))
+            return loadFromRawFilename(s, r, v);
+    }
 
+    // Make sure the library has been unloaded
+    // This unloading would have been done by `loadFromRawFilename()` if
+    // something was found
+    unload();
+    // We have found nothing :(
+    return false;
+}
 
+void File::unload()
+{
+    if (loaded())
+    {
+        YUNI_DYNLIB_DLCLOSE(pHandle);
+        pHandle = NullHandle;
+        pFilename.clear();
+        pFilename.shrink();
+    }
+}
 
-	File::File(const AnyString& filename, Relocation relocation, Visibility visibility) :
-		pHandle(NullHandle)
-	{
-		(void) loadFromFile(filename, relocation, visibility);
-	}
+#ifdef YUNI_OS_WINDOWS
 
+// Specific implementation for the Windows platform
+bool File::loadFromRawFilename(const AnyString& filename, File::Relocation, File::Visibility)
+{
+    // Unload the library if already loaded
+    unload();
 
-	File::File(const AnyString& filename) :
-		pHandle(NullHandle)
-	{
-		(void) loadFromFile(filename, relocationLazy, visibilityDefault);
-	}
+    if (not filename.empty())
+    {
+        // Loading
+        WString buffer(filename, true);
+        if (buffer.empty())
+            return false;
 
+        pHandle = YUNI_DYNLIB_DLOPEN(buffer.c_str());
+        if (NullHandle != pHandle)
+        {
+            pFilename = filename;
+            return true;
+        }
+    }
+    return false;
+}
 
-	File::File() :
-		pHandle(NullHandle)
-	{}
+#else
 
+// Specific implementation for the Unix platforms
+bool File::loadFromRawFilename(const AnyString& filename, File::Relocation r, File::Visibility v)
+{
+    // Unload the library if already loaded
+    unload();
 
-	File::~File()
-	{
-		if (NullHandle != pHandle)
-			YUNI_DYNLIB_DLCLOSE(pHandle);
-	}
+    if (not filename.empty())
+    {
+        // The mode
+        int mode = ((relocationLazy == r) ? RTLD_LAZY : RTLD_NOW);
+        if (visibilityDefault != v)
+            mode |= ((visibilityGlobal == v) ? RTLD_GLOBAL : RTLD_LOCAL);
 
+        // Loading
+        pHandle = YUNI_DYNLIB_DLOPEN(filename.c_str(), mode);
+        if (NullHandle != pHandle)
+        {
+            pFilename = filename;
+            return true;
+        }
+    }
+    return false;
+}
 
-	bool File::loadFromFile(const AnyString& filename, File::Relocation r, File::Visibility v)
-	{
-		// No filename
-		if (not filename.empty())
-		{
-			// If the file name is absolute, there is no need for research
-			if (IO::IsAbsolute(filename))
-				return loadFromRawFilename(filename, r, v);
+#endif
 
-			// A temporary string, where to write the absolute filename
-			String s;
-			s.reserve(512);
+bool File::hasSymbol(const AnyString& name) const
+{
+    return NullHandle != pHandle
+           and NULL != reinterpret_cast<Symbol::Handle>(YUNI_DYNLIB_DLSYM(pHandle, name.c_str()));
+}
 
-			// Search paths
-			// TODO : find a far more efficient way for doing this
-			if (FindLibrary(s, filename))
-				return loadFromRawFilename(s, r, v);
-		}
-
-		// Make sure the library has been unloaded
-		// This unloading would have been done by `loadFromRawFilename()` if
-		// something was found
-		unload();
-		// We have found nothing :(
-		return false;
-	}
-
-
-	void File::unload()
-	{
-		if (loaded())
-		{
-			YUNI_DYNLIB_DLCLOSE(pHandle);
-			pHandle = NullHandle;
-			pFilename.clear();
-			pFilename.shrink();
-		}
-	}
-
-
-
-
-
-
-	# ifdef YUNI_OS_WINDOWS
-
-	// Specific implementation for the Windows platform
-	bool File::loadFromRawFilename(const AnyString& filename, File::Relocation, File::Visibility)
-	{
-		// Unload the library if already loaded
-		unload();
-
-		if (not filename.empty())
-		{
-			// Loading
-			WString buffer(filename, true);
-			if (buffer.empty())
-				return false;
-
-			pHandle = YUNI_DYNLIB_DLOPEN(buffer.c_str());
-			if (NullHandle != pHandle)
-			{
-				pFilename = filename;
-				return true;
-			}
-		}
-		return false;
-	}
-
-	# else
-
-	// Specific implementation for the Unix platforms
-	bool File::loadFromRawFilename(const AnyString& filename, File::Relocation r, File::Visibility v)
-	{
-		// Unload the library if already loaded
-		unload();
-
-		if (not filename.empty())
-		{
-			// The mode
-			int mode = ((relocationLazy == r) ? RTLD_LAZY : RTLD_NOW);
-			if (visibilityDefault != v)
-				mode |= ((visibilityGlobal == v) ? RTLD_GLOBAL : RTLD_LOCAL);
-
-			// Loading
-			pHandle = YUNI_DYNLIB_DLOPEN(filename.c_str(), mode);
-			if (NullHandle != pHandle)
-			{
-				pFilename = filename;
-				return true;
-			}
-		}
-		return false;
-	}
-
-	# endif
-
-
-
-	bool File::hasSymbol(const AnyString& name) const
-	{
-		return NullHandle != pHandle
-			and NULL != reinterpret_cast<Symbol::Handle>(YUNI_DYNLIB_DLSYM(pHandle, name.c_str()));
-	}
-
-
-	Symbol File::resolve(const AnyString& name) const
-	{
-		return NullHandle != pHandle
-			? reinterpret_cast<Symbol::Handle>(YUNI_DYNLIB_DLSYM(pHandle, name.c_str()))
-			: nullptr;
-	}
-
-
-
+Symbol File::resolve(const AnyString& name) const
+{
+    return NullHandle != pHandle
+             ? reinterpret_cast<Symbol::Handle>(YUNI_DYNLIB_DLSYM(pHandle, name.c_str()))
+             : nullptr;
+}
 
 } // namespace DynamicLibrary
 } // namespace Yuni
-

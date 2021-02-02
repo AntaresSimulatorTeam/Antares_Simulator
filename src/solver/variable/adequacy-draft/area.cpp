@@ -28,6 +28,5 @@
 #include <antares/study/memory-usage.h>
 #include "all.h"
 
-
-#define NEXTTYPE  AdequacyDraft::VariablesPerArea
+#define NEXTTYPE AdequacyDraft::VariablesPerArea
 #include "../area.inc.hxx"

@@ -25,13 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_MISC_GETOPT_H__
-# define __SOLVER_MISC_GETOPT_H__
+#define __SOLVER_MISC_GETOPT_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-# include <antares/study/study.h>
-
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+#include <antares/study/study.h>
 
 /*!
 ** \brief Command line settings for launching the simulation
@@ -39,42 +37,37 @@
 class Settings
 {
 public:
-	//! Where is my study
-	YString studyFolder;
-	//! Name of the simulation
-	Yuni::CString<150, false> simulationName;
-	//! Comment file
-	YString commentFile;
+    //! Where is my study
+    YString studyFolder;
+    //! Name of the simulation
+    Yuni::CString<150, false> simulationName;
+    //! Comment file
+    YString commentFile;
 
-	//! Simplex optimizatio range
-	Yuni::CString<32,false>  simplexOptimRange;
+    //! Simplex optimizatio range
+    Yuni::CString<32, false> simplexOptimRange;
 
-	//! Ignore error/warnings
-	int ignoreWarningsErrors;
-	//! Ignore constraints
-	bool ignoreConstraints;
-	//!
-	bool tsGeneratorsOnly;
-	//! True to disable the writing in the output folder
-	bool noOutput;
-	//! Progression
-	bool displayProgression;
-	//! Swap folder
-	Yuni::String swap;
+    //! Ignore error/warnings
+    int ignoreWarningsErrors;
+    //! Ignore constraints
+    bool ignoreConstraints;
+    //!
+    bool tsGeneratorsOnly;
+    //! True to disable the writing in the output folder
+    bool noOutput;
+    //! Progression
+    bool displayProgression;
+    //! Swap folder
+    Yuni::String swap;
 
 }; // class Settings
-
-
-
-
-
 
 /*!
 ** \brief Interprete options given in command line
 */
-bool GrabOptionsFromCommandLine(int argc, char* argv[], Settings& settings,
-	Antares::Data::StudyLoadOptions& options);
-
-
+bool GrabOptionsFromCommandLine(int argc,
+                                char* argv[],
+                                Settings& settings,
+                                Antares::Data::StudyLoadOptions& options);
 
 #endif /* __SOLVER_MISC_GETOPT_H__ */

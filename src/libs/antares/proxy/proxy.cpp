@@ -46,289 +46,285 @@
 using namespace Yuni;
 
 #define SEP Yuni::IO::Separator
-#define BUFSIZE 256 
+#define BUFSIZE 256
 
 namespace Antares
 {
+//! Global mutex for proxy
+Yuni::Mutex ProxyMutex;
 
-	//! Global mutex for proxy
-	Yuni::Mutex ProxyMutex;
+static inline void obfuscate(YString& out, YString& value)
+{
+    // preparing the message
+    Clob message;
+    message = value;
 
-	static inline void obfuscate(YString& out, YString& value)
-	{
-		// preparing the message
-		Clob message;
-		message = value;
-		
-		// encrypting the message with the key 
-		License::EncryptionKey enckey;
-		enckey.key = "ENId99w5R466zoQt";
-		enckey.iv.assign("ENId99w5R466zoQt", enckey.key.size());
-		
-		// -1- encrypt
-		Clob encrypted;
-		encrypted.reserve(message.size()*2+enckey.key.size()*2);
-		Encrypt(encrypted, message, enckey);
-		
-		String encoded;
-		encoded.reserve(encrypted.size());
+    // encrypting the message with the key
+    License::EncryptionKey enckey;
+    enckey.key = "ENId99w5R466zoQt";
+    enckey.iv.assign("ENId99w5R466zoQt", enckey.key.size());
 
-		// -2- encode
-		base64_encodestate state;
-		base64_init_encodestate(&state);
+    // -1- encrypt
+    Clob encrypted;
+    encrypted.reserve(message.size() * 2 + enckey.key.size() * 2);
+    Encrypt(encrypted, message, enckey);
 
-		auto length = base64_encode_block(encrypted.c_str(), encrypted.size(), encoded.data(), &state);
-		length += base64_encode_blockend(encoded.data() + length, &state);
-		encoded.resize(length);
+    String encoded;
+    encoded.reserve(encrypted.size());
 
-		out = encoded;
+    // -2- encode
+    base64_encodestate state;
+    base64_init_encodestate(&state);
 
-		/*static const AnyString& keyCBF64 = "ENId99w5R466zoQt";
-		static const AnyString& ivecStr = "ENId99w5R466zoQt";
-	
-		int len;
-		int n = 0;
-		out.resize(BUFSIZE);
+    auto length = base64_encode_block(encrypted.c_str(), encrypted.size(), encoded.data(), &state);
+    length += base64_encode_blockend(encoded.data() + length, &state);
+    encoded.resize(length);
 
-		DES_cblock ivec;
-		DES_key_schedule keySchedule;
+    out = encoded;
 
-		// Converting the key into architecture dependent format 
-		DES_set_key_checked((C_Block *)keyCBF64.c_str(), &keySchedule);
+    /*static const AnyString& keyCBF64 = "ENId99w5R466zoQt";
+    static const AnyString& ivecStr = "ENId99w5R466zoQt";
 
-		memcpy(ivec, (C_Block *)ivecStr.c_str(), sizeof(ivec));
-		len = value.size() + 1;
+    int len;
+    int n = 0;
+    out.resize(BUFSIZE);
 
-		// Encryption
-		DES_cfb64_encrypt((const unsigned char*)value.c_str(), (unsigned char*)out.data(), len, &keySchedule, &ivec, &n, DES_ENCRYPT);
-		*/
-		
-	}
+    DES_cblock ivec;
+    DES_key_schedule keySchedule;
 
-	static inline void deobfuscate(YString& out, YString& value)
-	{
-		// decrypting the message with the key
-		License::EncryptionKey enckey;
-		enckey.key = "ENId99w5R466zoQt";
-		enckey.iv.assign("ENId99w5R466zoQt", enckey.key.size());
-		
-		// -1- decode
-		// the real message to decipher
-		String decoded;
-		decoded.reserve(value.size());
-		
-		base64_decodestate state;
-		base64_init_decodestate(&state);
-		auto length = base64_decode_block(value.c_str(), value.size(), decoded.data(), &state);
-		
-		assert((uint) length < decoded.capacity());
-		decoded.resize(length);
+    // Converting the key into architecture dependent format
+    DES_set_key_checked((C_Block *)keyCBF64.c_str(), &keySchedule);
 
-		// -2- decrypt
-		String decrypted;
-		decrypted.reserve(decoded.size());
-		License::Decrypt(decrypted, decoded, enckey);
-		
-		out = decrypted;
+    memcpy(ivec, (C_Block *)ivecStr.c_str(), sizeof(ivec));
+    len = value.size() + 1;
 
-		/*static const AnyString& keyCBF64 = "ENId99w5R466zoQt";
-		static const AnyString& ivecStr = "ENId99w5R466zoQt";
+    // Encryption
+    DES_cfb64_encrypt((const unsigned char*)value.c_str(), (unsigned char*)out.data(), len,
+    &keySchedule, &ivec, &n, DES_ENCRYPT);
+    */
+}
 
-		out.resize(BUFSIZE);
+static inline void deobfuscate(YString& out, YString& value)
+{
+    // decrypting the message with the key
+    License::EncryptionKey enckey;
+    enckey.key = "ENId99w5R466zoQt";
+    enckey.iv.assign("ENId99w5R466zoQt", enckey.key.size());
 
-		int len;
-		int n = 0;
+    // -1- decode
+    // the real message to decipher
+    String decoded;
+    decoded.reserve(value.size());
 
-		if( !value.empty() )
-		{
-			len = value.size() + 1;
+    base64_decodestate state;
+    base64_init_decodestate(&state);
+    auto length = base64_decode_block(value.c_str(), value.size(), decoded.data(), &state);
 
-			DES_cblock ivec;
-			DES_key_schedule keySchedule;
+    assert((uint)length < decoded.capacity());
+    decoded.resize(length);
 
-			// Converting the key into architecture dependent format 
-			DES_set_key_checked((C_Block *)keyCBF64.c_str(), &keySchedule);
+    // -2- decrypt
+    String decrypted;
+    decrypted.reserve(decoded.size());
+    License::Decrypt(decrypted, decoded, enckey);
 
-			memcpy(ivec, (C_Block *)ivecStr.c_str(), sizeof(ivec));
-		
-			// Unciphering
-			DES_cfb64_encrypt((unsigned char*)value.c_str(), (unsigned char*)out.data(), len, &keySchedule, &ivec, &n, DES_DECRYPT);	
-		}
-		*/
-	}
+    out = decrypted;
 
-	static inline bool FindProxyFile(String& filename)
-	{
-		filename.clear();
-		
-		// search or create the directory		
-		if (not OperatingSystem::FindAntaresLocalAppData(filename, false))
-			return false;
-		
-		if (not IO::Directory::Create(filename))
-			return false;
+    /*static const AnyString& keyCBF64 = "ENId99w5R466zoQt";
+    static const AnyString& ivecStr = "ENId99w5R466zoQt";
 
-		// proxy filename
-		filename << SEP << ANTARES_PROXY_PARAMETERS_FILENAME;
-		return true;
-	}
+    out.resize(BUFSIZE);
 
+    int len;
+    int n = 0;
 
-	bool ProxySettings::check()
-	{
-		int intPort;
+    if( !value.empty() )
+    {
+            len = value.size() + 1;
 
-		// Triming settings strings
-		host.trim();
-        host.replace(" ", "");
-        host.trim();
-        host.toLower();
+            DES_cblock ivec;
+            DES_key_schedule keySchedule;
 
-		login.trim();
-		password.trim();
+            // Converting the key into architecture dependent format
+            DES_set_key_checked((C_Block *)keyCBF64.c_str(), &keySchedule);
 
-		port.trim();
-		port.replace(" ", "");
+            memcpy(ivec, (C_Block *)ivecStr.c_str(), sizeof(ivec));
 
-		// Check for missing parameters
-		//if(password.empty()||login.empty()||host.empty()||port.empty())
-		
-		if(host.empty()||port.empty())
-		{
-			return false;
-		}
+            // Unciphering
+            DES_cfb64_encrypt((unsigned char*)value.c_str(), (unsigned char*)out.data(), len,
+    &keySchedule, &ivec, &n, DES_DECRYPT);
+    }
+    */
+}
 
-		if(!port.to<int>(intPort))
-		{
-			return false;
-		}
+static inline bool FindProxyFile(String& filename)
+{
+    filename.clear();
 
-		if((intPort<10) || (intPort>65535))
-		{
-			return false;
-		}
+    // search or create the directory
+    if (not OperatingSystem::FindAntaresLocalAppData(filename, false))
+        return false;
 
-		return true;
-	}
+    if (not IO::Directory::Create(filename))
+        return false;
 
+    // proxy filename
+    filename << SEP << ANTARES_PROXY_PARAMETERS_FILENAME;
+    return true;
+}
 
-	bool ProxySettings::saveProxyFile()
-	{
-		Yuni::MutexLocker locker(ProxyMutex);
+bool ProxySettings::check()
+{
+    int intPort;
 
-		Clob content;
-		String plainCredentials, encCredentials;
+    // Triming settings strings
+    host.trim();
+    host.replace(" ", "");
+    host.trim();
+    host.toLower();
 
-		content << "[proxy]\n";
-		content << "proxy.enabled = " << enabled << '\n';
-		content << "proxy.host  = " << host << '\n';
-		
-		
-		if( !login.empty() )
-		{
-			plainCredentials << login;
+    login.trim();
+    password.trim();
 
-			if( !password.empty())
-			{
-				plainCredentials << ";:;" << password;
-			}
+    port.trim();
+    port.replace(" ", "");
 
-			obfuscate(encCredentials, plainCredentials);
-			content << "proxy.credentials = " << encCredentials << '\n';
-		}
-		
-		content << "proxy.port = " << port << '\n';
+    // Check for missing parameters
+    // if(password.empty()||login.empty()||host.empty()||port.empty())
 
-		// search or create the directory
-		String filename;
-		if (not FindProxyFile(filename))
-		{	
-			logs.error() << "impossible to create the proxy directory. Please check your user account privileges";
-			return false;
-		}
+    if (host.empty() || port.empty())
+    {
+        return false;
+    }
 
-		return IO::File::SetContent(filename, content);
-	}
+    if (!port.to<int>(intPort))
+    {
+        return false;
+    }
 
+    if ((intPort < 10) || (intPort > 65535))
+    {
+        return false;
+    }
 
-	bool ProxySettings::loadProxyFile()
-	{
-		Yuni::MutexLocker locker(ProxyMutex);
+    return true;
+}
 
-		// search the proxy file
-		String filename;
-		if (not FindProxyFile(filename))
-			return false;
+bool ProxySettings::saveProxyFile()
+{
+    Yuni::MutexLocker locker(ProxyMutex);
 
-		String encCredentials, plainCredentials, encPass;
-		IniFile ini;
-		if (ini.open(filename, false))
-		{
-			for (auto* section = ini.firstSection; section; section = section->next)
-			{
-				for (auto* property = section->firstProperty; property; property = property->next)
-				{
-					auto & key   = property->key;
-					auto & value = property->value;
+    Clob content;
+    String plainCredentials, encCredentials;
 
-					if (key.empty())
-						continue;
+    content << "[proxy]\n";
+    content << "proxy.enabled = " << enabled << '\n';
+    content << "proxy.host  = " << host << '\n';
 
-					if (key == "proxy.enabled")
-					{
-						enabled = value.to<bool>();
-						continue;
-					}
-					if (key == "proxy.host")
-					{
-						host.clear();
-						host = value;
-						host.trim();
-						continue;
-					}
-					if (key == "proxy.port")
-					{
-						port.clear();
-						port = value;
-						continue;
-					}
-					if (key == "proxy.credentials")
-					{
-						encCredentials = value;
-						continue;
-					}
-				}
-			}
+    if (!login.empty())
+    {
+        plainCredentials << login;
 
-			if (not encCredentials.empty())
-			{
-				login.clear();
-				password.clear();
-				deobfuscate(plainCredentials, encCredentials);
+        if (!password.empty())
+        {
+            plainCredentials << ";:;" << password;
+        }
 
-				auto sep = plainCredentials.find(";:;");
-				if (sep != YString::npos)
-				{
-					login = AnyString(plainCredentials, 0, sep);
-					password = AnyString(plainCredentials, sep+3);
-				}
-				else
-					login = plainCredentials;
-			}
-			
-			return true;
-		}
-		else
-		{
-			//clear proxy parameters and disable proxy
-			host.clear();
-			port.clear();
-			login.clear();
-			password.clear();
-			codingType.clear();
-		}
-		return false;
-	}
+        obfuscate(encCredentials, plainCredentials);
+        content << "proxy.credentials = " << encCredentials << '\n';
+    }
+
+    content << "proxy.port = " << port << '\n';
+
+    // search or create the directory
+    String filename;
+    if (not FindProxyFile(filename))
+    {
+        logs.error()
+          << "impossible to create the proxy directory. Please check your user account privileges";
+        return false;
+    }
+
+    return IO::File::SetContent(filename, content);
+}
+
+bool ProxySettings::loadProxyFile()
+{
+    Yuni::MutexLocker locker(ProxyMutex);
+
+    // search the proxy file
+    String filename;
+    if (not FindProxyFile(filename))
+        return false;
+
+    String encCredentials, plainCredentials, encPass;
+    IniFile ini;
+    if (ini.open(filename, false))
+    {
+        for (auto* section = ini.firstSection; section; section = section->next)
+        {
+            for (auto* property = section->firstProperty; property; property = property->next)
+            {
+                auto& key = property->key;
+                auto& value = property->value;
+
+                if (key.empty())
+                    continue;
+
+                if (key == "proxy.enabled")
+                {
+                    enabled = value.to<bool>();
+                    continue;
+                }
+                if (key == "proxy.host")
+                {
+                    host.clear();
+                    host = value;
+                    host.trim();
+                    continue;
+                }
+                if (key == "proxy.port")
+                {
+                    port.clear();
+                    port = value;
+                    continue;
+                }
+                if (key == "proxy.credentials")
+                {
+                    encCredentials = value;
+                    continue;
+                }
+            }
+        }
+
+        if (not encCredentials.empty())
+        {
+            login.clear();
+            password.clear();
+            deobfuscate(plainCredentials, encCredentials);
+
+            auto sep = plainCredentials.find(";:;");
+            if (sep != YString::npos)
+            {
+                login = AnyString(plainCredentials, 0, sep);
+                password = AnyString(plainCredentials, sep + 3);
+            }
+            else
+                login = plainCredentials;
+        }
+
+        return true;
+    }
+    else
+    {
+        // clear proxy parameters and disable proxy
+        host.clear();
+        port.clear();
+        login.clear();
+        password.clear();
+        codingType.clear();
+    }
+    return false;
+}
 
 } // namespace Antares
-

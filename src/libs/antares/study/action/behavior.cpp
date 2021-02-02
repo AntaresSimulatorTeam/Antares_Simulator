@@ -29,27 +29,16 @@
 #include "behavior.h"
 #include <cassert>
 
-
 namespace Antares
 {
 namespace Action
 {
-
-
-	const char* BehaviorToString(Behavior behavior)
-	{
-		static const char* const str[] =
-		{
-			"skip",
-			"merge",
-			"overwrite"
-		};
-		assert((uint) behavior < (uint) bhMax);
-		return str[(uint) behavior];
-	}
-
-
+const char* BehaviorToString(Behavior behavior)
+{
+    static const char* const str[] = {"skip", "merge", "overwrite"};
+    assert((uint)behavior < (uint)bhMax);
+    return str[(uint)behavior];
+}
 
 } // namespace Action
 } // namespace Antares
-

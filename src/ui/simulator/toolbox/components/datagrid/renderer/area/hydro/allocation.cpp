@@ -31,8 +31,6 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
 namespace Component
@@ -41,142 +39,123 @@ namespace Datagrid
 {
 namespace Renderer
 {
+HydroAllocation::HydroAllocation()
+{
+}
 
+HydroAllocation::~HydroAllocation()
+{
+}
 
-	HydroAllocation::HydroAllocation()
-	{}
+bool HydroAllocation::valid() const
+{
+    return Data::Study::Current::Valid();
+}
 
+int HydroAllocation::width() const
+{
+    auto study = Data::Study::Current::Get();
+    return !(!study) ? study->areas.size() : 0;
+}
 
-	HydroAllocation::~HydroAllocation()
-	{
-	}
+int HydroAllocation::height() const
+{
+    auto study = Data::Study::Current::Get();
+    return !(!study) ? study->areas.size() : 0;
+}
 
+wxString HydroAllocation::columnCaption(int colIndx) const
+{
+    auto study = Data::Study::Current::Get();
+    return (study && (uint)colIndx < study->areas.size())
+             ? wxStringFromUTF8(" hydro \n " + study->areas[colIndx]->name)
+             : wxString(); // MBO 21/05/2014 - #22
+}
 
-	bool HydroAllocation::valid() const
-	{
-		return Data::Study::Current::Valid();
-	}
+wxString HydroAllocation::rowCaption(int rowIndx) const
+{
+    auto study = Data::Study::Current::Get();
+    return (study && (uint)rowIndx < study->areas.size())
+             ? wxStringFromUTF8("load " + study->areas[rowIndx]->name)
+             : wxString(); // MBO 21/05/2014 - #22
+}
 
+wxString HydroAllocation::cellValue(int x, int y) const
+{
+    auto study = Data::Study::Current::Get();
+    if (!(!study))
+    {
+        auto colArea = (uint)x;
+        auto rowArea = (uint)y;
+        auto areaCount = study->areas.size();
+        if (colArea < areaCount && rowArea < areaCount)
+        {
+            auto& area = *(study->areas[colArea]);
+            auto& target = *(study->areas[rowArea]);
+            double v = area.hydro.allocation[target];
+            if (!Math::Zero(v))
+                return DoubleToWxString(v);
+        }
+    }
+    static const wxString zero = wxT("0");
+    return zero;
+}
 
-	int HydroAllocation::width() const
-	{
-		auto study = Data::Study::Current::Get();
-		return !(!study) ? study->areas.size() : 0;
-	}
+double HydroAllocation::cellNumericValue(int x, int y) const
+{
+    auto study = Data::Study::Current::Get();
+    if (!(!study))
+    {
+        auto colArea = (uint)x;
+        auto rowArea = (uint)y;
+        auto areaCount = study->areas.size();
+        if (colArea < areaCount && rowArea < areaCount)
+        {
+            auto& area = *(study->areas[colArea]);
+            auto& target = *(study->areas[rowArea]);
+            return area.hydro.allocation[target];
+        }
+    }
+    return 0;
+}
 
+bool HydroAllocation::cellValue(int x, int y, const String& value)
+{
+    double v;
+    if (!value.to(v))
+        return false;
 
-	int HydroAllocation::height() const
-	{
-		auto study = Data::Study::Current::Get();
-		return !(!study) ? study->areas.size() : 0;
-	}
+    auto study = Data::Study::Current::Get();
+    if (!(!study))
+    {
+        auto colArea = (uint)x;
+        auto rowArea = (uint)y;
+        auto areaCount = study->areas.size();
+        if (colArea < areaCount && rowArea < areaCount)
+        {
+            auto& area = *(study->areas[colArea]);
+            auto& target = *(study->areas[rowArea]);
+            area.hydro.allocation.fromArea(target, v);
+            return true;
+        }
+    }
+    return false;
+}
 
-
-	wxString HydroAllocation::columnCaption(int colIndx) const
-	{
-		auto study = Data::Study::Current::Get();
-		return (study && (uint) colIndx < study->areas.size())
-			? wxStringFromUTF8(" hydro \n " + study->areas[colIndx]->name) 
-			: wxString(); // MBO 21/05/2014 - #22
-	}
-
-
-	wxString HydroAllocation::rowCaption(int rowIndx) const
-	{
-		auto study = Data::Study::Current::Get();
-		return (study && (uint) rowIndx < study->areas.size())
-			? wxStringFromUTF8("load " + study->areas[rowIndx]->name)
-			: wxString();  // MBO 21/05/2014 - #22
-	}
-
-
-	wxString HydroAllocation::cellValue(int x, int y) const
-	{
-		auto study = Data::Study::Current::Get();
-		if (!(!study))
-		{
-			auto colArea = (uint) x;
-			auto rowArea = (uint) y;
-			auto areaCount = study->areas.size();
-			if (colArea < areaCount && rowArea < areaCount)
-			{
-				auto& area   = *(study->areas[colArea]);
-				auto& target = *(study->areas[rowArea]);
-				double v = area.hydro.allocation[target];
-				if (!Math::Zero(v))
-					return DoubleToWxString(v);
-			}
-		}
-		static const wxString zero = wxT("0");
-		return zero;
-	}
-
-
-	double HydroAllocation::cellNumericValue(int x, int y) const
-	{
-		auto study = Data::Study::Current::Get();
-		if (!(!study))
-		{
-			auto colArea = (uint) x;
-			auto rowArea = (uint) y;
-			auto areaCount = study->areas.size();
-			if (colArea < areaCount && rowArea < areaCount)
-			{
-				auto& area = *(study->areas[colArea]);
-				auto& target = *(study->areas[rowArea]);
-				return area.hydro.allocation[target];
-			}
-		}
-		return 0;
-	}
-
-
-	bool HydroAllocation::cellValue(int x, int y, const String& value)
-	{
-		double v;
-		if (!value.to(v))
-			return false;
-
-		auto study = Data::Study::Current::Get();
-		if (!(!study))
-		{
-			auto colArea = (uint) x;
-			auto rowArea = (uint) y;
-			auto areaCount = study->areas.size();
-			if (colArea < areaCount && rowArea < areaCount)
-			{
-				auto& area   = *(study->areas[colArea]);
-				auto& target = *(study->areas[rowArea]);
-				area.hydro.allocation.fromArea(target, v);
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-
-	IRenderer::CellStyle HydroAllocation::cellStyle(int col, int row) const
-	{
-		if (Math::Zero(cellNumericValue(col, row)))
-		{
-			return ! (col % 2)
-				? IRenderer::cellStyleDefaultCenterDisabled
-				: IRenderer::cellStyleDefaultCenterAlternateDisabled;
-		}
-		else
-		{
-			return IRenderer::cellStyleConstraintWeight;
-		}
-	}
-
-
-
-
-
+IRenderer::CellStyle HydroAllocation::cellStyle(int col, int row) const
+{
+    if (Math::Zero(cellNumericValue(col, row)))
+    {
+        return !(col % 2) ? IRenderer::cellStyleDefaultCenterDisabled
+                          : IRenderer::cellStyleDefaultCenterAlternateDisabled;
+    }
+    else
+    {
+        return IRenderer::cellStyleConstraintWeight;
+    }
+}
 
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
 } // namespace Antares
-

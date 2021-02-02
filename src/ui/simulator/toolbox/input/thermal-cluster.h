@@ -25,21 +25,19 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_INPUT_THERMAL_CLUSTER_H__
-# define __ANTARES_TOOLBOX_INPUT_THERMAL_CLUSTER_H__
+#define __ANTARES_TOOLBOX_INPUT_THERMAL_CLUSTER_H__
 
-# include <antares/wx-wrapper.h>
-# include <yuni/core/event.h>
-# include <antares/study.h>
-# include "input.h"
-# include "area.h"
-# include <wx/panel.h>
-# include <wx/arrstr.h>
-# include <wx/stattext.h>
-# include <wx/imaglist.h>
-# include "../components/htmllistbox/component.h"
-# include "../components/htmllistbox/item/thermal-cluster.h"
-
-
+#include <antares/wx-wrapper.h>
+#include <yuni/core/event.h>
+#include <antares/study.h>
+#include "input.h"
+#include "area.h"
+#include <wx/panel.h>
+#include <wx/arrstr.h>
+#include <wx/stattext.h>
+#include <wx/imaglist.h>
+#include "../components/htmllistbox/component.h"
+#include "../components/htmllistbox/item/thermal-cluster.h"
 
 namespace Antares
 {
@@ -47,120 +45,117 @@ namespace Toolbox
 {
 namespace InputSelector
 {
+/*!
+** \brief Visual Component for displaying thermal clusters of an arbitrary area
+*/
+class ThermalCluster final : public AInput, public Yuni::IEventObserver<ThermalCluster>
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    ThermalCluster(wxWindow* parent, InputSelector::Area* area);
+    //! Destructor
+    virtual ~ThermalCluster();
+    //@}
 
+    virtual void update();
 
-	/*!
-	** \brief Visual Component for displaying thermal clusters of an arbitrary area
-	*/
-	class ThermalCluster final : public AInput, public Yuni::IEventObserver<ThermalCluster>
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		ThermalCluster(wxWindow* parent, InputSelector::Area* area);
-		//! Destructor
-		virtual ~ThermalCluster();
-		//@}
+    virtual wxPoint recommendedSize() const
+    {
+        return wxPoint(150, 240);
+    }
 
-		virtual void update();
+    void updateInnerValues();
 
-		virtual wxPoint recommendedSize() const {return wxPoint(150, 240);}
+    /*!
+    ** \brief Rename a thermal cluster and refresh inner values
+    **
+    ** \param cluster The thermal cluster to rename
+    ** \param newName The new name of the thermal cluster
+    ** \param broadcast Trigger the event to tell that the thermal cluster has changed
+    */
+    void renameAggregate(Antares::Data::ThermalCluster* cluster,
+                         const wxString& newName,
+                         const bool broadcast = true);
 
-		void updateInnerValues();
+public:
+    Yuni::Event<void(Antares::Data::ThermalCluster*)> onThermalClusterChanged;
 
-		/*!
-		** \brief Rename a thermal cluster and refresh inner values
-		**
-		** \param cluster The thermal cluster to rename
-		** \param newName The new name of the thermal cluster
-		** \param broadcast Trigger the event to tell that the thermal cluster has changed
-		*/
-		void renameAggregate(Antares::Data::ThermalCluster* cluster, const wxString& newName, const bool broadcast = true);
+protected:
+    /*!
+    ** \brief Create all needed controls (called by the constructor)
+    */
+    virtual void internalBuildSubControls();
+    //! Event: a group has been changed
+    void onThermalGroupChanged(Antares::Data::Area* area);
 
-	public:
-		Yuni::Event<void (Antares::Data::ThermalCluster*)> onThermalClusterChanged;
+private:
+    /*!
+    ** \brief Event: The parent area has changed
+    ** \param area The new parent area (can be NULL)
+    */
+    void areaHasChanged(Antares::Data::Area* area);
 
-	protected:
-		/*!
-		** \brief Create all needed controls (called by the constructor)
-		*/
-		virtual void internalBuildSubControls();
-		//! Event: a group has been changed
-		void onThermalGroupChanged(Antares::Data::Area* area);
+    //! End update of the study
+    void onStudyEndUpdate();
 
-	private:
-		/*!
-		** \brief Event: The parent area has changed
-		** \param area The new parent area (can be NULL)
-		*/
-		void areaHasChanged(Antares::Data::Area* area);
+    //! Create a new thermal cluster
+    void internalAddPlant(void*);
+    //! Delete the selection thermal cluster
+    void internalDeletePlant(void*);
+    //! Delete the selection thermal cluster
+    void internalClonePlant(void*);
 
-		//! End update of the study
-		void onStudyEndUpdate();
+    void internalDeleteAll(void*);
 
-		//! Create a new thermal cluster
-		void internalAddPlant(void*);
-		//! Delete the selection thermal cluster
-		void internalDeletePlant(void*);
-		//! Delete the selection thermal cluster
-		void internalClonePlant(void*);
+    /*!
+    ** \brief Event: The application is going to quit
+    ** \internal This method prevent against unwanted refresh with dead pointers
+    */
+    void onApplicationOnQuit();
 
-		void internalDeleteAll(void*);
+    /*!
+    ** \brief The study has been closed
+    */
+    void onStudyClosed();
 
-		/*!
-		** \brief Event: The application is going to quit
-		** \internal This method prevent against unwanted refresh with dead pointers
-		*/
-		void onApplicationOnQuit();
+    /*!
+    ** \brief Event: An item has been selected in the listbox
+    ** \param item The selected item
+    */
+    void onThSelected(Component::HTMLListbox::Item::IItem::Ptr item);
 
-		/*!
-		** \brief The study has been closed
-		*/
-		void onStudyClosed();
+    void onStudyThermalClusterCommonSettingsChanged();
 
-		/*!
-		** \brief Event: An item has been selected in the listbox
-		** \param item The selected item
-		*/
-		void onThSelected(Component::HTMLListbox::Item::IItem::Ptr item);
+    void onStudyThermalClusterRenamed(Antares::Data::ThermalCluster* cluster);
 
-		void onStudyThermalClusterCommonSettingsChanged();
+    void onStudyThermalClusterGroupChanged(Antares::Data::Area* area);
 
-		void onStudyThermalClusterRenamed(Antares::Data::ThermalCluster* cluster);
+    void onDeleteDropdown(Antares::Component::Button&, wxMenu& menu, void*);
 
-		void onStudyThermalClusterGroupChanged(Antares::Data::Area* area);
+    void evtPopupDelete(wxCommandEvent&);
+    void evtPopupDeleteAll(wxCommandEvent&);
 
-		void onDeleteDropdown(Antares::Component::Button&, wxMenu& menu, void*);
+    void delayedSelection(Component::HTMLListbox::Item::IItem::Ptr item);
 
-		void evtPopupDelete(wxCommandEvent&);
-		void evtPopupDeleteAll(wxCommandEvent&);
+private:
+    //! The current Area
+    Antares::Data::Area* pArea;
+    //! Label for displaying additional informations (such as the total power in MW)
+    wxStaticText* pTotalMW;
+    //! Image list
+    wxImageList pImageList;
+    //! The listbox (which contain all items)
+    Component::HTMLListbox::Component* pThListbox;
+    //! The area notifier
+    InputSelector::Area* pAreaNotifier;
+    //! The last selected thermal cluster
+    Component::HTMLListbox::Item::ThermalCluster::Ptr pLastSelectedThermalCluster;
 
-		void delayedSelection(Component::HTMLListbox::Item::IItem::Ptr item);
-
-	private:
-		//! The current Area
-		Antares::Data::Area* pArea;
-		//! Label for displaying additional informations (such as the total power in MW)
-		wxStaticText* pTotalMW;
-		//! Image list
-		wxImageList pImageList;
-		//! The listbox (which contain all items)
-		Component::HTMLListbox::Component* pThListbox;
-		//! The area notifier
-		InputSelector::Area* pAreaNotifier;
-		//! The last selected thermal cluster
-		Component::HTMLListbox::Item::ThermalCluster::Ptr pLastSelectedThermalCluster;
-
-	}; // class Area
-
-
-
-
-
-
+}; // class Area
 
 } // namespace InputSelector
 } // namespace Toolbox

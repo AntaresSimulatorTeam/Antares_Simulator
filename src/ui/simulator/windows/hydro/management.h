@@ -25,14 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_HYDROOW_HYDRO_MANAGEMENT_H__
-# define __ANTARES_APPLICATION_HYDROOW_HYDRO_MANAGEMENT_H__
+#define __ANTARES_APPLICATION_HYDROOW_HYDRO_MANAGEMENT_H__
 
-# include <antares/wx-wrapper.h>
-# include "../../toolbox/components/datagrid/component.h"
-# include "../../toolbox/input/area.h"
-# include <ui/common/component/panel.h>
-# include "../../toolbox/components/button.h"
-
+#include <antares/wx-wrapper.h>
+#include "../../toolbox/components/datagrid/component.h"
+#include "../../toolbox/input/area.h"
+#include <ui/common/component/panel.h>
+#include "../../toolbox/components/button.h"
 
 namespace Antares
 {
@@ -40,101 +39,95 @@ namespace Window
 {
 namespace Hydro
 {
+class Management : public wxScrolledWindow, public Yuni::IEventObserver<Management>
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    Management(wxWindow* parent, Toolbox::InputSelector::Area* notifier);
+    //! Destructor
+    virtual ~Management();
+    //@}
 
+private:
+    void createComponents();
+    void onStudyClosed();
+    void onAreaChanged(Data::Area* area);
 
-	class Management : public wxScrolledWindow, public Yuni::IEventObserver<Management>
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		Management(wxWindow* parent, Toolbox::InputSelector::Area* notifier);
-		//! Destructor
-		virtual ~Management();
-		//@}
+    void onInterdailyBreakdownChanged(wxCommandEvent& evt);
+    void onIntradailyModulationChanged(wxCommandEvent& evt);
+    void onIntermonthlyBreakdownChanged(wxCommandEvent& evt);
+    void onReservoirCapacityChanged(wxCommandEvent& evt);
+    void onLeewayLowBoundChanged(wxCommandEvent& evt);
+    void onLeewayUpperBoundChanged(wxCommandEvent& evt);
+    void onPumpingEfficiencyChanged(wxCommandEvent& evt);
+    void onToggleReservoirManagement(Component::Button&, wxMenu& menu, void*);
+    void onToggleFollowLoad(Component::Button&, wxMenu& menu, void*);
+    void onToggleUseLeeway(Component::Button&, wxMenu& menu, void*);
+    void onToggleUseWaterValue(Component::Button&, wxMenu& menu, void*);
+    void onToggleHardBoundsOnRuleCurves(Component::Button&, wxMenu& menu, void*);
+    void onToggleInitializeReservoirLevelDate(Component::Button&, wxMenu& menu, void*);
+    void onToggleUseHeuristicTarget(Component::Button&, wxMenu& menu, void*);
+    void onTogglePowerToLevel(Component::Button&, wxMenu& menu, void*);
 
-	private:
-		void createComponents();
-		void onStudyClosed();
-		void onAreaChanged(Data::Area* area);
+    void onEnableReserveManagement(wxCommandEvent& evt);
+    void onDisableReserveManagement(wxCommandEvent& evt);
 
-		void onInterdailyBreakdownChanged(wxCommandEvent& evt);
-		void onIntradailyModulationChanged(wxCommandEvent& evt);
-		void onIntermonthlyBreakdownChanged(wxCommandEvent& evt);
-		void onReservoirCapacityChanged(wxCommandEvent& evt);
-		void onLeewayLowBoundChanged(wxCommandEvent& evt);
-		void onLeewayUpperBoundChanged(wxCommandEvent& evt);
-		void onPumpingEfficiencyChanged(wxCommandEvent& evt);
-		void onToggleReservoirManagement(Component::Button&, wxMenu& menu, void*);
-		void onToggleFollowLoad(Component::Button&, wxMenu& menu, void*);
-		void onToggleUseLeeway(Component::Button&, wxMenu& menu, void*);
-		void onToggleUseWaterValue(Component::Button&, wxMenu& menu, void*);
-		void onToggleHardBoundsOnRuleCurves(Component::Button&, wxMenu& menu, void*);
-		void onToggleInitializeReservoirLevelDate(Component::Button&, wxMenu& menu, void*);
-		void onToggleUseHeuristicTarget(Component::Button&, wxMenu& menu, void*);
-		void onTogglePowerToLevel(Component::Button&, wxMenu& menu, void*);
+    void onEnableUseLeeway(wxCommandEvent& evt);
+    void onDisableUseLeeway(wxCommandEvent& evt);
 
-		void onEnableReserveManagement(wxCommandEvent& evt);
-		void onDisableReserveManagement(wxCommandEvent& evt);
+    void onFollowingLoadModulations(wxCommandEvent& evt);
+    void onUnfollowingLoadModulations(wxCommandEvent& evt);
 
-		void onEnableUseLeeway(wxCommandEvent& evt);
-		void onDisableUseLeeway(wxCommandEvent& evt);
+    void onEnableUseWaterValue(wxCommandEvent& evt);
+    void onDisableUseWaterValue(wxCommandEvent& evt);
 
-		void onFollowingLoadModulations(wxCommandEvent& evt);
-		void onUnfollowingLoadModulations(wxCommandEvent& evt);
+    void onEnableHardBoundsOnRuleCurves(wxCommandEvent& evt);
+    void onDisableHardBoundsOnRuleCurves(wxCommandEvent& evt);
 
-		void onEnableUseWaterValue(wxCommandEvent& evt);
-		void onDisableUseWaterValue(wxCommandEvent& evt);
+    void onChangingInitializeReservoirLevelDate(wxCommandEvent& evt);
 
-		void onEnableHardBoundsOnRuleCurves(wxCommandEvent& evt);
-		void onDisableHardBoundsOnRuleCurves(wxCommandEvent& evt);
+    void onEnableUseHeuristicTarget(wxCommandEvent& evt);
+    void onDisableUseHeuristicTarget(wxCommandEvent& evt);
 
-		void onChangingInitializeReservoirLevelDate(wxCommandEvent& evt);
+    void onEnablePowerToLevel(wxCommandEvent& evt);
+    void onDisablePowerToLevel(wxCommandEvent& evt);
 
-		void onEnableUseHeuristicTarget(wxCommandEvent& evt);
-		void onDisableUseHeuristicTarget(wxCommandEvent& evt);
+private:
+    //! The input area selector
+    Toolbox::InputSelector::Area* pInputAreaSelector;
+    Data::Area* pArea;
+    bool pComponentsAreReady;
+    Component::Panel* pSupport;
+    wxTextCtrl* pIntermonthlyBreakdown;
+    wxTextCtrl* pInterdailyBreakdown;
+    wxTextCtrl* pIntradailyModulation;
+    wxTextCtrl* pReservoirCapacity;
+    wxTextCtrl* pLeewayUpperBound;
+    wxTextCtrl* pLeewayLowerBound;
+    wxTextCtrl* pPumpingEfficiency;
+    wxWindow* pLabelReservoirCapacity;
+    wxWindow* pLabelUseWaterValues;
+    wxWindow* pLabelHardBounds;
+    wxWindow* pLabelUseHeuristicTarget;
+    wxWindow* pLabelLeewayLow;
+    wxWindow* pLabelLeewayUp;
+    wxWindow* pLabelUseLeeway;
+    wxWindow* pLabelPowerToLevel;
 
-		void onEnablePowerToLevel(wxCommandEvent& evt);
-		void onDisablePowerToLevel(wxCommandEvent& evt);
+    Component::Button* pReservoirManagement;
+    Component::Button* pFollowLoad;
+    Component::Button* pUseLeeway;
+    Component::Button* pUseWaterValue;
+    Component::Button* pHardBoundsOnRuleCurves;
+    Component::Button* pInitializeReservoirLevelDate;
+    Component::Button* pUseHeuristicTarget;
+    Component::Button* pPowerToLevel;
 
-	private:
-		//! The input area selector
-		Toolbox::InputSelector::Area*  pInputAreaSelector;
-		Data::Area* pArea;
-		bool pComponentsAreReady;
-		Component::Panel* pSupport;
-		wxTextCtrl* pIntermonthlyBreakdown;
-		wxTextCtrl* pInterdailyBreakdown;
-		wxTextCtrl* pIntradailyModulation;
-		wxTextCtrl* pReservoirCapacity;
-		wxTextCtrl* pLeewayUpperBound;
-		wxTextCtrl* pLeewayLowerBound;
-		wxTextCtrl* pPumpingEfficiency;
-		wxWindow* pLabelReservoirCapacity;
-		wxWindow* pLabelUseWaterValues;
-		wxWindow* pLabelHardBounds;
-		wxWindow* pLabelUseHeuristicTarget;
-		wxWindow* pLabelLeewayLow;
-		wxWindow* pLabelLeewayUp;
-		wxWindow* pLabelUseLeeway;
-		wxWindow* pLabelPowerToLevel;
-
-		Component::Button* pReservoirManagement;
-		Component::Button* pFollowLoad;
-		Component::Button* pUseLeeway;
-		Component::Button* pUseWaterValue;
-		Component::Button* pHardBoundsOnRuleCurves;
-		Component::Button* pInitializeReservoirLevelDate;
-		Component::Button* pUseHeuristicTarget;
-		Component::Button* pPowerToLevel;
-
-	}; // class Management
-
-
-
-
+}; // class Management
 
 } // namespace Hydro
 } // namespace Window

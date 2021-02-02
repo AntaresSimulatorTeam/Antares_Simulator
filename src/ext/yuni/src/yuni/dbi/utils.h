@@ -12,20 +12,15 @@
 #include "../yuni.h"
 #include "../core/string.h"
 
-
 namespace Yuni
 {
 namespace DBI
 {
-
-	/*!
-	** \brief Check whether a string is an identifier or not
-	** \ingroup DBI
-	*/
-	bool IsValidIdentifier(AnyString text);
-
-
-
+/*!
+** \brief Check whether a string is an identifier or not
+** \ingroup DBI
+*/
+bool IsValidIdentifier(AnyString text);
 
 } // namespace DBI
 } // namespace Yuni

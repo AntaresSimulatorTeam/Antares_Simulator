@@ -25,10 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_STORAGE_AVERAGE_DATA_H__
-# define __SOLVER_VARIABLE_STORAGE_AVERAGE_DATA_H__
+#define __SOLVER_VARIABLE_STORAGE_AVERAGE_DATA_H__
 
-# include <antares/study.h>
-
+#include <antares/study.h>
 
 namespace Antares
 {
@@ -40,56 +39,48 @@ namespace R
 {
 namespace AllYears
 {
+class AverageData
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    AverageData();
+    //! Destructor
+    ~AverageData();
 
+    void initializeFromStudy(Data::Study& study);
 
-	class AverageData
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		AverageData();
-		//! Destructor
-		~AverageData();
+    void reset();
 
+    void merge(unsigned int year, const IntermediateValues& rhs);
 
-		void initializeFromStudy(Data::Study& study);
+    Yuni::uint64 dynamicMemoryUsage() const
+    {
+        return
+#ifdef ANTARES_SWAP_SUPPORT
+          0
+#else
+          sizeof(double) * maxHoursInAYear
+#endif
+          + sizeof(double) * nbYearsCapacity;
+    }
 
-		void reset();
+public:
+    double monthly[maxMonths];
+    double weekly[maxWeeksInAYear];
+    double daily[maxDaysInAYear];
+    Antares::Memory::Stored<double>::Type hourly;
+    double* year;
+    mutable double allYears; // FIX MEEE - Remove the mutable as soon as possible
+    unsigned int nbYearsCapacity;
 
-		void merge(unsigned int year, const IntermediateValues& rhs);
+    std::vector<float> yearsWeight;
+    float yearsWeightSum;
 
-		Yuni::uint64 dynamicMemoryUsage() const
-		{
-			return
-				# ifdef ANTARES_SWAP_SUPPORT
-				0
-				# else
-				sizeof(double) * maxHoursInAYear
-				# endif
-				+ sizeof(double) * nbYearsCapacity
-				;
-		}
-
-	public:
-		double monthly[maxMonths];
-		double weekly[maxWeeksInAYear];
-		double daily[maxDaysInAYear];
-		Antares::Memory::Stored<double>::Type hourly;
-		double* year;
-		mutable double allYears; // FIX MEEE - Remove the mutable as soon as possible
-		unsigned int nbYearsCapacity;
-
-		std::vector<int>    yearsWeight;
-		int                 yearsWeightSum;
-
-	}; // class AverageData
-
-
-
-
+}; // class AverageData
 
 } // namespace AllYears
 } // namespace R

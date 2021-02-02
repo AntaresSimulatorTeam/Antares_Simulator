@@ -25,254 +25,277 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "opt_structure_probleme_a_resoudre.h"
 
+#include "../simulation/simulation.h"
+#include "../simulation/sim_structure_donnees.h"
+#include "../simulation/sim_extern_variables_globales.h"
 
+#include "opt_fonctions.h"
+#include <iostream>
 
-
-
-# include "opt_structure_probleme_a_resoudre.h"
-
-# include "../simulation/simulation.h"
-# include "../simulation/sim_structure_donnees.h"
-# include "../simulation/sim_extern_variables_globales.h"
-
-# include "opt_fonctions.h"  
-# include <iostream>
-
-
-
-
-void OPT_RestaurerLesDonnees( PROBLEME_HEBDO * ProblemeHebdo )
+void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo)
 {
-	int Pays        ; int Interco; int Pdt ; int DernierPasDeTemps; int Jour   ;  int Palier;
-	int CntCouplante; double PmaxHydEcretee  ; int Intervalle       ; int Semaine;
-	double PmaxHydUplift; // Hydro generating power required to make use of energy stored from pumps
-	
+    int Pays;
+    int Interco;
+    int Pdt;
+    int DernierPasDeTemps;
+    int Jour;
+    int Palier;
+    int CntCouplante;
+    double PmaxHydEcretee;
+    int Intervalle;
+    int Semaine;
+    double PmaxHydUplift; // Hydro generating power required to make use of energy stored from pumps
 
-	CONSOMMATIONS_ABATTUES              * ConsommationsAbattues;
-	CONSOMMATIONS_ABATTUES              * ConsommationsAbattuesRef;
-	VALEURS_DE_NTC_ET_RESISTANCES       * ValeursDeNTC;
-	VALEURS_DE_NTC_ET_RESISTANCES       * ValeursDeNTCRef;
-	
-	RESERVE_JMOINS1                     * ReserveJMoins1;
-	ENERGIES_ET_PUISSANCES_HYDRAULIQUES * CaracteristiquesHydrauliques;
-	PDISP_ET_COUTS_HORAIRES_PAR_PALIER  * PuissanceDisponibleEtCout;
-	PALIERS_THERMIQUES                  * PaliersThermiquesDuPays;
-	CONTRAINTES_COUPLANTES              * MatriceDesContraintesCouplantes;
-	COUTS_DE_TRANSPORT                  * CoutDeTransport;
-	int * NumeroDeJourDuPasDeTemps;
+    CONSOMMATIONS_ABATTUES* ConsommationsAbattues;
+    CONSOMMATIONS_ABATTUES* ConsommationsAbattuesRef;
+    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
+    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTCRef;
 
-	
-	DernierPasDeTemps = ProblemeHebdo->NombreDePasDeTemps;
-	NumeroDeJourDuPasDeTemps = ProblemeHebdo->NumeroDeJourDuPasDeTemps;
-	
-	
-	
-	for ( Pdt = 0 ; Pdt < DernierPasDeTemps ; Pdt++ )
-	{
-		ValeursDeNTCRef = ProblemeHebdo->ValeursDeNTCRef[Pdt];
-		ValeursDeNTC    = ProblemeHebdo->ValeursDeNTC[Pdt];
+    RESERVE_JMOINS1* ReserveJMoins1;
+    ENERGIES_ET_PUISSANCES_HYDRAULIQUES* CaracteristiquesHydrauliques;
+    PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout;
+    PALIERS_THERMIQUES* PaliersThermiquesDuPays;
+    CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes;
+    COUTS_DE_TRANSPORT* CoutDeTransport;
+    int* NumeroDeJourDuPasDeTemps;
 
-		for ( Interco = 0 ; Interco < ProblemeHebdo->NombreDInterconnexions ; Interco++ )
-		{
-			ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco] = ValeursDeNTCRef->ValeurDeNTCOrigineVersExtremite[Interco];
-			ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco] = ValeursDeNTCRef->ValeurDeNTCExtremiteVersOrigine[Interco];
-			ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco] = ValeursDeNTCRef->ValeurDeLoopFlowOrigineVersExtremite[Interco];
-		}
-	}
+    DernierPasDeTemps = ProblemeHebdo->NombreDePasDeTemps;
+    NumeroDeJourDuPasDeTemps = ProblemeHebdo->NumeroDeJourDuPasDeTemps;
 
-	if ( COUT_TRANSPORT == OUI_ANTARES )
-	{
-		
-		for ( Pdt = 0 ; Pdt < DernierPasDeTemps ; Pdt++ )
-		{
-			for ( Interco = 0 ; Interco < ProblemeHebdo->NombreDInterconnexions ; Interco++ )
-			{
-				CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
-				if ( CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES )
-				{
-					CoutDeTransport->CoutDeTransportOrigineVersExtremite[Pdt] = CoutDeTransport->CoutDeTransportOrigineVersExtremiteRef[Pdt]; 		
-					CoutDeTransport->CoutDeTransportExtremiteVersOrigine[Pdt] = CoutDeTransport->CoutDeTransportExtremiteVersOrigineRef[Pdt];
-				}
-			}
-		}
-	}
+    for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
+    {
+        ValeursDeNTCRef = ProblemeHebdo->ValeursDeNTCRef[Pdt];
+        ValeursDeNTC = ProblemeHebdo->ValeursDeNTC[Pdt];
 
-	
-	for ( Pdt = 0 ; Pdt < DernierPasDeTemps ; Pdt++ )
-	{
-		ConsommationsAbattuesRef = ProblemeHebdo->ConsommationsAbattuesRef[Pdt];
-		ConsommationsAbattues    = ProblemeHebdo->ConsommationsAbattues[Pdt];
-		for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ )
-		{
-			ConsommationsAbattues->ConsommationAbattueDuPays[Pays] = ConsommationsAbattuesRef->ConsommationAbattueDuPays[Pays];
-		}
-	}
-	
+        for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+        {
+            ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco]
+              = ValeursDeNTCRef->ValeurDeNTCOrigineVersExtremite[Interco];
+            ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]
+              = ValeursDeNTCRef->ValeurDeNTCExtremiteVersOrigine[Interco];
+            ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco]
+              = ValeursDeNTCRef->ValeurDeLoopFlowOrigineVersExtremite[Interco];
+        }
+    }
 
-	if ( ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES && (ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation == PREMIERE_OPTIMISATION ) {	
-		
-		for ( Pdt = 0 ; Pdt < DernierPasDeTemps ; Pdt++ )
-		{
-			for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ )
-			{
-				ReserveJMoins1 = ProblemeHebdo->ReserveJMoins1[Pays];
-				ReserveJMoins1->ReserveHoraireJMoins1[Pdt] = ReserveJMoins1->ReserveHoraireJMoins1Ref[Pdt];
-			}
-		}
-	}
+    if (COUT_TRANSPORT == OUI_ANTARES)
+    {
+        for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
+        {
+            for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+            {
+                CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
+                if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
+                {
+                    CoutDeTransport->CoutDeTransportOrigineVersExtremite[Pdt]
+                      = CoutDeTransport->CoutDeTransportOrigineVersExtremiteRef[Pdt];
+                    CoutDeTransport->CoutDeTransportExtremiteVersOrigine[Pdt]
+                      = CoutDeTransport->CoutDeTransportExtremiteVersOrigineRef[Pdt];
+                }
+            }
+        }
+    }
 
-	
-	
-	for ( Pdt = 0 ; Pdt < DernierPasDeTemps ; Pdt++ )
-	{
-		for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ )
-		{
-			CaracteristiquesHydrauliques = ProblemeHebdo->CaracteristiquesHydrauliques[Pays];
-			
-			if ( CaracteristiquesHydrauliques->PresenceDHydrauliqueModulable != OUI_ANTARES )
-				continue;
+    for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
+    {
+        ConsommationsAbattuesRef = ProblemeHebdo->ConsommationsAbattuesRef[Pdt];
+        ConsommationsAbattues = ProblemeHebdo->ConsommationsAbattues[Pdt];
+        for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+        {
+            ConsommationsAbattues->ConsommationAbattueDuPays[Pays]
+              = ConsommationsAbattuesRef->ConsommationAbattueDuPays[Pays];
+        }
+    }
 
-			CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraire[Pdt] = CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraireRef[Pdt];			
-			
-			Jour = NumeroDeJourDuPasDeTemps[Pdt];
-			PmaxHydEcretee = CaracteristiquesHydrauliques->CntEnergieH2OParJour[Jour]; 		
-			PmaxHydEcretee *= ProblemeHebdo->CoefficientEcretementPMaxHydraulique[Pays];  			
-			PmaxHydEcretee /= (double) ProblemeHebdo->NombreDePasDeTempsDUneJournee; 
-			// The primary generating power allowance may need to be uplifted to match pumping power allowance
-			if (CaracteristiquesHydrauliques->PresenceDePompageModulable == OUI_ANTARES)
-			{
-				PmaxHydUplift  = CaracteristiquesHydrauliques->ContrainteDePmaxPompageHoraire[Pdt]; 
-				PmaxHydUplift *= ProblemeHebdo->CoefficientEcretementPMaxHydraulique[Pays];
-				// The uplifted energy  cannot, throughout the week, exceed the remaining stock 
-				if (PmaxHydUplift*double(168) > CaracteristiquesHydrauliques->NiveauInitialReservoir)
-				{
-					PmaxHydUplift = CaracteristiquesHydrauliques->NiveauInitialReservoir /double(168);
-				}
+    if (ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES
+        && (ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation == PREMIERE_OPTIMISATION)
+    {
+        for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
+        {
+            for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+            {
+                ReserveJMoins1 = ProblemeHebdo->ReserveJMoins1[Pays];
+                ReserveJMoins1->ReserveHoraireJMoins1[Pdt]
+                  = ReserveJMoins1->ReserveHoraireJMoins1Ref[Pdt];
+            }
+        }
+    }
 
-				if (PmaxHydEcretee < PmaxHydUplift)
-					PmaxHydEcretee = PmaxHydUplift;
-			}
+    for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
+    {
+        for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+        {
+            CaracteristiquesHydrauliques = ProblemeHebdo->CaracteristiquesHydrauliques[Pays];
 
-			// The generating power allowance cannot exceed the maximum available generating power  
-			if ( PmaxHydEcretee < CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraire[Pdt] )
-			{
-				CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraire[Pdt] = PmaxHydEcretee;
-			}
-			
-		}
-	}
+            if (CaracteristiquesHydrauliques->PresenceDHydrauliqueModulable != OUI_ANTARES)
+                continue;
 
-	
-	for ( Pdt = 0 ; Pdt < DernierPasDeTemps ; )
-	{
-		Intervalle = ProblemeHebdo->NumeroDIntervalleOptimiseDuPasDeTemps[Pdt];		
-		Pdt+= ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;				
-		for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ ) {
-			CaracteristiquesHydrauliques = ProblemeHebdo->CaracteristiquesHydrauliques[Pays];
-			if ( CaracteristiquesHydrauliques->PresenceDHydrauliqueModulable == OUI_ANTARES ) {
-				CaracteristiquesHydrauliques->CntEnergieH2OParIntervalleOptimise[Intervalle] =
-				   CaracteristiquesHydrauliques->CntEnergieH2OParIntervalleOptimiseRef[Intervalle];
-			}
-		}
-	}
+            CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraire[Pdt]
+              = CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraireRef[Pdt];
 
-	for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ )
-	{
-		CaracteristiquesHydrauliques = ProblemeHebdo->CaracteristiquesHydrauliques[Pays];
-		if (CaracteristiquesHydrauliques->PresenceDHydrauliqueModulable == OUI_ANTARES)
-		{
-			CaracteristiquesHydrauliques->MaxDesPmaxHydrauliques = CaracteristiquesHydrauliques->MaxDesPmaxHydrauliquesRef;
-		}
-	}
-	
-	
-	for ( Pdt = 0 ; Pdt < DernierPasDeTemps; Pdt++ )
-	{
-		for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ )
-		{
-			PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
-			for ( Palier = 0 ; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques ; Palier++ )
-			{
-				PuissanceDisponibleEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Palier];
-				PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique[Pdt] = PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique_SV[Pdt];
-			}
-		}
-	}	
+            Jour = NumeroDeJourDuPasDeTemps[Pdt];
+            PmaxHydEcretee = CaracteristiquesHydrauliques->CntEnergieH2OParJour[Jour];
+            PmaxHydEcretee *= ProblemeHebdo->CoefficientEcretementPMaxHydraulique[Pays];
+            PmaxHydEcretee /= (double)ProblemeHebdo->NombreDePasDeTempsDUneJournee;
+            // The primary generating power allowance may need to be uplifted to match pumping power
+            // allowance
+            if (CaracteristiquesHydrauliques->PresenceDePompageModulable == OUI_ANTARES)
+            {
+                PmaxHydUplift = CaracteristiquesHydrauliques->ContrainteDePmaxPompageHoraire[Pdt];
+                PmaxHydUplift *= ProblemeHebdo->CoefficientEcretementPMaxHydraulique[Pays];
+                // The uplifted energy  cannot, throughout the week, exceed the remaining stock
+                if (PmaxHydUplift * double(168)
+                    > CaracteristiquesHydrauliques->NiveauInitialReservoir)
+                {
+                    PmaxHydUplift
+                      = CaracteristiquesHydrauliques->NiveauInitialReservoir / double(168);
+                }
 
-	
-	for ( Pdt = 0 ; Pdt < DernierPasDeTemps ; Pdt++ )
-	{
-		for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ )
-		{
-			PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
-			for ( Palier = 0 ; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques ; Palier++ )
-			{
-				PuissanceDisponibleEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Palier];    
-				PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermique[Pdt] = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef[Pdt];
-				
-						
-				if ( PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique[Pdt] > PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermique[Pdt] )
-				{			
-					PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermique[Pdt] = PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique[Pdt];
+                if (PmaxHydEcretee < PmaxHydUplift)
+                    PmaxHydEcretee = PmaxHydUplift;
+            }
 
-					if ( PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermique[Pdt] > PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef_SV[Pdt] )
-					{
-						PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermique[Pdt] = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef_SV[Pdt];
-						PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique       [Pdt] = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef_SV[Pdt];
-					}					
-				}
+            // The generating power allowance cannot exceed the maximum available generating power
+            if (PmaxHydEcretee
+                < CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraire[Pdt])
+            {
+                CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraire[Pdt]
+                  = PmaxHydEcretee;
+            }
+        }
+    }
 
-				PuissanceDisponibleEtCout->CoutHoraireDeProductionDuPalierThermique[Pdt] = PuissanceDisponibleEtCout->CoutHoraireDeProductionDuPalierThermiqueRef[Pdt];
-			}
-		}
-	}
-		
-	
-	for ( Pdt = 0 ; Pdt < DernierPasDeTemps ; Pdt++ )
-	{
-		for ( CntCouplante = 0 ; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes ; CntCouplante++ )
-		{
-			MatriceDesContraintesCouplantes = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
+    for (Pdt = 0; Pdt < DernierPasDeTemps;)
+    {
+        Intervalle = ProblemeHebdo->NumeroDIntervalleOptimiseDuPasDeTemps[Pdt];
+        Pdt += ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+        for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+        {
+            CaracteristiquesHydrauliques = ProblemeHebdo->CaracteristiquesHydrauliques[Pays];
+            if (CaracteristiquesHydrauliques->PresenceDHydrauliqueModulable == OUI_ANTARES)
+            {
+                CaracteristiquesHydrauliques->CntEnergieH2OParIntervalleOptimise[Intervalle]
+                  = CaracteristiquesHydrauliques->CntEnergieH2OParIntervalleOptimiseRef[Intervalle];
+            }
+        }
+    }
 
-			if ( MatriceDesContraintesCouplantes->TypeDeContrainteCouplante == CONTRAINTE_HORAIRE )
-			{
-		 		MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[Pdt] = MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplanteRef[Pdt];			
-			}
-		}
-	}
+    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    {
+        CaracteristiquesHydrauliques = ProblemeHebdo->CaracteristiquesHydrauliques[Pays];
+        if (CaracteristiquesHydrauliques->PresenceDHydrauliqueModulable == OUI_ANTARES)
+        {
+            CaracteristiquesHydrauliques->MaxDesPmaxHydrauliques
+              = CaracteristiquesHydrauliques->MaxDesPmaxHydrauliquesRef;
+        }
+    }
 
-	
-	for ( Pdt = 0 ; Pdt < DernierPasDeTemps ; )
-	{
-		Jour = ProblemeHebdo->NumeroDeJourDuPasDeTemps[Pdt];
-		Pdt += ProblemeHebdo->NombreDePasDeTempsDUneJournee;
-		for ( CntCouplante = 0 ; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes ; CntCouplante++ )
-		{
-			MatriceDesContraintesCouplantes = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
-			if ( MatriceDesContraintesCouplantes->TypeDeContrainteCouplante == CONTRAINTE_JOURNALIERE )
-			{
-			 	MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[Jour] = MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplanteRef[Jour];
-			}
-		}
-	}
+    for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
+    {
+        for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+        {
+            PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+            for (Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++)
+            {
+                PuissanceDisponibleEtCout
+                  = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Palier];
+                PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique[Pdt]
+                  = PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique_SV[Pdt];
+            }
+        }
+    }
 
-	
-	if ( ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation > ProblemeHebdo->NombreDePasDeTempsDUneJournee )
-	{
-		Semaine = 0;
-		for ( CntCouplante = 0 ; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes ; CntCouplante++ )
-		{
-	 		MatriceDesContraintesCouplantes = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
-			if ( MatriceDesContraintesCouplantes->TypeDeContrainteCouplante == CONTRAINTE_HEBDOMADAIRE )
-			{
-				MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[Semaine] = MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplanteRef[Semaine];		  
-			}
-		}
-	}
-	
-	return;
+    for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
+    {
+        for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+        {
+            PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+            for (Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++)
+            {
+                PuissanceDisponibleEtCout
+                  = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Palier];
+                PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermique[Pdt]
+                  = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef[Pdt];
+
+                if (PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique[Pdt]
+                    > PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermique[Pdt])
+                {
+                    PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermique[Pdt]
+                      = PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique[Pdt];
+
+                    if (PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermique[Pdt]
+                        > PuissanceDisponibleEtCout
+                            ->PuissanceDisponibleDuPalierThermiqueRef_SV[Pdt])
+                    {
+                        PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermique[Pdt]
+                          = PuissanceDisponibleEtCout
+                              ->PuissanceDisponibleDuPalierThermiqueRef_SV[Pdt];
+                        PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique[Pdt]
+                          = PuissanceDisponibleEtCout
+                              ->PuissanceDisponibleDuPalierThermiqueRef_SV[Pdt];
+                    }
+                }
+
+                PuissanceDisponibleEtCout->CoutHoraireDeProductionDuPalierThermique[Pdt]
+                  = PuissanceDisponibleEtCout->CoutHoraireDeProductionDuPalierThermiqueRef[Pdt];
+            }
+        }
+    }
+
+    for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
+    {
+        for (CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
+             CntCouplante++)
+        {
+            MatriceDesContraintesCouplantes
+              = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
+
+            if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante == CONTRAINTE_HORAIRE)
+            {
+                MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[Pdt]
+                  = MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplanteRef[Pdt];
+            }
+        }
+    }
+
+    for (Pdt = 0; Pdt < DernierPasDeTemps;)
+    {
+        Jour = ProblemeHebdo->NumeroDeJourDuPasDeTemps[Pdt];
+        Pdt += ProblemeHebdo->NombreDePasDeTempsDUneJournee;
+        for (CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
+             CntCouplante++)
+        {
+            MatriceDesContraintesCouplantes
+              = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
+            if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante
+                == CONTRAINTE_JOURNALIERE)
+            {
+                MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[Jour]
+                  = MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplanteRef[Jour];
+            }
+        }
+    }
+
+    if (ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation
+        > ProblemeHebdo->NombreDePasDeTempsDUneJournee)
+    {
+        Semaine = 0;
+        for (CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
+             CntCouplante++)
+        {
+            MatriceDesContraintesCouplantes
+              = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
+            if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante
+                == CONTRAINTE_HEBDOMADAIRE)
+            {
+                MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[Semaine]
+                  = MatriceDesContraintesCouplantes
+                      ->SecondMembreDeLaContrainteCouplanteRef[Semaine];
+            }
+        }
+    }
+
+    return;
 }
-
-
-

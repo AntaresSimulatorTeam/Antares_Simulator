@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SCENARIO_BUILDER_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SCENARIO_BUILDER_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SCENARIO_BUILDER_H__
 
-# include "../renderer.h"
-# include <antares/study/scenario-builder/rules.h>
-
+#include "../renderer.h"
+#include <antares/study/scenario-builder/rules.h>
 
 namespace Antares
 {
@@ -39,63 +38,67 @@ namespace Datagrid
 {
 namespace Renderer
 {
+class ScBuilderRendererBase : public IRenderer
+{
+public:
+    //! \name Constructors & Destructor
+    //@{
+    /*!
+    ** \brief Constructor with a given timeseries
+    */
+    ScBuilderRendererBase();
+    /*!
+    ** \brief Constructor for thermal
+    */
+    //! Destructor
+    virtual ~ScBuilderRendererBase();
+    //@}
 
-	class ScBuilderRendererBase : public IRenderer
-	{
-	public:
-		//! \name Constructors & Destructor
-		//@{
-		/*!
-		** \brief Constructor with a given timeseries
-		*/
-		ScBuilderRendererBase();
-		/*!
-		** \brief Constructor for thermal
-		*/
-		//! Destructor
-		virtual ~ScBuilderRendererBase();
-		//@}
+    virtual int width() const;
+    virtual int height() const;
 
-		virtual int width() const;
-		virtual int height() const;
+    virtual wxString columnCaption(int colIndx) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual wxString rowCaption(int rowIndx) const;
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual wxString cellValue(int x, int y) const;
 
-		virtual wxString cellValue(int x, int y) const;
+    virtual double cellNumericValue(int x, int y) const = 0;
 
-		virtual double cellNumericValue(int x, int y) const = 0;
+    virtual bool cellValue(int x, int y, const Yuni::String& value) = 0;
 
-		virtual bool cellValue(int x, int y, const Yuni::String& value) = 0;
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    {
+        // Do nothing
+    }
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{
-			// Do nothing
-		}
+    virtual bool valid() const;
 
-		virtual bool valid() const;
+    virtual uint maxWidthResize() const
+    {
+        return 0;
+    }
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
 
-		virtual uint maxWidthResize() const {return 0;}
-		virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+    void control(wxWindow* control)
+    {
+        pControl = control;
+    }
 
-		void control(wxWindow* control) {pControl = control;}
+public:
+    //! Event: A rules set has been changed
+    void onRulesChanged(Data::ScenarioBuilder::Rules::Ptr rules);
 
-	public:
-		//! Event: A rules set has been changed
-		void onRulesChanged(Data::ScenarioBuilder::Rules::Ptr rules);
+protected:
+    void onAreaChanged(Data::Area* area);
+    virtual void onStudyClosed();
 
-	protected:
-		void onAreaChanged(Data::Area* area);
-		virtual void onStudyClosed();
+protected:
+    wxWindow* pControl;
+    Data::Area* pArea;
+    Data::ScenarioBuilder::Rules::Ptr pRules;
 
-	protected:
-		wxWindow* pControl;
-		Data::Area* pArea;
-		Data::ScenarioBuilder::Rules::Ptr pRules;
-
-	}; // class ScBuilderRendererBase
-
+}; // class ScBuilderRendererBase
 
 } // namespace Renderer
 } // namespace Datagrid

@@ -10,71 +10,62 @@
 */
 #include "grammar.h"
 
-
 namespace Yuni
 {
 namespace Parser
 {
 namespace PEG
 {
+void Grammar::exportToDOT(Clob& out) const
+{
+    out << "\ndigraph {\n";
 
+    Node::Map::const_iterator end = pRules.end();
 
-	void Grammar::exportToDOT(Clob& out) const
-	{
-		out << "\ndigraph {\n";
+    out << "\t// options\n";
+    out << "\trankdir = LR;\n";
+    out << "\tcompound = true;\n";
+    out << '\n';
+    out << "\tsubgraph \"cluster_:start\" {\n";
+    out << "\t\tstyle = filled;\n";
+    out << "\t\tlabel = \"start\";\n";
+    out << "\t\tcolor = lightgrey;\n";
+    out << "\t\tnode [style = filled, color = white];\n";
+    out << "\t\t\":start\" [shape = diamond];\n";
+    out << "\t}\n";
+    out << "\tsubgraph \"cluster_:end\" {\n";
+    out << "\t\tstyle = filled;\n";
+    out << "\t\tlabel = \"final\";\n";
+    out << "\t\tcolor = \"#bbbbff\";\n";
+    out << "\t\tnode [style = filled, color = white];\n";
+    out << "\t\t\"EOF\" [shape = diamond];\n";
+    out << "\t}\n";
+    out << "\n";
 
-		Node::Map::const_iterator end = pRules.end();
+    // export rules
+    out << "\t// rules\n";
+    for (Node::Map::const_iterator i = pRules.begin(); i != end; ++i)
+    {
+        // the current rulename
+        const String& rulename = i->first;
+        // the node itself
+        const Node& node = i->second;
 
-		out << "\t// options\n";
-		out << "\trankdir = LR;\n";
-		out << "\tcompound = true;\n";
-		out << '\n';
-		out << "\tsubgraph \"cluster_:start\" {\n";
-		out << "\t\tstyle = filled;\n";
-		out << "\t\tlabel = \"start\";\n";
-		out << "\t\tcolor = lightgrey;\n";
-		out << "\t\tnode [style = filled, color = white];\n";
-		out << "\t\t\":start\" [shape = diamond];\n";
-		out << "\t}\n";
-		out << "\tsubgraph \"cluster_:end\" {\n";
-		out << "\t\tstyle = filled;\n";
-		out << "\t\tlabel = \"final\";\n";
-		out << "\t\tcolor = \"#bbbbff\";\n";
-		out << "\t\tnode [style = filled, color = white];\n";
-		out << "\t\t\"EOF\" [shape = diamond];\n";
-		out << "\t}\n";
-		out << "\n";
+        out << "\tsubgraph \"cluster-" << rulename << "\" { // " << node.enumID << '\n';
+        out << "\t\tstyle = filled;\n";
+        out << "\t\tlabel = \"rule:" << rulename << "\";\n";
+        out << "\t\tcolor = \"#e2e2e2\";\n";
+        out << "\t\tnode [style = filled, color = white];\n";
+        out << '\n';
+        node.exportDOTSubgraph(out, pRules, rulename);
+        out << '\n';
+        out << "\t} // cluster-" << rulename << '\n';
+        out << "\n\n";
+    }
 
-		// export rules
-		out << "\t// rules\n";
-		for (Node::Map::const_iterator i = pRules.begin(); i != end; ++i)
-		{
-			// the current rulename
-			const String& rulename = i->first;
-			// the node itself
-			const Node& node = i->second;
-
-			out << "\tsubgraph \"cluster-" << rulename << "\" { // " << node.enumID << '\n';
-			out << "\t\tstyle = filled;\n";
-			out << "\t\tlabel = \"rule:" << rulename << "\";\n";
-			out << "\t\tcolor = \"#e2e2e2\";\n";
-			out << "\t\tnode [style = filled, color = white];\n";
-			out << '\n';
-			node.exportDOTSubgraph(out, pRules, rulename);
-			out << '\n';
-			out << "\t} // cluster-" << rulename << '\n';
-			out << "\n\n";
-		}
-
-		out << "}\n\n";
-	}
-
-
-
-
-
+    out << "}\n\n";
+}
 
 } // namespace PEG
 } // namespace Parser
 } // namespace Yuni
-

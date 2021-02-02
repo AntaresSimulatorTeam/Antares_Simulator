@@ -25,18 +25,15 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __YBY_AGGREGATOR_VARIABLE_H__
-# define __YBY_AGGREGATOR_VARIABLE_H__
-
-
+#define __YBY_AGGREGATOR_VARIABLE_H__
 
 class Variable
 {
 public:
-	Variable()
-	{
-	}
+    Variable()
+    {
+    }
 
 } // class Variable
-
 
 #endif // __YBY_AGGREGATOR_VARIABLE_H__

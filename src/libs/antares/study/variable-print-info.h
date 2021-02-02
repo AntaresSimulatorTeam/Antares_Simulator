@@ -26,15 +26,14 @@
 */
 
 #ifndef __SOLVER_VARIABLE_PRINT_POLICY_H__
-# define __SOLVER_VARIABLE_PRINT_POLICY_H__
+#define __SOLVER_VARIABLE_PRINT_POLICY_H__
 
-
-# include<string>
-# include<vector>
-# include<map>
-# include <yuni/yuni.h>
-# include <yuni/core/fwd.h>
-# include <yuni/core/string.h>
+#include <string>
+#include <vector>
+#include <map>
+#include <yuni/yuni.h>
+#include <yuni/core/fwd.h>
+#include <yuni/core/string.h>
 
 using namespace std;
 // using namespace Yuni;
@@ -43,106 +42,122 @@ namespace Antares
 {
 namespace Data
 {
-	// Represents an output variable (wears the same name) and mainly answers the question :
-	// Is the real variable printed in all output reports ? Or is it not printed in any report ?  
-	class VariablePrintInfo
-	{
-	public:
-		VariablePrintInfo(AnyString vname, uint maxNbCols, uint dataLvl, uint fileLvl);
-		~VariablePrintInfo() {};
+// Represents an output variable (wears the same name) and mainly answers the question :
+// Is the real variable printed in all output reports ? Or is it not printed in any report ?
+class VariablePrintInfo
+{
+public:
+    VariablePrintInfo(AnyString vname, uint maxNbCols, uint dataLvl, uint fileLvl);
+    ~VariablePrintInfo(){};
 
-		// Getting name of the (represented) output variable
-		string name();
+    // Getting name of the (represented) output variable
+    string name();
 
-		// Do we enable or disable variable's print in output reports ?
-		void enablePrint(bool b);
-		bool isPrinted();
+    // Do we enable or disable variable's print in output reports ?
+    void enablePrint(bool b);
+    bool isPrinted();
 
-		uint getMaxColumnsCount();
-		uint getDataLevel() { return dataLevel; }
-		uint getFileLevel() { return fileLevel; }
+    uint getMaxColumnsCount();
+    uint getDataLevel()
+    {
+        return dataLevel;
+    }
+    uint getFileLevel()
+    {
+        return fileLevel;
+    }
 
-	private:
-		// Current variable's name
-		AnyString varname;
-		// Is the variable printed ?
-		bool to_be_printed;
+private:
+    // Current variable's name
+    AnyString varname;
+    // Is the variable printed ?
+    bool to_be_printed;
 
-		// All this useful to compute the max number of colums any report can contain
-		// ... maximum number of columns taken up by variable in the output files
-		uint maxNumberColumns;
-		// ... data and file levels
-		uint dataLevel;
-		uint fileLevel;
-	};
+    // All this useful to compute the max number of colums any report can contain
+    // ... maximum number of columns taken up by variable in the output files
+    uint maxNumberColumns;
+    // ... data and file levels
+    uint dataLevel;
+    uint fileLevel;
+};
 
-	class AllVariablesPrintInfo;
+class AllVariablesPrintInfo;
 
-	class variablePrintInfoCollector
-	{
-	public:
-		variablePrintInfoCollector(AllVariablesPrintInfo * allvarsprintinfo);
-		void add(const AnyString& name, uint nbGlobalResults, uint dataLevel, uint fileLevel);
-	private:
-		AllVariablesPrintInfo * allvarsinfo;
-	};
+class variablePrintInfoCollector
+{
+public:
+    variablePrintInfoCollector(AllVariablesPrintInfo* allvarsprintinfo);
+    void add(const AnyString& name, uint nbGlobalResults, uint dataLevel, uint fileLevel);
 
-	// Variables print info collection. Mainly a vector of pointers to print info.
-	// This collection is filled with as many print info as we can find output variables in the output variables Antares's static list.
-	class AllVariablesPrintInfo
-	{
-	public:
-		// Public methods
-		AllVariablesPrintInfo();
-		~AllVariablesPrintInfo();
+private:
+    AllVariablesPrintInfo* allvarsinfo;
+};
 
-		void add(VariablePrintInfo * v);
-		void clear();
-		VariablePrintInfo* operator [] (uint i) const;
-		size_t size() const;
-		bool isEmpty() const;
+// Variables print info collection. Mainly a vector of pointers to print info.
+// This collection is filled with as many print info as we can find output variables in the output
+// variables Antares's static list.
+class AllVariablesPrintInfo
+{
+public:
+    // Public methods
+    AllVariablesPrintInfo();
+    ~AllVariablesPrintInfo();
 
-		void resetInfoIterator() const;
-		
-		bool setPrintStatus(string varname, bool printStatus);
+    void add(VariablePrintInfo* v);
+    void clear();
+    VariablePrintInfo* operator[](uint i) const;
+    size_t size() const;
+    bool isEmpty() const;
 
-		void prepareForSimulation(bool userSelection);
+    void resetInfoIterator() const;
 
-		// Incremental search for the variable, then get the print status.
-		bool searchIncrementally_getPrintStatus(string var_name) const;
-		// Classic search, then get the print status
-		bool isPrinted(string var_name) const;
+    bool setPrintStatus(string varname, bool printStatus);
 
-		uint getMaxColumnsCount() const { return maxColumnsCount; }
-		
-		uint getNbSelectedZonalVars() const { return numberSelectedAreaVariables; }
-		uint getNbSelectedLinkVars() const { return numberSelectedLinkVariables; }
+    void prepareForSimulation(bool userSelection);
 
-	private:
-		void setAllPrintStatusesTo(bool b);
-		void computeMaxColumnsCountInReports();
-		void countSelectedAreaVars();
-		void countSelectedLinkVars();
+    // Incremental search for the variable, then get the print status.
+    bool searchIncrementally_getPrintStatus(string var_name) const;
+    // Classic search, then get the print status
+    bool isPrinted(string var_name) const;
 
-	private:
-		// Contains print info for all variables
-		vector<VariablePrintInfo*> allVarsPrintInfo;
-		
-		// Const iterator on variable print info list, that cannot change current object.
-		mutable vector<VariablePrintInfo*>::const_iterator it_info;
-		
-		// Max columns count a report of any kind can contain, depending on the number of selected variables.
-		// The less variables are selected, the smallest this count is.
-		uint maxColumnsCount;
+    uint getMaxColumnsCount() const
+    {
+        return maxColumnsCount;
+    }
 
-		// Number of selected zonal variables
-		uint numberSelectedAreaVariables;
-		// Number of selected link variables
-		uint numberSelectedLinkVariables;
-	};
+    uint getNbSelectedZonalVars() const
+    {
+        return numberSelectedAreaVariables;
+    }
+    uint getNbSelectedLinkVars() const
+    {
+        return numberSelectedLinkVariables;
+    }
+
+private:
+    void setAllPrintStatusesTo(bool b);
+    void computeMaxColumnsCountInReports();
+    void countSelectedAreaVars();
+    void countSelectedLinkVars();
+
+private:
+    // Contains print info for all variables
+    vector<VariablePrintInfo*> allVarsPrintInfo;
+
+    // Const iterator on variable print info list, that cannot change current object.
+    mutable vector<VariablePrintInfo*>::const_iterator it_info;
+
+    // Max columns count a report of any kind can contain, depending on the number of selected
+    // variables. The less variables are selected, the smallest this count is.
+    uint maxColumnsCount;
+
+    // Number of selected zonal variables
+    uint numberSelectedAreaVariables;
+    // Number of selected link variables
+    uint numberSelectedLinkVariables;
+};
 
 } // namespace Data
 } // namespace Antares
-
 
 #endif // __SOLVER_VARIABLE_PRINT_POLICY_H__

@@ -25,108 +25,135 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_UI_RUNTIME_INFOS_H__
-# define __ANTARES_LIBS_STUDY_UI_RUNTIME_INFOS_H__
+#define __ANTARES_LIBS_STUDY_UI_RUNTIME_INFOS_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-# include "fwd.h"
-# include "area.h"
-# include "constraint/constraint.h"
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+#include "fwd.h"
+#include "area.h"
+#include "constraint/constraint.h"
 
 namespace Antares
 {
 namespace Data
 {
+class UIRuntimeInfo final
+{
+public:
+    typedef std::map<enum BindingConstraint::Type, BindingConstraint::Vector> VectorByType;
+    typedef std::map<enum BindingConstraint::Operator, VectorByType> ByOperatorAndType;
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    UIRuntimeInfo(Study& study);
+    //! Destructor
+    ~UIRuntimeInfo()
+    {
+    }
+    //@}
 
-	class UIRuntimeInfo final
-	{
-	public:
-		typedef std::map<enum BindingConstraint::Type,BindingConstraint::Vector> VectorByType;
-		typedef std::map<enum BindingConstraint::Operator, VectorByType> ByOperatorAndType;
+    /*!
+    ** \brief Reload all informations about the study
+    */
+    void reloadAll();
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		UIRuntimeInfo(Study& study);
-		//! Destructor
-		~UIRuntimeInfo() {}
-		//@}
+    /*!
+    ** \brief Reload informations about the study
+    */
+    void reload();
 
-		/*!
-		** \brief Reload all informations about the study
-		*/
-		void reloadAll();
+    void reloadBindingConstraints();
 
-		/*!
-		** \brief Reload informations about the study
-		*/
-		void reload();
+    /*!
+    ** \brief The total number of links in the study
+    */
+    uint linkCount() const
+    {
+        return pLinkCount;
+    }
 
-		void reloadBindingConstraints();
+    /*!
+    ** \brief The total number of links in the clusters
+    */
+    uint clusterCount() const
+    {
+        return pClusterCount;
+    }
 
-		/*!
-		** \brief The total number of links in the study
-		*/
-		uint linkCount() const {return pLinkCount;}
+    /*!
+    ** \brief Get the link according a given index
+    */
+    AreaLink* link(uint i)
+    {
+        assert(i < pLink.size());
+        return pLink[i];
+    }
+    const AreaLink* link(uint i) const
+    {
+        assert(i < pLink.size());
+        return pLink[i];
+    }
 
-		/*!
-		** \brief The total number of links in the clusters
-		*/
-		uint clusterCount() const { return pClusterCount; }
+    /*!
+    ** \brief Get the cluster according a given index
+    */
+    ThermalCluster* cluster(uint i)
+    {
+        assert(i < pClusters.size());
+        return pClusters[i];
+    }
+    const ThermalCluster* cluster(uint i) const
+    {
+        assert(i < pClusters.size());
+        return pClusters[i];
+    }
 
-		/*!
-		** \brief Get the link according a given index
-		*/
-		AreaLink* link(uint i) {assert(i < pLink.size());return pLink[i];}
-		const AreaLink* link(uint i) const {assert(i < pLink.size());return pLink[i];}
+    BindingConstraint* constraint(uint i)
+    {
+        assert(i < pConstraint.size());
+        return pConstraint[i];
+    }
+    const BindingConstraint* constraint(uint i) const
+    {
+        assert(i < pConstraint.size());
+        return pConstraint[i];
+    }
+    uint constraintCount() const
+    {
+        return (uint)pConstraint.size();
+    }
 
-		/*!
-		** \brief Get the cluster according a given index
-		*/
-		ThermalCluster* cluster(uint i) { assert(i < pClusters.size()); return pClusters[i]; }
-		const ThermalCluster* cluster(uint i) const { assert(i < pClusters.size()); return pClusters[i]; }
+    uint countItems(BindingConstraint::Operator op, BindingConstraint::Type type);
 
+    uint visibleClustersCount(uint layerID);
 
-		BindingConstraint* constraint(uint i) {assert(i < pConstraint.size());return pConstraint[i];}
-		const BindingConstraint* constraint(uint i) const {assert(i < pConstraint.size());return pConstraint[i];}
-		uint constraintCount() const {return (uint)pConstraint.size();}
+    uint visibleLinksCount(uint layerID);
 
-		uint countItems(BindingConstraint::Operator op, BindingConstraint::Type type);
+    Yuni::uint64 memoryUsage() const;
 
-		uint visibleClustersCount(uint layerID);
+public:
+    //! Areas ordered by their name + links ordered by their name
+    Area::LinkMap orderedAreasAndLinks;
+    //! Binding constraints ordered by their name
+    BindingConstraint::Set orderedConstraint;
+    //! All binding constraints according their operator (<, > and = only)
+    ByOperatorAndType byOperator;
 
-		uint visibleLinksCount(uint layerID);
+private:
+    Study& pStudy;
+    uint pLinkCount;
+    uint pClusterCount;
+    AreaLink::Vector pLink;
+    BindingConstraint::Vector pConstraint;
+    ThermalCluster::Vector pClusters;
 
-		Yuni::uint64 memoryUsage() const;
-
-	public:
-		//! Areas ordered by their name + links ordered by their name
-		Area::LinkMap orderedAreasAndLinks;
-		//! Binding constraints ordered by their name
-		BindingConstraint::Set orderedConstraint;
-		//! All binding constraints according their operator (<, > and = only)
-		ByOperatorAndType byOperator;
-
-	private:
-		Study& pStudy;
-		uint pLinkCount;
-		uint pClusterCount;
-		AreaLink::Vector pLink;
-		BindingConstraint::Vector pConstraint;
-		ThermalCluster::Vector pClusters;
-
-	}; // class UIRuntimeInfo
-
-
-
-
+}; // class UIRuntimeInfo
 
 } // namespace Data
-} // namepsace Antares
+} // namespace Antares
 
 #endif // __ANTARES_LIBS_STUDY_UI_RUNTIME_INFOS_H__

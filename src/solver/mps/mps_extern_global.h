@@ -25,4 +25,3 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 extern PROBLEME_MPS Mps;
-

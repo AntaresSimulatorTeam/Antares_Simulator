@@ -25,97 +25,88 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "h2o_m_donnees_annuelles.h"
+#include "h2o_m_fonctions.h"
 
-
-
-
-
-# include "h2o_m_donnees_annuelles.h"
-# include "h2o_m_fonctions.h"
-
-
-
-void H2O_M_InitialiserBornesEtCoutsDesVariables( DONNEES_ANNUELLES * DonneesAnnuelles )
+void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES* DonneesAnnuelles)
 {
-int Pdt; int NbPdt; int Var;
-double * Xmin; double * Xmax; double * X; double * TurbineMax;
-double * CoutLineaire; double CoutDepassementVolume;
+    int Pdt;
+    int NbPdt;
+    int Var;
+    double* Xmin;
+    double* Xmax;
+    double* X;
+    double* TurbineMax;
+    double* CoutLineaire;
+    double CoutDepassementVolume;
 
-PROBLEME_HYDRAULIQUE * ProblemeHydraulique;
-PROBLEME_LINEAIRE_PARTIE_FIXE *     ProblemeLineairePartieFixe;
-PROBLEME_LINEAIRE_PARTIE_VARIABLE * ProblemeLineairePartieVariable;
+    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
+    PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe;
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
 
+    DonneesAnnuelles->Volume[0] = DonneesAnnuelles->VolumeInitial;
 
-DonneesAnnuelles->Volume[0] = DonneesAnnuelles->VolumeInitial;
+    NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
+    CoutDepassementVolume = DonneesAnnuelles->CoutDepassementVolume;
+    TurbineMax = DonneesAnnuelles->TurbineMax;
 
-NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
-CoutDepassementVolume = DonneesAnnuelles->CoutDepassementVolume;
-TurbineMax = DonneesAnnuelles->TurbineMax;
+    ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
+    ProblemeLineairePartieFixe = ProblemeHydraulique->ProblemeLineairePartieFixe;
+    ProblemeLineairePartieVariable = ProblemeHydraulique->ProblemeLineairePartieVariable;
 
-ProblemeHydraulique            = DonneesAnnuelles->ProblemeHydraulique;
-ProblemeLineairePartieFixe     = ProblemeHydraulique->ProblemeLineairePartieFixe;
-ProblemeLineairePartieVariable = ProblemeHydraulique->ProblemeLineairePartieVariable;
+    Xmin = ProblemeLineairePartieVariable->Xmin;
+    Xmax = ProblemeLineairePartieVariable->Xmax;
+    X = ProblemeLineairePartieVariable->X;
+    CoutLineaire = ProblemeLineairePartieFixe->CoutLineaire;
 
-Xmin                    = ProblemeLineairePartieVariable->Xmin;
-Xmax                    = ProblemeLineairePartieVariable->Xmax;
-X                       = ProblemeLineairePartieVariable->X;
-CoutLineaire            = ProblemeLineairePartieFixe->CoutLineaire;
+    X[0] = DonneesAnnuelles->Volume[0];
+    Xmin[0] = DonneesAnnuelles->Volume[0];
+    Xmax[0] = DonneesAnnuelles->Volume[0];
 
+    Var = 0;
 
-X[0] = DonneesAnnuelles->Volume[0];
-Xmin[0] = DonneesAnnuelles->Volume[0];
-Xmax[0] = DonneesAnnuelles->Volume[0];
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        CoutLineaire[Var] = 0.0;
+        Var++;
+    }
 
-Var = 0;
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        Xmax[Var] = TurbineMax[Pdt];
+        CoutLineaire[Var] = 0.0;
+        Var++;
+    }
 
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        CoutLineaire[Var] = CoutDepassementVolume;
+        Var++;
+    }
 
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-	CoutLineaire[Var] = 0.0;
-	Var++;
-}
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        CoutLineaire[Var] = CoutDepassementVolume;
+        Var++;
+    }
 
+    CoutLineaire[Var] = DonneesAnnuelles->CoutViolMaxDuVolumeMin;
+    Var++;
 
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-	Xmax[Var] = TurbineMax[Pdt];
-	CoutLineaire[Var] = 0.0;
-	Var++;
-}
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        CoutLineaire[Var] = 1.0;
+        Var++;
+    }
 
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        CoutLineaire[Var] = 1.0;
+        Var++;
+    }
 
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-	CoutLineaire[Var] = CoutDepassementVolume;
-	Var++;
-}
+    CoutLineaire[Var] = 1.0;
+    Var++;
 
-
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-	CoutLineaire[Var] = CoutDepassementVolume;
-	Var++;
-}
-
-
-CoutLineaire[Var] = DonneesAnnuelles->CoutViolMaxDuVolumeMin;
-Var++;
-
-
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-	
-	
-	CoutLineaire[Var] = 1.0;
-	Var++;
-}
-
-
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-	
-	
-	CoutLineaire[Var] = 1.0;	
-	Var++;
-}
-
-
-CoutLineaire[Var] = 1.0;
-Var++;
-
-return;
+    return;
 }

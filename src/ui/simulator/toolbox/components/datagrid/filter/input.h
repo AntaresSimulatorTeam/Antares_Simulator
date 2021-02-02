@@ -25,14 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_FILTER_INPUT_H__
-# define __ANTARES_TOOLBOX_FILTER_INPUT_H__
+#define __ANTARES_TOOLBOX_FILTER_INPUT_H__
 
-# include <antares/wx-wrapper.h>
-# include <wx/choice.h>
-# include "filter.h"
-# include "component/panel.h"
-
-
+#include <antares/wx-wrapper.h>
+#include <wx/choice.h>
+#include "filter.h"
+#include "component/panel.h"
 
 namespace Antares
 {
@@ -40,126 +38,135 @@ namespace Toolbox
 {
 namespace Filter
 {
+// Forward declaration (Parent class)
+class Component;
 
-	// Forward declaration (Parent class)
-	class Component;
+class Input : public Antares::Component::Panel
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    Input(Component* parent);
+    //! Destructor
+    virtual ~Input();
+    //@}
 
+    //! Get the Unique ID for the input
+    int id() const
+    {
+        return pId;
+    }
 
+    //! \name Precision
+    //@{
+    //! Get the precision used by the filter
+    Date::Precision precision() const
+    {
+        return pPrecision;
+    }
+    //! Set the precision to use for the filter
+    void precision(const Date::Precision p)
+    {
+        pPrecision = p;
+    }
+    //@}
 
-	class Input : public Antares::Component::Panel
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		Input(Component* parent);
-		//! Destructor
-		virtual ~Input();
-		//@}
+    /*!
+    ** \brief Add a filter from its ID
+    */
+    void add(const wxString& filterName);
 
-		//! Get the Unique ID for the input
-		int id() const {return pId;}
+    //! Get the current selected filter (may be null)
+    AFilterBase* selected() const
+    {
+        return pSelected ? pSelected->filter : NULL;
+    }
 
-		//! \name Precision
-		//@{
-		//! Get the precision used by the filter
-		Date::Precision precision() const {return pPrecision;}
-		//! Set the precision to use for the filter
-		void precision(const Date::Precision p) {pPrecision = p;}
-		//@}
+    /*!
+    ** \brief Add a standard preset for hourly matrices
+    */
+    void addStdPreset();
 
-		/*!
-		** \brief Add a filter from its ID
-		*/
-		void add(const wxString& filterName);
+    /*!
+    ** \brief Enable/Disable the button to remove the current filter
+    **
+    ** Filters are always available. So when the last one remains,
+    ** it is better to hide the button to remove it.
+    */
+    void showBtnToRemoveFilter(bool visible);
 
-		//! Get the current selected filter (may be null)
-		AFilterBase* selected() const {return pSelected ? pSelected->filter : NULL;}
+    Component* component() const
+    {
+        return pParent;
+    }
 
-		/*!
-		** \brief Add a standard preset for hourly matrices
-		*/
-		void addStdPreset();
+private:
+    /*!
+    ** \brief Structure that holds data to retrieve the good filter in the input selector
+    */
+    struct SelectorClientData : public wxClientData
+    {
+        //! \name Constructor && Destructor
+        //@{
+        /*!
+        ** \brief Default constructor
+        ** \param i Index of the client data in the input selector
+        */
+        explicit SelectorClientData(const wxString& i);
+        //! Destructor
+        virtual ~SelectorClientData();
+        //@}
 
-		/*!
-		** \brief Enable/Disable the button to remove the current filter
-		**
-		** Filters are always available. So when the last one remains,
-		** it is better to hide the button to remove it.
-		*/
-		void showBtnToRemoveFilter(bool visible);
+        /*!
+        ** \brief Create all controls associated to the filter if not already done
+        */
+        AFilterBase* createIfNeeded(Input* input, wxWindow* parent);
 
-		Component* component() const {return pParent;}
+        /*!
+        ** \brief Re-Attach the controls owned by the filter to a given sizer
+        */
+        void attachToSizer(wxSizer& sizer);
 
-	private:
-		/*!
-		** \brief Structure that holds data to retrieve the good filter in the input selector
-		*/
-		struct SelectorClientData : public wxClientData
-		{
-			//! \name Constructor && Destructor
-			//@{
-			/*!
-			** \brief Default constructor
-			** \param i Index of the client data in the input selector
-			*/
-			explicit SelectorClientData(const wxString& i);
-			//! Destructor
-			virtual ~SelectorClientData();
-			//@}
+        //! ID of the filder
+        wxString id;
+        //! Filter  (may be NULL if not used)
+        AFilterBase* filter;
 
-			/*!
-			** \brief Create all controls associated to the filter if not already done
-			*/
-			AFilterBase* createIfNeeded(Input* input, wxWindow* parent);
+    }; // SelectorClientData
 
-			/*!
-			** \brief Re-Attach the controls owned by the filter to a given sizer
-			*/
-			void attachToSizer(wxSizer& sizer);
+private:
+    //! Select a filter from the client data
+    void selectFilter(SelectorClientData* data);
 
-			//! ID of the filder
-			wxString id;
-			//! Filter  (may be NULL if not used)
-			AFilterBase* filter;
+    //! Event: The filter has been changed from the input selector
+    void onFilterChanged(wxCommandEvent& evt);
+    //! Event: The user is asking to add a filter
+    void onAddFilter(void*);
+    //! Event: The user is asking to remove the filter
+    void onRemoveFilter(void*);
 
-		}; // SelectorClientData
+private:
+    //! Input ID
+    const int pId;
+    //! Parent
+    Component* pParent;
+    //! The current selection
+    SelectorClientData* pSelected;
+    //! Filter selector
+    wxChoice* pChoice;
+    //! Sizer used for all controls owned by the filter
+    wxSizer* pFilterSizer;
+    //! Button: remove the filter
+    Antares::Component::Button* pBtnMinus;
+    //! Button: remove the filter
+    Antares::Component::Button* pBtnPlus;
+    //! Precision
+    Date::Precision pPrecision;
 
-	private:
-		//! Select a filter from the client data
-		void selectFilter(SelectorClientData* data);
-
-		//! Event: The filter has been changed from the input selector
-		void onFilterChanged(wxCommandEvent& evt);
-		//! Event: The user is asking to add a filter
-		void onAddFilter(void*);
-		//! Event: The user is asking to remove the filter
-		void onRemoveFilter(void*);
-
-	private:
-		//! Input ID
-		const int pId;
-		//! Parent
-		Component* pParent;
-		//! The current selection
-		SelectorClientData* pSelected;
-		//! Filter selector
-		wxChoice* pChoice;
-		//! Sizer used for all controls owned by the filter
-		wxSizer* pFilterSizer;
-		//! Button: remove the filter
-		Antares::Component::Button* pBtnMinus;
-		//! Button: remove the filter
-		Antares::Component::Button* pBtnPlus;
-		//! Precision
-		Date::Precision pPrecision;
-
-	}; // class Input
-
-
-
+}; // class Input
 
 } // namespace Filter
 } // namespace Toolbox

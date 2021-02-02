@@ -11,45 +11,49 @@
 #pragma once
 #include "distribution.h"
 
-
-
 namespace Yuni
 {
 namespace Math
 {
 namespace Random
 {
+/*!
+** \brief Constant random number generator
+**
+** Provides always the same value, given through the constructor
+*/
+template<typename T>
+class YUNI_DECL Constant final : public Distribution<T, Constant>
+{
+public:
+    // Name of the distribution
+    static const char* Name()
+    {
+        return "Constant";
+    }
 
+public:
+    Constant(const T v) : pValue(v)
+    {
+    }
+    ~Constant()
+    {
+    }
 
+    void reset()
+    {
+    }
 
-	/*!
-	** \brief Constant random number generator
-	**
-	** Provides always the same value, given through the constructor
-	*/
-	template<typename T>
-	class YUNI_DECL Constant final : public Distribution<T, Constant>
-	{
-	public:
-		// Name of the distribution
-		static const char* Name() {return "Constant";}
+    const Value next() const
+    {
+        return pValue;
+    }
 
-	public:
-		Constant(const T v) :pValue(v) {}
-		~Constant() {}
+private:
+    //! The constant value
+    const T pValue;
 
-		void reset() {}
-
-		const Value next() const {return pValue;}
-
-	private:
-		//! The constant value
-		const T pValue;
-
-	}; // class Constant
-
-
-
+}; // class Constant
 
 } // namespace Random
 } // namespace Math

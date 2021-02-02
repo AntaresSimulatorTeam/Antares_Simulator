@@ -27,7 +27,6 @@
 
 #include "reserves.h"
 
-
 namespace Antares
 {
 namespace Action
@@ -36,61 +35,51 @@ namespace AntaresStudy
 {
 namespace Area
 {
+Reserves::Reserves(const AnyString& areaname) : pOriginalAreaName(areaname)
+{
+    pInfos.caption << "Reserves";
+}
 
+Reserves::~Reserves()
+{
+}
 
-	Reserves::Reserves(const AnyString& areaname) :
-		pOriginalAreaName(areaname)
-	{
-		pInfos.caption << "Reserves";
-	}
+bool Reserves::prepareWL(Context&)
+{
+    pInfos.message.clear();
+    pInfos.state = stReady;
+    switch (pInfos.behavior)
+    {
+    case bhOverwrite:
+        pInfos.message << "The reserves will be copied";
+        break;
+    default:
+        pInfos.state = stNothingToDo;
+    }
 
+    return true;
+}
 
-	Reserves::~Reserves()
-	{}
-
-
-	bool Reserves::prepareWL(Context&)
-	{
-		pInfos.message.clear();
-		pInfos.state = stReady;
-		switch (pInfos.behavior)
-		{
-			case bhOverwrite:
-				pInfos.message << "The reserves will be copied";
-				break;
-			default:
-				pInfos.state = stNothingToDo;
-		}
-
-		return true;
-	}
-
-
-	bool Reserves::performWL(Context& ctx)
-	{
-		if (ctx.area && ctx.extStudy && ctx.area->ui)
-		{
-			Data::Area* source = ctx.extStudy->areas.findFromName(pOriginalAreaName);
-			// check the pointer + make sure that this is not the same memory area
-			if (source)
-			{
-				if (source != ctx.area)
-				{
-					ctx.area->reserves = source->reserves;
-					source->reserves.unloadFromMemory();
-				}
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-
-
+bool Reserves::performWL(Context& ctx)
+{
+    if (ctx.area && ctx.extStudy && ctx.area->ui)
+    {
+        Data::Area* source = ctx.extStudy->areas.findFromName(pOriginalAreaName);
+        // check the pointer + make sure that this is not the same memory area
+        if (source)
+        {
+            if (source != ctx.area)
+            {
+                ctx.area->reserves = source->reserves;
+                source->reserves.unloadFromMemory();
+            }
+            return true;
+        }
+    }
+    return false;
+}
 
 } // namespace Area
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
-

@@ -10,10 +10,8 @@
 */
 #pragma once
 
-
 namespace Yuni
 {
-
 /*!
 ** \brief Exceptions thrown by the Yuni framework.
 ** \ingroup Exceptions
@@ -23,6 +21,5 @@ namespace Yuni
 */
 namespace Exceptions
 {
-
 } // namespace Exceptions
 } // namespace Yuni

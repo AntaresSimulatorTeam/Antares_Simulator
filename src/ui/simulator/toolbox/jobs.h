@@ -25,9 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_JOBS_H__
-# define __ANTARES_TOOLBOX_JOBS_H__
+#define __ANTARES_TOOLBOX_JOBS_H__
 
-# include "jobs/job.h"
+#include "jobs/job.h"
 
 #endif // __ANTARES_TOOLBOX_JOBS_H__
-

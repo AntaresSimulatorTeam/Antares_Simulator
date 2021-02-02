@@ -25,13 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_EXT_SOURCE_APPLY_H__
-# define __ANTARES_TOOLBOX_EXT_SOURCE_APPLY_H__
+#define __ANTARES_TOOLBOX_EXT_SOURCE_APPLY_H__
 
-# include <yuni/yuni.h>
-# include <antares/study.h>
-# include <antares/study/action/action.h>
-# include <antares/study/action/context.h>
-
+#include <yuni/yuni.h>
+#include <antares/study.h>
+#include <antares/study/action/action.h>
+#include <antares/study/action/context.h>
 
 namespace Antares
 {
@@ -39,14 +38,12 @@ namespace ExtSource
 {
 namespace Handler
 {
-
-	/*!
-	** \brief Apply all actions
-	*/
-	void Apply(Antares::Action::Context::Ptr context,
-		Antares::Action::IAction::Ptr actions, bool windowRequired = false);
-
-
+/*!
+** \brief Apply all actions
+*/
+void Apply(Antares::Action::Context::Ptr context,
+           Antares::Action::IAction::Ptr actions,
+           bool windowRequired = false);
 
 } // namespace Handler
 } // namespace ExtSource

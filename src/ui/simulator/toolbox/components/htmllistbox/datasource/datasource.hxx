@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_DATASOURCE_HXX__
-# define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_DATASOURCE_HXX__
-
+#define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_DATASOURCE_HXX__
 
 namespace Antares
 {
@@ -36,16 +35,13 @@ namespace HTMLListbox
 {
 namespace Datasource
 {
+inline IDatasource::IDatasource(HTMLListbox::Component& parent) : pParent(parent)
+{
+}
 
-
-	inline IDatasource::IDatasource(HTMLListbox::Component& parent)
-		:pParent(parent)
-	{}
-
-	inline IDatasource::~IDatasource()
-	{}
-
-
+inline IDatasource::~IDatasource()
+{
+}
 
 } // namespace Datasource
 } // namespace HTMLListbox

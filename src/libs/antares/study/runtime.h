@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __LIBS_ANTARES_STUDY_RUNTIME_H__
-# define __LIBS_ANTARES_STUDY_RUNTIME_H__
+#define __LIBS_ANTARES_STUDY_RUNTIME_H__
 
-# include "runtime/runtime.h"
+#include "runtime/runtime.h"
 
 #endif // __LIBS_ANTARES_STUDY_RUNTIME_H__

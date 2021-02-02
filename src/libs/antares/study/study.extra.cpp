@@ -29,167 +29,145 @@
 #include "study.h"
 #include "scenario-builder/sets.h"
 
-
 using namespace Yuni;
-
-
 
 namespace Antares
 {
 namespace Data
 {
+// The path to the Icon file to use when writing a study
+String StudyIconFile;
 
-	// The path to the Icon file to use when writing a study
-	String StudyIconFile;
+void Study::releaseAllLocks()
+{
+    // Do nothing for now
+}
 
+void Study::scenarioRulesCreate()
+{
+    // releasing the previous instance of the scenario builder
+    delete scenarioRules;
 
+    // When ran from the solver, the scenario builder must be present
+    scenarioRules = new ScenarioBuilder::Sets();
+    scenarioRules->loadFromStudy(*this);
+}
 
+void Study::scenarioRulesCreate(const RulesScenarioName& /*thisoneonly*/)
+{
+    // releasing the previous instance of the scenario builder
+    delete scenarioRules;
+    // When ran from the solver, the scenario builder must be present
+    scenarioRules = new ScenarioBuilder::Sets();
+    scenarioRules->loadFromStudy(*this);
+}
 
-	void Study::releaseAllLocks()
-	{
-		// Do nothing for now
-	}
+void Study::scenarioRulesDestroy()
+{
+    if (scenarioRules)
+    {
+        // releasing the previous instance of the scenario builder
+        // safety dereferencing for the interface if running
+        ScenarioBuilder::Sets* sb = scenarioRules;
+        scenarioRules = nullptr;
+        delete sb;
+    }
+}
 
+void Study::scenarioRulesLoadIfNotAvailable()
+{
+    if (!scenarioRules)
+    {
+        // When ran from the solver, the scenario builder must be present
+        scenarioRules = new ScenarioBuilder::Sets();
+        scenarioRules->loadFromStudy(*this);
+    }
+}
 
-	void Study::scenarioRulesCreate()
-	{
-		// releasing the previous instance of the scenario builder
-		delete scenarioRules;
+bool Study::areaFindNameForANewArea(AreaName& out, const AreaName& basename)
+{
+    out = basename;
+    AreaName id = out;
+    id.toLower();
 
-		// When ran from the solver, the scenario builder must be present
-		scenarioRules = new ScenarioBuilder::Sets();
-		scenarioRules->loadFromStudy(*this);
-	}
+    if (areas.find(id))
+    {
+        int i = 1;
+        do
+        {
+            if (++i > 10000)
+            {
+                out.clear();
+                return false;
+            }
+            out = basename;
+            out << "-" << i;
+            id = out;
+            id.toLower();
+        } while (areas.find(id));
+    }
+    return true;
+}
 
+bool Study::TitleFromStudyFolder(const AnyString& folder, String& out, bool warnings)
+{
+    String b;
+    b << folder << IO::Separator << "study.antares";
+    StudyHeader header;
+    if (header.loadFromFile(b, warnings))
+    {
+        out = header.caption;
+        return true;
+    }
+    out.clear();
+    return false;
+}
 
-	void Study::scenarioRulesCreate(const RulesScenarioName& /*thisoneonly*/)
-	{
-		// releasing the previous instance of the scenario builder
-		delete scenarioRules;
-		// When ran from the solver, the scenario builder must be present
-		scenarioRules = new ScenarioBuilder::Sets();
-		scenarioRules->loadFromStudy(*this);
-	}
+bool Study::IsRootStudy(const AnyString& folder)
+{
+    String buffer;
+    buffer.reserve(folder.size() + 16);
+    return IsRootStudy(folder, buffer);
+}
 
+bool Study::IsRootStudy(const AnyString& folder, String& buffer)
+{
+    buffer.clear() << folder << IO::Separator << "study.antares";
+    StudyHeader header;
+    return (header.loadFromFile(buffer, false));
+}
 
+bool Study::IsInsideStudyFolder(const AnyString& path, String& location, String& title)
+{
+    if (TitleFromStudyFolder(path, title, false))
+    {
+        location = path;
+        return true;
+    }
 
-	void Study::scenarioRulesDestroy()
-	{
-		if (scenarioRules)
-		{
-			// releasing the previous instance of the scenario builder
-			// safety dereferencing for the interface if running
-			ScenarioBuilder::Sets* sb = scenarioRules;
-			scenarioRules = nullptr;
-			delete sb;
-		}
-	}
+    String::Size p;
+    String::Size offset = 0;
+    do
+    {
+        // Looking for the next folder separator
+        p = path.find(IO::Separator, offset);
+        if (p >= path.size())
+            return false;
 
+        AnyString tmp(path, 0, p);
+        if (!tmp.empty())
+        {
+            if (TitleFromStudyFolder(tmp, title, false))
+            {
+                location = tmp;
+                return true;
+            }
+        }
+        offset = p + 1;
+    } while (true);
 
-	void Study::scenarioRulesLoadIfNotAvailable()
-	{
-		if (!scenarioRules)
-		{
-			// When ran from the solver, the scenario builder must be present
-			scenarioRules = new ScenarioBuilder::Sets();
-			scenarioRules->loadFromStudy(*this);
-		}
-	}
-
-
-	bool Study::areaFindNameForANewArea(AreaName& out, const AreaName& basename)
-	{
-		out = basename;
-		AreaName id = out;
-		id.toLower();
-
-		if (areas.find(id))
-		{
-			int i = 1;
-			do
-			{
-				if (++i > 10000)
-				{
-					out.clear();
-					return false;
-				}
-				out = basename;
-				out << "-" << i;
-				id = out;
-				id.toLower();
-			}
-			while (areas.find(id));
-		}
-		return true;
-	}
-
-
-	bool Study::TitleFromStudyFolder(const AnyString& folder, String& out, bool warnings)
-	{
-		String b;
-		b << folder << IO::Separator << "study.antares";
-		StudyHeader header;
-		if (header.loadFromFile(b, warnings))
-		{
-			out = header.caption;
-			return true;
-		}
-		out.clear();
-		return false;
-	}
-
-
-	bool Study::IsRootStudy(const AnyString& folder)
-	{
-		String buffer;
-		buffer.reserve(folder.size() + 16);
-		return IsRootStudy(folder, buffer);
-	}
-
-
-	bool Study::IsRootStudy(const AnyString& folder, String& buffer)
-	{
-		buffer.clear() << folder << IO::Separator << "study.antares";
-		StudyHeader header;
-		return (header.loadFromFile(buffer, false));
-	}
-
-
-	bool Study::IsInsideStudyFolder(const AnyString& path, String& location, String& title)
-	{
-		if (TitleFromStudyFolder(path, title, false))
-		{
-			location = path;
-			return true;
-		}
-
-		String::Size p;
-		String::Size offset = 0;
-		do
-		{
-			// Looking for the next folder separator
-			p = path.find(IO::Separator, offset);
-			if (p >= path.size())
-				return false;
-
-			AnyString tmp(path, 0, p);
-			if (!tmp.empty())
-			{
-				if (TitleFromStudyFolder(tmp, title, false))
-				{
-					location = tmp;
-					return true;
-				}
-			}
-			offset = p + 1;
-		}
-		while (true);
-
-		return false;
-	}
-
-
-
+    return false;
+}
 
 } // namespace Data
 } // namespace Antares

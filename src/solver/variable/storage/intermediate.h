@@ -25,15 +25,14 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_STORAGE_INTERMEDIATE_H__
-# define __SOLVER_VARIABLE_STORAGE_INTERMEDIATE_H__
+#define __SOLVER_VARIABLE_STORAGE_INTERMEDIATE_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-# include "../constants.h"
-# include <antares/study.h>
-# include "../categories.h"
-# include "../surveyresults.h"
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+#include "../constants.h"
+#include <antares/study.h>
+#include "../categories.h"
+#include "../surveyresults.h"
 
 namespace Antares
 {
@@ -41,141 +40,138 @@ namespace Solver
 {
 namespace Variable
 {
+/*!
+** \brief Temporary buffer for allocating results for a single year
+**
+** This class is mostly used by economic variables for storing
+** their data for a single year.
+*/
+class IntermediateValues final
+{
+public:
+    //! Basic type
+    typedef double Type;
 
-	/*!
-	** \brief Temporary buffer for allocating results for a single year
-	**
-	** This class is mostly used by economic variables for storing
-	** their data for a single year.
-	*/
-	class IntermediateValues final
-	{
-	public:
-		//! Basic type
-		typedef double Type;
+public:
+    //! Try to estimate the amount of memory that will be required for a simulation
+    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u);
+    //! Get the dynamic amount of memory consummed by a simulation
+    // \note This method assumes that you've already have gathered the size
+    //   of this class
+    static Yuni::uint64 MemoryUsage();
 
-	public:
-		//! Try to estimate the amount of memory that will be required for a simulation
-		static void EstimateMemoryUsage(Data::StudyMemoryUsage& u);
-		//! Get the dynamic amount of memory consummed by a simulation
-		// \note This method assumes that you've already have gathered the size
-		//   of this class
-		static Yuni::uint64 MemoryUsage();
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    IntermediateValues();
+    //! Destructor
+    ~IntermediateValues();
+    //@}
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		IntermediateValues();
-		//! Destructor
-		~IntermediateValues();
-		//@}
+    void initializeFromStudy(Data::Study& study);
 
-		void initializeFromStudy(Data::Study& study);
+    /*!
+    ** \brief Reset all values
+    */
+    void reset();
 
-		/*!
-		** \brief Reset all values
-		*/
-		void reset();
+    /*!
+    ** \brief Flush the memory
+    */
+    void flush() const;
 
-		/*!
-		** \brief Flush the memory
-		*/
-		void flush() const;
+    /*!
+    ** \brief Compute statistics for the current year
+    */
+    void computeStatisticsForTheCurrentYear();
 
-		/*!
-		** \brief Compute statistics for the current year
-		*/
-		void computeStatisticsForTheCurrentYear();
+    /*!
+    ** \brief Compute statistics for the current year
+    */
+    void computeStatisticsOrForTheCurrentYear();
 
-		/*!
-		** \brief Compute statistics for the current year
-		*/
-		void computeStatisticsOrForTheCurrentYear();
+    /*!
+    ** \brief Compute statistics for the current year
+    */
+    void computeStatisticsAdequacyForTheCurrentYear();
 
-		/*!
-		** \brief Compute statistics for the current year
-		*/
-		void computeStatisticsAdequacyForTheCurrentYear();
+    /*!
+    ** \brief Compute daily, weekly, monthly and yearly averages for the current year
+    */
+    void computeAVGstatisticsForCurrentYear();
 
-		/*!
-		** \brief Compute daily, weekly, monthly and yearly averages for the current year
-		*/
-		void computeAVGstatisticsForCurrentYear();
+    /*!
+    ** \brief Compute probabilities for the current year
+    */
+    void computeProbabilitiesForTheCurrentYear();
 
-		/*!
-		** \brief Compute probabilities for the current year
-		*/
-		void computeProbabilitiesForTheCurrentYear();
+    /*!
+    ** \brief Make another calculations when values are related to a price
+    */
+    void adjustValuesWhenRelatedToAPrice();
 
-		/*!
-		** \brief Make another calculations when values are related to a price
-		*/
-		void adjustValuesWhenRelatedToAPrice();
+    /*!
+    ** \brief Make another calculations when values are related to a price
+    */
+    void adjustValuesAdequacyWhenRelatedToAPrice();
 
-		/*!
-		** \brief Make another calculations when values are related to a price
-		*/
-		void adjustValuesAdequacyWhenRelatedToAPrice();
+    //! \name User reports
+    //@{
+    template<class VCardT>
+    void buildAnnualSurveyReport(SurveyResults& report, int fileLevel, int precision) const;
+    //@}
 
+    //! \name Operators
+    //@{
+    /*!
+    ** \brief Vector alias for an hour in the year
+    */
+    Type& operator[](const uint index);
+    const Type& operator[](const uint index) const;
+    //@}
 
-		//! \name User reports
-		//@{
-		template<class VCardT>
-		void buildAnnualSurveyReport(SurveyResults& report, int fileLevel, int precision) const;
-		//@}
+private:
+    template<uint Size, class VCardT, class A>
+    void internalExportAnnualValues(SurveyResults& report, const A& array, bool annual) const;
 
+public:
+    //! Range
+    Antares::Data::StudyRangeLimits* pRange;
+    //! Calendar, from the study, but dedicated to the output (with leap year)
+    Antares::Date::Calendar* calendar;
+    //! Range
+    Antares::Data::StudyRuntimeInfos* pRuntimeInfo;
 
-		//! \name Operators
-		//@{
-		/*!
-		** \brief Vector alias for an hour in the year
-		*/
-		Type& operator [] (const uint index);
-		const Type& operator [] (const uint index) const;
-		//@}
+    //! Values for each month
+    Type month[maxMonths];
+    //! Values for each week
+    Type week[maxWeeksInAYear];
+    //! Values for each day in the year
+    Type day[maxDaysInAYear];
+    //! Values for each hour in the year
+    mutable Antares::Memory::Stored<Type>::Type hour;
+    //! Year
+    Type year;
 
+private:
+    // non copyable
+    IntermediateValues(const IntermediateValues&)
+    {
+    }
+    IntermediateValues& operator=(const IntermediateValues&)
+    {
+        return *this;
+    }
 
-	private:
-		template<uint Size, class VCardT, class A>
-		void internalExportAnnualValues(SurveyResults& report, const A& array, bool annual) const;
-
-	public:
-		//! Range
-		Antares::Data::StudyRangeLimits* pRange;
-		//! Calendar, from the study, but dedicated to the output (with leap year)
-		Antares::Date::Calendar* calendar;
-		//! Range
-		Antares::Data::StudyRuntimeInfos* pRuntimeInfo;
-
-		//! Values for each month
-		Type month[maxMonths];
-		//! Values for each week
-		Type week[maxWeeksInAYear];
-		//! Values for each day in the year
-		Type day[maxDaysInAYear];
-		//! Values for each hour in the year
-		mutable Antares::Memory::Stored<Type>::Type hour;
-		//! Year
-		Type year;
-
-	private:
-		// non copyable
-		IntermediateValues(const IntermediateValues&) {}
-		IntermediateValues& operator = (const IntermediateValues&) {return *this;}
-
-	}; // class IntermediateValues
-
-
-
-
+}; // class IntermediateValues
 
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
 
-# include "intermediate.hxx"
+#include "intermediate.hxx"
 
 #endif // __SOLVER_VARIABLE_STORAGE_INTERMEDIATE_H__

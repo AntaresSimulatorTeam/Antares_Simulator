@@ -25,17 +25,16 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_INPUT_CONNECTIONS_H__
-# define __ANTARES_TOOLBOX_INPUT_CONNECTIONS_H__
+#define __ANTARES_TOOLBOX_INPUT_CONNECTIONS_H__
 
-# include <antares/wx-wrapper.h>
-# include <wx/panel.h>
-# include <antares/study.h>
-# include "input.h"
-# include <wx/arrstr.h>
-# include <yuni/core/event.h>
-# include <wx/treectrl.h>
-# include <wx/combobox.h>
-
+#include <antares/wx-wrapper.h>
+#include <wx/panel.h>
+#include <antares/study.h>
+#include "input.h"
+#include <wx/arrstr.h>
+#include <yuni/core/event.h>
+#include <wx/treectrl.h>
+#include <wx/combobox.h>
 
 namespace Antares
 {
@@ -43,49 +42,45 @@ namespace Toolbox
 {
 namespace InputSelector
 {
+class Connections : public AInput, public Yuni::IEventObserver<Connections>
+{
+public:
+    Connections(wxWindow* parent);
+    virtual ~Connections();
 
+    virtual void update();
 
-	class Connections : public AInput, public Yuni::IEventObserver<Connections>
-	{
-	public:
-		Connections(wxWindow* parent);
-		virtual ~Connections();
+    virtual wxPoint recommendedSize() const
+    {
+        return wxPoint(250, 70);
+    }
 
-		virtual void update();
+public:
+    Yuni::Event<void(Antares::Data::AreaLink*)> onConnectionChanged;
 
-		virtual wxPoint recommendedSize() const {return wxPoint(250, 70);}
+protected:
+    virtual void internalBuildSubControls();
 
-	public:
-		Yuni::Event<void (Antares::Data::AreaLink*)> onConnectionChanged;
+private:
+    void onStudyClosed();
+    void onStudyAreaUpdate(Data::Area*);
+    void onStudyLinkUpdate(Data::AreaLink*);
 
-	protected:
-		virtual void internalBuildSubControls();
+    void onSelectionChanged(wxTreeEvent& evt);
+    void delayedSelection(wxTreeItemData* data);
 
-	private:
-		void onStudyClosed();
-		void onStudyAreaUpdate(Data::Area*);
-		void onStudyLinkUpdate(Data::AreaLink*);
+    void onMapLayerAdded(const wxString* text);
+    void onMapLayerRemoved(const wxString* text);
+    void onMapLayerChanged(const wxString* text);
+    void onMapLayerRenamed(const wxString* text);
+    void layerFilterChanged(wxCommandEvent& evt);
 
-		void onSelectionChanged(wxTreeEvent& evt);
-		void delayedSelection(wxTreeItemData* data);
+private:
+    wxComboBox* pLayerFilter;
+    wxTreeCtrl* pListbox;
+    Antares::Data::AreaLink* pLastSelected;
 
-		void onMapLayerAdded(const wxString * text);
-		void onMapLayerRemoved(const wxString * text);
-		void onMapLayerChanged(const wxString * text);
-		void onMapLayerRenamed(const wxString * text);
-		void layerFilterChanged(wxCommandEvent & evt);
-
-	private:
-		wxComboBox *pLayerFilter;
-		wxTreeCtrl* pListbox;
-		Antares::Data::AreaLink* pLastSelected;
-
-	}; // class Area
-
-
-
-
-
+}; // class Area
 
 } // namespace InputSelector
 } // namespace Toolbox

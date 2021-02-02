@@ -32,9 +32,7 @@
 #include "component.h"
 #include "../../button.h"
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
@@ -42,244 +40,220 @@ namespace Toolbox
 {
 namespace Filter
 {
+namespace // anonymous
+{
+//! The next global ID for inputs
+int gInputNextId = 0;
 
-	namespace // anonymous
-	{
-		//! The next global ID for inputs
-		int gInputNextId = 0;
+} // anonymous namespace
 
-	} // anonymous namespace
+void Input::addStdPreset()
+{
+    this->add(wxT("any"));
+    this->add(wxT("day"));
+    this->add(wxT("dayyear"));
+    this->add(wxT("hour"));
+    this->add(wxT("houryear"));
+    this->add(wxT("month"));
+    this->add(wxT("week"));
+    this->add(wxT("weekday"));
+    this->add(wxT("columnindex"));
+}
 
+Input::Input(Component* parent) :
+ Antares::Component::Panel(parent),
+ pId(gInputNextId++),
+ pParent(parent),
+ pSelected(nullptr),
+ pBtnMinus(nullptr),
+ pBtnPlus(nullptr),
+ pPrecision(Date::stepAny)
+{
+    // Main sizer
+    auto* sizer = new wxBoxSizer(wxHORIZONTAL);
+    SetSizer(sizer);
 
+    // -
+    pBtnMinus = new Antares::Component::Button(
+      this, wxEmptyString, "images/16x16/minus.png", this, &Input::onRemoveFilter);
+    sizer->Add(pBtnMinus, 0, wxALL | wxALIGN_CENTER, 1);
 
-	void Input::addStdPreset()
-	{
-		this->add(wxT("any"));
-		this->add(wxT("day"));
-		this->add(wxT("dayyear"));
-		this->add(wxT("hour"));
-		this->add(wxT("houryear"));
-		this->add(wxT("month"));
-		this->add(wxT("week"));
-		this->add(wxT("weekday"));
-		this->add(wxT("columnindex"));
-	}
+    // +
+    pBtnPlus = new Antares::Component::Button(
+      this, wxEmptyString, "images/16x16/plus.png", this, &Input::onAddFilter);
+    sizer->Add(pBtnPlus, 0, wxALL | wxALIGN_CENTER, 1);
 
+    sizer->AddSpacer(5);
 
+    // Filter selector
+    pChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxSize(-1, 22));
+    sizer->Add(pChoice, 0, wxALL | wxEXPAND);
 
-	Input::Input(Component* parent) :
-		Antares::Component::Panel(parent),
-		pId(gInputNextId++),
-		pParent(parent),
-		pSelected(nullptr),
-		pBtnMinus(nullptr),
-		pBtnPlus(nullptr),
-		pPrecision(Date::stepAny)
-	{
-		// Main sizer
-		auto* sizer = new wxBoxSizer(wxHORIZONTAL);
-		SetSizer(sizer);
+    // Sizer for the controls of the current filter
+    pFilterSizer = new wxBoxSizer(wxHORIZONTAL);
+    sizer->Add(pFilterSizer, 1, wxALL | wxEXPAND);
 
-		// -
-		pBtnMinus = new Antares::Component::Button(this, wxEmptyString, "images/16x16/minus.png",
-			this, &Input::onRemoveFilter);
-		sizer->Add(pBtnMinus, 0, wxALL|wxALIGN_CENTER, 1);
+    sizer->Layout();
 
-		// +
-		pBtnPlus = new Antares::Component::Button(this, wxEmptyString, "images/16x16/plus.png",
-			this, &Input::onAddFilter);
-		sizer->Add(pBtnPlus, 0, wxALL|wxALIGN_CENTER, 1);
+    // Events
+    pChoice->Connect(pChoice->GetId(),
+                     wxEVT_COMMAND_CHOICE_SELECTED,
+                     wxCommandEventHandler(Input::onFilterChanged),
+                     nullptr,
+                     this);
+}
 
-		sizer->AddSpacer(5);
+Input::~Input()
+{
+    // Disconnection
+    if (pBtnMinus)
+        pBtnMinus->disconnectClickEvent();
+    if (pBtnPlus)
+        pBtnPlus->disconnectClickEvent();
+}
 
-		// Filter selector
-		pChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxSize(-1, 22));
-		sizer->Add(pChoice, 0, wxALL|wxEXPAND);
+void Input::add(const wxString& filterName)
+{
+    if (not filterName.empty())
+    {
+        // Inserting the new filter in the list of available filters
+        const wxChar* caption = AFilterBase::CaptionFromName(filterName, pPrecision);
+        if (caption)
+        {
+            auto* data = new SelectorClientData(filterName);
+            // insert new item at the end
+            pChoice->Insert(caption, pChoice->GetCount(), data);
 
-		// Sizer for the controls of the current filter
-		pFilterSizer = new wxBoxSizer(wxHORIZONTAL);
-		sizer->Add(pFilterSizer, 1, wxALL|wxEXPAND);
+            // Autoselection - The first one
+            if (1 == pChoice->GetCount())
+            {
+                pChoice->SetSelection(0 /* The first item in the list */);
+                selectFilter(data);
+            }
+        }
+    }
+}
 
-		sizer->Layout();
+void Input::onFilterChanged(wxCommandEvent& evt)
+{
+    auto* data = dynamic_cast<SelectorClientData*>(evt.GetClientObject());
+    if (data)
+    {
+#ifndef NDEBUG
+        String textdbg;
+        wxStringToString(data->id, textdbg);
+        logs.debug() << "  component.datagrid: selecting " << textdbg;
+#endif
+        selectFilter(data);
+        pParent->refresh();
+    }
+    else
+    {
+#ifndef NDEBUG
+        logs.error() << "component.datagrid: no data from wxChoice::GetClientObject()";
+#endif
+    }
+}
 
-		// Events
-		pChoice->Connect(pChoice->GetId(), wxEVT_COMMAND_CHOICE_SELECTED,
-			wxCommandEventHandler(Input::onFilterChanged), nullptr, this);
-	}
+void Input::selectFilter(SelectorClientData* data)
+{
+    // Create the filter if not already exists
+    if (data)
+    {
+        if (data->createIfNeeded(this, this))
+        {
+            assert(pFilterSizer && "The sizer for the filter must not be null");
+            data->attachToSizer(*pFilterSizer);
+            pSelected = data;
+        }
+        else
+        {
+#ifndef NDEBUG
+            logs.error() << "component.datagrid.selectFilter: createIfNeeded failed";
+#endif
+        }
+    }
+}
 
+Input::SelectorClientData::SelectorClientData(const wxString& i) : id(i), filter(nullptr)
+{
+}
 
-	Input::~Input()
-	{
-		// Disconnection
-		if (pBtnMinus)
-			pBtnMinus->disconnectClickEvent();
-		if (pBtnPlus)
-			pBtnPlus->disconnectClickEvent();
-	}
+Input::SelectorClientData::~SelectorClientData()
+{
+    delete filter;
+}
 
+AFilterBase* Input::SelectorClientData::createIfNeeded(Input* input, wxWindow* parent)
+{
+    if (!filter)
+    {
+        filter = AFilterBase::FactoryCreate(input, id);
+        if (filter)
+            filter->recreateGUI(parent);
+    }
+    return filter;
+}
 
+void Input::SelectorClientData::attachToSizer(wxSizer& sizer)
+{
+    if (filter)
+    {
+        /* Asserts */
+        assert(filter->sizer());
 
-	void Input::add(const wxString& filterName)
-	{
-		if (not filterName.empty())
-		{
-			// Inserting the new filter in the list of available filters
-			const wxChar* caption = AFilterBase::CaptionFromName(filterName, pPrecision);
-			if (caption)
-			{
-				auto* data = new SelectorClientData(filterName);
-				// insert new item at the end
-				pChoice->Insert(caption, pChoice->GetCount(), data);
+        // Hide all controls
+        auto end = sizer.GetChildren().end();
+        for (auto i = sizer.GetChildren().begin(); i != end; ++i)
+            (*i)->Show(false);
 
-				// Autoselection - The first one
-				if (1 == pChoice->GetCount())
-				{
-					pChoice->SetSelection(0 /* The first item in the list */);
-					selectFilter(data);
-				}
-			}
-		}
-	}
+        // Attaching our filter to the given sizer
+        if (!sizer.GetItem(filter->sizer()))
+            sizer.Add(filter->sizer(), 0, wxALL | wxEXPAND);
 
+        // Make the new sizer visible
+        sizer.Show(filter->sizer(), true);
+        filter->refreshGUIOperator();
 
+        // Layout for sizers
+        filter->sizer()->Layout();
+        sizer.Layout();
+    }
+}
 
-	void Input::onFilterChanged(wxCommandEvent& evt)
-	{
-		auto* data = dynamic_cast<SelectorClientData*>(evt.GetClientObject());
-		if (data)
-		{
-			# ifndef NDEBUG
-			String textdbg;
-			wxStringToString(data->id, textdbg);
-			logs.debug() << "  component.datagrid: selecting " << textdbg;
-			# endif
-			selectFilter(data);
-			pParent->refresh();
-		}
-		else
-		{
-			# ifndef NDEBUG
-			logs.error() << "component.datagrid: no data from wxChoice::GetClientObject()";
-			# endif
-		}
-	}
+void Input::onRemoveFilter(void*)
+{
+    if (pParent)
+    {
+        // Disconnection first to avoid SegV
+        if (pBtnMinus)
+            pBtnMinus->disconnectClickEvent();
+        if (pBtnPlus)
+            pBtnPlus->disconnectClickEvent();
+        pBtnMinus = nullptr;
+        // remove me !
+        pParent->remove(pId);
+    }
+}
 
+void Input::onAddFilter(void*)
+{
+    if (pParent)
+    {
+        pParent->add();
+        pParent->refresh();
+    }
+}
 
-	void Input::selectFilter(SelectorClientData* data)
-	{
-		// Create the filter if not already exists
-		if (data)
-		{
-			if (data->createIfNeeded(this, this))
-			{
-				assert(pFilterSizer && "The sizer for the filter must not be null");
-				data->attachToSizer(*pFilterSizer);
-				pSelected = data;
-			}
-			else
-			{
-				# ifndef NDEBUG
-				logs.error() << "component.datagrid.selectFilter: createIfNeeded failed";
-				# endif
-			}
-		}
-	}
-
-
-
-
-
-	Input::SelectorClientData::SelectorClientData(const wxString& i) :
-		id(i),
-		filter(nullptr)
-	{}
-
-
-	Input::SelectorClientData::~SelectorClientData()
-	{
-		delete filter;
-	}
-
-
-	AFilterBase* Input::SelectorClientData::createIfNeeded(Input* input, wxWindow* parent)
-	{
-		if (!filter)
-		{
-			filter = AFilterBase::FactoryCreate(input, id);
-			if (filter)
-				filter->recreateGUI(parent);
-		}
-		return filter;
-	}
-
-
-	void Input::SelectorClientData::attachToSizer(wxSizer& sizer)
-	{
-		if (filter)
-		{
-			/* Asserts */
-			assert(filter->sizer());
-
-			// Hide all controls
-			auto end = sizer.GetChildren().end();
-			for (auto i = sizer.GetChildren().begin(); i != end; ++i)
-				(*i)->Show(false);
-
-			// Attaching our filter to the given sizer
-			if (!sizer.GetItem(filter->sizer()))
-				sizer.Add(filter->sizer(), 0, wxALL|wxEXPAND);
-
-			// Make the new sizer visible
-			sizer.Show(filter->sizer(), true);
-			filter->refreshGUIOperator();
-
-			// Layout for sizers
-			filter->sizer()->Layout();
-			sizer.Layout();
-		}
-	}
-
-
-	void Input::onRemoveFilter(void*)
-	{
-		if (pParent)
-		{
-			// Disconnection first to avoid SegV
-			if (pBtnMinus)
-				pBtnMinus->disconnectClickEvent();
-			if (pBtnPlus)
-				pBtnPlus->disconnectClickEvent();
-			pBtnMinus = nullptr;
-			// remove me !
-			pParent->remove(pId);
-		}
-	}
-
-
-	void Input::onAddFilter(void*)
-	{
-		if (pParent)
-		{
-			pParent->add();
-			pParent->refresh();
-		}
-	}
-
-
-	void Input::showBtnToRemoveFilter(bool visible)
-	{
-		if (pBtnMinus && GetSizer())
-		{
-			GetSizer()->Show(pBtnMinus, visible);
-			GetSizer()->Layout();
-		}
-	}
-
-
-
-
+void Input::showBtnToRemoveFilter(bool visible)
+{
+    if (pBtnMinus && GetSizer())
+    {
+        GetSizer()->Show(pBtnMinus, visible);
+        GetSizer()->Layout();
+    }
+}
 
 } // namespace Filter
 } // namespace Toolbox
 } // namespace Antares
-

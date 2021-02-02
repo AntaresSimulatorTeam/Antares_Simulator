@@ -25,12 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_H__
-# define __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_H__
+#define __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_H__
 
-# include "../../fwd.h"
-# include "../../xcast.h"
-
-
+#include "../../fwd.h"
+#include "../../xcast.h"
 
 namespace Antares
 {
@@ -38,73 +36,67 @@ namespace Data
 {
 namespace Wind
 {
+/*!
+** \brief Prepro Wind
+*/
+class Prepro
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    Prepro();
+    //! Destructor
+    ~Prepro();
+    //@}
 
+    /*!
+    ** \brief Try to estimate the amount of memory required by this class for a simulation
+    */
+    void estimateMemoryUsage(StudyMemoryUsage&) const;
 
-	/*!
-	** \brief Prepro Wind
-	*/
-	class Prepro
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		Prepro();
-		//! Destructor
-		~Prepro();
-		//@}
+    /*!
+    ** \brief Load data from a folder
+    */
+    bool loadFromFolder(Study& study, const AnyString& folder);
 
-		/*!
-		** \brief Try to estimate the amount of memory required by this class for a simulation
-		*/
-		void estimateMemoryUsage(StudyMemoryUsage&) const;
+    /*!
+    ** \brief Save data to a folder
+    */
+    bool saveToFolder(const AnyString& folder) const;
 
-		/*!
-		** \brief Load data from a folder
-		*/
-		bool loadFromFolder(Study& study, const AnyString& folder);
+    /*!
+    ** \brief Get the amount of memory currently used
+    */
+    Yuni::uint64 memoryUsage() const;
 
-		/*!
-		** \brief Save data to a folder
-		*/
-		bool saveToFolder(const AnyString& folder) const;
+    /*!
+    ** \brief Make sure that all data are loaded in memory
+    */
+    bool invalidate(bool reload = false) const;
 
-		/*!
-		** \brief Get the amount of memory currently used
-		*/
-		Yuni::uint64 memoryUsage() const;
+    void markAsModified() const;
 
-		/*!
-		** \brief Make sure that all data are loaded in memory
-		*/
-		bool invalidate(bool reload = false) const;
+    /*!
+    ** \brief Reset to default all values
+    */
+    void resetToDefault();
 
-		void markAsModified() const;
+public:
+    //! XCast
+    Data::XCast xcast;
 
-		/*!
-		** \brief Reset to default all values
-		*/
-		void resetToDefault();
+private:
+    bool internalLoadFormatBefore33(Study& study, const AnyString& folder);
 
-	public:
-		//! XCast
-		Data::XCast xcast;
+}; // Prepro
 
-	private:
-		bool internalLoadFormatBefore33(Study& study, const AnyString& folder);
-
-	}; // Prepro
-
-
-
-
-
-} // namespace Prepro
+} // namespace Wind
 } // namespace Data
 } // namespace Antares
 
-# include "prepro.hxx"
+#include "prepro.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_H__

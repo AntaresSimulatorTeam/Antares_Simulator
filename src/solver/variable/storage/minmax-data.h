@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_STORAGE_MINMAX_DATA_H__
-# define __SOLVER_VARIABLE_STORAGE_MINMAX_DATA_H__
+#define __SOLVER_VARIABLE_STORAGE_MINMAX_DATA_H__
 
-# include <antares/study.h>
-# include <antares/memory/memory.h>
-
+#include <antares/study.h>
+#include <antares/memory/memory.h>
 
 namespace Antares
 {
@@ -41,48 +40,41 @@ namespace R
 {
 namespace AllYears
 {
+class MinMaxData
+{
+public:
+    struct Data
+    {
+        double value;
+        Yuni::uint32 indice;
+    };
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    MinMaxData();
+    //! Destructor
+    ~MinMaxData();
 
-	class MinMaxData
-	{
-	public:
-		struct Data
-		{
-			double value;
-			Yuni::uint32 indice;
-		};
+    void initialize();
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		MinMaxData();
-		//! Destructor
-		~MinMaxData();
+    void resetInf();
+    void resetSup();
 
+    void mergeInf(uint year, const IntermediateValues& rhs);
+    void mergeSup(uint year, const IntermediateValues& rhs);
 
-		void initialize();
+public:
+    Data annual;
+    Data monthly[maxMonths];
+    Data weekly[maxWeeksInAYear];
+    Data daily[maxDaysInAYear];
+    Antares::Memory::Stored<Data>::Type hourly;
 
-		void resetInf();
-		void resetSup();
-
-		void mergeInf(uint year, const IntermediateValues& rhs);
-		void mergeSup(uint year, const IntermediateValues& rhs);
-
-	public:
-		Data annual;
-		Data monthly[maxMonths];
-		Data weekly[maxWeeksInAYear];
-		Data daily[maxDaysInAYear];
-		Antares::Memory::Stored<Data>::Type  hourly;
-
-	}; // class MinMaxData
-
-
-
-
+}; // class MinMaxData
 
 } // namespace AllYears
 } // namespace R

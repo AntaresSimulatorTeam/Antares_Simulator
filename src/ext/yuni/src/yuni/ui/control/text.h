@@ -9,15 +9,15 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_UI_CONTROL_TEXT_H__
-# define __YUNI_UI_CONTROL_TEXT_H__
+#define __YUNI_UI_CONTROL_TEXT_H__
 
-# include "../../yuni.h"
-# include "../../core/color/rgb.h"
-# include "../../core/color/rgba.h"
-# include "control.h"
-# include "../displaymode.h"
-# include "../font.h"
-# include "../theme.h"
+#include "../../yuni.h"
+#include "../../core/color/rgb.h"
+#include "../../core/color/rgba.h"
+#include "control.h"
+#include "../displaymode.h"
+#include "../font.h"
+#include "../theme.h"
 
 namespace Yuni
 {
@@ -25,78 +25,122 @@ namespace UI
 {
 namespace Control
 {
+//! A text is a control that displays text on the parent surface
+class Text : public IControl
+{
+public:
+    //! Smart pointer
+    typedef Ancestor::SmartPtrType<Text>::Ptr Ptr;
 
+public:
+    Text(float x, float y, float maxWidth, float maxHeight) :
+     IControl(x, y, maxWidth, maxHeight),
+     pText(),
+     pFont(Theme::Current()->font),
+     // White by default
+     pColor(Theme::Current()->textColor),
+     pAntiAliased(true)
+    {
+    }
 
-	//! A text is a control that displays text on the parent surface
-	class Text: public IControl
-	{
-	public:
-		//! Smart pointer
-		typedef Ancestor::SmartPtrType<Text>::Ptr  Ptr;
+    Text(const Point2D<float>& position, const Point2D<float>& maxSize) :
+     IControl(position, maxSize),
+     pText(),
+     pFont(Theme::Current()->font),
+     pColor(Theme::Current()->textColor),
+     pAntiAliased(true)
+    {
+    }
 
-	public:
-		Text(float x, float y, float maxWidth, float maxHeight):
-			IControl(x, y, maxWidth, maxHeight),
-			pText(),
-			pFont(Theme::Current()->font),
-			// White by default
-			pColor(Theme::Current()->textColor),
-			pAntiAliased(true)
-		{}
+    //! Virtual destructor
+    virtual ~Text()
+    {
+    }
 
-		Text(const Point2D<float>& position, const Point2D<float>& maxSize):
-			IControl(position, maxSize),
-			pText(),
-			pFont(Theme::Current()->font),
-			pColor(Theme::Current()->textColor),
-			pAntiAliased(true)
-		{}
+    //! Draw the panel
+    virtual void draw(DrawingSurface::Ptr& surface, float xOffset, float yOffset) const override;
 
-		//! Virtual destructor
-		virtual ~Text() {}
+    //! Clear the text
+    String& clear()
+    {
+        invalidate();
+        return pText.clear();
+    }
 
-		//! Draw the panel
-		virtual void draw(DrawingSurface::Ptr& surface, float xOffset, float yOffset) const override;
+    //! Get the text
+    String& text()
+    {
+        invalidate();
+        return pText;
+    }
+    const String& text() const
+    {
+        return pText;
+    }
 
-		//! Clear the text
-		String& clear() { invalidate(); return pText.clear(); }
+    //! Modify the font used
+    void font(const UI::FTFont::Ptr& font)
+    {
+        if (pFont != font)
+        {
+            pFont = font;
+            invalidate();
+        }
+    }
+    //! Get the font
+    const UI::FTFont::Ptr& font() const
+    {
+        return pFont;
+    }
 
-		//! Get the text
-		String& text() { invalidate(); return pText; }
-		const String& text() const { return pText; }
+    //! Modify the color used
+    void color(float r, float g, float b)
+    {
+        pColor.assign(r, g, b);
+        invalidate();
+    }
+    void color(float r, float g, float b, float a)
+    {
+        pColor.assign(r, g, b, a);
+        invalidate();
+    }
+    void color(const Color::RGB<float>& color)
+    {
+        pColor = color;
+        invalidate();
+    }
+    void color(const Color::RGBA<float>& color)
+    {
+        pColor = color;
+        invalidate();
+    }
 
-		//! Modify the font used
-		void font(const UI::FTFont::Ptr& font) { if (pFont != font) { pFont = font; invalidate(); } }
-		//! Get the font
-		const UI::FTFont::Ptr& font() const { return pFont; }
+    //! Is the text anti-aliased ?
+    bool antiAliased() const
+    {
+        return pAntiAliased;
+    }
+    //! Set text anti-aliasing
+    void antiAliased(bool newValue)
+    {
+        pAntiAliased = newValue;
+        invalidate();
+    }
 
-		//! Modify the color used
-		void color(float r, float g, float b) { pColor.assign(r, g, b); invalidate(); }
-		void color(float r, float g, float b, float a) { pColor.assign(r, g, b, a); invalidate(); }
-		void color(const Color::RGB<float>& color) { pColor = color; invalidate(); }
-		void color(const Color::RGBA<float>& color) { pColor = color; invalidate(); }
+private:
+    //! Text to display
+    String pText;
 
-		//! Is the text anti-aliased ?
-		bool antiAliased() const { return pAntiAliased; }
-		//! Set text anti-aliasing
-		void antiAliased(bool newValue) { pAntiAliased = newValue; invalidate(); }
+    //! Font to use
+    FTFont::Ptr pFont;
 
-	private:
-		//! Text to display
-		String pText;
+    //! Text color
+    Color::RGBA<float> pColor;
 
-		//! Font to use
-		FTFont::Ptr pFont;
+    //! Anti-alias the text ?
+    bool pAntiAliased;
 
-		//! Text color
-		Color::RGBA<float> pColor;
-
-		//! Anti-alias the text ?
-		bool pAntiAliased;
-
-	}; // class Text
-
-
+}; // class Text
 
 } // namespace Control
 } // namespace UI

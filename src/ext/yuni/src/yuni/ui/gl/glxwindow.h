@@ -9,7 +9,7 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_UI_GLXWINDOW_H__
-# define __YUNI_UI_GLXWINDOW_H__
+#define __YUNI_UI_GLXWINDOW_H__
 
 #include <yuni/yuni.h>
 #include <yuni/private/graphics/opengl/glew/glew.h>
@@ -20,84 +20,84 @@ namespace Yuni
 {
 namespace UI
 {
+/*!
+** \brief Specific implementation of a window for OpenGL rendering under MS Windows
+*/
+class GLXWindow : public GLWindow
+{
+public:
+    //! Constructor
+    GLXWindow(const AnyString& title, uint width, uint height, uint bitDepth, bool fullScreen) :
+     GLWindow(title, width, height, bitDepth, fullScreen)
+    {
+    }
 
+    //! Virtual destructor
+    virtual ~GLXWindow()
+    {
+    }
 
-	/*!
-	** \brief Specific implementation of a window for OpenGL rendering under MS Windows
-	*/
-	class GLXWindow: public GLWindow
-	{
-	public:
-		//! Constructor
-		GLXWindow(const AnyString& title, uint width, uint height, uint bitDepth, bool fullScreen) :
-			GLWindow(title, width, height, bitDepth, fullScreen)
-		{}
+    //! Initialize the window
+    virtual bool initialize() override;
 
-		//! Virtual destructor
-		virtual ~GLXWindow() {}
+    //! Main event loop
+    virtual bool loop();
 
-		//! Initialize the window
-		virtual bool initialize() override;
+    //! Kill the window, release everything
+    virtual void kill() override;
 
-		//! Main event loop
-		virtual bool loop();
+    //! Minimize the window
+    virtual void minimize() override;
 
-		//! Kill the window, release everything
-		virtual void kill() override;
+    //! Minimize the window
+    virtual void maximize() override;
 
-		//! Minimize the window
-		virtual void minimize() override;
+    //! Minimize the window
+    virtual void restore() override;
 
-		//! Minimize the window
-		virtual void maximize() override;
+    //! Swap front and back buffers (OS-specific)
+    virtual void swapBuffers() override;
 
-		//! Minimize the window
-		virtual void restore() override;
+    //! Refresh and swap buffers with a single polymorphic call
+    virtual void refreshAndSwap() override;
 
-		//! Swap front and back buffers (OS-specific)
-		virtual void swapBuffers() override;
+    //! Set window icon
+    virtual void icon(const AnyString& path) override;
 
-		//! Refresh and swap buffers with a single polymorphic call
-		virtual void refreshAndSwap() override;
+    //! Set window title
+    virtual void title(const AnyString& path) override;
 
-		//! Set window icon
-		virtual void icon(const AnyString& path) override;
+    //! Enable / Disable vertical sync
+    virtual void vsync(bool enable) override;
+    //! Current status of the vertical sync
+    virtual bool vsync() const override;
 
-		//! Set window title
-		virtual void title(const AnyString& path) override;
+    //! Does the window have Full Screen AntiAliasing / MultiSampling ?
+    virtual bool antiAliasing() const override;
+    /*!
+    ** \brief Should Full Screen AntiAliasing / MultiSampling be enabled ?
+    **
+    ** Changing this value may kill and re-create the window.
+    */
+    virtual void antiAliasing(bool enable) override;
 
-		//! Enable / Disable vertical sync
-		virtual void vsync(bool enable) override;
-		//! Current status of the vertical sync
-		virtual bool vsync() const override;
+    //! Enable / Disable full screen
+    virtual void fullScreen(bool enable) override;
+    //! Is the window full screen ?
+    virtual bool fullScreen() const override;
 
-		//! Does the window have Full Screen AntiAliasing / MultiSampling ?
-		virtual bool antiAliasing() const override;
-		/*!
-		** \brief Should Full Screen AntiAliasing / MultiSampling be enabled ?
-		**
-		** Changing this value may kill and re-create the window.
-		*/
-		virtual void antiAliasing(bool enable) override;
+private:
+    Display* pDisplay;
+    int pScreen;
+    Window pWindow;
+    GLXContext pContext;
+    XSetWindowAttributes pAttr;
+    XWindowAttributes pWndAttr;
 
-		//! Enable / Disable full screen
-		virtual void fullScreen(bool enable) override;
-		//! Is the window full screen ?
-		virtual bool fullScreen() const override;
+}; // GLXWindow
 
-	private:
-		Display* pDisplay;
-		int pScreen;
-		Window pWindow;
-		GLXContext pContext;
-		XSetWindowAttributes pAttr;
-		XWindowAttributes pWndAttr;
-
-	}; // GLXWindow
-
-
-} // UI
-} // Yuni
+} // namespace UI
+} // namespace Yuni
 
 #include "glxwindow.hxx"
 

@@ -25,93 +25,83 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_TIMESERIES_H__
-# define __ANTARES_LIBS_STUDY_PARTS_THERMAL_TIMESERIES_H__
+#define __ANTARES_LIBS_STUDY_PARTS_THERMAL_TIMESERIES_H__
 
-# include "../../../array/matrix.h"
-# include "../../fwd.h"
-# include "defines.h"
-
-
+#include "../../../array/matrix.h"
+#include "../../fwd.h"
+#include "defines.h"
 
 namespace Antares
 {
 namespace Data
 {
+/*!
+** \brief Data series (Thermal)
+*/
+class DataSeriesThermal
+{
+public:
+    void estimateMemoryUsage(StudyMemoryUsage&) const;
 
+    /*!
+    ** \brief Flush memory to swap file
+    */
+    void flush();
 
-	/*!
-	** \brief Data series (Thermal)
-	*/
-	class DataSeriesThermal
-	{
-	public:
-		void estimateMemoryUsage(StudyMemoryUsage&) const;
+    bool invalidate(bool reload = false) const;
 
-		/*!
-		** \brief Flush memory to swap file
-		*/
-		void flush();
+    void markAsModified() const;
 
-		bool invalidate(bool reload = false) const;
+public:
+    /*!
+    ** \brief Series (MW)
+    **
+    ** Merely a matrix of TimeSeriesCount * 8760 values
+    */
+    Matrix<double, Yuni::sint32> series;
 
-		void markAsModified() const;
+    /*!
+    ** \brief Monte-Carlo
+    */
+    Matrix<Yuni::uint32> timeseriesNumbers;
 
-	public:
-		/*!
-		** \brief Series (MW)
-		**
-		** Merely a matrix of TimeSeriesCount * 8760 values
-		*/
-		Matrix<double, Yuni::sint32> series;
+}; // class DataSeriesThermal
 
-		/*!
-		** \brief Monte-Carlo
-		*/
-		Matrix<Yuni::uint32> timeseriesNumbers;
+/*!
+** \brief Load thermal data series from a folder
+** \ingroup thermalseries
+**
+** \param t A thermal data series structure
+** \param ag A thermal cluster
+** \param folder The target folder
+** \return A non-zero value if the operation succeeded, 0 otherwise
+*/
+int DataSeriesThermalLoadFromFolder(Study& s,
+                                    DataSeriesThermal* t,
+                                    ThermalCluster* ag,
+                                    const AnyString& folder);
 
-	}; // class DataSeriesThermal
+/*!
+** \brief Save thermal data series into a folder
+** \ingroup thermalseries
+**
+** \param t A thermal data series structure
+** \param ag A thermal cluster
+** \param folder The target folder
+** \return A non-zero value if the operation succeeded, 0 otherwise
+*/
+int DataSeriesThermalSaveToFolder(const DataSeriesThermal* t,
+                                  const ThermalCluster* ag,
+                                  const AnyString& folder);
 
-
-
-
-
-	/*!
-	** \brief Load thermal data series from a folder
-	** \ingroup thermalseries
-	**
-	** \param t A thermal data series structure
-	** \param ag A thermal cluster
-	** \param folder The target folder
-	** \return A non-zero value if the operation succeeded, 0 otherwise
-	*/
-	int DataSeriesThermalLoadFromFolder(Study& s, DataSeriesThermal* t, ThermalCluster* ag, const AnyString& folder);
-
-
-	/*!
-	** \brief Save thermal data series into a folder
-	** \ingroup thermalseries
-	**
-	** \param t A thermal data series structure
-	** \param ag A thermal cluster
-	** \param folder The target folder
-	** \return A non-zero value if the operation succeeded, 0 otherwise
-	*/
-	int DataSeriesThermalSaveToFolder(const DataSeriesThermal* t, const ThermalCluster* ag, const AnyString& folder);
-
-
-	/*!
-	** \brief Get the size (bytes) occupied in memory by a `DataSeriesThermal` structure
-	*/
-	Yuni::uint64 DataSeriesThermalMemoryUsage(DataSeriesThermal* t);
-
-
-
-
-
+/*!
+** \brief Get the size (bytes) occupied in memory by a `DataSeriesThermal` structure
+*/
+Yuni::uint64 DataSeriesThermalMemoryUsage(DataSeriesThermal* t);
 
 } // namespace Data
 } // namespace Antares
 
-# include "series.hxx"
+#include "series.hxx"
 
 #endif /* __ANTARES_LIBS_STUDY_PARTS_THERMAL_TIMESERIES_H__ */

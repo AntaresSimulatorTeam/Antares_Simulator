@@ -32,177 +32,161 @@
 #include "../study.h"
 #include "../../toolbox/ext-source/handler.h"
 
-
 using namespace Yuni;
 
-#define ANTARES_MAGIC_CLIPBOARD  "antares.study.clipboard;"
-
+#define ANTARES_MAGIC_CLIPBOARD "antares.study.clipboard;"
 
 namespace Antares
 {
 namespace Forms
 {
+namespace
+{
+/*!
+** \brief Job for performing the paste operation
+*/
+class JobPasteFromClipboard final : public Yuni::Job::IJob
+{
+public:
+    JobPasteFromClipboard(String::Ptr text, bool forceDialog = false) :
+     pText(text), pForceDialog(forceDialog)
+    {
+    }
+    virtual ~JobPasteFromClipboard()
+    {
+    }
 
+protected:
+    virtual void onExecute() override
+    {
+        ApplWnd::Instance()->pasteFromClipboard(*pText, pForceDialog);
+    }
 
-	namespace
-	{
+private:
+    const String::Ptr pText;
+    bool pForceDialog;
 
-		/*!
-		** \brief Job for performing the paste operation
-		*/
-		class JobPasteFromClipboard final : public Yuni::Job::IJob
-		{
-		public:
-			JobPasteFromClipboard(String::Ptr text, bool forceDialog = false) :
-				pText(text),
-				pForceDialog(forceDialog)
-			{}
-			virtual ~JobPasteFromClipboard() {}
+}; // class JobPasteFromClipboard
 
-		protected:
-			virtual void onExecute() override
-			{
-				ApplWnd::Instance()->pasteFromClipboard(*pText, pForceDialog);
-			}
+void PreparePasteFromClipboard(const String& text, bool forceDialog)
+{
+    // The job of this routine is to extract informations about the
+    // handler to use for performing the paste.
+    // Each handler is designed for a single data source.
+    //
+    // The name of the handler is obvously required, such as "com.rte-france.antares.study"
+    // (used for Antares Study).
+    // Some additional parameters may be provided
+    //
+    // All those data are located on the first line, separated by semicolons.
+    // Here is an example :
+    // antares.study.clipboard;handler=com.rte-france.antares.study;path=/local/partage/private/CS_2008_v3.5
+    // (The first value is a magic dust)
 
-		private:
-			const String::Ptr pText;
-			bool pForceDialog;
+    // Map of properties
+    ExtSource::Handler::PropertyMap map;
+    // The offset the first end-of-line
+    String::Size line = text.find('\n');
 
-		}; // class JobPasteFromClipboard
+    // Extracting all parameters
+    {
+        // skipping the first semicolon, because the first value is only some magic dust
+        auto begin = text.find(';');
+        if (begin == String::npos or line == String::npos or line < begin)
+            return;
+        ++begin;
 
+        // iterating through all parameters
+        bool stop = false;
+        Antares::ExtSource::Handler::Key key;
+        Antares::ExtSource::Handler::Value value;
 
+        do
+        {
+            String::Size end = text.find(';', begin);
+            if (end == String::npos)
+            {
+                end = line;
+                stop = true;
+            }
+            if (end < begin)
+                break;
+            const String::Size equal = text.find('=', begin);
+            // note: end will always be > 0 here
+            if (equal < end - 1 && equal > begin)
+            {
+                key.assign(text, equal - begin, begin);
+                key.trim(" \r\n");
+                value.assign(text, end - equal - 1, equal + 1);
+                value.trim(" \r\n");
+                if (not key.empty())
+                    map[key] = value;
+            }
+            begin = end + 1;
+        } while (!stop);
 
+        if (map.empty())
+            return;
+    }
 
-		void PreparePasteFromClipboard(const String& text, bool forceDialog)
-		{
-			// The job of this routine is to extract informations about the
-			// handler to use for performing the paste.
-			// Each handler is designed for a single data source.
-			//
-			// The name of the handler is obvously required, such as "com.rte-france.antares.study"
-			// (used for Antares Study).
-			// Some additional parameters may be provided
-			//
-			// All those data are located on the first line, separated by semicolons.
-			// Here is an example :
-			// antares.study.clipboard;handler=com.rte-france.antares.study;path=/local/partage/private/CS_2008_v3.5
-			// (The first value is a magic dust)
+    // Retrieving the handler
+    const Antares::ExtSource::Handler::Value& handler = map["handler"];
+    if (handler.empty())
+        return;
 
-			// Map of properties
-			ExtSource::Handler::PropertyMap map;
-			// The offset the first end-of-line
-			String::Size line = text.find('\n');
+    // Performing the paste operation according to the handler name
+    // The following routines are located in 'toolbox/ext-source/handler'
+    //
+    // Note: Those routines will only prepare the paste in a first time
+    //   in order to check conflicts.
+    if (handler == "com.rte-france.antares.study")
+    {
+        auto study = Data::Study::Current::Get();
+        if (!(!study))
+            Antares::ExtSource::Handler::AntaresStudy(*study, text, line + 1, map, forceDialog);
+        return;
+    }
+}
 
-			// Extracting all parameters
-			{
-				// skipping the first semicolon, because the first value is only some magic dust
-				auto begin = text.find(';');
-				if (begin == String::npos or line == String::npos or line < begin)
-					return;
-				++begin;
+} // anonymous namespace
 
-				// iterating through all parameters
-				bool stop = false;
-				Antares::ExtSource::Handler::Key key;
-				Antares::ExtSource::Handler::Value value;
+void ApplWnd::pasteFromClipboard(bool showDialog)
+{
+    // Reset the status bar, since the next operation may take some
+    // time... (if the dialog is invoked for example)
+    resetDefaultStatusBarText();
 
-				do
-				{
-					String::Size end = text.find(';', begin);
-					if (end == String::npos)
-					{
-						end = line;
-						stop = true;
-					}
-					if (end < begin)
-						break;
-					const String::Size equal = text.find('=', begin);
-					// note: end will always be > 0 here
-					if (equal < end - 1 && equal > begin)
-					{
-						key.assign(text, equal - begin, begin);
-						key.trim(" \r\n");
-						value.assign(text, end - equal - 1, equal + 1);
-						value.trim(" \r\n");
-						if (not key.empty())
-							map[key] = value;
-					}
-					begin = end + 1;
-				}
-				while (!stop);
+    // Extracting the text from clipboard
+    String::Ptr s = new String();
+    Toolbox::Clipboard::GetFromClipboard(*s);
 
-				if (map.empty())
-					return;
-			}
+    // Performing the paste (delayed operation)
+    if (!s->empty())
+        Antares::Dispatcher::GUI::Post(
+          (const Yuni::Job::IJob::Ptr&)new JobPasteFromClipboard(s, showDialog), 50 /*ms*/);
+}
 
-			// Retrieving the handler
-			const Antares::ExtSource::Handler::Value& handler = map["handler"];
-			if (handler.empty())
-				return;
+void ApplWnd::evtOnEditPaste(wxCommandEvent&)
+{
+    pasteFromClipboard(false);
+}
 
-			// Performing the paste operation according to the handler name
-			// The following routines are located in 'toolbox/ext-source/handler'
-			//
-			// Note: Those routines will only prepare the paste in a first time
-			//   in order to check conflicts.
-			if (handler == "com.rte-france.antares.study")
-			{
-				auto study = Data::Study::Current::Get();
-				if (!(!study))
-					Antares::ExtSource::Handler::AntaresStudy(*study, text, line + 1, map, forceDialog);
-				return;
-			}
-		}
+void ApplWnd::evtOnEditPasteSpecial(wxCommandEvent&)
+{
+    pasteFromClipboard(true);
+}
 
-	} // anonymous namespace
-
-
-
-
-
-	void ApplWnd::pasteFromClipboard(bool showDialog)
-	{
-		// Reset the status bar, since the next operation may take some
-		// time... (if the dialog is invoked for example)
-		resetDefaultStatusBarText();
-
-		// Extracting the text from clipboard
-		String::Ptr s = new String();
-		Toolbox::Clipboard::GetFromClipboard(*s);
-
-		// Performing the paste (delayed operation)
-		if (!s->empty())
-			Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&) new JobPasteFromClipboard(s, showDialog), 50 /*ms*/);
-	}
-
-
-	void ApplWnd::evtOnEditPaste(wxCommandEvent&)
-	{
-		pasteFromClipboard(false);
-	}
-
-
-	void ApplWnd::evtOnEditPasteSpecial(wxCommandEvent&)
-	{
-		pasteFromClipboard(true);
-	}
-
-
-	void ApplWnd::pasteFromClipboard(const String& text, bool showDialog)
-	{
-		// The text is valid for Antares paste operations only if its
-		// starts with a magic value
-		if (text.startsWith(ANTARES_MAGIC_CLIPBOARD))
-		{
-			// The paste may have to be performed from various handler,
-			// because the source may not be an Antares study
-			PreparePasteFromClipboard(text, showDialog);
-		}
-	}
-
-
-
+void ApplWnd::pasteFromClipboard(const String& text, bool showDialog)
+{
+    // The text is valid for Antares paste operations only if its
+    // starts with a magic value
+    if (text.startsWith(ANTARES_MAGIC_CLIPBOARD))
+    {
+        // The paste may have to be performed from various handler,
+        // because the source may not be an Antares study
+        PreparePasteFromClipboard(text, showDialog);
+    }
+}
 
 } // namespace Forms
 } // namespace Antares

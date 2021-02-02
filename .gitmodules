@@ -4,7 +4,7 @@
 [submodule "src/antares-deps"]
 	path = src/antares-deps
 	url = https://github.com/AntaresSimulatorTeam/antares-deps.git
-	branch = v1.0.0
+	branch = v1.0.1
 [submodule "src/tests/resources/Antares_Simulator_Tests"]
 	path = src/tests/resources/Antares_Simulator_Tests
 	url = https://github.com/AntaresSimulatorTeam/Antares_Simulator_Tests.git

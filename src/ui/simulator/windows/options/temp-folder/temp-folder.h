@@ -25,15 +25,14 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_WINDOWS_OPTIONS_TEMP_FOLDER_H__
-# define __ANTARES_APPLICATION_WINDOWS_OPTIONS_TEMP_FOLDER_H__
+#define __ANTARES_APPLICATION_WINDOWS_OPTIONS_TEMP_FOLDER_H__
 
-# include <antares/wx-wrapper.h>
-# include <wx/dialog.h>
-# include <wx/button.h>
-# include <wx/stattext.h>
-# include <wx/textctrl.h>
-# include <wx/checkbox.h>
-
+#include <antares/wx-wrapper.h>
+#include <wx/dialog.h>
+#include <wx/button.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
+#include <wx/checkbox.h>
 
 namespace Antares
 {
@@ -41,55 +40,49 @@ namespace Window
 {
 namespace Options
 {
+/*!
+** \brief Startup Wizard User Interface
+*/
+class ConfigureTempFolder final : public wxDialog
+{
+public:
+    enum IDs
+    {
+        mnIDDefault = wxID_HIGHEST + 1,
+    };
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    **
+    ** \param parent The parent window
+    */
+    ConfigureTempFolder(wxWindow* parent);
+    //! Destructor
+    virtual ~ConfigureTempFolder();
+    //@}
 
-	/*!
-	** \brief Startup Wizard User Interface
-	*/
-	class ConfigureTempFolder final : public wxDialog
-	{
-	public:
-		enum IDs
-		{
-			mnIDDefault = wxID_HIGHEST + 1,
-		};
+private:
+    void reset(bool useDefault);
+    void onSave(void*);
+    void onCancel(void*);
+    void evtDefault(wxCommandEvent& evt);
+    void onBrowse(void*);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		**
-		** \param parent The parent window
-		*/
-		ConfigureTempFolder(wxWindow* parent);
-		//! Destructor
-		virtual ~ConfigureTempFolder();
-		//@}
+private:
+    wxButton* pBtnCancel;
+    wxButton* pBtnGo;
+    wxButton* pBtnBrowse;
+    wxTextCtrl* pPath;
+    wxCheckBox* pDefaults;
+    wxStaticText* pText;
 
-	private:
-		void reset(bool useDefault);
-		void onSave(void*);
-		void onCancel(void*);
-		void evtDefault(wxCommandEvent& evt);
-		void onBrowse(void*);
+    // Table
+    DECLARE_EVENT_TABLE()
 
-	private:
-		wxButton*   pBtnCancel;
-		wxButton*   pBtnGo;
-		wxButton*   pBtnBrowse;
-		wxTextCtrl* pPath;
-		wxCheckBox* pDefaults;
-		wxStaticText* pText;
-
-		// Table
-		DECLARE_EVENT_TABLE()
-
-	}; // class ConfigureTempFolder
-
-
-
-
+}; // class ConfigureTempFolder
 
 } // namespace Options
 } // namespace Window

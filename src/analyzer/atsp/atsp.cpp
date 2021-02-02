@@ -27,177 +27,168 @@
 
 #include "atsp.h"
 
-
 using namespace Yuni;
 
 #define SEP Yuni::IO::Separator
 
-
 namespace Antares
 {
+// constants
+const uint ATSP::lonmois[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+const uint ATSP::durmois[12] = {744, 672, 744, 720, 744, 720, 744, 744, 720, 744, 720, 744};
+const uint ATSP::posmois[12] = {0, 744, 1416, 2160, 2880, 3624, 4344, 5088, 5832, 6552, 7296, 8016};
 
-	// constants
-	const uint ATSP::lonmois[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
-	const uint ATSP::durmois[12] = {744,672,744,720,744,720,744,744,720,744,720,744};
-	const uint ATSP::posmois[12] = {0,744,1416,2160,2880,3624,4344,5088,5832,6552,7296,8016};
+ATSP::ATSP() :
+ pRoundingCount(),
+ pRounding80percentCount(),
+ pRoundingCountTotal(),
+ HOR(0.92),
+ pLimitMemory(200 * 1024 * 1024),
+ pCacheMemoryUsed(),
+ pAutoClean(false)
+{
+}
 
+ATSP::~ATSP()
+{
+    for (uint i = 0; i != pArea.size(); ++i)
+        delete pArea[i];
 
+    if (pAutoClean)
+    {
+        logs.info() << "Cleaning...";
+        pStr.clear();
+#ifdef YUNI_OS_WINDOWS
+        pStr << "del /S /F /Q ";
+        pStr << '"' << pTemp << SEP << tsName << '"';
+        system(pStr.c_str());
+        pStr.clear();
+        pStr << "rmdir /S /Q ";
+        pStr << '"' << pTemp << SEP << tsName << '"';
+        system(pStr.c_str());
+        pStr.clear();
+        pStr << "rmdir /Q ";
+        pStr << '"' << pTemp << '"';
+        system(pStr.c_str());
+#else
+        pStr << "rm -rf ";
+        pStr << '"' << pTemp << SEP << tsName << '"';
+        system(pStr.c_str());
+#endif
+    }
+}
 
-	ATSP::ATSP() :
-		pRoundingCount(),
-		pRounding80percentCount(),
-		pRoundingCountTotal(),
-		HOR(0.92),
-		pLimitMemory(200 * 1024 * 1024),
-		pCacheMemoryUsed(),
-		pAutoClean(false)
-	{
-	}
+void ATSP::printSummary() const
+{
+    logs.info();
+    logs.info() << "  Summary :";
+    logs.info() << "  number of timeseries : " << pTimeseriesCount;
+    logs.info() << "  short-term autocorr adjustment   : " << pShortTermAutoCorrAdjustment;
+    logs.info() << "  medium-term autocorr. adjustment : " << pMediumTermAutoCorrAdjustment;
+    logs.info() << "  trimming threshold               : " << pRoundOff;
 
+    if (pUseUpperBound)
+        logs.info() << "  upper bound  : " << pUpperBound;
+    else
+        logs.info() << "  upper bound  : (none)";
 
-	ATSP::~ATSP()
-	{
-		for (uint i = 0; i != pArea.size(); ++i)
-			delete pArea[i];
+    if (pUseLowerBound)
+        logs.info() << "  lower bound  : " << pLowerBound;
+    else
+        logs.info() << "  lower bound  : (none)";
 
-		if (pAutoClean)
-		{
-			logs.info() << "Cleaning...";
-			pStr.clear();
-			# ifdef YUNI_OS_WINDOWS
-			pStr << "del /S /F /Q ";
-			pStr << '"' << pTemp << SEP << tsName << '"';
-			system(pStr.c_str());
-			pStr.clear();
-			pStr << "rmdir /S /Q ";
-			pStr << '"' << pTemp << SEP << tsName << '"';
-			system(pStr.c_str());
-			pStr.clear();
-			pStr << "rmdir /Q ";
-			pStr << '"' << pTemp << '"';
-			system(pStr.c_str());
-			# else
-			pStr << "rm -rf ";
-			pStr << '"' << pTemp << SEP << tsName << '"';
-			system(pStr.c_str());
-			# endif
-		}
-	}
+    logs.info() << "  memory cache size : " << (pLimitMemory / 1024 / 1024) << "Mo";
+    logs.info() << "  auto-clean : " << (pAutoClean ? "yes" : "no");
 
+    logs.info();
+    if (pArea.size() > 1)
+        logs.info() << "  " << pArea.size() << " areas to analyze";
+    else
+        logs.info() << "  1 area to analyze";
 
-	void ATSP::printSummary() const
-	{
-		logs.info();
-		logs.info() << "  Summary :";
-		logs.info() << "  number of timeseries : " << pTimeseriesCount;
-		logs.info() << "  short-term autocorr adjustment   : " << pShortTermAutoCorrAdjustment;
-		logs.info() << "  medium-term autocorr. adjustment : " << pMediumTermAutoCorrAdjustment;
-		logs.info() << "  trimming threshold               : " << pRoundOff;
+    for (uint i = 0; i != pArea.size(); ++i)
+    {
+        const AreaInfo& info = *pArea[i];
+        if (info.rawData)
+        {
+            logs.info() << "  " << info.name << ": law '"
+                        << Data::XCast::DistributionToCString(info.distribution)
+                        << "' will be fitted on raw data";
+        }
+        else
+        {
+            logs.info() << "  " << info.name << ": law '"
+                        << Data::XCast::DistributionToCString(info.distribution)
+                        << "' will be fitted on deviation from average data";
+        }
+    }
+}
 
-		if (pUseUpperBound)
-			logs.info() << "  upper bound  : " << pUpperBound;
-		else
-			logs.info() << "  upper bound  : (none)";
+bool ATSP::writeMoments() const
+{
+    IO::File::Stream f;
+    {
+        String filename;
+        filename.clear() << pTemp << SEP << tsName << SEP << "moments-table.txt";
+        if (!f.openRW(filename))
+        {
+            logs.error() << "Impossible to create " << filename;
+            return false;
+        }
+    }
 
-		if (pUseLowerBound)
-			logs.info() << "  lower bound  : " << pLowerBound;
-		else
-			logs.info() << "  lower bound  : (none)";
+    f << '\t';
+    for (uint j = 0; j < 12; ++j)
+    {
+        for (uint k = 0; k < 4; ++k)
+            f << "MONTH " << (j + 1) << '\t';
+    }
+    f << "\n\t";
 
-		logs.info() << "  memory cache size : " << (pLimitMemory / 1024 / 1024) << "Mo";
-		logs.info() << "  auto-clean : " << (pAutoClean ? "yes" : "no");
+    for (uint j = 0; j < 12; ++j)
+        f << " EXPEC\t STAND\t SKEWN\t KURTO\t";
+    f << '\n';
 
-		logs.info();
-		if (pArea.size() > 1)
-			logs.info() << "  " << pArea.size() << " areas to analyze";
-		else
-			logs.info() << "  1 area to analyze";
+    for (uint i = 0; i < pArea.size(); ++i)
+    {
+        const AreaInfo& info = *(pArea[i]);
+        if (!info.enabled)
+            continue;
 
-		for (uint i = 0; i != pArea.size(); ++i)
-		{
-			const AreaInfo& info = *pArea[i];
-			if (info.rawData)
-			{
-				logs.info() << "  " << info.name << ": law '" << Data::XCast::DistributionToCString(info.distribution)
-					<< "' will be fitted on raw data";
-			}
-			else
-			{
-				logs.info() << "  " << info.name << ": law '" << Data::XCast::DistributionToCString(info.distribution)
-					<< "' will be fitted on deviation from average data";
-			}
-		}
-	}
+        f << info.name << '\t';
+        const MomentCentrSingle& moment = moments_centr_net[i];
 
+        for (uint j = 0; j < 12; ++j)
+        {
+            const double* m = moment.data[j];
 
+            for (uint k = 0; k < 4; ++k)
+                f << m[k] << '\t';
+        }
+        f << '\n';
+    }
 
-	bool ATSP::writeMoments() const
-	{
-		IO::File::Stream f;
-		{
-			String filename;
-			filename.clear() << pTemp << SEP << tsName << SEP << "moments-table.txt";
-			if (!f.openRW(filename))
-			{
-				logs.error() << "Impossible to create " << filename;
-				return false;
-			}
-		}
+    return true;
+}
 
-		f << '\t';
-		for (uint j = 0; j < 12; ++j)
-		{
-			for (uint k = 0; k < 4; ++k)
-				f << "MONTH " << (j+1) << '\t';
-		}
-		f << "\n\t";
+bool ATSP::cachePreload(unsigned index,
+                        const AnyString& filename,
+                        uint height,
+                        Matrix<>::BufferType& buffer)
+{
+    enum
+    {
+        options = Matrix<>::optImmediate | Matrix<>::optFixedSize,
+    };
+    if (pCacheMatrix[index].loadFromCSVFile(filename, NBS, height, options, &buffer))
+    {
+        pCacheLastValidIndex = index + 1;
+        return true;
+    }
+    else
+        pCacheMatrix[index].clear();
 
-		for (uint j = 0; j < 12; ++j)
-			f << " EXPEC\t STAND\t SKEWN\t KURTO\t";
-		f << '\n';
-
-		for (uint i = 0; i < pArea.size(); ++i)
-		{
-			const AreaInfo& info = *(pArea[i]);
-			if (!info.enabled)
-				continue;
-
-			f << info.name << '\t';
-			const MomentCentrSingle& moment = moments_centr_net[i];
-
-			for (uint j = 0; j < 12; ++j)
-			{
-				const double* m = moment.data[j];
-
-				for (uint k = 0; k < 4; ++k)
-					f << m[k] << '\t';
-			}
-			f << '\n';
-		}
-
-		return true;
-	}
-
-
-	bool ATSP::cachePreload(unsigned index, const AnyString& filename,
-		uint height, Matrix<>::BufferType& buffer)
-	{
-		enum
-		{
-			options = Matrix<>::optImmediate | Matrix<>::optFixedSize,
-		};
-		if (pCacheMatrix[index].loadFromCSVFile(filename, NBS, height, options, &buffer))
-		{
-			pCacheLastValidIndex = index + 1;
-			return true;
-		}
-		else
-			pCacheMatrix[index].clear();
-
-		return false;
-	}
-
-
-
+    return false;
+}
 
 } // namespace Antares

@@ -25,84 +25,82 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
-
-
-
-
-
-# ifdef __CPLUSPLUS
-  extern "C"
-  {
-# endif
-
-# include "spx_definition_arguments.h"
-# include "spx_fonctions.h"
-
-# ifdef __CPLUSPLUS
-  }
-# endif
-
-# include "h2o_m_donnees_annuelles.h"
-# include "h2o_m_fonctions.h"
-
-
-
-void H2O_M_Free( DONNEES_ANNUELLES * DonneesAnnuelles )
+#ifdef __CPLUSPLUS
+extern "C"
 {
-int i; PROBLEME_SPX * ProbSpx;
+#endif
 
-PROBLEME_HYDRAULIQUE * ProblemeHydraulique;
+#include "spx_definition_arguments.h"
+#include "spx_fonctions.h"
 
-ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
- 
-free( (ProblemeHydraulique->CorrespondanceDesVariables)->NumeroDeVariableVolume );
-free( (ProblemeHydraulique->CorrespondanceDesVariables)->NumeroDeVariableTurbine );
-free( (ProblemeHydraulique->CorrespondanceDesVariables)->NumeroDeVariableDepassementVolumeMax );
-free( (ProblemeHydraulique->CorrespondanceDesVariables)->NumeroDeVariableDepassementVolumeMin );
-free( (ProblemeHydraulique->CorrespondanceDesVariables)->NumeroDeVariableDEcartPositifAuTurbineCible );
-free( (ProblemeHydraulique->CorrespondanceDesVariables)->NumeroDeVariableDEcartNegatifAuTurbineCible );
-free( ProblemeHydraulique->CorrespondanceDesVariables );
-		
-free( (ProblemeHydraulique->ProblemeLineairePartieFixe)->CoutLineaire );
-free( (ProblemeHydraulique->ProblemeLineairePartieFixe)->TypeDeVariable );
-free( (ProblemeHydraulique->ProblemeLineairePartieFixe)->Sens );
-free( (ProblemeHydraulique->ProblemeLineairePartieFixe)->IndicesDebutDeLigne );
-free( (ProblemeHydraulique->ProblemeLineairePartieFixe)->NombreDeTermesDesLignes );
-free( (ProblemeHydraulique->ProblemeLineairePartieFixe)->CoefficientsDeLaMatriceDesContraintes );
-free( (ProblemeHydraulique->ProblemeLineairePartieFixe)->IndicesColonnes );
-free( ProblemeHydraulique->ProblemeLineairePartieFixe );
-	
-free( (ProblemeHydraulique->ProblemeLineairePartieVariable)->Xmin );
-free( (ProblemeHydraulique->ProblemeLineairePartieVariable)->Xmax );
-free( (ProblemeHydraulique->ProblemeLineairePartieVariable)->SecondMembre );
-free( (ProblemeHydraulique->ProblemeLineairePartieVariable)->AdresseOuPlacerLaValeurDesVariablesOptimisees );
-free( (ProblemeHydraulique->ProblemeLineairePartieVariable)->X );
-free( (ProblemeHydraulique->ProblemeLineairePartieVariable)->PositionDeLaVariable );
-free( (ProblemeHydraulique->ProblemeLineairePartieVariable)->ComplementDeLaBase );
-free( (ProblemeHydraulique->ProblemeLineairePartieVariable)->CoutsReduits );
-free( (ProblemeHydraulique->ProblemeLineairePartieVariable)->CoutsMarginauxDesContraintes );
-free( ProblemeHydraulique->ProblemeLineairePartieVariable );
-
-for ( i = 0 ; i < ProblemeHydraulique->NombreDeReservoirs ; i++ ) {
-  ProbSpx = (PROBLEME_SPX *) ProblemeHydraulique->ProblemeSpx[i];
-  if ( ProbSpx != NULL ) {
-	  SPX_LibererProbleme( ProbSpx );
-  }
+#ifdef __CPLUSPLUS
 }
-				
-free( ProblemeHydraulique->ProblemeSpx );
-free( ProblemeHydraulique->Probleme );
-free( ProblemeHydraulique );
- 
-free( DonneesAnnuelles->TurbineMax );
-free( DonneesAnnuelles->TurbineCible );
-free( DonneesAnnuelles->Apport );
-free( DonneesAnnuelles->VolumeMin );
-free( DonneesAnnuelles->VolumeMax );
-free( DonneesAnnuelles->Turbine );
-free( DonneesAnnuelles->Volume );
-free( DonneesAnnuelles );
+#endif
 
-return;	
+#include "h2o_m_donnees_annuelles.h"
+#include "h2o_m_fonctions.h"
+
+void H2O_M_Free(DONNEES_ANNUELLES* DonneesAnnuelles)
+{
+    int i;
+    PROBLEME_SPX* ProbSpx;
+
+    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
+
+    ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
+
+    free((ProblemeHydraulique->CorrespondanceDesVariables)->NumeroDeVariableVolume);
+    free((ProblemeHydraulique->CorrespondanceDesVariables)->NumeroDeVariableTurbine);
+    free((ProblemeHydraulique->CorrespondanceDesVariables)->NumeroDeVariableDepassementVolumeMax);
+    free((ProblemeHydraulique->CorrespondanceDesVariables)->NumeroDeVariableDepassementVolumeMin);
+    free((ProblemeHydraulique->CorrespondanceDesVariables)
+           ->NumeroDeVariableDEcartPositifAuTurbineCible);
+    free((ProblemeHydraulique->CorrespondanceDesVariables)
+           ->NumeroDeVariableDEcartNegatifAuTurbineCible);
+    free(ProblemeHydraulique->CorrespondanceDesVariables);
+
+    free((ProblemeHydraulique->ProblemeLineairePartieFixe)->CoutLineaire);
+    free((ProblemeHydraulique->ProblemeLineairePartieFixe)->TypeDeVariable);
+    free((ProblemeHydraulique->ProblemeLineairePartieFixe)->Sens);
+    free((ProblemeHydraulique->ProblemeLineairePartieFixe)->IndicesDebutDeLigne);
+    free((ProblemeHydraulique->ProblemeLineairePartieFixe)->NombreDeTermesDesLignes);
+    free((ProblemeHydraulique->ProblemeLineairePartieFixe)->CoefficientsDeLaMatriceDesContraintes);
+    free((ProblemeHydraulique->ProblemeLineairePartieFixe)->IndicesColonnes);
+    free(ProblemeHydraulique->ProblemeLineairePartieFixe);
+
+    free((ProblemeHydraulique->ProblemeLineairePartieVariable)->Xmin);
+    free((ProblemeHydraulique->ProblemeLineairePartieVariable)->Xmax);
+    free((ProblemeHydraulique->ProblemeLineairePartieVariable)->SecondMembre);
+    free((ProblemeHydraulique->ProblemeLineairePartieVariable)
+           ->AdresseOuPlacerLaValeurDesVariablesOptimisees);
+    free((ProblemeHydraulique->ProblemeLineairePartieVariable)->X);
+    free((ProblemeHydraulique->ProblemeLineairePartieVariable)->PositionDeLaVariable);
+    free((ProblemeHydraulique->ProblemeLineairePartieVariable)->ComplementDeLaBase);
+    free((ProblemeHydraulique->ProblemeLineairePartieVariable)->CoutsReduits);
+    free((ProblemeHydraulique->ProblemeLineairePartieVariable)->CoutsMarginauxDesContraintes);
+    free(ProblemeHydraulique->ProblemeLineairePartieVariable);
+
+    for (i = 0; i < ProblemeHydraulique->NombreDeReservoirs; i++)
+    {
+        ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique->ProblemeSpx[i];
+        if (ProbSpx != NULL)
+        {
+            SPX_LibererProbleme(ProbSpx);
+        }
+    }
+
+    free(ProblemeHydraulique->ProblemeSpx);
+    free(ProblemeHydraulique->Probleme);
+    free(ProblemeHydraulique);
+
+    free(DonneesAnnuelles->TurbineMax);
+    free(DonneesAnnuelles->TurbineCible);
+    free(DonneesAnnuelles->Apport);
+    free(DonneesAnnuelles->VolumeMin);
+    free(DonneesAnnuelles->VolumeMax);
+    free(DonneesAnnuelles->Turbine);
+    free(DonneesAnnuelles->Volume);
+    free(DonneesAnnuelles);
+
+    return;
 }

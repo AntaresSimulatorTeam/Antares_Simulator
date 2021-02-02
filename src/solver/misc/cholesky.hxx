@@ -25,85 +25,76 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
-
 //! Precision sur la factorisation des matrices
-# define ANTARES_CHOLESKY_EPSIMIN   ((T) 1.0e-9)
-
+#define ANTARES_CHOLESKY_EPSIMIN ((T)1.0e-9)
 
 namespace Antares
 {
 namespace Solver
 {
+template<class T, class U1, class U2>
+bool Cholesky(U1& L, U2& A, uint size, T* temp)
+{
+    using namespace Yuni;
 
+    for (uint i = 0; i != size; ++i)
+        temp[i] = 0;
 
-	template<class T, class U1, class U2>
-	bool Cholesky(U1& L, U2& A, uint size, T* temp)
-	{
-		using namespace Yuni;
+    T som;
 
-		for (uint i = 0; i != size; ++i)
-			temp[i] = 0;
+    for (uint i = 0; i < size; ++i)
+    {
+        typename MatrixSubColumn<U1>::Type Li = L[i];
 
-		T som;
+        // on calcule d'abord L[i][i]
+        som = A[i][i];
+        for (int j = 0; j <= (int)(i - 1); ++j)
+            som -= Li[j] * Li[j];
 
-		for (uint i = 0; i < size; ++i)
-		{
-			typename MatrixSubColumn<U1>::Type Li = L[i];
+        if (som > ANTARES_CHOLESKY_EPSIMIN)
+        {
+            Li[i] = Math::SquareRootNoCheck(som);
 
-			// on calcule d'abord L[i][i]
-			som = A[i][i];
-			for (int j = 0; j <= (int)(i - 1); ++j)
-				som -= Li[j] * Li[j];
+            // maintenant on cherche L[k][i], k > i.
+            for (uint k = i + 1; k < size; ++k)
+            {
+                typename MatrixSubColumn<U1>::Type Lk = L[k];
+                typename MatrixSubColumn<U2>::Type Ak = A[k];
 
-			if (som > ANTARES_CHOLESKY_EPSIMIN)
-			{
-				Li[i] = Math::SquareRootNoCheck(som);
+                if (temp[k] == Ak[k])
+                {
+                    Lk[i] = 0;
+                }
+                else
+                {
+                    som = Ak[i];
+                    for (int j = 0; j <= (int)(i - 1); ++j)
+                        som -= Li[j] * Lk[j];
 
-				// maintenant on cherche L[k][i], k > i.
-				for (uint k = i + 1; k < size; ++k)
-				{
-					typename MatrixSubColumn<U1>::Type Lk = L[k];
-					typename MatrixSubColumn<U2>::Type Ak = A[k];
+                    Lk[i] = som / Li[i];
+                    temp[k] += Lk[i] * Lk[i];
 
-					if (temp[k] == Ak[k])
-					{
-						Lk[i] = 0;
-					}
-					else
-					{
-						som = Ak[i];
-						for (int j = 0; j <= (int)(i - 1); ++j)
-							som -= Li[j] * Lk[j];
+                    // si temp[k] = A[k][k] la matrice n'est pas dp mais il est encore possible
+                    // qu'elle soit sdp.
+                    // si temp > A[k][k] alors il est certain que A n'est ni sdp ni dp donc on
+                    // arrete le calcul
+                    if (temp[k] > Ak[k])
+                        return true;
+                }
+            }
+        }
+        else
+        {
+            // annule le reste de la colonne
+            for (uint k = i; k != size; ++k)
+                L[k][i] = 0;
+        }
+    }
 
-						Lk[i]  = som / Li[i];
-						temp[k] += Lk[i] * Lk[i];
-
-						// si temp[k] = A[k][k] la matrice n'est pas dp mais il est encore possible
-						// qu'elle soit sdp.
-						// si temp > A[k][k] alors il est certain que A n'est ni sdp ni dp donc on
-						// arrete le calcul
-						if (temp[k] > Ak[k])
-							return true;
-					}
-				}
-			}
-			else
-			{
-				// annule le reste de la colonne
-				for (uint k = i; k != size; ++k)
-					L[k][i] = 0;
-			}
-		}
-
-		return false;
-	}
-
-
-
+    return false;
+}
 
 } // namespace Solver
 } // namespace Antares
 
-# undef ANTARES_CHOLESKY_EPSIMIN
-
+#undef ANTARES_CHOLESKY_EPSIMIN

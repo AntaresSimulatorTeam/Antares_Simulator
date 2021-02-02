@@ -15,75 +15,62 @@
 */
 #include "../../yuni.h"
 
-
-
-
 namespace Yuni
 {
 namespace DynamicLibrary
 {
+/*!
+** \brief Exported Symbol from a dynamic library
+** \ingroup DynamicLibs
+*/
+class YUNI_DECL Symbol final
+{
+public:
+    //! Handle for a symbol
+    typedef void* Handle;
 
-	/*!
-	** \brief Exported Symbol from a dynamic library
-	** \ingroup DynamicLibs
-	*/
-	class YUNI_DECL Symbol final
-	{
-	public:
-		//! Handle for a symbol
-		typedef void* Handle;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    //! Default constructor
+    Symbol();
+    //! Constructor with a given handle
+    Symbol(Handle p);
+    //! Copy constructor
+    Symbol(const Symbol& rhs);
+    //@}
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		//! Default constructor
-		Symbol();
-		//! Constructor with a given handle
-		Symbol(Handle p);
-		//! Copy constructor
-		Symbol(const Symbol& rhs);
-		//@}
+    //! \name Validity
+    //@{
+    //! Get if the symbol is invalid
+    bool null() const;
+    //! Get if the symbol is valid
+    bool valid() const;
+    //@}
 
+    //! \name Operator
+    //@{
+    //! Copy operator
+    Symbol& operator=(const Symbol& rhs);
+    //! Copy operator
+    Symbol& operator=(Symbol::Handle hndl);
+    //@}
 
-		//! \name Validity
-		//@{
-		//! Get if the symbol is invalid
-		bool null() const;
-		//! Get if the symbol is valid
-		bool valid() const;
-		//@}
+    //! \name Handle
+    //@{
+    /*!
+    ** \brief Get the handle of the symbol
+    */
+    Handle ptr() const;
+    //@}
 
+private:
+    //! Handle
+    Handle pPtr;
 
-		//! \name Operator
-		//@{
-		//! Copy operator
-		Symbol& operator = (const Symbol& rhs);
-		//! Copy operator
-		Symbol& operator = (Symbol::Handle hndl);
-		//@}
-
-
-		//! \name Handle
-		//@{
-		/*!
-		** \brief Get the handle of the symbol
-		*/
-		Handle ptr() const;
-		//@}
-
-
-	private:
-		//! Handle
-		Handle pPtr;
-
-	}; // class Symbol
-
-
-
-
+}; // class Symbol
 
 } // namespace DynamicLibrary
 } // namespace Yuni
 
 #include "symbol.hxx"
-

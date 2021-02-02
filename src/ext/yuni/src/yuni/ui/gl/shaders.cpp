@@ -10,20 +10,15 @@
 */
 #include "shaders.h"
 
-
 namespace Yuni
 {
 namespace Gfx3D
 {
+/////////////// VERTEX SHADERS
 
-
-
-	/////////////// VERTEX SHADERS
-
-
-	// Minimal vertex shader : only transform the vertex coordinates
-	const char* const vsTransform =
-		R"(
+// Minimal vertex shader : only transform the vertex coordinates
+const char* const vsTransform =
+  R"(
 #version 130
 
 in vec3 attrVertex;
@@ -35,10 +30,9 @@ void main()
 }
 		)";
 
-
-	// Very simple vertex shader : transform coordinates and propagate texture coordinates
-	const char* const vsTexCoord =
-		R"(
+// Very simple vertex shader : transform coordinates and propagate texture coordinates
+const char* const vsTexCoord =
+  R"(
 #version 130
 
 in vec3 attrVertex;
@@ -53,11 +47,10 @@ void main()
 }
 		)";
 
-
-	// For 2D post shaders, texture coordinates are calculated by transforming vertex position
-	// from [-1,1] to [0,1]
-	const char* const vs2D =
-		R"(
+// For 2D post shaders, texture coordinates are calculated by transforming vertex position
+// from [-1,1] to [0,1]
+const char* const vs2D =
+  R"(
 #version 130
 
 in vec2 attrVertex;
@@ -72,10 +65,9 @@ void main()
 }
 		)";
 
-
-	// Pass the color as attribute
-	const char* const vsColorAttr =
-		R"(
+// Pass the color as attribute
+const char* const vsColorAttr =
+  R"(
 #version 130
 
 in vec3 attrVertex;
@@ -90,10 +82,9 @@ void main()
 }
 		)";
 
-
-	// Sample a texture using a rectangle, do not resize the image, fill empty parts with a color
-	const char* const vsImageRectWithGeom =
-		R"(
+// Sample a texture using a rectangle, do not resize the image, fill empty parts with a color
+const char* const vsImageRectWithGeom =
+  R"(
 #version 130
 
 in vec3 attrVertex;
@@ -112,8 +103,8 @@ void main()
 }
 		)";
 
-	const char* const vsImageRect =
-		R"(
+const char* const vsImageRect =
+  R"(
 #version 130
 
 in vec3 attrVertex;
@@ -132,10 +123,9 @@ void main()
 }
 		)";
 
-
-	// Phong shading
-	const char* const vsPhong =
-		R"(
+// Phong shading
+const char* const vsPhong =
+  R"(
 #version 130
 
 const uint MAX_LIGHTS = 4u;
@@ -172,9 +162,8 @@ void main(void)
 }
 		)";
 
-
-	const char* const vsCubeMap =
-		R"(
+const char* const vsCubeMap =
+  R"(
 #version 130
 
 in vec3 attrVertex;
@@ -188,20 +177,11 @@ void main()
 }
 		)";
 
+/////////////// FRAGMENT SHADERS
 
-
-
-
-
-
-	/////////////// FRAGMENT SHADERS
-
-
-
-
-	// Use a single color given as uniform
-	const char* const fsColorUniform =
-		R"(
+// Use a single color given as uniform
+const char* const fsColorUniform =
+  R"(
 #version 130
 
 out vec4 gl_FragColor;
@@ -214,10 +194,9 @@ void main()
 }
 		)";
 
-
-	// Use a single color given as attribute
-	const char* const fsColorAttr =
-		R"(
+// Use a single color given as attribute
+const char* const fsColorAttr =
+  R"(
 #version 130
 
 in vec4 color;
@@ -230,10 +209,9 @@ void main()
 }
 		)";
 
-
-	// Use directly the texture value, no lighting
-	const char* const fsSimpleTexture =
-		R"(
+// Use directly the texture value, no lighting
+const char* const fsSimpleTexture =
+  R"(
 #version 130
 
 in vec2 texCoord;
@@ -247,10 +225,9 @@ void main()
 }
 		)";
 
-
-	// Sample a texture using a rectangle, do not resize the image, fill empty parts with a color
-	const char* const fsImageRect =
-		R"(
+// Sample a texture using a rectangle, do not resize the image, fill empty parts with a color
+const char* const fsImageRect =
+  R"(
 #version 130
 
 in vec2 texCoord;
@@ -271,11 +248,10 @@ void main()
 }
 		)";
 
-
-	// Freetype with normal render mode generates alpha-only bitmaps, stored as GL_R textures
-	// This shader displays them with the proper color.
-	const char* const fsText =
-		R"(
+// Freetype with normal render mode generates alpha-only bitmaps, stored as GL_R textures
+// This shader displays them with the proper color.
+const char* const fsText =
+  R"(
 #version 130
 
 in vec2 texCoord;
@@ -299,10 +275,9 @@ void main(void)
 }
 		)";
 
-
-	// Color picking
-	const char* const fsPicking =
-		R"(
+// Color picking
+const char* const fsPicking =
+  R"(
 #version 410
 
 out vec4 gl_FragColor;
@@ -321,10 +296,9 @@ void main()
 }
 		)";
 
-
-	// Skybox : cube map sampling
-	const char* const fsSkybox =
-		R"(
+// Skybox : cube map sampling
+const char* const fsSkybox =
+  R"(
 #version 130
 
 in vec3 texCoord;
@@ -338,10 +312,9 @@ void main()
 }
 		)";
 
-
-	// Phong shading
-	const char* const fsPhong =
-		R"(
+// Phong shading
+const char* const fsPhong =
+  R"(
 #version 130
 
 const uint MAX_LIGHTS = 4u;
@@ -396,9 +369,8 @@ void main()
 }
 		)";
 
-
-	const char* const fsYuv2Rgb =
-		R"(
+const char* const fsYuv2Rgb =
+  R"(
 #version 130
 
 in vec2 texCoord;
@@ -431,19 +403,11 @@ void main()
 }
 		)";
 
+/////////////// GEOMETRY SHADERS
 
-
-
-
-
-	/////////////// GEOMETRY SHADERS
-
-
-
-
-	// Generate empty borders for image rectangles
-	const char* const gsImageRect =
-		R"(
+// Generate empty borders for image rectangles
+const char* const gsImageRect =
+  R"(
 // Necessary version for the new geometry shader syntax
 #version 150
 
@@ -473,8 +437,6 @@ void main()
 		}
 }
 		)";
-
-
 
 } // namespace Gfx3D
 } // namespace Yuni

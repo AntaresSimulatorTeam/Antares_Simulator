@@ -33,61 +33,50 @@
 
 using namespace Yuni;
 
-
-
-
 namespace Antares
 {
 namespace Forms
 {
+class StudyDrop final : public wxFileDropTarget
+{
+public:
+    StudyDrop() : wxFileDropTarget()
+    {
+    }
 
+    virtual ~StudyDrop()
+    {
+    }
 
-	class StudyDrop final : public wxFileDropTarget
-	{
-	public:
-		StudyDrop() :
-			wxFileDropTarget()
-		{
-		}
+    virtual bool OnDropFiles(wxCoord /*x*/, wxCoord /*y*/, const wxArrayString& filenames) override
+    {
+        if (IsGUIAboutToQuit() or GUIIsLock())
+            return false;
 
-		virtual ~StudyDrop()
-		{
-		}
+        String filename;
+        String folder;
+        String title;
 
-		virtual bool OnDropFiles(wxCoord /*x*/, wxCoord /*y*/, const wxArrayString& filenames) override
-		{
-			if (IsGUIAboutToQuit() or GUIIsLock())
-				return false;
+        for (uint i = 0; i != (uint)filenames.size(); ++i)
+        {
+            wxStringToString(filenames[i], filename);
+            if (not Data::Study::IsInsideStudyFolder(filename, folder, title))
+                folder.clear();
+        }
 
-			String filename;
-			String folder;
-			String title;
+        if (not folder.empty())
+        {
+            // opening the study
+            Dispatcher::StudyOpen(folder);
+        }
+        else
+            logs.warning() << "The folder provided by drag & drop is not a valid study: "
+                           << filename;
 
-			for (uint i = 0; i != (uint) filenames.size(); ++i)
-			{
-				wxStringToString(filenames[i], filename);
-				if (not Data::Study::IsInsideStudyFolder(filename, folder, title))
-					folder.clear();
-			}
+        return true;
+    }
 
-			if (not folder.empty())
-			{
-				// opening the study
-				Dispatcher::StudyOpen(folder);
-			}
-			else
-				logs.warning() << "The folder provided by drag & drop is not a valid study: " << filename;
-
-			return true;
-		}
-
-	}; // class StudyDrop
-
-
-
-
-
+}; // class StudyDrop
 
 } // namespace Forms
 } // namespace Antares
-

@@ -25,32 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include <yuni/yuni.h>
 #include <antares/study.h>
 #include "xcast.h"
@@ -58,9 +32,7 @@
 #include <antares/logs.h>
 #include <antares/emergency.h>
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
@@ -70,33 +42,27 @@ namespace TSGenerator
 {
 namespace XCast
 {
+double XCast::GammaInc(double s, double z)
+{
+    enum
+    {
+        length = 30,
+    };
 
+    double x = 1. / z;
+    double somme = 0.;
+    for (int i = 0; i < length + 1; ++i)
+    {
+        x *= z;
+        x /= (s + double(i));
+        somme += x;
+    }
+    somme *= exp(-z);
+    somme *= pow(z, s);
+    return somme;
+}
 
-	double XCast::GammaInc(double s, double z)
-	{
-		enum
-		{
-			length = 30,
-		};
-
-		double x = 1. / z;
-		double somme = 0.;
-		for (int i = 0; i < length + 1; ++i)
-		{
-			x *= z;
-			x /= (s + double(i));
-			somme += x;
-		}
-		somme *= exp(-z);
-		somme *= pow(z, s);
-		return somme;
-	}
-
-
-
-
-} 
-} 
-} 
-} 
-
+} // namespace XCast
+} // namespace TSGenerator
+} // namespace Solver
+} // namespace Antares

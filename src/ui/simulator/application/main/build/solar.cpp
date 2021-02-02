@@ -33,49 +33,43 @@
 #include "../../../toolbox/components/datagrid/renderer/area/xcast-allareas.h"
 #include "standard-page.hxx"
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
 namespace Forms
 {
+void ApplWnd::createNBSolar()
+{
+    assert(NULL != pNotebook);
 
+    // Create a standard page with an input selector
+    std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page
+      = createStdNotebookPage<Toolbox::InputSelector::Area>(pNotebook, wxT("solar"), wxT("Solar"));
 
-	void ApplWnd::createNBSolar()
-	{
-		assert(NULL != pNotebook);
+    // Correlation matrix
+    pageSolarCorrelation = page.first->add(
+      new Window::CorrelationPanel(page.first, Data::timeSeriesSolar), wxT("Spatial correlation"));
+    pageSolarCorrelation->displayExtraControls(false);
 
-		// Create a standard page with an input selector
-		std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page =
-			createStdNotebookPage<Toolbox::InputSelector::Area>(pNotebook,
-			wxT("solar"), wxT("Solar"));
+    pageSolarPrepro
+      = page.first->add(new Component::Datagrid::Component(
+                          page.first,
+                          new Component::Datagrid::Renderer::XCastAllAreas<Data::timeSeriesSolar>(
+                            page.first, page.second)),
+                        wxT("Digest"));
+    pageSolarPrepro->displayExtraControls(false);
 
-		// Correlation matrix
-		pageSolarCorrelation = page.first->add(new Window::CorrelationPanel(page.first, Data::timeSeriesSolar), wxT("Spatial correlation"));
-		pageSolarCorrelation->displayExtraControls(false);
+    // TS Generator
+    pageSolarPrepro = page.first->add(
+      new Window::XCast<Data::timeSeriesSolar>(page.first, page.second), wxT("Local data"));
 
-		pageSolarPrepro = page.first->add(
-			new Component::Datagrid::Component(page.first,
-			new Component::Datagrid::Renderer::XCastAllAreas<Data::timeSeriesSolar>(page.first, page.second)),
-			wxT("Digest"));
-		pageSolarPrepro->displayExtraControls(false);
-
-		// TS Generator
-		pageSolarPrepro = page.first->add(new Window::XCast<Data::timeSeriesSolar>(page.first, page.second),
-			wxT("Local data"));
-
-		// Time-series
-		pageSolarTimeSeries = page.first->add(
-			new Component::Datagrid::Component(page.first,
-			new Component::Datagrid::Renderer::TimeSeriesSolar(page.first, page.second)),
-			wxT("Time-series"));
-	}
-
-
-
+    // Time-series
+    pageSolarTimeSeries = page.first->add(
+      new Component::Datagrid::Component(
+        page.first, new Component::Datagrid::Renderer::TimeSeriesSolar(page.first, page.second)),
+      wxT("Time-series"));
+}
 
 } // namespace Forms
 } // namespace Antares
-

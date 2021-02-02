@@ -25,183 +25,184 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__
-# define __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__
+#define __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__
 
-# include "prepro.h"
-# include "series.h"
-# include "../../fwd.h"
-# include "allocation.h"
-
-
+#include "prepro.h"
+#include "series.h"
+#include "../../fwd.h"
+#include "allocation.h"
 
 namespace Antares
 {
 namespace Data
 {
+/*!
+** \brief Hydro for a single area
+*/
+class PartHydro
+{
+public:
+    enum
+    {
+        //! The minimum value
+        minimum = 0,
+        //! The average value
+        average,
+        //! The maximum value
+        maximum,
+    };
 
-	/*!
-	** \brief Hydro for a single area
-	*/
-	class PartHydro
-	{
-	public:
-		enum
-		{
-			//! The minimum value
-			minimum = 0,
-			//! The average value
-			average,
-			//! The maximum value
-			maximum,
-		};
+    enum powerDailyE
+    {
+        //! Generated max power
+        genMaxP = 0,
+        //! Generated max energy
+        genMaxE,
+        //! Pumping max Power
+        pumpMaxP,
+        // Pumping max Energy
+        pumpMaxE,
+    };
 
-		enum powerDailyE
-		{
-			//! Generated max power
-			genMaxP = 0,
-			//! Generated max energy
-			genMaxE,
-			//! Pumping max Power
-			pumpMaxP,
-			// Pumping max Energy
-			pumpMaxE,
-		};
+    enum weeklyHydroMod
+    {
+        //! Weekly generating modulation
+        genMod = 0,
+        //! Weekly pumping modulation
+        pumpMod,
+    };
 
-		enum weeklyHydroMod
-		{
-			//! Weekly generating modulation
-			genMod = 0,
-			//! Weekly pumping modulation
-			pumpMod,
-		};
+public:
+    /*!
+    ** \brief Load data for hydro container from a folder
+    **
+    ** \param folder The targer folder
+    ** \return A non-zero value if the operation succeeded, 0 otherwise
+    */
+    static bool LoadFromFolder(Study& study, const AnyString& folder);
 
-	public:
-		/*!
-		** \brief Load data for hydro container from a folder
-		**
-		** \param folder The targer folder
-		** \return A non-zero value if the operation succeeded, 0 otherwise
-		*/
-		static bool LoadFromFolder(Study& study, const AnyString& folder);
+    /*!
+    ** \brief Save data from several containers to a folder (except data for the prepro and
+    *time-series)
+    **
+    ** \param l List of areas
+    ** \param folder The targer folder
+    ** \return A non-zero value if the operation succeeded, 0 otherwise
+    */
+    static bool SaveToFolder(const AreaList& areas, const AnyString& folder);
 
-		/*!
-		** \brief Save data from several containers to a folder (except data for the prepro and time-series)
-		**
-		** \param l List of areas
-		** \param folder The targer folder
-		** \return A non-zero value if the operation succeeded, 0 otherwise
-		*/
-		static bool SaveToFolder(const AreaList& areas, const AnyString& folder);
+public:
+    /*!
+    ** \brief Default Constructor
+    */
+    PartHydro();
+    //! Destructor
+    ~PartHydro();
 
+    /*!
+    ** \brief Reset internal data
+    */
+    void reset();
 
-	public:
-		/*!
-		** \brief Default Constructor
-		*/
-		PartHydro();
-		//! Destructor
-		~PartHydro();
+    void copyFrom(const PartHydro& rhs);
 
-		/*!
-		** \brief Reset internal data
-		*/
-		void reset();
+    bool invalidate(bool reload = false) const;
 
-		void copyFrom(const PartHydro& rhs);
+    /*!
+    ** \brief Mark all data as modified
+    */
+    void markAsModified() const;
 
-		bool invalidate(bool reload = false) const;
+public:
+    //! Inter-daily breakdown (previously called Smoothing Factor or alpha)
+    double interDailyBreakdown;
+    //! Intra-daily modulation
+    double intraDailyModulation;
 
-		/*!
-		** \brief Mark all data as modified
-		*/
-		void markAsModified() const;
+    //! Intermonthly breakdown
+    double intermonthlyBreakdown;
 
+    //! Enabled reservoir management
+    bool reservoirManagement;
 
-	public:
-		//! Inter-daily breakdown (previously called Smoothing Factor or alpha)
-		double interDailyBreakdown;
-		//! Intra-daily modulation
-		double intraDailyModulation;
+    //! Following load modulation
+    bool followLoadModulations;
+    //! Use water values
+    bool useWaterValue;
+    //! Hard bound on rule curves
+    bool hardBoundsOnRuleCurves;
+    //! Use heuristic target
+    bool useHeuristicTarget;
+    //! Reservoir capacity (MWh)
+    double reservoirCapacity;
+    // gp : pb - initializeReservoirLevelDate must be an enum from january (= 0) to december (= 11)
+    //! Initialize reservoir level date (month)
+    int initializeReservoirLevelDate;
+    //! Use Leeway
+    bool useLeeway;
+    //! Power to level modulations
+    bool powerToLevel;
+    //! Leeway low bound
+    double leewayLowerBound;
+    //! Leeway upper bound
+    double leewayUpperBound;
+    //! Puming efficiency
+    double pumpingEfficiency;
+    //! Daily max power ({generating max Power, generating max energy, pumping max power, pumping
+    //! max energy}x365)
+    Matrix<double, double> maxPower;
+    //! Credit Modulation (default 0, 101 * 2)
+    Matrix<double, double> creditModulation;
 
-		//! Intermonthly breakdown
-		double intermonthlyBreakdown;
+    //! Daily Inflow Patern ([default 1, 0<x<dayspermonth]x365)
+    Matrix<double> inflowPattern;
 
-		//! Enabled reservoir management
-		bool reservoirManagement;
+    // Useful for solver RAM estimation
+    bool hydroModulable;
 
-		//! Following load modulation
-		bool followLoadModulations;
-		//! Use water values
-		bool useWaterValue;
-		//! Hard bound on rule curves
-		bool hardBoundsOnRuleCurves;
-		//! Use heuristic target
-		bool useHeuristicTarget;
-		//! Reservoir capacity (MWh)
-		double reservoirCapacity;
-		// gp : pb - initializeReservoirLevelDate must be an enum from january (= 0) to december (= 11) 
-		//! Initialize reservoir level date (month)
-		int initializeReservoirLevelDate;
-		//! Use Leeway 
-		bool useLeeway;
-		//! Power to level modulations
-		bool powerToLevel;
-		//! Leeway low bound
-		double leewayLowerBound;
-		//! Leeway upper bound
-		double leewayUpperBound;
-		//! Puming efficiency
-		double pumpingEfficiency;
-		//! Daily max power ({generating max Power, generating max energy, pumping max power, pumping max energy}x365)
-		Matrix<double,double> maxPower;
-		//! Credit Modulation (default 0, 101 * 2)
-		Matrix<double, double> creditModulation;
+    //! Daily reservoir level ({min,avg,max}x365)
+    Matrix<double> reservoirLevel;
 
-		//! Daily Inflow Patern ([default 1, 0<x<dayspermonth]x365)
-		Matrix<double> inflowPattern;
+    //! Daily water value ({0,1,2%...100%}x365)
+    Matrix<double> waterValues;
 
-		// Useful for solver RAM estimation
-		bool hydroModulable;
+    //! Hydro allocation, from other areas
+    HydroAllocation allocation;
 
-		//! Daily reservoir level ({min,avg,max}x365)
-		Matrix<double> reservoirLevel;
+    //! Data for the pre-processor
+    PreproHydro* prepro;
+    //! Data for time-series
+    DataSeriesHydro* series;
 
-		//! Daily water value ({0,1,2%...100%}x365)
-		Matrix<double> waterValues;
+}; // class PartHydro
 
-		//! Hydro allocation, from other areas
-		HydroAllocation allocation;
+// Type encapsulating working variables for next function :
+// As the next function can be called a lot of times, passing an already created variable
+// avoids the overhead of local variables creation
+struct h2oValueWorkVarsType
+{
+    double levelUp;
+    double levelDown;
+};
 
-		//! Data for the pre-processor
-		PreproHydro* prepro;
-		//! Data for time-series
-		DataSeriesHydro* series;
+// Interpolates a water value from a table according to a level and a day.
+// As this function can be called a lot of times, we pass working variables and returned variables
+// as arguments, so that we don't have to create them locally (as in a classical function) each
+// time.
+void getWaterValue(const double& level,
+                   const Matrix<double>& waterValues,
+                   const uint day,
+                   h2oValueWorkVarsType& workVar,
+                   double& waterValueToReturn);
 
-	}; // class PartHydro
-
-	// Type encapsulating working variables for next function :
-	// As the next function can be called a lot of times, passing an already created variable
-	// avoids the overhead of local variables creation
-	struct h2oValueWorkVarsType {
-		double levelUp;
-		double levelDown;
-	};
-
-	// Interpolates a water value from a table according to a level and a day.
-	// As this function can be called a lot of times, we pass working variables and returned variables
-	// as arguments, so that we don't have to create them locally (as in a classical function) each time.
-	void getWaterValue(	const double & level,
-						const Matrix<double> & waterValues,
-						const uint day,
-						h2oValueWorkVarsType & workVar,
-						double & waterValueToReturn);
-
-	// Interpolates a rate from the credit modulation table according to a level
-	double getWeeklyModulation(const double & level /* format : in % of reservoir capacity */, Matrix<double, double> & creditMod, int modType);
+// Interpolates a rate from the credit modulation table according to a level
+double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,
+                           Matrix<double, double>& creditMod,
+                           int modType);
 
 } // namespace Data
 } // namespace Antares
 
-# include "../../area.h"
+#include "../../area.h"
 
 #endif /* __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__ */

@@ -31,36 +31,37 @@
 /* Construction de la matrice des contraintes a pas fin (horaire) */
 /* Optimisations */
 
-
-typedef struct {
-  int     NombreDePaliersThermiques;
-  /* Ajout */
-  int * minUpDownTime;
-  /* Fin ajout */
-  double * TailleUnitaireDUnGroupeDuPalierThermique;
-  double * PminDuPalierThermiquePendantUneHeure;
-  double * PminDuPalierThermiquePendantUnJour;
-  /* Ajout */
-  int   * DureeDeLaPminDuPalierThermiquePendantUnJour;
-  /*   */
-  double * PminDuPalierThermiquePendantUneSemaine; 
-  int *   NumeroDuPalierDansLEnsembleDesPaliersThermiques; 		      
-  PDISP_ET_COUTS_HORAIRES_PAR_PALIER ** PuissanceDisponibleEtCout; /* Indice par les paliers */
+typedef struct
+{
+    int NombreDePaliersThermiques;
+    /* Ajout */
+    int* minUpDownTime;
+    /* Fin ajout */
+    double* TailleUnitaireDUnGroupeDuPalierThermique;
+    double* PminDuPalierThermiquePendantUneHeure;
+    double* PminDuPalierThermiquePendantUnJour;
+    /* Ajout */
+    int* DureeDeLaPminDuPalierThermiquePendantUnJour;
+    /*   */
+    double* PminDuPalierThermiquePendantUneSemaine;
+    int* NumeroDuPalierDansLEnsembleDesPaliersThermiques;
+    PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout; /* Indice par les paliers */
 } PALIERS_THERMIQUES;
-
 
 void OPT_SauvegarderLesDonneesHoraires()
 {
-  /* Les donnes a sauvegarder */
-  NombreDePasDeTempsRef                   ; ValeursDeNTCRef                       ;
-  ConsommationsAbattuesRef                ; NombreDePasDeTempsDUneJourneeRef      ;
-  ReserveTournanteHoraireRef              ; ContrainteDePmaxHydrauliqueHoraireRef ;
-  PuissanceDisponibleDuPalierThermiqueRef ;  
-  return;
+    /* Les donnes a sauvegarder */
+    NombreDePasDeTempsRef;
+    ValeursDeNTCRef;
+    ConsommationsAbattuesRef;
+    NombreDePasDeTempsDUneJourneeRef;
+    ReserveTournanteHoraireRef;
+    ContrainteDePmaxHydrauliqueHoraireRef;
+    PuissanceDisponibleDuPalierThermiqueRef;
+    return;
 }
 
 /* Pour LongueurDuPasDeTemps = 24 à 1 */
-
 
 /*
 NombreDePasDeTemps = NombreDePasDeTempsRef / LongueurDuPasDeTemps;
@@ -69,16 +70,17 @@ NombreDePasDeTempsDUneJournee = NombreDePasDeTempsDUneJourneeRef / LongueurDuPas
 FAIT: Renseigner ValeursDeNTC a partir de ValeursDeNTCRef
 FAIT: Renseigner ConsommationsAbattues a partir de ConsommationsAbattuesRef
 FAIT: Renseigner ReserveTournanteHoraire a partir de ReserveTournanteHoraireRef
-FAIT: Renseigner ContrainteDePmaxHydrauliqueHoraire a partir de ContrainteDePmaxHydrauliqueHoraireRef:
+FAIT: Renseigner ContrainteDePmaxHydrauliqueHoraire a partir de
+ContrainteDePmaxHydrauliqueHoraireRef:
     -> les pmax hydrauliques : moyenne des Pmax horaire
-FAIT: Renseigner ContrainteDEnergieHydrauliqueParJour a partir ContrainteDEnergieHydrauliqueParJourRef:
-    contrainte = contrainte / LongueurDuPasDeTemps;
-FAIT: Renseigner PuissanceDisponibleDuPalierThermique a partir PuissanceDisponibleDuPalierThermiqueRef
+FAIT: Renseigner ContrainteDEnergieHydrauliqueParJour a partir
+ContrainteDEnergieHydrauliqueParJourRef: contrainte = contrainte / LongueurDuPasDeTemps; FAIT:
+Renseigner PuissanceDisponibleDuPalierThermique a partir PuissanceDisponibleDuPalierThermiqueRef
 
 Construire la liste des variables optimisees : meme routine
 Initialiser les bornes des variables optimisees : meme routine
 Construire la matrice des contraintes : meme routine
-Construire les couts : meme routine 
+Construire les couts : meme routine
 Le second membre : meme routine
 On optimise sur la journee:
 

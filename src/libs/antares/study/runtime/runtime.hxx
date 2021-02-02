@@ -25,20 +25,17 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_RUNTIME_RUNTIME_INFOS_HXX__
-# define __ANTARES_LIBS_STUDY_RUNTIME_RUNTIME_INFOS_HXX__
-
+#define __ANTARES_LIBS_STUDY_RUNTIME_RUNTIME_INFOS_HXX__
 
 namespace Antares
 {
 namespace Data
 {
-
-	# ifdef NDEBUG
-	inline void StudyRangeLimits::checkIntegrity() const
-	{
-	}
-	# endif
-
+#ifdef NDEBUG
+inline void StudyRangeLimits::checkIntegrity() const
+{
+}
+#endif
 
 } // namespace Data
 } // namespace Antares

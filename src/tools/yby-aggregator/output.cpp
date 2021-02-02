@@ -28,15 +28,11 @@
 #include "output.h"
 #include <antares/logs.h>
 
-
 using namespace Yuni;
 using namespace Antares;
 
-
 void Output::incrementError()
 {
-	if (++errors == 100)
-		logs.fatal() << "Too many errors for " << path;
+    if (++errors == 100)
+        logs.fatal() << "Too many errors for " << path;
 }
-
-

@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_XCAST_H__
-# define __ANTARES_LIBS_STUDY_XCAST_H__
+#define __ANTARES_LIBS_STUDY_XCAST_H__
 
-# include "xcast/xcast.h"
+#include "xcast/xcast.h"
 
 #endif // __ANTARES_LIBS_STUDY_XCAST_H__

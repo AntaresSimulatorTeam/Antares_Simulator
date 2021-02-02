@@ -25,10 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_PARTS_LOAD_PREPRO_HXX__
-# define __ANTARES_LIBS_STUDY_PARTS_LOAD_PREPRO_HXX__
+#define __ANTARES_LIBS_STUDY_PARTS_LOAD_PREPRO_HXX__
 
-# include "../../study.h"
-
+#include "../../study.h"
 
 namespace Antares
 {
@@ -36,39 +35,30 @@ namespace Data
 {
 namespace Load
 {
+inline void Prepro::estimateMemoryUsage(StudyMemoryUsage& u) const
+{
+    xcast.estimateMemoryUsage(u);
+}
 
+inline Yuni::uint64 Prepro::memoryUsage() const
+{
+    return xcast.memoryUsage();
+}
 
-	inline void Prepro::estimateMemoryUsage(StudyMemoryUsage& u) const
-	{
-		xcast.estimateMemoryUsage(u);
-	}
+inline bool Prepro::invalidate(bool reload) const
+{
+    return xcast.invalidate(reload);
+}
 
+inline void Prepro::markAsModified() const
+{
+    xcast.markAsModified();
+}
 
-	inline Yuni::uint64 Prepro::memoryUsage() const
-	{
-		return xcast.memoryUsage();
-	}
-
-
-	inline bool Prepro::invalidate(bool reload) const
-	{
-		return xcast.invalidate(reload);
-	}
-
-
-	inline void Prepro::markAsModified() const
-	{
-		xcast.markAsModified();
-	}
-
-
-	inline void Prepro::resetToDefault()
-	{
-		xcast.resetToDefaultValues();
-	}
-
-
-
+inline void Prepro::resetToDefault()
+{
+    xcast.resetToDefaultValues();
+}
 
 } // namespace Load
 } // namespace Data

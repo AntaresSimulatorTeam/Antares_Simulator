@@ -42,103 +42,91 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
 namespace Forms
 {
+static inline void OpenPDF(const AnyString& url)
+{
+    logs.info() << "opening PDF " << url;
+    wxString cmd;
 
-	static inline void OpenPDF(const AnyString& url)
-	{
-		logs.info() << "opening PDF " << url;
-		wxString cmd;
+    if (System::windows)
+    {
+        String u = url;
+        u.replace('/', '\\');
+        cmd << wxT("explorer.exe \"") << Resources::WxFindFile(u) << wxT("\"");
+    }
+    else
+        cmd << wxT("gnome-open \"") << Resources::WxFindFile(url) << wxT("\"");
 
-		if (System::windows)
-		{
-			String u = url;
-			u.replace('/', '\\');
-			cmd << wxT("explorer.exe \"") << Resources::WxFindFile(u) << wxT("\"");
-		}
-		else
-			cmd << wxT("gnome-open \"") << Resources::WxFindFile(url) << wxT("\"");
+    wxExecute(cmd);
+}
 
-		wxExecute(cmd);
-	}
+/*void ApplWnd::evtOnHelpVisitRTEWebsite(wxCommandEvent&)
+{
+        logs.info() << "opening url " << ANTARES_WEBSITE;
+        wxString url(wxT(ANTARES_WEBSITE));
+        if (not wxLaunchDefaultBrowser(url, wxBROWSER_NEW_WINDOW))
+        {
+                String u;
+                wxStringToString(url, u);
+                logs.error() << "Failed to open the url `" << u << '`';
+        }
+}*/
 
+void ApplWnd::evtOnHelpAbout(wxCommandEvent&)
+{
+    Forms::Disabler<ApplWnd> disabler(*this);
+    {
+        Window::AboutBox about(this);
+        about.ShowModal();
+    }
+}
 
+void ApplWnd::evtOnHelpPDFGeneralReferenceGuide(wxCommandEvent&)
+{
+    OpenPDF("help/antares-general-reference-guide.pdf");
+}
 
-	/*void ApplWnd::evtOnHelpVisitRTEWebsite(wxCommandEvent&)
-	{
-		logs.info() << "opening url " << ANTARES_WEBSITE;
-		wxString url(wxT(ANTARES_WEBSITE));
-		if (not wxLaunchDefaultBrowser(url, wxBROWSER_NEW_WINDOW))
-		{
-			String u;
-			wxStringToString(url, u);
-			logs.error() << "Failed to open the url `" << u << '`';
-		}
-	}*/
+void ApplWnd::evtOnHelpPDFOptimizationProblemsFormulation(wxCommandEvent&)
+{
+    OpenPDF("help/optimization-problems-formulation.pdf");
+}
 
+void ApplWnd::evtOnHelpPDFSystemMapEditorReferenceGuide(wxCommandEvent&)
+{
+    OpenPDF("help/system-map-editor-reference-guide.pdf");
+}
 
-	void ApplWnd::evtOnHelpAbout(wxCommandEvent&)
-	{
-		Forms::Disabler<ApplWnd> disabler(*this);
-		{
-			Window::AboutBox about(this);
-			about.ShowModal();
-		}
-	}
+void ApplWnd::evtOnHelpPDFExamplesLibrary(wxCommandEvent&)
+{
+    OpenPDF("help/antares-examples-library.pdf");
+}
 
-	void ApplWnd::evtOnHelpPDFGeneralReferenceGuide(wxCommandEvent&)
-	{
-		OpenPDF("help/antares-general-reference-guide.pdf");
-	}
+void ApplWnd::evtOnHelpContinueOnline(wxCommandEvent&)
+{
+    setGDPRStatus(true);
+}
 
-	void ApplWnd::evtOnHelpPDFOptimizationProblemsFormulation(wxCommandEvent&)
-	{
-		OpenPDF("help/optimization-problems-formulation.pdf");
-	}
+void ApplWnd::evtOnHelpContinueOffline(wxCommandEvent&)
+{
+    setGDPRStatus(false);
+}
 
-	void ApplWnd::evtOnHelpPDFSystemMapEditorReferenceGuide(wxCommandEvent&)
-	{
-		OpenPDF("help/system-map-editor-reference-guide.pdf");
-	}
+void ApplWnd::evtOnShowID(wxCommandEvent&)
+{
+    Antares::License::Properties hostproperties;
+    Antares::License::Properties licenseproperties;
+    Yuni::String tmp;
 
+    Antares::License::RetrieveHostProperties(hostproperties, tmp);
+    auto hostid = hostproperties[(tmp = "k")];
 
-	void ApplWnd::evtOnHelpPDFExamplesLibrary(wxCommandEvent&)
-	{
-		OpenPDF("help/antares-examples-library.pdf");
-	}
-
-
-	void ApplWnd::evtOnHelpContinueOnline(wxCommandEvent&)
-	{
-		setGDPRStatus(true);
-	}
-
-	void ApplWnd::evtOnHelpContinueOffline(wxCommandEvent&)
-	{
-		setGDPRStatus(false);
-	}
-
-	void ApplWnd::evtOnShowID(wxCommandEvent&)
-	{
-		Antares::License::Properties hostproperties;
-		Antares::License::Properties licenseproperties;
-		Yuni::String tmp;
-
-		Antares::License::RetrieveHostProperties(hostproperties, tmp);
-		auto hostid = hostproperties[(tmp = "k")];
-
-		Window::Message message(this, wxT(""),
-			hostid.c_str(), "", "images/128x128/antares.png");
-		message.add(Window::Message::btnOk, true);
-		message.showModal();
-	}
-
-
-
+    Window::Message message(this, wxT(""), hostid.c_str(), "", "images/128x128/antares.png");
+    message.add(Window::Message::btnOk, true);
+    message.showModal();
+}
 
 } // namespace Forms
 } // namespace Antares

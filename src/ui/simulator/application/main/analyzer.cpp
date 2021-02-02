@@ -34,166 +34,159 @@
 #include <wx/wupdlock.h>
 #include "internal-ids.h"
 
-
 using namespace Yuni;
 
 namespace Antares
 {
 namespace Forms
 {
+void ApplWnd::launchAnalyzer(const String& filename)
+{
+    if (not filename.empty())
+    {
+        wxCommandEvent evt(wxEVT_COMMAND_MENU_SELECTED, mnIDLaunchAnalyzer);
+        evt.SetString(wxStringFromUTF8(filename));
+        AddPendingEvent(evt);
+    }
+}
 
-	void ApplWnd::launchAnalyzer(const String& filename)
-	{
-		if (not filename.empty())
-		{
-			wxCommandEvent evt(wxEVT_COMMAND_MENU_SELECTED, mnIDLaunchAnalyzer);
-			evt.SetString(wxStringFromUTF8(filename));
-			AddPendingEvent(evt);
-		}
-	}
+void ApplWnd::evtLaunchAnalyzer(wxCommandEvent& evt)
+{
+    // We assume here that the study is already saved
 
+    auto& mainFrm = *Forms::ApplWnd::Instance();
+    Forms::Disabler<Forms::ApplWnd> disabler(mainFrm);
 
-	void ApplWnd::evtLaunchAnalyzer(wxCommandEvent& evt)
-	{
-		// We assume here that the study is already saved
+    // Checking for orphan swap files
+    mainFrm.timerCleanSwapFiles(100 /*ms*/);
 
-		auto& mainFrm = *Forms::ApplWnd::Instance();
-		Forms::Disabler<Forms::ApplWnd> disabler(mainFrm);
+    const wxString wfilename = evt.GetString();
+    if (wfilename.empty())
+        return;
+    String filename;
+    wxStringToString(wfilename, filename);
 
-		// Checking for orphan swap files
-		mainFrm.timerCleanSwapFiles(100 /*ms*/);
+    auto study = Data::Study::Current::Get();
+    if (!study) // A valid study would be better
+    {
+        logs.fatal() << "Internal error: Please provide a valid study";
+        OnStudyEndUpdate();
+        IO::File::Delete(filename);
+        return;
+    }
 
-		const wxString wfilename = evt.GetString();
-		if (wfilename.empty())
-			return;
-		String filename;
-		wxStringToString(wfilename, filename);
+    // Logs
+    {
+        logs.info();
+        logs.checkpoint() << "Launching the analyzer...";
+        logs.info() << "Gathering informations...";
+    }
 
-		auto study = Data::Study::Current::Get();
-		if (!study) // A valid study would be better
-		{
-			logs.fatal() << "Internal error: Please provide a valid study";
-			OnStudyEndUpdate();
-			IO::File::Delete(filename);
-			return;
-		}
+    // Where is our solver ?
+    String analyzerLocation;
+    {
+        if (!Solver::FindAnalyzerLocation(analyzerLocation))
+        {
+            logs.error() << "Impossible to find the program `antares-analyzer`.";
+            IO::File::Delete(filename);
+            OnStudyEndUpdate();
+            return;
+        }
+        logs.info() << "  Found Analyzer: `" << analyzerLocation << '`';
+        logs.info() << "  Study folder      : `" << study->folder << '`';
+        logs.debug() << "  Running from " << filename;
+        logs.info();
+    }
 
-		// Logs
-		{
-			logs.info();
-			logs.checkpoint() << "Launching the analyzer...";
-			logs.info() << "Gathering informations...";
-		}
+    // The process utility
+    auto* exec = new Toolbox::Process::Execute();
+    exec->title(wxT("Analyzer"));
+    exec->subTitle(wxT(""));
+    exec->icon("images/32x32/run.png");
 
+    // The command line
+    {
+        String cmd;
+        if (System::unix)
+            cmd << "nice ";
+        cmd << "\"" << analyzerLocation << "\" -i \"" << filename << "\"";
+        exec->command(wxStringFromUTF8(cmd));
 
-		// Where is our solver ?
-		String analyzerLocation;
-		{
-			if (!Solver::FindAnalyzerLocation(analyzerLocation))
-			{
-				logs.error() << "Impossible to find the program `antares-analyzer`.";
-				IO::File::Delete(filename);
-				OnStudyEndUpdate();
-				return;
-			}
-			logs.info() <<  "  Found Analyzer: `" << analyzerLocation << '`';
-			logs.info() <<  "  Study folder      : `" << study->folder << '`';
-			logs.debug() << "  Running from " << filename;
-			logs.info();
-		}
+        logs.debug() << "running " << cmd;
+    }
 
-		// The process utility
-		auto* exec = new Toolbox::Process::Execute();
-		exec->title(wxT("Analyzer"));
-		exec->subTitle(wxT(""));
-		exec->icon("images/32x32/run.png");
+    // Already done from windows/analyzer/analyzer.cpp, evtProceed()
+    // OnStudyBeginUpdate();
 
-		// The command line
-		{
-			String cmd;
-			if (System::unix)
-				cmd << "nice ";
-			cmd << "\"" << analyzerLocation << "\" -i \"" << filename << "\"";
-			exec->command(wxStringFromUTF8(cmd));
+    // Getting when the process was launched
+    const wxDateTime startTime = wxDateTime::Now();
 
-			logs.debug() << "running " << cmd;
-		}
+    // Running the simulation - it may take some time
+    const bool result = exec->run();
 
-		// Already done from windows/analyzer/analyzer.cpp, evtProceed()
-		//OnStudyBeginUpdate();
+    // Releasing
+    delete exec;
 
-		// Getting when the process was launched
-		const wxDateTime startTime = wxDateTime::Now();
+    // How long took the simulation ?
+    const wxTimeSpan timeSpan = wxDateTime::Now() - startTime;
 
-		// Running the simulation - it may take some time
-		const bool result = exec->run();
+    {
+        // Lock the window to prevent flickering
+        wxWindowUpdateLocker updater(&mainFrm);
 
-		// Releasing
-		delete exec;
+        // Refreshing the output
+        RefreshListOfOutputsForTheCurrentStudy();
 
-		// How long took the simulation ?
-		const wxTimeSpan timeSpan = wxDateTime::Now() - startTime;
+        // The refresh is important. This is the way to force the reloading
+        // some data (mainly wxGrid)
+        mainFrm.refreshStudyLogs();
 
-		{
-			// Lock the window to prevent flickering
-			wxWindowUpdateLocker updater(&mainFrm);
+        if (result)
+            logs.info() << "The analyzer has finished.";
+        logs.info();
 
-			// Refreshing the output
-			RefreshListOfOutputsForTheCurrentStudy();
+        // Reload all data
+        logs.info() << "Updating the study data...";
+        study->reloadCorrelation();
+        study->reloadXCastData();
+        // The binding constraints data must be reloaded since the current
+        // code is not able to dynamically reload it by itself
+        study->ensureDataAreLoadedForAllBindingConstraints();
+        // Reload runtime info about the study (Paranoid, should not be required)
+        study->uiinfo->reload();
 
-			// The refresh is important. This is the way to force the reloading
-			// some data (mainly wxGrid)
-			mainFrm.refreshStudyLogs();
+        GUIFlagInvalidateAreas = true;
 
-			if (result)
-				logs.info() << "The analyzer has finished.";
-			logs.info();
+        OnStudyEndUpdate();
 
-			// Reload all data
-			logs.info() << "Updating the study data...";
-			study->reloadCorrelation();
-			study->reloadXCastData();
-			// The binding constraints data must be reloaded since the current
-			// code is not able to dynamically reload it by itself
-			study->ensureDataAreLoadedForAllBindingConstraints();
-			// Reload runtime info about the study (Paranoid, should not be required)
-			study->uiinfo->reload();
+        OnStudyChanged(*study);
+        OnStudySettingsChanged();
+        OnStudyAreasChanged();
 
-			GUIFlagInvalidateAreas = true;
+        // Reset the status bar
+        mainFrm.resetDefaultStatusBarText();
 
-			OnStudyEndUpdate();
+        mainFrm.forceRefresh();
+    }
 
-			OnStudyChanged(*study);
-			OnStudySettingsChanged();
-			OnStudyAreasChanged();
+    // Checking for orphan swap files
+    // We may have to clean the cache folder
+    mainFrm.timerCleanSwapFiles(5000 /*ms*/);
 
-			// Reset the status bar
-			mainFrm.resetDefaultStatusBarText();
+    // Remove the temporary file
+    IO::File::Delete(filename);
 
-			mainFrm.forceRefresh();
-		}
-
-		// Checking for orphan swap files
-		// We may have to clean the cache folder
-		mainFrm.timerCleanSwapFiles(5000 /*ms*/);
-
-		// Remove the temporary file
-		IO::File::Delete(filename); 
-
-		if (result)
-		{
-			Window::Message message(&mainFrm, wxT("Analyzer"),
-				wxT("The analyzer has finished"),
-				wxString() << wxT("Time to complete the preprocessing : ") << timeSpan.Format());
-			message.add(Window::Message::btnContinue);
-			message.showModal();
-		}
-	}
-
-
-
-
+    if (result)
+    {
+        Window::Message message(
+          &mainFrm,
+          wxT("Analyzer"),
+          wxT("The analyzer has finished"),
+          wxString() << wxT("Time to complete the preprocessing : ") << timeSpan.Format());
+        message.add(Window::Message::btnContinue);
+        message.showModal();
+    }
+}
 
 } // namespace Forms
 } // namespace Antares
-

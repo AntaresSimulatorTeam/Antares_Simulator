@@ -37,171 +37,174 @@
 
 using namespace Yuni;
 
-
-
-
 int main(int argc, char** argv)
 {
-	// The parser
-	GetOpt::Parser getopt;
+    // The parser
+    GetOpt::Parser getopt;
 
-	getopt.addParagraph(String()
-		<< "Antares read-key v" << ANTARES_VERSION_PUB_STR << "\n");
+    getopt.addParagraph(String() << "Antares read-key v" << ANTARES_VERSION_PUB_STR << "\n");
 
-	String optInputFile;
-	String optOutputFile;
-	String name;
+    String optInputFile;
+    String optOutputFile;
+    String name;
 
-	// --input
-	getopt.add(optInputFile, 'i', "input", "Specify an input file");
-	// --output
-	getopt.add(optOutputFile, 'o', "output", "Specify an output file where the content will be APPENDED");
-	// --name
-	getopt.add(name, 'n', "name", "Specify the function name");
+    // --input
+    getopt.add(optInputFile, 'i', "input", "Specify an input file");
+    // --output
+    getopt.add(
+      optOutputFile, 'o', "output", "Specify an output file where the content will be APPENDED");
+    // --name
+    getopt.add(name, 'n', "name", "Specify the function name");
 
-	// --pid
-	String optPID;
-	getopt.add(optPID, 'p', "pid", "Specify the file where to write the process ID");
+    // --pid
+    String optPID;
+    getopt.add(optPID, 'p', "pid", "Specify the file where to write the process ID");
 
+    getopt.addParagraph("\nHelp");
+    // --version
+    bool optVersion = false;
+    getopt.addFlag(optVersion, 'v', "version", "Print the version of the solver and exit");
 
-	getopt.addParagraph("\nHelp");
-	// --version
-	bool optVersion = false;
-	getopt.addFlag(optVersion, 'v', "version", "Print the version of the solver and exit");
+    // Ask to parse the command line
+    if (!getopt(argc, argv))
+        return (getopt.errors() ? EXIT_FAILURE : 0);
 
-	// Ask to parse the command line
-	if (!getopt(argc, argv))
-		return (getopt.errors() ? EXIT_FAILURE : 0);
+    // Version
+    if (optVersion)
+    {
+        std::cout << ANTARES_VERSION_STR << std::endl;
+        return 0;
+    }
 
-	// Version
-	if (optVersion)
-	{
-		std::cout << ANTARES_VERSION_STR << std::endl;
-		return 0;
-	}
+    if (!optPID.empty())
+    {
+        IO::File::Stream pidfile;
+        if (pidfile.openRW(optPID))
+            pidfile << ProcessID();
+        else
+            std::cerr << "impossible to write pid file " << optPID << '\n';
+    }
 
-	if (!optPID.empty())
-	{
-		IO::File::Stream pidfile;
-		if (pidfile.openRW(optPID))
-			pidfile << ProcessID();
-		else
-			std::cerr << "impossible to write pid file " << optPID << '\n';
-	}
+    if (name.empty())
+    {
+        std::cerr << "Invalid empty function name\n";
+        return EXIT_FAILURE;
+    }
+    if (optInputFile.empty())
+    {
+        std::cerr << "Invalid empty filename\n";
+        return EXIT_FAILURE;
+    }
+    if (optOutputFile.empty())
+    {
+        std::cerr << "Invalid empty filename\n";
+        return EXIT_FAILURE;
+    }
 
-	if (name.empty())
-	{
-		std::cerr << "Invalid empty function name\n";
-		return EXIT_FAILURE;
-	}
-	if (optInputFile.empty())
-	{
-		std::cerr << "Invalid empty filename\n";
-		return EXIT_FAILURE;
-	}
-	if (optOutputFile.empty())
-	{
-		std::cerr << "Invalid empty filename\n";
-		return EXIT_FAILURE;
-	}
+    // normalizing the  filename
+    {
+        String tmp;
+        // input
+        IO::MakeAbsolute(tmp, optInputFile);
+        IO::Normalize(optInputFile, tmp);
+        // output
+        IO::MakeAbsolute(tmp, optOutputFile);
+        IO::Normalize(optOutputFile, tmp);
+    }
 
-	// normalizing the  filename
-	{
-		String tmp;
-		// input
-		IO::MakeAbsolute(tmp, optInputFile);
-		IO::Normalize(optInputFile, tmp);
-		// output
-		IO::MakeAbsolute(tmp, optOutputFile);
-		IO::Normalize(optOutputFile, tmp);
-	}
+    Clob content;
+    IO::File::LoadFromFile(content, optInputFile);
+    // removing any final line feeds
+    content.trim();
 
-	Clob content;
-	IO::File::LoadFromFile(content, optInputFile);
-	// removing any final line feeds
-	content.trim();
+    if (content.empty())
+    {
+        std::cerr << "empty content\n";
+        return EXIT_FAILURE;
+    }
 
-	if (content.empty())
-	{
-		std::cerr << "empty content\n";
-		return EXIT_FAILURE;
-	}
+    std::vector<uint> charToCopy;
+    charToCopy.resize(content.size());
+    for (uint i = 0; i != content.size(); ++i)
+        charToCopy[i] = i;
 
-	std::vector<uint> charToCopy;
-	charToCopy.resize(content.size());
-	for (uint i = 0; i != content.size(); ++i)
-		charToCopy[i] = i;
+    Clob out;
+    out << "\n\n";
+    out << "/*!\n";
+    out << "** \\brief License Key\n";
+    out << "**\n";
+    out << "** \\code\n** ";
 
-	Clob out;
-	out << "\n\n";
-	out << "/*!\n";
-	out << "** \\brief License Key\n";
-	out << "**\n";
-	out << "** \\code\n** ";
+    for (uint i = 0; i != content.size(); ++i)
+    {
+        char c = content[i];
+        if (c == '\n')
+        {
+            out << "\n** ";
+        }
+        else
+            out += c;
+    }
+    out << "\n** \\endcode\n";
+    out << "*/\n";
+    out << "# define " << name << "(S) \\\n";
+    out << "\tdo \\\n";
+    out << "\t{ \\\n";
+    out << "\t\tS.resize(" << content.size() << "); \\\n";
 
-	for (uint i = 0; i != content.size(); ++i)
-	{
-		char c = content[i];
-		if (c == '\n')
-		{
-			out << "\n** ";
-		}
-		else
-			out += c;
-	}
-	out << "\n** \\endcode\n";
-	out << "*/\n";
-	out << "# define " << name << "(S) \\\n";
-	out << "\tdo \\\n";
-	out << "\t{ \\\n";
-	out << "\t\tS.resize(" << content.size() << "); \\\n";
+    Math::Random::Default rnd;
+    uint perLine = 0;
+    CString<32, false> t;
+    while (not charToCopy.empty())
+    {
+        uint index = rnd() % charToCopy.size();
+        auto i = charToCopy.begin() + index;
+        assert(*i < content.size());
 
-	Math::Random::Default rnd;
-	uint perLine = 0;
-	CString<32,false> t;
-	while (not charToCopy.empty())
-	{
-		uint index = rnd() % charToCopy.size();
-		auto i = charToCopy.begin() + index;
-		assert(*i < content.size());
+        if (!perLine)
+            out += "\t\t";
 
-		if (!perLine)
-			out += "\t\t";
+        char c = content[*i];
+        t.clear();
+        switch (c)
+        {
+        case '\n':
+            t << "S[" << *i << "] = '\\n';";
+            break;
+        case '\r':
+            t << "S[" << *i << "] = '\\r';";
+            break;
+        case '\t':
+            t << "S[" << *i << "] = '\\t';";
+            break;
+        default:
+            t << "S[" << *i << "] = '" << c << "';";
+            break;
+        };
+        out += t;
+        charToCopy.erase(i);
 
-		char c = content[*i];
-		t.clear();
-		switch (c)
-		{
-			case '\n': t << "S[" << *i << "] = '\\n';";break;
-			case '\r': t << "S[" << *i << "] = '\\r';";break;
-			case '\t': t << "S[" << *i << "] = '\\t';";break;
-			default:   t << "S[" << *i << "] = '" << c << "';";break;
-		};
-		out += t;
-		charToCopy.erase(i);
+        for (unsigned int j = t.size(); j < 15; ++j)
+            out += ' ';
 
-		for (unsigned int j = t.size(); j < 15; ++j)
-			out += ' ';
+        if (perLine == 5)
+        {
+            perLine = 0;
+            out += "\\\n";
+        }
+        else
+            ++perLine;
+    }
 
-		if (perLine == 5)
-		{
-			perLine = 0;
-			out += "\\\n";
-		}
-		else
-			++perLine;
-	}
+    if (!perLine)
+        out << "} \\\n";
+    else
+        out << "\\\n\t} \\\n";
 
-	if (!perLine)
-		out << "} \\\n";
-	else
-		out << "\\\n\t} \\\n";
+    out << "\twhile (0)";
+    out << "\n\n\n";
 
-	out << "\twhile (0)";
-	out << "\n\n\n";
+    IO::File::AppendContent(optOutputFile, out);
 
-	IO::File::AppendContent(optOutputFile, out);
-
-	return 0;
+    return 0;
 }
-

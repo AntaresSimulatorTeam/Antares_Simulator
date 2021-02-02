@@ -10,41 +10,35 @@
 */
 #pragma once
 
-
 namespace Yuni
 {
 namespace DBI
 {
+/*!
+** \brief Class helper for automatically commit a transaction at the end of the scope
+** \ingroup DBI
+*/
+class AutoCommit final
+{
+public:
+    explicit AutoCommit(ConnectorPool& connectors) : tx(std::move(connectors.begin()))
+    {
+    }
 
-	/*!
-	** \brief Class helper for automatically commit a transaction at the end of the scope
-	** \ingroup DBI
-	*/
-	class AutoCommit final
-	{
-	public:
-		explicit AutoCommit(ConnectorPool& connectors) :
-			tx(std::move(connectors.begin()))
-		{}
+    AutoCommit(AutoCommit&& rhs) : tx(std::move(rhs.tx))
+    {
+    }
 
-		AutoCommit(AutoCommit&& rhs) :
-			tx(std::move(rhs.tx))
-		{}
+    ~AutoCommit()
+    {
+        tx.commit();
+    }
 
-		~AutoCommit()
-		{
-			tx.commit();
-		}
+public:
+    //! The transaction
+    Transaction tx;
 
-	public:
-		//! The transaction
-		Transaction tx;
-
-	}; // class AutoCommit
-
-
-
-
+}; // class AutoCommit
 
 } // namespace DBI
 } // namespace Yuni

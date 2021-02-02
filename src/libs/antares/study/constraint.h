@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_CONSTRAINT_H__
-# define __ANTARES_LIBS_STUDY_CONSTRAINT_H__
+#define __ANTARES_LIBS_STUDY_CONSTRAINT_H__
 
-# include "constraint/constraint.h"
+#include "constraint/constraint.h"
 
 #endif // __ANTARES_LIBS_STUDY_CONSTRAINT_H__

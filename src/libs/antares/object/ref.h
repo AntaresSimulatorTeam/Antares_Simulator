@@ -25,47 +25,41 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __OPTIMATE_LIB_ASSEMBLY_OID_H__
-# define __OPTIMATE_LIB_ASSEMBLY_OID_H__
+#define __OPTIMATE_LIB_ASSEMBLY_OID_H__
 
-# include "../antares.h"
-# include <yuni/uuid/uuid.h>
-# include <functional>
-
+#include "../antares.h"
+#include <yuni/uuid/uuid.h>
+#include <functional>
 
 namespace Yuni
 {
-	class YUNI_DECL UUID;
+class YUNI_DECL UUID;
 }
 
 namespace Antares
 {
-
-	//! Object Unique Identifier
-	typedef Yuni::UUID Ref;
+//! Object Unique Identifier
+typedef Yuni::UUID Ref;
 
 } // namespace Antares
 
-
-
 namespace std
 {
-
-	/*!
-	** \brief Specialization fot std::hash<Antares::Ref>
-	**
-	** This specialization is requiered for std::unordered_map
-	** (or any hash table from the previous tr1)
-	*/
-	template<>
-	class  hash<Yuni::UUID>
-	{
-	public:
-		inline std::size_t operator () (const Yuni::UUID& value) const
-		{
-			return value.hash();
-		}
-	}; // class hash<Yuni::UUID>
-
+/*!
+** \brief Specialization fot std::hash<Antares::Ref>
+**
+** This specialization is requiered for std::unordered_map
+** (or any hash table from the previous tr1)
+*/
+template<>
+class hash<Yuni::UUID>
+{
+public:
+    inline std::size_t operator()(const Yuni::UUID& value) const
+    {
+        return value.hash();
+    }
+}; // class hash<Yuni::UUID>
 
 } // namespace std
 

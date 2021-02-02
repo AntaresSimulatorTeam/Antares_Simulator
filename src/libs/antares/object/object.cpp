@@ -29,46 +29,35 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
+IObject::IObject() : pOID(Ref::fGenerate) // will generate a new uuid
+{
+    assert(!pOID.null()
+           and "An object ID must not be NULL ({000000000-0000-0000-0000-0000000000000})");
+}
 
-	IObject::IObject() :
-		pOID(Ref::fGenerate) // will generate a new uuid
-	{
-		assert(!pOID.null()
-			and "An object ID must not be NULL ({000000000-0000-0000-0000-0000000000000})");
-	}
+IObject::IObject(const Ref& uid) : pOID(uid)
+{
+    assert(!pOID.null()
+           and "An object ID must not be NULL ({000000000-0000-0000-0000-0000000000000})");
+}
 
+IObject::~IObject()
+{
+    // It would be safer to lock/unlock the inner mutex to prevent
+    // some rare (and nearly impossible) case where the object is destroyed
+    // whereas another thread is calling one of our methods.
+    // The smart pointer should get rid of this issue.
+    // And anyway, it is pointless here the vtable has been already wiped out
+    //
+    // ThreadingPolicy::MutexLocker locker(*this);
+}
 
-	IObject::IObject(const Ref& uid) :
-		pOID(uid)
-	{
-		assert(!pOID.null()
-			and "An object ID must not be NULL ({000000000-0000-0000-0000-0000000000000})");
-	}
-
-
-	IObject::~IObject()
-	{
-		// It would be safer to lock/unlock the inner mutex to prevent
-		// some rare (and nearly impossible) case where the object is destroyed
-		// whereas another thread is calling one of our methods.
-		// The smart pointer should get rid of this issue.
-		// And anyway, it is pointless here the vtable has been already wiped out
-		//
-		// ThreadingPolicy::MutexLocker locker(*this);
-	}
-
-
-	void IObject::caption(const AnyString& text)
-	{
-		ThreadingPolicy::MutexLocker locker(*this);
-		pCaption = text;
-	}
-
-
-
+void IObject::caption(const AnyString& text)
+{
+    ThreadingPolicy::MutexLocker locker(*this);
+    pCaption = text;
+}
 
 } // namespace Antares

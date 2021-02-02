@@ -25,57 +25,41 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "h2o2_j_donnees_mensuelles.h"
+#include "h2o2_j_fonctions.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# include "h2o2_j_donnees_mensuelles.h"
-# include "h2o2_j_fonctions.h"
-
-
-
-void H2O2_J_OptimiserUnMois(DONNEES_MENSUELLES_ETENDUES * DonneesMensuelles )
+void H2O2_J_OptimiserUnMois(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
 {
-	int NumeroDeProbleme; int i;
-	PROBLEME_HYDRAULIQUE_ETENDU * ProblemeHydrauliqueEtendu;
-  
-	ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
+    int NumeroDeProbleme;
+    int i;
+    PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
 
-	NumeroDeProbleme = -1;
-	for ( i = 0 ; i < ProblemeHydrauliqueEtendu->NombreDeProblemes ; i++ ) 
-	{
-		if ( DonneesMensuelles->NombreDeJoursDuMois == ProblemeHydrauliqueEtendu->NbJoursDUnProbleme[i] ) 
-		{
-			NumeroDeProbleme = i;
-			break;
-		}
-	}
+    ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
 
-	if ( NumeroDeProbleme < 0 ) 
-	{
-		DonneesMensuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;
-		return;
-	}
+    NumeroDeProbleme = -1;
+    for (i = 0; i < ProblemeHydrauliqueEtendu->NombreDeProblemes; i++)
+    {
+        if (DonneesMensuelles->NombreDeJoursDuMois
+            == ProblemeHydrauliqueEtendu->NbJoursDUnProbleme[i])
+        {
+            NumeroDeProbleme = i;
+            break;
+        }
+    }
 
-	DonneesMensuelles->ResultatsValides = NON;
- 
-	H2O2_J_InitialiserLeSecondMembre( DonneesMensuelles, NumeroDeProbleme );
-	
-	H2O2_J_InitialiserLesBornesdesVariables( DonneesMensuelles, NumeroDeProbleme );
+    if (NumeroDeProbleme < 0)
+    {
+        DonneesMensuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;
+        return;
+    }
 
-	H2O2_J_ResoudreLeProblemeLineaire( DonneesMensuelles, NumeroDeProbleme );
+    DonneesMensuelles->ResultatsValides = NON;
 
-	return;
+    H2O2_J_InitialiserLeSecondMembre(DonneesMensuelles, NumeroDeProbleme);
+
+    H2O2_J_InitialiserLesBornesdesVariables(DonneesMensuelles, NumeroDeProbleme);
+
+    H2O2_J_ResoudreLeProblemeLineaire(DonneesMensuelles, NumeroDeProbleme);
+
+    return;
 }

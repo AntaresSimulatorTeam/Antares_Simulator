@@ -25,127 +25,119 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
-
-
-
-
-
-# ifdef __cplusplus
+#ifdef __cplusplus
 extern "C"
 {
-# endif
+#endif
 
-# include "spx_constantes_externes.h"
+#include "spx_constantes_externes.h"
 
-# ifdef __cplusplus
+#ifdef __cplusplus
 }
-# endif
+#endif
 
-# include "h2o_m_donnees_annuelles.h"
-# include "h2o_m_fonctions.h"
+#include "h2o_m_donnees_annuelles.h"
+#include "h2o_m_fonctions.h"
 
-
-
-void H2O_M_ConstruireLesVariables( DONNEES_ANNUELLES * DonneesAnnuelles )
+void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES* DonneesAnnuelles)
 {
-int Var; int Pdt; int NbPdt;
-PROBLEME_HYDRAULIQUE * ProblemeHydraulique;
-CORRESPONDANCE_DES_VARIABLES *      CorrespondanceDesVariables;
-PROBLEME_LINEAIRE_PARTIE_FIXE *     ProblemeLineairePartieFixe;
-PROBLEME_LINEAIRE_PARTIE_VARIABLE * ProblemeLineairePartieVariable;
+    int Var;
+    int Pdt;
+    int NbPdt;
+    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
+    CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables;
+    PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe;
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
 
-NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
+    NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
 
-ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
-CorrespondanceDesVariables     = ProblemeHydraulique->CorrespondanceDesVariables;
-ProblemeLineairePartieFixe     = ProblemeHydraulique->ProblemeLineairePartieFixe;
-ProblemeLineairePartieVariable = ProblemeHydraulique->ProblemeLineairePartieVariable;
+    ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
+    CorrespondanceDesVariables = ProblemeHydraulique->CorrespondanceDesVariables;
+    ProblemeLineairePartieFixe = ProblemeHydraulique->ProblemeLineairePartieFixe;
+    ProblemeLineairePartieVariable = ProblemeHydraulique->ProblemeLineairePartieVariable;
 
+    Var = 0;
 
+    Pdt = 0;
+    CorrespondanceDesVariables->NumeroDeVariableVolume[Pdt] = Var;
+    ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
+    ProblemeLineairePartieVariable->Xmax[Var] = 1.0;
+    ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+    ProblemeLineairePartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
+      = &(DonneesAnnuelles->Volume[Pdt]);
+    Var++;
 
+    for (Pdt = 1; Pdt < NbPdt; Pdt++)
+    {
+        CorrespondanceDesVariables->NumeroDeVariableVolume[Pdt] = Var;
+        ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
+        ProblemeLineairePartieVariable->Xmax[Var] = 1.0;
+        ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+        ProblemeLineairePartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
+          = &(DonneesAnnuelles->Volume[Pdt]);
+        Var++;
+    }
 
-Var = 0;
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        CorrespondanceDesVariables->NumeroDeVariableTurbine[Pdt] = Var;
+        ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
+        ProblemeLineairePartieVariable->Xmax[Var] = 0.0;
+        ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+        ProblemeLineairePartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
+          = &(DonneesAnnuelles->Turbine[Pdt]);
+        Var++;
+    }
 
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMax[Pdt] = Var;
+        ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
+        ProblemeLineairePartieVariable->Xmax[Var] = LINFINI;
+        ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+        Var++;
+    }
 
-Pdt = 0;
-CorrespondanceDesVariables->NumeroDeVariableVolume[Pdt] = Var;
-ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
-ProblemeLineairePartieVariable->Xmax[Var] = 1.0;
-ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES ;
-ProblemeLineairePartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(DonneesAnnuelles->Volume[Pdt]);	
-Var++;
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMin[Pdt] = Var;
+        ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
+        ProblemeLineairePartieVariable->Xmax[Var] = LINFINI;
+        ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+        Var++;
+    }
 
-for ( Pdt = 1 ; Pdt < NbPdt ; Pdt++ ) {
-  CorrespondanceDesVariables->NumeroDeVariableVolume[Pdt] = Var;
-	ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
-	ProblemeLineairePartieVariable->Xmax[Var] = 1.0;
-	ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-  ProblemeLineairePartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(DonneesAnnuelles->Volume[Pdt]);	
-	Var++;
-}
+    CorrespondanceDesVariables->NumeroDeLaVariableViolMaxVolumeMin = Var;
+    ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
+    ProblemeLineairePartieVariable->Xmax[Var] = LINFINI;
+    ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+    Var++;
 
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        CorrespondanceDesVariables->NumeroDeVariableDEcartPositifAuTurbineCible[Pdt] = Var;
+        ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
+        ProblemeLineairePartieVariable->Xmax[Var] = LINFINI;
+        ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+        Var++;
+    }
 
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-  CorrespondanceDesVariables->NumeroDeVariableTurbine[Pdt] = Var;
-	ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
-	ProblemeLineairePartieVariable->Xmax[Var] = 0.0; 
-	ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-  ProblemeLineairePartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(DonneesAnnuelles->Turbine[Pdt]);	
-	Var++;
-}
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        CorrespondanceDesVariables->NumeroDeVariableDEcartNegatifAuTurbineCible[Pdt] = Var;
+        ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
+        ProblemeLineairePartieVariable->Xmax[Var] = LINFINI;
+        ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+        Var++;
+    }
 
+    CorrespondanceDesVariables->NumeroDeLaVariableXi = Var;
+    ProblemeLineairePartieVariable->Xmin[Var] = -LINFINI;
+    ProblemeLineairePartieVariable->Xmax[Var] = LINFINI;
+    ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_NON_BORNEE;
+    Var++;
 
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-  CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMax[Pdt] = Var;
-	ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
-	ProblemeLineairePartieVariable->Xmax[Var] = LINFINI;
-	ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-	Var++;
-}
+    ProblemeLineairePartieFixe->NombreDeVariables = Var;
 
-
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-  CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMin[Pdt] = Var;
-	ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
-	ProblemeLineairePartieVariable->Xmax[Var] = LINFINI;
-	ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-	Var++;
-}
-
-
-CorrespondanceDesVariables->NumeroDeLaVariableViolMaxVolumeMin = Var;
-ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
-ProblemeLineairePartieVariable->Xmax[Var] = LINFINI;
-ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-Var++;
-
-
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-  CorrespondanceDesVariables->NumeroDeVariableDEcartPositifAuTurbineCible[Pdt] = Var;
-	ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
-	ProblemeLineairePartieVariable->Xmax[Var] = LINFINI;
-	ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-	Var++;
-}
-
-
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-  CorrespondanceDesVariables->NumeroDeVariableDEcartNegatifAuTurbineCible[Pdt] = Var;
-	ProblemeLineairePartieVariable->Xmin[Var] = 0.0;
-	ProblemeLineairePartieVariable->Xmax[Var] = LINFINI;
-	ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-	Var++;
-}
-
-
-CorrespondanceDesVariables->NumeroDeLaVariableXi = Var;
-ProblemeLineairePartieVariable->Xmin[Var] = -LINFINI;
-ProblemeLineairePartieVariable->Xmax[Var] = LINFINI;
-ProblemeLineairePartieFixe->TypeDeVariable[Var] = VARIABLE_NON_BORNEE;
-Var++;
-
-ProblemeLineairePartieFixe->NombreDeVariables = Var;
-
-return;
+    return;
 }

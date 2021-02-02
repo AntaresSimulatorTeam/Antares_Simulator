@@ -25,11 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_DEFAULT_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_DEFAULT_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_DEFAULT_H__
 
-# include <antares/wx-wrapper.h>
-
-
+#include <antares/wx-wrapper.h>
 
 namespace Antares
 {
@@ -39,21 +37,29 @@ namespace Datagrid
 {
 namespace Default
 {
+//! Border color
+inline wxColour BorderColor()
+{
+    return wxColour(235, 235, 235);
+}
 
+//! Border hightlight color
+inline wxColour BorderHighlightColor()
+{
+    return wxColour(140, 140, 140);
+}
 
-	//! Border color
-	inline wxColour BorderColor() {return wxColour(235, 235, 235);}
+//! Border hightlight color
+inline wxColour BorderDaySeparator()
+{
+    return wxColour(170, 150, 150);
+}
 
-	//! Border hightlight color
-	inline wxColour BorderHighlightColor() {return wxColour(140, 140, 140);}
-
-	//! Border hightlight color
-	inline wxColour BorderDaySeparator() {return wxColour(170, 150, 150);}
-
-	//! Border hightlight color
-	inline wxColour BorderMonthSeparator() {return wxColour(110, 110, 220);}
-
-
+//! Border hightlight color
+inline wxColour BorderMonthSeparator()
+{
+    return wxColour(110, 110, 220);
+}
 
 } // namespace Default
 } // namespace Datagrid

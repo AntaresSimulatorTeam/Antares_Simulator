@@ -25,31 +25,24 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_OUTPUT_HXX__
-# define __ANTARES_LIBS_STUDY_OUTPUT_HXX__
-
+#define __ANTARES_LIBS_STUDY_OUTPUT_HXX__
 
 namespace Antares
 {
 namespace Data
 {
+inline bool Output::operator<(const Output& rhs) const
+{
+    return not(title < rhs.title);
+}
 
-
-	inline bool Output::operator < (const Output& rhs) const
-	{
-		return not (title < rhs.title);
-	}
-
-
-	inline void Output::RetrieveListFromStudy(List& out, const Study::Ptr& study)
-	{
-		if (!study)
-			out.clear();
-		else
-			RetrieveListFromStudy(out, *study);
-	}
-
-
-
+inline void Output::RetrieveListFromStudy(List& out, const Study::Ptr& study)
+{
+    if (!study)
+        out.clear();
+    else
+        RetrieveListFromStudy(out, *study);
+}
 
 } // namespace Data
 } // namespace Antares

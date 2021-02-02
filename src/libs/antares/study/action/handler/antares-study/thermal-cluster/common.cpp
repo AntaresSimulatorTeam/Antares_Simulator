@@ -29,8 +29,6 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
 namespace Action
@@ -39,56 +37,47 @@ namespace AntaresStudy
 {
 namespace ThermalCluster
 {
+CommonData::CommonData()
+{
+    pInfos.caption = "Common data";
+}
 
-	CommonData::CommonData()
-	{
-		pInfos.caption = "Common data";
-	}
+CommonData::~CommonData()
+{
+}
 
+bool CommonData::prepareWL(Context&)
+{
+    pInfos.message.clear();
+    pInfos.state = stReady;
+    switch (pInfos.behavior)
+    {
+    case bhOverwrite:
+        pInfos.message << "The common data will be copied";
+        break;
+    default:
+        pInfos.state = stDisabled;
+        break;
+    }
 
-	CommonData::~CommonData()
-	{}
+    return true;
+}
 
-
-	bool CommonData::prepareWL(Context&)
-	{
-		pInfos.message.clear();
-		pInfos.state = stReady;
-		switch (pInfos.behavior)
-		{
-			case bhOverwrite:
-				pInfos.message << "The common data will be copied";
-				break;
-			default:
-				pInfos.state = stDisabled;
-				break;
-		}
-
-		return true;
-	}
-
-
-
-	bool CommonData::performWL(Context& ctx)
-	{
-		if (ctx.area && ctx.extStudy)
-		{
-			if (ctx.cluster && ctx.originalPlant && ctx.cluster != ctx.originalPlant)
-			{
-				// copy the data
-				ctx.cluster->copyFrom(*(ctx.originalPlant));
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-
-
+bool CommonData::performWL(Context& ctx)
+{
+    if (ctx.area && ctx.extStudy)
+    {
+        if (ctx.cluster && ctx.originalPlant && ctx.cluster != ctx.originalPlant)
+        {
+            // copy the data
+            ctx.cluster->copyFrom(*(ctx.originalPlant));
+            return true;
+        }
+    }
+    return false;
+}
 
 } // namespace ThermalCluster
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
-

@@ -106,6 +106,7 @@ The install procedure can be done
 - by using a package manager. Depending on the OS we propose a solution
   - using VCPKG (Only tested on windows)
   - using the official package manager of the linux distribution
+- by using pre-compiled external libraries provided by [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps/releases/tag/v1.0.1)
 
 
 ### [Using VCPKG](#vcpkg)
@@ -185,6 +186,17 @@ Dependency install directory can be specified with `DEPS_INSTALL_DIR`. By defaul
 
 Note :
 > `DEPS_INSTALL_DIR` is added to `CMAKE_PREFIX_PATH`
+
+> If the dependency install directory contains CURL, OPENSSL or wxWidgets pre-compiled libraries an additionnal option must be used at configure time `-DUSE_PRECOMPILED_EXT=ON`
+
+### Pre-compiled libraries download : release version only
+You can download pre-compiled antares-deps archive from [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps/releases/tag/v1.0.1). Only release version are available.
+
+For Ubuntu 20.04 there are still some system librairies that must be installed :
+
+```
+sudo apt-get install libuuid1 uuid-dev libssh2-1 libssh2-1-dev libidn2-0 libidn2-dev libidn11 libidn11-dev gtk2.0 libb64-dev libjpeg-dev libtiff-dev libsecret-1-dev
+```
 
 ## [Building Antares Solution](#build)
 
@@ -283,6 +295,19 @@ cmake --build _build --config release -j8
 Note :
 > Compilation can be done on several processors with ```-j``` option.
 
+### Linux/Window building with pre-compiled external librairies
+- Download and extract [pre-compiled archive](https://github.com/AntaresSimulatorTeam/antares-deps/releases/tag/v1.0.1)
+- Configure build with CMake using ```DEPS_INSTALL_DIR``` and `USE_PRECOMPILED_EXT` option.
+```
+cmake -B _build -S [antares_src] -DDEPS_INSTALL_DIR=<deps_install_dir> -DCMAKE_BUILD_TYPE=release -DUSE_PRECOMPILED_EXT=ON..
+```
+- Build
+ ```
+cmake --build _build --config release -j8
+```
+Note :
+> Compilation can be done on several processors with ```-j``` option.
+
 ## [Tests](#tests)
 
 Tests compilation  can be enabled at configure time using the option `-DBUILD_TESTING=ON` (`OFF` by default)
@@ -292,7 +317,6 @@ After build, tests can be run with ``ctest`` :
 cd _build
 ctest -C Release --output-on-failure
 ```
-
 Note:
 > Tests with output comparison must be enabled using the option `-DBUILD_OUTPUT_TEST=ON` (`OFF` by default)
 
@@ -314,7 +338,6 @@ This is the list of the availables labels :
 
 Note :
 > Use `ctest -N` to see all available tests
-
 Here is an example for running only units tests:
 ```
 ctest -C Release --output-on-failure -L units
@@ -331,7 +354,6 @@ ctest -C Release --output-on-failure -R "short-examples.*sirius" -LE "ortools"
 ```` 
 Note :
 > In this case the regex is on name (`-R`) so only short-examples are executed.
-
 For more information on `ctest` call see [documentation](https://cmake.org/cmake/help/latest/manual/ctest.1.html)
 
 ## [Installer creation](#installer)
