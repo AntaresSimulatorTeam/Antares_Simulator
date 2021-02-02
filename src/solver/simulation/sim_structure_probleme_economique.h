@@ -515,7 +515,6 @@ struct PROBLEME_HEBDO
 
     char LeProblemeADejaEteInstancie;
     char TypeDOptimisation;
-    char SolveurDuProblemeLineaire;
 
     int NombreDePays;
     const char** NomsDesPays;

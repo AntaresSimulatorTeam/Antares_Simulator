@@ -318,7 +318,7 @@ char H2O_M_EcrireJeuDeDonneesLineaireAuFormatMPS(DONNEES_ANNUELLES* DonneesAnnue
         else
         {
             fprintf(Flot,
-                    "PNE_EcrireJeuDeDonneesMPS : le sens de la contrainte %d: %c ne fait pas "
+                    "H2O_M_EcrireJeuDeDonneesMPS : le sens de la contrainte %d: %c ne fait pas "
                     "partie des sens reconnus\n",
                     Cnt,
                     Sens[Cnt]);
