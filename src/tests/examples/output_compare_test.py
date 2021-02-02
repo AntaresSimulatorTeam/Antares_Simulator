@@ -657,3 +657,53 @@ def test_playlist_23(use_ortools, ortools_solver, solver_path):
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     enable_study_output(study_path, False)
     check_output_values(study_path)
+    
+@pytest.mark.short
+def test_unfeasible_problem_06(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "specific-tests" / "unfeasible-problem" /"unfeasible_problem_06"
+    enable_study_output(study_path, True)    
+    st = Study(str(study_path))
+    st.set_variable(variable="include-unfeasible-problem-behavior", value="warning-dry", file_nick_name="general")
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    enable_study_output(study_path, False)
+    check_output_values(study_path)
+    
+@pytest.mark.short
+def test_unfeasible_problem_07(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "specific-tests" / "unfeasible-problem" /"unfeasible_problem_07"
+    enable_study_output(study_path, True)    
+    st = Study(str(study_path))
+    st.set_variable(variable="include-unfeasible-problem-behavior", value="warning-dry", file_nick_name="general")
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    enable_study_output(study_path, False)
+    check_output_values(study_path)
+    
+@pytest.mark.short
+def test_unfeasible_problem_08(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "specific-tests" / "unfeasible-problem" /"unfeasible_problem_08"
+    enable_study_output(study_path, True)    
+    st = Study(str(study_path))
+    st.set_variable(variable="include-unfeasible-problem-behavior", value="warning-dry", file_nick_name="general")
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    enable_study_output(study_path, False)
+    check_output_values(study_path)
+    
+@pytest.mark.short
+def test_unfeasible_problem_09(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "specific-tests" / "unfeasible-problem" /"unfeasible_problem_09"
+    enable_study_output(study_path, True)    
+    st = Study(str(study_path))
+    st.set_variable(variable="include-unfeasible-problem-behavior", value="warning-dry", file_nick_name="general")
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    enable_study_output(study_path, False)
+    check_output_values(study_path)
+    
+@pytest.mark.short
+def test_unfeasible_problem_10(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "specific-tests" / "unfeasible-problem" /"unfeasible_problem_10"
+    enable_study_output(study_path, True)    
+    st = Study(str(study_path))
+    st.set_variable(variable="include-unfeasible-problem-behavior", value="warning-dry", file_nick_name="general")
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    enable_study_output(study_path, False)
+    check_output_values(study_path)
