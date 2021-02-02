@@ -42,8 +42,6 @@ extern "C"
 #include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
 
-#include "pne_definition_arguments.h"
-#include "pne_fonctions.h"
 #include "srs_api.h"
 }
 
@@ -375,7 +373,6 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     int* Csui;
     double CoutOpt;
     PROBLEME_SIMPLEXE* Probleme;
-    PROBLEME_A_RESOUDRE* ProblemePourPne;
 
     int NombreDeVariables;
     int* TypeDeBorneDeLaVariable;
@@ -392,51 +389,25 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     int ExistenceDUneSolution;
     double* X;
 
-    if (Type == ANTARES_SIMPLEXE)
-    {
-        Probleme = (PROBLEME_SIMPLEXE*)Prob;
+    Probleme = (PROBLEME_SIMPLEXE*)Prob;
 
-        ExistenceDUneSolution = Probleme->ExistenceDUneSolution;
-        if (ExistenceDUneSolution == OUI_SPX)
-            ExistenceDUneSolution = OUI_ANTARES;
+    ExistenceDUneSolution = Probleme->ExistenceDUneSolution;
+    if (ExistenceDUneSolution == OUI_SPX)
+        ExistenceDUneSolution = OUI_ANTARES;
 
-        NombreDeVariables = Probleme->NombreDeVariables;
-        TypeDeBorneDeLaVariable = Probleme->TypeDeVariable;
-        Xmax = Probleme->Xmax;
-        Xmin = Probleme->Xmin;
-        X = Probleme->X;
-        CoutLineaire = Probleme->CoutLineaire;
-        NombreDeContraintes = Probleme->NombreDeContraintes;
-        SecondMembre = Probleme->SecondMembre;
-        Sens = Probleme->Sens;
-        IndicesDebutDeLigne = Probleme->IndicesDebutDeLigne;
-        NombreDeTermesDesLignes = Probleme->NombreDeTermesDesLignes;
-        CoefficientsDeLaMatriceDesContraintes = Probleme->CoefficientsDeLaMatriceDesContraintes;
-        IndicesColonnes = Probleme->IndicesColonnes;
-    }
-    else
-    {
-        ProblemePourPne = (PROBLEME_A_RESOUDRE*)Prob;
-
-        ExistenceDUneSolution = ProblemePourPne->ExistenceDUneSolution;
-        if (ExistenceDUneSolution == SOLUTION_OPTIMALE_TROUVEE)
-            ExistenceDUneSolution = OUI_ANTARES;
-
-        NombreDeVariables = ProblemePourPne->NombreDeVariables;
-        TypeDeBorneDeLaVariable = ProblemePourPne->TypeDeBorneDeLaVariable;
-        Xmax = ProblemePourPne->Xmax;
-        Xmin = ProblemePourPne->Xmin;
-        X = ProblemePourPne->X;
-        CoutLineaire = ProblemePourPne->CoutLineaire;
-        NombreDeContraintes = ProblemePourPne->NombreDeContraintes;
-        SecondMembre = ProblemePourPne->SecondMembre;
-        Sens = ProblemePourPne->Sens;
-        IndicesDebutDeLigne = ProblemePourPne->IndicesDebutDeLigne;
-        NombreDeTermesDesLignes = ProblemePourPne->NombreDeTermesDesLignes;
-        CoefficientsDeLaMatriceDesContraintes
-          = ProblemePourPne->CoefficientsDeLaMatriceDesContraintes;
-        IndicesColonnes = ProblemePourPne->IndicesColonnes;
-    }
+    NombreDeVariables = Probleme->NombreDeVariables;
+    TypeDeBorneDeLaVariable = Probleme->TypeDeVariable;
+    Xmax = Probleme->Xmax;
+    Xmin = Probleme->Xmin;
+    X = Probleme->X;
+    CoutLineaire = Probleme->CoutLineaire;
+    NombreDeContraintes = Probleme->NombreDeContraintes;
+    SecondMembre = Probleme->SecondMembre;
+    Sens = Probleme->Sens;
+    IndicesDebutDeLigne = Probleme->IndicesDebutDeLigne;
+    NombreDeTermesDesLignes = Probleme->NombreDeTermesDesLignes;
+    CoefficientsDeLaMatriceDesContraintes = Probleme->CoefficientsDeLaMatriceDesContraintes;
+    IndicesColonnes = Probleme->IndicesColonnes;
 
     if (ExistenceDUneSolution == OUI_ANTARES)
     {

@@ -40,9 +40,6 @@ extern "C"
 {
 #include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
-
-#include "pne_definition_arguments.h"
-#include "pne_fonctions.h"
 }
 
 #include <antares/logs.h>
@@ -273,13 +270,11 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     int* PositionDeLaVariable;
     int* ComplementDeLaBase;
     int ResoudreLeProblemeLineaire;
-    int* TypeEntierOuReel;
     int Var;
     PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique;
 
     PROBLEME_SIMPLEXE Probleme;
     PROBLEME_SPX* ProbSpx;
-    PROBLEME_A_RESOUDRE ProblemePourPne;
 
     NombreDePasDeTempsProblemeHebdo = ProblemeHebdo->NombreDePasDeTemps;
     NombreDePasDeTemps = NombreDePasDeTempsProblemeHebdo;
@@ -424,7 +419,6 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     Xmin = (double*)MemAlloc(NombreDeVariables * sizeof(double));
     Xmax = (double*)MemAlloc(NombreDeVariables * sizeof(double));
     TypeDeVariable = (int*)MemAlloc(NombreDeVariables * sizeof(int));
-    TypeEntierOuReel = (int*)MemAlloc(NombreDeVariables * sizeof(int));
 
     ComplementDeLaBase = (int*)MemAlloc(NombreDeContraintes * sizeof(int));
     IndicesDebutDeLigne = (int*)MemAlloc(NombreDeContraintes * sizeof(int));
@@ -446,10 +440,10 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     if (NumeroDeVariableDeM == NULL || NumeroDeVariableDeMMoinsMoins == NULL
         || NumeroDeVariableDeMPlus == NULL || NumeroDeVariableDeMMoins == NULL
         || PositionDeLaVariable == NULL || CoutLineaire == NULL || Xsolution == NULL || Xmin == NULL
-        || Xmax == NULL || TypeDeVariable == NULL || TypeEntierOuReel == NULL
-        || ComplementDeLaBase == NULL || IndicesDebutDeLigne == NULL
-        || NombreDeTermesDesLignes == NULL || Sens == NULL || SecondMembre == NULL
-        || IndicesColonnes == NULL || CoefficientsDeLaMatriceDesContraintes == NULL)
+        || Xmax == NULL || TypeDeVariable == NULL || ComplementDeLaBase == NULL
+        || IndicesDebutDeLigne == NULL || NombreDeTermesDesLignes == NULL || Sens == NULL
+        || SecondMembre == NULL || IndicesColonnes == NULL
+        || CoefficientsDeLaMatriceDesContraintes == NULL)
     {
         logs.info();
         logs.error() << "Internal error: insufficient memory";
@@ -467,7 +461,6 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
         Xmin[NombreDeVariables] = NbMinOptDeGroupesEnMarche[Pdt];
         Xmax[NombreDeVariables] = NombreMaxDeGroupesEnMarcheDuPalierThermique[Pdt];
         TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-        TypeEntierOuReel[NombreDeVariables] = REEL;
         NombreDeVariables++;
 
         NumeroDeVariableDeMMoinsMoins[Pdt] = NombreDeVariables;
@@ -477,10 +470,8 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
 #if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
         Xmax[NombreDeVariables] = LINFINI_ANTARES;
         TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
-        TypeEntierOuReel[NombreDeVariables] = REEL;
 #else
         TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-        TypeEntierOuReel[NombreDeVariables] = REEL;
 #endif
         NombreDeVariables++;
 
@@ -491,7 +482,6 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
 
         Xmax[NombreDeVariables] = LINFINI_ANTARES;
         TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
-        TypeEntierOuReel[NombreDeVariables] = REEL;
         NombreDeVariables++;
 
         NumeroDeVariableDeMMoins[Pdt] = NombreDeVariables;
@@ -501,7 +491,6 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
 
         Xmax[NombreDeVariables] = LINFINI_ANTARES;
         TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
-        TypeEntierOuReel[NombreDeVariables] = REEL;
         NombreDeVariables++;
     }
 
@@ -755,7 +744,6 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     MemFree(Xmin);
     MemFree(Xmax);
     MemFree(TypeDeVariable);
-    MemFree(TypeEntierOuReel);
     MemFree(ComplementDeLaBase);
     MemFree(IndicesDebutDeLigne);
     MemFree(NombreDeTermesDesLignes);
