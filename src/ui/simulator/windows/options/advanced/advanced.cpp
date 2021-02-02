@@ -169,6 +169,19 @@ AdvancedParameters::AdvancedParameters(wxWindow* parent) :
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnInitialReservoirLevels = button;
     }
+    // Hydro heuristic policy
+    {
+        label = Component::CreateLabel(this, wxT("Hydro heuristic policy"));
+        button
+          = new Component::Button(this, wxT("accommodate rule curves"), "images/16x16/tag.png");
+        button->SetBackgroundColour(bgColor);
+        button->menu(true);
+        onPopup.bind(this, &AdvancedParameters::onHydroHeuristicPolicy);
+        button->onPopupMenu(onPopup);
+        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        pBtnHydroHeuristicPolicy = button;
+    }
     // Hydro Pricing Mode
     {
         label = Component::CreateLabel(this, wxT("Hydro Pricing Mode"));
@@ -333,6 +346,7 @@ void AdvancedParameters::onResetToDefault(void*)
         parameters.timeSeriesAccuracyOnCorrelation &= ~Data::timeSeriesSolar;
 
         parameters.initialReservoirLevels.iniLevels = Data::irlColdStart;
+        parameters.hydroHeuristicPolicy.hhPolicy = Data::hhpAccommodateRuleCurves;
         parameters.hydroPricing.hpMode = Data::hpHeuristic;
         parameters.power.fluctuations = Data::lssFreeModulations;
         // parameters.shedding.strategy = Data::shsShareMargins;
@@ -382,6 +396,10 @@ void AdvancedParameters::refresh()
     text = wxStringFromUTF8(
       InitialReservoirLevelsToCString(study.parameters.initialReservoirLevels.iniLevels));
     pBtnInitialReservoirLevels->caption(text);
+
+    text = wxStringFromUTF8(
+      HydroHeuristicPolicyToCString(study.parameters.hydroHeuristicPolicy.hhPolicy));
+    pBtnHydroHeuristicPolicy->caption(text);
 
     text = wxStringFromUTF8(HydroPricingModeToCString(study.parameters.hydroPricing.hpMode));
     pBtnHydroPricing->caption(text);
@@ -558,6 +576,58 @@ void AdvancedParameters::onSelectHotStart(wxCommandEvent&)
     if (study.parameters.initialReservoirLevels.iniLevels != Data::irlHotStart)
     {
         study.parameters.initialReservoirLevels.iniLevels = Data::irlHotStart;
+        MarkTheStudyAsModified();
+        refresh();
+    }
+}
+
+// ... Hydro heuristic policy
+void AdvancedParameters::onHydroHeuristicPolicy(Component::Button&, wxMenu& menu, void*)
+{
+    wxMenuItem* it;
+    wxString text;
+
+    text = wxStringFromUTF8(HydroHeuristicPolicyToCString(Data::hhpAccommodateRuleCurves));
+    text << wxT("   [default]");
+    it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(AdvancedParameters::onSelectAccomodateRuleCurves),
+                 nullptr,
+                 this);
+
+    text.clear();
+    text << wxStringFromUTF8(HydroHeuristicPolicyToCString(Data::hhpMaximizeGeneration));
+    it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(AdvancedParameters::onSelecMaximizeGeneration),
+                 nullptr,
+                 this);
+}
+
+void AdvancedParameters::onSelectAccomodateRuleCurves(wxCommandEvent& evt)
+{
+    if (not Data::Study::Current::Valid())
+        return;
+    auto& study = *Data::Study::Current::Get();
+
+    if (study.parameters.hydroHeuristicPolicy.hhPolicy != Data::hhpAccommodateRuleCurves)
+    {
+        study.parameters.hydroHeuristicPolicy.hhPolicy = Data::hhpAccommodateRuleCurves;
+        MarkTheStudyAsModified();
+        refresh();
+    }
+}
+void AdvancedParameters::onSelecMaximizeGeneration(wxCommandEvent& evt)
+{
+    if (not Data::Study::Current::Valid())
+        return;
+    auto& study = *Data::Study::Current::Get();
+
+    if (study.parameters.hydroHeuristicPolicy.hhPolicy != Data::hhpMaximizeGeneration)
+    {
+        study.parameters.hydroHeuristicPolicy.hhPolicy = Data::hhpMaximizeGeneration;
         MarkTheStudyAsModified();
         refresh();
     }

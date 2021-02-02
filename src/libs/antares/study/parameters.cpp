@@ -241,6 +241,10 @@ void Parameters::reset()
 
     // Initial reservoir levels
     initialReservoirLevels.iniLevels = irlColdStart;
+
+    // Hydro heuristic policy
+    hydroHeuristicPolicy.hhPolicy = hhpAccommodateRuleCurves;
+
     // Hydro pricing
     hydroPricing.hpMode = hpHeuristic;
     allSetsHaveSameSize = true;
@@ -422,6 +426,19 @@ static bool SGDIntLoadFamily_H(Parameters& d,
         d.horizon.trim(" \t\n\r");
         return true;
     }
+    if (key == "hydro-heuristic-policy")
+    {
+        auto hhpolicy = StringToHydroHeuristicPolicy(value);
+        if (hhpolicy != hhpUnknown)
+        {
+            d.hydroHeuristicPolicy.hhPolicy = hhpolicy;
+            return true;
+        }
+        logs.warning() << "parameters: invalid hydro heuristic policy. Got '" << value
+                       << "'. Reset to default accommodate rule curves.";
+        d.hydroHeuristicPolicy.hhPolicy = hhpAccommodateRuleCurves;
+        return false;
+    }
     if (key == "hydro-pricing-mode")
     {
         auto hpricing = StringToHydroPricingMode(value);
@@ -482,7 +499,7 @@ static bool SGDIntLoadFamily_I(Parameters& d, const String& key, const String& v
             return true;
         }
         logs.warning() << "parameters: invalid initital reservoir levels mode. Got '" << value
-                       << "'. reset to fast mode";
+                       << "'. reset to cold start mode.";
         d.initialReservoirLevels.iniLevels = irlColdStart;
         return false;
     }
@@ -1652,6 +1669,8 @@ void Parameters::saveToINI(IniFile& ini) const
         auto* section = ini.addSection("other preferences");
         section->add("initial-reservoir-levels",
                      InitialReservoirLevelsToCString(initialReservoirLevels.iniLevels));
+        section->add("hydro-heuristic-policy",
+                     HydroHeuristicPolicyToCString(hydroHeuristicPolicy.hhPolicy));
         section->add("hydro-pricing-mode", HydroPricingModeToCString(hydroPricing.hpMode));
         section->add("power-fluctuations", PowerFluctuationsToCString(power.fluctuations));
         section->add("shedding-strategy", SheddingStrategyToCString(shedding.strategy));
