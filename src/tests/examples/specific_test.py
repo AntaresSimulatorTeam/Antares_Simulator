@@ -151,7 +151,7 @@ def test_unfeasible_problem_04(solver_path):
     years_error = {6: [22]}
     check_all_unfeasible_options(solver_path, study_path, years_error, years_warning)
 
-@pytest.mark.short
+@pytest.mark.medium
 def test_unfeasible_problem_05(solver_path):
     study_path = ALL_STUDIES_PATH / "specific-tests" / "unfeasible-problem" / "unfeasible_problem_05"
     #Not all years with errors are tested, there is more than 200 years with errors
