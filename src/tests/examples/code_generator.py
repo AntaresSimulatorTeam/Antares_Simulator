@@ -61,7 +61,14 @@ SHORT_TESTS=[
     '072 Hydro Reservoir Model -enhanced-05',
     '073 Hydro Reservoir Model -enhanced-06',
     '074 KCG on Four areas -01',
-    '075 KCG on Four areas -02']
+    '075 KCG on Four areas -02',
+    'playlist-0',
+    'playlist-1',
+    'playlist-2',
+    'playlist-3',
+    'playlist-12',
+    'playlist-13',
+    'playlist-23']
 
 MEDIUM_TESTS=[
     '000 Free Data Sample',

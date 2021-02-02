@@ -14,7 +14,7 @@ add_subdirectory(src)
 add_subdirectory(end-to-end)
 
 
-OMESSAGE("antares-example-tests")
+option(BUILD_OUTPUT_TEST "Activates output values comparison test building" OFF)
 
 find_package(Python3 EXACT 3.8 COMPONENTS Interpreter)
 if(Python3_Interpreter_FOUND)
@@ -57,7 +57,7 @@ if(Python3_Interpreter_FOUND)
                 
                 set(ADDITIONNAL_LABELS ortools ${ortools_solver})
                 
-                set(${use_ortools_option} "--use-ortools")
+                set(use_ortools_option "--use-ortools")
             else()
                 SET(SHORT_EXAMPLES_NAME short-examples-sirius)
                 SET(MEDIUM_EXAMPLES_NAME medium-examples-sirius)
@@ -65,7 +65,7 @@ if(Python3_Interpreter_FOUND)
                                 
                 set(ADDITIONNAL_LABELS sirius)
                 
-                set(${use_ortools_option} "")
+                set(use_ortools_option "")
                 
             endif()
         
@@ -94,10 +94,39 @@ if(Python3_Interpreter_FOUND)
             set_property(TEST ${LONG_EXAMPLES_NAME} PROPERTY LABELS long-examples ${ADDITIONNAL_LABELS})
         
         endmacro()
+        
+        macro(output_tests use_ortools ortools_solver)
+        
+            if(${use_ortools})
+                SET(SHORT_NAME short-output-ortools-${ortools_solver})                
+                set(ADDITIONNAL_LABELS ortools ${ortools_solver})
+                
+                set(use_ortools_option "--use-ortools")
+            else()
+                SET(SHORT_NAME short-output-sirius)                                
+                set(ADDITIONNAL_LABELS sirius)
+                
+                set(use_ortools_option "")
+                
+            endif()
+        
+            # Short tests
+            add_test(
+                NAME ${SHORT_NAME}
+                COMMAND Python3::Interpreter -m pytest -m short --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver> ${use_ortools_option} --ortools-solver=${ortools_solver} output_compare_test.py
+                WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples"
+            )
+            set_property(TEST ${SHORT_NAME} PROPERTY LABELS short-output ${ADDITIONNAL_LABELS})            
+        
+        endmacro()
                 
         examples_tests(false "sirius")
         examples_tests(true "sirius")
         examples_tests(true "coin")
+        
+        if (BUILD_OUTPUT_TEST)
+            output_tests(false, "sirius")
+        endif()
         
   else()   
       message(FATAL "Module pytest or numpy not installed : can't run python scripts for end to end tests" )

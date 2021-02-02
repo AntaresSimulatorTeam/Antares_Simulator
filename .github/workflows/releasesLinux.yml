@@ -51,11 +51,16 @@ jobs:
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release
+           cmake -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
            
     - name: Build
       run: |
            cmake --build _build --config release -j2    
+           
+    - name: Running unit tests
+      run: |
+           cd _build
+           ctest -C release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
 
     - name: Installer .deb creation
       run: |
