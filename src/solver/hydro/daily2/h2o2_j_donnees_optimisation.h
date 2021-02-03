@@ -29,6 +29,7 @@
 
 #include "../daily/h2o_j_sys.h"
 #include "../daily/h2o_j_donnees_optimisation.h"
+#include <antares/study/study.h>
 
 #define LINFINI 1.e+80
 
@@ -132,5 +133,49 @@ typedef struct
     void* Probleme;     /* Le probleme en cours passe au simplexe */
 
 } PROBLEME_HYDRAULIQUE_ETENDU;
+
+class Hydro_problem_costs
+{
+public:
+    Hydro_problem_costs(Data::Study& study);
+
+    inline double get_end_days_levels_cost()
+    {
+        return end_days_levels;
+    }
+    inline double get_overflow_cost()
+    {
+        return overflow;
+    }
+    inline double get_deviations_cost()
+    {
+        return deviations;
+    }
+    inline double get_violations_cost()
+    {
+        return violations;
+    }
+    inline double get_waste_cost()
+    {
+        return waste;
+    }
+    inline double get_deviationMax_cost()
+    {
+        return deviationMax;
+    }
+    inline double get_violationMax_cost()
+    {
+        return violationMax;
+    }
+
+private:
+    double end_days_levels;
+    double overflow;
+    double deviations;
+    double violations;
+    double waste;
+    double deviationMax;
+    double violationMax;
+};
 
 #endif

@@ -312,6 +312,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
         }
 #endif
 
+        Hydro_problem_costs h2o2_optim_costs(study);
+
         for (uint month = 0; month != 12; ++month)
         {
             uint realmonth = (initReservoirLvlMonth + month) % 12;
@@ -323,6 +325,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             uint endDay = firstDay + daysPerMonth;
 
             DONNEES_MENSUELLES_ETENDUES& problem = *H2O2_J_Instanciation();
+            H2O2_J_apply_costs(h2o2_optim_costs, problem);
 
 #if HYDRO_DAILY_SOLVER_DEBUG != 0
             previousMonthWaste[realmonth] = wasteFromPreviousMonth / reservoirCapacity;

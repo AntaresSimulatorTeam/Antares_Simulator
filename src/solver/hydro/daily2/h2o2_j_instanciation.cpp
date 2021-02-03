@@ -28,7 +28,7 @@
 #include "h2o2_j_donnees_mensuelles.h"
 #include "h2o2_j_fonctions.h"
 
-DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation(void)
+DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
 {
     int i;
     int* NbJoursDUnProbleme;
@@ -318,43 +318,6 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation(void)
           ProblemeLineaireEtenduPartieFixe[i]->CoefficientsDeLaMatriceDesContraintes,
           ProblemeLineaireEtenduPartieFixe[i]->IndicesColonnes,
           CorrespondanceDesVariables[i]);
-
-        for (j = 0; j < ProblemeLineaireEtenduPartieFixe[i]->NombreDeVariables; j++)
-            ProblemeLineaireEtenduPartieFixe[i]->CoutLineaire[j] = 0.0;
-
-        NbPdt = NbJoursDUnProbleme[i];
-
-        for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-            ProblemeLineaireEtenduPartieFixe[i]
-              ->CoutLineaire[CorrespondanceDesVariables[i]->NumeroVar_niveauxFinJours[Pdt]]
-              = -1. / 32.;
-
-        for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-            ProblemeLineaireEtenduPartieFixe[i]
-              ->CoutLineaire[CorrespondanceDesVariables[i]->NumeroVar_overflow[Pdt]]
-              = 32 * 68 + 1;
-
-        for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-            ProblemeLineaireEtenduPartieFixe[i]
-              ->CoutLineaire[CorrespondanceDesVariables[i]->NumeroVar_deviations[Pdt]]
-              = 1.;
-
-        for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-            ProblemeLineaireEtenduPartieFixe[i]
-              ->CoutLineaire[CorrespondanceDesVariables[i]->NumeroVar_violations[Pdt]]
-              = 68.;
-
-        ProblemeLineaireEtenduPartieFixe[i]
-          ->CoutLineaire[CorrespondanceDesVariables[i]->NumeroVar_waste]
-          = 34.0;
-
-        ProblemeLineaireEtenduPartieFixe[i]
-          ->CoutLineaire[CorrespondanceDesVariables[i]->NumeroVar_deviationMax]
-          = 2.0;
-
-        ProblemeLineaireEtenduPartieFixe[i]
-          ->CoutLineaire[CorrespondanceDesVariables[i]->NumeroVar_violationMax]
-          = 68.0;
     }
 
     return (DonneesMensuellesEtendues);
