@@ -94,28 +94,28 @@ def check_all_unfeasible_options(solver_path, study_path, years_error,years_warn
     st = Study(str(study_path))
     st.check_files_existence()
 
-    # Option error-dry : no mps and error
+    # Option error-verbose : mps and error
     st.set_variable(variable="include-unfeasible-problem-behavior", value="error-verbose", file_nick_name="general")
     result_code = launch_solver(solver_path, study_path)
     assert result_code != 0
-
     check_log_values(output_path, years_error, "fatal")
     check_mps_availability(output_path, years_error)
 
-    # Option error-verbose : mps and error
+    # Option error-dry : no mps and error
     st.set_variable(variable="include-unfeasible-problem-behavior", value="error-dry", file_nick_name="general")
     result_code = launch_solver(solver_path, study_path)
     assert result_code != 0
     check_log_values(output_path, years_error, "fatal")
     check_no_mps_available(output_path)
 
-    # Option warning-dry : no mps and warning
+    # Option warning-verbose : mps and warning
     st.set_variable(variable="include-unfeasible-problem-behavior", value="warning-verbose", file_nick_name="general")
     result_code = launch_solver(solver_path, study_path)
     assert result_code == 0
     check_log_values(output_path, years_warning, "warns")
+    check_mps_availability(output_path, years_warning)
 
-    # Option warning-verbose : mps and warning
+    # Option warning-dry : no mps and warning
     st.set_variable(variable="include-unfeasible-problem-behavior", value="warning-dry", file_nick_name="general")
     result_code = launch_solver(solver_path, study_path)
     assert result_code == 0
