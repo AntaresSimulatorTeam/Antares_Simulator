@@ -26,6 +26,7 @@
 */
 
 #include "h2o2_j_donnees_optimisation.h"
+#include "antares/study/fwd.h"
 
 Hydro_problem_costs::Hydro_problem_costs(Data::Study& study)
 {
@@ -33,7 +34,19 @@ Hydro_problem_costs::Hydro_problem_costs(Data::Study& study)
     overflow = 32 * 68. + 1.;
     deviations = 1.;
     violations = 68.;
-    waste = 34.0;
+
+    switch (study.parameters.hydroHeuristicPolicy.hhPolicy)
+    {
+    case Data::hhpMaximizeGeneration:
+        waste = 33 * 68.;
+        break;
+    case Data::hhpAccommodateRuleCurves:
+        waste = 34.0;
+        break;
+    default:
+        break;
+    }
+
     deviationMax = 2.0;
     violationMax = 68.0;
 }
