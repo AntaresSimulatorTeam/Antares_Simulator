@@ -37,11 +37,16 @@ def find_output_result_dir(output_dir):
     assert len(dir_list) == 1
     return dir_list[0]
 
-def get_output_values(values_path : Path) -> np.array :
+def get_header_values(values_path : Path) -> np.array :
+    max_row = 3
+    # skip_header=4 in order to skip the unused part header of the file
+    # max_rows=3 to select 3 headers row (name, unit, type : std, min, max, exp,...)
+    output_values = np.genfromtxt(values_path, delimiter='\t', skip_header=4, max_rows=max_row, dtype=str)
+    return output_values
 
+def get_output_values(values_path : Path) -> np.array :
     max_row = 8760
     # skip_header=7 in order to skip the header of the file
-    # usecols=range(5, 25) in order to select the columns with the 20 group of production
     # max_rows=8760 to select all year
     output_values = np.genfromtxt(values_path, delimiter='\t', skip_header=7, max_rows=max_row)
     return output_values
@@ -102,11 +107,22 @@ def compare_directory(result_dir, reference_dir):
                 compare_directory(x, reference_dir / x.name)
         else:
 
-            if x.name != 'id-daily.txt' :
+            if x.name != 'id-daily.txt':
+                reference_headers = get_header_values(reference_dir / x.name)
                 reference_values = get_output_values(reference_dir / x.name)
+                
+                output_headers = get_header_values(x)
                 output_values = get_output_values(x)
+                
+                np.testing.assert_equal(reference_headers,output_headers, err_msg="headers dismatch in " + str(reference_dir / x.name), verbose=True)
 
-                np.testing.assert_allclose(reference_values, output_values, rtol=1e-4, atol=0,equal_nan=True, err_msg="values dismatch in " + str(reference_dir / x.name), verbose=True)
+                for i in range(len(output_headers[0])):
+                    err_msg = "values dismatch in '" + str(reference_dir / x.name) + "' for '" + output_headers[0, i] + "' column"
+                    if reference_values.ndim > 1:
+                        np.testing.assert_allclose(reference_values[:, i], output_values[:, i], rtol=1e-4, atol=0,equal_nan=True, err_msg=err_msg, verbose=True)
+                    else:
+                        np.testing.assert_allclose(reference_values[i], output_values[i], rtol=1e-4, atol=0,equal_nan=True, err_msg=err_msg, verbose=True)
+
 
 def check_output_values(path):
     result_dir = find_output_result_dir(path / 'output')
