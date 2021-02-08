@@ -48,8 +48,6 @@
 #include <curl/curl.h>
 #include <fstream>
 
-#include "getstarttime.h"
-
 using namespace Yuni;
 using namespace std;
 
