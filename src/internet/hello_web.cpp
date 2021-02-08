@@ -884,9 +884,6 @@ static size_t write_data(void* ptr, size_t size, size_t nmemb, void* stream)
             while (regex_search(searchStart, str.cend(), regexRes, expression))
             {
                 result = regexRes[0];
-                /*string b=m[1];
-                string x=m[2];*/
-                int c = regexRes.size();
                 size = result.size() - (tag_name_size + end_tag_name_size);
                 result = result.substr(tag_name_size, size);
                 searchStart += regexRes.position() + regexRes.length();
