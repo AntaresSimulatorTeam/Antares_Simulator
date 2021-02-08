@@ -25,80 +25,79 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_MAP_SETTINGS_H__
-# define __ANTARES_TOOLBOX_MAP_SETTINGS_H__
+#define __ANTARES_TOOLBOX_MAP_SETTINGS_H__
 
-# include <antares/wx-wrapper.h>
-# include <wx/colour.h>
-# include <wx/bitmap.h>
-# include <wx/image.h>
+#include <antares/wx-wrapper.h>
+#include <wx/colour.h>
+#include <wx/bitmap.h>
+#include <wx/image.h>
 
 namespace Antares
 {
 namespace Map
 {
-	enum mapImageFormat : uint16_t
-	{
-		mfPNG, mfDefaultFormat = 0,
-		mfJPG,
+enum mapImageFormat : uint16_t
+{
+    mfPNG,
+    mfDefaultFormat = 0,
+    mfJPG,
 
-		//
-		mfSVG,
-			
-		//--
-		mfFormatCount
-	};
+    //
+    mfSVG,
 
-	static const char* formatNames[mfFormatCount]		= {	"PNG", "JPEG", "SVG" };
-	static const char* formatExt[mfFormatCount]			= { ".png", ".jpg", ".svg" };
-	static wxBitmapType formatWXConstant[mfFormatCount]	= { wxBITMAP_TYPE_PNG, wxBITMAP_TYPE_JPEG, wxBITMAP_TYPE_INVALID };
-	
-	struct MapRenderOptions
-	{
-		bool			mapInFile;
-		mapImageFormat	fileFormat;
-		bool			transparentBackground;
-		wxColor			backgroundColor;
-		uint16_t		nbTiles;
-		std::list<uint16_t>  layers;
-	};
+    //--
+    mfFormatCount
+};
 
-	class Settings
-	{
-	public:
-		static wxColour background;
+static const char* formatNames[mfFormatCount] = {"PNG", "JPEG", "SVG"};
+static const char* formatExt[mfFormatCount] = {".png", ".jpg", ".svg"};
+static wxBitmapType formatWXConstant[mfFormatCount]
+  = {wxBITMAP_TYPE_PNG, wxBITMAP_TYPE_JPEG, wxBITMAP_TYPE_INVALID};
 
-		static wxColour text;
-		static wxColour textLight;
+struct MapRenderOptions
+{
+    bool mapInFile;
+    mapImageFormat fileFormat;
+    bool transparentBackground;
+    wxColor backgroundColor;
+    uint16_t nbTiles;
+    std::list<uint16_t> layers;
+};
 
-		static wxColour grid;
-		static wxColour gridCenter;
+class Settings
+{
+public:
+    static wxColour background;
 
-		static wxColour defaultNodeBackground;
-		static wxColour defaultNodeShadow;
+    static wxColour text;
+    static wxColour textLight;
 
-		static wxColour selectionNodeBorder;
-		static wxColour selectionNodeBackground;
+    static wxColour grid;
+    static wxColour gridCenter;
 
-		static wxColour clusterBorder;
-		static wxColour clusterBackground;
-		static wxColour clusterBorderSelected;
-		static wxColour clusterBackgroundSelected;
+    static wxColour defaultNodeBackground;
+    static wxColour defaultNodeShadow;
 
-		static wxColour selectionBoxBorder;
-		static wxColour selectionBoxBackground;
+    static wxColour selectionNodeBorder;
+    static wxColour selectionNodeBackground;
 
-		static wxColour selectionBoxBorderHighlighted;
-		static wxColour selectionBoxBackgroundHighlighted;
+    static wxColour clusterBorder;
+    static wxColour clusterBackground;
+    static wxColour clusterBorderSelected;
+    static wxColour clusterBackgroundSelected;
 
-		static wxColour mouseSelectionBorder;
-		static wxColour mouseSelectionBackground;
+    static wxColour selectionBoxBorder;
+    static wxColour selectionBoxBackground;
 
-		static wxColour connection;
-		static wxColour connectionHighlighted;
-	};
+    static wxColour selectionBoxBorderHighlighted;
+    static wxColour selectionBoxBackgroundHighlighted;
 
+    static wxColour mouseSelectionBorder;
+    static wxColour mouseSelectionBackground;
 
-
+    static wxColour connection;
+    static wxColour connectionHighlighted;
+};
 
 } // namespace Map
 } // namespace Antares
