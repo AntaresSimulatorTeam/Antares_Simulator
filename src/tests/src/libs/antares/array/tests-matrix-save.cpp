@@ -52,22 +52,12 @@ BOOST_AUTO_TEST_CASE(precision_has_no_effect_on_integer_values)
 	BOOST_REQUIRE_EQUAL(mtx.data, "1\t5\n0\t3\n");
 }
 
-BOOST_AUTO_TEST_CASE(add_predicate___each_coeff_is_one_incremented)
+BOOST_AUTO_TEST_CASE(add_identity_predicate___each_coeff_is_unchanged)
 {
 	Matrix_easy_to_fill<double, double> mtx(2, 2, {1, 0, 0, 2});
-	TSNumbersPredicate predicate;
+	PredicateIdentity predicate;
 	mtx.saveToCSVFile("path/to/an/output/file", 2, false, predicate);
-	BOOST_REQUIRE_EQUAL(mtx.data, "2\t1\n1\t3\n");
-}
-
-BOOST_AUTO_TEST_CASE(TS_nb_predicate_suits_int_matrices___It_converts_double_into_unsigned_ints)
-{
-	// Negative numbers are turned into strange positive numbers because the TS number
-	// predicate converted them into unsigned int
-	Matrix_easy_to_fill<double, double> mtx(2, 2, {1.5, -3.552, 0.66, 2.3});
-	TSNumbersPredicate predicate;
-	mtx.saveToCSVFile("path/to/an/output/file", 2, false, predicate);
-	BOOST_REQUIRE_EQUAL(mtx.data, "2\t4294967294\n1\t3\n");
+	BOOST_REQUIRE_EQUAL(mtx.data, "1\t0\n0\t2\n");
 }
 
 BOOST_AUTO_TEST_CASE(one_column__3_rows)
