@@ -107,7 +107,7 @@ def compare_directory(result_dir, reference_dir):
                 compare_directory(x, reference_dir / x.name)
         else:
 
-            uncompared_file_name = ['id_daily.txt', 'id_hourly.txt']
+            uncompared_file_name = ['id-daily.txt', 'id-hourly.txt']
 
             if not x.name in uncompared_file_name:
                 reference_headers = get_header_values(reference_dir / x.name)
@@ -118,8 +118,8 @@ def compare_directory(result_dir, reference_dir):
                 
                 np.testing.assert_equal(reference_headers,output_headers, err_msg="headers dismatch in " + str(reference_dir / x.name), verbose=True)
 
-                rtol_override = {"CO2 EMIS." : 1e-3, "FLOW LIN." : 1e-3 , "UCAP LIN." : 1e-3, "H. INFL" : 1e-3 , "H. STOR" : 1e-3 , "H. OVFL" : 1e-3 , "OV. COST" : 1e-3 , "LIGNITE" : 1e-3 , "CONG. FEE (ABS.)" : 1e-3 , "sb" : 1e-3 , "MARG. COST" : 1e-3 , "DTG MRG" : 1e-3 , "BALANCE" : 1e-3 , "BASE" : 1e-3}
-                atol_override = {"CO2 EMIS." : 1, "CONG. FEE (ALG.)" : 1, "FLOW LIN." : 1, "UCAP LIN." : 1, "peak" : 1, "PEAK" : 1, "H. INFL" : 1, "H. STOR" : 1, "HURDLE COST" : 1, "H. OVFL" : 1 , "LOAD" : 1, "CONG. FEE (ABS.)" : 1 , "sb" : 1 , "MISC. DTG" : 1 , "DTG MRG" : 1 , "BALANCE" : 1 , "BASE" : 1}
+                rtol_override = {"CO2 EMIS." : 1e-3, "FLOW LIN." : 1e-3 , "UCAP LIN." : 1e-3, "H. INFL" : 1e-3 , "H. STOR" : 1e-3 , "H. OVFL" : 1e-3 , "OV. COST" : 1e-3 , "LIGNITE" : 1e-3 , "CONG. FEE (ABS.)" : 1e-3 , "sb" : 1e-3 , "MARG. COST" : 1e-3 , "DTG MRG" : 1e-3 , "BALANCE" : 1e-3 , "BASE" : 1e-3 , "MRG. PRICE" : 1e-3 , "OP. COST" : 1e-3 , "SEMI BASE" : 1e-3 ,"COAL" : 1e-3 , "MAX MRG" : 1e-3 , "UNSP. ENRG" : 1e-3}
+                atol_override = {"CO2 EMIS." : 1, "CONG. FEE (ALG.)" : 1, "FLOW LIN." : 1, "UCAP LIN." : 1, "peak" : 1, "PEAK" : 1, "H. INFL" : 1, "H. STOR" : 1, "HURDLE COST" : 1, "H. OVFL" : 1 , "LOAD" : 1, "CONG. FEE (ABS.)" : 1 , "sb" : 1 , "MISC. DTG" : 1 , "DTG MRG" : 1 , "BALANCE" : 1 , "BASE" : 1 , "OP. COST" : 1 , "SEMI BASE" : 1 , "COAL" : 1 , "p" : 1 , "MAX MRG" : 1 , "UNSP. ENRG" : 1 , "SOLAR" : 1 , "b" : 1 , "NODU" : 1 , "H. ROR" : 1}
 
                 for i in range(len(output_headers[0])):
                     col_name=output_headers[0,i]
