@@ -192,8 +192,14 @@ private:
 
             // 6 - The Solver itself
             std::list<uint> failedWeekList;
-            if (not simulationObj->year(
-                  progression, state[numSpace], numSpace, randomForCurrentYear, failedWeekList))
+            bool isFirstPerformedYearOfSimulation
+              = isFirstPerformedYearOfASet[y] && not firstSetParallelWasRun;
+            if (not simulationObj->year(progression,
+                                        state[numSpace],
+                                        numSpace,
+                                        randomForCurrentYear,
+                                        failedWeekList,
+                                        isFirstPerformedYearOfSimulation))
             {
                 // Something goes wrong with this year. We have to restarting it
                 yearFailed[y] = true;
@@ -378,7 +384,7 @@ void ISimulation<Impl>::run()
         logs.info() << " Starting the simulation";
         TimeElapsed time("MC Years");
         uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
-        loopThroughYears<true>(0, finalYear, state);
+        loopThroughYears(0, finalYear, state);
 
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
@@ -1052,7 +1058,6 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
 }
 
 template<class Impl>
-template<bool PerformCalculationsT>
 uint ISimulation<Impl>::buildSetsOfParallelYears(
   uint firstYear,
   uint endYear,
@@ -1072,7 +1077,7 @@ uint ISimulation<Impl>::buildSetsOfParallelYears(
     for (uint y = firstYear; y < endYear; ++y)
     {
         unsigned int indexSpace = 999999;
-        bool performCalculations = PerformCalculationsT && yearsFilter[y];
+        bool performCalculations = yearsFilter[y];
 
         // Do we refresh just before this year ? If yes a new set of parallel years has to be
         // created
@@ -1462,7 +1467,6 @@ void ISimulation<Impl>::computeAnnualCostsStatistics(
 }
 
 template<class Impl>
-template<bool PerformCalculationsT>
 void ISimulation<Impl>::loopThroughYears(uint firstYear,
                                          uint endYear,
                                          std::vector<Variable::State>& state)
@@ -1482,7 +1486,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     // actually executed in a set. A set contains some years to be actually executed (at most
     // "pNbMaxPerformedYearsInParallel" years) and some others to skip.
     uint maxNbYearsPerformedInAset
-      = buildSetsOfParallelYears<PerformCalculationsT>(firstYear, endYear, setsOfParallelYears);
+      = buildSetsOfParallelYears(firstYear, endYear, setsOfParallelYears);
     // Related to annual costs statistics (printed in output into separate files)
     pAnnualCostsStatistics.setNbPerformedYears(pNbYearsReallyPerformed);
 

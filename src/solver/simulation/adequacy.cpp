@@ -143,7 +143,8 @@ bool Adequacy::year(Progression::Task& progression,
                     Variable::State& state,
                     uint numSpace,
                     yearRandomNumbers& randomForYear,
-                    std::list<uint>& failedWeekList)
+                    std::list<uint>& failedWeekList,
+                    bool isFirstPerformedYearOfSimulation)
 {
     // No failed week at year start
     failedWeekList.clear();
@@ -153,6 +154,8 @@ bool Adequacy::year(Progression::Task& progression,
     state.startANewYear();
 
     int hourInTheYear = pStartTime;
+    if (isFirstPerformedYearOfSimulation)
+        pProblemesHebdo[numSpace]->firstWeekOfSimulation = true;
     bool reinitOptim = true;
 
     for (uint w = 0; w != pNbWeeks; ++w)
@@ -340,6 +343,8 @@ bool Adequacy::year(Progression::Task& progression,
         variables.weekEnd(state);
 
         hourInTheYear += nbHoursInAWeek;
+
+        pProblemesHebdo[numSpace]->firstWeekOfSimulation = false;
 
         ++progression;
     }

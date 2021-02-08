@@ -513,6 +513,8 @@ struct PROBLEME_HEBDO
 
     unsigned int HeureDansLAnnee;
 
+    bool firstWeekOfSimulation;
+
     char LeProblemeADejaEteInstancie;
     char TypeDOptimisation;
 
