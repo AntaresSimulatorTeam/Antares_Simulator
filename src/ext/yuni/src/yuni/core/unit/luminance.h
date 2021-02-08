@@ -9,18 +9,15 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_CORE_UNIT_LUMINANCE_H__
-# define __YUNI_CORE_UNIT_LUMINANCE_H__
+#define __YUNI_CORE_UNIT_LUMINANCE_H__
 
-# include "unit.h"
-# include "define.h"
-
+#include "unit.h"
+#include "define.h"
 
 namespace Yuni
 {
 namespace Unit
 {
-
-
 /*!
 ** \defgroup UnitLuminance  Luminance
 ** \ingroup Units
@@ -32,26 +29,24 @@ namespace Unit
 */
 namespace Luminance
 {
-	//! \ingroup UnitLuminance
-	struct Quantity;
+//! \ingroup UnitLuminance
+struct Quantity;
 
-	//! \brief SI (Candela per square metre)
-	//! \ingroup UnitLuminance
-	YUNI_UNIT_IMPL(SIBaseUnit, "candela", "cd", int, 1);
+//! \brief SI (Candela per square metre)
+//! \ingroup UnitLuminance
+YUNI_UNIT_IMPL(SIBaseUnit, "candela", "cd", int, 1);
 
-	//! \brief Candela (per square metre)
-	//! \ingroup UnitLuminance
-	YUNI_UNIT_IMPL(Candela, "candela", "cd", int, 1);
-	//! \brief Lambert
-	//! \ingroup UnitLuminance
-	YUNI_UNIT_IMPL(Lambert, "lambert", "L", double, 3183.09886);
-
-
+//! \brief Candela (per square metre)
+//! \ingroup UnitLuminance
+YUNI_UNIT_IMPL(Candela, "candela", "cd", int, 1);
+//! \brief Lambert
+//! \ingroup UnitLuminance
+YUNI_UNIT_IMPL(Lambert, "lambert", "L", double, 3183.09886);
 
 } // namespace Luminance
 } // namespace Unit
 } // namespace Yuni
 
-# include "undef.h"
+#include "undef.h"
 
 #endif // __YUNI_CORE_UNIT_LUMINANCE_H__

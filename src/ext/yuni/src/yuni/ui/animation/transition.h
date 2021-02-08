@@ -14,105 +14,109 @@
 #include "../../core/noncopyable.h"
 #include "easing.h"
 
-
 namespace Yuni
 {
 namespace UI
 {
 namespace Animation
 {
+//! A timeline stores key values and transitions to animate a given variable in the program
+template<class T = float>
+class Transition final : private NonCopyable<Transition<T>>
+{
+public:
+    //! Smart pointer
+    typedef SmartPtr<Transition<T>> Ptr;
 
+    //! Prototype for an interpolation / easing function (cf Robert Penner's equations)
+    typedef Easing::Func EasingFunc;
 
-	//! A timeline stores key values and transitions to animate a given variable in the program
-	template<class T = float>
-	class Transition final : private NonCopyable<Transition<T> >
-	{
-	public:
-		//! Smart pointer
-		typedef SmartPtr<Transition<T> >  Ptr;
+    //! Key frame map : key = frame time in ms, value = state at the given time
+    typedef std::map<uint, T> FrameMap;
 
-		//! Prototype for an interpolation / easing function (cf Robert Penner's equations)
-		typedef Easing::Func EasingFunc;
+    //! Easing map : key = frame time in ms, value = easing used for this frame to the next
+    typedef std::map<uint, EasingFunc> EasingMap;
 
-		//! Key frame map : key = frame time in ms, value = state at the given time
-		typedef std::map<uint, T> FrameMap;
+public:
+    //! Constructor
+    Transition(uint durationMS, bool loop = false) : pDuration(durationMS), pLoop(loop)
+    {
+    }
 
-		//! Easing map : key = frame time in ms, value = easing used for this frame to the next
-		typedef std::map<uint, EasingFunc> EasingMap;
+    void addKeyFrame(const EasingFunc& easing, uint timeMS, const T& state)
+    {
+        pKeyFrames[timeMS] = state;
+        pEasings[timeMS] = easing;
+    }
 
-	public:
-		//! Constructor
-		Transition(uint durationMS, bool loop = false):
-			pDuration(durationMS),
-			pLoop(loop)
-		{}
+    void removeKeyFrame(uint timeMS)
+    {
+        auto frameIt = pKeyFrames.find(timeMS);
+        if (pKeyFrames.end() != frameIt)
+            pKeyFrames.erase(frameIt);
+        auto easingIt = pEasings.find(timeMS);
+        if (pEasings.end() != frameIt)
+            pEasings.erase(frameIt);
+    }
 
-		void addKeyFrame(const EasingFunc& easing, uint timeMS, const T& state)
-		{
-			pKeyFrames[timeMS] = state;
-			pEasings[timeMS] = easing;
-		}
+    void clear()
+    {
+        pKeyFrames.clear();
+        pEasings.clear();
+    }
 
-		void removeKeyFrame(uint timeMS)
-		{
-			auto frameIt = pKeyFrames.find(timeMS);
-			if (pKeyFrames.end() != frameIt)
-				pKeyFrames.erase(frameIt);
-			auto easingIt = pEasings.find(timeMS);
-			if (pEasings.end() != frameIt)
-				pEasings.erase(frameIt);
-		}
+    //! Duration of the full animation
+    uint duration() const
+    {
+        return pDuration;
+    }
+    //! Change animation duration
+    void duration(uint newDurationMS)
+    {
+        pDuration = newDurationMS;
+    }
 
-		void clear()
-		{
-			pKeyFrames.clear();
-			pEasings.clear();
-		}
+    //! Should the animation loop ?
+    bool loop() const
+    {
+        return pLoop;
+    }
+    //! Set whether the animation should loop
+    void loop(bool shouldLoop)
+    {
+        pLoop = shouldLoop;
+    }
 
-		//! Duration of the full animation
-		uint duration() const { return pDuration; }
-		//! Change animation duration
-		void duration(uint newDurationMS) { pDuration = newDurationMS; }
+    /*!
+    ** \brief Current interpolated value given the time in milliseconds along the timeline
+    **
+    ** \remark
+    **   It is legal to provide timeMS > duration(). Behaviour depends on the value of loop()
+    */
+    T currentValue(uint timeMS) const;
+    T operator()(uint timeMS) const;
 
-		//! Should the animation loop ?
-		bool loop() const { return pLoop; }
-		//! Set whether the animation should loop
-		void loop(bool shouldLoop) { pLoop = shouldLoop; }
+private:
+    //! Apply a given easing at a given ratio ([0,1])
+    T apply(const EasingFunc& easing, const T& start, const T& end, float ratio) const;
 
-		/*!
-		** \brief Current interpolated value given the time in milliseconds along the timeline
-		**
-		** \remark
-		**   It is legal to provide timeMS > duration(). Behaviour depends on the value of loop()
-		*/
-		T currentValue(uint timeMS) const;
-		T operator () (uint timeMS) const;
+private:
+    //! Duration in milliseconds of the timeline
+    uint pDuration;
 
-	private:
-		//! Apply a given easing at a given ratio ([0,1])
-		T apply(const EasingFunc& easing, const T& start, const T& end, float ratio) const;
+    //! Must the animation loop ?
+    bool pLoop;
 
-	private:
-		//! Duration in milliseconds of the timeline
-		uint pDuration;
+    //! Key frames
+    FrameMap pKeyFrames;
 
-		//! Must the animation loop ?
-		bool pLoop;
+    //! Easings
+    EasingMap pEasings;
 
-		//! Key frames
-		FrameMap pKeyFrames;
-
-		//! Easings
-		EasingMap pEasings;
-
-	}; // class Transition
-
-
+}; // class Transition
 
 } // namespace Animation
 } // namespace UI
 } // namespace Yuni
 
-
 #include "transition.hxx"
-

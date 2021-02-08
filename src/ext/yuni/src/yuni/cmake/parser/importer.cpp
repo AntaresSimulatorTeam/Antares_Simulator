@@ -16,75 +16,72 @@
 
 using namespace Yuni;
 
-
-
 class Reader final
 {
 public:
-	void operator () (const String& line) const
-	{
-		s = line;
-		size_t length = line.size();
-		s.replace("\\", "\\\\");
-		s.replace("\"", "\\\"");
-		s.replace("\r", "\\r");
-		s.replace("\n", "\\n");
-		s.replace("\t", "\\t");
+    void operator()(const String& line) const
+    {
+        s = line;
+        size_t length = line.size();
+        s.replace("\\", "\\\\");
+        s.replace("\"", "\\\"");
+        s.replace("\r", "\\r");
+        s.replace("\n", "\\n");
+        s.replace("\t", "\\t");
 
-		content << "\t\tout.append(\"" << s << "\\n\", " << (1 + length) << ");\n";
-	}
+        content << "\t\tout.append(\"" << s << "\\n\", " << (1 + length) << ");\n";
+    }
 
 public:
-	mutable Clob content;
-	mutable Clob s;
+    mutable Clob content;
+    mutable Clob s;
 };
-
-
 
 int main(int argc, char* argv[])
 {
-	if (argc < 3)
-	{
-		std::cerr << "USAGE: <template-file> <destination-file>\n";
-		return 1;
-	}
+    if (argc < 3)
+    {
+        std::cerr << "USAGE: <template-file> <destination-file>\n";
+        return 1;
+    }
 
-	AnyString tmplfile(argv[1]);
-	AnyString targetfile{argv[2]};
+    AnyString tmplfile(argv[1]);
+    AnyString targetfile{argv[2]};
 
-	if (not IO::IsAbsolute(tmplfile))
-	{
-		std::cerr << "the template filename '" << tmplfile << "' is not absolute\n";
-		return 1;
-	}
-	if (not IO::IsAbsolute(targetfile))
-	{
-		std::cerr << "the target filename '" << targetfile << "' is not absolute\n";
-		return 1;
-	}
+    if (not IO::IsAbsolute(tmplfile))
+    {
+        std::cerr << "the template filename '" << tmplfile << "' is not absolute\n";
+        return 1;
+    }
+    if (not IO::IsAbsolute(targetfile))
+    {
+        std::cerr << "the target filename '" << targetfile << "' is not absolute\n";
+        return 1;
+    }
 
-	String targetFolder;
-	IO::ExtractFilePath(targetFolder, targetfile);
+    String targetFolder;
+    IO::ExtractFilePath(targetFolder, targetfile);
 
-	String tmplcontent;
+    String tmplcontent;
 
-	Reader reader;
-	reader.content  = "\n\n// GENERATED\n";
-	reader.content += "\n\ntemplate<class StreamT>\nstatic inline void PrepareCPPInclude(StreamT& out)\n{\n";
+    Reader reader;
+    reader.content = "\n\n// GENERATED\n";
+    reader.content
+      += "\n\ntemplate<class StreamT>\nstatic inline void PrepareCPPInclude(StreamT& out)\n{\n";
 
-	if (not IO::File::ReadLineByLine(tmplfile, reader))
-	{
-		std::cerr << "failed to read '" << tmplfile << "'\n";
-		return 1;
-	}
+    if (not IO::File::ReadLineByLine(tmplfile, reader))
+    {
+        std::cerr << "failed to read '" << tmplfile << "'\n";
+        return 1;
+    }
 
-	reader.content << "}\n";
+    reader.content << "}\n";
 
-	if (not IO::Directory::Create(targetFolder))
-	{
-		std::cerr << "failed to create the directory '" << targetFolder << "'\n";
-		return 1;
-	}
+    if (not IO::Directory::Create(targetFolder))
+    {
+        std::cerr << "failed to create the directory '" << targetFolder << "'\n";
+        return 1;
+    }
 
-	return (IO::File::SetContent(argv[2], reader.content)) ? 0 : 1;
+    return (IO::File::SetContent(argv[2], reader.content)) ? 0 : 1;
 }

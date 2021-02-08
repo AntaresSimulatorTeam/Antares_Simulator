@@ -43,166 +43,152 @@
 using namespace Yuni;
 using namespace Antares;
 
-
-# define SEP Yuni::IO::Separator
-
-
-
-
+#define SEP Yuni::IO::Separator
 
 static bool OpenLogFilename(const String& optSettings)
 {
-	IniFile ini;
-	if (not ini.open(optSettings))
-	{
-		logs.fatal() << "impossible to open " << optSettings;
-		return false;
-	}
-	auto* section = ini.find(".general");
-	if (!section)
-	{
-		logs.fatal() << "invalid map structure (section not found): " << optSettings;
-		return false;
-	}
-	auto* property = section->find("study");
-	if (!property || !property->value)
-	{
-		logs.fatal() << "invalid map structure (no study specified): " << optSettings;
-		return false;
-	}
-	String filename;
-	filename << property->value << SEP << "logs";
+    IniFile ini;
+    if (not ini.open(optSettings))
+    {
+        logs.fatal() << "impossible to open " << optSettings;
+        return false;
+    }
+    auto* section = ini.find(".general");
+    if (!section)
+    {
+        logs.fatal() << "invalid map structure (section not found): " << optSettings;
+        return false;
+    }
+    auto* property = section->find("study");
+    if (!property || !property->value)
+    {
+        logs.fatal() << "invalid map structure (no study specified): " << optSettings;
+        return false;
+    }
+    String filename;
+    filename << property->value << SEP << "logs";
 
-	// Date/time
-	char nowstr[128];
-	time_t nowbin;
-	struct tm nowstruct;
+    // Date/time
+    char nowstr[128];
+    time_t nowbin;
+    struct tm nowstruct;
 
-	time(&nowbin);
-	# ifdef YUNI_OS_MSVC
-	localtime_s(&nowstruct, &nowbin);
-	# else
-	nowstruct = *localtime(&nowbin);
-	# endif
-	size_t result = strftime(nowstr, sizeof(nowstr), "%Y%m%d-%H%M%S", &nowstruct);
-	if (result == 0)
-	{
-		logs.error() << "[output] Could not get string from strftime()";
-		nowstr[0] = '\0';
-	}
-	else
-		nowstr[result] = '\0';
+    time(&nowbin);
+#ifdef YUNI_OS_MSVC
+    localtime_s(&nowstruct, &nowbin);
+#else
+    nowstruct = *localtime(&nowbin);
+#endif
+    size_t result = strftime(nowstr, sizeof(nowstr), "%Y%m%d-%H%M%S", &nowstruct);
+    if (result == 0)
+    {
+        logs.error() << "[output] Could not get string from strftime()";
+        nowstr[0] = '\0';
+    }
+    else
+        nowstr[result] = '\0';
 
-	filename << SEP << "analyzer-" << (const char*) nowstr << ".log";
+    filename << SEP << "analyzer-" << (const char*)nowstr << ".log";
 
-	// Assigning the log filename
-	logs.logfile(filename);
+    // Assigning the log filename
+    logs.logfile(filename);
 
-	if (not logs.logfileIsOpened())
-	{
-		logs.error() << "Impossible to open " << filename;
-		return false;
-	}
-	return true;
+    if (not logs.logfileIsOpened())
+    {
+        logs.error() << "Impossible to open " << filename;
+        return false;
+    }
+    return true;
 }
-
-
-
 
 static void NotEnoughMemory()
 {
-	logs.fatal() << "Not enough memory. aborting.";
-	exit(42);
+    logs.fatal() << "Not enough memory. aborting.";
+    exit(42);
 }
-
-
-
 
 int main(int argc, char* argv[])
 {
-	// Dealing with the lack of memory
-	std::set_new_handler(&NotEnoughMemory);
+    // Dealing with the lack of memory
+    std::set_new_handler(&NotEnoughMemory);
 
-	// Swap memory
-	if (not memory.initialize())
-		return EXIT_FAILURE;
+    // Swap memory
+    if (not memory.initialize())
+        return EXIT_FAILURE;
 
-	// locale
-	InitializeDefaultLocale();
+    // locale
+    InitializeDefaultLocale();
 
-	logs.applicationName("analyzer");
-	argv = AntaresGetUTF8Arguments(argc, argv);
+    logs.applicationName("analyzer");
+    argv = AntaresGetUTF8Arguments(argc, argv);
 
-	String optSettings;
+    String optSettings;
 
-	// Command Line options
-	{
-		// Parser
-		GetOpt::Parser options;
-		//
-		options.addParagraph(Yuni::String()
-			<< "Antares Study Analyzer v" << Antares::VersionToCString() << "\n");
-		// Input
-		options.remainingArguments(optSettings);
-		// Output
-		options.add(optSettings, 'i', "input", "INI file which contains the settings");
+    // Command Line options
+    {
+        // Parser
+        GetOpt::Parser options;
+        //
+        options.addParagraph(Yuni::String()
+                             << "Antares Study Analyzer v" << Antares::VersionToCString() << "\n");
+        // Input
+        options.remainingArguments(optSettings);
+        // Output
+        options.add(optSettings, 'i', "input", "INI file which contains the settings");
 
-		// Version
-		bool optVersion = false;
-		options.addFlag(optVersion, 'v', "version", "Print the version and exit");
+        // Version
+        bool optVersion = false;
+        options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
-		if (!options(argc, argv))
-			return options.errors() ? 1 : 0;
+        if (!options(argc, argv))
+            return options.errors() ? 1 : 0;
 
-		if (optVersion)
-		{
-			Antares::PrintVersionToStdCout();
-			return 0;
-		}
-	}
+        if (optVersion)
+        {
+            Antares::PrintVersionToStdCout();
+            return 0;
+        }
+    }
 
+    if (optSettings.empty())
+    {
+        logs.fatal() << "No settings file. Aborting.";
+        return 1;
+    }
 
-	if (optSettings.empty())
-	{
-		logs.fatal() << "No settings file. Aborting.";
-		return 1;
-	}
+    if (!OpenLogFilename(optSettings))
+        return 1;
 
-	if (!OpenLogFilename(optSettings))
-		return 1;
+    // Starting !
+    logs.checkpoint() << "Antares Analyzer v" << Antares::VersionToCString();
+    WriteHostInfoIntoLogs();
+#ifdef ANTARES_BENCHMARK
+    logs.info() << " :: Built with benchmark support";
+#endif
+    logs.info();
+    logs.info() << "Log filename: " << logs.logfile();
 
-	// Starting !
-	logs.checkpoint() << "Antares Analyzer v" << Antares::VersionToCString();
-	WriteHostInfoIntoLogs();
-	# ifdef ANTARES_BENCHMARK
-	logs.info() << " :: Built with benchmark support";
-	# endif
-	logs.info();
-	logs.info() << "Log filename: " << logs.logfile();
+    // Load the local policy settings
+    LocalPolicy::Open();
+    LocalPolicy::CheckRootPrefix(argv[0]);
 
+    // ASTP
+    // note : ASTP must be destroyed before the variable logs
+    {
+        ATSP atsp;
+        // Load global settings + per area
+        if (atsp.loadFromINIFile(optSettings))
+        {
+            // Print a summary of the global settings
+            atsp.printSummary();
+            // Prepare data
+            if (atsp.preflight())
+                atsp.computeMonthlyCorrelations(); // monthly correlations
+        }
+    }
 
-	// Load the local policy settings
-	LocalPolicy::Open();
-	LocalPolicy::CheckRootPrefix(argv[0]);
+    logs.info();
+    logs.info() << "Done.";
 
-	// ASTP
-	// note : ASTP must be destroyed before the variable logs
-	{
-		ATSP atsp;
-		// Load global settings + per area
-		if (atsp.loadFromINIFile(optSettings))
-		{
-			// Print a summary of the global settings
-			atsp.printSummary();
-			// Prepare data
-			if (atsp.preflight())
-				atsp.computeMonthlyCorrelations(); // monthly correlations
-		}
-	}
-
-	logs.info();
-	logs.info() << "Done.";
-
-	return 0;
+    return 0;
 }
-

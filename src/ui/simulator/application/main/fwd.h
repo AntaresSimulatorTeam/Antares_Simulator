@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_FWD_H__
-# define __ANTARES_FWD_H__
-
+#define __ANTARES_FWD_H__
 
 // wxWigets
 class wxGrid;
@@ -34,44 +33,36 @@ class wxWindow;
 class wxTopLevelWindow;
 
 // Antares study library
-# include <antares/study/fwd.h>
-
+#include <antares/study/fwd.h>
 
 namespace Antares
 {
-
-
 namespace Map
 {
-	class Component;
+class Component;
 
 } // namespace Map
 
-
 namespace Component
 {
-	class Notebook;
+class Notebook;
 
 } // namespace Component
 
-
 namespace Window
 {
-
-	class StudyLogs;
-	class BindingConstraint;
-	class Notes;
-	class Sets;
+class StudyLogs;
+class BindingConstraint;
+class Notes;
+class Sets;
 
 } // namespace Window
 
-
 namespace Forms
 {
-
-	class ApplWnd;
-	template<class WindowT> class Disabler;
-
+class ApplWnd;
+template<class WindowT>
+class Disabler;
 
 } // namespace Forms
 

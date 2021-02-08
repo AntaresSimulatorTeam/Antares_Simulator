@@ -25,12 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_ACTION_GUI_HXX__
-# define __ANTARES_TOOLBOX_ACTION_GUI_HXX__
-
-
+#define __ANTARES_TOOLBOX_ACTION_GUI_HXX__
 
 class wxDialog;
-
 
 namespace Antares
 {
@@ -38,39 +35,34 @@ namespace Private
 {
 namespace Dispatcher
 {
+void FormShowModal(wxDialog* window);
 
-	void FormShowModal(wxDialog* window);
+template<class FormT, class ParentT>
+class JobShowForm : public Yuni::Job::IJob
+{
+public:
+    explicit JobShowForm(ParentT* parent) : pParent(parent)
+    {
+    }
 
-	template<class FormT, class ParentT>
-	class JobShowForm : public Yuni::Job::IJob
-	{
-	public:
-		explicit JobShowForm(ParentT* parent) :
-			pParent(parent)
-		{
-		}
+    virtual ~JobShowForm()
+    {
+    }
 
-		virtual ~JobShowForm()
-		{}
+protected:
+    virtual void onExecute()
+    {
+        // An event will be triggered to avoid flickering
+        Antares::Dispatcher::GUI::ShowModal(new FormT(pParent));
+    }
 
-	protected:
-		virtual void onExecute()
-		{
-			// An event will be triggered to avoid flickering
-			Antares::Dispatcher::GUI::ShowModal(new FormT(pParent));
-		}
-
-	private:
-		ParentT* pParent;
-	};
-
+private:
+    ParentT* pParent;
+};
 
 } // namespace Dispatcher
 } // namespace Private
 } // namespace Antares
-
-
-
 
 namespace Antares
 {
@@ -78,12 +70,14 @@ namespace Dispatcher
 {
 namespace GUI
 {
-
-	template<class FormT, class ParentT> void CreateAndShowModal(ParentT* parent)
-	{
-		::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&) new ::Antares::Private::Dispatcher::JobShowForm<FormT, ParentT>(parent), 70);
-	}
-
+template<class FormT, class ParentT>
+void CreateAndShowModal(ParentT* parent)
+{
+    ::Antares::Dispatcher::GUI::Post(
+      (const Yuni::Job::IJob::Ptr&)new ::Antares::Private::Dispatcher::JobShowForm<FormT, ParentT>(
+        parent),
+      70);
+}
 
 } // namespace GUI
 } // namespace Dispatcher

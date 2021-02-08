@@ -9,82 +9,74 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_TEST_CHECKPOINT_H__
-# define __YUNI_TEST_CHECKPOINT_H__
+#define __YUNI_TEST_CHECKPOINT_H__
 
-
-# define YUNI_TEST_ID_MAXLENGTH 255
-
+#define YUNI_TEST_ID_MAXLENGTH 255
 
 namespace Yuni
 {
 namespace Test
 {
+class Checkpoint
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    explicit Checkpoint(const char* id);
+    //! Destructor
+    ~Checkpoint();
+    //@}
 
+    bool operator()(bool b);
+    bool operator()(bool b, const char* msg);
 
-	class Checkpoint
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		explicit Checkpoint(const char* id);
-		//! Destructor
-		~Checkpoint();
-		//@}
+private:
+    Checkpoint()
+    {
+    }
 
-		bool operator () (bool b);
-		bool operator () (bool b, const char* msg);
+private:
+    //! ID
+    char pID[YUNI_TEST_ID_MAXLENGTH];
+    //! Result
+    bool pResult;
 
-	private:
-		Checkpoint() {}
+}; // class Checkpoint
 
-	private:
-		//! ID
-		char pID[YUNI_TEST_ID_MAXLENGTH];
-		//! Result
-		bool pResult;
+class TimedCheckpoint
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    explicit TimedCheckpoint(const char* id);
+    //! Destructor
+    ~TimedCheckpoint();
+    //@}
 
-	}; // class Checkpoint
+    bool operator()(bool b);
+    bool operator()(bool b, const char* msg);
 
+private:
+    TimedCheckpoint()
+    {
+    }
 
+private:
+    //! ID
+    char pID[YUNI_TEST_ID_MAXLENGTH];
+    //! Start time
+    uint pStartTime;
 
+    //! Result
+    bool pResult;
 
-
-	class TimedCheckpoint
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		explicit TimedCheckpoint(const char* id);
-		//! Destructor
-		~TimedCheckpoint();
-		//@}
-
-		bool operator () (bool b);
-		bool operator () (bool b, const char* msg);
-
-	private:
-		TimedCheckpoint() {}
-
-	private:
-		//! ID
-		char pID[YUNI_TEST_ID_MAXLENGTH];
-		//! Start time
-		uint pStartTime;
-
-		//! Result
-		bool pResult;
-
-	}; // class Checkpoint
-
-
-
-
+}; // class Checkpoint
 
 } // namespace Test
 } // namespace Yuni

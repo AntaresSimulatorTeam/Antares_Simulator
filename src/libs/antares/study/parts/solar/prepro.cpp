@@ -29,10 +29,8 @@
 #include "prepro.h"
 #include "../../study.h"
 
-
 using namespace Yuni;
 using namespace Antares;
-
 
 namespace Antares
 {
@@ -40,35 +38,29 @@ namespace Data
 {
 namespace Solar
 {
+Prepro::Prepro() : xcast(timeSeriesSolar)
+{
+}
 
-	Prepro::Prepro() :
-		xcast(timeSeriesSolar)
-	{}
+Prepro::~Prepro()
+{
+}
 
+bool Prepro::loadFromFolder(Study& study, const AnyString& folder)
+{
+    if (study.header.version <= 320)
+    {
+        xcast.resetToDefaultValues();
+        return true;
+    }
+    return xcast.loadFromFolder(study, folder);
+}
 
-	Prepro::~Prepro()
-	{}
-
-
-	bool Prepro::loadFromFolder(Study& study, const AnyString& folder)
-	{
-		if (study.header.version <= 320)
-		{
-			xcast.resetToDefaultValues();
-			return true;
-		}
-		return xcast.loadFromFolder(study, folder);
-	}
-
-
-	bool Prepro::saveToFolder(const AnyString& folder) const
-	{
-		return xcast.saveToFolder(folder);
-	}
-
-
+bool Prepro::saveToFolder(const AnyString& folder) const
+{
+    return xcast.saveToFolder(folder);
+}
 
 } // namespace Solar
 } // namespace Data
 } // namespace Antares
-

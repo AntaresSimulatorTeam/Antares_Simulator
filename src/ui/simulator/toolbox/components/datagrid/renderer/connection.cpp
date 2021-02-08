@@ -32,8 +32,6 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
 namespace Component
@@ -42,182 +40,176 @@ namespace Datagrid
 {
 namespace Renderer
 {
+Connection::Connection(wxWindow* control, Toolbox::InputSelector::Connections* notifier) :
+ Renderer::Matrix<>(control), pControl(control)
+{
+    if (notifier)
+        notifier->onConnectionChanged.connect(this, &Connection::onConnectionChanged);
+}
 
+Connection::~Connection()
+{
+    destroyBoundEvents();
+}
 
-	Connection::Connection(wxWindow* control, Toolbox::InputSelector::Connections* notifier) :
-		Renderer::Matrix<>(control),
-		pControl(control)
-	{
-		if (notifier)
-			notifier->onConnectionChanged.connect(this, &Connection::onConnectionChanged);
-	}
+wxString Connection::rowCaption(int row) const
+{
+    if (!study || row >= study->calendar.maxHoursInYear)
+        return wxString() << (row + 1);
+    return wxStringFromUTF8(study->calendar.text.hours[row]);
+}
 
-	Connection::~Connection()
-	{
-		destroyBoundEvents();
-	}
+wxString Connection::columnCaption(int colIndx) const
+{
+    switch (colIndx)
+    {
+    case Data::fhlNTCDirect:
+        return wxT(" TRANS. CAPACITY \nDirect   ");
+    case Data::fhlNTCIndirect:
+        return wxT(" TRANS. CAPACITY \nIndirect");
+    case Data::fhlHurdlesCostDirect:
+        return wxT(" HURDLES COST \nDirect");
+    case Data::fhlHurdlesCostIndirect:
+        return wxT(" HURDLES COST \nIndirect");
+    case Data::fhlImpedances:
+        return wxT(" IMPEDANCES ");
+    case Data::fhlLoopFlow:
+        return wxT(" LOOP FLOW ");
+    case Data::fhlPShiftMinus:
+        return wxT(" P.SHIFT MIN ");
+    case Data::fhlPShiftPlus:
+        return wxT(" P.SHIFT MAX ");
+    }
+    return wxString();
+}
 
+void Connection::onConnectionChanged(Data::AreaLink* link)
+{
+    this->matrix((link) ? &(link->data) : NULL);
+    if (pControl)
+    {
+        pControl->InvalidateBestSize();
+        pControl->Refresh();
+    }
+}
 
-	wxString Connection::rowCaption(int row) const
-	{
-		if (!study || row >= study->calendar.maxHoursInYear)
-			return wxString() << (row + 1);
-		return wxStringFromUTF8(study->calendar.text.hours[row]);
-	}
+IRenderer::CellStyle Connection::cellStyle(int col, int row) const
+{
+    double cellvalue = cellNumericValue(col, row);
+    switch (col)
+    {
+    case Data::fhlNTCDirect:
+        break;
+    case Data::fhlNTCIndirect:
+        break;
+    case Data::fhlHurdlesCostDirect:
+    {
+        double cellvalueHrdlCostIndirect = cellNumericValue(col + 1, row);
+        double sumCellValues = cellvalue + cellvalueHrdlCostIndirect;
+        if (sumCellValues < 0.)
+            return IRenderer::cellStyleError;
+        if (sumCellValues >= 0. && cellvalue < 0.)
+            return IRenderer::cellStyleWarning;
+        break;
+    }
+    case Data::fhlHurdlesCostIndirect:
+    {
+        double cellvalueHrdlCostDirect = cellNumericValue(col - 1, row);
+        double sumCellValues = cellvalueHrdlCostDirect + cellvalue;
+        if (sumCellValues < 0.)
+            return IRenderer::cellStyleError;
+        if (sumCellValues >= 0. && cellvalue < 0.)
+            return IRenderer::cellStyleWarning;
+        break;
+    }
+    case Data::fhlImpedances:
+        return (cellvalue < 0.) ? IRenderer::cellStyleWarning
+                                : Renderer::Matrix<>::cellStyle(col, row);
+    case Data::fhlLoopFlow:
+    {
+        double ntcDirect = cellNumericValue(Data::fhlNTCDirect, row);
+        double ntcIndirect = cellNumericValue(Data::fhlNTCIndirect, row);
+        if ((ntcDirect < cellvalue))
+        {
+            return IRenderer::cellStyleError;
+        }
+        if (cellvalue < 0. && std::abs(cellvalue) > ntcIndirect)
+        {
+            return IRenderer::cellStyleError;
+        }
+        break;
+    }
+    case Data::fhlPShiftMinus:
+    {
+        double pShiftMax = cellNumericValue(Data::fhlPShiftPlus, row);
+        if (cellvalue > pShiftMax)
+        {
+            return IRenderer::cellStyleError;
+        }
 
+        break;
+    }
+    case Data::fhlPShiftPlus:
+    {
+        double pShiftMin = cellNumericValue(Data::fhlPShiftMinus, row);
+        if (cellvalue < pShiftMin)
+        {
+            return IRenderer::cellStyleError;
+        }
+        break;
+    }
+    }
+    return Renderer::Matrix<>::cellStyle(col, row);
+}
 
-	wxString Connection::columnCaption(int colIndx) const
-	{
-		switch (colIndx)
-		{
-			case Data::fhlNTCDirect				:return wxT(" TRANS. CAPACITY \nDirect   ");
-			case Data::fhlNTCIndirect			:return wxT(" TRANS. CAPACITY \nIndirect");
-			case Data::fhlHurdlesCostDirect		:return wxT(" HURDLES COST \nDirect");
-			case Data::fhlHurdlesCostIndirect	:return wxT(" HURDLES COST \nIndirect");
-			case Data::fhlImpedances			:return wxT(" IMPEDANCES ");
-			case Data::fhlLoopFlow				:return wxT(" LOOP FLOW ");
-			case Data::fhlPShiftMinus			:return wxT(" P.SHIFT MIN ");
-			case Data::fhlPShiftPlus			:return wxT(" P.SHIFT MAX ");
-		}
-		return wxString();
-	}
+wxColour Connection::horizontalBorderColor(int x, int y) const
+{
+    // Getting informations about the next hour
+    // (because the returned color is about the bottom border of the cell,
+    // so the next hour for the user)
+    if (!(!study) && y + 1 < Date::Calendar::maxHoursInYear)
+    {
+        auto& hourinfo = study->calendar.hours[y + 1];
 
+        if (hourinfo.firstHourInMonth)
+            return Default::BorderMonthSeparator();
+        if (hourinfo.firstHourInDay)
+            return Default::BorderDaySeparator();
+    }
+    return IRenderer::verticalBorderColor(x, y);
+}
 
-	void Connection::onConnectionChanged(Data::AreaLink* link)
-	{
-		this->matrix( (link) ? &(link->data) : NULL);
-		if (pControl)
-		{
-			pControl->InvalidateBestSize();
-			pControl->Refresh();
-		}
-	}
+bool Connection::cellValue(int x, int y, const Yuni::String& value)
+{
+    switch (x)
+    {
+    case Data::fhlNTCDirect:
+    case Data::fhlNTCIndirect:
+    {
+        double v;
+        if (!value.to(v))
+            return false;
+        if (v < 0.)
+            return Renderer::Matrix<>::cellValue(x, y, "0");
+        break;
+    }
+    case Data::fhlHurdlesCostDirect:
+    case Data::fhlHurdlesCostIndirect:
+    default:
+    {
+        double v;
+        if (!value.to(v))
+            return false;
+        if (Math::Abs(v) < LINK_MINIMAL_HURDLE_COSTS_NOT_NULL)
+            return Renderer::Matrix<>::cellValue(x, y, "0");
+        break;
+    }
+    }
 
-
-	IRenderer::CellStyle Connection::cellStyle(int col, int row) const
-	{
-		double cellvalue = cellNumericValue(col, row);
-		switch (col)
-		{
-			case Data::fhlNTCDirect:
-				break;
-			case Data::fhlNTCIndirect:
-				break;
-			case Data::fhlHurdlesCostDirect:
-			{
-				double cellvalueHrdlCostIndirect = cellNumericValue(col + 1, row);
-				double sumCellValues = cellvalue + cellvalueHrdlCostIndirect;
-				if (sumCellValues < 0.)
-					return IRenderer::cellStyleError;
-				if (sumCellValues >= 0. && cellvalue < 0.)
-					return IRenderer::cellStyleWarning;
-				break;
-			}
-			case Data::fhlHurdlesCostIndirect:
-			{
-				double cellvalueHrdlCostDirect = cellNumericValue(col - 1, row);
-				double sumCellValues = cellvalueHrdlCostDirect + cellvalue;
-				if (sumCellValues < 0.)
-					return IRenderer::cellStyleError;
-				if (sumCellValues >= 0. && cellvalue < 0.)
-					return IRenderer::cellStyleWarning;
-				break;
-			}
-			case Data::fhlImpedances:
-				return (cellvalue < 0.) ? IRenderer::cellStyleWarning : Renderer::Matrix<>::cellStyle(col, row);
-			case Data::fhlLoopFlow:
-			{	
-				double ntcDirect = cellNumericValue(Data::fhlNTCDirect, row);
-				double ntcIndirect = cellNumericValue(Data::fhlNTCIndirect, row);
-				if ((ntcDirect < cellvalue))
-				{
-					return IRenderer::cellStyleError;
-				}
-				if (cellvalue < 0. && std::abs(cellvalue) > ntcIndirect)
-				{
-					return IRenderer::cellStyleError;
-				}
-				break;
-			}
-			case Data::fhlPShiftMinus:
-			{
-				double pShiftMax = cellNumericValue(Data::fhlPShiftPlus, row);
-				if (cellvalue > pShiftMax)
-				{
-					return IRenderer::cellStyleError;
-				}
-
-				break;
-			}
-			case Data::fhlPShiftPlus:
-			{
-				double pShiftMin = cellNumericValue(Data::fhlPShiftMinus, row);
-				if (cellvalue < pShiftMin)
-				{
-					return IRenderer::cellStyleError;
-				}
-				break;
-			}
-		}
-		return Renderer::Matrix<>::cellStyle(col, row);
-	}
-
-
-	wxColour Connection::horizontalBorderColor(int x, int y) const
-	{
-		// Getting informations about the next hour
-		// (because the returned color is about the bottom border of the cell,
-		// so the next hour for the user)
-		if (!(!study) && y + 1 < Date::Calendar::maxHoursInYear)
-		{
-			auto& hourinfo = study->calendar.hours[y + 1];
-
-			if (hourinfo.firstHourInMonth)
-				return Default::BorderMonthSeparator();
-			if (hourinfo.firstHourInDay)
-				return Default::BorderDaySeparator();
-		}
-		return IRenderer::verticalBorderColor(x, y);
-	}
-
-
-	bool Connection::cellValue(int x, int y, const Yuni::String& value)
-	{
-		switch(x)
-		{ 
-			case Data::fhlNTCDirect:
-			case Data::fhlNTCIndirect:
-			{
-				double v;
-				if (!value.to(v))
-					return false;
-				if (v < 0.)
-					return Renderer::Matrix<>::cellValue(x, y, "0");
-				break;
-			}
-			case Data::fhlHurdlesCostDirect:
-			case Data::fhlHurdlesCostIndirect:
-			default:
-			{
-				double v;
-				if (!value.to(v))
-					return false;
-				if (Math::Abs(v) < LINK_MINIMAL_HURDLE_COSTS_NOT_NULL)
-					return Renderer::Matrix<>::cellValue(x, y, "0");
-				break;
-			}
-		}
-		
-		return Renderer::Matrix<>::cellValue(x, y, value);
-	}
-
-
-
-
-
+    return Renderer::Matrix<>::cellValue(x, y, value);
+}
 
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
 } // namespace Antares
-

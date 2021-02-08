@@ -9,163 +9,176 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_GFX3D_TEXTURE_H__
-# define __YUNI_GFX3D_TEXTURE_H__
+#define __YUNI_GFX3D_TEXTURE_H__
 
-# include "../../yuni.h"
-# include "../../core/string.h"
+#include "../../yuni.h"
+#include "../../core/string.h"
 
 namespace Yuni
 {
 namespace Gfx3D
 {
+/*!
+** \brief Texture loading and management
+*/
+class Texture
+{
+public:
+    enum DataType
+    {
+        UInt8,
+        Int8,
+        UInt16,
+        Int16,
+        UInt32,
+        Int32,
+        Float,
+    };
 
+public:
+    //! Smart pointer
+    typedef SmartPtr<Texture> Ptr;
 
-	/*!
-	** \brief Texture loading and management
-	*/
-	class Texture
-	{
-	public:
-		enum DataType
-		{
-			UInt8,
-			Int8,
-			UInt16,
-			Int16,
-			UInt32,
-			Int32,
-			Float,
-		};
+    //! unsigned int IDs for OpenGL
+    typedef uint ID;
 
-	public:
-		//! Smart pointer
-		typedef SmartPtr<Texture>  Ptr;
+public:
+    /*!
+    ** \brief Create a new 2D texture
+    **
+    ** \note It is valid to pass `nullptr` for the `data` parameter to delay construction.
+    ** \note Call `update()` to set the data afterwards.
+    */
+    static Texture::Ptr New(uint width,
+                            uint height,
+                            uint colorDepth,
+                            DataType type = UInt8,
+                            const uint8* data = nullptr,
+                            bool mipmaps = true);
 
-		//! unsigned int IDs for OpenGL
-		typedef uint  ID;
+    /*!
+    ** \brief Create a new 3D texture
+    **
+    ** \note It is valid to pass `nullptr` for the `data` parameter to delay construction.
+    ** \note Call `update()` to set the data afterwards.
+    */
+    static Texture::Ptr New3D(uint width,
+                              uint height,
+                              uint depth,
+                              uint colorDepth,
+                              DataType type = UInt8,
+                              const uint8* data = nullptr,
+                              bool mipmaps = true);
 
+    //! Create a new 2D multisample texture
+    static Texture::Ptr NewMS(uint width,
+                              uint height,
+                              uint colorDepth,
+                              DataType type = UInt8,
+                              uint samples = 1,
+                              const uint8* data = nullptr);
 
-	public:
-		/*!
-		** \brief Create a new 2D texture
-		**
-		** \note It is valid to pass `nullptr` for the `data` parameter to delay construction.
-		** \note Call `update()` to set the data afterwards.
-		*/
-		static Texture::Ptr New(uint width, uint height, uint colorDepth, DataType type = UInt8,
-			const uint8* data = nullptr, bool mipmaps = true);
+    //! Load texture from file
+    static Texture::Ptr LoadFromFile(const AnyString& filePath, bool mipmaps = true);
 
-		/*!
-		** \brief Create a new 3D texture
-		**
-		** \note It is valid to pass `nullptr` for the `data` parameter to delay construction.
-		** \note Call `update()` to set the data afterwards.
-		*/
-		static Texture::Ptr New3D(uint width, uint height, uint depth, uint colorDepth,
-			DataType type = UInt8, const uint8* data = nullptr, bool mipmaps = true);
+    //! Load skybox from a .box file. Returns a cubemap texture
+    static Texture::Ptr LoadFromBoxFile(const AnyString& filePath);
 
-		//! Create a new 2D multisample texture
-		static Texture::Ptr NewMS(uint width, uint height, uint colorDepth,
-			DataType type = UInt8, uint samples = 1, const uint8* data = nullptr);
+    //! Load texture from encoded data in memory
+    static Texture::Ptr LoadFromMemory(uint length, const uint8* data);
 
-		//! Load texture from file
-		static Texture::Ptr LoadFromFile(const AnyString& filePath, bool mipmaps = true);
+    //! Copy a texture by creating a new one and copying the data to it
+    static Texture::Ptr Copy(const Texture::Ptr& other, bool mipmaps = true);
 
-		//! Load skybox from a .box file. Returns a cubemap texture
-		static Texture::Ptr LoadFromBoxFile(const AnyString& filePath);
+    //! Release several OpenGL textures at once
+    static void ReleaseGLTextures(uint nbTextures, uint* textures);
 
-		//! Load texture from encoded data in memory
-		static Texture::Ptr LoadFromMemory(uint length, const uint8* data);
+public:
+    static uint PixelStoreAlignment;
 
-		//! Copy a texture by creating a new one and copying the data to it
-		static Texture::Ptr Copy(const Texture::Ptr& other, bool mipmaps = true);
+public:
+    //! Destructor
+    ~Texture();
 
-		//! Release several OpenGL textures at once
-		static void ReleaseGLTextures(uint nbTextures, uint* textures);
+    /*!
+    ** \brief Resize the texture.
+    **
+    ** \warning Invalidates all data in the texture !
+    */
+    void resize(uint width, uint height);
 
-	public:
-		static uint PixelStoreAlignment;
+    //! Update all the data for this texture
+    void update(const unsigned char* data);
 
-	public:
-		//! Destructor
-		~Texture();
+    //! Update the data for this texture
+    void update(uint offsetX,
+                uint offsetY,
+                uint width,
+                uint height,
+                uint colorDepth,
+                const uint8* data);
 
-		/*!
-		** \brief Resize the texture.
-		**
-		** \warning Invalidates all data in the texture !
-		*/
-		void resize(uint width, uint height);
+    //! Clear the whole texture to (0,0,0,0)
+    void clear();
+    //! Clear the given area of the texture to (0,0,0,0)
+    void clear(uint offsetX, uint offsetY, uint width, uint height);
+    //! Clear the whole texture to (1,1,1,1)
+    void clearToWhite();
 
-		//! Update all the data for this texture
-		void update(const unsigned char* data);
+    //! Get the texture ID
+    ID id() const;
 
-		//! Update the data for this texture
-		void update(uint offsetX, uint offsetY, uint width, uint height, uint colorDepth, const uint8* data);
+    //! Texture width
+    uint width() const;
 
-		//! Clear the whole texture to (0,0,0,0)
-		void clear();
-		//! Clear the given area of the texture to (0,0,0,0)
-		void clear(uint offsetX, uint offsetY, uint width, uint height);
-		//! Clear the whole texture to (1,1,1,1)
-		void clearToWhite();
+    //! Texture height
+    uint height() const;
 
-		//! Get the texture ID
-		ID id() const;
+    //! Texture depth
+    uint depth() const;
 
-		//! Texture width
-		uint width() const;
+    //! Texture color depth (in bytes per pixel)
+    uint colorDepth() const;
 
-		//! Texture height
-		uint height() const;
+    //! Data type
+    DataType type() const;
 
-		//! Texture depth
-		uint depth() const;
+private:
+    //! Private empty constructor
+    Texture();
 
-		//! Texture color depth (in bytes per pixel)
-		uint colorDepth() const;
+    //! Private copy constructor
+    Texture(const Texture&);
 
-		//! Data type
-		DataType type() const;
+    //! Private constructor that takes ownership of an already-loaded texture
+    Texture(ID id, uint width, uint height, uint colorDepth, DataType type);
 
-	private:
-		//! Private empty constructor
-		Texture();
+    //! Private constructor that takes ownership of a 3D already-loaded texture
+    Texture(ID id, uint width, uint height, uint depth, uint colorDepth, DataType type);
 
-		//! Private copy constructor
-		Texture(const Texture&);
+private:
+    //! GL Texture ID
+    ID pID;
 
-		//! Private constructor that takes ownership of an already-loaded texture
-		Texture(ID id, uint width, uint height, uint colorDepth, DataType type);
+    //! Texture width
+    uint pWidth;
 
-		//! Private constructor that takes ownership of a 3D already-loaded texture
-		Texture(ID id, uint width, uint height, uint depth, uint colorDepth, DataType type);
+    //! Texture height
+    uint pHeight;
 
-	private:
-		//! GL Texture ID
-		ID pID;
+    //! Texture depth (3D-texture only !)
+    uint pDepth;
 
-		//! Texture width
-		uint pWidth;
+    //! Texture color depth (in bytes per pixel)
+    uint pColorDepth;
 
-		//! Texture height
-		uint pHeight;
+    //! Data type
+    DataType pType;
 
-		//! Texture depth (3D-texture only !)
-		uint pDepth;
+    //! Does the texture have mipmaps ?
+    bool pMipmapped;
 
-		//! Texture color depth (in bytes per pixel)
-		uint pColorDepth;
-
-		//! Data type
-		DataType pType;
-
-		//! Does the texture have mipmaps ?
-		bool pMipmapped;
-
-	}; // class Texture
-
-
+}; // class Texture
 
 } // namespace Gfx3D
 } // namespace Yuni

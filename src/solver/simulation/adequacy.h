@@ -25,17 +25,16 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_SIMULATION_ADEQUACY_H__
-# define __SOLVER_SIMULATION_ADEQUACY_H__
+#define __SOLVER_SIMULATION_ADEQUACY_H__
 
-# include <yuni/yuni.h>
-# include "../variable/variable.h"
-# include "../variable/adequacy/all.h"
-# include "../variable/economy/all.h"
-# include "../variable/state.h"
-# include "common-eco-adq.h"
+#include <yuni/yuni.h>
+#include "../variable/variable.h"
+#include "../variable/adequacy/all.h"
+#include "../variable/economy/all.h"
+#include "../variable/state.h"
+#include "common-eco-adq.h"
 
-# include "solver.h" // for definition of type yearRandomNumbers
-
+#include "solver.h" // for definition of type yearRandomNumbers
 
 namespace Antares
 {
@@ -43,76 +42,71 @@ namespace Solver
 {
 namespace Simulation
 {
+class Adequacy
+{
+public:
+    //! Name of the type of simulation
+    static const char* Name()
+    {
+        return "adequacy";
+    }
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    **
+    ** \param study The current study
+    */
+    Adequacy(Data::Study& study);
+    //! Destructor
+    ~Adequacy();
+    //@}
 
-	class Adequacy
-	{
-	public:
-		//! Name of the type of simulation
-		static const char* Name() {return "adequacy";}
+public:
+    //! Current study
+    Data::Study& study;
+    //! All variables
+    Solver::Variable::Adequacy::AllVariables variables;
+    //! Prepro only
+    bool preproOnly;
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		**
-		** \param study The current study
-		*/
-		Adequacy(Data::Study& study);
-		//! Destructor
-		~Adequacy();
-		//@}
+protected:
+    void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
 
+    bool simulationBegin();
 
-	public:
-		//! Current study
-		Data::Study& study;
-		//! All variables
-		Solver::Variable::Adequacy::AllVariables variables;
-		//! Prepro only
-		bool preproOnly;
+    bool year(Progression::Task& progression,
+              Variable::State& state,
+              uint numSpace,
+              yearRandomNumbers& randomForYear,
+              std::list<uint>& failedWeekList);
 
-	protected:
-		void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
+    void incrementProgression(Progression::Task& progression);
 
-		bool simulationBegin();
+    void simulationEnd();
 
-		bool year(	Progression::Task & progression,
-					Variable::State& state, 
-					uint numSpace,
-					yearRandomNumbers & randomForYear,
-					std::list<uint> & failedWeekList
-				 );
+    /*!
+    ** \brief Prepare clusters in 'must-run' mode
+    */
+    void prepareClustersInMustRunMode(uint numSpace);
 
-		void incrementProgression(Progression::Task & progression);
+    void initializeState(Variable::State& state, uint numSpace);
 
-		void simulationEnd();
+private:
+    AvgExchangeResults* callbackRetrieveBalanceData(Data::Area* area);
+    bool simplexIsRequired(uint hourInTheYear, uint numSpace) const;
 
-		/*!
-		** \brief Prepare clusters in 'must-run' mode
-		*/
-		void prepareClustersInMustRunMode(uint numSpace);
+private:
+    uint pNbWeeks;
+    uint pStartTime;
+    uint pNbMaxPerformedYearsInParallel;
+    bool pPreproOnly;
+    PROBLEME_HEBDO** pProblemesHebdo;
+    Matrix<> pRES;
 
-		void initializeState(Variable::State& state, uint numSpace);
-
-	private:
-		AvgExchangeResults* callbackRetrieveBalanceData(Data::Area* area);
-		bool simplexIsRequired(uint hourInTheYear, uint numSpace) const;
-
-	private:
-		uint pNbWeeks;
-		uint pStartTime;
-		uint pNbMaxPerformedYearsInParallel;
-		bool pPreproOnly;
-		PROBLEME_HEBDO** pProblemesHebdo;
-		Matrix<> pRES;
-
-	}; // class Adequacy
-
-
-
-
+}; // class Adequacy
 
 } // namespace Simulation
 } // namespace Solver

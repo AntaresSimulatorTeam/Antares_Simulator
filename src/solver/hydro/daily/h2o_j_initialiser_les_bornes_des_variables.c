@@ -25,55 +25,60 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "h2o_j_donnees_mensuelles.h"
 
-
-
-
-
-# include "h2o_j_donnees_mensuelles.h"
- 
-
-
-void H2O_J_InitialiserLesBornesdesVariables( DONNEES_MENSUELLES * DonneesMensuelles, int NumeroDeProbleme )
+void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelles,
+                                            int NumeroDeProbleme)
 {
-int Pdt; int NbPdt; int Var;
-double * Xmin; double * Xmax; int * NumeroDeVariableTurbine; double * TurbineMax; double * Turbine;
-double * TurbineCible; double ** AdresseOuPlacerLaValeurDesVariablesOptimisees;
+    int Pdt;
+    int NbPdt;
+    int Var;
+    double* Xmin;
+    double* Xmax;
+    int* NumeroDeVariableTurbine;
+    double* TurbineMax;
+    double* Turbine;
+    double* TurbineCible;
+    double** AdresseOuPlacerLaValeurDesVariablesOptimisees;
 
-PROBLEME_HYDRAULIQUE * ProblemeHydraulique; 
-CORRESPONDANCE_DES_VARIABLES * CorrespondanceDesVariables;
-PROBLEME_LINEAIRE_PARTIE_VARIABLE * ProblemeLineairePartieVariable;
+    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
+    CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables;
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
 
-TurbineMax = DonneesMensuelles->TurbineMax;
-Turbine    = DonneesMensuelles->Turbine;
-TurbineCible = DonneesMensuelles->TurbineCible;
+    TurbineMax = DonneesMensuelles->TurbineMax;
+    Turbine = DonneesMensuelles->Turbine;
+    TurbineCible = DonneesMensuelles->TurbineCible;
 
-ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
+    ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
-NbPdt = ProblemeHydraulique->NbJoursDUnProbleme[NumeroDeProbleme];
+    NbPdt = ProblemeHydraulique->NbJoursDUnProbleme[NumeroDeProbleme];
 
-CorrespondanceDesVariables = ProblemeHydraulique->CorrespondanceDesVariables[NumeroDeProbleme];
-ProblemeLineairePartieVariable = ProblemeHydraulique->ProblemeLineairePartieVariable[NumeroDeProbleme];
+    CorrespondanceDesVariables = ProblemeHydraulique->CorrespondanceDesVariables[NumeroDeProbleme];
+    ProblemeLineairePartieVariable
+      = ProblemeHydraulique->ProblemeLineairePartieVariable[NumeroDeProbleme];
 
-NumeroDeVariableTurbine = CorrespondanceDesVariables->NumeroDeVariableTurbine;
- 
-Xmin = ProblemeLineairePartieVariable->Xmin;
-Xmax = ProblemeLineairePartieVariable->Xmax;
-AdresseOuPlacerLaValeurDesVariablesOptimisees = ProblemeLineairePartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees;
+    NumeroDeVariableTurbine = CorrespondanceDesVariables->NumeroDeVariableTurbine;
 
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-  
-  Var = NumeroDeVariableTurbine[Pdt];
-	Xmax[Var] = TurbineMax[Pdt];
-	
-	if ( TurbineMax[Pdt] > TurbineCible[Pdt] ) {
-	  Xmin[Var] = TurbineCible[Pdt];
-	}
-	else {
-    Xmin[Var] = TurbineMax[Pdt];
-	}
-  AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(Turbine[Pdt]);
-}
+    Xmin = ProblemeLineairePartieVariable->Xmin;
+    Xmax = ProblemeLineairePartieVariable->Xmax;
+    AdresseOuPlacerLaValeurDesVariablesOptimisees
+      = ProblemeLineairePartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees;
 
-return;
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        Var = NumeroDeVariableTurbine[Pdt];
+        Xmax[Var] = TurbineMax[Pdt];
+
+        if (TurbineMax[Pdt] > TurbineCible[Pdt])
+        {
+            Xmin[Var] = TurbineCible[Pdt];
+        }
+        else
+        {
+            Xmin[Var] = TurbineMax[Pdt];
+        }
+        AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(Turbine[Pdt]);
+    }
+
+    return;
 }

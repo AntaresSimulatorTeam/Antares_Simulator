@@ -25,124 +25,114 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_WINDOWS_SETS_H__
-# define __ANTARES_APPLICATION_WINDOWS_SETS_H__
+#define __ANTARES_APPLICATION_WINDOWS_SETS_H__
 
-# include <antares/wx-wrapper.h>
-# include <ui/common/component/panel.h>
-# include <wx/richtext/richtextctrl.h>
-# include <wx/richtext/richtextstyles.h>
-
+#include <antares/wx-wrapper.h>
+#include <ui/common/component/panel.h>
+#include <wx/richtext/richtextctrl.h>
+#include <wx/richtext/richtextstyles.h>
 
 namespace Antares
 {
 namespace Window
 {
+/*!
+** \brief `Save As` Dialog
+*/
+class Sets final : public Antares::Component::Panel, public Yuni::IEventObserver<Sets>
+{
+public:
+    enum IDs
+    {
+        mnIDUserNotes = wxID_HIGHEST + 1,
+    };
 
+    /*!
+    ** \brief Event triggered when the sets are changed
+    */
+    static Yuni::Event<void(Sets* sender)> OnChanged;
 
-	/*!
-	** \brief `Save As` Dialog
-	*/
-	class Sets final : public Antares::Component::Panel, public Yuni::IEventObserver<Sets>
-	{
-	public:
-		enum IDs
-		{
-			mnIDUserNotes = wxID_HIGHEST + 1,
-		};
+public:
+    // \name Constructors & Destructor
+    //@{
+    /*!
+    ** \brief Constructor with a parent window and a study
+    */
+    Sets(wxWindow* parent, uint margin = 18);
+    //! Destructor
+    virtual ~Sets();
+    //@}
 
-		/*!
-		** \brief Event triggered when the sets are changed
-		*/
-		static Yuni::Event<void (Sets* sender)>  OnChanged;
+    /*!
+    ** \brief Save the sets to the study
+    */
+    void saveToStudy();
 
+    /*!
+    ** \brief Load the sets from the study
+    */
+    void loadFromStudy();
 
-	public:
-		// \name Constructors & Destructor
-		//@{
-		/*!
-		** \brief Constructor with a parent window and a study
-		*/
-		Sets(wxWindow* parent, uint margin = 18);
-		//! Destructor
-		virtual ~Sets();
-		//@}
+    /*!
+    ** \brief Connect to the notification of sets updates
+    */
+    void connectToNotification();
 
-		/*!
-		** \brief Save the sets to the study
-		*/
-		void saveToStudy();
+    /*!
+    ** \brief Disconnect from the notifications of the sets updates
+    */
+    void disconnectFromNotification();
 
-		/*!
-		** \brief Load the sets from the study
-		*/
-		void loadFromStudy();
-		
-		/*!
-		** \brief Connect to the notification of sets updates
-		*/
-		void connectToNotification();
+private:
+    void onNewSet(void*);
 
-		/*!
-		** \brief Disconnect from the notifications of the sets updates
-		*/
-		void disconnectFromNotification();
+    void onCaption(void*);
+    void onFilter(void*);
+    void onOutput(void*);
+    void onComments(void*);
 
-	private:
-		void onNewSet(void*);
+    void onAdd(void*);
+    void onRemove(void*);
 
-		void onCaption(void*);
-		void onFilter(void*);
-		void onOutput(void*);
-		void onComments(void*);
+    void onCheck(void*);
 
-		void onAdd(void*);
-		void onRemove(void*);
+    void onUserNotesCharacter(wxRichTextEvent& evt);
+    void onUserNotesStyleChanged(wxRichTextEvent& evt);
 
-		void onCheck(void*);
+    void onSetsModified(Sets* sender);
 
-		void onUserNotesCharacter(wxRichTextEvent& evt);
-		void onUserNotesStyleChanged(wxRichTextEvent& evt);
+    void notifyChanges();
 
-		void onSetsModified(Sets* sender);
+    void onStudyClosed();
 
-		void notifyChanges();
+    /*!
+    ** \brief Initialize temporary files addresses
+    **
+    ** This method must be called whenever pWxTempFile or pTempFile
+    ** are empty (on-demand, to reduce startup time overhead as much
+    ** as possible).
+    */
+    bool initializeTemporaryFile();
 
-		void onStudyClosed();
+private:
+    //! Rich edit
+    wxRichTextCtrl* pRichEdit;
+    wxRichTextStyleSheet* pStyleSheet;
+    uint pLocalRevision;
+    uint pUpdatesToSkip;
 
-		/*!
-		** \brief Initialize temporary files addresses
-		**
-		** This method must be called whenever pWxTempFile or pTempFile
-		** are empty (on-demand, to reduce startup time overhead as much
-		** as possible).
-		*/
-		bool initializeTemporaryFile();
-		
+    /*!
+    ** \brief Temporary file
+    **
+    ** These variables are empty on purpose at the startup. To get a proper
+    ** content, please call initializeTemporaryFile() when needed
+    */
+    YString pTempFile;
 
-	private:
-		//! Rich edit
-		wxRichTextCtrl* pRichEdit;
-		wxRichTextStyleSheet* pStyleSheet;
-		uint pLocalRevision;
-		uint pUpdatesToSkip;
+    // Event Table
+    DECLARE_EVENT_TABLE()
 
-
-		/*!
-		** \brief Temporary file
-		**
-		** These variables are empty on purpose at the startup. To get a proper
-		** content, please call initializeTemporaryFile() when needed
-		*/
-		YString pTempFile;
-
-		// Event Table
-		DECLARE_EVENT_TABLE()
-
-	}; // class Sets
-
-
-
-
+}; // class Sets
 
 } // namespace Window
 } // namespace Antares

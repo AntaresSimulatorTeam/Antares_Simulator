@@ -25,93 +25,85 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_WINDOWS_XCAST_XCAST_H__
-# define __ANTARES_WINDOWS_XCAST_XCAST_H__
+#define __ANTARES_WINDOWS_XCAST_XCAST_H__
 
-# include <antares/wx-wrapper.h>
-# include "../../toolbox/components/notebook/notebook.h"
-# include "../../toolbox/components/datagrid/component.h"
-# include "../../toolbox/input/area.h"
-# include <yuni/core/event.h>
-# include <antares/study.h>
-# include <wx/stattext.h>
-# include <wx/sizer.h>
-# include <wx/checkbox.h>
-# include <wx/choice.h>
-
-
+#include <antares/wx-wrapper.h>
+#include "../../toolbox/components/notebook/notebook.h"
+#include "../../toolbox/components/datagrid/component.h"
+#include "../../toolbox/input/area.h"
+#include <yuni/core/event.h>
+#include <antares/study.h>
+#include <wx/stattext.h>
+#include <wx/sizer.h>
+#include <wx/checkbox.h>
+#include <wx/choice.h>
 
 namespace Antares
 {
 namespace Window
 {
+template<enum Data::TimeSeries T>
+class XCast final : public wxPanel, public Yuni::IEventObserver<XCast<T>>
+{
+public:
+    //! The notebook ancestor type
+    typedef Component::Notebook NotebookType;
+    //! The Observer ancestor type
+    typedef Yuni::IEventObserver<XCast<T>> ObserverAncestorType;
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    XCast(wxWindow* parent, Toolbox::InputSelector::Area* notifier);
+    /*!
+    ** \brief Destructor
+    */
+    virtual ~XCast();
+    //@}
 
-	template<enum Data::TimeSeries T>
-	class XCast final : public wxPanel, public Yuni::IEventObserver<XCast<T> >
-	{
-	public:
-		//! The notebook ancestor type
-		typedef Component::Notebook  NotebookType;
-		//! The Observer ancestor type
-		typedef Yuni::IEventObserver<XCast<T> >  ObserverAncestorType;
+    void selectDefaultPage();
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		XCast(wxWindow* parent, Toolbox::InputSelector::Area* notifier);
-		/*!
-		** \brief Destructor
-		*/
-		virtual ~XCast();
-		//@}
+private:
+    //! Event: The study has been closed
+    void onStudyClosed();
+    //! Event: Another area has been selected
+    void onAreaChanged(Data::Area* area);
+    //! Event: The user has changed the installed capacity for the current area
+    void onInstalledCapacityChanged(wxCommandEvent& evt);
+    //! Event: the user has changed the distribution probability
+    void onUpdateDistribution(wxCommandEvent& evt);
+    //! Event: the user has changed the way to use the TS average
+    void onUpdateTSTranslationUse(wxCommandEvent& evt);
+    //! Event: the user has changed if the transfer function should be used
+    void onUpdateConversion(wxCommandEvent& evt);
 
-		void selectDefaultPage();
+private:
+    //! Area notifier
+    Toolbox::InputSelector::Area* pNotifier;
+    //! The current area
+    Data::Area* pArea;
+    //! Edit
+    wxTextCtrl* pInstalledCapacity;
+    wxChoice* pDistribution;
+    wxCheckBox* useConversion;
+    wxChoice* useTranslation;
 
-	private:
-		//! Event: The study has been closed
-		void onStudyClosed();
-		//! Event: Another area has been selected
-		void onAreaChanged(Data::Area* area);
-		//! Event: The user has changed the installed capacity for the current area
-		void onInstalledCapacityChanged(wxCommandEvent& evt);
-		//! Event: the user has changed the distribution probability
-		void onUpdateDistribution(wxCommandEvent& evt);
-		//! Event: the user has changed the way to use the TS average
-		void onUpdateTSTranslationUse(wxCommandEvent& evt);
-		//! Event: the user has changed if the transfer function should be used
-		void onUpdateConversion(wxCommandEvent& evt);
+    Component::Notebook* pNotebook;
+    //
+    Component::Notebook::Page* pPageDailyProfile;
+    Component::Notebook::Page* pPageGeneral;
+    Component::Notebook::Page* pPageTranslation;
 
-	private:
-		//! Area notifier
-		Toolbox::InputSelector::Area* pNotifier;
-		//! The current area
-		Data::Area* pArea;
-		//! Edit
-		wxTextCtrl* pInstalledCapacity;
-		wxChoice* pDistribution;
-		wxCheckBox* useConversion;
-		wxChoice* useTranslation;
+    Component::Datagrid::Component* pGridCoeffs;
 
-		Component::Notebook* pNotebook;
-		//
-		Component::Notebook::Page* pPageDailyProfile;
-		Component::Notebook::Page* pPageGeneral;
-		Component::Notebook::Page* pPageTranslation;
-
-		Component::Datagrid::Component* pGridCoeffs;
-
-	}; // class XCast
-
-
-
-
+}; // class XCast
 
 } // namespace Window
 } // namespace Antares
 
-# include "xcast.hxx"
+#include "xcast.hxx"
 
 #endif // __ANTARES_WINDOWS_XCAST_XCAST_H__

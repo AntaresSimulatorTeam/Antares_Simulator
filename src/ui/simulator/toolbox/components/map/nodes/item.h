@@ -25,234 +25,279 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_MAP_ITEM_H__
-# define __ANTARES_TOOLBOX_MAP_ITEM_H__
+#define __ANTARES_TOOLBOX_MAP_ITEM_H__
 
-# include <antares/wx-wrapper.h>
-# include <vector>
-# include <set>
-# include <map>
-# include <wx/gdicmn.h>
-# include <wx/colour.h>
-# include <wx/dc.h>
-
-
+#include <antares/wx-wrapper.h>
+#include <vector>
+#include <set>
+#include <map>
+#include <wx/gdicmn.h>
+#include <wx/colour.h>
+#include <wx/dc.h>
 
 namespace Antares
 {
 namespace Map
 {
-	class DrawingContext;
-	class Manager;
-	class Connection;
-	class BindingConstraint;
+class DrawingContext;
+class Manager;
+class Connection;
+class BindingConstraint;
 
+class Item
+{
+public:
+    struct SetCompare
+    {
+        bool operator()(const Item* s1, const Item* s2) const
+        {
+            return s1 < s2;
+        }
+    };
 
+    typedef std::vector<Item*> Vector;
 
+    typedef std::set<Item*, SetCompare> Set;
 
-	class Item
-	{
-	public:
-		struct SetCompare
-		{
-			bool operator()(const Item* s1, const Item* s2) const
-			{return s1 < s2;}
-		};
+    typedef std::map<Item*, bool> Links;
 
-		typedef std::vector<Item*> Vector;
+    enum Type
+    {
+        tyUnknown,
+        tyNode,
+        tyConnection,
+        tyBindingConstraint,
+    };
 
-		typedef std::set<Item*, SetCompare>  Set;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    Item(Manager& manager, const int zPos = 0);
+    /*!
+    ** \brief Destructor
+    */
+    virtual ~Item();
+    //@}
 
-		typedef std::map<Item*, bool> Links;
+    /*!
+    ** \brief Type
+    */
+    virtual Type type() const
+    {
+        return tyUnknown;
+    }
 
-		enum Type
-		{
-			tyUnknown,
-			tyNode,
-			tyConnection,
-			tyBindingConstraint,
-		};
+    //! \name Manager
+    //@{
+    /*!
+    ** \brief Get the manager
+    */
+    Manager& manager()
+    {
+        return pManager;
+    };
+    const Manager& manager() const
+    {
+        return pManager;
+    };
+    //@}
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		Item(Manager& manager, const int zPos = 0);
-		/*!
-		** \brief Destructor
-		*/
-		virtual ~Item();
-		//@}
+    //! \name layerVisibility
+    //@{
+    /*!
+    ** \brief Get the visivility for a layerId
+    */
+    virtual const bool isVisibleOnLayer(const size_t& layerID) const
+    {
+        return false;
+    }
+    //@}
 
-		/*!
-		** \brief Type
-		*/
-		virtual Type type() const {return tyUnknown;}
+    //! \name Caption
+    //@{
+    const wxString& caption() const
+    {
+        return pCaption;
+    }
+    void caption(const wxString& v)
+    {
+        pCaption = v;
+        invalidate();
+        captionHasChanged();
+    }
+    //@}
 
+    //! \name X-Coordinate
+    //@{
+    int x() const
+    {
+        return pX;
+    }
+    void x(const int v)
+    {
+        pX = v;
+        invalidate();
+        positionHasChanged();
+    }
+    //@}
 
-		//! \name Manager
-		//@{
-		/*!
-		** \brief Get the manager
-		*/
-		Manager& manager() {return pManager;};
-		const Manager& manager() const {return pManager;};
-		//@}
+    //! \name Y-Coordinate
+    //@{
+    int y() const
+    {
+        return pY;
+    }
+    void y(const int v)
+    {
+        pY = v;
+        invalidate();
+        positionHasChanged();
+    }
+    //@}
 
-		//! \name layerVisibility
-		//@{
-		/*!
-		** \brief Get the visivility for a layerId
-		*/
-		virtual const bool isVisibleOnLayer(const size_t& layerID) const { return false; }
-		//@}
+    virtual wxPoint absolutePosition(DrawingContext& dc) const;
 
+    //! \name Color
+    //@{
+    const wxColour& color() const
+    {
+        return pColor;
+    }
+    void color(const wxColour& c);
+    void color(const wxString& s);
+    void color(const int r, const int g, const int b);
+    void color(const int r, const int g, const int b, const int alpha);
+    //@}
 
-		//! \name Caption
-		//@{
-		const wxString& caption() const {return pCaption;}
-		void caption(const wxString& v) {pCaption = v;invalidate();captionHasChanged();}
-		//@}
+    //! \name Selection
+    //@{
+    virtual bool selected() const
+    {
+        return pSelected;
+    }
+    virtual void selected(bool v);
+    //@}
 
-		//! \name X-Coordinate
-		//@{
-		int x() const {return pX;}
-		void x(const int v) {pX = v;invalidate();positionHasChanged();}
-		//@}
+    //! \name Z-Position
+    //@{
+    int zPosition() const
+    {
+        return pZPosition;
+    }
+    //@}
 
-		//! \name Y-Coordinate
-		//@{
-		int y() const {return pY;}
-		void y(const int v) {pY = v;invalidate();positionHasChanged();}
-		//@}
+    //! \name Cache
+    //@{
+    /*!
+    ** \brief Refresh the cache (even if not invalidated)
+    */
+    virtual void refreshCache(wxDC& dc) = 0;
 
-		virtual wxPoint absolutePosition(DrawingContext& dc) const;
+    /*!
+    ** \brief Mark the node as invalidated (to force its refresh for the next canvas update)
+    */
+    void invalidate();
 
-		//! \name Color
-		//@{
-		const wxColour& color() const {return pColor;}
-		void color(const wxColour& c);
-		void color(const wxString& s);
-		void color(const int r, const int g, const int b);
-		void color(const int r, const int g, const int b, const int alpha);
-		//@}
+    /*!
+    ** \brief Get the node is invalidated
+    */
+    bool isInvalidated() const
+    {
+        return pInvalidated;
+    }
+    //@}
 
-		//! \name Selection
-		//@{
-		virtual bool selected() const {return pSelected;}
-		virtual void selected(bool v);
-		//@}
+    //! \name Misc
+    //@{
+    /*!
+    ** \brief Get if the drawing representation of the node contains the point (x,y)
+    **
+    ** This method is used to know if the mouse if over a node or not
+    */
+    virtual bool contains(const int x, const int y, double& distance) = 0;
 
+    /*!
+    ** \brief Get if the drawing representation of the node is contained inside a bounding box
+    **
+    ** This method is used to know if the mouse if over a node or not
+    */
+    virtual bool isContained(const int x1, const int y1, const int x2, const int y2) const = 0;
 
-		//! \name Z-Position
-		//@{
-		int zPosition() const {return pZPosition;}
-		//@}
+    /*!
+    ** \brief Draw the node
+    */
+    virtual void draw(DrawingContext& dc) = 0;
 
-		//! \name Cache
-		//@{
-		/*!
-		** \brief Refresh the cache (even if not invalidated)
-		*/
-		virtual void refreshCache(wxDC& dc) = 0;
+    virtual void drawExternalDrawer(DrawingContext&)
+    {
+    }
+    //@}
 
-		/*!
-		** \brief Mark the node as invalidated (to force its refresh for the next canvas update)
-		*/
-		void invalidate();
+    virtual void move(const int x, const int y);
 
-		/*!
-		** \brief Get the node is invalidated
-		*/
-		bool isInvalidated() const {return pInvalidated;}
-		//@}
+    /*!
+    ** \brief Extends the bounding box
+    */
+    virtual void extendBoundingBox(wxPoint& topLeft, wxPoint& bottomRight) = 0;
 
+    //! \name Mouse handling
+    //@{
+    /*!
+    ** \brief Mouse double click
+    */
+    virtual void mouseDblClick()
+    {
+    }
+    //@}
 
-		//! \name Misc
-		//@{
-		/*!
-		** \brief Get if the drawing representation of the node contains the point (x,y)
-		**
-		** This method is used to know if the mouse if over a node or not
-		*/
-		virtual bool contains(const int x, const int y, double& distance) = 0;
+protected:
+    void internalClearAllLinks();
 
-		/*!
-		** \brief Get if the drawing representation of the node is contained inside a bounding box
-		**
-		** This method is used to know if the mouse if over a node or not
-		*/
-		virtual bool isContained(const int x1, const int y1, const int x2, const int y2) const = 0;
+    virtual void captionHasChanged()
+    {
+    }
+    virtual void positionHasChanged()
+    {
+    }
+    virtual void colorHasChanged()
+    {
+    }
 
-		/*!
-		** \brief Draw the node
-		*/
-		virtual void draw(DrawingContext& dc) = 0;
+protected:
+    Manager& pManager;
+    //! Color
+    wxColour pColor;
+    //! Selected
+    bool pSelected;
+    //! invalidated
+    bool pInvalidated;
 
-		virtual void drawExternalDrawer(DrawingContext&) {}
-		//@}
+    //! Y-Coordinate
+    int pX;
+    //! X-Coordinate
+    int pY;
+    //! Caption
+    wxString pCaption;
 
-		virtual void move(const int x, const int y);
+    //! Linked with other items
+    Links* pLinks;
 
-		/*!
-		** \brief Extends the bounding box
-		*/
-		virtual void extendBoundingBox(wxPoint& topLeft, wxPoint& bottomRight) = 0;
+    int pZPosition;
 
+    // Friends
+    friend class ::Antares::Map::Manager;
+    friend class ::Antares::Map::Connection;
+    friend class ::Antares::Map::BindingConstraint;
+}; // class Item
 
-		//! \name Mouse handling
-		//@{
-		/*!
-		** \brief Mouse double click
-		*/
-		virtual void mouseDblClick() {}
-		//@}
-
-
-	protected:
-		void internalClearAllLinks();
-
-		virtual void captionHasChanged() {}
-		virtual void positionHasChanged() {}
-		virtual void colorHasChanged() {}
-
-	protected:
-		Manager& pManager;
-		//! Color
-		wxColour pColor;
-		//! Selected
-		bool pSelected;
-		//! invalidated
-		bool pInvalidated;
-
-		//! Y-Coordinate
-		int pX;
-		//! X-Coordinate
-		int pY;
-		//! Caption
-		wxString pCaption;
-
-		//! Linked with other items
-		Links* pLinks;
-
-		int pZPosition;
-
-		// Friends
-		friend class ::Antares::Map::Manager;
-		friend class ::Antares::Map::Connection;
-		friend class ::Antares::Map::BindingConstraint;
-	}; // class Item
-
-
-
-
-
-} // namespace Item
+} // namespace Map
 } // namespace Antares
 
-# include "../drawingcontext.h"
-# include "../manager.h"
-# include "connection.h"
+#include "../drawingcontext.h"
+#include "../manager.h"
+#include "connection.h"
 
 #endif // __ANTARES_TOOLBOX_MAP_ITEM_H__

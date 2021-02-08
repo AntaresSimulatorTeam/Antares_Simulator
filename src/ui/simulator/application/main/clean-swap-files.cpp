@@ -30,77 +30,63 @@
 #include <antares/logs.h>
 #include <yuni/thread/timer.h>
 
-
 using namespace Yuni;
-
-
-
 
 namespace Antares
 {
 namespace Forms
 {
+namespace
+{
+class SwapFileCleanerTimer final : public Yuni::Thread::Timer
+{
+public:
+    SwapFileCleanerTimer(uint timeout) : Yuni::Thread::Timer(timeout)
+    {
+    }
 
-	namespace
-	{
+    virtual ~SwapFileCleanerTimer()
+    {
+        stop();
+    }
 
-		class SwapFileCleanerTimer final : public Yuni::Thread::Timer
-		{
-		public:
-			SwapFileCleanerTimer(uint timeout)
-				:Yuni::Thread::Timer(timeout)
-			{
-			}
+protected:
+    virtual bool onInterval(uint) override
+    {
+        logs.info() << "memory pool: looking for orphan swap files...";
+        Antares::memory.cleanupCacheFolder();
+        logs.debug() << "memory pool: cleanup is done";
+        return false;
+    }
+};
 
-			virtual ~SwapFileCleanerTimer()
-			{
-				stop();
-			}
+SwapFileCleanerTimer* cleanTimer = nullptr;
 
-		protected:
-			virtual bool onInterval(uint) override
-			{
-				logs.info() << "memory pool: looking for orphan swap files...";
-				Antares::memory.cleanupCacheFolder();
-				logs.debug() << "memory pool: cleanup is done";
-				return false;
-			}
-		};
+} // anonymous namespace
 
-		SwapFileCleanerTimer* cleanTimer = nullptr;
+void ApplWnd::timerCleanSwapFiles(uint timeout)
+{
+    if (not cleanTimer)
+    {
+        cleanTimer = new SwapFileCleanerTimer(timeout);
+        cleanTimer->start();
+    }
+    else
+    {
+        cleanTimer->stop();
+        cleanTimer->interval(timeout);
+        cleanTimer->start();
+    }
+}
 
-	} // anonymous namespace
-
-
-
-	void ApplWnd::timerCleanSwapFiles(uint timeout)
-	{
-		if (not cleanTimer)
-		{
-			cleanTimer = new SwapFileCleanerTimer(timeout);
-			cleanTimer->start();
-		}
-		else
-		{
-			cleanTimer->stop();
-			cleanTimer->interval(timeout);
-			cleanTimer->start();
-		}
-	}
-
-
-	void ApplWnd::timerCleanSwapFilesDestroy()
-	{
-		if (cleanTimer)
-		{
-			delete cleanTimer;
-			cleanTimer = nullptr;
-		}
-	}
-
-
-
+void ApplWnd::timerCleanSwapFilesDestroy()
+{
+    if (cleanTimer)
+    {
+        delete cleanTimer;
+        cleanTimer = nullptr;
+    }
+}
 
 } // namespace Forms
 } // namespace Antares
-

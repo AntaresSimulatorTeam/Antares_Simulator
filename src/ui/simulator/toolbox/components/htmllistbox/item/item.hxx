@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_HXX__
-# define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_HXX__
-
+#define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_HXX__
 
 namespace Antares
 {
@@ -36,33 +35,25 @@ namespace HTMLListbox
 {
 namespace Item
 {
+inline bool IItem::highlighted() const
+{
+    return pHighlighted;
+}
 
+inline bool IItem::visible() const
+{
+    return pVisible;
+}
 
-	inline bool IItem::highlighted() const
-	{
-		return pHighlighted;
-	}
+inline void IItem::visible(bool v)
+{
+    pVisible = v;
+}
 
-
-	inline bool IItem::visible() const
-	{
-		return pVisible;
-	}
-
-
-	inline void IItem::visible(bool v)
-	{
-		pVisible = v;
-	}
-
-
-
-	inline bool IItem::interactive() const
-	{
-		return false;
-	}
-
-
+inline bool IItem::interactive() const
+{
+    return false;
+}
 
 } // namespace Item
 } // namespace HTMLListbox

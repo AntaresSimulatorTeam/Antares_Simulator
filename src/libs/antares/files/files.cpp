@@ -34,35 +34,31 @@
 
 #include <yuni/core/system/windows.hdr.h>
 #ifndef YUNI_OS_MSVC
-# include <unistd.h>
+#include <unistd.h>
 #endif
 #include <sys/types.h>
 #include <sys/stat.h>
 
-
 using namespace Yuni;
-
-
 
 FILE* FileOpen(const char* filename, const char* mode)
 {
-	# ifdef YUNI_OS_WINDOWS
-	wchar_t m[4];
+#ifdef YUNI_OS_WINDOWS
+    wchar_t m[4];
 
-	wchar_t wb[FILENAME_MAX];
-	wb[0] = L'\\';
-	wb[1] = L'\\';
-	wb[2] = L'?';
-	wb[3] = L'\\';
-	int n = MultiByteToWideChar(CP_UTF8, 0, filename, -1, wb + 4, sizeof(wb) - 10);
-	if (n <= 0)
-		return NULL;
-	wb[n + 4] = L'\0';
-	MultiByteToWideChar(CP_UTF8, 0, mode, -1, m, sizeof(m));
-	FILE* fd;
-	return !_wfopen_s(&fd, wb, m) ? fd : NULL;
-	# else
-	return fopen(filename, mode);
-	# endif
+    wchar_t wb[FILENAME_MAX];
+    wb[0] = L'\\';
+    wb[1] = L'\\';
+    wb[2] = L'?';
+    wb[3] = L'\\';
+    int n = MultiByteToWideChar(CP_UTF8, 0, filename, -1, wb + 4, sizeof(wb) - 10);
+    if (n <= 0)
+        return NULL;
+    wb[n + 4] = L'\0';
+    MultiByteToWideChar(CP_UTF8, 0, mode, -1, m, sizeof(m));
+    FILE* fd;
+    return !_wfopen_s(&fd, wb, m) ? fd : NULL;
+#else
+    return fopen(filename, mode);
+#endif
 }
-

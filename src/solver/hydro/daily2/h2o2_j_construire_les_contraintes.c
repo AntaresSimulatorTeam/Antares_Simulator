@@ -25,223 +25,168 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
-
-
-
-
-
 #include "h2o2_j_donnees_mensuelles.h"
 #include "h2o2_j_fonctions.h"
 
-
-
-
-void H2O2_J_ConstruireLesContraintes(	int NbPdt,
-										int * IndicesDebutDeLigne,
-										char * Sens,
-										int * NombreDeTermesDesLignes,
-										double * CoefficientsDeLaMatriceDesContraintes,
-										int * IndicesColonnes,
-										CORRESPONDANCE_DES_VARIABLES_PB_ETENDU * CorrespondanceDesVariables
-									)
+void H2O2_J_ConstruireLesContraintes(
+  int NbPdt,
+  int* IndicesDebutDeLigne,
+  char* Sens,
+  int* NombreDeTermesDesLignes,
+  double* CoefficientsDeLaMatriceDesContraintes,
+  int* IndicesColonnes,
+  CORRESPONDANCE_DES_VARIABLES_PB_ETENDU* CorrespondanceDesVariables)
 {
-	int NombreDeContraintes;
-	int il;
-	int Pdt;
+    int NombreDeContraintes;
+    int il;
+    int Pdt;
 
-	NombreDeContraintes = 0;
-	il = 0;
+    NombreDeContraintes = 0;
+    il = 0;
 
-	
-	
-	
-	
-	
-	
-	
-	
+    IndicesDebutDeLigne[NombreDeContraintes] = il;
 
-	
-	IndicesDebutDeLigne[NombreDeContraintes] = il;
+    CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+    IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_Turbine[0];
+    il++;
+    CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+    IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_niveauxFinJours[0];
+    il++;
+    CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+    IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_overflow[0];
+    il++;
 
-	CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-	IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_Turbine[0];
-	il++;
-	CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-	IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_niveauxFinJours[0];
-	il++;
-	CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-	IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_overflow[0];
-	il++;
+    Sens[NombreDeContraintes] = '=';
+    NombreDeTermesDesLignes[NombreDeContraintes] = 3;
 
-	Sens[NombreDeContraintes] = '=';
-	NombreDeTermesDesLignes[NombreDeContraintes] = 3;
+    NombreDeContraintes++;
 
-	NombreDeContraintes++;
-	
-	
-	for (Pdt = 1; Pdt < NbPdt; Pdt++) 
-	{
-		IndicesDebutDeLigne[NombreDeContraintes] = il;
-		
-		CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-		IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_Turbine[Pdt];
-		il++;
+    for (Pdt = 1; Pdt < NbPdt; Pdt++)
+    {
+        IndicesDebutDeLigne[NombreDeContraintes] = il;
 
-		CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-		IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_niveauxFinJours[Pdt];
-		il++;
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_Turbine[Pdt];
+        il++;
 
-		CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
-		IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_niveauxFinJours[Pdt - 1];
-		il++;
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_niveauxFinJours[Pdt];
+        il++;
 
-		CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-		IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_overflow[Pdt];
-		il++;
+        CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_niveauxFinJours[Pdt - 1];
+        il++;
 
-		Sens[NombreDeContraintes] = '=';
-		NombreDeTermesDesLignes[NombreDeContraintes] = 4;
-		NombreDeContraintes++;
-	}
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_overflow[Pdt];
+        il++;
 
-	
-	
-	
-	
-	
-	IndicesDebutDeLigne[NombreDeContraintes] = il;
+        Sens[NombreDeContraintes] = '=';
+        NombreDeTermesDesLignes[NombreDeContraintes] = 4;
+        NombreDeContraintes++;
+    }
 
-	for (Pdt = 0; Pdt < NbPdt; Pdt++)
-	{
-		CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-		IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_Turbine[Pdt];
-		il++;
-	}
+    IndicesDebutDeLigne[NombreDeContraintes] = il;
 
-	CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-	IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_waste;
-	il++;
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_Turbine[Pdt];
+        il++;
+    }
 
-	Sens[NombreDeContraintes] = '=';
-	NombreDeTermesDesLignes[NombreDeContraintes] = NbPdt + 1;
-	NombreDeContraintes++;
+    CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+    IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_waste;
+    il++;
 
-	
-	
-	
-	
-	
-	
-	for (Pdt = 0; Pdt < NbPdt; Pdt++)
-	{
-		IndicesDebutDeLigne[NombreDeContraintes] = il;
+    Sens[NombreDeContraintes] = '=';
+    NombreDeTermesDesLignes[NombreDeContraintes] = NbPdt + 1;
+    NombreDeContraintes++;
 
-		CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-		IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_Turbine[Pdt];
-		il++;
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        IndicesDebutDeLigne[NombreDeContraintes] = il;
 
-		CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
-		IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_deviations[Pdt];
-		il++;
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_Turbine[Pdt];
+        il++;
 
-		Sens[NombreDeContraintes] = '<';
-		NombreDeTermesDesLignes[NombreDeContraintes] = 2;
-		NombreDeContraintes++;
-	}
+        CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_deviations[Pdt];
+        il++;
 
-	
-	
-	
-	
-	
-	
-	for (Pdt = 0; Pdt < NbPdt; Pdt++)
-	{
-		IndicesDebutDeLigne[NombreDeContraintes] = il;
+        Sens[NombreDeContraintes] = '<';
+        NombreDeTermesDesLignes[NombreDeContraintes] = 2;
+        NombreDeContraintes++;
+    }
 
-		CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-		IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_Turbine[Pdt];
-		il++;
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        IndicesDebutDeLigne[NombreDeContraintes] = il;
 
-		CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-		IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_deviations[Pdt];
-		il++;
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_Turbine[Pdt];
+        il++;
 
-		Sens[NombreDeContraintes] = '>';
-		NombreDeTermesDesLignes[NombreDeContraintes] = 2;
-		NombreDeContraintes++;
-	}
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_deviations[Pdt];
+        il++;
 
-	
-	
-	
-	
-	
-	
-	for (Pdt = 0; Pdt < NbPdt; Pdt++)
-	{
-		IndicesDebutDeLigne[NombreDeContraintes] = il;
+        Sens[NombreDeContraintes] = '>';
+        NombreDeTermesDesLignes[NombreDeContraintes] = 2;
+        NombreDeContraintes++;
+    }
 
-		CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-		IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_deviations[Pdt];
-		il++;
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        IndicesDebutDeLigne[NombreDeContraintes] = il;
 
-		CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
-		IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_deviationMax;
-		il++;
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_deviations[Pdt];
+        il++;
 
-		Sens[NombreDeContraintes] = '<';
-		NombreDeTermesDesLignes[NombreDeContraintes] = 2;
-		NombreDeContraintes++;
-	}
+        CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_deviationMax;
+        il++;
 
-	
-	
-	
-	
-	
-	
-	for (Pdt = 0; Pdt < NbPdt; Pdt++)
-	{
-		IndicesDebutDeLigne[NombreDeContraintes] = il;
+        Sens[NombreDeContraintes] = '<';
+        NombreDeTermesDesLignes[NombreDeContraintes] = 2;
+        NombreDeContraintes++;
+    }
 
-		CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-		IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_niveauxFinJours[Pdt];
-		il++;
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        IndicesDebutDeLigne[NombreDeContraintes] = il;
 
-		CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-		IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_violations[Pdt];
-		il++;
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_niveauxFinJours[Pdt];
+        il++;
 
-		Sens[NombreDeContraintes] = '>';
-		NombreDeTermesDesLignes[NombreDeContraintes] = 2;
-		NombreDeContraintes++;
-	}
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_violations[Pdt];
+        il++;
 
-	
-	
-	
-	
-	
-	
-	for (Pdt = 0; Pdt < NbPdt; Pdt++)
-	{
-		IndicesDebutDeLigne[NombreDeContraintes] = il;
+        Sens[NombreDeContraintes] = '>';
+        NombreDeTermesDesLignes[NombreDeContraintes] = 2;
+        NombreDeContraintes++;
+    }
 
-		CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-		IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_violations[Pdt];
-		il++;
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        IndicesDebutDeLigne[NombreDeContraintes] = il;
 
-		CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
-		IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_violationMax;
-		il++;
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_violations[Pdt];
+        il++;
 
-		Sens[NombreDeContraintes] = '<';
-		NombreDeTermesDesLignes[NombreDeContraintes] = 2;
-		NombreDeContraintes++;
-	}
+        CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_violationMax;
+        il++;
 
-	return;
+        Sens[NombreDeContraintes] = '<';
+        NombreDeTermesDesLignes[NombreDeContraintes] = 2;
+        NombreDeContraintes++;
+    }
+
+    return;
 }

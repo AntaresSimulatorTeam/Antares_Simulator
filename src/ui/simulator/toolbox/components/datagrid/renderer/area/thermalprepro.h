@@ -25,14 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_THERMALPREPRO_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_THERMALPREPRO_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_THERMALPREPRO_H__
 
-# include <antares/wx-wrapper.h>
-# include "../../../../input/thermal-cluster.h"
-# include "../matrix.h"
-# include <antares/study/parts/thermal/prepro.h>
-
-
+#include <antares/wx-wrapper.h>
+#include "../../../../input/thermal-cluster.h"
+#include "../matrix.h"
+#include <antares/study/parts/thermal/prepro.h>
 
 namespace Antares
 {
@@ -42,68 +40,81 @@ namespace Datagrid
 {
 namespace Renderer
 {
+class ThermalClusterPrepro : public Renderer::Matrix<>
+{
+public:
+    typedef Renderer::Matrix<> MatrixAncestorType;
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    ThermalClusterPrepro(wxWindow* control, Toolbox::InputSelector::ThermalCluster* notifier);
 
+    //! Destructor
+    virtual ~ThermalClusterPrepro();
+    //@}
 
-	class ThermalClusterPrepro : public Renderer::Matrix<>
-	{
-	public:
-		typedef Renderer::Matrix<>  MatrixAncestorType;
+    virtual int width() const
+    {
+        return 8;
+    }
+    virtual int height() const
+    {
+        return DAYS_PER_YEAR;
+    }
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		ThermalClusterPrepro(wxWindow* control, Toolbox::InputSelector::ThermalCluster* notifier);
+    virtual wxString columnCaption(int colIndx) const;
 
-		//! Destructor
-		virtual ~ThermalClusterPrepro();
-		//@}
+    virtual wxString rowCaption(int rowIndx) const;
 
-		virtual int width() const {return 8;}
-		virtual int height() const {return DAYS_PER_YEAR;}
+    virtual wxString cellValue(int x, int y) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual double cellNumericValue(int x, int y) const;
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual bool cellValue(int, int, const Yuni::String&);
 
-		virtual wxString cellValue(int x, int y) const;
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    { /*Do nothing*/
+    }
 
-		virtual double cellNumericValue(int x, int y) const;
+    virtual Date::Precision precision()
+    {
+        return Date::daily;
+    }
 
-		virtual bool cellValue(int, int, const Yuni::String&);
+    virtual bool valid() const
+    {
+        return MatrixAncestorType::valid();
+    }
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{/*Do nothing*/}
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
 
-		virtual Date::Precision precision() {return Date::daily;}
+    virtual wxColour verticalBorderColor(int x, int y) const;
+    virtual wxColour horizontalBorderColor(int x, int y) const;
 
-		virtual bool valid() const {return MatrixAncestorType::valid();}
+    virtual uint maxWidthResize() const
+    {
+        return 0;
+    }
+    virtual uint maxHeightResize() const
+    {
+        return 0;
+    }
 
-		virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+protected:
+    virtual void internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster);
 
-		virtual wxColour verticalBorderColor(int x, int y) const;
-		virtual wxColour horizontalBorderColor(int x, int y) const;
+private:
+    virtual void onStudyClosed() override;
 
-		virtual uint maxWidthResize() const {return 0;}
-		virtual uint maxHeightResize() const {return 0;}
+private:
+    Antares::Data::PreproThermal* pPreproThermal;
+    Antares::Data::ThermalCluster* pCluster;
 
-	protected:
-		virtual void internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster);
-
-	private:
-		virtual void onStudyClosed() override;
-
-	private:
-		Antares::Data::PreproThermal* pPreproThermal;
-		Antares::Data::ThermalCluster* pCluster;
-
-	}; // class ThermalClusterPrepro
-
-
-
+}; // class ThermalClusterPrepro
 
 } // namespace Renderer
 } // namespace Datagrid

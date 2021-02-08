@@ -25,105 +25,118 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "h2o_j_donnees_mensuelles.h"
+#include "h2o_j_fonctions.h"
 
+#define ZERO 1.e-9
 
-
-
-
-
-
-
-
-# include "h2o_j_donnees_mensuelles.h"
-# include "h2o_j_fonctions.h"
-
-# define ZERO 1.e-9
-
-
-
-void H2O_J_LisserLesSurTurbines( DONNEES_MENSUELLES * DonneesMensuelles, int NumeroDeProbleme )
+void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
 {
-int Pdt; int Cnt; int NbPdt; double * TurbineCible; double * Turbine; double * TurbineMax; double X; int Np;
-char * Flag; char LimiteAtteinte; int NbCycles; double SurTurbineARepartir; double Xmoy; double MargeMin;
-double SurTurbine;
-PROBLEME_HYDRAULIQUE * ProblemeHydraulique; 
-PROBLEME_LINEAIRE_PARTIE_VARIABLE * ProblemeLineairePartieVariable;
+    int Pdt;
+    int Cnt;
+    int NbPdt;
+    double* TurbineCible;
+    double* Turbine;
+    double* TurbineMax;
+    double X;
+    int Np;
+    char* Flag;
+    char LimiteAtteinte;
+    int NbCycles;
+    double SurTurbineARepartir;
+    double Xmoy;
+    double MargeMin;
+    double SurTurbine;
+    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
 
-ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
-ProblemeLineairePartieVariable = ProblemeHydraulique->ProblemeLineairePartieVariable[NumeroDeProbleme];
+    ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
+    ProblemeLineairePartieVariable
+      = ProblemeHydraulique->ProblemeLineairePartieVariable[NumeroDeProbleme];
 
-TurbineMax = DonneesMensuelles->TurbineMax;
-Turbine = DonneesMensuelles->Turbine;
-TurbineCible = DonneesMensuelles->TurbineCible;
+    TurbineMax = DonneesMensuelles->TurbineMax;
+    Turbine = DonneesMensuelles->Turbine;
+    TurbineCible = DonneesMensuelles->TurbineCible;
 
+    Flag = (char*)ProblemeLineairePartieVariable->Xmax;
 
+    NbPdt = ProblemeHydraulique->NbJoursDUnProbleme[NumeroDeProbleme];
 
-Flag = (char *) ProblemeLineairePartieVariable->Xmax;
+    SurTurbineARepartir = 0.0;
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        Flag[Pdt] = 0;
+        if (Turbine[Pdt] - TurbineCible[Pdt] > ZERO)
+            Flag[Pdt] = 1;
+    }
 
-NbPdt = ProblemeHydraulique->NbJoursDUnProbleme[NumeroDeProbleme];
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        if (Flag[Pdt] == 1)
+            SurTurbineARepartir += Turbine[Pdt] - TurbineCible[Pdt];
+    }
 
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+        Flag[Pdt] = 0;
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        if (TurbineMax[Pdt] - TurbineCible[Pdt] > ZERO)
+            Flag[Pdt] = 1;
+    }
 
-SurTurbineARepartir = 0.0;
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-  Flag[Pdt] = 0;
-  if ( Turbine[Pdt] - TurbineCible[Pdt] > ZERO ) Flag[Pdt] = 1;
-}
-  
-
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-  if ( Flag[Pdt] == 1 ) SurTurbineARepartir += Turbine[Pdt] - TurbineCible[Pdt];
-}
-
-
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) Flag[Pdt] = 0;
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-  if ( TurbineMax[Pdt] - TurbineCible[Pdt] > ZERO ) Flag[Pdt] = 1;
-}
-
-NbCycles = 0;
+    NbCycles = 0;
 BoucleDeRepartition:
 
-Np = 0;
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-  if ( Flag[Pdt] == 1 ) Np++;
-}
-if ( Np <= 0 ) {
-  return;
-}
+    Np = 0;
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        if (Flag[Pdt] == 1)
+            Np++;
+    }
+    if (Np <= 0)
+    {
+        return;
+    }
 
+    MargeMin = 0.;
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+        MargeMin += TurbineMax[Pdt];
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        if (Flag[Pdt] == 1)
+        {
+            if (TurbineMax[Pdt] - TurbineCible[Pdt] < MargeMin)
+                MargeMin = TurbineMax[Pdt] - TurbineCible[Pdt];
+        }
+    }
 
-MargeMin = 0.;
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) MargeMin += TurbineMax[Pdt];
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-  if ( Flag[Pdt] == 1 ) {
-	  if ( TurbineMax[Pdt] - TurbineCible[Pdt] < MargeMin ) MargeMin = TurbineMax[Pdt] - TurbineCible[Pdt];
-	}
-}
+    Xmoy = SurTurbineARepartir / Np;
+    if (Xmoy <= MargeMin)
+        SurTurbine = Xmoy;
+    else
+        SurTurbine = MargeMin;
 
+    LimiteAtteinte = 0;
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        if (Flag[Pdt] == 0)
+            continue;
 
-Xmoy = SurTurbineARepartir / Np;
-if( Xmoy <= MargeMin ) SurTurbine = Xmoy;
-else SurTurbine = MargeMin;
+        Turbine[Pdt] = TurbineCible[Pdt] + SurTurbine;
+        if (TurbineMax[Pdt] - Turbine[Pdt] <= ZERO)
+        {
+            SurTurbineARepartir -= SurTurbine;
+            LimiteAtteinte = 1;
+            Flag[Pdt] = 0;
+        }
+    }
 
+    if (LimiteAtteinte == 1 && SurTurbineARepartir > 0.0)
+    {
+        NbCycles++;
+        if (NbCycles <= NbPdt)
+            goto BoucleDeRepartition;
+    }
 
-LimiteAtteinte = 0;
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-  if ( Flag[Pdt] == 0 ) continue;
-  
-  Turbine[Pdt] = TurbineCible[Pdt] + SurTurbine;	
-	if (  TurbineMax[Pdt] - Turbine[Pdt] <= ZERO ) {  
-	  
-		SurTurbineARepartir -= SurTurbine;
-		LimiteAtteinte = 1;
-		Flag[Pdt] = 0;
-	}
-}
-
-
-if ( LimiteAtteinte == 1 && SurTurbineARepartir > 0.0 ) {
-  NbCycles++;
-  if ( NbCycles <= NbPdt ) goto BoucleDeRepartition;
-}
-
-return;
+    return;
 }

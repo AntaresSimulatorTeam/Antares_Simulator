@@ -30,268 +30,257 @@
 #include "../../../internet/limits.h"
 #include "../../windows/message.h"
 
-#define ANTARES_CHECKING_LICENSE_TEXT  "Checking Internet Access..."
-
+#define ANTARES_CHECKING_LICENSE_TEXT "Checking Internet Access..."
 
 // forward
 static void CheckAntaresLicense(bool startupwizard);
 static void AskForTryingAgain(bool startupwizard);
 
-
-
 static void DisconnectionFromLicenseServer()
 {
-	Bind<void ()> callback;
-	callback.bind(& AskForTryingAgain, false);
-	Antares::Dispatcher::GUI::Post(callback);
+    Bind<void()> callback;
+    callback.bind(&AskForTryingAgain, false);
+    Antares::Dispatcher::GUI::Post(callback);
 }
-
 
 static void RenableTheMainForm()
 {
-	auto* mainfrm = Antares::Forms::ApplWnd::Instance();
-	if (mainfrm)
-	{
-		mainfrm->Enable(true);
-		mainfrm->resetDefaultStatusBarText();
-	}
+    auto* mainfrm = Antares::Forms::ApplWnd::Instance();
+    if (mainfrm)
+    {
+        mainfrm->Enable(true);
+        mainfrm->resetDefaultStatusBarText();
+    }
 }
-
 
 static void DisableTheMainForm()
 {
-	auto* mainfrm = Antares::Forms::ApplWnd::Instance();
-	if (mainfrm)
-	{
-		mainfrm->Enable(false);
-		mainfrm->resetDefaultStatusBarText();
-	}
+    auto* mainfrm = Antares::Forms::ApplWnd::Instance();
+    if (mainfrm)
+    {
+        mainfrm->Enable(false);
+        mainfrm->resetDefaultStatusBarText();
+    }
 }
-
-
 
 static void LicenseOnLineIsNotValid(bool startupwizard)
 {
-	assert(wxIsMainThread() == true && "Must be ran from the main thread");
+    assert(wxIsMainThread() == true && "Must be ran from the main thread");
 
-	auto* mainfrm = Antares::Forms::ApplWnd::Instance();
-	if (mainfrm)
-	{
-		// restoring customer caption
-		// reset status bar
-		Antares::License::Limits::customerCaption.clear();
-		mainfrm->resetDefaultStatusBarText();
+    auto* mainfrm = Antares::Forms::ApplWnd::Instance();
+    if (mainfrm)
+    {
+        // restoring customer caption
+        // reset status bar
+        Antares::License::Limits::customerCaption.clear();
+        mainfrm->resetDefaultStatusBarText();
 
-		Antares::Window::LicenseCouldNotConnectToInternetServer form(mainfrm);
-		form.ShowModal();
+        Antares::Window::LicenseCouldNotConnectToInternetServer form(mainfrm);
+        form.ShowModal();
 
-		if (not form.canceled())
-		{
-			// Ok, let's try again
+        if (not form.canceled())
+        {
+            // Ok, let's try again
 
-			// The status bar will be reset by the dispatcher
-			Antares::License::Limits::customerCaption = ANTARES_CHECKING_LICENSE_TEXT;
-			mainfrm->resetDefaultStatusBarText();
+            // The status bar will be reset by the dispatcher
+            Antares::License::Limits::customerCaption = ANTARES_CHECKING_LICENSE_TEXT;
+            mainfrm->resetDefaultStatusBarText();
 
-			// check the license informations
-			// (in another thread - it can take some time)
-			Bind<void ()> callback;
-			callback.bind(&CheckAntaresLicense, startupwizard);
-			Antares::Dispatcher::Post(callback);
-		}
-		else
-		{
-			// The status bar will be reset by the dispatcher
-			Antares::License::Limits::customerCaption = "Aborting connexion...";
-			mainfrm->resetDefaultStatusBarText();
+            // check the license informations
+            // (in another thread - it can take some time)
+            Bind<void()> callback;
+            callback.bind(&CheckAntaresLicense, startupwizard);
+            Antares::Dispatcher::Post(callback);
+        }
+        else
+        {
+            // The status bar will be reset by the dispatcher
+            Antares::License::Limits::customerCaption = "Aborting connexion...";
+            mainfrm->resetDefaultStatusBarText();
 
-			// check the license informations
-			// (in another thread - it can take some time)
-			Antares::License::statusOnline = Antares::License::Status::stNotRequested;
-			Bind<void ()> callback;
-			callback.bind(&CheckAntaresLicense, startupwizard);
-			Antares::Dispatcher::Post(callback);
-		}
-		}
-	else
-	{
-		// what ?
-		assert(false and "we must have the main window here !");
-		exit(1); // just in case
-	}
+            // check the license informations
+            // (in another thread - it can take some time)
+            Antares::License::statusOnline = Antares::License::Status::stNotRequested;
+            Bind<void()> callback;
+            callback.bind(&CheckAntaresLicense, startupwizard);
+            Antares::Dispatcher::Post(callback);
+        }
+    }
+    else
+    {
+        // what ?
+        assert(false and "we must have the main window here !");
+        exit(1); // just in case
+    }
 }
-
 
 static void AskForTryingAgain(bool startupwizard)
 {
-	auto* mainfrm = Antares::Forms::ApplWnd::Instance();
-	if (mainfrm)
-	{
-		const wxChar* msg = wxT("Error");
+    auto* mainfrm = Antares::Forms::ApplWnd::Instance();
+    if (mainfrm)
+    {
+        const wxChar* msg = wxT("Error");
 
-		switch (Antares::License::lastError)
-		{
-			case Antares::License::errLSHostDown:
-			{
-				msg = wxT("The internet server seems down. Please retry in a few minutes.\r\nPlease contact your system administrator if the problem persists.");
-				break;
-			}
-			case Antares::License::errLSTooManyLicense:
-			{
-				msg = wxT("Exceeded maximum licenses.\r\nAll tokens provided by the internet Server are currently used");
-				break;
-			}
-			default:
-			{
-				msg = wxT("Error");
-				break;
-			}
-		}
+        switch (Antares::License::lastError)
+        {
+        case Antares::License::errLSHostDown:
+        {
+            msg = wxT("The internet server seems down. Please retry in a few minutes.\r\nPlease "
+                      "contact your system administrator if the problem persists.");
+            break;
+        }
+        case Antares::License::errLSTooManyLicense:
+        {
+            msg = wxT("Exceeded maximum licenses.\r\nAll tokens provided by the internet Server "
+                      "are currently used");
+            break;
+        }
+        default:
+        {
+            msg = wxT("Error");
+            break;
+        }
+        }
 
+        Antares::Window::Message message(mainfrm,
+                                         wxT("Floating license"),
+                                         wxT("Error with the internet Server"),
+                                         msg,
+                                         "images/misc/error.png");
 
-		Antares::Window::Message message(mainfrm, wxT("Floating license"),
-			wxT("Error with the internet Server"),
-			msg,
-			"images/misc/error.png");
+        message.add(Antares::Window::Message::btnRetry, true);
+        message.add(Antares::Window::Message::btnQuit);
 
-		message.add(Antares::Window::Message::btnRetry, true);
-		message.add(Antares::Window::Message::btnQuit);
+        switch (message.showModal())
+        {
+        case Antares::Window::Message::btnRetry:
+        {
+            // Ok, let's try again
 
-		switch (message.showModal())
-		{
-			case Antares::Window::Message::btnRetry:
-			{
-				// Ok, let's try again
+            // The status bar will be reset by the dispatcher
+            Antares::License::Limits::customerCaption = ANTARES_CHECKING_LICENSE_TEXT;
+            mainfrm->resetDefaultStatusBarText();
+            mainfrm->Enable(false);
 
-				// The status bar will be reset by the dispatcher
-				Antares::License::Limits::customerCaption = ANTARES_CHECKING_LICENSE_TEXT;
-				mainfrm->resetDefaultStatusBarText();
-				mainfrm->Enable(false);
+            // check the license informations
+            // (in another thread - it can take some time)
+            Bind<void()> callback;
+            callback.bind(&CheckAntaresLicense, startupwizard);
+            Antares::Dispatcher::Post(callback);
+            break;
+        }
+        default:
+        {
+            // The status bar will be reset by the dispatcher
+            Antares::License::Limits::customerCaption = "Aborting...";
+            mainfrm->resetDefaultStatusBarText();
 
-				// check the license informations
-				// (in another thread - it can take some time)
-				Bind<void ()> callback;
-				callback.bind(&CheckAntaresLicense, startupwizard);
-				Antares::Dispatcher::Post(callback);
-				break;
-			}
-			default:
-			{
-				// The status bar will be reset by the dispatcher
-				Antares::License::Limits::customerCaption = "Aborting...";
-				mainfrm->resetDefaultStatusBarText();
-
-				// the operation has been canceled by the user
-				Antares::Dispatcher::GUI::Close(mainfrm);
-				break;
-			}
-		}
-	}
-	else
-	{
-		// what ?
-		assert(false and "we must have the main window here !");
-		exit(1); // just in case
-	}
+            // the operation has been canceled by the user
+            Antares::Dispatcher::GUI::Close(mainfrm);
+            break;
+        }
+        }
+    }
+    else
+    {
+        // what ?
+        assert(false and "we must have the main window here !");
+        exit(1); // just in case
+    }
 }
-
 
 static void CheckAntaresLicense(bool startupwizard)
 {
-	// This method is ran from a thread which is not the main thread
-	// Thus we can not update the GUI from here
+    // This method is ran from a thread which is not the main thread
+    // Thus we can not update the GUI from here
 
-	// Checking the license. It can take some time
-	if (not Antares::License::CheckLicenseValidity())
-	{
-		// The license is not valid sorry
-		switch (Antares::License::lastError)
-		{
-			case Antares::License::errLSHostDown:
-			case Antares::License::errLSTooManyLicense:
-			{
-				Bind<void ()> callback;
-				callback.bind(& AskForTryingAgain, startupwizard);
-				Antares::Dispatcher::GUI::Post(callback);
-				break;
-			}
-			default:
-			{
-				
-			}
-		}
-	}
-	else
-	{
-		// check license on the server
-		if (not Antares::License::CheckOnlineLicenseValidity())
-		{
-			switch (Antares::License::lastError)
-			{
-			case Antares::License::errNone:
-				{
-					assert(Antares::License::lastError!=Antares::License::errNone);
-					break;
-				}
-				case Antares::License::errLSOnline:
-				{
-					// Could not connect, let's try to set a proxy first
-					Antares::License::statusOnline=Antares::License::stWaiting;
+    // Checking the license. It can take some time
+    if (not Antares::License::CheckLicenseValidity())
+    {
+        // The license is not valid sorry
+        switch (Antares::License::lastError)
+        {
+        case Antares::License::errLSHostDown:
+        case Antares::License::errLSTooManyLicense:
+        {
+            Bind<void()> callback;
+            callback.bind(&AskForTryingAgain, startupwizard);
+            Antares::Dispatcher::GUI::Post(callback);
+            break;
+        }
+        default:
+        {
+        }
+        }
+    }
+    else
+    {
+        // check license on the server
+        if (not Antares::License::CheckOnlineLicenseValidity())
+        {
+            switch (Antares::License::lastError)
+            {
+            case Antares::License::errNone:
+            {
+                assert(Antares::License::lastError != Antares::License::errNone);
+                break;
+            }
+            case Antares::License::errLSOnline:
+            {
+                // Could not connect, let's try to set a proxy first
+                Antares::License::statusOnline = Antares::License::stWaiting;
 
-					Bind<void ()> callback;
-					callback.bind(& LicenseOnLineIsNotValid, startupwizard);
-					Antares::Dispatcher::GUI::Post(callback);
-					break;
-				}
-				default:
-				{
-					Antares::License::statusOnline=Antares::License::stWaiting;
+                Bind<void()> callback;
+                callback.bind(&LicenseOnLineIsNotValid, startupwizard);
+                Antares::Dispatcher::GUI::Post(callback);
+                break;
+            }
+            default:
+            {
+                Antares::License::statusOnline = Antares::License::stWaiting;
 
-					Bind<void ()> callback;
-					callback.bind(&LicenseOnLineIsNotValid, startupwizard);
-					Antares::Dispatcher::GUI::Post(callback);
-				}
-			}
-		}
-		else
-		{
-			// re-enable the mainform
-			Bind<void ()> callback;
-			callback.bind(& RenableTheMainForm);
-			Antares::Dispatcher::GUI::Post(callback);
+                Bind<void()> callback;
+                callback.bind(&LicenseOnLineIsNotValid, startupwizard);
+                Antares::Dispatcher::GUI::Post(callback);
+            }
+            }
+        }
+        else
+        {
+            // re-enable the mainform
+            Bind<void()> callback;
+            callback.bind(&RenableTheMainForm);
+            Antares::Dispatcher::GUI::Post(callback);
 
-			// Ok the license is valid, let's continue !
-			if (startupwizard)
-			{
-				auto* mainfrm = Antares::Forms::ApplWnd::Instance();
-				Bind<void ()> callback;
-				callback.bind(mainfrm, &Antares::Forms::ApplWnd::startAntares);
-				Antares::Dispatcher::GUI::Post(callback); //ms, arbitrary
-			}
-		}
-	}
+            // Ok the license is valid, let's continue !
+            if (startupwizard)
+            {
+                auto* mainfrm = Antares::Forms::ApplWnd::Instance();
+                Bind<void()> callback;
+                callback.bind(mainfrm, &Antares::Forms::ApplWnd::startAntares);
+                Antares::Dispatcher::GUI::Post(callback); // ms, arbitrary
+            }
+        }
+    }
 }
-
 
 static void DispatchCheckAntaresLicense()
 {
-	assert(wxIsMainThread() == true and "Must be ran from the main thread");
+    assert(wxIsMainThread() == true and "Must be ran from the main thread");
 
-	// rebind events
-	Antares::License::onDisconnect.clear();
-	Antares::License::onDisconnect.connect(& DisconnectionFromLicenseServer);
+    // rebind events
+    Antares::License::onDisconnect.clear();
+    Antares::License::onDisconnect.connect(&DisconnectionFromLicenseServer);
 
-	// The status bar will be reset by the dispatcher
-	Antares::License::Limits::customerCaption = ANTARES_CHECKING_LICENSE_TEXT;
+    // The status bar will be reset by the dispatcher
+    Antares::License::Limits::customerCaption = ANTARES_CHECKING_LICENSE_TEXT;
 
-	// Not need to check the permission for a starting from simulator
-	Antares::License::hasSimulatorAuthorization = true;
+    // Not need to check the permission for a starting from simulator
+    Antares::License::hasSimulatorAuthorization = true;
 
-	// check the license informations
-	// (in another thread - it can take some time)
-	Bind<void ()> callback;
-	callback.bind(&CheckAntaresLicense, true);
-	Antares::Dispatcher::Post(callback);
+    // check the license informations
+    // (in another thread - it can take some time)
+    Bind<void()> callback;
+    callback.bind(&CheckAntaresLicense, true);
+    Antares::Dispatcher::Post(callback);
 }
-
-

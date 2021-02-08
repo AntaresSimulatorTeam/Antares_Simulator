@@ -28,7 +28,6 @@
 #include "impedances.h"
 #include "../../../../area/constants.h"
 
-
 namespace Antares
 {
 namespace Action
@@ -37,70 +36,61 @@ namespace AntaresStudy
 {
 namespace Link
 {
+Impedances::Impedances(const AnyString& fromarea, const AnyString& toarea) :
+ pOriginalFromAreaName(fromarea), pOriginalToAreaName(toarea)
+{
+    pInfos.caption << "Impedances";
+}
 
+Impedances::~Impedances()
+{
+}
 
-	Impedances::Impedances(const AnyString& fromarea, const AnyString& toarea) :
-		pOriginalFromAreaName(fromarea),
-		pOriginalToAreaName(toarea)
-	{
-		pInfos.caption << "Impedances";
-	}
+bool Impedances::prepareWL(Context&)
+{
+    pInfos.message.clear();
+    pInfos.state = stReady;
+    switch (pInfos.behavior)
+    {
+    case bhOverwrite:
+        pInfos.message << "The Impedances will be copied";
+        break;
+    default:
+        pInfos.state = stNothingToDo;
+        break;
+    }
 
+    return true;
+}
 
-	Impedances::~Impedances()
-	{}
+bool Impedances::performWL(Context& ctx)
+{
+    if (ctx.link && ctx.extStudy)
+    {
+        Data::AreaName idFrom;
+        Data::AreaName idTo;
+        TransformNameIntoID(pOriginalFromAreaName, idFrom);
+        TransformNameIntoID(pOriginalToAreaName, idTo);
 
+        Data::AreaLink* source;
+        if (pOriginalFromAreaName < pOriginalToAreaName)
+            source = ctx.extStudy->areas.findLink(idFrom, idTo);
+        else
+            source = ctx.extStudy->areas.findLink(idTo, idFrom);
 
-	bool Impedances::prepareWL(Context&)
-	{
-		pInfos.message.clear();
-		pInfos.state = stReady;
-		switch (pInfos.behavior)
-		{
-			case bhOverwrite:
-				pInfos.message << "The Impedances will be copied";
-				break;
-			default:
-				pInfos.state = stNothingToDo;
-				break;
-		}
-
-		return true;
-	}
-
-
-	bool Impedances::performWL(Context& ctx)
-	{
-		if (ctx.link && ctx.extStudy)
-		{
-			Data::AreaName idFrom;
-			Data::AreaName idTo;
-			TransformNameIntoID(pOriginalFromAreaName, idFrom);
-			TransformNameIntoID(pOriginalToAreaName,   idTo);
-
-			Data::AreaLink* source;
-			if (pOriginalFromAreaName < pOriginalToAreaName)
-				source = ctx.extStudy->areas.findLink(idFrom, idTo);
-			else
-				source = ctx.extStudy->areas.findLink(idTo, idFrom);
-
-			if (source && source != ctx.link)
-			{
-				source->data.invalidate(true);
-				ctx.link->data.invalidate(true);
-				ctx.link->data.pasteToColumn((uint) Data::fhlImpedances,   source->data.entry[Data::fhlImpedances]);
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-
-
+        if (source && source != ctx.link)
+        {
+            source->data.invalidate(true);
+            ctx.link->data.invalidate(true);
+            ctx.link->data.pasteToColumn((uint)Data::fhlImpedances,
+                                         source->data.entry[Data::fhlImpedances]);
+            return true;
+        }
+    }
+    return false;
+}
 
 } // namespace Link
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
-

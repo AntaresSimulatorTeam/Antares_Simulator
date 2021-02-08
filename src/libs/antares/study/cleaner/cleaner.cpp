@@ -31,127 +31,110 @@
 #include "versions.h"
 #include "../../logs.h"
 
-
 using namespace Yuni;
 
-
-# define STUDY_CLEANER_LOG "[study cleaner] "
-
-
+#define STUDY_CLEANER_LOG "[study cleaner] "
 
 namespace Antares
 {
 namespace Data
 {
+StudyCleaningInfos::StudyCleaningInfos()
+{
+    version = versionUnknown;
+}
 
+StudyCleaningInfos::StudyCleaningInfos(const AnyString& path) : folder(path)
+{
+    version = versionUnknown;
+}
 
-	StudyCleaningInfos::StudyCleaningInfos()
-	{
-		version = versionUnknown;
-	}
+StudyCleaningInfos::~StudyCleaningInfos()
+{
+}
 
+bool StudyCleaningInfos::analyze()
+{
+    logs.info() << "cleaning study: " << folder;
 
-	StudyCleaningInfos::StudyCleaningInfos(const AnyString& path) :
-		folder(path)
-	{
-		version = versionUnknown;
-	}
+    // clear
+    exclude.clear();
+    intruders.clear();
+    postExclude.clear();
+    // Getting the version
+    version = StudyTryToFindTheVersion(folder);
 
+    switch (version)
+    {
+    case version1xx:
+    {
+        logs.error() << "Study version: 1.x. Too old version. Nothing will be done: " << folder;
+        break;
+    }
+    case versionFutur:
+    {
+        logs.error() << "A more recent version of Antares is required for " << folder;
+        break;
+    }
+    case versionUnknown:
+    {
+        logs.error() << "Unknown study version: " << folder;
+        break;
+    }
+    default:
+    {
+        if ((int)version >= (int)version200 && (int)version <= (int)versionLatest)
+        {
+            if (not PreflightVersion20(this))
+            {
+                logs.error() << "Aborting: an error has been encountered: " << folder;
+                return false;
+            }
+        }
+        else
+            logs.error() << "Invalid study version: " << folder;
+        break;
+    }
+    }
 
-	StudyCleaningInfos::~StudyCleaningInfos()
-	{
-	}
+    // Grab all intruders at once
+    intruders.onProgress = onProgress;
+    intruders.addFromFolder(folder, exclude);
+    // Post cleanup in the list
+    intruders.remove(postExclude);
 
+    // Result
+    if (not intruders.empty())
+    {
+        if (intruders.size() == 1)
+            logs.info() << "  :: 1 file/folder will be removed";
+        else
+            logs.info() << "  :: " << intruders.size() << " files/folders will be removed";
+        return true;
+    }
+    else
+    {
+        logs.info() << "  :: no file will be removed";
+        return false;
+    }
+    return (intruders.size()) ? true : false;
+}
 
+void StudyCleaningInfos::performCleanup()
+{
+    if (version != versionUnknown && not intruders.empty())
+    {
+        // Remove all files first
+        intruders.deleteAllFiles(folder);
+        // Remove all folders next
+        intruders.deleteAllEmptyFolders(folder);
+    }
+}
 
-	bool StudyCleaningInfos::analyze()
-	{
-		logs.info() << "cleaning study: " << folder;
-
-		// clear
-		exclude.clear();
-		intruders.clear();
-		postExclude.clear();
-		// Getting the version
-		version = StudyTryToFindTheVersion(folder);
-
-		switch (version)
-		{
-			case version1xx:
-				{
-					logs.error() << "Study version: 1.x. Too old version. Nothing will be done: " << folder;
-					break;
-				}
-			case versionFutur:
-				{
-					logs.error() << "A more recent version of Antares is required for " << folder;
-					break;
-				}
-			case versionUnknown:
-				{
-					logs.error() << "Unknown study version: " << folder;
-					break;
-				}
-			default:
-				{
-					if ((int)version >= (int)version200 && (int)version <= (int)versionLatest)
-					{
-						if (not PreflightVersion20(this))
-						{
-							logs.error() << "Aborting: an error has been encountered: " << folder;
-							return false;
-						}
-					}
-					else
-						logs.error() << "Invalid study version: " << folder;
-					break;
-				}
-		}
-
-		// Grab all intruders at once
-		intruders.onProgress = onProgress;
-		intruders.addFromFolder(folder, exclude);
-		// Post cleanup in the list
-		intruders.remove(postExclude);
-
-		// Result
-		if (not intruders.empty())
-		{
-			if (intruders.size() == 1)
-				logs.info() << "  :: 1 file/folder will be removed";
-			else
-				logs.info() << "  :: " << intruders.size() << " files/folders will be removed";
-			return true;
-		}
-		else
-		{
-			logs.info() << "  :: no file will be removed";
-			return false;
-		}
-		return (intruders.size()) ? true : false;
-	}
-
-
-	void StudyCleaningInfos::performCleanup()
-	{
-		if (version != versionUnknown && not intruders.empty())
-		{
-			// Remove all files first
-			intruders.deleteAllFiles(folder);
-			// Remove all folders next
-			intruders.deleteAllEmptyFolders(folder);
-		}
-	}
-
-
-	Yuni::uint64 StudyCleaningInfos::totalSize() const
-	{
-		return intruders.totalSizeInBytes();
-	}
-
-
-
+Yuni::uint64 StudyCleaningInfos::totalSize() const
+{
+    return intruders.totalSizeInBytes();
+}
 
 } // namespace Data
 } // namespace Antares
-

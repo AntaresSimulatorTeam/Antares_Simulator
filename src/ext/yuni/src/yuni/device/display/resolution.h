@@ -15,160 +15,150 @@
 #include "../../core/string.h"
 #include "../../core/smartptr/smartptr.h"
 
-
-
 namespace Yuni
 {
 namespace Device
 {
 namespace Display
 {
+/*!
+** \brief Screen/Monitor resolution
+*/
+class Resolution final
+{
+public:
+    //! The most suitable smart pointer to use with the class `Resolution`
+    typedef SmartPtr<Resolution> Ptr;
 
-	/*!
-	** \brief Screen/Monitor resolution
-	*/
-	class Resolution final
-	{
-	public:
-		//! The most suitable smart pointer to use with the class `Resolution`
-		typedef SmartPtr<Resolution> Ptr;
+    enum
+    {
+        //! The smallest value allowed for the width of the screen
+        minimumWidth = 320u,
+        //! The smallest allowed value for the height of the screen
+        minimumHeight = 200u,
 
-		enum
-		{
-			//! The smallest value allowed for the width of the screen
-			minimumWidth  = 320u,
-			//! The smallest allowed value for the height of the screen
-			minimumHeight = 200u,
+        //! The highest allowed for the width of the screen
+        maximumWidth = 8192u, // 8K Video Format
+                              //! The highest allowed value for the height of the screen
+        maximumHeight = 4320u,
+    };
 
-			//! The highest allowed for the width of the screen
-			maximumWidth  = 8192u, // 8K Video Format
-			//! The highest allowed value for the height of the screen
-			maximumHeight = 4320u,
-		};
+    //! Vector of resolutions
+    typedef std::vector<Ptr> Vector;
 
-		//! Vector of resolutions
-		typedef std::vector<Ptr>  Vector;
+public:
+    //! \name Constructors
+    //@{
+    /*!
+    ** \brief Constructor
+    **
+    ** \param width  Width of the monitor/screen
+    ** \param height Height of the monitor/screen
+    ** \param bits   Bit per Pixel
+    */
+    Resolution(uint width, uint height, uint8 bits = 32);
 
-	public:
-		//! \name Constructors
-		//@{
-		/*!
-		** \brief Constructor
-		**
-		** \param width  Width of the monitor/screen
-		** \param height Height of the monitor/screen
-		** \param bits   Bit per Pixel
-		*/
-		Resolution(uint width, uint height, uint8 bits = 32);
+    /*!
+    ** \brief Constructor by copy
+    ** \param rhs The instance to copy
+    */
+    Resolution(const Resolution& rhs);
+    //@}
 
-		/*!
-		** \brief Constructor by copy
-		** \param rhs The instance to copy
-		*/
-		Resolution(const Resolution& rhs);
-		//@}
+    /*!
+    ** \brief Convert these informations into an human readable string
+    */
+    String toString() const;
 
-		/*!
-		** \brief Convert these informations into an human readable string
-		*/
-		String toString() const;
+    //! \name Information about the current mode
+    //@{
+    //! The width of the monitor/screen
+    uint width() const;
+    //! The height of the monitor/screen
+    uint height() const;
+    //! Bit per pixel
+    uint8 bitPerPixel() const;
+    //@}
 
+    //! \name Operators
+    //@{
+    /*!
+    ** \brief Comparison operator (equal with)
+    **
+    ** \param rhs The other resolution to compare with
+    ** \return True if the two resolution are equal
+    */
+    bool operator==(const Resolution& rhs) const;
 
-		//! \name Information about the current mode
-		//@{
-		//! The width of the monitor/screen
-		uint width() const;
-		//! The height of the monitor/screen
-		uint height() const;
-		//! Bit per pixel
-		uint8 bitPerPixel() const;
-		//@}
+    /*!
+    ** \brief Comparison operator (non equal with)
+    **
+    ** \param rhs The other resolution to compare with
+    ** \return True if the two resolution are not equal
+    */
+    bool operator!=(const Resolution& rhs) const;
 
+    /*!
+    ** \brief Comparison operator (less than)
+    **
+    ** \param rhs The other resolution to compare with
+    ** \return True if *this < rhs
+    */
+    bool operator<(const Resolution& rhs) const;
 
-		//! \name Operators
-		//@{
-		/*!
-		** \brief Comparison operator (equal with)
-		**
-		** \param rhs The other resolution to compare with
-		** \return True if the two resolution are equal
-		*/
-		bool operator == (const Resolution& rhs) const;
+    /*!
+    ** \brief Comparison operator (less than or equal)
+    **
+    ** \param rhs The other resolution to compare with
+    ** \return True if *this <= rhs
+    */
+    bool operator<=(const Resolution& rhs) const;
 
-		/*!
-		** \brief Comparison operator (non equal with)
-		**
-		** \param rhs The other resolution to compare with
-		** \return True if the two resolution are not equal
-		*/
-		bool operator != (const Resolution& rhs) const;
+    /*!
+    ** \brief Comparison operator (greater than)
+    **
+    ** \param rhs The other resolution to compare with
+    ** \return True if *this > rhs
+    */
+    bool operator>(const Resolution& rhs) const;
 
-		/*!
-		** \brief Comparison operator (less than)
-		**
-		** \param rhs The other resolution to compare with
-		** \return True if *this < rhs
-		*/
-		bool operator < (const Resolution& rhs) const;
+    /*!
+    ** \brief Comparison operator (greater than or equal)
+    **
+    ** \param rhs The other resolution to compare with
+    ** \return True if *this >= rhs
+    */
+    bool operator>=(const Resolution& rhs) const;
 
-		/*!
-		** \brief Comparison operator (less than or equal)
-		**
-		** \param rhs The other resolution to compare with
-		** \return True if *this <= rhs
-		*/
-		bool operator <= (const Resolution& rhs) const;
+    /*!
+    ** \brief Assign new values from another resolution
+    **
+    ** \param p The new values
+    ** \return Always *this
+    */
+    Resolution& operator=(const Resolution& p);
+    //@}
 
-		/*!
-		** \brief Comparison operator (greater than)
-		**
-		** \param rhs The other resolution to compare with
-		** \return True if *this > rhs
-		*/
-		bool operator > (const Resolution& rhs) const;
+    //! \name Stream printing
+    //@{
+    /*!
+    ** \brief Print the resolution
+    **
+    ** \param[in,out] out An output stream
+    ** \return The output stream `out`
+    */
+    std::ostream& print(std::ostream& out) const;
+    //@}
 
-		/*!
-		** \brief Comparison operator (greater than or equal)
-		**
-		** \param rhs The other resolution to compare with
-		** \return True if *this >= rhs
-		*/
-		bool operator >= (const Resolution& rhs) const;
+private:
+    //! Height of the screen
+    uint pWidth;
+    //! Width of the screen
+    uint pHeight;
+    //! Bits per pixel
+    uint8 pBitsPerPixel;
 
-		/*!
-		** \brief Assign new values from another resolution
-		**
-		** \param p The new values
-		** \return Always *this
-		*/
-		Resolution& operator = (const Resolution& p);
-		//@}
-
-
-		//! \name Stream printing
-		//@{
-		/*!
-		** \brief Print the resolution
-		**
-		** \param[in,out] out An output stream
-		** \return The output stream `out`
-		*/
-		std::ostream& print(std::ostream& out) const;
-		//@}
-
-	private:
-		//! Height of the screen
-		uint pWidth;
-		//! Width of the screen
-		uint pHeight;
-		//! Bits per pixel
-		uint8 pBitsPerPixel;
-
-	}; // class Resolution
-
-
-
-
+}; // class Resolution
 
 } // namespace Display
 } // namespace Device
@@ -176,11 +166,15 @@ namespace Display
 
 #include "resolution.hxx"
 
-
 //! \name Operator overload for stream printing
 //@{
-inline std::ostream& operator << (std::ostream& out, const Yuni::Device::Display::Resolution& rhs)
-{ return rhs.print(out); }
-inline std::ostream& operator << (std::ostream& out, const Yuni::Device::Display::Resolution::Ptr& rhs)
-{ return rhs->print(out); }
+inline std::ostream& operator<<(std::ostream& out, const Yuni::Device::Display::Resolution& rhs)
+{
+    return rhs.print(out);
+}
+inline std::ostream& operator<<(std::ostream& out,
+                                const Yuni::Device::Display::Resolution::Ptr& rhs)
+{
+    return rhs->print(out);
+}
 //@}

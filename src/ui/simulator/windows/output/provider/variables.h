@@ -25,13 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_WINDOWS_OUTPUT_PROVIDER_VARIABLES_H__
-# define __ANTARES_WINDOWS_OUTPUT_PROVIDER_VARIABLES_H__
+#define __ANTARES_WINDOWS_OUTPUT_PROVIDER_VARIABLES_H__
 
-# include <antares/wx-wrapper.h>
-# include <ui/common/component/spotlight.h>
-# include "../fwd.h"
-# include <wx/bitmap.h>
-
+#include <antares/wx-wrapper.h>
+#include <ui/common/component/spotlight.h>
+#include "../fwd.h"
+#include <wx/bitmap.h>
 
 namespace Antares
 {
@@ -41,51 +40,44 @@ namespace OutputViewer
 {
 namespace Provider
 {
+class Variables : public Antares::Component::Spotlight::IProvider
+{
+public:
+    //! The spotlight component (alias)
+    typedef Antares::Component::Spotlight Spotlight;
 
-	class Variables : public Antares::Component::Spotlight::IProvider
-	{
-	public:
-		//! The spotlight component (alias)
-		typedef Antares::Component::Spotlight Spotlight;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    Variables(Component* com);
+    //! Destructor
+    virtual ~Variables();
+    //@}
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		Variables(Component* com);
-		//! Destructor
-		virtual ~Variables();
-		//@}
+    /*!
+    ** \brief Perform a new search
+    */
+    virtual void search(Spotlight::IItem::Vector& out,
+                        const Spotlight::SearchToken::Vector& tokens,
+                        const Yuni::String& text = "");
 
-		/*!
-		** \brief Perform a new search
-		*/
-		virtual void search(Spotlight::IItem::Vector& out, const Spotlight::SearchToken::Vector& tokens, const Yuni::String& text = "");
+    /*!
+    ** \brief An item has been selected
+    */
+    virtual bool onSelect(Spotlight::IItem::Ptr& item);
 
-		/*!
-		** \brief An item has been selected
-		*/
-		virtual bool onSelect(Spotlight::IItem::Ptr& item);
+private:
+    //! The parent component
+    Component* pComponent;
 
+    //! Bitmap re-attach
+    wxBitmap* pBmpVariable;
+    wxBitmap* pBmpThermal;
 
-	private:
-		//! The parent component
-		Component* pComponent;
-
-		//! Bitmap re-attach
-		wxBitmap* pBmpVariable;
-		wxBitmap* pBmpThermal;
-
-	}; // class Layer
-
-
-
-
-
-
-
+}; // class Layer
 
 } // namespace Provider
 } // namespace OutputViewer

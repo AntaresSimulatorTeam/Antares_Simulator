@@ -25,14 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_BINDINGCONSTRAINT_WEIGHT_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_BINDINGCONSTRAINT_WEIGHT_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_BINDINGCONSTRAINT_WEIGHT_H__
 
-# include <antares/wx-wrapper.h>
-# include "../../gridhelper.h"
-# include "../../renderer.h"
-# include <yuni/core/event.h>
-# include "../../../../../application/study.h"
-
+#include <antares/wx-wrapper.h>
+#include "../../gridhelper.h"
+#include "../../renderer.h"
+#include <yuni/core/event.h>
+#include "../../../../../application/study.h"
 
 namespace Antares
 {
@@ -44,92 +43,85 @@ namespace Renderer
 {
 namespace BindingConstraint
 {
+class LinkWeights : public virtual IRenderer
+{
+public:
+    LinkWeights(wxWindow* parent);
+    virtual ~LinkWeights();
 
-	class LinkWeights : public virtual IRenderer
-	{
-	public:
-		LinkWeights(wxWindow* parent);
-		virtual ~LinkWeights();
+    virtual int width() const;
+    virtual int height() const;
 
-		virtual int width() const;
-		virtual int height() const;
+    virtual wxString columnCaption(int colIndx) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual wxString rowCaption(int rowIndx) const;
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual wxString cellValue(int x, int y) const;
 
-		virtual wxString cellValue(int x, int y) const;
+    virtual double cellNumericValue(int x, int y) const;
 
-		virtual double cellNumericValue(int x, int y) const;
+    virtual bool cellValue(int x, int y, const Yuni::String& value);
 
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    {
+        // Do nothing
+    }
 
-		virtual bool cellValue(int x, int y, const Yuni::String& value);
+    virtual bool valid() const;
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{
-			// Do nothing
-		}
+    virtual IRenderer::CellStyle cellStyle(int x, int y) const;
 
-		virtual bool valid() const;
+    virtual wxColour cellBackgroundColor(int x, int y) const;
 
-		virtual IRenderer::CellStyle cellStyle(int x, int y) const;
+    wxColour cellTextColor(int x, int y) const;
 
-		virtual wxColour cellBackgroundColor(int x, int y) const;
+    virtual void applyLayerFiltering(size_t layerID, VGridHelper* gridHelper);
 
-		wxColour cellTextColor(int x, int y) const;
+protected:
+    wxWindow* pControl;
+    wxString pZero;
 
-		virtual void applyLayerFiltering(size_t layerID, VGridHelper* gridHelper);
+}; // class LinkWeights
 
+class ClusterWeights : public virtual IRenderer
+{
+public:
+    ClusterWeights(wxWindow* parent);
+    virtual ~ClusterWeights();
 
-	protected:
-		wxWindow* pControl;
-		wxString pZero;
+    virtual int width() const;
+    virtual int height() const;
 
-	}; // class LinkWeights
+    virtual wxString columnCaption(int colIndx) const;
 
+    virtual wxString rowCaption(int rowIndx) const;
 
-	class ClusterWeights : public virtual IRenderer
-	{
-	public:
-		ClusterWeights(wxWindow* parent);
-		virtual ~ClusterWeights();
+    virtual wxString cellValue(int x, int y) const;
 
-		virtual int width() const;
-		virtual int height() const;
+    virtual double cellNumericValue(int x, int y) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual bool cellValue(int x, int y, const Yuni::String& value);
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    {
+        // Do nothing
+    }
 
-		virtual wxString cellValue(int x, int y) const;
+    virtual bool valid() const;
 
-		virtual double cellNumericValue(int x, int y) const;
+    virtual IRenderer::CellStyle cellStyle(int x, int y) const;
 
+    virtual wxColour cellBackgroundColor(int x, int y) const;
 
-		virtual bool cellValue(int x, int y, const Yuni::String& value);
+    wxColour cellTextColor(int x, int y) const;
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{
-			// Do nothing
-		}
+    virtual void applyLayerFiltering(size_t layerID, VGridHelper* gridHelper);
 
-		virtual bool valid() const;
+protected:
+    wxWindow* pControl;
+    wxString pZero;
 
-		virtual IRenderer::CellStyle cellStyle(int x, int y) const;
-
-		virtual wxColour cellBackgroundColor(int x, int y) const;
-
-		wxColour cellTextColor(int x, int y) const;
-
-		virtual void applyLayerFiltering(size_t layerID, VGridHelper* gridHelper);
-
-
-	protected:
-		wxWindow* pControl;
-		wxString pZero;
-
-	}; // class ClusterWeights
-
+}; // class ClusterWeights
 
 } // namespace BindingConstraint
 } // namespace Renderer

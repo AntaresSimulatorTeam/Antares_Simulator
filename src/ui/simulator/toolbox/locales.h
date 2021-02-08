@@ -25,30 +25,23 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LOCALES_H__
-# define __ANTARES_LOCALES_H__
-
+#define __ANTARES_LOCALES_H__
 
 namespace Antares
 {
 namespace Locale
 {
+/*!
+** \brief Get informations about the current locale
+*/
+void Init();
 
-
-	/*!
-	** \brief Get informations about the current locale
-	*/
-	void Init();
-
-
-
-	/*!
-	** \brief Get the decimal point
-	*/
-	extern char DecimalPoint;
-
+/*!
+** \brief Get the decimal point
+*/
+extern char DecimalPoint;
 
 } // namespace Locale
 } // namespace Antares
-
 
 #endif // __ANTARES_LOCALES_H__

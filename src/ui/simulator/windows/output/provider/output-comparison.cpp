@@ -36,8 +36,6 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
 namespace Window
@@ -46,95 +44,83 @@ namespace OutputViewer
 {
 namespace Provider
 {
+Comparison::Comparison(Component& com) : pComponent(com)
+{
+    assert(&pComponent);
 
+    pBmpSum = Resources::BitmapLoadFromFile("images/16x16/sum.png");
+    pBmpAverage = Resources::BitmapLoadFromFile("images/16x16/average.png");
+    pBmpMin = Resources::BitmapLoadFromFile("images/16x16/bottom.png");
+    pBmpMax = Resources::BitmapLoadFromFile("images/16x16/top.png");
+    pBmpDiff = Resources::BitmapLoadFromFile("images/16x16/merge.png");
+}
 
+Comparison::~Comparison()
+{
+    delete pBmpSum;
+    delete pBmpAverage;
+    delete pBmpMin;
+    delete pBmpMax;
+    delete pBmpDiff;
+}
 
-	Comparison::Comparison(Component& com) :
-		pComponent(com)
-	{
-		assert(&pComponent);
+void Comparison::search(Spotlight::IItem::Vector& out,
+                        const Spotlight::SearchToken::Vector&,
+                        const Yuni::String& text)
+{
+    {
+        auto* item = new Spotlight::IItem();
+        item->caption("Average");
+        item->group("comparison");
+        item->image(pBmpAverage);
+        item->tag = ltAverage;
+        out.push_back(item);
+    }
+    {
+        auto* item = new Spotlight::IItem();
+        item->caption("Differences");
+        item->group("comparison");
+        item->image(pBmpDiff);
+        item->tag = ltDiff;
+        out.push_back(item);
+    }
+    {
+        auto* item = new Spotlight::IItem();
+        item->caption("Minimum");
+        item->group("comparison");
+        item->image(pBmpMin);
+        item->tag = ltMin;
+        out.push_back(item);
+    }
+    {
+        auto* item = new Spotlight::IItem();
+        item->caption("Maximum");
+        item->group("comparison");
+        item->image(pBmpMax);
+        item->tag = ltMax;
+        out.push_back(item);
+    }
+    {
+        auto* item = new Spotlight::IItem();
+        item->caption("Sum");
+        item->group("comparison");
+        item->image(pBmpSum);
+        item->tag = (int)ltSum;
+        out.push_back(item);
+    }
+}
 
-		pBmpSum      = Resources::BitmapLoadFromFile("images/16x16/sum.png");
-		pBmpAverage  = Resources::BitmapLoadFromFile("images/16x16/average.png");
-		pBmpMin      = Resources::BitmapLoadFromFile("images/16x16/bottom.png");
-		pBmpMax      = Resources::BitmapLoadFromFile("images/16x16/top.png");
-		pBmpDiff     = Resources::BitmapLoadFromFile("images/16x16/merge.png");
-	}
-
-
-	Comparison::~Comparison()
-	{
-		delete pBmpSum;
-		delete pBmpAverage;
-		delete pBmpMin;
-		delete pBmpMax;
-		delete pBmpDiff;
-	}
-
-
-	void Comparison::search(Spotlight::IItem::Vector& out, const Spotlight::SearchToken::Vector&, const Yuni::String& text)
-	{
-		{
-			auto* item = new Spotlight::IItem();
-			item->caption("Average");
-			item->group("comparison");
-			item->image(pBmpAverage);
-			item->tag = ltAverage;
-			out.push_back(item);
-		}
-		{
-			auto* item = new Spotlight::IItem();
-			item->caption("Differences");
-			item->group("comparison");
-			item->image(pBmpDiff);
-			item->tag = ltDiff;
-			out.push_back(item);
-		}
-		{
-			auto* item = new Spotlight::IItem();
-			item->caption("Minimum");
-			item->group("comparison");
-			item->image(pBmpMin);
-			item->tag = ltMin;
-			out.push_back(item);
-		}
-		{
-			auto* item = new Spotlight::IItem();
-			item->caption("Maximum");
-			item->group("comparison");
-			item->image(pBmpMax);
-			item->tag = ltMax;
-			out.push_back(item);
-		}
-		{
-			auto* item = new Spotlight::IItem();
-			item->caption("Sum");
-			item->group("comparison");
-			item->image(pBmpSum);
-			item->tag = (int) ltSum;
-			out.push_back(item);
-		}
-	}
-
-
-	bool Comparison::onSelect(Spotlight::IItem::Ptr& item)
-	{
-		if (!(!item) && (uint) item->tag <= ltMax)
-		{
-			pComponent.createNewVirtualLayer((LayerType) item->tag);
-			return true;
-		}
-		return false;
-	}
-
-
-
-
-
-
+bool Comparison::onSelect(Spotlight::IItem::Ptr& item)
+{
+    if (!(!item) && (uint)item->tag <= ltMax)
+    {
+        pComponent.createNewVirtualLayer((LayerType)item->tag);
+        return true;
+    }
+    return false;
+}
 
 } // namespace Provider
 } // namespace OutputViewer
 } // namespace Window
 } // namespace Antares
-

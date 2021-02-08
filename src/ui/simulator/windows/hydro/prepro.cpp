@@ -36,9 +36,7 @@
 #include "../../application/menus.h"
 #include <wx/statline.h>
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
@@ -46,144 +44,152 @@ namespace Window
 {
 namespace Hydro
 {
+Prepro::Prepro(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
+ Component::Panel(parent),
+ pInputAreaSelector(notifier),
+ pArea(nullptr),
+ pComponentsAreReady(false),
+ pSupport(nullptr),
+ pIntermonthlyCorrelation(nullptr)
+{
+    OnStudyClosed.connect(this, &Prepro::onStudyClosed);
+    if (notifier)
+        notifier->onAreaChanged.connect(this, &Prepro::onAreaChanged);
+}
 
+void Prepro::createComponents()
+{
+    if (pComponentsAreReady)
+        return;
+    pComponentsAreReady = true;
 
-	Prepro::Prepro(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
-		Component::Panel(parent),
-		pInputAreaSelector(notifier),
-		pArea(nullptr),
-		pComponentsAreReady(false),
-		pSupport(nullptr),
-		pIntermonthlyCorrelation(nullptr)
-	{
-		OnStudyClosed.connect(this, &Prepro::onStudyClosed);
-		if (notifier)
-			notifier->onAreaChanged.connect(this, &Prepro::onAreaChanged);
-	}
+    {
+        wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+        SetSizer(sizer);
+        pSupport = new Component::Panel(this);
+        sizer->Add(pSupport, 1, wxALL | wxEXPAND);
+    }
 
+    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+    pSupport->SetSizer(sizer);
 
-	void Prepro::createComponents()
-	{
-		if (pComponentsAreReady)
-			return;
-		pComponentsAreReady = true;
+    const wxSize ourDefaultSize(55, wxDefaultSize.GetHeight());
 
-		{
-			wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-			SetSizer(sizer);
-			pSupport = new Component::Panel(this);
-			sizer->Add(pSupport, 1, wxALL|wxEXPAND);
-		}
+    wxBoxSizer* sizerH = new wxBoxSizer(wxHORIZONTAL);
+    sizer->Add(sizerH, 0, wxALL | wxEXPAND | wxFIXED_MINSIZE, 15);
+    // Options
+    {
+        sizerH->Add(Component::CreateLabel(pSupport, wxT("Options"), false, true),
+                    0,
+                    wxRIGHT | wxALIGN_CENTER_VERTICAL);
+    }
+    // Intermonthly correlation
+    {
+        sizerH->Add(Component::CreateLabel(pSupport, wxT("  Inter-monthly correlation")),
+                    0,
+                    wxRIGHT | wxALIGN_CENTER_VERTICAL);
 
-		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-		pSupport->SetSizer(sizer);
+        auto* edit = new wxTextCtrl(pSupport,
+                                    wxID_ANY,
+                                    wxT("0.0"),
+                                    wxDefaultPosition,
+                                    ourDefaultSize,
+                                    0,
+                                    Toolbox::Validator::Numeric());
+        sizerH->Add(edit, 0, wxALL | wxFIXED_MINSIZE);
+        pIntermonthlyCorrelation = edit;
+    }
 
-		const wxSize ourDefaultSize(55, wxDefaultSize.GetHeight());
+    wxBoxSizer* ssGrids = new wxBoxSizer(wxHORIZONTAL);
+    ssGrids->Add(new Component::Datagrid::Component(
+                   pSupport,
+                   new Component::Datagrid::Renderer::HydroPrepro(this, pInputAreaSelector),
+                   wxT("Overall monthly hydro Energy (ROR + Storage)")),
+                 4,
+                 wxALL | wxEXPAND,
+                 5);
 
-		wxBoxSizer* sizerH = new wxBoxSizer(wxHORIZONTAL);
-		sizer->Add(sizerH, 0, wxALL | wxEXPAND | wxFIXED_MINSIZE, 15);
-		// Options
-		{
-			sizerH->Add(Component::CreateLabel(pSupport, wxT("Options"), false, true), 0, wxRIGHT | wxALIGN_CENTER_VERTICAL);
-		}
-		// Intermonthly correlation
-		{
-			sizerH->Add(Component::CreateLabel(pSupport, wxT("  Inter-monthly correlation")), 0, wxRIGHT | wxALIGN_CENTER_VERTICAL);
+    ssGrids->Add(
+      new wxStaticLine(pSupport, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL),
+      0,
+      wxALL | wxEXPAND);
 
-			auto* edit = new wxTextCtrl(pSupport, wxID_ANY, wxT("0.0"),
-				wxDefaultPosition, ourDefaultSize, 0, Toolbox::Validator::Numeric());
-			sizerH->Add(edit, 0, wxALL| wxFIXED_MINSIZE);
-			pIntermonthlyCorrelation = edit;
-		}
+    ssGrids->Add(new Component::Datagrid::Component(
+                   pSupport,
+                   new Component::Datagrid::Renderer::InflowPattern(this, pInputAreaSelector),
+                   wxT("Inflow Pattern")),
+                 2,
+                 wxALL | wxEXPAND,
+                 5);
 
-		wxBoxSizer* ssGrids = new wxBoxSizer(wxHORIZONTAL);
-		ssGrids->Add(new Component::Datagrid::Component(pSupport,
-			new Component::Datagrid::Renderer::HydroPrepro(this, pInputAreaSelector), wxT("Overall monthly hydro Energy (ROR + Storage)")),
-			4, wxALL|wxEXPAND, 5);
+    sizer->Add(ssGrids, 1, wxALL | wxEXPAND);
+    sizer->Layout();
+    pIntermonthlyCorrelation->Connect(
+      pIntermonthlyCorrelation->GetId(),
+      wxEVT_COMMAND_TEXT_UPDATED,
+      wxCommandEventHandler(Prepro::onIntermonthlyCorrelationChanged),
+      nullptr,
+      this);
+}
 
-		ssGrids->Add(new wxStaticLine(pSupport, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL), 0, wxALL | wxEXPAND);
+Prepro::~Prepro()
+{
+    destroyBoundEvents();
+    // destroy all children as soon as possible to prevent against corrupt vtable
+    DestroyChildren();
+}
 
-		ssGrids->Add(new Component::Datagrid::Component(pSupport,
-			new Component::Datagrid::Renderer::InflowPattern(this, pInputAreaSelector), wxT("Inflow Pattern")),
-			2, wxALL | wxEXPAND, 5);
+void Prepro::onAreaChanged(Data::Area* area)
+{
+    pArea = area;
+    if (area and area->hydro.prepro)
+    {
+        // create components on-demand
+        if (!pComponentsAreReady)
+            createComponents();
+        else
+            GetSizer()->Show(pSupport, true);
 
+        pIntermonthlyCorrelation->ChangeValue(wxString()
+                                              << area->hydro.prepro->intermonthlyCorrelation);
+    }
+    else
+    {
+        if (pComponentsAreReady)
+        {
+            pIntermonthlyCorrelation->ChangeValue(wxString(wxT("0.0")));
+        }
+    }
+}
 
-		sizer->Add(ssGrids, 1, wxALL|wxEXPAND);
-		sizer->Layout();
-		pIntermonthlyCorrelation->Connect(pIntermonthlyCorrelation->GetId(), wxEVT_COMMAND_TEXT_UPDATED,
-			wxCommandEventHandler(Prepro::onIntermonthlyCorrelationChanged), nullptr, this);
-	}
+void Prepro::onIntermonthlyCorrelationChanged(wxCommandEvent& evt)
+{
+    if (pArea)
+    {
+        if (evt.GetString().empty())
+            return;
+        double d;
+        evt.GetString().ToDouble(&d);
+        if (not Math::Equals(d, pArea->hydro.prepro->intermonthlyCorrelation))
+        {
+            if (d < 0.)
+            {
+                d = 0.;
+                pIntermonthlyCorrelation->ChangeValue(wxT("0.0"));
+            }
+            pArea->hydro.prepro->intermonthlyCorrelation = d;
+            MarkTheStudyAsModified();
+        }
+    }
+}
 
+void Prepro::onStudyClosed()
+{
+    pArea = nullptr;
 
-	Prepro::~Prepro()
-	{
-		destroyBoundEvents();
-		// destroy all children as soon as possible to prevent against corrupt vtable
-		DestroyChildren();
-	}
-
-
-
-	void Prepro::onAreaChanged(Data::Area* area)
-	{
-		pArea = area;
-		if (area and area->hydro.prepro)
-		{
-			// create components on-demand
-			if (!pComponentsAreReady)
-				createComponents();
-			else
-				GetSizer()->Show(pSupport, true);
-
-			pIntermonthlyCorrelation->ChangeValue(wxString()<< area->hydro.prepro->intermonthlyCorrelation);
-		}
-		else
-		{
-			if (pComponentsAreReady)
-			{
-				pIntermonthlyCorrelation->ChangeValue(wxString(wxT("0.0")));
-			}
-		}
-	}
-
-
-	void Prepro::onIntermonthlyCorrelationChanged(wxCommandEvent& evt)
-	{
-		if (pArea)
-		{
-			if (evt.GetString().empty())
-				return;
-			double d;
-			evt.GetString().ToDouble(&d);
-			if (not Math::Equals(d, pArea->hydro.prepro->intermonthlyCorrelation))
-			{
-				if (d < 0.)
-				{
-					d = 0.;
-					pIntermonthlyCorrelation->ChangeValue(wxT("0.0"));
-				}
-				pArea->hydro.prepro->intermonthlyCorrelation = d;
-				MarkTheStudyAsModified();
-			}
-		}
-	}
-
-
-
-	void Prepro::onStudyClosed()
-	{
-		pArea = nullptr;
-
-		if (GetSizer())
-			GetSizer()->Show(pSupport, false);
-	}
-
-
-
-
-
-
-
+    if (GetSizer())
+        GetSizer()->Show(pSupport, false);
+}
 
 } // namespace Hydro
 } // namespace Window

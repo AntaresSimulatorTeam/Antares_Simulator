@@ -15,40 +15,39 @@
 ** \brief Singleton creation policies
 */
 
-
 namespace Yuni
 {
 namespace Policy
 {
-
 /*!
 ** \brief Creation policies
 ** \ingroup Policies
 */
 namespace Creation
 {
+/*!
+** \brief Singleton creation using the new operator and an empty constructor
+** \ingroup Policies
+**
+** \tparam T The data type
+*/
+template<class T>
+class EmptyConstructor final
+{
+public:
+    //! Creation of the data
+    static T* Create()
+    {
+        return new T();
+    }
 
-
-	/*!
-	** \brief Singleton creation using the new operator and an empty constructor
-	** \ingroup Policies
-	**
-	** \tparam T The data type
-	*/
-	template <class T>
-	class EmptyConstructor final
-	{
-	public:
-		//! Creation of the data
-		static T* Create() { return new T(); }
-
-		//! Destruction of the data
-		template<class U> static void Destroy(U* data) { delete data; }
-	};
-
-
-
-
+    //! Destruction of the data
+    template<class U>
+    static void Destroy(U* data)
+    {
+        delete data;
+    }
+};
 
 } // namespace Creation
 } // namespace Policy

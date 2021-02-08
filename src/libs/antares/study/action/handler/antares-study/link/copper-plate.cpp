@@ -27,7 +27,6 @@
 
 #include "copper-plate.h"
 
-
 namespace Antares
 {
 namespace Action
@@ -36,67 +35,58 @@ namespace AntaresStudy
 {
 namespace Link
 {
+CopperPlate::CopperPlate(const AnyString& fromarea, const AnyString& toarea) :
+ pOriginalFromAreaName(fromarea), pOriginalToAreaName(toarea)
+{
+    pInfos.caption << "Transmission capacities";
+}
 
-	CopperPlate::CopperPlate(const AnyString& fromarea, const AnyString& toarea) :
-		pOriginalFromAreaName(fromarea),
-		pOriginalToAreaName(toarea)
-	{
-		pInfos.caption << "Transmission capacities";
-	}
+CopperPlate::~CopperPlate()
+{
+}
 
+bool CopperPlate::prepareWL(Context&)
+{
+    pInfos.message.clear();
+    pInfos.state = stReady;
+    switch (pInfos.behavior)
+    {
+    case bhOverwrite:
+        pInfos.message << "The transmission capacities mode will be copied";
+        break;
+    default:
+        pInfos.state = stNothingToDo;
+        break;
+    }
 
-	CopperPlate::~CopperPlate()
-	{}
+    return true;
+}
 
+bool CopperPlate::performWL(Context& ctx)
+{
+    if (ctx.link && ctx.extStudy)
+    {
+        Data::AreaName idFrom;
+        Data::AreaName idTo;
+        TransformNameIntoID(pOriginalFromAreaName, idFrom);
+        TransformNameIntoID(pOriginalToAreaName, idTo);
 
-	bool CopperPlate::prepareWL(Context&)
-	{
-		pInfos.message.clear();
-		pInfos.state = stReady;
-		switch (pInfos.behavior)
-		{
-			case bhOverwrite:
-				pInfos.message << "The transmission capacities mode will be copied";
-				break;
-			default:
-				pInfos.state = stNothingToDo;
-				break;
-		}
+        Data::AreaLink* source;
+        if (pOriginalFromAreaName < pOriginalToAreaName)
+            source = ctx.extStudy->areas.findLink(idFrom, idTo);
+        else
+            source = ctx.extStudy->areas.findLink(idTo, idFrom);
 
-		return true;
-	}
-
-
-	bool CopperPlate::performWL(Context& ctx)
-	{
-		if (ctx.link && ctx.extStudy)
-		{
-			Data::AreaName idFrom;
-			Data::AreaName idTo;
-			TransformNameIntoID(pOriginalFromAreaName, idFrom);
-			TransformNameIntoID(pOriginalToAreaName,   idTo);
-
-			Data::AreaLink* source;
-			if (pOriginalFromAreaName < pOriginalToAreaName)
-				source = ctx.extStudy->areas.findLink(idFrom, idTo);
-			else
-				source = ctx.extStudy->areas.findLink(idTo, idFrom);
-
-			if (source && source != ctx.link)
-			{
-				ctx.link->transmissionCapacities = source->transmissionCapacities;
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-
-
+        if (source && source != ctx.link)
+        {
+            ctx.link->transmissionCapacities = source->transmissionCapacities;
+            return true;
+        }
+    }
+    return false;
+}
 
 } // namespace Link
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
-

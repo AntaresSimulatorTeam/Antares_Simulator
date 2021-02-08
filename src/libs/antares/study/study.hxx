@@ -25,56 +25,47 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_STUDY_HXX__
-# define __ANTARES_LIBS_STUDY_STUDY_HXX__
-
+#define __ANTARES_LIBS_STUDY_STUDY_HXX__
 
 namespace Antares
 {
 namespace Data
 {
+inline bool Study::readonly() const
+{
+    return (parameters.readonly);
+}
 
-	inline bool Study::readonly() const
-	{
-		return (parameters.readonly);
-	}
+template<int TimeSeriesT>
+inline bool Study::storeTimeSeriesNumbers()
+{
+    return areas.storeTimeseriesNumbers<TimeSeriesT>(*this);
+}
 
-
-	template<int TimeSeriesT>
-	inline bool Study::storeTimeSeriesNumbers()
-	{
-		return areas.storeTimeseriesNumbers<TimeSeriesT>(*this);
-	}
-
-
-	template<enum TimeSeries TS>
-	inline void Study::destroyTSGeneratorData()
-	{
-		switch (TS)
-		{
-			case timeSeriesLoad:
-				destroyAllLoadTSGeneratorData();
-				break;
-			case timeSeriesSolar:
-				destroyAllSolarTSGeneratorData();
-				break;
-			case timeSeriesWind:
-				destroyAllWindTSGeneratorData();
-				break;
-			case timeSeriesHydro:
-				destroyAllHydroTSGeneratorData();
-				break;
-			case timeSeriesThermal:
-				destroyAllThermalTSGeneratorData();
-				break;
-			case timeSeriesCount:
-				break;
-		}
-	}
-
-
-
-
-
+template<enum TimeSeries TS>
+inline void Study::destroyTSGeneratorData()
+{
+    switch (TS)
+    {
+    case timeSeriesLoad:
+        destroyAllLoadTSGeneratorData();
+        break;
+    case timeSeriesSolar:
+        destroyAllSolarTSGeneratorData();
+        break;
+    case timeSeriesWind:
+        destroyAllWindTSGeneratorData();
+        break;
+    case timeSeriesHydro:
+        destroyAllHydroTSGeneratorData();
+        break;
+    case timeSeriesThermal:
+        destroyAllThermalTSGeneratorData();
+        break;
+    case timeSeriesCount:
+        break;
+    }
+}
 
 } // namespace Data
 } // namespace Antares

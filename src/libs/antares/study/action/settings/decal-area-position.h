@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_SETTINGS_DECAL_AREA_POSITION_H__
-# define __ANTARES_LIBS_STUDY_ACTION_SETTINGS_DECAL_AREA_POSITION_H__
+#define __ANTARES_LIBS_STUDY_ACTION_SETTINGS_DECAL_AREA_POSITION_H__
 
-# include <yuni/yuni.h>
-# include "../action.h"
-
+#include <yuni/yuni.h>
+#include "../action.h"
 
 namespace Antares
 {
@@ -37,55 +36,49 @@ namespace Action
 {
 namespace Settings
 {
+/*!
+** \brief A dummy action, for displaying some text
+*/
+class DecalAreaPosition : public IAction
+{
+public:
+    //! The most suitable smart ptr for the class
+    typedef IAction::Ptr Ptr;
+    //! The threading policy
+    typedef IAction::ThreadingPolicy ThreadingPolicy;
 
-	/*!
-	** \brief A dummy action, for displaying some text
-	*/
-	class DecalAreaPosition : public IAction
-	{
-	public:
-		//! The most suitable smart ptr for the class
-		typedef IAction::Ptr  Ptr;
-		//! The threading policy
-		typedef IAction::ThreadingPolicy  ThreadingPolicy;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    explicit DecalAreaPosition(bool enabled = true);
+    //! Destructor
+    virtual ~DecalAreaPosition();
+    //@}
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		explicit DecalAreaPosition(bool enabled = true);
-		//! Destructor
-		virtual ~DecalAreaPosition();
-		//@}
+    virtual bool autoExpand() const;
 
-		virtual bool autoExpand() const;
+    virtual bool shouldPrepareRootNode() const;
 
-		virtual bool shouldPrepareRootNode() const;
+    virtual void behaviorToText(Behavior behavior, Yuni::String& out);
 
-		virtual void behaviorToText(Behavior behavior, Yuni::String& out);
+protected:
+    virtual bool prepareWL(Context& ctx);
+    virtual bool performWL(Context& ctx);
+    virtual void prepareSkipWL(Context& ctx);
 
-	protected:
-		virtual bool prepareWL(Context& ctx);
-		virtual bool performWL(Context& ctx);
-		virtual void prepareSkipWL(Context& ctx);
+private:
+    Yuni::String pValueX;
+    Yuni::String pValueY;
 
-
-	private:
-		Yuni::String pValueX;
-		Yuni::String pValueY;
-
-	}; // class DecalAreaPosition
-
-
-
-
+}; // class DecalAreaPosition
 
 } // namespace Settings
 } // namespace Action
 } // namespace Antares
 
-# include "decal-area-position.hxx"
+#include "decal-area-position.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_ACTION_SETTINGS_DECAL_AREA_POSITION_H__

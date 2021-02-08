@@ -29,44 +29,39 @@
 #include "window.h"
 #include "performer.h"
 
-
 namespace Antares
 {
 namespace ExtSource
 {
 namespace Handler
 {
+void Apply(Antares::Action::Context::Ptr context,
+           Antares::Action::IAction::Ptr root,
+           bool windowRequired)
+{
+    // prepare all actions
+    if (!(!root))
+    {
+        root->prepare(*context);
 
-
-	void Apply(Antares::Action::Context::Ptr context, Antares::Action::IAction::Ptr root, bool windowRequired)
-	{
-		// prepare all actions
-		if (!(!root))
-		{
-			root->prepare(*context);
-
-			if (windowRequired)
-			{
-				auto* form = new Antares::Window::ApplyActionsDialog(NULL, context, root);
-				Dispatcher::GUI::ShowModal(form);
-			}
-			else
-			{
-				auto* form = new Antares::Window::PerformerDialog(NULL, context, root);
-				Dispatcher::GUI::ShowModal(form);
-			}
-		}
-		else
-		{
-			// should never happend
-			assert(false && "copy/paster: apply: invalid root pointer");
-		}
-	}
-
-
-
+        if (windowRequired)
+        {
+            auto* form = new Antares::Window::ApplyActionsDialog(NULL, context, root);
+            Dispatcher::GUI::ShowModal(form);
+        }
+        else
+        {
+            auto* form = new Antares::Window::PerformerDialog(NULL, context, root);
+            Dispatcher::GUI::ShowModal(form);
+        }
+    }
+    else
+    {
+        // should never happend
+        assert(false && "copy/paster: apply: invalid root pointer");
+    }
+}
 
 } // namespace Handler
 } // namespace ExtSource
 } // namespace Antares
-

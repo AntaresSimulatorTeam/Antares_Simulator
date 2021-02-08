@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_JIT_H__
-# define __ANTARES_LIBS_JIT_H__
+#define __ANTARES_LIBS_JIT_H__
 
-# include "jit/jit.h"
+#include "jit/jit.h"
 
 #endif // __ANTARES_LIBS_JIT_H__

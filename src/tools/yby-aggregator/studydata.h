@@ -25,47 +25,42 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __STUDY_STUDY_DATA_AGGREGATOR_STUDY_DATA_H__
-# define __STUDY_STUDY_DATA_AGGREGATOR_STUDY_DATA_H__
+#define __STUDY_STUDY_DATA_AGGREGATOR_STUDY_DATA_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-# include <set>
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+#include <set>
 
 class StudyData final
 {
 public:
-	//! The most suitable smart pointer
-	typedef Yuni::SmartPtr<StudyData>  Ptr;
-	//! Vector
-	typedef std::vector<Ptr>  Vector;
-	//! Short string
-	typedef Yuni::CString<10, false>  ShortString;
-	//! Short string
-	typedef Yuni::CString<512, false>  ShortString512;
+    //! The most suitable smart pointer
+    typedef Yuni::SmartPtr<StudyData> Ptr;
+    //! Vector
+    typedef std::vector<Ptr> Vector;
+    //! Short string
+    typedef Yuni::CString<10, false> ShortString;
+    //! Short string
+    typedef Yuni::CString<512, false> ShortString512;
 
 public:
-	template<class StringT>
-	StudyData(const StringT& n, uint i) :
-		index(i),
-		name(n)
-	{}
+    template<class StringT>
+    StudyData(const StringT& n, uint i) : index(i), name(n)
+    {
+    }
 
-
-	template<class StringT> void append(StringT& out) const
-	{
-		out << name;
-	}
+    template<class StringT>
+    void append(StringT& out) const
+    {
+        out << name;
+    }
 
 public:
-	//! Local index
-	uint index;
-	//! type + Name of the area or the link
-	const ShortString512 name;
+    //! Local index
+    uint index;
+    //! type + Name of the area or the link
+    const ShortString512 name;
 
 }; // class StudyData
-
-
-
 
 #endif // __STUDY_STUDY_DATA_AGGREGATOR_STUDY_DATA_H__

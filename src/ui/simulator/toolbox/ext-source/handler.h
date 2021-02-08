@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_EXT_SOURCE_HANDLER_H__
-# define __ANTARES_TOOLBOX_EXT_SOURCE_HANDLER_H__
+#define __ANTARES_TOOLBOX_EXT_SOURCE_HANDLER_H__
 
-# include "handler/handler.h"
+#include "handler/handler.h"
 
 #endif // __ANTARES_TOOLBOX_EXT_SOURCE_HANDLER_H__

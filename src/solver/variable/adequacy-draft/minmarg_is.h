@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_ADEQUACY_MinMarg_IS_H__
-# define __SOLVER_VARIABLE_ADEQUACY_MinMarg_IS_H__
-
+#define __SOLVER_VARIABLE_ADEQUACY_MinMarg_IS_H__
 
 namespace Antares
 {
@@ -36,221 +35,229 @@ namespace Variable
 {
 namespace AdequacyDraft
 {
+struct VCardMinMarg_IS
+{
+    //! Caption
+    static const char* Caption()
+    {
+        return "MARG IS";
+    }
+    //! Unit
+    static const char* Unit()
+    {
+        return "MW";
+    }
 
+    //! The short description of the variable
+    static const char* Description()
+    {
+        return "Operation margin observed throughout all MC years";
+    }
 
-	struct VCardMinMarg_IS
-	{
-		//! Caption
-		static const char* Caption() {return "MARG IS";}
-		//! Unit
-		static const char* Unit() {return "MW";}
+    //! The expecte results
+    typedef Results<R::AllYears::Average< // The values throughout all years
+      R::AllYears::Min<                   // The minimum values throughout all years
+        R::AllYears::Max<                 // The maximum values throughout all years
+          >>>>
+      ResultsType;
 
-		//! The short description of the variable
-		static const char* Description() {return "Operation margin observed throughout all MC years";}
+    enum
+    {
+        //! Data Level
+        categoryDataLevel = Category::area,
+        //! File level (provided by the type of the results)
+        categoryFileLevel = ResultsType::categoryFile & (Category::is | Category::id),
+        //! Precision (views)
+        precision = Category::hourly | Category::annual,
+        //! Indentation (GUI)
+        nodeDepthForGUI = +0,
+        //! Decimal precision
+        decimal = 0,
+        //! Number of columns used by the variable (One ResultsType per column)
+        columnCount = 1,
+        //! The Spatial aggregation
+        spatialAggregate = Category::spatialAggregateSum,
+        //! Intermediate values
+        hasIntermediateValues = 1,
+        //! Can this variable be non applicable (0 : no, 1 : yes)
+        isPossiblyNonApplicable = 0,
+    };
 
-		//! The expecte results
-		typedef Results<
-			R::AllYears::Average<      // The values throughout all years
-			R::AllYears::Min<          // The minimum values throughout all years
-			R::AllYears::Max<          // The maximum values throughout all years
-			> > > >  ResultsType;
+}; // class VCard
 
-		enum
-		{
-			//! Data Level
-			categoryDataLevel = Category::area,
-			//! File level (provided by the type of the results)
-			categoryFileLevel = ResultsType::categoryFile & (Category::is|Category::id),
-			//! Precision (views)
-			precision = Category::hourly | Category::annual,
-			//! Indentation (GUI)
-			nodeDepthForGUI = +0,
-			//! Decimal precision
-			decimal = 0,
-			//! Number of columns used by the variable (One ResultsType per column)
-			columnCount = 1,
-			//! The Spatial aggregation
-			spatialAggregate = Category::spatialAggregateSum,
-			//! Intermediate values
-			hasIntermediateValues = 1,
-			//! Can this variable be non applicable (0 : no, 1 : yes)
-			isPossiblyNonApplicable = 0,
-		};
+/*!
+** \brief Marginal MinMarg_IS
+*/
+template<class NextT = Container::EndOfList>
+class MinMarg_IS : public Variable::IVariable<MinMarg_IS<NextT>, NextT, VCardMinMarg_IS>
+{
+public:
+    //! Type of the next static variable
+    typedef NextT NextType;
+    //! VCard
+    typedef VCardMinMarg_IS VCardType;
+    //! Ancestor
+    typedef Variable::IVariable<MinMarg_IS<NextT>, NextT, VCardType> AncestorType;
 
-	}; // class VCard
+    //! List of expected results
+    typedef typename VCardType::ResultsType ResultsType;
 
+    typedef VariableAccessor<ResultsType, VCardType::columnCount> VariableAccessorType;
 
-	/*!
-	** \brief Marginal MinMarg_IS
-	*/
-	template<class NextT = Container::EndOfList>
-	class MinMarg_IS : public Variable::IVariable<MinMarg_IS<NextT>, NextT, VCardMinMarg_IS>
-	{
-	public:
-		//! Type of the next static variable
-		typedef NextT NextType;
-		//! VCard
-		typedef VCardMinMarg_IS VCardType;
-		//! Ancestor
-		typedef Variable::IVariable<MinMarg_IS<NextT>, NextT, VCardType> AncestorType;
+    enum
+    {
+        //! How many items have we got
+        count = 1 + NextT::count,
+    };
 
-		//! List of expected results
-		typedef typename VCardType::ResultsType ResultsType;
+    template<int CDataLevel, int CFile>
+    struct Statistics
+    {
+        enum
+        {
+            count
+            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
+                 ? (NextType::template Statistics<CDataLevel, CFile>::count
+                    + VCardType::columnCount * ResultsType::count)
+                 : NextType::template Statistics<CDataLevel, CFile>::count),
+        };
+    };
 
-		typedef VariableAccessor<ResultsType, VCardType::columnCount>  VariableAccessorType;
+public:
+    ~MinMarg_IS()
+    {
+    }
 
-		enum
-		{
-			//! How many items have we got
-			count = 1 + NextT::count,
-		};
+    void initializeFromStudy(Data::Study& study)
+    {
+        // Average on all years
+        AncestorType::pResults.initializeFromStudy(study);
+        AncestorType::pResults.reset();
 
-		template<int CDataLevel, int CFile>
-		struct Statistics
-		{
-			enum
-			{
-				count = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-					? (NextType::template Statistics<CDataLevel, CFile>::count + VCardType::columnCount * ResultsType::count)
-					: NextType::template Statistics<CDataLevel, CFile>::count),
-			};
-		};
+        pValuesForTheCurrentYear.initializeFromStudy(study);
 
-	public:
-		~MinMarg_IS() {}
+        // Next
+        NextType::initializeFromStudy(study);
+    }
 
-		void initializeFromStudy(Data::Study& study)
-		{			
-			// Average on all years
-			AncestorType::pResults.initializeFromStudy(study);
-			AncestorType::pResults.reset();
+    void initializeFromArea(Data::Study* study, Data::Area* area)
+    {
+        // Next
+        NextType::initializeFromArea(study, area);
+    }
 
-			pValuesForTheCurrentYear.initializeFromStudy(study);
+    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
+    {
+        // Next
+        NextType::initializeFromAreaLink(study, link);
+    }
 
-			// Next
-			NextType::initializeFromStudy(study);
-		}
+    void initializeFromThermalCluster(Data::Study* study,
+                                      Data::Area* area,
+                                      Data::ThermalCluster* cluster)
+    {
+        // Next
+        NextType::initializeFromThermalCluster(study, area, cluster);
+    }
 
-		void initializeFromArea(Data::Study* study, Data::Area* area)
-		{
-			// Next
-			NextType::initializeFromArea(study, area);
-		}
+    void simulationBegin()
+    {
+        // Next
+        NextType::simulationBegin();
+    }
 
-		void initializeFromLink(Data::Study* study, Data::AreaLink* link)
-		{
-			// Next
-			NextType::initializeFromAreaLink(study, link);
-		}
+    void simulationEnd()
+    {
+        // Next
+        NextType::simulationEnd();
+    }
 
+    void yearBegin(unsigned int year, unsigned int numSpace)
+    {
+        // Reset the values for the current year
+        pValuesForTheCurrentYear.reset();
 
-		void initializeFromThermalCluster(Data::Study* study, Data::Area* area, Data::ThermalCluster* cluster)
-		{
-			// Next
-			NextType::initializeFromThermalCluster(study, area, cluster);
-		}
+        // Next variable
+        NextType::yearBegin(year, numSpace);
+    }
 
-		void simulationBegin()
-		{
-			// Next
-			NextType::simulationBegin();
-		}
+    void yearEndBuild(State& state, unsigned int year)
+    {
+        // Next variable
+        NextType::yearEndBuild(state, year);
+    }
 
-		void simulationEnd()
-		{
-			// Next
-			NextType::simulationEnd();
-		}
+    void yearEndBuildPrepareDataForEachThermalCluster(State& state,
+                                                      uint year,
+                                                      unsigned int numSpace)
+    {
+        // Next variable
+        NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
+    }
 
+    void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
+    {
+        // Next variable
+        NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
+    }
 
-		void yearBegin(unsigned int year, unsigned int numSpace)
-		{
-			// Reset the values for the current year
-			pValuesForTheCurrentYear.reset();
+    void yearEnd(unsigned int year, unsigned int numSpace)
+    {
+        // Compute all statistics for the current year (daily,weekly,monthly)
+        pValuesForTheCurrentYear.computeStatisticsAdequacyForTheCurrentYear();
+        pValuesForTheCurrentYear.adjustValuesAdequacyWhenRelatedToAPrice();
+        // Merge all those values with the global results
+        AncestorType::pResults.merge(year, pValuesForTheCurrentYear);
 
-			// Next variable
-			NextType::yearBegin(year, numSpace);
-		}
+        // Next variable
+        NextType::yearEnd(year, numSpace);
+    }
 
-		void yearEndBuild(State& state, unsigned int year)
-		{
-			
-			// Next variable
-			NextType::yearEndBuild(state, year);
-		}
-		
-		void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year, unsigned int numSpace)
-		{
-			// Next variable
-			NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
-		}
+    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
+                        unsigned int nbYearsForCurrentSummary)
+    {
+        // Nothing to do here because number of parallel years is reduced to 1 in draft mode
 
-		void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
-		{
-			// Next variable
-			NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
-		}
+        // Next variable
+        NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+    }
 
-		void yearEnd(unsigned int year, unsigned int numSpace)
-		{
-			// Compute all statistics for the current year (daily,weekly,monthly)
-			pValuesForTheCurrentYear.computeStatisticsAdequacyForTheCurrentYear();
-			pValuesForTheCurrentYear.adjustValuesAdequacyWhenRelatedToAPrice();
-			// Merge all those values with the global results
-			AncestorType::pResults.merge(year, pValuesForTheCurrentYear);
+    void hourBegin(unsigned int hourInTheYear)
+    {
+        // Next variable
+        NextType::hourBegin(hourInTheYear);
+    }
 
-			// Next variable
-			NextType::yearEnd(year, numSpace);
-		}
+    void hourForEachArea(State& state, unsigned int numSpace)
+    {
+        pValuesForTheCurrentYear[state.hourInTheYear]
+          = state.hourlyAdequacyResults->MargeHorsReseau;
+        // Next variable
+        NextType::hourForEachArea(state, numSpace);
+    }
 
-		void computeSummary(std::map<unsigned int, unsigned int> & numSpaceToYear, unsigned int nbYearsForCurrentSummary)
-		{
-			// Nothing to do here because number of parallel years is reduced to 1 in draft mode
+    void hourForEachThermalCluster(State& state, unsigned int numSpace)
+    {
+        // Next item in the list
+        NextType::hourForEachThermalCluster(state, numSpace);
+    }
 
-			// Next variable
-			NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
-		}
+    void hourEnd(State& state, unsigned int hourInTheYear)
+    {
+        // Next
+        NextType::hourEnd(state, hourInTheYear);
+    }
 
-		void hourBegin(unsigned int hourInTheYear)
-		{
-			// Next variable
-			NextType::hourBegin(hourInTheYear);
-		}
+    void localBuildAnnualSurveyReport(SurveyResults&, int, int, unsigned int) const
+    {
+        // do nothing
+    }
 
-		void hourForEachArea(State& state, unsigned int numSpace)
-		{
-			pValuesForTheCurrentYear[state.hourInTheYear] = state.hourlyAdequacyResults->MargeHorsReseau;
-			// Next variable
-			NextType::hourForEachArea(state, numSpace);
-		}
+private:
+    //! Intermediate values for each year
+    IntermediateValues pValuesForTheCurrentYear;
 
-		void hourForEachThermalCluster(State& state, unsigned int numSpace)
-		{
-			// Next item in the list
-			NextType::hourForEachThermalCluster(state, numSpace);
-		}
-
-		void hourEnd(State& state, unsigned int hourInTheYear)
-		{
-			// Next
-			NextType::hourEnd(state, hourInTheYear);
-		}
-
-		void localBuildAnnualSurveyReport(SurveyResults&, int, int, unsigned int) const
-		{
-			// do nothing
-		}
-
-
-	private:
-		//! Intermediate values for each year
-		IntermediateValues pValuesForTheCurrentYear;
-
-	}; // class MinMarg_IS
-
-
-
-
+}; // class MinMarg_IS
 
 } // namespace AdequacyDraft
 } // namespace Variable

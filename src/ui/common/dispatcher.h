@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_COMMON_EVENT_H__
-# define __ANTARES_COMMON_EVENT_H__
+#define __ANTARES_COMMON_EVENT_H__
 
-# include "dispatcher/gui.h"
+#include "dispatcher/gui.h"
 
 #endif // __ANTARES_COMMON_EVENT_H__

@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_WINDOWS_INSPECTOR_INSPECTOR_H__
-# define __ANTARES_WINDOWS_INSPECTOR_INSPECTOR_H__
+#define __ANTARES_WINDOWS_INSPECTOR_INSPECTOR_H__
 
-# include <yuni/yuni.h>
-# include <antares/study/study.h>
-
+#include <yuni/yuni.h>
+#include <antares/study/study.h>
 
 namespace Antares
 {
@@ -37,252 +36,239 @@ namespace Window
 {
 namespace Inspector
 {
+//! \name General management
+//@{
+/*!
+** \brief Refresh the inspector panel (if visible)
+*/
+void Refresh();
 
+/*!
+** \brief Show the inspector panel
+*/
+void Show();
 
-	//! \name General management
-	//@{
-	/*!
-	** \brief Refresh the inspector panel (if visible)
-	*/
-	void Refresh();
+/*!
+** \brief Hide the inspector panel
+*/
+void Hide();
 
-	/*!
-	** \brief Show the inspector panel
-	*/
-	void Show();
+/*!
+** \brief Destroy the inspector panel
+*/
+void Destroy();
 
-	/*!
-	** \brief Hide the inspector panel
-	*/
-	void Hide();
+/*!
+** \brief Unselect all items
+*/
+void Unselect();
+//@}
 
-	/*!
-	** \brief Destroy the inspector panel
-	*/
-	void Destroy();
+//! \name Study
+//@{
+/*!
+** \brief Clear the selection then Add a study
+*/
+void SelectStudy(const Data::Study* study);
+/*!
+** \brief Add a study into the selection
+*/
+void AddStudy(const Data::Study* study);
+//@}
 
-	/*!
-	** \brief Unselect all items
-	*/
-	void Unselect();
-	//@}
+//! \name Areas
+//@{
+/*!
+** \brief Clear the selection then Add an area
+*/
+void SelectArea(const Data::Area* area);
 
+/*!
+** \brief Clear the selection then Add a vector of areas
+*/
+void SelectAreas(const Data::Area::Vector& areas);
 
-	//! \name Study
-	//@{
-	/*!
-	** \brief Clear the selection then Add a study
-	*/
-	void SelectStudy(const Data::Study* study);
-	/*!
-	** \brief Add a study into the selection
-	*/
-	void AddStudy(const Data::Study* study);
-	//@}
+/*!
+** \brief Clear the selection then Add a vector of areas
+*/
+void SelectAreas(const Data::Area::Set& areas);
 
+/*!
+** \brief Add an area to the selection
+*/
+void AddArea(const Data::Area* area);
 
-	//! \name Areas
-	//@{
-	/*!
-	** \brief Clear the selection then Add an area
-	*/
-	void SelectArea(const Data::Area* area);
+/*!
+** \brief Add an array of areas to the current selection
+*/
+void AddAreas(const Data::Area::Vector& list);
 
-	/*!
-	** \brief Clear the selection then Add a vector of areas
-	*/
-	void SelectAreas(const Data::Area::Vector& areas);
+/*!
+** \brief Add a set of areas to the current selection
+*/
+void AddAreas(const Data::Area::Set& list);
 
-	/*!
-	** \brief Clear the selection then Add a vector of areas
-	*/
-	void SelectAreas(const Data::Area::Set& areas);
+/*!
+** \brief Remove an area from the selection
+*/
+void RemoveArea(const Data::Area* area);
+//@}
 
-	/*!
-	** \brief Add an area to the selection
-	*/
-	void AddArea(const Data::Area* area);
+//! \name Links
+//@{
+/*!
+** \brief Clear the selection then Add a link
+*/
+void SelectLink(const Data::AreaLink* lnk);
 
-	/*!
-	** \brief Add an array of areas to the current selection
-	*/
-	void AddAreas(const Data::Area::Vector& list);
+/*!
+** \brief Clear the selection then Add a vector of links
+*/
+void SelectLinks(const Data::AreaLink::Vector& lnks);
 
-	/*!
-	** \brief Add a set of areas to the current selection
-	*/
-	void AddAreas(const Data::Area::Set& list);
+/*!
+** \brief Add a link to the selection
+*/
+void AddLink(const Data::AreaLink* link);
 
-	/*!
-	** \brief Remove an area from the selection
-	*/
-	void RemoveArea(const Data::Area* area);
-	//@}
+/*!
+** \brief Add an array of links to the current selection
+*/
+void AddLinks(const Data::AreaLink::Vector& links);
 
+/*!
+** \brief Add a set of links to the current selection
+*/
+void AddLinks(const Data::AreaLink::Set& links);
 
-	//! \name Links
-	//@{
-	/*!
-	** \brief Clear the selection then Add a link
-	*/
-	void SelectLink(const Data::AreaLink* lnk);
+/*!
+** \brief get the current list of selected links
+*/
+const Data::AreaLink::Set& getLinks();
 
-	/*!
-	** \brief Clear the selection then Add a vector of links
-	*/
-	void SelectLinks(const Data::AreaLink::Vector& lnks);
+/*!
+** \brief Remove a link from the selection
+*/
+void RemoveLink(const Data::AreaLink* link);
+//@}
 
-	/*!
-	** \brief Add a link to the selection
-	*/
-	void AddLink(const Data::AreaLink* link);
+//! \name Thermal clusters
+//@{
+/*!
+** \brief Clear the selection then Add a thermal cluster
+*/
+void SelectThermalCluster(const Data::ThermalCluster* cluster);
 
-	/*!
-	** \brief Add an array of links to the current selection
-	*/
-	void AddLinks(const Data::AreaLink::Vector& links);
+/*!
+** \brief Clear the selection then Add a vector of thermal clusters
+*/
+void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters);
 
-	/*!
-	** \brief Add a set of links to the current selection
-	*/
-	void AddLinks(const Data::AreaLink::Set& links);
+/*!
+** \brief Add a thermal cluster to the selection
+*/
+void AddThermalCluster(const Data::ThermalCluster* cluster);
 
-	/*!
-	** \brief get the current list of selected links
-	*/
-	const Data::AreaLink::Set& getLinks();
+/*!
+** \brief Add an array of clusters to the current selection
+*/
+void AddThermalClusters(const Data::ThermalCluster::Vector& clusters);
 
-	/*!
-	** \brief Remove a link from the selection
-	*/
-	void RemoveLink(const Data::AreaLink* link);
-	//@}
+/*!
+** \brief Add a set of clusters to the current selection
+*/
+void AddThermalClusters(const Data::ThermalCluster::Set& clusters);
 
+/*!
+** \brief Remove a thermal cluster from the selection
+*/
+void RemoveThermalCluster(const Data::ThermalCluster* cluster);
+//@}
 
-	//! \name Thermal clusters
-	//@{
-	/*!
-	** \brief Clear the selection then Add a thermal cluster
-	*/
-	void SelectThermalCluster(const Data::ThermalCluster* cluster);
+//! \name Data::Binding constraints
+//@{
+/*!
+** \brief Clear the selection then Add a binding constraint
+*/
+void SelectBindingConstraint(const Data::BindingConstraint* constraint);
 
-	/*!
-	** \brief Clear the selection then Add a vector of thermal clusters
-	*/
-	void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters);
+/*!
+** \brief Clear the selection then Add a vector of binding constraints
+*/
+void SelectBindingConstraints(const Data::BindingConstraint::Vector& array);
 
-	/*!
-	** \brief Add a thermal cluster to the selection
-	*/
-	void AddThermalCluster(const Data::ThermalCluster* cluster);
+/*!
+** \brief Add a binding constraint to the selection
+*/
+void AddBindingConstraint(const Data::BindingConstraint* constraint);
 
-	/*!
-	** \brief Add an array of clusters to the current selection
-	*/
-	void AddThermalClusters(const Data::ThermalCluster::Vector& clusters);
+/*!
+** \brief Add a set of binding constraints to the current selection
+*/
+void AddBindingConstraints(const Data::BindingConstraint::Set& set);
 
-	/*!
-	** \brief Add a set of clusters to the current selection
-	*/
-	void AddThermalClusters(const Data::ThermalCluster::Set& clusters);
+/*!
+** \brief Remove a binding constraint from the selection
+*/
+void RemoveBindingConstraint(const Data::BindingConstraint* constraint);
+//@}
 
-	/*!
-	** \brief Remove a thermal cluster from the selection
-	*/
-	void RemoveThermalCluster(const Data::ThermalCluster* cluster);
-	//@}
+//! \name Misc
+//@{
+/*!
+** \brief Get the total number of selected areas
+*/
+uint SelectionAreaCount();
 
+/*!
+** \brief Get the total number of selected links
+*/
+uint SelectionLinksCount();
 
-	//! \name Data::Binding constraints
-	//@{
-	/*!
-	** \brief Clear the selection then Add a binding constraint
-	*/
-	void SelectBindingConstraint(const Data::BindingConstraint* constraint);
+/*!
+** \brief Get the total number of selected thermal clusters
+*/
+uint SelectionThermalClusterCount();
 
-	/*!
-	** \brief Clear the selection then Add a vector of binding constraints
-	*/
-	void SelectBindingConstraints(const Data::BindingConstraint::Vector& array);
+/*!
+** \brief Get the total number of binding constraints that are selected
+*/
+uint SelectionBindingConstraintCount();
 
-	/*!
-	** \brief Add a binding constraint to the selection
-	*/
-	void AddBindingConstraint(const Data::BindingConstraint* constraint);
+/*!
+** \brief Get the total number of selected items
+*/
+uint SelectionTotalCount();
 
-	/*!
-	** \brief Add a set of binding constraints to the current selection
-	*/
-	void AddBindingConstraints(const Data::BindingConstraint::Set& set);
+/*!
+** \brief Get if a set of area (represented by their name) is selected in the inspector
+*/
+bool isAreaSelected(Antares::Data::AreaName name);
+bool AreasSelected(const Data::Area::NameSet& set,
+                   std::map<Antares::Data::AreaName, Antares::Data::AreaName>& nameMap);
 
-	/*!
-	** \brief Remove a binding constraint from the selection
-	*/
-	void RemoveBindingConstraint(const Data::BindingConstraint* constraint);
-	//@}
+bool isConstraintSelected(const Yuni::String& constraintName);
+bool ConstraintsSelected(const std::set<Yuni::String>& set);
 
+bool IsLinkSelected(const Data::AreaName& from, const Data::AreaName& with);
+bool LinksSelected(std::map<Data::AreaName, std::map<Data::AreaName, bool>>& set);
 
-	//! \name Misc
-	//@{
-	/*!
-	** \brief Get the total number of selected areas
-	*/
-	uint SelectionAreaCount();
+bool IsThermalClusterSelected(const Data::AreaName& area, const Data::ThermalClusterName& name);
 
-	/*!
-	** \brief Get the total number of selected links
-	*/
-	uint SelectionLinksCount();
+void FirstSelectedArea(Data::AreaName& out);
 
-	/*!
-	** \brief Get the total number of selected thermal clusters
-	*/
-	uint SelectionThermalClusterCount();
+void FirstSelectedAreaLink(Data::AreaLink** link);
+//@}
 
-	/*!
-	** \brief Get the total number of binding constraints that are selected
-	*/
-	uint SelectionBindingConstraintCount();
-
-	/*!
-	** \brief Get the total number of selected items
-	*/
-	uint SelectionTotalCount();
-
-
-	/*!
-	** \brief Get if a set of area (represented by their name) is selected in the inspector
-	*/
-	bool isAreaSelected(Antares::Data::AreaName name);
-	bool AreasSelected(const Data::Area::NameSet& set, std::map<Antares::Data::AreaName, Antares::Data::AreaName>& nameMap);
-
-	bool isConstraintSelected(const Yuni::String& constraintName);
-	bool ConstraintsSelected(const std::set<Yuni::String>& set);
-
-	bool IsLinkSelected(const Data::AreaName& from, const Data::AreaName& with);
-	bool LinksSelected(std::map<Data::AreaName, std::map<Data::AreaName, bool> >& set);
-
-	bool IsThermalClusterSelected(const Data::AreaName& area, const Data::ThermalClusterName& name);
-
-
-	void FirstSelectedArea(Data::AreaName& out);
-
-	void FirstSelectedAreaLink(Data::AreaLink** link);
-	//@}
-
-
-
-	//! \name Clipboard
-	//@{
-	/*!
-	** \brief Copy to clipboard
-	**
-	** \return The total number of items which have been copied to the clipboard
-	*/
-	uint CopyToClipboard();
-	//@}
-
-
+//! \name Clipboard
+//@{
+/*!
+** \brief Copy to clipboard
+**
+** \return The total number of items which have been copied to the clipboard
+*/
+uint CopyToClipboard();
+//@}
 
 } // namespace Inspector
 } // namespace Window

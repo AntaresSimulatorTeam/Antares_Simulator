@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_MEMORY_STATISTICS_H__
-# define __ANTARES_APPLICATION_MEMORY_STATISTICS_H__
+#define __ANTARES_APPLICATION_MEMORY_STATISTICS_H__
 
-# include "memorystatistics/memorystatistics.h"
+#include "memorystatistics/memorystatistics.h"
 
 #endif // __ANTARES_APPLICATION_MEMORY_STATISTICS_H__

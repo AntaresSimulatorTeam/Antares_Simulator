@@ -13,110 +13,102 @@
 #include "string.h"
 #include "../noncopyable.h"
 
-
-
 namespace Yuni
 {
+/*!
+** \brief Lightweight helper for manipulating wide strings
+**
+** This helper is especially usefull for Windows API
+** \warning Due to Windows API limitations, the size of a WString is limited to 2147483648 chars
+*/
+class YUNI_DECL WString final
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    WString();
 
-	/*!
-	** \brief Lightweight helper for manipulating wide strings
-	**
-	** This helper is especially usefull for Windows API
-	** \warning Due to Windows API limitations, the size of a WString is limited to 2147483648 chars
-	*/
-	class YUNI_DECL WString final
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		WString();
+    //! Copy constructor
+    WString(const WString&);
 
-		//! Copy constructor
-		WString(const WString&);
+#ifdef YUNI_HAS_CPP_MOVE
+    //! Move constructor
+    WString(WString&& rhs);
+#endif
 
-		#ifdef YUNI_HAS_CPP_MOVE
-		//! Move constructor
-		WString(WString&& rhs);
-		#endif
+    /*!
+    ** \brief Constructor
+    **
+    ** \param uncprefix True to prepend the Windows UNC `\\?\` before converting
+    */
+    explicit WString(const AnyString& string, bool uncprefix = false);
 
-		/*!
-		** \brief Constructor
-		**
-		** \param uncprefix True to prepend the Windows UNC `\\?\` before converting
-		*/
-		explicit WString(const AnyString& string, bool uncprefix = false);
+    //! Destructor
+    ~WString();
+    //@}
 
-		//! Destructor
-		~WString();
-		//@}
+    /*!
+    ** \brief Reset with a new wide string
+    */
+    void assign(const AnyString& string, bool uncprefix = false);
 
-		/*!
-		** \brief Reset with a new wide string
-		*/
-		void assign(const AnyString& string, bool uncprefix = false);
+    /*!
+    ** \brief Clear the buffer
+    */
+    void clear();
 
-		/*!
-		** \brief Clear the buffer
-		*/
-		void clear();
+    /*!
+    ** \brief Size of the wide string
+    */
+    uint size() const;
 
-		/*!
-		** \brief Size of the wide string
-		*/
-		uint size() const;
+    /*!
+    ** \brief Get if the string is empty
+    */
+    bool empty() const;
 
-		/*!
-		** \brief Get if the string is empty
-		*/
-		bool empty() const;
+    /*!
+    ** \brief Get the wide string
+    */
+    const wchar_t* c_str() const;
 
-		/*!
-		** \brief Get the wide string
-		*/
-		const wchar_t* c_str() const;
+    /*!
+    ** \brief Get the wide string
+    */
+    wchar_t* data();
 
-		/*!
-		** \brief Get the wide string
-		*/
-		wchar_t* data();
+    /*!
+    ** \brief Replace all occurences of a single char
+    */
+    void replace(wchar_t from, wchar_t to);
 
-		/*!
-		** \brief Replace all occurences of a single char
-		*/
-		void replace(wchar_t from, wchar_t to);
+    //! \name Operators
+    //@{
+    //! Copy
+    WString& operator=(const WString& string);
+    //! Assignment
+    WString& operator=(const AnyString& string);
 
-		//! \name Operators
-		//@{
-		//! Copy
-		WString& operator = (const WString& string);
-		//! Assignment
-		WString& operator = (const AnyString& string);
+#ifdef YUNI_HAS_CPP_MOVE
+    //! move operator
+    WString& operator=(WString&& rhs);
+#endif
+    //@}
 
-		#ifdef YUNI_HAS_CPP_MOVE
-		//! move operator
-		WString& operator = (WString&& rhs);
-		#endif
-		//@}
+private:
+    //! Convert a C-String into a Wide String
+    void prepareWString(const AnyString& string, bool uncprefix);
 
+private:
+    //! Wide string
+    wchar_t* pWString;
+    //! Size of the wide string
+    size_t pSize;
 
-	private:
-		//! Convert a C-String into a Wide String
-		void prepareWString(const AnyString& string, bool uncprefix);
-
-	private:
-		//! Wide string
-		wchar_t* pWString;
-		//! Size of the wide string
-		size_t pSize;
-
-	}; // class WString
-
-
-
-
+}; // class WString
 
 } // namespace Yuni
 

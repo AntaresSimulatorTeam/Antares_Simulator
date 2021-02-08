@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_WINDOWS_INSPECTOR_DATA_HXX__
-# define __ANTARES_WINDOWS_INSPECTOR_DATA_HXX__
-
+#define __ANTARES_WINDOWS_INSPECTOR_DATA_HXX__
 
 namespace Antares
 {
@@ -34,20 +33,11 @@ namespace Window
 {
 namespace Inspector
 {
-
-
-	inline void InspectorData::determineEmpty()
-	{
-		empty = areas.empty()
-			and links.empty()
-			and clusters.empty()
-			and constraints.empty()
-			and studies.empty();
-	}
-
-
-
-
+inline void InspectorData::determineEmpty()
+{
+    empty = areas.empty() and links.empty() and clusters.empty() and constraints.empty()
+            and studies.empty();
+}
 
 } // namespace Inspector
 } // namespace Window

@@ -11,31 +11,29 @@
 #pragma once
 #include "adapter.h"
 
-
 namespace Yuni
 {
 namespace DBI
 {
 namespace Adapter
 {
+/*!
+** \brief SQLite Adapter (sqlite v3)
+** \ingroup DBIAdapter
+*/
+class SQLite final : public IAdapter
+{
+public:
+    SQLite()
+    {
+    }
+    virtual ~SQLite()
+    {
+    }
 
-	/*!
-	** \brief SQLite Adapter (sqlite v3)
-	** \ingroup DBIAdapter
-	*/
-	class SQLite final : public IAdapter
-	{
-	public:
-		SQLite() {}
-		virtual ~SQLite() {}
+    virtual void retrieveEntries(::yn_dbi_adapter& entries) override;
 
-		virtual void retrieveEntries(::yn_dbi_adapter& entries) override;
-
-	}; // class SQLite
-
-
-
-
+}; // class SQLite
 
 } // namespace Adapter
 } // namespace DBI

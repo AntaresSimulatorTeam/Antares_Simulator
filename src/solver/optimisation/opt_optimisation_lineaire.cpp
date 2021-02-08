@@ -25,18 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "opt_structure_probleme_a_resoudre.h"
 
+#include "../simulation/simulation.h"
+#include "../simulation/sim_structure_donnees.h"
+#include "../simulation/sim_extern_variables_globales.h"
 
-
-
-
-# include "opt_structure_probleme_a_resoudre.h"
-
-# include "../simulation/simulation.h"
-# include "../simulation/sim_structure_donnees.h"
-# include "../simulation/sim_extern_variables_globales.h"
-
-# include "opt_fonctions.h"
+#include "opt_fonctions.h"
 
 #include <antares/logs.h>
 #include <antares/study.h>
@@ -45,94 +40,94 @@
 using namespace Antares;
 using namespace Yuni;
 
-
-bool OPT_OptimisationLineaire(	PROBLEME_HEBDO * ProblemeHebdo,
-								uint numSpace,
-								char CalculerLesPmin,
-								char CalculerLesPmax,
-								char FaireDerniereOptimisation )
+bool OPT_OptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo,
+                              uint numSpace,
+                              char CalculerLesPmin,
+                              char CalculerLesPmax,
+                              char FaireDerniereOptimisation)
 {
-	int PdtHebdo; int PremierPdtDeLIntervalle; int DernierPdtDeLIntervalle;
-	int NumeroDeLIntervalle; int NombreDePasDeTempsPourUneOptimisation;
+    int PdtHebdo;
+    int PremierPdtDeLIntervalle;
+    int DernierPdtDeLIntervalle;
+    int NumeroDeLIntervalle;
+    int NombreDePasDeTempsPourUneOptimisation;
 
-	ProblemeHebdo->NombreDePasDeTemps            = ProblemeHebdo->NombreDePasDeTempsRef;
-	ProblemeHebdo->NombreDePasDeTempsDUneJournee = ProblemeHebdo->NombreDePasDeTempsDUneJourneeRef;
+    ProblemeHebdo->NombreDePasDeTemps = ProblemeHebdo->NombreDePasDeTempsRef;
+    ProblemeHebdo->NombreDePasDeTempsDUneJournee = ProblemeHebdo->NombreDePasDeTempsDUneJourneeRef;
 
-	if ( ProblemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES )
-	{
-		ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
-	}
-	else
-	{
-		ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTemps;
-	}
+    if (ProblemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES)
+    {
+        ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation
+          = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
+    }
+    else
+    {
+        ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTemps;
+    }
 
-	NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
-	(ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation = PREMIERE_OPTIMISATION;
+    (ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation = PREMIERE_OPTIMISATION;
 
+    OPT_NumeroDeJourDuPasDeTemps(ProblemeHebdo);
 
-	OPT_NumeroDeJourDuPasDeTemps( ProblemeHebdo );
+    OPT_NumeroDIntervalleOptimiseDuPasDeTemps(ProblemeHebdo);
 
-	OPT_NumeroDIntervalleOptimiseDuPasDeTemps( ProblemeHebdo );
+    OPT_RestaurerLesDonnees(ProblemeHebdo);
 
-	OPT_RestaurerLesDonnees( ProblemeHebdo );
+    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(ProblemeHebdo);
 
-	OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire( ProblemeHebdo );
+    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(ProblemeHebdo, numSpace);
 
-	OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire( ProblemeHebdo, numSpace );
+OptimisationHebdo:
 
-	OptimisationHebdo:
+    for (PdtHebdo = 0, NumeroDeLIntervalle = 0; PdtHebdo < ProblemeHebdo->NombreDePasDeTemps;
+         PdtHebdo = DernierPdtDeLIntervalle, NumeroDeLIntervalle++)
+    {
+        PremierPdtDeLIntervalle = PdtHebdo;
+        DernierPdtDeLIntervalle = PdtHebdo + NombreDePasDeTempsPourUneOptimisation;
 
-	for (	PdtHebdo = 0 , NumeroDeLIntervalle = 0 ; PdtHebdo < ProblemeHebdo->NombreDePasDeTemps;
-			PdtHebdo = DernierPdtDeLIntervalle , NumeroDeLIntervalle++ )
-	{
-		PremierPdtDeLIntervalle = PdtHebdo;
-		DernierPdtDeLIntervalle = PdtHebdo + NombreDePasDeTempsPourUneOptimisation;
+        OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(
+          ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, NumeroDeLIntervalle);
 
-		OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire( ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, NumeroDeLIntervalle );
-	
-		OPT_InitialiserLeSecondMembreDuProblemeLineaire( ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, NumeroDeLIntervalle );
+        OPT_InitialiserLeSecondMembreDuProblemeLineaire(
+          ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, NumeroDeLIntervalle);
 
-		OPT_InitialiserLesCoutsLineaire( ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, numSpace );
+        OPT_InitialiserLesCoutsLineaire(
+          ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, numSpace);
 
-		ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle]++;
-	
-		if (!OPT_AppelDuSolveurLineaire( ProblemeHebdo, numSpace, NumeroDeLIntervalle ))
-			return false;
+        ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle]++;
 
-		if ( ProblemeHebdo->ExportMPS == OUI_ANTARES || ProblemeHebdo->Expansion == OUI_ANTARES)
-			OPT_EcrireResultatFonctionObjectiveAuFormatTXT((void *) ProblemeHebdo, numSpace, NumeroDeLIntervalle);
+        if (!OPT_AppelDuSimplexe(ProblemeHebdo, numSpace, NumeroDeLIntervalle))
+            return false;
 
-	
-		if (ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle] == DEUXIEME_OPTIMISATION)
-			ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle] = 0;
-	}
+        if (ProblemeHebdo->ExportMPS == OUI_ANTARES || ProblemeHebdo->Expansion == OUI_ANTARES)
+            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
+              (void*)ProblemeHebdo, numSpace, NumeroDeLIntervalle);
 
+        if (ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle] == DEUXIEME_OPTIMISATION)
+            ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle] = 0;
+    }
 
-	if ( (ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation == PREMIERE_OPTIMISATION )
-	{	
-		if ( ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES )
-		{
-			OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT( ProblemeHebdo );
-		}
-		else if ( ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES ) 
-		{
-			OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage( ProblemeHebdo );
-		}
-		else
-			printf("BUG: l'indicateur ProblemeHebdo->OptimisationAvecCoutsDeDemarrage doit etre initialise a OUI_ANTARES ou NON_ANTARES\n");
+    if ((ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation == PREMIERE_OPTIMISATION)
+    {
+        if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
+        {
+            OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(ProblemeHebdo);
+        }
+        else if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES)
+        {
+            OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(ProblemeHebdo);
+        }
+        else
+            printf("BUG: l'indicateur ProblemeHebdo->OptimisationAvecCoutsDeDemarrage doit etre "
+                   "initialise a OUI_ANTARES ou NON_ANTARES\n");
 
-		(ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation = DEUXIEME_OPTIMISATION;
+        (ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation = DEUXIEME_OPTIMISATION;
 
-		if (ProblemeHebdo->Expansion == NON_ANTARES)
-			goto OptimisationHebdo;
-	}
-		
-	return true;
+        if (ProblemeHebdo->Expansion == NON_ANTARES)
+            goto OptimisationHebdo;
+    }
 
+    return true;
 }
-
-
-
-

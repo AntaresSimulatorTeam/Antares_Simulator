@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_H__
-# define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_H__
+#define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_H__
 
-# include "spotlight/spotlight.h"
+#include "spotlight/spotlight.h"
 
 #endif // __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_H__

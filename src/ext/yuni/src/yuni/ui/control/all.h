@@ -19,4 +19,3 @@
 #include "text.h"
 #include "texteditor.h"
 #include "window.h"
-

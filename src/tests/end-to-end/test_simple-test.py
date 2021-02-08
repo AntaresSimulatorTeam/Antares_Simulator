@@ -1,3 +1,5 @@
+import os
+import sys
 from pathlib import Path
 import tempfile as tpf
 from distutils.dir_util import copy_tree
@@ -23,11 +25,17 @@ def get_integrity_check_values(output : Path) -> np.array :
     return output_values
 
 def find_solver_path():
+    def is_exe(fpath):
+        if sys.platform == 'linux':
+            return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+        elif sys.platform == 'win32':
+            return fpath.endswith('.exe')
+
     search_result = list()
     for path in Path.cwd().parent.parent.parent.rglob('solver/antares-*.*-solver*'):
         search_result.append(path)
     # Eliminate swap version
-    solver = list(filter(lambda x: "swap" not in str(x), search_result))
+    solver = list(filter(lambda x: "swap" not in str(x) and is_exe(x), search_result))
     assert len(solver) == 1
     return str(solver[0])
 

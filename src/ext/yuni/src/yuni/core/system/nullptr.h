@@ -9,27 +9,22 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-# ifdef __cplusplus /* Only with a C++ Compiler */
+#ifdef __cplusplus /* Only with a C++ Compiler */
 
 /* nullptr_t does not exist in GCC 4.5 */
-# if YUNI_OS_GCC_VERSION >= 40000 && YUNI_OS_GCC_VERSION < 40600
-#	undef YUNI_HAS_NULLPTR
-# endif
+#if YUNI_OS_GCC_VERSION >= 40000 && YUNI_OS_GCC_VERSION < 40600
+#undef YUNI_HAS_NULLPTR
+#endif
 
-# ifdef YUNI_HAS_NULLPTR
-#	include <cstddef>
-# endif
+#ifdef YUNI_HAS_NULLPTR
+#include <cstddef>
+#endif
 
-
-
-
-
-
-# ifdef YUNI_HAS_NULLPTR
+#ifdef YUNI_HAS_NULLPTR
 
 typedef decltype(nullptr) YuniNullPtr;
 
-# else
+#else
 
 /*!
 ** \brief C++ Idioms/nullptr
@@ -39,90 +34,84 @@ typedef decltype(nullptr) YuniNullPtr;
 const class YuniNullPtr final
 {
 public:
-	/*! Convertible to any type of null non-member */
-	template<class T> inline operator T*() const
-	{
-		return 0;
-	}
+    /*! Convertible to any type of null non-member */
+    template<class T>
+    inline operator T*() const
+    {
+        return 0;
+    }
 
-	/*!
-	** \brief Any type of null member pointer
-	**
-	** \note In gcc 4.1.1 compiler that does not recognize the comparison of
-	** nullptr with point to member function.
-	*/
-	template<class C, class T> inline operator T C::*() const
-	{
-		return 0;
-	}
+    /*!
+    ** \brief Any type of null member pointer
+    **
+    ** \note In gcc 4.1.1 compiler that does not recognize the comparison of
+    ** nullptr with point to member function.
+    */
+    template<class C, class T>
+    inline operator T C::*() const
+    {
+        return 0;
+    }
 
-	# if YUNI_OS_GCC_VERSION >= 40400
-	template<class T> bool operator == (const T* rhs) const
-	{
-		return !rhs;
-	}
+#if YUNI_OS_GCC_VERSION >= 40400
+    template<class T>
+    bool operator==(const T* rhs) const
+    {
+        return !rhs;
+    }
 
-	template<class T> bool operator != (const T* rhs) const
-	{
-		return (NULL != rhs);
-	}
-	# endif
+    template<class T>
+    bool operator!=(const T* rhs) const
+    {
+        return (NULL != rhs);
+    }
+#endif
 
 private:
-	void operator&() const;  /* Can't take address of nullptr */
+    void operator&() const; /* Can't take address of nullptr */
 
 } nullptr = {};
 
-
-# endif /* nullptr support */
-
+#endif /* nullptr support */
 
 namespace Yuni
 {
-
-	typedef /*YUNI_DECL*/  YuniNullPtr  NullPtr;
+typedef /*YUNI_DECL*/ YuniNullPtr NullPtr;
 
 } /* namespace Yuni */
 
-
-
-# ifndef YUNI_HAS_NULLPTR
-# if YUNI_OS_GCC_VERSION >= 40400
+#ifndef YUNI_HAS_NULLPTR
+#if YUNI_OS_GCC_VERSION >= 40400
 template<class T>
-inline bool operator == (const T* rhs, const Yuni::NullPtr&)
+inline bool operator==(const T* rhs, const Yuni::NullPtr&)
 {
-	return !rhs;
+    return !rhs;
 }
 
 template<class T>
-inline bool operator != (const T* rhs, const Yuni::NullPtr&)
+inline bool operator!=(const T* rhs, const Yuni::NullPtr&)
 {
-	return static_cast<const T*>(NULL) != rhs;
+    return static_cast<const T*>(NULL) != rhs;
 }
-# endif
-# endif
-
-
+#endif
+#endif
 
 namespace Yuni
 {
+template<class T>
+static inline void deleteAndNull(T*& object)
+{
+    delete object;
+    object = nullptr;
+}
 
-	template<class T>
-	static inline void deleteAndNull(T*& object)
-	{
-		delete object;
-		object = nullptr;
-	}
-
-	template<class T>
-	static inline void deleteArrayAndNull(T*& object)
-	{
-		delete[] object;
-		object = nullptr;
-	}
+template<class T>
+static inline void deleteArrayAndNull(T*& object)
+{
+    delete[] object;
+    object = nullptr;
+}
 
 } // namespace Yuni
-
-
 
 #endif /* C++ Compiler */

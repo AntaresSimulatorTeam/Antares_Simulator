@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_COMPONENT_HXX__
-# define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_COMPONENT_HXX__
-
+#define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_COMPONENT_HXX__
 
 namespace Antares
 {
@@ -34,64 +33,54 @@ namespace Component
 {
 namespace HTMLListbox
 {
+inline Component& Component::operator+=(Item::IItem::Ptr it)
+{
+    this->add(it);
+    return *this;
+}
 
+inline Component& Component::operator<<(Item::IItem::Ptr it)
+{
+    this->add(it);
+    return *this;
+}
 
-	inline Component& Component::operator += (Item::IItem::Ptr it)
-	{
-		this->add(it);
-		return *this;
-	}
+inline Component& Component::operator+=(Item::IItem* it)
+{
+    this->add(it);
+    return *this;
+}
 
+inline Component& Component::operator<<(Item::IItem* it)
+{
+    this->add(it);
+    return *this;
+}
 
-	inline Component& Component::operator << (Item::IItem::Ptr it)
-	{
-		this->add(it);
-		return *this;
-	}
+template<class D>
+inline D* Component::addDatasource()
+{
+    D* d = new D(*this);
+    internalAddDatasource(d);
+    if (!pCurrentDatasource)
+        pCurrentDatasource = d;
+    return d;
+}
 
-	inline Component& Component::operator += (Item::IItem* it)
-	{
-		this->add(it);
-		return *this;
-	}
+inline Datasource::IDatasource* Component::datasource()
+{
+    return pCurrentDatasource;
+}
 
+inline bool Component::empty() const
+{
+    return pItems.empty();
+}
 
-	inline Component& Component::operator << (Item::IItem* it)
-	{
-		this->add(it);
-		return *this;
-	}
-
-
-
-	template<class D>
-	inline D* Component::addDatasource()
-	{
-		D* d = new D(*this);
-		internalAddDatasource(d);
-		if (!pCurrentDatasource)
-			pCurrentDatasource = d;
-		return d;
-	}
-
-
-	inline Datasource::IDatasource* Component::datasource()
-	{
-		return pCurrentDatasource;
-	}
-
-
-	inline bool Component::empty() const
-	{
-		return pItems.empty();
-	}
-
-	inline uint Component::size() const
-	{
-		return (uint) pItems.size();
-	}
-
-
+inline uint Component::size() const
+{
+    return (uint)pItems.size();
+}
 
 } // namespace HTMLListbox
 } // namespace Component

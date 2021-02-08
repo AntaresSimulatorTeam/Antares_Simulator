@@ -26,14 +26,15 @@
 */
 #include <antares/exception/UnfeasibleProblemError.hpp>
 
-namespace Antares {
-
-namespace Data {
-
+namespace Antares
+{
+namespace Data
+{
 UnfeasibleProblemError::UnfeasibleProblemError(const std::string& message) :
-    std::runtime_error(message) {
+ std::runtime_error(message)
+{
 }
 
-}  // namespace Data
+} // namespace Data
 
-}  // namespace Antares
+} // namespace Antares

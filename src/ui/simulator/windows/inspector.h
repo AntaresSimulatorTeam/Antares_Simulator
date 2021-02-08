@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_WINDOWS_INSPECTOR_H__
-# define __ANTARES_WINDOWS_INSPECTOR_H__
+#define __ANTARES_WINDOWS_INSPECTOR_H__
 
-# include "inspector/inspector.h"
+#include "inspector/inspector.h"
 
 #endif // __ANTARES_WINDOWS_INSPECTOR_H__

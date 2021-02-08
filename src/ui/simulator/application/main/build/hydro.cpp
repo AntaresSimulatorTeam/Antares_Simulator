@@ -35,48 +35,39 @@
 #include "../../../windows/hydro/allocation.h"
 #include "standard-page.hxx"
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
 namespace Forms
 {
+void ApplWnd::createNBHydro()
+{
+    assert(pNotebook);
 
+    // Create a standard page with an input selector
+    auto page
+      = createStdNotebookPage<Toolbox::InputSelector::Area>(pNotebook, wxT("hydro"), wxT("Hydro"));
 
-	void ApplWnd::createNBHydro()
-	{
-		assert(pNotebook);
+    // Hydro Allocation
+    pageHydroAllocation
+      = page.first->add(new Antares::Window::Hydro::Allocation(page.first), wxT("Allocation"));
+    pageHydroAllocation->displayExtraControls(false);
 
-		// Create a standard page with an input selector
-		auto page = createStdNotebookPage<Toolbox::InputSelector::Area>(pNotebook,
-			wxT("hydro"), wxT("Hydro"));
+    // Correlation matrix
+    pageHydroCorrelation
+      = page.first->add(new Antares::Window::CorrelationPanel(page.first, Data::timeSeriesHydro),
+                        wxT("Spatial correlation"));
+    pageHydroCorrelation->displayExtraControls(false);
 
-		// Hydro Allocation
-		pageHydroAllocation = page.first->add(new Antares::Window::Hydro::Allocation(page.first),
-			wxT("Allocation"));
-		pageHydroAllocation->displayExtraControls(false);
+    // TS Generator
+    pageHydroPrepro = page.first->add(
+      new Antares::Window::Hydro::Localdatahydro(page.first, page.second), wxT("Local data"));
 
-		// Correlation matrix
-		pageHydroCorrelation = page.first->add(new Antares::Window::CorrelationPanel(page.first, Data::timeSeriesHydro),
-			wxT("Spatial correlation"));
-		pageHydroCorrelation->displayExtraControls(false);
-
-		// TS Generator
-		pageHydroPrepro = page.first->add(new Antares::Window::Hydro::Localdatahydro(page.first, page.second),
-			wxT("Local data"));
-
-		// Time-series
-		pageHydroTimeSeries = page.first->add(
-			new Antares::Window::Hydro::Series(page.first, page.second),
-			wxT("Time-series"));
-	}
-
-
-
-
+    // Time-series
+    pageHydroTimeSeries = page.first->add(
+      new Antares::Window::Hydro::Series(page.first, page.second), wxT("Time-series"));
+}
 
 } // namespace Forms
 } // namespace Antares
-

@@ -25,12 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_PARTS_LOAD_CONTAINER_H__
-# define __ANTARES_LIBS_STUDY_PARTS_LOAD_CONTAINER_H__
+#define __ANTARES_LIBS_STUDY_PARTS_LOAD_CONTAINER_H__
 
-# include "prepro.h"
-# include "series.h"
-# include <yuni/core/noncopyable.h>
-
+#include "prepro.h"
+#include "series.h"
+#include <yuni/core/noncopyable.h>
 
 namespace Antares
 {
@@ -38,51 +37,46 @@ namespace Data
 {
 namespace Load
 {
+class Container final : private Yuni::NonCopyable<Container>
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    Container();
+    //! Destructor
+    ~Container();
+    //@}
 
-	class Container final : private Yuni::NonCopyable<Container>
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		Container();
-		//! Destructor
-		~Container();
-		//@}
+    /*!
+    ** \brief Reset to default values
+    */
+    void resetToDefault();
 
-		/*!
-		** \brief Reset to default values
-		*/
-		void resetToDefault();
+    /*!
+    ** \brief Make sure that all data are loaded
+    */
+    bool invalidate(bool reload = false) const;
 
-		/*!
-		** \brief Make sure that all data are loaded
-		*/
-		bool invalidate(bool reload = false) const;
+    /*!
+    ** \brief Mark the load data as modified
+    */
+    void markAsModified() const;
 
-		/*!
-		** \brief Mark the load data as modified
-		*/
-		void markAsModified() const;
+    /*!
+    ** \brief Get the amount of memory currently used by the class
+    */
+    Yuni::uint64 memoryUsage() const;
 
-		/*!
-		** \brief Get the amount of memory currently used by the class
-		*/
-		Yuni::uint64 memoryUsage() const;
+public:
+    //! Data for the pre-processor
+    Data::Load::Prepro* prepro;
+    /*! Data for time-series */
+    DataSeriesLoad* series;
 
-	public:
-		//! Data for the pre-processor
-		Data::Load::Prepro* prepro;
-		/*! Data for time-series */
-		DataSeriesLoad* series;
-
-	}; // class Container
-
-
-
-
+}; // class Container
 
 } // namespace Load
 } // namespace Data

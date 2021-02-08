@@ -31,108 +31,96 @@ using namespace Yuni;
 
 namespace Antares
 {
-	namespace Action
-	{
-		namespace AntaresStudy
-		{
-			namespace Constraint
-			{
+namespace Action
+{
+namespace AntaresStudy
+{
+namespace Constraint
+{
+Offsets::Offsets(const AnyString& name, Antares::Data::ConstraintName targetName) :
+ pOriginalConstraintName(name), targetName(targetName), pCurrentContext(NULL)
+{
+    pInfos.caption << "Offsets";
+}
 
-				Offsets::Offsets(const AnyString& name, Antares::Data::ConstraintName targetName) :
-					pOriginalConstraintName(name),
-					targetName(targetName),
-					pCurrentContext(NULL)
-				{
-					pInfos.caption << "Offsets";
-				}
+Offsets::~Offsets()
+{
+}
 
+bool Offsets::prepareWL(Context&)
+{
+    pInfos.message.clear();
+    pInfos.state = stReady;
+    switch (pInfos.behavior)
+    {
+    case bhOverwrite:
+        pInfos.message << "The Offsets will be copied";
+        break;
+    default:
+        pInfos.state = stNothingToDo;
+        break;
+    }
+    return true;
+}
 
-				Offsets::~Offsets()
-				{}
+void Offsets::translate(Antares::Data::AreaName& out, const Antares::Data::AreaName& original)
+{
+    assert(pCurrentContext);
+    assert(not original.empty());
 
+    auto i = pCurrentContext->areaLowerNameMapping.find(original);
+    if (i != pCurrentContext->areaLowerNameMapping.end())
+    {
+        out = i->second;
+        out.toLower();
+    }
+    else
+        out = original;
+    assert(not out.empty());
+    logs.debug() << "  copy/paste: binding constraint offset : " << original << " -> " << out;
+}
 
+void Offsets::toLower(Antares::Data::AreaName& out, const Antares::Data::AreaName& original)
+{
+    out = original;
+    out.toLower();
 
-				bool Offsets::prepareWL(Context&)
-				{
-					pInfos.message.clear();
-					pInfos.state = stReady;
-					switch (pInfos.behavior)
-					{
-					case bhOverwrite:
-						pInfos.message << "The Offsets will be copied";
-						break;
-					default:
-						pInfos.state = stNothingToDo;
-						break;
-					}
-					return true;
-				}
+    assert(not out.empty());
+    logs.debug() << "  copy/paste: binding constraint weight : " << original << " -> " << out;
+}
 
+bool Offsets::performWL(Context& ctx)
+{
+    if (ctx.constraint && ctx.extStudy)
+    {
+        assert(not pOriginalConstraintName.empty());
 
-				void Offsets::translate(Antares::Data::AreaName& out, const Antares::Data::AreaName& original)
-				{
-					assert(pCurrentContext);
-					assert(not original.empty());
+        Antares::Data::ConstraintName id;
+        TransformNameIntoID(pOriginalConstraintName, id);
 
-					auto i = pCurrentContext->areaLowerNameMapping.find(original);
-					if (i != pCurrentContext->areaLowerNameMapping.end())
-					{
-						out = i->second;
-						out.toLower();
-					}
-					else
-						out = original;
-					assert(not out.empty());
-					logs.debug() << "  copy/paste: binding constraint offset : " << original << " -> " << out;
-				}
+        Data::BindingConstraint* source = ctx.extStudy->bindingConstraints.find(id);
 
-				void Offsets::toLower(Antares::Data::AreaName& out, const Antares::Data::AreaName& original)
-				{
+        if (source && source != ctx.constraint)
+        {
+            pCurrentContext = &ctx;
+            Bind<void(Data::AreaName&, const Data::AreaName&)> tr;
+            if (!targetName.empty())
+            {
+                tr.bind(this, &Offsets::toLower);
+            }
+            else
+            {
+                tr.bind(this, &Offsets::translate);
+            }
+            ctx.constraint->copyOffsets(ctx.study, *source, true, tr);
+            pCurrentContext = nullptr;
+            return true;
+        }
+    }
+    return false;
+}
 
-					out = original;
-					out.toLower();
-
-					assert(not out.empty());
-					logs.debug() << "  copy/paste: binding constraint weight : " << original << " -> " << out;
-				}
-
-				bool Offsets::performWL(Context& ctx)
-				{
-					if (ctx.constraint && ctx.extStudy)
-					{
-						assert(not pOriginalConstraintName.empty());
-
-						Antares::Data::ConstraintName id;
-						TransformNameIntoID(pOriginalConstraintName, id);
-
-						Data::BindingConstraint* source = ctx.extStudy->bindingConstraints.find(id);
-
-						if (source && source != ctx.constraint)
-						{
-							pCurrentContext = &ctx;
-							Bind<void(Data::AreaName&, const Data::AreaName&)> tr;
-							if (!targetName.empty())
-							{
-								tr.bind(this, &Offsets::toLower);
-							}
-							else
-							{
-								tr.bind(this, &Offsets::translate);
-							}
-							ctx.constraint->copyOffsets(ctx.study, *source, true, tr);
-							pCurrentContext = nullptr;
-							return true;
-						}
-					}
-					return false;
-				}
-
-
-
-
-
-			} // namespace Constraint
-		} // namespace AntaresStudy
-	} // namespace Action
+} // namespace Constraint
+} // namespace AntaresStudy
+} // namespace Action
 } // namespace Antares
-

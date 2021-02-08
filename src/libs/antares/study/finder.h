@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIB_FINDER_H__
-# define __ANTARES_LIB_FINDER_H__
+#define __ANTARES_LIB_FINDER_H__
 
-# include "finder/finder.h"
+#include "finder/finder.h"
 
 #endif // __ANTARES_LIB_FINDER_H__

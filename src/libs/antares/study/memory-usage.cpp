@@ -29,165 +29,152 @@
 #include "memory-usage.h"
 #include "../date.h"
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
 namespace Data
 {
+// gp : voir l'impact de la selection des variables ici
+StudyMemoryUsage::StudyMemoryUsage(const Study& s) :
+ mode(s.parameters.mode),
+ swappingSupport(false),
+ gatheringInformationsForInput(false),
+ requiredMemory(),
+ requiredMemoryForInput(),
+ requiredMemoryForOutput(),
+ requiredDiskSpace(),
+ requiredDiskSpaceForSwap(),
+ requiredDiskSpaceForOutput(),
+ study(s),
+ years(s.parameters.nbYears),
+ nbYearsParallel(s.maxNbYearsInParallel),
+ buffer(nullptr),
+ area(nullptr)
+{
+    // alias to parameters
+    auto& parameters = study.parameters;
 
-	// gp : voir l'impact de la selection des variables ici
-	StudyMemoryUsage::StudyMemoryUsage(const Study& s) :
-		mode(s.parameters.mode),
-		swappingSupport(false),
-		gatheringInformationsForInput(false),
-		requiredMemory(),
-		requiredMemoryForInput(),
-		requiredMemoryForOutput(),
-		requiredDiskSpace(),
-		requiredDiskSpaceForSwap(),
-		requiredDiskSpaceForOutput(),
-		study(s),
-		years(s.parameters.nbYears),
-		nbYearsParallel(s.maxNbYearsInParallel),
-		buffer(nullptr),
-		area(nullptr)
-	{
-		// alias to parameters
-		auto& parameters = study.parameters;
+    // playlist
+    if (parameters.userPlaylist and parameters.yearsFilter)
+    {
+        uint y = 0;
+        for (uint i = 0; i != years; ++i)
+        {
+            if (parameters.yearsFilter[i])
+                ++y;
+        }
+        years = y;
+    }
 
-		// playlist
-		if (parameters.userPlaylist and parameters.yearsFilter)
-		{
-			uint y = 0;
-			for (uint i = 0; i != years; ++i)
-			{
-				if (parameters.yearsFilter[i])
-					++y;
-			}
-			years = y;
-		}
+    if (parameters.simulationDays.end > parameters.simulationDays.first)
+    {
+        pNbDays = parameters.simulationDays.end - parameters.simulationDays.first;
+        pNbHours = pNbDays * 24;
+        pNbWeeks = pNbDays / 7;
+        pNbMonths = 1 + study.calendar.days[parameters.simulationDays.end - 1].month
+                    - study.calendar.days[parameters.simulationDays.first].month;
+    }
+    else
+    {
+        pNbHours = 0;
+        pNbDays = 0;
+        pNbWeeks = 0;
+        pNbMonths = 0;
+    }
 
-		if (parameters.simulationDays.end > parameters.simulationDays.first)
-		{
-			pNbDays   = parameters.simulationDays.end - parameters.simulationDays.first;
-			pNbHours  = pNbDays * 24;
-			pNbWeeks  = pNbDays / 7;
-			pNbMonths =
-				1
-				+ study.calendar.days[parameters.simulationDays.end - 1].month
-				- study.calendar.days[parameters.simulationDays.first].month;
-		}
-		else
-		{
-			pNbHours  = 0;
-			pNbDays   = 0;
-			pNbWeeks  = 0;
-			pNbMonths = 0;
-		}
+    pNbMaxDigitForYear = 1;
 
-		pNbMaxDigitForYear = 1;
+    uint y = years;
+    while ((y /= 10) != 0)
+        ++pNbMaxDigitForYear;
+}
 
-		uint y = years;
-		while ((y /= 10) != 0)
-			++pNbMaxDigitForYear;
-	}
+StudyMemoryUsage::~StudyMemoryUsage()
+{
+    delete buffer;
+}
 
+StudyMemoryUsage& StudyMemoryUsage::operator+=(const StudyMemoryUsage& rhs)
+{
+    requiredMemory += rhs.requiredMemory;
+    requiredMemoryForInput += rhs.requiredMemoryForInput;
+    requiredMemoryForOutput += rhs.requiredMemoryForOutput;
+    requiredDiskSpace += rhs.requiredDiskSpace;
+    requiredDiskSpaceForSwap += rhs.requiredDiskSpaceForSwap;
+    requiredDiskSpaceForOutput += rhs.requiredDiskSpaceForOutput;
+    return *this;
+}
 
-	StudyMemoryUsage::~StudyMemoryUsage()
-	{
-		delete buffer;
-	}
+void StudyMemoryUsage::estimate()
+{
+    study.estimateMemoryUsageForInput(*this);
+    study.estimateMemoryUsageForOutput(*this);
 
+    if (requiredDiskSpaceForSwap != 0)
+    {
+        Yuni::uint64 swap = 0;
+        do
+        {
+            swap += Antares::Memory::swapSize;
+        } while (swap < requiredDiskSpaceForSwap);
 
-	StudyMemoryUsage& StudyMemoryUsage::operator += (const StudyMemoryUsage& rhs)
-	{
-		requiredMemory             += rhs.requiredMemory;
-		requiredMemoryForInput     += rhs.requiredMemoryForInput;
-		requiredMemoryForOutput    += rhs.requiredMemoryForOutput;
-		requiredDiskSpace          += rhs.requiredDiskSpace;
-		requiredDiskSpaceForSwap   += rhs.requiredDiskSpaceForSwap;
-		requiredDiskSpaceForOutput += rhs.requiredDiskSpaceForOutput;
-		return *this;
-	}
+        requiredDiskSpaceForSwap = swap + Antares::Memory::swapSize;
+    }
 
+    // Post-operations
+    requiredMemory = requiredMemoryForInput + requiredMemoryForOutput;
+    requiredDiskSpace = requiredDiskSpaceForSwap + requiredDiskSpaceForOutput;
+}
 
-	void StudyMemoryUsage::estimate()
-	{
-		study.estimateMemoryUsageForInput(*this);
-		study.estimateMemoryUsageForOutput(*this);
+void StudyMemoryUsage::takeIntoConsiderationANewTimeserieForDiskOutput(bool withIDs)
+{
+    enum
+    {
+        o = 7 /*line feed*/ + 8 /*text*/
+    };
 
-		if (requiredDiskSpaceForSwap != 0)
-		{
-			Yuni::uint64 swap = 0;
-			do
-			{
-				swap += Antares::Memory::swapSize;
-			}
-			while (swap < requiredDiskSpaceForSwap);
+    // The number of digits is an estimation
+    // values hourly
+    requiredDiskSpaceForOutput += (4 /*digits*/ + 1 /*tab*/) * pNbHours + o;
+    // values daily
+    requiredDiskSpaceForOutput += (4 /*digits*/ + 1 /*tab*/) * pNbDays + o;
+    // values weekly
+    requiredDiskSpaceForOutput += (6 /*digits*/ + 1 /*tab*/) * pNbWeeks + o;
+    // values monthly
+    requiredDiskSpaceForOutput += (6 /*digits*/ + 1 /*tab*/) * pNbMonths + o;
+    // values annual
+    requiredDiskSpaceForOutput += (8 /*digits*/ + 1 /*tab*/) * 1 + o;
 
-			requiredDiskSpaceForSwap = swap + Antares::Memory::swapSize;
-		}
+    if (withIDs)
+    {
+        // ID hourly
+        requiredDiskSpaceForOutput += (pNbMaxDigitForYear + 1 /*tab*/) * pNbHours + o;
+        // ID daily
+        requiredDiskSpaceForOutput += (pNbMaxDigitForYear + 1 /*tab*/) * pNbDays + o;
+        // ID weekly
+        requiredDiskSpaceForOutput += (pNbMaxDigitForYear + 1 /*tab*/) * pNbWeeks + o;
+        // ID monthly
+        requiredDiskSpaceForOutput += (pNbMaxDigitForYear + 1 /*tab*/) * pNbMonths + o;
+        // ID annual
+        requiredDiskSpaceForOutput += (pNbMaxDigitForYear + 1 /*tab*/) * 1 + o;
+    }
+}
 
-		// Post-operations
-		requiredMemory    = requiredMemoryForInput   + requiredMemoryForOutput;
-		requiredDiskSpace = requiredDiskSpaceForSwap + requiredDiskSpaceForOutput;
-	}
-
-
-	void StudyMemoryUsage::takeIntoConsiderationANewTimeserieForDiskOutput(bool withIDs)
-	{
-		enum { o = 7/*line feed*/ + 8 /*text*/ };
-
-		// The number of digits is an estimation
-		// values hourly
-		requiredDiskSpaceForOutput += (4 /*digits*/ + 1 /*tab*/) * pNbHours + o;
-		// values daily
-		requiredDiskSpaceForOutput += (4 /*digits*/ + 1 /*tab*/) * pNbDays + o;
-		// values weekly
-		requiredDiskSpaceForOutput += (6 /*digits*/ + 1 /*tab*/) * pNbWeeks + o;
-		// values monthly
-		requiredDiskSpaceForOutput += (6 /*digits*/ + 1 /*tab*/) * pNbMonths + o;
-		// values annual
-		requiredDiskSpaceForOutput += (8 /*digits*/ + 1 /*tab*/) * 1 + o;
-
-		if (withIDs)
-		{
-			// ID hourly
-			requiredDiskSpaceForOutput += (pNbMaxDigitForYear + 1 /*tab*/) * pNbHours + o;
-			// ID daily
-			requiredDiskSpaceForOutput += (pNbMaxDigitForYear + 1 /*tab*/) * pNbDays + o;
-			// ID weekly
-			requiredDiskSpaceForOutput += (pNbMaxDigitForYear + 1 /*tab*/) * pNbWeeks + o;
-			// ID monthly
-			requiredDiskSpaceForOutput += (pNbMaxDigitForYear + 1 /*tab*/) * pNbMonths + o;
-			// ID annual
-			requiredDiskSpaceForOutput += (pNbMaxDigitForYear + 1 /*tab*/) * 1 + o;
-		}
-	}
-
-
-	void StudyMemoryUsage::overheadDiskSpaceForSingleAreaOrLink()
-	{
-		// x2 : values + IDs
-		// hourly
-		requiredDiskSpaceForOutput += 2 * 160 * 1024;
-		// daily
-		requiredDiskSpaceForOutput += 2 *   6 * 1024;
-		// weekly
-		requiredDiskSpaceForOutput += 2 *   6 * 1024;
-		// monthly
-		requiredDiskSpaceForOutput += 2 *   2 * 1024;
-		// annual
-		requiredDiskSpaceForOutput += 2 *   1 * 1024;
-	}
-
-
-
-
+void StudyMemoryUsage::overheadDiskSpaceForSingleAreaOrLink()
+{
+    // x2 : values + IDs
+    // hourly
+    requiredDiskSpaceForOutput += 2 * 160 * 1024;
+    // daily
+    requiredDiskSpaceForOutput += 2 * 6 * 1024;
+    // weekly
+    requiredDiskSpaceForOutput += 2 * 6 * 1024;
+    // monthly
+    requiredDiskSpaceForOutput += 2 * 2 * 1024;
+    // annual
+    requiredDiskSpaceForOutput += 2 * 1 * 1024;
+}
 
 } // namespace Data
 } // namespace Antares
-

@@ -29,9 +29,7 @@
 #include "../../study.h"
 #include "container.h"
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
@@ -39,61 +37,48 @@ namespace Data
 {
 namespace Wind
 {
+Container::Container() : prepro(nullptr), series(nullptr)
+{
+}
 
-	Container::Container() :
-		prepro(nullptr),
-		series(nullptr)
-	{}
+Container::~Container()
+{
+    delete prepro;
+    delete series;
+}
 
+bool Container::invalidate(bool reload) const
+{
+    bool ret = true;
+    if (series)
+        ret = series->invalidate(reload) and ret;
+    if (prepro)
+        ret = prepro->invalidate(reload) and ret;
+    return ret;
+}
 
-	Container::~Container()
-	{
-		delete prepro;
-		delete series;
-	}
+void Container::markAsModified() const
+{
+    if (series)
+        series->markAsModified();
+    if (prepro)
+        prepro->markAsModified();
+}
 
+Yuni::uint64 Container::memoryUsage() const
+{
+    return sizeof(Container) + ((!series) ? 0 : DataSeriesWindMemoryUsage(series))
+           + ((!prepro) ? 0 : prepro->memoryUsage());
+}
 
-	bool Container::invalidate(bool reload) const
-	{
-		bool ret = true;
-		if (series)
-			ret = series->invalidate(reload) and ret;
-		if (prepro)
-			ret = prepro->invalidate(reload) and ret;
-		return ret;
-	}
-
-
-	void Container::markAsModified() const
-	{
-		if (series)
-			series->markAsModified();
-		if (prepro)
-			prepro->markAsModified();
-	}
-
-
-	Yuni::uint64 Container::memoryUsage() const
-	{
-		return sizeof(Container)
-			+ ((!series) ? 0 : DataSeriesWindMemoryUsage(series))
-			+ ((!prepro) ? 0 : prepro->memoryUsage());
-	}
-
-
-	void Container::resetToDefault()
-	{
-		if (series)
-			series->series.reset(1, HOURS_PER_YEAR);
-		if (prepro)
-			prepro->resetToDefault();
-	}
-
-
-
-
+void Container::resetToDefault()
+{
+    if (series)
+        series->series.reset(1, HOURS_PER_YEAR);
+    if (prepro)
+        prepro->resetToDefault();
+}
 
 } // namespace Wind
 } // namespace Data
-} // namespace Solver
-
+} // namespace Antares

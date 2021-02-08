@@ -34,9 +34,7 @@
 #include "../button.h"
 #include <ui/common/lock.h>
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
@@ -44,352 +42,335 @@ namespace Component
 {
 namespace HTMLListbox
 {
+BEGIN_EVENT_TABLE(Component, Panel)
+EVT_PAINT(Component::onDraw)
+END_EVENT_TABLE()
 
-	BEGIN_EVENT_TABLE(Component, Panel)
-		EVT_PAINT(Component::onDraw)
-	END_EVENT_TABLE()
+/*!
+** \brief Additional data for a single item in a listbox
+*/
+class CustomClientData final : public wxClientData
+{
+public:
+    //! List
+    typedef std::list<CustomClientData*> List;
+    typedef std::vector<CustomClientData*> Vector;
 
+public:
+    CustomClientData(const Item::IItem::Ptr& it) : item(it)
+    {
+    }
+    virtual ~CustomClientData()
+    {
+    }
 
-	/*!
-	** \brief Additional data for a single item in a listbox
-	*/
-	class CustomClientData final : public wxClientData
-	{
-	public:
-		//! List
-		typedef std::list<CustomClientData*> List;
-		typedef std::vector<CustomClientData*> Vector;
+    Item::IItem::Ptr item;
+};
 
-	public:
-		CustomClientData(const Item::IItem::Ptr& it)
-			:item(it)
-		{}
-		virtual ~CustomClientData()
-		{}
+Component::Component(wxWindow* parent) :
+ Panel(parent),
+ pListbox(nullptr),
+ pSizerForDatasources(nullptr),
+ pSearchEdit(nullptr),
+ pCurrentDatasource(nullptr),
+ pInvalidated(true)
+{
+    // The Listbox
+    pListbox = new wxSimpleHtmlListBox(
+      this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxBORDER_NONE);
+    pListbox->SetAutoLayout(true);
+    pListbox->Connect(pListbox->GetId(),
+                      wxEVT_COMMAND_LISTBOX_SELECTED,
+                      wxCommandEventHandler(Component::onSelectionChanged),
+                      nullptr,
+                      this);
+    pListbox->Connect(pListbox->GetId(),
+                      wxEVT_COMMAND_LISTBOX_DOUBLECLICKED,
+                      wxCommandEventHandler(Component::onSelectionDblClick),
+                      nullptr,
+                      this);
 
-		Item::IItem::Ptr item;
-	};
+    // Sizer
+    pSizerForDatasources = new wxBoxSizer(wxHORIZONTAL);
+    pSizerForDatasources->AddSpacer(15);
+    pSizerForDatasources->Add(
+      CreateLabel(this, wxT("sort"), false, true), 0, wxALIGN_CENTER_VERTICAL | wxALL);
+    pSizerForDatasources->AddSpacer(2);
 
+    // Get the main sizer
+    auto* sizer = new wxBoxSizer(wxVERTICAL);
 
+    // Adding the main listbox
+    sizer->Add(pSizerForDatasources, 0, wxALL | wxEXPAND);
+    sizer->Add(pListbox, 1, wxALL | wxEXPAND);
+#ifdef WYUNI_OS_WINDOWS
+    sizer->Show(pSizerForDatasources, false, true);
+#endif
+    sizer->Layout();
 
+    SetSizer(sizer);
+    Refresh();
 
-	Component::Component(wxWindow* parent) :
-		Panel(parent),
-		pListbox(nullptr),
-		pSizerForDatasources(nullptr),
-		pSearchEdit(nullptr), pCurrentDatasource(nullptr),
-		pInvalidated(true)
-	{
-		// The Listbox
-		pListbox = new wxSimpleHtmlListBox(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0,
-			nullptr, wxBORDER_NONE);
-		pListbox->SetAutoLayout(true);
-		pListbox->Connect(pListbox->GetId(), wxEVT_COMMAND_LISTBOX_SELECTED,
-			wxCommandEventHandler(Component::onSelectionChanged), nullptr, this);
-		pListbox->Connect(pListbox->GetId(), wxEVT_COMMAND_LISTBOX_DOUBLECLICKED,
-			wxCommandEventHandler(Component::onSelectionDblClick), nullptr, this);
+    OnStudyClosed.connect(this, &Component::onStudyClosed);
+}
 
-		// Sizer
-		pSizerForDatasources = new wxBoxSizer(wxHORIZONTAL);
-		pSizerForDatasources->AddSpacer(15);
-		pSizerForDatasources->Add(CreateLabel(this, wxT("sort"), false, true), 0, wxALIGN_CENTER_VERTICAL|wxALL);
-		pSizerForDatasources->AddSpacer(2);
+Component::~Component()
+{
+    // Make sure all structures have been released
+    if (pLastSelectedItem)
+    {
+        pLastSelectedItem = nullptr;
+        onItemSelected(pLastSelectedItem);
+    }
 
-		// Get the main sizer
-		auto* sizer = new wxBoxSizer(wxVERTICAL);
+    destroyBoundEvents();
 
-		// Adding the main listbox
-		sizer->Add(pSizerForDatasources, 0, wxALL|wxEXPAND);
-		sizer->Add(pListbox, 1, wxALL|wxEXPAND);
-		# ifdef WYUNI_OS_WINDOWS
-		sizer->Show(pSizerForDatasources, false, true);
-		# endif
-		sizer->Layout();
+    internalClearTheListbox();
+    pListbox = nullptr;
+    pItems.clear();
 
-		SetSizer(sizer);
-		Refresh();
+    // Remove all datasources
+    const auto end = pDatasources.end();
+    for (auto i = pDatasources.begin(); i != end; ++i)
+        delete i->second;
+    pDatasources.clear();
 
-		OnStudyClosed.connect(this, &Component::onStudyClosed);
-	}
+    auto* sizer = GetSizer();
+    if (sizer)
+        sizer->Clear(true);
+}
 
+void Component::add(Item::IItem::Ptr it)
+{
+    // Pushing back the item into the list
+    pItems.push_back(it);
+    invalidate();
+}
 
-	Component::~Component()
-	{
-		// Make sure all structures have been released
-		if (pLastSelectedItem)
-		{
-			pLastSelectedItem = nullptr;
-			onItemSelected(pLastSelectedItem);
-		}
+void Component::invalidate()
+{
+    if (!pInvalidated)
+    {
+        pInvalidated = true;
+        pItems.clear();
+        internalClearTheListbox();
+    }
+}
 
-		destroyBoundEvents();
+void Component::clear()
+{
+    internalClearTheListbox();
+    pItems.clear();
+    if (!(!pLastSelectedItem))
+    {
+        pLastSelectedItem = nullptr;
+        onItemSelected(pLastSelectedItem);
+    }
+    pInvalidated = true;
+}
 
-		internalClearTheListbox();
-		pListbox = nullptr;
-		pItems.clear();
+void Component::forceUpdate()
+{
+    pItems.clear();
+    internalClearTheListbox();
+    pInvalidated = true;
+    internalUpdateItems();
+}
 
-		// Remove all datasources
-		const auto end = pDatasources.end();
-		for (auto i = pDatasources.begin(); i != end; ++i)
-			delete i->second;
-		pDatasources.clear();
+void Component::internalUpdateItems()
+{
+    // Updating the content of the listbox first
+    internalClearTheListbox();
 
-		auto* sizer = GetSizer();
-		if (sizer)
-			sizer->Clear(true);
-	}
+    if (not pListbox)
+        return;
 
+    if (pItems.empty())
+    {
+        // Keep the user informed that there is nothing to display
+        pListbox->Append(wxEmptyString, new CustomClientData(new Item::Info(wxT("No item"))));
+        if (pLastSelectedItem)
+        {
+            pLastSelectedItem = nullptr;
+            onItemSelected(pLastSelectedItem);
+        }
+    }
+    else
+    {
+        int selection = -1;
+        Item::IItem::Ptr newSelection;
 
-	void Component::add(Item::IItem::Ptr it)
-	{
-		// Pushing back the item into the list
-		pItems.push_back(it);
-		invalidate();
-	}
+        // wxListbox are really slow when inserting many items. We have to use
+        // a wxArrayString to prevent against stupid refresh by the control, since
+        // the methods Freeze and Thaw are not mandatory.....
+        CustomClientData::Vector pts;
+        wxArrayString arr;
+        arr.Alloc(pItems.size());
+        wxString tmp;
 
+        auto end = pItems.end();
+        for (auto i = pItems.begin(); i != end; ++i)
+        {
+            if ((*i)->visible())
+            {
+                // Keeping a reference to the client data
+                auto* clientdata = new CustomClientData(*i);
+                pts.push_back(clientdata);
+                tmp = clientdata->item->htmlContent(wxEmptyString);
 
-	void Component::invalidate()
-	{
-		if (!pInvalidated)
-		{
-			pInvalidated = true;
-			pItems.clear();
-			internalClearTheListbox();
-		}
-	}
+                if (pLastSelectedItem == *i)
+                {
+                    selection = (int)arr.Add(tmp);
+                    newSelection = pLastSelectedItem;
+                }
+                else
+                {
+                    if (selection == -1 && (*i)->interactive())
+                    {
+                        selection = (int)arr.Add(tmp);
+                        newSelection = *i;
+                    }
+                    else
+                        arr.Add(tmp);
+                }
+            }
+        }
 
+        assert((uint)arr.GetCount() == pts.size());
+        if (pListbox)
+            pListbox->Append(arr);
 
-	void Component::clear()
-	{
-		internalClearTheListbox();
-		pItems.clear();
-		if (!(!pLastSelectedItem))
-		{
-			pLastSelectedItem = nullptr;
-			onItemSelected(pLastSelectedItem);
-		}
-		pInvalidated = true;
-	}
+        for (uint i = 0; i != pts.size(); ++i)
+            pListbox->SetClientObject(i, pts[i]);
 
+        if (selection == -1)
+        {
+            if (pLastSelectedItem)
+            {
+                pLastSelectedItem = nullptr;
+                onItemSelected(pLastSelectedItem);
+            }
+        }
+        else
+        {
+            pListbox->SetSelection(selection);
+            pLastSelectedItem = newSelection;
+            onItemSelected(pLastSelectedItem);
+        }
+    }
+}
 
-	void Component::forceUpdate()
-	{
-		pItems.clear();
-		internalClearTheListbox();
-		pInvalidated = true;
-		internalUpdateItems();
-	}
+void Component::updateHtmlContent()
+{
+    if (pListbox)
+    {
+        for (uint i = 0; i < pListbox->GetCount(); ++i)
+        {
+            auto* cd = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(i));
+            if (cd)
+                pListbox->SetString(i, cd->item->htmlContent(wxEmptyString));
+        }
+    }
+}
 
+void Component::onSelectionChanged(wxCommandEvent& evt)
+{
+    if (not GUIIsLock() && pListbox)
+    {
+        GUILocker locker;
+        auto* c = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(evt.GetSelection()));
+        if (c)
+        {
+            pLastSelectedItem = c->item;
+            onItemSelected(c->item);
+        }
+    }
+}
 
-	void Component::internalUpdateItems()
-	{
-		// Updating the content of the listbox first
-		internalClearTheListbox();
+void Component::onSelectionDblClick(wxCommandEvent& evt)
+{
+    if (not GUIIsLock() && pListbox)
+    {
+        GUILocker locker;
+        auto* c = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(evt.GetSelection()));
+        if (c)
+        {
+            pLastSelectedItem = c->item;
+            onItemDblClick(c->item);
+        }
+    }
+}
 
-		if (not pListbox)
-			return;
+void Component::internalAddDatasource(Datasource::IDatasource* ds)
+{
+    if (ds)
+    {
+        typedef Antares::Component::Button ButtonType;
+        auto* btn
+          = new ButtonType(this, wxEmptyString, ds->icon(), this, &Component::onDatasourceClicked);
+        pSizerForDatasources->Add(btn, 0, wxALL | wxEXPAND);
+        btn->userdata(ds);
+        // Keep a reference somewhere
+        pDatasources[btn->GetId()] = ds;
 
-		if (pItems.empty())
-		{
-			// Keep the user informed that there is nothing to display
-			pListbox->Append(wxEmptyString, new CustomClientData(new Item::Info(wxT("No item"))));
-			if (pLastSelectedItem)
-			{
-				pLastSelectedItem = nullptr;
-				onItemSelected(pLastSelectedItem);
-			}
-		}
-		else
-		{
-			int selection = -1;
-			Item::IItem::Ptr newSelection;
+#ifdef WYUNI_OS_WINDOWS
+        auto* sizer = GetSizer();
+        if (sizer)
+            sizer->Show(pSizerForDatasources, true, true);
+#endif
+        pSizerForDatasources->Layout();
+    }
+}
 
-			// wxListbox are really slow when inserting many items. We have to use
-			// a wxArrayString to prevent against stupid refresh by the control, since
-			// the methods Freeze and Thaw are not mandatory.....
-			CustomClientData::Vector pts;
-			wxArrayString arr;
-			arr.Alloc(pItems.size());
-			wxString tmp;
+void Component::onDatasourceClicked(void* ds)
+{
+    // getting the new current datasource
+    pCurrentDatasource = reinterpret_cast<Datasource::IDatasource*>(ds);
+    // The control must be invalidated to force the update
+    invalidate();
+    Refresh();
+}
 
-			auto end = pItems.end();
-			for (auto i = pItems.begin(); i != end; ++i)
-			{
-				if ((*i)->visible())
-				{
-					// Keeping a reference to the client data
-					auto* clientdata = new CustomClientData(*i);
-					pts.push_back(clientdata);
-					tmp = clientdata->item->htmlContent(wxEmptyString);
+void Component::onDraw(wxPaintEvent& evt)
+{
+    if (pInvalidated)
+    {
+        // avoid useless memory flush
+        MemoryFlushLocker memflushlocker;
 
-					if (pLastSelectedItem == *i)
-					{
-						selection = (int) arr.Add(tmp);
-						newSelection = pLastSelectedItem;
-					}
-					else
-					{
-						if (selection == -1 && (*i)->interactive())
-						{
-							selection = (int) arr.Add(tmp);
-							newSelection = *i;
-						}
-						else
-							arr.Add(tmp);
-					}
-				}
-			}
+        // The control is invalidated
+        // It must be refresh from the datasource
+        if (pCurrentDatasource)
+            pCurrentDatasource->refresh();
+        // Update the internal structure
+        internalUpdateItems();
+        pInvalidated = false;
+    }
+    // Continue
+    evt.Skip();
+}
 
-			assert((uint) arr.GetCount() == pts.size());
-			if (pListbox)
-				pListbox->Append(arr);
+void Component::internalClearTheListbox()
+{
+    if (pListbox && not pListbox->IsEmpty())
+    {
+        for (uint i = 0; i < pListbox->GetCount(); ++i)
+        {
+            // For an unknown reason we have to tell to wx to reset to nullptr
+            // to force the deletion of our objects...
+            pListbox->SetClientObject(i, nullptr);
+        }
 
-			for (uint i = 0; i != pts.size(); ++i)
-				pListbox->SetClientObject(i, pts[i]);
+        // Clear the listbox
+        pListbox->Clear();
+    }
+}
 
-			if (selection == -1)
-			{
-				if (pLastSelectedItem)
-				{
-					pLastSelectedItem = nullptr;
-					onItemSelected(pLastSelectedItem);
-				}
-			}
-			else
-			{
-				pListbox->SetSelection(selection);
-				pLastSelectedItem = newSelection;
-				onItemSelected(pLastSelectedItem);
-			}
-		}
-	}
-
-
-	void Component::updateHtmlContent()
-	{
-		if (pListbox)
-		{
-			for (uint i = 0; i < pListbox->GetCount(); ++i)
-			{
-				auto* cd = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(i));
-				if (cd)
-					pListbox->SetString(i, cd->item->htmlContent(wxEmptyString));
-			}
-		}
-	}
-
-
-	void Component::onSelectionChanged(wxCommandEvent& evt)
-	{
-		if (not GUIIsLock() && pListbox)
-		{
-			GUILocker locker;
-			auto* c = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(evt.GetSelection()));
-			if (c)
-			{
-				pLastSelectedItem = c->item;
-				onItemSelected(c->item);
-			}
-		}
-	}
-
-
-	void Component::onSelectionDblClick(wxCommandEvent& evt)
-	{
-		if (not GUIIsLock() && pListbox)
-		{
-			GUILocker locker;
-			auto* c = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(evt.GetSelection()));
-			if (c)
-			{
-				pLastSelectedItem = c->item;
-				onItemDblClick(c->item);
-			}
-		}
-	}
-
-
-	void Component::internalAddDatasource(Datasource::IDatasource* ds)
-	{
-		if (ds)
-		{
-			typedef Antares::Component::Button ButtonType;
-			auto* btn = new ButtonType(this, wxEmptyString, ds->icon(),
-				this, &Component::onDatasourceClicked);
-			pSizerForDatasources->Add(btn, 0, wxALL|wxEXPAND);
-			btn->userdata(ds);
-			// Keep a reference somewhere
-			pDatasources[btn->GetId()] = ds;
-
-			# ifdef WYUNI_OS_WINDOWS
-			auto* sizer = GetSizer();
-			if (sizer)
-				sizer->Show(pSizerForDatasources, true, true);
-			# endif
-			pSizerForDatasources->Layout();
-		}
-	}
-
-
-	void Component::onDatasourceClicked(void* ds)
-	{
-		// getting the new current datasource
-		pCurrentDatasource = reinterpret_cast<Datasource::IDatasource*>(ds);
-		// The control must be invalidated to force the update
-		invalidate();
-		Refresh();
-	}
-
-
-	void Component::onDraw(wxPaintEvent& evt)
-	{
-		if (pInvalidated)
-		{
-			// avoid useless memory flush
-			MemoryFlushLocker memflushlocker;
-
-			// The control is invalidated
-			// It must be refresh from the datasource
-			if (pCurrentDatasource)
-				pCurrentDatasource->refresh();
-			// Update the internal structure
-			internalUpdateItems();
-			pInvalidated = false;
-		}
-		// Continue
-		evt.Skip();
-	}
-
-
-
-	void Component::internalClearTheListbox()
-	{
-		if (pListbox && not pListbox->IsEmpty())
-		{
-			for (uint i = 0; i < pListbox->GetCount(); ++i)
-			{
-				// For an unknown reason we have to tell to wx to reset to nullptr
-				// to force the deletion of our objects...
-				pListbox->SetClientObject(i, nullptr);
-			}
-
-			// Clear the listbox
-			pListbox->Clear();
-		}
-	}
-
-
-	void Component::onStudyClosed()
-	{
-		clear();
-	}
-
-
-
-
-
+void Component::onStudyClosed()
+{
+    clear();
+}
 
 } // namespace HTMLListbox
 } // namespace Component
 } // namespace Antares
-

@@ -25,32 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include <yuni/yuni.h>
 #include <antares/study.h>
 #include <antares/study/memory-usage.h>
@@ -59,61 +33,54 @@
 #include "sim_structure_donnees.h"
 #include "sim_structure_probleme_economique.h"
 
-
 namespace Antares
 {
 namespace Solver
 {
 namespace Simulation
 {
+void DispatchableMarginForAllAreas(const Data::Study& study,
+                                   PROBLEME_HEBDO& problem,
+                                   uint numSpace,
+                                   uint hourInYear,
+                                   uint nbHour)
+{
+    assert(study.parameters.mode == Data::stdmEconomy);
+    assert(nbHour == 168);
+    (void)nbHour;
 
-	void DispatchableMarginForAllAreas(	const Data::Study& study, 
-										PROBLEME_HEBDO& problem,
-										uint numSpace,
-										uint hourInYear, 
-										uint nbHour)
-	{
-		assert(study.parameters.mode == Data::stdmEconomy);
-		assert(nbHour == 168);
-		(void) nbHour;
+    study.areas.each([&](Data::Area& area) {
+        double* dtgmrg = area.scratchpad[numSpace]->dispatchableGenerationMargin;
+        for (uint i = 0; i != 168; ++i)
+            dtgmrg[i] = 0.;
 
-		study.areas.each([&] (Data::Area& area)
-		{
-			double* dtgmrg = area.scratchpad[numSpace]->dispatchableGenerationMargin;
-			for (uint i = 0; i != 168; ++i)
-				dtgmrg[i] = 0.;
+        if (not area.thermal.list.empty())
+        {
+            auto& hourlyResults = *(problem.ResultatsHoraires[area.index]);
+            auto end = area.thermal.list.end();
 
-			if (not area.thermal.list.empty())
-			{
-				auto& hourlyResults   = *(problem.ResultatsHoraires[area.index]);
-				auto end = area.thermal.list.end();
+            for (auto i = area.thermal.list.begin(); i != end; ++i)
+            {
+                auto& cluster = *(i->second);
+                uint chro = NumeroChroniquesTireesParPays[numSpace][area.index]
+                              ->ThermiqueParPalier[cluster.areaWideIndex];
+                auto& matrix = cluster.series->series;
+                assert(chro < matrix.width);
+                auto& column = matrix.entry[chro];
+                assert(hourInYear + 168 <= matrix.height && "index out of bounds");
 
-				for (auto i = area.thermal.list.begin(); i != end; ++i)
-				{
-					
-					auto& cluster = *(i->second);
-					uint chro = NumeroChroniquesTireesParPays[numSpace][area.index]->ThermiqueParPalier[cluster.areaWideIndex]; 
-					auto& matrix = cluster.series->series;
-					assert(chro < matrix.width);
-					auto& column = matrix.entry[chro];
-					assert(hourInYear + 168 <= matrix.height && "index out of bounds");
+                for (uint y = 0; y != 168; ++y)
+                {
+                    double production = hourlyResults.ProductionThermique[y]
+                                          ->ProductionThermiqueDuPalier[cluster.index];
+                    dtgmrg[y] += column[y + hourInYear] - production;
+                }
+                matrix.flush();
+            }
+        }
+    });
+}
 
-					for (uint y = 0; y != 168; ++y)
-					{
-						double production = hourlyResults.ProductionThermique[y]->ProductionThermiqueDuPalier[cluster.index];
-						dtgmrg[y] += column[y + hourInYear] - production;
-					}
-					matrix.flush();
-				}
-			}
-		});
-	}
-
-
-
-
-
-} 
-} 
-} 
-
+} // namespace Simulation
+} // namespace Solver
+} // namespace Antares

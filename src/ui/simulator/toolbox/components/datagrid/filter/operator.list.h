@@ -25,12 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_FILTER_OPERATOR_LIST_H__
-# define __ANTARES_TOOLBOX_FILTER_OPERATOR_LIST_H__
+#define __ANTARES_TOOLBOX_FILTER_OPERATOR_LIST_H__
 
-# include <vector>
-# include <antares/wx-wrapper.h>
-
-
+#include <vector>
+#include <antares/wx-wrapper.h>
 
 namespace Antares
 {
@@ -38,89 +36,98 @@ namespace Toolbox
 {
 namespace Filter
 {
-
-	// Forward declaration
-	class AFilterBase;
+// Forward declaration
+class AFilterBase;
 
 namespace Operator
 {
+// Forward declaration
+class AOperator;
 
-	// Forward declaration
-	class AOperator;
+/*!
+** \brief Operator list
+*/
+class List
+{
+public:
+    //! \name Constructor && Destructor
+    //@{
+    //! Constructor
+    List(AFilterBase* parent);
+    //! Destructor
+    ~List();
+    //@}
 
+    /*!
+    ** \brief Clear the container
+    */
+    void clear();
 
+    /*!
+    ** \brief Add an operator from its given name
+    **
+    ** \param name Name of the operator
+    ** \return True if an operator has been added, false if not found
+    */
+    bool add(const wxString& name);
 
+    void addStdArithmetic(bool withModulo = true);
+    void addStdWeekday(bool withModulo = false);
+    void addStdMonth(bool withModulo = false);
 
-	/*!
-	** \brief Operator list
-	*/
-	class List
-	{
-	public:
-		//! \name Constructor && Destructor
-		//@{
-		//! Constructor
-		List(AFilterBase* parent);
-		//! Destructor
-		~List();
-		//@}
+    uint size() const
+    {
+        return (uint)pItems.size();
+    }
+    uint count() const
+    {
+        return (uint)pItems.size();
+    }
 
-		/*!
-		** \brief Clear the container
-		*/
-		void clear();
+    //! Get if the list is empty
+    bool empty() const
+    {
+        return pItems.empty();
+    }
 
-		/*!
-		** \brief Add an operator from its given name
-		**
-		** \param name Name of the operator
-		** \return True if an operator has been added, false if not found
-		*/
-		bool add(const wxString& name);
+    //! Get the parent filter
+    AFilterBase* parentFilter() const
+    {
+        return pParentFilter;
+    }
 
-		void addStdArithmetic(bool withModulo = true);
-		void addStdWeekday(bool withModulo = false);
-		void addStdMonth(bool withModulo = false);
+    /*!
+    ** \brief Get the operator at a given index
+    */
+    AOperator* at(const int indx) const throw()
+    {
+        return pItems[indx];
+    }
 
-		uint size() const {return (uint) pItems.size();}
-		uint count() const {return (uint) pItems.size();}
+    //! Operator []
+    AOperator* operator[](const int indx) const throw()
+    {
+        return pItems[indx];
+    }
 
-		//! Get if the list is empty
-		bool empty() const {return pItems.empty();}
+private:
+    bool internalAdd(const wxString& name);
 
-		//! Get the parent filter
-		AFilterBase* parentFilter() const {return pParentFilter;}
+private:
+    //! Parent filter
+    AFilterBase* pParentFilter;
+    //! Operator list (typedef)
+    typedef std::vector<AOperator*> OperatorList;
+    //! Operator list
+    OperatorList pItems;
 
-		/*!
-		** \brief Get the operator at a given index
-		*/
-		AOperator* at(const int indx) const throw() {return pItems[indx];}
-
-		//! Operator []
-		AOperator* operator [] (const int indx) const throw() {return pItems[indx];}
-
-
-	private:
-		bool internalAdd(const wxString& name);
-
-	private:
-		//! Parent filter
-		AFilterBase* pParentFilter;
-		//! Operator list (typedef)
-		typedef std::vector<AOperator*> OperatorList;
-		//! Operator list
-		OperatorList pItems;
-
-	}; // class List
-
-
-
+}; // class List
 
 } // namespace Operator
 } // namespace Filter
 } // namespace Toolbox
 } // namespace Antares
 
-# include "operator.h"
+#include "operator.h"
 
 #endif // __ANTARES_TOOLBOX_FILTER_OPERATOR_LIST_H__

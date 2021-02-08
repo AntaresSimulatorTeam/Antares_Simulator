@@ -25,14 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_FILTER_FILTER_H__
-# define __ANTARES_TOOLBOX_FILTER_FILTER_H__
+#define __ANTARES_TOOLBOX_FILTER_FILTER_H__
 
-# include <antares/wx-wrapper.h>
-# include <wx/panel.h>
-# include "operator.h"
-# include "operator.list.h"
-# include <antares/date.h>
-
+#include <antares/wx-wrapper.h>
+#include <wx/panel.h>
+#include "operator.h"
+#include "operator.list.h"
+#include <antares/date.h>
 
 namespace Antares
 {
@@ -40,170 +39,187 @@ namespace Toolbox
 {
 namespace Filter
 {
+// Forward declaration
+class Input;
 
-	// Forward declaration
-	class Input;
+/*!
+** \brief Abstract Filter
+**
+** A filter is a single test/condition to know if a value should be
+** displayed and/or managed according the user-settings (for example
+** `hour in the year > 42` is a filter).
+** A filter is mainly used by datagrid.
+**
+** A filter is composed into three parts : Its name/caption, its operator
+** (equals, less than...) and the parameters (a single one most of the time).
+** Graphically, it will be the same. All components created by the filter
+** only handle data specific to the filter itself.
+*/
+class AFilterBase : public wxEvtHandler
+{
+public:
+    /*!
+    ** \brief Precision of the filter
+    **
+    ** All filters with a precision below than required will not
+    ** be displayed.
+    */
+    static Date::Precision Precision()
+    {
+        return Date::stepNone;
+    }
 
+public:
+    //! \name Name
+    //@{
+    //! Get the name of the filter
+    static const wxChar* Name()
+    {
+        return wxT("(null)");
+    }
+    //@}
 
+    //! \name Caption
+    //@{
+    //! Get the caption of the filter
+    static const wxChar* Caption()
+    {
+        return wxT("(null)");
+    }
+    //@}
 
+    /*!
+    ** \brief Get the caption of a filter from its name
+    */
+    static const wxChar* CaptionFromName(const wxString& name, Date::Precision precision);
 
-	/*!
-	** \brief Abstract Filter
-	**
-	** A filter is a single test/condition to know if a value should be
-	** displayed and/or managed according the user-settings (for example
-	** `hour in the year > 42` is a filter).
-	** A filter is mainly used by datagrid.
-	**
-	** A filter is composed into three parts : Its name/caption, its operator
-	** (equals, less than...) and the parameters (a single one most of the time).
-	** Graphically, it will be the same. All components created by the filter
-	** only handle data specific to the filter itself.
-	*/
-	class AFilterBase : public wxEvtHandler
-	{
-	public:
-		/*!
-		** \brief Precision of the filter
-		**
-		** All filters with a precision below than required will not
-		** be displayed.
-		*/
-		static Date::Precision Precision() {return Date::stepNone;}
+    /*!
+    ** \brief Create a filter from its name
+    */
+    static AFilterBase* FactoryCreate(Input* parent, const wxString& name);
 
-	public:
-		//! \name Name
-		//@{
-		//! Get the name of the filter
-		static const wxChar* Name() {return wxT("(null)");}
-		//@}
+public:
+    //! \name Constructor && Destructor
+    //@{
+    //! Default constructor
+    AFilterBase(Input* parent);
+    //! Destructor
+    virtual ~AFilterBase();
+    //@}
 
-		//! \name Caption
-		//@{
-		//! Get the caption of the filter
-		static const wxChar* Caption() {return wxT("(null)");}
-		//@}
+    //! \name Precision of the filter
+    //@{
+    virtual Date::Precision precision() const;
+    //@}
 
-		/*!
-		** \brief Get the caption of a filter from its name
-		*/
-		static const wxChar* CaptionFromName(const wxString& name, Date::Precision precision);
+    //! \name What kind of item should be tested
+    //@{
+    virtual bool checkOnRowsLabels() const
+    {
+        return false;
+    }
+    virtual bool checkOnColsLabels() const
+    {
+        return false;
+    }
+    virtual bool checkOnCells() const
+    {
+        return false;
+    }
+    //@}
 
-		/*!
-		** \brief Create a filter from its name
-		*/
-		static AFilterBase* FactoryCreate(Input* parent, const wxString& name);
+    //! Get if the filter is about the raw values
+    virtual bool checkOnNumericValues() const
+    {
+        return true;
+    }
 
-	public:
-		//! \name Constructor && Destructor
-		//@{
-		//! Default constructor
-		AFilterBase(Input* parent);
-		//! Destructor
-		virtual ~AFilterBase();
-		//@}
+    //! Get the name of the filter
+    virtual const wxChar* name() const = 0;
 
-		//! \name Precision of the filter
-		//@{
-		virtual Date::Precision precision() const;
-		//@}
+    //! Get the caption of the filter
+    virtual const wxChar* caption() const = 0;
 
-		//! \name What kind of item should be tested
-		//@{
-		virtual bool checkOnRowsLabels() const {return false;}
-		virtual bool checkOnColsLabels() const {return false;}
-		virtual bool checkOnCells() const {return false;}
-		//@}
+    //! \name Filter
+    //@{
+    virtual bool rowIsValid(int row) const;
+    virtual bool colIsValid(int col) const;
+    virtual bool cellIsValid(const double v) const;
+    virtual bool cellIsValid(const wxString& v) const;
+    //@}
 
-		//! Get if the filter is about the raw values
-		virtual bool checkOnNumericValues() const {return true;}
+    //! \name GUI
+    //@{
+    /*!
+    ** \brief Create all GUI components for the filter
+    **
+    ** Actually all components are not created for the filter, but only
+    **
+    */
+    void recreateGUI(wxWindow* parent);
 
-		//! Get the name of the filter
-		virtual const wxChar* name() const = 0;
+    /*!
+    ** \brief Update the GUI according the current selected operator
+    */
+    void refreshGUIOperator();
 
-		//! Get the caption of the filter
-		virtual const wxChar* caption() const = 0;
+    /*!
+    ** \brief Update the GUI according the given operator
+    **
+    ** The operator is not forced to be the selected one.
+    */
+    void refreshGUIOperator(Operator::AOperator* op);
 
-		//! \name Filter
-		//@{
-		virtual bool rowIsValid(int row) const;
-		virtual bool colIsValid(int col) const;
-		virtual bool cellIsValid(const double v) const;
-		virtual bool cellIsValid(const wxString& v) const;
-		//@}
+    /*!
+    ** \brief Delete all components associated to the GUI
+    */
+    void deleteGUI();
 
-		//! \name GUI
-		//@{
-		/*!
-		** \brief Create all GUI components for the filter
-		**
-		** Actually all components are not created for the filter, but only
-		**
-		*/
-		void recreateGUI(wxWindow* parent);
+    //! Get the sizer
+    wxSizer* sizer() const
+    {
+        return pMainSizer;
+    }
 
-		/*!
-		** \brief Update the GUI according the current selected operator
-		*/
-		void refreshGUIOperator();
+    void refreshAttachedGrid();
+    //@}
 
-		/*!
-		** \brief Update the GUI according the given operator
-		**
-		** The operator is not forced to be the selected one.
-		*/
-		void refreshGUIOperator(Operator::AOperator* op);
+    //! Get the parent input
+    Input* parentInput() const
+    {
+        return pParentInput;
+    }
 
-		/*!
-		** \brief Delete all components associated to the GUI
-		*/
-		void deleteGUI();
+    /*!
+    ** \brief Precision required by the datagrid
+    */
+    void dataGridPrecision(Date::Precision p);
 
-		//! Get the sizer
-		wxSizer* sizer() const {return pMainSizer;}
+public:
+    //! List of all possible operations for the filter
+    Operator::List operators;
+    //! The current selected operator for the filter
+    Operator::AOperator* currentOperator;
 
-		void refreshAttachedGrid();
-		//@}
+protected:
+    //! Precision
+    Date::Precision pDataGridPrecision;
 
-		//! Get the parent input
-		Input* parentInput() const {return pParentInput;}
+private:
+    //! The operator has been changed
+    void onOperatorChanged(wxCommandEvent& evt);
 
-		/*!
-		** \brief Precision required by the datagrid
-		*/
-		void dataGridPrecision(Date::Precision p);
+private:
+    //! Parent input
+    Input* pParentInput;
+    //! The main sizer (controls for the operator + parameters)
+    wxSizer* pMainSizer;
+    //! The sizer for parameters (all controls after the operator)
+    wxSizer* pSizerParameters;
+    //! The last parent used for creating controls
+    wxWindow* pLastParent;
 
-
-	public:
-		//! List of all possible operations for the filter
-		Operator::List operators;
-		//! The current selected operator for the filter
-		Operator::AOperator* currentOperator;
-
-
-	protected:
-		//! Precision
-		Date::Precision pDataGridPrecision;
-
-	private:
-		//! The operator has been changed
-		void onOperatorChanged(wxCommandEvent& evt);
-
-	private:
-		//! Parent input
-		Input* pParentInput;
-		//! The main sizer (controls for the operator + parameters)
-		wxSizer* pMainSizer;
-		//! The sizer for parameters (all controls after the operator)
-		wxSizer* pSizerParameters;
-		//! The last parent used for creating controls
-		wxWindow* pLastParent;
-
-	}; // class AFilterBase
-
-
-
-
+}; // class AFilterBase
 
 } // namespace Filter
 } // namespace Toolbox

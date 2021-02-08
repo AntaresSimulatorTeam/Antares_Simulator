@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_GET_START_TIME_H__
-# define __ANTARES_GET_START_TIME_H__
+#define __ANTARES_GET_START_TIME_H__
 
 int getstarttime();
 

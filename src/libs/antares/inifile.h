@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_INIFILE_H__
-# define __ANTARES_LIBS_INIFILE_H__
+#define __ANTARES_LIBS_INIFILE_H__
 
-# include "inifile/inifile.h"
+#include "inifile/inifile.h"
 
 #endif /* __TOOLBOX_INIFILE_H__ */

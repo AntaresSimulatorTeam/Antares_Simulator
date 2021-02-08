@@ -29,10 +29,7 @@
 #include "../../../../application/study.h"
 #include "../../../../toolbox/components/refresh.h"
 
-
 using namespace Yuni;
-
-
 
 namespace Antares
 {
@@ -42,79 +39,65 @@ namespace Datagrid
 {
 namespace Renderer
 {
+ARendererArea::ARendererArea(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
+ pControl(control), pArea(nullptr)
+{
+    // Event: The current selected area
+    if (notifier)
+        notifier->onAreaChanged.connect(this, &ARendererArea::onAreaChanged);
 
+    // Event: An area has been deletde
+    OnStudyAreaDelete.connect(this, &ARendererArea::onAreaDelete);
+}
 
-	ARendererArea::ARendererArea(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
-		pControl(control),
-		pArea(nullptr)
-	{
-		// Event: The current selected area
-		if (notifier)
-			notifier->onAreaChanged.connect(this, &ARendererArea::onAreaChanged);
+ARendererArea::~ARendererArea()
+{
+    onRefresh.clear();
+    destroyBoundEvents();
+}
 
-		// Event: An area has been deletde
-		OnStudyAreaDelete.connect(this, &ARendererArea::onAreaDelete);
-	}
+void ARendererArea::onAreaChanged(Data::Area* area)
+{
+    // FIXME
+    if (area && !study)
+        study = Data::Study::Current::Get();
 
+    pArea = !study ? nullptr : area;
+    internalAreaChanged(area);
+    onRefresh();
+    if (pControl)
+        RefreshAllControls(pControl);
+}
 
-	ARendererArea::~ARendererArea()
-	{
-		onRefresh.clear();
-		destroyBoundEvents();
-	}
+void ARendererArea::onAreaDelete(Data::Area* area)
+{
+    if (area == pArea)
+    {
+        pArea = nullptr;
+        internalAreaChanged(nullptr);
+        onRefresh();
+        if (pControl)
+            RefreshAllControls(pControl);
+    }
+}
 
+void ARendererArea::internalAreaChanged(Data::Area*)
+{
+    // Do nothing
+}
 
-	void ARendererArea::onAreaChanged(Data::Area* area)
-	{
-		// FIXME
-		if (area && !study)
-			study = Data::Study::Current::Get();
+void ARendererArea::onStudyClosed()
+{
+    onAreaChanged(nullptr);
+    IRenderer::onStudyClosed();
+}
 
-		pArea = !study ? nullptr : area;
-		internalAreaChanged(area);
-		onRefresh();
-		if (pControl)
-			RefreshAllControls(pControl);
-	}
-
-
-	void ARendererArea::onAreaDelete(Data::Area* area)
-	{
-		if (area == pArea)
-		{
-			pArea = nullptr;
-			internalAreaChanged(nullptr);
-			onRefresh();
-			if (pControl)
-				RefreshAllControls(pControl);
-		}
-	}
-
-
-	void ARendererArea::internalAreaChanged(Data::Area*)
-	{
-		// Do nothing
-	}
-
-
-	void ARendererArea::onStudyClosed()
-	{
-		onAreaChanged(nullptr);
-		IRenderer::onStudyClosed();
-	}
-
-
-	void ARendererArea::onStudyLoaded()
-	{
-		IRenderer::onStudyLoaded();
-	}
-
-
-
-
+void ARendererArea::onStudyLoaded()
+{
+    IRenderer::onStudyLoaded();
+}
 
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
 } // namespace Antares
-

@@ -11,7 +11,6 @@
 #pragma once
 #include "../../../core/string.h"
 
-
 namespace Yuni
 {
 namespace Private
@@ -20,38 +19,32 @@ namespace IO
 {
 namespace Directory
 {
+//! Platform-dependant data implementation
+class IteratorData;
 
-	//! Platform-dependant data implementation
-	class IteratorData;
+IteratorData* IteratorDataCreate(const AnyString& folder, uint flags);
 
+IteratorData* IteratorDataCopy(const IteratorData*);
 
+void IteratorDataFree(const IteratorData*);
 
-	IteratorData* IteratorDataCreate(const AnyString& folder, uint flags);
+bool IteratorDataValid(const IteratorData*);
 
-	IteratorData* IteratorDataCopy(const IteratorData*);
+IteratorData* IteratorDataNext(IteratorData*);
 
-	void IteratorDataFree(const IteratorData*);
+const String& IteratorDataFilename(const IteratorData*);
 
-	bool IteratorDataValid(const IteratorData*);
+const String& IteratorDataParentName(const IteratorData*);
 
-	IteratorData* IteratorDataNext(IteratorData*);
+const String& IteratorDataName(const IteratorData*);
 
-	const String& IteratorDataFilename(const IteratorData*);
+uint64 IteratorDataSize(const IteratorData*);
 
-	const String& IteratorDataParentName(const IteratorData*);
+sint64 IteratorDataModified(const IteratorData*);
 
-	const String& IteratorDataName(const IteratorData*);
+bool IteratorDataIsFolder(const IteratorData*);
 
-	uint64 IteratorDataSize(const IteratorData*);
-
-	sint64 IteratorDataModified(const IteratorData*);
-
-	bool IteratorDataIsFolder(const IteratorData*);
-
-	bool IteratorDataIsFile(const IteratorData*);
-
-
-
+bool IteratorDataIsFile(const IteratorData*);
 
 } // namespace Directory
 } // namespace IO

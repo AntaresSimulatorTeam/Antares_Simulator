@@ -27,7 +27,6 @@
 
 #include "enabled.h"
 
-
 namespace Antares
 {
 namespace Action
@@ -36,50 +35,42 @@ namespace AntaresStudy
 {
 namespace Constraint
 {
+bool Enabled::prepareWL(Context&)
+{
+    pInfos.message.clear();
+    pInfos.state = stReady;
+    switch (pInfos.behavior)
+    {
+    case bhOverwrite:
+        pInfos.message << "The Enabled will be copied";
+        break;
+    default:
+        pInfos.state = stNothingToDo;
+        break;
+    }
 
+    return true;
+}
 
-	bool Enabled::prepareWL(Context&)
-	{
-		pInfos.message.clear();
-		pInfos.state = stReady;
-		switch (pInfos.behavior)
-		{
-			case bhOverwrite:
-				pInfos.message << "The Enabled will be copied";
-				break;
-			default:
-				pInfos.state = stNothingToDo;
-				break;
-		}
+bool Enabled::performWL(Context& ctx)
+{
+    if (ctx.constraint && ctx.extStudy)
+    {
+        Antares::Data::ConstraintName id;
+        TransformNameIntoID(pOriginalConstraintName, id);
 
-		return true;
-	}
+        Data::BindingConstraint* source = ctx.extStudy->bindingConstraints.find(id);
 
-
-	bool Enabled::performWL(Context& ctx)
-	{
-		if (ctx.constraint && ctx.extStudy)
-		{
-			Antares::Data::ConstraintName id;
-			TransformNameIntoID(pOriginalConstraintName, id);
-
-			Data::BindingConstraint* source = ctx.extStudy->bindingConstraints.find(id);
-
-			if (source && source != ctx.constraint)
-			{
-				ctx.constraint->enabled(source->enabled());
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-
-
+        if (source && source != ctx.constraint)
+        {
+            ctx.constraint->enabled(source->enabled());
+            return true;
+        }
+    }
+    return false;
+}
 
 } // namespace Constraint
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
-

@@ -14,19 +14,16 @@
 #include <IOKit/IOKitLib.h>
 #include <IOKit/graphics/IOGraphicsLib.h>
 
-
 #define GET_MODE_WIDTH(mode) GetDictionaryLong((mode), kCGDisplayWidth)
 #define GET_MODE_HEIGHT(mode) GetDictionaryLong((mode), kCGDisplayHeight)
 #define GET_MODE_REFRESH_RATE(mode) GetDictionaryLong((mode), kCGDisplayRefreshRate)
 #define GET_MODE_BITS_PER_PIXEL(mode) GetDictionaryLong((mode), kCGDisplayBitsPerPixel)
 
-#define GET_MODE_SAFE_FOR_HARDWARE(mode) GetDictionaryBoolean((mode), kCGDisplayModeIsSafeForHardware)
+#define GET_MODE_SAFE_FOR_HARDWARE(mode) \
+    GetDictionaryBoolean((mode), kCGDisplayModeIsSafeForHardware)
 #define GET_MODE_STRETCHED(mode) GetDictionaryBoolean((mode), kCGDisplayModeIsStretched)
 
 #define GET_MODE_TELEVISION(mode) GetDictionaryBoolean((mode), kCGDisplayModeIsTelevisionOutput)
-
-
-
 
 namespace Yuni
 {
@@ -34,186 +31,181 @@ namespace Device
 {
 namespace Display
 {
+namespace // anonymous
+{
+static uint bitDepthFromDisplayMode(CGDisplayModeRef mode)
+{
+    CFStringRef pixEnc = CGDisplayModeCopyPixelEncoding(mode);
 
-	namespace // anonymous
-	{
+    if (CFStringCompare(pixEnc, CFSTR(IO32BitDirectPixels), kCFCompareCaseInsensitive)
+        == kCFCompareEqualTo)
+        return 32;
+    if (CFStringCompare(pixEnc, CFSTR(IO16BitDirectPixels), kCFCompareCaseInsensitive)
+        == kCFCompareEqualTo)
+        return 16;
+    if (CFStringCompare(pixEnc, CFSTR(IO8BitIndexedPixels), kCFCompareCaseInsensitive)
+        == kCFCompareEqualTo)
+        return 8;
 
-		static uint bitDepthFromDisplayMode(CGDisplayModeRef mode)
-		{
-			CFStringRef pixEnc = CGDisplayModeCopyPixelEncoding(mode);
+    return 0; // default and invalid value
+}
 
-			if (CFStringCompare(pixEnc, CFSTR(IO32BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
-				return 32;
-			if (CFStringCompare(pixEnc, CFSTR(IO16BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
-				return 16;
-			if (CFStringCompare(pixEnc, CFSTR(IO8BitIndexedPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
-				return 8;
+static void cocoaGetAllAvailableModesUseful(CGDirectDisplayID display,
+                                            SmartPtr<OrderedResolutions>& res)
+{
+    // get a list of all possible display modes for this system.
+    // >= 10.6 is required for CGDisplayCopyAllDisplayModes
 
-			return 0; // default and invalid value
-		}
+    CFArrayRef availableModes = CGDisplayCopyAllDisplayModes(display, NULL);
+    if (!availableModes)
+        return;
 
+    // Getting the current bits per pixels value
+    uint currentModeBitsPerPixel;
+    {
+        CGDisplayModeRef mode = CGDisplayCopyDisplayMode(display);
+        if (!mode)
+        {
+            CFRelease(availableModes);
+            return;
+        }
+        currentModeBitsPerPixel = bitDepthFromDisplayMode(mode);
+        CGDisplayModeRelease(mode);
+    }
 
+    uint numberOfAvailableModes = (uint)CFArrayGetCount(availableModes);
+    for (uint i = 0; i != numberOfAvailableModes; ++i)
+    {
+        CGDisplayModeRef mode = (CGDisplayModeRef)CFArrayGetValueAtIndex(availableModes, i);
+        if (!mode)
+            continue;
 
-		static void cocoaGetAllAvailableModesUseful(CGDirectDisplayID display, SmartPtr<OrderedResolutions>& res)
-		{
-			// get a list of all possible display modes for this system.
-			// >= 10.6 is required for CGDisplayCopyAllDisplayModes
+        // we are only interested in modes with the same bits per pixel as current.
+        // to allow for switching from fullscreen to windowed modes.
+        // that are safe for this hardward
+        // that are not stretched.
+        uint bitsPerPixel = bitDepthFromDisplayMode(mode);
+        if (bitsPerPixel != currentModeBitsPerPixel)
+            continue;
 
-			CFArrayRef availableModes = CGDisplayCopyAllDisplayModes(display, NULL);
-			if (!availableModes)
-				return;
+        uint width = (uint)CGDisplayModeGetWidth(mode);
+        uint height = (uint)CGDisplayModeGetHeight(mode);
+        (*res)[width][height][(uint8)bitsPerPixel] = true;
+    }
 
-			// Getting the current bits per pixels value
-			uint currentModeBitsPerPixel;
-			{
-				CGDisplayModeRef mode = CGDisplayCopyDisplayMode(display);
-				if (!mode)
-				{
-					CFRelease(availableModes);
-					return;
-				}
-				currentModeBitsPerPixel = bitDepthFromDisplayMode(mode);
-				CGDisplayModeRelease(mode);
-			}
+    CFRelease(availableModes);
+}
 
-			uint numberOfAvailableModes = (uint) CFArrayGetCount(availableModes);
-			for (uint i = 0; i != numberOfAvailableModes; ++i)
-			{
-				CGDisplayModeRef mode = (CGDisplayModeRef) CFArrayGetValueAtIndex(availableModes, i);
-				if (!mode)
-					continue;
+static void DictionaryValueToString(String& out, CFStringRef formatString, ...)
+{
+    CFStringRef resultString;
+    CFDataRef data;
+    va_list argList;
 
-				// we are only interested in modes with the same bits per pixel as current.
-				// to allow for switching from fullscreen to windowed modes.
-				// that are safe for this hardward
-				// that are not stretched.
-				uint bitsPerPixel = bitDepthFromDisplayMode(mode);
-				if (bitsPerPixel != currentModeBitsPerPixel)
-					continue;
+    va_start(argList, formatString);
+    resultString = CFStringCreateWithFormatAndArguments(NULL, NULL, formatString, argList);
+    va_end(argList);
 
-				uint width  = (uint) CGDisplayModeGetWidth(mode);
-				uint height = (uint) CGDisplayModeGetHeight(mode);
-				(*res) [width][height][(uint8) bitsPerPixel] = true;
-			}
+    data
+      = CFStringCreateExternalRepresentation(NULL, resultString, CFStringGetSystemEncoding(), '?');
+    if (data != NULL)
+    {
+        char buffer[128];
+        int len = snprintf(buffer, 128, "%.*s", (int)CFDataGetLength(data), CFDataGetBytePtr(data));
+        if (len > 0)
+            out.append(buffer, (uint)len);
 
-			CFRelease(availableModes);
-		}
+        CFRelease(data);
+    }
 
+    CFRelease(resultString);
+}
 
-		static void DictionaryValueToString(String& out, CFStringRef formatString, ...)
-		{
-			CFStringRef resultString;
-			CFDataRef data;
-			va_list argList;
+/*!
+ ** \brief Get all monitor and their resolutions from the Cocoa Framework
+ **
+ ** \see
+ *http://developer.apple.com/documentation/GraphicsImaging/Reference/Quartz_Services_Ref/Reference/reference.html#//apple_ref/doc/uid/TP30001070-CH202-F17085
+ ** \see
+ *http://developer.apple.com/documentation/GraphicsImaging/Conceptual/QuartzDisplayServicesConceptual/Articles/DisplayInfo.html#//apple_ref/doc/uid/TP40004272
+ ** \see
+ *http://developer.apple.com/documentation/GraphicsImaging/Conceptual/OpenGL-MacProgGuide/opengl_quartz_services/chapter_952_section_2.html
+ ** \see http://www.cocoabuilder.com/archive/message/cocoa/2006/9/7/170773
+ */
+static void refreshForCocoa(MonitorsFound& lst)
+{
+    // All displays
+    CGDirectDisplayID displayArray[YUNI_DEVICE_MONITOR_COUNT_HARD_LIMIT];
+    // The count of display
+    CGDisplayCount numDisplays;
 
-			va_start(argList, formatString);
-			resultString = CFStringCreateWithFormatAndArguments(NULL, NULL, formatString, argList);
-			va_end(argList);
+    // Grab all available displays
+    CGGetOnlineDisplayList(YUNI_DEVICE_MONITOR_COUNT_HARD_LIMIT, displayArray, &numDisplays);
+    if (0 == numDisplays)
+        return;
 
-			data = CFStringCreateExternalRepresentation(NULL, resultString, CFStringGetSystemEncoding(), '?');
-			if (data != NULL)
-			{
-				char buffer[128];
-				int len = snprintf(buffer, 128, "%.*s", (int)CFDataGetLength(data), CFDataGetBytePtr(data));
-				if (len > 0)
-					out.append(buffer, (uint)len);
+    // Product name
+    String monitorProductName;
 
-				CFRelease(data);
-			}
+    // Browse all displays
+    for (uint i = 0; i < numDisplays; ++i)
+    {
+        const CGDirectDisplayID display = displayArray[i];
 
-			CFRelease(resultString);
-		}
+        monitorProductName.clear();
 
+        // Informations about the display, such as its product name
+        io_connect_t displayPort = CGDisplayIOServicePort(display);
+        if (displayPort != MACH_PORT_NULL)
+        {
+            CFDictionaryRef dict = IODisplayCreateInfoDictionary(displayPort, 0);
 
+            CFDictionaryRef names
+              = (CFDictionaryRef)CFDictionaryGetValue(dict, CFSTR(kDisplayProductName));
+            // Count items in the dictionary
+            CFIndex count = CFDictionaryGetCount(names);
 
+            if (count)
+            {
+                CFTypeRef* keys = (CFTypeRef*)::malloc((uint)count * sizeof(CFTypeRef));
+                CFTypeRef* values = (CFTypeRef*)::malloc((uint)count * sizeof(CFTypeRef));
+                CFDictionaryGetKeysAndValues(names, (const void**)keys, (const void**)values);
 
-		/*!
-		 ** \brief Get all monitor and their resolutions from the Cocoa Framework
-		 **
-		 ** \see http://developer.apple.com/documentation/GraphicsImaging/Reference/Quartz_Services_Ref/Reference/reference.html#//apple_ref/doc/uid/TP30001070-CH202-F17085
-		 ** \see http://developer.apple.com/documentation/GraphicsImaging/Conceptual/QuartzDisplayServicesConceptual/Articles/DisplayInfo.html#//apple_ref/doc/uid/TP40004272
-		 ** \see http://developer.apple.com/documentation/GraphicsImaging/Conceptual/OpenGL-MacProgGuide/opengl_quartz_services/chapter_952_section_2.html
-		 ** \see http://www.cocoabuilder.com/archive/message/cocoa/2006/9/7/170773
-		 */
-		static void refreshForCocoa(MonitorsFound& lst)
-		{
-			// All displays
-			CGDirectDisplayID displayArray [YUNI_DEVICE_MONITOR_COUNT_HARD_LIMIT];
-			// The count of display
-			CGDisplayCount numDisplays;
+                DictionaryValueToString(monitorProductName, CFSTR("%@"), values[0]);
+                monitorProductName.trim(" \r\n\t");
 
-			// Grab all available displays
-			CGGetOnlineDisplayList(YUNI_DEVICE_MONITOR_COUNT_HARD_LIMIT, displayArray, &numDisplays);
-			if (0 == numDisplays)
-				return;
+                ::free(keys);
+                ::free(values);
+            }
+            CFRelease(dict);
+        }
 
-			// Product name
-			String monitorProductName;
+        // int width  = CGDisplayPixelsWide(display);
+        // int height = CGDisplayPixelsHigh(display);
+        // int bpp    = CGDisplayBitsPerPixel(display);
+        bool mainDisplay = CGDisplayIsMain(display);
+        bool builtin = CGDisplayIsBuiltin(display);
+        bool ha = CGDisplayUsesOpenGLAcceleration(display);
+        // uint32_t modelNumber = CGDisplayModelNumber(display);
+        // uint32_t serialNumer = CGDisplaySerialNumber(display);
 
-			// Browse all displays
-			for (uint i = 0; i < numDisplays; ++i)
-			{
-				const CGDirectDisplayID display = displayArray[i];
+        Monitor::Ptr newMonitor(
+          new Monitor(monitorProductName, (Monitor::Handle)display, mainDisplay, ha, builtin));
 
-				monitorProductName.clear();
+        SmartPtr<OrderedResolutions> res(new OrderedResolutions());
+        cocoaGetAllAvailableModesUseful(display, res);
 
-				// Informations about the display, such as its product name
-				io_connect_t displayPort = CGDisplayIOServicePort(display);
-				if (displayPort != MACH_PORT_NULL)
-				{
-					CFDictionaryRef dict = IODisplayCreateInfoDictionary(displayPort, 0);
+        // Add it to the list
+        lst.push_back(SingleMonitorFound(newMonitor, res));
+    }
+}
 
-					CFDictionaryRef names = (CFDictionaryRef)CFDictionaryGetValue(dict, CFSTR(kDisplayProductName));
-					// Count items in the dictionary
-					CFIndex count = CFDictionaryGetCount(names);
+static inline void refreshOSSpecific(MonitorsFound& lst)
+{
+    refreshForCocoa(lst);
+}
 
-					if (count)
-					{
-						CFTypeRef* keys   = (CFTypeRef*) ::malloc((uint) count * sizeof(CFTypeRef));
-						CFTypeRef* values = (CFTypeRef*) ::malloc((uint) count * sizeof(CFTypeRef));
-						CFDictionaryGetKeysAndValues(names, (const void**) keys, (const void**) values);
-
-						DictionaryValueToString(monitorProductName, CFSTR("%@"), values[0]);
-						monitorProductName.trim(" \r\n\t");
-
-						::free(keys);
-						::free(values);
-					}
-					CFRelease(dict);
-				}
-
-				// int width  = CGDisplayPixelsWide(display);
-				// int height = CGDisplayPixelsHigh(display);
-				// int bpp    = CGDisplayBitsPerPixel(display);
-				bool mainDisplay = CGDisplayIsMain(display);
-				bool builtin     = CGDisplayIsBuiltin(display);
-				bool ha          = CGDisplayUsesOpenGLAcceleration(display);
-				// uint32_t modelNumber = CGDisplayModelNumber(display);
-				// uint32_t serialNumer = CGDisplaySerialNumber(display);
-
-				Monitor::Ptr newMonitor(new Monitor(monitorProductName,
-													(Monitor::Handle)display, mainDisplay, ha, builtin));
-
-				SmartPtr<OrderedResolutions> res(new OrderedResolutions());
-				cocoaGetAllAvailableModesUseful(display, res);
-
-				// Add it to the list
-				lst.push_back(SingleMonitorFound(newMonitor, res));
-			}
-		}
-
-
-		static inline void refreshOSSpecific(MonitorsFound& lst)
-		{
-			refreshForCocoa(lst);
-		}
-
-
-	} // anonymous namespace
-
-
-
-
+} // anonymous namespace
 
 } // namespace Display
 } // namespace Device

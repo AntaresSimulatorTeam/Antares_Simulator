@@ -25,14 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SIMULATION_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SIMULATION_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SIMULATION_H__
 
-# include <antares/wx-wrapper.h>
-# include "../renderer.h"
-# include <antares/date.h>
-# include <yuni/core/event.h>
-# include "../../../../application/study.h"
-
+#include <antares/wx-wrapper.h>
+#include "../renderer.h"
+#include <antares/date.h>
+#include <yuni/core/event.h>
+#include "../../../../application/study.h"
 
 namespace Antares
 {
@@ -42,52 +41,61 @@ namespace Datagrid
 {
 namespace Renderer
 {
+class SimulationTSManagement final : public IRenderer
+{
+public:
+    SimulationTSManagement();
+    virtual ~SimulationTSManagement();
 
+    virtual int width() const
+    {
+        return 5;
+    }
+    virtual int height() const
+    {
+        return 13;
+    }
 
-	class SimulationTSManagement final : public IRenderer
-	{
-	public:
-		SimulationTSManagement();
-		virtual ~SimulationTSManagement();
+    virtual wxString columnCaption(int colIndx) const;
 
-		virtual int width() const {return 5;}
-		virtual int height() const {return 13;}
+    virtual wxString rowCaption(int rowIndx) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual wxString cellValue(int x, int y) const;
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual double cellNumericValue(int x, int y) const;
 
-		virtual wxString cellValue(int x, int y) const;
+    virtual bool cellValue(int x, int y, const Yuni::String& value);
 
-		virtual double cellNumericValue(int x, int y) const;
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    {
+        // Do nothing
+    }
 
-		virtual bool cellValue(int x, int y, const Yuni::String& value);
+    virtual bool valid() const
+    {
+        return !(!study);
+    }
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{
-			// Do nothing
-		}
+    virtual uint maxWidthResize() const
+    {
+        return 0;
+    }
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
 
-		virtual bool valid() const {return !(!study);}
+    virtual wxColour horizontalBorderColor(int x, int y) const;
 
-		virtual uint maxWidthResize() const {return 0;}
-		virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+    void control(wxWindow* control)
+    {
+        pControl = control;
+    }
 
-		virtual wxColour horizontalBorderColor(int x, int y) const;
+protected:
+    wxWindow* pControl;
 
-		void control(wxWindow* control) {pControl = control;}
+private:
+    void onSimulationTSManagementChanged();
 
-	protected:
-		wxWindow* pControl;
-
-	private:
-		void onSimulationTSManagementChanged();
-
-	}; // class SimulationTSManagement
-
-
-
-
+}; // class SimulationTSManagement
 
 } // namespace Renderer
 } // namespace Datagrid

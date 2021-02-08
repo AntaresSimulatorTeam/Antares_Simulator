@@ -25,14 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_CONFIG_H__
-# define __ANTARES_LIBS_CONFIG_H__
+#define __ANTARES_LIBS_CONFIG_H__
 
-# include <yuni/yuni.h>
+#include <yuni/yuni.h>
 
 // Informations provided by CMake
-# include "../../config.h"
-
-
-
+#include "../../config.h"
 
 #endif /* __ANTARES_LIBS_CONFIG_H__ */

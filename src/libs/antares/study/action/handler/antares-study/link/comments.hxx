@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_LINK_COMMENTS_HXX__
-# define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_LINK_COMMENTS_HXX__
-
+#define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_LINK_COMMENTS_HXX__
 
 namespace Antares
 {
@@ -36,21 +35,16 @@ namespace AntaresStudy
 {
 namespace Link
 {
+template<class StringT1, class StringT2>
+inline Comments::Comments(const StringT1& fromarea, const StringT2& toarea) :
+ pOriginalFromAreaName(fromarea), pOriginalToAreaName(toarea)
+{
+    pInfos.caption << "Comments";
+}
 
-
-	template<class StringT1, class StringT2>
-	inline Comments::Comments(const StringT1& fromarea, const StringT2& toarea)
-		:pOriginalFromAreaName(fromarea),
-		pOriginalToAreaName(toarea)
-	{
-		pInfos.caption << "Comments";
-	}
-
-
-	inline Comments::~Comments()
-	{}
-
-
+inline Comments::~Comments()
+{
+}
 
 } // namespace Link
 } // namespace AntaresStudy

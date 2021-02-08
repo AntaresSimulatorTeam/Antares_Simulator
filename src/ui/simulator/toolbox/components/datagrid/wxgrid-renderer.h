@@ -25,14 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_WXGRID_RENDERER_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_WXGRID_RENDERER_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_WXGRID_RENDERER_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/math.h>
-# include <antares/wx-wrapper.h>
-# include <wx/grid.h>
-# include "renderer.h"
-
+#include <yuni/yuni.h>
+#include <yuni/core/math.h>
+#include <antares/wx-wrapper.h>
+#include <wx/grid.h>
+#include "renderer.h"
 
 namespace Antares
 {
@@ -40,24 +39,27 @@ namespace Component
 {
 namespace Datagrid
 {
+class AntaresWxGridRenderer : public wxGridCellFloatRenderer
+{
+public:
+    AntaresWxGridRenderer();
 
+    virtual ~AntaresWxGridRenderer()
+    {
+    }
 
-	class AntaresWxGridRenderer : public wxGridCellFloatRenderer
-	{
-	public:
-		AntaresWxGridRenderer();
+    virtual void Draw(wxGrid& grid,
+                      wxGridCellAttr& attr,
+                      wxDC& dc,
+                      const wxRect& r,
+                      int row,
+                      int col,
+                      bool isSelected);
 
-		virtual ~AntaresWxGridRenderer() {}
+public:
+    Renderer::IRenderer* renderer;
 
-		virtual void Draw(wxGrid& grid, wxGridCellAttr& attr, wxDC& dc, const wxRect& r, int row,  int col, bool isSelected);
-
-	public:
-		Renderer::IRenderer* renderer;
-
-	}; // class AntaresWxGridRenderer
-
-
-
+}; // class AntaresWxGridRenderer
 
 } // namespace Datagrid
 } // namespace Component

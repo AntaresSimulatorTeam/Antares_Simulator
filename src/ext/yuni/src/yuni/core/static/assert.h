@@ -11,9 +11,6 @@
 #pragma once
 #include "../preprocessor/std.h"
 
-
-
-
 /*!
 ** \def YUNI_STATIC_ASSERT(X,ID)
 ** \brief Assert at compile time
@@ -64,13 +61,14 @@
 **	// Error with gcc 3.x :
 **	// ./main.cpp: In member function `void Dummy<T>::foo() [with T = uint]':
 **	//	./main.cpp:36:   instantiated from here
-**	//	./main.cpp:11: error: creating array with size zero (` Assert_TheImplementationIsMissing')
+**	//	./main.cpp:11: error: creating array with size zero (`
+*Assert_TheImplementationIsMissing')
 **
 **	// Error with gcc 4.x :
 **	// ./main.cpp: In member function ‘void Dummy<T>::foo() [with T = uint]’:
 **	//	./main.cpp:36:   instantiated from here
-**	//	./main.cpp:11: error: creating array with negative size (‘(StaticAssert_TheImplementationIsMissing::._67)-0x000000001’)
-**	return 0;
+**	//	./main.cpp:11: error: creating array with negative size
+*(‘(StaticAssert_TheImplementationIsMissing::._67)-0x000000001’) *	return 0;
 ** }
 ** \endcode
 **
@@ -83,26 +81,40 @@
 ** \param ID An unique ID for the scope
 */
 #ifdef YUNI_HAS_CPP_STATIC_ASSERT
-#	define YUNI_STATIC_ASSERT(X, ID)   static_assert((X), #ID)
+#define YUNI_STATIC_ASSERT(X, ID) static_assert((X), #ID)
 #else
-#	define YUNI_STATIC_ASSERT(X, ID)  \
-		struct StaticAssert_##ID { \
-			enum { Assert_##ID = Yuni::Static::Assert<(0 != (X))>::result }; \
-		}; \
-		typedef char invokeStaticAssert_##ID[StaticAssert_##ID::Assert_##ID]
+#define YUNI_STATIC_ASSERT(X, ID)                                  \
+    struct StaticAssert_##ID                                       \
+    {                                                              \
+        enum                                                       \
+        {                                                          \
+            Assert_##ID = Yuni::Static::Assert<(0 != (X))>::result \
+        };                                                         \
+    };                                                             \
+    typedef char invokeStaticAssert_##ID[StaticAssert_##ID::Assert_##ID]
 #endif
-
-
 
 namespace Yuni
 {
 namespace Static
 {
+template<int N>
+struct Assert final
+{
+    enum
+    {
+        result = 1
+    };
+}; // No error
 
-	template<int N> struct Assert   final { enum {result =  1}; }; // No error
-
-	template<> struct Assert<false> final { enum {result = -1}; }; // Error
-
+template<>
+struct Assert<false> final
+{
+    enum
+    {
+        result = -1
+    };
+}; // Error
 
 } // namespace Static
-} // namespaec Yuni
+} // namespace Yuni

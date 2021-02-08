@@ -27,8 +27,7 @@
 #ifndef __ANTARES_COMMON_COMPONENTS_FRAME_REGISTRY_H__
 #define __ANTARES_COMMON_COMPONENTS_FRAME_REGISTRY_H__
 
-# include "frame.h"
-
+#include "frame.h"
 
 namespace Antares
 {
@@ -38,43 +37,37 @@ namespace Frame
 {
 namespace Registry
 {
+/*!
+** \brief Register a new frame
+*/
+void RegisterFrame(IFrame* frame);
 
-	/*!
-	** \brief Register a new frame
-	*/
-	void RegisterFrame(IFrame* frame);
+/*!
+** \brief Unregister a frame
+*/
+void UnregisterFrame(IFrame* frame);
 
-	/*!
-	** \brief Unregister a frame
-	*/
-	void UnregisterFrame(IFrame* frame);
+/*!
+** \brief Update all registered frames
+*/
+void DispatchUpdate();
 
-	/*!
-	** \brief Update all registered frames
-	*/
-	void DispatchUpdate();
+/*!
+** \brief Update all registered frames
+**
+** param exclude Any frame which should be excluded from the update
+*/
+void DispatchUpdate(IFrame* exclude);
 
-	/*!
-	** \brief Update all registered frames
-	**
-	** param exclude Any frame which should be excluded from the update
-	*/
-	void DispatchUpdate(IFrame* exclude);
+/*!
+** \brief Close all local registered frames
+*/
+void CloseAllLocal();
 
-
-	/*!
-	** \brief Close all local registered frames
-	*/
-	void CloseAllLocal();
-
-
-	/*!
-	** \brief Get the list of all registered frames
-	*/
-	const IFrame::Vector&  List();
-
-
-
+/*!
+** \brief Get the list of all registered frames
+*/
+const IFrame::Vector& List();
 
 } // namespace Registry
 } // namespace Frame

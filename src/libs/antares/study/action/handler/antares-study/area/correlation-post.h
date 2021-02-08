@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREA_CORRELATION_POST_H__
-# define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREA_CORRELATION_POST_H__
+#define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREA_CORRELATION_POST_H__
 
-# include <yuni/yuni.h>
-# include "../../../action.h"
-
+#include <yuni/yuni.h>
+#include "../../../action.h"
 
 namespace Antares
 {
@@ -39,48 +38,44 @@ namespace AntaresStudy
 {
 namespace Area
 {
+class CorrelationPost : public IAction
+{
+public:
+    //! The most suitable smart ptr for the class
+    typedef IAction::Ptr Ptr;
+    //! The threading policy
+    typedef IAction::ThreadingPolicy ThreadingPolicy;
 
-	class CorrelationPost : public IAction
-	{
-	public:
-		//! The most suitable smart ptr for the class
-		typedef IAction::Ptr  Ptr;
-		//! The threading policy
-		typedef IAction::ThreadingPolicy  ThreadingPolicy;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    explicit CorrelationPost(IAction* parent, Data::TimeSeries ts, const AnyString& areaname);
+    //! Destructor
+    virtual ~CorrelationPost();
+    //@}
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		explicit CorrelationPost(IAction* parent, Data::TimeSeries ts, const AnyString& areaname);
-		//! Destructor
-		virtual ~CorrelationPost();
-		//@}
+    virtual bool visible() const;
 
-		virtual bool visible() const;
+protected:
+    virtual bool prepareWL(Context& ctx);
+    virtual bool performWL(Context& ctx);
 
-	protected:
-		virtual bool prepareWL(Context& ctx);
-		virtual bool performWL(Context& ctx);
+private:
+    //! The attached action
+    IAction::Ptr pAction;
+    Data::TimeSeries pType;
+    Data::AreaName pOriginalAreaName;
 
-	private:
-		//! The attached action
-		IAction::Ptr pAction;
-		Data::TimeSeries pType;
-		Data::AreaName pOriginalAreaName;
-
-	}; // class IAction
-
-
-
+}; // class IAction
 
 } // namespace Area
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
 
-# include "correlation-post.hxx"
+#include "correlation-post.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREA_CORRELATION_POST_H__

@@ -25,46 +25,37 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_MAP_CONTAINER_HXX__
-# define __ANTARES_TOOLBOX_MAP_CONTAINER_HXX__
-
+#define __ANTARES_TOOLBOX_MAP_CONTAINER_HXX__
 
 namespace Antares
 {
 namespace Map
 {
+inline void Manager::deallocationStackAdd(Item* it)
+{
+    pStackDeallocation.insert(it);
+}
 
+inline void Manager::deallocationStackRemove(Item* it)
+{
+    pStackDeallocation.erase(it);
+}
 
-	inline void Manager::deallocationStackAdd(Item* it)
-	{
-		pStackDeallocation.insert(it);
-	}
+inline bool Manager::deallocationStackExists(Item* it)
+{
+    return pStackDeallocation.find(it) != pStackDeallocation.end();
+}
 
+inline bool Manager::loadFromAttachedStudy()
+{
+    return (pStudy) ? loadFromStudy(*pStudy) : false;
+}
 
-	inline void Manager::deallocationStackRemove(Item* it)
-	{
-		pStackDeallocation.erase(it);
-	}
-
-
-	inline bool Manager::deallocationStackExists(Item* it)
-	{
-		return pStackDeallocation.find(it) != pStackDeallocation.end();
-	}
-
-
-	inline bool Manager::loadFromAttachedStudy()
-	{
-		return (pStudy) ? loadFromStudy(*pStudy) : false;
-	}
-
-
-	template<class T>
-	inline T* Manager::add()
-	{
-		return new T(*this);
-	}
-
-
+template<class T>
+inline T* Manager::add()
+{
+    return new T(*this);
+}
 
 } // namespace Map
 } // namespace Antares

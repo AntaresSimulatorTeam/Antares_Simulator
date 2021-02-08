@@ -25,9 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_NET_NET_H__
-# define __ANTARES_LIBS_NET_NET_H__
+#define __ANTARES_LIBS_NET_NET_H__
 
-# include <yuni/yuni.h>
-
+#include <yuni/yuni.h>
 
 #endif // __ANTARES_LIBS_NET_NET_H__

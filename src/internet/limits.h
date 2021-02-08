@@ -25,12 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LICENSE_LIMITS_LIMITS_H__
-# define __ANTARES_LICENSE_LIMITS_LIMITS_H__
+#define __ANTARES_LICENSE_LIMITS_LIMITS_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-# include <antares/proxy.h>
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+#include <antares/proxy.h>
 
 namespace Antares
 {
@@ -38,57 +37,52 @@ namespace License
 {
 namespace Limits
 {
+/*!
+** \brief The maximum number of areas allowed in a study (0: unlimited)
+*/
+extern uint areaCount;
 
-	/*!
-	** \brief The maximum number of areas allowed in a study (0: unlimited)
-	*/
-	extern uint areaCount;
+/*!
+** \brief The maximum number of thermal plants allowed in a study (0: unlimited)
+*/
+extern uint thermalClusterCount;
 
-	/*!
-	** \brief The maximum number of thermal plants allowed in a study (0: unlimited)
-	*/
-	extern uint thermalClusterCount;
-	
-	/*!
-	** \brief The number of seconds between two check on the server
-	*/
-	extern uint tick;
+/*!
+** \brief The number of seconds between two check on the server
+*/
+extern uint tick;
 
-	/*!
-	** \brief Customer Caption
-	*/
-	extern Yuni::String customerCaption;
+/*!
+** \brief Customer Caption
+*/
+extern Yuni::String customerCaption;
 
-	/*!
-	** \brief Customer Id
-	*/
-	extern Yuni::String customerId;
+/*!
+** \brief Customer Id
+*/
+extern Yuni::String customerId;
 
-	/*!
-	** \brief host id online
-	*/
-	extern Yuni::String hostID;
+/*!
+** \brief host id online
+*/
+extern Yuni::String hostID;
 
-	/*!
-	** \brief license expiry date
-	*/
-	extern Yuni::String expiryDate;
+/*!
+** \brief license expiry date
+*/
+extern Yuni::String expiryDate;
 
-	/*!
-	** \brief url internet server
-	*/
-	extern Yuni::String urlLicenseServer;
+/*!
+** \brief url internet server
+*/
+extern Yuni::String urlLicenseServer;
 
-
-
-	/*!
-	** \brief Proxy settings
-	**
-	** \todo Should be located here
-	*/
-	 extern ProxySettings proxy;
-
-
+/*!
+** \brief Proxy settings
+**
+** \todo Should be located here
+*/
+extern ProxySettings proxy;
 
 } // namespace Limits
 } // namespace License

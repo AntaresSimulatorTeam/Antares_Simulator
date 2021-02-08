@@ -25,135 +25,122 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIB_OBJECT_H__
-# define __ANTARES_LIB_OBJECT_H__
+#define __ANTARES_LIB_OBJECT_H__
 
-# include "../antares.h"
-# include <yuni/string.h>
-# include <yuni/core/atomic/int.h>
-# include <yuni/core/smartptr/intrusive.h>
-# include "ref.h"
-# include "intrusive-reference.h"
-
+#include "../antares.h"
+#include <yuni/string.h>
+#include <yuni/core/atomic/int.h>
+#include <yuni/core/smartptr/intrusive.h>
+#include "ref.h"
+#include "intrusive-reference.h"
 
 namespace Antares
 {
+/*!
+** \brief Base assembly abstract object
+**
+** \note An object is disabled by default to avoid race conditions
+**  in future algorithms (race condtions while initializing for example)
+*/
+class IObject : public Yuni::IIntrusiveSmartPtr<IObject>
+{
+public:
+    //! Ancestor
+    typedef Yuni::IIntrusiveSmartPtr<IObject> Ancestor;
+    //! The current threading policy
+    typedef Ancestor::ThreadingPolicy ThreadingPolicy;
 
-	/*!
-	** \brief Base assembly abstract object
-	**
-	** \note An object is disabled by default to avoid race conditions
-	**  in future algorithms (race condtions while initializing for example)
-	*/
-	class  IObject : public Yuni::IIntrusiveSmartPtr<IObject>
-	{
-	public:
-		//! Ancestor
-		typedef Yuni::IIntrusiveSmartPtr<IObject> Ancestor;
-		//! The current threading policy
-		typedef Ancestor::ThreadingPolicy ThreadingPolicy;
+    /*!
+    ** \brief Class Helper to determine the most suitable smart pointer for a class
+    **   according the current threading policy
+    */
+    template<class U>
+    class SmartPtr
+    {
+    public:
+        //! The most suitable smart pointer for T
+        typedef typename Ancestor::template SmartPtrType<U>::Ptr Ptr;
+    };
 
-		/*!
-		** \brief Class Helper to determine the most suitable smart pointer for a class
-		**   according the current threading policy
-		*/
-		template<class U>
-		class SmartPtr
-		{
-		public:
-			//! The most suitable smart pointer for T
-			typedef typename Ancestor::template SmartPtrType<U>::Ptr  Ptr;
-		};
+    //! The most suitable smart pointer for the this class
+    typedef Ancestor::SmartPtrType<IObject>::Ptr Ptr;
 
-		//! The most suitable smart pointer for the this class
-		typedef Ancestor::SmartPtrType<IObject>::Ptr  Ptr;
+public:
+    //! \name Identifiers
+    //@{
+    /*!
+    ** \brief Object Identifier
+    */
+    const Ref& oid() const;
+    //@}
 
+    //! \name Caption
+    //@{
+    /*!
+    ** \brief Get the object's caption
+    ** \return Object's caption
+    */
+    YString caption() const;
+    /*!
+    ** \brief Set the caption field
+    ** \param caption String to use as caption.
+    */
+    void caption(const AnyString& caption);
+    //@}
 
-	public:
-		//! \name Identifiers
-		//@{
-		/*!
-		** \brief Object Identifier
-		*/
-		const Ref& oid() const;
-		//@}
+    //! \name Enabled
+    //@{
+    /*!
+    ** \brief Get the object's state
+    ** \return Object's state
+    */
+    bool enabled() const;
+    /*!
+    ** \brief Set the object stated (enabled or not)
+    ** \param state State to set
+    */
+    void enabled(bool state);
+    //@}
 
+    //! \name Events
+    //@{
+    //! The object is about to be destroyed
+    virtual void onRelease();
+    //@}
 
-		//! \name Caption
-		//@{
-		/*!
-		** \brief Get the object's caption
-		** \return Object's caption
-		*/
-		YString caption() const;
-		/*!
-		** \brief Set the caption field
-		** \param caption String to use as caption.
-		*/
-		void caption(const AnyString& caption);
-		//@}
+protected:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Initialize the new IObject with the given UOID.
+    */
+    IObject();
+    /*!
+    ** \brief Initialize the new IObject with the given assembly name.
+    */
+    explicit IObject(const Ref& oid);
+    /*!
+    ** \brief Destructor
+    */
+    virtual ~IObject();
+    //@}
 
+protected:
+    //! The most suitable type for a bool
+    typedef Yuni::Static::If<ThreadingPolicy::threadSafe, Yuni::Atomic::Int<>, bool>::ResultType
+      EnableType;
 
-		//! \name Enabled
-		//@{
-		/*!
-		** \brief Get the object's state
-		** \return Object's state
-		*/
-		bool enabled() const;
-		/*!
-		** \brief Set the object stated (enabled or not)
-		** \param state State to set
-		*/
-		void enabled(bool state);
-		//@}
+    //! Object Identifier
+    const Ref pOID;
+    //! Caption
+    YString pCaption;
+    //! If the object is enabled. Disabled by default
+    EnableType pEnabled;
 
-
-		//! \name Events
-		//@{
-		//! The object is about to be destroyed
-		virtual void onRelease();
-		//@}
-
-
-	protected:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Initialize the new IObject with the given UOID.
-		*/
-		IObject();
-		/*!
-		** \brief Initialize the new IObject with the given assembly name.
-		*/
-		explicit IObject(const Ref& oid);
-		/*!
-		** \brief Destructor
-		*/
-		virtual ~IObject();
-		//@}
-
-
-	protected:
-		//! The most suitable type for a bool
-		typedef Yuni::Static::If<ThreadingPolicy::threadSafe,
-			Yuni::Atomic::Int<>, bool>::ResultType  EnableType;
-
-		//! Object Identifier
-		const Ref pOID;
-		//! Caption
-		YString pCaption;
-		//! If the object is enabled. Disabled by default
-		EnableType pEnabled;
-
-	}; // class IObject
-
-
-
-
-
+}; // class IObject
 
 } // namespace Antares
 
-# include "object.hxx"
+#include "object.hxx"
 
 #endif // __ANTARES_LIB_OBJECT_H__

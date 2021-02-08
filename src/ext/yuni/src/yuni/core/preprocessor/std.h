@@ -11,25 +11,22 @@
 #pragma once
 /* !!! "C compatibility" header !!! */
 
-
 /*!
 ** \brief String concatenation
 */
-#define YUNI_JOIN(X,Y)  X ## Y
+#define YUNI_JOIN(X, Y) X##Y
 
 /*!
 ** \brief Convenient define to deal with temporary (or not) unused parameter
 */
 #define YUNI_UNUSED_ARGUMENT(X) (void)(X)
 
-
-
 #define __YN_STRINGIZE(X) #X
 
 /*!
 ** \brief Transform X into a string
 */
-#define YUNI_STRINGIZE(X)  __YN_STRINGIZE(X)
+#define YUNI_STRINGIZE(X) __YN_STRINGIZE(X)
 
 /*!
 ** \brief Test if something is empty
@@ -46,9 +43,7 @@
 ** }
 ** \endcode
 */
-#define YUNI_IS_EMPTY(X)  (YUNI_STRINGIZE(X)[0] == '\0')
-
-
+#define YUNI_IS_EMPTY(X) (YUNI_STRINGIZE(X)[0] == '\0')
 
 /*! The identity function */
 #define YUNI_IDENTITY(...) __VA_ARGS__

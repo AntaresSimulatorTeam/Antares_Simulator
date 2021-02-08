@@ -29,80 +29,71 @@
 
 using namespace Yuni;
 
-
 namespace Antares
 {
 namespace Data
 {
+uint StringToFilter(const AnyString& string)
+{
+    if (string.empty())
+        return filterNone;
 
+    uint flag = 0;
 
-	uint StringToFilter(const AnyString& string)
-	{
-		if (string.empty())
-			return filterNone;
+    string.words(",; \r\n\t", [&](const AnyString& word) -> bool {
+        ShortString16 s = word;
+        s.toLower();
+        if (s == "hourly")
+        {
+            flag |= filterHourly;
+            return true;
+        }
+        if (s == "daily")
+        {
+            flag |= filterDaily;
+            return true;
+        }
+        if (s == "weekly")
+        {
+            flag |= filterWeekly;
+            return true;
+        }
+        if (s == "monthly")
+        {
+            flag |= filterMonthly;
+            return true;
+        }
+        if (s == "annual")
+        {
+            flag |= filterAnnual;
+            return true;
+        }
+        return true;
+    });
+    return flag;
+}
 
-		uint flag = 0;
+uint filterIndexToFilter(const uint index)
+{
+    uint flag = 0;
+    switch (index)
+    {
+    case 0:
+        return flag |= filterHourly;
+    case 1:
+        return flag |= filterDaily;
+    case 2:
+        return flag |= filterWeekly;
+    case 3:
+        return flag |= filterMonthly;
+    case 4:
+        return flag |= filterAnnual;
+    default:
+        return filterNone;
+    }
 
-		string.words(",; \r\n\t", [&] (const AnyString& word) -> bool
-		{
-			ShortString16 s = word;
-			s.toLower();
-			if (s == "hourly")
-			{
-				flag |= filterHourly;
-				return true;
-			}
-			if (s == "daily")
-			{
-				flag |= filterDaily;
-				return true;
-			}
-			if (s == "weekly")
-			{
-				flag |= filterWeekly;
-				return true;
-			}
-			if (s == "monthly")
-			{
-				flag |= filterMonthly;
-				return true;
-			}
-			if (s == "annual")
-			{
-				flag |= filterAnnual;
-				return true;
-			}
-			return true;
-		});
-		return flag;
-	}
-
-	uint filterIndexToFilter(const uint index)
-	{
-		uint flag = 0;
-		switch (index)
-		{
-		case 0:
-			return flag |= filterHourly;
-		case 1:
-			return flag |= filterDaily;
-		case 2:
-			return flag |= filterWeekly;
-		case 3:
-			return flag |= filterMonthly;
-		case 4:
-			return flag |= filterAnnual;
-		default:
-			return filterNone;
-		}
-
-		return flag;
-	}
-
-
-
-
+    return flag;
+}
 
 } // namespace Data
 } // namespace Antares
-

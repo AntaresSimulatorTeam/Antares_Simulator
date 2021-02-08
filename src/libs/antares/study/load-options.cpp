@@ -28,46 +28,39 @@
 #include "load-options.h"
 #include "../logs.h"
 
-
 namespace Antares
 {
 namespace Data
 {
+StudyLoadOptions::StudyLoadOptions() :
+ nbYears(0),
+ prepareOutput(false),
+ loadOnlyNeeded(false),
+ forceYearByYear(false),
+ forceDerated(false),
+ noTimeseriesImportIntoInput(false),
+ simplexOptimizationRange(sorUnknown),
+ ignoreConstraints(false),
+ forceMode(stdmUnknown),
+ enableParallel(false),
+ forceParallel(false),
+ maxNbYearsInParallel(0),
+ usedByTheSolver(false),
+ mpsToExport(false),
+ ortoolsUsed(false),
+ ortoolsEnumUsed(OrtoolsSolver::sirius)
+{
+}
 
-	StudyLoadOptions::StudyLoadOptions() :
-		nbYears(0),
-		prepareOutput(false),
-		loadOnlyNeeded(false),
-		forceYearByYear(false),
-		forceDerated(false),
-		noTimeseriesImportIntoInput(false),
-		simplexOptimizationRange(sorUnknown),
-		ignoreConstraints(false),
-		forceMode(stdmUnknown),
-		enableParallel(false),
-		forceParallel(false),
-		maxNbYearsInParallel(0),
-		usedByTheSolver(false),
-		mpsToExport(false),
-		ortoolsUsed(false),
-		ortoolsEnumUsed(OrtoolsSolver::sirius)
-	{}
-
-
-	void StudyLoadOptions::pushProgressLogs() const
-	{
-		if (loadOnlyNeeded && progressTicks)
-		{
-			uint percent = progressTicks * 100 / progressTickCount;
-			if (percent < 100)
-				logs.info() << logMessage << "  " << percent << '%';
-		}
-	}
-
-
-
+void StudyLoadOptions::pushProgressLogs() const
+{
+    if (loadOnlyNeeded && progressTicks)
+    {
+        uint percent = progressTicks * 100 / progressTickCount;
+        if (percent < 100)
+            logs.info() << logMessage << "  " << percent << '%';
+    }
+}
 
 } // namespace Data
 } // namespace Antares
-
-

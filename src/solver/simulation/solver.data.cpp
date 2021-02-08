@@ -25,35 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include "solver.data.h"
 #include <antares/study/parameters.h>
-
 
 namespace Antares
 {
@@ -63,40 +36,32 @@ namespace Private
 {
 namespace Simulation
 {
+namespace
+{
+template<int TS>
+inline static bool CheckTSToRefresh(const Antares::Data::Parameters& g)
+{
+    return (TS & g.timeSeriesToRefresh) && (TS & g.timeSeriesToGenerate);
+}
 
-	namespace 
-	{
-		template<int TS>
-		inline static bool CheckTSToRefresh(const Antares::Data::Parameters& g)
-		{
-			return (TS & g.timeSeriesToRefresh) && (TS & g.timeSeriesToGenerate);
-		}
+} // namespace
 
-	} 
+void CacheData::initialize(const Antares::Data::Parameters& parameters)
+{
+    haveToRefreshTSLoad = CheckTSToRefresh<Data::timeSeriesLoad>(parameters);
+    haveToRefreshTSSolar = CheckTSToRefresh<Data::timeSeriesSolar>(parameters);
+    haveToRefreshTSHydro = CheckTSToRefresh<Data::timeSeriesHydro>(parameters);
+    haveToRefreshTSWind = CheckTSToRefresh<Data::timeSeriesWind>(parameters);
+    haveToRefreshTSThermal = CheckTSToRefresh<Data::timeSeriesThermal>(parameters);
 
+    refreshIntervalLoad = parameters.refreshIntervalLoad;
+    refreshIntervalSolar = parameters.refreshIntervalSolar;
+    refreshIntervalHydro = parameters.refreshIntervalHydro;
+    refreshIntervalWind = parameters.refreshIntervalWind;
+    refreshIntervalThermal = parameters.refreshIntervalThermal;
+}
 
-
-	void CacheData::initialize(const Antares::Data::Parameters& parameters)
-	{
-		
-		haveToRefreshTSLoad    = CheckTSToRefresh <Data::timeSeriesLoad>    (parameters);
-		haveToRefreshTSSolar   = CheckTSToRefresh <Data::timeSeriesSolar>   (parameters);
-		haveToRefreshTSHydro   = CheckTSToRefresh <Data::timeSeriesHydro>   (parameters);
-		haveToRefreshTSWind    = CheckTSToRefresh <Data::timeSeriesWind>    (parameters);
-		haveToRefreshTSThermal = CheckTSToRefresh <Data::timeSeriesThermal> (parameters);
-		
-		refreshIntervalLoad    = parameters.refreshIntervalLoad;
-		refreshIntervalSolar   = parameters.refreshIntervalSolar;
-		refreshIntervalHydro   = parameters.refreshIntervalHydro;
-		refreshIntervalWind    = parameters.refreshIntervalWind;
-		refreshIntervalThermal = parameters.refreshIntervalThermal;
-	}
-
-
-
-
-} 
-} 
-} 
-} 
-
+} // namespace Simulation
+} // namespace Private
+} // namespace Solver
+} // namespace Antares

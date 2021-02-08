@@ -25,15 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_HYDRO_MONTHLY_POWER_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_HYDRO_MONTHLY_POWER_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_HYDRO_MONTHLY_POWER_H__
 
-# include <antares/wx-wrapper.h>
-# include "../area.h"
-# include "../matrix.h"
-# include <antares/date.h>
-# include <antares/study/parts/wind/prepro.h>
-
-
+#include <antares/wx-wrapper.h>
+#include "../area.h"
+#include "../matrix.h"
+#include <antares/date.h>
+#include <antares/study/parts/wind/prepro.h>
 
 namespace Antares
 {
@@ -43,63 +41,75 @@ namespace Datagrid
 {
 namespace Renderer
 {
+class HydroMonthlyPower final : public Renderer::Matrix<double, double, 2>,
+                                public Renderer::ARendererArea
+{
+public:
+    typedef Renderer::Matrix<double, double, 2> MatrixAncestorType;
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    HydroMonthlyPower(wxWindow* control, Toolbox::InputSelector::Area* notifier);
+    //! Destructor
+    virtual ~HydroMonthlyPower();
+    //@}
 
-	class HydroMonthlyPower final :
-		public Renderer::Matrix<double, double, 2>,
-		public Renderer::ARendererArea
-	{
-	public:
-		typedef Renderer::Matrix<double, double, 2>  MatrixAncestorType;
+    virtual int width() const
+    {
+        return 4;
+    }
+    virtual int height() const
+    {
+        return DAYS_PER_YEAR;
+    }
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		HydroMonthlyPower(wxWindow* control, Toolbox::InputSelector::Area* notifier);
-		//! Destructor
-		virtual ~HydroMonthlyPower();
-		//@}
+    virtual wxString columnCaption(int colIndx) const;
 
-		virtual int width() const {return 4;}
-		virtual int height() const {return DAYS_PER_YEAR;}
+    virtual wxString rowCaption(int rowIndx) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual wxString cellValue(int x, int y) const;
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual double cellNumericValue(int x, int y) const;
 
-		virtual wxString cellValue(int x, int y) const;
+    virtual bool cellValue(int, int, const Yuni::String&);
 
-		virtual double cellNumericValue(int x, int y) const;
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    { /*Do nothing*/
+    }
 
-		virtual bool cellValue(int, int, const Yuni::String&);
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{/*Do nothing*/}
+    virtual Date::Precision precision()
+    {
+        return Date::daily;
+    }
 
-		virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+    virtual bool valid() const
+    {
+        return MatrixAncestorType::valid();
+    }
 
-		virtual Date::Precision precision() {return Date::daily;}
+    virtual uint maxWidthResize() const
+    {
+        return 0;
+    }
+    virtual uint maxHeightResize() const
+    {
+        return 0;
+    }
 
-		virtual bool valid() const {return MatrixAncestorType::valid();}
+protected:
+    virtual void internalAreaChanged(Antares::Data::Area* area);
+    //! Event: the study has been closed
+    virtual void onStudyClosed() override;
+    //! Event: the study has been loaded
+    virtual void onStudyLoaded() override;
 
-		virtual uint maxWidthResize() const {return 0;}
-		virtual uint maxHeightResize() const {return 0;}
-
-	protected:
-		virtual void internalAreaChanged(Antares::Data::Area* area);
-		//! Event: the study has been closed
-		virtual void onStudyClosed() override;
-		//! Event: the study has been loaded
-		virtual void onStudyLoaded() override;
-
-	}; // class HydroMonthlyPower
-
-
-
-
+}; // class HydroMonthlyPower
 
 } // namespace Renderer
 } // namespace Datagrid

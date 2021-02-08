@@ -25,116 +25,105 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_HEADER_H__
-# define __ANTARES_LIBS_STUDY_HEADER_H__
+#define __ANTARES_LIBS_STUDY_HEADER_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-# include <time.h>
-# include "../inifile.h"
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+#include <time.h>
+#include "../inifile.h"
 
 //! Default author
-# define STUDYHEADER_DEFAULT_AUTHOR      "Unknown"
+#define STUDYHEADER_DEFAULT_AUTHOR "Unknown"
 //! Default caption
-# define STUDYHEADER_DEFAULT_CAPTION     "No title"
-
-
+#define STUDYHEADER_DEFAULT_CAPTION "No title"
 
 namespace Antares
 {
 namespace Data
 {
+/*!
+** \brief Header of a study
+** \ingroup study
+*/
+class StudyHeader final
+{
+public:
+    /*!
+    ** \brief Get the version of a header
+    **
+    ** \param filename The filename to read
+    ** \return The version of the study, or 0 if unknown (invalid header)
+    */
+    static uint ReadVersionFromFile(const AnyString& filename);
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    StudyHeader();
+    /*!
+    ** \brief Destructor
+    */
+    ~StudyHeader();
+    //@}
 
-	/*!
-	** \brief Header of a study
-	** \ingroup study
-	*/
-	class StudyHeader final
-	{
-	public:
-		/*!
-		** \brief Get the version of a header
-		**
-		** \param filename The filename to read
-		** \return The version of the study, or 0 if unknown (invalid header)
-		*/
-		static uint ReadVersionFromFile(const AnyString& filename);
+    /*!
+    ** \brief Reset the values
+    */
+    void reset();
 
+    /*!
+    ** \brief Load a study header from a file
+    **
+    ** \param filename The target filename
+    ** \param warnings Enable warnings/errors
+    ** \return True if the operation succeeded, false otherwise
+    */
+    bool loadFromFile(const AnyString& filename, bool warnings = true);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		StudyHeader();
-		/*!
-		** \brief Destructor
-		*/
-		~StudyHeader();
-		//@}
+    /*!
+    ** \brief Save a study header into a file
+    **
+    ** The property `version` will be upgraded to the last available
+    ** and `dateLastSave` as well.
+    **
+    ** \param filename The target filename
+    ** \return True if the operation succeeded, false otherwise
+    */
+    bool saveToFile(const AnyString& filename, bool upgradeVersion = true);
 
-		/*!
-		** \brief Reset the values
-		*/
-		void reset();
+public:
+    //! Caption of the study
+    Yuni::String caption;
 
-		/*!
-		** \brief Load a study header from a file
-		**
-		** \param filename The target filename
-		** \param warnings Enable warnings/errors
-		** \return True if the operation succeeded, false otherwise
-		*/
-		bool loadFromFile(const AnyString& filename, bool warnings = true);
+    //! Format version
+    uint version;
 
-		/*!
-		** \brief Save a study header into a file
-		**
-		** The property `version` will be upgraded to the last available
-		** and `dateLastSave` as well.
-		**
-		** \param filename The target filename
-		** \return True if the operation succeeded, false otherwise
-		*/
-		bool saveToFile(const AnyString& filename, bool upgradeVersion = true);
+    //! Date: Creation (timestamp)
+    time_t dateCreated;
+    //! Date: Last save (timestamp)
+    time_t dateLastSave;
 
-	public:
-		//! Caption of the study
-		Yuni::String caption;
+    //! Author
+    Yuni::String author;
 
-		//! Format version
-		uint version;
+private:
+    //! Load settings from an INI file
+    bool internalLoadFromINIFile(const IniFile& ini, bool warnings);
 
-		//! Date: Creation (timestamp)
-		time_t dateCreated;
-		//! Date: Last save (timestamp)
-		time_t dateLastSave;
+    //! Get the version written in an header file
+    static uint internalFindVersionFromFile(const IniFile& ini);
 
-		//! Author
-		Yuni::String author;
+    //! Copy the internal settings into an INI structure
+    void internalCopySettingsToIni(IniFile& ini, bool upgradeVersion);
 
-	private:
-		//! Load settings from an INI file
-		bool internalLoadFromINIFile(const IniFile& ini, bool warnings);
-
-		//! Get the version written in an header file
-		static uint internalFindVersionFromFile(const IniFile& ini);
-
-		//! Copy the internal settings into an INI structure
-		void internalCopySettingsToIni(IniFile& ini, bool upgradeVersion);
-
-	}; // class StudyHeader;
-
-
-
-
-
+}; // class StudyHeader;
 
 } // namespace Data
 } // namespace Antares
 
-# include "header.hxx"
+#include "header.hxx"
 
 #endif /* __ANTARES_LIBS_STUDY_HEADER_H__ */

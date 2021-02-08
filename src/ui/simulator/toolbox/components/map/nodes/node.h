@@ -25,170 +25,172 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_MAP_NODE_H__
-# define __ANTARES_TOOLBOX_MAP_NODE_H__
+#define __ANTARES_TOOLBOX_MAP_NODE_H__
 
-# include <antares/wx-wrapper.h>
-# include <antares/study.h>
-# include <set>
-# include "item.h"
-# include "../drawingcontext.h"
-
-
+#include <antares/wx-wrapper.h>
+#include <antares/study.h>
+#include <set>
+#include "item.h"
+#include "../drawingcontext.h"
 
 namespace Antares
 {
 namespace Map
 {
+// Forward declaration of the manager
+class Manager;
+class DrawingContext;
 
-	// Forward declaration of the manager
-	class Manager;
-	class DrawingContext;
+/*!
+** \brief A node in a map
+*/
+class Node : public Item
+{
+public:
+    //! \name Constructors & Destructor
+    //@{
 
+    /*!
+    ** \brief Default constructor
+    */
+    Node(Manager& manager);
 
+    /*!
+    ** \brief Constructor with a given id
+    */
+    Node(Manager& manager, const wxString& id);
 
+    /*!
+    ** \brief Destructor
+    */
+    virtual ~Node();
 
-	/*!
-	** \brief A node in a map
-	*/
-	class Node : public Item
-	{
-	public:
-		//! \name Constructors & Destructor
-		//@{
+    //@}
 
-		/*!
-		** \brief Default constructor
-		*/
-		Node(Manager& manager);
+    //! \name layerVisibility
+    //@{
+    /*!
+    ** \brief Get the visivility for a layerId
+    */
+    const bool isVisibleOnLayer(const size_t& layerID) const;
+    //@}
 
-		/*!
-		** \brief Constructor with a given id
-		*/
-		Node(Manager& manager, const wxString& id);
+    virtual Type type() const
+    {
+        return tyNode;
+    }
 
-		/*!
-		** \brief Destructor
-		*/
-		virtual ~Node();
+    //! \name ID
+    //@{
+    const wxString& id() const
+    {
+        return pId;
+    }
+    //@}
 
-		//@}
+    void position(const int x, const int y);
 
-		//! \name layerVisibility
-		//@{
-		/*!
-		** \brief Get the visivility for a layerId
-		*/
-		const bool isVisibleOnLayer(const size_t& layerID)const;
-		//@}
+    /*!
+    ** \brief Move the node
+    **
+    ** \param x A relative X-coordinate
+    ** \param y A relative Y-coordinate
+    */
+    virtual void move(const int x, const int y);
 
-		virtual Type type() const {return tyNode;}
+    //! \name Cache
+    //@{
 
-		//! \name ID
-		//@{
-		const wxString& id() const {return pId;}
-		//@}
+    /*!
+    ** \brief Refresh the cache (even if not invalidated)
+    */
+    virtual void refreshCache(wxDC& dc);
 
+    /*!
+    ** \brief Get the cached position
+    */
+    const wxPoint& cachedPosition() const
+    {
+        return pCachedPosition;
+    }
 
-		void position(const int x, const int y);
+    /*!
+    ** \brief Get the cached size
+    */
+    const wxPoint& cachedSize() const
+    {
+        return pCachedSize;
+    }
 
+    //@}
 
-		/*!
-		** \brief Move the node
-		**
-		** \param x A relative X-coordinate
-		** \param y A relative Y-coordinate
-		*/
-		virtual void move(const int x, const int y);
+    //! \name Misc
+    //@{
+    /*!
+    ** \brief Get if the drawing representation of the node contains the point (x,y)
+    **
+    ** This method is used to know if the mouse if over a node or not
+    */
+    virtual bool contains(const int x, const int y, double& distance);
 
+    /*!
+    ** \brief Get if the drawing representation of the node is contained inside a bounding box
+    **
+    ** This method is used to know if the mouse if over a node or not
+    */
+    virtual bool isContained(const int x1, const int y1, const int x2, const int y2) const;
 
-		//! \name Cache
-		//@{
+    /*!
+    ** \brief Draw the node
+    */
+    virtual void draw(DrawingContext& dc);
 
-		/*!
-		** \brief Refresh the cache (even if not invalidated)
-		*/
-		virtual void refreshCache(wxDC& dc);
+    //@}
 
-		/*!
-		** \brief Get the cached position
-		*/
-		const wxPoint& cachedPosition() const {return pCachedPosition;}
+    virtual void extendBoundingBox(wxPoint& topLeft, wxPoint& bottomRight);
 
-		/*!
-		** \brief Get the cached size
-		*/
-		const wxPoint& cachedSize() const {return pCachedSize;}
+    Data::Area* attachedArea() const
+    {
+        return pAttachedArea;
+    }
+    void attachedArea(Data::Area* a)
+    {
+        pAttachedArea = a;
+    }
 
-		//@}
+    /*!
+    ** \brief make this node visible/invisible in a layer
+    */
+    void addLayerVisibility(size_t id = 0);
+    void removeLayerVisibility(size_t id);
 
+protected:
+    virtual void captionHasChanged();
+    virtual void positionHasChanged();
+    virtual void colorHasChanged();
 
-		//! \name Misc
-		//@{
-		/*!
-		** \brief Get if the drawing representation of the node contains the point (x,y)
-		**
-		** This method is used to know if the mouse if over a node or not
-		*/
-		virtual bool contains(const int x, const int y, double& distance);
+    void createANewAreaIfNotAlreadyAttached();
 
-		/*!
-		** \brief Get if the drawing representation of the node is contained inside a bounding box
-		**
-		** This method is used to know if the mouse if over a node or not
-		*/
-		virtual bool isContained(const int x1, const int y1, const int x2, const int y2) const;
+private:
+    //! id
+    wxString pId;
 
-		/*!
-		** \brief Draw the node
-		*/
-		virtual void draw(DrawingContext& dc);
+    wxPoint pCachedPosition;
+    wxPoint pCachedSize;
+    wxColour pCachedColorGradientStart;
+    wxColour pCachedColorGradientEnd;
+    wxColour pCachedColorGradientStart2;
+    wxColour pCachedColorGradientEnd2;
 
-		//@}
+    wxColour pCachedColorText;
+    wxPen pBorderPen;
+    wxPen pShadowPen;
 
-		virtual void extendBoundingBox(wxPoint& topLeft, wxPoint& bottomRight);
+    Data::Area* pAttachedArea;
 
-		Data::Area* attachedArea() const {return pAttachedArea;}
-		void attachedArea(Data::Area* a) {pAttachedArea = a;}
-		
-		/*!
-		** \brief make this node visible/invisible in a layer
-		*/
-		void addLayerVisibility(size_t id = 0);
-		void removeLayerVisibility(size_t id);
-
-	protected:
-		virtual void captionHasChanged();
-		virtual void positionHasChanged();
-		virtual void colorHasChanged();
-
-		void createANewAreaIfNotAlreadyAttached();
-
-	private:
-		//! id
-		wxString pId;
-
-		wxPoint pCachedPosition;
-		wxPoint pCachedSize;
-		wxColour pCachedColorGradientStart;
-		wxColour pCachedColorGradientEnd;
-		wxColour pCachedColorGradientStart2;
-		wxColour pCachedColorGradientEnd2;
-
-		wxColour pCachedColorText;
-		wxPen pBorderPen;
-		wxPen pShadowPen;
-
-		Data::Area* pAttachedArea;
-
-	}; // class Node
-
-
-
-
-
+}; // class Node
 
 } // namespace Map
 } // namespace Antares
-
 
 #endif // __ANTARES_TOOLBOX_MAP_NODE_H__

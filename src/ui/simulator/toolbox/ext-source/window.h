@@ -25,60 +25,53 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_EXT_SOURCE_WINDOW_H__
-# define __ANTARES_APPLICATION_EXT_SOURCE_WINDOW_H__
+#define __ANTARES_APPLICATION_EXT_SOURCE_WINDOW_H__
 
-# include <antares/wx-wrapper.h>
-# include <antares/study.h>
-# include <yuni/thread/thread.h>
-# include <wx/stattext.h>
-# include <wx/timer.h>
-# include <wx/dialog.h>
-# include <antares/study/action/action.h>
-
-
+#include <antares/wx-wrapper.h>
+#include <antares/study.h>
+#include <yuni/thread/thread.h>
+#include <wx/stattext.h>
+#include <wx/timer.h>
+#include <wx/dialog.h>
+#include <antares/study/action/action.h>
 
 namespace Antares
 {
 namespace Window
 {
+class ApplyActionsDialog : public wxDialog
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    ApplyActionsDialog(wxWindow* parent,
+                       const Antares::Action::Context::Ptr& context,
+                       const Antares::Action::IAction::Ptr& root);
 
+    //! Destructor
+    virtual ~ApplyActionsDialog()
+    {
+    }
+    //@}
 
-	class ApplyActionsDialog :public wxDialog
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		ApplyActionsDialog(wxWindow* parent, const Antares::Action::Context::Ptr& context,
-			const Antares::Action::IAction::Ptr& root);
+private:
+    //! Event: The user asked to cancel the operation
+    void onCancel(void*);
+    //! Event: Performing the operation
+    void onPerform(void*);
 
-		//! Destructor
-		virtual ~ApplyActionsDialog() {}
-		//@}
+private:
+    //! The target study
+    Antares::Action::Context::Ptr pContext;
+    //! The tree of the actions to perform
+    Antares::Action::IAction::Ptr pActions;
 
+    wxStaticText* pLblInfos;
 
-	private:
-		//! Event: The user asked to cancel the operation
-		void onCancel(void*);
-		//! Event: Performing the operation
-		void onPerform(void*);
-
-	private:
-		//! The target study
-		Antares::Action::Context::Ptr pContext;
-		//! The tree of the actions to perform
-		Antares::Action::IAction::Ptr pActions;
-
-		wxStaticText* pLblInfos;
-
-	}; // class ApplyActionsDialog
-
-
-
-
-
+}; // class ApplyActionsDialog
 
 } // namespace Window
 } // namespace Antares

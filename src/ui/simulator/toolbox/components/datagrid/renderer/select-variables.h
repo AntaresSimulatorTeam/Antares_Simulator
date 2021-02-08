@@ -1,10 +1,9 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SELECT_VARIABLES_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SELECT_VARIABLES_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SELECT_VARIABLES_H__
 
-# include <antares/wx-wrapper.h>
-# include "../renderer.h"
-# include "../../../../application/study.h"
-
+#include <antares/wx-wrapper.h>
+#include "../renderer.h"
+#include "../../../../application/study.h"
 
 namespace Antares
 {
@@ -14,51 +13,54 @@ namespace Datagrid
 {
 namespace Renderer
 {
+class SelectVariables : public IRenderer
+{
+public:
+    SelectVariables();
+    virtual ~SelectVariables();
 
+    virtual int width() const
+    {
+        return 1;
+    }
+    virtual int height() const;
 
-	class SelectVariables : public IRenderer
-	{
-	public:
-		SelectVariables();
-		virtual ~SelectVariables();
+    virtual wxString columnCaption(int colIndx) const;
 
-		virtual int width() const {return 1;}
-		virtual int height() const;
+    virtual wxString rowCaption(int rowIndx) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual wxString cellValue(int x, int y) const;
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual double cellNumericValue(int x, int y) const;
 
-		virtual wxString cellValue(int x, int y) const;
+    virtual bool cellValue(int x, int y, const Yuni::String& value);
 
-		virtual double cellNumericValue(int x, int y) const;
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    {
+        // Do nothing
+    }
 
-		virtual bool cellValue(int x, int y, const Yuni::String& value);
+    virtual bool valid() const;
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{
-			// Do nothing
-		}
+    virtual uint maxWidthResize() const
+    {
+        return 0;
+    }
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
 
-		virtual bool valid() const;
+    void control(wxWindow* control)
+    {
+        pControl = control;
+    }
 
-		virtual uint maxWidthResize() const {return 0;}
-		virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+public:
+    //! An item has been updated
+    Yuni::Bind<void()> onTriggerUpdate;
 
-		void control(wxWindow* control) {pControl = control;}
+protected:
+    wxWindow* pControl;
 
-	public:
-		//! An item has been updated
-		Yuni::Bind<void ()> onTriggerUpdate;
-
-	protected:
-		wxWindow* pControl;
-
-	}; // class SelectVariables
-
-
-
-
+}; // class SelectVariables
 
 } // namespace Renderer
 } // namespace Datagrid

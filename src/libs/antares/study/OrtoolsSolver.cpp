@@ -33,31 +33,24 @@
 
 #include <antares/Enum.hpp>
 
-namespace Antares {
-    
-namespace Data {
+namespace Antares
+{
+namespace Data
+{
+namespace Enum
+{
+template<>
+const std::initializer_list<std::string>& getNames<OrtoolsSolver>()
+{
+    // Enum must be stored in lower case and without spaces because values  are trimmed and lowered
+    // in ini load
+    static std::initializer_list<std::string> s_ortoolsSolverNames{
+      "sirius", "coin", "xpress", "glop-scip", "cplex", "gurobi", "glpk", "glop-cbc"};
 
-namespace Enum {
-
-    template <>
-    const std::initializer_list<std::string>& getNames<OrtoolsSolver>() {
-
-        //Enum must be stored in lower case and without spaces because values  are trimmed and lowered in ini load
-        static std::initializer_list<std::string> s_ortoolsSolverNames{
-                "sirius",
-                "coin",
-                "xpress",
-                "glop-scip",
-                "cplex",
-                "gurobi",
-                "glpk",
-                "glop-cbc"
-        };
-
-        return s_ortoolsSolverNames;
-    }
+    return s_ortoolsSolverNames;
+}
 } // namespace Enum
-   
+
 } // namespace Data
 
 } // namespace Antares

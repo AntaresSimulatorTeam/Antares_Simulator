@@ -25,129 +25,110 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_IO_STATISTICS_H__
-# define __ANTARES_LIBS_IO_STATISTICS_H__
+#define __ANTARES_LIBS_IO_STATISTICS_H__
 
-# include <yuni/yuni.h>
-
+#include <yuni/yuni.h>
 
 namespace Antares
 {
 namespace Statistics
 {
+/*!
+** \brief Get the amount of data (in bytes) which have been read from the disk
+*/
+Yuni::uint64 ReadFromDisk();
 
-	/*!
-	** \brief Get the amount of data (in bytes) which have been read from the disk
-	*/
-	Yuni::uint64  ReadFromDisk();
+/*!
+** \brief Get the amount of data (in bytes) which have been written to the disk
+*/
+Yuni::uint64 WrittenToDisk();
 
-	/*!
-	** \brief Get the amount of data (in bytes) which have been written to the disk
-	*/
-	Yuni::uint64  WrittenToDisk();
+/*!
+** \brief Get the amount of data (in bytes) which have been read from the disk since the startup
+*/
+Yuni::uint64 ReadFromDiskSinceStartup();
 
+/*!
+** \brief Get the amount of data (in bytes) which have been written to the disk since the startup
+*/
+Yuni::uint64 WrittenToDiskSinceStartup();
 
-	/*!
-	** \brief Get the amount of data (in bytes) which have been read from the disk since the startup
-	*/
-	Yuni::uint64  ReadFromDiskSinceStartup();
+/*!
+** \brief Get the amount of data (in bytes) which have been read from the network
+*/
+Yuni::uint64 ReadFromNetwork();
 
-	/*!
-	** \brief Get the amount of data (in bytes) which have been written to the disk since the startup
-	*/
-	Yuni::uint64  WrittenToDiskSinceStartup();
+/*!
+** \brief Get the amount of data (in bytes) which have been written to the network
+*/
+Yuni::uint64 WrittenToNetwork();
 
+/*!
+** \brief Get the amount of data (in bytes) which have been read from the network since the startup
+*/
+Yuni::uint64 ReadFromNetworkSinceStartup();
 
-	/*!
-	** \brief Get the amount of data (in bytes) which have been read from the network
-	*/
-	Yuni::uint64  ReadFromNetwork();
+/*!
+** \brief Get the amount of data (in bytes) which have been written to the network since the startup
+*/
+Yuni::uint64 WrittenToNetworkSinceStartup();
 
-	/*!
-	** \brief Get the amount of data (in bytes) which have been written to the network
-	*/
-	Yuni::uint64  WrittenToNetwork();
+/*!
+** \brief Notify taht a certain amount of data (in bytes) has been read from disk
+*/
+void HasReadFromDisk(Yuni::uint64 size);
 
+/*!
+** \brief Notify taht a certain amount of data (in bytes) has been written to disk
+*/
+void HasWrittenToDisk(Yuni::uint64 size);
 
-	/*!
-	** \brief Get the amount of data (in bytes) which have been read from the network since the startup
-	*/
-	Yuni::uint64  ReadFromNetworkSinceStartup();
+/*!
+** \brief Notify taht a certain amount of data (in bytes) has been read from the network
+*/
+void HasReadFromNetwork(Yuni::uint64 size);
 
-	/*!
-	** \brief Get the amount of data (in bytes) which have been written to the network since the startup
-	*/
-	Yuni::uint64  WrittenToNetworkSinceStartup();
+/*!
+** \brief Notify taht a certain amount of data (in bytes) has been sent to the network
+*/
+void HasWrittenToNetwork(Yuni::uint64 size);
 
+/*!
+** \brief Reset the internal counters
+*/
+void Reset();
 
+/*!
+** \brief Dump the statistic to the logs
+*/
+void DumpToLogs();
 
+class Updater
+{
+public:
+    Updater()
+    {
+        Reset();
+    }
 
+    ~Updater()
+    {
+        DumpToLogs();
+    }
+};
 
-	/*!
-	** \brief Notify taht a certain amount of data (in bytes) has been read from disk
-	*/
-	void HasReadFromDisk(Yuni::uint64 size);
+class LogsDumper
+{
+public:
+    LogsDumper()
+    {
+    }
 
-	/*!
-	** \brief Notify taht a certain amount of data (in bytes) has been written to disk
-	*/
-	void HasWrittenToDisk(Yuni::uint64 size);
-
-	/*!
-	** \brief Notify taht a certain amount of data (in bytes) has been read from the network
-	*/
-	void HasReadFromNetwork(Yuni::uint64 size);
-
-	/*!
-	** \brief Notify taht a certain amount of data (in bytes) has been sent to the network
-	*/
-	void HasWrittenToNetwork(Yuni::uint64 size);
-
-
-	/*!
-	** \brief Reset the internal counters
-	*/
-	void Reset();
-
-	/*!
-	** \brief Dump the statistic to the logs
-	*/
-	void DumpToLogs();
-
-
-
-
-
-
-	class Updater
-	{
-	public:
-		Updater()
-		{
-			Reset();
-		}
-
-		~Updater()
-		{
-			DumpToLogs();
-		}
-	};
-
-
-	class LogsDumper
-	{
-	public:
-		LogsDumper()
-		{
-		}
-
-		~LogsDumper()
-		{
-			DumpToLogs();
-		}
-	};
-
-
-
+    ~LogsDumper()
+    {
+        DumpToLogs();
+    }
+};
 
 } // namespace Statistics
 } // namespace Antares

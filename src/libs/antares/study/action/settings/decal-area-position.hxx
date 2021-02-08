@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_SETTINGS_DECAL_AREA_POSITION_HXX__
-# define __ANTARES_LIBS_STUDY_ACTION_SETTINGS_DECAL_AREA_POSITION_HXX__
-
+#define __ANTARES_LIBS_STUDY_ACTION_SETTINGS_DECAL_AREA_POSITION_HXX__
 
 namespace Antares
 {
@@ -34,31 +33,24 @@ namespace Action
 {
 namespace Settings
 {
+inline DecalAreaPosition::~DecalAreaPosition()
+{
+}
 
+inline bool DecalAreaPosition::performWL(Context&)
+{
+    return true;
+}
 
+inline bool DecalAreaPosition::autoExpand() const
+{
+    return false;
+}
 
-	inline DecalAreaPosition::~DecalAreaPosition()
-	{}
-
-
-	inline bool DecalAreaPosition::performWL(Context&)
-	{
-		return true;
-	}
-
-
-	inline bool DecalAreaPosition::autoExpand() const
-	{
-		return false;
-	}
-
-
-	inline bool DecalAreaPosition::shouldPrepareRootNode() const
-	{
-		return true;
-	}
-
-
+inline bool DecalAreaPosition::shouldPrepareRootNode() const
+{
+    return true;
+}
 
 } // namespace Settings
 } // namespace Action

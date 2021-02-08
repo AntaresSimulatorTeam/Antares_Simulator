@@ -49,56 +49,51 @@
 using namespace Yuni;
 using namespace Antares;
 
-
-
-
-
 int main(int argc, char* argv[])
 {
-	// locale
-	InitializeDefaultLocale();
+    // locale
+    InitializeDefaultLocale();
 
-	logs.applicationName("config");
-	argv = AntaresGetUTF8Arguments(argc, argv);
+    logs.applicationName("config");
+    argv = AntaresGetUTF8Arguments(argc, argv);
 
-	// Initializing the toolbox
-	Antares::Resources::Initialize(argc, argv, true);
+    // Initializing the toolbox
+    Antares::Resources::Initialize(argc, argv, true);
 
-	// Parser
-	GetOpt::Parser options;
-	//
-	options.addParagraph(String()
-		<< "Antares Infos v" << VersionToCString() << "\n");
+    // Parser
+    GetOpt::Parser options;
+    //
+    options.addParagraph(String() << "Antares Infos v" << VersionToCString() << "\n");
 
-	bool optPrint = true;
-	options.addFlag(optPrint, 'p', "print", "Print the current configuration");
+    bool optPrint = true;
+    options.addFlag(optPrint, 'p', "print", "Print the current configuration");
 
-	// Version
-	bool optVersion = false;
-	options.addFlag(optVersion, 'v', "version", "Print the version and exit");
+    // Version
+    bool optVersion = false;
+    options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
-	if (!options(argc, argv))
-		return options.errors() ? EXIT_FAILURE : 0;
+    if (!options(argc, argv))
+        return options.errors() ? EXIT_FAILURE : 0;
 
-	if (optVersion)
-	{
-		PrintVersionToStdCout();
-		return 0;
-	}
+    if (optVersion)
+    {
+        PrintVersionToStdCout();
+        return 0;
+    }
 
-	if (optPrint || true)
-	{
-		// Load the local policy settings
-		LocalPolicy::Open();
-		LocalPolicy::CheckRootPrefix(argv[0]);
+    if (optPrint || true)
+    {
+        // Load the local policy settings
+        LocalPolicy::Open();
+        LocalPolicy::CheckRootPrefix(argv[0]);
 
-		Clob out;
-		LocalPolicy::DumpToString(out);
+        Clob out;
+        LocalPolicy::DumpToString(out);
 
-		std::cout << out << std::flush;
+        std::cout << out << std::flush;
 
-		// release all resources held by the local policy engine
-		LocalPolicy::Close();
-	}
-	return 0;
+        // release all resources held by the local policy engine
+        LocalPolicy::Close();
+    }
+    return 0;
 }

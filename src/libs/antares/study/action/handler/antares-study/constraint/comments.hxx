@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_COMMENTS_HXX__
-# define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_COMMENTS_HXX__
-
+#define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_COMMENTS_HXX__
 
 namespace Antares
 {
@@ -36,20 +35,15 @@ namespace AntaresStudy
 {
 namespace Constraint
 {
+template<class StringT>
+inline Comments::Comments(const StringT& name) : pOriginalConstraintName(name)
+{
+    pInfos.caption << "Comments";
+}
 
-
-	template<class StringT>
-	inline Comments::Comments(const StringT& name)
-		:pOriginalConstraintName(name)
-	{
-		pInfos.caption << "Comments";
-	}
-
-
-	inline Comments::~Comments()
-	{}
-
-
+inline Comments::~Comments()
+{
+}
 
 } // namespace Constraint
 } // namespace AntaresStudy

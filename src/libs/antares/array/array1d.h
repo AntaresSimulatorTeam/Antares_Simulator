@@ -25,17 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_ARRAY_ARRAY_1D_H__
-# define __ANTARES_LIBS_ARRAY_ARRAY_1D_H__
-
-
+#define __ANTARES_LIBS_ARRAY_ARRAY_1D_H__
 
 /*!
 ** \defgroup array1d 1D-Array
 ** \ingroup toolbox
 */
-
-
-
 
 /*!
 ** \brief Load an integer 1D array from a file
@@ -48,8 +43,6 @@
 */
 int Array1DLoadFromFile(const char filename[], double data[], const int height);
 
-
-
 /*!
 ** \brief Save a 1D-Array into a file
 ** \ingroup array1d
@@ -59,8 +52,10 @@ int Array1DLoadFromFile(const char filename[], double data[], const int height);
 ** \param count The number of items in the array
 ** \return A non-zero value if the operation was successful, 0 otherwise
 */
-int Array1DSaveToFile(const char filename[], const double data[], const int count, uint precision = 6);
-
+int Array1DSaveToFile(const char filename[],
+                      const double data[],
+                      const int count,
+                      uint precision = 6);
 
 /*!
 ** \brief Check if all values are strictly positive
@@ -71,7 +66,6 @@ int Array1DSaveToFile(const char filename[], const double data[], const int coun
 ** \return A non-zero value if all values are strictly positive
 */
 int Array1DCheckStrictlyPositiveValues(const char msg[], const double data[], const int count);
-
 
 /*!
 ** \brief Check if all values are positive or null
@@ -93,7 +87,6 @@ int Array1DCheckPositiveValues(const char msg[], const double data[], const int 
 */
 int Array1DCheckNegativeValues(const char msg[], const double data[], const int count);
 
-
 /*!
 ** \brief Check if all values are within a range
 **
@@ -104,9 +97,11 @@ int Array1DCheckNegativeValues(const char msg[], const double data[], const int 
 ** \param maxV The maximum value
 ** \return A non-zero value if all values are strictly positive
 */
-int Array1DCheckForValuesInRange(const char msg[], const double data[], const int count,
-	const double minV, const double maxV);
-
+int Array1DCheckForValuesInRange(const char msg[],
+                                 const double data[],
+                                 const int count,
+                                 const double minV,
+                                 const double maxV);
 
 /*!
 ** \brief Check if all values are greater than or equal to a given number
@@ -116,9 +111,10 @@ int Array1DCheckForValuesInRange(const char msg[], const double data[], const in
 ** \param count The size of the array
 ** \return A non-zero value if all values are strictly positive
 */
-int Array1DCheckGreaterOrEqual(const char msg[], const double data[], const int count, const double v);
-
-
+int Array1DCheckGreaterOrEqual(const char msg[],
+                               const double data[],
+                               const int count,
+                               const double v);
 
 /*!
 ** \brief Set all values of a 1D-Array
@@ -127,7 +123,5 @@ int Array1DCheckGreaterOrEqual(const char msg[], const double data[], const int 
 ** \param count The size of the array
 */
 void Array1DSetValues(double data[], const int count, const double value);
-
-
 
 #endif /* __ANTARES_LIBS_ARRAY_ARRAY_1D_H__ */

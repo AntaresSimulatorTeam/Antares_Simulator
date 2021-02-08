@@ -25,20 +25,16 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_WINDOW_VERSION_H__
-# define __ANTARES_WINDOW_VERSION_H__
+#define __ANTARES_WINDOW_VERSION_H__
 
-# include <antares/wx-wrapper.h>
-
+#include <antares/wx-wrapper.h>
 
 namespace Antares
 {
-
-
-	/*!
-	** \brief Get the current version of Antares
-	*/
-	wxString VersionToWxString(bool copyright = true);
-
+/*!
+** \brief Get the current version of Antares
+*/
+wxString VersionToWxString(bool copyright = true);
 
 } // namespace Antares
 

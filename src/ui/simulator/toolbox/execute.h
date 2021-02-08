@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_EXECUTE_H__
-# define __ANTARES_TOOLBOX_EXECUTE_H__
+#define __ANTARES_TOOLBOX_EXECUTE_H__
 
-# include "execute/execute.h"
+#include "execute/execute.h"
 
 #endif // __ANTARES_TOOLBOX_EXECUTE_H__

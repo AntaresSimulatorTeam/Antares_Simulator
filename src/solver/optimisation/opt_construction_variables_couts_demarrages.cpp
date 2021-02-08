@@ -25,141 +25,139 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "opt_structure_probleme_a_resoudre.h"
 
+#include "../simulation/simulation.h"
+#include "../simulation/sim_structure_donnees.h"
+#include "../simulation/sim_extern_variables_globales.h"
 
+#include "opt_fonctions.h"
+#include <math.h>
 
+#include "spx_constantes_externes.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# include "opt_structure_probleme_a_resoudre.h"
-
-# include "../simulation/simulation.h"
-# include "../simulation/sim_structure_donnees.h"
-# include "../simulation/sim_extern_variables_globales.h"
-
-# include "opt_fonctions.h"
-# include <math.h>
-
-# include "spx_constantes_externes.h"
-
-
-
-
-
-void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage( PROBLEME_HEBDO * ProblemeHebdo, char Simulation )
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(
+  PROBLEME_HEBDO* ProblemeHebdo,
+  char Simulation)
 {
-int Pays; int Pdt; int Palier; int NombreDeVariables; int Index; int NombreDePasDeTempsPourUneOptimisation;
-char ContrainteDeReserveJMoins1ParZone;
-CORRESPONDANCES_DES_VARIABLES * CorrespondanceVarNativesVarOptim;
-PALIERS_THERMIQUES * PaliersThermiquesDuPays;
-PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
+    int Pays;
+    int Pdt;
+    int Palier;
+    int NombreDeVariables;
+    int Index;
+    int NombreDePasDeTempsPourUneOptimisation;
+    char ContrainteDeReserveJMoins1ParZone;
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    PALIERS_THERMIQUES* PaliersThermiquesDuPays;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
-ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
-NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation; 
-ContrainteDeReserveJMoins1ParZone = ProblemeHebdo->ContrainteDeReserveJMoins1ParZone;
+    NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    ContrainteDeReserveJMoins1ParZone = ProblemeHebdo->ContrainteDeReserveJMoins1ParZone;
 
-NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
+    NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
 
-for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ ) {
-	PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
-	
-	for ( Index = 0 ; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques ; Index++ ) {	
-	  Palier = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
-				
-    for ( Pdt = 0 ; Pdt < NombreDePasDeTempsPourUneOptimisation ; Pdt++ ) {
-		  if ( Simulation == OUI_ANTARES ) {
-        NombreDeVariables += 4;  
-				continue;
-			}
-	    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
-						
-      			
-		  CorrespondanceVarNativesVarOptim->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier] = NombreDeVariables;
-      ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;			
-      NombreDeVariables++;
-			
-      			
-		  CorrespondanceVarNativesVarOptim->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[Palier] = NombreDeVariables;
+    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    {
+        PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
 
-      # if SUBSTITUTION_DE_LA_VARIABLE_MPLUS == OUI_ANTARES			
-        ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;					
-			# else
-        ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
-			# endif
-      NombreDeVariables++;  
+        for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
+        {
+            Palier
+              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
 
-			
-		  CorrespondanceVarNativesVarOptim->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[Palier] = NombreDeVariables;
-      ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;			
-      NombreDeVariables++;
+            for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
+            {
+                if (Simulation == OUI_ANTARES)
+                {
+                    NombreDeVariables += 4;
+                    continue;
+                }
+                CorrespondanceVarNativesVarOptim
+                  = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
 
-			
-		  CorrespondanceVarNativesVarOptim->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[Palier] = NombreDeVariables;
-			# if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
-        ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
-			# else
-        ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-			# endif
-      NombreDeVariables++;
-			
-		}							
-	}   
+                CorrespondanceVarNativesVarOptim
+                  ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier]
+                  = NombreDeVariables;
+                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                  = VARIABLE_BORNEE_DES_DEUX_COTES;
+                NombreDeVariables++;
+
+                CorrespondanceVarNativesVarOptim
+                  ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[Palier]
+                  = NombreDeVariables;
+
+#if SUBSTITUTION_DE_LA_VARIABLE_MPLUS == OUI_ANTARES
+                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                  = VARIABLE_BORNEE_DES_DEUX_COTES;
+#else
+                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                  = VARIABLE_BORNEE_INFERIEUREMENT;
+#endif
+                NombreDeVariables++;
+
+                CorrespondanceVarNativesVarOptim
+                  ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[Palier]
+                  = NombreDeVariables;
+                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                  = VARIABLE_BORNEE_INFERIEUREMENT;
+                NombreDeVariables++;
+
+                CorrespondanceVarNativesVarOptim
+                  ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[Palier]
+                  = NombreDeVariables;
+#if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
+                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                  = VARIABLE_BORNEE_INFERIEUREMENT;
+#else
+                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                  = VARIABLE_BORNEE_DES_DEUX_COTES;
+#endif
+                NombreDeVariables++;
+            }
+        }
+    }
+
+#if GROSSES_VARIABLES == OUI_ANTARES
+    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    {
+        for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
+        {
+            CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
+            if (Simulation == OUI_ANTARES)
+            {
+                NombreDeVariables++;
+                NombreDeVariables++;
+                if (ContrainteDeReserveJMoins1ParZone == OUI_ANTARES)
+                {
+                    NombreDeVariables++;
+                }
+                continue;
+            }
+
+            CorrespondanceVarNativesVarOptim->NumeroDeGrosseVariableDefaillancePositive[Pays]
+              = NombreDeVariables;
+            ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_NON_BORNEE;
+            NombreDeVariables++;
+
+            CorrespondanceVarNativesVarOptim->NumeroDeGrosseVariableDefaillanceNegative[Pays]
+              = NombreDeVariables;
+            ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_NON_BORNEE;
+            NombreDeVariables++;
+
+            if (ContrainteDeReserveJMoins1ParZone == OUI_ANTARES)
+            {
+                CorrespondanceVarNativesVarOptim->NumeroDeGrosseVariableDefaillanceEnReserve[Pays]
+                  = NombreDeVariables;
+                ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_NON_BORNEE;
+                NombreDeVariables++;
+            }
+        }
+    }
+#endif
+
+    ProblemeAResoudre->NombreDeVariables = NombreDeVariables;
+
+    return;
 }
-
-# if GROSSES_VARIABLES == OUI_ANTARES
-for ( Pays = 0 ; Pays < ProblemeHebdo->NombreDePays ; Pays++ ) {				
-  for ( Pdt = 0 ; Pdt < NombreDePasDeTempsPourUneOptimisation ; Pdt++ ) {
-	  CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];						
-		if ( Simulation == OUI_ANTARES ) {
-      NombreDeVariables++; 
-      NombreDeVariables++; 
-		  if ( ContrainteDeReserveJMoins1ParZone == OUI_ANTARES ) {		
-        NombreDeVariables++; 
-			}
-			continue;
-		}
-    
-		CorrespondanceVarNativesVarOptim->NumeroDeGrosseVariableDefaillancePositive[Pays] = NombreDeVariables;
-    ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_NON_BORNEE;
-    NombreDeVariables++;
-		
-		CorrespondanceVarNativesVarOptim->NumeroDeGrosseVariableDefaillanceNegative[Pays] = NombreDeVariables;
-    ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_NON_BORNEE;			
-    NombreDeVariables++;
-		
-		if ( ContrainteDeReserveJMoins1ParZone == OUI_ANTARES ) {		
-      
-      CorrespondanceVarNativesVarOptim->NumeroDeGrosseVariableDefaillanceEnReserve[Pays] = NombreDeVariables;		
-      ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_NON_BORNEE;			
-      NombreDeVariables++;		  
-		}
-	}   
-}
-# endif
-			
-ProblemeAResoudre->NombreDeVariables = NombreDeVariables;
-
-return;
-}
-
-

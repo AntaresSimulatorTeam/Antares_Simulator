@@ -25,86 +25,79 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_SOLVER_LOAD_OPTIONS_H__
-# define __ANTARES_LIBS_SOLVER_LOAD_OPTIONS_H__
+#define __ANTARES_LIBS_SOLVER_LOAD_OPTIONS_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-# include "parameters.h"
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+#include "parameters.h"
 
 #include <antares/study/OrtoolsSolver.hpp>
-
 
 namespace Antares
 {
 namespace Data
 {
+class StudyLoadOptions
+{
+public:
+    //! \name Constructor
+    //@{
+    //! Default constructor
+    StudyLoadOptions();
+    //@}
 
+    //! Push a new log entry according to the local progress data
+    void pushProgressLogs() const;
 
-	class StudyLoadOptions
-	{
-	public:
-		//! \name Constructor
-		//@{
-		//! Default constructor
-		StudyLoadOptions();
-		//@}
+public:
+    //! The number of MC years (non-zero to force the value)
+    uint nbYears;
+    //! True to prepare the output folder
+    bool prepareOutput;
+    //! True to load only the strictly required data
+    bool loadOnlyNeeded;
+    //! Force the year-by-year flag
+    bool forceYearByYear;
+    //! Force the derated mode
+    bool forceDerated;
 
-		//! Push a new log entry according to the local progress data
-		void pushProgressLogs() const;
+    //! No Timeseries import in the input
+    // This option might be useful for running old studies without upgrading
+    bool noTimeseriesImportIntoInput;
 
-	public:
-		//! The number of MC years (non-zero to force the value)
-		uint nbYears;
-		//! True to prepare the output folder
-		bool prepareOutput;
-		//! True to load only the strictly required data
-		bool loadOnlyNeeded;
-		//! Force the year-by-year flag
-		bool forceYearByYear;
-		//! Force the derated mode
-		bool forceDerated;
+    //! Simplex optimization range
+    SimplexOptimization simplexOptimizationRange;
+    //! Mps files export asked
+    bool mpsToExport;
+    //! Ignore all constraints
+    bool ignoreConstraints;
+    //! Simulation mode
+    StudyMode forceMode;
 
-		//! No Timeseries import in the input
-		// This option might be useful for running old studies without upgrading
-		bool noTimeseriesImportIntoInput;
+    //! Enables the parallel computation of MC years
+    bool enableParallel;
 
-		//! Simplex optimization range
-		SimplexOptimization  simplexOptimizationRange;
-		//! Mps files export asked
-		bool mpsToExport;
-		//! Ignore all constraints
-		bool ignoreConstraints;
-		//! Simulation mode
-		StudyMode forceMode;
+    //! Force a maximum number of MC years computed simultaneously
+    bool forceParallel;
+    uint maxNbYearsInParallel;
 
-		//! Enables the parallel computation of MC years
-		bool enableParallel;
+    //! A non-zero value if the data will be used for a simulation
+    bool usedByTheSolver;
 
-		//! Force a maximum number of MC years computed simultaneously
-		bool forceParallel;
-		uint maxNbYearsInParallel;
+    //! Force ortools use
+    bool ortoolsUsed;
 
-		//! A non-zero value if the data will be used for a simulation
-		bool usedByTheSolver;
+    //! Ortool solver used for simulation
+    OrtoolsSolver ortoolsEnumUsed;
 
-		//!Force ortools use
-		bool ortoolsUsed;
+    //! Temporary string for passing log message
+    mutable Yuni::String logMessage;
+    //! Porgression, tick count
+    mutable uint progressTickCount;
+    //! The current number of ticks
+    mutable uint progressTicks;
 
-		//!Ortool solver used for simulation
-		OrtoolsSolver ortoolsEnumUsed;
-
-		//! Temporary string for passing log message
-		mutable Yuni::String logMessage;
-		//! Porgression, tick count
-		mutable uint progressTickCount;
-		//! The current number of ticks
-		mutable uint progressTicks;
-
-	}; // class StudyLoadOptions
-
-
-
-
+}; // class StudyLoadOptions
 
 } // namespace Data
 } // namespace Antares

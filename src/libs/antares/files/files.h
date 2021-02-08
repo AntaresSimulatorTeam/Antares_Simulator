@@ -25,12 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_FILES_FILES_H__
-# define __ANTARES_LIBS_FILES_FILES_H__
+#define __ANTARES_LIBS_FILES_FILES_H__
 
-# include <yuni/yuni.h>
-# include <stdio.h>
-
-
+#include <yuni/yuni.h>
+#include <stdio.h>
 
 /*!
 ** ** \brief Opens a file
@@ -38,9 +36,5 @@
 ** ** \see man 3 fopen
 ** */
 FILE* FileOpen(const char* filename, const char* mode);
-
-
-
-
 
 #endif /* __ANTARES_LIBS_FILES_FILES_H__ */
