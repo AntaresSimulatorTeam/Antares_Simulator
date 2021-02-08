@@ -107,7 +107,9 @@ def compare_directory(result_dir, reference_dir):
                 compare_directory(x, reference_dir / x.name)
         else:
 
-            if x.name != 'id-daily.txt':
+            uncompared_file_name = ['id_daily.txt', 'id_hourly.txt']
+
+            if not x.name in uncompared_file_name:
                 reference_headers = get_header_values(reference_dir / x.name)
                 reference_values = get_output_values(reference_dir / x.name)
                 
@@ -116,12 +118,23 @@ def compare_directory(result_dir, reference_dir):
                 
                 np.testing.assert_equal(reference_headers,output_headers, err_msg="headers dismatch in " + str(reference_dir / x.name), verbose=True)
 
+                rtol_override = {"CO2 EMIS." : 1e-3, "FLOW LIN." : 1e-3 , "UCAP LIN." : 1e-3, "H. INFL" : 1e-3 , "H. STOR" : 1e-3 , "H. OVFL" : 1e-3 , "OV. COST" : 1e-3 , "LIGNITE" : 1e-3 , "CONG. FEE (ABS.)" : 1e-3 , "sb" : 1e-3 , "MARG. COST" : 1e-3 , "DTG MRG" : 1e-3 , "BALANCE" : 1e-3 , "BASE" : 1e-3}
+                atol_override = {"CO2 EMIS." : 1, "CONG. FEE (ALG.)" : 1, "FLOW LIN." : 1, "UCAP LIN." : 1, "peak" : 1, "PEAK" : 1, "H. INFL" : 1, "H. STOR" : 1, "HURDLE COST" : 1, "H. OVFL" : 1 , "LOAD" : 1, "CONG. FEE (ABS.)" : 1 , "sb" : 1 , "MISC. DTG" : 1 , "DTG MRG" : 1 , "BALANCE" : 1 , "BASE" : 1}
+
                 for i in range(len(output_headers[0])):
-                    err_msg = "values dismatch in '" + str(reference_dir / x.name) + "' for '" + output_headers[0, i] + "' column"
+                    col_name=output_headers[0,i]
+                    err_msg = "values dismatch in '" + str(reference_dir / x.name) + "' for '" + col_name + "' column"
+                    rtol=1e-4
+                    atol=0
+                    if col_name in rtol_override:
+                        rtol = rtol_override[col_name]
+                    if col_name in atol_override:
+                        atol = atol_override[col_name] 
+
                     if reference_values.ndim > 1:
-                        np.testing.assert_allclose(reference_values[:, i], output_values[:, i], rtol=1e-4, atol=0,equal_nan=True, err_msg=err_msg, verbose=True)
+                        np.testing.assert_allclose(reference_values[:, i], output_values[:, i], rtol=rtol, atol=atol, equal_nan=True, err_msg=err_msg, verbose=True)
                     else:
-                        np.testing.assert_allclose(reference_values[i], output_values[i], rtol=1e-4, atol=0,equal_nan=True, err_msg=err_msg, verbose=True)
+                        np.testing.assert_allclose(reference_values[i], output_values[i], rtol=rtol, atol=atol, equal_nan=True, err_msg=err_msg, verbose=True)
 
 
 def check_output_values(path):
