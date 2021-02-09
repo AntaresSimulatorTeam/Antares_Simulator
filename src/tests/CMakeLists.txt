@@ -128,6 +128,21 @@ if(Python3_Interpreter_FOUND)
             output_tests(false, "sirius")
         endif()
         
+        # Specific tests
+        add_test(
+            NAME short-specific
+            COMMAND Python3::Interpreter -m pytest -m short --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver> specific_test.py
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples"
+        )
+        set_property(TEST short-specific PROPERTY LABELS short-specific sirius)
+        
+        add_test(
+            NAME medium-specific
+            COMMAND Python3::Interpreter -m pytest -m medium --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver> specific_test.py
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples"
+        )
+        set_property(TEST medium-specific PROPERTY LABELS medium-specific sirius)
+        
   else()   
       message(FATAL "Module pytest or numpy not installed : can't run python scripts for end to end tests" )
   endif()
