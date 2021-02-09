@@ -642,7 +642,7 @@ static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& v
 
         if (values.size() == 2)
         {
-            int y = values[0];
+            uint y = (uint)(values[0]);
             float weight = values[1];
 
             // Check values
@@ -1236,7 +1236,7 @@ float Parameters::getYearsWeightSum() const
     else
     {
         // if no user playlist, nbYears
-        result = nbYears;
+        result = (float)nbYears;
     }
 
     return result;
@@ -1320,7 +1320,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         }
 
         // Add log in case of MC year weight different from 1.0
-        std::vector<float> maximumWeightYearsList;
+        std::vector<int> maximumWeightYearsList;
         int nbYearsDifferentFrom1 = 0;
         float maximumWeight = *std::max_element(yearsWeight.begin(), yearsWeight.end());
         for (int i = 0; i < yearsWeight.size(); i++)
@@ -1345,7 +1345,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
             std::stringstream ss;
             copy(maximumWeightYearsList.begin(),
                  maximumWeightYearsList.end(),
-                 std::ostream_iterator<float>(ss, ","));
+                 std::ostream_iterator<int>(ss, ","));
             std::string s = ss.str();
             s = s.substr(0, s.length() - 1); // get rid of the trailing ,
 
