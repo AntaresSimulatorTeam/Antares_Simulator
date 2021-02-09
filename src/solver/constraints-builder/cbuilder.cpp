@@ -75,7 +75,7 @@ uint Antares::CBuilder::cycleCount(linkInfo* lnkI)
 {
     uint n = 0;
     for (auto it = pMesh.begin(); it != pMesh.end(); it++)
-        n += std::count(it->begin(), it->end(), lnkI);
+        n += (uint)(std::count(it->begin(), it->end(), lnkI));
 
     return n;
 }
@@ -205,7 +205,7 @@ fhlPShiftPlus,*/
             }
         }
 
-        k->nImpedanceChanges = impedances.size();
+        k->nImpedanceChanges = (uint)impedances.size();
 
         if (k->nImpedanceChanges > 0)
         {
