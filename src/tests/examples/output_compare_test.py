@@ -283,7 +283,7 @@ def test_018_probabilistic_vs_deterministic_3(use_ortools, ortools_solver, solve
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_020_single_mesh_dc_law(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "020 Single mesh - DC law"
@@ -293,7 +293,7 @@ def test_020_single_mesh_dc_law(use_ortools, ortools_solver, solver_path):
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_021_four_areas_dc_law(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "021 Four areas - DC law"
@@ -319,7 +319,7 @@ def test_023_anti_pricewise_flows(use_ortools, ortools_solver, solver_path):
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_024_hurdle_costs_1(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "024 Hurdle costs - 1"
@@ -329,7 +329,7 @@ def test_024_hurdle_costs_1(use_ortools, ortools_solver, solver_path):
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_025_hurdle_costs_2(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "025 Hurdle costs - 2"
@@ -339,7 +339,7 @@ def test_025_hurdle_costs_2(use_ortools, ortools_solver, solver_path):
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_026_day_ahead_reserve_1(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "026 Day ahead reserve - 1"
@@ -349,7 +349,7 @@ def test_026_day_ahead_reserve_1(use_ortools, ortools_solver, solver_path):
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_027_day_ahead_reserve_2(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "027 Day ahead reserve - 2"
@@ -359,7 +359,7 @@ def test_027_day_ahead_reserve_2(use_ortools, ortools_solver, solver_path):
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_028_pumped_storage_plant_1(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "028 Pumped storage plant - 1"
@@ -369,7 +369,7 @@ def test_028_pumped_storage_plant_1(use_ortools, ortools_solver, solver_path):
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_029_pumped_storage_plant_2(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "029 Pumped storage plant - 2"
@@ -379,7 +379,7 @@ def test_029_pumped_storage_plant_2(use_ortools, ortools_solver, solver_path):
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_030_pumped_storage_plant_3(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "030 Pumped storage plant - 3"
@@ -397,7 +397,7 @@ def test_031_wind_analysis(use_ortools, ortools_solver, solver_path):
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_033_mixed_expansion_storage(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "033 Mixed Expansion - Storage"
@@ -407,7 +407,7 @@ def test_033_mixed_expansion_storage(use_ortools, ortools_solver, solver_path):
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_034_mixed_expansion_smart_grid_model_1(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "034 Mixed Expansion - Smart grid model 1"
@@ -425,7 +425,7 @@ def test_036_multistage_study_1_isolated_systems(use_ortools, ortools_solver, so
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_037_multistage_study_2_copperplate(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "037 Multistage study-2-Copperplate"
@@ -435,7 +435,7 @@ def test_037_multistage_study_2_copperplate(use_ortools, ortools_solver, solver_
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_040_multistage_study_5_derated(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "040 Multistage study-5-Derated"
@@ -461,7 +461,7 @@ def test_045_psp_strategies_2_det_pumping(use_ortools, ortools_solver, solver_pa
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_046_psp_strategies_3_opt_daily(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "046 PSP strategies-3-Opt daily"
@@ -471,7 +471,7 @@ def test_046_psp_strategies_3_opt_daily(use_ortools, ortools_solver, solver_path
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_047_psp_strategies_4_opt_weekly(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "047 PSP strategies-4-Opt weekly"
@@ -489,7 +489,7 @@ def test_053_system_map_editor_1(use_ortools, ortools_solver, solver_path):
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_054_system_map_editor_2(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "054 System Map Editor -2"
@@ -507,7 +507,7 @@ def test_055_system_map_editor_3(use_ortools, ortools_solver, solver_path):
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_056_system_map_editor_4(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "056 System Map Editor - 4"
@@ -517,7 +517,7 @@ def test_056_system_map_editor_4(use_ortools, ortools_solver, solver_path):
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_057_four_areas_grid_outages_01(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "057 Four areas - Grid outages  01"
@@ -527,7 +527,7 @@ def test_057_four_areas_grid_outages_01(use_ortools, ortools_solver, solver_path
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_058_four_areas_grid_outages_02(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "058 Four areas - Grid outages  02"
@@ -537,7 +537,7 @@ def test_058_four_areas_grid_outages_02(use_ortools, ortools_solver, solver_path
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_059_four_areas_grid_outages_03(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "059 Four areas - Grid outages  03"
@@ -579,7 +579,7 @@ def test_063_grid_topology_changes_on_contingencies_02(use_ortools, ortools_solv
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_064_probabilistic_exchange_capacity(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "064 Probabilistic exchange capacity"
@@ -589,7 +589,7 @@ def test_064_probabilistic_exchange_capacity(use_ortools, ortools_solver, solver
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_065_pumped_storage_plant_explicit_model_01(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "065 Pumped storage plant -explicit model-01"
@@ -599,7 +599,7 @@ def test_065_pumped_storage_plant_explicit_model_01(use_ortools, ortools_solver,
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_066_pumped_storage_plant_explicit_model_02(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "066 Pumped storage plant -explicit model-02"
@@ -609,7 +609,7 @@ def test_066_pumped_storage_plant_explicit_model_02(use_ortools, ortools_solver,
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_067_pumped_storage_plant_explicit_model_03(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "067 Pumped storage plant -explicit model-03"
@@ -627,7 +627,7 @@ def test_068_hydro_reservoir_model_enhanced_01(use_ortools, ortools_solver, solv
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_069_hydro_reservoir_model_enhanced_02(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "069 Hydro Reservoir Model -enhanced-02"
@@ -637,7 +637,7 @@ def test_069_hydro_reservoir_model_enhanced_02(use_ortools, ortools_solver, solv
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_070_hydro_reservoir_model_enhanced_03(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "070 Hydro Reservoir Model -enhanced-03"
@@ -647,7 +647,7 @@ def test_070_hydro_reservoir_model_enhanced_03(use_ortools, ortools_solver, solv
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform.startswith("Linux"),
+@pytest.mark.skipif(sys.platform.startswith("linux"),
                     reason="Results differents between linux and windows.")
 def test_071_hydro_reservoir_model_enhanced_04(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "071 Hydro Reservoir Model -enhanced-04"
