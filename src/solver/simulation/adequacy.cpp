@@ -233,7 +233,7 @@ bool Adequacy::year(Progression::Task& progression,
                            + " simulation is stopped : " + ex.what());
                 return false;
             }
-            catch (Data::UnfeasibleProblemError& ex)
+            catch (Data::UnfeasibleProblemError&)
             {
                 // need to clean next problemeHebdo
                 reinitOptim = true;
