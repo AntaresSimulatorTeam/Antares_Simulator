@@ -6,6 +6,7 @@ on:
 jobs:
 
   valid-branch-name:
+    runs-on: ubuntu-latest
   
     steps:
     - uses: deepakputhraya/action-branch-name@master
