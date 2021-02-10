@@ -14,6 +14,9 @@ import pytest
 
 ALL_STUDIES_PATH = Path('../resources/Antares_Simulator_Tests')
 
+RTOL_OVERRIDE_LINUX = {"CO2 EMIS." : 1e-3, "FLOW LIN." : 1e-3 , "UCAP LIN." : 1e-3, "H. INFL" : 1e-3 , "H. STOR" : 1e-3 , "H. OVFL" : 1e-3 , "OV. COST" : 1e-3 , "LIGNITE" : 1e-3 , "CONG. FEE (ABS.)" : 1e-3 , "sb" : 1e-3 , "MARG. COST" : 1e-3 , "DTG MRG" : 1e-3 , "BALANCE" : 1e-3 , "BASE" : 1e-3 , "MRG. PRICE" : 1e-3 , "OP. COST" : 1e-3 , "SEMI BASE" : 1e-3 ,"COAL" : 1e-3 , "MAX MRG" : 1e-3 , "UNSP. ENRG" : 1e-3}
+ATOL_OVERRIDE_LINUX = {"CO2 EMIS." : 1, "CONG. FEE (ALG.)" : 1, "FLOW LIN." : 1, "UCAP LIN." : 1, "peak" : 1, "PEAK" : 1, "H. INFL" : 1, "H. STOR" : 1, "HURDLE COST" : 1, "H. OVFL" : 1 , "LOAD" : 1, "CONG. FEE (ABS.)" : 1 , "sb" : 1 , "MISC. DTG" : 1 , "DTG MRG" : 1 , "BALANCE" : 1 , "BASE" : 1 , "OP. COST" : 1 , "SEMI BASE" : 1 , "COAL" : 1 , "p" : 1 , "MAX MRG" : 1 , "UNSP. ENRG" : 1 , "SOLAR" : 1 , "b" : 1 , "NODU" : 1 , "H. ROR" : 1}
+
 def searching_all_directories(directory):
     dir_path = Path(directory)
     assert(dir_path.is_dir())
@@ -100,7 +103,7 @@ def enable_study_output(study_path, enable):
 def compare_directory(result_dir, reference_dir):
     assert (result_dir.is_dir())
     assert (reference_dir.is_dir())
-    dir_list = []
+    
     for x in result_dir.iterdir():
         if x.is_dir():
             if x.name != 'grid':
@@ -118,9 +121,7 @@ def compare_directory(result_dir, reference_dir):
                 
                 np.testing.assert_equal(reference_headers,output_headers, err_msg="headers dismatch in " + str(reference_dir / x.name), verbose=True)
 
-                rtol_override = {"CO2 EMIS." : 1e-3, "FLOW LIN." : 1e-3 , "UCAP LIN." : 1e-3, "H. INFL" : 1e-3 , "H. STOR" : 1e-3 , "H. OVFL" : 1e-3 , "OV. COST" : 1e-3 , "LIGNITE" : 1e-3 , "CONG. FEE (ABS.)" : 1e-3 , "sb" : 1e-3 , "MARG. COST" : 1e-3 , "DTG MRG" : 1e-3 , "BALANCE" : 1e-3 , "BASE" : 1e-3 , "MRG. PRICE" : 1e-3 , "OP. COST" : 1e-3 , "SEMI BASE" : 1e-3 ,"COAL" : 1e-3 , "MAX MRG" : 1e-3 , "UNSP. ENRG" : 1e-3}
-                atol_override = {"CO2 EMIS." : 1, "CONG. FEE (ALG.)" : 1, "FLOW LIN." : 1, "UCAP LIN." : 1, "peak" : 1, "PEAK" : 1, "H. INFL" : 1, "H. STOR" : 1, "HURDLE COST" : 1, "H. OVFL" : 1 , "LOAD" : 1, "CONG. FEE (ABS.)" : 1 , "sb" : 1 , "MISC. DTG" : 1 , "DTG MRG" : 1 , "BALANCE" : 1 , "BASE" : 1 , "OP. COST" : 1 , "SEMI BASE" : 1 , "COAL" : 1 , "p" : 1 , "MAX MRG" : 1 , "UNSP. ENRG" : 1 , "SOLAR" : 1 , "b" : 1 , "NODU" : 1 , "H. ROR" : 1}
-
+                
                 for i in range(len(output_headers[0])):
                     col_name=output_headers[0,i]
                     err_msg = "values dismatch in '" + str(reference_dir / x.name) + "' for '" + col_name + "' column"
@@ -128,10 +129,10 @@ def compare_directory(result_dir, reference_dir):
                     atol=0
                     
                     if sys.platform.startswith("linux"):
-                        if col_name in rtol_override:
-                            rtol = rtol_override[col_name]
-                        if col_name in atol_override:
-                            atol = atol_override[col_name] 
+                        if col_name in RTOL_OVERRIDE_LINUX:
+                            rtol = RTOL_OVERRIDE_LINUX[col_name]
+                        if col_name in ATOL_OVERRIDE_LINUX:
+                            atol = ATOL_OVERRIDE_LINUX[col_name] 
 
                     if reference_values.ndim > 1:
                         np.testing.assert_allclose(reference_values[:, i], output_values[:, i], rtol=rtol, atol=atol, equal_nan=True, err_msg=err_msg, verbose=True)
