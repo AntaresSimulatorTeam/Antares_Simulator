@@ -137,7 +137,7 @@ typedef struct
 class Hydro_problem_costs
 {
 public:
-    Hydro_problem_costs(Data::Study& study);
+    Hydro_problem_costs(const Data::Study& study);
 
     inline double get_end_days_levels_cost() const
     {
