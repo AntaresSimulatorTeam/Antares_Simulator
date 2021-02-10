@@ -601,7 +601,7 @@ void AdvancedParameters::onHydroHeuristicPolicy(Component::Button&, wxMenu& menu
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelecMaximizeGeneration),
+                 wxCommandEventHandler(AdvancedParameters::onSelectMaximizeGeneration),
                  nullptr,
                  this);
 }
@@ -619,7 +619,7 @@ void AdvancedParameters::onSelectAccomodateRuleCurves(wxCommandEvent& evt)
         refresh();
     }
 }
-void AdvancedParameters::onSelecMaximizeGeneration(wxCommandEvent& evt)
+void AdvancedParameters::onSelectMaximizeGeneration(wxCommandEvent& evt)
 {
     if (not Data::Study::Current::Valid())
         return;

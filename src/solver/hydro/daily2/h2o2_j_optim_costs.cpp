@@ -44,6 +44,7 @@ Hydro_problem_costs::Hydro_problem_costs(Data::Study& study)
         waste = 34.0;
         break;
     default:
+        waste = 34.0;
         break;
     }
 

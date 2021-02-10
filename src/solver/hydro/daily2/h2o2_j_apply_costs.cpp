@@ -29,7 +29,7 @@
 #include "h2o2_j_donnees_optimisation.h"
 #include "h2o2_j_fonctions.h"
 
-void H2O2_J_apply_costs(Hydro_problem_costs& h2o2_costs, DONNEES_MENSUELLES_ETENDUES& problem)
+void H2O2_J_apply_costs(const Hydro_problem_costs& h2o2_costs, DONNEES_MENSUELLES_ETENDUES& problem)
 {
     int NombreDeProblemes;
     PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE** ProblemeLineaireEtenduPartieFixe;

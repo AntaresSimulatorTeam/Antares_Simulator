@@ -81,7 +81,7 @@ private:
 
     void onHydroHeuristicPolicy(Component::Button&, wxMenu& menu, void*);
     void onSelectAccomodateRuleCurves(wxCommandEvent& evt);
-    void onSelecMaximizeGeneration(wxCommandEvent& evt);
+    void onSelectMaximizeGeneration(wxCommandEvent& evt);
 
     void onHydroPricingMode(Component::Button&, wxMenu& menu, void*);
     void onSelectHPHeuristic(wxCommandEvent& evt);

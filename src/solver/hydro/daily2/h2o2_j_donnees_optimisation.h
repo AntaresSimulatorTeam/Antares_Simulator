@@ -139,31 +139,31 @@ class Hydro_problem_costs
 public:
     Hydro_problem_costs(Data::Study& study);
 
-    inline double get_end_days_levels_cost()
+    inline double get_end_days_levels_cost() const
     {
         return end_days_levels;
     }
-    inline double get_overflow_cost()
+    inline double get_overflow_cost() const
     {
         return overflow;
     }
-    inline double get_deviations_cost()
+    inline double get_deviations_cost() const
     {
         return deviations;
     }
-    inline double get_violations_cost()
+    inline double get_violations_cost() const
     {
         return violations;
     }
-    inline double get_waste_cost()
+    inline double get_waste_cost() const
     {
         return waste;
     }
-    inline double get_deviationMax_cost()
+    inline double get_deviationMax_cost() const
     {
         return deviationMax;
     }
-    inline double get_violationMax_cost()
+    inline double get_violationMax_cost() const
     {
         return violationMax;
     }

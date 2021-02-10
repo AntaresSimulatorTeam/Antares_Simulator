@@ -46,7 +46,7 @@ void H2O2_j_ConstruireLesVariables(int,
                                    int*,
                                    double**,
                                    CORRESPONDANCE_DES_VARIABLES_PB_ETENDU*);
-void H2O2_J_apply_costs(Hydro_problem_costs&, DONNEES_MENSUELLES_ETENDUES&);
+void H2O2_J_apply_costs(const Hydro_problem_costs&, DONNEES_MENSUELLES_ETENDUES&);
 void H2O2_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES_ETENDUES*, int);
 void H2O2_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES_ETENDUES*, int);
 void H2O2_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES_ETENDUES*, int);
