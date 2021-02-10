@@ -270,7 +270,6 @@ void WriteLastError(String& message, String& errType)
         message << "The maximum number of tokens has been reached from the Antares server.\n";
         if (used_Machines.size() > 0)
         {
-            size_t used_Size = used_Machines.size();
             message << "These users are currently using antares :\n";
             for (size_t i_used = 0; i_used < used_Machines.size(); i_used++)
             {
@@ -818,7 +817,7 @@ bool CheckActivationKeyValidity(uint version,
     return true;
 }
 
-static size_t write_data(void* ptr, size_t size, size_t nmemb, void* stream)
+static size_t write_data(void* ptr, size_t, size_t nmemb, void*)
 {
     std::string test = (char*)ptr;
     if (strstr((char*)ptr, "available"))
@@ -916,7 +915,7 @@ bool CheckOnlineLicenseValidity(uint version, bool recheck)
         if (not CheckLicenseValidity(version))
             return false;
 
-        // !here, not need break
+        break;
     }
     case stWaiting:
     {
