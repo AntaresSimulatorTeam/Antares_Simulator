@@ -28,7 +28,7 @@
 #include "license.h"
 #include "decrypt.hxx"
 
-bool LicenseTimer::onInterval(uint cycle)
+bool LicenseTimer::onInterval(uint)
 {
     // LICENSE_DEBUG("cycle");
     License::CheckOnlineLicenseValidity(Data::versionLatest, true);
