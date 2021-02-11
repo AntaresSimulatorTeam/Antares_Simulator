@@ -45,10 +45,10 @@ void H2O2_J_apply_costs(const Hydro_problem_costs& h2o2_costs, DONNEES_MENSUELLE
 
     for (int pb_num = 0; pb_num < NombreDeProblemes; pb_num++)
     {
+        NbPdt = NbJoursDUnProbleme[pb_num];
+        
         for (int var = 0; var < ProblemeLineaireEtenduPartieFixe[pb_num]->NombreDeVariables; var++)
             ProblemeLineaireEtenduPartieFixe[pb_num]->CoutLineaire[var] = 0.0;
-
-        NbPdt = NbJoursDUnProbleme[pb_num];
 
         for (int Pdt = 0; Pdt < NbPdt; Pdt++)
             ProblemeLineaireEtenduPartieFixe[pb_num]
