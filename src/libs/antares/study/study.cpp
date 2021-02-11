@@ -70,21 +70,21 @@ static inline void FreeAndNil(T*& pointer)
 }
 
 Study::Study(bool forTheSolver) :
- nbYearsParallelRaw(0),
+ simulation(*this),
  maxNbYearsInParallel(0),
  maxNbYearsInParallel_save(0),
+ nbYearsParallelRaw(0),
  minNbYearsInParallel(0),
  minNbYearsInParallel_save(0),
- simulation(*this),
  areas(*this),
  scenarioRules(nullptr),
  runtime(nullptr),
  // state(nullptr),
  uiinfo(nullptr),
- gotFatalError(false),
- usedByTheSolver(forTheSolver),
  activeLayerID(0),
- showAllLayer(true)
+ showAllLayer(true),
+ gotFatalError(false),
+ usedByTheSolver(forTheSolver)
 {
     // TS generators
     for (uint i = 0; i != timeSeriesCount; ++i)
