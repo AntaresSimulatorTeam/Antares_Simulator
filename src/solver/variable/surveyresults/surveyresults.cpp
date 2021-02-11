@@ -201,7 +201,7 @@ void ExportGridInfosAreas(const Data::Study& study, const String& folder)
     IOFileSetContent(filename, outThermal);
 }
 
-SurveyResultsData::SurveyResultsData(const Data::Study& s, const String& o, uint year) :
+SurveyResultsData::SurveyResultsData(const Data::Study& s, const String& o) :
  time("Survey report"),
  columnIndex((uint)-1),
  thermalCluster(nullptr),
@@ -248,6 +248,7 @@ void SurveyResultsData::initialize(uint maxVariables)
         break;
     }
     case Data::stdmUnknown:
+    case Data::stdmExpansion:
     case Data::stdmMax:
         break;
     }
@@ -563,8 +564,8 @@ static inline void WriteIndexHeaderToFileDescriptor(int precisionLevel,
 }
 
 // TOFIX - MBO 02/06/2014 nombre de colonnes fonction du nombre de variables
-SurveyResults::SurveyResults(uint maxVars, const Data::Study& s, const String& o, uint year) :
- data(s, o, year),
+SurveyResults::SurveyResults(uint maxVars, const Data::Study& s, const String& o) :
+ data(s, o),
  maxVariables(Math::Max<uint>(maxVars, 3 * s.runtime->maxThermalClustersForSingleArea)),
  yearByYearResults(false),
  isCurrentVarNA(nullptr),
@@ -880,7 +881,7 @@ void SurveyResults::EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u)
         // temporary buffers for numeric conversion
         temporaryMemoryAmount += 256;
 
-        // Il y a un thread par année MC et chaque thread construit dynamiquement un objet de type
+        // Il y a un thread par ann\E9e MC et chaque thread construit dynamiquement un objet de type
         // SurveyResults pour ses outputs (voir container.hxx : void
         // List<NextT>::exportSurveyResults(...))
         u.requiredMemoryForOutput += temporaryMemoryAmount * u.nbYearsParallel;

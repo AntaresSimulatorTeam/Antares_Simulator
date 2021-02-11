@@ -46,7 +46,7 @@ class SurveyResultsData
 public:
     //! \name Constructor
     //@{
-    SurveyResultsData(const Data::Study& s, const Yuni::String& o, unsigned int year);
+    SurveyResultsData(const Data::Study& s, const Yuni::String& o);
     //@}
 
     void initialize(unsigned int maxVariables);

@@ -70,7 +70,7 @@ public:
     ** \param o The output folder
     ** \param year The current year, if any
     */
-    SurveyResults(uint maxVars, const Data::Study& s, const Yuni::String& o, uint year = (uint)-1);
+    SurveyResults(uint maxVars, const Data::Study& s, const Yuni::String& o);
     /*!
     ** \brief Destructor
     */
