@@ -227,7 +227,9 @@ inline void SetsOfAreas<NextT>::buildSurveyReport(SurveyResults& results,
                                                   int fileLevel,
                                                   int precision) const
 {
-    if (count && (dataLevel & Category::setOfAreas))
+    int count_int = count;
+    bool setOfAreasDataLevel = dataLevel & Category::setOfAreas;
+    if (count_int && setOfAreasDataLevel)
     {
         pSetsOfAreas[results.data.setOfAreasIndex]->buildSurveyReport(
           results, dataLevel, fileLevel, precision);
@@ -241,7 +243,9 @@ inline void SetsOfAreas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
                                                         int precision,
                                                         uint numSpace) const
 {
-    if (count && (dataLevel & Category::setOfAreas))
+    int count_int = count;
+    bool setOfAreasDataLevel = dataLevel & Category::setOfAreas;
+    if (count_int && setOfAreasDataLevel)
     {
         pSetsOfAreas[results.data.setOfAreasIndex]->buildAnnualSurveyReport(
           results, dataLevel, fileLevel, precision, numSpace);
@@ -251,7 +255,9 @@ inline void SetsOfAreas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 template<class NextT>
 void SetsOfAreas<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
 {
-    if (count && 0 != (dataLevel & Category::setOfAreas))
+    int count_int = count;
+    bool setOfAreasDataLevel = dataLevel & Category::setOfAreas;
+    if (count_int && setOfAreasDataLevel)
     {
         // Reset
         results.data.rowCaptions.clear();
