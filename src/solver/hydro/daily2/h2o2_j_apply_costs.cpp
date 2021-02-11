@@ -43,43 +43,43 @@ void H2O2_J_apply_costs(const Hydro_problem_costs& h2o2_costs, DONNEES_MENSUELLE
     CorrespondanceDesVariables = problem.ProblemeHydrauliqueEtendu->CorrespondanceDesVariables;
     NbJoursDUnProbleme = problem.ProblemeHydrauliqueEtendu->NbJoursDUnProbleme;
 
-    for (int i = 0; i < NombreDeProblemes; i++)
+    for (int pb_num = 0; pb_num < NombreDeProblemes; pb_num++)
     {
-        for (int j = 0; j < ProblemeLineaireEtenduPartieFixe[i]->NombreDeVariables; j++)
-            ProblemeLineaireEtenduPartieFixe[i]->CoutLineaire[j] = 0.0;
+        for (int var = 0; var < ProblemeLineaireEtenduPartieFixe[pb_num]->NombreDeVariables; var++)
+            ProblemeLineaireEtenduPartieFixe[pb_num]->CoutLineaire[var] = 0.0;
 
-        NbPdt = NbJoursDUnProbleme[i];
+        NbPdt = NbJoursDUnProbleme[pb_num];
 
         for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-            ProblemeLineaireEtenduPartieFixe[i]
-              ->CoutLineaire[CorrespondanceDesVariables[i]->NumeroVar_niveauxFinJours[Pdt]]
+            ProblemeLineaireEtenduPartieFixe[pb_num]
+              ->CoutLineaire[CorrespondanceDesVariables[pb_num]->NumeroVar_niveauxFinJours[Pdt]]
               = h2o2_costs.get_end_days_levels_cost();
 
         for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-            ProblemeLineaireEtenduPartieFixe[i]
-              ->CoutLineaire[CorrespondanceDesVariables[i]->NumeroVar_overflow[Pdt]]
+            ProblemeLineaireEtenduPartieFixe[pb_num]
+              ->CoutLineaire[CorrespondanceDesVariables[pb_num]->NumeroVar_overflow[Pdt]]
               = h2o2_costs.get_overflow_cost();
 
         for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-            ProblemeLineaireEtenduPartieFixe[i]
-              ->CoutLineaire[CorrespondanceDesVariables[i]->NumeroVar_deviations[Pdt]]
+            ProblemeLineaireEtenduPartieFixe[pb_num]
+              ->CoutLineaire[CorrespondanceDesVariables[pb_num]->NumeroVar_deviations[Pdt]]
               = h2o2_costs.get_deviations_cost();
 
         for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-            ProblemeLineaireEtenduPartieFixe[i]
-              ->CoutLineaire[CorrespondanceDesVariables[i]->NumeroVar_violations[Pdt]]
+            ProblemeLineaireEtenduPartieFixe[pb_num]
+              ->CoutLineaire[CorrespondanceDesVariables[pb_num]->NumeroVar_violations[Pdt]]
               = h2o2_costs.get_violations_cost();
 
-        ProblemeLineaireEtenduPartieFixe[i]
-          ->CoutLineaire[CorrespondanceDesVariables[i]->NumeroVar_waste]
+        ProblemeLineaireEtenduPartieFixe[pb_num]
+          ->CoutLineaire[CorrespondanceDesVariables[pb_num]->NumeroVar_waste]
           = h2o2_costs.get_waste_cost();
 
-        ProblemeLineaireEtenduPartieFixe[i]
-          ->CoutLineaire[CorrespondanceDesVariables[i]->NumeroVar_deviationMax]
+        ProblemeLineaireEtenduPartieFixe[pb_num]
+          ->CoutLineaire[CorrespondanceDesVariables[pb_num]->NumeroVar_deviationMax]
           = h2o2_costs.get_deviationMax_cost();
 
-        ProblemeLineaireEtenduPartieFixe[i]
-          ->CoutLineaire[CorrespondanceDesVariables[i]->NumeroVar_violationMax]
+        ProblemeLineaireEtenduPartieFixe[pb_num]
+          ->CoutLineaire[CorrespondanceDesVariables[pb_num]->NumeroVar_violationMax]
           = h2o2_costs.get_violationMax_cost();
     }
 }
