@@ -204,7 +204,9 @@ inline void Links::buildSurveyReport(SurveyResults& results,
                                      int fileLevel,
                                      int precision) const
 {
-    if (count && (dataLevel & Category::link))
+    int count_int = count;
+    bool link_dataLevel = (dataLevel & Category::link);
+    if (count_int && link_dataLevel)
     {
         assert(results.data.link != NULL
                && "The link must not be null to generate a survey report");
@@ -249,7 +251,9 @@ inline void Links::buildAnnualSurveyReport(SurveyResults& results,
                                            int precision,
                                            uint numSpace) const
 {
-    if (count && (dataLevel & Category::link))
+    int count_int = count;
+    bool link_dataLevel = (dataLevel & Category::link);
+    if (count_int && link_dataLevel)
     {
         assert(results.data.link != NULL
                && "The link must not be null to generate a survey report");
