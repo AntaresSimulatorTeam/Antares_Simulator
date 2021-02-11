@@ -734,6 +734,7 @@ bool Study::prepareOutput()
         folderOutput += "dft";
         break;
     case stdmUnknown:
+    case stdmExpansion:
     case stdmMax:
         break;
     }
