@@ -202,8 +202,6 @@ void Rules::sendWarningsForDisabledClusters()
         int nbScenariiForCluster = (int)scenariiForCurrentCluster.size();
         vector<uint>::iterator itv = scenariiForCurrentCluster.begin();
 
-        int nbScenariiLimit = min(nbScenariiForCluster, 10);
-
         // Listing the 10 first scenarii numbers (years numbers) where current cluster is refered
         // to. Notice that these scenarii could be less then 10, but are at least 1.
         string listScenarii = to_string(*itv + 1);
