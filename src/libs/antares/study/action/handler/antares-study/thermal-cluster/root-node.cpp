@@ -66,8 +66,8 @@ bool RootNode::prepareWL(Context& ctx)
         {
             pInfos.message << "The thermal cluster list will remain untouched";
             pInfos.state = stNothingToDo;
-            break;
         }
+        break;
     }
     case bhOverwrite:
         pInfos.message << "The thermal cluster list will be reset";
