@@ -51,7 +51,7 @@ Yuni::String linkInfo::getName() const
 template class Graph::Grid<areaInfo>;
 
 CBuilder::CBuilder(Antares::Data::Study::Ptr study) :
- pStudy(study), pDelete(false), pPrefix(CB_PREFIX), pPrefixDelete(CB_PREFIX)
+ pPrefix(CB_PREFIX), pPrefixDelete(CB_PREFIX), pDelete(false), pStudy(study)
 {
 }
 
@@ -260,11 +260,11 @@ fhlPShiftPlus,*/
     logs.info() << "Compute Mesh ";
     const std::vector<std::vector<int>>& meshIndexMatrix = _grid.getMeshIndexMatrix();
 
-    for (int i = 0; i < meshIndexMatrix.size(); i++)
+    for (uint i = 0; i < meshIndexMatrix.size(); i++)
     {
         std::vector<linkInfo*> Ci;
 
-        for (int j = 0; j < meshIndexMatrix[i].size(); j++)
+        for (uint j = 0; j < meshIndexMatrix[i].size(); j++)
         {
             Ci.push_back(enabledACLines[meshIndexMatrix[i][j]]);
         }
@@ -277,7 +277,7 @@ fhlPShiftPlus,*/
     return true;
 }
 
-bool CBuilder::runConstraintsBuilder(const Yuni::String& filename, bool standalone)
+bool CBuilder::runConstraintsBuilder(bool standalone)
 {
     // build the set of loops which span the grid
     if (!update(true))

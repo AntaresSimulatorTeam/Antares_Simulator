@@ -101,7 +101,7 @@ protected:
         // exec.deletePreviousConstraints();
         exec.completeCBuilderFromFile(pFilename);
 
-        const bool result = exec.runConstraintsBuilder(pFilename);
+        const bool result = exec.runConstraintsBuilder();
 
         if (result)
         {
