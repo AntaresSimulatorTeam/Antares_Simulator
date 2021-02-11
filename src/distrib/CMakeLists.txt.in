@@ -6,7 +6,7 @@ message(STATUS "Submodule examples update with ${ANTARES_EXAMPLES_TAG} tag")
 
 # Update example submodules as needed
 
-execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init 
+execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init @PROJECT_SOURCE_DIR@/../resources/examples
 				WORKING_DIRECTORY @PROJECT_SOURCE_DIR@/../resources/
 				RESULT_VARIABLE GIT_SUBMOD_RESULT)
 if(NOT GIT_SUBMOD_RESULT EQUAL "0")
