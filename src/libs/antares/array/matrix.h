@@ -126,7 +126,7 @@ public:
     */
     Matrix(uint w, uint h);
     //! Destructor
-    ~Matrix();
+    virtual ~Matrix();
     //@}
 
     //! \name Copy / Paste
