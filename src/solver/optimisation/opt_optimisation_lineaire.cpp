@@ -98,7 +98,7 @@ OptimisationHebdo:
 
         ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle]++;
 
-        if (!OPT_AppelDuSolveurLineaire(ProblemeHebdo, numSpace, NumeroDeLIntervalle))
+        if (!OPT_AppelDuSimplexe(ProblemeHebdo, numSpace, NumeroDeLIntervalle))
             return false;
 
         if (ProblemeHebdo->ExportMPS == OUI_ANTARES || ProblemeHebdo->Expansion == OUI_ANTARES)

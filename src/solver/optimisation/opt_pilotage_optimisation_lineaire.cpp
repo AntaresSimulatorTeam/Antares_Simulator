@@ -45,13 +45,6 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo, uint numSpa
 
     int Pays;
 
-    ProblemeHebdo->SolveurDuProblemeLineaire = ANTARES_SIMPLEXE;
-    if (0 && ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES
-        && ProblemeHebdo->Expansion == NON_ANTARES)
-    {
-        ProblemeHebdo->SolveurDuProblemeLineaire = ANTARES_PNE;
-    } // disable call to PNE until presolve and scaling issues are fixed
-
     if (ProblemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
     {
         if (ProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
