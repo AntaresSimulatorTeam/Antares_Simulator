@@ -544,7 +544,7 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
 
     // Now finding the smallest size among all sets.
     minNbYearsInParallel = maxNbYearsInParallel;
-    for (int s = 0; s < setsOfParallelYears.size(); s++)
+    for (uint s = 0; s < setsOfParallelYears.size(); s++)
     {
         uint setSize = (uint)setsOfParallelYears[s].size();
         // Empty sets are not taken into account because, on the solver side,
@@ -562,7 +562,7 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
     // parallel years. This latter number can be limited by the smallest interval between 2 refresh
     // points and determined by the unrun MC years in case of play-list.
     uint maxNbYearsOverAllSets = 0;
-    for (int s = 0; s < setsOfParallelYears.size(); s++)
+    for (uint s = 0; s < setsOfParallelYears.size(); s++)
     {
         if (setsOfParallelYears[s].size() > maxNbYearsOverAllSets)
             maxNbYearsOverAllSets = (uint)setsOfParallelYears[s].size();
@@ -582,7 +582,7 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
         uint currentSetSize = (uint)setsOfParallelYears[0].size();
         if (setsOfParallelYears.size() > 1)
         {
-            for (int s = 1; s < setsOfParallelYears.size(); s++)
+            for (uint s = 1; s < setsOfParallelYears.size(); s++)
             {
                 if (setsOfParallelYears[s].size() != currentSetSize)
                 {
