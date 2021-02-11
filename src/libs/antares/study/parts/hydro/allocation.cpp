@@ -222,7 +222,6 @@ bool HydroAllocation::saveToFile(const AnyString& filename) const
 
 void HydroAllocation::copyFrom(const HydroAllocation& source,
                                const Study& studySource,
-                               const AreaName& areaSource,
                                const AreaNameMapping& mapping,
                                const Study& study)
 {
