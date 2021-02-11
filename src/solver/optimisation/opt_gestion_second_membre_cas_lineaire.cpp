@@ -198,22 +198,19 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
             AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = NULL;
         }
 
-        if (COUT_TRANSPORT == OUI_ANTARES)
+        for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
         {
-            for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+            CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
+            if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
             {
-                CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
-                if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
-                {
-                    Cnt = CorrespondanceCntNativesCntOptim
-                            ->NumeroDeContrainteDeDissociationDeFlux[Interco];
-                    if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
-                        SecondMembre[Cnt] = ProblemeHebdo->ValeursDeNTC[PdtHebdo]
-                                              ->ValeurDeLoopFlowOrigineVersExtremite[Interco];
-                    else
-                        SecondMembre[Cnt] = 0.;
-                    AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = NULL;
-                }
+                Cnt = CorrespondanceCntNativesCntOptim
+                        ->NumeroDeContrainteDeDissociationDeFlux[Interco];
+                if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
+                    SecondMembre[Cnt] = ProblemeHebdo->ValeursDeNTC[PdtHebdo]
+                                          ->ValeurDeLoopFlowOrigineVersExtremite[Interco];
+                else
+                    SecondMembre[Cnt] = 0.;
+                AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = NULL;
             }
         }
 

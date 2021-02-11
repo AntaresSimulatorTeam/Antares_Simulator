@@ -114,24 +114,21 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* ProblemeHebdo,
                 ProblemeAResoudre->CoutLineaire[Var] = 0.0;
             }
 
-            if (COUT_TRANSPORT == OUI_ANTARES)
+            if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
             {
-                if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+                if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
                 {
-                    Var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
-                    if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-                    {
-                        ProblemeAResoudre->CoutLineaire[Var]
-                          = CoutDeTransport->CoutDeTransportOrigineVersExtremite[PdtHebdo];
-                    }
-                    Var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
-                    if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-                    {
-                        ProblemeAResoudre->CoutLineaire[Var]
-                          = CoutDeTransport->CoutDeTransportExtremiteVersOrigine[PdtHebdo];
-                    }
+                    ProblemeAResoudre->CoutLineaire[Var]
+                      = CoutDeTransport->CoutDeTransportOrigineVersExtremite[PdtHebdo];
+                }
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+                if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+                {
+                    ProblemeAResoudre->CoutLineaire[Var]
+                      = CoutDeTransport->CoutDeTransportExtremiteVersOrigine[PdtHebdo];
                 }
             }
         }

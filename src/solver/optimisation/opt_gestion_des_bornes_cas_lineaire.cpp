@@ -203,47 +203,44 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             AdresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[Interco]);
             AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
 
-            if (COUT_TRANSPORT == OUI_ANTARES)
+            if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
             {
-                if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+
+                if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
+                    Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco]
+                                - ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
+                else
+                    Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+
+                Xmax[Var] += 0.01;
+                TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+                if (Math::Infinite(Xmax[Var]) == 1)
                 {
-                    Var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
-
-                    if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
-                        Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco]
-                                    - ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
-                    else
-                        Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-
-                    Xmax[Var] += 0.01;
-                    TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-                    if (Math::Infinite(Xmax[Var]) == 1)
-                    {
-                        TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-                    }
-                    Xmin[Var] = 0.0;
-                    AdresseOuPlacerLaValeurDesCoutsReduits[Var] = NULL;
-                    AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
-
-                    Var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
-                    if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
-                        Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]
-                                    + ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
-                    else
-                        Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco];
-
-                    Xmax[Var] += 0.01;
-                    TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-                    if (Math::Infinite(Xmax[Var]) == 1)
-                    {
-                        TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-                    }
-                    Xmin[Var] = 0.0;
-                    AdresseOuPlacerLaValeurDesCoutsReduits[Var] = NULL;
-                    AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
+                    TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
                 }
+                Xmin[Var] = 0.0;
+                AdresseOuPlacerLaValeurDesCoutsReduits[Var] = NULL;
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
+
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+                if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
+                    Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]
+                                + ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
+                else
+                    Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco];
+
+                Xmax[Var] += 0.01;
+                TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+                if (Math::Infinite(Xmax[Var]) == 1)
+                {
+                    TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+                }
+                Xmin[Var] = 0.0;
+                AdresseOuPlacerLaValeurDesCoutsReduits[Var] = NULL;
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
             }
         }
 
