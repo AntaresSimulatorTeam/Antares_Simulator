@@ -965,7 +965,7 @@ void ISimulation<Impl>::estimateMemoryForOptimizationPb(Antares::Data::StudyMemo
     NbTermes += nbAreas * NombreDePasDeTempsPourUneOptimisation
                 * 5; // if explicit hydro level and overflow modelling
 
-    /* Les contraintes pour la prise en compte des co\FBts de demarrage et durees min d'arret/marche
+    /* Les contraintes pour la prise en compte des coûts de demarrage et durees min d'arret/marche
      */
     NbTermes += NbTermesContraintesPourLesCoutsDeDemarrage;
 
@@ -1560,7 +1560,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             // gp - todo :
             // ================================================================================== gp
             // - todo : Dans le cas d'une boucle "while" avant la boucle "for" concernant la gestion
-            // gp - todo : des AMC qui ne trouvent pas de solution, ce qui suit peut \EAtre utile.
+            // gp - todo : des AMC qui ne trouvent pas de solution, ce qui suit peut être utile.
             // gp - todo :
             // ================================================================================== If
             // the year has not to be rerun, we skip the computation of the year Note that, when we
@@ -1591,7 +1591,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
         if (!pFirstSetParallelWasRun)
             pFirstSetParallelWasRun = true;
 
-        // On regarde si au moins une ann\E9e du lot n'a pas trouv\E9 de solution
+        // On regarde si au moins une année du lot n'a pas trouvé de solution
         std::map<uint, bool>::iterator it;
         bool foundFailure = false;
         for (it = set_it->yearFailed.begin(); it != set_it->yearFailed.end(); it++)
@@ -1602,7 +1602,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                 break;
             }
         }
-        // Si une ann\E9e du lot d'ann\E9es n'a pas trouv\E9 de solution, on arr\EAte tout
+        // Si une année du lot d'années n'a pas trouvé de solution, on arrête tout
         if (foundFailure)
         {
             logs.fatal() << "At least one year has failed in the previous set of parallel year.";
