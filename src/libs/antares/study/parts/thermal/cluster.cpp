@@ -974,7 +974,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                 //	- Startup cost
                 // MBO 23/12/2015
                 // v5.0 format
-                // allow startup cost between [-5 000 000 ;-5 000 000] \80 (was [-50 000;50 000])
+                // allow startup cost between [-5 000 000 ;-5 000 000] (was [-50 000;50 000])
 
                 if (study.header.version <= 500)
                 {
