@@ -289,9 +289,9 @@ public:
         }
     }
 
-    linkInfo* getLink(int i)
+    linkInfo* getLink(uint i)
     {
-        if (i < (int)pLink.size())
+        if (i < pLink.size())
             return pLink[i];
         return nullptr;
     }

@@ -307,7 +307,7 @@ bool thermalTSNumberData::reset(const Study& study)
     return true;
 }
 
-void thermalTSNumberData::saveToINIFile(const Study&, Yuni::IO::File::Stream& file) const
+void thermalTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
 {
     // Prefix
     CString<512, false> prefix;
