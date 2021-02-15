@@ -1556,14 +1556,8 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                 study.runtime->timeseriesNumberYear[numSpace] = y;
                 study.runtime->currentYear[numSpace] = y;
             }
-
-            // gp - todo :
-            // ================================================================================== gp
-            // - todo : Dans le cas d'une boucle "while" avant la boucle "for" concernant la gestion
-            // gp - todo : des AMC qui ne trouvent pas de solution, ce qui suit peut être utile.
-            // gp - todo :
-            // ================================================================================== If
-            // the year has not to be rerun, we skip the computation of the year Note that, when we
+            
+            // If the year has not to be rerun, we skip the computation of the year Note that, when we
             // enter for the first time in the "for" loop, all years of the set have to be rerun
             // (meaning : they must be run once). if(!set_it->yearFailed[y]) continue;
 
