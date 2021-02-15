@@ -881,7 +881,7 @@ void SurveyResults::EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u)
         // temporary buffers for numeric conversion
         temporaryMemoryAmount += 256;
 
-        // Il y a un thread par ann\E9e MC et chaque thread construit dynamiquement un objet de type
+        // Il y a un thread par année MC et chaque thread construit dynamiquement un objet de type
         // SurveyResults pour ses outputs (voir container.hxx : void
         // List<NextT>::exportSurveyResults(...))
         u.requiredMemoryForOutput += temporaryMemoryAmount * u.nbYearsParallel;
