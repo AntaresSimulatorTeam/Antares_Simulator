@@ -71,6 +71,7 @@ private:
 
 private:
     wxCheckBox* pProxyEnabled;
+    wxCheckBox* pRemoveDialogBox;
     wxTextCtrl* pEditProxyHost;
     wxTextCtrl* pEditProxyPort;
     wxTextCtrl* pEditProxyLogin;

@@ -124,6 +124,10 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
     proxySizerDiv->Add(proxySizer, 1, wxALL | wxEXPAND);
     contentSizer->Add(proxySizerDiv, 1, wxALL | wxEXPAND);
 
+    pRemoveDialogBox = new wxCheckBox(this, wxID_ANY, wxT(" Do not show this message again"));
+    proxySizer->Add(pRemoveDialogBox, 0, wxALL | wxEXPAND);
+    proxySizer->AddSpacer(15);
+
     pProxyEnabled = new wxCheckBox(this, wxID_ANY, wxT(" Activate proxy"));
     proxySizer->Add(pProxyEnabled, 0, wxALL | wxEXPAND);
     proxySizer->AddSpacer(15);
