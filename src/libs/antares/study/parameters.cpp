@@ -426,7 +426,7 @@ static bool SGDIntLoadFamily_H(Parameters& d,
     if (key == "hydro-pricing-mode")
     {
         auto hpricing = StringToHydroPricingMode(value);
-        if ((int)hpricing != (int)ucUnknown)
+        if (hpricing != hpUnknown)
         {
             d.hydroPricing.hpMode = hpricing;
             return true;
