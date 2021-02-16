@@ -80,20 +80,16 @@ static void LicenseOnLineIsNotValid(bool startupwizard)
 
         if (not form.canceled())
         {
-            // Ok, let's try again
-
-            // The status bar will be reset by the dispatcher
             Antares::License::Limits::customerCaption = ANTARES_CHECKING_LICENSE_TEXT;
-            mainfrm->resetDefaultStatusBarText();
         }
         else
         {
-            // The status bar will be reset by the dispatcher
             Antares::License::Limits::customerCaption = "Aborting connexion...";
-            mainfrm->resetDefaultStatusBarText();
-
             Antares::License::statusOnline = Antares::License::Status::stNotRequested;
         }
+
+        // The status bar is reset by the dispatcher
+        mainfrm->resetDefaultStatusBarText();
 
         // check the license informations
         // (in another thread - it can take some time)
