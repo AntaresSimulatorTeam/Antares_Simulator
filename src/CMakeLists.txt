@@ -165,12 +165,31 @@ else()
     endif()    
 endif()
 
-# Build Needed dependencies
-add_subdirectory(antares-deps)
+
+# Add DEPS_INSTALL_DIR with antares-xpansion CMAKE_BUILD_TYPE
+if (${CMAKE_BUILD_TYPE} STREQUAL  "release")
+
+	string(REPLACE ${CMAKE_BUILD_TYPE} Release
+			DEPS_INSTALL_DIR_XPANSION
+			${DEPS_INSTALL_DIR})
+	
+	list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR_ANTARES})
+	
+elseif(${CMAKE_BUILD_TYPE} STREQUAL  "debug")
+
+	string(REPLACE ${CMAKE_BUILD_TYPE} Debug
+			DEPS_INSTALL_DIR_XPANSION
+			${DEPS_INSTALL_DIR})
+	
+	list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR_XPANSION})
+
+endif()
 
 list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR})
 message(STATUS "CMAKE_PREFIX_PATH : ${CMAKE_PREFIX_PATH}")
 
+# Build Needed dependencies
+add_subdirectory(antares-deps)
 
 # Define needed external library
 
