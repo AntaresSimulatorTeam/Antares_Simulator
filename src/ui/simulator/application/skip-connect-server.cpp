@@ -26,21 +26,36 @@
 */
 
 #include <wx/config.h>
+#include "../toolbox/wx-wrapper.h"
+#include <yuni/core/smartptr/smartptr.h>
 #include "skip-connect-server.h"
+
+using namespace Yuni;
 
 namespace Antares
 {
 namespace SkipConnectionToServer
 {
+typedef SmartPtr<wxConfig, Policy::Ownership::ReferenceCounted> WxConfigPtr;
+
 bool Get()
 {
-    // To be done
-    return false;
+    bool result = false;
+
+    // Get the config file
+    WxConfigPtr config = new wxConfig(wxT(LOG_APPLICATION_NAME), wxT(LOG_APPLICATION_VENDOR));
+
+    result = config->ReadBool("/skipConnectionToServer", false);
+
+    return result;
 }
 
 void Do()
 {
-    // To be done
+    // Get the config file
+    WxConfigPtr config = new wxConfig(wxT(LOG_APPLICATION_NAME), wxT(LOG_APPLICATION_VENDOR));
+
+    config->Write("/skipConnectionToServer", true);
 }
 
 } // namespace SkipConnectionToServer
