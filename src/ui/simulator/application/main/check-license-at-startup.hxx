@@ -76,7 +76,10 @@ static void LicenseOnLineIsNotValid(bool startupwizard)
         mainfrm->resetDefaultStatusBarText();
 
         Antares::Window::LicenseCouldNotConnectToInternetServer form(mainfrm);
-        form.ShowModal();
+        if (form.doWeDisplay())
+            form.ShowModal();
+        else
+            form.cancel();
 
         if (not form.canceled())
         {

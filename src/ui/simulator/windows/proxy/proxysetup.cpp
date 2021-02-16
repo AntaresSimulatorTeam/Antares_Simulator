@@ -124,8 +124,8 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
     proxySizerDiv->Add(proxySizer, 1, wxALL | wxEXPAND);
     contentSizer->Add(proxySizerDiv, 1, wxALL | wxEXPAND);
 
-    pRemoveDialogBox = new wxCheckBox(this, wxID_ANY, wxT(" Do not show this message again"));
-    proxySizer->Add(pRemoveDialogBox, 0, wxALL | wxEXPAND);
+    pDoNotDisplayAgain = new wxCheckBox(this, wxID_ANY, wxT(" Do not show this message again"));
+    proxySizer->Add(pDoNotDisplayAgain, 0, wxALL | wxEXPAND);
     proxySizer->AddSpacer(15);
 
     pProxyEnabled = new wxCheckBox(this, wxID_ANY, wxT(" Activate proxy"));
@@ -210,12 +210,19 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
             NULL,
             this);
 
-    pProxyEnabled->Connect(
-      pProxyEnabled->GetId(),
-      wxEVT_COMMAND_CHECKBOX_CLICKED,
-      wxCommandEventHandler(LicenseCouldNotConnectToInternetServer::evtToggleUseProxy),
-      nullptr,
-      this);
+    pDoNotDisplayAgain->Connect(
+        pDoNotDisplayAgain->GetId(),
+        wxEVT_COMMAND_CHECKBOX_CLICKED,
+        wxCommandEventHandler(LicenseCouldNotConnectToInternetServer::evtToggleDoNotDisplay),
+        nullptr,
+        this);
+
+        pProxyEnabled->Connect(
+          pProxyEnabled->GetId(),
+          wxEVT_COMMAND_CHECKBOX_CLICKED,
+          wxCommandEventHandler(LicenseCouldNotConnectToInternetServer::evtToggleUseProxy),
+          nullptr,
+          this);
 
     SetSizer(sizer);
     sizer->Layout();
@@ -326,9 +333,25 @@ void LicenseCouldNotConnectToInternetServer::toggleProxySettings()
         mainsizer->Layout();
 }
 
+void LicenseCouldNotConnectToInternetServer::evtToggleDoNotDisplay(wxCommandEvent&)
+{
+    // To be done
+}
+
 void LicenseCouldNotConnectToInternetServer::evtToggleUseProxy(wxCommandEvent&)
 {
     toggleProxySettings();
+}
+
+bool LicenseCouldNotConnectToInternetServer::doWeDisplay() const
+{
+    // To do : uncoded method - to be done
+    return true;
+}
+
+void LicenseCouldNotConnectToInternetServer::cancel()
+{
+    pCanceled = true;
 }
 
 bool LicenseCouldNotConnectToInternetServer::canceled() const

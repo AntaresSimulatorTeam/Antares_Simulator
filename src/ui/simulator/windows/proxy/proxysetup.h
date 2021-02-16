@@ -59,19 +59,26 @@ public:
     virtual ~LicenseCouldNotConnectToInternetServer();
     //@}
 
-    //! Get if the operation has been canceled by the user
+    // Do we display the connection to server dialog box ?
+    bool doWeDisplay() const;
+
+    // Cancel connection to the server. 
+    void cancel();
+
+    //! Was the connection to server canceled ?
     bool canceled() const;
 
 private:
     void onClose(void*);
     void onProceed(void*);
     void toggleProxySettings();
+    void evtToggleDoNotDisplay(wxCommandEvent&);
     void evtToggleUseProxy(wxCommandEvent&);
     void onInternalMotion(wxMouseEvent&);
 
 private:
     wxCheckBox* pProxyEnabled;
-    wxCheckBox* pRemoveDialogBox;
+    wxCheckBox* pDoNotDisplayAgain;
     wxTextCtrl* pEditProxyHost;
     wxTextCtrl* pEditProxyPort;
     wxTextCtrl* pEditProxyLogin;
