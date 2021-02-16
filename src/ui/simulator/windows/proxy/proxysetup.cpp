@@ -39,6 +39,7 @@
 #include <ui/common/component/panel.h>
 #include <antares/logs.h>
 #include "../startupwizard.h"
+#include "../../application/skip-connect-server.h"
 
 using namespace Yuni;
 
@@ -335,7 +336,7 @@ void LicenseCouldNotConnectToInternetServer::toggleProxySettings()
 
 void LicenseCouldNotConnectToInternetServer::evtToggleDoNotDisplay(wxCommandEvent&)
 {
-    // To be done
+    SkipConnectionToServer::Do();
 }
 
 void LicenseCouldNotConnectToInternetServer::evtToggleUseProxy(wxCommandEvent&)
@@ -345,8 +346,7 @@ void LicenseCouldNotConnectToInternetServer::evtToggleUseProxy(wxCommandEvent&)
 
 bool LicenseCouldNotConnectToInternetServer::doWeDisplay() const
 {
-    // To do : uncoded method - to be done
-    return true;
+    return not SkipConnectionToServer::Get();
 }
 
 void LicenseCouldNotConnectToInternetServer::cancel()

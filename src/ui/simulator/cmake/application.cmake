@@ -5,6 +5,8 @@ SET(SRC_APPLICATION
 		# Menu
 		application/recentfiles.h
 		application/recentfiles.cpp
+		application/skip-connect-server.h
+		application/skip-connect-server.cpp
 		application/menus.h application/menus.cpp
 
 		application/main/fwd.h
