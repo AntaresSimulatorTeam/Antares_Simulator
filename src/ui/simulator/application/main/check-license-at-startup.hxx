@@ -85,12 +85,6 @@ static void LicenseOnLineIsNotValid(bool startupwizard)
             // The status bar will be reset by the dispatcher
             Antares::License::Limits::customerCaption = ANTARES_CHECKING_LICENSE_TEXT;
             mainfrm->resetDefaultStatusBarText();
-
-            // check the license informations
-            // (in another thread - it can take some time)
-            Bind<void()> callback;
-            callback.bind(&CheckAntaresLicense, startupwizard);
-            Antares::Dispatcher::Post(callback);
         }
         else
         {
@@ -98,13 +92,14 @@ static void LicenseOnLineIsNotValid(bool startupwizard)
             Antares::License::Limits::customerCaption = "Aborting connexion...";
             mainfrm->resetDefaultStatusBarText();
 
-            // check the license informations
-            // (in another thread - it can take some time)
             Antares::License::statusOnline = Antares::License::Status::stNotRequested;
-            Bind<void()> callback;
-            callback.bind(&CheckAntaresLicense, startupwizard);
-            Antares::Dispatcher::Post(callback);
         }
+
+        // check the license informations
+        // (in another thread - it can take some time)
+        Bind<void()> callback;
+        callback.bind(&CheckAntaresLicense, startupwizard);
+        Antares::Dispatcher::Post(callback);
     }
     else
     {
