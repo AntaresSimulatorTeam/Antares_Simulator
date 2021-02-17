@@ -344,6 +344,7 @@ const char* SeedToCString(SeedIndex seed);
 */
 const char* SeedToID(SeedIndex seed);
 
+// ... Initial reservoir levels ...
 enum InitialReservoirLevels
 {
     irlColdStart = 0,
@@ -360,6 +361,18 @@ const char* InitialReservoirLevelsToCString(InitialReservoirLevels iniLevels);
 ** \brief Convert a text into an Initial Reservoir Levels strategy
 */
 InitialReservoirLevels StringToInitialReservoirLevels(const AnyString& text);
+
+// ... Hydro heuristic policy ...
+enum HydroHeuristicPolicy
+{
+    hhpAccommodateRuleCurves = 0,
+    hhpMaximizeGeneration,
+    hhpUnknown,
+};
+
+HydroHeuristicPolicy StringToHydroHeuristicPolicy(const AnyString& text);
+
+const char* HydroHeuristicPolicyToCString(HydroHeuristicPolicy hhPolicy);
 
 // ... Hydro Pricing ...
 enum HydroPricingMode

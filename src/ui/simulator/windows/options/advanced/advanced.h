@@ -79,6 +79,10 @@ private:
     void onSelectHotStart(wxCommandEvent& evt);
     void onSelectColdStart(wxCommandEvent& evt);
 
+    void onHydroHeuristicPolicy(Component::Button&, wxMenu& menu, void*);
+    void onSelectAccomodateRuleCurves(wxCommandEvent& evt);
+    void onSelectMaximizeGeneration(wxCommandEvent& evt);
+
     void onHydroPricingMode(Component::Button&, wxMenu& menu, void*);
     void onSelectHPHeuristic(wxCommandEvent& evt);
     void onSelectHPMixedIntegerLinearProblem(wxCommandEvent& evt);
@@ -113,6 +117,7 @@ private:
     Component::Button* pBtnNumericQualitySolar;
     Component::Button* pBtnPowerFluctuations;
     Component::Button* pBtnInitialReservoirLevels;
+    Component::Button* pBtnHydroHeuristicPolicy;
     Component::Button* pBtnHydroPricing;
     Component::Button* pBtnSheddingPolicy;
     Component::Button* pBtnMultiNodalMarginalPrices;
