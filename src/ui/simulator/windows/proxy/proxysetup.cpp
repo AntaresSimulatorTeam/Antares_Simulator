@@ -111,8 +111,7 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
             "please click on \"Cancel\", then unfold Antares help (\"?\") menu and\n"
             "select \"Continue offline\"."),
         false,
-        false,
-        +1);
+        false);
     contentSizer->AddSpacer(20);
     contentSizer->Add(titlespacer, 0, wxALL | wxEXPAND);
     contentSizer->AddSpacer(40);
