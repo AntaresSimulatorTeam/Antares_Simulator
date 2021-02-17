@@ -24,39 +24,24 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#ifndef __ANTARES_APPLICATION_SKIP_CONNECT_SERVER_H__
+#define __ANTARES_APPLICATION_SKIP_CONNECT_SERVER_H__
 
-#include <wx/config.h>
-#include "../toolbox/wx-wrapper.h"
-#include <yuni/core/smartptr/smartptr.h>
-#include "skip-connect-server.h"
-
-using namespace Yuni;
+// #include "../toolbox/wx-wrapper.h"
+#include <yuni/yuni.h>
 
 namespace Antares
 {
-namespace SkipConnectionToServer
+namespace ConnectionToServerConfig
 {
-typedef SmartPtr<wxConfig, Policy::Ownership::ReferenceCounted> WxConfigPtr;
+// Do we display the connexion to server dialog box.
+bool Display();
 
-bool Get()
-{
-    bool result = false;
-
-    // Get the config file
-    WxConfigPtr config = new wxConfig(wxT(LOG_APPLICATION_NAME), wxT(LOG_APPLICATION_VENDOR));
-
-    result = config->ReadBool("/skipConnectionToServer", false);
-
-    return result;
-}
-
-void Do()
-{
-    // Get the config file
-    WxConfigPtr config = new wxConfig(wxT(LOG_APPLICATION_NAME), wxT(LOG_APPLICATION_VENDOR));
-
-    config->Write("/skipConnectionToServer", true);
-}
+// Allow user to display or not the connexion to server dialog box at next opening
+// of application.
+void Display(bool doWeDisplay);
 
 } // namespace SkipConnectionToServer
 } // namespace Antares
+
+#endif // __ANTARES_APPLICATION_SKIP_CONNECT_SERVER_H__

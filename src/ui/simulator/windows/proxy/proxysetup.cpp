@@ -336,7 +336,7 @@ void LicenseCouldNotConnectToInternetServer::toggleProxySettings()
 
 void LicenseCouldNotConnectToInternetServer::evtToggleDoNotDisplay(wxCommandEvent&)
 {
-    SkipConnectionToServer::Do();
+    ConnectionToServerConfig::Display(false);
 }
 
 void LicenseCouldNotConnectToInternetServer::evtToggleUseProxy(wxCommandEvent&)
@@ -346,7 +346,7 @@ void LicenseCouldNotConnectToInternetServer::evtToggleUseProxy(wxCommandEvent&)
 
 bool LicenseCouldNotConnectToInternetServer::doWeDisplay() const
 {
-    return not SkipConnectionToServer::Get();
+    return ConnectionToServerConfig::Display();
 }
 
 void LicenseCouldNotConnectToInternetServer::cancel()
