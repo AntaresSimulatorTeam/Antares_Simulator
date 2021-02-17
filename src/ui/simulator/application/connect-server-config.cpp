@@ -28,7 +28,7 @@
 #include <wx/config.h>
 #include "../toolbox/wx-wrapper.h"
 #include <yuni/core/smartptr/smartptr.h>
-#include "skip-connect-server.h"
+#include "connect-server-config.h"
 
 using namespace Yuni;
 

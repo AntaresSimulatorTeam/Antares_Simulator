@@ -39,7 +39,7 @@
 #include <ui/common/component/panel.h>
 #include <antares/logs.h>
 #include "../startupwizard.h"
-#include "../../application/skip-connect-server.h"
+#include "../../application/connect-server-config.h"
 
 using namespace Yuni;
 
