@@ -451,13 +451,12 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
  thermalPlantTotalCountMustRun(0),
  maxThermalClustersForSingleArea(0),
 #ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
- ,
  hydroCostByAreaShouldBeInfinite(nullptr),
  globalMaximumCost(0.),
 #endif
  quadraticOptimizationHasFailed(false),
- currentYear(nullptr),
- weekInTheYear(nullptr)
+ weekInTheYear(nullptr),
+ currentYear(nullptr)
 {
     currentYear = new uint[nbYearsParallel];
     weekInTheYear = new uint[nbYearsParallel];

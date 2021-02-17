@@ -255,25 +255,40 @@ void BindingConstraint::matrix(const Matrix<double, double>& secondMember)
         assert(secondMember.height == 366 and "Height of the matrix does not fit");
         break;
     }
+    case typeUnknown:
+    case typeMax:
+    {
+        break;
     }
+    }
+    
     switch (pOperator)
     {
     case opEquality:
     {
         pValues.pasteToColumn((uint)columnEquality, secondMember.column(0));
+        break;
     }
     case opLess:
     {
         pValues.pasteToColumn(columnInferior, secondMember.column(0));
+        break;
     }
     case opGreater:
     {
         pValues.pasteToColumn(columnSuperior, secondMember.column(0));
+        break;
     }
     case opBoth:
     {
         pValues.pasteToColumn(columnInferior, secondMember.column(0));
         pValues.pasteToColumn(columnSuperior, secondMember.column(0));
+        break;
+    }
+    case opUnknown:
+    case opMax:
+    {
+        break;
     }
     }
 }

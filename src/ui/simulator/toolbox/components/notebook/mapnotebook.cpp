@@ -129,7 +129,7 @@ void MapNotebook::MapTabs::onDraw(wxPaintEvent&)
     {
         fontSize = 8,
     };
-    static const wxFont font(fontSize, wxSWISS, wxNORMAL, wxNORMAL, false, wxT("Tahoma"));
+    static const wxFont font(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTSTYLE_NORMAL, false, wxT("Tahoma"));
 
     // The DC
     wxAutoBufferedPaintDC dc(this);
@@ -200,7 +200,7 @@ void MapNotebook::MapTabs::drawOrientationTop(wxDC& dc)
     dc.GradientFillLinear(wxRect(pRect.x, pRect.y, pRect.width, pRect.height / 2), a1, b1, wxSOUTH);
     dc.GradientFillLinear(
       wxRect(pRect.x, pRect.y + pRect.height / 2, pRect.width, pRect.height / 2), a2, b2, wxSOUTH);
-    dc.SetPen(wxPen(a2, 1, wxSOLID));
+    dc.SetPen(wxPen(a2, 1, wxPENSTYLE_SOLID));
     dc.DrawLine(0, pRect.height - 1, pRect.width, pRect.height - 1);
 
     // compute the size of all tabs and draw the navigation buttons if necessary
@@ -376,7 +376,7 @@ void MapNotebook::MapTabs::drawItemTop(wxDC& dc, Page* page, int& pos, Notebook:
             return;
         }
 
-        dc.SetBrush(wxBrush(colGray, wxTRANSPARENT));
+        dc.SetBrush(wxBrush(colGray, wxBRUSHSTYLE_TRANSPARENT));
         if (!page->selected())
         {
             dc.SetTextForeground(wxColour(50, 50, 50));
@@ -405,10 +405,10 @@ void MapNotebook::MapTabs::drawItemTop(wxDC& dc, Page* page, int& pos, Notebook:
             switch (pNotebook.theme())
             {
             case themeLight:
-                dc.SetPen(wxPen(wxColour(85, 85, 85), 1, wxSOLID));
+                dc.SetPen(wxPen(wxColour(85, 85, 85), 1, wxPENSTYLE_SOLID));
                 break;
             default:
-                dc.SetPen(wxPen(wxColour(0, 0, 0), 1, wxSOLID));
+                dc.SetPen(wxPen(wxColour(0, 0, 0), 1, wxPENSTYLE_SOLID));
             }
             dc.SetBrush(*wxTRANSPARENT_BRUSH);
             dc.DrawRectangle(rect.x, rect.y, rect.width, rect.height);

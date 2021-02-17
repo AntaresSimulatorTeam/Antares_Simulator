@@ -195,7 +195,7 @@ void Message::add(const wxString& caption, uint value, bool defaultButton, int s
 {
     // We will use the userdata (a pointer) as a container for an int (value)
     auto* btn = Component::CreateButton(
-      pPanel, caption, this, &Message::onButtonClick, reinterpret_cast<void*>(value));
+      pPanel, caption, this, &Message::onButtonClick, &value);
 
     if (defaultButton)
     {

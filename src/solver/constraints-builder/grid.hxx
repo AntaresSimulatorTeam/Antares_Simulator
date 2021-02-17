@@ -137,7 +137,7 @@ uint Grid<NodeT>::getNumberOfConnectedComponents()
         cVec[cIT->second] = true;
     }
 
-    return cVec.size();
+    return (uint)(cVec.size());
 }
 
 template<class NodeT>

@@ -18,4 +18,12 @@ struct TSNumbersPredicate
 	}
 };
 
+struct PredicateIdentity
+{
+    template<class U>
+    inline U operator()(const U& value) const
+    {
+        return value;
+    }
+};
 

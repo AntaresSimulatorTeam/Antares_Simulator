@@ -88,7 +88,7 @@ void OPT_ExportAreaName(const Antares::Data::Study& study, uint numSpace)
     if (study.runtime->currentYear[numSpace] == 0 && study.runtime->weekInTheYear[numSpace] == 0)
     {
         FILE* Flot = study.createFileIntoOutputWithExtension("area", "txt", numSpace);
-        for (int i(0); i < study.areas.size(); ++i)
+        for (uint i = 0; i < study.areas.size(); ++i)
         {
             fprintf(Flot, "%s\n", study.areas[i]->name.c_str());
         }
@@ -103,7 +103,7 @@ void OPT_Export_add_variable(std::vector<std::string>& varname,
                              int secondVal,
                              int ts)
 {
-    if (varname.size() > Var && varname[Var].empty())
+    if ((int)varname.size() > Var && varname[Var].empty())
     {
         std::stringstream buffer;
         buffer << Var << " ";
@@ -121,7 +121,7 @@ void OPT_Export_add_variable(std::vector<std::string>& varname,
                              int firstVal,
                              int ts)
 {
-    if (varname.size() > Var && varname[Var].empty())
+    if ((int)varname.size() > Var && varname[Var].empty())
     {
         std::stringstream buffer;
         buffer << Var << " ";

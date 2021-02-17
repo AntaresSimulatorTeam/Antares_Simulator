@@ -392,13 +392,15 @@ void Spotlight::IItem::draw(wxDC& dc,
         wxString subCaption = wxStringFromUTF8(pSubCaption);
         bool b = pCaption.equals("W2");
         int length = subCaption.Length();
+        uint bounds_width = bounds.width;
+
         // display the main label
         // display the sub label, with shadow
         if (!reverseTextColor)
         {
             DrawTextWithSelection<true, false>(
               pCaption, pCacheCaption, dc, tokens, tagHeight, bounds.x, bounds.y, mayHasSelection);
-            if (pSubCaption.length() * 5 < bounds.width - bounds.x - 1)
+            if (pSubCaption.length() * 5 < bounds_width - bounds.x - 1)
             {
                 dc.SetTextForeground(wxColour(255, 255, 255));
                 dc.DrawText(subCaption, bounds.x + 1, bounds.y + 16 + 1);
@@ -413,7 +415,7 @@ void Spotlight::IItem::draw(wxDC& dc,
         {
             DrawTextWithSelection<true, true>(
               pCaption, pCacheCaption, dc, tokens, tagHeight, bounds.x, bounds.y, mayHasSelection);
-            if (pSubCaption.length() * 5 < bounds.width - bounds.x - 1)
+            if (pSubCaption.length() * 5 < bounds_width - bounds.x - 1)
             {
                 dc.SetTextForeground(wxColour(70, 70, 90));
                 dc.DrawText(subCaption, bounds.x + 1, bounds.y + 16 + 1);

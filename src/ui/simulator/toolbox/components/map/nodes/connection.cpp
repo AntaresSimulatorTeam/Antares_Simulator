@@ -111,8 +111,8 @@ Connection::Connection(Manager& manager, Item* a, Item* b) :
  pCachedAbsolutePosition(0, 0),
  pHaveTools(false),
  pAttachedAreaLink(nullptr),
- pDefaultPen(wxPen(wxColour(225, 225, 225), 6, wxSOLID)),
- pErrorPen(wxPen(wxColour(255, 200, 200), 6, wxSOLID))
+ pDefaultPen(wxPen(wxColour(225, 225, 225), 6, wxPENSTYLE_SOLID)),
+ pErrorPen(wxPen(wxColour(255, 200, 200), 6, wxPENSTYLE_SOLID))
 {
     if (a && b)
     {

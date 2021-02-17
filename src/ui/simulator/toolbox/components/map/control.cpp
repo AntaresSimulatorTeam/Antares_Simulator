@@ -238,7 +238,7 @@ wxBitmap Control::getRenderedMapImage(const MapRenderOptions& mapOptions)
 void Control::drawGrid(wxDC& dc)
 {
     // Grid
-    dc.SetPen(wxPen(Settings::grid, 1, wxDOT));
+    dc.SetPen(wxPen(Settings::grid, 1, wxPENSTYLE_DOT));
     // Horizontal lines
     for (int y = pCachedOrigin.y - gridSize; y > 0; y -= gridSize)
         dc.DrawLine(0, y, pCachedRealSize.x, y);
@@ -251,7 +251,7 @@ void Control::drawGrid(wxDC& dc)
         dc.DrawLine(x, 0, x, pCachedRealSize.y);
 
     // Major lines
-    dc.SetPen(wxPen(Settings::gridCenter, 1, wxSOLID));
+    dc.SetPen(wxPen(Settings::gridCenter, 1, wxPENSTYLE_SOLID));
     dc.DrawLine(0, pCachedOrigin.y, pCachedRealSize.x, pCachedOrigin.y);
     dc.DrawLine(pCachedOrigin.x, 0, pCachedOrigin.x, pCachedRealSize.y);
 }

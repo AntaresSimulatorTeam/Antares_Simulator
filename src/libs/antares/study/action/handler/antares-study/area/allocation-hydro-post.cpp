@@ -73,7 +73,6 @@ bool AllocationHydroPost::performWL(Context& ctx)
             {
                 targetArea->hydro.allocation.copyFrom(source->hydro.allocation,
                                                       *ctx.extStudy,
-                                                      pOriginalAreaName,
                                                       ctx.areaNameMapping,
                                                       ctx.study);
             }

@@ -326,13 +326,10 @@ void thermalTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stre
 
     for (uint index = 0; index != pTSNumberRules.width; ++index)
     {
-        // alias to the current column
-        const MatrixType::ColumnType& col = pTSNumberRules[index];
         // Foreach thermal cluster...
         for (uint y = 0; y != pTSNumberRules.height; ++y)
         {
             const uint val = get(pArea->thermal.list.byIndex[index], y);
-            // const MatrixType::Type  value = col[y];
             // Equals to zero means 'auto', which is the default mode
             if (!val)
                 continue;
@@ -358,9 +355,6 @@ void thermalTSNumberData::apply(Study& study)
     CString<512, false> logprefix;
     // Errors
     uint errors = 0;
-
-    // General data
-    auto& parameters = study.parameters;
 
     // Alias to the current area
     assert(pArea != nullptr);

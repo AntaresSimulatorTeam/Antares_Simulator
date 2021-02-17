@@ -105,7 +105,10 @@ void Links::simulationEnd()
 
 void Links::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
 {
-    if (count && (dataLevel & Category::link || dataLevel & Category::area))
+    int count_int = count;
+    bool linkDataLevel = dataLevel & Category::link;
+    bool areaDataLevel = dataLevel & Category::area;
+    if (count_int && (linkDataLevel || areaDataLevel))
     {
         if (not results.data.area->links.empty())
         {

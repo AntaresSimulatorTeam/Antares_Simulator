@@ -80,7 +80,7 @@ void UIRuntimeInfo::reload()
                     set.insert(i->second);
             }
 
-            for (auto j = 0; j < area->thermal.clusterCount; ++j)
+            for (uint j = 0; j < area->thermal.clusterCount; ++j)
             {
                 ThermalCluster* cluster = area->thermal.clusters[j];
                 pClusters.push_back(cluster);
@@ -88,7 +88,7 @@ void UIRuntimeInfo::reload()
         }
     }
 
-    pClusterCount = pClusters.size();
+    pClusterCount = (uint)pClusters.size();
 
     // Sorting the links between the areas as well
     {

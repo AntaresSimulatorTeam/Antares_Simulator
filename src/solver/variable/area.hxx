@@ -68,9 +68,11 @@ void Areas<NextT>::buildSurveyReport(SurveyResults& results,
                                      int fileLevel,
                                      int precision) const
 {
-    if (count
-        && (dataLevel & Category::link || dataLevel & Category::area
-            || dataLevel & Category::thermalAggregate))
+    int count_int = count;
+    bool linkDataLevel = dataLevel & Category::link;
+    bool areaDataLevel = dataLevel & Category::area;
+    bool thermalAggregateDataLevel = dataLevel & Category::thermalAggregate;
+    if (count_int && (linkDataLevel || areaDataLevel || thermalAggregateDataLevel))
     {
         assert(results.data.area != NULL
                && "The area must not be null to generate a survey report");
@@ -118,9 +120,11 @@ void Areas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
                                            int precision,
                                            uint numSpace) const
 {
-    if (count
-        && (dataLevel & Category::link || dataLevel & Category::area
-            || dataLevel & Category::thermalAggregate))
+    int count_int = count;
+    bool linkDataLevel = dataLevel & Category::link;
+    bool areaDataLevel = dataLevel & Category::area;
+    bool thermalAggregateDataLevel = dataLevel & Category::thermalAggregate;
+    if (count_int && (linkDataLevel || areaDataLevel || thermalAggregateDataLevel))
     {
         assert(results.data.area != NULL
                && "The area must not be null to generate a survey report");
@@ -166,7 +170,8 @@ void Areas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 template<class NextT>
 void Areas<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
 {
-    if (count)
+    int count_int = count;
+    if (count_int)
     {
         if (dataLevel & Category::area)
         {

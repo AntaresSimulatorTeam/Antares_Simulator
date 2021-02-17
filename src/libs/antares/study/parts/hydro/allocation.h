@@ -113,7 +113,6 @@ public:
     */
     void copyFrom(const HydroAllocation& source,
                   const Study& studySource,
-                  const AreaName& areaSource,
                   const AreaNameMapping& mapping,
                   const Study& study);
     //@}
