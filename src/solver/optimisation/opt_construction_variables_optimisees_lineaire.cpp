@@ -69,24 +69,21 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             NombreDeVariables++;
 
-            if (COUT_TRANSPORT == OUI_ANTARES)
+            CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
+            if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
             {
-                CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
-                if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
-                {
-                    CorrespondanceVarNativesVarOptim
-                      ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco]
-                      = NombreDeVariables;
-                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
-                      = VARIABLE_BORNEE_DES_DEUX_COTES;
-                    NombreDeVariables++;
-                    CorrespondanceVarNativesVarOptim
-                      ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco]
-                      = NombreDeVariables;
-                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
-                      = VARIABLE_BORNEE_DES_DEUX_COTES;
-                    NombreDeVariables++;
-                }
+                CorrespondanceVarNativesVarOptim
+                  ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco]
+                  = NombreDeVariables;
+                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                  = VARIABLE_BORNEE_DES_DEUX_COTES;
+                NombreDeVariables++;
+                CorrespondanceVarNativesVarOptim
+                  ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco]
+                  = NombreDeVariables;
+                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                  = VARIABLE_BORNEE_DES_DEUX_COTES;
+                NombreDeVariables++;
             }
         }
 
