@@ -69,6 +69,9 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
  pEditProxyPass(nullptr),
  pCanceled(true)
 {
+    // TODO : a lot of pointer variables are not destroyed after usage here : sizers, titles, ...
+    // TODO : They have to be deleted to avoid memory leaks.
+    
     assert(parent);
 
     // Background color
@@ -105,6 +108,13 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
       false,
       false);
     subtitle->Enable(false);
+    pOffline_title = Component::CreateLabel(
+        this,
+        wxT("If you wish to stay offline in all future sessions,\n"
+            "click on \"Cancel\", and select \"Continue offline\"\n"
+            "in the Antares help (\"?\") menu."),
+        false,
+        false);
     contentSizer->AddSpacer(20);
     contentSizer->Add(titlespacer, 0, wxALL | wxEXPAND);
     contentSizer->AddSpacer(40);
@@ -114,6 +124,8 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
     subtitlespacer->Add(title, 0, wxLEFT);
     subtitlespacer->AddSpacer(3);
     subtitlespacer->Add(subtitle, 0, wxLEFT);
+    subtitlespacer->AddSpacer(10);
+    subtitlespacer->Add(pOffline_title, 0, wxLEFT);
     subtitlespacer->AddStretchSpacer();
     titlespacer->AddSpacer(10);
     titlespacer->Add(subtitlespacer, 1, wxALL | wxALIGN_CENTER_VERTICAL | wxLEFT);
@@ -225,8 +237,8 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
 
 LicenseCouldNotConnectToInternetServer::~LicenseCouldNotConnectToInternetServer()
 {
-    // MakeModal(false);
     Component::Spotlight::FrameClose();
+    delete pOffline_title;
 }
 
 void LicenseCouldNotConnectToInternetServer::onClose(void*)

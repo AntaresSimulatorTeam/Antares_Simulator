@@ -82,6 +82,8 @@ private:
     wxSizer* pFlexSizer;
     bool pCanceled;
 
+    wxStaticText* pOffline_title;
+
 }; // class LicenseCoudtNotConnectToInternetServer
 
 } // namespace Window
