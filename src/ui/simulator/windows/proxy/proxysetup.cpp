@@ -63,6 +63,7 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
           wxDefaultPosition,
           wxDefaultSize,
           wxCLOSE_BOX | wxCAPTION | wxCLIP_CHILDREN),
+ pOnLineConsent(parent),
  pEditProxyHost(nullptr),
  pEditProxyPort(nullptr),
  pEditProxyLogin(nullptr),
@@ -244,7 +245,7 @@ void LicenseCouldNotConnectToInternetServer::onClose(void*)
 
 void LicenseCouldNotConnectToInternetServer::onOffline(void*)
 {
-    // Forms::setGDPRStatus(true);
+    pOnLineConsent.setGDPRStatus(false);
     Dispatcher::GUI::Close(this);
 }
 

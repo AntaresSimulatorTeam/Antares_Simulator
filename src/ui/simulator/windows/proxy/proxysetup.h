@@ -31,6 +31,7 @@
 #include "../../toolbox/components/button.h"
 #include <wx/dialog.h>
 #include <wx/checkbox.h>
+#include "../onLineConsent/on-line-consent.h"
 
 namespace Antares
 {
@@ -84,6 +85,10 @@ private:
     wxButton* pBtnCancel;
     wxButton* pBtnValidate;
     wxButton* pBtnContinueOffline;
+
+    // User consent for sending anonymous usage infos on server
+    onLineConsent pOnLineConsent;
+
     bool pCanceled;
 
 }; // class LicenseCoudtNotConnectToInternetServer
