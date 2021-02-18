@@ -110,9 +110,9 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
     subtitle->Enable(false);
     pOffline_title = Component::CreateLabel(
         this,
-        wxT("If you wish to stay offline (disable sending anonymous usage metrics),\n"
-            "please click on \"Cancel\", then unfold Antares help (\"?\") menu and\n"
-            "select \"Continue offline\"."),
+        wxT("If you wish to stay offline in all future sessions,\n"
+            "click on \"Cancel\", and select \"Continue offline\"\n"
+            "in the Antares help (\"?\") menu."),
         false,
         false);
     contentSizer->AddSpacer(20);
