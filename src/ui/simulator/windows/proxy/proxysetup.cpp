@@ -184,13 +184,18 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
     pnlSizerBtns->AddSpacer(25);
 
     pnlSizerBtns->AddStretchSpacer();
-    auto* pBtnValidate = Antares::Component::CreateButton(
+    pBtnValidate = Antares::Component::CreateButton(
       panel, wxT(" Connect "), this, &LicenseCouldNotConnectToInternetServer::onProceed);
     pBtnValidate->SetDefault();
 
-    auto* pBtnCancel = Antares::Component::CreateButton(
+    pBtnCancel = Antares::Component::CreateButton(
       panel, wxT(" Cancel "), this, &LicenseCouldNotConnectToInternetServer::onClose);
 
+    pBtnContinueOffline = Antares::Component::CreateButton(
+        panel, wxT(" Continue offline "), this, &LicenseCouldNotConnectToInternetServer::onOffline);
+
+    pnlSizerBtns->Add(pBtnContinueOffline, 0, wxALL | wxEXPAND);
+    pnlSizerBtns->AddSpacer(5);
     pnlSizerBtns->Add(pBtnCancel, 0, wxALL | wxEXPAND);
     pnlSizerBtns->AddSpacer(5);
     pnlSizerBtns->Add(pBtnValidate, 0, wxALL | wxEXPAND);
@@ -227,10 +232,19 @@ LicenseCouldNotConnectToInternetServer::~LicenseCouldNotConnectToInternetServer(
 {
     // MakeModal(false);
     Component::Spotlight::FrameClose();
+    delete pBtnCancel;
+    delete pBtnValidate;
+    delete pBtnContinueOffline;
 }
 
 void LicenseCouldNotConnectToInternetServer::onClose(void*)
 {
+    Dispatcher::GUI::Close(this);
+}
+
+void LicenseCouldNotConnectToInternetServer::onOffline(void*)
+{
+    // Forms::setGDPRStatus(true);
     Dispatcher::GUI::Close(this);
 }
 

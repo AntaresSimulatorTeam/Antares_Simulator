@@ -64,6 +64,7 @@ public:
 
 private:
     void onClose(void*);
+    void onOffline(void*);
     void onProceed(void*);
     void toggleProxySettings();
     void evtToggleUseProxy(wxCommandEvent&);
@@ -80,6 +81,9 @@ private:
     wxWindow* pLblProxyLogin;
     wxWindow* pLblProxyPass;
     wxSizer* pFlexSizer;
+    wxButton* pBtnCancel;
+    wxButton* pBtnValidate;
+    wxButton* pBtnContinueOffline;
     bool pCanceled;
 
 }; // class LicenseCoudtNotConnectToInternetServer
