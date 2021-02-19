@@ -50,7 +50,7 @@ jobs:
 
     - name: Configure
       run: |
-           cmake3 -B _build -S . -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON
+           cmake3 -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON
 
     - name: Build
       run: |
@@ -59,7 +59,7 @@ jobs:
     - name: Run unit tests
       run: |
            cd _build
-           ctest -C Release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
+           ctest3 -C Release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
            
     - name: Installer .tar.gz creation
       run: |
