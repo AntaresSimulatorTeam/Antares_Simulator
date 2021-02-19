@@ -16,7 +16,7 @@ add_subdirectory(end-to-end)
 
 option(BUILD_OUTPUT_TEST "Activates output values comparison test building" OFF)
 
-find_package(Python3 EXACT 3.8 COMPONENTS Interpreter)
+find_package(Python3 COMPONENTS Interpreter)
 if(Python3_Interpreter_FOUND)
 
   #check if pytest and numpy are installed
