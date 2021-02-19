@@ -24,7 +24,7 @@ jobs:
     - name: Install libraries
       run: |
            yum install -y wget git epel-release redhat-lsb-core gcc gcc-c++ make centos-release-scl scl-utils
-           yum install -y openssl-devel curl-devel libuuid-devel wxGTK3-devel boost-test boost-filesystem boost-regex boost-devel 
+           yum install -y unzip openssl-devel curl-devel libuuid-devel wxGTK3-devel boost-test boost-filesystem boost-regex boost-devel 
            yum install -y cmake3
                       
     
