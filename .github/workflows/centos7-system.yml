@@ -25,7 +25,7 @@ jobs:
       run: |
            yum install -y wget git epel-release redhat-lsb-core gcc gcc-c++ make centos-release-scl scl-utils
            yum install -y unzip openssl-devel curl-devel libuuid-devel wxGTK3-devel boost-test boost-filesystem boost-regex boost-devel 
-           yum install -y cmake3
+           yum install -y cmake3 devtoolset-7
                       
     
     - uses: nelonoel/branch-name@v1.0.1
