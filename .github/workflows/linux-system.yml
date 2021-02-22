@@ -75,7 +75,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: antares-ubuntu-archive
-        path: _build/antares-*.*.*-*-*.*.*
+        path: _build/*.tar.gz
         
     - name: Installer deb upload
       uses: actions/upload-artifact@v2

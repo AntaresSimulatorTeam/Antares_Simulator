@@ -77,7 +77,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: antares-centos7-archive
-        path: _build/antares-*.*.*-*-*.*.*
+        path: _build/*.tar.gz
         
     - name: Installer rpm upload
       uses: actions/upload-artifact@v2

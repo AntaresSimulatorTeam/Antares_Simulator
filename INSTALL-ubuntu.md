@@ -210,5 +210,5 @@ cpack -G TGZ .
 There are still some system librairies that must be installed if you want to use *ANTARES*:
 
 ```
-sudo apt-get install libcurl4 libwxgtk3.0
+sudo apt-get install libcurl4 libwxgtk3.0-gtk3
 ```
