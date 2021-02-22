@@ -44,7 +44,8 @@ This section describes the install procedures for the third-party Open source li
 The install procedure can be done
 - by compiling the sources after cloning the official git repository
 - by using VCPKG
-
+- by using pre-compiled external libraries provided by [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps/releases/tag/v1.2.0)
+- 
 ### VCPKG
 
 For Windows we will use [vcpkg](https://github.com/microsoft/vcpkg) to download and compile the librairies.
@@ -115,10 +116,11 @@ First you need to update git submodule for dependency build :
 ```
 git submodule update --init [antares_src]/antares-deps
 ```
-Note :
-> cpack NSIS installer creation need an 'out of source build'. The build directory must be outside `[antares_src]` directory
 
 ### 2 - CMake configure
+
+Note :
+> cpack NSIS installer creation need an 'out of source build'. The build directory must be outside `[antares_src]` directory
 
 #### Configure options
 

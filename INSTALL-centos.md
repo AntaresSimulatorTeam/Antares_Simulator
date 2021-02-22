@@ -7,13 +7,13 @@
 |:-------|--------|------|
 | Centos7  | [![Status][centos_system_svg]][centos_system_link] | [![Status][centos_deps_build_svg]][centos_deps_build_link] |
 
-[centos_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(deps.%20compilation)/badge.svg
+[centos_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Centos7%20CI%20(deps.%20compilation)/badge.svg
 
-[centos_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(deps.%20compilation)"
+[centos_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Centos7%20CI%20(deps.%20compilation)"
 
-[centos_system_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(VCPKG)/badge.svg
+[centos_system_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Centos7%20CI%20(system%20libs)/badge.svg
 
-[centos_system_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(VCPKG)"
+[centos_system_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Centos7%20CI%20(system%20libs)"
  
 ## [CMake version](#cmake-version)
 CMake 3.x must be used.
@@ -26,7 +26,7 @@ Note:
 
 ## [GCC version](#gcc-version)
 By default, GCC version of Centos7 is 4.8.5.
-The compilation of  *antares-xpansion* requires C++17 support.
+The compilation of  *ANTARES* requires C++17 support.
 
 You can use a more recent version of GCC by enabling `devtoolset-7` :
 ```
@@ -108,7 +108,7 @@ First you need to update git submodule for dependency build :
 git submodule update --init [antares_src]/antares-deps
 ```
 
-### 2 - Enable `devtoolset-7
+### 2 - Enable `devtoolset-7`
 
 ```
 scl enable devtoolset-7 bash
