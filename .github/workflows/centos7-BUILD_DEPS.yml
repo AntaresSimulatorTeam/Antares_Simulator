@@ -24,7 +24,7 @@ jobs:
     - name: Install libraries
       run: |
            yum install -y wget git epel-release redhat-lsb-core gcc gcc-c++ make centos-release-scl scl-utils
-           yum install -y unzip libuuid-devel
+           yum install -y unzip libuuid-devel libidn2-devel gtk2-devel
            yum install -y cmake3 devtoolset-7
                       
     
