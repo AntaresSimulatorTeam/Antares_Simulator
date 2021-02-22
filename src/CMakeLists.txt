@@ -367,7 +367,8 @@ else()
 	set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION})
 	
 	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libcurl4,libwxgtk3.0")
-    set(CPACK_RPM_PACKAGE_REQUIRES "epel-release,openssl,curl,wxGTK3")
+    set(CPACK_RPM_PACKAGE_REQUIRES "openssl,curl,wxGTK3")
+    set(CPACK_RPM_PACKAGE_AUTOREQPROV "0")
 
 	configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
 
