@@ -52,14 +52,14 @@ pip3 install -r src/tests/examples/requirements.txt
 ```
 
 ## [Dependencies](#deps)
- ANTARES depends on severals mandatory libraries. 
+ ANTARES depends on several mandatory libraries. 
  - [OpenSSL](https://github.com/openssl/openssl)
  - [CURL](https://github.com/curl/curl)
  - [Sirius Solver](https://github.com/AntaresSimulatorTeam/sirius-solver/tree/Antares_VCPKG) (fork from [RTE](https://github.com/rte-france/sirius-solver/tree/Antares_VCPKG))
  - [OR-Tools](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) (fork from [RTE](https://github.com/rte-france/or-tools/tree/rte_dev_sirius) based on official OR-Tools github)
  - [wxWidgets](https://github.com/wxWidgets/wxWidgets)
  (Only for the complete Antares Simulator solution with GUI)
- - Boost librairies : test process filesystem regex dll (Only for unit tests)
+ - Boost libraries : test process filesystem regex dll (Only for unit tests)
 
 This section describes the install procedures for the third-party Open source libraries used by ANTARES.
 The install procedure can be done
@@ -74,14 +74,18 @@ sudo yum install redhat-lsb-core openssl-devel curl-devel wxGTK3-devel boost-tes
 ### [Automatic librairies compilation from git](#git_compil)
 [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps) is used as a git submodule for automatic librairies compilation from git.
 
-Dependency can be built at configure time using the option `-DBUILD_ALL=ON` (`OFF` by default). For a list of available option see [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps).
+All dependencies can be built at configure time using the option `-DBUILD_ALL=ON` (`OFF` by default).
+For a list of available option see [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps).
 
-Some dependencies can't be installed with a package manager. They can be built at configure step with a cmake option  : `-DBUILD_not_system=ON` (`ON` by default).
+Some dependencies can't be installed with a package manager.
+They can be built at configure step with a cmake option  : `-DBUILD_not_system=ON` (`ON` by default).
 
 #### Defining dependency install directory
-When using multiple directories for antares development with multiple branches it can be useful to have a common dependency install directory.
+It can be useful to have a common dependency install directory, when using multiple directories for antares development
+with multiple branches.
 
-Dependency install directory can be specified with `DEPS_INSTALL_DIR`. By default install directory is `<antares_checkout_dir>/../rte-antares-deps-<build_type>`
+The dependency-install-directory can be specified with `DEPS_INSTALL_DIR`.
+By default the install directory is `<antares_checkout_dir>/../rte-antares-deps-<build_type>`
 
 Note :
 > `DEPS_INSTALL_DIR` is added to `CMAKE_PREFIX_PATH`
@@ -91,7 +95,7 @@ Note :
 ### Pre-compiled libraries download : release version only
 You can download pre-compiled antares-deps archive from [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps/releases/tag/v1.1.0). Only release version are available.
 
-There are still some system librairies that must be installed :
+There are still some system libraries that must be installed :
 
 ```
 sudo yum install libuuid-devel libidn2-devel gtk2-devel redhat-lsb-core
@@ -155,7 +159,7 @@ Note:
 
 All tests are associated to a label and multiple labels can be defined. You can choose which tests will be executed at ctest run.
 
-This is the list of the availables labels :
+This is the list of the available labels :
 
 | Label     | Description |
 |:-------|-----|
@@ -206,7 +210,7 @@ cd _build
 cpack3 -G TGZ .
 ```
 
-There are still some system librairies that must be installed if you want to use *ANTARES*:
+There are still some system libraries that must be installed if you want to use *ANTARES*:
 
 ```
 sudo yum install epel-release
