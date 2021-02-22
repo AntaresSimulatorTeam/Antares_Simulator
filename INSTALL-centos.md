@@ -191,7 +191,22 @@ For more information on `ctest` call see [documentation](https://cmake.org/cmake
 
 ## [Installer creation](#installer)
 CPack can be used to create the installer after the build phase.
+
+## RHEL .rpm (Experimental)
+ ```
+cd _build
+cpack3 -G RPM .
+```
+
+## Linux .tar.gz
  ```
 cd _build
 cpack3 -G TGZ .
+```
+
+There are still some system librairies that must be installed if you want to use *ANTARES*:
+
+```
+sudo yum install epel-release
+sudo yum install openssl curl wxGTK3
 ```

@@ -65,6 +65,13 @@ jobs:
       run: |
            cd _build
            ctest3 -C release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
+               
+    - name: Installer .rpm creation
+      run: |
+           cd _build
+           cpack3 -G RPM
+           export RPM_NAME=$(ls *.rpm)
+           echo "RPM_NAME=$RPM_NAME" >> $GITHUB_ENV
            
     - name: .tar.gz creation
       run: |
@@ -72,6 +79,14 @@ jobs:
            cpack3 -G TGZ
            export TGZ_NAME=$(ls *.tar.gz)
            echo "TGZ_NAME=$TGZ_NAME" >> $GITHUB_ENV
+           
+    - name: Upload .rpm
+      uses: actions/upload-release-asset@v1.0.2
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: _build/${{env.RPM_NAME}}
+        asset_name: ${{env.RPM_NAME}}
+        asset_content_type: application/octet-stream
            
     - name: Upload .tar.gz
       uses: actions/upload-release-asset@v1.0.2
