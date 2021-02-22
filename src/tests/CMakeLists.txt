@@ -11,8 +11,11 @@ endif()
 
 
 add_subdirectory(src)
-add_subdirectory(end-to-end)
 
+#end to end test require boost 1.6.x because for boost::test_tools::tolerance 
+if(Boost_VERSION VERSION_GREATER 1.6.0)
+    add_subdirectory(end-to-end)
+endif()
 
 option(BUILD_OUTPUT_TEST "Activates output values comparison test building" OFF)
 
