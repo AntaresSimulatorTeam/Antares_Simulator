@@ -367,9 +367,11 @@ else()
 	set(CPACK_DEBIAN_PACKAGE_NAME "antares")
 	set(CPACK_PACKAGE_VERSION_MAJOR ${ANTARES_VERSION_HI})
 	set(CPACK_PACKAGE_VERSION_MINOR ${ANTARES_VERSION_LO})
-	set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION})	
+	set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION})
 	
-	set(CPACK_DEBIAN_PACKAGE_DEPENDS "uuid-dev, libcurl4-openssl-dev, libssl-dev, libwxgtk3.0-gtk3-dev")
+	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libcurl4,libwxgtk3.0-gtk3-0v5")
+    set(CPACK_RPM_PACKAGE_REQUIRES "openssl,curl,wxGTK3")
+    set(CPACK_RPM_PACKAGE_AUTOREQPROV "0")
 
 	configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
 

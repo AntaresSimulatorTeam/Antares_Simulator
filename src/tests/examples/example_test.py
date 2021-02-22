@@ -91,7 +91,7 @@ def check_integrity_first_opt(path):
     output_path = path / 'output'
     output_values = get_integrity_check_values(output_path)
 
-    np.testing.assert_allclose(reference_values[0:4], output_values[0:4], rtol=1e-4, atol=0)
+    np.testing.assert_allclose(reference_values[0:4], output_values[0:4], rtol=1e-3, atol=0)
 
 def check_integrity_second_opt(path):
     reference_path = path / 'reference'
@@ -100,7 +100,7 @@ def check_integrity_second_opt(path):
     output_path = path / 'output'
     output_values = get_integrity_check_values(output_path)
 
-    np.testing.assert_allclose(reference_values[4:8], output_values[4:8], rtol=1e-4, atol=0)
+    np.testing.assert_allclose(reference_values[4:8], output_values[4:8], rtol=1e-3, atol=0)
 
 def generate_reference_integrity(solver_path, path):
     reference_path = path / 'reference'
