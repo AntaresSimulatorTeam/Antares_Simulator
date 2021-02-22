@@ -197,6 +197,8 @@ CPack can be used to create the installer after the build phase.
 cd _build
 cpack3 -G RPM .
 ```
+Note :
+> `rpm-build` must be installed for RPM creation :  `sudo yum install rpm-build `
 
 ## Linux .tar.gz
  ```
