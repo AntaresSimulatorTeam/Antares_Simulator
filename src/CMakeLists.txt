@@ -155,6 +155,9 @@ endif()
 option(BUILD_UI "Build antares ui simulator" ON)
 message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 
+option(BUILD_SWAP "Build antares solver with swap support (developpement option)" ${BUILD_UI})
+message(STATUS "Build antares solver with swap support: ${BUILD_SWAP}")
+
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
     SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../rte-antares-deps-${CMAKE_BUILD_TYPE})
