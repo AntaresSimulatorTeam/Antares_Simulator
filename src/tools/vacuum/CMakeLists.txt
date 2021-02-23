@@ -25,7 +25,12 @@ endif(WIN32)
 
 set(execname "antares-${ANTARES_PRG_VERSION}-vacuum")
 add_executable(${execname}  ${SRCS})
-install(TARGETS ${execname} DESTINATION bin)
+install(TARGETS ${execname} EXPORT antares-vacuum DESTINATION bin)
+
+INSTALL(EXPORT antares-vacuum
+	FILE antares-vacuumConfig.cmake
+	DESTINATION cmake
+)
 
 set(VACUUM_LIBS
 	libantares-core
