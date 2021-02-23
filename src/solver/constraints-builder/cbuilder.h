@@ -391,12 +391,6 @@ private:
                                                     const WeightMap& weights,
                                                     const double& secondMember);
 
-    void addConstraint(const Data::ConstraintName& name,
-                       const Yuni::String& op,
-                       const Yuni::String& type,
-                       const WeightMap& weights,
-                       const Matrix<double, double>& secondMember);
-
 public:
     Vector pLink;
 
