@@ -158,8 +158,12 @@ set(ANTARES_LIBS
 			)
 
 
-install(TARGETS ${execname} DESTINATION bin)
+install(TARGETS ${execname} EXPORT antares-ui-simulator DESTINATION bin)
 
+INSTALL(EXPORT antares-ui-simulator
+	FILE antares-ui-simulatorConfig.cmake
+	DESTINATION cmake
+)
 
 import_std_libs(${execname})
 executable_strip(${execname})

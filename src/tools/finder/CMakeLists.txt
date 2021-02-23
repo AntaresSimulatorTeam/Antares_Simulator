@@ -18,7 +18,12 @@ endif(WIN32)
 
 set(execname "antares-${ANTARES_PRG_VERSION}-study-finder")
 add_executable(${execname}  ${SRCS})
-install(TARGETS ${execname} DESTINATION bin)
+install(TARGETS ${execname} EXPORT antares-study-finder DESTINATION bin)
+
+INSTALL(EXPORT antares-study-finder
+	FILE antares-study-finderConfig.cmake
+	DESTINATION cmake
+)
 
 set(FINDER_LIBS
 	libantares-core
