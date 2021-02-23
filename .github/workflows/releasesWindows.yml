@@ -79,6 +79,14 @@ jobs:
            export NSIS_NAME=$(ls *.exe)
            echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
            
+    - name: .zip creation
+      shell: bash
+      run: |
+           cd _build
+           cpack -G ZIP
+           export ZIP_NAME=$(ls *.zip)
+           echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
+           
     - name: Upload NSIS installer
       uses: actions/upload-release-asset@v1.0.2
       with:
@@ -86,5 +94,12 @@ jobs:
         asset_path: _build/${{env.NSIS_NAME}}
         asset_name: ${{env.NSIS_NAME}}
         asset_content_type: application/octet-stream
-
+        
+    - name: Upload .zip installer
+      uses: actions/upload-release-asset@v1.0.2
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: _build/${{env.ZIP_NAME}}
+        asset_name: ${{env.ZIP_NAME}}
+        asset_content_type: application/octet-stream
     
