@@ -29,53 +29,47 @@
 
 using namespace Yuni;
 
-
 /*extern*/ bool dry = true;
 
-/*extern*/ Atomic::Int<> IOBytesDeleted   = 0;
-/*extern*/ Atomic::Int<> IOFilesDeleted   = 0;
+/*extern*/ Atomic::Int<> IOBytesDeleted = 0;
+/*extern*/ Atomic::Int<> IOFilesDeleted = 0;
 /*extern*/ Atomic::Int<> IOFoldersDeleted = 0;
 
 /*extern*/ std::unordered_set<String> inputFolders;
 
-
-
-
 bool RemoveFile(const String& filename, uint64 size)
 {
-	if (dry || IO::errNone == IO::File::Delete(filename))
-	{
-		++IOFilesDeleted;
-		IOBytesDeleted += (Atomic::Int<>::Type) size;
-		return true;
-	}
-	return false;
+    if (dry || IO::errNone == IO::File::Delete(filename))
+    {
+        ++IOFilesDeleted;
+        IOBytesDeleted += (Atomic::Int<>::Type)size;
+        return true;
+    }
+    return false;
 }
-
 
 bool RemoveDirectoryIfEmpty(const String& folder)
 {
-	if (inputFolders.count(folder) == 0) // input folders must not be removed
-	{
-		if (dry)
-		{
-			++IOFoldersDeleted;
-			return true;
-		}
-		else
-		{
-			# ifdef YUNI_OS_WINDOWS
-			Yuni::WString wpath(folder);
-			if (0 != RemoveDirectoryW(wpath.c_str()))
-			# else
-			if (0 == ::rmdir(folder.c_str()))
-			# endif
-			{
-				++IOFoldersDeleted;
-				return true;
-			}
-		}
-	}
-	return false;
+    if (inputFolders.count(folder) == 0) // input folders must not be removed
+    {
+        if (dry)
+        {
+            ++IOFoldersDeleted;
+            return true;
+        }
+        else
+        {
+#ifdef YUNI_OS_WINDOWS
+            Yuni::WString wpath(folder);
+            if (0 != RemoveDirectoryW(wpath.c_str()))
+#else
+            if (0 == ::rmdir(folder.c_str()))
+#endif
+            {
+                ++IOFoldersDeleted;
+                return true;
+            }
+        }
+    }
+    return false;
 }
-

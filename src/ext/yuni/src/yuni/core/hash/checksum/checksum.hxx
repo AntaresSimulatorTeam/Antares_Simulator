@@ -11,47 +11,37 @@
 #pragma once
 #include "checksum.h"
 
-
-
 namespace Yuni
 {
 namespace Hash
 {
 namespace Checksum
 {
+inline void IChecksum::reset()
+{
+    pValue.clear();
+}
 
+inline const String& IChecksum::fromString(const String& s)
+{
+    return fromRawData(s.data(), s.size());
+}
 
-	inline void IChecksum::reset()
-	{
-		pValue.clear();
-	}
+inline const String& IChecksum::operator[](const String& s)
+{
+    fromString(s);
+    return pValue;
+}
 
+inline const String& IChecksum::value() const
+{
+    return pValue;
+}
 
-	inline const String& IChecksum::fromString(const String& s)
-	{
-		return fromRawData(s.data(), s.size());
-	}
-
-
-	inline const String& IChecksum::operator[] (const String& s)
-	{
-		fromString(s);
-		return pValue;
-	}
-
-
-	inline const String& IChecksum::value() const
-	{
-		return pValue;
-	}
-
-
-	inline const String& IChecksum::operator() () const
-	{
-		return pValue;
-	}
-
-
+inline const String& IChecksum::operator()() const
+{
+    return pValue;
+}
 
 } // namespace Checksum
 } // namespace Hash

@@ -11,5 +11,4 @@
 #pragma once
 #include "../yuni.h"
 
-
 void DummyFunctionForCompiling();

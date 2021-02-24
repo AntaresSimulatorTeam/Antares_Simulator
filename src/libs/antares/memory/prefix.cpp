@@ -32,53 +32,48 @@
 #include <yuni/core/system/process.h>
 #include <yuni/core/system/environment.h>
 
-
 using namespace Yuni;
 
 namespace Antares
 {
+void Memory::initializeSwapFilePrefix()
+{
+    // getting the current process id
+    pProcessID = Yuni::ProcessID();
 
+    pSwapFilePrefix << "antares-" << ANTARES_VERSION << "-swap-";
 
-	void Memory::initializeSwapFilePrefix()
-	{
-		// getting the current process id
-		pProcessID = Yuni::ProcessID();
+    // Appending the hostname to differentiate when used from a network
+    // folder
+    LocalPolicy::Read(pSwapFilePrefix, "hostname");
+    if (pSwapFilePrefix.empty())
+        AppendHostName(pSwapFilePrefix);
 
-		pSwapFilePrefix << "antares-" << ANTARES_VERSION << "-swap-";
+    // User name
+    pSwapFilePrefix += '-';
+    String user;
+    LocalPolicy::Read(user, "user");
+    if (!user)
+    {
+        uint oldsize = pSwapFilePrefix.size();
 
-		// Appending the hostname to differentiate when used from a network
-		// folder
-		LocalPolicy::Read(pSwapFilePrefix, "hostname");
-		if (pSwapFilePrefix.empty())
-			AppendHostName(pSwapFilePrefix);
+#ifdef YUNI_OS_WINDOWS
+        System::Environment::Read("USERNAME", pSwapFilePrefix, false);
+#else
+        System::Environment::Read("USER", pSwapFilePrefix, false);
+#endif
 
-		// User name
-		pSwapFilePrefix += '-';
-		String user;
-		LocalPolicy::Read(user, "user");
-		if (!user)
-		{
-			uint oldsize = pSwapFilePrefix.size();
+        // nothing may have been found
+        if (oldsize == pSwapFilePrefix.size())
+            pSwapFilePrefix += "unknown__user";
+    }
+    else
+        pSwapFilePrefix += user;
 
-			# ifdef YUNI_OS_WINDOWS
-			System::Environment::Read("USERNAME", pSwapFilePrefix, false);
-			# else
-			System::Environment::Read("USER", pSwapFilePrefix, false);
-			# endif
-
-			// nothing may have been found
-			if (oldsize == pSwapFilePrefix.size())
-				pSwapFilePrefix += "unknown__user";
-		}
-		else
-			pSwapFilePrefix += user;
-
-		// Appending the process ID
-		pSwapFilePrefix += '-';
-		pSwapFilePrefix.toLower();
-		pSwapFilePrefixProcessID << pProcessID << '-';
-	}
-
-
+    // Appending the process ID
+    pSwapFilePrefix += '-';
+    pSwapFilePrefix.toLower();
+    pSwapFilePrefixProcessID << pProcessID << '-';
+}
 
 } // namespace Antares

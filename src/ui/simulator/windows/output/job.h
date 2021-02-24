@@ -25,14 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_WINDOWS_OUTPUT_JOB_H__
-# define __ANTARES_WINDOWS_OUTPUT_JOB_H__
+#define __ANTARES_WINDOWS_OUTPUT_JOB_H__
 
-# include <yuni/yuni.h>
-# include <yuni/job/job.h>
-# include <antares/study/fwd.h>
-# include "output.h"
-# include "content.h"
-
+#include <yuni/yuni.h>
+#include <yuni/job/job.h>
+#include <antares/study/fwd.h>
+#include "output.h"
+#include "content.h"
 
 namespace Antares
 {
@@ -40,41 +39,33 @@ namespace Private
 {
 namespace OutputViewerData
 {
+class Job final : public Yuni::Job::IJob
+{
+public:
+    /*!
+    ** \brief Constructor
+    */
+    Job(Antares::Window::OutputViewer::Component& component, const AnyString& path);
+    //! Destructor
+    virtual ~Job();
 
-	class Job final : public Yuni::Job::IJob
-	{
-	public:
-		/*!
-		** \brief Constructor
-		*/
-		Job(Antares::Window::OutputViewer::Component& component, const AnyString& path);
-		//! Destructor
-		virtual ~Job();
+protected:
+    virtual void onExecute() override;
 
+    //! Gather informations about year-by-year data
+    void gatherInfosAboutYearByYearData(const AnyString& path);
 
-	protected:
-		virtual void onExecute() override;
+    //! Gather informations about thermal clusters
+    void gatherInfosAboutThermalClusters(const AnyString& path);
 
-		//! Gather informations about year-by-year data
-		void gatherInfosAboutYearByYearData(const AnyString& path);
+private:
+    Antares::Window::OutputViewer::Component& pComponent;
+    //! The path to analyze
+    const YString pPath;
+    //!
+    Content* pContent;
 
-		//! Gather informations about thermal clusters
-		void gatherInfosAboutThermalClusters(const AnyString& path);
-
-
-	private:
-		Antares::Window::OutputViewer::Component& pComponent;
-		//! The path to analyze
-		const YString pPath;
-		//!
-		Content* pContent;
-
-	}; // class Job
-
-
-
-
-
+}; // class Job
 
 } // namespace OutputViewerData
 } // namespace Private

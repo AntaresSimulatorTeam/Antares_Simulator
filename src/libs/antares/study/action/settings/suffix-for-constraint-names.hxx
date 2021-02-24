@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_SETTINGS_SUFFIXCONSTRAINT_NAME_HXX__
-# define __ANTARES_LIBS_STUDY_ACTION_SETTINGS_SUFFIXCONSTRAINT_NAME_HXX__
-
+#define __ANTARES_LIBS_STUDY_ACTION_SETTINGS_SUFFIXCONSTRAINT_NAME_HXX__
 
 namespace Antares
 {
@@ -34,40 +33,33 @@ namespace Action
 {
 namespace Settings
 {
+template<class StringT>
+inline SuffixConstraintName::SuffixConstraintName(const StringT& value, bool enabled) :
+ pValue(value)
+{
+    pInfos.caption = "Suffix for constraint names";
+    if (!enabled)
+        pInfos.behavior = bhSkip;
+}
 
+inline SuffixConstraintName::~SuffixConstraintName()
+{
+}
 
-	template<class StringT>
-	inline SuffixConstraintName::SuffixConstraintName(const StringT& value, bool enabled)
-		:pValue(value)
-	{
-		pInfos.caption = "Suffix for constraint names";
-		if (!enabled)
-			pInfos.behavior = bhSkip;
-	}
+inline bool SuffixConstraintName::performWL(Context&)
+{
+    return true;
+}
 
+inline bool SuffixConstraintName::autoExpand() const
+{
+    return false;
+}
 
-	inline SuffixConstraintName::~SuffixConstraintName()
-	{}
-
-
-	inline bool SuffixConstraintName::performWL(Context&)
-	{
-		return true;
-	}
-
-
-	inline bool SuffixConstraintName::autoExpand() const
-	{
-		return false;
-	}
-
-
-	inline bool SuffixConstraintName::shouldPrepareRootNode() const
-	{
-		return true;
-	}
-
-
+inline bool SuffixConstraintName::shouldPrepareRootNode() const
+{
+    return true;
+}
 
 } // namespace Settings
 } // namespace Action

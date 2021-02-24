@@ -25,27 +25,25 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_NET_REQUEST_H__
-# define __ANTARES_LIBS_NET_REQUEST_H__
-
+#define __ANTARES_LIBS_NET_REQUEST_H__
 
 namespace Antares
 {
 namespace Net
 {
+enum Method
+{
+    rmGET,
+    rmPOST
+};
 
-	enum Method
-	{
-		rmGET,
-		rmPOST
-	};
+//! Event
+typedef Yuni::Bind<void()> EventOnSuccess;
 
-	//! Event
-	typedef Yuni::Bind<void ()> EventOnSuccess;
-
-
-	void Request(Method method, const AnyString& url, const EventOnSuccess& onSuccess, const EventOnError& onError);
-
-
+void Request(Method method,
+             const AnyString& url,
+             const EventOnSuccess& onSuccess,
+             const EventOnError& onError);
 
 } // namespace Net
 } // namespace Antares

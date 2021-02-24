@@ -25,10 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_MAP_TOOLS_DELETE_H__
-# define __ANTARES_TOOLBOX_MAP_TOOLS_DELETE_H__
+#define __ANTARES_TOOLBOX_MAP_TOOLS_DELETE_H__
 
-# include "tool.h"
-
+#include "tool.h"
 
 namespace Antares
 {
@@ -36,22 +35,19 @@ namespace Map
 {
 namespace Tool
 {
+class Remover : public Tool
+{
+public:
+    Remover(Manager& manager);
+    virtual ~Remover();
 
+    virtual void draw(DrawingContext& dc,
+                      const bool mouseDown,
+                      const wxPoint& position,
+                      const wxPoint& absolute) const;
 
-	class Remover : public Tool
-	{
-	public:
-		Remover(Manager& manager);
-		virtual ~Remover();
-
-		virtual void draw(DrawingContext& dc, const bool mouseDown,
-			const wxPoint& position, const wxPoint& absolute) const;
-
-		virtual bool onMouseUp(const int mx, const int my);
-	};
-
-
-
+    virtual bool onMouseUp(const int mx, const int my);
+};
 
 } // namespace Tool
 } // namespace Map

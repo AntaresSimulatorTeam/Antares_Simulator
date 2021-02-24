@@ -25,13 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LOCALE_H__
-# define __ANTARES_LOCALE_H__
-
+#define __ANTARES_LOCALE_H__
 
 /*!
 ** \brief Initialize the default locale for Antares
 */
 void InitializeDefaultLocale();
-
 
 #endif // __ANTARES_LOCALE_H__

@@ -25,12 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_PARTS_SOLAR_PREPRO_H__
-# define __ANTARES_LIBS_STUDY_PARTS_SOLAR_PREPRO_H__
+#define __ANTARES_LIBS_STUDY_PARTS_SOLAR_PREPRO_H__
 
-# include "../../fwd.h"
-# include "../../xcast.h"
-
-
+#include "../../fwd.h"
+#include "../../xcast.h"
 
 namespace Antares
 {
@@ -38,74 +36,68 @@ namespace Data
 {
 namespace Solar
 {
+/*!
+** \brief Prepro Solar
+*/
+class Prepro
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    Prepro();
+    //! Destructor
+    ~Prepro();
+    //@}
 
+    /*!
+    ** \brief Try to estimate the amount of memory required by this class for a simulation
+    */
+    void estimateMemoryUsage(StudyMemoryUsage&) const;
 
-	/*!
-	** \brief Prepro Solar
-	*/
-	class Prepro
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		Prepro();
-		//! Destructor
-		~Prepro();
-		//@}
+    /*!
+    ** \brief Solar data from a folder
+    */
+    bool loadFromFolder(Study& study, const AnyString& folder);
 
-		/*!
-		** \brief Try to estimate the amount of memory required by this class for a simulation
-		*/
-		void estimateMemoryUsage(StudyMemoryUsage&) const;
+    /*!
+    ** \brief Save data to a folder
+    */
+    bool saveToFolder(const AnyString& folder) const;
 
-		/*!
-		** \brief Solar data from a folder
-		*/
-		bool loadFromFolder(Study& study, const AnyString& folder);
+    /*!
+    ** \brief Get the amount of memory currently used
+    */
+    Yuni::uint64 memoryUsage() const;
 
-		/*!
-		** \brief Save data to a folder
-		*/
-		bool saveToFolder(const AnyString& folder) const;
+    /*!
+    ** \brief Make sure that all data are loaded in memory
+    */
+    bool invalidate(bool reload = false) const;
 
-		/*!
-		** \brief Get the amount of memory currently used
-		*/
-		Yuni::uint64 memoryUsage() const;
+    void markAsModified() const;
 
-		/*!
-		** \brief Make sure that all data are loaded in memory
-		*/
-		bool invalidate(bool reload = false) const;
+    /*!
+    ** \brief Reset to default all values
+    */
+    void resetToDefault();
 
-		void markAsModified() const;
+public:
+    //! XCast
+    Data::XCast xcast;
 
-		/*!
-		** \brief Reset to default all values
-		*/
-		void resetToDefault();
+private:
+    bool internalSolarFromFolder(Study& study, const char* folder, uint length);
+    bool internalSolarFormatBefore33(Study& study, const YString& folder);
 
-	public:
-		//! XCast
-		Data::XCast xcast;
-
-	private:
-		bool internalSolarFromFolder(Study& study, const char* folder, uint length);
-		bool internalSolarFormatBefore33(Study& study, const YString& folder);
-
-	}; // Prepro
-
-
-
-
+}; // Prepro
 
 } // namespace Solar
 } // namespace Data
 } // namespace Antares
 
-# include "prepro.hxx"
+#include "prepro.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_SOLAR_PREPRO_H__

@@ -25,255 +25,281 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __PREPROCESSOR_ATSP_H__
-# define __PREPROCESSOR_ATSP_H__
+#define __PREPROCESSOR_ATSP_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-# include <antares/study/xcast/xcast.h>
-# include <antares/study.h>
-
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+#include <antares/study/xcast/xcast.h>
+#include <antares/study.h>
 
 namespace Antares
 {
+class ATSP final
+{
+public:
+    //! The most suitable smart pointer for the class
+    typedef Yuni::SmartPtr<ATSP> Ptr;
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    ATSP();
+    //! Destructor
+    ~ATSP();
+    //@}
 
-	class ATSP final
-	{
-	public:
-		//! The most suitable smart pointer for the class
-		typedef Yuni::SmartPtr<ATSP>  Ptr;
+    /*!
+    ** \brief Load settings from an INI file
+    */
+    bool loadFromINIFile(const Yuni::String& filename);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		ATSP();
-		//! Destructor
-		~ATSP();
-		//@}
+    /*!
+    ** \brief Print a summary
+    */
+    void printSummary() const;
 
-		/*!
-		** \brief Load settings from an INI file
-		*/
-		bool loadFromINIFile(const Yuni::String& filename);
+    bool preflight();
 
-		/*!
-		** \brief Print a summary
-		*/
-		void printSummary() const;
+    bool computeMonthlyCorrelations();
 
-		bool preflight();
+private:
+    class AreaInfo final
+    {
+    public:
+        //! Vector
+        typedef std::vector<AreaInfo*> Vector;
 
-		bool computeMonthlyCorrelations();
+    public:
+        bool enabled;
+        Data::AreaName name;
+        Yuni::String filename;
+        bool rawData;
+        Data::XCast::Distribution distribution;
+    };
 
+    struct MomentCentrSingle
+    {
+        double data[12][4];
+    };
+    typedef std::vector<MomentCentrSingle> MomentCentr;
 
-	private:
-		class AreaInfo final
-		{
-		public:
-			//! Vector
-			typedef std::vector<AreaInfo*> Vector;
+    struct HiddenHoursSingle
+    {
+        int data[12][24];
+    };
+    typedef std::vector<HiddenHoursSingle> HiddenHours;
 
-		public:
-			bool enabled;
-			Data::AreaName name;
-			Yuni::String filename;
-			bool rawData;
-			Data::XCast::Distribution distribution;
-		};
+private:
+    // range dans les nblig première lignes et nbcol premières colonnes de OUT
+    // le bloc d'élements de MTRX de taille nblig x nbcol commençant aux indices indlig et indcol
+    static void Extrait_bloc(Matrix<>& out,
+                             uint indlig,
+                             uint indcol,
+                             const Matrix<>& MTRX,
+                             uint nblig,
+                             uint nbcol);
 
-		struct MomentCentrSingle
-		{
-			double data[12][4];
-		};
-		typedef std::vector<MomentCentrSingle> MomentCentr;
+    // range dans OUT la moyenne des colonnes de MTRX
+    static void Colonne_moyenne(double* out, const Matrix<>& MTRX, uint nblig, uint nbcol);
 
-		struct HiddenHoursSingle
-		{
-			int data[12][24];
-		};
-		typedef std::vector<HiddenHoursSingle> HiddenHours;
+    // retourne le maximum ou le minimum de MTRX selon le code
+    static void Mtrx_bound(double& rmin,
+                           double& rmax,
+                           const Matrix<>& MTRX,
+                           uint nblig,
+                           uint nbcol);
 
-	private:
-		// range dans les nblig première lignes et nbcol premières colonnes de OUT
-		// le bloc d'élements de MTRX de taille nblig x nbcol commençant aux indices indlig et indcol
-		static void Extrait_bloc(Matrix<>& out, uint indlig, uint indcol,
-			const Matrix<>& MTRX, uint nblig, uint nbcol);
+    // met dans OUT la valeur absolue de MTRX
+    static void Mtrx_abs(Matrix<>& out, const Matrix<>& MTRX, uint nblig, uint nbcol);
 
-		// range dans OUT la moyenne des colonnes de MTRX
-		static void Colonne_moyenne(double* out, const Matrix<>& MTRX, uint nblig, uint nbcol);
+    // retourne la moyenne des elements de A
+    static double Moyenne_generale(double* A, uint nblig);
 
-		// retourne le maximum ou le minimum de MTRX selon le code
-		static void Mtrx_bound(double& rmin, double& rmax, const Matrix<>& MTRX,
-			uint nblig, uint nbcol);
+    // retranche de MTRX le vecteur A
+    static void Retranche_mtrx(Matrix<>& MTRX, const double* A, uint nblig, uint nbcol);
 
-		// met dans OUT la valeur absolue de MTRX
-		static void Mtrx_abs(Matrix<>& out, const Matrix<>& MTRX, uint nblig, uint nbcol);
+    // range dans OUT les nblig première lignes de la colonne de MTRX d'indice indcol
+    static void Extrait_col(double* out, const Matrix<>& MTRX, uint nblig, uint indcol);
 
-		// retourne la moyenne des elements de A
-		static double Moyenne_generale(double* A, uint nblig);
+    // met dans A le carre de B
+    static void Square(double* A, const double* B, uint nblig);
 
-		// retranche de MTRX le vecteur A
-		static void Retranche_mtrx(Matrix<>& MTRX, const double* A, uint nblig, uint nbcol);
+    // met (B- le scalaire x) dans A
+    static void Retranche_scalaire(Matrix<>& A,
+                                   const Matrix<>& B,
+                                   double x,
+                                   uint nblig,
+                                   uint nbcol);
 
-		// range dans OUT les nblig première lignes de la colonne de MTRX d'indice indcol
-		static void Extrait_col(double* out, const Matrix<>& MTRX, uint nblig, uint indcol);
+    // met (B /scalaire x) dans A
+    static void Divise_scalaire(Matrix<>& A, const Matrix<>& B, double x, uint nblig, uint nbcol);
 
-		// met dans A le carre de B
-		static void Square(double* A, const double* B, uint nblig);
+    // met dans A le cube de B
+    static void Cube(double* A, const double* B, uint nblig);
 
-		// met (B- le scalaire x) dans A
-		static void Retranche_scalaire(Matrix<>& A, const Matrix<>& B, double x, uint nblig, uint nbcol);
+    // met dans A B^4
+    static void Dsquare(double* A, const double* B, uint nblig);
 
-		// met (B /scalaire x) dans A
-		static void Divise_scalaire(Matrix<>& A, const Matrix<>& B, double x, uint nblig, uint nbcol);
+    // range dans OUT  nblig elements de MTRX pris a partir de l'indice indlig
+    static void Extrait_seg(double* out, const double* src, uint nblig, uint indlig);
 
-		// met dans A le cube de B
-		static void Cube(double* A, const double* B, uint nblig);
+    // retourne le coefficient de corrélation entre A et B  (retourne 999 si paramètre "code"
+    // aberrant)
+    //   si code = 0 : les espérances et écarts-types des variables représentées par  A et B sont à
+    //   calculer si code = 1 : des estimations des espérances et écarts-types sont fournis dans
+    //   EA,EB,SA,SB
+    static double Correlation(double* A,
+                              double* B,
+                              uint nblig,
+                              double EA,
+                              double EB,
+                              double SA,
+                              double SB,
+                              int code);
 
-		// met dans A B^4
-		static void Dsquare(double* A, const double* B, uint nblig);
+    static double GammaEuler(double z);
 
-		// range dans OUT  nblig elements de MTRX pris a partir de l'indice indlig
-		static void Extrait_seg(double* out, const double* src, uint nblig, uint indlig);
+    static double Ecart(double T1, double P1, double T2, double P2, int M, double T);
 
-		// retourne le coefficient de corrélation entre A et B  (retourne 999 si paramètre "code" aberrant)
-		//   si code = 0 : les espérances et écarts-types des variables représentées par  A et B sont à calculer
-		//   si code = 1 : des estimations des espérances et écarts-types sont fournis dans EA,EB,SA,SB
-		static double Correlation(double* A, double* B, uint nblig, double EA, double EB, double SA, double SB, int code);
+    static double autocorr_average(int H, int M, double R);
 
-		static double GammaEuler(double z);
+    static double Standard_shrinkage(int M, double R);
 
-		static double Ecart(double T1, double P1, double T2, double P2 , int M, double T);
+private:
+    //! Check the study version
+    bool checkStudyVersion() const;
 
-		static double autocorr_average(int H, int M, double R);
+    bool preflight(const uint areaIndex);
 
-		static double Standard_shrinkage(int M, double R);
+    void Analyse_auto(double* A,
+                      int nblig,
+                      double auc,
+                      double aum,
+                      double hor,
+                      double& theta,
+                      double& mu);
 
+    // ajustement de la densité de probabilité en fonction des bornes L, U, de l'espérance E
+    // et de l'écart-type S
+    // selon une loi "type" : calcule alpha=A, beta = B, gamma = C, delta = D
+    // retourne 0 si le calage est possible et 1 sinon
+    bool Probab_density_funct(double L,
+                              double U,
+                              double E,
+                              double S,
+                              Data::XCast::Distribution law,
+                              double& A,
+                              double& B,
+                              double& C,
+                              double& D);
 
-	private:
-		//! Check the study version
-		bool checkStudyVersion() const;
+    void roundMatrixValues(Matrix<>& m);
 
-		bool preflight(const uint areaIndex);
+    bool writeMoments() const;
 
-		void Analyse_auto(double* A, int nblig, double auc, double aum, double hor, double& theta, double& mu);
+    void cacheCreate();
+    void cacheDestroy();
+    void cacheClear();
+    bool cacheFetch(uint index, Matrix<>& out) const;
 
-		// ajustement de la densité de probabilité en fonction des bornes L, U, de l'espérance E
-		// et de l'écart-type S
-		// selon une loi "type" : calcule alpha=A, beta = B, gamma = C, delta = D
-		// retourne 0 si le calage est possible et 1 sinon
-		bool Probab_density_funct(double L, double U, double E, double S, Data::XCast::Distribution law,
-			double& A, double& B, double& C, double& D);
+    bool cachePreload(uint index,
+                      const AnyString& filename,
+                      uint height,
+                      Matrix<>::BufferType& buffer);
 
-		void roundMatrixValues(Matrix<>& m);
+private:
+    AreaInfo::Vector pArea;
+    YString pStudyFolder;
+    YString pTemp;
+    uint pTimeseriesCount;
+    uint pMHeight;
+    uint pTimeseries;
+    double pMediumTermAutoCorrAdjustment;
+    double pShortTermAutoCorrAdjustment;
+    double pRoundOff;
+    double pUpperBound;
+    double pUpperBound80percent;
+    double pLowerBound;
+    bool pUseUpperBound;
+    bool pUseLowerBound;
+    yuint64 pRoundingCount;
+    yuint64 pRounding80percentCount;
+    yuint64 pRoundingCountTotal;
+    Yuni::ShortString16 tsName;
 
-		bool writeMoments() const;
+    uint pEnabledAreaCount;
 
-		void cacheCreate();
-		void cacheDestroy();
-		void cacheClear();
-		bool cacheFetch(uint index, Matrix<>& out) const;
+    //! The total number of zareas
+    uint NBZ;
+    //! The total number of timeseries to analyze
+    uint NBS;
 
-		bool cachePreload(uint index, const AnyString& filename,
-			uint height, Matrix<>::BufferType& buffer);
+    //! The target timeseries (1: wind, 2: solar, 3: load)
+    char TDS;
+    //! The target timeseries (W: wind, S: solar, L: load)
+    char code;
 
+    double RTZ;
+    //! Short-term auto-correlation adjustment
+    double AUC;
+    //! Medium-term auto-correlation adjustment
+    double AUM;
 
-	private:
-		AreaInfo::Vector pArea;
-		YString pStudyFolder;
-		YString pTemp;
-		uint pTimeseriesCount;
-		uint pMHeight;
-		uint pTimeseries;
-		double pMediumTermAutoCorrAdjustment;
-		double pShortTermAutoCorrAdjustment;
-		double pRoundOff;
-		double pUpperBound;
-		double pUpperBound80percent;
-		double pLowerBound;
-		bool   pUseUpperBound;
-		bool   pUseLowerBound;
-		yuint64 pRoundingCount;
-		yuint64 pRounding80percentCount;
-		yuint64 pRoundingCountTotal;
-		Yuni::ShortString16 tsName;
+    /*!
+    ** \brief Horizon degenere
+    **
+    ** Autocorrelation minimale requise entre X(0) et X(0+mu), ou mu est la periode des
+    ** moyennes glissantes de X(t)
+    **
+    ** valeur >= 0.92 pour eviter la degenerescence de X en loi normale
+    ** Ce seuil n'est pas utilise quand l'analyse porte sur une loi normale
+    */
+    const double HOR; // 0.92 by default
+    enum
+    {
+        //! nombre de valeurs d'autocorrelation calculees (de X0-X0 à X0-X119)
+        PRA = 120,
+    };
 
-		uint pEnabledAreaCount;
+    MomentCentr moments_centr_net;
+    MomentCentr moments_centr_raw;
 
-		//! The total number of zareas
-		uint NBZ;
-		//! The total number of timeseries to analyze
-		uint NBS;
+    HiddenHours hidden_hours;
 
-		//! The target timeseries (1: wind, 2: solar, 3: load)
-		char TDS;
-		//! The target timeseries (W: wind, S: solar, L: load)
-		char code;
+    Matrix<> SERIE_N;
+    Matrix<> SERIE_P;
+    Matrix<> SERIE_Q;
 
-		double RTZ;
-		//! Short-term auto-correlation adjustment
-		double AUC;
-		//! Medium-term auto-correlation adjustment
-		double AUM;
+    double buffer_n[744];
+    double buffer_p[744];
+    double buffer_q[744];
 
-		/*!
-		** \brief Horizon degenere
-		**
-		** Autocorrelation minimale requise entre X(0) et X(0+mu), ou mu est la periode des
-		** moyennes glissantes de X(t)
-		**
-		** valeur >= 0.92 pour eviter la degenerescence de X en loi normale
-		** Ce seuil n'est pas utilise quand l'analyse porte sur une loi normale
-		*/
-		const double HOR; // 0.92 by default
-		enum
-		{
-			//! nombre de valeurs d'autocorrelation calculees (de X0-X0 à X0-X119)
-			PRA = 120,
-		};
+    static const uint lonmois[12];
+    static const uint durmois[12];
+    static const uint posmois[12];
+    enum
+    {
+        durjour = 24
+    };
 
-		MomentCentr moments_centr_net;
-		MomentCentr moments_centr_raw;
-		
+    yuint64 pLimitMemory;
+    yuint64 pCacheMemoryUsed;
+    uint pCacheLastValidIndex;
+    Matrix<>* pCacheMatrix;
 
-		HiddenHours hidden_hours;
+    Yuni::String::Vector folderPerArea;
+    //! Temporary string mainly used for filename manipulation
+    Yuni::CString<512> pStr;
 
-		Matrix<> SERIE_N;
-		Matrix<> SERIE_P;
-		Matrix<> SERIE_Q;
+    bool pAutoClean;
 
-		double buffer_n[744];
-		double buffer_p[744];
-		double buffer_q[744];
-
-		static const uint lonmois[12];
-		static const uint durmois[12];
-		static const uint posmois[12];
-		enum { durjour = 24 };
-
-		yuint64 pLimitMemory;
-		yuint64 pCacheMemoryUsed;
-		uint pCacheLastValidIndex;
-		Matrix<>* pCacheMatrix;
-
-		Yuni::String::Vector folderPerArea;
-		//! Temporary string mainly used for filename manipulation
-		Yuni::CString<512> pStr;
-
-		bool pAutoClean;
-
-	}; // class ATSP
-
-
-
-
+}; // class ATSP
 
 } // namespace Antares
 
-# include "atsp.hxx"
+#include "atsp.hxx"
 
 #endif // __PREPROCESSOR_ATSP_H__

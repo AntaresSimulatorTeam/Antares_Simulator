@@ -11,41 +11,38 @@
 #pragma once
 #include "entries.h"
 
-
 namespace Yuni
 {
 namespace DBI
 {
 namespace Adapter
 {
+/*!
+** \brief Abstract adapter
+** \ingroup DBIAdapter
+*/
+class IAdapter
+{
+public:
+    //! \name Default constructor
+    //@[
+    //! Default constructor
+    IAdapter()
+    {
+    }
+    //! Destructor
+    virtual ~IAdapter()
+    {
+    }
+    //@}
 
-	/*!
-	** \brief Abstract adapter
-	** \ingroup DBIAdapter
-	*/
-	class IAdapter
-	{
-	public:
-		//! \name Default constructor
-		//@[
-		//! Default constructor
-		IAdapter() {}
-		//! Destructor
-		virtual ~IAdapter() {}
-		//@}
+    //! \name Entries
+    //@{
+    //! Retrieve the entry table for the adapter
+    virtual void retrieveEntries(::yn_dbi_adapter& entries) = 0;
+    //@}
 
-		//! \name Entries
-		//@{
-		//! Retrieve the entry table for the adapter
-		virtual void retrieveEntries(::yn_dbi_adapter& entries) = 0;
-		//@}
-
-	}; // class IAdapter
-
-
-
-
-
+}; // class IAdapter
 
 } // namespace Adapter
 } // namespace DBI

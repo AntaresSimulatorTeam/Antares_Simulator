@@ -25,91 +25,84 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_WINDOW_CLEANER_H__
-# define __ANTARES_APPLICATION_WINDOW_CLEANER_H__
+#define __ANTARES_APPLICATION_WINDOW_CLEANER_H__
 
-# include <antares/wx-wrapper.h>
-# include <yuni/thread/thread.h>
-# include <yuni/thread/mutex.h>
-# include <wx/panel.h>
-# include <wx/dialog.h>
-# include "../toolbox/components/htmllistbox/component.h"
-# include <antares/study/cleaner.h>
-# include <wx/stattext.h>
-# include <wx/button.h>
-
+#include <antares/wx-wrapper.h>
+#include <yuni/thread/thread.h>
+#include <yuni/thread/mutex.h>
+#include <wx/panel.h>
+#include <wx/dialog.h>
+#include "../toolbox/components/htmllistbox/component.h"
+#include <antares/study/cleaner.h>
+#include <wx/stattext.h>
+#include <wx/button.h>
 
 namespace Antares
 {
 namespace Window
 {
+// Forward declaration
+class CleaningThread;
 
-	// Forward declaration
-	class CleaningThread;
+class StudyCleaner final : public wxDialog
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor, with a parent frame
+    */
+    StudyCleaner(wxFrame* parent);
+    //! Destructor
+    virtual ~StudyCleaner();
+    //@}
 
+    //! \name Folder
+    //@{
+    //! Set the study folder
+    void studyFolder(const wxString& folder);
+    //! Get the study folder
+    const wxString& studyFolder() const
+    {
+        return pFolder;
+    }
+    //@}
 
+    //! \name Progression
+    //@{
+    void progress(uint count);
+    void updateProgressionLabel();
+    //@}
 
+private:
+    void onRefresh(void*);
+    void onCancel(void*);
+    void onProceed(void*);
+    void updateGUI(bool hasItems);
+    void launchCleanup();
+    void closeMe();
 
-	class StudyCleaner final : public wxDialog
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor, with a parent frame
-		*/
-		StudyCleaner(wxFrame* parent);
-		//! Destructor
-		virtual ~StudyCleaner();
-		//@}
+private:
+    //! The study folder
+    wxString pFolder;
+    //! Listbox
+    Component::HTMLListbox::Component* pListbox;
+    //!
+    Data::StudyCleaningInfos* pInfos;
+    //!
+    wxStaticText* pLblInfos;
+    wxButton* pBtnRefresh;
+    wxButton* pBtnCancel;
+    wxButton* pBtnGo;
 
-		//! \name Folder
-		//@{
-		//! Set the study folder
-		void studyFolder(const wxString& folder);
-		//! Get the study folder
-		const wxString& studyFolder() const {return pFolder;}
-		//@}
+    wxTimer* pRefreshTimer;
+    Yuni::Thread::IThread* pThread;
+    Yuni::Mutex pMutex;
+    uint pProgressionCount;
 
-		//! \name Progression
-		//@{
-		void progress(uint count);
-		void updateProgressionLabel();
-		//@}
+    friend class CleaningThread;
 
-
-	private:
-		void onRefresh(void*);
-		void onCancel(void*);
-		void onProceed(void*);
-		void updateGUI(bool hasItems);
-		void launchCleanup();
-		void closeMe();
-
-	private:
-		//! The study folder
-		wxString pFolder;
-		//! Listbox
-		Component::HTMLListbox::Component* pListbox;
-		//!
-		Data::StudyCleaningInfos* pInfos;
-		//!
-		wxStaticText* pLblInfos;
-		wxButton* pBtnRefresh;
-		wxButton* pBtnCancel;
-		wxButton* pBtnGo;
-
-		wxTimer* pRefreshTimer;
-		Yuni::Thread::IThread* pThread;
-		Yuni::Mutex pMutex;
-		uint pProgressionCount;
-
-		friend class CleaningThread;
-
-	}; // class StudyCleaner
-
-
-
-
+}; // class StudyCleaner
 
 } // namespace Window
 } // namespace Antares

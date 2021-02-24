@@ -25,41 +25,35 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_ABOUTBOX_ABOUTBOX_H__
-# define __ANTARES_APPLICATION_ABOUTBOX_ABOUTBOX_H__
+#define __ANTARES_APPLICATION_ABOUTBOX_ABOUTBOX_H__
 
-# include <antares/wx-wrapper.h>
-# include <wx/dialog.h>
-
+#include <antares/wx-wrapper.h>
+#include <wx/dialog.h>
 
 namespace Antares
 {
 namespace Window
 {
+class AboutBox final : public wxDialog
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    AboutBox(wxWindow* parent);
+    //! Destructor
+    virtual ~AboutBox()
+    {
+    }
+    //@}
 
+private:
+    //! Event: the user requested to close the window
+    void onClose(void*);
 
-	class AboutBox final : public wxDialog
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		AboutBox(wxWindow* parent);
-		//! Destructor
-		virtual ~AboutBox() {}
-		//@}
-
-
-	private:
-		//! Event: the user requested to close the window
-		void onClose(void*);
-
-	}; // class AboutBox
-
-
-
-
+}; // class AboutBox
 
 } // namespace Window
 } // namespace Antares

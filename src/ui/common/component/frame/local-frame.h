@@ -25,13 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_COMMON_COMPONENTS_FRAME_LOCAL_FRAME_H__
-# define __ANTARES_COMMON_COMPONENTS_FRAME_LOCAL_FRAME_H__
+#define __ANTARES_COMMON_COMPONENTS_FRAME_LOCAL_FRAME_H__
 
-# include <yuni/yuni.h>
-# include "../../wx-wrapper.h"
-# include <wx/frame.h>
-# include "frame.h"
-
+#include <yuni/yuni.h>
+#include "../../wx-wrapper.h"
+#include <wx/frame.h>
+#include "frame.h"
 
 namespace Antares
 {
@@ -39,33 +38,32 @@ namespace Component
 {
 namespace Frame
 {
+class WxLocalFrame : public wxFrame, public IFrame
+{
+public:
+    WxLocalFrame();
+    WxLocalFrame(wxWindow* parent,
+                 wxWindowID id,
+                 const wxString& title,
+                 const wxPoint& pos = wxDefaultPosition,
+                 const wxSize& size = wxDefaultSize,
+                 long style = wxDEFAULT_FRAME_STYLE,
+                 const wxString& name = wxT("registered-frame"));
 
-	class WxLocalFrame : public wxFrame, public IFrame
-	{
-	public:
-		WxLocalFrame();
-		WxLocalFrame(wxWindow* parent, wxWindowID id, const wxString& title,
-			const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
-			long style = wxDEFAULT_FRAME_STYLE, const wxString& name = wxT("registered-frame"));
+    virtual ~WxLocalFrame();
 
-		virtual ~WxLocalFrame();
+    virtual bool Destroy();
 
-		virtual bool Destroy();
+    virtual bool excludeFromMenu() override;
+    virtual void updateOpenWindowsMenu() override;
+    virtual void frameRaise() override;
+    virtual Yuni::String frameTitle() const override;
+    virtual int frameID() const override;
 
-		virtual bool excludeFromMenu() override;
-		virtual void updateOpenWindowsMenu() override;
-		virtual void frameRaise() override;
-		virtual Yuni::String frameTitle() const override;
-		virtual int frameID() const override;
+    // Override Frame title
+    virtual void SetTitle(const wxString& title) override;
 
-		// Override Frame title
-		virtual void SetTitle(const wxString& title) override;
-
-	}; // class WxLocalFrame
-
-
-
-
+}; // class WxLocalFrame
 
 } // namespace Frame
 } // namespace Component

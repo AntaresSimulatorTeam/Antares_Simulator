@@ -25,65 +25,65 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENTS_PROGRESSBAR_H__
-# define __ANTARES_TOOLBOX_COMPONENTS_PROGRESSBAR_H__
+#define __ANTARES_TOOLBOX_COMPONENTS_PROGRESSBAR_H__
 
-# include <antares/wx-wrapper.h>
-# include <ui/common/component/panel.h>
-
-
+#include <antares/wx-wrapper.h>
+#include <ui/common/component/panel.h>
 
 namespace Antares
 {
 namespace Component
 {
+/*!
+** \brief A simple panel with a caption
+*/
+class ProgressBar : public Panel
+{
+public:
+    //! \name Constructors & Destructor
+    //@{
+    /*!
+    ** \brief Default contructor
+    ** \param parent The parent control
+    */
+    ProgressBar(wxWindow* parent);
 
+    //! Destructor
+    ~ProgressBar();
+    //@}
 
-	/*!
-	** \brief A simple panel with a caption
-	*/
-	class ProgressBar : public Panel
-	{
-	public:
-		//! \name Constructors & Destructor
-		//@{
-		/*!
-		** \brief Default contructor
-		** \param parent The parent control
-		*/
-		ProgressBar(wxWindow* parent);
+    //! \name Value
+    //@{
+    //! Get the progress value
+    double value() const
+    {
+        return pValue;
+    }
+    //! Set the progress value
+    void value(double v)
+    {
+        pValue = v;
+        Refresh();
+    }
+    //@}
 
-		//! Destructor
-		~ProgressBar();
-		//@}
+protected:
+    /*!
+    ** \brief Event: The panel has to paint itself
+    */
+    void onDraw(wxPaintEvent& evt);
+    /*!
+    ** \brief Event: The panel is been resizing
+    */
+    void onResize(wxSizeEvent& evt);
 
-		//! \name Value
-		//@{
-		//! Get the progress value
-		double value() const {return pValue;}
-		//! Set the progress value
-		void value(double v) {pValue = v;Refresh();}
-		//@}
+private:
+    //! Progression
+    double pValue;
+    // Event table
+    DECLARE_EVENT_TABLE()
 
-	protected:
-		/*!
-		** \brief Event: The panel has to paint itself
-		*/
-		void onDraw(wxPaintEvent& evt);
-		/*!
-		** \brief Event: The panel is been resizing
-		*/
-		void onResize(wxSizeEvent& evt);
-
-	private:
-		//! Progression
-		double pValue;
-		// Event table
-		DECLARE_EVENT_TABLE()
-
-	}; // class ProgressBar
-
-
-
+}; // class ProgressBar
 
 } // namespace Component
 } // namespace Antares

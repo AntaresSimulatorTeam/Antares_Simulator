@@ -11,92 +11,77 @@
 #include "string.h"
 #include <iostream>
 
-
 namespace Yuni
 {
+const String emptyString;
 
-	const String emptyString;
+std::ostream& operator<<(std::ostream& out, const AnyString& rhs)
+{
+    if (not rhs.empty())
+        out.write(rhs.data(), static_cast<std::streamsize>(rhs.size()));
+    return out;
+}
 
+std::ostream& operator<<(std::ostream& out, const Yuni::ShortString16& rhs)
+{
+    if (not rhs.empty())
+        out.write(rhs.data(), static_cast<std::streamsize>(rhs.size()));
+    return out;
+}
 
+std::ostream& operator<<(std::ostream& out, const Yuni::ShortString32& rhs)
+{
+    if (not rhs.empty())
+        out.write(rhs.data(), static_cast<std::streamsize>(rhs.size()));
+    return out;
+}
 
-	std::ostream& operator << (std::ostream& out, const AnyString& rhs)
-	{
-		if (not rhs.empty())
-			out.write(rhs.data(), static_cast<std::streamsize>(rhs.size()));
-		return out;
-	}
+std::ostream& operator<<(std::ostream& out, const Yuni::ShortString64& rhs)
+{
+    if (not rhs.empty())
+        out.write(rhs.data(), static_cast<std::streamsize>(rhs.size()));
+    return out;
+}
 
+std::ostream& operator<<(std::ostream& out, const Yuni::ShortString128& rhs)
+{
+    if (not rhs.empty())
+        out.write(rhs.data(), static_cast<std::streamsize>(rhs.size()));
+    return out;
+}
 
-	std::ostream& operator << (std::ostream& out, const Yuni::ShortString16& rhs)
-	{
-		if (not rhs.empty())
-			out.write(rhs.data(), static_cast<std::streamsize>(rhs.size()));
-		return out;
-	}
+std::ostream& operator<<(std::ostream& out, const Yuni::ShortString256& rhs)
+{
+    if (not rhs.empty())
+        out.write(rhs.data(), static_cast<std::streamsize>(rhs.size()));
+    return out;
+}
 
+std::ostream& operator<<(std::ostream& out, const Yuni::ShortString512& rhs)
+{
+    if (not rhs.empty())
+        out.write(rhs.data(), static_cast<std::streamsize>(rhs.size()));
+    return out;
+}
 
-	std::ostream& operator << (std::ostream& out, const Yuni::ShortString32& rhs)
-	{
-		if (not rhs.empty())
-			out.write(rhs.data(), static_cast<std::streamsize>(rhs.size()));
-		return out;
-	}
+std::ostream& operator<<(std::ostream& out, const Yuni::Clob& rhs)
+{
+    if (not rhs.empty())
+        out.write(rhs.data(), static_cast<std::streamsize>(rhs.size()));
+    return out;
+}
 
+std::ostream& operator<<(std::ostream& out, const Yuni::String& rhs)
+{
+    if (not rhs.empty())
+        out.write(rhs.data(), static_cast<std::streamsize>(rhs.size()));
+    return out;
+}
 
-	std::ostream& operator << (std::ostream& out, const Yuni::ShortString64& rhs)
-	{
-		if (not rhs.empty())
-			out.write(rhs.data(), static_cast<std::streamsize>(rhs.size()));
-		return out;
-	}
-
-
-	std::ostream& operator << (std::ostream& out, const Yuni::ShortString128& rhs)
-	{
-		if (not rhs.empty())
-			out.write(rhs.data(), static_cast<std::streamsize>(rhs.size()));
-		return out;
-	}
-
-
-	std::ostream& operator << (std::ostream& out, const Yuni::ShortString256& rhs)
-	{
-		if (not rhs.empty())
-			out.write(rhs.data(), static_cast<std::streamsize>(rhs.size()));
-		return out;
-	}
-
-
-	std::ostream& operator << (std::ostream& out, const Yuni::ShortString512& rhs)
-	{
-		if (not rhs.empty())
-			out.write(rhs.data(), static_cast<std::streamsize>(rhs.size()));
-		return out;
-	}
-
-
-	std::ostream& operator << (std::ostream& out, const Yuni::Clob& rhs)
-	{
-		if (not rhs.empty())
-			out.write(rhs.data(), static_cast<std::streamsize>(rhs.size()));
-		return out;
-	}
-
-
-	std::ostream& operator << (std::ostream& out, const Yuni::String& rhs)
-	{
-		if (not rhs.empty())
-			out.write(rhs.data(), static_cast<std::streamsize>(rhs.size()));
-		return out;
-	}
-
-
-	std::ostream& operator << (std::ostream& out, const Yuni::UTF8::Char& rhs)
-	{
-		rhs.write(out);
-		return out;
-	}
-
-
+std::ostream& operator<<(std::ostream& out, const Yuni::UTF8::Char& rhs)
+{
+    rhs.write(out);
+    return out;
+}
 
 } // namespace Yuni

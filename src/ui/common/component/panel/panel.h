@@ -25,71 +25,79 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_COMMON_COMPONENTS_PANEL_PANEL_H__
-# define __ANTARES_COMMON_COMPONENTS_PANEL_PANEL_H__
+#define __ANTARES_COMMON_COMPONENTS_PANEL_PANEL_H__
 
-# include <yuni/yuni.h>
-# include "../../wx-wrapper.h"
-# include <wx/panel.h>
-
+#include <yuni/yuni.h>
+#include "../../wx-wrapper.h"
+#include <wx/panel.h>
 
 namespace Antares
 {
 namespace Component
 {
+/*!
+** \brief Panel implementation
+*/
+class Panel : public wxPanel
+{
+public:
+    /*!
+    ** \brief Event triggered by any other component (not derived from Panel)
+    */
+    static void OnMouseMoveFromExternalComponent();
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    Panel(wxWindow* parent);
+    //! Destructor
+    virtual ~Panel();
+    //@}
 
-	/*!
-	** \brief Panel implementation
-	*/
-	class Panel : public wxPanel
-	{
-	public:
-		/*!
-		** \brief Event triggered by any other component (not derived from Panel)
-		*/
-		static void OnMouseMoveFromExternalComponent();
+    //! Click down
+    virtual void onMouseDown(wxMouseEvent&)
+    {
+    }
+    //! Click up
+    virtual void onMouseUp(wxMouseEvent&)
+    {
+    }
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		Panel(wxWindow* parent);
-		//! Destructor
-		virtual ~Panel();
-		//@}
+    //! The panel has been clicked (delayed)
+    virtual void onMouseClick()
+    {
+    }
 
+    //! The mouse has entered
+    virtual void onMouseEnter()
+    {
+    }
+    //! The mouse has leaved
+    virtual void onMouseLeave()
+    {
+    }
 
-		//! Click down
-		virtual void onMouseDown(wxMouseEvent&) {}
-		//! Click up
-		virtual void onMouseUp(wxMouseEvent&) {}
+    //! The mouse has moved
+    virtual void onMouseMoved(int /*x*/, int /*y*/)
+    {
+    }
 
-		//! The panel has been clicked (delayed)
-		virtual void onMouseClick() {}
+protected:
+    virtual bool triggerMouseClickEvent() const
+    {
+        return true;
+    }
 
-		//! The mouse has entered
-		virtual void onMouseEnter() {}
-		//! The mouse has leaved
-		virtual void onMouseLeave() {}
+private:
+    //!
+    void onInternalMotion(wxMouseEvent&);
+    void onInternalMouseUp(wxMouseEvent&);
+    void onInternalMouseDown(wxMouseEvent&);
 
-		//! The mouse has moved
-		virtual void onMouseMoved(int /*x*/, int /*y*/) {}
-
-	protected:
-		virtual bool triggerMouseClickEvent() const {return true;}
-
-	private:
-		//!
-		void onInternalMotion(wxMouseEvent&);
-		void onInternalMouseUp(wxMouseEvent&);
-		void onInternalMouseDown(wxMouseEvent&);
-
-	}; // class Panel
-
-
-
+}; // class Panel
 
 } // namespace Component
 } // namespace Antares

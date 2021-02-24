@@ -34,146 +34,130 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
 namespace Private
 {
 namespace Dispatcher
 {
+class JobLayout final : public Yuni::Job::IJob
+{
+public:
+    explicit JobLayout(wxSizer* sizer) : pSizer(sizer)
+    {
+        assert(sizer);
+    }
 
+    virtual ~JobLayout()
+    {
+    }
 
-	class JobLayout final : public Yuni::Job::IJob
-	{
-	public:
-		explicit JobLayout(wxSizer* sizer) :
-			pSizer(sizer)
-		{
-			assert(sizer);
-		}
+protected:
+    virtual void onExecute()
+    {
+        wxWindow* parent = pSizer->GetContainingWindow();
+        if (parent)
+        {
+            pSizer->Layout();
+            parent->Refresh();
+        }
+    }
 
-		virtual ~JobLayout()
-		{}
+private:
+    wxSizer* pSizer;
+};
 
-	protected:
-		virtual void onExecute()
-		{
-			wxWindow* parent = pSizer->GetContainingWindow();
-			if (parent)
-			{
-				pSizer->Layout();
-				parent->Refresh();
-			}
-		}
+class JobRefresh final : public Yuni::Job::IJob
+{
+public:
+    explicit JobRefresh(wxWindow* window) : pWindow(window)
+    {
+        assert(pWindow);
+        if (window)
+        {
+            auto* info = window->GetClassInfo();
+            if (info)
+                name = info->GetClassName();
+            pWindowID = pWindow->GetId();
+        }
+    }
 
-	private:
-		wxSizer* pSizer;
-	};
+    virtual ~JobRefresh()
+    {
+    }
 
+protected:
+    virtual void onExecute()
+    {
+        if (pWindow && wxWindow::FindWindowById(pWindowID))
+            pWindow->Refresh();
+    }
 
-	class JobRefresh final : public Yuni::Job::IJob
-	{
-	public:
-		explicit JobRefresh(wxWindow* window) :
-			pWindow(window)
-		{
-			assert(pWindow);
-			if (window)
-			{
-				auto* info = window->GetClassInfo();
-				if (info)
-					name = info->GetClassName();
-				pWindowID = pWindow->GetId();
-			}
-		}
+private:
+    wxWindow* pWindow;
+    wxWindowID pWindowID;
+    wxString name;
+};
 
-		virtual ~JobRefresh()
-		{
-		}
+class JobShowModalThenDestroy final : public Yuni::Job::IJob
+{
+public:
+    explicit JobShowModalThenDestroy(wxDialog* form, bool destroy) : pForm(form), pDestroy(destroy)
+    {
+        assert(form);
+    }
 
-	protected:
-		virtual void onExecute()
-		{
-			if (pWindow && wxWindow::FindWindowById(pWindowID))
-				pWindow->Refresh();
-		}
+    virtual ~JobShowModalThenDestroy()
+    {
+    }
 
-	private:
-		wxWindow* pWindow;
-		wxWindowID pWindowID;
-		wxString name;
-	};
+protected:
+    virtual void onExecute()
+    {
+        pForm->ShowModal();
+        if (pDestroy)
+            pForm->Destroy();
+    }
 
+private:
+    wxDialog* pForm;
+    bool pDestroy;
 
-	class JobShowModalThenDestroy final : public Yuni::Job::IJob
-	{
-	public:
-		explicit JobShowModalThenDestroy(wxDialog* form, bool destroy) :
-			pForm(form),
-			pDestroy(destroy)
-		{
-			assert(form);
-		}
+}; // class JobShowModalThenDestroy
 
-		virtual ~JobShowModalThenDestroy()
-		{}
+class JobShow final : public Yuni::Job::IJob
+{
+public:
+    explicit JobShow(wxWindow* form, bool focus, bool makeModal) :
+     pForm(form), pFocus(focus), pMakeModal(makeModal)
+    {
+        assert(pForm);
+    }
 
-	protected:
-		virtual void onExecute()
-		{
-			pForm->ShowModal();
-			if (pDestroy)
-				pForm->Destroy();
-		}
+    virtual ~JobShow()
+    {
+    }
 
-	private:
-		wxDialog* pForm;
-		bool pDestroy;
+protected:
+    virtual void onExecute()
+    {
+        pForm->Show();
+        if (pFocus)
+            pForm->SetFocus();
+        if (pMakeModal)
+            wxWindowDisabler(pForm);
+    }
 
-	}; // class JobShowModalThenDestroy
+private:
+    wxWindow* pForm;
+    bool pFocus;
+    bool pMakeModal;
 
-
-	class JobShow final : public Yuni::Job::IJob
-	{
-	public:
-		explicit JobShow(wxWindow* form, bool focus, bool makeModal) :
-			pForm(form),
-			pFocus(focus),
-			pMakeModal(makeModal)
-		{
-			assert(pForm);
-		}
-
-		virtual ~JobShow()
-		{}
-
-	protected:
-		virtual void onExecute()
-		{
-			pForm->Show();
-			if (pFocus)
-				pForm->SetFocus();
-			if (pMakeModal)
-				//pForm->MakeModal();
-				wxWindowDisabler(pForm);
-		}
-
-	private:
-		wxWindow* pForm;
-		bool pFocus;
-		bool pMakeModal;
-
-	}; // class JobShow
-
-
-
+}; // class JobShow
 
 } // namespace Dispatcher
 } // namespace Private
 } // namespace Antares
-
-
 
 namespace Antares
 {
@@ -181,157 +165,148 @@ namespace Dispatcher
 {
 namespace GUI
 {
+void Layout(wxSizer* sizer)
+{
+    if (sizer)
+        ::Antares::Dispatcher::GUI::Post(
+          (const Yuni::Job::IJob::Ptr&)new ::Antares::Private::Dispatcher::JobLayout(sizer));
+}
 
-	void Layout(wxSizer* sizer)
-	{
-		if (sizer)
-			::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&) new ::Antares::Private::Dispatcher::JobLayout(sizer));
-	}
+void Refresh(wxWindow* window)
+{
+    if (window)
+        ::Antares::Dispatcher::GUI::Post(
+          (const Yuni::Job::IJob::Ptr&)new ::Antares::Private::Dispatcher::JobRefresh(window));
+}
 
+void Refresh(wxWindow* window, uint delay)
+{
+    if (window)
+        ::Antares::Dispatcher::GUI::Post(
+          (const Yuni::Job::IJob::Ptr&)new ::Antares::Private::Dispatcher::JobRefresh(window),
+          delay);
+}
 
-	void Refresh(wxWindow* window)
-	{
-		if (window)
-			::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&) new ::Antares::Private::Dispatcher::JobRefresh(window));
-	}
+void ShowModal(wxDialog* window, bool destroy)
+{
+    if (window)
+    {
+        ::Antares::Dispatcher::GUI::Post(
+          (const Yuni::Job::IJob::Ptr&)new ::Antares::Private::Dispatcher::JobShowModalThenDestroy(
+            window, destroy));
+    }
+}
 
+void Show(wxWindow* window, bool focus, bool makeModal)
+{
+    if (window)
+        ::Antares::Dispatcher::GUI::Post(
+          (const Yuni::Job::IJob::Ptr&)new ::Antares::Private::Dispatcher::JobShow(
+            window, focus, makeModal));
+}
 
-	void Refresh(wxWindow* window, uint delay)
-	{
-		if (window)
-			::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&) new ::Antares::Private::Dispatcher::JobRefresh(window), delay);
-	}
+namespace // anonymous
+{
+class JobWindowClose final : public Yuni::Job::IJob
+{
+public:
+    JobWindowClose(wxWindow* object) : pWindow(object)
+    {
+        assert(object);
+    }
+    virtual ~JobWindowClose()
+    {
+    }
 
+protected:
+    virtual void onExecute()
+    {
+        if (pWindow)
+            pWindow->Close();
+    }
 
-	void ShowModal(wxDialog* window, bool destroy)
-	{
-		if (window)
-		{
-			::Antares::Dispatcher::GUI::Post(
-				(const Yuni::Job::IJob::Ptr&) new ::Antares::Private::Dispatcher::JobShowModalThenDestroy(window, destroy));
-		}
-	}
+private:
+    wxWindow* pWindow;
+};
 
+class JobWindowDestroy final : public Yuni::Job::IJob
+{
+public:
+    JobWindowDestroy(wxWindow* object) : pWindow(object)
+    {
+        assert(object);
+    }
+    virtual ~JobWindowDestroy()
+    {
+    }
 
-	void Show(wxWindow* window, bool focus, bool makeModal)
-	{
-		if (window)
-			::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&) new ::Antares::Private::Dispatcher::JobShow(window, focus, makeModal));
-	}
+protected:
+    virtual void onExecute()
+    {
+        pWindow->Destroy();
+    }
 
+private:
+    wxWindow* pWindow;
+};
 
+class JobTimerDestroy final : public Yuni::Job::IJob
+{
+public:
+    JobTimerDestroy(wxTimer* object) : pTimer(object)
+    {
+    }
+    virtual ~JobTimerDestroy()
+    {
+    }
 
-	namespace // anonymous
-	{
+protected:
+    virtual void onExecute()
+    {
+        delete pTimer;
+    }
 
-		class JobWindowClose final : public Yuni::Job::IJob
-		{
-		public:
-			JobWindowClose(wxWindow* object) :
-				pWindow(object)
-			{
-				assert(object);
-			}
-			virtual ~JobWindowClose() {}
+private:
+    wxTimer* pTimer;
+};
 
-		protected:
-			virtual void onExecute()
-			{
-				if (pWindow)
-					pWindow->Close();
-			}
+} // anonymous namespace
 
-		private:
-			wxWindow* pWindow;
-		};
+void Close(wxWindow* window)
+{
+    if (!window)
+        logs.debug() << "Impossible to close a NULL top level window";
+    else
+        ::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&)new JobWindowClose(window));
+}
 
+void Close(wxWindow* window, uint delay)
+{
+    if (!window)
+        logs.debug() << "Impossible to close a NULL top level window";
+    else
+        ::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&)new JobWindowClose(window),
+                                         delay);
+}
 
-		class JobWindowDestroy final : public Yuni::Job::IJob
-		{
-		public:
-			JobWindowDestroy(wxWindow* object) :
-				pWindow(object)
-			{
-				assert(object);
-			}
-			virtual ~JobWindowDestroy() {}
+void Destroy(wxWindow* window)
+{
+    if (!window)
+        logs.debug() << "Impossible to destroy a NULL top level window";
+    else
+        ::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&)new JobWindowDestroy(window));
+}
 
-		protected:
-			virtual void onExecute()
-			{
-				pWindow->Destroy();
-			}
-
-		private:
-			wxWindow* pWindow;
-		};
-
-
-		class JobTimerDestroy final : public Yuni::Job::IJob
-		{
-		public:
-			JobTimerDestroy(wxTimer* object) :
-				pTimer(object)
-			{}
-			virtual ~JobTimerDestroy() {}
-
-		protected:
-			virtual void onExecute()
-			{
-				delete pTimer;
-			}
-
-		private:
-			wxTimer* pTimer;
-		};
-
-
-	} // anonymous namespace
-
-
-
-	void Close(wxWindow* window)
-	{
-		if (!window)
-			logs.debug() << "Impossible to close a NULL top level window";
-		else
-			::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&) new JobWindowClose(window));
-	}
-
-
-	void Close(wxWindow* window, uint delay)
-	{
-		if (!window)
-			logs.debug() << "Impossible to close a NULL top level window";
-		else
-			::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&) new JobWindowClose(window), delay);
-	}
-
-
-
-	void Destroy(wxWindow* window)
-	{
-		if (!window)
-			logs.debug() << "Impossible to destroy a NULL top level window";
-		else
-			::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&) new JobWindowDestroy(window));
-	}
-
-
-	void Destroy(wxTimer* timer)
-	{
-		if (!timer)
-			logs.debug() << "Impossible to destroy a NULL timer";
-		else
-		{
-			::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&) new JobTimerDestroy(timer));
-		}
-	}
-
-
-
+void Destroy(wxTimer* timer)
+{
+    if (!timer)
+        logs.debug() << "Impossible to destroy a NULL timer";
+    else
+    {
+        ::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&)new JobTimerDestroy(timer));
+    }
+}
 
 } // namespace GUI
 } // namespace Dispatcher
 } // namespace Antares
-

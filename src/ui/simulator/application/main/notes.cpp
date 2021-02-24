@@ -29,42 +29,35 @@
 #include "../../windows/notes.h"
 #include "../../windows/sets.h"
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
 namespace Forms
 {
+void ApplWnd::loadUserNotes()
+{
+    assert(NULL != pUserNotes);
+    pUserNotes->loadFromStudy();
+}
 
+void ApplWnd::saveUserNotes()
+{
+    assert(NULL != pUserNotes);
+    pUserNotes->saveToStudy();
+}
 
-	void ApplWnd::loadUserNotes()
-	{
-		assert(NULL != pUserNotes);
-		pUserNotes->loadFromStudy();
-	}
+void ApplWnd::loadSets()
+{
+    assert(NULL != pSets);
+    pSets->loadFromStudy();
+}
 
-
-	void ApplWnd::saveUserNotes()
-	{
-		assert(NULL != pUserNotes);
-		pUserNotes->saveToStudy();
-	}
-
-	void ApplWnd::loadSets()
-	{
-		assert(NULL != pSets);
-		pSets->loadFromStudy();
-	}
-
-
-	void ApplWnd::saveSets()
-	{
-		assert(NULL != pSets);
-		pSets->saveToStudy();
-	}
+void ApplWnd::saveSets()
+{
+    assert(NULL != pSets);
+    pSets->saveToStudy();
+}
 
 } // namespace Forms
 } // namespace Antares
-

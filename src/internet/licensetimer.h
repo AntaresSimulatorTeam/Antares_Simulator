@@ -25,22 +25,26 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LICENSE_TIMER_H__
-# define __ANTARES_LICENSE_TIMER_H__
+#define __ANTARES_LICENSE_TIMER_H__
 
 #include <yuni/thread/timer.h>
 #include <yuni/thread/thread.h>
 
-
-//using namespace Yuni; 
+// using namespace Yuni;
 
 class LicenseTimer : public Yuni::Thread::Timer
- {
-	public:
-		LicenseTimer(uint timeout):Yuni::Thread::Timer(timeout) {}
-		virtual ~LicenseTimer() {stop();} // Absolutely needed
+{
+public:
+    LicenseTimer(uint timeout) : Yuni::Thread::Timer(timeout)
+    {
+    }
+    virtual ~LicenseTimer()
+    {
+        stop();
+    } // Absolutely needed
 
-	protected:
-		virtual bool onInterval(uint cycle);
- };
+protected:
+    virtual bool onInterval(uint cycle);
+};
 
 #endif // __ANTARES_LICENSE_TIMER_H__

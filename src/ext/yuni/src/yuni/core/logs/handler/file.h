@@ -13,85 +13,75 @@
 #include "../../../io/file.h"
 #include <cassert>
 
-
-
 namespace Yuni
 {
 namespace Logs
 {
+/*!
+** \brief Log Handler: Single Log file
+*/
+template<class NextHandler = NullHandler>
+class YUNI_DECL File : public NextHandler
+{
+public:
+    enum Settings
+    {
+        // Colors are not allowed in a file
+        colorsAllowed = 0,
+    };
 
-	/*!
-	** \brief Log Handler: Single Log file
-	*/
-	template<class NextHandler = NullHandler>
-	class YUNI_DECL File : public NextHandler
-	{
-	public:
-		enum Settings
-		{
-			// Colors are not allowed in a file
-			colorsAllowed = 0,
-		};
+public:
+    /*!
+    ** \brief Try to (re)open a target log file
+    **
+    ** You should use an absolute filename to be able to safely reopen it.
+    ** If a log file was already opened, it will be closed before anything else.
+    ** If the given filename is empty, true will be returned.
+    **
+    ** \param filename A relative or absolute filename
+    ** \return True if the operation succeeded, false otherwise
+    */
+    bool logfile(const AnyString& filename);
 
-	public:
-		/*!
-		** \brief Try to (re)open a target log file
-		**
-		** You should use an absolute filename to be able to safely reopen it.
-		** If a log file was already opened, it will be closed before anything else.
-		** If the given filename is empty, true will be returned.
-		**
-		** \param filename A relative or absolute filename
-		** \return True if the operation succeeded, false otherwise
-		*/
-		bool logfile(const AnyString& filename);
+    /*!
+    ** \brief Get the last opened log file
+    ** \see outputFilename(filename)
+    */
+    String logfile() const;
 
-		/*!
-		** \brief Get the last opened log file
-		** \see outputFilename(filename)
-		*/
-		String logfile() const;
+    /*!
+    ** \brief Reopen the log file
+    **
+    ** It is safe to call several times this routine.
+    ** True will be returned if the log filename is empty.
+    */
+    bool reopenLogfile();
 
-		/*!
-		** \brief Reopen the log file
-		**
-		** It is safe to call several times this routine.
-		** True will be returned if the log filename is empty.
-		*/
-		bool reopenLogfile();
+    /*!
+    ** \brief Close the log file
+    **
+    ** It is safe to call several times this routine.
+    */
+    void closeLogfile();
 
-		/*!
-		** \brief Close the log file
-		**
-		** It is safe to call several times this routine.
-		*/
-		void closeLogfile();
+    /*!
+    ** \brief Get if a log file is opened
+    */
+    bool logfileIsOpened() const;
 
-		/*!
-		** \brief Get if a log file is opened
-		*/
-		bool logfileIsOpened() const;
+public:
+    template<class LoggerT, class VerbosityType>
+    void internalDecoratorWriteWL(LoggerT& logger, const AnyString& s) const;
 
+private:
+    //! The originale filename
+    String pOutputFilename;
+    //! File
+    mutable IO::File::Stream pFile;
 
-	public:
-		template<class LoggerT, class VerbosityType>
-		void internalDecoratorWriteWL(LoggerT& logger, const AnyString& s) const;
-
-	private:
-		//! The originale filename
-		String pOutputFilename;
-		//! File
-		mutable IO::File::Stream pFile;
-
-	}; // class File
-
-
-
-
-
+}; // class File
 
 } // namespace Logs
 } // namespace Yuni
 
 #include "file.hxx"
-

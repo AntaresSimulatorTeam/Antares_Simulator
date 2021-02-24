@@ -16,99 +16,94 @@ namespace UI
 {
 namespace Control
 {
+template<class ContentT>
+void ListBox<ContentT>::draw(DrawingSurface::Ptr& surface, float xOffset, float yOffset) const
+{
+    if (!pVisible)
+        return;
 
+    Point2D<float> pos(pPosition.x + xOffset, pPosition.y + yOffset);
 
-	template<class ContentT>
-	void ListBox<ContentT>::draw(DrawingSurface::Ptr& surface, float xOffset, float yOffset) const
-	{
-		if (!pVisible)
-			return;
+    // Draw background
+    surface->drawFilledRectangle(pBackColor, pBackColor, pos.x, pos.y, pSize.x, pSize.y, 0.0f);
 
-		Point2D<float> pos(pPosition.x + xOffset, pPosition.y + yOffset);
+    surface->beginRectangleClipping(pos.x + pHorizMargin,
+                                    pos.y + pVertMargin,
+                                    pSize.x - 2 * pHorizMargin,
+                                    pSize.y - 2 * pVertMargin);
 
-		// Draw background
-		surface->drawFilledRectangle(pBackColor, pBackColor, pos.x, pos.y, pSize.x, pSize.y, 0.0f);
+    // Draw the text
+    float pixelLineHeight = pLineHeight(pConversion);
+    float x = pos.x + pHorizMargin;
+    float y = pos.y + pVertMargin;
+    uint lineNb = 0u;
+    // Loop on elements
+    for (const auto& element : pElements)
+    {
+        if (lineNb++ < pTopLineNb)
+            continue;
+        // Ignore empty labels
+        if (!element.label.empty())
+        {
+            if (pIndex == lineNb - 1)
+                // Currently selected -> invert colors
+                surface->drawTextOnColor(element.label, pFont, pBackColor, pColor, x, y);
+            else
+                surface->drawText(element.label, pFont, pColor, x, y);
+        }
+        y += pixelLineHeight;
+        // Stop if we are outside the rectangle (for optim)
+        if (y >= pSize.y)
+            break;
+    }
 
-		surface->beginRectangleClipping(pos.x + pHorizMargin, pos.y + pVertMargin,
-			pSize.x - 2 * pHorizMargin, pSize.y - 2 * pVertMargin);
+    surface->endClipping();
+    pModified = false;
+}
 
-		// Draw the text
-		float pixelLineHeight = pLineHeight(pConversion);
-		float x = pos.x + pHorizMargin;
-		float y = pos.y + pVertMargin;
-		uint lineNb = 0u;
-		// Loop on elements
-		for (const auto& element : pElements)
-		{
-			if (lineNb++ < pTopLineNb)
-				continue;
-			// Ignore empty labels
-			if (!element.label.empty())
-			{
-				if (pIndex == lineNb - 1)
-					// Currently selected -> invert colors
-					surface->drawTextOnColor(element.label, pFont, pBackColor, pColor, x, y);
-				else
-					surface->drawText(element.label, pFont, pColor, x, y);
-			}
-			y += pixelLineHeight;
-			// Stop if we are outside the rectangle (for optim)
-			if (y >= pSize.y)
-				break;
-		}
+template<class Content>
+EventPropagation ListBox<Content>::mouseScroll(float delta, float, float)
+{
+    uint oldTopLine = pTopLineNb;
+    float newLineNb = (float)pTopLineNb - delta;
+    float maxLineNb = (float)pElements.size();
+    float displayedLineCount = pSize.y / pLineHeight(pConversion);
+    pTopLineNb = (uint)Math::Max(0.0f, Math::Min(maxLineNb - displayedLineCount, newLineNb));
+    if (oldTopLine != pTopLineNb)
+        invalidate();
+    return epStop;
+}
 
-		surface->endClipping();
-		pModified = false;
-	}
+template<class Content>
+EventPropagation ListBox<Content>::mouseDown(Input::IMouse::Button btn, float, float y)
+{
+    if (btn == Input::IMouse::ButtonLeft)
+    {
+        // Store selected index, wait mouseUp to confirm selection
+        pClickedIndex = pTopLineNb + Math::Floor((y - pPosition.y) / pLineHeight(pConversion));
+        if (pClickedIndex < 0 || (uint)pClickedIndex >= pElements.size())
+            pClickedIndex = -1;
+    }
+    return epStop;
+}
 
-
-	template<class Content>
-	EventPropagation ListBox<Content>::mouseScroll(float delta, float, float)
-	{
-		uint oldTopLine = pTopLineNb;
-		float newLineNb = (float)pTopLineNb - delta;
-		float maxLineNb = (float)pElements.size();
-		float displayedLineCount = pSize.y / pLineHeight(pConversion);
-		pTopLineNb = (uint)Math::Max(0.0f, Math::Min(maxLineNb - displayedLineCount, newLineNb));
-		if (oldTopLine != pTopLineNb)
-			invalidate();
-		return epStop;
-	}
-
-
-	template<class Content>
-	EventPropagation ListBox<Content>::mouseDown(Input::IMouse::Button btn, float, float y)
-	{
-		if (btn == Input::IMouse::ButtonLeft)
-		{
-			// Store selected index, wait mouseUp to confirm selection
-			pClickedIndex = pTopLineNb + Math::Floor((y - pPosition.y) / pLineHeight(pConversion));
-			if (pClickedIndex < 0 || (uint)pClickedIndex >= pElements.size())
-				pClickedIndex = -1;
-		}
-		return epStop;
-	}
-
-
-	template<class Content>
-	EventPropagation ListBox<Content>::mouseUp(Input::IMouse::Button btn, float, float y)
-	{
-		if (btn == Input::IMouse::ButtonLeft && pClickedIndex > -1)
-		{
-			// Store selected index, wait mouseUp to confirm selection
-			uint newIndex = pTopLineNb + Math::Floor((y - pPosition.y) / pLineHeight(pConversion));
-			if (newIndex == (uint)pClickedIndex)
-			{
-				pIndex = newIndex;
-				onSelectionChange(this, pIndex);
-				invalidate();
-			}
-			pClickedIndex = -1;
-		}
-		return epStop;
-	}
-
-
+template<class Content>
+EventPropagation ListBox<Content>::mouseUp(Input::IMouse::Button btn, float, float y)
+{
+    if (btn == Input::IMouse::ButtonLeft && pClickedIndex > -1)
+    {
+        // Store selected index, wait mouseUp to confirm selection
+        uint newIndex = pTopLineNb + Math::Floor((y - pPosition.y) / pLineHeight(pConversion));
+        if (newIndex == (uint)pClickedIndex)
+        {
+            pIndex = newIndex;
+            onSelectionChange(this, pIndex);
+            invalidate();
+        }
+        pClickedIndex = -1;
+    }
+    return epStop;
+}
 
 } // namespace Control
 } // namespace UI

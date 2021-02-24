@@ -25,13 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_STORAGE_RAW_H__
-# define __SOLVER_VARIABLE_STORAGE_RAW_H__
+#define __SOLVER_VARIABLE_STORAGE_RAW_H__
 
-# include <yuni/yuni.h>
-# include <float.h>
-# include "rawdata.h"
-# include <antares/memory/memory.h>
-
+#include <yuni/yuni.h>
+#include <float.h>
+#include "rawdata.h"
+#include <antares/memory/memory.h>
 
 namespace Antares
 {
@@ -43,222 +42,223 @@ namespace R
 {
 namespace AllYears
 {
+template<class NextT /*= Empty*/, int FileFilter /*= Variable::Category::allFile*/>
+struct Raw : public NextT
+{
+public:
+    //! Type of the net item in the list
+    typedef NextT NextType;
 
+    enum
+    {
+        //! The count if item in the list
+        count = 1 + NextT::count,
 
+        categoryFile = NextT::categoryFile | Variable::Category::allFile,
+    };
 
-	template<class NextT /*= Empty*/, int FileFilter /*= Variable::Category::allFile*/>
-	struct Raw : public NextT
-	{
-	public:
-		//! Type of the net item in the list
-		typedef NextT NextType;
+    struct Data
+    {
+        double value;
+        uint32_t indice;
+    };
 
-		enum
-		{
-			//! The count if item in the list
-			count = 1 + NextT::count,
+    //! Name of the filter
+    static const char* Name()
+    {
+        return "raw";
+    }
 
-			categoryFile = NextT::categoryFile | Variable::Category::allFile,
-		};
+public:
+    Raw()
+    {
+    }
 
-		struct Data
-		{
-			double value;
-			uint32_t indice;
-		};
+    ~Raw()
+    {
+    }
 
-		//! Name of the filter
-		static const char* Name() {return "raw";}
+protected:
+    void initializeFromStudy(Antares::Data::Study& study);
 
-	public:
-		Raw()
-		{
-		}
+    inline void reset()
+    {
+        rawdata.reset();
+        // Next
+        NextType::reset();
+    }
 
-		~Raw()
-		{
-		}
+    inline void merge(uint year, const IntermediateValues& rhs)
+    {
+        rawdata.merge(year, rhs);
+        // Next
+        NextType::merge(year, rhs);
+    }
 
-	protected:
-		void initializeFromStudy(Antares::Data::Study& study);
+    template<class S, class VCardT>
+    void buildSurveyReport(SurveyResults& report,
+                           const S& results,
+                           int dataLevel,
+                           int fileLevel,
+                           int precision) const
+    {
+        if (0 != (fileLevel & FileFilter))
+        {
+            switch (fileLevel)
+            {
+            case Category::mc:
+                InternalExportValuesMC<1, VCardT>(precision, report, rawdata.year);
+                break;
+            case Category::id:
+                break;
+            default:
+                switch (precision)
+                {
+                case Category::hourly:
+                    InternalExportValues<Category::hourly, maxHoursInAYear, VCardT>(
+                      report, ::Antares::Memory::RawPointer(rawdata.hourly));
+                    break;
+                case Category::daily:
+                    InternalExportValues<Category::daily, maxDaysInAYear, VCardT>(report,
+                                                                                  rawdata.daily);
+                    break;
+                case Category::weekly:
+                    InternalExportValues<Category::weekly, maxWeeksInAYear, VCardT>(report,
+                                                                                    rawdata.weekly);
+                    break;
+                case Category::monthly:
+                    InternalExportValues<Category::monthly, maxMonths, VCardT>(report,
+                                                                               rawdata.monthly);
+                    break;
+                case Category::annual:
+                    InternalExportValues<Category::annual, 1, VCardT>(report, rawdata.year);
+                    break;
+                }
+            }
+        }
+        // Next
+        NextType::template buildSurveyReport<S, VCardT>(
+          report, results, dataLevel, fileLevel, precision);
+    }
 
-		inline void reset()
-		{
-			rawdata.reset();
-			// Next
-			NextType::reset();
-		}
+    template<class VCardT>
+    void buildDigest(SurveyResults& report, int digestLevel, int dataLevel) const
+    {
+        if ((dataLevel & Category::area || dataLevel & Category::setOfAreas)
+            && digestLevel & Category::digestAllYears)
+        {
+            if (report.data.study.parameters.mode != Antares::Data::stdmAdequacyDraft)
+            {
+                assert(report.data.columnIndex < report.maxVariables
+                       && "Column index out of bounds");
 
-		inline void merge(uint year, const IntermediateValues& rhs)
-		{
-			rawdata.merge(year, rhs);
-			// Next
-			NextType::merge(year, rhs);
-		}
+                report.captions[0][report.data.columnIndex] = report.variableCaption;
+                report.captions[1][report.data.columnIndex] = VCardT::Unit();
+                report.captions[2][report.data.columnIndex] = "values";
 
-		inline void mergeHourInYear(uint year, uint hour, const double value)
-		{
-			// Next
-			NextType::mergeHourInYear(year, hour, value);
-		}
+                // Precision
+                report.precision[report.data.columnIndex]
+                  = PrecisionToPrintfFormat<VCardT::decimal>::Value();
+                // Value
+                report.values[report.data.columnIndex][report.data.rowIndex] = rawdata.allYears;
+                // Non applicability
+                report.digestNonApplicableStatus[report.data.rowIndex][report.data.columnIndex]
+                  = *report.isCurrentVarNA;
 
+                ++(report.data.columnIndex);
+            }
+        }
+        // Next
+        NextType::template buildDigest<VCardT>(report, digestLevel, dataLevel);
+    }
 
-		template<class S, class VCardT>
-		void buildSurveyReport(SurveyResults& report, const S& results, int dataLevel, int fileLevel, int precision) const
-		{
-			if (0 != (fileLevel & FileFilter))
-			{
-				switch (fileLevel)
-				{
-					case Category::mc:
-						InternalExportValuesMC<1, VCardT>(precision, report, rawdata.year);
-						break;
-					case Category::id:
-						break;
-					default:
-						switch (precision)
-						{
-							case Category::hourly:
-								InternalExportValues<Category::hourly, maxHoursInAYear, VCardT>(report, ::Antares::Memory::RawPointer(rawdata.hourly));
-								break;
-							case Category::daily:
-								InternalExportValues<Category::daily, maxDaysInAYear, VCardT>(report, rawdata.daily);
-								break;
-							case Category::weekly:
-								InternalExportValues<Category::weekly, maxWeeksInAYear, VCardT>(report, rawdata.weekly);
-								break;
-							case Category::monthly:
-								InternalExportValues<Category::monthly, maxMonths, VCardT>(report, rawdata.monthly);
-								break;
-							case Category::annual:
-								InternalExportValues<Category::annual, 1, VCardT>(report, rawdata.year);
-								break;
-						}
-				}
-			}
-			// Next
-			NextType::template buildSurveyReport<S,VCardT>(report, results, dataLevel, fileLevel, precision);
-		}
+    Yuni::uint64 memoryUsage() const
+    {
+        return
+#ifdef ANTARES_SWAP_SUPPORT
+          0
+#else
+          +sizeof(double) * maxHoursInAYear
+#endif
+          + NextType::memoryUsage();
+    }
 
+    static void EstimateMemoryUsage(Antares::Data::StudyMemoryUsage& u)
+    {
+        u.requiredMemoryForOutput += sizeof(double) * u.years;
+        Antares::Memory::EstimateMemoryUsage(sizeof(double), maxHoursInAYear, u, false);
+        u.takeIntoConsiderationANewTimeserieForDiskOutput();
+        NextType::EstimateMemoryUsage(u);
+    }
 
-		template<class VCardT>
-		void buildDigest(SurveyResults& report, int digestLevel, int dataLevel) const
-		{
-			if ((dataLevel & Category::area || dataLevel & Category::setOfAreas)
-				&& digestLevel & Category::digestAllYears)
-			{
-				if (report.data.study.parameters.mode != Antares::Data::stdmAdequacyDraft)
-				{
-					assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
+    template<template<class, int> class DecoratorT>
+    Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
+    {
+        if (Yuni::Static::Type::StrictlyEqual<DecoratorT<Empty, 0>, Raw<Empty, 0>>::Yes)
+            return rawdata.hourly;
+        return NextType::template hourlyValuesForSpatialAggregate<DecoratorT>();
+    }
 
-					report.captions[0][report.data.columnIndex] = report.variableCaption;
-					report.captions[1][report.data.columnIndex] = VCardT::Unit();
-					report.captions[2][report.data.columnIndex] = "values";
+public:
+    RawData rawdata;
 
-					// Precision
-					report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<VCardT::decimal>::Value();
-					// Value
-					report.values[report.data.columnIndex][report.data.rowIndex] = rawdata.allYears;
-					// Non applicability
-					report.digestNonApplicableStatus[report.data.rowIndex][report.data.columnIndex] = *report.isCurrentVarNA;
+private:
+    template<int PrecisionT, uint Size, class VCardT>
+    void InternalExportValues(SurveyResults& report, const double* array) const
+    {
+        assert(array);
+        assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
-					++(report.data.columnIndex);
-				}
-			}
-			// Next
-			NextType::template buildDigest<VCardT>(report, digestLevel, dataLevel);
-		}
+        // Caption
+        report.captions[0][report.data.columnIndex] = report.variableCaption;
+        report.captions[1][report.data.columnIndex] = VCardT::Unit();
+        report.captions[2][report.data.columnIndex] = "values";
+        // Precision
+        report.precision[report.data.columnIndex]
+          = Solver::Variable::PrecisionToPrintfFormat<VCardT::decimal>::Value();
+        // Non applicability
+        report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
+        // Values
+        if (PrecisionT == Category::annual)
+        {
+            rawdata.allYears = 0.;
+            for (uint i = 0; i != rawdata.nbYearsCapacity; ++i)
+                rawdata.allYears += array[i];
+            *(report.values[report.data.columnIndex]) = rawdata.allYears;
+        }
+        else
+            (void)::memcpy(report.values[report.data.columnIndex], array, sizeof(double) * Size);
 
-		Yuni::uint64 memoryUsage() const
-		{
-			return
-			# ifdef ANTARES_SWAP_SUPPORT
-				0
-			# else
-				+ sizeof(double) * maxHoursInAYear
-			# endif
-				+ NextType::memoryUsage();
-		}
+        // Next column index
+        ++report.data.columnIndex;
+    }
 
+    template<uint Size, class VCardT>
+    void InternalExportValuesMC(int precision, SurveyResults& report, const double* array) const
+    {
+        if (not(precision & Category::annual))
+            return;
+        assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
-		static void EstimateMemoryUsage(Antares::Data::StudyMemoryUsage& u)
-		{
-			u.requiredMemoryForOutput += sizeof(double) * u.years;
-			Antares::Memory::EstimateMemoryUsage(sizeof(double), maxHoursInAYear, u, false);
-			u.takeIntoConsiderationANewTimeserieForDiskOutput();
-			NextType::EstimateMemoryUsage(u);
-		}
+        // Caption
+        report.captions[0][report.data.columnIndex] = report.variableCaption;
+        report.captions[1][report.data.columnIndex] = VCardT::Unit();
+        report.captions[2][report.data.columnIndex] = "values";
+        // Precision
+        report.precision[report.data.columnIndex]
+          = Solver::Variable::PrecisionToPrintfFormat<VCardT::decimal>::Value();
+        // Non applicability
+        report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
-		template<template<class,int> class DecoratorT>
-		Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
-		{
-			if (Yuni::Static::Type::StrictlyEqual<DecoratorT<Empty,0>,Raw<Empty,0> >::Yes)
-				return rawdata.hourly;
-			return NextType::template hourlyValuesForSpatialAggregate<DecoratorT>();
-		}
+        (void)::memcpy(
+          report.data.matrix[report.data.columnIndex], array, report.data.nbYears * sizeof(double));
 
-	public:
-		RawData rawdata;
+        // Next column index
+        ++report.data.columnIndex;
+    }
 
-	private:
-		template<int PrecisionT, uint Size, class VCardT>
-		void InternalExportValues(SurveyResults& report, const double* array) const
-		{
-			assert(array);
-			assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
-
-			// Caption
-			report.captions[0][report.data.columnIndex] = report.variableCaption;
-			report.captions[1][report.data.columnIndex] = VCardT::Unit();
-			report.captions[2][report.data.columnIndex] = "values";
-			// Precision
-			report.precision[report.data.columnIndex] = Solver::Variable::PrecisionToPrintfFormat<VCardT::decimal>::Value();
-			// Non applicability
-			report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
-
-			// Values
-			if (PrecisionT == Category::annual)
-			{
-				rawdata.allYears = 0.;
-				for (uint i = 0; i != rawdata.nbYearsCapacity; ++i)
-					rawdata.allYears += array[i];
-				*(report.values[report.data.columnIndex]) = rawdata.allYears;
-			}
-			else
-				(void)::memcpy(report.values[report.data.columnIndex], array, sizeof(double) * Size);
-
-			// Next column index
-			++report.data.columnIndex;
-		}
-
-		template<uint Size, class VCardT>
-		void InternalExportValuesMC(int precision, SurveyResults& report, const double* array) const
-		{
-			if (not (precision & Category::annual))
-				return;
-			assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
-
-			// Caption
-			report.captions[0][report.data.columnIndex] = report.variableCaption;
-			report.captions[1][report.data.columnIndex] = VCardT::Unit();
-			report.captions[2][report.data.columnIndex] = "values";
-			// Precision
-			report.precision[report.data.columnIndex] = Solver::Variable::PrecisionToPrintfFormat<VCardT::decimal>::Value();
-			// Non applicability
-			report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
-
-			(void)::memcpy(report.data.matrix[report.data.columnIndex], array, report.data.nbYears * sizeof(double));
-
-			// Next column index
-			++report.data.columnIndex;
-		}
-
-	}; // class Raw
-
-
-
-
+}; // class Raw
 
 } // namespace AllYears
 } // namespace R
@@ -266,6 +266,6 @@ namespace AllYears
 } // namespace Solver
 } // namespace Antares
 
-# include "raw.hxx"
+#include "raw.hxx"
 
 #endif // __SOLVER_VARIABLE_STORAGE_RAW_H__

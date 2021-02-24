@@ -27,7 +27,6 @@
 
 #include "root-node.h"
 
-
 namespace Antares
 {
 namespace Action
@@ -36,74 +35,64 @@ namespace AntaresStudy
 {
 namespace ThermalCluster
 {
+RootNode::RootNode(const AnyString& areaname) : pOriginalAreaName(areaname)
+{
+    pInfos.caption << "Thermal clusters";
+    pInfos.behavior = bhOverwrite;
+}
 
-	RootNode::RootNode(const AnyString& areaname) :
-		pOriginalAreaName(areaname)
-	{
-		pInfos.caption << "Thermal clusters";
-		pInfos.behavior = bhOverwrite;
-	}
+RootNode::~RootNode()
+{
+}
 
+void RootNode::prepareSkipWL(Context& ctx)
+{
+    ctx.clusterForceCreate[pOriginalAreaName] = false;
+}
 
-	RootNode::~RootNode()
-	{}
+bool RootNode::prepareWL(Context& ctx)
+{
+    pInfos.message.clear();
+    pInfos.state = stReady;
 
+    bool forceAreaCreate = ctx.areaForceCreate[pOriginalAreaName];
+    ctx.clusterForceCreate[pOriginalAreaName] = (forceAreaCreate || pInfos.behavior == bhOverwrite);
 
-	void RootNode::prepareSkipWL(Context& ctx)
-	{
-		ctx.clusterForceCreate[pOriginalAreaName] = false;
-	}
+    switch (pInfos.behavior)
+    {
+    case bhMerge:
+    {
+        if (!forceAreaCreate)
+        {
+            pInfos.message << "The thermal cluster list will remain untouched";
+            pInfos.state = stNothingToDo;
+        }
+        break;
+    }
+    case bhOverwrite:
+        pInfos.message << "The thermal cluster list will be reset";
+        break;
+    default:
+        pInfos.state = stDisabled;
+        break;
+    }
 
+    return true;
+}
 
-	bool RootNode::prepareWL(Context& ctx)
-	{
-		pInfos.message.clear();
-		pInfos.state = stReady;
-
-		bool forceAreaCreate  = ctx.areaForceCreate[pOriginalAreaName];
-		ctx.clusterForceCreate[pOriginalAreaName] = (forceAreaCreate || pInfos.behavior == bhOverwrite);
-
-		switch (pInfos.behavior)
-		{
-			case bhMerge:
-				{
-					if (!forceAreaCreate)
-					{
-						pInfos.message << "The thermal cluster list will remain untouched";
-						pInfos.state = stNothingToDo;
-						break;
-					}
-				}
-			case bhOverwrite:
-				pInfos.message << "The thermal cluster list will be reset";
-				break;
-			default:
-				pInfos.state = stDisabled;
-				break;
-		}
-
-		return true;
-	}
-
-
-	bool RootNode::performWL(Context& ctx)
-	{
-		if (ctx.area)
-		{
-			//bool forcePlantCreate = ctx.clusterForceCreate[pOriginalAreaName];
-			if (pInfos.behavior == bhOverwrite)
-				ctx.area->thermal.list.clear();
-			return true;
-		}
-		return false;
-	}
-
-
-
-
+bool RootNode::performWL(Context& ctx)
+{
+    if (ctx.area)
+    {
+        // bool forcePlantCreate = ctx.clusterForceCreate[pOriginalAreaName];
+        if (pInfos.behavior == bhOverwrite)
+            ctx.area->thermal.list.clear();
+        return true;
+    }
+    return false;
+}
 
 } // namespace ThermalCluster
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
-

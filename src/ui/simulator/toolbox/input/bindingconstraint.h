@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_INPUT_BINDING_CONSTRAINT_H__
-# define __ANTARES_TOOLBOX_INPUT_BINDING_CONSTRAINT_H__
+#define __ANTARES_TOOLBOX_INPUT_BINDING_CONSTRAINT_H__
 
-# include "bindingconstraint/bindingconstraint.h"
+#include "bindingconstraint/bindingconstraint.h"
 
 #endif // __ANTARES_TOOLBOX_INPUT_BINDING_CONSTRAINT_H__

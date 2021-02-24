@@ -11,27 +11,21 @@
 #pragma once
 #include "complex.h"
 
-
 namespace Yuni
 {
 namespace Private
 {
 namespace IStringImpl
 {
-
-
-	// std::complex
-	template<class MemBufT, class U>
-	struct YUNI_DECL Append<MemBufT, std::complex<U> > final
-	{
-		static void Do(MemBufT& memoryBuffer, const std::complex<U>& rhs)
-		{
-			memoryBuffer << rhs.real() << ',' << rhs.imag();
-		}
-	};
-
-
-
+// std::complex
+template<class MemBufT, class U>
+struct YUNI_DECL Append<MemBufT, std::complex<U>> final
+{
+    static void Do(MemBufT& memoryBuffer, const std::complex<U>& rhs)
+    {
+        memoryBuffer << rhs.real() << ',' << rhs.imag();
+    }
+};
 
 } // namespace IStringImpl
 } // namespace Private

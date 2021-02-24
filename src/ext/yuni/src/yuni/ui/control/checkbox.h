@@ -9,11 +9,11 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_UI_CONTROL_CHECKBOX_H__
-# define __YUNI_UI_CONTROL_CHECKBOX_H__
+#define __YUNI_UI_CONTROL_CHECKBOX_H__
 
-# include "../../yuni.h"
-# include "control.h"
-# include "../font.h"
+#include "../../yuni.h"
+#include "control.h"
+#include "../font.h"
 
 namespace Yuni
 {
@@ -21,88 +21,92 @@ namespace UI
 {
 namespace Control
 {
+//! A check box is a clickable control that has a boolean state: either checked or unchecked
+class CheckBox : public IControl
+{
+public:
+    //! Smart pointer
+    typedef Ancestor::SmartPtrType<CheckBox>::Ptr Ptr;
 
+    //! Checkbox checked callback
+    Yuni::Bind<void(IControl* sender, bool newValue)> onCheckChanged;
 
-	//! A check box is a clickable control that has a boolean state: either checked or unchecked
-	class CheckBox: public IControl
-	{
-	public:
-		//! Smart pointer
-		typedef Ancestor::SmartPtrType<CheckBox>::Ptr  Ptr;
+public:
+    CheckBox(float x, float y, float width, float height) :
+     IControl(x, y, width, height), pChecked(false), pBeingClicked(false)
+    {
+    }
 
-		//! Checkbox checked callback
-		Yuni::Bind<void (IControl* sender, bool newValue)>  onCheckChanged;
+    CheckBox(const Point2D<float>& position, const Point2D<float>& size) :
+     IControl(position, size), pChecked(false), pBeingClicked(false)
+    {
+    }
 
-	public:
-		CheckBox(float x, float y, float width, float height):
-			IControl(x, y, width, height),
-			pChecked(false),
-			pBeingClicked(false)
-		{}
+    //! Virtual destructor
+    virtual ~CheckBox()
+    {
+    }
 
-		CheckBox(const Point2D<float>& position, const Point2D<float>& size):
-			IControl(position, size),
-			pChecked(false),
-			pBeingClicked(false)
-		{}
+    const String& text() const
+    {
+        return pText;
+    }
+    void text(const AnyString& text)
+    {
+        pText = text;
+        invalidate();
+    }
 
-		//! Virtual destructor
-		virtual ~CheckBox() {}
+    //! Modify whether the checkbox is checked
+    void checked(bool newValue)
+    {
+        if (pChecked == newValue)
+            return;
+        pChecked = newValue;
+        invalidate();
+        // Callback
+        onCheckChanged(this, newValue);
+    }
+    //! Get whether the checkbox is checked
+    bool checked() const
+    {
+        return pChecked;
+    }
 
-		const String& text() const { return pText; }
-		void text(const AnyString& text) { pText = text; invalidate(); }
+    //! Draw the checkbox on the surface
+    virtual void draw(DrawingSurface::Ptr& surface, float xOffset, float yOffset) const override;
 
-		//! Modify whether the checkbox is checked
-		void checked(bool newValue)
-		{
-			if (pChecked == newValue)
-				return;
-			pChecked = newValue;
-			invalidate();
-			// Callback
-			onCheckChanged(this, newValue);
-		}
-		//! Get whether the checkbox is checked
-		bool checked() const { return pChecked; }
+private:
+    //! Control reaction to mouse down
+    virtual EventPropagation mouseDown(Input::IMouse::Button btn, float, float) override
+    {
+        if (Input::IMouse::ButtonLeft == btn)
+            pBeingClicked = true;
+        return epStop;
+    }
+    //! Control reaction to mouse up
+    virtual EventPropagation mouseUp(Input::IMouse::Button btn, float, float) override
+    {
+        if (Input::IMouse::ButtonLeft == btn && pBeingClicked)
+        {
+            pChecked = !pChecked;
+            invalidate();
+            onCheckChanged(this, pChecked);
+        }
+        pBeingClicked = false;
+        return epStop;
+    }
 
-		//! Draw the checkbox on the surface
-		virtual void draw(DrawingSurface::Ptr& surface, float xOffset, float yOffset) const override;
+private:
+    bool pChecked;
 
-	private:
-		//! Control reaction to mouse down
-		virtual EventPropagation mouseDown(Input::IMouse::Button btn, float, float) override
-		{
-			if (Input::IMouse::ButtonLeft == btn)
-				pBeingClicked = true;
-			return epStop;
-		}
-		//! Control reaction to mouse up
-		virtual EventPropagation mouseUp(Input::IMouse::Button btn, float, float) override
-		{
-			if (Input::IMouse::ButtonLeft == btn && pBeingClicked)
-			{
-				pChecked = !pChecked;
-				invalidate();
-				onCheckChanged(this, pChecked);
-			}
-			pBeingClicked = false;
-			return epStop;
-		}
+    bool pBeingClicked;
 
-	private:
-		bool pChecked;
+    String pText;
 
-		bool pBeingClicked;
+    String pHoverText;
 
-		String pText;
-
-		String pHoverText;
-
-	}; // class CheckBox
-
-
-
-
+}; // class CheckBox
 
 } // namespace Control
 } // namespace UI

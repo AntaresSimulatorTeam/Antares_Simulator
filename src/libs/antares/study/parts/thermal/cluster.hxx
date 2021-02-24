@@ -25,125 +25,107 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_CLUSTER_HXX__
-# define __ANTARES_LIBS_STUDY_PARTS_THERMAL_CLUSTER_HXX__
-
+#define __ANTARES_LIBS_STUDY_PARTS_THERMAL_CLUSTER_HXX__
 
 namespace Antares
 {
 namespace Data
 {
+#ifndef ANTARES_SWAP_SUPPORT
+inline void ThermalCluster::flush()
+{
+    // do nothing
+}
+#endif
 
-	# ifndef ANTARES_SWAP_SUPPORT
-	inline void ThermalCluster::flush()
-	{
-		// do nothing
-	}
-	# endif
+#ifndef ANTARES_SWAP_SUPPORT
+inline void ThermalClusterList::flush()
+{
+    // do nothing
+}
+#endif
 
-	# ifndef ANTARES_SWAP_SUPPORT
-	inline void ThermalClusterList::flush()
-	{
-		// do nothing
-	}
-	# endif
+inline uint ThermalClusterList::size() const
+{
+    return (uint)cluster.size();
+}
 
+inline bool ThermalClusterList::empty() const
+{
+    return cluster.empty();
+}
 
-	inline uint ThermalClusterList::size() const
-	{
-		return (uint) cluster.size();
-	}
+inline ThermalClusterList::iterator ThermalClusterList::begin()
+{
+    return cluster.begin();
+}
 
+inline ThermalClusterList::const_iterator ThermalClusterList::begin() const
+{
+    return cluster.begin();
+}
 
-	inline bool ThermalClusterList::empty() const
-	{
-		return cluster.empty();
-	}
+inline ThermalClusterList::iterator ThermalClusterList::end()
+{
+    return cluster.end();
+}
 
+inline ThermalClusterList::const_iterator ThermalClusterList::end() const
+{
+    return cluster.end();
+}
 
-	inline ThermalClusterList::iterator ThermalClusterList::begin()
-	{
-		return cluster.begin();
-	}
+inline const Data::ThermalClusterName& ThermalCluster::group() const
+{
+    return pGroup;
+}
 
-	inline ThermalClusterList::const_iterator ThermalClusterList::begin() const
-	{
-		return cluster.begin();
-	}
+inline const Data::ThermalClusterName& ThermalCluster::id() const
+{
+    return pID;
+}
 
-	inline ThermalClusterList::iterator ThermalClusterList::end()
-	{
-		return cluster.end();
-	}
+inline const Data::ThermalClusterName& ThermalCluster::name() const
+{
+    return pName;
+}
 
-	inline ThermalClusterList::const_iterator ThermalClusterList::end() const
-	{
-		return cluster.end();
-	}
+inline const ThermalCluster* ThermalClusterList::find(const Data::ThermalClusterName& id) const
+{
+    auto i = cluster.find(id);
+    return (i != cluster.end()) ? i->second : nullptr;
+}
 
+inline ThermalCluster* ThermalClusterList::find(const Data::ThermalClusterName& id)
+{
+    auto i = cluster.find(id);
+    return (i != cluster.end()) ? i->second : nullptr;
+}
 
-	inline const Data::ThermalClusterName& ThermalCluster::group() const
-	{
-		return pGroup;
-	}
+template<class PredicateT>
+void ThermalClusterList::each(const PredicateT& predicate) const
+{
+    auto end = cluster.cend();
+    for (auto i = cluster.cbegin(); i != end; ++i)
+    {
+        const ThermalCluster& it = *(i->second);
+        predicate(it);
+    }
+}
 
-	inline const Data::ThermalClusterName& ThermalCluster::id() const
-	{
-		return pID;
-	}
-
-	inline const Data::ThermalClusterName& ThermalCluster::name() const
-	{
-		return pName;
-	}
-
-
-
-	inline const ThermalCluster* ThermalClusterList::find(const Data::ThermalClusterName& id) const
-	{
-		auto i = cluster.find(id);
-		return (i != cluster.end()) ? i->second : nullptr;
-	}
-
-
-	inline ThermalCluster* ThermalClusterList::find(const Data::ThermalClusterName& id)
-	{
-		auto i = cluster.find(id);
-		return (i != cluster.end()) ? i->second : nullptr;
-	}
-
-
-	template<class PredicateT>
-	void ThermalClusterList::each(const PredicateT& predicate) const
-	{
-		auto end = cluster.cend();
-		for (auto i = cluster.cbegin(); i != end; ++i)
-		{
-			const ThermalCluster& it = *(i->second);
-			predicate(it);
-		}
-	}
-
-
-	template<class PredicateT>
-	void ThermalClusterList::each(const PredicateT& predicate)
-	{
-		auto end = cluster.end();
-		for (auto i = cluster.begin(); i != end; ++i)
-		{
-			ThermalCluster& it = *(i->second);
-			predicate(it);
-		}
-	}
-
-
-
-
+template<class PredicateT>
+void ThermalClusterList::each(const PredicateT& predicate)
+{
+    auto end = cluster.end();
+    for (auto i = cluster.begin(); i != end; ++i)
+    {
+        ThermalCluster& it = *(i->second);
+        predicate(it);
+    }
+}
 
 } // namespace Data
 } // namespace Antares
-
-
-
 
 namespace Yuni
 {
@@ -151,45 +133,47 @@ namespace Extension
 {
 namespace CString
 {
+template<class CStringT>
+class Append<CStringT, Antares::Data::ThermalLaw>
+{
+public:
+    static void Perform(CStringT& string, Antares::Data::ThermalLaw law)
+    {
+        switch (law)
+        {
+        case Antares::Data::thermalLawUniform:
+            string += "uniform";
+            break;
+        case Antares::Data::thermalLawGeometric:
+            string += "geometric";
+            break;
+        }
+    }
+};
 
-	template<class CStringT>
-	class Append<CStringT, Antares::Data::ThermalLaw>
-	{
-	public:
-		static void Perform(CStringT& string, Antares::Data::ThermalLaw law)
-		{
-			switch (law)
-			{
-				case Antares::Data::thermalLawUniform:   string += "uniform"; break;
-				case Antares::Data::thermalLawGeometric: string += "geometric"; break;
-			}
-		}
-	};
+template<>
+class Into<Antares::Data::ThermalLaw>
+{
+public:
+    typedef Antares::Data::ThermalLaw TargetType;
+    enum
+    {
+        valid = 1
+    };
 
+    static bool Perform(AnyString string, TargetType& out);
 
-	template<>
-	class Into<Antares::Data::ThermalLaw>
-	{
-	public:
-		typedef Antares::Data::ThermalLaw TargetType;
-		enum { valid = 1 };
-
-		static bool Perform(AnyString string, TargetType& out);
-
-		template<class StringT> static TargetType Perform(const StringT& s)
-		{
-			TargetType law = Antares::Data::thermalLawUniform;
-			Perform(s, law);
-			return law;
-		}
-	};
-
-
+    template<class StringT>
+    static TargetType Perform(const StringT& s)
+    {
+        TargetType law = Antares::Data::thermalLawUniform;
+        Perform(s, law);
+        return law;
+    }
+};
 
 } // namespace CString
 } // namespace Extension
 } // namespace Yuni
-
-
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_CLUSTER_HXX__

@@ -30,7 +30,7 @@
 
 bool LicenseTimer::onInterval(uint cycle)
 {
- 	//LICENSE_DEBUG("cycle");
+    // LICENSE_DEBUG("cycle");
     License::CheckOnlineLicenseValidity(Data::versionLatest, true);
- 	return true;
- }
+    return true;
+}

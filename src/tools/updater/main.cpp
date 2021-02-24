@@ -36,230 +36,238 @@
 #include <antares/sys/policy.h>
 #include <antares/locale.h>
 
-
 using namespace Yuni;
 using namespace Antares;
 
-
 static bool onProgress(uint)
 {
-	return true;
+    return true;
 }
-
 
 class MyStudyFinder final : public Data::StudyFinder
 {
 public:
-	void onStudyFound(const String& folder, Data::Version version) override
-	{
-		if (version == Data::version1xx or version == Data::versionUnknown or version == Data::versionFutur)
-		{
-			logs.info() << folder << " : version of study is too old, too new or unknown";
-			return;
-		}
+    void onStudyFound(const String& folder, Data::Version version) override
+    {
+        if (version == Data::version1xx or version == Data::versionUnknown
+            or version == Data::versionFutur)
+        {
+            logs.info() << folder << " : version of study is too old, too new or unknown";
+            return;
+        }
 
-		if (listOnly)
-		{
-			logs.info() << folder << " : nothing done (currently dry mode is enabled).";
-			return;
-		}
-		
-		if ((int)Data::versionLatest == (int)version and (not removeUselessTimeseries))
-		{
-			logs.info() << folder << " : is up-to-date";
-		}
-		else
-		{
-			logs.notice() << "Upgrading " << folder << "  (v" << Data::VersionToCStr(version)
-				<< " to " << Data::VersionToCStr((Data::Version)Data::versionLatest) << ")";
+        if (listOnly)
+        {
+            logs.info() << folder << " : nothing done (currently dry mode is enabled).";
+            return;
+        }
 
-			auto* study = new Data::Study();
+        if ((int)Data::versionLatest == (int)version and (not removeUselessTimeseries))
+        {
+            logs.info() << folder << " : is up-to-date";
+        }
+        else
+        {
+            logs.notice() << "Upgrading " << folder << "  (v" << Data::VersionToCStr(version)
+                          << " to " << Data::VersionToCStr((Data::Version)Data::versionLatest)
+                          << ")";
 
-			// It is important to enabled those feature to have the entire set of data
-			// loaded and written
-			JIT::enabled = true;
-			JIT::usedFromGUI = true;
+            auto* study = new Data::Study();
 
-			Data::StudyLoadOptions options;
-			options.loadOnlyNeeded = false;
+            // It is important to enabled those feature to have the entire set of data
+            // loaded and written
+            JIT::enabled = true;
+            JIT::usedFromGUI = true;
 
-			// disabling all useless logs
-			logs.verbosityLevel = Logs::Verbosity::Warning::level;
+            Data::StudyLoadOptions options;
+            options.loadOnlyNeeded = false;
 
-			if (study->loadFromFolder(folder, options))
-			{
-				if (removeUselessTimeseries)
-					study->removeTimeseriesIfTSGeneratorEnabled();
+            // disabling all useless logs
+            logs.verbosityLevel = Logs::Verbosity::Warning::level;
 
-				if (forceReadonly)
-					study->parameters.readonly = true;
+            if (study->loadFromFolder(folder, options))
+            {
+                if (removeUselessTimeseries)
+                    study->removeTimeseriesIfTSGeneratorEnabled();
 
-				logs.info() << "Saving...";
-				study->saveToFolder(folder);
-			}
+                if (forceReadonly)
+                    study->parameters.readonly = true;
 
-			// restoring logs
-			logs.verbosityLevel = Logs::Verbosity::Debug::level;
+                logs.info() << "Saving...";
+                study->saveToFolder(folder);
+            }
 
-			delete study;
-		}
+            // restoring logs
+            logs.verbosityLevel = Logs::Verbosity::Debug::level;
 
-		if (cleanup)
-		{
-			auto* cleaner = new Data::StudyCleaningInfos(folder.c_str());
-			cleaner->onProgress.bind(&onProgress);
-			if (cleaner->analyze())
-				cleaner->performCleanup();
-			delete cleaner;
-		}
+            delete study;
+        }
 
-		logs.info();
-	}
+        if (cleanup)
+        {
+            auto* cleaner = new Data::StudyCleaningInfos(folder.c_str());
+            cleaner->onProgress.bind(&onProgress);
+            if (cleaner->analyze())
+                cleaner->performCleanup();
+            delete cleaner;
+        }
+
+        logs.info();
+    }
 
 public:
-	bool cleanup;
-	bool listOnly;
-	bool removeUselessTimeseries;
-	bool forceReadonly;
+    bool cleanup;
+    bool listOnly;
+    bool removeUselessTimeseries;
+    bool forceReadonly;
 
 }; // class MyStudyFinder
 
-
-// Useful for information addition in help content 
+// Useful for information addition in help content
 // ... Extracting base name from full path
 const char* ExtractFilenameOnly(const char* argv)
 {
-	const char* result = argv;
-	while ('\0' != *argv)
-	{
-		if ('\\' == *argv or '/' == *argv)
-		{
-			result = argv;
-			++result;
-		}
-		++argv;
-	}
-	return result;
+    const char* result = argv;
+    while ('\0' != *argv)
+    {
+        if ('\\' == *argv or '/' == *argv)
+        {
+            result = argv;
+            ++result;
+        }
+        ++argv;
+    }
+    return result;
 }
 
 // ... Getting the size of a char* (ending with '\0')
 int getFilenameSize(const char* filename)
 {
-	int count = 0;
-	while ('\0' != *filename)
-	{
-		filename++;
-		count++;
-	}
-	return count;
+    int count = 0;
+    while ('\0' != *filename)
+    {
+        filename++;
+        count++;
+    }
+    return count;
 }
 
 // ... Building a left margin with as many spaces as the int in parameter
 std::string getMargin(int size)
 {
-	std::string margin;
-	for (int i = 0; i < size; i++)
-		margin += " ";
-	margin += " ";
-	return margin;
+    std::string margin;
+    for (int i = 0; i < size; i++)
+        margin += " ";
+    margin += " ";
+    return margin;
 }
-
 
 int main(int argc, char* argv[])
 {
-	// locale
-	InitializeDefaultLocale();
+    // locale
+    InitializeDefaultLocale();
 
-	logs.applicationName("updater");
-	argv = AntaresGetUTF8Arguments(argc, argv);
+    logs.applicationName("updater");
+    argv = AntaresGetUTF8Arguments(argc, argv);
 
-	String::Vector optInput;
-	bool optCleanup = false;
-	bool optPrintOnly = false;
-	bool optRemoveUselessTimeseries = false;
-	bool optForceReadonly = false;
+    String::Vector optInput;
+    bool optCleanup = false;
+    bool optPrintOnly = false;
+    bool optRemoveUselessTimeseries = false;
+    bool optForceReadonly = false;
 
-	// Command Line options
-	{
-		// Parser
-		GetOpt::Parser options;
+    // Command Line options
+    {
+        // Parser
+        GetOpt::Parser options;
 
-		// General information
-		std::string updaterComment = "\nFound studies are upgraded, unless dry run is enabled (-d | --dry).\n";
-		updaterComment += "Following options make other options useless when used in the same run :\n";
-		updaterComment += "(-h|--help), (-v|--version) and (-d | --dry), in that order of priority.\n";
-		updaterComment += "Thus they should be used alone.\n";
-		updaterComment += "If previous options are not used, other options have an action in addition to upgrade.\n";
-		updaterComment += "Note that (-i|--input) is required for upgrade.\n";
-		options.addParagraph(Yuni::String() << updaterComment);
+        // General information
+        std::string updaterComment
+          = "\nFound studies are upgraded, unless dry run is enabled (-d | --dry).\n";
+        updaterComment
+          += "Following options make other options useless when used in the same run :\n";
+        updaterComment
+          += "(-h|--help), (-v|--version) and (-d | --dry), in that order of priority.\n";
+        updaterComment += "Thus they should be used alone.\n";
+        updaterComment += "If previous options are not used, other options have an action in "
+                          "addition to upgrade.\n";
+        updaterComment += "Note that (-i|--input) is required for upgrade.\n";
+        options.addParagraph(Yuni::String() << updaterComment);
 
-		// Adding usage information to help content
-		const char* updaterFilename = ExtractFilenameOnly(argv[0]);
-		std::string tabs = getMargin(getFilenameSize(updaterFilename));
-		std::string updaterUsage = "Updater usage:\n";
-		updaterUsage += updaterFilename;
-		updaterUsage += " -i <Directory/study path> [-c|--clean]\n";
-		updaterUsage += tabs + "[--remove-generated-timeseries]\n";
-		updaterUsage += tabs + "[--force-readonly] [-d|--dry]\n";
-		updaterUsage += tabs + "[-v|--version] [-h|--help]\n";
-		updaterUsage += updaterFilename;
-		updaterUsage += " -d|--dry\n";
-		updaterUsage += updaterFilename;
-		updaterUsage += " -v|--version\n";
-		updaterUsage += updaterFilename;
-		updaterUsage += " -h|--help\n";
-		options.addParagraph(Yuni::String() << updaterUsage << "\n");
+        // Adding usage information to help content
+        const char* updaterFilename = ExtractFilenameOnly(argv[0]);
+        std::string tabs = getMargin(getFilenameSize(updaterFilename));
+        std::string updaterUsage = "Updater usage:\n";
+        updaterUsage += updaterFilename;
+        updaterUsage += " -i <Directory/study path> [-c|--clean]\n";
+        updaterUsage += tabs + "[--remove-generated-timeseries]\n";
+        updaterUsage += tabs + "[--force-readonly] [-d|--dry]\n";
+        updaterUsage += tabs + "[-v|--version] [-h|--help]\n";
+        updaterUsage += updaterFilename;
+        updaterUsage += " -d|--dry\n";
+        updaterUsage += updaterFilename;
+        updaterUsage += " -v|--version\n";
+        updaterUsage += updaterFilename;
+        updaterUsage += " -h|--help\n";
+        options.addParagraph(Yuni::String() << updaterUsage << "\n");
 
-		// Adding a line on Antares version to help usage.
-		options.addParagraph(Yuni::String()
-			<< "Antares Study Updater v" << VersionToCString() << "\n");
+        // Adding a line on Antares version to help usage.
+        options.addParagraph(Yuni::String()
+                             << "Antares Study Updater v" << VersionToCString() << "\n");
 
-		// Input
-		options.remainingArguments(optInput);
-		std::string inputComment = "Add an input folder where to look for studies or give a study folder to process the study.\n";
-		inputComment += "This argument is mandatory.";
-		options.add(optInput, 'i', "input", inputComment);
-		
-		// Options
-		options.addFlag(optCleanup, 'c', "clean", "Clean all studies found");
-		options.addFlag(optRemoveUselessTimeseries, ' ', "remove-generated-timeseries", "Remove timeseries which will be regenerated by the ts-generators");
-		options.addFlag(optPrintOnly, 'd', "dry", "Only Lists the study folders which would be upgraded but do nothing");
-		options.addFlag(optForceReadonly, ' ', "force-readonly", "Force read-only mode for all studies found");
+        // Input
+        options.remainingArguments(optInput);
+        std::string inputComment = "Add an input folder where to look for studies or give a study "
+                                   "folder to process the study.\n";
+        inputComment += "This argument is mandatory.";
+        options.add(optInput, 'i', "input", inputComment);
 
-		// Version
-		bool optVersion = false;
-		options.addFlag(optVersion, 'v', "version", "Print the version and exit");
+        // Options
+        options.addFlag(optCleanup, 'c', "clean", "Clean all studies found");
+        options.addFlag(optRemoveUselessTimeseries,
+                        ' ',
+                        "remove-generated-timeseries",
+                        "Remove timeseries which will be regenerated by the ts-generators");
+        options.addFlag(optPrintOnly,
+                        'd',
+                        "dry",
+                        "Only Lists the study folders which would be upgraded but do nothing");
+        options.addFlag(
+          optForceReadonly, ' ', "force-readonly", "Force read-only mode for all studies found");
 
-		if (!options(argc, argv))
-			return options.errors() ? 1 : 0;
+        // Version
+        bool optVersion = false;
+        options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
-		if (optVersion)
-		{
-			PrintVersionToStdCout();
-			return 0;
-		}
-	}
+        if (!options(argc, argv))
+            return options.errors() ? 1 : 0;
 
-	// Load the local policy settings
-	LocalPolicy::Open();
-	LocalPolicy::CheckRootPrefix(argv[0]);
+        if (optVersion)
+        {
+            PrintVersionToStdCout();
+            return 0;
+        }
+    }
 
-	if (optInput.empty())
-	{
-		logs.error() << "No directory to look for studies is given. Please use -i option.";
-		LocalPolicy::Close();
-		return 0;
-	}
+    // Load the local policy settings
+    LocalPolicy::Open();
+    LocalPolicy::CheckRootPrefix(argv[0]);
 
-	MyStudyFinder updater;
-	updater.listOnly = optPrintOnly;
-	updater.cleanup = optCleanup;
-	updater.removeUselessTimeseries = optRemoveUselessTimeseries;
-	updater.forceReadonly = optForceReadonly;
-	updater.lookup(optInput);
-	updater.wait();
+    if (optInput.empty())
+    {
+        logs.error() << "No directory to look for studies is given. Please use -i option.";
+        LocalPolicy::Close();
+        return 0;
+    }
 
-	LocalPolicy::Close();
-	return 0;
+    MyStudyFinder updater;
+    updater.listOnly = optPrintOnly;
+    updater.cleanup = optCleanup;
+    updater.removeUselessTimeseries = optRemoveUselessTimeseries;
+    updater.forceReadonly = optForceReadonly;
+    updater.lookup(optInput);
+    updater.wait();
+
+    LocalPolicy::Close();
+    return 0;
 }
-

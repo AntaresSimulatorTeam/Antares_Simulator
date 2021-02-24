@@ -25,16 +25,16 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_MAP_COMPONENT_H__
-# define __ANTARES_TOOLBOX_MAP_COMPONENT_H__
+#define __ANTARES_TOOLBOX_MAP_COMPONENT_H__
 
-# include <antares/wx-wrapper.h>
-# include <antares/study.h>
-# include "control.h"
-# include <wx/stattext.h>
-# include <ui/common/component/panel.h>
-# include "../button.h"
-# include "../notebook/mapnotebook.h"
-# include "settings.h"
+#include <antares/wx-wrapper.h>
+#include <antares/study.h>
+#include "control.h"
+#include <wx/stattext.h>
+#include <ui/common/component/panel.h>
+#include "../button.h"
+#include "../notebook/mapnotebook.h"
+#include "settings.h"
 
 #include <wx/textctrl.h>
 
@@ -42,281 +42,277 @@ namespace Antares
 {
 namespace Map
 {
+/*!
+** \brief Standard study MAP
+*/
+class Component final : public Antares::Component::Panel, public Yuni::IEventObserver<Component>
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    Component(wxWindow* parent);
+    /*!
+    ** \brief Destructor
+    */
+    virtual ~Component();
+    //@}
 
+    //! \name Study
+    //@{
+    /*!
+    ** \brief Attach a study to the map to reflect changes
+    **
+    ** The user is responsible for deleting the study. However
+    ** to not forget to detach it just before
+    **
+    ** \param study The study to attach
+    */
+    void attachStudy(Data::Study::Ptr study);
 
-	/*!
-	** \brief Standard study MAP
-	*/
-	class Component final : public Antares::Component::Panel, public Yuni::IEventObserver<Component>
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		Component(wxWindow* parent);
-		/*!
-		** \brief Destructor
-		*/
-		virtual ~Component();
-		//@}
+    /*!
+    ** \brief Detach the study (if any) currently attached to the map
+    */
+    void detachStudy(bool canRefresh = true);
 
-		//! \name Study
-		//@{
-		/*!
-		** \brief Attach a study to the map to reflect changes
-		**
-		** The user is responsible for deleting the study. However
-		** to not forget to detach it just before
-		**
-		** \param study The study to attach
-		*/
-		void attachStudy(Data::Study::Ptr study);
+    /*!
+    ** \brief Get the study attached to the map
+    ** \return A pointer to a Study structure, or NULL
+    */
+    Data::Study::Ptr attachedStudy();
+    //@}
 
-		/*!
-		** \brief Detach the study (if any) currently attached to the map
-		*/
-		void detachStudy(bool canRefresh = true);
+    //! \name Import Export
+    //@{
+    /*!
+    ** \brief Load the map's settings from an existing Antares study
+    **
+    ** \param study The study to import the data from
+    ** \return True if the operation succeeded, False otherwise
+    */
+    bool loadFromStudy(Data::Study& study);
 
-		/*!
-		** \brief Get the study attached to the map
-		** \return A pointer to a Study structure, or NULL
-		*/
-		Data::Study::Ptr attachedStudy();
-		//@}
+    /*!
+    ** \brief Load the map's settings from the attached study
+    ** \return True if the operation succeeded, False otherwise
+    */
+    bool loadFromAttachedStudy();
 
+    /*!
+    ** \brief Save the map's settings to a study
+    **
+    ** \param study The target study
+    ** \param incremental Modify the study only for detected changes
+    ** \return True if the operation succeded, False otherwise
+    */
+    bool saveToStudy(Data::Study& study, bool incremental = true);
 
-		//! \name Import Export
-		//@{
-		/*!
-		** \brief Load the map's settings from an existing Antares study
-		**
-		** \param study The study to import the data from
-		** \return True if the operation succeeded, False otherwise
-		*/
-		bool loadFromStudy(Data::Study& study);
+    /*!
+    ** \brief Save the map's settings to the attached study (if any)
+    **
+    ** \param incremental Modify the study only for detected changes
+    ** \return True if the operation succeeded, False otherwise
+    */
+    bool saveToAttachedStudy(bool incremental = true);
+    //@}
 
-		/*!
-		** \brief Load the map's settings from the attached study
-		** \return True if the operation succeeded, False otherwise
-		*/
-		bool loadFromAttachedStudy();
+    /*!
+    ** \brief Save the map into an image file
+    **
+    ** \param filePath
+    ** \return True if the operation succeeded, False otherwise
+    */
+    bool saveToImageFile(const AnyString& filePath, const MapRenderOptions& options);
+    //@}
 
-		/*!
-		** \brief Save the map's settings to a study
-		**
-		** \param study The target study
-		** \param incremental Modify the study only for detected changes
-		** \return True if the operation succeded, False otherwise
-		*/
-		bool saveToStudy(Data::Study& study, bool incremental = true);
+    void clear();
 
-		/*!
-		** \brief Save the map's settings to the attached study (if any)
-		**
-		** \param incremental Modify the study only for detected changes
-		** \return True if the operation succeeded, False otherwise
-		*/
-		bool saveToAttachedStudy(bool incremental = true);
-		//@}
+    //! \name UI
+    //@{
+    /*!
+    ** \brief Recenter scrollbars to the center of the map
+    */
+    void recenterView();
 
-		/*!
-		** \brief Save the map into an image file
-		**
-		** \param filePath 
-		** \return True if the operation succeeded, False otherwise
-		*/
-		bool saveToImageFile(const AnyString& filePath, const MapRenderOptions& options);
-		//@}
-		
-		void clear();
+    void onCenterXY(void*);
 
-		//! \name UI
-		//@{
-		/*!
-		** \brief Recenter scrollbars to the center of the map
-		*/
-		void recenterView();
+    /*!
+    ** \brief Set the focus to the map
+    */
+    void setFocus();
 
-		void onCenterXY(void*);
+    /*!
+    ** \brief Get how many areas have been selected
+    */
+    uint selectedAreaCount() const;
+    //@}
 
-		/*!
-		** \brief Set the focus to the map
-		*/
-		void setFocus();
+    void drawerVisible(bool v);
 
-		/*!
-		** \brief Get how many areas have been selected
-		*/
-		uint selectedAreaCount() const;
-		//@}
+    void showLayerAll();
 
-		void drawerVisible(bool v);
+    void invalidate();
+    void refresh();
 
-		void showLayerAll();
+    /*!
+    ** \brief Refresh the header informations (how many areas/connexions)
+    */
+    void refreshHeaderInformations();
 
+    void renameNodeFromArea(const Data::Area* area);
 
-		void invalidate();
-		void refresh();
+    //! \name Edition
+    //@{
+    /*!
+    ** \brief Select all nodes of type "area"
+    */
+    void unselectAll(bool canRefresh = true);
 
-		/*!
-		** \brief Refresh the header informations (how many areas/connexions)
-		*/
-		void refreshHeaderInformations();
+    /*!
+    ** \brief Select all nodes of type "area"
+    */
+    void selectAll();
 
-		void renameNodeFromArea(const Data::Area* area);
+    /*!
+    ** \brief Reverse the selection
+    */
+    void reverseSelection();
 
+    /*!
+    ** \brief Select only items from a list of areas
+    */
+    void selectOnly(const Data::Area::Vector& areas);
 
-		//! \name Edition
-		//@{
-		/*!
-		** \brief Select all nodes of type "area"
-		*/
-		void unselectAll(bool canRefresh = true);
+    /*!
+    ** \brief Select only items from a list of areas and links
+    */
+    void selectOnly(const Data::Area::Vector& areas, const Data::AreaLink::Vector& links);
+    //@}
 
-		/*!
-		** \brief Select all nodes of type "area"
-		*/
-		void selectAll();
+    //! \name Cache management
+    //@{
+    /*!
+    ** \brief Refresh the internal cache about the color of a single area
+    */
+    void reimportNodeColors(const Data::Area* area);
 
-		/*!
-		** \brief Reverse the selection
-		*/
-		void reverseSelection();
+    /*!
+    ** \brief Refresh the internal cache about the X-coordinate  of a single area
+    */
+    void moveNodeFromAreaX(const Data::Area* area, int x);
 
-		/*!
-		** \brief Select only items from a list of areas
-		*/
-		void selectOnly(const Data::Area::Vector& areas);
+    /*!
+    ** \brief Refresh the internal cache about the X-coordinate  of a single area
+    */
+    void moveNodeFromAreaY(const Data::Area* area, int y);
+    //@}
 
-		/*!
-		** \brief Select only items from a list of areas and links
-		*/
-		void selectOnly(const Data::Area::Vector& areas, const Data::AreaLink::Vector& links);
-		//@}
+    size_t getActiveLayerID()
+    {
+        return pMapActiveLayer ? pMapActiveLayer->getUid() : 0;
+    }
 
+public:
+    //! Popup event
+    Yuni::Event<void(int, int)> onPopupEvent;
+    //! Status bar event
+    Yuni::Event<void(const wxString&)> onStatusBarText;
+    //! Event: Double-Click on a item
+    Yuni::Event<void(Component&)> onDblClick;
+    //! Event: Enter in a text item
+    // Yuni::Event<void (void*)> onTextEnter;
 
-		//! \name Cache management
-		//@{
-		/*!
-		** \brief Refresh the internal cache about the color of a single area
-		*/
-		void reimportNodeColors(const Data::Area* area);
+private:
+    class Drawer final : public Antares::Component::Panel
+    {
+    public:
+        Drawer(wxWindow* parent, Component& com) :
+         Antares::Component::Panel(parent), pComponent(com)
+        {
+        }
+        void onDraw(wxPaintEvent& evt);
+        void onSize(wxSizeEvent& evt);
 
-		/*!
-		** \brief Refresh the internal cache about the X-coordinate  of a single area
-		*/
-		void moveNodeFromAreaX(const Data::Area* area, int x);
+    private:
+        void drawFromDevice(wxDC& dc);
 
-		/*!
-		** \brief Refresh the internal cache about the X-coordinate  of a single area
-		*/
-		void moveNodeFromAreaY(const Data::Area* area, int y);
-		//@}
+    private:
+        Component& pComponent;
+        DECLARE_EVENT_TABLE()
+    };
 
-		size_t getActiveLayerID() { return pMapActiveLayer? pMapActiveLayer->getUid(): 0; }
+    void onApplicationQuit();
 
-	public:
-		//! Popup event
-		Yuni::Event<void (int, int)> onPopupEvent;
-		//! Status bar event
-		Yuni::Event<void (const wxString&)> onStatusBarText;
-		//! Event: Double-Click on a item
-		Yuni::Event<void (Component&)> onDblClick;
-		//! Event: Enter in a text item
-		//Yuni::Event<void (void*)> onTextEnter;
+    void onPageChanged(Antares::Component::MapNotebook::Page& page);
 
-	private:
-		class Drawer final : public Antares::Component::Panel
-		{
-		public:
-			Drawer(wxWindow* parent, Component& com)
-				:Antares::Component::Panel(parent), pComponent(com)
-			{}
-			void onDraw(wxPaintEvent& evt);
-			void onSize(wxSizeEvent& evt);
-		private:
-			void drawFromDevice(wxDC& dc);
-		private:
-			Component& pComponent;
-			DECLARE_EVENT_TABLE()
-		};
+    Antares::Component::MapNotebook::Page* addNewLayer(wxString pageName = wxString(""),
+                                                       size_t uID = 0);
+    void addNewEmptyLayer()
+    {
+        addNewLayer();
+    }
+    void removeLayer(Antares::Component::MapNotebook::Page& page);
 
-		void onApplicationQuit();
+    void evtOnPopupEvent(int x, int y);
 
-		void onPageChanged(Antares::Component::MapNotebook::Page& page);
+    void evtOnSelectionHide(wxCommandEvent&);
 
-		Antares::Component::MapNotebook::Page* addNewLayer(wxString pageName = wxString(""), size_t uID = 0);
-		void addNewEmptyLayer() { addNewLayer(); }
-		void removeLayer(Antares::Component::MapNotebook::Page& page);
+    void evtOnSelectionShow(wxCommandEvent&);
 
-		void evtOnPopupEvent(int x, int y);
+    void onCopy(void*);
+    void onCopyDropdown(Antares::Component::Button&, wxMenu& menu, void*);
+    void evtPopupCopy(wxCommandEvent&);
+    void evtPopupCopyAll(wxCommandEvent&);
+    void evtPopupCopyAllAreas(wxCommandEvent&);
+    void evtPopupCopyAllLinks(wxCommandEvent&);
+    void onPaste(void*);
+    void onPasteDropdown(Antares::Component::Button&, wxMenu& menu, void*);
+    void evtPopupPaste(wxCommandEvent&);
+    void evtPopupPasteSpecial(wxCommandEvent&);
+    void onSelectAll(void*);
 
-		void evtOnSelectionHide(wxCommandEvent&);
+    void onNew(void*);
+    void onNewDropdown(Antares::Component::Button&, wxMenu& menu, void*);
+    void evtNewArea(wxCommandEvent&);
+    void evtNewArea2(wxCommandEvent&);
+    void evtNewArea4(wxCommandEvent&);
+    void evtNewArea6(wxCommandEvent&);
+    void evtNewArea8(wxCommandEvent&);
 
-		void evtOnSelectionShow(wxCommandEvent&);
+    void onToggleMouseSelectionArea(void*);
+    void onToggleMouseSelectionLink(void*);
+    void onToggleMouseSelectionPlant(void*);
+    void onToggleMouseSelectionConstraint(void*);
 
-		void onCopy(void*);
-		void onCopyDropdown(Antares::Component::Button&, wxMenu& menu, void*);
-		void evtPopupCopy(wxCommandEvent&);
-		void evtPopupCopyAll(wxCommandEvent&);
-		void evtPopupCopyAllAreas(wxCommandEvent&);
-		void evtPopupCopyAllLinks(wxCommandEvent&);
-		void onPaste(void*);
-		void onPasteDropdown(Antares::Component::Button&, wxMenu& menu, void*);
-		void evtPopupPaste(wxCommandEvent&);
-		void evtPopupPasteSpecial(wxCommandEvent&);
-		void onSelectAll(void*);
+    void onCenter(void*);
 
-		void onNew(void*);
-		void onNewDropdown(Antares::Component::Button&, wxMenu& menu, void*);
-		void evtNewArea(wxCommandEvent&);
-		void evtNewArea2(wxCommandEvent&);
-		void evtNewArea4(wxCommandEvent&);
-		void evtNewArea6(wxCommandEvent&);
-		void evtNewArea8(wxCommandEvent&);
+    void onEvtCenterXY(wxCommandEvent& WXUNUSED(event));
 
-		void onToggleMouseSelectionArea(void*);
-		void onToggleMouseSelectionLink(void*);
-		void onToggleMouseSelectionPlant(void*);
-		void onToggleMouseSelectionConstraint(void*);
+private:
+    Control* pMapActiveLayer;
+    Antares::Component::MapNotebook* pNoteBook;
+    std::vector<Control*> mapLayersPtrList;
 
-		void onCenter(void*);
+    wxStaticText* pInfosAreaCount;
+    wxStaticText* pInfosConnxCount;
+    // Toggle buttons
+    // The class wxWindow is used here to not include button.h everywhere
+    // It is already such a pain to compile on Windows...
+    //! The toggle button for selecting areas with the mouse
+    wxWindow* pBtnSelectionArea;
+    //! The toggle button for selecting links with the mouse
+    wxWindow* pBtnSelectionLink;
+    //! The toggle button for selecting clusters with the mouse
+    wxWindow* pBtnSelectionPlant;
+    //! The toggle button for selecting constraints with the mouse
+    wxWindow* pBtnSelectionConstraint;
 
-		void onEvtCenterXY(wxCommandEvent& WXUNUSED(event));
+    // PopUp Menu
+    wxMenu* pSelectionPopUpMenu;
 
-	private:
-
-		Control* pMapActiveLayer;
-		Antares::Component::MapNotebook * pNoteBook;
-		std::vector<Control*> mapLayersPtrList;
-
-
-
-		wxStaticText* pInfosAreaCount;
-		wxStaticText* pInfosConnxCount;
-		// Toggle buttons
-		// The class wxWindow is used here to not include button.h everywhere
-		// It is already such a pain to compile on Windows...
-		//! The toggle button for selecting areas with the mouse
-		wxWindow* pBtnSelectionArea;
-		//! The toggle button for selecting links with the mouse
-		wxWindow* pBtnSelectionLink;
-		//! The toggle button for selecting clusters with the mouse
-		wxWindow* pBtnSelectionPlant;
-		//! The toggle button for selecting constraints with the mouse
-		wxWindow* pBtnSelectionConstraint;
-
-		//PopUp Menu
-		wxMenu* pSelectionPopUpMenu;
-
-	}; // class Component
-
-
-
-
-
+}; // class Component
 
 } // namespace Map
 } // namespace Antares

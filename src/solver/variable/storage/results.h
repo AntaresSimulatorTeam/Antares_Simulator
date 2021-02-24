@@ -25,13 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_STORAGE_RESULTS_H__
-# define __SOLVER_VARIABLE_STORAGE_RESULTS_H__
+#define __SOLVER_VARIABLE_STORAGE_RESULTS_H__
 
-# include <antares/study.h>
-# include "intermediate.h"
-# include "../categories.h"
-# include "fwd.h"
-
+#include <antares/study.h>
+#include "intermediate.h"
+#include "../categories.h"
+#include "fwd.h"
 
 namespace Antares
 {
@@ -39,100 +38,91 @@ namespace Solver
 {
 namespace Variable
 {
+template<class FirstDecoratorT = Empty, // The first decorator for the results
+         template<class, int> class DecoratorForSpatialAggregateT = R::AllYears::Raw>
+class Results;
 
-	template<
-		class FirstDecoratorT = Empty,  // The first decorator for the results
-		template<class,int> class DecoratorForSpatialAggregateT = R::AllYears::Raw
-		>
-	class Results ;
+/*!
+** \brief
+**
+** \tparam FirstDecoratorT The first decorator for the class. The common values
+**   are `Raw`, `Average`, `Min`, `Max`... This parameter is a static list.
+*/
+template<class FirstDecoratorT, template<class, int> class DecoratorForSpatialAggregateT>
+class Results : public FirstDecoratorT
+{
+public:
+    //! Type of the first decorator
+    typedef FirstDecoratorT DecoratorType;
+    enum
+    {
+        //! The count if item in the list
+        count = DecoratorType::count,
+    };
 
-	/*!
-	** \brief
-	**
-	** \tparam FirstDecoratorT The first decorator for the class. The common values
-	**   are `Raw`, `Average`, `Min`, `Max`... This parameter is a static list.
-	*/
-	template<
-		class FirstDecoratorT,
-		template<class,int> class DecoratorForSpatialAggregateT
-		>
-	class Results : public FirstDecoratorT
-	{
-	public:
-		//! Type of the first decorator
-		typedef FirstDecoratorT DecoratorType;
-		enum
-		{
-			//! The count if item in the list
-			count = DecoratorType::count,
-		};
+    enum
+    {
+        categoryFile = FirstDecoratorT::categoryFile,
+    };
 
-		enum
-		{
-			categoryFile = FirstDecoratorT::categoryFile,
-		};
+public:
+    /*!
+    ** \brief Initialize result outputs from study
+    */
+    void initializeFromStudy(Antares::Data::Study&);
 
-	public:
-		/*!
-		** \brief Initialize result outputs from study
-		*/
-		void initializeFromStudy(Antares::Data::Study&);
+    /*!
+    ** \brief Reset all values
+    */
+    void reset();
 
-		/*!
-		** \brief Reset all values
-		*/
-		void reset();
+    /*!
+    ** \brief Merge the intermediate values
+    */
+    void merge(uint year, const IntermediateValues& data);
 
-		/*!
-		** \brief Merge the intermediate values
-		*/
-		void merge(uint year, const IntermediateValues& data);
+    template<class S, class VCardT>
+    void buildSurveyReport(SurveyResults& report,
+                           const S& results,
+                           int dataLevel,
+                           int fileLevel,
+                           int precision) const;
 
+    template<class VCardT>
+    void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+    {
+        // Next
+        DecoratorType::template buildDigest<VCardT>(results, digestLevel, dataLevel);
+    }
 
-		template<class S, class VCardT>
-		void buildSurveyReport(SurveyResults& report, const S& results, int dataLevel, int fileLevel, int precision) const;
+    Yuni::uint64 memoryUsage() const
+    {
+        return DecoratorType::memoryUsage();
+    }
 
-		template<class VCardT>
-		void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
-		{
-			// Next
-			DecoratorType::template buildDigest<VCardT>(results, digestLevel, dataLevel);
-		}
+    static void EstimateMemoryUsage(Antares::Data::StudyMemoryUsage& u)
+    {
+        DecoratorType::EstimateMemoryUsage(u);
+    }
 
-		Yuni::uint64 memoryUsage() const
-		{
-			return DecoratorType::memoryUsage();
-		}
+    Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
+    {
+        return DecoratorType::template hourlyValuesForSpatialAggregate<
+          DecoratorForSpatialAggregateT>();
+    }
 
-		static void EstimateMemoryUsage(Antares::Data::StudyMemoryUsage& u)
-		{
-			DecoratorType::EstimateMemoryUsage(u);
-		}
-
-		Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
-		{
-			return DecoratorType::template
-				hourlyValuesForSpatialAggregate<DecoratorForSpatialAggregateT>();
-		}
-
-	}; // class Results
-
-
-
-
-
+}; // class Results
 
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
 
-# include "results.hxx"
-# include "empty.h"
-# include "raw.h"
-# include "minmax.h"
-# include "average.h"
-# include "stdDeviation.h"
-# include "and.h"
-# include "or.h"
+#include "results.hxx"
+#include "empty.h"
+#include "raw.h"
+#include "minmax.h"
+#include "average.h"
+#include "stdDeviation.h"
+#include "and.h"
 
 #endif // __SOLVER_VARIABLE_STORAGE_RESULTS_H__

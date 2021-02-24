@@ -25,37 +25,29 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_XCAST_XCAST_HXX__
-# define __ANTARES_LIBS_STUDY_XCAST_XCAST_HXX__
+#define __ANTARES_LIBS_STUDY_XCAST_XCAST_HXX__
 
-# include <yuni/io/directory.h>
-
+#include <yuni/io/directory.h>
 
 namespace Antares
 {
 namespace Data
 {
+inline void XCast::flush()
+{
+#ifndef ANTARES_SWAP_SUPPORT
+    data.flush();
+    K.flush();
+    translation.flush();
+    conversion.flush();
+#endif
+}
 
-	inline void XCast::flush()
-	{
-		# ifndef ANTARES_SWAP_SUPPORT
-		data.flush();
-		K.flush();
-		translation.flush();
-		conversion.flush();
-		# endif
-	}
-
-
-	inline Yuni::uint64 XCast::memoryUsage() const
-	{
-		return sizeof(XCast) + data.memoryUsage()
-			+ K.memoryUsage()
-			+ translation.memoryUsage()
-			+ conversion.memoryUsage();
-	}
-
-
-
+inline Yuni::uint64 XCast::memoryUsage() const
+{
+    return sizeof(XCast) + data.memoryUsage() + K.memoryUsage() + translation.memoryUsage()
+           + conversion.memoryUsage();
+}
 
 } // namespace Data
 } // namespace Antares

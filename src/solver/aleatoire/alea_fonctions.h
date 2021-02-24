@@ -25,13 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_ALEA_H__
-# define __SOLVER_ALEA_H__
+#define __SOLVER_ALEA_H__
 
-
-
-
-
-void ALEA_TirageAuSortChroniques(double ** thermalNoisesByArea, uint numSpace);
+void ALEA_TirageAuSortChroniques(double** thermalNoisesByArea, uint numSpace);
 
 void HydroVentilation();
 

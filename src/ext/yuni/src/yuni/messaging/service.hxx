@@ -11,57 +11,45 @@
 #pragma once
 #include "service.h"
 
-
-
 namespace Yuni
 {
 namespace Messaging
 {
+inline Service::Transports::Transports() : pService()
+{
+}
 
-	inline Service::Transports::Transports()
-		: pService()
-	{}
+inline Service::HeavyTasks::HeavyTasks() : pService()
+{
+}
 
+inline Net::Error Service::Transports::add(const Net::Port& port,
+                                           Transport::ITransport::Ptr transport)
+{
+    return add("*", port, transport);
+}
 
-	inline Service::HeavyTasks::HeavyTasks()
-		: pService()
-	{}
+inline bool Service::HeavyTasks::enabled() const
+{
+    return (0 != pEnabled);
+}
 
+inline void Service::HeavyTasks::enabled(bool on)
+{
+    pEnabled = (on ? 1 : 0);
+}
 
-	inline Net::Error Service::Transports::add(const Net::Port& port, Transport::ITransport::Ptr transport)
-	{
-		return add("*", port, transport);
-	}
+inline Service::HeavyTasks& Service::HeavyTasks::operator+=(Job::IJob* job)
+{
+    queue += job;
+    return *this;
+}
 
-
-	inline bool Service::HeavyTasks::enabled() const
-	{
-		return (0 != pEnabled);
-	}
-
-
-	inline void Service::HeavyTasks::enabled(bool on)
-	{
-		pEnabled = (on ? 1 : 0);
-	}
-
-
-	inline Service::HeavyTasks& Service::HeavyTasks::operator += (Job::IJob* job)
-	{
-		queue += job;
-		return *this;
-	}
-
-
-	inline Service::HeavyTasks& Service::HeavyTasks::operator += (Job::IJob::Ptr& job)
-	{
-		queue += job;
-		return *this;
-	}
-
-
-
-
+inline Service::HeavyTasks& Service::HeavyTasks::operator+=(Job::IJob::Ptr& job)
+{
+    queue += job;
+    return *this;
+}
 
 } // namespace Messaging
 } // namespace Yuni

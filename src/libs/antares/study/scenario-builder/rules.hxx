@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __LIBS_STUDY_SCENARIO_BUILDER_RULES_HXX__
-# define __LIBS_STUDY_SCENARIO_BUILDER_RULES_HXX__
-
+#define __LIBS_STUDY_SCENARIO_BUILDER_RULES_HXX__
 
 namespace Antares
 {
@@ -34,21 +33,15 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
+inline uint Rules::areaCount() const
+{
+    return pAreaCount;
+}
 
-
-	inline uint Rules::areaCount() const
-	{
-		return pAreaCount;
-	}
-
-
-	inline const RulesScenarioName&  Rules::name() const
-	{
-		return pName;
-	}
-
-
-
+inline const RulesScenarioName& Rules::name() const
+{
+    return pName;
+}
 
 } // namespace ScenarioBuilder
 } // namespace Data

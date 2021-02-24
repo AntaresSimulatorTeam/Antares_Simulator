@@ -25,16 +25,15 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_ECONOMY_LINK_H__
-# define __SOLVER_VARIABLE_ECONOMY_LINK_H__
+#define __SOLVER_VARIABLE_ECONOMY_LINK_H__
 
-# ifdef LINK_NAMESPACE
-#	undef LINK_NAMESPACE
-# endif
-# define LINK_NAMESPACE  Economy
+#ifdef LINK_NAMESPACE
+#undef LINK_NAMESPACE
+#endif
+#define LINK_NAMESPACE Economy
 
-# include <yuni/yuni.h>
-# include "all.h"
-# include "../commons/links/links.h.inc.hxx"
-
+#include <yuni/yuni.h>
+#include "all.h"
+#include "../commons/links/links.h.inc.hxx"
 
 #endif // __SOLVER_VARIABLE_ECONOMY_LINK_H__

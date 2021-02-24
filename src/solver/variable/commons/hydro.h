@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesHydro_H__
-# define __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesHydro_H__
+#define __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesHydro_H__
 
-# include "../variable.h"
-# include "../../simulation/sim_extern_variables_globales.h"
-
+#include "../variable.h"
+#include "../../simulation/sim_extern_variables_globales.h"
 
 namespace Antares
 {
@@ -39,274 +38,286 @@ namespace Variable
 {
 namespace Economy
 {
+struct VCardTimeSeriesValuesHydro
+{
+    //! Caption
+    static const char* Caption()
+    {
+        return "H. ROR";
+    }
+    //! Unit
+    static const char* Unit()
+    {
+        return "MWh";
+    }
 
+    //! The short description of the variable
+    static const char* Description()
+    {
+        return "Hydro generation, thoughout all MC years";
+    }
 
-	struct VCardTimeSeriesValuesHydro
-	{
-		//! Caption
-		static const char* Caption() {return "H. ROR";}
-		//! Unit
-		static const char* Unit() {return "MWh";}
+    //! The expecte results
+    typedef Results<R::AllYears::Average< // The average values throughout all years
+      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
+        R::AllYears::Min<                 // The minimum values throughout all years
+          R::AllYears::Max<               // The maximum values throughout all years
+            >>>>>
+      ResultsType;
 
-		//! The short description of the variable
-		static const char* Description() {return "Hydro generation, thoughout all MC years";}
+    //! The VCard to look for for calculating spatial aggregates
+    typedef VCardTimeSeriesValuesHydro VCardForSpatialAggregate;
 
-		//! The expecte results
-		typedef Results<
-			R::AllYears::Average<      // The average values throughout all years
-			R::AllYears::StdDeviation< // The standard deviation values throughout all years
-			R::AllYears::Min<          // The minimum values throughout all years
-			R::AllYears::Max<          // The maximum values throughout all years
-			> > > > >  ResultsType;
+    enum
+    {
+        //! Data Level
+        categoryDataLevel = Category::area,
+        //! File level (provided by the type of the results)
+        categoryFileLevel = ResultsType::categoryFile & (Category::id | Category::va),
+        //! Precision (views)
+        precision = Category::all,
+        //! Indentation (GUI)
+        nodeDepthForGUI = +0,
+        //! Decimal precision
+        decimal = 0,
+        //! Number of columns used by the variable (One ResultsType per column)
+        columnCount = 1,
+        //! The Spatial aggregation
+        spatialAggregate = Category::spatialAggregateSum,
+        spatialAggregateMode = Category::spatialAggregateEachYear,
+        spatialAggregatePostProcessing = 0,
+        //! Intermediate values
+        hasIntermediateValues = 1,
+        //! Can this variable be non applicable (0 : no, 1 : yes)
+        isPossiblyNonApplicable = 0,
+    };
 
-		//! The VCard to look for for calculating spatial aggregates
-		typedef VCardTimeSeriesValuesHydro  VCardForSpatialAggregate;
+    typedef IntermediateValues IntermediateValuesBaseType;
+    typedef IntermediateValues* IntermediateValuesType;
 
-		enum
-		{
-			//! Data Level
-			categoryDataLevel = Category::area,
-			//! File level (provided by the type of the results)
-			categoryFileLevel = ResultsType::categoryFile & (Category::id | Category::va),
-			//! Precision (views)
-			precision = Category::all,
-			//! Indentation (GUI)
-			nodeDepthForGUI = +0,
-			//! Decimal precision
-			decimal = 0,
-			//! Number of columns used by the variable (One ResultsType per column)
-			columnCount = 1,
-			//! The Spatial aggregation
-			spatialAggregate = Category::spatialAggregateSum,
-			spatialAggregateMode = Category::spatialAggregateEachYear,
-			spatialAggregatePostProcessing = 0,
-			//! Intermediate values
-			hasIntermediateValues = 1,
-			//! Can this variable be non applicable (0 : no, 1 : yes)
-			isPossiblyNonApplicable = 0,
-		};
+    typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
 
-		typedef IntermediateValues IntermediateValuesBaseType;
-		typedef IntermediateValues * IntermediateValuesType;
+}; // class VCard
 
-		typedef IntermediateValuesBaseType * IntermediateValuesTypeForSpatialAg;
+/*!
+** \brief Marginal TimeSeriesValuesHydro
+*/
+template<class NextT = Container::EndOfList>
+class TimeSeriesValuesHydro
+ : public Variable::IVariable<TimeSeriesValuesHydro<NextT>, NextT, VCardTimeSeriesValuesHydro>
+{
+public:
+    //! Type of the next static variable
+    typedef NextT NextType;
+    //! VCard
+    typedef VCardTimeSeriesValuesHydro VCardType;
+    //! Ancestor
+    typedef Variable::IVariable<TimeSeriesValuesHydro<NextT>, NextT, VCardType> AncestorType;
 
-	}; // class VCard
+    //! List of expected results
+    typedef typename VCardType::ResultsType ResultsType;
 
+    typedef VariableAccessor<ResultsType, VCardType::columnCount> VariableAccessorType;
 
-	/*!
-	** \brief Marginal TimeSeriesValuesHydro
-	*/
-	template<class NextT = Container::EndOfList>
-	class TimeSeriesValuesHydro : public Variable::IVariable<TimeSeriesValuesHydro<NextT>, NextT, VCardTimeSeriesValuesHydro>
-	{
-	public:
-		//! Type of the next static variable
-		typedef NextT NextType;
-		//! VCard
-		typedef VCardTimeSeriesValuesHydro VCardType;
-		//! Ancestor
-		typedef Variable::IVariable<TimeSeriesValuesHydro<NextT>, NextT, VCardType> AncestorType;
+    enum
+    {
+        //! How many items have we got
+        count = 1 + NextT::count,
+    };
 
-		//! List of expected results
-		typedef typename VCardType::ResultsType ResultsType;
+    template<int CDataLevel, int CFile>
+    struct Statistics
+    {
+        enum
+        {
+            count
+            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
+                 ? (NextType::template Statistics<CDataLevel, CFile>::count
+                    + VCardType::columnCount * ResultsType::count)
+                 : NextType::template Statistics<CDataLevel, CFile>::count),
+        };
+    };
 
-		typedef VariableAccessor<ResultsType, VCardType::columnCount>  VariableAccessorType;
+public:
+    ~TimeSeriesValuesHydro()
+    {
+        delete[] pValuesForTheCurrentYear;
+        delete[] pFatalValues;
+    }
 
-		enum
-		{
-			//! How many items have we got
-			count = 1 + NextT::count,
-		};
+    void initializeFromStudy(Data::Study& study)
+    {
+        pNbYearsParallel = study.maxNbYearsInParallel;
 
-		template<int CDataLevel, int CFile>
-		struct Statistics
-		{
-			enum
-			{
-				count = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-					? (NextType::template Statistics<CDataLevel, CFile>::count + VCardType::columnCount * ResultsType::count)
-					: NextType::template Statistics<CDataLevel, CFile>::count),
-			};
-		};
+        pFatalValues = new Matrix<>::ColumnType*[pNbYearsParallel];
+        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            pFatalValues[numSpace] = NULL;
 
-	public:
-		~TimeSeriesValuesHydro()
-		{
-			delete[] pValuesForTheCurrentYear;
-			delete[] pFatalValues;
-		}
+        InitializeResultsFromStudy(AncestorType::pResults, study);
 
-		void initializeFromStudy(Data::Study& study)
-		{
-			pNbYearsParallel = study.maxNbYearsInParallel;
+        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
 
-			pFatalValues = new Matrix<>::ColumnType*[pNbYearsParallel];
-			for(unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-				pFatalValues[numSpace] = NULL;
+        // Next
+        NextType::initializeFromStudy(study);
+    }
 
-			InitializeResultsFromStudy(AncestorType::pResults, study);
+    template<class R>
+    static void InitializeResultsFromStudy(R& results, Data::Study& study)
+    {
+        VariableAccessorType::InitializeAndReset(results, study);
+    }
 
-			pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
-			for(unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-				pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+    void initializeFromArea(Data::Study* study, Data::Area* area)
+    {
+        pArea = area;
+        // Next
+        NextType::initializeFromArea(study, area);
+    }
 
-			// Next
-			NextType::initializeFromStudy(study);
-		}
+    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
+    {
+        // Next
+        NextType::initializeFromAreaLink(study, link);
+    }
 
-		template<class R>
-		static void InitializeResultsFromStudy(R& results, Data::Study& study)
-		{
-			VariableAccessorType::InitializeAndReset(results, study);
-			results.averageMaxValue(study.runtime->rangeLimits.year[Data::rangeCount]);
-			results.stdDeviationMaxValue(study.runtime->rangeLimits.year[Data::rangeCount]);
-		}
+    void initializeFromThermalCluster(Data::Study* study,
+                                      Data::Area* area,
+                                      Data::ThermalCluster* cluster)
+    {
+        // Next
+        NextType::initializeFromThermalCluster(study, area, cluster);
+    }
 
+    void simulationBegin()
+    {
+        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            pValuesForTheCurrentYear[numSpace].reset();
+        // Next
+        NextType::simulationBegin();
+    }
 
-		void initializeFromArea(Data::Study* study, Data::Area* area)
-		{
-			pArea = area;
-			// Next
-			NextType::initializeFromArea(study, area);
-		}
+    void simulationEnd()
+    {
+        NextType::simulationEnd();
+    }
 
-		void initializeFromLink(Data::Study* study, Data::AreaLink* link)
-		{
-			// Next
-			NextType::initializeFromAreaLink(study, link);
-		}
+    void yearBegin(unsigned int year, unsigned int numSpace)
+    {
+        // The current time-series
+        auto& ror = pArea->hydro.series->ror;
+        const unsigned int nbchro
+          = NumeroChroniquesTireesParPays[numSpace][pArea->index]->Hydraulique;
+        pFatalValues[numSpace] = &(ror.entry[(nbchro < ror.width ? nbchro : 0)]);
+        ror.flush();
+        // Next variable
+        NextType::yearBegin(year, numSpace);
+    }
 
+    void yearEndBuildPrepareDataForEachThermalCluster(State& state,
+                                                      uint year,
+                                                      unsigned int numSpace)
+    {
+        // Next variable
+        NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
+    }
 
-		void initializeFromThermalCluster(Data::Study* study, Data::Area* area, Data::ThermalCluster* cluster)
-		{
-			// Next
-			NextType::initializeFromThermalCluster(study, area, cluster);
-		}
+    void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
+    {
+        // Next variable
+        NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
+    }
 
-		void simulationBegin()
-		{
-			for(unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-				pValuesForTheCurrentYear[numSpace].reset();
-			// Next
-			NextType::simulationBegin();
-		}
+    void yearEndBuild(State& state, unsigned int year)
+    {
+        // Next variable
+        NextType::yearEndBuild(state, year);
+    }
 
-		void simulationEnd()
-		{
-			NextType::simulationEnd();
-		}
+    void yearEnd(unsigned int year, unsigned int numSpace)
+    {
+        // Compute all statistics for the current year (daily,weekly,monthly)
+        pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
 
+        // Next variable
+        NextType::yearEnd(year, numSpace);
+    }
 
-		void yearBegin(unsigned int year, unsigned int numSpace)
-		{
-			// The current time-series
-			auto& ror = pArea->hydro.series->ror;
-			const unsigned int nbchro = NumeroChroniquesTireesParPays[numSpace][pArea->index]->Hydraulique;
-			pFatalValues[numSpace] = &(ror.entry[(nbchro < ror.width ? nbchro : 0)]);
-			ror.flush();
-			// Next variable
-			NextType::yearBegin(year, numSpace);
-		}
-		
-		void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year, unsigned int numSpace)
-		{
-			// Next variable
-			NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
-		}
+    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
+                        unsigned int nbYearsForCurrentSummary)
+    {
+        for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
+        {
+            // Merge all those values with the global results
+            AncestorType::pResults.merge(numSpaceToYear[numSpace] /*year*/,
+                                         pValuesForTheCurrentYear[numSpace]);
+        }
 
-		void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
-		{
-			// Next variable
-			NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
-		}
+        // Next variable
+        NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+    }
 
-		void yearEndBuild(State& state, unsigned int year)
-		{
-			
-			// Next variable
-			NextType::yearEndBuild(state, year);
-		}
-		
-		void yearEnd(unsigned int year, unsigned int numSpace)
-		{
-			// Compute all statistics for the current year (daily,weekly,monthly)
-			pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
+    void hourBegin(unsigned int hourInTheYear)
+    {
+        // Next variable
+        NextType::hourBegin(hourInTheYear);
+    }
 
-			// Next variable
-			NextType::yearEnd(year, numSpace);
-		}
+    void hourForEachArea(State& state, unsigned int numSpace)
+    {
+        pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
+          = (*pFatalValues[numSpace])[state.hourInTheYear];
+        // Next variable
+        NextType::hourForEachArea(state, numSpace);
+    }
 
-		void computeSummary(std::map<unsigned int, unsigned int> & numSpaceToYear, unsigned int nbYearsForCurrentSummary)
-		{
-			for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
-			{
-				// Merge all those values with the global results
-				AncestorType::pResults.merge(numSpaceToYear[numSpace] /*year*/, pValuesForTheCurrentYear[numSpace]);
-			}
-			
-			// Next variable
-			NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
-		}
+    void hourForEachThermalCluster(State& state, unsigned int numSpace)
+    {
+        // Next item in the list
+        NextType::hourForEachThermalCluster(state, numSpace);
+    }
 
-		void hourBegin(unsigned int hourInTheYear)
-		{
-			// Next variable
-			NextType::hourBegin(hourInTheYear);
-		}
+    void hourEnd(State& state, unsigned int hourInTheYear)
+    {
+        NextType::hourEnd(state, hourInTheYear);
+    }
 
-		void hourForEachArea(State& state, unsigned int numSpace)
-		{
-			pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = (*pFatalValues[numSpace])[state.hourInTheYear];
-			// Next variable
-			NextType::hourForEachArea(state, numSpace);
-		}
+    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
+      unsigned int,
+      unsigned int numSpace) const
+    {
+        return pValuesForTheCurrentYear[numSpace].hour;
+    }
 
-		void hourForEachThermalCluster(State& state, unsigned int numSpace)
-		{
-			// Next item in the list
-			NextType::hourForEachThermalCluster(state, numSpace);
-		}
+    void localBuildAnnualSurveyReport(SurveyResults& results,
+                                      int fileLevel,
+                                      int precision,
+                                      unsigned int numSpace) const
+    {
+        // Initializing external pointer on current variable non applicable status
+        results.isCurrentVarNA = AncestorType::isNonApplicable;
 
-		void hourEnd(State& state, unsigned int hourInTheYear)
-		{
-			NextType::hourEnd(state, hourInTheYear);
-		}
+        if (AncestorType::isPrinted[0])
+        {
+            // Write the data for the current year
+            results.variableCaption = VCardType::Caption();
+            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
+              results, fileLevel, precision);
+        }
+    }
 
-		Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(unsigned int, unsigned int numSpace) const
-		{
-			return pValuesForTheCurrentYear[numSpace].hour;
-		}
+private:
+    //! The attached area
+    Data::Area* pArea;
+    //!
+    Matrix<>::ColumnType** pFatalValues;
 
-		void localBuildAnnualSurveyReport(SurveyResults& results, int fileLevel, int precision, unsigned int numSpace) const
-		{
-			// Initializing external pointer on current variable non applicable status
-			results.isCurrentVarNA = AncestorType::isNonApplicable;
-			
-			if (AncestorType::isPrinted[0])
-			{
-				// Write the data for the current year
-				results.variableCaption = VCardType::Caption();
-				pValuesForTheCurrentYear[numSpace].template
-					buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
-			}
-		}
+    //! Intermediate values for each year
+    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
+    unsigned int pNbYearsParallel;
 
-	private:
-		//! The attached area
-		Data::Area* pArea;
-		//!
-		Matrix<>::ColumnType** pFatalValues;
-
-		//! Intermediate values for each year
-		typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-		unsigned int pNbYearsParallel;
-
-	}; // class TimeSeriesValuesHydro
-
-
-
-
+}; // class TimeSeriesValuesHydro
 
 } // namespace Economy
 } // namespace Variable

@@ -36,16 +36,20 @@ source_group("array" FILES ${SRC_MATRIX})
 
 
 set(SRC_STUDY_SCENARIO_BUILDER
-	study/scenario-builder/timeseries.cpp
-	study/scenario-builder/timeseries.h
-	study/scenario-builder/timeseries.hxx
+	study/scenario-builder/scBuilderDataInterface.h
+	study/scenario-builder/TSnumberData.h
+	study/scenario-builder/TSnumberData.cpp
+	study/scenario-builder/hydroLevelsData.h
+	study/scenario-builder/hydroLevelsData.cpp
 	study/scenario-builder/rules.h
 	study/scenario-builder/rules.hxx
 	study/scenario-builder/rules.cpp
 	study/scenario-builder/sets.h
 	study/scenario-builder/sets.hxx
 	study/scenario-builder/sets.cpp
-	study/scenario-builder/updater.hxx)
+	study/scenario-builder/updater.hxx
+	study/scenario-builder/scBuilderUtils.h
+	study/scenario-builder/scBuilderUtils.cpp)
 source_group("study\\scenario builder" FILES ${SRC_MATRIX})
 
 set(SRC_STUDY_ACTIONS
@@ -246,6 +250,9 @@ set(SRC_STUDY_PARAMETERS
 	study/UnfeasibleProblemBehavior.cpp
     # TODO JMK : should be in a target_include_directories : but need to remove all .h from all SRC
     study/UnfeasibleProblemBehavior.hpp
+	study/OrtoolsSolver.cpp
+    # TODO JMK : should be in a target_include_directories : but need to remove all .h from all SRC
+    study/OrtoolsSolver.hpp
 	)
 source_group("study\\general data" FILES ${SRC_STUDY_PARAMETERS})
 
@@ -531,6 +538,7 @@ macro(ADD_ANTARES_CORE name)
 			PUBLIC
 				${CMAKE_SOURCE_DIR}/ext/yuni/src
 				${CMAKE_SOURCE_DIR}/libs
+				${CMAKE_SOURCE_DIR}/libs/antares/logs
 			)
 
 	target_link_libraries(libantares-core${name}
@@ -544,9 +552,12 @@ macro(ADD_ANTARES_CORE name)
 endmacro()
 
 ADD_ANTARES_CORE("")
-ADD_ANTARES_CORE("-swap")
 
-#Add specific swap support for libantares-core-swap
-set_target_properties(libantares-core-swap PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
+if(BUILD_SWAP)
 
+    ADD_ANTARES_CORE("-swap")
 
+    #Add specific swap support for libantares-core-swap
+    set_target_properties(libantares-core-swap PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
+
+endif()

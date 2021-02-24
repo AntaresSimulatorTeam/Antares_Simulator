@@ -10,60 +10,50 @@
 */
 #include "../thread/utility.h"
 #ifdef YUNI_HAS_CPP_MOVE
-# include <utility>
+#include <utility>
 #endif
-
-
 
 namespace Yuni
 {
+class SpawnThread final : public Thread::IThread
+{
+public:
+    SpawnThread(const Bind<void()>& callback) : pCallback(callback)
+    {
+    }
 
-	class SpawnThread final : public Thread::IThread
-	{
-	public:
-		SpawnThread(const Bind<void ()>& callback) :
-			pCallback(callback)
-		{}
+    virtual ~SpawnThread()
+    {
+        // mandatory, the user is unlikely to call it when using 'Async'
+        if (started())
+        {
+            gracefulStop();
+            wait(); // wait indefinitely if needed
+        }
+    }
 
-		virtual ~SpawnThread()
-		{
-			// mandatory, the user is unlikely to call it when using 'Async'
-			if (started())
-			{
-				gracefulStop();
-				wait(); // wait indefinitely if needed
-			}
-		}
+protected:
+    virtual bool onExecute() override
+    {
+        pCallback();
+        return false; // this thread is unlikely to be reused
+    }
 
-	protected:
-		virtual bool onExecute() override
-		{
-			pCallback();
-			return false; // this thread is unlikely to be reused
-		}
+private:
+    Bind<void()> pCallback;
+};
 
-	private:
-		Bind<void ()> pCallback;
-	};
+Thread::IThread::Ptr spawn(const Bind<void()>& callback, bool autostart)
+{
+#ifdef YUNI_HAS_CPP_MOVE
+    Thread::IThread* thread = new SpawnThread(std::move(callback));
+#else
+    Thread::IThread* thread = new SpawnThread(callback);
+#endif
 
-
-
-
-	Thread::IThread::Ptr  spawn(const Bind<void ()>& callback, bool autostart)
-	{
-		# ifdef YUNI_HAS_CPP_MOVE
-		Thread::IThread* thread = new SpawnThread(std::move(callback));
-		# else
-		Thread::IThread* thread = new SpawnThread(callback);
-		# endif
-
-		if (autostart)
-			thread->start();
-		return thread;
-	}
-
-
-
+    if (autostart)
+        thread->start();
+    return thread;
+}
 
 } // namespace Yuni
-

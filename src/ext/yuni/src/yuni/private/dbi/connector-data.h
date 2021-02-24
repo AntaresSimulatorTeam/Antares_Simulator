@@ -15,66 +15,56 @@
 #include "channel.h"
 #include "../../core/event/event.h"
 
-
-
 namespace Yuni
 {
 namespace Private
 {
 namespace DBI
 {
+class ConnectorData final
+{
+public:
+    //! Default constructor
+    ConnectorData(const Yuni::DBI::Settings& settings, Yuni::DBI::Adapter::IAdapter* adapter);
+    //! Destructor
+    ~ConnectorData();
 
+    /*!
+    ** \brief Open a communication channel to the remote database (per thread)
+    */
+    ChannelPtr openChannel();
 
-	class ConnectorData final
-	{
-	public:
-		//! Default constructor
-		ConnectorData(const Yuni::DBI::Settings& settings, Yuni::DBI::Adapter::IAdapter* adapter);
-		//! Destructor
-		~ConnectorData();
+    /*!
+    ** \brief Close all old channels
+    **
+    ** \param idletime Idle time (seconds)
+    ** \param[out] remainingCount The number of channels currently opened (after cleanup)
+    ** \return The number of channels which have been closed
+    */
+    uint closeTooOldChannels(uint idletime, uint& remainingCount);
 
-		/*!
-		** \brief Open a communication channel to the remote database (per thread)
-		*/
-		ChannelPtr openChannel();
+public:
+    //! Settings used to connect to the database
+    Yuni::DBI::Settings settings;
+    //! Adapter Entries
+    ::yn_dbi_adapter adapter;
+    //! Mutex
+    Mutex mutex;
 
-		/*!
-		** \brief Close all old channels
-		**
-		** \param idletime Idle time (seconds)
-		** \param[out] remainingCount The number of channels currently opened (after cleanup)
-		** \return The number of channels which have been closed
-		*/
-		uint closeTooOldChannels(uint idletime, uint& remainingCount);
+    //! All channels, ordered by a thread id
+    Channel::Table channels;
 
+    // delete the instance
+    Yuni::DBI::Adapter::IAdapter* instance;
 
-	public:
-		//! Settings used to connect to the database
-		Yuni::DBI::Settings settings;
-		//! Adapter Entries
-		::yn_dbi_adapter adapter;
-		//! Mutex
-		Mutex mutex;
+    //! Event trigered when a SQL error occurs
+    Event<void()> onSQLError;
 
-		//! All channels, ordered by a thread id
-		Channel::Table channels;
+private:
+    //! Instantiate a new channel
+    ChannelPtr createNewChannelWL(uint64 threadid);
 
-		// delete the instance
-		Yuni::DBI::Adapter::IAdapter* instance;
-
-		//! Event trigered when a SQL error occurs
-		Event<void ()> onSQLError;
-
-
-	private:
-		//! Instantiate a new channel
-		ChannelPtr createNewChannelWL(uint64 threadid);
-
-	}; // class ConnectorData
-
-
-
-
+}; // class ConnectorData
 
 } // namespace DBI
 } // namespace Private

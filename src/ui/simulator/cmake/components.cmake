@@ -67,12 +67,26 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS
 		toolbox/components/datagrid/renderer/mc-playlist.h
 		toolbox/components/datagrid/renderer/logfile.cpp
 		toolbox/components/datagrid/renderer/logfile.h
-		toolbox/components/datagrid/renderer/scenario-builder.cpp
-		toolbox/components/datagrid/renderer/scenario-builder.h
+		toolbox/components/datagrid/renderer/scenario-builder-renderer-base.cpp
+		toolbox/components/datagrid/renderer/scenario-builder-renderer-base.h
+		toolbox/components/datagrid/renderer/scenario-builder-load-renderer.cpp
+		toolbox/components/datagrid/renderer/scenario-builder-load-renderer.h
+		toolbox/components/datagrid/renderer/scenario-builder-thermal-renderer.cpp
+		toolbox/components/datagrid/renderer/scenario-builder-thermal-renderer.h
+		toolbox/components/datagrid/renderer/scenario-builder-hydro-renderer.cpp
+		toolbox/components/datagrid/renderer/scenario-builder-hydro-renderer.h
+		toolbox/components/datagrid/renderer/scenario-builder-wind-renderer.cpp
+		toolbox/components/datagrid/renderer/scenario-builder-wind-renderer.h
+		toolbox/components/datagrid/renderer/scenario-builder-solar-renderer.cpp
+		toolbox/components/datagrid/renderer/scenario-builder-solar-renderer.h
+		toolbox/components/datagrid/renderer/scenario-builder-hydro-levels-renderer.h
+		toolbox/components/datagrid/renderer/scenario-builder-hydro-levels-renderer.cpp
 		toolbox/components/datagrid/renderer/layers.cpp
 		toolbox/components/datagrid/renderer/layers.h
 		)
 source_group("Datagrid\\Renderer" FILES ${SRC_TOOLBOX_COM_DBGRID_RENDERERS})
+
+SET(SRC_SCENARIO_BUILDER_UTILS ${CMAKE_SOURCE_DIR}/libs/antares/study/scenario-builder/scBuilderUtils.cpp)
 
 SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS_MATRIX
 		# Matrix
@@ -228,6 +242,7 @@ add_library(libantares-ui-components
 	${SRC_TOOLBOX_COM_WIPPANEL}
 	# Datagrid
 	${SRC_TOOLBOX_COM_DBGRID_RENDERERS}
+	${SRC_SCENARIO_BUILDER_UTILS}
 	${SRC_TOOLBOX_COM_DBGRID_RENDERERS_MATRIX}
 	${SRC_TOOLBOX_COM_DBGRID_RENDERERS_AREAS}
 	${SRC_TOOLBOX_COM_DBGRID_RENDERERS_LINKS}

@@ -25,12 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __LIBS_STUDY_SCENARIO_BUILDER_SETS_H__
-# define __LIBS_STUDY_SCENARIO_BUILDER_SETS_H__
+#define __LIBS_STUDY_SCENARIO_BUILDER_SETS_H__
 
-# include <yuni/yuni.h>
-# include "rules.h"
-
-
+#include <yuni/yuni.h>
+#include "rules.h"
 
 namespace Antares
 {
@@ -38,135 +36,128 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
+/*!
+** \brief Sets for TS numbers, for all years and a single timeseries
+*/
+class Sets final : private Yuni::NonCopyable<Sets>
+{
+public:
+    //! Iterator
+    typedef Rules::Map::iterator iterator;
+    //! Const iterator
+    typedef Rules::Map::const_iterator const_iterator;
 
+public:
+    //! Update mode, indicates wether we are called from with a ScenarioBuilderUpdater instance or
+    //! not
+    bool inUpdaterMode;
 
-	/*!
-	** \brief Sets for TS numbers, for all years and a single timeseries
-	*/
-	class Sets final : private Yuni::NonCopyable<Sets>
-	{
-	public:
-		//! Iterator
-		typedef Rules::Map::iterator  iterator;
-		//! Const iterator
-		typedef Rules::Map::const_iterator  const_iterator;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    **
+    ** \param tstype Type of the timeseries
+    */
+    Sets();
+    //! Destructor
+    ~Sets();
+    //@}
 
-	public:
-		//! Update mode, indicates wether we are called from with a ScenarioBuilderUpdater instance or not
-		bool inUpdaterMode;
+    //! \name Data manupulation
+    //@{
+    /*!
+    ** \brief Load data from the study
+    */
+    bool loadFromStudy(Study& study);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		**
-		** \param tstype Type of the timeseries
-		*/
-		Sets();
-		//! Destructor
-		~Sets();
-		//@}
+    /*!
+    ** \brief Clear all data
+    */
+    void clear();
 
-		//! \name Data manupulation
-		//@{
-		/*!
-		** \brief Load data from the study
-		*/
-		bool loadFromStudy(Study& study);
+    /*!
+    ** \brief Load all rulesets from an INI file
+    */
+    template<class StringT>
+    bool loadFromINIFile(const StringT& filename);
+    /*!
+    ** \brief Save all rulesets into a mere INI file
+    */
+    template<class StringT>
+    bool saveToINIFile(const StringT& filename);
+    //@}
 
-		/*!
-		** \brief Clear all data
-		*/
-		void clear();
+    //! \name Set manipulation
+    //@{
+    /*!
+    ** \brief Create a new set
+    **
+    ** \return A non-null pointer if the operation succeeded, null otherwise
+    */
+    Rules::Ptr createNew(const RulesScenarioName& name);
 
-		/*!
-		** \brief Load all rulesets from an INI file
-		*/
-		template<class StringT> bool loadFromINIFile(const StringT& filename);
-		/*!
-		** \brief Save all rulesets into a mere INI file
-		*/
-		template<class StringT> bool saveToINIFile(const StringT& filename);
-		//@}
+    /*!
+    ** \brief Test if a rules set exist
+    **
+    ** \param lname Name of the rule set (in lower case)
+    */
+    bool exists(const RulesScenarioName& lname) const;
 
+    /*!
+    ** \brief Find a rule set
+    */
+    Rules::Ptr find(const RulesScenarioName& lname) const;
 
-		//! \name Set manipulation
-		//@{
-		/*!
-		** \brief Create a new set
-		**
-		** \return A non-null pointer if the operation succeeded, null otherwise
-		*/
-		Rules::Ptr createNew(const RulesScenarioName& name);
+    /*!
+    ** \brief Rename a given ruleset
+    **
+    ** \return The object to the ruleset, null if the operation failed
+    */
+    Rules::Ptr rename(const RulesScenarioName& lname, const RulesScenarioName& newname);
 
-		/*!
-		** \brief Test if a rules set exist
-		**
-		** \param lname Name of the rule set (in lower case)
-		*/
-		bool exists(const RulesScenarioName& lname) const;
+    /*!
+    ** \brief Delete a ruleset
+    **
+    ** \return True if the operation suceeded, false otherwise
+    */
+    bool remove(const RulesScenarioName& lname);
 
-		/*!
-		** \brief Find a rule set
-		*/
-		Rules::Ptr  find(const RulesScenarioName& lname) const;
+    iterator begin();
+    const_iterator begin() const;
 
-		/*!
-		** \brief Rename a given ruleset
-		**
-		** \return The object to the ruleset, null if the operation failed
-		*/
-		Rules::Ptr  rename(const RulesScenarioName& lname, const RulesScenarioName& newname);
+    iterator end();
+    const_iterator end() const;
 
+    /*!
+    ** \brief Get the number of available sets
+    */
+    uint size() const;
 
-		/*!
-		** \brief Delete a ruleset
-		**
-		** \return True if the operation suceeded, false otherwise
-		*/
-		bool remove(const RulesScenarioName& lname);
+    /*!
+    ** \brief Get if empty
+    */
+    bool empty() const;
+    //@}
 
+private:
+    //! Load all rulesets into a mere INI file
+    bool internalLoadFromINIFile(const AnyString& filename);
+    //! Save all rulesets into a mere INI file
+    bool internalSaveToIniFile(const AnyString& filename) const;
 
-		iterator  begin();
-		const_iterator  begin() const;
-
-		iterator end();
-		const_iterator  end() const;
-
-		/*!
-		** \brief Get the number of available sets
-		*/
-		uint size() const;
-
-		/*!
-		** \brief Get if empty
-		*/
-		bool empty() const;
-		//@}
-
-	private:
-		//! Load all rulesets into a mere INI file
-		bool internalLoadFromINIFile(const AnyString& filename);
-		//! Save all rulesets into a mere INI file
-		bool internalSaveToIniFile(const AnyString& filename) const;
-
-	private:
-		//! All available sets, ordered by their lower name
-		Rules::Map pMap;
-		//! Alias to the study
-		Study* pStudy;
-	}; // class Sets
-
-
-
-
-
+private:
+    //! All available sets, ordered by their lower name
+    Rules::Map pMap;
+    //! Alias to the study
+    Study* pStudy;
+}; // class Sets
 
 } // namespace ScenarioBuilder
 } // namespace Data
 } // namespace Antares
 
-# include "sets.hxx"
+#include "sets.hxx"
 
 #endif // __LIBS_STUDY_SCENARIO_BUILDER_SETS_H__

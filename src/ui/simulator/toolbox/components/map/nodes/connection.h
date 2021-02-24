@@ -25,144 +25,152 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_MAP_CONNECTION_H__
-# define __ANTARES_TOOLBOX_MAP_CONNECTION_H__
+#define __ANTARES_TOOLBOX_MAP_CONNECTION_H__
 
-# include <antares/wx-wrapper.h>
-# include "item.h"
-# include "node.h"
-# include "../tools/tool.h"
-# include <antares/study/area.h>
-
-
-
+#include <antares/wx-wrapper.h>
+#include "item.h"
+#include "node.h"
+#include "../tools/tool.h"
+#include <antares/study/area.h>
 
 namespace Antares
 {
 namespace Map
 {
+// Forward declaration
+namespace Tool
+{
+class Tool;
+}
 
-	// Forward declaration
-	namespace Tool { class Tool; }
+class Connection : public Item
+{
+public:
+    enum Direction
+    {
+        dirNone,
+        dirDirect,
+        dirIndirect,
+    };
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    Connection(Manager& manager, Item* a, Item* b);
+    //! Destructor
+    virtual ~Connection();
+    //@}
 
+    //! \name layerVisibility
+    //@{
+    /*!
+    ** \brief Get the visivility for a layerId
+    */
+    const bool isVisibleOnLayer(const size_t& layerID) const;
+    //@}
 
-	class Connection : public Item
-	{
-	public:
-		enum Direction
-		{
-			dirNone,
-			dirDirect,
-			dirIndirect,
-		};
+    //! Type of the node
+    virtual Type type() const;
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		Connection(Manager& manager, Item* a, Item* b);
-		//! Destructor
-		virtual ~Connection();
-		//@}
+    Item* leftSide()
+    {
+        return pA;
+    }
+    const Item* leftSide() const
+    {
+        return pA;
+    }
 
-		//! \name layerVisibility
-		//@{
-		/*!
-		** \brief Get the visivility for a layerId
-		*/
-		const bool isVisibleOnLayer(const size_t& layerID) const;
-		//@}
+    Item* rightSide()
+    {
+        return pB;
+    }
+    const Item* rightSide() const
+    {
+        return pB;
+    }
 
-		//! Type of the node
-		virtual Type type() const;
+    Direction arrowDirection() const
+    {
+        return pArrowDirection;
+    }
+    void arrowDirection(const Direction& d);
 
-		Item* leftSide() {return pA;}
-		const Item* leftSide() const {return pA;}
+    Direction direction() const
+    {
+        return pDirection;
+    }
+    void direction(const Direction& d);
 
-		Item* rightSide() {return pB;}
-		const Item* rightSide() const {return pB;}
+    /*!
+    ** \brief Refresh the cache (even if not invalidated)
+    */
+    virtual void refreshCache(wxDC& dc);
 
+    virtual bool contains(const int x, const int y, double& distance);
 
-		Direction arrowDirection() const {return pArrowDirection;}
-		void arrowDirection(const Direction& d);
+    virtual bool isContained(const int x1, const int y1, const int x2, const int y2) const;
 
-		Direction direction() const {return pDirection;}
-		void direction(const Direction& d);
+    virtual void draw(DrawingContext& dc);
 
-		/*!
-		** \brief Refresh the cache (even if not invalidated)
-		*/
-		virtual void refreshCache(wxDC& dc);
+    virtual void extendBoundingBox(wxPoint& topLeft, wxPoint& bottomRight);
 
-		virtual bool contains(const int x, const int y, double& distance);
+    //! \name Selection
+    //@{
+    //! Get if the item is selected
+    virtual bool selected() const;
+    //! Select or unselect the item
+    virtual void selected(bool v);
+    //@}
 
-		virtual bool isContained(const int x1, const int y1, const int x2, const int y2) const;
+    //! \name Link
+    //@{
+    //! Get the attached link
+    Data::AreaLink* attachedAreaLink() const;
+    //! Set the attached link
+    void attachedAreaLink(Data::AreaLink* a);
 
-		virtual void draw(DrawingContext& dc);
+    /*!
+    ** \brief Create a link if the internal pointers are nil
+    */
+    void createANewConnectionIfNeeded();
+    //@}
 
-		virtual void extendBoundingBox(wxPoint& topLeft, wxPoint& bottomRight);
+private:
+    void drawArrow(wxDC& dc, const Direction direction, const wxPoint& rA, const wxPoint& rB);
 
-		//! \name Selection
-		//@{
-		//! Get if the item is selected
-		virtual bool selected() const;
-		//! Select or unselect the item
-		virtual void selected(bool v);
-		//@}
+    void destroyTools();
+    void createTools();
 
+private:
+    Item* pA;
+    Item* pB;
+    Direction pDirection;
+    Direction pArrowDirection;
 
-		//! \name Link
-		//@{
-		//! Get the attached link
-		Data::AreaLink* attachedAreaLink() const;
-		//! Set the attached link
-		void attachedAreaLink(Data::AreaLink* a);
+    wxPoint pCachedAbsolutePosition;
+    wxPoint pCachedSize;
+    wxPoint pCachedMiddlePoint;
+    wxPoint pCachedTextPos;
+    //! Bad line orientation
+    bool pCachedError;
 
-		/*!
-		** \brief Create a link if the internal pointers are nil
-		*/
-		void createANewConnectionIfNeeded();
-		//@}
+    bool pHaveTools;
+    Tool::Tool* pToolDirection;
 
+    Data::AreaLink* pAttachedAreaLink;
 
-	private:
-		void drawArrow(wxDC& dc, const Direction direction, const wxPoint& rA, const wxPoint& rB);
+    wxPen pDefaultPen;
+    wxPen pErrorPen;
 
-		void destroyTools();
-		void createTools();
-
-	private:
-		Item* pA;
-		Item* pB;
-		Direction pDirection;
-		Direction pArrowDirection;
-
-		wxPoint pCachedAbsolutePosition;
-		wxPoint pCachedSize;
-		wxPoint pCachedMiddlePoint;
-		wxPoint pCachedTextPos;
-		//! Bad line orientation
-		bool pCachedError;
-
-		bool pHaveTools;
-		Tool::Tool* pToolDirection;
-
-		Data::AreaLink* pAttachedAreaLink;
-
-		wxPen pDefaultPen;
-		wxPen pErrorPen;
-
-	}; // class Connection
-
-
-
-
+}; // class Connection
 
 } // namespace Map
 } // namespace Antares
 
-# include "connection.hxx"
+#include "connection.hxx"
 
 #endif // __ANTARES_TOOLBOX_MAP_CONNECTION_H__

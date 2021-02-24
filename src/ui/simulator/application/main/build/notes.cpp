@@ -28,25 +28,19 @@
 #include "../main.h"
 #include "../../../windows/notes.h"
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
 namespace Forms
 {
+void ApplWnd::createNBNotes()
+{
+    assert(NULL != pNotebook);
 
-	void ApplWnd::createNBNotes()
-	{
-		assert(NULL != pNotebook);
-
-		pUserNotes = new Window::Notes(pNotebook);
-		pNotebook->add(pUserNotes, wxT("notes"), wxT("User's Notes"));
-	}
-
-
+    pUserNotes = new Window::Notes(pNotebook);
+    pNotebook->add(pUserNotes, wxT("notes"), wxT("User's Notes"));
+}
 
 } // namespace Forms
 } // namespace Antares
-

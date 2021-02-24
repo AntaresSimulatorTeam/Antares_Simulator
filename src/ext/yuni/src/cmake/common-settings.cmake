@@ -4,10 +4,8 @@
 #
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 # Policy
-if(NOT CMAKE_MINOR_VERSION EQUAL 4 OR NOT CMAKE_MAJOR_VERSION EQUAL 2 )
-	cmake_policy(SET CMP0004 OLD)
-	cmake_policy(SET CMP0003 NEW)
-endif()
+cmake_policy(SET CMP0003 NEW)
+
 include(CheckIncludeFile)
 include(CheckCXXCompilerFlag)
 

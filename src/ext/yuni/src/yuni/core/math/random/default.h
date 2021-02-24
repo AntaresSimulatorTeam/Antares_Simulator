@@ -13,47 +13,48 @@
 #include <time.h>
 #include "distribution.h"
 
-
-
 namespace Yuni
 {
 namespace Math
 {
 namespace Random
 {
+/*!
+** \brief Default Pseudo random number generator
+**
+** This random number generator is the one provided by your Operating System.
+*/
+class YUNI_DECL Default /*final*/ : public ADistribution<int, Default>
+{
+public:
+    // Name of the distribution
+    static const char* Name()
+    {
+        return "Pseudo random numbers";
+    }
 
-	/*!
-	** \brief Default Pseudo random number generator
-	**
-	** This random number generator is the one provided by your Operating System.
-	*/
-	class YUNI_DECL Default /*final*/ : public ADistribution<int, Default>
-	{
-	public:
-		// Name of the distribution
-		static const char* Name() {return "Pseudo random numbers";}
+    //! Type of a single random number
+    typedef int Value;
 
-		//! Type of a single random number
-		typedef int Value;
+public:
+    Default()
+    {
+    }
+    ~Default()
+    {
+    }
 
-	public:
-		Default() {}
-		~Default() {}
+    void reset();
+    void reset(uint seed);
 
-		void reset();
-		void reset(uint seed);
+    Value next();
 
-		Value next();
+    static Value min();
+    static Value max();
 
-		static Value min();
-		static Value max();
-
-		template<class U> Default& operator >> (U& u);
-	};
-
-
-
-
+    template<class U>
+    Default& operator>>(U& u);
+};
 
 } // namespace Random
 } // namespace Math

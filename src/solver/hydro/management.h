@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_SOLVER_HYDRO_MANAGEMENT_H__
-# define __ANTARES_SOLVER_HYDRO_MANAGEMENT_H__
+#define __ANTARES_SOLVER_HYDRO_MANAGEMENT_H__
 
-# include "management/management.h"
+#include "management/management.h"
 
 #endif // __ANTARES_SOLVER_HYDRO_MANAGEMENT_H__

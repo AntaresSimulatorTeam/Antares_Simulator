@@ -25,46 +25,36 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_PARAMETERS_HXX__
-# define __ANTARES_LIBS_STUDY_PARAMETERS_HXX__
-
-
+#define __ANTARES_LIBS_STUDY_PARAMETERS_HXX__
 
 namespace Antares
 {
 namespace Data
 {
+inline Yuni::uint64 Parameters::memoryUsage() const
+{
+    return 0;
+}
 
-	inline Yuni::uint64 Parameters::memoryUsage() const
-	{
-		return 0;
-	}
+inline bool Parameters::isTSGeneratedByPrepro(const TimeSeries ts) const
+{
+    return (timeSeriesToGenerate & ts) || (timeSeriesToRefresh & ts);
+}
 
+inline bool Parameters::economy() const
+{
+    return mode == stdmEconomy;
+}
 
-	inline bool Parameters::isTSGeneratedByPrepro(const TimeSeries ts) const
-	{
-		return (timeSeriesToGenerate & ts) || (timeSeriesToRefresh & ts);
-	}
+inline bool Parameters::adequacy() const
+{
+    return mode == stdmAdequacy;
+}
 
-
-	inline bool Parameters::economy() const
-	{
-		return mode == stdmEconomy;
-	}
-
-
-	inline bool Parameters::adequacy() const
-	{
-		return mode == stdmAdequacy;
-	}
-
-
-	inline bool Parameters::adequacyDraft() const
-	{
-		return mode == stdmAdequacyDraft;
-	}
-
-
-
+inline bool Parameters::adequacyDraft() const
+{
+    return mode == stdmAdequacyDraft;
+}
 
 } // namespace Data
 } // namespace Antares

@@ -34,207 +34,196 @@
 #include <wx/dcbuffer.h>
 #include <ui/common/component/panel.h>
 
-
-
-
 namespace Antares
 {
 namespace Toolbox
 {
 namespace Components
 {
+BEGIN_EVENT_TABLE(WizardHeader, Panel)
+EVT_PAINT(WizardHeader::onDraw)
+EVT_ERASE_BACKGROUND(WizardHeader::onEraseBackground)
+END_EVENT_TABLE()
 
-	BEGIN_EVENT_TABLE(WizardHeader, Panel)
-		EVT_PAINT(WizardHeader::onDraw)
-		EVT_ERASE_BACKGROUND(WizardHeader::onEraseBackground)
-	END_EVENT_TABLE()
+namespace // anonymous
+{
+// The font re-used for each drawing
+enum
+{
+    fontSize = 8,
+};
+const wxFont font(wxFontInfo(fontSize).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
+const wxFont fontSmall(wxFontInfo(fontSize - 1).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
 
+} // anonymous namespace
 
+WizardHeader::WizardHeader(wxWindow* parent,
+                           const char* icon,
+                           const wxString& text,
+                           const wxString& sub) :
+ Antares::Component::Panel(parent), pText(text), pSubText(sub)
+{
+    SetBackgroundStyle(wxBG_STYLE_CUSTOM); // Required by Windows
+    SetSize(100, 100);
+    pIcon = Resources::BitmapLoadFromFile(icon);
+}
 
-	namespace // anonymous
-	{
-		// The font re-used for each drawing
-		enum
-		{
-			fontSize = 8,
-		};
-		const wxFont font(wxFontInfo(fontSize).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
-		const wxFont fontSmall(wxFontInfo(fontSize-1).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
+WizardHeader::~WizardHeader()
+{
+    delete pIcon;
 
-	} // anonymous namespace
+    // To avoid corrupt vtable in some rare cases / misuses
+    // (when children try to access to this object for example),
+    // we should destroy all children as soon as possible.
+    wxSizer* sizer = GetSizer();
+    if (sizer)
+        sizer->Clear(true);
+}
 
+void WizardHeader::onDraw(wxPaintEvent&)
+{
+    onDraw();
+}
 
+void WizardHeader::onDraw()
+{
+    // The DC
+    wxClientDC dc(this);
+    // Shifts the device origin so we don't have to worry
+    // about the current scroll position ourselves
+    PrepareDC(dc);
 
+    // Drawing the background
+    wxRect rect = this->GetRect();
+    rect.x = 0;
+    rect.y = 0;
+    dc.GradientFillLinear(rect, wxColour(30, 30, 30), wxColour(100, 100, 100), wxSOUTH);
+    // Drawing the border
+    dc.SetPen(wxPen(wxColour(20, 20, 20), 1));
+    dc.DrawLine(0, rect.GetHeight() - 1, rect.GetWidth(), rect.GetHeight() - 1);
 
-	WizardHeader::WizardHeader(wxWindow* parent, const char* icon, const wxString& text, const wxString& sub)
-		:Antares::Component::Panel(parent),
-		pText(text), pSubText(sub)
-	{
-		SetBackgroundStyle(wxBG_STYLE_CUSTOM); // Required by Windows
-		SetSize(100, 100);
-		pIcon = Resources::BitmapLoadFromFile(icon);
-	}
+    // Cute font
+    wxFont f = font;
+    f.SetWeight(wxFONTWEIGHT_BOLD);
+    f.SetPointSize(f.GetPointSize() + 2);
+    dc.SetFont(f);
 
+    // Drawing the text
+    wxSize size = dc.GetTextExtent(pText);
+    // offset
+    int offset = rect.height >> 1;
+    if (!pSubText.IsEmpty())
+        offset -= ((size.GetHeight()) >> 1);
+    sizeNeeded = (size.GetHeight() >> 1);
+    offset -= sizeNeeded;
 
-	WizardHeader::~WizardHeader()
-	{
-		delete pIcon;
+    ++offset; // for beauty (alignment)
 
-		// To avoid corrupt vtable in some rare cases / misuses
-		// (when children try to access to this object for example),
-		// we should destroy all children as soon as possible.
-		wxSizer* sizer = GetSizer();
-		if (sizer)
-			sizer->Clear(true);
-	}
+    // -- Caption --
+    // Shadow
+    dc.SetTextForeground(wxColour(30, 30, 30));
+    dc.DrawText(pText, 71, offset + 2);
+    dc.DrawText(pText, 72, offset + 1);
+    dc.SetTextForeground(wxColour(0, 0, 0));
+    dc.DrawText(pText, 71, offset + 1);
+    // White
+    dc.SetTextForeground(wxColour(250, 250, 250));
+    dc.DrawText(pText, 70, offset);
 
+    // Recalculating the offset
+    offset += size.GetHeight();
 
+    if (!pSubText.IsEmpty())
+    {
+        // Cute font
+        f.SetWeight(wxFONTWEIGHT_NORMAL);
+        f.SetPointSize(f.GetPointSize() - 3);
+        dc.SetFont(f);
 
-	void WizardHeader::onDraw(wxPaintEvent&)
-	{
-		// The DC
-		wxAutoBufferedPaintDC dc(this);
-		// Shifts the device origin so we don't have to worry
-		// about the current scroll position ourselves
-		PrepareDC(dc);
+        size = dc.GetTextExtent(pSubText);
 
-		// Drawing the background
-		wxRect rect = this->GetRect();
-		rect.x = 0;
-		rect.y = 0;
-		dc.GradientFillLinear(rect,
-			wxColour(30, 30, 30), wxColour(100, 100, 100), wxSOUTH);
-		// Drawing the border
-		dc.SetPen(wxPen(wxColour(20,20,20), 1));
-		dc.DrawLine(0, rect.GetHeight() - 1, rect.GetWidth(), rect.GetHeight() - 1);
+        // -- Caption --
+        // Shadow
+        dc.SetTextForeground(wxColour(0, 0, 0));
+        dc.DrawText(pSubText, 71, offset + 1);
+        // White
+        dc.SetTextForeground(wxColour(190, 190, 190));
+        dc.DrawText(pSubText, 70, offset);
+    }
 
-		// Cute font
-		wxFont f = font;
-		f.SetWeight(wxFONTWEIGHT_BOLD);
-		f.SetPointSize(f.GetPointSize() + 2);
-		dc.SetFont(f);
+    // -- Icon --
+    if (pIcon)
+        dc.DrawBitmap(*pIcon, 25, (rect.GetHeight() >> 1) - (pIcon->GetHeight() >> 1), true);
 
-		// Drawing the text
-		wxSize size = dc.GetTextExtent(pText);
-		// offset
-		int offset = rect.height >> 1;
-		if (!pSubText.IsEmpty())
-			offset -= ((size.GetHeight()) >> 1);
-		sizeNeeded = (size.GetHeight() >> 1);
-		offset -= sizeNeeded;
+    if (sizeNeeded < 40)
+        sizeNeeded = 40;
+    sizeNeeded += size.GetHeight();
+}
 
-		++offset; // for beauty (alignment)
+Antares::Component::Panel* WizardHeader::Create(wxWindow* parent,
+                                                const wxString& caption,
+                                                const char* img,
+                                                const wxString& help,
+                                                const int wrap,
+                                                bool customDraw)
+{
+    Antares::Component::Panel* p;
+    if (customDraw)
+    {
+        WizardHeader* pnl = new WizardHeader(parent, img, caption, help);
+        // Need to force draw to get sizeNeeded
+        pnl->onDraw();
+        p = pnl;
+        p->SetSize(100, pnl->sizeNeeded);
+    }
+    else
+    {
+        p = new Antares::Component::Panel(parent);
+        wxBoxSizer* s = new wxBoxSizer(wxHORIZONTAL);
+        p->SetSizer(s);
 
-		// -- Caption --
-		// Shadow
-		dc.SetTextForeground(wxColour(30,30,30));
-		dc.DrawText(pText, 71, offset + 2);
-		dc.DrawText(pText, 72, offset + 1);
-		dc.SetTextForeground(wxColour(0,0,0));
-		dc.DrawText(pText, 71, offset + 1);
-		// White
-		dc.SetTextForeground(wxColour(250,250, 250));
-		dc.DrawText(pText, 70, offset);
+        // Space
+        s->AddSpacer(14);
 
-		// Recalculating the offset
-		offset += size.GetHeight();
+        // The Image
+        s->Add(
+          Resources::StaticBitmapLoadFromFile(p, wxID_ANY, img), 0, wxALL | wxALIGN_CENTER, 10);
 
-		if (!pSubText.IsEmpty())
-		{
-			// Cute font
-			f.SetWeight(wxFONTWEIGHT_NORMAL);
-			f.SetPointSize(f.GetPointSize() - 3);
-			dc.SetFont(f);
+        // The Text
+        if (help.IsEmpty())
+        {
+            // The caption
+            wxWindow* t = Antares::Component::CreateLabel(p, caption, true, false, +2);
+            s->Add(t, 1, wxLEFT | wxALIGN_CENTER_VERTICAL, 10);
+        }
+        else
+        {
+            // Sub Panel
+            wxBoxSizer* subP = new wxBoxSizer(wxVERTICAL);
 
-			size = dc.GetTextExtent(pSubText);
+            // The caption
+            wxWindow* t = Antares::Component::CreateLabel(p, caption, true, false, +2);
+            subP->AddSpacer(5);
+            subP->Add(t, 0, wxLEFT | wxALL);
 
-			// -- Caption --
-			// Shadow
-			dc.SetTextForeground(wxColour(0,0,0));
-			dc.DrawText(pSubText, 71, offset + 1);
-			// White
-			dc.SetTextForeground(wxColour(190,190, 190));
-			dc.DrawText(pSubText, 70, offset);
-		}
+            // Help
+            wxStaticText* stH = Antares::Component::CreateLabel(p, help);
+            stH->SetForegroundColour(wxColour(60, 60, 60));
+            stH->Wrap(wrap - 40);
+            subP->AddSpacer(1);
+            subP->Add(stH, 1, wxLEFT);
+            subP->AddSpacer(5);
 
-		// -- Icon --
-		if (pIcon)
-			dc.DrawBitmap(*pIcon, 25, (rect.GetHeight() >> 1) - (pIcon->GetHeight() >> 1), true);
+            s->Add(subP, 1, wxALL | wxEXPAND, 8);
+        }
+        s->AddSpacer(10);
+        s->Layout();
+    }
 
-		if (sizeNeeded < 40)
-			sizeNeeded = 40;
-		sizeNeeded += size.GetHeight();
-	}
+    p->Layout();
+    return p;
+}
 
-
-
-
-
-	Antares::Component::Panel*
-	WizardHeader::Create(wxWindow* parent, const wxString& caption,
-		const char* img, const wxString& help, const int wrap, bool customDraw)
-	{
-		Antares::Component::Panel* p;
-		if (customDraw)
-		{
-			WizardHeader* pnl = new WizardHeader(parent, img, caption, help);
-			p = pnl;
-			wxPaintEvent evt(pnl->GetId());
-			pnl->onDraw(evt);
-			p->SetSize(100, pnl->sizeNeeded);
-		}
-		else
-		{
-			p = new Antares::Component::Panel(parent);
-			wxBoxSizer* s = new wxBoxSizer(wxHORIZONTAL);
-			p->SetSizer(s);
-
-			// Space
-			s->AddSpacer(14);
-
-			// The Image
-			s->Add(Resources::StaticBitmapLoadFromFile(p, wxID_ANY, img), 0, wxALL|wxALIGN_CENTER, 10);
-
-			// The Text
-			if (help.IsEmpty())
-			{
-				// The caption
-				wxWindow* t = Antares::Component::CreateLabel(p, caption, true, false, +2);
-				s->Add(t, 1, wxLEFT|wxALIGN_CENTER_VERTICAL, 10);
-			}
-			else
-			{
-				// Sub Panel
-				wxBoxSizer* subP = new wxBoxSizer(wxVERTICAL);
-
-				// The caption
-				wxWindow* t = Antares::Component::CreateLabel(p, caption, true, false, +2);
-				subP->AddSpacer(5);
-				subP->Add(t, 0, wxLEFT|wxALL);
-
-				// Help
-				wxStaticText* stH = Antares::Component::CreateLabel(p, help);
-				stH->SetForegroundColour(wxColour(60, 60, 60));
-				stH->Wrap(wrap - 40);
-				subP->AddSpacer(1);
-				subP->Add(stH, 1, wxLEFT);
-				subP->AddSpacer(5);
-
-				s->Add(subP, 1, wxALL|wxEXPAND, 8);
-			}
-			s->AddSpacer(10);
-			s->Layout();
-		}
-
-		p->Layout();
-		return p;
-	}
-
-
-
-
-
-} // namespace Antares
+} // namespace Components
 } // namespace Toolbox
 } // namespace Antares
-

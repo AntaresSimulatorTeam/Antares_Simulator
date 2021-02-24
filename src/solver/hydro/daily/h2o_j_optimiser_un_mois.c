@@ -25,55 +25,41 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "h2o_j_donnees_mensuelles.h"
+#include "h2o_j_fonctions.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# include "h2o_j_donnees_mensuelles.h"
-# include "h2o_j_fonctions.h"
-
-
-
-void H2O_J_OptimiserUnMois( DONNEES_MENSUELLES * DonneesMensuelles )
+void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES* DonneesMensuelles)
 {
-int NumeroDeProbleme; int i;
-PROBLEME_HYDRAULIQUE * ProblemeHydraulique;
-  
-ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
+    int NumeroDeProbleme;
+    int i;
+    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
 
-NumeroDeProbleme = -1;
-for ( i = 0 ; i < ProblemeHydraulique->NombreDeProblemes ; i++ ) {
-  if ( DonneesMensuelles->NombreDeJoursDuMois == ProblemeHydraulique->NbJoursDUnProbleme[i] ) {
-	  NumeroDeProbleme = i;
-		break;
-	}
-}
-if ( NumeroDeProbleme < 0 ) {
-  DonneesMensuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;
-	return;
-}
+    ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
-DonneesMensuelles->ResultatsValides = NON;
- 
-H2O_J_InitialiserLeSecondMembre( DonneesMensuelles, NumeroDeProbleme );
-	
-H2O_J_InitialiserLesBornesdesVariables( DonneesMensuelles, NumeroDeProbleme );
+    NumeroDeProbleme = -1;
+    for (i = 0; i < ProblemeHydraulique->NombreDeProblemes; i++)
+    {
+        if (DonneesMensuelles->NombreDeJoursDuMois == ProblemeHydraulique->NbJoursDUnProbleme[i])
+        {
+            NumeroDeProbleme = i;
+            break;
+        }
+    }
+    if (NumeroDeProbleme < 0)
+    {
+        DonneesMensuelles->ResultatsValides = EMERGENCY_SHUT_DOWN;
+        return;
+    }
 
-H2O_J_ResoudreLeProblemeLineaire( DonneesMensuelles, NumeroDeProbleme );
+    DonneesMensuelles->ResultatsValides = NON;
 
-H2O_J_LisserLesSurTurbines( DonneesMensuelles, NumeroDeProbleme );
+    H2O_J_InitialiserLeSecondMembre(DonneesMensuelles, NumeroDeProbleme);
 
-return;
+    H2O_J_InitialiserLesBornesdesVariables(DonneesMensuelles, NumeroDeProbleme);
+
+    H2O_J_ResoudreLeProblemeLineaire(DonneesMensuelles, NumeroDeProbleme);
+
+    H2O_J_LisserLesSurTurbines(DonneesMensuelles, NumeroDeProbleme);
+
+    return;
 }

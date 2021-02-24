@@ -25,16 +25,15 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_LINKS_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_LINKS_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_LINKS_H__
 
-# include <antares/wx-wrapper.h>
-# include "../../renderer.h"
-# include <antares/study.h>
-# include "../solver/constraints-builder/cbuilder.h"
-# include <map>
-# include <yuni/core/bind.h>
-# include <yuni/core/event.h>
-
+#include <antares/wx-wrapper.h>
+#include "../../renderer.h"
+#include <antares/study.h>
+#include "../solver/constraints-builder/cbuilder.h"
+#include <map>
+#include <yuni/core/bind.h>
+#include <yuni/core/event.h>
 
 namespace Antares
 {
@@ -46,129 +45,137 @@ namespace Renderer
 {
 namespace ConstraintsBuilder
 {
+class Links final : public virtual Renderer::IRenderer
+{
+public:
+    //! Map of string
+    typedef std::map<Yuni::String, Yuni::String> Map;
+    class Record final
+    {
+    public:
+        enum Type
+        {
+            tyAC,
+            tyDC,
+            tyACPST,
+        };
+        class Vector final
+        {
+        public:
+            typedef std::vector<Record>::iterator iterator;
+            typedef std::vector<Record>::const_iterator const_iterator;
 
+        public:
+            size_t size() const
+            {
+                return array.size();
+            }
 
-	class Links final : public virtual Renderer::IRenderer
-	{
-	public:
-		//! Map of string
-		typedef std::map<Yuni::String, Yuni::String>  Map;
-		class Record final
-		{
-		public:
-			enum Type
-			{
-				tyAC,
-				tyDC,
-				tyACPST,
-			};
-			class Vector final
-			{
-			public:
-				typedef std::vector<Record>::iterator iterator;
-				typedef std::vector<Record>::const_iterator const_iterator;
+            bool empty() const
+            {
+                return array.empty();
+            }
 
-			public:
-				size_t size() const
-				{
-					return array.size();
-				}
+        public:
+            mutable Yuni::Mutex mutex;
+            std::vector<Record> array;
+            bool canRunAnalyzer;
+        };
 
-				bool empty() const
-				{
-					return array.empty();
-				}
+    public:
+        //! Get if the item is enabled
+        bool enabled;
+        //! Index of the area in the study
+        Data::AreaName areaFromId;
+        //! Index of the area in the study
+        Data::AreaName areaWithId;
+        //! Name of the link (wx)
+        wxString wxLinkName;
+        //! Type of the link
+        Antares::Data::AssetType type;
 
-			public:
-				mutable Yuni::Mutex mutex;
-				std::vector<Record> array;
-				bool canRunAnalyzer;
-			};
+        //! Width and height of the matrix
+        uint mWidth, mHeight;
+    };
 
-		public:
-			//! Get if the item is enabled
-			bool enabled;
-			//! Index of the area in the study
-			Data::AreaName areaFromId;
-			//! Index of the area in the study
-			Data::AreaName areaWithId;
-			//! Name of the link (wx)
-			wxString wxLinkName;
-			//! Type of the link
-			Antares::Data::AssetType type;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    Links(CBuilder* cBuilder) : pMapFile(nullptr), pCBuilder(cBuilder){};
+    //! Destructor
+    virtual ~Links();
+    //@}
 
-			//! Width and height of the matrix
-			uint mWidth, mHeight;
-		};
+    void mapFile(Map* newMap);
+    Map* mapFile();
 
+    Record::Vector& record()
+    {
+        return pRecord;
+    }
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		Links(CBuilder* cBuilder) : pMapFile(nullptr), pCBuilder(cBuilder) {};
-		//! Destructor
-		virtual ~Links();
-		//@}
+    void onBeforeUpdate(const Yuni::Bind<void(int, int)>& b)
+    {
+        pOnBeforeUpdate = b;
+    }
+    void onAfterUpdate(const Yuni::Bind<void(int, int)>& b)
+    {
+        pOnAfterUpdate = b;
+    }
 
-		void mapFile(Map* newMap);
-		Map* mapFile();
+    virtual int width() const
+    {
+        return 2;
+    }
 
+    virtual int height() const
+    {
+        return pCBuilder->linkCount();
+    }
 
-		Record::Vector& record() {return pRecord;}
+    virtual wxString columnCaption(int colIndx) const;
 
-		void onBeforeUpdate(const Yuni::Bind<void (int, int)>& b) {pOnBeforeUpdate = b;}
-		void onAfterUpdate(const Yuni::Bind<void (int, int)>& b) {pOnAfterUpdate = b;}
+    virtual wxString rowCaption(int rowIndx) const;
 
-		virtual int width() const {return 2;}
+    virtual wxString cellValue(int, int) const;
 
-		virtual int height() const {return pCBuilder->linkCount();}
+    virtual double cellNumericValue(int, int) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual bool cellValue(int x, int y, const Yuni::String& value);
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    { /*Do nothing*/
+    }
 
-		virtual wxString cellValue(int, int) const;
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+    virtual wxColour cellBackgroundColor(int, int) const;
+    virtual wxColour cellTextColor(int, int) const;
 
-		virtual double cellNumericValue(int,int) const;
+    virtual bool valid() const;
 
-		virtual bool cellValue(int x, int y, const Yuni::String& value);
+    /*!
+    ** \brief Reset internal variables according the current study
+    */
+    void initializeFromStudy();
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{/*Do nothing*/}
+protected:
+    virtual void onUpdate()
+    {
+    }
 
-		virtual IRenderer::CellStyle cellStyle(int col, int row) const;
-		virtual wxColour cellBackgroundColor(int, int) const;
-		virtual wxColour cellTextColor(int, int) const;
+private:
+    Map* pMapFile;
+    Record::Vector pRecord;
+    CBuilder* pCBuilder;
+    Yuni::Bind<void(int, int)> pOnBeforeUpdate;
+    Yuni::Bind<void(int, int)> pOnAfterUpdate;
 
-		virtual bool valid() const;
+}; // class Areas
 
-
-		/*!
-		** \brief Reset internal variables according the current study
-		*/
-		void initializeFromStudy();
-
-	protected:
-		virtual void onUpdate() {}
-
-
-	private:
-		Map* pMapFile;
-		Record::Vector pRecord;
-		CBuilder* pCBuilder;
-		Yuni::Bind<void (int, int)> pOnBeforeUpdate;
-		Yuni::Bind<void (int, int)> pOnAfterUpdate;
-
-	}; // class Areas
-
-
-
-
-
-} // namespace Analyzer
+} // namespace ConstraintsBuilder
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

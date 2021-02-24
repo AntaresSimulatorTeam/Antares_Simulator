@@ -25,58 +25,28 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "opt_structure_probleme_a_resoudre.h"
 
+#include "../simulation/simulation.h"
+#include "../simulation/sim_structure_donnees.h"
+#include "../simulation/sim_extern_variables_globales.h"
 
+#include "opt_fonctions.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# include "opt_structure_probleme_a_resoudre.h"
-
-# include "../simulation/simulation.h"
-# include "../simulation/sim_structure_donnees.h"
-# include "../simulation/sim_extern_variables_globales.h"
-
-# include "opt_fonctions.h"
-
-
-
-void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage( PROBLEME_HEBDO * ProblemeHebdo )
+void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO* ProblemeHebdo)
 {
-char Simulation; 
+    char Simulation;
 
+    if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
+        return;
 
-if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage  == NON_ANTARES ) return;
+    Simulation = OUI_ANTARES;
 
-Simulation = OUI_ANTARES;
+    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(ProblemeHebdo,
+                                                                            Simulation);
 
-OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage( ProblemeHebdo, Simulation );
+    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(ProblemeHebdo,
+                                                                                  Simulation);
 
-OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage( ProblemeHebdo, Simulation );
-
-return;
+    return;
 }
-
-
-
-  

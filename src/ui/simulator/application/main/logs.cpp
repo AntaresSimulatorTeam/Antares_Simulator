@@ -35,269 +35,245 @@
 #include "../../toolbox/components/htmllistbox/item/error.h"
 #include "internal-ids.h"
 
-
-
 using namespace Yuni;
-
 
 namespace Antares
 {
 namespace Forms
 {
+namespace
+{
+class LogInfo final
+{
+public:
+    bool warning;
+    wxString entry;
+};
 
-	namespace
-	{
+typedef std::vector<LogInfo*> WaitingLogEntries;
 
-		class LogInfo final
-		{
-		public:
-			bool warning;
-			wxString entry;
-		};
+WaitingLogEntries waitingLogEntry;
+Yuni::Mutex logMutex;
 
-		typedef std::vector<LogInfo*> WaitingLogEntries;
+Yuni::Atomic::Int<> logUpdateCount;
 
-		WaitingLogEntries waitingLogEntry;
-		Yuni::Mutex logMutex;
+class LogFlusherTimer final : public wxTimer
+{
+public:
+    LogFlusherTimer() : wxTimer()
+    {
+    }
 
-		Yuni::Atomic::Int<> logUpdateCount;
+    virtual ~LogFlusherTimer()
+    {
+    }
 
+    virtual void Notify() override
+    {
+        if (!(!logUpdateCount))
+        {
+            Start(300, wxTIMER_ONE_SHOT);
+            return;
+        }
 
+        logMutex.lock();
+        if (waitingLogEntry.empty())
+        {
+            logMutex.unlock();
+            return;
+        }
 
-		class LogFlusherTimer final : public wxTimer
-		{
-		public:
-			LogFlusherTimer()
-				:wxTimer()
-			{}
+        Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
+        Forms::Disabler<Forms::ApplWnd> disabler(mainFrm);
 
-			virtual ~LogFlusherTimer()
-			{
-			}
+        wxString msg;
+        if (waitingLogEntry.size() == 1)
+        {
+            msg = waitingLogEntry[0]->entry;
+        }
+        else
+        {
+            uint w = 0;
+            uint e = 0;
+            for (uint i = 0; i != waitingLogEntry.size(); ++i)
+            {
+                if (waitingLogEntry[i]->warning)
+                    ++w;
+                else
+                    ++e;
+            }
+            if (w)
+            {
+                if (w == 1)
+                    msg << wxT("1 warning");
+                else
+                    msg << w << wxT(" warnings");
+                if (e)
+                    msg << wxT(", ");
+            }
+            if (e)
+            {
+                if (e == 1)
+                    msg << wxT("1 error");
+                else
+                    msg << e << wxT(" errors");
+            }
+        }
 
-			virtual void Notify() override
-			{
-				if (!(!logUpdateCount))
-				{
-					Start(300, wxTIMER_ONE_SHOT);
-					return;
-				}
+        auto* message = new Window::Message(
+          &mainFrm, wxT("Log"), wxT("Log Report"), msg, "images/misc/warning.png");
+        message->add(Window::Message::btnContinue, true);
 
-				logMutex.lock();
-				if (waitingLogEntry.empty())
-				{
-					logMutex.unlock();
-					return;
-				}
+        // We should display a list of all errors, only if more than one
+        if (waitingLogEntry.size() > 1)
+        {
+            uint w = 0;
+            uint l;
+            uint count = (uint)waitingLogEntry.size();
+            String text;
+            for (uint i = 0; i != count; ++i)
+            {
+                LogInfo* info = waitingLogEntry[i];
 
-				Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
-				Forms::Disabler<Forms::ApplWnd> disabler(mainFrm);
+                wxStringToString(info->entry, text);
+                l = (uint)(30 + text.size() * 6.2) /*px*/;
+                if (l > w)
+                    w = l;
 
-				wxString msg;
-				if (waitingLogEntry.size() == 1)
-				{
-					msg = waitingLogEntry[0]->entry;
-				}
-				else
-				{
-					uint w = 0;
-					uint e = 0;
-					for (uint i = 0; i != waitingLogEntry.size(); ++i)
-					{
-						if (waitingLogEntry[i]->warning)
-							++w;
-						else
-							++e;
-					}
-					if (w)
-					{
-						if (w == 1)
-							msg << wxT("1 warning");
-						else
-							msg << w << wxT(" warnings");
-						if (e)
-							msg << wxT(", ");
-					}
-					if (e)
-					{
-						if (e == 1)
-							msg << wxT("1 error");
-						else
-							msg << e << wxT(" errors");
-					}
-				}
+                if (info->warning)
+                    message->appendWarning(text);
+                else
+                    message->appendError(text);
 
-				auto* message = new Window::Message(&mainFrm, wxT("Log"), wxT("Log Report"), msg,
-					"images/misc/warning.png");
-				message->add(Window::Message::btnContinue, true);
+                delete info;
+            }
+            message->recommendedWidth(w);
+        }
+        else
+        {
+            // We already know that the list is not empty
+            assert((!waitingLogEntry.empty()) && "The list must not be empty");
+            delete waitingLogEntry[0];
+        }
 
-				// We should display a list of all errors, only if more than one
-				if (waitingLogEntry.size() > 1)
-				{
-					uint w = 0;
-					uint l;
-					uint count = (uint) waitingLogEntry.size();
-					String text;
-					for (uint i = 0; i != count; ++i)
-					{
-						LogInfo* info = waitingLogEntry[i];
+        waitingLogEntry.clear();
+        logMutex.unlock();
 
-						wxStringToString(info->entry, text);
-						l = (uint)(30 + text.size() * 6.2) /*px*/;
-						if (l > w)
-							w = l;
+        message->showModalAsync();
+    }
 
-						if (info->warning)
-							message->appendWarning(text);
-						else
-							message->appendError(text);
+}; // class LogFlusherTimer
 
-						delete info;
-					}
-					message->recommendedWidth(w);
-				}
-				else
-				{
-					// We already know that the list is not empty
-					assert((!waitingLogEntry.empty()) && "The list must not be empty");
-					delete waitingLogEntry[0];
-				}
+} // anonymous namespace
 
-				waitingLogEntry.clear();
-				logMutex.unlock();
+void ApplWnd::createLogs()
+{
+    pLogFlusherTimer = new LogFlusherTimer();
+    connectLogCallback();
+}
 
-				message->showModalAsync();
-			}
+void ApplWnd::destroyLogs()
+{
+    if (pLogFlusherTimer)
+    {
+        wxTimer* timer = pLogFlusherTimer;
+        pLogFlusherTimer = NULL;
+        delete timer;
+    }
+}
 
-		}; // class LogFlusherTimer
+void ApplWnd::showStudyLogs()
+{
+    if (!pWndLogs)
+        pWndLogs = new Window::StudyLogs(this);
+    pWndLogs->Show();
+    pWndLogs->Raise();
+}
 
+void ApplWnd::refreshStudyLogs()
+{
+    if (pWndLogs)
+        pWndLogs->refreshListOfAllAvailableLogs();
+}
 
-	} // anonymous namespace
+void ApplWnd::destroyLogsViewer()
+{
+    if (pWndLogs)
+    {
+        pWndLogs->Destroy();
+        pWndLogs = NULL;
+    }
+}
 
+void ApplWnd::connectLogCallback()
+{
+    logs.callback.clear();
+    logs.callback.connect(this, &ApplWnd::onLogMessageDeferred);
+}
 
+void ApplWnd::onLogMessageDeferred(int level, const String& message)
+{
+    if (not message.empty() and message.first() != '[')
+    {
+        // wxLogError(), like wxLogWarning(), are routine with
+        // variadic parameters, like the standard printf.
+        // Consequently, any char `%` are interpreted as additional
+        // parameters to read, which will lead to a SegV.
+        // We must replace all occurences of `%` by `%%`.
+        switch (level)
+        {
+        case Logs::Verbosity::Warning::level:
+        {
+            auto* info = new LogInfo();
+            info->warning = true;
+            info->entry = wxStringFromUTF8(message);
+            info->entry.Replace(wxT("%"), wxT("%%"));
 
+            logMutex.lock();
+            waitingLogEntry.push_back(info);
+            logMutex.unlock();
 
-	void ApplWnd::createLogs()
-	{
-		pLogFlusherTimer = new LogFlusherTimer();
-		connectLogCallback();
-	}
+            wxCommandEvent evt(wxEVT_COMMAND_MENU_SELECTED, mnInternalLogMessage);
+            AddPendingEvent(evt);
+            break;
+        }
+        case Logs::Verbosity::Error::level:
+        case Logs::Verbosity::Fatal::level:
+        {
+            auto* info = new LogInfo();
+            info->warning = false;
+            info->entry = wxStringFromUTF8(message);
+            info->entry.Replace(wxT("%"), wxT("%%"));
 
+            logMutex.lock();
+            waitingLogEntry.push_back(info);
+            logMutex.unlock();
 
-	void ApplWnd::destroyLogs()
-	{
-		if (pLogFlusherTimer)
-		{
-			wxTimer* timer = pLogFlusherTimer;
-			pLogFlusherTimer = NULL;
-			delete timer;
-		}
-	}
+            wxCommandEvent evt(wxEVT_COMMAND_MENU_SELECTED, mnInternalLogMessage);
+            AddPendingEvent(evt);
+            break;
+        }
+        default:
+            break;
+        }
+    }
+}
 
+void ApplWnd::onLogMessage(wxCommandEvent&)
+{
+    if (pLogFlusherTimer)
+        pLogFlusherTimer->Start(300, wxTIMER_ONE_SHOT);
+}
 
-	void ApplWnd::showStudyLogs()
-	{
-		if (!pWndLogs)
-			pWndLogs = new Window::StudyLogs(this);
-		pWndLogs->Show();
-		pWndLogs->Raise();
-	}
+void ApplWnd::endUpdateLogs() const
+{
+    --logUpdateCount;
+}
 
-
-	void ApplWnd::refreshStudyLogs()
-	{
-		if (pWndLogs)
-			pWndLogs->refreshListOfAllAvailableLogs();
-	}
-
-
-	void ApplWnd::destroyLogsViewer()
-	{
-		if (pWndLogs)
-		{
-			pWndLogs->Destroy();
-			pWndLogs = NULL;
-		}
-	}
-
-
-	void ApplWnd::connectLogCallback()
-	{
-		logs.callback.clear();
-		logs.callback.connect(this, &ApplWnd::onLogMessageDeferred);
-	}
-
-
-	void ApplWnd::onLogMessageDeferred(int level, const String& message)
-	{
-		if (not message.empty() and message.first() != '[')
-		{
-			// wxLogError(), like wxLogWarning(), are routine with
-			// variadic parameters, like the standard printf.
-			// Consequently, any char `%` are interpreted as additional
-			// parameters to read, which will lead to a SegV.
-			// We must replace all occurences of `%` by `%%`.
-			switch (level)
-			{
-				case Logs::Verbosity::Warning::level:
-					{
-						auto* info = new LogInfo();
-						info->warning = true;
-						info->entry = wxStringFromUTF8(message);
-						info->entry.Replace(wxT("%"), wxT("%%"));
-
-						logMutex.lock();
-						waitingLogEntry.push_back(info);
-						logMutex.unlock();
-
-						wxCommandEvent evt(wxEVT_COMMAND_MENU_SELECTED, mnInternalLogMessage);
-						AddPendingEvent(evt);
-						break;
-					}
-				case Logs::Verbosity::Error::level:
-				case Logs::Verbosity::Fatal::level:
-					{
-						auto* info = new LogInfo();
-						info->warning = false;
-						info->entry = wxStringFromUTF8(message);
-						info->entry.Replace(wxT("%"), wxT("%%"));
-
-						logMutex.lock();
-						waitingLogEntry.push_back(info);
-						logMutex.unlock();
-
-						wxCommandEvent evt(wxEVT_COMMAND_MENU_SELECTED, mnInternalLogMessage);
-						AddPendingEvent(evt);
-						break;
-					}
-				default:
-					break;
-			}
-		}
-	}
-
-
-	void ApplWnd::onLogMessage(wxCommandEvent&)
-	{
-		if (pLogFlusherTimer)
-			pLogFlusherTimer->Start(300, wxTIMER_ONE_SHOT);
-	}
-
-
-	void ApplWnd::endUpdateLogs() const
-	{
-		--logUpdateCount;
-	}
-
-
-	void ApplWnd::beginUpdateLogs() const
-	{
-		++logUpdateCount;
-	}
-
-
-
+void ApplWnd::beginUpdateLogs() const
+{
+    ++logUpdateCount;
+}
 
 } // namespace Forms
 } // namespace Antares
-

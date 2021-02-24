@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_SOLVER_TIME_SERIES_GENERATOR_HXX__
-# define __ANTARES_SOLVER_TIME_SERIES_GENERATOR_HXX__
+#define __ANTARES_SOLVER_TIME_SERIES_GENERATOR_HXX__
 
-# include "../aleatoire/alea_fonctions.h"
-# include <antares/logs.h>
-
+#include "../aleatoire/alea_fonctions.h"
+#include <antares/logs.h>
 
 namespace Antares
 {
@@ -37,151 +36,133 @@ namespace Solver
 {
 namespace TSGenerator
 {
+// forward declaration
+// Thermal - see thermal.cpp
+bool GenerateThermalTimeSeries(Data::Study& study, uint year);
+// Hydro - see hydro.cpp
+bool GenerateHydroTimeSeries(Data::Study& study, uint year);
 
+template<>
+inline bool GenerateTimeSeries<Data::timeSeriesThermal>(Data::Study& study, uint year)
+{
+    return GenerateThermalTimeSeries(study, year);
+}
 
-	// forward declaration
-	// Thermal - see thermal.cpp
-	bool GenerateThermalTimeSeries(Data::Study& study, uint year);
-	// Hydro - see hydro.cpp
-	bool GenerateHydroTimeSeries(Data::Study& study, uint year);
+template<>
+inline bool GenerateTimeSeries<Data::timeSeriesHydro>(Data::Study& study, uint year)
+{
+    return GenerateHydroTimeSeries(study, year);
+}
 
+// --- TS Generators using XCast ---
+template<enum Data::TimeSeries T>
+bool GenerateTimeSeries(Data::Study& study, uint year)
+{
+    auto* xcast = reinterpret_cast<XCast::XCast*>(
+      study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]);
 
+    if (not xcast)
+    {
+        logs.debug() << "Preparing the " << Data::TimeSeriesToCStr<T>::Value() << " TS Generator";
+        xcast = new XCast::XCast(study, T);
+        study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value] = xcast;
+    }
 
+    // The current year
+    xcast->year = year;
 
-	template<>
-	inline bool GenerateTimeSeries<Data::timeSeriesThermal>(Data::Study& study, uint year)
-	{
-		return GenerateThermalTimeSeries(study, year);
-	}
+    switch (T)
+    {
+    case Data::timeSeriesLoad:
+        xcast->random = &(study.runtime->random[Data::seedTsGenLoad]);
+        break;
+    case Data::timeSeriesSolar:
+        xcast->random = &(study.runtime->random[Data::seedTsGenSolar]);
+        break;
+    case Data::timeSeriesWind:
+        xcast->random = &(study.runtime->random[Data::seedTsGenWind]);
+        break;
+    case Data::timeSeriesHydro:
+        xcast->random = &(study.runtime->random[Data::seedTsGenHydro]);
+        break;
+    default:
+        xcast->random = nullptr;
+        assert(false and "invalid ts type");
+    }
 
-	template<>
-	inline bool GenerateTimeSeries<Data::timeSeriesHydro>(Data::Study& study, uint year)
-	{
-		return GenerateHydroTimeSeries(study, year);
-	}
+    // Run the generation of the time-series
+    bool r = xcast->run();
+    // Destroy if required the TS Generator
+    Destroy<T>(study, year);
+    return r;
+}
 
+template<enum Data::TimeSeries T>
+void Destroy(Data::Study& study, uint year)
+{
+    auto* xcast = reinterpret_cast<XCast::XCast*>(
+      study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]);
+    if (not xcast)
+        return;
 
-	// --- TS Generators using XCast ---
-	template<enum Data::TimeSeries T>
-	bool GenerateTimeSeries(Data::Study& study, uint year)
-	{
-		auto* xcast = reinterpret_cast<XCast::XCast*>
-			(study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]);
+    // releasing
+    auto& parameters = study.parameters;
 
-		if (not xcast)
-		{
-			logs.debug() << "Preparing the " << Data::TimeSeriesToCStr<T>::Value() << " TS Generator";
-			xcast = new XCast::XCast(study, T);
-			study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value] = xcast;
-		}
+    bool shouldDestroy;
+    switch (T)
+    {
+    case Data::timeSeriesLoad:
+    {
+        shouldDestroy = (parameters.refreshIntervalLoad > parameters.nbYears)
+                        || year + parameters.refreshIntervalLoad > parameters.nbYears;
+        break;
+    }
+    case Data::timeSeriesSolar:
+    {
+        shouldDestroy = (parameters.refreshIntervalSolar > parameters.nbYears)
+                        || year + parameters.refreshIntervalSolar > parameters.nbYears;
+        break;
+    }
+    case Data::timeSeriesHydro:
+    {
+        shouldDestroy = (parameters.refreshIntervalHydro > parameters.nbYears)
+                        || year + parameters.refreshIntervalHydro > parameters.nbYears;
+        break;
+    }
+    case Data::timeSeriesWind:
+    {
+        shouldDestroy = (parameters.refreshIntervalWind > parameters.nbYears)
+                        || year + parameters.refreshIntervalWind > parameters.nbYears;
+        break;
+    }
+    case Data::timeSeriesThermal:
+    {
+        shouldDestroy = (parameters.refreshIntervalThermal > parameters.nbYears)
+                        || year + parameters.refreshIntervalThermal > parameters.nbYears;
+        break;
+    }
+    default:
+        shouldDestroy = true;
+    }
 
-		// The current year
-		xcast->year = year;
+    if (shouldDestroy)
+    {
+        logs.info() << "  Releasing the " << Data::TimeSeriesToCStr<T>::Value() << " TS Generator";
+        study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value] = nullptr;
+        study.destroyTSGeneratorData<T>();
+        delete xcast;
+        xcast = nullptr;
+    }
+}
 
-		switch (T)
-		{
-			case Data::timeSeriesLoad:
-				xcast->random = &(study.runtime->random[Data::seedTsGenLoad]);
-				break;
-			case Data::timeSeriesSolar:
-				xcast->random = &(study.runtime->random[Data::seedTsGenSolar]);
-				break;
-			case Data::timeSeriesWind:
-				xcast->random = &(study.runtime->random[Data::seedTsGenWind]);
-				break;
-			case Data::timeSeriesHydro:
-				xcast->random = &(study.runtime->random[Data::seedTsGenHydro]);
-				break;
-			default:
-				xcast->random = nullptr;
-				assert(false and "invalid ts type");
-		}
-
-		// Run the generation of the time-series
-		bool r = xcast->run();
-		// Destroy if required the TS Generator
-		Destroy<T>(study, year);
-		return r;
-	}
-
-
-
-	template<enum Data::TimeSeries T>
-	void Destroy(Data::Study& study, uint year)
-	{
-		auto* xcast = reinterpret_cast<XCast::XCast*>
-			(study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]);
-		if (not xcast)
-			return;
-
-		// releasing
-		auto& parameters = study.parameters;
-
-		bool shouldDestroy;
-		switch (T)
-		{
-			case Data::timeSeriesLoad:
-				{
-					shouldDestroy = (parameters.refreshIntervalLoad > parameters.nbYears)
-						|| year + parameters.refreshIntervalLoad > parameters.nbYears;
-					break;
-				}
-			case Data::timeSeriesSolar:
-				{
-					shouldDestroy = (parameters.refreshIntervalSolar > parameters.nbYears)
-						|| year + parameters.refreshIntervalSolar > parameters.nbYears;
-					break;
-				}
-			case Data::timeSeriesHydro:
-				{
-					shouldDestroy = (parameters.refreshIntervalHydro > parameters.nbYears)
-						|| year + parameters.refreshIntervalHydro > parameters.nbYears;
-					break;
-				}
-			case Data::timeSeriesWind:
-				{
-					shouldDestroy = (parameters.refreshIntervalWind > parameters.nbYears)
-						|| year + parameters.refreshIntervalWind > parameters.nbYears;
-					break;
-				}
-			case Data::timeSeriesThermal:
-				{
-					shouldDestroy = (parameters.refreshIntervalThermal > parameters.nbYears)
-						|| year + parameters.refreshIntervalThermal > parameters.nbYears;
-					break;
-				}
-			default:
-				shouldDestroy = true;
-		}
-
-		if (shouldDestroy)
-		{
-			logs.info() << "  Releasing the " << Data::TimeSeriesToCStr<T>::Value() << " TS Generator";
-			study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value] = nullptr;
-			study.destroyTSGeneratorData<T>();
-			delete xcast;
-			xcast = nullptr;
-		}
-	}
-
-
-
-	inline void DestroyAll(Data::Study& study)
-	{
-		Solver::TSGenerator::Destroy <Data::timeSeriesLoad>   (study, (uint)-1);
-		Solver::TSGenerator::Destroy <Data::timeSeriesSolar>  (study, (uint)-1);
-		Solver::TSGenerator::Destroy <Data::timeSeriesWind>   (study, (uint)-1);
-		Solver::TSGenerator::Destroy <Data::timeSeriesHydro>  (study, (uint)-1);
-		Solver::TSGenerator::Destroy <Data::timeSeriesThermal>(study, (uint)-1);
-	}
-
-
-
-
-
-
-
-
+inline void DestroyAll(Data::Study& study)
+{
+    Solver::TSGenerator::Destroy<Data::timeSeriesLoad>(study, (uint)-1);
+    Solver::TSGenerator::Destroy<Data::timeSeriesSolar>(study, (uint)-1);
+    Solver::TSGenerator::Destroy<Data::timeSeriesWind>(study, (uint)-1);
+    Solver::TSGenerator::Destroy<Data::timeSeriesHydro>(study, (uint)-1);
+    Solver::TSGenerator::Destroy<Data::timeSeriesThermal>(study, (uint)-1);
+}
 
 } // namespace TSGenerator
 } // namespace Solver

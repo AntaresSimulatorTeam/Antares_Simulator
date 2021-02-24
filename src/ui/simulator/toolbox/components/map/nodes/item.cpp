@@ -29,151 +29,131 @@
 #include "../settings.h"
 #include "bindingconstraint.h"
 
-
 namespace Antares
 {
 namespace Map
 {
+Item::Item(Manager& manager, const int zPos) :
+ pManager(manager),
+ pColor(Settings::defaultNodeBackground),
+ pSelected(false),
+ pInvalidated(true),
+ pX(0),
+ pY(0),
+ pCaption(),
+ pZPosition(zPos)
+{
+    pManager.internalAddItem(this);
+    pLinks = new Links();
+}
 
+Item::~Item()
+{
+    selected(false);
+    pManager.setChangesFlag(true);
+    pManager.internalRemoveItem(this);
+    internalClearAllLinks();
+    delete pLinks;
+}
 
-	Item::Item(Manager& manager, const int zPos) :
-		pManager(manager),
-		pColor(Settings::defaultNodeBackground),
-		pSelected(false),
-		pInvalidated(true),
-		pX(0),
-		pY(0),
-		pCaption(),
-		pZPosition(zPos)
-	{
-		pManager.internalAddItem(this);
-		pLinks = new Links();
-	}
+void Item::color(const wxColour& c)
+{
+    pColor = c;
+    this->invalidate();
+    colorHasChanged();
+}
 
+void Item::color(const wxString& s)
+{
+    pColor.Set(s);
+    this->invalidate();
+    colorHasChanged();
+}
 
-	Item::~Item()
-	{
-		selected(false);
-		pManager.setChangesFlag(true);
-		pManager.internalRemoveItem(this);
-		internalClearAllLinks();
-		delete pLinks;
-	}
+void Item::color(const int r, const int g, const int b)
+{
+    pColor.Set((unsigned char)Yuni::Math::MinMax<int>(r, 0, 255),
+               (unsigned char)Yuni::Math::MinMax<int>(g, 0, 255),
+               (unsigned char)Yuni::Math::MinMax<int>(b, 0, 255),
+               wxALPHA_OPAQUE);
+    this->invalidate();
+    colorHasChanged();
+}
 
+void Item::color(const int r, const int g, const int b, const int alpha)
+{
+    pColor.Set((unsigned char)Yuni::Math::MinMax<int>(r, 0, 255),
+               (unsigned char)Yuni::Math::MinMax<int>(g, 0, 255),
+               (unsigned char)Yuni::Math::MinMax<int>(b, 0, 255),
+               (unsigned char)Yuni::Math::MinMax<int>(alpha, 0, 255));
+    this->invalidate();
+    colorHasChanged();
+}
 
-	void Item::color(const wxColour& c)
-	{
-		pColor = c;
-		this->invalidate();
-		colorHasChanged();
-	}
+void Item::selected(bool v)
+{
+    if (v != pSelected)
+    {
+        pSelected = v;
+        if (v)
+            pManager.pSelectedItems[this] = true;
+        else
+        {
+            Manager::NodeMap::iterator i = pManager.pSelectedItems.find(this);
+            if (i != pManager.pSelectedItems.end())
+                pManager.pSelectedItems.erase(i);
+        }
+        invalidate();
+    }
+}
 
+void Item::move(const int, const int)
+{
+    // Do nothing
+    positionHasChanged();
+}
 
-	void Item::color(const wxString& s)
-	{
-		pColor.Set(s);
-		this->invalidate();
-		colorHasChanged();
-	}
+void Item::internalClearAllLinks()
+{
+    if (pLinks && !pLinks->empty())
+    {
+        Links* lnks = pLinks;
+        pLinks = NULL;
 
+        const Links::const_iterator end = lnks->end();
+        for (Links::const_iterator i = lnks->begin(); i != end; ++i)
+        {
+            if (dynamic_cast<BindingConstraint*>(i->first))
+            {
+                BindingConstraint* bc = dynamic_cast<BindingConstraint*>(i->first);
+                bc->remove(this);
+                if (bc->empty())
+                    pManager.internalRemoveItem(bc);
+            }
+            else
+                pManager.internalRemoveItem(i->first);
+        }
 
-	void Item::color(const int r, const int g, const int b)
-	{
-		pColor.Set(
-			(unsigned char) Yuni::Math::MinMax<int>(r, 0, 255),
-			(unsigned char) Yuni::Math::MinMax<int>(g, 0, 255),
-			(unsigned char) Yuni::Math::MinMax<int>(b, 0, 255),
-			wxALPHA_OPAQUE);
-		this->invalidate();
-		colorHasChanged();
-	}
+        lnks->clear();
+        pLinks = lnks;
+    }
+}
 
+void Item::invalidate()
+{
+    pInvalidated = true;
+    if (!pLinks->empty())
+    {
+        Links::iterator end = pLinks->end();
+        for (Links::iterator i = pLinks->begin(); i != end; ++i)
+            i->first->invalidate();
+    }
+}
 
-
-	void Item::color(const int r, const int g, const int b, const int alpha)
-	{
-		pColor.Set(
-			(unsigned char) Yuni::Math::MinMax<int>(r, 0, 255),
-			(unsigned char) Yuni::Math::MinMax<int>(g, 0, 255),
-			(unsigned char) Yuni::Math::MinMax<int>(b, 0, 255),
-			(unsigned char) Yuni::Math::MinMax<int>(alpha, 0, 255) );
-		this->invalidate();
-		colorHasChanged();
-	}
-
-
-	void Item::selected(bool v)
-	{
-		if (v != pSelected)
-		{
-			pSelected = v;
-			if (v)
-				pManager.pSelectedItems[this] = true;
-			else
-			{
-				Manager::NodeMap::iterator i = pManager.pSelectedItems.find(this);
-				if (i != pManager.pSelectedItems.end())
-					pManager.pSelectedItems.erase(i);
-			}
-			invalidate();
-		}
-	}
-
-
-	void Item::move(const int, const int)
-	{
-		// Do nothing
-		positionHasChanged();
-	}
-
-
-
-	void Item::internalClearAllLinks()
-	{
-		if (pLinks && !pLinks->empty())
-		{
-			Links* lnks = pLinks;
-			pLinks = NULL;
-
-			const Links::const_iterator end = lnks->end();
-			for (Links::const_iterator i = lnks->begin(); i != end; ++i)
-			{
-				if (dynamic_cast<BindingConstraint*>(i->first))
-				{
-					BindingConstraint* bc = dynamic_cast<BindingConstraint*>(i->first);
-					bc->remove(this);
-					if (bc->empty())
-						pManager.internalRemoveItem(bc);
-				}
-				else
-					pManager.internalRemoveItem(i->first);
-			}
-
-			lnks->clear();
-			pLinks = lnks;
-		}
-	}
-
-
-	void Item::invalidate()
-	{
-		pInvalidated = true;
-		if (!pLinks->empty())
-		{
-			Links::iterator end = pLinks->end();
-			for (Links::iterator i = pLinks->begin(); i != end; ++i)
-				i->first->invalidate();
-		}
-	}
-
-
-	wxPoint Item::absolutePosition(DrawingContext& dc) const
-	{
-		return wxPoint(dc.origin().x + pX, dc.origin().y - pY);
-	}
-
-
-
+wxPoint Item::absolutePosition(DrawingContext& dc) const
+{
+    return wxPoint(dc.origin().x + pX, dc.origin().y - pY);
+}
 
 } // namespace Map
 } // namespace Antares

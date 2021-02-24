@@ -11,52 +11,41 @@
 #pragma once
 #include "list.h"
 
-
-
 namespace Yuni
 {
 namespace Device
 {
 namespace Display
 {
+inline size_t List::size() const
+{
+    return pMonitors.size();
+}
 
+inline Monitor::Ptr List::primary() const
+{
+    return pPrimary;
+}
 
-	inline size_t List::size() const
-	{
-		return pMonitors.size();
-	}
+inline List::iterator List::begin()
+{
+    return pMonitors.begin();
+}
 
+inline List::iterator List::end()
+{
+    return pMonitors.end();
+}
 
-	inline Monitor::Ptr List::primary() const
-	{
-		return pPrimary;
-	}
+inline List::const_iterator List::begin() const
+{
+    return pMonitors.begin();
+}
 
-
-	inline List::iterator List::begin()
-	{
-		return pMonitors.begin();
-	}
-
-
-	inline List::iterator List::end()
-	{
-		return pMonitors.end();
-	}
-
-	inline List::const_iterator List::begin() const
-	{
-		return pMonitors.begin();
-	}
-
-
-	inline List::const_iterator List::end() const
-	{
-		return pMonitors.end();
-	}
-
-
-
+inline List::const_iterator List::end() const
+{
+    return pMonitors.end();
+}
 
 } // namespace Display
 } // namespace Device

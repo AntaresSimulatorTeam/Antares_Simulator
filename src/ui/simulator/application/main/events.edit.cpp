@@ -36,80 +36,69 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
 namespace Forms
 {
+void ApplWnd::evtOnViewAllSystem(wxCommandEvent&)
+{
+    pSectionNotebook->select(wxT("input"));
+    pNotebook->select(wxT("sys"));
+    pMainMap->showLayerAll();
+}
 
-	void ApplWnd::evtOnViewAllSystem(wxCommandEvent&)
-	{
-		pSectionNotebook->select(wxT("input"));
-		pNotebook->select(wxT("sys"));
-		pMainMap->showLayerAll();
-	}
+void ApplWnd::copyToClipboard()
+{
+    // Copy to the clipboard items present in the inspector
+    uint count = Window::Inspector::CopyToClipboard();
 
-	void ApplWnd::copyToClipboard()
-	{
-		// Copy to the clipboard items present in the inspector
-		uint count = Window::Inspector::CopyToClipboard();
+    // Keeping the user informed about the operation
+    switch (count)
+    {
+    case 0:
+        SetStatusText(wxT("  Nothing has been copied"));
+        break;
+    case 1:
+        SetStatusText(wxT("  1 item has been copied"));
+        break;
+    default:
+        SetStatusText(wxString(wxT("  ")) << count << wxT(" items have been copied"));
+    }
+    // paste: applicate/main/paste-from-clipboard.cpp
+}
 
-		// Keeping the user informed about the operation
-		switch (count)
-		{
-			case 0:
-				SetStatusText(wxT("  Nothing has been copied"));
-				break;
-			case 1:
-				SetStatusText(wxT("  1 item has been copied"));
-				break;
-			default:
-				SetStatusText(wxString(wxT("  ")) << count << wxT(" items have been copied"));
-		}
-		// paste: applicate/main/paste-from-clipboard.cpp
-	}
+void ApplWnd::evtOnEditCopy(wxCommandEvent&)
+{
+    if (GUIIsLock())
+        return;
+    copyToClipboard();
+    // paste: applicate/main/paste-from-clipboard.cpp
+}
 
+void ApplWnd::evtOnEditMapSelectAll(wxCommandEvent&)
+{
+    if (GUIIsLock() || !pMainMap)
+        return;
+    pMainMap->selectAll();
+}
 
-	void ApplWnd::evtOnEditCopy(wxCommandEvent&)
-	{
-		if (GUIIsLock())
-			return;
-		copyToClipboard();
-		// paste: applicate/main/paste-from-clipboard.cpp
-	}
+void ApplWnd::evtOnEditMapUnselectAll(wxCommandEvent&)
+{
+    if (GUIIsLock())
+        return;
+    if (!pMainMap)
+        return;
+    pMainMap->unselectAll();
+}
 
-
-	void ApplWnd::evtOnEditMapSelectAll(wxCommandEvent&)
-	{
-		if (GUIIsLock() || !pMainMap)
-			return;
-		pMainMap->selectAll();
-	}
-
-
-	void ApplWnd::evtOnEditMapUnselectAll(wxCommandEvent&)
-	{
-		if (GUIIsLock())
-			return;
-		if (!pMainMap)
-			return;
-		pMainMap->unselectAll();
-	}
-
-
-	void ApplWnd::evtOnEditMapReverseSelection(wxCommandEvent&)
-	{
-		if (GUIIsLock())
-			return;
-		if (!pMainMap)
-			return;
-		pMainMap->reverseSelection();
-	}
-
-
-
-
+void ApplWnd::evtOnEditMapReverseSelection(wxCommandEvent&)
+{
+    if (GUIIsLock())
+        return;
+    if (!pMainMap)
+        return;
+    pMainMap->reverseSelection();
+}
 
 } // namespace Forms
 } // namespace Antares

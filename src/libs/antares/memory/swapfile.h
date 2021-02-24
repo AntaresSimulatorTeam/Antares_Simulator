@@ -25,12 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_MEMORY_SWAPFILE_H__
-# define __ANTARES_LIBS_MEMORY_SWAPFILE_H__
+#define __ANTARES_LIBS_MEMORY_SWAPFILE_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/system/windows.hdr.h>
-# include <yuni/core/bit/array.h>
-
+#include <yuni/yuni.h>
+#include <yuni/core/system/windows.hdr.h>
+#include <yuni/core/bit/array.h>
 
 namespace Antares
 {
@@ -38,49 +37,43 @@ namespace Private
 {
 namespace Memory
 {
+class SwapFileInfo final
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    SwapFileInfo();
+    //! Destructor
+    ~SwapFileInfo();
+    //@}
 
-	class SwapFileInfo final
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		SwapFileInfo();
-		//! Destructor
-		~SwapFileInfo();
-		//@}
+    /*!
+    ** \brief Open a new swap file
+    */
+    bool openSwapFile(uint count);
 
-		/*!
-		** \brief Open a new swap file
-		*/
-		bool openSwapFile(uint count);
+public:
+#ifdef YUNI_OS_WINDOWS
+    HANDLE handle;
+    HANDLE mappingHandle;
+#else
+    int handle;
+#endif
 
+    //! Reminder for the last cursor offset
+    // This offset is used for optimizing the allocation of a new block
+    uint lastOffset;
+    //! Number of blocks currently used
+    uint nbFreeBlocks;
+    //! Bitmap index for Free blocks
+    Yuni::Bit::Array blocks;
+    //! Swap filename
+    Yuni::String filename;
 
-	public:
-		# ifdef YUNI_OS_WINDOWS
-		HANDLE handle;
-		HANDLE mappingHandle;
-		# else
-		int handle;
-		# endif
-
-		//! Reminder for the last cursor offset
-		// This offset is used for optimizing the allocation of a new block
-		uint lastOffset;
-		//! Number of blocks currently used
-		uint nbFreeBlocks;
-		//! Bitmap index for Free blocks
-		Yuni::Bit::Array blocks;
-		//! Swap filename
-		Yuni::String filename;
-
-	}; // class SwapFileInfo
-
-
-
-
+}; // class SwapFileInfo
 
 } // namespace Memory
 } // namespace Private

@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_PLANT_ROOT_NODE_HXX__
-# define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_PLANT_ROOT_NODE_HXX__
-
+#define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_PLANT_ROOT_NODE_HXX__
 
 namespace Antares
 {
@@ -36,13 +35,10 @@ namespace AntaresStudy
 {
 namespace ThermalCluster
 {
-
-	inline bool RootNode::allowUpdate() const
-	{
-		return true;
-	}
-
-
+inline bool RootNode::allowUpdate() const
+{
+    return true;
+}
 
 } // namespace ThermalCluster
 } // namespace AntaresStudy

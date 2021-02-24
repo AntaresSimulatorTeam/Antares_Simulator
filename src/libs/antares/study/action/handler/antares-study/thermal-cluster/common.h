@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_THERMAL_PLANT_COMMON_H__
-# define __ANTARES_LIBS_STUDY_ACTION_THERMAL_PLANT_COMMON_H__
+#define __ANTARES_LIBS_STUDY_ACTION_THERMAL_PLANT_COMMON_H__
 
-# include <yuni/yuni.h>
-# include "../../../action.h"
-
+#include <yuni/yuni.h>
+#include "../../../action.h"
 
 namespace Antares
 {
@@ -39,34 +38,30 @@ namespace AntaresStudy
 {
 namespace ThermalCluster
 {
+class CommonData : public IAction
+{
+public:
+    //! The most suitable smart ptr for the class
+    typedef IAction::Ptr Ptr;
+    //! The threading policy
+    typedef IAction::ThreadingPolicy ThreadingPolicy;
 
-	class CommonData : public IAction
-	{
-	public:
-		//! The most suitable smart ptr for the class
-		typedef IAction::Ptr  Ptr;
-		//! The threading policy
-		typedef IAction::ThreadingPolicy  ThreadingPolicy;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    CommonData();
+    //! Destructor
+    virtual ~CommonData();
+    //@}
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		CommonData();
-		//! Destructor
-		virtual ~CommonData();
-		//@}
+protected:
+    virtual bool prepareWL(Context& ctx);
+    virtual bool performWL(Context& ctx);
 
-	protected:
-		virtual bool prepareWL(Context& ctx);
-		virtual bool performWL(Context& ctx);
-
-	}; // class IAction
-
-
-
+}; // class IAction
 
 } // namespace ThermalCluster
 } // namespace AntaresStudy

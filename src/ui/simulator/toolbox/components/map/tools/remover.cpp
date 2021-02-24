@@ -34,107 +34,96 @@
 
 using namespace Yuni;
 
-
 namespace Antares
 {
 namespace Map
 {
 namespace Tool
 {
+Remover::Remover(Manager& manager) : Tool(manager, nullptr)
+{
+    pWidth = 20;
+    pHeight = 20;
+}
 
+Remover::~Remover()
+{
+}
 
-	Remover::Remover(Manager& manager)
-		:Tool(manager, nullptr)
-	{
-		pWidth = 20;
-		pHeight = 20;
-	}
+void Remover::draw(DrawingContext& dc,
+                   const bool mouseDown,
+                   const wxPoint& position,
+                   const wxPoint& absolute) const
+{
+    // Parent::draw
+    Tool::draw(dc, mouseDown, position, absolute);
+}
 
+bool Remover::onMouseUp(const int, const int)
+{
+    if (not Data::Study::Current::Valid())
+        return false;
 
-	Remover::~Remover()
-	{}
+    auto& mainFrm = *Forms::ApplWnd::Instance();
 
+    wxString messageText
+      = wxT("Do you really want to delete the selected items ?\nSelected items: ");
+    uint selectedAreasCount = Antares::Window::Inspector::SelectionAreaCount();
+    if (selectedAreasCount > 0)
+    {
+        messageText << selectedAreasCount;
+        messageText << " Area";
+        if (selectedAreasCount > 1)
+            messageText << "s";
+    }
 
+    uint selectedLinksCount = Antares::Window::Inspector::SelectionLinksCount();
+    if (selectedLinksCount > 0)
+    {
+        if (selectedAreasCount > 0)
+            messageText << ", ";
+        messageText << selectedLinksCount;
+        messageText << " Link";
+        if (selectedLinksCount > 1)
+            messageText << "s";
+    }
 
-	void Remover::draw(DrawingContext& dc, const bool mouseDown, const wxPoint& position,
-		const wxPoint& absolute) const
-	{
-		// Parent::draw
-		Tool::draw(dc, mouseDown, position, absolute);
-	}
+    uint selectedConstraintsCount = Antares::Window::Inspector::SelectionBindingConstraintCount();
+    if (selectedConstraintsCount > 0)
+    {
+        if (selectedLinksCount > 0 || selectedAreasCount > 0)
+            messageText << ", ";
+        messageText << selectedConstraintsCount;
+        messageText << " Constraint";
+        if (selectedConstraintsCount > 1)
+            messageText << "s";
+    }
 
+    Window::Message message(&mainFrm, wxT("Map"), wxT("Map"), messageText);
+    message.add(Window::Message::btnYes);
+    message.add(Window::Message::btnCancel, true);
+    if (message.showModal() == Window::Message::btnYes)
+    {
+        // Remove all selected items
+        bool r = (0 != pManager.removeAllSelected());
 
-	bool Remover::onMouseUp(const int, const int)
-	{
-		if (not Data::Study::Current::Valid())
-			return false;
+        // post-check about the study - paranoid
+        if (not Data::Study::Current::Valid())
+            return false;
 
-		auto& mainFrm = *Forms::ApplWnd::Instance();
-
-		wxString messageText = wxT("Do you really want to delete the selected items ?\nSelected items: ");
-		uint selectedAreasCount = Antares::Window::Inspector::SelectionAreaCount();
-		if (selectedAreasCount > 0)
-		{
-			messageText << selectedAreasCount;
-			messageText << " Area";
-			if (selectedAreasCount > 1)
-				messageText << "s";	
-		}
-
-		uint selectedLinksCount = Antares::Window::Inspector::SelectionLinksCount();
-		if (selectedLinksCount > 0)
-		{
-			if(selectedAreasCount > 0)
-				messageText << ", ";
-			messageText << selectedLinksCount;
-			messageText << " Link";
-			if (selectedLinksCount > 1)
-				messageText << "s";
-		}
-
-		uint selectedConstraintsCount = Antares::Window::Inspector::SelectionBindingConstraintCount();
-		if (selectedConstraintsCount > 0)
-		{
-			if (selectedLinksCount > 0 || selectedAreasCount > 0)
-				messageText << ", ";
-			messageText << selectedConstraintsCount;
-			messageText << " Constraint";
-			if (selectedConstraintsCount > 1)
-				messageText << "s";
-		}
-
-		Window::Message message(&mainFrm, wxT("Map"),
-			wxT("Map"),
-			messageText);
-		message.add(Window::Message::btnYes);
-		message.add(Window::Message::btnCancel, true);
-		if (message.showModal() == Window::Message::btnYes)
-		{
-			// Remove all selected items
-			bool r = (0 != pManager.removeAllSelected());
-
-			// post-check about the study - paranoid
-			if (not Data::Study::Current::Valid())
-				return false;
-
-			// Force the refresh of runtime data
-			logs.debug() << "  Asking to reload UI runtime data";
-			auto* info = Data::Study::Current::Get()->uiinfo;
-			if (info)
-			{
-				info->reload();
-				info->reloadBindingConstraints();
-			}
-			return r;
-		}
-		return false;
-	}
-
-
-
-
+        // Force the refresh of runtime data
+        logs.debug() << "  Asking to reload UI runtime data";
+        auto* info = Data::Study::Current::Get()->uiinfo;
+        if (info)
+        {
+            info->reload();
+            info->reloadBindingConstraints();
+        }
+        return r;
+    }
+    return false;
+}
 
 } // namespace Tool
 } // namespace Map
 } // namespace Antares
-

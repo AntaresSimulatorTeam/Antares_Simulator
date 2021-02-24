@@ -30,9 +30,7 @@
 #include "../../toolbox/components/datagrid/component.h"
 #include "../../toolbox/components/datagrid/renderer/area/timeseries.h"
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
@@ -40,69 +38,56 @@ namespace Window
 {
 namespace Hydro
 {
+Series::Series(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
+ Component::Panel(parent), pNotifier(notifier), pLastArea(nullptr)
+{
+    auto* notebook = new Component::Notebook(this, Component::Notebook::orTop);
+    notebook->displayTitle(false);
+    notebook->theme(Component::Notebook::themeLight);
 
+    auto* com = new Component::Datagrid::Component(notebook);
+    com->renderer(new Component::Datagrid::Renderer::TimeSeriesHydroFatal(com, notifier));
+    pPageFatal = notebook->add(com, wxT("Run-of-the-river (ROR)"));
 
-	Series::Series(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
-		Component::Panel(parent),
-		pNotifier(notifier),
-		pLastArea(nullptr)
-	{
-		auto* notebook = new Component::Notebook(this, Component::Notebook::orTop);
-		notebook->displayTitle(false);
-		notebook->theme(Component::Notebook::themeLight);
+    com = new Component::Datagrid::Component(notebook);
+    com->renderer(new Component::Datagrid::Renderer::TimeSeriesHydroMod(com, notifier));
+    notebook->add(com, wxT("Hydro Storage"));
 
-		auto* com = new Component::Datagrid::Component(notebook);
-		com->renderer(new Component::Datagrid::Renderer::TimeSeriesHydroFatal(com, notifier));
-		pPageFatal = notebook->add(com, wxT("Run-of-the-river (ROR)"));
+    // Connection to the notifier
+    if (pNotifier)
+        pNotifier->onAreaChanged.connect(this, &Series::onAreaChanged);
+    OnStudyClosed.connect(this, &Series::onStudyClosed);
 
-		com = new Component::Datagrid::Component(notebook);
-		com->renderer(new Component::Datagrid::Renderer::TimeSeriesHydroMod(com, notifier));
-		notebook->add(com, wxT("Hydro Storage"));
+    wxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+    sizer->Add(notebook, 1, wxALL | wxEXPAND);
+    SetSizer(sizer);
 
-		// Connection to the notifier
-		if (pNotifier)
-			pNotifier->onAreaChanged.connect(this, &Series::onAreaChanged);
-		OnStudyClosed.connect(this, &Series::onStudyClosed);
+    OnStudyLoaded.connect(this, &Series::onStudyLoaded);
+}
 
-		wxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
-		sizer->Add(notebook, 1, wxALL|wxEXPAND);
-		SetSizer(sizer);
+Series::~Series()
+{
+    destroyBoundEvents();
+}
 
-		OnStudyLoaded.connect(this, &Series::onStudyLoaded);
-	}
+void Series::onAreaChanged(Data::Area* area)
+{
+    pLastArea = Data::Study::Current::Valid() ? area : nullptr;
+}
 
+void Series::onStudyClosed()
+{
+    pLastArea = nullptr;
+    if (pNotifier)
+        pNotifier->onAreaChanged(nullptr);
+}
 
-
-	Series::~Series()
-	{
-		destroyBoundEvents();
-	}
-
-
-	void Series::onAreaChanged(Data::Area* area)
-	{
-		pLastArea = Data::Study::Current::Valid() ? area : nullptr;
-	}
-
-
-	void Series::onStudyClosed()
-	{
-		pLastArea = nullptr;
-		if (pNotifier)
-			pNotifier->onAreaChanged(nullptr);
-	}
-
-
-	void Series::onStudyLoaded()
-	{
-		if (pPageFatal)
-			pPageFatal->select();
-	}
-
-
-
+void Series::onStudyLoaded()
+{
+    if (pPageFatal)
+        pPageFatal->select();
+}
 
 } // namespace Hydro
 } // namespace Window
 } // namespace Antares
-

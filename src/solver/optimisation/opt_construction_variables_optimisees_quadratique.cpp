@@ -25,67 +25,35 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "opt_structure_probleme_a_resoudre.h"
 
+#include "../simulation/simulation.h"
+#include "../simulation/sim_structure_donnees.h"
+#include "../simulation/sim_extern_variables_globales.h"
 
+#include "opt_fonctions.h"
 
+#include "pi_constantes_externes.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# include "opt_structure_probleme_a_resoudre.h"
-
-# include "../simulation/simulation.h"
-# include "../simulation/sim_structure_donnees.h"
-# include "../simulation/sim_extern_variables_globales.h"
-
-# include "opt_fonctions.h"
-
-# include "../ext/Sirius_Solver/pointInterieur/pi_constantes_externes.h"
-
-
-
-
-
-
-
-void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique( PROBLEME_HEBDO * ProblemeHebdo )
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_HEBDO* ProblemeHebdo)
 {
-	PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
-	int Interco;
-	int NombreDeVariables = 0;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    int Interco;
+    int NombreDeVariables = 0;
 
-	CORRESPONDANCES_DES_VARIABLES * CorrespondanceVarNativesVarOptim;
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
 
-	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-	assert(ProblemeAResoudre != NULL);
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    assert(ProblemeAResoudre != NULL);
 
-	CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0];
+    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0];
 
-	for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
-	{
-		CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco] = NombreDeVariables;
-		ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-		NombreDeVariables++;
-	}
-	ProblemeAResoudre->NombreDeVariables = NombreDeVariables;
+    for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    {
+        CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco]
+          = NombreDeVariables;
+        ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+        NombreDeVariables++;
+    }
+    ProblemeAResoudre->NombreDeVariables = NombreDeVariables;
 }
-
-

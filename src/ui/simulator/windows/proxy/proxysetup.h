@@ -25,74 +25,66 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_WINDOWS_PROXY_SETUP_H__
-# define __ANTARES_APPLICATION_WINDOWS_PROXY_SETUP_H__
+#define __ANTARES_APPLICATION_WINDOWS_PROXY_SETUP_H__
 
-# include <antares/wx-wrapper.h>
-# include "../../toolbox/components/button.h"
-# include <wx/dialog.h>
-# include <wx/checkbox.h>
-
-
+#include <antares/wx-wrapper.h>
+#include "../../toolbox/components/button.h"
+#include <wx/dialog.h>
+#include <wx/checkbox.h>
 
 namespace Antares
 {
 namespace Window
 {
+/*!
+** \brief Startup Wizard User Interface
+*/
+class LicenseCouldNotConnectToInternetServer final : public wxDialog
+{
+public:
+    /*!
+    ** \brief Show an instance of proxy setup page
+    */
+    // static void ShowProxySetup();
 
-	/*!
-	** \brief Startup Wizard User Interface
-	*/
-	class LicenseCouldNotConnectToInternetServer final : public wxDialog
-	{
-	public:
-		/*!
-		** \brief Show an instance of proxy setup page
-		*/
-		//static void ShowProxySetup();
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    **
+    ** \param parent The parent window
+    */
+    LicenseCouldNotConnectToInternetServer(wxWindow* parent);
+    //! Destructor
+    virtual ~LicenseCouldNotConnectToInternetServer();
+    //@}
 
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		**
-		** \param parent The parent window
-		*/
-		LicenseCouldNotConnectToInternetServer(wxWindow* parent);
-		//! Destructor
-		virtual ~LicenseCouldNotConnectToInternetServer();
-		//@}
+    //! Get if the operation has been canceled by the user
+    bool canceled() const;
 
+private:
+    void onClose(void*);
+    void onProceed(void*);
+    void toggleProxySettings();
+    void evtToggleUseProxy(wxCommandEvent&);
+    void onInternalMotion(wxMouseEvent&);
 
-		//! Get if the operation has been canceled by the user
-		bool canceled() const;
+private:
+    wxCheckBox* pProxyEnabled;
+    wxTextCtrl* pEditProxyHost;
+    wxTextCtrl* pEditProxyPort;
+    wxTextCtrl* pEditProxyLogin;
+    wxTextCtrl* pEditProxyPass;
+    wxWindow* pLblProxyHost;
+    wxWindow* pLblProxyPort;
+    wxWindow* pLblProxyLogin;
+    wxWindow* pLblProxyPass;
+    wxSizer* pFlexSizer;
+    bool pCanceled;
 
+    wxStaticText* pOffline_title;
 
-	private:
-		void onClose(void*);
-		void onProceed(void*);
-		void toggleProxySettings();
-		void evtToggleUseProxy(wxCommandEvent &);
-		void onInternalMotion(wxMouseEvent&);
-
-
-	private:
-		wxCheckBox* pProxyEnabled;
-		wxTextCtrl* pEditProxyHost;
-		wxTextCtrl* pEditProxyPort;
-		wxTextCtrl* pEditProxyLogin;
-		wxTextCtrl* pEditProxyPass;
-		wxWindow* pLblProxyHost;
-		wxWindow* pLblProxyPort;
-		wxWindow* pLblProxyLogin;
-		wxWindow* pLblProxyPass;
-		wxSizer* pFlexSizer;
-		bool pCanceled;
-
-	}; // class LicenseCoudtNotConnectToInternetServer
-
-
-
-
+}; // class LicenseCoudtNotConnectToInternetServer
 
 } // namespace Window
 } // namespace Antares

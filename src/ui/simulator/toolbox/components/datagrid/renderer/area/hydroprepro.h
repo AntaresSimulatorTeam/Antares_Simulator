@@ -25,15 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_HYDROPREPRO_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_HYDROPREPRO_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_HYDROPREPRO_H__
 
-# include <antares/wx-wrapper.h>
-# include "../area.h"
-# include "../matrix.h"
-# include <antares/date.h>
-# include <antares/study/parts/wind/prepro.h>
-
-
+#include <antares/wx-wrapper.h>
+#include "../area.h"
+#include "../matrix.h"
+#include <antares/date.h>
+#include <antares/study/parts/wind/prepro.h>
 
 namespace Antares
 {
@@ -43,66 +41,67 @@ namespace Datagrid
 {
 namespace Renderer
 {
+class HydroPrepro final : public Renderer::Matrix<double, double, 3>, public Renderer::ARendererArea
+{
+public:
+    typedef Renderer::Matrix<double, double, 3> MatrixAncestorType;
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    HydroPrepro(wxWindow* control, Toolbox::InputSelector::Area* notifier);
+    //! Destructor
+    virtual ~HydroPrepro();
+    //@}
 
-	class HydroPrepro final :
-		public Renderer::Matrix<double, double, 3>,
-		public Renderer::ARendererArea
-	{
-	public:
-		typedef Renderer::Matrix<double, double, 3>  MatrixAncestorType;
+    virtual int width() const;
+    virtual int height() const;
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		HydroPrepro(wxWindow* control, Toolbox::InputSelector::Area* notifier);
-		//! Destructor
-		virtual ~HydroPrepro();
-		//@}
+    virtual wxString columnCaption(int colIndx) const;
 
-		virtual int width() const;
-		virtual int height() const;
+    virtual wxString rowCaption(int rowIndx) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual wxString cellValue(int x, int y) const;
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual double cellNumericValue(int x, int y) const;
 
-		virtual wxString cellValue(int x, int y) const;
+    virtual bool cellValue(int, int, const Yuni::String&);
 
-		virtual double cellNumericValue(int x, int y) const;
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    { /*Do nothing*/
+    }
 
-		virtual bool cellValue(int, int, const Yuni::String&);
+    virtual Date::Precision precision()
+    {
+        return Date::monthly;
+    }
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{/*Do nothing*/}
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
 
-		virtual Date::Precision precision() {return Date::monthly;}
+    virtual bool valid() const;
 
-		virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+    virtual uint maxWidthResize() const
+    {
+        return 0;
+    }
+    virtual uint maxHeightResize() const
+    {
+        return 0;
+    }
 
-		virtual bool valid() const;
+    virtual bool circularShiftRowsUntilDate(MonthName month, uint daymonth);
 
-		virtual uint maxWidthResize() const {return 0;}
-		virtual uint maxHeightResize() const {return 0;}
+protected:
+    virtual void internalAreaChanged(Antares::Data::Area* area);
+    //! Event: the study has been closed
+    virtual void onStudyClosed() override;
+    //! Event: the study has been loaded
+    virtual void onStudyLoaded() override;
 
-		virtual bool circularShiftRowsUntilDate(MonthName month, uint daymonth);
-
-	protected:
-		virtual void internalAreaChanged(Antares::Data::Area* area);
-		//! Event: the study has been closed
-		virtual void onStudyClosed() override;
-		//! Event: the study has been loaded
-		virtual void onStudyLoaded() override;
-
-	}; // class HydroPrepro
-
-
-
-
-
+}; // class HydroPrepro
 
 } // namespace Renderer
 } // namespace Datagrid

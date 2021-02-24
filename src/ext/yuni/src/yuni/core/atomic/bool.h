@@ -12,21 +12,15 @@
 #include "../../yuni.h"
 #include "int.h"
 
-
-
 namespace Yuni
 {
 namespace Atomic
 {
-
-	/*!
-	** \brief An atomic boolean type
-	** \ingroup Atomic
-	*/
-	typedef Atomic::Int<1>  Bool;
-
-
-
+/*!
+** \brief An atomic boolean type
+** \ingroup Atomic
+*/
+typedef Atomic::Int<1> Bool;
 
 } // namespace Atomic
 } // namespace Yuni

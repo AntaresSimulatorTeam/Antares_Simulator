@@ -28,194 +28,188 @@
 #include "../../libs/antares/study/area/constants.h"
 
 #include <string>
-#include <iostream> 
-#include <sstream> 
+#include <iostream>
+#include <sstream>
 #include <iomanip>
-
 
 using namespace Yuni;
 
 namespace Antares
 {
+bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
+{
+    uint nCount = alreadyExistingNetworkConstraints(CB_PREFIX) + 1;
+    uint nSubCount = 1;
+    uint nLoops = (uint)mesh.size();
+    bool ret = false;
 
-	bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
-	{
-		uint nCount = alreadyExistingNetworkConstraints(CB_PREFIX)+1;
-		uint nSubCount = 1;
-		uint nLoops = (uint)mesh.size();
-		bool ret = false;
+    uint columnImpedance = (uint)Antares::Data::fhlImpedances;
+    uint columnLoopFlow = (uint)Antares::Data::fhlLoopFlow;
 
-		uint columnImpedance = (uint)Antares::Data::fhlImpedances;
-		uint columnLoopFlow = (uint)Antares::Data::fhlLoopFlow;
+    std::vector<Cycle> cycleBase;
+    int count = 1;
+    auto i = mesh.begin();
+    for (; i != mesh.end(); i++, count++)
+    {
+        logs.info() << "Writing constraints (" << count << "/" << mesh.size() << ")";
+        const Vector& loop = (*i);
 
-		std::vector<Cycle> cycleBase;
-		int count = 1;
-		auto i = mesh.begin();
-		for ( ; i != mesh.end(); i++, count++)
-		{
-			logs.info() << "Writing constraints (" << count << "/" << mesh.size() << ")";
-			const Vector& loop = (*i);
-			
-			Cycle currentCycle(loop, infiniteSecondMember);
-			if (calendarEnd != 8760 || calendarStart != 1)
-			{
-				currentCycle.opType = Data::BindingConstraint::opBoth;
-			}
+        Cycle currentCycle(loop, infiniteSecondMember);
+        if (calendarEnd != 8760 || calendarStart != 1)
+        {
+            currentCycle.opType = Data::BindingConstraint::opBoth;
+        }
 
-			for (uint hour = 0; hour < currentCycle.time; ++hour)
-			{
-				std::vector<double> impedanceVector;
-				WeightMap wm;
-				// initiate second members
-				double lb(0), ub(0);
-				int i = 0;
-				for (auto line = loop.begin(); line != loop.end(); line++ , i++)
-				{
-					impedanceVector.push_back((*line)->dataLink->entry[columnImpedance][hour]);
-					/*PN-TODO: Check the formula (page 3)*/
-					if(currentCycle.opType == Data::BindingConstraint::opEquality)
-						ub += ((*line)->dataLink->entry[columnImpedance][hour] * (*line)->dataLink->entry[columnLoopFlow][hour] * includeLoopFlow + (*line)->dataLink->entry[Data::fhlPShiftMinus][hour] * includePhaseShift) * currentCycle.sign[i];
-					else if (currentCycle.opType == Data::BindingConstraint::opBoth && hour+1 <= calendarEnd && hour+1 >= calendarStart)
-					{
-						ub += ((*line)->dataLink->entry[columnImpedance][hour] * (*line)->dataLink->entry[columnLoopFlow][hour] * includeLoopFlow)* currentCycle.sign[i] + std::min(((*line)->dataLink->entry[Data::fhlPShiftMinus][hour] * includePhaseShift) * currentCycle.sign[i], ((*line)->dataLink->entry[Data::fhlPShiftPlus][hour] * includePhaseShift) * currentCycle.sign[i]);
-						lb += ((*line)->dataLink->entry[columnImpedance][hour] * (*line)->dataLink->entry[columnLoopFlow][hour] * includeLoopFlow)* currentCycle.sign[i] + std::max(((*line)->dataLink->entry[Data::fhlPShiftMinus][hour] * includePhaseShift) * currentCycle.sign[i], ((*line)->dataLink->entry[Data::fhlPShiftPlus][hour] * includePhaseShift) * currentCycle.sign[i]);
-					}
-					else
-					{
-						lb = infiniteSecondMember;
-						ub = -1* infiniteSecondMember;
-					}
+        for (uint hour = 0; hour < currentCycle.time; ++hour)
+        {
+            std::vector<double> impedanceVector;
+            WeightMap wm;
+            // initiate second members
+            double lb(0), ub(0);
+            int i = 0;
+            for (auto line = loop.begin(); line != loop.end(); line++, i++)
+            {
+                impedanceVector.push_back((*line)->dataLink->entry[columnImpedance][hour]);
+                /*PN-TODO: Check the formula (page 3)*/
+                if (currentCycle.opType == Data::BindingConstraint::opEquality)
+                    ub += ((*line)->dataLink->entry[columnImpedance][hour]
+                             * (*line)->dataLink->entry[columnLoopFlow][hour] * includeLoopFlow
+                           + (*line)->dataLink->entry[Data::fhlPShiftMinus][hour]
+                               * includePhaseShift)
+                          * currentCycle.sign[i];
+                else if (currentCycle.opType == Data::BindingConstraint::opBoth
+                         && hour + 1 <= calendarEnd && hour + 1 >= calendarStart)
+                {
+                    ub += ((*line)->dataLink->entry[columnImpedance][hour]
+                           * (*line)->dataLink->entry[columnLoopFlow][hour] * includeLoopFlow)
+                            * currentCycle.sign[i]
+                          + std::min(((*line)->dataLink->entry[Data::fhlPShiftMinus][hour]
+                                      * includePhaseShift)
+                                       * currentCycle.sign[i],
+                                     ((*line)->dataLink->entry[Data::fhlPShiftPlus][hour]
+                                      * includePhaseShift)
+                                       * currentCycle.sign[i]);
+                    lb += ((*line)->dataLink->entry[columnImpedance][hour]
+                           * (*line)->dataLink->entry[columnLoopFlow][hour] * includeLoopFlow)
+                            * currentCycle.sign[i]
+                          + std::max(((*line)->dataLink->entry[Data::fhlPShiftMinus][hour]
+                                      * includePhaseShift)
+                                       * currentCycle.sign[i],
+                                     ((*line)->dataLink->entry[Data::fhlPShiftPlus][hour]
+                                      * includePhaseShift)
+                                       * currentCycle.sign[i]);
+                }
+                else
+                {
+                    lb = infiniteSecondMember;
+                    ub = -1 * infiniteSecondMember;
+                }
 
-					wm[(*line)] = (*line)->dataLink->entry[columnImpedance][hour] * currentCycle.sign[i];
-				}
+                wm[(*line)]
+                  = (*line)->dataLink->entry[columnImpedance][hour] * currentCycle.sign[i];
+            }
 
-				State& st = currentCycle.getState(impedanceVector);
+            State& st = currentCycle.getState(impedanceVector);
 
-				if (currentCycle.opType == Data::BindingConstraint::opBoth)
-				{
-					st.secondMember.entry[0][hour] = std::max(lb,ub);
-					st.secondMember.entry[1][hour] = std::min(ub,lb);
-				}
-				else
-				{
-					st.secondMember.entry[2][hour] = ub;
-				}
-				st.WeightMap = wm;
-			}
+            if (currentCycle.opType == Data::BindingConstraint::opBoth)
+            {
+                st.secondMember.entry[0][hour] = std::max(lb, ub);
+                st.secondMember.entry[1][hour] = std::min(ub, lb);
+            }
+            else
+            {
+                st.secondMember.entry[2][hour] = ub;
+            }
+            st.WeightMap = wm;
+        }
 
-			cycleBase.push_back(currentCycle);
+        cycleBase.push_back(currentCycle);
+    }
 
-		}
+    for (auto cycle = cycleBase.begin(); cycle != cycleBase.end(); cycle++)
+    {
+        nSubCount = 1;
+        for (auto state = cycle->states.begin(); state != cycle->states.end(); state++)
+        {
+            Data::ConstraintName name1;
+            std::stringstream ss;
+            ss << std::setw(4) << std::setfill('0') << nCount;
+            name1 << pPrefix << ss.str();
+            if (cycle->opType == Data::BindingConstraint::opBoth)
+            {
+                name1 << "." << nSubCount;
+                auto constraint
+                  = addConstraint(name1,
+                                  "both",
+                                  "hourly",
+                                  state->WeightMap,
+                                  0); // vocabulary is not so obvious here (less or greater)
+                ret = constraint != nullptr;
+                state->secondMember.resizeWithoutDataLost(
+                  constraint->matrix().width, constraint->matrix().height, 0);
+                constraint->matrix() = state->secondMember;
 
-		for (auto cycle = cycleBase.begin(); cycle != cycleBase.end(); cycle++)
-		{
-			nSubCount = 1;
-			for (auto state = cycle->states.begin(); state != cycle->states.end(); state++)
-			{
+                // iterate the counter
+                ++nSubCount;
+            }
+            else
+            {
+                auto constraint
+                  = addConstraint(name1,
+                                  "equal",
+                                  "hourly",
+                                  state->WeightMap,
+                                  0); // vocabulary is not so obvious here (less or greater)
+                ret = constraint != nullptr;
+                state->secondMember.resizeWithoutDataLost(
+                  constraint->matrix().width, constraint->matrix().height, 0);
+                constraint->matrix() = state->secondMember;
+                // constraint->matrix() = state->secondMember;
+            }
+        }
+        ++nCount;
+    }
 
-				Data::ConstraintName name1;
-				std::stringstream ss;
-				ss << std::setw(4) << std::setfill('0') << nCount;
-				name1 << pPrefix << ss.str();
-				if (cycle->opType == Data::BindingConstraint::opBoth)
-				{
-					name1 << "." << nSubCount;
-					auto constraint = addConstraint(name1, "both", "hourly", state->WeightMap, 0); // vocabulary is not so obvious here (less or greater)
-					ret =  constraint != nullptr;
-					state->secondMember.resizeWithoutDataLost(constraint->matrix().width, constraint->matrix().height,0);
-					constraint->matrix() = state->secondMember;
+    return ret;
+}
 
-					// iterate the counter
-					++nSubCount;
-				}
-				else 
-				{
-					auto constraint = addConstraint(name1, "equal", "hourly", state->WeightMap, 0); // vocabulary is not so obvious here (less or greater)
-					ret = constraint != nullptr;
-					state->secondMember.resizeWithoutDataLost(constraint->matrix().width, constraint->matrix().height, 0);
-					constraint->matrix() = state->secondMember;
-					//constraint->matrix() = state->secondMember;
-				}
-				
+Antares::Data::BindingConstraint* CBuilder::addConstraint(const Data::ConstraintName& name,
+                                                          const String& op,
+                                                          const String& type,
+                                                          const WeightMap& weights,
+                                                          const double& secondMember)
+{
+    // Create a new contraint
+    auto* constraint = pStudy->bindingConstraints.add(name);
+    const Data::BindingConstraint::Operator o = Data::BindingConstraint::StringToOperator(op);
+    assert(o != Data::BindingConstraint::opUnknown);
+    const Data::BindingConstraint::Type t = Data::BindingConstraint::StringToType(type);
+    assert(t != Data::BindingConstraint::typeUnknown);
 
+    // Reseting
+    constraint->clearAndReset(name, t, o);
+    constraint->removeAllWeights();
+    constraint->enabled(1);
 
-				
+    // weights
+    for (auto j = weights.begin(); j != weights.end(); j++)
+    {
+        if (!Math::Zero(j->second))
+            constraint->weight(j->first->ptr, j->second);
+    }
 
-			}
-			++nCount;
-		}
+    // second members
+    if (!Math::Zero(secondMember))
+    {
+        // Matrix<double, double> sm(1,8760);
+        // sm.fill(secondMember);
+        constraint->matrix(secondMember);
+    }
 
-		
-		return ret;
-	}
+    // mark all values as modified
+    constraint->markAsModified();
 
+    return constraint;
+}
 
-	Antares::Data::BindingConstraint* CBuilder::addConstraint(const Data::ConstraintName& name, const String& op, const String& type, const WeightMap& weights, const double& secondMember)
-	{
-		// Create a new contraint
-		auto* constraint = pStudy->bindingConstraints.add(name);
-		const Data::BindingConstraint::Operator o = Data::BindingConstraint::StringToOperator(op);
-		assert(o != Data::BindingConstraint::opUnknown);
-		const Data::BindingConstraint::Type t =	Data::BindingConstraint::StringToType(type);
-		assert(t != Data::BindingConstraint::typeUnknown);
-
-		// Reseting
-		constraint->clearAndReset(name, t, o);
-		constraint->removeAllWeights();
-		constraint->enabled(1);
-		
-		// weights
-		for(auto j=weights.begin(); j!=weights.end(); j++)
-		{
-			if(!Math::Zero(j->second))
-				constraint->weight(j->first->ptr,j->second);
-		}
-		
-		// second members
-		if(!Math::Zero(secondMember))
-		{
-			//Matrix<double, double> sm(1,8760);
-			//sm.fill(secondMember);
-			constraint->matrix(secondMember);
-		}
-
-		// mark all values as modified
-		constraint->markAsModified();
-
-		return constraint;
-
-	}
-
-	void CBuilder::addConstraint(const Data::ConstraintName& name, const String& op, const String& type, const WeightMap& weights, const Matrix<double, double>& secondMember)
-	{
-		// Create a new contraint
-		auto* constraint = pStudy->bindingConstraints.add(name);
-		const Data::BindingConstraint::Operator o = Data::BindingConstraint::StringToOperator(op);
-		assert(o != Data::BindingConstraint::opUnknown);
-		const Data::BindingConstraint::Type t =	Data::BindingConstraint::StringToType(type);
-		assert(t != Data::BindingConstraint::typeUnknown);
-
-		// Reseting
-		constraint->clearAndReset(name, t, o);
-		constraint->removeAllWeights();
-		constraint->enabled(1);
-		
-		// weights
-		for(auto j=weights.begin(); j!=weights.end(); j++)
-		{
-			if(!Math::Zero(j->second))
-				constraint->weight(j->first->ptr,j->second);
-		}
-		
-		// second members
-		constraint->matrix(secondMember);
-		
-		
-		// mark all values as modified
-		constraint->markAsModified();
-
-	}
-
-
-
-} //namespace Antares
+} // namespace Antares

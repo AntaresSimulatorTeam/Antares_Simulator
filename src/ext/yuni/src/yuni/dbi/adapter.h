@@ -9,8 +9,8 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_DBI_ADAPTER_H__
-# define __YUNI_DBI_ADAPTER_H__
+#define __YUNI_DBI_ADAPTER_H__
 
-# include "adapter/adapter.h"
+#include "adapter/adapter.h"
 
 #endif // __YUNI_DBI_ADAPTER_H__

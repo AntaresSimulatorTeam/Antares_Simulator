@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_PLEASE_WAIT_H__
-# define __ANTARES_APPLICATION_PLEASE_WAIT_H__
-
+#define __ANTARES_APPLICATION_PLEASE_WAIT_H__
 
 namespace Antares
 {
@@ -35,38 +34,31 @@ namespace Antares
 */
 namespace WIP
 {
+/*!
+** \brief Enter into a new blocking piece of code
+*/
+void Enter(bool immediate = true);
 
-	/*!
-	** \brief Enter into a new blocking piece of code
-	*/
-	void Enter(bool immediate = true);
+/*!
+** \brief Lease a blocking piece of code
+*/
+void Leave();
 
+class Locker final
+{
+public:
+    Locker()
+    {
+        Enter();
+    }
 
-	/*!
-	** \brief Lease a blocking piece of code
-	*/
-	void Leave();
-
-
-
-
-	class Locker final
-	{
-	public:
-		Locker()
-		{
-			Enter();
-		}
-
-		~Locker()
-		{
-			Leave();
-		}
-	};
-
+    ~Locker()
+    {
+        Leave();
+    }
+};
 
 } // namespace WIP
 } // namespace Antares
-
 
 #endif // __ANTARES_APPLICATION_PLEASE_WAIT_H__

@@ -25,13 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_MC_PLAYLIST_H__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_MC_PLAYLIST_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_MC_PLAYLIST_H__
 
-# include <antares/wx-wrapper.h>
-# include "../renderer.h"
-# include "../../../../application/study.h"
-# include <vector>
-
+#include <antares/wx-wrapper.h>
+#include "../renderer.h"
+#include "../../../../application/study.h"
+#include <vector>
 
 namespace Antares
 {
@@ -41,137 +40,142 @@ namespace Datagrid
 {
 namespace Renderer
 {
+class LogEntry
+{
+public:
+    //! Vector of log entries
+    typedef std::vector<LogEntry*> Vector;
+    //! Verbosity type
+    enum VerbosityType
+    {
+        vtInfo,
+        vtNotice,
+        vtCheckpoint,
+        vtWarning,
+        vtError,
+        vtDebug
+    };
 
-	class LogEntry
-	{
-	public:
-		//! Vector of log entries
-		typedef std::vector<LogEntry*>  Vector;
-		//! Verbosity type
-		enum VerbosityType
-		{
-			vtInfo,
-			vtNotice,
-			vtCheckpoint,
-			vtWarning,
-			vtError,
-			vtDebug
-		};
+public:
+    LogEntry();
 
-	public:
-		LogEntry();
+    bool isWarningError() const
+    {
+        return (verbosityType == vtWarning || verbosityType == vtError);
+    }
 
-		bool isWarningError() const
-		{
-			return (verbosityType == vtWarning || verbosityType == vtError);
-		}
+    void assignVerbosity(const AnyString& pS);
 
-		void assignVerbosity(const AnyString& pS);
+public:
+    //! Type of the verbosity
+    VerbosityType verbosityType;
+    //! Line in the file
+    uint line;
+    // The most of the time, we will prefer customstring to consume less
+    // memory for large logfiles
+    //! Date
+    Yuni::CString<32, false> date;
+    //! Application
+    Yuni::CString<32, false> application;
+    //! Verbosity
+    Yuni::CString<16, false> verbosity;
+    //! The message itself
+    wxString message;
+    //! Highlight
+    bool highlight;
+};
 
-	public:
-		//! Type of the verbosity
-		VerbosityType verbosityType;
-		//! Line in the file
-		uint line;
-		// The most of the time, we will prefer customstring to consume less
-		// memory for large logfiles
-		//! Date
-		Yuni::CString<32,false> date;
-		//! Application
-		Yuni::CString<32,false> application;
-		//! Verbosity
-		Yuni::CString<16,false> verbosity;
-		//! The message itself
-		wxString message;
-		//! Highlight
-		bool highlight;
-	};
+class LogEntryContainer
+{
+public:
+    //! The most suitable smart pointer for the class
+    typedef Yuni::SmartPtr<LogEntryContainer> Ptr;
 
+public:
+    LogEntryContainer() : longestLine(0), maxCharForALine(0)
+    {
+    }
+    ~LogEntryContainer();
 
-	class LogEntryContainer
-	{
-	public:
-		//! The most suitable smart pointer for the class
-		typedef Yuni::SmartPtr<LogEntryContainer> Ptr;
+public:
+    //! Full filename
+    YString filename;
+    //! The bare filename
+    YString barefilename;
+    //! The total number of lines
+    uint lines;
+    //! Size
+    Yuni::uint64 size;
+    //! All entries
+    LogEntry::Vector entries;
+    //! The longest line
+    uint longestLine;
+    //! The maximum number of char found for a single line
+    uint maxCharForALine;
+};
 
-	public:
-		LogEntryContainer() :
-			longestLine(0), maxCharForALine(0)
-		{}
-		~LogEntryContainer();
+class LogFile : public IRenderer
+{
+public:
+    LogFile();
+    virtual ~LogFile();
 
-	public:
-		//! Full filename
-		YString filename;
-		//! The bare filename
-		YString barefilename;
-		//! The total number of lines
-		uint lines;
-		//! Size
-		Yuni::uint64 size;
-		//! All entries
-		LogEntry::Vector entries;
-		//! The longest line
-		uint longestLine;
-		//! The maximum number of char found for a single line
-		uint maxCharForALine;
-	};
+    virtual int width() const
+    {
+        return 3;
+    }
+    virtual int height() const;
 
+    virtual wxString columnCaption(int colIndx) const;
 
-	class LogFile : public IRenderer
-	{
-	public:
-		LogFile();
-		virtual ~LogFile();
+    virtual wxString rowCaption(int rowIndx) const;
 
-		virtual int width() const {return 3;}
-		virtual int height() const;
+    virtual wxString cellValue(int x, int y) const;
 
-		virtual wxString columnCaption(int colIndx) const;
+    virtual double cellNumericValue(int x, int y) const;
 
-		virtual wxString rowCaption(int rowIndx) const;
+    virtual bool cellValue(int x, int y, const Yuni::String& value);
 
-		virtual wxString cellValue(int x, int y) const;
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    {
+        // Do nothing
+    }
 
-		virtual double cellNumericValue(int x, int y) const;
+    virtual bool valid() const
+    {
+        return !(!logs);
+    }
 
-		virtual bool cellValue(int x, int y, const Yuni::String& value);
+    virtual uint maxWidthResize() const
+    {
+        return 0;
+    }
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
 
-		virtual void resetColors(int, int, wxColour&, wxColour&) const
-		{
-			// Do nothing
-		}
+    virtual wxColour cellBackgroundColor(int, int) const;
+    virtual wxColour cellTextColor(int, int) const;
 
-		virtual bool valid() const {return !(!logs);}
+    virtual wxColour verticalBorderColor(int x, int y) const;
 
-		virtual uint maxWidthResize() const {return 0;}
-		virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+    void control(wxWindow* control)
+    {
+        pControl = control;
+    }
 
-		virtual wxColour cellBackgroundColor(int, int) const;
-		virtual wxColour cellTextColor(int, int) const;
+    virtual int cellAlignment(int x, int y) const;
 
-		virtual wxColour verticalBorderColor(int x, int y) const;
+    virtual int columnWidthCustom(int x) const;
 
-		void control(wxWindow* control) {pControl = control;}
+    virtual void hintForColumnWidth(int x, wxString& out) const;
 
-		virtual int cellAlignment(int x, int y) const;
+public:
+    //! Logs
+    LogEntryContainer::Ptr logs;
 
-		virtual int columnWidthCustom(int x) const;
+protected:
+    wxWindow* pControl;
 
-		virtual void hintForColumnWidth(int x, wxString& out) const;
-
-	public:
-		//! Logs
-		LogEntryContainer::Ptr logs;
-
-	protected:
-		wxWindow* pControl;
-
-	}; // class LogFile
-
-
-
-
+}; // class LogFile
 
 } // namespace Renderer
 } // namespace Datagrid

@@ -25,12 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_H__
-# define __ANTARES_H__
+#define __ANTARES_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/foreach.h>
+#include <yuni/yuni.h>
+#include <yuni/core/foreach.h>
 
-# define foreach YUNI_FOREACH
-
+#define foreach YUNI_FOREACH
 
 #endif // __ANTARES_H__

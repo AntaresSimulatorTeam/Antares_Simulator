@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREA_TS_NODE_HXX__
-# define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREA_TS_NODE_HXX__
-
+#define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREA_TS_NODE_HXX__
 
 namespace Antares
 {
@@ -36,14 +35,10 @@ namespace AntaresStudy
 {
 namespace Area
 {
-
-
-	inline bool NodeTimeseries::allowUpdate() const
-	{
-		return false;
-	}
-
-
+inline bool NodeTimeseries::allowUpdate() const
+{
+    return false;
+}
 
 } // namespace Area
 } // namespace AntaresStudy

@@ -25,74 +25,72 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_CLIPBOARD_CLIPBOARD_H__
-# define __ANTARES_TOOLBOX_CLIPBOARD_CLIPBOARD_H__
+#define __ANTARES_TOOLBOX_CLIPBOARD_CLIPBOARD_H__
 
-# include <antares/wx-wrapper.h>
-# include <antares/array/matrix.h>
-# include <vector>
-# include "../components/datagrid/gridhelper.h"
-
+#include <antares/wx-wrapper.h>
+#include <antares/array/matrix.h>
+#include <vector>
+#include "../components/datagrid/gridhelper.h"
 
 namespace Antares
 {
 namespace Toolbox
 {
+class Clipboard final
+{
+public:
+    enum Type
+    {
+        typeText,
+        typeHTML
+    };
 
+    static void GetFromClipboard(Yuni::String& out);
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    Clipboard();
+    //! Destructor
+    ~Clipboard();
+    //@}
 
-	class Clipboard final
-	{
-	public:
-		enum Type
-		{
-			typeText,
-			typeHTML
-		};
+    void clear();
+    void add(const Matrix<>& m);
+    void add(Antares::Component::Datagrid::VGridHelper* m,
+             uint offsetX = 0,
+             uint offsetY = 0,
+             uint offsetX2 = (uint)-1,
+             uint offsetY2 = (uint)-1,
+             bool withStyle = true,
+             bool withHeaders = true);
 
-		static void GetFromClipboard(Yuni::String& out);
+    void add(const Yuni::String& text);
+    void add(const Yuni::String::Ptr& text);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		Clipboard();
-		//! Destructor
-		~Clipboard();
-		//@}
+    void copy();
 
-		void clear();
-		void add(const Matrix<>& m);
-		void add(Antares::Component::Datagrid::VGridHelper* m,
-			uint offsetX = 0, uint offsetY = 0,
-			uint offsetX2 = (uint)-1, uint offsetY2 = (uint)-1,
-			bool withStyle = true, bool withHeaders = true);
+private:
+    class Item final
+    {
+    public:
+        typedef Yuni::SmartPtr<Item> Ptr;
 
-		void add(const Yuni::String& text);
-		void add(const Yuni::String::Ptr& text);
+    public:
+        Item(const Type t, Yuni::String::Ptr d) : type(t), data(d)
+        {
+        }
+        const Type type;
+        Yuni::String::Ptr data;
+    };
 
-		void copy();
+    typedef std::vector<Item::Ptr> List;
+    List pList;
 
-	private:
-		class Item final
-		{
-		public:
-			typedef Yuni::SmartPtr<Item> Ptr;
-		public:
-			Item(const Type t, Yuni::String::Ptr d) :type(t), data(d) {}
-			const Type type;
-			Yuni::String::Ptr data;
-		};
-
-		typedef std::vector<Item::Ptr> List;
-		List pList;
-
-	}; // class Clipboard
-
-
-
-
+}; // class Clipboard
 
 } // namespace Toolbox
 } // namespace Antares

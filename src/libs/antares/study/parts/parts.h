@@ -25,34 +25,31 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_PARTS_H__
-# define __ANTARES_LIBS_STUDY_PARTS_H__
-
+#define __ANTARES_LIBS_STUDY_PARTS_H__
 
 // Load
-# include "load/series.h"
-# include "load/container.h"
+#include "load/series.h"
+#include "load/container.h"
 
 // Solar
-# include "solar/series.h"
-# include "solar/container.h"
+#include "solar/series.h"
+#include "solar/container.h"
 
 // Hydro
-# include "hydro/prepro.h"
-# include "hydro/series.h"
-# include "hydro/container.h"
+#include "hydro/prepro.h"
+#include "hydro/series.h"
+#include "hydro/container.h"
 
 // Wind
-# include "wind/prepro.h"
-# include "wind/series.h"
-# include "wind/container.h"
+#include "wind/prepro.h"
+#include "wind/series.h"
+#include "wind/container.h"
 
 // Thermal
-# include "thermal/defines.h"
-# include "thermal/prepro.h"
-# include "thermal/series.h"
-# include "thermal/cluster.h"
-# include "thermal/container.h"
-
-
+#include "thermal/defines.h"
+#include "thermal/prepro.h"
+#include "thermal/series.h"
+#include "thermal/cluster.h"
+#include "thermal/container.h"
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_H__

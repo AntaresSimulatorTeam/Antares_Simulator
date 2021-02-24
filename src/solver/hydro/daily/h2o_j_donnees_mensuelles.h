@@ -25,45 +25,47 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-# ifndef __SOLVER_H2O_J_DONNEES_ANNEE__
-# define __SOLVER_H2O_J_DONNEES_ANNEE__
+#ifndef __SOLVER_H2O_J_DONNEES_ANNEE__
+#define __SOLVER_H2O_J_DONNEES_ANNEE__
 
-# define OUI 1
-# define NON 0
-# define EMERGENCY_SHUT_DOWN 2
+#define OUI 1
+#define NON 0
+#define EMERGENCY_SHUT_DOWN 2
 
-# include "h2o_j_donnees_optimisation.h"
+#include "h2o_j_donnees_optimisation.h"
 
-# ifdef __cplusplus
+#ifdef __cplusplus
 extern "C"
 {
-# endif
+#endif
 
-/*************************************************************************************************/
-/*                    Structure contenant les champs a renseigner par l'appelant                 */
+    /*************************************************************************************************/
+    /*                    Structure contenant les champs a renseigner par l'appelant */
 
-typedef struct {
-	/* En entree: seules les donnees ci-dessous doivent etre renseignees par l'appelant apres
-	   avoir appele H2O_J_Instanciation */
-	int      NombreDeJoursDuMois; /* A renseigner par l'appelant */
-	double   TurbineDuMois;       /* A renseigner par l'appelant (c'est le turbine opt du mois) */
-	double * TurbineMax;          /* A renseigner par l'appelant : 1 valeur par jour */
-	double * TurbineCible;        /* A renseigner par l'appelant : 1 valeur par jour */
-	/* Les resultats */
-	char     ResultatsValides; /* Vaut:
-	                              OUI si la solution est exploitable pour le reservoir
-	                              NON s'il y a eu un probleme dans la resolution
-																EMERGENCY_SHUT_DOWN si la resolution du probleme a donne lieu a une erreur interne
-														 */
-	double * Turbine; /* Resultat a recuperer par l'appelant */
+    typedef struct
+    {
+        /* En entree: seules les donnees ci-dessous doivent etre renseignees par l'appelant apres
+           avoir appele H2O_J_Instanciation */
+        int NombreDeJoursDuMois; /* A renseigner par l'appelant */
+        double TurbineDuMois;    /* A renseigner par l'appelant (c'est le turbine opt du mois) */
+        double* TurbineMax;      /* A renseigner par l'appelant : 1 valeur par jour */
+        double* TurbineCible;    /* A renseigner par l'appelant : 1 valeur par jour */
+        /* Les resultats */
+        char
+          ResultatsValides; /* Vaut:
+                               OUI si la solution est exploitable pour le reservoir
+                               NON s'il y a eu un probleme dans la resolution
+                                                                                                                         EMERGENCY_SHUT_DOWN si la resolution du probleme a donne lieu a une erreur interne
+                                                                                                          */
+        double* Turbine;    /* Resultat a recuperer par l'appelant */
 
-  /******************************************************************************************/
-	/* Problemes internes (utilise uniquement par l'optimisation) */
-	PROBLEME_HYDRAULIQUE * ProblemeHydraulique;
-} DONNEES_MENSUELLES;
+        /******************************************************************************************/
+        /* Problemes internes (utilise uniquement par l'optimisation) */
+        PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
+    } DONNEES_MENSUELLES;
 
-# ifdef __cplusplus
+#ifdef __cplusplus
 }
-# endif
+#endif
 
-# endif
+#endif

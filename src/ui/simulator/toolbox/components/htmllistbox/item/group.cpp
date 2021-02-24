@@ -26,7 +26,6 @@
 */
 #include "group.h"
 
-
 namespace Antares
 {
 namespace Component
@@ -35,33 +34,23 @@ namespace HTMLListbox
 {
 namespace Item
 {
+Group::Group(const wxString& text) : pText(text)
+{
+}
 
+Group::~Group()
+{
+}
 
-	Group::Group(const wxString& text)
-		:pText(text)
-	{
-	}
-
-
-	Group::~Group()
-	{
-	}
-
-
-
-	wxString Group::htmlContent(const wxString&)
-	{
-		return wxString() << wxT("<table cellpadding=2><tr><td width=10></td><td><font size=\"-1\" color=\"")
-			<< wxT("black")
-			<< wxT("\"><b>") << pText
-			<< wxT("</b></font></td></tr></table>");
-	}
-
-
-
+wxString Group::htmlContent(const wxString&)
+{
+    return wxString() << wxT(
+             "<table cellpadding=2><tr><td width=10></td><td><font size=\"-1\" color=\"")
+                      << wxT("black") << wxT("\"><b>") << pText
+                      << wxT("</b></font></td></tr></table>");
+}
 
 } // namespace Item
 } // namespace HTMLListbox
 } // namespace Component
 } // namespace Antares
-

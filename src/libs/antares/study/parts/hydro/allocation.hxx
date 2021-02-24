@@ -25,27 +25,20 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIB_STUDY_AREA_HYDRO_ALLOCATION_HXX__
-# define __ANTARES_LIB_STUDY_AREA_HYDRO_ALLOCATION_HXX__
-
+#define __ANTARES_LIB_STUDY_AREA_HYDRO_ALLOCATION_HXX__
 
 namespace Antares
 {
 namespace Data
 {
-
-
-	template<class CallbackT>
-	inline void HydroAllocation::eachNonNull(const CallbackT& callback) const
-	{
-		assert(pMustUseValuesFromAreaID);
-		auto end = pValuesFromAreaID.end();
-		for (auto i = pValuesFromAreaID.begin(); i != end; ++i)
-			callback(i->first, i->second);
-	}
-
-
-
-
+template<class CallbackT>
+inline void HydroAllocation::eachNonNull(const CallbackT& callback) const
+{
+    assert(pMustUseValuesFromAreaID);
+    auto end = pValuesFromAreaID.end();
+    for (auto i = pValuesFromAreaID.begin(); i != end; ++i)
+        callback(i->first, i->second);
+}
 
 } // namespace Data
 } // namespace Antares

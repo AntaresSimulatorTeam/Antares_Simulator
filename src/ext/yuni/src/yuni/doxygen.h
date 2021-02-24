@@ -10,7 +10,6 @@
 */
 #pragma once
 
-
 /*!
 ** \defgroup Gfx  2D/3D computer graphics
 **
@@ -33,7 +32,6 @@
 ** \defgroup Protocol Protocols
 ** \ingroup Net
 */
-
 
 /*!
 ** \defgroup Core Core

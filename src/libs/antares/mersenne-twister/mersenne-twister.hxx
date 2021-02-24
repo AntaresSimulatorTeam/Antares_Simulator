@@ -25,30 +25,24 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __LIB_ANTARES_RANDOM_MERSENNE_HXX__
-# define __LIB_ANTARES_RANDOM_MERSENNE_HXX__
-
+#define __LIB_ANTARES_RANDOM_MERSENNE_HXX__
 
 namespace Antares
 {
+inline MersenneTwister::Value MersenneTwister::min()
+{
+    return 0.;
+}
 
-	inline MersenneTwister::Value  MersenneTwister::min()
-	{
-		return 0.;
-	}
+inline MersenneTwister::Value MersenneTwister::max()
+{
+    return 1.;
+}
 
-	inline MersenneTwister::Value MersenneTwister::max()
-	{
-		return 1.;
-	}
-
-
-	inline void MersenneTwister::reset()
-	{
-		reset(defaultSeed);
-	}
-
-
-
+inline void MersenneTwister::reset()
+{
+    reset(defaultSeed);
+}
 
 } // namespace Antares
 

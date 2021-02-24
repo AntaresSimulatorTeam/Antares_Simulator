@@ -25,14 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_INPUT_BINDING_CONSTRAINT_BINDING_CONSTRAINT_H__
-# define __ANTARES_TOOLBOX_INPUT_BINDING_CONSTRAINT_BINDING_CONSTRAINT_H__
+#define __ANTARES_TOOLBOX_INPUT_BINDING_CONSTRAINT_BINDING_CONSTRAINT_H__
 
-# include <antares/wx-wrapper.h>
-# include <yuni/core/event.h>
-# include <antares/study/constraint.h>
-# include "../input.h"
-
-
+#include <antares/wx-wrapper.h>
+#include <yuni/core/event.h>
+#include <antares/study/constraint.h>
+#include "../input.h"
 
 namespace Antares
 {
@@ -40,47 +38,44 @@ namespace Toolbox
 {
 namespace InputSelector
 {
+class BindingConstraint : public AInput, public Yuni::IEventObserver<BindingConstraint>
+{
+public:
+    BindingConstraint(wxWindow* parent);
+    virtual ~BindingConstraint();
 
+    virtual void update();
+    virtual void updateRowContent();
+    virtual void updateInnerData(const wxString& searchString);
 
-	class BindingConstraint : public AInput, public Yuni::IEventObserver<BindingConstraint>
-	{
-	public:
-		BindingConstraint(wxWindow* parent);
-		virtual ~BindingConstraint();
+    virtual wxPoint recommendedSize() const
+    {
+        return wxPoint(150, 200);
+    }
 
-		virtual void update();
-		virtual void updateRowContent();
-		virtual void updateInnerData(const wxString& searchString);
+public:
+    //! A binding constraint has been selected
+    Yuni::Event<void(Data::BindingConstraint*)> onBindingConstraintChanged;
+    //! A binding constraint has been double clicked
+    Yuni::Event<void(Data::BindingConstraint*)> onBindingConstraintDblClick;
 
-		virtual wxPoint recommendedSize() const {return wxPoint(150, 200);}
+protected:
+    virtual void internalBuildSubControls();
 
-	public:
-		//! A binding constraint has been selected
-		Yuni::Event<void (Data::BindingConstraint*)> onBindingConstraintChanged;
-		//! A binding constraint has been double clicked
-		Yuni::Event<void (Data::BindingConstraint*)> onBindingConstraintDblClick;
+private:
+    //! Event: The application is about to leave
+    void onApplicationOnQuit();
 
-	protected:
-		virtual void internalBuildSubControls();
+    void onUpdate();
+    void onStudyAreaUpdate(Data::Area*);
+    void onStudyLinkUpdate(Data::AreaLink*);
 
-	private:
-		//! Event: The application is about to leave
-		void onApplicationOnQuit();
+    /*!
+    ** \brief Clear the control and broadcast a change in the current selected area
+    */
+    void clear();
 
-		void onUpdate();
-		void onStudyAreaUpdate(Data::Area*);
-		void onStudyLinkUpdate(Data::AreaLink*);
-
-		/*!
-		** \brief Clear the control and broadcast a change in the current selected area
-		*/
-		void clear();
-
-	}; // class Area
-
-
-
-
+}; // class Area
 
 } // namespace InputSelector
 } // namespace Toolbox

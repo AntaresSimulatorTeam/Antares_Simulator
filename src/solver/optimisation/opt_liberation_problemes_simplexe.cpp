@@ -25,37 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include <math.h>
 #include "opt_structure_probleme_a_resoudre.h"
 
@@ -67,46 +36,62 @@
 #include <antares/emergency.h>
 #include <antares/logs.h>
 
+#include "../utils/ortools_utils.h"
+
 extern "C"
 {
-#include "../ext/Sirius_Solver/simplexe/spx_fonctions.h"
+#include "spx_fonctions.h"
 }
 
 using namespace Antares;
 
-
-
-void OPT_LiberationProblemesSimplexe( PROBLEME_HEBDO * ProblemeHebdo )
+void OPT_LiberationProblemesSimplexe(PROBLEME_HEBDO* ProblemeHebdo)
 {
-int i; PROBLEME_SPX * ProbSpx; PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
-int NbIntervalles; int NumIntervalle; int NombreDePasDeTempsPourUneOptimisation;
+    PROBLEME_SPX* ProbSpx;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    int NbIntervalles;
+    int NumIntervalle;
+    int NombreDePasDeTempsPourUneOptimisation;
+    MPSolver* solver;
 
-if ( ProblemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES ) {
-	NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
+    if (ProblemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES)
+    {
+        NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
+    }
+    else
+    {
+        NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTemps;
+    }
+    NbIntervalles
+      = (int)(ProblemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
+
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    if (ProblemeAResoudre)
+    {
+        auto& study = *Data::Study::Current::Get();
+        bool ortoolsUsed = study.parameters.ortoolsUsed;
+
+        if (ProblemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
+        {
+            for (NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
+            {
+                ProbSpx
+                  = (PROBLEME_SPX*)((ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle]);
+                solver = (MPSolver*)((ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle]);
+
+                if (ortoolsUsed && solver != NULL)
+                {
+                    ORTOOLS_LibererProbleme(solver);
+                    solver = NULL;
+                }
+                else if (ProbSpx != NULL)
+                {
+                    SPX_LibererProbleme(ProbSpx);
+                    ProbSpx = NULL;
+                }
+            }
+        }
+    }
+
+    return;
 }
-else {
-	NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTemps;
-}
-NbIntervalles = (int) (ProblemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation );
-
-ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-if (ProblemeAResoudre) {
-	
-	if ( ProblemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES ) {
-		
-		for ( i = 0 ; i < ProblemeHebdo->NombreDeClassesDeManoeuvrabiliteActives ; i++ ) {
-			for ( NumIntervalle = 0 ; NumIntervalle < NbIntervalles ; NumIntervalle++ ) {
-				ProbSpx = (PROBLEME_SPX *) ((ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[i])->ProblemeSpx[NumIntervalle]);
-				if ( ProbSpx != NULL ) {
-					SPX_LibererProbleme( ProbSpx );
-					(ProblemeAResoudre->ProblemesSpxDUneClasseDeManoeuvrabilite[i])->ProblemeSpx[NumIntervalle] = NULL;
-				}
-			}
-		}
-	}
-}
-
-return;
-}
-
-

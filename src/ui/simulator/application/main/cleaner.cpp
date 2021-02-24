@@ -29,56 +29,49 @@
 #include "../../windows/cleaner.h"
 #include "../study.h"
 
-
 namespace Antares
 {
 namespace Forms
 {
+void ApplWnd::evtOnCleanCurrentStudyFolder(wxCommandEvent&)
+{
+    auto study = Data::Study::Current::Get();
+    if (!(!study))
+    {
+        if (study->parameters.readonly)
+        {
+            logs.error() << "Impossible to perform a cleanup. The study is readonly.";
+            return;
+        }
+        if ((int)study->header.version != (int)Data::versionLatest)
+        {
+            // Logs
+            logs.error() << "Impossible to perform a cleanup. You must save (as) the study before, "
+                            "in order to upgrade the structure of folder";
+            return;
+        }
+        if (StudyHasBeenModified())
+        {
+            // Logs
+            logs.error() << "You must save the changes first before cleaning the study folder.";
+            return;
+        }
 
+        Forms::Disabler<ApplWnd> disabler(*this);
+        auto* dialog = new Window::StudyCleaner(this);
+        dialog->studyFolder(wxStringFromUTF8(study->folder));
+        dialog->ShowModal();
+        dialog->Destroy();
+    }
+}
 
-	void ApplWnd::evtOnCleanCurrentStudyFolder(wxCommandEvent&)
-	{
-		auto study = Data::Study::Current::Get();
-		if (!(!study))
-		{
-			if (study->parameters.readonly)
-			{
-				logs.error() << "Impossible to perform a cleanup. The study is readonly.";
-				return;
-			}
-			if ((int) study->header.version != (int) Data::versionLatest)
-			{
-				// Logs
-				logs.error() << "Impossible to perform a cleanup. You must save (as) the study before, in order to upgrade the structure of folder";
-				return;
-			}
-			if (StudyHasBeenModified())
-			{
-				// Logs
-				logs.error() << "You must save the changes first before cleaning the study folder.";
-				return;
-			}
-
-			Forms::Disabler<ApplWnd> disabler(*this);
-			auto* dialog = new Window::StudyCleaner(this);
-			dialog->studyFolder(wxStringFromUTF8(study->folder));
-			dialog->ShowModal();
-			dialog->Destroy();
-		}
-	}
-
-
-	void ApplWnd::evtOnCleanStudyFolder(wxCommandEvent&)
-	{
-		Forms::Disabler<ApplWnd> disabler(*this);
-		auto* dialog = new Window::StudyCleaner(this);
-		dialog->ShowModal();
-		dialog->Destroy();
-	}
-
-
-
-
+void ApplWnd::evtOnCleanStudyFolder(wxCommandEvent&)
+{
+    Forms::Disabler<ApplWnd> disabler(*this);
+    auto* dialog = new Window::StudyCleaner(this);
+    dialog->ShowModal();
+    dialog->Destroy();
+}
 
 } // namespace Forms
 } // namespace Antares

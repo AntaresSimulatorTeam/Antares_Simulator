@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_THERMAL_CLUSTER_H__
-# define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_THERMAL_CLUSTER_H__
+#define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_THERMAL_CLUSTER_H__
 
-# include "item.h"
-# include <antares/study.h>
-
+#include "item.h"
+#include <antares/study.h>
 
 namespace Antares
 {
@@ -39,86 +38,82 @@ namespace HTMLListbox
 {
 namespace Item
 {
+/*!
+** \brief Single item for an Input (abstract)
+**
+** An input is often an item list (list of areas, list of interconnections...)
+** but this list may be heterogenous (for example `areas + groups`)
+** This class a merely a simple wrapper to bring commons display operations
+*/
+class ThermalCluster : public IItem
+{
+public:
+    //! The smartptr
+    typedef Yuni::SmartPtr<ThermalCluster> Ptr;
 
+public:
+    /*!
+    ** \brief Add a portion of Html from a thermal cluster to a string
+    **
+    ** A very simple equivalent html code would be :
+    ** \code
+    ** <td>thermal cluster name</td>
+    ** \endcode
+    **
+    ** \param[in,out] out The string where the result will be appended
+    ** \param th The thermal cluster
+    ** \param searchString The string to highlight
+    ** return True if something has been highlighted, false otherwise
+    */
+    static bool HtmlContent(wxString& out, Data::ThermalCluster* th, const wxString& searchString);
 
-	/*!
-	** \brief Single item for an Input (abstract)
-	**
-	** An input is often an item list (list of areas, list of interconnections...)
-	** but this list may be heterogenous (for example `areas + groups`)
-	** This class a merely a simple wrapper to bring commons display operations
-	*/
-	class ThermalCluster : public IItem
-	{
-	public:
-		//! The smartptr
-		typedef Yuni::SmartPtr<ThermalCluster> Ptr;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    ThermalCluster(Antares::Data::ThermalCluster* a);
+    /*!
+    ** \brief additional Additional HTML content ("<td>my text</td>")
+    */
+    ThermalCluster(Antares::Data::ThermalCluster* a, const wxString& additional);
+    //! Destructor
+    virtual ~ThermalCluster();
+    //@}
 
-	public:
-		/*!
-		** \brief Add a portion of Html from a thermal cluster to a string
-		**
-		** A very simple equivalent html code would be :
-		** \code
-		** <td>thermal cluster name</td>
-		** \endcode
-		**
-		** \param[in,out] out The string where the result will be appended
-		** \param th The thermal cluster
-		** \param searchString The string to highlight
-		** return True if something has been highlighted, false otherwise
-		*/
-		static bool HtmlContent(wxString& out, Data::ThermalCluster* th, const wxString& searchString);
+    /*!
+    ** \brief Get the HTML Content for the item
+    */
+    virtual wxString htmlContent(const wxString& searchString);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		ThermalCluster(Antares::Data::ThermalCluster* a);
-		/*!
-		** \brief additional Additional HTML content ("<td>my text</td>")
-		*/
-		ThermalCluster(Antares::Data::ThermalCluster* a, const wxString& additional);
-		//! Destructor
-		virtual ~ThermalCluster();
-		//@}
+    //! Get the attached area
+    Antares::Data::ThermalCluster* thermalAggregate() const;
 
-		/*!
-		** \brief Get the HTML Content for the item
-		*/
-		virtual wxString htmlContent(const wxString& searchString);
+    virtual bool interactive() const
+    {
+        return true;
+    }
 
-		//! Get the attached area
-		Antares::Data::ThermalCluster* thermalAggregate() const;
+private:
+    void preloadImages();
 
-		virtual bool interactive() const {return true;}
+protected:
+    //! The current ThermalCluster
+    Antares::Data::ThermalCluster* pThermalCluster;
+    //! Additional text
+    const wxString pText;
+    static wxString pIconFileEnabled;
+    static wxString pIconFileDisabled;
+    static wxString pIconFileThermal;
 
-
-	private:
-		void preloadImages();
-
-	protected:
-		//! The current ThermalCluster
-		Antares::Data::ThermalCluster* pThermalCluster;
-		//! Additional text
-		const wxString pText;
-		static wxString pIconFileEnabled;
-		static wxString pIconFileDisabled;
-		static wxString pIconFileThermal;
-
-	}; // class ThermalCluster
-
-
-
-
+}; // class ThermalCluster
 
 } // namespace Item
 } // namespace HTMLListbox
 } // namespace Component
 } // namespace Antares
 
-# include "thermal-cluster.hxx"
+#include "thermal-cluster.hxx"
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_THERMAL_CLUSTER_H__

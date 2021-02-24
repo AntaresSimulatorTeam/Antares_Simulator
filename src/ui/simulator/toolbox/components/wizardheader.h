@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENTS_H__
-# define __ANTARES_TOOLBOX_COMPONENTS_H__
+#define __ANTARES_TOOLBOX_COMPONENTS_H__
 
-# include <antares/wx-wrapper.h>
-# include <ui/common/component/panel.h>
-
+#include <antares/wx-wrapper.h>
+#include <ui/common/component/panel.h>
 
 namespace Antares
 {
@@ -37,56 +36,57 @@ namespace Toolbox
 {
 namespace Components
 {
+class WizardHeader : public Antares::Component::Panel
+{
+public:
+    /*!
+    ** \brief Create a new instance
+    */
+    static Antares::Component::Panel* Create(wxWindow* parent,
+                                             const wxString& caption,
+                                             const char* img,
+                                             const wxString& help = wxEmptyString,
+                                             const int wrap = 500,
+                                             bool customDraw = true);
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    WizardHeader(wxWindow* parent, const char* icon, const wxString& text, const wxString& sub);
+    //! Destructor
+    virtual ~WizardHeader();
+    //@}
 
-	class WizardHeader : public Antares::Component::Panel
-	{
-	public:
-		/*!
-		** \brief Create a new instance
-		*/
-		static Antares::Component::Panel* Create(wxWindow* parent, const wxString& caption,
-			const char* img, const wxString& help = wxEmptyString,
-			const int wrap = 500, bool customDraw = true);
+    /*!
+    ** \brief Event: The panel has to draw itself
+    */
+    virtual void onDraw(wxPaintEvent& evt);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		WizardHeader(wxWindow* parent, const char* icon, const wxString& text, const wxString& sub);
-		//! Destructor
-		virtual ~WizardHeader();
-		//@}
+    /*!
+    ** \brief UI Event: Erase background
+    */
+    virtual void onEraseBackground(wxEraseEvent&)
+    {
+    }
 
-		/*!
-		** \brief Event: The panel has to draw itself
-		*/
-		virtual void onDraw(wxPaintEvent& evt);
+public:
+    int sizeNeeded;
 
-		/*!
-		** \brief UI Event: Erase background
-		*/
-		virtual void onEraseBackground(wxEraseEvent&) {}
+private:
+    void onDraw();
 
-	public:
-		int sizeNeeded;
+    wxString pText;
+    wxString pSubText;
+    wxBitmap* pIcon;
 
-	private:
-		wxString pText;
-		wxString pSubText;
-		wxBitmap* pIcon;
+    DECLARE_EVENT_TABLE()
 
-		DECLARE_EVENT_TABLE()
+}; // class WizardHeader
 
-	}; // class WizardHeader
-
-
-
-
-
-} // namespace Antares
+} // namespace Components
 } // namespace Toolbox
 } // namespace Antares
 

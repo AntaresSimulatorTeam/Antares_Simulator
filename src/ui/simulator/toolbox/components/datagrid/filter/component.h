@@ -25,19 +25,17 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_FILTER_COMPONENT_H__
-# define __ANTARES_TOOLBOX_FILTER_COMPONENT_H__
+#define __ANTARES_TOOLBOX_FILTER_COMPONENT_H__
 
-# include <antares/wx-wrapper.h>
-# include <wx/panel.h>
-# include <vector>
-# include <list>
-# include "input.h"
-# include "../gridhelper.h"
-# include "filter.h"
-# include <antares/date.h>
-# include "component/panel.h"
-
-
+#include <antares/wx-wrapper.h>
+#include <wx/panel.h>
+#include <vector>
+#include <list>
+#include "input.h"
+#include "../gridhelper.h"
+#include "filter.h"
+#include <antares/date.h>
+#include "component/panel.h"
 
 namespace Antares
 {
@@ -45,92 +43,106 @@ namespace Toolbox
 {
 namespace Filter
 {
+class Component : public Antares::Component::Panel
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    ** \param parent The parent window
+    */
+    Component(wxWindow* parent, Date::Precision precision = Date::stepNone);
+    //! Destructor
+    virtual ~Component();
+    //@}
 
+    Date::Precision precision() const
+    {
+        return pPrecision;
+    }
+    void precision(const Date::Precision p)
+    {
+        pPrecision = p;
+    }
 
-	class Component : public Antares::Component::Panel
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		** \param parent The parent window
-		*/
-		Component(wxWindow* parent, Date::Precision precision = Date::stepNone);
-		//! Destructor
-		virtual ~Component();
-		//@}
+    /*!
+    ** \brief Create and add an input
+    */
+    Input* add();
 
-		Date::Precision precision() const {return pPrecision;}
-		void precision(const Date::Precision p) {pPrecision = p;}
+    /*!
+    ** \brief Remove an input
+    */
+    bool remove(Input* in);
+    void remove(int id);
 
-		/*!
-		** \brief Create and add an input
-		*/
-		Input* add();
+    /*!
+    ** \brief Remove all inputs
+    */
+    void clear();
 
-		/*!
-		** \brief Remove an input
-		*/
-		bool remove(Input* in);
-		void remove(int id);
+    void updateSearchResults();
 
-		/*!
-		** \brief Remove all inputs
-		*/
-		void clear();
+    void refresh();
 
-		void updateSearchResults();
+    Yuni::Event<void()> onUpdateSearchResults;
 
-		void refresh();
+    //! \name Grid
+    //@{
+    wxGrid* grid() const
+    {
+        return pGrid;
+    }
+    void grid(wxGrid* g)
+    {
+        pGrid = g;
+    }
 
-		Yuni::Event<void()> onUpdateSearchResults;
+    Antares::Component::Datagrid::VGridHelper* gridHelper() const
+    {
+        return pGridHelper;
+    }
+    void gridHelper(Antares::Component::Datagrid::VGridHelper* g)
+    {
+        pGridHelper = g;
+    }
+    //@}
 
-		//! \name Grid
-		//@{
-		wxGrid* grid() const {return pGrid;}
-		void grid(wxGrid* g) {pGrid = g;}
+    /*!
+    ** \brief Set the precision required by the datagrid
+    */
+    void dataGridPrecision(Date::Precision p)
+    {
+        pDataGridPrecision = p;
+    }
 
-		Antares::Component::Datagrid::VGridHelper* gridHelper() const {return pGridHelper;}
-		void gridHelper(Antares::Component::Datagrid::VGridHelper* g) {pGridHelper = g;}
-		//@}
+private:
+    //! Input List
+    typedef std::list<Input*> InputList;
+    typedef std::vector<Input*> InputVector;
 
-		/*!
-		** \brief Set the precision required by the datagrid
-		*/
-		void dataGridPrecision(Date::Precision p) {pDataGridPrecision = p;}
+    void evtRefreshGrid();
 
-	private:
-		//! Input List
-		typedef std::list<Input*> InputList;
-		typedef std::vector<Input*> InputVector;
+    void classifyFilters(InputVector& onRows, InputVector& onCols, InputVector& onCells);
 
-		void evtRefreshGrid();
+private:
+    //! All inputs
+    InputList pInputs;
+    //! Attached grid
+    wxGrid* pGrid;
+    //! Grid Helper
+    Antares::Component::Datagrid::VGridHelper* pGridHelper;
 
-		void classifyFilters(InputVector& onRows, InputVector& onCols, InputVector& onCells);
+    //! Concurrent refresh count
+    int pRefreshBatchCount;
 
-	private:
-		//! All inputs
-		InputList pInputs;
-		//! Attached grid
-		wxGrid* pGrid;
-		//! Grid Helper
-		Antares::Component::Datagrid::VGridHelper* pGridHelper;
+    //! Precision
+    Date::Precision pPrecision;
+    //!
+    Date::Precision pDataGridPrecision;
 
-		//! Concurrent refresh count
-		int pRefreshBatchCount;
-
-		//! Precision
-		Date::Precision pPrecision;
-		//!
-		Date::Precision pDataGridPrecision;
-
-	}; // class Component
-
-
-
-
-
+}; // class Component
 
 } // namespace Filter
 } // namespace Toolbox

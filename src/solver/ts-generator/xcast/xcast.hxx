@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_SOLVER_TS_GENERATOR_XCAST_XCAST_HXX__
-# define __ANTARES_SOLVER_TS_GENERATOR_XCAST_XCAST_HXX__
-
+#define __ANTARES_SOLVER_TS_GENERATOR_XCAST_XCAST_HXX__
 
 namespace Antares
 {
@@ -36,17 +35,11 @@ namespace TSGenerator
 {
 namespace XCast
 {
-
-
-	template<class PredicateT>
-	inline void
-	XCast::loadFromStudy(const Data::Correlation& correlation, PredicateT& predicate)
-	{
-		pData.template loadFromStudy<PredicateT>(study, correlation, predicate);
-	}
-
-
-
+template<class PredicateT>
+inline void XCast::loadFromStudy(const Data::Correlation& correlation, PredicateT& predicate)
+{
+    pData.template loadFromStudy<PredicateT>(study, correlation, predicate);
+}
 
 } // namespace XCast
 } // namespace TSGenerator

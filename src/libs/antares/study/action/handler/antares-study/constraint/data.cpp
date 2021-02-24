@@ -27,7 +27,6 @@
 
 #include "data.h"
 
-
 namespace Antares
 {
 namespace Action
@@ -36,54 +35,46 @@ namespace AntaresStudy
 {
 namespace Constraint
 {
+bool Data::prepareWL(Context&)
+{
+    pInfos.message.clear();
+    pInfos.state = stReady;
+    switch (pInfos.behavior)
+    {
+    case bhOverwrite:
+        pInfos.message << "The Bounds/RHS will be copied";
+        break;
+    default:
+        pInfos.state = stNothingToDo;
+        break;
+    }
 
+    return true;
+}
 
-	bool Data::prepareWL(Context&)
-	{
-		pInfos.message.clear();
-		pInfos.state = stReady;
-		switch (pInfos.behavior)
-		{
-			case bhOverwrite:
-				pInfos.message << "The Bounds/RHS will be copied";
-				break;
-			default:
-				pInfos.state = stNothingToDo;
-				break;
-		}
+bool Data::performWL(Context& ctx)
+{
+    if (ctx.constraint && ctx.extStudy)
+    {
+        Antares::Data::ConstraintName id;
+        TransformNameIntoID(pOriginalConstraintName, id);
 
-		return true;
-	}
+        Antares::Data::BindingConstraint* source = ctx.extStudy->bindingConstraints.find(id);
 
-
-	bool Data::performWL(Context& ctx)
-	{
-		if (ctx.constraint && ctx.extStudy)
-		{
-			Antares::Data::ConstraintName id;
-			TransformNameIntoID(pOriginalConstraintName, id);
-
-			Antares::Data::BindingConstraint* source = ctx.extStudy->bindingConstraints.find(id);
-
-			if (source && source != ctx.constraint)
-			{
-				source->matrix().invalidate(true);
-				assert(source->matrix().width > 0);
-				assert(source->matrix().height > 0);
-				ctx.constraint->matrix() = source->matrix();
-				source->matrix().unloadFromMemory();
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-
-
+        if (source && source != ctx.constraint)
+        {
+            source->matrix().invalidate(true);
+            assert(source->matrix().width > 0);
+            assert(source->matrix().height > 0);
+            ctx.constraint->matrix() = source->matrix();
+            source->matrix().unloadFromMemory();
+            return true;
+        }
+    }
+    return false;
+}
 
 } // namespace Constraint
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
-

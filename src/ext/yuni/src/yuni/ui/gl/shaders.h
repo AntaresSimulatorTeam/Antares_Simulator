@@ -9,7 +9,7 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_UI_GL_SHADERS_H__
-# define __YUNI_UI_GL_SHADERS_H__
+#define __YUNI_UI_GL_SHADERS_H__
 
 // This file contains necessary GLSL shaders for internal use
 
@@ -17,77 +17,64 @@ namespace Yuni
 {
 namespace Gfx3D
 {
+/////////////// VERTEX SHADERS
 
+// Minimal vertex shader : only transform the vertex coordinates
+extern const char* const vsTransform;
 
+// Very simple vertex shader : transform coordinates and propagate texture coordinates
+extern const char* const vsTexCoord;
 
-	/////////////// VERTEX SHADERS
+// For 2D post shaders, texture coordinates are calculated by transforming vertex position
+// from [-1,1] to [0,1]
+extern const char* const vs2D;
 
+// Pass the color as attribute
+extern const char* const vsColorAttr;
 
-	// Minimal vertex shader : only transform the vertex coordinates
-	extern const char* const vsTransform;
+// Sample a texture using a rectangle, do not resize the image, fill empty parts with a color
+extern const char* const vsImageRect;
 
-	// Very simple vertex shader : transform coordinates and propagate texture coordinates
-	extern const char* const vsTexCoord;
+// Phong shading
+extern const char* const vsPhong;
 
-	// For 2D post shaders, texture coordinates are calculated by transforming vertex position
-	// from [-1,1] to [0,1]
-	extern const char* const vs2D;
+extern const char* const vsCubeMap;
 
-	// Pass the color as attribute
-	extern const char* const vsColorAttr;
+/////////////// FRAGMENT SHADERS
 
-	// Sample a texture using a rectangle, do not resize the image, fill empty parts with a color
-	extern const char* const vsImageRect;
+// Use a single color given as uniform
+extern const char* const fsColorUniform;
 
-	// Phong shading
-	extern const char* const vsPhong;
+// Use a single color given as attribute
+extern const char* const fsColorAttr;
 
-	extern const char* const vsCubeMap;
+// Use directly the texture value, no lighting
+extern const char* const fsSimpleTexture;
 
+// Sample a texture using a rectangle, do not resize the image, fill empty parts with a color
+extern const char* const fsImageRect;
 
+// Freetype with normal render mode generates alpha-only bitmaps, stored as GL_R textures
+// This shader displays them with the proper color.
+extern const char* const fsText;
 
-	/////////////// FRAGMENT SHADERS
+// Color picking
+extern const char* const fsPicking;
 
+// Skybox : cube map sampling
+extern const char* const fsSkybox;
 
-	// Use a single color given as uniform
-	extern const char* const fsColorUniform;
+// Phong shading
+extern const char* const fsPhong;
 
-	// Use a single color given as attribute
-	extern const char* const fsColorAttr;
+//// POST FRAGMENT SHADERS
 
-	// Use directly the texture value, no lighting
-	extern const char* const fsSimpleTexture;
+extern const char* const fsYuv2Rgb;
 
-	// Sample a texture using a rectangle, do not resize the image, fill empty parts with a color
-	extern const char* const fsImageRect;
+/////////////// GEOMETRY SHADERS
 
-	// Freetype with normal render mode generates alpha-only bitmaps, stored as GL_R textures
-	// This shader displays them with the proper color.
-	extern const char* const fsText;
-
-	// Color picking
-	extern const char* const fsPicking;
-
-	// Skybox : cube map sampling
-	extern const char* const fsSkybox;
-
-	// Phong shading
-	extern const char* const fsPhong;
-
-
-	//// POST FRAGMENT SHADERS
-
-	extern const char* const fsYuv2Rgb;
-
-
-
-	/////////////// GEOMETRY SHADERS
-
-
-	// Generate empty borders for image rectangles
-	extern const char* const gsImageRect;
-
-
+// Generate empty borders for image rectangles
+extern const char* const gsImageRect;
 
 } // namespace Gfx3D
 } // namespace Yuni
