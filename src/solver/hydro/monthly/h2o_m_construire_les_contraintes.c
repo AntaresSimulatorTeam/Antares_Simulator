@@ -25,198 +25,188 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "h2o_m_donnees_annuelles.h"
+#include "h2o_m_fonctions.h"
 
-
-
-
-
-
-# include "h2o_m_donnees_annuelles.h"
-# include "h2o_m_fonctions.h"
-
-
-
-void H2O_M_ConstruireLesContraintes( DONNEES_ANNUELLES * DonneesAnnuelles )
+void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES* DonneesAnnuelles)
 {
-int NombreDeContraintes; int il; int Pdt; int NbPdt;
-double * CoefficientsDeLaMatriceDesContraintes; int * IndicesColonnes; int * IndicesDebutDeLigne;
-int * NombreDeTermesDesLignes; char * Sens; double ChgmtSens;
-int * NumeroDeVariableVolume; int * NumeroDeVariableTurbine; int * NumeroDeVariableDepassementVolumeMax;
-int * NumeroDeVariableDepassementVolumeMin; int * NumeroDeVariableDEcartPositifAuTurbineCible;
-int * NumeroDeVariableDEcartNegatifAuTurbineCible; int NumeroDeLaVariableXi;
+    int NombreDeContraintes;
+    int il;
+    int Pdt;
+    int NbPdt;
+    double* CoefficientsDeLaMatriceDesContraintes;
+    int* IndicesColonnes;
+    int* IndicesDebutDeLigne;
+    int* NombreDeTermesDesLignes;
+    char* Sens;
+    double ChgmtSens;
+    int* NumeroDeVariableVolume;
+    int* NumeroDeVariableTurbine;
+    int* NumeroDeVariableDepassementVolumeMax;
+    int* NumeroDeVariableDepassementVolumeMin;
+    int* NumeroDeVariableDEcartPositifAuTurbineCible;
+    int* NumeroDeVariableDEcartNegatifAuTurbineCible;
+    int NumeroDeLaVariableXi;
 
-PROBLEME_HYDRAULIQUE * ProblemeHydraulique;
-CORRESPONDANCE_DES_VARIABLES *      CorrespondanceDesVariables;
-PROBLEME_LINEAIRE_PARTIE_FIXE *     ProblemeLineairePartieFixe;
-PROBLEME_LINEAIRE_PARTIE_VARIABLE * ProblemeLineairePartieVariable;
+    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
+    CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables;
+    PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe;
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
 
-ChgmtSens = -1.0;
+    ChgmtSens = -1.0;
 
-NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
+    NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
 
-ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
-CorrespondanceDesVariables     = ProblemeHydraulique->CorrespondanceDesVariables;
-ProblemeLineairePartieFixe     = ProblemeHydraulique->ProblemeLineairePartieFixe;
-ProblemeLineairePartieVariable = ProblemeHydraulique->ProblemeLineairePartieVariable;
+    ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
+    CorrespondanceDesVariables = ProblemeHydraulique->CorrespondanceDesVariables;
+    ProblemeLineairePartieFixe = ProblemeHydraulique->ProblemeLineairePartieFixe;
+    ProblemeLineairePartieVariable = ProblemeHydraulique->ProblemeLineairePartieVariable;
 
-CoefficientsDeLaMatriceDesContraintes = ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes;
-IndicesColonnes = ProblemeLineairePartieFixe->IndicesColonnes;
-IndicesDebutDeLigne = ProblemeLineairePartieFixe->IndicesDebutDeLigne;
-Sens = ProblemeLineairePartieFixe->Sens;
-NombreDeTermesDesLignes = ProblemeLineairePartieFixe->NombreDeTermesDesLignes;
+    CoefficientsDeLaMatriceDesContraintes
+      = ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes;
+    IndicesColonnes = ProblemeLineairePartieFixe->IndicesColonnes;
+    IndicesDebutDeLigne = ProblemeLineairePartieFixe->IndicesDebutDeLigne;
+    Sens = ProblemeLineairePartieFixe->Sens;
+    NombreDeTermesDesLignes = ProblemeLineairePartieFixe->NombreDeTermesDesLignes;
 
-NumeroDeVariableVolume = CorrespondanceDesVariables->NumeroDeVariableVolume;
-NumeroDeVariableTurbine = CorrespondanceDesVariables->NumeroDeVariableTurbine;
-NumeroDeVariableDepassementVolumeMax = CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMax;
-NumeroDeVariableDepassementVolumeMin = CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMin;
-NumeroDeVariableDEcartPositifAuTurbineCible = CorrespondanceDesVariables->NumeroDeVariableDEcartPositifAuTurbineCible;
-NumeroDeVariableDEcartNegatifAuTurbineCible = CorrespondanceDesVariables->NumeroDeVariableDEcartNegatifAuTurbineCible;
-NumeroDeLaVariableXi = CorrespondanceDesVariables->NumeroDeLaVariableXi;
+    NumeroDeVariableVolume = CorrespondanceDesVariables->NumeroDeVariableVolume;
+    NumeroDeVariableTurbine = CorrespondanceDesVariables->NumeroDeVariableTurbine;
+    NumeroDeVariableDepassementVolumeMax
+      = CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMax;
+    NumeroDeVariableDepassementVolumeMin
+      = CorrespondanceDesVariables->NumeroDeVariableDepassementVolumeMin;
+    NumeroDeVariableDEcartPositifAuTurbineCible
+      = CorrespondanceDesVariables->NumeroDeVariableDEcartPositifAuTurbineCible;
+    NumeroDeVariableDEcartNegatifAuTurbineCible
+      = CorrespondanceDesVariables->NumeroDeVariableDEcartNegatifAuTurbineCible;
+    NumeroDeLaVariableXi = CorrespondanceDesVariables->NumeroDeLaVariableXi;
 
-NombreDeContraintes = 0;
-il = 0;
+    NombreDeContraintes = 0;
+    il = 0;
 
+    for (Pdt = 1; Pdt < NbPdt; Pdt++)
+    {
+        IndicesDebutDeLigne[NombreDeContraintes] = il;
 
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = NumeroDeVariableVolume[Pdt];
+        il++;
 
+        CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
+        IndicesColonnes[il] = NumeroDeVariableVolume[Pdt - 1];
+        il++;
 
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt - 1];
+        il++;
 
+        Sens[NombreDeContraintes] = '=';
+        NombreDeTermesDesLignes[NombreDeContraintes] = 3;
+        NombreDeContraintes++;
+    }
 
-for ( Pdt = 1 ; Pdt < NbPdt ; Pdt++ ) {
-  IndicesDebutDeLigne[NombreDeContraintes] = il;
-	
-	CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-	IndicesColonnes[il] = NumeroDeVariableVolume[Pdt];
-	il++;
-	
-	CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
-	IndicesColonnes[il] = NumeroDeVariableVolume[Pdt-1];
-	il++;
-	
-	CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-	IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt-1];	
-	il++;
+    IndicesDebutDeLigne[NombreDeContraintes] = il;
 
-  Sens[NombreDeContraintes] = '=';
-  NombreDeTermesDesLignes[NombreDeContraintes] = 3;
-  NombreDeContraintes++;
-}
+    CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+    IndicesColonnes[il] = NumeroDeVariableVolume[NbPdt - 1];
+    il++;
 
+    CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
+    IndicesColonnes[il] = NumeroDeVariableTurbine[NbPdt - 1];
+    il++;
 
+    Sens[NombreDeContraintes] = '=';
+    NombreDeTermesDesLignes[NombreDeContraintes] = 2;
+    NombreDeContraintes++;
 
-IndicesDebutDeLigne[NombreDeContraintes] = il;
+    for (Pdt = 1; Pdt < NbPdt; Pdt++)
+    {
+        IndicesDebutDeLigne[NombreDeContraintes] = il;
 
-CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-IndicesColonnes[il] = NumeroDeVariableVolume[NbPdt-1];
-il++;
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = NumeroDeVariableVolume[Pdt];
+        il++;
 
-CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
-IndicesColonnes[il] = NumeroDeVariableTurbine[NbPdt-1];
-il++;
+        ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
+        ProblemeLineairePartieFixe->IndicesColonnes[il] = NumeroDeVariableDepassementVolumeMax[Pdt];
+        il++;
 
-Sens[NombreDeContraintes] = '=';
-NombreDeTermesDesLignes[NombreDeContraintes] = 2;
-NombreDeContraintes++;
+        Sens[NombreDeContraintes] = '<';
+        NombreDeTermesDesLignes[NombreDeContraintes] = 2;
+        NombreDeContraintes++;
 
+        IndicesDebutDeLigne[NombreDeContraintes] = il;
 
-for ( Pdt = 1 ; Pdt < NbPdt ; Pdt++ ) {
-	
-	IndicesDebutDeLigne[NombreDeContraintes] = il;
-	
-	CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-	IndicesColonnes[il] = NumeroDeVariableVolume[Pdt];
-	il++;
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0 * ChgmtSens;
+        IndicesColonnes[il] = NumeroDeVariableVolume[Pdt];
+        il++;
 
-	ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
-	ProblemeLineairePartieFixe->IndicesColonnes[il] = NumeroDeVariableDepassementVolumeMax[Pdt];
-	il++;
-	
-	Sens[NombreDeContraintes] = '<';
-	NombreDeTermesDesLignes[NombreDeContraintes] = 2;
-	NombreDeContraintes++;
-	
-	
-	IndicesDebutDeLigne[NombreDeContraintes] = il;
-	
-	CoefficientsDeLaMatriceDesContraintes[il] = 1.0 * ChgmtSens; 
-	IndicesColonnes[il] = NumeroDeVariableVolume[Pdt];	
-	il++;
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0 * ChgmtSens;
+        IndicesColonnes[il] = NumeroDeVariableDepassementVolumeMin[Pdt];
+        il++;
 
-	CoefficientsDeLaMatriceDesContraintes[il] = 1.0 * ChgmtSens; 
-	IndicesColonnes[il] = NumeroDeVariableDepassementVolumeMin[Pdt];
-	il++;
-	
-	Sens[NombreDeContraintes] = '<';
-	NombreDeTermesDesLignes[NombreDeContraintes] = 2;
-	NombreDeContraintes++;
-}
+        Sens[NombreDeContraintes] = '<';
+        NombreDeTermesDesLignes[NombreDeContraintes] = 2;
+        NombreDeContraintes++;
+    }
 
+    for (Pdt = 1; Pdt < NbPdt; Pdt++)
+    {
+        IndicesDebutDeLigne[NombreDeContraintes] = il;
 
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = NumeroDeVariableDepassementVolumeMin[Pdt];
+        il++;
 
+        CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroDeLaVariableViolMaxVolumeMin;
+        il++;
 
-for (Pdt = 1; Pdt < NbPdt; Pdt++)
-{
-	IndicesDebutDeLigne[NombreDeContraintes] = il;
+        Sens[NombreDeContraintes] = '<';
+        NombreDeTermesDesLignes[NombreDeContraintes] = 2;
+        NombreDeContraintes++;
+    }
 
-	CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-	IndicesColonnes[il] = NumeroDeVariableDepassementVolumeMin[Pdt];
-	il++;
+    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        IndicesDebutDeLigne[NombreDeContraintes] = il;
 
-	CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
-	IndicesColonnes[il] = CorrespondanceDesVariables->NumeroDeLaVariableViolMaxVolumeMin;
-	il++;
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt];
+        il++;
 
-	Sens[NombreDeContraintes] = '<';
-	NombreDeTermesDesLignes[NombreDeContraintes] = 2;
-	NombreDeContraintes++;
-}
+        CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
+        IndicesColonnes[il] = NumeroDeVariableDEcartPositifAuTurbineCible[Pdt];
+        il++;
 
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = NumeroDeVariableDEcartNegatifAuTurbineCible[Pdt];
+        il++;
 
+        Sens[NombreDeContraintes] = '=';
+        NombreDeTermesDesLignes[NombreDeContraintes] = 3;
+        NombreDeContraintes++;
 
+        IndicesDebutDeLigne[NombreDeContraintes] = il;
 
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0 * ChgmtSens;
+        IndicesColonnes[il] = NumeroDeLaVariableXi;
+        il++;
 
+        CoefficientsDeLaMatriceDesContraintes[il] = -1.0 * ChgmtSens;
+        IndicesColonnes[il] = NumeroDeVariableDEcartPositifAuTurbineCible[Pdt];
+        il++;
 
+        CoefficientsDeLaMatriceDesContraintes[il] = -1.0 * ChgmtSens;
+        IndicesColonnes[il] = NumeroDeVariableDEcartNegatifAuTurbineCible[Pdt];
+        il++;
 
-for ( Pdt = 0 ; Pdt < NbPdt ; Pdt++ ) {
-  
-  IndicesDebutDeLigne[NombreDeContraintes] = il;
+        Sens[NombreDeContraintes] = '<';
+        NombreDeTermesDesLignes[NombreDeContraintes] = 3;
+        NombreDeContraintes++;
+    }
 
-  CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-  IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt];
-  il++;			
-	
-  CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
-  IndicesColonnes[il] = NumeroDeVariableDEcartPositifAuTurbineCible[Pdt];
-  il++;		
-		
-  CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-  IndicesColonnes[il] = NumeroDeVariableDEcartNegatifAuTurbineCible[Pdt];
-  il++;			
+    ProblemeLineairePartieFixe->NombreDeContraintes = NombreDeContraintes;
 
-  Sens[NombreDeContraintes] = '=';
-  NombreDeTermesDesLignes[NombreDeContraintes] = 3;
-  NombreDeContraintes++;	
-
-  	
-  IndicesDebutDeLigne[NombreDeContraintes] = il;   
-
-  CoefficientsDeLaMatriceDesContraintes[il] = 1.0 * ChgmtSens; 
-  IndicesColonnes[il] = NumeroDeLaVariableXi;	
-  il++;				
-	
-  CoefficientsDeLaMatriceDesContraintes[il] = -1.0 * ChgmtSens; 
-  IndicesColonnes[il] = NumeroDeVariableDEcartPositifAuTurbineCible[Pdt];
-  il++;		
-
-  CoefficientsDeLaMatriceDesContraintes[il] = -1.0 * ChgmtSens; 
-  IndicesColonnes[il] = NumeroDeVariableDEcartNegatifAuTurbineCible[Pdt];
-  il++;			
-
-  Sens[NombreDeContraintes] = '<' ;
-  NombreDeTermesDesLignes[NombreDeContraintes] = 3;
-  NombreDeContraintes++;		
-}
-
-ProblemeLineairePartieFixe->NombreDeContraintes = NombreDeContraintes;
-
-return;
+    return;
 }

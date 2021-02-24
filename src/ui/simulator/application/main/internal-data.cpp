@@ -28,30 +28,19 @@
 #include "internal-data.h"
 #include <libs/antares/study/study.h>
 
-
 namespace Antares
 {
 namespace Forms
 {
+MainFormData::MainFormData(ApplWnd& form) : wipEnabled(false), wipPanel(nullptr), pMainForm(form)
+{
+}
 
-	MainFormData::MainFormData(ApplWnd& form) :
-		wipEnabled(false),
-		wipPanel(nullptr),
-		pMainForm(form)
-	{}
-
-
-	void MainFormData::editCurrentLocation(const wxString& string)
-	{
-		assert(pEditCurrentLocation != NULL);
-		pEditCurrentLocation->SetItemLabel(wxString(wxT("Current tab : ")) << string);
-	}
-
-
-
-
+void MainFormData::editCurrentLocation(const wxString& string)
+{
+    assert(pEditCurrentLocation != NULL);
+    pEditCurrentLocation->SetItemLabel(wxString(wxT("Current tab : ")) << string);
+}
 
 } // namespace Forms
 } // namespace Antares
-
-

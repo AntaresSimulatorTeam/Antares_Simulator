@@ -37,9 +37,7 @@
 #include "../../application/menus.h"
 #include <wx/statline.h>
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
@@ -47,103 +45,97 @@ namespace Window
 {
 namespace Hydro
 {
+Dailypower::Dailypower(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
+ Component::Panel(parent),
+ pInputAreaSelector(notifier),
+ pArea(nullptr),
+ pComponentsAreReady(false),
+ pSupport(nullptr)
+{
+    OnStudyClosed.connect(this, &Dailypower::onStudyClosed);
+    if (notifier)
+        notifier->onAreaChanged.connect(this, &Dailypower::onAreaChanged);
+}
 
+void Dailypower::createComponents()
+{
+    if (pComponentsAreReady)
+        return;
+    pComponentsAreReady = true;
 
-	Dailypower::Dailypower(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
-		Component::Panel(parent),
-		pInputAreaSelector(notifier),
-		pArea(nullptr),
-		pComponentsAreReady(false),
-		pSupport(nullptr)
-	{
-		OnStudyClosed.connect(this, &Dailypower::onStudyClosed);
-		if (notifier)
-			notifier->onAreaChanged.connect(this, &Dailypower::onAreaChanged);
-	}
+    {
+        wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+        SetSizer(sizer);
+        pSupport = new Component::Panel(this);
+        sizer->Add(pSupport, 1, wxALL | wxEXPAND);
+    }
 
+    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+    pSupport->SetSizer(sizer);
 
-	void Dailypower::createComponents()
-	{
-		if (pComponentsAreReady)
-			return;
-		pComponentsAreReady = true;
+    const wxSize ourDefaultSize(55, wxDefaultSize.GetHeight());
 
-		{
-			wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-			SetSizer(sizer);
-			pSupport = new Component::Panel(this);
-			sizer->Add(pSupport, 1, wxALL|wxEXPAND);
-		}
+    enum
+    {
+        right = wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL,
+        left = wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
+    };
 
-		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-		pSupport->SetSizer(sizer);
+    wxBoxSizer* sizerHigh = new wxBoxSizer(wxHORIZONTAL);
 
-		const wxSize ourDefaultSize(55, wxDefaultSize.GetHeight());
+    sizer->Add(sizerHigh, 2, wxALL | wxEXPAND | wxFIXED_MINSIZE);
 
-		enum
-		{
-			right = wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL,
-			left  = wxLEFT  | wxALIGN_LEFT  | wxALIGN_CENTER_VERTICAL,
-		};
+    sizerHigh->Add(new Component::Datagrid::Component(
+                     pSupport,
+                     new Component::Datagrid::Renderer::CreditModulations(this, pInputAreaSelector),
+                     wxT("Credit Modulations (reservoir level)")),
+                   3,
+                   wxALL | wxEXPAND,
+                   5);
+    sizerHigh->SetMinSize(10, 200);
 
-		wxBoxSizer* sizerHigh = new wxBoxSizer(wxHORIZONTAL);
-		
-		sizer->Add(sizerHigh, 2, wxALL | wxEXPAND | wxFIXED_MINSIZE);
+    wxBoxSizer* ssGridsLow = new wxBoxSizer(wxHORIZONTAL);
 
-		sizerHigh->Add(new Component::Datagrid::Component(pSupport,
-			new Component::Datagrid::Renderer::CreditModulations(this, pInputAreaSelector), wxT("Credit Modulations (reservoir level)")),
-			3, wxALL | wxEXPAND, 5);
-		sizerHigh->SetMinSize(10, 200);
+    ssGridsLow->Add(
+      new Component::Datagrid::Component(
+        pSupport,
+        new Component::Datagrid::Renderer::HydroMonthlyPower(this, pInputAreaSelector),
+        wxT("Standard Credits (calendar)")),
+      3,
+      wxALL | wxEXPAND,
+      5);
+    sizer->Add(ssGridsLow, 4, wxALL | wxEXPAND | wxFIXED_MINSIZE);
 
-		wxBoxSizer* ssGridsLow = new wxBoxSizer(wxHORIZONTAL);
+    sizer->Layout();
+}
 
-		ssGridsLow->Add(new Component::Datagrid::Component(pSupport,
-			new Component::Datagrid::Renderer::HydroMonthlyPower(this, pInputAreaSelector), wxT("Standard Credits (calendar)")),
-			3, wxALL | wxEXPAND, 5);
-		sizer->Add(ssGridsLow, 4, wxALL | wxEXPAND | wxFIXED_MINSIZE);
-		
+Dailypower::~Dailypower()
+{
+    destroyBoundEvents();
+    // destroy all children as soon as possible to prevent against corrupt vtable
+    DestroyChildren();
+}
 
-		sizer->Layout();
-	}
+void Dailypower::onAreaChanged(Data::Area* area)
+{
+    pArea = area;
+    if (area and area->hydro.prepro)
+    {
+        // create components on-demand
+        if (!pComponentsAreReady)
+            createComponents();
+        else
+            GetSizer()->Show(pSupport, true);
+    }
+}
 
+void Dailypower::onStudyClosed()
+{
+    pArea = nullptr;
 
-	Dailypower::~Dailypower()
-	{
-		destroyBoundEvents();
-		// destroy all children as soon as possible to prevent against corrupt vtable
-		DestroyChildren();
-	}
-
-
-
-	void Dailypower::onAreaChanged(Data::Area* area)
-	{
-		pArea = area;
-		if (area and area->hydro.prepro)
-		{
-			// create components on-demand
-			if (!pComponentsAreReady)
-				createComponents();
-			else
-				GetSizer()->Show(pSupport, true);
-		}
-	}
-
-
-	void Dailypower::onStudyClosed()
-	{
-		pArea = nullptr;
-
-		if (GetSizer())
-			GetSizer()->Show(pSupport, false);
-	}
-
-
-
-
-
-
-
+    if (GetSizer())
+        GetSizer()->Show(pSupport, false);
+}
 
 } // namespace Hydro
 } // namespace Window

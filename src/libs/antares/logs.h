@@ -25,12 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_LOGS_H__
-# define __ANTARES_LIBS_LOGS_H__
+#define __ANTARES_LIBS_LOGS_H__
 
-#ifdef TESTING
-#include "logs/fake-logs.h"
-#else
-# include "logs/logs.h"
-#endif
+#include "logs/logs.h"
 
 #endif /* __ANTARES_LIBS_LOGS_H__ */

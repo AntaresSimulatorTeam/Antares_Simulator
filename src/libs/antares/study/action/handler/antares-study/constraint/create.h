@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_CREATE_H__
-# define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_CREATE_H__
+#define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_CREATE_H__
 
-# include <yuni/yuni.h>
-# include "../../../action.h"
-
+#include <yuni/yuni.h>
+#include "../../../action.h"
 
 namespace Antares
 {
@@ -39,65 +38,64 @@ namespace AntaresStudy
 {
 namespace Constraint
 {
+class Create : public IAction
+{
+public:
+    //! The most suitable smart ptr for the class
+    typedef IAction::Ptr Ptr;
+    //! The threading policy
+    typedef IAction::ThreadingPolicy ThreadingPolicy;
 
-	class Create : public IAction
-	{
-	public:
-		//! The most suitable smart ptr for the class
-		typedef IAction::Ptr  Ptr;
-		//! The threading policy
-		typedef IAction::ThreadingPolicy  ThreadingPolicy;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    template<class StringT>
+    explicit Create(const StringT& areaname,
+                    Data::BindingConstraint::Type t,
+                    Data::BindingConstraint::Operator o);
+    /*!
+    ** \brief Default constructor
+    */
+    template<class StringT1, class StringT2>
+    Create(const StringT1& areaname,
+           const StringT2& targetname,
+           Data::BindingConstraint::Type t,
+           Data::BindingConstraint::Operator o);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		template<class StringT> explicit Create(const StringT& areaname, Data::BindingConstraint::Type t, Data::BindingConstraint::Operator o);
-		/*!
-		** \brief Default constructor
-		*/
-		template<class StringT1, class StringT2>
-		Create(const StringT1& areaname, const StringT2& targetname, Data::BindingConstraint::Type t, Data::BindingConstraint::Operator o);
+    //! Destructor
+    virtual ~Create();
+    //@}
 
-		//! Destructor
-		virtual ~Create();
-		//@}
+    /*!
+    ** \brief Create all standard actions for copy/pasting an area
+    */
+    void createActionsForAStandardConstraintCopy(Context& ctx);
 
-		/*!
-		** \brief Create all standard actions for copy/pasting an area
-		*/
-		void createActionsForAStandardConstraintCopy(Context& ctx);
+    virtual bool allowUpdate() const;
 
+protected:
+    virtual void prepareSkipWL(Context& ctx);
+    virtual bool prepareWL(Context& ctx);
+    virtual bool performWL(Context& ctx);
 
-		virtual bool allowUpdate() const;
+private:
+    //! The futur area name
+    Antares::Data::ConstraintName pOriginalConstraintName;
+    Antares::Data::ConstraintName pTargetConstraintName;
+    Antares::Data::ConstraintName pFuturConstraintName;
+    Antares::Data::BindingConstraint::Type pType;
+    Antares::Data::BindingConstraint::Operator pOperator;
 
-	protected:
-		virtual void prepareSkipWL(Context& ctx);
-		virtual bool prepareWL(Context& ctx);
-		virtual bool performWL(Context& ctx);
-
-	private:
-		//! The futur area name
-		Antares::Data::ConstraintName pOriginalConstraintName;
-		Antares::Data::ConstraintName pTargetConstraintName;
-		Antares::Data::ConstraintName pFuturConstraintName;
-		Antares::Data::BindingConstraint::Type pType;
-		Antares::Data::BindingConstraint::Operator pOperator;
-
-	}; // class IAction
-
-
-
-
-
+}; // class IAction
 
 } // namespace Constraint
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
 
-# include "create.hxx"
+#include "create.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_CREATE_H__

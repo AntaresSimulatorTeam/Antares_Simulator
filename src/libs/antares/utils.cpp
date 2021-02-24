@@ -29,50 +29,43 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
+void BeautifyName(YString& out, AnyString oldname)
+{
+    out.clear();
+    if (oldname.empty())
+        return;
 
-	void BeautifyName(YString& out, AnyString oldname)
-	{
-		out.clear();
-		if (oldname.empty())
-			return;
+    oldname.trim(" \r\n\t");
+    if (oldname.empty())
+        return;
 
-		oldname.trim(" \r\n\t");
-		if (oldname.empty())
-			return;
+    out.reserve(oldname.size());
 
-		out.reserve(oldname.size());
+    auto end = oldname.utf8end();
+    for (auto i = oldname.utf8begin(); i != end; ++i)
+    {
+        auto& utf8char = *i;
+        // simple char
+        char c = (char)utf8char;
 
-		auto end = oldname.utf8end();
-		for (auto i = oldname.utf8begin(); i != end; ++i)
-		{
-			auto& utf8char = *i;
-			// simple char
-			char c = (char) utf8char;
+        if (c == ' ' or (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z')
+            or (c >= '0' and c <= '9') or c == '_' or c == '-' or c == '(' or c == ')' or c == ','
+            or c == '&')
+        {
+            out += c;
+        }
+        else
+            out += ' ';
+    }
 
-			if (c == ' '
-				or (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9')
-				or c == '_' or c == '-' or c == '(' or c == ')' or c == ',' or c == '&')
-			{
-				out += c;
-			}
-			else
-				out += ' ';
-		}
+    out.trim(" \t\r\n");
 
-		out.trim(" \t\r\n");
+    while (std::string(out.c_str()).find("  ") != std::string::npos)
+        out.replace("  ", " ");
 
-		while (std::string(out.c_str()).find("  ") != std::string::npos)
-			out.replace("  ", " ");
-
-		out.trim(" \t\r\n");
-	}
-
-
-
+    out.trim(" \t\r\n");
+}
 
 } // namespace Antares
-

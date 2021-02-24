@@ -90,7 +90,6 @@ macro(solver_app name swap)
 			libantares-solver-simulation-swap
 			libantares-solver-ts-generator-swap
 			libmodel_antares-swap
-			libsolver_antares-swap
 			libantares-core-swap)
 		set_target_properties(${exec_name} PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
 	else()
@@ -103,8 +102,7 @@ macro(solver_app name swap)
 			libantares-solver-variable
 			libantares-solver-simulation
 			libantares-solver-ts-generator
-			libmodel_antares 
-			libsolver_antares			
+			libmodel_antares
 			libantares-core)
 	endif()
 
@@ -112,16 +110,36 @@ macro(solver_app name swap)
 			PRIVATE
 				${ANTARES_SOLVER_LIBS}
 			)
-	
+
 	import_std_libs(${exec_name})
-	executable_strip(${exec_name})
+	executable_strip(${exec_name})	
+	
+	copy_dependency(sirius_solver ${exec_name})	
 
 endmacro()
 
 solver_app("solver"      false)
-solver_app("solver-swap" true)
 
 #TODO : not working inside macro
-install(TARGETS "antares-${ANTARES_PRG_VERSION}-solver" DESTINATION bin)
-install(TARGETS "antares-${ANTARES_PRG_VERSION}-solver-swap" DESTINATION bin)
+install(TARGETS "antares-${ANTARES_PRG_VERSION}-solver" EXPORT antares-solver DESTINATION bin)
+
+INSTALL(EXPORT antares-solver
+	FILE antares-solverConfig.cmake
+	DESTINATION cmake
+)
+
+
+if(BUILD_SWAP)
+
+    solver_app("solver-swap" true)
+
+    #TODO : not working inside macro
+    install(TARGETS "antares-${ANTARES_PRG_VERSION}-solver-swap" EXPORT antares-solver-swap DESTINATION bin)
+    
+    INSTALL(EXPORT antares-solver-swap
+	FILE antares-solver-swapConfig.cmake
+	DESTINATION cmake
+)
+
+endif()
 

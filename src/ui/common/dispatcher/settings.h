@@ -25,10 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_COMMON_ACTION_SETTINGS_H__
-# define __ANTARES_COMMON_ACTION_SETTINGS_H__
+#define __ANTARES_COMMON_ACTION_SETTINGS_H__
 
-# include "../wx-wrapper.h"
-
+#include "../wx-wrapper.h"
 
 namespace Antares
 {
@@ -36,18 +35,15 @@ namespace Dispatcher
 {
 namespace Settings
 {
+/*!
+** \brief The wx window to use for performing pending events
+*/
+extern wxWindow* WindowForPendingDispatchers;
 
-	/*!
-	** \brief The wx window to use for performing pending events
-	*/
-	extern wxWindow* WindowForPendingDispatchers;
-
-	/*!
-	** \brief The wxID to use for performing pending events
-	*/
-	extern int IDForWxDispatcher;
-
-
+/*!
+** \brief The wxID to use for performing pending events
+*/
+extern int IDForWxDispatcher;
 
 } // namespace Settings
 } // namespace Dispatcher

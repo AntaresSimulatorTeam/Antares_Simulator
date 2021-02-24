@@ -25,32 +25,25 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_AREALIST_HXX__
-# define __ANTARES_LIBS_STUDY_AREALIST_HXX__
-
+#define __ANTARES_LIBS_STUDY_AREALIST_HXX__
 
 namespace Antares
 {
 namespace Data
 {
+inline bool AreaList::empty() const
+{
+    return areas.empty();
+}
 
-	inline bool AreaList::empty() const
-	{
-		return areas.empty();
-	}
-
-
-	template<int TimeSeriesT>
-	bool AreaList::storeTimeseriesNumbers(Study& study)
-	{
-		auto end = areas.end();
-		for (auto i = areas.begin(); i != end; ++i)
-			(i->second)->storeTimeseriesNumbers<TimeSeriesT>(study);
-		return true;
-	}
-
-
-
-
+template<int TimeSeriesT>
+bool AreaList::storeTimeseriesNumbers(Study& study)
+{
+    auto end = areas.end();
+    for (auto i = areas.begin(); i != end; ++i)
+        (i->second)->storeTimeseriesNumbers<TimeSeriesT>(study);
+    return true;
+}
 
 } // namespace Data
 } // namespace Antares

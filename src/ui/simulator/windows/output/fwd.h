@@ -25,15 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_WINDOWS_OUTPUT_FWD_H__
-# define __ANTARES_WINDOWS_OUTPUT_FWD_H__
+#define __ANTARES_WINDOWS_OUTPUT_FWD_H__
 
-# include <yuni/yuni.h>
-# include <yuni/job/job.h>
-# include <vector>
-# include <map>
-# include <set>
-
-
+#include <yuni/yuni.h>
+#include <yuni/job/job.h>
+#include <vector>
+#include <map>
+#include <set>
 
 namespace Antares
 {
@@ -43,18 +41,14 @@ namespace OutputViewer
 {
 namespace Provider
 {
-
-	class Variables;
-	class Outputs;
-	class Comparison;
+class Variables;
+class Outputs;
+class Comparison;
 
 } // namespace Provider
-} // namespace OutputViewerData
-} // namespace Private
+} // namespace OutputViewer
+} // namespace Window
 } // namespace Antares
-
-
-
 
 namespace Antares
 {
@@ -62,68 +56,62 @@ namespace Window
 {
 namespace OutputViewer
 {
+class Layer;
+class Component;
+class SpotlightProvider;
+class SpotlightProviderGlobalSelection;
 
-	class Layer;
-	class Component;
-	class SpotlightProvider;
-	class SpotlightProviderGlobalSelection;
+/*!
+** \brief Level of Details
+*/
+enum LevelOfDetails
+{
+    lodAllMCYears,
+    lodDetailledResults,
+    lodDetailedResultsWithConcatenation,
+};
 
-	/*!
-	** \brief Level of Details
-	*/
-	enum LevelOfDetails
-	{
-		lodAllMCYears,
-		lodDetailledResults,
-		lodDetailedResultsWithConcatenation,
-	};
+/*!
+** \brief Type of the selection
+*/
+enum SelectionType
+{
+    //! No selection
+    stNone = 0,
+    //! An area has been selected
+    stArea,
+    //! A link has been selected
+    stLink,
+    //! The summary has been selected
+    stSummary,
+    //! The comments have been selected
+    stComments,
+    //! The logs have been selected
+    stLogs
+};
 
-	/*!
-	** \brief Type of the selection
-	*/
-	enum SelectionType
-	{
-		//! No selection
-		stNone = 0,
-		//! An area has been selected
-		stArea,
-		//! A link has been selected
-		stLink,
-		//! The summary has been selected
-		stSummary,
-		//! The comments have been selected
-		stComments,
-		//! The logs have been selected
-		stLogs
-	};
-
-
-	/*!
-	** \brief All types of layers
-	*/
-	enum LayerType
-	{
-		//! A real data file, taken from an output
-		ltOutput = 0,
-		//! Virtual layer, sum of all non-virtual layers
-		ltSum,
-		//! Virtual layer, diff of all non-virtual layers
-		ltDiff,
-		//! Virtual layer, average of all non-virtual layers
-		ltAverage,
-		//! Virtual layer, min of all non-virtual layers
-		ltMin,
-		//! Virtual layer, max of all non-virtual layers
-		ltMax,
-	};
-
+/*!
+** \brief All types of layers
+*/
+enum LayerType
+{
+    //! A real data file, taken from an output
+    ltOutput = 0,
+    //! Virtual layer, sum of all non-virtual layers
+    ltSum,
+    //! Virtual layer, diff of all non-virtual layers
+    ltDiff,
+    //! Virtual layer, average of all non-virtual layers
+    ltAverage,
+    //! Virtual layer, min of all non-virtual layers
+    ltMin,
+    //! Virtual layer, max of all non-virtual layers
+    ltMax,
+};
 
 } // namespace OutputViewer
 } // namespace Window
 } // namespace Antares
-
-
-
 
 namespace Antares
 {
@@ -131,32 +119,28 @@ namespace Private
 {
 namespace OutputViewerData
 {
+//! Job for analyzing an output
+class Job;
 
-	//! Job for analyzing an output
-	class Job;
+//! Content of a single output
+class Content;
 
-	//! Content of a single output
-	class Content;
+//! Content for a given output
+typedef std::map<Yuni::String, Content*> ContentMap;
 
-	//! Content for a given output
-	typedef std::map<Yuni::String, Content*>  ContentMap;
+//! Smart pointer on a job
+// typedef Yuni::SmartPtr<Job>  JobPtr;
+typedef Yuni::Job::IJob::Ptr::Promote<Job>::Ptr JobPtr;
 
-	//! Smart pointer on a job
-	//typedef Yuni::SmartPtr<Job>  JobPtr;
-	typedef Yuni::Job::IJob::Ptr::Promote<Job>::Ptr  JobPtr;
+//! Array of jobs
+typedef std::vector<JobPtr> JobVector;
 
-	//! Array of jobs
-	typedef std::vector<JobPtr>  JobVector;
+//! Output panel
+class Panel;
 
-
-	//! Output panel
-	class Panel;
-
-
-	typedef std::set<Data::ThermalClusterName>  ThermalNameSet;
-	//! List of thermal clusters, for all areas
-	typedef std::map<Data::AreaName, std::set<Data::ThermalClusterName> >  ThermalNameSetPerArea;
-
+typedef std::set<Data::ThermalClusterName> ThermalNameSet;
+//! List of thermal clusters, for all areas
+typedef std::map<Data::AreaName, std::set<Data::ThermalClusterName>> ThermalNameSetPerArea;
 
 } // namespace OutputViewerData
 } // namespace Private

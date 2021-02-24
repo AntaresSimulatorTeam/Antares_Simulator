@@ -39,8 +39,12 @@ endif()
 
 set(execname "antares-${ANTARES_PRG_VERSION}-ybyaggregator")
 add_executable(${execname}  ${SRCS})
-install(TARGETS ${execname} DESTINATION bin)
+install(TARGETS ${execname} EXPORT antares-ybyaggregator DESTINATION bin)
 
+INSTALL(EXPORT antares-ybyaggregator
+	FILE antares-ybyaggregatorConfig.cmake
+	DESTINATION cmake
+)
 
 set(YBY_AGGREGATOR_LIBS
 	libantares-core-swap

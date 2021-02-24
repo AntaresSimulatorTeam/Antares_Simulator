@@ -25,12 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_FILTER_ALL_ANY_H__
-# define __ANTARES_TOOLBOX_FILTER_ALL_ANY_H__
+#define __ANTARES_TOOLBOX_FILTER_ALL_ANY_H__
 
-# include <antares/wx-wrapper.h>
-# include "../filter.h"
-
-
+#include <antares/wx-wrapper.h>
+#include "../filter.h"
 
 namespace Antares
 {
@@ -38,32 +36,45 @@ namespace Toolbox
 {
 namespace Filter
 {
+class Any : public AFilterBase
+{
+public:
+    static const wxChar* Name()
+    {
+        return wxT("any");
+    }
+    static const wxChar* Caption()
+    {
+        return wxT("Any");
+    }
+    static Date::Precision Precision()
+    {
+        return Date::stepAny;
+    }
 
+public:
+    Any(Input* parent) : AFilterBase(parent)
+    {
+    }
+    virtual ~Any()
+    {
+    }
 
+    virtual Date::Precision precision() const
+    {
+        return Any::Precision();
+    }
 
-	class Any : public AFilterBase
-	{
-	public:
-		static const wxChar* Name()    {return wxT("any");}
-		static const wxChar* Caption() {return wxT("Any");}
-		static Date::Precision Precision() {return Date::stepAny;}
+    virtual const wxChar* name() const
+    {
+        return Any::Name();
+    }
+    virtual const wxChar* caption() const
+    {
+        return Any::Caption();
+    }
 
-	public:
-		Any(Input* parent)
-			:AFilterBase(parent)
-		{}
-		virtual ~Any() {}
-
-		virtual Date::Precision precision() const {return Any::Precision();}
-
-		virtual const wxChar* name() const {return Any::Name();}
-		virtual const wxChar* caption() const {return Any::Caption();}
-
-	}; // class Any
-
-
-
-
+}; // class Any
 
 } // namespace Filter
 } // namespace Toolbox

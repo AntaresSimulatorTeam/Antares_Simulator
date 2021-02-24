@@ -9,198 +9,194 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_MEDIA_EMITTER_H__
-# define __YUNI_MEDIA_EMITTER_H__
+#define __YUNI_MEDIA_EMITTER_H__
 
-# include "../yuni.h"
-# include <map>
-# include "../core/string.h"
-# include "../core/point3D.h"
-# include "../core/vector3D.h"
-# include "source.h"
-
+#include "../yuni.h"
+#include <map>
+#include "../core/string.h"
+#include "../core/point3D.h"
+#include "../core/vector3D.h"
+#include "source.h"
 
 namespace Yuni
 {
 namespace Media
 {
+/*!
+** \brief An emitter is a virtual object from which a source is played
+**
+** Emitters can be placed in space, and be moved around.
+*/
+class Emitter : public Policy::ObjectLevelLockable<Emitter>
+{
+public:
+    //! The most suitable smart pointer for the class
+    typedef SmartPtr<Emitter> Ptr;
+    //! Threading Policy
+    typedef Policy::ObjectLevelLockable<Emitter> ThreadingPolicy;
+    //! Map
+    typedef std::map<String, Ptr> Map;
 
-	/*!
-	** \brief An emitter is a virtual object from which a source is played
-	**
-	** Emitters can be placed in space, and be moved around.
-	*/
-	class Emitter: public Policy::ObjectLevelLockable<Emitter>
-	{
-	public:
-		//! The most suitable smart pointer for the class
-		typedef SmartPtr<Emitter> Ptr;
-		//! Threading Policy
-		typedef Policy::ObjectLevelLockable<Emitter> ThreadingPolicy;
-		//! Map
-		typedef std::map<String, Ptr> Map;
+public:
+    //! Default value for pitch (1.0)
+    static const float DefaultPitch;
+    //! Default value for gain (1.0)
+    static const float DefaultGain;
+    enum
+    {
+        //! Default value for attenuation (enabled)
+        DefaultAttenuation = true,
+        //! Default value for looping (false)
+        DefaultLooping = false
+    };
 
-	public:
-		//! Default value for pitch (1.0)
-		static const float DefaultPitch;
-		//! Default value for gain (1.0)
-		static const float DefaultGain;
-		enum
-		{
-			//! Default value for attenuation (enabled)
-			DefaultAttenuation = true,
-			//! Default value for looping (false)
-			DefaultLooping = false
-		};
+public:
+    //! \name Constructors & Destructor
+    //@{
+    /*!
+    ** \brief Shortest constructor
+    **
+    ** Position, speed and direction default to (0,0,0)
+    */
+    Emitter(bool loop = DefaultLooping);
 
-	public:
-		//! \name Constructors & Destructor
-		//@{
-		/*!
-		** \brief Shortest constructor
-		**
-		** Position, speed and direction default to (0,0,0)
-		*/
-		Emitter(bool loop = DefaultLooping);
+    /*!
+    ** \brief Constructor with 3D position
+    **
+    ** Speed and velocity default to (0,0,0)
+    */
+    Emitter(const Point3D<>& position, bool loop);
 
-		/*!
-		** \brief Constructor with 3D position
-		**
-		** Speed and velocity default to (0,0,0)
-		*/
-		Emitter(const Point3D<>& position, bool loop);
+    /*!
+    ** \brief Constructor with position, velocity and direction
+    */
+    Emitter(const Point3D<>& position,
+            const Vector3D<>& velocity,
+            const Vector3D<>& direction,
+            bool loop);
 
-		/*!
-		** \brief Constructor with position, velocity and direction
-		*/
-		Emitter(const Point3D<>& position, const Vector3D<>& velocity,
-			const Vector3D<>& direction, bool loop);
+    /*!
+    ** \brief Destructor
+    */
+    ~Emitter()
+    {
+    }
+    //@}
 
-		/*!
-		** \brief Destructor
-		*/
-		~Emitter() {}
-		//@}
+    //! \name Methods
+    //@{
+    //! Attach a source to the emitter
+    bool attachSourceDispatched(Source::Ptr& source);
 
+    //! Detach the emitter from any source
+    bool detachSourceDispatched();
 
-		//! \name Methods
-		//@{
-		//! Attach a source to the emitter
-		bool attachSourceDispatched(Source::Ptr& source);
+    //! Prepare the emitter for playing
+    bool prepareDispatched();
 
-		//! Detach the emitter from any source
-		bool detachSourceDispatched();
+    //! Play the source
+    bool playSourceDispatched();
+    //! Play the source
+    bool playSourceDispatched(Source::Ptr& source);
 
-		//! Prepare the emitter for playing
-		bool prepareDispatched();
+    //! Stop the source
+    bool stopSourceDispatched();
 
-		//! Play the source
-		bool playSourceDispatched();
-		//! Play the source
-		bool playSourceDispatched(Source::Ptr& source);
+    //! Pause the source
+    bool pauseSourceDispatched();
 
-		//! Stop the source
-		bool stopSourceDispatched();
+    //! Update sources if necessary
+    bool updateDispatched();
+    //@}
 
-		//! Pause the source
-		bool pauseSourceDispatched();
+    //! \name Accessors
+    //@{
+    //! Is the emitter attached to a source ?
+    bool attached() const;
 
-		//! Update sources if necessary
-		bool updateDispatched();
-		//@}
+    //! Is the emitter currently playing ?
+    bool playing() const;
 
+    //! Is the emitter currently playing ?
+    bool paused() const;
 
-		//! \name Accessors
-		//@{
-		//! Is the emitter attached to a source ?
-		bool attached() const;
+    //! Set the 3D position of the emitter
+    void position(const Point3D<>& position);
+    //! Get the 3D position of the emitter
+    Point3D<> position() const;
 
-		//! Is the emitter currently playing ?
-		bool playing() const;
+    //! Set the velocity of the emitter
+    void velocity(const Vector3D<>& position);
+    //! Get the velocity of the emitter
+    Vector3D<> velocity() const;
 
-		//! Is the emitter currently playing ?
-		bool paused() const;
+    //! Set the direction of the emitter
+    void direction(const Vector3D<>& position);
+    //! Get the direction of the emitter
+    Vector3D<> direction() const;
 
-		//! Set the 3D position of the emitter
-		void position(const Point3D<>& position);
-		//! Get the 3D position of the emitter
-		Point3D<> position() const;
+    //! Set whether the emitter should loop
+    void loop(bool looping);
+    //! Get whether the emitter loops
+    bool loop() const;
 
-		//! Set the velocity of the emitter
-		void velocity(const Vector3D<>& position);
-		//! Get the velocity of the emitter
-		Vector3D<> velocity() const;
+    /*!
+    ** \brief Set the volume modifier on the emitter
+    ** \param newGain 0.0f for no sound, 1.0f to keep sound as is, > 1.0f to amplify sound
+    */
+    //! Set the volume modifier
+    void gain(float newGain);
+    //! Get the current volume modifier
+    float gain() const;
 
-		//! Set the direction of the emitter
-		void direction(const Vector3D<>& position);
-		//! Get the direction of the emitter
-		Vector3D<> direction() const;
+    /*!
+    ** \brief Get the elapsed playback time (in seconds)
+    ** \returns Time elapsed since the emitter started playback. 0 if not playing.
+    */
+    float elapsedTime() const;
 
-		//! Set whether the emitter should loop
-		void loop(bool looping);
-		//! Get whether the emitter loops
-		bool loop() const;
+    //! Get the identifier for the emitter
+    uint id() const;
+    //@}
 
-		/*!
-		** \brief Set the volume modifier on the emitter
-		** \param newGain 0.0f for no sound, 1.0f to keep sound as is, > 1.0f to amplify sound
-		*/
-		//! Set the volume modifier
-		void gain(float newGain);
-		//! Get the current volume modifier
-		float gain() const;
+private:
+    Emitter(const Emitter&);
+    Emitter& operator=(const Emitter&);
 
-		/*!
-		** \brief Get the elapsed playback time (in seconds)
-		** \returns Time elapsed since the emitter started playback. 0 if not playing.
-		*/
-		float elapsedTime() const;
+private:
+    //! String identifier for the emitter
+    String pName;
+    //! OpenAL identifier for the emitter
+    unsigned int pID;
+    //! Position of the emitter in space
+    Point3D<> pPosition;
+    //! Speed of the emitter
+    Vector3D<> pVelocity;
+    //! Direction of the movement of the emitter
+    Vector3D<> pDirection;
+    //! Should the emitter loop on itself when finished playing?
+    bool pLoop;
+    //! Volume modifier, 1.0 means no modification
+    float pGain;
+    //! Current playback position
+    sint64 pStartTime;
+    //! Sound to play. nullptr if none
+    Source::Ptr pSource;
 
-		//! Get the identifier for the emitter
-		uint id() const;
-		//@}
+    //! Is the emitter ready for use?
+    bool pReady;
+    //! Is the emitter currently playing?
+    bool pPlaying;
+    //! Is the emitter currently paused?
+    bool pPaused;
+    //! Has the emitter's values been modified ?
+    bool pModified;
 
-
-	private:
-		Emitter(const Emitter&);
-		Emitter& operator= (const Emitter&);
-
-	private:
-		//! String identifier for the emitter
-		String pName;
-		//! OpenAL identifier for the emitter
-		unsigned int pID;
-		//! Position of the emitter in space
-		Point3D<> pPosition;
-		//! Speed of the emitter
-		Vector3D<> pVelocity;
-		//! Direction of the movement of the emitter
-		Vector3D<> pDirection;
-		//! Should the emitter loop on itself when finished playing?
-		bool pLoop;
-		//! Volume modifier, 1.0 means no modification
-		float pGain;
-		//! Current playback position
-		sint64 pStartTime;
-		//! Sound to play. nullptr if none
-		Source::Ptr pSource;
-
-		//! Is the emitter ready for use?
-		bool pReady;
-		//! Is the emitter currently playing?
-		bool pPlaying;
-		//! Is the emitter currently paused?
-		bool pPaused;
-		//! Has the emitter's values been modified ?
-		bool pModified;
-
-	}; // class Emitter
-
-
-
+}; // class Emitter
 
 } // namespace Media
 } // namespace Yuni
 
-# include "emitter.hxx"
+#include "emitter.hxx"
 
 #endif // __YUNI_MEDIA_EMITTER_H__

@@ -25,65 +25,58 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_MPS_DEFINE_H__
-# define __SOLVER_MPS_DEFINE_H__
+#define __SOLVER_MPS_DEFINE_H__
 
+#define OUI_MPS 1
+#define NON_MPS 0
 
+#define REEL 1
+#define ENTIER 2
 
-# define OUI_MPS  1
-# define NON_MPS  0
-
-# define REEL    1
-# define ENTIER  2
-
-# define NON_DEFINI 128
-
-
-
+#define NON_DEFINI 128
 
 typedef struct
 {
-	long NentreesVar;
-	long NentreesCnt;
+    long NentreesVar;
+    long NentreesCnt;
 
-	long NbVar;
-	long NbCnt;
+    long NbVar;
+    long NbCnt;
 
-	long CoeffHaschCodeContraintes;
-	long SeuilHaschCodeContraintes;
-	long CoeffHaschCodeVariables;
-	long SeuilHaschCodeVariables; 
+    long CoeffHaschCodeContraintes;
+    long SeuilHaschCodeContraintes;
+    long CoeffHaschCodeVariables;
+    long SeuilHaschCodeVariables;
 
-	long   *  Mdeb;
-	double *  A;      
-	long   *  Nuvar;  
-	long   *  Msui;   
-	long   *  Mder;
-	long   *  NbTerm;
-	double *  B;
-	char   *  SensDeLaContrainte;
-	double *  VariablesDualesDesContraintes;
+    long* Mdeb;
+    double* A;
+    long* Nuvar;
+    long* Msui;
+    long* Mder;
+    long* NbTerm;
+    double* B;
+    char* SensDeLaContrainte;
+    double* VariablesDualesDesContraintes;
 
-	char   ** LabelDeLaContrainte;
-	char   ** LabelDuSecondMembre;
-	char   *  LabelDeLObjectif;
+    char** LabelDeLaContrainte;
+    char** LabelDuSecondMembre;
+    char* LabelDeLObjectif;
 
-	char   ** LabelDeLaVariable; 
+    char** LabelDeLaVariable;
 
-	long   *  TypeDeVariable;  
-	long   *  TypeDeBorneDeLaVariable;  
-	double *  U;	     
-	double *  L; 	      
-	double *  Umin;	     
-	double *  Umax;	
+    long* TypeDeVariable;
+    long* TypeDeBorneDeLaVariable;
+    double* U;
+    double* L;
+    double* Umin;
+    double* Umax;
 
-	long * FirstNomCnt;
-	long * NomCntSuivant;
+    long* FirstNomCnt;
+    long* NomCntSuivant;
 
-	long * FirstNomVar;
-	long * NomVarSuivant;
+    long* FirstNomVar;
+    long* NomVarSuivant;
 
 } PROBLEME_MPS;
-
-
 
 #endif /* __SOLVER_MPS_DEFINE_H__ */

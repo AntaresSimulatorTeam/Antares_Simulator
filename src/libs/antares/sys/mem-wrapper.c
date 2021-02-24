@@ -29,29 +29,21 @@
 #include "mem-wrapper.h"
 #include <string.h>
 
-
-
 void* MemAllocMemset(const size_t blocksize)
 {
-	void* p = (void*)malloc(blocksize);
-	memset(p, 0, blocksize);
-	return p;
+    void* p = (void*)malloc(blocksize);
+    memset(p, 0, blocksize);
+    return p;
 }
-
 
 void* MemAlloc(const size_t blocksize)
 {
-	void* p = (void*)malloc(blocksize);
-	return p;
+    void* p = (void*)malloc(blocksize);
+    return p;
 }
-
 
 void* MemRealloc(void* p, const size_t blsize)
 {
-	void* np = (void*)realloc(p, blsize);
-	return np;
+    void* np = (void*)realloc(p, blsize);
+    return np;
 }
-
-
-
-

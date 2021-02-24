@@ -26,8 +26,7 @@
 */
 #include "renderer.h"
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_HXX__
-# define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_HXX__
-
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_HXX__
 
 namespace Antares
 {
@@ -37,129 +36,106 @@ namespace Datagrid
 {
 namespace Renderer
 {
+inline int IRenderer::internalWidth() const
+{
+    return width();
+}
 
+inline int IRenderer::internalHeight() const
+{
+    return height();
+}
 
-	inline int IRenderer::internalWidth() const
-	{
-		return width();
-	}
+inline bool IRenderer::ensureDataAreLoaded()
+{
+    return false;
+}
 
+inline IRenderer::CellStyle IRenderer::cellStyleWithNumericCheck(int x, int y) const
+{
+    return Yuni::Math::Zero(cellNumericValue(x, y))
+             ? ((y % 2) ? cellStyleDefaultAlternateDisabled : cellStyleDefaultDisabled)
+             : ((y % 2) ? cellStyleDefaultAlternate : cellStyleDefault);
+}
 
-	inline int IRenderer::internalHeight() const
-	{
-		return height();
-	}
+inline IRenderer::CellStyle IRenderer::cellStyle(int, int y) const
+{
+    return ((y % 2) ? cellStyleDefaultAlternate : cellStyleDefault);
+}
 
+inline wxColour IRenderer::cellBackgroundColor(int, int) const
+{
+    return wxColour(255, 255, 255);
+}
 
-	inline bool IRenderer::ensureDataAreLoaded()
-	{
-		return false;
-	}
+inline wxColour IRenderer::cellTextColor(int, int) const
+{
+    return wxColour(255, 0, 0);
+}
 
+inline bool IRenderer::onMatrixResize(uint, uint, uint&, uint&)
+{
+    return true;
+}
 
-	inline IRenderer::CellStyle IRenderer::cellStyleWithNumericCheck(int x, int y) const
-	{
-		return Yuni::Math::Zero(cellNumericValue(x, y))
-			? ((y % 2) ? cellStyleDefaultAlternateDisabled : cellStyleDefaultDisabled)
-			: ((y % 2) ? cellStyleDefaultAlternate : cellStyleDefault);
-	}
+inline wxColour IRenderer::verticalBorderColor(int, int) const
+{
+    return Default::BorderColor();
+}
 
+inline wxColour IRenderer::horizontalBorderColor(int, int) const
+{
+    return Default::BorderColor();
+}
 
-	inline IRenderer::CellStyle IRenderer::cellStyle(int, int y) const
-	{
-		return ((y % 2) ? cellStyleDefaultAlternate : cellStyleDefault);
-	}
+inline uint IRenderer::maxWidthResize() const
+{
+    return 0;
+}
 
+inline uint IRenderer::maxHeightResize() const
+{
+    return 0;
+}
 
-	inline wxColour IRenderer::cellBackgroundColor(int, int) const
-	{
-		return wxColour(255, 255, 255);
-	}
+inline int IRenderer::cellAlignment(int, int) const
+{
+    return 0;
+}
 
+inline int IRenderer::columnWidthCustom(int) const
+{
+    return 0;
+}
 
-	inline wxColour IRenderer::cellTextColor(int, int) const
-	{
-		return wxColour(255, 0, 0);
-	}
+inline void IRenderer::hintForColumnWidth(int, wxString& out) const
+{
+    out.Clear();
+}
 
+inline wxString IRenderer::asString(int x, int y) const
+{
+    return cellValue(x, y);
+}
 
-	inline bool IRenderer::onMatrixResize(uint, uint, uint&, uint&)
-	{
-		return true;
-	}
+inline double IRenderer::asDouble(int x, int y) const
+{
+    return cellNumericValue(x, y);
+}
 
+inline Date::Precision IRenderer::precision()
+{
+    return Date::stepAny;
+}
 
-	inline wxColour IRenderer::verticalBorderColor(int, int) const
-	{
-		return Default::BorderColor();
-	}
+inline bool IRenderer::circularShiftRowsUntilDate(MonthName, uint)
+{
+    return false; // not implemented
+}
 
-
-	inline wxColour IRenderer::horizontalBorderColor(int, int) const
-	{
-		return Default::BorderColor();
-	}
-
-
-	inline uint IRenderer::maxWidthResize() const
-	{
-		return 0;
-	}
-
-
-	inline uint IRenderer::maxHeightResize() const
-	{
-		return 0;
-	}
-
-
-	inline int IRenderer::cellAlignment(int, int) const
-	{
-		return 0;
-	}
-
-
-	inline int IRenderer::columnWidthCustom(int) const
-	{
-		return 0;
-	}
-
-
-	inline void IRenderer::hintForColumnWidth(int, wxString& out) const
-	{
-		out.Clear();
-	}
-
-
-	inline wxString IRenderer::asString(int x, int y) const
-	{
-		return cellValue(x, y);
-	}
-
-
-	inline double IRenderer::asDouble(int x, int y) const
-	{
-		return cellNumericValue(x, y);
-	}
-
-
-	inline Date::Precision  IRenderer::precision()
-	{
-		return Date::stepAny;
-	}
-
-
-	inline bool IRenderer::circularShiftRowsUntilDate(MonthName, uint)
-	{
-		return false; // not implemented
-	}
-
-	inline void IRenderer::applyLayerFiltering(size_t layerID, VGridHelper* gridHelper)
-	{
-	}
-
-
-
+inline void IRenderer::applyLayerFiltering(size_t layerID, VGridHelper* gridHelper)
+{
+}
 
 } // namespace Renderer
 } // namespace Datagrid

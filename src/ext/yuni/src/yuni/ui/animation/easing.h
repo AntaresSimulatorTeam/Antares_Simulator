@@ -13,7 +13,6 @@
 #include <yuni/core/math.h>
 #include <yuni/core/math/trigonometric.h>
 
-
 namespace Yuni
 {
 namespace UI
@@ -22,187 +21,158 @@ namespace Animation
 {
 namespace Easing
 {
+//! Prototype for an interpolation / easing function (cf Robert Penner's equations)
+typedef Yuni::Bind<float(float ratio)> Func;
 
-	//! Prototype for an interpolation / easing function (cf Robert Penner's equations)
-	typedef Yuni::Bind<float (float ratio)>  Func;
+namespace // anonymous
+{
+template<class T>
+inline float Invert(const T& func, float ratio)
+{
+    return 1.0f - func(1.0f - ratio);
+}
 
+template<class T>
+inline float MakeInOut(const T& func, float ratio)
+{
+    return (ratio < 0.5f) ? func(ratio * 2.0f) / 2.0f : 1.0f - func((1.0f - ratio) * 2.0f) / 2.0f;
+}
 
-	namespace // anonymous
-	{
-		template<class T>
-		inline float Invert(const T& func, float ratio)
-		{
-			return 1.0f - func(1.0f - ratio);
-		}
+} // namespace
 
-		template<class T>
-		inline float MakeInOut(const T& func, float ratio)
-		{
-			return (ratio < 0.5f) ?
-				func(ratio * 2.0f) / 2.0f :
-				1.0f - func((1.0f - ratio) * 2.0f) / 2.0f;
-		}
+inline float None(float /*ratio*/)
+{
+    return 0.0f;
+}
 
-	} // namespace anonymous
+inline float Linear(float ratio)
+{
+    return ratio;
+}
 
+inline float QuadIn(float ratio)
+{
+    return ratio * ratio;
+}
 
+inline float QuadOut(float ratio)
+{
+    return Invert(QuadIn, ratio);
+}
 
-	inline float None(float /*ratio*/)
-	{
-		return 0.0f;
-	}
+inline float QuadInOut(float ratio)
+{
+    return MakeInOut(QuadIn, ratio);
+}
 
+inline float CubicIn(float ratio)
+{
+    return Math::Power(ratio, 3);
+}
 
-	inline float Linear(float ratio)
-	{
-		return ratio;
-	}
+inline float CubicOut(float ratio)
+{
+    return Invert(CubicIn, ratio);
+}
 
+inline float CubicInOut(float ratio)
+{
+    return MakeInOut(CubicIn, ratio);
+}
 
-	inline float QuadIn(float ratio)
-	{
-		return ratio * ratio;
-	}
+inline float QuarticIn(float ratio)
+{
+    return Math::Power(ratio, 4);
+}
 
+inline float QuarticOut(float ratio)
+{
+    return Invert(QuarticIn, ratio);
+}
 
-	inline float QuadOut(float ratio)
-	{
-		return Invert(QuadIn, ratio);
-	}
+inline float QuarticInOut(float ratio)
+{
+    return MakeInOut(QuarticIn, ratio);
+}
 
+inline float QuinticIn(float ratio)
+{
+    return Math::Power(ratio, 5);
+}
 
-	inline float QuadInOut(float ratio)
-	{
-		return MakeInOut(QuadIn, ratio);
-	}
+inline float QuinticOut(float ratio)
+{
+    return Invert(QuinticIn, ratio);
+}
 
+inline float QuinticInOut(float ratio)
+{
+    return MakeInOut(QuinticIn, ratio);
+}
 
-	inline float CubicIn(float ratio)
-	{
-		return Math::Power(ratio, 3);
-	}
+inline float CircIn(float ratio)
+{
+    return 1.0f - Math::SquareRootNoCheck(1.0f - ratio * ratio);
+}
 
+inline float CircOut(float ratio)
+{
+    return Invert(CircIn, ratio);
+}
 
-	inline float CubicOut(float ratio)
-	{
-		return Invert(CubicIn, ratio);
-	}
+inline float CircInOut(float ratio)
+{
+    return MakeInOut(CircIn, ratio);
+}
 
+inline float Back(float ratio)
+{
+    static const float v = 1.70158f;
+    ratio -= 1.0f;
+    return ratio * ratio * ((v + 1.0f) * ratio + v) + 1.0f;
+}
 
-	inline float CubicInOut(float ratio)
-	{
-		return MakeInOut(CubicIn, ratio);
-	}
+inline float ElasticOut(float ratio)
+{
+    static const float p = 0.3;
+    return (float)(Math::Power(2, -10 * ratio) * Math::Sin((ratio - p / 4.0) * (2.0 * YUNI_PI) / p)
+                   + 1.0);
+}
 
+inline float ElasticIn(float ratio)
+{
+    return Invert(ElasticOut, ratio);
+}
 
-	inline float QuarticIn(float ratio)
-	{
-		return Math::Power(ratio, 4);
-	}
+inline float ElasticInOut(float ratio)
+{
+    return MakeInOut(ElasticIn, ratio);
+}
 
+inline float BounceOut(float ratio)
+{
+    if (ratio < 1 / 2.75)
+    {
+        return 7.5625 * ratio * ratio;
+    }
+    else if (ratio < 2 / 2.75)
+    {
+        ratio -= 1.5 / 2.75;
+        return 7.5625 * ratio * ratio + .75;
+    }
+    else if (ratio < 2.5 / 2.75)
+    {
+        ratio -= 2.25 / 2.75;
+        return 7.5625 * ratio * ratio + .9375;
+    }
+    ratio -= 2.625 / 2.75;
+    return 7.5625 * ratio * ratio + .984375;
+}
 
-	inline float QuarticOut(float ratio)
-	{
-		return Invert(QuarticIn, ratio);
-	}
-
-
-	inline float QuarticInOut(float ratio)
-	{
-		return MakeInOut(QuarticIn, ratio);
-	}
-
-
-	inline float QuinticIn(float ratio)
-	{
-		return Math::Power(ratio, 5);
-	}
-
-
-	inline float QuinticOut(float ratio)
-	{
-		return Invert(QuinticIn, ratio);
-	}
-
-
-	inline float QuinticInOut(float ratio)
-	{
-		return MakeInOut(QuinticIn, ratio);
-	}
-
-
-	inline float CircIn(float ratio)
-	{
-		return 1.0f - Math::SquareRootNoCheck(1.0f - ratio * ratio);
-	}
-
-
-	inline float CircOut(float ratio)
-	{
-		return Invert(CircIn, ratio);
-	}
-
-
-	inline float CircInOut(float ratio)
-	{
-		return MakeInOut(CircIn, ratio);
-	}
-
-
-	inline float Back(float ratio)
-	{
-		static const float v = 1.70158f;
-		ratio -= 1.0f;
-		return ratio * ratio * ((v + 1.0f) * ratio + v) + 1.0f;
-	}
-
-
-	inline float ElasticOut(float ratio)
-	{
-		static const float p = 0.3;
-		return (float)(Math::Power(2, -10 * ratio) *
-			Math::Sin((ratio - p / 4.0) * (2.0 * YUNI_PI) / p) + 1.0);
-	}
-
-	inline float ElasticIn(float ratio)
-	{
-		return Invert(ElasticOut, ratio);
-	}
-
-
-	inline float ElasticInOut(float ratio)
-	{
-		return MakeInOut(ElasticIn, ratio);
-	}
-
-
-	inline float BounceOut(float ratio)
-	{
-		if (ratio < 1 / 2.75)
-		{
-			return 7.5625 * ratio * ratio;
-		}
-		else if (ratio < 2 / 2.75)
-		{
-			ratio -= 1.5 / 2.75;
-			return 7.5625 * ratio * ratio + .75;
-		}
-		else if (ratio < 2.5 / 2.75)
-		{
-			ratio -= 2.25 / 2.75;
-			return 7.5625 * ratio * ratio + .9375;
-		}
-		ratio -= 2.625 / 2.75;
-		return 7.5625 * ratio * ratio + .984375;
-	}
-
-
-	inline float BounceIn(float ratio)
-	{
-		return Invert(BounceOut, ratio);
-	}
-
-
+inline float BounceIn(float ratio)
+{
+    return Invert(BounceOut, ratio);
+}
 
 } // namespace Easing
 } // namespace Animation

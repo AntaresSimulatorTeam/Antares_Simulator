@@ -32,156 +32,144 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
 namespace Data
 {
+AreaScratchpad::TimeseriesData::TimeseriesData(Area& area) :
+ load(area.load.series->series), solar(area.solar.series->series), wind(area.wind.series->series)
+{
+}
 
+AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts(area)
+{
+    // alias to the simulation mode
+    auto mode = rinfos.mode;
 
-	AreaScratchpad::TimeseriesData::TimeseriesData(Area& area) :
-		load(area.load.series->series),
-		solar(area.solar.series->series),
-		wind(area.wind.series->series)
-	{
-	}
+    for (uint i = 0; i != 168; ++i)
+        dispatchableGenerationMargin[i] = 0;
 
+    for (uint h = 0; h != HOURS_PER_YEAR; ++h)
+    {
+        mustrunSum[h] = std::numeric_limits<double>::quiet_NaN();
+        originalMustrunSum[h] = std::numeric_limits<double>::quiet_NaN();
+    }
 
-	AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) :
-		ts(area)
-	{
-		// alias to the simulation mode
-		auto mode = rinfos.mode;
-		
-		for (uint i = 0; i != 168; ++i)
-			dispatchableGenerationMargin[i] = 0;
+    for (uint d = 0; d != DAYS_PER_YEAR; ++d)
+    {
+        optimalMaxPower[d] = std::numeric_limits<double>::quiet_NaN();
+        pumpingMaxPower[d] = std::numeric_limits<double>::quiet_NaN();
+    }
 
-		for (uint h = 0; h != HOURS_PER_YEAR; ++h)
-		{
-			mustrunSum[h]         = std::numeric_limits<double>::quiet_NaN();
-			originalMustrunSum[h] = std::numeric_limits<double>::quiet_NaN();
-		}
+    // Fatal hors hydro
+    {
+        double sum;
+        uint w;
+        assert(area.miscGen.height > 0);
+        assert(area.miscGen.width > 0);
+        uint height = area.miscGen.height;
+        for (uint h = 0; h != height; ++h)
+        {
+            sum = 0.;
+            for (w = 0; w != area.miscGen.width; ++w)
+                sum += area.miscGen[w][h];
+            miscGenSum[h] = sum;
+        }
+        if (mode == Data::stdmAdequacy)
+        {
+            for (uint h = 0; h != area.miscGen.height; ++h)
+                miscGenSum[h] -= area.reserves[Data::fhrPrimaryReserve][h];
+        }
+    }
 
-		for (uint d = 0; d != DAYS_PER_YEAR; ++d)
-		{
-			optimalMaxPower[d] = std::numeric_limits<double>::quiet_NaN();
-			pumpingMaxPower[d] = std::numeric_limits<double>::quiet_NaN();
-		}
-		
-		// Fatal hors hydro
-		{
-			double sum;
-			uint w;
-			assert(area.miscGen.height > 0);
-			assert(area.miscGen.width  > 0);
-			uint height = area.miscGen.height;
-			for (uint h = 0; h != height; ++h)
-			{
-				sum = 0.;
-				for (w = 0; w != area.miscGen.width; ++w)
-					sum += area.miscGen[w][h];
-				miscGenSum[h] = sum;
-			}
-			if (mode == Data::stdmAdequacy)
-			{
-				for (uint h = 0; h != area.miscGen.height; ++h)
-					miscGenSum[h] -= area.reserves[Data::fhrPrimaryReserve][h];
-			}
-		}
+    // ===============
+    // hydroHasMod
+    // ===============
+    if (mode != stdmAdequacyDraft)
+    {
+        // ------------------------------
+        // Hydro generation permission
+        // ------------------------------
+        // Useful whether we use a heuristic target or not
+        bool hydroGenerationPermission = false;
 
-		// ===============
-		// hydroHasMod
-		// ===============
-		if (mode != stdmAdequacyDraft)
-		{
-			// ------------------------------
-			// Hydro generation permission
-			// ------------------------------
-			// Useful whether we use a heuristic target or not
-			bool hydroGenerationPermission = false;
+        // ... Getting hydro max power
+        auto const& maxPower = area.hydro.maxPower;
 
-			// ... Getting hydro max power
-			auto const& maxPower = area.hydro.maxPower;
+        // ... Hydro max generating power and energy
+        auto const& maxGenP = maxPower[Data::PartHydro::genMaxP];
+        auto const& maxGenE = maxPower[Data::PartHydro::genMaxE];
 
-			// ... Hydro max generating power and energy
-			auto const& maxGenP = maxPower[Data::PartHydro::genMaxP];
-			auto const& maxGenE = maxPower[Data::PartHydro::genMaxE];
+        double value = 0.;
+        for (uint d = 0; d < DAYS_PER_YEAR; ++d)
+            value += maxGenP[d] * maxGenE[d];
 
-			double value = 0.;
-			for (uint d = 0; d < DAYS_PER_YEAR; ++d)
-				value += maxGenP[d] * maxGenE[d];
+        // If generating energy is nil over the whole year, hydroGenerationPermission is false, true
+        // otherwise.
+        hydroGenerationPermission = (value > 0.);
 
-			// If generating energy is nil over the whole year, hydroGenerationPermission is false, true otherwise.
-			hydroGenerationPermission = (value > 0.);
+        // ---------------------
+        // Hydro has inflows
+        // ---------------------
+        bool hydroHasInflows = false;
+        if (!area.hydro.prepro) // not in prepro mode
+        {
+            assert(area.hydro.series);
+            hydroHasInflows = MatrixTestForAtLeastOnePositiveValue(area.hydro.series->storage);
+        }
+        else
+        {
+            auto& m = area.hydro.prepro->data;
+            double value = 0.;
+            auto& colPowerOverWater = m[PreproHydro::powerOverWater];
+            auto& colMaxEnergy = m[PreproHydro::maximumEnergy];
 
-			// ---------------------
-			// Hydro has inflows
-			// ---------------------
-			bool hydroHasInflows = false;
-			if (!area.hydro.prepro) // not in prepro mode
-			{
-				assert(area.hydro.series);
-				hydroHasInflows = MatrixTestForAtLeastOnePositiveValue(area.hydro.series->storage);
-			}
-			else
-			{
-				auto& m = area.hydro.prepro->data;
-				double value = 0.;
-				auto& colPowerOverWater = m[PreproHydro::powerOverWater];
-				auto& colMaxEnergy = m[PreproHydro::maximumEnergy];
+            for (uint m = 0; m < rinfos.nbMonthsPerYear; ++m)
+                value += colMaxEnergy[m] * (1. - colPowerOverWater[m]);
 
-				for (uint m = 0; m < rinfos.nbMonthsPerYear; ++m)
-					value += colMaxEnergy[m] * (1. - colPowerOverWater[m]);
+            hydroHasInflows = (value > 0.);
+        }
 
-				hydroHasInflows = (value > 0.);
-			}
+        // --------------------------
+        // hydroHasMod definition
+        // --------------------------
+        hydroHasMod = hydroHasInflows || hydroGenerationPermission;
+    }
+    else
+    {
+        // No modulation in adequacy
+        hydroHasMod = false;
+    }
 
-			// --------------------------
-			// hydroHasMod definition
-			// --------------------------
-			hydroHasMod = hydroHasInflows || hydroGenerationPermission;
-		}
-		else
-		{
-			// No modulation in adequacy
-			hydroHasMod = false;
-		}
+    // ===============
+    // Pumping
+    // ===============
+    // ... Hydro max power
+    auto const& maxPower = area.hydro.maxPower;
 
-		
-		// ===============
-		// Pumping
-		// ===============
-		// ... Hydro max power
-		auto const& maxPower = area.hydro.maxPower;
+    // ... Hydro max pumping power and energy
+    auto const& maxPumpingP = maxPower[Data::PartHydro::pumpMaxP];
+    auto const& maxPumpingE = maxPower[Data::PartHydro::pumpMaxE];
 
-		// ... Hydro max pumping power and energy
-		auto const& maxPumpingP = maxPower[Data::PartHydro::pumpMaxP];
-		auto const& maxPumpingE = maxPower[Data::PartHydro::pumpMaxE];
+    // ... Pumping max power
+    for (uint d = 0; d != DAYS_PER_YEAR; ++d)
+        pumpingMaxPower[d] = maxPumpingP[d];
 
-		// ... Pumping max power
-		for (uint d = 0; d != DAYS_PER_YEAR; ++d)
-			pumpingMaxPower[d] = maxPumpingP[d];
+    // ... Computing 'pumpHasMod' parameter
+    if (mode != stdmAdequacyDraft)
+    {
+        double value = 0.;
+        for (uint d = 0; d < DAYS_PER_YEAR; ++d)
+            value += maxPumpingP[d] * maxPumpingE[d];
 
-		// ... Computing 'pumpHasMod' parameter
-		if (mode != stdmAdequacyDraft)
-		{
-			double value = 0.;
-			for (uint d = 0; d < DAYS_PER_YEAR; ++d)
-				value += maxPumpingP[d] * maxPumpingE[d];
+        // If pumping energy is nil over the whole year, pumpHasMod is false, true otherwise.
+        pumpHasMod = (value > 0.);
+    }
 
-			// If pumping energy is nil over the whole year, pumpHasMod is false, true otherwise.
-			pumpHasMod = (value > 0.);
-		}
-
-		// Spinning reserves
-		memcpy(spinningReserve, area.reserves[fhrPrimaryReserve], sizeof(double) * rinfos.nbHoursPerYear);
-	}
-
-
-
-
+    // Spinning reserves
+    memcpy(
+      spinningReserve, area.reserves[fhrPrimaryReserve], sizeof(double) * rinfos.nbHoursPerYear);
+}
 
 } // namespace Data
 } // namespace Antares
-

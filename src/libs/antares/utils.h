@@ -25,38 +25,31 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_UTILS_H__
-# define __ANTARES_LIBS_UTILS_H__
+#define __ANTARES_LIBS_UTILS_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
 namespace Antares
 {
+/*!
+** \brief Transform an arbitrary string into an ID
+**
+** All invalid caracters will be replaced by `_`.
+*/
+template<class StringT>
+void TransformNameIntoID(const AnyString& name, StringT& out);
 
-	/*!
-	** \brief Transform an arbitrary string into an ID
-	**
-	** All invalid caracters will be replaced by `_`.
-	*/
-	template<class StringT>
-	void TransformNameIntoID(const AnyString& name, StringT& out);
+/*!
+** \brief Beautify a name, for renaming an area for example
+*/
+void BeautifyName(YString& out, AnyString oldname);
 
-
-	/*!
-	** \brief Beautify a name, for renaming an area for example
-	*/
-	void BeautifyName(YString& out, AnyString oldname);
-
-
-	template<class StringT>
-	void TransformNameIntoNameBefore390(const AnyString& name, StringT& out);
-
-
-
+template<class StringT>
+void TransformNameIntoNameBefore390(const AnyString& name, StringT& out);
 
 } // namespace Antares
 
-# include "utils.hxx"
+#include "utils.hxx"
 
 #endif // __ANTARES_LIBS_UTILS_H__

@@ -17,7 +17,12 @@ endif(WIN32)
 
 set(execname "antares-${ANTARES_PRG_VERSION}-study-updater")
 add_executable(${execname}  ${SRCS})
-install(TARGETS ${execname} DESTINATION bin)
+install(TARGETS ${execname} EXPORT antares-study-updater DESTINATION bin)
+
+INSTALL(EXPORT antares-study-updater
+	FILE antares-study-updaterConfig.cmake
+	DESTINATION cmake
+)
 
 set(UPDATER_LIBS
 		libantares-core

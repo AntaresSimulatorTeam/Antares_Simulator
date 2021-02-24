@@ -25,37 +25,35 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_SIMULATION_EXTERN_H__
-# define __SOLVER_SIMULATION_EXTERN_H__
+#define __SOLVER_SIMULATION_EXTERN_H__
 
-# include "sim_structure_donnees.h"
-# include "sim_structure_probleme_adequation.h"
-# include "sim_structure_probleme_economique.h"
-
+#include "sim_structure_donnees.h"
+#include "sim_structure_probleme_adequation.h"
+#include "sim_structure_probleme_economique.h"
 
 /* Structures Donnees lues a partir de fichiers */
-extern DONNEES_PAR_PAYS **                   DonneesParPays;
+extern DONNEES_PAR_PAYS** DonneesParPays;
 
 /* Donnees simples lues a partir du fichier donnees_generales.txt */
-extern char                                  AppelEnModeSimulateur;
+extern char AppelEnModeSimulateur;
 
 /* Valeurs generees de maniere aleatoire */
-extern VALEURS_GENEREES_PAR_PAYS       ***    ValeursGenereesParPays;
-extern NUMERO_CHRONIQUES_TIREES_PAR_PAYS ***  NumeroChroniquesTireesParPays;
+extern VALEURS_GENEREES_PAR_PAYS*** ValeursGenereesParPays;
+extern NUMERO_CHRONIQUES_TIREES_PAR_PAYS*** NumeroChroniquesTireesParPays;
 
 /* Optimisation */
 /*-Economique-*/
-//extern PROBLEME_HEBDO                        ProblemeHebdo;
+// extern PROBLEME_HEBDO                        ProblemeHebdo;
 /*-Adequation-*/
-extern PROBLEME_HORAIRE_ADEQUATION           ProblemeHoraireAdequation;
-extern VALEURS_ANNUELLES **                  ValeursAnnuellesAdequation;
+extern PROBLEME_HORAIRE_ADEQUATION ProblemeHoraireAdequation;
+extern VALEURS_ANNUELLES** ValeursAnnuellesAdequation;
 
 /* Resultats */
 /*-Economique-*/
-extern RESULTATS_PAR_INTERCONNEXION **       ResultatsParInterconnexion;
-extern RESULTATS_PAR_CONTRAINTE_COUPLANTE ** ResultatsParContrainteCouplante;
+extern RESULTATS_PAR_INTERCONNEXION** ResultatsParInterconnexion;
+extern RESULTATS_PAR_CONTRAINTE_COUPLANTE** ResultatsParContrainteCouplante;
 
 /* Gestion des anomalies */
-extern COMPTE_RENDU                          CompteRendu;
-
+extern COMPTE_RENDU CompteRendu;
 
 #endif /* __SOLVER_SIMULATION_EXTERN_H__ */

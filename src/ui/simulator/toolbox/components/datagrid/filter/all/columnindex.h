@@ -25,12 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_COLUMN_INDEX_H__
-# define __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_COLUMN_INDEX_H__
+#define __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_COLUMN_INDEX_H__
 
-# include <antares/wx-wrapper.h>
-# include "../filter.h"
-# include <antares/date.h>
-
+#include <antares/wx-wrapper.h>
+#include "../filter.h"
+#include <antares/date.h>
 
 namespace Antares
 {
@@ -38,43 +37,57 @@ namespace Toolbox
 {
 namespace Filter
 {
+class ColumnIndex : public AFilterBase
+{
+public:
+    static const wxChar* Name()
+    {
+        return wxT("columnindex");
+    }
+    static const wxChar* Caption()
+    {
+        return wxT("Column");
+    }
+    static Date::Precision Precision()
+    {
+        return Date::stepAny;
+    }
 
+public:
+    ColumnIndex(Input* parent) : AFilterBase(parent)
+    {
+        operators.addStdArithmetic();
+    }
 
+    virtual ~ColumnIndex()
+    {
+    }
 
-	class ColumnIndex : public AFilterBase
-	{
-	public:
-		static const wxChar* Name()    {return wxT("columnindex");}
-		static const wxChar* Caption() {return wxT("Column");}
-		static Date::Precision Precision() {return Date::stepAny;}
+    virtual Date::Precision precision() const
+    {
+        return ColumnIndex::Precision();
+    }
 
-	public:
-		ColumnIndex(Input* parent) :
-			AFilterBase(parent)
-		{
-			operators.addStdArithmetic();
-		}
+    virtual bool checkOnColsLabels() const
+    {
+        return true;
+    }
 
-		virtual ~ColumnIndex() {}
+    virtual const wxChar* name() const
+    {
+        return ColumnIndex::Name();
+    }
+    virtual const wxChar* caption() const
+    {
+        return ColumnIndex::Caption();
+    }
 
-		virtual Date::Precision precision() const {return ColumnIndex::Precision();}
+    virtual bool colIsValid(int col) const
+    {
+        return currentOperator->compute(col + 1);
+    }
 
-		virtual bool checkOnColsLabels() const {return true;}
-
-		virtual const wxChar* name() const {return ColumnIndex::Name();}
-		virtual const wxChar* caption() const {return ColumnIndex::Caption();}
-
-
-		virtual bool colIsValid(int col) const
-		{
-			return currentOperator->compute(col + 1);
-		}
-
-	}; // class ColumnIndex
-
-
-
-
+}; // class ColumnIndex
 
 } // namespace Filter
 } // namespace Toolbox

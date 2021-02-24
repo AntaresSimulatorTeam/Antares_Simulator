@@ -34,85 +34,78 @@
 
 using namespace Yuni;
 
-#define SEP IO:: Separator
-
+#define SEP IO::Separator
 
 namespace Antares
 {
 namespace Data
 {
+int DataSeriesThermalSaveToFolder(const DataSeriesThermal* t,
+                                  const ThermalCluster* ag,
+                                  const AnyString& folder)
+{
+    if (t && ag and not folder.empty())
+    {
+        Clob buffer;
 
+        buffer.clear() << folder << SEP << ag->parentArea->id << SEP << ag->id();
+        if (IO::Directory::Create(buffer))
+        {
+            int ret = 1;
+            buffer.clear() << folder << SEP << ag->parentArea->id << SEP << ag->id() << SEP
+                           << "series.txt";
+            ret = t->series.saveToCSVFile(buffer, 0) && ret;
 
-	int DataSeriesThermalSaveToFolder(const DataSeriesThermal* t, const ThermalCluster* ag, const AnyString& folder)
-	{
-		if (t && ag and not folder.empty())
-		{
-			Clob buffer;
+            return ret;
+        }
+        return 0;
+    }
+    return 1;
+}
 
-			buffer.clear() << folder << SEP << ag->parentArea->id << SEP << ag->id();
-			if (IO::Directory::Create(buffer))
-			{
-				int ret = 1;
-				buffer.clear() << folder << SEP << ag->parentArea->id << SEP << ag->id() << SEP << "series.txt";
-				ret = t->series.saveToCSVFile(buffer, 0) && ret;
+int DataSeriesThermalLoadFromFolder(Study& s,
+                                    DataSeriesThermal* t,
+                                    ThermalCluster* ag,
+                                    const AnyString& folder)
+{
+    if (t and ag and not folder.empty())
+    {
+        auto& buffer = s.bufferLoadingTS;
 
-				return ret;
-			}
-			return 0;
-		}
-		return 1;
-	}
+        int ret = 1;
+        buffer.clear() << folder << SEP << ag->parentArea->id << SEP << ag->id() << SEP << "series."
+                       << s.inputExtension;
+        ret = t->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
 
+        if (s.usedByTheSolver && s.parameters.derated)
+            t->series.averageTimeseries();
 
-	int DataSeriesThermalLoadFromFolder(Study& s, DataSeriesThermal* t, ThermalCluster* ag, const AnyString& folder)
-	{
-		if (t and ag and not folder.empty())
-		{
-			auto& buffer = s.bufferLoadingTS;
+        t->timeseriesNumbers.clear();
 
-			int ret = 1;
-			buffer.clear() << folder << SEP << ag->parentArea->id
-				<< SEP << ag->id()
-				<< SEP << "series." << s.inputExtension;
-			ret = t->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+        return ret;
+    }
+    return 1;
+}
 
-			if (s.usedByTheSolver && s.parameters.derated)
-				t->series.averageTimeseries();
+bool DataSeriesThermal::invalidate(bool reload) const
+{
+    return series.invalidate(reload);
+}
 
-			t->timeseriesNumbers.clear();
+void DataSeriesThermal::markAsModified() const
+{
+    series.markAsModified();
+}
 
-			return ret;
-		}
-		return 1;
-	}
-
-
-
-	bool DataSeriesThermal::invalidate(bool reload) const
-	{
-		return series.invalidate(reload);
-	}
-
-
-	void DataSeriesThermal::markAsModified() const
-	{
-		series.markAsModified();
-	}
-
-
-
-	void DataSeriesThermal::estimateMemoryUsage(StudyMemoryUsage& u) const
-	{
-		u.requiredMemoryForInput += sizeof(DataSeriesThermal);
-		timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
-		series.estimateMemoryUsage(u,
-			0 != (timeSeriesThermal & u.study.parameters.timeSeriesToGenerate),
-			u.study.parameters.nbTimeSeriesThermal, HOURS_PER_YEAR);
-	}
-
-
-
+void DataSeriesThermal::estimateMemoryUsage(StudyMemoryUsage& u) const
+{
+    u.requiredMemoryForInput += sizeof(DataSeriesThermal);
+    timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
+    series.estimateMemoryUsage(u,
+                               0 != (timeSeriesThermal & u.study.parameters.timeSeriesToGenerate),
+                               u.study.parameters.nbTimeSeriesThermal,
+                               HOURS_PER_YEAR);
+}
 
 } // namespace Data
 } // namespace Antares
-

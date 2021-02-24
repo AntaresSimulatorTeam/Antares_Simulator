@@ -25,63 +25,56 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_OFFSETS_H__
-# define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_OFFSETS_H__
+#define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_OFFSETS_H__
 
-# include <yuni/yuni.h>
-# include "../../../action.h"
-
+#include <yuni/yuni.h>
+#include "../../../action.h"
 
 namespace Antares
 {
-	namespace Action
-	{
-		namespace AntaresStudy
-		{
-			namespace Constraint
-			{
+namespace Action
+{
+namespace AntaresStudy
+{
+namespace Constraint
+{
+class Offsets : public IAction
+{
+public:
+    //! The most suitable smart ptr for the class
+    typedef IAction::Ptr Ptr;
+    //! The threading policy
+    typedef IAction::ThreadingPolicy ThreadingPolicy;
 
-				class Offsets : public IAction
-				{
-				public:
-					//! The most suitable smart ptr for the class
-					typedef IAction::Ptr  Ptr;
-					//! The threading policy
-					typedef IAction::ThreadingPolicy  ThreadingPolicy;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    Offsets(const AnyString& name, Antares::Data::ConstraintName targetName = "");
 
-				public:
-					//! \name Constructor & Destructor
-					//@{
-					/*!
-					** \brief Default constructor
-					*/
-					Offsets(const AnyString& name, Antares::Data::ConstraintName targetName = "");
+    //! Destructor
+    virtual ~Offsets();
+    //@}
 
-					//! Destructor
-					virtual ~Offsets();
-					//@}
+protected:
+    virtual bool prepareWL(Context& ctx);
+    virtual bool performWL(Context& ctx);
+    void translate(Antares::Data::AreaName& out, const Antares::Data::AreaName& original);
+    void toLower(Antares::Data::AreaName& out, const Antares::Data::AreaName& original);
 
-				protected:
-					virtual bool prepareWL(Context& ctx);
-					virtual bool performWL(Context& ctx);
-					void translate(Antares::Data::AreaName& out, const Antares::Data::AreaName& original);
-					void toLower(Antares::Data::AreaName & out, const Antares::Data::AreaName& original);
+private:
+    //! From
+    Antares::Data::ConstraintName pOriginalConstraintName;
+    Antares::Data::ConstraintName targetName;
+    Context* pCurrentContext;
 
-				private:
-					//! From
-					Antares::Data::ConstraintName pOriginalConstraintName;
-					Antares::Data::ConstraintName targetName;
-					Context* pCurrentContext;
+}; // class IAction
 
-				}; // class IAction
-
-
-
-
-
-			} // namespace Constraint
-		} // namespace AntaresStudy
-	} // namespace Action
+} // namespace Constraint
+} // namespace AntaresStudy
+} // namespace Action
 } // namespace Antares
 
 #endif // __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_OFFSETS_H__
-

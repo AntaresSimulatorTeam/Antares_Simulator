@@ -25,60 +25,54 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_TEXT_H__
-# define __ANTARES_LIBS_STUDY_ACTION_TEXT_H__
+#define __ANTARES_LIBS_STUDY_ACTION_TEXT_H__
 
-# include <yuni/yuni.h>
-# include "action.h"
-
+#include <yuni/yuni.h>
+#include "action.h"
 
 namespace Antares
 {
 namespace Action
 {
+/*!
+** \brief A dummy action, for displaying some text
+*/
+template<bool AutoExpandT = true>
+class Text : public IAction
+{
+public:
+    //! The most suitable smart ptr for the class
+    typedef IAction::Ptr Ptr;
+    //! The threading policy
+    typedef IAction::ThreadingPolicy ThreadingPolicy;
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    template<class StringT>
+    explicit Text(const StringT& text);
+    //! Destructor
+    virtual ~Text();
+    //@}
 
-	/*!
-	** \brief A dummy action, for displaying some text
-	*/
-	template<bool AutoExpandT = true>
-	class Text : public IAction
-	{
-	public:
-		//! The most suitable smart ptr for the class
-		typedef IAction::Ptr  Ptr;
-		//! The threading policy
-		typedef IAction::ThreadingPolicy  ThreadingPolicy;
+    virtual bool bold() const;
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		template<class StringT> explicit Text(const StringT& text);
-		//! Destructor
-		virtual ~Text();
-		//@}
+    virtual bool autoExpand() const;
 
-		virtual bool bold() const;
+    virtual bool canDoSomething() const;
 
-		virtual bool autoExpand() const;
+protected:
+    virtual bool prepareWL(Context& ctx);
+    virtual bool performWL(Context& ctx);
 
-		virtual bool canDoSomething() const;
-
-	protected:
-		virtual bool prepareWL(Context& ctx);
-		virtual bool performWL(Context& ctx);
-
-	}; // class IAction
-
-
-
-
+}; // class IAction
 
 } // namespace Action
 } // namespace Antares
 
-# include "text.hxx"
+#include "text.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_ACTION_TEXT_H__

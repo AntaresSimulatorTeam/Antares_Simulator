@@ -25,20 +25,16 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_PARTS_SOLAR_TIMESERIES_HXX__
-# define __ANTARES_LIBS_STUDY_PARTS_SOLAR_TIMESERIES_HXX__
-
-
+#define __ANTARES_LIBS_STUDY_PARTS_SOLAR_TIMESERIES_HXX__
 
 namespace Antares
 {
 namespace Data
 {
-
-	inline Yuni::uint64 DataSeriesSolarMemoryUsage(DataSeriesSolar* l)
-	{
-		return (l) ? l->series.memoryUsage(): 0;
-	}
-
+inline Yuni::uint64 DataSeriesSolarMemoryUsage(DataSeriesSolar* l)
+{
+    return (l) ? l->series.memoryUsage() : 0;
+}
 
 } // namespace Data
 } // namespace Antares

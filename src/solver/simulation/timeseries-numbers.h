@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_SIMULATION_GENERATE_TIMESERIES_H__
-# define __SOLVER_SIMULATION_GENERATE_TIMESERIES_H__
+#define __SOLVER_SIMULATION_GENERATE_TIMESERIES_H__
 
-# include <yuni/yuni.h>
-# include <antares/study.h>
-
+#include <yuni/yuni.h>
+#include <antares/study.h>
 
 namespace Antares
 {
@@ -37,14 +36,12 @@ namespace Solver
 {
 namespace TimeSeriesNumbers
 {
+/*!
+** \brief Generate all time-series numbers for a given set
+*/
+bool Generate(Data::Study& study);
 
-	/*!
-	** \brief Generate all time-series numbers for a given set
-	*/
-	bool Generate(Data::Study& study);
-
-
-
+void StoreTimeseriesIntoOuput(Data::Study& study);
 
 } // namespace TimeSeriesNumbers
 } // namespace Solver

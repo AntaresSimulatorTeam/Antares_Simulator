@@ -25,10 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_FILTER_OPERATOR_MODULO_H__
-# define __ANTARES_TOOLBOX_FILTER_OPERATOR_MODULO_H__
+#define __ANTARES_TOOLBOX_FILTER_OPERATOR_MODULO_H__
 
-# include "../operator.h"
-
+#include "../operator.h"
 
 namespace Antares
 {
@@ -38,41 +37,38 @@ namespace Filter
 {
 namespace Operator
 {
+class Modulo : public AOperator
+{
+public:
+    Modulo(AFilterBase* parent) : AOperator(parent, wxT("%"), wxT("modulo"))
+    {
+        // When the operator is the modulo, we must have another
+        // value
+        parameters.push_back(Parameter(*this).presetModuloAddon());
+    }
 
+    virtual ~Modulo()
+    {
+    }
 
-	class Modulo : public AOperator
-	{
-	public:
-		Modulo(AFilterBase* parent)
-			:AOperator(parent, wxT("%"), wxT("modulo"))
-		{
-			// When the operator is the modulo, we must have another
-			// value
-			parameters.push_back(Parameter(*this).presetModuloAddon());
-		}
+    virtual bool compute(const int a) const
+    {
+        return parameters[0].value.asInt
+                 ? (a % parameters[0].value.asInt == parameters[1].value.asInt)
+                 : false;
+    }
 
-		virtual ~Modulo() {}
+    virtual bool compute(const double a) const
+    {
+        return (int(floor(a)) % parameters[0].value.asInt == parameters[1].value.asInt);
+    }
 
-		virtual bool compute(const int a) const
-		{
-			return parameters[0].value.asInt
-				? (a % parameters[0].value.asInt == parameters[1].value.asInt)
-				: false;
-		}
+    virtual bool compute(const wxString&) const
+    {
+        return false;
+    }
 
-		virtual bool compute(const double a) const
-		{
-			return (int(floor(a)) % parameters[0].value.asInt == parameters[1].value.asInt);
-		}
-
-		virtual bool compute(const wxString&) const
-		{
-			return false;
-		}
-
-	}; // class Modulo
-
-
+}; // class Modulo
 
 } // namespace Operator
 } // namespace Filter

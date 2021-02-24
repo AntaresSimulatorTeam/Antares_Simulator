@@ -25,99 +25,87 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_AREAS_CONSTANTS_H__
-# define __ANTARES_LIBS_STUDY_AREAS_CONSTANTS_H__
-
+#define __ANTARES_LIBS_STUDY_AREAS_CONSTANTS_H__
 
 namespace Antares
 {
 namespace Data
 {
+struct CompareAreaName;
 
-	struct CompareAreaName;
+enum LinkDataIndex
+{
+    //! NTC Direct
+    fhlNTCDirect = 0,
+    //! NTC Indirect
+    fhlNTCIndirect,
+    //! Hurdles cost, Direct
+    fhlHurdlesCostDirect,
+    //! Hurdles cost, Indirect
+    fhlHurdlesCostIndirect,
+    //! Impedances,
+    fhlImpedances,
+    //! Loop flow,
+    fhlLoopFlow,
+    //! P.shift min,
+    fhlPShiftMinus,
+    //! P.shift max,
+    fhlPShiftPlus,
+    //! Maximum number of items
+    fhlMax,
+};
 
+/*!
+** \brief Misc. Gen.
+*/
+enum MiscGenIndex
+{
+    //! CHP
+    fhhCHP = 0,
+    //! Bio-Mass
+    fhhBioMass,
+    //! BioGaz
+    fhhBioGaz,
+    //! Waste
+    fhhWaste,
+    //! GeoThermal
+    fhhGeoThermal,
+    //! Other */
+    fhhOther,
+    //! PSP - Pump
+    fhhPSP,
+    //! Row Balance
+    fhhRowBalance,
+    //! Maximum number of items
+    fhhMax
+};
 
-	enum LinkDataIndex
-	{
-		//! NTC Direct
-		fhlNTCDirect = 0,
-		//! NTC Indirect
-		fhlNTCIndirect,
-		//! Hurdles cost, Direct
-		fhlHurdlesCostDirect,
-		//! Hurdles cost, Indirect
-		fhlHurdlesCostIndirect,
-		//! Impedances,
-		fhlImpedances,
-		//! Loop flow,
-		fhlLoopFlow,
-		//! P.shift min,
-		fhlPShiftMinus,
-		//! P.shift max,
-		fhlPShiftPlus,
-		//! Maximum number of items
-		fhlMax,
-	};
+enum ReservesIndex
+{
+    //! Primary reserve
+    fhrPrimaryReserve = 0,
+    //! Strategic reserve
+    fhrStrategicReserve,
+    //! DSM
+    fhrDSM,
+    //! D-1
+    fhrDayBefore,
+    //! Maximum number of items
+    fhrMax,
+};
 
+enum AreaNodalOptimization
+{
+    //! Non Dispatchable power
+    anoNonDispatchPower = 1,
+    //! Dispatchable Hydro power
+    anoDispatchHydroPower = 2,
+    //! Other dispatchable power
+    anoOtherDispatchPower = 4,
 
-
-	/*!
-	** \brief Misc. Gen.
-	*/
-	enum MiscGenIndex
-	{
-		//! CHP
-		fhhCHP = 0,
-		//! Bio-Mass
-		fhhBioMass,
-		//! BioGaz
-		fhhBioGaz,
-		//! Waste
-		fhhWaste,
-		//! GeoThermal
-		fhhGeoThermal,
-		//! Other */
-		fhhOther,
-		//! PSP - Pump
-		fhhPSP,
-		//! Row Balance
-		fhhRowBalance,
-		//! Maximum number of items
-		fhhMax
-	};
-
-
-	enum ReservesIndex
-	{
-		//! Primary reserve
-		fhrPrimaryReserve = 0,
-		//! Strategic reserve
-		fhrStrategicReserve,
-		//! DSM
-		fhrDSM,
-		//! D-1
-		fhrDayBefore,
-		//! Maximum number of items
-		fhrMax,
-	};
-
-
-
-	enum AreaNodalOptimization
-	{
-		//! Non Dispatchable power
-		anoNonDispatchPower    = 1,
-		//! Dispatchable Hydro power
-		anoDispatchHydroPower  = 2,
-		//! Other dispatchable power
-		anoOtherDispatchPower  = 4,
-
-		//! All features
-		anoAll  = anoNonDispatchPower | anoDispatchHydroPower | anoOtherDispatchPower,
-	};
-
-
-
-
+    //! All features
+    anoAll = anoNonDispatchPower | anoDispatchHydroPower | anoOtherDispatchPower,
+};
 
 } // namespace Data
 } // namespace Antares

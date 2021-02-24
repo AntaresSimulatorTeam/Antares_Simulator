@@ -25,13 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <algorithm>
 #include "rules.h"
 #include "../study.h"
 #include "../../logs.h"
-
+#include "scBuilderUtils.h"
 
 using namespace Yuni;
-
 
 namespace Antares
 {
@@ -39,175 +39,187 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
+Rules::Rules() : load(), solar(), hydro(), wind(), thermal(), hydroLevels(), pAreaCount(0)
+{
+}
 
-	Rules::Rules() :
-		load(timeSeriesLoad),
-		solar(timeSeriesSolar),
-		hydro(timeSeriesHydro),
-		wind(timeSeriesWind),
-		thermal(nullptr),
-		pAreaCount(0)
-	{
-	}
+Rules::~Rules()
+{
+    delete[] thermal;
+}
 
+void Rules::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
+{
+    file << "[" << pName << "]\n";
+    if (pAreaCount)
+    {
+        // load
+        load.saveToINIFile(study, file);
+        // solar
+        solar.saveToINIFile(study, file);
+        // hydro
+        hydro.saveToINIFile(study, file);
+        // wind
+        wind.saveToINIFile(study, file);
+        // Thermal, each area
+        for (uint i = 0; i != pAreaCount; ++i)
+            thermal[i].saveToINIFile(study, file);
+        // hydro levels
+        hydroLevels.saveToINIFile(study, file);
+    }
+    file << '\n';
+}
 
-	Rules::~Rules()
-	{
-		delete[] thermal;
-	}
+bool Rules::reset(const Study& study)
+{
+    // Alias to the current study
+    assert(&study != nullptr);
 
+    // The new area count
+    pAreaCount = study.areas.size();
 
+    load.reset(study);
+    solar.reset(study);
+    hydro.reset(study);
+    wind.reset(study);
 
-	bool Rules::loadFromStudy(const Study& study)
-	{
-		logs.info() << "  Loading data for the scenario builder overlay";
-		load.loadFromStudy(study);
-		solar.loadFromStudy(study);
-		hydro.loadFromStudy(study);
-		wind.loadFromStudy(study);
+    delete[] thermal;
+    thermal = new thermalTSNumberData[pAreaCount];
 
-		delete[] thermal;
-		pAreaCount = study.areas.size();
-		thermal = new TSNumberRules[pAreaCount];
-		for (uint i = 0; i != pAreaCount; ++i)
-		{
-			thermal[i].attachArea(study.areas.byIndex[i]);
-			thermal[i].loadFromStudy(study);
-		}
-		return true;
-	}
+    for (uint i = 0; i != pAreaCount; ++i)
+    {
+        thermal[i].attachArea(study.areas.byIndex[i]);
+        thermal[i].reset(study);
+    }
 
+    hydroLevels.reset(study);
+    return true;
+}
 
-	void Rules::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
-	{
-		file << "[" << pName << "]\n";
-		if (pAreaCount)
-		{
-			// load
-			load.saveToINIFile(study, file);
-			// solar
-			solar.saveToINIFile(study, file);
-			// hydro
-			hydro.saveToINIFile(study, file);
-			// wind
-			wind.saveToINIFile(study, file);
-			// Thermal, each area
-			for (uint i = 0; i != pAreaCount; ++i)
-				thermal[i].saveToINIFile(study, file);
-		}
-		file << '\n';
-	}
+void Rules::loadFromInstrs(Study& study,
+                           const AreaName::Vector& instrs,
+                           String value,
+                           bool updaterMode = false)
+{
+    assert(instrs.size() > 2);
 
+    const AreaName& kind_of_scenario = instrs[0]; // load, thermal, hydro, ..., hydro levels, ... ?
+    const uint year = instrs[2].to<uint>();
+    const AreaName& areaname = instrs[1];
+    const ThermalClusterName& clustername = (instrs.size() == 4) ? instrs[3] : "";
 
-	bool Rules::reset(const Study& study)
-	{
-		// Alias to the current study
-		assert(&study != nullptr);
-		pStudy = &study;
+    if (kind_of_scenario.size() > 2)
+        return;
 
-		// The new area count
-		pAreaCount = study.areas.size();
+    Data::Area* area = study.areas.find(areaname);
+    if (!area)
+    {
+        // silently ignore the error
+        if (not updaterMode)
+            logs.warning() << "[scenario-builder] The area '" << areaname << "' has not been found";
 
-		load.reset(study);
-		solar.reset(study);
-		hydro.reset(study);
-		wind.reset(study);
+        return;
+    }
 
-		delete[] thermal;
-		thermal = new TSNumberRules[pAreaCount];
+    if (kind_of_scenario == "t")
+    {
+        if (clustername.empty())
+            return;
 
-		for (uint i = 0; i != pAreaCount; ++i)
-		{
-			thermal[i].attachArea(study.areas.byIndex[i]);
-			thermal[i].reset(study);
-		}
-		return true;
-	}
+        const ThermalCluster* cluster = area->thermal.list.find(clustername);
+        if (not cluster)
+            cluster = area->thermal.mustrunList.find(clustername);
 
+        if (cluster)
+        {
+            uint val = fromStringToTSnumber(value);
+            thermal[area->index].set(cluster, year, val);
+        }
+        else
+        {
+            bool isTheActiveRule
+              = (pName.toLower() == study.parameters.activeRulesScenario.toLower());
+            if (not updaterMode and isTheActiveRule)
+            {
+                string clusterId = (area->id).to<string>() + "." + clustername.to<string>();
+                disabledClustersOnRuleActive[clusterId].push_back(year);
+            }
+        }
+    }
 
-	void Rules::loadFromInstrs( Study& study, const AreaName::Vector& instrs, uint value, bool updaterMode=false)
-	{
-		assert(instrs.size() > 2);
+    if (kind_of_scenario == "l")
+    {
+        uint val = fromStringToTSnumber(value);
+        load.set(area->index, year, val);
+    }
 
-		const AreaName& kind = instrs[0];
-		if (kind.size() != 1)
-			return;
-		const char kindc = kind[0];
+    if (kind_of_scenario == "w")
+    {
+        uint val = fromStringToTSnumber(value);
+        wind.set(area->index, year, val);
+    }
 
-		// The current area name
-		const AreaName& areaname = instrs[1];
-		auto pStudy = &study;
-		Data::Area* area = pStudy->areas.find(areaname);
-		if (!area)
-		{
-			// silently ignore the error
-			if (not updaterMode)
-				logs.warning() << "[scenario-builder] The area '" << areaname << "' has not been found";
-			
-			return;
-		}
-		
+    if (kind_of_scenario == "h")
+    {
+        uint val = fromStringToTSnumber(value);
+        hydro.set(area->index, year, val);
+    }
 
-		// Year
-		const uint year = instrs[2].to<uint>();
+    if (kind_of_scenario == "s")
+    {
+        uint val = fromStringToTSnumber(value);
+        solar.set(area->index, year, val);
+    }
 
-		switch (kindc)
-		{
-			case 't':
-				{
-					if (instrs.size() != 4)
-						return;
-					const ThermalClusterName& clustername = instrs[3];
-					const ThermalCluster* cluster = area->thermal.list.find(clustername);
-					if (not cluster)
-						cluster = area->thermal.mustrunList.find(clustername);
+    if (kind_of_scenario == "hl")
+    {
+        double val = fromStringToHydroLevel(value, 1.);
+        hydroLevels.set(area->index, year, val);
+    }
+}
 
-					if (cluster)
-					{
-						//thermal[area->index].set(cluster->areaWideIndex, year, value);
-						thermal[area->index].set(cluster, year, value);
-					}
-					else
-						if (not updaterMode) 
-							logs.warning() << "cluster " << area->id << " / " << clustername << " (size:" << clustername.size() << ") not found: it may not exist or it is disabled";
-					break;
-				}
-			case 'l':
-				load.set(area->index, year, value);
-				return;
-			case 'w':
-				wind.set(area->index, year, value);
-				return;
-			case 'h':
-				hydro.set(area->index, year, value);
-				return;
-			case 's':
-				solar.set(area->index, year, value);
-				return;
-		}
-		return;
-	}
+void Rules::apply(Study& study)
+{
+    if (pAreaCount)
+    {
+        load.apply(study);
+        solar.apply(study);
+        hydro.apply(study);
+        wind.apply(study);
+        for (uint i = 0; i != pAreaCount; ++i)
+            thermal[i].apply(study);
+        hydroLevels.apply(study);
+    }
+}
 
+void Rules::sendWarningsForDisabledClusters()
+{
+    for (map<string, vector<uint>>::iterator it = disabledClustersOnRuleActive.begin();
+         it != disabledClustersOnRuleActive.end();
+         it++)
+    {
+        vector<uint>& scenariiForCurrentCluster = it->second;
+        int nbScenariiForCluster = (int)scenariiForCurrentCluster.size();
+        vector<uint>::iterator itv = scenariiForCurrentCluster.begin();
 
+        // Listing the 10 first scenarii numbers (years numbers) where current cluster is refered
+        // to. Notice that these scenarii could be less then 10, but are at least 1.
+        string listScenarii = to_string(*itv + 1);
+        itv++;
+        for (; itv != scenariiForCurrentCluster.end(); itv++)
+            listScenarii += ", " + to_string(*itv + 1);
 
-	void Rules::apply(const Study& study)
-	{
-		if (pAreaCount)
-		{
-			load.apply(study);
-			solar.apply(study);
-			hydro.apply(study);
-			wind.apply(study);
-			for (uint i = 0; i != pAreaCount; ++i)
-				thermal[i].apply(study);
-		}
-	}
+        // Adding last scenario to the list
+        if (nbScenariiForCluster > 10)
+            listScenarii += "..." + to_string(scenariiForCurrentCluster.back());
 
-
-
+        logs.warning()
+          << "Cluster " << it->first
+          << " not found: it may be disabled, though given TS numbers in sc builder for year(s) :";
+        logs.warning() << listScenarii;
+    }
+}
 
 } // namespace ScenarioBuilder
 } // namespace Data
 } // namespace Antares
-
-

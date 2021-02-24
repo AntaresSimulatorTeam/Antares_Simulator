@@ -26,14 +26,14 @@
 */
 #include <antares/exception/AssertionError.hpp>
 
-namespace Antares {
-
-namespace Data {
-
-AssertionError::AssertionError(const std::string& message) :
-    std::runtime_error(message) {
+namespace Antares
+{
+namespace Data
+{
+AssertionError::AssertionError(const std::string& message) : std::runtime_error(message)
+{
 }
 
-}  // namespace Data
+} // namespace Data
 
-}  // namespace Antares
+} // namespace Antares

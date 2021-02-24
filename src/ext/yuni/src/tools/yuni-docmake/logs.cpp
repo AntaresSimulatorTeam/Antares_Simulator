@@ -2,6 +2,4 @@
 
 #include "logs.h"
 
-
-DocMakeLogs  logs;
-
+DocMakeLogs logs;

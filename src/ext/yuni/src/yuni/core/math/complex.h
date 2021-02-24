@@ -12,7 +12,6 @@
 #include "../../yuni.h"
 #include <complex>
 
-
 /*
 ** The STL already provides a complete set of tools for dealing with
 ** complex numbers.

@@ -25,33 +25,29 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_SEARCH_TOKEN_HXX__
-# define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_SEARCH_TOKEN_HXX__
+#define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_SEARCH_TOKEN_HXX__
 
+/*!
+** \brief A search token
+*/
+class SearchToken final
+{
+public:
+    //! The most suitable smart point for the class
+    typedef Yuni::SmartPtr<SearchToken> Ptr;
+    //! Vector of search tokens
+    typedef std::vector<Ptr> Vector;
+    //! Vector ptr
+    typedef Yuni::SmartPtr<Vector> VectorPtr;
 
-	/*!
-	** \brief A search token
-	*/
-	class SearchToken final
-	{
-	public:
-		//! The most suitable smart point for the class
-		typedef Yuni::SmartPtr<SearchToken>  Ptr;
-		//! Vector of search tokens
-		typedef std::vector<Ptr>  Vector;
-		//! Vector ptr
-		typedef Yuni::SmartPtr<Vector>  VectorPtr;
-
-	public:
-		SearchToken() :
-			weight(1.f)
-		{}
-		//! Text
-		Yuni::String  text;
-		//! Weight of the token
-		float weight;
-	};
-
-
-
+public:
+    SearchToken() : weight(1.f)
+    {
+    }
+    //! Text
+    Yuni::String text;
+    //! Weight of the token
+    float weight;
+};
 
 #endif // __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_SEARCH_TOKEN_HXX__

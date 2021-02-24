@@ -25,19 +25,18 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_LIST_H__
-# define __SOLVER_VARIABLE_LIST_H__
+#define __SOLVER_VARIABLE_LIST_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-# include <yuni/core/static/types.h>
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+#include <yuni/core/static/types.h>
 
-# include <antares/logs.h>
+#include <antares/logs.h>
 
-# include "endoflist.h"
-# include "categories.h"
-# include "surveyresults.h"
-# include "info.h"
-
+#include "endoflist.h"
+#include "categories.h"
+#include "surveyresults.h"
+#include "info.h"
 
 namespace Antares
 {
@@ -47,215 +46,215 @@ namespace Variable
 {
 namespace Container
 {
+/*!
+** \brief Static list for all output variables
+**
+** This structure is merely a static linked list with all variables
+*/
+template<class NextT = Container::EndOfList>
+class List : public NextT
+{
+public:
+    //! Type of the next static variable
+    typedef NextT NextType;
+    //! The full type of the class
+    typedef List<NextT> ListType;
 
+    enum
+    {
+        //! How many items have we got
+        count = NextT::count,
+    };
 
-	/*!
-	** \brief Static list for all output variables
-	**
-	** This structure is merely a static linked list with all variables
-	*/
-	template<class NextT = Container::EndOfList>
-	class List : public NextT
-	{
-	public:
-		//! Type of the next static variable
-		typedef NextT NextType;
-		//! The full type of the class
-		typedef List<NextT> ListType;
+public:
+    /*!
+    ** \brief Try to estimate the memory footprint that the solver will require to make a simulation
+    */
+    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u);
 
-		enum
-		{
-			//! How many items have we got
-			count = NextT::count,
-		};
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    List();
+    /*!
+    ** \brief Destructor
+    */
+    ~List();
+    //@}
 
-	public:
-		/*!
-		** \brief Try to estimate the memory footprint that the solver will require to make a simulation
-		*/
-		static void EstimateMemoryUsage(Data::StudyMemoryUsage& u);
+    //! \name Variable initialization
+    //@{
+    /*!
+    ** \brief Initialize all output variables
+    */
+    void initializeFromStudy(Data::Study& study);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default Constructor
-		*/
-		List();
-		/*!
-		** \brief Destructor
-		*/
-		~List();
-		//@}
+    /*!
+    ** \brief Initialize all output variables according a given area
+    */
+    void initializeFromArea(Data::Study* study, Data::Area* area);
 
+    /*!
+    ** \brief Initialize all output variables according a given link
+    */
+    void initializeFromLink(Data::Study* study, Data::AreaLink* link);
 
-		//! \name Variable initialization
-		//@{
-		/*!
-		** \brief Initialize all output variables
-		*/
-		void initializeFromStudy(Data::Study& study);
+    /*!
+    ** \brief Initialize all output variables according a given thermal cluster
+    */
+    void initializeFromThermalCluster(Data::Study* study,
+                                      Data::Area* area,
+                                      Data::ThermalCluster* cluster);
+    //@}
 
-		/*!
-		** \brief Initialize all output variables according a given area
-		*/
-		void initializeFromArea(Data::Study* study, Data::Area* area);
+    //! \name Simulation events
+    //@{
+    /*!
+    ** \brief Notify to all variables that the simulation is about to begin
+    */
+    void simulationBegin();
 
-		/*!
-		** \brief Initialize all output variables according a given link
-		*/
-		void initializeFromLink(Data::Study* study, Data::AreaLink* link);
+    /*!
+    ** \brief Notify to all variables that the simulation has finished
+    */
+    void simulationEnd();
+    //@}
 
-		/*!
-		** \brief Initialize all output variables according a given thermal cluster
-		*/
-		void initializeFromThermalCluster(Data::Study* study, Data::Area* area, Data::ThermalCluster* cluster);
-		//@}
+    //! \name Years events
+    //@{
+    /*!
+    ** \brief Notify to all variables that a new year is about to start
+    **
+    ** \param year The current year
+    */
+    void yearBegin(unsigned int year, unsigned int numSpace);
 
+    /*!
+    ** \brief Notify to all variables that the year is now over
+    **
+    ** That mainly means that all variables should perform the monthly
+    ** aggragations.
+    ** \param year The current year
+    */
+    void yearEnd(unsigned int year, unsigned int numSpace);
 
-		//! \name Simulation events
-		//@{
-		/*!
-		** \brief Notify to all variables that the simulation is about to begin
-		*/
-		void simulationBegin();
+    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
+                        unsigned int nbYearsForCurrentSummary);
 
-		/*!
-		** \brief Notify to all variables that the simulation has finished
-		*/
-		void simulationEnd();
-		//@}
+    template<class V>
+    void yearEndSpatialAggregates(V& allVars, unsigned int year, unsigned int numSpace);
 
+    template<class V, class SetT>
+    void yearEndSpatialAggregates(V& allVars, unsigned int year, const SetT& set);
 
-		//! \name Years events
-		//@{
-		/*!
-		** \brief Notify to all variables that a new year is about to start
-		**
-		** \param year The current year
-		*/
-		void yearBegin(unsigned int year, unsigned int numSpace);
+    template<class V>
+    void computeSpatialAggregatesSummary(V& allVars,
+                                         std::map<unsigned int, unsigned int>& numSpaceToYear,
+                                         unsigned int);
 
-		/*!
-		** \brief Notify to all variables that the year is now over
-		**
-		** That mainly means that all variables should perform the monthly
-		** aggragations.
-		** \param year The current year
-		*/
-		void yearEnd(unsigned int year, unsigned int numSpace);	
+    template<class V>
+    void simulationEndSpatialAggregates(V& allVars);
 
-		void computeSummary(std::map<unsigned int, unsigned int> & numSpaceToYear, unsigned int nbYearsForCurrentSummary);
+    template<class V, class SetT>
+    void simulationEndSpatialAggregates(V& allVars, const SetT& set);
+    //@}
 
-		template<class V>
-		void yearEndSpatialAggregates(V& allVars, unsigned int year, unsigned int numSpace);
+    //! \name Hourly events
+    //@{
+    /*!
+    ** \brief Notify to all variables that a new hour is about to begin
+    */
+    void hourBegin(unsigned int hourInTheYear);
 
-		template<class V, class SetT>
-		void yearEndSpatialAggregates(V& allVars, unsigned int year, const SetT& set);
+    void hourForEachArea(State& state, unsigned int numSpace);
 
-		template<class V>
-		void computeSpatialAggregatesSummary(V& allVars, std::map<unsigned int, unsigned int> & numSpaceToYear, unsigned int);
+    void hourForEachThermalCluster(State& state);
 
-		template<class V>
-		void simulationEndSpatialAggregates(V& allVars);
+    void hourForEachLink(State& state);
 
-		template<class V, class SetT>
-		void simulationEndSpatialAggregates(V& allVars, const SetT& set);
-		//@}
+    void hourEnd(State& state, unsigned int hourInTheYear);
+    //@}
 
+    //! \name Weekly events
+    //@{
+    void weekBegin(State& state);
 
-		//! \name Hourly events
-		//@{
-		/*!
-		** \brief Notify to all variables that a new hour is about to begin
-		*/
-		void hourBegin(unsigned int hourInTheYear);
+    void weekEnd(State& state);
+    //@}
 
-		void hourForEachArea(State& state, unsigned int numSpace);
+    //! \name Spatial aggregation
+    //@{
+    template<class SearchVCardT, class O>
+    void computeSpatialAggregateWith(O& out);
 
-		void hourForEachThermalCluster(State& state);
+    template<class SearchVCardT, class O>
+    void computeSpatialAggregateWith(O& out, const Data::Area* area, unsigned int numSpace);
 
-		void hourForEachLink(State& state);
+    template<class VCardToFindT>
+    void retrieveResultsForArea(typename Variable::Storage<VCardToFindT>::ResultsType** result,
+                                const Data::Area* area);
 
-		void hourEnd(State& state, unsigned int hourInTheYear);
-		//@}
+    template<class VCardToFindT>
+    void retrieveResultsForThermalCluster(
+      typename Variable::Storage<VCardToFindT>::ResultsType** result,
+      const Data::ThermalCluster* cluster);
 
+    template<class VCardToFindT>
+    void retrieveResultsForLink(typename Variable::Storage<VCardToFindT>::ResultsType** result,
+                                const Data::AreaLink* link);
+    //@}
 
-		//! \name Weekly events
-		//@{
-		void weekBegin(State& state);
+    //! \name User reports
+    //@{
+    /*!
+    ** \brief Ask to all variables to fullfil the report
+    */
+    void buildSurveyReport(SurveyResults& results,
+                           int dataLevel,
+                           int fileLevel,
+                           int precision) const;
 
-		void weekEnd(State& state);
-		//@}
+    void buildAnnualSurveyReport(SurveyResults& results,
+                                 int dataLevel,
+                                 int fileLevel,
+                                 int precision,
+                                 unsigned int numSpace) const;
 
+    /*!
+    ** \brief Ask to all variables to fullfil additional reports (like the digest for example)
+    **
+    ** \tparam GlobalT True to write down the results of the simulation, false
+    **   for the results of the current year
+    */
+    void exportSurveyResults(bool global, const Yuni::String& output, unsigned int numSpace);
 
-		//! \name Spatial aggregation
-		//@{
-		template<class SearchVCardT, class O>
-		void computeSpatialAggregateWith(O& out);
+    /*!
+    ** \brief Ask to all variables to fullfil the digest
+    */
+    void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const;
+    //@}
 
-		template<class SearchVCardT, class O>
-		void computeSpatialAggregateWith(O& out, const Data::Area* area, unsigned int numSpace);
+    //! \name Memory management
+    //@{
+    //! Get the amount of memory currently used by the class
+    Yuni::uint64 memoryUsage() const;
+    //@}
 
+private:
+    //! Pointer to the current study
+    Data::Study* pStudy;
 
-
-		template<class VCardToFindT>
-		void retrieveResultsForArea(typename Variable::Storage<VCardToFindT>::ResultsType** result, const Data::Area* area);
-
-		template<class VCardToFindT>
-		void retrieveResultsForThermalCluster(typename Variable::Storage<VCardToFindT>::ResultsType** result, const Data::ThermalCluster* cluster);
-
-		template<class VCardToFindT>
-		void retrieveResultsForLink(typename Variable::Storage<VCardToFindT>::ResultsType** result, const Data::AreaLink* link);
-		//@}
-
-
-		//! \name User reports
-		//@{
-		/*!
-		** \brief Ask to all variables to fullfil the report
-		*/
-		void buildSurveyReport(SurveyResults& results, int dataLevel, int fileLevel, int precision) const;
-
-		void buildAnnualSurveyReport(SurveyResults& results, int dataLevel, int fileLevel, int precision, unsigned int numSpace) const;
-
-		/*!
-		** \brief Ask to all variables to fullfil additional reports (like the digest for example)
-		**
-		** \tparam GlobalT True to write down the results of the simulation, false
-		**   for the results of the current year
-		*/
-		void exportSurveyResults(bool global, const Yuni::String& output, unsigned int numSpace);
-
-		/*!
-		** \brief Ask to all variables to fullfil the digest
-		*/
-		void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const;
-		//@}
-
-
-		//! \name Memory management
-		//@{
-		//! Get the amount of memory currently used by the class
-		Yuni::uint64 memoryUsage() const;
-		//@}
-
-	private:
-		//! Pointer to the current study
-		Data::Study* pStudy;
-
-	}; // class List
-
-
-
-
+}; // class List
 
 } // namespace Container
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
 
-# include "surveyresults/reportbuilder.hxx"
-# include "container.hxx"
+#include "surveyresults/reportbuilder.hxx"
+#include "container.hxx"
 
 #endif // __SOLVER_VARIABLE_LIST_H__

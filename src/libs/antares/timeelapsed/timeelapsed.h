@@ -25,48 +25,41 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_TIME_ELAPSED__TIME_ELAPSED_H__
-# define __ANTARES_LIBS_TIME_ELAPSED__TIME_ELAPSED_H__
+#define __ANTARES_LIBS_TIME_ELAPSED__TIME_ELAPSED_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
 class TimeElapsed final
 {
 public:
-	//! Default constructor
-	TimeElapsed();
+    //! Default constructor
+    TimeElapsed();
 
-	//! Copy constructor
-	TimeElapsed(const TimeElapsed& rhs):
-		text(rhs.text), pStartTime(rhs.pStartTime)
-	{}
+    //! Copy constructor
+    TimeElapsed(const TimeElapsed& rhs) : text(rhs.text), pStartTime(rhs.pStartTime)
+    {
+    }
 
-	//! Constructor with a default text
-	explicit TimeElapsed(const AnyString& text) :
-		text(text)
-	{
-		reset();
-	}
+    //! Constructor with a default text
+    explicit TimeElapsed(const AnyString& text) : text(text)
+    {
+        reset();
+    }
 
-	//! Destructor
-	~TimeElapsed();
+    //! Destructor
+    ~TimeElapsed();
 
-	void reset();
-
+    void reset();
 
 public:
-	//! The text to display at the end
-	Yuni::ShortString256 text;
+    //! The text to display at the end
+    Yuni::ShortString256 text;
 
 private:
-	//! timestamp when the timer started
-	yint64 pStartTime;
+    //! timestamp when the timer started
+    yint64 pStartTime;
 
 }; // class TimeElapsed
-
-
-
 
 #endif // __ANTARES_LIBS_TIME_ELAPSED__TIME_ELAPSED_H__

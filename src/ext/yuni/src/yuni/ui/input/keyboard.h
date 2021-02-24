@@ -9,102 +9,104 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #ifndef __YUNI_INPUT_KEYBOARD_H__
-# define __YUNI_INPUT_KEYBOARD_H__
+#define __YUNI_INPUT_KEYBOARD_H__
 
-# include "../../yuni.h"
-# include "../../core/bind.h"
-# include "../../core/smartptr.h"
-# include "key.h"
-# include "../eventpropagation.h"
+#include "../../yuni.h"
+#include "../../core/bind.h"
+#include "../../core/smartptr.h"
+#include "key.h"
+#include "../eventpropagation.h"
 
 namespace Yuni
 {
-
 namespace UI
 {
-
-	//! Forward declaration
-	class RenderWindow;
+//! Forward declaration
+class RenderWindow;
 
 } // namespace UI
 
-
 namespace Input
 {
+//! Keyboard input management
+class Keyboard
+{
+public:
+    //! Smart pointer
+    typedef SmartPtr<Keyboard> Ptr;
 
+public:
+    //! Arguments for event callbacks
+    struct EventArgs
+    {
+        EventArgs(const bool* keyStates) : keys(keyStates), propagate(UI::epStop)
+        {
+        }
 
-	//! Keyboard input management
-	class Keyboard
-	{
-	public:
-		//! Smart pointer
-		typedef SmartPtr<Keyboard>  Ptr;
+        //! Key states : true if the key is currently pushed
+        const bool* const keys;
 
-	public:
-		//! Arguments for event callbacks
-		struct EventArgs
-		{
-			EventArgs(const bool* keyStates):
-				keys(keyStates),
-				propagate(UI::epStop)
-			{}
+        //! Should we propagate the event to underlying controls / views ?
+        UI::EventPropagation propagate;
 
-			//! Key states : true if the key is currently pushed
-			const bool* const keys;
+    }; // struct EventArgs
 
-			//! Should we propagate the event to underlying controls / views ?
-			UI::EventPropagation propagate;
+public:
+    //! Prototype for a keyboard event callback
+    // typedef Yuni::Bind<void (IControl::Ptr sender, EventArgs& args)>  KeyboardCallback;
 
-		}; // struct EventArgs
+    //! \name Bindings for user-code event listeners
+    //@{
+    Yuni::Bind<void(Key key)> onKeyDown;
+    Yuni::Bind<void(Key key)> onKeyUp;
+    //@}
 
-	public:
-		//! Prototype for a keyboard event callback
-		//typedef Yuni::Bind<void (IControl::Ptr sender, EventArgs& args)>  KeyboardCallback;
+public:
+    //! Constructor
+    Keyboard()
+    {
+        for (uint i = 0; i < KeyCount; ++i)
+            pKeyDown[i] = false;
+    }
 
-		//! \name Bindings for user-code event listeners
-		//@{
-		Yuni::Bind<void (Key key)>  onKeyDown;
-		Yuni::Bind<void (Key key)>  onKeyUp;
-		//@}
+    //! Virtual destructor
+    virtual ~Keyboard()
+    {
+        onKeyDown.unbind();
+        onKeyUp.unbind();
+    }
 
-	public:
-		//! Constructor
-		Keyboard()
-		{
-			for (uint i = 0; i < KeyCount; ++i)
-				pKeyDown[i] = false;
-		}
+    //! Is the key pressed ?
+    bool isPressed(Key key) const
+    {
+        return pKeyDown[key];
+    }
 
-		//! Virtual destructor
-		virtual ~Keyboard()
-		{
-			onKeyDown.unbind();
-			onKeyUp.unbind();
-		}
+private:
+    //! \name Event notifications from window
+    //@{
+    void doDown(Key key)
+    {
+        pKeyDown[key] = true;
+        onKeyDown(key);
+    }
+    void doUp(Key key)
+    {
+        pKeyDown[key] = false;
+        onKeyUp(key);
+    }
+    //@}
 
-		//! Is the key pressed ?
-		bool isPressed(Key key) const { return pKeyDown[key]; }
+protected:
+    //! Keep button state
+    volatile bool pKeyDown[KeyCount];
 
-	private:
-		//! \name Event notifications from window
-		//@{
-		void doDown(Key key) { pKeyDown[key] = true; onKeyDown(key); }
-		void doUp(Key key) { pKeyDown[key] = false; onKeyUp(key); }
-		//@}
+    //! Friend declaration : RenderWindow manages data in this class
+    friend class Yuni::UI::RenderWindow;
 
-	protected:
-		//! Keep button state
-		volatile bool pKeyDown[KeyCount];
-
-		//! Friend declaration : RenderWindow manages data in this class
-		friend class Yuni::UI::RenderWindow;
-
-	}; // class Keyboard
-
-
+}; // class Keyboard
 
 } // namespace Input
 } // namespace Yuni
-
 
 #endif // __YUNI_INPUT_KEYBOARD_H__

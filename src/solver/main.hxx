@@ -25,25 +25,21 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __MAIN_HXX__
-# define __MAIN_HXX__
-
+#define __MAIN_HXX__
 
 template<class SimulationT>
 void SolverApplication::runSimulation()
 {
-	// The variable simulation _must_ not be allocated on the stack
-	// You might encounter some strange issues otherwise
-	auto* simulation = new SimulationT(*pStudy, pSettings);
-	// Let's go
-	simulation->run();
-	// write the results of the simulation
-	if (not (pSettings.noOutput || pSettings.tsGeneratorsOnly) )
-		simulation->writeResults(/*synthesis:*/true);
-	// Release
-	delete simulation;
+    // The variable simulation _must_ not be allocated on the stack
+    // You might encounter some strange issues otherwise
+    auto* simulation = new SimulationT(*pStudy, pSettings);
+    // Let's go
+    simulation->run();
+    // write the results of the simulation
+    if (not(pSettings.noOutput || pSettings.tsGeneratorsOnly))
+        simulation->writeResults(/*synthesis:*/ true);
+    // Release
+    delete simulation;
 }
-
-
-
 
 #endif // __MAIN_HXX__

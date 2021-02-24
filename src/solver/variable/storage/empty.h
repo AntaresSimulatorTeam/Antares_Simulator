@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_STORAGE_EMPTY_H__
-# define __SOLVER_VARIABLE_STORAGE_EMPTY_H__
-
+#define __SOLVER_VARIABLE_STORAGE_EMPTY_H__
 
 namespace Antares
 {
@@ -34,73 +33,66 @@ namespace Solver
 {
 namespace Variable
 {
+struct Empty
+{
+public:
+    //! Name of the filter
+    const char* Name()
+    {
+        return NULL;
+    }
+    enum
+    {
+        //! The count if item in the list
+        count = 0,
+        categoryFile = 0,
+    };
 
+protected:
+    static void initializeFromStudy(const Data::Study&)
+    {
+        // Does nothing
+    }
 
-	struct Empty
-	{
-	public:
-		//! Name of the filter
-		const char* Name() {return NULL;}
-		enum
-		{
-			//! The count if item in the list
-			count = 0,
-			categoryFile = 0,
-		};
+    static void reset()
+    {
+        // Does nothing
+    }
 
-	protected:
-		static void initializeFromStudy(const Data::Study&)
-		{
-			// Does nothing
-		}
+    static void merge(unsigned int /*year*/, const IntermediateValues& /*rhs*/)
+    {
+        // Does nothing
+    }
 
-		static void reset()
-		{
-			// Does nothing
-		}
+    template<class S, class VCardT>
+    static void buildSurveyReport(SurveyResults&, const S&, int, int, int)
+    {
+        // Does nothing
+    }
 
-		static void merge(unsigned int /*year*/, const IntermediateValues& /*rhs*/)
-		{
-			// Does nothing
-		}
+    template<class VCardT>
+    static void buildDigest(SurveyResults&, int, int)
+    {
+        // Does nothing
+    }
 
-		static void mergeHourInYear(unsigned int /*year*/, unsigned int /*hour*/, const double /*value*/)
-		{
-			// Does nothing
-		}
+    static Yuni::uint64 memoryUsage()
+    {
+        return 0;
+    }
 
-		template<class S, class VCardT>
-		static void buildSurveyReport(SurveyResults&, const S&, int, int, int)
-		{
-			// Does nothing
-		}
+    static void EstimateMemoryUsage(Data::StudyMemoryUsage&)
+    {
+        // Does nothing
+    }
 
-		template<class VCardT> static void buildDigest(SurveyResults&, int, int)
-		{
-			// Does nothing
-		}
+    template<template<class, int> class DecoratorT>
+    static Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate()
+    {
+        return Antares::Memory::Stored<double>::NullValue();
+    }
 
-		static Yuni::uint64 memoryUsage()
-		{
-			return 0;
-		}
-
-		static void EstimateMemoryUsage(Data::StudyMemoryUsage&)
-		{
-			// Does nothing
-		}
-
-		template<template<class,int> class DecoratorT>
-		static Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate()
-		{
-			return Antares::Memory::Stored<double>::NullValue();
-		}
-
-	}; // class Empty
-
-
-
-
+}; // class Empty
 
 } // namespace Variable
 } // namespace Solver

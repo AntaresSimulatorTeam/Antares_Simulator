@@ -27,7 +27,6 @@
 
 #include <antares/study/xcast/xcast.h>
 
-
 namespace Antares
 {
 namespace Component
@@ -36,131 +35,108 @@ namespace Datagrid
 {
 namespace Renderer
 {
+template<enum Data::TimeSeries T>
+XCastK<T>::XCastK(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
+ MatrixAncestorType(control), Renderer::ARendererArea(control, notifier)
+{
+}
 
+template<enum Data::TimeSeries T>
+XCastK<T>::~XCastK()
+{
+    destroyBoundEvents();
+}
 
-	template<enum Data::TimeSeries T>
-	XCastK<T>::XCastK(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
-		MatrixAncestorType(control),
-		Renderer::ARendererArea(control, notifier)
-	{}
+template<enum Data::TimeSeries T>
+wxString XCastK<T>::columnCaption(int colIndx) const
+{
+    return (colIndx < 12) ? wxStringFromUTF8(Date::MonthToString(colIndx)) << wxT("  ")
+                          : wxString();
+}
 
+template<enum Data::TimeSeries T>
+wxString XCastK<T>::cellValue(int x, int y) const
+{
+    return MatrixAncestorType::cellValue(x, y);
+}
 
-	template<enum Data::TimeSeries T>
-	XCastK<T>::~XCastK()
-	{
-		destroyBoundEvents();
-	}
+template<enum Data::TimeSeries T>
+double XCastK<T>::cellNumericValue(int x, int y) const
+{
+    return MatrixAncestorType::cellNumericValue(x, y);
+}
 
+template<enum Data::TimeSeries T>
+bool XCastK<T>::cellValue(int x, int y, const Yuni::String& value)
+{
+    return MatrixAncestorType::cellValue(x, y, value);
+}
 
-	template<enum Data::TimeSeries T>
-	wxString XCastK<T>::columnCaption(int colIndx) const
-	{
-		return (colIndx < 12)
-			? wxStringFromUTF8(Date::MonthToString(colIndx)) << wxT("  ")
-			: wxString();
-	}
+template<enum Data::TimeSeries T>
+void XCastK<T>::internalAreaChanged(Data::Area* area)
+{
+    if (area)
+    {
+        auto* xcastData = area->xcastData<T>();
+        this->matrix(&(xcastData->K));
+    }
+    else
+        this->matrix(nullptr);
+    // parent
+    Renderer::ARendererArea::internalAreaChanged(area);
+}
 
+template<enum Data::TimeSeries T>
+inline IRenderer::CellStyle XCastK<T>::cellStyle(int col, int row) const
+{
+    return MatrixAncestorType::cellStyle(col, row);
+}
 
-	template<enum Data::TimeSeries T>
-	wxString XCastK<T>::cellValue(int x, int y) const
-	{
-		return MatrixAncestorType::cellValue(x,y);
-	}
+template<enum Data::TimeSeries T>
+inline wxString XCastK<T>::rowCaption(int rowIndx) const
+{
+    return wxString() << rowIndx;
+}
 
+template<enum Data::TimeSeries T>
+inline int XCastK<T>::width() const
+{
+    return MatrixAncestorType::width();
+}
 
-	template<enum Data::TimeSeries T>
-	double XCastK<T>::cellNumericValue(int x, int y) const
-	{
-		return MatrixAncestorType::cellNumericValue(x,y);
-	}
+template<enum Data::TimeSeries T>
+inline int XCastK<T>::height() const
+{
+    return MatrixAncestorType::height();
+}
 
+template<enum Data::TimeSeries T>
+inline uint XCastK<T>::maxWidthResize() const
+{
+    return 0;
+}
 
-	template<enum Data::TimeSeries T>
-	bool XCastK<T>::cellValue(int x, int y, const Yuni::String& value)
-	{
-		return MatrixAncestorType::cellValue(x,y,value);
-	}
+template<enum Data::TimeSeries T>
+inline bool XCastK<T>::valid() const
+{
+    return MatrixAncestorType::valid();
+}
 
+template<enum Data::TimeSeries T>
+void XCastK<T>::onStudyClosed()
+{
+    Renderer::Matrix<float>::onStudyClosed();
+    Renderer::ARendererArea::onStudyClosed();
+}
 
-	template<enum Data::TimeSeries T>
-	void XCastK<T>::internalAreaChanged(Data::Area* area)
-	{
-		if (area)
-		{
-			auto* xcastData = area->xcastData<T>();
-			this->matrix(&(xcastData->K));
-		}
-		else
-			this->matrix(nullptr);
-		// parent
-		Renderer::ARendererArea::internalAreaChanged(area);
-	}
-
-
-	template<enum Data::TimeSeries T>
-	inline IRenderer::CellStyle XCastK<T>::cellStyle(int col, int row) const
-	{
-		return MatrixAncestorType::cellStyle(col, row);
-	}
-
-
-	template<enum Data::TimeSeries T>
-	inline wxString XCastK<T>::rowCaption(int rowIndx) const
-	{
-		return wxString() << rowIndx;
-	}
-
-
-	template<enum Data::TimeSeries T>
-	inline int XCastK<T>::width() const
-	{
-		return MatrixAncestorType::width();
-	}
-
-
-	template<enum Data::TimeSeries T>
-	inline int XCastK<T>::height() const
-	{
-		return MatrixAncestorType::height();
-	}
-
-
-
-	template<enum Data::TimeSeries T>
-	inline uint XCastK<T>::maxWidthResize() const
-	{
-		return 0;
-	}
-
-
-	template<enum Data::TimeSeries T>
-	inline bool XCastK<T>::valid() const
-	{
-		return MatrixAncestorType::valid();
-	}
-
-
-	template<enum Data::TimeSeries T>
-	void XCastK<T>::onStudyClosed()
-	{
-		Renderer::Matrix<float>::onStudyClosed();
-		Renderer::ARendererArea::onStudyClosed();
-	}
-
-
-	template<enum Data::TimeSeries T>
-	void XCastK<T>::onStudyLoaded()
-	{
-		Renderer::Matrix<float>::onStudyLoaded();
-		Renderer::ARendererArea::onStudyLoaded();
-	}
-
-
-
-
+template<enum Data::TimeSeries T>
+void XCastK<T>::onStudyLoaded()
+{
+    Renderer::Matrix<float>::onStudyLoaded();
+    Renderer::ARendererArea::onStudyLoaded();
+}
 
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
 } // namespace Antares
-

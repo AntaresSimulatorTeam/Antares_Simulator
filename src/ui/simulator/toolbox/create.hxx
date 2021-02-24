@@ -25,10 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_CREATE_HXX__
-# define __ANTARES_TOOLBOX_CREATE_HXX__
+#define __ANTARES_TOOLBOX_CREATE_HXX__
 
-# include <yuni/core/bind.h>
-
+#include <yuni/core/bind.h>
 
 namespace Antares
 {
@@ -36,61 +35,60 @@ namespace Private
 {
 namespace Component
 {
+class CustomWxButton : public wxButton
+{
+public:
+    /*!
+    ** \brief Constructor
+    */
+    CustomWxButton(wxWindow* parent, const wxString& title);
+    //! Destructor
+    virtual ~CustomWxButton()
+    {
+    }
 
-	class CustomWxButton : public wxButton
-	{
-	public:
-		/*!
-		** \brief Constructor
-		*/
-		CustomWxButton(wxWindow* parent, const wxString& title);
-		//! Destructor
-		virtual ~CustomWxButton() {}
+public:
+    //!
+    Yuni::Bind<void()> onUserClick;
 
-	public:
-		//!
-		Yuni::Bind<void ()> onUserClick;
+private:
+    void evtOnUserClick(wxCommandEvent&);
 
-	private:
-		void evtOnUserClick(wxCommandEvent&);
-
-	}; // class CustomWxButton
-
-
+}; // class CustomWxButton
 
 } // namespace Component
 } // namespace Private
 } // namespace Antares
 
-
 namespace Antares
 {
 namespace Component
 {
+template<class T, class StringT>
+wxButton* CreateButton(wxWindow* parent,
+                       const StringT& caption,
+                       T* object,
+                       void (T::*method)(void*),
+                       void* userdata)
+{
+    // type alias
+    typedef ::Antares::Private::Component::CustomWxButton ButtonType;
+    // Title of the button
+    wxString title;
+    title << wxT("   ") << caption << wxT("   ");
 
-	template<class T, class StringT>
-	wxButton* CreateButton(wxWindow* parent, const StringT& caption, T* object, void (T::* method)(void*),
-		void* userdata)
-	{
-		// type alias
-		typedef ::Antares::Private::Component::CustomWxButton ButtonType;
-		// Title of the button
-		wxString title;
-		title << wxT("   ") << caption << wxT("   ");
+    // Creation
+    auto* button = new ButtonType(parent, title);
 
-		// Creation
-		auto* button = new ButtonType(parent, title);
-
-		// Event
-		if (object)
-		{
-			typedef void (T::* MemberType)(void*);
-			button->onUserClick.bind(const_cast<T*>(object), reinterpret_cast<MemberType>(method), userdata);
-		}
-		return button;
-	}
-
-
+    // Event
+    if (object)
+    {
+        typedef void (T::*MemberType)(void*);
+        button->onUserClick.bind(
+          const_cast<T*>(object), reinterpret_cast<MemberType>(method), userdata);
+    }
+    return button;
+}
 
 } // namespace Component
 } // namespace Antares

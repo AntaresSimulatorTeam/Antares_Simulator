@@ -25,89 +25,77 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_WINDOW_BINDING_CONSTRAINT_H__
-# define __ANTARES_APPLICATION_WINDOW_BINDING_CONSTRAINT_H__
+#define __ANTARES_APPLICATION_WINDOW_BINDING_CONSTRAINT_H__
 
-# include <antares/wx-wrapper.h>
-# include "../../toolbox/components/notebook/notebook.h"
-# include "../../toolbox/components/datagrid/component.h"
-# include "../../toolbox/input/bindingconstraint.h"
-# include <ui/common/component/panel.h>
-
-
+#include <antares/wx-wrapper.h>
+#include "../../toolbox/components/notebook/notebook.h"
+#include "../../toolbox/components/datagrid/component.h"
+#include "../../toolbox/input/bindingconstraint.h"
+#include <ui/common/component/panel.h>
 
 namespace Antares
 {
 namespace Window
 {
+class BindingConstraintDataPanel;
+class BindingConstraintWeightsPanel;
+class BindingConstraintOffsetsPanel;
 
-	class BindingConstraintDataPanel;
-	class BindingConstraintWeightsPanel;
-	class BindingConstraintOffsetsPanel;
+/*!
+** \brief Settings for a single Binding constraint
+*/
+class BindingConstraint : public Component::Panel, public Yuni::IEventObserver<BindingConstraint>
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    **
+    ** \param parent The parent window
+    */
+    BindingConstraint(wxWindow* parent);
+    //! Destructor
+    virtual ~BindingConstraint();
+    //@}
 
+    void selectDefaultPage();
 
+private:
+    void onPageChanged(Component::Notebook::Page& page);
 
-	/*!
-	** \brief Settings for a single Binding constraint
-	*/
-	class BindingConstraint : public Component::Panel, public Yuni::IEventObserver<BindingConstraint>
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		**
-		** \param parent The parent window
-		*/
-		BindingConstraint(wxWindow* parent);
-		//! Destructor
-		virtual ~BindingConstraint();
-		//@}
+    void onSelectedConstraint(Data::BindingConstraint* contraint);
+    void onDblClickConstraint(Data::BindingConstraint* contraint);
 
-		void selectDefaultPage();
+    void onAdd(void*);
+    void onAddFromMouse(wxMouseEvent&);
+    void onDelete(void*);
+    void onDeleteFromMouse(wxMouseEvent&);
+    void onEdit(void*);
+    void onDeleteAll(void*);
+    void onEditFromMouse(wxMouseEvent&);
 
-	private:
-		void onPageChanged(Component::Notebook::Page& page);
+private:
+    Component::Notebook::Page* pPageList;
+    Component::Notebook::Page* pPageWeights;
+    Component::Notebook::Page* pPageOffsets;
+    Component::Notebook::Page* pPageEqual;
+    Component::Notebook::Page* pPageLess;
+    Component::Notebook::Page* pPageGreater;
+    Toolbox::InputSelector::BindingConstraint* pAllConstraints;
+    Data::BindingConstraint* pSelected;
 
-		void onSelectedConstraint(Data::BindingConstraint* contraint);
-		void onDblClickConstraint(Data::BindingConstraint* contraint);
+    BindingConstraintDataPanel* pDataPanelEqual;
+    BindingConstraintDataPanel* pDataPanelLess;
+    BindingConstraintDataPanel* pDataPanelGreater;
+    BindingConstraintWeightsPanel* pWeightsPanel;
+    BindingConstraintOffsetsPanel* pOffsetsPanel;
 
-		void onAdd(void*);
-		void onAddFromMouse(wxMouseEvent&);
-		void onDelete(void*);
-		void onDeleteFromMouse(wxMouseEvent&);
-		void onEdit(void*);
-		void onDeleteAll(void*);
-		void onEditFromMouse(wxMouseEvent&);
-		void onBuild(void*);
-		
-	private:
-		Component::Notebook::Page* pPageList;
-		Component::Notebook::Page* pPageWeights;
-		Component::Notebook::Page* pPageOffsets;
-		Component::Notebook::Page* pPageEqual;
-		Component::Notebook::Page* pPageLess;
-		Component::Notebook::Page* pPageGreater;
-		Toolbox::InputSelector::BindingConstraint* pAllConstraints;
-		Data::BindingConstraint* pSelected;
+public:
+    // Event table
+    DECLARE_EVENT_TABLE()
 
-		BindingConstraintDataPanel* pDataPanelEqual;
-		BindingConstraintDataPanel* pDataPanelLess;
-		BindingConstraintDataPanel* pDataPanelGreater;
-		BindingConstraintWeightsPanel* pWeightsPanel;
-		BindingConstraintOffsetsPanel* pOffsetsPanel;
-
-	public:
-		// Event table
-		DECLARE_EVENT_TABLE()
-
-	}; // class BindingConstraint
-
-
-
-
-
-
+}; // class BindingConstraint
 
 } // namespace Window
 } // namespace Antares

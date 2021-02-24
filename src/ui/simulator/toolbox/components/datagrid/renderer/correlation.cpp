@@ -31,8 +31,6 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares
 {
 namespace Component
@@ -41,171 +39,148 @@ namespace Datagrid
 {
 namespace Renderer
 {
+wxString CorrelationMatrix::IDatasource::name(uint i) const
+{
+    auto* a = this->at(i);
+    return (a) ? wxStringFromUTF8(a->name) : wxString();
+}
 
-	wxString CorrelationMatrix::IDatasource::name(uint i) const
-	{
-		auto* a = this->at(i);
-		return (a) ? wxStringFromUTF8(a->name) : wxString();
-	}
+CorrelationMatrix::CorrelationMatrix() : pMatrix(nullptr), pControl(nullptr)
+{
+}
 
+CorrelationMatrix::~CorrelationMatrix()
+{
+    destroyBoundEvents();
+}
 
-	CorrelationMatrix::CorrelationMatrix() :
-		pMatrix(nullptr),
-		pControl(nullptr)
-	{
-	}
+void CorrelationMatrix::onUpdate()
+{
+}
 
+int CorrelationMatrix::width() const
+{
+    return pSource ? pSource->size() : 0;
+}
 
-	CorrelationMatrix::~CorrelationMatrix()
-	{
-		destroyBoundEvents();
-	}
+int CorrelationMatrix::height() const
+{
+    return pSource ? pSource->size() : 0;
+}
 
+bool CorrelationMatrix::valid() const
+{
+    return (pSource and pSource->size() != 0) and pMatrix and !pMatrix->empty();
+}
 
-	void CorrelationMatrix::onUpdate()
-	{
-	}
+wxString CorrelationMatrix::columnCaption(int colIndx) const
+{
+    return (pSource) ? pSource->name((uint)colIndx) : wxString();
+}
 
+wxString CorrelationMatrix::rowCaption(int rowIndx) const
+{
+    return (pSource) ? wxString() << pSource->name((uint)rowIndx) : wxString();
+}
 
-	int CorrelationMatrix::width() const
-	{
-		return pSource ? pSource->size() : 0;
-	}
+IRenderer::CellStyle CorrelationMatrix::cellStyle(int col, int row) const
+{
+    double d = cellNumericValue(col, row);
+    if (d > 100. || d < -100.)
+        return IRenderer::cellStyleError;
 
+    if (pSource and pSource->cellStyle(col, row) == IRenderer::cellStyleCustom)
+        return IRenderer::cellStyleCustom;
+    if (col == row)
+        return IRenderer::cellStyleDisabled;
+    return (Yuni::Math::Zero(d))
+             ? ((row > col) ? IRenderer::cellStyleDefaultAlternateDisabled
+                            : IRenderer::cellStyleDefaultDisabled)
+             : ((row > col) ? IRenderer::cellStyleDefaultAlternate : IRenderer::cellStyleDefault);
+}
 
-	int CorrelationMatrix::height() const
-	{
-		return pSource ? pSource->size() : 0;
-	}
+wxColour CorrelationMatrix::cellBackgroundColor(int col, int row) const
+{
+    return pSource ? pSource->cellBackgroundColor(col, row) : wxColor();
+}
 
+wxColour CorrelationMatrix::cellTextColor(int col, int row) const
+{
+    return (Math::Zero(cellNumericValue(col, row)))
+             ? wxColour(100, 100, 100)
+             : (pSource ? pSource->cellTextColor(col, row) : wxColor());
+}
 
-	bool CorrelationMatrix::valid() const
-	{
-		return (pSource and pSource->size() != 0) and pMatrix and !pMatrix->empty();
-	}
+void CorrelationMatrix::datasource(const CorrelationMatrix::IDatasource::Ptr& s)
+{
+    pSource = s;
+}
 
+wxString CorrelationMatrix::cellValue(int x, int y) const
+{
+    if (x == y)
+        return wxT("100.0");
 
-	wxString CorrelationMatrix::columnCaption(int colIndx) const
-	{
-		return (pSource) ? pSource->name((uint) colIndx) : wxString();
-	}
+    if (pMatrix and !(!study))
+    {
+        assert(pMatrix->width <= study->areas.size());
+        assert(pMatrix->height <= study->areas.size());
+        const uint nX = pSource->areaIndex(x);
+        const uint nY = pSource->areaIndex(y);
+        if (nX < pMatrix->width and nY < pMatrix->height)
+            return DoubleToWxString(100 * pMatrix->entry[nX][nY]);
+    }
+    return wxEmptyString;
+}
 
+double CorrelationMatrix::cellNumericValue(int x, int y) const
+{
+    if (x == y)
+        return 1.;
+    if (pMatrix and !(!study))
+    {
+        assert(pMatrix->width <= study->areas.size());
+        assert(pMatrix->height <= study->areas.size());
+        const uint nX = pSource->areaIndex(x);
+        const uint nY = pSource->areaIndex(y);
+        if (nX < pMatrix->width and nY < pMatrix->height)
+            return pMatrix->entry[nX][nY] * 100.0;
+    }
+    return 0.;
+}
 
-	wxString CorrelationMatrix::rowCaption(int rowIndx) const
-	{
-		return (pSource) ? wxString() << pSource->name((uint) rowIndx) : wxString();
-	}
+bool CorrelationMatrix::cellValue(int x, int y, const String& value)
+{
+    if (x == y || !pMatrix || !pSource)
+        return false;
+    double d;
+    if (!value.to(d))
+        return false;
+    d /= 100.;
 
+    uint ax = pSource->areaIndex(x);
+    uint ay = pSource->areaIndex(y);
 
-	IRenderer::CellStyle CorrelationMatrix::cellStyle(int col, int row) const
-	{
-		double d = cellNumericValue(col, row);
-		if (d > 100. || d < -100.)
-			return IRenderer::cellStyleError;
+    if (ax < pMatrix->width and ay < pMatrix->height and not Math::Equals((*pMatrix)[ax][ay], d))
+    {
+        pMatrix->entry[ax][ay] = d;
+        pMatrix->entry[ay][ax] = d;
+        pMatrix->markAsModified();
+        MarkTheStudyAsModified(study);
+    }
 
-		if (pSource and pSource->cellStyle(col,row) == IRenderer::cellStyleCustom)
-			return IRenderer::cellStyleCustom;
-		if (col == row)
-			return IRenderer::cellStyleDisabled;
-		return (Yuni::Math::Zero(d))
-			? ((row > col)
-				? IRenderer::cellStyleDefaultAlternateDisabled : IRenderer::cellStyleDefaultDisabled)
-			: ((row > col)
-				? IRenderer::cellStyleDefaultAlternate : IRenderer::cellStyleDefault);
-	}
+    if (pControl)
+        pControl->Refresh();
+    return true;
+}
 
-
-	wxColour CorrelationMatrix::cellBackgroundColor(int col, int row) const
-	{
-		return pSource ? pSource->cellBackgroundColor(col,row) : wxColor();
-	}
-
-	wxColour CorrelationMatrix::cellTextColor(int col, int row) const
-	{
-		return (Math::Zero(cellNumericValue(col, row)))
-			? wxColour(100,100,100)
-			: (pSource ? pSource->cellTextColor(col,row) : wxColor());
-	}
-
-
-	void CorrelationMatrix::datasource(const CorrelationMatrix::IDatasource::Ptr& s)
-	{
-		pSource = s;
-	}
-
-
-	wxString CorrelationMatrix::cellValue(int x, int y) const
-	{
-		if (x == y)
-			return wxT("100.0");
-
-		if (pMatrix and !(!study))
-		{
-			assert(pMatrix->width  <= study->areas.size());
-			assert(pMatrix->height <= study->areas.size());
-			const uint nX = pSource->areaIndex(x);
-			const uint nY = pSource->areaIndex(y);
-			if (nX < pMatrix->width and nY < pMatrix->height)
-				return DoubleToWxString(100 * pMatrix->entry[nX][nY]);
-		}
-		return wxEmptyString;
-	}
-
-
-	double CorrelationMatrix::cellNumericValue(int x,int y) const
-	{
-		if (x == y)
-			return 1.;
-		if (pMatrix and !(!study))
-		{
-			assert(pMatrix->width  <= study->areas.size());
-			assert(pMatrix->height <= study->areas.size());
-			const uint nX = pSource->areaIndex(x);
-			const uint nY = pSource->areaIndex(y);
-			if (nX < pMatrix->width and nY < pMatrix->height)
-				return pMatrix->entry[nX][nY] * 100.0;
-		}
-		return 0.;
-	}
-
-
-	bool CorrelationMatrix::cellValue(int x, int y, const String& value)
-	{
-		if (x == y || !pMatrix || !pSource)
-			return false;
-		double d;
-		if (!value.to(d))
-			return false;
-		d /= 100.;
-
-		uint ax = pSource->areaIndex(x);
-		uint ay = pSource->areaIndex(y);
-
-		if (ax < pMatrix->width and ay < pMatrix->height and not Math::Equals((*pMatrix)[ax][ay], d))
-		{
-			pMatrix->entry[ax][ay] = d;
-			pMatrix->entry[ay][ax] = d;
-			pMatrix->markAsModified();
-			MarkTheStudyAsModified(study);
-		}
-
-		if (pControl)
-			pControl->Refresh();
-		return true;
-	}
-
-
-	void CorrelationMatrix::onStudyClosed()
-	{
-		pMatrix = nullptr;
-		pSource = nullptr;
-	}
-
-
-
+void CorrelationMatrix::onStudyClosed()
+{
+    pMatrix = nullptr;
+    pSource = nullptr;
+}
 
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
 } // namespace Antares
-

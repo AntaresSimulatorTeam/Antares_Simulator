@@ -25,172 +25,176 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_MAPNOTEBOOK_H__
-# define __ANTARES_TOOLBOX_COMPONENT_MAPNOTEBOOK_H__
+#define __ANTARES_TOOLBOX_COMPONENT_MAPNOTEBOOK_H__
 
 #include "notebook.h"
 #include <wx/textctrl.h>
 #include "antares/logs.h"
 namespace Antares
 {
-	namespace Component
-	{
+namespace Component
+{
+/*!
+** \brief MapNotebook
+*/
+class MapNotebook : public Notebook, public Yuni::IEventObserver<MapNotebook>
+{
+    friend class MapTabs;
 
-		/*!
-		** \brief MapNotebook
-		*/
-		class MapNotebook : public Notebook, public Yuni::IEventObserver<MapNotebook>
-		{
-			friend class MapTabs;
-		public:
-			//! \name Constructor & Destructor
-			//@{
-			/*!
-			** \brief Default constructor
-			** \param parent The parent window
-			*/
-			MapNotebook(wxWindow* parent, Notebook::Orientation orientation = orLeft);
-			~MapNotebook() { destroyBoundEvents();	}
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    ** \param parent The parent window
+    */
+    MapNotebook(wxWindow* parent, Notebook::Orientation orientation = orLeft);
+    ~MapNotebook()
+    {
+        destroyBoundEvents();
+    }
 
-			/*!
-			** \brief remove a page by its name
-			*/
-			void onMapLayerChanged(const wxString * text);
-			bool remove(Page* page);
+    /*!
+    ** \brief remove a page by its name
+    */
+    void onMapLayerChanged(const wxString* text);
+    bool remove(Page* page);
 
-		public:
-			class TabTextCtrl : public wxTextCtrl
-			{
-			public:
-				TabTextCtrl(Tabs * parent, wxWindowID id, Page* pageToRename) :
-					wxTextCtrl((wxWindow*)parent, id, pageToRename->caption(),wxPoint(pageToRename->pBoundingBox.x, pageToRename->pBoundingBox.y), pageToRename->pBoundingBox.GetSize(), wxTE_PROCESS_ENTER),
-					pPage(pageToRename),
-					pNotebook(&(parent->pNotebook))
-				{
-					SelectAll();
-				};
-				~TabTextCtrl()
-				{};
-				void OnTextEnter(wxCommandEvent& evt);
-				void SetPage(Page*p)
-				{
-					if (p != nullptr)
-					{
-						pPage = p;
-						SetValue(pPage->caption());
-						Move(pPage->pBoundingBox.x, pPage->pBoundingBox.y);
-						SetSize(pPage->pBoundingBox.GetSize());
-						SelectAll();
-						Show();
-					}
-					else
-						Hide();
-				}
-			private:
-				Page* pPage;
-				Notebook* pNotebook;
+public:
+    class TabTextCtrl : public wxTextCtrl
+    {
+    public:
+        TabTextCtrl(Tabs* parent, wxWindowID id, Page* pageToRename) :
+         wxTextCtrl((wxWindow*)parent,
+                    id,
+                    pageToRename->caption(),
+                    wxPoint(pageToRename->pBoundingBox.x, pageToRename->pBoundingBox.y),
+                    pageToRename->pBoundingBox.GetSize(),
+                    wxTE_PROCESS_ENTER),
+         pPage(pageToRename),
+         pNotebook(&(parent->pNotebook))
+        {
+            SelectAll();
+        };
+        ~TabTextCtrl(){};
+        void OnTextEnter(wxCommandEvent& evt);
+        void SetPage(Page* p)
+        {
+            if (p != nullptr)
+            {
+                pPage = p;
+                SetValue(pPage->caption());
+                Move(pPage->pBoundingBox.x, pPage->pBoundingBox.y);
+                SetSize(pPage->pBoundingBox.GetSize());
+                SelectAll();
+                Show();
+            }
+            else
+                Hide();
+        }
 
+    private:
+        Page* pPage;
+        Notebook* pNotebook;
+    };
 
-			};
+public:
+    class MapTabs : public Notebook::Tabs
+    {
+        friend class MapNotebook;
 
-		public:
-			class MapTabs : public Notebook::Tabs
-			{
-				friend class MapNotebook;
-			private:
-				class tabButton
-				{
-				public:
-					enum BtnType
-					{
-						btnLeft,
-						btnRight,
-						btnNone
-					};
-					tabButton(std::string imagePath, MapTabs* parentFrame, BtnType t = btnNone, char* hoverImagePath = nullptr);
-					~tabButton();
-					void drawButton(wxDC& dc, int x, int y);
-					void onMouseUp(wxMouseEvent&);
-					void onMouseEnter();
-					void onMouseLeave();
-					void onClick(wxMouseEvent &, BtnType t);
+    private:
+        class tabButton
+        {
+        public:
+            enum BtnType
+            {
+                btnLeft,
+                btnRight,
+                btnNone
+            };
+            tabButton(std::string imagePath,
+                      MapTabs* parentFrame,
+                      BtnType t = btnNone,
+                      char* hoverImagePath = nullptr);
+            ~tabButton();
+            void drawButton(wxDC& dc, int x, int y);
+            void onMouseUp(wxMouseEvent&);
+            void onMouseEnter();
+            void onMouseLeave();
+            void onClick(wxMouseEvent&, BtnType t);
 
-					BtnType type;
-					wxPoint coords;
-					wxBitmap* buttonImage;
-					wxBitmap* hoverImage;
-					wxRect* pBoundingBox;
-					MapTabs* parentTabFrame;
-					bool isVisible;
-					bool drawHover;
-				};
+            BtnType type;
+            wxPoint coords;
+            wxBitmap* buttonImage;
+            wxBitmap* hoverImage;
+            wxRect* pBoundingBox;
+            MapTabs* parentTabFrame;
+            bool isVisible;
+            bool drawHover;
+        };
 
-				int sizingOffset;
-				int undrawnLeftTabs;
-				int remainingRightTabs;
-				tabButton* rightTabScroll;
-				tabButton* leftTabScroll;
-				tabButton* addPageButton;
-				TabTextCtrl* pTabNameCtrl;
-				
+        int sizingOffset;
+        int undrawnLeftTabs;
+        int remainingRightTabs;
+        tabButton* rightTabScroll;
+        tabButton* leftTabScroll;
+        tabButton* addPageButton;
+        TabTextCtrl* pTabNameCtrl;
 
-			public:
+    public:
+        MapTabs(wxWindow* parent, Notebook& notebook);
 
-				MapTabs(wxWindow* parent, Notebook& notebook);
+        ~MapTabs()
+        {
+            delete rightTabScroll;
+            delete leftTabScroll;
+            delete addPageButton;
+        }
 
-				~MapTabs()
-				{
-					delete rightTabScroll;
-					delete leftTabScroll;
-					delete addPageButton;
-				}
+        void onDraw(wxPaintEvent&);
+        void drawOrientationTop(wxDC& dc);
+        //! \name Constructor & Destructor
+        //@{
+        /*!
+        ** \brief compute the offset and draw tab scrolling button if tabs don't fit in the window
+        ** \
+        */
+        void doSizing(wxDC& dc);
 
+        void drawItemTop(wxDC& dc, Page* page, int& pos, Notebook::Alignment align);
+        void onMouseUp(wxMouseEvent&);
+        void onMouseMove(wxMouseEvent&);
+        void onMouseLeave(wxMouseEvent&);
 
-				void onDraw(wxPaintEvent&);
-				void drawOrientationTop(wxDC & dc);
-				//! \name Constructor & Destructor
-				//@{
-				/*!
-				** \brief compute the offset and draw tab scrolling button if tabs don't fit in the window
-				** \
-				*/
-				void doSizing(wxDC& dc);
+        /*!
+        ** \brief Event: adding a page
+        */
+        Yuni::Event<void(int&, int&)> onMouseMotion;
 
-				void drawItemTop(wxDC& dc, Page* page, int& pos, Notebook::Alignment align);
-				void onMouseUp(wxMouseEvent&);
-				void onMouseMove(wxMouseEvent&);
-				void onMouseLeave(wxMouseEvent&);
+        DECLARE_EVENT_TABLE()
+    };
 
+private:
+    wxRect closePageBoundingBox;
 
-				/*!
-				** \brief Event: adding a page
-				*/
-				Yuni::Event<void(int&,int&)> onMouseMotion;
+public:
+    /*!
+    ** \brief Event: adding a page
+    */
+    Yuni::Event<> onAddPage;
+    /*!
+    ** \brief Event: Page deletion
+    **
+    ** Prototype :
+    ** \code
+    ** // page : The page to be deleted
+    ** \endcode
+    */
+    Yuni::Event<void(Page&)> onPageDelete;
 
+}; // class MapNotebook
 
-				DECLARE_EVENT_TABLE()
-			};
-
-		private:
-			wxRect closePageBoundingBox;
-
-		public:
-			/*!
-			** \brief Event: adding a page
-			*/
-			Yuni::Event<> onAddPage;
-			/*!
-			** \brief Event: Page deletion
-			**
-			** Prototype :
-			** \code
-			** // page : The page to be deleted
-			** \endcode
-			*/
-			Yuni::Event<void(Page&)> onPageDelete;
-
-
-		}; //class MapNotebook
-
-	}//namespace Component
-}//namespace Antares
+} // namespace Component
+} // namespace Antares
 #endif

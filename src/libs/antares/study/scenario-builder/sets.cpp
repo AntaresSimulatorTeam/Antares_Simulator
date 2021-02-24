@@ -31,9 +31,7 @@
 
 using namespace Yuni;
 
-#define SEP  IO::Separator
-
-
+#define SEP IO::Separator
 
 namespace Antares
 {
@@ -41,183 +39,165 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
+Sets::Sets() : pStudy(nullptr)
+{
+    inUpdaterMode = false;
+}
 
-	Sets::Sets() :
-		pStudy(nullptr)
-	{
-		inUpdaterMode=false;
-	}
+Sets::~Sets()
+{
+}
 
+void Sets::clear()
+{
+    assert(pStudy && "Invalid study");
+    pMap.clear();
+}
 
-	Sets::~Sets()
-	{
-	}
+bool Sets::loadFromStudy(Study& study)
+{
+    if (not study.usedByTheSolver)
+        logs.info() << "  Loading data for the scenario builder overlay";
 
+    // Reset / clear
+    pStudy = &study;
+    assert(pStudy && "Invalid study");
 
-	void Sets::clear()
-	{
-		assert(pStudy && "Invalid study");
-		pMap.clear();
-	}
+    // Loading from the INI file
+    String filename;
+    filename << study.folder << SEP << "settings" << SEP << "scenariobuilder.dat";
+    bool r = true;
+    // If the source code below is changed, please change it in loadFromINIFile too
+    if (study.header.version >= 360 && IO::Exists(filename))
+        r = internalLoadFromINIFile(filename);
+    else
+        pMap.clear();
 
+    if (pMap.empty())
+        createNew("Default Ruleset");
+    return r;
+}
 
-	bool Sets::loadFromStudy(Study& study)
-	{
-		if (not study.usedByTheSolver)
-			logs.info() << "  Loading data for the scenario builder overlay";
+Rules::Ptr Sets::createNew(const RulesScenarioName& name)
+{
+    assert(pStudy != nullptr);
 
-		// Reset / clear
-		pStudy = &study;
-		assert(pStudy && "Invalid study");
+    // Checking in a first time if the name already exists
+    RulesScenarioName id = name;
+    id.toLower();
+    if (exists(id))
+        return nullptr;
 
-		// Loading from the INI file
-		String filename;
-		filename << study.folder << SEP << "settings" << SEP << "scenariobuilder.dat";
-		bool r = true;
-		// If the source code below is changed, please change it in loadFromINIFile too
-		if (study.header.version >= 360 && IO::Exists(filename))
-			r = internalLoadFromINIFile(filename);
-		else
-			pMap.clear();
+    // The rule set does not exist, creating a new empty one
+    Rules::Ptr newRulesSet = new Rules();
+    newRulesSet->reset(*pStudy);
+    newRulesSet->pName = name;
+    pMap[id] = newRulesSet;
+    return newRulesSet;
+}
 
-		if (pMap.empty())
-			createNew("Default Ruleset");
-		return r;
-	}
+Rules::Ptr Sets::rename(const RulesScenarioName& lname, const RulesScenarioName& newname)
+{
+    // Checking in a first time if the name already exists
+    RulesScenarioName id = newname;
+    id.toLower();
+    if (id == lname)
+        return find(lname);
+    if (exists(id))
+        return nullptr;
 
+    Rules::Map::iterator i = pMap.find(lname);
+    if (i == pMap.end())
+        return nullptr;
+    Rules::Ptr rules = i->second;
+    pMap.erase(i);
+    rules->pName = newname;
+    pMap[id] = rules;
+    return rules;
+}
 
-	Rules::Ptr Sets::createNew(const RulesScenarioName& name)
-	{
-		assert(pStudy != nullptr);
+bool Sets::remove(const RulesScenarioName& lname)
+{
+    // Checking in a first time if the name already exists
+    if (lname.empty())
+        return true;
 
-		// Checking in a first time if the name already exists
-		RulesScenarioName id = name;
-		id.toLower();
-		if (exists(id))
-			return nullptr;
+    Rules::Map::iterator i = pMap.find(lname);
+    if (i == pMap.end())
+        return false;
+    pMap.erase(i);
+    return true;
+}
 
-		// The rule set does not exist, creating a new empty one
-		Rules::Ptr newRulesSet = new Rules();
-		newRulesSet->reset(*pStudy);
-		newRulesSet->pName = name;
-		pMap[id] = newRulesSet;
-		return newRulesSet;
-	}
+bool Sets::internalSaveToIniFile(const AnyString& filename) const
+{
+    // Logs
+    {
+        logs.info() << "  > Exporting scenario builder data";
+        logs.debug() << "[scenario-builder] writing " << filename;
+    }
 
+    // Open the file
+    IO::File::Stream file;
+    if (not file.openRW(filename))
+    {
+        logs.error() << "Impossible to write " << filename;
+        return false;
+    }
 
-	Rules::Ptr  Sets::rename(const RulesScenarioName& lname, const RulesScenarioName& newname)
-	{
-		// Checking in a first time if the name already exists
-		RulesScenarioName id = newname;
-		id.toLower();
-		if (id == lname)
-			return find(lname);
-		if (exists(id))
-			return nullptr;
+    // There is no ruleset. Trivial. Aborting.
+    if (pMap.empty())
+        return true;
 
-		Rules::Map::iterator i = pMap.find(lname);
-		if (i == pMap.end())
-			return nullptr;
-		Rules::Ptr rules = i->second;
-		pMap.erase(i);
-		rules->pName = newname;
-		pMap[id] = rules;
-		return rules;
-	}
+    const Rules::Map::const_iterator end = pMap.end();
+    for (Rules::Map::const_iterator i = pMap.begin(); i != end; ++i)
+    {
+        // Alias to the current ruleset
+        // Export the informations of the current ruleset
+        const Rules::Ptr& ruleset = i->second;
+        if (!(!ruleset))
+            ruleset->saveToINIFile(*pStudy, file);
+    }
+    return true;
+}
 
+bool Sets::internalLoadFromINIFile(const AnyString& filename)
+{
+    // Logs
+    logs.info() << "  > loading scenario builder data from " << filename;
+    // Cleaning
+    pMap.clear();
 
-	bool  Sets::remove(const RulesScenarioName& lname)
-	{
-		// Checking in a first time if the name already exists
-		if (lname.empty())
-			return true;
+    IniFile ini;
+    if (not ini.open(filename))
+        return false;
 
-		Rules::Map::iterator i = pMap.find(lname);
-		if (i == pMap.end())
-			return false;
-		pMap.erase(i);
-		return true;
-	}
+    ini.each([&](const IniFile::Section& section) {
+        if (section.name.empty())
+            return;
 
+        RulesScenarioName name = section.name;
+        name.trim(" \t");
+        if (!name)
+            return;
 
-	bool Sets::internalSaveToIniFile(const AnyString& filename) const
-	{
-		// Logs
-		{
-			logs.info() << "  > Exporting scenario builder data";
-			logs.debug() << "[scenario-builder] writing " << filename;
-		}
+        // Create a new ruleset
+        Rules::Ptr rulesetptr = createNew(name);
+        Rules& ruleset = *rulesetptr;
+        AreaName::Vector instrs;
 
-		// Open the file
-		IO::File::Stream file;
-		if (not file.openRW(filename))
-		{
-			logs.error() << "Impossible to write " << filename;
-			return false;
-		}
+        for (auto* p = section.firstProperty; p != nullptr; p = p->next)
+        {
+            p->key.split(instrs, ",", true, false);
+            if (instrs.size() > 2)
+                ruleset.loadFromInstrs(*pStudy, instrs, p->value, inUpdaterMode);
+        }
 
-		// There is no ruleset. Trivial. Aborting.
-		if (pMap.empty())
-			return true;
-
-		const Rules::Map::const_iterator end = pMap.end();
-		for (Rules::Map::const_iterator i = pMap.begin(); i != end; ++i)
-		{
-			// Alias to the current ruleset
-			// Export the informations of the current ruleset
-			const Rules::Ptr& ruleset = i->second;
-			if (!(!ruleset))
-				ruleset->saveToINIFile(*pStudy, file);
-		}
-		return true;
-	}
-
-
-	bool Sets::internalLoadFromINIFile(const AnyString& filename)
-	{
-		// Logs
-		logs.info() << "  > loading scenario builder data from " << filename;
-		// Cleaning
-		pMap.clear();
-
-		IniFile ini;
-		if (not ini.open(filename))
-			return false;
-
-		ini.each([&] (const IniFile::Section& section)
-		{
-			if (section.name.empty())
-				return;
-
-			RulesScenarioName name = section.name;
-			name.trim(" \t");
-			if (!name)
-				return;
-
-			// Create a new ruleset
-			Rules::Ptr  rulesetptr = createNew(name);
-			Rules& ruleset = *rulesetptr;
-			AreaName::Vector instrs;
-
-			for (auto* p = section.firstProperty; p != nullptr; p = p->next)
-			{
-				uint value = p->value.to<uint>();
-				if (value)
-				{
-					p->key.split(instrs, ",", true, false);
-					if (instrs.size() > 2)
-						ruleset.loadFromInstrs(*pStudy, instrs, value, inUpdaterMode);
-				}
-			}
-		});
-		return true;
-	}
-
-
-
-
+        ruleset.sendWarningsForDisabledClusters();
+    });
+    return true;
+}
 
 } // namespace ScenarioBuilder
 } // namespace Data
 } // namespace Antares
-

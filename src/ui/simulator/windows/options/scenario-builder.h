@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef _ANTARES_APPLICATION_WINDOWS_OPTIONS_SCENARIO_BUILDER_H__
-# define _ANTARES_APPLICATION_WINDOWS_OPTIONS_SCENARIO_BUILDER_H__
+#define _ANTARES_APPLICATION_WINDOWS_OPTIONS_SCENARIO_BUILDER_H__
 
-# include "scenario-builder/scenario-builder.h"
+#include "scenario-builder/scenario-builder.h"
 
 #endif // _ANTARES_APPLICATION_WINDOWS_OPTIONS_SCENARIO_BUILDER_H__

@@ -32,67 +32,54 @@
 #include <ui/common/dispatcher.h>
 #include "internal-data.h"
 
-
 using namespace Yuni;
-
 
 namespace Antares
 {
 namespace Forms
 {
+static uint stackCount = 0;
 
-	static uint stackCount = 0;
+static void DelayedGUIEndUpdate()
+{
+    GUIEndUpdate();
+}
 
+void ApplWnd::showWIP()
+{
+    GUIBeginUpdate();
+    MemoryFlushBeginUpdate();
+    if (!stackCount++)
+    {
+        pData->wipEnabled = true;
+        // The operation must not be delayed here
+        if (pData->wipPanel)
+            pData->wipPanel->Refresh();
+    }
+}
 
-	static void DelayedGUIEndUpdate()
-	{
-		GUIEndUpdate();
-	}
+void ApplWnd::hideWIP()
+{
+    assert(stackCount > 0);
 
+    if (stackCount and !--stackCount)
+    {
+        pData->wipEnabled = false;
+        // The operation must not be delayed here
+        if (pData->wipPanel)
+            pData->wipPanel->Refresh();
+    }
+    MemoryFlushEndUpdate();
 
-
-
-
-
-	void ApplWnd::showWIP()
-	{
-		GUIBeginUpdate();
-		MemoryFlushBeginUpdate();
-		if (!stackCount++)
-		{
-			pData->wipEnabled = true;
-			// The operation must not be delayed here
-			if (pData->wipPanel)
-				pData->wipPanel->Refresh();
-		}
-	}
-
-
-	void ApplWnd::hideWIP()
-	{
-		assert(stackCount > 0);
-
-		if (stackCount and !--stackCount)
-		{
-			pData->wipEnabled = false;
-			// The operation must not be delayed here
-			if (pData->wipPanel)
-				pData->wipPanel->Refresh();
-		}
-		MemoryFlushEndUpdate();
-
-		if (GUILockRefCount() == 1)
-		{
-			Yuni::Bind<void ()> callback;
-			callback.bind(&DelayedGUIEndUpdate);
-			Dispatcher::GUI::Post(callback, 10 /*ms, arbitrary*/);
-		}
-		else
-			GUIEndUpdate();
-	}
-
-
-
+    if (GUILockRefCount() == 1)
+    {
+        Yuni::Bind<void()> callback;
+        callback.bind(&DelayedGUIEndUpdate);
+        Dispatcher::GUI::Post(callback, 10 /*ms, arbitrary*/);
+    }
+    else
+        GUIEndUpdate();
+}
 
 } // namespace Forms
 } // namespace Antares

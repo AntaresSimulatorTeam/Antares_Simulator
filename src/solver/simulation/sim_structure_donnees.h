@@ -25,139 +25,110 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_SIMULATION_DATA_STRUCTS_H__
-# define __SOLVER_SIMULATION_DATA_STRUCTS_H__
+#define __SOLVER_SIMULATION_DATA_STRUCTS_H__
 
-# include <setjmp.h>
-
-
-
-
+#include <setjmp.h>
 
 typedef struct
 {
-	/* donnees communes adequation et economie */
-	/*-----------------------------------------*/
-	/* hydraulique si generation en ligne */
-	double * PuissanceHydrauliqueFilMoyenne;
-	double * PuissanceHydrauliqueFilVariance;
-	double * CoefficientHydraulicite;
-	double * ProbabiliteHydraulicite;
+    /* donnees communes adequation et economie */
+    /*-----------------------------------------*/
+    /* hydraulique si generation en ligne */
+    double* PuissanceHydrauliqueFilMoyenne;
+    double* PuissanceHydrauliqueFilVariance;
+    double* CoefficientHydraulicite;
+    double* ProbabiliteHydraulicite;
 } DONNEES_PAR_PAYS;
 
-
-
-
-
 typedef struct
 {
-	int * ThermiqueParPalier;
-	int   Hydraulique;
-	int   Eolien;
-	int   Consommation;
-	int   Solar;
+    int* ThermiqueParPalier;
+    int Hydraulique;
+    int Eolien;
+    int Consommation;
+    int Solar;
 } NUMERO_CHRONIQUES_TIREES_PAR_PAYS;
 
-
-
 typedef struct
 {
-	double *                         HydrauliqueModulableQuotidien ; /* indice par jour */
-	double *                         AleaCoutDeProductionParPalier; /* epsilon sur le cout de production */
-	double *						 NiveauxReservoirsDebutJours;	// Niveaux (quotidiens) du reservoir de début de jour (en cas de gestion des reservoirs).
-	double *						 NiveauxReservoirsFinJours;		// Niveaux (quotidiens) du reservoir de fin de jour (en cas de gestion des reservoirs).
+    double* HydrauliqueModulableQuotidien; /* indice par jour */
+    double* AleaCoutDeProductionParPalier; /* epsilon sur le cout de production */
+    double* NiveauxReservoirsDebutJours;   // Niveaux (quotidiens) du reservoir de début de jour (en
+                                           // cas de gestion des reservoirs).
+    double* NiveauxReservoirsFinJours; // Niveaux (quotidiens) du reservoir de fin de jour (en cas
+                                       // de gestion des reservoirs).
 } VALEURS_GENEREES_PAR_PAYS;
 
-
-
-
-
 typedef struct
 {
-	double * Horaire;
+    double* Horaire;
 } PRODUCTION_THERMIQUE;
 
 typedef struct
 {
-	double *                DefaillancePositive; /* horaire */
-	double *                DefaillanceNegative; /* horaire */
-	double *                DefaillanceEnReserve;/* horaire */
-	double *                Turbinage;           /* horaire */
-	double *                Solde;               /* horaire */
-	double *                CoutMarginal;        /* horaire */
-	PRODUCTION_THERMIQUE ** ProductionThermique; /* indice par paliers */
-} PAYS_PAR_ANNEE_SIMULEE ;
-
-
+    double* DefaillancePositive;                /* horaire */
+    double* DefaillanceNegative;                /* horaire */
+    double* DefaillanceEnReserve;               /* horaire */
+    double* Turbinage;                          /* horaire */
+    double* Solde;                              /* horaire */
+    double* CoutMarginal;                       /* horaire */
+    PRODUCTION_THERMIQUE** ProductionThermique; /* indice par paliers */
+} PAYS_PAR_ANNEE_SIMULEE;
 
 typedef struct
 {
-	double * ParPalier; /* indice par palier */
-	double * Minimum;
-	int    * MinimumNo;
-	double * Maximum;
-	int    * MaximumNo;
-	double * StdDev;
-	double * Annuel; /*Productions annuelles*/
+    double* ParPalier; /* indice par palier */
+    double* Minimum;
+    int* MinimumNo;
+    double* Maximum;
+    int* MaximumNo;
+    double* StdDev;
+    double* Annuel; /*Productions annuelles*/
 } PRODUCTION_THERMIQUE_MOYENNE;
 
-
-
 typedef struct
 {
-	double * VariableDuale;
+    double* VariableDuale;
 } CONTCOUPL_PAR_ANNEE_SIMULEE;
 
-
-
 typedef struct
 {
-	double *                       VariablesDualesMoyennes;
-	CONTCOUPL_PAR_ANNEE_SIMULEE ** ParSituation;
+    double* VariablesDualesMoyennes;
+    CONTCOUPL_PAR_ANNEE_SIMULEE** ParSituation;
 } RESULTATS_PAR_CONTRAINTE_COUPLANTE;
 
-
-
 typedef struct
 {
-	double * VariableDuale;
+    double* VariableDuale;
 } INTERCO_PAR_ANNEE_SIMULEE;
 
-
-
 typedef struct
 {
-	double *                     TransitMoyen;
-	double *                     TransitMinimum;
-	int   *                      TransitMinimumNo;
-	double *                     TransitMaximum;
-	int   *                      TransitMaximumNo;
-	double *                     TransitStdDev;
-	double *                     TransitMoyenRecalculQuadratique;
-	double *                     VariablesDualesMoyennes;
-	double *                     TransitAnnuel;
-	INTERCO_PAR_ANNEE_SIMULEE ** ParSituation;
-	double *                     RenteHoraire;
+    double* TransitMoyen;
+    double* TransitMinimum;
+    int* TransitMinimumNo;
+    double* TransitMaximum;
+    int* TransitMaximumNo;
+    double* TransitStdDev;
+    double* TransitMoyenRecalculQuadratique;
+    double* VariablesDualesMoyennes;
+    double* TransitAnnuel;
+    INTERCO_PAR_ANNEE_SIMULEE** ParSituation;
+    double* RenteHoraire;
 } RESULTATS_PAR_INTERCONNEXION;
 
-
-
 typedef struct
 {
-	double * ParLigne;
+    double* ParLigne;
 } MATRICE_2D;
 
-
 typedef struct
 {
-	int    AnomalieDetectee;
-	jmp_buf Env;
+    int AnomalieDetectee;
+    jmp_buf Env;
 } COMPTE_RENDU;
-
-
-
 
 /* Old define */
 #define DEFINITION_STRUCTURES_DONNEES
-
 
 #endif /* __SOLVER_SIMULATION_DATA_STRUCTS_H__ */

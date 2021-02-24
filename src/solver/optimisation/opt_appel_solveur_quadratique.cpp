@@ -25,31 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include "opt_structure_probleme_a_resoudre.h"
 
 #include "../simulation/simulation.h"
@@ -62,145 +37,140 @@
 
 extern "C"
 {
-# include "../ext/Sirius_Solver/pointInterieur/pi_define.h"
-# include "../ext/Sirius_Solver/pointInterieur/pi_definition_arguments.h"
-# include "../ext/Sirius_Solver/pointInterieur/pi_fonctions.h"
+#include "pi_define.h"
+#include "pi_definition_arguments.h"
+#include "pi_fonctions.h"
 }
 
 #include <antares/logs.h>
 
 using namespace Antares;
 
-
-bool OPT_AppelDuSolveurQuadratique( PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre, const int PdtHebdo)
+bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                                   const int PdtHebdo)
 {
-	int Var; double * pt;
-	double ToleranceSurLAdmissibilite   ; int ChoixToleranceParDefautSurLAdmissibilite;
-	double ToleranceSurLaStationnarite  ; int ChoixToleranceParDefautSurLaStationnarite;
-	double ToleranceSurLaComplementarite; int ChoixToleranceParDefautSurLaComplementarite;
+    int Var;
+    double* pt;
+    double ToleranceSurLAdmissibilite;
+    int ChoixToleranceParDefautSurLAdmissibilite;
+    double ToleranceSurLaStationnarite;
+    int ChoixToleranceParDefautSurLaStationnarite;
+    double ToleranceSurLaComplementarite;
+    int ChoixToleranceParDefautSurLaComplementarite;
 
-	PROBLEME_POINT_INTERIEUR Probleme;
+    PROBLEME_POINT_INTERIEUR Probleme;
 
-	
-	
+    ToleranceSurLAdmissibilite = 1.e-5;
+    ChoixToleranceParDefautSurLAdmissibilite = OUI_PI;
 
-	
-	
+    ToleranceSurLaStationnarite = 1.e-5;
+    ChoixToleranceParDefautSurLaStationnarite = OUI_PI;
 
-	ToleranceSurLAdmissibilite               = 1.e-5;
-	ChoixToleranceParDefautSurLAdmissibilite = OUI_PI;
+    ToleranceSurLaComplementarite = 1.e-5;
+    ChoixToleranceParDefautSurLaComplementarite = OUI_PI;
 
-	ToleranceSurLaStationnarite               = 1.e-5;
-	ChoixToleranceParDefautSurLaStationnarite = OUI_PI;
+    Probleme.NombreMaxDIterations = -1;
+    Probleme.CoutQuadratique = ProblemeAResoudre->CoutQuadratique;
+    Probleme.CoutLineaire = ProblemeAResoudre->CoutLineaire;
+    Probleme.X = ProblemeAResoudre->X;
+    Probleme.Xmin = ProblemeAResoudre->Xmin;
+    Probleme.Xmax = ProblemeAResoudre->Xmax;
+    Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
+    Probleme.TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
 
-	ToleranceSurLaComplementarite               = 1.e-5;
-	ChoixToleranceParDefautSurLaComplementarite = OUI_PI;
+    Probleme.VariableBinaire = (char*)ProblemeAResoudre->CoutsReduits;
 
-	Probleme.NombreMaxDIterations = -1; 
-	Probleme.CoutQuadratique   = ProblemeAResoudre->CoutQuadratique;
-	Probleme.CoutLineaire      = ProblemeAResoudre->CoutLineaire;
-	Probleme.X                 = ProblemeAResoudre->X;
-	Probleme.Xmin              = ProblemeAResoudre->Xmin;
-	Probleme.Xmax              = ProblemeAResoudre->Xmax;
-	Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
-	Probleme.TypeDeVariable    = ProblemeAResoudre->TypeDeVariable;
+    Probleme.NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
+    Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne;
+    Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes;
+    Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes;
+    Probleme.CoefficientsDeLaMatriceDesContraintes
+      = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes;
+    Probleme.Sens = ProblemeAResoudre->Sens;
+    Probleme.SecondMembre = ProblemeAResoudre->SecondMembre;
 
-	
-	
-	
-	
-	
-	Probleme.VariableBinaire   = (char *) ProblemeAResoudre->CoutsReduits;
+    Probleme.AffichageDesTraces = NON_PI;
 
-	Probleme.NombreDeContraintes                   = ProblemeAResoudre->NombreDeContraintes;
-	Probleme.IndicesDebutDeLigne                   = ProblemeAResoudre->IndicesDebutDeLigne;
-	Probleme.NombreDeTermesDesLignes               = ProblemeAResoudre->NombreDeTermesDesLignes;
-	Probleme.IndicesColonnes                       = ProblemeAResoudre->IndicesColonnes;
-	Probleme.CoefficientsDeLaMatriceDesContraintes = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes;
-	Probleme.Sens                                  = ProblemeAResoudre->Sens;
-	Probleme.SecondMembre                          = ProblemeAResoudre->SecondMembre;
+    Probleme.UtiliserLaToleranceDAdmissibiliteParDefaut = ChoixToleranceParDefautSurLAdmissibilite;
+    Probleme.ToleranceDAdmissibilite = ToleranceSurLAdmissibilite;
 
-	Probleme.AffichageDesTraces = NON_PI;
+    Probleme.UtiliserLaToleranceDeStationnariteParDefaut
+      = ChoixToleranceParDefautSurLaStationnarite;
+    Probleme.ToleranceDeStationnarite = ToleranceSurLaStationnarite;
 
-	Probleme.UtiliserLaToleranceDAdmissibiliteParDefaut = ChoixToleranceParDefautSurLAdmissibilite;
-	Probleme.ToleranceDAdmissibilite                    = ToleranceSurLAdmissibilite;
+    Probleme.UtiliserLaToleranceDeComplementariteParDefaut
+      = ChoixToleranceParDefautSurLaComplementarite;
+    Probleme.ToleranceDeComplementarite = ToleranceSurLaComplementarite;
 
-	Probleme.UtiliserLaToleranceDeStationnariteParDefaut = ChoixToleranceParDefautSurLaStationnarite;
-	Probleme.ToleranceDeStationnarite                    = ToleranceSurLaStationnarite;
+    Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes;
 
-	Probleme.UtiliserLaToleranceDeComplementariteParDefaut = ChoixToleranceParDefautSurLaComplementarite;
-	Probleme.ToleranceDeComplementarite                    = ToleranceSurLaComplementarite;
+    Probleme.CoutsMarginauxDesContraintesDeBorneInf = ProblemeAResoudre->CoutsReduits;
+    Probleme.CoutsMarginauxDesContraintesDeBorneSup = ProblemeAResoudre->CoutsReduits;
 
-	Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes;
+    PI_Quamin(&Probleme);
 
-	Probleme.CoutsMarginauxDesContraintesDeBorneInf = ProblemeAResoudre->CoutsReduits;
-	Probleme.CoutsMarginauxDesContraintesDeBorneSup = ProblemeAResoudre->CoutsReduits;
+    ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
+    if (ProblemeAResoudre->ExistenceDUneSolution == OUI_PI)
+    {
+        for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+        {
+            pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
+            if (pt)
+                *pt = ProblemeAResoudre->X[Var];
+        }
 
-	PI_Quamin(&Probleme);
+        return true;
+    }
+    else
+    {
+        logs.warning() << "Quadratic Optimisation: No solution, hour " << PdtHebdo;
 
-	ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
-	if (ProblemeAResoudre->ExistenceDUneSolution == OUI_PI)
-	{
-		
-		for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
-		{
-			pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
-			if (pt)
-				*pt = ProblemeAResoudre->X[Var];
-		}
+        for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+        {
+            pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
+            if (pt)
+                *pt = std::numeric_limits<double>::quiet_NaN();
+        }
 
-		return true;
-	}
-	else
-	{
-		logs.warning() << "Quadratic Optimisation: No solution, hour " << PdtHebdo;
+#ifndef NDEBUG
 
-		
-		
-		for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
-		{
-			pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
-			if (pt)
-				*pt = std::numeric_limits<double>::quiet_NaN();
-		}
+        {
+            logs.info();
 
-		# ifndef NDEBUG
-		
-		
-		{
-			logs.info(); 
+            logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
 
-			
-			
-			logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+            logs.info() << "Here is the trace:";
+            for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+            {
+                logs.info().appendFormat("Variable %ld cout lineaire %e  cout quadratique %e",
+                                         Var,
+                                         ProblemeAResoudre->CoutLineaire[Var],
+                                         ProblemeAResoudre->CoutQuadratique[Var]);
+            }
+            for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
+            {
+                logs.info().appendFormat("Constraint %ld sens %c B %e",
+                                         Cnt,
+                                         ProblemeAResoudre->Sens[Cnt],
+                                         ProblemeAResoudre->SecondMembre[Cnt]);
 
-			logs.info() << "Here is the trace:";
-			for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
-			{
-				logs.info().appendFormat("Variable %ld cout lineaire %e  cout quadratique %e",
-					Var,ProblemeAResoudre->CoutLineaire[Var],ProblemeAResoudre->CoutQuadratique[Var]);
-			}
-			for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
-			{
-				logs.info().appendFormat("Constraint %ld sens %c B %e",
-					Cnt,ProblemeAResoudre->Sens[Cnt],ProblemeAResoudre->SecondMembre[Cnt]);
+                int il = ProblemeAResoudre->IndicesDebutDeLigne[Cnt];
+                int ilMax = il + ProblemeAResoudre->NombreDeTermesDesLignes[Cnt];
+                for (; il < ilMax; ++il)
+                {
+                    Var = ProblemeAResoudre->IndicesColonnes[il];
+                    logs.info().appendFormat(
+                      "      coeff %e var %ld xmin %e xmax %e type %ld",
+                      ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il],
+                      Var,
+                      ProblemeAResoudre->Xmin[Var],
+                      ProblemeAResoudre->Xmax[Var],
+                      ProblemeAResoudre->TypeDeVariable[Var]);
+                }
+            }
+        }
+#endif
 
-				int il = ProblemeAResoudre->IndicesDebutDeLigne[Cnt];
-				int ilMax = il + ProblemeAResoudre->NombreDeTermesDesLignes[Cnt];
-				for (; il < ilMax; ++il)
-				{
-					Var = ProblemeAResoudre->IndicesColonnes[il];
-					logs.info().appendFormat("      coeff %e var %ld xmin %e xmax %e type %ld",
-						ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il],
-						Var,ProblemeAResoudre->Xmin[Var],ProblemeAResoudre->Xmax[Var],ProblemeAResoudre->TypeDeVariable[Var]);
-				}
-			}
-		}
-		# endif
-
-		return false;
-	}
+        return false;
+    }
 }
-
-
-

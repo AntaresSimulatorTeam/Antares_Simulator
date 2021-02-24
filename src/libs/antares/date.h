@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_DATE_H__
-# define __ANTARES_LIBS_DATE_H__
+#define __ANTARES_LIBS_DATE_H__
 
-# include "date/date.h"
+#include "date/date.h"
 
 #endif // __ANTARES_CORE_DATE_H__

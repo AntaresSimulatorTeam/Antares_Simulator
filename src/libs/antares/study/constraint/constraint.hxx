@@ -25,170 +25,144 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_CONSTRAINT_CONSTRAINT_HXX__
-# define __ANTARES_LIBS_STUDY_CONSTRAINT_CONSTRAINT_HXX__
+#define __ANTARES_LIBS_STUDY_CONSTRAINT_CONSTRAINT_HXX__
 
-# include "../../utils.h"
-
-
+#include "../../utils.h"
 
 namespace Antares
 {
 namespace Data
 {
+inline const ConstraintName& BindingConstraint::name() const
+{
+    return pName;
+}
 
-	inline const ConstraintName& BindingConstraint::name() const
-	{
-		return pName;
-	}
+inline const ConstraintName& BindingConstraint::id() const
+{
+    return pID;
+}
 
+inline const YString& BindingConstraint::comments() const
+{
+    return pComments;
+}
 
-	inline const ConstraintName& BindingConstraint::id() const
-	{
-		return pID;
-	}
+inline void BindingConstraint::comments(const AnyString& newcomments)
+{
+    pComments = newcomments;
+}
 
+inline const Matrix<>& BindingConstraint::matrix() const
+{
+    return pValues;
+}
 
-	inline const YString& BindingConstraint::comments() const
-	{
-		return pComments;
-	}
+inline Matrix<>& BindingConstraint::matrix()
+{
+    return pValues;
+}
 
+inline uint BindingConstraint::linkCount() const
+{
+    return (uint)pLinkWeights.size();
+}
 
-	inline void BindingConstraint::comments(const AnyString& newcomments)
-	{
-		pComments = newcomments;
-	}
+inline uint BindingConstraint::clusterCount() const
+{
+    return (uint)pClusterWeights.size();
+}
 
+inline bool BindingConstraint::enabled() const
+{
+    return pEnabled;
+}
 
-	inline const Matrix<>& BindingConstraint::matrix() const
-	{
-		return pValues;
-	}
+inline BindingConstraint::Operator BindingConstraint::operatorType() const
+{
+    return pOperator;
+}
 
+inline BindingConstraint::Type BindingConstraint::type() const
+{
+    return pType;
+}
 
-	inline Matrix<>& BindingConstraint::matrix()
-	{
-		return pValues;
-	}
+inline void BindingConstraint::mutateTypeWithoutCheck(Type t)
+{
+    if (t != typeUnknown and t != typeMax)
+        pType = t;
+}
 
+inline BindingConstraint::iterator BindingConstraint::begin()
+{
+    return pLinkWeights.begin();
+}
 
-	inline uint BindingConstraint::linkCount() const
-	{
-		return (uint) pLinkWeights.size();
-	}
+inline BindingConstraint::iterator BindingConstraint::end()
+{
+    return pLinkWeights.end();
+}
 
-	inline uint BindingConstraint::clusterCount() const
-	{
-		return (uint)pClusterWeights.size();
-	}
+inline BindingConstraint::const_iterator BindingConstraint::begin() const
+{
+    return pLinkWeights.begin();
+}
 
+inline BindingConstraint::const_iterator BindingConstraint::end() const
+{
+    return pLinkWeights.end();
+}
 
-	inline bool BindingConstraint::enabled() const
-	{
-		return pEnabled;
-	}
+inline uint BindConstList::size() const
+{
+    return (uint)pList.size();
+}
 
+inline bool BindConstList::empty() const
+{
+    return pList.empty();
+}
 
-	inline BindingConstraint::Operator BindingConstraint::operatorType() const
-	{
-		return pOperator;
-	}
+template<class PredicateT>
+inline void BindConstList::each(const PredicateT& predicate)
+{
+    uint count = (uint)pList.size();
+    for (uint i = 0; i != count; ++i)
+        predicate(*(pList[i]));
+}
 
+template<class PredicateT>
+inline void BindConstList::each(const PredicateT& predicate) const
+{
+    uint count = (uint)pList.size();
+    for (uint i = 0; i != count; ++i)
+        predicate(*(pList[i]));
+}
 
-	inline BindingConstraint::Type BindingConstraint::type() const
-	{
-		return pType;
-	}
+template<class PredicateT>
+inline void BindConstList::eachEnabled(const PredicateT& predicate)
+{
+    uint count = (uint)pList.size();
+    for (uint i = 0; i != count; ++i)
+    {
+        auto& constraint = *(pList[i]);
+        if (constraint.enabled())
+            predicate(constraint);
+    }
+}
 
-
-	inline void BindingConstraint::mutateTypeWithoutCheck(Type t)
-	{
-		if (t != typeUnknown and t != typeMax)
-			pType = t;
-	}
-
-
-	inline BindingConstraint::iterator BindingConstraint::begin()
-	{
-		return pLinkWeights.begin();
-	}
-
-	inline BindingConstraint::iterator BindingConstraint::end()
-	{
-		return pLinkWeights.end();
-	}
-
-	inline BindingConstraint::const_iterator BindingConstraint::begin() const
-	{
-		return pLinkWeights.begin();
-	}
-
-	inline BindingConstraint::const_iterator BindingConstraint::end() const
-	{
-		return pLinkWeights.end();
-	}
-
-
-
-
-	inline uint BindConstList::size() const
-	{
-		return (uint) pList.size();
-	}
-
-
-	inline bool BindConstList::empty() const
-	{
-		return pList.empty();
-	}
-
-
-
-	template<class PredicateT>
-	inline void BindConstList::each(const PredicateT& predicate)
-	{
-		uint count = (uint) pList.size();
-		for (uint i = 0; i != count; ++i)
-			predicate(*(pList[i]));
-	}
-
-
-	template<class PredicateT>
-	inline void BindConstList::each(const PredicateT& predicate) const
-	{
-		uint count = (uint) pList.size();
-		for (uint i = 0; i != count; ++i)
-			predicate(*(pList[i]));
-	}
-
-
-	template<class PredicateT>
-	inline void BindConstList::eachEnabled(const PredicateT& predicate)
-	{
-		uint count = (uint) pList.size();
-		for (uint i = 0; i != count; ++i)
-		{
-			auto& constraint = *(pList[i]);
-			if (constraint.enabled())
-				predicate(constraint);
-		}
-	}
-
-
-	template<class PredicateT>
-	inline void BindConstList::eachEnabled(const PredicateT& predicate) const
-	{
-		uint count = (uint) pList.size();
-		for (uint i = 0; i != count; ++i)
-		{
-			auto& constraint = *(pList[i]);
-			if (constraint.enabled())
-				predicate(constraint);
-		}
-	}
-
-
-
+template<class PredicateT>
+inline void BindConstList::eachEnabled(const PredicateT& predicate) const
+{
+    uint count = (uint)pList.size();
+    for (uint i = 0; i != count; ++i)
+    {
+        auto& constraint = *(pList[i]);
+        if (constraint.enabled())
+            predicate(constraint);
+    }
+}
 
 } // namespace Data
 } // namespace Antares

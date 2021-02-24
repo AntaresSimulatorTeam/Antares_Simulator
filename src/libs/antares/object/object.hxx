@@ -25,44 +25,35 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIB_OBJECT_HXX__
-# define __ANTARES_LIB_OBJECT_HXX__
-
+#define __ANTARES_LIB_OBJECT_HXX__
 
 namespace Antares
 {
+inline const Ref& IObject::oid() const
+{
+    return pOID;
+}
 
-	inline const Ref& IObject::oid() const
-	{
-		return pOID;
-	}
+inline YString IObject::caption() const
+{
+    ThreadingPolicy::MutexLocker locker(*this);
+    return pCaption;
+}
 
+inline bool IObject::enabled() const
+{
+    return (pEnabled != 0);
+}
 
-	inline YString IObject::caption() const
-	{
-		ThreadingPolicy::MutexLocker locker(*this);
-		return pCaption;
-	}
+inline void IObject::enabled(bool state)
+{
+    pEnabled = state;
+}
 
-
-	inline bool IObject::enabled() const
-	{
-		return (pEnabled != 0);
-	}
-
-
-	inline void IObject::enabled(bool state)
-	{
-		pEnabled = state;
-	}
-
-
-	inline void IObject::onRelease()
-	{
-		// do nothing
-	}
-
-
-
+inline void IObject::onRelease()
+{
+    // do nothing
+}
 
 } // namespace Antares
 

@@ -12,59 +12,45 @@
 #include "../job/queue/service.h"
 #include "../job/taskgroup.h"
 
-
-
 namespace Yuni
 {
+class AsyncJob final : public Job::IJob
+{
+public:
+    AsyncJob(const Bind<void()>& callback) : pCallback(callback)
+    {
+    }
 
-	class AsyncJob final : public Job::IJob
-	{
-	public:
-		AsyncJob(const Bind<void ()>& callback) :
-			pCallback(callback)
-		{}
+    virtual ~AsyncJob()
+    {
+    }
 
-		virtual ~AsyncJob()
-		{
-		}
+protected:
+    virtual void onExecute() override
+    {
+        pCallback();
+    }
 
+private:
+    Bind<void()> pCallback;
 
-	protected:
-		virtual void onExecute() override
-		{
-			pCallback();
-		}
+}; // class AsyncJob
 
+Job::IJob::Ptr async(Job::QueueService& queueservice, const Bind<void()>& callback)
+{
+    AsyncJob::Ptr job = new AsyncJob(callback);
+    queueservice += job;
+    return job;
+}
 
-	private:
-		Bind<void ()> pCallback;
+Job::IJob::Ptr async(const Bind<void()>& callback)
+{
+    return new AsyncJob(callback);
+}
 
-	}; // class AsyncJob
-
-
-
-
-	Job::IJob::Ptr  async(Job::QueueService& queueservice, const Bind<void ()>& callback)
-	{
-		AsyncJob::Ptr job = new AsyncJob(callback);
-		queueservice += job;
-		return job;
-	}
-
-
-	Job::IJob::Ptr  async(const Bind<void ()>& callback)
-	{
-		return new AsyncJob(callback);
-	}
-
-
-	void async(Job::Taskgroup& task, const Bind<bool (Job::IJob&)>& callback)
-	{
-		task.add(callback);
-	}
-
-
-
+void async(Job::Taskgroup& task, const Bind<bool(Job::IJob&)>& callback)
+{
+    task.add(callback);
+}
 
 } // namespace Yuni
-

@@ -25,68 +25,35 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "opt_structure_probleme_a_resoudre.h"
 
+#include "../simulation/simulation.h"
+#include "../simulation/sim_structure_donnees.h"
+#include "../simulation/sim_extern_variables_globales.h"
 
+#include "opt_fonctions.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# include "opt_structure_probleme_a_resoudre.h"
-
-# include "../simulation/simulation.h"
-# include "../simulation/sim_structure_donnees.h"
-# include "../simulation/sim_extern_variables_globales.h"
-
-# include "opt_fonctions.h"
-
-
-
-
-
-
-
-
-void OPT_InitialiserLesCoutsQuadratiques( PROBLEME_HEBDO * ProblemeHebdo, int PdtHebdo )
+void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* ProblemeHebdo, int PdtHebdo)
 {
-	int Interco; int Var;
-	CORRESPONDANCES_DES_VARIABLES * CorrespondanceVarNativesVarOptim;
-	VALEURS_DE_NTC_ET_RESISTANCES * ValeursDeResistances;
-	PROBLEME_ANTARES_A_RESOUDRE * ProblemeAResoudre;
+    int Interco;
+    int Var;
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeResistances;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
-	ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
-	memset((char*)ProblemeAResoudre->CoutLineaire, 0, ProblemeAResoudre->NombreDeVariables * sizeof(double));
-	CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0];
-	ValeursDeResistances             = ProblemeHebdo->ValeursDeNTC[PdtHebdo];
+    memset((char*)ProblemeAResoudre->CoutLineaire,
+           0,
+           ProblemeAResoudre->NombreDeVariables * sizeof(double));
+    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0];
+    ValeursDeResistances = ProblemeHebdo->ValeursDeNTC[PdtHebdo];
 
-	for (Interco = 0 ; Interco < ProblemeHebdo->NombreDInterconnexions ; Interco++)
-	{
-		Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-		if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-			ProblemeAResoudre->CoutQuadratique[Var] = ValeursDeResistances->ResistanceApparente[Interco];
-	}
+    for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    {
+        Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+        if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+            ProblemeAResoudre->CoutQuadratique[Var]
+              = ValeursDeResistances->ResistanceApparente[Interco];
+    }
 }
-
-
-
-

@@ -14,82 +14,70 @@
 #include <map>
 #include <set>
 #ifdef YUNI_HAS_STL_UNORDERED_MAP
-# include <unordered_map>
+#include <unordered_map>
 #endif
 #ifdef YUNI_HAS_STL_UNORDERED_SET
-# include <unordered_set>
+#include <unordered_set>
 #endif
-
-
 
 namespace Yuni
 {
+/*!
+** \brief Class helper for defining ordered/unordered map
+** \ingroup Core
+*/
+template<class KeyT, class ValueT>
+class Dictionary final
+{
+public:
+#ifndef YUNI_HAS_STL_UNORDERED_MAP
+    //! An unordered dictionary table
+    typedef std::map<KeyT, ValueT> Hash;
+    //! An unordered dictionary table
+    typedef std::map<KeyT, ValueT> Unordered;
+#else
+    //! An unordered dictionary table
+    typedef std::unordered_map<KeyT, ValueT> Hash;
+    //! An unordered dictionary table
+    typedef std::unordered_map<KeyT, ValueT> Unordered;
+#endif
 
-	/*!
-	** \brief Class helper for defining ordered/unordered map
-	** \ingroup Core
-	*/
-	template<class KeyT, class ValueT>
-	class Dictionary final
-	{
-	public:
-		# ifndef YUNI_HAS_STL_UNORDERED_MAP
-		//! An unordered dictionary table
-		typedef std::map<KeyT, ValueT> Hash;
-		//! An unordered dictionary table
-		typedef std::map<KeyT, ValueT> Unordered;
-		# else
-		//! An unordered dictionary table
-		typedef std::unordered_map<KeyT, ValueT> Hash;
-		//! An unordered dictionary table
-		typedef std::unordered_map<KeyT, ValueT> Unordered;
-		# endif
+    //! An ordered dictionary table
+    typedef std::map<KeyT, ValueT> Map;
+    //! An ordered dictionary table
+    typedef std::map<KeyT, ValueT> Ordered;
 
-		//! An ordered dictionary table
-		typedef std::map<KeyT, ValueT> Map;
-		//! An ordered dictionary table
-		typedef std::map<KeyT, ValueT> Ordered;
+}; // struct Dictionary
 
-	}; // struct Dictionary
+/*!
+** \brief Class helper for defining ordered/unordered set
+** \ingroup Core
+*/
+template<class KeyT>
+class Set final
+{
+public:
+#ifndef YUNI_HAS_STL_UNORDERED_MAP
+    //! An unordered set table
+    typedef std::set<KeyT> Hash;
+    //! An unordered set table
+    typedef std::set<KeyT> Unordered;
+#else
+    //! An unordered set table
+    typedef std::unordered_set<KeyT> Hash;
+    //! An unordered set table
+    typedef std::unordered_set<KeyT> Unordered;
+#endif
 
+    //! An ordered dictionary table
+    typedef std::set<KeyT> Ordered;
 
+}; // struct Set
 
-	/*!
-	** \brief Class helper for defining ordered/unordered set
-	** \ingroup Core
-	*/
-	template<class KeyT>
-	class Set final
-	{
-	public:
-		# ifndef YUNI_HAS_STL_UNORDERED_MAP
-		//! An unordered set table
-		typedef std::set<KeyT> Hash;
-		//! An unordered set table
-		typedef std::set<KeyT> Unordered;
-		# else
-		//! An unordered set table
-		typedef std::unordered_set<KeyT> Hash;
-		//! An unordered set table
-		typedef std::unordered_set<KeyT> Unordered;
-		# endif
-
-		//! An ordered dictionary table
-		typedef std::set<KeyT> Ordered;
-
-	}; // struct Set
-
-
-
-	/*!
-	** \brief Convenient typedef for a key/value store
-	** \ingroup Core
-	*/
-	typedef Dictionary<String, String>::Hash  KeyValueStore;
-
-
-
-
+/*!
+** \brief Convenient typedef for a key/value store
+** \ingroup Core
+*/
+typedef Dictionary<String, String>::Hash KeyValueStore;
 
 } // namespace Yuni
-

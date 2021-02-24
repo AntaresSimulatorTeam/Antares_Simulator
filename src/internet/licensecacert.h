@@ -25,9 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_LICENSE_CACERT_H__
-# define __ANTARES_LIBS_LICENSE_CACERT_H__
+#define __ANTARES_LIBS_LICENSE_CACERT_H__
 
-#define ANTARES_ROOT_CERT	"UTN USERFirst Hardware Root CA\n\
+#define ANTARES_ROOT_CERT \
+    "UTN USERFirst Hardware Root CA\n\
 ==============================\n\
 -----BEGIN CERTIFICATE-----\n\
 MIIEdDCCA1ygAwIBAgIQRL4Mi1AAJLQR0zYq/mUK/TANBgkqhkiG9w0BAQUFADCBlzELMAkGA1UE\n\

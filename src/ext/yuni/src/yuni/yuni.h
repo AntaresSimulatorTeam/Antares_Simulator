@@ -10,14 +10,11 @@
 */
 #pragma once
 
-
-
 #ifdef YUNI_CONFIG_H_LOCATION
-#	include YUNI_CONFIG_H_LOCATION
+#include YUNI_CONFIG_H_LOCATION
 #else
-#	include "config.h"
+#include "config.h"
 #endif
-
 
 /* Platform checks */
 #include "platform.h"
@@ -30,14 +27,14 @@
 /* ISO 646 - part of C90 standard but not by default on all compilers */
 #include <iso646.h>
 
-
 #ifdef __cplusplus /* Only with a C++ Compiler */
 
 /*!
 ** \brief The Yuni Framework
 */
 namespace Yuni
-{}
+{
+}
 
 /* nullptr */
 #include "core/system/nullptr.h"

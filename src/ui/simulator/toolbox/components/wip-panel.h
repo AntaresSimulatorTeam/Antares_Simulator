@@ -25,51 +25,46 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_COMPONENTS_WIP_PANEL_WIP_PANEL_H__
-# define __ANTARES_TOOLBOX_COMPONENTS_WIP_PANEL_WIP_PANEL_H__
+#define __ANTARES_TOOLBOX_COMPONENTS_WIP_PANEL_WIP_PANEL_H__
 
-# include <yuni/yuni.h>
-# include <antares/wx-wrapper.h>
-# include <wx/bitmap.h>
-# include <ui/common/component/panel.h>
-
+#include <yuni/yuni.h>
+#include <antares/wx-wrapper.h>
+#include <wx/bitmap.h>
+#include <ui/common/component/panel.h>
 
 namespace Antares
 {
 namespace Component
 {
+class WIPPanel : public Panel
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    WIPPanel(wxWindow* parent);
 
+    //! Destructor
+    virtual ~WIPPanel();
+    //@}
 
-	class WIPPanel : public Panel
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		*/
-		WIPPanel(wxWindow* parent);
+protected:
+    //! Event: draw the panel
+    void onDraw(wxPaintEvent& evt);
+    //! UI: Erase background, empty to avoid flickering
+    void onEraseBackground(wxEraseEvent&)
+    {
+    }
 
-		//! Destructor
-		virtual ~WIPPanel();
-		//@}
+private:
+    //! Icon
+    wxBitmap* pIcon;
+    // Event table
+    DECLARE_EVENT_TABLE()
 
-
-	protected:
-		//! Event: draw the panel
-		void onDraw(wxPaintEvent& evt);
-		//! UI: Erase background, empty to avoid flickering
-		void onEraseBackground(wxEraseEvent&) {}
-
-	private:
-		//! Icon
-		wxBitmap* pIcon;
-		// Event table
-		DECLARE_EVENT_TABLE()
-
-	}; // class WIPPanel
-
-
-
+}; // class WIPPanel
 
 } // namespace Component
 } // namespace Antares

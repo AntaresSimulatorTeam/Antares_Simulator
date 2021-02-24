@@ -11,21 +11,15 @@
 #pragma once
 #include "versions.h"
 
-
-
 namespace Yuni
 {
 namespace LibConfig
 {
 namespace VersionInfo
 {
-
-	inline Settings::Settings()
-		: supportOpenGL(false)
-		, supportDirectX(false)
-	{}
-
-
+inline Settings::Settings() : supportOpenGL(false), supportDirectX(false)
+{
+}
 
 } // namespace VersionInfo
 } // namespace LibConfig

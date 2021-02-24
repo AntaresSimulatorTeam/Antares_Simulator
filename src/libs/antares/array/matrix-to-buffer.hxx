@@ -26,150 +26,161 @@
 */
 
 #ifndef __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_HXX__
-# define __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_HXX__
+#define __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_HXX__
 
-# ifdef YUNI_OS_MSVC
-#	define ANTARES_MATRIX_SNPRINTF  sprintf_s
-# else
-#	define ANTARES_MATRIX_SNPRINTF  snprintf
-# endif
-
+#ifdef YUNI_OS_MSVC
+#define ANTARES_MATRIX_SNPRINTF sprintf_s
+#else
+#define ANTARES_MATRIX_SNPRINTF snprintf
+#endif
 
 namespace Antares
 {
-	namespace // anonymous
-	{
+namespace // anonymous
+{
+template<class T>
+struct MatrixScalar
+{
+    static inline void Append(std::string& file, T v, const char* const)
+    {
+        if (Yuni::Math::Zero(v))
+            file.append(std::to_string(0));
+        else
+            file.append(std::to_string(v));
+    }
+};
 
-		template<class T>
-		struct MatrixScalar
-		{
-			static inline void Append(Yuni::Clob& file, T v, const char* const)
-			{
-				if (Yuni::Math::Zero(v))
-					file.append('0');
-				else
-					file.append(v);
-			}
+template<>
+struct MatrixScalar<double>
+{
+    static void Append(std::string& file, double v, const char* const format)
+    {
+        if (Yuni::Math::Zero(v))
+        {
+            file += '0';
+        }
+        else
+        {
+            char ConversionBuffer[128];
+            const int sizePrintf
+              = (Yuni::Math::Zero(v - floor(v)))
+                  ? ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), "%.0f", v)
+                  : ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), format, v);
 
-		};
+            if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
+                file += (const char*)ConversionBuffer;
+            else
+                file += "ERR";
+        }
+    }
+};
 
+template<>
+struct MatrixScalar<float>
+{
+    static void Append(std::string& file, float v, const char* const format)
+    {
+        if (Yuni::Math::Zero(v))
+        {
+            file += '0';
+        }
+        else
+        {
+            char ConversionBuffer[128];
+            const int sizePrintf
+              = (Yuni::Math::Zero(v - floor(v)))
+                  ? ANTARES_MATRIX_SNPRINTF(
+                    ConversionBuffer, sizeof(ConversionBuffer), "%.0f", (double)v)
+                  : ANTARES_MATRIX_SNPRINTF(
+                    ConversionBuffer, sizeof(ConversionBuffer), format, (double)v);
 
-		template<>
-		struct MatrixScalar<double>
-		{
-			static void Append(Yuni::Clob& file, double v, const char* const format)
-			{
-				if (Yuni::Math::Zero(v))
-				{
-					file += '0';
-				}
-				else
-				{
-					char ConversionBuffer[128];
-					const int sizePrintf =
-						(Yuni::Math::Zero(v - floor(v)))
-						? ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), "%.0f", v)
-						: ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), format, v);
+            if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
+                file += (const char*)ConversionBuffer;
+            else
+                file += "ERR";
+        }
+    }
+};
 
-					if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
-						file.write((const char*)ConversionBuffer, sizePrintf);
-					else
-						file += "ERR";
-				}
-			}
-		};
+} // anonymous namespace
 
+template<class T, class ReadWriteT, class PredicateT>
+I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>* matrix_to_buffer_dumper_factory::get_dumper(
+  const Matrix<T, ReadWriteT>* mtx,
+  std::string& data,
+  PredicateT& predicate)
+{
+    if (mtx->width == 1)
+        return new one_column__dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate);
+    else
+        return new multiple_columns__dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate);
+}
 
-		template<>
-		struct MatrixScalar<float>
-		{
-			static void Append(Yuni::Clob& file, float v, const char* const format)
-			{
-				if (Yuni::Math::Zero(v))
-				{
-					file += '0';
-				}
-				else
-				{
-					char ConversionBuffer[128];
-					const int sizePrintf =
-						(Yuni::Math::Zero(v - floor(v)))
-						? ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), "%.0f", (double)v)
-						: ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), format, (double)v);
+template<class T, class ReadWriteT, class PredicateT>
+void I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::set_print_format(bool isDecimal,
+                                                                         uint precision)
+{
+    // Determining the string format to use according the given precision
+    format_ = "%.0f";
 
-					if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
-						file.write((const char*)ConversionBuffer, sizePrintf);
-					else
-						file += "ERR";
-				}
-			}
-		};
+    if (isDecimal and precision)
+    {
+        const char* const sfmt[] = {
+          "%.0f",
+          "%.1f",
+          "%.2f",
+          "%.3f",
+          "%.4f",
+          "%.5f",
+          "%.6f",
+          "%.7f",
+          "%.8f",
+          "%.9f",
+          "%.10f",
+          "%.11f",
+          "%.12f",
+          "%.13f",
+          "%.14f",
+          "%.15f",
+          "%.16f",
+        };
+        assert(precision <= 16);
+        format_ = sfmt[precision];
+    }
+}
 
-	} // anonymous namespace
+template<class T, class ReadWriteT, class PredicateT>
+void one_column__dumper<T, ReadWriteT, PredicateT>::run()
+{
+    for (uint y = 0; y != (this->mtx_)->height; ++y)
+    {
+        MatrixScalar<ReadWriteT>::Append(
+          this->buffer_, (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]), this->format_);
+        this->buffer_ += '\n';
+    }
+}
 
+template<class T, class ReadWriteT, class PredicateT>
+void multiple_columns__dumper<T, ReadWriteT, PredicateT>::run()
+{
+    for (uint y = 0; y < (this->mtx_)->height; ++y)
+    {
+        MatrixScalar<ReadWriteT>::Append(
+          this->buffer_, (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]), this->format_);
+        for (uint x = 1; x < (this->mtx_)->width; ++x)
+        {
+            this->buffer_ += '\t';
+            MatrixScalar<ReadWriteT>::Append(
+              this->buffer_,
+              (ReadWriteT)this->predicate_((this->mtx_)->entry[x][y]),
+              this->format_);
+        }
+        this->buffer_ += '\n';
+    }
+}
 
+} // namespace Antares
 
-	template<class T, class ReadWriteT, class PredicateT>
-	I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>* 
-		matrix_to_buffer_dumper_factory::
-			get_dumper(	const Matrix<T, ReadWriteT>* mtx, 
-						Yuni::Clob& data, 
-						PredicateT& predicate)
-	{
-		if (mtx->width == 1)
-			return new one_column__dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate);
-		else
-			return new multiple_columns__dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate);
-	}
+#undef ANTARES_MATRIX_SNPRINTF
 
-
-	template<class T, class ReadWriteT, class PredicateT>
-	void I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::set_print_format(bool isDecimal, uint precision)
-	{
-		// Determining the string format to use according the given precision
-		format_ = "%.0f";
-
-		if (isDecimal and precision)
-		{
-			const char* const sfmt[] =
-			{
-				"%.0f",  "%.1f",  "%.2f", "%.3f",  "%.4f",  "%.5f",  "%.6f",
-				"%.7f",	 "%.8f",  "%.9f", "%.10f", "%.11f", "%.12f", "%.13f",
-				"%.14f", "%.15f", "%.16f",
-			};
-			assert(precision <= 16);
-			format_ = sfmt[precision];
-		}
-	}
-
-
-	template<class T, class ReadWriteT, class PredicateT>
-	void one_column__dumper<T, ReadWriteT, PredicateT>::run()
-	{
-		for (uint y = 0; y != (this->mtx_)->height; ++y)
-		{
-			MatrixScalar<ReadWriteT>::Append(this->buffer_, (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]), this->format_);
-			this->buffer_ += '\n';
-		}
-	}
-
-	template<class T, class ReadWriteT, class PredicateT>
-	void multiple_columns__dumper<T, ReadWriteT, PredicateT>::run()
-	{
-		for (uint y = 0; y < (this->mtx_)->height; ++y)
-		{
-			MatrixScalar<ReadWriteT>::Append(this->buffer_, (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]), this->format_);
-			for (uint x = 1; x < (this->mtx_)->width; ++x)
-			{
-				this->buffer_ += '\t';
-				MatrixScalar<ReadWriteT>::Append(this->buffer_, (ReadWriteT)this->predicate_((this->mtx_)->entry[x][y]), this->format_);
-			}
-			this->buffer_ += '\n';
-		}
-	}
-
-}	// namespace Antares
-
-# undef ANTARES_MATRIX_SNPRINTF
-
-#endif	// __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_HXX__
+#endif // __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_HXX__

@@ -29,6 +29,7 @@
 #define ANTARES_DATA_ENUM_HXX
 
 #include <algorithm>
+#include <list>
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/stdcxx/demangle.hpp>
@@ -39,28 +40,45 @@ namespace Antares
 {
 namespace Data
 {
-    
-namespace Enum {
-
-template <typename E, typename>
-E fromString(const std::string& name) {
+namespace Enum
+{
+template<typename E, typename>
+E fromString(const std::string& name)
+{
     const auto& names = getNames<E>();
     const auto& it = std::find(names.begin(), names.end(), name);
-    if (it == names.end()) {
-        throw AssertionError("Unexpected " + stdcxx::simpleClassName<E>() + " name " +name);
+    if (it == names.end())
+    {
+        throw AssertionError("Unexpected " + stdcxx::simpleClassName<E>() + " name " + name);
     }
 
     return static_cast<E>(it - names.begin());
 }
 
-template <typename E, typename>
-std::string toString(const E& value) {
+template<typename E, typename>
+std::string toString(const E& value)
+{
     auto index = static_cast<unsigned long>(value);
     const auto& names = getNames<E>();
-    if (index >= names.size()) {
-        throw AssertionError("Unexpected " +  stdcxx::simpleClassName<E>() + " value " + std::to_string(index));
+    if (index >= names.size())
+    {
+        throw AssertionError("Unexpected " + stdcxx::simpleClassName<E>() + " value "
+                             + std::to_string(index));
     }
     return *(names.begin() + index);
+}
+
+template<typename E, typename>
+std::list<E> enumList()
+{
+    std::list<E> result;
+    const auto& names = getNames<E>();
+    for (auto name : names)
+    {
+        result.push_back(fromString<E>(name));
+    }
+
+    return result;
 }
 
 } // namespace Enum
@@ -69,4 +87,4 @@ std::string toString(const E& value) {
 
 } // namespace Antares
 
-#endif  // ANTARES_DATA_ENUM_HXX
+#endif // ANTARES_DATA_ENUM_HXX

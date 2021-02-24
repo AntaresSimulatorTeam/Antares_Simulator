@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_TOOLBOX_INPUT_H__
-# define __ANTARES_TOOLBOX_INPUT_H__
+#define __ANTARES_TOOLBOX_INPUT_H__
 
-# include <antares/wx-wrapper.h>
-# include <ui/common/component/panel.h>
-
+#include <antares/wx-wrapper.h>
+#include <ui/common/component/panel.h>
 
 namespace Antares
 {
@@ -37,52 +36,49 @@ namespace Toolbox
 {
 namespace InputSelector
 {
+class AInput : public Antares::Component::Panel
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    ** \param parent the parent window
+    */
+    AInput(wxWindow* parent);
+    //! Destructor
+    virtual ~AInput();
+    //@}
 
+    /*!
+    ** \brief Clear then Update the input
+    */
+    virtual void update() = 0;
 
-	class AInput : public Antares::Component::Panel
-	{
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		** \param parent the parent window
-		*/
-		AInput(wxWindow* parent);
-		//! Destructor
-		virtual ~AInput();
-		//@}
+    /*!
+    ** \brief Only update the content and not the list itself
+    */
+    virtual void updateRowContent();
 
-		/*!
-		** \brief Clear then Update the input
-		*/
-		virtual void update() = 0;
+    /*!
+    ** \brief Update each item available in the input
+    **
+    ** \param searchString The string to highlight
+    */
+    virtual void updateInnerData(const wxString& searchString);
 
-		/*!
-		** \brief Only update the content and not the list itself
-		*/
-		virtual void updateRowContent();
+    /*!
+    ** \brief Get the recommended size for the control
+    */
+    virtual wxPoint recommendedSize() const
+    {
+        return wxPoint(50, 50);
+    }
 
-		/*!
-		** \brief Update each item available in the input
-		**
-		** \param searchString The string to highlight
-		*/
-		virtual void updateInnerData(const wxString& searchString);
+protected:
+    virtual void internalBuildSubControls() = 0;
 
-		/*!
-		** \brief Get the recommended size for the control
-		*/
-		virtual wxPoint recommendedSize() const {return wxPoint(50, 50);}
-
-
-	protected:
-		virtual void internalBuildSubControls() = 0;
-
-	}; // class IInput
-
-
-
+}; // class IInput
 
 } // namespace InputSelector
 } // namespace Toolbox

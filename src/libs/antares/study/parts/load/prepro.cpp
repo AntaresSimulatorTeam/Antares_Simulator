@@ -29,10 +29,7 @@
 #include "prepro.h"
 #include "../../study.h"
 
-
 using namespace Yuni;
-
-
 
 namespace Antares
 {
@@ -40,36 +37,29 @@ namespace Data
 {
 namespace Load
 {
+Prepro::Prepro() : xcast(timeSeriesLoad)
+{
+}
 
-	Prepro::Prepro() :
-		xcast(timeSeriesLoad)
-	{}
+Prepro::~Prepro()
+{
+}
 
+bool Prepro::loadFromFolder(Study& study, const AnyString& folder)
+{
+    if (study.header.version <= 320)
+    {
+        xcast.resetToDefaultValues();
+        return true;
+    }
+    return xcast.loadFromFolder(study, folder);
+}
 
-	Prepro::~Prepro()
-	{}
-
-
-	bool Prepro::loadFromFolder(Study& study, const AnyString& folder)
-	{
-		if (study.header.version <= 320)
-		{
-			xcast.resetToDefaultValues();
-			return true;
-		}
-		return xcast.loadFromFolder(study, folder);
-	}
-
-
-	bool Prepro::saveToFolder(const AnyString& folder) const
-	{
-		return xcast.saveToFolder(folder);
-	}
-
-
-
+bool Prepro::saveToFolder(const AnyString& folder) const
+{
+    return xcast.saveToFolder(folder);
+}
 
 } // namespace Load
 } // namespace Data
 } // namespace Antares
-

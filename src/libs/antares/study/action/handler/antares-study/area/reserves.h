@@ -25,11 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREA_RESERVES_H__
-# define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREA_RESERVES_H__
+#define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREA_RESERVES_H__
 
-# include <yuni/yuni.h>
-# include "../../../action.h"
-
+#include <yuni/yuni.h>
+#include "../../../action.h"
 
 namespace Antares
 {
@@ -39,38 +38,33 @@ namespace AntaresStudy
 {
 namespace Area
 {
+class Reserves : public IAction
+{
+public:
+    //! The most suitable smart ptr for the class
+    typedef IAction::Ptr Ptr;
+    //! The threading policy
+    typedef IAction::ThreadingPolicy ThreadingPolicy;
 
-	class Reserves : public IAction
-	{
-	public:
-		//! The most suitable smart ptr for the class
-		typedef IAction::Ptr  Ptr;
-		//! The threading policy
-		typedef IAction::ThreadingPolicy  ThreadingPolicy;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    explicit Reserves(const AnyString& areaname);
+    //! Destructor
+    virtual ~Reserves();
+    //@}
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		explicit Reserves(const AnyString& areaname);
-		//! Destructor
-		virtual ~Reserves();
-		//@}
+protected:
+    virtual bool prepareWL(Context& ctx);
+    virtual bool performWL(Context& ctx);
 
+private:
+    Data::AreaName pOriginalAreaName;
 
-	protected:
-		virtual bool prepareWL(Context& ctx);
-		virtual bool performWL(Context& ctx);
-
-	private:
-		Data::AreaName pOriginalAreaName;
-
-	}; // class IAction
-
-
-
+}; // class IAction
 
 } // namespace Area
 } // namespace AntaresStudy

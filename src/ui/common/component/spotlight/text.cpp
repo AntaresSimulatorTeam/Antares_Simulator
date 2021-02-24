@@ -27,33 +27,22 @@
 
 #include "spotlight.h"
 
-
 using namespace Yuni;
-
-
 
 namespace Antares
 {
 namespace Component
 {
+Spotlight::Text::Text()
+{
+    // This item should not be taken into consideration in the result set
+    pCountedAsResult = false;
+}
 
-
-	Spotlight::Text::Text()
-	{
-		// This item should not be taken into consideration in the result set
-		pCountedAsResult = false;
-	}
-
-
-	Spotlight::Text::~Text()
-	{
-		// destructor
-	}
-
-
-
-
+Spotlight::Text::~Text()
+{
+    // destructor
+}
 
 } // namespace Component
 } // namespace Antares
-

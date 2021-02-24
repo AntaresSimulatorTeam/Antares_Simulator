@@ -28,5 +28,3 @@
 #include <antares/study/memory-usage.h>
 #include "links.h"
 #include "../commons/links/links.cpp.inc.hxx"
-
-

@@ -37,313 +37,309 @@
 
 using namespace Yuni;
 
-#define SEP IO:: Separator
-
+#define SEP IO::Separator
 
 namespace Antares
 {
 namespace Data
 {
+PreproThermal::PreproThermal()
+{
+}
 
+void PreproThermal::copyFrom(const PreproThermal& rhs)
+{
+    data = rhs.data;
+    rhs.data.unloadFromMemory();
+}
 
-	PreproThermal::PreproThermal()
-	{
-	}
+bool PreproThermal::saveToFolder(const AnyString& folder)
+{
+    if (IO::Directory::Create(folder))
+    {
+        String buffer;
+        buffer.clear() << folder << SEP << "data.txt";
+        return data.saveToCSVFile(buffer, /*decimal*/ 6);
+    }
+    return false;
+}
 
+static bool LoadPreproThermal350(Study& study, Matrix<>& data, const AnyString& folder)
+{
+    // very old code for loading thermal ts-generator data for Antares <3.5
+    // resize the matrix
+    data.resize(PreproThermal::thermalPreproMax, DAYS_PER_YEAR, true);
 
-	void PreproThermal::copyFrom(const PreproThermal& rhs)
-	{
-		data = rhs.data;
-		rhs.data.unloadFromMemory();
-	}
+    String buffer;
+    double* tmp = new double[DAYS_PER_YEAR];
+    bool ret = true;
 
+    buffer.clear() << folder << SEP << "fo-duration." << study.inputExtension;
+    ret = Array1DLoadFromFile(buffer.c_str(), tmp, DAYS_PER_YEAR) and ret;
+    data.pasteToColumn(PreproThermal::foDuration, tmp);
 
-	bool PreproThermal::saveToFolder(const AnyString& folder)
-	{
-		if (IO::Directory::Create(folder))
-		{
-			String buffer;
-			buffer.clear() << folder << SEP << "data.txt";
-			return data.saveToCSVFile(buffer, /*decimal*/ 6);
-		}
-		return false;
-	}
+    buffer.clear() << folder << SEP << "po-duration." << study.inputExtension;
+    ret = Array1DLoadFromFile(buffer.c_str(), tmp, DAYS_PER_YEAR) and ret;
+    data.pasteToColumn(PreproThermal::poDuration, tmp);
 
+    buffer.clear() << folder << SEP << "fo-rate." << study.inputExtension;
+    ret = Array1DLoadFromFile(buffer.c_str(), tmp, DAYS_PER_YEAR) and ret;
+    data.pasteToColumn(PreproThermal::foRate, tmp);
 
-	static bool LoadPreproThermal350(Study& study, Matrix<>& data, const AnyString& folder)
-	{
-		// very old code for loading thermal ts-generator data for Antares <3.5
-		// resize the matrix
-		data.resize(PreproThermal::thermalPreproMax, DAYS_PER_YEAR, true);
+    buffer.clear() << folder << SEP << "po-rate." << study.inputExtension;
+    ret = Array1DLoadFromFile(buffer.c_str(), tmp, DAYS_PER_YEAR) and ret;
+    data.pasteToColumn(PreproThermal::poRate, tmp);
 
-		String buffer;
-		double* tmp = new double[DAYS_PER_YEAR];
-		bool ret = true;
+    // release
+    delete[] tmp;
+    return ret;
+}
 
-		buffer.clear() << folder << SEP << "fo-duration." << study.inputExtension;
-		ret = Array1DLoadFromFile(buffer.c_str(), tmp, DAYS_PER_YEAR) and ret;
-		data.pasteToColumn(PreproThermal::foDuration, tmp);
+bool PreproThermal::loadFromFolder(Study& study,
+                                   const AnyString& folder,
+                                   const AreaName& areaID,
+                                   const AnyString& clustername)
+{
+    bool ret = true;
+    auto& buffer = study.bufferLoadingTS;
 
-		buffer.clear() << folder << SEP << "po-duration." << study.inputExtension;
-		ret = Array1DLoadFromFile(buffer.c_str(), tmp, DAYS_PER_YEAR) and ret;
-		data.pasteToColumn(PreproThermal::poDuration, tmp);
+    if (study.header.version < 350)
+    {
+        ret = LoadPreproThermal350(study, data, folder) and ret;
+        data.flush();
+    }
+    else
+    {
+        buffer.clear() << folder << SEP << "data.txt";
 
-		buffer.clear() << folder << SEP << "fo-rate." << study.inputExtension;
-		ret = Array1DLoadFromFile(buffer.c_str(), tmp, DAYS_PER_YEAR) and ret;
-		data.pasteToColumn(PreproThermal::foRate, tmp);
+        if (study.header.version < 440)
+        {
+            // temporary matrix
+            Matrix<> tmp;
+            // reset
+            data.reset(thermalPreproMax, DAYS_PER_YEAR, true);
 
-		buffer.clear() << folder << SEP << "po-rate." << study.inputExtension;
-		ret = Array1DLoadFromFile(buffer.c_str(), tmp, DAYS_PER_YEAR) and ret;
-		data.pasteToColumn(PreproThermal::poRate, tmp);
+            enum
+            {
+                flags = Matrix<>::optFixedSize | Matrix<>::optImmediate,
+            };
+            if (tmp.loadFromCSVFile(buffer, 4, DAYS_PER_YEAR, flags, &study.dataBuffer))
+            {
+                for (uint x = 0; x != 4; ++x)
+                    data.pasteToColumn(x, tmp.column(x));
 
-		// release
-		delete[] tmp;
-		return ret;
-	}
+                // reset NPO max to cluster size
+                // retrieving the appropriate area
+                auto* area = study.areas.findFromName(areaID);
+                if (area)
+                {
+                    // retrieving the appropriate thermal cluster
+                    auto* ourselves = area->thermal.list.find(clustername);
+                    if (ourselves)
+                    {
+                        uint clusterSize = ourselves->unitCount;
+                        auto& npomax = data[npoMax];
+                        for (uint y = 0; y != data.height; ++y)
+                            npomax[y] = clusterSize;
+                    }
+                    else
+                        logs.error() << "NPO max reset: impossible to find the thermal cluster '"
+                                     << areaID << '.' << clustername << "'";
+                }
+                else
+                    logs.error() << "NPO max reset: impossible to find the area '" << areaID << "'";
+            }
+            else
+                ret = false;
+            // the structure must be marked as modified
+            data.markAsModified();
+            data.flush();
+        }
+        else
+        {
+            // standard loading
+            ret = data.loadFromCSVFile(buffer,
+                                       thermalPreproMax,
+                                       DAYS_PER_YEAR,
+                                       Matrix<>::optFixedSize,
+                                       &study.dataBuffer)
+                  and ret;
+        }
+    }
 
+    if (study.header.version < 390)
+    {
+        data.invalidate(true);
+        auto& colFoDuration = data[foDuration];
+        auto& colPoDuration = data[poDuration];
+        for (uint i = 0; i != DAYS_PER_YEAR; ++i)
+        {
+            colFoDuration[i] = Math::Round(colFoDuration[i]);
+            colPoDuration[i] = Math::Round(colPoDuration[i]);
+        }
+        data.markAsModified();
+    }
 
-	bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder, const AreaName& areaID,
-		const AnyString& clustername)
-	{
-		bool ret = true;
-		auto& buffer = study.bufferLoadingTS;
+    if (study.usedByTheSolver)
+    {
+        auto& colFoRate = data[foRate];
+        auto& colPoRate = data[poRate];
+        auto& colFoDuration = data[foDuration];
+        auto& colPoDuration = data[poDuration];
+        auto& colNPOMin = data[npoMin];
+        auto& colNPOMax = data[npoMax];
+        uint errors = 0;
 
-		if (study.header.version < 350)
-		{
-			ret = LoadPreproThermal350(study, data, folder) and ret;
-			data.flush();
-		}
-		else
-		{
-			buffer.clear() << folder << SEP << "data.txt";
+        for (uint i = 0; i != DAYS_PER_YEAR; ++i)
+        {
+            double foRate = colFoRate[i];
+            double poRate = colPoRate[i];
+            double foDuration = colFoDuration[i];
+            double poDuration = colPoDuration[i];
+            double cNPOMin = colNPOMin[i];
+            double cNPOMax = colNPOMax[i];
 
-			if (study.header.version < 440)
-			{
-				// temporary matrix
-				Matrix<> tmp;
-				// reset
-				data.reset(thermalPreproMax, DAYS_PER_YEAR, true);
+            if (cNPOMin < 0)
+            {
+                logs.error() << "Thermal: Prepro: " << areaID << '/' << clustername
+                             << ": NPO min can not be negative (line:" << (i + 1) << ")";
+                ++errors;
+            }
+            if (cNPOMax < 0)
+            {
+                logs.error() << "Thermal: Prepro: " << areaID << '/' << clustername
+                             << ": NPO max can not be negative (line:" << (i + 1) << ")";
+                ++errors;
+            }
+            if (cNPOMin > cNPOMax)
+            {
+                logs.error() << "Thermal: Prepro: " << areaID << '/' << clustername
+                             << ": NPO max must be greater or equal to NPO min (line:" << (i + 1)
+                             << ")";
+                ++errors;
+            }
 
-				enum
-				{
-					flags = Matrix<>::optFixedSize | Matrix<>::optImmediate,
-				};
-				if (tmp.loadFromCSVFile(buffer, 4, DAYS_PER_YEAR, flags, &study.dataBuffer))
-				{
-					for (uint x = 0; x != 4; ++x)
-						data.pasteToColumn(x, tmp.column(x));
+            if (foRate < 0. or foRate > 1.)
+            {
+                logs.error() << "Thermal: Prepro: " << areaID << '/' << clustername
+                             << ": invalid value for FO rate (line:" << (i + 1) << ")";
+                ++errors;
+            }
 
-					// reset NPO max to cluster size
-					// retrieving the appropriate area
-					auto* area = study.areas.findFromName(areaID);
-					if (area)
-					{
-						// retrieving the appropriate thermal cluster
-						auto* ourselves = area->thermal.list.find(clustername);
-						if (ourselves)
-						{
-							uint clusterSize = ourselves->unitCount;
-							auto& npomax = data[npoMax];
-							for (uint y = 0; y != data.height; ++y)
-								npomax[y] = clusterSize;
-						}
-						else
-							logs.error() << "NPO max reset: impossible to find the thermal cluster '" << areaID << '.' << clustername << "'";
-					}
-					else
-						logs.error() << "NPO max reset: impossible to find the area '" << areaID << "'";
-				}
-				else
-					ret = false;
-				// the structure must be marked as modified
-				data.markAsModified();
-				data.flush();
-			}
-			else
-			{
-				// standard loading
-				ret = data.loadFromCSVFile(buffer, thermalPreproMax, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer) and ret;
-			}
-		}
+            if (poRate < 0. or poRate > 1.)
+            {
+                logs.error() << "Thermal: Prepro: " << areaID << '/' << clustername
+                             << ": invalid value for PO rate (line:" << (i + 1) << ")";
+                ++errors;
+            }
 
+            if (foDuration < 1. or foDuration > 365.)
+            {
+                logs.error() << "Thermal: Prepro: " << areaID << '/' << clustername
+                             << ": invalid value for FO Duration (line:" << (i + 1) << ")";
+                ++errors;
+            }
+            if (foDuration < 1. or poDuration > 365.)
+            {
+                logs.error() << "Thermal: Prepro: " << areaID << '/' << clustername
+                             << ": invalid value for PO Duration (line:" << (i + 1) << ")";
+                ++errors;
+            }
 
-		if (study.header.version < 390)
-		{
-			data.invalidate(true);
-			auto& colFoDuration = data[foDuration];
-			auto& colPoDuration = data[poDuration];
-			for (uint i = 0; i != DAYS_PER_YEAR; ++i)
-			{
-				colFoDuration[i] = Math::Round(colFoDuration[i]);
-				colPoDuration[i] = Math::Round(colPoDuration[i]);
-			}
-			data.markAsModified();
-		}
+            if (errors > 30)
+            {
+                logs.error() << "Thermal: Prepro: " << areaID << '/' << clustername
+                             << ": too many errors. skipping";
+                break;
+            }
+        }
 
-		if (study.usedByTheSolver)
-		{
-			auto& colFoRate = data[foRate];
-			auto& colPoRate = data[poRate];
-			auto& colFoDuration = data[foDuration];
-			auto& colPoDuration = data[poDuration];
-			auto& colNPOMin = data[npoMin];
-			auto& colNPOMax = data[npoMax];
-			uint errors = 0;
+        // memory swapping
+        data.flush();
+    }
 
-			for (uint i = 0; i != DAYS_PER_YEAR; ++i)
-			{
-				double foRate = colFoRate[i];
-				double poRate = colPoRate[i];
-				double foDuration = colFoDuration[i];
-				double poDuration = colPoDuration[i];
-				double cNPOMin = colNPOMin[i];
-				double cNPOMax = colNPOMax[i];
+    return ret;
+}
 
-				if (cNPOMin < 0)
-				{
-					logs.error() << "Thermal: Prepro: " << areaID << '/' << clustername
-						<< ": NPO min can not be negative (line:" << (i+1) << ")";
-					++errors;
-				}
-				if (cNPOMax < 0)
-				{
-					logs.error() << "Thermal: Prepro: " << areaID << '/' << clustername
-						<< ": NPO max can not be negative (line:" << (i+1) << ")";
-					++errors;
-				}
-				if (cNPOMin > cNPOMax)
-				{
-					logs.error() << "Thermal: Prepro: " << areaID << '/' << clustername
-						<< ": NPO max must be greater or equal to NPO min (line:" << (i+1) << ")";
-					++errors;
-				}
+bool PreproThermal::invalidate(bool reload) const
+{
+    return data.invalidate(reload);
+}
 
-				if (foRate < 0. or foRate > 1.)
-				{
-					logs.error() << "Thermal: Prepro: " << areaID << '/' << clustername
-						<< ": invalid value for FO rate (line:" << (i+1) << ")";
-					++errors;
-				}
+void PreproThermal::markAsModified() const
+{
+    data.markAsModified();
+}
 
-				if (poRate < 0. or poRate > 1.)
-				{
-					logs.error() << "Thermal: Prepro: " << areaID << '/' << clustername
-						<< ": invalid value for PO rate (line:" << (i+1) << ")";
-					++errors;
-				}
+void PreproThermal::estimateMemoryUsage(StudyMemoryUsage& u) const
+{
+    if (timeSeriesThermal & u.study.parameters.timeSeriesToGenerate)
+    {
+        data.estimateMemoryUsage(u, true, thermalPreproMax, DAYS_PER_YEAR);
+        u.requiredMemoryForInput += sizeof(PreproThermal);
+    }
+}
 
-				if (foDuration < 1. or foDuration > 365.)
-				{
-					logs.error() << "Thermal: Prepro: " << areaID << '/' << clustername
-						<< ": invalid value for FO Duration (line:" << (i+1) << ")";
-					++errors;
-				}
-				if (foDuration < 1. or poDuration > 365.)
-				{
-					logs.error() << "Thermal: Prepro: " << areaID << '/' << clustername
-						<< ": invalid value for PO Duration (line:" << (i+1) << ")";
-					++errors;
-				}
+void PreproThermal::reset()
+{
+    data.reset(thermalPreproMax, DAYS_PER_YEAR, true);
 
-				if (errors > 30)
-				{
-					logs.error() << "Thermal: Prepro: " << areaID << '/' << clustername
-						<< ": too many errors. skipping";
-					break;
-				}
-			}
+    auto& colFoDuration = data[foDuration];
+    auto& colPoDuration = data[poDuration];
 
-			// memory swapping
-			data.flush();
-		}
+    for (uint i = 0; i != DAYS_PER_YEAR; ++i)
+    {
+        colFoDuration[i] = 1.;
+        colPoDuration[i] = 1.;
+    }
+}
 
-		return ret;
-	}
+bool PreproThermal::normalizeAndCheckNPO(const AnyString& clustername, uint clusterSize)
+{
+    // alias to our data columns
+    auto& columnNPOMax = data[npoMax];
+    auto& columnNPOMin = data[npoMin];
+    // errors management
+    uint errors = 0;
+    enum
+    {
+        maxErrors = 10
+    };
+    // Flag to determine whether the column NPO max has been normalized or not
+    bool normalized = false;
 
+    for (uint y = 0; y != data.height; ++y)
+    {
+        if (columnNPOMax[y] > clusterSize)
+        {
+            columnNPOMax[y] = clusterSize;
+            normalized = true;
+        }
 
+        if (columnNPOMin[y] > columnNPOMax[y])
+        {
+            if (++errors < maxErrors)
+            {
+                logs.error() << clustername
+                             << ": NPO min can not be greater than NPO max (hour: " << (y + 1)
+                             << ", npo-min: " << columnNPOMin[y] << ", npo-max: " << columnNPOMax[y]
+                             << ')';
+            }
+        }
+    }
 
-	bool PreproThermal::invalidate(bool reload) const
-	{
-		return data.invalidate(reload);
-	}
+    if (errors >= maxErrors)
+        logs.error() << clustername << ": too many errors. skipping (total: " << errors << ')';
 
+    if (normalized)
+        logs.info() << "  NPO max for the thermal cluster '" << clustername
+                    << "' has been normalized";
 
-	void PreproThermal::markAsModified() const
-	{
-		data.markAsModified();
-	}
-
-
-	void PreproThermal::estimateMemoryUsage(StudyMemoryUsage& u) const
-	{
-		if (timeSeriesThermal & u.study.parameters.timeSeriesToGenerate)
-		{
-			data.estimateMemoryUsage(u, true, thermalPreproMax, DAYS_PER_YEAR);
-			u.requiredMemoryForInput += sizeof(PreproThermal);
-		}
-	}
-
-
-	void PreproThermal::reset()
-	{
-		data.reset(thermalPreproMax, DAYS_PER_YEAR, true);
-
-		auto& colFoDuration = data[foDuration];
-		auto& colPoDuration = data[poDuration];
-
-		for (uint i = 0; i != DAYS_PER_YEAR; ++i)
-		{
-			colFoDuration[i] = 1.;
-			colPoDuration[i] = 1.;
-		}
-	}
-
-
-	bool PreproThermal::normalizeAndCheckNPO(const AnyString& clustername, uint clusterSize)
-	{
-		// alias to our data columns
-		auto& columnNPOMax = data[npoMax];
-		auto& columnNPOMin = data[npoMin];
-		// errors management
-		uint errors = 0;
-		enum { maxErrors = 10 };
-		// Flag to determine whether the column NPO max has been normalized or not
-		bool normalized = false;
-
-		for (uint y = 0; y != data.height; ++y)
-		{
-			if (columnNPOMax[y] > clusterSize)
-			{
-				columnNPOMax[y] = clusterSize;
-				normalized = true;
-			}
-
-			if (columnNPOMin[y] > columnNPOMax[y])
-			{
-				if (++errors < maxErrors)
-				{
-					logs.error() << clustername
-						<< ": NPO min can not be greater than NPO max (hour: " << (y + 1)
-						<< ", npo-min: " <<  columnNPOMin[y] << ", npo-max: " << columnNPOMax[y] << ')';
-				}
-			}
-		}
-
-		if (errors >= maxErrors)
-			logs.error() << clustername << ": too many errors. skipping (total: " << errors << ')';
-
-		if (normalized)
-			logs.info() << "  NPO max for the thermal cluster '" << clustername << "' has been normalized";
-
-		// modified and flushed
-		data.markAsModified();
-		data.flush();
-		return (0 == errors);
-	}
-
-
-
+    // modified and flushed
+    data.markAsModified();
+    data.flush();
+    return (0 == errors);
+}
 
 } // namespace Data
 } // namespace Antares
-

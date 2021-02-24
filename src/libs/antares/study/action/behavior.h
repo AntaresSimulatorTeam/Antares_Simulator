@@ -25,40 +25,35 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_BEHAVIOR_H__
-# define __ANTARES_LIBS_STUDY_ACTION_BEHAVIOR_H__
-
+#define __ANTARES_LIBS_STUDY_ACTION_BEHAVIOR_H__
 
 namespace Antares
 {
 namespace Action
 {
+/*!
+** \brief Behavior for a single action
+*/
+enum Behavior
+{
+    //! Disabled the action and all sub-actions
+    bhSkip = 0,
+    /*!
+    ** \brief Create if not exists
+    */
+    bhMerge,
+    //! Overwrite any existing item
+    bhOverwrite,
 
-	/*!
-	** \brief Behavior for a single action
-	*/
-	enum Behavior
-	{
-		//! Disabled the action and all sub-actions
-		bhSkip = 0,
-		/*!
-		** \brief Create if not exists
-		*/
-		bhMerge,
-		//! Overwrite any existing item
-		bhOverwrite,
+    //! The maximum number of behaviors
+    bhMax
 
-		//! The maximum number of behaviors
-		bhMax
+}; // enum Behavior
 
-	}; // enum Behavior
-
-
-
-	/*!
-	** \brief Convert a behavior into its human string representation
-	*/
-	const char* BehaviorToString(Behavior behavior);
-
+/*!
+** \brief Convert a behavior into its human string representation
+*/
+const char* BehaviorToString(Behavior behavior);
 
 } // namespace Action
 } // namespace Antares

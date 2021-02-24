@@ -11,26 +11,21 @@
 #pragma once
 #include "waitingroom.h"
 
-
 namespace Yuni
 {
 namespace Private
 {
 namespace QueueService
 {
+inline bool WaitingRoom::empty() const
+{
+    return (0 == pJobCount);
+}
 
-	inline bool WaitingRoom::empty() const
-	{
-		return (0 == pJobCount);
-	}
-
-
-	inline uint WaitingRoom::size() const
-	{
-		return (uint) pJobCount;
-	}
-
-
+inline uint WaitingRoom::size() const
+{
+    return (uint)pJobCount;
+}
 
 } // namespace QueueService
 } // namespace Private

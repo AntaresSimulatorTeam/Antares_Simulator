@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_MEMORYSTATISTICS_PRIVATE_H__
-# define __ANTARES_APPLICATION_MEMORYSTATISTICS_PRIVATE_H__
-
+#define __ANTARES_APPLICATION_MEMORYSTATISTICS_PRIVATE_H__
 
 namespace Antares
 {
@@ -34,15 +33,11 @@ namespace Private
 {
 namespace Window
 {
-
-
-	// Forward declaration
-	class MemoryStatisticsData;
-
+// Forward declaration
+class MemoryStatisticsData;
 
 } // namespace Window
 } // namespace Private
 } // namespace Antares
-
 
 #endif // __ANTARES_APPLICATION_MEMORYSTATISTICS_PRIVATE_H__

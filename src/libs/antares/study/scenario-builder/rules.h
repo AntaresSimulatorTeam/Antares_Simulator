@@ -25,14 +25,14 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __LIBS_STUDY_SCENARIO_BUILDER_RULES_H__
-# define __LIBS_STUDY_SCENARIO_BUILDER_RULES_H__
+#define __LIBS_STUDY_SCENARIO_BUILDER_RULES_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-# include "../fwd.h"
-# include "timeseries.h"
-# include <map>
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+#include "../fwd.h"
+#include "TSnumberData.h"
+#include "hydroLevelsData.h"
+#include <map>
 
 namespace Antares
 {
@@ -40,104 +40,99 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
+/*!
+** \brief Rules for TS numbers, for all years and a single timeseries
+*/
+class Rules final : private Yuni::NonCopyable<Rules>
+{
+public:
+    //! Smart pointer
+    typedef Yuni::SmartPtr<Rules> Ptr;
+    //! Map
+    typedef std::map<RulesScenarioName, Ptr> Map;
+    //! Map ID
+    typedef std::map<int, Ptr> MappingID;
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    **
+    ** \param tstype Type of the timeseries
+    */
+    Rules();
+    //! Destructor
+    ~Rules();
+    //@}
 
-	/*!
-	** \brief Rules for TS numbers, for all years and a single timeseries
-	*/
-	class Rules final : private Yuni::NonCopyable<Rules>
-	{
-	public:
-		//! Smart pointer
-		typedef Yuni::SmartPtr<Rules>  Ptr;
-		//! Map
-		typedef std::map<RulesScenarioName, Ptr>  Map;
-		//! Map ID
-		typedef std::map<int, Ptr>  MappingID;
+    //! \name Data manupulation
+    //@{
+    /*!
+    ** \brief Initialize data from the study
+    */
+    bool reset(const Study& study);
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		**
-		** \param tstype Type of the timeseries
-		*/
-		Rules();
-		//! Destructor
-		~Rules();
-		//@}
+    /*!
+    ** \brief Load information from a single line (extracted from an INI file)
+    */
+    void loadFromInstrs(Study& study,
+                        const AreaName::Vector& instrs,
+                        String value,
+                        bool updaterMode);
 
-		//! \name Data manupulation
-		//@{
-		/*!
-		** \brief Initialize data from the study
-		*/
-		bool reset(const Study& study);
+    /*!
+    ** \brief Export the data into a mere INI file
+    */
+    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
+    //@}
 
-		/*!
-		** \brief Load data from the study
-		*/
-		bool loadFromStudy(const Study& study);
+    //! Get the number of areas
+    uint areaCount() const;
 
-		/*!
-		** \brief Load information from a single line (extracted from an INI file)
-		*/
-		void loadFromInstrs(Study& study, const AreaName::Vector& instrs, uint value, bool updaterMode);
+    //! Name of the rules set
+    const RulesScenarioName& name() const;
 
-		/*!
-		** \brief Export the data into a mere INI file
-		*/
-		void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
-		//@}
+    /*!
+    ** \brief Apply the changes to the timeseries number matrices
+    **
+    ** This method is only useful when launched from the solver.
+    */
+    void apply(Study& study);
 
-		//! Get the number of areas
-		uint areaCount() const;
+    // When current rule is the active one, sends warnings for disabled clusters.
+    void sendWarningsForDisabledClusters();
 
-		//! Name of the rules set
-		const RulesScenarioName&  name() const;
+public:
+    //! Load
+    loadTSNumberData load;
+    //! Solar
+    solarTSNumberData solar;
+    //! Hydro
+    hydroTSNumberData hydro;
+    //! Wind
+    windTSNumberData wind;
+    //! Thermal (array [0..pAreaCount - 1])
+    thermalTSNumberData* thermal;
+    //! hydro levels
+    hydroLevelsData hydroLevels;
 
+private:
+    //! Total number of areas
+    uint pAreaCount;
+    //! Name of the rules
+    RulesScenarioName pName;
+    // Disabled clusters when current rule is active (useful for sending warnings)
+    map<string, vector<uint>> disabledClustersOnRuleActive;
+    // Friend !
+    friend class Sets;
 
-		/*!
-		** \brief Apply the changes to the timeseries number matrices
-		**
-		** This method is only useful when launched from the solver.
-		*/
-		void apply(const Study& study);
-
-	public:
-		//! Load
-		TSNumberRules  load;
-		//! Solar
-		TSNumberRules  solar;
-		//! Hydro
-		TSNumberRules  hydro;
-		//! Wind
-		TSNumberRules  wind;
-		//! Thermal (array [0..pAreaCount - 1])
-		TSNumberRules* thermal;
-
-	private:
-		//! Total number of areas
-		uint pAreaCount;
-		//! Name of the rules
-		RulesScenarioName pName;
-		//! Alias to the study, provided by the class Sets
-		const Study* pStudy;
-		// Friend !
-		friend class Sets;
-
-	}; // class Rules
-
-
-
-
-
+}; // class Rules
 
 } // namespace ScenarioBuilder
 } // namespace Data
 } // namespace Antares
 
-# include "rules.hxx"
+#include "rules.hxx"
 
 #endif // __LIBS_STUDY_SCENARIO_BUILDER_RULES_H__

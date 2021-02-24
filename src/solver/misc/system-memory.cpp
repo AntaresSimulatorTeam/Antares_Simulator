@@ -32,36 +32,28 @@
 using namespace Yuni;
 using namespace Antares;
 
-
-
 SystemMemoryLogger::SystemMemoryLogger()
 {
 }
 
-
 SystemMemoryLogger::~SystemMemoryLogger()
 {
-	stop();
+    stop();
 }
-
 
 bool SystemMemoryLogger::onStarting()
 {
-	onInterval(0);
-	return true;
+    onInterval(0);
+    return true;
 }
-
 
 bool SystemMemoryLogger::onInterval(uint)
 {
-	System::Memory::Usage memory;
-	memory.available /= 1024 * 1024; // Mib
-	memory.total   /= 1024 * 1024; // Mib
+    System::Memory::Usage memory;
+    memory.available /= 1024 * 1024; // Mib
+    memory.total /= 1024 * 1024;     // Mib
 
-	logs.info() << "  system memory report: "
-		<< memory.available << " Mib / "
-		<< memory.total  << " Mib,  "
-		<< (100. / memory.total * memory.available) << "% free";
-	return true;
+    logs.info() << "  system memory report: " << memory.available << " Mib / " << memory.total
+                << " Mib,  " << (100. / memory.total * memory.available) << "% free";
+    return true;
 }
-

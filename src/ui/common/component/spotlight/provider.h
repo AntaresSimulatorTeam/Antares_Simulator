@@ -25,70 +25,68 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_PROVIDER_HXX__
-# define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_PROVIDER_HXX__
+#define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_PROVIDER_HXX__
 
+/*!
+** \brief Data Provider
+*/
+class IProvider : public Yuni::IEventObserver<Spotlight>
+{
+public:
+    //! ptr
+    typedef Yuni::SmartPtr<IProvider> Ptr;
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    IProvider()
+    {
+    }
+    //! Destructor
+    virtual ~IProvider();
+    //@}
 
-	/*!
-	** \brief Data Provider
-	*/
-	class IProvider : public Yuni::IEventObserver<Spotlight>
-	{
-	public:
-		//! ptr
-		typedef Yuni::SmartPtr<IProvider> Ptr;
+    //! \name Search
+    //@{
+    /*!
+    ** \brief Rebuild the result list from a list of tokens
+    */
+    virtual void search(IItem::Vector& out,
+                        const SearchToken::Vector& tokens,
+                        const Yuni::String& text = "")
+      = 0;
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		IProvider() {}
-		//! Destructor
-		virtual ~IProvider();
-		//@}
+    /*!
+    ** \brief Redo the research
+    */
+    void redoResearch();
+    //@}
 
+    //! \name Selection
+    //@{
+    //! Event: an item has been selected
+    virtual bool onSelect(IItem::Ptr& item);
+    //! Event: a list of items have been selected (more than one)
+    virtual bool onSelect(const IItem::Vector& items);
 
-		//! \name Search
-		//@{
-		/*!
-		** \brief Rebuild the result list from a list of tokens
-		*/
-		virtual void search(IItem::Vector& out, const SearchToken::Vector& tokens, const Yuni::String& text = "") = 0;
+    //! Event: an item has been selected
+    virtual bool onDoubleClickSelect(IItem::Ptr& item);
+    //@}
 
-		/*!
-		** \brief Redo the research
-		*/
-		void redoResearch();
-		//@}
+    //! \name Component
+    //@{
+    //! Get the pointer of the attached component (can be null)
+    Spotlight* component() const;
+    //@}
 
+protected:
+    //! The parent component (can be null)
+    Spotlight* pSpotlightComponent;
+    friend class Spotlight;
 
-		//! \name Selection
-		//@{
-		//! Event: an item has been selected
-		virtual bool onSelect(IItem::Ptr& item);
-		//! Event: a list of items have been selected (more than one)
-		virtual bool onSelect(const IItem::Vector& items);
-
-		//! Event: an item has been selected
-		virtual bool onDoubleClickSelect(IItem::Ptr& item);
-		//@}
-
-
-		//! \name Component
-		//@{
-		//! Get the pointer of the attached component (can be null)
-		Spotlight* component() const;
-		//@}
-
-	protected:
-		//! The parent component (can be null)
-		Spotlight* pSpotlightComponent;
-		friend class Spotlight;
-
-	}; // class IProvider
-
-
+}; // class IProvider
 
 #endif // __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_PROVIDER_HXX__

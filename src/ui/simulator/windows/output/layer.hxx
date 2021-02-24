@@ -25,8 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_WINDOWS_OUTPUT_LAYER_HXX__
-# define __ANTARES_WINDOWS_OUTPUT_LAYER_HXX__
-
+#define __ANTARES_WINDOWS_OUTPUT_LAYER_HXX__
 
 namespace Antares
 {
@@ -34,20 +33,15 @@ namespace Window
 {
 namespace OutputViewer
 {
+inline const wxString& Layer::alternativeCaption() const
+{
+    return pAlternativeCaption;
+}
 
-	inline const wxString& Layer::alternativeCaption() const
-	{
-		return pAlternativeCaption;
-	}
-
-
-	inline bool Layer::isVirtual() const
-	{
-		return type != ltOutput;
-	}
-
-
-
+inline bool Layer::isVirtual() const
+{
+    return type != ltOutput;
+}
 
 } // namespace OutputViewer
 } // namespace Window

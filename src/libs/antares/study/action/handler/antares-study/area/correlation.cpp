@@ -28,7 +28,6 @@
 #include "correlation.h"
 #include "correlation-post.h"
 
-
 namespace Antares
 {
 namespace Action
@@ -37,77 +36,66 @@ namespace AntaresStudy
 {
 namespace Area
 {
+Correlation::Correlation(Data::TimeSeries ts, const AnyString& areaname) :
+ pType(ts), pOriginalAreaName(areaname)
+{
+    switch (ts)
+    {
+    case Data::timeSeriesLoad:
+        pInfos.caption << "Load : Correlation";
+        break;
+    case Data::timeSeriesSolar:
+        pInfos.caption << "Solar : Correlation";
+        break;
+    case Data::timeSeriesWind:
+        pInfos.caption << "Wind : Correlation";
+        break;
+    case Data::timeSeriesHydro:
+        pInfos.caption << "Hydro : Correlation";
+        break;
+    case Data::timeSeriesThermal:
+        pInfos.caption << "Thermal : Correlation";
+        break;
+    default:
+        break;
+    }
+}
 
-	Correlation::Correlation(Data::TimeSeries ts, const AnyString& areaname) :
-		pType(ts),
-		pOriginalAreaName(areaname)
-	{
-		switch (ts)
-		{
-			case Data::timeSeriesLoad:
-				pInfos.caption << "Load : Correlation";
-				break;
-			case Data::timeSeriesSolar:
-				pInfos.caption << "Solar : Correlation";
-				break;
-			case Data::timeSeriesWind:
-				pInfos.caption << "Wind : Correlation";
-				break;
-			case Data::timeSeriesHydro:
-				pInfos.caption << "Hydro : Correlation";
-				break;
-			case Data::timeSeriesThermal:
-				pInfos.caption << "Thermal : Correlation";
-				break;
-			default:
-				break;
-		}
-	}
+Correlation::~Correlation()
+{
+}
 
+bool Correlation::prepareWL(Context&)
+{
+    pInfos.message.clear();
+    pInfos.state = stReady;
+    switch (pInfos.behavior)
+    {
+    case bhOverwrite:
+        pInfos.message << "The correlation coefficients will be copied";
+        break;
+    default:
+        pInfos.state = stNothingToDo;
+        break;
+    }
 
-	Correlation::~Correlation()
-	{}
+    return true;
+}
 
+bool Correlation::performWL(Context&)
+{
+    // Nothing to do
+    return true;
+}
 
-	bool Correlation::prepareWL(Context&)
-	{
-		pInfos.message.clear();
-		pInfos.state = stReady;
-		switch (pInfos.behavior)
-		{
-			case bhOverwrite:
-				pInfos.message << "The correlation coefficients will be copied";
-				break;
-			default:
-				pInfos.state = stNothingToDo;
-				break;
-		}
-
-		return true;
-	}
-
-
-	bool Correlation::performWL(Context&)
-	{
-		// Nothing to do
-		return true;
-	}
-
-
-	void Correlation::createPostActionsWL(const IAction::Ptr& node)
-	{
-		// all actions on correlation must be delayed
-		// (we must have all areas, thus it must be done at the end of the merge)
-		*node += new CorrelationPost(this, pType, pOriginalAreaName);
-	}
-
-
-
-
-
+void Correlation::createPostActionsWL(const IAction::Ptr& node)
+{
+    // all actions on correlation must be delayed
+    // (we must have all areas, thus it must be done at the end of the merge)
+    *node += new CorrelationPost(this, pType, pOriginalAreaName);
+}
 
 } // namespace Area
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
-

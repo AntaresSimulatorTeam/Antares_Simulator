@@ -40,83 +40,77 @@
 #ifdef YUNI_OS_MSVC
 // WxWidgets Stuff
 IMPLEMENT_APP(Antares::Application)
-# else
+#else
 
-# include "../../internet/license.h"
-# include <antares/memory/memory.h>
-
+#include "../../internet/license.h"
+#include <antares/memory/memory.h>
 
 // WxWidgets Stuff
 IMPLEMENT_APP_NO_MAIN(Antares::Application)
 
-
 using namespace Yuni;
 using namespace Antares;
 
-
-
-
 int main(int argc, char* argv[])
 {
+    // Antares SWAP
+    if (not memory.initialize())
+        return EXIT_FAILURE;
 
-	// Antares SWAP
-	if (not memory.initialize())
-		return EXIT_FAILURE;
+    // We have one or several arguments
+    argv = AntaresGetUTF8Arguments(argc, argv);
 
-	// We have one or several arguments
-	argv = AntaresGetUTF8Arguments(argc, argv);
+    // locale
+    InitializeDefaultLocale();
 
-	// locale
-	InitializeDefaultLocale();
+    if (argc > 1)
+    {
+        GetOpt::Parser options;
+        //
+        options.addParagraph(Yuni::String()
+                             << "Antares Simulator v" << ANTARES_VERSION_PUB_STR << "\n");
 
-	if (argc > 1)
-	{
-		GetOpt::Parser options;
-		//
-		options.addParagraph(Yuni::String()
-			<< "Antares Simulator v" << ANTARES_VERSION_PUB_STR << "\n");
+        // Study
+        options.add(Antares::Forms::StudyToLoadAtStartup, 'p', "path", "Path to the study to load");
+        options.remainingArguments(Antares::Forms::StudyToLoadAtStartup);
+        // Version
+        bool optVersion = false;
+        options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
-		// Study
-		options.add(Antares::Forms::StudyToLoadAtStartup, 'p', "path", "Path to the study to load");
-		options.remainingArguments(Antares::Forms::StudyToLoadAtStartup);
-		// Version
-		bool optVersion = false;
-		options.addFlag(optVersion, 'v', "version", "Print the version and exit");
+        // An error has occured
+        if (!options(argc, argv))
+        {
+            FreeUTF8Arguments(argc, argv);
+            return options.errors() ? 1 : 0;
+        }
 
-		// An error has occured
-		if (!options(argc, argv))
-		{
-			FreeUTF8Arguments(argc, argv);
-			return options.errors() ? 1 : 0;
-		}
+        // Version
+        if (optVersion)
+        {
+            std::cout << ANTARES_VERSION_STR << "\n";
+            FreeUTF8Arguments(argc, argv);
+            return 0;
+        }
+    }
 
-		// Version
-		if (optVersion)
-		{
-			std::cout << ANTARES_VERSION_STR << "\n";
-			FreeUTF8Arguments(argc, argv);
-			return 0;
-		}
-	}
+    // UNIX - Application name
+    // For Windows, see application/application.cpp
+    logs.applicationName("antares");
 
-	// UNIX - Application name
-	// For Windows, see application/application.cpp
-	logs.applicationName("antares");
+    // UNIX - Load the local policy settings
+    // For Windows, see application/application.cpp
+    LocalPolicy::Open();
+    LocalPolicy::CheckRootPrefix(argv[0]);
 
-	// UNIX - Load the local policy settings
-	// For Windows, see application/application.cpp
-	LocalPolicy::Open();
-	LocalPolicy::CheckRootPrefix(argv[0]);
+    // Initialize resources
+    Resources::Initialize(argc, argv, true);
 
-	// Initialize resources
-	Resources::Initialize(argc, argv, true);
+    // Running the GUI
+    const int ret = wxEntry(argc, argv);
 
-	// Running the GUI
-	const int ret = wxEntry(argc, argv);
-
-	LocalPolicy::Close();
-	FreeUTF8Arguments(argc, argv);
-	return ret;
+    LocalPolicy::Close();
+    FreeUTF8Arguments(argc, argv);
+    return ret;
 }
 
 #endif // not YUNI_OS_MSVC

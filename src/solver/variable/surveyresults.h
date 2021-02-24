@@ -25,9 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_VARIABLE_SURVEY_RESULTS_H__
-# define __SOLVER_VARIABLE_SURVEY_RESULTS_H__
+#define __SOLVER_VARIABLE_SURVEY_RESULTS_H__
 
-# include "surveyresults/surveyresults.h"
-
+#include "surveyresults/surveyresults.h"
 
 #endif // __SOLVER_VARIABLE_SURVEY_RESULTS_H__

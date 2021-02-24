@@ -31,192 +31,169 @@
 #include "container.h"
 #include "../../../logs.h"
 
-
 using namespace Yuni;
 using namespace Antares;
-
-
 
 namespace Antares
 {
 namespace Data
 {
+PartThermal::PartThermal() :
+ unsuppliedEnergyCost(0.), spilledEnergyCost(0.), clusters(nullptr), clusterCount((uint)-1)
+{
+}
 
+bool PartThermal::invalidate(bool reload) const
+{
+    bool ret = true;
+    ret = list.invalidate(reload) && ret;
+    ret = mustrunList.invalidate(reload) && ret;
+    return ret;
+}
 
-	PartThermal::PartThermal() :
-		unsuppliedEnergyCost(0.),
-		spilledEnergyCost(0.),
-		clusters(nullptr),
-		clusterCount((uint) -1)
-	{}
+void PartThermal::markAsModified() const
+{
+    list.markAsModified();
+    mustrunList.markAsModified();
+}
 
+void PartThermal::estimateMemoryUsage(StudyMemoryUsage& u) const
+{
+    u.requiredMemoryForInput += sizeof(PartThermal);
+    list.estimateMemoryUsage(u);
+}
 
-	bool PartThermal::invalidate(bool reload) const
-	{
-		bool ret = true;
-		ret = list.invalidate(reload) && ret;
-		ret = mustrunList.invalidate(reload) && ret;
-		return ret;
-	}
+PartThermal::~PartThermal()
+{
+    if (clusterCount)
+        delete[] clusters;
+}
 
+void PartThermal::prepareAreaWideIndexes()
+{
+    // Copy the list with all thermal clusters
+    // And init the areaWideIndex (unique index for a given area)
+    clusterCount = list.size();
+    delete[] clusters;
+    if (!clusterCount)
+    {
+        clusters = nullptr;
+        return;
+    }
 
-	void PartThermal::markAsModified() const
-	{
-		list.markAsModified();
-		mustrunList.markAsModified();
-	}
+    typedef ThermalCluster* ThermalClusterPointer;
+    clusters = new ThermalClusterPointer[clusterCount];
 
+    auto end = list.end();
+    uint idx = 0;
+    for (auto i = list.begin(); i != end; ++i)
+    {
+        ThermalCluster* t = i->second;
+        t->areaWideIndex = idx;
+        clusters[idx] = t;
+        ++idx;
+    }
+}
 
-	void PartThermal::estimateMemoryUsage(StudyMemoryUsage& u) const
-	{
-		u.requiredMemoryForInput += sizeof(PartThermal);
-		list.estimateMemoryUsage(u);
-	}
+uint PartThermal::prepareClustersInMustRunMode()
+{
+    // nothing to do if there is no cluster available
+    if (list.empty())
+        return 0;
 
+    // the number of clusters in 'must-run' mode
+    uint count = 0;
+    bool mustContinue;
+    do
+    {
+        mustContinue = false;
+        auto end = list.end();
+        for (auto i = list.begin(); i != end; ++i)
+        {
+            if ((i->second)->mustrun)
+            {
+                // Detaching the thermal cluster from the main list...
+                ThermalCluster* cluster = list.detach(i);
+                if (!cluster->enabled)
+                    continue;
+                // ...and attaching it into the second list
+                if (!mustrunList.add(cluster))
+                {
+                    logs.error() << "Impossible to prepare the thermal cluster in 'must-run' mode: "
+                                 << cluster->parentArea->name << "::" << cluster->name();
+                }
+                else
+                {
+                    ++count;
+                    logs.info() << "enabling 'must-run' mode for the cluster  "
+                                << cluster->parentArea->name << "::" << cluster->name();
+                }
 
-	PartThermal::~PartThermal()
-	{
-		if(clusterCount)
-		delete[] clusters;
-	}
+                // the iterator has been invalidated, loop again
+                mustContinue = true;
+                break;
+            }
+        }
+    } while (mustContinue);
 
+    // if some thermal cluster has been moved, we must rebuild all the indexes
+    if (count)
+    {
+        list.rebuildIndex();
+        mustrunList.rebuildIndex();
+    }
 
-	void PartThermal::prepareAreaWideIndexes()
-	{
-		// Copy the list with all thermal clusters
-		// And init the areaWideIndex (unique index for a given area)
-		clusterCount = list.size();
-		delete[] clusters;
-		if (!clusterCount)
-		{
-			clusters = nullptr;
-			return;
-		}
+    return count;
+}
 
-		typedef ThermalCluster* ThermalClusterPointer;
-		clusters = new ThermalClusterPointer[clusterCount];
+uint PartThermal::removeDisabledClusters()
+{
+    // nothing to do if there is no cluster available
+    if (list.empty())
+        return 0;
 
-		auto end = list.end();
-		uint idx = 0;
-		for (auto i = list.begin(); i != end; ++i)
-		{
-			ThermalCluster* t = i->second;
-			t->areaWideIndex = idx;
-			clusters[idx] = t;
-			++idx;
-		}
-	}
+    // the number of clusters in 'must-run' mode
+    uint count = 0;
+    bool doWeContinue;
+    do
+    {
+        doWeContinue = false;
+        auto end = list.end();
+        for (auto i = list.begin(); i != end; ++i)
+        {
+            if (!(i->second)->enabled)
+            {
+                // Removing the thermal cluster from the main list...
+                list.remove(i);
 
+                ++count;
 
-	uint PartThermal::prepareClustersInMustRunMode()
-	{
-		// nothing to do if there is no cluster available
-		if (list.empty())
-			return 0;
+                // the iterator has been invalidated, loop again
+                doWeContinue = true;
+                break;
+            }
+        }
+    } while (doWeContinue);
 
-		// the number of clusters in 'must-run' mode
-		uint count = 0;
-		bool mustContinue;
-		do
-		{
-			mustContinue = false;
-			auto end = list.end();
-			for (auto i = list.begin(); i != end; ++i)
-			{
-				if ((i->second)->mustrun)
-				{
-					// Detaching the thermal cluster from the main list...
-					ThermalCluster* cluster = list.detach(i);
-					if (!cluster->enabled)
-						continue;
-					// ...and attaching it into the second list
-					if (!mustrunList.add(cluster))
-					{
-						logs.error() << "Impossible to prepare the thermal cluster in 'must-run' mode: "
-							<< cluster->parentArea->name << "::" << cluster->name();
-					}
-					else
-					{
-						++count;
-						logs.info() << "enabling 'must-run' mode for the cluster  "
-							<< cluster->parentArea->name << "::" << cluster->name();
-					}
+    // if some thermal cluster has been moved, we must rebuild all the indexes
+    if (count)
+        list.rebuildIndex();
 
-					// the iterator has been invalidated, loop again
-					mustContinue = true;
-					break;
-				}
-			}
-		}
-		while (mustContinue);
+    return count;
+}
 
-		// if some thermal cluster has been moved, we must rebuild all the indexes
-		if (count)
-		{
-			list.rebuildIndex();
-			mustrunList.rebuildIndex();
-		}
+void PartThermal::reset()
+{
+    unsuppliedEnergyCost = 0.;
+    spilledEnergyCost = 0.;
 
-		return count;
-	}
+    mustrunList.clear();
+    list.clear();
 
-
-
-	uint PartThermal::removeDisabledClusters()
-	{
-		// nothing to do if there is no cluster available
-		if (list.empty())
-			return 0;
-
-		// the number of clusters in 'must-run' mode
-		uint count = 0;
-		bool doWeContinue;
-		do
-		{
-			doWeContinue = false;
-			auto end = list.end();
-			for (auto i = list.begin(); i != end; ++i)
-			{
-				if (!(i->second)->enabled)
-				{
-					// Removing the thermal cluster from the main list...
-					list.remove(i);
-
-					++count;
-
-					// the iterator has been invalidated, loop again
-					doWeContinue = true;
-					break;
-				}
-			}
-		} while (doWeContinue);
-
-		// if some thermal cluster has been moved, we must rebuild all the indexes
-		if (count)
-			list.rebuildIndex();
-
-		return count;
-	}
-
-
-
-	void PartThermal::reset()
-	{
-		unsuppliedEnergyCost = 0.;
-		spilledEnergyCost    = 0.;
-
-		mustrunList.clear();
-		list.clear();
-
-		// just in case
-		clusterCount  = 0;
-		delete[] clusters;
-	}
-
-
-
-
+    // just in case
+    clusterCount = 0;
+    delete[] clusters;
+}
 
 } // namespace Data
 } // namespace Antares
-

@@ -25,52 +25,45 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_LIB_STUDY_FILTER_H__
-# define __ANTARES_LIB_STUDY_FILTER_H__
+#define __ANTARES_LIB_STUDY_FILTER_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
 namespace Antares
 {
 namespace Data
 {
+enum FilterFlag
+{
+    filterNone = 0,
+    filterHourly = 1,
+    filterDaily = 2,
+    filterWeekly = 4,
+    filterMonthly = 8,
+    filterAnnual = 16,
+    filterAll = (uint)-1,
+};
 
-	enum FilterFlag
-	{
-		filterNone     = 0,
-		filterHourly   = 1,
-		filterDaily    = 2,
-		filterWeekly   = 4,
-		filterMonthly  = 8,
-		filterAnnual   = 16,
-		filterAll      = (uint) -1,
-	};
+/*!
+** \brief Append to an arbitrary string all flags that make up the filter
+*/
+template<class StringT>
+void AppendFilterToString(StringT& out, uint filter);
 
+/*!
+** \brief Convert a mere string into filter flags
+*/
+uint StringToFilter(const AnyString& string);
 
-	/*!
-	** \brief Append to an arbitrary string all flags that make up the filter
-	*/
-	template<class StringT>
-	void AppendFilterToString(StringT& out, uint filter);
-
-
-	/*!
-	** \brief Convert a mere string into filter flags
-	*/
-	uint StringToFilter(const AnyString& string);
-
-	/*!
-	** \brief Convert a filter indices into filter flags
-	*/
-	uint filterIndexToFilter(const uint index);
-
-
+/*!
+** \brief Convert a filter indices into filter flags
+*/
+uint filterIndexToFilter(const uint index);
 
 } // namespace Data
 } // namespace Antares
 
-# include "filter.hxx"
+#include "filter.hxx"
 
 #endif // __ANTARES_LIB_STUDY_FILTER_H__

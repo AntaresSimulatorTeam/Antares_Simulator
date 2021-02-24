@@ -25,25 +25,17 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_APPLICATION_WINDOW_ANALYZER_HXX__
-# define __ANTARES_APPLICATION_WINDOW_ANALYZER_HXX__
-
-
+#define __ANTARES_APPLICATION_WINDOW_ANALYZER_HXX__
 
 namespace Antares
 {
 namespace Window
 {
-
-
-
-	inline void AnalyzerWizard::info(const Yuni::NullPtr&)
-	{
-		wxCommandEvent evt(wxEVT_COMMAND_MENU_SELECTED, mnIDUpdateInfo);
-		AddPendingEvent(evt);
-	}
-
-
-
+inline void AnalyzerWizard::info(const Yuni::NullPtr&)
+{
+    wxCommandEvent evt(wxEVT_COMMAND_MENU_SELECTED, mnIDUpdateInfo);
+    AddPendingEvent(evt);
+}
 
 } // namespace Window
 } // namespace Antares

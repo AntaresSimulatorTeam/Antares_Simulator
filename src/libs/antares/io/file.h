@@ -25,12 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __LIBS_ANTARES_IO_FILE_H__
-# define __LIBS_ANTARES_IO_FILE_H__
+#define __LIBS_ANTARES_IO_FILE_H__
 
-# include <yuni/yuni.h>
-# include <yuni/core/string.h>
-
-
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
 /*!
 ** \brief Reset the content of a file
@@ -38,7 +36,5 @@
 ** This routine will wait if there is not enough disk space
 */
 bool IOFileSetContent(const AnyString& filename, const AnyString& content);
-
-
 
 #endif // __LIBS_ANTARES_IO_FILE_H__

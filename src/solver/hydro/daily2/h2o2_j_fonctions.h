@@ -25,33 +25,30 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-# ifndef __SOLVER_H2O2_J_FONCTIONS__
-# define __SOLVER_H2O2_J_FONCTIONS__
+#ifndef __SOLVER_H2O2_J_FONCTIONS__
+#define __SOLVER_H2O2_J_FONCTIONS__
 
-# ifdef __cplusplus
-  extern "C"
-  {
-# endif
+DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation();
+void H2O2_J_OptimiserUnMois(DONNEES_MENSUELLES_ETENDUES*);
+char H2O2_J_EcrireJeuDeDonneesLineaireAuFormatMPS(DONNEES_MENSUELLES_ETENDUES*, FILE*);
+void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES*);
+void H2O2_J_ConstruireLesContraintes(int,
+                                     int*,
+                                     char*,
+                                     int*,
+                                     double*,
+                                     int*,
+                                     CORRESPONDANCE_DES_VARIABLES_PB_ETENDU*);
+void H2O2_j_ConstruireLesVariables(int,
+                                   DONNEES_MENSUELLES_ETENDUES*,
+                                   double*,
+                                   double*,
+                                   int*,
+                                   double**,
+                                   CORRESPONDANCE_DES_VARIABLES_PB_ETENDU*);
+void H2O2_J_apply_costs(const Hydro_problem_costs&, DONNEES_MENSUELLES_ETENDUES&);
+void H2O2_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES_ETENDUES*, int);
+void H2O2_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES_ETENDUES*, int);
+void H2O2_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES_ETENDUES*, int);
 
-DONNEES_MENSUELLES_ETENDUES * H2O2_J_Instanciation( void );
-void H2O2_J_OptimiserUnMois( DONNEES_MENSUELLES_ETENDUES * );
-char H2O2_J_EcrireJeuDeDonneesLineaireAuFormatMPS( DONNEES_MENSUELLES_ETENDUES * , FILE * );
-void H2O2_J_Free( DONNEES_MENSUELLES_ETENDUES * );		
-void H2O2_J_ConstruireLesContraintes(	int,
-										int *,
-										char *,
-										int *,
-										double *,
-										int *,
-										CORRESPONDANCE_DES_VARIABLES_PB_ETENDU *
-									);
-void H2O2_j_ConstruireLesVariables( int , DONNEES_MENSUELLES_ETENDUES *, double * , double * , int * , double ** , CORRESPONDANCE_DES_VARIABLES_PB_ETENDU * );
-void H2O2_J_InitialiserLesBornesdesVariables( DONNEES_MENSUELLES_ETENDUES * , int );
-void H2O2_J_InitialiserLeSecondMembre( DONNEES_MENSUELLES_ETENDUES * , int );
-void H2O2_J_ResoudreLeProblemeLineaire( DONNEES_MENSUELLES_ETENDUES * , int );
-	
-# ifdef __cplusplus
-  }
-# endif
-
-# endif  /* __SOLVER_H2O2_J_FONCTIONS__ */
+#endif /* __SOLVER_H2O2_J_FONCTIONS__ */

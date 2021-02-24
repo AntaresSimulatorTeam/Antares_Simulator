@@ -37,103 +37,90 @@ namespace AntaresStudy
 {
 namespace Constraint
 {
+Weights::Weights(const AnyString& name, Antares::Data::ConstraintName targetName) :
+ pOriginalConstraintName(name), targetName(targetName), pCurrentContext(NULL)
+{
+    pInfos.caption << "Weights";
+}
 
-	Weights::Weights(const AnyString& name, Antares::Data::ConstraintName targetName) :
-		pOriginalConstraintName(name),
-		targetName(targetName),
-		pCurrentContext(NULL)
-	{
-		pInfos.caption << "Weights";
-	}
+Weights::~Weights()
+{
+}
 
+bool Weights::prepareWL(Context&)
+{
+    pInfos.message.clear();
+    pInfos.state = stReady;
+    switch (pInfos.behavior)
+    {
+    case bhOverwrite:
+        pInfos.message << "The Weights will be copied";
+        break;
+    default:
+        pInfos.state = stNothingToDo;
+        break;
+    }
+    return true;
+}
 
-	Weights::~Weights()
-	{}
+void Weights::translate(Antares::Data::AreaName& out, const Antares::Data::AreaName& original)
+{
+    assert(pCurrentContext);
+    assert(not original.empty());
 
+    auto i = pCurrentContext->areaLowerNameMapping.find(original);
+    if (i != pCurrentContext->areaLowerNameMapping.end())
+    {
+        out = i->second;
+        out.toLower();
+    }
+    else
+        out = original;
+    assert(not out.empty());
+    logs.debug() << "  copy/paste: binding constraint weight : " << original << " -> " << out;
+}
 
+void Weights::toLower(Antares::Data::AreaName& out, const Antares::Data::AreaName& original)
+{
+    out = original;
+    out.toLower();
 
-	bool Weights::prepareWL(Context&)
-	{
-		pInfos.message.clear();
-		pInfos.state = stReady;
-		switch (pInfos.behavior)
-		{
-			case bhOverwrite:
-				pInfos.message << "The Weights will be copied";
-				break;
-			default:
-				pInfos.state = stNothingToDo;
-				break;
-		}
-		return true;
-	}
+    assert(not out.empty());
+    logs.debug() << "  copy/paste: binding constraint weight : " << original << " -> " << out;
+}
 
+bool Weights::performWL(Context& ctx)
+{
+    if (ctx.constraint && ctx.extStudy)
+    {
+        assert(not pOriginalConstraintName.empty());
 
-	void Weights::translate(Antares::Data::AreaName& out, const Antares::Data::AreaName& original)
-	{
-		assert(pCurrentContext);
-		assert(not original.empty());
+        Antares::Data::ConstraintName id;
+        TransformNameIntoID(pOriginalConstraintName, id);
 
-		auto i = pCurrentContext->areaLowerNameMapping.find(original);
-		if (i != pCurrentContext->areaLowerNameMapping.end())
-		{
-			out = i->second;
-			out.toLower();
-		}
-		else
-			out = original;
-		assert(not out.empty());
-		logs.debug() << "  copy/paste: binding constraint weight : " << original << " -> " << out;
-	}
+        Data::BindingConstraint* source = ctx.extStudy->bindingConstraints.find(id);
 
-	void Weights::toLower(Antares::Data::AreaName& out, const Antares::Data::AreaName& original)
-	{
-
-			out = original;
-			out.toLower();
-
-		assert(not out.empty());
-		logs.debug() << "  copy/paste: binding constraint weight : " << original << " -> " << out;
-	}
-
-
-	bool Weights::performWL(Context& ctx)
-	{
-		if (ctx.constraint && ctx.extStudy)
-		{
-			assert(not pOriginalConstraintName.empty());
-
-			Antares::Data::ConstraintName id;
-			TransformNameIntoID(pOriginalConstraintName, id);
-
-			Data::BindingConstraint* source = ctx.extStudy->bindingConstraints.find(id);
-
-			if (source && source != ctx.constraint)
-			{
-				pCurrentContext = &ctx;
-				Bind<void(Data::AreaName&, const Data::AreaName&)> tr;
-				if (!targetName.empty())
-				{
-					tr.bind(this, &Weights::toLower);
-				}
-				else
-				{
-					tr.bind(this, &Weights::translate);				
-				}
-				ctx.constraint->copyWeights(ctx.study, *source, true, tr);
-				pCurrentContext = nullptr;
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-
-
+        if (source && source != ctx.constraint)
+        {
+            pCurrentContext = &ctx;
+            Bind<void(Data::AreaName&, const Data::AreaName&)> tr;
+            if (!targetName.empty())
+            {
+                tr.bind(this, &Weights::toLower);
+            }
+            else
+            {
+                tr.bind(this, &Weights::translate);
+            }
+            ctx.constraint->copyWeights(ctx.study, *source, true, tr);
+            pCurrentContext = nullptr;
+            return true;
+        }
+    }
+    return false;
+}
 
 } // namespace Constraint
 } // namespace AntaresStudy
 } // namespace Action
 } // namespace Antares
-

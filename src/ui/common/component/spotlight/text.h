@@ -25,37 +25,40 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_TEXT_H__
-# define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_TEXT_H__
+#define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_TEXT_H__
 
+class Text : public IItem
+{
+public:
+    //! Ptr
+    typedef Yuni::SmartPtr<Text> Ptr;
+    //! Vector of items
+    typedef std::vector<Ptr> Vector;
+    //! Vector Ptr
+    typedef Yuni::SmartPtr<Vector> VectorPtr;
 
-	class Text : public IItem
-	{
-	public:
-		//! Ptr
-		typedef Yuni::SmartPtr<Text> Ptr;
-		//! Vector of items
-		typedef std::vector<Ptr>  Vector;
-		//! Vector Ptr
-		typedef Yuni::SmartPtr<Vector>  VectorPtr;
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    Text();
+    //! Constructor with text
+    template<class StringT>
+    Text(const StringT& text)
+    {
+        caption(text);
+    }
+    //! Destructor
+    virtual ~Text();
+    //@}
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Default constructor
-		*/
-		Text();
-		//! Constructor with text
-		template<class StringT> Text(const StringT& text) {caption(text);}
-		//! Destructor
-		virtual ~Text();
-		//@}
+    virtual bool canBeSelected() const override
+    {
+        return false;
+    }
 
-		virtual bool canBeSelected() const override {return false;}
-
-	}; // class Text
-
-
-
+}; // class Text
 
 #endif // __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_TEXT_H__
