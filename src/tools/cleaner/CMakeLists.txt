@@ -17,7 +17,12 @@ endif()
 
 set(execname "antares-${ANTARES_PRG_VERSION}-study-cleaner")
 add_executable(${execname}  ${SRCS})
-install(TARGETS ${execname} DESTINATION bin)
+install(TARGETS ${execname} EXPORT antares-study-cleaner DESTINATION bin)
+
+INSTALL(EXPORT antares-study-cleaner
+	FILE antares-study-cleanerConfig.cmake
+	DESTINATION cmake
+)
 
 set(CLEANER_LIBS
 	libantares-core

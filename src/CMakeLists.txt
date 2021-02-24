@@ -12,7 +12,7 @@ set(ANTARES_WEBSITE	   "https://antares.rte-france.com")
 
 # Beta release
 set(ANTARES_BETA 0)
-set(ANTARES_RC 3)
+#set(ANTARES_RC 3)
 
 # CMAKE - Suppress useless features
 set(CMAKE_SKIP_PREPROCESSED_SOURCE_RULES true)
@@ -154,6 +154,9 @@ endif()
 
 option(BUILD_UI "Build antares ui simulator" ON)
 message(STATUS "Build antares ui simulator: ${BUILD_UI}")
+
+option(BUILD_SWAP "Build antares solver with swap support (developpement option)" ${BUILD_UI})
+message(STATUS "Build antares solver with swap support: ${BUILD_SWAP}")
 
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
@@ -364,9 +367,11 @@ else()
 	set(CPACK_DEBIAN_PACKAGE_NAME "antares")
 	set(CPACK_PACKAGE_VERSION_MAJOR ${ANTARES_VERSION_HI})
 	set(CPACK_PACKAGE_VERSION_MINOR ${ANTARES_VERSION_LO})
-	set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION})	
+	set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION})
 	
-	set(CPACK_DEBIAN_PACKAGE_DEPENDS "uuid-dev, libcurl4-openssl-dev, libssl-dev, libwxgtk3.0-gtk3-dev")
+	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libcurl4,libwxgtk3.0-gtk3-0v5")
+    set(CPACK_RPM_PACKAGE_REQUIRES "openssl,curl,wxGTK3")
+    set(CPACK_RPM_PACKAGE_AUTOREQPROV "0")
 
 	configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
 

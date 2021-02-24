@@ -119,9 +119,27 @@ macro(solver_app name swap)
 endmacro()
 
 solver_app("solver"      false)
-solver_app("solver-swap" true)
 
 #TODO : not working inside macro
-install(TARGETS "antares-${ANTARES_PRG_VERSION}-solver" DESTINATION bin)
-install(TARGETS "antares-${ANTARES_PRG_VERSION}-solver-swap" DESTINATION bin)
+install(TARGETS "antares-${ANTARES_PRG_VERSION}-solver" EXPORT antares-solver DESTINATION bin)
+
+INSTALL(EXPORT antares-solver
+	FILE antares-solverConfig.cmake
+	DESTINATION cmake
+)
+
+
+if(BUILD_SWAP)
+
+    solver_app("solver-swap" true)
+
+    #TODO : not working inside macro
+    install(TARGETS "antares-${ANTARES_PRG_VERSION}-solver-swap" EXPORT antares-solver-swap DESTINATION bin)
+    
+    INSTALL(EXPORT antares-solver-swap
+	FILE antares-solver-swapConfig.cmake
+	DESTINATION cmake
+)
+
+endif()
 
