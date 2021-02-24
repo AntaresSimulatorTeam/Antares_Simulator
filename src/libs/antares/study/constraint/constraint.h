@@ -477,10 +477,6 @@ public:
     ** \brief Fill the second member matrix with all member to the same value
     */
     void matrix(const double onevalue);
-    /*!
-    ** \brief Fill the second member matrix with a given matrix
-    */
-    void matrix(const Matrix<double, double>&);
 
 private:
     //! Raw name
