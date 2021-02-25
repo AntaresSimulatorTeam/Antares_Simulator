@@ -88,9 +88,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
           ? OUI_ANTARES
           : NON_ANTARES;
 
-    problem.BorneDeLaDefaillancePositive
-      = (parameters.mode == Data::stdmEconomy) ? EGOISTE : ALTRUISTE;
-
     switch (parameters.power.fluctuations)
     {
     case Data::lssFreeModulations:
