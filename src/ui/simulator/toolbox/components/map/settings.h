@@ -49,11 +49,6 @@ enum mapImageFormat : uint16_t
     mfFormatCount
 };
 
-static const char* formatNames[mfFormatCount] = {"PNG", "JPEG", "SVG"};
-static const char* formatExt[mfFormatCount] = {".png", ".jpg", ".svg"};
-static wxBitmapType formatWXConstant[mfFormatCount]
-  = {wxBITMAP_TYPE_PNG, wxBITMAP_TYPE_JPEG, wxBITMAP_TYPE_INVALID};
-
 struct MapRenderOptions
 {
     bool mapInFile;
