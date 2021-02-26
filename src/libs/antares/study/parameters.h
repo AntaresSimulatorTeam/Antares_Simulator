@@ -231,7 +231,7 @@ public:
     //! Custom playlist (each year will be manually selected by the user)
     bool userPlaylist;
     //! Flag to perform the calculations or not from the solver
-    bool* yearsFilter;
+    std::vector<bool> yearsFilter;
 
     //! Custom variable selection (each variable will be manually selected for print by the user)
     bool thematicTrimming;

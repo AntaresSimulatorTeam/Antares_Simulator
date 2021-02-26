@@ -151,13 +151,12 @@ const char* StudyModeToCString(StudyMode mode)
     return "Unknown";
 }
 
-Parameters::Parameters() : yearsFilter(nullptr), noOutput(false)
+Parameters::Parameters() : yearsFilter({}), noOutput(false)
 {
 }
 
 Parameters::~Parameters()
 {
-    delete[] yearsFilter;
 }
 
 void Parameters::resetSeeds()
@@ -192,8 +191,7 @@ void Parameters::reset()
     thematicTrimming = false;
 
     nbYears = 1;
-    delete[] yearsFilter;
-    yearsFilter = nullptr;
+    std::fill(yearsFilter.begin(), yearsFilter.end(), false);
 
     resetYearsWeigth();
 
@@ -1045,26 +1043,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     // forcing value
     if (options.nbYears != 0)
     {
-        if (options.nbYears > nbYears)
-        {
-            if (yearsFilter)
-            {
-                // The variable `yearsFilter` must be enlarged
-                bool* newset = new bool[options.nbYears];
-                for (uint i = 0; i != nbYears; ++i)
-                    newset[i] = yearsFilter[i];
-                for (uint i = nbYears; i < options.nbYears; ++i)
-                    newset[i] = false;
-                delete[] yearsFilter;
-                yearsFilter = newset;
-            }
-            else
-            {
-                yearsFilter = new bool[options.nbYears];
-                for (uint i = 0; i < options.nbYears; ++i)
-                    yearsFilter[i] = true;
-            }
-        }
+        yearsFilter.resize(options.nbYears, false);
         nbYears = options.nbYears;
 
         // Resize years weight (add or remove item)
@@ -1140,13 +1119,7 @@ void Parameters::fixBadValues()
     if (derated)
     {
         // Force the number of years
-        nbYears = 1;
-        if (!yearsFilter)
-        {
-            yearsFilter = new bool[1];
-            yearsFilter[0] = true;
-        }
-
+        yearsFilter = {true};
         resetYearsWeigth();
     }
     else
@@ -1311,7 +1284,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     }
 
     // If the user's playlist is disabled, the filter must be reset
-    assert(yearsFilter && "The array yearsFilter must be valid at this point");
+    assert(not yearsFilter.empty() && "The array yearsFilter must be valid at this point");
     if (!userPlaylist)
     {
         for (uint i = 0; i < nbYears; ++i)
@@ -1518,21 +1491,18 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 void Parameters::years(uint y)
 {
     // Resetting the filter on the years
-    delete[] yearsFilter;
+    yearsFilter.clear();
 
     if (y < 2)
     {
         nbYears = 1;
-        yearsFilter = new bool[1];
-        yearsFilter[0] = true;
+        yearsFilter = {true};
     }
     else
     {
         nbYears = (y > (uint)maximumMCYears) ? (uint)maximumMCYears : y;
         // Reset the filter
-        yearsFilter = new bool[nbYears];
-        for (uint i = 0; i != nbYears; ++i)
-            yearsFilter[i] = true;
+        yearsFilter = std::vector<bool>(nbYears, true);
     }
 
     resetYearsWeigth();
@@ -1697,7 +1667,7 @@ void Parameters::saveToINI(IniFile& ini) const
 
     // User's playlist
     {
-        assert(yearsFilter);
+        assert(not yearsFilter.empty());
         uint effNbYears = 0;
         float weightSum = 0;
         for (uint i = 0; i != nbYears; ++i)

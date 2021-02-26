@@ -115,7 +115,7 @@ IRenderer::CellStyle ScBuilderRendererBase::cellStyle(int x, int y) const
     if (valid)
     {
         auto& parameters = study->parameters;
-        if (parameters.userPlaylist && parameters.yearsFilter)
+        if (parameters.userPlaylist && not parameters.yearsFilter.empty())
             valid = !parameters.yearsFilter[x];
     }
     return (valid)

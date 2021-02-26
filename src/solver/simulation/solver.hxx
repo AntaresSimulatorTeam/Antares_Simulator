@@ -1058,7 +1058,7 @@ uint ISimulation<Impl>::buildSetsOfParallelYears(
   std::vector<setOfParallelYears>& setsOfParallelYears)
 {
     // Filter on the years
-    const bool* yearsFilter = study.parameters.yearsFilter;
+    const std::vector<bool>& yearsFilter = study.parameters.yearsFilter;
 
     // number max of years (to be executed or not) in a set of parallel years
     uint maxNbYearsPerformed = 0;

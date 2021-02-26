@@ -91,7 +91,7 @@ bool MCPlaylist::cellValue(int x, int y, const Yuni::String& value)
         case MCPlaylistCol::STATUS:
         {
             bool v = s.to<bool>() || s == "active" || s == "enabled";
-            assert(study->parameters.yearsFilter);
+            assert(not study->parameters.yearsFilter.empty());
             study->parameters.yearsFilter[y] = v;
             break;
         }
@@ -128,7 +128,7 @@ double MCPlaylist::cellNumericValue(int x, int y) const
         {
         case MCPlaylistCol::STATUS:
         {
-            assert(study->parameters.yearsFilter);
+            assert(not study->parameters.yearsFilter.empty());
             return study->parameters.yearsFilter[y];
         }
         case MCPlaylistCol::WEIGHT:
@@ -150,7 +150,7 @@ wxString MCPlaylist::cellValue(int x, int y) const
         {
         case MCPlaylistCol::STATUS:
         {
-            assert(study->parameters.yearsFilter);
+            assert(not study->parameters.yearsFilter.empty());
             return study->parameters.yearsFilter[y] ? wxT("Active") : wxT("skip");
         }
         case MCPlaylistCol::WEIGHT:
@@ -173,7 +173,7 @@ IRenderer::CellStyle MCPlaylist::cellStyle(int, int y) const
 {
     if (!(!study) && (uint)y < study->parameters.nbYears)
     {
-        assert(study->parameters.yearsFilter);
+        assert(not study->parameters.yearsFilter.empty());
         return !study->parameters.yearsFilter[y] ? IRenderer::cellStyleConstraintNoWeight
                                                  : IRenderer::cellStyleConstraintWeight;
     }

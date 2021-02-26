@@ -159,8 +159,7 @@ void Study::createAsNew()
 
     // Simulations
     parameters.reset();
-    parameters.yearsFilter = new bool[1];
-    parameters.yearsFilter[0] = true;
+    parameters.yearsFilter = {true};
 
     // Sets
     setsOfAreas.defaultForAreas();

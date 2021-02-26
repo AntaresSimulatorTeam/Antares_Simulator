@@ -56,7 +56,7 @@ StudyMemoryUsage::StudyMemoryUsage(const Study& s) :
     auto& parameters = study.parameters;
 
     // playlist
-    if (parameters.userPlaylist and parameters.yearsFilter)
+    if (parameters.userPlaylist and not parameters.yearsFilter.empty())
     {
         uint y = 0;
         for (uint i = 0; i != years; ++i)
