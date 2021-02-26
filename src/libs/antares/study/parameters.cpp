@@ -1135,6 +1135,7 @@ void Parameters::fixBadValues()
     if (derated)
     {
         // Force the number of years
+        nbYears = 1;
         yearsFilter = {true};
         resetYearsWeigth();
     }
