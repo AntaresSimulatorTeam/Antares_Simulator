@@ -191,7 +191,7 @@ void Parameters::reset()
     thematicTrimming = false;
 
     nbYears = 1;
-    std::fill(yearsFilter.begin(), yearsFilter.end(), false);
+    yearsFilter.clear();
 
     resetYearsWeigth();
 
