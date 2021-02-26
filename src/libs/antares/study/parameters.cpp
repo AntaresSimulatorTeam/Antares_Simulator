@@ -648,6 +648,22 @@ static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& v
         return false;
     }
 
+    if (key == "playlist")
+    {
+        std::list<int> in_playlist;
+        value.split(in_playlist, ",");
+        // Check indices
+        for (int y : in_playlist)
+            if ((uint)y >= d.nbYears || y < 0)
+                return false;
+        // All indices good, change d.yearsFilter
+        for (uint y = 0; y < d.nbYears; ++y)
+            d.yearsFilter[y] = false;
+        for (int y : in_playlist)
+            d.yearsFilter[y] = true;
+        return true;
+    }
+
     if (key == "playlist_year_weight")
     {
         // Get year index and weight from  string
