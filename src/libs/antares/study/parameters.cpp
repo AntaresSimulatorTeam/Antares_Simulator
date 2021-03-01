@@ -1699,18 +1699,17 @@ void Parameters::saveToINI(IniFile& ini) const
     {
         assert(yearsFilter);
         uint effNbYears = 0;
-        float weightSum = 0;
+        bool weightEnabled = false;
         for (uint i = 0; i != nbYears; ++i)
         {
             if (yearsFilter[i])
                 ++effNbYears;
-            weightSum += yearsWeight[i];
+            weightEnabled |= yearsWeight[i] != 1.f;
         }
 
-        // Playlist section must be added if at least one year is disable or one MC year weight sum
-        // is not equal to nbYears
+        // Playlist section must be added if at least one year is disable or one MC year weight is not 1.0
         bool addPlayListSection = effNbYears != nbYears;
-        addPlayListSection |= weightSum != nbYears;
+        addPlayListSection |= weightEnabled;
 
         if (addPlayListSection)
         {
