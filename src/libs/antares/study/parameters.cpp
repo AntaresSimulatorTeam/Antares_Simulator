@@ -610,8 +610,14 @@ static bool SGDIntLoadFamily_N(Parameters& d, const String& key, const String& v
 
 static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& value, uint)
 {
+    const auto warning = [&logs, &key]() {
+        logs.warning() << key
+                       << " is deprecated and will be removed in a future version. Consider using "
+                          "playlist instead.";
+    };
     if (key == "playlist_reset")
     {
+        warning();
         bool mode = value.to<bool>();
         if (mode)
         {
@@ -627,6 +633,7 @@ static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& v
     }
     if (key == "playlist_year +")
     {
+        warning();
         uint y;
         if (value.to<uint>(y))
         {
@@ -638,6 +645,7 @@ static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& v
     }
     if (key == "playlist_year -")
     {
+        warning();
         uint y;
         if (value.to<uint>(y))
         {
