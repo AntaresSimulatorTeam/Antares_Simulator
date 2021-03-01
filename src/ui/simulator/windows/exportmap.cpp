@@ -45,6 +45,9 @@
 
 using namespace Yuni;
 
+static const char* formatNames[Antares::Map::mfFormatCount] = {"PNG", "JPEG", "SVG"};
+static const char* formatExt[Antares::Map::mfFormatCount] = {".png", ".jpg", ".svg"};
+
 namespace Antares
 {
 namespace Window
@@ -147,12 +150,12 @@ ExportMap::~ExportMap()
 
 wxString ExportMap::getFormatAsString(Antares::Map::mapImageFormat format)
 {
-    return wxStringFromUTF8(Antares::Map::formatNames[format]);
+    return wxStringFromUTF8(formatNames[format]);
 }
 
 YString getFormatAsYString(Antares::Map::mapImageFormat format)
 {
-    return YString(Antares::Map::formatNames[format]);
+    return YString(formatNames[format]);
 }
 
 void ExportMap::propCaption(const wxString& text, bool bold)
@@ -271,9 +274,9 @@ void ExportMap::internalCreateComponents()
 
     // Image format of the image map
     wxArrayString formatsList;
-    formatsList.Add(wxStringFromUTF8(Antares::Map::formatNames[Antares::Map::mfPNG]));
-    formatsList.Add(wxStringFromUTF8(Antares::Map::formatNames[Antares::Map::mfJPG]));
-    formatsList.Add(wxStringFromUTF8(Antares::Map::formatNames[Antares::Map::mfSVG]));
+    formatsList.Add(wxStringFromUTF8(formatNames[Antares::Map::mfPNG]));
+    formatsList.Add(wxStringFromUTF8(formatNames[Antares::Map::mfJPG]));
+    formatsList.Add(wxStringFromUTF8(formatNames[Antares::Map::mfSVG]));
 
     pMapFormatChoice = new wxChoice(
       pParentProperties, mnIDMapFormat, wxDefaultPosition, wxSize(-1, 22), formatsList);
@@ -448,7 +451,7 @@ void ExportMap::ensureUniqueFileName(Yuni::String folderPath)
         currentMapName.replace(" ", "_");
 
     mapNameWithoutExtension = baseMapFileName << "-" << currentMapName;
-    mapFileName = mapNameWithoutExtension + Antares::Map::formatExt[Antares::Map::mfDefaultFormat];
+    mapFileName = mapNameWithoutExtension + formatExt[Antares::Map::mfDefaultFormat];
 
     // if a name has already been chosen by the user we only do changes for uniqueness
     if (pMapName->GetValue() != wxEmptyString
@@ -498,7 +501,7 @@ void ExportMap::ensureUniqueFileName(Yuni::String folderPath)
 
         mapNameWithoutExtension = baseMapFileName + "-" << String(offsetIndex);
         mapFileName
-          = mapNameWithoutExtension + Antares::Map::formatExt[Antares::Map::mfDefaultFormat];
+          = mapNameWithoutExtension + formatExt[Antares::Map::mfDefaultFormat];
         fullPathMapName = folderPath + SEP << mapFileName;
     }
     // Ensure unique name for file -- end
@@ -512,7 +515,7 @@ void ExportMap::onMapFormatChanged(wxCommandEvent&)
     s.Trim(true);
 
     pMapName->ChangeValue(
-      s + wxStringFromUTF8(Antares::Map::formatExt[pMapFormatChoice->GetSelection()]));
+      s + wxStringFromUTF8(formatExt[pMapFormatChoice->GetSelection()]));
 
     pMapFormat = static_cast<Antares::Map::mapImageFormat>(pMapFormatChoice->GetSelection());
 }
