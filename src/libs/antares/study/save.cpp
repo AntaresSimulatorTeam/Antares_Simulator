@@ -211,7 +211,7 @@ bool Study::saveToFolder(const AnyString& newfolder)
     buffer.clear() << folder << SEP << "settings";
     ret = simulation.saveToFolder(buffer) and ret;
     buffer.clear() << folder << SEP << "settings" << SEP << "generaldata.ini";
-    ret = parameters.saveToFile(buffer) and ret;
+    ret = parameters.saveToFile(buffer, (uint)header.version) and ret;
 
     // All areas
     ret = areas.saveToFolder(folder) and ret;

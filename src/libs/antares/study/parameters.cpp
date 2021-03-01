@@ -1540,7 +1540,7 @@ StudyError Parameters::checkIntegrity() const
     return stErrNone;
 }
 
-void Parameters::saveToINI(IniFile& ini) const
+void Parameters::saveToINI(IniFile& ini, uint version) const
 {
     // -- General --
     {
@@ -1803,10 +1803,10 @@ bool Parameters::loadFromFile(const AnyString& filename,
     return false;
 }
 
-bool Parameters::saveToFile(const AnyString& filename) const
+bool Parameters::saveToFile(const AnyString& filename, uint version) const
 {
     IniFile ini;
-    saveToINI(ini);
+    saveToINI(ini, version);
     return ini.save(filename);
 }
 
