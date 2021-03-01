@@ -25,32 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include <yuni/yuni.h>
 #include <antares/study/memory-usage.h>
 #include "adequacy-draft.h"
@@ -59,114 +33,89 @@
 #include "../optimisation/opt_fonctions.h"
 #include "../aleatoire/alea_fonctions.h"
 
-
-
 namespace Antares
 {
 namespace Solver
 {
 namespace Simulation
 {
+AdequacyDraft::AdequacyDraft(Data::Study& study) : study(study), preproOnly(false)
+{
+}
 
+AdequacyDraft::~AdequacyDraft()
+{
+    SIM_DesallocationProblemeHoraireAdequation();
+}
 
-	AdequacyDraft::AdequacyDraft(Data::Study& study) :
-		study(study),
-		preproOnly(false)
-	{
-	}
+void AdequacyDraft::setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel)
+{
+    pNbMaxPerformedYearsInParallel = nbMaxPerformedYearsInParallel;
+}
 
+void AdequacyDraft::initializeState(Variable::State& state, uint)
+{
+    state.simplexHasBeenRan = false;
+}
 
-	AdequacyDraft::~AdequacyDraft()
-	{
-		SIM_DesallocationProblemeHoraireAdequation();
-	}
+bool AdequacyDraft::simulationBegin()
+{
+    SIM_InitialisationProblemeHoraireAdequation();
 
-	void AdequacyDraft::setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel)
-		{pNbMaxPerformedYearsInParallel = nbMaxPerformedYearsInParallel;}
+    pStartHour = study.calendar.days[study.parameters.simulationDays.first].hours.first;
+    pFinalHour = study.calendar.days[study.parameters.simulationDays.end - 1].hours.end;
 
+    pYearsRatio = 1. / (double)study.runtime->rangeLimits.year[Data::rangeCount];
 
-	void AdequacyDraft::initializeState(Variable::State& state, uint )
-	{
-		
-		state.simplexHasBeenRan = false;
-	}
+    return true;
+}
 
+bool AdequacyDraft::year(Progression::Task& progression,
+                         Variable::State& state,
+                         uint numSpace,
+                         yearRandomNumbers&,
+                         std::list<uint>&,
+                         bool)
+{
+    SIM_RenseignementValeursPourTouteLAnnee(study, numSpace);
 
-	bool AdequacyDraft::simulationBegin()
-	{
-		SIM_InitialisationProblemeHoraireAdequation();
-		
-		pStartHour = study.calendar.days[study.parameters.simulationDays.first].hours.first;
-		pFinalHour = study.calendar.days[study.parameters.simulationDays.end - 1].hours.end;
-		
-		pYearsRatio = 1. / (double) study.runtime->rangeLimits.year[Data::rangeCount];
+    state.startANewYear();
 
-		return true;
-	}
+    for (unsigned int hour = pStartHour; hour != pFinalHour; ++hour)
+    {
+        state.hourInTheYear = (unsigned int)hour;
+        state.eensSystemIS = 0.;
+        state.eensSystemCN = 0.;
 
+        SIM_RenseignementProblemeHoraireAdequation(hour);
+        SIM_CalculFlotHoraireAdequation();
 
-	bool AdequacyDraft::year(	Progression::Task & progression,
-								Variable::State& state, 
-								uint numSpace,
-								yearRandomNumbers &, 
-								std::list<uint> &,
-								bool
-							)
-	{
-		
-		SIM_RenseignementValeursPourTouteLAnnee(study, numSpace);
+        variables.hourBegin(state.hourInTheYear);
 
-		
-		state.startANewYear();
+        variables.hourForEachArea(state, numSpace);
 
-		
-		for (unsigned int hour = pStartHour; hour != pFinalHour; ++hour)
-		{
-			
-			state.hourInTheYear = (unsigned int) hour;
-			state.eensSystemIS = 0.;
-			state.eensSystemCN = 0.;
+        variables.hourEnd(state, state.hourInTheYear);
 
-			SIM_RenseignementProblemeHoraireAdequation(hour);
-			SIM_CalculFlotHoraireAdequation();
+        ++state.hourInTheSimulation;
+    }
 
-			
-			variables.hourBegin(state.hourInTheYear);
-			
-			
-			
-			variables.hourForEachArea(state, numSpace);
-			
-			variables.hourEnd(state, state.hourInTheYear);
+    ++progression;
+    return true;
+}
 
-			++state.hourInTheSimulation;
-		}
+void AdequacyDraft::incrementProgression(Progression::Task& progression)
+{
+    ++progression;
+}
 
-		++progression;
-		return true;
-	}
+void AdequacyDraft::simulationEnd()
+{
+}
 
-	void AdequacyDraft::incrementProgression(Progression::Task & progression)
-	{
-		++progression;
-	}
+void AdequacyDraft::prepareClustersInMustRunMode(uint)
+{
+}
 
-	void AdequacyDraft::simulationEnd()
-	{
-		
-	}
-
-
-	void AdequacyDraft::prepareClustersInMustRunMode(uint )
-	{
-		
-	}
-
-
-
-
-
-} 
-} 
-} 
-
+} // namespace Simulation
+} // namespace Solver
+} // namespace Antares

@@ -25,16 +25,15 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_SIMULATION_ECONOMY_H__
-# define __SOLVER_SIMULATION_ECONOMY_H__
+#define __SOLVER_SIMULATION_ECONOMY_H__
 
-# include <yuni/yuni.h>
-# include "../variable/variable.h"
-# include "../variable/economy/all.h"
-# include "../variable/state.h"
-# include "common-eco-adq.h"
+#include <yuni/yuni.h>
+#include "../variable/variable.h"
+#include "../variable/economy/all.h"
+#include "../variable/state.h"
+#include "common-eco-adq.h"
 
-# include "solver.h" // for definition of type yearRandomNumbers
-
+#include "solver.h" // for definition of type yearRandomNumbers
 
 namespace Antares
 {
@@ -42,74 +41,70 @@ namespace Solver
 {
 namespace Simulation
 {
+class Economy
+{
+public:
+    //! Name of the type of simulation
+    static const char* Name()
+    {
+        return "economy";
+    }
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    **
+    ** \param study The current study
+    */
+    Economy(Data::Study& study);
+    //! Destructor
+    ~Economy();
+    //@}
 
-	class Economy
-	{
-	public:
-		//! Name of the type of simulation
-		static const char* Name() {return "economy";}
+public:
+    //! Current study
+    Data::Study& study;
+    //! All variables
+    Solver::Variable::Economy::AllVariables variables;
+    //! Prepro only
+    bool preproOnly;
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		**
-		** \param study The current study
-		*/
-		Economy(Data::Study& study);
-		//! Destructor
-		~Economy();
-		//@}
+protected:
+    void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
 
-	public:
-		//! Current study
-		Data::Study& study;
-		//! All variables
-		Solver::Variable::Economy::AllVariables variables;
-		//! Prepro only
-		bool preproOnly;
+    bool simulationBegin();
 
-	protected:
-		void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
+    bool year(Progression::Task& progression,
+              Variable::State& state,
+              uint numSpace,
+              yearRandomNumbers& randomForYear,
+              std::list<uint>& failedWeekList,
+              bool isFirstPerformedYearOfSimulation);
 
-		bool simulationBegin();
+    void incrementProgression(Progression::Task& progression);
 
-		bool year(	Progression::Task& progression,
-					Variable::State& state,
-					uint numSpace,
-					yearRandomNumbers & randomForYear,
-					std::list<uint> & failedWeekList,
-					bool isFirstPerformedYearOfSimulation
-				 );
+    void simulationEnd();
 
-		void incrementProgression(Progression::Task & progression);
+    /*!
+    ** \brief Prepare clusters in 'must-run' mode
+    */
+    void prepareClustersInMustRunMode(uint numSpace);
 
-		void simulationEnd();
+    void initializeState(Variable::State& state, uint numSpace);
 
-		/*!
-		** \brief Prepare clusters in 'must-run' mode
-		*/
-		void prepareClustersInMustRunMode(uint numSpace);
+private:
+    AvgExchangeResults* callbackRetrieveBalanceData(Data::Area* area);
 
-		void initializeState(Variable::State& state, uint numSpace);
+private:
+    uint pNbWeeks;
+    uint pStartTime;
+    uint pNbMaxPerformedYearsInParallel;
+    bool pPreproOnly;
+    PROBLEME_HEBDO** pProblemesHebdo;
 
-	private:
-		AvgExchangeResults* callbackRetrieveBalanceData(Data::Area* area);
-
-	private:
-		uint pNbWeeks;
-		uint pStartTime;
-		uint pNbMaxPerformedYearsInParallel;
-		bool pPreproOnly;
-		PROBLEME_HEBDO** pProblemesHebdo;
-
-	}; // class Economy
-
-
-
-
+}; // class Economy
 
 } // namespace Simulation
 } // namespace Solver

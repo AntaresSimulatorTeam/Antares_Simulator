@@ -25,13 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #ifndef __SOLVER_SIMULATION_ADEQUACY_DRAFT_H__
-# define __SOLVER_SIMULATION_ADEQUACY_DRAFT_H__
+#define __SOLVER_SIMULATION_ADEQUACY_DRAFT_H__
 
-# include "../variable/variable.h"
-# include "../variable/adequacy-draft/all.h"
-# include "../variable/state.h"
+#include "../variable/variable.h"
+#include "../variable/adequacy-draft/all.h"
+#include "../variable/state.h"
 
-# include "solver.h"
+#include "solver.h"
 
 namespace Antares
 {
@@ -39,68 +39,64 @@ namespace Solver
 {
 namespace Simulation
 {
+class AdequacyDraft
+{
+public:
+    //! Name of the type of simulation
+    static const char* Name()
+    {
+        return "adequacy-draft";
+    }
 
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    **
+    ** \param study The current study
+    */
+    AdequacyDraft(Data::Study& study);
+    //! Destructor
+    ~AdequacyDraft();
+    //@}
 
-	class AdequacyDraft
-	{
-	public:
-		//! Name of the type of simulation
-		static const char* Name() {return "adequacy-draft";}
+public:
+    //! Current study
+    Data::Study& study;
+    //! All variables
+    Solver::Variable::AdequacyDraft::AllVariables variables;
+    //! Prepro only
+    bool preproOnly;
 
-	public:
-		//! \name Constructor & Destructor
-		//@{
-		/*!
-		** \brief Constructor
-		**
-		** \param study The current study
-		*/
-		AdequacyDraft(Data::Study& study);
-		//! Destructor
-		~AdequacyDraft();
-		//@}
+protected:
+    void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
 
-	public:
-		//! Current study
-		Data::Study& study;
-		//! All variables
-		Solver::Variable::AdequacyDraft::AllVariables variables;
-		//! Prepro only
-		bool preproOnly;
+    bool simulationBegin();
+    bool year(Progression::Task& progression,
+              Variable::State& state,
+              uint numSpace,
+              yearRandomNumbers& randomForYear,
+              std::list<uint>& failedWeekList,
+              bool isFirstPerformedYearOfSimulation);
+    void simulationEnd();
 
-	protected:
-		void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
+    void incrementProgression(Progression::Task& progression);
 
-		bool simulationBegin();
-		bool year(	Progression::Task & progression,
-					Variable::State& state, 
-					uint numSpace,
-					yearRandomNumbers & randomForYear,
-					std::list<uint> & failedWeekList,
-					bool isFirstPerformedYearOfSimulation
-				 );
-		void simulationEnd();
+    /*!
+    ** \brief Prepare clusters in 'must-run' mode
+    */
+    void prepareClustersInMustRunMode(uint numSpace);
 
-		void incrementProgression(Progression::Task & progression);
+    void initializeState(Variable::State& state, uint numSpace);
 
-		/*!
-		** \brief Prepare clusters in 'must-run' mode
-		*/
-		void prepareClustersInMustRunMode(uint numSpace);
+private:
+    uint pStartHour;
+    uint pFinalHour;
+    double pYearsRatio;
+    uint pNbMaxPerformedYearsInParallel;
 
-		void initializeState(Variable::State& state, uint numSpace);
-
-
-	private:
-		uint pStartHour;
-		uint pFinalHour;
-		double pYearsRatio;
-		uint pNbMaxPerformedYearsInParallel;
-
-	}; // class AdequacyDraft
-
-
-
+}; // class AdequacyDraft
 
 } // namespace Simulation
 } // namespace Solver
