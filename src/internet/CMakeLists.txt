@@ -18,8 +18,8 @@ add_library(libantares-license
 #TODO : needed for include antares core
 target_include_directories(libantares-license
 		PRIVATE
-			${CMAKE_SOURCE_DIR}/ext/yuni/src
-			${CMAKE_SOURCE_DIR}/libs
+			${CMAKE_SOURCE_DIR}/src/ext/yuni/src
+			${CMAKE_SOURCE_DIR}/src/libs
 		PUBLIC
 			${OPENSSL_INCLUDE_DIR}
 			${CURL_INCLUDE_DIRS}

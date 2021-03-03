@@ -35,11 +35,11 @@ jobs:
     
     - name: Init submodule
       run: |
-           git submodule update --init --recursive src
+           git submodule update --init --recursive .
     
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -Dsirius_solver_ROOT=/sirius-install
+           cmake -B _build -S . -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -Dsirius_solver_ROOT=/sirius-install
 
     - name: Build
       run: |           

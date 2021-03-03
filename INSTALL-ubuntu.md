@@ -110,13 +110,11 @@ sudo apt-get install libuuid1 uuid-dev libssh2-1 libssh2-1-dev libidn2-0 libidn2
 
 ## [Building Antares Solution](#build)
 
-Antares source directory is named `[antares_src]` in all following commands.
-
 ### 1 - Update git submodule for dependency build
 
 First you need to update git submodule for dependency build :
 ```
-git submodule update --init [antares_src]/antares-deps
+git submodule update --init antares-deps
 ```
 
 ### 2 - CMake configure
@@ -139,7 +137,7 @@ Here is a list of available CMake configure option :
 #### Configure
 
 ```
-cmake -B _build -S [antares_src] -DCMAKE_BUILD_TYPE=release
+cmake -B _build -S . -DCMAKE_BUILD_TYPE=release
 ```
 
 ### 3 - Build

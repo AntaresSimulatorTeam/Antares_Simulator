@@ -103,13 +103,11 @@ sudo yum install libuuid-devel libidn2-devel gtk2-devel redhat-lsb-core
 
 ## [Building Antares Solution](#build)
 
-Antares source directory is named `[antares_src]` in all following commands.
-
 ### 1 - Update git submodule for dependency build
 
 First you need to update git submodule for dependency build :
 ```
-git submodule update --init [antares_src]/antares-deps
+git submodule update --init antares-deps
 ```
 
 ### 2 - Enable `devtoolset-7`
@@ -135,7 +133,7 @@ Here is a list of available CMake configure option :
 
 
 ```
-cmake3 -B _build -S [antares_src] -DCMAKE_BUILD_TYPE=release
+cmake3 -B _build -S . -DCMAKE_BUILD_TYPE=release
 ```
 
 ### 4 - Build

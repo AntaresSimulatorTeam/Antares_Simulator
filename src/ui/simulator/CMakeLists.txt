@@ -193,7 +193,7 @@ if(WIN32)
 endif()
 
 #Copy resources files
-FILE(COPY "${PROJECT_SOURCE_DIR}/../docs/ref_guides/"  			DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/help/" FILES_MATCHING PATTERN "*.pdf")
+FILE(COPY "${PROJECT_SOURCE_DIR}/docs/ref_guides/"  			DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/help/" FILES_MATCHING PATTERN "*.pdf")
 FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/images/" 		DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/images/")
 FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/animations/" 	DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/animations/")
 FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/icons/" 		DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/icons/")

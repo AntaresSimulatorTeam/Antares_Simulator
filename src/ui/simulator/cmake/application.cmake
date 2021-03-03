@@ -68,7 +68,7 @@ add_library(libantares-ui-application ${SRC_APPLICATION})
 
 target_include_directories(libantares-ui-application
 							PRIVATE
-								"${CMAKE_SOURCE_DIR}/ui/simulator"
+								"${CMAKE_SOURCE_DIR}/src/ui/simulator"
 )
 
 target_link_libraries(libantares-ui-application

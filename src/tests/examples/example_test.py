@@ -11,24 +11,7 @@ import subprocess
 
 import pytest
 
-ALL_STUDIES_PATH = Path('../resources/Antares_Simulator_Tests')
-
-@pytest.fixture(scope="session", autouse=True)
-def prepare_studies(request):
-    if os.path.isdir(ALL_STUDIES_PATH):
-        print("Study files found, no need to download")
-    else:
-        # TODO Find a better host, download speed from this source is limited to ~2.5Mb/s as of December 2020
-        url = 'https://github.com/AntaresSimulatorTeam/Antares_Simulator_Tests/archive/master.zip'
-        archive = 'master.zip'
-        print("Downloading studies")
-        urllib.request.urlretrieve(url, archive)
-        print("Unzipping studies")
-        with zipfile.ZipFile(archive, 'r') as zip_ref:
-            zip_ref.extractall('.')
-        os.remove(archive)
-        print("Done")
-
+ALL_STUDIES_PATH = Path('../../../resources/Antares_Simulator_Tests')
 
 def find_integrity_path(output_dir):
     op = []

@@ -494,8 +494,8 @@ add_library( libantares-core-calendar
 #TODO : needed for include
 target_include_directories(libantares-core-calendar
 		PRIVATE
-			${CMAKE_SOURCE_DIR}/ext/yuni/src/
-			${CMAKE_SOURCE_DIR}/libs
+			${CMAKE_SOURCE_DIR}/src/ext/yuni/src/
+			${CMAKE_SOURCE_DIR}/src/libs
 		)
 
 macro(ADD_ANTARES_CORE name)
@@ -536,9 +536,9 @@ macro(ADD_ANTARES_CORE name)
 	#TODO : needed for include
 	target_include_directories(libantares-core${name}
 			PUBLIC
-				${CMAKE_SOURCE_DIR}/ext/yuni/src
-				${CMAKE_SOURCE_DIR}/libs
-				${CMAKE_SOURCE_DIR}/libs/antares/logs
+				${CMAKE_SOURCE_DIR}/src/ext/yuni/src
+				${CMAKE_SOURCE_DIR}/src/libs
+				${CMAKE_SOURCE_DIR}/src/libs/antares/logs
 			)
 
 	target_link_libraries(libantares-core${name}

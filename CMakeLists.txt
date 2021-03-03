@@ -32,10 +32,10 @@ endif()
 
 
 #CMake function
-include("cmake/utils.cmake")
+include("src/cmake/utils.cmake")
 
 #CMake Macro to display message
-include("cmake/messages.cmake")
+include("src/cmake/messages.cmake")
 
 if(${ANTARES_BETA})
 	set(ANTARES_VERSION_TAG "-beta${ANTARES_BETA}")
@@ -70,10 +70,10 @@ OMESSAGE("")
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Copy changelog
-include("cmake/changelog.cmake")
+include("src/cmake/changelog.cmake")
 
 #Check compiler version
-include("cmake/checks.cmake")
+include("src/cmake/checks.cmake")
 
 
 if (ANTARES_LICENSE)
@@ -160,11 +160,11 @@ message(STATUS "Build antares solver with swap support: ${BUILD_SWAP}")
 
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
-    SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../rte-antares-deps-${CMAKE_BUILD_TYPE})
+    SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../rte-antares-deps-${CMAKE_BUILD_TYPE})
 
 else()
     if(NOT IS_ABSOLUTE ${DEPS_INSTALL_DIR})
-        SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../${DEPS_INSTALL_DIR})
+        SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${DEPS_INSTALL_DIR})
     endif()    
 endif()
 
@@ -239,35 +239,35 @@ endif()
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 
     #Add cmake directory to CMAKE_MODULE_PATH to use specific FindwxWidgets package needed for vcpkg
-    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/wxWidgets")
+    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/cmake/wxWidgets")
 endif()
 
 # TODO : review Standard Settings
-include(cmake/common-settings.cmake)
+include(src/cmake/common-settings.cmake)
 
 # Configure config.h with current ANTARES version
-configure_file("config.h.cmake" "${CMAKE_CURRENT_BINARY_DIR}/config.h")
-configure_file("config.h.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/config.h")
+configure_file("src/config.h.cmake" "${CMAKE_CURRENT_BINARY_DIR}/src/config.h")
+configure_file("src/config.h.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/src/config.h")
 
 # Yuni Framework
-configure_file("cmake/ProfileBuild.template.cmake" "ext/yuni/src/ProfileBuild.cmake")
-add_subdirectory("ext/yuni/src")
+configure_file("src/cmake/ProfileBuild.template.cmake" "src/ext/yuni/src/ProfileBuild.cmake")
+add_subdirectory("src/ext/yuni/src")
 
 OMESSAGE("") # empty line
 
 # Sub Directories
-add_subdirectory(libs) 		#antares-core fswalker
-add_subdirectory(internet) 	#libantares-license base64 keys
+add_subdirectory(src/libs) 		#antares-core fswalker
+add_subdirectory(src/internet) 	#libantares-license base64 keys
 
 if(BUILD_UI)
-	add_subdirectory(ui)		#all antares ui libs + antares simulator
+	add_subdirectory(src/ui)		#all antares ui libs + antares simulator
 endif()
 
-add_subdirectory(solver)	#antares solver and all associated libs
-add_subdirectory(analyzer)	#antares analyser
+add_subdirectory(src/solver)	#antares solver and all associated libs
+add_subdirectory(src/analyzer)	#antares analyser
 
 # Tools
-add_subdirectory(tools)	#All antares tools
+add_subdirectory(src/tools)	#All antares tools
 
 # Tests
 # 	Not setting BUILD_TESTING as a command line argument is equivalent to use -DBUILD_TESTING=OFF
@@ -277,7 +277,7 @@ if(BUILD_TESTING)
 	# include(CTest) # calls enable_testing() and turns BUILD_TESTING to ON by default (among other useful things)
 	enable_testing()
 
-	add_subdirectory(tests)
+	add_subdirectory(src/tests)
 endif()
 
 OMESSAGE("")
@@ -301,22 +301,22 @@ if(WIN32 OR WIN64)
 		set(COMPILER_INCLUDE "mingw")
 	endif(MSVC)
 	
-	set(CPACK_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32 ${CPACK_MODULE_PATH})
+	set(CPACK_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR}/src/distrib/win32 ${CPACK_MODULE_PATH})
 
 	# Configure file with custom definitions for NSIS.
 	configure_file(
-		${PROJECT_SOURCE_DIR}/distrib/win32/version.cmake
-		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/version.nsh
+		${PROJECT_SOURCE_DIR}/src/distrib/win32/version.cmake
+		${CMAKE_CURRENT_BINARY_DIR}/src/distrib/win32/version.nsh
 	)
 	
 	configure_file(
-		${PROJECT_SOURCE_DIR}/distrib/win32/build.template.cmake
-		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/build.nsh
+		${PROJECT_SOURCE_DIR}/src/distrib/win32/build.template.cmake
+		${CMAKE_CURRENT_BINARY_DIR}/src/distrib/win32/build.nsh
 	)
 	
 	configure_file(
-		${PROJECT_SOURCE_DIR}/distrib/win32/make-zip-from-installer.cmake
-		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/make-zip-from-installer.bat
+		${PROJECT_SOURCE_DIR}/src/distrib/win32/make-zip-from-installer.cmake
+		${CMAKE_CURRENT_BINARY_DIR}/src/distrib/win32/make-zip-from-installer.bat
 	)
 	
 	SET(ANTARES_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
@@ -335,14 +335,14 @@ if(WIN32 OR WIN64)
 	string (REPLACE ";" " " SYSTEM_RUNTIME_LIBS_STR "${SYSTEM_RUNTIME_LIBS_NATIVE}")
 
 	configure_file(
-		${PROJECT_SOURCE_DIR}/distrib/win32/NSIS.template.in
+		${PROJECT_SOURCE_DIR}/src/distrib/win32/NSIS.template.in
 		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/NSIS.template.in
 		@ONLY
 	)
 	
 	#Define cpack install script to checkout examples
 	configure_file(
-		${PROJECT_SOURCE_DIR}/distrib/CMakeLists.txt.in
+		${PROJECT_SOURCE_DIR}/src/distrib/CMakeLists.txt.in
 		${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt
 		@ONLY
 	)

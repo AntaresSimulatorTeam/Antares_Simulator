@@ -19,7 +19,7 @@ add_Library(libantares-ui-windows-options ${SRC_UI_WINDOWS_OPTIONS})
 
 target_include_directories(libantares-ui-windows-options
 							PRIVATE
-								"${CMAKE_SOURCE_DIR}/ui/simulator"
+								"${CMAKE_SOURCE_DIR}/src/ui/simulator"
 )
 
 target_link_libraries(libantares-ui-windows-options

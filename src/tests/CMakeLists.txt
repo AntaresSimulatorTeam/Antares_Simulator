@@ -36,8 +36,8 @@ if(Python3_Interpreter_FOUND)
         message(STATUS "Submodule test update with ${ANTARES_TEST_TAG} tag")
 
         # Update test submodules as needed
-        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init src/tests/resources/Antares_Simulator_Tests
-                        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/..
+        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init resources/Antares_Simulator_Tests
+                        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                         RESULT_VARIABLE GIT_SUBMOD_RESULT)
         if(NOT GIT_SUBMOD_RESULT EQUAL "0")
             message(FATAL_ERROR "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
@@ -45,7 +45,7 @@ if(Python3_Interpreter_FOUND)
 
         # Define submodule tag
         execute_process(COMMAND ${GIT_EXECUTABLE} checkout ${ANTARES_TEST_TAG}
-                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/resources/Antares_Simulator_Tests
+                        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/resources/Antares_Simulator_Tests
                         RESULT_VARIABLE GIT_SUBMOD_RESULT)
         if(NOT GIT_SUBMOD_RESULT EQUAL "0")
             message(FATAL_ERROR "git checkout ${ANTARES_TEST_TAG} failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")

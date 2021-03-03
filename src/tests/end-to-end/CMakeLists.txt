@@ -23,7 +23,7 @@ target_link_libraries(tests-simple-study
 			
 target_include_directories(tests-simple-study
 							PRIVATE
-							${CMAKE_SOURCE_DIR}/solver
+							${CMAKE_SOURCE_DIR}/src/solver
 							)
 
 add_test(NAME end-to-end-simple-study COMMAND tests-simple-study)

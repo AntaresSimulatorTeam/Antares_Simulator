@@ -35,7 +35,7 @@ add_library(libantares-ui-common ${SRC_UI_COMMON})
 target_include_directories(libantares-ui-common
 		PUBLIC
 			.
-			${CMAKE_SOURCE_DIR}
+			${CMAKE_SOURCE_DIR}/src
 		)
 
 target_link_libraries(libantares-ui-common

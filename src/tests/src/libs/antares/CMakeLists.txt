@@ -1,4 +1,4 @@
-set(src_libs_antares "${CMAKE_SOURCE_DIR}/libs/antares")
+set(src_libs_antares "${CMAKE_SOURCE_DIR}/src/libs/antares")
 
 
 # Adding a library embedding all Antares sources useful to test class Matrix
@@ -19,7 +19,7 @@ target_include_directories(lib-matrix
 								PRIVATE
 									"${CMAKE_CURRENT_SOURCE_DIR}"
 									"${CMAKE_CURRENT_SOURCE_DIR}/logs"
-									"${CMAKE_SOURCE_DIR}/ext/yuni/src"
+									"${CMAKE_SOURCE_DIR}/src/ext/yuni/src"
 )
 
 # Storing lib-matrix under the folder Unit-tests in the IDE
@@ -40,7 +40,7 @@ target_include_directories(tests-matrix-save
 									"${src_libs_antares}/array"
 									"${CMAKE_CURRENT_SOURCE_DIR}/logs"
 									"${CMAKE_CURRENT_SOURCE_DIR}/jit"
-									"${CMAKE_SOURCE_DIR}/ext/yuni/src"
+									"${CMAKE_SOURCE_DIR}/src/ext/yuni/src"
 )
 
 target_link_libraries(tests-matrix-save
@@ -71,7 +71,7 @@ target_include_directories(tests-matrix-load
 									"${src_libs_antares}/array"
 									"${CMAKE_CURRENT_SOURCE_DIR}/logs"
 									"${CMAKE_CURRENT_SOURCE_DIR}/jit"
-									"${CMAKE_SOURCE_DIR}/ext/yuni/src"
+									"${CMAKE_SOURCE_DIR}/src/ext/yuni/src"
 )
 
 

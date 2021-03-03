@@ -17,8 +17,8 @@ add_library(libantares-fswalker
 #TODO : needed for include
 target_include_directories(libantares-fswalker
 		PRIVATE
-			${CMAKE_SOURCE_DIR}/ext/yuni/src
-			${CMAKE_SOURCE_DIR}/libs
+			${CMAKE_SOURCE_DIR}/src/ext/yuni/src
+			${CMAKE_SOURCE_DIR}/src/libs
 		)
 target_link_libraries(libantares-fswalker
 		PRIVATE
