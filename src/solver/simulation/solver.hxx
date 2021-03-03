@@ -1541,7 +1541,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             }
         }
 #endif
-
+		bool yearPerformed = false;
         for (year_it = set_it->yearsIndices.begin(); year_it != set_it->yearsIndices.end();
              ++year_it)
         {
@@ -1552,6 +1552,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             unsigned int numSpace = 999999;
             if (performCalculations)
             {
+				yearPerformed = true;
                 numSpace = set_it->performedYearToSpace[y];
                 study.runtime->timeseriesNumberYear[numSpace] = y;
                 study.runtime->currentYear[numSpace] = y;
@@ -1581,8 +1582,8 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
         qs.wait(Yuni::qseIdle);
         qs.stop();
 
-        // At this point, the first set of parallel year(s) was run
-        if (!pFirstSetParallelWasRun)
+        // At this point, the first set of parallel year(s) was run with at least one year performed
+        if (!pFirstSetParallelWasRun && yearPerformed)
             pFirstSetParallelWasRun = true;
 
         // On regarde si au moins une année du lot n'a pas trouvé de solution
