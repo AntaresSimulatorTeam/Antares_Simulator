@@ -191,7 +191,7 @@ private:
                 Antares::memory.flushAll();
 
             // 6 - The Solver itself
-            bool isFirstPerformedYearOfSimulation = isFirstPerformedYearOfASet[y] && not firstSetParallelWasRun;
+            bool isFirstPerformedYearOfSimulation = isFirstPerformedYearOfASet[y] && not firstSetParallelWithAPerformedYearWasRun;
             std::list<uint> failedWeekList;
             if (not simulationObj->year(
                                          progression,
