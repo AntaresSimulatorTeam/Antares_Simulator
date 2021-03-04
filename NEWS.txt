@@ -2,7 +2,10 @@
 =================
 v8.0.1 (03/2021)
 -------------------- 
-	
+### Features
+
+ - Add "Continue Offline" button at startup if antares metric server is unreachable
+ 
 ### Bug fixes
 
  - Error with hydro start when using scenario playlist and stochastic TS refresh span
