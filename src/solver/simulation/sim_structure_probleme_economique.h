@@ -535,6 +535,7 @@ struct PROBLEME_HEBDO
 
     unsigned int HeureDansLAnnee;
     char LeProblemeADejaEteInstancie;
+    bool firstWeekOfSimulation;
 
     CORRESPONDANCES_DES_VARIABLES** CorrespondanceVarNativesVarOptim;
     CORRESPONDANCES_DES_CONTRAINTES** CorrespondanceCntNativesCntOptim;
