@@ -1753,20 +1753,31 @@ void Parameters::saveToINI(IniFile& ini, uint version) const
         else // version > version800
         {
             auto* section = ini.addSection("playlist");
-            std::string active_years, weights;
+            std::string active_years;
             for (uint i = 0; i != nbYears; ++i)
             {
                 if (yearsFilter[i])
                 {
                     active_years += std::to_string(i) + ",";
-                    weights += std::to_string(yearsWeight[i]) + ",";
                 }
             }
-            active_years.pop_back(); // Remove final ,
-            section->add("playlist", active_years);
 
-            weights.pop_back(); // Remove final ,
-            section->add("weights", weights);
+            for (uint i = 0; i != nbYears; ++i)
+            {
+                /* Save active and inactive years
+                   Only with weight is not default value 1 */
+                if (yearsWeight[i] != 1.f)
+                {
+                    section->add("weight[" + std::to_string(i) + "]",
+                                 yearsWeight[i]);
+                }
+            }
+
+            if (!active_years.empty())
+            {
+                active_years.pop_back(); // Remove final ,
+                section->add("playlist", active_years);
+            }
         }
     }
 
