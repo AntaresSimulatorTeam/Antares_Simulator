@@ -32,36 +32,39 @@
 #include <string>
 #include <type_traits>
 
-namespace Antares {
-
-namespace Data {
-
-namespace Enum {
-
-template <typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
+namespace Antares
+{
+namespace Data
+{
+namespace Enum
+{
+template<typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
 const std::initializer_list<std::string>& getNames();
 
-template <typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
+template<typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
 std::string toString(const E& value);
 
-template <typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
+template<typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
 E fromString(const std::string& name);
 
-template <typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
+template<typename E, typename = typename std::enable_if<std::is_enum<E>::value>::type>
 std::list<E> enumList();
 
-}  // namespace Enum
+} // namespace Enum
 
-template <typename E>
-inline typename std::enable_if<std::is_enum<E>::value, std::ostream&>::type operator<<(std::ostream& stream, const E& value) {
+template<typename E>
+inline typename std::enable_if<std::is_enum<E>::value, std::ostream&>::type operator<<(
+  std::ostream& stream,
+  const E& value)
+{
     stream << Data::Enum::toString(value);
     return stream;
 }
 
-}  // namespace Data
+} // namespace Data
 
-}  // namespace Antares
+} // namespace Antares
 
 #include <antares/Enum.hxx>
 
-#endif  // ANTARES_DATA_ENUM_HPP
+#endif // ANTARES_DATA_ENUM_HPP

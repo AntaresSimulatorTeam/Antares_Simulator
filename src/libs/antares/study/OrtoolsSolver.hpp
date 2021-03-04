@@ -28,25 +28,25 @@
 #ifndef ANTARES_DATA_ORTOOLSSOLVER_HPP
 #define ANTARES_DATA_ORTOOLSSOLVER_HPP
 
-namespace Antares {
-
-namespace Data {
-
-
+namespace Antares
+{
+namespace Data
+{
 /*! Enum class to define ortools solvers used */
-enum class OrtoolsSolver : unsigned char {
-    sirius,     /*! Sirius solver  */
-    coin,       /*! Cpl and Cbc coin solver */
-    xpress,     /*! Xpress solver : licence needed, depends on ortools link */
-    glop_scip,  /*! Glop and SCIP solver */
-    cplex,      /*! CPlex solver  : licence needed, depends on ortools link*/
-    gurobi,     /*! Gurobi solver : licence needed, depends on ortools link*/
-    glpk,       /*! GLPK solver */
-    glop_cbc    /*! Glop and Cbc coin solver */
+enum class OrtoolsSolver : unsigned char
+{
+    sirius,    /*! Sirius solver  */
+    coin,      /*! Cpl and Cbc coin solver */
+    xpress,    /*! Xpress solver : licence needed, depends on ortools link */
+    glop_scip, /*! Glop and SCIP solver */
+    cplex,     /*! CPlex solver  : licence needed, depends on ortools link*/
+    gurobi,    /*! Gurobi solver : licence needed, depends on ortools link*/
+    glpk,      /*! GLPK solver */
+    glop_cbc   /*! Glop and Cbc coin solver */
 };
 
-}  // namespace Data
+} // namespace Data
 
-}  // namespace Antares
+} // namespace Antares
 
-#endif  // ANTARES_DATA_ORTOOLSSOLVER_HPP
+#endif // ANTARES_DATA_ORTOOLSSOLVER_HPP
