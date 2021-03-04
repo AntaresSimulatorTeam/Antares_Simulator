@@ -336,18 +336,18 @@ if(WIN32 OR WIN64)
 
 	configure_file(
 		${PROJECT_SOURCE_DIR}/src/distrib/win32/NSIS.template.in
-		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/NSIS.template.in
+		${CMAKE_CURRENT_BINARY_DIR}/src/distrib/win32/NSIS.template.in
 		@ONLY
 	)
 	
 	#Define cpack install script to checkout examples
 	configure_file(
 		${PROJECT_SOURCE_DIR}/src/distrib/CMakeLists.txt.in
-		${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt
+		${CMAKE_CURRENT_BINARY_DIR}/src/distrib/CMakeLists.txt
 		@ONLY
 	)
 
-	set(CPACK_INSTALL_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt)
+	set(CPACK_INSTALL_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/src/distrib/CMakeLists.txt)
 
 	#Set package name from CMake and antares variables
 	set(CPACK_PACKAGE_FILE_NAME "rte-antares-${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG}-installer-${ANTARES_INSTALLER_ARCH}")
@@ -373,7 +373,7 @@ else()
     set(CPACK_RPM_PACKAGE_REQUIRES "openssl,curl,wxGTK3")
     set(CPACK_RPM_PACKAGE_AUTOREQPROV "0")
 
-	configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
+	configure_file("src/distrib/unix/packages.cmake" "src/distrib/unix/packages.sh")
 
 
 endif()

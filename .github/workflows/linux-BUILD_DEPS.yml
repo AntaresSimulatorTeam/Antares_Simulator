@@ -40,11 +40,11 @@ jobs:
            
     - name: Init submodule
       run: |
-           git submodule update --init --recursive src
+           git submodule update --init --recursive .
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DUSE_PRECOMPILED_EXT=ON
+           cmake -B _build -S . -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DUSE_PRECOMPILED_EXT=ON
 
     - name: Build
       run: |
