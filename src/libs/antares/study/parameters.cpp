@@ -610,10 +610,12 @@ static bool SGDIntLoadFamily_N(Parameters& d, const String& key, const String& v
 
 static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& value, uint)
 {
-    const auto warning = [&logs, &key]() {
-        logs.warning() << key
                        << " is deprecated and will be removed in a future version. Consider using "
                           "playlist instead.";
+    auto& logs_tmp = logs; // logs can't be passed to a lambda function
+    const auto warning = [&logs_tmp, &key]() {
+        logs_tmp.warning()
+          << key
     };
     if (key == "playlist_reset")
     {
