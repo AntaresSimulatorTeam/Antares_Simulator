@@ -74,6 +74,41 @@ static void AllocateResultsForEconomicMode(void)
     }
 }
 
+static void DeallocateResultsForEconomicMode(void)
+{
+    auto& study = *Data::Study::Current::Get();
+    RESULTATS_PAR_INTERCONNEXION* rpNtc;
+    uint i;
+
+    for (i = 0; i != study.runtime->interconnectionsCount; i++)
+    {
+        rpNtc = ResultatsParInterconnexion[i];
+
+        MemFree(rpNtc->TransitMoyen);
+        MemFree(rpNtc->TransitMinimum);
+        MemFree(rpNtc->TransitMinimumNo);
+        MemFree(rpNtc->TransitMaximum);
+        MemFree(rpNtc->TransitMaximumNo);
+        MemFree(rpNtc->TransitStdDev);
+        MemFree(rpNtc->TransitAnnuel);
+        MemFree(rpNtc->TransitMoyenRecalculQuadratique);
+        MemFree(rpNtc->VariablesDualesMoyennes);
+        MemFree(rpNtc->RenteHoraire);
+
+        MemFree(rpNtc);
+    }
+    MemFree(ResultatsParInterconnexion);
+    ResultatsParInterconnexion = NULL;
+
+    for (i = 0; i != study.runtime->bindingConstraintCount; ++i)
+    {
+        MemFree(ResultatsParContrainteCouplante[i]->VariablesDualesMoyennes);
+        MemFree(ResultatsParContrainteCouplante[i]);
+    }
+    MemFree(ResultatsParContrainteCouplante);
+    ResultatsParContrainteCouplante = NULL;
+}
+
 void SIM_AllocationTableaux()
 {
     uint i;
@@ -164,4 +199,9 @@ void SIM_DesallocationTableaux()
 
     MemFree(DonneesParPays);
     DonneesParPays = NULL;
+
+    if (not studyptr->parameters.adequacyDraft())
+    {
+        DeallocateResultsForEconomicMode();
+    }
 }
