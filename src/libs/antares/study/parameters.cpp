@@ -1752,26 +1752,31 @@ void Parameters::saveToINI(IniFile& ini, uint version) const
         }
         else // version > version800
         {
-            auto* section = ini.addSection("playlist");
-            std::string active_years;
-            for (uint i = 0; i != nbYears; ++i)
+            const bool any_year_enabled
+              = std::any_of(yearsFilter.cbegin(), yearsFilter.cend(), [](bool i) { return i; });
+            const bool any_weight_not_default = std::any_of(
+              yearsWeight.cbegin(), yearsWeight.cend(), [](float w) { return w != 1.f });
+            if (any_year_enabled || any_weight_not_default)
             {
-                if (yearsFilter[i])
+                auto* section = ini.addSection("playlist");
+                std::string active_years;
+                for (uint i = 0; i != nbYears; ++i)
                 {
-                    active_years += std::to_string(i) + ",";
+                    if (yearsFilter[i])
+                    {
+                        active_years += std::to_string(i) + ",";
+                    }
                 }
-            }
 
-            for (uint i = 0; i != nbYears; ++i)
-            {
-                /* Save active and inactive years
-                   Only with weight is not default value 1 */
-                if (yearsWeight[i] != 1.f)
+                for (uint i = 0; i != nbYears; ++i)
                 {
-                    section->add("weight[" + std::to_string(i) + "]",
-                                 yearsWeight[i]);
+                    /* Save active and inactive years
+                       Only with weight is not default value 1 */
+                    if (yearsWeight[i] != 1.f)
+                    {
+                        section->add("weight[" + std::to_string(i) + "]", yearsWeight[i]);
+                    }
                 }
-            }
 
                 if (!active_years.empty())
                 {
