@@ -1707,7 +1707,8 @@ void Parameters::saveToINI(IniFile& ini) const
             weightEnabled |= yearsWeight[i] != 1.f;
         }
 
-        // Playlist section must be added if at least one year is disable or one MC year weight is not 1.0
+        // Playlist section must be added if at least one year is disable or one MC year weight is
+        // not 1.0
         bool addPlayListSection = effNbYears != nbYears;
         addPlayListSection |= weightEnabled;
 

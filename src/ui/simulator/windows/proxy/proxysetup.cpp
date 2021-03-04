@@ -71,7 +71,7 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
 {
     // TODO : a lot of pointer variables are not destroyed after usage here : sizers, titles, ...
     // TODO : They have to be deleted to avoid memory leaks.
-    
+
     assert(parent);
 
     // Background color
@@ -108,13 +108,13 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
       false,
       false);
     subtitle->Enable(false);
-    pOffline_title = Component::CreateLabel(
-        this,
-        wxT("If you wish to stay offline in all future sessions,\n"
-            "click on \"Cancel\", and select \"Continue offline\"\n"
-            "in the Antares help (\"?\") menu."),
-        false,
-        false);
+    pOffline_title
+      = Component::CreateLabel(this,
+                               wxT("If you wish to stay offline in all future sessions,\n"
+                                   "click on \"Cancel\", and select \"Continue offline\"\n"
+                                   "in the Antares help (\"?\") menu."),
+                               false,
+                               false);
     contentSizer->AddSpacer(20);
     contentSizer->Add(titlespacer, 0, wxALL | wxEXPAND);
     contentSizer->AddSpacer(40);
