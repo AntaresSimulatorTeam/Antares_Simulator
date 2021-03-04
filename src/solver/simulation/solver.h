@@ -110,7 +110,6 @@ private:
     **
     ** \return The max number of years in a set of parallel years (to be executed or not)
     */
-    template<bool PerformCalculationsT>
     uint buildSetsOfParallelYears(uint firstYear,
                                   uint endYear,
                                   std::vector<setOfParallelYears>& setsOfParallelYears);
@@ -151,7 +150,6 @@ private:
     ** \param firstYear The first real MC year
     ** \param endYear   The last MC year
     */
-    template<bool PerformCalculationsT>
     void loopThroughYears(uint firstYear, uint endYear, std::vector<Variable::State>& state);
 
 private:

@@ -512,6 +512,7 @@ struct PROBLEME_HEBDO
     double** BruitSurCoutHydraulique;
 
     unsigned int HeureDansLAnnee;
+    bool firstWeekOfSimulation;
 
     char LeProblemeADejaEteInstancie;
     char TypeDOptimisation;
