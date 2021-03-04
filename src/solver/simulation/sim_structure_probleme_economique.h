@@ -658,15 +658,16 @@ struct PROBLEME_HEBDO
     BOUND_FLEX_DOWN_NODE** BoundFlexDownNode;
     LEVEL_FLEX_UP_NODE** LevelFlexUpNode;
     LEVEL_FLEX_DOWN_NODE** LevelFlexDownNode;
-#endif
 
-    /* Allocated / deallocated, but not used */
     int* MarketOfferPoolOfNode;
     int* MarketDemandPoolOfNode;
     int* FlexUpOfferPoolOfNode;
     int* FlexUpDemandPoolOfNode;
     int* FlexDownOfferPoolOfNode;
     int* FlexDownDemandPoolOfNode;
+#endif
+
+
 
     /* Unknown status */
     int* NbGrpCourbeGuide; // ?
