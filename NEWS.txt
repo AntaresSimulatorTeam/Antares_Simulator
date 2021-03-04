@@ -1,13 +1,14 @@
 ﻿Antares Changelog
 =================
-v8.0.1 (xx/2021)
+v8.0.1 (03/2021)
 -------------------- 
 	
 ### Bug fixes
 
  - Error with hydro start when using scenario playlist and stochastic TS refresh span
+ - Files needed for antares-xpansion not exported when using scenario playlist with first year disabled
  
-v8.0.0 (03/2020)
+v8.0.0 (03/2021)
 -------------------- 
 
 ### Features
