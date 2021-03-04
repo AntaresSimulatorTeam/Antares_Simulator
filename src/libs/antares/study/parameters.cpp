@@ -676,6 +676,7 @@ static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& v
 
     if (key == "playlist_year_weight")
     {
+        info();
         // Get year index and weight from  string
 
         // Use of yuni to split string
@@ -719,6 +720,12 @@ static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& v
             return false;
         }
         return false;
+    }
+
+    if (key.startsWith("weights["))
+    {
+        // TODO
+        // Get year number and weights
     }
 
     if (key == "power-fluctuations")
@@ -1704,42 +1711,62 @@ void Parameters::saveToINI(IniFile& ini, uint version) const
             weightSum += yearsWeight[i];
         }
 
-        // Playlist section must be added if at least one year is disable or one MC year weight sum
-        // is not equal to nbYears
-        bool addPlayListSection = effNbYears != nbYears;
-        addPlayListSection |= weightSum != nbYears;
-
-        if (addPlayListSection)
+        if (version <= version800)
         {
-            // We have something to write !
-            auto* section = ini.addSection("playlist");
-            if (effNbYears <= (nbYears / 2))
+            // Playlist section must be added if at least one year is disable or one MC year weight
+            // sum is not equal to nbYears
+            bool addPlayListSection = effNbYears != nbYears;
+            addPlayListSection |= weightSum != nbYears;
+            if (addPlayListSection)
             {
-                section->add("playlist_reset", "false");
-                for (uint i = 0; i != nbYears; ++i)
+                // We have something to write !
+                auto* section = ini.addSection("playlist");
+                if (effNbYears <= (nbYears / 2))
                 {
-                    if (yearsFilter[i])
-                        section->add("playlist_year +", i);
+                    section->add("playlist_reset", "false");
+                    for (uint i = 0; i != nbYears; ++i)
+                    {
+                        if (yearsFilter[i])
+                            section->add("playlist_year +", i);
+                    }
                 }
-            }
-            else
-            {
-                for (uint i = 0; i != nbYears; ++i)
+                else
                 {
-                    if (not yearsFilter[i])
-                        section->add("playlist_year -", i);
+                    for (uint i = 0; i != nbYears; ++i)
+                    {
+                        if (not yearsFilter[i])
+                            section->add("playlist_year -", i);
+                    }
                 }
-            }
 
+                for (uint i = 0; i != nbYears; ++i)
+                {
+                    // Only write weight different from 1.0 to limit .ini file size and readability
+                    if (yearsWeight[i] != 1.f)
+                    {
+                        std::string val = std::to_string(i) + "," + std::to_string(yearsWeight[i]);
+                        section->add("playlist_year_weight", val);
+                    }
+                }
+            }
+        }
+        else // version > version800
+        {
+            auto* section = ini.addSection("playlist");
+            std::string active_years, weights;
             for (uint i = 0; i != nbYears; ++i)
             {
-                // Only write weight different from 1.0 to limit .ini file size and readability
-                if (yearsWeight[i] != 1.f)
+                if (yearsFilter[i])
                 {
-                    std::string val = std::to_string(i) + "," + std::to_string(yearsWeight[i]);
-                    section->add("playlist_year_weight", val);
+                    active_years += std::to_string(i) + ",";
+                    weights += std::to_string(yearsWeight[i]) + ",";
                 }
             }
+            active_years.pop_back(); // Remove final ,
+            section->add("playlist", active_years);
+
+            weights.pop_back(); // Remove final ,
+            section->add("weights", weights);
         }
     }
 
