@@ -74,7 +74,6 @@ jobs:
     - name: NSIS Installer creation
       shell: bash
       run: |
-           rm -rf src/tests/resources/Antares_Simulator_Tests
            cd _build
            cpack -GNSIS
            export NSIS_NAME=$(ls *.exe)

@@ -73,7 +73,6 @@ jobs:
 
     - name: Installer creation
       run: |
-           Remove-Item .\src\tests\resources\Antares_Simulator_Tests\ -Recurse -Force
            cd _build
            cpack -GNSIS
            
