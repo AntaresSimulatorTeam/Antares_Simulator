@@ -1755,7 +1755,7 @@ void Parameters::saveToINI(IniFile& ini, uint version) const
             const bool any_year_enabled
               = std::any_of(yearsFilter.cbegin(), yearsFilter.cend(), [](bool i) { return i; });
             const bool any_weight_not_default = std::any_of(
-              yearsWeight.cbegin(), yearsWeight.cend(), [](float w) { return w != 1.f });
+              yearsWeight.cbegin(), yearsWeight.cend(), [](float w) { return w != 1.f; });
             if (any_year_enabled || any_weight_not_default)
             {
                 auto* section = ini.addSection("playlist");
