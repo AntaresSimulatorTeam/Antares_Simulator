@@ -1,5 +1,5 @@
 # Antares Simulator
-[![Status][linux_system_svg]][linux_system_link]  [![Status][windows_vcpkg_svg]][windows_vcpkg_link]
+[![Status][linux_system_svg]][linux_system_link]  [![Status][windows_vcpkg_svg]][windows_vcpkg_link] [![Status][centos7_system_svg]][centos7_system_link]
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
@@ -30,6 +30,10 @@ In May 2018 RTE decided to relicense the project under the GPLv3 license.
 
 [windows_vcpkg_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(VCPKG)"
 
+[centos7_system_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Centos7%20CI%20(system%20libs)/badge.svg
+
+[centos7_system_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Centos7%20CI%20(system%20libs)"
+
 
 # Links:
 
@@ -41,8 +45,9 @@ In May 2018 RTE decided to relicense the project under the GPLv3 license.
 
 This software suite has been tested under:
 
-*   Ubuntu 16.04 and up (64-bit) [![Status][linux_system_svg]][linux_system_link] 
+*   Ubuntu 20.04 [![Status][linux_system_svg]][linux_system_link] 
 *   Microsoft Windows with Visual Studio 2019 (64-bit) [![Status][windows_vcpkg_svg]][windows_vcpkg_link]
+*   Centos7 [![Status][centos7_system_svg]][centos7_system_link] 
 
 Antares Simulator is built using CMake.
 For installation instructions, please visit [INSTALL.md](INSTALL.md)

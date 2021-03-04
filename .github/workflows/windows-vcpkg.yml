@@ -7,6 +7,7 @@ on:
       - feature/*
       - features/*
       - fix/*
+      - release/*
 jobs:
 
   windows:
@@ -72,11 +73,23 @@ jobs:
 
     - name: Installer creation
       run: |
+           Remove-Item .\src\tests\resources\Antares_Simulator_Tests\ -Recurse -Force
            cd _build
            cpack -GNSIS
+           
+    - name: .zip creation
+      run: |
+           cd _build
+           cpack -G ZIP
 
     - name: Installer upload
       uses: actions/upload-artifact@v2
       with:
         name: antares-installer-64bits
         path: _build/rte-antares-*.*.*-installer-*.exe
+        
+    - name: Archive upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: antares-windows-archive
+        path: _build/*.zip

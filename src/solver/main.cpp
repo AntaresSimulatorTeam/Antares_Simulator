@@ -579,9 +579,6 @@ bool SolverApplication::completeWithOnlineCheck()
 
 SolverApplication::~SolverApplication()
 {
-    // removed any global reference
-    Data::Study::Current::Set(nullptr);
-
     // Destroy all remaining bouns (callbacks)
     destroyBoundEvents();
 

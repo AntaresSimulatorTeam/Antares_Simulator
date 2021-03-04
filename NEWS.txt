@@ -1,7 +1,13 @@
 ﻿Antares Changelog
 =================
+v8.0.1 (xx/2021)
+-------------------- 
+	
+### Bug fixes
 
-v8.0.0 (12/2020)
+ - Error with hydro start when using scenario playlist and stochastic TS refresh span
+ 
+v8.0.0 (03/2020)
 -------------------- 
 
 ### Features
@@ -10,46 +16,31 @@ v8.0.0 (12/2020)
    - add command line option in antares-solver to define OR-Tools use and OR-Tools solver (option --use-ortools and --ortools-solver='solver')
    - add GUI option in run simulation to define antares-solver launch with OR-Tools option
 
- - External dependencies :
-   - use of new repository [antares-deps](https://github.com/AntaresSimulatorTeam/antares-deps) for external dependencies compilation
-   
+- Add advanced hydro allocation feature
+
+- Add indication on how to disable anonymous metrics
+      
  - antares-xpansion :
-   - add option `include-exportstructure` in `generaldata.ini` to export .txt files needed for antares-xpansion
+   - add option `include-exportstructure` in `generaldata.ini` to export .txt files needed for antares-xpansion 
 
- - docker image :
-   - create of dockerfile for docker image creation
-   
- - continuous integration : 
-   - use docker images in CI
-   - use of antares-deps release artifact in CI
-   - push of docker image to dockerHub in [antaresrte/rte-antares repository](https://hub.docker.com/repository/docker/antaresrte/rte-antares)
+ - Scenario builder and hydraulic level :<br/>
+   Adding an hydraulic starting level tab in the scenario builder.<br/>
+   For each MC year and area, a starting level can be defined, that is a 0-100 value.<br/>
+   When the scenario builder is enabled, these levels get priority upon hot-start mode.    
 
- - Scenario builder and hydraulic level :
-   Adding an hydraulic starting level tab in the scenario builder.
-   For each MC year and area, a starting level can be defined, that is a 0-100 value.
-   When the scenario builder is enabled, these levels get priority upon hot-start mode.
-
- - Unit tests :
-    - Adding an end-to-end test in memory (see simple-study.cpp) :
-      This test calls high level functions to build a simple study and runs it.
-      It then checks if some elements of results match associated expected values.
-      During this process, file system is not involved : everything takes place in RAM
-    - Adding a "calling solver" end-to-end test (see solver-call.cpp) :
-      This test calls the solver upon simple studies located on disk.
-      When a study has run, it opens a result file, checks it contains expected values and removes all simulation results.      
-
- - Binding constraints (BC) and thermal clusters :
-	If a must-run or disabled cluster is involved in a binding constraint :
+ - Binding constraints (BC) and thermal clusters :<br/>
+	  If a must-run or disabled cluster is involved in a binding constraint :
     - the cluster is marked as "N/A" in the BC formula (GUI > Binding constraint > Summary)
     - the cluster is marked as must-run/disabled in the Weights or Offsets tabs.
+
     If a BC involves only zero weighted clusters/links or must-run/disabled clusters, the BC is :
     - marked with a red bullet in the Summary tab
     - marked as Skipped in the Weights and Offsets tabs
 
  - MC Scenario Playlist :
-	 Add possibility to define a weight for each MC years in the synthetis results.
-	 See : GUI > Configure > MC scenario playlist.
-	 By default, a MC year's weight is 1, but can be set by user to more or less.
+	 Add possibility to define a weight for each MC years in the synthetis results.<br/>
+	 See : GUI > Configure > MC scenario playlist.<br/>
+	 By default, a MC year's weight is 1, but can be set by user to more or less.<br/>
 	 After simulation, the MC year have a contribution to averages or standard deviations in synthesis results
 	 depending on the weight it was given.
 	
@@ -62,8 +53,34 @@ v8.0.0 (12/2020)
      to Automatic or Derated. In the previous cases, the Configute menu item is disabled.
    - If a disabled thermal cluster is given a time series number in a non active rule of the scenario builder, a warning should not be
      triggered. If the disabled cluster is given a number for many MC years in the active rule, a single summary warning should be raised,
-	 not a warning per year.
+	 not a warning per year. 
+	 
+### For developers
 
+ - External dependencies :
+   - use of new repository [antares-deps](https://github.com/AntaresSimulatorTeam/antares-deps) for external dependencies compilation
+ 
+- Fix several compilation warnings
+- Remove unused `COUT_TRANSPORT` constant
+- Add code formatting with clang-format
+- Remove PNE dead code
+
+- docker image :
+   - create of dockerfile for docker image creation
+   
+ - continuous integration : 
+   - use docker images in CI
+   - use of antares-deps release artifact in CI
+   - push of docker image to dockerHub in [antaresrte/rte-antares repository](https://hub.docker.com/repository/docker/antaresrte/rte-antares)
+   - add Centos7 support
+
+ - Unit tests :
+    - Adding an end-to-end test in memory (see simple-study.cpp) :<br/>
+      This test calls high level functions to build a simple study and runs it.<br/>
+      It then checks if some elements of results match associated expected values.<br/>
+      During this process, file system is not involved : everything takes place in RAM
+    - Adding pytest scripts to check reference output values
+    - Add pytest scripts related to unfeasible problems
 
 v7.2.0 (06/2020)
 -------------------- 

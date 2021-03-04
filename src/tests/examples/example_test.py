@@ -37,6 +37,21 @@ def find_integrity_path(output_dir):
     assert len(op) == 1
     return op[0]
 
+def find_values_hourly_path(output_dir, area, year):
+    op = []
+    for path in Path(output_dir).rglob(f'mc-ind/{year:05d}/areas/{area}/values-hourly.txt'):
+        op.append(path)
+    assert len(op) == 1
+    return op[0]
+
+def fetch_hourly_column_values(path, area, year, col_index):
+    output_path = path / 'output'
+    hourly_path = find_values_hourly_path(output_path, area, year)
+    # skiprows=7 in order to skip the header of the file
+    col_values = np.loadtxt(hourly_path, delimiter='\t', skiprows=7, usecols=col_index, dtype=float)
+    assert len(col_values == 364 * 24)
+    return col_values
+
 def get_integrity_check_values(output : Path) -> np.array :
     integrity_path = find_integrity_path(output)
     integrity_file = open(str(integrity_path), 'r')
@@ -76,7 +91,7 @@ def check_integrity_first_opt(path):
     output_path = path / 'output'
     output_values = get_integrity_check_values(output_path)
 
-    np.testing.assert_allclose(reference_values[0:4], output_values[0:4], rtol=1e-4, atol=0)
+    np.testing.assert_allclose(reference_values[0:4], output_values[0:4], rtol=1e-3, atol=0)
 
 def check_integrity_second_opt(path):
     reference_path = path / 'reference'
@@ -85,7 +100,7 @@ def check_integrity_second_opt(path):
     output_path = path / 'output'
     output_values = get_integrity_check_values(output_path)
 
-    np.testing.assert_allclose(reference_values[4:8], output_values[4:8], rtol=1e-4, atol=0)
+    np.testing.assert_allclose(reference_values[4:8], output_values[4:8], rtol=1e-3, atol=0)
 
 def generate_reference_integrity(solver_path, path):
     reference_path = path / 'reference'
@@ -529,6 +544,42 @@ def test_075_kcg_on_four_areas_02(use_ortools, ortools_solver, solver_path):
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     check_integrity_first_opt(study_path)
     check_integrity_second_opt(study_path)
+
+# hydro tests
+
+@pytest.mark.short
+def test_hydro_hydro_initialization_1(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "hydro initialization 1"
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    # 26th column = average reservoir level %
+    reservoir_levels = fetch_hourly_column_values(study_path, area='area', year=1, col_index=26)
+    first_january_midnight = 0
+    assert(abs(reservoir_levels[first_january_midnight] - 30) < .05)
+
+@pytest.mark.short
+def test_hydro_hydro_initialization_2(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "hydro initialization 2"
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    # 26th column = average reservoir level %
+    reservoir_levels = fetch_hourly_column_values(study_path, area='area', year=1, col_index=26)
+    first_march_midnight = 1417
+    assert(abs(reservoir_levels[first_march_midnight] - 30) < .05)
+
+@pytest.mark.short
+def test_hydro_hydro_preference_1(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "hydro preference 1"
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    # 26th column = average reservoir level %
+    reservoir_levels = fetch_hourly_column_values(study_path, area='area', year=1, col_index=26)
+    assert(abs(reservoir_levels[-1] - 30.46) < .05)
+
+@pytest.mark.short
+def test_hydro_hydro_preference_2(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "hydro preference 2"
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    # 26th column = average reservoir level %
+    reservoir_levels = fetch_hourly_column_values(study_path, area='area', year=1, col_index=26)
+    assert(reservoir_levels[-1] < 30)
 
 @pytest.mark.medium
 def test_000_free_data_sample(use_ortools, ortools_solver, solver_path):

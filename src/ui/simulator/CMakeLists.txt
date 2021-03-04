@@ -158,8 +158,12 @@ set(ANTARES_LIBS
 			)
 
 
-install(TARGETS ${execname} DESTINATION bin)
+install(TARGETS ${execname} EXPORT antares-ui-simulator DESTINATION bin)
 
+INSTALL(EXPORT antares-ui-simulator
+	FILE antares-ui-simulatorConfig.cmake
+	DESTINATION cmake
+)
 
 import_std_libs(${execname})
 executable_strip(${execname})
@@ -194,10 +198,26 @@ FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/images/" 		DESTINATION "${CMAKE
 FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/animations/" 	DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/animations/")
 FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources/icons/" 		DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources/icons/")
 
-#resources are loaded from /usr/share/antares/ANTARES_VERSION/resources
-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/help/" 		DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/help")
-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/images/" 		DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/images")
-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/animations/" 	DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/animations")
-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/icons/" 		DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/icons")
+if (WIN32)
 
+	#Install shared .dll
+	install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/
+	TYPE BIN
+	FILES_MATCHING PATTERN "*.dll")
+
+	#Install resources
+	install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/help/" 		DESTINATION resources/help)
+	install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/images/" 		DESTINATION resources/images)
+	install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/animations/" 	DESTINATION resources/animations)
+	install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/icons/" 		DESTINATION resources/icons)
+
+else()
+
+	#resources are loaded from /usr/share/antares/ANTARES_VERSION/resources
+	install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/help/" 		DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/help")
+	install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/images/" 		DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/images")
+	install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/animations/" 	DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/animations")
+	install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources/icons/" 		DESTINATION "share/antares/${ANTARES_PRG_VERSION}/resources/icons")
+
+endif()
 

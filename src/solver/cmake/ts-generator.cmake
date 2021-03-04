@@ -44,11 +44,13 @@ add_library(libantares-solver-ts-generator
 
 target_link_libraries(libantares-solver-ts-generator PRIVATE libantares-core)
 
-add_library(libantares-solver-ts-generator-swap
-		${SRC_GENERATORS}
-		${SRC_XCAST} )
+if(BUILD_SWAP)
+    add_library(libantares-solver-ts-generator-swap
+            ${SRC_GENERATORS}
+            ${SRC_XCAST} )
+    target_link_libraries(libantares-solver-ts-generator-swap PRIVATE libantares-core-swap)
 
-target_link_libraries(libantares-solver-ts-generator-swap PRIVATE libantares-core-swap)
+    set_target_properties(libantares-solver-ts-generator-swap PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
 
-set_target_properties(libantares-solver-ts-generator-swap PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
+endif()
 

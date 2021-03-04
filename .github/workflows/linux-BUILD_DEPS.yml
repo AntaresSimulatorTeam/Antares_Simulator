@@ -65,8 +65,14 @@ jobs:
            cd _build
            cpack -G TGZ
 
-    - name: Installer upload
+    - name: Installer archive upload
       uses: actions/upload-artifact@v2
       with:
-        name: antares-installer-64bits
-        path: _build/antares-*.*.*-*-*.*.*
+        name: antares-ubuntu-archive
+        path: _build/*.tar.gz
+        
+    - name: Installer deb upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: antares-ubuntu-deb
+        path: _build/*.deb
