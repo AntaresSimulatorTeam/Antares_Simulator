@@ -10,7 +10,14 @@ v8.0.1 (03/2021)
 
  - Error with hydro start when using scenario playlist and stochastic TS refresh span
  - Files needed for antares-xpansion not exported when using scenario playlist with first year disabled
-	 
+ - Correction of crash if user define a stochastic TS refresh span of 0 : minimum value is now 0
+ - Correction of MC years playlist weight write when sum of weight was equal to number oy years (no MC years playlist export in .ini)
+
+### For developers
+
+ - Add a GitHub action to check if branch name will launch CI
+ - Add shared dll in windows .zip archive
+
 v8.0.0 (03/2021)
 -------------------- 
 
