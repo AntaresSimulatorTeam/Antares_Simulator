@@ -4,11 +4,11 @@
 ; NO VERBOSE !!!
 !verbose 3
 
-!define ANTARES_BUILD_DIR "@CMAKE_CURRENT_BINARY_DIR@"
+!define ANTARES_BUILD_DIR "@CMAKE_CURRENT_BINARY_DIR@/src"
 !define ANTARES_SRC_DIR   "@CMAKE_CURRENT_SOURCE_DIR@/src"
 
 !include "${ANTARES_BUILD_DIR}\distrib\win32\version.nsh"
-!include "@PROJECT_SOURCE_DIR@\distrib\win32\extension.nsh"
+!include "@PROJECT_SOURCE_DIR@\src\distrib\win32\extension.nsh"
 !include "${ANTARES_BUILD_DIR}\distrib\win32\build.nsh"
 !include "x64.nsh"
 !include "Sections.nsh"
@@ -45,7 +45,7 @@ SetCompressor /SOLID /FINAL lzma
 SetCompressorDictSize 8 ; seems the same results 8 or 32
 
 !include "MUI2.nsh"
-!include "@PROJECT_SOURCE_DIR@\distrib\win32\ui.nsh"
+!include "@PROJECT_SOURCE_DIR@\src\distrib\win32\ui.nsh"
 !insertmacro MUI_LANGUAGE "English" ;first language is the default language
 ;!insertmacro MUI_LANGUAGE "French"
 ;!insertmacro MUI_LANGUAGE "German"
@@ -286,7 +286,7 @@ ${MementoSection} "$(LngCoreFiles)" SecCore
 	${SetOutPath} $INSTDIR
 
 	SetOverwrite on
-	${File} "@PROJECT_SOURCE_DIR@\distrib\"    "changelog.txt"
+	${File} "@PROJECT_SOURCE_DIR@\src\distrib\"    "changelog.txt"
 ;	!insertmacro AppendCoreFiles
 
 	${SetOutPath} "$INSTDIR\bin"
@@ -362,7 +362,7 @@ ${MementoSection} "$(LngResExamples)" SecExamples
 	SectionIn 1
 
 	SetOverwrite on
-	!include "@PROJECT_SOURCE_DIR@\distrib\win32\examplesfiles.inc.nsh"
+	!include "@PROJECT_SOURCE_DIR@\src\distrib\win32\examplesfiles.inc.nsh"
 ${Mementosectionend}
 
 ${MementoSection} "$(LngResSources)" SecSources
@@ -374,7 +374,7 @@ ${MementoSection} "$(LngResSources)" SecSources
 	SectionIn 1
 
 	SetOverwrite on
-	!include "@PROJECT_SOURCE_DIR@\distrib\win32\sourcefiles.inc.nsh"
+	!include "@PROJECT_SOURCE_DIR@\src\distrib\win32\sourcefiles.inc.nsh"
 ${Mementosectionend}
 
 
@@ -502,7 +502,7 @@ section Uninstall
 	; NSIS may not delete these files in the good order
 	; And the progress bar does not advance smoothly
 	DetailPrint "Deleting Antares files..."
-	!include "@PROJECT_SOURCE_DIR@\distrib\win32\uninstall-folders.inc.nsh"
+	!include "@PROJECT_SOURCE_DIR@\src\distrib\win32\uninstall-folders.inc.nsh"
 
 
 	SetDetailsPrint textonly

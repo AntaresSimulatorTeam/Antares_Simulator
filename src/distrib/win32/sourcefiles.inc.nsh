@@ -15,9 +15,6 @@ File  ${ANTARES_SRC_DIR}\..\README.md
 ${SetOutPath} "$INSTDIR\Sources\docs"
 File /r  ${ANTARES_SRC_DIR}\..\docs\*.*
 
-${SetOutPath} "$INSTDIR\Sources\resources"
-File /r  ${ANTARES_SRC_DIR}\..\resources\*.*
-
 ; TODO For now build_deps source are not provided
 
 ;${SetOutPath} "$INSTDIR\Sources\src\build_deps\curl\source"
