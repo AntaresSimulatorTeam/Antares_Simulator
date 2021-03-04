@@ -658,7 +658,7 @@ static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& v
         return false;
     }
 
-    if (key == "playlist")
+    if (key == "active_years")
     {
         std::list<int> in_playlist;
         value.split(in_playlist, ",");
@@ -1773,10 +1773,11 @@ void Parameters::saveToINI(IniFile& ini, uint version) const
                 }
             }
 
-            if (!active_years.empty())
-            {
-                active_years.pop_back(); // Remove final ,
-                section->add("playlist", active_years);
+                if (!active_years.empty())
+                {
+                    active_years.pop_back(); // Remove final ,
+                    section->add("active_years", active_years);
+                }
             }
         }
     }
