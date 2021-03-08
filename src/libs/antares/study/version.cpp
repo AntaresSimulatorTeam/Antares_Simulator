@@ -38,7 +38,7 @@ using namespace Yuni;
 // Checking version between CMakeLists.txt and Antares'versions
 enum
 {
-    versionFromCMake = (ANTARES_VERSION_HI * 100 + ANTARES_VERSION_LO * 10 + ANTARES_VERSION_BUILD),
+    versionFromCMake = (ANTARES_VERSION_HI * 100 + ANTARES_VERSION_LO * 10),
 };
 
 YUNI_STATIC_ASSERT((uint)versionFromCMake == (uint)Antares::Data::versionLatest,
