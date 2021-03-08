@@ -1295,7 +1295,7 @@ float Parameters::getYearsWeightSum() const
 
 void Parameters::setYearWeight(int year, float weight)
 {
-    assert(year < yearsWeight.size());
+    assert((uint)year < yearsWeight.size());
     yearsWeight[year] = weight;
 }
 
