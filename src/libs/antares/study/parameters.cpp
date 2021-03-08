@@ -724,18 +724,18 @@ static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& v
     }
 
     /* Format added in Antares 8.1 */
-    if (key.startsWith("weights["))
+    if (key.startsWith("playlist_weight_year_"))
     {
         String key_cpy(key);
-        uint year_in, weight_in;
-        key_cpy.replace("weights[", "");
-        key_cpy.replace("]", "");
+        uint year_in;
+        float weight_in;
+        key_cpy.replace("playlist_weight_year_", "");
         if (!key_cpy.to<uint>(year_in))
         {
             logs.error() << "parameters: invalid MC year index. Got '" << key << "'";
             return false;
         }
-        if (!value.to<uint>(weight_in))
+        if (!value.to<float>(weight_in))
         {
             logs.error() << "parameters: invalid MC year weight. Got '" << value << "'";
             return false;
@@ -745,7 +745,7 @@ static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& v
         {
             logs.warning() << "parameters: invalid MC year weight.Got '" << weight_in
                            << "'. Value not used";
-            return false;
+            weight_in = 1.f;
         }
 
         d.setYearWeight(year_in, weight_in);
@@ -1798,7 +1798,8 @@ void Parameters::saveToINI(IniFile& ini, uint version) const
                        Only with weight is not default value 1 */
                     if (yearsWeight[i] != 1.f)
                     {
-                        section->add("weight[" + std::to_string(i) + "]", yearsWeight[i]);
+                        section->add("playlist_weight_year_" + std::to_string(i) + "]",
+                                     yearsWeight[i]);
                     }
                 }
 
