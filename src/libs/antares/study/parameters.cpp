@@ -658,6 +658,7 @@ static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& v
         return false;
     }
 
+    /* Format added in Antares 8.1 */
     if (key == "active_years")
     {
         std::list<int> in_playlist;
@@ -722,10 +723,33 @@ static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& v
         return false;
     }
 
+    /* Format added in Antares 8.1 */
     if (key.startsWith("weights["))
     {
-        // TODO
-        // Get year number and weights
+        String key_cpy(key);
+        uint year_in, weight_in;
+        key_cpy.replace("weights[", "");
+        key_cpy.replace("]", "");
+        if (!key_cpy.to<uint>(year_in))
+        {
+            logs.error() << "parameters: invalid MC year index. Got '" << key << "'";
+            return false;
+        }
+        if (!value.to<uint>(weight_in))
+        {
+            logs.error() << "parameters: invalid MC year weight. Got '" << value << "'";
+            return false;
+        }
+
+        if (weight_in < 0.f)
+        {
+            logs.warning() << "parameters: invalid MC year weight.Got '" << weight_in
+                           << "'. Value not used";
+            return false;
+        }
+
+        d.setYearWeight(year_in, weight_in);
+        return true;
     }
 
     if (key == "power-fluctuations")
