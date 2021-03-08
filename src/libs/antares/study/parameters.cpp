@@ -1798,7 +1798,7 @@ void Parameters::saveToINI(IniFile& ini, uint version) const
                        Only with weight is not default value 1 */
                     if (yearsWeight[i] != 1.f)
                     {
-                        section->add("playlist_weight_year_" + std::to_string(i) + "]",
+                        section->add("playlist_weight_year_" + std::to_string(i),
                                      yearsWeight[i]);
                     }
                 }
