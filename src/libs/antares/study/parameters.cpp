@@ -659,7 +659,7 @@ static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& v
     }
 
     /* Format added in Antares 8.1 */
-    if (key == "active_years")
+    if (key == "playlist_active_years")
     {
         std::list<int> in_playlist;
         value.split(in_playlist, ",");
@@ -1805,7 +1805,7 @@ void Parameters::saveToINI(IniFile& ini, uint version) const
                 if (!active_years.empty())
                 {
                     active_years.pop_back(); // Remove final ,
-                    section->add("active_years", active_years);
+                    section->add("playlist_active_years", active_years);
                 }
             }
         }
