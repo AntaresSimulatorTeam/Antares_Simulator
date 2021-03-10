@@ -401,19 +401,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                 else
                     Xmax[Var] = 0.;
 
-                if (ProblemeHebdo->BorneDeLaDefaillancePositive == EGOISTE && 0)
-                {
-                    PmxTh = OPT_SommeDesPmaxThermiques(ProblemeHebdo, Pays, PdtHebdo);
-                    if (PmxTh > Xmax[Var])
-                    {
-                        Xmax[Var] = 0.0;
-                    }
-                    else
-                    {
-                        Xmax[Var] -= PmxTh;
-                    }
-                }
-
                 ProblemeHebdo->ResultatsHoraires[Pays]
                   ->ValeursHorairesDeDefaillancePositive[PdtHebdo]
                   = 0.0;

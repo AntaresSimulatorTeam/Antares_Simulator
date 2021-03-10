@@ -31,6 +31,7 @@
 #include "../../toolbox/components/button.h"
 #include <wx/dialog.h>
 #include <wx/checkbox.h>
+#include "../onLineConsent/on-line-consent.h"
 
 namespace Antares
 {
@@ -64,6 +65,7 @@ public:
 
 private:
     void onClose(void*);
+    void onOffline(void*);
     void onProceed(void*);
     void toggleProxySettings();
     void evtToggleUseProxy(wxCommandEvent&);
@@ -80,6 +82,13 @@ private:
     wxWindow* pLblProxyLogin;
     wxWindow* pLblProxyPass;
     wxSizer* pFlexSizer;
+    wxButton* pBtnCancel;
+    wxButton* pBtnValidate;
+    wxButton* pBtnContinueOffline;
+
+    // User consent for sending anonymous usage infos on server
+    onLineConsent pOnLineConsent;
+
     bool pCanceled;
 
     wxStaticText* pOffline_title;

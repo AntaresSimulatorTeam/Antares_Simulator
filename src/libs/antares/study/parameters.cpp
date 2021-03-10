@@ -1727,12 +1727,12 @@ void Parameters::saveToINI(IniFile& ini, uint version) const
     {
         assert(not yearsFilter.empty());
         uint effNbYears = 0;
-        float weightSum = 0;
+        bool weightEnabled = false;
         for (uint i = 0; i != nbYears; ++i)
         {
             if (yearsFilter[i])
                 ++effNbYears;
-            weightSum += yearsWeight[i];
+            weightEnabled |= yearsWeight[i] != 1.f;
         }
 
         if (version <= version800)

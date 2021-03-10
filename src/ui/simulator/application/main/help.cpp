@@ -106,12 +106,12 @@ void ApplWnd::evtOnHelpPDFExamplesLibrary(wxCommandEvent&)
 
 void ApplWnd::evtOnHelpContinueOnline(wxCommandEvent&)
 {
-    setGDPRStatus(true);
+    pOnLineConsent.setGDPRStatus(true);
 }
 
 void ApplWnd::evtOnHelpContinueOffline(wxCommandEvent&)
 {
-    setGDPRStatus(false);
+    pOnLineConsent.setGDPRStatus(false);
 }
 
 void ApplWnd::evtOnShowID(wxCommandEvent&)

@@ -58,6 +58,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     auto& parameters = study.parameters;
 
     problem.Expansion = parameters.expansion ? OUI_ANTARES : NON_ANTARES;
+    problem.firstWeekOfSimulation = false;
 
     problem.hydroHotStart
       = (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart);
@@ -87,9 +88,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
       = (study.parameters.unitCommitment.ucMode == Antares::Data::UnitCommitmentMode::ucMILP)
           ? OUI_ANTARES
           : NON_ANTARES;
-
-    problem.BorneDeLaDefaillancePositive
-      = (parameters.mode == Data::stdmEconomy) ? EGOISTE : ALTRUISTE;
 
     switch (parameters.power.fluctuations)
     {

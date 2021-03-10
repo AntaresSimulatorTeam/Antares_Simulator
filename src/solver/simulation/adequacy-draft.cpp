@@ -74,7 +74,8 @@ bool AdequacyDraft::year(Progression::Task& progression,
                          Variable::State& state,
                          uint numSpace,
                          yearRandomNumbers&,
-                         std::list<uint>&)
+                         std::list<uint>&,
+                         bool)
 {
     SIM_RenseignementValeursPourTouteLAnnee(study, numSpace);
 
