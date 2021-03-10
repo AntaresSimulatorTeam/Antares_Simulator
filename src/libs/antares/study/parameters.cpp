@@ -661,34 +661,18 @@ static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& v
     /* Format added in Antares 8.1 */
     if (key == "playlist_active_years")
     {
-        const auto fillActiveYears = [&d](const std::list<int>& years, bool exclude) -> bool {
-            for (int y : years)
-                if ((uint)y >= d.nbYears || y < 0)
-                    return false;
-            // All indices good, change d.yearsFilter
-            for (uint y = 0; y < d.nbYears; ++y)
-                d.yearsFilter[y] = !exclude;
-            for (int y : years)
-                d.yearsFilter[y] = exclude;
-            return true;
-        };
-
-        std::list<String> in_playlist;
+        std::list<int> in_playlist;
         value.split(in_playlist, ",");
-        if (in_playlist.front() == "all_but")
-        {
-            String value_copy = value;
-            value_copy.replace("all_but,", "");
-            std::list<int> years;
-            value_copy.split(years, ",");
-            return fillActiveYears(years, false);
-        }
-        else
-        {
-            std::list<int> years;
-            value.split(years, ",");
-            return fillActiveYears(years, true);
-        }
+        // Check indices
+        for (int y : in_playlist)
+            if ((uint)y >= d.nbYears || y < 0)
+                return false;
+        // All indices good, change d.yearsFilter
+        for (uint y = 0; y < d.nbYears; ++y)
+            d.yearsFilter[y] = false;
+        for (int y : in_playlist)
+            d.yearsFilter[y] = true;
+        return true;
     }
 
     if (key == "playlist_year_weight")
@@ -1800,23 +1784,11 @@ void Parameters::saveToINI(IniFile& ini, uint version) const
             {
                 auto* section = ini.addSection("playlist");
                 std::string active_years;
-                if (effNbYears <= (nbYears / 2))
+                for (uint i = 0; i != nbYears; ++i)
                 {
-                    for (uint i = 0; i != nbYears; ++i)
+                    if (yearsFilter[i])
                     {
-                        if (yearsFilter[i])
-                        {
-                            active_years += std::to_string(i) + ",";
-                        }
-                    }
-                }
-                else
-                {
-                    active_years += "all_but,";
-                    for (uint i = 0; i != nbYears; ++i)
-                    {
-                        if (not yearsFilter[i])
-                            active_years += std::to_string(i) + ",";
+                        active_years += std::to_string(i) + ",";
                     }
                 }
 
