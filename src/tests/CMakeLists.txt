@@ -2,20 +2,15 @@ cmake_minimum_required(VERSION 3.10)
 
 project(unit_tests_antares VERSION 1.0)
 
-find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+find_package(Boost 1.6.0 COMPONENTS unit_test_framework filesystem REQUIRED)
 
 # Make found targets globally available.
 if (Boost_FOUND)
-	set_target_properties(Boost::unit_test_framework PROPERTIES IMPORTED_GLOBAL TRUE)
+    set_target_properties(Boost::unit_test_framework PROPERTIES IMPORTED_GLOBAL TRUE)
 endif()
 
 
 add_subdirectory(src)
-
-#end to end test require boost 1.6.x because for boost::test_tools::tolerance 
-if(Boost_VERSION VERSION_GREATER 106000)
-    add_subdirectory(end-to-end)
-endif()
 
 option(BUILD_OUTPUT_TEST "Activates output values comparison test building" OFF)
 
