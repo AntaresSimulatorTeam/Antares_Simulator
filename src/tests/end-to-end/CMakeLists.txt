@@ -3,8 +3,17 @@ if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
 endif(MSVC)
 
+# Simple study
+
 add_executable(tests-simple-study
 			simple-study.cpp)
+
+
+target_include_directories(tests-simple-study
+							PRIVATE
+							${CMAKE_SOURCE_DIR}/solver
+							)
+
 
 target_link_libraries(tests-simple-study
 						PRIVATE
@@ -20,11 +29,6 @@ target_link_libraries(tests-simple-study
 						libmodel_antares
 						Boost::unit_test_framework
 			)
-			
-target_include_directories(tests-simple-study
-							PRIVATE
-							${CMAKE_SOURCE_DIR}/solver
-							)
 
 add_test(NAME end-to-end-simple-study COMMAND tests-simple-study)
 
@@ -35,3 +39,26 @@ copy_dependency(sirius_solver tests-simple-study)
 # Storing tests-simple-study under the folder Unit-tests in the IDE
 set_target_properties(tests-simple-study PROPERTIES FOLDER Unit-tests)
 
+# Playlist
+
+add_executable(tests-playlist
+			playlist.cpp)
+
+target_include_directories(tests-playlist
+							PRIVATE
+                            ${CMAKE_SOURCE_DIR}/libs
+                            ${CMAKE_SOURCE_DIR}/src/ext/yuni/src
+							)
+
+target_link_libraries(tests-playlist
+						PRIVATE
+						libantares-core
+						libmodel_antares
+						Boost::unit_test_framework
+                        ${Boost_FILESYSTEM_LIBRARY}
+			)
+
+
+add_test(NAME tests-playlist COMMAND tests-playlist)
+
+set_property(TEST tests-playlist PROPERTY LABELS playlist)

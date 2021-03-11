@@ -11,6 +11,7 @@ endif()
 
 
 add_subdirectory(src)
+add_subdirectory(end-to-end)
 
 option(BUILD_OUTPUT_TEST "Activates output values comparison test building" OFF)
 
