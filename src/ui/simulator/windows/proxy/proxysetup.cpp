@@ -205,7 +205,7 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
       panel, wxT(" Cancel "), this, &LicenseCouldNotConnectToInternetServer::onClose);
 
     pBtnContinueOffline = Antares::Component::CreateButton(
-        panel, wxT(" Continue offline "), this, &LicenseCouldNotConnectToInternetServer::onOffline);
+      panel, wxT(" Continue offline "), this, &LicenseCouldNotConnectToInternetServer::onOffline);
 
     pnlSizerBtns->Add(pBtnContinueOffline, 0, wxALL | wxEXPAND);
     pnlSizerBtns->AddSpacer(5);
@@ -247,7 +247,8 @@ LicenseCouldNotConnectToInternetServer::~LicenseCouldNotConnectToInternetServer(
     delete pBtnCancel;
     delete pBtnValidate;
     delete pBtnContinueOffline;
-    delete pOffline_title;}
+    delete pOffline_title;
+}
 
 void LicenseCouldNotConnectToInternetServer::onClose(void*)
 {

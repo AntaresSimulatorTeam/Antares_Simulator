@@ -777,7 +777,7 @@ private:
 
     //! A context menu for the map
     wxMenu* pMapContextMenu;
-   
+
     // User consent for sending anonymous usage infos on server
     onLineConsent pOnLineConsent;
 
