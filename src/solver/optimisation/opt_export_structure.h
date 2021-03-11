@@ -76,7 +76,9 @@ void OPT_Export_add_variable(std::vector<std::string>& varname,
 void OPT_ExportInterco(const Antares::Data::Study& study,
                        PROBLEME_HEBDO* ProblemeHebdo,
                        uint numSpace);
-void OPT_ExportAreaName(const Antares::Data::Study& study, uint numSpace);
+void OPT_ExportAreaName(const Antares::Data::Study& study,
+                        PROBLEME_HEBDO* ProblemeHebdo,
+                        uint numSpace);
 void OPT_ExportVariables(const Antares::Data::Study& study,
                          const std::vector<std::string>& varname,
                          const std::string& fileName,

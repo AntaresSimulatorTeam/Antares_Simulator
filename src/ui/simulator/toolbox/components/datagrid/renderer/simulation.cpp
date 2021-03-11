@@ -28,6 +28,8 @@
 #include "simulation.h"
 #include <wx/panel.h>
 #include <yuni/core/math.h>
+#include <algorithm>
+#include <math.h>
 
 using namespace Yuni;
 
@@ -188,22 +190,23 @@ bool SimulationTSManagement::cellValue(int x, int y, const String& value)
     {
         if (!conversionValid)
             break;
+        uint refreshSpan = std::max((int)std::round(d), 1);
         switch (x)
         {
         case 0:
-            study->parameters.refreshIntervalLoad = (uint)Math::Round(d);
+            study->parameters.refreshIntervalLoad = refreshSpan;
             return true;
         case 1:
-            study->parameters.refreshIntervalThermal = (uint)Math::Round(d);
+            study->parameters.refreshIntervalThermal = refreshSpan;
             return true;
         case 2:
-            study->parameters.refreshIntervalHydro = (uint)Math::Round(d);
+            study->parameters.refreshIntervalHydro = refreshSpan;
             return true;
         case 3:
-            study->parameters.refreshIntervalWind = (uint)Math::Round(d);
+            study->parameters.refreshIntervalWind = refreshSpan;
             return true;
         case 4:
-            study->parameters.refreshIntervalSolar = (uint)Math::Round(d);
+            study->parameters.refreshIntervalSolar = refreshSpan;
             return true;
         }
         break;
