@@ -68,7 +68,7 @@ jobs:
     - name: Running unit tests
       run: |
            cd _build
-           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
+           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|playlist|end-to-end|short|medium" -LE ortools
 
 
     - name: Installer creation
