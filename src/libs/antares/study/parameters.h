@@ -507,6 +507,7 @@ private:
     //! Save the internal settings into an INI file
     void saveToINI(IniFile& ini, uint version) const;
 
+public:
     //! MC year weight for MC synthesis
     std::vector<float> yearsWeight;
 
