@@ -29,10 +29,15 @@ private:
     bf::path mPath;
 
 public:
+    std::string path() const
+    {
+        return std::string(mPath.native());
+    }
+
     TemporaryFile(std::string content)
     {
         mPath = boost::filesystem::temp_directory_path() / boost::filesystem::unique_path();
-        bf::ofstream ofs(mPath);
+        std::ofstream ofs(path());
         // dump content into temporary file
         ofs << content;
     }
@@ -40,11 +45,6 @@ public:
     ~TemporaryFile()
     {
         bf::remove(mPath);
-    }
-
-    std::string path() const
-    {
-        return mPath.native();
     }
 };
 
