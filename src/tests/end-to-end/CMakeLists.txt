@@ -62,6 +62,7 @@ target_link_libraries(tests-playlist
 						PRIVATE
 						libantares-core
 						libmodel_antares
+                        stdc++fs
                         Catch2::Catch2
 			            )
 
