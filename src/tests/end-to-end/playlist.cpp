@@ -7,7 +7,21 @@
 
 #include <iostream>
 #include <fstream>
+
+/* GCC */
+#ifdef __GNUC__
+#if __GNUC__ < 8
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
 #include <filesystem>
+namespace fs = std::filesystem;
+#endif
+/* Other compilers */
+#else
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
 
 /*
    Small wrapper to ensure temporary files are removed when we no longer need them
@@ -20,12 +34,12 @@
 class TemporaryFile
 {
 private:
-    std::filesystem::path mPath;
+    fs::path mPath;
 
 public:
     TemporaryFile(std::string content)
     {
-        mPath = std::filesystem::temp_directory_path() / "generaldata.ini";
+        mPath = fs::temp_directory_path() / "generaldata.ini";
         std::ofstream ofs(mPath);
         // dump content into temporary file
         ofs << content;
@@ -33,7 +47,7 @@ public:
 
     ~TemporaryFile()
     {
-        std::filesystem::remove(mPath);
+        fs::remove(mPath);
     }
 
     std::string path() const
