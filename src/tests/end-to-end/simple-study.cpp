@@ -42,9 +42,9 @@ void checkVariable(
 	/*Get value*/
 	typename Antares::Solver::Variable::Storage<VCard>::ResultsType* result = nullptr;
 	simulation->variables.retrieveResultsForArea<VCard>(&result, pArea);
-	BOOST_TEST(std::fabs(result->avgdata.hourly[0] - expectedHourlyValue) < 0.001);
-	BOOST_TEST(std::fabs(result->avgdata.daily[0] - expectedHourlyValue * 24) < 0.001);
-	BOOST_TEST(std::fabs(result->avgdata.weekly[0] - expectedHourlyValue * 24 * 7) <0.001);
+	BOOST_CHECK(std::fabs(result->avgdata.hourly[0] - expectedHourlyValue) < 0.001);
+	BOOST_CHECK(std::fabs(result->avgdata.daily[0] - expectedHourlyValue * 24) < 0.001);
+	BOOST_CHECK(std::fabs(result->avgdata.weekly[0] - expectedHourlyValue * 24 * 7) <0.001);
 }
 
 void prepareStudy(Study::Ptr pStudy, int nbYears)
