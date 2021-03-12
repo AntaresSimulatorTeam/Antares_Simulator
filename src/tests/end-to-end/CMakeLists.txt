@@ -58,11 +58,17 @@ target_include_directories(tests-playlist
                             Catch2::Catch2
 							)
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+target_link_libraries(tests-playlist
+                      PRIVATE
+                      stdc++fs
+                      )
+endif()
+
 target_link_libraries(tests-playlist
 						PRIVATE
 						libantares-core
 						libmodel_antares
-                        stdc++fs
                         Catch2::Catch2
 			            )
 
