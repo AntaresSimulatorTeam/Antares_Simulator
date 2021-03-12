@@ -1,3 +1,12 @@
+include(FetchContent)
+
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG        v2.13.1)
+
+FetchContent_MakeAvailable(Catch2)
+
 #bigobj support needed for windows compilation
 if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
@@ -6,14 +15,12 @@ endif(MSVC)
 # Simple study
 
 add_executable(tests-simple-study
-			simple-study.cpp)
-
+  simple-study.cpp)
 
 target_include_directories(tests-simple-study
 							PRIVATE
 							${CMAKE_SOURCE_DIR}/solver
 							)
-
 
 target_link_libraries(tests-simple-study
 						PRIVATE
@@ -27,7 +34,7 @@ target_link_libraries(tests-simple-study
 						libantares-solver-simulation
 						libantares-solver-ts-generator
 						libmodel_antares
-						Boost::unit_test_framework
+                        Catch2::Catch2
 			)
 
 add_test(NAME end-to-end-simple-study COMMAND tests-simple-study)
@@ -48,16 +55,17 @@ target_include_directories(tests-playlist
 							PRIVATE
                             ${CMAKE_SOURCE_DIR}/libs
                             ${CMAKE_SOURCE_DIR}/src/ext/yuni/src
+                            Catch2::Catch2
 							)
 
 target_link_libraries(tests-playlist
 						PRIVATE
 						libantares-core
 						libmodel_antares
-						Boost::unit_test_framework
-                        ${Boost_FILESYSTEM_LIBRARY}
-			)
+                        Catch2::Catch2
+			            )
 
+target_compile_features(tests-playlist PRIVATE cxx_std_17)
 
 add_test(NAME tests-playlist COMMAND tests-playlist)
 

@@ -1,18 +1,13 @@
-#define BOOST_TEST_MODULE playlist tests
+#define CATCH_CONFIG_MAIN // This tells Catch to provide a main() - only do this in one cpp file
 
-#define WIN32_LEAN_AND_MEAN
-
-#include <boost/test/included/unit_test.hpp>
-#include <boost/filesystem.hpp>
+#include "catch2/catch.hpp"
 
 #include <antares/study/parameters.h>
 #include <antares/study/load-options.h>
 
 #include <iostream>
 #include <fstream>
-
-namespace utf = boost::unit_test;
-namespace bf = boost::filesystem;
+#include <filesystem>
 
 /*
    Small wrapper to ensure temporary files are removed when we no longer need them
@@ -25,31 +20,29 @@ namespace bf = boost::filesystem;
 class TemporaryFile
 {
 private:
-    bf::path mPath;
+    std::filesystem::path mPath;
 
 public:
-    std::string path() const
-    {
-        return mPath.string();
-    }
-
     TemporaryFile(std::string content)
     {
-        mPath = boost::filesystem::temp_directory_path() / boost::filesystem::unique_path();
-        std::ofstream ofs(path());
+        mPath = std::filesystem::temp_directory_path() / "generaldata.ini";
+        std::ofstream ofs(mPath);
         // dump content into temporary file
         ofs << content;
     }
 
     ~TemporaryFile()
     {
-        bf::remove(mPath);
+        std::filesystem::remove(mPath);
+    }
+
+    std::string path() const
+    {
+        return mPath.string();
     }
 };
 
-BOOST_AUTO_TEST_SUITE(playlist_update)
-
-BOOST_AUTO_TEST_CASE(read_two_active_years_v800)
+TEST_CASE("Read v800 active years", "[v800]")
 {
     using namespace Antares::Data;
     Parameters p;
@@ -77,23 +70,23 @@ playlist_year += 1)");
     StudyLoadOptions loadOpt;
     loadOpt.nbYears = 5;
     const bool loadSuccessful = p.loadFromFile(ini_file.path(), 800, loadOpt);
-    BOOST_CHECK(loadSuccessful);
+    REQUIRE(loadSuccessful);
 
-    BOOST_CHECK(p.userPlaylist);
-    BOOST_CHECK_EQUAL(p.nbYears, 5);
+    REQUIRE(p.userPlaylist);
+    REQUIRE(p.nbYears == 5);
 
-    BOOST_CHECK_EQUAL(p.mode, StudyMode::stdmAdequacy);
+    REQUIRE(p.mode == StudyMode::stdmAdequacy);
 
-    BOOST_CHECK_EQUAL(p.yearsFilter.size(), 5);
+    REQUIRE(p.yearsFilter.size() == 5);
     size_t idx = 0;
     for (bool v : {true, true, false, false, false})
-        BOOST_CHECK_EQUAL(p.yearsFilter[idx++], v);
+        REQUIRE(p.yearsFilter[idx++] == v);
 
     p.prepareForSimulation(loadOpt);
-    BOOST_CHECK_EQUAL(p.effectiveNbYears, 2);
+    REQUIRE(p.effectiveNbYears == 2);
 }
 
-BOOST_AUTO_TEST_CASE(read_two_active_years_v810)
+TEST_CASE("Read v810 active years", "[v810]")
 {
     using namespace Antares::Data;
     Parameters p;
@@ -119,23 +112,25 @@ playlist_active_years=0,1)");
     StudyLoadOptions loadOpt;
     loadOpt.nbYears = 5;
     const bool loadSuccessful = p.loadFromFile(ini_file.path(), 810, loadOpt);
-    BOOST_CHECK(loadSuccessful);
+    REQUIRE(loadSuccessful);
 
-    BOOST_CHECK(p.userPlaylist);
-    BOOST_CHECK_EQUAL(p.nbYears, 5);
+    REQUIRE(p.userPlaylist);
+    REQUIRE(p.nbYears == 5);
 
-    BOOST_CHECK_EQUAL(p.mode, StudyMode::stdmAdequacy);
+    REQUIRE(p.mode == StudyMode::stdmAdequacy);
 
-    BOOST_CHECK_EQUAL(p.yearsFilter.size(), 5);
+    REQUIRE(p.yearsFilter.size() == 5);
     size_t idx = 0;
     for (bool v : {true, true, false, false, false})
-        BOOST_CHECK_EQUAL(p.yearsFilter[idx++], v);
+    {
+        REQUIRE(p.yearsFilter[idx++] == v);
+    }
 
     p.prepareForSimulation(loadOpt);
-    BOOST_CHECK_EQUAL(p.effectiveNbYears, 2);
+    REQUIRE(p.effectiveNbYears == 2);
 }
 
-BOOST_AUTO_TEST_CASE(read_weights_v810)
+TEST_CASE("Read v810 weights", "[v810]")
 {
     using namespace Antares::Data;
     Parameters p;
@@ -165,17 +160,15 @@ playlist_weight_year_1=3.3
     StudyLoadOptions loadOpt;
     loadOpt.nbYears = 5;
     const bool loadSuccessful = p.loadFromFile(ini_file.path(), 810, loadOpt);
-    BOOST_CHECK(loadSuccessful);
+    REQUIRE(loadSuccessful);
 
-    BOOST_CHECK(p.userPlaylist);
-    BOOST_CHECK_EQUAL(p.nbYears, 5);
+    REQUIRE(p.userPlaylist);
+    REQUIRE(p.nbYears == 5);
 
-    BOOST_CHECK_EQUAL(p.mode, StudyMode::stdmAdequacy);
-    BOOST_CHECK_EQUAL(p.yearsWeight.size(), 5);
+    REQUIRE(p.mode == StudyMode::stdmAdequacy);
+    REQUIRE(p.yearsWeight.size() == 5);
 
     size_t idx = 0;
     for (float w : {1.1f, 3.3f, 1.f, 1.f, 2.f})
-        BOOST_CHECK_CLOSE(p.yearsWeight[idx++], w, 1e-6);
+        CHECK(p.yearsWeight[idx++] == Approx(w).margin(1e-6));
 }
-
-BOOST_AUTO_TEST_SUITE_END()
