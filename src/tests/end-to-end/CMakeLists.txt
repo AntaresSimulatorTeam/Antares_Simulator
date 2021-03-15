@@ -76,4 +76,4 @@ target_compile_features(tests-playlist PRIVATE cxx_std_17)
 
 add_test(NAME tests-playlist COMMAND tests-playlist)
 
-set_property(TEST tests-playlist PROPERTY LABELS playlist)
+set_property(TEST tests-playlist PROPERTY LABELS study-rw)

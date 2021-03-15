@@ -59,7 +59,7 @@ jobs:
     - name: Run unit tests
       run: |
            cd _build
-           ctest -C Release --output-on-failure -L "unit|playlist|end-to-end|playlist|short|medium" -LE ortools
+           ctest -C Release --output-on-failure -L "unit|study-rw|end-to-end|playlist|short|medium" -LE ortools
 
 
     - name: Installer .deb creation

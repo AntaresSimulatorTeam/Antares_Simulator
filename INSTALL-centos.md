@@ -164,6 +164,7 @@ This is the list of the available labels :
 | Label     | Description |
 |:-------|-----|
 | `units`  | Units tests|
+| `study-rw`  | Study read/write tests|
 | `end-to-end`  | End to end tests with antares study creation|
 | `short-examples`  | Short duration pytest with antares solver call and objective function result check|
 | `medium-examples`  | Medium duration pytest with antares solver call and objective function result check|
