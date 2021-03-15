@@ -48,7 +48,7 @@ The install procedure can be done
 - by using a package manager.
 - by using pre-compiled external libraries provided by [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps/releases/tag/v1.2.0)
 
-#### apt command to install dependencies
+#### Command to install dependencies
 ```
 sudo apt install uuid-dev libcurl4-openssl-dev libssl-dev libwxgtk3.0-gtk3-dev libboost-test-dev libboost-filesystem-dev libboost-regex-dev libboost-dev
 ```
