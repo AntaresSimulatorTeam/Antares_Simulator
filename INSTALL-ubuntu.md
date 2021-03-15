@@ -15,11 +15,6 @@
 
 [linux_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Linux%20CI%20(deps.%20compilation)"
 
-## [CMake version](#cmake-version)
-sudo snap install cmake --classic
-```
-#### Compiling from sources
-
 ```
 sudo apt install build-essential libssl-dev cmake
 ```
@@ -28,7 +23,7 @@ sudo apt install build-essential libssl-dev cmake
 Python 3.x must be used.
 
 ```
-sudo apt-get install python3 python3-pip
+sudo apt install python3 python3-pip
 ```
 Required python modules can be installed with :
 ```
@@ -51,7 +46,7 @@ The install procedure can be done
 - by using a package manager.
 - by using pre-compiled external libraries provided by [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps/releases/tag/v1.2.0)
 
-#### apt-get command
+#### apt command to install dependencies
 ```
 sudo apt install uuid-dev libcurl4-openssl-dev libssl-dev libwxgtk3.0-gtk3-dev libboost-test-dev libboost-filesystem-dev libboost-regex-dev libboost-dev
 ```
