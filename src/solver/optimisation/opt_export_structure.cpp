@@ -67,7 +67,7 @@ void OPT_ExportInterco(const Antares::Data::Study& study,
                        uint numSpace)
 {
     // Interco are exported only once for first year
-    if (study.runtime->currentYear[numSpace] == 0 && study.runtime->weekInTheYear[numSpace] == 0)
+    if (ProblemeHebdo->firstWeekOfSimulation)
     {
         FILE* Flot = study.createFileIntoOutputWithExtension("interco", "txt", numSpace);
         for (int i(0); i < ProblemeHebdo->NombreDInterconnexions; ++i)
@@ -82,10 +82,12 @@ void OPT_ExportInterco(const Antares::Data::Study& study,
     }
 }
 
-void OPT_ExportAreaName(const Antares::Data::Study& study, uint numSpace)
+void OPT_ExportAreaName(const Antares::Data::Study& study,
+                        PROBLEME_HEBDO* ProblemeHebdo,
+                        uint numSpace)
 {
     // Area name are exported only once for first year
-    if (study.runtime->currentYear[numSpace] == 0 && study.runtime->weekInTheYear[numSpace] == 0)
+    if (ProblemeHebdo->firstWeekOfSimulation)
     {
         FILE* Flot = study.createFileIntoOutputWithExtension("area", "txt", numSpace);
         for (uint i = 0; i < study.areas.size(); ++i)

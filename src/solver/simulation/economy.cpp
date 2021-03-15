@@ -116,7 +116,8 @@ bool Economy::year(Progression::Task& progression,
                    Variable::State& state,
                    uint numSpace,
                    yearRandomNumbers& randomForYear,
-                   std::list<uint>& failedWeekList)
+                   std::list<uint>& failedWeekList,
+                   bool isFirstPerformedYearOfSimulation)
 {
     // No failed week at year start
     failedWeekList.clear();
@@ -126,6 +127,8 @@ bool Economy::year(Progression::Task& progression,
     state.startANewYear();
 
     int hourInTheYear = pStartTime;
+    if (isFirstPerformedYearOfSimulation)
+        pProblemesHebdo[numSpace]->firstWeekOfSimulation = true;
     bool reinitOptim = true;
 
     for (uint w = 0; w != pNbWeeks; ++w)
@@ -214,6 +217,8 @@ bool Economy::year(Progression::Task& progression,
         }
 
         hourInTheYear += nbHoursInAWeek;
+
+        pProblemesHebdo[numSpace]->firstWeekOfSimulation = false;
 
         ++progression;
     }

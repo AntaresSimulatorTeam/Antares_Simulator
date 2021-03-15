@@ -63,6 +63,7 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
           wxDefaultPosition,
           wxDefaultSize,
           wxCLOSE_BOX | wxCAPTION | wxCLIP_CHILDREN),
+ pOnLineConsent(parent),
  pEditProxyHost(nullptr),
  pEditProxyPort(nullptr),
  pEditProxyLogin(nullptr),
@@ -108,11 +109,12 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
       false,
       false);
     subtitle->Enable(false);
+
     pOffline_title = Component::CreateLabel(
         this,
-        wxT("If you wish to stay offline in all future sessions,\n"
-            "click on \"Cancel\", and select \"Continue offline\"\n"
-            "in the Antares help (\"?\") menu."),
+        wxT("If you wish to stay offline in all future sessions, click on \"Continue offline\".\n"
+            "You can choose to be online by clicking \"Cancel\", but you can switch to offline\n"
+            "anytime by selecting \"Continue offline\" in the Antares help (\"?\") menu."),
         false,
         false);
     contentSizer->AddSpacer(20);
@@ -196,13 +198,18 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
     pnlSizerBtns->AddSpacer(25);
 
     pnlSizerBtns->AddStretchSpacer();
-    auto* pBtnValidate = Antares::Component::CreateButton(
+    pBtnValidate = Antares::Component::CreateButton(
       panel, wxT(" Connect "), this, &LicenseCouldNotConnectToInternetServer::onProceed);
     pBtnValidate->SetDefault();
 
-    auto* pBtnCancel = Antares::Component::CreateButton(
+    pBtnCancel = Antares::Component::CreateButton(
       panel, wxT(" Cancel "), this, &LicenseCouldNotConnectToInternetServer::onClose);
 
+    pBtnContinueOffline = Antares::Component::CreateButton(
+        panel, wxT(" Continue offline "), this, &LicenseCouldNotConnectToInternetServer::onOffline);
+
+    pnlSizerBtns->Add(pBtnContinueOffline, 0, wxALL | wxEXPAND);
+    pnlSizerBtns->AddSpacer(5);
     pnlSizerBtns->Add(pBtnCancel, 0, wxALL | wxEXPAND);
     pnlSizerBtns->AddSpacer(5);
     pnlSizerBtns->Add(pBtnValidate, 0, wxALL | wxEXPAND);
@@ -238,11 +245,19 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
 LicenseCouldNotConnectToInternetServer::~LicenseCouldNotConnectToInternetServer()
 {
     Component::Spotlight::FrameClose();
-    delete pOffline_title;
-}
+    delete pBtnCancel;
+    delete pBtnValidate;
+    delete pBtnContinueOffline;
+    delete pOffline_title;}
 
 void LicenseCouldNotConnectToInternetServer::onClose(void*)
 {
+    Dispatcher::GUI::Close(this);
+}
+
+void LicenseCouldNotConnectToInternetServer::onOffline(void*)
+{
+    pOnLineConsent.setGDPRStatus(false);
     Dispatcher::GUI::Close(this);
 }
 
