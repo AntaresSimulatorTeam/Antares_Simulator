@@ -15,6 +15,8 @@
 
 [linux_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Linux%20CI%20(deps.%20compilation)"
 
+## Build tools
+
 ```
 sudo apt install build-essential libssl-dev cmake
 ```
