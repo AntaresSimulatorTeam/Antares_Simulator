@@ -1,6 +1,6 @@
 ﻿# Antares Simulator CMake Build Instructions
 
-[Environnement](#environment) | [CMake version](#cmake-version) |  [Environnement build install](#env-build-install) | [Python version](#python-version) | [Dependencies](#dependencies) | [Building](#building-antares-solution) | [Tests](#tests) | [Installer creation](#installer-creation)
+[Environnement](#environment) | [Build tools](#build-tools) |  [Environnement build install](#env-build-install) | [Python version](#python-version) | [Dependencies](#dependencies) | [Building](#building-antares-solution) | [Tests](#tests) | [Installer creation](#installer-creation)
 
 ## C/I status
 | OS     | System librairies | Built in libraries |
@@ -15,42 +15,17 @@
 
 [linux_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Linux%20CI%20(deps.%20compilation)"
 
-## [CMake version](#cmake-version)
-CMake 3.x must be used.
-On some OS it is not available by default on the system.
-
-#### Using snap
-```
-sudo snap install cmake --classic
-```
-#### Compiling from sources
+## [Build tools](#build-tools)
 
 ```
-sudo apt install build-essential libssl-dev
-wget https://github.com/Kitware/CMake/releases/download/v3.16.5/cmake-3.18.1.tar.gz
-tar -zxvf cmake-3.18.1.tar.gz
-cd cmake-3.18.1
-./bootstrap
-make 
-sudo make install
-```
-Note:
-> You can use a different version of CMake. Check CMake website for available version and change the ``wget`` url.
-
-You can then tell Ubuntu that a new version of cmake should be used :
-```
-sudo update-alternatives --install /usr/bin/cmake cmake /usr/local/bin/cmake 1 --force
-```
-## [Environnement build install](#env-build-install)
-```
-sudo apt-get install build-essential
+sudo apt install build-essential libssl-dev cmake
 ```
 
 ## [Python version](#python-version)
 Python 3.x must be used.
 
 ```
-sudo apt-get install python3 python3-pip
+sudo apt install python3 python3-pip
 ```
 Required python modules can be installed with :
 ```
@@ -73,7 +48,7 @@ The install procedure can be done
 - by using a package manager.
 - by using pre-compiled external libraries provided by [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps/releases/tag/v1.2.0)
 
-#### apt-get command
+#### Command to install dependencies
 ```
 sudo apt install uuid-dev libcurl4-openssl-dev libssl-dev libwxgtk3.0-gtk3-dev libboost-test-dev libboost-filesystem-dev libboost-regex-dev libboost-dev
 ```
