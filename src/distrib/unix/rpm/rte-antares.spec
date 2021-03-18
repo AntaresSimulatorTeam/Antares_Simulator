@@ -11,7 +11,7 @@ Source0:        %%SOURCE%%
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  chrpath
 
-Requires:       glibc >= 2.12, libuuid >= 2.17, openssl >= 1.0
+Requires:       glibc >= 2.12, libuuid >= 2.17
 
 %description
 Under the impulsion given by the worldwide growth of innovative technologies

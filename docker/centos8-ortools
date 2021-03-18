@@ -9,7 +9,7 @@ RUN yum install -y epel-release
 # Install requirements
 RUN yum install -y git redhat-lsb-core gcc gcc-c++ make \
     wget \
-    unzip openssl-devel libcurl-devel wxGTK3-devel libuuid-devel boost-devel boost-test boost-filesystem boost-regex
+    unzip libcurl-devel wxGTK3-devel libuuid-devel boost-devel boost-test boost-filesystem boost-regex
 
 # Install CMake3
 RUN wget https://github.com/Kitware/CMake/releases/download/v3.17.3/cmake-3.17.3.tar.gz &&\

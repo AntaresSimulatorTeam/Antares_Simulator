@@ -120,10 +120,7 @@ void ApplWnd::evtOnShowID(wxCommandEvent&)
     Antares::License::Properties licenseproperties;
     Yuni::String tmp;
 
-    Antares::License::RetrieveHostProperties(hostproperties, tmp);
-    auto hostid = hostproperties[(tmp = "k")];
-
-    Window::Message message(this, wxT(""), hostid.c_str(), "", "images/128x128/antares.png");
+    Window::Message message(this, wxT(""), "", "", "images/128x128/antares.png");
     message.add(Window::Message::btnOk, true);
     message.showModal();
 }

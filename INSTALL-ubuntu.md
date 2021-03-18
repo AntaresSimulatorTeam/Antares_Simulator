@@ -34,7 +34,6 @@ pip3 install -r src/src/tests/examples/requirements.txt
 
 ## [Dependencies](#deps)
  ANTARES depends on several mandatory libraries. 
- - [OpenSSL](https://github.com/openssl/openssl)
  - [CURL](https://github.com/curl/curl)
  - [Sirius Solver](https://github.com/AntaresSimulatorTeam/sirius-solver/tree/Antares_VCPKG) (fork from [RTE](https://github.com/rte-france/sirius-solver/tree/Antares_VCPKG))
  - [OR-Tools](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) (fork from [RTE](https://github.com/rte-france/or-tools/tree/rte_dev_sirius) based on official OR-Tools github)
@@ -50,7 +49,7 @@ The install procedure can be done
 
 #### Command to install dependencies
 ```
-sudo apt install uuid-dev libcurl4-openssl-dev libssl-dev libwxgtk3.0-gtk3-dev libboost-test-dev libboost-filesystem-dev libboost-regex-dev libboost-dev
+sudo apt install uuid-dev libcurl4-openssl-dev libwxgtk3.0-gtk3-dev libboost-test-dev libboost-filesystem-dev libboost-regex-dev libboost-dev
 ```
 
 ### [Automatic librairies compilation from git](#git_compil)

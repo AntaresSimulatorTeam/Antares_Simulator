@@ -77,12 +77,6 @@ license: wxWindows Library License,V3.1	https://spdx.org/licenses/wxWindows.html
 libCurl 7.51.0	Copyright (c) 1996-2017	Daniel Stenberg et al			\n\
 license: curl license	https://spdx.org/licenses/curl.html\n\
 \n\
-OpenSSL 1.1.0	Copyright (c) 1998-2016	The OpenSSL Project\n\
-\"This product includes software developed by the OpenSSL Project\n\
-for use in the OpenSSL Toolkit(http://www.openssl.org/)\"\n\
-\"This product includes software written by Tim Hudson (tjh@cryptsoft.com)\" \n\
-license: OpenSSL license and SSLeay license	https://spdx.org/licenses/OpenSSL.html\n\
-					\n\
 libYuni 1.1.0	https://github.com/libyuni	\n\
 license: Mozilla Public License 2.0	https://spdx.org/licenses/MPL-2.0.html\n\
 \n\

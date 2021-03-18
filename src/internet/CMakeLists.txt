@@ -21,7 +21,6 @@ target_include_directories(libantares-license
 			${CMAKE_SOURCE_DIR}/ext/yuni/src
 			${CMAKE_SOURCE_DIR}/libs
 		PUBLIC
-			${OPENSSL_INCLUDE_DIR}
 			${CURL_INCLUDE_DIRS}
 		)
 
@@ -30,7 +29,6 @@ target_link_libraries(libantares-license
 			yuni-static-core
 		PUBLIC
 			${CURL_LIBRARIES}
-			${OPENSSL_LIBRARIES}
 			base64
 		)
 if(WIN32 OR WIN64)
