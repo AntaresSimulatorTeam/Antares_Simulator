@@ -129,7 +129,8 @@ void MapNotebook::MapTabs::onDraw(wxPaintEvent&)
     {
         fontSize = 8,
     };
-    static const wxFont font(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTSTYLE_NORMAL, false, wxT("Tahoma"));
+    static const wxFont font(
+      fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTSTYLE_NORMAL, false, wxT("Tahoma"));
 
     // The DC
     wxAutoBufferedPaintDC dc(this);

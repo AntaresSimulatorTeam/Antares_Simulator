@@ -50,7 +50,8 @@
 
 using namespace Yuni;
 
-static wxBitmapType formatWXConstant[] = {wxBITMAP_TYPE_PNG, wxBITMAP_TYPE_JPEG, wxBITMAP_TYPE_INVALID};
+static wxBitmapType formatWXConstant[]
+  = {wxBITMAP_TYPE_PNG, wxBITMAP_TYPE_JPEG, wxBITMAP_TYPE_INVALID};
 
 namespace Antares
 {

@@ -129,7 +129,7 @@ const char* InitialReservoirLevelsToCString(InitialReservoirLevels iniLevels)
 }
 
 // ... Hydro heuristic policy ...
-HydroHeuristicPolicy  StringToHydroHeuristicPolicy(const AnyString& text)
+HydroHeuristicPolicy StringToHydroHeuristicPolicy(const AnyString& text)
 {
     if (!text)
         return hhpUnknown;
@@ -149,9 +149,12 @@ const char* HydroHeuristicPolicyToCString(HydroHeuristicPolicy hhPolicy)
 {
     switch (hhPolicy)
     {
-    case hhpAccommodateRuleCurves:	return "accommodate rule curves";
-    case hhpMaximizeGeneration:		return "maximize generation";
-    case hhpUnknown:				return "";
+    case hhpAccommodateRuleCurves:
+        return "accommodate rule curves";
+    case hhpMaximizeGeneration:
+        return "maximize generation";
+    case hhpUnknown:
+        return "";
     }
     return "";
 }
