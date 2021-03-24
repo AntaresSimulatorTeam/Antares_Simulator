@@ -2,7 +2,7 @@
 #include <fstream>
 #include <ctime>
 
-#include<wx/string.h>
+#include <wx/string.h>
 #include <yuni/io/file/file.h>
 
 #include "on-line-consent.h"
@@ -13,7 +13,8 @@ using namespace Yuni;
 
 namespace Antares
 {
-onLineConsent::onLineConsent(wxWindow* parent) : timeStamp_(0), consent_(0), banned_(0), parent_(parent)
+onLineConsent::onLineConsent(wxWindow* parent) :
+ timeStamp_(0), consent_(0), banned_(0), parent_(parent)
 {
     // search for the GDPR configuration file
     GDPR_filename_.clear();
@@ -148,7 +149,7 @@ void onLineConsent::setGDPRStatus(bool checkOnline)
             else
             {
                 if (consent_ == 1) // display  "  Antares_Simulator is already online (anonymous
-                                  // usage metrics)" // nothing to do
+                                   // usage metrics)" // nothing to do
                 {
                     Window::Message message(
                       parent_,

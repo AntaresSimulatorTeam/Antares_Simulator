@@ -71,10 +71,8 @@ bool AllocationHydroPost::performWL(Context& ctx)
             auto* targetArea = ctx.study.areas.find(targetID);
             if (targetArea && targetArea != source)
             {
-                targetArea->hydro.allocation.copyFrom(source->hydro.allocation,
-                                                      *ctx.extStudy,
-                                                      ctx.areaNameMapping,
-                                                      ctx.study);
+                targetArea->hydro.allocation.copyFrom(
+                  source->hydro.allocation, *ctx.extStudy, ctx.areaNameMapping, ctx.study);
             }
             return true;
         }

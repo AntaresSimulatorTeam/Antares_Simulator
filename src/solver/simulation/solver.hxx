@@ -191,17 +191,15 @@ private:
                 Antares::memory.flushAll();
 
             // 6 - The Solver itself
-            bool isFirstPerformedYearOfSimulation = isFirstPerformedYearOfASet[y] && not firstSetParallelWithAPerformedYearWasRun;
+            bool isFirstPerformedYearOfSimulation
+              = isFirstPerformedYearOfASet[y] && not firstSetParallelWithAPerformedYearWasRun;
             std::list<uint> failedWeekList;
-            if (not simulationObj->year(
-                                         progression,
-                                         state[numSpace],
-                                         numSpace,
-                                         randomForCurrentYear,
-                                         failedWeekList,
-                                         isFirstPerformedYearOfSimulation
-                                       )
-                )
+            if (not simulationObj->year(progression,
+                                        state[numSpace],
+                                        numSpace,
+                                        randomForCurrentYear,
+                                        failedWeekList,
+                                        isFirstPerformedYearOfSimulation))
             {
                 // Something goes wrong with this year. We have to restarting it
                 yearFailed[y] = true;
@@ -1547,7 +1545,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             }
         }
 #endif
-		bool yearPerformed = false;
+        bool yearPerformed = false;
         for (year_it = set_it->yearsIndices.begin(); year_it != set_it->yearsIndices.end();
              ++year_it)
         {
@@ -1558,14 +1556,14 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             unsigned int numSpace = 999999;
             if (performCalculations)
             {
-				yearPerformed = true;
+                yearPerformed = true;
                 numSpace = set_it->performedYearToSpace[y];
                 study.runtime->timeseriesNumberYear[numSpace] = y;
                 study.runtime->currentYear[numSpace] = y;
             }
-            
-            // If the year has not to be rerun, we skip the computation of the year Note that, when we
-            // enter for the first time in the "for" loop, all years of the set have to be rerun
+
+            // If the year has not to be rerun, we skip the computation of the year Note that, when
+            // we enter for the first time in the "for" loop, all years of the set have to be rerun
             // (meaning : they must be run once). if(!set_it->yearFailed[y]) continue;
 
             qs.add(new yearJob<ImplementationType>(this,

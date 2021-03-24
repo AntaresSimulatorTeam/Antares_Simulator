@@ -500,8 +500,7 @@ void ExportMap::ensureUniqueFileName(Yuni::String folderPath)
         }
 
         mapNameWithoutExtension = baseMapFileName + "-" << String(offsetIndex);
-        mapFileName
-          = mapNameWithoutExtension + formatExt[Antares::Map::mfDefaultFormat];
+        mapFileName = mapNameWithoutExtension + formatExt[Antares::Map::mfDefaultFormat];
         fullPathMapName = folderPath + SEP << mapFileName;
     }
     // Ensure unique name for file -- end
@@ -514,8 +513,7 @@ void ExportMap::onMapFormatChanged(wxCommandEvent&)
     s.Trim(false);
     s.Trim(true);
 
-    pMapName->ChangeValue(
-      s + wxStringFromUTF8(formatExt[pMapFormatChoice->GetSelection()]));
+    pMapName->ChangeValue(s + wxStringFromUTF8(formatExt[pMapFormatChoice->GetSelection()]));
 
     pMapFormat = static_cast<Antares::Map::mapImageFormat>(pMapFormatChoice->GetSelection());
 }
