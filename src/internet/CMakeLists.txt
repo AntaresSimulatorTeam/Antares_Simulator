@@ -20,22 +20,12 @@ target_include_directories(libantares-license
 		PRIVATE
 			${CMAKE_SOURCE_DIR}/ext/yuni/src
 			${CMAKE_SOURCE_DIR}/libs
-		PUBLIC
-			${CURL_INCLUDE_DIRS}
 		)
 
 target_link_libraries(libantares-license
 		PRIVATE
 			yuni-static-core
 		PUBLIC
-			${CURL_LIBRARIES}
 			base64
 		)
-if(WIN32 OR WIN64)
-#VCPKG define CURL::libcurl
-target_link_libraries(libantares-license
-		PUBLIC
-			CURL::libcurl
-		)
-endif()
 

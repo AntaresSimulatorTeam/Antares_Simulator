@@ -8,13 +8,6 @@ git submodule update --init --recursive
 
 cd src/ext
 
-#CURL
-cd ../libcurl
-./buildconf
-export LIBS="-ldl -lpthread"
-./configure --disable-shared --disable-ldap --without-libidn --without-libssh2 --without-zlib
-make
-
 #export CC=/usr/local/gcc/4.8/bin/gcc-4.8
 #export CXX=/usr/local/gcc/4.8/bin/g++-4.8
 

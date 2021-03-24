@@ -23,13 +23,3 @@ ms\do_ms
 nmake -f ms\nt.mak
 nmake -f ms\nt.mak install
 
-libcurl build options 
-x86:
-"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\vcvars32.bat" 
-cd ${ANTARES}\src\ext\libcurl\winbuild
-nmake /f Makefile.vc mode=static VC=14 WITH_SSL=static WITH_DEVEL=../../openssl/vc-release-x86 ENABLE_SSPI=no ENABLE_IDN=no ENABLE_WINSSL=no GEN_PDB=no DEBUG=no MACHINE=x86
-
-x64:
-"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\amd64\vcvars64.bat" 
-cd ${ANTARES}\src\ext\libcurl\winbuild
-nmake /f Makefile.vc mode=static VC=14 ENABLE_SSPI=no ENABLE_IDN=no ENABLE_WINSSL=no GEN_PDB=no DEBUG=no MACHINE=x64

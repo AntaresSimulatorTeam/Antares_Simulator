@@ -53,7 +53,6 @@ pip3 install -r src/tests/examples/requirements.txt
 
 ## [Dependencies](#deps)
  ANTARES depends on several mandatory libraries. 
- - [CURL](https://github.com/curl/curl)
  - [Sirius Solver](https://github.com/AntaresSimulatorTeam/sirius-solver/tree/Antares_VCPKG) (fork from [RTE](https://github.com/rte-france/sirius-solver/tree/Antares_VCPKG))
  - [OR-Tools](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) (fork from [RTE](https://github.com/rte-france/or-tools/tree/rte_dev_sirius) based on official OR-Tools github)
  - [wxWidgets](https://github.com/wxWidgets/wxWidgets)

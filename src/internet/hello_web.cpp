@@ -45,7 +45,6 @@
 #include "licensetimer.h"
 #include "base64/cencode.h"
 #include "decrypt.hxx"
-#include <curl/curl.h>
 #include <fstream>
 
 using namespace Yuni;
@@ -144,35 +143,6 @@ static inline void Fremoverootca()
     std::remove(filename.c_str());
 }
 
-#ifndef NDEBUG
-// Debug mode for the license manager
-inline CURLcode curlDebugPerform(CURL* x)
-{
-    auto tempname = tmpnam(NULL);
-    auto pFile = fopen(tempname, "w");
-    curl_easy_setopt(x, CURLOPT_VERBOSE, 1);
-    curl_easy_setopt(x, CURLOPT_STDERR, pFile);
-    auto code = curl_easy_perform(x);
-    // TODO : removed because cause crashes on windows (maybe related to curl version tested
-    // (7.53.1) : does curl close file handle ? fclose(pFile);
-    std::ifstream filestream(tempname);
-    string ligne;
-    if (filestream) // si l'ouverture a fonctionné
-    {
-        while (getline(filestream, ligne))
-        {
-            logs.debug() << ligne;
-        }
-    }
-    filestream.close();
-    remove(tempname);
-    return code;
-}
-
-#define CURL_PERFORM(x) curlDebugPerform(x)
-#else
-#define CURL_PERFORM(x) curl_easy_perform(x)
-#endif
 
 template<class PredicateT>
 static void IterateAllLicenseActivationKeys(uint version, const PredicateT& callback)

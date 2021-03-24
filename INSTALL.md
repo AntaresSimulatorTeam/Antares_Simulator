@@ -51,7 +51,6 @@ Git version must be above 2.15 for external dependencies build because `--ignore
 
 ## [Dependencies](#deps)
  *ANTARES* depends on severals mandatory libraries. 
- - [CURL](https://github.com/curl/curl)
  - [Sirius Solver](https://github.com/AntaresSimulatorTeam/sirius-solver/tree/Antares_VCPKG) (fork from [RTE](https://github.com/rte-france/sirius-solver/tree/Antares_VCPKG))
  - [OR-Tools](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) (fork from [RTE](https://github.com/rte-france/or-tools/tree/rte_dev_sirius) based on official OR-Tools github)
  - [wxWidgets](https://github.com/wxWidgets/wxWidgets)
