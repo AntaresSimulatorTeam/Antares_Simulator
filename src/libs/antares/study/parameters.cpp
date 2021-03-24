@@ -1100,11 +1100,11 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     // forcing value
     if (options.nbYears != 0)
     {
-      if (yearsFilter.size() > 0)
-        yearsFilter.resize(options.nbYears, false);
-      else
-        yearsFilter = std::vector<bool>(options.nbYears, true);
-      
+        if (yearsFilter.size() > 0)
+            yearsFilter.resize(options.nbYears, false);
+        else
+            yearsFilter = std::vector<bool>(options.nbYears, true);
+
         nbYears = options.nbYears;
 
         // Resize years weight (add or remove item)
@@ -1731,22 +1731,21 @@ void Parameters::saveToINI(IniFile& ini, uint version) const
     {
         assert(not yearsFilter.empty());
 
-
         if (version <= version800)
         {
             // Playlist section must be added if at least one year is disable or one MC year weight
             // sum is not equal to nbYears
-          uint effNbYears = 0;
-          bool weightEnabled = false;
-          for (uint i = 0; i != nbYears; ++i)
+            uint effNbYears = 0;
+            bool weightEnabled = false;
+            for (uint i = 0; i != nbYears; ++i)
             {
-              if (yearsFilter[i])
-                ++effNbYears;
-              weightEnabled |= yearsWeight[i] != 1.f;
+                if (yearsFilter[i])
+                    ++effNbYears;
+                weightEnabled |= yearsWeight[i] != 1.f;
             }
 
-          bool addPlayListSection = (effNbYears != nbYears) || weightEnabled;
-          if (addPlayListSection)
+            bool addPlayListSection = (effNbYears != nbYears) || weightEnabled;
+            if (addPlayListSection)
             {
                 // We have something to write !
                 auto* section = ini.addSection("playlist");
