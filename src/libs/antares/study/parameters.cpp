@@ -1100,7 +1100,11 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     // forcing value
     if (options.nbYears != 0)
     {
+      if (yearsFilter.size() > 0)
         yearsFilter.resize(options.nbYears, false);
+      else
+        yearsFilter = std::vector<bool>(options.nbYears, true);
+      
         nbYears = options.nbYears;
 
         // Resize years weight (add or remove item)

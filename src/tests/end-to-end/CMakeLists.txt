@@ -34,7 +34,7 @@ target_link_libraries(tests-simple-study
 						libantares-solver-simulation
 						libantares-solver-ts-generator
 						libmodel_antares
-                        Catch2::Catch2
+						Boost::unit_test_framework
 			)
 
 add_test(NAME end-to-end-simple-study COMMAND tests-simple-study)
