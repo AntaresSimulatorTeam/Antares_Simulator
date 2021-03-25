@@ -1,5 +1,13 @@
 ﻿Antares Changelog
 =================
+v8.0.2 (04/2021)
+-------------------- 
+ 
+### Bug fixes
+
+ - Fix GUI freeze when area color is changed but user don't validate new color
+ - Correction of MC year weight use for PSP and MISC NDG
+ 
 v8.0.1 (03/2021)
 -------------------- 
 ### Features
