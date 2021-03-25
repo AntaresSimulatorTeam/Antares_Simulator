@@ -746,6 +746,8 @@ def test_playlist_23(use_ortools, ortools_solver, solver_path):
     check_output_values(study_path)
 
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_playlist_psp_misc_ndg(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "playlist-psp-misc-ndg"
     enable_study_output(study_path, True)
