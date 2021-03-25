@@ -68,7 +68,8 @@ SHORT_TESTS=[
     'playlist-3',
     'playlist-12',
     'playlist-13',
-    'playlist-23']
+    'playlist-23',
+    'playlist-psp-misc-ndg']
 
 MEDIUM_TESTS=[
     '000 Free Data Sample',
