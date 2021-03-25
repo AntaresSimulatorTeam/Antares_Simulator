@@ -20,7 +20,6 @@ SET(SRC_APPLICATION
 		application/main/internal-ids.h
 		application/main/internal-data.cpp
 		application/main/help.cpp
-		application/main/processevent.cpp
 		application/main/menu.cpp
 		application/main/refresh.cpp
 		application/main/notes.cpp

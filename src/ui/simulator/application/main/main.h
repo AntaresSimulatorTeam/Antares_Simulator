@@ -191,11 +191,6 @@ public:
     */
     bool wouldYouLikeToSaveTheStudy();
 
-    /*!
-    ** \brief Forward command events to the current control, if any
-    */
-    virtual bool ProcessEvent(wxEvent& event);
-
     void loadUserNotes();
     void saveUserNotes();
 
