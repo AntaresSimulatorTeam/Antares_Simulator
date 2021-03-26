@@ -26,7 +26,6 @@
 */
 
 #include "../../../internet/license.h"
-#include "../../windows/proxy/proxysetup.h"
 #include "../../../internet/limits.h"
 #include "../../windows/message.h"
 

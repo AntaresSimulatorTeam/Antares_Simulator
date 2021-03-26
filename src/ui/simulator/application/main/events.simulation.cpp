@@ -33,7 +33,6 @@
 #include "internal-data.h"
 #include "../../config.h"
 #include <yuni/datetime/timestamp.h>
-#include "../../windows/proxy/proxysetup.h"
 #include "../../../internet/license.h"
 #include "../../toolbox/dispatcher/study.h"
 #include <antares/study/version.h>
