@@ -103,16 +103,6 @@ void ApplWnd::evtOnHelpPDFExamplesLibrary(wxCommandEvent&)
     OpenPDF("help/antares-examples-library.pdf");
 }
 
-void ApplWnd::evtOnHelpContinueOnline(wxCommandEvent&)
-{
-    pOnLineConsent.setGDPRStatus(true);
-}
-
-void ApplWnd::evtOnHelpContinueOffline(wxCommandEvent&)
-{
-    pOnLineConsent.setGDPRStatus(false);
-}
-
 void ApplWnd::evtOnShowID(wxCommandEvent&)
 {
     Antares::License::Properties hostproperties;

@@ -595,17 +595,6 @@ wxMenu* ApplWnd::createMenuHelp()
 
     pMenuHelp->AppendSeparator();
 
-    Menu::CreateItem(pMenuHelp,
-                     mnIDHelpContinueOnline,
-                     wxT("Continue online"),
-                     nullptr,
-                     wxT("Allow gathering of  anonymous usage metrics"));
-    Menu::CreateItem(pMenuHelp,
-                     mnIDHelpContinueOffline,
-                     wxT("Continue offline"),
-                     nullptr,
-                     wxT("Stop gathering of  anonymous usage metrics"));
-
     Menu::CreateItem(
       pMenuHelp, mnIDHelpShowID, wxT("Show signature"), nullptr, wxT("Show unique signature"));
 

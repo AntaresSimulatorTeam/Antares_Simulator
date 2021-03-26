@@ -628,10 +628,6 @@ private:
     //! Event: PDF Examples library
     void evtOnHelpPDFExamplesLibrary(wxCommandEvent& evt);
 
-    void evtOnHelpContinueOnline(wxCommandEvent& evt);
-
-    void evtOnHelpContinueOffline(wxCommandEvent& evt);
-
     void evtOnShowID(wxCommandEvent&);
 
     //@}

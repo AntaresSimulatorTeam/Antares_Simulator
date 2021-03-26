@@ -181,8 +181,8 @@ EVT_MENU(mnIDHelpPDFOptimizationProblemsFormulation,
 EVT_MENU(mnIDHelpPDFSystemMapEditorReferenceGuide,
          ApplWnd::evtOnHelpPDFSystemMapEditorReferenceGuide)
 EVT_MENU(mnIDHelpPDFExamplesLibrary, ApplWnd::evtOnHelpPDFExamplesLibrary)
-EVT_MENU(mnIDHelpContinueOnline, ApplWnd::evtOnHelpContinueOnline)
-EVT_MENU(mnIDHelpContinueOffline, ApplWnd::evtOnHelpContinueOffline)
+// EVT_MENU(mnIDHelpContinueOnline, ApplWnd::evtOnHelpContinueOnline)
+// EVT_MENU(mnIDHelpContinueOffline, ApplWnd::evtOnHelpContinueOffline)
 EVT_MENU(mnIDHelpShowID, ApplWnd::evtOnShowID)
 
 EVT_MENU(mnInternalLogMessage, ApplWnd::onLogMessage)

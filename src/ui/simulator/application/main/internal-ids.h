@@ -161,8 +161,6 @@ enum MenusID
     mnIDHelpPDFExamplesLibrary,
     mnIDHelpAbout,
     mnIDHelpVisitRTEWebSite,
-    mnIDHelpContinueOnline,
-    mnIDHelpContinueOffline,
     mnIDHelpShowID,
     //@}
 
