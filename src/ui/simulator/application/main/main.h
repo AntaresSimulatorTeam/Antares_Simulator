@@ -191,11 +191,6 @@ public:
     */
     bool wouldYouLikeToSaveTheStudy();
 
-    /*!
-    ** \brief Forward command events to the current control, if any
-    */
-    virtual bool ProcessEvent(wxEvent& event);
-
     void loadUserNotes();
     void saveUserNotes();
 
@@ -777,7 +772,7 @@ private:
 
     //! A context menu for the map
     wxMenu* pMapContextMenu;
-   
+
     // User consent for sending anonymous usage infos on server
     onLineConsent pOnLineConsent;
 

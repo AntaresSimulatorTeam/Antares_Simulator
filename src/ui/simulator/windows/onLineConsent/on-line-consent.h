@@ -31,7 +31,6 @@
 #include <yuni/core/string.h>
 #include <wx/window.h>
 
-
 namespace Antares
 {
 class onLineConsent

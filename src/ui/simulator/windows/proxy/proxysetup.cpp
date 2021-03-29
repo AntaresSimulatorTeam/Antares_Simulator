@@ -72,7 +72,7 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
 {
     // TODO : a lot of pointer variables are not destroyed after usage here : sizers, titles, ...
     // TODO : They have to be deleted to avoid memory leaks.
-    
+
     assert(parent);
 
     // Background color
@@ -111,12 +111,12 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
     subtitle->Enable(false);
 
     pOffline_title = Component::CreateLabel(
-        this,
-        wxT("If you wish to stay offline in all future sessions, click on \"Continue offline\".\n"
-            "You can choose to be online by clicking \"Cancel\", but you can switch to offline\n"
-            "anytime by selecting \"Continue offline\" in the Antares help (\"?\") menu."),
-        false,
-        false);
+      this,
+      wxT("If you wish to stay offline in all future sessions, click on \"Continue offline\".\n"
+          "You can choose to be online by clicking \"Cancel\", but you can switch to offline\n"
+          "anytime by selecting \"Continue offline\" in the Antares help (\"?\") menu."),
+      false,
+      false);
     contentSizer->AddSpacer(20);
     contentSizer->Add(titlespacer, 0, wxALL | wxEXPAND);
     contentSizer->AddSpacer(40);
@@ -206,7 +206,7 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
       panel, wxT(" Cancel "), this, &LicenseCouldNotConnectToInternetServer::onClose);
 
     pBtnContinueOffline = Antares::Component::CreateButton(
-        panel, wxT(" Continue offline "), this, &LicenseCouldNotConnectToInternetServer::onOffline);
+      panel, wxT(" Continue offline "), this, &LicenseCouldNotConnectToInternetServer::onOffline);
 
     pnlSizerBtns->Add(pBtnContinueOffline, 0, wxALL | wxEXPAND);
     pnlSizerBtns->AddSpacer(5);
@@ -248,7 +248,8 @@ LicenseCouldNotConnectToInternetServer::~LicenseCouldNotConnectToInternetServer(
     delete pBtnCancel;
     delete pBtnValidate;
     delete pBtnContinueOffline;
-    delete pOffline_title;}
+    delete pOffline_title;
+}
 
 void LicenseCouldNotConnectToInternetServer::onClose(void*)
 {
