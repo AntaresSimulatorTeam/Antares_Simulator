@@ -37,9 +37,6 @@
 #include "../../../internet/license.h"
 #include "../../../internet/base64/cencode.h"
 #include "../../../internet/decrypt.hxx"
-#include <curl/curl.h>
-#include <openssl/des.h>
-#include <openssl/rand.h>
 #include <sstream>
 #include <yuni/core/utils/hexdump.h>
 

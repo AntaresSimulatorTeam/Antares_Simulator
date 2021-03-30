@@ -32,8 +32,6 @@ pip install -r src/tests/examples/requirements.txt
 
 ## [Dependencies](#deps)
  ANTARES depends on several mandatory libraries. 
- - [OpenSSL](https://github.com/openssl/openssl)
- - [CURL](https://github.com/curl/curl)
  - [Sirius Solver](https://github.com/AntaresSimulatorTeam/sirius-solver/tree/Antares_VCPKG) (fork from [RTE](https://github.com/rte-france/sirius-solver/tree/Antares_VCPKG))
  - [OR-Tools](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) (fork from [RTE](https://github.com/rte-france/or-tools/tree/rte_dev_sirius) based on official OR-Tools github)
  - [wxWidgets](https://github.com/wxWidgets/wxWidgets)
@@ -74,8 +72,6 @@ Note :
 #### 2 Install dependencies
 ```
 cd [vcpkg_root]
-vcpkg install openssl:[vcpg-triplet] 
-vcpkg install curl:[vcpg-triplet] 
 vcpkg install wxwidgets:[vcpg-triplet] 
 vcpkg install boost-test:[vcpg-triplet]
 vcpkg install boost-filesystem:[vcpg-triplet]
@@ -102,7 +98,7 @@ By default the install directory is `<antares_checkout_dir>/../rte-antares-deps-
 Note :
 > `DEPS_INSTALL_DIR` is added to `CMAKE_PREFIX_PATH`
 
-> If the dependency install directory contains CURL, OPENSSL or wxWidgets pre-compiled libraries an additionnal option must be used at configure time `-DUSE_PRECOMPILED_EXT=ON`
+> If the dependency install directory contains wxWidgets pre-compiled libraries an additionnal option must be used at configure time `-DUSE_PRECOMPILED_EXT=ON`
 
 ### Pre-compiled libraries download : release version only
 You can download pre-compiled antares-deps archive from [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps/releases/tag/v1.1.0). Only release version are available. 

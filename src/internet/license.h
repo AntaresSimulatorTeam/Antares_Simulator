@@ -120,15 +120,6 @@ void ReleaseEncryptionEngine();
 bool CheckLicenseValidity(uint version = Antares::Data::versionLatest,
                           Yuni::String* error = nullptr);
 
-/*!
-** \brief Check if an activation key is valid
-**
-** \param activationKey: A license Activation key. The variable is likely to be modified internally
-*/
-bool CheckActivationKeyValidity(uint version,
-                                YString& activationKey,
-                                YString* error = nullptr,
-                                bool ignoreLicenseServer = false);
 
 /*!
 ** \brief Check if an activation key is valid on line
@@ -251,15 +242,6 @@ typedef struct
 
 //! Dictionary for properties
 typedef std::map<YString, YString> Properties;
-
-/*!
-** \brief Retrieve all properties + the signature of the current host
-**
-** \param properties map string -> string
-** \param A string for temporary uses
-** \return True if the operation succeeded, false otherwise
-*/
-bool RetrieveHostProperties(Properties& properties, YString& n);
 
 /*!
 ** \brief Retrieve the mac address of the host

@@ -194,14 +194,6 @@ message(STATUS "CMAKE_PREFIX_PATH : ${CMAKE_PREFIX_PATH}")
 # Build Needed dependencies
 add_subdirectory(antares-deps)
 
-# Define needed external library
-
-#libcurl
-find_package(CURL REQUIRED)
-
-#openssl	
-find_package(OpenSSL REQUIRED)
-
 #Add needed definition in case of external dependencies compilation
 include (antares-deps/cmake/additionnal-definitions.cmake)
 
@@ -369,8 +361,8 @@ else()
 	set(CPACK_PACKAGE_VERSION_MINOR ${ANTARES_VERSION_LO})
 	set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION})
 	
-	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libcurl4,libwxgtk3.0-gtk3-0v5")
-    set(CPACK_RPM_PACKAGE_REQUIRES "openssl,curl,wxGTK3")
+	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-gtk3-0v5")
+    set(CPACK_RPM_PACKAGE_REQUIRES "wxGTK3")
     set(CPACK_RPM_PACKAGE_AUTOREQPROV "0")
 
 	configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")

@@ -491,18 +491,10 @@ void ApplWnd::internalInitialize()
 void ApplWnd::installUserLicense(bool online)
 {
     String activationKey = online ? ANTARES_ONLINE_ACTIVATION_KEY : ANTARES_OFFLINE_ACTIVATION_KEY;
-
-    // creating a copy of the activation key, since CheckActivationKeyValidity
     // may modify our variable
     String activationKeyToInstall = activationKey;
     activationKeyToInstall.trim();
     activationKeyToInstall.replace("\r", "");
-
-    if (not Antares::License::CheckActivationKeyValidity(Data::versionLatest, activationKey))
-    {
-        logs.error() << "The activation key is invalid";
-        return;
-    }
 
     // Installation for all users ?
     bool allusers = false;

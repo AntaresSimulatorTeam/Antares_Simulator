@@ -34,8 +34,6 @@ pip3 install -r src/src/tests/examples/requirements.txt
 
 ## [Dependencies](#deps)
  ANTARES depends on several mandatory libraries. 
- - [OpenSSL](https://github.com/openssl/openssl)
- - [CURL](https://github.com/curl/curl)
  - [Sirius Solver](https://github.com/AntaresSimulatorTeam/sirius-solver/tree/Antares_VCPKG) (fork from [RTE](https://github.com/rte-france/sirius-solver/tree/Antares_VCPKG))
  - [OR-Tools](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) (fork from [RTE](https://github.com/rte-france/or-tools/tree/rte_dev_sirius) based on official OR-Tools github)
  - [wxWidgets](https://github.com/wxWidgets/wxWidgets)
@@ -50,7 +48,7 @@ The install procedure can be done
 
 #### Command to install dependencies
 ```
-sudo apt install uuid-dev libcurl4-openssl-dev libssl-dev libwxgtk3.0-gtk3-dev libboost-test-dev libboost-filesystem-dev libboost-regex-dev libboost-dev
+sudo apt install uuid-dev libwxgtk3.0-gtk3-dev libboost-test-dev libboost-filesystem-dev libboost-regex-dev libboost-dev
 ```
 
 ### [Automatic librairies compilation from git](#git_compil)
@@ -72,7 +70,7 @@ By default the install directory is `<antares_checkout_dir>/../rte-antares-deps-
 Note :
 > `DEPS_INSTALL_DIR` is added to `CMAKE_PREFIX_PATH`
 
-> If the dependency install directory contains CURL, OPENSSL or wxWidgets pre-compiled libraries an additionnal option must be used at configure time `-DUSE_PRECOMPILED_EXT=ON`
+> If the dependency install directory contains wxWidgets pre-compiled libraries an additionnal option must be used at configure time `-DUSE_PRECOMPILED_EXT=ON`
 
 ### Pre-compiled libraries download : release version only
 You can download pre-compiled antares-deps archive from [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps/releases/tag/v1.1.0). Only release version are available.
@@ -189,5 +187,5 @@ cpack -G TGZ .
 There are still some system libraries that must be installed if you want to use *ANTARES*:
 
 ```
-sudo apt-get install libcurl4 libwxgtk3.0-gtk3-0v5
+sudo apt-get install libwxgtk3.0-gtk3-0v5
 ```
