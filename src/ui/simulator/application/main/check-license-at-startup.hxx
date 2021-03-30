@@ -191,76 +191,18 @@ static void AskForTryingAgain(bool startupwizard)
 
 static void CheckAntaresLicense(bool startupwizard)
 {
-    // This method is ran from a thread which is not the main thread
-    // Thus we can not update the GUI from here
+    // re-enable the mainform
+    Bind<void()> callback;
+    callback.bind(&RenableTheMainForm);
+    Antares::Dispatcher::GUI::Post(callback);
 
-    // Checking the license. It can take some time
-    if (not Antares::License::CheckLicenseValidity())
+    // Ok the license is valid, let's continue !
+    if (startupwizard)
     {
-        // The license is not valid sorry
-        switch (Antares::License::lastError)
-        {
-        case Antares::License::errLSHostDown:
-        case Antares::License::errLSTooManyLicense:
-        {
-            Bind<void()> callback;
-            callback.bind(&AskForTryingAgain, startupwizard);
-            Antares::Dispatcher::GUI::Post(callback);
-            break;
-        }
-        default:
-        {
-        }
-        }
-    }
-    else
-    {
-        // check license on the server
-        if (not Antares::License::CheckOnlineLicenseValidity())
-        {
-            switch (Antares::License::lastError)
-            {
-            case Antares::License::errNone:
-            {
-                assert(Antares::License::lastError != Antares::License::errNone);
-                break;
-            }
-            case Antares::License::errLSOnline:
-            {
-                // Could not connect, let's try to set a proxy first
-                Antares::License::statusOnline = Antares::License::stWaiting;
-
-                Bind<void()> callback;
-                callback.bind(&LicenseOnLineIsNotValid, startupwizard);
-                Antares::Dispatcher::GUI::Post(callback);
-                break;
-            }
-            default:
-            {
-                Antares::License::statusOnline = Antares::License::stWaiting;
-
-                Bind<void()> callback;
-                callback.bind(&LicenseOnLineIsNotValid, startupwizard);
-                Antares::Dispatcher::GUI::Post(callback);
-            }
-            }
-        }
-        else
-        {
-            // re-enable the mainform
-            Bind<void()> callback;
-            callback.bind(&RenableTheMainForm);
-            Antares::Dispatcher::GUI::Post(callback);
-
-            // Ok the license is valid, let's continue !
-            if (startupwizard)
-            {
-                auto* mainfrm = Antares::Forms::ApplWnd::Instance();
-                Bind<void()> callback;
-                callback.bind(mainfrm, &Antares::Forms::ApplWnd::startAntares);
-                Antares::Dispatcher::GUI::Post(callback); // ms, arbitrary
-            }
-        }
+        auto* mainfrm = Antares::Forms::ApplWnd::Instance();
+        Bind<void()> callback;
+        callback.bind(mainfrm, &Antares::Forms::ApplWnd::startAntares);
+        Antares::Dispatcher::GUI::Post(callback); // ms, arbitrary
     }
 }
 
