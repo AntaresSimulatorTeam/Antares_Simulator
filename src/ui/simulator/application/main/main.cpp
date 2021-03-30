@@ -263,7 +263,6 @@ ApplWnd::ApplWnd() :
  pGridSelectionOperator(new Component::Datagrid::Selection::CellCount()),
  pGridSelectionAttachedGrid(nullptr),
  pMapContextMenu(nullptr),
- pOnLineConsent(this),
  pUserNotes(nullptr),
  pMainNotebookAlreadyHasItsComponents(false),
  pLogFlusherTimer(nullptr),

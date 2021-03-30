@@ -468,24 +468,10 @@ void ApplWnd::internalInitialize()
     Enable(false);
     installUserLicense();
 
-    if (pOnLineConsent.checkGDPRStatus())
-    {
-        installUserLicense(true);
-        Antares::License::statusOnline = Antares::License::Status::stInitialize;
-        // check the license informations
-        // (in another thread - it can take some time)
-        DispatchCheckAntaresLicense();
-    }
-    else
-    {
-        // Enable(true);// not enough, show the startup wizard!!!!
-        // logs.info() << "Launching startup wizard";
-        //			Window::StartupWizard::Show();
-        Antares::License::statusOnline = Antares::License::Status::stNotRequested;
-        Yuni::Bind<void()> callback;
-        callback.bind(&CheckAntaresLicense, true);
-        Antares::Dispatcher::Post(callback);
-    }
+    installUserLicense(true);
+    // check the license informations
+    // (in another thread - it can take some time)
+    DispatchCheckAntaresLicense();
 }
 
 void ApplWnd::installUserLicense(bool online)
