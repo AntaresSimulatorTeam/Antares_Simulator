@@ -39,7 +39,6 @@
 #include "config.h"
 #include <ui/common/component/frame/local-frame.h>
 #include <antares/study.h>
-// #include "../../windows/onLineConsent/on-line-consent.h"
 
 const Yuni::String ANTARES_ONLINE_ACTIVATION_KEY = "-----BEGIN LICENSE ACTIVATION KEY-----\n\
 LC1cZqFqRlQIdVTX6Hf/rDTR7py0I6SuIVfAVXuft/ZA+HwtbuE7+RvOfXc5znFAw+GOy8vuPo9C4nlw/\n\
