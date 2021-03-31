@@ -568,8 +568,8 @@ bool SolverApplication::completeWithOnlineCheck()
     }
 
     // verify License online
-    if (not License::CheckOnlineLicenseValidity(Data::versionLatest, true))
-        return false;
+    // if (not License::CheckOnlineLicenseValidity(Data::versionLatest, true))
+    //     return false;
 
     // if ok, save proxy parameers
     License::proxy.saveProxyFile();

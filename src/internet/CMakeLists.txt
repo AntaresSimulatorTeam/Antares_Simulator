@@ -10,8 +10,6 @@ add_library(libantares-license
 	host-properties.cpp
 	limits.h
 	limits.cpp
-	licensetimer.cpp
-	licensetimer.h
 )
 
 #TODO : needed for include yuni : why yuni must be include first ???

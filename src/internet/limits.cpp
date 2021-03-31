@@ -41,8 +41,6 @@ uint tick = 30;
 
 Yuni::String customerId;
 
-Yuni::String customerCaption;
-
 Yuni::String hostID;
 
 Yuni::String expiryDate;
