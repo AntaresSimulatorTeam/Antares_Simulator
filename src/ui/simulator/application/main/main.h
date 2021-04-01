@@ -627,8 +627,6 @@ private:
     //! Event: PDF Examples library
     void evtOnHelpPDFExamplesLibrary(wxCommandEvent& evt);
 
-    void evtOnShowID(wxCommandEvent&);
-
     //@}
 
     //! \name Menu event
