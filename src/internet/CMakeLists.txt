@@ -5,7 +5,6 @@ add_subdirectory(keys)
 
 add_library(libantares-license
 	license.h
-	host-properties.cpp
 	limits.h
 	limits.cpp
 )
