@@ -138,9 +138,9 @@ wxMenu* ApplWnd::createMenuFiles()
     {
         Menu::CreateItem(pMenuFile,
                          mnIDOpenExplorer,
-                         wxT("Open in Gnome Nautilus..."),
+                         wxT("Open in file explorer..."),
                          "images/16x16/empty.png",
-                         wxT("Open the folder in Gnome Nautilus"));
+                         wxT("Open the folder in file explorer"));
     }
 
     Menu::CreateItem(pMenuFile,
@@ -652,7 +652,7 @@ void ApplWnd::evtOnOpenStudyFolderInExplorer(wxCommandEvent&)
             wxExecute(wxString(wxT("explorer.exe \""))
                       << wxStringFromUTF8(study->folder) << wxT("\""));
         else
-            wxExecute(wxString(wxT("gnome-open \""))
+            wxExecute(wxString(wxT("xdg-open \""))
                       << wxStringFromUTF8(study->folder) << wxT("\""));
     }
 }
@@ -668,7 +668,7 @@ void ApplWnd::evtOnOpenOutputInExplorer(wxCommandEvent& evt)
                 wxExecute(wxString(wxT("explorer.exe \""))
                           << wxStringFromUTF8((*i)->path) << wxT("\""));
             else
-                wxExecute(wxString(wxT("gnome-open \""))
+                wxExecute(wxString(wxT("xdg-open \""))
                           << wxStringFromUTF8((*i)->path) << wxT("\""));
             return;
         }
