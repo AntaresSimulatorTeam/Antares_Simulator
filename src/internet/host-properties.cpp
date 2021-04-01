@@ -31,7 +31,6 @@
 #include "../internet/limits.h"
 
 #include "license.h"
-#include "base64/cencode.h"
 #include "decrypt.hxx"
 
 #include <fstream>
