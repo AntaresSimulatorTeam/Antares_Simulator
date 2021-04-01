@@ -5,7 +5,6 @@ add_subdirectory(keys)
 
 add_library(libantares-license
 	license.h
-	hello_web.cpp
 	host-properties.cpp
 	limits.h
 	limits.cpp
