@@ -181,8 +181,6 @@ EVT_MENU(mnIDHelpPDFOptimizationProblemsFormulation,
 EVT_MENU(mnIDHelpPDFSystemMapEditorReferenceGuide,
          ApplWnd::evtOnHelpPDFSystemMapEditorReferenceGuide)
 EVT_MENU(mnIDHelpPDFExamplesLibrary, ApplWnd::evtOnHelpPDFExamplesLibrary)
-EVT_MENU(mnIDHelpShowID, ApplWnd::evtOnShowID)
-
 EVT_MENU(mnInternalLogMessage, ApplWnd::onLogMessage)
 EVT_MENU(mnIDLaunchAnalyzer, ApplWnd::evtLaunchAnalyzer)
 EVT_MENU(mnIDLaunchConstraintsBuilder, ApplWnd::evtLaunchConstraintsBuilder)

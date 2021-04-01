@@ -161,7 +161,6 @@ enum MenusID
     mnIDHelpPDFExamplesLibrary,
     mnIDHelpAbout,
     mnIDHelpVisitRTEWebSite,
-    mnIDHelpShowID,
     //@}
 
     //! \name Misc

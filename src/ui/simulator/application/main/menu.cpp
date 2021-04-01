@@ -595,11 +595,6 @@ wxMenu* ApplWnd::createMenuHelp()
 
     pMenuHelp->AppendSeparator();
 
-    Menu::CreateItem(
-      pMenuHelp, mnIDHelpShowID, wxT("Show signature"), nullptr, wxT("Show unique signature"));
-
-    pMenuHelp->AppendSeparator();
-
     Menu::CreateItem(pMenuHelp, mnIDHelpAbout, wxT("About Antares"), nullptr, wxT("About Antares"));
 
     return pMenuHelp;

@@ -103,16 +103,5 @@ void ApplWnd::evtOnHelpPDFExamplesLibrary(wxCommandEvent&)
     OpenPDF("help/antares-examples-library.pdf");
 }
 
-void ApplWnd::evtOnShowID(wxCommandEvent&)
-{
-    Antares::License::Properties hostproperties;
-    Antares::License::Properties licenseproperties;
-    Yuni::String tmp;
-
-    Window::Message message(this, wxT(""), "", "", "images/128x128/antares.png");
-    message.add(Window::Message::btnOk, true);
-    message.showModal();
-}
-
 } // namespace Forms
 } // namespace Antares
