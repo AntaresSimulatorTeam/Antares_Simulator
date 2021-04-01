@@ -33,7 +33,6 @@
 #include "../../../config.h"
 #include "../../toolbox/resources.h"
 #include "../../windows/aboutbox.h"
-#include "../../../internet/license.h"
 #include "../../toolbox/dispatcher/study.h"
 #include "../../windows/message.h"
 #include <antares/study/version.h>

@@ -46,7 +46,6 @@
 #include <antares/memory/memory.h>
 #include <antares/sys/policy.h>
 #include <antares/locale.h>
-#include "../internet/license.h"
 #include "misc/system-memory.h"
 
 #ifdef YUNI_OS_WINDOWS

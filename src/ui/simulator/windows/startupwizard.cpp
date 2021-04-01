@@ -31,7 +31,6 @@
 #include <wx/settings.h>
 #include <wx/statline.h>
 
-#include "../../../internet/license.h"
 #include <antares/study/finder.h>
 #include "../toolbox/resources.h"
 #include "../toolbox/components/button.h"

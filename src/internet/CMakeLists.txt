@@ -4,7 +4,6 @@ OMESSAGE("License")
 add_subdirectory(keys)
 
 add_library(libantares-license
-	license.h
 	limits.h
 	limits.cpp
 )
