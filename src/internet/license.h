@@ -58,40 +58,7 @@
         }                                                                              \
     } while (0)
 
-#define ANTARES_LICENSE_GUI_SHOW_PROXY                                                 \
-    do                                                                                 \
-    {                                                                                  \
-        /* asking to the user for a new proxy */                                       \
-        {                                                                              \
-            auto* mainFrm = Antares::Forms::ApplWnd::Instance();                       \
-            if (mainFrm)                                                               \
-            {                                                                          \
-                Antares::Window::LicenseCouldNotConnectToInternetServer form(mainFrm); \
-                form.ShowModal();                                                      \
-                /* reset the status bar which uses informations from the status bar */ \
-                mainFrm->resetDefaultStatusBarText();                                  \
-            }                                                                          \
-            else                                                                       \
-                exit(1);                                                               \
-        }                                                                              \
-        /* aborting if still invalid */                                                \
-        if (not Antares::License::CheckOnlineLicenseValidity(Data::versionLatest))     \
-        {                                                                              \
-            Dispatcher::StudyClose(true, false);                                       \
-            return;                                                                    \
-        }                                                                              \
-    } while (0)
 
-#define ANTARES_LICENSE_GUI_CHECK_FOR_ACTIVATION_KEY_ON_LINE                       \
-    do                                                                             \
-    {                                                                              \
-        /* checking the license */                                                 \
-        if (not Antares::License::CheckOnlineLicenseValidity(Data::versionLatest)) \
-        {                                                                          \
-            /* asking to the user for a new license */                             \
-            ANTARES_LICENSE_GUI_SHOW_PROXY;                                        \
-        }                                                                          \
-    } while (0)
 
 namespace Antares
 {

@@ -26,7 +26,6 @@
 */
 
 #include "../../../internet/license.h"
-#include "../../windows/proxy/proxysetup.h"
 #include "../../../internet/limits.h"
 #include "../../windows/message.h"
 
@@ -75,36 +74,16 @@ static void LicenseOnLineIsNotValid(bool startupwizard)
         Antares::License::Limits::customerCaption.clear();
         mainfrm->resetDefaultStatusBarText();
 
-        Antares::Window::LicenseCouldNotConnectToInternetServer form(mainfrm);
-        form.ShowModal();
+        // The status bar will be reset by the dispatcher
+        Antares::License::Limits::customerCaption = "Aborting connexion...";
+        mainfrm->resetDefaultStatusBarText();
 
-        if (not form.canceled())
-        {
-            // Ok, let's try again
-
-            // The status bar will be reset by the dispatcher
-            Antares::License::Limits::customerCaption = ANTARES_CHECKING_LICENSE_TEXT;
-            mainfrm->resetDefaultStatusBarText();
-
-            // check the license informations
-            // (in another thread - it can take some time)
-            Bind<void()> callback;
-            callback.bind(&CheckAntaresLicense, startupwizard);
-            Antares::Dispatcher::Post(callback);
-        }
-        else
-        {
-            // The status bar will be reset by the dispatcher
-            Antares::License::Limits::customerCaption = "Aborting connexion...";
-            mainfrm->resetDefaultStatusBarText();
-
-            // check the license informations
-            // (in another thread - it can take some time)
-            Antares::License::statusOnline = Antares::License::Status::stNotRequested;
-            Bind<void()> callback;
-            callback.bind(&CheckAntaresLicense, startupwizard);
-            Antares::Dispatcher::Post(callback);
-        }
+        // check the license informations
+        // (in another thread - it can take some time)
+        Antares::License::statusOnline = Antares::License::Status::stNotRequested;
+        Bind<void()> callback;
+        callback.bind(&CheckAntaresLicense, startupwizard);
+        Antares::Dispatcher::Post(callback);
     }
     else
     {
