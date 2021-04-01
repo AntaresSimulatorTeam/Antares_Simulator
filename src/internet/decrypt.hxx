@@ -29,7 +29,6 @@
 
 #include <yuni/yuni.h>
 #include "license.h"
-#include "base64/cdecode.h"
 
 #include <yuni/core/system/cpu.h>
 #include <yuni/core/system/memory.h>

@@ -1,7 +1,6 @@
 
 OMESSAGE("License")
 
-add_subdirectory(base64)
 add_subdirectory(keys)
 
 add_library(libantares-license
@@ -23,7 +22,5 @@ target_include_directories(libantares-license
 target_link_libraries(libantares-license
 		PRIVATE
 			yuni-static-core
-		PUBLIC
-			base64
 		)
 
