@@ -25,14 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/proxy/proxy.h>
-
 namespace Antares
 {
 namespace License
 {
-
-/*extern*/ ProxySettings proxy;
 
 } // namespace License
 } // namespace Antares

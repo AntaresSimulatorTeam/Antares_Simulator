@@ -32,7 +32,6 @@
 #include <map>
 #include <antares/study/version.h>
 #include <yuni/core/event.h>
-#include <antares/proxy.h>
 
 
 
@@ -86,13 +85,6 @@ enum Status
     //! The license is not validated in the Internet Server
     stInvalidOnline,
 };
-
-/*!
-** \brief Proxy settings
-**
-** \todo Should be located here
-*/
-extern ProxySettings proxy;
 
 // ---------------------------------------------------------------------------
 // low-level routines
