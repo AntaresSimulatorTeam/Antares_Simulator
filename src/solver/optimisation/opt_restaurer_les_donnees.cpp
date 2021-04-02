@@ -80,20 +80,17 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo)
         }
     }
 
-    if (COUT_TRANSPORT == OUI_ANTARES)
+    for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
     {
-        for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
+        for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
         {
-            for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+            CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
+            if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
             {
-                CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
-                if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
-                {
-                    CoutDeTransport->CoutDeTransportOrigineVersExtremite[Pdt]
-                      = CoutDeTransport->CoutDeTransportOrigineVersExtremiteRef[Pdt];
-                    CoutDeTransport->CoutDeTransportExtremiteVersOrigine[Pdt]
-                      = CoutDeTransport->CoutDeTransportExtremiteVersOrigineRef[Pdt];
-                }
+                CoutDeTransport->CoutDeTransportOrigineVersExtremite[Pdt]
+                  = CoutDeTransport->CoutDeTransportOrigineVersExtremiteRef[Pdt];
+                CoutDeTransport->CoutDeTransportExtremiteVersOrigine[Pdt]
+                  = CoutDeTransport->CoutDeTransportExtremiteVersOrigineRef[Pdt];
             }
         }
     }

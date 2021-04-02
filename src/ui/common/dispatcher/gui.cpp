@@ -145,7 +145,6 @@ protected:
         if (pFocus)
             pForm->SetFocus();
         if (pMakeModal)
-            // pForm->MakeModal();
             wxWindowDisabler(pForm);
     }
 

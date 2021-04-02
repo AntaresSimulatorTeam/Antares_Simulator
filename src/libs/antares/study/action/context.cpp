@@ -37,12 +37,12 @@ Context::Context(Data::Study& targetStudy, const size_t layer) :
  study(targetStudy),
  extStudy(nullptr),
  shouldDestroyExtStudy(false),
+ layerID(layer),
  area(nullptr),
  cluster(nullptr),
  link(nullptr),
  originalPlant(nullptr),
- constraint(nullptr),
- layerID(layer)
+ constraint(nullptr)
 {
 }
 

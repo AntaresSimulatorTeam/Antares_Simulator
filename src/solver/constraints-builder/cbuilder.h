@@ -236,7 +236,7 @@ public:
     /*!
     ** \brief Independent function to run the constraint generator from a study
     */
-    bool runConstraintsBuilder(const Yuni::String& filename, bool standalone = false);
+    bool runConstraintsBuilder(bool standalone = false);
 
     /*!
     ** \brief Complete the settings with the data from the study
@@ -289,7 +289,7 @@ public:
         }
     }
 
-    linkInfo* getLink(int i)
+    linkInfo* getLink(uint i)
     {
         if (i < pLink.size())
             return pLink[i];
@@ -390,12 +390,6 @@ private:
                                                     const Yuni::String& type,
                                                     const WeightMap& weights,
                                                     const double& secondMember);
-
-    void addConstraint(const Data::ConstraintName& name,
-                       const Yuni::String& op,
-                       const Yuni::String& type,
-                       const WeightMap& weights,
-                       const Matrix<double, double>& secondMember);
 
 public:
     Vector pLink;

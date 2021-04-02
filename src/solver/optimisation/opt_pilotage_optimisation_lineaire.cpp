@@ -86,15 +86,7 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo, uint numSpa
 
     OPT_VerifierPresenceReserveJmoins1(ProblemeHebdo);
 
-    CalculerLesPmin = OUI_ANTARES;
-    CalculerLesPmax = OUI_ANTARES;
-
     OPT_SauvegarderLesPmaxThermiques(ProblemeHebdo);
-
-    if (ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES)
-        FaireDerniereOptimisation = NON_ANTARES;
-    else
-        FaireDerniereOptimisation = OUI_ANTARES;
 
     OPT_InitialiserLesPminHebdo(ProblemeHebdo);
 
@@ -107,8 +99,7 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo, uint numSpa
         OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(ProblemeHebdo);
     }
 
-    if (!OPT_OptimisationLineaire(
-          ProblemeHebdo, numSpace, CalculerLesPmin, CalculerLesPmax, FaireDerniereOptimisation))
+    if (!OPT_OptimisationLineaire(ProblemeHebdo, numSpace))
         return false;
 
     return true;

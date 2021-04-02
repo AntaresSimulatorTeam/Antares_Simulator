@@ -445,6 +445,12 @@ public:
 
     struct
     {
+        //! Hydro heuristic policy
+        HydroHeuristicPolicy hhPolicy;
+    } hydroHeuristicPolicy;
+
+    struct
+    {
         //! Hydro Pricing Mode
         HydroPricingMode hpMode;
     } hydroPricing;

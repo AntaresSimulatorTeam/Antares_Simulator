@@ -177,20 +177,18 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
             auto& col = storage[x];
             for (int month = 0; month < 12; month++)
             {
-                int realMonth = (month + study.parameters.firstMonthInYear)
-                                % 12; // Example : month = 0, realMonth = 2 (march), the first month
-                                      // of the simulation (march -> february)
-                double valDiff;
-                int res = Math::Floor(
-                  col[realMonth]
-                  / daysPerMonthDecals[month]); // Total march power / number of days in march
-                int diff
-                  = col[realMonth]
-                    - res
-                        * daysPerMonthDecals[month]; // Possible difference, always positive and
-                                                     // inferior to the number of days in the month
-                for (uint day = firstDayMonth[month]; day < firstDayMonth[month + 1];
-                     day++) // First day of march is 0 to < 31
+                // Example : month = 0, realMonth = 2 (march), the first month
+                // of the simulation (march -> february)
+                int realMonth = (month + study.parameters.firstMonthInYear) % 12;
+
+                // Total march power / number of days in march
+                int res = (int)(Math::Floor(col[realMonth] / daysPerMonthDecals[month]));
+                // Possible difference, always positive and
+                // inferior to the number of days in the month
+                uint diff = (uint)(col[realMonth] - res * daysPerMonthDecals[month]);
+
+                // First day of march is 0 to < 31
+                for (uint day = firstDayMonth[month]; day < firstDayMonth[month + 1]; day++)
                 {
                     temp[x][day] = res;
                     if (day - firstDayMonth[month] < diff)

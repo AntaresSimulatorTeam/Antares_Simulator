@@ -232,52 +232,6 @@ uint Antares::Data::BindingConstraint::enabledClusterCount() const
     return enabledClusterNumber;
 }
 
-void BindingConstraint::matrix(const Matrix<double, double>& secondMember)
-{
-    assert(secondMember.width == 1 and "Too many column in the matrix");
-    assert((uint)pType < (uint)(typeMax + 1) and "Type of the constraint not defined");
-    assert((uint)pOperator < (uint)(opMax + 1) and "Operator not defined");
-
-    switch (pType)
-    {
-    case typeHourly:
-    {
-        assert(secondMember.height == 8784 and "Height of the matrix does not fit");
-        break;
-    }
-    case typeDaily:
-    {
-        assert(secondMember.height == 366 and "Height of the matrix does not fit");
-        break;
-    }
-    case typeWeekly:
-    {
-        assert(secondMember.height == 366 and "Height of the matrix does not fit");
-        break;
-    }
-    }
-    switch (pOperator)
-    {
-    case opEquality:
-    {
-        pValues.pasteToColumn((uint)columnEquality, secondMember.column(0));
-    }
-    case opLess:
-    {
-        pValues.pasteToColumn(columnInferior, secondMember.column(0));
-    }
-    case opGreater:
-    {
-        pValues.pasteToColumn(columnSuperior, secondMember.column(0));
-    }
-    case opBoth:
-    {
-        pValues.pasteToColumn(columnInferior, secondMember.column(0));
-        pValues.pasteToColumn(columnSuperior, secondMember.column(0));
-    }
-    }
-}
-
 bool BindingConstraint::removeLink(const AreaLink* lnk)
 {
     auto iw = pLinkWeights.find(lnk);

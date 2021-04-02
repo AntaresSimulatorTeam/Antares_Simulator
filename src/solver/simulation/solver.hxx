@@ -64,7 +64,7 @@ public:
             std::vector<unsigned int>& pYearsIndices,
             std::map<uint, bool>& pYearFailed,
             std::map<uint, bool>& pIsFirstPerformedYearOfASet,
-            bool pFirstSetParallelWasRun,
+            bool pFirstSetParallelWithAPerformedYearWasRun,
             unsigned int pNumSpace,
             randomNumbers& pRandomForParallelYears,
             bool pPerformCalculations,
@@ -76,7 +76,7 @@ public:
      yearsIndices(pYearsIndices),
      yearFailed(pYearFailed),
      isFirstPerformedYearOfASet(pIsFirstPerformedYearOfASet),
-     firstSetParallelWasRun(pFirstSetParallelWasRun),
+     firstSetParallelWithAPerformedYearWasRun(pFirstSetParallelWithAPerformedYearWasRun),
      numSpace(pNumSpace),
      randomForParallelYears(pRandomForParallelYears),
      performCalculations(pPerformCalculations),
@@ -93,7 +93,7 @@ private:
     std::vector<unsigned int>& yearsIndices;
     std::map<uint, bool>& yearFailed;
     std::map<uint, bool>& isFirstPerformedYearOfASet;
-    bool firstSetParallelWasRun;
+    bool firstSetParallelWithAPerformedYearWasRun;
     unsigned int numSpace;
     randomNumbers& randomForParallelYears;
     bool performCalculations;
@@ -163,7 +163,7 @@ private:
             double* randomReservoirLevel = nullptr;
             if (not study.parameters.adequacyDraft())
             {
-                if (hydroHotStart && firstSetParallelWasRun)
+                if (hydroHotStart && firstSetParallelWithAPerformedYearWasRun)
                     randomReservoirLevel = state[numSpace].problemeHebdo->previousYearFinalLevels;
                 else
                     randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
@@ -191,9 +191,9 @@ private:
                 Antares::memory.flushAll();
 
             // 6 - The Solver itself
-            std::list<uint> failedWeekList;
             bool isFirstPerformedYearOfSimulation
-              = isFirstPerformedYearOfASet[y] && not firstSetParallelWasRun;
+              = isFirstPerformedYearOfASet[y] && not firstSetParallelWithAPerformedYearWasRun;
+            std::list<uint> failedWeekList;
             if (not simulationObj->year(progression,
                                         state[numSpace],
                                         numSpace,
@@ -270,7 +270,7 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study, const ::Settings& sett
  pNbMaxPerformedYearsInParallel(0),
  pYearByYear(study.parameters.yearByYear),
  pHydroManagement(study),
- pFirstSetParallelWasRun(false),
+ pFirstSetParallelWithAPerformedYearWasRun(false),
  pAnnualCostsStatistics(study)
 {
     // Ask to the interface to show the messages
@@ -916,7 +916,6 @@ void ISimulation<Impl>::estimateMemoryForOptimizationPb(Antares::Data::StudyMemo
     size_t szNbContInt = NombreDeContraintes * sizeof(int);
     size_t szNbContDouble = NombreDeContraintes * sizeof(double);
 
-    int NbIntervalles = (int)(NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
     int NbTermes = 0;
 
     // Computation of NbTermes :
@@ -972,7 +971,7 @@ void ISimulation<Impl>::estimateMemoryForOptimizationPb(Antares::Data::StudyMemo
     NbTermes += nbAreas * NombreDePasDeTempsPourUneOptimisation
                 * 5; // if explicit hydro level and overflow modelling
 
-    /* Les contraintes pour la prise en compte des coûts de demarrage et durees min d'arret/marche
+    /* Les contraintes pour la prise en compte des coÃ»ts de demarrage et durees min d'arret/marche
      */
     NbTermes += NbTermesContraintesPourLesCoutsDeDemarrage;
 
@@ -1306,7 +1305,7 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
                     return; // Skipping the current area
                 }
 
-                if (!pFirstSetParallelWasRun)
+                if (!pFirstSetParallelWithAPerformedYearWasRun)
                     randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = randomLevel;
                 // Else : means the start levels (multiple areas are affected) of a year are
                 // retrieved from a previous year and
@@ -1546,7 +1545,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             }
         }
 #endif
-
+        bool yearPerformed = false;
         for (year_it = set_it->yearsIndices.begin(); year_it != set_it->yearsIndices.end();
              ++year_it)
         {
@@ -1557,19 +1556,14 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             unsigned int numSpace = 999999;
             if (performCalculations)
             {
+                yearPerformed = true;
                 numSpace = set_it->performedYearToSpace[y];
                 study.runtime->timeseriesNumberYear[numSpace] = y;
                 study.runtime->currentYear[numSpace] = y;
             }
 
-            // gp - todo :
-            // ================================================================================== gp
-            // - todo : Dans le cas d'une boucle "while" avant la boucle "for" concernant la gestion
-            // gp - todo : des AMC qui ne trouvent pas de solution, ce qui suit peut être utile.
-            // gp - todo :
-            // ================================================================================== If
-            // the year has not to be rerun, we skip the computation of the year Note that, when we
-            // enter for the first time in the "for" loop, all years of the set have to be rerun
+            // If the year has not to be rerun, we skip the computation of the year Note that, when
+            // we enter for the first time in the "for" loop, all years of the set have to be rerun
             // (meaning : they must be run once). if(!set_it->yearFailed[y]) continue;
 
             qs.add(new yearJob<ImplementationType>(this,
@@ -1577,7 +1571,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                                                    yearsIndicesCopy,
                                                    set_it->yearFailed,
                                                    set_it->isFirstPerformedYearOfASet,
-                                                   pFirstSetParallelWasRun,
+                                                   pFirstSetParallelWithAPerformedYearWasRun,
                                                    numSpace,
                                                    randomForParallelYears,
                                                    performCalculations,
@@ -1592,11 +1586,11 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
         qs.wait(Yuni::qseIdle);
         qs.stop();
 
-        // At this point, the first set of parallel year(s) was run
-        if (!pFirstSetParallelWasRun)
-            pFirstSetParallelWasRun = true;
+        // At this point, the first set of parallel year(s) was run with at least one year performed
+        if (!pFirstSetParallelWithAPerformedYearWasRun && yearPerformed)
+            pFirstSetParallelWithAPerformedYearWasRun = true;
 
-        // On regarde si au moins une année du lot n'a pas trouvé de solution
+        // On regarde si au moins une annÃ©e du lot n'a pas trouvÃ© de solution
         std::map<uint, bool>::iterator it;
         bool foundFailure = false;
         for (it = set_it->yearFailed.begin(); it != set_it->yearFailed.end(); it++)
@@ -1607,7 +1601,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                 break;
             }
         }
-        // Si une année du lot d'années n'a pas trouvé de solution, on arrête tout
+        // Si une annÃ©e du lot d'annÃ©es n'a pas trouvÃ© de solution, on arrÃªte tout
         if (foundFailure)
         {
             logs.fatal() << "At least one year has failed in the previous set of parallel year.";

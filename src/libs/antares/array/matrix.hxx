@@ -1048,7 +1048,7 @@ bool Matrix<T, ReadWriteT>::internalLoadCSVFile(const AnyString& filename,
     if (not buffer)
         buffer = new BufferType();
 
-    switch (loadFromFileToBuffer(*buffer, filename, filesizeHardLimit))
+    switch (loadFromFileToBuffer(*buffer, filename))
     {
     case IO::errNone:
     {

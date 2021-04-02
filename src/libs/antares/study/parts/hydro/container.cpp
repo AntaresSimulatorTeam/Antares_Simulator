@@ -48,16 +48,16 @@ PartHydro::PartHydro() :
  useWaterValue(false),
  hardBoundsOnRuleCurves(false),
  useHeuristicTarget(true),
- initializeReservoirLevelDate(0),
  reservoirCapacity(0.),
+ initializeReservoirLevelDate(0),
  useLeeway(false),
+ powerToLevel(false),
  leewayLowerBound(1.),
  leewayUpperBound(1.),
  pumpingEfficiency(1.),
- prepro(nullptr),
- series(nullptr),
  hydroModulable(false),
- powerToLevel(false)
+ prepro(nullptr),
+ series(nullptr)
 {
 }
 
@@ -287,18 +287,6 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 
             double temp[3][DAYS_PER_YEAR];
             static const uint daysPerMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-            static const uint daysPerMonthR[] = {study.calendar.months[0].days,
-                                                 study.calendar.months[1].days,
-                                                 study.calendar.months[2].days,
-                                                 study.calendar.months[3].days,
-                                                 study.calendar.months[4].days,
-                                                 study.calendar.months[5].days,
-                                                 study.calendar.months[6].days,
-                                                 study.calendar.months[7].days,
-                                                 study.calendar.months[8].days,
-                                                 study.calendar.months[9].days,
-                                                 study.calendar.months[10].days,
-                                                 study.calendar.months[11].days};
             uint daysPerMonthDecals[12];
             for (int oldMonth = 0; oldMonth < 12; oldMonth++)
             {

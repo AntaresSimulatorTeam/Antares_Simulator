@@ -4,7 +4,7 @@ File /nonfatal /r /x build_deps  ${ANTARES_SRC_DIR}\..\src\*.*
 ${SetOutPath} "$INSTDIR\Sources"
 File  ${ANTARES_SRC_DIR}\..\AUTHORS.txt
 File  ${ANTARES_SRC_DIR}\..\CERTIFICATE.txt
-File  ${ANTARES_SRC_DIR}\..\CONTRIBUTING.txt
+File  ${ANTARES_SRC_DIR}\..\CONTRIBUTING.md
 File  ${ANTARES_SRC_DIR}\..\COPYING.txt
 File  ${ANTARES_SRC_DIR}\..\NEWS.txt
 File  ${ANTARES_SRC_DIR}\..\ROADMAP.txt

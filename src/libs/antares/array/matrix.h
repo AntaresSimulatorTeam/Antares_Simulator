@@ -126,7 +126,7 @@ public:
     */
     Matrix(uint w, uint h);
     //! Destructor
-    ~Matrix();
+    virtual ~Matrix();
     //@}
 
     //! \name Copy / Paste
@@ -217,8 +217,7 @@ public:
     //@}
 
     virtual Yuni::IO::Error loadFromFileToBuffer(BufferType& buffer,
-                                                 const AnyString& filename,
-                                                 unsigned long long hardlimit) const
+                                                 const AnyString& filename) const
     {
         return Yuni::IO::File::LoadFromFile(buffer, filename, filesizeHardLimit);
     }

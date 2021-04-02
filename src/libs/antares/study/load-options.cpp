@@ -40,13 +40,13 @@ StudyLoadOptions::StudyLoadOptions() :
  forceDerated(false),
  noTimeseriesImportIntoInput(false),
  simplexOptimizationRange(sorUnknown),
+ mpsToExport(false),
  ignoreConstraints(false),
  forceMode(stdmUnknown),
  enableParallel(false),
  forceParallel(false),
  maxNbYearsInParallel(0),
  usedByTheSolver(false),
- mpsToExport(false),
  ortoolsUsed(false),
  ortoolsEnumUsed(OrtoolsSolver::sirius)
 {

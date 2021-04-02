@@ -58,7 +58,7 @@ static inline void OpenPDF(const AnyString& url)
         cmd << wxT("explorer.exe \"") << Resources::WxFindFile(u) << wxT("\"");
     }
     else
-        cmd << wxT("gnome-open \"") << Resources::WxFindFile(url) << wxT("\"");
+        cmd << wxT("xdg-open \"") << Resources::WxFindFile(url) << wxT("\"");
 
     wxExecute(cmd);
 }
@@ -106,12 +106,12 @@ void ApplWnd::evtOnHelpPDFExamplesLibrary(wxCommandEvent&)
 
 void ApplWnd::evtOnHelpContinueOnline(wxCommandEvent&)
 {
-    setGDPRStatus(true);
+    pOnLineConsent.setGDPRStatus(true);
 }
 
 void ApplWnd::evtOnHelpContinueOffline(wxCommandEvent&)
 {
-    setGDPRStatus(false);
+    pOnLineConsent.setGDPRStatus(false);
 }
 
 void ApplWnd::evtOnShowID(wxCommandEvent&)

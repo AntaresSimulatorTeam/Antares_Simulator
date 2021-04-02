@@ -24,31 +24,30 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include "getstarttime.h"
-#include <yuni/yuni.h>
-#include <yuni/datetime/timestamp.h>
-#include "../ui/common/dispatcher/action.h"
 
-#ifdef YUNI_OS_WINDOWS
-#include <iostream>
-#include <Winbase.h>
-int getstarttime()
+#include "h2o2_j_donnees_optimisation.h"
+#include "antares/study/fwd.h"
+
+Hydro_problem_costs::Hydro_problem_costs(const Data::Study& study)
 {
-    DWORD miliUptime = GetTickCount();
-    int uptime = miliUptime / 1000;
-    int now = Yuni::DateTime::Now();
-    return now - uptime;
-}
+    end_days_levels = -1. / 32.;
+    overflow = 32 * 68. + 1.;
+    deviations = 1.;
+    violations = 68.;
 
-#endif
-#ifdef YUNI_OS_LINUX
-#include <sys/sysinfo.h>
+    switch (study.parameters.hydroHeuristicPolicy.hhPolicy)
+    {
+    case Data::hhpMaximizeGeneration:
+        waste = 33 * 68.;
+        break;
+    case Data::hhpAccommodateRuleCurves:
+        waste = 34.0;
+        break;
+    default:
+        waste = 34.0;
+        break;
+    }
 
-int getstarttime()
-{
-    struct sysinfo si;
-    sysinfo(&si);
-    int now = Yuni::DateTime::Now();
-    return now - si.uptime;
+    deviationMax = 2.0;
+    violationMax = 68.0;
 }
-#endif

@@ -561,8 +561,8 @@ void Notebook::Tabs::drawItemOnCanvasSelected(Page* page,
                             pos + subTabSize * (i + 1),
                             pRect.width - 15 - 11,
                             subpageTextExtent.GetHeight());
-                dc.SetBrush(wxBrush(pNotebook.pOriginalColorDark, wxSOLID));
-                dc.SetPen(wxPen(pNotebook.pOriginalColorDark, 1, wxSOLID));
+                dc.SetBrush(wxBrush(pNotebook.pOriginalColorDark, wxBRUSHSTYLE_SOLID));
+                dc.SetPen(wxPen(pNotebook.pOriginalColorDark, 1, wxPENSTYLE_SOLID));
                 dc.DrawRectangle(rect);
 
                 page->subPages[i]->pBoundingBox = rect;

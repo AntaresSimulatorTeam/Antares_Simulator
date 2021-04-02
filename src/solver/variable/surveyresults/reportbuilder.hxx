@@ -407,7 +407,8 @@ private:
         if (!selectedLinkVarsCount)
             return;
 
-        if (VariablesStatsByDataLevel<NextT, Category::link>::count)
+        int count_int = VariablesStatsByDataLevel<NextT, Category::link>::count;
+        if (count_int)
         {
             auto& area = *results.data.area;
             auto end = area.links.end();

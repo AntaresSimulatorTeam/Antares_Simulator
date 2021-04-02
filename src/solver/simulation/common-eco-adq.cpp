@@ -87,7 +87,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
     {
         OPT_OptimisationHebdomadaire(&problem, 0);
     }
-    catch (Data::UnfeasibleProblemError& ex)
+    catch (Data::UnfeasibleProblemError&)
     {
         study.runtime->quadraticOptimizationHasFailed = true;
     }

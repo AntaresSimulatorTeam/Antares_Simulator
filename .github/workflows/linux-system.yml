@@ -7,6 +7,7 @@ on:
       - feature/*
       - features/*
       - fix/*
+      - release/*
 jobs:
 
   build:
@@ -22,7 +23,7 @@ jobs:
 
     - name: Install libraries
       run: |
-           sudo apt-get update --fix-missing
+           sudo apt-get update
            sudo apt-get install uuid-dev libcurl4-openssl-dev libssl-dev libwxgtk3.0-gtk3-dev
            sudo apt-get install libboost-test-dev libboost-filesystem-dev libboost-regex-dev libboost-dev
            
@@ -48,7 +49,7 @@ jobs:
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
+           cmake -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON
            
     - name: Build
       run: |
@@ -71,9 +72,15 @@ jobs:
            cd _build
            cpack -G TGZ
            
-    - name: Installer upload
+    - name: Installer archive upload
       uses: actions/upload-artifact@v2
       with:
-        name: antares-installer-64bits
-        path: _build/antares-*.*.*-*-*.*.*
+        name: antares-ubuntu-archive
+        path: _build/*.tar.gz
+        
+    - name: Installer deb upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: antares-ubuntu-deb
+        path: _build/*.deb
 

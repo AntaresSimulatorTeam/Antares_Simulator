@@ -94,7 +94,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
     if (exportStructure)
     {
         OPT_ExportInterco(study, ProblemeHebdo, numSpace);
-        OPT_ExportAreaName(study, numSpace);
+        OPT_ExportAreaName(study, ProblemeHebdo, numSpace);
     }
 
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
@@ -289,70 +289,61 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
               ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '<');
         }
 
-        if (COUT_TRANSPORT == OUI_ANTARES)
+        for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
         {
-            for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+            CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
+            if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
             {
-                CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
-                if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
+                NombreDeTermes = 0;
+                Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+                if (Var >= 0)
                 {
-                    NombreDeTermes = 0;
-                    Var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariableDeLInterconnexion[Interco];
-                    if (Var >= 0)
-                    {
-                        Pi[NombreDeTermes] = 1.0;
-                        Colonne[NombreDeTermes] = Var;
-                        NombreDeTermes++;
+                    Pi[NombreDeTermes] = 1.0;
+                    Colonne[NombreDeTermes] = Var;
+                    NombreDeTermes++;
 
-                        if (exportStructure)
-                            OPT_Export_add_variable(varname,
-                                                    Var,
-                                                    Enum::ExportStructDict::DefaillanceNegative,
-                                                    Pays,
-                                                    ts,
-                                                    ts);
-                    }
-                    Var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
-                    if (Var >= 0)
-                    {
-                        Pi[NombreDeTermes] = -1.0;
-                        Colonne[NombreDeTermes] = Var;
-                        NombreDeTermes++;
-
-                        if (exportStructure)
-                            OPT_Export_add_variable(
-                              varname,
-                              Var,
-                              Enum::ExportStructDict::CoutOrigineVersExtremiteDeLInterconnexion,
-                              Interco,
-                              ts);
-                    }
-                    Var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
-                    if (Var >= 0)
-                    {
-                        Pi[NombreDeTermes] = 1.0;
-                        Colonne[NombreDeTermes] = Var;
-                        NombreDeTermes++;
-
-                        if (exportStructure)
-                            OPT_Export_add_variable(
-                              varname,
-                              Var,
-                              Enum::ExportStructDict::CoutExtremiteVersOrigineDeLInterconnexion,
-                              Interco,
-                              ts);
-                    }
-
-                    CorrespondanceCntNativesCntOptim
-                      ->NumeroDeContrainteDeDissociationDeFlux[Interco]
-                      = ProblemeAResoudre->NombreDeContraintes;
-
-                    OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                      ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=');
+                    if (exportStructure)
+                        OPT_Export_add_variable(
+                          varname, Var, Enum::ExportStructDict::DefaillanceNegative, Pays, ts, ts);
                 }
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+                if (Var >= 0)
+                {
+                    Pi[NombreDeTermes] = -1.0;
+                    Colonne[NombreDeTermes] = Var;
+                    NombreDeTermes++;
+
+                    if (exportStructure)
+                        OPT_Export_add_variable(
+                          varname,
+                          Var,
+                          Enum::ExportStructDict::CoutOrigineVersExtremiteDeLInterconnexion,
+                          Interco,
+                          ts);
+                }
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+                if (Var >= 0)
+                {
+                    Pi[NombreDeTermes] = 1.0;
+                    Colonne[NombreDeTermes] = Var;
+                    NombreDeTermes++;
+
+                    if (exportStructure)
+                        OPT_Export_add_variable(
+                          varname,
+                          Var,
+                          Enum::ExportStructDict::CoutExtremiteVersOrigineDeLInterconnexion,
+                          Interco,
+                          ts);
+                }
+
+                CorrespondanceCntNativesCntOptim->NumeroDeContrainteDeDissociationDeFlux[Interco]
+                  = ProblemeAResoudre->NombreDeContraintes;
+
+                OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+                  ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=');
             }
         }
 

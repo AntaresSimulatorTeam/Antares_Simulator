@@ -212,36 +212,4 @@ Antares::Data::BindingConstraint* CBuilder::addConstraint(const Data::Constraint
     return constraint;
 }
 
-void CBuilder::addConstraint(const Data::ConstraintName& name,
-                             const String& op,
-                             const String& type,
-                             const WeightMap& weights,
-                             const Matrix<double, double>& secondMember)
-{
-    // Create a new contraint
-    auto* constraint = pStudy->bindingConstraints.add(name);
-    const Data::BindingConstraint::Operator o = Data::BindingConstraint::StringToOperator(op);
-    assert(o != Data::BindingConstraint::opUnknown);
-    const Data::BindingConstraint::Type t = Data::BindingConstraint::StringToType(type);
-    assert(t != Data::BindingConstraint::typeUnknown);
-
-    // Reseting
-    constraint->clearAndReset(name, t, o);
-    constraint->removeAllWeights();
-    constraint->enabled(1);
-
-    // weights
-    for (auto j = weights.begin(); j != weights.end(); j++)
-    {
-        if (!Math::Zero(j->second))
-            constraint->weight(j->first->ptr, j->second);
-    }
-
-    // second members
-    constraint->matrix(secondMember);
-
-    // mark all values as modified
-    constraint->markAsModified();
-}
-
 } // namespace Antares

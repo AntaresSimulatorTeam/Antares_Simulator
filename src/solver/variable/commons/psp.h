@@ -238,7 +238,8 @@ public:
                         unsigned int nbYearsForCurrentSummary)
     {
         for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
-            AncestorType::pResults.merge(0, pValuesForTheCurrentYear[numSpace]);
+            AncestorType::pResults.merge(numSpaceToYear[numSpace],
+                                         pValuesForTheCurrentYear[numSpace]);
 
         // Next variable
         NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);

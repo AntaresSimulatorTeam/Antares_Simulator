@@ -11,12 +11,15 @@ endif()
 
 
 add_subdirectory(src)
-add_subdirectory(end-to-end)
 
+#end to end test require boost 1.6.x because for boost::test_tools::tolerance 
+if(Boost_VERSION VERSION_GREATER 106000)
+    add_subdirectory(end-to-end)
+endif()
 
 option(BUILD_OUTPUT_TEST "Activates output values comparison test building" OFF)
 
-find_package(Python3 EXACT 3.8 COMPONENTS Interpreter)
+find_package(Python3 COMPONENTS Interpreter)
 if(Python3_Interpreter_FOUND)
 
   #check if pytest and numpy are installed
@@ -33,8 +36,8 @@ if(Python3_Interpreter_FOUND)
         message(STATUS "Submodule test update with ${ANTARES_TEST_TAG} tag")
 
         # Update test submodules as needed
-        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init 
-                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/resources/
+        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init src/tests/resources/Antares_Simulator_Tests
+                        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/..
                         RESULT_VARIABLE GIT_SUBMOD_RESULT)
         if(NOT GIT_SUBMOD_RESULT EQUAL "0")
             message(FATAL_ERROR "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
@@ -127,6 +130,21 @@ if(Python3_Interpreter_FOUND)
         if (BUILD_OUTPUT_TEST)
             output_tests(false, "sirius")
         endif()
+        
+        # Specific tests
+        add_test(
+            NAME short-specific
+            COMMAND Python3::Interpreter -m pytest -m short --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver> specific_test.py
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples"
+        )
+        set_property(TEST short-specific PROPERTY LABELS short-specific sirius)
+        
+        add_test(
+            NAME medium-specific
+            COMMAND Python3::Interpreter -m pytest -m medium --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver> specific_test.py
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples"
+        )
+        set_property(TEST medium-specific PROPERTY LABELS medium-specific sirius)
         
   else()   
       message(FATAL "Module pytest or numpy not installed : can't run python scripts for end to end tests" )

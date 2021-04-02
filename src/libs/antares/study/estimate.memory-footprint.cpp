@@ -214,6 +214,7 @@ void Study::estimateMemoryUsageForOutput(StudyMemoryUsage& u) const
         return;
     }
     case stdmUnknown:
+    case stdmExpansion:
     case stdmMax:
         return;
     }

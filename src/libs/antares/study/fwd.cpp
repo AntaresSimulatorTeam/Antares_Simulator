@@ -97,6 +97,7 @@ const char* SeedToID(SeedIndex seed)
     return "";
 }
 
+// ... Initial reservoir levels ...
 InitialReservoirLevels StringToInitialReservoirLevels(const AnyString& text)
 {
     if (!text)
@@ -127,6 +128,38 @@ const char* InitialReservoirLevelsToCString(InitialReservoirLevels iniLevels)
     return "";
 }
 
+// ... Hydro heuristic policy ...
+HydroHeuristicPolicy StringToHydroHeuristicPolicy(const AnyString& text)
+{
+    if (!text)
+        return hhpUnknown;
+
+    CString<24, false> s = text;
+    s.trim();
+    s.toLower();
+    if (s == "accommodate rule curves")
+        return hhpAccommodateRuleCurves;
+    if (s == "maximize generation")
+        return hhpMaximizeGeneration;
+
+    return hhpUnknown;
+}
+
+const char* HydroHeuristicPolicyToCString(HydroHeuristicPolicy hhPolicy)
+{
+    switch (hhPolicy)
+    {
+    case hhpAccommodateRuleCurves:
+        return "accommodate rule curves";
+    case hhpMaximizeGeneration:
+        return "maximize generation";
+    case hhpUnknown:
+        return "";
+    }
+    return "";
+}
+
+// ... Hydro pricing ...
 HydroPricingMode StringToHydroPricingMode(const AnyString& text)
 {
     if (!text)

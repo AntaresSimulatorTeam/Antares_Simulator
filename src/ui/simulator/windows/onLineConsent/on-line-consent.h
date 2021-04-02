@@ -24,9 +24,34 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_GET_START_TIME_H__
-#define __ANTARES_GET_START_TIME_H__
 
-int getstarttime();
+#ifndef __ANTARES_APPLICATION_WINDOWS_ON_LINE_CONSENT_H__
+#define __ANTARES_APPLICATION_WINDOWS_ON_LINE_CONSENT_H__
 
-#endif // __ANTARES_GET_START_TIME_H__
+#include <yuni/core/string.h>
+#include <wx/window.h>
+
+namespace Antares
+{
+class onLineConsent
+{
+public:
+    onLineConsent(wxWindow* parent);
+    bool checkGDPRStatus();
+    void setGDPRStatus(bool checkOnline);
+
+private:
+    // Parent window
+    wxWindow* parent_;
+    // GDPR file path
+    Yuni::String GDPR_filename_;
+    // Time stamp used for hostid
+    long timeStamp_;
+    // user consent on sending data
+    int consent_;
+    // user consent on sending data
+    int banned_;
+};
+
+} // namespace Antares
+#endif // __ANTARES_APPLICATION_WINDOWS_ON_LINE_CONSENT_H__

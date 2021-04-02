@@ -385,12 +385,12 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
  groupMinCount(0),
  groupMaxCount(0),
  annuityInvestment(0),
+ PthetaInf(HOURS_PER_YEAR, 0),
  prepro(nullptr),
  series(nullptr),
  productionCost(nullptr),
  unitCountLastHour(nullptr),
  productionLastHour(nullptr),
- PthetaInf(HOURS_PER_YEAR, 0),
  pminOfAGroup(nullptr)
 {
     // assert
@@ -435,12 +435,12 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  groupMinCount(0),
  groupMaxCount(0),
  annuityInvestment(0),
+ PthetaInf(HOURS_PER_YEAR, 0),
  prepro(nullptr),
  series(nullptr),
  productionCost(nullptr),
  unitCountLastHour(nullptr),
  productionLastHour(nullptr),
- PthetaInf(HOURS_PER_YEAR, 0),
  pminOfAGroup(nullptr)
 {
     // assert
@@ -974,7 +974,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                 //	- Startup cost
                 // MBO 23/12/2015
                 // v5.0 format
-                // allow startup cost between [-5 000 000 ;-5 000 000] € (was [-50 000;50 000])
+                // allow startup cost between [-5 000 000 ;-5 000 000] (was [-50 000;50 000])
 
                 if (study.header.version <= 500)
                 {
@@ -1834,7 +1834,6 @@ ThermalCluster* ThermalClusterList::detach(iterator i)
 
 void ThermalClusterList::remove(iterator i)
 {
-    auto* c = i->second;
     cluster.erase(i);
 }
 

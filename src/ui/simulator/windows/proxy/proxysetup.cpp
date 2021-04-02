@@ -63,12 +63,16 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
           wxDefaultPosition,
           wxDefaultSize,
           wxCLOSE_BOX | wxCAPTION | wxCLIP_CHILDREN),
+ pOnLineConsent(parent),
  pEditProxyHost(nullptr),
  pEditProxyPort(nullptr),
  pEditProxyLogin(nullptr),
  pEditProxyPass(nullptr),
  pCanceled(true)
 {
+    // TODO : a lot of pointer variables are not destroyed after usage here : sizers, titles, ...
+    // TODO : They have to be deleted to avoid memory leaks.
+
     assert(parent);
 
     // Background color
@@ -105,6 +109,14 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
       false,
       false);
     subtitle->Enable(false);
+
+    pOffline_title = Component::CreateLabel(
+      this,
+      wxT("If you wish to stay offline in all future sessions, click on \"Continue offline\".\n"
+          "You can choose to be online by clicking \"Cancel\", but you can switch to offline\n"
+          "anytime by selecting \"Continue offline\" in the Antares help (\"?\") menu."),
+      false,
+      false);
     contentSizer->AddSpacer(20);
     contentSizer->Add(titlespacer, 0, wxALL | wxEXPAND);
     contentSizer->AddSpacer(40);
@@ -114,6 +126,8 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
     subtitlespacer->Add(title, 0, wxLEFT);
     subtitlespacer->AddSpacer(3);
     subtitlespacer->Add(subtitle, 0, wxLEFT);
+    subtitlespacer->AddSpacer(10);
+    subtitlespacer->Add(pOffline_title, 0, wxLEFT);
     subtitlespacer->AddStretchSpacer();
     titlespacer->AddSpacer(10);
     titlespacer->Add(subtitlespacer, 1, wxALL | wxALIGN_CENTER_VERTICAL | wxLEFT);
@@ -184,13 +198,18 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
     pnlSizerBtns->AddSpacer(25);
 
     pnlSizerBtns->AddStretchSpacer();
-    auto* pBtnValidate = Antares::Component::CreateButton(
+    pBtnValidate = Antares::Component::CreateButton(
       panel, wxT(" Connect "), this, &LicenseCouldNotConnectToInternetServer::onProceed);
     pBtnValidate->SetDefault();
 
-    auto* pBtnCancel = Antares::Component::CreateButton(
+    pBtnCancel = Antares::Component::CreateButton(
       panel, wxT(" Cancel "), this, &LicenseCouldNotConnectToInternetServer::onClose);
 
+    pBtnContinueOffline = Antares::Component::CreateButton(
+      panel, wxT(" Continue offline "), this, &LicenseCouldNotConnectToInternetServer::onOffline);
+
+    pnlSizerBtns->Add(pBtnContinueOffline, 0, wxALL | wxEXPAND);
+    pnlSizerBtns->AddSpacer(5);
     pnlSizerBtns->Add(pBtnCancel, 0, wxALL | wxEXPAND);
     pnlSizerBtns->AddSpacer(5);
     pnlSizerBtns->Add(pBtnValidate, 0, wxALL | wxEXPAND);
@@ -225,12 +244,21 @@ LicenseCouldNotConnectToInternetServer::LicenseCouldNotConnectToInternetServer(w
 
 LicenseCouldNotConnectToInternetServer::~LicenseCouldNotConnectToInternetServer()
 {
-    // MakeModal(false);
     Component::Spotlight::FrameClose();
+    delete pBtnCancel;
+    delete pBtnValidate;
+    delete pBtnContinueOffline;
+    delete pOffline_title;
 }
 
 void LicenseCouldNotConnectToInternetServer::onClose(void*)
 {
+    Dispatcher::GUI::Close(this);
+}
+
+void LicenseCouldNotConnectToInternetServer::onOffline(void*)
+{
+    pOnLineConsent.setGDPRStatus(false);
     Dispatcher::GUI::Close(this);
 }
 

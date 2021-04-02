@@ -7,6 +7,7 @@ on:
       - feature/*
       - features/*
       - fix/*
+      - release/*
 jobs:
 
   windows:
@@ -58,7 +59,7 @@ jobs:
         
     - name: Configure
       run: |
-           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DVCPKG_ROOT=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }} -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
+           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DVCPKG_ROOT=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }} -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON  -DBUILD_OUTPUT_TEST=ON
 
     - name: Build
       run: |
@@ -72,11 +73,23 @@ jobs:
 
     - name: Installer creation
       run: |
+           Remove-Item .\src\tests\resources\Antares_Simulator_Tests\ -Recurse -Force
            cd _build
            cpack -GNSIS
+           
+    - name: .zip creation
+      run: |
+           cd _build
+           cpack -G ZIP
 
     - name: Installer upload
       uses: actions/upload-artifact@v2
       with:
         name: antares-installer-64bits
         path: _build/rte-antares-*.*.*-installer-*.exe
+        
+    - name: Archive upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: antares-windows-archive
+        path: _build/*.zip

@@ -57,8 +57,7 @@ void OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO
     MxPaliers = 0;
     ProblemeAResoudre->NombreDeVariables = ProblemeHebdo->NombreDInterconnexions;
 
-    if (COUT_TRANSPORT == OUI_ANTARES)
-        ProblemeAResoudre->NombreDeVariables += 2 * ProblemeHebdo->NombreDInterconnexions;
+    ProblemeAResoudre->NombreDeVariables += 2 * ProblemeHebdo->NombreDInterconnexions;
 
     for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
     {
@@ -107,8 +106,7 @@ void OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO
 
     ProblemeAResoudre->NombreDeContraintes += ProblemeHebdo->NombreDePays;
 
-    if (COUT_TRANSPORT == OUI_ANTARES)
-        ProblemeAResoudre->NombreDeContraintes += ProblemeHebdo->NombreDInterconnexions;
+    ProblemeAResoudre->NombreDeContraintes += ProblemeHebdo->NombreDInterconnexions;
 
     if (ContrainteDeReserveJMoins1ParZone == OUI_ANTARES)
     {

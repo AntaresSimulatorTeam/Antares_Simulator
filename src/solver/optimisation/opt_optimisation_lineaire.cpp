@@ -40,11 +40,7 @@
 using namespace Antares;
 using namespace Yuni;
 
-bool OPT_OptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo,
-                              uint numSpace,
-                              char CalculerLesPmin,
-                              char CalculerLesPmax,
-                              char FaireDerniereOptimisation)
+bool OPT_OptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace)
 {
     int PdtHebdo;
     int PremierPdtDeLIntervalle;

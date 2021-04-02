@@ -1584,7 +1584,7 @@ void AnalyzerWizard::onBrowseMenu(Component::Button&, wxMenu& menu, void*)
     if (System::windows)
         it = Menu::CreateItem(&menu, wxID_ANY, wxT("Open in Windows Explorer"));
     else
-        it = Menu::CreateItem(&menu, wxID_ANY, wxT("Open in Gnome Nautilus"));
+        it = Menu::CreateItem(&menu, wxID_ANY, wxT("Open in file explorer"));
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(AnalyzerWizard::onBrowseOpenInExplorer),
@@ -1668,7 +1668,7 @@ void AnalyzerWizard::onBrowseOpenInExplorer(wxCommandEvent&)
     if (System::windows)
         wxExecute(wxString(wxT("explorer.exe \"")) << path << wxT("\""));
     else
-        wxExecute(wxString(wxT("gnome-open \"")) << path << wxT("\""));
+        wxExecute(wxString(wxT("xdg-open \"")) << path << wxT("\""));
 }
 
 void AnalyzerWizard::onBrowseReset(wxCommandEvent&)

@@ -144,6 +144,7 @@ const char* StudyModeToCString(StudyMode mode)
     case stdmAdequacyDraft:
         return "draft";
     case stdmMax:
+    case stdmExpansion:
     case stdmUnknown:
         return "Unknown";
     }
@@ -241,6 +242,10 @@ void Parameters::reset()
 
     // Initial reservoir levels
     initialReservoirLevels.iniLevels = irlColdStart;
+
+    // Hydro heuristic policy
+    hydroHeuristicPolicy.hhPolicy = hhpAccommodateRuleCurves;
+
     // Hydro pricing
     hydroPricing.hpMode = hpHeuristic;
     allSetsHaveSameSize = true;
@@ -422,10 +427,23 @@ static bool SGDIntLoadFamily_H(Parameters& d,
         d.horizon.trim(" \t\n\r");
         return true;
     }
+    if (key == "hydro-heuristic-policy")
+    {
+        auto hhpolicy = StringToHydroHeuristicPolicy(value);
+        if (hhpolicy != hhpUnknown)
+        {
+            d.hydroHeuristicPolicy.hhPolicy = hhpolicy;
+            return true;
+        }
+        logs.warning() << "parameters: invalid hydro heuristic policy. Got '" << value
+                       << "'. Reset to default accommodate rule curves.";
+        d.hydroHeuristicPolicy.hhPolicy = hhpAccommodateRuleCurves;
+        return false;
+    }
     if (key == "hydro-pricing-mode")
     {
         auto hpricing = StringToHydroPricingMode(value);
-        if (hpricing != ucUnknown)
+        if (hpricing != hpUnknown)
         {
             d.hydroPricing.hpMode = hpricing;
             return true;
@@ -482,7 +500,7 @@ static bool SGDIntLoadFamily_I(Parameters& d, const String& key, const String& v
             return true;
         }
         logs.warning() << "parameters: invalid initital reservoir levels mode. Got '" << value
-                       << "'. reset to fast mode";
+                       << "'. reset to cold start mode.";
         d.initialReservoirLevels.iniLevels = irlColdStart;
         return false;
     }
@@ -642,7 +660,7 @@ static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& v
 
         if (values.size() == 2)
         {
-            int y = values[0];
+            uint y = (uint)(values[0]);
             float weight = values[1];
 
             // Check values
@@ -840,6 +858,7 @@ static bool SGDIntLoadFamily_S(Parameters& d, const String& key, const String& v
             d.simulationDays.end = day; // not included
             return true;
         }
+        break;
     }
     case 'h':
     {
@@ -870,6 +889,7 @@ static bool SGDIntLoadFamily_S(Parameters& d, const String& key, const String& v
             return true;
         if (key == "shedding-strategy-global") // ignored since 4.0
             return true;
+        break;
     }
     default:
     {
@@ -1236,7 +1256,7 @@ float Parameters::getYearsWeightSum() const
     else
     {
         // if no user playlist, nbYears
-        result = nbYears;
+        result = (float)nbYears;
     }
 
     return result;
@@ -1320,10 +1340,10 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         }
 
         // Add log in case of MC year weight different from 1.0
-        std::vector<float> maximumWeightYearsList;
+        std::vector<int> maximumWeightYearsList;
         int nbYearsDifferentFrom1 = 0;
         float maximumWeight = *std::max_element(yearsWeight.begin(), yearsWeight.end());
-        for (int i = 0; i < yearsWeight.size(); i++)
+        for (uint i = 0; i < yearsWeight.size(); i++)
         {
             float weight = yearsWeight[i];
             if (weight != 1.f)
@@ -1345,7 +1365,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
             std::stringstream ss;
             copy(maximumWeightYearsList.begin(),
                  maximumWeightYearsList.end(),
-                 std::ostream_iterator<float>(ss, ","));
+                 std::ostream_iterator<int>(ss, ","));
             std::string s = ss.str();
             s = s.substr(0, s.length() - 1); // get rid of the trailing ,
 
@@ -1380,6 +1400,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         break;
     }
     case stdmUnknown:
+    case stdmExpansion:
     case stdmMax:
     {
         // The mode year-by-year can not be enabled in adequacy
@@ -1652,6 +1673,8 @@ void Parameters::saveToINI(IniFile& ini) const
         auto* section = ini.addSection("other preferences");
         section->add("initial-reservoir-levels",
                      InitialReservoirLevelsToCString(initialReservoirLevels.iniLevels));
+        section->add("hydro-heuristic-policy",
+                     HydroHeuristicPolicyToCString(hydroHeuristicPolicy.hhPolicy));
         section->add("hydro-pricing-mode", HydroPricingModeToCString(hydroPricing.hpMode));
         section->add("power-fluctuations", PowerFluctuationsToCString(power.fluctuations));
         section->add("shedding-strategy", SheddingStrategyToCString(shedding.strategy));
@@ -1676,18 +1699,18 @@ void Parameters::saveToINI(IniFile& ini) const
     {
         assert(yearsFilter);
         uint effNbYears = 0;
-        float weightSum = 0;
+        bool weightEnabled = false;
         for (uint i = 0; i != nbYears; ++i)
         {
             if (yearsFilter[i])
                 ++effNbYears;
-            weightSum += yearsWeight[i];
+            weightEnabled |= yearsWeight[i] != 1.f;
         }
 
-        // Playlist section must be added if at least one year is disable or one MC year weight sum
-        // is not equal to nbYears
+        // Playlist section must be added if at least one year is disable or one MC year weight is
+        // not 1.0
         bool addPlayListSection = effNbYears != nbYears;
-        addPlayListSection |= weightSum != nbYears;
+        addPlayListSection |= weightEnabled;
 
         if (addPlayListSection)
         {

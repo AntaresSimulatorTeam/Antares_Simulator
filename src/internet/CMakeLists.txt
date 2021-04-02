@@ -12,8 +12,6 @@ add_library(libantares-license
 	limits.cpp
 	licensetimer.cpp
 	licensetimer.h
-	getstarttime.cpp
-	getstarttime.h	
 )
 
 #TODO : needed for include yuni : why yuni must be include first ???

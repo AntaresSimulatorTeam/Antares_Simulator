@@ -474,53 +474,131 @@ typedef struct
 
 struct PROBLEME_HEBDO
 {
+    /* Business problem */
     char OptimisationAuPasHebdomadaire;
-
-    char ReinitOptimisation;
-
-    char SecondeOptimisationRelaxee;
-
-    char MarketPoolActivated;
-    char FlexUpPoolActivated;
-    char FlexDownPoolActivated;
-
-    char ImpressionDuCritere;
-
-    char UnitCommitmentExact;
-
     char TypeDeLissageHydraulique;
+    char WaterValueAccurate; /* OUI_ANTARES /NON_ANTARES*/
+    char OptimisationAvecCoutsDeDemarrage;
+    int NombreDePays;
+    const char** NomsDesPays;
+    int NombreDePaliersThermiques;
+
+    int NombreDInterconnexions;
+    int* PaysOrigineDeLInterconnexion;
+    int* PaysExtremiteDeLInterconnexion;
+    COUTS_DE_TRANSPORT** CoutDeTransport;
+
+    VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTC;
+    VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTCRef;
+
+    int NombreDePasDeTemps;
+    int NombreDePasDeTempsRef;
+    int* NumeroDeJourDuPasDeTemps;
+
+    int NombreDePasDeTempsPourUneOptimisation;
+    int* NumeroDIntervalleOptimiseDuPasDeTemps;
+    int NombreDeJours;
+
+    int NombreDePasDeTempsDUneJournee;
+    int NombreDePasDeTempsDUneJourneeRef;
+
+    CONSOMMATIONS_ABATTUES** ConsommationsAbattues;
+
+    CONSOMMATIONS_ABATTUES** ConsommationsAbattuesRef;
+
+    double* CoutDeDefaillancePositive;
+    double* CoutDeDefaillanceNegative;
+    double* CoutDeDefaillanceEnReserve;
+
+    PALIERS_THERMIQUES** PaliersThermiquesDuPays;
+    ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques;
+    /* Optimization problem */
+    int NbTermesContraintesPourLesCoutsDeDemarrage;
+    char* DefaillanceNegativeUtiliserPMinThermique;
+    char* DefaillanceNegativeUtiliserHydro;
+    char* DefaillanceNegativeUtiliserConsoAbattue;
+
+    char TypeDOptimisation; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
+
+    double** BruitSurCoutHydraulique;
+
+    int NombreDeContraintesCouplantes;
+    CONTRAINTES_COUPLANTES** MatriceDesContraintesCouplantes;
+
+    SOLDE_MOYEN_DES_ECHANGES** SoldeMoyenHoraire; // Used for quadratic opt
+    /* Implementation details : I/O, error management, etc. */
+    char ReinitOptimisation;
 
     char ExportMPS;
     bool exportMPSOnError;
     bool ExportStructure;
 
-    char WaterValueAccurate; /* OUI_ANTARES /NON_ANTARES*/
-
-    char OptimisationAvecCoutsDeDemarrage;
-    int NbTermesContraintesPourLesCoutsDeDemarrage;
-
-    char BorneDeLaDefaillancePositive;
-
-    char* DefaillanceNegativeUtiliserPMinThermique;
-
-    char* DefaillanceNegativeUtiliserHydro;
-
-    char* DefaillanceNegativeUtiliserConsoAbattue;
-
-    double* CoefficientEcretementPMaxHydraulique;
-
-    double** BruitSurCoutHydraulique;
-
     unsigned int HeureDansLAnnee;
+    char LeProblemeADejaEteInstancie;
+    bool firstWeekOfSimulation;
+
+    CORRESPONDANCES_DES_VARIABLES** CorrespondanceVarNativesVarOptim;
+    CORRESPONDANCES_DES_CONTRAINTES** CorrespondanceCntNativesCntOptim;
+    CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES** CorrespondanceCntNativesCntOptimJournalieres;
+    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES** CorrespondanceCntNativesCntOptimHebdomadaires;
+
+    RESERVE_JMOINS1** ReserveJMoins1;
+
+    int* IndexDebutIntercoOrigine;
+    int* IndexSuivantIntercoOrigine;
+    int* IndexDebutIntercoExtremite;
+    int* IndexSuivantIntercoExtremite;
+
+    char Expansion;
+
+    int* NumeroDeContrainteEnergieHydraulique;
+    int* NumeroDeContrainteMinEnergieHydraulique;
+    int* NumeroDeContrainteMaxEnergieHydraulique;
+    int* NumeroDeContrainteMaxPompage;
+
+    int* NumeroDeContrainteDeSoldeDEchange;
+
+    int* NumeroDeContrainteBorneStockFinal;
+    int* NumeroDeContrainteEquivalenceStockFinal;
+    int* NumeroDeContrainteExpressionStockFinal;
+
+    int* NumeroDeVariableStockFinal;
+    int** NumeroDeVariableDeTrancheDeStock;
+
+    int* numeroOptimisation;
+
+    char YaDeLaReserveJmoins1;
+    char ContrainteDeReserveJMoins1ParZone;
+    int NombreDeZonesDeReserveJMoins1;
+    int* NumeroDeZoneDeReserveJMoins1;
+
+    double* previousYearFinalLevels;
+    ALL_MUST_RUN_GENERATION** AllMustRunGeneration;
 
     bool firstWeekOfSimulation;
 
-    char LeProblemeADejaEteInstancie;
-    char TypeDOptimisation;
+    /* Hydro management */
+    double* CoefficientEcretementPMaxHydraulique;
+    bool hydroHotStart;
+    double* previousSimulationFinalLevel;
+    computeTimeStepLevel computeLvl_object;
 
-    int NombreDePays;
-    const char** NomsDesPays;
-    int NombreDePaliersThermiques;
+    /* Results */
+    RESULTATS_HORAIRES** ResultatsHoraires;
+    VARIABLES_DUALES_INTERCONNEXIONS** VariablesDualesDesContraintesDeNTC;
+
+    double* coutOptimalSolution1;
+    double* coutOptimalSolution2;
+
+    /* Unused for now, will be used in future revisions */
+#if 0
+    char SecondeOptimisationRelaxee;
+    char MarketPoolActivated;
+    char FlexUpPoolActivated;
+    char FlexDownPoolActivated;
+    char ImpressionDuCritere;
+    char UnitCommitmentExact;
+    char BorneDeLaDefaillancePositive;
 
     int NumberOfMarketOfferPool;
     int NumberOfMarketDemandPool;
@@ -528,13 +606,6 @@ struct PROBLEME_HEBDO
     int NumberOfFlexUpDemandPool;
     int NumberOfFlexDownOfferPool;
     int NumberOfFlexDownDemandPool;
-
-    int* MarketOfferPoolOfNode;
-    int* MarketDemandPoolOfNode;
-    int* FlexUpOfferPoolOfNode;
-    int* FlexUpDemandPoolOfNode;
-    int* FlexDownOfferPoolOfNode;
-    int* FlexDownDemandPoolOfNode;
 
     int** IsInMarketOfferPool;
     int** IsInMarketDemandPool;
@@ -588,102 +659,17 @@ struct PROBLEME_HEBDO
     LEVEL_FLEX_UP_NODE** LevelFlexUpNode;
     LEVEL_FLEX_DOWN_NODE** LevelFlexDownNode;
 
-    int NombreDInterconnexions;
-    int* PaysOrigineDeLInterconnexion;
-    int* PaysExtremiteDeLInterconnexion;
-    COUTS_DE_TRANSPORT** CoutDeTransport;
+    int* MarketOfferPoolOfNode;
+    int* MarketDemandPoolOfNode;
+    int* FlexUpOfferPoolOfNode;
+    int* FlexUpDemandPoolOfNode;
+    int* FlexDownOfferPoolOfNode;
+    int* FlexDownDemandPoolOfNode;
+#endif
 
-    int* IndexDebutIntercoOrigine;
-    int* IndexSuivantIntercoOrigine;
-    int* IndexDebutIntercoExtremite;
-    int* IndexSuivantIntercoExtremite;
-
-    int NombreDePasDeTemps;
-
-    int NombreDePasDeTempsRef;
-
-    int* NumeroDeJourDuPasDeTemps;
-
-    int NombreDePasDeTempsPourUneOptimisation;
-    int* NumeroDIntervalleOptimiseDuPasDeTemps;
-    int NombreDeJours;
-    char YaDeLaReserveJmoins1;
-    char Expansion;
-
-    int* NbGrpCourbeGuide;
-    int* NbGrpOpt;
-
-    VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTC;
-
-    VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTCRef;
-
-    int NombreDeContraintesCouplantes;
-    CONTRAINTES_COUPLANTES** MatriceDesContraintesCouplantes;
-
-    CONSOMMATIONS_ABATTUES** ConsommationsAbattues;
-
-    CONSOMMATIONS_ABATTUES** ConsommationsAbattuesRef;
-
-    ALL_MUST_RUN_GENERATION** AllMustRunGeneration;
-
-    SOLDE_MOYEN_DES_ECHANGES** SoldeMoyenHoraire;
-
-    PALIERS_THERMIQUES** PaliersThermiquesDuPays;
-
-    ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques;
-
-    computeTimeStepLevel computeLvl_object;
-
-    double* previousSimulationFinalLevel;
-
-    bool hydroHotStart;
-
-    double* previousYearFinalLevels;
-
-    char ContrainteDeReserveJMoins1ParZone;
-    int NombreDeZonesDeReserveJMoins1;
-
-    int* NumeroDeZoneDeReserveJMoins1;
-    COUTS_MARGINAUX_ZONES_DE_RESERVE** CoutsMarginauxDesContraintesDeReserveParZone;
-
-    RESERVE_JMOINS1** ReserveJMoins1;
-
-    double* CoutDeDefaillancePositive;
-    double* CoutDeDefaillanceNegative;
-    double* CoutDeDefaillanceEnReserve;
-
-    int NombreDePasDeTempsDUneJournee;
-
-    int NombreDePasDeTempsDUneJourneeRef;
-
-    CORRESPONDANCES_DES_VARIABLES** CorrespondanceVarNativesVarOptim;
-    CORRESPONDANCES_DES_CONTRAINTES** CorrespondanceCntNativesCntOptim;
-    CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES** CorrespondanceCntNativesCntOptimJournalieres;
-    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES** CorrespondanceCntNativesCntOptimHebdomadaires;
-
-    int* NumeroDeContrainteEnergieHydraulique;
-    int* NumeroDeContrainteMinEnergieHydraulique;
-    int* NumeroDeContrainteMaxEnergieHydraulique;
-    int* NumeroDeContrainteMaxPompage;
-
-    int* NumeroDeContrainteDeSoldeDEchange;
-
-    int* NumeroDeContrainteBorneStockFinal;
-    int* NumeroDeContrainteEquivalenceStockFinal;
-    int* NumeroDeContrainteExpressionStockFinal;
-
-    int* NumeroDeVariableStockFinal;
-    int** NumeroDeVariableDeTrancheDeStock;
-
-    RESULTATS_HORAIRES** ResultatsHoraires;
-
-    VARIABLES_DUALES_INTERCONNEXIONS** VariablesDualesDesContraintesDeNTC;
-
-    int* numeroOptimisation;
-
-    double* coutOptimalSolution1;
-
-    double* coutOptimalSolution2;
+    /* Unknown status */
+    int* NbGrpCourbeGuide; // ?
+    int* NbGrpOpt;         // ?
 
     class MatriceContraintes
     {
