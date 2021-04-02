@@ -588,6 +588,8 @@ struct PROBLEME_HEBDO
     double* coutOptimalSolution1;
     double* coutOptimalSolution2;
 
+    COUTS_MARGINAUX_ZONES_DE_RESERVE** CoutsMarginauxDesContraintesDeReserveParZone;
+
     /* Unused for now, will be used in future revisions */
 #if 0
     char SecondeOptimisationRelaxee;
