@@ -42,8 +42,7 @@ FILE* Study::createFileIntoOutputWithExtension(const YString& prefix,
                                                const YString& extension,
                                                uint numSpace) const
 {
-    static int count_problem = 0;
-    static int count_criterion = 0;
+    static std::map<YString, int> count;
 
     // Empty log entry
     logs.info();
@@ -76,17 +75,15 @@ FILE* Study::createFileIntoOutputWithExtension(const YString& prefix,
     // logs.debug() << " !fd_test = " << (!fd_test) << " : FOR " << buffer.c_str();
     if (fd_test)
     {
-        if (prefix == "problem")
-            outputFile << "-" << (++count_problem) << "." << extension;
-        else
-            outputFile << "-" << (++count_criterion) << "." << extension;
+        count[prefix]++;
+        outputFile << "-" << count[prefix] << "." << extension;
 
         buffer.clear() << this->folderOutput << SEP << outputFile;
         fclose(fd_test);
     }
     else
     {
-        count_problem = count_criterion = 0;
+        count.clear();
 
         outputFile << "." << extension;
         buffer.clear() << this->folderOutput << SEP << outputFile;

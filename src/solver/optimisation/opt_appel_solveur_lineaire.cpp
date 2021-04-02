@@ -352,7 +352,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
         CoutOptimalDeLaSolution = Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
 
     auto& study = *Data::Study::Current::Get();
-    Flot = study.createCriterionFileIntoOutput(numSpace);
+    Flot = study.createFileIntoOutputWithExtension("criterion", "txt", numSpace);
     if (!Flot)
         exit(2);
 
@@ -361,6 +361,236 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     fclose(Flot);
 
     return;
+}
+
+void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
+{
+    FILE* Flot;
+    int Cnt;
+    int Var;
+    int il;
+    int ilk;
+    int ilMax;
+    char* Nombre;
+    int* Cder;
+    int* Cdeb;
+    int* NumeroDeContrainte;
+    int* Csui;
+
+    for (ilMax = -1, Cnt = 0; Cnt < Pb->NombreDeContraintes; Cnt++)
+    {
+        if ((Pb->IndicesDebutDeLigne[Cnt] + Pb->NombreDeTermesDesLignes[Cnt] - 1) > ilMax)
+        {
+            ilMax = Pb->IndicesDebutDeLigne[Cnt] + Pb->NombreDeTermesDesLignes[Cnt] - 1;
+        }
+    }
+
+    ilMax += Pb->NombreDeContraintes;
+
+    Cder = (int*)malloc(Pb->NombreDeVariables * sizeof(int));
+    Cdeb = (int*)malloc(Pb->NombreDeVariables * sizeof(int));
+    NumeroDeContrainte = (int*)malloc(ilMax * sizeof(int));
+    Csui = (int*)malloc(ilMax * sizeof(int));
+    Nombre = (char*)malloc(1024);
+
+    if (Cder == NULL || Cdeb == NULL || NumeroDeContrainte == NULL || Csui == NULL
+        || Nombre == NULL)
+    {
+        logs.fatal() << "Not enough memory";
+        AntaresSolverEmergencyShutdown();
+    }
+
+    for (Var = 0; Var < Pb->NombreDeVariables; Var++)
+        Cdeb[Var] = -1;
+
+    for (Cnt = 0; Cnt < Pb->NombreDeContraintes; Cnt++)
+    {
+        il = Pb->IndicesDebutDeLigne[Cnt];
+        ilMax = il + Pb->NombreDeTermesDesLignes[Cnt];
+        while (il < ilMax)
+        {
+            Var = Pb->IndicesColonnes[il];
+            if (Cdeb[Var] < 0)
+            {
+                Cdeb[Var] = il;
+                NumeroDeContrainte[il] = Cnt;
+                Csui[il] = -1;
+                Cder[Var] = il;
+            }
+            else
+            {
+                ilk = Cder[Var];
+                Csui[ilk] = il;
+                NumeroDeContrainte[il] = Cnt;
+                Csui[il] = -1;
+                Cder[Var] = il;
+            }
+
+            il++;
+        }
+    }
+
+    free(Cder);
+
+    auto& study = *Data::Study::Current::Get();
+    Flot = study.createFileIntoOutputWithExtension("fixed-part", "mps", numSpace);
+
+    if (!Flot)
+        exit(2);
+
+    fprintf(Flot, "* Number of variables:   %d\n", Pb->NombreDeVariables);
+    fprintf(Flot, "* Number of constraints: %d\n", Pb->NombreDeContraintes);
+    fprintf(Flot, "NAME          Pb Solve\n");
+    fprintf(Flot, "ROWS\n");
+    fprintf(Flot, " N  OBJECTIF\n");
+
+    for (Cnt = 0; Cnt < Pb->NombreDeContraintes; Cnt++)
+    {
+        if (Pb->Sens[Cnt] == '=')
+        {
+            fprintf(Flot, " E  R%07d\n", Cnt);
+        }
+        else if (Pb->Sens[Cnt] == '<')
+        {
+            fprintf(Flot, " L  R%07d\n", Cnt);
+        }
+        else if (Pb->Sens[Cnt] == '>')
+        {
+            fprintf(Flot, " G  R%07d\n", Cnt);
+        }
+        else
+        {
+            fprintf(Flot,
+                    "Writing fixed part of MPS data : le sens de la contrainte %c ne fait pas "
+                    "partie des sens reconnus\n",
+                    Pb->Sens[Cnt]);
+            AntaresSolverEmergencyShutdown();
+            exit(0);
+        }
+    }
+
+    fprintf(Flot, "COLUMNS\n");
+    for (Var = 0; Var < Pb->NombreDeVariables; Var++)
+    {
+        il = Cdeb[Var];
+        while (il >= 0)
+        {
+            SNPRINTF(Nombre, 1024, "%-.10lf", Pb->CoefficientsDeLaMatriceDesContraintes[il]);
+            fprintf(Flot, "    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il], Nombre);
+            il = Csui[il];
+        }
+    }
+
+    fprintf(Flot, "ENDATA\n");
+
+    free(Cdeb);
+    free(NumeroDeContrainte);
+    free(Csui);
+    free(Nombre);
+
+    fclose(Flot);
+}
+
+void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
+{
+    FILE* Flot;
+    int Cnt;
+    int Var;
+    char* Nombre;
+
+    Nombre = (char*)malloc(1024);
+
+    if (Nombre == NULL)
+    {
+        logs.fatal() << "Not enough memory";
+        AntaresSolverEmergencyShutdown();
+    }
+
+    // gp : to be changed
+    auto& study = *Data::Study::Current::Get();
+    Flot = study.createFileIntoOutputWithExtension("variable-part", "mps", numSpace);
+
+    if (!Flot)
+        exit(2);
+
+    fprintf(Flot, "* Number of variables:   %d\n", Pb->NombreDeVariables);
+    fprintf(Flot, "* Number of constraints: %d\n", Pb->NombreDeContraintes);
+    fprintf(Flot, "NAME          Pb Solve\n");
+
+    fprintf(Flot, "COLUMNS\n");
+    for (Var = 0; Var < Pb->NombreDeVariables; Var++)
+    {
+        if (Pb->CoutLineaire[Var] != 0.0)
+        {
+            SNPRINTF(Nombre, 1024, "%-.10lf", Pb->CoutLineaire[Var]);
+            fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, Nombre);
+        }
+    }
+
+    fprintf(Flot, "RHS\n");
+    for (Cnt = 0; Cnt < Pb->NombreDeContraintes; Cnt++)
+    {
+        if (Pb->SecondMembre[Cnt] != 0.0)
+        {
+            SNPRINTF(Nombre, 1024, "%-.9lf", Pb->SecondMembre[Cnt]);
+            fprintf(Flot, "    RHSVAL    R%07d  %s\n", Cnt, Nombre);
+        }
+    }
+
+    fprintf(Flot, "BOUNDS\n");
+
+    for (Var = 0; Var < Pb->NombreDeVariables; Var++)
+    {
+        if (Pb->TypeDeVariable[Var] == VARIABLE_FIXE)
+        {
+            SNPRINTF(Nombre, 1024, "%-.9lf", Pb->Xmin[Var]);
+
+            fprintf(Flot, " FX BNDVALUE  C%07d  %s\n", Var, Nombre);
+            continue;
+        }
+
+        if (Pb->TypeDeVariable[Var] == VARIABLE_BORNEE_DES_DEUX_COTES)
+        {
+            if (Pb->Xmin[Var] != 0.0)
+            {
+                SNPRINTF(Nombre, 1024, "%-.9lf", Pb->Xmin[Var]);
+                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, Nombre);
+            }
+
+            SNPRINTF(Nombre, 1024, "%-.9lf", Pb->Xmax[Var]);
+            fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, Nombre);
+        }
+
+        if (Pb->TypeDeVariable[Var] == VARIABLE_BORNEE_INFERIEUREMENT)
+        {
+            if (Pb->Xmin[Var] != 0.0)
+            {
+                SNPRINTF(Nombre, 1024, "%-.9lf", Pb->Xmin[Var]);
+                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, Nombre);
+            }
+        }
+
+        if (Pb->TypeDeVariable[Var] == VARIABLE_BORNEE_SUPERIEUREMENT)
+        {
+            fprintf(Flot, " MI BNDVALUE  C%07d\n", Var);
+            if (Pb->Xmax[Var] != 0.0)
+            {
+                SNPRINTF(Nombre, 1024, "%-.9lf", Pb->Xmax[Var]);
+                fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, Nombre);
+            }
+        }
+
+        if (Pb->TypeDeVariable[Var] == VARIABLE_NON_BORNEE)
+        {
+            fprintf(Flot, " FR BNDVALUE  C%07d\n", Var);
+        }
+    }
+
+    fprintf(Flot, "ENDATA\n");
+
+    free(Nombre);
+
+    fclose(Flot);
 }
 
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char Type)
@@ -378,6 +608,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     int* Csui;
     double CoutOpt;
     PROBLEME_SIMPLEXE* Probleme;
+    PROBLEME_A_RESOUDRE* ProblemePourPne;
 
     int NombreDeVariables;
     int* TypeDeBorneDeLaVariable;
@@ -394,25 +625,51 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     int ExistenceDUneSolution;
     double* X;
 
-    Probleme = (PROBLEME_SIMPLEXE*)Prob;
+    if (Type == ANTARES_SIMPLEXE)
+    {
+        Probleme = (PROBLEME_SIMPLEXE*)Prob;
 
-    ExistenceDUneSolution = Probleme->ExistenceDUneSolution;
-    if (ExistenceDUneSolution == OUI_SPX)
-        ExistenceDUneSolution = OUI_ANTARES;
+        ExistenceDUneSolution = Probleme->ExistenceDUneSolution;
+        if (ExistenceDUneSolution == OUI_SPX)
+            ExistenceDUneSolution = OUI_ANTARES;
 
-    NombreDeVariables = Probleme->NombreDeVariables;
-    TypeDeBorneDeLaVariable = Probleme->TypeDeVariable;
-    Xmax = Probleme->Xmax;
-    Xmin = Probleme->Xmin;
-    X = Probleme->X;
-    CoutLineaire = Probleme->CoutLineaire;
-    NombreDeContraintes = Probleme->NombreDeContraintes;
-    SecondMembre = Probleme->SecondMembre;
-    Sens = Probleme->Sens;
-    IndicesDebutDeLigne = Probleme->IndicesDebutDeLigne;
-    NombreDeTermesDesLignes = Probleme->NombreDeTermesDesLignes;
-    CoefficientsDeLaMatriceDesContraintes = Probleme->CoefficientsDeLaMatriceDesContraintes;
-    IndicesColonnes = Probleme->IndicesColonnes;
+        NombreDeVariables = Probleme->NombreDeVariables;
+        TypeDeBorneDeLaVariable = Probleme->TypeDeVariable;
+        Xmax = Probleme->Xmax;
+        Xmin = Probleme->Xmin;
+        X = Probleme->X;
+        CoutLineaire = Probleme->CoutLineaire;
+        NombreDeContraintes = Probleme->NombreDeContraintes;
+        SecondMembre = Probleme->SecondMembre;
+        Sens = Probleme->Sens;
+        IndicesDebutDeLigne = Probleme->IndicesDebutDeLigne;
+        NombreDeTermesDesLignes = Probleme->NombreDeTermesDesLignes;
+        CoefficientsDeLaMatriceDesContraintes = Probleme->CoefficientsDeLaMatriceDesContraintes;
+        IndicesColonnes = Probleme->IndicesColonnes;
+    }
+    else
+    {
+        ProblemePourPne = (PROBLEME_A_RESOUDRE*)Prob;
+
+        ExistenceDUneSolution = ProblemePourPne->ExistenceDUneSolution;
+        if (ExistenceDUneSolution == SOLUTION_OPTIMALE_TROUVEE)
+            ExistenceDUneSolution = OUI_ANTARES;
+
+        NombreDeVariables = ProblemePourPne->NombreDeVariables;
+        TypeDeBorneDeLaVariable = ProblemePourPne->TypeDeBorneDeLaVariable;
+        Xmax = ProblemePourPne->Xmax;
+        Xmin = ProblemePourPne->Xmin;
+        X = ProblemePourPne->X;
+        CoutLineaire = ProblemePourPne->CoutLineaire;
+        NombreDeContraintes = ProblemePourPne->NombreDeContraintes;
+        SecondMembre = ProblemePourPne->SecondMembre;
+        Sens = ProblemePourPne->Sens;
+        IndicesDebutDeLigne = ProblemePourPne->IndicesDebutDeLigne;
+        NombreDeTermesDesLignes = ProblemePourPne->NombreDeTermesDesLignes;
+        CoefficientsDeLaMatriceDesContraintes
+          = ProblemePourPne->CoefficientsDeLaMatriceDesContraintes;
+        IndicesColonnes = ProblemePourPne->IndicesColonnes;
+    }
 
     if (ExistenceDUneSolution == OUI_ANTARES)
     {
@@ -477,7 +734,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     free(Cder);
 
     auto& study = *Data::Study::Current::Get();
-    Flot = study.createMPSFileIntoOutput(numSpace);
+    Flot = study.createFileIntoOutputWithExtension("problem", "mps", numSpace);
 
     if (!Flot)
         exit(2);
@@ -505,9 +762,8 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
         else
         {
             fprintf(Flot,
-                    "%s : le sens de la contrainte %c ne fait pas partie "
+                    "PNE_EcrireJeuDeDonneesMPS : le sens de la contrainte %c ne fait pas partie "
                     "des sens reconnus\n",
-                    __FUNCTION__,
                     Sens[Cnt]);
             AntaresSolverEmergencyShutdown();
             exit(0);
