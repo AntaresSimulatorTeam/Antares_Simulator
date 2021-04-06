@@ -44,6 +44,11 @@
 /*! */
 /* # define ANTARES_USE_GLOBAL_MAXIMUM_COST 0 */
 
+// The maximum number of areas allowed in a study
+#define MAX_NUMBER_OF_AREAS 9999
+// The maximum number of thermal plants per area allowed in a study
+#define MAX_NUMBER_OF_THERMAL_CLUSTERS_PER_AREA 999
+
 enum AntaresConstants
 {
     ant_k_area_name_max_length = 128,

@@ -38,7 +38,6 @@ INSTALL(EXPORT antares-batchrun
 set(BATCHRUN_LIBS
 		libantares-core
 		libantares-core-calendar
-		libantares-license
 		yuni-static-core
 		${CMAKE_THREADS_LIBS_INIT}
 )
