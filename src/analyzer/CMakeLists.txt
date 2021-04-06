@@ -44,7 +44,6 @@ add_executable(antares-${ANTARES_PRG_VERSION}-analyzer  ${SRCS})
 
 target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer
 		PRIVATE
-			libantares-license
 			libantares-core
 			libantares-core-calendar
 			yuni-static-core

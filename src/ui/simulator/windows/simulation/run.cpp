@@ -33,7 +33,7 @@
 #include <yuni/io/file.h>
 #include <antares/study/parameters.h>
 #include <antares/study/memory-usage.h>
-#include "../../../../internet/limits.h"
+#include "antares/constants.h"
 
 #include <wx/stattext.h>
 #include <wx/button.h>
@@ -672,15 +672,15 @@ void Run::onRun(void*)
     if (not Data::Study::Current::Valid())
         return;
 
-    if (License::Limits::areaCount) // checking for license restrictions
+    if (MAX_NUMBER_OF_AREAS)
     {
         auto& study = *Data::Study::Current::Get();
-        bool isTrial = (study.areas.size() > License::Limits::areaCount);
-        if (not isTrial and License::Limits::thermalClusterCount)
+        bool isTrial = (study.areas.size() > MAX_NUMBER_OF_AREAS);
+        if (not isTrial and MAX_NUMBER_OF_THERMAL_CLUSTERS_PER_AREA)
         {
             study.areas.each([&](const Data::Area& area) {
                 if (area.thermal.list.size() + area.thermal.mustrunList.size()
-                    > License::Limits::thermalClusterCount)
+                    > MAX_NUMBER_OF_THERMAL_CLUSTERS_PER_AREA)
                     isTrial = true;
             });
         }
@@ -688,20 +688,20 @@ void Run::onRun(void*)
         if (isTrial)
         {
             wxString text;
-            if (License::Limits::thermalClusterCount)
+            if (MAX_NUMBER_OF_THERMAL_CLUSTERS_PER_AREA)
             {
-                text << wxT("Simulation limited to ") << License::Limits::areaCount
-                     << wxT(" areas and ") << License::Limits::thermalClusterCount
+                text << wxT("Simulation limited to ") << MAX_NUMBER_OF_AREAS
+                     << wxT(" areas and ") << MAX_NUMBER_OF_THERMAL_CLUSTERS_PER_AREA
                      << wxT(" thermal clusters / area.");
             }
             else
             {
-                text << wxT("Simulation limited to ") << License::Limits::areaCount
+                text << wxT("Simulation limited to ") << MAX_NUMBER_OF_AREAS
                      << wxT(" areas");
             }
 
             Window::Message message(
-              this, wxT("Simulation"), wxT("LICENSE RESTRICTION"), text, "images/misc/warning.png");
+              this, wxT("Simulation"), wxT("RESTRICTION"), text, "images/misc/warning.png");
             message.add(Window::Message::btnCancel, true);
             message.showModal();
             return;

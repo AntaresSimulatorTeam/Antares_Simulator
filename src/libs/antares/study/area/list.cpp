@@ -38,7 +38,7 @@
 #include "../../config.h"
 #include "../filter.h"
 #include "constants.h"
-#include "../../../internet/limits.h"
+#include "antares/constants.h"
 
 #define SEP IO::Separator
 
@@ -1180,9 +1180,9 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
                        << pStudy.inputExtension;
         ret = loadListFromFile(buffer) and ret;
 
-        if (License::Limits::areaCount)
+        if (MAX_NUMBER_OF_AREAS)
         {
-            if (options.usedByTheSolver and size() > License::Limits::areaCount)
+            if (options.usedByTheSolver and size() > MAX_NUMBER_OF_AREAS)
                 return false;
         }
     }
@@ -1216,10 +1216,10 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             buffer.clear() << pStudy.folderInput << thermalPlant << area.id;
             ret = area.thermal.list.loadFromFolder(pStudy, buffer.c_str(), &area) and ret;
             area.thermal.prepareAreaWideIndexes();
-            if (License::Limits::thermalClusterCount)
+            if (MAX_NUMBER_OF_THERMAL_CLUSTERS_PER_AREA)
             {
                 if (options.usedByTheSolver
-                    and area.thermal.list.size() > License::Limits::thermalClusterCount)
+                    and area.thermal.list.size() > MAX_NUMBER_OF_THERMAL_CLUSTERS_PER_AREA)
                     return false;
             }
         }

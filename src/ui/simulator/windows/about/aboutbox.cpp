@@ -34,7 +34,6 @@
 #include "../../toolbox/create.h"
 #include "../../../config.h"
 #include <ui/common/component/panel.h>
-#include "../../../../internet/limits.h"
 
 #include <wx/sizer.h>
 #include <wx/button.h>

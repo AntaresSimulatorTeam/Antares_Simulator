@@ -31,7 +31,7 @@
 #include "../../date.h"
 #include <limits>
 #include "../../emergency.h"
-#include "../../../../internet/limits.h"
+#include "antares/constants.h"
 #include "../memory-usage.h"
 #include "../../config.h"
 #include "../filter.h"
@@ -47,7 +47,7 @@ namespace Data
 static bool StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos& r)
 {
     uint areaCount = study.areas.size();
-    if (License::Limits::areaCount and areaCount > License::Limits::areaCount)
+    if (MAX_NUMBER_OF_AREAS and areaCount > MAX_NUMBER_OF_AREAS)
         return false;
 
     // For each area
@@ -472,7 +472,7 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
 
 bool StudyRuntimeInfos::loadFromStudy(Study& study)
 {
-    if (License::Limits::areaCount and study.areas.size() > License::Limits::areaCount)
+    if (MAX_NUMBER_OF_AREAS and study.areas.size() > MAX_NUMBER_OF_AREAS)
         return false;
 
     auto& gd = study.parameters;
@@ -592,9 +592,9 @@ bool StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
         if (area.thermal.clusterCount > maxThermalClustersForSingleArea)
             maxThermalClustersForSingleArea = area.thermal.clusterCount;
 
-        if (License::Limits::thermalClusterCount)
+        if (MAX_NUMBER_OF_THERMAL_CLUSTERS_PER_AREA)
         {
-            if (area.thermal.clusterCount > License::Limits::thermalClusterCount)
+            if (area.thermal.clusterCount > MAX_NUMBER_OF_THERMAL_CLUSTERS_PER_AREA)
                 return false;
         }
     }
