@@ -53,11 +53,6 @@ extern uint thermalClusterCount;
 extern uint tick;
 
 /*!
-** \brief Customer Caption
-*/
-extern Yuni::String customerCaption;
-
-/*!
 ** \brief Customer Id
 */
 extern Yuni::String customerId;

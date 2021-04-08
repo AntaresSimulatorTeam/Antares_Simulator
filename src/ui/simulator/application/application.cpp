@@ -255,9 +255,6 @@ bool Application::OnInit()
     // Print the local policy settings
     LocalPolicy::DumpToLogs();
 
-    // initialize openssl
-    License::InitializeEncryptionEngine();
-
     // Notify
     OnStudyBeginUpdate.connect(&OnNotifyStudyBeginUpdate);
     OnStudyEndUpdate.connect(&OnNotifyStudyEndUpdate);
@@ -340,9 +337,6 @@ Application::~Application()
     memory.removeAllUnusedSwapFiles();
     // Checking for orphan swap files
     memory.cleanupCacheFolder();
-
-    // openssl
-    License::ReleaseEncryptionEngine();
 
     logs.info() << "Exiting now.";
 }

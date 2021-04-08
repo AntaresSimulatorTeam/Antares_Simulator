@@ -87,7 +87,7 @@
 #include "../../windows/startupwizard.h"
 #include "../../toolbox/dispatcher/study.h"
 // license
-#include "check-license-at-startup.hxx"
+#include "../../windows/message.h"
 
 using namespace Yuni;
 
@@ -466,58 +466,17 @@ void ApplWnd::internalInitialize()
 
     // temporary disabled while checking the license
     Enable(false);
-    installUserLicense();
 
-    installUserLicense(true);
-    // check the license informations
-    // (in another thread - it can take some time)
-    DispatchCheckAntaresLicense();
-}
+    // Sarting Antares
+    auto* mainfrm = Antares::Forms::ApplWnd::Instance();
+    ::Bind<void()> callback;
+    callback.bind(mainfrm, &Antares::Forms::ApplWnd::startAntares);
+    Antares::Dispatcher::GUI::Post(callback); // ms, arbitrary
 
-void ApplWnd::installUserLicense(bool online)
-{
-    String activationKey = online ? ANTARES_ONLINE_ACTIVATION_KEY : ANTARES_OFFLINE_ACTIVATION_KEY;
-    // may modify our variable
-    String activationKeyToInstall = activationKey;
-    activationKeyToInstall.trim();
-    activationKeyToInstall.replace("\r", "");
-
-    // Installation for all users ?
-    bool allusers = false;
-
-    // Installation filename
-    String filename;
-
-    if (not OperatingSystem::FindAntaresLocalAppData(filename, allusers))
-    {
-        logs.error() << "impossible to find the local app data";
-        return;
-    }
-
-    if (not IO::Directory::Create(filename))
-    {
-        logs.error()
-          << "impossible to install the license. Please check your user account privileges";
-        return;
-    }
-
-    // the license filename
-    filename << IO::Separator << "antares-" << ANTARES_VERSION << ".hwb";
-
-    if (not IO::File::SetContent(filename, activationKeyToInstall))
-    {
-        logs.error()
-          << "impossible to install the license. Please check your user account privileges";
-        return;
-    }
 }
 
 void ApplWnd::startAntares()
 {
-    // Reset the status bar to display the new informations
-    // extracted from the license
-    resetDefaultStatusBarText();
-
     // re-enable the main form
     Enable(true);
 

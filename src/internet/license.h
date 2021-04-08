@@ -34,79 +34,12 @@
 #include <yuni/core/event.h>
 #include <antares/proxy.h>
 
-#define ANTARES_LICENSE_GUI_SHOW_ACTIVATION_KEY                                        \
-    do                                                                                 \
-    {                                                                                  \
-        /* asking to the user for a new license */                                     \
-        {                                                                              \
-            auto* mainFrm = Antares::Forms::ApplWnd::Instance();                       \
-            if (mainFrm)                                                               \
-            {                                                                          \
-                Antares::Window::License form(mainFrm);                                \
-                form.ShowModal();                                                      \
-                /* reset the status bar which uses informations from the status bar */ \
-                mainFrm->resetDefaultStatusBarText();                                  \
-            }                                                                          \
-            else                                                                       \
-                exit(1);                                                               \
-        }                                                                              \
-        /* aborting if still invalid */                                                \
-        if (not Antares::License::CheckLicenseValidity(Data::versionLatest))           \
-        {                                                                              \
-            Dispatcher::StudyClose(true, true);                                        \
-            return;                                                                    \
-        }                                                                              \
-    } while (0)
-
 
 
 namespace Antares
 {
 namespace License
 {
-void WriteLastError(Yuni::String& message, Yuni::String& errType);
-
-/*!
-** \brief Initialize the encryption engine (aka OpenSSL)
-*/
-void InitializeEncryptionEngine();
-
-/*!
-** \brief Release the encryption engine (aka OpenSSL)
-*/
-void ReleaseEncryptionEngine();
-
-/*!
-** \brief Check if the installed lincese is valid
-**
-** This method may take some time to complete, since it may
-** require a network connection to a license server (such as FlexNET).
-** It is recommended to run this method into a dedicated thread, especially
-** for GUI.
-*/
-bool CheckLicenseValidity(uint version = Antares::Data::versionLatest,
-                          Yuni::String* error = nullptr);
-
-
-/*!
-** \brief Check if an activation key is valid on line
-**
-** \param recheck Whether need to recheck the license Activation key on the server
-*/
-bool CheckOnlineLicenseValidity(uint version = Antares::Data::versionLatest, bool recheck = false);
-
-/*!
-** \brief Try to retrieve the activation key from the current installation
-*/
-bool RetrieveActivationKey(uint version, YString& activationKey, YString* error = nullptr);
-
-/*!
-** \brief Remove all user license activation keys
-**
-** \note The global activation keys will be preserved
-** \return True if the operation succeeded
-*/
-bool RevokeAllUserActivationKeys(uint version);
 
 enum Error
 {
@@ -155,39 +88,11 @@ enum Status
 };
 
 /*!
-** \brief Flag to determine whether the current toiken has internet servers enabled
-*/
-extern bool hasLicenseServers;
-
-/*!
-** \brief Last error when checking the license
-*/
-extern enum Error lastError;
-
-/*!
-** \brief Event triggerred when the license has been disconnected from the server
-*/
-extern Yuni::Event<void()> onDisconnect;
-
-/*!
 ** \brief Proxy settings
 **
 ** \todo Should be located here
 */
 extern ProxySettings proxy;
-
-/*!
-** \brief Status for checking the license online
-*/
-extern enum Status statusOnline;
-
-/*!
-** \brief Flag to determine whether we need to check the current license.
-**        This parameter should set to true when the request comes from simulator interface
-*/
-extern bool hasSimulatorAuthorization;
-
-extern bool timerlaunched;
 
 // ---------------------------------------------------------------------------
 // low-level routines
