@@ -29,7 +29,6 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <antares/proxy.h>
 
 namespace Antares
 {
@@ -71,13 +70,6 @@ extern Yuni::String expiryDate;
 ** \brief url internet server
 */
 extern Yuni::String urlLicenseServer;
-
-/*!
-** \brief Proxy settings
-**
-** \todo Should be located here
-*/
-extern ProxySettings proxy;
 
 } // namespace Limits
 } // namespace License

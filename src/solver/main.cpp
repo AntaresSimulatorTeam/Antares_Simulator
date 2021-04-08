@@ -46,9 +46,7 @@
 #include <antares/memory/memory.h>
 #include <antares/sys/policy.h>
 #include <antares/locale.h>
-#include "../internet/license.h"
 #include "misc/system-memory.h"
-//#include <antares/proxy/proxy.h>
 
 #ifdef YUNI_OS_WINDOWS
 #include <conio.h>
@@ -512,67 +510,6 @@ bool SolverApplication::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Random-numbers generators
     initializeRandomNumberGenerators();
-
-    return true;
-}
-
-bool SolverApplication::completeWithOnlineCheck()
-{
-    // if first connection ask proxy parameters and try again
-    std::cout << "Do you want to use proxy?(yes or no):\n";
-    String enable;
-    std::cin >> enable;
-    if (enable == "yes")
-    {
-        License::proxy.enabled = true;
-
-        std::cout << "enter host address:\n";
-        std::cin >> License::proxy.host;
-
-        std::cout << "enter port:\n";
-        std::cin >> License::proxy.port;
-
-        std::cout << "enter login:\n";
-        std::cin >> License::proxy.login;
-
-#ifdef YUNI_OS_WINDOWS
-        std::cout << "enter password:\n";
-        std::string password = "";
-        char ch;
-        ch = _getch();
-        while (ch != 0x0D)
-        {
-            // character 0x0D is enter
-            password.push_back(ch);
-            std::cout << '*';
-            ch = _getch();
-        }
-#else
-        char* password;
-        password = getpass("enter password:\n");
-#endif
-
-        // set password
-        License::proxy.password << password;
-
-        // check proxy parameters
-        if (not License::proxy.check())
-        {
-            logs.fatal() << "invalid proxy parameters";
-            return false;
-        }
-    }
-    else
-    {
-        License::proxy.enabled = false;
-    }
-
-    // verify License online
-    // if (not License::CheckOnlineLicenseValidity(Data::versionLatest, true))
-    //     return false;
-
-    // if ok, save proxy parameers
-    License::proxy.saveProxyFile();
 
     return true;
 }

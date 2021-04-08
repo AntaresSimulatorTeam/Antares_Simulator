@@ -1,13 +1,7 @@
 
 OMESSAGE("License")
 
-add_subdirectory(base64)
-add_subdirectory(keys)
-
 add_library(libantares-license
-	license.h
-	hello_web.cpp
-	host-properties.cpp
 	limits.h
 	limits.cpp
 )
@@ -23,7 +17,5 @@ target_include_directories(libantares-license
 target_link_libraries(libantares-license
 		PRIVATE
 			yuni-static-core
-		PUBLIC
-			base64
 		)
 

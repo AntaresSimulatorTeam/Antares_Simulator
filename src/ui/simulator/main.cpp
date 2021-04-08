@@ -42,7 +42,6 @@
 IMPLEMENT_APP(Antares::Application)
 #else
 
-#include "../../internet/license.h"
 #include <antares/memory/memory.h>
 
 // WxWidgets Stuff

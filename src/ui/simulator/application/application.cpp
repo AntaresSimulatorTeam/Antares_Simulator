@@ -45,7 +45,6 @@
 #include "study.h"
 #include <yuni/datetime/timestamp.h>
 #include <antares/logs/cleaner.h>
-#include "../../../internet/license.h"
 #include <antares/locale.h>
 #ifndef YUNI_OS_WINDOWS
 #include <signal.h>

@@ -138,11 +138,6 @@ private:
 
     void processCaption(const AnyString& caption);
 
-    /*!
-     * \brief check the proxy with the commend line entries
-     */
-    bool completeWithOnlineCheck();
-
 private:
     //! The settings given from the command line
     Settings pSettings;

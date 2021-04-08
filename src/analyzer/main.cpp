@@ -38,7 +38,6 @@
 #include <antares/sys/policy.h>
 #include <antares/locale.h>
 #include "../config.h"
-#include "../internet/license.h"
 
 using namespace Yuni;
 using namespace Antares;

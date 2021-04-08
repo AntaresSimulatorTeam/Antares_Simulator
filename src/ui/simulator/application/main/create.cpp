@@ -464,10 +464,7 @@ void ApplWnd::internalInitialize()
 
     Thaw();
 
-    // temporary disabled while checking the license
-    Enable(false);
-
-    // Sarting Antares
+    // Starting Antares
     auto* mainfrm = Antares::Forms::ApplWnd::Instance();
     ::Bind<void()> callback;
     callback.bind(mainfrm, &Antares::Forms::ApplWnd::startAntares);
@@ -477,9 +474,6 @@ void ApplWnd::internalInitialize()
 
 void ApplWnd::startAntares()
 {
-    // re-enable the main form
-    Enable(true);
-
     if (not logs.logfile())
     {
         wxString msg = wxT("Impossible to create the log file.\n");
