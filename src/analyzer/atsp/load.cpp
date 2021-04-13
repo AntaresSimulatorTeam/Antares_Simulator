@@ -27,7 +27,6 @@
 #include "atsp.h"
 #include <antares/inifile.h>
 #include "../../config.h"
-#include "antares/constants.h"
 
 using namespace Yuni;
 

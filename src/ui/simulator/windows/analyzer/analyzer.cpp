@@ -57,7 +57,6 @@
 #include "../../application/study.h"
 #include <antares/config.h>
 #include <antares/io/statistics.h>
-#include "antares/constants.h"
 
 using namespace Yuni;
 

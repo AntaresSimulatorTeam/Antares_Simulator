@@ -33,7 +33,6 @@
 #include <yuni/io/file.h>
 #include <antares/study/parameters.h>
 #include <antares/study/memory-usage.h>
-#include "antares/constants.h"
 
 #include <wx/stattext.h>
 #include <wx/button.h>

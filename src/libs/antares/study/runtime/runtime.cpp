@@ -31,7 +31,6 @@
 #include "../../date.h"
 #include <limits>
 #include "../../emergency.h"
-#include "antares/constants.h"
 #include "../memory-usage.h"
 #include "../../config.h"
 #include "../filter.h"
