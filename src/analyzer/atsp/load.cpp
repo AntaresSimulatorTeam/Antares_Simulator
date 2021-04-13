@@ -205,8 +205,6 @@ bool ATSP::loadFromINIFile(const String& filename)
                 }
 
                 pArea.push_back(info);
-                if (MAX_NUMBER_OF_AREAS and pArea.size() > MAX_NUMBER_OF_AREAS)
-                    return false;
             }
         }
 
@@ -220,8 +218,6 @@ bool ATSP::loadFromINIFile(const String& filename)
             logs.error() << "no area found.";
             return false;
         }
-        if (MAX_NUMBER_OF_AREAS and pArea.size() > MAX_NUMBER_OF_AREAS)
-            return false;
 
         if (!checkStudyVersion())
             return false;
@@ -295,7 +291,7 @@ bool ATSP::loadFromINIFile(const String& filename)
             return false;
         }
 
-        return not(MAX_NUMBER_OF_AREAS and pArea.size() > MAX_NUMBER_OF_AREAS);
+        return true;
     }
     return false;
 }

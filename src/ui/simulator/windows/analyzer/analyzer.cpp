@@ -1098,41 +1098,6 @@ void AnalyzerWizard::onProceed(void*)
     // Reset internal IO statistics
     Statistics::Reset();
 
-    if (MAX_NUMBER_OF_AREAS)
-    {
-        auto& study = *Data::Study::Current::Get();
-        bool isTrial = (study.areas.size() > MAX_NUMBER_OF_AREAS);
-        if (not isTrial and MAX_NUMBER_OF_THERMAL_CLUSTERS_PER_AREA)
-        {
-            study.areas.each([&](const Data::Area& area) {
-                if (area.thermal.list.size() + area.thermal.mustrunList.size()
-                    > MAX_NUMBER_OF_THERMAL_CLUSTERS_PER_AREA)
-                    isTrial = true;
-            });
-        }
-
-        if (isTrial)
-        {
-            wxString text;
-            if (MAX_NUMBER_OF_THERMAL_CLUSTERS_PER_AREA)
-            {
-                text << wxT("Analyzer limited to ") << MAX_NUMBER_OF_AREAS
-                     << wxT(" areas and ") << MAX_NUMBER_OF_THERMAL_CLUSTERS_PER_AREA
-                     << wxT(" thermal clusters / area.");
-            }
-            else
-            {
-                text << wxT("Analyzer limited to ") << MAX_NUMBER_OF_AREAS << wxT(" areas");
-            }
-
-            Window::Message message(
-              this, wxT("Analyzer"), wxT("RESTRICTION"), text, "images/misc/warning.png");
-            message.add(Window::Message::btnCancel, true);
-            message.showModal();
-            return;
-        }
-    }
-
     Enable(false);
     if (StudyHasBeenModified())
     {

@@ -1179,12 +1179,6 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         buffer.clear() << pStudy.folderInput << SEP << "areas" << SEP << "list."
                        << pStudy.inputExtension;
         ret = loadListFromFile(buffer) and ret;
-
-        if (MAX_NUMBER_OF_AREAS)
-        {
-            if (options.usedByTheSolver and size() > MAX_NUMBER_OF_AREAS)
-                return false;
-        }
     }
 
     // Hydro
@@ -1216,12 +1210,6 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             buffer.clear() << pStudy.folderInput << thermalPlant << area.id;
             ret = area.thermal.list.loadFromFolder(pStudy, buffer.c_str(), &area) and ret;
             area.thermal.prepareAreaWideIndexes();
-            if (MAX_NUMBER_OF_THERMAL_CLUSTERS_PER_AREA)
-            {
-                if (options.usedByTheSolver
-                    and area.thermal.list.size() > MAX_NUMBER_OF_THERMAL_CLUSTERS_PER_AREA)
-                    return false;
-            }
         }
     }
 
