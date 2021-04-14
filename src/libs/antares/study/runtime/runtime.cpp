@@ -31,7 +31,6 @@
 #include "../../date.h"
 #include <limits>
 #include "../../emergency.h"
-#include "../../../../internet/limits.h"
 #include "../memory-usage.h"
 #include "../../config.h"
 #include "../filter.h"
@@ -44,11 +43,9 @@ namespace Antares
 {
 namespace Data
 {
-static bool StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos& r)
+static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos& r)
 {
     uint areaCount = study.areas.size();
-    if (License::Limits::areaCount and areaCount > License::Limits::areaCount)
-        return false;
 
     // For each area
     for (uint a = 0; a != areaCount; ++a)
@@ -136,10 +133,9 @@ static bool StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         r.thermalPlantTotalCount += area.thermal.list.size();
         r.thermalPlantTotalCountMustRun += area.thermal.mustrunList.size();
     }
-    return true;
 }
 
-static bool StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos& r)
+static void StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos& r)
 {
     r.interconnectionsCount = study.areas.areaLinkCount();
     typedef AreaLink* AreaLinkPointer;
@@ -162,7 +158,6 @@ static bool StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos
             ++areaIndx;
         }
     });
-    return true;
 }
 
 template<enum BindingConstraint::Column C>
@@ -472,9 +467,6 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
 
 bool StudyRuntimeInfos::loadFromStudy(Study& study)
 {
-    if (License::Limits::areaCount and study.areas.size() > License::Limits::areaCount)
-        return false;
-
     auto& gd = study.parameters;
 
     nbYears = gd.nbYears;
@@ -503,8 +495,8 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     initializeThermalClustersInMustRunMode(study);
 
     // Areas
-    if (not StudyRuntimeInfosInitializeAllAreas(study, *this))
-        return false;
+    StudyRuntimeInfosInitializeAllAreas(study, *this);
+
     // Area links
     StudyRuntimeInfosInitializeAreaLinks(study, *this);
 
@@ -574,7 +566,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     return true;
 }
 
-bool StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
+void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
 {
     logs.info();
     logs.info() << "Optimizing the thermal clusters in 'must-run' mode...";
@@ -591,12 +583,6 @@ bool StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
 
         if (area.thermal.clusterCount > maxThermalClustersForSingleArea)
             maxThermalClustersForSingleArea = area.thermal.clusterCount;
-
-        if (License::Limits::thermalClusterCount)
-        {
-            if (area.thermal.clusterCount > License::Limits::thermalClusterCount)
-                return false;
-        }
     }
 
     switch (count)
@@ -612,8 +598,6 @@ bool StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
     }
     // space
     logs.info();
-
-    return true;
 }
 
 void StudyRuntimeInfos::removeDisabledThermalClustersFromSolverComputations(Study& study)

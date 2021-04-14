@@ -249,7 +249,6 @@ OMESSAGE("") # empty line
 
 # Sub Directories
 add_subdirectory(libs) 		#antares-core fswalker
-add_subdirectory(internet) 	#libantares-license base64 keys
 
 if(BUILD_UI)
 	add_subdirectory(ui)		#all antares ui libs + antares simulator
