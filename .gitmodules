@@ -1,10 +1,10 @@
 [submodule "resources/examples"]
 	path = resources/examples
 	url = https://github.com/AntaresSimulatorTeam/Antares_Simulator_Examples.git
-[submodule "src/antares-deps"]
+[submodule "antares-deps"]
 	path = antares-deps
 	url = https://github.com/AntaresSimulatorTeam/antares-deps.git
 	branch = v1.0.2
-[submodule "src/tests/resources/Antares_Simulator_Tests"]
+[submodule "resources/Antares_Simulator_Tests"]
 	path = resources/Antares_Simulator_Tests
 	url = https://github.com/AntaresSimulatorTeam/Antares_Simulator_Tests.git
