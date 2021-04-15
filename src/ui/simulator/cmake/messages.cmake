@@ -8,9 +8,6 @@ set(SRC_UI_MESSAGES
 		windows/about/aboutbox.cpp
 		windows/aboutbox.h
 		
-		windows/onLineConsent/on-line-consent.h
-		windows/onLineConsent/on-line-consent.cpp
-		
 		windows/textinput/input.h
 		windows/textinput/input.cpp
 

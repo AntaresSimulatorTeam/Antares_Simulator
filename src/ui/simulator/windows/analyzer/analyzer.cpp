@@ -57,7 +57,6 @@
 #include "../../application/study.h"
 #include <antares/config.h>
 #include <antares/io/statistics.h>
-#include "../../../../internet/limits.h"
 
 using namespace Yuni;
 
@@ -1097,41 +1096,6 @@ void AnalyzerWizard::onProceed(void*)
 
     // Reset internal IO statistics
     Statistics::Reset();
-
-    if (License::Limits::areaCount) // checking for license restrictions
-    {
-        auto& study = *Data::Study::Current::Get();
-        bool isTrial = (study.areas.size() > License::Limits::areaCount);
-        if (not isTrial and License::Limits::thermalClusterCount)
-        {
-            study.areas.each([&](const Data::Area& area) {
-                if (area.thermal.list.size() + area.thermal.mustrunList.size()
-                    > License::Limits::thermalClusterCount)
-                    isTrial = true;
-            });
-        }
-
-        if (isTrial)
-        {
-            wxString text;
-            if (License::Limits::thermalClusterCount)
-            {
-                text << wxT("Analyzer limited to ") << License::Limits::areaCount
-                     << wxT(" areas and ") << License::Limits::thermalClusterCount
-                     << wxT(" thermal clusters / area.");
-            }
-            else
-            {
-                text << wxT("Analyzer limited to ") << License::Limits::areaCount << wxT(" areas");
-            }
-
-            Window::Message message(
-              this, wxT("Analyzer"), wxT("LICENSE RESTRICTION"), text, "images/misc/warning.png");
-            message.add(Window::Message::btnCancel, true);
-            message.showModal();
-            return;
-        }
-    }
 
     Enable(false);
     if (StudyHasBeenModified())

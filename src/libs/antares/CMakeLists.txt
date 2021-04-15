@@ -283,14 +283,6 @@ set(SRC_LOGS
 	)
 source_group("misc\\logs" FILES ${SRC_LOGS})
 
-set(SRC_PROXY
-	proxy.h
-	proxy/proxy.h
-	proxy/proxy.cpp
-	)
-source_group("misc\\proxy" FILES ${SRC_PROXY})
-
-
 set(SRC_JIT
 	# JIT (Just in Time)
 	jit.h
@@ -508,7 +500,6 @@ macro(ADD_ANTARES_CORE name)
 		${SRC_JIT}
 		${SRC_INI}
 		${SRC_IO}
-		${SRC_PROXY}
 		${SRC_MATRIX}
 		${SRC_TIMEELAPSED}
 		${SRC_AREAS}
@@ -545,7 +536,6 @@ macro(ADD_ANTARES_CORE name)
 		PUBLIC
 			yuni-static-core
 			yuni-static-uuid
-			libantares-license
 			libantares-core-calendar
 			libantares-solver-variable-info${name}
 		)

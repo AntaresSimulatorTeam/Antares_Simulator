@@ -34,7 +34,6 @@
 #include "../../toolbox/create.h"
 #include "../../../config.h"
 #include <ui/common/component/panel.h>
-#include "../../../../internet/limits.h"
 
 #include <wx/sizer.h>
 #include <wx/button.h>
@@ -74,15 +73,6 @@ are distributed along with Antares_Simulator with NO WARRANTY:\n\
 Wxwidgets 3.0.2	Copyright (c) 1998-2017	The wxWidget Team\n\
 license: wxWindows Library License,V3.1	https://spdx.org/licenses/wxWindows.html\n\
 \n\
-libCurl 7.51.0	Copyright (c) 1996-2017	Daniel Stenberg et al			\n\
-license: curl license	https://spdx.org/licenses/curl.html\n\
-\n\
-OpenSSL 1.1.0	Copyright (c) 1998-2016	The OpenSSL Project\n\
-\"This product includes software developed by the OpenSSL Project\n\
-for use in the OpenSSL Toolkit(http://www.openssl.org/)\"\n\
-\"This product includes software written by Tim Hudson (tjh@cryptsoft.com)\" \n\
-license: OpenSSL license and SSLeay license	https://spdx.org/licenses/OpenSSL.html\n\
-					\n\
 libYuni 1.1.0	https://github.com/libyuni	\n\
 license: Mozilla Public License 2.0	https://spdx.org/licenses/MPL-2.0.html\n\
 \n\
