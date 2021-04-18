@@ -28,6 +28,7 @@
 #include <yuni/yuni.h>
 #include <antares/study.h>
 #include "state.h"
+#include <math.h>
 
 using namespace Yuni;
 
@@ -67,6 +68,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
     {
         uint serieIndex = timeseriesIndex->ThermiqueParPalier[clusterAreaWideIndex];
         thermalClusterAvailableProduction = cluster->series->series[serieIndex][hourInTheYear];
+        double clusterNominalCapacityWithSpinning = std::round(cluster->nominalCapacityWithSpinning);
 
         if (cluster->mustrun)
         {
@@ -169,7 +171,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
             if (p > cluster->productionLastHour[numSpace])
             {
                 newUnitCount
-                  = static_cast<uint>(Math::Ceil(p / cluster->nominalCapacityWithSpinning));
+                  = static_cast<uint>(Math::Ceil(p / clusterNominalCapacityWithSpinning));
                 if (newUnitCount > cluster->unitCount)
                     newUnitCount = cluster->unitCount;
                 if (newUnitCount < previousUnitCount)
@@ -180,7 +182,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
                 if (cluster->minStablePower > 0.)
                 {
                     newUnitCount
-                      = static_cast<uint>(Math::Ceil(p / cluster->nominalCapacityWithSpinning));
+                      = static_cast<uint>(Math::Ceil(p / clusterNominalCapacityWithSpinning));
                     if (newUnitCount > cluster->unitCount)
                         newUnitCount = cluster->unitCount;
                 }
@@ -269,6 +271,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex,
         // Get cluster properties
         Data::ThermalCluster* currentCluster = area->thermal.clusters[clusterAreaWideIndex];
         uint serieIndex = timeseriesIndex->ThermiqueParPalier[clusterAreaWideIndex];
+        double clusterNominalCapacityWithSpinning = std::round(cluster->nominalCapacityWithSpinning);
 
         assert(endHourForCurrentYear <= Variable::maxHoursInAYear);
         assert(endHourForCurrentYear <= currentCluster->series->series.height);
@@ -340,21 +343,21 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex,
                                                   / currentCluster->pminOfAGroup[numSpace])),
                                     static_cast<uint>(
                                       Math::Ceil(thermalClusterAvailableProduction
-                                                 / currentCluster->nominalCapacityWithSpinning))),
+                                                 / clusterNominalCapacityWithSpinning))),
                           static_cast<uint>(
                             Math::Ceil(thermalClusterProduction
-                                       / currentCluster->nominalCapacityWithSpinning)));
+                                       / clusterNominalCapacityWithSpinning)));
                     }
                     else
                         ON_min[h] = static_cast<uint>(Math::Ceil(
-                          thermalClusterProduction / currentCluster->nominalCapacityWithSpinning));
+                          thermalClusterProduction / clusterNominalCapacityWithSpinning));
                     break;
                 }
                 case Antares::Data::UnitCommitmentMode::ucMILP:
                 {
                     ON_min[h] = Math::Max(
                       static_cast<uint>(Math::Ceil(thermalClusterProduction
-                                                   / currentCluster->nominalCapacityWithSpinning)),
+                                                   / clusterNominalCapacityWithSpinning)),
                       thermalClusterDispatchedUnitsCountForYear[h]); // eq. to thermalClusterON for
                                                                      // that hour
 
@@ -363,7 +366,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex,
                 }
 
                 ON_max[h] = static_cast<uint>(Math::Ceil(
-                  thermalClusterAvailableProduction / currentCluster->nominalCapacityWithSpinning));
+                  thermalClusterAvailableProduction / clusterNominalCapacityWithSpinning));
 
                 if (currentCluster->minStablePower > 0.)
                 {
