@@ -90,7 +90,7 @@ struct VCardRowBalance
         isPossiblyNonApplicable = 0,
     };
 
-    typedef IntermediateValues IntermediateValuesType;
+    typedef IntermediateValues* IntermediateValuesType;
     typedef IntermediateValues IntermediateValuesBaseType;
 
     typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
@@ -138,15 +138,20 @@ public:
 public:
     ~RowBalance()
     {
+        delete[] pValuesForTheCurrentYear;
     }
 
     void initializeFromStudy(Data::Study& study)
     {
+        pNbYearsParallel = study.maxNbYearsInParallel;
+
         // Average on all years
         InitializeResultsFromStudy(AncestorType::pResults, study);
 
         // Intermediate values
-        pValuesForTheCurrentYear.initializeFromStudy(study);
+        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
 
         // Next
         NextType::initializeFromStudy(study);
@@ -162,16 +167,20 @@ public:
     {
         // Copy raw values
         unsigned int height = area->miscGen.height;
-        (void)::memcpy(pValuesForTheCurrentYear.hour,
-                       area->miscGen.entry[Data::fhhRowBalance],
-                       sizeof(double) * height);
 
-        if (study->parameters.mode == Data::stdmAdequacy)
+        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
-            for (unsigned int h = 0; h != height; ++h)
-                pValuesForTheCurrentYear.hour[h]
-                  -= area->reserves.entry[Data::fhrPrimaryReserve][h];
-        }
+            (void)::memcpy(pValuesForTheCurrentYear[numSpace].hour,
+                           area->miscGen.entry[Data::fhhRowBalance],
+                           sizeof(double) * height);
+
+            if (study->parameters.mode == Data::stdmAdequacy)
+            {
+                for (unsigned int h = 0; h != height; ++h)
+                    pValuesForTheCurrentYear[numSpace].hour[h]
+                      -= area->reserves.entry[Data::fhrPrimaryReserve][h];
+            }        
+        }        
 
         // Next
         NextType::initializeFromArea(study, area);
@@ -231,7 +240,7 @@ public:
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
         // Compute all statistics for the current year (daily,weekly,monthly)
-        pValuesForTheCurrentYear.computeStatisticsForTheCurrentYear();
+        pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
 
         // Next variable
         NextType::yearEnd(year, numSpace);
@@ -274,7 +283,7 @@ public:
     void localBuildAnnualSurveyReport(SurveyResults& results,
                                       int fileLevel,
                                       int precision,
-                                      unsigned int) const
+                                      unsigned int numSpace) const
     {
         // Initializing external pointer on current variable non applicable status
         results.isCurrentVarNA = AncestorType::isNonApplicable;
@@ -283,7 +292,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
-            pValuesForTheCurrentYear.template buildAnnualSurveyReport<VCardType>(
+            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }
     }
@@ -291,6 +300,7 @@ public:
 private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
+    unsigned int pNbYearsParallel;
 
 }; // class RowBalance
 

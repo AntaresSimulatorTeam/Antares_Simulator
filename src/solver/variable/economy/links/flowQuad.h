@@ -86,6 +86,7 @@ struct VCardFlowQuad
     };
 
     typedef IntermediateValues* IntermediateValuesType;
+    typedef IntermediateValues IntermediateValuesBaseType;
 
 }; // class VCard
 
@@ -135,13 +136,17 @@ public:
 
     void initializeFromStudy(Data::Study& study)
     {
+        pNbYearsParallel = study.maxNbYearsInParallel;
+
         // Average on all years
         pNbHours = study.runtime->rangeLimits.hour[Data::rangeEnd] + 1;
         AncestorType::pResults.initializeFromStudy(study);
         AncestorType::pResults.reset();
-
+                
         // Intermediate values
-        pValuesForTheCurrentYear.initializeFromStudy(study);
+        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
 
         // Next
         NextType::initializeFromStudy(study);
@@ -171,8 +176,6 @@ public:
 
     void simulationBegin()
     {
-        pValuesForTheCurrentYear.reset();
-
         // Next
         NextType::simulationBegin();
     }
@@ -213,12 +216,12 @@ public:
     {
         // Flow assessed over all MC years (linear)
         (void)::memcpy(
-          pValuesForTheCurrentYear->hour,
+          pValuesForTheCurrentYear[numSpace].hour,
           ResultatsParInterconnexion[pLinkGlobalIndex]->TransitMoyenRecalculQuadratique,
           sizeof(double) * pNbHours);
 
         // Compute all statistics for the current year (daily,weekly,monthly)
-        pValuesForTheCurrentYear->computeStatisticsForTheCurrentYear();
+        pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
 
         // Next variable
         NextType::yearEnd(year, numSpace);
@@ -292,7 +295,7 @@ public:
     void localBuildAnnualSurveyReport(SurveyResults& results,
                                       int fileLevel,
                                       int precision,
-                                      uint) const
+                                      uint numSpace) const
     {
         // Initializing external pointer on current variable non applicable status
         results.isCurrentVarNA = AncestorType::isNonApplicable;
@@ -301,7 +304,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
-            pValuesForTheCurrentYear->template buildAnnualSurveyReport<VCardType>(
+            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }
     }
@@ -309,8 +312,10 @@ public:
 private:
     uint pLinkGlobalIndex;
     uint pNbHours;
+
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
+    unsigned int pNbYearsParallel;
 
 }; // class FlowQuad
 
