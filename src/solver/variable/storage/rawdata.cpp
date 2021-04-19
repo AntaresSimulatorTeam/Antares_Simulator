@@ -79,7 +79,7 @@ void RawData::merge(unsigned int y, const IntermediateValues& rhs)
 
     // StdDeviation value for each hour throughout all years
     for (i = 0; i != maxHoursInAYear; ++i)
-        hourly[i] += rhs.hour[i * ratio;
+        hourly[i] += rhs.hour[i] * ratio;
     // StdDeviation value for each day throughout all years
     for (i = 0; i != maxDaysInAYear; ++i)
         daily[i] += rhs.day[i] * ratio;
