@@ -290,9 +290,9 @@ public:
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
       uint,
-      uint) const
+      uint numSpace) const
     {
-        return pValuesForTheCurrentYear->hour;
+        return pValuesForTheCurrentYear[numSpace].hour;
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,
