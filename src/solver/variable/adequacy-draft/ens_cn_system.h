@@ -131,7 +131,6 @@ public:
         // Average on all years
         AncestorType::pResults.initializeFromStudy(study);
         AncestorType::pResults.reset();
-        pRatio = 1. / study.runtime->rangeLimits.year[Data::rangeCount];
 
         // Special draft variable : non applicability is set here, not in ancester class
         AncestorType::isNonApplicable[0] = false;
@@ -230,8 +229,8 @@ public:
 
     void hourEnd(State& state, unsigned int hourInTheYear)
     {
-        AncestorType::pResults.rawdata.hourly[hourInTheYear] += state.eensSystemCN * pRatio;
-        AncestorType::pResults.rawdata.year[0] += state.eensSystemCN * pRatio;
+        AncestorType::pResults.rawdata.hourly[hourInTheYear] += state.eensSystemCN;
+        AncestorType::pResults.rawdata.year[0] += state.eensSystemCN;
         // Next
         NextType::hourEnd(state, hourInTheYear);
     }
@@ -240,9 +239,6 @@ public:
     {
         // do nothing
     }
-
-private:
-    double pRatio;
 
 }; // class ENS_CN_System
 

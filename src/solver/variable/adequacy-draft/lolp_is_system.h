@@ -129,7 +129,6 @@ public:
     void initializeFromStudy(Data::Study& study)
     {
         // Average on all years
-        pRatio = 100. / study.runtime->rangeLimits.year[Data::rangeCount];
         AncestorType::pResults.initializeFromStudy(study);
         AncestorType::pResults.reset();
 
@@ -202,7 +201,7 @@ public:
     {
         if (pGotFailure > 0.)
         {
-            AncestorType::pResults.rawdata.year[y] += pRatio;
+            AncestorType::pResults.rawdata.year[y] += 100.0;
             pGotFailure = false;
         }
         // Next variable
@@ -219,7 +218,7 @@ public:
     void hourBegin(unsigned int hourInTheYear)
     {
         AncestorType::pResults.rawdata.hourly[hourInTheYear]
-          += (double)ProblemeHoraireAdequation.DefaillanceEuropeenneHorsReseau * pRatio;
+          += (double)ProblemeHoraireAdequation.DefaillanceEuropeenneHorsReseau * 100.0;
 
         pGotFailure += (double)ProblemeHoraireAdequation.DefaillanceEuropeenneHorsReseau;
 
@@ -251,7 +250,6 @@ public:
     }
 
 private:
-    double pRatio;
     double pGotFailure;
 
 }; // class LOLP_IS_System
