@@ -172,11 +172,6 @@ public:
                 pValuesForTheCurrentYear.hour[h]
                   -= area->reserves.entry[Data::fhrPrimaryReserve][h];
         }
-        // Compute all statistics for the current year (daily,weekly,monthly)
-        pValuesForTheCurrentYear.computeStatisticsForTheCurrentYear();
-
-        // Merge all those values with the global results
-        AncestorType::pResults.merge(0, pValuesForTheCurrentYear);
 
         // Next
         NextType::initializeFromArea(study, area);
@@ -235,6 +230,9 @@ public:
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
+        // Compute all statistics for the current year (daily,weekly,monthly)
+        pValuesForTheCurrentYear.computeStatisticsForTheCurrentYear();
+
         // Next variable
         NextType::yearEnd(year, numSpace);
     }
@@ -242,6 +240,10 @@ public:
     void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
                         unsigned int nbYearsForCurrentSummary)
     {
+        for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
+            AncestorType::pResults.merge(numSpaceToYear[numSpace],
+                                         pValuesForTheCurrentYear[numSpace]);
+
         // Next variable
         NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
     }
