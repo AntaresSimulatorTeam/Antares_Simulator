@@ -157,8 +157,6 @@ public:
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
 
-        pRatio = 100. / (double)study.runtime->rangeLimits.year[Data::rangeCount];
-
         // Average on all years
         for (uint i = 0; i != VCardType::columnCount; ++i)
         {
@@ -305,11 +303,11 @@ public:
         // CONG. PROB +
         if (state.ntc->ValeurDuFlux[state.link->index]
             > +linkdata.entry[Data::fhlNTCDirect][state.hourInTheYear] - 10e-6)
-            pValuesForTheCurrentYear[numSpace][0].hour[state.hourInTheYear] += pRatio;
+            pValuesForTheCurrentYear[numSpace][0].hour[state.hourInTheYear] += 100.0;
         // CONG. PROB -
         if (state.ntc->ValeurDuFlux[state.link->index]
             < -linkdata.entry[Data::fhlNTCIndirect][state.hourInTheYear] + 10e-6)
-            pValuesForTheCurrentYear[numSpace][1].hour[state.hourInTheYear] += pRatio;
+            pValuesForTheCurrentYear[numSpace][1].hour[state.hourInTheYear] += 100.0;
 
         // Next item in the list
         NextType::hourForEachLink(state, numSpace);
@@ -375,7 +373,6 @@ public:
     }
 
 private:
-    double pRatio;
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     typename VCardType::IntermediateValuesType pValuesForYearLocalReport;
