@@ -68,6 +68,10 @@ public:
     mutable double allYears;
     unsigned int nbYearsCapacity;
 
+    std::vector<float> yearsWeight;
+    float yearsWeightSum;
+
+
 }; // class RawData
 
 } // namespace AllYears

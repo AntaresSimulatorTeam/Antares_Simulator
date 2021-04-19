@@ -55,6 +55,9 @@ void RawData::initializeFromStudy(const Data::Study& study)
     Antares::Memory::Allocate<double>(hourly, maxHoursInAYear);
     nbYearsCapacity = study.runtime->rangeLimits.year[Data::rangeEnd] + 1;
     year = new double[nbYearsCapacity];
+
+    yearsWeight = study.parameters.getYearsWeight();
+    yearsWeightSum = study.parameters.getYearsWeightSum();
 }
 
 void RawData::reset()
@@ -70,20 +73,24 @@ void RawData::reset()
 void RawData::merge(unsigned int y, const IntermediateValues& rhs)
 {
     unsigned int i;
+
+    // Ratio take into account MC year weight
+    double ratio = (double)yearsWeight[y] / (double)yearsWeightSum;
+
     // StdDeviation value for each hour throughout all years
     for (i = 0; i != maxHoursInAYear; ++i)
-        hourly[i] += rhs.hour[i];
+        hourly[i] += rhs.hour[i * ratio;
     // StdDeviation value for each day throughout all years
     for (i = 0; i != maxDaysInAYear; ++i)
-        daily[i] += rhs.day[i];
+        daily[i] += rhs.day[i] * ratio;
     // StdDeviation value for each week throughout all years
     for (i = 0; i != maxWeeksInAYear; ++i)
-        weekly[i] += rhs.week[i];
+        weekly[i] += rhs.week[i] * ratio;
     // StdDeviation value for each month throughout all years
     for (i = 0; i != maxMonths; ++i)
-        monthly[i] += rhs.month[i];
+        monthly[i] += rhs.month[i] * ratio;
     // StdDeviation value throughout all years
-    year[y] += rhs.year;
+    year[y] += rhs.year * ratio;
 }
 
 } // namespace AllYears
