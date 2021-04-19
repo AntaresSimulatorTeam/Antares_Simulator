@@ -85,7 +85,7 @@ struct VCardFlowQuad
         isPossiblyNonApplicable = 0,
     };
 
-    typedef IntermediateValues IntermediateValuesType;
+    typedef IntermediateValues* IntermediateValuesType;
 
 }; // class VCard
 
@@ -130,6 +130,7 @@ public:
 public:
     ~FlowQuad()
     {
+        delete[] pValuesForTheCurrentYear;
     }
 
     void initializeFromStudy(Data::Study& study)
@@ -212,12 +213,12 @@ public:
     {
         // Flow assessed over all MC years (linear)
         (void)::memcpy(
-          pValuesForTheCurrentYear.hour,
+          pValuesForTheCurrentYear->hour,
           ResultatsParInterconnexion[pLinkGlobalIndex]->TransitMoyenRecalculQuadratique,
           sizeof(double) * pNbHours);
 
         // Compute all statistics for the current year (daily,weekly,monthly)
-        pValuesForTheCurrentYear.computeStatisticsForTheCurrentYear();
+        pValuesForTheCurrentYear->computeStatisticsForTheCurrentYear();
 
         // Next variable
         NextType::yearEnd(year, numSpace);
@@ -300,7 +301,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
-            pValuesForTheCurrentYear.template buildAnnualSurveyReport<VCardType>(
+            pValuesForTheCurrentYear->template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }
     }

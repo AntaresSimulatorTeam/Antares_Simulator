@@ -85,7 +85,7 @@ struct VCardLoopFlow
         isPossiblyNonApplicable = 0,
     };
 
-    typedef IntermediateValues IntermediateValuesType;
+    typedef IntermediateValues* IntermediateValuesType;
 
 }; // class VCard
 
@@ -130,6 +130,7 @@ public:
 public:
     ~LoopFlow()
     {
+        delete[] pValuesForTheCurrentYear;
     }
 
     void initializeFromStudy(Data::Study& study)
@@ -226,7 +227,7 @@ public:
     void yearEnd(uint year, unsigned int numSpace)
     {
         // Compute all statistics for the current year (daily,weekly,monthly)
-        pValuesForTheCurrentYear.computeStatisticsForTheCurrentYear();
+        pValuesForTheCurrentYear->computeStatisticsForTheCurrentYear();
 
         // Next variable
         NextType::yearEnd(year, numSpace);
@@ -282,7 +283,7 @@ public:
       uint,
       uint) const
     {
-        return pValuesForTheCurrentYear.hour;
+        return pValuesForTheCurrentYear->hour;
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,
@@ -297,7 +298,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
-            pValuesForTheCurrentYear.template buildAnnualSurveyReport<VCardType>(
+            pValuesForTheCurrentYear->template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }
     }
