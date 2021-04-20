@@ -58,7 +58,7 @@ struct VCardCongestionProbability
     }
 
     //! The expecte results
-    typedef Results<R::AllYears::Raw< // The raw values throughout all years
+    typedef Results<R::AllYears::Average< // The raw values throughout all years
       >>
       ResultsType;
 

@@ -182,6 +182,18 @@ public:
 
     void simulationEnd()
     {
+        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
+            // Flow assessed over all MC years (linear)
+            (void)::memcpy(
+              pValuesForTheCurrentYear[numSpace].hour,
+              ResultatsParInterconnexion[pLinkGlobalIndex]->TransitMoyenRecalculQuadratique,
+              sizeof(double) * pNbHours);
+
+            // Compute all statistics for the current year (daily,weekly,monthly)
+            pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
+        }        
+
         // Next
         NextType::simulationEnd();
     }
@@ -214,15 +226,6 @@ public:
 
     void yearEnd(uint year, unsigned int numSpace)
     {
-        // Flow assessed over all MC years (linear)
-        (void)::memcpy(
-          pValuesForTheCurrentYear[numSpace].hour,
-          ResultatsParInterconnexion[pLinkGlobalIndex]->TransitMoyenRecalculQuadratique,
-          sizeof(double) * pNbHours);
-
-        // Compute all statistics for the current year (daily,weekly,monthly)
-        pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
-
         // Next variable
         NextType::yearEnd(year, numSpace);
     }
