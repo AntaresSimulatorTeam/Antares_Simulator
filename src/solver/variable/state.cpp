@@ -462,6 +462,10 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex,
             // optimal number.
             (dur == 0) ? (optimalCount = ON_min[i]) : (optimalCount = ON_opt[i]);
 
+            // NODU cannot be > unit count
+            if (optimalCount > currentCluster->unitCount)
+                optimalCount = currentCluster->unitCount;
+
             thermalClusterFixedCostForYear[i] = currentCluster->fixedCost * optimalCount;
 
             if (i >= startHourForCurrentYear + 1) // starting hour +1 (fron start hour)
