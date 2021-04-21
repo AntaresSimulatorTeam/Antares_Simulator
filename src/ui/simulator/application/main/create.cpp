@@ -469,7 +469,6 @@ void ApplWnd::internalInitialize()
     ::Bind<void()> callback;
     callback.bind(mainfrm, &Antares::Forms::ApplWnd::startAntares);
     Antares::Dispatcher::GUI::Post(callback); // ms, arbitrary
-
 }
 
 void ApplWnd::startAntares()

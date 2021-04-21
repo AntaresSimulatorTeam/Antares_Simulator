@@ -31,14 +31,13 @@
 namespace Antares
 {
 wxString VersionToWxString()
-{        
-    return wxString(wxT("Antares v"))
-            << ANTARES_VERSION_HI << wxT('.') << ANTARES_VERSION_LO << wxT('.')
-            << ANTARES_VERSION_BUILD
+{
+    return wxString(wxT("Antares v")) << ANTARES_VERSION_HI << wxT('.') << ANTARES_VERSION_LO
+                                      << wxT('.') << ANTARES_VERSION_BUILD
 #if ANTARES_RC != 0
-            << wxT("rc") << int(ANTARES_RC)
+                                      << wxT("rc") << int(ANTARES_RC)
 #endif
-        ;
+      ;
 }
 
 } // namespace Antares
