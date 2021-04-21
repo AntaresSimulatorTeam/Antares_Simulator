@@ -31,7 +31,6 @@
 #include <wx/settings.h>
 #include <wx/statline.h>
 
-#include "../../../internet/license.h"
 #include <antares/study/finder.h>
 #include "../toolbox/resources.h"
 #include "../toolbox/components/button.h"
@@ -46,8 +45,6 @@
 #include <ui/common/component/panel.h>
 #include <ui/common/component/spotlight.h>
 #include "../toolbox/dispatcher/study.h"
-#include "../windows/proxy/proxysetup.h"
-#include "../internet/limits.h"
 
 using namespace Yuni;
 namespace Antares
@@ -217,13 +214,7 @@ void StartupWizard::Show()
     if (not globalWndStartupWizard)
         globalWndStartupWizard = new StartupWizard(Forms::ApplWnd::Instance());
 
-    // display welcome page or proxy setup page
-    if (Antares::License::statusOnline == Antares::License::stNotRequested
-        || Antares::License::statusOnline == Antares::License::stValidOnline)
-        Dispatcher::GUI::Show(globalWndStartupWizard, true, true);
-    else
-        Dispatcher::GUI::ShowModal(
-          new LicenseCouldNotConnectToInternetServer(Forms::ApplWnd::Instance()), true);
+    Dispatcher::GUI::Show(globalWndStartupWizard, true, true);
 }
 
 void StartupWizard::Close()

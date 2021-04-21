@@ -50,7 +50,6 @@ set(YBY_AGGREGATOR_LIBS
 	libantares-core-swap
 	libantares-core-calendar
 	yuni-static-core
-	libantares-license
 	${wxWidgets_LIBRARIES} ${CMAKE_THREADS_LIBS_INIT})
 
 # The new ant library

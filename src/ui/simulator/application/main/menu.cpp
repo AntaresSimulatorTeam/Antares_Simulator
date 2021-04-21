@@ -138,9 +138,9 @@ wxMenu* ApplWnd::createMenuFiles()
     {
         Menu::CreateItem(pMenuFile,
                          mnIDOpenExplorer,
-                         wxT("Open in Gnome Nautilus..."),
+                         wxT("Open in file explorer..."),
                          "images/16x16/empty.png",
-                         wxT("Open the folder in Gnome Nautilus"));
+                         wxT("Open the folder in file explorer"));
     }
 
     Menu::CreateItem(pMenuFile,
@@ -595,22 +595,6 @@ wxMenu* ApplWnd::createMenuHelp()
 
     pMenuHelp->AppendSeparator();
 
-    Menu::CreateItem(pMenuHelp,
-                     mnIDHelpContinueOnline,
-                     wxT("Continue online"),
-                     nullptr,
-                     wxT("Allow gathering of  anonymous usage metrics"));
-    Menu::CreateItem(pMenuHelp,
-                     mnIDHelpContinueOffline,
-                     wxT("Continue offline"),
-                     nullptr,
-                     wxT("Stop gathering of  anonymous usage metrics"));
-
-    Menu::CreateItem(
-      pMenuHelp, mnIDHelpShowID, wxT("Show signature"), nullptr, wxT("Show unique signature"));
-
-    pMenuHelp->AppendSeparator();
-
     Menu::CreateItem(pMenuHelp, mnIDHelpAbout, wxT("About Antares"), nullptr, wxT("About Antares"));
 
     return pMenuHelp;
@@ -652,7 +636,7 @@ void ApplWnd::evtOnOpenStudyFolderInExplorer(wxCommandEvent&)
             wxExecute(wxString(wxT("explorer.exe \""))
                       << wxStringFromUTF8(study->folder) << wxT("\""));
         else
-            wxExecute(wxString(wxT("gnome-open \""))
+            wxExecute(wxString(wxT("xdg-open \""))
                       << wxStringFromUTF8(study->folder) << wxT("\""));
     }
 }
@@ -668,7 +652,7 @@ void ApplWnd::evtOnOpenOutputInExplorer(wxCommandEvent& evt)
                 wxExecute(wxString(wxT("explorer.exe \""))
                           << wxStringFromUTF8((*i)->path) << wxT("\""));
             else
-                wxExecute(wxString(wxT("gnome-open \""))
+                wxExecute(wxString(wxT("xdg-open \""))
                           << wxStringFromUTF8((*i)->path) << wxT("\""));
             return;
         }

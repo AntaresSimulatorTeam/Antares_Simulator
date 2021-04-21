@@ -252,7 +252,7 @@ void ApplWnd::refreshMenuOutput()
     if (System::windows)
         item = pMenuOutput->AppendSubMenu(new wxMenu(), wxT("Open in Windows Explorer..."));
     else
-        item = pMenuOutput->AppendSubMenu(new wxMenu(), wxT("Open in Gnome Nautilus..."));
+        item = pMenuOutput->AppendSubMenu(new wxMenu(), wxT("Open in file explorer..."));
 
     // The current total number of item for the current category
     total = 0;

@@ -8,20 +8,6 @@ git submodule update --init --recursive
 
 cd src/ext
 
-#OPENSSL
-cd openssl
-./config --prefix=$PWD/release-x86_64 no-asm no-mdc2 no-rc5 no-shared
-make depend
-make
-make install
-
-#CURL
-cd ../libcurl
-./buildconf
-export LIBS="-ldl -lpthread"
-./configure --disable-shared --disable-ldap --with-ssl="$ANTARES_SRC/ext/openssl/release-x86_64" --without-libidn --without-libssh2 --without-zlib
-make
-
 #export CC=/usr/local/gcc/4.8/bin/gcc-4.8
 #export CXX=/usr/local/gcc/4.8/bin/g++-4.8
 

@@ -27,7 +27,6 @@
 #include "atsp.h"
 #include <antares/inifile.h>
 #include "../../config.h"
-#include "../../internet/limits.h"
 
 using namespace Yuni;
 
@@ -205,8 +204,6 @@ bool ATSP::loadFromINIFile(const String& filename)
                 }
 
                 pArea.push_back(info);
-                if (License::Limits::areaCount and pArea.size() > License::Limits::areaCount)
-                    return false;
             }
         }
 
@@ -220,8 +217,6 @@ bool ATSP::loadFromINIFile(const String& filename)
             logs.error() << "no area found.";
             return false;
         }
-        if (License::Limits::areaCount and pArea.size() > License::Limits::areaCount)
-            return false;
 
         if (!checkStudyVersion())
             return false;
@@ -295,7 +290,7 @@ bool ATSP::loadFromINIFile(const String& filename)
             return false;
         }
 
-        return not(License::Limits::areaCount and pArea.size() > License::Limits::areaCount);
+        return true;
     }
     return false;
 }

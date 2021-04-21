@@ -38,7 +38,6 @@
 #include "../../config.h"
 #include "../filter.h"
 #include "constants.h"
-#include "../../../internet/limits.h"
 
 #define SEP IO::Separator
 
@@ -1179,12 +1178,6 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         buffer.clear() << pStudy.folderInput << SEP << "areas" << SEP << "list."
                        << pStudy.inputExtension;
         ret = loadListFromFile(buffer) and ret;
-
-        if (License::Limits::areaCount)
-        {
-            if (options.usedByTheSolver and size() > License::Limits::areaCount)
-                return false;
-        }
     }
 
     // Hydro
@@ -1216,12 +1209,6 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             buffer.clear() << pStudy.folderInput << thermalPlant << area.id;
             ret = area.thermal.list.loadFromFolder(pStudy, buffer.c_str(), &area) and ret;
             area.thermal.prepareAreaWideIndexes();
-            if (License::Limits::thermalClusterCount)
-            {
-                if (options.usedByTheSolver
-                    and area.thermal.list.size() > License::Limits::thermalClusterCount)
-                    return false;
-            }
         }
     }
 

@@ -8,15 +8,6 @@ are distributed along with Antares_Simulator with NO WARRANTY:
 Wxwidgets 3.0.2		Copyright (c) 1998-2017  	The wxWidget Team
 license:	wxWindows Library License,V3.1		https://spdx.org/licenses/wxWindows.html
 
-libCurl   7.51.0	Copyright (c) 1996-2017  	Daniel Stenberg et al			
-license:	curl license						https://spdx.org/licenses/curl.html
-
-OpenSSL	  1.1.0  	Copyright (c) 1998-2016  The OpenSSL Project
-"This product includes software developed by the OpenSSL Project
-for use in the OpenSSL Toolkit (http://www.openssl.org/)"
-"This product includes software written by Tim Hudson (tjh@cryptsoft.com)" 
-license: 	OpenSSL license and SSLeay license	https://spdx.org/licenses/OpenSSL.html
-					
 libYuni	  1.1.0		https://github.com/libyuni	
 license:			Mozilla Public License 2.0	https://spdx.org/licenses/MPL-2.0.html
 
