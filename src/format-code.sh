@@ -1,7 +1,14 @@
 #!/bin/bash
 
-SOURCE_DIRS="analyzer/ ext/ internet/ libs/ solver/ tools/ ui/"
-SOURCE_FILES=$(find $SOURCE_DIRS -type f \( -name "*.h" -or -name "*.cpp" -or -name "*.h" -or -name "*.hxx" -or -name "*.hpp" -or -name "*.cxx" -or -name "*.c" \) -and -not \( -iname "sqlite3.c" -or -name "*.h.generator.hpp" -or -name "*.hxx.generator.hpp" -or -name "*.generator.commonstypes.hpp" \))
+if [ $# -eq 0 ]
+then
+    # No arguments: format all
+    SOURCE_DIRS="analyzer/ ext/ internet/ libs/ solver/ tools/ ui/"
+    SOURCE_FILES=$(find $SOURCE_DIRS -type f \( -name "*.h" -or -name "*.cpp" -or -name "*.h" -or -name "*.hxx" -or -name "*.hpp" -or -name "*.cxx" -or -name "*.c" \) -and -not \( -iname "sqlite3.c" -or -name "*.h.generator.hpp" -or -name "*.hxx.generator.hpp" -or -name "*.generator.commonstypes.hpp" \))
+else
+    # Format files provided as arguments
+    SOURCE_FILES="$@"
+fi
 
 # Remove ^M, etc.
 if ! [ -x "$(command -v dos2unix)" ]; then
