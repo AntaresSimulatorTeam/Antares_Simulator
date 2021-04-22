@@ -665,11 +665,6 @@ struct PROBLEME_HEBDO
     int* FlexUpDemandPoolOfNode;
     int* FlexDownOfferPoolOfNode;
     int* FlexDownDemandPoolOfNode;
-#endif
-
-    /* Unknown status */
-    int* NbGrpCourbeGuide; // ?
-    int* NbGrpOpt;         // ?
 
     class MatriceContraintes
     {
@@ -688,6 +683,11 @@ struct PROBLEME_HEBDO
     };
 
     MatriceContraintes matriceContraintes;
+#endif
+    public:
+    /* Unknown status */
+    int* NbGrpCourbeGuide; // ?
+    int* NbGrpOpt;         // ?
 
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
