@@ -302,7 +302,7 @@ public:
     void hourForEachLink(State& state, unsigned int numSpace)
     {
         // Ratio take into account MC year weight
-        double ratio = (double)yearsWeight[state.year] / (double)yearsWeightSum;
+        float ratio = yearsWeight[state.year] / yearsWeightSum;
 
         assert(state.link != NULL);
         auto& linkdata = state.link->data;
