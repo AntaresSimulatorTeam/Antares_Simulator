@@ -252,7 +252,7 @@ public:
                         unsigned int nbYearsForCurrentSummary)
     {
         for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
-            AncestorType::pResults.merge(numSpaceToYear[numSpace], 
+            AncestorType::pResults.merge(numSpaceToYear[numSpace],
                                          pValuesForTheCurrentYear[numSpace]);
 
         // Next variable
