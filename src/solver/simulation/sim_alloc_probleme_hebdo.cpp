@@ -929,26 +929,3 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     MemFree(problem.coutOptimalSolution1);
     MemFree(problem.coutOptimalSolution2);
 }
-
-PROBLEME_HEBDO::MatriceContraintes::MatriceContraintes() : pi(NULL), columns(NULL), pCapacity(0)
-{
-}
-
-PROBLEME_HEBDO::MatriceContraintes::~MatriceContraintes()
-{
-    MemFree(pi);
-    MemFree(columns);
-}
-
-void PROBLEME_HEBDO::MatriceContraintes::reserve(uint c)
-{
-    if (pCapacity < c)
-    {
-        do
-        {
-            pCapacity += 4096;
-        } while (pCapacity < c);
-        pi = (double*)MemRealloc(pi, sizeof(double) * pCapacity);
-        columns = (int*)MemRealloc(columns, sizeof(int) * pCapacity);
-    }
-}

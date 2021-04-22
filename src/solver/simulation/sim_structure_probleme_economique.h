@@ -666,23 +666,6 @@ struct PROBLEME_HEBDO
     int* FlexDownOfferPoolOfNode;
     int* FlexDownDemandPoolOfNode;
 
-    class MatriceContraintes
-    {
-    public:
-        MatriceContraintes();
-
-        ~MatriceContraintes();
-
-        double* pi;
-        int* columns;
-
-        void reserve(unsigned int c);
-
-    private:
-        unsigned int pCapacity;
-    };
-
-    MatriceContraintes matriceContraintes;
 #endif
     public:
     /* Unknown status */
