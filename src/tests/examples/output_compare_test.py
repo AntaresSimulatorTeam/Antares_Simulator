@@ -3243,7 +3243,7 @@ def test_hydrobind_spxweek_freemod(use_ortools, ortools_solver, solver_path):
                     reason="Results different between linux and windows.")
 def test_hydrobind_spxweek_minexc(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroBind" / "hydrobind-spxweek-minexc"
-                     run_study(solver_path, study_path, use_ortools, ortools_solver)
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
     enable_study_output(study_path, False)
     check_output_values(study_path)
 
