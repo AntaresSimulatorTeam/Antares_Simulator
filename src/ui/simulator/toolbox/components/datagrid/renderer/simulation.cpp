@@ -33,6 +33,15 @@
 
 using namespace Yuni;
 
+// Anonymous namespace: global variable, local scope
+namespace {
+  enum Antares::Data::TimeSeries mapping[] = {Data::timeSeriesLoad,
+                                              Data::timeSeriesThermal,
+                                              Data::timeSeriesHydro,
+                                              Data::timeSeriesWind,
+                                              Data::timeSeriesSolar};
+}
+
 namespace Antares
 {
 namespace Component
@@ -91,11 +100,6 @@ bool SimulationTSManagement::cellValue(int x, int y, const String& value)
 {
     if (not study || x < 0 || x > 4)
         return 0.;
-    enum Antares::Data::TimeSeries mapping[] = {Data::timeSeriesLoad,
-                                                Data::timeSeriesThermal,
-                                                Data::timeSeriesHydro,
-                                                Data::timeSeriesWind,
-                                                Data::timeSeriesSolar};
     auto ts = mapping[x];
 
     double d;
@@ -301,11 +305,6 @@ double SimulationTSManagement::cellNumericValue(int x, int y) const
 {
     if (not study || x < 0 || x > 4)
         return 0.;
-    enum Antares::Data::TimeSeries mapping[] = {Data::timeSeriesLoad,
-                                                Data::timeSeriesThermal,
-                                                Data::timeSeriesHydro,
-                                                Data::timeSeriesWind,
-                                                Data::timeSeriesSolar};
     auto ts = mapping[x];
     switch (y)
     {
@@ -407,11 +406,6 @@ wxString SimulationTSManagement::cellValue(int x, int y) const
 {
     if (not study || x < 0 || x > 4)
         return wxEmptyString;
-    enum Antares::Data::TimeSeries mapping[] = {Data::timeSeriesLoad,
-                                                Data::timeSeriesThermal,
-                                                Data::timeSeriesHydro,
-                                                Data::timeSeriesWind,
-                                                Data::timeSeriesSolar};
     auto ts = mapping[x];
     switch (y)
     {
@@ -513,11 +507,6 @@ IRenderer::CellStyle SimulationTSManagement::cellStyle(int x, int y) const
 {
     if (not study || x < 0 || x > 4)
         return IRenderer::cellStyleError;
-    enum Antares::Data::TimeSeries mapping[] = {Data::timeSeriesLoad,
-                                                Data::timeSeriesThermal,
-                                                Data::timeSeriesHydro,
-                                                Data::timeSeriesWind,
-                                                Data::timeSeriesSolar};
     auto ts = mapping[x];
     bool tsGenerator = (0 != (study->parameters.timeSeriesToGenerate & ts));
 
