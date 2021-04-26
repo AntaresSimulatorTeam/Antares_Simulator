@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_H__
-#define __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_H__
+#ifndef __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_PREPRO_H__
+#define __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_PREPRO_H__
 
 #include "../../../array/matrix.h"
 #include "defines.h"
@@ -36,36 +36,17 @@ namespace Antares
 namespace Data
 {
 /*!
-** \brief Thermal
+** \brief Renewable
 */
-class PreproThermal
+class PreproRenewable
 {
-public:
-    enum
-    {
-        //! FO Duration (Forced outage Duration - Duree moyenne d'indisponibilite fortuite)
-        foDuration = 0,
-        //! PO Duration (Planned outage Duration - Duree moyenne d'indisponibilite programmee)
-        poDuration,
-        //! FO Rate (Forced outage Rate - Taux moyen d'indisponibilite fortuite)
-        foRate,
-        //! PO Rate (Planned outage Rate - Taux moyen d'indisponibilite programmee)
-        poRate,
-        //! NPO min (nombre minimal de groupes en maintenance)
-        npoMin,
-        //! NPO max (nombre maximal de groupes en maintenance)
-        npoMax,
-        // max
-        thermalPreproMax,
-    };
-
 public:
     //! \name Constructor
     //@{
     /*!
     ** \brief Default constructor
     */
-    PreproThermal();
+    PreproRenewable();
     //@}
 
     bool invalidate(bool reload) const;
@@ -80,10 +61,10 @@ public:
     void reset();
 
     //! Copy data from another struct
-    void copyFrom(const PreproThermal& rhs);
+    void copyFrom(const PreproRenewable& rhs);
 
     /*!
-    ** \brief Load settings for the thermal prepro from a folder
+    ** \brief Load settings for the renewable prepro from a folder
     **
     ** \param folder The source folder
     ** \return A non-zero value if the operation succeeded, 0 otherwise
@@ -94,7 +75,7 @@ public:
                         const AnyString& clustername);
 
     /*!
-    ** \brief Save settings used by the thermal prepro to a folder
+    ** \brief Save settings used by the renewable prepro to a folder
     **
     ** \param folder The targer folder
     ** \return A non-zero value if the operation succeeded, 0 otherwise
@@ -123,7 +104,7 @@ public:
     // max x DAYS_PER_YEAR
     Matrix<> data;
 
-}; // class PreproThermal
+}; // class PreproRenewable
 
 } // namespace Data
 } // namespace Antares
@@ -131,4 +112,4 @@ public:
 #include "prepro.hxx"
 #include "cluster.h"
 
-#endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_HXX__
+#endif // __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_PREPRO_HXX__

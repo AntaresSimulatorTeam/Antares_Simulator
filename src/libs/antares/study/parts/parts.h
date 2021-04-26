@@ -52,4 +52,12 @@
 #include "thermal/cluster.h"
 #include "thermal/container.h"
 
+// Renewable
+#include "renewable/defines.h"
+#include "renewable/prepro.h"
+#include "renewable/series.h"
+#include "renewable/cluster.h"
+#include "renewable/container.h"
+
+
 #endif // __ANTARES_LIBS_STUDY_PARTS_H__
