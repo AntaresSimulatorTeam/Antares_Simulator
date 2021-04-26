@@ -270,6 +270,11 @@ public:
     PartThermal thermal;
     //@}
 
+    //! \name Renewable
+    //@{
+    PartRenewable renewable;
+    //@}
+
     //! \name Interconnections
     //@{
     //! All connections with this area
@@ -335,6 +340,7 @@ private:
     bool storeTimeseriesNumbersForWind(Study& study);
     bool storeTimeseriesNumbersForHydro(Study& study);
     bool storeTimeseriesNumbersForThermal(Study& study);
+    bool storeTimeseriesNumbersForRenewable(Study& study);
 
 }; // class Area
 

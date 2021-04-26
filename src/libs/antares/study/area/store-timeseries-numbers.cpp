@@ -128,5 +128,20 @@ bool Area::storeTimeseriesNumbersForThermal(Study& study)
     return ret;
 }
 
+bool Area::storeTimeseriesNumbersForRenewable(Study& study)
+{
+    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP << "renewable" << SEP
+                         << id;
+
+    if (!IO::Directory::Create(study.buffer))
+    {
+        logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
+        return false;
+    }
+
+    bool ret = renewable.list.storeTimeseriesNumbers(study);
+    return ret;
+}
+
 } // namespace Data
 } // namespace Antares
