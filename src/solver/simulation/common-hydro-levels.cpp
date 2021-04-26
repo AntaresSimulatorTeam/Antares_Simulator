@@ -56,10 +56,7 @@ void computingHydroLevels(const Data::Study& study,
 
         if (not computeAnyway)
         {
-            if (area.hydro.useHeuristicTarget && !remixWasRun)
-                return;
-
-            if (!area.hydro.useHeuristicTarget && remixWasRun)
+            if (area.hydro.useHeuristicTarget or remixWasRun)
                 return;
         }
 
