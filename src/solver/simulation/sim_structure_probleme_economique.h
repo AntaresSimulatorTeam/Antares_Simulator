@@ -665,29 +665,12 @@ struct PROBLEME_HEBDO
     int* FlexUpDemandPoolOfNode;
     int* FlexDownOfferPoolOfNode;
     int* FlexDownDemandPoolOfNode;
-#endif
 
+#endif
+    public:
     /* Unknown status */
     int* NbGrpCourbeGuide; // ?
     int* NbGrpOpt;         // ?
-
-    class MatriceContraintes
-    {
-    public:
-        MatriceContraintes();
-
-        ~MatriceContraintes();
-
-        double* pi;
-        int* columns;
-
-        void reserve(unsigned int c);
-
-    private:
-        unsigned int pCapacity;
-    };
-
-    MatriceContraintes matriceContraintes;
 
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
