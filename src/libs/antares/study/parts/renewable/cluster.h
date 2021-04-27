@@ -31,7 +31,6 @@
 #include <yuni/core/noncopyable.h>
 #include "../../../array/matrix.h"
 #include "defines.h"
-#include "prepro.h"
 #include "series.h"
 #include "../../fwd.h"
 #include <set>
@@ -53,7 +52,7 @@ enum RenewableGroup
     //! PV solar
     PVSolar,
     //! Other
-    renewableOther
+    renewableOther,
     
     //! The highest value
     renewableGroupMax
@@ -140,26 +139,6 @@ public:
     void group(Data::RenewableClusterName newgrp);
     //@}
 
-    //! \name Spinning
-    //@{
-    /*!
-    ** \brief Calculation of spinning
-    **
-    ** The formula is : TS[i,j] = TS[i,j] * (1 - Spinning / 100)
-    */
-    void calculationOfSpinning();
-
-    /*!
-    ** \brief Calculation of spinning (reverse)
-    **
-    ** The original formula for the calculation of the spinning is :
-    ** TS[i,j] = TS[i,j] * (1 - Spinning / 100)
-    **
-    ** This method is used to removed the spinning, before exporting the TS matrices
-    ** into the input.
-    */
-    void reverseCalculationOfSpinning();
-    //@}
 
     /*!
     ** \brief Check and fix all values of a renewable cluster
@@ -408,19 +387,6 @@ public:
 
     //! Get if the list is empty
     bool empty() const;
-    //@}
-
-    //! \name Spinning
-    //@{
-    /*!
-    ** \brief Calculation of Spinning for all renewable clusters
-    */
-    void calculationOfSpinning();
-
-    /*!
-    ** \brief Calculation of Spinning for all renewable clusters (reverse)
-    */
-    void reverseCalculationOfSpinning();
     //@}
 
     /*!

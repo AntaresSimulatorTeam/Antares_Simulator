@@ -211,6 +211,19 @@ set(SRC_STUDY_PART_THERMAL
 	)
 source_group("study\\part\\thermal" FILES ${SRC_STUDY_PART_THERMAL})
 
+set(SRC_STUDY_PART_RENEWABLE
+	study/parts/renewable/container.h
+	study/parts/renewable/container.hxx
+	study/parts/renewable/container.cpp
+	study/parts/renewable/series.h
+	study/parts/renewable/series.hxx
+	study/parts/renewable/series.cpp
+	study/parts/renewable/cluster.h
+	study/parts/renewable/cluster.hxx
+	study/parts/renewable/cluster.cpp
+	)
+source_group("study\\part\\renewable" FILES ${SRC_STUDY_PART_RENEWABLE})
+
 set(SRC_STUDY_PART_WIND
 	study/parts/wind/container.h
 	study/parts/wind/container.cpp
@@ -517,6 +530,7 @@ macro(ADD_ANTARES_CORE name)
 		${SRC_STUDY_PART_WIND}
 		${SRC_STUDY_PART_HYDRO}
 		${SRC_STUDY_PART_THERMAL}
+        ${SRC_STUDY_PART_RENEWABLE}
 		${SRC_STUDY_SCENARIO_BUILDER}
         ${SRC_EXCEPTION}
         ${SRC_STDCXX}

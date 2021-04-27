@@ -84,7 +84,6 @@ static bool RenewableClusterLoadFromSection(const AnyString& filename,
             }
         }
         // update the minUpDownTime
-        cluster.minUpDownTime = Math::Max(cluster.minUpTime, cluster.minDownTime);
     }
     return true;
 }
@@ -96,8 +95,7 @@ Data::RenewableCluster::RenewableCluster(Area* parent, uint nbParallelYears) :
  parentArea(parent),
  enabled(true),
  nominalCapacity(0.),
- prepro(nullptr),
- series(nullptr),
+ series(nullptr)
 {
     // assert
     assert(parent and "A parent for a renewable dispatchable cluster can not be null");
@@ -110,8 +108,7 @@ Data::RenewableCluster::RenewableCluster(Area* parent) :
  parentArea(parent),
  enabled(true),
  nominalCapacity(0.),
- prepro(nullptr),
- series(nullptr),
+ series(nullptr)
 {
     // assert
     assert(parent and "A parent for a renewable dispatchable cluster can not be null");
@@ -119,15 +116,12 @@ Data::RenewableCluster::RenewableCluster(Area* parent) :
 
 Data::RenewableCluster::~RenewableCluster()
 {
-    delete prepro;
     delete series;
 }
 
 #ifdef ANTARES_SWAP_SUPPORT
 void RenewableCluster::flush()
 {
-    if (prepro)
-        prepro->flush();
     if (series)
         series->flush();
 }
@@ -160,19 +154,6 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
     // Note: In this method, only the data can be copied (and not the name or
     //   the ID for example)
 
-    // production cost, even if this variable should not be used
-    if (productionCost)
-    {
-        if (cluster.productionCost)
-            memcpy(productionCost, cluster.productionCost, HOURS_PER_YEAR * sizeof(double));
-        else
-            memset(productionCost, 0, HOURS_PER_YEAR * sizeof(double));
-    }
-
-    // mustrun
-    mustrun = cluster.mustrun;
-    mustrunOrigin = cluster.mustrunOrigin;
-
     // group
     groupID = cluster.groupID;
     pGroup = cluster.pGroup;
@@ -180,22 +161,14 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
     // Enabled
     enabled = cluster.enabled;
 
-    // unit count
-    unitCount = cluster.unitCount;
     // nominal capacity
     nominalCapacity = cluster.nominalCapacity;
-    nominalCapacityWithSpinning = cluster.nominalCapacityWithSpinning;
 
-    // Making sure that the data related to the prepro and timeseries are present
-    // prepro
-    if (not prepro)
-        prepro = new PreproRenewable();
+    // Making sure that the data related to the timeseries are present
     if (not series)
         series = new DataSeriesRenewable();
 
-    prepro->copyFrom(*cluster.prepro);
     // timseries
-
     series->series = cluster.series->series;
     cluster.series->series.unloadFromMemory();
     series->timeseriesNumbers.clear();
@@ -279,15 +252,8 @@ void RenewableClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
     each([&](const RenewableCluster& cluster) {
         u.requiredMemoryForInput += sizeof(RenewableCluster);
         u.requiredMemoryForInput += sizeof(void*);
-        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // productionCost
-        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // PthetaInf
-        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // dispatchedUnitsCount
-        cluster.modulation.estimateMemoryUsage(u, true, renewableModulationMax, HOURS_PER_YEAR);
-
         if (cluster.series)
             cluster.series->estimateMemoryUsage(u);
-        if (cluster.prepro)
-            cluster.prepro->estimateMemoryUsage(u);
 
         // From the solver
         u.requiredMemoryForInput += 70 * 1024;
@@ -395,9 +361,6 @@ bool RenewableClusterListSaveToFolder(const RenewableClusterList* l, const AnySt
                 s->add("group", cluster.group());
             if (not cluster.enabled)
                 s->add("enabled", "false");
-
-            buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
-                           << cluster.parentArea->id << SEP << cluster.id();
         });
 
         // Write the ini file
@@ -445,8 +408,6 @@ bool RenewableClusterList::loadFromFolder(Study& study, const AnyString& folder,
 
         if (ini.firstSection)
         {
-            String modulationFile;
-
             for (auto* section = ini.firstSection; section; section = section->next)
             {
                 if (section->name.empty())
@@ -467,242 +428,6 @@ bool RenewableClusterList::loadFromFolder(Study& study, const AnyString& folder,
                     // temporary reverting to the old naming convention
                     cluster->pID = cluster->name();
                     cluster->pID.toLower();
-                }
-
-                // Keeping the current value of 'mustrun' somewhere else
-                cluster->mustrunOrigin = cluster->mustrun;
-
-                // MBO 15/04/2014
-                // new rounding scheme starting version 450
-                // if abs(value) < 1.e-3 => 0 ; if abs(value) > 5.e-4 => 5.e-4
-                // applies to
-                //	- Market Bid cost
-                //	- Marginal cost
-                //	- Spread cost
-                //	- Fixed cost
-                //	- Startup cost
-                // MBO 23/12/2015
-                // v5.0 format
-                // allow startup cost between [-5 000 000 ;-5 000 000] (was [-50 000;50 000])
-
-                if (study.header.version <= 500)
-                {
-                    // cluster->marketBidCost = Math::Round(cluster->marketBidCost, 3);
-
-                    // Market bid cost
-                    if (Math::Abs(cluster->marketBidCost) < 5.e-3)
-                        cluster->marketBidCost = 0.;
-                    else
-                    {
-                        if (Math::Abs(cluster->marketBidCost) > 5.e4)
-                            (cluster->marketBidCost > 0) ? cluster->marketBidCost = 5.e4
-                                                         : cluster->marketBidCost = -5.e4;
-                        else
-                            cluster->marketBidCost = Math::Round(cluster->marketBidCost, 3);
-                    }
-
-                    // Marginal cost
-                    if (Math::Abs(cluster->marginalCost) < 5.e-3)
-                        cluster->marginalCost = 0.;
-                    else
-                    {
-                        if (Math::Abs(cluster->marginalCost) > 5.e4)
-                            (cluster->marginalCost > 0) ? cluster->marginalCost = 5.e4
-                                                        : cluster->marginalCost = -5.e4;
-                        else
-                            cluster->marginalCost = Math::Round(cluster->marginalCost, 3);
-                    }
-
-                    // Spread cost - no negative values, must be 0 or >= 0.005
-                    if (cluster->spreadCost < 5.e-3)
-                        cluster->spreadCost = 0.;
-                    else
-                    {
-                        if (cluster->spreadCost > 5.e4)
-                            cluster->spreadCost = 5.e4;
-                        else
-                            cluster->spreadCost = Math::Round(cluster->spreadCost, 3);
-                    }
-
-                    // Fixed cost
-                    if (Math::Abs(cluster->fixedCost) < 5.e-3)
-                        cluster->fixedCost = 0.;
-                    else
-                    {
-                        if (Math::Abs(cluster->fixedCost) > 5.e4)
-                            (cluster->fixedCost > 0) ? cluster->fixedCost = 5.e4
-                                                     : cluster->fixedCost = -5.e4;
-                        else
-                            cluster->fixedCost = Math::Round(cluster->fixedCost, 3);
-                    }
-
-                    // Startup cost
-                    if (Math::Abs(cluster->startupCost) < 5.e-3)
-                        cluster->startupCost = 0.;
-                    else
-                    {
-                        if (Math::Abs(cluster->startupCost) > 5.e6)
-                            (cluster->startupCost > 0) ? cluster->startupCost = 5.e6
-                                                       : cluster->startupCost = -5.e6;
-                        else
-                            cluster->startupCost = Math::Round(cluster->startupCost, 3);
-                    }
-
-                    // Before v3.5, the marginal cost and the market bid cost were the same
-                    // (and was named 'operatingCost')
-                    // Rounding to 3 decimal places
-                    if (study.header.version < 350)
-                        cluster->marginalCost = cluster->marketBidCost;
-
-                    //	if (not Math::Zero(it->weeklyMinimumCapacity))
-                    //		it->minUpDownTime = 168;
-                    //	else
-                    //	{
-                    //		if (not Math::Zero(it->dailyMinimumCapacity))
-                    //			it->minUpDownTime = 24;
-                    //		else
-                    //			it->minUpDownTime = 1;
-                    //	}
-                    //	it->minStablePower =
-                    //		Math::Max(it->hourlyMinimumCapacity,
-                    //			Math::Max(it->dailyMinimumCapacity,
-                    // it->weeklyMinimumCapacity));
-                }
-                // Backward compatibility
-                // switch (it->minUpDownTime)
-                // {
-                //	case 1:
-                //		it->hourlyMinimumCapacity = it->minStablePower;
-                //		it->dailyMinimumCapacity  = 0;
-                //		it->weeklyMinimumCapacity = 0;
-                //		break;
-                //	case 24:
-                //		it->hourlyMinimumCapacity = 0;//it->minStablePower;
-                //		it->dailyMinimumCapacity  = it->minStablePower;
-                //		it->weeklyMinimumCapacity = 0;
-                //		break;
-                //	case 168:
-                //		it->hourlyMinimumCapacity = 0;//it->minStablePower;
-                //		it->dailyMinimumCapacity  = 0;//it->minStablePower;
-                //		it->weeklyMinimumCapacity = it->minStablePower;
-                //		break;
-                //	default:
-                //		logs.error() << "Invalid 'Min. Up/Down time' for the cluster '" <<
-                // it->name() << "'"; 		it->hourlyMinimumCapacity = it->minStablePower;
-                //		it->dailyMinimumCapacity  = 0;
-                //		it->weeklyMinimumCapacity = 0;
-                // }
-
-                // Modulation
-                modulationFile.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro"
-                                       << SEP << cluster->parentArea->id << SEP << cluster->id()
-                                       << SEP << "modulation." << study.inputExtension;
-
-                if (study.header.version < 350)
-                {
-                    auto& modulation = cluster->modulation;
-                    // Before v3.5, the market bid modulation is missing
-                    bool r = modulation.loadFromCSVFile(
-                      modulationFile,
-                      2,
-                      HOURS_PER_YEAR,
-                      Matrix<>::optImmediate | Matrix<>::optMarkAsModified);
-                    if (r and modulation.width == 2)
-                    {
-                        modulation.resizeWithoutDataLost(renewableModulationMax, modulation.height);
-                        // Copy of the modulation cost into the market bid modulation
-                        // modulation.fillColumn(2, 1.);
-                        modulation.pasteToColumn(renewableModulationMarketBid,
-                                                 modulation[renewableModulationCost]);
-                        modulation.fillColumn(renewableMinGenModulation, 0.);
-                    }
-                    else
-                    {
-                        modulation.reset(renewableModulationMax, HOURS_PER_YEAR);
-                        modulation.fill(1.);
-                    }
-                    modulation.markAsModified();
-                    ret = ret and r;
-                }
-                else if (study.header.version <= 450)
-                {
-                    auto& modulation = cluster->modulation;
-                    // Before v4.5, the modulation generation relative is missing
-                    bool r = cluster->modulation.loadFromCSVFile(
-                      modulationFile,
-                      3,
-                      HOURS_PER_YEAR,
-                      Matrix<>::optImmediate | Matrix<>::optMarkAsModified);
-
-                    if (r and modulation.width == 3)
-                    {
-                        modulation.resizeWithoutDataLost(renewableModulationMax, modulation.height);
-                    }
-                    else
-                    {
-                        modulation.reset(renewableModulationMax, HOURS_PER_YEAR);
-                        modulation.fill(1.);
-                    }
-                    // switch renewableModulationMarketBid and renewableModulationCapacity
-                    // They have a wrong order
-                    modulation.pasteToColumn(renewableMinGenModulation,
-                                             modulation[renewableModulationMarketBid]);
-                    modulation.pasteToColumn(renewableModulationMarketBid,
-                                             modulation[renewableModulationCapacity]);
-                    modulation.pasteToColumn(renewableModulationCapacity,
-                                             modulation[renewableMinGenModulation]);
-                    modulation.fillColumn(renewableMinGenModulation, 0.);
-                    modulation.markAsModified();
-                    ret = ret and r;
-                }
-                else
-                {
-                    enum
-                    {
-                        options = Matrix<>::optFixedSize,
-                    };
-                    bool r = cluster->modulation.loadFromCSVFile(
-                      modulationFile, renewableModulationMax, HOURS_PER_YEAR, options);
-                    if (not r and study.usedByTheSolver)
-                    {
-                        cluster->modulation.reset(renewableModulationMax, HOURS_PER_YEAR);
-                        cluster->modulation.fill(1.);
-                        cluster->modulation.fillColumn(renewableMinGenModulation, 0.);
-                    }
-                    ret = ret and r;
-                }
-
-                // Special operations when not ran from the interface (aka solver)
-                if (study.usedByTheSolver)
-                {
-                    if (not cluster->productionCost)
-                        cluster->productionCost = new double[HOURS_PER_YEAR];
-
-                    // alias to the production cost
-                    double* prodCost = cluster->productionCost;
-                    // alias to the marginal cost
-                    double marginalCost = cluster->marginalCost;
-                    // Production cost
-                    auto& modulation = cluster->modulation[renewableModulationCost];
-                    for (uint h = 0; h != cluster->modulation.height; ++h)
-                        prodCost[h] = marginalCost * modulation[h];
-
-                    if (not study.parameters.include.renewable.minStablePower)
-                        cluster->minStablePower = 0.;
-                    if (not study.parameters.include.renewable.minUPTime)
-                    {
-                        cluster->minUpDownTime = 1;
-                        cluster->minUpTime = 1;
-                        cluster->minDownTime = 1;
-                    }
-                    else
-                        cluster->minUpDownTime
-                          = Math::Max(cluster->minUpTime, cluster->minDownTime);
-
-                    if (not study.parameters.include.reserve.spinning)
-                        cluster->spinning = 0;
-
-                    cluster->nominalCapacityWithSpinning = cluster->nominalCapacity;
                 }
 
                 // Check the data integrity of the cluster
@@ -729,62 +454,6 @@ bool RenewableClusterList::loadFromFolder(Study& study, const AnyString& folder,
     return false;
 }
 
-bool RenewableClusterListSavePreproToFolder(const RenewableClusterList* list, const AnyString& folder)
-{
-    assert(list);
-    if (list->empty())
-        return true;
-
-    Clob buffer;
-    bool ret = true;
-
-    list->each([&](const Data::RenewableCluster& cluster) {
-        if (cluster.prepro)
-        {
-            assert(cluster.parentArea and "cluster: invalid parent area");
-            buffer.clear() << folder << SEP << cluster.parentArea->id << SEP << cluster.id();
-            ret = cluster.prepro->saveToFolder(buffer) and ret;
-        }
-    });
-    return ret;
-}
-
-bool RenewableClusterListLoadPreproFromFolder(Study& study,
-                                            const StudyLoadOptions& options,
-                                            RenewableClusterList* list,
-                                            const AnyString& folder)
-{
-    if (list->empty())
-        return true;
-
-    Clob buffer;
-    bool ret = true;
-
-    auto end = list->cluster.end();
-    for (auto it = list->cluster.begin(); it != end; ++it)
-    {
-        auto& cluster = *(it->second);
-        if (cluster.prepro)
-        {
-            assert(cluster.parentArea and "cluster: invalid parent area");
-            buffer.clear() << folder << SEP << cluster.parentArea->id << SEP << cluster.id();
-
-            bool result
-              = cluster.prepro->loadFromFolder(study, buffer, cluster.parentArea->id, cluster.id());
-
-            if (result and study.usedByTheSolver)
-            {
-                // checking NPO max
-                result = cluster.prepro->normalizeAndCheckNPO(cluster.name(), cluster.unitCount);
-            }
-
-            ret = result and ret;
-        }
-        ++options.progressTicks;
-        options.pushProgressLogs();
-    }
-    return ret;
-}
 
 int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l, const AnyString& folder)
 {
@@ -839,24 +508,13 @@ int RenewableClusterListLoadDataSeriesFromFolder(Study& s,
     int ret = 1;
 
     l->each([&](Data::RenewableCluster& cluster) {
-        if (cluster.series and (!fast or !cluster.prepro))
+        if (cluster.series and !fast)
             ret = DataSeriesRenewableLoadFromFolder(s, cluster.series, &cluster, folder) and ret;
 
         ++options.progressTicks;
         options.pushProgressLogs();
     });
     return ret;
-}
-
-void RenewableClusterListEnsureDataPrepro(RenewableClusterList* list)
-{
-    auto end = list->cluster.end();
-    for (auto it = list->cluster.begin(); it != end; ++it)
-    {
-        auto& cluster = *(it->second);
-        if (not cluster.prepro)
-            cluster.prepro = new PreproRenewable();
-    }
 }
 
 void RenewableClusterListEnsureDataTimeSeries(RenewableClusterList* list)
@@ -933,23 +591,6 @@ bool RenewableClusterList::rename(Data::RenewableClusterName idToFind, Data::Ren
     return true;
 }
 
-bool Data::RenewableCluster::FlexibilityIsValid(uint f)
-{
-    switch (f)
-    {
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-    case 6:
-    case 8:
-    case 12:
-    case 24:
-        return true;
-    }
-    return false;
-}
-
 bool Data::RenewableClusterList::invalidate(bool reload) const
 {
     bool ret = true;
@@ -962,11 +603,8 @@ bool Data::RenewableClusterList::invalidate(bool reload) const
 bool Data::RenewableCluster::invalidate(bool reload) const
 {
     bool ret = true;
-    ret = modulation.invalidate(reload) and ret;
     if (series)
         ret = series->invalidate(reload) and ret;
-    if (prepro)
-        ret = prepro->invalidate(reload) and ret;
     return ret;
 }
 
@@ -979,103 +617,25 @@ void Data::RenewableClusterList::markAsModified() const
 
 void Data::RenewableCluster::markAsModified() const
 {
-    modulation.markAsModified();
     if (series)
         series->markAsModified();
-    if (prepro)
-        prepro->markAsModified();
 }
 
-void Data::RenewableCluster::calculationOfSpinning()
-{
-    assert(this->series);
-
-    // nominal capacity (for solver)
-    nominalCapacityWithSpinning = nominalCapacity;
-
-    // Nothing to do if the spinning is equal to zero
-    // because it will the same multiply all entries of the matrix by 1.
-    if (not Math::Zero(spinning))
-    {
-        logs.debug() << "  Calculation of spinning... " << parentArea->name << "::" << pName;
-
-        auto& ts = series->series;
-        // The formula
-        // const double s = 1. - cluster.spinning / 100.; */
-
-        // All values in the matrix will be multiply by this coeff
-        // It is no really useful to test if the result of the formula
-        // is equal to zero, since the method `Matrix::multiplyAllValuesBy()`
-        // already does this test.
-        nominalCapacityWithSpinning *= 1 - (spinning / 100.);
-        ts.multiplyAllEntriesBy(1. - (spinning / 100.));
-        ts.flush();
-    }
-}
-
-void RenewableClusterList::calculationOfSpinning()
-{
-    each([&](Data::RenewableCluster& cluster) { cluster.calculationOfSpinning(); });
-}
-
-void Data::RenewableCluster::reverseCalculationOfSpinning()
-{
-    assert(this->series);
-
-    // Nothing to do if the spinning is equal to zero
-    // because it will the same multiply all entries of the matrix by 1.
-    if (not Math::Zero(spinning))
-    {
-        logs.debug() << "  Calculation of spinning (reverse)... " << parentArea->name
-                     << "::" << pName;
-
-        auto& ts = series->series;
-        // The formula
-        // const double s = 1. - cluster.spinning / 100.;
-
-        // All values in the matrix will be multiply by this coeff
-        // It is no really useful to test if the result of the formula
-        // is equal to zero, since the method `Matrix::multiplyAllValuesBy()`
-        // already does this test.
-        ts.multiplyAllEntriesBy(1. / (1. - (spinning / 100.)));
-        ts.roundAllEntries();
-        ts.flush();
-    }
-}
-
-void RenewableClusterList::reverseCalculationOfSpinning()
-{
-    auto end = cluster.end();
-    for (auto it = cluster.begin(); it != end; ++it)
-    {
-        auto& cluster = *(it->second);
-        cluster.reverseCalculationOfSpinning();
-    }
-}
 
 void Data::RenewableCluster::reset()
 {
-    // production cost
-    // reminder: this variable should be considered as valid only when used from the
-    // solver
-    if (productionCost)
-        (void)::memset(productionCost, 0, HOURS_PER_YEAR * sizeof(double));
-
     enabled = true;
     nominalCapacity = 0.;
 
-    // timeseries & prepro
-    // warning: the variables `prepro` and `series` __must__ not be destroyed
+    // timeseries
+    // warning: the variables `series` __must__ not be destroyed
     //   since the interface may still have a pointer to them.
     //   we must simply reset their content.
-    if (not prepro)
-        prepro = new PreproRenewable();
     if (not series)
         series = new DataSeriesRenewable();
 
     series->series.reset(1, HOURS_PER_YEAR);
     series->series.flush();
-    prepro->reset();
 }
 
 bool Data::RenewableCluster::integrityCheck()
@@ -1093,7 +653,6 @@ bool Data::RenewableCluster::integrityCheck()
         logs.error() << "Renewable cluster " << parentArea->name << "/" << pName
                      << ": The Nominal capacity must be positive or null";
         nominalCapacity = 0.;
-        nominalCapacityWithSpinning = 0.;
         ret = false;
     }
     return ret;
@@ -1161,7 +720,7 @@ void RenewableClusterList::retrieveTotalCapacity(double& total) const
 
             // Reference to the renewable cluster
             auto& cluster = *(i->second);
-            total += cluster.unitCount * cluster.nominalCapacity;
+            total += cluster.nominalCapacity;
         }
     }
 }
@@ -1212,9 +771,7 @@ bool RenewableClusterList::exists(const Data::RenewableClusterName& id) const
 
 uint64 RenewableCluster::memoryUsage() const
 {
-    uint64 amount = sizeof(RenewableCluster) + modulation.memoryUsage();
-    if (prepro)
-        amount += prepro->memoryUsage();
+    uint64 amount = sizeof(RenewableCluster);
     if (series)
         amount += DataSeriesRenewableMemoryUsage(series);
     return amount;

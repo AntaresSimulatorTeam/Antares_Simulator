@@ -258,6 +258,8 @@ public:
     uint nbTimeSeriesWind;
     //! Nb of timeSeries : Thermal
     uint nbTimeSeriesThermal;
+    //! Nb of timeSeries : Renewable
+    uint nbTimeSeriesRenewable;
     //! Nb of timeSeries : Solar
     uint nbTimeSeriesSolar;
     //@}

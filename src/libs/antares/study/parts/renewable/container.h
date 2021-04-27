@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_CONTAINER_H__
-#define __ANTARES_LIBS_STUDY_PARTS_THERMAL_CONTAINER_H__
+#ifndef __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CONTAINER_H__
+#define __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CONTAINER_H__
 
 #include <yuni/yuni.h>
 #include "../../fwd.h"
@@ -35,7 +35,7 @@ namespace Antares
 {
 namespace Data
 {
-class PartThermal
+class PartRenewable
 {
 public:
     //! \name Constructor
@@ -43,9 +43,9 @@ public:
     /*!
     ** \brief Default constructor
     */
-    PartThermal();
+    PartRenewable();
     //! Destructor
-    ~PartThermal();
+    ~PartRenewable();
     //@}
 
     /*!
@@ -71,22 +71,10 @@ public:
     void prepareAreaWideIndexes();
 
     /*!
-    ** \brief Prepare all thermal clusters in the 'mustrun' mode
-    **
-    ** All clusters with the flag will be moved to the container 'mustrunList'.
-    ** As a consequence, they will no longer be seen as thermal clusters
-    ** from the solver's point of view.
-    ** \warning This method should only be used from the solver
-    **
-    ** \return The number of clusters found in 'must-run' mode
-    */
-    uint prepareClustersInMustRunMode();
-
-    /*!
-    ** \brief Removes disabled thermal clusters
+    ** \brief Removes disabled renewable clusters
     **
     ** All clusters with the flag 'enabled' turned to false will be removed from 'list'.
-    ** As a consequence, they will no longer be seen as thermal clusters
+    ** As a consequence, they will no longer be seen as renewable clusters
     ** from the solver's point of view.
     ** \warning This method should only be used from the solver
     **
@@ -100,21 +88,13 @@ public:
     bool invalidate(bool reload) const;
 
     /*!
-    ** \brief Mark the thermal cluster as modified
+    ** \brief Mark the renewable cluster as modified
     */
     void markAsModified() const;
 
 public:
-    //! The unsupplied energy cost (Euros/MWh)
-    double unsuppliedEnergyCost;
-    //! The spilled energy cost
-    double spilledEnergyCost;
-
-    //! List of all thermal clusters (enabled and disabled) except must-run clusters
-    ThermalClusterList list;
-    //! List of all thermal clusters in 'must-run' mode
-    //! \warning This list must only be used from the solver
-    ThermalClusterList mustrunList;
+    //! List of all renewable clusters (enabled and disabled) except must-run clusters
+    RenewableClusterList list;
 
     /*!
     ** \brief All clusters for the area
@@ -123,18 +103,18 @@ public:
     ** It is initialized in the same time that the runtime data.
     **
     ** This list is mainly used to ensure the same order of the
-    ** thermal clusters in the outputs.
+    ** renewable clusters in the outputs.
     */
-    ThermalCluster** clusters;
+    RenewableCluster** clusters;
     //! How many clusters have we got ?
     // Only available from the solver
     uint clusterCount;
 
-}; // class PartThermal
+}; // class PartRenewable
 
 } // namespace Data
 } // namespace Antares
 
 #include "container.hxx"
 
-#endif /* __ANTARES_LIBS_STUDY_PARTS_THERMAL_CONTAINER_H__ */
+#endif /* __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CONTAINER_H__ */

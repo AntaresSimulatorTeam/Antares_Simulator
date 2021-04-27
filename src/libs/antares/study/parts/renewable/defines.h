@@ -35,7 +35,6 @@ namespace Data
 class RenewableCluster;
 class RenewableClusterList;
 class DataSeriesRenewable;
-class PreproRenewable;
 
 } // namespace Data
 } // namespace Antares
