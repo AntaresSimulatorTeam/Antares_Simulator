@@ -53,7 +53,7 @@ enum RenewableGroup
     PVSolar,
     //! Other
     renewableOther,
-    
+
     //! The highest value
     renewableGroupMax
 };
@@ -138,7 +138,6 @@ public:
     //! Set the group
     void group(Data::RenewableClusterName newgrp);
     //@}
-
 
     /*!
     ** \brief Check and fix all values of a renewable cluster

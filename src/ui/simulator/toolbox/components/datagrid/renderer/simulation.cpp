@@ -34,12 +34,13 @@
 using namespace Yuni;
 
 // Anonymous namespace: global variable, local scope
-namespace {
-  enum Antares::Data::TimeSeries mapping[] = {Data::timeSeriesLoad,
-                                              Data::timeSeriesThermal,
-                                              Data::timeSeriesHydro,
-                                              Data::timeSeriesWind,
-                                              Data::timeSeriesSolar};
+namespace
+{
+enum Antares::Data::TimeSeries mapping[] = {Data::timeSeriesLoad,
+                                            Data::timeSeriesThermal,
+                                            Data::timeSeriesHydro,
+                                            Data::timeSeriesWind,
+                                            Data::timeSeriesSolar};
 }
 
 namespace Antares

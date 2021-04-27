@@ -77,9 +77,9 @@ public:
 ** \return A non-zero value if the operation succeeded, 0 otherwise
 */
 int DataSeriesRenewableLoadFromFolder(Study& s,
-                                    DataSeriesRenewable* t,
-                                    RenewableCluster* ag,
-                                    const AnyString& folder);
+                                      DataSeriesRenewable* t,
+                                      RenewableCluster* ag,
+                                      const AnyString& folder);
 
 /*!
 ** \brief Save renewable data series into a folder
@@ -91,8 +91,8 @@ int DataSeriesRenewableLoadFromFolder(Study& s,
 ** \return A non-zero value if the operation succeeded, 0 otherwise
 */
 int DataSeriesRenewableSaveToFolder(const DataSeriesRenewable* t,
-                                  const RenewableCluster* ag,
-                                  const AnyString& folder);
+                                    const RenewableCluster* ag,
+                                    const AnyString& folder);
 
 /*!
 ** \brief Get the size (bytes) occupied in memory by a `DataSeriesRenewable` structure

@@ -58,5 +58,4 @@
 #include "renewable/cluster.h"
 #include "renewable/container.h"
 
-
 #endif // __ANTARES_LIBS_STUDY_PARTS_H__

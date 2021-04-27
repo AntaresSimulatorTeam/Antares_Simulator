@@ -41,8 +41,8 @@ namespace Antares
 namespace Data
 {
 int DataSeriesRenewableSaveToFolder(const DataSeriesRenewable* t,
-                                  const RenewableCluster* ag,
-                                  const AnyString& folder)
+                                    const RenewableCluster* ag,
+                                    const AnyString& folder)
 {
     if (t && ag and not folder.empty())
     {
@@ -64,9 +64,9 @@ int DataSeriesRenewableSaveToFolder(const DataSeriesRenewable* t,
 }
 
 int DataSeriesRenewableLoadFromFolder(Study& s,
-                                    DataSeriesRenewable* t,
-                                    RenewableCluster* ag,
-                                    const AnyString& folder)
+                                      DataSeriesRenewable* t,
+                                      RenewableCluster* ag,
+                                      const AnyString& folder)
 {
     if (t and ag and not folder.empty())
     {

@@ -58,8 +58,8 @@ static bool RenewableClusterLoadFromProperty(RenewableCluster& cluster, const In
 }
 
 static bool RenewableClusterLoadFromSection(const AnyString& filename,
-                                          RenewableCluster& cluster,
-                                          const IniFile::Section& section)
+                                            RenewableCluster& cluster,
+                                            const IniFile::Section& section)
 {
     if (section.name.empty())
         return false;
@@ -240,7 +240,8 @@ void RenewableClusterList::resizeAllTimeseriesNumbers(uint n)
         }
         else
         {
-            each([&](RenewableCluster& cluster) { cluster.series->timeseriesNumbers.resize(1, n); });
+            each(
+              [&](RenewableCluster& cluster) { cluster.series->timeseriesNumbers.resize(1, n); });
         }
     }
 }
@@ -454,8 +455,8 @@ bool RenewableClusterList::loadFromFolder(Study& study, const AnyString& folder,
     return false;
 }
 
-
-int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l, const AnyString& folder)
+int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l,
+                                               const AnyString& folder)
 {
     if (l->empty())
         return 1;
@@ -473,8 +474,8 @@ int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l, co
 }
 
 int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l,
-                                             const AnyString& folder,
-                                             const String& msg)
+                                               const AnyString& folder,
+                                               const String& msg)
 {
     if (l->empty())
         return 1;
@@ -497,10 +498,10 @@ int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l,
 }
 
 int RenewableClusterListLoadDataSeriesFromFolder(Study& s,
-                                               const StudyLoadOptions& options,
-                                               RenewableClusterList* l,
-                                               const AnyString& folder,
-                                               int fast)
+                                                 const StudyLoadOptions& options,
+                                                 RenewableClusterList* l,
+                                                 const AnyString& folder,
+                                                 int fast)
 {
     if (l->empty())
         return 1;
@@ -536,7 +537,8 @@ Yuni::uint64 RenewableClusterList::memoryUsage() const
     return ret;
 }
 
-bool RenewableClusterList::rename(Data::RenewableClusterName idToFind, Data::RenewableClusterName newName)
+bool RenewableClusterList::rename(Data::RenewableClusterName idToFind,
+                                  Data::RenewableClusterName newName)
 {
     if (not idToFind or newName.empty())
         return false;
@@ -620,7 +622,6 @@ void Data::RenewableCluster::markAsModified() const
     if (series)
         series->markAsModified();
 }
-
 
 void Data::RenewableCluster::reset()
 {

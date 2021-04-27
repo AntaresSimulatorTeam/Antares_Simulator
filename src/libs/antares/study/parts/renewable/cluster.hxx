@@ -90,7 +90,8 @@ inline const Data::RenewableClusterName& RenewableCluster::name() const
     return pName;
 }
 
-inline const RenewableCluster* RenewableClusterList::find(const Data::RenewableClusterName& id) const
+inline const RenewableCluster* RenewableClusterList::find(
+  const Data::RenewableClusterName& id) const
 {
     auto i = cluster.find(id);
     return (i != cluster.end()) ? i->second : nullptr;
