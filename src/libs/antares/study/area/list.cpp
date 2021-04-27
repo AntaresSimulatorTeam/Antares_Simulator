@@ -148,6 +148,17 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const Clob& filename
     return true;
 }
 
+static bool AreaListLoadRenewableDataFromFile(AreaList& list, const Clob& filename)
+{
+    IniFile ini;
+    // Try to load the file
+    if (not ini.open(filename))
+        return false;
+    // TODO
+    return true;
+}
+
+
 static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString& filename)
 {
     Clob data;
@@ -1058,6 +1069,16 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         area.thermal.list.flush();
     }
 
+    // Renewable cluster list
+    {
+      buffer.clear() << study.folderInput << SEP << "renewable" << SEP << "series";
+      logs.warning() << "Renewable cluster list " << area.renewable.list.size();
+      ret = RenewableClusterListLoadDataSeriesFromFolder(
+                                                       study, options, &area.renewable.list, buffer, options.loadOnlyNeeded)
+        and ret;
+    }
+
+
     // Nodal Optimization
     if (study.header.version >= 330)
     {
@@ -1211,6 +1232,29 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             area.thermal.prepareAreaWideIndexes();
         }
     }
+
+    // Renewable data, specific to areas
+    {
+        logs.info() << "Loading renewable clusters...";
+        buffer.clear() << pStudy.folderInput << SEP << "renewable" << SEP << "areas.ini";
+        ret = AreaListLoadRenewableDataFromFile(*this, buffer) and ret;
+
+        // The cluster list must be loaded before the method
+        // Study::ensureDataAreInitializedAccordingParameters() is called
+        // in order to allocate data with all thermal clusters.
+        CString<30, false> renewablePlant;
+        renewablePlant << SEP << "renewable" << SEP << "clusters" << SEP;
+
+        auto end = areas.end();
+        for (auto i = areas.begin(); i != end; ++i)
+        {
+            Area& area = *(i->second);
+            buffer.clear() << pStudy.folderInput << thermalPlant << area.id;
+            ret = area.thermal.list.loadFromFolder(pStudy, buffer.c_str(), &area) and ret;
+            area.thermal.prepareAreaWideIndexes();
+        }
+    }
+
 
     // Prepare
     if (options.loadOnlyNeeded)

@@ -88,7 +88,7 @@ static bool RenewableClusterLoadFromSection(const AnyString& filename,
     return true;
 }
 
-Data::RenewableCluster::RenewableCluster(Area* parent, uint nbParallelYears) :
+Data::RenewableCluster::RenewableCluster(Area* parent, uint /*nbParallelYears*/) :
  groupID(renewableOther),
  index(0),
  areaWideIndex((uint)-1),
@@ -671,6 +671,8 @@ const char* Data::RenewableCluster::GroupName(enum RenewableGroup grp)
         return "Concentration solar";
     case PVSolar:
         return "PV solar";
+    case renewableOther:
+        return "Other renewable";
     case renewableGroupMax:
         return "";
     }
