@@ -1498,25 +1498,19 @@ bool Data::ThermalCluster::integrityCheck()
     return ret;
 }
 
-const char* Data::ThermalCluster::GroupName(enum ThermalDispatchableGroup grp)
+const char* Data::RenewableCluster::GroupName(enum RenewableGroup grp)
 {
     switch (grp)
     {
-    case thermalDispatchGrpNuclear:
-        return "Nuclear";
-    case thermalDispatchGrpLignite:
-        return "Lignite";
-    case thermalDispatchGrpHardCoal:
-        return "Hard Coal";
-    case thermalDispatchGrpGas:
-        return "Gas";
-    case thermalDispatchGrpOil:
-        return "Oil";
-    case thermalDispatchGrpMixedFuel:
-        return "Mixed Fuel";
-    case thermalDispatchGrpOther:
-        return "Other";
-    case thermalDispatchGrpMax:
+    case windOffShore:
+        return "Wind off-shore";
+    case windOnShore:
+        return "Wind on-shore";
+    case concentrationSolar:
+        return "Concentration solar";
+    case PVSolar:
+        return "PV solar";
+    case renewableGroupMax:
         return "";
     }
     return "";

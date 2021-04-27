@@ -47,7 +47,7 @@ enum RenewableGroup
     //! Wind offshore
     windOffShore = 0,
     //! Wind onshore
-    windOnShort,
+    windOnShore,
     //! Concentration solar
     concentrationSolar,
     //! PV solar
