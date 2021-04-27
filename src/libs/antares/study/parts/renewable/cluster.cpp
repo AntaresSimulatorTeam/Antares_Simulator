@@ -89,164 +89,43 @@ static bool ThermalClusterLoadFromSection(const AnyString& filename,
     return true;
 }
 
-static bool ThermalClusterLoadCouplingSection(const AnyString& filename,
-                                              ThermalClusterList& list,
-                                              const IniFile::Section* s)
-{
-    if (s->firstProperty)
-    {
-        Data::ThermalClusterName from;
-        Data::ThermalClusterName with;
-        Data::ThermalCluster* clusterFrom;
-        Data::ThermalCluster* clusterWith;
-
-        // Browse all properties
-        for (const IniFile::Property* p = s->firstProperty; p; p = p->next)
-        {
-            from = p->key;
-            with = p->value;
-            if (not from or !with)
-            {
-                logs.warning() << '`' << filename << "`: `" << s->name << "`: Invalid key/value";
-                continue;
-            }
-            from.toLower();
-            with.toLower();
-            clusterFrom = list.find(from);
-            if (not clusterFrom)
-            {
-                logs.error() << filename << ": impossible to find the cluster '" << from << "'";
-                continue;
-            }
-            clusterWith = list.find(with);
-            if (not clusterWith)
-            {
-                logs.error() << filename << ": impossible to find the cluster '" << with << "'";
-                continue;
-            }
-
-            if (clusterFrom->coupling.end() != clusterFrom->coupling.find(clusterWith))
-                // already referenced
-                continue;
-
-            // Adding the reference in both clusters
-            clusterFrom->coupling.insert(clusterWith);
-            clusterWith->coupling.insert(clusterFrom);
-            logs.info() << "  cluster coupling : " << clusterFrom->name() << " <-> "
-                        << clusterWith->name();
-        }
-    }
-    return true;
-}
-
-Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
- groupID(thermalDispatchGrpOther),
+Data::RenewableCluster::RenewableCluster(Area* parent, uint nbParallelYears) :
+ groupID(renewableOther),
  index(0),
  areaWideIndex((uint)-1),
  parentArea(parent),
  enabled(true),
- mustrun(false),
- mustrunOrigin(false),
- unitCount(0),
  nominalCapacity(0.),
- nominalCapacityWithSpinning(0.),
- minStablePower(0.),
- minUpTime(1),
- minDownTime(1),
- spinning(0.),
- co2(0.),
- forcedVolatility(0.),
- plannedVolatility(0.),
- forcedLaw(thermalLawUniform),
- plannedLaw(thermalLawUniform),
- marginalCost(0.),
- spreadCost(0.),
- fixedCost(0.),
- startupCost(0.),
- marketBidCost(0.),
- groupMinCount(0),
- groupMaxCount(0),
- annuityInvestment(0),
- PthetaInf(HOURS_PER_YEAR, 0),
  prepro(nullptr),
  series(nullptr),
- productionCost(nullptr),
- unitCountLastHour(nullptr),
- productionLastHour(nullptr),
- pminOfAGroup(nullptr)
 {
     // assert
-    assert(parent and "A parent for a thermal dispatchable cluster can not be null");
-
-    unitCountLastHour = new uint[nbParallelYears];
-    productionLastHour = new double[nbParallelYears];
-    pminOfAGroup = new double[nbParallelYears];
-    for (uint numSpace = 0; numSpace < nbParallelYears; ++numSpace)
-    {
-        unitCountLastHour[numSpace] = 0;
-        productionLastHour[numSpace] = 0.;
-        pminOfAGroup[numSpace] = 0.;
-    }
+    assert(parent and "A parent for a renewable dispatchable cluster can not be null");
 }
 
-Data::ThermalCluster::ThermalCluster(Area* parent) :
- groupID(thermalDispatchGrpOther),
+Data::RenewableCluster::RenewableCluster(Area* parent) :
+ groupID(renewableOther),
  index(0),
  areaWideIndex((uint)-1),
  parentArea(parent),
  enabled(true),
- mustrun(false),
- mustrunOrigin(false),
- unitCount(0),
  nominalCapacity(0.),
- nominalCapacityWithSpinning(0.),
- minStablePower(0.),
- minUpTime(1),
- minDownTime(1),
- spinning(0.),
- co2(0.),
- forcedVolatility(0.),
- plannedVolatility(0.),
- forcedLaw(thermalLawUniform),
- plannedLaw(thermalLawUniform),
- marginalCost(0.),
- spreadCost(0.),
- fixedCost(0.),
- startupCost(0.),
- marketBidCost(0.),
- groupMinCount(0),
- groupMaxCount(0),
- annuityInvestment(0),
- PthetaInf(HOURS_PER_YEAR, 0),
  prepro(nullptr),
  series(nullptr),
- productionCost(nullptr),
- unitCountLastHour(nullptr),
- productionLastHour(nullptr),
- pminOfAGroup(nullptr)
 {
     // assert
-    assert(parent and "A parent for a thermal dispatchable cluster can not be null");
+    assert(parent and "A parent for a renewable dispatchable cluster can not be null");
 }
 
-Data::ThermalCluster::~ThermalCluster()
+Data::RenewableCluster::~RenewableCluster()
 {
-    delete[] productionCost;
     delete prepro;
     delete series;
-
-    if (unitCountLastHour)
-        delete[] unitCountLastHour;
-    if (productionLastHour)
-        delete[] productionLastHour;
-    if (pminOfAGroup)
-        delete[] pminOfAGroup;
 }
 
 #ifdef ANTARES_SWAP_SUPPORT
-void ThermalCluster::flush()
+void RenewableCluster::flush()
 {
-    modulation.flush();
     if (prepro)
         prepro->flush();
     if (series)
@@ -556,17 +435,12 @@ bool ThermalClusterListSaveToFolder(const ThermalClusterList* l, const AnyString
     {
         Clob buffer;
         bool ret = true;
-        bool hasCoupling = false;
 
         // Allocate the inifile structure
         IniFile ini;
 
         // Browse all clusters
-        l->each([&](const Data::ThermalCluster& cluster) {
-            // Coupling
-            if (not cluster.coupling.empty())
-                hasCoupling = true;
-
+        l->each([&](const Data::RenewableCluster& cluster) {
             // Adding a section to the inifile
             IniFile::Section* s = ini.addSection(cluster.name());
 
@@ -650,18 +524,6 @@ bool ThermalClusterListSaveToFolder(const ThermalClusterList* l, const AnyString
                 ret = 0;
         });
 
-        if (hasCoupling)
-        {
-            IniFile::Section* s = ini.addSection("~_-_coupling_-_~");
-            l->each([&](const Data::ThermalCluster& cluster) {
-                if (cluster.coupling.empty())
-                    return;
-                auto send = cluster.coupling.end();
-                for (auto j = cluster.coupling.begin(); j != send; ++j)
-                    s->add(cluster.id(), (*j)->id());
-            });
-        }
-
         // Write the ini file
         buffer.clear() << folder << SEP << "list.ini";
         ret = ini.save(buffer) and ret;
@@ -714,21 +576,10 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                 if (section->name.empty())
                     continue;
 
-                if (section->name == "~_-_coupling_-_~")
-                {
-                    Data::ThermalClusterLoadCouplingSection(study.buffer, *this, section);
+                auto* cluster = new RenewableCluster(area, study.maxNbYearsInParallel);
 
-                    // ignoring all other sections
-                    section = section->next;
-                    for (; section; section = section->next)
-                        logs.warning() << "Ignoring the section " << section->name;
-                    break;
-                }
-
-                auto* cluster = new ThermalCluster(area, study.maxNbYearsInParallel);
-
-                // Load data of a thermal cluster from a ini file section
-                if (not ThermalClusterLoadFromSection(study.buffer, *cluster, *section))
+                // Load data of a renewable cluster from a ini file section
+                if (not RenewableClusterLoadFromSection(study.buffer, *cluster, *section))
                 {
                     delete cluster;
                     continue;
@@ -1388,9 +1239,6 @@ void Data::ThermalCluster::reset()
     series->series.reset(1, HOURS_PER_YEAR);
     series->series.flush();
     prepro->reset();
-
-    // Links
-    coupling.clear();
 }
 
 bool Data::ThermalCluster::integrityCheck()
@@ -1580,18 +1428,6 @@ bool ThermalClusterList::remove(const Data::ThermalClusterName& id)
     cluster.erase(i);
     // Invalidating the parent area
     c->parentArea->invalidate();
-
-    // Remove all cluster coupling
-    if (not c->coupling.empty())
-    {
-        auto end = c->coupling.end();
-        for (auto j = c->coupling.begin(); j != end; ++j)
-        {
-            auto* link = *j;
-            link->parentArea->invalidate();
-            link->coupling.erase(c);
-        }
-    }
 
     // delete the cluster
     delete c;
