@@ -46,7 +46,6 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo)
     double PmaxHydEcretee;
     int Intervalle;
     int Semaine;
-    double PmaxHydUplift; // Hydro generating power required to make use of energy stored from pumps
 
     CONSOMMATIONS_ABATTUES* ConsommationsAbattues;
     CONSOMMATIONS_ABATTUES* ConsommationsAbattuesRef;
@@ -136,23 +135,6 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo)
             PmaxHydEcretee = CaracteristiquesHydrauliques->CntEnergieH2OParJour[Jour];
             PmaxHydEcretee *= ProblemeHebdo->CoefficientEcretementPMaxHydraulique[Pays];
             PmaxHydEcretee /= (double)ProblemeHebdo->NombreDePasDeTempsDUneJournee;
-            // The primary generating power allowance may need to be uplifted to match pumping power
-            // allowance
-            if (CaracteristiquesHydrauliques->PresenceDePompageModulable == OUI_ANTARES)
-            {
-                PmaxHydUplift = CaracteristiquesHydrauliques->ContrainteDePmaxPompageHoraire[Pdt];
-                PmaxHydUplift *= ProblemeHebdo->CoefficientEcretementPMaxHydraulique[Pays];
-                // The uplifted energy  cannot, throughout the week, exceed the remaining stock
-                if (PmaxHydUplift * double(168)
-                    > CaracteristiquesHydrauliques->NiveauInitialReservoir)
-                {
-                    PmaxHydUplift
-                      = CaracteristiquesHydrauliques->NiveauInitialReservoir / double(168);
-                }
-
-                if (PmaxHydEcretee < PmaxHydUplift)
-                    PmaxHydEcretee = PmaxHydUplift;
-            }
 
             // The generating power allowance cannot exceed the maximum available generating power
             if (PmaxHydEcretee
