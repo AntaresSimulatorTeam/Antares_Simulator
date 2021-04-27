@@ -52,7 +52,9 @@ enum RenewableGroup
     concentrationSolar,
     //! PV solar
     PVSolar,
-
+    //! Other
+    renewableOther
+    
     //! The highest value
     renewableGroupMax
 };
@@ -430,19 +432,7 @@ public:
 
     bool storeTimeseriesNumbers(Study& study);
 
-    //! \name Informations
-    //@{
-    /*!
-    ** \brief Retrieve the total capacity and the total unit count
-    **
-    ** Pseudo code:
-    ** \code
-    ** each renewable cluster do
-    ** 	total += cluster{unit count} * cluster{nominal capacity}
-    **	unit  += cluster{unit count}
-    ** \endcode
-    */
-    void retrieveTotalCapacityAndUnitCount(double& total, uint& unitCount) const;
+    void retrieveTotalCapacity(double& total) const;
     //@}
 
     //! \name Memory management

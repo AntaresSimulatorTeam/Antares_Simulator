@@ -57,8 +57,8 @@ static bool RenewableClusterLoadFromProperty(RenewableCluster& cluster, const In
     return false;
 }
 
-static bool ThermalClusterLoadFromSection(const AnyString& filename,
-                                          ThermalCluster& cluster,
+static bool RenewableClusterLoadFromSection(const AnyString& filename,
+                                          RenewableCluster& cluster,
                                           const IniFile::Section& section)
 {
     if (section.name.empty())
@@ -77,7 +77,7 @@ static bool ThermalClusterLoadFromSection(const AnyString& filename,
                                << "`: Invalid key/value";
                 continue;
             }
-            if (not ThermalClusterLoadFromProperty(cluster, property))
+            if (not RenewableClusterLoadFromProperty(cluster, property))
             {
                 logs.warning() << '`' << filename << "`: `" << section.name << "`/`"
                                << property->value << "`: The property is unknown and ignored";
@@ -134,7 +134,7 @@ void RenewableCluster::flush()
 #endif
 
 #ifdef ANTARES_SWAP_SUPPORT
-void ThermalClusterList::flush()
+void RenewableClusterList::flush()
 {
     auto end = cluster.cend();
     for (auto i = cluster.cbegin(); i != end; ++i)
@@ -142,20 +142,20 @@ void ThermalClusterList::flush()
 }
 #endif
 
-void Data::ThermalCluster::invalidateArea()
+void Data::RenewableCluster::invalidateArea()
 {
     if (parentArea)
         parentArea->invalidate();
 }
 
-String Antares::Data::ThermalCluster::getFullName() const
+String Antares::Data::RenewableCluster::getFullName() const
 {
     String s;
     s << parentArea->name << "." << pID;
     return s;
 }
 
-void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
+void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
 {
     // Note: In this method, only the data can be copied (and not the name or
     //   the ID for example)
@@ -186,48 +186,12 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     nominalCapacity = cluster.nominalCapacity;
     nominalCapacityWithSpinning = cluster.nominalCapacityWithSpinning;
 
-    minDivModulation = cluster.minDivModulation;
-
-    minStablePower = cluster.minStablePower;
-    minUpTime = cluster.minUpTime;
-    minDownTime = cluster.minDownTime;
-
-    // spinning
-    spinning = cluster.spinning;
-    // co2
-    co2 = cluster.co2;
-
-    // volatility
-    forcedVolatility = cluster.forcedVolatility;
-    plannedVolatility = cluster.plannedVolatility;
-    // law
-    forcedLaw = cluster.forcedLaw;
-    plannedLaw = cluster.plannedLaw;
-
-    // costs
-    marginalCost = cluster.marginalCost;
-    spreadCost = cluster.spreadCost;
-    fixedCost = cluster.fixedCost;
-    startupCost = cluster.startupCost;
-    marketBidCost = cluster.marketBidCost;
-
-    // group {min,max}
-    groupMinCount = cluster.groupMinCount;
-    groupMaxCount = cluster.groupMaxCount;
-
-    // Annuity investment (kEuros/MW)
-    annuityInvestment = cluster.annuityInvestment;
-
-    // modulation
-    modulation = cluster.modulation;
-    cluster.modulation.unloadFromMemory();
-
     // Making sure that the data related to the prepro and timeseries are present
     // prepro
     if (not prepro)
-        prepro = new PreproThermal();
+        prepro = new PreproRenewable();
     if (not series)
-        series = new DataSeriesThermal();
+        series = new DataSeriesRenewable();
 
     prepro->copyFrom(*cluster.prepro);
     // timseries
@@ -242,18 +206,18 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
         parentArea->invalidate();
 }
 
-Data::ThermalClusterList::ThermalClusterList() : byIndex(nullptr)
+Data::RenewableClusterList::RenewableClusterList() : byIndex(nullptr)
 {
     (void)::memset(&groupCount, 0, sizeof(groupCount));
 }
 
-Data::ThermalClusterList::~ThermalClusterList()
+Data::RenewableClusterList::~RenewableClusterList()
 {
-    // deleting all thermal clusters
+    // deleting all renewable clusters
     clear();
 }
 
-void ThermalClusterList::clear()
+void RenewableClusterList::clear()
 {
     if (byIndex)
     {
@@ -270,7 +234,7 @@ void ThermalClusterList::clear()
         cluster.clear();
 }
 
-const ThermalCluster* ThermalClusterList::find(const ThermalCluster* p) const
+const RenewableCluster* RenewableClusterList::find(const RenewableCluster* p) const
 {
     auto end = cluster.end();
     for (auto i = cluster.begin(); i != end; ++i)
@@ -281,7 +245,7 @@ const ThermalCluster* ThermalClusterList::find(const ThermalCluster* p) const
     return nullptr;
 }
 
-Data::ThermalCluster* ThermalClusterList::find(const ThermalCluster* p)
+Data::RenewableCluster* RenewableClusterList::find(const RenewableCluster* p)
 {
     auto end = cluster.end();
     for (auto i = cluster.begin(); i != end; ++i)
@@ -292,33 +256,33 @@ Data::ThermalCluster* ThermalClusterList::find(const ThermalCluster* p)
     return nullptr;
 }
 
-void ThermalClusterList::resizeAllTimeseriesNumbers(uint n)
+void RenewableClusterList::resizeAllTimeseriesNumbers(uint n)
 {
     assert(n < 200000); // arbitrary number
     if (not cluster.empty())
     {
         if (0 == n)
         {
-            each([&](ThermalCluster& cluster) { cluster.series->timeseriesNumbers.clear(); });
+            each([&](RenewableCluster& cluster) { cluster.series->timeseriesNumbers.clear(); });
         }
         else
         {
-            each([&](ThermalCluster& cluster) { cluster.series->timeseriesNumbers.resize(1, n); });
+            each([&](RenewableCluster& cluster) { cluster.series->timeseriesNumbers.resize(1, n); });
         }
     }
 }
 
-void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
+void RenewableClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
 {
     u.requiredMemoryForInput += (sizeof(void*) * 4 /*overhead map*/) * cluster.size();
 
-    each([&](const ThermalCluster& cluster) {
-        u.requiredMemoryForInput += sizeof(ThermalCluster);
+    each([&](const RenewableCluster& cluster) {
+        u.requiredMemoryForInput += sizeof(RenewableCluster);
         u.requiredMemoryForInput += sizeof(void*);
         u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // productionCost
         u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // PthetaInf
         u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // dispatchedUnitsCount
-        cluster.modulation.estimateMemoryUsage(u, true, thermalModulationMax, HOURS_PER_YEAR);
+        cluster.modulation.estimateMemoryUsage(u, true, renewableModulationMax, HOURS_PER_YEAR);
 
         if (cluster.series)
             cluster.series->estimateMemoryUsage(u);
@@ -330,11 +294,11 @@ void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
     });
 }
 
-void Data::ThermalCluster::group(Data::ThermalClusterName newgrp)
+void Data::RenewableCluster::group(Data::RenewableClusterName newgrp)
 {
     if (not newgrp)
     {
-        groupID = thermalDispatchGrpOther;
+        groupID = renewableOther;
         pGroup.clear();
         return;
     }
@@ -343,74 +307,53 @@ void Data::ThermalCluster::group(Data::ThermalClusterName newgrp)
 
     switch (newgrp[0])
     {
-    case 'g':
+    case 'c':
     {
-        if (newgrp == "gas")
+        if (newgrp == "concentration solar")
         {
-            groupID = thermalDispatchGrpGas;
+            groupID = concentrationSolar;
             return;
         }
         break;
     }
-    case 'h':
+    case 'p':
     {
-        if (newgrp == "hard coal")
+        if (newgrp == "pv solar")
         {
-            groupID = thermalDispatchGrpHardCoal;
+            groupID = PVSolar;
             return;
         }
         break;
     }
-    case 'l':
+    case 'w':
     {
-        if (newgrp == "lignite")
+        if (newgrp == "wind on-shore")
         {
-            groupID = thermalDispatchGrpLignite;
+            groupID = windOnShore;
             return;
         }
-        break;
-    }
-    case 'm':
-    {
-        if (newgrp == "mixed fuel")
+
+        if (newgrp == "wind off-shore")
         {
-            groupID = thermalDispatchGrpMixedFuel;
-            return;
-        }
-        break;
-    }
-    case 'n':
-    {
-        if (newgrp == "nuclear")
-        {
-            groupID = thermalDispatchGrpNuclear;
-            return;
-        }
-        break;
-    }
-    case 'o':
-    {
-        if (newgrp == "oil")
-        {
-            groupID = thermalDispatchGrpOil;
+            groupID = windOffShore;
             return;
         }
         break;
     }
     }
     // assigning a default value
-    groupID = thermalDispatchGrpOther;
+    groupID = renewableOther;
 }
 
-void ThermalClusterList::rebuildIndex()
+void RenewableClusterList::rebuildIndex()
 {
     delete[] byIndex;
 
     if (not empty())
     {
         uint indx = 0;
-        typedef ThermalCluster* ThermalClusterWeakPtr;
-        byIndex = new ThermalClusterWeakPtr[size()];
+        typedef RenewableCluster* RenewableClusterWeakPtr;
+        byIndex = new RenewableClusterWeakPtr[size()];
 
         auto end = cluster.end();
         for (auto i = cluster.begin(); i != end; ++i)
@@ -425,7 +368,7 @@ void ThermalClusterList::rebuildIndex()
         byIndex = nullptr;
 }
 
-bool ThermalClusterListSaveToFolder(const ThermalClusterList* l, const AnyString& folder)
+bool RenewableClusterListSaveToFolder(const RenewableClusterList* l, const AnyString& folder)
 {
     // Assert
     assert(l);
@@ -452,76 +395,9 @@ bool ThermalClusterListSaveToFolder(const ThermalClusterList* l, const AnyString
                 s->add("group", cluster.group());
             if (not cluster.enabled)
                 s->add("enabled", "false");
-            if (not Math::Zero(cluster.unitCount))
-                s->add("unitCount", cluster.unitCount);
-            if (not Math::Zero(cluster.nominalCapacity))
-                s->add("nominalCapacity", cluster.nominalCapacity);
-
-            // Min. Stable Power
-            if (not Math::Zero(cluster.minStablePower))
-                s->add("min-stable-power", cluster.minStablePower);
-
-            // Min up and min down time
-            if (cluster.minUpTime != 1)
-                s->add("min-up-time", cluster.minUpTime);
-            if (cluster.minDownTime != 1)
-                s->add("min-down-time", cluster.minDownTime);
-
-            // must-run
-            if (cluster.mustrun)
-                s->add("must-run", "true");
-
-            // spinning
-            if (not Math::Zero(cluster.spinning))
-                s->add("spinning", cluster.spinning);
-            // co2
-            if (not Math::Zero(cluster.co2))
-                s->add("co2", cluster.co2);
-
-            // volatility
-            if (not Math::Zero(cluster.forcedVolatility))
-                s->add("volatility.forced", Math::Round(cluster.forcedVolatility, 3));
-            if (not Math::Zero(cluster.plannedVolatility))
-                s->add("volatility.planned", Math::Round(cluster.plannedVolatility, 3));
-
-            // laws
-            if (cluster.forcedLaw != thermalLawUniform)
-                s->add("law.forced", cluster.forcedLaw);
-            if (cluster.plannedLaw != thermalLawUniform)
-                s->add("law.planned", cluster.plannedLaw);
-
-            // costs
-            if (not Math::Zero(cluster.marginalCost))
-                s->add("marginal-cost", Math::Round(cluster.marginalCost, 3));
-            if (not Math::Zero(cluster.spreadCost))
-                s->add("spread-cost", cluster.spreadCost);
-            if (not Math::Zero(cluster.fixedCost))
-                s->add("fixed-cost", Math::Round(cluster.fixedCost, 3));
-            if (not Math::Zero(cluster.startupCost))
-                s->add("startup-cost", Math::Round(cluster.startupCost, 3));
-            if (not Math::Zero(cluster.marketBidCost))
-                s->add("market-bid-cost", Math::Round(cluster.marketBidCost, 3));
-
-            // groun{min,max}
-            if (not Math::Zero(cluster.groupMinCount))
-                s->add("groupMinCount", cluster.groupMinCount);
-            if (not Math::Zero(cluster.groupMaxCount))
-                s->add("groupMaxCount", cluster.groupMaxCount);
-            if (not Math::Zero(cluster.annuityInvestment))
-                s->add("annuityInvestment", cluster.annuityInvestment);
 
             buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
                            << cluster.parentArea->id << SEP << cluster.id();
-            if (IO::Directory::Create(buffer))
-            {
-                buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
-                               << cluster.parentArea->id << SEP << cluster.id() << SEP
-                               << "modulation.txt";
-
-                ret = cluster.modulation.saveToCSVFile(buffer) and ret;
-            }
-            else
-                ret = 0;
         });
 
         // Write the ini file
@@ -537,7 +413,7 @@ bool ThermalClusterListSaveToFolder(const ThermalClusterList* l, const AnyString
     return true;
 }
 
-bool ThermalClusterList::add(ThermalCluster* newcluster)
+bool RenewableClusterList::add(RenewableCluster* newcluster)
 {
     if (newcluster)
     {
@@ -553,12 +429,12 @@ bool ThermalClusterList::add(ThermalCluster* newcluster)
     return false;
 }
 
-bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, Area* area)
+bool RenewableClusterList::loadFromFolder(Study& study, const AnyString& folder, Area* area)
 {
     assert(area and "A parent area is required");
 
     // logs
-    logs.info() << "Loading thermal configuration for the area " << area->name;
+    logs.info() << "Loading renewable configuration for the area " << area->name;
 
     // Open the ini file
     study.buffer.clear() << folder << SEP << "list.ini";
@@ -733,16 +609,16 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                       Matrix<>::optImmediate | Matrix<>::optMarkAsModified);
                     if (r and modulation.width == 2)
                     {
-                        modulation.resizeWithoutDataLost(thermalModulationMax, modulation.height);
+                        modulation.resizeWithoutDataLost(renewableModulationMax, modulation.height);
                         // Copy of the modulation cost into the market bid modulation
                         // modulation.fillColumn(2, 1.);
-                        modulation.pasteToColumn(thermalModulationMarketBid,
-                                                 modulation[thermalModulationCost]);
-                        modulation.fillColumn(thermalMinGenModulation, 0.);
+                        modulation.pasteToColumn(renewableModulationMarketBid,
+                                                 modulation[renewableModulationCost]);
+                        modulation.fillColumn(renewableMinGenModulation, 0.);
                     }
                     else
                     {
-                        modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
+                        modulation.reset(renewableModulationMax, HOURS_PER_YEAR);
                         modulation.fill(1.);
                     }
                     modulation.markAsModified();
@@ -760,22 +636,22 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
 
                     if (r and modulation.width == 3)
                     {
-                        modulation.resizeWithoutDataLost(thermalModulationMax, modulation.height);
+                        modulation.resizeWithoutDataLost(renewableModulationMax, modulation.height);
                     }
                     else
                     {
-                        modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
+                        modulation.reset(renewableModulationMax, HOURS_PER_YEAR);
                         modulation.fill(1.);
                     }
-                    // switch thermalModulationMarketBid and thermalModulationCapacity
+                    // switch renewableModulationMarketBid and renewableModulationCapacity
                     // They have a wrong order
-                    modulation.pasteToColumn(thermalMinGenModulation,
-                                             modulation[thermalModulationMarketBid]);
-                    modulation.pasteToColumn(thermalModulationMarketBid,
-                                             modulation[thermalModulationCapacity]);
-                    modulation.pasteToColumn(thermalModulationCapacity,
-                                             modulation[thermalMinGenModulation]);
-                    modulation.fillColumn(thermalMinGenModulation, 0.);
+                    modulation.pasteToColumn(renewableMinGenModulation,
+                                             modulation[renewableModulationMarketBid]);
+                    modulation.pasteToColumn(renewableModulationMarketBid,
+                                             modulation[renewableModulationCapacity]);
+                    modulation.pasteToColumn(renewableModulationCapacity,
+                                             modulation[renewableMinGenModulation]);
+                    modulation.fillColumn(renewableMinGenModulation, 0.);
                     modulation.markAsModified();
                     ret = ret and r;
                 }
@@ -786,12 +662,12 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                         options = Matrix<>::optFixedSize,
                     };
                     bool r = cluster->modulation.loadFromCSVFile(
-                      modulationFile, thermalModulationMax, HOURS_PER_YEAR, options);
+                      modulationFile, renewableModulationMax, HOURS_PER_YEAR, options);
                     if (not r and study.usedByTheSolver)
                     {
-                        cluster->modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
+                        cluster->modulation.reset(renewableModulationMax, HOURS_PER_YEAR);
                         cluster->modulation.fill(1.);
-                        cluster->modulation.fillColumn(thermalMinGenModulation, 0.);
+                        cluster->modulation.fillColumn(renewableMinGenModulation, 0.);
                     }
                     ret = ret and r;
                 }
@@ -807,13 +683,13 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                     // alias to the marginal cost
                     double marginalCost = cluster->marginalCost;
                     // Production cost
-                    auto& modulation = cluster->modulation[thermalModulationCost];
+                    auto& modulation = cluster->modulation[renewableModulationCost];
                     for (uint h = 0; h != cluster->modulation.height; ++h)
                         prodCost[h] = marginalCost * modulation[h];
 
-                    if (not study.parameters.include.thermal.minStablePower)
+                    if (not study.parameters.include.renewable.minStablePower)
                         cluster->minStablePower = 0.;
-                    if (not study.parameters.include.thermal.minUPTime)
+                    if (not study.parameters.include.renewable.minUPTime)
                     {
                         cluster->minUpDownTime = 1;
                         cluster->minUpTime = 1;
@@ -832,11 +708,11 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                 // Check the data integrity of the cluster
                 cluster->integrityCheck();
 
-                // adding the thermal cluster
+                // adding the renewable cluster
                 if (not add(cluster))
                 {
                     // This error should never happen
-                    logs.error() << "Impossible to add the thermal cluster '" << cluster->name()
+                    logs.error() << "Impossible to add the renewable cluster '" << cluster->name()
                                  << "'";
                     delete cluster;
                     continue;
@@ -853,7 +729,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
     return false;
 }
 
-bool ThermalClusterListSavePreproToFolder(const ThermalClusterList* list, const AnyString& folder)
+bool RenewableClusterListSavePreproToFolder(const RenewableClusterList* list, const AnyString& folder)
 {
     assert(list);
     if (list->empty())
@@ -862,7 +738,7 @@ bool ThermalClusterListSavePreproToFolder(const ThermalClusterList* list, const 
     Clob buffer;
     bool ret = true;
 
-    list->each([&](const Data::ThermalCluster& cluster) {
+    list->each([&](const Data::RenewableCluster& cluster) {
         if (cluster.prepro)
         {
             assert(cluster.parentArea and "cluster: invalid parent area");
@@ -873,9 +749,9 @@ bool ThermalClusterListSavePreproToFolder(const ThermalClusterList* list, const 
     return ret;
 }
 
-bool ThermalClusterListLoadPreproFromFolder(Study& study,
+bool RenewableClusterListLoadPreproFromFolder(Study& study,
                                             const StudyLoadOptions& options,
-                                            ThermalClusterList* list,
+                                            RenewableClusterList* list,
                                             const AnyString& folder)
 {
     if (list->empty())
@@ -910,7 +786,7 @@ bool ThermalClusterListLoadPreproFromFolder(Study& study,
     return ret;
 }
 
-int ThermalClusterListSaveDataSeriesToFolder(const ThermalClusterList* l, const AnyString& folder)
+int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l, const AnyString& folder)
 {
     if (l->empty())
         return 1;
@@ -922,12 +798,12 @@ int ThermalClusterListSaveDataSeriesToFolder(const ThermalClusterList* l, const 
     {
         auto& cluster = *(it->second);
         if (cluster.series)
-            ret = DataSeriesThermalSaveToFolder(cluster.series, &cluster, folder) and ret;
+            ret = DataSeriesRenewableSaveToFolder(cluster.series, &cluster, folder) and ret;
     }
     return ret;
 }
 
-int ThermalClusterListSaveDataSeriesToFolder(const ThermalClusterList* l,
+int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l,
                                              const AnyString& folder,
                                              const String& msg)
 {
@@ -944,16 +820,16 @@ int ThermalClusterListSaveDataSeriesToFolder(const ThermalClusterList* l,
         if (cluster.series)
         {
             logs.info() << msg << "  " << (ticks * 100 / (1 + l->mapping.size())) << "% complete";
-            ret = DataSeriesThermalSaveToFolder(cluster.series, &cluster, folder) and ret;
+            ret = DataSeriesRenewableSaveToFolder(cluster.series, &cluster, folder) and ret;
         }
         ++ticks;
     }
     return ret;
 }
 
-int ThermalClusterListLoadDataSeriesFromFolder(Study& s,
+int RenewableClusterListLoadDataSeriesFromFolder(Study& s,
                                                const StudyLoadOptions& options,
-                                               ThermalClusterList* l,
+                                               RenewableClusterList* l,
                                                const AnyString& folder,
                                                int fast)
 {
@@ -962,9 +838,9 @@ int ThermalClusterListLoadDataSeriesFromFolder(Study& s,
 
     int ret = 1;
 
-    l->each([&](Data::ThermalCluster& cluster) {
+    l->each([&](Data::RenewableCluster& cluster) {
         if (cluster.series and (!fast or !cluster.prepro))
-            ret = DataSeriesThermalLoadFromFolder(s, cluster.series, &cluster, folder) and ret;
+            ret = DataSeriesRenewableLoadFromFolder(s, cluster.series, &cluster, folder) and ret;
 
         ++options.progressTicks;
         options.pushProgressLogs();
@@ -972,37 +848,37 @@ int ThermalClusterListLoadDataSeriesFromFolder(Study& s,
     return ret;
 }
 
-void ThermalClusterListEnsureDataPrepro(ThermalClusterList* list)
+void RenewableClusterListEnsureDataPrepro(RenewableClusterList* list)
 {
     auto end = list->cluster.end();
     for (auto it = list->cluster.begin(); it != end; ++it)
     {
         auto& cluster = *(it->second);
         if (not cluster.prepro)
-            cluster.prepro = new PreproThermal();
+            cluster.prepro = new PreproRenewable();
     }
 }
 
-void ThermalClusterListEnsureDataTimeSeries(ThermalClusterList* list)
+void RenewableClusterListEnsureDataTimeSeries(RenewableClusterList* list)
 {
     auto end = list->cluster.end();
     for (auto it = list->cluster.begin(); it != end; ++it)
     {
         auto& cluster = *(it->second);
         if (not cluster.series)
-            cluster.series = new DataSeriesThermal();
+            cluster.series = new DataSeriesRenewable();
     }
 }
 
-Yuni::uint64 ThermalClusterList::memoryUsage() const
+Yuni::uint64 RenewableClusterList::memoryUsage() const
 {
-    uint64 ret = sizeof(ThermalClusterList) + (2 * sizeof(void*)) * this->size();
+    uint64 ret = sizeof(RenewableClusterList) + (2 * sizeof(void*)) * this->size();
 
-    each([&](const Data::ThermalCluster& cluster) { ret += cluster.memoryUsage(); });
+    each([&](const Data::RenewableCluster& cluster) { ret += cluster.memoryUsage(); });
     return ret;
 }
 
-bool ThermalClusterList::rename(Data::ThermalClusterName idToFind, Data::ThermalClusterName newName)
+bool RenewableClusterList::rename(Data::RenewableClusterName idToFind, Data::RenewableClusterName newName)
 {
     if (not idToFind or newName.empty())
         return false;
@@ -1017,15 +893,15 @@ bool ThermalClusterList::rename(Data::ThermalClusterName idToFind, Data::Thermal
     idToFind.toLower();
 
     // The new ID
-    Data::ThermalClusterName newID;
+    Data::RenewableClusterName newID;
     TransformNameIntoID(newName, newID);
 
-    // Looking for the thermal cluster in the list
+    // Looking for the renewable cluster in the list
     auto it = cluster.find(idToFind);
     if (it == cluster.end())
         return true;
 
-    Data::ThermalCluster* p = it->second;
+    Data::RenewableCluster* p = it->second;
 
     if (idToFind == newID)
     {
@@ -1047,7 +923,7 @@ bool ThermalClusterList::rename(Data::ThermalClusterName idToFind, Data::Thermal
     cluster[newID] = p;
 
     // Invalidate matrices attached to the area
-    // It is a bit excessive (all matrices not only those related to the thermal cluster)
+    // It is a bit excessive (all matrices not only those related to the renewable cluster)
     // will be rewritten but currently it is the less error-prone.
     if (p->parentArea)
         (p->parentArea)->invalidateJIT = true;
@@ -1057,7 +933,7 @@ bool ThermalClusterList::rename(Data::ThermalClusterName idToFind, Data::Thermal
     return true;
 }
 
-bool Data::ThermalCluster::FlexibilityIsValid(uint f)
+bool Data::RenewableCluster::FlexibilityIsValid(uint f)
 {
     switch (f)
     {
@@ -1074,7 +950,7 @@ bool Data::ThermalCluster::FlexibilityIsValid(uint f)
     return false;
 }
 
-bool Data::ThermalClusterList::invalidate(bool reload) const
+bool Data::RenewableClusterList::invalidate(bool reload) const
 {
     bool ret = true;
     auto end = cluster.end();
@@ -1083,7 +959,7 @@ bool Data::ThermalClusterList::invalidate(bool reload) const
     return ret;
 }
 
-bool Data::ThermalCluster::invalidate(bool reload) const
+bool Data::RenewableCluster::invalidate(bool reload) const
 {
     bool ret = true;
     ret = modulation.invalidate(reload) and ret;
@@ -1094,14 +970,14 @@ bool Data::ThermalCluster::invalidate(bool reload) const
     return ret;
 }
 
-void Data::ThermalClusterList::markAsModified() const
+void Data::RenewableClusterList::markAsModified() const
 {
     auto end = cluster.end();
     for (auto i = cluster.begin(); i != end; ++i)
         (i->second)->markAsModified();
 }
 
-void Data::ThermalCluster::markAsModified() const
+void Data::RenewableCluster::markAsModified() const
 {
     modulation.markAsModified();
     if (series)
@@ -1110,7 +986,7 @@ void Data::ThermalCluster::markAsModified() const
         prepro->markAsModified();
 }
 
-void Data::ThermalCluster::calculationOfSpinning()
+void Data::RenewableCluster::calculationOfSpinning()
 {
     assert(this->series);
 
@@ -1137,12 +1013,12 @@ void Data::ThermalCluster::calculationOfSpinning()
     }
 }
 
-void ThermalClusterList::calculationOfSpinning()
+void RenewableClusterList::calculationOfSpinning()
 {
-    each([&](Data::ThermalCluster& cluster) { cluster.calculationOfSpinning(); });
+    each([&](Data::RenewableCluster& cluster) { cluster.calculationOfSpinning(); });
 }
 
-void Data::ThermalCluster::reverseCalculationOfSpinning()
+void Data::RenewableCluster::reverseCalculationOfSpinning()
 {
     assert(this->series);
 
@@ -1167,7 +1043,7 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
     }
 }
 
-void ThermalClusterList::reverseCalculationOfSpinning()
+void RenewableClusterList::reverseCalculationOfSpinning()
 {
     auto end = cluster.end();
     for (auto it = cluster.begin(); it != end; ++it)
@@ -1177,7 +1053,7 @@ void ThermalClusterList::reverseCalculationOfSpinning()
     }
 }
 
-void Data::ThermalCluster::reset()
+void Data::RenewableCluster::reset()
 {
     // production cost
     // reminder: this variable should be considered as valid only when used from the
@@ -1185,164 +1061,41 @@ void Data::ThermalCluster::reset()
     if (productionCost)
         (void)::memset(productionCost, 0, HOURS_PER_YEAR * sizeof(double));
 
-    mustrun = false;
-    mustrunOrigin = false;
-    unitCount = 0;
     enabled = true;
     nominalCapacity = 0.;
-    nominalCapacityWithSpinning = 0.;
-    minDivModulation.isCalculated = false;
-    minStablePower = 0.;
-    minUpDownTime = 1;
-    minUpTime = 1;
-    minDownTime = 1;
-
-    // spinning
-    spinning = 0.;
-    // co2
-    co2 = 0.;
-
-    // volatility
-    forcedVolatility = 0.;
-    plannedVolatility = 0.;
-    // laws
-    plannedLaw = thermalLawUniform;
-    forcedLaw = thermalLawUniform;
-
-    // costs
-    marginalCost = 0.;
-    spreadCost = 0.;
-    fixedCost = 0.;
-    startupCost = 0.;
-    marketBidCost = 0.;
-
-    // group{min,max}
-    groupMinCount = 0;
-    groupMaxCount = 0;
-    annuityInvestment = 0;
-
-    // modulation
-    modulation.resize(thermalModulationMax, HOURS_PER_YEAR);
-    modulation.fill(1.);
-    modulation.fillColumn(thermalMinGenModulation, 0.);
-    modulation.flush();
 
     // timeseries & prepro
     // warning: the variables `prepro` and `series` __must__ not be destroyed
     //   since the interface may still have a pointer to them.
     //   we must simply reset their content.
     if (not prepro)
-        prepro = new PreproThermal();
+        prepro = new PreproRenewable();
     if (not series)
-        series = new DataSeriesThermal();
+        series = new DataSeriesRenewable();
 
     series->series.reset(1, HOURS_PER_YEAR);
     series->series.flush();
     prepro->reset();
 }
 
-bool Data::ThermalCluster::integrityCheck()
+bool Data::RenewableCluster::integrityCheck()
 {
     if (not parentArea)
     {
-        logs.error() << "Thermal cluster " << pName << ": The parent area is missing";
-        return false;
-    }
-
-    if (Math::NaN(marketBidCost))
-    {
-        logs.error() << "Thermal cluster " << pName << ": NaN detected for market bid cost";
-        return false;
-    }
-    if (Math::NaN(marginalCost))
-    {
-        logs.error() << "Thermal cluster " << parentArea->name << '/' << pName
-                     << ": NaN detected for marginal cost";
-        return false;
-    }
-    if (Math::NaN(spreadCost))
-    {
-        logs.error() << "Thermal cluster " << parentArea->name << '/' << pName
-                     << ": NaN detected for marginal cost";
+        logs.error() << "Renewable cluster " << pName << ": The parent area is missing";
         return false;
     }
 
     bool ret = true;
 
-    if (minUpTime > 168 or 0 == minUpTime)
-    {
-        logs.error() << "Thermal cluster " << parentArea->name << "/" << pName
-                     << ": The min. up time must be between 1 and 168";
-        minUpTime = 1;
-        ret = false;
-    }
-    if (minDownTime > 168 or 0 == minDownTime)
-    {
-        logs.error() << "Thermal cluster " << parentArea->name << "/" << pName
-                     << ": The min. down time must be between 1 and 168";
-        minDownTime = 1;
-        ret = false;
-    }
     if (nominalCapacity < 0.)
     {
-        logs.error() << "Thermal cluster " << parentArea->name << "/" << pName
+        logs.error() << "Renewable cluster " << parentArea->name << "/" << pName
                      << ": The Nominal capacity must be positive or null";
         nominalCapacity = 0.;
         nominalCapacityWithSpinning = 0.;
         ret = false;
     }
-    if (unitCount > 100)
-    {
-        logs.error() << "Thermal cluster " << pID << ": The variable `unitCount` must be < 100";
-        unitCount = 100;
-        ret = false;
-    }
-    if (spinning < 0. or spinning > 100.)
-    {
-        if (spinning < 0.)
-            spinning = 0;
-        else
-            spinning = 100.;
-        logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
-                     << ": The spinning must be within the range [0,+100] (rounded to " << spinning
-                     << ')';
-        ret = false;
-        nominalCapacityWithSpinning = nominalCapacity;
-    }
-    if (co2 < 0.)
-    {
-        logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
-                     << ": The co2 must be positive or null";
-        co2 = 0;
-        ret = false;
-    }
-    if (spreadCost < 0.)
-    {
-        logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
-                     << ": The spread must be positive or null";
-        spreadCost = 0.;
-        ret = false;
-    }
-
-    // Modulation
-    if (modulation.height > 0)
-    {
-        CString<ant_k_cluster_name_max_length + ant_k_area_name_max_length + 50, false> buffer;
-        buffer << "Thermal cluster: " << parentArea->name << '/' << pName << ": Modulation";
-        ret = MatrixTestForPositiveValues(buffer.c_str(), &modulation) and ret;
-    }
-
-    // la valeur minStablePower should not be modified
-    /*
-    if (minStablePower > nominalCapacity)
-    {
-            logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
-                    << ": failed min stable power < nominal capacity (with min power = "
-                    << minStablePower << ", nominal power = " << nominalCapacity;
-            minStablePower = nominalCapacity;
-            ret = false;
-    }*/
-
     return ret;
 }
 
@@ -1376,7 +1129,7 @@ struct TSNumbersPredicate
 
 } // anonymous namespace
 
-bool ThermalClusterList::storeTimeseriesNumbers(Study& study)
+bool RenewableClusterList::storeTimeseriesNumbers(Study& study)
 {
     if (cluster.empty())
         return true;
@@ -1384,9 +1137,9 @@ bool ThermalClusterList::storeTimeseriesNumbers(Study& study)
     bool ret = true;
     TSNumbersPredicate predicate;
 
-    each([&](const Data::ThermalCluster& cluster) {
+    each([&](const Data::RenewableCluster& cluster) {
         study.buffer = study.folderOutput;
-        study.buffer << SEP << "ts-numbers" << SEP << "thermal" << SEP << cluster.parentArea->id
+        study.buffer << SEP << "ts-numbers" << SEP << "renewable" << SEP << cluster.parentArea->id
                      << SEP << cluster.id() << ".txt";
         ret = cluster.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate)
               and ret;
@@ -1394,10 +1147,9 @@ bool ThermalClusterList::storeTimeseriesNumbers(Study& study)
     return ret;
 }
 
-void ThermalClusterList::retrieveTotalCapacityAndUnitCount(double& total, uint& unitCount) const
+void RenewableClusterList::retrieveTotalCapacity(double& total) const
 {
     total = 0.;
-    unitCount = 0;
 
     if (not cluster.empty())
     {
@@ -1407,15 +1159,14 @@ void ThermalClusterList::retrieveTotalCapacityAndUnitCount(double& total, uint& 
             if (not i->second)
                 return;
 
-            // Reference to the thermal cluster
+            // Reference to the renewable cluster
             auto& cluster = *(i->second);
-            unitCount += cluster.unitCount;
             total += cluster.unitCount * cluster.nominalCapacity;
         }
     }
 }
 
-bool ThermalClusterList::remove(const Data::ThermalClusterName& id)
+bool RenewableClusterList::remove(const Data::RenewableClusterName& id)
 {
     auto i = cluster.find(id);
     if (i == cluster.end())
@@ -1437,19 +1188,19 @@ bool ThermalClusterList::remove(const Data::ThermalClusterName& id)
     return true;
 }
 
-ThermalCluster* ThermalClusterList::detach(iterator i)
+RenewableCluster* RenewableClusterList::detach(iterator i)
 {
     auto* c = i->second;
     cluster.erase(i);
     return c;
 }
 
-void ThermalClusterList::remove(iterator i)
+void RenewableClusterList::remove(iterator i)
 {
     cluster.erase(i);
 }
 
-bool ThermalClusterList::exists(const Data::ThermalClusterName& id) const
+bool RenewableClusterList::exists(const Data::RenewableClusterName& id) const
 {
     if (not cluster.empty())
     {
@@ -1459,97 +1210,24 @@ bool ThermalClusterList::exists(const Data::ThermalClusterName& id) const
     return false;
 }
 
-uint64 ThermalCluster::memoryUsage() const
+uint64 RenewableCluster::memoryUsage() const
 {
-    uint64 amount = sizeof(ThermalCluster) + modulation.memoryUsage();
+    uint64 amount = sizeof(RenewableCluster) + modulation.memoryUsage();
     if (prepro)
         amount += prepro->memoryUsage();
     if (series)
-        amount += DataSeriesThermalMemoryUsage(series);
+        amount += DataSeriesRenewableMemoryUsage(series);
     return amount;
 }
 
-void ThermalCluster::calculatMinDivModulation()
-{
-    minDivModulation.value = (modulation[thermalModulationCapacity][0]
-                              / Math::Ceil(modulation[thermalModulationCapacity][0]));
-    minDivModulation.index = 0;
-
-    for (uint t = 1; t < modulation.height; t++)
-    {
-        double div = modulation[thermalModulationCapacity][t]
-                     / ceil(modulation[thermalModulationCapacity][t]);
-
-        if (div < minDivModulation.value)
-        {
-            minDivModulation.value = div;
-            minDivModulation.index = t;
-        }
-    }
-    minDivModulation.isCalculated = true;
-}
-
-bool ThermalCluster::checkMinStablePower()
-{
-    if (not minDivModulation.isCalculated) // not has been initialized
-        calculatMinDivModulation();
-
-    if (minDivModulation.value < 0)
-    {
-        minDivModulation.isValidated = false;
-        return false;
-    }
-
-    // calculate nominalCapacityWithSpinning
-    double nomCapacityWithSpinning = nominalCapacity * (1 - spinning / 101);
-
-    if (Math::Zero(1 - spinning / 101))
-        minDivModulation.border = .0;
-    else
-        minDivModulation.border
-          = Math::Min(nomCapacityWithSpinning, minStablePower) / nomCapacityWithSpinning;
-
-    if (minDivModulation.value < minDivModulation.border)
-    {
-        minDivModulation.isValidated = false;
-        return false;
-    }
-
-    minDivModulation.isValidated = true;
-    return true;
-}
-
-bool ThermalCluster::checkMinStablePowerWithNewModulation(uint index, double value)
-{
-    if (not minDivModulation.isCalculated || index == minDivModulation.index)
-        calculatMinDivModulation();
-    else
-    {
-        double div = value / ceil(value);
-        if (div < minDivModulation.value)
-        {
-            minDivModulation.value = div;
-            minDivModulation.index = index;
-        }
-    }
-
-    return checkMinStablePower();
-}
-
-void ThermalClusterList::enableMustrunForEveryone()
-{
-    // enabling the mustrun mode
-    each([&](Data::ThermalCluster& cluster) { cluster.mustrun = true; });
-}
-
-void ThermalCluster::name(const AnyString& newname)
+void RenewableCluster::name(const AnyString& newname)
 {
     pName = newname;
     pID.clear();
     TransformNameIntoID(pName, pID);
 }
 
-bool ThermalCluster::isVisibleOnLayer(const size_t& layerID) const
+bool RenewableCluster::isVisibleOnLayer(const size_t& layerID) const
 {
     return parentArea ? parentArea->isVisibleOnLayer(layerID) : false;
 }
