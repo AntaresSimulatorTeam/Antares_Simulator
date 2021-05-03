@@ -53,8 +53,6 @@ pip3 install -r src/tests/examples/requirements.txt
 
 ## [Dependencies](#deps)
  ANTARES depends on several mandatory libraries. 
- - [OpenSSL](https://github.com/openssl/openssl)
- - [CURL](https://github.com/curl/curl)
  - [Sirius Solver](https://github.com/AntaresSimulatorTeam/sirius-solver/tree/Antares_VCPKG) (fork from [RTE](https://github.com/rte-france/sirius-solver/tree/Antares_VCPKG))
  - [OR-Tools](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) (fork from [RTE](https://github.com/rte-france/or-tools/tree/rte_dev_sirius) based on official OR-Tools github)
  - [wxWidgets](https://github.com/wxWidgets/wxWidgets)
@@ -69,7 +67,7 @@ The install procedure can be done
 
 #### Yum commands
 ```
-sudo yum install redhat-lsb-core openssl-devel curl-devel wxGTK3-devel boost-test boost-filesystem boost-regex boost-devel unzip
+sudo yum install redhat-lsb-core curl-devel wxGTK3-devel boost-test boost-filesystem boost-regex boost-devel unzip
 ```
 ### [Automatic librairies compilation from git](#git_compil)
 [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps) is used as a git submodule for automatic librairies compilation from git.
@@ -90,7 +88,7 @@ By default the install directory is `<antares_checkout_dir>/../rte-antares-deps-
 Note :
 > `DEPS_INSTALL_DIR` is added to `CMAKE_PREFIX_PATH`
 
-> If the dependency install directory contains CURL, OPENSSL or wxWidgets pre-compiled libraries an additionnal option must be used at configure time `-DUSE_PRECOMPILED_EXT=ON`
+> If the dependency install directory contains CURL, or wxWidgets pre-compiled libraries an additionnal option must be used at configure time `-DUSE_PRECOMPILED_EXT=ON`
 
 ### Pre-compiled libraries download : release version only
 You can download pre-compiled antares-deps archive from [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps/releases/tag/v1.1.0). Only release version are available.
@@ -212,5 +210,5 @@ There are still some system libraries that must be installed if you want to use 
 
 ```
 sudo yum install epel-release
-sudo yum install openssl curl wxGTK3
+sudo yum install curl wxGTK3
 ```

@@ -230,15 +230,6 @@ bool Open(bool expandEntries)
     (*entries)[(key = "localpolicy.user.path")] = pathLocalPolicy;
     (*entries)[(key = "localpolicy.allusers.path")] = pathLocalPolicyAllUsers;
 
-    // license
-    (*entries)[(key = "license.user.path")].clear()
-      << localAppData << SEP << "antares-" << ANTARES_VERSION << ".hwb";
-    (*entries)[(key = "license.allusers.path")].clear()
-      << localAppDataAllUsers << SEP << "antares-" << ANTARES_VERSION << ".hwb";
-
-    if ((*entries).count((key = "license.servers")) == 0)
-        (*entries)[key].clear();
-
     if (expandEntries)
         ExpansionWL();
     return true;

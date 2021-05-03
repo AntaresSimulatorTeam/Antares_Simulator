@@ -27,7 +27,6 @@
 #include "cbuilder.h"
 #include <antares/inifile.h>
 #include "../../config.h"
-#include "../../internet/limits.h"
 #include "../../libs/antares/study/area/constants.h"
 #include <yuni/io/file.h>
 //#include <wx/wx.h> // bourrin -> à modifier

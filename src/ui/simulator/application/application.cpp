@@ -45,7 +45,6 @@
 #include "study.h"
 #include <yuni/datetime/timestamp.h>
 #include <antares/logs/cleaner.h>
-#include "../../../internet/license.h"
 #include <antares/locale.h>
 #ifndef YUNI_OS_WINDOWS
 #include <signal.h>
@@ -255,9 +254,6 @@ bool Application::OnInit()
     // Print the local policy settings
     LocalPolicy::DumpToLogs();
 
-    // initialize openssl
-    License::InitializeEncryptionEngine();
-
     // Notify
     OnStudyBeginUpdate.connect(&OnNotifyStudyBeginUpdate);
     OnStudyEndUpdate.connect(&OnNotifyStudyEndUpdate);
@@ -340,9 +336,6 @@ Application::~Application()
     memory.removeAllUnusedSwapFiles();
     // Checking for orphan swap files
     memory.cleanupCacheFolder();
-
-    // openssl
-    License::ReleaseEncryptionEngine();
 
     logs.info() << "Exiting now.";
 }

@@ -39,39 +39,6 @@
 #include "config.h"
 #include <ui/common/component/frame/local-frame.h>
 #include <antares/study.h>
-#include "../../windows/onLineConsent/on-line-consent.h"
-
-const Yuni::String ANTARES_ONLINE_ACTIVATION_KEY = "-----BEGIN LICENSE ACTIVATION KEY-----\n\
-LC1cZqFqRlQIdVTX6Hf/rDTR7py0I6SuIVfAVXuft/ZA+HwtbuE7+RvOfXc5znFAw+GOy8vuPo9C4nlw/\n\
-rW4mpk6brsPIBbFleM8lN2Pm6jRG9HqhaQNMSiwHEZK65vCoTpax1BtiL8g9D2gQ8nYELKXEtiuF9N/jI\n\
-sM8thCrIw=-XChR7X3mixKOoKnBNPhsEVONggkDWd601HY6GZbq5zmd8IKL9HxSb6Bs1QjioabwGifncI\n\
-W9iu/4ChtMyNclK2KEliZYWtcBYLGQFrkg+BK5Cn4k9ViTzvcrxQNtqM451XxzoN1X4lSjQC+nmgDW9fO\n\
-Jl/iCTyYRDcZrPhI6NQOx7MAsCV2YXSHOIdIs9t03IAIM+wklyZgafltvop194gJMOsDi9Numou8LxFTP\n\
-vbWa5R/aiuV/USCOQBcLg6da+BfNI8SFFAkA8PWQDlm9bY5E4NwwD948SwQ5GnzD1/umM/4nvMQsvMP7S\n\
-Sa/oh6GiLvm0OmNm994YSIhZq6HUApkS+XH9fQEJFwJke7WghfrkcZc3znCD5ZmDHX83L21AsQRqc6Pv+\n\
-TMyBqeRkgPIlfslCM+zykYx644QKQnT9qJhS8gw7/xACjTmBHyZajc//k5M5lPABoCChB4z3TB02NtDXr\n\
-4k6ew+OhlcYrBfxuC7unXK8deOyna0ZO6uNU3LlM0xhwYngkSTkkl7bW5+KwqnFj5dSLhrv++hBPK3jkK\n\
-+Q8gQUOn8kCt/0BzFlRXlA3CuRcRlTGyPwblaGTAiLmrtl690rUwTAls9djziR6uRWl1e6yXWsqKQRB6B\n\
-qjY3PA7LJyMz/pgfjee7ULuXDAghzJSjE502p54xIBrOD4AeXcOhKPdcTI83kXyXv/q6NkqWqFnyS8eWC\n\
-/9rqSZeMi1g/h4OFJk2H22rAwx65MCgvOgeF5+kHmwLhhQqTGhdREDpRMOTIqO+BjtfvnrOTGTktoyGLH\n\
-HXIF9B5Mu6wXZLF9NsTsMSA==\n\
------END LICENSE ACTIVATION KEY-----";
-
-const Yuni::String ANTARES_OFFLINE_ACTIVATION_KEY = "-----BEGIN LICENSE ACTIVATION KEY-----\n\
-VKoHuK+Ku+INcjMmyoj4IHjFzc3KnE4VW5TArnsgNtznRVpch88nkGJisSlA3OeBq5ngz/HOcOA8vyVC9\n\
-y9k7XbNQCcw6yDe8Lp2XM0YbQz+vKDHY1DIKfUgVD7lIxssiV9FjYiXYvvxpMOuZwyWVw0NXL/L/2s29k\n\
-2eqEfUlac=-gbn8rJczav+SpaIdoR6fq9uco95FPzQXp71xBGsbxVBibM04VM2J8B4G4RvzkuDDeNvpgV\n\
-QW10oGG56ErWgnBDr0+tNqgfIIm7A2qjFfaXpZglsI084Sh0pCJNI/apIB+jCrS9x/GsoVp9aXB8NQYIh\n\
-sZMMQWMKbkw+az9ryI22lNNwHPROjyb2HqOE5IvqoRh11K8T9LX0SloNyjkY3D1gEqIIPXMJK1N4vxxFP\n\
-clEAp4qtNub/Kap4qlMtDI62nblNJgjQO3V3s7r9Gm2UuqJqXr6zaC4Fboj5rZucMh5kNzQphlsXVF1Sb\n\
-2/Bdg7Hv2/ty4ffF1Tm8mrkmsRqpg8pOTitFMhvI4KZ/F95jbILep1s4PFXMYODYhksCXgbDSnk5Y16O1\n\
-K/u6TR52ovuBanWB/tPj3uyU7roNvLWa2S4rxxIz4OaAuRS+dTFKzEPrgmuis5mTEKQkU4aqZuzjIFl0L\n\
-mDYEUWO9cNSLMG37LqfPR5HwCs3B3Al4Ko7n8lhuMOIKZkU0iFIjI1LMWldjrOHs+91t4GgP/OyqzvDMI\n\
-OQ/EtYHgXWv9Yh3sZFFLDct5wuk8v+3m2SCZtnljNIQ67ztFirwplDfTYXNEBp6p7rtheLz6MkSB6QlPD\n\
-saX7TlwSKPb2JHz+hnx0TnIgx7tsxZOn83WQ7KWaWS4948S50yoBognAxDrI+TQBk1sqDmZRu4ivGsqun\n\
-v5++vcXOEdMY+xKEBFRRBFOluOc3pPXeyCWOdDK0C7IqHJOdc7RpSqtJimSelFGoY+fN5brxw5Y5UWHUx\n\
-VEtOWyvPjR7P8QoAHTpQoJQ==\n\
------END LICENSE ACTIVATION KEY-----";
 
 namespace Antares
 {
@@ -628,12 +595,6 @@ private:
     //! Event: PDF Examples library
     void evtOnHelpPDFExamplesLibrary(wxCommandEvent& evt);
 
-    void evtOnHelpContinueOnline(wxCommandEvent& evt);
-
-    void evtOnHelpContinueOffline(wxCommandEvent& evt);
-
-    void evtOnShowID(wxCommandEvent&);
-
     //@}
 
     //! \name Menu event
@@ -772,9 +733,6 @@ private:
 
     //! A context menu for the map
     wxMenu* pMapContextMenu;
-
-    // User consent for sending anonymous usage infos on server
-    onLineConsent pOnLineConsent;
 
     //! User notes
     Window::Notes* pUserNotes;

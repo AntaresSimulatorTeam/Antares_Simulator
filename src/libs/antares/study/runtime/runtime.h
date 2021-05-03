@@ -211,7 +211,7 @@ private:
     void initializeBindingConstraints(BindConstList& list);
     void initializeRangeLimits(const Study& study, StudyRangeLimits& limits);
     //! Prepare all thermal clusters in 'must-run' mode
-    bool initializeThermalClustersInMustRunMode(Study& study);
+    void initializeThermalClustersInMustRunMode(Study& study);
     void removeDisabledThermalClustersFromSolverComputations(Study& study);
 
     void disableAllFilters(Study& study);

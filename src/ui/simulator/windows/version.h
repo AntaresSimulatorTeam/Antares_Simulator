@@ -34,7 +34,7 @@ namespace Antares
 /*!
 ** \brief Get the current version of Antares
 */
-wxString VersionToWxString(bool copyright = true);
+wxString VersionToWxString();
 
 } // namespace Antares
 

@@ -498,7 +498,7 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGClusterParams = Category(pg, wxT("Operating parameters"), wxT("cluster.params"));
     pPGClusterEnabled = P_BOOL("Enabled", "cluster.enabled");
     pPGClusterUnitCount = P_UINT("Unit", "cluster.unit");
-    pPGClusterNominalCapacity = P_UINT("Nominal capacity (MW)", "cluster.nominal_capacity");
+    pPGClusterNominalCapacity = P_FLOAT("Nominal capacity (MW)", "cluster.nominal_capacity");
     pPGClusterInstalled = P_FLOAT("Installed (MW)", "cluster.installed");
     pg->DisableProperty(pPGClusterInstalled);
     pPGClusterMustRun = P_BOOL("Must run", "cluster.must-run");
