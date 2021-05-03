@@ -1,4 +1,4 @@
 
 # Copy the changelog
-file(READ "changelog.mdown" changelog_content)
-file(WRITE "distrib/changelog.txt" "${changelog_content}")
+file(READ "src/changelog.mdown" changelog_content)
+file(WRITE "src/distrib/changelog.txt" "${changelog_content}")

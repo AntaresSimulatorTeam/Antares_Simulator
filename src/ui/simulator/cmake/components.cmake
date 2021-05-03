@@ -86,7 +86,7 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS
 		)
 source_group("Datagrid\\Renderer" FILES ${SRC_TOOLBOX_COM_DBGRID_RENDERERS})
 
-SET(SRC_SCENARIO_BUILDER_UTILS ${CMAKE_SOURCE_DIR}/libs/antares/study/scenario-builder/scBuilderUtils.cpp)
+SET(SRC_SCENARIO_BUILDER_UTILS ${CMAKE_SOURCE_DIR}/src/libs/antares/study/scenario-builder/scBuilderUtils.cpp)
 
 SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS_MATRIX
 		# Matrix
@@ -257,7 +257,7 @@ add_library(libantares-ui-components
 
 target_include_directories(libantares-ui-components
 							PRIVATE
-								"${CMAKE_SOURCE_DIR}/ui/simulator"
+								"${CMAKE_SOURCE_DIR}/src/ui/simulator"
 )
 
 target_link_libraries(libantares-ui-components

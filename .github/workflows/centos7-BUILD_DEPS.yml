@@ -39,7 +39,7 @@ jobs:
     
     - name: Init submodule
       run: |
-           git submodule update --init --recursive src .
+           git submodule update --init --recursive .
           
     - name: Install dependencies
       run: |
@@ -48,7 +48,7 @@ jobs:
     - name: Configure
       run: |
            source /opt/rh/devtoolset-7/enable
-           cmake3 -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DUSE_PRECOMPILED_EXT=ON
+           cmake3 -B _build -S . -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DUSE_PRECOMPILED_EXT=ON
 
     - name: Build
       run: |

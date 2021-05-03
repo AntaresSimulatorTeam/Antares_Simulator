@@ -10,7 +10,7 @@ import pytest
 
 from study import Study
 
-ALL_STUDIES_PATH = Path('../resources/Antares_Simulator_Tests')
+ALL_STUDIES_PATH = Path('../../../resources/Antares_Simulator_Tests')
 
 def find_log_path(output_dir):
     op = []
