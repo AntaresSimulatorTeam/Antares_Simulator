@@ -93,6 +93,30 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
             ptchro.Eolien
               = (data.series.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
         }
+        // Renewable
+        {
+            auto end = area.renewable.list.mapping.end();
+            for (auto it = area.renewable.list.mapping.begin(); it != end; ++it)
+            {
+                auto* cluster = it->second;
+                // Draw a new random number, whatever the cluster is
+                if (!cluster->enabled)
+                {
+                    continue;
+                }
+
+                const Data::DataSeriesRenewable& data = *cluster->series;
+                assert(year < data.timeseriesNumbers.height);
+                unsigned int index = cluster->areaWideIndex;
+
+                // the matrix data.series should be properly initialized at this stage
+                // because the ts-generator has already been launched
+                ptchro.RenouvelableParPalier[index] = (data.series.width != 1)
+                                                        ? (long)data.timeseriesNumbers[0][year]
+                                                        : 0; // zero-based
+            }
+        }
+
         // Thermal
         {
             uint indexCluster = 0;
