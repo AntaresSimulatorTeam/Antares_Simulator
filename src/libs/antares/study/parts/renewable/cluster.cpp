@@ -50,6 +50,15 @@ static bool RenewableClusterLoadFromProperty(RenewableCluster& cluster, const In
     if (p->key.empty())
         return false;
 
+    if (p->key == "group")
+    {
+        cluster.group(p->value);
+        return true;
+    }
+
+    if (p->key == "name")
+        return true;
+
     if (p->key == "enabled")
         return p->value.to<bool>(cluster.enabled);
 
