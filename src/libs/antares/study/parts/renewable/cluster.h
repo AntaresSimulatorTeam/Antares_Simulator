@@ -51,8 +51,16 @@ enum RenewableGroup
     concentrationSolar,
     //! PV solar
     PVSolar,
-    //! Other
-    renewableOther,
+    //! Rooftop solar
+    rooftopSolar,
+    //! Other 1
+    renewableOther1,
+    //! Other 2
+    renewableOther2,
+    //! Other 3
+    renewableOther3,
+    //! Other 4
+    renewableOther4,
 
     //! The highest value
     renewableGroupMax

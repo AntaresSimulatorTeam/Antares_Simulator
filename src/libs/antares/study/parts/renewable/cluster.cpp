@@ -89,7 +89,7 @@ static bool RenewableClusterLoadFromSection(const AnyString& filename,
 }
 
 Data::RenewableCluster::RenewableCluster(Area* parent, uint /*nbParallelYears*/) :
- groupID(renewableOther),
+ groupID(renewableOther1),
  index(0),
  areaWideIndex((uint)-1),
  parentArea(parent),
@@ -102,7 +102,7 @@ Data::RenewableCluster::RenewableCluster(Area* parent, uint /*nbParallelYears*/)
 }
 
 Data::RenewableCluster::RenewableCluster(Area* parent) :
- groupID(renewableOther),
+ groupID(renewableOther1),
  index(0),
  areaWideIndex((uint)-1),
  parentArea(parent),
@@ -265,7 +265,7 @@ void Data::RenewableCluster::group(Data::RenewableClusterName newgrp)
 {
     if (not newgrp)
     {
-        groupID = renewableOther;
+        groupID = renewableOther1;
         pGroup.clear();
         return;
     }
@@ -283,11 +283,44 @@ void Data::RenewableCluster::group(Data::RenewableClusterName newgrp)
         }
         break;
     }
+    case 'o':
+    {
+        if (newgrp == "other renewable 1")
+        {
+            groupID = renewableOther1;
+            return;
+        }
+        if (newgrp == "other renewable 2")
+        {
+            groupID = renewableOther2;
+            return;
+        }
+        if (newgrp == "other renewable 3")
+        {
+            groupID = renewableOther3;
+            return;
+        }
+        if (newgrp == "other renewable 4")
+        {
+            groupID = renewableOther4;
+            return;
+        }
+        break;
+    }
     case 'p':
     {
         if (newgrp == "pv solar")
         {
             groupID = PVSolar;
+            return;
+        }
+        break;
+    }
+    case 'r':
+    {
+        if (newgrp == "rooftop solar")
+        {
+            groupID = rooftopSolar;
             return;
         }
         break;
@@ -309,7 +342,7 @@ void Data::RenewableCluster::group(Data::RenewableClusterName newgrp)
     }
     }
     // assigning a default value
-    groupID = renewableOther;
+    groupID = renewableOther1;
 }
 
 void RenewableClusterList::rebuildIndex()
@@ -671,8 +704,16 @@ const char* Data::RenewableCluster::GroupName(enum RenewableGroup grp)
         return "Concentration solar";
     case PVSolar:
         return "PV solar";
-    case renewableOther:
-        return "Other renewable";
+    case rooftopSolar:
+        return "Rooftop solar";
+    case renewableOther1:
+        return "Renewable 1";
+    case renewableOther2:
+        return "Renewable 2";
+    case renewableOther3:
+        return "Renewable 3";
+    case renewableOther4:
+        return "Renewable 4";
     case renewableGroupMax:
         return "";
     }
