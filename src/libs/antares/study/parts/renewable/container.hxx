@@ -24,20 +24,19 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_CONTAINER_HXX__
-#define __ANTARES_LIBS_STUDY_PARTS_THERMAL_CONTAINER_HXX__
+#ifndef __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CONTAINER_HXX__
+#define __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CONTAINER_HXX__
 
 namespace Antares
 {
 namespace Data
 {
-inline void PartThermal::resizeAllTimeseriesNumbers(uint n)
+inline void PartRenewable::resizeAllTimeseriesNumbers(uint n)
 {
     list.resizeAllTimeseriesNumbers(n);
-    mustrunList.resizeAllTimeseriesNumbers(n);
 }
 
 } // namespace Data
 } // namespace Antares
 
-#endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_CONTAINER_HXX__
+#endif // __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CONTAINER_HXX__
