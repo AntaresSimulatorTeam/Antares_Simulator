@@ -231,6 +231,9 @@ Yuni::uint64 Area::memoryUsage() const
     // Thermal
     ret += thermal.list.memoryUsage();
 
+    // Renewable
+    ret += renewable.list.memoryUsage();
+
     // UI
     if (ui)
         ret += ui->memoryUsage();
@@ -259,6 +262,7 @@ void Area::ensureAllDataAreCreated()
     if (!hydro.series)
         hydro.series = new DataSeriesHydro();
     ThermalClusterListEnsureDataTimeSeries(&thermal.list);
+    RenewableClusterListEnsureDataTimeSeries(&renewable.list);
 
     // Prepro
     if (!load.prepro)
@@ -296,6 +300,8 @@ void Area::resetToDefaultValues()
     hydro.allocation.fromArea(id, 1.);
     // Thermal
     thermal.reset();
+    // Renewable
+    renewable.reset();
     // Fatal hors hydro
     miscGen.reset(fhhMax, HOURS_PER_YEAR, true);
     // reserves
@@ -353,6 +359,7 @@ void Area::resizeAllTimeseriesNumbers(uint n)
         hydro.series->timeseriesNumbers.resize(1, n);
     }
     thermal.resizeAllTimeseriesNumbers(n);
+    renewable.resizeAllTimeseriesNumbers(n);
 }
 
 void Area::estimateMemoryUsage(StudyMemoryUsage& u) const
@@ -388,6 +395,9 @@ void Area::estimateMemoryUsage(StudyMemoryUsage& u) const
 
     // Thermal
     thermal.estimateMemoryUsage(u);
+
+    // Renewable
+    renewable.estimateMemoryUsage(u);
 
     // Scratchpad
     u.requiredMemoryForInput += sizeof(AreaScratchpad) * u.nbYearsParallel;
@@ -451,7 +461,8 @@ bool Area::invalidate(bool reload) const
     ret = self.wind.invalidate(reload) and ret;
     // Thermal
     ret = self.thermal.invalidate(reload) and ret;
-
+    // Renewable
+    ret = self.renewable.invalidate(reload) and ret;
     if (not links.empty())
     {
         auto end = self.links.end();
@@ -482,6 +493,8 @@ void Area::markAsModified() const
     wind.markAsModified();
     // Thermal
     thermal.markAsModified();
+    // Renewable
+    renewable.markAsModified();
 
     if (not links.empty())
     {
