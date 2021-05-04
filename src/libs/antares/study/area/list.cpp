@@ -1070,7 +1070,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // Renewable cluster list
     {
-        buffer.clear() << study.folderInput << SEP << "renewable" << SEP << "series";
+        buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
         ret = RenewableClusterListLoadDataSeriesFromFolder(
                 study, options, &area.renewable.list, buffer, options.loadOnlyNeeded)
               and ret;
@@ -1233,14 +1233,14 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     // Renewable data, specific to areas
     {
         logs.info() << "Loading renewable clusters...";
-        buffer.clear() << pStudy.folderInput << SEP << "renewable" << SEP << "areas.ini";
+        buffer.clear() << pStudy.folderInput << SEP << "renewables" << SEP << "areas.ini";
         ret = AreaListLoadRenewableDataFromFile(*this, buffer) and ret;
 
         // The cluster list must be loaded before the method
         // Study::ensureDataAreInitializedAccordingParameters() is called
         // in order to allocate data with all thermal clusters.
         CString<30, false> renewablePlant;
-        renewablePlant << SEP << "renewable" << SEP << "clusters" << SEP;
+        renewablePlant << SEP << "renewables" << SEP << "clusters" << SEP;
 
         auto end = areas.end();
         for (auto i = areas.begin(); i != end; ++i)
