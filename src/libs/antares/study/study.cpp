@@ -246,6 +246,11 @@ void StudyEnsureDataThermalTimeSeries(Study* s)
     AreaListEnsureDataThermalTimeSeries(&s->areas);
 }
 
+void StudyEnsureDataRenewableTimeSeries(Study* s)
+{
+    AreaListEnsureDataRenewableTimeSeries(&s->areas);
+}
+
 void StudyEnsureDataThermalPrepro(Study* s)
 {
     AreaListEnsureDataThermalPrepro(&s->areas);
@@ -279,6 +284,7 @@ void Study::ensureDataAreInitializedAccordingParameters()
     StudyEnsureDataWindTimeSeries(this);
     StudyEnsureDataHydroTimeSeries(this);
     StudyEnsureDataThermalTimeSeries(this);
+    StudyEnsureDataRenewableTimeSeries(this);
 
     // Load
     if (parameters.isTSGeneratedByPrepro(timeSeriesLoad))
@@ -305,6 +311,7 @@ void Study::ensureDataAreAllInitialized()
     StudyEnsureDataWindTimeSeries(this);
     StudyEnsureDataHydroTimeSeries(this);
     StudyEnsureDataThermalTimeSeries(this);
+    StudyEnsureDataRenewableTimeSeries(this);
 
     // TS-Generators
     StudyEnsureDataLoadPrepro(this);

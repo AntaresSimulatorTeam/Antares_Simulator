@@ -1446,6 +1446,13 @@ void AreaListEnsureDataThermalTimeSeries(AreaList* l)
     l->each([&](Data::Area& area) { ThermalClusterListEnsureDataTimeSeries(&area.thermal.list); });
 }
 
+void AreaListEnsureDataRenewableTimeSeries(AreaList* l)
+{
+    assert(l);
+
+    l->each([&](Data::Area& area) { RenewableClusterListEnsureDataTimeSeries(&area.renewable.list); });
+}
+
 void AreaListEnsureDataThermalPrepro(AreaList* l)
 {
     assert(l and "The area list must not be nullptr");
