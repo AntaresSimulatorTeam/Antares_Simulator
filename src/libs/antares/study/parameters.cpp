@@ -217,6 +217,7 @@ void Parameters::reset()
     nbTimeSeriesHydro = 1;
     nbTimeSeriesWind = 1;
     nbTimeSeriesThermal = 1;
+    nbTimeSeriesRenewable = 1;
     // Time-series refresh
     timeSeriesToRefresh = 0; // None
     refreshIntervalLoad = 100;
@@ -224,6 +225,7 @@ void Parameters::reset()
     refreshIntervalHydro = 100;
     refreshIntervalWind = 100;
     refreshIntervalThermal = 100;
+    refreshIntervalRenewable = 100;
     // Archive
     timeSeriesToArchive = 0; // None
     // Pre-Processor

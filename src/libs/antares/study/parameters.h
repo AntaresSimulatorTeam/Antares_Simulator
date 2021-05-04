@@ -282,6 +282,8 @@ public:
     uint refreshIntervalWind;
     //! Refresh interval (in years) for timeSeries : Thermal
     uint refreshIntervalThermal;
+    //! Refresh interval (in years) for timeSeries : Renewable
+    uint refreshIntervalRenewable;
     //! Refresh interval (in years) for timeSeries : Solar
     uint refreshIntervalSolar;
     //@}
