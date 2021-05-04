@@ -158,7 +158,6 @@ static bool AreaListLoadRenewableDataFromFile(AreaList& list, const Clob& filena
     return true;
 }
 
-
 static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString& filename)
 {
     Clob data;
@@ -1071,13 +1070,12 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // Renewable cluster list
     {
-      buffer.clear() << study.folderInput << SEP << "renewable" << SEP << "series";
-      logs.warning() << "Renewable cluster list " << area.renewable.list.size();
-      ret = RenewableClusterListLoadDataSeriesFromFolder(
-                                                       study, options, &area.renewable.list, buffer, options.loadOnlyNeeded)
-        and ret;
+        buffer.clear() << study.folderInput << SEP << "renewable" << SEP << "series";
+        logs.warning() << "Renewable cluster list " << area.renewable.list.size();
+        ret = RenewableClusterListLoadDataSeriesFromFolder(
+                study, options, &area.renewable.list, buffer, options.loadOnlyNeeded)
+              and ret;
     }
-
 
     // Nodal Optimization
     if (study.header.version >= 330)
@@ -1249,12 +1247,11 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         for (auto i = areas.begin(); i != end; ++i)
         {
             Area& area = *(i->second);
-            buffer.clear() << pStudy.folderInput << thermalPlant << area.id;
-            ret = area.thermal.list.loadFromFolder(pStudy, buffer.c_str(), &area) and ret;
-            area.thermal.prepareAreaWideIndexes();
+            buffer.clear() << pStudy.folderInput << renewablePlant << area.id;
+            ret = area.renewable.list.loadFromFolder(pStudy, buffer.c_str(), &area) and ret;
+            area.renewable.prepareAreaWideIndexes();
         }
     }
-
 
     // Prepare
     if (options.loadOnlyNeeded)
