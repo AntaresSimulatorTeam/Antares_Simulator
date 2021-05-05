@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.0)
 # Version
 set(ANTARES_VERSION_HI	      8)
 set(ANTARES_VERSION_LO	      0)
-set(ANTARES_VERSION_REVISION  2)
+set(ANTARES_VERSION_REVISION  3)
 set(ANTARES_VERSION_YEAR      2021)
 
 set(ANTARES_PUBLISHER	   "RTE France")
