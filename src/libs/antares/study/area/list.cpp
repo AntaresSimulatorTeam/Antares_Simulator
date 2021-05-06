@@ -1074,6 +1074,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         ret = RenewableClusterListLoadDataSeriesFromFolder(
                 study, options, &area.renewable.list, buffer, options.loadOnlyNeeded)
               and ret;
+        // flush
+        area.renewable.list.flush();
     }
 
     // Nodal Optimization
