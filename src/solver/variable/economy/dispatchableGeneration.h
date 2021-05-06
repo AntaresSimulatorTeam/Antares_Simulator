@@ -287,7 +287,7 @@ public:
     void hourForEachThermalCluster(State& state, unsigned int numSpace)
     {
         // Adding the dispatchable generation for the class_name fuel
-        pValuesForTheCurrentYear[numSpace][state.cluster->groupID][state.hourInTheYear]
+        pValuesForTheCurrentYear[numSpace][state.thermalCluster->groupID][state.hourInTheYear]
           += state.thermalClusterProduction;
         // Next item in the list
         NextType::hourForEachThermalCluster(state, numSpace);

@@ -262,7 +262,7 @@ public:
         // CO2 = CO2 for the thermal cluster/Mwh * production
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear] +=
           // production for the current thermal dispatchable cluster
-          (state.cluster->co2 * state.thermalClusterProduction);
+          (state.thermalCluster->co2 * state.thermalClusterProduction);
 
         // Next item in the list
         NextType::hourForEachThermalCluster(state, numSpace);

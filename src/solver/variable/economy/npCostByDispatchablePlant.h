@@ -279,7 +279,7 @@ public:
              i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd];
              ++i)
         {
-            pValuesForTheCurrentYear[numSpace][state.cluster->areaWideIndex].hour[i]
+            pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i]
               = state.thermalClusterNonProportionalCostForYear[i];
         }
 
@@ -350,7 +350,7 @@ public:
     {
         // Total Non Proportional cost for this hour
         // NP = startup cost + fixed cost
-        // pValuesForTheCurrentYear[state.cluster->areaWideIndex].hour[state.hourInTheYear] +=
+        // pValuesForTheCurrentYear[state.thermalCluster->areaWideIndex].hour[state.hourInTheYear] +=
         // production for the current thermal dispatchable cluster
         //	(state.thermalClusterNonProportionalCost);
 

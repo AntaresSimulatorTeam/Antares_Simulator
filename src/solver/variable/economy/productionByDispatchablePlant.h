@@ -292,10 +292,10 @@ public:
         for (unsigned int i = 0; i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd]; ++i)
         {
             state.thermalClusterProductionForYear[i]
-              += pValuesForTheCurrentYear[numSpace][state.cluster->areaWideIndex].hour[i];
+              += pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i];
             state.thermalClusterPMinOfTheClusterForYear[i]
               += pminOfTheClusterForYear[numSpace]
-                                        [(state.cluster->areaWideIndex * maxHoursInAYear) + i];
+                                        [(state.thermalCluster->areaWideIndex * maxHoursInAYear) + i];
         }
 
         // Next variable
@@ -370,12 +370,12 @@ public:
     void hourForEachThermalCluster(State& state, unsigned int numSpace)
     {
         // Production for this hour
-        pValuesForTheCurrentYear[numSpace][state.cluster->areaWideIndex].hour[state.hourInTheYear]
+        pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[state.hourInTheYear]
           +=
           // production for the current thermal dispatchable cluster
           (state.thermalClusterProduction);
 
-        pminOfTheClusterForYear[numSpace][(state.cluster->areaWideIndex * maxHoursInAYear)
+        pminOfTheClusterForYear[numSpace][(state.thermalCluster->areaWideIndex * maxHoursInAYear)
                                           + state.hourInTheYear]
           =
             // pmin of the current cluster

@@ -110,7 +110,7 @@ public:
     //! The current area
     Data::Area* area;
     //! The current thermal cluster
-    Data::ThermalCluster* cluster;
+    Data::ThermalCluster* thermalCluster;
     //! The Scratchpad for the current area
     Data::AreaScratchpad* scratchpad;
     //! The current link
