@@ -534,8 +534,7 @@ int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l,
 int RenewableClusterListLoadDataSeriesFromFolder(Study& s,
                                                  const StudyLoadOptions& options,
                                                  RenewableClusterList* l,
-                                                 const AnyString& folder,
-                                                 int fast)
+                                                 const AnyString& folder)
 {
     if (l->empty())
         return 1;
@@ -543,7 +542,7 @@ int RenewableClusterListLoadDataSeriesFromFolder(Study& s,
     int ret = 1;
 
     l->each([&](Data::RenewableCluster& cluster) {
-        if (cluster.series and !fast)
+        if (cluster.series)
             ret = DataSeriesRenewableLoadFromFolder(s, cluster.series, &cluster, folder) and ret;
 
         ++options.progressTicks;

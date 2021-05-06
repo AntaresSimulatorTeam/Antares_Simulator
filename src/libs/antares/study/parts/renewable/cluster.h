@@ -483,8 +483,7 @@ public:
 int RenewableClusterListLoadDataSeriesFromFolder(Study& study,
                                                  const StudyLoadOptions& options,
                                                  RenewableClusterList* l,
-                                                 const AnyString& folder,
-                                                 int fast);
+                                                 const AnyString& folder);
 
 /*!
 ** \brief Save data related to time-series from a list of renewable clusters to a folder
