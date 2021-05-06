@@ -154,7 +154,7 @@ static bool AreaListLoadRenewableDataFromFile(AreaList& list, const Clob& filena
     // Try to load the file
     if (not ini.open(filename))
         return false;
-    // TODO
+    // TODO: add modulation
     return true;
 }
 
