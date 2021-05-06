@@ -154,7 +154,7 @@ static bool AreaListLoadRenewableDataFromFile(AreaList& list, const Clob& filena
     // Try to load the file
     if (not ini.open(filename))
         return false;
-    // TODO
+    // TODO: add modulation
     return true;
 }
 
@@ -1072,8 +1072,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
         ret = RenewableClusterListLoadDataSeriesFromFolder(
-                study, options, &area.renewable.list, buffer, options.loadOnlyNeeded)
+                study, options, &area.renewable.list, buffer)
               and ret;
+        // flush
+        area.renewable.list.flush();
     }
 
     // Nodal Optimization
@@ -1238,7 +1240,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
 
         // The cluster list must be loaded before the method
         // Study::ensureDataAreInitializedAccordingParameters() is called
-        // in order to allocate data with all thermal clusters.
+        // in order to allocate data with all renewable clusters.
         CString<30, false> renewablePlant;
         renewablePlant << SEP << "renewables" << SEP << "clusters" << SEP;
 

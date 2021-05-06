@@ -99,7 +99,6 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
             for (auto it = area.renewable.list.mapping.begin(); it != end; ++it)
             {
                 auto* cluster = it->second;
-                // Draw a new random number, whatever the cluster is
                 if (!cluster->enabled)
                 {
                     continue;
@@ -109,8 +108,6 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
                 assert(year < data.timeseriesNumbers.height);
                 unsigned int index = cluster->areaWideIndex;
 
-                // the matrix data.series should be properly initialized at this stage
-                // because the ts-generator has already been launched
                 ptchro.RenouvelableParPalier[index] = (data.series.width != 1)
                                                         ? (long)data.timeseriesNumbers[0][year]
                                                         : 0; // zero-based

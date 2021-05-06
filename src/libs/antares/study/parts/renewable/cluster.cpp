@@ -465,14 +465,6 @@ bool RenewableClusterList::loadFromFolder(Study& study, const AnyString& folder,
                     continue;
                 }
 
-                if (study.header.version < 390)
-                {
-                    // We may have some strange name/id in older studies
-                    // temporary reverting to the old naming convention
-                    cluster->pID = cluster->name();
-                    cluster->pID.toLower();
-                }
-
                 // Check the data integrity of the cluster
                 cluster->integrityCheck();
 
@@ -542,8 +534,7 @@ int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l,
 int RenewableClusterListLoadDataSeriesFromFolder(Study& s,
                                                  const StudyLoadOptions& options,
                                                  RenewableClusterList* l,
-                                                 const AnyString& folder,
-                                                 int fast)
+                                                 const AnyString& folder)
 {
     if (l->empty())
         return 1;
@@ -551,7 +542,7 @@ int RenewableClusterListLoadDataSeriesFromFolder(Study& s,
     int ret = 1;
 
     l->each([&](Data::RenewableCluster& cluster) {
-        if (cluster.series and !fast)
+        if (cluster.series)
             ret = DataSeriesRenewableLoadFromFolder(s, cluster.series, &cluster, folder) and ret;
 
         ++options.progressTicks;
