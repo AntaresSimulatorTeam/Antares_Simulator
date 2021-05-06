@@ -465,14 +465,6 @@ bool RenewableClusterList::loadFromFolder(Study& study, const AnyString& folder,
                     continue;
                 }
 
-                if (study.header.version < 390)
-                {
-                    // We may have some strange name/id in older studies
-                    // temporary reverting to the old naming convention
-                    cluster->pID = cluster->name();
-                    cluster->pID.toLower();
-                }
-
                 // Check the data integrity of the cluster
                 cluster->integrityCheck();
 
