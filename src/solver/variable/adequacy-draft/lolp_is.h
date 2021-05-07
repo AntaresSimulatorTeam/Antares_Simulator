@@ -168,11 +168,6 @@ public:
     }
 
 
-    void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
-    }
 
     void yearEndBuild(State& state, unsigned int year)
     {

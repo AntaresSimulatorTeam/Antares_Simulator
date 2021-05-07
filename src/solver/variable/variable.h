@@ -216,7 +216,7 @@ public:
     ** \param state The current thermal cluster
     ** \param year The current year
     */
-    void yearEndBuildForEachThermalCluster(State& state, uint year);
+    void yearEndBuildForEachThermalCluster(State& state, uint year, uint numSpace);
 
     /*!
     ** \brief Notify to all variables that the year is now over
