@@ -42,10 +42,10 @@ using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
-template<bool EconomicModeT>
 static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
   double** thermalNoisesByArea,
-  uint numSpace)
+  uint numSpace,
+  bool EconomicModeT)
 {
     auto& study = *Data::Study::Current::Get();
     auto& runtime = *study.runtime;
@@ -152,29 +152,6 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
 
                 indexCluster++;
             }
-            /*
-            const unsigned int clusterCount = area.thermal.clusterCount;
-            for (unsigned int k = 0; k != clusterCount; ++k)
-            {
-                    // The current thermal dispatchable cluster
-                    const Data::ThermalCluster& cluster = *(area.thermal.clusters[k]);
-                    const Data::DataSeriesThermal& data = *cluster.series;
-
-                    assert(year < data.timeseriesNumbers.height);
-                    ptchro.ThermiqueParPalier[cluster.areaWideIndex] = (data.series.width != 1)
-                            ? (long) data.timeseriesNumbers[0][year] : 0; // zero-based
-
-                    if (EconomicModeT)
-                    {
-                            ptvalgen.AleaCoutDeProductionParPalier[k] =
-                                    (runtime.random[Data::seedThermalCosts]() - 0.5) *
-            (cluster.spreadCost + 1e-4);
-
-                            // This formula was used prior 3.8 :
-                            // ((x * 2. - 1.) * cluster.spreadCost) + (x * 1e-4);
-                    }
-            } // each thermal cluster
-            */
         } // thermal
     }     // each area
 }
@@ -182,17 +159,12 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
 void ALEA_TirageAuSortChroniques(double** thermalNoisesByArea, uint numSpace)
 {
     // Time-series numbers
-    if (Data::Study::Current::Get()->runtime->mode != stdmAdequacyDraft)
-    {
-        // Retrieve all time-series numbers
-        // Initialize in the same time the production costs of all thermal clusters.
-        InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost<true>(thermalNoisesByArea,
-                                                                           numSpace);
-    }
-    else
-        InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost<false>(thermalNoisesByArea,
-                                                                            numSpace);
-
+  bool ecoMode = Data::Study::Current::Get()->runtime->mode != stdmAdequacyDraft;
+  // Retrieve all time-series numbers
+  // Initialize in the same time the production costs of all thermal clusters.
+  InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(thermalNoisesByArea,
+                                                                     numSpace,
+                                                                     ecoMode);
     // Flush all memory into the swap files
     // (only if the support is available)
     if (Antares::Memory::swapSupport)
