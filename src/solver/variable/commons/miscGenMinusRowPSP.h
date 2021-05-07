@@ -271,11 +271,6 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
-    {
-        // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
-    }
 
     void hourEnd(State& state, unsigned int hourInTheYear)
     {
