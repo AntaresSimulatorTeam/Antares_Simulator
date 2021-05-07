@@ -33,7 +33,6 @@
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_structure_probleme_economique.h"
 #include "../simulation/sim_extern_variables_globales.h"
-#include <antares/study/parts/hydro/container.h>
 
 namespace Antares
 {
