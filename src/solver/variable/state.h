@@ -110,6 +110,8 @@ public:
     Data::Area* area;
     //! The current thermal cluster
     Data::ThermalCluster* thermalCluster;
+    //! The current renewable cluster
+    Data::RenewableCluster* renewableCluster;
     //! The Scratchpad for the current area
     Data::AreaScratchpad* scratchpad;
     //! The current link
