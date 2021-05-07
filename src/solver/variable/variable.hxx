@@ -256,6 +256,15 @@ inline void IVariable<ChildT, NextT, VCardT>::yearEndSpatialAggregates(V& allVar
 }
 
 template<class ChildT, class NextT, class VCardT>
+inline void IVariable<ChildT, NextT, VCardT>::yearEndBuildPrepareDataForEachThermalCluster(State& state,
+                                                                                           uint year,
+                                                                                           uint numSpace)
+{
+  // Next variable
+  NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
+}
+
+template<class ChildT, class NextT, class VCardT>
 template<class V>
 inline void IVariable<ChildT, NextT, VCardT>::simulationEndSpatialAggregates(V& allVars)
 {

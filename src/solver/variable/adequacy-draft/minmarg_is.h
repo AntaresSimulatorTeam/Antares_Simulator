@@ -180,13 +180,6 @@ public:
         NextType::yearEndBuild(state, year);
     }
 
-    void yearEndBuildPrepareDataForEachThermalCluster(State& state,
-                                                      uint year,
-                                                      unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
-    }
 
     void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
     {
