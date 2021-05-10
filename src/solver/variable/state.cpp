@@ -243,7 +243,7 @@ void State::initFromRenewableClusterIndex(const uint clusterAreaWideIndex, uint 
     // alias to the current renewable cluster
     renewableCluster = area->renewable.clusters[clusterAreaWideIndex];
     assert(timeseriesIndex);
-    uint serieIndex = timeseriesIndex->ThermiqueParPalier[clusterAreaWideIndex];
+    uint serieIndex = timeseriesIndex->RenouvelableParPalier[clusterAreaWideIndex];
 
     assert(renewableCluster->series);
     assert(hourInTheYear < renewableCluster->series->series.height);
