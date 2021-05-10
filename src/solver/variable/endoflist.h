@@ -223,6 +223,11 @@ public:
         UNUSED_VARIABLE(numSpace);
     }
 
+    static void hourForEachRenewableCluster(State&, uint numSpace)
+    {
+        UNUSED_VARIABLE(numSpace);
+    }
+
     static void hourEnd(State&, unsigned int)
     {
     }

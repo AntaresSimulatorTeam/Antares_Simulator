@@ -266,6 +266,15 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
+    void hourForEachRenewableCluster(State& state, unsigned int numSpace)
+    {
+        // Adding the dispatchable generation for the class_name fuel
+        pValuesForTheCurrentYear[numSpace][state.renewableCluster->groupID][state.hourInTheYear]
+          += state.renewableClusterProduction;
+        // Next item in the list
+        NextType::hourForEachRenewableCluster(state, numSpace);
+    }
+
     void hourEnd(State& state, unsigned int hourInTheYear)
     {
         NextType::hourEnd(state, hourInTheYear);

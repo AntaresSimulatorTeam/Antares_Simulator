@@ -76,6 +76,16 @@ public:
     void initFromThermalClusterIndex(const unsigned int areaWideIndex, uint numSpace);
 
     /*!
+    ** \brief Initialize some variable according a renewable cluster index
+    **
+    ** We assume here that the variables related to an area
+    ** are properly initialized.
+    **
+    ** \param areaWideIndex Index of the renewable cluster for the current area
+    */
+    void initFromRenewableClusterIndex(const unsigned int areaWideIndex, uint numSpace);
+
+    /*!
     ** \brief End the year by smoothing the thermal units run
     ** We assume here that the variables related to an area
     ** are properly initialized.
