@@ -46,6 +46,7 @@
 
 // For General values
 #include "dispatchableGeneration.h"
+#include "renewableGeneration.h"
 #include "overallCost.h"
 #include "operatingCost.h"
 #include "nonProportionalCost.h"
@@ -130,6 +131,7 @@ typedef          // Prices
              <TimeSeriesValuesSolar    // Solar
                                        // Other
               <DispatchableGeneration  // All dispatchable generation
+              <RenewableGeneration     // All renewable generation
                <HydroStorage           // Hydro Storage Generation
                 <Pumping               // Pumping generation
                  <ReservoirLevel       // Reservoir levels
@@ -153,7 +155,7 @@ typedef          // Prices
                                                           // MBO 25/02/2016 - refs: #55
                                // Links
                                <Variable::Economy::Links // All links
-                                >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!

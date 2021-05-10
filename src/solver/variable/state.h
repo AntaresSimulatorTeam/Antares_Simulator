@@ -171,6 +171,9 @@ public:
     //! Minimum power of the cluster for the whole year
     double thermalClusterPMinOfTheClusterForYear[Variable::maxHoursInAYear];
 
+    double renewableClusterProduction;
+    double renewableClusterProductionForYear[Variable::maxHoursInAYear];
+
     //! Dispatchable margin for the current area (valid only from weekForEachArea)
     const double* dispatchableMargin;
     //@}

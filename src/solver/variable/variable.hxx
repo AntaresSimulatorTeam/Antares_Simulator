@@ -265,6 +265,15 @@ inline void IVariable<ChildT, NextT, VCardT>::yearEndBuildPrepareDataForEachTher
 }
 
 template<class ChildT, class NextT, class VCardT>
+inline void IVariable<ChildT, NextT, VCardT>::yearEndBuildPrepareDataForEachRenewableCluster(State& state,
+                                                                                           uint year,
+                                                                                           uint numSpace)
+{
+  // Next variable
+  NextType::yearEndBuildPrepareDataForEachRenewableCluster(state, year, numSpace);
+}
+
+template<class ChildT, class NextT, class VCardT>
 template<class V>
 inline void IVariable<ChildT, NextT, VCardT>::simulationEndSpatialAggregates(V& allVars)
 {
@@ -326,11 +335,11 @@ inline void IVariable<ChildT, NextT, VCardT>::hourForEachThermalCluster(State& s
 
 template<class ChildT, class NextT, class VCardT>
 inline void IVariable<ChildT, NextT, VCardT>::yearEndBuildForEachThermalCluster(State& state,
-                                                                                uint year,
+                                                                                unsigned int year,
                                                                                 unsigned int numSpace)
 {
       // Next item in the list
-  NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
+      NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
 }
 
 template<class ChildT, class NextT, class VCardT>

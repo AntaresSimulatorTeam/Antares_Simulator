@@ -104,6 +104,22 @@ inline void Links::yearEndBuildPrepareDataForEachThermalCluster(State& state,
     }
 }
 
+inline void Links::yearEndBuildPrepareDataForEachRenewableCluster(State& state,
+                                                                uint year,
+                                                                unsigned int numSpace)
+{
+    for (uint i = 0; i != pLinkCount; ++i)
+    {
+        pLinks[i].yearEndBuildPrepareDataForEachRenewableCluster(state, year, numSpace);
+
+        // Flush all memory into the swap files
+        // (only if the support is available)
+        if (Antares::Memory::swapSupport)
+            Antares::memory.flushAll();
+    }
+}
+
+
 inline void Links::yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)

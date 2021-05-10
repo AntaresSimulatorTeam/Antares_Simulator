@@ -47,6 +47,8 @@ inline void State::startANewYear()
            0,
            sizeof(thermalClusterDispatchedUnitsCountForYear));
 
+    memset(renewableClusterProductionForYear, 0, sizeof(renewableClusterProductionForYear));
+
     // Re-initializing annual costs (to be printed in output into separate files)
     annualSystemCost = 0.;
     optimalSolutionCost1 = 0.;
@@ -64,6 +66,7 @@ inline void State::yearEndReset()
     memset(thermalClusterDispatchedUnitsCountForYear,
            0,
            sizeof(thermalClusterDispatchedUnitsCountForYear));
+    memset(renewableClusterProductionForYear, 0, sizeof(renewableClusterProductionForYear));
 }
 
 inline void State::initFromAreaIndex(const unsigned int areaIndex, uint numSpace)

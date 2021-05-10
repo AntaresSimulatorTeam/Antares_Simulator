@@ -46,6 +46,7 @@
 #include "../commons/spatial-aggregate.h"
 
 #include "../economy/dispatchableGeneration.h"
+#include "../economy/renewableGeneration.h"
 #include "../adequacy/overallCost.h"
 #include "../economy/operatingCost.h"
 #include "../economy/hydrostorage.h"
@@ -122,6 +123,7 @@ typedef                             // Prices
              <Variable::Economy::TimeSeriesValuesSolar   // Solar
                                                          // Other
               <Variable::Economy::DispatchableGeneration // All dispatchable generation
+              <Variable::Economy::RenewableGeneration
                <Variable::Economy::HydroStorage          // Hydro Storage Generation
                 <Variable::Economy::Pumping              // Pumping generation
                  <Variable::Economy::ReservoirLevel      // Reservoir levels
@@ -138,7 +140,7 @@ typedef                             // Prices
                               Variable::Economy::Marge // OP. MRG
                               // Links
                               <Variable::Adequacy::Links // All links
-                               >>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                               >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -176,6 +178,8 @@ typedef // Prices
                           // Other
                           Common::SpatialAggregate<
                             Variable::Economy::DispatchableGeneration,
+                          Common::SpatialAggregate<
+                            Variable::Economy::RenewableGeneration,
                             Common::SpatialAggregate<
                               Variable::Economy::HydroStorage,
                               Common::SpatialAggregate<
@@ -206,7 +210,7 @@ typedef // Prices
                                                       Variable::Economy::DispatchableGenMargin,
                                                       Common::SpatialAggregate<
                                                         Variable::Economy::
-                                                          Marge>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                          Marge>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef Variable::Join<

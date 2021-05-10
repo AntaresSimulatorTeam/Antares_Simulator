@@ -147,6 +147,7 @@ public:
     void yearBegin(uint year, unsigned int numSpace);
 
     void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year, uint numSpace);
+    void yearEndBuildPrepareDataForEachRenewableCluster(State& state, uint year, uint numSpace);
     void yearEndBuildForEachThermalCluster(State& state, uint year, uint numSpace);
 
     void yearEndBuild(State& state, uint year);
