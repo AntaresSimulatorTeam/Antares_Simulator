@@ -232,7 +232,6 @@ public:
         NextType::initializeFromAreaLink(study, link);
     }
 
-
     void simulationBegin()
     {
         // Next
@@ -345,7 +344,8 @@ public:
     void hourForEachThermalCluster(State& state, unsigned int numSpace)
     {
         // Production for this hour
-        pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[state.hourInTheYear]
+        pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex]
+          .hour[state.hourInTheYear]
           = state.thermalClusterNumberON;
 
         // Next item in the list

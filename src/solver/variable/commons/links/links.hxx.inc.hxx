@@ -105,8 +105,8 @@ inline void Links::yearEndBuildPrepareDataForEachThermalCluster(State& state,
 }
 
 inline void Links::yearEndBuildPrepareDataForEachRenewableCluster(State& state,
-                                                                uint year,
-                                                                unsigned int numSpace)
+                                                                  uint year,
+                                                                  unsigned int numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -118,7 +118,6 @@ inline void Links::yearEndBuildPrepareDataForEachRenewableCluster(State& state,
             Antares::memory.flushAll();
     }
 }
-
 
 inline void Links::yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
 {

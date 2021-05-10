@@ -171,7 +171,6 @@ public:
         NextType::initializeFromAreaLink(study, link);
     }
 
-
     void simulationBegin()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
@@ -193,8 +192,6 @@ public:
         // Next variable
         NextType::yearBegin(year, numSpace);
     }
-
-
 
     void yearEndBuild(State& state, unsigned int year)
     {
@@ -240,7 +237,6 @@ public:
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
-
 
     void hourEnd(State& state, unsigned int hourInTheYear)
     {

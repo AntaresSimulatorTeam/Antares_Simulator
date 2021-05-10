@@ -209,7 +209,6 @@ public:
         NextType::initializeFromAreaLink(study, link);
     }
 
-
     void simulationBegin()
     {
         // Next
@@ -280,8 +279,8 @@ public:
     }
 
     void yearEndBuildPrepareDataForEachRenewableCluster(State& state,
-                                                      uint year,
-                                                      unsigned int numSpace)
+                                                        uint year,
+                                                        unsigned int numSpace)
     {
         for (unsigned int i = 0; i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd]; ++i)
         {

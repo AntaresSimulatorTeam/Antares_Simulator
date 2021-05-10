@@ -123,24 +123,24 @@ typedef                             // Prices
              <Variable::Economy::TimeSeriesValuesSolar   // Solar
                                                          // Other
               <Variable::Economy::DispatchableGeneration // All dispatchable generation
-              <Variable::Economy::RenewableGeneration
-               <Variable::Economy::HydroStorage          // Hydro Storage Generation
-                <Variable::Economy::Pumping              // Pumping generation
-                 <Variable::Economy::ReservoirLevel      // Reservoir levels
-                  <Variable::Economy::Inflows            // Hydraulic inflows
-                   <Variable::Economy::Overflows         // Hydraulic overflows
-                    <Variable::Economy::WaterValue       // Water values
-                     <Variable::Economy::HydroCost       // Hydro costs
-                      <Variable::Economy::UnsupliedEnergy // Unsuplied Energy
-                       <Variable::Adequacy::SpilledEnergy // Spilled Energy
-                        <Variable::Economy::LOLD          // LOLD
-                         <Variable::Economy::LOLP         // LOLP
-                          <Variable::Economy::AvailableDispatchGen<
-                            Variable::Economy::DispatchableGenMargin<
-                              Variable::Economy::Marge // OP. MRG
-                              // Links
-                              <Variable::Adequacy::Links // All links
-                               >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+               <Variable::Economy::RenewableGeneration<
+                 Variable::Economy::HydroStorage           // Hydro Storage Generation
+                 <Variable::Economy::Pumping               // Pumping generation
+                  <Variable::Economy::ReservoirLevel       // Reservoir levels
+                   <Variable::Economy::Inflows             // Hydraulic inflows
+                    <Variable::Economy::Overflows          // Hydraulic overflows
+                     <Variable::Economy::WaterValue        // Water values
+                      <Variable::Economy::HydroCost        // Hydro costs
+                       <Variable::Economy::UnsupliedEnergy // Unsuplied Energy
+                        <Variable::Adequacy::SpilledEnergy // Spilled Energy
+                         <Variable::Economy::LOLD          // LOLD
+                          <Variable::Economy::LOLP         // LOLP
+                           <Variable::Economy::AvailableDispatchGen<
+                             Variable::Economy::DispatchableGenMargin<
+                               Variable::Economy::Marge // OP. MRG
+                               // Links
+                               <Variable::Adequacy::Links // All links
+                                >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -178,39 +178,39 @@ typedef // Prices
                           // Other
                           Common::SpatialAggregate<
                             Variable::Economy::DispatchableGeneration,
-                          Common::SpatialAggregate<
-                            Variable::Economy::RenewableGeneration,
                             Common::SpatialAggregate<
-                              Variable::Economy::HydroStorage,
+                              Variable::Economy::RenewableGeneration,
                               Common::SpatialAggregate<
-                                Variable::Economy::Pumping,
+                                Variable::Economy::HydroStorage,
                                 Common::SpatialAggregate<
-                                  Variable::Economy::ReservoirLevel,
+                                  Variable::Economy::Pumping,
                                   Common::SpatialAggregate<
-                                    Variable::Economy::Inflows,
+                                    Variable::Economy::ReservoirLevel,
                                     Common::SpatialAggregate<
-                                      Variable::Economy::Overflows,
+                                      Variable::Economy::Inflows,
                                       Common::SpatialAggregate<
-                                        Variable::Economy::WaterValue,
+                                        Variable::Economy::Overflows,
                                         Common::SpatialAggregate<
-                                          Variable::Economy::HydroCost,
+                                          Variable::Economy::WaterValue,
                                           Common::SpatialAggregate<
-                                            Variable::Economy::UnsupliedEnergy,
+                                            Variable::Economy::HydroCost,
                                             Common::SpatialAggregate<
-                                              Variable::Adequacy::SpilledEnergy,
-                                              // LOLD
+                                              Variable::Economy::UnsupliedEnergy,
                                               Common::SpatialAggregate<
-                                                Variable::Economy::LOLD,
+                                                Variable::Adequacy::SpilledEnergy,
+                                                // LOLD
                                                 Common::SpatialAggregate<
-                                                  Variable::Economy::LOLP,
-
+                                                  Variable::Economy::LOLD,
                                                   Common::SpatialAggregate<
-                                                    Variable::Economy::AvailableDispatchGen,
+                                                    Variable::Economy::LOLP,
+
                                                     Common::SpatialAggregate<
-                                                      Variable::Economy::DispatchableGenMargin,
+                                                      Variable::Economy::AvailableDispatchGen,
                                                       Common::SpatialAggregate<
-                                                        Variable::Economy::
-                                                          Marge>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                        Variable::Economy::DispatchableGenMargin,
+                                                        Common::SpatialAggregate<
+                                                          Variable::Economy::
+                                                            Marge>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef Variable::Join<

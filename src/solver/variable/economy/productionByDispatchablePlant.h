@@ -250,7 +250,6 @@ public:
         NextType::initializeFromAreaLink(study, link);
     }
 
-
     void simulationBegin()
     {
         // Next
@@ -288,13 +287,13 @@ public:
               += pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i];
             state.thermalClusterPMinOfTheClusterForYear[i]
               += pminOfTheClusterForYear[numSpace]
-                                        [(state.thermalCluster->areaWideIndex * maxHoursInAYear) + i];
+                                        [(state.thermalCluster->areaWideIndex * maxHoursInAYear)
+                                         + i];
         }
 
         // Next variable
         NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
     }
-
 
     void yearEndBuild(State& state, unsigned int year)
     {
@@ -358,7 +357,8 @@ public:
     void hourForEachThermalCluster(State& state, unsigned int numSpace)
     {
         // Production for this hour
-        pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[state.hourInTheYear]
+        pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex]
+          .hour[state.hourInTheYear]
           +=
           // production for the current thermal dispatchable cluster
           (state.thermalClusterProduction);

@@ -183,7 +183,6 @@ public:
         NextType::initializeFromAreaLink(study, link);
     }
 
-
     void simulationBegin()
     {
         // Next
@@ -202,7 +201,6 @@ public:
         // Next variable
         NextType::yearBegin(year, numSpace);
     }
-
 
     void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
     {

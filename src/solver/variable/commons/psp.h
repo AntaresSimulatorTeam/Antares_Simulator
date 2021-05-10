@@ -174,7 +174,6 @@ public:
         NextType::initializeFromAreaLink(study, link);
     }
 
-
     template<class R>
     static void InitializeResultsFromStudy(R& results, Data::Study& study)
     {
@@ -197,8 +196,6 @@ public:
         // Next variable
         NextType::yearBegin(year, numSpace);
     }
-
-
 
     void yearEndBuild(State& state, unsigned int year)
     {
@@ -237,7 +234,6 @@ public:
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
-
 
     void hourEnd(State& state, unsigned int hourInTheYear)
     {

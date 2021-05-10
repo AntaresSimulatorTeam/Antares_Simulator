@@ -176,7 +176,6 @@ public:
         NextType::initializeFromAreaLink(study, link);
     }
 
-
     void simulationBegin()
     {
         // Next
@@ -195,8 +194,6 @@ public:
         // Next variable
         NextType::yearBegin(year, numSpace);
     }
-
-
 
     void yearEndBuild(State& state, unsigned int year)
     {
@@ -243,7 +240,6 @@ public:
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
-
 
     void hourEnd(State& state, uint hourInTheYear)
     {

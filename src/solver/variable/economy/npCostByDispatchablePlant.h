@@ -235,7 +235,6 @@ public:
         NextType::initializeFromAreaLink(study, link);
     }
 
-
     void simulationBegin()
     {
         // Next
@@ -256,7 +255,6 @@ public:
         // Next variable
         NextType::yearBegin(year, numSpace);
     }
-
 
     void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
     {
@@ -336,8 +334,8 @@ public:
     {
         // Total Non Proportional cost for this hour
         // NP = startup cost + fixed cost
-        // pValuesForTheCurrentYear[state.thermalCluster->areaWideIndex].hour[state.hourInTheYear] +=
-        // production for the current thermal dispatchable cluster
+        // pValuesForTheCurrentYear[state.thermalCluster->areaWideIndex].hour[state.hourInTheYear]
+        // += production for the current thermal dispatchable cluster
         //	(state.thermalClusterNonProportionalCost);
 
         // Next item in the list

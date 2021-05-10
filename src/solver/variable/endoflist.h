@@ -136,7 +136,9 @@ public:
         UNUSED_VARIABLE(numSpace);
     }
 
-    static void yearEndBuildPrepareDataForEachRenewableCluster(State& state, uint year, uint numSpace)
+    static void yearEndBuildPrepareDataForEachRenewableCluster(State& state,
+                                                               uint year,
+                                                               uint numSpace)
     {
         UNUSED_VARIABLE(state);
         UNUSED_VARIABLE(year);

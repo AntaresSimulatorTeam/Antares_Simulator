@@ -66,7 +66,8 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
     if (studyMode != Data::stdmAdequacyDraft)
     {
         uint serieIndex = timeseriesIndex->ThermiqueParPalier[clusterAreaWideIndex];
-        thermalClusterAvailableProduction = thermalCluster->series->series[serieIndex][hourInTheYear];
+        thermalClusterAvailableProduction
+          = thermalCluster->series->series[serieIndex][hourInTheYear];
 
         if (thermalCluster->mustrun)
         {
@@ -179,8 +180,8 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
             {
                 if (thermalCluster->minStablePower > 0.)
                 {
-                    newUnitCount
-                      = static_cast<uint>(Math::Ceil(p / thermalCluster->nominalCapacityWithSpinning));
+                    newUnitCount = static_cast<uint>(
+                      Math::Ceil(p / thermalCluster->nominalCapacityWithSpinning));
                     if (newUnitCount > thermalCluster->unitCount)
                         newUnitCount = thermalCluster->unitCount;
                 }
