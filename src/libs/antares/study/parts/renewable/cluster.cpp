@@ -742,7 +742,7 @@ bool RenewableClusterList::storeTimeseriesNumbers(Study& study)
 
     each([&](const Data::RenewableCluster& cluster) {
         study.buffer = study.folderOutput;
-        study.buffer << SEP << "ts-numbers" << SEP << "renewable" << SEP << cluster.parentArea->id
+        study.buffer << SEP << "ts-numbers" << SEP << "renewables" << SEP << cluster.parentArea->id
                      << SEP << cluster.id() << ".txt";
         ret = cluster.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate)
               and ret;

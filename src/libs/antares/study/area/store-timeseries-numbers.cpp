@@ -130,7 +130,7 @@ bool Area::storeTimeseriesNumbersForThermal(Study& study)
 
 bool Area::storeTimeseriesNumbersForRenewable(Study& study)
 {
-    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP << "renewable" << SEP
+    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP << "renewables" << SEP
                          << id;
 
     if (!IO::Directory::Create(study.buffer))
