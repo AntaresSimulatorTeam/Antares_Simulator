@@ -466,6 +466,12 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
                     tsNumbers = &(area.wind.series->timeseriesNumbers);
                 else if (intermodal[TS_INDEX(Data::timeSeriesHydro)])
                     tsNumbers = &(area.hydro.series->timeseriesNumbers);
+                else if (intermodal[TS_INDEX(Data::timeSeriesThermal)]
+                         && area.thermal.clusterCount > 0)
+                    tsNumbers = &(area.thermal.clusters[0]->series->timeseriesNumbers);
+                else if (intermodal[TS_INDEX(Data::timeSeriesRenewable)]
+                         && area.renewable.clusterCount > 0)
+                    tsNumbers = &(area.renewable.clusters[0]->series->timeseriesNumbers);
             }
             assert(tsNumbers);
 
