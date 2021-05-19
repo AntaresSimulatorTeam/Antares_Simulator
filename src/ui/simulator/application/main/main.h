@@ -420,7 +420,8 @@ private:
     void createNBWind();
     //! Create the page about the thermal clusters
     void createNBThermal();
-
+    //! Create the page about the renewable clusters
+    void createNBRenewable();
     //! Create the page about reserves and DSM
     void createNBDSM();
     //! Create the page
@@ -719,6 +720,8 @@ private:
     Component::Notebook::Page* pageThermalTimeSeries;
     Component::Notebook::Page* pageThermalPrepro;
     Component::Notebook::Page* pageThermalCommon;
+
+    Component::Notebook::Page* pageRenewableClusterList;
 
     Component::Notebook::Page* pageLinksSummary;
     Component::Notebook::Page* pageLinksDetails;
