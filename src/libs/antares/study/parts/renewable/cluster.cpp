@@ -276,74 +276,50 @@ void Data::RenewableCluster::group(Data::ClusterName newgrp)
     pGroup = newgrp;
     newgrp.toLower();
 
-    switch (newgrp[0])
+    if (newgrp == "concentration solar")
     {
-    case 'c':
-    {
-        if (newgrp == "concentration solar")
-        {
-            groupID = concentrationSolar;
-            return;
-        }
-        break;
+        groupID = concentrationSolar;
+        return;
     }
-    case 'o':
+    if (newgrp == "pv solar")
     {
-        if (newgrp == "other renewable 1")
-        {
-            groupID = renewableOther1;
-            return;
-        }
-        if (newgrp == "other renewable 2")
-        {
-            groupID = renewableOther2;
-            return;
-        }
-        if (newgrp == "other renewable 3")
-        {
-            groupID = renewableOther3;
-            return;
-        }
-        if (newgrp == "other renewable 4")
-        {
-            groupID = renewableOther4;
-            return;
-        }
-        break;
+        groupID = PVSolar;
+        return;
     }
-    case 'p':
+    if (newgrp == "rooftop solar")
     {
-        if (newgrp == "pv solar")
-        {
-            groupID = PVSolar;
-            return;
-        }
-        break;
+        groupID = rooftopSolar;
+        return;
     }
-    case 'r':
+    if (newgrp == "wind on-shore")
     {
-        if (newgrp == "rooftop solar")
-        {
-            groupID = rooftopSolar;
-            return;
-        }
-        break;
+        groupID = windOnShore;
+        return;
     }
-    case 'w':
+    if (newgrp == "wind off-shore")
     {
-        if (newgrp == "wind on-shore")
-        {
-            groupID = windOnShore;
-            return;
-        }
-
-        if (newgrp == "wind off-shore")
-        {
-            groupID = windOffShore;
-            return;
-        }
-        break;
+        groupID = windOffShore;
+        return;
     }
+    if (newgrp == "other renewable 1")
+    {
+        groupID = renewableOther1;
+        return;
+    }
+    if (newgrp == "other renewable 2")
+    {
+        groupID = renewableOther2;
+        return;
+    }
+    if (newgrp == "other renewable 3")
+    {
+        groupID = renewableOther3;
+        return;
+    }
+    if (newgrp == "other renewable 4")
+    {
+        groupID = renewableOther4;
+        return;
     }
     // assigning a default value
     groupID = renewableOther1;
