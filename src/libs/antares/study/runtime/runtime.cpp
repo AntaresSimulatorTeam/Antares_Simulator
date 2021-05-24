@@ -627,8 +627,6 @@ static void removeDisabledClusters(Study& study,
         logs.info() << "Found " << count
                     << " disabled " << type << " clusters and removed them before solver computations";
     }
-    // space
-    logs.info();
 }
 
 void StudyRuntimeInfos::removeDisabledThermalClustersFromSolverComputations(Study& study)
