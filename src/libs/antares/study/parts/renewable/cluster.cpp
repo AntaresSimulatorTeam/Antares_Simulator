@@ -270,7 +270,7 @@ void RenewableClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
     });
 }
 
-void Data::RenewableCluster::group(Data::RenewableClusterName newgrp)
+void Data::RenewableCluster::group(Data::ClusterName newgrp)
 {
     if (not newgrp)
     {
@@ -570,8 +570,7 @@ Yuni::uint64 RenewableClusterList::memoryUsage() const
     return ret;
 }
 
-bool RenewableClusterList::rename(Data::RenewableClusterName idToFind,
-                                  Data::RenewableClusterName newName)
+bool RenewableClusterList::rename(Data::ClusterName idToFind, Data::ClusterName newName)
 {
     if (not idToFind or newName.empty())
         return false;
@@ -586,7 +585,7 @@ bool RenewableClusterList::rename(Data::RenewableClusterName idToFind,
     idToFind.toLower();
 
     // The new ID
-    Data::RenewableClusterName newID;
+    Data::ClusterName newID;
     TransformNameIntoID(newName, newID);
 
     // Looking for the renewable cluster in the list
@@ -769,7 +768,7 @@ void RenewableClusterList::retrieveTotalCapacity(double& total) const
     }
 }
 
-bool RenewableClusterList::remove(const Data::RenewableClusterName& id)
+bool RenewableClusterList::remove(const Data::ClusterName& id)
 {
     auto i = cluster.find(id);
     if (i == cluster.end())
@@ -803,7 +802,7 @@ void RenewableClusterList::remove(iterator i)
     cluster.erase(i);
 }
 
-bool RenewableClusterList::exists(const Data::RenewableClusterName& id) const
+bool RenewableClusterList::exists(const Data::ClusterName& id) const
 {
     if (not cluster.empty())
     {

@@ -91,7 +91,7 @@ public:
     //! Set of thermal clusters (pointer)
     typedef std::set<ThermalCluster*> SetPointer;
     //! Map of thermal clusters
-    typedef std::map<ThermalClusterName, ThermalCluster*> Map;
+    typedef std::map<ClusterName, ThermalCluster*> Map;
     //! Vector of thermal clusters
     typedef std::vector<Data::ThermalCluster*> Vector;
 
@@ -144,10 +144,10 @@ public:
     //! \name Name and ID
     //@{
     //! Get the thermal cluster ID
-    const Data::ThermalClusterName& id() const;
+    const Data::ClusterName& id() const;
 
     //! Get the thermal cluster name
-    const Data::ThermalClusterName& name() const;
+    const Data::ClusterName& name() const;
 
     //! Get the full thermal cluster name
     Yuni::String getFullName() const;
@@ -159,9 +159,9 @@ public:
     //! \name Group
     //@{
     //! Get the group of the cluster
-    const Data::ThermalClusterName& group() const;
+    const Data::ClusterName& group() const;
     //! Set the group
-    void group(Data::ThermalClusterName newgrp);
+    void group(Data::ClusterName newgrp);
     //@}
 
     //! \name Spinning
@@ -432,11 +432,11 @@ public:
 
 private:
     //! Name
-    Data::ThermalClusterName pName;
+    Data::ClusterName pName;
     //! ID
-    Data::ThermalClusterName pID;
+    Data::ClusterName pID;
     //! Group
-    Data::ThermalClusterName pGroup;
+    Data::ClusterName pGroup;
 
     friend class ThermalClusterList;
 
@@ -542,14 +542,14 @@ public:
     ** \param id ID of the cluster to find
     ** \return A pointer to a cluster. nullptr if not found
     */
-    ThermalCluster* find(const Data::ThermalClusterName& id);
+    ThermalCluster* find(const Data::ClusterName& id);
     /*!
     ** \brief Try to find a thermal cluster from its id (const)
     **
     ** \param id ID of the cluster to find
     ** \return A pointer to a cluster. nullptr if not found
     */
-    const ThermalCluster* find(const Data::ThermalClusterName& id) const;
+    const ThermalCluster* find(const Data::ClusterName& id) const;
 
     /*!
     ** \brief Try to find a thermal cluster from its pointer
@@ -572,7 +572,7 @@ public:
     ** \param id ID of the cluster to find
     ** \return True if the thermal cluster exists
     */
-    bool exists(const Data::ThermalClusterName& id) const;
+    bool exists(const Data::ClusterName& id) const;
 
     /*!
     ** \brief Rename a thermal cluster
@@ -584,12 +584,12 @@ public:
     **
     ** The indexes for thermal clusters will be rebuilt.
     */
-    bool rename(Data::ThermalClusterName idToFind, Data::ThermalClusterName newName);
+    bool rename(Data::ClusterName idToFind, Data::ClusterName newName);
 
     /*!
     ** \brief Remove properly a cluster
     */
-    bool remove(const Data::ThermalClusterName& id);
+    bool remove(const Data::ClusterName& id);
 
     //! Get the number of items in the list
     uint size() const;

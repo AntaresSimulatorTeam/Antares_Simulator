@@ -1452,7 +1452,8 @@ void AreaListEnsureDataRenewableTimeSeries(AreaList* l)
 {
     assert(l);
 
-    l->each([&](Data::Area& area) { RenewableClusterListEnsureDataTimeSeries(&area.renewable.list); });
+    l->each(
+      [&](Data::Area& area) { RenewableClusterListEnsureDataTimeSeries(&area.renewable.list); });
 }
 
 void AreaListEnsureDataThermalPrepro(AreaList* l)
@@ -1703,7 +1704,7 @@ ThermalCluster* AreaList::findClusterFromINIKey(const AnyString& key)
     if (offset == AreaName::npos or (0 == offset) or (offset == key.size() - 1))
         return nullptr;
     AreaName parentName(key.c_str(), offset);
-    ThermalClusterName id(key.c_str() + offset + 1, key.size() - (offset + 1));
+    ClusterName id(key.c_str() + offset + 1, key.size() - (offset + 1));
     Area* parentArea = findFromName(parentName);
     if (parentArea == nullptr)
         return nullptr;

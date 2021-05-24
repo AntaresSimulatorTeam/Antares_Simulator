@@ -1078,7 +1078,7 @@ bool Study::areasThermalClustersMinStablePowerValidity(
     return resultat;
 }
 
-bool Study::thermalClusterRename(ThermalCluster* cluster, ThermalClusterName newName, bool)
+bool Study::thermalClusterRename(ThermalCluster* cluster, ClusterName newName, bool)
 {
     // A name must not be empty
     if (!cluster or !newName)
@@ -1091,7 +1091,7 @@ bool Study::thermalClusterRename(ThermalCluster* cluster, ThermalClusterName new
     newName = beautifyname;
 
     // Preparing the new area ID
-    ThermalClusterName newID;
+    ClusterName newID;
     TransformNameIntoID(newName, newID);
     if (!newID)
     {
@@ -1129,8 +1129,8 @@ bool Study::thermalClusterRename(ThermalCluster* cluster, ThermalClusterName new
     // Otherwise the values associated to the area will be lost.
     logs.info() << "  renaming thermal cluster '" << cluster->name() << "' into '" << newName
                 << "'";
-    //	ThermalClusterName oldId   = cluster->id();
-    //	ThermalClusterName oldName = cluster->name();
+    //	ClusterName oldId   = cluster->id();
+    //	ClusterName oldName = cluster->name();
     //	cluster->name(newName);
     area.invalidateJIT = true;
 

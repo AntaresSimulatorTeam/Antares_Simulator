@@ -313,8 +313,8 @@ static bool ThermalClusterLoadCouplingSection(const AnyString& filename,
 {
     if (s->firstProperty)
     {
-        Data::ThermalClusterName from;
-        Data::ThermalClusterName with;
+        Data::ClusterName from;
+        Data::ClusterName with;
         Data::ThermalCluster* clusterFrom;
         Data::ThermalCluster* clusterWith;
 
@@ -669,7 +669,7 @@ void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
     });
 }
 
-void Data::ThermalCluster::group(Data::ThermalClusterName newgrp)
+void Data::ThermalCluster::group(Data::ClusterName newgrp)
 {
     if (not newgrp)
     {
@@ -1369,7 +1369,7 @@ Yuni::uint64 ThermalClusterList::memoryUsage() const
     return ret;
 }
 
-bool ThermalClusterList::rename(Data::ThermalClusterName idToFind, Data::ThermalClusterName newName)
+bool ThermalClusterList::rename(Data::ClusterName idToFind, Data::ClusterName newName)
 {
     if (not idToFind or newName.empty())
         return false;
@@ -1384,7 +1384,7 @@ bool ThermalClusterList::rename(Data::ThermalClusterName idToFind, Data::Thermal
     idToFind.toLower();
 
     // The new ID
-    Data::ThermalClusterName newID;
+    Data::ClusterName newID;
     TransformNameIntoID(newName, newID);
 
     // Looking for the thermal cluster in the list
@@ -1791,7 +1791,7 @@ void ThermalClusterList::retrieveTotalCapacityAndUnitCount(double& total, uint& 
     }
 }
 
-bool ThermalClusterList::remove(const Data::ThermalClusterName& id)
+bool ThermalClusterList::remove(const Data::ClusterName& id)
 {
     auto i = cluster.find(id);
     if (i == cluster.end())
@@ -1837,7 +1837,7 @@ void ThermalClusterList::remove(iterator i)
     cluster.erase(i);
 }
 
-bool ThermalClusterList::exists(const Data::ThermalClusterName& id) const
+bool ThermalClusterList::exists(const Data::ClusterName& id) const
 {
     if (not cluster.empty())
     {
