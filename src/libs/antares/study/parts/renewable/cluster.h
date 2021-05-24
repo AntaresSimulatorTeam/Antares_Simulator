@@ -493,6 +493,9 @@ int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l,
                                                const AnyString& folder,
                                                const YString& msg);
 
+bool RenewableClusterListSaveToFolder(const RenewableClusterList* l,
+                                      const AnyString& folder);
+
 void RenewableClusterListEnsureDataTimeSeries(RenewableClusterList* list);
 
 struct CompareRenewableClusterName final
