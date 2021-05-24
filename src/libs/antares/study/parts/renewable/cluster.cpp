@@ -207,11 +207,6 @@ void RenewableClusterList::clear()
         byIndex = nullptr;
     }
 
-    auto end = mapping.end();
-    for (auto it = mapping.begin(); it != end; ++it)
-        delete it->second;
-    mapping.clear();
-
     if (not cluster.empty())
         cluster.clear();
 }
@@ -477,8 +472,6 @@ bool RenewableClusterList::loadFromFolder(Study& study, const AnyString& folder,
                     delete cluster;
                     continue;
                 }
-                // keeping track of the cluster
-                mapping[cluster->id()] = cluster;
 
                 cluster->flush();
             }
@@ -517,13 +510,13 @@ int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l,
     int ret = 1;
     uint ticks = 0;
 
-    auto end = l->mapping.end();
-    for (auto it = l->mapping.begin(); it != end; ++it)
+    auto end = l->cluster.end();
+    for (auto it = l->cluster.begin(); it != end; ++it)
     {
         auto& cluster = *(it->second);
         if (cluster.series)
         {
-            logs.info() << msg << "  " << (ticks * 100 / (1 + l->mapping.size())) << "% complete";
+            logs.info() << msg << "  " << (ticks * 100 / (1 + l->cluster.size())) << "% complete";
             ret = DataSeriesRenewableSaveToFolder(cluster.series, &cluster, folder) and ret;
         }
         ++ticks;

@@ -461,14 +461,6 @@ public:
     ** These values are modified by 'RenewableClusterListAdd()'
     */
     uint groupCount[renewableGroupMax];
-
-    /*!
-    ** \brief Original mapping from the input
-    **
-    ** Without taking into consideration the enabled flags
-    */
-    RenewableCluster::Map mapping;
-
 }; // class RenewableClusterList
 
 /*!

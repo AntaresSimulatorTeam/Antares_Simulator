@@ -95,8 +95,8 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
         }
         // Renewable
         {
-            auto end = area.renewable.list.mapping.end();
-            for (auto it = area.renewable.list.mapping.begin(); it != end; ++it)
+            auto end = area.renewable.list.cluster.end();
+            for (auto it = area.renewable.list.cluster.begin(); it != end; ++it)
             {
                 auto* cluster = it->second;
                 if (!cluster->enabled)
