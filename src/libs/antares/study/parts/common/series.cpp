@@ -50,14 +50,24 @@ void DataSeriesCommon::markAsModified() const
     series.markAsModified();
 }
 
-/* TODO : improve estimate for renewable TS */
-void DataSeriesCommon::estimateMemoryUsage(StudyMemoryUsage& u) const
+void DataSeriesCommon::estimateMemoryUsage(StudyMemoryUsage& u, enum TimeSeries ts) const
 {
     u.requiredMemoryForInput += sizeof(DataSeriesCommon);
     timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
+    uint nbTimeSeries;
+    switch (ts) {
+    case timeSeriesThermal:
+      nbTimeSeries = u.study.parameters.nbTimeSeriesThermal;
+      break;
+    case timeSeriesRenewable:
+      nbTimeSeries = u.study.parameters.nbTimeSeriesRenewable;
+      break;
+    default:
+      nbTimeSeries = 0;
+    }
     series.estimateMemoryUsage(u,
-                               0 != (timeSeriesThermal & u.study.parameters.timeSeriesToGenerate),
-                               u.study.parameters.nbTimeSeriesThermal,
+                               0 != (ts & u.study.parameters.timeSeriesToGenerate),
+                               nbTimeSeries,
                                HOURS_PER_YEAR);
 }
 

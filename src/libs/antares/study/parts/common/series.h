@@ -40,7 +40,7 @@ namespace Data
 class DataSeriesCommon
 {
 public:
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+    void estimateMemoryUsage(StudyMemoryUsage&, enum TimeSeries) const;
 
     /*!
     ** \brief Flush memory to swap file

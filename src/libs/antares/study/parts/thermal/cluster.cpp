@@ -660,7 +660,7 @@ void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
         cluster.modulation.estimateMemoryUsage(u, true, thermalModulationMax, HOURS_PER_YEAR);
 
         if (cluster.series)
-            cluster.series->estimateMemoryUsage(u);
+            cluster.series->estimateMemoryUsage(u, timeSeriesThermal);
         if (cluster.prepro)
             cluster.prepro->estimateMemoryUsage(u);
 

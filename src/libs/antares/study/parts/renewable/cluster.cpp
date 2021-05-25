@@ -258,7 +258,7 @@ void RenewableClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
         u.requiredMemoryForInput += sizeof(RenewableCluster);
         u.requiredMemoryForInput += sizeof(void*);
         if (cluster.series)
-            cluster.series->estimateMemoryUsage(u);
+            cluster.series->estimateMemoryUsage(u, timeSeriesRenewable);
 
         // From the solver
         u.requiredMemoryForInput += 70 * 1024;
