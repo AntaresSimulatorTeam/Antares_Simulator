@@ -208,6 +208,9 @@ SET(SRC_TOOLBOX_COM_HTMLLISTBOX
 		toolbox/components/htmllistbox/item/thermal-cluster.h
 		toolbox/components/htmllistbox/item/thermal-cluster.cpp
 		toolbox/components/htmllistbox/item/thermal-cluster.hxx
+		toolbox/components/htmllistbox/item/renewable-cluster.h
+		toolbox/components/htmllistbox/item/renewable-cluster.cpp
+		toolbox/components/htmllistbox/item/renewable-cluster.hxx
 		toolbox/components/htmllistbox/item/bindingconstraint.h
 		toolbox/components/htmllistbox/item/bindingconstraint.cpp
 		toolbox/components/htmllistbox/item/bindingconstraint.hxx
@@ -220,6 +223,8 @@ SET(SRC_TOOLBOX_COM_HTMLLISTBOX
 		toolbox/components/htmllistbox/datasource/areas.cpp
 		toolbox/components/htmllistbox/datasource/thermal-cluster.h
 		toolbox/components/htmllistbox/datasource/thermal-cluster.cpp
+		toolbox/components/htmllistbox/datasource/renewable-cluster.h
+		toolbox/components/htmllistbox/datasource/renewable-cluster.cpp
 		toolbox/components/htmllistbox/datasource/bindingconstraint.h
 		toolbox/components/htmllistbox/datasource/bindingconstraint.cpp
 )

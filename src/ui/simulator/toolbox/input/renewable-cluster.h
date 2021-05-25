@@ -38,6 +38,7 @@
 #include <wx/imaglist.h>
 // #include "../components/htmllistbox/component.h"
 // #include "../components/htmllistbox/item/thermal-cluster.h"
+#include "../components/htmllistbox/item/renewable-cluster.h"
 
 namespace Antares
 {
@@ -70,7 +71,7 @@ public:
     }
     */
 
-    // void updateInnerValues();
+    void updateInnerValues();
 
     /*!
     ** \brief Rename a thermal cluster and refresh inner values
@@ -99,7 +100,7 @@ private:
     ** \brief Event: The parent area has changed
     ** \param area The new parent area (can be NULL)
     */
-    // void areaHasChanged(Antares::Data::Area* area);
+    void areaHasChanged(Antares::Data::Area* area);
 
     //! End update of the study
     // void onStudyEndUpdate();
@@ -128,7 +129,7 @@ private:
     ** \brief Event: An item has been selected in the listbox
     ** \param item The selected item
     */
-    // void onThSelected(Component::HTMLListbox::Item::IItem::Ptr item);
+    void onRnSelected(Component::HTMLListbox::Item::IItem::Ptr item);
 
     // void onStudyThermalClusterCommonSettingsChanged();
 
@@ -141,7 +142,7 @@ private:
     // void evtPopupDelete(wxCommandEvent&);
     // void evtPopupDeleteAll(wxCommandEvent&);
 
-    // void delayedSelection(Component::HTMLListbox::Item::IItem::Ptr item);
+    void delayedSelection(Component::HTMLListbox::Item::IItem::Ptr item);
 
 private:
     //! The current Area
@@ -151,11 +152,11 @@ private:
     //! Image list
     wxImageList pImageList;
     //! The listbox (which contain all items)
-    // Component::HTMLListbox::Component* pThListbox;
+    Component::HTMLListbox::Component* pRnListbox;
     //! The area notifier
-    // InputSelector::Area* pAreaNotifier;
+    InputSelector::Area* pAreaNotifier;
     //! The last selected thermal cluster
-    // Component::HTMLListbox::Item::ThermalCluster::Ptr pLastSelectedThermalCluster;
+    Component::HTMLListbox::Item::RenewableCluster::Ptr pLastSelectedRenewableCluster;
 
 }; // class Area
 

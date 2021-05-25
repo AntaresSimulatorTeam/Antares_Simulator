@@ -472,6 +472,17 @@ public:
 }; // class RenewableClusterList
 
 /*!
+** \brief Save a list of renewable clusters to a folder
+** \ingroup renewableclusters
+**
+** \todo Remaining of old C-library. this routine should be moved into the appropriate class
+** \param l The list of renewable cluster
+** \param folder The folder where the data will be written
+** \return A non-zero value if the operation succeeded, 0 otherwise
+*/
+bool RenewableClusterListSaveToFolder(const RenewableClusterList* l, const AnyString& folder);
+
+/*!
 ** \brief Load data related to time-series from a list of renewable clusters from a folder
 ** \ingroup renewableclusters
 **
