@@ -24,19 +24,42 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_DEFINES_H__
-#define __ANTARES_LIBS_STUDY_PARTS_THERMAL_DEFINES_H__
+
+#include <yuni/yuni.h>
+#include <yuni/io/file.h>
+#include <yuni/io/directory.h>
+#include "../../study.h"
+#include "../../memory-usage.h"
+#include "series.h"
+
+using namespace Yuni;
+
+#define SEP IO::Separator
 
 namespace Antares
 {
 namespace Data
 {
-// Forward declaration
-class ThermalCluster;
-class ThermalClusterList;
-class PreproThermal;
+bool DataSeriesCommon::invalidate(bool reload) const
+{
+    return series.invalidate(reload);
+}
+
+void DataSeriesCommon::markAsModified() const
+{
+    series.markAsModified();
+}
+
+/* TODO : improve estimate for renewable TS */
+void DataSeriesCommon::estimateMemoryUsage(StudyMemoryUsage& u) const
+{
+    u.requiredMemoryForInput += sizeof(DataSeriesCommon);
+    timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
+    series.estimateMemoryUsage(u,
+                               0 != (timeSeriesThermal & u.study.parameters.timeSeriesToGenerate),
+                               u.study.parameters.nbTimeSeriesThermal,
+                               HOURS_PER_YEAR);
+}
 
 } // namespace Data
 } // namespace Antares
-
-#endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_DEFINES_H__

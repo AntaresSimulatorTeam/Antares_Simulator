@@ -1853,7 +1853,7 @@ uint64 ThermalCluster::memoryUsage() const
     if (prepro)
         amount += prepro->memoryUsage();
     if (series)
-        amount += DataSeriesThermalMemoryUsage(series);
+        amount += DataSeriesMemoryUsage(series);
     return amount;
 }
 

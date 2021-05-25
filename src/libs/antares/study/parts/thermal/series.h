@@ -29,6 +29,7 @@
 
 #include "../../../array/matrix.h"
 #include "../../fwd.h"
+#include "../common/series.h"
 #include "defines.h"
 
 namespace Antares
@@ -38,34 +39,7 @@ namespace Data
 /*!
 ** \brief Data series (Thermal)
 */
-class DataSeriesThermal
-{
-public:
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
-
-    /*!
-    ** \brief Flush memory to swap file
-    */
-    void flush();
-
-    bool invalidate(bool reload = false) const;
-
-    void markAsModified() const;
-
-public:
-    /*!
-    ** \brief Series (MW)
-    **
-    ** Merely a matrix of TimeSeriesCount * 8760 values
-    */
-    Matrix<double, Yuni::sint32> series;
-
-    /*!
-    ** \brief Monte-Carlo
-    */
-    Matrix<Yuni::uint32> timeseriesNumbers;
-
-}; // class DataSeriesThermal
+typedef DataSeriesCommon DataSeriesThermal;
 
 /*!
 ** \brief Load thermal data series from a folder
@@ -101,7 +75,4 @@ Yuni::uint64 DataSeriesThermalMemoryUsage(DataSeriesThermal* t);
 
 } // namespace Data
 } // namespace Antares
-
-#include "series.hxx"
-
 #endif /* __ANTARES_LIBS_STUDY_PARTS_THERMAL_TIMESERIES_H__ */

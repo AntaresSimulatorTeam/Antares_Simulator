@@ -86,26 +86,5 @@ int DataSeriesRenewableLoadFromFolder(Study& s,
     }
     return 1;
 }
-
-bool DataSeriesRenewable::invalidate(bool reload) const
-{
-    return series.invalidate(reload);
-}
-
-void DataSeriesRenewable::markAsModified() const
-{
-    series.markAsModified();
-}
-
-void DataSeriesRenewable::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    u.requiredMemoryForInput += sizeof(DataSeriesRenewable);
-    timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
-    series.estimateMemoryUsage(u,
-                               0 != (timeSeriesRenewable & u.study.parameters.timeSeriesToGenerate),
-                               u.study.parameters.nbTimeSeriesRenewable,
-                               HOURS_PER_YEAR);
-}
-
 } // namespace Data
 } // namespace Antares

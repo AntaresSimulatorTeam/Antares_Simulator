@@ -24,27 +24,50 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_TIMESERIES_HXX__
-#define __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_TIMESERIES_HXX__
+#ifndef __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
+#define __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
+
+#include "../../../array/matrix.h"
+#include "../../fwd.h"
 
 namespace Antares
 {
 namespace Data
 {
-inline void DataSeriesRenewable::flush()
+/*!
+** \brief Data series (Common)
+*/
+class DataSeriesCommon
 {
-#ifdef ANTARES_SWAP_SUPPORT
-    series.flush();
-    timeseriesNumbers.flush();
-#endif
-}
+public:
+    void estimateMemoryUsage(StudyMemoryUsage&) const;
 
-inline Yuni::uint64 DataSeriesRenewableMemoryUsage(DataSeriesRenewable* t)
-{
-    return (t) ? t->series.memoryUsage() : 0;
-}
+    /*!
+    ** \brief Flush memory to swap file
+    */
+    void flush();
 
+    bool invalidate(bool reload = false) const;
+
+    void markAsModified() const;
+
+public:
+    /*!
+    ** \brief Series (MW)
+    **
+    ** Merely a matrix of TimeSeriesCount * 8760 values
+    */
+    Matrix<double, Yuni::sint32> series;
+
+    /*!
+    ** \brief Monte-Carlo
+    */
+    Matrix<Yuni::uint32> timeseriesNumbers;
+
+}; // class DataSeriesCommon
 } // namespace Data
 } // namespace Antares
 
-#endif // __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_TIMESERIES_HXX__
+#include "series.hxx"
+
+#endif /* __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__ */
