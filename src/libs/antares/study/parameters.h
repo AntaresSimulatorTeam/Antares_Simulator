@@ -487,6 +487,9 @@ public:
     bool noOutput;
     //@}
 
+    bool debugHydroDaily;
+    bool debugHydroMonthly;
+
     //! \name Seeds
     //@{
     //! Seeds
