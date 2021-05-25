@@ -104,7 +104,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
                     continue;
                 }
 
-                const Data::DataSeriesRenewable& data = *cluster->series;
+                const auto& data = *cluster->series;
                 assert(year < data.timeseriesNumbers.height);
                 unsigned int index = cluster->areaWideIndex;
 
@@ -130,7 +130,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
                     continue;
                 }
 
-                const Data::DataSeriesThermal& data = *cluster->series;
+                const auto& data = *cluster->series;
                 assert(year < data.timeseriesNumbers.height);
                 unsigned int index = cluster->areaWideIndex;
 
@@ -173,29 +173,6 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
 
                 indexCluster++;
             }
-            /*
-            const unsigned int clusterCount = area.thermal.clusterCount;
-            for (unsigned int k = 0; k != clusterCount; ++k)
-            {
-                    // The current thermal dispatchable cluster
-                    const Data::ThermalCluster& cluster = *(area.thermal.clusters[k]);
-                    const Data::DataSeriesThermal& data = *cluster.series;
-
-                    assert(year < data.timeseriesNumbers.height);
-                    ptchro.ThermiqueParPalier[cluster.areaWideIndex] = (data.series.width != 1)
-                            ? (long) data.timeseriesNumbers[0][year] : 0; // zero-based
-
-                    if (EconomicModeT)
-                    {
-                            ptvalgen.AleaCoutDeProductionParPalier[k] =
-                                    (runtime.random[Data::seedThermalCosts]() - 0.5) *
-            (cluster.spreadCost + 1e-4);
-
-                            // This formula was used prior 3.8 :
-                            // ((x * 2. - 1.) * cluster.spreadCost) + (x * 1e-4);
-                    }
-            } // each thermal cluster
-            */
         } // thermal
     }     // each area
 }

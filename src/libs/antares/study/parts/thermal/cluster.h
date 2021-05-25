@@ -387,7 +387,7 @@ public:
     //! Data for the preprocessor
     PreproThermal* prepro;
     //! Series
-    DataSeriesThermal* series;
+    DataSeriesCommon* series;
 
     //! List of all other clusters linked with the current one
     SetPointer coupling;

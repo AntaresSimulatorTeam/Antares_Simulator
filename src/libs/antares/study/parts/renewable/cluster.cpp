@@ -175,7 +175,7 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
 
     // Making sure that the data related to the timeseries are present
     if (not series)
-        series = new DataSeriesRenewable();
+        series = new DataSeriesCommon();
 
     // timseries
     series->series = cluster.series->series;
@@ -471,7 +471,7 @@ int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l,
     {
         auto& cluster = *(it->second);
         if (cluster.series)
-            ret = DataSeriesRenewableSaveToFolder(cluster.series, &cluster, folder) and ret;
+            ret = DataSeriesSaveToFolder(cluster.series, &cluster, folder) and ret;
     }
     return ret;
 }
@@ -493,7 +493,7 @@ int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l,
         if (cluster.series)
         {
             logs.info() << msg << "  " << (ticks * 100 / (1 + l->cluster.size())) << "% complete";
-            ret = DataSeriesRenewableSaveToFolder(cluster.series, &cluster, folder) and ret;
+            ret = DataSeriesSaveToFolder(cluster.series, &cluster, folder) and ret;
         }
         ++ticks;
     }
@@ -512,7 +512,7 @@ int RenewableClusterListLoadDataSeriesFromFolder(Study& s,
 
     l->each([&](Data::RenewableCluster& cluster) {
         if (cluster.series)
-            ret = DataSeriesRenewableLoadFromFolder(s, cluster.series, &cluster, folder) and ret;
+            ret = DataSeriesLoadFromFolder(s, cluster.series, &cluster, folder) and ret;
 
         ++options.progressTicks;
         options.pushProgressLogs();
@@ -527,7 +527,7 @@ void RenewableClusterListEnsureDataTimeSeries(RenewableClusterList* list)
     {
         auto& cluster = *(it->second);
         if (not cluster.series)
-            cluster.series = new DataSeriesRenewable();
+            cluster.series = new DataSeriesCommon();
     }
 }
 
@@ -634,7 +634,7 @@ void Data::RenewableCluster::reset()
     //   since the interface may still have a pointer to them.
     //   we must simply reset their content.
     if (not series)
-        series = new DataSeriesRenewable();
+        series = new DataSeriesCommon();
 
     series->series.reset(1, HOURS_PER_YEAR);
     series->series.flush();

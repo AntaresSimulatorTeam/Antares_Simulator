@@ -566,7 +566,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     if (not prepro)
         prepro = new PreproThermal();
     if (not series)
-        series = new DataSeriesThermal();
+        series = new DataSeriesCommon();
 
     prepro->copyFrom(*cluster.prepro);
     // timseries
@@ -1289,7 +1289,7 @@ int ThermalClusterListSaveDataSeriesToFolder(const ThermalClusterList* l, const 
     {
         auto& cluster = *(it->second);
         if (cluster.series)
-            ret = DataSeriesThermalSaveToFolder(cluster.series, &cluster, folder) and ret;
+            ret = DataSeriesSaveToFolder(cluster.series, &cluster, folder) and ret;
     }
     return ret;
 }
@@ -1311,7 +1311,7 @@ int ThermalClusterListSaveDataSeriesToFolder(const ThermalClusterList* l,
         if (cluster.series)
         {
             logs.info() << msg << "  " << (ticks * 100 / (1 + l->mapping.size())) << "% complete";
-            ret = DataSeriesThermalSaveToFolder(cluster.series, &cluster, folder) and ret;
+            ret = DataSeriesSaveToFolder(cluster.series, &cluster, folder) and ret;
         }
         ++ticks;
     }
@@ -1331,7 +1331,7 @@ int ThermalClusterListLoadDataSeriesFromFolder(Study& s,
 
     l->each([&](Data::ThermalCluster& cluster) {
         if (cluster.series and (!fast or !cluster.prepro))
-            ret = DataSeriesThermalLoadFromFolder(s, cluster.series, &cluster, folder) and ret;
+            ret = DataSeriesLoadFromFolder(s, cluster.series, &cluster, folder) and ret;
 
         ++options.progressTicks;
         options.pushProgressLogs();
@@ -1357,7 +1357,7 @@ void ThermalClusterListEnsureDataTimeSeries(ThermalClusterList* list)
     {
         auto& cluster = *(it->second);
         if (not cluster.series)
-            cluster.series = new DataSeriesThermal();
+            cluster.series = new DataSeriesCommon();
     }
 }
 
@@ -1601,7 +1601,7 @@ void Data::ThermalCluster::reset()
     if (not prepro)
         prepro = new PreproThermal();
     if (not series)
-        series = new DataSeriesThermal();
+        series = new DataSeriesCommon();
 
     series->series.reset(1, HOURS_PER_YEAR);
     series->series.flush();

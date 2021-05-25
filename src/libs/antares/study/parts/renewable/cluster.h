@@ -226,7 +226,7 @@ public:
     double nominalCapacity;
 
     //! Series
-    DataSeriesRenewable* series;
+    DataSeriesCommon* series;
 
 private:
     //! Name

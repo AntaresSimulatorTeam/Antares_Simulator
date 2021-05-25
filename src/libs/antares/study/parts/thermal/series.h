@@ -37,11 +37,6 @@ namespace Antares
 namespace Data
 {
 /*!
-** \brief Data series (Thermal)
-*/
-typedef DataSeriesCommon DataSeriesThermal;
-
-/*!
 ** \brief Load thermal data series from a folder
 ** \ingroup thermalseries
 **
@@ -50,10 +45,10 @@ typedef DataSeriesCommon DataSeriesThermal;
 ** \param folder The target folder
 ** \return A non-zero value if the operation succeeded, 0 otherwise
 */
-int DataSeriesThermalLoadFromFolder(Study& s,
-                                    DataSeriesThermal* t,
-                                    ThermalCluster* ag,
-                                    const AnyString& folder);
+int DataSeriesLoadFromFolder(Study& s,
+                             DataSeriesCommon* t,
+                             ThermalCluster* ag,
+                             const AnyString& folder);
 
 /*!
 ** \brief Save thermal data series into a folder
@@ -64,15 +59,9 @@ int DataSeriesThermalLoadFromFolder(Study& s,
 ** \param folder The target folder
 ** \return A non-zero value if the operation succeeded, 0 otherwise
 */
-int DataSeriesThermalSaveToFolder(const DataSeriesThermal* t,
-                                  const ThermalCluster* ag,
-                                  const AnyString& folder);
-
-/*!
-** \brief Get the size (bytes) occupied in memory by a `DataSeriesThermal` structure
-*/
-Yuni::uint64 DataSeriesThermalMemoryUsage(DataSeriesThermal* t);
-
+int DataSeriesSaveToFolder(const DataSeriesCommon* t,
+                           const ThermalCluster* ag,
+                           const AnyString& folder);
 } // namespace Data
 } // namespace Antares
 #endif /* __ANTARES_LIBS_STUDY_PARTS_THERMAL_TIMESERIES_H__ */

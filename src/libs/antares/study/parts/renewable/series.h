@@ -37,10 +37,6 @@ namespace Antares
 namespace Data
 {
 /*!
-** \brief Data series (Renewable)
-*/
-typedef DataSeriesCommon DataSeriesRenewable;
-/*!
 ** \brief Load renewable data series from a folder
 ** \ingroup renewableseries
 **
@@ -49,10 +45,10 @@ typedef DataSeriesCommon DataSeriesRenewable;
 ** \param folder The target folder
 ** \return A non-zero value if the operation succeeded, 0 otherwise
 */
-int DataSeriesRenewableLoadFromFolder(Study& s,
-                                      DataSeriesRenewable* t,
-                                      RenewableCluster* ag,
-                                      const AnyString& folder);
+int DataSeriesLoadFromFolder(Study& s,
+                             DataSeriesCommon* t,
+                             RenewableCluster* ag,
+                             const AnyString& folder);
 
 /*!
 ** \brief Save renewable data series into a folder
@@ -63,9 +59,9 @@ int DataSeriesRenewableLoadFromFolder(Study& s,
 ** \param folder The target folder
 ** \return A non-zero value if the operation succeeded, 0 otherwise
 */
-int DataSeriesRenewableSaveToFolder(const DataSeriesRenewable* t,
-                                    const RenewableCluster* ag,
-                                    const AnyString& folder);
+int DataSeriesSaveToFolder(const DataSeriesCommon* t,
+                           const RenewableCluster* ag,
+                           const AnyString& folder);
 
 } // namespace Data
 } // namespace Antares

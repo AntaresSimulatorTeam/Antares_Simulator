@@ -40,9 +40,9 @@ namespace Antares
 {
 namespace Data
 {
-int DataSeriesThermalSaveToFolder(const DataSeriesThermal* t,
-                                  const ThermalCluster* ag,
-                                  const AnyString& folder)
+int DataSeriesSaveToFolder(const DataSeriesCommon* t,
+                           const ThermalCluster* ag,
+                           const AnyString& folder)
 {
     if (t && ag and not folder.empty())
     {
@@ -63,10 +63,10 @@ int DataSeriesThermalSaveToFolder(const DataSeriesThermal* t,
     return 1;
 }
 
-int DataSeriesThermalLoadFromFolder(Study& s,
-                                    DataSeriesThermal* t,
-                                    ThermalCluster* ag,
-                                    const AnyString& folder)
+int DataSeriesLoadFromFolder(Study& s,
+                             DataSeriesCommon* t,
+                             ThermalCluster* ag,
+                             const AnyString& folder)
 {
     if (t and ag and not folder.empty())
     {
