@@ -67,10 +67,9 @@ public:
     //! Random number generator
     MersenneTwister random;
 
-private:
     // forward declaration
     struct PerArea;
-
+private:
     //! \name Steps
     //@{
     //! Prepare inflows scaling for each area
@@ -109,7 +108,7 @@ public:
     //! General data
     Data::Parameters& parameters;
 
-private:
+public:
     enum
     {
         //! The maximum number of days in a year
