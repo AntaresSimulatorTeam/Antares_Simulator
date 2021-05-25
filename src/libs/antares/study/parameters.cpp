@@ -59,25 +59,6 @@ enum
     maximumMCYears = 100000,
 };
 
-static void ConvertHydroDebugStr(Parameters& d, const String& value)
-{
-    d.debugHydroDaily = (value.find("daily") != String::npos);
-    d.debugHydroMonthly = (value.find("monthly") != String::npos);
-}
-
-static String HydroDebugToStr(bool daily, bool monthly)
-{
-    if (!daily && !monthly)
-        return "";
-    if (daily && !monthly)
-        return "daily";
-    if (!daily && monthly)
-        return "monthly";
-    if (daily && monthly)
-        return "daily, monthly";
-    return "";
-}
-
 static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
 {
     v = 0;
@@ -472,9 +453,10 @@ static bool SGDIntLoadFamily_H(Parameters& d,
         d.unitCommitment.ucMode = ucHeuristic;
         return false;
     }
+
     if (key == "hydro-debug")
     {
-        ConvertHydroDebugStr(d, value);
+        return value.to<bool>(d.hydroDebug);
     }
     // Error
     return false;
@@ -1634,8 +1616,8 @@ void Parameters::saveToINI(IniFile& ini) const
         auto* section = ini.addSection("output");
         section->add("synthesis", synthesis);
         section->add("storeNewSet", storeTimeseriesNumbers);
-        if (debugHydroDaily || debugHydroMonthly)
-            section->add("hydro-debug", HydroDebugToStr(debugHydroDaily, debugHydroMonthly));
+        if (hydroDebug)
+            section->add("hydro-debug", hydroDebug);
         ParametersSaveTimeSeries(section, "archives", timeSeriesToArchive);
     }
 

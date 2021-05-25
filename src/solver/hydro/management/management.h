@@ -69,6 +69,7 @@ public:
 
     // forward declaration
     struct PerArea;
+
 private:
     //! \name Steps
     //@{

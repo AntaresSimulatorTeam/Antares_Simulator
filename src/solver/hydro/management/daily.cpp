@@ -152,7 +152,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     DebugData* debugData;
 
-    if (study.parameters.debugHydroDaily)
+    if (study.parameters.hydroDebug)
         debugData = new DebugData(data, valgen);
     else
         debugData = nullptr;

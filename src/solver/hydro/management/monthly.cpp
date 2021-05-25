@@ -242,7 +242,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
         }
 #endif
 
-        if (study.parameters.debugHydroMonthly)
+        if (study.parameters.hydroDebug)
         {
             String folder;
             folder << study.folderOutput << SEP << "debug" << SEP << "solver" << SEP << (1 + y);
