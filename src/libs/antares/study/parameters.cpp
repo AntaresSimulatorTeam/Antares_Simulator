@@ -75,6 +75,7 @@ static String HydroDebugToStr(bool daily, bool monthly)
         return "monthly";
     if (daily && monthly)
         return "daily, monthly";
+    return "";
 }
 
 static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
