@@ -624,8 +624,8 @@ static void removeDisabledClusters(Study& study,
         logs.info() << "No disabled " << type << " cluster removed before solver computations";
         break;
     default:
-        logs.info() << "Found " << count
-                    << " disabled " << type << " clusters and removed them before solver computations";
+        logs.info() << "Found " << count << " disabled " << type
+                    << " clusters and removed them before solver computations";
     }
 }
 
