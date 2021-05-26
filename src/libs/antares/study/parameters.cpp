@@ -227,7 +227,6 @@ void Parameters::reset()
     refreshIntervalHydro = 100;
     refreshIntervalWind = 100;
     refreshIntervalThermal = 100;
-    refreshIntervalRenewable = 100;
     // Archive
     timeSeriesToArchive = 0; // None
     // Pre-Processor
