@@ -364,8 +364,8 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
             }
             // Renewables
             {
-                auto end = area.renewable.list.mapping.end();
-                for (auto i = area.renewable.list.mapping.begin(); i != end; ++i)
+                auto end = area.renewable.list.cluster.end();
+                for (auto i = area.renewable.list.cluster.begin(); i != end; ++i)
                 {
                     auto* cluster = i->second;
                     if (!cluster->enabled)
