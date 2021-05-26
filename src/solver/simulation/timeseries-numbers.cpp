@@ -306,7 +306,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
          0 != (Data::timeSeriesWind & parameters.timeSeriesToRefresh),
          0 != (Data::timeSeriesThermal & parameters.timeSeriesToRefresh),
          0 != (Data::timeSeriesSolar & parameters.timeSeriesToRefresh),
-         0 != (Data::timeSeriesRenewable & parameters.timeSeriesToRefresh)};
+         false}; // TS generation is always disabled for renewables
 
     CORRELATION_CHECK_AND_INIT(Data::timeSeriesLoad);
     CORRELATION_CHECK_AND_INIT(Data::timeSeriesHydro);
