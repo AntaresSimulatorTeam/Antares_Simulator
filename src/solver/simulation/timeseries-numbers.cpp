@@ -394,6 +394,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
             BUILD_LOG_ENTRY(Data::timeSeriesWind, "wind");
             BUILD_LOG_ENTRY(Data::timeSeriesHydro, "hydro");
             BUILD_LOG_ENTRY(Data::timeSeriesThermal, "thermal");
+            BUILD_LOG_ENTRY(Data::timeSeriesRenewable, "renewables");
             logs.info() << e << ')';
         }
 
