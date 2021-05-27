@@ -119,7 +119,7 @@ def compare_directory(result_dir, reference_dir):
                 output_headers = get_header_values(x)
                 output_values = get_output_values(x)
                 
-                np.testing.assert_equal(reference_headers,output_headers, err_msg="headers dismatch in " + str(reference_dir / x.name), verbose=True)
+                assert set(reference_headers).issubset(set(output_headers)), "At least one column is missing in the output"
 
                 
                 for i in range(len(output_headers[0])):
