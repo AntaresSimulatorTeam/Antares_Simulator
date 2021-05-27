@@ -814,3 +814,11 @@ def test_unfeasible_problem_10(use_ortools, ortools_solver, solver_path):
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     enable_study_output(study_path, False)
     check_output_values(study_path)
+
+@pytest.mark.short
+def test_renewables_1(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "renewables-1"
+    enable_study_output(study_path, True)
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    enable_study_output(study_path, False)
+    check_output_values(study_path)
