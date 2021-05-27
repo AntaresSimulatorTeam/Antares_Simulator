@@ -119,7 +119,7 @@ def compare_directory(result_dir, reference_dir):
                 output_headers = get_header_values(x)
                 output_values = get_output_values(x)
                 
-                assert set(reference_headers).issubset(set(output_headers)), "At least one column is missing in the output"
+                assert set(reference_headers[0]).issubset(set(output_headers[0])), "At least one column is missing in the output"
 
                 
                 for i in range(len(output_headers[0])):
