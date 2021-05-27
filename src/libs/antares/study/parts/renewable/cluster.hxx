@@ -75,29 +75,28 @@ inline RenewableClusterList::const_iterator RenewableClusterList::end() const
     return cluster.end();
 }
 
-inline const Data::RenewableClusterName& RenewableCluster::group() const
+inline const Data::ClusterName& RenewableCluster::group() const
 {
     return pGroup;
 }
 
-inline const Data::RenewableClusterName& RenewableCluster::id() const
+inline const Data::ClusterName& RenewableCluster::id() const
 {
     return pID;
 }
 
-inline const Data::RenewableClusterName& RenewableCluster::name() const
+inline const Data::ClusterName& RenewableCluster::name() const
 {
     return pName;
 }
 
-inline const RenewableCluster* RenewableClusterList::find(
-  const Data::RenewableClusterName& id) const
+inline const RenewableCluster* RenewableClusterList::find(const Data::ClusterName& id) const
 {
     auto i = cluster.find(id);
     return (i != cluster.end()) ? i->second : nullptr;
 }
 
-inline RenewableCluster* RenewableClusterList::find(const Data::RenewableClusterName& id)
+inline RenewableCluster* RenewableClusterList::find(const Data::ClusterName& id)
 {
     auto i = cluster.find(id);
     return (i != cluster.end()) ? i->second : nullptr;

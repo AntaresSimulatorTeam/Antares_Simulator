@@ -335,6 +335,15 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
         ret = ThermalClusterListSaveDataSeriesToFolder(&area.thermal.list, buffer) and ret;
     }
 
+    // Renewable cluster list
+    {
+        buffer.clear() << folder << SEP << "input" << SEP << "renewables" << SEP << "clusters"
+                       << SEP << area.id;
+        ret = RenewableClusterListSaveToFolder(&area.renewable.list, buffer) and ret;
+
+        buffer.clear() << folder << SEP << "input" << SEP << "renewables" << SEP << "series";
+        ret = RenewableClusterListSaveDataSeriesToFolder(&area.renewable.list, buffer) and ret;
+    }
     return ret;
 }
 
@@ -1704,7 +1713,7 @@ ThermalCluster* AreaList::findClusterFromINIKey(const AnyString& key)
     if (offset == AreaName::npos or (0 == offset) or (offset == key.size() - 1))
         return nullptr;
     AreaName parentName(key.c_str(), offset);
-    ThermalClusterName id(key.c_str() + offset + 1, key.size() - (offset + 1));
+    ClusterName id(key.c_str() + offset + 1, key.size() - (offset + 1));
     Area* parentArea = findFromName(parentName);
     if (parentArea == nullptr)
         return nullptr;

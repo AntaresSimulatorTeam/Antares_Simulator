@@ -40,9 +40,9 @@ namespace Antares
 {
 namespace Data
 {
-int DataSeriesRenewableSaveToFolder(const DataSeriesRenewable* t,
-                                    const RenewableCluster* ag,
-                                    const AnyString& folder)
+int DataSeriesSaveToFolder(const DataSeriesCommon* t,
+                           const RenewableCluster* ag,
+                           const AnyString& folder)
 {
     if (t && ag and not folder.empty())
     {
@@ -63,10 +63,10 @@ int DataSeriesRenewableSaveToFolder(const DataSeriesRenewable* t,
     return 1;
 }
 
-int DataSeriesRenewableLoadFromFolder(Study& s,
-                                      DataSeriesRenewable* t,
-                                      RenewableCluster* ag,
-                                      const AnyString& folder)
+int DataSeriesLoadFromFolder(Study& s,
+                             DataSeriesCommon* t,
+                             RenewableCluster* ag,
+                             const AnyString& folder)
 {
     if (t and ag and not folder.empty())
     {
@@ -86,26 +86,5 @@ int DataSeriesRenewableLoadFromFolder(Study& s,
     }
     return 1;
 }
-
-bool DataSeriesRenewable::invalidate(bool reload) const
-{
-    return series.invalidate(reload);
-}
-
-void DataSeriesRenewable::markAsModified() const
-{
-    series.markAsModified();
-}
-
-void DataSeriesRenewable::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    u.requiredMemoryForInput += sizeof(DataSeriesRenewable);
-    timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
-    series.estimateMemoryUsage(u,
-                               0 != (timeSeriesRenewable & u.study.parameters.timeSeriesToGenerate),
-                               u.study.parameters.nbTimeSeriesRenewable,
-                               HOURS_PER_YEAR);
-}
-
 } // namespace Data
 } // namespace Antares

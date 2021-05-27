@@ -67,9 +67,7 @@ typedef Yuni::CString<ant_k_area_name_max_length, false> AreaName;
 //! Name of a single link
 typedef Yuni::CString<ant_k_area_name_max_length * 2 + 1, false> AreaLinkName;
 //! Name of a single thermal
-typedef Yuni::CString<ant_k_cluster_name_max_length, false> ThermalClusterName;
-
-typedef Yuni::CString<ant_k_cluster_name_max_length, false> RenewableClusterName;
+typedef Yuni::CString<ant_k_cluster_name_max_length, false> ClusterName;
 
 typedef Yuni::CString<ant_k_constraint_name_max_length, false> ConstraintName;
 

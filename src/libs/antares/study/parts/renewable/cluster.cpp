@@ -175,7 +175,7 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
 
     // Making sure that the data related to the timeseries are present
     if (not series)
-        series = new DataSeriesRenewable();
+        series = new DataSeriesCommon();
 
     // timseries
     series->series = cluster.series->series;
@@ -206,11 +206,6 @@ void RenewableClusterList::clear()
         delete[] byIndex;
         byIndex = nullptr;
     }
-
-    auto end = mapping.end();
-    for (auto it = mapping.begin(); it != end; ++it)
-        delete it->second;
-    mapping.clear();
 
     if (not cluster.empty())
         cluster.clear();
@@ -263,14 +258,14 @@ void RenewableClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
         u.requiredMemoryForInput += sizeof(RenewableCluster);
         u.requiredMemoryForInput += sizeof(void*);
         if (cluster.series)
-            cluster.series->estimateMemoryUsage(u);
+            cluster.series->estimateMemoryUsage(u, timeSeriesRenewable);
 
         // From the solver
         u.requiredMemoryForInput += 70 * 1024;
     });
 }
 
-void Data::RenewableCluster::group(Data::RenewableClusterName newgrp)
+void Data::RenewableCluster::group(Data::ClusterName newgrp)
 {
     if (not newgrp)
     {
@@ -281,74 +276,50 @@ void Data::RenewableCluster::group(Data::RenewableClusterName newgrp)
     pGroup = newgrp;
     newgrp.toLower();
 
-    switch (newgrp[0])
+    if (newgrp == "concentration solar")
     {
-    case 'c':
-    {
-        if (newgrp == "concentration solar")
-        {
-            groupID = concentrationSolar;
-            return;
-        }
-        break;
+        groupID = concentrationSolar;
+        return;
     }
-    case 'o':
+    if (newgrp == "pv solar")
     {
-        if (newgrp == "other renewable 1")
-        {
-            groupID = renewableOther1;
-            return;
-        }
-        if (newgrp == "other renewable 2")
-        {
-            groupID = renewableOther2;
-            return;
-        }
-        if (newgrp == "other renewable 3")
-        {
-            groupID = renewableOther3;
-            return;
-        }
-        if (newgrp == "other renewable 4")
-        {
-            groupID = renewableOther4;
-            return;
-        }
-        break;
+        groupID = PVSolar;
+        return;
     }
-    case 'p':
+    if (newgrp == "rooftop solar")
     {
-        if (newgrp == "pv solar")
-        {
-            groupID = PVSolar;
-            return;
-        }
-        break;
+        groupID = rooftopSolar;
+        return;
     }
-    case 'r':
+    if (newgrp == "wind on-shore")
     {
-        if (newgrp == "rooftop solar")
-        {
-            groupID = rooftopSolar;
-            return;
-        }
-        break;
+        groupID = windOnShore;
+        return;
     }
-    case 'w':
+    if (newgrp == "wind off-shore")
     {
-        if (newgrp == "wind on-shore")
-        {
-            groupID = windOnShore;
-            return;
-        }
-
-        if (newgrp == "wind off-shore")
-        {
-            groupID = windOffShore;
-            return;
-        }
-        break;
+        groupID = windOffShore;
+        return;
     }
+    if (newgrp == "other renewable 1")
+    {
+        groupID = renewableOther1;
+        return;
+    }
+    if (newgrp == "other renewable 2")
+    {
+        groupID = renewableOther2;
+        return;
+    }
+    if (newgrp == "other renewable 3")
+    {
+        groupID = renewableOther3;
+        return;
+    }
+    if (newgrp == "other renewable 4")
+    {
+        groupID = renewableOther4;
+        return;
     }
     // assigning a default value
     groupID = renewableOther1;
@@ -477,8 +448,6 @@ bool RenewableClusterList::loadFromFolder(Study& study, const AnyString& folder,
                     delete cluster;
                     continue;
                 }
-                // keeping track of the cluster
-                mapping[cluster->id()] = cluster;
 
                 cluster->flush();
             }
@@ -502,7 +471,7 @@ int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l,
     {
         auto& cluster = *(it->second);
         if (cluster.series)
-            ret = DataSeriesRenewableSaveToFolder(cluster.series, &cluster, folder) and ret;
+            ret = DataSeriesSaveToFolder(cluster.series, &cluster, folder) and ret;
     }
     return ret;
 }
@@ -517,14 +486,14 @@ int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l,
     int ret = 1;
     uint ticks = 0;
 
-    auto end = l->mapping.end();
-    for (auto it = l->mapping.begin(); it != end; ++it)
+    auto end = l->cluster.end();
+    for (auto it = l->cluster.begin(); it != end; ++it)
     {
         auto& cluster = *(it->second);
         if (cluster.series)
         {
-            logs.info() << msg << "  " << (ticks * 100 / (1 + l->mapping.size())) << "% complete";
-            ret = DataSeriesRenewableSaveToFolder(cluster.series, &cluster, folder) and ret;
+            logs.info() << msg << "  " << (ticks * 100 / (1 + l->cluster.size())) << "% complete";
+            ret = DataSeriesSaveToFolder(cluster.series, &cluster, folder) and ret;
         }
         ++ticks;
     }
@@ -543,7 +512,7 @@ int RenewableClusterListLoadDataSeriesFromFolder(Study& s,
 
     l->each([&](Data::RenewableCluster& cluster) {
         if (cluster.series)
-            ret = DataSeriesRenewableLoadFromFolder(s, cluster.series, &cluster, folder) and ret;
+            ret = DataSeriesLoadFromFolder(s, cluster.series, &cluster, folder) and ret;
 
         ++options.progressTicks;
         options.pushProgressLogs();
@@ -558,7 +527,7 @@ void RenewableClusterListEnsureDataTimeSeries(RenewableClusterList* list)
     {
         auto& cluster = *(it->second);
         if (not cluster.series)
-            cluster.series = new DataSeriesRenewable();
+            cluster.series = new DataSeriesCommon();
     }
 }
 
@@ -570,8 +539,7 @@ Yuni::uint64 RenewableClusterList::memoryUsage() const
     return ret;
 }
 
-bool RenewableClusterList::rename(Data::RenewableClusterName idToFind,
-                                  Data::RenewableClusterName newName)
+bool RenewableClusterList::rename(Data::ClusterName idToFind, Data::ClusterName newName)
 {
     if (not idToFind or newName.empty())
         return false;
@@ -586,7 +554,7 @@ bool RenewableClusterList::rename(Data::RenewableClusterName idToFind,
     idToFind.toLower();
 
     // The new ID
-    Data::RenewableClusterName newID;
+    Data::ClusterName newID;
     TransformNameIntoID(newName, newID);
 
     // Looking for the renewable cluster in the list
@@ -666,7 +634,7 @@ void Data::RenewableCluster::reset()
     //   since the interface may still have a pointer to them.
     //   we must simply reset their content.
     if (not series)
-        series = new DataSeriesRenewable();
+        series = new DataSeriesCommon();
 
     series->series.reset(1, HOURS_PER_YEAR);
     series->series.flush();
@@ -769,7 +737,7 @@ void RenewableClusterList::retrieveTotalCapacity(double& total) const
     }
 }
 
-bool RenewableClusterList::remove(const Data::RenewableClusterName& id)
+bool RenewableClusterList::remove(const Data::ClusterName& id)
 {
     auto i = cluster.find(id);
     if (i == cluster.end())
@@ -803,7 +771,7 @@ void RenewableClusterList::remove(iterator i)
     cluster.erase(i);
 }
 
-bool RenewableClusterList::exists(const Data::RenewableClusterName& id) const
+bool RenewableClusterList::exists(const Data::ClusterName& id) const
 {
     if (not cluster.empty())
     {
@@ -817,7 +785,7 @@ uint64 RenewableCluster::memoryUsage() const
 {
     uint64 amount = sizeof(RenewableCluster);
     if (series)
-        amount += DataSeriesRenewableMemoryUsage(series);
+        amount += DataSeriesMemoryUsage(series);
     return amount;
 }
 

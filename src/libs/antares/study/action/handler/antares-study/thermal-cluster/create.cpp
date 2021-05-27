@@ -68,7 +68,7 @@ bool Create::prepareWL(Context& ctx)
     }
 
     // Computing the futur ID of the area
-    Data::ThermalClusterName id;
+    Data::ClusterName id;
     const Data::ThermalCluster* clusterFound = nullptr;
 
     // finding the final area
@@ -159,7 +159,7 @@ bool Create::performWL(Context& ctx)
     ctx.cluster = nullptr;
     if (ctx.area)
     {
-        Data::ThermalClusterName id;
+        Data::ClusterName id;
 
         // source cluster
         Data::Area* source = ctx.extStudy->areas.findFromName(pOriginalAreaName);

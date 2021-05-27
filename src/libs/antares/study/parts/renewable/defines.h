@@ -34,7 +34,6 @@ namespace Data
 // Forward declaration
 class RenewableCluster;
 class RenewableClusterList;
-class DataSeriesRenewable;
 
 } // namespace Data
 } // namespace Antares

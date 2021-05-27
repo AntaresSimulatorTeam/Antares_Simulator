@@ -75,28 +75,28 @@ inline ThermalClusterList::const_iterator ThermalClusterList::end() const
     return cluster.end();
 }
 
-inline const Data::ThermalClusterName& ThermalCluster::group() const
+inline const Data::ClusterName& ThermalCluster::group() const
 {
     return pGroup;
 }
 
-inline const Data::ThermalClusterName& ThermalCluster::id() const
+inline const Data::ClusterName& ThermalCluster::id() const
 {
     return pID;
 }
 
-inline const Data::ThermalClusterName& ThermalCluster::name() const
+inline const Data::ClusterName& ThermalCluster::name() const
 {
     return pName;
 }
 
-inline const ThermalCluster* ThermalClusterList::find(const Data::ThermalClusterName& id) const
+inline const ThermalCluster* ThermalClusterList::find(const Data::ClusterName& id) const
 {
     auto i = cluster.find(id);
     return (i != cluster.end()) ? i->second : nullptr;
 }
 
-inline ThermalCluster* ThermalClusterList::find(const Data::ThermalClusterName& id)
+inline ThermalCluster* ThermalClusterList::find(const Data::ClusterName& id)
 {
     auto i = cluster.find(id);
     return (i != cluster.end()) ? i->second : nullptr;

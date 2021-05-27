@@ -40,9 +40,9 @@ namespace Antares
 {
 namespace Data
 {
-int DataSeriesThermalSaveToFolder(const DataSeriesThermal* t,
-                                  const ThermalCluster* ag,
-                                  const AnyString& folder)
+int DataSeriesSaveToFolder(const DataSeriesCommon* t,
+                           const ThermalCluster* ag,
+                           const AnyString& folder)
 {
     if (t && ag and not folder.empty())
     {
@@ -63,10 +63,10 @@ int DataSeriesThermalSaveToFolder(const DataSeriesThermal* t,
     return 1;
 }
 
-int DataSeriesThermalLoadFromFolder(Study& s,
-                                    DataSeriesThermal* t,
-                                    ThermalCluster* ag,
-                                    const AnyString& folder)
+int DataSeriesLoadFromFolder(Study& s,
+                             DataSeriesCommon* t,
+                             ThermalCluster* ag,
+                             const AnyString& folder)
 {
     if (t and ag and not folder.empty())
     {
@@ -86,26 +86,5 @@ int DataSeriesThermalLoadFromFolder(Study& s,
     }
     return 1;
 }
-
-bool DataSeriesThermal::invalidate(bool reload) const
-{
-    return series.invalidate(reload);
-}
-
-void DataSeriesThermal::markAsModified() const
-{
-    series.markAsModified();
-}
-
-void DataSeriesThermal::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    u.requiredMemoryForInput += sizeof(DataSeriesThermal);
-    timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
-    series.estimateMemoryUsage(u,
-                               0 != (timeSeriesThermal & u.study.parameters.timeSeriesToGenerate),
-                               u.study.parameters.nbTimeSeriesThermal,
-                               HOURS_PER_YEAR);
-}
-
 } // namespace Data
 } // namespace Antares

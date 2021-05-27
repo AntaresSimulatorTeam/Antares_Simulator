@@ -79,7 +79,7 @@ public:
     //! Set of renewable clusters (pointer)
     typedef std::set<RenewableCluster*> SetPointer;
     //! Map of renewable clusters
-    typedef std::map<RenewableClusterName, RenewableCluster*> Map;
+    typedef std::map<ClusterName, RenewableCluster*> Map;
     //! Vector of renewable clusters
     typedef std::vector<Data::RenewableCluster*> Vector;
 
@@ -127,10 +127,10 @@ public:
     //! \name Name and ID
     //@{
     //! Get the renewable cluster ID
-    const Data::RenewableClusterName& id() const;
+    const Data::ClusterName& id() const;
 
     //! Get the renewable cluster name
-    const Data::RenewableClusterName& name() const;
+    const Data::ClusterName& name() const;
 
     //! Get the full renewable cluster name
     Yuni::String getFullName() const;
@@ -142,9 +142,9 @@ public:
     //! \name Group
     //@{
     //! Get the group of the cluster
-    const Data::RenewableClusterName& group() const;
+    const Data::ClusterName& group() const;
     //! Set the group
-    void group(Data::RenewableClusterName newgrp);
+    void group(Data::ClusterName newgrp);
     //@}
 
     /*!
@@ -226,15 +226,15 @@ public:
     double nominalCapacity;
 
     //! Series
-    DataSeriesRenewable* series;
+    DataSeriesCommon* series;
 
 private:
     //! Name
-    Data::RenewableClusterName pName;
+    Data::ClusterName pName;
     //! ID
-    Data::RenewableClusterName pID;
+    Data::ClusterName pID;
     //! Group
-    Data::RenewableClusterName pGroup;
+    Data::ClusterName pGroup;
 
     friend class RenewableClusterList;
 
@@ -340,14 +340,14 @@ public:
     ** \param id ID of the cluster to find
     ** \return A pointer to a cluster. nullptr if not found
     */
-    RenewableCluster* find(const Data::RenewableClusterName& id);
+    RenewableCluster* find(const Data::ClusterName& id);
     /*!
     ** \brief Try to find a renewable cluster from its id (const)
     **
     ** \param id ID of the cluster to find
     ** \return A pointer to a cluster. nullptr if not found
     */
-    const RenewableCluster* find(const Data::RenewableClusterName& id) const;
+    const RenewableCluster* find(const Data::ClusterName& id) const;
 
     /*!
     ** \brief Try to find a renewable cluster from its pointer
@@ -370,7 +370,7 @@ public:
     ** \param id ID of the cluster to find
     ** \return True if the renewable cluster exists
     */
-    bool exists(const Data::RenewableClusterName& id) const;
+    bool exists(const Data::ClusterName& id) const;
 
     /*!
     ** \brief Rename a renewable cluster
@@ -382,12 +382,12 @@ public:
     **
     ** The indexes for renewable clusters will be rebuilt.
     */
-    bool rename(Data::RenewableClusterName idToFind, Data::RenewableClusterName newName);
+    bool rename(Data::ClusterName idToFind, Data::ClusterName newName);
 
     /*!
     ** \brief Remove properly a cluster
     */
-    bool remove(const Data::RenewableClusterName& id);
+    bool remove(const Data::ClusterName& id);
 
     //! Get the number of items in the list
     uint size() const;
@@ -461,14 +461,6 @@ public:
     ** These values are modified by 'RenewableClusterListAdd()'
     */
     uint groupCount[renewableGroupMax];
-
-    /*!
-    ** \brief Original mapping from the input
-    **
-    ** Without taking into consideration the enabled flags
-    */
-    RenewableCluster::Map mapping;
-
 }; // class RenewableClusterList
 
 /*!
@@ -500,6 +492,8 @@ int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l,
 int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l,
                                                const AnyString& folder,
                                                const YString& msg);
+
+bool RenewableClusterListSaveToFolder(const RenewableClusterList* l, const AnyString& folder);
 
 void RenewableClusterListEnsureDataTimeSeries(RenewableClusterList* list);
 

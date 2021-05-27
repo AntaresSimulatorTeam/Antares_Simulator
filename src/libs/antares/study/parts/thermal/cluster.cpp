@@ -313,8 +313,8 @@ static bool ThermalClusterLoadCouplingSection(const AnyString& filename,
 {
     if (s->firstProperty)
     {
-        Data::ThermalClusterName from;
-        Data::ThermalClusterName with;
+        Data::ClusterName from;
+        Data::ClusterName with;
         Data::ThermalCluster* clusterFrom;
         Data::ThermalCluster* clusterWith;
 
@@ -566,7 +566,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     if (not prepro)
         prepro = new PreproThermal();
     if (not series)
-        series = new DataSeriesThermal();
+        series = new DataSeriesCommon();
 
     prepro->copyFrom(*cluster.prepro);
     // timseries
@@ -660,7 +660,7 @@ void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
         cluster.modulation.estimateMemoryUsage(u, true, thermalModulationMax, HOURS_PER_YEAR);
 
         if (cluster.series)
-            cluster.series->estimateMemoryUsage(u);
+            cluster.series->estimateMemoryUsage(u, timeSeriesThermal);
         if (cluster.prepro)
             cluster.prepro->estimateMemoryUsage(u);
 
@@ -669,7 +669,7 @@ void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
     });
 }
 
-void Data::ThermalCluster::group(Data::ThermalClusterName newgrp)
+void Data::ThermalCluster::group(Data::ClusterName newgrp)
 {
     if (not newgrp)
     {
@@ -1289,7 +1289,7 @@ int ThermalClusterListSaveDataSeriesToFolder(const ThermalClusterList* l, const 
     {
         auto& cluster = *(it->second);
         if (cluster.series)
-            ret = DataSeriesThermalSaveToFolder(cluster.series, &cluster, folder) and ret;
+            ret = DataSeriesSaveToFolder(cluster.series, &cluster, folder) and ret;
     }
     return ret;
 }
@@ -1311,7 +1311,7 @@ int ThermalClusterListSaveDataSeriesToFolder(const ThermalClusterList* l,
         if (cluster.series)
         {
             logs.info() << msg << "  " << (ticks * 100 / (1 + l->mapping.size())) << "% complete";
-            ret = DataSeriesThermalSaveToFolder(cluster.series, &cluster, folder) and ret;
+            ret = DataSeriesSaveToFolder(cluster.series, &cluster, folder) and ret;
         }
         ++ticks;
     }
@@ -1331,7 +1331,7 @@ int ThermalClusterListLoadDataSeriesFromFolder(Study& s,
 
     l->each([&](Data::ThermalCluster& cluster) {
         if (cluster.series and (!fast or !cluster.prepro))
-            ret = DataSeriesThermalLoadFromFolder(s, cluster.series, &cluster, folder) and ret;
+            ret = DataSeriesLoadFromFolder(s, cluster.series, &cluster, folder) and ret;
 
         ++options.progressTicks;
         options.pushProgressLogs();
@@ -1357,7 +1357,7 @@ void ThermalClusterListEnsureDataTimeSeries(ThermalClusterList* list)
     {
         auto& cluster = *(it->second);
         if (not cluster.series)
-            cluster.series = new DataSeriesThermal();
+            cluster.series = new DataSeriesCommon();
     }
 }
 
@@ -1369,7 +1369,7 @@ Yuni::uint64 ThermalClusterList::memoryUsage() const
     return ret;
 }
 
-bool ThermalClusterList::rename(Data::ThermalClusterName idToFind, Data::ThermalClusterName newName)
+bool ThermalClusterList::rename(Data::ClusterName idToFind, Data::ClusterName newName)
 {
     if (not idToFind or newName.empty())
         return false;
@@ -1384,7 +1384,7 @@ bool ThermalClusterList::rename(Data::ThermalClusterName idToFind, Data::Thermal
     idToFind.toLower();
 
     // The new ID
-    Data::ThermalClusterName newID;
+    Data::ClusterName newID;
     TransformNameIntoID(newName, newID);
 
     // Looking for the thermal cluster in the list
@@ -1601,7 +1601,7 @@ void Data::ThermalCluster::reset()
     if (not prepro)
         prepro = new PreproThermal();
     if (not series)
-        series = new DataSeriesThermal();
+        series = new DataSeriesCommon();
 
     series->series.reset(1, HOURS_PER_YEAR);
     series->series.flush();
@@ -1791,7 +1791,7 @@ void ThermalClusterList::retrieveTotalCapacityAndUnitCount(double& total, uint& 
     }
 }
 
-bool ThermalClusterList::remove(const Data::ThermalClusterName& id)
+bool ThermalClusterList::remove(const Data::ClusterName& id)
 {
     auto i = cluster.find(id);
     if (i == cluster.end())
@@ -1837,7 +1837,7 @@ void ThermalClusterList::remove(iterator i)
     cluster.erase(i);
 }
 
-bool ThermalClusterList::exists(const Data::ThermalClusterName& id) const
+bool ThermalClusterList::exists(const Data::ClusterName& id) const
 {
     if (not cluster.empty())
     {
@@ -1853,7 +1853,7 @@ uint64 ThermalCluster::memoryUsage() const
     if (prepro)
         amount += prepro->memoryUsage();
     if (series)
-        amount += DataSeriesThermalMemoryUsage(series);
+        amount += DataSeriesMemoryUsage(series);
     return amount;
 }
 

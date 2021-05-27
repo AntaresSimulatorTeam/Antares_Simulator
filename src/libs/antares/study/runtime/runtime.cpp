@@ -30,6 +30,7 @@
 #include "../parameters.h"
 #include "../../date.h"
 #include <limits>
+#include <functional>
 #include "../../emergency.h"
 #include "../memory-usage.h"
 #include "../../config.h"
@@ -491,6 +492,9 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Removing disabled thermal clusters from solver computations
     removeDisabledThermalClustersFromSolverComputations(study);
 
+    // Removing disabled renewable clusters from solver computations
+    removeDisabledRenewableClustersFromSolverComputations(study);
+
     // Must-run mode
     initializeThermalClustersInMustRunMode(study);
 
@@ -600,31 +604,41 @@ void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
     logs.info();
 }
 
-void StudyRuntimeInfos::removeDisabledThermalClustersFromSolverComputations(Study& study)
+static void removeDisabledClusters(Study& study,
+                                   const char* type,
+                                   std::function<uint(Area&)> eachArea)
 {
     logs.info();
-    logs.info() << "Removing disabled thermal clusters in from solver computations...";
-
-    // The number of thermal clusters in 'must-run' mode
+    logs.info() << "Removing disabled " << type << " clusters in from solver computations...";
     uint count = 0;
     // each area...
     for (uint a = 0; a != study.areas.size(); ++a)
     {
         Area& area = *(study.areas.byIndex[a]);
-        count += area.thermal.removeDisabledClusters();
+        count += eachArea(area);
     }
 
     switch (count)
     {
     case 0:
-        logs.info() << "No disabled thermal cluster removed before solver computations";
+        logs.info() << "No disabled " << type << " cluster removed before solver computations";
         break;
     default:
-        logs.info() << "Found " << count
-                    << " disabled thermal clusters and removed them before solver computations";
+        logs.info() << "Found " << count << " disabled " << type
+                    << " clusters and removed them before solver computations";
     }
-    // space
-    logs.info();
+}
+
+void StudyRuntimeInfos::removeDisabledThermalClustersFromSolverComputations(Study& study)
+{
+    removeDisabledClusters(
+      study, "thermal", [](Area& area) { return area.thermal.removeDisabledClusters(); });
+}
+
+void StudyRuntimeInfos::removeDisabledRenewableClustersFromSolverComputations(Study& study)
+{
+    removeDisabledClusters(
+      study, "renewable", [](Area& area) { return area.renewable.removeDisabledClusters(); });
 }
 
 StudyRuntimeInfos::~StudyRuntimeInfos()

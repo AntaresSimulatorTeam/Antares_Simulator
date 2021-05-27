@@ -29,44 +29,13 @@
 
 #include "../../../array/matrix.h"
 #include "../../fwd.h"
+#include "../common/series.h"
 #include "defines.h"
 
 namespace Antares
 {
 namespace Data
 {
-/*!
-** \brief Data series (Thermal)
-*/
-class DataSeriesThermal
-{
-public:
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
-
-    /*!
-    ** \brief Flush memory to swap file
-    */
-    void flush();
-
-    bool invalidate(bool reload = false) const;
-
-    void markAsModified() const;
-
-public:
-    /*!
-    ** \brief Series (MW)
-    **
-    ** Merely a matrix of TimeSeriesCount * 8760 values
-    */
-    Matrix<double, Yuni::sint32> series;
-
-    /*!
-    ** \brief Monte-Carlo
-    */
-    Matrix<Yuni::uint32> timeseriesNumbers;
-
-}; // class DataSeriesThermal
-
 /*!
 ** \brief Load thermal data series from a folder
 ** \ingroup thermalseries
@@ -76,10 +45,10 @@ public:
 ** \param folder The target folder
 ** \return A non-zero value if the operation succeeded, 0 otherwise
 */
-int DataSeriesThermalLoadFromFolder(Study& s,
-                                    DataSeriesThermal* t,
-                                    ThermalCluster* ag,
-                                    const AnyString& folder);
+int DataSeriesLoadFromFolder(Study& s,
+                             DataSeriesCommon* t,
+                             ThermalCluster* ag,
+                             const AnyString& folder);
 
 /*!
 ** \brief Save thermal data series into a folder
@@ -90,18 +59,9 @@ int DataSeriesThermalLoadFromFolder(Study& s,
 ** \param folder The target folder
 ** \return A non-zero value if the operation succeeded, 0 otherwise
 */
-int DataSeriesThermalSaveToFolder(const DataSeriesThermal* t,
-                                  const ThermalCluster* ag,
-                                  const AnyString& folder);
-
-/*!
-** \brief Get the size (bytes) occupied in memory by a `DataSeriesThermal` structure
-*/
-Yuni::uint64 DataSeriesThermalMemoryUsage(DataSeriesThermal* t);
-
+int DataSeriesSaveToFolder(const DataSeriesCommon* t,
+                           const ThermalCluster* ag,
+                           const AnyString& folder);
 } // namespace Data
 } // namespace Antares
-
-#include "series.hxx"
-
 #endif /* __ANTARES_LIBS_STUDY_PARTS_THERMAL_TIMESERIES_H__ */
