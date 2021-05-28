@@ -103,7 +103,7 @@ private:
     void areaHasChanged(Antares::Data::Area* area);
 
     //! End update of the study
-    // void onStudyEndUpdate();
+    void onStudyEndUpdate();
 
     //! Create a new thermal cluster
     void internalAddPlant(void*);
@@ -139,7 +139,7 @@ private:
 
     void onDeleteDropdown(Antares::Component::Button&, wxMenu& menu, void*);
 
-    // void evtPopupDelete(wxCommandEvent&);
+    void evtPopupDelete(wxCommandEvent&);
     // void evtPopupDeleteAll(wxCommandEvent&);
 
     void delayedSelection(Component::HTMLListbox::Item::IItem::Ptr item);

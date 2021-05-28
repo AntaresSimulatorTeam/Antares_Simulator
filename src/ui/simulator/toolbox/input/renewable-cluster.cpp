@@ -39,8 +39,8 @@
 // #include "../components/htmllistbox/datasource/thermal-cluster.h"
 // #include "../components/htmllistbox/item/thermal-cluster.h"
 #include "../components/button.h"
-// #include "../../windows/message.h"
-// #include "../../application/menus.h"
+#include "../../windows/message.h"
+#include "../../application/menus.h"
 // #include <antares/study/scenario-builder/updater.hxx>
 #include <wx/wupdlock.h>
 #include <wx/sizer.h>
@@ -84,8 +84,8 @@ namespace InputSelector
     Forms::ApplWnd::Instance()->onApplicationQuit.connect(this,
                                                           &ThermalCluster::onApplicationOnQuit);
     OnStudyClosed.connect(this, &ThermalCluster::onStudyClosed);
-    OnStudyEndUpdate.connect(this, &ThermalCluster::onStudyEndUpdate);
     */
+    OnStudyEndUpdate.connect(this, &RenewableCluster::onStudyEndUpdate);
 
     if (area)
         area->onAreaChanged.connect(this, &RenewableCluster::areaHasChanged);
@@ -223,13 +223,13 @@ void RenewableCluster::areaHasChanged(Antares::Data::Area* area)
     }
 }
 
-/*
 void RenewableCluster::onStudyEndUpdate()
 {
     if (pRnListbox)
         pRnListbox->forceUpdate();
 }
 
+/*
 void RenewableCluster::renameAggregate(Antares::Data::ThermalCluster* cluster,
                                      const wxString& newName,
                                      const bool broadcast)
@@ -254,14 +254,16 @@ void RenewableCluster::onStudyThermalClusterRenamed(Antares::Data::ThermalCluste
     if (cluster->parentArea == pArea)
         updateInnerValues();
 }
+*/
 
 void RenewableCluster::evtPopupDelete(wxCommandEvent&)
 {
     Yuni::Bind<void()> callback;
-    callback.bind(this, &ThermalCluster::internalDeletePlant, (void*)nullptr);
+    callback.bind(this, &RenewableCluster::internalDeletePlant, (void*)nullptr);
     Dispatcher::GUI::Post(callback);
 }
 
+/*
 void RenewableCluster::evtPopupDeleteAll(wxCommandEvent&)
 {
     Yuni::Bind<void()> callback;
@@ -272,35 +274,25 @@ void RenewableCluster::evtPopupDeleteAll(wxCommandEvent&)
 
 void RenewableCluster::internalDeletePlant(void*)
 {
-    /*
     // Nothing is/was selected. Aborting.
     if (!pArea || !pLastSelectedRenewableCluster || not Data::Study::Current::Valid())
         return;
 
     // The thermal cluster to delete
-    auto* toDelete = pLastSelectedRenewableCluster->thermalAggregate();
+    auto* toDelete = pLastSelectedRenewableCluster->renewableAggregate();
     if (not toDelete)
         return;
 
     auto& mainFrm = *Forms::ApplWnd::Instance();
 
     wxString messageText = wxT("");
-    uint selectedConstraintsCount = Antares::Window::Inspector::SelectionBindingConstraintCount();
-    if (selectedConstraintsCount > 0)
-    {
-        messageText << "\nSelected: ";
-        messageText << selectedConstraintsCount;
-        messageText << " Constraint";
-        if (selectedConstraintsCount > 1)
-            messageText << "s";
-    }
 
     // If the pointer has been, it is guaranteed to be valid
     Window::Message message(&mainFrm,
-                            wxT("Thermal cluster"),
-                            wxT("Delete a thermal cluster"),
+                            wxT("Renewable cluster"),
+                            wxT("Delete a renewable cluster"),
                             wxString()
-                              << wxT("Do you really want to delete the thermal cluster '")
+                              << wxT("Do you really want to delete the renewable cluster '")
                               << wxStringFromUTF8(toDelete->name()) << wxT("' ?") << messageText);
     message.add(Window::Message::btnYes);
     message.add(Window::Message::btnCancel, true);
@@ -312,18 +304,18 @@ void RenewableCluster::internalDeletePlant(void*)
 
         // Because we may need to update this afterwards
         auto study = Data::Study::Current::Get();
-        study->scenarioRulesLoadIfNotAvailable();
+        // study->scenarioRulesLoadIfNotAvailable();
 
         // Update the list
-        Window::Inspector::RemoveThermalCluster(toDelete);
+        // Window::Inspector::RemoveThermalCluster(toDelete);
         pLastSelectedRenewableCluster = nullptr;
         onClusterChanged(nullptr);
 
         // We have to rebuild the scenario builder data, if required
-        ScenarioBuilderUpdater updaterSB(
-          *study); // this will create a temp file, and save it during destructor call
+        // ScenarioBuilderUpdater updaterSB(
+        //   *study); // this will create a temp file, and save it during destructor call
 
-        if (pArea->thermal.list.remove(toDelete->id()))
+        if (pArea->renewable.list.remove(toDelete->id()))
         {
             // We __must__ update the scenario builder data
             // We may delete an area and re-create a new one with the same
@@ -334,30 +326,9 @@ void RenewableCluster::internalDeletePlant(void*)
             Refresh();
             MarkTheStudyAsModified();
             updateInnerValues();
-            pArea->thermal.list.rebuildIndex();
-            pArea->thermal.prepareAreaWideIndexes();
+            pArea->renewable.list.rebuildIndex();
+            pArea->renewable.prepareAreaWideIndexes();
             study->uiinfo->reload();
-
-            // delete associated constraints
-            Antares::Data::BindConstList::iterator BC = study->bindingConstraints.begin();
-            int BCListSize = study->bindingConstraints.size();
-
-            if (BCListSize)
-            {
-                logs.info() << "deleting the constraints ";
-
-                WIP::Locker wip;
-                for (int i = 0; i < BCListSize; i++)
-                {
-                    if (Window::Inspector::isConstraintSelected((*BC)->name()))
-                        study->bindingConstraints.remove(*BC);
-                    else
-                        ++BC;
-                }
-
-                study->uiinfo->reloadBindingConstraints();
-                OnStudyConstraintDelete(nullptr);
-            }
         }
         else
             logs.error() << "Impossible to delete the cluster '" << toDelete->name() << "'";
@@ -365,7 +336,6 @@ void RenewableCluster::internalDeletePlant(void*)
         // The components are now allow to refresh themselves
         OnStudyEndUpdate();
     }
-    */
 }
 
 /*
@@ -605,7 +575,7 @@ void RenewableCluster::delayedSelection(Component::HTMLListbox::Item::IItem::Ptr
         Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
 
         pLastSelectedRenewableCluster = a;
-        auto* cluster = a->thermalAggregate();
+        auto* cluster = a->renewableAggregate();
 
         WIP::Locker wip;
         wxWindowUpdateLocker updater(&mainFrm);
@@ -636,17 +606,18 @@ void RenewableCluster::delayedSelection(Component::HTMLListbox::Item::IItem::Ptr
 
 void RenewableCluster::onDeleteDropdown(Antares::Component::Button&, wxMenu& menu, void*)
 {
-    /*
     wxMenuItem* it;
 
     it = Menu::CreateItem(
       &menu, wxID_ANY, wxT("Delete the selected cluster"), "images/16x16/thermal_remove.png");
+    
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(ThermalCluster::evtPopupDelete),
+                 wxCommandEventHandler(RenewableCluster::evtPopupDelete),
                  nullptr,
                  this);
 
+    /*
     it = Menu::CreateItem(&menu, wxID_ANY, wxT("Delete all"), "images/16x16/empty.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,

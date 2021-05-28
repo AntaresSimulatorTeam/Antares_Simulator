@@ -53,15 +53,15 @@ public:
 
 public:
     /*!
-    ** \brief Add a portion of Html from a thermal cluster to a string
+    ** \brief Add a portion of Html from a renewable cluster to a string
     **
     ** A very simple equivalent html code would be :
     ** \code
-    ** <td>thermal cluster name</td>
+    ** <td>renewable cluster name</td>
     ** \endcode
     **
     ** \param[in,out] out The string where the result will be appended
-    ** \param rn The thermal cluster
+    ** \param rn The renewable cluster
     ** \param searchString The string to highlight
     ** return True if something has been highlighted, false otherwise
     */
@@ -87,8 +87,8 @@ public:
     */
     virtual wxString htmlContent(const wxString& searchString);
 
-    //! Get the attached area
-    Antares::Data::RenewableCluster* thermalAggregate() const;
+    //! Get the attached cluster
+    Antares::Data::RenewableCluster* renewableAggregate() const;
 
     virtual bool interactive() const
     {

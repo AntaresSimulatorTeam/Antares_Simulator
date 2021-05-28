@@ -35,7 +35,7 @@ namespace HTMLListbox
 {
 namespace Item
 {
-inline Antares::Data::RenewableCluster* RenewableCluster::thermalAggregate() const
+inline Antares::Data::RenewableCluster* RenewableCluster::renewableAggregate() const
 {
     return pRenewableCluster;
 }
