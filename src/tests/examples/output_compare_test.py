@@ -95,15 +95,12 @@ def read_csv(file_name):
         return (col_name not in ['Area', 'system', 'annual', 'monthly', 'weekly', 'daily', 'hourly']) and "Unnamed" not in col_name
 
     ignore_rows = [0,1,2,3,5,6]
-    try:
-        return pd.read_csv(file_name,
-                           skiprows=ignore_rows,
-                           sep='\t',
-                           usecols=cols,
-                           low_memory=False,
-                           dtype=float)
-    except ValueError:
-        raise ValueError(file_name)
+    return pd.read_csv(file_name,
+                       skiprows=ignore_rows,
+                       sep='\t',
+                       usecols=cols,
+                       low_memory=False,
+                       dtype=float)
 
 def compare_directory(result_dir, reference_dir):
     assert (result_dir.is_dir())
