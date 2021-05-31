@@ -11,6 +11,7 @@ from study import Study
 
 import pytest
 from trim_column_name import trim_digit_after_last_dot
+from read_utils import read_csv
 
 ALL_STUDIES_PATH = Path('../resources/Antares_Simulator_Tests')
 
@@ -88,19 +89,6 @@ def enable_study_output(study_path, enable):
 
     synthesis_value = "true" if enable else "false"
     st.set_variable(variable = "synthesis", value = synthesis_value, file_nick_name="general")
-
-def read_csv(file_name):
-    def cols(col_name):
-        # Ignore columns with an empty name, labelled "Unammed.N" by pandas
-        return (col_name not in ['Area', 'system', 'annual', 'monthly', 'weekly', 'daily', 'hourly']) and "Unnamed" not in col_name
-
-    ignore_rows = [0,1,2,3,5,6]
-    return pd.read_csv(file_name,
-                       skiprows=ignore_rows,
-                       sep='\t',
-                       usecols=cols,
-                       low_memory=False,
-                       dtype=float)
 
 def compare_directory(result_dir, reference_dir):
     assert (result_dir.is_dir())
