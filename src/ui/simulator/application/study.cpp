@@ -92,6 +92,8 @@ Event<void()> OnStudySimulationSettingsChanged;
 Event<void()> OnStudyNodalOptimizationChanged;
 Event<void()> OnStudyThermalClusterCommonSettingsChanged;
 Event<void(Data::ThermalCluster*)> OnStudyThermalClusterRenamed;
+Event<void()> OnStudyRenewableClusterCommonSettingsChanged;
+Event<void(Data::RenewableCluster*)> OnStudyRenewableClusterRenamed;
 Event<void(Data::Area*)> OnStudyThermalClusterGroupChanged;
 Event<void()> OnStudyUpdatePlaylist;
 Event<void(const void*)> OnInspectorRefresh;

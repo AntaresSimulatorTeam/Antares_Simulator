@@ -55,8 +55,9 @@ RenewableClusterSummarySingleArea::~RenewableClusterSummarySingleArea()
 
 wxString RenewableClusterSummarySingleArea::rowCaption(int rowIndx) const
 {
-    if (pArea)
-        return wxStringFromUTF8(pArea->renewable.list.byIndex[rowIndx]->name());
+    // gp : causes a crash when saving a study
+    // if (pArea)
+    //     return wxStringFromUTF8(pArea->renewable.list.byIndex[rowIndx]->name());
     return wxEmptyString;
 }
 
@@ -75,6 +76,7 @@ wxString RenewableClusterSummarySingleArea::columnCaption(int colIndx) const
 
 wxString RenewableClusterSummarySingleArea::cellValue(int x, int y) const
 {
+    /*
     Data::RenewableCluster* cluster = (pArea and (uint) y < pArea->renewable.list.size())
                                       ? pArea->renewable.list.byIndex[y]
                                       : nullptr;
@@ -89,11 +91,13 @@ wxString RenewableClusterSummarySingleArea::cellValue(int x, int y) const
     case 2:
         return DoubleToWxString(cluster->nominalCapacity);
     }
+    */
     return wxEmptyString;
 }
 
 double RenewableClusterSummarySingleArea::cellNumericValue(int x, int y) const
 {
+    /*
     Data::RenewableCluster* cluster = (pArea and (uint) y < pArea->renewable.list.size())
                                       ? pArea->renewable.list.byIndex[y]
                                       : nullptr;
@@ -108,16 +112,19 @@ double RenewableClusterSummarySingleArea::cellNumericValue(int x, int y) const
     case 3:
         return cluster->nominalCapacity;
     }
+    */
     return 0.;
 }
 
 void RenewableClusterSummarySingleArea::onAreaChanged(Antares::Data::Area* area)
 {
+    /*
     if (pArea != area)
     {
         pArea = area;
         RefreshAllControls(pControl);
     }
+    */
 }
 
 IRenderer::CellStyle RenewableClusterSummarySingleArea::cellStyle(int col, int row) const

@@ -1154,6 +1154,78 @@ bool Study::thermalClusterRename(ThermalCluster* cluster, ThermalClusterName new
     return ret;
 }
 
+// gp : this is a copy, to be factored with thermal counterpart
+bool Study::renewableClusterRename(RenewableCluster* cluster, RenewableClusterName newName, bool)
+{
+    // A name must not be empty
+    if (!cluster or !newName)
+        return false;
+
+    String beautifyname;
+    BeautifyName(beautifyname, newName);
+    if (!beautifyname)
+        return false;
+    newName = beautifyname;
+
+    // Preparing the new area ID
+    RenewableClusterName newID;
+    TransformNameIntoID(newName, newID);
+    if (!newID)
+    {
+        logs.error() << "invalid id transformation";
+        return false;
+    }
+
+    Area& area = *cluster->parentArea;
+    if (not cluster->parentArea)
+    {
+        logs.error() << "renaming renewable cluster: no parent area";
+        return false;
+    }
+
+    // Checking if the area exists
+    {
+        RenewableCluster* found;
+        if ((found = area.renewable.list.find(newID)))
+        {
+            if (found->name() != newName)
+            {
+                area.invalidateJIT = true;
+                found->name(newName);
+                return true;
+            }
+            return false;
+        }
+    }
+
+    // gp : to be updated with renewable clusters
+    // We must have the scenario rules to rename properly the cluster
+    scenarioRulesLoadIfNotAvailable();
+
+    // We will temporary override the id of the area in order to have to
+    // the new name in the archive
+    // Otherwise the values associated to the area will be lost.
+    logs.info() << "  renaming renewable cluster '" << cluster->name() << "' into '" << newName
+        << "'";
+ 
+    area.invalidateJIT = true;
+
+    bool ret = true;
+
+    // Archiving data
+    {
+        ret = area.renewable.list.rename(cluster->id(), newName);
+        area.renewable.prepareAreaWideIndexes();
+        // gp : to be updated with renewable clusters
+        ScenarioBuilderUpdater updaterSB(*this);
+    }
+
+    if (uiinfo)
+        uiinfo->reloadAll();
+
+    return ret;
+}
+
 void Study::destroyAllLoadTSGeneratorData()
 {
     areas.each([&](Data::Area& area) { FreeAndNil(area.load.prepro); });

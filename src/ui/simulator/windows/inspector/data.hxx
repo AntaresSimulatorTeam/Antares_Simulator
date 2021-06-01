@@ -35,7 +35,7 @@ namespace Inspector
 {
 inline void InspectorData::determineEmpty()
 {
-    empty = areas.empty() and links.empty() and clusters.empty() and constraints.empty()
+    empty = areas.empty() and links.empty() and ThClusters.empty() and constraints.empty()
             and studies.empty();
 }
 

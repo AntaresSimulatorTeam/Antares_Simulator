@@ -35,7 +35,7 @@
 // #include "../../toolbox/components/datagrid/renderer/area/timeseries.h"
 #include <wx/stattext.h>
 #include <wx/splitter.h>
-// #include "cluster.h"
+#include "cluster.h"
 
 #include <wx/sizer.h>
 #include "../../toolbox/input/renewable-cluster.h"
@@ -54,7 +54,7 @@ Panel::Panel(Component::Notebook* parent) : Component::Panel(parent)
  ,
  // pageThermalTimeSeries(nullptr),
  // pageThermalPrepro(nullptr),
- // pageThermalCommon(nullptr),
+ pageRenewableCommon(nullptr),
  pNotebookCluster(nullptr),
  pAreaForCommonData(nullptr),
  pAreaSelector(nullptr),
@@ -112,11 +112,11 @@ Panel::Panel(Component::Notebook* parent) : Component::Panel(parent)
         subbook->caption(wxT("Renewable cluster"));
         subbook->theme(Component::Notebook::themeLight);
 
-        /*
         // Common properties of the current thermal cluster
-        pageThermalCommon
-          = subbook->add(new Window::Thermal::CommonProperties(subbook, tag), wxT("Common"));
+        pageRenewableCommon
+          = subbook->add(new Window::Renewable::CommonProperties(subbook, tag), wxT("Common"));
 
+        /*
         // TS-Generator
         pageThermalPrepro = subbook->add(
           new Component::Datagrid::Component(

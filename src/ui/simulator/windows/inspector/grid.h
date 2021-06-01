@@ -79,6 +79,8 @@ protected:
     bool onPropertyChanging_Cluster(wxPGProperty*,
                                     const PropertyNameType& name,
                                     const wxVariant& value);
+    bool onPropertyChanging_RenewableClusters(const PropertyNameType& name,
+                                              const wxVariant& value);
     bool onPropertyChanging_L(wxPGProperty*, const PropertyNameType& name, const wxVariant& value);
     bool onPropertyChanging_S(wxPGProperty*, const PropertyNameType& name, const wxVariant& value);
 

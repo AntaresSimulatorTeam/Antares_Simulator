@@ -234,6 +234,21 @@ static const wxChar* arrayClusterGroup[] = {wxT("Gas"),
 
 enum
 {
+    arrayRnClusterGroupCount = 9
+};
+static const wxChar* arrayRnClusterGroup[] = { wxT("Wind Onshore"),
+                                               wxT("Wind Offshore"),
+                                               wxT("Solar Thermal"),
+                                               wxT("Solar PV"),
+                                               wxT("Solar Rooftop"),
+                                               wxT("ENR 1"),
+                                               wxT("ENR 2"),
+                                               wxT("ENR 3"),
+                                               wxT("ENR 4"),
+                                               nullptr };
+
+enum
+{
     thermalLawCount = 2
 };
 static const wxChar* thermalLaws[] = {wxT("uniform"), wxT("geometric"), nullptr};
@@ -931,6 +946,9 @@ struct PAreaSpilledEnergyCost
     }
 };
 
+// ----------------
+// THERMAL CLUSTERS
+// ----------------
 struct PClusterEnabled
 {
     typedef bool Type;
@@ -1310,6 +1328,75 @@ struct PConstraintType
     static wxString ConvertToString(const Type v)
     {
         return wxStringFromUTF8(Data::BindingConstraint::TypeToCString(v));
+    }
+};
+
+// --------------------
+// RENEWABLE CLUSTERS
+// --------------------
+struct PRnClusterArea
+{
+    typedef wxString Type;
+    static Type Value(const Data::RenewableCluster* cluster)
+    {
+        return wxStringFromUTF8(cluster->parentArea->name);
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return v;
+    }
+};
+
+struct PRnClusterGroup
+{
+    typedef wxString Type;
+    static Type Value(const Data::RenewableCluster* cluster)
+    {
+        return wxStringFromUTF8(cluster->group());
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return v;
+    }
+};
+
+struct PRnClusterEnabled
+{
+    typedef bool Type;
+    static Type Value(const Data::RenewableCluster* cluster)
+    {
+        return cluster->enabled;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return v ? wxT("True") : wxT("False");
+    }
+};
+
+struct PRnClusterUnitCount
+{
+    typedef uint Type;
+    static Type Value(const Data::RenewableCluster* cluster)
+    {
+        // return cluster->unitCount;
+        return 5;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return wxString() << v;
+    }
+};
+
+struct PRnClusterNomCapacity
+{
+    typedef double Type;
+    static Type Value(const Data::RenewableCluster* cluster)
+    {
+        return cluster->nominalCapacity;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return DoubleToWxString(v);
     }
 };
 

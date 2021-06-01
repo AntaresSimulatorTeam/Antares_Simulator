@@ -316,6 +316,19 @@ public:
                               bool force = false);
     //@}
 
+    //! \name Renewable clusters
+    //@{
+    /*!
+    ** \brief Rename a renewable cluster
+    **
+    ** \param cluster The cluster
+    ** \return True if the operation succeeded, false otherwise
+    */
+    bool renewableClusterRename(RenewableCluster* cluster,
+                                RenewableClusterName newName,
+                                bool force = false);
+    //@}
+
     //! \name Read-only
     //@{
     /*!

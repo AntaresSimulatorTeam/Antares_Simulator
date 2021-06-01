@@ -63,7 +63,7 @@ public:
     //! The page related to the cluster's ts-generator data
     // Component::Notebook::Page* pageThermalPrepro;
     //! The page related to the cluster's properties
-    // Component::Notebook::Page* pageThermalCommon;
+    Component::Notebook::Page* pageRenewableCommon;
     //! The page related to the cluster list view
     Component::Notebook::Page* pageRenewableClusterList;
 

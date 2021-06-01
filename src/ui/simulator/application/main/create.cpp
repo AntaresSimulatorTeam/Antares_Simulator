@@ -648,7 +648,7 @@ void ApplWnd::createNBRenewable()
 
     // pageThermalTimeSeries = panel->pageThermalTimeSeries;
     // pageThermalPrepro = panel->pageThermalPrepro;
-    // pageThermalCommon = panel->pageThermalCommon;
+    pageRenewableCommon = panel->pageRenewableCommon;
     pageRenewableClusterList = panel->pageRenewableClusterList;
 }
 

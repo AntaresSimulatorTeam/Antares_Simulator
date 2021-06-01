@@ -252,6 +252,7 @@ ApplWnd::ApplWnd() :
  pageThermalPrepro(nullptr),
  pageThermalCommon(nullptr),
  pageRenewableClusterList(nullptr),
+ pageRenewableCommon(nullptr),
  pageLinksSummary(nullptr),
  pageLinksDetails(nullptr),
  pageNodalOptim(nullptr),
@@ -917,6 +918,8 @@ void ApplWnd::selectAllDefaultPages()
         pageThermalCommon->select();
     if (pageRenewableClusterList)
         pageRenewableClusterList->select();
+    if (pageRenewableCommon)
+        pageRenewableCommon->select();
     if (pageLinksDetails)
         pageLinksDetails->select();
     if (pageWindPreproDailyProfile)

@@ -24,55 +24,58 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_APPLICATION_WINDOW_THERMAL_COMMON_H__
-#define __ANTARES_APPLICATION_WINDOW_THERMAL_COMMON_H__
+#ifndef __ANTARES_APPLICATION_WINDOW_RENEWABLE_COMMON_H__
+#define __ANTARES_APPLICATION_WINDOW_RENEWABLE_COMMON_H__
 
 #include <antares/wx-wrapper.h>
-#include <ui/common/component/panel.h>
-#include "../../toolbox/components/datagrid/component.h"
-#include "../../toolbox/input/thermal-cluster.h"
-#include "../../toolbox/validator.h"
+// #include <ui/common/component/panel.h>
+// #include "../../toolbox/components/datagrid/component.h"
+#include "../../toolbox/input/renewable-cluster.h"
+// #include "../../toolbox/validator.h"
 #include "../../windows/inspector/data.h"
+
+#include "../../toolbox/input/renewable-cluster.h"
 
 namespace Antares
 {
 namespace Window
 {
-namespace Thermal
+namespace Renewable
 {
 class CommonProperties : public Component::Panel, public Yuni::IEventObserver<CommonProperties>
 {
 public:
-    CommonProperties(wxWindow* parent, Toolbox::InputSelector::ThermalCluster* notifier);
+    CommonProperties(wxWindow* parent, Toolbox::InputSelector::RenewableCluster* notifier);
     virtual ~CommonProperties();
 
 private:
-    void onThermalClusterChanged(Data::ThermalCluster* cluster);
+    void onClusterChanged(Data::RenewableCluster* cluster);
 
     void onUpdAggregateListDueToGroupChange();
 
-    void thermalEventConnect();
-    void thermalEventDisconnect();
+    void renewableEventConnect();
+    void renewableEventDisconnect();
 
-    void onStudyThermalClusterRenamed(Data::ThermalCluster* cluster);
 
-    void thermalSettingsChanged();
+    void onStudyRenewableClusterRenamed(Data::RenewableCluster* cluster);
+
+    void renewableSettingsChanged();
 
     void onStudyClosed();
 
 private:
     //! The main sizer
     wxSizer* pMainSizer;
-    Data::ThermalCluster* pAggregate;
-    Toolbox::InputSelector::ThermalCluster* pNotifier;
+    Data::RenewableCluster* pAggregate;
+    Toolbox::InputSelector::RenewableCluster* pNotifier;
     bool pGroupHasChanged;
 
     Yuni::Bind<void(const Window::Inspector::InspectorData::Ptr&)> pUpdateInfoAboutPlant;
 
 }; // class Aggregate
 
-} // namespace Thermal
+} // namespace Renewable
 } // namespace Window
 } // namespace Antares
 
-#endif // __ANTARES_APPLICATION_WINDOW_THERMAL_COMMON_H__
+#endif // __ANTARES_APPLICATION_WINDOW_RENEWABLE_COMMON_H__

@@ -722,6 +722,7 @@ private:
     Component::Notebook::Page* pageThermalCommon;
 
     Component::Notebook::Page* pageRenewableClusterList;
+    Component::Notebook::Page* pageRenewableCommon;
 
     Component::Notebook::Page* pageLinksSummary;
     Component::Notebook::Page* pageLinksDetails;

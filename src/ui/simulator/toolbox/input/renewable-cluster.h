@@ -131,11 +131,11 @@ private:
     */
     void onRnSelected(Component::HTMLListbox::Item::IItem::Ptr item);
 
-    // void onStudyThermalClusterCommonSettingsChanged();
+    void onStudyRenewableClusterCommonSettingsChanged();
 
-    // void onStudyThermalClusterRenamed(Antares::Data::ThermalCluster* cluster);
+    void onStudyRenewableClusterRenamed(Antares::Data::RenewableCluster* cluster);
 
-    // void onStudyThermalClusterGroupChanged(Antares::Data::Area* area);
+    void onStudyRenewableClusterGroupChanged(Antares::Data::Area* area);
 
     void onDeleteDropdown(Antares::Component::Button&, wxMenu& menu, void*);
 

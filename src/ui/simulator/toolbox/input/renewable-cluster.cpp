@@ -90,13 +90,11 @@ namespace InputSelector
     if (area)
         area->onAreaChanged.connect(this, &RenewableCluster::areaHasChanged);
 
-    /*
-    OnStudyThermalClusterRenamed.connect(this, &ThermalCluster::onStudyThermalClusterRenamed);
+    OnStudyRenewableClusterRenamed.connect(this, &RenewableCluster::onStudyRenewableClusterRenamed);
     OnStudyThermalClusterGroupChanged.connect(this,
-                                              &ThermalCluster::onStudyThermalClusterGroupChanged);
+                                              &RenewableCluster::onStudyRenewableClusterGroupChanged);
     OnStudyThermalClusterCommonSettingsChanged.connect(
-      this, &ThermalCluster::onStudyThermalClusterCommonSettingsChanged);
-    */
+      this, &RenewableCluster::onStudyRenewableClusterCommonSettingsChanged);
 }
 
 RenewableCluster::~RenewableCluster()
@@ -248,13 +246,13 @@ void RenewableCluster::renameAggregate(Antares::Data::ThermalCluster* cluster,
     OnStudyThermalClusterRenamed(cluster);
     Window::Inspector::Refresh();
 }
+*/
 
-void RenewableCluster::onStudyThermalClusterRenamed(Antares::Data::ThermalCluster* cluster)
+void RenewableCluster::onStudyRenewableClusterRenamed(Antares::Data::RenewableCluster* cluster)
 {
     if (cluster->parentArea == pArea)
         updateInnerValues();
 }
-*/
 
 void RenewableCluster::evtPopupDelete(wxCommandEvent&)
 {
@@ -627,8 +625,7 @@ void RenewableCluster::onDeleteDropdown(Antares::Component::Button&, wxMenu& men
     */
 }
 
-/*
-void RenewableCluster::onStudyThermalClusterGroupChanged(Antares::Data::Area* area)
+void RenewableCluster::onStudyRenewableClusterGroupChanged(Antares::Data::Area* area)
 {
     if (area && area == pArea)
     {
@@ -638,12 +635,11 @@ void RenewableCluster::onStudyThermalClusterGroupChanged(Antares::Data::Area* ar
     }
 }
 
-void RenewableCluster::onStudyThermalClusterCommonSettingsChanged()
+void RenewableCluster::onStudyRenewableClusterCommonSettingsChanged()
 {
     updateInnerValues();
     Refresh();
 }
-*/
 
 } // namespace InputSelector
 } // namespace Toolbox

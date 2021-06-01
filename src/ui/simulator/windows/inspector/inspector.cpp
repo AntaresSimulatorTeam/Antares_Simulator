@@ -92,7 +92,7 @@ uint SelectionLinksCount()
 
 uint SelectionThermalClusterCount()
 {
-    return ((!(!gData)) ? (uint)gData->clusters.size() : 0);
+    return ((!(!gData)) ? (uint)gData->ThClusters.size() : 0);
 }
 
 uint SelectionBindingConstraintCount()
@@ -102,7 +102,7 @@ uint SelectionBindingConstraintCount()
 
 uint SelectionTotalCount()
 {
-    return (!(!gData)) ? (uint)gData->constraints.size() + (uint)gData->clusters.size()
+    return (!(!gData)) ? (uint)gData->constraints.size() + (uint)gData->ThClusters.size()
                            + (uint)gData->links.size() + (uint)gData->areas.size()
                        : 0;
 }
@@ -361,7 +361,7 @@ void AddThermalCluster(const Data::ThermalCluster* cluster)
 {
     if (!gData)
         gData = new InspectorData(*Data::Study::Current::Get());
-    if (gData->clusters.insert(const_cast<Data::ThermalCluster*>(cluster)).second)
+    if (gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(cluster)).second)
     {
         gData->empty = false;
         if (gInspector)
@@ -379,7 +379,7 @@ void AddThermalClusters(const Data::ThermalCluster::Vector& list)
     bool notEmpty = false;
     Data::ThermalCluster::Vector::const_iterator end = list.end();
     for (Data::ThermalCluster::Vector::const_iterator i = list.begin(); i != end; ++i)
-        notEmpty = gData->clusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
+        notEmpty = gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
 
     if (notEmpty)
     {
@@ -399,7 +399,7 @@ void AddThermalClusters(const Data::ThermalCluster::Set& list)
     bool notEmpty = false;
     Data::ThermalCluster::Set::const_iterator end = list.end();
     for (Data::ThermalCluster::Set::const_iterator i = list.begin(); i != end; ++i)
-        notEmpty = gData->clusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
+        notEmpty = gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
 
     if (notEmpty)
     {
@@ -441,7 +441,7 @@ void RemoveLink(const Data::AreaLink* link)
 
 void RemoveThermalCluster(const Data::ThermalCluster* cluster)
 {
-    if (!(!gData) && gData->clusters.erase(const_cast<Data::ThermalCluster*>(cluster)))
+    if (!(!gData) && gData->ThClusters.erase(const_cast<Data::ThermalCluster*>(cluster)))
     {
         gData->determineEmpty();
         if (gInspector)
@@ -551,7 +551,7 @@ void SelectThermalCluster(const Data::ThermalCluster* cluster)
     gData->clear();
     if (cluster)
     {
-        if (gData->clusters.insert(const_cast<Data::ThermalCluster*>(cluster)).second)
+        if (gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(cluster)).second)
             gData->empty = false;
     }
     if (gInspector)
@@ -570,7 +570,7 @@ void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters)
         auto end = clusters.end();
         for (auto i = clusters.begin(); i != end; ++i)
             notEmpty
-              = (gData->clusters).insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
+              = (gData->ThClusters).insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
 
         if (notEmpty)
             gData->empty = false;
@@ -619,8 +619,8 @@ uint CopyToClipboard()
 
     // copying thermal plants if any
     {
-        auto end = gData->clusters.end();
-        for (auto i = gData->clusters.begin(); i != end; ++i)
+        auto end = gData->ThClusters.end();
+        for (auto i = gData->ThClusters.begin(); i != end; ++i)
         {
             text << "import-thermal-cluster:" << (*i)->parentArea->name << '@' << (*i)->name()
                  << "\n";

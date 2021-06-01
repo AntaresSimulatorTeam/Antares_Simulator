@@ -90,7 +90,7 @@ void CommonProperties::onThermalClusterChanged(Data::ThermalCluster* cluster)
     if (cluster)
     {
         auto* data = new Window::Inspector::InspectorData(*Data::Study::Current::Get());
-        data->clusters.insert(cluster);
+        data->ThClusters.insert(cluster);
         pUpdateInfoAboutPlant(data);
     }
     else

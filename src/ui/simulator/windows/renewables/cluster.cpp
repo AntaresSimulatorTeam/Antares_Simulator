@@ -26,14 +26,16 @@
 */
 
 #include "cluster.h"
-#include "../../windows/inspector.h"
-#include "../../toolbox/components/datagrid/renderer/area/thermalmodulation.h"
-#include "../../toolbox/components/notebook/notebook.h"
-#include "../../toolbox/components/refresh.h"
-#include <antares/study/parts/thermal/cluster.h>
+// #include "../../windows/inspector.h"
+// #include "../../toolbox/components/datagrid/renderer/area/thermalmodulation.h"
+// #include "../../toolbox/components/notebook/notebook.h"
+// #include "../../toolbox/components/refresh.h"
+// #include <antares/study/parts/thermal/cluster.h>
 #include <wx/sizer.h>
 #include "../../windows/inspector/frame.h"
-#include <ui/common/dispatcher/gui.h>
+// #include <ui/common/dispatcher/gui.h>
+
+#include "../../application/study.h"
 
 using namespace Yuni;
 
@@ -41,10 +43,10 @@ namespace Antares
 {
 namespace Window
 {
-namespace Thermal
+namespace Renewable
 {
 CommonProperties::CommonProperties(wxWindow* parent,
-                                   Toolbox::InputSelector::ThermalCluster* notifier) :
+                                   Toolbox::InputSelector::RenewableCluster* notifier) :
  Component::Panel(parent),
  pMainSizer(nullptr),
  pAggregate(nullptr),
@@ -64,18 +66,18 @@ CommonProperties::CommonProperties(wxWindow* parent,
     sizer->Add(vs, 0, wxALL | wxEXPAND);
     sizer->SetItemMinSize(inspector, 280, 50);
 
-    sizer->Add(
-      new Component::Datagrid::Component(
-        this, new Component::Datagrid::Renderer::ThermalClusterCommonModulation(this, notifier)),
-      1,
-      wxALL | wxEXPAND);
+    // sizer->Add(
+    //   new Component::Datagrid::Component(
+    //     this, new Component::Datagrid::Renderer::RenewableClusterCommonModulation(this, notifier)),
+    //   1,
+    // wxALL | wxEXPAND);
 
     // Connection with the notifier
-    thermalEventConnect();
+    renewableEventConnect();
 
-    OnStudyThermalClusterRenamed.connect(this, &CommonProperties::onStudyThermalClusterRenamed);
-    OnStudyThermalClusterCommonSettingsChanged.connect(this,
-                                                       &CommonProperties::thermalSettingsChanged);
+    OnStudyRenewableClusterRenamed.connect(this, &CommonProperties::onStudyRenewableClusterRenamed);
+    OnStudyRenewableClusterCommonSettingsChanged.connect(this,
+                                                       &CommonProperties::renewableSettingsChanged);
     OnStudyClosed.connect(this, &CommonProperties::onStudyClosed);
 }
 
@@ -85,12 +87,12 @@ CommonProperties::~CommonProperties()
     destroyBoundEvents();
 }
 
-void CommonProperties::onThermalClusterChanged(Data::ThermalCluster* cluster)
+void CommonProperties::onClusterChanged(Data::RenewableCluster* cluster)
 {
     if (cluster)
     {
         auto* data = new Window::Inspector::InspectorData(*Data::Study::Current::Get());
-        data->clusters.insert(cluster);
+        data->RnClusters.insert(cluster);
         pUpdateInfoAboutPlant(data);
     }
     else
@@ -102,7 +104,7 @@ void CommonProperties::onThermalClusterChanged(Data::ThermalCluster* cluster)
 
 void CommonProperties::onStudyClosed()
 {
-    onThermalClusterChanged(nullptr);
+    onClusterChanged(nullptr);
 }
 
 void CommonProperties::onUpdAggregateListDueToGroupChange()
@@ -112,42 +114,42 @@ void CommonProperties::onUpdAggregateListDueToGroupChange()
         pGroupHasChanged = false;
         if (pNotifier)
         {
-            thermalEventDisconnect();
+            renewableEventDisconnect();
             pNotifier->update();
             pNotifier->Refresh();
 
             // (Re) Connection with the notifier
             pNotifier->UpdateWindowUI();
-            thermalEventConnect();
+            renewableEventConnect();
         }
     }
 }
 
-void CommonProperties::thermalEventConnect()
+void CommonProperties::renewableEventConnect()
 {
     if (pNotifier)
-        pNotifier->onThermalClusterChanged.connect(this,
-                                                   &CommonProperties::onThermalClusterChanged);
+        pNotifier->onClusterChanged.connect(this,
+                                                   &CommonProperties::onClusterChanged);
 }
 
-void CommonProperties::thermalEventDisconnect()
+void CommonProperties::renewableEventDisconnect()
 {
     if (pNotifier)
-        pNotifier->onThermalClusterChanged.remove(this);
+        pNotifier->onClusterChanged.remove(this);
 }
 
-void CommonProperties::onStudyThermalClusterRenamed(Data::ThermalCluster* cluster)
+void CommonProperties::onStudyRenewableClusterRenamed(Data::RenewableCluster* cluster)
 {
     if (cluster == pAggregate and cluster)
-        onThermalClusterChanged(cluster);
+        onClusterChanged(cluster);
     Dispatcher::GUI::Refresh(this);
 }
 
-void CommonProperties::thermalSettingsChanged()
+void CommonProperties::renewableSettingsChanged()
 {
     Dispatcher::GUI::Refresh(this);
 }
 
-} // namespace Thermal
+} // namespace Renewable
 } // namespace Window
 } // namespace Antares

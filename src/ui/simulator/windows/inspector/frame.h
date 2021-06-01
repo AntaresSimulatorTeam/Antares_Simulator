@@ -198,35 +198,46 @@ private:
     wxPGProperty* pPGLinkWidth;
 
     // About Thermal clusters
-    wxPGProperty* pPGClusterSeparator;
-    wxPGProperty* pPGClusterGeneral;
-    wxPGProperty* pPGClusterParams;
-    wxPGProperty* pPGClusterReliabilityModel;
-    wxPGProperty* pPGClusterCosts;
-    wxPGProperty* pPGClusterName;
-    wxPGProperty* pPGClusterNominalCapacity;
-    wxPGProperty* pPGClusterEnabled;
-    wxPGProperty* pPGClusterUnitCount;
-    wxPGProperty* pPGClusterInstalled;
-    wxPGProperty* pPGClusterMustRun;
-    wxPGProperty* pPGClusterGroup;
-    wxPGProperty* pPGClusterArea;
-    wxPGProperty* pPGClusterCO2;
-    wxPGProperty* pPGClusterVolatilityForced;
-    wxPGProperty* pPGClusterVolatilityPlanned;
-    wxPGProperty* pPGClusterLawForced;
-    wxPGProperty* pPGClusterLawPlanned;
-    wxPGProperty* pPGClusterSpinning;
+    wxPGProperty* pPGThClusterSeparator;
+    wxPGProperty* pPGThClusterGeneral;
+    wxPGProperty* pPGThClusterParams;
+    wxPGProperty* pPGThClusterReliabilityModel;
+    wxPGProperty* pPGThClusterCosts;
+    wxPGProperty* pPGThClusterName;
+    wxPGProperty* pPGThClusterNominalCapacity;
+    wxPGProperty* pPGThClusterEnabled;
+    wxPGProperty* pPGThClusterUnitCount;
+    wxPGProperty* pPGThClusterInstalled;
+    wxPGProperty* pPGThClusterMustRun;
+    wxPGProperty* pPGThClusterGroup;
+    wxPGProperty* pPGThClusterArea;
+    wxPGProperty* pPGThClusterCO2;
+    wxPGProperty* pPGThClusterVolatilityForced;
+    wxPGProperty* pPGThClusterVolatilityPlanned;
+    wxPGProperty* pPGThClusterLawForced;
+    wxPGProperty* pPGThClusterLawPlanned;
+    wxPGProperty* pPGThClusterSpinning;
 
-    wxPGProperty* pPGClusterMarginalCost;
-    wxPGProperty* pPGClusterFixedCost;
-    wxPGProperty* pPGClusterStartupCost;
-    wxPGProperty* pPGClusterOperatingCost;
-    wxPGProperty* pPGClusterRandomSpread;
+    wxPGProperty* pPGThClusterMarginalCost;
+    wxPGProperty* pPGThClusterFixedCost;
+    wxPGProperty* pPGThClusterStartupCost;
+    wxPGProperty* pPGThClusterOperatingCost;
+    wxPGProperty* pPGThClusterRandomSpread;
 
-    wxPGProperty* pPGClusterMinStablePower;
-    wxPGProperty* pPGClusterMinUpTime;
-    wxPGProperty* pPGClusterMinDownTime;
+    wxPGProperty* pPGThClusterMinStablePower;
+    wxPGProperty* pPGThClusterMinUpTime;
+    wxPGProperty* pPGThClusterMinDownTime;
+
+    // About Renewable clusters
+    wxPGProperty* pPGRnClusterSeparator;
+    wxPGProperty* pPGRnClusterGeneral;
+    wxPGProperty* pPGRnClusterName;
+    wxPGProperty* pPGRnClusterGroup;
+    wxPGProperty* pPGRnClusterArea;
+    wxPGProperty* pPGRnClusterParams;
+    wxPGProperty* pPGRnClusterEnabled;
+    wxPGProperty* pPGRnClusterUnitCount;
+    wxPGProperty* pPGRnClusterNominalCapacity;
 
     // About constraints
     wxPGProperty* pPGConstraintSeparator;
