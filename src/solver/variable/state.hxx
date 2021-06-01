@@ -55,7 +55,7 @@ inline void State::startANewYear()
     optimalSolutionCost2 = 0.;
 }
 
-inline void State::yearEndReset()
+inline void State::yearEndResetThermal()
 {
     memset(thermalClusterProductionForYear, 0, sizeof(thermalClusterProductionForYear));
     memset(thermalClusterOperatingCostForYear, 0, sizeof(thermalClusterOperatingCostForYear));
@@ -66,6 +66,10 @@ inline void State::yearEndReset()
     memset(thermalClusterDispatchedUnitsCountForYear,
            0,
            sizeof(thermalClusterDispatchedUnitsCountForYear));
+}
+
+inline void State::yearEndResetRenewable()
+{
     memset(renewableClusterProductionForYear, 0, sizeof(renewableClusterProductionForYear));
 }
 

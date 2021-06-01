@@ -100,9 +100,14 @@ public:
     void startANewYear();
 
     /*!
-    ** \brief Reset internal data for end of year calculations
+    ** \brief Reset thermal internal data for end of year calculations
     */
-    void yearEndReset();
+    void yearEndResetThermal();
+
+    /*!
+    ** \brief Reset renewable internal data for end of year calculations
+    */
+    void yearEndResetRenewable();
 
 public:
     //! Current year
