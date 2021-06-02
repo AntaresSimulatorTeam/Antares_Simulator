@@ -55,20 +55,19 @@ void DataSeriesCommon::estimateMemoryUsage(StudyMemoryUsage& u, enum TimeSeries 
     u.requiredMemoryForInput += sizeof(DataSeriesCommon);
     timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
     uint nbTimeSeries;
-    switch (ts) {
+    switch (ts)
+    {
     case timeSeriesThermal:
-      nbTimeSeries = u.study.parameters.nbTimeSeriesThermal;
-      break;
+        nbTimeSeries = u.study.parameters.nbTimeSeriesThermal;
+        break;
     case timeSeriesRenewable:
-      nbTimeSeries = u.study.parameters.nbTimeSeriesRenewable;
-      break;
+        nbTimeSeries = u.study.parameters.nbTimeSeriesRenewable;
+        break;
     default:
-      nbTimeSeries = 0;
+        nbTimeSeries = 0;
     }
-    series.estimateMemoryUsage(u,
-                               0 != (ts & u.study.parameters.timeSeriesToGenerate),
-                               nbTimeSeries,
-                               HOURS_PER_YEAR);
+    series.estimateMemoryUsage(
+      u, 0 != (ts & u.study.parameters.timeSeriesToGenerate), nbTimeSeries, HOURS_PER_YEAR);
 }
 
 } // namespace Data

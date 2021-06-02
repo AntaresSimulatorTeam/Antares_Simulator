@@ -30,6 +30,7 @@
 #include <yuni/yuni.h>
 #include "../../fwd.h"
 #include "cluster.h"
+#include "cluster_list.h"
 
 namespace Antares
 {
