@@ -522,7 +522,7 @@ bool InspectorGrid::onPropertyChanging_Constraint(wxPGProperty*,
     return false;
 }
 
-bool InspectorGrid::onPropertyChanging_Cluster(wxPGProperty*,
+bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
                                                const PropertyNameType& name,
                                                const wxVariant& value)
 {
@@ -1124,7 +1124,7 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
         {
             const SetType::iterator end = set.end();
             for (SetType::iterator i = set.begin(); i != end; ++i)
-                OnStudyThermalClusterGroupChanged(*i);
+                OnStudyRenewableClusterGroupChanged(*i);
         }
 
         return true;
@@ -1595,7 +1595,7 @@ void InspectorGrid::OnPropertyChanging(wxPropertyGridEvent& event)
         }
         case 'l':
             // cluster
-            result = onPropertyChanging_Cluster(property, propName, value);
+            result = onPropertyChanging_ThermalCluster(property, propName, value);
         }
         break;
     }

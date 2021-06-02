@@ -48,6 +48,7 @@ void InspectorData::clear()
         areas.clear();
         links.clear();
         ThClusters.clear();
+        RnClusters.clear();
         constraints.clear();
         studies.clear();
         empty = true;
@@ -56,7 +57,7 @@ void InspectorData::clear()
 
 uint InspectorData::totalNbOfItems() const
 {
-    return (uint)areas.size() + (uint)links.size() + (uint)ThClusters.size()
+    return (uint)areas.size() + (uint)links.size() + (uint)ThClusters.size() + (uint)RnClusters.size()
            + (uint)constraints.size();
 }
 

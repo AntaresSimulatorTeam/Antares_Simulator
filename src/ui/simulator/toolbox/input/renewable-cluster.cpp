@@ -31,7 +31,7 @@
 #include "../../application/study.h"
 #include "../../application/main.h"
 #include "../../application/wait.h"
-// #include "../../windows/inspector.h"
+#include "../../windows/inspector.h"
 // #include <assert.h>
 #include "../resources.h"
 #include "../create.h"
@@ -91,9 +91,9 @@ namespace InputSelector
         area->onAreaChanged.connect(this, &RenewableCluster::areaHasChanged);
 
     OnStudyRenewableClusterRenamed.connect(this, &RenewableCluster::onStudyRenewableClusterRenamed);
-    OnStudyThermalClusterGroupChanged.connect(this,
+    OnStudyRenewableClusterGroupChanged.connect(this,
                                               &RenewableCluster::onStudyRenewableClusterGroupChanged);
-    OnStudyThermalClusterCommonSettingsChanged.connect(
+    OnStudyRenewableClusterCommonSettingsChanged.connect(
       this, &RenewableCluster::onStudyRenewableClusterCommonSettingsChanged);
 }
 
@@ -305,10 +305,11 @@ void RenewableCluster::internalDeletePlant(void*)
         // study->scenarioRulesLoadIfNotAvailable();
 
         // Update the list
-        // Window::Inspector::RemoveThermalCluster(toDelete);
+        Window::Inspector::RemoveRenewableCluster(toDelete);
         pLastSelectedRenewableCluster = nullptr;
         onClusterChanged(nullptr);
 
+        // gp : uncomment this when GUI's scenario builder comes up 
         // We have to rebuild the scenario builder data, if required
         // ScenarioBuilderUpdater updaterSB(
         //   *study); // this will create a temp file, and save it during destructor call
@@ -578,27 +579,8 @@ void RenewableCluster::delayedSelection(Component::HTMLListbox::Item::IItem::Ptr
         WIP::Locker wip;
         wxWindowUpdateLocker updater(&mainFrm);
         onClusterChanged(cluster);
-        // Window::Inspector::SelectThermalCluster(cluster);
+        Window::Inspector::SelectRenewableCluster(cluster);
         updateInnerValues();
-
-        // Selecting Binding constraints containing the cluster
-
-        /*
-        Data::BindingConstraint::Set constraintlist;
-
-        auto study = Data::Study::Current::Get();
-
-        const Data::BindConstList::iterator cEnd = study->bindingConstraints.end();
-        for (Data::BindConstList::iterator i = study->bindingConstraints.begin(); i != cEnd; ++i)
-        {
-            // alias to the current constraint
-            Data::BindingConstraint* constraint = *i;
-
-            if (constraint->contains(cluster))
-                constraintlist.insert(constraint);
-        }
-        Window::Inspector::AddBindingConstraints(constraintlist);
-        */
     }
 }
 

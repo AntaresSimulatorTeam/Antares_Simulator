@@ -357,6 +357,7 @@ void AddLink(const Data::AreaLink* link)
     }
 }
 
+// gp : never used - to be removed
 void AddThermalCluster(const Data::ThermalCluster* cluster)
 {
     if (!gData)
@@ -442,6 +443,16 @@ void RemoveLink(const Data::AreaLink* link)
 void RemoveThermalCluster(const Data::ThermalCluster* cluster)
 {
     if (!(!gData) && gData->ThClusters.erase(const_cast<Data::ThermalCluster*>(cluster)))
+    {
+        gData->determineEmpty();
+        if (gInspector)
+            gInspector->apply(gData);
+    }
+}
+
+void RemoveRenewableCluster(const Data::RenewableCluster* cluster)
+{
+    if (!(!gData) && gData->RnClusters.erase(const_cast<Data::RenewableCluster*>(cluster)))
     {
         gData->determineEmpty();
         if (gInspector)
@@ -558,6 +569,7 @@ void SelectThermalCluster(const Data::ThermalCluster* cluster)
         gInspector->apply(gData);
 }
 
+// gp : never used - to be removed
 void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters)
 {
     if (!gData)
@@ -573,6 +585,20 @@ void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters)
               = (gData->ThClusters).insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
 
         if (notEmpty)
+            gData->empty = false;
+    }
+    if (gInspector)
+        gInspector->apply(gData);
+}
+
+void SelectRenewableCluster(const Data::RenewableCluster* cluster)
+{
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+    gData->clear();
+    if (cluster)
+    {
+        if (gData->RnClusters.insert(const_cast<Data::RenewableCluster*>(cluster)).second)
             gData->empty = false;
     }
     if (gInspector)
@@ -616,7 +642,8 @@ uint CopyToClipboard()
             }
         }
     }
-
+    // gp : to be taken care of for renewable clusters
+    // gp : Find "import-thermal-cluster:" and make same thing for renewables
     // copying thermal plants if any
     {
         auto end = gData->ThClusters.end();
@@ -771,6 +798,7 @@ bool LinksSelected(std::map<Data::AreaName, std::map<Data::AreaName, bool>>& set
     return true;
 }
 
+// gp : never used - to be removed
 bool IsThermalClusterSelected(const Data::AreaName& area, const Data::ThermalClusterName& name)
 {
     (void)area;

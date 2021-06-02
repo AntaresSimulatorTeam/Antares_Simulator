@@ -127,6 +127,7 @@ void Frame::onSelectAllLinks(wxCommandEvent&)
         }
         data->areas.clear();
         data->ThClusters.clear();
+        data->RnClusters.clear();
         data->empty = data->links.empty();
         gInspector->delayApplyGlobalSelection();
     }
@@ -141,6 +142,7 @@ void Frame::onSelectLink(wxCommandEvent& evt)
         data->links.insert((Data::AreaLink*)mapIDPointer[evt.GetId()]);
         data->areas.clear();
         data->ThClusters.clear();
+        data->RnClusters.clear();
         data->empty = data->links.empty();
         gInspector->delayApplyGlobalSelection();
     }
@@ -160,6 +162,7 @@ void Frame::onSelectAllLinksFromArea(wxCommandEvent& evt)
             data->links.insert(i->second);
         data->areas.clear();
         data->ThClusters.clear();
+        data->RnClusters.clear();
         data->empty = data->links.empty();
         gInspector->delayApplyGlobalSelection();
     }
@@ -966,14 +969,14 @@ void Frame::apply(const InspectorData::Ptr& data)
     if (!hide)
     {
         pPGRnClusterName->Hide(multiple);
-        if (!multiple) // only one thermal cluster
+        if (!multiple) // only one renewable cluster
         {
             p->SetLabel(wxT("RENEWABLE CLUSTER"));
             pPGRnClusterName->SetValueFromString(
                 wxStringFromUTF8((*(data->RnClusters.begin()))->name()));
         }
         else
-            p->SetLabel(wxString() << data->ThClusters.size() << wxT(" RENEWABLE CLUSTERS"));
+            p->SetLabel(wxString() << data->RnClusters.size() << wxT(" RENEWABLE CLUSTERS"));
 
         // Parent Area
         Accumulator<PRnClusterArea>::Apply(pPGRnClusterArea, data->RnClusters);
