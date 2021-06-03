@@ -118,12 +118,12 @@ private:
     ** \brief Event: The application is going to quit
     ** \internal This method prevent against unwanted refresh with dead pointers
     */
-    // void onApplicationOnQuit();
+    void onApplicationOnQuit();
 
     /*!
     ** \brief The study has been closed
     */
-    // void onStudyClosed();
+    void onStudyClosed();
 
     /*!
     ** \brief Event: An item has been selected in the listbox

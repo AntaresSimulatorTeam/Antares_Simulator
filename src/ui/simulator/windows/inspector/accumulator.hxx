@@ -1378,7 +1378,7 @@ struct PRnClusterUnitCount
     typedef uint Type;
     static Type Value(const Data::RenewableCluster* cluster)
     {
-        // return cluster->unitCount;
+        // gp : 5 should be replaced with cluster->unitCount when it is defined
         return 5;
     }
     static wxString ConvertToString(const Type v)

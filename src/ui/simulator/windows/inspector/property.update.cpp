@@ -1178,6 +1178,7 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
         {
             Accumulator<PRnClusterNomCapacity>::Apply(pFrame.pPGRnClusterNominalCapacity,
                 data->RnClusters);
+            // gp : what do we do about that ?
             // AccumulatorCheck<PClusterNomCapacityColor>::ApplyTextColor(
             //     pFrame.pPGThClusterNominalCapacity, data->ThClusters);
         }

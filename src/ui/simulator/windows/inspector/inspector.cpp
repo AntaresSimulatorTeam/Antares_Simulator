@@ -90,6 +90,7 @@ uint SelectionLinksCount()
     return ((!(!gData)) ? (uint)gData->links.size() : 0);
 }
 
+// gp : do we have to add a renewable counterpart ? Check where it is called
 uint SelectionThermalClusterCount()
 {
     return ((!(!gData)) ? (uint)gData->ThClusters.size() : 0);
@@ -100,6 +101,7 @@ uint SelectionBindingConstraintCount()
     return ((!(!gData)) ? (uint)gData->constraints.size() : 0);
 }
 
+// gp : we should add contribution of renewable clusters. Where is this function used and why ? 
 uint SelectionTotalCount()
 {
     return (!(!gData)) ? (uint)gData->constraints.size() + (uint)gData->ThClusters.size()
@@ -370,6 +372,7 @@ void AddThermalCluster(const Data::ThermalCluster* cluster)
     }
 }
 
+// gp : should we add its renewable counterpart ?
 void AddThermalClusters(const Data::ThermalCluster::Vector& list)
 {
     if (list.empty())
@@ -390,6 +393,7 @@ void AddThermalClusters(const Data::ThermalCluster::Vector& list)
     }
 }
 
+// gp : should we add its renewable counterpart ?
 void AddThermalClusters(const Data::ThermalCluster::Set& list)
 {
     if (list.empty())

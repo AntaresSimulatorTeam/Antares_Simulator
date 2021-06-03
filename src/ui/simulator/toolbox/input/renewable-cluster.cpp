@@ -78,13 +78,11 @@ namespace InputSelector
     internalBuildSubControls();
     update();
 
-    /*
     // Connect to the global event
     // Avoid SegV
     Forms::ApplWnd::Instance()->onApplicationQuit.connect(this,
-                                                          &ThermalCluster::onApplicationOnQuit);
-    OnStudyClosed.connect(this, &ThermalCluster::onStudyClosed);
-    */
+                                                          &RenewableCluster::onApplicationOnQuit);
+    OnStudyClosed.connect(this, &RenewableCluster::onStudyClosed);
     OnStudyEndUpdate.connect(this, &RenewableCluster::onStudyEndUpdate);
 
     if (area)
@@ -228,6 +226,7 @@ void RenewableCluster::onStudyEndUpdate()
 }
 
 /*
+// gp : never used - to be removed (same for thermal clusters) 
 void RenewableCluster::renameAggregate(Antares::Data::ThermalCluster* cluster,
                                      const wxString& newName,
                                      const bool broadcast)
@@ -538,7 +537,6 @@ void RenewableCluster::internalClonePlant(void*)
     */
 }
 
-/*
 void RenewableCluster::onApplicationOnQuit()
 {
     // Avoid SegV at exit
@@ -554,7 +552,6 @@ void RenewableCluster::onStudyClosed()
     onClusterChanged(nullptr);
     pRnListbox->clear();
 }
-*/
 
 void RenewableCluster::onRnSelected(Component::HTMLListbox::Item::IItem::Ptr item)
 {

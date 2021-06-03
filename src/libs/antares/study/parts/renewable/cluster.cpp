@@ -61,6 +61,8 @@ static bool RenewableClusterLoadFromProperty(RenewableCluster& cluster, const In
 
     if (p->key == "enabled")
         return p->value.to<bool>(cluster.enabled);
+    if (p->key == "nominalcapacity")
+        return p->value.to<double>(cluster.nominalCapacity);
 
     // The property is unknown
     return false;
@@ -404,6 +406,8 @@ bool RenewableClusterListSaveToFolder(const RenewableClusterList* l, const AnySt
                 s->add("group", cluster.group());
             if (not cluster.enabled)
                 s->add("enabled", "false");
+            if (not Math::Zero(cluster.nominalCapacity))
+                s->add("nominalCapacity", cluster.nominalCapacity);
         });
 
         // Write the ini file

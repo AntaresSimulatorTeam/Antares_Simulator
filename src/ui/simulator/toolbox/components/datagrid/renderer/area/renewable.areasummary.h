@@ -53,7 +53,7 @@ public:
     }
     virtual int height() const
     {
-        return (pArea) ? pArea->thermal.list.size() : 0;
+        return (pArea) ? pArea->renewable.list.size() : 0;
     }
 
     virtual wxString columnCaption(int colIndx) const;
@@ -95,7 +95,7 @@ private:
     Antares::Data::Area* pArea;
     wxWindow* pControl;
     Toolbox::InputSelector::Area* pAreaNotifier;
-}; // class ThermalClusterPrepro
+}; // class RenewableClusterSummarySingleArea
 
 } // namespace Renderer
 } // namespace Datagrid

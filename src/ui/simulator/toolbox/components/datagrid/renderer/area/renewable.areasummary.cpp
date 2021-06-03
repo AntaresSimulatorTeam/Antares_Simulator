@@ -55,9 +55,8 @@ RenewableClusterSummarySingleArea::~RenewableClusterSummarySingleArea()
 
 wxString RenewableClusterSummarySingleArea::rowCaption(int rowIndx) const
 {
-    // gp : causes a crash when saving a study
-    // if (pArea)
-    //     return wxStringFromUTF8(pArea->renewable.list.byIndex[rowIndx]->name());
+    if (pArea)
+        return wxStringFromUTF8(pArea->renewable.list.byIndex[rowIndx]->name());
     return wxEmptyString;
 }
 
@@ -76,12 +75,12 @@ wxString RenewableClusterSummarySingleArea::columnCaption(int colIndx) const
 
 wxString RenewableClusterSummarySingleArea::cellValue(int x, int y) const
 {
-    /*
     Data::RenewableCluster* cluster = (pArea and (uint) y < pArea->renewable.list.size())
                                       ? pArea->renewable.list.byIndex[y]
                                       : nullptr;
-    if (!cluster->enabled)
-        return wxEmptyString;
+    // gp : do we wish to have the line empty if cluster disabled
+    // if (!cluster->enabled)
+    //    return wxEmptyString;
     switch (x)
     {
     case 0:
@@ -89,42 +88,44 @@ wxString RenewableClusterSummarySingleArea::cellValue(int x, int y) const
     case 1:
         return cluster->enabled ? wxT("Yes") : wxT("no");
     case 2:
+        // gp : to be replaced with "cluster->unitCount" when it is defined
+        return wxString() << 5;
+    case 3:
         return DoubleToWxString(cluster->nominalCapacity);
     }
-    */
     return wxEmptyString;
 }
 
 double RenewableClusterSummarySingleArea::cellNumericValue(int x, int y) const
 {
-    /*
     Data::RenewableCluster* cluster = (pArea and (uint) y < pArea->renewable.list.size())
                                       ? pArea->renewable.list.byIndex[y]
                                       : nullptr;
-    if (!cluster->enabled)
-        return 0.;
+    // gp : do we wish to have the line empty if cluster disabled
+    // if (!cluster->enabled)
+    //     return 0.;
     switch (x)
     {
     case 0:
         return 0.;
     case 1:
         return cluster->enabled ? 1. : 0.;
+    case 2:
+        // gp : to be replaced with "cluster->unitCount" when it is defined
+        return 5;
     case 3:
         return cluster->nominalCapacity;
     }
-    */
     return 0.;
 }
 
 void RenewableClusterSummarySingleArea::onAreaChanged(Antares::Data::Area* area)
 {
-    /*
     if (pArea != area)
     {
         pArea = area;
         RefreshAllControls(pControl);
     }
-    */
 }
 
 IRenderer::CellStyle RenewableClusterSummarySingleArea::cellStyle(int col, int row) const
@@ -141,14 +142,6 @@ struct NoCheck
     static bool Validate(const T&)
     {
         return true;
-    }
-};
-
-struct CheckMinUpDownTime
-{
-    static bool Validate(uint f)
-    {
-        return (f == 1) || (f == 24) || (f == 168);
     }
 };
 
@@ -223,6 +216,7 @@ bool RenewableClusterSummarySingleArea::cellValue(int x, int y, const String& v)
                       ? pArea->renewable.list.byIndex[y]
                       : nullptr;
 
+    uint unitCount = 5; // gp : to be removed and replaced lower
     if (cluster)
     {
         switch (x)
@@ -239,6 +233,8 @@ bool RenewableClusterSummarySingleArea::cellValue(int x, int y, const String& v)
         case 1:
             return UpdateBool<NoCheck>(cluster->enabled, v);
         case 2:
+            return UpdateUnsignedLong<CheckUnitCount>(unitCount, v);
+        case 3:
             return UpdateDouble<NoCheck>(cluster->nominalCapacity, v);
         }
     }

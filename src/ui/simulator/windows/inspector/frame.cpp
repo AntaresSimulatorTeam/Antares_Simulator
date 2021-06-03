@@ -168,6 +168,7 @@ void Frame::onSelectAllLinksFromArea(wxCommandEvent& evt)
     }
 }
 
+// gp : never used - to be removed
 void Frame::onSelectAllPlants(wxCommandEvent&)
 {
     InspectorData::Ptr data = gData;
@@ -189,6 +190,7 @@ void Frame::onSelectAllPlants(wxCommandEvent&)
     }
 }
 
+// gp : never used - to be removed
 void Frame::onSelectPlant(wxCommandEvent& evt)
 {
     InspectorData::Ptr data = gData;
@@ -203,6 +205,7 @@ void Frame::onSelectPlant(wxCommandEvent& evt)
     }
 }
 
+// gp : never used - to be removed
 void Frame::onSelectAllPlantsFromArea(wxCommandEvent& evt)
 {
     InspectorData::Ptr data = gData;
