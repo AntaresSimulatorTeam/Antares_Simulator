@@ -641,6 +641,8 @@ void ApplWnd::onMainNotebookPageChanging(Component::Notebook::Page& page)
         pCurrentEquipmentPage = Data::timeSeriesLoad;
     else if (page.name() == wxT("thermal"))
         pCurrentEquipmentPage = Data::timeSeriesThermal;
+    else if (page.name() == wxT("renewable"))
+        pCurrentEquipmentPage = Data::timeSeriesRenewable;
     else if (page.name() == wxT("solar"))
         pCurrentEquipmentPage = Data::timeSeriesSolar;
     else if (page.name() == wxT("wind"))
