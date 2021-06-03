@@ -106,6 +106,7 @@ bool RenewableCluster::HtmlContent(wxString& out,
 
 wxString RenewableCluster::htmlContent(const wxString& searchString)
 {
+    // gp : to be adapted
     if (pRenewableCluster)
     {
         wxString d;

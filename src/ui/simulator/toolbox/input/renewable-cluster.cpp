@@ -191,6 +191,7 @@ void RenewableCluster::updateInnerValues()
     {
         double total = 0.;
         uint unitCount = 0;
+        // gp : to be adapted
         // pArea->thermal.list.retrieveTotalCapacityAndUnitCount(total, unitCount);
         pArea->renewable.list.retrieveTotalCapacity(total);
 
@@ -260,6 +261,7 @@ void RenewableCluster::evtPopupDelete(wxCommandEvent&)
     Dispatcher::GUI::Post(callback);
 }
 
+// gp : to be adapted
 /*
 void RenewableCluster::evtPopupDeleteAll(wxCommandEvent&)
 {
@@ -336,6 +338,7 @@ void RenewableCluster::internalDeletePlant(void*)
     }
 }
 
+// gp : to be adapted
 /*
 void RenewableCluster::internalDeleteAll(void*)
 {
@@ -427,6 +430,7 @@ void RenewableCluster::internalAddPlant(void*)
             sFl.clear() << "new cluster " << indx;
         }
 
+        // gp : to be adapted
         /*
         // We have to rebuild the scenario builder data, if required
         ScenarioBuilderUpdater updaterSB(*study);
@@ -455,6 +459,7 @@ void RenewableCluster::internalAddPlant(void*)
     }
 }
 
+// gp : to be adapted
 void RenewableCluster::internalClonePlant(void*)
 {
     /*
@@ -594,6 +599,7 @@ void RenewableCluster::onDeleteDropdown(Antares::Component::Button&, wxMenu& men
                  nullptr,
                  this);
 
+    // gp : to be adapted
     /*
     it = Menu::CreateItem(&menu, wxID_ANY, wxT("Delete all"), "images/16x16/empty.png");
     menu.Connect(it->GetId(),

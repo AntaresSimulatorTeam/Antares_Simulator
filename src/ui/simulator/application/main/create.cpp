@@ -646,6 +646,7 @@ void ApplWnd::createNBRenewable()
     auto* panel = new Window::Renewable::Panel(pNotebook);
     pNotebook->add(panel, wxT("renewable"), wxT("Renewable"));
 
+    // gp : to be adapted
     // pageThermalTimeSeries = panel->pageThermalTimeSeries;
     // pageThermalPrepro = panel->pageThermalPrepro;
     pageRenewableCommon = panel->pageRenewableCommon;

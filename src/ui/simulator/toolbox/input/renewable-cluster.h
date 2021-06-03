@@ -64,6 +64,7 @@ public:
 
     virtual void update();
 
+    // gp : to be adapted
     /*
     virtual wxPoint recommendedSize() const
     {
@@ -73,6 +74,7 @@ public:
 
     void updateInnerValues();
 
+    // gp : should be removed
     /*!
     ** \brief Rename a thermal cluster and refresh inner values
     **
@@ -92,6 +94,7 @@ protected:
     ** \brief Create all needed controls (called by the constructor)
     */
     virtual void internalBuildSubControls();
+    // gp : to be adapted
     //! Event: a group has been changed
     // void onThermalGroupChanged(Antares::Data::Area* area);
 
@@ -112,6 +115,7 @@ private:
     //! Delete the selection thermal cluster
     void internalClonePlant(void*);
 
+    // gp : to be adapted
     // void internalDeleteAll(void*);
 
     /*!
@@ -140,6 +144,7 @@ private:
     void onDeleteDropdown(Antares::Component::Button&, wxMenu& menu, void*);
 
     void evtPopupDelete(wxCommandEvent&);
+    // gp : to be adapted
     // void evtPopupDeleteAll(wxCommandEvent&);
 
     void delayedSelection(Component::HTMLListbox::Item::IItem::Ptr item);

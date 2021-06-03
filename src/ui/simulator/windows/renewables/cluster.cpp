@@ -66,6 +66,7 @@ CommonProperties::CommonProperties(wxWindow* parent,
     sizer->Add(vs, 0, wxALL | wxEXPAND);
     sizer->SetItemMinSize(inspector, 280, 50);
 
+    // gp : to be adapted
     // sizer->Add(
     //   new Component::Datagrid::Component(
     //     this, new Component::Datagrid::Renderer::RenewableClusterCommonModulation(this, notifier)),

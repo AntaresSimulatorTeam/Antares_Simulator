@@ -116,6 +116,7 @@ Panel::Panel(Component::Notebook* parent) : Component::Panel(parent)
         pageRenewableCommon
           = subbook->add(new Window::Renewable::CommonProperties(subbook, tag), wxT("Common"));
 
+        // gp : to be adapted
         /*
         // TS-Generator
         pageThermalPrepro = subbook->add(

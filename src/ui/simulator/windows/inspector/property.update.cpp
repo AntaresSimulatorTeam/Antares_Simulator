@@ -1130,6 +1130,7 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
         return true;
     }
 
+    // gp : to be adapted
     // unit
     /*
     if (name == "rn-cluster.unit")

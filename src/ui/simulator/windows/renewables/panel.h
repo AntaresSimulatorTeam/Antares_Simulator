@@ -58,6 +58,7 @@ public:
     //@}
 
 public:
+    // gp : to be adapted
     //! The page related to the cluster's timeseries
     // Component::Notebook::Page* pageThermalTimeSeries;
     //! The page related to the cluster's ts-generator data
