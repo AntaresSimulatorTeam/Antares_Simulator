@@ -98,33 +98,17 @@ uint PartRenewable::removeDisabledClusters()
     if (list.empty())
         return 0;
 
-    uint count = 0;
-    bool doWeContinue;
-    do
-    {
-        doWeContinue = false;
-        auto end = list.end();
-        for (auto i = list.begin(); i != end; ++i)
-        {
-            if (!(i->second)->enabled)
-            {
-                // Removing the renewable cluster from the main list...
-                list.remove(i);
+    std::vector<ClusterName> disabledClusters;
 
-                ++count;
+    for (auto& it : list) {
+      if (!it.second->enabled)
+          disabledClusters.push_back(it.first);
+    }
 
-                // the iterator has been invalidated, loop again
-                doWeContinue = true;
-                break;
-            }
-        }
-    } while (doWeContinue);
+    for (auto& cluster : disabledClusters)
+        list.remove(cluster);
 
-    // if some renewable cluster has been moved, we must rebuild all the indexes
-    if (count)
-        list.rebuildIndex();
-
-    return count;
+    return disabledClusters.size();
 }
 
 void PartRenewable::reset()
