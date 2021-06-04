@@ -262,7 +262,7 @@ void Area::ensureAllDataAreCreated()
     if (!hydro.series)
         hydro.series = new DataSeriesHydro();
     ThermalClusterListEnsureDataTimeSeries(&thermal.list);
-    RenewableClusterListEnsureDataTimeSeries(&renewable.list);
+    renewable.list.ensureDataTimeSeries();
 
     // Prepro
     if (!load.prepro)

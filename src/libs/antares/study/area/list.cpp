@@ -339,10 +339,10 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
     {
         buffer.clear() << folder << SEP << "input" << SEP << "renewables" << SEP << "clusters"
                        << SEP << area.id;
-        ret = RenewableClusterListSaveToFolder(&area.renewable.list, buffer) and ret;
+        ret = area.renewable.list.saveToFolder(buffer) and ret;
 
         buffer.clear() << folder << SEP << "input" << SEP << "renewables" << SEP << "series";
-        ret = RenewableClusterListSaveDataSeriesToFolder(&area.renewable.list, buffer) and ret;
+        ret = area.renewable.list.saveDataSeriesToFolder(buffer) and ret;
     }
     return ret;
 }
@@ -1080,9 +1080,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // Renewable cluster list
     {
         buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
-        ret = RenewableClusterListLoadDataSeriesFromFolder(
-                study, options, &area.renewable.list, buffer)
-              and ret;
+        ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer) and ret;
         // flush
         area.renewable.list.flush();
     }
@@ -1461,8 +1459,7 @@ void AreaListEnsureDataRenewableTimeSeries(AreaList* l)
 {
     assert(l);
 
-    l->each(
-      [&](Data::Area& area) { RenewableClusterListEnsureDataTimeSeries(&area.renewable.list); });
+    l->each([&](Data::Area& area) { area.renewable.list.ensureDataTimeSeries(); });
 }
 
 void AreaListEnsureDataThermalPrepro(AreaList* l)

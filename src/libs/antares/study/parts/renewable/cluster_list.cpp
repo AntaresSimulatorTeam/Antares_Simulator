@@ -402,5 +402,114 @@ bool RenewableClusterList::remove(const Data::ClusterName& id)
     return true;
 }
 
+bool RenewableClusterList::saveToFolder(const AnyString& folder) const
+{
+    // Make sure the folder is created
+    if (IO::Directory::Create(folder))
+    {
+        Clob buffer;
+        bool ret = true;
+
+        // Allocate the inifile structure
+        IniFile ini;
+
+        // Browse all clusters
+        each([&](const Data::Cluster& cluster) {
+            // Adding a section to the inifile
+            IniFile::Section* s = ini.addSection(cluster.name());
+
+            // The section must not be empty
+            // This key will be silently ignored the next time
+            s->add("name", cluster.name());
+
+            if (not cluster.group().empty())
+                s->add("group", cluster.group());
+            if (not cluster.enabled)
+                s->add("enabled", "false");
+        });
+
+        // Write the ini file
+        buffer.clear() << folder << SEP << "list.ini";
+        ret = ini.save(buffer) and ret;
+    }
+    else
+    {
+        logs.error() << "I/O Error: impossible to create '" << folder << "'";
+        return false;
+    }
+
+    return true;
+}
+
+int RenewableClusterList::saveDataSeriesToFolder(const AnyString& folder) const
+{
+    if (empty())
+        return 1;
+
+    int ret = 1;
+
+    auto end = cluster.end();
+    for (auto it = cluster.begin(); it != end; ++it)
+    {
+        auto& cluster = *(it->second);
+        if (cluster.series)
+            ret = DataSeriesSaveToFolder(cluster.series, &cluster, folder) and ret;
+    }
+    return ret;
+}
+
+int RenewableClusterList::saveDataSeriesToFolder(const AnyString& folder, const String& msg) const
+{
+    if (empty())
+        return 1;
+
+    int ret = 1;
+    uint ticks = 0;
+
+    auto end = cluster.end();
+    for (auto it = cluster.begin(); it != end; ++it)
+    {
+        auto& cluster = *(it->second);
+        if (cluster.series)
+        {
+            logs.info() << msg << "  " << (ticks * 100 / (1 + this->cluster.size()))
+                        << "% complete";
+            ret = DataSeriesSaveToFolder(cluster.series, &cluster, folder) and ret;
+        }
+        ++ticks;
+    }
+    return ret;
+}
+
+int RenewableClusterList::loadDataSeriesFromFolder(Study& s,
+                                                   const StudyLoadOptions& options,
+                                                   const AnyString& folder)
+{
+    if (empty())
+        return 1;
+
+    int ret = 1;
+
+    each([&](Data::RenewableCluster& cluster) {
+        if (cluster.series)
+            ret = DataSeriesLoadFromFolder(s, cluster.series, &cluster, folder) and ret;
+
+        ++options.progressTicks;
+        options.pushProgressLogs();
+    });
+    return ret;
+}
+
+void RenewableClusterList::ensureDataTimeSeries()
+{
+    auto end = cluster.end();
+    for (auto it = cluster.begin(); it != end; ++it)
+    {
+        auto& cluster = *(it->second);
+        if (not cluster.series)
+            cluster.series = new DataSeriesCommon();
+    }
+}
+
 } // namespace Data
 } // namespace Antares

@@ -203,20 +203,6 @@ public:
 }; // class RenewableCluster
 
 /*!
-** \brief Load data related to time-series from a list of renewable clusters from a folder
-** \ingroup renewableclusters
-**
-** \todo Remaining of old C-library. this routine should be moved into the appropriate class
-** \param l A list of renewable clusters
-** \param folder The target folder
-** \return A non-zero value if the operation succeeded, 0 otherwise
-*/
-int RenewableClusterListLoadDataSeriesFromFolder(Study& study,
-                                                 const StudyLoadOptions& options,
-                                                 RenewableClusterList* l,
-                                                 const AnyString& folder);
-
-/*!
 ** \brief Save data related to time-series from a list of renewable clusters to a folder
 ** \ingroup renewableclusters
 **
@@ -226,15 +212,6 @@ int RenewableClusterListLoadDataSeriesFromFolder(Study& study,
 ** \param msg Message to display
 ** \return A non-zero value if the operation succeeded, 0 otherwise
 */
-int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l,
-                                               const AnyString& folder);
-int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l,
-                                               const AnyString& folder,
-                                               const YString& msg);
-
-bool RenewableClusterListSaveToFolder(const RenewableClusterList* l, const AnyString& folder);
-
-void RenewableClusterListEnsureDataTimeSeries(RenewableClusterList* list);
 
 struct CompareRenewableClusterName final
 {

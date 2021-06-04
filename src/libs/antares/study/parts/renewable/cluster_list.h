@@ -229,6 +229,18 @@ public:
     ** These values are modified by 'RenewableClusterListAdd()'
     */
     uint groupCount[renewableGroupMax];
+
+    int loadDataSeriesFromFolder(Study& study,
+                                 const StudyLoadOptions& options,
+                                 const AnyString& folder);
+
+    int saveDataSeriesToFolder(const AnyString& folder) const;
+
+    int saveDataSeriesToFolder(const AnyString& folder, const YString& msg) const;
+
+    bool saveToFolder(const AnyString& folder) const;
+
+    void ensureDataTimeSeries();
 }; // class RenewableClusterList
 } // namespace Data
 } // namespace Antares
