@@ -94,7 +94,7 @@ public:
     void markAsModified() const;
 
 public:
-    //! List of all renewable clusters (enabled and disabled) except must-run clusters
+    //! List of all renewable clusters (enabled and disabled)
     RenewableClusterList list;
 
     /*!
@@ -106,7 +106,7 @@ public:
     ** This list is mainly used to ensure the same order of the
     ** renewable clusters in the outputs.
     */
-    RenewableCluster** clusters;
+    Cluster** clusters;
     //! How many clusters have we got ?
     // Only available from the solver
     uint clusterCount;

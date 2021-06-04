@@ -38,7 +38,7 @@ namespace Antares
 {
 namespace Data
 {
-PartRenewable::PartRenewable() : clusters(nullptr), clusterCount((uint)-1)
+PartRenewable::PartRenewable() : list(renewableGroupMax), clusters(nullptr), clusterCount((uint)-1)
 {
 }
 
@@ -78,14 +78,14 @@ void PartRenewable::prepareAreaWideIndexes()
         return;
     }
 
-    typedef RenewableCluster* RenewableClusterPointer;
+    typedef Cluster* RenewableClusterPointer;
     clusters = new RenewableClusterPointer[clusterCount];
 
     auto end = list.end();
     uint idx = 0;
     for (auto i = list.begin(); i != end; ++i)
     {
-        RenewableCluster* t = i->second;
+        Cluster* t = i->second;
         t->areaWideIndex = idx;
         clusters[idx] = t;
         ++idx;

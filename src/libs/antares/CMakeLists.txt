@@ -201,6 +201,9 @@ set(SRC_STUDY_PART_COMMON
 	study/parts/common/series.cpp
     study/parts/common/cluster.cpp
     study/parts/common/cluster.h
+    study/parts/common/cluster_list.h
+	study/parts/common/cluster_list.hxx
+	study/parts/common/cluster_list.cpp
     )
 source_group("study\\part\\common" FILES ${SRC_STUDY_PART_COMMON})
 
@@ -224,8 +227,7 @@ set(SRC_STUDY_PART_RENEWABLE
 	study/parts/renewable/cluster.h
 	study/parts/renewable/cluster.cpp
     study/parts/renewable/cluster_list.h
-	study/parts/renewable/cluster_list.hxx
-	study/parts/renewable/cluster_list.cpp
+    study/parts/renewable/cluster_list.cpp
     )
 source_group("study\\part\\renewable" FILES ${SRC_STUDY_PART_RENEWABLE})
 

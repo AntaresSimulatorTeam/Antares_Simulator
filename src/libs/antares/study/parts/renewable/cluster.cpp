@@ -46,14 +46,13 @@ namespace Antares
 namespace Data
 {
 Data::RenewableCluster::RenewableCluster(Area* parent, uint /*nbParallelYears*/) :
- Cluster(parent), groupID(renewableOther1), areaWideIndex((uint)-1)
+ Cluster(parent), groupID(renewableOther1)
 {
     // assert
     assert(parent and "A parent for a renewable dispatchable cluster can not be null");
 }
 
-Data::RenewableCluster::RenewableCluster(Area* parent) :
- Cluster(parent), groupID(renewableOther1), areaWideIndex((uint)-1)
+Data::RenewableCluster::RenewableCluster(Area* parent) : Cluster(parent), groupID(renewableOther1)
 {
     // assert
     assert(parent and "A parent for a renewable dispatchable cluster can not be null");
@@ -72,17 +71,15 @@ void RenewableCluster::flush()
 #endif
 }
 
+uint RenewableCluster::groupId() const
+{
+    return groupID;
+}
+
 void Data::RenewableCluster::invalidateArea()
 {
     if (parentArea)
         parentArea->invalidate();
-}
-
-String Antares::Data::RenewableCluster::getFullName() const
-{
-    String s;
-    s << parentArea->name << "." << pID;
-    return s;
 }
 
 void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)

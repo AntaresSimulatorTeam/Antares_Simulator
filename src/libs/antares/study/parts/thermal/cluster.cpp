@@ -360,7 +360,6 @@ static bool ThermalClusterLoadCouplingSection(const AnyString& filename,
 Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
  Cluster(parent),
  groupID(thermalDispatchGrpOther),
- areaWideIndex((uint)-1),
  mustrun(false),
  mustrunOrigin(false),
  nominalCapacityWithSpinning(0.),
@@ -405,7 +404,6 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
 Data::ThermalCluster::ThermalCluster(Area* parent) :
  Cluster(parent),
  groupID(thermalDispatchGrpOther),
- areaWideIndex((uint)-1),
  mustrun(false),
  mustrunOrigin(false),
  nominalCapacityWithSpinning(0.),
@@ -462,6 +460,11 @@ void ThermalCluster::flush()
 }
 #endif
 
+uint ThermalCluster::groupId() const
+{
+    return groupID;
+}
+
 #ifdef ANTARES_SWAP_SUPPORT
 void ThermalClusterList::flush()
 {
@@ -475,13 +478,6 @@ void Data::ThermalCluster::invalidateArea()
 {
     if (parentArea)
         parentArea->invalidate();
-}
-
-String Antares::Data::ThermalCluster::getFullName() const
-{
-    String s;
-    s << parentArea->name << "." << pID;
-    return s;
 }
 
 void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)

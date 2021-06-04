@@ -11,7 +11,13 @@ namespace Antares
 namespace Data
 {
 Cluster::Cluster(Area* parent) :
- unitCount(0), enabled(true), parentArea(parent), index(0), nominalCapacity(0.), series(nullptr)
+ unitCount(0),
+ enabled(true),
+ parentArea(parent),
+ index(0),
+ nominalCapacity(0.),
+ areaWideIndex((uint)-1),
+ series(nullptr)
 
 {
 }
@@ -29,6 +35,13 @@ const ClusterName& Cluster::name() const
 const ClusterName& Cluster::id() const
 {
     return pID;
+}
+
+Yuni::String Cluster::getFullName() const
+{
+    Yuni::String s;
+    s << parentArea->name << "." << pID;
+    return s;
 }
 
 void Cluster::setName(const AnyString& newname)
@@ -49,8 +62,7 @@ int Cluster::saveDataSeriesToFolder(const AnyString& folder) const
         if (Yuni::IO::Directory::Create(buffer))
         {
             int ret = 1;
-            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP
-                           << "series.txt";
+            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series.txt";
             ret = series->series.saveToCSVFile(buffer, 0) && ret;
 
             return ret;
@@ -60,8 +72,7 @@ int Cluster::saveDataSeriesToFolder(const AnyString& folder) const
     return 1;
 }
 
-int Cluster::loadDataSeriesFromFolder(Study& s,
-                                      const AnyString& folder)
+int Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
 {
     if (not folder.empty())
     {

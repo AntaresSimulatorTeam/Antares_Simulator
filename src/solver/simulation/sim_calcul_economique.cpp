@@ -598,7 +598,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 + scratchpad.mustrunSum[indx];
 
             // Renewable
-            area.renewable.list.each([&](const Data::RenewableCluster& cluster) {
+            area.renewable.list.each([&](const Cluster& cluster) {
                 assert((uint)tsIndex.RenouvelableParPalier[cluster.areaWideIndex]
                        < cluster.series->series.width);
                 assert((uint)indx < cluster.series->series.height);

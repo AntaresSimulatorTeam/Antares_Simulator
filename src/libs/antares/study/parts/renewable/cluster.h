@@ -33,9 +33,6 @@
 #include "defines.h"
 #include "../common/cluster.h"
 #include "../../fwd.h"
-#include <set>
-#include <map>
-#include <vector>
 
 namespace Antares
 {
@@ -66,23 +63,11 @@ enum RenewableGroup
     renewableGroupMax
 };
 
-struct CompareRenewableClusterName;
-
 /*!
 ** \brief A single renewable cluster
 */
 class RenewableCluster final : public Cluster
 {
-public:
-    //! Set of renewable clusters
-    typedef std::set<RenewableCluster*, CompareRenewableClusterName> Set;
-    //! Set of renewable clusters (pointer)
-    typedef std::set<RenewableCluster*> SetPointer;
-    //! Map of renewable clusters
-    typedef std::map<ClusterName, RenewableCluster*> Map;
-    //! Vector of renewable clusters
-    typedef std::vector<Data::RenewableCluster*> Vector;
-
 public:
     /*!
     ** \brief Get the group name string
@@ -105,12 +90,12 @@ public:
     /*!
     ** \brief Invalidate all data associated to the renewable cluster
     */
-    bool invalidate(bool reload) const;
+    bool invalidate(bool reload) const override;
 
     /*!
     ** \brief Mark the renewable cluster as modified
     */
-    void markAsModified() const;
+    void markAsModified() const override;
 
     /*!
     ** \brief Invalidate the whole attached area
@@ -124,11 +109,8 @@ public:
     */
     void reset();
 
-    //! Get the full renewable cluster name
-    Yuni::String getFullName() const;
-
     //! Set the group
-    void setGroup(Data::ClusterName newgrp);
+    void setGroup(Data::ClusterName newgrp) override;
     //@}
 
     /*!
@@ -136,7 +118,7 @@ public:
     **
     ** \return False if an error has been detected and fixed with a default value
     */
-    bool integrityCheck();
+    bool integrityCheck() override;
 
     /*!
     ** \brief Copy data from another cluster
@@ -150,12 +132,17 @@ public:
     /*!
     ** \brief Flush the memory to swap files (if swap support enabled)
     */
-    virtual void flush() override;
+    void flush() override;
+
+    /*!
+    ** \brief Group ID as an uint
+    */
+    uint groupId() const override;
 
     /*!
     ** \brief Get the memory consummed by the renewable cluster (in bytes)
     */
-    Yuni::uint64 memoryUsage() const;
+    Yuni::uint64 memoryUsage() const override;
     //@}
 
     //! \name validity of Min Stable Power
@@ -193,32 +180,8 @@ public:
     */
     enum RenewableGroup groupID;
 
-    //! The index of the renewable cluster from the area's point of view
-    //! \warning this variable is only valid when used by the solver
-    // (initialized in the same time that the runtime data)
-    uint areaWideIndex;
-
-    friend class RenewableClusterList;
+    friend class ClusterList;
 }; // class RenewableCluster
-
-/*!
-** \brief Save data related to time-series from a list of renewable clusters to a folder
-** \ingroup renewableclusters
-**
-** \todo Remaining of old C-library. this routine should be moved into the appropriate class
-** \param l A list of renewable clusters
-** \param folder The target folder
-** \param msg Message to display
-** \return A non-zero value if the operation succeeded, 0 otherwise
-*/
-
-struct CompareRenewableClusterName final
-{
-    inline bool operator()(const RenewableCluster* s1, const RenewableCluster* s2) const
-    {
-        return (s1->getFullName() < s2->getFullName());
-    }
-};
 
 } // namespace Data
 } // namespace Antares

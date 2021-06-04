@@ -122,12 +122,12 @@ public:
     /*!
     ** \brief Invalidate all data associated to the thermal cluster
     */
-    bool invalidate(bool reload) const;
+    bool invalidate(bool reload) const override;
 
     /*!
     ** \brief Mark the thermal cluster as modified
     */
-    void markAsModified() const;
+    void markAsModified() const override;
 
     /*!
     ** \brief Invalidate the whole attached area
@@ -141,11 +141,8 @@ public:
     */
     void reset();
 
-    //! Get the full thermal cluster name
-    Yuni::String getFullName() const;
-
     //! Set the group
-    void setGroup(Data::ClusterName newgrp);
+    void setGroup(Data::ClusterName newgrp) override;
     //@}
 
     //! \name Spinning
@@ -174,7 +171,7 @@ public:
     **
     ** \return False if an error has been detected and fixed with a default value
     */
-    bool integrityCheck();
+    bool integrityCheck() override;
 
     /*!
     ** \brief Copy data from another cluster
@@ -188,12 +185,17 @@ public:
     /*!
     ** \brief Flush the memory to swap files (if swap support enabled)
     */
-    virtual void flush() override;
+    void flush() override;
+
+    /*!
+    ** \brief Group ID as an uint
+    */
+    uint groupId() const override;
 
     /*!
     ** \brief Get the memory consummed by the thermal cluster (in bytes)
     */
-    Yuni::uint64 memoryUsage() const;
+    Yuni::uint64 memoryUsage() const override;
     //@}
 
     //! \name validity of Min Stable Power
@@ -230,11 +232,6 @@ public:
     ** \see group()
     */
     enum ThermalDispatchableGroup groupID;
-
-    //! The index of the thermal cluster from the area's point of view
-    //! \warning this variable is only valid when used by the solver
-    // (initialized in the same time that the runtime data)
-    uint areaWideIndex;
 
     //! Mustrun
     bool mustrun;

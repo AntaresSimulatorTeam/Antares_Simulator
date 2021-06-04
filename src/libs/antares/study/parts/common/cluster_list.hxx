@@ -2,78 +2,78 @@ namespace Antares
 {
 namespace Data
 {
-inline void RenewableClusterList::flush()
+inline void ClusterList::flush()
 {
 #ifndef ANTARES_SWAP_SUPPORT
     auto end = cluster.end();
     for (auto i = cluster.begin(); i != end; ++i)
     {
-        RenewableCluster& it = *(i->second);
+        Cluster& it = *(i->second);
         it.flush();
     }
 #endif
 }
 
-inline uint RenewableClusterList::size() const
+inline uint ClusterList::size() const
 {
     return (uint)cluster.size();
 }
 
-inline bool RenewableClusterList::empty() const
+inline bool ClusterList::empty() const
 {
     return cluster.empty();
 }
 
-inline RenewableClusterList::iterator RenewableClusterList::begin()
+inline ClusterList::iterator ClusterList::begin()
 {
     return cluster.begin();
 }
 
-inline RenewableClusterList::const_iterator RenewableClusterList::begin() const
+inline ClusterList::const_iterator ClusterList::begin() const
 {
     return cluster.begin();
 }
 
-inline RenewableClusterList::iterator RenewableClusterList::end()
+inline ClusterList::iterator ClusterList::end()
 {
     return cluster.end();
 }
 
-inline RenewableClusterList::const_iterator RenewableClusterList::end() const
+inline ClusterList::const_iterator ClusterList::end() const
 {
     return cluster.end();
 }
 
-inline const RenewableCluster* RenewableClusterList::find(const Data::ClusterName& id) const
+inline const Cluster* ClusterList::find(const Data::ClusterName& id) const
 {
     auto i = cluster.find(id);
     return (i != cluster.end()) ? i->second : nullptr;
 }
 
-inline RenewableCluster* RenewableClusterList::find(const Data::ClusterName& id)
+inline Cluster* ClusterList::find(const Data::ClusterName& id)
 {
     auto i = cluster.find(id);
     return (i != cluster.end()) ? i->second : nullptr;
 }
 
 template<class PredicateT>
-void RenewableClusterList::each(const PredicateT& predicate) const
+void ClusterList::each(const PredicateT& predicate) const
 {
     auto end = cluster.cend();
     for (auto i = cluster.cbegin(); i != end; ++i)
     {
-        const RenewableCluster& it = *(i->second);
+        const Cluster& it = *(i->second);
         predicate(it);
     }
 }
 
 template<class PredicateT>
-void RenewableClusterList::each(const PredicateT& predicate)
+void ClusterList::each(const PredicateT& predicate)
 {
     auto end = cluster.end();
     for (auto i = cluster.begin(); i != end; ++i)
     {
-        RenewableCluster& it = *(i->second);
+        Cluster& it = *(i->second);
         predicate(it);
     }
 }
