@@ -31,6 +31,12 @@ public:
     void setName(const AnyString& newname);
     //@}
 
+    //! \name Memory management
+    //@{
+    /*!
+    ** \brief Flush the memory to swap files (if swap support enabled)
+    */
+    virtual void flush() = 0;
     //! Count of unit
     uint unitCount;
 

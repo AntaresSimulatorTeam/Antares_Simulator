@@ -188,7 +188,7 @@ public:
     /*!
     ** \brief Flush the memory to swap files (if swap support enabled)
     */
-    void flush();
+    virtual void flush() override;
 
     /*!
     ** \brief Get the memory consummed by the thermal cluster (in bytes)
