@@ -11,7 +11,6 @@ namespace Antares
 {
 namespace Data
 {
-
 class Cluster
 {
 public:
@@ -66,6 +65,6 @@ protected:
     //! Group
     Data::ClusterName pGroup;
 };
-}
-}
+} // namespace Data
+} // namespace Antares
 #endif /* __LIBS_ANTARES_STUDY_PARTS_COMMON_H__ */

@@ -75,7 +75,6 @@ inline ThermalClusterList::const_iterator ThermalClusterList::end() const
     return cluster.end();
 }
 
-
 inline const ThermalCluster* ThermalClusterList::find(const Data::ClusterName& id) const
 {
     auto i = cluster.find(id);

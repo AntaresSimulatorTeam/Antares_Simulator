@@ -5,14 +5,11 @@ namespace Antares
 {
 namespace Data
 {
-  Cluster::Cluster(Area* parent) : unitCount(0),
-                                   enabled(true),
-                                   parentArea(parent),
-                                   index(0),
-                                   nominalCapacity(0.),
-                                   series(nullptr)
+Cluster::Cluster(Area* parent) :
+ unitCount(0), enabled(true), parentArea(parent), index(0), nominalCapacity(0.), series(nullptr)
 
-  {}
+{
+}
 
 const ClusterName& Cluster::group() const
 {
@@ -36,5 +33,5 @@ void Cluster::setName(const AnyString& newname)
     TransformNameIntoID(pName, pID);
 }
 
-}
-}
+} // namespace Data
+} // namespace Antares

@@ -100,9 +100,10 @@ uint PartRenewable::removeDisabledClusters()
 
     std::vector<ClusterName> disabledClusters;
 
-    for (auto& it : list) {
-      if (!it.second->enabled)
-          disabledClusters.push_back(it.first);
+    for (auto& it : list)
+    {
+        if (!it.second->enabled)
+            disabledClusters.push_back(it.first);
     }
 
     for (auto& cluster : disabledClusters)

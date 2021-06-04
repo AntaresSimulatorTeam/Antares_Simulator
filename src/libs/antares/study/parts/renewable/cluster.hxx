@@ -31,7 +31,6 @@ namespace Antares
 {
 namespace Data
 {
-
 } // namespace Data
 } // namespace Antares
 

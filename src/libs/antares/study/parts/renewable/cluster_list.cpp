@@ -249,7 +249,7 @@ bool RenewableClusterList::loadFromFolder(Study& study, const AnyString& folder,
                 if (not add(cluster))
                 {
                     // This error should never happen
-                  logs.error() << "Impossible to add the renewable cluster '" << cluster->name()
+                    logs.error() << "Impossible to add the renewable cluster '" << cluster->name()
                                  << "'";
                     delete cluster;
                     continue;
