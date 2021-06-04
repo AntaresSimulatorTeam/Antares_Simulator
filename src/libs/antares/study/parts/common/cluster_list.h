@@ -4,6 +4,9 @@
 #include "../../fwd.h"
 #include "cluster.h"
 
+
+#include <vector>
+
 namespace Antares
 {
 namespace Data
@@ -230,7 +233,7 @@ public:
     ** and until the study is not modified.
     ** These values are modified by 'ClusterListAdd()'
     */
-    uint* groupCount;
+    std::vector<uint> groupCount;
 
     int loadDataSeriesFromFolder(Study& study,
                                  const StudyLoadOptions& options,

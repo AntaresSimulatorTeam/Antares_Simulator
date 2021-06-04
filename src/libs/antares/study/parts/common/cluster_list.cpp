@@ -44,18 +44,15 @@ bool ClusterList::exists(const Data::ClusterName& id) const
     }
     return false;
 }
-Data::ClusterList::ClusterList(uint sizeGroup) : byIndex(nullptr)
+Data::ClusterList::ClusterList(uint sizeGroup) : byIndex(nullptr),
+                                                 groupCount(sizeGroup, 0)
 {
-    groupCount = new uint[sizeGroup];
-    for (uint ii = 0; ii < sizeGroup; ii++)
-        groupCount[ii] = 0;
 }
 
 Data::ClusterList::~ClusterList()
 {
     // deleting all renewable clusters
     clear();
-    delete[] groupCount;
 }
 
 void ClusterList::clear()
