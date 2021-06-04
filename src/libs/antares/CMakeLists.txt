@@ -223,8 +223,6 @@ set(SRC_STUDY_PART_RENEWABLE
 	study/parts/renewable/container.h
 	study/parts/renewable/container.hxx
 	study/parts/renewable/container.cpp
-	study/parts/renewable/series.h
-	study/parts/renewable/series.cpp
 	study/parts/renewable/cluster.h
 	study/parts/renewable/cluster.cpp
     study/parts/renewable/cluster_list.h

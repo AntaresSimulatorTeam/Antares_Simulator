@@ -1,4 +1,9 @@
+#include <yuni/yuni.h>
+#include <yuni/io/file.h>
+#include <yuni/io/directory.h>
+
 #include "cluster.h"
+#include "../../study.h"
 #include "../../../utils.h"
 
 namespace Antares
@@ -33,5 +38,49 @@ void Cluster::setName(const AnyString& newname)
     TransformNameIntoID(pName, pID);
 }
 
+#define SEP Yuni::IO::Separator
+int Cluster::saveDataSeriesToFolder(const AnyString& folder) const
+{
+    if (not folder.empty())
+    {
+        Yuni::Clob buffer;
+
+        buffer.clear() << folder << SEP << parentArea->id << SEP << id();
+        if (Yuni::IO::Directory::Create(buffer))
+        {
+            int ret = 1;
+            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP
+                           << "series.txt";
+            ret = series->series.saveToCSVFile(buffer, 0) && ret;
+
+            return ret;
+        }
+        return 0;
+    }
+    return 1;
+}
+
+int Cluster::loadDataSeriesFromFolder(Study& s,
+                                      const AnyString& folder)
+{
+    if (not folder.empty())
+    {
+        auto& buffer = s.bufferLoadingTS;
+
+        int ret = 1;
+        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
+                       << s.inputExtension;
+        ret = series->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+
+        if (s.usedByTheSolver && s.parameters.derated)
+            series->series.averageTimeseries();
+
+        series->timeseriesNumbers.clear();
+
+        return ret;
+    }
+    return 1;
+}
+#undef SEP
 } // namespace Data
 } // namespace Antares

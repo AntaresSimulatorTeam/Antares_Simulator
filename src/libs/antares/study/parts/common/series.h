@@ -63,7 +63,6 @@ public:
     ** \brief Monte-Carlo
     */
     Matrix<Yuni::uint32> timeseriesNumbers;
-
 }; // class DataSeriesCommon
 } // namespace Data
 } // namespace Antares

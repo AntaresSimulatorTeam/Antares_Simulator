@@ -453,7 +453,7 @@ int RenewableClusterList::saveDataSeriesToFolder(const AnyString& folder) const
     {
         auto& cluster = *(it->second);
         if (cluster.series)
-            ret = DataSeriesSaveToFolder(cluster.series, &cluster, folder) and ret;
+            ret = cluster.saveDataSeriesToFolder(folder) and ret;
     }
     return ret;
 }
@@ -474,7 +474,7 @@ int RenewableClusterList::saveDataSeriesToFolder(const AnyString& folder, const 
         {
             logs.info() << msg << "  " << (ticks * 100 / (1 + this->cluster.size()))
                         << "% complete";
-            ret = DataSeriesSaveToFolder(cluster.series, &cluster, folder) and ret;
+            ret = cluster.saveDataSeriesToFolder(folder) and ret;
         }
         ++ticks;
     }
@@ -492,7 +492,7 @@ int RenewableClusterList::loadDataSeriesFromFolder(Study& s,
 
     each([&](Data::RenewableCluster& cluster) {
         if (cluster.series)
-            ret = DataSeriesLoadFromFolder(s, cluster.series, &cluster, folder) and ret;
+            ret = cluster.loadDataSeriesFromFolder(s, folder) and ret;
 
         ++options.progressTicks;
         options.pushProgressLogs();

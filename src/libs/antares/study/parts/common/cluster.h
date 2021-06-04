@@ -64,6 +64,11 @@ protected:
     Data::ClusterName pID;
     //! Group
     Data::ClusterName pGroup;
+
+public:
+    int saveDataSeriesToFolder(const AnyString& folder) const;
+    int loadDataSeriesFromFolder(Study& s,
+                                 const AnyString& folder);
 };
 } // namespace Data
 } // namespace Antares
