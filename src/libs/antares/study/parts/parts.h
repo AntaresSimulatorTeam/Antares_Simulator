@@ -48,7 +48,6 @@
 // Thermal
 #include "thermal/defines.h"
 #include "thermal/prepro.h"
-#include "thermal/series.h"
 #include "thermal/cluster.h"
 #include "thermal/container.h"
 

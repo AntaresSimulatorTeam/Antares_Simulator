@@ -208,8 +208,6 @@ set(SRC_STUDY_PART_THERMAL
 	study/parts/thermal/container.h
 	study/parts/thermal/container.hxx
 	study/parts/thermal/container.cpp
-	study/parts/thermal/series.h
-	study/parts/thermal/series.cpp
 	study/parts/thermal/prepro.h
 	study/parts/thermal/prepro.hxx
 	study/parts/thermal/prepro.cpp

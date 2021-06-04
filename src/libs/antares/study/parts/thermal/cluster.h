@@ -32,7 +32,6 @@
 #include "../../../array/matrix.h"
 #include "defines.h"
 #include "prepro.h"
-#include "series.h"
 #include "../common/cluster.h"
 #include "../../fwd.h"
 #include <set>

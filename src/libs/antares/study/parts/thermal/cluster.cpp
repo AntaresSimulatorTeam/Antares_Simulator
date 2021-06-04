@@ -1279,7 +1279,7 @@ int ThermalClusterListSaveDataSeriesToFolder(const ThermalClusterList* l, const 
     {
         auto& cluster = *(it->second);
         if (cluster.series)
-            ret = DataSeriesSaveToFolder(cluster.series, &cluster, folder) and ret;
+            ret = cluster.saveDataSeriesToFolder(folder) and ret;
     }
     return ret;
 }
@@ -1301,7 +1301,7 @@ int ThermalClusterListSaveDataSeriesToFolder(const ThermalClusterList* l,
         if (cluster.series)
         {
             logs.info() << msg << "  " << (ticks * 100 / (1 + l->mapping.size())) << "% complete";
-            ret = DataSeriesSaveToFolder(cluster.series, &cluster, folder) and ret;
+            ret = cluster.saveDataSeriesToFolder(folder) and ret;
         }
         ++ticks;
     }
@@ -1321,7 +1321,7 @@ int ThermalClusterListLoadDataSeriesFromFolder(Study& s,
 
     l->each([&](Data::ThermalCluster& cluster) {
         if (cluster.series and (!fast or !cluster.prepro))
-            ret = DataSeriesLoadFromFolder(s, cluster.series, &cluster, folder) and ret;
+            ret = cluster.loadDataSeriesFromFolder(s, folder) and ret;
 
         ++options.progressTicks;
         options.pushProgressLogs();
