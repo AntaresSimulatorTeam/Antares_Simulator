@@ -178,7 +178,7 @@ bool Create::performWL(Context& ctx)
         if (!ctx.cluster)
         {
             ctx.cluster = new Data::ThermalCluster(ctx.area);
-            ctx.cluster->name(pFuturPlantName);
+            ctx.cluster->setName(pFuturPlantName);
             ctx.cluster->reset();
             (ctx.area)->thermal.list.add(ctx.cluster);
             (ctx.area)->thermal.list.rebuildIndex();

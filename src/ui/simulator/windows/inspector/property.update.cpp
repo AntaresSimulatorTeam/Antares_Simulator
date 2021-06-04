@@ -603,7 +603,7 @@ bool InspectorGrid::onPropertyChanging_Cluster(wxPGProperty*,
             Data::ThermalCluster& cluster = *(*i);
             if (cluster.group() != name)
             {
-                cluster.group(name);
+                cluster.setGroup(name);
                 set.insert(cluster.parentArea);
             }
         }

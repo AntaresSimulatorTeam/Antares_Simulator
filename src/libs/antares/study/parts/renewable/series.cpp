@@ -29,7 +29,6 @@
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "series.h"
 
 using namespace Yuni;

@@ -75,20 +75,6 @@ inline ThermalClusterList::const_iterator ThermalClusterList::end() const
     return cluster.end();
 }
 
-inline const Data::ClusterName& ThermalCluster::group() const
-{
-    return pGroup;
-}
-
-inline const Data::ClusterName& ThermalCluster::id() const
-{
-    return pID;
-}
-
-inline const Data::ClusterName& ThermalCluster::name() const
-{
-    return pName;
-}
 
 inline const ThermalCluster* ThermalClusterList::find(const Data::ClusterName& id) const
 {

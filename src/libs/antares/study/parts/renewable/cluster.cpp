@@ -46,26 +46,18 @@ namespace Antares
 namespace Data
 {
 Data::RenewableCluster::RenewableCluster(Area* parent, uint /*nbParallelYears*/) :
+ Cluster(parent),
  groupID(renewableOther1),
- index(0),
- areaWideIndex((uint)-1),
- parentArea(parent),
- enabled(true),
- nominalCapacity(0.),
- series(nullptr)
+ areaWideIndex((uint)-1)
 {
     // assert
     assert(parent and "A parent for a renewable dispatchable cluster can not be null");
 }
 
 Data::RenewableCluster::RenewableCluster(Area* parent) :
+ Cluster(parent),
  groupID(renewableOther1),
- index(0),
- areaWideIndex((uint)-1),
- parentArea(parent),
- enabled(true),
- nominalCapacity(0.),
- series(nullptr)
+ areaWideIndex((uint)-1)
 {
     // assert
     assert(parent and "A parent for a renewable dispatchable cluster can not be null");
@@ -127,7 +119,7 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
         parentArea->invalidate();
 }
 
-void Data::RenewableCluster::group(Data::ClusterName newgrp)
+void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
 {
     if (not newgrp)
     {
@@ -202,7 +194,7 @@ bool RenewableClusterListSaveToFolder(const RenewableClusterList* l, const AnySt
         IniFile ini;
 
         // Browse all clusters
-        l->each([&](const Data::RenewableCluster& cluster) {
+        l->each([&](const Data::Cluster& cluster) {
             // Adding a section to the inifile
             IniFile::Section* s = ini.addSection(cluster.name());
 
@@ -398,13 +390,6 @@ uint64 RenewableCluster::memoryUsage() const
     if (series)
         amount += DataSeriesMemoryUsage(series);
     return amount;
-}
-
-void RenewableCluster::name(const AnyString& newname)
-{
-    pName = newname;
-    pID.clear();
-    TransformNameIntoID(pName, pID);
 }
 
 bool RenewableCluster::isVisibleOnLayer(const size_t& layerID) const

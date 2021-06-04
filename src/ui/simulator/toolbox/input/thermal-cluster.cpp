@@ -445,7 +445,7 @@ void ThermalCluster::internalAddPlant(void*)
         // Creating a new cluster
         Antares::Data::ThermalCluster* cluster = new Antares::Data::ThermalCluster(pArea);
         logs.info() << "adding new thermal cluster " << pArea->id << '.' << sFl;
-        cluster->name(sFl);
+        cluster->setName(sFl);
         cluster->reset();
         pArea->thermal.list.add(cluster);
         pArea->thermal.list.mapping[cluster->id()] = cluster;
@@ -522,7 +522,7 @@ void ThermalCluster::internalClonePlant(void*)
 
         // Creating a new cluster
         auto* cluster = new Antares::Data::ThermalCluster(pArea);
-        cluster->name(sFl);
+        cluster->setName(sFl);
         cluster->reset();
         // Reset to default values
         cluster->copyFrom(selectedPlant);

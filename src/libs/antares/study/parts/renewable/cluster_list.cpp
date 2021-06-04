@@ -167,7 +167,7 @@ static bool RenewableClusterLoadFromProperty(RenewableCluster& cluster, const In
 
     if (p->key == "group")
     {
-        cluster.group(p->value);
+        cluster.setGroup(p->value);
         return true;
     }
 
@@ -188,7 +188,7 @@ static bool RenewableClusterLoadFromSection(const AnyString& filename,
     if (section.name.empty())
         return false;
 
-    cluster.name(section.name);
+    cluster.setName(section.name);
 
     if (section.firstProperty)
     {
@@ -249,7 +249,7 @@ bool RenewableClusterList::loadFromFolder(Study& study, const AnyString& folder,
                 if (not add(cluster))
                 {
                     // This error should never happen
-                    logs.error() << "Impossible to add the renewable cluster '" << cluster->name()
+                  logs.error() << "Impossible to add the renewable cluster '" << cluster->name()
                                  << "'";
                     delete cluster;
                     continue;
@@ -299,7 +299,7 @@ bool RenewableClusterList::rename(Data::ClusterName idToFind, Data::ClusterName 
 
     if (idToFind == newID)
     {
-        p->name(newName);
+        p->setName(newName);
         return true;
     }
 
@@ -313,7 +313,7 @@ bool RenewableClusterList::rename(Data::ClusterName idToFind, Data::ClusterName 
 
     cluster.erase(it);
 
-    p->name(newName);
+    p->setName(newName);
     cluster[newID] = p;
 
     // Invalidate matrices attached to the area

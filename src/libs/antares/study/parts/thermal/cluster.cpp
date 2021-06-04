@@ -135,7 +135,7 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
             return p->value.to<uint>(cluster.groupMaxCount);
         if (p->key == "group")
         {
-            cluster.group(p->value);
+            cluster.setGroup(p->value);
             return true;
         }
         break;
@@ -282,7 +282,7 @@ static bool ThermalClusterLoadFromSection(const AnyString& filename,
     if (section.name.empty())
         return false;
 
-    cluster.name(section.name);
+    cluster.setName(section.name);
 
     if (section.firstProperty)
     {
@@ -358,15 +358,11 @@ static bool ThermalClusterLoadCouplingSection(const AnyString& filename,
 }
 
 Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
+ Cluster(parent),
  groupID(thermalDispatchGrpOther),
- index(0),
  areaWideIndex((uint)-1),
- parentArea(parent),
- enabled(true),
  mustrun(false),
  mustrunOrigin(false),
- unitCount(0),
- nominalCapacity(0.),
  nominalCapacityWithSpinning(0.),
  minStablePower(0.),
  minUpTime(1),
@@ -387,7 +383,6 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
  annuityInvestment(0),
  PthetaInf(HOURS_PER_YEAR, 0),
  prepro(nullptr),
- series(nullptr),
  productionCost(nullptr),
  unitCountLastHour(nullptr),
  productionLastHour(nullptr),
@@ -408,15 +403,11 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
 }
 
 Data::ThermalCluster::ThermalCluster(Area* parent) :
+ Cluster(parent),
  groupID(thermalDispatchGrpOther),
- index(0),
  areaWideIndex((uint)-1),
- parentArea(parent),
- enabled(true),
  mustrun(false),
  mustrunOrigin(false),
- unitCount(0),
- nominalCapacity(0.),
  nominalCapacityWithSpinning(0.),
  minStablePower(0.),
  minUpTime(1),
@@ -437,7 +428,6 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  annuityInvestment(0),
  PthetaInf(HOURS_PER_YEAR, 0),
  prepro(nullptr),
- series(nullptr),
  productionCost(nullptr),
  unitCountLastHour(nullptr),
  productionLastHour(nullptr),
@@ -669,7 +659,7 @@ void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
     });
 }
 
-void Data::ThermalCluster::group(Data::ClusterName newgrp)
+void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
 {
     if (not newgrp)
     {
@@ -1396,7 +1386,7 @@ bool ThermalClusterList::rename(Data::ClusterName idToFind, Data::ClusterName ne
 
     if (idToFind == newID)
     {
-        p->name(newName);
+        p->setName(newName);
         return true;
     }
 
@@ -1410,7 +1400,7 @@ bool ThermalClusterList::rename(Data::ClusterName idToFind, Data::ClusterName ne
 
     cluster.erase(it);
 
-    p->name(newName);
+    p->setName(newName);
     cluster[newID] = p;
 
     // Invalidate matrices attached to the area
@@ -1928,13 +1918,6 @@ void ThermalClusterList::enableMustrunForEveryone()
 {
     // enabling the mustrun mode
     each([&](Data::ThermalCluster& cluster) { cluster.mustrun = true; });
-}
-
-void ThermalCluster::name(const AnyString& newname)
-{
-    pName = newname;
-    pID.clear();
-    TransformNameIntoID(pName, pID);
 }
 
 bool ThermalCluster::isVisibleOnLayer(const size_t& layerID) const

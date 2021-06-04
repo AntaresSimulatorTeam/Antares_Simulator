@@ -33,6 +33,7 @@
 #include "defines.h"
 #include "prepro.h"
 #include "series.h"
+#include "../common/cluster.h"
 #include "../../fwd.h"
 #include <set>
 #include <map>
@@ -83,7 +84,7 @@ struct CompareThermalClusterName;
 /*!
 ** \brief A single thermal cluster
 */
-class ThermalCluster final : public Yuni::NonCopyable<ThermalCluster>
+class ThermalCluster final : public Cluster
 {
 public:
     //! Set of thermal clusters
@@ -141,27 +142,11 @@ public:
     */
     void reset();
 
-    //! \name Name and ID
-    //@{
-    //! Get the thermal cluster ID
-    const Data::ClusterName& id() const;
-
-    //! Get the thermal cluster name
-    const Data::ClusterName& name() const;
-
     //! Get the full thermal cluster name
     Yuni::String getFullName() const;
 
-    //! Set the name/ID
-    void name(const AnyString& newname);
-    //@}
-
-    //! \name Group
-    //@{
-    //! Get the group of the cluster
-    const Data::ClusterName& group() const;
     //! Set the group
-    void group(Data::ClusterName newgrp);
+    void setGroup(Data::ClusterName newgrp);
     //@}
 
     //! \name Spinning
@@ -247,18 +232,11 @@ public:
     */
     enum ThermalDispatchableGroup groupID;
 
-    //! The index of the thermal cluster (within a list)
-    uint index;
     //! The index of the thermal cluster from the area's point of view
     //! \warning this variable is only valid when used by the solver
     // (initialized in the same time that the runtime data)
     uint areaWideIndex;
 
-    //! The associate area (alias)
-    Area* parentArea;
-
-    //! Enabled
-    bool enabled;
     //! Mustrun
     bool mustrun;
     //! Mustrun (as it were at the loading of the data)
@@ -268,11 +246,6 @@ public:
     // Only used by the solver in adequacy mode
     bool mustrunOrigin;
 
-    //! Count of unit
-    uint unitCount;
-
-    //! Capacity of reference per unit (MW) (pMax)
-    double nominalCapacity;
     //! Nominal capacity - spinning (solver only)
     double nominalCapacityWithSpinning;
 
@@ -370,14 +343,6 @@ public:
     uint annuityInvestment;
 
     /*!
-    ** \brief Modulation matrix
-    **
-    ** It is merely a 3x8760 matrix
-    ** [modulation cost, modulation capacity, market bid modulation] per hour
-    */
-    Matrix<> modulation;
-
-    /*!
     ** \brief thermalMinGenModulation vector used in solver only to store the year values
     ** 8760 vector
     ** PthetaInf[hour]
@@ -386,8 +351,6 @@ public:
 
     //! Data for the preprocessor
     PreproThermal* prepro;
-    //! Series
-    DataSeriesCommon* series;
 
     //! List of all other clusters linked with the current one
     SetPointer coupling;
@@ -430,16 +393,7 @@ public:
     */
     double* pminOfAGroup;
 
-private:
-    //! Name
-    Data::ClusterName pName;
-    //! ID
-    Data::ClusterName pID;
-    //! Group
-    Data::ClusterName pGroup;
-
     friend class ThermalClusterList;
-
 }; // class ThermalCluster
 
 /*!

@@ -32,6 +32,7 @@
 #include "../../../array/matrix.h"
 #include "defines.h"
 #include "series.h"
+#include "../common/cluster.h"
 #include "../../fwd.h"
 #include <set>
 #include <map>
@@ -71,7 +72,7 @@ struct CompareRenewableClusterName;
 /*!
 ** \brief A single renewable cluster
 */
-class RenewableCluster final : public Yuni::NonCopyable<RenewableCluster>
+class RenewableCluster final : public Cluster
 {
 public:
     //! Set of renewable clusters
@@ -124,27 +125,11 @@ public:
     */
     void reset();
 
-    //! \name Name and ID
-    //@{
-    //! Get the renewable cluster ID
-    const Data::ClusterName& id() const;
-
-    //! Get the renewable cluster name
-    const Data::ClusterName& name() const;
-
     //! Get the full renewable cluster name
     Yuni::String getFullName() const;
 
-    //! Set the name/ID
-    void name(const AnyString& newname);
-    //@}
-
-    //! \name Group
-    //@{
-    //! Get the group of the cluster
-    const Data::ClusterName& group() const;
     //! Set the group
-    void group(Data::ClusterName newgrp);
+    void setGroup(Data::ClusterName newgrp);
     //@}
 
     /*!
@@ -209,35 +194,12 @@ public:
     */
     enum RenewableGroup groupID;
 
-    //! The index of the renewable cluster (within a list)
-    uint index;
     //! The index of the renewable cluster from the area's point of view
     //! \warning this variable is only valid when used by the solver
     // (initialized in the same time that the runtime data)
     uint areaWideIndex;
 
-    //! The associate area (alias)
-    Area* parentArea;
-
-    //! Enabled
-    bool enabled;
-
-    //! Capacity of reference per unit (MW) (pMax)
-    double nominalCapacity;
-
-    //! Series
-    DataSeriesCommon* series;
-
-private:
-    //! Name
-    Data::ClusterName pName;
-    //! ID
-    Data::ClusterName pID;
-    //! Group
-    Data::ClusterName pGroup;
-
     friend class RenewableClusterList;
-
 }; // class RenewableCluster
 
 /*!
@@ -284,7 +246,5 @@ struct CompareRenewableClusterName final
 
 } // namespace Data
 } // namespace Antares
-
-#include "cluster.hxx"
 
 #endif //__ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_H__

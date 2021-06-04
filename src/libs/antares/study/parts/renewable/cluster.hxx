@@ -31,20 +31,7 @@ namespace Antares
 {
 namespace Data
 {
-inline const Data::ClusterName& RenewableCluster::group() const
-{
-    return pGroup;
-}
 
-inline const Data::ClusterName& RenewableCluster::id() const
-{
-    return pID;
-}
-
-inline const Data::ClusterName& RenewableCluster::name() const
-{
-    return pName;
-}
 } // namespace Data
 } // namespace Antares
 

@@ -1114,7 +1114,7 @@ bool Study::thermalClusterRename(ThermalCluster* cluster, ClusterName newName, b
             if (found->name() != newName)
             {
                 area.invalidateJIT = true;
-                found->name(newName);
+                found->setName(newName);
                 return true;
             }
             return false;
