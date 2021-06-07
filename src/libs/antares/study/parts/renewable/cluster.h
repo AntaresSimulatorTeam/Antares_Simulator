@@ -66,6 +66,14 @@ enum RenewableGroup
     renewableGroupMax
 };
 
+enum RenewableModulation
+{
+    renewableModulationCost = 0,
+    renewableModulationCapacity,
+    renewableMinGenModulation,
+    renewableModulationMax
+};
+
 struct CompareRenewableClusterName;
 
 /*!
@@ -224,6 +232,14 @@ public:
 
     //! Capacity of reference per unit (MW) (pMax)
     double nominalCapacity;
+
+    /*!
+    ** \brief Modulation matrix
+    **
+    ** It is merely a 3x8760 matrix
+    ** [modulation cost, modulation capacity, min gen modulation] per hour
+    */
+    Matrix<> modulation;
 
     //! Series
     DataSeriesRenewable* series;

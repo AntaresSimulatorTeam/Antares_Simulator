@@ -408,6 +408,20 @@ bool RenewableClusterListSaveToFolder(const RenewableClusterList* l, const AnySt
                 s->add("enabled", "false");
             if (not Math::Zero(cluster.nominalCapacity))
                 s->add("nominalCapacity", cluster.nominalCapacity);
+
+            buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
+                << cluster.parentArea->id << SEP << cluster.id();
+
+            if (IO::Directory::Create(buffer))
+            {
+                buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
+                    << cluster.parentArea->id << SEP << cluster.id() << SEP
+                    << "modulation.txt";
+
+                ret = cluster.modulation.saveToCSVFile(buffer) and ret;
+            }
+            else
+                ret = 0;
         });
 
         // Write the ini file
@@ -455,6 +469,8 @@ bool RenewableClusterList::loadFromFolder(Study& study, const AnyString& folder,
 
         if (ini.firstSection)
         {
+            String modulationFile;
+
             for (auto* section = ini.firstSection; section; section = section->next)
             {
                 if (section->name.empty())
@@ -467,6 +483,29 @@ bool RenewableClusterList::loadFromFolder(Study& study, const AnyString& folder,
                 {
                     delete cluster;
                     continue;
+                }
+
+                // Modulation
+                modulationFile.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro"
+                    << SEP << cluster->parentArea->id << SEP << cluster->id()
+                    << SEP << "modulation." << study.inputExtension;
+
+                // gp : put the right version number
+                if (study.header.version >= 800)
+                {
+                    enum
+                    {
+                        options = Matrix<>::optFixedSize,
+                    };
+                    bool r = cluster->modulation.loadFromCSVFile(
+                        modulationFile, renewableModulationMax, HOURS_PER_YEAR, options);
+                    if (not r and study.usedByTheSolver)
+                    {
+                        cluster->modulation.reset(renewableModulationMax, HOURS_PER_YEAR);
+                        cluster->modulation.fill(1.);
+                        cluster->modulation.fillColumn(renewableMinGenModulation, 0.);
+                    }
+                    ret = ret and r;
                 }
 
                 // Check the data integrity of the cluster
@@ -642,6 +681,7 @@ bool Data::RenewableClusterList::invalidate(bool reload) const
 bool Data::RenewableCluster::invalidate(bool reload) const
 {
     bool ret = true;
+    ret = modulation.invalidate(reload) and ret;
     if (series)
         ret = series->invalidate(reload) and ret;
     return ret;
@@ -664,6 +704,12 @@ void Data::RenewableCluster::reset()
 {
     enabled = true;
     nominalCapacity = 0.;
+
+    // modulation
+    modulation.resize(renewableModulationMax, HOURS_PER_YEAR);
+    modulation.fill(1.);
+    modulation.fillColumn(renewableMinGenModulation, 0.);
+    modulation.flush();
 
     // timeseries
     // warning: the variables `series` __must__ not be destroyed

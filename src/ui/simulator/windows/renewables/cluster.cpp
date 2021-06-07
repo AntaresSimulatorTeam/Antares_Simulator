@@ -27,7 +27,7 @@
 
 #include "cluster.h"
 // #include "../../windows/inspector.h"
-// #include "../../toolbox/components/datagrid/renderer/area/thermalmodulation.h"
+#include "../../toolbox/components/datagrid/renderer/area/renewable-modulation.h"
 // #include "../../toolbox/components/notebook/notebook.h"
 // #include "../../toolbox/components/refresh.h"
 // #include <antares/study/parts/thermal/cluster.h>
@@ -66,12 +66,11 @@ CommonProperties::CommonProperties(wxWindow* parent,
     sizer->Add(vs, 0, wxALL | wxEXPAND);
     sizer->SetItemMinSize(inspector, 280, 50);
 
-    // gp : to be adapted
-    // sizer->Add(
-    //   new Component::Datagrid::Component(
-    //     this, new Component::Datagrid::Renderer::RenewableClusterCommonModulation(this, notifier)),
-    //   1,
-    // wxALL | wxEXPAND);
+    sizer->Add(
+      new Component::Datagrid::Component(this, 
+        new Component::Datagrid::Renderer::RenewableClusterCommonModulation(this, notifier)),
+        1,
+        wxALL | wxEXPAND);
 
     // Connection with the notifier
     renewableEventConnect();
