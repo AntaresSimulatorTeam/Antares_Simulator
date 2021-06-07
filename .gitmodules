@@ -10,4 +10,4 @@
 	url = https://github.com/AntaresSimulatorTeam/Antares_Simulator_Tests.git
 [submodule "src/tests/resources/Antares_Simulator_NonReg"]
 	path = src/tests/resources/Antares_Simulator_NonReg
-	url = https://github.com/AntaresSimulatorTeam/NonReg.git
+	url = https://github.com/AntaresSimulatorTeam/NonRegTests.git
