@@ -31,6 +31,7 @@
 #include "../area.h"
 #include "../matrix.h"
 #include "../../../../input/thermal-cluster.h"
+#include "../../../../input/renewable-cluster.h"
 #include <antares/date.h>
 #include "../../../../../application/study.h"
 
@@ -363,6 +364,84 @@ public:
 
 protected:
     virtual void internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster)
+    {
+        matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->series) : NULL);
+    }
+    virtual void onStudyClosed();
+};
+
+/*  
+*   --------------------
+*   RENEWABLE CLUSTERS
+*   --------------------
+*/
+// gp : apart from the constructor, the 2 clusters time series classes are identical !
+// gp : To be factored
+class TimeSeriesRenewableCluster final : public Renderer::Matrix<double, yint32>
+{
+public:
+    typedef Renderer::Matrix<double, Yuni::sint32> AncestorType;
+
+public:
+    TimeSeriesRenewableCluster(wxWindow* control, Toolbox::InputSelector::RenewableCluster* notifier);
+
+    virtual ~TimeSeriesRenewableCluster();
+
+    virtual int width() const
+    {
+        return AncestorType::width() + 3;
+    }
+    virtual int height() const
+    {
+        return AncestorType::height();
+    }
+
+    virtual int internalWidth() const
+    {
+        return AncestorType::width();
+    }
+    virtual int internalHeight() const
+    {
+        return AncestorType::height();
+    }
+
+    virtual wxString columnCaption(int colIndx) const;
+
+    virtual wxString rowCaption(int rowIndx) const
+    {
+        return AncestorType::rowCaption(rowIndx);
+    }
+
+    virtual wxString cellValue(int x, int y) const;
+
+    virtual double cellNumericValue(int x, int y) const;
+
+    virtual bool cellValue(int x, int y, const Yuni::String& value)
+    {
+        return AncestorType::cellValue(x, y, value);
+    }
+
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    { /*Do nothing*/
+    }
+
+    IRenderer::CellStyle cellStyle(int col, int row) const;
+
+    virtual wxColour verticalBorderColor(int x, int y) const;
+    virtual wxColour horizontalBorderColor(int x, int y) const;
+
+    virtual uint maxHeightResize() const
+    {
+        return HOURS_PER_YEAR;
+    }
+
+    virtual Date::Precision precision()
+    {
+        return Date::hourly;
+    }
+
+protected:
+    virtual void internalRenewableClusterChanged(Antares::Data::RenewableCluster* cluster)
     {
         matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->series) : NULL);
     }

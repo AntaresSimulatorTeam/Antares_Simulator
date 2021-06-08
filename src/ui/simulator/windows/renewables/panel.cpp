@@ -32,7 +32,7 @@
 // #include "../../toolbox/input/thermal-cluster.h"
 // #include "../../toolbox/components/datagrid/renderer/area/thermal.areasummary.h"
 // #include "../../toolbox/components/datagrid/renderer/area/thermalprepro.h"
-// #include "../../toolbox/components/datagrid/renderer/area/timeseries.h"
+#include "../../toolbox/components/datagrid/renderer/area/timeseries.h"
 #include <wx/stattext.h>
 #include <wx/splitter.h>
 #include "cluster.h"
@@ -123,13 +123,12 @@ Panel::Panel(Component::Notebook* parent) : Component::Panel(parent)
           new Component::Datagrid::Component(
             subbook, new Component::Datagrid::Renderer::ThermalClusterPrepro(subbook, tag)),
           wxT("TS generator"));
-
+        */
         // Time Series
         pageThermalTimeSeries = subbook->add(
           new Component::Datagrid::Component(
-            subbook, new Component::Datagrid::Renderer::TimeSeriesThermalCluster(subbook, tag)),
+            subbook, new Component::Datagrid::Renderer::TimeSeriesRenewableCluster(subbook, tag)),
           wxT("Time-Series"));
-        */
 
         // Split the view
         pSplitter->SetMinimumPaneSize(70);

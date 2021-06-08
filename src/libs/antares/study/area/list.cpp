@@ -335,11 +335,13 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
         ret = ThermalClusterListSaveDataSeriesToFolder(&area.thermal.list, buffer) and ret;
     }
 
-    // Thermal cluster list
+    // Renewable cluster list
     {
         buffer.clear() << folder << SEP << "input" << SEP << "renewables" << SEP << "clusters" << SEP
             << area.id;
         ret = RenewableClusterListSaveToFolder(&area.renewable.list, buffer) and ret;
+        buffer.clear() << folder << SEP << "input" << SEP << "renewables" << SEP << "series";
+        ret = RenewableClusterListSaveDataSeriesToFolder(&area.renewable.list, buffer) and ret;
     }
 
     return ret;
