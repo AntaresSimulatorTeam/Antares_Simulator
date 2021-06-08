@@ -1235,8 +1235,6 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     // Renewable data, specific to areas
     {
         logs.info() << "Loading renewable clusters...";
-        buffer.clear() << pStudy.folderInput << SEP << "renewables" << SEP << "areas.ini";
-        ret = AreaListLoadRenewableDataFromFile(*this, buffer) and ret;
 
         // The cluster list must be loaded before the method
         // Study::ensureDataAreInitializedAccordingParameters() is called
