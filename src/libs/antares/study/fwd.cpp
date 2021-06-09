@@ -356,6 +356,36 @@ const char* NumberOfCoresModeToCString(NumberOfCoresMode ucores)
     return "";
 }
 
+RenewableGenerationModelling StringToRenewableGenerationModelling(const AnyString& text)
+{
+    if (!text)
+        return rgUnknown;
+
+    CString<24, false> s = text;
+    s.trim();
+    s.toLower();
+    if (s == "aggregated")
+        return rgAggregated;
+    if (s == "clusters") // Using renewable clusters
+        return rgClusters;
+
+    return rgUnknown;
+}
+
+const char* RenewableGenerationModellingToCString(RenewableGenerationModelling rgModelling)
+{
+    switch (rgModelling)
+    {
+    case rgAggregated:
+        return "aggregated";
+    case rgClusters:
+        return "clusters"; // using renewable clusters
+    case ucUnknown:
+        return "";
+    }
+    return "";
+}
+
 DayAheadReserveManagement StringToDayAheadReserveManagementMode(const AnyString& text)
 {
     if (!text)
