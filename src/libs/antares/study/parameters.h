@@ -439,6 +439,12 @@ public:
 
     struct
     {
+        //! Unit Commitment Mode
+        RenewableGenerationModelling rgModelling;
+    } renewableGeneration;
+
+    struct
+    {
         //! Initial reservoir levels
         InitialReservoirLevels iniLevels;
     } initialReservoirLevels;

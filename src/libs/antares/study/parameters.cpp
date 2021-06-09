@@ -259,6 +259,7 @@ void Parameters::reset()
 
     unitCommitment.ucMode = ucHeuristic;
     nbCores.ncMode = ncAvg;
+    renewableGeneration.rgModelling = rgAggregated;
     reserveManagement.daMode = daGlobal;
 
     // Misc
@@ -741,6 +742,20 @@ static bool SGDIntLoadFamily_R(Parameters& d, const String& key, const String& v
     // readonly
     if (key == "readonly")
         return value.to<bool>(d.readonly);
+    // Renewable generation modelling
+    if (key == "renewable-generation-modelling")
+    {
+        auto renewGenMod = StringToRenewableGenerationModelling(value);
+        if (renewGenMod != rgUnknown)
+        {
+            d.renewableGeneration.rgModelling = renewGenMod;
+            return true;
+        }
+        logs.warning() << "parameters: invalid renewable generation modelling. Got '" << value
+            << "'. reset to aggregated";
+        d.renewableGeneration.rgModelling = rgAggregated;
+        return false;
+    }
     // Error
     return false;
 }
@@ -1688,6 +1703,8 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("shedding-policy", SheddingPolicyToCString(shedding.policy));
         section->add("unit-commitment-mode", UnitCommitmentModeToCString(unitCommitment.ucMode));
         section->add("number-of-cores-mode", NumberOfCoresModeToCString(nbCores.ncMode));
+        section->add("renewable-generation-modelling",
+                     RenewableGenerationModellingToCString(renewableGeneration.rgModelling));
         section->add("day-ahead-reserve-management",
                      DayAheadReserveManagementModeToCString(reserveManagement.daMode));
     }
