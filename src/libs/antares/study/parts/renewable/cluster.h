@@ -171,6 +171,9 @@ public:
     */
     bool isVisibleOnLayer(const size_t& layerID) const;
 
+    // TODO remove
+    void* prepro;
+
 public:
     /*!
     ** \brief The group ID
@@ -180,7 +183,7 @@ public:
     */
     enum RenewableGroup groupID;
 
-    friend class ClusterList;
+    friend class RenewableClusterList;
 }; // class RenewableCluster
 
 } // namespace Data

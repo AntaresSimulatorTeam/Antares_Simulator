@@ -311,7 +311,8 @@ public:
     ** \param cluster The cluster
     ** \return True if the operation succeeded, false otherwise
     */
-    bool thermalClusterRename(ThermalCluster* cluster, ClusterName newName, bool force = false);
+    // TODO FO : clusterRename
+    bool thermalClusterRename(Cluster* cluster, ClusterName newName, bool force = false);
     //@}
 
     //! \name Read-only

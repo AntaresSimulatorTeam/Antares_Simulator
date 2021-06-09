@@ -4,12 +4,6 @@ namespace Antares
 {
 namespace Data
 {
-Cluster* RenewableClusterList::clusterFactory(Area* area, uint nbParallelYears)
-{
-    Cluster* cluster = new RenewableCluster(area, nbParallelYears);
-    return cluster;
-}
-
 RenewableClusterList::~RenewableClusterList()
 {
     for (auto& it : cluster)
@@ -20,6 +14,26 @@ RenewableClusterList::~RenewableClusterList()
 
 RenewableClusterList::RenewableClusterList(uint groupSize) : ClusterList(groupSize)
 {
+}
+
+YString RenewableClusterList::typeID() const
+{
+    return "renewable";
+}
+
+void RenewableClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
+{
+    u.requiredMemoryForInput += (sizeof(void*) * 4 /*overhead map*/) * cluster.size();
+
+    each([&](const Cluster& cluster) {
+        u.requiredMemoryForInput += sizeof(RenewableCluster);
+        u.requiredMemoryForInput += sizeof(void*);
+        if (cluster.series)
+            cluster.series->estimateMemoryUsage(u, timeSeriesRenewable /* FIXME */);
+
+        // From the solver
+        u.requiredMemoryForInput += 70 * 1024;
+    });
 }
 
 } // namespace Data

@@ -13,12 +13,14 @@ namespace Data
 ** \brief List of renewable clusters
 ** \ingroup renewableclusters
 */
-class RenewableClusterList : public ClusterList
+class RenewableClusterList : public ClusterList<RenewableCluster>
 {
 public:
     RenewableClusterList(uint sizeGroup);
     ~RenewableClusterList();
-    Cluster* clusterFactory(Area*, uint) override;
+    // Overriden virtual methods
+    YString typeID() const override;
+    void estimateMemoryUsage(StudyMemoryUsage&) const override;
 }; // class RenewableClusterList
 } // namespace Data
 } // namespace Antares

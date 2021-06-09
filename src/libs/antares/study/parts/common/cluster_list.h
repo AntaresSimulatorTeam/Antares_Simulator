@@ -1,9 +1,9 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_COMMON_CLUSTER_LIST_H__
 #define __ANTARES_LIBS_STUDY_PARTS_COMMON_CLUSTER_LIST_H__
 
+#include "../../memory-usage.h"
+#include "../../../logs.h"
 #include "../../fwd.h"
-#include "cluster.h"
-
 
 #include <vector>
 
@@ -15,13 +15,15 @@ namespace Data
 ** \brief List of clusters
 ** \ingroup renewableclusters
 */
+template<class ClusterT>
 class ClusterList
 {
 public:
+    typedef typename std::map<ClusterName, ClusterT*> Map;
     //! iterator
-    typedef Cluster::Map::iterator iterator;
+    typedef typename Map::iterator iterator;
     //! const iterator
-    typedef Cluster::Map::const_iterator const_iterator;
+    typedef typename Map::const_iterator const_iterator;
 
 public:
     //! \name Constructor & Destructor
@@ -42,24 +44,28 @@ public:
     ** \brief Iterate through all clusters
     */
     template<class PredicateT>
-    void each(const PredicateT& predicate);
+    void each(const PredicateT& predicate)
+    {
+        auto end = cluster.cend();
+        for (auto i = cluster.cbegin(); i != end; ++i)
+        {
+            auto& it = *(i->second);
+            predicate(it);
+        }
+    }
     /*!
     ** \brief Iterate through all clusters (const)
     */
     template<class PredicateT>
-    void each(const PredicateT& predicate) const;
-
-    //! iterator to the begining of the list
-    iterator begin();
-    //! iterator to the begining of the list
-    const_iterator begin() const;
-
-    //! iterator to the end of the list
-    iterator end();
-    //! iterator to the end of the list
-    const_iterator end() const;
-
-    //@}
+    void each(const PredicateT& predicate) const
+    {
+        auto end = cluster.end();
+        for (auto i = cluster.begin(); i != end; ++i)
+        {
+            const auto& it = *(i->second);
+            predicate(it);
+        }
+    }
 
     //! \name Cluster management
     //@{
@@ -74,7 +80,7 @@ public:
     ** \param t The cluster to add
     ** \return True if the cluster has been added, false otherwise
     */
-    bool add(Cluster* t);
+    bool add(ClusterT* t);
 
     /*!
     ** \brief Detach a cluster represented by an iterator
@@ -84,7 +90,7 @@ public:
     ** The iterator should considered as invalid after using this method.
     ** \return A pointer to the cluster, NULL if an error has occured
     */
-    Cluster* detach(iterator i);
+    ClusterT* detach(iterator i);
 
     /*!
     ** \brief Remove a cluster represented by an iterator
@@ -94,7 +100,7 @@ public:
     ** The iterator should considered as invalid after using this method.
     ** \return void
     */
-    void remove(iterator i);
+    virtual void remove(iterator i);
 
     /*!
     ** \brief Load a list of cluster from a folder
@@ -103,7 +109,7 @@ public:
     ** \param area The associate area
     ** \return True if the operation succeeded, false otherwise
     */
-    bool loadFromFolder(Study& s, const AnyString& folder, Area* area);
+    virtual bool loadFromFolder(Study& s, const AnyString& folder, Area* area);
 
     /*!
     ** \brief Try to find a cluster from its id
@@ -111,14 +117,14 @@ public:
     ** \param id ID of the cluster to find
     ** \return A pointer to a cluster. nullptr if not found
     */
-    Cluster* find(const Data::ClusterName& id);
+    ClusterT* find(const Data::ClusterName& id);
     /*!
     ** \brief Try to find a cluster from its id (const)
     **
     ** \param id ID of the cluster to find
     ** \return A pointer to a cluster. nullptr if not found
     */
-    const Cluster* find(const Data::ClusterName& id) const;
+    const ClusterT* find(const Data::ClusterName& id) const;
 
     /*!
     ** \brief Try to find a cluster from its pointer
@@ -126,14 +132,14 @@ public:
     ** \param  p Pointer of the cluster to find
     ** \return A pointer to a cluster. nullptr if not found
     */
-    Cluster* find(const Cluster* p);
+    ClusterT* find(const ClusterT* p);
     /*!
     ** \brief Try to find a cluster from its pointer (const)
     **
     ** \param  p Pointer of the cluster to find
     ** \return A pointer to a cluster. nullptr if not found
     */
-    const Cluster* find(const Cluster* p) const;
+    const ClusterT* find(const ClusterT* p) const;
 
     /*!
     ** \brief Get if a cluster exists
@@ -158,7 +164,7 @@ public:
     /*!
     ** \brief Remove properly a cluster
     */
-    bool remove(const Data::ClusterName& id);
+    virtual bool remove(const Data::ClusterName& id);
 
     //! Get the number of items in the list
     uint size() const;
@@ -166,6 +172,16 @@ public:
     //! Get if the list is empty
     bool empty() const;
     //@}
+
+    //! iterator to the begining of the list
+    iterator begin();
+    //! iterator to the begining of the list
+    const_iterator begin() const;
+
+    //! iterator to the end of the list
+    iterator end();
+    //! iterator to the end of the list
+    const_iterator end() const;
 
     /*!
     ** \brief Resize all matrices dedicated to the sampled timeseries numbers
@@ -177,6 +193,7 @@ public:
     bool storeTimeseriesNumbers(Study& study);
 
     void retrieveTotalCapacity(double& total) const;
+
     //@}
 
     //! \name Memory management
@@ -215,16 +232,17 @@ public:
     /*!
     ** \brief Try to estimate the amount of memory which will be used by the solver
     */
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+    virtual void estimateMemoryUsage(StudyMemoryUsage&) const = 0;
     //@}
 
 public:
     //! All clusters by their index
-    Cluster** byIndex;
+    ClusterT** byIndex;
     //! All clusters
-    Cluster::Map cluster;
+    Map cluster;
 
-    virtual Cluster* clusterFactory(Area*, uint) = 0;
+    // thermal, renewable, etc.
+    virtual YString typeID() const = 0;
 
     /*!
     ** \brief Number of dispatchable cluster per group
@@ -237,7 +255,8 @@ public:
 
     int loadDataSeriesFromFolder(Study& study,
                                  const StudyLoadOptions& options,
-                                 const AnyString& folder);
+                                 const AnyString& folder,
+                                 bool fast);
 
     int saveDataSeriesToFolder(const AnyString& folder) const;
 
@@ -249,7 +268,4 @@ public:
 }; // class ClusterList
 } // namespace Data
 } // namespace Antares
-
-#include "cluster_list.hxx"
-
 #endif /* __ANTARES_LIBS_STUDY_PARTS_COMMON_CLUSTER_LIST_H__ */

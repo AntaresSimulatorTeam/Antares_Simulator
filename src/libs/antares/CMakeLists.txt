@@ -202,7 +202,6 @@ set(SRC_STUDY_PART_COMMON
     study/parts/common/cluster.cpp
     study/parts/common/cluster.h
     study/parts/common/cluster_list.h
-	study/parts/common/cluster_list.hxx
 	study/parts/common/cluster_list.cpp
     )
 source_group("study\\part\\common" FILES ${SRC_STUDY_PART_COMMON})
@@ -217,6 +216,8 @@ set(SRC_STUDY_PART_THERMAL
 	study/parts/thermal/cluster.h
 	study/parts/thermal/cluster.hxx
 	study/parts/thermal/cluster.cpp
+    study/parts/thermal/cluster_list.h
+    study/parts/thermal/cluster_list.cpp
 	)
 source_group("study\\part\\thermal" FILES ${SRC_STUDY_PART_THERMAL})
 

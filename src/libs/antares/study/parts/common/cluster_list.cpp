@@ -1,13 +1,10 @@
 #include "cluster_list.h"
-#include "../../memory-usage.h"
-#include "../../../logs.h"
+#include "../../../utils.h"
+#include "../../../inifile.h"
 #include "../../study.h"
+#include "../../area.h"
 
 using namespace Yuni;
-using namespace Antares;
-
-#define SEP IO::Separator
-
 namespace // anonymous
 {
 struct TSNumbersPredicate
@@ -23,19 +20,87 @@ namespace Antares
 {
 namespace Data
 {
-Cluster* ClusterList::detach(iterator i)
+using namespace Antares;
+
+template<class ClusterT>
+inline void ClusterList<ClusterT>::flush()
+{
+#ifndef ANTARES_SWAP_SUPPORT
+    auto end = cluster.end();
+    for (auto i = cluster.begin(); i != end; ++i)
+    {
+        Cluster& it = *(i->second);
+        it.flush();
+    }
+#endif
+}
+
+template<class ClusterT>
+inline uint ClusterList<ClusterT>::size() const
+{
+    return (uint)cluster.size();
+}
+
+template<class ClusterT>
+inline bool ClusterList<ClusterT>::empty() const
+{
+    return cluster.empty();
+}
+
+template<class ClusterT>
+typename ClusterList<ClusterT>::iterator ClusterList<ClusterT>::begin()
+{
+    return std::begin(cluster);
+}
+
+template<class ClusterT>
+typename ClusterList<ClusterT>::const_iterator ClusterList<ClusterT>::begin() const
+{
+    return std::begin(cluster);
+}
+
+template<class ClusterT>
+typename ClusterList<ClusterT>::iterator ClusterList<ClusterT>::end()
+{
+    return std::end(cluster);
+}
+
+template<class ClusterT>
+typename ClusterList<ClusterT>::const_iterator ClusterList<ClusterT>::end() const
+{
+    return std::end(cluster);
+}
+
+template<class ClusterT>
+const ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id) const
+{
+    auto i = cluster.find(id);
+    return (i != cluster.end()) ? i->second : nullptr;
+}
+
+template<class ClusterT>
+ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id)
+{
+    auto i = cluster.find(id);
+    return (i != cluster.end()) ? i->second : nullptr;
+}
+
+template<class ClusterT>
+ClusterT* ClusterList<ClusterT>::detach(iterator i)
 {
     auto* c = i->second;
     cluster.erase(i);
     return c;
 }
 
-void ClusterList::remove(iterator i)
+template<class ClusterT>
+void ClusterList<ClusterT>::remove(iterator i)
 {
     cluster.erase(i);
 }
 
-bool ClusterList::exists(const Data::ClusterName& id) const
+template<class ClusterT>
+bool ClusterList<ClusterT>::exists(const Data::ClusterName& id) const
 {
     if (not cluster.empty())
     {
@@ -44,18 +109,22 @@ bool ClusterList::exists(const Data::ClusterName& id) const
     }
     return false;
 }
-Data::ClusterList::ClusterList(uint sizeGroup) : byIndex(nullptr),
-                                                 groupCount(sizeGroup, 0)
+
+template<class ClusterT>
+Data::ClusterList<ClusterT>::ClusterList(uint sizeGroup) :
+ byIndex(nullptr), groupCount(sizeGroup, 0)
 {
 }
 
-Data::ClusterList::~ClusterList()
+template<class ClusterT>
+Data::ClusterList<ClusterT>::~ClusterList()
 {
     // deleting all renewable clusters
     clear();
 }
 
-void ClusterList::clear()
+template<class ClusterT>
+void ClusterList<ClusterT>::clear()
 {
     if (byIndex)
     {
@@ -67,7 +136,8 @@ void ClusterList::clear()
         cluster.clear();
 }
 
-const Cluster* ClusterList::find(const Cluster* p) const
+template<class ClusterT>
+const ClusterT* ClusterList<ClusterT>::find(const ClusterT* p) const
 {
     auto end = cluster.end();
     for (auto i = cluster.begin(); i != end; ++i)
@@ -78,7 +148,8 @@ const Cluster* ClusterList::find(const Cluster* p) const
     return nullptr;
 }
 
-Data::Cluster* ClusterList::find(const Cluster* p)
+template<class ClusterT>
+ClusterT* ClusterList<ClusterT>::find(const ClusterT* p)
 {
     auto end = cluster.end();
     for (auto i = cluster.begin(); i != end; ++i)
@@ -89,7 +160,8 @@ Data::Cluster* ClusterList::find(const Cluster* p)
     return nullptr;
 }
 
-void ClusterList::resizeAllTimeseriesNumbers(uint n)
+template<class ClusterT>
+void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n)
 {
     assert(n < 200000); // arbitrary number
     if (not cluster.empty())
@@ -105,29 +177,36 @@ void ClusterList::resizeAllTimeseriesNumbers(uint n)
     }
 }
 
-void ClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
+#define SEP IO::Separator
+
+template<class ClusterT>
+bool ClusterList<ClusterT>::storeTimeseriesNumbers(Study& study)
 {
-    u.requiredMemoryForInput += (sizeof(void*) * 4 /*overhead map*/) * cluster.size();
+    if (cluster.empty())
+        return true;
+
+    bool ret = true;
+    TSNumbersPredicate predicate;
 
     each([&](const Cluster& cluster) {
-        u.requiredMemoryForInput += sizeof(Cluster);
-        u.requiredMemoryForInput += sizeof(void*);
-        if (cluster.series)
-            cluster.series->estimateMemoryUsage(u, timeSeriesRenewable /* FIXME */);
-
-        // From the solver
-        u.requiredMemoryForInput += 70 * 1024;
+        study.buffer = study.folderOutput;
+        study.buffer << SEP << "ts-numbers" << SEP << typeID() << SEP << cluster.parentArea->id
+                     << SEP << cluster.id() << ".txt";
+        ret = cluster.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate)
+              and ret;
     });
+    return ret;
 }
 
-void ClusterList::rebuildIndex()
+template<class ClusterT>
+void ClusterList<ClusterT>::rebuildIndex()
 {
     delete[] byIndex;
 
     if (not empty())
     {
         uint indx = 0;
-        typedef Cluster* ClusterWeakPtr;
+        typedef ClusterT* ClusterWeakPtr;
         byIndex = new ClusterWeakPtr[size()];
 
         auto end = cluster.end();
@@ -143,7 +222,8 @@ void ClusterList::rebuildIndex()
         byIndex = nullptr;
 }
 
-bool ClusterList::add(Cluster* newcluster)
+template<class ClusterT>
+bool ClusterList<ClusterT>::add(ClusterT* newcluster)
 {
     if (newcluster)
     {
@@ -159,7 +239,8 @@ bool ClusterList::add(Cluster* newcluster)
     return false;
 }
 
-static bool ClusterLoadFromProperty(Cluster& cluster, const IniFile::Property* p)
+template<class ClusterT>
+static bool ClusterLoadFromProperty(ClusterT& cluster, const IniFile::Property* p)
 {
     if (p->key.empty())
         return false;
@@ -180,8 +261,9 @@ static bool ClusterLoadFromProperty(Cluster& cluster, const IniFile::Property* p
     return false;
 }
 
+template<class ClusterT>
 static bool ClusterLoadFromSection(const AnyString& filename,
-                                   Cluster& cluster,
+                                   ClusterT& cluster,
                                    const IniFile::Section& section)
 {
     if (section.name.empty())
@@ -211,7 +293,8 @@ static bool ClusterLoadFromSection(const AnyString& filename,
     return true;
 }
 
-bool ClusterList::loadFromFolder(Study& study, const AnyString& folder, Area* area)
+template<class ClusterT>
+bool ClusterList<ClusterT>::loadFromFolder(Study& study, const AnyString& folder, Area* area)
 {
     assert(area and "A parent area is required");
 
@@ -232,7 +315,7 @@ bool ClusterList::loadFromFolder(Study& study, const AnyString& folder, Area* ar
                 if (section->name.empty())
                     continue;
 
-                Cluster* cluster = clusterFactory(area, study.maxNbYearsInParallel);
+                ClusterT* cluster = new ClusterT(area, study.maxNbYearsInParallel);
 
                 // Load data of a renewable cluster from a ini file section
                 if (not ClusterLoadFromSection(study.buffer, *cluster, *section))
@@ -263,15 +346,17 @@ bool ClusterList::loadFromFolder(Study& study, const AnyString& folder, Area* ar
     return false;
 }
 
-Yuni::uint64 ClusterList::memoryUsage() const
+template<class ClusterT>
+Yuni::uint64 ClusterList<ClusterT>::memoryUsage() const
 {
     uint64 ret = sizeof(ClusterList) + (2 * sizeof(void*)) * this->size();
 
-    each([&](const Data::Cluster& cluster) { ret += cluster.memoryUsage(); });
+    each([&](const ClusterT& cluster) { ret += cluster.memoryUsage(); });
     return ret;
 }
 
-bool ClusterList::rename(Data::ClusterName idToFind, Data::ClusterName newName)
+template<class ClusterT>
+bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName newName)
 {
     if (not idToFind or newName.empty())
         return false;
@@ -287,14 +372,14 @@ bool ClusterList::rename(Data::ClusterName idToFind, Data::ClusterName newName)
 
     // The new ID
     Data::ClusterName newID;
-    TransformNameIntoID(newName, newID);
+    Antares::TransformNameIntoID(newName, newID);
 
     // Looking for the renewable cluster in the list
     auto it = cluster.find(idToFind);
     if (it == cluster.end())
         return true;
 
-    Data::Cluster* p = it->second;
+    ClusterT* p = it->second;
 
     if (idToFind == newID)
     {
@@ -326,7 +411,8 @@ bool ClusterList::rename(Data::ClusterName idToFind, Data::ClusterName newName)
     return true;
 }
 
-bool Data::ClusterList::invalidate(bool reload) const
+template<class ClusterT>
+bool ClusterList<ClusterT>::invalidate(bool reload) const
 {
     bool ret = true;
     auto end = cluster.end();
@@ -335,32 +421,16 @@ bool Data::ClusterList::invalidate(bool reload) const
     return ret;
 }
 
-void Data::ClusterList::markAsModified() const
+template<class ClusterT>
+void ClusterList<ClusterT>::markAsModified() const
 {
     auto end = cluster.end();
     for (auto i = cluster.begin(); i != end; ++i)
         (i->second)->markAsModified();
 }
 
-bool ClusterList::storeTimeseriesNumbers(Study& study)
-{
-    if (cluster.empty())
-        return true;
-
-    bool ret = true;
-    TSNumbersPredicate predicate;
-
-    each([&](const Data::Cluster& cluster) {
-        study.buffer = study.folderOutput;
-        study.buffer << SEP << "ts-numbers" << SEP << "renewable" << SEP << cluster.parentArea->id
-                     << SEP << cluster.id() << ".txt";
-        ret = cluster.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate)
-              and ret;
-    });
-    return ret;
-}
-
-void ClusterList::retrieveTotalCapacity(double& total) const
+template<class ClusterT>
+void ClusterList<ClusterT>::retrieveTotalCapacity(double& total) const
 {
     total = 0.;
 
@@ -379,7 +449,8 @@ void ClusterList::retrieveTotalCapacity(double& total) const
     }
 }
 
-bool ClusterList::remove(const Data::ClusterName& id)
+template<class ClusterT>
+bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
 {
     auto i = cluster.find(id);
     if (i == cluster.end())
@@ -401,7 +472,8 @@ bool ClusterList::remove(const Data::ClusterName& id)
     return true;
 }
 
-bool ClusterList::saveToFolder(const AnyString& folder) const
+template<class ClusterT>
+bool ClusterList<ClusterT>::saveToFolder(const AnyString& folder) const
 {
     // Make sure the folder is created
     if (IO::Directory::Create(folder))
@@ -440,7 +512,10 @@ bool ClusterList::saveToFolder(const AnyString& folder) const
     return true;
 }
 
-int ClusterList::saveDataSeriesToFolder(const AnyString& folder) const
+#undef SEP
+
+template<class ClusterT>
+int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) const
 {
     if (empty())
         return 1;
@@ -457,7 +532,8 @@ int ClusterList::saveDataSeriesToFolder(const AnyString& folder) const
     return ret;
 }
 
-int ClusterList::saveDataSeriesToFolder(const AnyString& folder, const String& msg) const
+template<class ClusterT>
+int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, const String& msg) const
 {
     if (empty())
         return 1;
@@ -480,17 +556,19 @@ int ClusterList::saveDataSeriesToFolder(const AnyString& folder, const String& m
     return ret;
 }
 
-int ClusterList::loadDataSeriesFromFolder(Study& s,
-                                          const StudyLoadOptions& options,
-                                          const AnyString& folder)
+template<class ClusterT>
+int ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s,
+                                                    const StudyLoadOptions& options,
+                                                    const AnyString& folder,
+                                                    bool fast)
 {
     if (empty())
         return 1;
 
     int ret = 1;
 
-    each([&](Data::Cluster& cluster) {
-        if (cluster.series)
+    each([&](ClusterT& cluster) {
+        if (cluster.series and (!fast or !cluster.prepro))
             ret = cluster.loadDataSeriesFromFolder(s, folder) and ret;
 
         ++options.progressTicks;
@@ -499,7 +577,8 @@ int ClusterList::loadDataSeriesFromFolder(Study& s,
     return ret;
 }
 
-void ClusterList::ensureDataTimeSeries()
+template<class ClusterT>
+void ClusterList<ClusterT>::ensureDataTimeSeries()
 {
     auto end = cluster.end();
     for (auto it = cluster.begin(); it != end; ++it)
@@ -509,6 +588,10 @@ void ClusterList::ensureDataTimeSeries()
             cluster.series = new DataSeriesCommon();
     }
 }
+
+// Force template instantiation
+template class ClusterList<ThermalCluster>;
+template class ClusterList<RenewableCluster>;
 
 } // namespace Data
 } // namespace Antares

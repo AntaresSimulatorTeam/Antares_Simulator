@@ -1024,8 +1024,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             ret = ThermalClusterListLoadPreproFromFolder(study, options, &area.thermal.list, buffer)
                   and ret;
             buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
-            ret = ThermalClusterListLoadDataSeriesFromFolder(
-                    study, options, &area.thermal.list, buffer, options.loadOnlyNeeded)
+            ret = area.thermal.list.loadDataSeriesFromFolder(
+                    study, options, buffer, options.loadOnlyNeeded)
                   and ret;
         }
         else
@@ -1040,8 +1040,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             else
             {
                 buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
-                ret = ThermalClusterListLoadDataSeriesFromFolder(
-                        study, options, &area.thermal.list, buffer, options.loadOnlyNeeded)
+                ret = area.thermal.list.loadDataSeriesFromFolder(
+                        study, options, buffer, options.loadOnlyNeeded)
                       and ret;
             }
         }
@@ -1080,7 +1080,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // Renewable cluster list
     {
         buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
-        ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer) and ret;
+        ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer, false) and ret;
         // flush
         area.renewable.list.flush();
     }

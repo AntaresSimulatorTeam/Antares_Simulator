@@ -250,18 +250,6 @@ const char* Data::RenewableCluster::GroupName(enum RenewableGroup grp)
     return "";
 }
 
-namespace // anonymous
-{
-struct TSNumbersPredicate
-{
-    uint32 operator()(uint32 value) const
-    {
-        return value + 1;
-    }
-};
-
-} // anonymous namespace
-
 uint64 RenewableCluster::memoryUsage() const
 {
     uint64 amount = sizeof(RenewableCluster);

@@ -39,7 +39,12 @@ namespace Antares
 namespace Data
 {
 PartThermal::PartThermal() :
- unsuppliedEnergyCost(0.), spilledEnergyCost(0.), clusters(nullptr), clusterCount((uint)-1)
+ unsuppliedEnergyCost(0.),
+ spilledEnergyCost(0.),
+ list(thermalDispatchGrpMax),
+ mustrunList(thermalDispatchGrpMax),
+ clusters(nullptr),
+ clusterCount((uint)-1)
 {
 }
 
@@ -160,7 +165,7 @@ uint PartThermal::removeDisabledClusters()
             disabledClusters.push_back(it.first);
     }
 
-    for (auto& cluster : disabledClusters)
+    for (const auto& cluster : disabledClusters)
         list.remove(cluster);
 
     return disabledClusters.size();

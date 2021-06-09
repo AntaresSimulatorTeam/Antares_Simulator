@@ -1078,7 +1078,7 @@ bool Study::areasThermalClustersMinStablePowerValidity(
     return resultat;
 }
 
-bool Study::thermalClusterRename(ThermalCluster* cluster, ClusterName newName, bool)
+bool Study::thermalClusterRename(Cluster* cluster, ClusterName newName, bool)
 {
     // A name must not be empty
     if (!cluster or !newName)
@@ -1108,7 +1108,7 @@ bool Study::thermalClusterRename(ThermalCluster* cluster, ClusterName newName, b
 
     // Checking if the area exists
     {
-        ThermalCluster* found;
+        Cluster* found;
         if ((found = area.thermal.list.find(newID)))
         {
             if (found->name() != newName)
@@ -1481,7 +1481,7 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
             auto& cname = clustername;
             cname.clear();
 
-            area.thermal.list.each([&](const ThermalCluster& cluster) {
+            area.thermal.list.each([&](const Cluster& cluster) {
                 if (cluster.id().size() > cname.size())
                     cname = cluster.id();
             });
