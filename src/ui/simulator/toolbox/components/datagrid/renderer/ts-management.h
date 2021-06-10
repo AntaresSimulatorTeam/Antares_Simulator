@@ -41,11 +41,11 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class SimulationTSManagement final : public IRenderer
+class TSmanagement final : public IRenderer
 {
 public:
-    SimulationTSManagement();
-    virtual ~SimulationTSManagement();
+    TSmanagement();
+    virtual ~TSmanagement();
 
     virtual int width() const
     {
@@ -95,7 +95,7 @@ protected:
 private:
     void onSimulationTSManagementChanged();
 
-}; // class SimulationTSManagement
+}; // class TSmanagement
 
 } // namespace Renderer
 } // namespace Datagrid

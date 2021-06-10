@@ -78,7 +78,7 @@ Panel::Panel(wxWindow* parent) : Antares::Component::Panel(parent)
             new Component::CaptionPanel(this, wxT("Time-Series Management")), 0, wxALL | wxEXPAND);
         /*
         typedef Component::Datagrid::Component DatagridType;
-        typedef Component::Datagrid::Renderer::SimulationTSManagement RendererType;
+        typedef Component::Datagrid::Renderer::TSmanagement RendererType;
         RendererType* renderer = new RendererType();
         DatagridType* grid = new DatagridType(this, renderer, wxEmptyString, false, true, true);
         renderer->control(grid);
@@ -111,7 +111,7 @@ Panel::~Panel()
 void Panel::onStudyLoaded()
 {
     typedef Component::Datagrid::Component DatagridType;
-    typedef Component::Datagrid::Renderer::SimulationTSManagement RendererType;
+    typedef Component::Datagrid::Renderer::TSmanagement RendererType;
     RendererType* renderer = new RendererType();
     DatagridType* grid = new DatagridType(this, renderer, wxEmptyString, false, true, true);
     renderer->control(grid);

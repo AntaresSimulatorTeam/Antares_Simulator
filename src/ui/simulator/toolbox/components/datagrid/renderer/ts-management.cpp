@@ -51,16 +51,16 @@ namespace Datagrid
 {
 namespace Renderer
 {
-SimulationTSManagement::SimulationTSManagement() : pControl(nullptr)
+TSmanagement::TSmanagement() : pControl(nullptr)
 {
 }
 
-SimulationTSManagement::~SimulationTSManagement()
+TSmanagement::~TSmanagement()
 {
     destroyBoundEvents();
 }
 
-wxString SimulationTSManagement::columnCaption(int colIndx) const
+wxString TSmanagement::columnCaption(int colIndx) const
 {
     static const wxChar* const captions[] = {wxT("      Load      "),
                                              wxT("   Thermal   "),
@@ -72,7 +72,7 @@ wxString SimulationTSManagement::columnCaption(int colIndx) const
     return wxEmptyString;
 }
 
-wxString SimulationTSManagement::rowCaption(int rowIndx) const
+wxString TSmanagement::rowCaption(int rowIndx) const
 {
     static const wxChar* const captions[] = {
       wxT("Ready made TS"),
@@ -94,7 +94,7 @@ wxString SimulationTSManagement::rowCaption(int rowIndx) const
     return wxEmptyString;
 }
 
-bool SimulationTSManagement::cellValue(int x, int y, const String& value)
+bool TSmanagement::cellValue(int x, int y, const String& value)
 {
     if (not study || x < 0 || x > 4)
         return 0.;
@@ -299,7 +299,7 @@ bool SimulationTSManagement::cellValue(int x, int y, const String& value)
     return false;
 }
 
-double SimulationTSManagement::cellNumericValue(int x, int y) const
+double TSmanagement::cellNumericValue(int x, int y) const
 {
     if (not study || x < 0 || x > 4)
         return 0.;
@@ -400,7 +400,7 @@ double SimulationTSManagement::cellNumericValue(int x, int y) const
     return 0.;
 }
 
-wxString SimulationTSManagement::cellValue(int x, int y) const
+wxString TSmanagement::cellValue(int x, int y) const
 {
     if (not study || x < 0 || x > 4)
         return wxEmptyString;
@@ -492,7 +492,7 @@ wxString SimulationTSManagement::cellValue(int x, int y) const
     return wxEmptyString;
 }
 
-void SimulationTSManagement::onSimulationTSManagementChanged()
+void TSmanagement::onSimulationTSManagementChanged()
 {
     if (pControl)
     {
@@ -501,7 +501,7 @@ void SimulationTSManagement::onSimulationTSManagementChanged()
     }
 }
 
-IRenderer::CellStyle SimulationTSManagement::cellStyle(int x, int y) const
+IRenderer::CellStyle TSmanagement::cellStyle(int x, int y) const
 {
     if (not study || x < 0 || x > 4)
         return IRenderer::cellStyleError;
@@ -563,7 +563,7 @@ IRenderer::CellStyle SimulationTSManagement::cellStyle(int x, int y) const
     return tsGenerator ? IRenderer::cellStyleDefault : IRenderer::cellStyleDefaultDisabled;
 }
 
-wxColour SimulationTSManagement::horizontalBorderColor(int x, int y) const
+wxColour TSmanagement::horizontalBorderColor(int x, int y) const
 {
     if (y == 1 || y == 9)
         return Default::BorderDaySeparator();
