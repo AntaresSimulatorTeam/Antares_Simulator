@@ -103,7 +103,7 @@ void DataSeriesRenewable::estimateMemoryUsage(StudyMemoryUsage& u) const
     timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
     series.estimateMemoryUsage(u,
                                0 != (timeSeriesRenewable & u.study.parameters.timeSeriesToGenerate),
-                               u.study.parameters.nbTimeSeriesRenewable,
+                               1,
                                HOURS_PER_YEAR);
 }
 

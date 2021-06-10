@@ -219,7 +219,6 @@ void Parameters::reset()
     nbTimeSeriesHydro = 1;
     nbTimeSeriesWind = 1;
     nbTimeSeriesThermal = 1;
-    nbTimeSeriesRenewable = 1;
     // Time-series refresh
     timeSeriesToRefresh = 0; // None
     refreshIntervalLoad = 100;
