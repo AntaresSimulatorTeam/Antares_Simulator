@@ -114,7 +114,7 @@ bool Area::storeTimeseriesNumbersForWind(Study& study)
 
 bool Area::storeTimeseriesNumbersForThermal(Study& study)
 {
-    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP << "thermal" << SEP
+    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP << thermal.list.typeID() << SEP
                          << id;
 
     if (!IO::Directory::Create(study.buffer))
@@ -130,7 +130,7 @@ bool Area::storeTimeseriesNumbersForThermal(Study& study)
 
 bool Area::storeTimeseriesNumbersForRenewable(Study& study)
 {
-    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP << "renewables" << SEP
+    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP << renewable.list.typeID() << SEP
                          << id;
 
     if (!IO::Directory::Create(study.buffer))

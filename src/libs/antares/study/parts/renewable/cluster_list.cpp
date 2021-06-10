@@ -18,7 +18,7 @@ RenewableClusterList::RenewableClusterList(uint groupSize) : ClusterList(groupSi
 
 YString RenewableClusterList::typeID() const
 {
-    return "renewable";
+    return "renewables";
 }
 
 void RenewableClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
