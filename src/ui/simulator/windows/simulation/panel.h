@@ -67,6 +67,9 @@ private:
     //! local inspector update about the study
     Yuni::Bind<void(const Window::Inspector::InspectorData::Ptr&)> pUpdateInfoStudy;
 
+private:
+    wxBoxSizer* verticalSizer_;
+
 }; // class Panel
 
 } // namespace Simulation

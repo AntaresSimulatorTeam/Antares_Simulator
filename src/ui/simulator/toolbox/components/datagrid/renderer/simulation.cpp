@@ -53,9 +53,6 @@ namespace Renderer
 {
 SimulationTSManagement::SimulationTSManagement() : pControl(nullptr)
 {
-    // if (notifier)
-    //	notifier->onSimulationTSManagementChanged.connect(this,
-    //&SimulationTSManagement::onSimulationTSManagementChanged);
 }
 
 SimulationTSManagement::~SimulationTSManagement()

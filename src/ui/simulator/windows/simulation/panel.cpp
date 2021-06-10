@@ -72,16 +72,19 @@ Panel::Panel(wxWindow* parent) : Antares::Component::Panel(parent)
 
     // TS Management
     {
-        auto* vs = new wxBoxSizer(wxVERTICAL);
-        vs->Add(
-          new Component::CaptionPanel(this, wxT("Time-Series Management")), 0, wxALL | wxEXPAND);
+        // auto* vs = new wxBoxSizer(wxVERTICAL);
+        verticalSizer_ = new wxBoxSizer(wxVERTICAL);
+        verticalSizer_->Add(
+            new Component::CaptionPanel(this, wxT("Time-Series Management")), 0, wxALL | wxEXPAND);
+        /*
         typedef Component::Datagrid::Component DatagridType;
         typedef Component::Datagrid::Renderer::SimulationTSManagement RendererType;
         RendererType* renderer = new RendererType();
         DatagridType* grid = new DatagridType(this, renderer, wxEmptyString, false, true, true);
         renderer->control(grid);
-        vs->Add(grid, 1, wxALL | wxEXPAND);
-        hz->Add(vs, 1, wxALL | wxEXPAND);
+        verticalSizer_->Add(grid, 1, wxALL | wxEXPAND);
+        */
+        hz->Add(verticalSizer_, 1, wxALL | wxEXPAND);
     }
 
     SetSizer(hz);
@@ -107,6 +110,13 @@ Panel::~Panel()
 
 void Panel::onStudyLoaded()
 {
+    typedef Component::Datagrid::Component DatagridType;
+    typedef Component::Datagrid::Renderer::SimulationTSManagement RendererType;
+    RendererType* renderer = new RendererType();
+    DatagridType* grid = new DatagridType(this, renderer, wxEmptyString, false, true, true);
+    renderer->control(grid);
+    verticalSizer_->Add(grid, 1, wxALL | wxEXPAND);
+    
     Dispatcher::GUI::Post(this, &Panel::onDelayedStudyLoaded, 20 /*ms*/);
 }
 
