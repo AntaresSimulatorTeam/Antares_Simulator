@@ -207,7 +207,7 @@ enum TimeSeries
     timeSeriesRenewable = 32,
 
     //! The maximum number of time-series that we can encounter
-    timeSeriesCount = 5,
+    timeSeriesCount = 6,
 
 }; // enum TimeSeries
 

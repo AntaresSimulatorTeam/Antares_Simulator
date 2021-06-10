@@ -39,7 +39,8 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
-Rules::Rules() : load(), solar(), hydro(), wind(), thermal(), hydroLevels(), pAreaCount(0)
+Rules::Rules() :
+ load(), solar(), hydro(), wind(), thermal(), renewable(), hydroLevels(), pAreaCount(0)
 {
 }
 
@@ -63,7 +64,10 @@ void Rules::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) cons
         wind.saveToINIFile(study, file);
         // Thermal, each area
         for (uint i = 0; i != pAreaCount; ++i)
+        {
             thermal[i].saveToINIFile(study, file);
+            renewable[i].saveToINIFile(study, file);
+        }
         // hydro levels
         hydroLevels.saveToINIFile(study, file);
     }
@@ -83,6 +87,7 @@ bool Rules::reset(const Study& study)
     hydro.reset(study);
     wind.reset(study);
 
+    // Thermal
     delete[] thermal;
     thermal = new thermalTSNumberData[pAreaCount];
 
@@ -90,6 +95,16 @@ bool Rules::reset(const Study& study)
     {
         thermal[i].attachArea(study.areas.byIndex[i]);
         thermal[i].reset(study);
+    }
+
+    // Renewable
+    delete[] renewable;
+    renewable = new renewableTSNumberData[pAreaCount];
+
+    for (uint i = 0; i != pAreaCount; ++i)
+    {
+        renewable[i].attachArea(study.areas.byIndex[i]);
+        renewable[i].reset(study);
     }
 
     hydroLevels.reset(study);
@@ -147,6 +162,30 @@ void Rules::loadFromInstrs(Study& study,
         }
     }
 
+    if (kind_of_scenario == "r")
+    {
+        if (clustername.empty())
+            return;
+
+        const RenewableCluster* cluster = area->renewable.list.find(clustername);
+
+        if (cluster)
+        {
+            uint val = fromStringToTSnumber(value);
+            renewable[area->index].set(cluster, year, val);
+        }
+        else
+        {
+            bool isTheActiveRule
+              = (pName.toLower() == study.parameters.activeRulesScenario.toLower());
+            if (not updaterMode and isTheActiveRule)
+            {
+                string clusterId = (area->id).to<string>() + "." + clustername.to<string>();
+                disabledClustersOnRuleActive[clusterId].push_back(year);
+            }
+        }
+    }
+
     if (kind_of_scenario == "l")
     {
         uint val = fromStringToTSnumber(value);
@@ -187,7 +226,10 @@ void Rules::apply(Study& study)
         hydro.apply(study);
         wind.apply(study);
         for (uint i = 0; i != pAreaCount; ++i)
+        {
             thermal[i].apply(study);
+            renewable[i].apply(study);
+        }
         hydroLevels.apply(study);
     }
 }
