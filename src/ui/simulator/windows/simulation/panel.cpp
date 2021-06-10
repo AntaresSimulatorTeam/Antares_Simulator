@@ -31,7 +31,7 @@
 #include "../../toolbox/components/notebook/notebook.h"
 #include "../../toolbox/components/captionpanel.h"
 #include "../../toolbox/components/datagrid/component.h"
-#include "../../toolbox/components/datagrid/renderer/simulation.h"
+#include "../../toolbox/components/datagrid/renderer/ts-management.h"
 #include "../../application/main.h"
 #include "../../application/study.h"
 #include "../../toolbox/validator.h"

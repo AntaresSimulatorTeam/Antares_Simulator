@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "simulation.h"
+#include "ts-management.h"
 #include <wx/panel.h>
 #include <yuni/core/math.h>
 #include <algorithm>
