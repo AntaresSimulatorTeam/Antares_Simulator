@@ -72,7 +72,7 @@ using namespace Yuni;
                 nbTimeseries[TS_INDEX(T)] = parameters.nbTimeSeriesThermal;   \
                 break;                                                        \
             case Data::timeSeriesRenewable:                                   \
-                nbTimeseries[TS_INDEX(T)] = parameters.nbTimeSeriesRenewable; \
+                nbTimeseries[TS_INDEX(T)] = 1;                                \
                 break;                                                        \
             case Data::timeSeriesCount:                                       \
                 break;                                                        \
@@ -377,7 +377,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
                         cluster->series->timeseriesNumbers.entry[0][y]
                           = DRAW_A_RANDOM_NUMBER(Data::timeSeriesRenewable,
                                                  cluster->series->series,
-                                                 parameters.nbTimeSeriesRenewable);
+                                                 1);
                     }
                 }
             }
@@ -434,7 +434,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
                 {
                     auto& cluster = *(area.renewable.clusters[j]);
                     CORRELATION_CHECK_INTERMODAL_SINGLE_AREA(Data::timeSeriesRenewable,
-                                                             parameters.nbTimeSeriesRenewable,
+                                                             1,
                                                              cluster.series->series.width);
                 }
             }

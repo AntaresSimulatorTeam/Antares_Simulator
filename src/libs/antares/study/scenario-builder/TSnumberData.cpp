@@ -434,7 +434,7 @@ uint renewableTSNumberData::get_tsGenCount(const Study& study) const
     auto& parameters = study.parameters;
 
     bool tsGenRenewable = (0 != (parameters.timeSeriesToGenerate & timeSeriesRenewable));
-    return tsGenRenewable ? parameters.nbTimeSeriesRenewable : 0u;
+    return tsGenRenewable ? 1 : 0u;
 }
 
 void renewableTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
