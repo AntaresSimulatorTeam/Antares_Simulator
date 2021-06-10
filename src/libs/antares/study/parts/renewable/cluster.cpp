@@ -138,12 +138,12 @@ void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
         groupID = rooftopSolar;
         return;
     }
-    if (newgrp == "wind on-shore")
+    if (newgrp == "wind on shore" || newgrp == "wind on-shore")
     {
         groupID = windOnShore;
         return;
     }
-    if (newgrp == "wind off-shore")
+    if (newgrp == "wind off shore" || newgrp == "wind off-shore")
     {
         groupID = windOffShore;
         return;
@@ -227,9 +227,9 @@ const char* Data::RenewableCluster::GroupName(enum RenewableGroup grp)
     switch (grp)
     {
     case windOffShore:
-        return "Wind off-shore";
+        return "Wind off shore";
     case windOnShore:
-        return "Wind on-shore";
+        return "Wind on shore";
     case concentrationSolar:
         return "Concentration solar";
     case PVSolar:
