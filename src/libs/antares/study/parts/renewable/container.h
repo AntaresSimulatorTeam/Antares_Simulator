@@ -106,7 +106,7 @@ public:
     ** This list is mainly used to ensure the same order of the
     ** renewable clusters in the outputs.
     */
-    Cluster** clusters;
+    RenewableCluster** clusters;
     //! How many clusters have we got ?
     // Only available from the solver
     uint clusterCount;

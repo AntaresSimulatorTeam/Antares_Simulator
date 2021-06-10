@@ -78,14 +78,14 @@ void PartRenewable::prepareAreaWideIndexes()
         return;
     }
 
-    typedef Cluster* RenewableClusterPointer;
+    typedef RenewableCluster* RenewableClusterPointer;
     clusters = new RenewableClusterPointer[clusterCount];
 
     auto end = list.end();
     uint idx = 0;
     for (auto i = list.begin(); i != end; ++i)
     {
-        Cluster* t = i->second;
+        RenewableCluster* t = i->second;
         t->areaWideIndex = idx;
         clusters[idx] = t;
         ++idx;
