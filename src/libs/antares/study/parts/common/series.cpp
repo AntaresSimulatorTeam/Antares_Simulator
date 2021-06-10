@@ -61,7 +61,7 @@ void DataSeriesCommon::estimateMemoryUsage(StudyMemoryUsage& u, enum TimeSeries 
         nbTimeSeries = u.study.parameters.nbTimeSeriesThermal;
         break;
     case timeSeriesRenewable:
-        nbTimeSeries = u.study.parameters.nbTimeSeriesRenewable;
+        nbTimeSeries = 1;
         break;
     default:
         nbTimeSeries = 0;
