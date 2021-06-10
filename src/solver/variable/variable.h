@@ -206,7 +206,7 @@ public:
     ** \param state The current thermal cluster
     ** \param year The current year
     */
-    void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year);
+    void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year, uint numSpace);
 
     /*!
     ** \brief Notify to all variables that the year is close to end
@@ -216,7 +216,9 @@ public:
     ** \param state The current thermal cluster
     ** \param year The current year
     */
-    void yearEndBuildForEachThermalCluster(State& state, uint year);
+    void yearEndBuildForEachThermalCluster(State& state, uint year, uint numSpace);
+
+    void yearEndBuildPrepareDataForEachRenewableCluster(State& state, uint year, uint numSpace);
 
     /*!
     ** \brief Notify to all variables that the year is now over
@@ -249,6 +251,11 @@ public:
     //! Event: For a given hour in the year, walking through all thermal clusters
     // for a given area
     void hourForEachThermalCluster(State& state);
+
+    void hourForEachThermalCluster(State& state, unsigned int numSpace);
+
+    void hourForEachRenewableCluster(State& state, unsigned int numSpace);
+
     //! Event: For a given hour in the year, walking through all links
     // for a given area
     void hourForEachLink(State& state, uint numSpace);

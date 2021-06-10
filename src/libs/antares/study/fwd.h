@@ -47,6 +47,7 @@ class AreaLink;
 class AreaList;
 class AreaUI;
 class ThermalCluster;
+class RenewableCluster;
 
 class AreaScratchpad;
 

@@ -250,14 +250,6 @@ public:
         NextType::initializeFromAreaLink(study, link);
     }
 
-    void initializeFromThermalCluster(Data::Study* study,
-                                      Data::Area* area,
-                                      Data::ThermalCluster* cluster)
-    {
-        // Next
-        NextType::initializeFromThermalCluster(study, area, cluster);
-    }
-
     void simulationBegin()
     {
         // Next
@@ -292,20 +284,15 @@ public:
         for (unsigned int i = 0; i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd]; ++i)
         {
             state.thermalClusterProductionForYear[i]
-              += pValuesForTheCurrentYear[numSpace][state.cluster->areaWideIndex].hour[i];
+              += pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i];
             state.thermalClusterPMinOfTheClusterForYear[i]
               += pminOfTheClusterForYear[numSpace]
-                                        [(state.cluster->areaWideIndex * maxHoursInAYear) + i];
+                                        [(state.thermalCluster->areaWideIndex * maxHoursInAYear)
+                                         + i];
         }
 
         // Next variable
         NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
-    }
-
-    void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
     }
 
     void yearEndBuild(State& state, unsigned int year)
@@ -370,12 +357,13 @@ public:
     void hourForEachThermalCluster(State& state, unsigned int numSpace)
     {
         // Production for this hour
-        pValuesForTheCurrentYear[numSpace][state.cluster->areaWideIndex].hour[state.hourInTheYear]
+        pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex]
+          .hour[state.hourInTheYear]
           +=
           // production for the current thermal dispatchable cluster
           (state.thermalClusterProduction);
 
-        pminOfTheClusterForYear[numSpace][(state.cluster->areaWideIndex * maxHoursInAYear)
+        pminOfTheClusterForYear[numSpace][(state.thermalCluster->areaWideIndex * maxHoursInAYear)
                                           + state.hourInTheYear]
           =
             // pmin of the current cluster

@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_NonProportionalCost_H__
-#define __SOLVER_VARIABLE_ECONOMY_NonProportionalCost_H__
+#ifndef __SOLVER_VARIABLE_ECONOMY_RenewableGeneration_H__
+#define __SOLVER_VARIABLE_ECONOMY_RenewableGeneration_H__
 
 #include "../variable.h"
 
@@ -37,39 +37,35 @@ namespace Variable
 {
 namespace Economy
 {
-struct VCardNonProportionalCost
+struct VCardRenewableGeneration
 {
     //! Caption
     static const char* Caption()
     {
-        return "NP COST";
+        return "Renewable Gen.";
     }
     //! Unit
     static const char* Unit()
     {
-        return "Euro";
+        return "MWh";
     }
 
     //! The short description of the variable
     static const char* Description()
     {
-        return "Non Proportional Cost throughout all MC years, of all the thermal dispatchable "
-               "clusters";
+        return "Value of all the renewable generation throughout all MC years";
     }
 
     //! The expecte results
-    typedef Results<R::AllYears::Average<        // The average values throughout all years
-                      R::AllYears::StdDeviation< // The standard deviation values throughout all
-                                                 // years
-                        R::AllYears::Min<        // The minimum values throughout all years
-                          R::AllYears::Max<      // The maximum values throughout all years
-                            >>>>,
-                    R::AllYears::Average // The
-                    >
+    typedef Results<R::AllYears::Average< // The average values throughout all years
+      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
+        R::AllYears::Min<                 // The minimum values throughout all years
+          R::AllYears::Max<               // The maximum values throughout all years
+            >>>>>
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardNonProportionalCost VCardForSpatialAggregate;
+    typedef VCardRenewableGeneration VCardForSpatialAggregate;
 
     enum
     {
@@ -84,7 +80,7 @@ struct VCardNonProportionalCost
         //! Decimal precision
         decimal = 0,
         //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 1,
+        columnCount = 9,
         //! The Spatial aggregation
         spatialAggregate = Category::spatialAggregateSum,
         spatialAggregateMode = Category::spatialAggregateEachYear,
@@ -95,28 +91,56 @@ struct VCardNonProportionalCost
         isPossiblyNonApplicable = 0,
     };
 
-    typedef IntermediateValues IntermediateValuesBaseType;
-    typedef IntermediateValues* IntermediateValuesType;
+    typedef IntermediateValues IntermediateValuesBaseType[columnCount];
+    typedef IntermediateValuesBaseType* IntermediateValuesType;
 
     typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
 
+    struct Multiple
+    {
+        static const char* Caption(const unsigned int indx)
+        {
+            switch (indx)
+            {
+            case 0:
+                return "WIND OFFSHORE";
+            case 1:
+                return "WIND ONSHORE";
+            case 2:
+                return "SOLAR CONCRT.";
+            case 3:
+                return "SOLAR PV";
+            case 4:
+                return "SOLAR ROOFT";
+            case 5:
+                return "RENW. 1";
+            case 6:
+                return "RENW. 2";
+            case 7:
+                return "RENW. 3";
+            case 8:
+                return "RENW. 4";
+            default:
+                return "<unknown>";
+            }
+        }
+    };
 }; // class VCard
 
 /*!
-** \brief C02 Average value of the overrall OperatingCost emissions expected from all
-**   the thermal dispatchable clusters
+** \brief Marginal RenewableGeneration
 */
 template<class NextT = Container::EndOfList>
-class NonProportionalCost
- : public Variable::IVariable<NonProportionalCost<NextT>, NextT, VCardNonProportionalCost>
+class RenewableGeneration
+ : public Variable::IVariable<RenewableGeneration<NextT>, NextT, VCardRenewableGeneration>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardNonProportionalCost VCardType;
+    typedef VCardRenewableGeneration VCardType;
     //! Ancestor
-    typedef Variable::IVariable<NonProportionalCost<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<RenewableGeneration<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -143,7 +167,7 @@ public:
     };
 
 public:
-    ~NonProportionalCost()
+    ~RenewableGeneration()
     {
         delete[] pValuesForTheCurrentYear;
     }
@@ -155,8 +179,9 @@ public:
         InitializeResultsFromStudy(AncestorType::pResults, study);
 
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-            pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; ++numSpace)
+            for (unsigned int i = 0; i != VCardType::columnCount; ++i)
+                pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(study);
 
         // Next
         NextType::initializeFromStudy(study);
@@ -165,7 +190,11 @@ public:
     template<class R>
     static void InitializeResultsFromStudy(R& results, Data::Study& study)
     {
-        VariableAccessorType::InitializeAndReset(results, study);
+        for (unsigned int i = 0; i != VCardType::columnCount; ++i)
+        {
+            results[i].initializeFromStudy(study);
+            results[i].reset();
+        }
     }
 
     void initializeFromArea(Data::Study* study, Data::Area* area)
@@ -194,24 +223,10 @@ public:
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
         // Reset the values for the current year
-        pValuesForTheCurrentYear[numSpace].reset();
+        for (unsigned int i = 0; i != VCardType::columnCount; ++i)
+            pValuesForTheCurrentYear[numSpace][i].reset();
         // Next variable
         NextType::yearBegin(year, numSpace);
-    }
-
-    void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
-    {
-        // Get end year calculations
-        for (unsigned int i = state.study.runtime->rangeLimits.hour[Data::rangeBegin];
-             i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd];
-             ++i)
-        {
-            pValuesForTheCurrentYear[numSpace][i]
-              += state.thermalClusterNonProportionalCostForYear[i];
-        }
-
-        // Next variable
-        NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
     }
 
     void yearEndBuild(State& state, unsigned int year)
@@ -222,8 +237,8 @@ public:
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
-        // Compute all statistics for the current year (daily,weekly,monthly)
-        pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
+        VariableAccessorType::template ComputeStatistics<VCardType>(
+          pValuesForTheCurrentYear[numSpace]);
 
         // Next variable
         NextType::yearEnd(year, numSpace);
@@ -233,12 +248,8 @@ public:
                         unsigned int nbYearsForCurrentSummary)
     {
         for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
-        {
-            // Merge all those values with the global results
-            AncestorType::pResults.merge(numSpaceToYear[numSpace] /*year*/,
-                                         pValuesForTheCurrentYear[numSpace]);
-        }
-
+            VariableAccessorType::ComputeSummary(
+              pValuesForTheCurrentYear[numSpace], AncestorType::pResults, numSpaceToYear[numSpace]);
         // Next variable
         NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
     }
@@ -255,14 +266,13 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
+    void hourForEachRenewableCluster(State& state, unsigned int numSpace)
     {
-        // Total Non Proportional cost
-        // NP = startup cost + fixed cost
-        // pValuesForTheCurrentYear[state.hourInTheYear] += state.thermalClusterNonProportionalCost;
-
+        // Adding the dispatchable generation for the class_name fuel
+        pValuesForTheCurrentYear[numSpace][state.renewableCluster->groupID][state.hourInTheYear]
+          += state.renewableClusterProduction;
         // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
+        NextType::hourForEachRenewableCluster(state, numSpace);
     }
 
     void hourEnd(State& state, unsigned int hourInTheYear)
@@ -271,10 +281,24 @@ public:
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int,
+      unsigned int column,
       unsigned int numSpace) const
     {
-        return pValuesForTheCurrentYear[numSpace].hour;
+        return pValuesForTheCurrentYear[numSpace][column].hour;
+    }
+
+    void yearEndBuildPrepareDataForEachRenewableCluster(State& state,
+                                                        uint year,
+                                                        unsigned int numSpace)
+    {
+        for (unsigned int i = 0; i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd]; ++i)
+        {
+            state.renewableClusterProductionForYear[i]
+              += pValuesForTheCurrentYear[numSpace][state.renewableCluster->areaWideIndex].hour[i];
+        }
+
+        // Next variable
+        NextType::yearEndBuildPrepareDataForEachRenewableCluster(state, year, numSpace);
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,
@@ -282,15 +306,19 @@ public:
                                       int precision,
                                       unsigned int numSpace) const
     {
-        // Initializing external pointer on current variable non applicable status
+        // The current variable is actually a multiple-variable.
         results.isCurrentVarNA = AncestorType::isNonApplicable;
 
-        if (AncestorType::isPrinted[0])
+        for (uint i = 0; i != VCardType::columnCount; ++i)
         {
-            // Write the data for the current year
-            results.variableCaption = VCardType::Caption();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            if (AncestorType::isPrinted[i])
+            {
+                // Write the data for the current year
+                results.variableCaption = VCardType::Multiple::Caption(i);
+                pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
+                  results, fileLevel, precision);
+            }
+            results.isCurrentVarNA++;
         }
     }
 
@@ -299,11 +327,11 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class NonProportionalCost
+}; // class RenewableGeneration
 
 } // namespace Economy
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
 
-#endif // __SOLVER_VARIABLE_ECONOMY_NonProportionalCost_H__
+#endif // __SOLVER_VARIABLE_ECONOMY_RenewableGeneration_H__
