@@ -100,11 +100,6 @@ public:
     */
     static const char* GroupName(enum ThermalDispatchableGroup grp);
 
-    /*!
-    ** \brief Get if a value us valid for a flexibility
-    */
-    static bool FlexibilityIsValid(uint f);
-
 public:
     //! \name Constructor & Destructor
     //@{

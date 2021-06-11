@@ -597,23 +597,6 @@ int ThermalClusterListLoadDataSeriesFromFolder(Study& s,
     return ret;
 }
 
-bool Data::ThermalCluster::FlexibilityIsValid(uint f)
-{
-    switch (f)
-    {
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-    case 6:
-    case 8:
-    case 12:
-    case 24:
-        return true;
-    }
-    return false;
-}
-
 bool Data::ThermalCluster::invalidate(bool reload) const
 {
     bool ret = true;
