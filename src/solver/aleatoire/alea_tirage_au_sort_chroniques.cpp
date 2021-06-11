@@ -42,10 +42,10 @@ using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
-template<bool EconomicModeT>
 static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
   double** thermalNoisesByArea,
-  uint numSpace)
+  uint numSpace,
+  bool EconomicModeT)
 {
     auto& study = *Data::Study::Current::Get();
     auto& runtime = *study.runtime;
@@ -180,17 +180,12 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
 void ALEA_TirageAuSortChroniques(double** thermalNoisesByArea, uint numSpace)
 {
     // Time-series numbers
-    if (Data::Study::Current::Get()->runtime->mode != stdmAdequacyDraft)
-    {
-        // Retrieve all time-series numbers
-        // Initialize in the same time the production costs of all thermal clusters.
-        InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost<true>(thermalNoisesByArea,
-                                                                           numSpace);
-    }
-    else
-        InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost<false>(thermalNoisesByArea,
-                                                                            numSpace);
-
+  bool ecoMode = Data::Study::Current::Get()->runtime->mode != stdmAdequacyDraft;
+  // Retrieve all time-series numbers
+  // Initialize in the same time the production costs of all thermal clusters.
+  InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(thermalNoisesByArea,
+                                                                     numSpace,
+                                                                     ecoMode);
     // Flush all memory into the swap files
     // (only if the support is available)
     if (Antares::Memory::swapSupport)
