@@ -32,7 +32,7 @@ public:
 public:
     Cluster(Area* parent);
 
-    //! Get the thermal cluster ID
+    //! Get the cluster ID
     const ClusterName& id() const;
 
     //! \name Group
@@ -47,7 +47,7 @@ public:
     void setName(const AnyString& newname);
     //@}
 
-    //! Get the full thermal cluster name
+    //! Get the full cluster name
     Yuni::String getFullName() const;
 
     //! \name Memory management
@@ -101,7 +101,7 @@ public:
     //! Capacity of reference per unit (MW) (pMax)
     double nominalCapacity;
 
-    //! The index of the thermal cluster from the area's point of view
+    //! The index of the cluster from the area's point of view
     //! \warning this variable is only valid when used by the solver
     // (initialized in the same time that the runtime data)
     uint areaWideIndex;
