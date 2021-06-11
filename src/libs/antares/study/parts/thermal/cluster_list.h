@@ -90,15 +90,6 @@ public:
     void ensureDataPrepro();
 
     /*!
-    ** \brief Ensure data for the time-series are initialized
-    ** \ingroup thermalclusters
-    **
-    ** \todo Remaining of old C-library. this routine should be moved into the appropriate class
-    ** \param l The list of thermal clusters
-    */
-    void ensureDataTimeSeries();
-
-    /*!
   ** \brief Load data related to the preprocessor from a list of thermal clusters from a folder
   ** \ingroup thermalclusters
   **

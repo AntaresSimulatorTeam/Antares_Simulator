@@ -746,17 +746,6 @@ void ThermalClusterList::ensureDataPrepro()
     }
 }
 
-void ThermalClusterList::ensureDataTimeSeries()
-{
-    auto end = cluster.end();
-    for (auto it = cluster.begin(); it != end; ++it)
-    {
-        auto& c = *(it->second);
-        if (not c.series)
-            c.series = new DataSeriesCommon();
-    }
-}
-
 bool ThermalClusterList::saveToFolder(const AnyString& folder) const
 {
     // Make sure the folder is created

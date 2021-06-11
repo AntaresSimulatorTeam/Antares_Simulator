@@ -616,17 +616,5 @@ int ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s,
     });
     return ret;
 }
-
-template<class ClusterT>
-void ClusterList<ClusterT>::ensureDataTimeSeries()
-{
-    auto end = cluster.end();
-    for (auto it = cluster.begin(); it != end; ++it)
-    {
-        auto& cluster = *(it->second);
-        if (not cluster.series)
-            cluster.series = new DataSeriesCommon();
-    }
-}
 } // namespace Data
 } // namespace Antares
