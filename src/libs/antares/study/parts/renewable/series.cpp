@@ -40,9 +40,9 @@ namespace Antares
 {
 namespace Data
 {
-int DataSeriesThermalSaveToFolder(const DataSeriesThermal* t,
-                                  const ThermalCluster* ag,
-                                  const AnyString& folder)
+int DataSeriesRenewableSaveToFolder(const DataSeriesRenewable* t,
+                                    const RenewableCluster* ag,
+                                    const AnyString& folder)
 {
     if (t && ag and not folder.empty())
     {
@@ -63,10 +63,10 @@ int DataSeriesThermalSaveToFolder(const DataSeriesThermal* t,
     return 1;
 }
 
-int DataSeriesThermalLoadFromFolder(Study& s,
-                                    DataSeriesThermal* t,
-                                    ThermalCluster* ag,
-                                    const AnyString& folder)
+int DataSeriesRenewableLoadFromFolder(Study& s,
+                                      DataSeriesRenewable* t,
+                                      RenewableCluster* ag,
+                                      const AnyString& folder)
 {
     if (t and ag and not folder.empty())
     {
@@ -87,23 +87,23 @@ int DataSeriesThermalLoadFromFolder(Study& s,
     return 1;
 }
 
-bool DataSeriesThermal::invalidate(bool reload) const
+bool DataSeriesRenewable::invalidate(bool reload) const
 {
     return series.invalidate(reload);
 }
 
-void DataSeriesThermal::markAsModified() const
+void DataSeriesRenewable::markAsModified() const
 {
     series.markAsModified();
 }
 
-void DataSeriesThermal::estimateMemoryUsage(StudyMemoryUsage& u) const
+void DataSeriesRenewable::estimateMemoryUsage(StudyMemoryUsage& u) const
 {
-    u.requiredMemoryForInput += sizeof(DataSeriesThermal);
+    u.requiredMemoryForInput += sizeof(DataSeriesRenewable);
     timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
     series.estimateMemoryUsage(u,
-                               0 != (timeSeriesThermal & u.study.parameters.timeSeriesToGenerate),
-                               u.study.parameters.nbTimeSeriesThermal,
+                               0 != (timeSeriesRenewable & u.study.parameters.timeSeriesToGenerate),
+                               1,
                                HOURS_PER_YEAR);
 }
 

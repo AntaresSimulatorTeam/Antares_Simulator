@@ -597,6 +597,17 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 + scratchpad.miscGenSum[indx] + ror[tsFatalIndex][indx]
                 + scratchpad.mustrunSum[indx];
 
+            // Renewable
+            area.renewable.list.each([&](const Cluster& cluster) {
+                assert((uint)tsIndex.RenouvelableParPalier[cluster.areaWideIndex]
+                       < cluster.series->series.width);
+                assert((uint)indx < cluster.series->series.height);
+                assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
+                problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
+                  += cluster.series
+                       ->series[tsIndex.RenouvelableParPalier[cluster.areaWideIndex]][indx];
+            });
+
             assert(
               !Math::NaN(problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k])
               && "NaN detected for 'AllMustRunGeneration', probably from miscGenSum/mustrunSum");

@@ -205,14 +205,6 @@ public:
         NextType::initializeFromAreaLink(study, link);
     }
 
-    void initializeFromThermalCluster(Data::Study* study,
-                                      Data::Area* area,
-                                      Data::ThermalCluster* cluster)
-    {
-        // Next
-        NextType::initializeFromThermalCluster(study, area, cluster);
-    }
-
     void simulationBegin()
     {
         // Next
@@ -231,20 +223,6 @@ public:
             pValuesForTheCurrentYear[numSpace][i].reset();
         // Next variable
         NextType::yearBegin(year, numSpace);
-    }
-
-    void yearEndBuildPrepareDataForEachThermalCluster(State& state,
-                                                      uint year,
-                                                      unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
-    }
-
-    void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
     }
 
     void yearEndBuild(State& state, unsigned int year)
@@ -287,7 +265,7 @@ public:
     void hourForEachThermalCluster(State& state, unsigned int numSpace)
     {
         // Adding the dispatchable generation for the class_name fuel
-        pValuesForTheCurrentYear[numSpace][state.cluster->groupID][state.hourInTheYear]
+        pValuesForTheCurrentYear[numSpace][state.thermalCluster->groupID][state.hourInTheYear]
           += state.thermalClusterProduction;
         // Next item in the list
         NextType::hourForEachThermalCluster(state, numSpace);

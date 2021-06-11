@@ -93,6 +93,27 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
             ptchro.Eolien
               = (data.series.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
         }
+        // Renewable
+        {
+            auto end = area.renewable.list.cluster.end();
+            for (auto it = area.renewable.list.cluster.begin(); it != end; ++it)
+            {
+                auto* cluster = it->second;
+                if (!cluster->enabled)
+                {
+                    continue;
+                }
+
+                const auto& data = *cluster->series;
+                assert(year < data.timeseriesNumbers.height);
+                unsigned int index = cluster->areaWideIndex;
+
+                ptchro.RenouvelableParPalier[index] = (data.series.width != 1)
+                                                        ? (long)data.timeseriesNumbers[0][year]
+                                                        : 0; // zero-based
+            }
+        }
+
         // Thermal
         {
             uint indexCluster = 0;
@@ -109,7 +130,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
                     continue;
                 }
 
-                const Data::DataSeriesThermal& data = *cluster->series;
+                const auto& data = *cluster->series;
                 assert(year < data.timeseriesNumbers.height);
                 unsigned int index = cluster->areaWideIndex;
 

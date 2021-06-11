@@ -148,6 +148,16 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const Clob& filename
     return true;
 }
 
+static bool AreaListLoadRenewableDataFromFile(AreaList& list, const Clob& filename)
+{
+    IniFile ini;
+    // Try to load the file
+    if (not ini.open(filename))
+        return false;
+    // TODO: add modulation
+    return true;
+}
+
 static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString& filename)
 {
     Clob data;
@@ -325,6 +335,15 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
         ret = ThermalClusterListSaveDataSeriesToFolder(&area.thermal.list, buffer) and ret;
     }
 
+    // Renewable cluster list
+    {
+        buffer.clear() << folder << SEP << "input" << SEP << "renewables" << SEP << "clusters"
+                       << SEP << area.id;
+        ret = area.renewable.list.saveToFolder(buffer) and ret;
+
+        buffer.clear() << folder << SEP << "input" << SEP << "renewables" << SEP << "series";
+        ret = area.renewable.list.saveDataSeriesToFolder(buffer) and ret;
+    }
     return ret;
 }
 
@@ -1005,8 +1024,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             ret = ThermalClusterListLoadPreproFromFolder(study, options, &area.thermal.list, buffer)
                   and ret;
             buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
-            ret = ThermalClusterListLoadDataSeriesFromFolder(
-                    study, options, &area.thermal.list, buffer, options.loadOnlyNeeded)
+            ret = area.thermal.list.loadDataSeriesFromFolder(
+                    study, options, buffer, options.loadOnlyNeeded)
                   and ret;
         }
         else
@@ -1021,8 +1040,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             else
             {
                 buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
-                ret = ThermalClusterListLoadDataSeriesFromFolder(
-                        study, options, &area.thermal.list, buffer, options.loadOnlyNeeded)
+                ret = area.thermal.list.loadDataSeriesFromFolder(
+                        study, options, buffer, options.loadOnlyNeeded)
                       and ret;
             }
         }
@@ -1056,6 +1075,14 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
         // flush
         area.thermal.list.flush();
+    }
+
+    // Renewable cluster list
+    {
+        buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
+        ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer, false) and ret;
+        // flush
+        area.renewable.list.flush();
     }
 
     // Nodal Optimization
@@ -1209,6 +1236,28 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             buffer.clear() << pStudy.folderInput << thermalPlant << area.id;
             ret = area.thermal.list.loadFromFolder(pStudy, buffer.c_str(), &area) and ret;
             area.thermal.prepareAreaWideIndexes();
+        }
+    }
+
+    // Renewable data, specific to areas
+    {
+        logs.info() << "Loading renewable clusters...";
+        buffer.clear() << pStudy.folderInput << SEP << "renewables" << SEP << "areas.ini";
+        ret = AreaListLoadRenewableDataFromFile(*this, buffer) and ret;
+
+        // The cluster list must be loaded before the method
+        // Study::ensureDataAreInitializedAccordingParameters() is called
+        // in order to allocate data with all renewable clusters.
+        CString<30, false> renewablePlant;
+        renewablePlant << SEP << "renewables" << SEP << "clusters" << SEP;
+
+        auto end = areas.end();
+        for (auto i = areas.begin(); i != end; ++i)
+        {
+            Area& area = *(i->second);
+            buffer.clear() << pStudy.folderInput << renewablePlant << area.id;
+            ret = area.renewable.list.loadFromFolder(pStudy, buffer.c_str(), &area) and ret;
+            area.renewable.prepareAreaWideIndexes();
         }
     }
 
@@ -1404,6 +1453,13 @@ void AreaListEnsureDataThermalTimeSeries(AreaList* l)
     assert(l);
 
     l->each([&](Data::Area& area) { ThermalClusterListEnsureDataTimeSeries(&area.thermal.list); });
+}
+
+void AreaListEnsureDataRenewableTimeSeries(AreaList* l)
+{
+    assert(l);
+
+    l->each([&](Data::Area& area) { area.renewable.list.ensureDataTimeSeries(); });
 }
 
 void AreaListEnsureDataThermalPrepro(AreaList* l)
@@ -1654,7 +1710,7 @@ ThermalCluster* AreaList::findClusterFromINIKey(const AnyString& key)
     if (offset == AreaName::npos or (0 == offset) or (offset == key.size() - 1))
         return nullptr;
     AreaName parentName(key.c_str(), offset);
-    ThermalClusterName id(key.c_str() + offset + 1, key.size() - (offset + 1));
+    ClusterName id(key.c_str() + offset + 1, key.size() - (offset + 1));
     Area* parentArea = findFromName(parentName);
     if (parentArea == nullptr)
         return nullptr;

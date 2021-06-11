@@ -24,27 +24,14 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_TIMESERIES_HXX__
-#define __ANTARES_LIBS_STUDY_PARTS_THERMAL_TIMESERIES_HXX__
+#ifndef __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_HXX__
+#define __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_HXX__
 
 namespace Antares
 {
 namespace Data
 {
-inline void DataSeriesThermal::flush()
-{
-#ifdef ANTARES_SWAP_SUPPORT
-    series.flush();
-    timeseriesNumbers.flush();
-#endif
-}
-
-inline Yuni::uint64 DataSeriesThermalMemoryUsage(DataSeriesThermal* t)
-{
-    return (t) ? t->series.memoryUsage() : 0;
-}
-
 } // namespace Data
 } // namespace Antares
 
-#endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_TIMESERIES_HXX__
+#endif //__ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_HXX__

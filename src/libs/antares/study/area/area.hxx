@@ -61,7 +61,9 @@ inline bool Area::storeTimeseriesNumbers(Study& study)
         // Thermal
     case timeSeriesThermal:
         return storeTimeseriesNumbersForThermal(study);
-
+        // Renewable
+    case timeSeriesRenewable:
+        return storeTimeseriesNumbersForRenewable(study);
         // Useless here
     case timeSeriesCount:
         break;

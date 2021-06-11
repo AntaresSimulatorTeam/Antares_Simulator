@@ -88,7 +88,7 @@ Area* addArea(Study::Ptr pStudy, const std::string& areaName, int nbTS)
 ThermalCluster* addCluster(Study::Ptr pStudy, Area* pArea, const std::string& clusterName, double maximumPower, double cost, int nbTS, int unitCount = 1)
 {
 	ThermalCluster* pCluster = new ThermalCluster(pArea, pStudy->maxNbYearsInParallel);
-	pCluster->name(clusterName);
+	pCluster->setName(clusterName);
 	pCluster->reset();
 	
 	pCluster->unitCount			= unitCount;
