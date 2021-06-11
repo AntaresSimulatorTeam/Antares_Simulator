@@ -148,16 +148,6 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const Clob& filename
     return true;
 }
 
-static bool AreaListLoadRenewableDataFromFile(AreaList& list, const Clob& filename)
-{
-    IniFile ini;
-    // Try to load the file
-    if (not ini.open(filename))
-        return false;
-    // TODO: add modulation
-    return true;
-}
-
 static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString& filename)
 {
     Clob data;
@@ -1240,10 +1230,6 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
 
     // Renewable data, specific to areas
     {
-        logs.info() << "Loading renewable clusters...";
-        buffer.clear() << pStudy.folderInput << SEP << "renewables" << SEP << "areas.ini";
-        ret = AreaListLoadRenewableDataFromFile(*this, buffer) and ret;
-
         // The cluster list must be loaded before the method
         // Study::ensureDataAreInitializedAccordingParameters() is called
         // in order to allocate data with all renewable clusters.
