@@ -38,37 +38,44 @@ namespace Antares
 {
 namespace Data
 {
-enum RenewableGroup
-{
-    //! Wind offshore
-    windOffShore = 0,
-    //! Wind onshore
-    windOnShore,
-    //! Concentration solar
-    concentrationSolar,
-    //! PV solar
-    PVSolar,
-    //! Rooftop solar
-    rooftopSolar,
-    //! Other 1
-    renewableOther1,
-    //! Other 2
-    renewableOther2,
-    //! Other 3
-    renewableOther3,
-    //! Other 4
-    renewableOther4,
-
-    //! The highest value
-    renewableGroupMax
-};
-
 /*!
 ** \brief A single renewable cluster
 */
 class RenewableCluster final : public Cluster
 {
 public:
+    enum RenewableGroup
+    {
+        //! Wind offshore
+        windOffShore = 0,
+        //! Wind onshore
+        windOnShore,
+        //! Concentration solar
+        concentrationSolar,
+        //! PV solar
+        PVSolar,
+        //! Rooftop solar
+        rooftopSolar,
+        //! Other 1
+        renewableOther1,
+        //! Other 2
+        renewableOther2,
+        //! Other 3
+        renewableOther3,
+        //! Other 4
+        renewableOther4,
+
+        //! The highest value
+        groupMax
+    };
+
+    //! Set of renewable clusters
+    typedef std::set<Cluster*, CompareClusterName> Set;
+    //! Set of renewable clusters (pointer)
+    typedef std::set<Cluster*> SetPointer;
+    //! Vector of renewable clusters
+    typedef std::vector<Data::Cluster*> Vector;
+
     /*!
     ** \brief Get the group name string
     ** \return A valid CString
@@ -98,16 +105,11 @@ public:
     void markAsModified() const override;
 
     /*!
-    ** \brief Invalidate the whole attached area
-    */
-    void invalidateArea();
-
-    /*!
     ** \brief Reset to default values
     **
     ** This method should only be called from the GUI
     */
-    void reset();
+    void reset() override;
 
     //! Set the group
     void setGroup(Data::ClusterName newgrp) override;
@@ -164,12 +166,6 @@ public:
     */
     bool checkMinStablePowerWithNewModulation(uint index, double value);
     //@}
-
-    /*!
-    ** \brief Check wether the cluster is visible in a layer (it's parent area is visible in the
-    *layer)
-    */
-    bool isVisibleOnLayer(const size_t& layerID) const;
 
     // TODO remove
     void* prepro;

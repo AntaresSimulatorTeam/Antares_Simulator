@@ -16,7 +16,7 @@ namespace Data
 class RenewableClusterList : public ClusterList<RenewableCluster>
 {
 public:
-    RenewableClusterList(uint sizeGroup);
+    RenewableClusterList();
     ~RenewableClusterList();
     // Overriden virtual methods
     YString typeID() const override;

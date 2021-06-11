@@ -15,24 +15,16 @@ namespace Antares
 {
 namespace Data
 {
-struct CompareClusterName;
-
 class Cluster
 {
 public:
-    //! Set of renewable clusters
-    typedef std::set<Cluster*, CompareClusterName> Set;
-    //! Set of renewable clusters (pointer)
-    typedef std::set<Cluster*> SetPointer;
     //! Map of renewable clusters
     typedef std::map<ClusterName, Cluster*> Map;
-    //! Vector of renewable clusters
-    typedef std::vector<Data::Cluster*> Vector;
 
 public:
     Cluster(Area* parent);
 
-    //! Get the thermal cluster ID
+    //! Get the cluster ID
     const ClusterName& id() const;
 
     //! \name Group
@@ -47,7 +39,7 @@ public:
     void setName(const AnyString& newname);
     //@}
 
-    //! Get the full thermal cluster name
+    //! Get the full cluster name
     Yuni::String getFullName() const;
 
     //! \name Memory management
@@ -82,9 +74,27 @@ public:
     virtual bool invalidate(bool reload) const = 0;
 
     /*!
+    ** \brief Invalidate the whole attached area
+    */
+    void invalidateArea();
+
+    /*!
     ** \brief Mark the renewable cluster as modified
     */
     virtual void markAsModified() const = 0;
+
+    /*!
+    ** \brief Check wether the cluster is visible in a layer (it's parent area is visible in the
+    *layer)
+    */
+    bool isVisibleOnLayer(const size_t& layerID) const;
+
+    /*!
+    ** \brief Reset to default values
+    **
+    ** This method should only be called from the GUI
+    */
+    virtual void reset();
 
     //! Count of unit
     uint unitCount;
@@ -101,7 +111,7 @@ public:
     //! Capacity of reference per unit (MW) (pMax)
     double nominalCapacity;
 
-    //! The index of the thermal cluster from the area's point of view
+    //! The index of the cluster from the area's point of view
     //! \warning this variable is only valid when used by the solver
     // (initialized in the same time that the runtime data)
     uint areaWideIndex;
@@ -132,10 +142,7 @@ public:
 
 struct CompareClusterName final
 {
-    inline bool operator()(const Cluster* s1, const Cluster* s2) const
-    {
-        return (s1->getFullName() < s2->getFullName());
-    }
+    bool operator()(const Cluster* s1, const Cluster* s2) const;
 };
 
 } // namespace Data

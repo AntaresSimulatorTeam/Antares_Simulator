@@ -20,7 +20,7 @@ namespace Data
 {
 using namespace Yuni;
 
-ThermalClusterList::ThermalClusterList(uint sizeGroup) : ClusterList<ThermalCluster>(sizeGroup)
+ThermalClusterList::ThermalClusterList()
 {
 }
 
@@ -733,11 +733,6 @@ void ThermalClusterList::enableMustrunForEveryone()
 {
     // enabling the mustrun mode
     each([&](ThermalCluster& cluster) { cluster.mustrun = true; });
-}
-
-bool ThermalCluster::isVisibleOnLayer(const size_t& layerID) const
-{
-    return parentArea ? parentArea->isVisibleOnLayer(layerID) : false;
 }
 
 // TODO : move to class

@@ -42,27 +42,6 @@ namespace Antares
 {
 namespace Data
 {
-enum ThermalDispatchableGroup
-{
-    //! Nuclear
-    thermalDispatchGrpNuclear = 0,
-    //! Lignite
-    thermalDispatchGrpLignite,
-    //! Hard Coal
-    thermalDispatchGrpHardCoal,
-    //! Gas
-    thermalDispatchGrpGas,
-    //! Oil
-    thermalDispatchGrpOil,
-    //! Mixed fuel
-    thermalDispatchGrpMixedFuel,
-    //! Other
-    thermalDispatchGrpOther,
-
-    //! The highest value
-    thermalDispatchGrpMax
-};
-
 enum ThermalLaw
 {
     thermalLawUniform,
@@ -78,16 +57,35 @@ enum ThermalModulation
     thermalModulationMax
 };
 
-struct CompareThermalClusterName;
-
 /*!
 ** \brief A single thermal cluster
 */
 class ThermalCluster final : public Cluster
 {
 public:
+    enum ThermalDispatchableGroup
+    {
+        //! Nuclear
+        thermalDispatchGrpNuclear = 0,
+        //! Lignite
+        thermalDispatchGrpLignite,
+        //! Hard Coal
+        thermalDispatchGrpHardCoal,
+        //! Gas
+        thermalDispatchGrpGas,
+        //! Oil
+        thermalDispatchGrpOil,
+        //! Mixed fuel
+        thermalDispatchGrpMixedFuel,
+        //! Other
+        thermalDispatchGrpOther,
+
+        //! The highest value
+        groupMax
+    };
+
     //! Set of thermal clusters
-    typedef std::set<ThermalCluster*, CompareThermalClusterName> Set;
+    typedef std::set<ThermalCluster*, CompareClusterName> Set;
     //! Set of thermal clusters (pointer)
     typedef std::set<ThermalCluster*> SetPointer;
     //! Vector of thermal clusters
@@ -99,11 +97,6 @@ public:
     ** \return A valid CString
     */
     static const char* GroupName(enum ThermalDispatchableGroup grp);
-
-    /*!
-    ** \brief Get if a value us valid for a flexibility
-    */
-    static bool FlexibilityIsValid(uint f);
 
 public:
     //! \name Constructor & Destructor
@@ -128,16 +121,11 @@ public:
     void markAsModified() const override;
 
     /*!
-    ** \brief Invalidate the whole attached area
-    */
-    void invalidateArea();
-
-    /*!
     ** \brief Reset to default values
     **
     ** This method should only be called from the GUI
     */
-    void reset();
+    void reset() override;
 
     //! Set the group
     void setGroup(Data::ClusterName newgrp) override;
@@ -215,12 +203,6 @@ public:
     */
     bool checkMinStablePowerWithNewModulation(uint index, double value);
     //@}
-
-    /*!
-    ** \brief Check wether the cluster is visible in a layer (it's parent area is visible in the
-    *layer)
-    */
-    bool isVisibleOnLayer(const size_t& layerID) const;
 
 public:
     /*!
@@ -389,15 +371,6 @@ public:
 
     friend class ThermalClusterList;
 }; // class ThermalCluster
-
-struct CompareThermalClusterName final
-{
-    inline bool operator()(const ThermalCluster* s1, const ThermalCluster* s2) const
-    {
-        return (s1->getFullName() < s2->getFullName());
-    }
-};
-
 } // namespace Data
 } // namespace Antares
 

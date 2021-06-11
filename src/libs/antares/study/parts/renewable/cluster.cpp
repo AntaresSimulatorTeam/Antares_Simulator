@@ -76,12 +76,6 @@ uint RenewableCluster::groupId() const
     return groupID;
 }
 
-void Data::RenewableCluster::invalidateArea()
-{
-    if (parentArea)
-        parentArea->invalidate();
-}
-
 void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
 {
     // Note: In this method, only the data can be copied (and not the name or
@@ -188,18 +182,7 @@ void Data::RenewableCluster::markAsModified() const
 
 void Data::RenewableCluster::reset()
 {
-    enabled = true;
-    nominalCapacity = 0.;
-
-    // timeseries
-    // warning: the variables `series` __must__ not be destroyed
-    //   since the interface may still have a pointer to them.
-    //   we must simply reset their content.
-    if (not series)
-        series = new DataSeriesCommon();
-
-    series->series.reset(1, HOURS_PER_YEAR);
-    series->series.flush();
+    Cluster::reset();
 }
 
 bool Data::RenewableCluster::integrityCheck()
@@ -244,7 +227,7 @@ const char* Data::RenewableCluster::GroupName(enum RenewableGroup grp)
         return "Renewable 3";
     case renewableOther4:
         return "Renewable 4";
-    case renewableGroupMax:
+    case groupMax:
         return "";
     }
     return "";
@@ -257,11 +240,5 @@ uint64 RenewableCluster::memoryUsage() const
         amount += DataSeriesMemoryUsage(series);
     return amount;
 }
-
-bool RenewableCluster::isVisibleOnLayer(const size_t& layerID) const
-{
-    return parentArea ? parentArea->isVisibleOnLayer(layerID) : false;
-}
-
 } // namespace Data
 } // namespace Antares

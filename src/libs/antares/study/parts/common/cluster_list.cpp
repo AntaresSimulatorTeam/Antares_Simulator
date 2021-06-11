@@ -111,8 +111,7 @@ bool ClusterList<ClusterT>::exists(const Data::ClusterName& id) const
 }
 
 template<class ClusterT>
-Data::ClusterList<ClusterT>::ClusterList(uint sizeGroup) :
- byIndex(nullptr), groupCount(sizeGroup, 0)
+Data::ClusterList<ClusterT>::ClusterList() : byIndex(nullptr), groupCount(ClusterT::groupMax, 0)
 {
 }
 

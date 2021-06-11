@@ -12,7 +12,7 @@ RenewableClusterList::~RenewableClusterList()
     }
 }
 
-RenewableClusterList::RenewableClusterList(uint groupSize) : ClusterList(groupSize)
+RenewableClusterList::RenewableClusterList()
 {
 }
 

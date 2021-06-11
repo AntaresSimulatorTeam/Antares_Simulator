@@ -1,6 +1,3 @@
-#ifndef __CLUSTER_LIST_COMMON_HXX__
-#define __CLUSTER_LIST_COMMON_HXX__
-
 #include "../../../utils.h"
 #include "../../../inifile.h"
 #include "../../study.h"
@@ -633,4 +630,3 @@ void ClusterList<ClusterT>::ensureDataTimeSeries()
 }
 } // namespace Data
 } // namespace Antares
-#endif /* __CLUSTER_LIST_COMMON_HXX__ */

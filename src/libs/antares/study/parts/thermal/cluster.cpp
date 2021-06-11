@@ -184,12 +184,6 @@ uint ThermalCluster::groupId() const
     return groupID;
 }
 
-void Data::ThermalCluster::invalidateArea()
-{
-    if (parentArea)
-        parentArea->invalidate();
-}
-
 void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
 {
     // Note: In this method, only the data can be copied (and not the name or
@@ -597,23 +591,6 @@ int ThermalClusterListLoadDataSeriesFromFolder(Study& s,
     return ret;
 }
 
-bool Data::ThermalCluster::FlexibilityIsValid(uint f)
-{
-    switch (f)
-    {
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-    case 6:
-    case 8:
-    case 12:
-    case 24:
-        return true;
-    }
-    return false;
-}
-
 bool Data::ThermalCluster::invalidate(bool reload) const
 {
     bool ret = true;
@@ -694,11 +671,10 @@ void Data::ThermalCluster::reset()
     if (productionCost)
         (void)::memset(productionCost, 0, HOURS_PER_YEAR * sizeof(double));
 
+    Cluster::reset();
+
     mustrun = false;
     mustrunOrigin = false;
-    unitCount = 0;
-    enabled = true;
-    nominalCapacity = 0.;
     nominalCapacityWithSpinning = 0.;
     minDivModulation.isCalculated = false;
     minStablePower = 0.;
@@ -736,17 +712,12 @@ void Data::ThermalCluster::reset()
     modulation.fillColumn(thermalMinGenModulation, 0.);
     modulation.flush();
 
-    // timeseries & prepro
+    // prepro
     // warning: the variables `prepro` and `series` __must__ not be destroyed
     //   since the interface may still have a pointer to them.
     //   we must simply reset their content.
     if (not prepro)
         prepro = new PreproThermal();
-    if (not series)
-        series = new DataSeriesCommon();
-
-    series->series.reset(1, HOURS_PER_YEAR);
-    series->series.flush();
     prepro->reset();
 
     // Links
@@ -876,7 +847,7 @@ const char* Data::ThermalCluster::GroupName(enum ThermalDispatchableGroup grp)
         return "Mixed Fuel";
     case thermalDispatchGrpOther:
         return "Other";
-    case thermalDispatchGrpMax:
+    case groupMax:
         return "";
     }
     return "";
