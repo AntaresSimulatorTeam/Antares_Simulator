@@ -89,6 +89,13 @@ public:
     */
     bool isVisibleOnLayer(const size_t& layerID) const;
 
+    /*!
+    ** \brief Reset to default values
+    **
+    ** This method should only be called from the GUI
+    */
+    virtual void reset();
+
     //! Count of unit
     uint unitCount;
 

@@ -105,6 +105,19 @@ bool Cluster::isVisibleOnLayer(const size_t& layerID) const
     return parentArea ? parentArea->isVisibleOnLayer(layerID) : false;
 }
 
+void Cluster::reset()
+{
+    unitCount = 0;
+    enabled = true;
+    nominalCapacity = 0.;
+
+    if (not series)
+        series = new DataSeriesCommon();
+
+    series->series.reset(1, HOURS_PER_YEAR);
+    series->series.flush();
+}
+
 bool CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const
 {
     return (s1->getFullName() < s2->getFullName());

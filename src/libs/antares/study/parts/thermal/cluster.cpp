@@ -671,11 +671,10 @@ void Data::ThermalCluster::reset()
     if (productionCost)
         (void)::memset(productionCost, 0, HOURS_PER_YEAR * sizeof(double));
 
+    Cluster::reset();
+
     mustrun = false;
     mustrunOrigin = false;
-    unitCount = 0;
-    enabled = true;
-    nominalCapacity = 0.;
     nominalCapacityWithSpinning = 0.;
     minDivModulation.isCalculated = false;
     minStablePower = 0.;
@@ -713,17 +712,12 @@ void Data::ThermalCluster::reset()
     modulation.fillColumn(thermalMinGenModulation, 0.);
     modulation.flush();
 
-    // timeseries & prepro
+    // prepro
     // warning: the variables `prepro` and `series` __must__ not be destroyed
     //   since the interface may still have a pointer to them.
     //   we must simply reset their content.
     if (not prepro)
         prepro = new PreproThermal();
-    if (not series)
-        series = new DataSeriesCommon();
-
-    series->series.reset(1, HOURS_PER_YEAR);
-    series->series.flush();
     prepro->reset();
 
     // Links

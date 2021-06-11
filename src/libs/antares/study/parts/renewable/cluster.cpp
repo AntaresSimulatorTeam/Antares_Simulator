@@ -182,18 +182,7 @@ void Data::RenewableCluster::markAsModified() const
 
 void Data::RenewableCluster::reset()
 {
-    enabled = true;
-    nominalCapacity = 0.;
-
-    // timeseries
-    // warning: the variables `series` __must__ not be destroyed
-    //   since the interface may still have a pointer to them.
-    //   we must simply reset their content.
-    if (not series)
-        series = new DataSeriesCommon();
-
-    series->series.reset(1, HOURS_PER_YEAR);
-    series->series.flush();
+    Cluster::reset();
 }
 
 bool Data::RenewableCluster::integrityCheck()

@@ -109,7 +109,7 @@ public:
     **
     ** This method should only be called from the GUI
     */
-    void reset();
+    void reset() override;
 
     //! Set the group
     void setGroup(Data::ClusterName newgrp) override;
