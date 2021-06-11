@@ -31,7 +31,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    ClusterList(uint sizeGroup);
+    ClusterList();
     /*!
     ** \brief Destructor
     */

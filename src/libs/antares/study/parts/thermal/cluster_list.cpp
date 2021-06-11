@@ -20,7 +20,7 @@ namespace Data
 {
 using namespace Yuni;
 
-ThermalClusterList::ThermalClusterList(uint sizeGroup) : ClusterList<ThermalCluster>(sizeGroup)
+ThermalClusterList::ThermalClusterList()
 {
 }
 

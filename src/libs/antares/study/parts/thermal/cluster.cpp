@@ -876,7 +876,7 @@ const char* Data::ThermalCluster::GroupName(enum ThermalDispatchableGroup grp)
         return "Mixed Fuel";
     case thermalDispatchGrpOther:
         return "Other";
-    case thermalDispatchGrpMax:
+    case groupMax:
         return "";
     }
     return "";

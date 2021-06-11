@@ -244,7 +244,7 @@ const char* Data::RenewableCluster::GroupName(enum RenewableGroup grp)
         return "Renewable 3";
     case renewableOther4:
         return "Renewable 4";
-    case renewableGroupMax:
+    case groupMax:
         return "";
     }
     return "";

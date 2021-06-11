@@ -38,37 +38,37 @@ namespace Antares
 {
 namespace Data
 {
-enum RenewableGroup
-{
-    //! Wind offshore
-    windOffShore = 0,
-    //! Wind onshore
-    windOnShore,
-    //! Concentration solar
-    concentrationSolar,
-    //! PV solar
-    PVSolar,
-    //! Rooftop solar
-    rooftopSolar,
-    //! Other 1
-    renewableOther1,
-    //! Other 2
-    renewableOther2,
-    //! Other 3
-    renewableOther3,
-    //! Other 4
-    renewableOther4,
-
-    //! The highest value
-    renewableGroupMax
-};
-
 /*!
 ** \brief A single renewable cluster
 */
 class RenewableCluster final : public Cluster
 {
 public:
+    enum RenewableGroup
+    {
+        //! Wind offshore
+        windOffShore = 0,
+        //! Wind onshore
+        windOnShore,
+        //! Concentration solar
+        concentrationSolar,
+        //! PV solar
+        PVSolar,
+        //! Rooftop solar
+        rooftopSolar,
+        //! Other 1
+        renewableOther1,
+        //! Other 2
+        renewableOther2,
+        //! Other 3
+        renewableOther3,
+        //! Other 4
+        renewableOther4,
+
+        //! The highest value
+        groupMax
+    };
+
     /*!
     ** \brief Get the group name string
     ** \return A valid CString

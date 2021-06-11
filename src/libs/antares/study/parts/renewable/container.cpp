@@ -38,7 +38,7 @@ namespace Antares
 {
 namespace Data
 {
-PartRenewable::PartRenewable() : list(renewableGroupMax), clusters(nullptr), clusterCount((uint)-1)
+PartRenewable::PartRenewable() : list(), clusters(nullptr), clusterCount((uint)-1)
 {
 }
 

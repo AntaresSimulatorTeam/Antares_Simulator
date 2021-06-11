@@ -42,27 +42,6 @@ namespace Antares
 {
 namespace Data
 {
-enum ThermalDispatchableGroup
-{
-    //! Nuclear
-    thermalDispatchGrpNuclear = 0,
-    //! Lignite
-    thermalDispatchGrpLignite,
-    //! Hard Coal
-    thermalDispatchGrpHardCoal,
-    //! Gas
-    thermalDispatchGrpGas,
-    //! Oil
-    thermalDispatchGrpOil,
-    //! Mixed fuel
-    thermalDispatchGrpMixedFuel,
-    //! Other
-    thermalDispatchGrpOther,
-
-    //! The highest value
-    thermalDispatchGrpMax
-};
-
 enum ThermalLaw
 {
     thermalLawUniform,
@@ -86,6 +65,27 @@ struct CompareThermalClusterName;
 class ThermalCluster final : public Cluster
 {
 public:
+    enum ThermalDispatchableGroup
+    {
+        //! Nuclear
+        thermalDispatchGrpNuclear = 0,
+        //! Lignite
+        thermalDispatchGrpLignite,
+        //! Hard Coal
+        thermalDispatchGrpHardCoal,
+        //! Gas
+        thermalDispatchGrpGas,
+        //! Oil
+        thermalDispatchGrpOil,
+        //! Mixed fuel
+        thermalDispatchGrpMixedFuel,
+        //! Other
+        thermalDispatchGrpOther,
+
+        //! The highest value
+        groupMax
+    };
+
     //! Set of thermal clusters
     typedef std::set<ThermalCluster*, CompareThermalClusterName> Set;
     //! Set of thermal clusters (pointer)

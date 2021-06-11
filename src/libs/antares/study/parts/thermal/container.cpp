@@ -41,8 +41,8 @@ namespace Data
 PartThermal::PartThermal() :
  unsuppliedEnergyCost(0.),
  spilledEnergyCost(0.),
- list(thermalDispatchGrpMax),
- mustrunList(thermalDispatchGrpMax),
+ list(),
+ mustrunList(),
  clusters(nullptr),
  clusterCount((uint)-1)
 {

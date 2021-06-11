@@ -28,7 +28,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    ThermalClusterList(uint);
+    ThermalClusterList();
     /*!
     ** \brief Destructor
     */
