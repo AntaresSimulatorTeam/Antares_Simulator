@@ -1451,22 +1451,19 @@ void AreaListEnsureDataHydroPrepro(AreaList* l)
 void AreaListEnsureDataThermalTimeSeries(AreaList* l)
 {
     assert(l);
-
     l->each([&](Data::Area& area) { ThermalClusterListEnsureDataTimeSeries(&area.thermal.list); });
 }
 
 void AreaListEnsureDataRenewableTimeSeries(AreaList* l)
 {
     assert(l);
-
     l->each([&](Data::Area& area) { area.renewable.list.ensureDataTimeSeries(); });
 }
 
 void AreaListEnsureDataThermalPrepro(AreaList* l)
 {
     assert(l and "The area list must not be nullptr");
-
-    l->each([&](Data::Area& area) { ThermalClusterListEnsureDataPrepro(&area.thermal.list); });
+    l->each([&](Data::Area& area) { area.thermal.list.ensureDataPrepro(); });
 }
 
 uint64 AreaList::memoryUsage() const

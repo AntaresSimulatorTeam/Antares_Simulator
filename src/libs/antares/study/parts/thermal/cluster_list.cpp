@@ -735,15 +735,14 @@ void ThermalClusterList::enableMustrunForEveryone()
     each([&](ThermalCluster& cluster) { cluster.mustrun = true; });
 }
 
-// TODO : move to class
-void ThermalClusterListEnsureDataPrepro(ThermalClusterList* list)
+void ThermalClusterList::ensureDataPrepro()
 {
-    auto end = list->cluster.end();
-    for (auto it = list->cluster.begin(); it != end; ++it)
+    auto end = cluster.end();
+    for (auto it = cluster.begin(); it != end; ++it)
     {
-        auto& cluster = *(it->second);
-        if (not cluster.prepro)
-            cluster.prepro = new PreproThermal();
+        auto& c = *(it->second);
+        if (not c.prepro)
+            c.prepro = new PreproThermal();
     }
 }
 

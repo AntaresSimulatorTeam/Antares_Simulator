@@ -79,6 +79,8 @@ public:
     void estimateMemoryUsage(StudyMemoryUsage&) const override;
 
     Map mapping;
+
+    void ensureDataPrepro();
 }; // class ThermalClusterList
 /*!
 ** \brief Ensure data for the prepro are initialized
@@ -87,7 +89,7 @@ public:
 ** \todo Remaining of old C-library. this routine should be moved into the appropriate class
 ** \param l The list of thermal clusters
 */
-void ThermalClusterListEnsureDataPrepro(ThermalClusterList* l);
+
 
 /*!
 ** \brief Ensure data for the time-series are initialized

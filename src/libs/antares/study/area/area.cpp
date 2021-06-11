@@ -273,7 +273,7 @@ void Area::ensureAllDataAreCreated()
         wind.prepro = new Data::Wind::Prepro();
     if (!hydro.prepro)
         hydro.prepro = new PreproHydro();
-    ThermalClusterListEnsureDataPrepro(&thermal.list);
+    thermal.list.ensureDataPrepro();
 }
 
 void Area::resetToDefaultValues()
@@ -328,7 +328,7 @@ void Area::resetToDefaultValues()
 
     // 		thermal.list.add(ag);
     // 		thermal.list.rebuildIndex();
-    // 		ThermalClusterListEnsureDataPrepro(&thermal.list);
+    // 		thermal.list.ensureDataPrepro();
     // 		ThermalClusterListEnsureDataTimeSeries(&thermal.list);
     // 	}
     // }
