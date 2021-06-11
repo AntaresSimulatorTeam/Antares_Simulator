@@ -327,12 +327,12 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
     {
         buffer.clear() << folder << SEP << "input" << SEP << "thermal" << SEP << "clusters" << SEP
                        << area.id;
-        ret = ThermalClusterListSaveToFolder(&area.thermal.list, buffer) and ret;
+        ret = area.thermal.list.saveToFolder(buffer) and ret;
 
         buffer.clear() << folder << SEP << "input" << SEP << "thermal" << SEP << "prepro";
-        ret = ThermalClusterListSavePreproToFolder(&area.thermal.list, buffer) and ret;
+        ret = area.thermal.list.savePreproToFolder(buffer) and ret;
         buffer.clear() << folder << SEP << "input" << SEP << "thermal" << SEP << "series";
-        ret = ThermalClusterListSaveDataSeriesToFolder(&area.thermal.list, buffer) and ret;
+        ret = area.thermal.list.saveDataSeriesToFolder(buffer) and ret;
     }
 
     // Renewable cluster list
@@ -1021,7 +1021,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (not options.loadOnlyNeeded)
         {
             buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
-            ret = ThermalClusterListLoadPreproFromFolder(study, options, &area.thermal.list, buffer)
+            ret = area.thermal.list.loadPreproFromFolder(study, options, buffer)
                   and ret;
             buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
             ret = area.thermal.list.loadDataSeriesFromFolder(
@@ -1033,8 +1033,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             if (study.parameters.isTSGeneratedByPrepro(timeSeriesThermal))
             {
                 buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
-                ret = ThermalClusterListLoadPreproFromFolder(
-                        study, options, &area.thermal.list, buffer)
+                ret = area.thermal.list.loadPreproFromFolder(study, options,buffer)
                       and ret;
             }
             else

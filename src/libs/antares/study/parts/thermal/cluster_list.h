@@ -97,73 +97,24 @@ public:
     ** \param l The list of thermal clusters
     */
     void ensureDataTimeSeries();
+
+    /*!
+  ** \brief Load data related to the preprocessor from a list of thermal clusters from a folder
+  ** \ingroup thermalclusters
+  **
+  ** \todo Remaining of old C-library. this routine should be moved into the appropriate class
+  ** \param l A list of thermal clusters
+  ** \param folder The target folder
+  ** \return A non-zero value if the operation succeeded, 0 otherwise
+  */
+    bool loadPreproFromFolder(Study& s,
+                              const StudyLoadOptions& options,
+                              const AnyString& folder);
+
+    bool savePreproToFolder(const AnyString& folder) const;
+
+    bool saveToFolder(const AnyString& folder) const override;
+
 }; // class ThermalClusterList
-
-/*!
-** \brief Save a list of thermal clusters to a folder
-** \ingroup thermalclusters
-**
-** \todo Remaining of old C-library. this routine should be moved into the appropriate class
-** \param l The list of thermal cluster
-** \param folder The folder where the data will be written
-** \return A non-zero value if the operation succeeded, 0 otherwise
-*/
-bool ThermalClusterListSaveToFolder(const ThermalClusterList* l, const AnyString& folder);
-
-/*!
-** \brief Load data related to the preprocessor from a list of thermal clusters from a folder
-** \ingroup thermalclusters
-**
-** \todo Remaining of old C-library. this routine should be moved into the appropriate class
-** \param l A list of thermal clusters
-** \param folder The target folder
-** \return A non-zero value if the operation succeeded, 0 otherwise
-*/
-bool ThermalClusterListLoadPreproFromFolder(Study& s,
-                                            const StudyLoadOptions& options,
-                                            ThermalClusterList* l,
-                                            const AnyString& folder);
-
-/*!
-** \brief Save data related to the preprocessor from a list of thermal clusters to a folder
-** \ingroup thermalclusters
-**
-** \todo Remaining of old C-library. this routine should be moved into the appropriate class
-** \param l A list of thermal clusters
-** \param folder The target folder
-** \return A non-zero value if the operation succeeded, 0 otherwise
-*/
-bool ThermalClusterListSavePreproToFolder(const ThermalClusterList* l, const AnyString& folder);
-
-/*!
-** \brief Load data related to time-series from a list of thermal clusters from a folder
-** \ingroup thermalclusters
-**
-** \todo Remaining of old C-library. this routine should be moved into the appropriate class
-** \param l A list of thermal clusters
-** \param folder The target folder
-** \return A non-zero value if the operation succeeded, 0 otherwise
-*/
-int ThermalClusterListLoadDataSeriesFromFolder(Study& study,
-                                               const StudyLoadOptions& options,
-                                               ThermalClusterList* l,
-                                               const AnyString& folder,
-                                               int fast);
-
-/*!
-** \brief Save data related to time-series from a list of thermal clusters to a folder
-** \ingroup thermalclusters
-**
-** \todo Remaining of old C-library. this routine should be moved into the appropriate class
-** \param l A list of thermal clusters
-** \param folder The target folder
-** \param msg Message to display
-** \return A non-zero value if the operation succeeded, 0 otherwise
-*/
-int ThermalClusterListSaveDataSeriesToFolder(const ThermalClusterList* l, const AnyString& folder);
-int ThermalClusterListSaveDataSeriesToFolder(const ThermalClusterList* l,
-                                             const AnyString& folder,
-                                             const YString& msg);
-
 } // namespace Data
 } // namespace Antares

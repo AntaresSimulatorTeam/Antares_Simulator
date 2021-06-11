@@ -756,5 +756,185 @@ void ThermalClusterList::ensureDataTimeSeries()
             c.series = new DataSeriesCommon();
     }
 }
+
+bool ThermalClusterList::saveToFolder(const AnyString& folder) const
+{
+    // Make sure the folder is created
+    if (IO::Directory::Create(folder))
+    {
+        Clob buffer;
+        bool ret = true;
+        bool hasCoupling = false;
+
+        // Allocate the inifile structure
+        IniFile ini;
+
+        // Browse all clusters
+        each([&](const Data::ThermalCluster& c) {
+            // Coupling
+            if (not c.coupling.empty())
+                hasCoupling = true;
+
+            // Adding a section to the inifile
+            IniFile::Section* s = ini.addSection(c.name());
+
+            // The section must not be empty
+            // This key will be silently ignored the next time
+            s->add("name", c.name());
+
+            if (not c.group().empty())
+                s->add("group", c.group());
+            if (not c.enabled)
+                s->add("enabled", "false");
+            if (not Math::Zero(c.unitCount))
+                s->add("unitCount", c.unitCount);
+            if (not Math::Zero(c.nominalCapacity))
+                s->add("nominalCapacity", c.nominalCapacity);
+
+            // Min. Stable Power
+            if (not Math::Zero(c.minStablePower))
+                s->add("min-stable-power", c.minStablePower);
+
+            // Min up and min down time
+            if (c.minUpTime != 1)
+                s->add("min-up-time", c.minUpTime);
+            if (c.minDownTime != 1)
+                s->add("min-down-time", c.minDownTime);
+
+            // must-run
+            if (c.mustrun)
+                s->add("must-run", "true");
+
+            // spinning
+            if (not Math::Zero(c.spinning))
+                s->add("spinning", c.spinning);
+            // co2
+            if (not Math::Zero(c.co2))
+                s->add("co2", c.co2);
+
+            // volatility
+            if (not Math::Zero(c.forcedVolatility))
+                s->add("volatility.forced", Math::Round(c.forcedVolatility, 3));
+            if (not Math::Zero(c.plannedVolatility))
+                s->add("volatility.planned", Math::Round(c.plannedVolatility, 3));
+
+            // laws
+            if (c.forcedLaw != thermalLawUniform)
+                s->add("law.forced", c.forcedLaw);
+            if (c.plannedLaw != thermalLawUniform)
+                s->add("law.planned", c.plannedLaw);
+
+            // costs
+            if (not Math::Zero(c.marginalCost))
+                s->add("marginal-cost", Math::Round(c.marginalCost, 3));
+            if (not Math::Zero(c.spreadCost))
+                s->add("spread-cost", c.spreadCost);
+            if (not Math::Zero(c.fixedCost))
+                s->add("fixed-cost", Math::Round(c.fixedCost, 3));
+            if (not Math::Zero(c.startupCost))
+                s->add("startup-cost", Math::Round(c.startupCost, 3));
+            if (not Math::Zero(c.marketBidCost))
+                s->add("market-bid-cost", Math::Round(c.marketBidCost, 3));
+
+            // groun{min,max}
+            if (not Math::Zero(c.groupMinCount))
+                s->add("groupMinCount", c.groupMinCount);
+            if (not Math::Zero(c.groupMaxCount))
+                s->add("groupMaxCount", c.groupMaxCount);
+            if (not Math::Zero(c.annuityInvestment))
+                s->add("annuityInvestment", c.annuityInvestment);
+
+            buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
+                           << c.parentArea->id << SEP << c.id();
+            if (IO::Directory::Create(buffer))
+            {
+                buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
+                               << c.parentArea->id << SEP << c.id() << SEP
+                               << "modulation.txt";
+
+                ret = c.modulation.saveToCSVFile(buffer) and ret;
+            }
+            else
+                ret = 0;
+        });
+
+        if (hasCoupling)
+        {
+            IniFile::Section* s = ini.addSection("~_-_coupling_-_~");
+            each([&](const Data::ThermalCluster& c) {
+                if (c.coupling.empty())
+                    return;
+                auto send = c.coupling.end();
+                for (auto j = c.coupling.begin(); j != send; ++j)
+                    s->add(c.id(), (*j)->id());
+            });
+        }
+
+        // Write the ini file
+        buffer.clear() << folder << SEP << "list.ini";
+        ret = ini.save(buffer) and ret;
+    }
+    else
+    {
+        logs.error() << "I/O Error: impossible to create '" << folder << "'";
+        return false;
+    }
+
+    return true;
+}
+
+bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
+{
+    if (empty())
+        return true;
+
+    Clob buffer;
+    bool ret = true;
+
+    each([&](const Data::ThermalCluster& c) {
+        if (c.prepro)
+        {
+            assert(c.parentArea and "cluster: invalid parent area");
+            buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
+            ret = c.prepro->saveToFolder(buffer) and ret;
+        }
+    });
+    return ret;
+}
+
+bool ThermalClusterList::loadPreproFromFolder(Study& study,
+                                            const StudyLoadOptions& options,
+                                            const AnyString& folder)
+{
+    if (empty())
+        return true;
+
+    Clob buffer;
+    bool ret = true;
+
+    for (auto it = begin(); it != end(); ++it)
+    {
+        auto& c = *(it->second);
+        if (c.prepro)
+        {
+            assert(c.parentArea and "cluster: invalid parent area");
+            buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
+
+            bool result
+              = c.prepro->loadFromFolder(study, buffer, c.parentArea->id, c.id());
+
+            if (result and study.usedByTheSolver)
+            {
+                // checking NPO max
+                result = c.prepro->normalizeAndCheckNPO(c.name(), c.unitCount);
+            }
+
+            ret = result and ret;
+        }
+        ++options.progressTicks;
+        options.pushProgressLogs();
+    }
+    return ret;
+}
 } // namespace Data
 } // namespace Antares

@@ -262,7 +262,7 @@ public:
 
     int saveDataSeriesToFolder(const AnyString& folder, const YString& msg) const;
 
-    bool saveToFolder(const AnyString& folder) const;
+    virtual bool saveToFolder(const AnyString& folder) const;
 
     void ensureDataTimeSeries();
 }; // class ClusterList
