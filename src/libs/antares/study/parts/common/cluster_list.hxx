@@ -320,7 +320,7 @@ bool ClusterList<ClusterT>::loadFromFolder(Study& study, const AnyString& folder
     assert(area and "A parent area is required");
 
     // logs
-    logs.info() << "Loading renewable configuration for the area " << area->name;
+    logs.info() << "Loading " << typeID() << " configuration for the area " << area->name;
 
     // Open the ini file
     study.buffer.clear() << folder << SEP << "list.ini";
@@ -338,7 +338,7 @@ bool ClusterList<ClusterT>::loadFromFolder(Study& study, const AnyString& folder
 
                 ClusterT* cluster = new ClusterT(area, study.maxNbYearsInParallel);
 
-                // Load data of a renewable cluster from a ini file section
+                // Load data of a cluster from a ini file section
                 if (not ClusterLoadFromSection(study.buffer, *cluster, *section))
                 {
                     delete cluster;
@@ -348,11 +348,11 @@ bool ClusterList<ClusterT>::loadFromFolder(Study& study, const AnyString& folder
                 // Check the data integrity of the cluster
                 cluster->integrityCheck();
 
-                // adding the renewable cluster
+                // adding the cluster
                 if (not add(cluster))
                 {
                     // This error should never happen
-                    logs.error() << "Impossible to add the renewable cluster '" << cluster->name()
+                    logs.error() << "Impossible to add the " << typeID() << " cluster '" << cluster->name()
                                  << "'";
                     delete cluster;
                     continue;
@@ -395,7 +395,7 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
     Data::ClusterName newID;
     Antares::TransformNameIntoID(newName, newID);
 
-    // Looking for the renewable cluster in the list
+    // Looking for the cluster in the list
     auto it = cluster.find(idToFind);
     if (it == cluster.end())
         return true;
@@ -422,7 +422,7 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
     cluster[newID] = p;
 
     // Invalidate matrices attached to the area
-    // It is a bit excessive (all matrices not only those related to the renewable cluster)
+    // It is a bit excessive (all matrices not only those related to the cluster)
     // will be rewritten but currently it is the less error-prone.
     if (p->parentArea)
         (p->parentArea)->invalidateJIT = true;
@@ -482,7 +482,7 @@ void ClusterList<ClusterT>::retrieveTotalCapacity(double& total) const
             if (not i->second)
                 return;
 
-            // Reference to the renewable cluster
+            // Reference to the cluster
             auto& cluster = *(i->second);
             total += cluster.nominalCapacity;
         }
