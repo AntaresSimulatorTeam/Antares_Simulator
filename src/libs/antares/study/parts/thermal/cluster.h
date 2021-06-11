@@ -123,11 +123,6 @@ public:
     void markAsModified() const override;
 
     /*!
-    ** \brief Invalidate the whole attached area
-    */
-    void invalidateArea();
-
-    /*!
     ** \brief Reset to default values
     **
     ** This method should only be called from the GUI

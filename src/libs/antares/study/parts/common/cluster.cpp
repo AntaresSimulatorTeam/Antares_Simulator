@@ -93,5 +93,12 @@ int Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
     return 1;
 }
 #undef SEP
+
+
+void Cluster::invalidateArea()
+{
+    if (parentArea)
+        parentArea->invalidate();
+}
 } // namespace Data
 } // namespace Antares
