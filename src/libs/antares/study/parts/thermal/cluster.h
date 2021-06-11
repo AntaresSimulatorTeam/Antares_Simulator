@@ -57,8 +57,6 @@ enum ThermalModulation
     thermalModulationMax
 };
 
-struct CompareThermalClusterName;
-
 /*!
 ** \brief A single thermal cluster
 */
@@ -87,7 +85,7 @@ public:
     };
 
     //! Set of thermal clusters
-    typedef std::set<ThermalCluster*, CompareThermalClusterName> Set;
+    typedef std::set<ThermalCluster*, CompareClusterName> Set;
     //! Set of thermal clusters (pointer)
     typedef std::set<ThermalCluster*> SetPointer;
     //! Vector of thermal clusters
@@ -379,15 +377,6 @@ public:
 
     friend class ThermalClusterList;
 }; // class ThermalCluster
-
-struct CompareThermalClusterName final
-{
-    inline bool operator()(const ThermalCluster* s1, const ThermalCluster* s2) const
-    {
-        return (s1->getFullName() < s2->getFullName());
-    }
-};
-
 } // namespace Data
 } // namespace Antares
 

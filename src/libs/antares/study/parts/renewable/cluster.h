@@ -69,6 +69,13 @@ public:
         groupMax
     };
 
+    //! Set of renewable clusters
+    typedef std::set<Cluster*, CompareClusterName> Set;
+    //! Set of renewable clusters (pointer)
+    typedef std::set<Cluster*> SetPointer;
+    //! Vector of renewable clusters
+    typedef std::vector<Data::Cluster*> Vector;
+
     /*!
     ** \brief Get the group name string
     ** \return A valid CString

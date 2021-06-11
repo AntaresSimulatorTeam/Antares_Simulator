@@ -15,19 +15,11 @@ namespace Antares
 {
 namespace Data
 {
-struct CompareClusterName;
-
 class Cluster
 {
 public:
-    //! Set of renewable clusters
-    typedef std::set<Cluster*, CompareClusterName> Set;
-    //! Set of renewable clusters (pointer)
-    typedef std::set<Cluster*> SetPointer;
     //! Map of renewable clusters
     typedef std::map<ClusterName, Cluster*> Map;
-    //! Vector of renewable clusters
-    typedef std::vector<Data::Cluster*> Vector;
 
 public:
     Cluster(Area* parent);
@@ -137,10 +129,7 @@ public:
 
 struct CompareClusterName final
 {
-    inline bool operator()(const Cluster* s1, const Cluster* s2) const
-    {
-        return (s1->getFullName() < s2->getFullName());
-    }
+    bool operator()(const Cluster* s1, const Cluster* s2) const;
 };
 
 } // namespace Data
