@@ -101,10 +101,8 @@ void DataSeriesRenewable::estimateMemoryUsage(StudyMemoryUsage& u) const
 {
     u.requiredMemoryForInput += sizeof(DataSeriesRenewable);
     timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
-    series.estimateMemoryUsage(u,
-                               0 != (timeSeriesRenewable & u.study.parameters.timeSeriesToGenerate),
-                               1,
-                               HOURS_PER_YEAR);
+    series.estimateMemoryUsage(
+      u, 0 != (timeSeriesRenewable & u.study.parameters.timeSeriesToGenerate), 1, HOURS_PER_YEAR);
 }
 
 } // namespace Data
