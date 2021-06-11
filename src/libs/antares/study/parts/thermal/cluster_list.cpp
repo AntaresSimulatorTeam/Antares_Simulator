@@ -735,11 +735,6 @@ void ThermalClusterList::enableMustrunForEveryone()
     each([&](ThermalCluster& cluster) { cluster.mustrun = true; });
 }
 
-bool ThermalCluster::isVisibleOnLayer(const size_t& layerID) const
-{
-    return parentArea ? parentArea->isVisibleOnLayer(layerID) : false;
-}
-
 // TODO : move to class
 void ThermalClusterListEnsureDataPrepro(ThermalClusterList* list)
 {

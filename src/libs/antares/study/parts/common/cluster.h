@@ -83,6 +83,12 @@ public:
     */
     virtual void markAsModified() const = 0;
 
+    /*!
+    ** \brief Check wether the cluster is visible in a layer (it's parent area is visible in the
+    *layer)
+    */
+    bool isVisibleOnLayer(const size_t& layerID) const;
+
     //! Count of unit
     uint unitCount;
 

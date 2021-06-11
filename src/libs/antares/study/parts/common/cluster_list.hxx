@@ -630,4 +630,3 @@ void ClusterList<ClusterT>::ensureDataTimeSeries()
 }
 } // namespace Data
 } // namespace Antares
-

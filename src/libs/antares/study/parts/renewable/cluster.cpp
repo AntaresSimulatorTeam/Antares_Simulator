@@ -251,11 +251,5 @@ uint64 RenewableCluster::memoryUsage() const
         amount += DataSeriesMemoryUsage(series);
     return amount;
 }
-
-bool RenewableCluster::isVisibleOnLayer(const size_t& layerID) const
-{
-    return parentArea ? parentArea->isVisibleOnLayer(layerID) : false;
-}
-
 } // namespace Data
 } // namespace Antares

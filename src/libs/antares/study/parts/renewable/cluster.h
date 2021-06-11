@@ -167,12 +167,6 @@ public:
     bool checkMinStablePowerWithNewModulation(uint index, double value);
     //@}
 
-    /*!
-    ** \brief Check wether the cluster is visible in a layer (it's parent area is visible in the
-    *layer)
-    */
-    bool isVisibleOnLayer(const size_t& layerID) const;
-
     // TODO remove
     void* prepro;
 
