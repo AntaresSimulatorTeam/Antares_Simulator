@@ -463,9 +463,6 @@ bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
     // Invalidating the parent area
     c->parentArea->invalidate();
 
-    // delete the cluster
-    delete c;
-
     // Rebuilding the index
     rebuildIndex();
     return true;

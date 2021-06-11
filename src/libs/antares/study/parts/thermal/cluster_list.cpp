@@ -721,9 +721,6 @@ bool ThermalClusterList::remove(const ClusterName& id)
         }
     }
 
-    // delete the cluster
-    delete c;
-
     // Rebuilding the index
     rebuildIndex();
     return true;
