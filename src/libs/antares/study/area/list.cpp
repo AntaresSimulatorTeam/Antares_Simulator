@@ -1451,7 +1451,7 @@ void AreaListEnsureDataHydroPrepro(AreaList* l)
 void AreaListEnsureDataThermalTimeSeries(AreaList* l)
 {
     assert(l);
-    l->each([&](Data::Area& area) { ThermalClusterListEnsureDataTimeSeries(&area.thermal.list); });
+    l->each([&](Data::Area& area) { area.thermal.list.ensureDataTimeSeries(); });
 }
 
 void AreaListEnsureDataRenewableTimeSeries(AreaList* l)

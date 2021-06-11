@@ -80,25 +80,24 @@ public:
 
     Map mapping;
 
+    /*!
+    ** \brief Ensure data for the prepro are initialized
+    ** \ingroup thermalclusters
+    **
+    ** \todo Remaining of old C-library. this routine should be moved into the appropriate class
+    ** \param l The list of thermal clusters
+    */
     void ensureDataPrepro();
+
+    /*!
+    ** \brief Ensure data for the time-series are initialized
+    ** \ingroup thermalclusters
+    **
+    ** \todo Remaining of old C-library. this routine should be moved into the appropriate class
+    ** \param l The list of thermal clusters
+    */
+    void ensureDataTimeSeries();
 }; // class ThermalClusterList
-/*!
-** \brief Ensure data for the prepro are initialized
-** \ingroup thermalclusters
-**
-** \todo Remaining of old C-library. this routine should be moved into the appropriate class
-** \param l The list of thermal clusters
-*/
-
-
-/*!
-** \brief Ensure data for the time-series are initialized
-** \ingroup thermalclusters
-**
-** \todo Remaining of old C-library. this routine should be moved into the appropriate class
-** \param l The list of thermal clusters
-*/
-void ThermalClusterListEnsureDataTimeSeries(ThermalClusterList* l);
 
 /*!
 ** \brief Save a list of thermal clusters to a folder

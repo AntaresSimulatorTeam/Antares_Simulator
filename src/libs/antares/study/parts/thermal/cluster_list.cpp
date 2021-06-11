@@ -746,14 +746,14 @@ void ThermalClusterList::ensureDataPrepro()
     }
 }
 
-void ThermalClusterListEnsureDataTimeSeries(ThermalClusterList* list)
+void ThermalClusterList::ensureDataTimeSeries()
 {
-    auto end = list->cluster.end();
-    for (auto it = list->cluster.begin(); it != end; ++it)
+    auto end = cluster.end();
+    for (auto it = cluster.begin(); it != end; ++it)
     {
-        auto& cluster = *(it->second);
-        if (not cluster.series)
-            cluster.series = new DataSeriesCommon();
+        auto& c = *(it->second);
+        if (not c.series)
+            c.series = new DataSeriesCommon();
     }
 }
 } // namespace Data

@@ -261,7 +261,7 @@ void Area::ensureAllDataAreCreated()
         wind.series = new DataSeriesWind();
     if (!hydro.series)
         hydro.series = new DataSeriesHydro();
-    ThermalClusterListEnsureDataTimeSeries(&thermal.list);
+    thermal.list.ensureDataTimeSeries();
     renewable.list.ensureDataTimeSeries();
 
     // Prepro
@@ -329,7 +329,7 @@ void Area::resetToDefaultValues()
     // 		thermal.list.add(ag);
     // 		thermal.list.rebuildIndex();
     // 		thermal.list.ensureDataPrepro();
-    // 		ThermalClusterListEnsureDataTimeSeries(&thermal.list);
+    // 		thermal.list.ensureDataTimeSeries();
     // 	}
     // }
 }
