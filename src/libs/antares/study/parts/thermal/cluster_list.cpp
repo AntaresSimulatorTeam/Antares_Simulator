@@ -26,6 +26,11 @@ ThermalClusterList::ThermalClusterList()
 
 ThermalClusterList::~ThermalClusterList()
 {
+    for (auto& it : mapping)
+    {
+        delete it.second;
+    }
+
     // deleting all thermal clusters
     clear();
 }
