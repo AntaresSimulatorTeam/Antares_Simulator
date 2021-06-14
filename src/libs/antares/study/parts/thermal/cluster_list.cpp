@@ -703,7 +703,7 @@ bool ThermalClusterList::remove(const ClusterName& id)
         return false;
 
     // Getting the pointer on the cluster
-    auto c = i->second;
+    SharedPtr c = i->second;
 
     // Removing it from the list
     cluster.erase(i);

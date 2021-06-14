@@ -20,7 +20,10 @@ template<class ClusterT>
 class ClusterList
 {
 public:
-    typedef typename std::map<ClusterName, std::shared_ptr<ClusterT>> Map;
+    // Shared pointer
+    typedef typename std::shared_ptr<ClusterT> SharedPtr;
+    // Map container
+    typedef typename std::map<ClusterName, SharedPtr> Map;
     //! iterator
     typedef typename Map::iterator iterator;
     //! const iterator

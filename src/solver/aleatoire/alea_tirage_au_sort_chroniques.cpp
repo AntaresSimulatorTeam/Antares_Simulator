@@ -98,7 +98,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
             auto end = area.renewable.list.cluster.end();
             for (auto it = area.renewable.list.cluster.begin(); it != end; ++it)
             {
-                auto cluster = it->second;
+                RenewableClusterList::SharedPtr cluster = it->second;
                 if (!cluster->enabled)
                 {
                     continue;
@@ -120,7 +120,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
             auto end = area.thermal.list.mapping.end();
             for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
             {
-                auto cluster = it->second;
+                ThermalClusterList::SharedPtr cluster = it->second;
                 // Draw a new random number, whatever the cluster is
                 double rnd = thermalNoisesByArea[i][indexCluster];
 

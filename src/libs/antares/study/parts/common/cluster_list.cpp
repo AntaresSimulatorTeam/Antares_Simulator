@@ -88,7 +88,7 @@ ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id)
 template<class ClusterT>
 ClusterT* ClusterList<ClusterT>::detach(iterator i)
 {
-    auto c = i->second;
+    SharedPtr c = i->second;
     cluster.erase(i);
     return c.get();
 }
@@ -456,7 +456,7 @@ bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
         return false;
 
     // Getting the pointer on the cluster
-    auto c = i->second;
+    SharedPtr c = i->second;
 
     // Removing it from the list
     cluster.erase(i);
@@ -579,9 +579,9 @@ void ClusterList<ClusterT>::ensureDataTimeSeries()
     auto end = cluster.end();
     for (auto it = cluster.begin(); it != end; ++it)
     {
-        auto& cluster = *(it->second);
-        if (not cluster.series)
-            cluster.series = new DataSeriesCommon();
+        SharedPtr cluster = it->second;
+        if (not cluster->series)
+            cluster->series = new DataSeriesCommon();
     }
 }
 
