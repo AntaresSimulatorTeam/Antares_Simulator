@@ -75,22 +75,22 @@ template<class ClusterT>
 const ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id) const
 {
     auto i = cluster.find(id);
-    return (i != cluster.end()) ? i->second : nullptr;
+    return (i != cluster.end()) ? i->second.get() : nullptr;
 }
 
 template<class ClusterT>
 ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id)
 {
     auto i = cluster.find(id);
-    return (i != cluster.end()) ? i->second : nullptr;
+    return (i != cluster.end()) ? i->second.get() : nullptr;
 }
 
 template<class ClusterT>
 ClusterT* ClusterList<ClusterT>::detach(iterator i)
 {
-    auto* c = i->second;
+    auto c = i->second;
     cluster.erase(i);
-    return c;
+    return c.get();
 }
 
 template<class ClusterT>
@@ -141,8 +141,8 @@ const ClusterT* ClusterList<ClusterT>::find(const ClusterT* p) const
     auto end = cluster.end();
     for (auto i = cluster.begin(); i != end; ++i)
     {
-        if (p == i->second)
-            return i->second;
+        if (p == i->second.get())
+            return i->second.get();
     }
     return nullptr;
 }
@@ -153,8 +153,8 @@ ClusterT* ClusterList<ClusterT>::find(const ClusterT* p)
     auto end = cluster.end();
     for (auto i = cluster.begin(); i != end; ++i)
     {
-        if (p == i->second)
-            return i->second;
+        if (p == i->second.get())
+            return i->second.get();
     }
     return nullptr;
 }
@@ -211,7 +211,7 @@ void ClusterList<ClusterT>::rebuildIndex()
         auto end = cluster.end();
         for (auto i = cluster.begin(); i != end; ++i)
         {
-            auto* cluster = i->second;
+            auto cluster = i->second.get();
             byIndex[indx] = cluster;
             cluster->index = indx;
             ++indx;
@@ -222,20 +222,20 @@ void ClusterList<ClusterT>::rebuildIndex()
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::add(ClusterT* newcluster)
+typename std::shared_ptr<ClusterT> ClusterList<ClusterT>::add(ClusterT* newcluster)
 {
     if (newcluster)
     {
         if (exists(newcluster->id()))
-            return true;
+            return cluster[newcluster->id()];
 
         newcluster->index = (uint)size();
-        cluster[newcluster->id()] = newcluster;
+        cluster[newcluster->id()] = std::shared_ptr<ClusterT>(newcluster);
         ++(groupCount[newcluster->groupId()]);
         rebuildIndex();
-        return true;
+        return cluster[newcluster->id()];
     }
-    return false;
+    return nullptr;
 }
 
 template<class ClusterT>
@@ -378,7 +378,7 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
     if (it == cluster.end())
         return true;
 
-    ClusterT* p = it->second;
+    std::shared_ptr<ClusterT> p = it->second;
 
     if (idToFind == newID)
     {
@@ -456,7 +456,7 @@ bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
         return false;
 
     // Getting the pointer on the cluster
-    auto* c = i->second;
+    auto c = i->second;
 
     // Removing it from the list
     cluster.erase(i);

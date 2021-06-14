@@ -348,7 +348,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
                 auto end = area.thermal.list.mapping.end();
                 for (auto i = area.thermal.list.mapping.begin(); i != end; ++i)
                 {
-                    auto* cluster = i->second;
+                    auto cluster = i->second;
                     if (!cluster->enabled)
                     {
                         study.runtime->random[Data::seedTimeseriesNumbers].next();
@@ -367,7 +367,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
                 auto end = area.renewable.list.cluster.end();
                 for (auto i = area.renewable.list.cluster.begin(); i != end; ++i)
                 {
-                    auto* cluster = i->second;
+                    auto cluster = i->second;
                     if (!cluster->enabled)
                     {
                         study.runtime->random[Data::seedTimeseriesNumbers].next();
