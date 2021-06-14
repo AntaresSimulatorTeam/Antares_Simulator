@@ -84,7 +84,7 @@ public:
     ** \param t The cluster to add
     ** \return True if the cluster has been added, false otherwise
     */
-    typename std::shared_ptr<ClusterT> add(ClusterT* t);
+    SharedPtr add(ClusterT* t);
 
     /*!
     ** \brief Detach a cluster represented by an iterator
