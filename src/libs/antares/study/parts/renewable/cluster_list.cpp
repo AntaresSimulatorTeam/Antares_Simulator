@@ -55,18 +55,26 @@ bool RenewableClusterList::saveToFolder(const AnyString& folder) const
         IniFile ini;
 
         // Browse all clusters
-        each([&](const Data::Cluster& cluster) {
+        each([&](const Data::RenewableCluster& c) {
             // Adding a section to the inifile
-            IniFile::Section* s = ini.addSection(cluster.name());
+            IniFile::Section* s = ini.addSection(c.name());
 
             // The section must not be empty
             // This key will be silently ignored the next time
-            s->add("name", cluster.name());
+            s->add("name", c.name());
 
-            if (not cluster.group().empty())
-                s->add("group", cluster.group());
-            if (not cluster.enabled)
+            if (not c.group().empty())
+                s->add("group", c.group());
+            if (not c.enabled)
                 s->add("enabled", "false");
+
+            if (not Math::Zero(c.nominalCapacity))
+                s->add("nominalCapacity", c.nominalCapacity);
+
+            if (not Math::Zero(c.unitCount))
+                s->add("unitCount", c.unitCount);
+
+            s->add("ts-interpretation", c.getTimeSeriesModeAsString());
         });
 
         // Write the ini file
@@ -98,6 +106,15 @@ static bool ClusterLoadFromProperty(RenewableCluster& cluster, const IniFile::Pr
 
     if (p->key == "enabled")
         return p->value.to<bool>(cluster.enabled);
+
+    if (p->key == "unitcount")
+        return p->value.to<uint>(cluster.unitCount);
+
+    if (p->key == "nominalcapacity")
+        return p->value.to<double>(cluster.nominalCapacity);
+
+    if (p->key == "ts-interpretation")
+        return cluster.setTimeSeriesModeFromString(p->value);
 
     // The property is unknown
     return false;
