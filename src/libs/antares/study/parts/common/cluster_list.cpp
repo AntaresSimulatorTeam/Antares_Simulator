@@ -321,26 +321,6 @@ void ClusterList<ClusterT>::markAsModified() const
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::retrieveTotalCapacity(double& total) const
-{
-    total = 0.;
-
-    if (not cluster.empty())
-    {
-        auto end = cluster.cend();
-        for (auto i = cluster.cbegin(); i != end; ++i)
-        {
-            if (not i->second)
-                return;
-
-            // Reference to the cluster
-            auto& cluster = *(i->second);
-            total += cluster.nominalCapacity;
-        }
-    }
-}
-
-template<class ClusterT>
 bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
 {
     auto i = cluster.find(id);
@@ -435,6 +415,28 @@ void ClusterList<ClusterT>::ensureDataTimeSeries()
         auto& cluster = *(it->second);
         if (not cluster.series)
             cluster.series = new DataSeriesCommon();
+    }
+}
+
+template<class ClusterT>
+void ClusterList<ClusterT>::retrieveTotalCapacityAndUnitCount(double& total, uint& unitCount) const
+{
+    total = 0.;
+    unitCount = 0;
+
+    if (not cluster.empty())
+    {
+        auto end = cluster.cend();
+        for (auto i = cluster.cbegin(); i != end; ++i)
+        {
+            if (not i->second)
+                return;
+
+            // Reference to the thermal cluster
+            auto& cluster = *(i->second);
+            unitCount += cluster.unitCount;
+            total += cluster.unitCount * cluster.nominalCapacity;
+        }
     }
 }
 

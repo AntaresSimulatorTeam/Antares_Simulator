@@ -59,21 +59,6 @@ public:
     void enableMustrunForEveryone();
     //@}
 
-    //! \name Informations
-    //@{
-    /*!
-    ** \brief Retrieve the total capacity and the total unit count
-    **
-    ** Pseudo code:
-    ** \code
-    ** each thermal cluster do
-    ** 	total += cluster{unit count} * cluster{nominal capacity}
-    **	unit  += cluster{unit count}
-    ** \endcode
-    */
-    void retrieveTotalCapacityAndUnitCount(double& total, uint& unitCount) const;
-    //@}
-
     bool remove(const ClusterName& id) override;
 
     void estimateMemoryUsage(StudyMemoryUsage&) const override;

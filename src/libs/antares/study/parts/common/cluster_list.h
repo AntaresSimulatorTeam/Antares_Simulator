@@ -192,8 +192,6 @@ public:
 
     bool storeTimeseriesNumbers(Study& study);
 
-    void retrieveTotalCapacity(double& total) const;
-
     //@}
 
     //! \name Memory management
@@ -265,6 +263,21 @@ public:
     virtual bool saveToFolder(const AnyString& folder) const = 0;
 
     void ensureDataTimeSeries();
+
+    //! \name Informations
+    //@{
+    /*!
+    ** \brief Retrieve the total capacity and the total unit count
+    **
+    ** Pseudo code:
+    ** \code
+    ** each thermal cluster do
+    ** 	total += cluster{unit count} * cluster{nominal capacity}
+    **	unit  += cluster{unit count}
+    ** \endcode
+    */
+    void retrieveTotalCapacityAndUnitCount(double& total, uint& unitCount) const;
+    //@}
 }; // class ClusterList
 } // namespace Data
 } // namespace Antares

@@ -674,27 +674,6 @@ void ThermalClusterList::reverseCalculationOfSpinning()
     }
 }
 
-void ThermalClusterList::retrieveTotalCapacityAndUnitCount(double& total, uint& unitCount) const
-{
-    total = 0.;
-    unitCount = 0;
-
-    if (not cluster.empty())
-    {
-        auto end = cluster.cend();
-        for (auto i = cluster.cbegin(); i != end; ++i)
-        {
-            if (not i->second)
-                return;
-
-            // Reference to the thermal cluster
-            auto& cluster = *(i->second);
-            unitCount += cluster.unitCount;
-            total += cluster.unitCount * cluster.nominalCapacity;
-        }
-    }
-}
-
 bool ThermalClusterList::remove(const ClusterName& id)
 {
     auto i = cluster.find(id);
