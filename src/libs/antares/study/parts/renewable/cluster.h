@@ -69,6 +69,16 @@ public:
         groupMax
     };
 
+    enum TimeSeriesMode
+    {
+        //! TS contain power generation for each unit
+        //! Nominal capacity is *ignored*
+        powerGeneration = 0,
+        //! TS contain production factor for each unit
+        //! Nominal capacity is used as a multiplicative factor
+        productionFactor
+    };
+
     //! Set of renewable clusters
     typedef std::set<Cluster*, CompareClusterName> Set;
     //! Set of renewable clusters (pointer)
@@ -178,6 +188,8 @@ public:
     ** \see group()
     */
     enum RenewableGroup groupID;
+
+    enum TimeSeriesMode tsMode;
 
     friend class RenewableClusterList;
 }; // class RenewableCluster

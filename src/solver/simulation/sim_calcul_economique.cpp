@@ -603,9 +603,18 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                        < cluster.series->series.width);
                 assert((uint)indx < cluster.series->series.height);
                 assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
-                problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
-                  += cluster.series
-                       ->series[tsIndex.RenouvelableParPalier[cluster.areaWideIndex]][indx];
+                const auto& tsValue = cluster.series
+                    ->series[tsIndex.RenouvelableParPalier[cluster.areaWideIndex]][indx];
+                if (cluster.tsMode == powerGeneration) {
+                  problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
+                    += cluster.unitCount
+                    * tsValue;
+                } else if (cluster.tsMode == productionFactor) {
+                  problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
+                    += cluster.unitCount
+                    * cluster.nominalCapacity
+                    * tsValue;
+                }
             });
 
             assert(
