@@ -109,7 +109,7 @@ public:
     ** \param area The associate area
     ** \return True if the operation succeeded, false otherwise
     */
-    virtual bool loadFromFolder(Study& s, const AnyString& folder, Area* area);
+    virtual bool loadFromFolder(Study& s, const AnyString& folder, Area* area) = 0;
 
     /*!
     ** \brief Try to find a cluster from its id
@@ -262,7 +262,7 @@ public:
 
     int saveDataSeriesToFolder(const AnyString& folder, const YString& msg) const;
 
-    virtual bool saveToFolder(const AnyString& folder) const;
+    virtual bool saveToFolder(const AnyString& folder) const = 0;
 
     void ensureDataTimeSeries();
 }; // class ClusterList

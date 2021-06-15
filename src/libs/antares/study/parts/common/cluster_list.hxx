@@ -352,8 +352,8 @@ bool ClusterList<ClusterT>::loadFromFolder(Study& study, const AnyString& folder
                 if (not add(cluster))
                 {
                     // This error should never happen
-                    logs.error() << "Impossible to add the " << typeID() << " cluster '" << cluster->name()
-                                 << "'";
+                    logs.error() << "Impossible to add the " << typeID() << " cluster '"
+                                 << cluster->name() << "'";
                     delete cluster;
                     continue;
                 }

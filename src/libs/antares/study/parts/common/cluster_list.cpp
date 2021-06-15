@@ -1,6 +1,5 @@
 #include "cluster_list.h"
 #include "../../../utils.h"
-#include "../../../inifile.h"
 #include "../../study.h"
 #include "../../area.h"
 
@@ -239,113 +238,6 @@ bool ClusterList<ClusterT>::add(ClusterT* newcluster)
 }
 
 template<class ClusterT>
-static bool ClusterLoadFromProperty(ClusterT& cluster, const IniFile::Property* p)
-{
-    if (p->key.empty())
-        return false;
-
-    if (p->key == "group")
-    {
-        cluster.setGroup(p->value);
-        return true;
-    }
-
-    if (p->key == "name")
-        return true;
-
-    if (p->key == "enabled")
-        return p->value.to<bool>(cluster.enabled);
-
-    // The property is unknown
-    return false;
-}
-
-template<class ClusterT>
-static bool ClusterLoadFromSection(const AnyString& filename,
-                                   ClusterT& cluster,
-                                   const IniFile::Section& section)
-{
-    if (section.name.empty())
-        return false;
-
-    cluster.setName(section.name);
-
-    if (section.firstProperty)
-    {
-        // Browse all properties
-        for (auto* property = section.firstProperty; property; property = property->next)
-        {
-            if (property->key.empty())
-            {
-                logs.warning() << '`' << filename << "`: `" << section.name
-                               << "`: Invalid key/value";
-                continue;
-            }
-            if (not ClusterLoadFromProperty(cluster, property))
-            {
-                logs.warning() << '`' << filename << "`: `" << section.name << "`/`"
-                               << property->value << "`: The property is unknown and ignored";
-            }
-        }
-        // update the minUpDownTime
-    }
-    return true;
-}
-
-template<class ClusterT>
-bool ClusterList<ClusterT>::loadFromFolder(Study& study, const AnyString& folder, Area* area)
-{
-    assert(area and "A parent area is required");
-
-    // logs
-    logs.info() << "Loading renewable configuration for the area " << area->name;
-
-    // Open the ini file
-    study.buffer.clear() << folder << SEP << "list.ini";
-    IniFile ini;
-    if (ini.open(study.buffer))
-    {
-        bool ret = true;
-
-        if (ini.firstSection)
-        {
-            for (auto* section = ini.firstSection; section; section = section->next)
-            {
-                if (section->name.empty())
-                    continue;
-
-                ClusterT* cluster = new ClusterT(area, study.maxNbYearsInParallel);
-
-                // Load data of a renewable cluster from a ini file section
-                if (not ClusterLoadFromSection(study.buffer, *cluster, *section))
-                {
-                    delete cluster;
-                    continue;
-                }
-
-                // Check the data integrity of the cluster
-                cluster->integrityCheck();
-
-                // adding the renewable cluster
-                if (not add(cluster))
-                {
-                    // This error should never happen
-                    logs.error() << "Impossible to add the renewable cluster '" << cluster->name()
-                                 << "'";
-                    delete cluster;
-                    continue;
-                }
-
-                cluster->flush();
-            }
-        }
-
-        return ret;
-    }
-    return false;
-}
-
-template<class ClusterT>
 Yuni::uint64 ClusterList<ClusterT>::memoryUsage() const
 {
     uint64 ret = sizeof(ClusterList) + (2 * sizeof(void*)) * this->size();
@@ -441,7 +333,7 @@ void ClusterList<ClusterT>::retrieveTotalCapacity(double& total) const
             if (not i->second)
                 return;
 
-            // Reference to the renewable cluster
+            // Reference to the cluster
             auto& cluster = *(i->second);
             total += cluster.nominalCapacity;
         }
@@ -470,48 +362,6 @@ bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
     rebuildIndex();
     return true;
 }
-
-template<class ClusterT>
-bool ClusterList<ClusterT>::saveToFolder(const AnyString& folder) const
-{
-    // Make sure the folder is created
-    if (IO::Directory::Create(folder))
-    {
-        Clob buffer;
-        bool ret = true;
-
-        // Allocate the inifile structure
-        IniFile ini;
-
-        // Browse all clusters
-        each([&](const Data::Cluster& cluster) {
-            // Adding a section to the inifile
-            IniFile::Section* s = ini.addSection(cluster.name());
-
-            // The section must not be empty
-            // This key will be silently ignored the next time
-            s->add("name", cluster.name());
-
-            if (not cluster.group().empty())
-                s->add("group", cluster.group());
-            if (not cluster.enabled)
-                s->add("enabled", "false");
-        });
-
-        // Write the ini file
-        buffer.clear() << folder << SEP << "list.ini";
-        ret = ini.save(buffer) and ret;
-    }
-    else
-    {
-        logs.error() << "I/O Error: impossible to create '" << folder << "'";
-        return false;
-    }
-
-    return true;
-}
-
-#undef SEP
 
 template<class ClusterT>
 int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) const
