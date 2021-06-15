@@ -128,9 +128,7 @@ ThermalCluster* addCluster(Study::Ptr pStudy, Area* pArea, const std::string& cl
 	
 	pCluster->nominalCapacityWithSpinning = pCluster->nominalCapacity;
 
-	BOOST_CHECK(pArea->thermal.list.add(pCluster));
-
-	pArea->thermal.list.mapping[pCluster->id()] = pCluster;
+	BOOST_CHECK(pArea->add(pCluster));
 
 	return pCluster;
 }
