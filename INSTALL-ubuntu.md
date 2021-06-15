@@ -189,3 +189,16 @@ There are still some system libraries that must be installed if you want to use 
 ```
 sudo apt-get install libwxgtk3.0-gtk3-0v5
 ```
+
+## Debugging
+If you run into a bug, you might want to execute debugging tools such as gdb, valgrind, etc.
+
+You'll need to build in debug mode. For that, you'll need debugging symbols.
+
+```
+mkdir build_debug
+cmake -B build_debug -S src -DCMAKE_BUILD_TYPE=debug
+cmake --build build_debug --config debug -j<N>
+```
+
+The solver executable is `build_debug/solver/antares-<version>-solver`.
