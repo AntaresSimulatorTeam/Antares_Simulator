@@ -598,22 +598,23 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 + scratchpad.mustrunSum[indx];
 
             // Renewable
-            area.renewable.list.each([&](const Cluster& cluster) {
+            area.renewable.list.each([&](const RenewableCluster& cluster) {
                 assert((uint)tsIndex.RenouvelableParPalier[cluster.areaWideIndex]
                        < cluster.series->series.width);
                 assert((uint)indx < cluster.series->series.height);
                 assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
-                const auto& tsValue = cluster.series
-                    ->series[tsIndex.RenouvelableParPalier[cluster.areaWideIndex]][indx];
-                if (cluster.tsMode == powerGeneration) {
-                  problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
-                    += cluster.unitCount
-                    * tsValue;
-                } else if (cluster.tsMode == productionFactor) {
-                  problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
-                    += cluster.unitCount
-                    * cluster.nominalCapacity
-                    * tsValue;
+                const auto& tsValue
+                  = cluster.series
+                      ->series[tsIndex.RenouvelableParPalier[cluster.areaWideIndex]][indx];
+                if (cluster.tsMode == RenewableCluster::powerGeneration)
+                {
+                    problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
+                      += cluster.unitCount * tsValue;
+                }
+                else if (cluster.tsMode == RenewableCluster::productionFactor)
+                {
+                    problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
+                      += cluster.unitCount * cluster.nominalCapacity * tsValue;
                 }
             });
 
