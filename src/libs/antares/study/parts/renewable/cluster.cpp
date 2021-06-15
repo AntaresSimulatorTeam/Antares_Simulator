@@ -233,6 +233,33 @@ const char* Data::RenewableCluster::GroupName(enum RenewableGroup grp)
     return "";
 }
 
+bool Data::RenewableCluster::setTimeSeriesModeFromString(const YString& value)
+{
+    if (value == "power-generation")
+    {
+        tsMode = powerGeneration;
+        return true;
+    }
+    if (value == "production-factor")
+    {
+        tsMode = productionFactor;
+        return true;
+    }
+    return false;
+}
+
+const YString& Data::RenewableCluster::getTimeSeriesModeAsString() const
+{
+  switch(tsMode) {
+  case powerGeneration:
+    return "power-generation";
+  case productionFactor:
+    return "production-factor";
+  }
+  return "unknown";
+}
+
+
 uint64 RenewableCluster::memoryUsage() const
 {
     uint64 amount = sizeof(RenewableCluster);

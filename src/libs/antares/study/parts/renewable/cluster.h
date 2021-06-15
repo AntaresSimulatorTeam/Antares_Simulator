@@ -177,8 +177,9 @@ public:
     bool checkMinStablePowerWithNewModulation(uint index, double value);
     //@}
 
-    // TODO remove
-    void* prepro;
+    bool setTimeSeriesModeFromString(const YString& value);
+
+    const YString& getTimeSeriesModeAsString() const;
 
 public:
     /*!
@@ -190,6 +191,9 @@ public:
     enum RenewableGroup groupID;
 
     enum TimeSeriesMode tsMode;
+
+    // TODO remove
+    void* prepro;
 
     friend class RenewableClusterList;
 }; // class RenewableCluster
