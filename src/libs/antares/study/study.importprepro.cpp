@@ -119,8 +119,7 @@ bool Study::importTimeseriesIntoInput()
                 }
 
                 buffer.clear() << folderInput << SEP << "thermal" << SEP << "series";
-                ret = area.thermal.list.saveDataSeriesToFolder(buffer.c_str(), msg)
-                      && ret;
+                ret = area.thermal.list.saveDataSeriesToFolder(buffer.c_str(), msg) && ret;
                 ++progression;
             });
         }

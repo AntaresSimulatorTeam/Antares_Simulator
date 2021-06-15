@@ -90,17 +90,15 @@ public:
     void ensureDataPrepro();
 
     /*!
-  ** \brief Load data related to the preprocessor from a list of thermal clusters from a folder
-  ** \ingroup thermalclusters
-  **
-  ** \todo Remaining of old C-library. this routine should be moved into the appropriate class
-  ** \param l A list of thermal clusters
-  ** \param folder The target folder
-  ** \return A non-zero value if the operation succeeded, 0 otherwise
-  */
-    bool loadPreproFromFolder(Study& s,
-                              const StudyLoadOptions& options,
-                              const AnyString& folder);
+     ** \brief Load data related to the preprocessor from a list of thermal clusters from a folder
+     ** \ingroup thermalclusters
+     **
+     ** \todo Remaining of old C-library. this routine should be moved into the appropriate class
+     ** \param l A list of thermal clusters
+     ** \param folder The target folder
+     ** \return A non-zero value if the operation succeeded, 0 otherwise
+     */
+    bool loadPreproFromFolder(Study& s, const StudyLoadOptions& options, const AnyString& folder);
 
     bool savePreproToFolder(const AnyString& folder) const;
 

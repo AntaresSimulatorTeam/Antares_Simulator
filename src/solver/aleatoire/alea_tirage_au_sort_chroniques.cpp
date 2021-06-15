@@ -180,12 +180,11 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
 void ALEA_TirageAuSortChroniques(double** thermalNoisesByArea, uint numSpace)
 {
     // Time-series numbers
-  bool ecoMode = Data::Study::Current::Get()->runtime->mode != stdmAdequacyDraft;
-  // Retrieve all time-series numbers
-  // Initialize in the same time the production costs of all thermal clusters.
-  InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(thermalNoisesByArea,
-                                                                     numSpace,
-                                                                     ecoMode);
+    bool ecoMode = Data::Study::Current::Get()->runtime->mode != stdmAdequacyDraft;
+    // Retrieve all time-series numbers
+    // Initialize in the same time the production costs of all thermal clusters.
+    InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
+      thermalNoisesByArea, numSpace, ecoMode);
     // Flush all memory into the swap files
     // (only if the support is available)
     if (Antares::Memory::swapSupport)

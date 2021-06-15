@@ -1011,8 +1011,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (not options.loadOnlyNeeded)
         {
             buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
-            ret = area.thermal.list.loadPreproFromFolder(study, options, buffer)
-                  and ret;
+            ret = area.thermal.list.loadPreproFromFolder(study, options, buffer) and ret;
             buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
             ret = area.thermal.list.loadDataSeriesFromFolder(
                     study, options, buffer, options.loadOnlyNeeded)
@@ -1023,8 +1022,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             if (study.parameters.isTSGeneratedByPrepro(timeSeriesThermal))
             {
                 buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
-                ret = area.thermal.list.loadPreproFromFolder(study, options,buffer)
-                      and ret;
+                ret = area.thermal.list.loadPreproFromFolder(study, options, buffer) and ret;
             }
             else
             {

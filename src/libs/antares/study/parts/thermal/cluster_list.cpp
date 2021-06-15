@@ -838,8 +838,7 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             if (IO::Directory::Create(buffer))
             {
                 buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
-                               << c.parentArea->id << SEP << c.id() << SEP
-                               << "modulation.txt";
+                               << c.parentArea->id << SEP << c.id() << SEP << "modulation.txt";
 
                 ret = c.modulation.saveToCSVFile(buffer) and ret;
             }
@@ -892,8 +891,8 @@ bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
 }
 
 bool ThermalClusterList::loadPreproFromFolder(Study& study,
-                                            const StudyLoadOptions& options,
-                                            const AnyString& folder)
+                                              const StudyLoadOptions& options,
+                                              const AnyString& folder)
 {
     if (empty())
         return true;
@@ -909,8 +908,7 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
             assert(c.parentArea and "cluster: invalid parent area");
             buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
 
-            bool result
-              = c.prepro->loadFromFolder(study, buffer, c.parentArea->id, c.id());
+            bool result = c.prepro->loadFromFolder(study, buffer, c.parentArea->id, c.id());
 
             if (result and study.usedByTheSolver)
             {
