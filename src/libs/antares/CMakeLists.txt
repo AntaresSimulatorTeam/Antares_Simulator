@@ -203,7 +203,6 @@ set(SRC_STUDY_PART_COMMON
     study/parts/common/cluster.h
     study/parts/common/cluster_list.h
 	study/parts/common/cluster_list.cpp
-	study/parts/common/cluster_list.hxx
     )
 source_group("study\\part\\common" FILES ${SRC_STUDY_PART_COMMON})
 
