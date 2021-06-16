@@ -11,10 +11,6 @@ namespace Data
 {
 RenewableClusterList::~RenewableClusterList()
 {
-    for (auto& it : cluster)
-    {
-        delete it.second;
-    }
 }
 
 RenewableClusterList::RenewableClusterList()
