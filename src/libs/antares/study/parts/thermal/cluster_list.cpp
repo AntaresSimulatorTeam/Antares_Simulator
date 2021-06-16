@@ -353,7 +353,8 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                 cluster->integrityCheck();
 
                 // adding the thermal cluster
-                if (not add(cluster))
+                auto added = add(cluster);
+                if (not added)
                 {
                     // This error should never happen
                     logs.error() << "Impossible to add the thermal cluster '" << cluster->name()
@@ -362,7 +363,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                     continue;
                 }
                 // keeping track of the cluster
-                mapping[cluster->id()] = cluster;
+                mapping[cluster->id()] = added;
 
                 cluster->flush();
             }
@@ -681,7 +682,7 @@ bool ThermalClusterList::remove(const ClusterName& id)
         return false;
 
     // Getting the pointer on the cluster
-    auto* c = i->second;
+    SharedPtr c = i->second;
 
     // Removing it from the list
     cluster.erase(i);
@@ -696,12 +697,9 @@ bool ThermalClusterList::remove(const ClusterName& id)
         {
             auto* link = *j;
             link->parentArea->invalidate();
-            link->coupling.erase(c);
+            link->coupling.erase(c.get());
         }
     }
-
-    // delete the cluster
-    delete c;
 
     // Rebuilding the index
     rebuildIndex();
