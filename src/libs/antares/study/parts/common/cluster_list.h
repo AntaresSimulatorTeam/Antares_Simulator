@@ -6,6 +6,7 @@
 #include "../../fwd.h"
 
 #include <vector>
+#include <memory>
 
 namespace Antares
 {
@@ -19,7 +20,10 @@ template<class ClusterT>
 class ClusterList
 {
 public:
-    typedef typename std::map<ClusterName, ClusterT*> Map;
+    // Shared pointer
+    typedef typename std::shared_ptr<ClusterT> SharedPtr;
+    // Map container
+    typedef typename std::map<ClusterName, SharedPtr> Map;
     //! iterator
     typedef typename Map::iterator iterator;
     //! const iterator
@@ -80,7 +84,7 @@ public:
     ** \param t The cluster to add
     ** \return True if the cluster has been added, false otherwise
     */
-    bool add(ClusterT* t);
+    SharedPtr add(ClusterT* t);
 
     /*!
     ** \brief Detach a cluster represented by an iterator

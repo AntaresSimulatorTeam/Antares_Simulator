@@ -75,7 +75,7 @@ void GetThermalClusterMap(Data::Area* area, ThermalClusterMap& l, const wxString
     const Data::ThermalClusterList::iterator end = area->thermal.list.end();
     for (Data::ThermalClusterList::iterator i = area->thermal.list.begin(); i != end; ++i)
     {
-        Data::ThermalCluster* cluster = i->second;
+        Data::ThermalCluster* cluster = i->second.get();
 
         if (search.empty())
         {

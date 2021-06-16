@@ -93,7 +93,7 @@ void PartThermal::prepareAreaWideIndexes()
     uint idx = 0;
     for (auto i = list.begin(); i != end; ++i)
     {
-        ThermalCluster* t = i->second;
+        ThermalCluster* t = i->second.get();
         t->areaWideIndex = idx;
         clusters[idx] = t;
         ++idx;
