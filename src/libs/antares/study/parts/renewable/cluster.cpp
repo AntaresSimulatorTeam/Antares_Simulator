@@ -46,7 +46,7 @@ namespace Antares
 namespace Data
 {
 Data::RenewableCluster::RenewableCluster(Area* parent, uint /*nbParallelYears*/) :
- Cluster(parent), groupID(renewableOther1), tsMode(powerGeneration)
+ Cluster(parent), groupID(renewableOther1), tsMode(powerGeneration), series(nullptr)
 {
     // assert
     assert(parent and "A parent for a renewable dispatchable cluster can not be null");
@@ -93,7 +93,7 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
 
     // Making sure that the data related to the timeseries are present
     if (not series)
-        series = new DataSeriesCommon();
+        series = new DataSeriesRenewableCluster();
 
     // timseries
     series->series = cluster.series->series;
@@ -182,7 +182,15 @@ void Data::RenewableCluster::markAsModified() const
 
 void Data::RenewableCluster::reset()
 {
-    Cluster::reset();
+    unitCount = 0;
+    enabled = true;
+    nominalCapacity = 0.;
+
+    if (not series)
+        series = new DataSeriesRenewableCluster();
+
+    series->series.reset(1, HOURS_PER_YEAR);
+    series->series.flush();
 }
 
 bool Data::RenewableCluster::integrityCheck()
@@ -267,5 +275,47 @@ uint64 RenewableCluster::memoryUsage() const
         amount += DataSeriesMemoryUsage(series);
     return amount;
 }
+
+int RenewableCluster::saveDataSeriesToFolder(const AnyString& folder) const
+{
+    if (not folder.empty())
+    {
+        Yuni::Clob buffer;
+
+        buffer.clear() << folder << SEP << parentArea->id << SEP << id();
+        if (Yuni::IO::Directory::Create(buffer))
+        {
+            int ret = 1;
+            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series.txt";
+            ret = series->series.saveToCSVFile(buffer, 4) && ret;
+
+            return ret;
+        }
+        return 0;
+    }
+    return 1;
+}
+
+int RenewableCluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
+{
+    if (not folder.empty())
+    {
+        auto& buffer = s.bufferLoadingTS;
+
+        int ret = 1;
+        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
+            << s.inputExtension;
+        ret = series->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+
+        if (s.usedByTheSolver && s.parameters.derated)
+            series->series.averageTimeseries();
+
+        series->timeseriesNumbers.clear();
+
+        return ret;
+    }
+    return 1;
+}
+
 } // namespace Data
 } // namespace Antares

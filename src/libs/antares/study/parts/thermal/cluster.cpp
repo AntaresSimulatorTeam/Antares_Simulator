@@ -122,6 +122,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
 
 Data::ThermalCluster::ThermalCluster(Area* parent) :
  Cluster(parent),
+ series(nullptr),
  groupID(thermalDispatchGrpOther),
  mustrun(false),
  mustrunOrigin(false),
@@ -256,7 +257,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     if (not prepro)
         prepro = new PreproThermal();
     if (not series)
-        series = new DataSeriesCommon();
+        series = new DataSeriesThermalCluster();
 
     prepro->copyFrom(*cluster.prepro);
     // timseries
@@ -423,7 +424,15 @@ void Data::ThermalCluster::reset()
     if (productionCost)
         (void)::memset(productionCost, 0, HOURS_PER_YEAR * sizeof(double));
 
-    Cluster::reset();
+    unitCount = 0;
+    enabled = true;
+    nominalCapacity = 0.;
+
+    if (not series)
+        series = new DataSeriesThermalCluster();
+
+    series->series.reset(1, HOURS_PER_YEAR);
+    series->series.flush();
 
     mustrun = false;
     mustrunOrigin = false;
@@ -680,6 +689,47 @@ bool ThermalCluster::checkMinStablePowerWithNewModulation(uint index, double val
     }
 
     return checkMinStablePower();
+}
+
+int ThermalCluster::saveDataSeriesToFolder(const AnyString& folder) const
+{
+    if (not folder.empty())
+    {
+        Yuni::Clob buffer;
+
+        buffer.clear() << folder << SEP << parentArea->id << SEP << id();
+        if (Yuni::IO::Directory::Create(buffer))
+        {
+            int ret = 1;
+            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series.txt";
+            ret = series->series.saveToCSVFile(buffer, 0) && ret;
+
+            return ret;
+        }
+        return 0;
+    }
+    return 1;
+}
+
+int ThermalCluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
+{
+    if (not folder.empty())
+    {
+        auto& buffer = s.bufferLoadingTS;
+
+        int ret = 1;
+        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
+            << s.inputExtension;
+        ret = series->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+
+        if (s.usedByTheSolver && s.parameters.derated)
+            series->series.averageTimeseries();
+
+        series->timeseriesNumbers.clear();
+
+        return ret;
+    }
+    return 1;
 }
 
 } // namespace Data

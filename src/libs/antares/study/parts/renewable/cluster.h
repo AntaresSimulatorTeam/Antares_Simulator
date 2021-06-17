@@ -32,6 +32,7 @@
 #include "../../../array/matrix.h"
 #include "defines.h"
 #include "../common/cluster.h"
+#include "series.h"
 #include "../../fwd.h"
 
 namespace Antares
@@ -178,10 +179,16 @@ public:
     //@}
 
     bool setTimeSeriesModeFromString(const YString& value);
+    int saveDataSeriesToFolder(const AnyString& folder) const;
+    int loadDataSeriesFromFolder(Study& s, const AnyString& folder);
+
 
     const YString& getTimeSeriesModeAsString() const;
 
 public:
+    //! Series
+    DataSeriesRenewableCluster* series;
+
     /*!
     ** \brief The group ID
     **

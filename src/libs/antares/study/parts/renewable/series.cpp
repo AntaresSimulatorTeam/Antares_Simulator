@@ -24,40 +24,40 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
-#define __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 
-#include "../../../array/matrix.h"
-#include "../../fwd.h"
+#include <yuni/yuni.h>
+#include <yuni/io/file.h>
+#include <yuni/io/directory.h>
+#include "../../study.h"
+#include "../../memory-usage.h"
+#include "series.h"
+
+using namespace Yuni;
+
+#define SEP IO::Separator
 
 namespace Antares
 {
 namespace Data
 {
-/*!
-** \brief Data series (Common)
-*/
-class DataSeriesCommon
+bool DataSeriesRenewableCluster::invalidate(bool reload) const
 {
-public:
-    virtual void estimateMemoryUsage(StudyMemoryUsage&) const = 0;
+    return series.invalidate(reload);
+}
 
-    /*!
-    ** \brief Flush memory to swap file
-    */
-    virtual void flush() = 0;
+void DataSeriesRenewableCluster::markAsModified() const
+{
+    series.markAsModified();
+}
 
-    virtual bool invalidate(bool) const = 0;
+void DataSeriesRenewableCluster::estimateMemoryUsage(StudyMemoryUsage& u) const
+{
+    u.requiredMemoryForInput += sizeof(DataSeriesRenewableCluster);
+    timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
+    uint nbTimeSeries = 1;
+    series.estimateMemoryUsage(
+      u, 0 != (timeSeriesRenewable & u.study.parameters.timeSeriesToGenerate), nbTimeSeries, HOURS_PER_YEAR);
+}
 
-    virtual void markAsModified() const = 0;
-
-public:
-    /*!
-    ** \brief Monte-Carlo
-    */
-    Matrix<Yuni::uint32> timeseriesNumbers;
-}; // class DataSeriesCommon
 } // namespace Data
 } // namespace Antares
-
-#endif /* __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__ */

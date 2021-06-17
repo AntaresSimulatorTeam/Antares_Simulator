@@ -23,6 +23,27 @@ public:
     void estimateMemoryUsage(StudyMemoryUsage&) const override;
     bool loadFromFolder(Study& s, const AnyString& folder, Area* area) override;
     bool saveToFolder(const AnyString& folder) const override;
+
+    /*!
+    ** \brief Resize all matrices dedicated to the sampled timeseries numbers
+    **
+    ** \param n A number of years
+    */
+    void resizeAllTimeseriesNumbers(uint n);
+
+    bool storeTimeseriesNumbers(Study& study);
+
+    int loadDataSeriesFromFolder(Study& study,
+        const StudyLoadOptions& options,
+        const AnyString& folder,
+        bool fast);
+
+    int saveDataSeriesToFolder(const AnyString& folder) const;
+
+    int saveDataSeriesToFolder(const AnyString& folder, const YString& msg) const;
+
+    void ensureDataTimeSeries();
+
 }; // class RenewableClusterList
 } // namespace Data
 } // namespace Antares

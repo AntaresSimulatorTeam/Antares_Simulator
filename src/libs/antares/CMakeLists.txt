@@ -197,8 +197,6 @@ source_group("study\\area\\ui" FILES ${SRC_STUDY_AREA_UI})
 
 set(SRC_STUDY_PART_COMMON
     study/parts/common/series.h
-	study/parts/common/series.hxx
-	study/parts/common/series.cpp
     study/parts/common/cluster.cpp
     study/parts/common/cluster.h
     study/parts/common/cluster_list.h
@@ -218,6 +216,8 @@ set(SRC_STUDY_PART_THERMAL
 	study/parts/thermal/cluster.cpp
     study/parts/thermal/cluster_list.h
     study/parts/thermal/cluster_list.cpp
+	study/parts/thermal/series.h
+    study/parts/thermal/series.cpp
 	)
 source_group("study\\part\\thermal" FILES ${SRC_STUDY_PART_THERMAL})
 
@@ -229,6 +229,8 @@ set(SRC_STUDY_PART_RENEWABLE
 	study/parts/renewable/cluster.cpp
     study/parts/renewable/cluster_list.h
     study/parts/renewable/cluster_list.cpp
+	study/parts/renewable/series.h
+    study/parts/renewable/series.cpp
     )
 source_group("study\\part\\renewable" FILES ${SRC_STUDY_PART_RENEWABLE})
 

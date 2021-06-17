@@ -76,7 +76,7 @@ protected:
                     auto& cluster = *(i->second);
 
                     if (cluster.series)
-                        cluster.series->estimateMemoryUsage(m, timeSeriesThermal);
+                        cluster.series->estimateMemoryUsage(m);
 
                     if (shouldAbort())
                         return false;
@@ -96,7 +96,7 @@ protected:
                     auto& cluster = *(i->second);
 
                     if (cluster.series)
-                        cluster.series->estimateMemoryUsage(m, timeSeriesRenewable);
+                        cluster.series->estimateMemoryUsage(m);
 
                     if (shouldAbort())
                         return false;

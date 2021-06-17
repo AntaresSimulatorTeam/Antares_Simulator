@@ -3,18 +3,6 @@
 #include "../../study.h"
 #include "../../area.h"
 
-using namespace Yuni;
-namespace // anonymous
-{
-struct TSNumbersPredicate
-{
-    uint32 operator()(uint32 value) const
-    {
-        return value + 1;
-    }
-};
-} // namespace
-
 namespace Antares
 {
 namespace Data
@@ -158,43 +146,7 @@ ClusterT* ClusterList<ClusterT>::find(const ClusterT* p)
     return nullptr;
 }
 
-template<class ClusterT>
-void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n)
-{
-    assert(n < 200000); // arbitrary number
-    if (not cluster.empty())
-    {
-        if (0 == n)
-        {
-            each([&](Cluster& cluster) { cluster.series->timeseriesNumbers.clear(); });
-        }
-        else
-        {
-            each([&](Cluster& cluster) { cluster.series->timeseriesNumbers.resize(1, n); });
-        }
-    }
-}
-
 #define SEP IO::Separator
-
-template<class ClusterT>
-bool ClusterList<ClusterT>::storeTimeseriesNumbers(Study& study)
-{
-    if (cluster.empty())
-        return true;
-
-    bool ret = true;
-    TSNumbersPredicate predicate;
-
-    each([&](const Cluster& cluster) {
-        study.buffer = study.folderOutput;
-        study.buffer << SEP << "ts-numbers" << SEP << typeID() << SEP << cluster.parentArea->id
-                     << SEP << cluster.id() << ".txt";
-        ret = cluster.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate)
-              and ret;
-    });
-    return ret;
-}
 
 template<class ClusterT>
 void ClusterList<ClusterT>::rebuildIndex()
@@ -340,80 +292,6 @@ bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
     return true;
 }
 
-template<class ClusterT>
-int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) const
-{
-    if (empty())
-        return 1;
-
-    int ret = 1;
-
-    auto end = cluster.end();
-    for (auto it = cluster.begin(); it != end; ++it)
-    {
-        auto& cluster = *(it->second);
-        if (cluster.series)
-            ret = cluster.saveDataSeriesToFolder(folder) and ret;
-    }
-    return ret;
-}
-
-template<class ClusterT>
-int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, const String& msg) const
-{
-    if (empty())
-        return 1;
-
-    int ret = 1;
-    uint ticks = 0;
-
-    auto end = cluster.end();
-    for (auto it = cluster.begin(); it != end; ++it)
-    {
-        auto& cluster = *(it->second);
-        if (cluster.series)
-        {
-            logs.info() << msg << "  " << (ticks * 100 / (1 + this->cluster.size()))
-                        << "% complete";
-            ret = cluster.saveDataSeriesToFolder(folder) and ret;
-        }
-        ++ticks;
-    }
-    return ret;
-}
-
-template<class ClusterT>
-int ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s,
-                                                    const StudyLoadOptions& options,
-                                                    const AnyString& folder,
-                                                    bool fast)
-{
-    if (empty())
-        return 1;
-
-    int ret = 1;
-
-    each([&](ClusterT& cluster) {
-        if (cluster.series and (!fast or !cluster.prepro))
-            ret = cluster.loadDataSeriesFromFolder(s, folder) and ret;
-
-        ++options.progressTicks;
-        options.pushProgressLogs();
-    });
-    return ret;
-}
-
-template<class ClusterT>
-void ClusterList<ClusterT>::ensureDataTimeSeries()
-{
-    auto end = cluster.end();
-    for (auto it = cluster.begin(); it != end; ++it)
-    {
-        SharedPtr cluster = it->second;
-        if (not cluster->series)
-            cluster->series = new DataSeriesCommon();
-    }
-}
 
 template<class ClusterT>
 void ClusterList<ClusterT>::retrieveTotalCapacityAndUnitCount(double& total, uint& unitCount) const

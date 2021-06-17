@@ -26,11 +26,11 @@ void RenewableClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
 {
     u.requiredMemoryForInput += (sizeof(void*) * 4 /*overhead map*/) * cluster.size();
 
-    each([&](const Cluster& cluster) {
+    each([&](const RenewableCluster& cluster) {
         u.requiredMemoryForInput += sizeof(RenewableCluster);
         u.requiredMemoryForInput += sizeof(void*);
         if (cluster.series)
-            cluster.series->estimateMemoryUsage(u, timeSeriesRenewable /* FIXME */);
+            cluster.series->estimateMemoryUsage(u);
 
         // From the solver
         u.requiredMemoryForInput += 70 * 1024;
@@ -200,6 +200,115 @@ bool RenewableClusterList::loadFromFolder(Study& study, const AnyString& folder,
 }
 
 #undef SEP
+
+void RenewableClusterList::resizeAllTimeseriesNumbers(uint n)
+{
+    assert(n < 200000); // arbitrary number
+    if (not cluster.empty())
+    {
+        if (0 == n)
+        {
+            each([&](RenewableCluster& cluster) { cluster.series->timeseriesNumbers.clear(); });
+        }
+        else
+        {
+            each([&](RenewableCluster& cluster) { cluster.series->timeseriesNumbers.resize(1, n); });
+        }
+    }
+}
+
+#define SEP IO::Separator
+
+bool RenewableClusterList::storeTimeseriesNumbers(Study& study)
+{
+    if (cluster.empty())
+        return true;
+
+    bool ret = true;
+    TSNumbersPredicate predicate;
+
+    each([&](const RenewableCluster& cluster) {
+        study.buffer = study.folderOutput;
+        study.buffer << SEP << "ts-numbers" << SEP << typeID() << SEP << cluster.parentArea->id
+            << SEP << cluster.id() << ".txt";
+        ret = cluster.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate)
+            and ret;
+    });
+    return ret;
+}
+
+#undef SEP
+
+int RenewableClusterList::saveDataSeriesToFolder(const AnyString& folder) const
+{
+    if (empty())
+        return 1;
+
+    int ret = 1;
+
+    auto end = cluster.end();
+    for (auto it = cluster.begin(); it != end; ++it)
+    {
+        auto& cluster = *(it->second);
+        if (cluster.series)
+            ret = cluster.saveDataSeriesToFolder(folder) and ret;
+    }
+    return ret;
+}
+
+int RenewableClusterList::saveDataSeriesToFolder(const AnyString& folder, const String& msg) const
+{
+    if (empty())
+        return 1;
+
+    int ret = 1;
+    uint ticks = 0;
+
+    auto end = cluster.end();
+    for (auto it = cluster.begin(); it != end; ++it)
+    {
+        auto& cluster = *(it->second);
+        if (cluster.series)
+        {
+            logs.info() << msg << "  " << (ticks * 100 / (1 + this->cluster.size()))
+                << "% complete";
+            ret = cluster.saveDataSeriesToFolder(folder) and ret;
+        }
+        ++ticks;
+    }
+    return ret;
+}
+
+int RenewableClusterList::loadDataSeriesFromFolder(Study& s,
+    const StudyLoadOptions& options,
+    const AnyString& folder,
+    bool fast)
+{
+    if (empty())
+        return 1;
+
+    int ret = 1;
+
+    each([&](RenewableCluster& cluster) {
+        if (cluster.series and (!fast or !cluster.prepro))
+            ret = cluster.loadDataSeriesFromFolder(s, folder) and ret;
+
+        ++options.progressTicks;
+        options.pushProgressLogs();
+    });
+    return ret;
+}
+
+void RenewableClusterList::ensureDataTimeSeries()
+{
+    auto end = cluster.end();
+    for (auto it = cluster.begin(); it != end; ++it)
+    {
+        auto& cluster = *(it->second);
+        if (not cluster.series)
+            cluster.series = new DataSeriesRenewableCluster();
+    }
+}
 
 } // namespace Data
 } // namespace Antares
