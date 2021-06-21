@@ -78,6 +78,7 @@ namespace Data
 {
 Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
  Cluster(parent),
+ series(nullptr),
  groupID(thermalDispatchGrpOther),
  mustrun(false),
  mustrunOrigin(false),
