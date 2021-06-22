@@ -1040,6 +1040,7 @@ void AdvancedParameters::onSelectRGMaggregated(wxCommandEvent& evt)
     {
         study.parameters.renewableGeneration.rgModelling = Data::rgAggregated;
         MarkTheStudyAsModified();
+        OnStudyLoaded();
         refresh();
     }
 }
@@ -1054,6 +1055,7 @@ void AdvancedParameters::onSelectRGMrenewableClusters(wxCommandEvent& evt)
     {
         study.parameters.renewableGeneration.rgModelling = Data::rgClusters;
         MarkTheStudyAsModified();
+        OnStudyLoaded();
         refresh();
     }
 }

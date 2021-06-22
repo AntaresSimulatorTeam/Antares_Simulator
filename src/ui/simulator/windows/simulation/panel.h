@@ -30,6 +30,7 @@
 #include <antares/wx-wrapper.h>
 #include "../inspector/data.h"
 #include <ui/common/component/panel.h>
+#include "../../toolbox/components/datagrid/component.h"
 
 namespace Antares
 {
@@ -42,6 +43,8 @@ namespace Simulation
 */
 class Panel final : public Antares::Component::Panel, public Yuni::IEventObserver<Panel>
 {
+    typedef Component::Datagrid::Component DatagridType;
+
 public:
     //! \name Constructor && Destructor
     //@{
@@ -69,7 +72,8 @@ private:
 
 private:
     wxBoxSizer* verticalSizer_;
-
+    DatagridType* grid_ts_mgt_;
+    DatagridType* grid_ts_mgt_rn_cluster_;
 }; // class Panel
 
 } // namespace Simulation

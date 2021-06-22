@@ -30,8 +30,8 @@
 #include <ui/common/component/scrollbox/scrollbox.h>
 #include "../../toolbox/components/notebook/notebook.h"
 #include "../../toolbox/components/captionpanel.h"
-#include "../../toolbox/components/datagrid/component.h"
 #include "../../toolbox/components/datagrid/renderer/ts-management.h"
+#include "../../toolbox/components/datagrid/renderer/ts-management-clusters-as-renewables.h"
 #include "../../application/main.h"
 #include "../../application/study.h"
 #include "../../toolbox/validator.h"
@@ -72,18 +72,25 @@ Panel::Panel(wxWindow* parent) : Antares::Component::Panel(parent)
 
     // TS Management
     {
-        // auto* vs = new wxBoxSizer(wxVERTICAL);
+        typedef Component::Datagrid::Renderer::TSmanagement TSmanagement;
+        typedef Component::Datagrid::Renderer::TSmanagementRenewableCluster TSmanagementRenewableCluster;
+        
         verticalSizer_ = new wxBoxSizer(wxVERTICAL);
         verticalSizer_->Add(
             new Component::CaptionPanel(this, wxT("Time-Series Management")), 0, wxALL | wxEXPAND);
-        /*
-        typedef Component::Datagrid::Component DatagridType;
-        typedef Component::Datagrid::Renderer::TSmanagement RendererType;
-        RendererType* renderer = new RendererType();
-        DatagridType* grid = new DatagridType(this, renderer, wxEmptyString, false, true, true);
-        renderer->control(grid);
-        verticalSizer_->Add(grid, 1, wxALL | wxEXPAND);
-        */
+
+        TSmanagement* renderer = new TSmanagement();
+        TSmanagementRenewableCluster* renderer_rn_cl = new TSmanagementRenewableCluster();
+
+        grid_ts_mgt_ = new DatagridType(this, renderer, wxEmptyString, false, true, true);
+        grid_ts_mgt_rn_cluster_ = new DatagridType(this, renderer_rn_cl, wxEmptyString, false, true, true);
+
+        verticalSizer_->Add(grid_ts_mgt_, 1, wxALL | wxEXPAND);
+        verticalSizer_->Add(grid_ts_mgt_rn_cluster_, 1, wxALL | wxEXPAND);
+
+        renderer->control(grid_ts_mgt_);
+        renderer_rn_cl->control(grid_ts_mgt_rn_cluster_);
+
         hz->Add(verticalSizer_, 1, wxALL | wxEXPAND);
     }
 
@@ -110,12 +117,23 @@ Panel::~Panel()
 
 void Panel::onStudyLoaded()
 {
-    typedef Component::Datagrid::Component DatagridType;
-    typedef Component::Datagrid::Renderer::TSmanagement RendererType;
-    RendererType* renderer = new RendererType();
-    DatagridType* grid = new DatagridType(this, renderer, wxEmptyString, false, true, true);
-    renderer->control(grid);
-    verticalSizer_->Add(grid, 1, wxALL | wxEXPAND);
+    auto study = Data::Study::Current::Get();
+    if (!study)
+        return;
+    
+    if (study->parameters.renewableGeneration.rgModelling == Antares::Data::rgAggregated)
+    {
+        verticalSizer_->Hide(grid_ts_mgt_rn_cluster_);
+        verticalSizer_->Show(grid_ts_mgt_);
+        grid_ts_mgt_->forceRefresh();
+    }
+    else
+    {
+        verticalSizer_->Hide(grid_ts_mgt_);
+        verticalSizer_->Show(grid_ts_mgt_rn_cluster_);
+        grid_ts_mgt_rn_cluster_->forceRefresh();
+    }
+    verticalSizer_->Layout();
     
     Dispatcher::GUI::Post(this, &Panel::onDelayedStudyLoaded, 20 /*ms*/);
 }
