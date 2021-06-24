@@ -100,7 +100,7 @@ public:
     ** \brief Default constructor, with a parent area
     */
     explicit RenewableCluster(Data::Area* parent);
-    explicit RenewableCluster(Data::Area* parent, uint nbParallelYears);
+
     //! Destructor
     ~RenewableCluster();
     //@}
@@ -156,26 +156,6 @@ public:
     ** \brief Get the memory consummed by the renewable cluster (in bytes)
     */
     Yuni::uint64 memoryUsage() const override;
-    //@}
-
-    //! \name validity of Min Stable Power
-    //@{
-    // bool minStablePowerValidity() const;
-
-    /*!
-    ** \brief Calculte the minimum modulation/ceil(modulation) from 8760 capacity modulation
-    */
-    void calculatMinDivModulation();
-
-    /*!
-    ** \brief Check the validity of Min Stable Power
-    */
-    bool checkMinStablePower();
-
-    /*!
-    ** \brief Check the validity of Min Stable Power with a new modulation value
-    */
-    bool checkMinStablePowerWithNewModulation(uint index, double value);
     //@}
 
     bool setTimeSeriesModeFromString(const YString& value);

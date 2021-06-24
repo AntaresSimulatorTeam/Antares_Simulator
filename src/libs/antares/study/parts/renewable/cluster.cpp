@@ -45,14 +45,8 @@ namespace Antares
 {
 namespace Data
 {
-Data::RenewableCluster::RenewableCluster(Area* parent, uint /*nbParallelYears*/) :
+Data::RenewableCluster::RenewableCluster(Area* parent) :
  Cluster(parent), groupID(renewableOther1), tsMode(powerGeneration), series(nullptr)
-{
-    // assert
-    assert(parent and "A parent for a renewable dispatchable cluster can not be null");
-}
-
-Data::RenewableCluster::RenewableCluster(Area* parent) : Cluster(parent), series(nullptr), groupID(renewableOther1)
 {
     // assert
     assert(parent and "A parent for a renewable dispatchable cluster can not be null");

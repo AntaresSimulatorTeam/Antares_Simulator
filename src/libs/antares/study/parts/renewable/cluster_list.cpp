@@ -147,7 +147,7 @@ static bool ClusterLoadFromSection(const AnyString& filename,
     return true;
 }
 
-bool RenewableClusterList::loadFromFolder(Study& study, const AnyString& folder, Area* area)
+bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
 {
     assert(area and "A parent area is required");
 
@@ -155,9 +155,11 @@ bool RenewableClusterList::loadFromFolder(Study& study, const AnyString& folder,
     logs.info() << "Loading renewable configuration for the area " << area->name;
 
     // Open the ini file
-    study.buffer.clear() << folder << SEP << "list.ini";
+    YString buffer;
+    buffer << folder << SEP << "list.ini";
+
     IniFile ini;
-    if (ini.open(study.buffer))
+    if (ini.open(buffer))
     {
         bool ret = true;
 
@@ -168,10 +170,10 @@ bool RenewableClusterList::loadFromFolder(Study& study, const AnyString& folder,
                 if (section->name.empty())
                     continue;
 
-                RenewableCluster* cluster = new RenewableCluster(area, study.maxNbYearsInParallel);
+                RenewableCluster* cluster = new RenewableCluster(area);
 
                 // Load data of a renewable cluster from a ini file section
-                if (not ClusterLoadFromSection(study.buffer, *cluster, *section))
+                if (not ClusterLoadFromSection(buffer, *cluster, *section))
                 {
                     delete cluster;
                     continue;
