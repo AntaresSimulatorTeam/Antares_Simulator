@@ -16,7 +16,9 @@ Cluster::Cluster(Area* parent) :
  parentArea(parent),
  index(0),
  nominalCapacity(0.),
- areaWideIndex((uint)-1)
+ areaWideIndex((uint)-1),
+ series(nullptr)
+
 {
 }
 
@@ -49,6 +51,49 @@ void Cluster::setName(const AnyString& newname)
     TransformNameIntoID(pName, pID);
 }
 
+#define SEP Yuni::IO::Separator
+int Cluster::saveDataSeriesToFolder(const AnyString& folder) const
+{
+    if (not folder.empty())
+    {
+        Yuni::Clob buffer;
+
+        buffer.clear() << folder << SEP << parentArea->id << SEP << id();
+        if (Yuni::IO::Directory::Create(buffer))
+        {
+            int ret = 1;
+            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series.txt";
+            ret = series->series.saveToCSVFile(buffer, 0) && ret;
+
+            return ret;
+        }
+        return 0;
+    }
+    return 1;
+}
+
+int Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
+{
+    if (not folder.empty())
+    {
+        auto& buffer = s.bufferLoadingTS;
+
+        int ret = 1;
+        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
+                       << s.inputExtension;
+        ret = series->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+
+        if (s.usedByTheSolver && s.parameters.derated)
+            series->series.averageTimeseries();
+
+        series->timeseriesNumbers.clear();
+
+        return ret;
+    }
+    return 1;
+}
+#undef SEP
+
 void Cluster::invalidateArea()
 {
     if (parentArea)
@@ -58,6 +103,19 @@ void Cluster::invalidateArea()
 bool Cluster::isVisibleOnLayer(const size_t& layerID) const
 {
     return parentArea ? parentArea->isVisibleOnLayer(layerID) : false;
+}
+
+void Cluster::reset()
+{
+    unitCount = 0;
+    enabled = true;
+    nominalCapacity = 0.;
+
+    if (not series)
+        series = new DataSeriesCommon();
+
+    series->series.reset(1, HOURS_PER_YEAR);
+    series->series.flush();
 }
 
 bool CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const

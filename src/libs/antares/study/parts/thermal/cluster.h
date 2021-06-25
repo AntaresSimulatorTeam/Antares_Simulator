@@ -33,7 +33,6 @@
 #include "defines.h"
 #include "prepro.h"
 #include "../common/cluster.h"
-#include "series.h"
 #include "../../fwd.h"
 #include <set>
 #include <map>
@@ -205,13 +204,7 @@ public:
     bool checkMinStablePowerWithNewModulation(uint index, double value);
     //@}
 
-    int saveDataSeriesToFolder(const AnyString& folder) const;
-    int loadDataSeriesFromFolder(Study& s, const AnyString& folder);
-
 public:
-    //! Series
-    DataSeriesThermalCluster* series;
-
     /*!
     ** \brief The group ID
     **

@@ -8,19 +8,6 @@
 #include <vector>
 #include <memory>
 
-using namespace Yuni;
-
-namespace // anonymous
-{
-    struct TSNumbersPredicate
-    {
-        uint32 operator()(uint32 value) const
-        {
-            return value + 1;
-        }
-    };
-} // namespace
-
 namespace Antares
 {
 namespace Data
@@ -191,6 +178,15 @@ public:
     //! iterator to the end of the list
     const_iterator end() const;
 
+    /*!
+    ** \brief Resize all matrices dedicated to the sampled timeseries numbers
+    **
+    ** \param n A number of years
+    */
+    void resizeAllTimeseriesNumbers(uint n);
+
+    bool storeTimeseriesNumbers(Study& study);
+
     //@}
 
     //! \name Memory management
@@ -250,7 +246,18 @@ public:
     */
     std::vector<uint> groupCount;
 
+    int loadDataSeriesFromFolder(Study& study,
+                                 const StudyLoadOptions& options,
+                                 const AnyString& folder,
+                                 bool fast);
+
+    int saveDataSeriesToFolder(const AnyString& folder) const;
+
+    int saveDataSeriesToFolder(const AnyString& folder, const YString& msg) const;
+
     virtual bool saveToFolder(const AnyString& folder) const = 0;
+
+    void ensureDataTimeSeries();
 
     //! \name Informations
     //@{

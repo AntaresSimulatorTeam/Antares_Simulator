@@ -3,6 +3,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
+#include "series.h"
 #include "../../../array/matrix.h"
 #include "../../fwd.h"
 
@@ -16,6 +17,10 @@ namespace Data
 {
 class Cluster
 {
+public:
+    //! Map of renewable clusters
+    typedef std::map<ClusterName, Cluster*> Map;
+
 public:
     Cluster(Area* parent);
 
@@ -89,7 +94,7 @@ public:
     **
     ** This method should only be called from the GUI
     */
-    virtual void reset() = 0;
+    virtual void reset();
 
     //! Count of unit
     uint unitCount;
@@ -111,6 +116,9 @@ public:
     // (initialized in the same time that the runtime data)
     uint areaWideIndex;
 
+    //! Series
+    DataSeriesCommon* series;
+
     /*!
     ** \brief Modulation matrix
     **
@@ -128,8 +136,8 @@ protected:
     Data::ClusterName pGroup;
 
 public:
-    virtual int saveDataSeriesToFolder(const AnyString& folder) const = 0;
-    virtual int loadDataSeriesFromFolder(Study& s, const AnyString& folder) = 0;
+    int saveDataSeriesToFolder(const AnyString& folder) const;
+    int loadDataSeriesFromFolder(Study& s, const AnyString& folder);
 };
 
 struct CompareClusterName final

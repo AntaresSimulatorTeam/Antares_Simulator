@@ -40,18 +40,25 @@ namespace Data
 class DataSeriesCommon
 {
 public:
-    virtual void estimateMemoryUsage(StudyMemoryUsage&) const = 0;
+    void estimateMemoryUsage(StudyMemoryUsage&, enum TimeSeries) const;
 
     /*!
     ** \brief Flush memory to swap file
     */
-    virtual void flush() = 0;
+    void flush();
 
-    virtual bool invalidate(bool) const = 0;
+    bool invalidate(bool reload = false) const;
 
-    virtual void markAsModified() const = 0;
+    void markAsModified() const;
 
 public:
+    /*!
+    ** \brief Series (MW)
+    **
+    ** Merely a matrix of TimeSeriesCount * 8760 values
+    */
+    Matrix<double, Yuni::sint32> series;
+
     /*!
     ** \brief Monte-Carlo
     */
@@ -59,5 +66,7 @@ public:
 }; // class DataSeriesCommon
 } // namespace Data
 } // namespace Antares
+
+#include "series.hxx"
 
 #endif /* __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__ */
