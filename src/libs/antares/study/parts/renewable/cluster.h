@@ -176,6 +176,9 @@ public:
     void* prepro;
 
     friend class RenewableClusterList;
+
+    private:
+    unsigned int precision() const override;
 }; // class RenewableCluster
 
 } // namespace Data

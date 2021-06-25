@@ -370,6 +370,9 @@ public:
     double* pminOfAGroup;
 
     friend class ThermalClusterList;
+
+    private:
+    unsigned int precision() const override;
 }; // class ThermalCluster
 } // namespace Data
 } // namespace Antares

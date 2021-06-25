@@ -261,5 +261,9 @@ uint64 RenewableCluster::memoryUsage() const
         amount += DataSeriesMemoryUsage(series);
     return amount;
 }
+
+unsigned int RenewableCluster::precision() const {
+    return 4;
+}
 } // namespace Data
 } // namespace Antares
