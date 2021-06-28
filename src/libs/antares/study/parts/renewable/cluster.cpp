@@ -254,6 +254,20 @@ const YString& Data::RenewableCluster::getTimeSeriesModeAsString() const
     return "unknown";
 }
 
+double RenewableCluster::valueAtTimeStep(uint timeSeriesIndex, uint timeStepIndex) const
+{
+    assert(timeStepIndex < series->series.height);
+    assert(timeSeriesIndex < series->series.width);
+    const double tsValue = series->series[timeSeriesIndex][timeStepIndex];
+    switch (tsMode)
+    {
+    case powerGeneration:
+        return unitCount * tsValue;
+    case productionFactor:
+        return unitCount * nominalCapacity * tsValue;
+    }
+    return 0.d;
+}
 
 uint64 RenewableCluster::memoryUsage() const
 {

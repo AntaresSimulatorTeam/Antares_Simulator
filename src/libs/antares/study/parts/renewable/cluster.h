@@ -180,6 +180,11 @@ public:
 
     const YString& getTimeSeriesModeAsString() const;
 
+    /* !
+    ** Get production value at time-step ts
+    */
+    double valueAtTimeStep(uint timeSeriesIndex, uint timeStepIndex) const;
+
 public:
     /*!
     ** \brief The group ID
