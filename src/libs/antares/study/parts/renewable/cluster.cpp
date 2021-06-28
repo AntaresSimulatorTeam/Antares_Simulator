@@ -45,7 +45,8 @@ namespace Antares
 {
 namespace Data
 {
-Data::RenewableCluster::RenewableCluster(Area* parent) : Cluster(parent), groupID(renewableOther1), tsMode(powerGeneration)
+Data::RenewableCluster::RenewableCluster(Area* parent) :
+ Cluster(parent), groupID(renewableOther1), tsMode(powerGeneration)
 {
     // assert
     assert(parent and "A parent for a renewable dispatchable cluster can not be null");
@@ -243,13 +244,14 @@ bool Data::RenewableCluster::setTimeSeriesModeFromString(const YString& value)
 
 const YString& Data::RenewableCluster::getTimeSeriesModeAsString() const
 {
-  switch(tsMode) {
-  case powerGeneration:
-    return "power-generation";
-  case productionFactor:
-    return "production-factor";
-  }
-  return "unknown";
+    switch (tsMode)
+    {
+    case powerGeneration:
+        return "power-generation";
+    case productionFactor:
+        return "production-factor";
+    }
+    return "unknown";
 }
 
 
