@@ -99,7 +99,6 @@ public:
     ** \brief Default constructor, with a parent area
     */
     explicit RenewableCluster(Data::Area* parent);
-
     //! Destructor
     ~RenewableCluster();
     //@}
@@ -160,6 +159,11 @@ public:
     bool setTimeSeriesModeFromString(const YString& value);
 
     const YString& getTimeSeriesModeAsString() const;
+
+    /* !
+    ** Get production value at time-step ts
+    */
+    double valueAtTimeStep(uint timeSeriesIndex, uint timeStepIndex) const;
 
 public:
     /*!

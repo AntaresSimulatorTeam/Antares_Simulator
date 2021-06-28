@@ -599,23 +599,10 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
             // Renewable
             area.renewable.list.each([&](const RenewableCluster& cluster) {
-                assert((uint)tsIndex.RenouvelableParPalier[cluster.areaWideIndex]
-                       < cluster.series->series.width);
-                assert((uint)indx < cluster.series->series.height);
                 assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
-                const auto& tsValue
-                  = cluster.series
-                      ->series[tsIndex.RenouvelableParPalier[cluster.areaWideIndex]][indx];
-                if (cluster.tsMode == RenewableCluster::powerGeneration)
-                {
-                    problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
-                      += cluster.unitCount * tsValue;
-                }
-                else if (cluster.tsMode == RenewableCluster::productionFactor)
-                {
-                    problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
-                      += cluster.unitCount * cluster.nominalCapacity * tsValue;
-                }
+                problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
+                  += cluster.valueAtTimeStep(tsIndex.RenouvelableParPalier[cluster.areaWideIndex],
+                                             (uint)indx);
             });
 
             assert(
