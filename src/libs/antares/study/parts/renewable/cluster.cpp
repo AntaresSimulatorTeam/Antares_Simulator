@@ -266,7 +266,7 @@ double RenewableCluster::valueAtTimeStep(uint timeSeriesIndex, uint timeStepInde
     case productionFactor:
         return unitCount * nominalCapacity * tsValue;
     }
-    return 0.d;
+    return 0.;
 }
 
 uint64 RenewableCluster::memoryUsage() const
