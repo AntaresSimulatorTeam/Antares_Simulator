@@ -99,7 +99,6 @@ public:
     ** \brief Default constructor, with a parent area
     */
     explicit RenewableCluster(Data::Area* parent);
-    explicit RenewableCluster(Data::Area* parent, uint nbParallelYears);
     //! Destructor
     ~RenewableCluster();
     //@}

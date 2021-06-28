@@ -168,7 +168,7 @@ bool RenewableClusterList::loadFromFolder(Study& study, const AnyString& folder,
                 if (section->name.empty())
                     continue;
 
-                RenewableCluster* cluster = new RenewableCluster(area, study.maxNbYearsInParallel);
+                RenewableCluster* cluster = new RenewableCluster(area);
 
                 // Load data of a renewable cluster from a ini file section
                 if (not ClusterLoadFromSection(study.buffer, *cluster, *section))
