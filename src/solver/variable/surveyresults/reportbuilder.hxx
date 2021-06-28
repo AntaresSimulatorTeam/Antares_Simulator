@@ -133,9 +133,6 @@ public:
 
     static void Run(const ListType& list, SurveyResults& results, unsigned int numSpace)
     {
-        // Antares::logs.debug() << "Data: " << Category::DataLevelToCStr<CDataLevel>()
-        //	<< ", Level: " << Category::FileLevelToCStr<CFile>();
-
         if (globalResults)
             RunGlobalResults(list, results);
         else

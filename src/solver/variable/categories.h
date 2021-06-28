@@ -168,37 +168,6 @@ struct NextLevel
     };
 };
 
-template<int DataLevel>
-inline const char* DataLevelToCStr()
-{
-    return "unknown";
-}
-template<>
-inline const char* DataLevelToCStr<standard>()
-{
-    return "group";
-}
-template<>
-inline const char* DataLevelToCStr<area>()
-{
-    return "area";
-}
-template<>
-inline const char* DataLevelToCStr<thermalAggregate>()
-{
-    return "thermal";
-}
-template<>
-inline const char* DataLevelToCStr<link>()
-{
-    return "link";
-}
-template<>
-inline const char* DataLevelToCStr<setOfAreas>()
-{
-    return "set of areas";
-}
-
 template<class StreamT>
 inline void DataLevelToStream(StreamT& out, int dataLevel)
 {
@@ -225,50 +194,6 @@ inline void DataLevelToStream(StreamT& out, int dataLevel)
     out += values[dataLevel];
 }
 
-/*!
-** \brief Get the string literal representation for a file level
-*/
-template<int CFileLevel>
-const char* FileLevelToShortCStr()
-{
-    return "unknown";
-}
-template<>
-inline const char* FileLevelToShortCStr<0>()
-{
-    return "none";
-}
-template<>
-inline const char* FileLevelToShortCStr<va>()
-{
-    return "va";
-}
-template<>
-inline const char* FileLevelToShortCStr<id>()
-{
-    return "id";
-}
-template<>
-inline const char* FileLevelToShortCStr<de>()
-{
-    return "de";
-}
-template<>
-inline const char* FileLevelToShortCStr<is>()
-{
-    return "is";
-}
-template<>
-inline const char* FileLevelToShortCStr<cn>()
-{
-    return "cn";
-}
-template<>
-inline const char* FileLevelToShortCStr<mc>()
-{
-    return "mc";
-}
-
 template<class StreamT>
 inline void FileLevelToStreamShort(StreamT& out, int fileLevel)
 {
@@ -279,50 +204,6 @@ inline void FileLevelToStreamShort(StreamT& out, int fileLevel)
     };
     assert(fileLevel <= 32);
     out += values[fileLevel];
-}
-
-/*!
-** \brief Get the string literal representation for a file level
-*/
-template<int CFileLevel>
-const char* FileLevelToCStr()
-{
-    return "unknown";
-}
-template<>
-inline const char* FileLevelToCStr<0>()
-{
-    return "none";
-}
-template<>
-inline const char* FileLevelToCStr<va>()
-{
-    return "values";
-}
-template<>
-inline const char* FileLevelToCStr<id>()
-{
-    return "id";
-}
-template<>
-inline const char* FileLevelToCStr<de>()
-{
-    return "details";
-}
-template<>
-inline const char* FileLevelToCStr<is>()
-{
-    return "without-network";
-}
-template<>
-inline const char* FileLevelToCStr<cn>()
-{
-    return "with-network";
-}
-template<>
-inline const char* FileLevelToCStr<mc>()
-{
-    return "mc";
 }
 
 template<class StreamT>
@@ -336,45 +217,6 @@ inline void FileLevelToStream(StreamT& out, int fileLevel)
     };
     assert(fileLevel <= 32);
     out += values[fileLevel];
-}
-
-/*!
-** \brief Get the string literal representation for a precision
-*/
-template<int PrecisionLevel>
-const char* PrecisionToCStr()
-{
-    return "unknown";
-}
-template<>
-inline const char* PrecisionToCStr<0>()
-{
-    return "none";
-}
-template<>
-inline const char* PrecisionToCStr<hourly>()
-{
-    return "hourly";
-}
-template<>
-inline const char* PrecisionToCStr<daily>()
-{
-    return "daily";
-}
-template<>
-inline const char* PrecisionToCStr<weekly>()
-{
-    return "weekly";
-}
-template<>
-inline const char* PrecisionToCStr<monthly>()
-{
-    return "monthly";
-}
-template<>
-inline const char* PrecisionToCStr<annual>()
-{
-    return "annual";
 }
 
 template<class StreamT>
@@ -399,40 +241,6 @@ inline void PrecisionLevelToStream(StreamT& out, int precisionLevel)
                                          "annual"};
     assert(precisionLevel <= 16);
     out += values[precisionLevel];
-}
-
-/*!
-** \brief Get the short string literal representation for a precision
-*/
-template<int PrecisionLevel>
-const char* PrecisionToShortCStr()
-{
-    return "--";
-}
-template<>
-inline const char* PrecisionToShortCStr<hourly>()
-{
-    return "hr";
-}
-template<>
-inline const char* PrecisionToShortCStr<daily>()
-{
-    return "da";
-}
-template<>
-inline const char* PrecisionToShortCStr<weekly>()
-{
-    return "we";
-}
-template<>
-inline const char* PrecisionToShortCStr<monthly>()
-{
-    return "mn";
-}
-template<>
-inline const char* PrecisionToShortCStr<annual>()
-{
-    return "yr";
 }
 
 template<int PrecisionLevel>
@@ -475,18 +283,6 @@ struct MaxRowCount<monthly>
         value = maxMonths
     };
 };
-
-template<int DataLevel, int FileLevel, int Precision>
-struct DumpInformations
-{
-    static void Print(std::ostream& out)
-    {
-        out << "Data: " << DataLevelToCStr<DataLevel>()
-            << ", File: " << FileLevelToCStr<FileLevel>()
-            << ", Precision: " << PrecisionToCStr<Precision>();
-    }
-};
-
 } // namespace Category
 } // namespace Variable
 } // namespace Solver
