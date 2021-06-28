@@ -44,40 +44,40 @@ using namespace Yuni;
                                                                                             \
        : draw[TS_INDEX(T)])
 
-#define CORRELATION_CHECK_AND_INIT(T)                                         \
-    do                                                                        \
-    {                                                                         \
-        if (intramodal[TS_INDEX(T)] && !tsgen[TS_INDEX(T)])                   \
-        {                                                                     \
-            if (!CorrelationCheck<T>(study, nbTimeseries[TS_INDEX(T)]))       \
-                return false;                                                 \
-        }                                                                     \
-        else                                                                  \
-        {                                                                     \
-            switch (T)                                                        \
-            {                                                                 \
-            case Data::timeSeriesLoad:                                        \
-                nbTimeseries[TS_INDEX(T)] = parameters.nbTimeSeriesLoad;      \
-                break;                                                        \
-            case Data::timeSeriesSolar:                                       \
-                nbTimeseries[TS_INDEX(T)] = parameters.nbTimeSeriesSolar;     \
-                break;                                                        \
-            case Data::timeSeriesWind:                                        \
-                nbTimeseries[TS_INDEX(T)] = parameters.nbTimeSeriesWind;      \
-                break;                                                        \
-            case Data::timeSeriesHydro:                                       \
-                nbTimeseries[TS_INDEX(T)] = parameters.nbTimeSeriesHydro;     \
-                break;                                                        \
-            case Data::timeSeriesThermal:                                     \
-                nbTimeseries[TS_INDEX(T)] = parameters.nbTimeSeriesThermal;   \
-                break;                                                        \
-            case Data::timeSeriesRenewable:                                   \
-                nbTimeseries[TS_INDEX(T)] = 1;                                \
-                break;                                                        \
-            case Data::timeSeriesCount:                                       \
-                break;                                                        \
-            }                                                                 \
-        }                                                                     \
+#define CORRELATION_CHECK_AND_INIT(T)                                       \
+    do                                                                      \
+    {                                                                       \
+        if (intramodal[TS_INDEX(T)] && !tsgen[TS_INDEX(T)])                 \
+        {                                                                   \
+            if (!CorrelationCheck<T>(study, nbTimeseries[TS_INDEX(T)]))     \
+                return false;                                               \
+        }                                                                   \
+        else                                                                \
+        {                                                                   \
+            switch (T)                                                      \
+            {                                                               \
+            case Data::timeSeriesLoad:                                      \
+                nbTimeseries[TS_INDEX(T)] = parameters.nbTimeSeriesLoad;    \
+                break;                                                      \
+            case Data::timeSeriesSolar:                                     \
+                nbTimeseries[TS_INDEX(T)] = parameters.nbTimeSeriesSolar;   \
+                break;                                                      \
+            case Data::timeSeriesWind:                                      \
+                nbTimeseries[TS_INDEX(T)] = parameters.nbTimeSeriesWind;    \
+                break;                                                      \
+            case Data::timeSeriesHydro:                                     \
+                nbTimeseries[TS_INDEX(T)] = parameters.nbTimeSeriesHydro;   \
+                break;                                                      \
+            case Data::timeSeriesThermal:                                   \
+                nbTimeseries[TS_INDEX(T)] = parameters.nbTimeSeriesThermal; \
+                break;                                                      \
+            case Data::timeSeriesRenewable:                                 \
+                nbTimeseries[TS_INDEX(T)] = 1;                              \
+                break;                                                      \
+            case Data::timeSeriesCount:                                     \
+                break;                                                      \
+            }                                                               \
+        }                                                                   \
     } while (0)
 
 #define CORRELATION_CHECK_INTERMODAL_SINGLE_AREA(T, PREPRO_WIDTH, MTX_WIDTH)                      \
@@ -348,7 +348,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
                 auto end = area.thermal.list.mapping.end();
                 for (auto i = area.thermal.list.mapping.begin(); i != end; ++i)
                 {
-                    auto* cluster = i->second;
+                    Data::ThermalClusterList::SharedPtr cluster = i->second;
                     if (!cluster->enabled)
                     {
                         study.runtime->random[Data::seedTimeseriesNumbers].next();
@@ -367,17 +367,15 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
                 auto end = area.renewable.list.cluster.end();
                 for (auto i = area.renewable.list.cluster.begin(); i != end; ++i)
                 {
-                    auto* cluster = i->second;
+                    Data::RenewableClusterList::SharedPtr cluster = i->second;
                     if (!cluster->enabled)
                     {
                         study.runtime->random[Data::seedTimeseriesNumbers].next();
                     }
                     else
                     {
-                        cluster->series->timeseriesNumbers.entry[0][y]
-                          = DRAW_A_RANDOM_NUMBER(Data::timeSeriesRenewable,
-                                                 cluster->series->series,
-                                                 1);
+                        cluster->series->timeseriesNumbers.entry[0][y] = DRAW_A_RANDOM_NUMBER(
+                          Data::timeSeriesRenewable, cluster->series->series, 1);
                     }
                 }
             }
@@ -433,9 +431,8 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
                 for (unsigned int j = 0; j != clusterCount; ++j)
                 {
                     auto& cluster = *(area.renewable.clusters[j]);
-                    CORRELATION_CHECK_INTERMODAL_SINGLE_AREA(Data::timeSeriesRenewable,
-                                                             1,
-                                                             cluster.series->series.width);
+                    CORRELATION_CHECK_INTERMODAL_SINGLE_AREA(
+                      Data::timeSeriesRenewable, 1, cluster.series->series.width);
                 }
             }
 

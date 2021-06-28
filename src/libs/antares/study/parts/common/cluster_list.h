@@ -6,6 +6,7 @@
 #include "../../fwd.h"
 
 #include <vector>
+#include <memory>
 
 namespace Antares
 {
@@ -19,7 +20,10 @@ template<class ClusterT>
 class ClusterList
 {
 public:
-    typedef typename std::map<ClusterName, ClusterT*> Map;
+    // Shared pointer
+    typedef typename std::shared_ptr<ClusterT> SharedPtr;
+    // Map container
+    typedef typename std::map<ClusterName, SharedPtr> Map;
     //! iterator
     typedef typename Map::iterator iterator;
     //! const iterator
@@ -80,7 +84,7 @@ public:
     ** \param t The cluster to add
     ** \return True if the cluster has been added, false otherwise
     */
-    bool add(ClusterT* t);
+    SharedPtr add(ClusterT* t);
 
     /*!
     ** \brief Detach a cluster represented by an iterator
@@ -109,7 +113,7 @@ public:
     ** \param area The associate area
     ** \return True if the operation succeeded, false otherwise
     */
-    virtual bool loadFromFolder(Study& s, const AnyString& folder, Area* area);
+    virtual bool loadFromFolder(Study& s, const AnyString& folder, Area* area) = 0;
 
     /*!
     ** \brief Try to find a cluster from its id
@@ -192,8 +196,6 @@ public:
 
     bool storeTimeseriesNumbers(Study& study);
 
-    void retrieveTotalCapacity(double& total) const;
-
     //@}
 
     //! \name Memory management
@@ -262,9 +264,24 @@ public:
 
     int saveDataSeriesToFolder(const AnyString& folder, const YString& msg) const;
 
-    bool saveToFolder(const AnyString& folder) const;
+    virtual bool saveToFolder(const AnyString& folder) const = 0;
 
     void ensureDataTimeSeries();
+
+    //! \name Informations
+    //@{
+    /*!
+    ** \brief Retrieve the total capacity and the total unit count
+    **
+    ** Pseudo code:
+    ** \code
+    ** each thermal cluster do
+    ** 	total += cluster{unit count} * cluster{nominal capacity}
+    **	unit  += cluster{unit count}
+    ** \endcode
+    */
+    void retrieveTotalCapacityAndUnitCount(double& total, uint& unitCount) const;
+    //@}
 }; // class ClusterList
 } // namespace Data
 } // namespace Antares

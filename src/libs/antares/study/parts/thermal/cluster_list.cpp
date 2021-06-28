@@ -353,7 +353,8 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                 cluster->integrityCheck();
 
                 // adding the thermal cluster
-                if (not add(cluster))
+                auto added = add(cluster);
+                if (not added)
                 {
                     // This error should never happen
                     logs.error() << "Impossible to add the thermal cluster '" << cluster->name()
@@ -362,7 +363,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                     continue;
                 }
                 // keeping track of the cluster
-                mapping[cluster->id()] = cluster;
+                mapping[cluster->id()] = added;
 
                 cluster->flush();
             }
@@ -674,27 +675,6 @@ void ThermalClusterList::reverseCalculationOfSpinning()
     }
 }
 
-void ThermalClusterList::retrieveTotalCapacityAndUnitCount(double& total, uint& unitCount) const
-{
-    total = 0.;
-    unitCount = 0;
-
-    if (not cluster.empty())
-    {
-        auto end = cluster.cend();
-        for (auto i = cluster.cbegin(); i != end; ++i)
-        {
-            if (not i->second)
-                return;
-
-            // Reference to the thermal cluster
-            auto& cluster = *(i->second);
-            unitCount += cluster.unitCount;
-            total += cluster.unitCount * cluster.nominalCapacity;
-        }
-    }
-}
-
 bool ThermalClusterList::remove(const ClusterName& id)
 {
     auto i = cluster.find(id);
@@ -702,7 +682,7 @@ bool ThermalClusterList::remove(const ClusterName& id)
         return false;
 
     // Getting the pointer on the cluster
-    auto* c = i->second;
+    SharedPtr c = i->second;
 
     // Removing it from the list
     cluster.erase(i);
@@ -717,12 +697,9 @@ bool ThermalClusterList::remove(const ClusterName& id)
         {
             auto* link = *j;
             link->parentArea->invalidate();
-            link->coupling.erase(c);
+            link->coupling.erase(c.get());
         }
     }
-
-    // delete the cluster
-    delete c;
 
     // Rebuilding the index
     rebuildIndex();
@@ -735,27 +712,193 @@ void ThermalClusterList::enableMustrunForEveryone()
     each([&](ThermalCluster& cluster) { cluster.mustrun = true; });
 }
 
-// TODO : move to class
-void ThermalClusterListEnsureDataPrepro(ThermalClusterList* list)
+void ThermalClusterList::ensureDataPrepro()
 {
-    auto end = list->cluster.end();
-    for (auto it = list->cluster.begin(); it != end; ++it)
+    auto end = cluster.end();
+    for (auto it = cluster.begin(); it != end; ++it)
     {
-        auto& cluster = *(it->second);
-        if (not cluster.prepro)
-            cluster.prepro = new PreproThermal();
+        auto& c = *(it->second);
+        if (not c.prepro)
+            c.prepro = new PreproThermal();
     }
 }
 
-void ThermalClusterListEnsureDataTimeSeries(ThermalClusterList* list)
+bool ThermalClusterList::saveToFolder(const AnyString& folder) const
 {
-    auto end = list->cluster.end();
-    for (auto it = list->cluster.begin(); it != end; ++it)
+    // Make sure the folder is created
+    if (IO::Directory::Create(folder))
     {
-        auto& cluster = *(it->second);
-        if (not cluster.series)
-            cluster.series = new DataSeriesCommon();
+        Clob buffer;
+        bool ret = true;
+        bool hasCoupling = false;
+
+        // Allocate the inifile structure
+        IniFile ini;
+
+        // Browse all clusters
+        each([&](const Data::ThermalCluster& c) {
+            // Coupling
+            if (not c.coupling.empty())
+                hasCoupling = true;
+
+            // Adding a section to the inifile
+            IniFile::Section* s = ini.addSection(c.name());
+
+            // The section must not be empty
+            // This key will be silently ignored the next time
+            s->add("name", c.name());
+
+            if (not c.group().empty())
+                s->add("group", c.group());
+            if (not c.enabled)
+                s->add("enabled", "false");
+            if (not Math::Zero(c.unitCount))
+                s->add("unitCount", c.unitCount);
+            if (not Math::Zero(c.nominalCapacity))
+                s->add("nominalCapacity", c.nominalCapacity);
+
+            // Min. Stable Power
+            if (not Math::Zero(c.minStablePower))
+                s->add("min-stable-power", c.minStablePower);
+
+            // Min up and min down time
+            if (c.minUpTime != 1)
+                s->add("min-up-time", c.minUpTime);
+            if (c.minDownTime != 1)
+                s->add("min-down-time", c.minDownTime);
+
+            // must-run
+            if (c.mustrun)
+                s->add("must-run", "true");
+
+            // spinning
+            if (not Math::Zero(c.spinning))
+                s->add("spinning", c.spinning);
+            // co2
+            if (not Math::Zero(c.co2))
+                s->add("co2", c.co2);
+
+            // volatility
+            if (not Math::Zero(c.forcedVolatility))
+                s->add("volatility.forced", Math::Round(c.forcedVolatility, 3));
+            if (not Math::Zero(c.plannedVolatility))
+                s->add("volatility.planned", Math::Round(c.plannedVolatility, 3));
+
+            // laws
+            if (c.forcedLaw != thermalLawUniform)
+                s->add("law.forced", c.forcedLaw);
+            if (c.plannedLaw != thermalLawUniform)
+                s->add("law.planned", c.plannedLaw);
+
+            // costs
+            if (not Math::Zero(c.marginalCost))
+                s->add("marginal-cost", Math::Round(c.marginalCost, 3));
+            if (not Math::Zero(c.spreadCost))
+                s->add("spread-cost", c.spreadCost);
+            if (not Math::Zero(c.fixedCost))
+                s->add("fixed-cost", Math::Round(c.fixedCost, 3));
+            if (not Math::Zero(c.startupCost))
+                s->add("startup-cost", Math::Round(c.startupCost, 3));
+            if (not Math::Zero(c.marketBidCost))
+                s->add("market-bid-cost", Math::Round(c.marketBidCost, 3));
+
+            // groun{min,max}
+            if (not Math::Zero(c.groupMinCount))
+                s->add("groupMinCount", c.groupMinCount);
+            if (not Math::Zero(c.groupMaxCount))
+                s->add("groupMaxCount", c.groupMaxCount);
+            if (not Math::Zero(c.annuityInvestment))
+                s->add("annuityInvestment", c.annuityInvestment);
+
+            buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
+                           << c.parentArea->id << SEP << c.id();
+            if (IO::Directory::Create(buffer))
+            {
+                buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
+                               << c.parentArea->id << SEP << c.id() << SEP << "modulation.txt";
+
+                ret = c.modulation.saveToCSVFile(buffer) and ret;
+            }
+            else
+                ret = 0;
+        });
+
+        if (hasCoupling)
+        {
+            IniFile::Section* s = ini.addSection("~_-_coupling_-_~");
+            each([&](const Data::ThermalCluster& c) {
+                if (c.coupling.empty())
+                    return;
+                auto send = c.coupling.end();
+                for (auto j = c.coupling.begin(); j != send; ++j)
+                    s->add(c.id(), (*j)->id());
+            });
+        }
+
+        // Write the ini file
+        buffer.clear() << folder << SEP << "list.ini";
+        ret = ini.save(buffer) and ret;
     }
+    else
+    {
+        logs.error() << "I/O Error: impossible to create '" << folder << "'";
+        return false;
+    }
+
+    return true;
+}
+
+bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
+{
+    if (empty())
+        return true;
+
+    Clob buffer;
+    bool ret = true;
+
+    each([&](const Data::ThermalCluster& c) {
+        if (c.prepro)
+        {
+            assert(c.parentArea and "cluster: invalid parent area");
+            buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
+            ret = c.prepro->saveToFolder(buffer) and ret;
+        }
+    });
+    return ret;
+}
+
+bool ThermalClusterList::loadPreproFromFolder(Study& study,
+                                              const StudyLoadOptions& options,
+                                              const AnyString& folder)
+{
+    if (empty())
+        return true;
+
+    Clob buffer;
+    bool ret = true;
+
+    for (auto it = begin(); it != end(); ++it)
+    {
+        auto& c = *(it->second);
+        if (c.prepro)
+        {
+            assert(c.parentArea and "cluster: invalid parent area");
+            buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
+
+            bool result = c.prepro->loadFromFolder(study, buffer, c.parentArea->id, c.id());
+
+            if (result and study.usedByTheSolver)
+            {
+                // checking NPO max
+                result = c.prepro->normalizeAndCheckNPO(c.name(), c.unitCount);
+            }
+
+            ret = result and ret;
+        }
+        ++options.progressTicks;
+        options.pushProgressLogs();
+    }
+    return ret;
 }
 } // namespace Data
 } // namespace Antares

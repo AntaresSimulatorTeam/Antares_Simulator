@@ -1,6 +1,5 @@
 #include "cluster_list.h"
 #include "../../../utils.h"
-#include "../../../inifile.h"
 #include "../../study.h"
 #include "../../area.h"
 
@@ -75,22 +74,22 @@ template<class ClusterT>
 const ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id) const
 {
     auto i = cluster.find(id);
-    return (i != cluster.end()) ? i->second : nullptr;
+    return (i != cluster.end()) ? i->second.get() : nullptr;
 }
 
 template<class ClusterT>
 ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id)
 {
     auto i = cluster.find(id);
-    return (i != cluster.end()) ? i->second : nullptr;
+    return (i != cluster.end()) ? i->second.get() : nullptr;
 }
 
 template<class ClusterT>
 ClusterT* ClusterList<ClusterT>::detach(iterator i)
 {
-    auto* c = i->second;
+    SharedPtr c = i->second;
     cluster.erase(i);
-    return c;
+    return c.get();
 }
 
 template<class ClusterT>
@@ -141,8 +140,8 @@ const ClusterT* ClusterList<ClusterT>::find(const ClusterT* p) const
     auto end = cluster.end();
     for (auto i = cluster.begin(); i != end; ++i)
     {
-        if (p == i->second)
-            return i->second;
+        if (p == i->second.get())
+            return i->second.get();
     }
     return nullptr;
 }
@@ -153,8 +152,8 @@ ClusterT* ClusterList<ClusterT>::find(const ClusterT* p)
     auto end = cluster.end();
     for (auto i = cluster.begin(); i != end; ++i)
     {
-        if (p == i->second)
-            return i->second;
+        if (p == i->second.get())
+            return i->second.get();
     }
     return nullptr;
 }
@@ -211,7 +210,7 @@ void ClusterList<ClusterT>::rebuildIndex()
         auto end = cluster.end();
         for (auto i = cluster.begin(); i != end; ++i)
         {
-            auto* cluster = i->second;
+            auto cluster = i->second.get();
             byIndex[indx] = cluster;
             cluster->index = indx;
             ++indx;
@@ -222,127 +221,20 @@ void ClusterList<ClusterT>::rebuildIndex()
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::add(ClusterT* newcluster)
+typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::add(ClusterT* newcluster)
 {
     if (newcluster)
     {
         if (exists(newcluster->id()))
-            return true;
+            return cluster[newcluster->id()];
 
         newcluster->index = (uint)size();
-        cluster[newcluster->id()] = newcluster;
+        cluster[newcluster->id()] = SharedPtr(newcluster);
         ++(groupCount[newcluster->groupId()]);
         rebuildIndex();
-        return true;
+        return cluster[newcluster->id()];
     }
-    return false;
-}
-
-template<class ClusterT>
-static bool ClusterLoadFromProperty(ClusterT& cluster, const IniFile::Property* p)
-{
-    if (p->key.empty())
-        return false;
-
-    if (p->key == "group")
-    {
-        cluster.setGroup(p->value);
-        return true;
-    }
-
-    if (p->key == "name")
-        return true;
-
-    if (p->key == "enabled")
-        return p->value.to<bool>(cluster.enabled);
-
-    // The property is unknown
-    return false;
-}
-
-template<class ClusterT>
-static bool ClusterLoadFromSection(const AnyString& filename,
-                                   ClusterT& cluster,
-                                   const IniFile::Section& section)
-{
-    if (section.name.empty())
-        return false;
-
-    cluster.setName(section.name);
-
-    if (section.firstProperty)
-    {
-        // Browse all properties
-        for (auto* property = section.firstProperty; property; property = property->next)
-        {
-            if (property->key.empty())
-            {
-                logs.warning() << '`' << filename << "`: `" << section.name
-                               << "`: Invalid key/value";
-                continue;
-            }
-            if (not ClusterLoadFromProperty(cluster, property))
-            {
-                logs.warning() << '`' << filename << "`: `" << section.name << "`/`"
-                               << property->value << "`: The property is unknown and ignored";
-            }
-        }
-        // update the minUpDownTime
-    }
-    return true;
-}
-
-template<class ClusterT>
-bool ClusterList<ClusterT>::loadFromFolder(Study& study, const AnyString& folder, Area* area)
-{
-    assert(area and "A parent area is required");
-
-    // logs
-    logs.info() << "Loading renewable configuration for the area " << area->name;
-
-    // Open the ini file
-    study.buffer.clear() << folder << SEP << "list.ini";
-    IniFile ini;
-    if (ini.open(study.buffer))
-    {
-        bool ret = true;
-
-        if (ini.firstSection)
-        {
-            for (auto* section = ini.firstSection; section; section = section->next)
-            {
-                if (section->name.empty())
-                    continue;
-
-                ClusterT* cluster = new ClusterT(area, study.maxNbYearsInParallel);
-
-                // Load data of a renewable cluster from a ini file section
-                if (not ClusterLoadFromSection(study.buffer, *cluster, *section))
-                {
-                    delete cluster;
-                    continue;
-                }
-
-                // Check the data integrity of the cluster
-                cluster->integrityCheck();
-
-                // adding the renewable cluster
-                if (not add(cluster))
-                {
-                    // This error should never happen
-                    logs.error() << "Impossible to add the renewable cluster '" << cluster->name()
-                                 << "'";
-                    delete cluster;
-                    continue;
-                }
-
-                cluster->flush();
-            }
-        }
-
-        return ret;
-    }
-    return false;
+    return nullptr;
 }
 
 template<class ClusterT>
@@ -378,7 +270,7 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
     if (it == cluster.end())
         return true;
 
-    ClusterT* p = it->second;
+    SharedPtr p = it->second;
 
     if (idToFind == newID)
     {
@@ -429,26 +321,6 @@ void ClusterList<ClusterT>::markAsModified() const
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::retrieveTotalCapacity(double& total) const
-{
-    total = 0.;
-
-    if (not cluster.empty())
-    {
-        auto end = cluster.cend();
-        for (auto i = cluster.cbegin(); i != end; ++i)
-        {
-            if (not i->second)
-                return;
-
-            // Reference to the renewable cluster
-            auto& cluster = *(i->second);
-            total += cluster.nominalCapacity;
-        }
-    }
-}
-
-template<class ClusterT>
 bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
 {
     auto i = cluster.find(id);
@@ -456,62 +328,17 @@ bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
         return false;
 
     // Getting the pointer on the cluster
-    auto* c = i->second;
+    SharedPtr c = i->second;
 
     // Removing it from the list
     cluster.erase(i);
     // Invalidating the parent area
     c->parentArea->invalidate();
 
-    // delete the cluster
-    delete c;
-
     // Rebuilding the index
     rebuildIndex();
     return true;
 }
-
-template<class ClusterT>
-bool ClusterList<ClusterT>::saveToFolder(const AnyString& folder) const
-{
-    // Make sure the folder is created
-    if (IO::Directory::Create(folder))
-    {
-        Clob buffer;
-        bool ret = true;
-
-        // Allocate the inifile structure
-        IniFile ini;
-
-        // Browse all clusters
-        each([&](const Data::Cluster& cluster) {
-            // Adding a section to the inifile
-            IniFile::Section* s = ini.addSection(cluster.name());
-
-            // The section must not be empty
-            // This key will be silently ignored the next time
-            s->add("name", cluster.name());
-
-            if (not cluster.group().empty())
-                s->add("group", cluster.group());
-            if (not cluster.enabled)
-                s->add("enabled", "false");
-        });
-
-        // Write the ini file
-        buffer.clear() << folder << SEP << "list.ini";
-        ret = ini.save(buffer) and ret;
-    }
-    else
-    {
-        logs.error() << "I/O Error: impossible to create '" << folder << "'";
-        return false;
-    }
-
-    return true;
-}
-
-#undef SEP
 
 template<class ClusterT>
 int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) const
@@ -582,9 +409,31 @@ void ClusterList<ClusterT>::ensureDataTimeSeries()
     auto end = cluster.end();
     for (auto it = cluster.begin(); it != end; ++it)
     {
-        auto& cluster = *(it->second);
-        if (not cluster.series)
-            cluster.series = new DataSeriesCommon();
+        SharedPtr cluster = it->second;
+        if (not cluster->series)
+            cluster->series = new DataSeriesCommon();
+    }
+}
+
+template<class ClusterT>
+void ClusterList<ClusterT>::retrieveTotalCapacityAndUnitCount(double& total, uint& unitCount) const
+{
+    total = 0.;
+    unitCount = 0;
+
+    if (not cluster.empty())
+    {
+        auto end = cluster.cend();
+        for (auto i = cluster.cbegin(); i != end; ++i)
+        {
+            if (not i->second)
+                return;
+
+            // Reference to the thermal cluster
+            auto& cluster = *(i->second);
+            unitCount += cluster.unitCount;
+            total += cluster.unitCount * cluster.nominalCapacity;
+        }
     }
 }
 

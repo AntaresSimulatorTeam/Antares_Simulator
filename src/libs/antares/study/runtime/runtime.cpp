@@ -637,13 +637,12 @@ void StudyRuntimeInfos::removeDisabledThermalClustersFromSolverComputations(Stud
 
 void StudyRuntimeInfos::removeDisabledRenewableClustersFromSolverComputations(Study& study)
 {
-    removeDisabledClusters(
-      study, "renewable", [](Area& area) {
-                            uint ret = area.renewable.removeDisabledClusters();
-                            if (ret > 0)
-                              area.renewable.prepareAreaWideIndexes();
-                            return ret;
-                          });
+    removeDisabledClusters(study, "renewable", [](Area& area) {
+        uint ret = area.renewable.removeDisabledClusters();
+        if (ret > 0)
+            area.renewable.prepareAreaWideIndexes();
+        return ret;
+    });
 }
 
 StudyRuntimeInfos::~StudyRuntimeInfos()

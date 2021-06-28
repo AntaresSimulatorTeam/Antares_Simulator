@@ -177,7 +177,7 @@ void Frame::onSelectAllPlants(wxCommandEvent&)
             Data::Area& area = *(*i);
             auto end = area.thermal.list.end();
             for (auto i = area.thermal.list.begin(); i != end; ++i)
-                data->clusters.insert(i->second);
+                data->clusters.insert(i->second.get());
         }
         data->areas.clear();
         data->links.clear();
@@ -211,7 +211,7 @@ void Frame::onSelectAllPlantsFromArea(wxCommandEvent& evt)
         data->clusters.clear();
         auto end = area->thermal.list.end();
         for (auto i = area->thermal.list.begin(); i != end; ++i)
-            data->clusters.insert(i->second);
+            data->clusters.insert(i->second.get());
         data->areas.clear();
         data->links.clear();
         data->empty = data->clusters.empty();

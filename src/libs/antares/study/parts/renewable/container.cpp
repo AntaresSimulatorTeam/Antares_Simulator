@@ -85,7 +85,7 @@ void PartRenewable::prepareAreaWideIndexes()
     uint idx = 0;
     for (auto i = list.begin(); i != end; ++i)
     {
-        RenewableCluster* t = i->second;
+        RenewableCluster* t = i->second.get();
         t->areaWideIndex = idx;
         clusters[idx] = t;
         ++idx;

@@ -98,7 +98,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
             auto end = area.renewable.list.cluster.end();
             for (auto it = area.renewable.list.cluster.begin(); it != end; ++it)
             {
-                auto* cluster = it->second;
+                RenewableClusterList::SharedPtr cluster = it->second;
                 if (!cluster->enabled)
                 {
                     continue;
@@ -120,7 +120,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
             auto end = area.thermal.list.mapping.end();
             for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
             {
-                auto* cluster = it->second;
+                ThermalClusterList::SharedPtr cluster = it->second;
                 // Draw a new random number, whatever the cluster is
                 double rnd = thermalNoisesByArea[i][indexCluster];
 
@@ -180,12 +180,11 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
 void ALEA_TirageAuSortChroniques(double** thermalNoisesByArea, uint numSpace)
 {
     // Time-series numbers
-  bool ecoMode = Data::Study::Current::Get()->runtime->mode != stdmAdequacyDraft;
-  // Retrieve all time-series numbers
-  // Initialize in the same time the production costs of all thermal clusters.
-  InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(thermalNoisesByArea,
-                                                                     numSpace,
-                                                                     ecoMode);
+    bool ecoMode = Data::Study::Current::Get()->runtime->mode != stdmAdequacyDraft;
+    // Retrieve all time-series numbers
+    // Initialize in the same time the production costs of all thermal clusters.
+    InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
+      thermalNoisesByArea, numSpace, ecoMode);
     // Flush all memory into the swap files
     // (only if the support is available)
     if (Antares::Memory::swapSupport)
