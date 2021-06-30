@@ -69,10 +69,12 @@ enum File
     cn = 16,
     //! Annual adequacy results
     mc = 32,
+    //! Detailed values regarding RES generation
+    de_res = 64,
     //! The maximum available value
-    maxFileLevel = 32,
+    maxFileLevel = 64,
     //! All file level
-    allFile = va | id | de | is | cn | mc,
+    allFile = va | id | de | is | cn | mc | de_res,
 };
 
 enum Precision
@@ -216,6 +218,9 @@ inline void FileLevelToStreamShort(StreamT& out, int fileLevel)
     case mc:
         out += "mc";
         break;
+    case de_res:
+        out += "res";
+        break;
     default:
         out += NULL;
     }
@@ -243,6 +248,9 @@ inline void FileLevelToStream(StreamT& out, int fileLevel)
         break;
     case mc:
         out += "mc";
+        break;
+    case de_res:
+        out += "details-res";
         break;
     default:
         out += NULL;
