@@ -262,7 +262,7 @@ double RenewableCluster::valueAtTimeStep(uint timeSeriesIndex, uint timeStepInde
     switch (tsMode)
     {
     case powerGeneration:
-        return unitCount * tsValue;
+        return tsValue;
     case productionFactor:
         return unitCount * nominalCapacity * tsValue;
     }
