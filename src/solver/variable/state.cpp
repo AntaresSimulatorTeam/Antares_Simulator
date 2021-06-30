@@ -246,8 +246,7 @@ void State::initFromRenewableClusterIndex(const uint clusterAreaWideIndex, uint 
     uint serieIndex = timeseriesIndex->RenouvelableParPalier[clusterAreaWideIndex];
 
     assert(renewableCluster->series);
-    assert(hourInTheYear < renewableCluster->series->series.height);
-    renewableClusterProduction = renewableCluster->series->series[serieIndex][hourInTheYear];
+    renewableClusterProduction = renewableCluster->valueAtTimeStep(serieIndex, hourInTheYear);
 }
 
 void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex, uint numSpace)
