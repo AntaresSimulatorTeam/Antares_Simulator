@@ -403,27 +403,6 @@ int ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s,
     return ret;
 }
 
-template<>
-int ClusterList<RenewableCluster>::loadDataSeriesFromFolder(Study& s,
-                                                    const StudyLoadOptions& options,
-                                                    const AnyString& folder,
-                                                    bool fast)
-{
-    if (empty())
-        return 1;
-
-    int ret = 1;
-
-    each([&](Cluster& cluster) {
-        if (cluster.series and !fast)
-            ret = cluster.loadDataSeriesFromFolder(s, folder) and ret;
-
-        ++options.progressTicks;
-        options.pushProgressLogs();
-    });
-    return ret;
-}
-
 template<class ClusterT>
 void ClusterList<ClusterT>::ensureDataTimeSeries()
 {

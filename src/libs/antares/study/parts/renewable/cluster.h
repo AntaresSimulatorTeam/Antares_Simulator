@@ -176,6 +176,9 @@ public:
 
     enum TimeSeriesMode tsMode;
 
+    // TODO remove
+    void* prepro;
+
     friend class RenewableClusterList;
 
     private:
