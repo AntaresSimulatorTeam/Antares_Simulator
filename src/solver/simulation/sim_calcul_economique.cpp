@@ -598,14 +598,11 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 + scratchpad.mustrunSum[indx];
 
             // Renewable
-            area.renewable.list.each([&](const Cluster& cluster) {
-                assert((uint)tsIndex.RenouvelableParPalier[cluster.areaWideIndex]
-                       < cluster.series->series.width);
-                assert((uint)indx < cluster.series->series.height);
+            area.renewable.list.each([&](const RenewableCluster& cluster) {
                 assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
                 problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
-                  += cluster.series
-                       ->series[tsIndex.RenouvelableParPalier[cluster.areaWideIndex]][indx];
+                  += cluster.valueAtTimeStep(tsIndex.RenouvelableParPalier[cluster.areaWideIndex],
+                                             (uint)indx);
             });
 
             assert(

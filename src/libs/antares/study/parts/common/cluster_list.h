@@ -107,15 +107,6 @@ public:
     virtual void remove(iterator i);
 
     /*!
-    ** \brief Load a list of cluster from a folder
-    **
-    ** \param folder The folder where the data are located (ex: `input/renewable/clusters/[area]/`)
-    ** \param area The associate area
-    ** \return True if the operation succeeded, false otherwise
-    */
-    virtual bool loadFromFolder(Study& s, const AnyString& folder, Area* area) = 0;
-
-    /*!
     ** \brief Try to find a cluster from its id
     **
     ** \param id ID of the cluster to find

@@ -45,14 +45,8 @@ namespace Antares
 {
 namespace Data
 {
-Data::RenewableCluster::RenewableCluster(Area* parent, uint /*nbParallelYears*/) :
- Cluster(parent), groupID(renewableOther1)
-{
-    // assert
-    assert(parent and "A parent for a renewable dispatchable cluster can not be null");
-}
-
-Data::RenewableCluster::RenewableCluster(Area* parent) : Cluster(parent), groupID(renewableOther1)
+Data::RenewableCluster::RenewableCluster(Area* parent) :
+ Cluster(parent), groupID(renewableOther1), tsMode(powerGeneration)
 {
     // assert
     assert(parent and "A parent for a renewable dispatchable cluster can not be null");
@@ -233,12 +227,58 @@ const char* Data::RenewableCluster::GroupName(enum RenewableGroup grp)
     return "";
 }
 
+bool Data::RenewableCluster::setTimeSeriesModeFromString(const YString& value)
+{
+    if (value == "power-generation")
+    {
+        tsMode = powerGeneration;
+        return true;
+    }
+    if (value == "production-factor")
+    {
+        tsMode = productionFactor;
+        return true;
+    }
+    return false;
+}
+
+YString Data::RenewableCluster::getTimeSeriesModeAsString() const
+{
+    switch (tsMode)
+    {
+    case powerGeneration:
+        return "power-generation";
+    case productionFactor:
+        return "production-factor";
+    }
+    return "unknown";
+}
+
+double RenewableCluster::valueAtTimeStep(uint timeSeriesIndex, uint timeStepIndex) const
+{
+    assert(timeStepIndex < series->series.height);
+    assert(timeSeriesIndex < series->series.width);
+    const double tsValue = series->series[timeSeriesIndex][timeStepIndex];
+    switch (tsMode)
+    {
+    case powerGeneration:
+        return tsValue;
+    case productionFactor:
+        return unitCount * nominalCapacity * tsValue;
+    }
+    return 0.;
+}
+
 uint64 RenewableCluster::memoryUsage() const
 {
     uint64 amount = sizeof(RenewableCluster);
     if (series)
         amount += DataSeriesMemoryUsage(series);
     return amount;
+}
+
+unsigned int RenewableCluster::precision() const {
+    return 4;
 }
 } // namespace Data
 } // namespace Antares

@@ -63,7 +63,7 @@ int Cluster::saveDataSeriesToFolder(const AnyString& folder) const
         {
             int ret = 1;
             buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series.txt";
-            ret = series->series.saveToCSVFile(buffer, 0) && ret;
+            ret = series->series.saveToCSVFile(buffer, precision()) && ret;
 
             return ret;
         }

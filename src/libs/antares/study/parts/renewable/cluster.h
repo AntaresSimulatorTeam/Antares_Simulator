@@ -69,6 +69,16 @@ public:
         groupMax
     };
 
+    enum TimeSeriesMode
+    {
+        //! TS contain power generation for each unit
+        //! Nominal capacity is *ignored*
+        powerGeneration = 0,
+        //! TS contain production factor for each unit
+        //! Nominal capacity is used as a multiplicative factor
+        productionFactor
+    };
+
     //! Set of renewable clusters
     typedef std::set<Cluster*, CompareClusterName> Set;
     //! Set of renewable clusters (pointer)
@@ -89,7 +99,6 @@ public:
     ** \brief Default constructor, with a parent area
     */
     explicit RenewableCluster(Data::Area* parent);
-    explicit RenewableCluster(Data::Area* parent, uint nbParallelYears);
     //! Destructor
     ~RenewableCluster();
     //@}
@@ -147,28 +156,14 @@ public:
     Yuni::uint64 memoryUsage() const override;
     //@}
 
-    //! \name validity of Min Stable Power
-    //@{
-    // bool minStablePowerValidity() const;
+    bool setTimeSeriesModeFromString(const YString& value);
 
-    /*!
-    ** \brief Calculte the minimum modulation/ceil(modulation) from 8760 capacity modulation
+    YString getTimeSeriesModeAsString() const;
+
+    /* !
+    ** Get production value at time-step ts
     */
-    void calculatMinDivModulation();
-
-    /*!
-    ** \brief Check the validity of Min Stable Power
-    */
-    bool checkMinStablePower();
-
-    /*!
-    ** \brief Check the validity of Min Stable Power with a new modulation value
-    */
-    bool checkMinStablePowerWithNewModulation(uint index, double value);
-    //@}
-
-    // TODO remove
-    void* prepro;
+    double valueAtTimeStep(uint timeSeriesIndex, uint timeStepIndex) const;
 
 public:
     /*!
@@ -179,7 +174,12 @@ public:
     */
     enum RenewableGroup groupID;
 
+    enum TimeSeriesMode tsMode;
+
     friend class RenewableClusterList;
+
+    private:
+    unsigned int precision() const override;
 }; // class RenewableCluster
 
 } // namespace Data
