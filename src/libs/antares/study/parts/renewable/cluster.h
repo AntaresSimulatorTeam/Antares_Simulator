@@ -178,7 +178,7 @@ public:
 
     bool setTimeSeriesModeFromString(const YString& value);
 
-    const YString& getTimeSeriesModeAsString() const;
+    YString getTimeSeriesModeAsString() const;
 
     /* !
     ** Get production value at time-step ts

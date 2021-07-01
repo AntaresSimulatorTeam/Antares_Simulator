@@ -242,7 +242,7 @@ bool Data::RenewableCluster::setTimeSeriesModeFromString(const YString& value)
     return false;
 }
 
-const YString& Data::RenewableCluster::getTimeSeriesModeAsString() const
+YString Data::RenewableCluster::getTimeSeriesModeAsString() const
 {
     switch (tsMode)
     {
