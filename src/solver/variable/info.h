@@ -392,10 +392,8 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
     {
         if (*results.isPrinted)
         {
-            const Data::PartThermal& thermal = results.data.area->thermal;
             for (uint i = 0; i != container.size(); ++i)
             {
-                results.variableCaption = thermal.clusters[i]->name();
                 container[i].template buildSurveyReport<ResultsT, VCardType>(
                   results, container[i], dataLevel, fileLevel, precision);
             }
@@ -410,10 +408,8 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
     {
         if (*results.isPrinted)
         {
-            const Data::PartThermal& thermal = results.data.area->thermal;
             for (uint i = 0; i != container.size(); ++i)
             {
-                results.variableCaption = thermal.clusters[i]->name();
                 container[i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }
