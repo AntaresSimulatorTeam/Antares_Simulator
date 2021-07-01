@@ -184,6 +184,65 @@ BOOST_AUTO_TEST_CASE(fake_file_not_empty__target_mtx_empty___mtx_gets_file_dimen
 	BOOST_REQUIRE_EQUAL(mtx.entry[2][1], -5.56);
 }
 
+// Specific tests for renewable TS
+// Expected behavior : read 4 digits
+BOOST_AUTO_TEST_CASE(fake_file_double_renewable)
+{
+	// Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
+    Matrix_easy_to_fill<double, double> mtx_0(2, 3, { 100.5111, -2.44444, 3.66666, 0, 8.559, -5.5555 });
+    fake_buffer_factory<double, double> buffer_factory_dd;
+	buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
+	buffer_factory_dd.set_precision(4);
+	buffer_factory_dd.print_dimensions(false);
+
+	Clob* fake_buffer = buffer_factory_dd.build_buffer();
+
+	// Testing load
+	Matrix_mock_load_to_buffer<double, double> mtx;
+	BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 0, 0, Matrix<>::optNone, fake_buffer));
+
+	delete fake_buffer;
+
+	BOOST_REQUIRE_EQUAL(mtx.height, 2);
+	BOOST_REQUIRE_EQUAL(mtx.width, 3);
+	BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 100.5111);
+	BOOST_REQUIRE_EQUAL(mtx.entry[1][0], -2.4444);
+	BOOST_REQUIRE_EQUAL(mtx.entry[2][0], 3.6667);
+	BOOST_REQUIRE_EQUAL(mtx.entry[0][1], 0);
+	BOOST_REQUIRE_EQUAL(mtx.entry[1][1], 8.559);
+	BOOST_REQUIRE_EQUAL(mtx.entry[2][1], -5.5555);
+}
+
+// Specific tests for thermal TS
+// Expected behavior : read 0 digits, i.e round input to closest integer value
+BOOST_AUTO_TEST_CASE(fake_file_double_thermal)
+{
+	// Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
+    Matrix_easy_to_fill<double, double> mtx_0(2, 3, { 1.50001, -2.44444, 3.66666, 0, 8.559, -5.55555 });
+    fake_buffer_factory<double, double> buffer_factory_dd;
+	buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
+	buffer_factory_dd.set_precision(0); // default precision is 0
+	buffer_factory_dd.print_dimensions(false);
+
+	Clob* fake_buffer = buffer_factory_dd.build_buffer();
+
+	// Testing load
+	Matrix_mock_load_to_buffer<double, double> mtx;
+	BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 0, 0, Matrix<>::optNone, fake_buffer));
+
+	delete fake_buffer;
+
+	BOOST_REQUIRE_EQUAL(mtx.height, 2);
+	BOOST_REQUIRE_EQUAL(mtx.width, 3);
+	BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 2);
+	BOOST_REQUIRE_EQUAL(mtx.entry[1][0], -2);
+	BOOST_REQUIRE_EQUAL(mtx.entry[2][0], 4);
+	BOOST_REQUIRE_EQUAL(mtx.entry[0][1], 0);
+	BOOST_REQUIRE_EQUAL(mtx.entry[1][1], 9);
+	BOOST_REQUIRE_EQUAL(mtx.entry[2][1], -6);
+}
+
+
 // 1.f.
 BOOST_AUTO_TEST_CASE(file_with_alphabetic_char___load_fails_with_warning)
 {

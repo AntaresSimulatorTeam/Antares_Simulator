@@ -138,6 +138,8 @@ protected:
 public:
     int saveDataSeriesToFolder(const AnyString& folder) const;
     int loadDataSeriesFromFolder(Study& s, const AnyString& folder);
+private:
+    virtual unsigned int precision() const = 0;
 };
 
 struct CompareClusterName final

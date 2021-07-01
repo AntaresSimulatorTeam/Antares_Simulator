@@ -20,7 +20,7 @@ public:
     ** \brief Get the size (bytes) occupied in memory by a `ThermalClusterList` structure
     ** \return A size (in bytes)
     */
-    bool loadFromFolder(Study& s, const AnyString& folder, Area* area) override;
+    bool loadFromFolder(Study& s, const AnyString& folder, Area* area);
 
 public:
     //! \name Constructor & Destructor

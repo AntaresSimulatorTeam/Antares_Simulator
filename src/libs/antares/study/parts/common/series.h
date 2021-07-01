@@ -57,7 +57,7 @@ public:
     **
     ** Merely a matrix of TimeSeriesCount * 8760 values
     */
-    Matrix<double, Yuni::sint32> series;
+    Matrix<double> series;
 
     /*!
     ** \brief Monte-Carlo

@@ -682,5 +682,8 @@ bool ThermalCluster::checkMinStablePowerWithNewModulation(uint index, double val
     return checkMinStablePower();
 }
 
+unsigned int ThermalCluster::precision() const {
+    return 0;
+}
 } // namespace Data
 } // namespace Antares
