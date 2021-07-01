@@ -24,27 +24,51 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_TIMESERIES_HXX__
-#define __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_TIMESERIES_HXX__
+
+#include <yuni/yuni.h>
+#include <yuni/io/file.h>
+#include <yuni/io/directory.h>
+#include "../../study.h"
+#include "../../memory-usage.h"
+#include "series.h"
+
+using namespace Yuni;
+
+#define SEP IO::Separator
 
 namespace Antares
 {
 namespace Data
 {
-inline void DataSeriesRenewable::flush()
+bool DataSeriesCommon::invalidate(bool reload) const
 {
-#ifdef ANTARES_SWAP_SUPPORT
-    series.flush();
-    timeseriesNumbers.flush();
-#endif
+    return series.invalidate(reload);
 }
 
-inline Yuni::uint64 DataSeriesRenewableMemoryUsage(DataSeriesRenewable* t)
+void DataSeriesCommon::markAsModified() const
 {
-    return (t) ? t->series.memoryUsage() : 0;
+    series.markAsModified();
+}
+
+void DataSeriesCommon::estimateMemoryUsage(StudyMemoryUsage& u, enum TimeSeries ts) const
+{
+    u.requiredMemoryForInput += sizeof(DataSeriesCommon);
+    timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
+    uint nbTimeSeries;
+    switch (ts)
+    {
+    case timeSeriesThermal:
+        nbTimeSeries = u.study.parameters.nbTimeSeriesThermal;
+        break;
+    case timeSeriesRenewable:
+        nbTimeSeries = 1;
+        break;
+    default:
+        nbTimeSeries = 0;
+    }
+    series.estimateMemoryUsage(
+      u, 0 != (ts & u.study.parameters.timeSeriesToGenerate), nbTimeSeries, HOURS_PER_YEAR);
 }
 
 } // namespace Data
 } // namespace Antares
-
-#endif // __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_TIMESERIES_HXX__

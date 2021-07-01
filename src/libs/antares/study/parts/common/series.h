@@ -24,24 +24,23 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_TIMESERIES_H__
-#define __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_TIMESERIES_H__
+#ifndef __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
+#define __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 
 #include "../../../array/matrix.h"
 #include "../../fwd.h"
-#include "defines.h"
 
 namespace Antares
 {
 namespace Data
 {
 /*!
-** \brief Data series (Renewable)
+** \brief Data series (Common)
 */
-class DataSeriesRenewable
+class DataSeriesCommon
 {
 public:
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+    void estimateMemoryUsage(StudyMemoryUsage&, enum TimeSeries) const;
 
     /*!
     ** \brief Flush memory to swap file
@@ -58,50 +57,16 @@ public:
     **
     ** Merely a matrix of TimeSeriesCount * 8760 values
     */
-    Matrix<double, Yuni::sint32> series;
+    Matrix<double> series;
 
     /*!
     ** \brief Monte-Carlo
     */
     Matrix<Yuni::uint32> timeseriesNumbers;
-
-}; // class DataSeriesRenewable
-
-/*!
-** \brief Load renewable data series from a folder
-** \ingroup renewableseries
-**
-** \param t A renewable data series structure
-** \param ag A renewable cluster
-** \param folder The target folder
-** \return A non-zero value if the operation succeeded, 0 otherwise
-*/
-int DataSeriesRenewableLoadFromFolder(Study& s,
-                                      DataSeriesRenewable* t,
-                                      RenewableCluster* ag,
-                                      const AnyString& folder);
-
-/*!
-** \brief Save renewable data series into a folder
-** \ingroup renewableseries
-**
-** \param t A renewable data series structure
-** \param ag A renewable cluster
-** \param folder The target folder
-** \return A non-zero value if the operation succeeded, 0 otherwise
-*/
-int DataSeriesRenewableSaveToFolder(const DataSeriesRenewable* t,
-                                    const RenewableCluster* ag,
-                                    const AnyString& folder);
-
-/*!
-** \brief Get the size (bytes) occupied in memory by a `DataSeriesRenewable` structure
-*/
-Yuni::uint64 DataSeriesRenewableMemoryUsage(DataSeriesRenewable* t);
-
+}; // class DataSeriesCommon
 } // namespace Data
 } // namespace Antares
 
 #include "series.hxx"
 
-#endif /* __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_TIMESERIES_H__ */
+#endif /* __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__ */

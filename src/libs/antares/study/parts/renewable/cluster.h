@@ -31,67 +31,61 @@
 #include <yuni/core/noncopyable.h>
 #include "../../../array/matrix.h"
 #include "defines.h"
-#include "series.h"
+#include "../common/cluster.h"
 #include "../../fwd.h"
-#include <set>
-#include <map>
-#include <vector>
 
 namespace Antares
 {
 namespace Data
 {
-enum RenewableGroup
-{
-    //! Wind offshore
-    windOffShore = 0,
-    //! Wind onshore
-    windOnShore,
-    //! Concentration solar
-    concentrationSolar,
-    //! PV solar
-    PVSolar,
-    //! Rooftop solar
-    rooftopSolar,
-    //! Other 1
-    renewableOther1,
-    //! Other 2
-    renewableOther2,
-    //! Other 3
-    renewableOther3,
-    //! Other 4
-    renewableOther4,
-
-    //! The highest value
-    renewableGroupMax
-};
-
-enum RenewableModulation
-{
-    renewableModulationCost = 0,
-    renewableModulationCapacity,
-    renewableMinGenModulation,
-    renewableModulationMax
-};
-
-struct CompareRenewableClusterName;
-
 /*!
 ** \brief A single renewable cluster
 */
-class RenewableCluster final : public Yuni::NonCopyable<RenewableCluster>
+class RenewableCluster final : public Cluster
 {
 public:
-    //! Set of renewable clusters
-    typedef std::set<RenewableCluster*, CompareRenewableClusterName> Set;
-    //! Set of renewable clusters (pointer)
-    typedef std::set<RenewableCluster*> SetPointer;
-    //! Map of renewable clusters
-    typedef std::map<RenewableClusterName, RenewableCluster*> Map;
-    //! Vector of renewable clusters
-    typedef std::vector<Data::RenewableCluster*> Vector;
+    enum RenewableGroup
+    {
+        //! Wind offshore
+        windOffShore = 0,
+        //! Wind onshore
+        windOnShore,
+        //! Concentration solar
+        concentrationSolar,
+        //! PV solar
+        PVSolar,
+        //! Rooftop solar
+        rooftopSolar,
+        //! Other 1
+        renewableOther1,
+        //! Other 2
+        renewableOther2,
+        //! Other 3
+        renewableOther3,
+        //! Other 4
+        renewableOther4,
 
-public:
+        //! The highest value
+        groupMax
+    };
+
+    enum TimeSeriesMode
+    {
+        //! TS contain power generation for each unit
+        //! Nominal capacity is *ignored*
+        powerGeneration = 0,
+        //! TS contain production factor for each unit
+        //! Nominal capacity is used as a multiplicative factor
+        productionFactor
+    };
+
+    //! Set of renewable clusters
+    typedef std::set<Cluster*, CompareClusterName> Set;
+    //! Set of renewable clusters (pointer)
+    typedef std::set<Cluster*> SetPointer;
+    //! Vector of renewable clusters
+    typedef std::vector<Data::Cluster*> Vector;
+
     /*!
     ** \brief Get the group name string
     ** \return A valid CString
@@ -105,7 +99,6 @@ public:
     ** \brief Default constructor, with a parent area
     */
     explicit RenewableCluster(Data::Area* parent);
-    explicit RenewableCluster(Data::Area* parent, uint nbParallelYears);
     //! Destructor
     ~RenewableCluster();
     //@}
@@ -113,46 +106,22 @@ public:
     /*!
     ** \brief Invalidate all data associated to the renewable cluster
     */
-    bool invalidate(bool reload) const;
+    bool invalidate(bool reload) const override;
 
     /*!
     ** \brief Mark the renewable cluster as modified
     */
-    void markAsModified() const;
-
-    /*!
-    ** \brief Invalidate the whole attached area
-    */
-    void invalidateArea();
+    void markAsModified() const override;
 
     /*!
     ** \brief Reset to default values
     **
     ** This method should only be called from the GUI
     */
-    void reset();
+    void reset() override;
 
-    //! \name Name and ID
-    //@{
-    //! Get the renewable cluster ID
-    const Data::RenewableClusterName& id() const;
-
-    //! Get the renewable cluster name
-    const Data::RenewableClusterName& name() const;
-
-    //! Get the full renewable cluster name
-    Yuni::String getFullName() const;
-
-    //! Set the name/ID
-    void name(const AnyString& newname);
-    //@}
-
-    //! \name Group
-    //@{
-    //! Get the group of the cluster
-    const Data::RenewableClusterName& group() const;
     //! Set the group
-    void group(Data::RenewableClusterName newgrp);
+    void setGroup(Data::ClusterName newgrp) override;
     //@}
 
     /*!
@@ -160,7 +129,7 @@ public:
     **
     ** \return False if an error has been detected and fixed with a default value
     */
-    bool integrityCheck();
+    bool integrityCheck() override;
 
     /*!
     ** \brief Copy data from another cluster
@@ -174,39 +143,27 @@ public:
     /*!
     ** \brief Flush the memory to swap files (if swap support enabled)
     */
-    void flush();
+    void flush() override;
+
+    /*!
+    ** \brief Group ID as an uint
+    */
+    uint groupId() const override;
 
     /*!
     ** \brief Get the memory consummed by the renewable cluster (in bytes)
     */
-    Yuni::uint64 memoryUsage() const;
+    Yuni::uint64 memoryUsage() const override;
     //@}
 
-    //! \name validity of Min Stable Power
-    //@{
-    // bool minStablePowerValidity() const;
+    bool setTimeSeriesModeFromString(const YString& value);
 
-    /*!
-    ** \brief Calculte the minimum modulation/ceil(modulation) from 8760 capacity modulation
-    */
-    void calculatMinDivModulation();
+    YString getTimeSeriesModeAsString() const;
 
-    /*!
-    ** \brief Check the validity of Min Stable Power
+    /* !
+    ** Get production value at time-step ts
     */
-    bool checkMinStablePower();
-
-    /*!
-    ** \brief Check the validity of Min Stable Power with a new modulation value
-    */
-    bool checkMinStablePowerWithNewModulation(uint index, double value);
-    //@}
-
-    /*!
-    ** \brief Check wether the cluster is visible in a layer (it's parent area is visible in the
-    *layer)
-    */
-    bool isVisibleOnLayer(const size_t& layerID) const;
+    double valueAtTimeStep(uint timeSeriesIndex, uint timeStepIndex) const;
 
 public:
     /*!
@@ -217,330 +174,15 @@ public:
     */
     enum RenewableGroup groupID;
 
-    //! The index of the renewable cluster (within a list)
-    uint index;
-    //! The index of the renewable cluster from the area's point of view
-    //! \warning this variable is only valid when used by the solver
-    // (initialized in the same time that the runtime data)
-    uint areaWideIndex;
-
-    //! The associate area (alias)
-    Area* parentArea;
-
-    //! Enabled
-    bool enabled;
-
-    //! Capacity of reference per unit (MW) (pMax)
-    double nominalCapacity;
-
-    /*!
-    ** \brief Modulation matrix
-    **
-    ** It is merely a 3x8760 matrix
-    ** [modulation cost, modulation capacity, min gen modulation] per hour
-    */
-    Matrix<> modulation;
-
-    //! Series
-    DataSeriesRenewable* series;
-
-private:
-    //! Name
-    Data::RenewableClusterName pName;
-    //! ID
-    Data::RenewableClusterName pID;
-    //! Group
-    Data::RenewableClusterName pGroup;
+    enum TimeSeriesMode tsMode;
 
     friend class RenewableClusterList;
 
+    private:
+    unsigned int precision() const override;
 }; // class RenewableCluster
-
-/*!
-** \brief List of clusters
-** \ingroup renewableclusters
-*/
-class RenewableClusterList
-{
-public:
-    //! iterator
-    typedef RenewableCluster::Map::iterator iterator;
-    //! const iterator
-    typedef RenewableCluster::Map::const_iterator const_iterator;
-
-public:
-    //! \name Constructor & Destructor
-    //@{
-    /*!
-    ** \brief Default constructor
-    */
-    RenewableClusterList();
-    /*!
-    ** \brief Destructor
-    */
-    ~RenewableClusterList();
-    //@}
-
-    //! \name Iterating
-    //@{
-    /*!
-    ** \brief Iterate through all renewable clusters
-    */
-    template<class PredicateT>
-    void each(const PredicateT& predicate);
-    /*!
-    ** \brief Iterate through all renewable clusters (const)
-    */
-    template<class PredicateT>
-    void each(const PredicateT& predicate) const;
-
-    //! iterator to the begining of the list
-    iterator begin();
-    //! iterator to the begining of the list
-    const_iterator begin() const;
-
-    //! iterator to the end of the list
-    iterator end();
-    //! iterator to the end of the list
-    const_iterator end() const;
-
-    //@}
-
-    //! \name Cluster management
-    //@{
-    /*!
-    ** \brief Destroy all renewable clusters
-    */
-    void clear();
-
-    /*!
-    ** \brief Add a renewable cluster in the list
-    **
-    ** \param t The renewable cluster to add
-    ** \return True if the renewable cluster has been added, false otherwise
-    */
-    bool add(RenewableCluster* t);
-
-    /*!
-    ** \brief Detach a cluster represented by an iterator
-    **
-    ** The renewable cluster will be removed from the list but _not_
-    ** destroyed.
-    ** The iterator should considered as invalid after using this method.
-    ** \return A pointer to the renewable cluster, NULL if an error has occured
-    */
-    RenewableCluster* detach(iterator i);
-
-    /*!
-    ** \brief Remove a cluster represented by an iterator
-    **
-    ** The renewable cluster will be removed from the list but _not_
-    ** destroyed.
-    ** The iterator should considered as invalid after using this method.
-    ** \return void
-    */
-    void remove(iterator i);
-
-    /*!
-    ** \brief Load a list of renewable cluster from a folder
-    **
-    ** \param folder The folder where the data are located (ex: `input/renewable/clusters/[area]/`)
-    ** \param area The associate area
-    ** \return True if the operation succeeded, false otherwise
-    */
-    bool loadFromFolder(Study& s, const AnyString& folder, Area* area);
-
-    /*!
-    ** \brief Try to find a renewable cluster from its id
-    **
-    ** \param id ID of the cluster to find
-    ** \return A pointer to a cluster. nullptr if not found
-    */
-    RenewableCluster* find(const Data::RenewableClusterName& id);
-    /*!
-    ** \brief Try to find a renewable cluster from its id (const)
-    **
-    ** \param id ID of the cluster to find
-    ** \return A pointer to a cluster. nullptr if not found
-    */
-    const RenewableCluster* find(const Data::RenewableClusterName& id) const;
-
-    /*!
-    ** \brief Try to find a renewable cluster from its pointer
-    **
-    ** \param  p Pointer of the cluster to find
-    ** \return A pointer to a cluster. nullptr if not found
-    */
-    RenewableCluster* find(const RenewableCluster* p);
-    /*!
-    ** \brief Try to find a renewable cluster from its pointer (const)
-    **
-    ** \param  p Pointer of the cluster to find
-    ** \return A pointer to a cluster. nullptr if not found
-    */
-    const RenewableCluster* find(const RenewableCluster* p) const;
-
-    /*!
-    ** \brief Get if a renewable cluster exists
-    **
-    ** \param id ID of the cluster to find
-    ** \return True if the renewable cluster exists
-    */
-    bool exists(const Data::RenewableClusterName& id) const;
-
-    /*!
-    ** \brief Rename a renewable cluster
-    **
-    ** \param idToFind ID of the cluster to rename
-    ** \param newName The new name for the cluster
-    ** \return True if the operation succeeded (the cluster has been renammed)
-    **   false otherwise (not found or if another renewable cluster has the same name)
-    **
-    ** The indexes for renewable clusters will be rebuilt.
-    */
-    bool rename(Data::RenewableClusterName idToFind, Data::RenewableClusterName newName);
-
-    /*!
-    ** \brief Remove properly a cluster
-    */
-    bool remove(const Data::RenewableClusterName& id);
-
-    //! Get the number of items in the list
-    uint size() const;
-
-    //! Get if the list is empty
-    bool empty() const;
-    //@}
-
-    /*!
-    ** \brief Resize all matrices dedicated to the sampled timeseries numbers
-    **
-    ** \param n A number of years
-    */
-    void resizeAllTimeseriesNumbers(uint n);
-
-    bool storeTimeseriesNumbers(Study& study);
-
-    void retrieveTotalCapacity(double& total) const;
-    //@}
-
-    //! \name Memory management
-    //@{
-    /*!
-    ** \brief Invalidate all renewable clusters
-    */
-    bool invalidate(bool reload = false) const;
-
-    /*!
-    ** \brief Mark the renewable cluster as modified
-    */
-    void markAsModified() const;
-
-    /*!
-    ** \brief Flush memory to swap files
-    */
-    void flush();
-
-    /*!
-    ** \brief Rebuild the index of renewable clusters
-    **
-    ** As a list of renewable clusters is a hash table, it is not
-    ** possible to directly accees to a renewable cluster from its index.
-    ** However an index can be built but it must be re-built when
-    ** the hash table is modified.
-    */
-    void rebuildIndex();
-
-    /*!
-    ** \brief Get the size (bytes) occupied in memory by a `RenewableClusterList` structure
-    ** \return A size (in bytes)
-    */
-    Yuni::uint64 memoryUsage() const;
-
-    /*!
-    ** \brief Try to estimate the amount of memory which will be used by the solver
-    */
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
-    //@}
-
-public:
-    //! All renewable clusters by their index
-    RenewableCluster** byIndex;
-    //! All renewable clusters
-    RenewableCluster::Map cluster;
-
-    /*!
-    ** \brief Number of renewable dispatchable cluster per group
-    **
-    ** You should rely on these values only after the loading of the study
-    ** and until the study is not modified.
-    ** These values are modified by 'RenewableClusterListAdd()'
-    */
-    uint groupCount[renewableGroupMax];
-
-    /*!
-    ** \brief Original mapping from the input
-    **
-    ** Without taking into consideration the enabled flags
-    */
-    RenewableCluster::Map mapping;
-
-}; // class RenewableClusterList
-
-/*!
-** \brief Save a list of renewable clusters to a folder
-** \ingroup renewableclusters
-**
-** \todo Remaining of old C-library. this routine should be moved into the appropriate class
-** \param l The list of renewable cluster
-** \param folder The folder where the data will be written
-** \return A non-zero value if the operation succeeded, 0 otherwise
-*/
-bool RenewableClusterListSaveToFolder(const RenewableClusterList* l, const AnyString& folder);
-
-/*!
-** \brief Load data related to time-series from a list of renewable clusters from a folder
-** \ingroup renewableclusters
-**
-** \todo Remaining of old C-library. this routine should be moved into the appropriate class
-** \param l A list of renewable clusters
-** \param folder The target folder
-** \return A non-zero value if the operation succeeded, 0 otherwise
-*/
-int RenewableClusterListLoadDataSeriesFromFolder(Study& study,
-                                                 const StudyLoadOptions& options,
-                                                 RenewableClusterList* l,
-                                                 const AnyString& folder);
-
-/*!
-** \brief Save data related to time-series from a list of renewable clusters to a folder
-** \ingroup renewableclusters
-**
-** \todo Remaining of old C-library. this routine should be moved into the appropriate class
-** \param l A list of renewable clusters
-** \param folder The target folder
-** \param msg Message to display
-** \return A non-zero value if the operation succeeded, 0 otherwise
-*/
-int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l,
-                                               const AnyString& folder);
-int RenewableClusterListSaveDataSeriesToFolder(const RenewableClusterList* l,
-                                               const AnyString& folder,
-                                               const YString& msg);
-
-void RenewableClusterListEnsureDataTimeSeries(RenewableClusterList* list);
-
-struct CompareRenewableClusterName final
-{
-    inline bool operator()(const RenewableCluster* s1, const RenewableCluster* s2) const
-    {
-        return (s1->getFullName() < s2->getFullName());
-    }
-};
 
 } // namespace Data
 } // namespace Antares
-
-#include "cluster.hxx"
 
 #endif //__ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_H__

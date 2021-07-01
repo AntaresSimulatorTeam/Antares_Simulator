@@ -38,7 +38,7 @@ namespace Antares
 {
 namespace Data
 {
-PartRenewable::PartRenewable() : clusters(nullptr), clusterCount((uint)-1)
+PartRenewable::PartRenewable() : list(), clusters(nullptr), clusterCount((uint)-1)
 {
 }
 
@@ -85,7 +85,7 @@ void PartRenewable::prepareAreaWideIndexes()
     uint idx = 0;
     for (auto i = list.begin(); i != end; ++i)
     {
-        RenewableCluster* t = i->second;
+        RenewableCluster* t = i->second.get();
         t->areaWideIndex = idx;
         clusters[idx] = t;
         ++idx;
@@ -98,33 +98,18 @@ uint PartRenewable::removeDisabledClusters()
     if (list.empty())
         return 0;
 
-    uint count = 0;
-    bool doWeContinue;
-    do
+    std::vector<ClusterName> disabledClusters;
+
+    for (auto& it : list)
     {
-        doWeContinue = false;
-        auto end = list.end();
-        for (auto i = list.begin(); i != end; ++i)
-        {
-            if (!(i->second)->enabled)
-            {
-                // Removing the renewable cluster from the main list...
-                list.remove(i);
+        if (!it.second->enabled)
+            disabledClusters.push_back(it.first);
+    }
 
-                ++count;
+    for (auto& cluster : disabledClusters)
+        list.remove(cluster);
 
-                // the iterator has been invalidated, loop again
-                doWeContinue = true;
-                break;
-            }
-        }
-    } while (doWeContinue);
-
-    // if some renewable cluster has been moved, we must rebuild all the indexes
-    if (count)
-        list.rebuildIndex();
-
-    return count;
+    return disabledClusters.size();
 }
 
 void PartRenewable::reset()

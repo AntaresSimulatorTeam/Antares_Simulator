@@ -78,6 +78,8 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
             v |= timeSeriesThermal;
         else if (word == "solar")
             v |= timeSeriesSolar;
+        else if (word == "renewables")
+            v |= timeSeriesRenewable;
         return true;
     });
     return true;
@@ -217,7 +219,6 @@ void Parameters::reset()
     nbTimeSeriesHydro = 1;
     nbTimeSeriesWind = 1;
     nbTimeSeriesThermal = 1;
-    nbTimeSeriesRenewable = 1;
     // Time-series refresh
     timeSeriesToRefresh = 0; // None
     refreshIntervalLoad = 100;
@@ -225,7 +226,6 @@ void Parameters::reset()
     refreshIntervalHydro = 100;
     refreshIntervalWind = 100;
     refreshIntervalThermal = 100;
-    refreshIntervalRenewable = 100;
     // Archive
     timeSeriesToArchive = 0; // None
     // Pre-Processor
@@ -325,7 +325,12 @@ static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint
             v += ", ";
         v += "solar";
     }
-
+    if (value & timeSeriesRenewable)
+    {
+        if (not v.empty())
+            v += ", ";
+        v += "renewables";
+    }
     s->add(name, v);
 }
 

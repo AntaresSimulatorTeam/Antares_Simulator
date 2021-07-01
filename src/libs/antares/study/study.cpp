@@ -1078,7 +1078,7 @@ bool Study::areasThermalClustersMinStablePowerValidity(
     return resultat;
 }
 
-bool Study::thermalClusterRename(ThermalCluster* cluster, ThermalClusterName newName, bool)
+bool Study::thermalClusterRename(Cluster* cluster, ClusterName newName, bool)
 {
     // A name must not be empty
     if (!cluster or !newName)
@@ -1091,7 +1091,7 @@ bool Study::thermalClusterRename(ThermalCluster* cluster, ThermalClusterName new
     newName = beautifyname;
 
     // Preparing the new area ID
-    ThermalClusterName newID;
+    ClusterName newID;
     TransformNameIntoID(newName, newID);
     if (!newID)
     {
@@ -1108,13 +1108,13 @@ bool Study::thermalClusterRename(ThermalCluster* cluster, ThermalClusterName new
 
     // Checking if the area exists
     {
-        ThermalCluster* found;
+        Cluster* found;
         if ((found = area.thermal.list.find(newID)))
         {
             if (found->name() != newName)
             {
                 area.invalidateJIT = true;
-                found->name(newName);
+                found->setName(newName);
                 return true;
             }
             return false;
@@ -1129,8 +1129,8 @@ bool Study::thermalClusterRename(ThermalCluster* cluster, ThermalClusterName new
     // Otherwise the values associated to the area will be lost.
     logs.info() << "  renaming thermal cluster '" << cluster->name() << "' into '" << newName
                 << "'";
-    //	ThermalClusterName oldId   = cluster->id();
-    //	ThermalClusterName oldName = cluster->name();
+    //	ClusterName oldId   = cluster->id();
+    //	ClusterName oldName = cluster->name();
     //	cluster->name(newName);
     area.invalidateJIT = true;
 
@@ -1553,7 +1553,7 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
             auto& cname = clustername;
             cname.clear();
 
-            area.thermal.list.each([&](const ThermalCluster& cluster) {
+            area.thermal.list.each([&](const Cluster& cluster) {
                 if (cluster.id().size() > cname.size())
                     cname = cluster.id();
             });

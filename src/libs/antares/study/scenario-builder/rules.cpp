@@ -121,7 +121,8 @@ void Rules::loadFromInstrs(Study& study,
     const AreaName& kind_of_scenario = instrs[0]; // load, thermal, hydro, ..., hydro levels, ... ?
     const uint year = instrs[2].to<uint>();
     const AreaName& areaname = instrs[1];
-    const String& clustername = (instrs.size() == 4) ? instrs[3] : "";
+    const ClusterName& clustername = (instrs.size() == 4) ? instrs[3] : "";
+
     if (kind_of_scenario.size() > 2)
         return;
 

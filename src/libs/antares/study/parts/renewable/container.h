@@ -30,6 +30,7 @@
 #include <yuni/yuni.h>
 #include "../../fwd.h"
 #include "cluster.h"
+#include "cluster_list.h"
 
 namespace Antares
 {
@@ -93,7 +94,7 @@ public:
     void markAsModified() const;
 
 public:
-    //! List of all renewable clusters (enabled and disabled) except must-run clusters
+    //! List of all renewable clusters (enabled and disabled)
     RenewableClusterList list;
 
     /*!

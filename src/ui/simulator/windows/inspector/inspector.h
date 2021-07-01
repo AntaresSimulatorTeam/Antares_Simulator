@@ -265,7 +265,7 @@ bool ConstraintsSelected(const std::set<Yuni::String>& set);
 bool IsLinkSelected(const Data::AreaName& from, const Data::AreaName& with);
 bool LinksSelected(std::map<Data::AreaName, std::map<Data::AreaName, bool>>& set);
 
-bool IsThermalClusterSelected(const Data::AreaName& area, const Data::ThermalClusterName& name);
+bool IsThermalClusterSelected(const Data::AreaName& area, const Data::ClusterName& name);
 
 void FirstSelectedArea(Data::AreaName& out);
 

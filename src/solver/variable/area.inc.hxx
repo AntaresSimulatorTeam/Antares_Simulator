@@ -239,7 +239,7 @@ void Areas<NEXTTYPE>::yearEndBuild(State& state, uint year, uint numSpace)
         for (uint j = 0; j != area.thermal.clusterCount; ++j)
         {
             state.thermalCluster = area.thermal.clusters[j];
-            state.yearEndReset();
+            state.yearEndResetThermal();
 
             // Variables
             variablesForArea.yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
@@ -255,7 +255,7 @@ void Areas<NEXTTYPE>::yearEndBuild(State& state, uint year, uint numSpace)
         for (uint j = 0; j != area.renewable.clusterCount; ++j)
         {
             state.renewableCluster = area.renewable.clusters[j];
-            state.yearEndReset();
+            state.yearEndResetRenewable();
 
             // Variables
             variablesForArea.yearEndBuildPrepareDataForEachRenewableCluster(state, year, numSpace);

@@ -40,7 +40,8 @@ enum Antares::Data::TimeSeries mapping[] = {Data::timeSeriesLoad,
                                             Data::timeSeriesThermal,
                                             Data::timeSeriesHydro,
                                             Data::timeSeriesWind,
-                                            Data::timeSeriesSolar};
+                                            Data::timeSeriesSolar,
+                                            Data::timeSeriesRenewable};
 }
 
 namespace Antares
@@ -96,7 +97,7 @@ wxString TSmanagement::rowCaption(int rowIndx) const
 
 bool TSmanagement::cellValue(int x, int y, const String& value)
 {
-    if (not study || x < 0 || x > 4)
+    if (not study || x < 0 || x > 5)
         return 0.;
     auto ts = mapping[x];
 
@@ -301,7 +302,7 @@ bool TSmanagement::cellValue(int x, int y, const String& value)
 
 double TSmanagement::cellNumericValue(int x, int y) const
 {
-    if (not study || x < 0 || x > 4)
+    if (not study || x < 0 || x > 5)
         return 0.;
     auto ts = mapping[x];
     switch (y)
@@ -402,7 +403,7 @@ double TSmanagement::cellNumericValue(int x, int y) const
 
 wxString TSmanagement::cellValue(int x, int y) const
 {
-    if (not study || x < 0 || x > 4)
+    if (not study || x < 0 || x > 5)
         return wxEmptyString;
     auto ts = mapping[x];
     switch (y)
@@ -503,7 +504,7 @@ void TSmanagement::onSimulationTSManagementChanged()
 
 IRenderer::CellStyle TSmanagement::cellStyle(int x, int y) const
 {
-    if (not study || x < 0 || x > 4)
+    if (not study || x < 0 || x > 5)
         return IRenderer::cellStyleError;
     auto ts = mapping[x];
     bool tsGenerator = (0 != (study->parameters.timeSeriesToGenerate & ts));

@@ -536,7 +536,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
     {
         if (data->ThClusters.size() != 1)
             return false;
-        Data::ThermalClusterName name;
+        Data::ClusterName name;
         wxStringToString(value.GetString(), name);
         name.trim(" \r\n\t");
         if (!name)
@@ -560,7 +560,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         wxString vs = value.GetString();
         String newgroup;
         wxStringToString(vs, newgroup);
-        Data::ThermalClusterName name;
+        Data::ClusterName name;
 
         if (not newgroup.empty())
         {
@@ -603,7 +603,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
             Data::ThermalCluster& cluster = *(*i);
             if (cluster.group() != name)
             {
-                cluster.group(name);
+                cluster.setGroup(name);
                 set.insert(cluster.parentArea);
             }
         }

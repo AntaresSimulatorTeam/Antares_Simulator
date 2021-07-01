@@ -195,19 +195,29 @@ set(SRC_STUDY_AREA_UI
 source_group("study\\area\\ui" FILES ${SRC_STUDY_AREA_UI})
 
 
+set(SRC_STUDY_PART_COMMON
+    study/parts/common/series.h
+	study/parts/common/series.hxx
+	study/parts/common/series.cpp
+    study/parts/common/cluster.cpp
+    study/parts/common/cluster.h
+    study/parts/common/cluster_list.h
+	study/parts/common/cluster_list.cpp
+    )
+source_group("study\\part\\common" FILES ${SRC_STUDY_PART_COMMON})
+
 set(SRC_STUDY_PART_THERMAL
 	study/parts/thermal/container.h
 	study/parts/thermal/container.hxx
 	study/parts/thermal/container.cpp
-	study/parts/thermal/series.h
-	study/parts/thermal/series.hxx
-	study/parts/thermal/series.cpp
 	study/parts/thermal/prepro.h
 	study/parts/thermal/prepro.hxx
 	study/parts/thermal/prepro.cpp
 	study/parts/thermal/cluster.h
 	study/parts/thermal/cluster.hxx
 	study/parts/thermal/cluster.cpp
+    study/parts/thermal/cluster_list.h
+    study/parts/thermal/cluster_list.cpp
 	)
 source_group("study\\part\\thermal" FILES ${SRC_STUDY_PART_THERMAL})
 
@@ -215,13 +225,11 @@ set(SRC_STUDY_PART_RENEWABLE
 	study/parts/renewable/container.h
 	study/parts/renewable/container.hxx
 	study/parts/renewable/container.cpp
-	study/parts/renewable/series.h
-	study/parts/renewable/series.hxx
-	study/parts/renewable/series.cpp
 	study/parts/renewable/cluster.h
-	study/parts/renewable/cluster.hxx
 	study/parts/renewable/cluster.cpp
-	)
+    study/parts/renewable/cluster_list.h
+    study/parts/renewable/cluster_list.cpp
+    )
 source_group("study\\part\\renewable" FILES ${SRC_STUDY_PART_RENEWABLE})
 
 set(SRC_STUDY_PART_WIND
@@ -529,6 +537,7 @@ macro(ADD_ANTARES_CORE name)
 		${SRC_STUDY_BINDING_CONSTRAINT}
 		${SRC_STUDY_PART_WIND}
 		${SRC_STUDY_PART_HYDRO}
+		${SRC_STUDY_PART_COMMON}
 		${SRC_STUDY_PART_THERMAL}
         ${SRC_STUDY_PART_RENEWABLE}
 		${SRC_STUDY_SCENARIO_BUILDER}

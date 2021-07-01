@@ -41,7 +41,7 @@ public:
     //! Set of area' names
     typedef std::set<Data::AreaName> AreaSet;
     typedef std::map<Data::AreaName, std::map<Data::AreaName, bool>> LinkSet;
-    typedef std::map<Data::AreaName, std::map<Data::ThermalClusterName, bool>> ThermalClusterSet;
+    typedef std::map<Data::AreaName, std::map<Data::ClusterName, bool>> ThermalClusterSet;
     typedef std::set<Yuni::String> ConstraintSet;
 
 public:

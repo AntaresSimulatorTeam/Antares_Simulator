@@ -299,10 +299,10 @@ protected:
     }
 };
 
-class TimeSeriesThermalCluster final : public Renderer::Matrix<double, yint32>
+class TimeSeriesThermalCluster final : public Renderer::Matrix<double>
 {
 public:
-    typedef Renderer::Matrix<double, Yuni::sint32> AncestorType;
+    typedef Renderer::Matrix<double> AncestorType;
 
 public:
     TimeSeriesThermalCluster(wxWindow* control, Toolbox::InputSelector::ThermalCluster* notifier);
