@@ -4,13 +4,14 @@ import sys
 import glob
 import shutil
 
-import numpy as np
+import pandas as pd
 import subprocess
 
 from study import Study
 
 import pytest
-
+from trim_column_name import trim_digit_after_last_dot
+from read_utils import read_csv
 
 ALL_STUDIES_PATH = Path('../resources/Antares_Simulator_Tests')
 
@@ -40,19 +41,8 @@ def find_output_result_dir(output_dir):
     assert len(dir_list) == 1
     return dir_list[0]
 
-def get_header_values(values_path : Path) -> np.array :
-    max_row = 3
-    # skip_header=4 in order to skip the unused part header of the file
-    # max_rows=3 to select 3 headers row (name, unit, type : std, min, max, exp,...)
-    output_values = np.genfromtxt(values_path, delimiter='\t', skip_header=4, max_rows=max_row, dtype=str)
-    return output_values
-
-def get_output_values(values_path : Path) -> np.array :
-    max_row = 8760
-    # skip_header=7 in order to skip the header of the file
-    # max_rows=8760 to select all year
-    output_values = np.genfromtxt(values_path, delimiter='\t', skip_header=7, max_rows=max_row)
-    return output_values
+def get_headers(df) -> set :
+    return set(df.columns)
 
 def remove_outputs(study_path):
     output_path = study_path / 'output'
@@ -103,6 +93,8 @@ def enable_study_output(study_path, enable):
 def compare_directory(result_dir, reference_dir):
     assert (result_dir.is_dir())
     assert (reference_dir.is_dir())
+
+    uncompared_file_name = ['id-daily.txt', 'id-hourly.txt']
     
     for x in result_dir.iterdir():
         if x.is_dir():
@@ -110,34 +102,30 @@ def compare_directory(result_dir, reference_dir):
                 compare_directory(x, reference_dir / x.name)
         else:
 
-            uncompared_file_name = ['id-daily.txt', 'id-hourly.txt']
 
             if not x.name in uncompared_file_name:
-                reference_headers = get_header_values(reference_dir / x.name)
-                reference_values = get_output_values(reference_dir / x.name)
-                
-                output_headers = get_header_values(x)
-                output_values = get_output_values(x)
-                
-                np.testing.assert_equal(reference_headers,output_headers, err_msg="headers dismatch in " + str(reference_dir / x.name), verbose=True)
+                output_df = read_csv(x)
+                ref_df = read_csv(reference_dir / x.name)
 
+                reference_headers = get_headers(ref_df)
+                output_headers = get_headers(output_df)
+
+                assert reference_headers.issubset(output_headers), f"The following column(s) is missing from the output {reference_headers.difference(output_headers)}"
                 
-                for i in range(len(output_headers[0])):
-                    col_name=output_headers[0,i]
-                    err_msg = "values dismatch in '" + str(reference_dir / x.name) + "' for '" + col_name + "' column"
-                    rtol=1e-4
-                    atol=0
+                for col_name in reference_headers:
+                    rtol = 1e-4
+                    atol = 0
                     
                     if sys.platform=="linux":
-                        if col_name in RTOL_OVERRIDE_LINUX:
-                            rtol = RTOL_OVERRIDE_LINUX[col_name]
-                        if col_name in ATOL_OVERRIDE_LINUX:
-                            atol = ATOL_OVERRIDE_LINUX[col_name] 
-
-                    if reference_values.ndim > 1:
-                        np.testing.assert_allclose(reference_values[:, i], output_values[:, i], rtol=rtol, atol=atol, equal_nan=True, err_msg=err_msg, verbose=True)
-                    else:
-                        np.testing.assert_allclose(reference_values[i], output_values[i], rtol=rtol, atol=atol, equal_nan=True, err_msg=err_msg, verbose=True)
+                        trimmed_name = trim_digit_after_last_dot(col_name)
+                        if trimmed_name in RTOL_OVERRIDE_LINUX:
+                            rtol = RTOL_OVERRIDE_LINUX[trimmed_name]
+                        if trimmed_name in ATOL_OVERRIDE_LINUX:
+                            atol = ATOL_OVERRIDE_LINUX[trimmed_name]
+                    try:
+                        pd.testing.assert_series_equal(ref_df[col_name], output_df[col_name], atol=atol, rtol=rtol)
+                    except AssertionError: # Catch and re-raise exception to print col_name & tolerances
+                        raise AssertionError(f"In file {x.name}, columns {col_name} have differences (atol={atol}, rtol={rtol})")
 
 
 def check_output_values(study_path):
@@ -811,6 +799,30 @@ def test_unfeasible_problem_10(use_ortools, ortools_solver, solver_path):
     enable_study_output(study_path, True)    
     st = Study(str(study_path))
     st.set_variable(variable="include-unfeasible-problem-behavior", value="warning-dry", file_nick_name="general")
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    enable_study_output(study_path, False)
+    check_output_values(study_path)
+
+@pytest.mark.short
+def test_renewables_1(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "renewables-1"
+    enable_study_output(study_path, True)
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    enable_study_output(study_path, False)
+    check_output_values(study_path)
+
+@pytest.mark.short
+def test_renewables_2(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "renewables-2"
+    enable_study_output(study_path, True)
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    enable_study_output(study_path, False)
+    check_output_values(study_path)
+
+@pytest.mark.short
+def test_renewables_3(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "renewables-3"
+    enable_study_output(study_path, True)
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     enable_study_output(study_path, False)
     check_output_values(study_path)

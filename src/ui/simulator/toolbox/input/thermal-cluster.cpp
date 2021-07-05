@@ -222,7 +222,7 @@ void ThermalCluster::renameAggregate(Antares::Data::ThermalCluster* cluster,
     WIP::Locker wip;
     if (cluster && pArea && Data::Study::Current::Valid())
     {
-        Antares::Data::ThermalClusterName newPlantName;
+        Antares::Data::ClusterName newPlantName;
         wxStringToString(newName, newPlantName);
 
         Data::Study::Current::Get()->thermalClusterRename(cluster, newPlantName);
@@ -431,7 +431,7 @@ void ThermalCluster::internalAddPlant(void*)
         uint indx = 1;
 
         // Trying to find an uniq name
-        Antares::Data::ThermalClusterName sFl;
+        Antares::Data::ClusterName sFl;
         sFl.clear() << "new cluster";
         while (pArea->thermal.list.find(sFl))
         {
@@ -445,10 +445,10 @@ void ThermalCluster::internalAddPlant(void*)
         // Creating a new cluster
         Antares::Data::ThermalCluster* cluster = new Antares::Data::ThermalCluster(pArea);
         logs.info() << "adding new thermal cluster " << pArea->id << '.' << sFl;
-        cluster->name(sFl);
+        cluster->setName(sFl);
         cluster->reset();
-        pArea->thermal.list.add(cluster);
-        pArea->thermal.list.mapping[cluster->id()] = cluster;
+        auto added = pArea->thermal.list.add(cluster);
+        pArea->thermal.list.mapping[cluster->id()] = added;
         pArea->thermal.list.rebuildIndex();
         pArea->thermal.prepareAreaWideIndexes();
 
@@ -493,23 +493,23 @@ void ThermalCluster::internalClonePlant(void*)
         uint indx = 2;
 
         // Trying to find an uniq name
-        Antares::Data::ThermalClusterName copy = selectedPlant.name();
+        Antares::Data::ClusterName copy = selectedPlant.name();
 
-        Data::ThermalClusterName::Size sepPos = copy.find_last_of(' ');
+        Data::ClusterName::Size sepPos = copy.find_last_of(' ');
         if (sepPos != YString::npos)
         {
-            Data::ThermalClusterName suffixChain(copy, sepPos + 1);
+            Data::ClusterName suffixChain(copy, sepPos + 1);
             int suffixNumber = suffixChain.to<int>();
             if (suffixNumber > 0)
             {
-                Data::ThermalClusterName suffixLess(copy, 0, sepPos);
+                Data::ClusterName suffixLess(copy, 0, sepPos);
                 copy = suffixLess;
             }
         }
 
         copy += ' ';
 
-        Antares::Data::ThermalClusterName sFl;
+        Antares::Data::ClusterName sFl;
         sFl << copy << indx; // lowercase
         while (pArea->thermal.list.find(sFl))
         {
@@ -522,13 +522,13 @@ void ThermalCluster::internalClonePlant(void*)
 
         // Creating a new cluster
         auto* cluster = new Antares::Data::ThermalCluster(pArea);
-        cluster->name(sFl);
+        cluster->setName(sFl);
         cluster->reset();
         // Reset to default values
         cluster->copyFrom(selectedPlant);
 
-        pArea->thermal.list.add(cluster);
-        pArea->thermal.list.mapping[cluster->id()] = cluster;
+        auto added = pArea->thermal.list.add(cluster);
+        pArea->thermal.list.mapping[cluster->id()] = added;
         pArea->thermal.list.rebuildIndex();
         pArea->thermal.prepareAreaWideIndexes();
 

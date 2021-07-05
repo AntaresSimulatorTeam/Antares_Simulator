@@ -104,6 +104,21 @@ inline void Links::yearEndBuildPrepareDataForEachThermalCluster(State& state,
     }
 }
 
+inline void Links::yearEndBuildPrepareDataForEachRenewableCluster(State& state,
+                                                                  uint year,
+                                                                  unsigned int numSpace)
+{
+    for (uint i = 0; i != pLinkCount; ++i)
+    {
+        pLinks[i].yearEndBuildPrepareDataForEachRenewableCluster(state, year, numSpace);
+
+        // Flush all memory into the swap files
+        // (only if the support is available)
+        if (Antares::Memory::swapSupport)
+            Antares::memory.flushAll();
+    }
+}
+
 inline void Links::yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)
@@ -191,6 +206,12 @@ inline void Links::hourForEachThermalCluster(State& state, unsigned int numSpace
 {
     for (uint i = 0; i != pLinkCount; ++i)
         pLinks[i].hourForEachThermalCluster(state, numSpace);
+}
+
+inline void Links::hourForEachRenewableCluster(State& state, unsigned int numSpace)
+{
+    for (uint i = 0; i != pLinkCount; ++i)
+        pLinks[i].hourForEachRenewableCluster(state, numSpace);
 }
 
 inline void Links::hourEnd(State& state, uint hourInTheYear)
