@@ -384,6 +384,18 @@ public:
         }
     }
 
+    void setCaptions(SurveyResults& results) const
+    {
+        assert(NULL != results.data.area);
+        const auto& renewable = results.data.area->renewable;
+        // Write the data for the current year
+        for (uint i = 0; i < pSize; ++i)
+        {
+            // Write the data for the current year
+            results.variableCaption = renewable.clusters[i]->name();
+        }
+    }
+
 private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;

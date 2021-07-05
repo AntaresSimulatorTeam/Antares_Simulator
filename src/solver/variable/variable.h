@@ -348,6 +348,8 @@ public:
     //! The results
     const StoredResultType& results() const;
 
+    void setCaptions(SurveyResults& results) const;
+
 protected:
     //! All the results about this variable
     StoredResultType pResults;
