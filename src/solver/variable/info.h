@@ -392,11 +392,13 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         {
             auto& thermal = results.data.area->thermal;
             results.variableCaption = thermal.clusters[idx]->name();
+            break;
         }
         case Category::Renewable:
         {
             auto& renewable = results.data.area->renewable;
             results.variableCaption = renewable.clusters[idx]->name();
+            break;
         }
         }
     }
