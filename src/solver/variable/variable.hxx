@@ -394,8 +394,6 @@ inline void IVariable<ChildT, NextT, VCardT>::buildSurveyReport(SurveyResults& r
 
             VariableAccessorType::template BuildSurveyReport<VCardType>(
               results, pResults, dataLevel, fileLevel, precision);
-
-            static_cast<const ChildT*>(this)->setCaptions(results);
         }
     }
 
@@ -656,11 +654,6 @@ inline const typename Storage<VCardT>::ResultsType& IVariable<ChildT, NextT, VCa
   const
 {
     return pResults;
-}
-
-template<class ChildT, class NextT, class VCardT>
-inline void IVariable<ChildT, NextT, VCardT>::setCaptions(SurveyResults&) const
-{
 }
 
 // class RetrieveVariableListHelper goes with function RetrieveVariableList(...).

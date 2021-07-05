@@ -424,17 +424,6 @@ public:
         }
     }
 
-    void setCaptions(SurveyResults& results) const
-    {
-        assert(NULL != results.data.area);
-        const auto& thermal = results.data.area->thermal;
-        // Write the data for the current year
-        for (uint i = 0; i < pSize; ++i)
-        {
-            results.variableCaption = thermal.clusters[i]->name();
-        }
-    }
-
 private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
