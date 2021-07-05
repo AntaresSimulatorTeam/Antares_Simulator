@@ -626,7 +626,7 @@ const char* Data::ThermalCluster::GroupName(enum ThermalDispatchableGroup grp)
     case thermalDispatchGrpOther4:
         return "Other 4";
 
-    case case groupMax:
+    case groupMax:
         return "";
     }
     return "";
