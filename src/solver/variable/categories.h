@@ -153,6 +153,13 @@ enum SpatialAggregatePostProcessing
     spatialAggregatePostProcessingPrice = 1,
 };
 
+enum ClusterType
+{
+    None, // default value
+    Thermal,
+    Renewable
+};
+
 /*!
 ** \brief Hard limit for the decimal precision according a given File precision level
 */

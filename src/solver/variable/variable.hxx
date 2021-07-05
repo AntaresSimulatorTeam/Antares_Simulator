@@ -391,7 +391,7 @@ inline void IVariable<ChildT, NextT, VCardT>::buildSurveyReport(SurveyResults& r
             // Initializing pointer on variable non applicable and print stati arrays to beginning
             results.isPrinted = isPrinted;
             results.isCurrentVarNA = isNonApplicable;
-
+            results.clusterType = VCardType::clusterType;
             VariableAccessorType::template BuildSurveyReport<VCardType>(
               results, pResults, dataLevel, fileLevel, precision);
         }
@@ -442,7 +442,7 @@ inline void IVariable<ChildT, NextT, VCardT>::buildDigest(SurveyResults& results
         // Initializing pointer on variable non applicable and print stati arrays to beginning
         results.isPrinted = isPrinted;
         results.isCurrentVarNA = isNonApplicable;
-
+        results.clusterType = clusterType;
         VariableAccessorType::template BuildDigest<VCardT>(
           results, pResults, digestLevel, dataLevel);
     }

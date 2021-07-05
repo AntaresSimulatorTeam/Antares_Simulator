@@ -107,7 +107,7 @@ public:
     Solver::Variable::Private::SurveyResultsData data;
 
     //! Caption for the current variable
-    Yuni::CString<128, false> variableCaption;
+    CaptionType variableCaption;
 
     //! Matrix where to store all results
     double** values;
@@ -116,6 +116,9 @@ public:
     {
         captionCount = 3,
     };
+
+    int clusterType;
+
     //! Array to store all variable names
     CaptionType* captions[captionCount];
 

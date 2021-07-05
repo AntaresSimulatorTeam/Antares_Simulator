@@ -129,6 +129,7 @@ struct VCardProxy
         hasIntermediateValues = 1,
         //! Can this variable be non applicable (0 : no, 1 : yes)
         isPossiblyNonApplicable = VCardOrigin::isPossiblyNonApplicable,
+        clusterType = Category::None
     };
 
     struct Multiple
@@ -341,6 +342,7 @@ public:
             // Initializing pointer on variable non applicable and print stati arrays to beginning
             results.isPrinted = AncestorType::isPrinted;
             results.isCurrentVarNA = AncestorType::isNonApplicable;
+            results.clusterType = AncestorType::clusterType;
 
             VariableAccessorType::template BuildDigest<typename VCardType::VCardOrigin>(
               results, AncestorType::pResults, digestLevel, dataLevel);
@@ -359,6 +361,7 @@ public:
             // Initializing pointer on variable non applicable and print stati arrays to beginning
             results.isPrinted = AncestorType::isPrinted;
             results.isCurrentVarNA = AncestorType::isNonApplicable;
+            results.clusterType = AncestorType::clusterType;
 
             typedef VariableAccessor<typename VCardType::IntermediateValuesBaseType,
                                      VCardType::columnCount>

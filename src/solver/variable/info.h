@@ -383,6 +383,24 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         }
     }
 
+    static void setClusterCaption(SurveyResults& results, uint idx)
+    {
+        assert(results.data.area && "Area is NULL");
+        switch (results.clusterType)
+        {
+        case Category::Thermal:
+        {
+            auto& thermal = results.data.area->thermal;
+            results.variableCaption = thermal.clusters[idx]->name();
+        }
+        case Category::Renewable:
+        {
+            auto& renewable = results.data.area->renewable;
+            results.variableCaption = renewable.clusters[idx]->name();
+        }
+        }
+    }
+
     template<class VCardType>
     static void BuildSurveyReport(SurveyResults& results,
                                   const Type& container,
@@ -394,6 +412,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         {
             for (uint i = 0; i != container.size(); ++i)
             {
+                setClusterCaption(results, i);
                 container[i].template buildSurveyReport<ResultsT, VCardType>(
                   results, container[i], dataLevel, fileLevel, precision);
             }
@@ -410,6 +429,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         {
             for (uint i = 0; i != container.size(); ++i)
             {
+                setClusterCaption(results, i);
                 container[i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }

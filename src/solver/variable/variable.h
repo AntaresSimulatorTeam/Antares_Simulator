@@ -362,6 +362,7 @@ protected:
     // plant"])
     uint pColumnCount;
 
+    int clusterType;
 }; // class Variable
 
 } // namespace Variable
