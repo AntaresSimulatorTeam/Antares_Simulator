@@ -89,7 +89,6 @@ struct VCardReservoirLevel
         hasIntermediateValues = 1,
         //! Can this variable be non applicable
         isPossiblyNonApplicable = 1,
-        clusterType = Category::None
     };
 
     typedef IntermediateValues IntermediateValuesBaseType;

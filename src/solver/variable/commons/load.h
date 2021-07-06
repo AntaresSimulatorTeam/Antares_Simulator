@@ -90,7 +90,6 @@ struct VCardTimeSeriesValuesLoad
         hasIntermediateValues = 1,
         //! Can this variable be non applicable (0 : no, 1 : yes)
         isPossiblyNonApplicable = 0,
-        clusterType = Category::None
     };
 
     typedef IntermediateValues IntermediateValuesBaseType;
