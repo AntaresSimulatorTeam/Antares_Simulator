@@ -383,6 +383,30 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         }
     }
 
+    static bool setClusterCaption(SurveyResults& results, int fileLevel, uint idx)
+    {
+        assert(results.data.area && "Area is NULL");
+        const bool thermal_details = fileLevel & Category::de;
+        const bool renewable_details = fileLevel & Category::de_res;
+        if (thermal_details && renewable_details) {
+            logs.error() << "Inconsistent fileLevel detected";
+            return false;
+        }
+        if (thermal_details)
+        {
+            auto& thermal = results.data.area->thermal;
+            results.variableCaption = thermal.clusters[idx]->name();
+            return true;
+        }
+        if (renewable_details)
+        {
+            auto& renewable = results.data.area->renewable;
+            results.variableCaption = renewable.clusters[idx]->name();
+            return true;
+        }
+        return true;
+    }
+
     template<class VCardType>
     static void BuildSurveyReport(SurveyResults& results,
                                   const Type& container,
@@ -390,10 +414,14 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                                   int fileLevel,
                                   int precision)
     {
+        bool res;
         if (*results.isPrinted)
         {
             for (uint i = 0; i != container.size(); ++i)
             {
+                res = setClusterCaption(results, fileLevel, i);
+                if (!res)
+                    return;
                 container[i].template buildSurveyReport<ResultsT, VCardType>(
                   results, container[i], dataLevel, fileLevel, precision);
             }
@@ -406,10 +434,15 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                                         int fileLevel,
                                         int precision)
     {
+
+        bool res;
         if (*results.isPrinted)
         {
             for (uint i = 0; i != container.size(); ++i)
             {
+                setClusterCaption(results, fileLevel, i);
+                if (!res)
+                    return;
                 container[i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }
