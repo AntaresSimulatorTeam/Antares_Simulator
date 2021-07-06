@@ -453,6 +453,11 @@ static bool SGDIntLoadFamily_H(Parameters& d,
         d.unitCommitment.ucMode = ucHeuristic;
         return false;
     }
+
+    if (key == "hydro-debug")
+    {
+        return value.to<bool>(d.hydroDebug);
+    }
     // Error
     return false;
 }
@@ -1611,6 +1616,8 @@ void Parameters::saveToINI(IniFile& ini) const
         auto* section = ini.addSection("output");
         section->add("synthesis", synthesis);
         section->add("storeNewSet", storeTimeseriesNumbers);
+        if (hydroDebug)
+            section->add("hydro-debug", hydroDebug);
         ParametersSaveTimeSeries(section, "archives", timeSeriesToArchive);
     }
 
