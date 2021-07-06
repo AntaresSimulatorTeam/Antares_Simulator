@@ -191,13 +191,10 @@ void RenewableCluster::updateInnerValues()
     {
         double total = 0.;
         uint unitCount = 0;
-        // gp : to be adapted
-        // pArea->thermal.list.retrieveTotalCapacityAndUnitCount(total, unitCount);
-        pArea->renewable.list.retrieveTotalCapacity(total);
+        pArea->thermal.list.retrieveTotalCapacityAndUnitCount(total, unitCount);
 
         // The total - installed capacity
-        // pTotalMW->SetLabel(wxString() << unitCount << wxT(" units, ") << total << wxT(" MW"));
-        pTotalMW->SetLabel(wxString() << total << wxT(" MW"));
+        pTotalMW->SetLabel(wxString() << unitCount << wxT(" units, ") << total << wxT(" MW"));
     }
     else
         pTotalMW->SetLabel(wxEmptyString);
@@ -422,7 +419,7 @@ void RenewableCluster::internalAddPlant(void*)
         uint indx = 1;
 
         // Trying to find an uniq name
-        Antares::Data::RenewableClusterName sFl;
+        Antares::Data::ClusterName sFl;
         sFl.clear() << "new cluster";
         while (pArea->renewable.list.find(sFl))
         {
@@ -439,10 +436,9 @@ void RenewableCluster::internalAddPlant(void*)
         // Creating a new cluster
         Antares::Data::RenewableCluster* cluster = new Antares::Data::RenewableCluster(pArea);
         logs.info() << "adding new renewable cluster " << pArea->id << '.' << sFl;
-        cluster->name(sFl);
+        cluster->setName(sFl);
         cluster->reset();
         pArea->renewable.list.add(cluster);
-        pArea->renewable.list.mapping[cluster->id()] = cluster;
         pArea->renewable.list.rebuildIndex();
         pArea->renewable.prepareAreaWideIndexes();
 

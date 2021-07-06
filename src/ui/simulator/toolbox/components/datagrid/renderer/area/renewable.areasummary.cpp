@@ -225,7 +225,7 @@ bool RenewableClusterSummarySingleArea::cellValue(int x, int y, const String& v)
         {
             if (cluster->group() != v)
             {
-                cluster->group(v);
+                cluster->setGroup(v);
                 return true;
             }
             break;

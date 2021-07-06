@@ -377,10 +377,12 @@ protected:
 */
 // gp : apart from the constructor, the 2 clusters time series classes are identical !
 // gp : To be factored
-class TimeSeriesRenewableCluster final : public Renderer::Matrix<double, yint32>
+// gp : ==> after a merge from feature/renewable, we change the parent of this class
+// gp : then not sure aove comment is still relevant 
+class TimeSeriesRenewableCluster final : public Renderer::Matrix<double>
 {
 public:
-    typedef Renderer::Matrix<double, Yuni::sint32> AncestorType;
+    typedef Renderer::Matrix<double> AncestorType;
 
 public:
     TimeSeriesRenewableCluster(wxWindow* control, Toolbox::InputSelector::RenewableCluster* notifier);

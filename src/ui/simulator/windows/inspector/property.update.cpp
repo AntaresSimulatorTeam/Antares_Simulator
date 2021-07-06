@@ -1047,8 +1047,7 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
     {
         if (data->RnClusters.size() != 1)
             return false;
-        // gp : RenewableClusterName will be renamed soon into ClusterName
-        Data::RenewableClusterName name;
+        Data::ClusterName name;
         wxStringToString(value.GetString(), name);
         name.trim(" \r\n\t");
         if (!name)
@@ -1072,7 +1071,7 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
         wxString vs = value.GetString();
         String newgroup;
         wxStringToString(vs, newgroup);
-        Data::RenewableClusterName name; // gp : RenewableClusterName about to be renamed into ClusterName
+        Data::ClusterName name;
 
         if (not newgroup.empty())
         {
@@ -1115,7 +1114,7 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
             Data::RenewableCluster& cluster = *(*i);
             if (cluster.group() != name)
             {
-                cluster.group(name);
+                cluster.setGroup(name);
                 set.insert(cluster.parentArea);
             }
         }

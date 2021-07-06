@@ -1155,7 +1155,7 @@ bool Study::thermalClusterRename(Cluster* cluster, ClusterName newName, bool)
 }
 
 // gp : this is a copy, to be factored with thermal counterpart
-bool Study::renewableClusterRename(RenewableCluster* cluster, RenewableClusterName newName, bool)
+bool Study::renewableClusterRename(RenewableCluster* cluster, ClusterName newName, bool)
 {
     // A name must not be empty
     if (!cluster or !newName)
@@ -1168,7 +1168,7 @@ bool Study::renewableClusterRename(RenewableCluster* cluster, RenewableClusterNa
     newName = beautifyname;
 
     // Preparing the new area ID
-    RenewableClusterName newID;
+    ClusterName newID;
     TransformNameIntoID(newName, newID);
     if (!newID)
     {
@@ -1191,7 +1191,7 @@ bool Study::renewableClusterRename(RenewableCluster* cluster, RenewableClusterNa
             if (found->name() != newName)
             {
                 area.invalidateJIT = true;
-                found->name(newName);
+                found->setName(newName);
                 return true;
             }
             return false;

@@ -324,7 +324,7 @@ public:
     ** \return True if the operation succeeded, false otherwise
     */
     bool renewableClusterRename(RenewableCluster* cluster,
-                                RenewableClusterName newName,
+                                ClusterName newName,
                                 bool force = false);
     //@}
 
