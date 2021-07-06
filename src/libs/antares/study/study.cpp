@@ -1216,7 +1216,6 @@ bool Study::renewableClusterRename(RenewableCluster* cluster, ClusterName newNam
     {
         ret = area.renewable.list.rename(cluster->id(), newName);
         area.renewable.prepareAreaWideIndexes();
-        // gp : to be updated with renewable clusters
         ScenarioBuilderUpdater updaterSB(*this);
     }
 

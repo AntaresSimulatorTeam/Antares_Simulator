@@ -90,10 +90,6 @@ public:
 
     //! Set of renewable clusters
     typedef std::set<RenewableCluster*, CompareClusterName> Set;
-    //! Set of renewable clusters (pointer)
-    typedef std::set<Cluster*> SetPointer;
-    //! Vector of renewable clusters
-    typedef std::vector<Data::Cluster*> Vector;
 
     /*!
     ** \brief Get the group name string
