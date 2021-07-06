@@ -442,7 +442,7 @@ inline void IVariable<ChildT, NextT, VCardT>::buildDigest(SurveyResults& results
         // Initializing pointer on variable non applicable and print stati arrays to beginning
         results.isPrinted = isPrinted;
         results.isCurrentVarNA = isNonApplicable;
-        results.clusterType = VCardT::clusterType;
+        results.clusterType = clusterType;
         VariableAccessorType::template BuildDigest<VCardT>(
           results, pResults, digestLevel, dataLevel);
     }
