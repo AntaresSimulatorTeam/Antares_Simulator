@@ -336,7 +336,7 @@ void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
             groupID = thermalDispatchGrpOil;
             return;
         }
-        else if (newgrp == "other 1")
+        else if (newgrp == "other")
         {
             groupID = thermalDispatchGrpOther1;
             return;
@@ -618,7 +618,7 @@ const char* Data::ThermalCluster::GroupName(enum ThermalDispatchableGroup grp)
     case thermalDispatchGrpMixedFuel:
         return "Mixed Fuel";
     case thermalDispatchGrpOther1:
-        return "Other 1";
+        return "Other";
     case thermalDispatchGrpOther2:
         return "Other 2";
     case thermalDispatchGrpOther3:

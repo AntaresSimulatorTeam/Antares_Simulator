@@ -115,7 +115,7 @@ struct VCardDispatchableGeneration
             case 5:
                 return "MIX. FUEL";
             case 6:
-                return "MISC. DTG 1";
+                return "MISC. DTG";
             case 7:
                 return "MISC. DTG 2";
             case 8:
