@@ -440,7 +440,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         {
             for (uint i = 0; i != container.size(); ++i)
             {
-                setClusterCaption(results, fileLevel, i);
+                res = setClusterCaption(results, fileLevel, i);
                 if (!res)
                     return;
                 container[i].template buildAnnualSurveyReport<VCardType>(
