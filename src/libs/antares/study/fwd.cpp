@@ -380,7 +380,7 @@ const char* RenewableGenerationModellingToCString(RenewableGenerationModelling r
         return "aggregated";
     case rgClusters:
         return "clusters"; // using renewable clusters
-    case ucUnknown:
+    case rgUnknown:
         return "";
     }
     return "";

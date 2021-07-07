@@ -439,7 +439,7 @@ public:
 
     struct
     {
-        //! Unit Commitment Mode
+        //! Renewable generation mode
         RenewableGenerationModelling rgModelling;
     } renewableGeneration;
 
