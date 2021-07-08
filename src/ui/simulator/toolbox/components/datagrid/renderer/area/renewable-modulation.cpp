@@ -91,13 +91,11 @@ wxString RenewableClusterCommonModulation::cellValue(int x, int y) const
         case Data::renewableMinGenModulation:
             return DoubleToWxString(Math::Round((*pMatrix)[Data::renewableMinGenModulation][y], 3));
         case (Data::renewableModulationCost + Data::renewableModulationMax):
-            // gp : "5" must be replaced with pCluster->unitCount when this last var is defined
             return DoubleToWxString(Math::Round(
-               (*pMatrix)[Data::renewableModulationCapacity][y] * 5 * pCluster->nominalCapacity, 2));
+               (*pMatrix)[Data::renewableModulationCapacity][y] * pCluster->unitCount * pCluster->nominalCapacity, 2));
         case (Data::renewableModulationCapacity + Data::renewableModulationMax):
-            // gp : "5" must be replaced with pCluster->unitCount when this last var is defined
             return DoubleToWxString(Math::Round(
-               (*pMatrix)[Data::renewableMinGenModulation][y] * 5 * pCluster->nominalCapacity, 2));
+               (*pMatrix)[Data::renewableMinGenModulation][y] * pCluster->unitCount * pCluster->nominalCapacity, 2));
         }
     }
     return wxT("0");
@@ -117,11 +115,9 @@ double RenewableClusterCommonModulation::cellNumericValue(int x, int y) const
         case Data::renewableMinGenModulation:
             return (*pMatrix)[Data::renewableMinGenModulation][y];
         case (Data::renewableModulationCost + Data::renewableModulationMax):
-            // gp : "5" must be replaced with pCluster->unitCount when this last var is defined
-            return (*pMatrix)[Data::renewableModulationCapacity][y] * 5 * pCluster->nominalCapacity;
+            return (*pMatrix)[Data::renewableModulationCapacity][y] * pCluster->unitCount * pCluster->nominalCapacity;
         case (Data::renewableModulationCapacity + Data::renewableModulationMax):
-            // gp : "5" must be replaced with pCluster->unitCount when this last var is defined
-            return (*pMatrix)[Data::renewableMinGenModulation][y] * 5 * pCluster->nominalCapacity;
+            return (*pMatrix)[Data::renewableMinGenModulation][y] * pCluster->unitCount * pCluster->nominalCapacity;
         }
     }
     return 0.;

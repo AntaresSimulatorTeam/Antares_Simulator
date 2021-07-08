@@ -88,8 +88,7 @@ wxString RenewableClusterSummarySingleArea::cellValue(int x, int y) const
     case 1:
         return cluster->enabled ? wxT("Yes") : wxT("no");
     case 2:
-        // gp : to be replaced with "cluster->unitCount" when it is defined
-        return wxString() << 5;
+        return wxString() << cluster->unitCount;
     case 3:
         return DoubleToWxString(cluster->nominalCapacity);
     }
@@ -111,8 +110,7 @@ double RenewableClusterSummarySingleArea::cellNumericValue(int x, int y) const
     case 1:
         return cluster->enabled ? 1. : 0.;
     case 2:
-        // gp : to be replaced with "cluster->unitCount" when it is defined
-        return 5;
+        return cluster->unitCount;
     case 3:
         return cluster->nominalCapacity;
     }
@@ -216,7 +214,6 @@ bool RenewableClusterSummarySingleArea::cellValue(int x, int y, const String& v)
                       ? pArea->renewable.list.byIndex[y]
                       : nullptr;
 
-    uint unitCount = 5; // gp : to be removed and replaced lower
     if (cluster)
     {
         switch (x)
@@ -233,7 +230,7 @@ bool RenewableClusterSummarySingleArea::cellValue(int x, int y, const String& v)
         case 1:
             return UpdateBool<NoCheck>(cluster->enabled, v);
         case 2:
-            return UpdateUnsignedLong<CheckUnitCount>(unitCount, v);
+            return UpdateUnsignedLong<CheckUnitCount>(cluster->unitCount, v);
         case 3:
             return UpdateDouble<NoCheck>(cluster->nominalCapacity, v);
         }
