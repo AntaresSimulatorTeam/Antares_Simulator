@@ -191,7 +191,7 @@ void RenewableCluster::updateInnerValues()
     {
         double total = 0.;
         uint unitCount = 0;
-        pArea->thermal.list.retrieveTotalCapacityAndUnitCount(total, unitCount);
+        pArea->renewable.list.retrieveTotalCapacityAndUnitCount(total, unitCount);
 
         // The total - installed capacity
         pTotalMW->SetLabel(wxString() << unitCount << wxT(" units, ") << total << wxT(" MW"));
