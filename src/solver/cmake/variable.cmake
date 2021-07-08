@@ -132,6 +132,7 @@ set(SRC_VARIABLE_ECONOMY
 		variable/economy/spilledEnergy.h
 		variable/economy/dispatchableGeneration.h
 		variable/economy/productionByDispatchablePlant.h
+        variable/economy/productionByRenewablePlant.h
 		variable/economy/npCostByDispatchablePlant.h
 		variable/economy/nbOfDispatchedUnitsByPlant.h
 		variable/economy/nbOfDispatchedUnits.h
