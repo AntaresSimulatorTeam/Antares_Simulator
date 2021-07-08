@@ -69,10 +69,12 @@ enum File
     cn = 16,
     //! Annual adequacy results
     mc = 32,
+    //! Detailed values regarding RES generation
+    de_res = 64,
     //! The maximum available value
-    maxFileLevel = 32,
+    maxFileLevel = 64,
     //! All file level
-    allFile = va | id | de | is | cn | mc,
+    allFile = va | id | de | is | cn | mc | de_res,
 };
 
 enum Precision
@@ -168,271 +170,116 @@ struct NextLevel
     };
 };
 
-template<int DataLevel>
-inline const char* DataLevelToCStr()
-{
-    return "unknown";
-}
-template<>
-inline const char* DataLevelToCStr<standard>()
-{
-    return "group";
-}
-template<>
-inline const char* DataLevelToCStr<area>()
-{
-    return "area";
-}
-template<>
-inline const char* DataLevelToCStr<thermalAggregate>()
-{
-    return "thermal";
-}
-template<>
-inline const char* DataLevelToCStr<link>()
-{
-    return "link";
-}
-template<>
-inline const char* DataLevelToCStr<setOfAreas>()
-{
-    return "set of areas";
-}
-
 template<class StreamT>
 inline void DataLevelToStream(StreamT& out, int dataLevel)
 {
-    static const char* const values[] = {
-      NULL,
-      "group", //  1 - standard
-      "area",  //  2 - area
-      NULL,
-      "thermal", //  4 - thermal
-      NULL,
-      NULL,
-      NULL,
-      "link", //  8 - link
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      "set of areas" // 16 - set of areas
+    switch (dataLevel)
+    {
+    case standard:
+        out += "group";
+        break;
+    case area:
+        out += "area";
+        break;
+    case thermalAggregate:
+        out += "thermal";
+        break;
+    case link:
+        out += "link";
+        break;
+    case setOfAreas:
+        out += "set of areas";
+        break;
+    default:
+        out += NULL;
     };
-    assert(dataLevel <= 16);
-    out += values[dataLevel];
-}
-
-/*!
-** \brief Get the string literal representation for a file level
-*/
-template<int CFileLevel>
-const char* FileLevelToShortCStr()
-{
-    return "unknown";
-}
-template<>
-inline const char* FileLevelToShortCStr<0>()
-{
-    return "none";
-}
-template<>
-inline const char* FileLevelToShortCStr<va>()
-{
-    return "va";
-}
-template<>
-inline const char* FileLevelToShortCStr<id>()
-{
-    return "id";
-}
-template<>
-inline const char* FileLevelToShortCStr<de>()
-{
-    return "de";
-}
-template<>
-inline const char* FileLevelToShortCStr<is>()
-{
-    return "is";
-}
-template<>
-inline const char* FileLevelToShortCStr<cn>()
-{
-    return "cn";
-}
-template<>
-inline const char* FileLevelToShortCStr<mc>()
-{
-    return "mc";
 }
 
 template<class StreamT>
 inline void FileLevelToStreamShort(StreamT& out, int fileLevel)
 {
-    static const char* const values[] = {
-      NULL, "va", "id", NULL, "de", NULL, NULL, NULL, "is", NULL, NULL,
-      NULL, NULL, NULL, NULL, NULL, "cn", NULL, NULL, NULL, NULL, NULL,
-      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, "mc",
-    };
-    assert(fileLevel <= 32);
-    out += values[fileLevel];
-}
-
-/*!
-** \brief Get the string literal representation for a file level
-*/
-template<int CFileLevel>
-const char* FileLevelToCStr()
-{
-    return "unknown";
-}
-template<>
-inline const char* FileLevelToCStr<0>()
-{
-    return "none";
-}
-template<>
-inline const char* FileLevelToCStr<va>()
-{
-    return "values";
-}
-template<>
-inline const char* FileLevelToCStr<id>()
-{
-    return "id";
-}
-template<>
-inline const char* FileLevelToCStr<de>()
-{
-    return "details";
-}
-template<>
-inline const char* FileLevelToCStr<is>()
-{
-    return "without-network";
-}
-template<>
-inline const char* FileLevelToCStr<cn>()
-{
-    return "with-network";
-}
-template<>
-inline const char* FileLevelToCStr<mc>()
-{
-    return "mc";
+    switch (fileLevel)
+    {
+    case va:
+        out += "va";
+        break;
+    case id:
+        out += "id";
+        break;
+    case de:
+        out += "de";
+        break;
+    case is:
+        out += "is";
+        break;
+    case cn:
+        out += "cn";
+        break;
+    case mc:
+        out += "mc";
+        break;
+    case de_res:
+        out += "res";
+        break;
+    default:
+        out += NULL;
+    }
 }
 
 template<class StreamT>
 inline void FileLevelToStream(StreamT& out, int fileLevel)
 {
-    static const char* const values[] = {
-      NULL, "values", "id", NULL, "details", NULL, NULL, NULL,           "without-network",
-      NULL, NULL,     NULL, NULL, NULL,      NULL, NULL, "with-network", NULL,
-      NULL, NULL,     NULL, NULL, NULL,      NULL, NULL, NULL,           NULL,
-      NULL, NULL,     NULL, NULL, NULL,      "mc",
-    };
-    assert(fileLevel <= 32);
-    out += values[fileLevel];
-}
-
-/*!
-** \brief Get the string literal representation for a precision
-*/
-template<int PrecisionLevel>
-const char* PrecisionToCStr()
-{
-    return "unknown";
-}
-template<>
-inline const char* PrecisionToCStr<0>()
-{
-    return "none";
-}
-template<>
-inline const char* PrecisionToCStr<hourly>()
-{
-    return "hourly";
-}
-template<>
-inline const char* PrecisionToCStr<daily>()
-{
-    return "daily";
-}
-template<>
-inline const char* PrecisionToCStr<weekly>()
-{
-    return "weekly";
-}
-template<>
-inline const char* PrecisionToCStr<monthly>()
-{
-    return "monthly";
-}
-template<>
-inline const char* PrecisionToCStr<annual>()
-{
-    return "annual";
+    switch (fileLevel)
+    {
+    case va:
+        out += "values";
+        break;
+    case id:
+        out += "id";
+        break;
+    case de:
+        out += "details";
+        break;
+    case is:
+        out += "without-network";
+        break;
+    case cn:
+        out += "with-network";
+        break;
+    case mc:
+        out += "mc";
+        break;
+    case de_res:
+        out += "details-res";
+        break;
+    default:
+        out += NULL;
+    }
 }
 
 template<class StreamT>
 inline void PrecisionLevelToStream(StreamT& out, int precisionLevel)
 {
-    static const char* const values[] = {NULL,
-                                         "hourly",
-                                         "daily",
-                                         NULL,
-                                         "weekly",
-                                         NULL,
-                                         NULL,
-                                         NULL,
-                                         "monthly",
-                                         NULL,
-                                         NULL,
-                                         NULL,
-                                         NULL,
-                                         NULL,
-                                         NULL,
-                                         NULL,
-                                         "annual"};
-    assert(precisionLevel <= 16);
-    out += values[precisionLevel];
-}
-
-/*!
-** \brief Get the short string literal representation for a precision
-*/
-template<int PrecisionLevel>
-const char* PrecisionToShortCStr()
-{
-    return "--";
-}
-template<>
-inline const char* PrecisionToShortCStr<hourly>()
-{
-    return "hr";
-}
-template<>
-inline const char* PrecisionToShortCStr<daily>()
-{
-    return "da";
-}
-template<>
-inline const char* PrecisionToShortCStr<weekly>()
-{
-    return "we";
-}
-template<>
-inline const char* PrecisionToShortCStr<monthly>()
-{
-    return "mn";
-}
-template<>
-inline const char* PrecisionToShortCStr<annual>()
-{
-    return "yr";
+    switch (precisionLevel)
+    {
+    case hourly:
+        out += "hourly";
+        break;
+    case daily:
+        out += "daily";
+        break;
+    case weekly:
+        out += "weekly";
+        break;
+    case monthly:
+        out += "monthly";
+        break;
+    case annual:
+        out += "annual";
+        break;
+    default:
+        out += NULL;
+    }
 }
 
 template<int PrecisionLevel>
@@ -475,18 +322,6 @@ struct MaxRowCount<monthly>
         value = maxMonths
     };
 };
-
-template<int DataLevel, int FileLevel, int Precision>
-struct DumpInformations
-{
-    static void Print(std::ostream& out)
-    {
-        out << "Data: " << DataLevelToCStr<DataLevel>()
-            << ", File: " << FileLevelToCStr<FileLevel>()
-            << ", Precision: " << PrecisionToCStr<Precision>();
-    }
-};
-
 } // namespace Category
 } // namespace Variable
 } // namespace Solver
