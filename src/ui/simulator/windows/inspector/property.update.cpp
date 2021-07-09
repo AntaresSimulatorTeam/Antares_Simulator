@@ -544,7 +544,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
 
         Data::ThermalCluster* cluster = *(data->ThClusters.begin());
         auto study = Data::Study::Current::Get();
-        if (!(!study) && study->thermalClusterRename(cluster, name))
+        if (!(!study) && study->clusterRename(cluster, name, Data::Study::kThermal))
         {
             OnStudyThermalClusterRenamed(cluster);
             // Notify
@@ -1037,25 +1037,26 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
 
 bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType& name, const wxVariant& value)
 {
+    using namespace Data;
     InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
-    Data::RenewableCluster::Set::iterator end = data->RnClusters.end();
-    Data::RenewableCluster::Set::iterator i = data->RnClusters.begin();
+    RenewableCluster::Set::iterator end = data->RnClusters.end();
+    RenewableCluster::Set::iterator i = data->RnClusters.begin();
 
     if (name == "rn-cluster.name")
     {
         if (data->RnClusters.size() != 1)
             return false;
-        Data::ClusterName name;
+        ClusterName name;
         wxStringToString(value.GetString(), name);
         name.trim(" \r\n\t");
         if (!name)
             return false;
 
-        Data::RenewableCluster* cluster = *(data->RnClusters.begin());
-        auto study = Data::Study::Current::Get();
-        if (!(!study) && study->renewableClusterRename(cluster, name))
+        RenewableCluster* cluster = *(data->RnClusters.begin());
+        auto study = Study::Current::Get();
+        if (!(!study) && study->clusterRename(cluster, name, Study::kRenewable))
         {
             OnStudyRenewableClusterRenamed(cluster);
             // Notify
@@ -1071,7 +1072,7 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
         wxString vs = value.GetString();
         String newgroup;
         wxStringToString(vs, newgroup);
-        Data::ClusterName name;
+        ClusterName name;
 
         if (not newgroup.empty())
         {
@@ -1105,13 +1106,13 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
         name.replace('?', '-');
         name.replace(':', '-');
 
-        typedef Data::Area* AreaType;
+        typedef Area* AreaType;
         typedef std::set<AreaType> SetType;
         SetType set;
 
         for (; i != end; ++i)
         {
-            Data::RenewableCluster& cluster = *(*i);
+            RenewableCluster& cluster = *(*i);
             if (cluster.group() != name)
             {
                 cluster.setGroup(name);

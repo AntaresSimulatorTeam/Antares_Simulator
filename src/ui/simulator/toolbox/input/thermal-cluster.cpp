@@ -219,13 +219,14 @@ void ThermalCluster::renameAggregate(Antares::Data::ThermalCluster* cluster,
                                      const wxString& newName,
                                      const bool broadcast)
 {
+    using namespace Data;
     WIP::Locker wip;
-    if (cluster && pArea && Data::Study::Current::Valid())
+    if (cluster && pArea && Study::Current::Valid())
     {
-        Antares::Data::ClusterName newPlantName;
+        ClusterName newPlantName;
         wxStringToString(newName, newPlantName);
 
-        Data::Study::Current::Get()->thermalClusterRename(cluster, newPlantName);
+        Study::Current::Get()->clusterRename(cluster, newPlantName, Study::kThermal);
         MarkTheStudyAsModified();
     }
     if (broadcast)
