@@ -25,6 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <limits>
 #include <yuni/yuni.h>
 #include "../study.h"
 #include "links.h"
