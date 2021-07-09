@@ -437,11 +437,14 @@ public:
         NumberOfCoresMode ncMode;
     } nbCores;
 
-    struct
+    struct RenewableGeneration
     {
         //! Renewable generation mode
         RenewableGenerationModelling rgModelling;
-    } renewableGeneration;
+        std::vector<std::string> excludedVariables() const;
+    };
+
+    RenewableGeneration renewableGeneration;
 
     struct
     {

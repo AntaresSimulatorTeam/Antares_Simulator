@@ -163,13 +163,21 @@ bool AllVariablesPrintInfo::setPrintStatus(string varname, bool printStatus)
     return false;
 }
 
-void AllVariablesPrintInfo::prepareForSimulation(bool userSelection)
+void AllVariablesPrintInfo::prepareForSimulation(bool userSelection,
+                                                 const std::vector<std::string>& excluded_vars)
 {
     assert(!isEmpty() && "The variable print info list must not be empty at this point");
 
     // Initializing output variables status
     if (!userSelection)
         setAllPrintStatusesTo(true);
+
+    for (const auto& varname : excluded_vars)
+    {
+        const bool res = setPrintStatus(varname, false);
+        if (not res)
+            logs.warning() << "Variable " << varname << " not found. Could not remove it";
+    }
 
     // Computing the max number columns a report of any kind can contain.
     computeMaxColumnsCountInReports();

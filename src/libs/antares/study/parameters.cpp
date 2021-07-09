@@ -752,7 +752,7 @@ static bool SGDIntLoadFamily_R(Parameters& d, const String& key, const String& v
             return true;
         }
         logs.warning() << "parameters: invalid renewable generation modelling. Got '" << value
-            << "'. reset to aggregated";
+                       << "'. reset to aggregated";
         d.renewableGeneration.rgModelling = rgAggregated;
         return false;
     }
@@ -1397,7 +1397,22 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 
     // Prepare output variables print info before the simulation (used to initialize output
     // variables)
-    variablesPrintInfo.prepareForSimulation(thematicTrimming);
+
+    // Force enable/disable when cluster/aggragated production is enabled
+    // This will be deprecated when support for aggragated production is dropped.
+    switch (renewableGeneration.rgModelling) // Warn the user about that.
+    {
+    case rgClusters:
+        logs.info()
+          << "Cluster renewables were chosen. Output will be disabled for aggregated modes.";
+        break;
+    case rgAggregated:
+        logs.info()
+          << "Aggregate renewables were chosen. Output will be disabled for renewable clusters.";
+        break;
+    }
+    const std::vector<std::string> excluded_vars = renewableGeneration.excludedVariables();
+    variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
 
     switch (mode)
     {
@@ -1835,6 +1850,35 @@ bool Parameters::saveToFile(const AnyString& filename) const
     IniFile ini;
     saveToINI(ini);
     return ini.save(filename);
+}
+
+std::vector<std::string> Parameters::RenewableGeneration::excludedVariables() const
+{
+    switch (rgModelling)
+    {
+    /*
+       Order is important because AllVariablesPrintInfo::setPrintStatus
+       does not reset the search pointer.
+
+       Inverting some variable names below may result in some of them not being
+       taken into account.
+    */
+    case rgAggregated:
+        return {"wind offshore",
+                "wind onshore",
+                "solar concrt.",
+                "solar pv",
+                "solar rooft",
+                "renw. 1",
+                "renw. 2",
+                "renw. 3",
+                "renw. 4"};
+    case rgClusters:
+        return {"wind", "solar"};
+    case rgUnknown:
+        return {};
+    }
+    return {};
 }
 
 } // namespace Data
