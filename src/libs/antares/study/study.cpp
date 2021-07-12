@@ -1080,9 +1080,6 @@ bool Study::areasThermalClustersMinStablePowerValidity(
 
 bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 {
-    const enum Cluster::Type clusterType = cluster->type();
-    assert((clusterType == Cluster::kThermal or clusterType == Cluster::kRenewable)
-           && "Wrong cluster type");
     // A name must not be empty
     if (!cluster or !newName)
         return false;
@@ -1112,15 +1109,10 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     // Checking if the area exists
     Cluster* found = nullptr;
 
-    switch (clusterType)
-    {
-    case Cluster::kThermal:
+    if (dynamic_cast<ThermalCluster*>(cluster))
         found = area.thermal.list.find(newID);
-        break;
-    case Cluster::kRenewable:
+    else if (dynamic_cast<RenewableCluster*>(cluster))
         found = area.renewable.list.find(newID);
-        break;
-    }
 
     if (found)
     {

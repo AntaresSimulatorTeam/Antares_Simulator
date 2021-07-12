@@ -77,7 +77,7 @@ namespace Antares
 namespace Data
 {
 Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
- Cluster(parent, kThermal),
+ Cluster(parent),
  groupID(thermalDispatchGrpOther),
  mustrun(false),
  mustrunOrigin(false),
@@ -121,7 +121,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
 }
 
 Data::ThermalCluster::ThermalCluster(Area* parent) :
- Cluster(parent, kThermal),
+ Cluster(parent),
  groupID(thermalDispatchGrpOther),
  mustrun(false),
  mustrunOrigin(false),

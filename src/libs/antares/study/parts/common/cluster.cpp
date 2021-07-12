@@ -10,15 +10,15 @@ namespace Antares
 {
 namespace Data
 {
-Cluster::Cluster(Area* parent, Type type) :
+Cluster::Cluster(Area* parent) :
  unitCount(0),
  enabled(true),
  parentArea(parent),
  index(0),
  nominalCapacity(0.),
  areaWideIndex((uint)-1),
- series(nullptr),
- pType(type)
+ series(nullptr)
+
 {
 }
 
@@ -35,11 +35,6 @@ const ClusterName& Cluster::name() const
 const ClusterName& Cluster::id() const
 {
     return pID;
-}
-
-Cluster::Type Cluster::type() const
-{
-    return pType;
 }
 
 Yuni::String Cluster::getFullName() const
