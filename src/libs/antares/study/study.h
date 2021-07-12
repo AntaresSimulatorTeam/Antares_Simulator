@@ -303,29 +303,15 @@ public:
     bool linkDelete(AreaLink* lnk);
     //@}
 
-    //! \name Thermal clusters
+    //! \name Renewable/thermal clusters
     //@{
     /*!
-    ** \brief Rename a thermal cluster
+    ** \brief Rename a renewable/thermal cluster
     **
     ** \param cluster The cluster
     ** \return True if the operation succeeded, false otherwise
     */
-    // TODO FO : clusterRename
-    bool thermalClusterRename(Cluster* cluster, ClusterName newName, bool force = false);
-    //@}
-
-    //! \name Renewable clusters
-    //@{
-    /*!
-    ** \brief Rename a renewable cluster
-    **
-    ** \param cluster The cluster
-    ** \return True if the operation succeeded, false otherwise
-    */
-    bool renewableClusterRename(RenewableCluster* cluster,
-                                ClusterName newName,
-                                bool force = false);
+    bool clusterRename(Cluster* cluster, ClusterName newName);
     //@}
 
     //! \name Read-only

@@ -223,28 +223,6 @@ void RenewableCluster::onStudyEndUpdate()
         pRnListbox->forceUpdate();
 }
 
-/*
-// gp : never used - to be removed (same for thermal clusters) 
-void RenewableCluster::renameAggregate(Antares::Data::ThermalCluster* cluster,
-                                     const wxString& newName,
-                                     const bool broadcast)
-{
-    WIP::Locker wip;
-    if (cluster && pArea && Data::Study::Current::Valid())
-    {
-        Antares::Data::ThermalClusterName newPlantName;
-        wxStringToString(newName, newPlantName);
-
-        Data::Study::Current::Get()->thermalClusterRename(cluster, newPlantName);
-        MarkTheStudyAsModified();
-    }
-    if (broadcast)
-        onClusterChanged(cluster);
-    OnStudyThermalClusterRenamed(cluster);
-    Window::Inspector::Refresh();
-}
-*/
-
 void RenewableCluster::onStudyRenewableClusterRenamed(Antares::Data::RenewableCluster* cluster)
 {
     if (cluster->parentArea == pArea)

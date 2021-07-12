@@ -1078,7 +1078,7 @@ bool Study::areasThermalClustersMinStablePowerValidity(
     return resultat;
 }
 
-bool Study::thermalClusterRename(Cluster* cluster, ClusterName newName, bool)
+bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 {
     // A name must not be empty
     if (!cluster or !newName)
@@ -1102,100 +1102,39 @@ bool Study::thermalClusterRename(Cluster* cluster, ClusterName newName, bool)
     Area& area = *cluster->parentArea;
     if (not cluster->parentArea)
     {
-        logs.error() << "renaming thermal cluster: no parent area";
+        logs.error() << "renaming cluster: no parent area";
         return false;
     }
 
     // Checking if the area exists
+    Cluster* found = nullptr;
+
+    enum
     {
-        Cluster* found;
-        if ((found = area.thermal.list.find(newID)))
+        kThermal,
+        kRenewable
+    } type;
+
+    if (dynamic_cast<ThermalCluster*>(cluster))
+    {
+        found = area.thermal.list.find(newID);
+        type = kThermal;
+    }
+    else if (dynamic_cast<RenewableCluster*>(cluster))
+    {
+        found = area.renewable.list.find(newID);
+        type = kRenewable;
+    }
+
+    if (found)
+    {
+        if (found->name() != newName)
         {
-            if (found->name() != newName)
-            {
-                area.invalidateJIT = true;
-                found->setName(newName);
-                return true;
-            }
-            return false;
+            area.invalidateJIT = true;
+            found->setName(newName);
+            return true;
         }
-    }
-
-    // We must have the scenario rules to rename properly the cluster
-    scenarioRulesLoadIfNotAvailable();
-
-    // We will temporary override the id of the area in order to have to
-    // the new name in the archive
-    // Otherwise the values associated to the area will be lost.
-    logs.info() << "  renaming thermal cluster '" << cluster->name() << "' into '" << newName
-                << "'";
-    //	ClusterName oldId   = cluster->id();
-    //	ClusterName oldName = cluster->name();
-    //	cluster->name(newName);
-    area.invalidateJIT = true;
-
-    bool ret = true;
-
-    // Archiving data
-    {
-        ret = area.thermal.list.rename(cluster->id(), newName);
-        area.thermal.prepareAreaWideIndexes();
-        ScenarioBuilderUpdater updaterSB(*this);
-
-        // Restoring the old ID
-        //		cluster->name(oldId);
-        // Rename the cluster
-        // ret = area.thermal.list.rename(cluster->id(), newName);
-    }
-
-    if (uiinfo)
-        uiinfo->reloadAll();
-
-    return ret;
-}
-
-// gp : this is a copy, to be factored with thermal counterpart
-bool Study::renewableClusterRename(RenewableCluster* cluster, ClusterName newName, bool)
-{
-    // A name must not be empty
-    if (!cluster or !newName)
         return false;
-
-    String beautifyname;
-    BeautifyName(beautifyname, newName);
-    if (!beautifyname)
-        return false;
-    newName = beautifyname;
-
-    // Preparing the new area ID
-    ClusterName newID;
-    TransformNameIntoID(newName, newID);
-    if (!newID)
-    {
-        logs.error() << "invalid id transformation";
-        return false;
-    }
-
-    Area& area = *cluster->parentArea;
-    if (not cluster->parentArea)
-    {
-        logs.error() << "renaming renewable cluster: no parent area";
-        return false;
-    }
-
-    // Checking if the area exists
-    {
-        RenewableCluster* found;
-        if ((found = area.renewable.list.find(newID)))
-        {
-            if (found->name() != newName)
-            {
-                area.invalidateJIT = true;
-                found->setName(newName);
-                return true;
-            }
-            return false;
-        }
     }
 
     // gp : to be updated with renewable clusters
@@ -1205,19 +1144,26 @@ bool Study::renewableClusterRename(RenewableCluster* cluster, ClusterName newNam
     // We will temporary override the id of the area in order to have to
     // the new name in the archive
     // Otherwise the values associated to the area will be lost.
-    logs.info() << "  renaming renewable cluster '" << cluster->name() << "' into '" << newName
-        << "'";
- 
+    logs.info() << "  renaming cluster '" << cluster->name() << "' into '" << newName << "'";
+
     area.invalidateJIT = true;
 
     bool ret = true;
 
     // Archiving data
+    switch (type)
     {
+    case kRenewable:
         ret = area.renewable.list.rename(cluster->id(), newName);
         area.renewable.prepareAreaWideIndexes();
-        ScenarioBuilderUpdater updaterSB(*this);
+        break;
+    case kThermal:
+        ret = area.thermal.list.rename(cluster->id(), newName);
+        area.thermal.prepareAreaWideIndexes();
+        break;
     }
+
+    ScenarioBuilderUpdater updaterSB(*this);
 
     if (uiinfo)
         uiinfo->reloadAll();
