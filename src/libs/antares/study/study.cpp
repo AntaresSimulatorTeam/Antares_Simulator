@@ -1109,10 +1109,22 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     // Checking if the area exists
     Cluster* found = nullptr;
 
+    enum
+    {
+        kThermal,
+        kRenewable
+    } type;
+
     if (dynamic_cast<ThermalCluster*>(cluster))
+    {
         found = area.thermal.list.find(newID);
+        type = kThermal;
+    }
     else if (dynamic_cast<RenewableCluster*>(cluster))
+    {
         found = area.renewable.list.find(newID);
+        type = kRenewable;
+    }
 
     if (found)
     {
@@ -1139,11 +1151,19 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     bool ret = true;
 
     // Archiving data
+    switch (type)
     {
+    case kRenewable:
         ret = area.renewable.list.rename(cluster->id(), newName);
         area.renewable.prepareAreaWideIndexes();
-        ScenarioBuilderUpdater updaterSB(*this);
+        break;
+    case kThermal:
+        ret = area.thermal.list.rename(cluster->id(), newName);
+        area.thermal.prepareAreaWideIndexes();
+        break;
     }
+
+    ScenarioBuilderUpdater updaterSB(*this);
 
     if (uiinfo)
         uiinfo->reloadAll();
