@@ -388,7 +388,8 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         assert(results.data.area && "Area is NULL");
         const bool thermal_details = fileLevel & Category::de;
         const bool renewable_details = fileLevel & Category::de_res;
-        if (thermal_details && renewable_details) {
+        if (thermal_details && renewable_details)
+        {
             logs.error() << "Inconsistent fileLevel detected";
             return false;
         }
@@ -434,7 +435,6 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                                         int fileLevel,
                                         int precision)
     {
-
         bool res;
         if (*results.isPrinted)
         {
