@@ -303,13 +303,7 @@ public:
     bool linkDelete(AreaLink* lnk);
     //@}
 
-    enum ClusterType
-    {
-        kThermal,
-        kRenewable
-    };
-
-    //! \name Renewable clusters
+    //! \name Renewable/thermal clusters
     //@{
     /*!
     ** \brief Rename a renewable/thermal cluster
@@ -317,7 +311,7 @@ public:
     ** \param cluster The cluster
     ** \return True if the operation succeeded, false otherwise
     */
-    bool clusterRename(Cluster* cluster, ClusterName newName, ClusterType clusterType);
+    bool clusterRename(Cluster* cluster, ClusterName newName);
     //@}
 
     //! \name Read-only

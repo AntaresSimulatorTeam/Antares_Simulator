@@ -226,7 +226,7 @@ void ThermalCluster::renameAggregate(Antares::Data::ThermalCluster* cluster,
         ClusterName newPlantName;
         wxStringToString(newName, newPlantName);
 
-        Study::Current::Get()->clusterRename(cluster, newPlantName, Study::kThermal);
+        Study::Current::Get()->clusterRename(cluster, newPlantName);
         MarkTheStudyAsModified();
     }
     if (broadcast)

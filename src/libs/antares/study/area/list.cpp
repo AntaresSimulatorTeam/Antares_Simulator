@@ -1052,7 +1052,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                 // applying the new naming convention
                 String newname;
                 BeautifyName(newname, cluster->name());
-                study.clusterRename(cluster, newname, Study::kThermal);
+                study.clusterRename(cluster, newname);
             }
         }
 

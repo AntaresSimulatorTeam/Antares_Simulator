@@ -544,7 +544,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
 
         Data::ThermalCluster* cluster = *(data->ThClusters.begin());
         auto study = Data::Study::Current::Get();
-        if (!(!study) && study->clusterRename(cluster, name, Data::Study::kThermal))
+        if (!(!study) && study->clusterRename(cluster, name))
         {
             OnStudyThermalClusterRenamed(cluster);
             // Notify
@@ -1056,7 +1056,7 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
 
         RenewableCluster* cluster = *(data->RnClusters.begin());
         auto study = Study::Current::Get();
-        if (!(!study) && study->clusterRename(cluster, name, Study::kRenewable))
+        if (!(!study) && study->clusterRename(cluster, name))
         {
             OnStudyRenewableClusterRenamed(cluster);
             // Notify

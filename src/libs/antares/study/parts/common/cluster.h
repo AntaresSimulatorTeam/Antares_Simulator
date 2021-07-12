@@ -18,11 +18,16 @@ namespace Data
 class Cluster
 {
 public:
+    enum Type
+    {
+        kThermal,
+        kRenewable
+    };
+
     //! Map of renewable clusters
     typedef std::map<ClusterName, Cluster*> Map;
 
-public:
-    Cluster(Area* parent);
+    Cluster(Area* parent, Type type);
 
     //! Get the cluster ID
     const ClusterName& id() const;
@@ -34,6 +39,9 @@ public:
 
     //! Get the renewable cluster name
     const ClusterName& name() const;
+
+    //! Get the renewable cluster type
+    Type type() const;
 
     //! Set the name/ID
     void setName(const AnyString& newname);
@@ -134,10 +142,13 @@ protected:
     Data::ClusterName pID;
     //! Group
     Data::ClusterName pGroup;
+    //! Type
+    const Type pType;
 
 public:
     int saveDataSeriesToFolder(const AnyString& folder) const;
     int loadDataSeriesFromFolder(Study& s, const AnyString& folder);
+
 private:
     virtual unsigned int precision() const = 0;
 };
