@@ -121,8 +121,6 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS_AREAS
 		toolbox/components/datagrid/renderer/area/thermalprepro.h
 		toolbox/components/datagrid/renderer/area/thermalprepro.cpp
 		toolbox/components/datagrid/renderer/area/thermalmodulation.h
-		toolbox/components/datagrid/renderer/area/renewable-modulation.cpp
-		toolbox/components/datagrid/renderer/area/renewable-modulation.h
 		toolbox/components/datagrid/renderer/area/thermalmodulation.cpp
 		toolbox/components/datagrid/renderer/area/dsm.h
 		toolbox/components/datagrid/renderer/area/dsm.cpp
