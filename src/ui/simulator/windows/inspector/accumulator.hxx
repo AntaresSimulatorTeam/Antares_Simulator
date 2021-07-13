@@ -241,10 +241,10 @@ static const wxChar* arrayRnClusterGroup[] = { wxT("Wind Onshore"),
                                                wxT("Solar Thermal"),
                                                wxT("Solar PV"),
                                                wxT("Solar Rooftop"),
-                                               wxT("ENR 1"),
-                                               wxT("ENR 2"),
-                                               wxT("ENR 3"),
-                                               wxT("ENR 4"),
+                                               wxT("Other RES 1"),
+                                               wxT("Other RES 2"),
+                                               wxT("Other RES 3"),
+                                               wxT("Other RES 4"),
                                                nullptr };
 
 enum
