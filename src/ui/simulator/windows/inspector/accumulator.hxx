@@ -1010,7 +1010,7 @@ struct PClusterNomCapacityColor
 struct PClusterInstalled
 {
     typedef double Type;
-    static Type Value(const Data::ThermalCluster* cluster)
+    static Type Value(const Data::Cluster* cluster)
     {
         return cluster->nominalCapacity * cluster->unitCount;
     }

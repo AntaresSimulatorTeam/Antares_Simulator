@@ -237,6 +237,7 @@ private:
     wxPGProperty* pPGRnClusterParams;
     wxPGProperty* pPGRnClusterEnabled;
     wxPGProperty* pPGRnClusterUnitCount;
+    wxPGProperty* pPGRnClusterInstalled;
     wxPGProperty* pPGRnClusterNominalCapacity;
 
     // About constraints

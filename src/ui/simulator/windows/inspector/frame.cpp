@@ -553,8 +553,8 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGRnClusterEnabled = P_BOOL("Enabled", "rn-cluster.enabled");
     pPGRnClusterUnitCount = P_UINT("Unit", "rn-cluster.unit");
     pPGRnClusterNominalCapacity = P_FLOAT("Nominal capacity (MW)", "rn-cluster.nominal_capacity");
-
-
+    pPGRnClusterInstalled = P_FLOAT("Installed (MW)", "rn-cluster.installed");
+    pg->DisableProperty(pPGRnClusterInstalled);
     // --- CONSTRAINT ---
     pPGConstraintSeparator = Group(pg, wxEmptyString, wxEmptyString);
     pPGConstraintTitle = Group(pg, wxT("1 CONSTRAINT"), wxT("constraint.title"));
@@ -991,7 +991,8 @@ void Frame::apply(const InspectorData::Ptr& data)
         Accumulator<PRnClusterUnitCount>::Apply(pPGRnClusterUnitCount, data->RnClusters);
         // Nominal capacity
         Accumulator<PRnClusterNomCapacity>::Apply(pPGRnClusterNominalCapacity, data->RnClusters);
-
+        // Installed capacity
+        Accumulator<PClusterInstalled, Add>::Apply(pPGRnClusterInstalled, data->RnClusters);
         // gp : what should we do with that ?
         // check Nominal capacity with thermal modulation
         // AccumulatorCheck<PClusterNomCapacityColor>::ApplyTextColor(pPGRnClusterNominalCapacity,
