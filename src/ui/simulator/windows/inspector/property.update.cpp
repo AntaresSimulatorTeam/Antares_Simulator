@@ -1130,9 +1130,7 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
         return true;
     }
 
-    // gp : to be adapted
     // unit
-    /*
     if (name == "rn-cluster.unit")
     {
         uint d = static_cast<uint>(value.GetLong());
@@ -1141,7 +1139,7 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
             logs.error() << "A renewable cluster can not have more than 100 units";
             for (; i != end; ++i)
                 (*i)->unitCount = 100;
-            Accumulator<PClusterUnitCount>::Apply(pFrame.pPGThClusterUnitCount, data->ThClusters);
+            Accumulator<PRnClusterUnitCount>::Apply(pFrame.pPGRnClusterUnitCount, data->RnClusters);
         }
         else
         {
@@ -1149,8 +1147,8 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
                 (*i)->unitCount = d;
         }
         // refresh the installed capacity
-        if (data)
-            Accumulator<PClusterInstalled, Add>::Apply(pFrame.pPGThClusterInstalled, data->ThClusters);
+        // if (data)
+        //    Accumulator<PClusterInstalled, Add>::Apply(pFrame.pPGRnClusterInstalled, data->ThClusters);
 
         // Notify
         OnStudyThermalClusterCommonSettingsChanged();
@@ -1159,7 +1157,6 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
             pFrame.delayApply();
         return true;
     }
-    */
     if (name == "rn-cluster.nominal_capacity")
     {
         double d = value.GetDouble();
