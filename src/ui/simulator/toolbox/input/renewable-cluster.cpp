@@ -41,7 +41,7 @@
 #include "../components/button.h"
 #include "../../windows/message.h"
 #include "../../application/menus.h"
-// #include <antares/study/scenario-builder/updater.hxx>
+#include <antares/study/scenario-builder/updater.hxx>
 #include <wx/wupdlock.h>
 #include <wx/sizer.h>
 // #include <wx/stattext.h>
@@ -252,7 +252,7 @@ void RenewableCluster::internalDeletePlant(void*)
     if (!pArea || !pLastSelectedRenewableCluster || not Data::Study::Current::Valid())
         return;
 
-    // The thermal cluster to delete
+    // The renewable cluster to delete
     auto* toDelete = pLastSelectedRenewableCluster->renewableAggregate();
     if (not toDelete)
         return;
@@ -278,7 +278,7 @@ void RenewableCluster::internalDeletePlant(void*)
 
         // Because we may need to update this afterwards
         auto study = Data::Study::Current::Get();
-        // study->scenarioRulesLoadIfNotAvailable();
+        study->scenarioRulesLoadIfNotAvailable();
 
         // Update the list
         Window::Inspector::RemoveRenewableCluster(toDelete);
@@ -287,8 +287,7 @@ void RenewableCluster::internalDeletePlant(void*)
 
         // gp : uncomment this when GUI's scenario builder comes up 
         // We have to rebuild the scenario builder data, if required
-        // ScenarioBuilderUpdater updaterSB(
-        //   *study); // this will create a temp file, and save it during destructor call
+        ScenarioBuilderUpdater updaterSB(*study); // this will create a temp file, and save it during destructor call
 
         if (pArea->renewable.list.remove(toDelete->id()))
         {
@@ -433,26 +432,24 @@ void RenewableCluster::internalAddPlant(void*)
     }
 }
 
-// gp : to be adapted
 void RenewableCluster::internalClonePlant(void*)
 {
-    /*
     // Nothing is/was selected. Aborting.
     if (!pArea || !pLastSelectedRenewableCluster)
         return;
 
-    if (!pArea->thermal.list.find(pLastSelectedRenewableCluster->thermalAggregate()->id()))
+    if (!pArea->renewable.list.find(pLastSelectedRenewableCluster->renewableAggregate()->id()))
     {
         // The selected has been obviously invalidated
         pLastSelectedRenewableCluster = nullptr;
         // Inform the user
-        logs.error() << "Please select a thermal cluster.";
+        logs.error() << "Please select a renewable cluster.";
         return;
     }
 
     WIP::Locker wip;
-    const Antares::Data::ThermalCluster& selectedPlant
-      = *pLastSelectedRenewableCluster->thermalAggregate();
+    const Antares::Data::RenewableCluster& selectedPlant
+      = *pLastSelectedRenewableCluster->renewableAggregate();
 
     auto study = Data::Study::Current::Get();
     if (!(!study) && pArea)
@@ -462,25 +459,25 @@ void RenewableCluster::internalClonePlant(void*)
         uint indx = 2;
 
         // Trying to find an uniq name
-        Antares::Data::ThermalClusterName copy = selectedPlant.name();
+        Antares::Data::ClusterName copy = selectedPlant.name();
 
-        Data::ThermalClusterName::Size sepPos = copy.find_last_of(' ');
+        Data::ClusterName::Size sepPos = copy.find_last_of(' ');
         if (sepPos != YString::npos)
         {
-            Data::ThermalClusterName suffixChain(copy, sepPos + 1);
+            Data::ClusterName suffixChain(copy, sepPos + 1);
             int suffixNumber = suffixChain.to<int>();
             if (suffixNumber > 0)
             {
-                Data::ThermalClusterName suffixLess(copy, 0, sepPos);
+                Data::ClusterName suffixLess(copy, 0, sepPos);
                 copy = suffixLess;
             }
         }
 
         copy += ' ';
 
-        Antares::Data::ThermalClusterName sFl;
+        Antares::Data::ClusterName sFl;
         sFl << copy << indx; // lowercase
-        while (pArea->thermal.list.find(sFl))
+        while (pArea->renewable.list.find(sFl))
         {
             ++indx;
             sFl.clear() << copy << indx;
@@ -490,16 +487,15 @@ void RenewableCluster::internalClonePlant(void*)
         ScenarioBuilderUpdater updaterSB(*study);
 
         // Creating a new cluster
-        auto* cluster = new Antares::Data::ThermalCluster(pArea);
-        cluster->name(sFl);
+        auto* cluster = new Antares::Data::RenewableCluster(pArea);
+        cluster->setName(sFl);
         cluster->reset();
         // Reset to default values
         cluster->copyFrom(selectedPlant);
 
-        pArea->thermal.list.add(cluster);
-        pArea->thermal.list.mapping[cluster->id()] = cluster;
-        pArea->thermal.list.rebuildIndex();
-        pArea->thermal.prepareAreaWideIndexes();
+        pArea->renewable.list.add(cluster);
+        pArea->renewable.list.rebuildIndex();
+        pArea->renewable.prepareAreaWideIndexes();
 
         // Update the list
         update();
@@ -513,7 +509,6 @@ void RenewableCluster::internalClonePlant(void*)
 
         study->uiinfo->reload();
     }
-    */
 }
 
 void RenewableCluster::onApplicationOnQuit()
