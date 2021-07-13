@@ -81,7 +81,8 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
 
     // Enabled
     enabled = cluster.enabled;
-
+    // unit count
+    unitCount = cluster.unitCount;
     // nominal capacity
     nominalCapacity = cluster.nominalCapacity;
 
