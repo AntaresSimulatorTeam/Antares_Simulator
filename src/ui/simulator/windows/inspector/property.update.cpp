@@ -1139,7 +1139,7 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
             logs.error() << "A renewable cluster can not have more than 100 units";
             for (; i != end; ++i)
                 (*i)->unitCount = 100;
-            Accumulator<PRnClusterUnitCount>::Apply(pFrame.pPGRnClusterUnitCount, data->RnClusters);
+            Accumulator<PClusterUnitCount>::Apply(pFrame.pPGRnClusterUnitCount, data->RnClusters);
         }
         else
         {
@@ -1174,7 +1174,7 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
         // refresh the nominal and installed capacity
         if (data)
         {
-            Accumulator<PRnClusterNomCapacity>::Apply(pFrame.pPGRnClusterNominalCapacity,
+            Accumulator<PClusterNomCapacity>::Apply(pFrame.pPGRnClusterNominalCapacity,
                                                       data->RnClusters);
 
             Accumulator<PClusterInstalled, Add>::Apply(pFrame.pPGRnClusterInstalled,

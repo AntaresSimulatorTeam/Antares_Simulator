@@ -947,12 +947,12 @@ struct PAreaSpilledEnergyCost
 };
 
 // ----------------
-// THERMAL CLUSTERS
+// THERMAL/RENEWABLE CLUSTERS
 // ----------------
 struct PClusterEnabled
 {
     typedef bool Type;
-    static Type Value(const Data::ThermalCluster* cluster)
+    static Type Value(const Data::Cluster* cluster)
     {
         return cluster->enabled;
     }
@@ -965,7 +965,7 @@ struct PClusterEnabled
 struct PClusterUnitCount
 {
     typedef uint Type;
-    static Type Value(const Data::ThermalCluster* cluster)
+    static Type Value(const Data::Cluster* cluster)
     {
         return cluster->unitCount;
     }
@@ -978,7 +978,7 @@ struct PClusterUnitCount
 struct PClusterNomCapacity
 {
     typedef double Type;
-    static Type Value(const Data::ThermalCluster* cluster)
+    static Type Value(const Data::Cluster* cluster)
     {
         return cluster->nominalCapacity;
     }
@@ -1036,7 +1036,7 @@ struct PClusterMustRun
 struct PClusterGroup
 {
     typedef wxString Type;
-    static Type Value(const Data::ThermalCluster* cluster)
+    static Type Value(const Data::Cluster* cluster)
     {
         return wxStringFromUTF8(cluster->group());
     }
@@ -1049,7 +1049,7 @@ struct PClusterGroup
 struct PClusterArea
 {
     typedef wxString Type;
-    static Type Value(const Data::ThermalCluster* cluster)
+    static Type Value(const Data::Cluster* cluster)
     {
         return wxStringFromUTF8(cluster->parentArea->name);
     }
@@ -1330,75 +1330,6 @@ struct PConstraintType
         return wxStringFromUTF8(Data::BindingConstraint::TypeToCString(v));
     }
 };
-
-// --------------------
-// RENEWABLE CLUSTERS
-// --------------------
-struct PRnClusterArea
-{
-    typedef wxString Type;
-    static Type Value(const Data::RenewableCluster* cluster)
-    {
-        return wxStringFromUTF8(cluster->parentArea->name);
-    }
-    static wxString ConvertToString(const Type v)
-    {
-        return v;
-    }
-};
-
-struct PRnClusterGroup
-{
-    typedef wxString Type;
-    static Type Value(const Data::RenewableCluster* cluster)
-    {
-        return wxStringFromUTF8(cluster->group());
-    }
-    static wxString ConvertToString(const Type v)
-    {
-        return v;
-    }
-};
-
-struct PRnClusterEnabled
-{
-    typedef bool Type;
-    static Type Value(const Data::RenewableCluster* cluster)
-    {
-        return cluster->enabled;
-    }
-    static wxString ConvertToString(const Type v)
-    {
-        return v ? wxT("True") : wxT("False");
-    }
-};
-
-struct PRnClusterUnitCount
-{
-    typedef uint Type;
-    static Type Value(const Data::RenewableCluster* cluster)
-    {
-        return cluster->unitCount;
-    }
-    static wxString ConvertToString(const Type v)
-    {
-        return wxString() << v;
-    }
-};
-
-struct PRnClusterNomCapacity
-{
-    typedef double Type;
-    static Type Value(const Data::RenewableCluster* cluster)
-    {
-        return cluster->nominalCapacity;
-    }
-    static wxString ConvertToString(const Type v)
-    {
-        return DoubleToWxString(v);
-    }
-};
-
 } // namespace Inspector
 } // namespace Window
 } // namespace Antares
