@@ -1139,7 +1139,7 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
             logs.error() << "A renewable cluster can not have more than 100 units";
             for (; i != end; ++i)
                 (*i)->unitCount = 100;
-            Accumulator<PRnClusterUnitCount>::Apply(pFrame.pPGRnClusterUnitCount, data->RnClusters);
+            Accumulator<PClusterUnitCount>::Apply(pFrame.pPGRnClusterUnitCount, data->RnClusters);
         }
         else
         {
@@ -1147,11 +1147,11 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
                 (*i)->unitCount = d;
         }
         // refresh the installed capacity
-        // if (data)
-        //    Accumulator<PClusterInstalled, Add>::Apply(pFrame.pPGRnClusterInstalled, data->ThClusters);
+        if (data)
+           Accumulator<PClusterInstalled, Add>::Apply(pFrame.pPGRnClusterInstalled, data->RnClusters);
 
         // Notify
-        OnStudyThermalClusterCommonSettingsChanged();
+        OnStudyRenewableClusterCommonSettingsChanged();
 
         if (d > 100)
             pFrame.delayApply();
@@ -1171,11 +1171,14 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
             for (; i != end; ++i)
                 (*i)->nominalCapacity = d;
         }
-        // refresh the installed capacity
+        // refresh the nominal and installed capacity
         if (data)
         {
-            Accumulator<PRnClusterNomCapacity>::Apply(pFrame.pPGRnClusterNominalCapacity,
-                data->RnClusters);
+            Accumulator<PClusterNomCapacity>::Apply(pFrame.pPGRnClusterNominalCapacity,
+                                                      data->RnClusters);
+
+            Accumulator<PClusterInstalled, Add>::Apply(pFrame.pPGRnClusterInstalled,
+                                                       data->RnClusters);
             // gp : what do we do about that ?
             // AccumulatorCheck<PClusterNomCapacityColor>::ApplyTextColor(
             //     pFrame.pPGThClusterNominalCapacity, data->ThClusters);
