@@ -284,17 +284,18 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
     const bool intramodal[Data::timeSeriesCount]
       = {0 != (Data::timeSeriesLoad & parameters.intraModal),
          0 != (Data::timeSeriesHydro & parameters.intraModal),
-         0 != (Data::timeSeriesWind & parameters.intraModal),
+         0 != ((Data::timeSeriesWind & parameters.intraModal) && (parameters.renewableGeneration() == Data::rgAggregated)),
          0 != (Data::timeSeriesThermal & parameters.intraModal),
-         0 != (Data::timeSeriesSolar & parameters.intraModal),
-         0 != (Data::timeSeriesRenewable & parameters.intraModal)};
+         0 != ((Data::timeSeriesSolar & parameters.intraModal) && (parameters.renewableGeneration() == Data::rgAggregated)),
+         0 != ((Data::timeSeriesRenewable & parameters.intraModal) && (parameters.renewableGeneration() == Data::rgClusters))};
+
     const bool intermodal[Data::timeSeriesCount]
       = {0 != (Data::timeSeriesLoad & parameters.interModal),
          0 != (Data::timeSeriesHydro & parameters.interModal),
-         0 != (Data::timeSeriesWind & parameters.interModal),
+         0 != ((Data::timeSeriesWind & parameters.interModal) && (parameters.renewableGeneration() == Data::rgAggregated)),
          0 != (Data::timeSeriesThermal & parameters.interModal),
-         0 != (Data::timeSeriesSolar & parameters.interModal),
-         0 != (Data::timeSeriesRenewable & parameters.interModal)};
+         0 != ((Data::timeSeriesSolar & parameters.interModal) && (parameters.renewableGeneration() == Data::rgAggregated)),
+         0 != ((Data::timeSeriesRenewable & parameters.interModal) && (parameters.renewableGeneration() == Data::rgClusters))};
 
     unsigned int nbTimeseries[Data::timeSeriesCount];
 

@@ -442,6 +442,7 @@ public:
         //! Renewable generation mode
         RenewableGenerationModelling rgModelling;
         std::vector<std::string> excludedVariables() const;
+        RenewableGenerationModelling operator()() const;
     };
 
     RenewableGeneration renewableGeneration;
