@@ -22,8 +22,12 @@ set(SRC_UI_WINDOWS_STUDYPARTS
 		windows/hydro/levelsandvalues.cpp
 		windows/thermal/cluster.h
 		windows/thermal/cluster.cpp
+		windows/renewables/cluster.h
+		windows/renewables/cluster.cpp
 		windows/thermal/panel.h
 		windows/thermal/panel.cpp
+		windows/renewables/panel.h
+		windows/renewables/panel.cpp
 		windows/connection.h
 		windows/connection.cpp
 		windows/scenario-builder/panel.h

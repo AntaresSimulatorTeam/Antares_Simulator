@@ -236,10 +236,19 @@ protected:
             {
                 CString<32, false> text;
                 text << area->thermal.list.size();
-                // item->addRightTag(text, 240, 220, 220);
                 item->addRightTag(text, 210, 217, 216);
             }
         }
+        if (0 != (equipment & Data::timeSeriesRenewable))
+        {
+            if (area->renewable.list.size() > 0)
+            {
+                CString<32, false> text;
+                text << area->renewable.list.size();
+                item->addRightTag(text, 210, 217, 216);
+            }
+        }
+
         out.push_back(item);
     }
 

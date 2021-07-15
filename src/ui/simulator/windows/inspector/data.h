@@ -78,7 +78,9 @@ public:
     //! All selected links
     Data::AreaLink::Set links;
     //! All selected thermal clusters
-    Data::ThermalCluster::Set clusters;
+    Data::ThermalCluster::Set ThClusters;
+    //! All selected renewable clusters
+    Data::RenewableCluster::Set RnClusters;
     //! All selected binding constraints
     Data::BindingConstraint::Set constraints;
     //! All studies

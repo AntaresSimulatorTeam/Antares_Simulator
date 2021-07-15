@@ -251,6 +251,8 @@ ApplWnd::ApplWnd() :
  pageThermalTimeSeries(nullptr),
  pageThermalPrepro(nullptr),
  pageThermalCommon(nullptr),
+ pageRenewableClusterList(nullptr),
+ pageRenewableCommon(nullptr),
  pageLinksSummary(nullptr),
  pageLinksDetails(nullptr),
  pageNodalOptim(nullptr),
@@ -639,6 +641,8 @@ void ApplWnd::onMainNotebookPageChanging(Component::Notebook::Page& page)
         pCurrentEquipmentPage = Data::timeSeriesLoad;
     else if (page.name() == wxT("thermal"))
         pCurrentEquipmentPage = Data::timeSeriesThermal;
+    else if (page.name() == wxT("renewable"))
+        pCurrentEquipmentPage = Data::timeSeriesRenewable;
     else if (page.name() == wxT("solar"))
         pCurrentEquipmentPage = Data::timeSeriesSolar;
     else if (page.name() == wxT("wind"))
@@ -914,6 +918,10 @@ void ApplWnd::selectAllDefaultPages()
         pageThermalClusterList->select();
     if (pageThermalCommon)
         pageThermalCommon->select();
+    if (pageRenewableClusterList)
+        pageRenewableClusterList->select();
+    if (pageRenewableCommon)
+        pageRenewableCommon->select();
     if (pageLinksDetails)
         pageLinksDetails->select();
     if (pageWindPreproDailyProfile)

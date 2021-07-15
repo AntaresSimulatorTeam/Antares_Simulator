@@ -38,6 +38,15 @@ namespace Antares
 {
 namespace Data
 {
+
+enum RenewableModulation
+{
+    renewableModulationCost = 0,
+    renewableModulationCapacity,
+    renewableMinGenModulation,
+    renewableModulationMax
+};
+
 /*!
 ** \brief A single renewable cluster
 */
@@ -80,11 +89,7 @@ public:
     };
 
     //! Set of renewable clusters
-    typedef std::set<Cluster*, CompareClusterName> Set;
-    //! Set of renewable clusters (pointer)
-    typedef std::set<Cluster*> SetPointer;
-    //! Vector of renewable clusters
-    typedef std::vector<Data::Cluster*> Vector;
+    typedef std::set<RenewableCluster*, CompareClusterName> Set;
 
     /*!
     ** \brief Get the group name string

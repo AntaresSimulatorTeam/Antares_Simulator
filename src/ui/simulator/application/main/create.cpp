@@ -74,6 +74,7 @@
 #include "../../windows/connection.h"
 #include "../../windows/simulation/panel.h"
 #include "../../windows/thermal/panel.h"
+#include "../../windows/renewables/panel.h"
 #include "../../windows/correlation/correlation.h"
 #include "../../windows/bindingconstraint/bindingconstraint.h"
 #include "../../windows/analyzer/analyzer.h"
@@ -565,6 +566,9 @@ void ApplWnd::createAllComponentsNeededByTheMainNotebook()
     // Solar
     createNBSolar();
 
+    // Renewable
+    createNBRenewable();
+
     // Separator
     pNotebook->addSeparator();
 
@@ -633,6 +637,20 @@ void ApplWnd::createNBThermal()
     pageThermalPrepro = panel->pageThermalPrepro;
     pageThermalCommon = panel->pageThermalCommon;
     pageThermalClusterList = panel->pageThermalClusterList;
+}
+
+void ApplWnd::createNBRenewable()
+{
+    assert(pNotebook);
+
+    auto* panel = new Window::Renewable::Panel(pNotebook);
+    pNotebook->add(panel, wxT("renewable"), wxT("Renewable"));
+
+    // gp : to be adapted
+    // pageThermalTimeSeries = panel->pageThermalTimeSeries;
+    // pageThermalPrepro = panel->pageThermalPrepro;
+    pageRenewableCommon = panel->pageRenewableCommon;
+    pageRenewableClusterList = panel->pageRenewableClusterList;
 }
 
 void ApplWnd::createNBBindingConstraints()

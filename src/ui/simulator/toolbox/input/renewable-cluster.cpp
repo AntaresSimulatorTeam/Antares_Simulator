@@ -25,29 +25,33 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/wx-wrapper.h>
-#include "thermal-cluster.h"
-#include "../components/captionpanel.h"
+// #include <antares/wx-wrapper.h>
+// #include "thermal-cluster.h"
+// #include "../components/captionpanel.h"
 #include "../../application/study.h"
 #include "../../application/main.h"
 #include "../../application/wait.h"
 #include "../../windows/inspector.h"
-#include <assert.h>
+// #include <assert.h>
 #include "../resources.h"
 #include "../create.h"
-#include "../validator.h"
-#include "../components/htmllistbox/datasource/thermal-cluster.h"
-#include "../components/htmllistbox/item/thermal-cluster.h"
+// #include "../validator.h"
+// #include "../components/htmllistbox/datasource/thermal-cluster.h"
+// #include "../components/htmllistbox/item/thermal-cluster.h"
 #include "../components/button.h"
 #include "../../windows/message.h"
 #include "../../application/menus.h"
 #include <antares/study/scenario-builder/updater.hxx>
 #include <wx/wupdlock.h>
 #include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/statline.h>
-#include <wx/bmpbuttn.h>
-#include <ui/common/lock.h>
+// #include <wx/stattext.h>
+// #include <wx/statline.h>
+// #include <wx/bmpbuttn.h>
+// #include <ui/common/lock.h>
+
+#include "renewable-cluster.h"
+#include "../components/htmllistbox/item/renewable-cluster.h"
+#include "../components/htmllistbox/datasource/renewable-cluster.h"
 
 using namespace Yuni;
 
@@ -57,8 +61,8 @@ namespace Toolbox
 {
 namespace InputSelector
 {
-ThermalCluster::ThermalCluster(wxWindow* parent, InputSelector::Area* area) :
- AInput(parent), pArea(nullptr), pTotalMW(nullptr), pImageList(16, 16), pAreaNotifier(area)
+    RenewableCluster::RenewableCluster(wxWindow* parent, InputSelector::Area* area) :
+        AInput(parent), pArea(nullptr), pTotalMW(nullptr), pImageList(16, 16), pAreaNotifier(area)
 {
     SetSize(300, 330);
 
@@ -77,44 +81,45 @@ ThermalCluster::ThermalCluster(wxWindow* parent, InputSelector::Area* area) :
     // Connect to the global event
     // Avoid SegV
     Forms::ApplWnd::Instance()->onApplicationQuit.connect(this,
-                                                          &ThermalCluster::onApplicationOnQuit);
-    OnStudyClosed.connect(this, &ThermalCluster::onStudyClosed);
-    OnStudyEndUpdate.connect(this, &ThermalCluster::onStudyEndUpdate);
+                                                          &RenewableCluster::onApplicationOnQuit);
+    OnStudyClosed.connect(this, &RenewableCluster::onStudyClosed);
+    OnStudyEndUpdate.connect(this, &RenewableCluster::onStudyEndUpdate);
 
     if (area)
-        area->onAreaChanged.connect(this, &ThermalCluster::areaHasChanged);
+        area->onAreaChanged.connect(this, &RenewableCluster::areaHasChanged);
 
-    OnStudyThermalClusterRenamed.connect(this, &ThermalCluster::onStudyThermalClusterRenamed);
-    OnStudyThermalClusterGroupChanged.connect(this,
-                                              &ThermalCluster::onStudyThermalClusterGroupChanged);
-    OnStudyThermalClusterCommonSettingsChanged.connect(
-      this, &ThermalCluster::onStudyThermalClusterCommonSettingsChanged);
+    OnStudyRenewableClusterRenamed.connect(this, &RenewableCluster::onStudyRenewableClusterRenamed);
+    OnStudyRenewableClusterGroupChanged.connect(this,
+                                              &RenewableCluster::onStudyRenewableClusterGroupChanged);
+    OnStudyRenewableClusterCommonSettingsChanged.connect(
+      this, &RenewableCluster::onStudyRenewableClusterCommonSettingsChanged);
 }
 
-ThermalCluster::~ThermalCluster()
+RenewableCluster::~RenewableCluster()
 {
     destroyBoundEvents();
 }
 
-namespace HTMLLsDatasourcesTh = Component::HTMLListbox::Datasource::ThermalClusters;
+namespace HTMLLsDatasourcesRn = Component::HTMLListbox::Datasource::RenewableClusters;
 
-void ThermalCluster::internalBuildSubControls()
+
+void RenewableCluster::internalBuildSubControls()
 {
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
     SetSizer(sizer);
 
     Antares::Component::Button* btn;
 
-    //
     wxBoxSizer* toolSZ = new wxBoxSizer(wxHORIZONTAL);
     toolSZ->AddSpacer(10);
 
-    // Create a new thermal cluster
+    // Create a new renewable cluster
     btn = new Antares::Component::Button(this,
                                          wxT("Create a cluster"),
                                          "images/16x16/thermal_add.png",
                                          this,
-                                         &ThermalCluster::internalAddPlant);
+                                         &RenewableCluster::internalAddPlant);
+
     toolSZ->Add(btn, 0, wxALIGN_CENTER_VERTICAL | wxALL);
 
     // Delete
@@ -122,9 +127,9 @@ void ThermalCluster::internalBuildSubControls()
                                          wxT("Delete"),
                                          "images/16x16/thermal_remove.png",
                                          this,
-                                         &ThermalCluster::internalDeletePlant);
+                                         &RenewableCluster::internalDeletePlant);
     btn->dropDown(true);
-    btn->onPopupMenu(this, &ThermalCluster::onDeleteDropdown);
+    btn->onPopupMenu(this, &RenewableCluster::onDeleteDropdown);
     toolSZ->Add(btn, 0, wxALIGN_CENTER_VERTICAL | wxALL);
 
     // vertical line
@@ -132,7 +137,7 @@ void ThermalCluster::internalBuildSubControls()
 
     // Clone
     btn = new Antares::Component::Button(
-      this, wxT("Clone"), "images/16x16/paste.png", this, &ThermalCluster::internalClonePlant);
+      this, wxT("Clone"), "images/16x16/paste.png", this, &RenewableCluster::internalClonePlant);
     toolSZ->Add(btn, 0, wxALIGN_CENTER_VERTICAL | wxALL);
 
     toolSZ->AddStretchSpacer();
@@ -147,43 +152,46 @@ void ThermalCluster::internalBuildSubControls()
     sizer->AddSpacer(2);
 
     // The listbox
-    pThListbox = new Component::HTMLListbox::Component(this);
-    HTMLLsDatasourcesTh::ByAlphaOrder* dsAZ;
-    dsAZ = pThListbox->addDatasource<HTMLLsDatasourcesTh::ByAlphaOrder>();
-    HTMLLsDatasourcesTh::ByAlphaReverseOrder* dsZA;
-    dsZA = pThListbox->addDatasource<HTMLLsDatasourcesTh::ByAlphaReverseOrder>();
+    pRnListbox = new Component::HTMLListbox::Component(this);
+    
+    HTMLLsDatasourcesRn::ByAlphaOrder* dsAZ;
+    dsAZ = pRnListbox->addDatasource<HTMLLsDatasourcesRn::ByAlphaOrder>();
+    HTMLLsDatasourcesRn::ByAlphaReverseOrder* dsZA;
+    dsZA = pRnListbox->addDatasource<HTMLLsDatasourcesRn::ByAlphaReverseOrder>();
+
     if (pAreaNotifier)
     {
         pAreaNotifier->onAreaChanged.connect(dsAZ,
-                                             &HTMLLsDatasourcesTh::ByAlphaOrder::onAreaChanged);
+                                             &HTMLLsDatasourcesRn::ByAlphaOrder::onAreaChanged);
         pAreaNotifier->onAreaChanged.connect(
-          dsZA, &HTMLLsDatasourcesTh::ByAlphaReverseOrder::onAreaChanged);
+          dsZA, &HTMLLsDatasourcesRn::ByAlphaReverseOrder::onAreaChanged);
     }
-    sizer->Add(pThListbox, 1, wxALL | wxEXPAND);
-    sizer->SetItemMinSize(pThListbox, 100, 200);
-    pThListbox->onItemSelected.connect(this, &ThermalCluster::onThSelected);
+    
+    sizer->Add(pRnListbox, 1, wxALL | wxEXPAND);
+    sizer->SetItemMinSize(pRnListbox, 100, 200);
+    pRnListbox->onItemSelected.connect(this, &RenewableCluster::onRnSelected);
 
     // Update the layout
     GetSizer()->Layout();
 }
 
-void ThermalCluster::update()
+void RenewableCluster::update()
 {
-    pThListbox->invalidate();
-    onThermalClusterChanged(nullptr);
+    pRnListbox->invalidate();
+    onClusterChanged(nullptr);
     updateInnerValues();
 }
 
-void ThermalCluster::updateInnerValues()
+void RenewableCluster::updateInnerValues()
 {
-    if (pThListbox)
-        pThListbox->updateHtmlContent();
+    if (pRnListbox)
+        pRnListbox->updateHtmlContent();
 
     if (pArea)
     {
         double total = 0.;
         uint unitCount = 0;
-        pArea->thermal.list.retrieveTotalCapacityAndUnitCount(total, unitCount);
+        pArea->renewable.list.retrieveTotalCapacityAndUnitCount(total, unitCount);
 
         // The total - installed capacity
         pTotalMW->SetLabel(wxString() << unitCount << wxT(" units, ") << total << wxT(" MW"));
@@ -195,96 +203,67 @@ void ThermalCluster::updateInnerValues()
     GetSizer()->Layout();
 }
 
-void ThermalCluster::areaHasChanged(Antares::Data::Area* area)
+void RenewableCluster::areaHasChanged(Antares::Data::Area* area)
 {
     if (pArea != area)
     {
         pArea = area;
-        pLastSelectedThermalCluster = nullptr;
-        if (pThListbox)
-            pThListbox->forceUpdate();
+        pLastSelectedRenewableCluster = nullptr;
+        if (pRnListbox)
+            pRnListbox->forceUpdate();
         update();
-        if (pThListbox)
-            pThListbox->Refresh();
+        if (pRnListbox)
+            pRnListbox->Refresh();
     }
 }
 
-void ThermalCluster::onStudyEndUpdate()
+void RenewableCluster::onStudyEndUpdate()
 {
-    if (pThListbox)
-        pThListbox->forceUpdate();
+    if (pRnListbox)
+        pRnListbox->forceUpdate();
 }
 
-void ThermalCluster::renameAggregate(Antares::Data::ThermalCluster* cluster,
-                                     const wxString& newName,
-                                     const bool broadcast)
-{
-    using namespace Data;
-    WIP::Locker wip;
-    if (cluster && pArea && Study::Current::Valid())
-    {
-        ClusterName newPlantName;
-        wxStringToString(newName, newPlantName);
-
-        Study::Current::Get()->clusterRename(cluster, newPlantName);
-        MarkTheStudyAsModified();
-    }
-    if (broadcast)
-        onThermalClusterChanged(cluster);
-    OnStudyThermalClusterRenamed(cluster);
-    Window::Inspector::Refresh();
-}
-
-void ThermalCluster::onStudyThermalClusterRenamed(Antares::Data::ThermalCluster* cluster)
+void RenewableCluster::onStudyRenewableClusterRenamed(Antares::Data::RenewableCluster* cluster)
 {
     if (cluster->parentArea == pArea)
         updateInnerValues();
 }
 
-void ThermalCluster::evtPopupDelete(wxCommandEvent&)
+void RenewableCluster::evtPopupDelete(wxCommandEvent&)
 {
     Yuni::Bind<void()> callback;
-    callback.bind(this, &ThermalCluster::internalDeletePlant, (void*)nullptr);
+    callback.bind(this, &RenewableCluster::internalDeletePlant, (void*)nullptr);
     Dispatcher::GUI::Post(callback);
 }
 
-void ThermalCluster::evtPopupDeleteAll(wxCommandEvent&)
+void RenewableCluster::evtPopupDeleteAll(wxCommandEvent&)
 {
     Yuni::Bind<void()> callback;
-    callback.bind(this, &ThermalCluster::internalDeleteAll, (void*)nullptr);
+    callback.bind(this, &RenewableCluster::internalDeleteAll, (void*)nullptr);
     Dispatcher::GUI::Post(callback);
 }
 
-void ThermalCluster::internalDeletePlant(void*)
+void RenewableCluster::internalDeletePlant(void*)
 {
     // Nothing is/was selected. Aborting.
-    if (!pArea || !pLastSelectedThermalCluster || not Data::Study::Current::Valid())
+    if (!pArea || !pLastSelectedRenewableCluster || not Data::Study::Current::Valid())
         return;
 
-    // The thermal cluster to delete
-    auto* toDelete = pLastSelectedThermalCluster->thermalAggregate();
+    // The renewable cluster to delete
+    auto* toDelete = pLastSelectedRenewableCluster->renewableAggregate();
     if (not toDelete)
         return;
 
     auto& mainFrm = *Forms::ApplWnd::Instance();
 
     wxString messageText = wxT("");
-    uint selectedConstraintsCount = Antares::Window::Inspector::SelectionBindingConstraintCount();
-    if (selectedConstraintsCount > 0)
-    {
-        messageText << "\nSelected: ";
-        messageText << selectedConstraintsCount;
-        messageText << " Constraint";
-        if (selectedConstraintsCount > 1)
-            messageText << "s";
-    }
 
     // If the pointer has been, it is guaranteed to be valid
     Window::Message message(&mainFrm,
-                            wxT("Thermal cluster"),
-                            wxT("Delete a thermal cluster"),
+                            wxT("Renewable cluster"),
+                            wxT("Delete a renewable cluster"),
                             wxString()
-                              << wxT("Do you really want to delete the thermal cluster '")
+                              << wxT("Do you really want to delete the renewable cluster '")
                               << wxStringFromUTF8(toDelete->name()) << wxT("' ?") << messageText);
     message.add(Window::Message::btnYes);
     message.add(Window::Message::btnCancel, true);
@@ -299,15 +278,14 @@ void ThermalCluster::internalDeletePlant(void*)
         study->scenarioRulesLoadIfNotAvailable();
 
         // Update the list
-        Window::Inspector::RemoveThermalCluster(toDelete);
-        pLastSelectedThermalCluster = nullptr;
-        onThermalClusterChanged(nullptr);
+        Window::Inspector::RemoveRenewableCluster(toDelete);
+        pLastSelectedRenewableCluster = nullptr;
+        onClusterChanged(nullptr);
 
         // We have to rebuild the scenario builder data, if required
-        ScenarioBuilderUpdater updaterSB(
-          *study); // this will create a temp file, and save it during destructor call
+        ScenarioBuilderUpdater updaterSB(*study); // this will create a temp file, and save it during destructor call
 
-        if (pArea->thermal.list.remove(toDelete->id()))
+        if (pArea->renewable.list.remove(toDelete->id()))
         {
             // We __must__ update the scenario builder data
             // We may delete an area and re-create a new one with the same
@@ -318,30 +296,9 @@ void ThermalCluster::internalDeletePlant(void*)
             Refresh();
             MarkTheStudyAsModified();
             updateInnerValues();
-            pArea->thermal.list.rebuildIndex();
-            pArea->thermal.prepareAreaWideIndexes();
+            pArea->renewable.list.rebuildIndex();
+            pArea->renewable.prepareAreaWideIndexes();
             study->uiinfo->reload();
-
-            // delete associated constraints
-            Antares::Data::BindConstList::iterator BC = study->bindingConstraints.begin();
-            int BCListSize = study->bindingConstraints.size();
-
-            if (BCListSize)
-            {
-                logs.info() << "deleting the constraints ";
-
-                WIP::Locker wip;
-                for (int i = 0; i < BCListSize; i++)
-                {
-                    if (Window::Inspector::isConstraintSelected((*BC)->name()))
-                        study->bindingConstraints.remove(*BC);
-                    else
-                        ++BC;
-                }
-
-                study->uiinfo->reloadBindingConstraints();
-                OnStudyConstraintDelete(nullptr);
-            }
         }
         else
             logs.error() << "Impossible to delete the cluster '" << toDelete->name() << "'";
@@ -351,16 +308,16 @@ void ThermalCluster::internalDeletePlant(void*)
     }
 }
 
-void ThermalCluster::internalDeleteAll(void*)
+void RenewableCluster::internalDeleteAll(void*)
 {
     // Nothing is/was selected. Aborting.
     if (!pArea)
         return;
 
-    if (pArea->thermal.list.empty())
+    if (pArea->renewable.list.empty())
     {
         // The selected has been obviously invalidated
-        pLastSelectedThermalCluster = nullptr;
+        pLastSelectedRenewableCluster = nullptr;
         return;
     }
 
@@ -371,9 +328,9 @@ void ThermalCluster::internalDeleteAll(void*)
     // If the pointer has been, it is guaranteed to be valid
     Window::Message message(
       &mainFrm,
-      wxT("Thermal cluster"),
-      wxT("Delete all thermal clusters"),
-      wxString() << wxT("Do you really want to delete all thermal clusters from the area '")
+      wxT("Renewable cluster"),
+      wxT("Delete all renewable clusters"),
+      wxString() << wxT("Do you really want to delete all renewable clusters from the area '")
                  << wxStringFromUTF8(pArea->name) << wxT("' ?"));
     message.add(Window::Message::btnYes);
     message.add(Window::Message::btnCancel, true);
@@ -391,22 +348,10 @@ void ThermalCluster::internalDeleteAll(void*)
 
         // Update the list
         Window::Inspector::SelectArea(pArea);
-        pLastSelectedThermalCluster = nullptr;
-        onThermalClusterChanged(nullptr);
+        pLastSelectedRenewableCluster = nullptr;
+        onClusterChanged(nullptr);
 
-        // delete associated constraints
-
-        int BCListSize = study->bindingConstraints.size();
-
-        if (BCListSize)
-        {
-            logs.info() << "deleting the constraints ";
-
-            WIP::Locker wip;
-            study->bindingConstraints.remove(pArea);
-        }
-
-        pArea->thermal.reset();
+        pArea->renewable.reset();
 
         update();
         Refresh();
@@ -420,21 +365,21 @@ void ThermalCluster::internalDeleteAll(void*)
     }
 }
 
-void ThermalCluster::internalAddPlant(void*)
+void RenewableCluster::internalAddPlant(void*)
 {
     WIP::Locker wip;
     auto study = Data::Study::Current::Get();
 
     if (!(!study) && pArea)
     {
-        onThermalClusterChanged(nullptr);
+        onClusterChanged(nullptr);
 
         uint indx = 1;
 
         // Trying to find an uniq name
         Antares::Data::ClusterName sFl;
         sFl.clear() << "new cluster";
-        while (pArea->thermal.list.find(sFl))
+        while (pArea->renewable.list.find(sFl))
         {
             ++indx;
             sFl.clear() << "new cluster " << indx;
@@ -444,20 +389,18 @@ void ThermalCluster::internalAddPlant(void*)
         ScenarioBuilderUpdater updaterSB(*study);
 
         // Creating a new cluster
-        Antares::Data::ThermalCluster* cluster = new Antares::Data::ThermalCluster(pArea);
-        logs.info() << "adding new thermal cluster " << pArea->id << '.' << sFl;
+        Antares::Data::RenewableCluster* cluster = new Antares::Data::RenewableCluster(pArea);
+        logs.info() << "adding new renewable cluster " << pArea->id << '.' << sFl;
         cluster->setName(sFl);
         cluster->reset();
-        auto added = pArea->thermal.list.add(cluster);
-        pArea->thermal.list.mapping[cluster->id()] = added;
-        pArea->thermal.list.rebuildIndex();
-        pArea->thermal.prepareAreaWideIndexes();
+        pArea->renewable.list.add(cluster);
+        pArea->renewable.list.rebuildIndex();
+        pArea->renewable.prepareAreaWideIndexes();
 
         // Update the list
         update();
         Refresh();
-
-        onThermalClusterChanged(cluster);
+        onClusterChanged(cluster);
         MarkTheStudyAsModified();
         updateInnerValues();
 
@@ -467,29 +410,29 @@ void ThermalCluster::internalAddPlant(void*)
     }
 }
 
-void ThermalCluster::internalClonePlant(void*)
+void RenewableCluster::internalClonePlant(void*)
 {
     // Nothing is/was selected. Aborting.
-    if (!pArea || !pLastSelectedThermalCluster)
+    if (!pArea || !pLastSelectedRenewableCluster)
         return;
 
-    if (!pArea->thermal.list.find(pLastSelectedThermalCluster->thermalAggregate()->id()))
+    if (!pArea->renewable.list.find(pLastSelectedRenewableCluster->renewableAggregate()->id()))
     {
         // The selected has been obviously invalidated
-        pLastSelectedThermalCluster = nullptr;
+        pLastSelectedRenewableCluster = nullptr;
         // Inform the user
-        logs.error() << "Please select a thermal cluster.";
+        logs.error() << "Please select a renewable cluster.";
         return;
     }
 
     WIP::Locker wip;
-    const Antares::Data::ThermalCluster& selectedPlant
-      = *pLastSelectedThermalCluster->thermalAggregate();
+    const Antares::Data::RenewableCluster& selectedPlant
+      = *pLastSelectedRenewableCluster->renewableAggregate();
 
     auto study = Data::Study::Current::Get();
     if (!(!study) && pArea)
     {
-        onThermalClusterChanged(nullptr);
+        onClusterChanged(nullptr);
 
         uint indx = 2;
 
@@ -512,7 +455,7 @@ void ThermalCluster::internalClonePlant(void*)
 
         Antares::Data::ClusterName sFl;
         sFl << copy << indx; // lowercase
-        while (pArea->thermal.list.find(sFl))
+        while (pArea->renewable.list.find(sFl))
         {
             ++indx;
             sFl.clear() << copy << indx;
@@ -522,22 +465,21 @@ void ThermalCluster::internalClonePlant(void*)
         ScenarioBuilderUpdater updaterSB(*study);
 
         // Creating a new cluster
-        auto* cluster = new Antares::Data::ThermalCluster(pArea);
+        auto* cluster = new Antares::Data::RenewableCluster(pArea);
         cluster->setName(sFl);
         cluster->reset();
         // Reset to default values
         cluster->copyFrom(selectedPlant);
 
-        auto added = pArea->thermal.list.add(cluster);
-        pArea->thermal.list.mapping[cluster->id()] = added;
-        pArea->thermal.list.rebuildIndex();
-        pArea->thermal.prepareAreaWideIndexes();
+        pArea->renewable.list.add(cluster);
+        pArea->renewable.list.rebuildIndex();
+        pArea->renewable.prepareAreaWideIndexes();
 
         // Update the list
         update();
         Refresh();
 
-        onThermalClusterChanged(cluster);
+        onClusterChanged(cluster);
         MarkTheStudyAsModified();
         updateInnerValues();
 
@@ -547,87 +489,72 @@ void ThermalCluster::internalClonePlant(void*)
     }
 }
 
-void ThermalCluster::onApplicationOnQuit()
+void RenewableCluster::onApplicationOnQuit()
 {
     // Avoid SegV at exit
     pArea = nullptr;
-    onThermalClusterChanged(nullptr);
-    pThListbox->clear();
+    onClusterChanged(nullptr);
+    pRnListbox->clear();
 }
 
-void ThermalCluster::onStudyClosed()
+void RenewableCluster::onStudyClosed()
 {
     // Avoid SegV at exit
     pArea = nullptr;
-    onThermalClusterChanged(nullptr);
-    pThListbox->clear();
+    onClusterChanged(nullptr);
+    pRnListbox->clear();
 }
 
-void ThermalCluster::onThSelected(Component::HTMLListbox::Item::IItem::Ptr item)
+void RenewableCluster::onRnSelected(Component::HTMLListbox::Item::IItem::Ptr item)
 {
     Yuni::Bind<void()> callback;
-    callback.bind(this, &ThermalCluster::delayedSelection, item);
+    callback.bind(this, &RenewableCluster::delayedSelection, item);
     Dispatcher::GUI::Post(callback, 30);
 }
 
-void ThermalCluster::delayedSelection(Component::HTMLListbox::Item::IItem::Ptr item)
+
+void RenewableCluster::delayedSelection(Component::HTMLListbox::Item::IItem::Ptr item)
 {
-    typedef Component::HTMLListbox::Item::ThermalCluster::Ptr ThPtr;
-    ThPtr a = Component::HTMLListbox::Item::IItem::Ptr::DynamicCast<ThPtr>(item);
+    typedef Component::HTMLListbox::Item::RenewableCluster::Ptr RnPtr;
+    RnPtr a = Component::HTMLListbox::Item::IItem::Ptr::DynamicCast<RnPtr>(item);
     if (a)
     {
         // Lock the window to prevent flickering
         Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
 
-        pLastSelectedThermalCluster = a;
-        auto* cluster = a->thermalAggregate();
+        pLastSelectedRenewableCluster = a;
+        auto* cluster = a->renewableAggregate();
 
         WIP::Locker wip;
         wxWindowUpdateLocker updater(&mainFrm);
-        onThermalClusterChanged(cluster);
-        Window::Inspector::SelectThermalCluster(cluster);
+        onClusterChanged(cluster);
+        Window::Inspector::SelectRenewableCluster(cluster);
         updateInnerValues();
-
-        // Selecting Binding constraints containing the cluster
-
-        Data::BindingConstraint::Set constraintlist;
-
-        auto study = Data::Study::Current::Get();
-
-        const Data::BindConstList::iterator cEnd = study->bindingConstraints.end();
-        for (Data::BindConstList::iterator i = study->bindingConstraints.begin(); i != cEnd; ++i)
-        {
-            // alias to the current constraint
-            Data::BindingConstraint* constraint = *i;
-
-            if (constraint->contains(cluster))
-                constraintlist.insert(constraint);
-        }
-        Window::Inspector::AddBindingConstraints(constraintlist);
     }
 }
 
-void ThermalCluster::onDeleteDropdown(Antares::Component::Button&, wxMenu& menu, void*)
+void RenewableCluster::onDeleteDropdown(Antares::Component::Button&, wxMenu& menu, void*)
 {
     wxMenuItem* it;
 
     it = Menu::CreateItem(
       &menu, wxID_ANY, wxT("Delete the selected cluster"), "images/16x16/thermal_remove.png");
+    
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(ThermalCluster::evtPopupDelete),
+                 wxCommandEventHandler(RenewableCluster::evtPopupDelete),
                  nullptr,
                  this);
 
     it = Menu::CreateItem(&menu, wxID_ANY, wxT("Delete all"), "images/16x16/empty.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(ThermalCluster::evtPopupDeleteAll),
+                 wxCommandEventHandler(RenewableCluster::evtPopupDeleteAll),
                  nullptr,
                  this);
 }
 
-void ThermalCluster::onStudyThermalClusterGroupChanged(Antares::Data::Area* area)
+void RenewableCluster::onStudyRenewableClusterGroupChanged(Antares::Data::Area* area)
 {
     if (area && area == pArea)
     {
@@ -637,7 +564,7 @@ void ThermalCluster::onStudyThermalClusterGroupChanged(Antares::Data::Area* area
     }
 }
 
-void ThermalCluster::onStudyThermalClusterCommonSettingsChanged()
+void RenewableCluster::onStudyRenewableClusterCommonSettingsChanged()
 {
     updateInnerValues();
     Refresh();

@@ -53,7 +53,7 @@ def remove_outputs(study_path):
 def launch_solver(solver_path, study_path, use_ortools = False, ortools_solver = "sirius"):
     # Clean study output
     remove_outputs(study_path)
-    
+
     solver_path_full = str(Path(solver_path).resolve())
 
     command = [solver_path_full, "-i", str(study_path)]
@@ -82,7 +82,7 @@ def generate_reference_values(solver_path, path, use_ortools, ortools_solver):
 def run_study(solver_path, path, use_ortools, ortools_solver):
     # Launch antares-solver
     launch_solver(solver_path, path, use_ortools, ortools_solver)
-    
+
 def enable_study_synthesis(study_path, enable):
     st = Study(str(study_path))
     st.check_files_existence()
@@ -95,7 +95,7 @@ def compare_directory(result_dir, reference_dir):
     assert (reference_dir.is_dir())
 
     uncompared_file_name = ['id-daily.txt', 'id-hourly.txt']
-    
+
     for x in result_dir.iterdir():
         if x.is_dir():
             if x.name != 'grid':
@@ -111,11 +111,11 @@ def compare_directory(result_dir, reference_dir):
                 output_headers = get_headers(output_df)
 
                 assert reference_headers.issubset(output_headers), f"The following column(s) is missing from the output {reference_headers.difference(output_headers)}"
-                
+
                 for col_name in reference_headers:
                     rtol = 1e-4
                     atol = 0
-                    
+
                     if sys.platform=="linux":
                         trimmed_name = trim_digit_after_last_dot(col_name)
                         if trimmed_name in RTOL_OVERRIDE_LINUX:
@@ -676,7 +676,7 @@ def test_075_kcg_on_four_areas_02(use_ortools, ortools_solver, solver_path):
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     enable_study_synthesis(study_path, False)
     check_output_values(study_path)
-    
+
 @pytest.mark.short
 def test_playlist_0(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "playlist-0"
@@ -708,7 +708,7 @@ def test_playlist_3(use_ortools, ortools_solver, solver_path):
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     enable_study_synthesis(study_path, False)
     check_output_values(study_path)
-    
+
 @pytest.mark.short
 def test_playlist_12(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "playlist-12"
@@ -716,7 +716,7 @@ def test_playlist_12(use_ortools, ortools_solver, solver_path):
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     enable_study_synthesis(study_path, False)
     check_output_values(study_path)
-    
+
 @pytest.mark.short
 def test_playlist_13(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "playlist-13"
@@ -724,7 +724,7 @@ def test_playlist_13(use_ortools, ortools_solver, solver_path):
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     enable_study_synthesis(study_path, False)
     check_output_values(study_path)
-    
+
 @pytest.mark.short
 def test_playlist_23(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "playlist-23"
@@ -742,61 +742,61 @@ def test_playlist_psp_misc_ndg(use_ortools, ortools_solver, solver_path):
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     enable_study_synthesis(study_path, False)
     check_output_values(study_path)
-    
+
 @pytest.mark.short
 @pytest.mark.skipif(sys.platform=="linux",
                     reason="Results different between linux and windows.")
 def test_unfeasible_problem_06(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "specific-tests" / "unfeasible-problem" /"unfeasible_problem_06"
-    enable_study_synthesis(study_path, True)    
+    enable_study_synthesis(study_path, True)
     st = Study(str(study_path))
     st.set_variable(variable="include-unfeasible-problem-behavior", value="warning-dry", file_nick_name="general")
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     enable_study_synthesis(study_path, False)
     check_output_values(study_path)
-    
+
 @pytest.mark.short
 @pytest.mark.skipif(sys.platform=="linux",
                     reason="Results different between linux and windows.")
 def test_unfeasible_problem_07(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "specific-tests" / "unfeasible-problem" /"unfeasible_problem_07"
-    enable_study_synthesis(study_path, True)    
+    enable_study_synthesis(study_path, True)
     st = Study(str(study_path))
     st.set_variable(variable="include-unfeasible-problem-behavior", value="warning-dry", file_nick_name="general")
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     enable_study_synthesis(study_path, False)
     check_output_values(study_path)
-    
+
 @pytest.mark.short
 @pytest.mark.skipif(sys.platform=="linux",
                     reason="Results different between linux and windows.")
 def test_unfeasible_problem_08(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "specific-tests" / "unfeasible-problem" /"unfeasible_problem_08"
-    enable_study_synthesis(study_path, True)    
+    enable_study_synthesis(study_path, True)
     st = Study(str(study_path))
     st.set_variable(variable="include-unfeasible-problem-behavior", value="warning-dry", file_nick_name="general")
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     enable_study_synthesis(study_path, False)
     check_output_values(study_path)
-    
+
 @pytest.mark.short
 @pytest.mark.skipif(sys.platform=="linux",
                     reason="Results different between linux and windows.")
 def test_unfeasible_problem_09(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "specific-tests" / "unfeasible-problem" /"unfeasible_problem_09"
-    enable_study_synthesis(study_path, True)    
+    enable_study_synthesis(study_path, True)
     st = Study(str(study_path))
     st.set_variable(variable="include-unfeasible-problem-behavior", value="warning-dry", file_nick_name="general")
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     enable_study_synthesis(study_path, False)
     check_output_values(study_path)
-    
+
 @pytest.mark.short
 @pytest.mark.skipif(sys.platform=="linux",
                     reason="Results different between linux and windows.")
 def test_unfeasible_problem_10(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "specific-tests" / "unfeasible-problem" /"unfeasible_problem_10"
-    enable_study_synthesis(study_path, True)    
+    enable_study_synthesis(study_path, True)
     st = Study(str(study_path))
     st.set_variable(variable="include-unfeasible-problem-behavior", value="warning-dry", file_nick_name="general")
     run_study(solver_path, study_path, use_ortools, ortools_solver)
@@ -844,4 +844,3 @@ def test_renewables_ts_prod_factor_cluster_disabled(use_ortools, ortools_solver,
     study_path = ALL_STUDIES_PATH / "short-tests" / "renewable-ts-prod-factor-cluster-disabled"
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     check_output_values(study_path)
-
