@@ -249,6 +249,14 @@ static const wxChar* arrayRnClusterGroup[] = { wxT("Wind Onshore"),
 
 enum
 {
+    renewableTSModeCount = 2
+};
+
+static const wxChar* renewableTSMode[]
+  = {wxT("power generation"), wxT("production factor"), nullptr};
+
+enum
+{
     thermalLawCount = 2
 };
 static const wxChar* thermalLaws[] = {wxT("uniform"), wxT("geometric"), nullptr};
@@ -1276,6 +1284,19 @@ struct PClusterLawPlanned
     static wxString ConvertToString(const Type v)
     {
         return (v < thermalLawCount) ? thermalLaws[v] : nullptr;
+    }
+};
+
+struct PRnClusterTSMode
+{
+    typedef uint Type;
+    static Type Value(const Data::RenewableCluster* cluster)
+    {
+        return cluster->tsMode;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return (v < renewableTSModeCount) ? renewableTSMode[v] : nullptr;
     }
 };
 

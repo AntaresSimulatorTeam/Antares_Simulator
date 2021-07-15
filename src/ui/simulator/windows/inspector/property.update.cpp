@@ -1148,7 +1148,8 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
         }
         // refresh the installed capacity
         if (data)
-           Accumulator<PClusterInstalled, Add>::Apply(pFrame.pPGRnClusterInstalled, data->RnClusters);
+            Accumulator<PClusterInstalled, Add>::Apply(pFrame.pPGRnClusterInstalled,
+                                                       data->RnClusters);
 
         // Notify
         OnStudyRenewableClusterCommonSettingsChanged();
@@ -1175,7 +1176,7 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
         if (data)
         {
             Accumulator<PClusterNomCapacity>::Apply(pFrame.pPGRnClusterNominalCapacity,
-                                                      data->RnClusters);
+                                                    data->RnClusters);
 
             Accumulator<PClusterInstalled, Add>::Apply(pFrame.pPGRnClusterInstalled,
                                                        data->RnClusters);
@@ -1198,9 +1199,29 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
         return true;
     }
 
+    if (name == "rn-cluster.ts_mode")
+    {
+        long index = value.GetLong();
+        Data::RenewableCluster::TimeSeriesMode tsMode = Data::RenewableCluster::powerGeneration;
+        switch (index)
+        {
+        case 0:
+            tsMode = Data::RenewableCluster::powerGeneration;
+            break;
+        case 1:
+            tsMode = Data::RenewableCluster::productionFactor;
+            break;
+        default:
+            return false;
+        }
+        for (; i != end; ++i)
+            (*i)->tsMode = tsMode;
+
+        OnStudyRenewableClusterCommonSettingsChanged();
+        return true;
+    }
     return false;
 }
-
 
 bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
                                          const PropertyNameType& name,
