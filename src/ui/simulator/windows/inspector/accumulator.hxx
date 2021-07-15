@@ -996,25 +996,6 @@ struct PClusterNomCapacity
     }
 };
 
-struct PClusterNomCapacityColor
-{
-    static wxColor TextColor(Data::ThermalCluster* cluster)
-    {
-        if (not cluster->checkMinStablePower())
-            return wxColor(255, 0, 0);
-
-        if (cluster->minStablePower > cluster->nominalCapacity * (1 - cluster->spinning / 100.))
-            return wxColor(255, 0, 0);
-
-        return wxColour(86, 98, 115);
-    }
-
-    static bool IsValid(Data::ThermalCluster* cluster)
-    {
-        return cluster->checkMinStablePower();
-    }
-};
-
 struct PClusterInstalled
 {
     typedef double Type;
@@ -1025,19 +1006,6 @@ struct PClusterInstalled
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
-    }
-};
-
-struct PClusterMustRun
-{
-    typedef bool Type;
-    static Type Value(const Data::ThermalCluster* cluster)
-    {
-        return cluster->mustrun;
-    }
-    static wxString ConvertToString(const Type v)
-    {
-        return v ? wxT("True") : wxT("False");
     }
 };
 
@@ -1064,6 +1032,41 @@ struct PClusterArea
     static wxString ConvertToString(const Type v)
     {
         return v;
+    }
+};
+
+// ----------------
+// THERMAL CLUSTERS
+// ----------------
+struct PClusterNomCapacityColor
+{
+    static wxColor TextColor(Data::ThermalCluster* cluster)
+    {
+        if (not cluster->checkMinStablePower())
+            return wxColor(255, 0, 0);
+
+        if (cluster->minStablePower > cluster->nominalCapacity * (1 - cluster->spinning / 100.))
+            return wxColor(255, 0, 0);
+
+        return wxColour(86, 98, 115);
+    }
+
+    static bool IsValid(Data::ThermalCluster* cluster)
+    {
+        return cluster->checkMinStablePower();
+    }
+};
+
+struct PClusterMustRun
+{
+    typedef bool Type;
+    static Type Value(const Data::ThermalCluster* cluster)
+    {
+        return cluster->mustrun;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return v ? wxT("True") : wxT("False");
     }
 };
 
@@ -1300,6 +1303,9 @@ struct PRnClusterTSMode
     }
 };
 
+// -------------------
+// BINDING CONSTRAINTS
+// -------------------
 struct PConstraintName
 {
     typedef wxString Type;
