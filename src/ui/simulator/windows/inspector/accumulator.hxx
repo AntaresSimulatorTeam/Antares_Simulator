@@ -221,7 +221,7 @@ static const uint arrayMinUpDownTimeValue[] = {1, 24, 168, 0};
 
 enum
 {
-    arrayClusterGroupCount = 7
+    arrayClusterGroupCount = 10
 };
 static const wxChar* arrayClusterGroup[] = {wxT("Gas"),
                                             wxT("Hard coal"),
@@ -229,7 +229,10 @@ static const wxChar* arrayClusterGroup[] = {wxT("Gas"),
                                             wxT("Mixed fuel"),
                                             wxT("Nuclear"),
                                             wxT("Oil"),
-                                            wxT("Other"),
+                                            wxT("Other 1"),
+                                            wxT("Other 2"),
+                                            wxT("Other 3"),
+                                            wxT("Other 4"),
                                             nullptr};
 
 enum

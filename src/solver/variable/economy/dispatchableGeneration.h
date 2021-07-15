@@ -80,7 +80,7 @@ struct VCardDispatchableGeneration
         //! Decimal precision
         decimal = 0,
         //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 7,
+        columnCount = 10,
         //! The Spatial aggregation
         spatialAggregate = Category::spatialAggregateSum,
         spatialAggregateMode = Category::spatialAggregateEachYear,
@@ -116,6 +116,13 @@ struct VCardDispatchableGeneration
                 return "MIX. FUEL";
             case 6:
                 return "MISC. DTG";
+            case 7:
+                return "MISC. DTG 2";
+            case 8:
+                return "MISC. DTG 3";
+            case 9:
+                return "MISC. DTG 4";
+
             default:
                 return "<unknown>";
             }
