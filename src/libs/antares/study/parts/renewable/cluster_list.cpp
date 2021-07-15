@@ -139,7 +139,7 @@ static bool ClusterLoadFromSection(const AnyString& filename,
             if (not ClusterLoadFromProperty(cluster, property))
             {
                 logs.warning() << '`' << filename << "`: `" << section.name << "`/`"
-                               << property->value << "`: The property is unknown and ignored";
+                               << property->key << "`: The property is unknown and ignored";
             }
         }
         // update the minUpDownTime

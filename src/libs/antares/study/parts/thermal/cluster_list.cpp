@@ -601,7 +601,7 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
             if (not ThermalClusterLoadFromProperty(cluster, property))
             {
                 logs.warning() << '`' << filename << "`: `" << section.name << "`/`"
-                               << property->value << "`: The property is unknown and ignored";
+                               << property->key << "`: The property is unknown and ignored";
             }
         }
         // update the minUpDownTime
