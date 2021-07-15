@@ -115,8 +115,7 @@ private:
     //! Delete the selection thermal cluster
     void internalClonePlant(void*);
 
-    // gp : to be adapted
-    // void internalDeleteAll(void*);
+    void internalDeleteAll(void*);
 
     /*!
     ** \brief Event: The application is going to quit
@@ -144,8 +143,8 @@ private:
     void onDeleteDropdown(Antares::Component::Button&, wxMenu& menu, void*);
 
     void evtPopupDelete(wxCommandEvent&);
-    // gp : to be adapted
-    // void evtPopupDeleteAll(wxCommandEvent&);
+
+    void evtPopupDeleteAll(wxCommandEvent&);
 
     void delayedSelection(Component::HTMLListbox::Item::IItem::Ptr item);
 
