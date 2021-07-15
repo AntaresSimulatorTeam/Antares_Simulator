@@ -86,6 +86,9 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
     // nominal capacity
     nominalCapacity = cluster.nominalCapacity;
 
+    // ts-mode
+    tsMode = cluster.tsMode;
+
     // Making sure that the data related to the timeseries are present
     if (not series)
         series = new DataSeriesCommon();

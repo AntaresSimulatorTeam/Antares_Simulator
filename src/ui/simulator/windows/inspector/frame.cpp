@@ -487,7 +487,8 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
       = page->AppendIn(lid, new wxBoolProperty(wxT("annual"), wxT("annual"), true));
 
     // --- THERMAL CLUSTERS ---
-    // gp : all thermal property names should be renamed "th-cluster.<something>" instead of "cluster.<something>"
+    // gp : all thermal property names should be renamed "th-cluster.<something>" instead of
+    // "cluster.<something>"
     pPGThClusterSeparator = Group(pg, wxEmptyString, wxEmptyString);
     Group(pg, wxT("THERMAL CLUSTERS"), wxT("cluster.title"));
     pPGThClusterGeneral = Category(pg, wxT("General"), wxT("cluster.general"));
@@ -548,6 +549,8 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
 
     pPGRnClusterArea = P_STRING("area", "rn-cluster.area");
     pg->DisableProperty(pPGRnClusterArea);
+
+    pPGRnClusterTSMode = P_ENUM("timeseries mode", "rn-cluster.ts_mode", renewableTSMode);
 
     pPGRnClusterParams = Category(pg, wxT("Operating parameters"), wxT("rn-cluster.params"));
     pPGRnClusterEnabled = P_BOOL("Enabled", "rn-cluster.enabled");
@@ -985,6 +988,8 @@ void Frame::apply(const InspectorData::Ptr& data)
         Accumulator<PClusterArea>::Apply(pPGRnClusterArea, data->RnClusters);
         // Group
         Accumulator<PClusterGroup>::Apply(pPGRnClusterGroup, data->RnClusters);
+        // TS mode
+        Accumulator<PRnClusterTSMode>::Apply(pPGRnClusterTSMode, data->RnClusters);
         // Enabled
         Accumulator<PClusterEnabled>::Apply(pPGRnClusterEnabled, data->RnClusters);
         // Unit count
