@@ -59,8 +59,8 @@ public:
     //@}
 
 private:
-    //! A study has been loaded
-    void onStudyLoaded();
+    //! In case renewable generation modelling was changed
+    void onRenewableGenerationModellingChanged();
     //! The study has been closed
     void onStudyClosed();
     //! A study has been loaded (delayed)
