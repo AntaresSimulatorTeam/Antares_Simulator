@@ -85,11 +85,11 @@ ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id)
 }
 
 template<class ClusterT>
-ClusterT* ClusterList<ClusterT>::detach(iterator i)
+typename std::shared_ptr<ClusterT> ClusterList<ClusterT>::detach(iterator i)
 {
     SharedPtr c = i->second;
     cluster.erase(i);
-    return c.get();
+    return c;
 }
 
 template<class ClusterT>
@@ -221,7 +221,7 @@ void ClusterList<ClusterT>::rebuildIndex()
 }
 
 template<class ClusterT>
-typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::add(ClusterT* newcluster)
+typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::add(const ClusterList<ClusterT>::SharedPtr& newcluster)
 {
     if (newcluster)
     {
@@ -229,7 +229,7 @@ typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::add(ClusterT* n
             return cluster[newcluster->id()];
 
         newcluster->index = (uint)size();
-        cluster[newcluster->id()] = SharedPtr(newcluster);
+        cluster[newcluster->id()] = newcluster;
         ++(groupCount[newcluster->groupId()]);
         rebuildIndex();
         return cluster[newcluster->id()];

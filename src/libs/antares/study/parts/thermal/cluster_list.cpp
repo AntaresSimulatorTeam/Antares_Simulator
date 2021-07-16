@@ -96,12 +96,11 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                     break;
                 }
 
-                auto* cluster = new ThermalCluster(area, study.maxNbYearsInParallel);
+                auto cluster = std::make_shared<ThermalCluster>(area, study.maxNbYearsInParallel);
 
                 // Load data of a thermal cluster from a ini file section
                 if (not ThermalClusterLoadFromSection(study.buffer, *cluster, *section))
                 {
-                    delete cluster;
                     continue;
                 }
 
@@ -359,7 +358,6 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                     // This error should never happen
                     logs.error() << "Impossible to add the thermal cluster '" << cluster->name()
                                  << "'";
-                    delete cluster;
                     continue;
                 }
                 // keeping track of the cluster
