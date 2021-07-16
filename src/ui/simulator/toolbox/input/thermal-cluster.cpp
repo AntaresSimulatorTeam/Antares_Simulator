@@ -443,12 +443,11 @@ void ThermalCluster::internalAddPlant(void*)
         ScenarioBuilderUpdater updaterSB(*study);
 
         // Creating a new cluster
-        Antares::Data::ThermalCluster* cluster = new Antares::Data::ThermalCluster(pArea);
+        auto cluster = std::make_shared<Antares::Data::ThermalCluster>(pArea);
         logs.info() << "adding new thermal cluster " << pArea->id << '.' << sFl;
         cluster->setName(sFl);
         cluster->reset();
-        auto added = pArea->thermal.list.add(cluster);
-        pArea->thermal.list.mapping[cluster->id()] = added;
+        pArea->thermal.list.add(cluster);
         pArea->thermal.list.rebuildIndex();
         pArea->thermal.prepareAreaWideIndexes();
 
@@ -456,7 +455,7 @@ void ThermalCluster::internalAddPlant(void*)
         update();
         Refresh();
 
-        onThermalClusterChanged(cluster);
+        onThermalClusterChanged(cluster.get());
         MarkTheStudyAsModified();
         updateInnerValues();
 
@@ -521,14 +520,13 @@ void ThermalCluster::internalClonePlant(void*)
         ScenarioBuilderUpdater updaterSB(*study);
 
         // Creating a new cluster
-        auto* cluster = new Antares::Data::ThermalCluster(pArea);
+        auto cluster = std::make_shared<Antares::Data::ThermalCluster>(pArea);
         cluster->setName(sFl);
         cluster->reset();
         // Reset to default values
         cluster->copyFrom(selectedPlant);
 
-        auto added = pArea->thermal.list.add(cluster);
-        pArea->thermal.list.mapping[cluster->id()] = added;
+        pArea->thermal.list.add(cluster);
         pArea->thermal.list.rebuildIndex();
         pArea->thermal.prepareAreaWideIndexes();
 
@@ -536,7 +534,7 @@ void ThermalCluster::internalClonePlant(void*)
         update();
         Refresh();
 
-        onThermalClusterChanged(cluster);
+        onThermalClusterChanged(cluster.get());
         MarkTheStudyAsModified();
         updateInnerValues();
 
