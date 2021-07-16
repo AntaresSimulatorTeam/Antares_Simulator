@@ -356,6 +356,8 @@ private:
     Button* pBtnValues;
     //! Data level: details
     Button* pBtnDetails;
+    //! Data level: details-res
+    Button* pBtnDetailsRes;
     //! Data level: id
     Button* pBtnID;
 
