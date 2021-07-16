@@ -39,6 +39,9 @@ namespace Window
 {
 namespace Options
 {
+
+extern Yuni::Event<void()> OnRenewableGenerationModellingChanged;
+
 /*!
 ** \brief Startup Wizard User Interface
 */
