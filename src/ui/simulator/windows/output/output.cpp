@@ -116,6 +116,7 @@ Component::Component(wxWindow* parent, bool parentIsStandaloneWindow) :
  pLabelItemName(nullptr),
  pBtnValues(nullptr),
  pBtnDetails(nullptr),
+ pBtnDetailsRes(nullptr),
  pBtnID(nullptr),
  pBtnHourly(nullptr),
  pBtnDaily(nullptr),
@@ -361,6 +362,7 @@ void Component::createAllControlsIfNeeded()
                 pBtnValues->pushed(true);
 
                 pBtnDetails = addButton(wxT("Thermal plants"));
+                pBtnDetailsRes = addButton(wxT("Ren. clusters"));
                 pBtnID = addButton(wxT("Record years"));
             }
 
@@ -628,6 +630,7 @@ void Component::clear()
 
     pBtnValues = nullptr;
     pBtnDetails = nullptr;
+    pBtnDetailsRes = nullptr;
     pBtnID = nullptr;
 
     pBtnHourly = nullptr;
@@ -1342,6 +1345,7 @@ void Component::copyFrom(const Component& source)
     // Data level
     pBtnValues->pushed(source.pBtnValues->pushed());
     pBtnDetails->pushed(source.pBtnDetails->pushed());
+    pBtnDetailsRes->pushed(source.pBtnDetailsRes->pushed());
     pBtnID->pushed(source.pBtnID->pushed());
     // Time level
     pBtnHourly->pushed(source.pBtnHourly->pushed());
@@ -1596,6 +1600,7 @@ void Component::onSelectDataLevel(void* userdata)
 
     pBtnValues->pushed((userdata == pBtnValues));
     pBtnDetails->pushed((userdata == pBtnDetails));
+    pBtnDetailsRes->pushed((userdata == pBtnDetailsRes));
     pBtnID->pushed((userdata == pBtnID));
     // refresh
     refreshAllPanels();
