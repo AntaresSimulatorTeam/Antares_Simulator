@@ -348,31 +348,20 @@ void Component::createAllControlsIfNeeded()
                   = Resources::StaticBitmapLoadFromFile(grp, wxID_ANY, "images/16x16/default.png");
                 grp->leftSizer->Add(sbmp, 0, wxALIGN_CENTER);
 
-                btn = new Button(grp->subpanel,
-                                 wxT("General values"),
-                                 nullptr,
-                                 this,
-                                 &Component::onSelectDataLevel);
-                btn->pushed(true);
-                btn->pushedColor(grp);
-                btn->userdata(btn);
-                pBtnValues = btn;
-                hz->Add(btn, 0, wxALL | wxEXPAND);
-                btn = new Button(grp->subpanel,
-                                 wxT("Thermal plants"),
-                                 nullptr,
-                                 this,
-                                 &Component::onSelectDataLevel);
-                btn->pushedColor(grp);
-                btn->userdata(btn);
-                pBtnDetails = btn;
-                hz->Add(btn, 0, wxALL | wxEXPAND);
-                btn = new Button(
-                  grp->subpanel, wxT("Record years"), nullptr, this, &Component::onSelectDataLevel);
-                btn->pushedColor(grp);
-                btn->userdata(btn);
-                hz->Add(btn, 0, wxALL | wxEXPAND);
-                pBtnID = btn;
+                auto addButton = [&](const wxString& caption) -> Button* {
+                    btn = new Button(
+                      grp->subpanel, caption, nullptr, this, &Component::onSelectDataLevel);
+                    btn->pushedColor(grp);
+                    btn->userdata(btn);
+                    hz->Add(btn, 0, wxALL | wxEXPAND);
+                    return btn;
+                };
+
+                pBtnValues = addButton(wxT("General values"));
+                pBtnValues->pushed(true);
+
+                pBtnDetails = addButton(wxT("Thermal plants"));
+                pBtnID = addButton(wxT("Record years"));
             }
 
             hzori->AddSpacer(5);
