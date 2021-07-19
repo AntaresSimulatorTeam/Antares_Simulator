@@ -773,6 +773,26 @@ void ApplWnd::onSystemParametersChanged()
     // Do nothing
 }
 
+void ApplWnd::onRenewableGenerationModellingChanged()
+{
+    auto study = Data::Study::Current::Get();
+    if (!study)
+        return;
+
+    if (study->parameters.renewableGeneration.rgModelling == Antares::Data::rgAggregated)
+    {
+        pNotebook->show_page(wxString("wind"));
+        pNotebook->show_page(wxString("solar"));
+        pNotebook->hide_page(wxString("renewable"));
+    }
+    else
+    {
+        pNotebook->hide_page(wxString("wind"));
+        pNotebook->hide_page(wxString("solar"));
+        pNotebook->show_page(wxString("renewable"));
+    }
+}
+
 void ApplWnd::gridOperatorSelectedCells(Component::Datagrid::Selection::IOperator* v)
 {
     delete pGridSelectionOperator;

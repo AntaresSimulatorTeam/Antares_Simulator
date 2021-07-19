@@ -1023,6 +1023,18 @@ Notebook::Page* Notebook::find(const wxString& name, bool warn)
     return nullptr;
 }
 
+void Notebook::hide_page(const wxString& name)
+{
+    Page* page = find(name);
+    page->visible(false);
+}
+
+void Notebook::show_page(const wxString& name)
+{
+    Page* page = find(name);
+    page->visible(true);
+}
+
 void Notebook::caption(const wxString& s)
 {
     pCaption = s;

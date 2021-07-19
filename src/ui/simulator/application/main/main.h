@@ -619,6 +619,9 @@ private:
     //!! The system parameters have changed, some pages have to be hidden
     void onSystemParametersChanged();
 
+    // Renewable generation modelling changed, some pages have to be hidden
+    void onRenewableGenerationModellingChanged();
+
     //! Update the Interface after loaded a study
     void evtOnUpdateInterfaceAfterLoadedStudy(wxCommandEvent& evt);
 
