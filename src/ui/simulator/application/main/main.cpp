@@ -781,15 +781,27 @@ void ApplWnd::onRenewableGenerationModellingChanged()
 
     if (study->parameters.renewableGeneration.rgModelling == Antares::Data::rgAggregated)
     {
+        // Main window
         pNotebook->show_page(wxString("wind"));
         pNotebook->show_page(wxString("solar"));
         pNotebook->hide_page(wxString("renewable"));
+
+        // Scenario builder pane
+        pScenarioBuilderNotebook->show_page(wxString("wind"));
+        pScenarioBuilderNotebook->show_page(wxString("solar"));
+        pScenarioBuilderNotebook->hide_page(wxString("renewable"));
     }
     else
     {
+        // Main window
         pNotebook->hide_page(wxString("wind"));
         pNotebook->hide_page(wxString("solar"));
         pNotebook->show_page(wxString("renewable"));
+
+        // Scenario builder pane
+        pScenarioBuilderNotebook->hide_page(wxString("wind"));
+        pScenarioBuilderNotebook->hide_page(wxString("solar"));
+        pScenarioBuilderNotebook->show_page(wxString("renewable"));
     }
 }
 
