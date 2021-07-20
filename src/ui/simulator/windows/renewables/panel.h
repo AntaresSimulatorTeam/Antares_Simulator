@@ -58,11 +58,8 @@ public:
     //@}
 
 public:
-    // gp : to be adapted
     //! The page related to the cluster's timeseries
     Component::Notebook::Page* pageRenewableTimeSeries;
-    //! The page related to the cluster's ts-generator data
-    // Component::Notebook::Page* pageThermalPrepro;
     //! The page related to the cluster's properties
     Component::Notebook::Page* pageRenewableCommon;
     //! The page related to the cluster list view
