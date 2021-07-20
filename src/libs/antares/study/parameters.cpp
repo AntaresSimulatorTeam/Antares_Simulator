@@ -85,6 +85,28 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
     return true;
 }
 
+static bool ConvertStringToRenewableGenerationModelling(const AnyString& text, RenewableGenerationModelling & out)
+{
+    CString<24, false> s = text;
+    s.trim();
+    s.toLower();
+    if (s == "aggregated")
+    {
+        out = rgAggregated;
+        return true;
+    }
+    if (s == "clusters") // Using renewable clusters
+    {
+        out = rgClusters;
+        return true;
+    }
+
+    logs.warning() << "parameters: invalid renewable generation modelling. Got '" << text << "'";
+    out = rgUnknown;
+
+    return false;
+}
+
 bool StringToStudyMode(StudyMode& mode, CString<20, false> text)
 {
     if (!text)
@@ -744,18 +766,8 @@ static bool SGDIntLoadFamily_R(Parameters& d, const String& key, const String& v
         return value.to<bool>(d.readonly);
     // Renewable generation modelling
     if (key == "renewable-generation-modelling")
-    {
-        auto renewGenMod = StringToRenewableGenerationModelling(value);
-        if (renewGenMod != rgUnknown)
-        {
-            d.renewableGeneration.rgModelling = renewGenMod;
-            return true;
-        }
-        logs.warning() << "parameters: invalid renewable generation modelling. Got '" << value
-                       << "'. reset to aggregated";
-        d.renewableGeneration.rgModelling = rgAggregated;
-        return false;
-    }
+        return ConvertStringToRenewableGenerationModelling(value, d.renewableGeneration.rgModelling);
+
     // Error
     return false;
 }

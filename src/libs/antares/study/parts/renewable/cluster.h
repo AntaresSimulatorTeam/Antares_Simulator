@@ -39,6 +39,8 @@ namespace Antares
 namespace Data
 {
 
+// gp : useless in v8.1, could be useful in a further version 
+/*
 enum RenewableModulation
 {
     renewableModulationCost = 0,
@@ -46,6 +48,7 @@ enum RenewableModulation
     renewableMinGenModulation,
     renewableModulationMax
 };
+
 
 /*!
 ** \brief A single renewable cluster
