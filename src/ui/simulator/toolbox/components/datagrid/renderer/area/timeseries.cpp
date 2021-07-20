@@ -200,10 +200,20 @@ IRenderer::CellStyle ATimeSeries::cellStyle(int col, int row) const
     if (col == AncestorType::width() + 2)
         return IRenderer::cellStyleMinMax;
     // Default
-    return Math::Zero(v)
-             ? ((row % 2) ? IRenderer::cellStyleDefaultAlternateDisabled
-                          : IRenderer::cellStyleDefaultDisabled)
-             : ((row % 2) ? IRenderer::cellStyleDefaultAlternate : IRenderer::cellStyleDefault);
+    if (Math::Zero(v))
+    {
+        if (row % 2)
+            return IRenderer::cellStyleDefaultAlternateDisabled;
+        else
+            return IRenderer::cellStyleDefaultDisabled;
+    }
+    else
+    {
+        if (row % 2)
+            return IRenderer::cellStyleDefaultAlternate;
+        else
+            return IRenderer::cellStyleDefault;
+    }
 }
 
 wxColour TimeSeriesThermalCluster::verticalBorderColor(int x, int y) const
@@ -281,10 +291,20 @@ IRenderer::CellStyle TimeSeriesThermalCluster::cellStyle(int col, int row) const
     if (col == AncestorType::width() + 2)
         return IRenderer::cellStyleMinMax;
     // Default
-    return Math::Zero(v)
-             ? ((row % 2) ? IRenderer::cellStyleDefaultAlternateDisabled
-                          : IRenderer::cellStyleDefaultDisabled)
-             : ((row % 2) ? IRenderer::cellStyleDefaultAlternate : IRenderer::cellStyleDefault);
+    if (Math::Zero(v))
+    {
+        if (row % 2)
+            return IRenderer::cellStyleDefaultAlternateDisabled;
+        else
+            return IRenderer::cellStyleDefaultDisabled;
+    }
+    else
+    {
+        if (row % 2)
+            return IRenderer::cellStyleDefaultAlternate;
+        else
+            return IRenderer::cellStyleDefault;
+    }
 }
 
 void TimeSeriesThermalCluster::onStudyClosed()
@@ -386,10 +406,20 @@ IRenderer::CellStyle TimeSeriesRenewableCluster::cellStyle(int col, int row) con
     if (col == AncestorType::width() + 2)
         return IRenderer::cellStyleMinMax;
     // Default
-    return Math::Zero(v)
-        ? ((row % 2) ? IRenderer::cellStyleDefaultAlternateDisabled
-            : IRenderer::cellStyleDefaultDisabled)
-        : ((row % 2) ? IRenderer::cellStyleDefaultAlternate : IRenderer::cellStyleDefault);
+    if (Math::Zero(v))
+    {
+        if (row % 2)
+            return IRenderer::cellStyleDefaultAlternateDisabled;
+        else
+            return IRenderer::cellStyleDefaultDisabled;
+    }
+    else
+    {
+        if (row % 2)
+            return IRenderer::cellStyleDefaultAlternate;
+        else
+            return IRenderer::cellStyleDefault;
+    }
 }
 
 void TimeSeriesRenewableCluster::onStudyClosed()
