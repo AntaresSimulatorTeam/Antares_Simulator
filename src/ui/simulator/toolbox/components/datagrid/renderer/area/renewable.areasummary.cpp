@@ -86,7 +86,7 @@ wxString RenewableClusterSummarySingleArea::cellValue(int x, int y) const
     case 0:
         return wxStringFromUTF8(cluster->group());
     case 1:
-        return cluster->enabled ? wxT("Yes") : wxT("no");
+        return cluster->enabled ? wxT("Yes") : wxT("No");
     case 2:
         return wxString() << cluster->unitCount;
     case 3:
