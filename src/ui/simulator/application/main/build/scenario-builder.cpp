@@ -174,7 +174,7 @@ public:
     {
     }
 
-    void create()
+    void create() override
     {
         page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(
           notebook_, wxT("thermal"), wxT("Thermal"));
@@ -190,7 +190,7 @@ private:
     {
         renderer_ = new Renderer::thermalScBuilderRenderer(page_.second);
     }
-    void createGrid()
+    void createGrid() override
     {
         grid_ = new DatagridType(page_.first, renderer_);
     }
@@ -214,7 +214,7 @@ public:
     {
     }
 
-    void create()
+    void create() override
     {
         page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(
             notebook_, wxT("renewable"), wxT("Renewable"));
@@ -230,7 +230,7 @@ private:
     {
         renderer_ = new Renderer::renewableScBuilderRenderer(page_.second);
     }
-    void createGrid()
+    void createGrid() override
     {
         grid_ = new DatagridType(page_.first, renderer_);
     }
