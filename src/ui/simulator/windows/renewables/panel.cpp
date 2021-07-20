@@ -26,12 +26,7 @@
 */
 
 #include "panel.h"
-// #include "../../windows/inspector.h"
-// #include "../../toolbox/create.h"
 #include "../../toolbox/components/datagrid/component.h"
-// #include "../../toolbox/input/thermal-cluster.h"
-// #include "../../toolbox/components/datagrid/renderer/area/thermal.areasummary.h"
-// #include "../../toolbox/components/datagrid/renderer/area/thermalprepro.h"
 #include "../../toolbox/components/datagrid/renderer/area/timeseries.h"
 #include <wx/stattext.h>
 #include <wx/splitter.h>
@@ -50,10 +45,7 @@ namespace Window
 {
 namespace Renewable
 {
-Panel::Panel(Component::Notebook* parent) : Component::Panel(parent)
- ,
- // pageThermalTimeSeries(nullptr),
- // pageThermalPrepro(nullptr),
+Panel::Panel(Component::Notebook* parent) : Component::Panel(parent),
  pageRenewableCommon(nullptr),
  pNotebookCluster(nullptr),
  pAreaForCommonData(nullptr),
@@ -116,16 +108,8 @@ Panel::Panel(Component::Notebook* parent) : Component::Panel(parent)
         pageRenewableCommon
           = subbook->add(new Window::Renewable::CommonProperties(subbook, tag), wxT("Common"));
 
-        // gp : to be adapted
-        /*
-        // TS-Generator
-        pageThermalPrepro = subbook->add(
-          new Component::Datagrid::Component(
-            subbook, new Component::Datagrid::Renderer::ThermalClusterPrepro(subbook, tag)),
-          wxT("TS generator"));
-        */
         // Time Series
-        pageThermalTimeSeries = subbook->add(
+        pageRenewableTimeSeries = subbook->add(
           new Component::Datagrid::Component(
             subbook, new Component::Datagrid::Renderer::TimeSeriesRenewableCluster(subbook, tag)),
           wxT("Time-Series"));
