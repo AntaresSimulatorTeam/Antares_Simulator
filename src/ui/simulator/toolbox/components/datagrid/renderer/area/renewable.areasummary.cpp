@@ -78,9 +78,6 @@ wxString RenewableClusterSummarySingleArea::cellValue(int x, int y) const
     Data::RenewableCluster* cluster = (pArea and (uint) y < pArea->renewable.list.size())
                                       ? pArea->renewable.list.byIndex[y]
                                       : nullptr;
-    // gp : do we wish to have the line empty if cluster disabled
-    // if (!cluster->enabled)
-    //    return wxEmptyString;
     switch (x)
     {
     case 0:
@@ -128,10 +125,15 @@ void RenewableClusterSummarySingleArea::onAreaChanged(Antares::Data::Area* area)
 
 IRenderer::CellStyle RenewableClusterSummarySingleArea::cellStyle(int col, int row) const
 {
-    return (col > 0 and Math::Zero(cellNumericValue(col, row)))
-             ? IRenderer::cellStyleDefaultDisabled
-             : (col == 1 || col == 2) ? IRenderer::cellStyleConstraintWeight
-                                      : IRenderer::cellStyleDefault;
+    if (col > 0 and Math::Zero(cellNumericValue(col, row)))
+        return IRenderer::cellStyleDefaultDisabled;
+    else
+    {
+        if (col == 1 || col == 2)
+            return IRenderer::cellStyleConstraintWeight;
+        else
+            return IRenderer::cellStyleDefault;
+    }
 }
 
 struct NoCheck
