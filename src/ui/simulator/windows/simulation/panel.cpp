@@ -33,7 +33,7 @@
 #include "../../toolbox/components/datagrid/renderer/ts-management.h"
 #include "../../toolbox/components/datagrid/renderer/ts-management-clusters-as-renewables.h"
 #include "../../application/main.h"
-#include "../../application/study.h"
+#include "../../windows/options/advanced/advanced.h"
 #include "../../toolbox/validator.h"
 #include "../../toolbox/resources.h"
 #include "../../toolbox/create.h"
@@ -97,7 +97,7 @@ Panel::Panel(wxWindow* parent) : Antares::Component::Panel(parent)
     SetSizer(hz);
 
     // External events
-    OnStudyLoaded.connect(this, &Panel::onStudyLoaded);
+    Options::OnRenewableGenerationModellingChanged.connect(this, &Panel::onRenewableGenerationModellingChanged);
     OnStudyClosed.connect(this, &Panel::onStudyClosed);
     OnStudyUpdatePlaylist.connect(this, &Panel::onUpdatePlaylist);
 }
@@ -115,7 +115,7 @@ Panel::~Panel()
         sizer->Clear(true);
 }
 
-void Panel::onStudyLoaded()
+void Panel::onRenewableGenerationModellingChanged()
 {
     auto study = Data::Study::Current::Get();
     if (!study)

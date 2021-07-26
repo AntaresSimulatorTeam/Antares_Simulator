@@ -65,6 +65,8 @@
 #include "internal-data.h"
 #include "../wait.h"
 
+#include "../../windows/options/advanced/advanced.h"
+
 using namespace Yuni;
 
 namespace Antares
@@ -533,6 +535,7 @@ void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
     // Keep informed all other dependencies that something has changed
     OnStudyAreasChanged();
     OnStudySettingsChanged();
+    Window::Options::OnRenewableGenerationModellingChanged();
 
     // Make some components visible
     pAUIManager.GetPane(pBigDaddy).Show(opened);
