@@ -501,6 +501,26 @@ const char* NumberOfCoresModeToCString(NumberOfCoresMode ncores);
 */
 NumberOfCoresMode StringToNumberOfCoresMode(const AnyString& text);
 
+/*
+* Renewable generation modelling
+*/
+enum RenewableGenerationModelling
+{
+    rgAggregated = 0, // Default
+    rgClusters, // Using renewable clusters
+    rgUnknown,
+};
+
+/*!
+** \brief Convert a renewable generation modelling into a text
+*/
+const char* RenewableGenerationModellingToCString(RenewableGenerationModelling rgModelling);
+
+/*!
+** \brief Convert a text into a renewable generation modelling
+*/
+RenewableGenerationModelling StringToRenewableGenerationModelling(const AnyString& text);
+
 enum DayAheadReserveManagement
 {
     daGlobal = 0,

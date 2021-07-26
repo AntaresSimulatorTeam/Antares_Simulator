@@ -437,6 +437,16 @@ public:
         NumberOfCoresMode ncMode;
     } nbCores;
 
+    struct RenewableGeneration
+    {
+        //! Renewable generation mode
+        RenewableGenerationModelling rgModelling;
+        std::vector<std::string> excludedVariables() const;
+        RenewableGenerationModelling operator()() const;
+    };
+
+    RenewableGeneration renewableGeneration;
+
     struct
     {
         //! Initial reservoir levels

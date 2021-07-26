@@ -310,6 +310,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                                     const int PasDeTempsDebut)
 {
     auto& study = *Data::Study::Current::Get();
+    const auto& parameters = study.parameters;
     auto& studyruntime = *study.runtime;
     const uint nbPays = study.areas.size();
     const size_t pasDeTempsSizeDouble = problem.NombreDePasDeTemps * sizeof(double);
@@ -584,26 +585,36 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
             assert(&scratchpad);
             assert((uint)indx < scratchpad.ts.load.height);
-            assert((uint)indx < scratchpad.ts.solar.height);
-            assert((uint)indx < scratchpad.ts.wind.height);
             assert((uint)tsIndex.Consommation < scratchpad.ts.load.width);
-            assert((uint)tsIndex.Eolien < scratchpad.ts.wind.width);
-            assert((uint)tsIndex.Solar < scratchpad.ts.solar.width);
+            if (parameters.renewableGeneration() == rgAggregated)
+            {
+                assert((uint)indx < scratchpad.ts.solar.height);
+                assert((uint)indx < scratchpad.ts.wind.height);
+                assert((uint)tsIndex.Eolien < scratchpad.ts.wind.width);
+                assert((uint)tsIndex.Solar < scratchpad.ts.solar.width);
+            }
 
             uint tsFatalIndex = (uint)tsIndex.Hydraulique < ror.width ? tsIndex.Hydraulique : 0;
-
             problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
-              = +scratchpad.ts.wind[tsIndex.Eolien][indx] + scratchpad.ts.solar[tsIndex.Solar][indx]
-                + scratchpad.miscGenSum[indx] + ror[tsFatalIndex][indx]
-                + scratchpad.mustrunSum[indx];
+              = scratchpad.miscGenSum[indx] + ror[tsFatalIndex][indx] + scratchpad.mustrunSum[indx];
+
+            if (parameters.renewableGeneration() == rgAggregated)
+            {
+                problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
+                  += scratchpad.ts.wind[tsIndex.Eolien][indx]
+                     + scratchpad.ts.solar[tsIndex.Solar][indx];
+            }
 
             // Renewable
-            area.renewable.list.each([&](const RenewableCluster& cluster) {
-                assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
-                problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
-                  += cluster.valueAtTimeStep(tsIndex.RenouvelableParPalier[cluster.areaWideIndex],
-                                             (uint)indx);
-            });
+            if (parameters.renewableGeneration() == rgClusters)
+            {
+                area.renewable.list.each([&](const RenewableCluster& cluster) {
+                    assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
+                    problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
+                      += cluster.valueAtTimeStep(
+                        tsIndex.RenouvelableParPalier[cluster.areaWideIndex], (uint)indx);
+                });
+            }
 
             assert(
               !Math::NaN(problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k])
