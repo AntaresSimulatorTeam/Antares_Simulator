@@ -1881,5 +1881,10 @@ std::vector<std::string> Parameters::RenewableGeneration::excludedVariables() co
     return {};
 }
 
+RenewableGenerationModelling Parameters::RenewableGeneration::operator()() const
+{
+    return rgModelling;
+}
+
 } // namespace Data
 } // namespace Antares
