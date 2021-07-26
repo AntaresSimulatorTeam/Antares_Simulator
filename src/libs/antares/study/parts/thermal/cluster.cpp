@@ -336,7 +336,7 @@ void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
             groupID = thermalDispatchGrpOil;
             return;
         }
-        else if (newgrp == "other")
+        else if (newgrp == "other" || newgrp == "other 1")
         {
             groupID = thermalDispatchGrpOther1;
             return;
