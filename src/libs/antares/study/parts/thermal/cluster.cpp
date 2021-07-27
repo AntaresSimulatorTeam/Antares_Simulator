@@ -78,7 +78,7 @@ namespace Data
 {
 Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
  Cluster(parent),
- groupID(thermalDispatchGrpOther),
+ groupID(thermalDispatchGrpOther1),
  mustrun(false),
  mustrunOrigin(false),
  nominalCapacityWithSpinning(0.),
@@ -122,7 +122,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
 
 Data::ThermalCluster::ThermalCluster(Area* parent) :
  Cluster(parent),
- groupID(thermalDispatchGrpOther),
+ groupID(thermalDispatchGrpOther1),
  mustrun(false),
  mustrunOrigin(false),
  nominalCapacityWithSpinning(0.),
@@ -275,7 +275,7 @@ void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
 {
     if (not newgrp)
     {
-        groupID = thermalDispatchGrpOther;
+        groupID = thermalDispatchGrpOther1;
         pGroup.clear();
         return;
     }
@@ -336,11 +336,31 @@ void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
             groupID = thermalDispatchGrpOil;
             return;
         }
+        else if (newgrp == "other" || newgrp == "other 1")
+        {
+            groupID = thermalDispatchGrpOther1;
+            return;
+        }
+        else if (newgrp == "other 2")
+        {
+            groupID = thermalDispatchGrpOther2;
+            return;
+        }
+        else if (newgrp == "other 3")
+        {
+            groupID = thermalDispatchGrpOther3;
+            return;
+        }
+        else if (newgrp == "other 4")
+        {
+            groupID = thermalDispatchGrpOther4;
+            return;
+        }
         break;
     }
     }
     // assigning a default value
-    groupID = thermalDispatchGrpOther;
+    groupID = thermalDispatchGrpOther1;
 }
 
 bool Data::ThermalCluster::invalidate(bool reload) const
@@ -597,8 +617,15 @@ const char* Data::ThermalCluster::GroupName(enum ThermalDispatchableGroup grp)
         return "Oil";
     case thermalDispatchGrpMixedFuel:
         return "Mixed Fuel";
-    case thermalDispatchGrpOther:
+    case thermalDispatchGrpOther1:
         return "Other";
+    case thermalDispatchGrpOther2:
+        return "Other 2";
+    case thermalDispatchGrpOther3:
+        return "Other 3";
+    case thermalDispatchGrpOther4:
+        return "Other 4";
+
     case groupMax:
         return "";
     }

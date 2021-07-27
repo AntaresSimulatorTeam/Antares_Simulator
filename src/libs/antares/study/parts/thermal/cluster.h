@@ -77,8 +77,14 @@ public:
         thermalDispatchGrpOil,
         //! Mixed fuel
         thermalDispatchGrpMixedFuel,
-        //! Other
-        thermalDispatchGrpOther,
+        //! Other 1
+        thermalDispatchGrpOther1,
+        //! Other 2
+        thermalDispatchGrpOther2,
+        //! Other 3
+        thermalDispatchGrpOther3,
+        //! Other 4
+        thermalDispatchGrpOther4,
 
         //! The highest value
         groupMax
