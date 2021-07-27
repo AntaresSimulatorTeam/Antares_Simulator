@@ -63,6 +63,9 @@ jobs:
           cd vcpkg
           ./bootstrap-vcpkg.sh
           vcpkg install ${{matrix.vcpkgPackages}} --triplet ${{matrix.triplet}}
+          rm -rf buildtrees
+          rm -rf packages
+          rm -rf downloads
       shell: bash
             
     - name: Download pre-compiled librairies
