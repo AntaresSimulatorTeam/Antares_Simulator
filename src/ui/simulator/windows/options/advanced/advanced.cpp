@@ -47,7 +47,7 @@ namespace Window
 namespace Options
 {
 
-Yuni::Event<void()> OnRenewableGenerationModellingChanged;
+Yuni::Event<void(bool)> OnRenewableGenerationModellingChanged;
 
 static void Title(wxWindow* parent, wxSizer* sizer, const wxChar* text, bool margintop = true)
 {
@@ -1043,7 +1043,7 @@ void AdvancedParameters::onSelectRGMaggregated(wxCommandEvent& evt)
     {
         study.parameters.renewableGeneration.rgModelling = Data::rgAggregated;
         MarkTheStudyAsModified();
-        OnRenewableGenerationModellingChanged();
+        OnRenewableGenerationModellingChanged(false);
         refresh();
     }
 }
@@ -1058,7 +1058,7 @@ void AdvancedParameters::onSelectRGMrenewableClusters(wxCommandEvent& evt)
     {
         study.parameters.renewableGeneration.rgModelling = Data::rgClusters;
         MarkTheStudyAsModified();
-        OnRenewableGenerationModellingChanged();
+        OnRenewableGenerationModellingChanged(false);
         refresh();
     }
 }

@@ -60,7 +60,7 @@ public:
 
 private:
     //! In case renewable generation modelling was changed
-    void onRenewableGenerationModellingChanged();
+    void onRenewableGenerationModellingChanged(bool);
     //! The study has been closed
     void onStudyClosed();
     //! A study has been loaded (delayed)

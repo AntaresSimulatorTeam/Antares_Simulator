@@ -115,7 +115,7 @@ Panel::~Panel()
         sizer->Clear(true);
 }
 
-void Panel::onRenewableGenerationModellingChanged()
+void Panel::onRenewableGenerationModellingChanged(bool)
 {
     auto study = Data::Study::Current::Get();
     if (!study)
