@@ -28,14 +28,7 @@ jobs:
       
     steps:
     - uses: actions/checkout@v2
-        
-    - name: Download pre-compiled librairies
-      run: |
-           choco install wget
-           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v1.0.1/rte-antares-deps-${{matrix.os}}-x64-Release-solver.zip
-           Expand-Archive ./rte-antares-deps-${{matrix.os}}-x64-Release-solver.zip -DestinationPath .
-           rm rte-antares-deps-${{matrix.os}}-x64-Release-solver.zip
-           
+
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
@@ -74,7 +67,14 @@ jobs:
           ./bootstrap-vcpkg.sh
           vcpkg install ${{matrix.vcpkgPackages}} --triplet ${{matrix.triplet}}
       shell: bash
-      
+        
+    - name: Download pre-compiled librairies
+      run: |
+           choco install wget
+           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v1.0.1/rte-antares-deps-${{matrix.os}}-x64-Release-solver.zip
+           Expand-Archive ./rte-antares-deps-${{matrix.os}}-x64-Release-solver.zip -DestinationPath .
+           rm rte-antares-deps-${{matrix.os}}-x64-Release-solver.zip
+           
     - name: Configure
       run: |
            cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DVCPKG_ROOT=${{env.VCPKG_ROOT}} -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON  -DBUILD_OUTPUT_TEST=ON

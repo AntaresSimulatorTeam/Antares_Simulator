@@ -29,13 +29,6 @@ jobs:
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.2.0
-            
-    - name: Download pre-compiled librairies
-      run: |
-           choco install wget
-           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v1.0.1/rte-antares-deps-${{matrix.os}}-x64-Release-solver.zip
-           Expand-Archive ./rte-antares-deps-${{matrix.os}}-x64-Release-solver.zip -DestinationPath .
-           rm rte-antares-deps-${{matrix.os}}-x64-Release-solver.zip
            
     - name: Set up Python
       uses: actions/setup-python@v1
@@ -75,6 +68,13 @@ jobs:
           ./bootstrap-vcpkg.sh
           vcpkg install ${{matrix.vcpkgPackages}} --triplet ${{matrix.triplet}}
       shell: bash
+            
+    - name: Download pre-compiled librairies
+      run: |
+           choco install wget
+           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v1.0.1/rte-antares-deps-${{matrix.os}}-x64-Release-solver.zip
+           Expand-Archive ./rte-antares-deps-${{matrix.os}}-x64-Release-solver.zip -DestinationPath .
+           rm rte-antares-deps-${{matrix.os}}-x64-Release-solver.zip
       
     - name: Configure with VCPKG
       run: |
