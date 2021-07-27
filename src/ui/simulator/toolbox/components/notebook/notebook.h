@@ -278,8 +278,7 @@ public:
     */
     Page* find(const wxString& name, bool warn = true);
 
-    void hide_page(const wxString& name);
-    void show_page(const wxString& name);
+    void set_page_visibility(const wxString& name, bool visible);
 
     //! \name Theme
     //@{
