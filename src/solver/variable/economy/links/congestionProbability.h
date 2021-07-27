@@ -157,7 +157,8 @@ public:
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
 
-        pRatio = 100. / (double)study.runtime->rangeLimits.year[Data::rangeCount];
+        yearsWeight = study.parameters.getYearsWeight();
+        yearsWeightSum = study.parameters.getYearsWeightSum();
 
         // Average on all years
         for (uint i = 0; i != VCardType::columnCount; ++i)
@@ -300,16 +301,19 @@ public:
 
     void hourForEachLink(State& state, unsigned int numSpace)
     {
+        // Ratio take into account MC year weight
+        float ratio = yearsWeight[state.year] / yearsWeightSum;
+
         assert(state.link != NULL);
         auto& linkdata = state.link->data;
         // CONG. PROB +
         if (state.ntc->ValeurDuFlux[state.link->index]
             > +linkdata.entry[Data::fhlNTCDirect][state.hourInTheYear] - 10e-6)
-            pValuesForTheCurrentYear[numSpace][0].hour[state.hourInTheYear] += pRatio;
+            pValuesForTheCurrentYear[numSpace][0].hour[state.hourInTheYear] += 100.0 * ratio;
         // CONG. PROB -
         if (state.ntc->ValeurDuFlux[state.link->index]
             < -linkdata.entry[Data::fhlNTCIndirect][state.hourInTheYear] + 10e-6)
-            pValuesForTheCurrentYear[numSpace][1].hour[state.hourInTheYear] += pRatio;
+            pValuesForTheCurrentYear[numSpace][1].hour[state.hourInTheYear] += 100.0 * ratio;
 
         // Next item in the list
         NextType::hourForEachLink(state, numSpace);
@@ -375,7 +379,8 @@ public:
     }
 
 private:
-    double pRatio;
+    std::vector<float> yearsWeight;
+    float yearsWeightSum;
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     typename VCardType::IntermediateValuesType pValuesForYearLocalReport;

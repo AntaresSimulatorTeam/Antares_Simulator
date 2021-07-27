@@ -28,53 +28,53 @@
 #ifndef ANTARES_DATA_UNFEASIBLEPROBLEMHAVIOR_HPP
 #define ANTARES_DATA_UNFEASIBLEPROBLEMHAVIOR_HPP
 
-namespace Antares {
-
-namespace Data {
-
-
+namespace Antares
+{
+namespace Data
+{
 /*! Enum class to define unfeasible problem behavior */
-enum class UnfeasibleProblemBehavior : unsigned char {
+enum class UnfeasibleProblemBehavior : unsigned char
+{
     WARNING_DRY, /*! Continue simulation without MPS export */
-	WARNING_MPS, /*! Continue simulation with MPS export */
-	ERROR_DRY,   /*! Stop simulation without MPS export */
-	ERROR_MPS    /*! Stop simulation with MPS export */
+    WARNING_MPS, /*! Continue simulation with MPS export */
+    ERROR_DRY,   /*! Stop simulation without MPS export */
+    ERROR_MPS    /*! Stop simulation with MPS export */
 };
 
 /*!
-*  \brief Get icon from UnfeasibleProblemBehavior enum
-*
-*  \param unfeasibleProblemBehavior : UnfeasibleProblemBehavior enum
-*  \return icon
-*/
+ *  \brief Get icon from UnfeasibleProblemBehavior enum
+ *
+ *  \param unfeasibleProblemBehavior : UnfeasibleProblemBehavior enum
+ *  \return icon
+ */
 const char* getIcon(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
 
 /*!
-*  \brief Get display name from UnfeasibleProblemBehavior enum
-*
-*  \param unfeasibleProblemBehavior : UnfeasibleProblemBehavior enum
-*  \return displayName
-*/
- std::string getDisplayName(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
+ *  \brief Get display name from UnfeasibleProblemBehavior enum
+ *
+ *  \param unfeasibleProblemBehavior : UnfeasibleProblemBehavior enum
+ *  \return displayName
+ */
+std::string getDisplayName(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
 
- /*!
-*  \brief Define if MPS must be exported in case of unfeasible problem
-*
-*  \param unfeasibleProblemBehavior : UnfeasibleProblemBehavior enum
-*  \return true if MPS must be exported, false otherwise
-*/
- bool exportMPS(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
+/*!
+ *  \brief Define if MPS must be exported in case of unfeasible problem
+ *
+ *  \param unfeasibleProblemBehavior : UnfeasibleProblemBehavior enum
+ *  \return true if MPS must be exported, false otherwise
+ */
+bool exportMPS(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
 
- /*!
-*  \brief Define if simulation must be stopped in case of unfeasible problem
-*
-*  \param unfeasibleProblemBehavior : UnfeasibleProblemBehavior enum
-*  \return true if simulation must be stopped, false otherwise
-*/
- bool stopSimulation(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
+/*!
+ *  \brief Define if simulation must be stopped in case of unfeasible problem
+ *
+ *  \param unfeasibleProblemBehavior : UnfeasibleProblemBehavior enum
+ *  \return true if simulation must be stopped, false otherwise
+ */
+bool stopSimulation(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
 
-}  // namespace Data
+} // namespace Data
 
-}  // namespace Antares
+} // namespace Antares
 
-#endif  // ANTARES_DATA_UNFEASIBLEPROBLEMHAVIOR_HPP
+#endif // ANTARES_DATA_UNFEASIBLEPROBLEMHAVIOR_HPP
