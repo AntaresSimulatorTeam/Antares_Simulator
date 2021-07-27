@@ -55,14 +55,10 @@ jobs:
       run: |
           python -m pip install --upgrade pip
           pip3 install -r src/tests/examples/requirements.txt
-           
-    - name: Init submodule
-      run: |
-           git submodule update --init --recursive src
-           git submodule update --init vcpkg
-           
+          
     - name : Install deps with VCPKG
       run: |
+          git submodule update --init vcpkg
           cd vcpkg
           ./bootstrap-vcpkg.sh
           vcpkg install ${{matrix.vcpkgPackages}} --triplet ${{matrix.triplet}}
@@ -74,6 +70,10 @@ jobs:
            wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v1.0.1/rte-antares-deps-${{matrix.os}}-x64-Release-solver.zip
            Expand-Archive ./rte-antares-deps-${{matrix.os}}-x64-Release-solver.zip -DestinationPath .
            rm rte-antares-deps-${{matrix.os}}-x64-Release-solver.zip
+           
+    - name: Init submodule
+      run: |
+           git submodule update --init --recursive src
            
     - name: Configure
       run: |
