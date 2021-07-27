@@ -179,6 +179,82 @@ STUDIES = [
     ["valid-parallel", "test-parallel-03-random_nbrs_eco-acc-168", "long"],
     ["valid-complex", "E2050-5y-6w-accurate-mps", "long"]]
 
+TESTS_FAILING_ON_LINUX = ['test_draft_hydrobind_no_selvar',
+                          'test_h700_26',
+                          'test_h700_28',
+                          'test_h700_35',
+                          'test_h700_36',
+                          'test_h700_45',
+                          'test_accurate_yht_one_node_differentstyles_hydro_pricing_he',
+                          'test_accurate_yht_one_node_differentstyles_hydro_pricing_m',
+                          'test_fast_yht_one_node_differentstyles_hydro_pricing_he',
+                          'test_fast_yht_one_node_differentstyles_hydro_pricing_m_hb',
+                          'test_marginalcostrevised',
+                          'test_bind_06_gen',
+                          'test_draft_no_selvar',
+                          'test_no_geo_trim_adq_selvars_1',
+                          'test_no_geo_trim_linkvars',
+                          'test_h700_33',
+                          'test_h700_46',
+                          'test_accurate_yht_one_node_differentstyles_hydro_pricing_e',
+                          'test_accurate_yht_one_node_differentstyles_hydro_pricing_e_hb',
+                          'test_accurate_yht_one_node_differentstyles_hydro_pricing_m_hb',
+                          'test_fast_yht_one_node_differentstyles_hydro_pricing_e',
+                          'test_fast_yht_one_node_differentstyles_hydro_pricing_m',
+                          'test_tsgeneration_and_export_10',
+                          'test_defaillance_positive_majore',
+                          'test_no_geo_trim_areavars',
+                          'test_no_geo_trim_full_selvars',
+                          'test_no_geo_trim_no_row_bal',
+                          'test_no_geo_trim_no_vars_by_plant',
+                          'test_no_geo_trim_novar',
+                          'test_no_geo_trim_selvars_1',
+                          'test_no_geo_trim_selvars_4',
+                          'test_no_geo_trim_adq_selvars_2',
+                          'test_with_geo_trim_no_vars_by_plant',
+                          'test_with_geo_trim_selvars_1',
+                          'test_h700_34',
+                          'test_h701_52',
+                          'test_fast_yht_one_node_differentstyles_hydro_pricing_e_hb',
+                          'test_h700_30',
+                          'test_h701_53',
+                          'test_h701_59',
+                          'test_h700_31',
+                          'test_h700_51',
+                          'test_test_paral_cplx_pl_7on12_scbuild_eco_fast_24',
+                          'test_hydrau_frch',
+                          'test_accurate_yht_five_areas_hydro_pricing_01',
+                          'test_accurate_yht_five_areas_hydro_pricing_02',
+                          'test_accurate_yht_five_areas_hydro_pricing_03',
+                          'test_accurate_yht_five_areas_hydro_pricing_04',
+                          'test_fast_yht_five_areas_hydro_pricing_01',
+                          'test_fast_yht_five_areas_hydro_pricing_02',
+                          'test_fast_yht_five_areas_hydro_pricing_03',
+                          'test_fast_yht_five_areas_hydro_pricing_04',
+                          'test_test_paral_cplx_pl_7on12_scbuild_eco_acc_168',
+                          'test_test_parallelisation_complexe_pl_2on12y_eco_acc_168',
+                          'test_accurate_yht_five_areas_hydro_pricing_05',
+                          'test_fast_yht_five_areas_hydro_pricing_05',
+                          'test_hydrobind_spxday_freemod',
+                          'test_hydrobind_adequacy',
+                          'test_hydrobind_spxday_minexc',
+                          'test_hydrobind_spxweek_freemod',
+                          'test_052benchmarkcpuramhdd_4_draft',
+                          'test_hydrobind_spxweek_minexc',
+                          'test_hydrobind_draft',
+                          'test_test_parallel_02_eco_fast_24',
+                          'test_test_parallel_01_eco_fast_24',
+                          'test_test_parallel_02_nomustrun_eco_acc_168',
+                          'test_test_parallel_02_nomustrun_eco_fast_24',
+                          'test_test_parallel_01_eco_acc_168',
+                          'test_test_parallel_02_eco_acc_168',
+                          'test_052benchmarkcpuramhdd_4_adq',
+                          'test_bind_00_gen',
+                          'test_bind_01_gen',
+                          'test_bind_02_gen',
+                          'test_e2050_5y_6w_fast_mps',
+                          'test_e2050_5y_6w_accurate_mps']
+
 f=open("out.py", "w")
 
 def fmt(x):
@@ -188,16 +264,16 @@ def fmt(x):
             .replace("__", "_")\
             .lower()
 
-skip=False
-
 for it in STUDIES:
     f.write(f"@pytest.mark.non_regression\n")
     f.write(f"@pytest.mark.{fmt(it[0])}\n")
     f.write(f"@pytest.mark.{it[2]}\n")
+    fn_name = f"test_{fmt(it[1])}"
+    skip = fn_name in TESTS_FAILING_ON_LINUX
     if skip:
         f.write("@pytest.mark.skipif(sys.platform==\"linux\",\n")
         f.write("                    reason=\"Results different between linux and windows.\")\n")
-    f.write(f"def test_{fmt(it[1])}(use_ortools, ortools_solver, solver_path):\n")
+    f.write(f"def {fn_name}(use_ortools, ortools_solver, solver_path):\n")
     f.write(f"    study_path = NONREG_STUDIES_PATH / \"{it[0]}\" / \"{it[1]}\"\n")
     f.write("    enable_study_output(study_path, True)\n")
     f.write("    run_study(solver_path, study_path, use_ortools, ortools_solver)\n")

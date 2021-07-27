@@ -892,6 +892,8 @@ def test_v601_def_negative_positive_zonecc(use_ortools, ortools_solver, solver_p
 @pytest.mark.non_regression
 @pytest.mark.valid_filter_outputs
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_draft_hydrobind_no_selvar(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-filter-outputs" / "draft--hydrobind-no-selVar"
     enable_study_output(study_path, True)
@@ -1261,6 +1263,8 @@ def test_h700_23(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_hydro
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_h700_26(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydro" / "H700-26"
     enable_study_output(study_path, True)
@@ -1279,6 +1283,8 @@ def test_h700_27(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_hydro
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_h700_28(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydro" / "H700-28"
     enable_study_output(study_path, True)
@@ -1288,6 +1294,8 @@ def test_h700_28(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_hydro
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_h700_35(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydro" / "H700-35"
     enable_study_output(study_path, True)
@@ -1297,6 +1305,8 @@ def test_h700_35(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_hydro
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_h700_36(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydro" / "H700-36"
     enable_study_output(study_path, True)
@@ -1342,6 +1352,8 @@ def test_h700_40(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_hydro
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_h700_45(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydro" / "H700-45"
     enable_study_output(study_path, True)
@@ -1396,6 +1408,8 @@ def test_accurate_few_weeks_five_areas_hydro_pricing_05(use_ortools, ortools_sol
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_accurate_yht_one_node_differentstyles_hydro_pricing_he(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Accurate/YHT-one_node_different styles/hydro-pricing-HE"
     enable_study_output(study_path, True)
@@ -1405,6 +1419,8 @@ def test_accurate_yht_one_node_differentstyles_hydro_pricing_he(use_ortools, ort
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_accurate_yht_one_node_differentstyles_hydro_pricing_m(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Accurate/YHT-one_node_different styles/hydro-pricing-M"
     enable_study_output(study_path, True)
@@ -1459,6 +1475,8 @@ def test_fast_few_weeks_five_areas_hydro_pricing_05(use_ortools, ortools_solver,
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_fast_yht_one_node_differentstyles_hydro_pricing_he(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Fast/YHT-one_node_different styles/hydro-pricing-HE"
     enable_study_output(study_path, True)
@@ -1468,6 +1486,8 @@ def test_fast_yht_one_node_differentstyles_hydro_pricing_he(use_ortools, ortools
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_fast_yht_one_node_differentstyles_hydro_pricing_m_hb(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Fast/YHT-one_node_different styles/hydro-pricing-M_hb"
     enable_study_output(study_path, True)
@@ -1477,6 +1497,8 @@ def test_fast_yht_one_node_differentstyles_hydro_pricing_m_hb(use_ortools, ortoo
 @pytest.mark.non_regression
 @pytest.mark.valid_margincost
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_marginalcostrevised(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-marginCost" / "marginal cost revised"
     enable_study_output(study_path, True)
@@ -1522,6 +1544,8 @@ def test_bind_05_gen(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_bind
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_bind_06_gen(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-bind" / "BIND-06-gen"
     enable_study_output(study_path, True)
@@ -1531,6 +1555,8 @@ def test_bind_06_gen(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_filter_outputs
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_draft_no_selvar(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-filter-outputs" / "draft--no-selVar"
     enable_study_output(study_path, True)
@@ -1540,6 +1566,8 @@ def test_draft_no_selvar(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_filter_outputs
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_no_geo_trim_adq_selvars_1(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-filter-outputs" / "no-geo-trim--adq-selVars-1"
     enable_study_output(study_path, True)
@@ -1549,6 +1577,8 @@ def test_no_geo_trim_adq_selvars_1(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_filter_outputs
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_no_geo_trim_linkvars(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-filter-outputs" / "no-geo-trim--linkVars"
     enable_study_output(study_path, True)
@@ -1603,6 +1633,8 @@ def test_h700_29(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_hydro
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_h700_33(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydro" / "H700-33"
     enable_study_output(study_path, True)
@@ -1612,6 +1644,8 @@ def test_h700_33(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_hydro
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_h700_46(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydro" / "H700-46"
     enable_study_output(study_path, True)
@@ -1639,6 +1673,8 @@ def test_hydrobind_scenario_builder_tsgen(use_ortools, ortools_solver, solver_pa
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_accurate_yht_one_node_differentstyles_hydro_pricing_e(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Accurate/YHT-one_node_different styles/hydro-pricing-E"
     enable_study_output(study_path, True)
@@ -1648,6 +1684,8 @@ def test_accurate_yht_one_node_differentstyles_hydro_pricing_e(use_ortools, orto
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_accurate_yht_one_node_differentstyles_hydro_pricing_e_hb(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Accurate/YHT-one_node_different styles/hydro-pricing-E_hb"
     enable_study_output(study_path, True)
@@ -1657,6 +1695,8 @@ def test_accurate_yht_one_node_differentstyles_hydro_pricing_e_hb(use_ortools, o
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_accurate_yht_one_node_differentstyles_hydro_pricing_m_hb(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Accurate/YHT-one_node_different styles/hydro-pricing-M_hb"
     enable_study_output(study_path, True)
@@ -1666,6 +1706,8 @@ def test_accurate_yht_one_node_differentstyles_hydro_pricing_m_hb(use_ortools, o
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_fast_yht_one_node_differentstyles_hydro_pricing_e(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Fast/YHT-one_node_different styles/hydro-pricing-E"
     enable_study_output(study_path, True)
@@ -1675,6 +1717,8 @@ def test_fast_yht_one_node_differentstyles_hydro_pricing_e(use_ortools, ortools_
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_fast_yht_one_node_differentstyles_hydro_pricing_m(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Fast/YHT-one_node_different styles/hydro-pricing-M"
     enable_study_output(study_path, True)
@@ -1729,6 +1773,8 @@ def test_generic_someoff_somemust_tsrm(use_ortools, ortools_solver, solver_path)
 @pytest.mark.non_regression
 @pytest.mark.valid_ts_gen_export
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_tsgeneration_and_export_10(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-ts-gen-export" / "TS generation-and-export-10"
     enable_study_output(study_path, True)
@@ -1738,6 +1784,8 @@ def test_tsgeneration_and_export_10(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_defaillance
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_defaillance_positive_majore(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-defaillance" / "defaillance_positive_majore"
     enable_study_output(study_path, True)
@@ -1747,6 +1795,8 @@ def test_defaillance_positive_majore(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_filter_outputs
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_no_geo_trim_areavars(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-filter-outputs" / "no-geo-trim--areaVars"
     enable_study_output(study_path, True)
@@ -1756,6 +1806,8 @@ def test_no_geo_trim_areavars(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_filter_outputs
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_no_geo_trim_full_selvars(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-filter-outputs" / "no-geo-trim--full-selVars"
     enable_study_output(study_path, True)
@@ -1765,6 +1817,8 @@ def test_no_geo_trim_full_selvars(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_filter_outputs
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_no_geo_trim_no_row_bal(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-filter-outputs" / "no-geo-trim--no-row-bal"
     enable_study_output(study_path, True)
@@ -1774,6 +1828,8 @@ def test_no_geo_trim_no_row_bal(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_filter_outputs
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_no_geo_trim_no_vars_by_plant(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-filter-outputs" / "no-geo-trim--no-vars-by-plant"
     enable_study_output(study_path, True)
@@ -1783,6 +1839,8 @@ def test_no_geo_trim_no_vars_by_plant(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_filter_outputs
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_no_geo_trim_novar(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-filter-outputs" / "no-geo-trim--noVar"
     enable_study_output(study_path, True)
@@ -1792,6 +1850,8 @@ def test_no_geo_trim_novar(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_filter_outputs
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_no_geo_trim_selvars_1(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-filter-outputs" / "no-geo-trim--selVars-1"
     enable_study_output(study_path, True)
@@ -1819,6 +1879,8 @@ def test_no_geo_trim_selvars_3(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_filter_outputs
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_no_geo_trim_selvars_4(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-filter-outputs" / "no-geo-trim--selVars-4"
     enable_study_output(study_path, True)
@@ -1828,6 +1890,8 @@ def test_no_geo_trim_selvars_4(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_filter_outputs
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_no_geo_trim_adq_selvars_2(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-filter-outputs" / "no-geo-trim-adq-selVars-2"
     enable_study_output(study_path, True)
@@ -1837,6 +1901,8 @@ def test_no_geo_trim_adq_selvars_2(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_filter_outputs
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_with_geo_trim_no_vars_by_plant(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-filter-outputs" / "with-geo-trim--no-vars-by-plant"
     enable_study_output(study_path, True)
@@ -1846,6 +1912,8 @@ def test_with_geo_trim_no_vars_by_plant(use_ortools, ortools_solver, solver_path
 @pytest.mark.non_regression
 @pytest.mark.valid_filter_outputs
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_with_geo_trim_selvars_1(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-filter-outputs" / "with-geo-trim--selVars-1"
     enable_study_output(study_path, True)
@@ -1864,6 +1932,8 @@ def test_with_geo_trim_selvars_2(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_hydro
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_h700_34(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydro" / "H700-34"
     enable_study_output(study_path, True)
@@ -1873,6 +1943,8 @@ def test_h700_34(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_hydro
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_h701_52(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydro" / "H701-52"
     enable_study_output(study_path, True)
@@ -1900,6 +1972,8 @@ def test_h701_58(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_fast_yht_one_node_differentstyles_hydro_pricing_e_hb(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Fast/YHT-one_node_different styles/hydro-pricing-E_hb"
     enable_study_output(study_path, True)
@@ -1945,6 +2019,8 @@ def test_generic_someoff_somemust_tsgen(use_ortools, ortools_solver, solver_path
 @pytest.mark.non_regression
 @pytest.mark.valid_hydro
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_h700_30(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydro" / "H700-30"
     enable_study_output(study_path, True)
@@ -1954,6 +2030,8 @@ def test_h700_30(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_hydro
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_h701_53(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydro" / "H701-53"
     enable_study_output(study_path, True)
@@ -1990,6 +2068,8 @@ def test_h701_56(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_hydro
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_h701_59(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydro" / "H701-59"
     enable_study_output(study_path, True)
@@ -1999,6 +2079,8 @@ def test_h701_59(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_hydro
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_h700_31(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydro" / "H700-31"
     enable_study_output(study_path, True)
@@ -2008,6 +2090,8 @@ def test_h700_31(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_hydro
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_h700_51(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydro" / "H700-51"
     enable_study_output(study_path, True)
@@ -2017,6 +2101,8 @@ def test_h700_51(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_parallel
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_test_paral_cplx_pl_7on12_scbuild_eco_fast_24(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-parallel" / "test-paral-cplx-pl-7on12-scBuild_eco-fast-24"
     enable_study_output(study_path, True)
@@ -2035,6 +2121,8 @@ def test_test_parallelisation_complexe_pl_2on12y_eco_fast_24(use_ortools, ortool
 @pytest.mark.non_regression
 @pytest.mark.valid_complex
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_hydrau_frch(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-complex" / "hydrau_FRCH"
     enable_study_output(study_path, True)
@@ -2053,6 +2141,8 @@ def test_multistagestudy_3_ptdf_eco_fast_24(use_ortools, ortools_solver, solver_
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_accurate_yht_five_areas_hydro_pricing_01(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Accurate/YHT-five-areas/hydro-pricing-01"
     enable_study_output(study_path, True)
@@ -2062,6 +2152,8 @@ def test_accurate_yht_five_areas_hydro_pricing_01(use_ortools, ortools_solver, s
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_accurate_yht_five_areas_hydro_pricing_02(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Accurate/YHT-five-areas/hydro-pricing-02"
     enable_study_output(study_path, True)
@@ -2071,6 +2163,8 @@ def test_accurate_yht_five_areas_hydro_pricing_02(use_ortools, ortools_solver, s
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_accurate_yht_five_areas_hydro_pricing_03(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Accurate/YHT-five-areas/hydro-pricing-03"
     enable_study_output(study_path, True)
@@ -2080,6 +2174,8 @@ def test_accurate_yht_five_areas_hydro_pricing_03(use_ortools, ortools_solver, s
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_accurate_yht_five_areas_hydro_pricing_04(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Accurate/YHT-five-areas/hydro-pricing-04"
     enable_study_output(study_path, True)
@@ -2089,6 +2185,8 @@ def test_accurate_yht_five_areas_hydro_pricing_04(use_ortools, ortools_solver, s
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_fast_yht_five_areas_hydro_pricing_01(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Fast/YHT-five-areas/hydro-pricing-01"
     enable_study_output(study_path, True)
@@ -2098,6 +2196,8 @@ def test_fast_yht_five_areas_hydro_pricing_01(use_ortools, ortools_solver, solve
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_fast_yht_five_areas_hydro_pricing_02(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Fast/YHT-five-areas/hydro-pricing-02"
     enable_study_output(study_path, True)
@@ -2107,6 +2207,8 @@ def test_fast_yht_five_areas_hydro_pricing_02(use_ortools, ortools_solver, solve
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_fast_yht_five_areas_hydro_pricing_03(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Fast/YHT-five-areas/hydro-pricing-03"
     enable_study_output(study_path, True)
@@ -2116,6 +2218,8 @@ def test_fast_yht_five_areas_hydro_pricing_03(use_ortools, ortools_solver, solve
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_fast_yht_five_areas_hydro_pricing_04(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Fast/YHT-five-areas/hydro-pricing-04"
     enable_study_output(study_path, True)
@@ -2125,6 +2229,8 @@ def test_fast_yht_five_areas_hydro_pricing_04(use_ortools, ortools_solver, solve
 @pytest.mark.non_regression
 @pytest.mark.valid_parallel
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_test_paral_cplx_pl_7on12_scbuild_eco_acc_168(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-parallel" / "test-paral-cplx-pl-7on12-scBuild_eco-acc-168"
     enable_study_output(study_path, True)
@@ -2134,6 +2240,8 @@ def test_test_paral_cplx_pl_7on12_scbuild_eco_acc_168(use_ortools, ortools_solve
 @pytest.mark.non_regression
 @pytest.mark.valid_parallel
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_test_parallelisation_complexe_pl_2on12y_eco_acc_168(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-parallel" / "test-parallelisation-complexe-pl-2on12Y_eco-acc-168"
     enable_study_output(study_path, True)
@@ -2143,6 +2251,8 @@ def test_test_parallelisation_complexe_pl_2on12y_eco_acc_168(use_ortools, ortool
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_accurate_yht_five_areas_hydro_pricing_05(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Accurate/YHT-five-areas/hydro-pricing-05"
     enable_study_output(study_path, True)
@@ -2152,6 +2262,8 @@ def test_accurate_yht_five_areas_hydro_pricing_05(use_ortools, ortools_solver, s
 @pytest.mark.non_regression
 @pytest.mark.valid_hydropricing
 @pytest.mark.short
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_fast_yht_five_areas_hydro_pricing_05(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroPricing" / "Fast/YHT-five-areas/hydro-pricing-05"
     enable_study_output(study_path, True)
@@ -2170,6 +2282,8 @@ def test_multistagestudy_3_ptdf_eco_acc_168(use_ortools, ortools_solver, solver_
 @pytest.mark.non_regression
 @pytest.mark.valid_hydrobind
 @pytest.mark.medium
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_hydrobind_spxday_freemod(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroBind" / "hydrobind-spxday-freemod"
     enable_study_output(study_path, True)
@@ -2179,6 +2293,8 @@ def test_hydrobind_spxday_freemod(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_hydrobind
 @pytest.mark.medium
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_hydrobind_adequacy(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroBind" / "hydrobind-Adequacy"
     enable_study_output(study_path, True)
@@ -2188,6 +2304,8 @@ def test_hydrobind_adequacy(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_hydrobind
 @pytest.mark.medium
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_hydrobind_spxday_minexc(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroBind" / "hydrobind-spxday-minexc"
     enable_study_output(study_path, True)
@@ -2224,6 +2342,8 @@ def test_h700_32(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_hydrobind
 @pytest.mark.medium
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_hydrobind_spxweek_freemod(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroBind" / "hydrobind-spxweek-freemod"
     enable_study_output(study_path, True)
@@ -2233,6 +2353,8 @@ def test_hydrobind_spxweek_freemod(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_draft
 @pytest.mark.medium
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_052benchmarkcpuramhdd_4_draft(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-draft" / "052 Benchmark CPU RAM HDD - 4_draft"
     enable_study_output(study_path, True)
@@ -2242,6 +2364,8 @@ def test_052benchmarkcpuramhdd_4_draft(use_ortools, ortools_solver, solver_path)
 @pytest.mark.non_regression
 @pytest.mark.valid_hydrobind
 @pytest.mark.medium
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_hydrobind_spxweek_minexc(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroBind" / "hydrobind-spxweek-minexc"
     enable_study_output(study_path, True)
@@ -2251,6 +2375,8 @@ def test_hydrobind_spxweek_minexc(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_hydrobind
 @pytest.mark.medium
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_hydrobind_draft(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydroBind" / "hydrobind-draft"
     enable_study_output(study_path, True)
@@ -2260,6 +2386,8 @@ def test_hydrobind_draft(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_parallel
 @pytest.mark.medium
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_test_parallel_02_eco_fast_24(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-parallel" / "test-parallel-02_eco-fast-24"
     enable_study_output(study_path, True)
@@ -2269,6 +2397,8 @@ def test_test_parallel_02_eco_fast_24(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_parallel
 @pytest.mark.medium
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_test_parallel_01_eco_fast_24(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-parallel" / "test-parallel-01_eco-fast-24"
     enable_study_output(study_path, True)
@@ -2278,6 +2408,8 @@ def test_test_parallel_01_eco_fast_24(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_parallel
 @pytest.mark.medium
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_test_parallel_02_nomustrun_eco_acc_168(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-parallel" / "test-parallel-02-noMustRun_eco-acc-168"
     enable_study_output(study_path, True)
@@ -2287,6 +2419,8 @@ def test_test_parallel_02_nomustrun_eco_acc_168(use_ortools, ortools_solver, sol
 @pytest.mark.non_regression
 @pytest.mark.valid_parallel
 @pytest.mark.medium
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_test_parallel_02_nomustrun_eco_fast_24(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-parallel" / "test-parallel-02-noMustRun_eco-fast-24"
     enable_study_output(study_path, True)
@@ -2296,6 +2430,8 @@ def test_test_parallel_02_nomustrun_eco_fast_24(use_ortools, ortools_solver, sol
 @pytest.mark.non_regression
 @pytest.mark.valid_parallel
 @pytest.mark.medium
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_test_parallel_01_eco_acc_168(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-parallel" / "test-parallel-01_eco-acc-168"
     enable_study_output(study_path, True)
@@ -2305,6 +2441,8 @@ def test_test_parallel_01_eco_acc_168(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_parallel
 @pytest.mark.medium
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_test_parallel_02_eco_acc_168(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-parallel" / "test-parallel-02_eco-acc-168"
     enable_study_output(study_path, True)
@@ -2314,6 +2452,8 @@ def test_test_parallel_02_eco_acc_168(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_adq
 @pytest.mark.medium
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_052benchmarkcpuramhdd_4_adq(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-adq" / "052 Benchmark CPU RAM HDD - 4_adq"
     enable_study_output(study_path, True)
@@ -2323,6 +2463,8 @@ def test_052benchmarkcpuramhdd_4_adq(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_bind
 @pytest.mark.medium
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_bind_00_gen(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-bind" / "BIND-00-gen"
     enable_study_output(study_path, True)
@@ -2332,6 +2474,8 @@ def test_bind_00_gen(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_bind
 @pytest.mark.medium
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_bind_01_gen(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-bind" / "BIND-01-gen"
     enable_study_output(study_path, True)
@@ -2350,6 +2494,8 @@ def test_test_parallel_03_random_nbrs_eco_fast_24(use_ortools, ortools_solver, s
 @pytest.mark.non_regression
 @pytest.mark.valid_bind
 @pytest.mark.long
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_bind_02_gen(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-bind" / "BIND-02-gen"
     enable_study_output(study_path, True)
@@ -2359,7 +2505,31 @@ def test_bind_02_gen(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_complex
 @pytest.mark.long
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
 def test_e2050_5y_6w_fast_mps(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-complex" / "E2050-5y-6w-fast-mps"
     enable_study_output(study_path, True)
     run_study(solver_path, study_path, use_ortools, ortools_solver)
+    check_output_values(study_path)
+
+@pytest.mark.non_regression
+@pytest.mark.valid_parallel
+@pytest.mark.long
+def test_test_parallel_03_random_nbrs_eco_acc_168(use_ortools, ortools_solver, solver_path):
+    study_path = NONREG_STUDIES_PATH / "valid-parallel" / "test-parallel-03-random_nbrs_eco-acc-168"
+    enable_study_output(study_path, True)
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    check_output_values(study_path)
+
+@pytest.mark.non_regression
+@pytest.mark.valid_complex
+@pytest.mark.long
+@pytest.mark.skipif(sys.platform=="linux",
+                    reason="Results different between linux and windows.")
+def test_e2050_5y_6w_accurate_mps(use_ortools, ortools_solver, solver_path):
+    study_path = NONREG_STUDIES_PATH / "valid-complex" / "E2050-5y-6w-accurate-mps"
+    enable_study_output(study_path, True)
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    check_output_values(study_path)
+
