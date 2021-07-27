@@ -70,8 +70,8 @@ jobs:
            
     - name : Install deps with VCPKG
       run: |
-          ./bootstrap-vcpkg.sh
           cd vcpkg
+          ./bootstrap-vcpkg.sh
           vcpkg install ${{matrix.vcpkgPackages}} --triplet ${{matrix.triplet}}
       shell: bash
       
