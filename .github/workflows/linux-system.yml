@@ -20,7 +20,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
+    
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1
+      
     - name: Install libraries
       run: |
            sudo apt-get update
@@ -49,7 +52,7 @@ jobs:
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON
+           cmake -B _build -S src -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON
            
     - name: Build
       run: |
