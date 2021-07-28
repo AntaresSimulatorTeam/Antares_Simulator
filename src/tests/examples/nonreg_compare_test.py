@@ -4,7 +4,7 @@ import sys
 
 from antares_test_utils import *
 
-NONREG_STUDIES_PATH = Path('../resources/Antares_Simulator_NonReg')
+NONREG_STUDIES_PATH = Path('../resources/NonRegTests')
 
 # NON-REGRESSION
 @pytest.mark.non_regression
