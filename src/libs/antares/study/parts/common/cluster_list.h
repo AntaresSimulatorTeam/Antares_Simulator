@@ -39,7 +39,7 @@ public:
     /*!
     ** \brief Destructor
     */
-    ~ClusterList();
+    virtual ~ClusterList();
     //@}
 
     //! \name Iterating
@@ -84,8 +84,8 @@ public:
     ** \param t The cluster to add
     ** \return True if the cluster has been added, false otherwise
     */
-    SharedPtr add(ClusterT* t);
 
+    SharedPtr add(const SharedPtr& t);
     /*!
     ** \brief Detach a cluster represented by an iterator
     **
@@ -94,7 +94,7 @@ public:
     ** The iterator should considered as invalid after using this method.
     ** \return A pointer to the cluster, NULL if an error has occured
     */
-    ClusterT* detach(iterator i);
+    SharedPtr detach(iterator i);
 
     /*!
     ** \brief Remove a cluster represented by an iterator

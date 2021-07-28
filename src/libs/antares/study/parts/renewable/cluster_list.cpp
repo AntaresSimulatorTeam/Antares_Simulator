@@ -170,12 +170,11 @@ bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
                 if (section->name.empty())
                     continue;
 
-                RenewableCluster* cluster = new RenewableCluster(area);
+                auto cluster = std::make_shared<RenewableCluster>(area);
 
                 // Load data of a renewable cluster from a ini file section
                 if (not ClusterLoadFromSection(buffer, *cluster, *section))
                 {
-                    delete cluster;
                     continue;
                 }
 
@@ -188,7 +187,6 @@ bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
                     // This error should never happen
                     logs.error() << "Impossible to add the renewable cluster '" << cluster->name()
                                  << "'";
-                    delete cluster;
                     continue;
                 }
 

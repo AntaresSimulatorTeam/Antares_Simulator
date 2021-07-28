@@ -24,6 +24,8 @@ public:
 public:
     Cluster(Area* parent);
 
+    virtual ~Cluster() = default;
+
     //! Get the cluster ID
     const ClusterName& id() const;
 
