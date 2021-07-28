@@ -34,6 +34,7 @@
 #include "toolbox/components/datagrid/renderer/scenario-builder-renderer-base.h"
 #include "toolbox/components/datagrid/renderer/scenario-builder-load-renderer.h"
 #include "toolbox/components/datagrid/renderer/scenario-builder-thermal-renderer.h"
+#include "toolbox/components/datagrid/renderer/scenario-builder-renewable-renderer.h"
 #include "toolbox/components/datagrid/renderer/scenario-builder-hydro-renderer.h"
 #include "toolbox/components/datagrid/renderer/scenario-builder-wind-renderer.h"
 #include "toolbox/components/datagrid/renderer/scenario-builder-solar-renderer.h"
@@ -173,7 +174,7 @@ public:
     {
     }
 
-    void create()
+    void create() override
     {
         page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(
           notebook_, wxT("thermal"), wxT("Thermal"));
@@ -189,7 +190,7 @@ private:
     {
         renderer_ = new Renderer::thermalScBuilderRenderer(page_.second);
     }
-    void createGrid()
+    void createGrid() override
     {
         grid_ = new DatagridType(page_.first, renderer_);
     }
@@ -198,6 +199,46 @@ private:
         page_.first->add(grid_, wxT("thermal"), wxT("Thermal"));
         renderer_->control(grid_); // Shouldn't that be inside create() ?
         page_.first->select(wxT("thermal"));
+    }
+
+private:
+    std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page_;
+};
+
+// Renewable clusters ...
+class renewableScBuilderGrid : public basicScBuilderGrid
+{
+public:
+    renewableScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
+        basicScBuilderGrid(control, notebook)
+    {
+    }
+
+    void create() override
+    {
+        page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(
+            notebook_, wxT("renewable"), wxT("Renewable"));
+        createRenderer();
+        control_->updateRules.connect(renderer_,
+            &Renderer::renewableScBuilderRenderer::onRulesChanged);
+        createGrid();
+        addToNotebook();
+    }
+
+private:
+    void createRenderer()
+    {
+        renderer_ = new Renderer::renewableScBuilderRenderer(page_.second);
+    }
+    void createGrid() override
+    {
+        grid_ = new DatagridType(page_.first, renderer_);
+    }
+    void addToNotebook()
+    {
+        page_.first->add(grid_, wxT("renewable"), wxT("Renewable"));
+        renderer_->control(grid_); // Shouldn't that be inside create() ?
+        page_.first->select(wxT("renewable"));
     }
 
 private:
@@ -272,6 +313,9 @@ void ApplWnd::createNBScenarioBuilder()
 
     solarScBuilderGrid solarScBuilder(control, pScenarioBuilderNotebook);
     solarScBuilder.create();
+
+    renewableScBuilderGrid renewableScBuilder(control, pScenarioBuilderNotebook);
+    renewableScBuilder.create();
 
     pScenarioBuilderNotebook->addSeparator();
 

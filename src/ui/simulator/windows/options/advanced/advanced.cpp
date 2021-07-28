@@ -46,6 +46,9 @@ namespace Window
 {
 namespace Options
 {
+
+Yuni::Event<void()> OnRenewableGenerationModellingChanged;
+
 static void Title(wxWindow* parent, wxSizer* sizer, const wxChar* text, bool margintop = true)
 {
     if (margintop)
@@ -271,6 +274,19 @@ AdvancedParameters::AdvancedParameters(wxWindow* parent) :
         pBtnNumberOfCores = button;
     }
 
+    // Renewable generation modelling
+    {
+        label = Component::CreateLabel(this, wxT("Renewable generation modeling"));
+        button = new Component::Button(this, wxT("Aggregated"), "images/16x16/tag.png");
+        button->SetBackgroundColour(bgColor);
+        button->menu(true);
+        onPopup.bind(this, &AdvancedParameters::onRenewableGenerationModelling);
+        button->onPopupMenu(onPopup);
+        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        pBtnRenewableGenModelling = button;
+    }
+
     sizer->AddSpacer(15);
 
     // Buttons
@@ -417,6 +433,9 @@ void AdvancedParameters::refresh()
 
     text = wxStringFromUTF8(NumberOfCoresModeToCString(study.parameters.nbCores.ncMode));
     pBtnNumberOfCores->caption(text);
+
+    text = wxStringFromUTF8(RenewableGenerationModellingToCString(study.parameters.renewableGeneration.rgModelling));
+    pBtnRenewableGenModelling->caption(text);
 
     text = wxStringFromUTF8(
       DayAheadReserveManagementModeToCString(study.parameters.reserveManagement.daMode));
@@ -986,6 +1005,60 @@ void AdvancedParameters::onSelectNCmax(wxCommandEvent& evt)
     {
         study.parameters.nbCores.ncMode = Data::ncMax;
         MarkTheStudyAsModified();
+        refresh();
+    }
+}
+
+void AdvancedParameters::onRenewableGenerationModelling(Component::Button&, wxMenu& menu, void*)
+{
+    wxMenuItem* it;
+    wxString text;
+
+    text = wxStringFromUTF8(RenewableGenerationModellingToCString(Data::rgAggregated));
+    text << wxT("   [default]");
+    it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
+    menu.Connect(it->GetId(),
+        wxEVT_COMMAND_MENU_SELECTED,
+        wxCommandEventHandler(AdvancedParameters::onSelectRGMaggregated),
+        nullptr,
+        this);
+
+    text.clear();
+    text = wxStringFromUTF8(RenewableGenerationModellingToCString(Data::rgClusters));
+    it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
+    menu.Connect(it->GetId(),
+        wxEVT_COMMAND_MENU_SELECTED,
+        wxCommandEventHandler(AdvancedParameters::onSelectRGMrenewableClusters),
+        nullptr,
+        this);
+}
+
+void AdvancedParameters::onSelectRGMaggregated(wxCommandEvent& evt)
+{
+    if (not Data::Study::Current::Valid())
+        return;
+    auto& study = *Data::Study::Current::Get();
+
+    if (study.parameters.renewableGeneration.rgModelling != Data::rgAggregated)
+    {
+        study.parameters.renewableGeneration.rgModelling = Data::rgAggregated;
+        MarkTheStudyAsModified();
+        OnRenewableGenerationModellingChanged();
+        refresh();
+    }
+}
+
+void AdvancedParameters::onSelectRGMrenewableClusters(wxCommandEvent& evt)
+{
+    if (not Data::Study::Current::Valid())
+        return;
+    auto& study = *Data::Study::Current::Get();
+
+    if (study.parameters.renewableGeneration.rgModelling != Data::rgClusters)
+    {
+        study.parameters.renewableGeneration.rgModelling = Data::rgClusters;
+        MarkTheStudyAsModified();
+        OnRenewableGenerationModellingChanged();
         refresh();
     }
 }

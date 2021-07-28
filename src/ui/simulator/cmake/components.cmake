@@ -57,8 +57,10 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS
 		toolbox/components/datagrid/renderer/constraintsbuilder/links.cpp
 		toolbox/components/datagrid/renderer/connection.h
 		toolbox/components/datagrid/renderer/connection.cpp
-		toolbox/components/datagrid/renderer/simulation.h
-		toolbox/components/datagrid/renderer/simulation.cpp
+		toolbox/components/datagrid/renderer/ts-management.h
+		toolbox/components/datagrid/renderer/ts-management.cpp
+		toolbox/components/datagrid/renderer/ts-management-clusters-as-renewables.h
+		toolbox/components/datagrid/renderer/ts-management-clusters-as-renewables.cpp
 		toolbox/components/datagrid/renderer/geographic-trimming-grid.h
 		toolbox/components/datagrid/renderer/geographic-trimming-grid.cpp
 		toolbox/components/datagrid/renderer/select-variables.h
@@ -73,6 +75,8 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS
 		toolbox/components/datagrid/renderer/scenario-builder-load-renderer.h
 		toolbox/components/datagrid/renderer/scenario-builder-thermal-renderer.cpp
 		toolbox/components/datagrid/renderer/scenario-builder-thermal-renderer.h
+		toolbox/components/datagrid/renderer/scenario-builder-renewable-renderer.cpp
+		toolbox/components/datagrid/renderer/scenario-builder-renewable-renderer.h
 		toolbox/components/datagrid/renderer/scenario-builder-hydro-renderer.cpp
 		toolbox/components/datagrid/renderer/scenario-builder-hydro-renderer.h
 		toolbox/components/datagrid/renderer/scenario-builder-wind-renderer.cpp
@@ -124,6 +128,8 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS_AREAS
 		toolbox/components/datagrid/renderer/area/misc.cpp
 		toolbox/components/datagrid/renderer/area/thermal.areasummary.cpp
 		toolbox/components/datagrid/renderer/area/thermal.areasummary.h
+		toolbox/components/datagrid/renderer/area/renewable.areasummary.cpp
+		toolbox/components/datagrid/renderer/area/renewable.areasummary.h
 		toolbox/components/datagrid/renderer/area/xcast-k.h
 		toolbox/components/datagrid/renderer/area/xcast-k.hxx
 		toolbox/components/datagrid/renderer/area/xcast-coefficients.h
@@ -206,6 +212,9 @@ SET(SRC_TOOLBOX_COM_HTMLLISTBOX
 		toolbox/components/htmllistbox/item/thermal-cluster.h
 		toolbox/components/htmllistbox/item/thermal-cluster.cpp
 		toolbox/components/htmllistbox/item/thermal-cluster.hxx
+		toolbox/components/htmllistbox/item/renewable-cluster.h
+		toolbox/components/htmllistbox/item/renewable-cluster.cpp
+		toolbox/components/htmllistbox/item/renewable-cluster.hxx
 		toolbox/components/htmllistbox/item/bindingconstraint.h
 		toolbox/components/htmllistbox/item/bindingconstraint.cpp
 		toolbox/components/htmllistbox/item/bindingconstraint.hxx
@@ -218,6 +227,8 @@ SET(SRC_TOOLBOX_COM_HTMLLISTBOX
 		toolbox/components/htmllistbox/datasource/areas.cpp
 		toolbox/components/htmllistbox/datasource/thermal-cluster.h
 		toolbox/components/htmllistbox/datasource/thermal-cluster.cpp
+		toolbox/components/htmllistbox/datasource/renewable-cluster.h
+		toolbox/components/htmllistbox/datasource/renewable-cluster.cpp
 		toolbox/components/htmllistbox/datasource/bindingconstraint.h
 		toolbox/components/htmllistbox/datasource/bindingconstraint.cpp
 )

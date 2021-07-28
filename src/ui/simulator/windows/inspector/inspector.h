@@ -185,6 +185,18 @@ void AddThermalClusters(const Data::ThermalCluster::Set& clusters);
 void RemoveThermalCluster(const Data::ThermalCluster* cluster);
 //@}
 
+//! \name Renewable clusters
+//@{
+/*!
+** \brief Clear the selection then Add a renewable cluster
+*/
+void SelectRenewableCluster(const Data::RenewableCluster* cluster);
+
+/*!
+** \brief Remove a renewable cluster from the selection
+*/
+void RemoveRenewableCluster(const Data::RenewableCluster* cluster);
+
 //! \name Data::Binding constraints
 //@{
 /*!

@@ -24,43 +24,25 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-
-#include "data.h"
+#ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_RENEWABLE_CLUSTER_HXX__
+#define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_RENEWABLE_CLUSTER_HXX__
 
 namespace Antares
 {
-namespace Window
+namespace Component
 {
-namespace Inspector
+namespace HTMLListbox
 {
-InspectorData::InspectorData(Antares::Data::Study& s) : study(s), empty(true)
+namespace Item
 {
+inline Antares::Data::RenewableCluster* RenewableCluster::renewableAggregate() const
+{
+    return pRenewableCluster;
 }
 
-InspectorData::~InspectorData()
-{
-}
-
-void InspectorData::clear()
-{
-    if (not empty)
-    {
-        areas.clear();
-        links.clear();
-        ThClusters.clear();
-        RnClusters.clear();
-        constraints.clear();
-        studies.clear();
-        empty = true;
-    }
-}
-
-uint InspectorData::totalNbOfItems() const
-{
-    return (uint)areas.size() + (uint)links.size() + (uint)ThClusters.size() + (uint)RnClusters.size()
-           + (uint)constraints.size();
-}
-
-} // namespace Inspector
-} // namespace Window
+} // namespace Item
+} // namespace HTMLListbox
+} // namespace Component
 } // namespace Antares
+
+#endif // __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_RENEWABLE_CLUSTER_HXX__

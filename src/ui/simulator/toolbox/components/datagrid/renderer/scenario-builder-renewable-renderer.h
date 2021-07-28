@@ -24,43 +24,37 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_RENEWABLE_SCENARIO_BUILDER_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_RENEWABLE_SCENARIO_BUILDER_H__
 
-#include "data.h"
+#include "scenario-builder-renderer-base.h"
+#include "../../../../toolbox/input/area.h"
 
 namespace Antares
 {
-namespace Window
+namespace Component
 {
-namespace Inspector
+namespace Datagrid
 {
-InspectorData::InspectorData(Antares::Data::Study& s) : study(s), empty(true)
+namespace Renderer
 {
-}
+class renewableScBuilderRenderer : public ScBuilderRendererBase
+{
+public:
+    renewableScBuilderRenderer(Toolbox::InputSelector::Area* notifier);
+    bool valid() const;
+    ~renewableScBuilderRenderer();
+    bool cellValue(int x, int y, const Yuni::String& value);
+    int height() const;
+    wxString rowCaption(int rowIndx) const;
+    double cellNumericValue(int x, int y) const;
+}; // class renewableScBuilderRenderer
 
-InspectorData::~InspectorData()
-{
-}
-
-void InspectorData::clear()
-{
-    if (not empty)
-    {
-        areas.clear();
-        links.clear();
-        ThClusters.clear();
-        RnClusters.clear();
-        constraints.clear();
-        studies.clear();
-        empty = true;
-    }
-}
-
-uint InspectorData::totalNbOfItems() const
-{
-    return (uint)areas.size() + (uint)links.size() + (uint)ThClusters.size() + (uint)RnClusters.size()
-           + (uint)constraints.size();
-}
-
-} // namespace Inspector
-} // namespace Window
+} // namespace Renderer
+} // namespace Datagrid
+} // namespace Component
 } // namespace Antares
+
+#endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_RENEWABLE_SCENARIO_BUILDER_H__
+
+#pragma once

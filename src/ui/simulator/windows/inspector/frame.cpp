@@ -126,7 +126,8 @@ void Frame::onSelectAllLinks(wxCommandEvent&)
                 data->links.insert(i->second);
         }
         data->areas.clear();
-        data->clusters.clear();
+        data->ThClusters.clear();
+        data->RnClusters.clear();
         data->empty = data->links.empty();
         gInspector->delayApplyGlobalSelection();
     }
@@ -140,7 +141,8 @@ void Frame::onSelectLink(wxCommandEvent& evt)
         data->links.clear();
         data->links.insert((Data::AreaLink*)mapIDPointer[evt.GetId()]);
         data->areas.clear();
-        data->clusters.clear();
+        data->ThClusters.clear();
+        data->RnClusters.clear();
         data->empty = data->links.empty();
         gInspector->delayApplyGlobalSelection();
     }
@@ -159,47 +161,51 @@ void Frame::onSelectAllLinksFromArea(wxCommandEvent& evt)
         for (auto i = area->links.begin(); i != end; ++i)
             data->links.insert(i->second);
         data->areas.clear();
-        data->clusters.clear();
+        data->ThClusters.clear();
+        data->RnClusters.clear();
         data->empty = data->links.empty();
         gInspector->delayApplyGlobalSelection();
     }
 }
 
+// gp : never used - to be removed
 void Frame::onSelectAllPlants(wxCommandEvent&)
 {
     InspectorData::Ptr data = gData;
     if (!(!data) and gInspector)
     {
-        data->clusters.clear();
+        data->ThClusters.clear();
         auto areaEnd = data->areas.end();
         for (auto i = data->areas.begin(); i != areaEnd; ++i)
         {
             Data::Area& area = *(*i);
             auto end = area.thermal.list.end();
             for (auto i = area.thermal.list.begin(); i != end; ++i)
-                data->clusters.insert(i->second.get());
+                data->ThClusters.insert(i->second.get());
         }
         data->areas.clear();
         data->links.clear();
-        data->empty = data->clusters.empty();
+        data->empty = data->ThClusters.empty();
         gInspector->delayApplyGlobalSelection();
     }
 }
 
+// gp : never used - to be removed
 void Frame::onSelectPlant(wxCommandEvent& evt)
 {
     InspectorData::Ptr data = gData;
     if (!(!data) and gInspector and evt.GetEventObject())
     {
-        data->clusters.clear();
-        data->clusters.insert((Data::ThermalCluster*)mapIDPointer[evt.GetId()]);
+        data->ThClusters.clear();
+        data->ThClusters.insert((Data::ThermalCluster*)mapIDPointer[evt.GetId()]);
         data->areas.clear();
         data->links.clear();
-        data->empty = data->clusters.empty();
+        data->empty = data->ThClusters.empty();
         gInspector->delayApplyGlobalSelection();
     }
 }
 
+// gp : never used - to be removed
 void Frame::onSelectAllPlantsFromArea(wxCommandEvent& evt)
 {
     InspectorData::Ptr data = gData;
@@ -208,13 +214,13 @@ void Frame::onSelectAllPlantsFromArea(wxCommandEvent& evt)
         Data::Area* area = (Data::Area*)mapIDPointer[evt.GetId()];
         if (!area)
             return;
-        data->clusters.clear();
+        data->ThClusters.clear();
         auto end = area->thermal.list.end();
         for (auto i = area->thermal.list.begin(); i != end; ++i)
-            data->clusters.insert(i->second.get());
+            data->ThClusters.insert(i->second.get());
         data->areas.clear();
         data->links.clear();
-        data->empty = data->clusters.empty();
+        data->empty = data->ThClusters.empty();
         gInspector->delayApplyGlobalSelection();
     }
 }
@@ -481,52 +487,77 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
       = page->AppendIn(lid, new wxBoolProperty(wxT("annual"), wxT("annual"), true));
 
     // --- THERMAL CLUSTERS ---
-    pPGClusterSeparator = Group(pg, wxEmptyString, wxEmptyString);
+    // gp : all thermal property names should be renamed "th-cluster.<something>" instead of
+    // "cluster.<something>"
+    pPGThClusterSeparator = Group(pg, wxEmptyString, wxEmptyString);
     Group(pg, wxT("THERMAL CLUSTERS"), wxT("cluster.title"));
-    pPGClusterGeneral = Category(pg, wxT("General"), wxT("cluster.general"));
-    pPGClusterName = P_STRING("Name", "cluster.name");
+    pPGThClusterGeneral = Category(pg, wxT("General"), wxT("cluster.general"));
+    pPGThClusterName = P_STRING("Name", "cluster.name");
 
-    wxPGChoices chs;
+    wxPGChoices ThGroupChoices;
     for (uint i = 0; i != arrayClusterGroupCount; ++i)
-        chs.Add(arrayClusterGroup[i], i);
-    pPGClusterGroup = page->Append(
-      new wxEditEnumProperty(wxT("group"), wxT("cluster.group"), chs, wxEmptyString));
+        ThGroupChoices.Add(arrayClusterGroup[i], i);
+    pPGThClusterGroup = page->Append(
+      new wxEditEnumProperty(wxT("group"), wxT("cluster.group"), ThGroupChoices, wxEmptyString));
 
-    pPGClusterArea = P_STRING("area", "cluster.area");
-    pg->DisableProperty(pPGClusterArea);
+    pPGThClusterArea = P_STRING("area", "cluster.area");
+    pg->DisableProperty(pPGThClusterArea);
 
-    pPGClusterParams = Category(pg, wxT("Operating parameters"), wxT("cluster.params"));
-    pPGClusterEnabled = P_BOOL("Enabled", "cluster.enabled");
-    pPGClusterUnitCount = P_UINT("Unit", "cluster.unit");
-    pPGClusterNominalCapacity = P_FLOAT("Nominal capacity (MW)", "cluster.nominal_capacity");
-    pPGClusterInstalled = P_FLOAT("Installed (MW)", "cluster.installed");
-    pg->DisableProperty(pPGClusterInstalled);
-    pPGClusterMustRun = P_BOOL("Must run", "cluster.must-run");
+    pPGThClusterParams = Category(pg, wxT("Operating parameters"), wxT("cluster.params"));
+    pPGThClusterEnabled = P_BOOL("Enabled", "cluster.enabled");
+    pPGThClusterUnitCount = P_UINT("Unit", "cluster.unit");
+    pPGThClusterNominalCapacity = P_FLOAT("Nominal capacity (MW)", "cluster.nominal_capacity");
+    pPGThClusterInstalled = P_FLOAT("Installed (MW)", "cluster.installed");
+    pg->DisableProperty(pPGThClusterInstalled);
+    pPGThClusterMustRun = P_BOOL("Must run", "cluster.must-run");
 
-    pPGClusterMinStablePower = P_FLOAT("Min Stable Power (MW)", "cluster.minstablepower");
-    pPGClusterMinUpTime = page->Append(
+    pPGThClusterMinStablePower = P_FLOAT("Min Stable Power (MW)", "cluster.minstablepower");
+    pPGThClusterMinUpTime = page->Append(
       new wxEnumProperty(wxT("Min. Up Time"), wxT("cluster.minuptime"), arrayMinUpDownTime));
-    pPGClusterMinDownTime = page->Append(
+    pPGThClusterMinDownTime = page->Append(
       new wxEnumProperty(wxT("Min. Down Time"), wxT("cluster.mindowntime"), arrayMinUpDownTime));
 
-    pPGClusterSpinning = P_FLOAT("Spinning (%)", "cluster.spinning");
-    pPGClusterSpinning->SetAttribute(wxPG_ATTR_MAX, 99.99);
-    pPGClusterCO2 = P_FLOAT("CO2 (Tons/MWh)", "cluster.co2");
+    pPGThClusterSpinning = P_FLOAT("Spinning (%)", "cluster.spinning");
+    pPGThClusterSpinning->SetAttribute(wxPG_ATTR_MAX, 99.99);
+    pPGThClusterCO2 = P_FLOAT("CO2 (Tons/MWh)", "cluster.co2");
 
-    pPGClusterCosts = Category(pg, wxT("Operating costs"), wxT("cluster.costs"));
-    pPGClusterMarginalCost = P_FLOAT("Marginal (\u20AC/MWh)", "cluster.opcost_marginal");
-    pPGClusterFixedCost = P_FLOAT("Fixed (\u20AC/hour)", "cluster.opcost_fixed");
-    pPGClusterStartupCost = P_FLOAT("Startup (\u20AC/startup)", "cluster.opcost_startup");
-    pPGClusterOperatingCost = P_FLOAT("Market bid (\u20AC/MWh)", "cluster.opcost_marketbid");
-    pPGClusterRandomSpread = P_FLOAT("Spread (\u20AC/MWh)", "cluster.opcost_spread");
+    pPGThClusterCosts = Category(pg, wxT("Operating costs"), wxT("cluster.costs"));
+    pPGThClusterMarginalCost = P_FLOAT("Marginal (\u20AC/MWh)", "cluster.opcost_marginal");
+    pPGThClusterFixedCost = P_FLOAT("Fixed (\u20AC/hour)", "cluster.opcost_fixed");
+    pPGThClusterStartupCost = P_FLOAT("Startup (\u20AC/startup)", "cluster.opcost_startup");
+    pPGThClusterOperatingCost = P_FLOAT("Market bid (\u20AC/MWh)", "cluster.opcost_marketbid");
+    pPGThClusterRandomSpread = P_FLOAT("Spread (\u20AC/MWh)", "cluster.opcost_spread");
 
-    pPGClusterReliabilityModel
+    pPGThClusterReliabilityModel
       = Category(pg, wxT("Reliability model"), wxT("cluster.reliabilitymodel"));
-    pPGClusterVolatilityForced = P_FLOAT("Volatility (forced)", "cluster.forcedVolatility");
-    pPGClusterVolatilityPlanned = P_FLOAT("Volatility (planned)", "cluster.plannedVolatility");
-    pPGClusterLawForced = P_ENUM("Law (forced)", "cluster.forcedlaw", thermalLaws);
-    pPGClusterLawPlanned = P_ENUM("Law (planned)", "cluster.plannedlaw", thermalLaws);
+    pPGThClusterVolatilityForced = P_FLOAT("Volatility (forced)", "cluster.forcedVolatility");
+    pPGThClusterVolatilityPlanned = P_FLOAT("Volatility (planned)", "cluster.plannedVolatility");
+    pPGThClusterLawForced = P_ENUM("Law (forced)", "cluster.forcedlaw", thermalLaws);
+    pPGThClusterLawPlanned = P_ENUM("Law (planned)", "cluster.plannedlaw", thermalLaws);
 
+    // --- RENEWABLE CLUSTERS ---
+    pPGRnClusterSeparator = Group(pg, wxEmptyString, wxEmptyString);
+    Group(pg, wxT("RENEWABLE CLUSTERS"), wxT("rn-cluster.title"));
+    pPGRnClusterGeneral = Category(pg, wxT("General"), wxT("rn-cluster.general"));
+    pPGRnClusterName = P_STRING("Name", "rn-cluster.name");
+
+    wxPGChoices RnGroupChoices;
+    for (uint i = 0; i != arrayRnClusterGroupCount; ++i)
+        RnGroupChoices.Add(arrayRnClusterGroup[i], i);
+    pPGRnClusterGroup = page->Append(
+        new wxEditEnumProperty(wxT("group"), wxT("rn-cluster.group"), RnGroupChoices, wxEmptyString));
+
+    pPGRnClusterArea = P_STRING("area", "rn-cluster.area");
+    pg->DisableProperty(pPGRnClusterArea);
+
+    pPGRnClusterTSMode = P_ENUM("timeseries mode", "rn-cluster.ts_mode", renewableTSMode);
+
+    pPGRnClusterParams = Category(pg, wxT("Operating parameters"), wxT("rn-cluster.params"));
+    pPGRnClusterEnabled = P_BOOL("Enabled", "rn-cluster.enabled");
+    pPGRnClusterUnitCount = P_UINT("Unit", "rn-cluster.unit");
+    pPGRnClusterNominalCapacity = P_FLOAT("Nominal capacity (MW)", "rn-cluster.nominal_capacity");
+    pPGRnClusterInstalled = P_FLOAT("Installed (MW)", "rn-cluster.installed");
+    pg->DisableProperty(pPGRnClusterInstalled);
     // --- CONSTRAINT ---
     pPGConstraintSeparator = Group(pg, wxEmptyString, wxEmptyString);
     pPGConstraintTitle = Group(pg, wxT("1 CONSTRAINT"), wxT("constraint.title"));
@@ -864,74 +895,117 @@ void Frame::apply(const InspectorData::Ptr& data)
     // ----------------
     // THERMAL CLUSTERS
     // ----------------
-    hide = !data || data->clusters.empty();
-    multiple = (data and data->clusters.size() > 1);
-    pPGClusterSeparator->Hide(hide);
+    hide = !data || data->ThClusters.empty();
+    multiple = (data and data->ThClusters.size() > 1);
+    pPGThClusterSeparator->Hide(hide);
     p = PROPERTY("cluster.title");
     p->Hide(hide);
     if (!hide)
     {
-        pPGClusterName->Hide(multiple);
+        pPGThClusterName->Hide(multiple);
         if (!multiple) // only one thermal cluster
         {
             p->SetLabel(wxT("THERMAL CLUSTER"));
-            pPGClusterName->SetValueFromString(
-              wxStringFromUTF8((*(data->clusters.begin()))->name()));
+            pPGThClusterName->SetValueFromString(
+              wxStringFromUTF8((*(data->ThClusters.begin()))->name()));
         }
         else
-            p->SetLabel(wxString() << data->clusters.size() << wxT(" THERMAL CLUSTERS"));
+            p->SetLabel(wxString() << data->ThClusters.size() << wxT(" THERMAL CLUSTERS"));
 
         // Parent Area
-        Accumulator<PClusterArea>::Apply(pPGClusterArea, data->clusters);
+        Accumulator<PClusterArea>::Apply(pPGThClusterArea, data->ThClusters);
         // Group
-        Accumulator<PClusterGroup>::Apply(pPGClusterGroup, data->clusters);
+        Accumulator<PClusterGroup>::Apply(pPGThClusterGroup, data->ThClusters);
         // Must run
-        Accumulator<PClusterMustRun>::Apply(pPGClusterMustRun, data->clusters);
+        Accumulator<PClusterMustRun>::Apply(pPGThClusterMustRun, data->ThClusters);
         // Enabled
-        Accumulator<PClusterEnabled>::Apply(pPGClusterEnabled, data->clusters);
+        Accumulator<PClusterEnabled>::Apply(pPGThClusterEnabled, data->ThClusters);
         // Unit count
-        Accumulator<PClusterUnitCount>::Apply(pPGClusterUnitCount, data->clusters);
+        Accumulator<PClusterUnitCount>::Apply(pPGThClusterUnitCount, data->ThClusters);
         // Nominal capacity
-        Accumulator<PClusterNomCapacity>::Apply(pPGClusterNominalCapacity, data->clusters);
+        Accumulator<PClusterNomCapacity>::Apply(pPGThClusterNominalCapacity, data->ThClusters);
         // Installed
-        Accumulator<PClusterInstalled, Add>::Apply(pPGClusterInstalled, data->clusters);
+        Accumulator<PClusterInstalled, Add>::Apply(pPGThClusterInstalled, data->ThClusters);
         // Min. Up Time
-        Accumulator<PClusterMinUpTime>::Apply(pPGClusterMinUpTime, data->clusters);
+        Accumulator<PClusterMinUpTime>::Apply(pPGThClusterMinUpTime, data->ThClusters);
         // Min. Down Time
-        Accumulator<PClusterMinDownTime>::Apply(pPGClusterMinDownTime, data->clusters);
+        Accumulator<PClusterMinDownTime>::Apply(pPGThClusterMinDownTime, data->ThClusters);
         // Min. Stable Power
-        Accumulator<PClusterMinStablePower>::Apply(pPGClusterMinStablePower, data->clusters);
+        Accumulator<PClusterMinStablePower>::Apply(pPGThClusterMinStablePower, data->ThClusters);
         // Spinning
-        Accumulator<PClusterSpinning>::Apply(pPGClusterSpinning, data->clusters);
+        Accumulator<PClusterSpinning>::Apply(pPGThClusterSpinning, data->ThClusters);
         // CO2
-        Accumulator<PClusterCO2>::Apply(pPGClusterCO2, data->clusters);
+        Accumulator<PClusterCO2>::Apply(pPGThClusterCO2, data->ThClusters);
         // Volatility
-        Accumulator<PClusterVolatilityPlanned>::Apply(pPGClusterVolatilityPlanned, data->clusters);
-        Accumulator<PClusterVolatilityForced>::Apply(pPGClusterVolatilityForced, data->clusters);
+        Accumulator<PClusterVolatilityPlanned>::Apply(pPGThClusterVolatilityPlanned, data->ThClusters);
+        Accumulator<PClusterVolatilityForced>::Apply(pPGThClusterVolatilityForced, data->ThClusters);
         // Laws
-        Accumulator<PClusterLawPlanned>::Apply(pPGClusterLawPlanned, data->clusters);
-        Accumulator<PClusterLawForced>::Apply(pPGClusterLawForced, data->clusters);
+        Accumulator<PClusterLawPlanned>::Apply(pPGThClusterLawPlanned, data->ThClusters);
+        Accumulator<PClusterLawForced>::Apply(pPGThClusterLawForced, data->ThClusters);
         // Costs
-        Accumulator<PClusterMarginalCost>::Apply(pPGClusterMarginalCost, data->clusters);
-        Accumulator<PClusterReference>::Apply(pPGClusterOperatingCost, data->clusters);
-        Accumulator<PClusterFixedCost>::Apply(pPGClusterFixedCost, data->clusters);
-        Accumulator<PClusterStartupCost>::Apply(pPGClusterStartupCost, data->clusters);
-        Accumulator<PClusterRandomSpread>::Apply(pPGClusterRandomSpread, data->clusters);
+        Accumulator<PClusterMarginalCost>::Apply(pPGThClusterMarginalCost, data->ThClusters);
+        Accumulator<PClusterReference>::Apply(pPGThClusterOperatingCost, data->ThClusters);
+        Accumulator<PClusterFixedCost>::Apply(pPGThClusterFixedCost, data->ThClusters);
+        Accumulator<PClusterStartupCost>::Apply(pPGThClusterStartupCost, data->ThClusters);
+        Accumulator<PClusterRandomSpread>::Apply(pPGThClusterRandomSpread, data->ThClusters);
 
         // check Nominal capacity with thermal modulation
-        AccumulatorCheck<PClusterNomCapacityColor>::ApplyTextColor(pPGClusterNominalCapacity,
-                                                                   data->clusters);
+        AccumulatorCheck<PClusterNomCapacityColor>::ApplyTextColor(pPGThClusterNominalCapacity,
+                                                                   data->ThClusters);
         // check Min. Stable Power with thermal modulation
-        AccumulatorCheck<PClusterMinStablePowerColor>::ApplyTextColor(pPGClusterMinStablePower,
-                                                                      data->clusters);
+        AccumulatorCheck<PClusterMinStablePowerColor>::ApplyTextColor(pPGThClusterMinStablePower,
+                                                                      data->ThClusters);
         // check Min. Stable Power with thermal modulation
-        AccumulatorCheck<PClusterSpinningColor>::ApplyTextColor(pPGClusterSpinning, data->clusters);
+        AccumulatorCheck<PClusterSpinningColor>::ApplyTextColor(pPGThClusterSpinning, data->ThClusters);
     }
 
-    pPGClusterParams->Hide(hide);
-    pPGClusterReliabilityModel->Hide(hide);
-    pPGClusterCosts->Hide(hide);
-    pPGClusterGeneral->Hide(hide);
+    pPGThClusterParams->Hide(hide);
+    pPGThClusterReliabilityModel->Hide(hide);
+    pPGThClusterCosts->Hide(hide);
+    pPGThClusterGeneral->Hide(hide);
+
+    // --------------------
+    // RENEWABLE CLUSTERS
+    // --------------------
+    hide = !data || data->RnClusters.empty();
+    multiple = (data and data->RnClusters.size() > 1);
+    pPGRnClusterSeparator->Hide(hide);
+    p = PROPERTY("rn-cluster.title");
+    p->Hide(hide);
+    if (!hide)
+    {
+        pPGRnClusterName->Hide(multiple);
+        if (!multiple) // only one renewable cluster
+        {
+            p->SetLabel(wxT("RENEWABLE CLUSTER"));
+            pPGRnClusterName->SetValueFromString(
+                wxStringFromUTF8((*(data->RnClusters.begin()))->name()));
+        }
+        else
+            p->SetLabel(wxString() << data->RnClusters.size() << wxT(" RENEWABLE CLUSTERS"));
+
+        // Parent Area
+        Accumulator<PClusterArea>::Apply(pPGRnClusterArea, data->RnClusters);
+        // Group
+        Accumulator<PClusterGroup>::Apply(pPGRnClusterGroup, data->RnClusters);
+        // TS mode
+        Accumulator<PRnClusterTSMode>::Apply(pPGRnClusterTSMode, data->RnClusters);
+        // Enabled
+        Accumulator<PClusterEnabled>::Apply(pPGRnClusterEnabled, data->RnClusters);
+        // Unit count
+        Accumulator<PClusterUnitCount>::Apply(pPGRnClusterUnitCount, data->RnClusters);
+        // Nominal capacity
+        Accumulator<PClusterNomCapacity>::Apply(pPGRnClusterNominalCapacity, data->RnClusters);
+        // Installed capacity
+        Accumulator<PClusterInstalled, Add>::Apply(pPGRnClusterInstalled, data->RnClusters);
+        // gp : what should we do with that ?
+        // check Nominal capacity with thermal modulation
+        // AccumulatorCheck<PClusterNomCapacityColor>::ApplyTextColor(pPGRnClusterNominalCapacity,
+        //    data->RnClusters);
+    }
+
+    pPGRnClusterParams->Hide(hide);
+    pPGRnClusterGeneral->Hide(hide);
 
     // -----------
     // CONSTRAINTS

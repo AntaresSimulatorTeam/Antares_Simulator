@@ -30,6 +30,7 @@
 #include <antares/wx-wrapper.h>
 #include "../inspector/data.h"
 #include <ui/common/component/panel.h>
+#include "../../toolbox/components/datagrid/component.h"
 
 namespace Antares
 {
@@ -42,6 +43,8 @@ namespace Simulation
 */
 class Panel final : public Antares::Component::Panel, public Yuni::IEventObserver<Panel>
 {
+    typedef Component::Datagrid::Component DatagridType;
+
 public:
     //! \name Constructor && Destructor
     //@{
@@ -56,8 +59,8 @@ public:
     //@}
 
 private:
-    //! A study has been loaded
-    void onStudyLoaded();
+    //! In case renewable generation modelling was changed
+    void onRenewableGenerationModellingChanged();
     //! The study has been closed
     void onStudyClosed();
     //! A study has been loaded (delayed)
@@ -67,6 +70,10 @@ private:
     //! local inspector update about the study
     Yuni::Bind<void(const Window::Inspector::InspectorData::Ptr&)> pUpdateInfoStudy;
 
+private:
+    wxBoxSizer* verticalSizer_;
+    DatagridType* grid_ts_mgt_;
+    DatagridType* grid_ts_mgt_rn_cluster_;
 }; // class Panel
 
 } // namespace Simulation
