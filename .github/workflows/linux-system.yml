@@ -64,6 +64,10 @@ jobs:
            cd _build
            ctest -C Release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
 
+    - name : Run non-regression tests
+      run: |
+          cd _build
+          ctest -C Release --output-on-failure -L "non-regression"
 
     - name: Installer .deb creation
       run: |
