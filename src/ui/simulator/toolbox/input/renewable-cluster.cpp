@@ -389,7 +389,7 @@ void RenewableCluster::internalAddPlant(void*)
         ScenarioBuilderUpdater updaterSB(*study);
 
         // Creating a new cluster
-        Antares::Data::RenewableCluster* cluster = new Antares::Data::RenewableCluster(pArea);
+        auto cluster = std::make_shared<Antares::Data::RenewableCluster>(pArea);
         logs.info() << "adding new renewable cluster " << pArea->id << '.' << sFl;
         cluster->setName(sFl);
         cluster->reset();
@@ -400,7 +400,7 @@ void RenewableCluster::internalAddPlant(void*)
         // Update the list
         update();
         Refresh();
-        onClusterChanged(cluster);
+        onClusterChanged(cluster.get());
         MarkTheStudyAsModified();
         updateInnerValues();
 
@@ -465,7 +465,7 @@ void RenewableCluster::internalClonePlant(void*)
         ScenarioBuilderUpdater updaterSB(*study);
 
         // Creating a new cluster
-        auto* cluster = new Antares::Data::RenewableCluster(pArea);
+        auto cluster = std::make_shared<Antares::Data::RenewableCluster>(pArea);
         cluster->setName(sFl);
         cluster->reset();
         // Reset to default values
@@ -479,7 +479,7 @@ void RenewableCluster::internalClonePlant(void*)
         update();
         Refresh();
 
-        onClusterChanged(cluster);
+        onClusterChanged(cluster.get());
         MarkTheStudyAsModified();
         updateInnerValues();
 
