@@ -8,3 +8,6 @@
 [submodule "src/tests/resources/Antares_Simulator_Tests"]
 	path = src/tests/resources/Antares_Simulator_Tests
 	url = https://github.com/AntaresSimulatorTeam/Antares_Simulator_Tests.git
+[submodule "vcpkg"]
+	path = vcpkg
+	url = https://github.com/microsoft/vcpkg.git
