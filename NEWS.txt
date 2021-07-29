@@ -1,6 +1,18 @@
 ﻿Antares Changelog
 =================
 
+v8.1.0 (08/2021)
+--------------------
+
+### New features
+ - Allow up to 9 RES groups (off-shore wind, on-shore wind, rooftop solar, PV solar, etc.) as opposed to wind and solar previously.
+ - Add 3 thermal groups, named other 2, 3 and 4.
+
+### For developers
+ - Add non-regression tests
+ - Fix vcpkg on Github Actions
+ - Add build cache for Github Actions to speed up the build (Linux only)
+
 v8.0.3 (05/2021)
 --------------------
 
