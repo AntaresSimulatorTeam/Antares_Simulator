@@ -115,27 +115,27 @@ void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
     pGroup = newgrp;
     newgrp.toLower();
 
-    if (newgrp == "concentration solar")
+    if (newgrp == "solar thermal")
     {
-        groupID = concentrationSolar;
+        groupID = thermalSolar;
         return;
     }
-    if (newgrp == "pv solar")
+    if (newgrp == "solar pv")
     {
         groupID = PVSolar;
         return;
     }
-    if (newgrp == "rooftop solar")
+    if (newgrp == "solar rooftop")
     {
         groupID = rooftopSolar;
         return;
     }
-    if (newgrp == "wind on shore" || newgrp == "wind on-shore")
+    if (newgrp == "wind onshore")
     {
         groupID = windOnShore;
         return;
     }
-    if (newgrp == "wind off shore" || newgrp == "wind off-shore")
+    if (newgrp == "wind offshore")
     {
         groupID = windOffShore;
         return;
@@ -208,23 +208,23 @@ const char* Data::RenewableCluster::GroupName(enum RenewableGroup grp)
     switch (grp)
     {
     case windOffShore:
-        return "Wind off shore";
+        return "Wind offshore";
     case windOnShore:
-        return "Wind on shore";
-    case concentrationSolar:
-        return "Concentration solar";
+        return "Wind onshore";
+    case thermalSolar:
+        return "Solar thermal";
     case PVSolar:
-        return "PV solar";
+        return "Solar PV";
     case rooftopSolar:
-        return "Rooftop solar";
+        return "Solar rooftop";
     case renewableOther1:
-        return "Renewable 1";
+        return "Other RES 1";
     case renewableOther2:
-        return "Renewable 2";
+        return "Other RES 2";
     case renewableOther3:
-        return "Renewable 3";
+        return "Other RES 3";
     case renewableOther4:
-        return "Renewable 4";
+        return "Other RES 4";
     case groupMax:
         return "";
     }

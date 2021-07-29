@@ -62,7 +62,7 @@ public:
         //! Wind onshore
         windOnShore,
         //! Concentration solar
-        concentrationSolar,
+        thermalSolar,
         //! PV solar
         PVSolar,
         //! Rooftop solar
