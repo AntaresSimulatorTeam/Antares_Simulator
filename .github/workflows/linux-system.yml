@@ -70,7 +70,7 @@ jobs:
 
     - name : Run non-regression tests
       run: |
-         if [[ "${{ env.GITHUB_REF_SLUG }}" ~= "release" ]]; then
+         if [[ "${{ env.GITHUB_REF_SLUG }}" =~ "release" ]]; then
             cd _build
             ctest -C Release --output-on-failure -L "non-regression"
          else
