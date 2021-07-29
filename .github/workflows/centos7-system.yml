@@ -71,7 +71,7 @@ jobs:
       run: |
          if [[ "${{ env.GITHUB_REF_SLUG }}" =~ "release" ]]; then
             cd _build
-            ctest -C Release --output-on-failure -L "non-regression"
+            ctest3 -C Release --output-on-failure -L "non-regression"
          else
             echo "Non-regression tests were not run"
          fi
