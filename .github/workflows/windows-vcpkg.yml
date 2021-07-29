@@ -27,15 +27,6 @@ jobs:
       
     steps:
     - uses: actions/checkout@v2    
-    
-              
-    - name : Install deps with VCPKG
-      run: |
-          git submodule update --init vcpkg
-          cd vcpkg
-          ./bootstrap-vcpkg.sh
-          vcpkg install ${{matrix.vcpkgPackages}} --triplet ${{matrix.triplet}}
-          rm -rf buildtrees packages downloads
 
     - name: Set up Python
       uses: actions/setup-python@v1
@@ -58,6 +49,14 @@ jobs:
         # Note: given a key, the cache content is immutable. If a cache entry has been created improperly, in order the recreate the right content the key must be changed as well, and it must be brand new (i.e. not existing already).
         key: |
           ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ matrix.triplet }}-invalidate
+    
+    - name : Install deps with VCPKG
+      run: |
+          git submodule update --init vcpkg
+          cd vcpkg
+          ./bootstrap-vcpkg.sh
+          vcpkg install ${{matrix.vcpkgPackages}} --triplet ${{matrix.triplet}}
+          rm -rf buildtrees packages downloads
           
     - name: Install dependencies
       run: |
