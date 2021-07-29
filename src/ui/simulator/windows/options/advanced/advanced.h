@@ -40,7 +40,7 @@ namespace Window
 namespace Options
 {
 
-extern Yuni::Event<void()> OnRenewableGenerationModellingChanged;
+extern Yuni::Event<void(bool)> OnRenewableGenerationModellingChanged;
 
 /*!
 ** \brief Startup Wizard User Interface

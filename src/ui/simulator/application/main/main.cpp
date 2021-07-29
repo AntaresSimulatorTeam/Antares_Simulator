@@ -535,7 +535,7 @@ void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
     // Keep informed all other dependencies that something has changed
     OnStudyAreasChanged();
     OnStudySettingsChanged();
-    Window::Options::OnRenewableGenerationModellingChanged();
+    Window::Options::OnRenewableGenerationModellingChanged(true);
 
     // Make some components visible
     pAUIManager.GetPane(pBigDaddy).Show(opened);
@@ -771,6 +771,37 @@ void ApplWnd::onSectionNotebookPageChanging(Component::Notebook::Page& page)
 void ApplWnd::onSystemParametersChanged()
 {
     // Do nothing
+}
+
+void ApplWnd::onRenewableGenerationModellingChanged(bool init)
+{
+    auto study = Data::Study::Current::Get();
+    if (!study)
+        return;
+
+    const bool aggregated = study->parameters.renewableGeneration.rgModelling == Antares::Data::rgAggregated;
+
+    for (auto s : {"wind", "solar"}) {
+      // Main window
+      pNotebook->set_page_visibility(wxString(s), aggregated);
+      // Scenario builder pane
+      pScenarioBuilderNotebook->set_page_visibility(wxString(s), aggregated);
+    }
+
+    // Main window
+    pNotebook->set_page_visibility(wxString("renewable"), not aggregated);
+
+    // Scenario builder pane
+    pScenarioBuilderNotebook->set_page_visibility(wxString("renewable"), not aggregated);
+    if (!init)
+    {
+      if (aggregated)
+        pNotebook->select(wxT("wind"));
+      else
+        pNotebook->select(wxT("renewable"));
+
+      pNotebook->forceRefresh();
+    }
 }
 
 void ApplWnd::gridOperatorSelectedCells(Component::Datagrid::Selection::IOperator* v)
