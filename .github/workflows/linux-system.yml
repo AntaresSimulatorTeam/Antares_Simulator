@@ -64,10 +64,18 @@ jobs:
            cd _build
            ctest -C Release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
 
+
+    - name: Inject slug/short variables
+           uses: rlespinasse/github-slug-action@v3.x
+
     - name : Run non-regression tests
       run: |
-          cd _build
-          ctest -C Release --output-on-failure -L "non-regression"
+         if [[ "${{ env.GITHUB_REF_SLUG }}" ~= "release" ]]; then
+            cd _build
+            ctest -C Release --output-on-failure -L "non-regression"
+         else
+            echo "Non-regression tests were not run"
+         fi
 
     - name: Installer .deb creation
       run: |
