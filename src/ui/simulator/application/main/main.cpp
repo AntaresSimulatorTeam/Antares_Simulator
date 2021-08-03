@@ -779,7 +779,7 @@ void ApplWnd::onRenewableGenerationModellingChanged(bool init)
     if (!study)
         return;
 
-    const bool aggregated = study->parameters.renewableGeneration.rgModelling == Antares::Data::rgAggregated;
+    const bool aggregated = study->parameters.renewableGeneration() == Antares::Data::rgAggregated;
 
     for (auto s : {"wind", "solar"}) {
       // Main window

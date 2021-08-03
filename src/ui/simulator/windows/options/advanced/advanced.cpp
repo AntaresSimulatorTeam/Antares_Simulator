@@ -434,7 +434,7 @@ void AdvancedParameters::refresh()
     text = wxStringFromUTF8(NumberOfCoresModeToCString(study.parameters.nbCores.ncMode));
     pBtnNumberOfCores->caption(text);
 
-    text = wxStringFromUTF8(RenewableGenerationModellingToCString(study.parameters.renewableGeneration.rgModelling));
+    text = wxStringFromUTF8(RenewableGenerationModellingToCString(study.parameters.renewableGeneration()));
     pBtnRenewableGenModelling->caption(text);
 
     text = wxStringFromUTF8(
@@ -1039,7 +1039,7 @@ void AdvancedParameters::onSelectRGMaggregated(wxCommandEvent& evt)
         return;
     auto& study = *Data::Study::Current::Get();
 
-    if (study.parameters.renewableGeneration.rgModelling != Data::rgAggregated)
+    if (study.parameters.renewableGeneration() != Data::rgAggregated)
     {
         study.parameters.renewableGeneration.rgModelling = Data::rgAggregated;
         MarkTheStudyAsModified();
@@ -1054,7 +1054,7 @@ void AdvancedParameters::onSelectRGMrenewableClusters(wxCommandEvent& evt)
         return;
     auto& study = *Data::Study::Current::Get();
 
-    if (study.parameters.renewableGeneration.rgModelling != Data::rgClusters)
+    if (study.parameters.renewableGeneration() != Data::rgClusters)
     {
         study.parameters.renewableGeneration.rgModelling = Data::rgClusters;
         MarkTheStudyAsModified();
