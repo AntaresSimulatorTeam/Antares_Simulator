@@ -175,7 +175,7 @@ static unsigned int CheckMatricesWidth(const Data::Study& study)
         }
         case Data::timeSeriesThermal:
         {
-            unsigned int clusterCount = area.thermal.clusterCount;
+            unsigned int clusterCount = area.thermal.clusterCount();
             for (unsigned int i = 0; i != clusterCount; ++i)
             {
                 auto& cluster = *(area.thermal.clusters[i]);
@@ -260,7 +260,7 @@ static bool GenerateDeratedMode(Data::Study& study)
         area.wind.series->timeseriesNumbers.zero();
         area.hydro.series->timeseriesNumbers.zero();
 
-        for (unsigned int i = 0; i != area.thermal.clusterCount; ++i)
+        for (unsigned int i = 0; i != area.thermal.clusterCount(); ++i)
         {
             auto& cluster = *(area.thermal.clusters[i]);
             cluster.series->timeseriesNumbers.zero();
@@ -416,7 +416,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
 
             if (intermodal[TS_INDEX(Data::timeSeriesThermal)])
             {
-                const unsigned int clusterCount = area.thermal.clusterCount;
+                const unsigned int clusterCount = area.thermal.clusterCount();
                 for (unsigned int j = 0; j != clusterCount; ++j)
                 {
                     auto& cluster = *(area.thermal.clusters[j]);
@@ -466,7 +466,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
                 else if (intermodal[TS_INDEX(Data::timeSeriesHydro)])
                     tsNumbers = &(area.hydro.series->timeseriesNumbers);
                 else if (intermodal[TS_INDEX(Data::timeSeriesThermal)]
-                         && area.thermal.clusterCount > 0)
+                         && area.thermal.clusterCount() > 0)
                     tsNumbers = &(area.thermal.clusters[0]->series->timeseriesNumbers);
                 else if (intermodal[TS_INDEX(Data::timeSeriesRenewable)]
                          && area.renewable.clusterCount > 0)
@@ -497,7 +497,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
 
                 if (intermodal[TS_INDEX(Data::timeSeriesThermal)])
                 {
-                    unsigned int clusterCount = area.thermal.clusterCount;
+                    unsigned int clusterCount = area.thermal.clusterCount();
                     for (unsigned int i = 0; i != clusterCount; ++i)
                     {
                         auto& cluster = *(area.thermal.clusters[i]);

@@ -56,7 +56,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
 {
     // asserts
     assert(area);
-    assert(clusterAreaWideIndex < area->thermal.clusterCount);
+    assert(clusterAreaWideIndex < area->thermal.clusterCount());
 
     thermalClusterNonProportionalCost = 0.;
 

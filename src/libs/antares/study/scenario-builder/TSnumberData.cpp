@@ -296,7 +296,7 @@ bool thermalTSNumberData::reset(const Study& study)
     // If an area is available, it can only be an overlay for thermal timeseries
     // WARNING: The total number of clusters may vary if used from the
     //   solver or not.
-    // WARNING: At this point in time, the variable pArea->thermal.clusterCount
+    // WARNING: At this point in time, the variable pArea->thermal.clusterCount()
     //   might not be valid (because not really initialized yet)
     uint clusterCount = (study.usedByTheSolver)
                           ? (pArea->thermal.list.size() + pArea->thermal.mustrunList.size())
@@ -362,7 +362,7 @@ void thermalTSNumberData::apply(Study& study)
     Area& area = *(study.areas.byIndex[pArea->index]);
     // The total number of clusters for the area
     // WARNING: We may have some thermal clusters with the `mustrun` option
-    uint clusterCount = area.thermal.clusterCount;
+    uint clusterCount = area.thermal.clusterCount();
 
     const uint tsGenCountThermal = get_tsGenCount(study);
 
