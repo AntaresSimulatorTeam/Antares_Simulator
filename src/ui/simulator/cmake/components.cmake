@@ -126,6 +126,8 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS_AREAS
 		toolbox/components/datagrid/renderer/area/dsm.cpp
 		toolbox/components/datagrid/renderer/area/misc.h
 		toolbox/components/datagrid/renderer/area/misc.cpp
+		toolbox/components/datagrid/renderer/area/common.areasummary.cpp
+		toolbox/components/datagrid/renderer/area/common.areasummary.h
 		toolbox/components/datagrid/renderer/area/thermal.areasummary.cpp
 		toolbox/components/datagrid/renderer/area/thermal.areasummary.h
 		toolbox/components/datagrid/renderer/area/renewable.areasummary.cpp
