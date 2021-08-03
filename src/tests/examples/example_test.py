@@ -82,7 +82,7 @@ def launch_solver(solver_path, study_path, use_ortools = False, ortools_solver =
     output = process.communicate()
 
     # TODO check return value
-    assert "Solver returned error" not in output[0].decode('utf-8')
+    assert "Solver returned error" not in output[0].decode('iso-8859-1')
 
 
 def check_integrity_first_opt(path):

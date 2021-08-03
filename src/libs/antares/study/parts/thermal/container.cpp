@@ -71,10 +71,10 @@ void PartThermal::prepareAreaWideIndexes()
 {
     // Copy the list with all thermal clusters
     // And init the areaWideIndex (unique index for a given area)
-    if (!clusterCount())
+    if (!list.size())
         return;
 
-    clusters = std::vector<ThermalCluster*>(clusterCount());
+    clusters = std::vector<ThermalCluster*>(list.size());
 
     auto end = list.end();
     uint idx = 0;

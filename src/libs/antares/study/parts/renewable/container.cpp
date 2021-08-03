@@ -68,10 +68,10 @@ void PartRenewable::prepareAreaWideIndexes()
 {
     // Copy the list with all renewable clusters
     // And init the areaWideIndex (unique index for a given area)
-    if (!clusterCount())
+    if (list.size() == 0)
         return;
 
-    clusters = std::vector<RenewableCluster*>(clusterCount());
+    clusters = std::vector<RenewableCluster*>(list.size());
 
     auto end = list.end();
     uint idx = 0;
