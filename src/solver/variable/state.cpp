@@ -238,7 +238,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
 void State::initFromRenewableClusterIndex(const uint clusterAreaWideIndex, uint numSpace)
 {
     assert(area);
-    assert(clusterAreaWideIndex < area->renewable.clusterCount);
+    assert(clusterAreaWideIndex < area->renewable.clusterCount());
 
     // alias to the current renewable cluster
     renewableCluster = area->renewable.clusters[clusterAreaWideIndex];

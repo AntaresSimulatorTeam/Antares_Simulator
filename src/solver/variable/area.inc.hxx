@@ -157,7 +157,7 @@ void Areas<NEXTTYPE>::hourForEachArea(State& state, uint numSpace)
         } // for each thermal cluster
 
         // For each renewable cluster
-        for (uint j = 0; j != area.renewable.clusterCount; ++j)
+        for (uint j = 0; j != area.renewable.clusterCount(); ++j)
         {
             // Intitializing the state for the current thermal cluster
             state.initFromRenewableClusterIndex(j, numSpace);
@@ -252,7 +252,7 @@ void Areas<NEXTTYPE>::yearEndBuild(State& state, uint year, uint numSpace)
         } // for each thermal cluster
 
         // For each renewable cluster
-        for (uint j = 0; j != area.renewable.clusterCount; ++j)
+        for (uint j = 0; j != area.renewable.clusterCount(); ++j)
         {
             state.renewableCluster = area.renewable.clusters[j];
             state.yearEndResetRenewable();

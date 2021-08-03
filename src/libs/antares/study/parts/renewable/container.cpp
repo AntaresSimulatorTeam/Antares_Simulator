@@ -38,7 +38,7 @@ namespace Antares
 {
 namespace Data
 {
-PartRenewable::PartRenewable() : list(), clusters(nullptr), clusterCount((uint)-1)
+PartRenewable::PartRenewable() : list(), clusters()
 {
 }
 
@@ -62,24 +62,16 @@ void PartRenewable::estimateMemoryUsage(StudyMemoryUsage& u) const
 
 PartRenewable::~PartRenewable()
 {
-    if (clusterCount)
-        delete[] clusters;
 }
 
 void PartRenewable::prepareAreaWideIndexes()
 {
     // Copy the list with all renewable clusters
     // And init the areaWideIndex (unique index for a given area)
-    clusterCount = list.size();
-    delete[] clusters;
-    if (!clusterCount)
-    {
-        clusters = nullptr;
+    if (!clusterCount())
         return;
-    }
 
-    typedef RenewableCluster* RenewableClusterPointer;
-    clusters = new RenewableClusterPointer[clusterCount];
+    clusters = std::vector<RenewableCluster*>(clusterCount());
 
     auto end = list.end();
     uint idx = 0;
@@ -115,10 +107,7 @@ uint PartRenewable::removeDisabledClusters()
 void PartRenewable::reset()
 {
     list.clear();
-
-    // just in case
-    clusterCount = 0;
-    delete[] clusters;
+    clusters.clear();
 }
 
 } // namespace Data

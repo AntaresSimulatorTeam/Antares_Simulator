@@ -142,7 +142,7 @@ void SIM_AllocationTableaux()
             NumeroChroniquesTireesParPays[numSpace][i]->ThermiqueParPalier
               = (int*)MemAlloc(area.thermal.clusterCount() * sizeof(int));
             NumeroChroniquesTireesParPays[numSpace][i]->RenouvelableParPalier
-              = (int*)MemAlloc(area.renewable.clusterCount * sizeof(int));
+              = (int*)MemAlloc(area.renewable.clusterCount() * sizeof(int));
             ValeursGenereesParPays[numSpace][i]->HydrauliqueModulableQuotidien
               = (double*)MemAlloc(study.runtime->nbDaysPerYear * sizeof(double));
             ValeursGenereesParPays[numSpace][i]->AleaCoutDeProductionParPalier

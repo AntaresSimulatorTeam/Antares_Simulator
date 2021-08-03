@@ -411,7 +411,7 @@ void renewableTSNumberData::apply(Study& study)
     Area& area = *(study.areas.byIndex[pArea->index]);
     // The total number of clusters for the area
     // WARNING: We may have some renewable clusters with the `mustrun` option
-    uint clusterCount = area.renewable.clusterCount;
+    uint clusterCount = area.renewable.clusterCount();
 
     const uint tsGenCountRenewable = get_tsGenCount(study);
 
@@ -479,7 +479,7 @@ bool renewableTSNumberData::reset(const Study& study)
     // If an area is available, it can only be an overlay for renewable timeseries
     // WARNING: The total number of clusters may vary if used from the
     //   solver or not.
-    // WARNING: At this point in time, the variable pArea->renewable.clusterCount
+    // WARNING: At this point in time, the variable pArea->renewable.clusterCount()
     //   might not be valid (because not really initialized yet)
     uint clusterCount
       = (study.usedByTheSolver) ? (pArea->renewable.list.size()) : pArea->renewable.list.size();

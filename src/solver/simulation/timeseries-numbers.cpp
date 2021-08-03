@@ -192,7 +192,7 @@ static unsigned int CheckMatricesWidth(const Data::Study& study)
         }
         case Data::timeSeriesRenewable:
         {
-            unsigned int clusterCount = area.renewable.clusterCount;
+            unsigned int clusterCount = area.renewable.clusterCount();
             for (unsigned int i = 0; i != clusterCount; ++i)
             {
                 auto& cluster = *(area.renewable.clusters[i]);
@@ -428,7 +428,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
 
             if (intermodal[TS_INDEX(Data::timeSeriesRenewable)])
             {
-                const unsigned int clusterCount = area.renewable.clusterCount;
+                const unsigned int clusterCount = area.renewable.clusterCount();
                 for (unsigned int j = 0; j != clusterCount; ++j)
                 {
                     auto& cluster = *(area.renewable.clusters[j]);
@@ -469,7 +469,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
                          && area.thermal.clusterCount() > 0)
                     tsNumbers = &(area.thermal.clusters[0]->series->timeseriesNumbers);
                 else if (intermodal[TS_INDEX(Data::timeSeriesRenewable)]
-                         && area.renewable.clusterCount > 0)
+                         && area.renewable.clusterCount() > 0)
                     tsNumbers = &(area.renewable.clusters[0]->series->timeseriesNumbers);
             }
             assert(tsNumbers);
@@ -507,7 +507,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
                 }
                 if (intermodal[TS_INDEX(Data::timeSeriesRenewable)])
                 {
-                    unsigned int clusterCount = area.renewable.clusterCount;
+                    unsigned int clusterCount = area.renewable.clusterCount();
                     for (unsigned int i = 0; i != clusterCount; ++i)
                     {
                         auto& cluster = *(area.renewable.clusters[i]);
