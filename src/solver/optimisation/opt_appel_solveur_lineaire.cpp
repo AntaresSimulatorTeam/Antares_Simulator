@@ -51,6 +51,8 @@ extern "C"
 
 #include "../utils/ortools_utils.h"
 
+#include <chrono>
+
 using namespace operations_research;
 
 using namespace Antares;
@@ -62,6 +64,27 @@ using namespace Yuni;
 #else
 #define SNPRINTF snprintf
 #endif
+
+class TimeMeasurement {
+    using clock = std::chrono::steady_clock;
+public:
+    TimeMeasurement() {
+        start_ = clock::now();
+    }
+    
+    void tick() {
+        end_ = clock::now();
+    }
+
+    std::string toString() const {
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_);
+        return std::to_string(duration.count()) + "ms";
+    }
+
+private:
+    clock::time_point start_;
+    clock::time_point end_;
+};
 
 bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIntervalle)
 {
@@ -199,6 +222,7 @@ RESOLUTION:
 
     Probleme.NombreDeContraintesCoupes = 0;
 
+    TimeMeasurement measure;
     if (ortoolsUsed)
     {
         solver = ORTOOLS_Simplexe(&Probleme, solver);
@@ -215,6 +239,8 @@ RESOLUTION:
             (ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
         }
     }
+    measure.tick();
+    logs.info() << "Total time in linear solver " << measure.toString();
 
     if (ProblemeHebdo->ExportMPS == OUI_ANTARES)
     {
