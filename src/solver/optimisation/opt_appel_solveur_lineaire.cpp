@@ -70,15 +70,19 @@ class TimeMeasurement {
 public:
     TimeMeasurement() {
         start_ = clock::now();
+        end_ = start_;
     }
     
     void tick() {
         end_ = clock::now();
     }
 
+    long long duration() const {
+        return std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count();
+    }
+
     std::string toString() const {
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_);
-        return std::to_string(duration.count()) + "ms";
+        return std::to_string(duration()) + "ms";
     }
 
 private:
@@ -240,6 +244,7 @@ RESOLUTION:
         }
     }
     measure.tick();
+    ProblemeHebdo->optimizationStatistics_object.add(measure.duration());
     logs.info() << "Total time in linear solver " << measure.toString();
 
     if (ProblemeHebdo->ExportMPS == OUI_ANTARES)

@@ -399,6 +399,42 @@ public:
     }
 };
 
+class OptimizationStatistics
+{
+private:
+    long long totalSolvingTime;
+    unsigned int nbSolve;
+
+public:
+    OptimizationStatistics() :
+        totalSolvingTime(0),
+        nbSolve(0)
+    {
+    }
+
+    void add(long long solveTime)
+    {
+        totalSolvingTime += solveTime;
+        nbSolve++;
+    }
+
+    long long getNbSolve() const 
+    {
+        return nbSolve;
+    }
+
+    long long getTotalSolvingTime() const 
+    {
+        return totalSolvingTime;
+    }
+
+    double getAverageSolvingTime() const 
+    {
+        if (nbSolve == 0) return 0;
+        return ((double) totalSolvingTime) / nbSolve;
+    }
+};
+
 typedef struct
 {
     double* ReserveHoraireJMoins1;
@@ -675,6 +711,8 @@ struct PROBLEME_HEBDO
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
     double maxPminThermiqueByDay[366];
+
+    OptimizationStatistics optimizationStatistics_object;
 };
 
 #endif
