@@ -159,7 +159,7 @@ bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
     buffer << folder << SEP << "list.ini";
 
     IniFile ini;
-    if (ini.open(buffer))
+    if (ini.open(buffer, false))
     {
         bool ret = true;
 
