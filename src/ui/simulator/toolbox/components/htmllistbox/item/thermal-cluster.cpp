@@ -138,6 +138,11 @@ wxString ThermalCluster::htmlContent(const wxString& searchString)
     return wxString();
 }
 
+Antares::Data::ThermalCluster* ThermalCluster::thermalAggregate() const
+{
+    return pThermalCluster;
+}
+
 } // namespace Item
 } // namespace HTMLListbox
 } // namespace Component

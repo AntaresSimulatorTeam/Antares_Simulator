@@ -127,6 +127,11 @@ wxString RenewableCluster::htmlContent(const wxString& searchString)
     return wxString();
 }
 
+Antares::Data::RenewableCluster* RenewableCluster::renewableAggregate() const
+{
+    return pRenewableCluster;
+}
+
 } // namespace Item
 } // namespace HTMLListbox
 } // namespace Component

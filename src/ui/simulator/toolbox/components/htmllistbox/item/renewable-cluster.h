@@ -52,22 +52,6 @@ public:
     typedef Yuni::SmartPtr<RenewableCluster> Ptr;
 
 public:
-    /*!
-    ** \brief Add a portion of Html from a renewable cluster to a string
-    **
-    ** A very simple equivalent html code would be :
-    ** \code
-    ** <td>renewable cluster name</td>
-    ** \endcode
-    **
-    ** \param[in,out] out The string where the result will be appended
-    ** \param rn The renewable cluster
-    ** \param searchString The string to highlight
-    ** return True if something has been highlighted, false otherwise
-    */
-    static bool HtmlContent(wxString& out, Data::RenewableCluster* rn, const wxString& searchString);
-
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -96,6 +80,21 @@ public:
     }
 
 private:
+    /*!
+    ** \brief Add a portion of Html from a renewable cluster to a string
+    **
+    ** A very simple equivalent html code would be :
+    ** \code
+    ** <td>renewable cluster name</td>
+    ** \endcode
+    **
+    ** \param[in,out] out The string where the result will be appended
+    ** \param rn The renewable cluster
+    ** \param searchString The string to highlight
+    ** return True if something has been highlighted, false otherwise
+    */
+    static bool HtmlContent(wxString& out, Data::RenewableCluster* rn, const wxString& searchString);
+
     void preloadImages();
 
 protected:
@@ -113,7 +112,5 @@ protected:
 } // namespace HTMLListbox
 } // namespace Component
 } // namespace Antares
-
-#include "renewable-cluster.hxx"
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_RENEWABLE_CLUSTER_H__

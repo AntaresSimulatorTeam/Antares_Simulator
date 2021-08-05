@@ -52,22 +52,6 @@ public:
     typedef Yuni::SmartPtr<ThermalCluster> Ptr;
 
 public:
-    /*!
-    ** \brief Add a portion of Html from a thermal cluster to a string
-    **
-    ** A very simple equivalent html code would be :
-    ** \code
-    ** <td>thermal cluster name</td>
-    ** \endcode
-    **
-    ** \param[in,out] out The string where the result will be appended
-    ** \param th The thermal cluster
-    ** \param searchString The string to highlight
-    ** return True if something has been highlighted, false otherwise
-    */
-    static bool HtmlContent(wxString& out, Data::ThermalCluster* th, const wxString& searchString);
-
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -96,6 +80,21 @@ public:
     }
 
 private:
+    /*!
+    ** \brief Add a portion of Html from a thermal cluster to a string
+    **
+    ** A very simple equivalent html code would be :
+    ** \code
+    ** <td>thermal cluster name</td>
+    ** \endcode
+    **
+    ** \param[in,out] out The string where the result will be appended
+    ** \param th The thermal cluster
+    ** \param searchString The string to highlight
+    ** return True if something has been highlighted, false otherwise
+    */
+    static bool HtmlContent(wxString& out, Data::ThermalCluster* th, const wxString& searchString);
+
     void preloadImages();
 
 protected:
@@ -113,7 +112,5 @@ protected:
 } // namespace HTMLListbox
 } // namespace Component
 } // namespace Antares
-
-#include "thermal-cluster.hxx"
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_THERMAL_CLUSTER_H__
