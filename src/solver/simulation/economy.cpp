@@ -225,13 +225,10 @@ bool Economy::year(Progression::Task& progression,
 
     updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
 
-    logs.info() << "Update statistics: "
-        << std::to_string(pProblemesHebdo[numSpace]->optimizationStatistics_object.getNbUpdate()) << " updates with average time: "
+    logs.info() << "Year " << numSpace <<  ": average solve time: " 
+        << std::to_string(pProblemesHebdo[numSpace]->optimizationStatistics_object.getAverageSolveTime()) << "ms, "
+        << "average update time: " 
         << std::to_string(pProblemesHebdo[numSpace]->optimizationStatistics_object.getAverageUpdateTime()) << "ms";
-    
-    logs.info() << "Resolution statistics: "
-        << std::to_string(pProblemesHebdo[numSpace]->optimizationStatistics_object.getNbSolve()) << " resolutions with average time: "
-        << std::to_string(pProblemesHebdo[numSpace]->optimizationStatistics_object.getAverageSolvingTime()) << "ms";
 
     return true;
 }
@@ -256,6 +253,22 @@ void Economy::simulationEnd()
         CallbackBalanceRetrieval callback;
         callback.bind(this, &Economy::callbackRetrieveBalanceData);
         PerformQuadraticOptimisation(study, *pProblemesHebdo[0], callback, pNbWeeks);
+    }
+
+    if (pProblemesHebdo)
+    {
+        double averageUpdateTime = 0.0;
+        double averageSolveTime = 0.0;
+        for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
+        {
+            averageUpdateTime += pProblemesHebdo[numSpace]->optimizationStatistics_object.getAverageUpdateTime();
+            averageSolveTime += pProblemesHebdo[numSpace]->optimizationStatistics_object.getAverageSolveTime();
+        }
+        averageUpdateTime /= pNbMaxPerformedYearsInParallel;
+        averageSolveTime /= pNbMaxPerformedYearsInParallel;
+
+        logs.info() << "Global: average solve time: " << averageSolveTime << "ms, "
+                    << "average update time: " << averageUpdateTime << "ms";
     }
 }
 
