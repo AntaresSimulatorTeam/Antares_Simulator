@@ -1,6 +1,8 @@
 #ifndef __SOLVER_UTILS_STATISTICS_H__
 #define __SOLVER_UTILS_STATISTICS_H__
 
+#include <string>
+
 class optimizationStatistics
 {
 private:
@@ -68,6 +70,12 @@ public:
     {
         if (nbSolve == 0) return 0.0;
         return ((double) totalSolveTime) / nbSolve;
+    }
+
+    std::string toString() const
+    {
+        return "average solve time: " + std::to_string(getAverageSolveTime()) + "ms, " 
+            + "average update time: " + std::to_string(getAverageUpdateTime()) + "ms";
     }
 };
 
