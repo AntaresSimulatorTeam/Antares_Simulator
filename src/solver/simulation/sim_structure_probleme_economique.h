@@ -409,10 +409,10 @@ private:
 
 public:
     OptimizationStatistics() :
-        totalUpdateTime(0),
         totalSolvingTime(0),
-        nbUpdate(0),
-        nbSolve(0)
+        totalUpdateTime(0),
+        nbSolve(0),
+        nbUpdate(0)
     {
     }
 

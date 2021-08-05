@@ -227,11 +227,11 @@ bool Economy::year(Progression::Task& progression,
 
     logs.info() << "Update statistics: "
         << std::to_string(pProblemesHebdo[numSpace]->optimizationStatistics_object.getNbUpdate()) << " updates with average time: "
-        << std::to_string(pProblemesHebdo[numSpace]->optimizationStatistics_object.getAverageUpdateTime());
+        << std::to_string(pProblemesHebdo[numSpace]->optimizationStatistics_object.getAverageUpdateTime()) << "ms";
     
     logs.info() << "Resolution statistics: "
         << std::to_string(pProblemesHebdo[numSpace]->optimizationStatistics_object.getNbSolve()) << " resolutions with average time: "
-        << std::to_string(pProblemesHebdo[numSpace]->optimizationStatistics_object.getAverageSolvingTime());
+        << std::to_string(pProblemesHebdo[numSpace]->optimizationStatistics_object.getAverageSolvingTime()) << "ms";
 
     return true;
 }
