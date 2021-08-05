@@ -399,7 +399,7 @@ public:
     }
 };
 
-class OptimizationStatistics
+class optimizationStatistics
 {
 private:
     long long totalSolveTime;
@@ -408,7 +408,7 @@ private:
     unsigned int nbUpdate;
 
 public:
-    OptimizationStatistics() :
+    optimizationStatistics() :
         totalSolveTime(0),
         totalUpdateTime(0),
         nbSolve(0),
@@ -738,7 +738,7 @@ struct PROBLEME_HEBDO
 
     double maxPminThermiqueByDay[366];
 
-    OptimizationStatistics optimizationStatistics_object;
+    optimizationStatistics optimizationStatistics_object;
 };
 
 #endif

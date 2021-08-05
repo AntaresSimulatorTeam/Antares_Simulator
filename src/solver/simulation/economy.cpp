@@ -225,7 +225,7 @@ bool Economy::year(Progression::Task& progression,
 
     updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
 
-    logs.info() << "Year " << numSpace <<  ": average solve time: " 
+    logs.info() << "Year " << (numSpace + 1) <<  ": average solve time: " 
         << std::to_string(pProblemesHebdo[numSpace]->optimizationStatistics_object.getAverageSolveTime()) << "ms, "
         << "average update time: " 
         << std::to_string(pProblemesHebdo[numSpace]->optimizationStatistics_object.getAverageUpdateTime()) << "ms";
