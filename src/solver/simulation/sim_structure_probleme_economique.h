@@ -29,6 +29,7 @@
 #define __SOLVER_SIMULATION_ECO_STRUCTS_H__
 
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
+#include "../utils/optimization_statistics.h"
 
 #define GROSSES_VARIABLES NON_ANTARES
 #define COEFF_GROSSES_VARIABLES 100
@@ -396,68 +397,6 @@ public:
     double getLevel()
     {
         return level;
-    }
-};
-
-class optimizationStatistics
-{
-private:
-    long long totalSolveTime;
-    long long totalUpdateTime;
-    unsigned int nbSolve;
-    unsigned int nbUpdate;
-
-public:
-    optimizationStatistics() :
-        totalSolveTime(0),
-        totalUpdateTime(0),
-        nbSolve(0),
-        nbUpdate(0)
-    {
-    }
-
-    void addUpdateTime(long long updateTime)
-    {
-        totalUpdateTime += updateTime;
-        nbUpdate++;
-    }
-
-    void addSolveTime(long long solveTime)
-    {
-        totalSolveTime += solveTime;
-        nbSolve++;
-    }
-
-    unsigned int getNbUpdate() const
-    {
-        return nbUpdate;
-    }
-
-    unsigned int getNbSolve() const 
-    {
-        return nbSolve;
-    }
-
-    long long getTotalSolveTime() const
-    {
-        return totalSolveTime;
-    }
-
-    long long getTotalUpdateTime() const
-    {
-        return totalUpdateTime;
-    }
-
-    double getAverageUpdateTime() const
-    {
-        if (nbUpdate == 0) return 0.0;
-        return ((double) totalUpdateTime) / nbUpdate;
-    }
-
-    double getAverageSolveTime() const 
-    {
-        if (nbSolve == 0) return 0.0;
-        return ((double) totalSolveTime) / nbSolve;
     }
 };
 

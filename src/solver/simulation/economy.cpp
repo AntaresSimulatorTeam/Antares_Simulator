@@ -257,18 +257,14 @@ void Economy::simulationEnd()
 
     if (pProblemesHebdo)
     {
-        double averageUpdateTime = 0.0;
-        double averageSolveTime = 0.0;
+        optimizationStatistics globalStatistics;
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
-            averageUpdateTime += pProblemesHebdo[numSpace]->optimizationStatistics_object.getAverageUpdateTime();
-            averageSolveTime += pProblemesHebdo[numSpace]->optimizationStatistics_object.getAverageSolveTime();
+            globalStatistics.add(pProblemesHebdo[numSpace]->optimizationStatistics_object);
         }
-        averageUpdateTime /= pNbMaxPerformedYearsInParallel;
-        averageSolveTime /= pNbMaxPerformedYearsInParallel;
 
-        logs.info() << "Global: average solve time: " << averageSolveTime << "ms, "
-                    << "average update time: " << averageUpdateTime << "ms";
+        logs.info() << "Global: average solve time: " << globalStatistics.getAverageSolveTime() << "ms, "
+                    << "average update time: " << globalStatistics.getAverageUpdateTime() << "ms";
     }
 }
 
