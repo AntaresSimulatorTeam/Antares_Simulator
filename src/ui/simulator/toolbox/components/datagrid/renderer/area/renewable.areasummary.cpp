@@ -125,11 +125,11 @@ bool RenewableClusterSummarySingleArea::cellValue(int x, int y, const String& v)
             break;
         }
         case 1:
-            return UpdateBool<NoCheck>(cluster->enabled, v);
+            return Update<bool, NoCheck, RefeshInspector>(cluster->enabled, v);
         case 2:
-            return UpdateUnsignedLong<CheckUnitCount>(cluster->unitCount, v);
+            return Update<uint, CheckUnitCount, RefeshInspectorAndMarkAsModified>(cluster->unitCount, v);
         case 3:
-            return UpdateDouble<NoCheck>(cluster->nominalCapacity, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->nominalCapacity, v);
         }
     }
     return false;

@@ -182,33 +182,33 @@ bool ThermalClusterSummarySingleArea::cellValue(int x, int y, const String& v)
             break;
         }
         case 1:
-            return UpdateBool<NoCheck>(cluster->enabled, v);
+            return Update<bool, NoCheck, RefeshInspector>(cluster->enabled, v);
         case 2:
-            return UpdateUnsignedLong<CheckUnitCount>(cluster->unitCount, v);
+            return Update<uint, CheckUnitCount, RefeshInspectorAndMarkAsModified>(cluster->unitCount, v);
         case 3:
-            return UpdateDouble<NoCheck>(cluster->nominalCapacity, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->nominalCapacity, v);
         case 4:
-            return UpdateBool<NoCheck>(cluster->mustrun, v);
+            return Update<bool, NoCheck, RefeshInspector>(cluster->mustrun, v);
         case 5:
-            return UpdateDouble<NoCheck>(cluster->minStablePower, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->minStablePower, v);
         case 6:
-            return UpdateUnsignedLong<CheckMinUpDownTime>(cluster->minUpTime, v);
+            return Update<uint, CheckMinUpDownTime, RefeshInspectorAndMarkAsModified>(cluster->minUpTime, v);
         case 7:
-            return UpdateUnsignedLong<CheckMinUpDownTime>(cluster->minDownTime, v);
+            return Update<uint, CheckMinUpDownTime, RefeshInspectorAndMarkAsModified>(cluster->minDownTime, v);
         case 8:
-            return UpdateDouble<NoCheck>(cluster->spinning, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->spinning, v);
         case 9:
-            return UpdateDouble<NoCheck>(cluster->co2, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->co2, v);
         case 10:
-            return UpdateDouble<NoCheck>(cluster->marginalCost, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->marginalCost, v);
         case 11:
-            return UpdateDouble<NoCheck>(cluster->fixedCost, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->fixedCost, v);
         case 12:
-            return UpdateDouble<NoCheck>(cluster->startupCost, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->startupCost, v);
         case 13:
-            return UpdateDouble<NoCheck>(cluster->marketBidCost, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->marketBidCost, v);
         case 14:
-            return UpdateDouble<NoCheck>(cluster->spreadCost, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->spreadCost, v);
         }
     }
     return false;

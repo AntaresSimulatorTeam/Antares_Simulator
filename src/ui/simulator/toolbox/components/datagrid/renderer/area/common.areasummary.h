@@ -42,6 +42,8 @@ namespace Datagrid
 {
 namespace Renderer
 {
+    // Check on value ...
+
     struct NoCheck
     {
         template<class T>
@@ -69,62 +71,43 @@ namespace Renderer
         }
     };
 
+    // Refresh after update ...
+    struct RefeshInspector
+    {
+        static void refresh()
+        {
+            OnInspectorRefresh(nullptr);
+        }
+    };
+
+    struct RefeshInspectorAndMarkAsModified
+    {
+        static void refresh()
+        {
+            MarkTheStudyAsModified();
+            OnInspectorRefresh(nullptr);
+        }
+    };
+
+
     // Update value ...
 
-    template<class CheckT>
-    bool UpdateUnsignedLong(uint& value, const String& str)
+    template<class T, class CheckT, class RefreshT>
+    bool Update(T& value, const String& str)
     {
-        uint l;
-        if (str.to(l))
+        T v;
+        if (str.to(v))
         {
-            if (value != l and CheckT::Validate(l))
+            if (not Math::Equals<T>(value, v) and CheckT::Validate(v))
             {
-                value = l;
-                MarkTheStudyAsModified();
-                OnInspectorRefresh(nullptr);
+                value = v;
+                RefreshT::refresh();
                 return true;
             }
         }
         return false;
     }
 
-    template<class CheckT>
-    bool UpdateDouble(double& value, const String& str)
-    {
-        double d;
-        if (str.to(d))
-        {
-            if (not Math::Equals<double>(value, d))
-            {
-                if (CheckT::Validate(d))
-                {
-                    value = d;
-                    OnInspectorRefresh(nullptr);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    template<class CheckT>
-    bool UpdateBool(bool& value, const String& str)
-    {
-        bool d;
-        if (str.to(d))
-        {
-            if (value != d)
-            {
-                if (CheckT::Validate(d))
-                {
-                    value = d;
-                    OnInspectorRefresh(nullptr);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
     // Single area common cluster summary renderer
 
