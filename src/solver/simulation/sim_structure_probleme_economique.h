@@ -403,19 +403,34 @@ class OptimizationStatistics
 {
 private:
     long long totalSolvingTime;
+    long long totalUpdateTime;
     unsigned int nbSolve;
+    unsigned int nbUpdate;
 
 public:
     OptimizationStatistics() :
+        totalUpdateTime(0),
         totalSolvingTime(0),
+        nbUpdate(0),
         nbSolve(0)
     {
     }
 
-    void add(long long solveTime)
+    void addUpdateTime(long long updateTime)
+    {
+        totalUpdateTime += updateTime;
+        nbUpdate++;
+    }
+
+    void addSolveTime(long long solveTime)
     {
         totalSolvingTime += solveTime;
         nbSolve++;
+    }
+
+    long long getNbUpdate() const
+    {
+        return nbUpdate;
     }
 
     long long getNbSolve() const 
@@ -423,14 +438,15 @@ public:
         return nbSolve;
     }
 
-    long long getTotalSolvingTime() const 
+    double getAverageUpdateTime() const
     {
-        return totalSolvingTime;
+        if (nbUpdate == 0) return 0.0;
+        return ((double) totalUpdateTime) / nbUpdate;
     }
 
     double getAverageSolvingTime() const 
     {
-        if (nbSolve == 0) return 0;
+        if (nbSolve == 0) return 0.0;
         return ((double) totalSolvingTime) / nbSolve;
     }
 };

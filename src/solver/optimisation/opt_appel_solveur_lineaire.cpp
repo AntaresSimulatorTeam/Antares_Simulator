@@ -141,6 +141,7 @@ RESOLUTION:
             Probleme.Contexte = BRANCH_AND_BOUND_OU_CUT_NOEUD;
             Probleme.BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
 
+            TimeMeasurement measure;
             if (ortoolsUsed)
             {
                 ORTOOLS_ModifierLeVecteurCouts(
@@ -165,6 +166,8 @@ RESOLUTION:
                                                   ProblemeAResoudre->Sens,
                                                   ProblemeAResoudre->NombreDeContraintes);
             }
+            measure.tick();
+            ProblemeHebdo->optimizationStatistics_object.addUpdateTime(measure.duration());
         }
     }
 
@@ -244,8 +247,7 @@ RESOLUTION:
         }
     }
     measure.tick();
-    ProblemeHebdo->optimizationStatistics_object.add(measure.duration());
-    logs.info() << "Total time in linear solver " << measure.toString();
+    ProblemeHebdo->optimizationStatistics_object.addSolveTime(measure.duration());
 
     if (ProblemeHebdo->ExportMPS == OUI_ANTARES)
     {
