@@ -26,9 +26,6 @@
 */
 
 #include "renewable-cluster.h"
-#include <wx/colour.h>
-#include "../../../resources.h"
-#include <yuni/core/math.h>
 
 using namespace Yuni;
 
@@ -40,9 +37,6 @@ namespace HTMLListbox
 {
 namespace Item
 {
-wxString RenewableCluster::pIconFileEnabled;
-wxString RenewableCluster::pIconFileDisabled;
-wxString RenewableCluster::pIconFileThermal;
 
 RenewableCluster::RenewableCluster(Antares::Data::RenewableCluster* a) : pRenewableCluster(a)
 {
@@ -50,7 +44,8 @@ RenewableCluster::RenewableCluster(Antares::Data::RenewableCluster* a) : pRenewa
 }
 
 RenewableCluster::RenewableCluster(Antares::Data::RenewableCluster* a, const wxString& additional) :
- pRenewableCluster(a), pText(additional)
+    ClusterItem(additional),
+    pRenewableCluster(a)
 {
     preloadImages();
 }
@@ -59,21 +54,9 @@ RenewableCluster::~RenewableCluster()
 {
 }
 
-void RenewableCluster::preloadImages()
+wxString RenewableCluster::getClusterIconFilePath()
 {
-    if (pIconFileEnabled.empty())
-    {
-        String location;
-
-        Resources::FindFile(location, "images/16x16/light_green.png");
-        pIconFileEnabled = wxStringFromUTF8(location);
-
-        Resources::FindFile(location, "images/16x16/light_orange.png");
-        pIconFileDisabled = wxStringFromUTF8(location);
-
-        Resources::FindFile(location, "images/16x16/thermal.png");
-        pIconFileThermal = wxStringFromUTF8(location);
-    }
+    return getIconFilePath("images/16x16/link.png");
 }
 
 bool RenewableCluster::HtmlContent(wxString& out,
@@ -91,9 +74,9 @@ bool RenewableCluster::HtmlContent(wxString& out,
         out << wxT("<td width=30 align=center><img src=\"") << pIconFileDisabled << wxT("\"></td>");
     }
 
-    out << wxT("<td width=20 align=center><img src=\"") << pIconFileThermal << wxT("\"></td>");
-
+    out << wxT("<td width=20 align=center><img src=\"") << pClusterIconFilePath << wxT("\"></td>");
     out << wxT("<td width=8></td><td nowrap><font size=\"-1\"");
+
     wxString name = wxStringFromUTF8(rn->name());
     if (searchString.empty() || (highlight = HTMLCodeHighlightString(name, searchString)))
         out << wxT(">") << name << wxT("</font>");

@@ -26,9 +26,6 @@
 */
 
 #include "thermal-cluster.h"
-#include <wx/colour.h>
-#include "../../../resources.h"
-#include <yuni/core/math.h>
 
 using namespace Yuni;
 
@@ -40,9 +37,6 @@ namespace HTMLListbox
 {
 namespace Item
 {
-wxString ThermalCluster::pIconFileEnabled;
-wxString ThermalCluster::pIconFileDisabled;
-wxString ThermalCluster::pIconFileThermal;
 
 ThermalCluster::ThermalCluster(Antares::Data::ThermalCluster* a) : pThermalCluster(a)
 {
@@ -50,7 +44,8 @@ ThermalCluster::ThermalCluster(Antares::Data::ThermalCluster* a) : pThermalClust
 }
 
 ThermalCluster::ThermalCluster(Antares::Data::ThermalCluster* a, const wxString& additional) :
- pThermalCluster(a), pText(additional)
+    ClusterItem(additional),
+    pThermalCluster(a)
 {
     preloadImages();
 }
@@ -59,21 +54,9 @@ ThermalCluster::~ThermalCluster()
 {
 }
 
-void ThermalCluster::preloadImages()
+wxString ThermalCluster::getClusterIconFilePath()
 {
-    if (pIconFileEnabled.empty())
-    {
-        String location;
-
-        Resources::FindFile(location, "images/16x16/light_green.png");
-        pIconFileEnabled = wxStringFromUTF8(location);
-
-        Resources::FindFile(location, "images/16x16/light_orange.png");
-        pIconFileDisabled = wxStringFromUTF8(location);
-
-        Resources::FindFile(location, "images/16x16/thermal.png");
-        pIconFileThermal = wxStringFromUTF8(location);
-    }
+    return getIconFilePath("images/16x16/thermal.png");
 }
 
 bool ThermalCluster::HtmlContent(wxString& out,
@@ -91,17 +74,9 @@ bool ThermalCluster::HtmlContent(wxString& out,
         out << wxT("<td width=30 align=center><img src=\"") << pIconFileDisabled << wxT("\"></td>");
     }
 
-    out << wxT("<td width=20 align=center><img src=\"") << pIconFileThermal << wxT("\"></td>");
-
-    /*
-    out	<< wxT("<td width=16 bgcolor=\"")
-            << wxColour(230, 230, 230).GetAsString(wxC2S_HTML_SYNTAX)
-            << wxT("\" align=center><font size=\"-3\" color=\"")
-            << ColorDarker(230, 230, 230).GetAsString(wxC2S_HTML_SYNTAX)
-            << wxT("\">Th</font></td>");
-            */
-
+    out << wxT("<td width=20 align=center><img src=\"") << pClusterIconFilePath << wxT("\"></td>");
     out << wxT("<td width=8></td><td nowrap><font size=\"-1\"");
+
     wxString name = wxStringFromUTF8(th->name());
     if (searchString.empty() || (highlight = HTMLCodeHighlightString(name, searchString)))
         out << wxT(">") << name << wxT("</font>");

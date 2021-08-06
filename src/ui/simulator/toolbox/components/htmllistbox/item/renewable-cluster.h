@@ -27,7 +27,7 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_RENEWABLE_CLUSTER_H__
 #define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_RENEWABLE_CLUSTER_H__
 
-#include "item.h"
+#include "cluster-item.h"
 #include <antares/study.h>
 
 namespace Antares
@@ -39,13 +39,11 @@ namespace HTMLListbox
 namespace Item
 {
 /*!
-** \brief Single item for an Input (abstract)
+** \brief Single item for a renewable cluster.
 **
-** An input is often an item list (list of areas, list of interconnections...)
-** but this list may be heterogenous (for example `areas + groups`)
-** This class a merely a simple wrapper to bring commons display operations
+** See parent classes for more explanations
 */
-class RenewableCluster : public IItem
+class RenewableCluster : public ClusterItem
 {
 public:
     //! The smartptr
@@ -93,18 +91,13 @@ private:
     ** \param searchString The string to highlight
     ** return True if something has been highlighted, false otherwise
     */
-    static bool HtmlContent(wxString& out, Data::RenewableCluster* rn, const wxString& searchString);
+    bool HtmlContent(wxString& out, Data::RenewableCluster* rn, const wxString& searchString);
 
-    void preloadImages();
+    wxString getClusterIconFilePath() override;
 
-protected:
+private:
     //! The current RenewableCluster
     Antares::Data::RenewableCluster* pRenewableCluster;
-    //! Additional text
-    const wxString pText;
-    static wxString pIconFileEnabled;
-    static wxString pIconFileDisabled;
-    static wxString pIconFileThermal;
 
 }; // class RenewableCluster
 
