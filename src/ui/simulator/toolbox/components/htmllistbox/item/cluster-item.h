@@ -51,10 +51,10 @@ namespace Item
 
     public:
         // Default constructor
-        ClusterItem();
+        ClusterItem(Antares::Data::Cluster* a);
         
         // Additional Additional HTML content ("<td>my text</td>")
-        ClusterItem(const wxString& additional);
+        ClusterItem(Antares::Data::Cluster* a, const wxString& additional);
 
         // Destructor
         virtual ~ClusterItem();
@@ -64,17 +64,20 @@ namespace Item
             return true;
         }
 
+        // Get the HTML Content for the item
+        wxString htmlContent(const wxString& searchString);
+
     protected:
         /*!
-        ** \brief Add a portion of Html from a thermal cluster to a string
+        ** \brief Add a portion of Html from a cluster to a string
         **
         ** A very simple equivalent html code would be :
         ** \code
-        ** <td>thermal cluster name</td>
+        ** <td>cluster name</td>
         ** \endcode
         **
         ** \param[in,out] out The string where the result will be appended
-        ** \param th The thermal cluster
+        ** \param cluster The cluster
         ** \param searchString The string to highlight
         ** return True if something has been highlighted, false otherwise
         */
@@ -84,25 +87,14 @@ namespace Item
         void preloadImages();
 
     private:
-        /*!
-        ** \brief Add a portion of Html from a thermal cluster to a string
-        **
-        ** A very simple equivalent html code would be :
-        ** \code
-        ** <td>thermal cluster name</td>
-        ** \endcode
-        **
-        ** \param[in,out] out The string where the result will be appended
-        ** \param th The thermal cluster
-        ** \param searchString The string to highlight
-        ** return True if something has been highlighted, false otherwise
-        */
-        // static bool HtmlContent(wxString& out, Data::ThermalCluster* th, const wxString& searchString);
-
         virtual wxString getClusterIconFilePath() = 0;
+        virtual wxString htmlContentTail() = 0;
 
     protected:
-        //! Additional text
+        // The current cluster
+        Antares::Data::Cluster* pCluster;
+
+        // Additional text
         const wxString pText;
         wxString pIconFileEnabled;
         wxString pIconFileDisabled;

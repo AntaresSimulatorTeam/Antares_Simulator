@@ -39,16 +39,15 @@ namespace Item
 {
 
 RenewableCluster::RenewableCluster(Antares::Data::RenewableCluster* a) :
-    pRenewableCluster(a),
-    pCluster(a)
+    ClusterItem(a),
+    pRenewableCluster(a)
 {
     preloadImages();
 }
 
 RenewableCluster::RenewableCluster(Antares::Data::RenewableCluster* a, const wxString& additional) :
-    ClusterItem(additional),
-    pRenewableCluster(a),
-    pCluster(a)
+    ClusterItem(a, additional),
+    pRenewableCluster(a)
 {
     preloadImages();
 }
@@ -64,26 +63,9 @@ wxString RenewableCluster::getClusterIconFilePath()
     return getIconFilePath("images/16x16/link.png");
 }
 
-wxString RenewableCluster::htmlContent(const wxString& searchString)
+wxString RenewableCluster::htmlContentTail()
 {
-    if (pCluster)
-    {
-        wxString d;
-        d << wxT("<table border=0 cellpadding=0 cellspacing=0 width=\"100%\"><tr>");
-        pHighlighted = HtmlContent(d, pCluster, searchString);
-        d << wxT("<td nowrap align=right><font size=\"-2\">") << pCluster->unitCount
-            << wxT("<font color=\"#5555BB\"> u </font>") << wxT("<font color=\"#5555BB\">* </font>")
-            << pCluster->nominalCapacity
-            << wxT(" <font color=\"#5555BB\">MW =</font></font></td>")
-            << wxT("<td width=64 nowrap align=right><font size=\"-2\">")
-            << Math::Round(pCluster->nominalCapacity * pCluster->unitCount, 2)
-            << wxT(" <font color=\"#5555BB\">MW</font></font></td>")
-            << wxT("<td width=90 nowrap align=right><font size=\"-2\">");
-        // Post
-        d << pText << wxT("</tr></table>");
-        return d;
-    }
-    pHighlighted = false;
+    // Return nothing 
     return wxString();
 }
 

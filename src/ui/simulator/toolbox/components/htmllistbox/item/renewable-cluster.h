@@ -63,11 +63,6 @@ public:
     virtual ~RenewableCluster();
     //@}
 
-    /*!
-    ** \brief Get the HTML Content for the item
-    */
-    virtual wxString htmlContent(const wxString& searchString);
-
     //! Get the attached cluster
     Antares::Data::RenewableCluster* renewableAggregate() const;
 
@@ -78,12 +73,11 @@ public:
 
 private:
     wxString getClusterIconFilePath() override;
+    wxString htmlContentTail() override;
 
 private:
     //! The current RenewableCluster
     Antares::Data::RenewableCluster* pRenewableCluster;
-    Antares::Data::Cluster* pCluster;
-
 
 }; // class RenewableCluster
 

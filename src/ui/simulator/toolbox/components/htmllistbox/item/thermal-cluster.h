@@ -64,11 +64,6 @@ public:
     virtual ~ThermalCluster();
     //@}
 
-    /*!
-    ** \brief Get the HTML Content for the item
-    */
-    virtual wxString htmlContent(const wxString& searchString);
-
     //! Get the attached area
     Antares::Data::ThermalCluster* thermalAggregate() const;
 
@@ -79,11 +74,11 @@ public:
 
 private:
     wxString getClusterIconFilePath() override;
+    wxString htmlContentTail() override;
 
 private:
     //! The current ThermalCluster
     Antares::Data::ThermalCluster* pThermalCluster;
-    Antares::Data::Cluster* pCluster;
     double pThermalClusterMarketBidCost;
 
 }; // class ThermalCluster

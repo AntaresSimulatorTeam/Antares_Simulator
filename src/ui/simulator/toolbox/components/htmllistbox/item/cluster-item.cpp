@@ -39,11 +39,15 @@ namespace HTMLListbox
 namespace Item
 {
 
-ClusterItem::ClusterItem() : pText(wxString())
+ClusterItem::ClusterItem(Antares::Data::Cluster* a) :
+    pCluster(a),
+    pText(wxString())
 {
 }
 
-ClusterItem::ClusterItem(const wxString& additional) : pText(additional)
+ClusterItem::ClusterItem(Antares::Data::Cluster* a, const wxString& additional) :
+    pCluster(a),
+    pText(additional)
 {
 }
 
@@ -88,6 +92,30 @@ bool ClusterItem::HtmlContent(wxString& out, Data::Cluster* cluster, const wxStr
     // Post
     out << wxT("</td>");
     return highlight;
+}
+
+wxString ClusterItem::htmlContent(const wxString& searchString)
+{
+    if (pCluster)
+    {
+        wxString d;
+        d << wxT("<table border=0 cellpadding=0 cellspacing=0 width=\"100%\"><tr>");
+        pHighlighted = HtmlContent(d, pCluster, searchString);
+        d << wxT("<td nowrap align=right><font size=\"-2\">") << pCluster->unitCount
+            << wxT("<font color=\"#5555BB\"> u </font>") << wxT("<font color=\"#5555BB\">* </font>")
+            << pCluster->nominalCapacity
+            << wxT(" <font color=\"#5555BB\">MW =</font></font></td>")
+            << wxT("<td width=64 nowrap align=right><font size=\"-2\">")
+            << Math::Round(pCluster->nominalCapacity * pCluster->unitCount, 2)
+            << wxT(" <font color=\"#5555BB\">MW</font></font></td>")
+            << wxT("<td width=90 nowrap align=right><font size=\"-2\">")
+            << htmlContentTail();
+        // Post
+        d << pText << wxT("</tr></table>");
+        return d;
+    }
+    pHighlighted = false;
+    return wxString();
 }
 
 ClusterItem::~ClusterItem()
