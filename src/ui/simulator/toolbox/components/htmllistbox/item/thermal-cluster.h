@@ -67,11 +67,6 @@ public:
     //! Get the attached area
     Antares::Data::ThermalCluster* thermalAggregate() const;
 
-    virtual bool interactive() const
-    {
-        return true;
-    }
-
 private:
     wxString getClusterIconFilePath() override;
     wxString htmlContentTail() override;

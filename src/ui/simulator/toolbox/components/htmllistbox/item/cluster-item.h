@@ -59,7 +59,7 @@ namespace Item
         // Destructor
         virtual ~ClusterItem();
 
-        virtual bool interactive() const
+        bool interactive() const override
         {
             return true;
         }

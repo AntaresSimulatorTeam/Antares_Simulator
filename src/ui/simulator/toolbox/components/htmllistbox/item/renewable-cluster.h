@@ -66,11 +66,6 @@ public:
     //! Get the attached cluster
     Antares::Data::RenewableCluster* renewableAggregate() const;
 
-    virtual bool interactive() const
-    {
-        return true;
-    }
-
 private:
     wxString getClusterIconFilePath() override;
     wxString htmlContentTail() override;
