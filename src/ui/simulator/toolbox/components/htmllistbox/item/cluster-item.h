@@ -28,6 +28,7 @@
 #pragma once
 
 #include "item.h"
+#include <antares/study.h>
 
 namespace Antares
 {
@@ -64,6 +65,21 @@ namespace Item
         }
 
     protected:
+        /*!
+        ** \brief Add a portion of Html from a thermal cluster to a string
+        **
+        ** A very simple equivalent html code would be :
+        ** \code
+        ** <td>thermal cluster name</td>
+        ** \endcode
+        **
+        ** \param[in,out] out The string where the result will be appended
+        ** \param th The thermal cluster
+        ** \param searchString The string to highlight
+        ** return True if something has been highlighted, false otherwise
+        */
+        bool HtmlContent(wxString& out, Data::Cluster* cluster, const wxString& searchString);
+
         wxString getIconFilePath(const AnyString& filename);
         void preloadImages();
 

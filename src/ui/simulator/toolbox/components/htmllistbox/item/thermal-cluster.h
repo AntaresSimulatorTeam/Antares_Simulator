@@ -28,7 +28,7 @@
 #define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_THERMAL_CLUSTER_H__
 
 #include "cluster-item.h"
-#include <antares/study.h>
+// #include <antares/study.h>
 
 namespace Antares
 {
@@ -78,26 +78,13 @@ public:
     }
 
 private:
-    /*!
-    ** \brief Add a portion of Html from a thermal cluster to a string
-    **
-    ** A very simple equivalent html code would be :
-    ** \code
-    ** <td>thermal cluster name</td>
-    ** \endcode
-    **
-    ** \param[in,out] out The string where the result will be appended
-    ** \param th The thermal cluster
-    ** \param searchString The string to highlight
-    ** return True if something has been highlighted, false otherwise
-    */
-    bool HtmlContent(wxString& out, Data::ThermalCluster* th, const wxString& searchString);
-
     wxString getClusterIconFilePath() override;
 
 private:
     //! The current ThermalCluster
     Antares::Data::ThermalCluster* pThermalCluster;
+    Antares::Data::Cluster* pCluster;
+    double pThermalClusterMarketBidCost;
 
 }; // class ThermalCluster
 

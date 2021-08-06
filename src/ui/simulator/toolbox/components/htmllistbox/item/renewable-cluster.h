@@ -28,7 +28,6 @@
 #define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_RENEWABLE_CLUSTER_H__
 
 #include "cluster-item.h"
-#include <antares/study.h>
 
 namespace Antares
 {
@@ -78,26 +77,13 @@ public:
     }
 
 private:
-    /*!
-    ** \brief Add a portion of Html from a renewable cluster to a string
-    **
-    ** A very simple equivalent html code would be :
-    ** \code
-    ** <td>renewable cluster name</td>
-    ** \endcode
-    **
-    ** \param[in,out] out The string where the result will be appended
-    ** \param rn The renewable cluster
-    ** \param searchString The string to highlight
-    ** return True if something has been highlighted, false otherwise
-    */
-    bool HtmlContent(wxString& out, Data::RenewableCluster* rn, const wxString& searchString);
-
     wxString getClusterIconFilePath() override;
 
 private:
     //! The current RenewableCluster
     Antares::Data::RenewableCluster* pRenewableCluster;
+    Antares::Data::Cluster* pCluster;
+
 
 }; // class RenewableCluster
 

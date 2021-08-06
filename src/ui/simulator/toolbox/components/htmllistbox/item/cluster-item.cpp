@@ -64,6 +64,32 @@ void ClusterItem::preloadImages()
     }
 }
 
+bool ClusterItem::HtmlContent(wxString& out, Data::Cluster* cluster, const wxString& searchString)
+{
+    bool highlight = false;
+
+    if (cluster->enabled)
+    {
+        out << wxT("<td width=30 align=center><img src=\"") << pIconFileEnabled << wxT("\"></td>");
+    }
+    else
+    {
+        out << wxT("<td width=30 align=center><img src=\"") << pIconFileDisabled << wxT("\"></td>");
+    }
+
+    out << wxT("<td width=20 align=center><img src=\"") << pClusterIconFilePath << wxT("\"></td>");
+    out << wxT("<td width=8></td><td nowrap><font size=\"-1\"");
+
+    wxString name = wxStringFromUTF8(cluster->name());
+    if (searchString.empty() || (highlight = HTMLCodeHighlightString(name, searchString)))
+        out << wxT(">") << name << wxT("</font>");
+    else
+        out << wxT(" color=\"#999999\">") << name << wxT("</font>");
+    // Post
+    out << wxT("</td>");
+    return highlight;
+}
+
 ClusterItem::~ClusterItem()
 {
 }
