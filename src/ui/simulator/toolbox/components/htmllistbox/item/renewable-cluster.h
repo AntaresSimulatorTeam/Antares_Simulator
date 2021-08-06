@@ -42,11 +42,11 @@ namespace Item
 **
 ** See parent classes for more explanations
 */
-class RenewableCluster : public ClusterItem
+class RenewableClusterItem : public ClusterItem
 {
 public:
     //! The smartptr
-    typedef Yuni::SmartPtr<RenewableCluster> Ptr;
+    typedef Yuni::SmartPtr<RenewableClusterItem> Ptr;
 
 public:
     //! \name Constructor & Destructor
@@ -54,13 +54,13 @@ public:
     /*!
     ** \brief Default Constructor
     */
-    RenewableCluster(Antares::Data::RenewableCluster* a);
+    RenewableClusterItem(Antares::Data::RenewableCluster* a);
     /*!
     ** \brief additional Additional HTML content ("<td>my text</td>")
     */
-    RenewableCluster(Antares::Data::RenewableCluster* a, const wxString& additional);
+    RenewableClusterItem(Antares::Data::RenewableCluster* a, const wxString& additional);
     //! Destructor
-    virtual ~RenewableCluster();
+    virtual ~RenewableClusterItem();
     //@}
 
     //! Get the attached cluster
@@ -74,7 +74,7 @@ private:
     //! The current RenewableCluster
     Antares::Data::RenewableCluster* pRenewableCluster;
 
-}; // class RenewableCluster
+}; // class RenewableClusterItem
 
 } // namespace Item
 } // namespace HTMLListbox

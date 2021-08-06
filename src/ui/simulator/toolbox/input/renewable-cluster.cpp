@@ -515,7 +515,7 @@ void RenewableCluster::onRnSelected(Component::HTMLListbox::Item::IItem::Ptr ite
 
 void RenewableCluster::delayedSelection(Component::HTMLListbox::Item::IItem::Ptr item)
 {
-    typedef Component::HTMLListbox::Item::RenewableCluster::Ptr RnPtr;
+    typedef Component::HTMLListbox::Item::RenewableClusterItem::Ptr RnPtr;
     RnPtr a = Component::HTMLListbox::Item::IItem::Ptr::DynamicCast<RnPtr>(item);
     if (a)
     {

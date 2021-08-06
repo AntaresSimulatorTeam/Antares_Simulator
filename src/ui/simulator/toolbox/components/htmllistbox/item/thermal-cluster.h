@@ -28,7 +28,6 @@
 #define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_THERMAL_CLUSTER_H__
 
 #include "cluster-item.h"
-// #include <antares/study.h>
 
 namespace Antares
 {
@@ -43,11 +42,11 @@ namespace Item
 **
 ** See parent classes for more explanations
 */
-class ThermalCluster : public ClusterItem
+class ThermalClusterItem : public ClusterItem
 {
 public:
     //! The smartptr
-    typedef Yuni::SmartPtr<ThermalCluster> Ptr;
+    typedef Yuni::SmartPtr<ThermalClusterItem> Ptr;
 
 public:
     //! \name Constructor & Destructor
@@ -55,13 +54,13 @@ public:
     /*!
     ** \brief Default Constructor
     */
-    ThermalCluster(Antares::Data::ThermalCluster* a);
+    ThermalClusterItem(Antares::Data::ThermalCluster* a);
     /*!
     ** \brief additional Additional HTML content ("<td>my text</td>")
     */
-    ThermalCluster(Antares::Data::ThermalCluster* a, const wxString& additional);
+    ThermalClusterItem(Antares::Data::ThermalCluster* a, const wxString& additional);
     //! Destructor
-    virtual ~ThermalCluster();
+    virtual ~ThermalClusterItem();
     //@}
 
     //! Get the attached area
@@ -76,7 +75,7 @@ private:
     Antares::Data::ThermalCluster* pThermalCluster;
     double pThermalClusterMarketBidCost;
 
-}; // class ThermalCluster
+}; // class ThermalClusterItem
 
 } // namespace Item
 } // namespace HTMLListbox

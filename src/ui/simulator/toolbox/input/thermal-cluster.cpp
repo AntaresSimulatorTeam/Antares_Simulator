@@ -570,7 +570,7 @@ void ThermalCluster::onThSelected(Component::HTMLListbox::Item::IItem::Ptr item)
 
 void ThermalCluster::delayedSelection(Component::HTMLListbox::Item::IItem::Ptr item)
 {
-    typedef Component::HTMLListbox::Item::ThermalCluster::Ptr ThPtr;
+    typedef Component::HTMLListbox::Item::ThermalClusterItem::Ptr ThPtr;
     ThPtr a = Component::HTMLListbox::Item::IItem::Ptr::DynamicCast<ThPtr>(item);
     if (a)
     {

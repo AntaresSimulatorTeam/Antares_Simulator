@@ -38,7 +38,7 @@ namespace HTMLListbox
 namespace Item
 {
 
-ThermalCluster::ThermalCluster(Antares::Data::ThermalCluster* a) :
+ThermalClusterItem::ThermalClusterItem(Antares::Data::ThermalCluster* a) :
     ClusterItem(a),
     pThermalClusterMarketBidCost(a->marketBidCost),
     pThermalCluster(a)
@@ -46,7 +46,7 @@ ThermalCluster::ThermalCluster(Antares::Data::ThermalCluster* a) :
     preloadImages();
 }
 
-ThermalCluster::ThermalCluster(Antares::Data::ThermalCluster* a, const wxString& additional) :
+ThermalClusterItem::ThermalClusterItem(Antares::Data::ThermalCluster* a, const wxString& additional) :
     ClusterItem(a, additional),
     pThermalClusterMarketBidCost(a->marketBidCost),
     pThermalCluster(a)
@@ -54,16 +54,16 @@ ThermalCluster::ThermalCluster(Antares::Data::ThermalCluster* a, const wxString&
     preloadImages();
 }
 
-ThermalCluster::~ThermalCluster()
+ThermalClusterItem::~ThermalClusterItem()
 {
 }
 
-wxString ThermalCluster::getClusterIconFilePath()
+wxString ThermalClusterItem::getClusterIconFilePath()
 {
     return getIconFilePath("images/16x16/thermal.png");
 }
 
-wxString ThermalCluster::htmlContentTail()
+wxString ThermalClusterItem::htmlContentTail()
 {
     wxString tail_to_return;
     tail_to_return
@@ -73,7 +73,7 @@ wxString ThermalCluster::htmlContentTail()
     return tail_to_return;
 }
 
-Antares::Data::ThermalCluster* ThermalCluster::thermalAggregate() const
+Antares::Data::ThermalCluster* ThermalClusterItem::thermalAggregate() const
 {
     return pThermalCluster;
 }

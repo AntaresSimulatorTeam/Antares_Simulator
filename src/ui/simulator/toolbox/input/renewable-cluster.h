@@ -160,7 +160,7 @@ private:
     //! The area notifier
     InputSelector::Area* pAreaNotifier;
     //! The last selected thermal cluster
-    Component::HTMLListbox::Item::RenewableCluster::Ptr pLastSelectedRenewableCluster;
+    Component::HTMLListbox::Item::RenewableClusterItem::Ptr pLastSelectedRenewableCluster;
 
 }; // class Area
 

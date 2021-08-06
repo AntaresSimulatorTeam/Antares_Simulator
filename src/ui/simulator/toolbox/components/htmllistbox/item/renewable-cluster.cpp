@@ -38,38 +38,38 @@ namespace HTMLListbox
 namespace Item
 {
 
-RenewableCluster::RenewableCluster(Antares::Data::RenewableCluster* a) :
+RenewableClusterItem::RenewableClusterItem(Antares::Data::RenewableCluster* a) :
     ClusterItem(a),
     pRenewableCluster(a)
 {
     preloadImages();
 }
 
-RenewableCluster::RenewableCluster(Antares::Data::RenewableCluster* a, const wxString& additional) :
+RenewableClusterItem::RenewableClusterItem(Antares::Data::RenewableCluster* a, const wxString& additional) :
     ClusterItem(a, additional),
     pRenewableCluster(a)
 {
     preloadImages();
 }
 
-RenewableCluster::~RenewableCluster()
+RenewableClusterItem::~RenewableClusterItem()
 {
 }
 
-wxString RenewableCluster::getClusterIconFilePath()
+wxString RenewableClusterItem::getClusterIconFilePath()
 {
     // gp : This icon file (link.png) is given here as an example, for test purposes.
     // gp : It has to be chnaged when renewable icon is ready 
     return getIconFilePath("images/16x16/link.png");
 }
 
-wxString RenewableCluster::htmlContentTail()
+wxString RenewableClusterItem::htmlContentTail()
 {
     // Return nothing 
     return wxString();
 }
 
-Antares::Data::RenewableCluster* RenewableCluster::renewableAggregate() const
+Antares::Data::RenewableCluster* RenewableClusterItem::renewableAggregate() const
 {
     return pRenewableCluster;
 }
