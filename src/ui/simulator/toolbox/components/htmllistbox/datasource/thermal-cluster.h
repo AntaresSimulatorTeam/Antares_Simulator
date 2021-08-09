@@ -27,9 +27,10 @@
 
 #pragma once
 
-#include "datasource.h"
-#include <yuni/core/event.h>
-#include <antares/study.h>
+// #include "datasource.h"
+// #include <yuni/core/event.h>
+// #include <antares/study.h>
+#include "cluster-order.h"
 
 namespace Antares
 {
@@ -40,7 +41,7 @@ namespace HTMLListbox
 namespace Datasource
 {
 
-class ThermalClustersByAlphaOrder : public Yuni::IEventObserver<ThermalClustersByAlphaOrder>, public IDatasource
+class ThermalClustersByAlphaOrder : public ClustersByAlphaOrder
 {
 public:
     //! \name Constructor & Destructor
@@ -51,25 +52,19 @@ public:
     virtual ~ThermalClustersByAlphaOrder();
     //@}
 
-    virtual wxString name() const
+    wxString name() const override
     {
         return wxT("Thermal clusters in alphabetical order");
     }
-    virtual const char* icon() const
+    const char* icon() const override
     {
         return "images/16x16/sort_alphabet.png";
     }
-    virtual void refresh(const wxString& search = wxEmptyString);
-
-    void onAreaChanged(Data::Area* area);
-    void onInvalidateAllAreas();
-
-private:
-    Data::Area* pArea;
+    virtual void refresh(const wxString& search = wxEmptyString) override;
 
 }; // class ThermalClustersByAlphaOrder
 
-class ThermalClustersByAlphaReverseOrder : public Yuni::IEventObserver<ThermalClustersByAlphaReverseOrder>, public IDatasource
+class ThermalClustersByAlphaReverseOrder : public ClustersByAlphaReverseOrder
 {
 public:
     //! \name Constructor & Destructor
@@ -88,13 +83,7 @@ public:
     {
         return "images/16x16/sort_alphabet_descending.png";
     }
-    virtual void refresh(const wxString& search = wxEmptyString);
-
-    void onAreaChanged(Data::Area* area);
-    void onInvalidateAllAreas();
-
-private:
-    Data::Area* pArea;
+    virtual void refresh(const wxString& search = wxEmptyString) override;
 
 }; // class ThermalClustersByAlphaReverseOrder
 

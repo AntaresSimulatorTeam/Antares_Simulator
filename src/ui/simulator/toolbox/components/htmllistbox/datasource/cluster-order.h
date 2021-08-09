@@ -27,10 +27,9 @@
 
 #pragma once
 
-// #include "datasource.h"
-// #include <yuni/core/event.h>
-// #include <antares/study.h>
-#include "cluster-order.h"
+#include "datasource.h"
+#include <yuni/core/event.h>
+#include <antares/study.h>
 
 namespace Antares
 {
@@ -40,55 +39,74 @@ namespace HTMLListbox
 {
 namespace Datasource
 {
-    //RenewableClusters
-class RenewableClustersByAlphaOrder : public ClustersByAlphaOrder
+
+struct SortAlphaOrder
+{
+    inline bool operator()(const Data::Cluster* a, const Data::Cluster* b)
+    {
+        return a->name() < b->name();
+    }
+};
+
+struct SortAlphaReverseOrder
+{
+    inline bool operator()(const Data::Cluster* a, const Data::Cluster* b)
+    {
+        return a->name() > b->name();
+    }
+};
+
+class ClustersByAlphaOrder : public Yuni::IEventObserver<ClustersByAlphaOrder>, public IDatasource
 {
 public:
     //! \name Constructor & Destructor
     //@{
     //! Default Constructor
-    RenewableClustersByAlphaOrder(HTMLListbox::Component& parent);
+    ClustersByAlphaOrder(HTMLListbox::Component& parent);
     //! Destructor
-    virtual ~RenewableClustersByAlphaOrder();
+    virtual ~ClustersByAlphaOrder();
     //@}
 
-    virtual wxString name() const override
-    {
-        return wxT("Thermal clusters in alphabetical order");
-    }
-    virtual const char* icon() const override
-    {
-        return "images/16x16/sort_alphabet.png";
-    }
-    virtual void refresh(const wxString& search = wxEmptyString) override;
+    virtual wxString name() const = 0;
+ 
+    virtual const char* icon() const = 0;
 
-}; // class RenewableClustersByAlphaOrder
+    virtual void refresh(const wxString& search = wxEmptyString) = 0;
 
-class RenewableClustersByAlphaReverseOrder : public ClustersByAlphaReverseOrder
+    void onAreaChanged(Data::Area* area);
+    void onInvalidateAllAreas();
+
+protected:
+    Data::Area* pArea;
+
+}; // class ClustersByAlphaOrder
+
+class ClustersByAlphaReverseOrder : public Yuni::IEventObserver<ClustersByAlphaReverseOrder>, public IDatasource
 {
 public:
     //! \name Constructor & Destructor
     //@{
     //! Default Constructor
-    RenewableClustersByAlphaReverseOrder(HTMLListbox::Component& parent);
+    ClustersByAlphaReverseOrder(HTMLListbox::Component& parent);
     //! Destructor
-    virtual ~RenewableClustersByAlphaReverseOrder();
+    virtual ~ClustersByAlphaReverseOrder();
     //@}
 
-    virtual wxString name() const
-    {
-        return wxT("Renewable clusters in reverse alphabetical order");
-    }
-    virtual const char* icon() const
-    {
-        return "images/16x16/sort_alphabet_descending.png";
-    }
-    virtual void refresh(const wxString& search = wxEmptyString) override;
+    virtual wxString name() const = 0;
 
-}; // class RenewableClustersByAlphaReverseOrder
+    virtual const char* icon() const = 0;
+
+    virtual void refresh(const wxString& search = wxEmptyString) = 0;
+
+    void onAreaChanged(Data::Area* area);
+    void onInvalidateAllAreas();
+
+protected:
+    Data::Area* pArea;
+
+}; // class ClustersByAlphaReverseOrder
 
 } // namespace Datasource
 } // namespace HTMLListbox
 } // namespace Component
 } // namespace Antares
-

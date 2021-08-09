@@ -227,6 +227,8 @@ SET(SRC_TOOLBOX_COM_HTMLLISTBOX
 		toolbox/components/htmllistbox/datasource/datasource.hxx
 		toolbox/components/htmllistbox/datasource/areas.h
 		toolbox/components/htmllistbox/datasource/areas.cpp
+		toolbox/components/htmllistbox/datasource/cluster-order.h
+		toolbox/components/htmllistbox/datasource/cluster-order.cpp
 		toolbox/components/htmllistbox/datasource/thermal-cluster.h
 		toolbox/components/htmllistbox/datasource/thermal-cluster.cpp
 		toolbox/components/htmllistbox/datasource/renewable-cluster.h
