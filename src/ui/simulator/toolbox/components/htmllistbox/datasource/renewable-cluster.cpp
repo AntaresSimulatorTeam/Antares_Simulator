@@ -27,7 +27,7 @@
 
 #include "renewable-cluster.h"
 #include "../../../../application/study.h"
-#include "../item/renewable-cluster.h"
+#include "../item/renewable-cluster-item.h"
 #include "../item/group.h"
 #include "../component.h"
 #include <map>

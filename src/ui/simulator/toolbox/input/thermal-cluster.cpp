@@ -37,7 +37,7 @@
 #include "../create.h"
 #include "../validator.h"
 #include "../components/htmllistbox/datasource/thermal-cluster.h"
-#include "../components/htmllistbox/item/thermal-cluster.h"
+#include "../components/htmllistbox/item/thermal-cluster-item.h"
 #include "../components/button.h"
 #include "../../windows/message.h"
 #include "../../application/menus.h"

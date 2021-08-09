@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "thermal-cluster.h"
+#include "thermal-cluster-item.h"
 
 using namespace Yuni;
 

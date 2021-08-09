@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "renewable-cluster.h"
+#include "renewable-cluster-item.h"
 
 using namespace Yuni;
 

@@ -50,7 +50,7 @@
 // #include <ui/common/lock.h>
 
 #include "renewable-cluster.h"
-#include "../components/htmllistbox/item/renewable-cluster.h"
+#include "../components/htmllistbox/item/renewable-cluster-item.h"
 #include "../components/htmllistbox/datasource/renewable-cluster.h"
 
 using namespace Yuni;

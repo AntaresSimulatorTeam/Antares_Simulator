@@ -27,6 +27,7 @@
 #ifndef __ANTARES_TOOLBOX_INPUT_RENEWABLE_CLUSTER_H__
 #define __ANTARES_TOOLBOX_INPUT_RENEWABLE_CLUSTER_H__
 
+// gp : remove useless header includes
 // #include <antares/wx-wrapper.h>
 #include <yuni/core/event.h>
 // #include <antares/study.h>
@@ -38,7 +39,7 @@
 #include <wx/imaglist.h>
 // #include "../components/htmllistbox/component.h"
 // #include "../components/htmllistbox/item/thermal-cluster.h"
-#include "../components/htmllistbox/item/renewable-cluster.h"
+#include "../components/htmllistbox/item/renewable-cluster-item.h"
 
 namespace Antares
 {

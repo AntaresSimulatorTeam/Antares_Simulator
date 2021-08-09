@@ -27,7 +27,7 @@
 
 #include "thermal-cluster.h"
 #include "../../../../application/study.h"
-#include "../item/thermal-cluster.h"
+#include "../item/thermal-cluster-item.h"
 #include "../item/group.h"
 #include "../component.h"
 #include <map>

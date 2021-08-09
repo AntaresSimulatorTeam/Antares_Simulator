@@ -37,7 +37,7 @@
 #include <wx/stattext.h>
 #include <wx/imaglist.h>
 #include "../components/htmllistbox/component.h"
-#include "../components/htmllistbox/item/thermal-cluster.h"
+#include "../components/htmllistbox/item/thermal-cluster-item.h"
 
 namespace Antares
 {
