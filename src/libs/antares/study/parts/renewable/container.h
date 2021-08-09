@@ -109,7 +109,7 @@ public:
     std::vector<RenewableCluster*> clusters;
     //! How many clusters have we got ?
     // Only available from the solver
-    inline uint clusterCount() const
+    inline size_t clusterCount() const
     {
         return clusters.size();
     }

@@ -39,7 +39,7 @@ namespace Antares
 namespace Data
 {
 PartThermal::PartThermal() :
- unsuppliedEnergyCost(0.), spilledEnergyCost(0.), list(), mustrunList(), clusters()
+ unsuppliedEnergyCost(0.), spilledEnergyCost(0.)
 {
 }
 

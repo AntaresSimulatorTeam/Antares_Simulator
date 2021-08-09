@@ -127,7 +127,7 @@ public:
     std::vector<ThermalCluster*> clusters;
 
     // Return unit count
-    inline uint clusterCount() const {
+    inline size_t clusterCount() const {
         return clusters.size();
     }
 }; // class PartThermal
