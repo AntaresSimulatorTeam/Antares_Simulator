@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_THERMAL_PLANTS_H__
-#define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_THERMAL_PLANTS_H__
+
+#pragma once
 
 #include "datasource.h"
 #include <yuni/core/event.h>
@@ -39,17 +39,16 @@ namespace HTMLListbox
 {
 namespace Datasource
 {
-namespace ThermalClusters
-{
-class ByAlphaOrder : public Yuni::IEventObserver<ByAlphaOrder>, public IDatasource
+
+class ThermalClustersByAlphaOrder : public Yuni::IEventObserver<ThermalClustersByAlphaOrder>, public IDatasource
 {
 public:
     //! \name Constructor & Destructor
     //@{
     //! Default Constructor
-    ByAlphaOrder(HTMLListbox::Component& parent);
+    ThermalClustersByAlphaOrder(HTMLListbox::Component& parent);
     //! Destructor
-    virtual ~ByAlphaOrder();
+    virtual ~ThermalClustersByAlphaOrder();
     //@}
 
     virtual wxString name() const
@@ -68,17 +67,17 @@ public:
 private:
     Data::Area* pArea;
 
-}; // class ByAlphaOrder
+}; // class ThermalClustersByAlphaOrder
 
-class ByAlphaReverseOrder : public Yuni::IEventObserver<ByAlphaReverseOrder>, public IDatasource
+class ThermalClustersByAlphaReverseOrder : public Yuni::IEventObserver<ThermalClustersByAlphaReverseOrder>, public IDatasource
 {
 public:
     //! \name Constructor & Destructor
     //@{
     //! Default Constructor
-    ByAlphaReverseOrder(HTMLListbox::Component& parent);
+    ThermalClustersByAlphaReverseOrder(HTMLListbox::Component& parent);
     //! Destructor
-    virtual ~ByAlphaReverseOrder();
+    virtual ~ThermalClustersByAlphaReverseOrder();
     //@}
 
     virtual wxString name() const
@@ -97,12 +96,9 @@ public:
 private:
     Data::Area* pArea;
 
-}; // class ByAlphaReverseOrder
+}; // class ThermalClustersByAlphaReverseOrder
 
-} // namespace ThermalClusters
 } // namespace Datasource
 } // namespace HTMLListbox
 } // namespace Component
 } // namespace Antares
-
-#endif // __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_THERMAL_PLANTS_H__

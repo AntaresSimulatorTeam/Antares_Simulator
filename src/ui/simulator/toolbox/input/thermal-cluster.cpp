@@ -96,7 +96,7 @@ ThermalCluster::~ThermalCluster()
     destroyBoundEvents();
 }
 
-namespace HTMLLsDatasourcesTh = Component::HTMLListbox::Datasource::ThermalClusters;
+using namespace Component::HTMLListbox::Datasource;
 
 void ThermalCluster::internalBuildSubControls()
 {
@@ -148,16 +148,16 @@ void ThermalCluster::internalBuildSubControls()
 
     // The listbox
     pThListbox = new Component::HTMLListbox::Component(this);
-    HTMLLsDatasourcesTh::ByAlphaOrder* dsAZ;
-    dsAZ = pThListbox->addDatasource<HTMLLsDatasourcesTh::ByAlphaOrder>();
-    HTMLLsDatasourcesTh::ByAlphaReverseOrder* dsZA;
-    dsZA = pThListbox->addDatasource<HTMLLsDatasourcesTh::ByAlphaReverseOrder>();
+    ThermalClustersByAlphaOrder* dsAZ;
+    dsAZ = pThListbox->addDatasource<ThermalClustersByAlphaOrder>();
+    ThermalClustersByAlphaReverseOrder* dsZA;
+    dsZA = pThListbox->addDatasource<ThermalClustersByAlphaReverseOrder>();
     if (pAreaNotifier)
     {
         pAreaNotifier->onAreaChanged.connect(dsAZ,
-                                             &HTMLLsDatasourcesTh::ByAlphaOrder::onAreaChanged);
+                                             &ThermalClustersByAlphaOrder::onAreaChanged);
         pAreaNotifier->onAreaChanged.connect(
-          dsZA, &HTMLLsDatasourcesTh::ByAlphaReverseOrder::onAreaChanged);
+          dsZA, &ThermalClustersByAlphaReverseOrder::onAreaChanged);
     }
     sizer->Add(pThListbox, 1, wxALL | wxEXPAND);
     sizer->SetItemMinSize(pThListbox, 100, 200);

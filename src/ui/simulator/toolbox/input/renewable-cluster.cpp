@@ -100,7 +100,7 @@ RenewableCluster::~RenewableCluster()
     destroyBoundEvents();
 }
 
-namespace HTMLLsDatasourcesRn = Component::HTMLListbox::Datasource::RenewableClusters;
+using namespace Component::HTMLListbox::Datasource;
 
 
 void RenewableCluster::internalBuildSubControls()
@@ -154,17 +154,17 @@ void RenewableCluster::internalBuildSubControls()
     // The listbox
     pRnListbox = new Component::HTMLListbox::Component(this);
     
-    HTMLLsDatasourcesRn::ByAlphaOrder* dsAZ;
-    dsAZ = pRnListbox->addDatasource<HTMLLsDatasourcesRn::ByAlphaOrder>();
-    HTMLLsDatasourcesRn::ByAlphaReverseOrder* dsZA;
-    dsZA = pRnListbox->addDatasource<HTMLLsDatasourcesRn::ByAlphaReverseOrder>();
+    RenewableClustersByAlphaOrder* dsAZ;
+    dsAZ = pRnListbox->addDatasource<RenewableClustersByAlphaOrder>();
+    RenewableClustersByAlphaReverseOrder* dsZA;
+    dsZA = pRnListbox->addDatasource<RenewableClustersByAlphaReverseOrder>();
 
     if (pAreaNotifier)
     {
         pAreaNotifier->onAreaChanged.connect(dsAZ,
-                                             &HTMLLsDatasourcesRn::ByAlphaOrder::onAreaChanged);
+                                             &RenewableClustersByAlphaOrder::onAreaChanged);
         pAreaNotifier->onAreaChanged.connect(
-          dsZA, &HTMLLsDatasourcesRn::ByAlphaReverseOrder::onAreaChanged);
+          dsZA, &RenewableClustersByAlphaReverseOrder::onAreaChanged);
     }
     
     sizer->Add(pRnListbox, 1, wxALL | wxEXPAND);

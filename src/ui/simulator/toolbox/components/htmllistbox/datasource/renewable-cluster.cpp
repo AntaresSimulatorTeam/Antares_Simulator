@@ -44,8 +44,7 @@ namespace HTMLListbox
 {
 namespace Datasource
 {
-namespace RenewableClusters
-{
+
 typedef Data::RenewableCluster RenewableClusterFromLib;
 typedef std::list<RenewableClusterFromLib*> RenewableClusterList;
 typedef std::map<wxString, RenewableClusterList> RenewableClusterMap;
@@ -88,20 +87,20 @@ void GetRenewableClusterMap(Data::Area* area, RenewableClusterMap& l, const wxSt
 
 } // anonymous namespace
 
-ByAlphaOrder::ByAlphaOrder(HTMLListbox::Component& parent) : IDatasource(parent), pArea(nullptr)
+RenewableClustersByAlphaOrder::RenewableClustersByAlphaOrder(HTMLListbox::Component& parent) : IDatasource(parent), pArea(nullptr)
 {
-    OnStudyAreasChanged.connect(this, &ByAlphaOrder::onInvalidateAllAreas);
+    OnStudyAreasChanged.connect(this, &RenewableClustersByAlphaOrder::onInvalidateAllAreas);
     Forms::ApplWnd::Instance()->onApplicationQuit.connect(this,
-                                                          &ByAlphaOrder::onInvalidateAllAreas);
+                                                          &RenewableClustersByAlphaOrder::onInvalidateAllAreas);
 }
 
 //! Destructor
-ByAlphaOrder::~ByAlphaOrder()
+RenewableClustersByAlphaOrder::~RenewableClustersByAlphaOrder()
 {
     destroyBoundEvents();
 }
 
-void ByAlphaOrder::refresh(const wxString& search)
+void RenewableClustersByAlphaOrder::refresh(const wxString& search)
 {
     pParent.clear();
 
@@ -139,31 +138,31 @@ void ByAlphaOrder::refresh(const wxString& search)
     pParent.invalidate();
 }
 
-void ByAlphaOrder::onAreaChanged(Data::Area* area)
+void RenewableClustersByAlphaOrder::onAreaChanged(Data::Area* area)
 {
     pArea = area;
 }
 
-void ByAlphaOrder::onInvalidateAllAreas()
+void RenewableClustersByAlphaOrder::onInvalidateAllAreas()
 {
     pArea = nullptr;
 }
 
-ByAlphaReverseOrder::ByAlphaReverseOrder(HTMLListbox::Component& parent) :
+RenewableClustersByAlphaReverseOrder::RenewableClustersByAlphaReverseOrder(HTMLListbox::Component& parent) :
  IDatasource(parent), pArea(nullptr)
 {
-    OnStudyAreasChanged.connect(this, &ByAlphaReverseOrder::onInvalidateAllAreas);
+    OnStudyAreasChanged.connect(this, &RenewableClustersByAlphaReverseOrder::onInvalidateAllAreas);
     Forms::ApplWnd::Instance()->onApplicationQuit.connect(
-      this, &ByAlphaReverseOrder::onInvalidateAllAreas);
+      this, &RenewableClustersByAlphaReverseOrder::onInvalidateAllAreas);
 }
 
 //! Destructor
-ByAlphaReverseOrder::~ByAlphaReverseOrder()
+RenewableClustersByAlphaReverseOrder::~RenewableClustersByAlphaReverseOrder()
 {
     destroyBoundEvents();
 }
 
-void ByAlphaReverseOrder::refresh(const wxString& search)
+void RenewableClustersByAlphaReverseOrder::refresh(const wxString& search)
 {
     pParent.clear();
 
@@ -194,17 +193,16 @@ void ByAlphaReverseOrder::refresh(const wxString& search)
     pParent.invalidate();
 }
 
-void ByAlphaReverseOrder::onAreaChanged(Data::Area* area)
+void RenewableClustersByAlphaReverseOrder::onAreaChanged(Data::Area* area)
 {
     pArea = area;
 }
 
-void ByAlphaReverseOrder::onInvalidateAllAreas()
+void RenewableClustersByAlphaReverseOrder::onInvalidateAllAreas()
 {
     pArea = nullptr;
 }
 
-} // namespace RenewableClusters
 } // namespace Datasource
 } // namespace HTMLListbox
 } // namespace Component

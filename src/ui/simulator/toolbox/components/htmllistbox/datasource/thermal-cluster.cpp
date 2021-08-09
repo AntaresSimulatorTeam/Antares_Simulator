@@ -44,8 +44,7 @@ namespace HTMLListbox
 {
 namespace Datasource
 {
-namespace ThermalClusters
-{
+
 typedef Data::ThermalCluster ThermalClusterFromLib;
 typedef std::list<ThermalClusterFromLib*> ThermalClusterList;
 typedef std::map<wxString, ThermalClusterList> ThermalClusterMap;
@@ -88,20 +87,20 @@ void GetThermalClusterMap(Data::Area* area, ThermalClusterMap& l, const wxString
 
 } // anonymous namespace
 
-ByAlphaOrder::ByAlphaOrder(HTMLListbox::Component& parent) : IDatasource(parent), pArea(nullptr)
+ThermalClustersByAlphaOrder::ThermalClustersByAlphaOrder(HTMLListbox::Component& parent) : IDatasource(parent), pArea(nullptr)
 {
-    OnStudyAreasChanged.connect(this, &ByAlphaOrder::onInvalidateAllAreas);
+    OnStudyAreasChanged.connect(this, &ThermalClustersByAlphaOrder::onInvalidateAllAreas);
     Forms::ApplWnd::Instance()->onApplicationQuit.connect(this,
-                                                          &ByAlphaOrder::onInvalidateAllAreas);
+                                                          &ThermalClustersByAlphaOrder::onInvalidateAllAreas);
 }
 
 //! Destructor
-ByAlphaOrder::~ByAlphaOrder()
+ThermalClustersByAlphaOrder::~ThermalClustersByAlphaOrder()
 {
     destroyBoundEvents();
 }
 
-void ByAlphaOrder::refresh(const wxString& search)
+void ThermalClustersByAlphaOrder::refresh(const wxString& search)
 {
     pParent.clear();
 
@@ -139,31 +138,31 @@ void ByAlphaOrder::refresh(const wxString& search)
     pParent.invalidate();
 }
 
-void ByAlphaOrder::onAreaChanged(Data::Area* area)
+void ThermalClustersByAlphaOrder::onAreaChanged(Data::Area* area)
 {
     pArea = area;
 }
 
-void ByAlphaOrder::onInvalidateAllAreas()
+void ThermalClustersByAlphaOrder::onInvalidateAllAreas()
 {
     pArea = nullptr;
 }
 
-ByAlphaReverseOrder::ByAlphaReverseOrder(HTMLListbox::Component& parent) :
+ThermalClustersByAlphaReverseOrder::ThermalClustersByAlphaReverseOrder(HTMLListbox::Component& parent) :
  IDatasource(parent), pArea(nullptr)
 {
-    OnStudyAreasChanged.connect(this, &ByAlphaReverseOrder::onInvalidateAllAreas);
+    OnStudyAreasChanged.connect(this, &ThermalClustersByAlphaReverseOrder::onInvalidateAllAreas);
     Forms::ApplWnd::Instance()->onApplicationQuit.connect(
-      this, &ByAlphaReverseOrder::onInvalidateAllAreas);
+      this, &ThermalClustersByAlphaReverseOrder::onInvalidateAllAreas);
 }
 
 //! Destructor
-ByAlphaReverseOrder::~ByAlphaReverseOrder()
+ThermalClustersByAlphaReverseOrder::~ThermalClustersByAlphaReverseOrder()
 {
     destroyBoundEvents();
 }
 
-void ByAlphaReverseOrder::refresh(const wxString& search)
+void ThermalClustersByAlphaReverseOrder::refresh(const wxString& search)
 {
     pParent.clear();
 
@@ -194,17 +193,16 @@ void ByAlphaReverseOrder::refresh(const wxString& search)
     pParent.invalidate();
 }
 
-void ByAlphaReverseOrder::onAreaChanged(Data::Area* area)
+void ThermalClustersByAlphaReverseOrder::onAreaChanged(Data::Area* area)
 {
     pArea = area;
 }
 
-void ByAlphaReverseOrder::onInvalidateAllAreas()
+void ThermalClustersByAlphaReverseOrder::onInvalidateAllAreas()
 {
     pArea = nullptr;
 }
 
-} // namespace ThermalClusters
 } // namespace Datasource
 } // namespace HTMLListbox
 } // namespace Component

@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_RENEWABLE_PLANTS_H__
-#define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_RENEWABLE_PLANTS_H__
+
+#pragma once
 
 #include "datasource.h"
 #include <yuni/core/event.h>
@@ -39,17 +39,16 @@ namespace HTMLListbox
 {
 namespace Datasource
 {
-namespace RenewableClusters
-{
-class ByAlphaOrder : public Yuni::IEventObserver<ByAlphaOrder>, public IDatasource
+    //RenewableClusters
+class RenewableClustersByAlphaOrder : public Yuni::IEventObserver<RenewableClustersByAlphaOrder>, public IDatasource
 {
 public:
     //! \name Constructor & Destructor
     //@{
     //! Default Constructor
-    ByAlphaOrder(HTMLListbox::Component& parent);
+    RenewableClustersByAlphaOrder(HTMLListbox::Component& parent);
     //! Destructor
-    virtual ~ByAlphaOrder();
+    virtual ~RenewableClustersByAlphaOrder();
     //@}
 
     virtual wxString name() const
@@ -68,17 +67,17 @@ public:
 private:
     Data::Area* pArea;
 
-}; // class ByAlphaOrder
+}; // class RenewableClustersByAlphaOrder
 
-class ByAlphaReverseOrder : public Yuni::IEventObserver<ByAlphaReverseOrder>, public IDatasource
+class RenewableClustersByAlphaReverseOrder : public Yuni::IEventObserver<RenewableClustersByAlphaReverseOrder>, public IDatasource
 {
 public:
     //! \name Constructor & Destructor
     //@{
     //! Default Constructor
-    ByAlphaReverseOrder(HTMLListbox::Component& parent);
+    RenewableClustersByAlphaReverseOrder(HTMLListbox::Component& parent);
     //! Destructor
-    virtual ~ByAlphaReverseOrder();
+    virtual ~RenewableClustersByAlphaReverseOrder();
     //@}
 
     virtual wxString name() const
@@ -97,12 +96,10 @@ public:
 private:
     Data::Area* pArea;
 
-}; // class ByAlphaReverseOrder
+}; // class RenewableClustersByAlphaReverseOrder
 
-} // namespace RenewableClusters
 } // namespace Datasource
 } // namespace HTMLListbox
 } // namespace Component
 } // namespace Antares
 
-#endif // __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_RENEWABLE_PLANTS_H__
