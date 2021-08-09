@@ -172,12 +172,15 @@ void AllVariablesPrintInfo::prepareForSimulation(bool userSelection,
     if (!userSelection)
         setAllPrintStatusesTo(true);
 
+    auto saved_it = it_info;
+    it_info = allVarsPrintInfo.begin();
     for (const auto& varname : excluded_vars)
     {
         const bool res = setPrintStatus(varname, false);
         if (not res)
             logs.info() << "Variable " << varname << " not found. Could not remove it";
     }
+    it_info = saved_it;
 
     // Computing the max number columns a report of any kind can contain.
     computeMaxColumnsCountInReports();
