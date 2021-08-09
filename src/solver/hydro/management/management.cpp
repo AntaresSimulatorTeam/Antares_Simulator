@@ -168,6 +168,16 @@ void HydroManagement::prepareNetDemand(uint numSpace)
                 - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
                                                  : scratchpad.originalMustrunSum[hour]);
 
+            // RES
+            if (parameters.renewableGeneration() == Antares::Data::rgClusters)
+            {
+                area.renewable.list.each([&](const Antares::Data::RenewableCluster& cluster) {
+                    assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
+                    netdemand -= cluster.valueAtTimeStep(
+                      ptchro.RenouvelableParPalier[cluster.areaWideIndex], hour);
+                });
+            }
+
             assert(!Math::NaN(netdemand)
                    && "hydro management: NaN detected when calculating the net demande");
             data.MLN[realmonth] += netdemand;
