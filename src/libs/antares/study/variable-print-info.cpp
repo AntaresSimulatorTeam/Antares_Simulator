@@ -149,7 +149,7 @@ bool AllVariablesPrintInfo::setPrintStatus(string varname, bool printStatus)
     */
     std::transform(varname.begin(), varname.end(), varname.begin(), ::toupper);
 
-    for (; it_info != allVarsPrintInfo.end(); it_info++)
+    for (it_info = allVarsPrintInfo.begin(); it_info != allVarsPrintInfo.end(); it_info++)
     {
         string current_var_name = (*it_info)->name();
         std::transform(
