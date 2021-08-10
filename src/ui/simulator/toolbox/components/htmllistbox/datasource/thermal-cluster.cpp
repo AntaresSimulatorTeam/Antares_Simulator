@@ -27,7 +27,7 @@
 
 #include "thermal-cluster.h"
 #include "../../../../application/study.h"
-#include "../item/thermal-cluster.h"
+#include "../item/thermal-cluster-item.h"
 #include "../item/group.h"
 #include "../component.h"
 #include <map>
@@ -132,7 +132,7 @@ void ByAlphaOrder::refresh(const wxString& search)
                 ThermalClusterList::iterator jend = i->second.end();
                 i->second.sort(SortAlphaOrder());
                 for (ThermalClusterList::iterator j = i->second.begin(); j != jend; ++j)
-                    pParent.add(new Antares::Component::HTMLListbox::Item::ThermalCluster(*j));
+                    pParent.add(new Antares::Component::HTMLListbox::Item::ThermalClusterItem(*j));
             }
         }
     }
@@ -187,7 +187,7 @@ void ByAlphaReverseOrder::refresh(const wxString& search)
                 ThermalClusterList::iterator jend = i->second.end();
                 i->second.sort(SortAlphaReverseOrder());
                 for (ThermalClusterList::iterator j = i->second.begin(); j != jend; ++j)
-                    pParent.add(new Antares::Component::HTMLListbox::Item::ThermalCluster(*j));
+                    pParent.add(new Antares::Component::HTMLListbox::Item::ThermalClusterItem(*j));
             }
         }
     }

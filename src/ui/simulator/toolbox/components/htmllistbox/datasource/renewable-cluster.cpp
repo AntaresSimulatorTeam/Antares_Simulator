@@ -27,7 +27,7 @@
 
 #include "renewable-cluster.h"
 #include "../../../../application/study.h"
-#include "../item/renewable-cluster.h"
+#include "../item/renewable-cluster-item.h"
 #include "../item/group.h"
 #include "../component.h"
 #include <map>
@@ -132,7 +132,7 @@ void ByAlphaOrder::refresh(const wxString& search)
                 RenewableClusterList::iterator jend = i->second.end();
                 i->second.sort(SortAlphaOrder());
                 for (RenewableClusterList::iterator j = i->second.begin(); j != jend; ++j)
-                    pParent.add(new Antares::Component::HTMLListbox::Item::RenewableCluster(*j));
+                    pParent.add(new Antares::Component::HTMLListbox::Item::RenewableClusterItem(*j));
             }
         }
     }
@@ -187,7 +187,7 @@ void ByAlphaReverseOrder::refresh(const wxString& search)
                 RenewableClusterList::iterator jend = i->second.end();
                 i->second.sort(SortAlphaReverseOrder());
                 for (RenewableClusterList::iterator j = i->second.begin(); j != jend; ++j)
-                    pParent.add(new Antares::Component::HTMLListbox::Item::RenewableCluster(*j));
+                    pParent.add(new Antares::Component::HTMLListbox::Item::RenewableClusterItem(*j));
             }
         }
     }

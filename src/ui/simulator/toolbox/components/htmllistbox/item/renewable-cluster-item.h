@@ -27,8 +27,7 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_RENEWABLE_CLUSTER_H__
 #define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_RENEWABLE_CLUSTER_H__
 
-#include "item.h"
-#include <antares/study.h>
+#include "cluster-item.h"
 
 namespace Antares
 {
@@ -39,33 +38,15 @@ namespace HTMLListbox
 namespace Item
 {
 /*!
-** \brief Single item for an Input (abstract)
+** \brief Single item for a renewable cluster.
 **
-** An input is often an item list (list of areas, list of interconnections...)
-** but this list may be heterogenous (for example `areas + groups`)
-** This class a merely a simple wrapper to bring commons display operations
+** See parent classes for more explanations
 */
-class RenewableCluster : public IItem
+class RenewableClusterItem : public ClusterItem
 {
 public:
     //! The smartptr
-    typedef Yuni::SmartPtr<RenewableCluster> Ptr;
-
-public:
-    /*!
-    ** \brief Add a portion of Html from a renewable cluster to a string
-    **
-    ** A very simple equivalent html code would be :
-    ** \code
-    ** <td>renewable cluster name</td>
-    ** \endcode
-    **
-    ** \param[in,out] out The string where the result will be appended
-    ** \param rn The renewable cluster
-    ** \param searchString The string to highlight
-    ** return True if something has been highlighted, false otherwise
-    */
-    static bool HtmlContent(wxString& out, Data::RenewableCluster* rn, const wxString& searchString);
+    typedef Yuni::SmartPtr<RenewableClusterItem> Ptr;
 
 public:
     //! \name Constructor & Destructor
@@ -73,47 +54,31 @@ public:
     /*!
     ** \brief Default Constructor
     */
-    RenewableCluster(Antares::Data::RenewableCluster* a);
+    RenewableClusterItem(Antares::Data::RenewableCluster* a);
     /*!
     ** \brief additional Additional HTML content ("<td>my text</td>")
     */
-    RenewableCluster(Antares::Data::RenewableCluster* a, const wxString& additional);
+    RenewableClusterItem(Antares::Data::RenewableCluster* a, const wxString& additional);
     //! Destructor
-    virtual ~RenewableCluster();
+    virtual ~RenewableClusterItem();
     //@}
-
-    /*!
-    ** \brief Get the HTML Content for the item
-    */
-    virtual wxString htmlContent(const wxString& searchString);
 
     //! Get the attached cluster
     Antares::Data::RenewableCluster* renewableAggregate() const;
 
-    virtual bool interactive() const
-    {
-        return true;
-    }
+private:
+    wxString getClusterIconFilePath() override;
+    wxString htmlContentTail() override;
 
 private:
-    void preloadImages();
-
-protected:
     //! The current RenewableCluster
     Antares::Data::RenewableCluster* pRenewableCluster;
-    //! Additional text
-    const wxString pText;
-    static wxString pIconFileEnabled;
-    static wxString pIconFileDisabled;
-    static wxString pIconFileThermal;
 
-}; // class RenewableCluster
+}; // class RenewableClusterItem
 
 } // namespace Item
 } // namespace HTMLListbox
 } // namespace Component
 } // namespace Antares
-
-#include "renewable-cluster.hxx"
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_RENEWABLE_CLUSTER_H__

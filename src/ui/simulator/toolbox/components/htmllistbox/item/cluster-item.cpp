@@ -25,10 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "renewable-cluster.h"
-#include <wx/colour.h>
+#include "cluster-item.h"
 #include "../../../resources.h"
-#include <yuni/core/math.h>
 
 using namespace Yuni;
 
@@ -40,49 +38,41 @@ namespace HTMLListbox
 {
 namespace Item
 {
-wxString RenewableCluster::pIconFileEnabled;
-wxString RenewableCluster::pIconFileDisabled;
-wxString RenewableCluster::pIconFileThermal;
 
-RenewableCluster::RenewableCluster(Antares::Data::RenewableCluster* a) : pRenewableCluster(a)
-{
-    preloadImages();
-}
-
-RenewableCluster::RenewableCluster(Antares::Data::RenewableCluster* a, const wxString& additional) :
- pRenewableCluster(a), pText(additional)
-{
-    preloadImages();
-}
-
-RenewableCluster::~RenewableCluster()
+ClusterItem::ClusterItem(Antares::Data::Cluster* a) :
+    pCluster(a),
+    pText(wxString())
 {
 }
 
-void RenewableCluster::preloadImages()
+ClusterItem::ClusterItem(Antares::Data::Cluster* a, const wxString& additional) :
+    pCluster(a),
+    pText(additional)
+{
+}
+
+wxString ClusterItem::getIconFilePath(const AnyString& filename)
+{
+    String location;
+    Resources::FindFile(location, filename);
+    return wxStringFromUTF8(location);
+}
+
+void ClusterItem::preloadImages()
 {
     if (pIconFileEnabled.empty())
     {
-        String location;
-
-        Resources::FindFile(location, "images/16x16/light_green.png");
-        pIconFileEnabled = wxStringFromUTF8(location);
-
-        Resources::FindFile(location, "images/16x16/light_orange.png");
-        pIconFileDisabled = wxStringFromUTF8(location);
-
-        Resources::FindFile(location, "images/16x16/thermal.png");
-        pIconFileThermal = wxStringFromUTF8(location);
+        pIconFileEnabled = getIconFilePath("images/16x16/light_green.png");
+        pIconFileDisabled = getIconFilePath("images/16x16/light_orange.png");
+        pClusterIconFilePath = getClusterIconFilePath();
     }
 }
 
-bool RenewableCluster::HtmlContent(wxString& out,
-                                 Data::RenewableCluster* rn,
-                                 const wxString& searchString)
+bool ClusterItem::HtmlContent(wxString& out, Data::Cluster* cluster, const wxString& searchString)
 {
     bool highlight = false;
 
-    if (rn->enabled)
+    if (cluster->enabled)
     {
         out << wxT("<td width=30 align=center><img src=\"") << pIconFileEnabled << wxT("\"></td>");
     }
@@ -91,10 +81,10 @@ bool RenewableCluster::HtmlContent(wxString& out,
         out << wxT("<td width=30 align=center><img src=\"") << pIconFileDisabled << wxT("\"></td>");
     }
 
-    out << wxT("<td width=20 align=center><img src=\"") << pIconFileThermal << wxT("\"></td>");
-
+    out << wxT("<td width=20 align=center><img src=\"") << pClusterIconFilePath << wxT("\"></td>");
     out << wxT("<td width=8></td><td nowrap><font size=\"-1\"");
-    wxString name = wxStringFromUTF8(rn->name());
+
+    wxString name = wxStringFromUTF8(cluster->name());
     if (searchString.empty() || (highlight = HTMLCodeHighlightString(name, searchString)))
         out << wxT(">") << name << wxT("</font>");
     else
@@ -104,27 +94,32 @@ bool RenewableCluster::HtmlContent(wxString& out,
     return highlight;
 }
 
-wxString RenewableCluster::htmlContent(const wxString& searchString)
+wxString ClusterItem::htmlContent(const wxString& searchString)
 {
-    if (pRenewableCluster)
+    if (pCluster)
     {
         wxString d;
         d << wxT("<table border=0 cellpadding=0 cellspacing=0 width=\"100%\"><tr>");
-        pHighlighted = HtmlContent(d, pRenewableCluster, searchString);
-        d << wxT("<td nowrap align=right><font size=\"-2\">") << pRenewableCluster->unitCount
+        pHighlighted = HtmlContent(d, pCluster, searchString);
+        d << wxT("<td nowrap align=right><font size=\"-2\">") << pCluster->unitCount
             << wxT("<font color=\"#5555BB\"> u </font>") << wxT("<font color=\"#5555BB\">* </font>")
-            << pRenewableCluster->nominalCapacity
+            << pCluster->nominalCapacity
             << wxT(" <font color=\"#5555BB\">MW =</font></font></td>")
             << wxT("<td width=64 nowrap align=right><font size=\"-2\">")
-            << Math::Round(pRenewableCluster->nominalCapacity * pRenewableCluster->unitCount, 2)
+            << Math::Round(pCluster->nominalCapacity * pCluster->unitCount, 2)
             << wxT(" <font color=\"#5555BB\">MW</font></font></td>")
-            << wxT("<td width=90 nowrap align=right><font size=\"-2\">");
+            << wxT("<td width=90 nowrap align=right><font size=\"-2\">")
+            << htmlContentTail();
         // Post
         d << pText << wxT("</tr></table>");
         return d;
     }
     pHighlighted = false;
     return wxString();
+}
+
+ClusterItem::~ClusterItem()
+{
 }
 
 } // namespace Item

@@ -24,8 +24,10 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_RENEWABLE_CLUSTER_HXX__
-#define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_RENEWABLE_CLUSTER_HXX__
+
+#include "renewable-cluster-item.h"
+
+using namespace Yuni;
 
 namespace Antares
 {
@@ -35,7 +37,39 @@ namespace HTMLListbox
 {
 namespace Item
 {
-inline Antares::Data::RenewableCluster* RenewableCluster::renewableAggregate() const
+
+RenewableClusterItem::RenewableClusterItem(Antares::Data::RenewableCluster* a) :
+    ClusterItem(a),
+    pRenewableCluster(a)
+{
+    preloadImages();
+}
+
+RenewableClusterItem::RenewableClusterItem(Antares::Data::RenewableCluster* a, const wxString& additional) :
+    ClusterItem(a, additional),
+    pRenewableCluster(a)
+{
+    preloadImages();
+}
+
+RenewableClusterItem::~RenewableClusterItem()
+{
+}
+
+wxString RenewableClusterItem::getClusterIconFilePath()
+{
+    // gp : This icon file (link.png) is given here as an example, for test purposes.
+    // gp : It has to be chnaged when renewable icon is ready 
+    return getIconFilePath("images/16x16/link.png");
+}
+
+wxString RenewableClusterItem::htmlContentTail()
+{
+    // Return nothing 
+    return wxString();
+}
+
+Antares::Data::RenewableCluster* RenewableClusterItem::renewableAggregate() const
 {
     return pRenewableCluster;
 }
@@ -44,5 +78,3 @@ inline Antares::Data::RenewableCluster* RenewableCluster::renewableAggregate() c
 } // namespace HTMLListbox
 } // namespace Component
 } // namespace Antares
-
-#endif // __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_RENEWABLE_CLUSTER_HXX__
