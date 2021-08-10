@@ -1412,7 +1412,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 
     // Force enable/disable when cluster/aggragated production is enabled
     // This will be deprecated when support for aggragated production is dropped.
-    switch (renewableGeneration.rgModelling) // Warn the user about that.
+    switch (renewableGeneration()) // Warn the user about that.
     {
     case rgClusters:
         logs.info()
@@ -1731,7 +1731,7 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("unit-commitment-mode", UnitCommitmentModeToCString(unitCommitment.ucMode));
         section->add("number-of-cores-mode", NumberOfCoresModeToCString(nbCores.ncMode));
         section->add("renewable-generation-modelling",
-                     RenewableGenerationModellingToCString(renewableGeneration.rgModelling));
+                     RenewableGenerationModellingToCString(renewableGeneration()));
         section->add("day-ahead-reserve-management",
                      DayAheadReserveManagementModeToCString(reserveManagement.daMode));
     }
