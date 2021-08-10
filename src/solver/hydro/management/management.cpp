@@ -168,7 +168,7 @@ void HydroManagement::prepareNetDemand(uint numSpace)
                 - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
                                                  : scratchpad.originalMustrunSum[hour]);
 
-            // RES
+            // Renewable clusters, if enabled
             if (parameters.renewableGeneration() == Antares::Data::rgClusters)
             {
                 area.renewable.list.each([&](const Antares::Data::RenewableCluster& cluster) {
