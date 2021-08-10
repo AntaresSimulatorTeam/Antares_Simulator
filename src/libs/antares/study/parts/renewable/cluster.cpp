@@ -260,6 +260,9 @@ YString Data::RenewableCluster::getTimeSeriesModeAsString() const
 
 double RenewableCluster::valueAtTimeStep(uint timeSeriesIndex, uint timeStepIndex) const
 {
+    if (!enabled)
+        return 0.;
+
     assert(timeStepIndex < series->series.height);
     assert(timeSeriesIndex < series->series.width);
     const double tsValue = series->series[timeSeriesIndex][timeStepIndex];
