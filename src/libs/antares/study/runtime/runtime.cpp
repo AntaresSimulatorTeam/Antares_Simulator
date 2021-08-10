@@ -585,8 +585,8 @@ void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
         if (mode != stdmAdequacyDraft)
             count += area.thermal.prepareClustersInMustRunMode();
 
-        if (area.thermal.clusterCount > maxThermalClustersForSingleArea)
-            maxThermalClustersForSingleArea = area.thermal.clusterCount;
+        if (area.thermal.clusterCount() > maxThermalClustersForSingleArea)
+            maxThermalClustersForSingleArea = area.thermal.clusterCount();
     }
 
     switch (count)

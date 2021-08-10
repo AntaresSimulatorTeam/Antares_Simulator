@@ -421,7 +421,7 @@ void Area::estimateMemoryUsage(StudyMemoryUsage& u) const
 bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) const
 {
     bool noErrorMinStabPow = true;
-    for (uint l = 0; l != thermal.clusterCount; ++l)
+    for (uint l = 0; l != thermal.clusterCount(); ++l)
     {
         auto& cluster = thermal.clusters[l];
         logs.debug() << "cluster : " << cluster->name();

@@ -39,12 +39,7 @@ namespace Antares
 namespace Data
 {
 PartThermal::PartThermal() :
- unsuppliedEnergyCost(0.),
- spilledEnergyCost(0.),
- list(),
- mustrunList(),
- clusters(nullptr),
- clusterCount((uint)-1)
+ unsuppliedEnergyCost(0.), spilledEnergyCost(0.)
 {
 }
 
@@ -70,24 +65,16 @@ void PartThermal::estimateMemoryUsage(StudyMemoryUsage& u) const
 
 PartThermal::~PartThermal()
 {
-    if (clusterCount)
-        delete[] clusters;
 }
 
 void PartThermal::prepareAreaWideIndexes()
 {
     // Copy the list with all thermal clusters
     // And init the areaWideIndex (unique index for a given area)
-    clusterCount = list.size();
-    delete[] clusters;
-    if (!clusterCount)
-    {
-        clusters = nullptr;
+    if (!list.size())
         return;
-    }
 
-    typedef ThermalCluster* ThermalClusterPointer;
-    clusters = new ThermalClusterPointer[clusterCount];
+    clusters = std::vector<ThermalCluster*>(list.size());
 
     auto end = list.end();
     uint idx = 0;
@@ -178,11 +165,7 @@ void PartThermal::reset()
 
     mustrunList.clear();
     list.clear();
-
-    // just in case
-    clusterCount = 0;
-    delete[] clusters;
+    clusters.clear();
 }
-
 } // namespace Data
 } // namespace Antares
