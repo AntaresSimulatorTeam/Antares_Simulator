@@ -30,6 +30,7 @@
 #include <antares/study.h>
 #include <antares/study/scenario-builder/sets.h>
 #include "../aleatoire/alea_fonctions.h"
+#include <algorithm>
 
 using namespace Yuni;
 
@@ -383,7 +384,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
         });
     }
 
-    if (parameters.interModal)
+    if (std::any_of(std::begin(intermodal), std::end(intermodal), [](bool x){return x;}))
     {
         {
             CString<248, false> e = "Checking inter-modal correlation... (";
