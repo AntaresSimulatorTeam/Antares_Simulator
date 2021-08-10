@@ -16,9 +16,8 @@ add_library(libantares-ui-component-htmllistbox
 		toolbox/components/htmllistbox/item/error.h
 		toolbox/components/htmllistbox/item/error.cpp
 
-		toolbox/components/htmllistbox/item/thermal-cluster.h
-		toolbox/components/htmllistbox/item/thermal-cluster.cpp
-		toolbox/components/htmllistbox/item/thermal-cluster.hxx
+		toolbox/components/htmllistbox/item/thermal-cluster-item.h
+		toolbox/components/htmllistbox/item/thermal-cluster-item.cpp
 		toolbox/components/htmllistbox/item/bindingconstraint.h
 		toolbox/components/htmllistbox/item/bindingconstraint.cpp
 		toolbox/components/htmllistbox/item/bindingconstraint.hxx

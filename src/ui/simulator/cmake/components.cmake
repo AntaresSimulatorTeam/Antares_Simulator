@@ -126,6 +126,8 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS_AREAS
 		toolbox/components/datagrid/renderer/area/dsm.cpp
 		toolbox/components/datagrid/renderer/area/misc.h
 		toolbox/components/datagrid/renderer/area/misc.cpp
+		toolbox/components/datagrid/renderer/area/common.areasummary.cpp
+		toolbox/components/datagrid/renderer/area/common.areasummary.h
 		toolbox/components/datagrid/renderer/area/thermal.areasummary.cpp
 		toolbox/components/datagrid/renderer/area/thermal.areasummary.h
 		toolbox/components/datagrid/renderer/area/renewable.areasummary.cpp
@@ -209,12 +211,12 @@ SET(SRC_TOOLBOX_COM_HTMLLISTBOX
 		toolbox/components/htmllistbox/item/error.h
 		toolbox/components/htmllistbox/item/error.cpp
 
-		toolbox/components/htmllistbox/item/thermal-cluster.h
-		toolbox/components/htmllistbox/item/thermal-cluster.cpp
-		toolbox/components/htmllistbox/item/thermal-cluster.hxx
-		toolbox/components/htmllistbox/item/renewable-cluster.h
-		toolbox/components/htmllistbox/item/renewable-cluster.cpp
-		toolbox/components/htmllistbox/item/renewable-cluster.hxx
+		toolbox/components/htmllistbox/item/cluster-item.h
+		toolbox/components/htmllistbox/item/cluster-item.cpp
+		toolbox/components/htmllistbox/item/thermal-cluster-item.h
+		toolbox/components/htmllistbox/item/thermal-cluster-item.cpp
+		toolbox/components/htmllistbox/item/renewable-cluster-item.h
+		toolbox/components/htmllistbox/item/renewable-cluster-item.cpp
 		toolbox/components/htmllistbox/item/bindingconstraint.h
 		toolbox/components/htmllistbox/item/bindingconstraint.cpp
 		toolbox/components/htmllistbox/item/bindingconstraint.hxx
