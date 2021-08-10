@@ -793,14 +793,19 @@ void ApplWnd::onRenewableGenerationModellingChanged(bool init)
 
     // Scenario builder pane
     pScenarioBuilderNotebook->set_page_visibility(wxString("renewable"), not aggregated);
+
+    // Visibility in the left panel
     if (!init)
     {
-      if (aggregated)
-        pNotebook->select(wxT("wind"));
-      else
-        pNotebook->select(wxT("renewable"));
-
-      pNotebook->forceRefresh();
+        const Component::Notebook::Page* windPage = pNotebook->find("wind");
+        const Component::Notebook::Page* solarPage = pNotebook->find("solar");
+        const Component::Notebook::Page* renewablePage = pNotebook->find("renewable");
+        if (aggregated)
+            if (pNotebook->selected() == renewablePage)
+                pNotebook->select(wxT("wind"));
+            else if (pNotebook->selected() == windPage || pNotebook->selected() == solarPage)
+                pNotebook->select(wxT("renewable"));
+        pNotebook->forceRefresh();
     }
 }
 
