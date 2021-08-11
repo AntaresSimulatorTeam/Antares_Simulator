@@ -617,8 +617,10 @@ void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
     logs.info();
 }
 
-template<bool verbose = true>
-static void removeClusters(Study& study, const char* type, std::function<uint(Area&)> eachArea)
+static void removeClusters(Study& study,
+                           const char* type,
+                           std::function<uint(Area&)> eachArea,
+                           bool verbose = true)
 {
     if (verbose)
     {
@@ -649,13 +651,13 @@ static void removeClusters(Study& study, const char* type, std::function<uint(Ar
 
 void StudyRuntimeInfos::removeDisabledThermalClustersFromSolverComputations(Study& study)
 {
-    removeClusters<true>(
+    removeClusters(
       study, "thermal", [](Area& area) { return area.thermal.removeDisabledClusters(); });
 }
 
 void StudyRuntimeInfos::removeDisabledRenewableClustersFromSolverComputations(Study& study)
 {
-    removeClusters<true>(study, "renewable", [](Area& area) {
+    removeClusters(study, "renewable", [](Area& area) {
         uint ret = area.renewable.removeDisabledClusters();
         if (ret > 0)
             area.renewable.prepareAreaWideIndexes();
@@ -665,10 +667,14 @@ void StudyRuntimeInfos::removeDisabledRenewableClustersFromSolverComputations(St
 
 void StudyRuntimeInfos::removeAllRenewableClustersFromSolverComputations(Study& study)
 {
-    removeClusters<false>(study, "renewable", [](Area& area) {
-        area.renewable.reset();
-        return 0;
-    });
+    removeClusters<false>(
+      study,
+      "renewable",
+      [](Area& area) {
+          area.renewable.reset();
+          return 0;
+      },
+      false);
 }
 
 StudyRuntimeInfos::~StudyRuntimeInfos()
