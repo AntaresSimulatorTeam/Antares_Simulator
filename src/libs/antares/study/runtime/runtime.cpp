@@ -492,8 +492,21 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Removing disabled thermal clusters from solver computations
     removeDisabledThermalClustersFromSolverComputations(study);
 
-    // Removing disabled renewable clusters from solver computations
-    removeDisabledRenewableClustersFromSolverComputations(study);
+    switch (study.parameters.renewableGeneration())
+    {
+    case rgClusters:
+        // Removing disabled renewable clusters from solver computations
+        removeDisabledRenewableClustersFromSolverComputations(study);
+        break;
+    case rgAggregated:
+        // Removing all renewable clusters from solver computations
+        removeAllRenewableClustersFromSolverComputations(study);
+        break;
+    case rgUnknown:
+    default:
+        logs.warning() << "Invalid value for renewable generation";
+        break;
+    }
 
     // Must-run mode
     initializeThermalClustersInMustRunMode(study);
@@ -604,12 +617,14 @@ void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
     logs.info();
 }
 
-static void removeDisabledClusters(Study& study,
-                                   const char* type,
-                                   std::function<uint(Area&)> eachArea)
+template<bool verbose = true>
+static void removeClusters(Study& study, const char* type, std::function<uint(Area&)> eachArea)
 {
-    logs.info();
-    logs.info() << "Removing disabled " << type << " clusters in from solver computations...";
+    if (verbose)
+    {
+        logs.info();
+        logs.info() << "Removing disabled " << type << " clusters in from solver computations...";
+    }
     uint count = 0;
     // each area...
     for (uint a = 0; a != study.areas.size(); ++a)
@@ -618,30 +633,41 @@ static void removeDisabledClusters(Study& study,
         count += eachArea(area);
     }
 
-    switch (count)
+    if (verbose)
     {
-    case 0:
-        logs.info() << "No disabled " << type << " cluster removed before solver computations";
-        break;
-    default:
-        logs.info() << "Found " << count << " disabled " << type
-                    << " clusters and removed them before solver computations";
+        switch (count)
+        {
+        case 0:
+            logs.info() << "No disabled " << type << " cluster removed before solver computations";
+            break;
+        default:
+            logs.info() << "Found " << count << " disabled " << type
+                        << " clusters and removed them before solver computations";
+        }
     }
 }
 
 void StudyRuntimeInfos::removeDisabledThermalClustersFromSolverComputations(Study& study)
 {
-    removeDisabledClusters(
+    removeClusters<true>(
       study, "thermal", [](Area& area) { return area.thermal.removeDisabledClusters(); });
 }
 
 void StudyRuntimeInfos::removeDisabledRenewableClustersFromSolverComputations(Study& study)
 {
-    removeDisabledClusters(study, "renewable", [](Area& area) {
+    removeClusters<true>(study, "renewable", [](Area& area) {
         uint ret = area.renewable.removeDisabledClusters();
         if (ret > 0)
             area.renewable.prepareAreaWideIndexes();
         return ret;
+    });
+}
+
+void StudyRuntimeInfos::removeAllRenewableClustersFromSolverComputations(Study& study)
+{
+    removeClusters<false>(study, "renewable", [](Area& area) {
+        area.renewable.reset();
+        return 0;
     });
 }
 
