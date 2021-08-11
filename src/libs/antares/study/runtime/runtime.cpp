@@ -667,7 +667,7 @@ void StudyRuntimeInfos::removeDisabledRenewableClustersFromSolverComputations(St
 
 void StudyRuntimeInfos::removeAllRenewableClustersFromSolverComputations(Study& study)
 {
-    removeClusters<false>(
+    removeClusters(
       study,
       "renewable",
       [](Area& area) {
