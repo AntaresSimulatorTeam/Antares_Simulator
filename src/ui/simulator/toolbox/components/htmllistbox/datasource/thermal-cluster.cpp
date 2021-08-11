@@ -79,8 +79,9 @@ void ThermalClustersByOrder::refresh(const wxString& search)
         if (!l.empty())
         {
             ThermalClusterMap::iterator end = l.end();
-            for (ThermalClusterMap::iterator i = l.begin(); i != end; ++i)
+            for (ThermalClusterMap::iterator group_it = l.begin(); group_it != end; ++group_it)
             {
+                // Group title
                 wxString s;
                 s << wxStringFromUTF8(pArea->name);
                 if (s.size() > 43)
@@ -88,14 +89,17 @@ void ThermalClustersByOrder::refresh(const wxString& search)
                     s.resize(40);
                     s += wxT("...");
                 }
-                if (i->first.empty())
-                    pParent.add(new Antares::Component::HTMLListbox::Item::Group(
-                        s << wxT(" / <i>* no group *</i>")));
-                else
-                    pParent.add(new Antares::Component::HTMLListbox::Item::Group(s << wxT(" / ")
-                        << i->first));
 
-                refreshClustersInGroup(i->second);
+                if (group_it->first.empty())
+                        s << wxT(" / <i>* no group *</i>");
+                else
+                        s << wxT(" / ") << group_it->first;
+
+                // Refreshing the group
+                pParent.add(new Antares::Component::HTMLListbox::Item::Group(s));
+                
+                // Refreshing all clusters of the group
+                refreshClustersInGroup(group_it->second);
             }
         }
     }

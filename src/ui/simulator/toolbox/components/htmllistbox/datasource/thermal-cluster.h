@@ -53,10 +53,6 @@ public:
     virtual ~ThermalClustersByOrder();
     //@}
 
-    virtual wxString name() const = 0;
-
-    virtual const char* icon() const = 0;
-
     void refresh(const wxString& search = wxEmptyString) override;
 
 private:
