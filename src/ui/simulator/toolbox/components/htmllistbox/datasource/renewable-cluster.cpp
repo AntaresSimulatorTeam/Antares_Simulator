@@ -29,8 +29,6 @@
 #include "../item/renewable-cluster-item.h"
 #include "../item/group.h"
 #include "../component.h"
-#include <map>
-#include <list>
 
 using namespace Yuni;
 

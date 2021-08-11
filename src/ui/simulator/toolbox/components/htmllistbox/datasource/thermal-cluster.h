@@ -28,6 +28,8 @@
 #pragma once
 
 #include "cluster-order.h"
+#include <map>
+#include <list>
 
 namespace Antares
 {
@@ -87,6 +89,8 @@ private:
     void refreshClustersInGroup(ThermalClusterList& clusterList);
 
 }; // class ThermalClustersByAlphaOrder
+
+
 
 class ThermalClustersByAlphaReverseOrder : public ThermalClustersByOrder
 {

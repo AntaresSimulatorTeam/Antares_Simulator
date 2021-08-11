@@ -28,6 +28,8 @@
 #pragma once
 
 #include "cluster-order.h"
+#include <map>
+#include <list>
 
 namespace Antares
 {
@@ -86,6 +88,8 @@ private:
     void refreshClustersInGroup(RenewableClusterList& clusterList);
 
 }; // class RenewableClustersByAlphaOrder
+
+
 
 class RenewableClustersByAlphaReverseOrder : public RenewableClustersByOrder
 {
