@@ -51,7 +51,7 @@
 
 #include "renewable-cluster.h"
 #include "../components/htmllistbox/item/renewable-cluster-item.h"
-#include "../components/htmllistbox/datasource/renewable-cluster.h"
+#include "../components/htmllistbox/datasource/renewable-cluster-order.h"
 
 using namespace Yuni;
 

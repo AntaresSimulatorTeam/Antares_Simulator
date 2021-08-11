@@ -229,10 +229,10 @@ SET(SRC_TOOLBOX_COM_HTMLLISTBOX
 		toolbox/components/htmllistbox/datasource/areas.cpp
 		toolbox/components/htmllistbox/datasource/cluster-order.h
 		toolbox/components/htmllistbox/datasource/cluster-order.cpp
-		toolbox/components/htmllistbox/datasource/thermal-cluster.h
-		toolbox/components/htmllistbox/datasource/thermal-cluster.cpp
-		toolbox/components/htmllistbox/datasource/renewable-cluster.h
-		toolbox/components/htmllistbox/datasource/renewable-cluster.cpp
+		toolbox/components/htmllistbox/datasource/thermal-cluster-order.h
+		toolbox/components/htmllistbox/datasource/thermal-cluster-order.cpp
+		toolbox/components/htmllistbox/datasource/renewable-cluster-order.h
+		toolbox/components/htmllistbox/datasource/renewable-cluster-order.cpp
 		toolbox/components/htmllistbox/datasource/bindingconstraint.h
 		toolbox/components/htmllistbox/datasource/bindingconstraint.cpp
 )

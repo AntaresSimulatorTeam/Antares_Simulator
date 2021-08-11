@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "renewable-cluster.h"
-#include "../item/renewable-cluster-item.h"
+#include "thermal-cluster-order.h"
+#include "../item/thermal-cluster-item.h"
 #include "../item/group.h"
 #include "../component.h"
 
@@ -41,21 +41,21 @@ namespace HTMLListbox
 namespace Datasource
 {
 
-RenewableClustersByOrder::RenewableClustersByOrder(HTMLListbox::Component& parent) :
-ClustersByOrder(parent)
+ThermalClustersByOrder::ThermalClustersByOrder(HTMLListbox::Component& parent) :
+    ClustersByOrder(parent)
 {}
 
-RenewableClustersByOrder::~RenewableClustersByOrder()
+ThermalClustersByOrder::~ThermalClustersByOrder()
 {}
 
-void GetRenewableClusterMap(Data::Area* area, RenewableClusterMap& l, const wxString& search)
+void GetThermalClusterMap(Data::Area* area, ThermalClusterMap& l, const wxString& search)
 {
     wxString grp;
 
-    const Data::RenewableClusterList::iterator end = area->renewable.list.end();
-    for (Data::RenewableClusterList::iterator i = area->renewable.list.begin(); i != end; ++i)
+    const Data::ThermalClusterList::iterator end = area->thermal.list.end();
+    for (Data::ThermalClusterList::iterator i = area->thermal.list.begin(); i != end; ++i)
     {
-        Data::RenewableCluster* cluster = i->second.get();
+        Data::ThermalCluster* cluster = i->second.get();
 
         if (search.empty())
         {
@@ -66,18 +66,18 @@ void GetRenewableClusterMap(Data::Area* area, RenewableClusterMap& l, const wxSt
     }
 }
 
-void RenewableClustersByOrder::refresh(const wxString& search)
+void ThermalClustersByOrder::refresh(const wxString& search)
 {
     pParent.clear();
 
     if (pArea)
     {
-        RenewableClusterMap l;
-        GetRenewableClusterMap(pArea, l, search);
+        ThermalClusterMap l;
+        GetThermalClusterMap(pArea, l, search);
         if (!l.empty())
         {
-            RenewableClusterMap::iterator end = l.end();
-            for (RenewableClusterMap::iterator group_it = l.begin(); group_it != end; ++group_it)
+            ThermalClusterMap::iterator end = l.end();
+            for (ThermalClusterMap::iterator group_it = l.begin(); group_it != end; ++group_it)
             {
                 // Group title
                 wxString s;
@@ -89,13 +89,13 @@ void RenewableClustersByOrder::refresh(const wxString& search)
                 }
 
                 if (group_it->first.empty())
-                    s << wxT(" / <i>* no group *</i>");
+                        s << wxT(" / <i>* no group *</i>");
                 else
-                    s << wxT(" / ") << group_it->first;
+                        s << wxT(" / ") << group_it->first;
 
                 // Refreshing the group
                 pParent.add(new Antares::Component::HTMLListbox::Item::Group(s));
-
+                
                 // Refreshing all clusters of the group
                 refreshClustersInGroup(group_it->second);
             }
@@ -106,38 +106,38 @@ void RenewableClustersByOrder::refresh(const wxString& search)
 
 
 
-RenewableClustersByAlphaOrder::RenewableClustersByAlphaOrder(HTMLListbox::Component& parent) :
-    RenewableClustersByOrder(parent)
+ThermalClustersByAlphaOrder::ThermalClustersByAlphaOrder(HTMLListbox::Component& parent) : 
+    ThermalClustersByOrder(parent)
 {}
 
-RenewableClustersByAlphaOrder::~RenewableClustersByAlphaOrder()
+ThermalClustersByAlphaOrder::~ThermalClustersByAlphaOrder()
 {}
 
-void RenewableClustersByAlphaOrder::refreshClustersInGroup(RenewableClusterList& clusterList)
+void ThermalClustersByAlphaOrder::refreshClustersInGroup(ThermalClusterList & clusterList)
 {
     // Added the area as a result
-    RenewableClusterList::iterator jend = clusterList.end();
+    ThermalClusterList::iterator jend = clusterList.end();
     clusterList.sort(SortAlphaOrder());
-    for (RenewableClusterList::iterator j = clusterList.begin(); j != jend; ++j)
-        pParent.add(new Antares::Component::HTMLListbox::Item::RenewableClusterItem(*j));
+    for (ThermalClusterList::iterator j = clusterList.begin(); j != jend; ++j)
+        pParent.add(new Antares::Component::HTMLListbox::Item::ThermalClusterItem(*j));
 }
 
 
 
-RenewableClustersByAlphaReverseOrder::RenewableClustersByAlphaReverseOrder(HTMLListbox::Component& parent) :
-    RenewableClustersByOrder(parent)
+ThermalClustersByAlphaReverseOrder::ThermalClustersByAlphaReverseOrder(HTMLListbox::Component& parent) :
+    ThermalClustersByOrder(parent)
 {}
 
-RenewableClustersByAlphaReverseOrder::~RenewableClustersByAlphaReverseOrder()
+ThermalClustersByAlphaReverseOrder::~ThermalClustersByAlphaReverseOrder()
 {}
 
-void RenewableClustersByAlphaReverseOrder::refreshClustersInGroup(RenewableClusterList& clusterList)
+void ThermalClustersByAlphaReverseOrder::refreshClustersInGroup(ThermalClusterList& clusterList)
 {
     // Added the area as a result
-    RenewableClusterList::iterator jend = clusterList.end();
+    ThermalClusterList::iterator jend = clusterList.end();
     clusterList.sort(SortAlphaReverseOrder());
-    for (RenewableClusterList::iterator j = clusterList.begin(); j != jend; ++j)
-        pParent.add(new Antares::Component::HTMLListbox::Item::RenewableClusterItem(*j));
+    for (ThermalClusterList::iterator j = clusterList.begin(); j != jend; ++j)
+        pParent.add(new Antares::Component::HTMLListbox::Item::ThermalClusterItem(*j));
 }
 
 } // namespace Datasource
