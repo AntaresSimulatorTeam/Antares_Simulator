@@ -27,9 +27,6 @@
 
 #pragma once
 
-// #include "datasource.h"
-// #include <yuni/core/event.h>
-// #include <antares/study.h>
 #include "cluster-order.h"
 
 namespace Antares
@@ -41,7 +38,35 @@ namespace HTMLListbox
 namespace Datasource
 {
 
-class ThermalClustersByAlphaOrder : public ClustersByAlphaOrder
+typedef std::list<Data::ThermalCluster*> ThermalClusterList;
+typedef std::map<wxString, ThermalClusterList> ThermalClusterMap;
+
+
+class ThermalClustersByOrder : public ClustersByOrder
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    //! Default Constructor
+    ThermalClustersByOrder(HTMLListbox::Component& parent);
+    //! Destructor
+    virtual ~ThermalClustersByOrder();
+    //@}
+
+    virtual wxString name() const = 0;
+
+    virtual const char* icon() const = 0;
+
+    void refresh(const wxString& search = wxEmptyString) override;
+
+private:
+    virtual void refreshClustersInGroup(ThermalClusterList& clusterList) = 0;
+
+}; // ThermalClustersByOrder
+
+
+
+class ThermalClustersByAlphaOrder : public ThermalClustersByOrder
 {
 public:
     //! \name Constructor & Destructor
@@ -56,15 +81,18 @@ public:
     {
         return wxT("Thermal clusters in alphabetical order");
     }
+
     const char* icon() const override
     {
         return "images/16x16/sort_alphabet.png";
     }
-    virtual void refresh(const wxString& search = wxEmptyString) override;
+    
+private:
+    void refreshClustersInGroup(ThermalClusterList& clusterList);
 
 }; // class ThermalClustersByAlphaOrder
 
-class ThermalClustersByAlphaReverseOrder : public ClustersByAlphaReverseOrder
+class ThermalClustersByAlphaReverseOrder : public ThermalClustersByOrder
 {
 public:
     //! \name Constructor & Destructor
@@ -79,11 +107,14 @@ public:
     {
         return wxT("Thermal clusters in reverse alphabetical order");
     }
+
     virtual const char* icon() const
     {
         return "images/16x16/sort_alphabet_descending.png";
     }
-    virtual void refresh(const wxString& search = wxEmptyString) override;
+    
+private:
+    void refreshClustersInGroup(ThermalClusterList& clusterList);
 
 }; // class ThermalClustersByAlphaReverseOrder
 

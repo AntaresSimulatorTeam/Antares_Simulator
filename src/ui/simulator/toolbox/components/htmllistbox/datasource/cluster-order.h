@@ -56,15 +56,15 @@ struct SortAlphaReverseOrder
     }
 };
 
-class ClustersByAlphaOrder : public Yuni::IEventObserver<ClustersByAlphaOrder>, public IDatasource
+class ClustersByOrder : public Yuni::IEventObserver<ClustersByOrder>, public IDatasource
 {
 public:
     //! \name Constructor & Destructor
     //@{
     //! Default Constructor
-    ClustersByAlphaOrder(HTMLListbox::Component& parent);
+    ClustersByOrder(HTMLListbox::Component& parent);
     //! Destructor
-    virtual ~ClustersByAlphaOrder();
+    virtual ~ClustersByOrder();
     //@}
 
     virtual wxString name() const = 0;
@@ -79,32 +79,8 @@ public:
 protected:
     Data::Area* pArea;
 
-}; // class ClustersByAlphaOrder
+}; // class ClustersByOrder
 
-class ClustersByAlphaReverseOrder : public Yuni::IEventObserver<ClustersByAlphaReverseOrder>, public IDatasource
-{
-public:
-    //! \name Constructor & Destructor
-    //@{
-    //! Default Constructor
-    ClustersByAlphaReverseOrder(HTMLListbox::Component& parent);
-    //! Destructor
-    virtual ~ClustersByAlphaReverseOrder();
-    //@}
-
-    virtual wxString name() const = 0;
-
-    virtual const char* icon() const = 0;
-
-    virtual void refresh(const wxString& search = wxEmptyString) = 0;
-
-    void onAreaChanged(Data::Area* area);
-    void onInvalidateAllAreas();
-
-protected:
-    Data::Area* pArea;
-
-}; // class ClustersByAlphaReverseOrder
 
 } // namespace Datasource
 } // namespace HTMLListbox

@@ -26,13 +26,11 @@
 */
 
 #include "renewable-cluster.h"
-// #include "../../../../application/study.h"
 #include "../item/renewable-cluster-item.h"
 #include "../item/group.h"
 #include "../component.h"
 #include <map>
 #include <list>
-// #include "../../../../application/main.h"
 
 using namespace Yuni;
 
@@ -45,12 +43,12 @@ namespace HTMLListbox
 namespace Datasource
 {
 
-typedef Data::RenewableCluster RenewableClusterFromLib;
-typedef std::list<RenewableClusterFromLib*> RenewableClusterList;
-typedef std::map<wxString, RenewableClusterList> RenewableClusterMap;
+RenewableClustersByOrder::RenewableClustersByOrder(HTMLListbox::Component& parent) :
+ClustersByOrder(parent)
+{}
 
-namespace // anonymous
-{
+RenewableClustersByOrder::~RenewableClustersByOrder()
+{}
 
 void GetRenewableClusterMap(Data::Area* area, RenewableClusterMap& l, const wxString& search)
 {
@@ -70,17 +68,7 @@ void GetRenewableClusterMap(Data::Area* area, RenewableClusterMap& l, const wxSt
     }
 }
 
-} // anonymous namespace
-
-RenewableClustersByAlphaOrder::RenewableClustersByAlphaOrder(HTMLListbox::Component& parent) :
-    ClustersByAlphaOrder(parent)
-{}
-
-//! Destructor
-RenewableClustersByAlphaOrder::~RenewableClustersByAlphaOrder()
-{}
-
-void RenewableClustersByAlphaOrder::refresh(const wxString& search)
+void RenewableClustersByOrder::refresh(const wxString& search)
 {
     pParent.clear();
 
@@ -102,59 +90,52 @@ void RenewableClustersByAlphaOrder::refresh(const wxString& search)
                 }
                 if (i->first.empty())
                     pParent.add(new Antares::Component::HTMLListbox::Item::Group(
-                      s << wxT(" / <i>* no group *</i>")));
+                        s << wxT(" / <i>* no group *</i>")));
                 else
                     pParent.add(new Antares::Component::HTMLListbox::Item::Group(s << wxT(" / ")
-                                                                                   << i->first));
+                        << i->first));
 
-                // Added the area as a result
-                RenewableClusterList::iterator jend = i->second.end();
-                i->second.sort(SortAlphaOrder());
-                for (RenewableClusterList::iterator j = i->second.begin(); j != jend; ++j)
-                    pParent.add(new Antares::Component::HTMLListbox::Item::RenewableClusterItem(*j));
+                refreshClustersInGroup(i->second);
             }
         }
     }
     pParent.invalidate();
 }
 
-RenewableClustersByAlphaReverseOrder::RenewableClustersByAlphaReverseOrder(HTMLListbox::Component& parent) :
-    ClustersByAlphaReverseOrder(parent)
+
+
+RenewableClustersByAlphaOrder::RenewableClustersByAlphaOrder(HTMLListbox::Component& parent) :
+    RenewableClustersByOrder(parent)
 {}
 
-//! Destructor
+RenewableClustersByAlphaOrder::~RenewableClustersByAlphaOrder()
+{}
+
+void RenewableClustersByAlphaOrder::refreshClustersInGroup(RenewableClusterList& clusterList)
+{
+    // Added the area as a result
+    RenewableClusterList::iterator jend = clusterList.end();
+    clusterList.sort(SortAlphaOrder());
+    for (RenewableClusterList::iterator j = clusterList.begin(); j != jend; ++j)
+        pParent.add(new Antares::Component::HTMLListbox::Item::RenewableClusterItem(*j));
+}
+
+
+
+RenewableClustersByAlphaReverseOrder::RenewableClustersByAlphaReverseOrder(HTMLListbox::Component& parent) :
+    RenewableClustersByOrder(parent)
+{}
+
 RenewableClustersByAlphaReverseOrder::~RenewableClustersByAlphaReverseOrder()
 {}
 
-void RenewableClustersByAlphaReverseOrder::refresh(const wxString& search)
+void RenewableClustersByAlphaReverseOrder::refreshClustersInGroup(RenewableClusterList& clusterList)
 {
-    pParent.clear();
-
-    if (pArea)
-    {
-        RenewableClusterMap l;
-        GetRenewableClusterMap(pArea, l, search);
-        if (!l.empty())
-        {
-            RenewableClusterMap::iterator end = l.end();
-            for (RenewableClusterMap::iterator i = l.begin(); i != end; ++i)
-            {
-                if (i->first.empty())
-                    pParent.add(new Antares::Component::HTMLListbox::Item::Group(
-                      wxString() << wxStringFromUTF8(pArea->name)
-                                 << wxT(" / <i>* no group *</i>")));
-                else
-                    pParent.add(new Antares::Component::HTMLListbox::Item::Group(
-                      wxString() << wxStringFromUTF8(pArea->name) << wxT(" / ") << i->first));
-                // Added the area as a result
-                RenewableClusterList::iterator jend = i->second.end();
-                i->second.sort(SortAlphaReverseOrder());
-                for (RenewableClusterList::iterator j = i->second.begin(); j != jend; ++j)
-                    pParent.add(new Antares::Component::HTMLListbox::Item::RenewableClusterItem(*j));
-            }
-        }
-    }
-    pParent.invalidate();
+    // Added the area as a result
+    RenewableClusterList::iterator jend = clusterList.end();
+    clusterList.sort(SortAlphaReverseOrder());
+    for (RenewableClusterList::iterator j = clusterList.begin(); j != jend; ++j)
+        pParent.add(new Antares::Component::HTMLListbox::Item::RenewableClusterItem(*j));
 }
 
 } // namespace Datasource

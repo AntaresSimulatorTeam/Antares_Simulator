@@ -38,51 +38,25 @@ namespace HTMLListbox
 namespace Datasource
 {
 
-ClustersByAlphaOrder::ClustersByAlphaOrder(HTMLListbox::Component& parent) : IDatasource(parent), pArea(nullptr)
+ClustersByOrder::ClustersByOrder(HTMLListbox::Component& parent) : IDatasource(parent), pArea(nullptr)
 {
-    OnStudyAreasChanged.connect(this, &ClustersByAlphaOrder::onInvalidateAllAreas);
+    OnStudyAreasChanged.connect(this, &ClustersByOrder::onInvalidateAllAreas);
     Forms::ApplWnd::Instance()->onApplicationQuit.connect(this,
-        &ClustersByAlphaOrder::onInvalidateAllAreas);
+        &ClustersByOrder::onInvalidateAllAreas);
 }
 
 //! Destructor
-ClustersByAlphaOrder::~ClustersByAlphaOrder()
+ClustersByOrder::~ClustersByOrder()
 {
     destroyBoundEvents();
 }
 
-void ClustersByAlphaOrder::onAreaChanged(Data::Area* area)
+void ClustersByOrder::onAreaChanged(Data::Area* area)
 {
     pArea = area;
 }
 
-void ClustersByAlphaOrder::onInvalidateAllAreas()
-{
-    pArea = nullptr;
-}
-
-
-
-ClustersByAlphaReverseOrder::ClustersByAlphaReverseOrder(HTMLListbox::Component& parent) :
-    IDatasource(parent), pArea(nullptr)
-{
-    OnStudyAreasChanged.connect(this, &ClustersByAlphaReverseOrder::onInvalidateAllAreas);
-    Forms::ApplWnd::Instance()->onApplicationQuit.connect(
-        this, &ClustersByAlphaReverseOrder::onInvalidateAllAreas);
-}
-
-//! Destructor
-ClustersByAlphaReverseOrder::~ClustersByAlphaReverseOrder()
-{
-    destroyBoundEvents();
-}
-
-void ClustersByAlphaReverseOrder::onAreaChanged(Data::Area* area)
-{
-    pArea = area;
-}
-
-void ClustersByAlphaReverseOrder::onInvalidateAllAreas()
+void ClustersByOrder::onInvalidateAllAreas()
 {
     pArea = nullptr;
 }

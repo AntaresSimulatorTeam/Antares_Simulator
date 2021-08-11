@@ -27,9 +27,6 @@
 
 #pragma once
 
-// #include "datasource.h"
-// #include <yuni/core/event.h>
-// #include <antares/study.h>
 #include "cluster-order.h"
 
 namespace Antares
@@ -40,8 +37,35 @@ namespace HTMLListbox
 {
 namespace Datasource
 {
-    //RenewableClusters
-class RenewableClustersByAlphaOrder : public ClustersByAlphaOrder
+
+typedef std::list<Data::RenewableCluster*> RenewableClusterList;
+typedef std::map<wxString, RenewableClusterList> RenewableClusterMap;
+
+class RenewableClustersByOrder : public ClustersByOrder
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    //! Default Constructor
+    RenewableClustersByOrder(HTMLListbox::Component& parent);
+    //! Destructor
+    virtual ~RenewableClustersByOrder();
+    //@}
+
+    virtual wxString name() const = 0;
+
+    virtual const char* icon() const = 0;
+
+    void refresh(const wxString& search = wxEmptyString) override;
+
+private:
+    virtual void refreshClustersInGroup(RenewableClusterList& clusterList) = 0;
+
+}; // RenewableClustersByOrder
+
+
+
+class RenewableClustersByAlphaOrder : public RenewableClustersByOrder
 {
 public:
     //! \name Constructor & Destructor
@@ -54,17 +78,20 @@ public:
 
     virtual wxString name() const override
     {
-        return wxT("Thermal clusters in alphabetical order");
+        return wxT("Renewable clusters in alphabetical order");
     }
+
     virtual const char* icon() const override
     {
         return "images/16x16/sort_alphabet.png";
     }
-    virtual void refresh(const wxString& search = wxEmptyString) override;
+
+private:
+    void refreshClustersInGroup(RenewableClusterList& clusterList);
 
 }; // class RenewableClustersByAlphaOrder
 
-class RenewableClustersByAlphaReverseOrder : public ClustersByAlphaReverseOrder
+class RenewableClustersByAlphaReverseOrder : public RenewableClustersByOrder
 {
 public:
     //! \name Constructor & Destructor
@@ -79,11 +106,14 @@ public:
     {
         return wxT("Renewable clusters in reverse alphabetical order");
     }
+
     virtual const char* icon() const
     {
         return "images/16x16/sort_alphabet_descending.png";
     }
-    virtual void refresh(const wxString& search = wxEmptyString) override;
+
+private:
+    void refreshClustersInGroup(RenewableClusterList& clusterList);
 
 }; // class RenewableClustersByAlphaReverseOrder
 
