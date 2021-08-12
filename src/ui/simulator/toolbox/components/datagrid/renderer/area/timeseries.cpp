@@ -107,24 +107,6 @@ void ATimeSeries::onStudyLoaded()
     Renderer::ARendererArea::onStudyLoaded();
 }
 
-TimeSeriesThermalCluster::TimeSeriesThermalCluster(
-  wxWindow* control,
-  Toolbox::InputSelector::ThermalCluster* notifier) :
- AncestorType(control)
-{
-    if (notifier)
-        notifier->onThermalClusterChanged.connect(
-          this, &TimeSeriesThermalCluster::internalThermalClusterChanged);
-}
-
-TimeSeriesThermalCluster::~TimeSeriesThermalCluster()
-{
-    // Disconnect all entities attached to this object
-    destroyBoundEvents();
-    // Make sure the matrix is no longer available
-    this->matrix(nullptr);
-}
-
 wxString ATimeSeries::cellValue(int x, int y) const
 {
     if (x < AncestorType::width())
@@ -216,114 +198,19 @@ IRenderer::CellStyle ATimeSeries::cellStyle(int col, int row) const
     }
 }
 
-wxColour TimeSeriesThermalCluster::verticalBorderColor(int x, int y) const
-{
-    return (x == AncestorType::width() - 1) ? Default::BorderHighlightColor()
-                                            : IRenderer::verticalBorderColor(x, y);
-}
+// =========================
+// Clusters ...
+// =========================
 
-wxColour TimeSeriesThermalCluster::horizontalBorderColor(int x, int y) const
-{
-    // Getting informations about the next hour
-    // (because the returned color is about the bottom border of the cell,
-    // so the next hour for the user)
-    if (!(!study) && y + 1 < Date::Calendar::maxHoursInYear)
-    {
-        auto& hourinfo = study->calendar.hours[y + 1];
 
-        if (hourinfo.firstHourInMonth)
-            return Default::BorderMonthSeparator();
-        if (hourinfo.firstHourInDay)
-            return Default::BorderDaySeparator();
-    }
-    return IRenderer::verticalBorderColor(x, y);
-}
+// ----------------------
+//   CLUSTER COMMON
+// ----------------------
 
-wxString TimeSeriesThermalCluster::cellValue(int x, int y) const
-{
-    if (x < AncestorType::width())
-        return AncestorType::cellValue(x, y);
-    if (x == AncestorType::width())
-        return DoubleToWxString(Math::Round(ComputeAverageOnRow(pMatrix, y), 2));
-    if (x == AncestorType::width() + 1)
-        return DoubleToWxString(ComputeMinOnRow(pMatrix, y));
-    if (x == AncestorType::width() + 2)
-        return DoubleToWxString(ComputeMaxOnRow(pMatrix, y));
-    return wxT("0");
-}
+TimeSeriesCluster::TimeSeriesCluster(wxWindow* control) : AncestorType(control)
+{}
 
-double TimeSeriesThermalCluster::cellNumericValue(int x, int y) const
-{
-    if (x < AncestorType::width())
-        return AncestorType::cellNumericValue(x, y);
-    if (x == AncestorType::width())
-        return ComputeAverageOnRow(pMatrix, y);
-    if (x == AncestorType::width() + 1)
-        return ComputeMinOnRow(pMatrix, y);
-    if (x == AncestorType::width() + 2)
-        return ComputeMaxOnRow(pMatrix, y);
-    return 0.;
-}
-
-wxString TimeSeriesThermalCluster::columnCaption(int colIndx) const
-{
-    if (colIndx == AncestorType::width())
-        return wxT("Average");
-    if (colIndx == AncestorType::width() + 1)
-        return wxT("Min");
-    if (colIndx == AncestorType::width() + 2)
-        return wxT("Max");
-    return AncestorType::columnCaption(colIndx);
-}
-
-IRenderer::CellStyle TimeSeriesThermalCluster::cellStyle(int col, int row) const
-{
-    // All timeseries must have a positive value
-    double v = cellNumericValue(col, row);
-
-    // Average
-    if (col == AncestorType::width())
-        return IRenderer::cellStyleAverage;
-    // Min
-    if (col == AncestorType::width() + 1)
-        return IRenderer::cellStyleMinMax;
-    // Max
-    if (col == AncestorType::width() + 2)
-        return IRenderer::cellStyleMinMax;
-    // Default
-    if (Math::Zero(v))
-    {
-        if (row % 2)
-            return IRenderer::cellStyleDefaultAlternateDisabled;
-        else
-            return IRenderer::cellStyleDefaultDisabled;
-    }
-    else
-    {
-        if (row % 2)
-            return IRenderer::cellStyleDefaultAlternate;
-        else
-            return IRenderer::cellStyleDefault;
-    }
-}
-
-void TimeSeriesThermalCluster::onStudyClosed()
-{
-    internalThermalClusterChanged(nullptr);
-    AncestorType::onStudyClosed();
-}
-
-TimeSeriesRenewableCluster::TimeSeriesRenewableCluster(
-    wxWindow* control,
-    Toolbox::InputSelector::RenewableCluster* notifier) :
-    AncestorType(control)
-{
-    if (notifier)
-        notifier->onClusterChanged.connect(
-            this, &TimeSeriesRenewableCluster::internalRenewableClusterChanged);
-}
-
-TimeSeriesRenewableCluster::~TimeSeriesRenewableCluster()
+TimeSeriesCluster::~TimeSeriesCluster()
 {
     // Disconnect all entities attached to this object
     destroyBoundEvents();
@@ -331,30 +218,18 @@ TimeSeriesRenewableCluster::~TimeSeriesRenewableCluster()
     this->matrix(nullptr);
 }
 
-wxColour TimeSeriesRenewableCluster::verticalBorderColor(int x, int y) const
+wxString TimeSeriesCluster::columnCaption(int colIndx) const
 {
-    return (x == AncestorType::width() - 1) ? Default::BorderHighlightColor()
-        : IRenderer::verticalBorderColor(x, y);
+    if (colIndx == AncestorType::width())
+        return wxT("Average");
+    if (colIndx == AncestorType::width() + 1)
+        return wxT("Min");
+    if (colIndx == AncestorType::width() + 2)
+        return wxT("Max");
+    return AncestorType::columnCaption(colIndx);
 }
 
-wxColour TimeSeriesRenewableCluster::horizontalBorderColor(int x, int y) const
-{
-    // Getting informations about the next hour
-    // (because the returned color is about the bottom border of the cell,
-    // so the next hour for the user)
-    if (!(!study) && y + 1 < Date::Calendar::maxHoursInYear)
-    {
-        auto& hourinfo = study->calendar.hours[y + 1];
-
-        if (hourinfo.firstHourInMonth)
-            return Default::BorderMonthSeparator();
-        if (hourinfo.firstHourInDay)
-            return Default::BorderDaySeparator();
-    }
-    return IRenderer::verticalBorderColor(x, y);
-}
-
-wxString TimeSeriesRenewableCluster::cellValue(int x, int y) const
+wxString TimeSeriesCluster::cellValue(int x, int y) const
 {
     if (x < AncestorType::width())
         return AncestorType::cellValue(x, y);
@@ -367,7 +242,7 @@ wxString TimeSeriesRenewableCluster::cellValue(int x, int y) const
     return wxT("0");
 }
 
-double TimeSeriesRenewableCluster::cellNumericValue(int x, int y) const
+double TimeSeriesCluster::cellNumericValue(int x, int y) const
 {
     if (x < AncestorType::width())
         return AncestorType::cellNumericValue(x, y);
@@ -380,18 +255,7 @@ double TimeSeriesRenewableCluster::cellNumericValue(int x, int y) const
     return 0.;
 }
 
-wxString TimeSeriesRenewableCluster::columnCaption(int colIndx) const
-{
-    if (colIndx == AncestorType::width())
-        return wxT("Average");
-    if (colIndx == AncestorType::width() + 1)
-        return wxT("Min");
-    if (colIndx == AncestorType::width() + 2)
-        return wxT("Max");
-    return AncestorType::columnCaption(colIndx);
-}
-
-IRenderer::CellStyle TimeSeriesRenewableCluster::cellStyle(int col, int row) const
+IRenderer::CellStyle TimeSeriesCluster::cellStyle(int col, int row) const
 {
     // All timeseries must have a positive value
     double v = cellNumericValue(col, row);
@@ -421,6 +285,69 @@ IRenderer::CellStyle TimeSeriesRenewableCluster::cellStyle(int col, int row) con
             return IRenderer::cellStyleDefault;
     }
 }
+
+wxColour TimeSeriesCluster::verticalBorderColor(int x, int y) const
+{
+    return (x == AncestorType::width() - 1) ? Default::BorderHighlightColor()
+        : IRenderer::verticalBorderColor(x, y);
+}
+
+wxColour TimeSeriesCluster::horizontalBorderColor(int x, int y) const
+{
+    // Getting informations about the next hour
+    // (because the returned color is about the bottom border of the cell,
+    // so the next hour for the user)
+    if (!(!study) && y + 1 < Date::Calendar::maxHoursInYear)
+    {
+        auto& hourinfo = study->calendar.hours[y + 1];
+
+        if (hourinfo.firstHourInMonth)
+            return Default::BorderMonthSeparator();
+        if (hourinfo.firstHourInDay)
+            return Default::BorderDaySeparator();
+    }
+    return IRenderer::verticalBorderColor(x, y);
+}
+
+// ----------------------
+//   THERMAL CLUSTERS
+// ----------------------
+
+TimeSeriesThermalCluster::TimeSeriesThermalCluster(
+    wxWindow* control,
+    Toolbox::InputSelector::ThermalCluster* notifier) :
+    TimeSeriesCluster(control)
+{
+    if (notifier)
+        notifier->onThermalClusterChanged.connect(
+            this, &TimeSeriesThermalCluster::internalThermalClusterChanged);
+}
+
+TimeSeriesThermalCluster::~TimeSeriesThermalCluster()
+{}
+
+void TimeSeriesThermalCluster::onStudyClosed()
+{
+    internalThermalClusterChanged(nullptr);
+    AncestorType::onStudyClosed();
+}
+
+// ----------------------
+//   RENEWABLE CLUSTERS
+// ----------------------
+
+TimeSeriesRenewableCluster::TimeSeriesRenewableCluster(
+    wxWindow* control,
+    Toolbox::InputSelector::RenewableCluster* notifier) :
+    TimeSeriesCluster(control)
+{
+    if (notifier)
+        notifier->onClusterChanged.connect(
+            this, &TimeSeriesRenewableCluster::internalRenewableClusterChanged);
+}
+
+TimeSeriesRenewableCluster::~TimeSeriesRenewableCluster()
+{}
 
 void TimeSeriesRenewableCluster::onStudyClosed()
 {
