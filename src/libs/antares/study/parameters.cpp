@@ -949,7 +949,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
             {"variables selection",&SGDIntLoadFamily_VariablesSelection},
             {"seeds",&SGDIntLoadFamily_SeedsMersenneTwister}};
 
-    Callback* handleAllKeysInSection;
+    Callback handleAllKeysInSection;
     // Foreach section on the ini file...
     for (auto* section = ini.firstSection; section; section = section->next)
     {
@@ -974,7 +974,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
             // Deal with the current property
             // Do not forget the variable `key` and `value` are identical to
             // `p->key` and `p->value` except they are already in the lower case format
-            if (not (*handleAllKeysInSection)(*this, p->key, value, p->value, version))
+            if (not (*andleAllKeysInSection)(*this, p->key, value, p->value, version))
             {
                 if (not SGDIntLoadFamily_Legacy(*this, p->key, value, p->value, version))
                 {
