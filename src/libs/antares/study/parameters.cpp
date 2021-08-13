@@ -461,7 +461,7 @@ static bool SGDIntLoadFamily_General(Parameters& d,
 static bool SGDIntLoadFamily_Input(Parameters& d,
                                const String& key,
                                const String& value,
-                               const String& rawvalue,
+                               const String&,
                                uint){
     if (key == "import")
         return ConvertCStrToListTimeSeries(value, d.timeSeriesToImport);
@@ -472,7 +472,7 @@ static bool SGDIntLoadFamily_Input(Parameters& d,
 static bool SGDIntLoadFamily_Output(Parameters& d,
                                const String& key,
                                const String& value,
-                               const String& rawvalue,
+                               const String&,
                                uint){
     if (key == "archives")
         return ConvertCStrToListTimeSeries(value, d.timeSeriesToArchive);
@@ -485,7 +485,7 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
 static bool SGDIntLoadFamily_Optimization(Parameters& d,
                                const String& key,
                                const String& value,
-                               const String& rawvalue,
+                               const String&,
                                uint){
     if (key == "include-constraints")
         return value.to<bool>(d.include.constraints);
@@ -569,7 +569,7 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
 static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
                                const String& key,
                                const String& value,
-                               const String& rawvalue,
+                               const String&,
                                uint){
     if (key == "day-ahead-reserve-management") // after 5.0
         {
@@ -692,7 +692,7 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
 static bool SGDIntLoadFamily_AdvancedParameters(Parameters& d,
                                const String& key,
                                const String& value,
-                               const String& rawvalue,
+                               const String&,
                                uint){
     if (key == "adequacy-block-size" || key == "adequacy_blocksize")
         return value.to<uint>(d.adequacyBlockSize);
@@ -703,7 +703,7 @@ static bool SGDIntLoadFamily_AdvancedParameters(Parameters& d,
 static bool SGDIntLoadFamily_Playlist(Parameters& d,
                                const String& key,
                                const String& value,
-                               const String& rawvalue,
+                               const String&,
                                uint){
     if (key == "playlist_reset")
     {
@@ -794,7 +794,7 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
 static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
                                const String& key,
                                const String& value,
-                               const String& rawvalue,
+                               const String&,
                                uint){
     if (key == "selected_vars_reset")
     {
@@ -820,7 +820,7 @@ static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
 static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
                                const String& key,
                                const String& value,
-                               const String& rawvalue,
+                               const String&,
                                uint){
     if (key.startsWith("seed")) // seeds
         {
@@ -856,7 +856,7 @@ static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
 static bool SGDIntLoadFamily_Legacy(Parameters& d,
                                const String& key,
                                const String& value,
-                               const String& rawvalue,
+                               const String&,
                                uint version){
     //Comparisons kept for compatibility reasons
 
