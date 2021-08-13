@@ -1756,7 +1756,7 @@ void Parameters::saveToINI(IniFile& ini) const
 
     // Seeds
     {
-        auto* section = ini.addSection("seeds - Mersenne Twister"); //@TODO : Why Capital letters are used here ?
+        auto* section = ini.addSection("seeds - Mersenne Twister");
         for (uint sd = 0; sd != (uint)seedMax; ++sd)
             section->add(SeedToID((SeedIndex)sd), seed[sd]);
     }
