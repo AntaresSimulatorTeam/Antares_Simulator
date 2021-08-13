@@ -825,7 +825,7 @@ static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
         return d.variablesPrintInfo.setPrintStatus(value.to<string>(), false);
     return false;
 }
-static bool SGDIntLoadFamily_Seeds(Parameters& d,
+static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
                                const String& sectionName,
                                const String& key,
                                const String& value,
@@ -974,7 +974,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
             {"advanced parameters",&SGDIntLoadFamily_AdvancedParameters},
             {"playlist",&SGDIntLoadFamily_Playlist},
             {"variables selection",&SGDIntLoadFamily_VariablesSelection},
-            {"seeds",&SGDIntLoadFamily_Seeds}};
+            {"seeds",&SGDIntLoadFamily_SeedsMersenneTwister}};
 
     Callback* handleAllKeysInSection;
     // Foreach section on the ini file...
