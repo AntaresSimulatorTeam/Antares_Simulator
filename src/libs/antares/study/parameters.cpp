@@ -327,7 +327,6 @@ static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint
 }
 
 static bool SGDIntLoadFamily_General(Parameters& d,
-                               const String& sectionName,
                                const String& key,
                                const String& value,
                                const String& rawvalue,
@@ -460,7 +459,6 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     return false;
 }
 static bool SGDIntLoadFamily_Input(Parameters& d,
-                               const String& sectionName,
                                const String& key,
                                const String& value,
                                const String& rawvalue,
@@ -472,7 +470,6 @@ static bool SGDIntLoadFamily_Input(Parameters& d,
 
 }
 static bool SGDIntLoadFamily_Output(Parameters& d,
-                               const String& sectionName,
                                const String& key,
                                const String& value,
                                const String& rawvalue,
@@ -486,7 +483,6 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
     return false;
 }
 static bool SGDIntLoadFamily_Optimization(Parameters& d,
-                               const String& sectionName,
                                const String& key,
                                const String& value,
                                const String& rawvalue,
@@ -571,7 +567,6 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     return false;
 }
 static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
-                               const String& sectionName,
                                const String& key,
                                const String& value,
                                const String& rawvalue,
@@ -695,7 +690,6 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
     return false;
 }
 static bool SGDIntLoadFamily_AdvancedParameters(Parameters& d,
-                               const String& sectionName,
                                const String& key,
                                const String& value,
                                const String& rawvalue,
@@ -707,7 +701,6 @@ static bool SGDIntLoadFamily_AdvancedParameters(Parameters& d,
     return false;
 }
 static bool SGDIntLoadFamily_Playlist(Parameters& d,
-                               const String& sectionName,
                                const String& key,
                                const String& value,
                                const String& rawvalue,
@@ -799,7 +792,6 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
     return false;
 }
 static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
-                               const String& sectionName,
                                const String& key,
                                const String& value,
                                const String& rawvalue,
@@ -826,7 +818,6 @@ static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
     return false;
 }
 static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
-                               const String& sectionName,
                                const String& key,
                                const String& value,
                                const String& rawvalue,
@@ -863,7 +854,6 @@ static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
         return false;
 }
 static bool SGDIntLoadFamily_Others(Parameters& d,
-                               const String& sectionName,
                                const String& key,
                                const String& value,
                                const String& rawvalue,
@@ -887,7 +877,6 @@ static bool SGDIntLoadFamily_Others(Parameters& d,
 }
 
 static bool isDeprecated(Parameters& d,
-                               const String& sectionName,
                                const String& key,
                                const String& value,
                                const String& rawvalue,
@@ -963,7 +952,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     // A temporary buffer, used for the values in lowercase
     String value;
     String sectionName;
-    typedef bool (*Callback)(Parameters&, const String&, const String&, const String&, const String&, uint);
+    typedef bool (*Callback)(Parameters&, const String&, const String&, const String&, uint);
 
     static const std::map<String,Callback> sectionAssociatedToKeysProcess = {
             {"general",&SGDIntLoadFamily_General},
@@ -1001,11 +990,11 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
             // Deal with the current property
             // Do not forget the variable `key` and `value` are identical to
             // `p->key` and `p->value` except they are already in the lower case format
-            if (not (*handleAllKeysInSection)(*this, sectionName, p->key, value, p->value, version))
+            if (not (*handleAllKeysInSection)(*this, p->key, value, p->value, version))
             {
-                if (not SGDIntLoadFamily_Others(*this, sectionName, p->key, value, p->value, version))
+                if (not SGDIntLoadFamily_Others(*this, p->key, value, p->value, version))
                 {
-                    if (not isDeprecated(*this, sectionName, p->key, value, p->value, version))
+                    if (not isDeprecated(*this, p->key, value, p->value, version))
                     {
                         // Continue on error
                         logs.warning() << ini.filename() << ": '" << p->key << "': Unknown property";
