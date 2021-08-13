@@ -853,11 +853,13 @@ static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
         }
         return false;
 }
-static bool SGDIntLoadFamily_Others(Parameters& d,
+static bool SGDIntLoadFamily_Legacy(Parameters& d,
                                const String& key,
                                const String& value,
                                const String& rawvalue,
                                uint version){
+    //Comparisons kept for compatibility reasons
+
     // Same time-series
     if (key == "correlateddraws")
         return ConvertCStrToListTimeSeries(value, d.intraModal);
@@ -873,14 +875,7 @@ static bool SGDIntLoadFamily_Others(Parameters& d,
 
     if (version <= 310 && key == "storetimeseriesnumbers")
             return value.to<bool>(d.storeTimeseriesNumbers);
-    return false;
-}
 
-static bool isDeprecated(Parameters& d,
-                               const String& key,
-                               const String& value,
-                               const String& rawvalue,
-                               uint){
     // Custom set
     if (key == "customset")
         return true; // value ignored
@@ -890,22 +885,25 @@ static bool isDeprecated(Parameters& d,
 
     if (key == "startyear") // ignored from 3.5.3155
         return true;
+
     if (key == "starttime")
         return true; // ignored since 4.3 // return value.to<uint>(d.startTime);
+
     // deprecated
     if (key == "seed_virtualcost" || key == "seed_misc")
         return true; // ignored since 3.8
 
     if (key == "spillage_bound") // ignored sinve v3.3
         return true;
+
     if (key == "spillage_cost") // ignored since v3.3
         return true;
 
     if (key == "shedding-strategy-local") // ignored since 4.0
         return true;
+
     if (key == "shedding-strategy-global") // ignored since 4.0
         return true;
-
     // deprecated
     if (key == "thresholdmin")
         return true; // value.to<int>(d.thresholdMinimum);
@@ -914,20 +912,6 @@ static bool isDeprecated(Parameters& d,
 
     return false;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 static bool ParametersInternalLoadProperty(Parameters& params,
                                            const String& sectionName,
@@ -992,13 +976,10 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
             // `p->key` and `p->value` except they are already in the lower case format
             if (not (*handleAllKeysInSection)(*this, p->key, value, p->value, version))
             {
-                if (not SGDIntLoadFamily_Others(*this, p->key, value, p->value, version))
+                if (not SGDIntLoadFamily_Legacy(*this, p->key, value, p->value, version))
                 {
-                    if (not isDeprecated(*this, p->key, value, p->value, version))
-                    {
-                        // Continue on error
-                        logs.warning() << ini.filename() << ": '" << p->key << "': Unknown property";
-                    }
+                    // Continue on error
+                    logs.warning() << ini.filename() << ": '" << p->key << "': Unknown property";
                 }
             }
         }
