@@ -965,7 +965,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     String sectionName;
     typedef bool (*Callback)(Parameters&, const String&, const String&, const String&, const String&, uint);
 
-    static std::map<String,Callback> sectionAssociatedToKeysProcess = {
+    static const std::map<String,Callback> sectionAssociatedToKeysProcess = {
             {"general",&SGDIntLoadFamily_General},
             {"input",&SGDIntLoadFamily_Input},
             {"output",&SGDIntLoadFamily_Output},
