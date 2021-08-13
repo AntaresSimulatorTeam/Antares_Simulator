@@ -913,20 +913,10 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     return false;
 }
 
-static bool ParametersInternalLoadProperty(Parameters& params,
-                                           const String& sectionName,
-                                           const String& key,
-                                           const String& value,
-                                           const String& rawvalue,
-                                           uint version)
+bool firstKeyLetterIsValid(const String& name)
 {
-    char cKey = key.first();
-    char cSection = sectionName.first();
-    if (cKey < 'a' || cKey > 'z' || cSection < 'a' || cSection > 'z')
-        return false;
-
-
-
+    char firstLetter = name.first();
+    return (firstLetter >= 'a' && firstLetter <= 'z');
 }
 
 bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options)
@@ -969,6 +959,8 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
         for (const IniFile::Property* p = section->firstProperty; p; p = p->next)
         {
             if (p->key.empty())
+                continue;
+            if (!firstKeyLetterIsValid(p->key))
                 continue;
             // We convert the key and the value into the lower case format
             value = p->value;
