@@ -962,6 +962,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
         {
             // Continue on error
             logs.warning() << ini.filename() << ": '" << section->name << "': Unknown section name";
+            continue;
         }
 
         // Foreach properties in the section
