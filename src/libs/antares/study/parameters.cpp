@@ -955,13 +955,15 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     {
         sectionName = section->name;
         sectionName.toLower();
-        handleAllKeysInSection = &sectionAssociatedToKeysProcess[section->name]; // @TODO Must check that the function exists
-        if (!handleAllKeysInSection)
+        try
+        {
+            handleAllKeysInSection = sectionAssociatedToKeysProcess.at(sectionName);
+        } catch (const std::out_of_range&)
         {
             // Continue on error
             logs.warning() << ini.filename() << ": '" << section->name << "': Unknown section name";
         }
-
+        
         // Foreach properties in the section
         for (const IniFile::Property* p = section->firstProperty; p; p = p->next)
         {
