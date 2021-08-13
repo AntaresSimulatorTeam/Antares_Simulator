@@ -947,7 +947,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
             {"advanced parameters",&SGDIntLoadFamily_AdvancedParameters},
             {"playlist",&SGDIntLoadFamily_Playlist},
             {"variables selection",&SGDIntLoadFamily_VariablesSelection},
-            {"seeds",&SGDIntLoadFamily_SeedsMersenneTwister}};
+            {"seeds - mersenne twister",&SGDIntLoadFamily_SeedsMersenneTwister}};
 
     Callback handleAllKeysInSection;
     // Foreach section on the ini file...
@@ -963,7 +963,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
             // Continue on error
             logs.warning() << ini.filename() << ": '" << section->name << "': Unknown section name";
         }
-        
+
         // Foreach properties in the section
         for (const IniFile::Property* p = section->firstProperty; p; p = p->next)
         {
