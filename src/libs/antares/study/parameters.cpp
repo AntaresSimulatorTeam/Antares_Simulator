@@ -1460,7 +1460,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 
     if (interModal == timeSeriesLoad || interModal == timeSeriesSolar
         || interModal == timeSeriesWind || interModal == timeSeriesHydro
-        || interModal == timeSeriesThermal)
+        || interModal == timeSeriesThermal || interModal == timeSeriesRenewable)
     {
         // Only one timeseries in interModal correlation, which is the same than nothing
         interModal = 0;
