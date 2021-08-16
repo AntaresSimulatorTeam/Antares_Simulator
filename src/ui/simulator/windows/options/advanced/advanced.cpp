@@ -93,7 +93,7 @@ AdvancedParameters::AdvancedParameters(wxWindow* parent) :
     hz->AddSpacer(6);
     hz->Add(Resources::StaticBitmapLoadFromFile(this, wxID_ANY, "images/64x64/advanced.png"),
             0,
-            wxALL | wxALIGN_TOP | wxALIGN_CENTER_HORIZONTAL);
+            wxALL | wxALIGN_TOP);
     hz->AddSpacer(35);
 
     auto* s = new wxFlexGridSizer(0, 2, 1, 10);
