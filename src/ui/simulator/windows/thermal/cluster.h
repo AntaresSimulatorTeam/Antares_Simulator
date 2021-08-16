@@ -49,8 +49,6 @@ public:
 private:
     void onThermalClusterChanged(Data::ThermalCluster* cluster);
 
-    void onUpdAggregateListDueToGroupChange();
-
     void thermalEventConnect();
     void thermalEventDisconnect();
 

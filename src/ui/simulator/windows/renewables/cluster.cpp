@@ -95,24 +95,6 @@ void CommonProperties::onStudyClosed()
     onClusterChanged(nullptr);
 }
 
-void CommonProperties::onUpdAggregateListDueToGroupChange()
-{
-    if (pGroupHasChanged)
-    {
-        pGroupHasChanged = false;
-        if (pNotifier)
-        {
-            renewableEventDisconnect();
-            pNotifier->update();
-            pNotifier->Refresh();
-
-            // (Re) Connection with the notifier
-            pNotifier->UpdateWindowUI();
-            renewableEventConnect();
-        }
-    }
-}
-
 void CommonProperties::renewableEventConnect()
 {
     if (pNotifier)

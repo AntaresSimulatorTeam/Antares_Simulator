@@ -51,8 +51,6 @@ public:
 private:
     void onClusterChanged(Data::RenewableCluster* cluster);
 
-    void onUpdAggregateListDueToGroupChange();
-
     void renewableEventConnect();
     void renewableEventDisconnect();
 

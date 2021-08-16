@@ -105,24 +105,6 @@ void CommonProperties::onStudyClosed()
     onThermalClusterChanged(nullptr);
 }
 
-void CommonProperties::onUpdAggregateListDueToGroupChange()
-{
-    if (pGroupHasChanged)
-    {
-        pGroupHasChanged = false;
-        if (pNotifier)
-        {
-            thermalEventDisconnect();
-            pNotifier->update();
-            pNotifier->Refresh();
-
-            // (Re) Connection with the notifier
-            pNotifier->UpdateWindowUI();
-            thermalEventConnect();
-        }
-    }
-}
-
 void CommonProperties::thermalEventConnect()
 {
     if (pNotifier)
