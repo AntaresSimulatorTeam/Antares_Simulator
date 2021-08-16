@@ -34,7 +34,7 @@ SelectOutput::SelectOutput(wxFrame* parent) :
           wxT("Output Selection"),
           wxDefaultPosition,
           wxSize(380, 410),
-          wxCLOSE_BOX | wxCAPTION)
+          wxCLOSE_BOX | wxCAPTION | wxRESIZE_BORDER)
 {
     assert(parent);
 
