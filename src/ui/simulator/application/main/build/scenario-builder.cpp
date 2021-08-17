@@ -177,7 +177,7 @@ public:
     void create() override
     {
         page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(
-          notebook_, wxT("thermal"), wxT("Thermal"));
+          notebook_, Renderer::thermalScBuilderRenderer::internalLabel, Renderer::thermalScBuilderRenderer::InternalLabel);
         createRenderer();
         control_->updateRules.connect(renderer_,
                                       &Renderer::thermalScBuilderRenderer::onRulesChanged);
@@ -196,9 +196,9 @@ private:
     }
     void addToNotebook()
     {
-        page_.first->add(grid_, wxT("thermal"), wxT("Thermal"));
+        page_.first->add(grid_, Renderer::thermalScBuilderRenderer::internalLabel, Renderer::thermalScBuilderRenderer::InternalLabel);
         renderer_->control(grid_); // Shouldn't that be inside create() ?
-        page_.first->select(wxT("thermal"));
+        page_.first->select(Renderer::thermalScBuilderRenderer::internalLabel);
     }
 
 private:
@@ -217,7 +217,7 @@ public:
     void create() override
     {
         page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(
-            notebook_, wxT("renewable"), wxT("Renewable"));
+            notebook_, Renderer::renewableScBuilderRenderer::internalLabel, Renderer::renewableScBuilderRenderer::InternalLabel);
         createRenderer();
         control_->updateRules.connect(renderer_,
             &Renderer::renewableScBuilderRenderer::onRulesChanged);
@@ -236,9 +236,9 @@ private:
     }
     void addToNotebook()
     {
-        page_.first->add(grid_, wxT("renewable"), wxT("Renewable"));
+        page_.first->add(grid_, Renderer::renewableScBuilderRenderer::internalLabel, Renderer::renewableScBuilderRenderer::InternalLabel);
         renderer_->control(grid_); // Shouldn't that be inside create() ?
-        page_.first->select(wxT("renewable"));
+        page_.first->select(Renderer::renewableScBuilderRenderer::internalLabel);
     }
 
 private:
