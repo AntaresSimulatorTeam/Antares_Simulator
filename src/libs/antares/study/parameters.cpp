@@ -926,7 +926,11 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     // A temporary buffer, used for the values in lowercase
     String value;
     String sectionName;
-    typedef bool (*Callback)(Parameters&, const String&, const String&, const String&, uint);
+    typedef bool (*Callback)(Parameters&, // [out] Parameter object to load the data into
+            const String&, // [in] Key, comes left to the '=' sign in the .ini file
+            const String&, // [in] Lowercase value, comes right to the '=' sign in the .ini file
+            const String&, // [in] Raw value as writtent right to the '=' sign in the .ini file
+            uint); // [in] Version of the simulator (such as 710)
 
     static const std::map<String,Callback> sectionAssociatedToKeysProcess = {
             {"general",&SGDIntLoadFamily_General},
@@ -969,7 +973,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
             // Deal with the current property
             // Do not forget the variable `key` and `value` are identical to
             // `p->key` and `p->value` except they are already in the lower case format
-            if (not (handleAllKeysInSection)(*this, p->key, value, p->value, version))
+            if (not handleAllKeysInSection(*this, p->key, value, p->value, version))
             {
                 if (not SGDIntLoadFamily_Legacy(*this, p->key, value, p->value, version))
                 {
