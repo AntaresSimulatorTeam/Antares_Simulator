@@ -48,8 +48,6 @@ public:
     int height() const;
     wxString rowCaption(int rowIndx) const;
     double cellNumericValue(int x, int y) const;
-    static constexpr auto internalLabel = wxT("renewable");
-    static constexpr auto InternalLabel = wxT("Renewable");
 }; // class renewableScBuilderRenderer
 
 } // namespace Renderer

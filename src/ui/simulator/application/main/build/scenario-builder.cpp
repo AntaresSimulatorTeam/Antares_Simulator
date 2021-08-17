@@ -166,7 +166,7 @@ private:
 };
 
 // Thermal & renewable
-template<class Renderer>
+template<class Renderer, class Label>
 class commonScBuilderGrid : public basicScBuilderGrid
 {
 public:
@@ -178,10 +178,9 @@ public:
     void create() override
     {
         page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(
-          notebook_, Renderer::internalLabel, Renderer::InternalLabel);
+          notebook_, Label::lowerCase, Label::capitalized);
         createRenderer();
-        control_->updateRules.connect(renderer_,
-                                      &Renderer::onRulesChanged);
+        control_->updateRules.connect(renderer_, &Renderer::onRulesChanged);
         createGrid();
         addToNotebook();
     }
@@ -197,20 +196,38 @@ private:
     }
     void addToNotebook()
     {
-        page_.first->add(grid_, Renderer::internalLabel, Renderer::InternalLabel);
+        page_.first->add(grid_, Label::lowerCase, Label::capitalized);
         renderer_->control(grid_); // Shouldn't that be inside create() ?
-        page_.first->select(Renderer::internalLabel);
+        page_.first->select(Label::lowerCase);
     }
 
 private:
     std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page_;
 };
 
+namespace Label
+{
+struct Thermal
+{
+    static constexpr auto lowerCase = wxT("thermal");
+    static constexpr auto capitalized = wxT("Thermal");
+};
+struct Renewable
+{
+    static constexpr auto lowerCase = wxT("renewable");
+    static constexpr auto capitalized = wxT("Renewable");
+};
+} // namespace Label
+
 // Thermal clusters ...
-typedef commonScBuilderGrid<Antares::Component::Datagrid::Renderer::thermalScBuilderRenderer> thermalScBuilderGrid;
+typedef commonScBuilderGrid<Antares::Component::Datagrid::Renderer::thermalScBuilderRenderer,
+                            Label::Thermal>
+  thermalScBuilderGrid;
 
 // Renewable clusters ...
-typedef commonScBuilderGrid<Antares::Component::Datagrid::Renderer::renewableScBuilderRenderer> renewableScBuilderGrid;
+typedef commonScBuilderGrid<Antares::Component::Datagrid::Renderer::renewableScBuilderRenderer,
+                            Label::Renewable>
+  renewableScBuilderGrid;
 
 // Hydro levels ...
 class hydroLevelsScBuilderGrid : public basicScBuilderGrid
