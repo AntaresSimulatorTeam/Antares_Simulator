@@ -522,6 +522,7 @@ bool InspectorGrid::onPropertyChanging_Constraint(wxPGProperty*,
     return false;
 }
 
+
 // ========================================
 // Parent cluster update class (abstract)
 // ========================================
@@ -532,24 +533,20 @@ protected:
 
 public:
     clusterUpdater(InspectorData::Ptr currentSelection, 
-        const PropertyNameType& name,
-        const wxVariant& value);
+        const wxVariant& new_name);
     virtual ~clusterUpdater();
     virtual bool update() = 0;
 
 protected:
     InspectorData::Ptr currentSelection_;
-    PropertyNameType name_;
-    wxVariant value_;
+    wxVariant new_name_;
 
 };
 
 clusterUpdater::clusterUpdater(InspectorData::Ptr currentSelection, 
-    const PropertyNameType& name, 
-    const wxVariant& value) : 
+    const wxVariant& new_name) : 
     currentSelection_(currentSelection),
-    name_(name),
-    value_(value)
+    new_name_(new_name)
 {}
 
 clusterUpdater::~clusterUpdater()
@@ -563,9 +560,8 @@ class clusterNameUpdater : public clusterUpdater
 {
 public:
     clusterNameUpdater(InspectorData::Ptr currentSelection,
-        const PropertyNameType& name,
-        const wxVariant& value) 
-        : clusterUpdater(currentSelection, name, value) {}
+        const wxVariant& new_name) 
+        : clusterUpdater(currentSelection, new_name) {}
     virtual ~clusterNameUpdater() {}
     bool update() override;
 
@@ -581,7 +577,7 @@ bool clusterNameUpdater::update()
     if (getSelectedClustersListSize() != 1)
         return false;
     Data::ClusterName name;
-    wxStringToString(value_.GetString(), name);
+    wxStringToString(new_name_.GetString(), name);
     name.trim(" \r\n\t");
     if (!name)
         return false;
@@ -608,8 +604,7 @@ class thermalClusterNameUpdater : public clusterNameUpdater
 {
 public:
     thermalClusterNameUpdater(InspectorData::Ptr currentSelection,
-        const PropertyNameType& name,
-        const wxVariant& value);
+        const wxVariant& new_name);
 
     ~thermalClusterNameUpdater() {}
     
@@ -622,9 +617,8 @@ private:
 };
 
 thermalClusterNameUpdater::thermalClusterNameUpdater(InspectorData::Ptr currentSelection,
-    const PropertyNameType& name,
-    const wxVariant& value)
-    : clusterNameUpdater(currentSelection, name, value)
+    const wxVariant& new_name)
+    : clusterNameUpdater(currentSelection, new_name)
 {
     selectedThermalCluster_ = *(currentSelection_->ThClusters.begin());
 }
@@ -650,8 +644,7 @@ class renewableClusterNameUpdater : public clusterNameUpdater
 {
 public:
     renewableClusterNameUpdater(InspectorData::Ptr currentSelection,
-        const PropertyNameType& name,
-        const wxVariant& value);
+        const wxVariant& new_name);
 
     ~renewableClusterNameUpdater() {}
 
@@ -664,9 +657,8 @@ private:
 };
 
 renewableClusterNameUpdater::renewableClusterNameUpdater(InspectorData::Ptr currentSelection,
-    const PropertyNameType& name,
-    const wxVariant& value)
-    : clusterNameUpdater(currentSelection, name, value)
+    const wxVariant& new_name)
+    : clusterNameUpdater(currentSelection, new_name)
 {
     selectedRenewableCluster_ = *(currentSelection_->RnClusters.begin());
 }
@@ -701,7 +693,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*, /* arg usel
 
     if (name == "cluster.name")
     {
-        cluster_updater = new thermalClusterNameUpdater(data, name, value);
+        cluster_updater = new thermalClusterNameUpdater(data, value);
 
         // gp : should be called at the end of the current function, when all refactoring work is finished
         return cluster_updater->update();
@@ -1202,7 +1194,7 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
 
     if (name == "rn-cluster.name")
     {
-        cluster_updater = new renewableClusterNameUpdater(data, name, value);
+        cluster_updater = new renewableClusterNameUpdater(data, value);
 
         // gp : should be called at the end of the current function, when all refactoring work is finished
         return cluster_updater->update();
