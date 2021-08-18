@@ -15,6 +15,12 @@ namespace Antares
 {
 namespace Data
 {
+class Cluster;
+struct CompareClusterName final
+{
+    bool operator()(const Cluster* s1, const Cluster* s2) const;
+};
+
 class Cluster
 {
 public:
@@ -138,18 +144,15 @@ protected:
     Data::ClusterName pGroup;
 
 public:
+    //! Set of clusters
+    typedef std::set<Cluster*, CompareClusterName> Set;
+
     int saveDataSeriesToFolder(const AnyString& folder) const;
     int loadDataSeriesFromFolder(Study& s, const AnyString& folder);
 
 private:
     virtual unsigned int precision() const = 0;
 };
-
-struct CompareClusterName final
-{
-    bool operator()(const Cluster* s1, const Cluster* s2) const;
-};
-
 } // namespace Data
 } // namespace Antares
 #endif /* __LIBS_ANTARES_STUDY_PARTS_COMMON_H__ */
