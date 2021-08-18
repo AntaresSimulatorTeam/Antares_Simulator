@@ -522,7 +522,171 @@ bool InspectorGrid::onPropertyChanging_Constraint(wxPGProperty*,
     return false;
 }
 
-bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
+// ========================================
+// Parent cluster update class (abstract)
+// ========================================
+class clusterUpdater
+{
+protected:
+    typedef Yuni::CString<128, false> PropertyNameType;
+
+public:
+    clusterUpdater(InspectorData::Ptr currentSelection, 
+        const PropertyNameType& name,
+        const wxVariant& value);
+    virtual ~clusterUpdater();
+    virtual bool update() = 0;
+
+protected:
+    InspectorData::Ptr currentSelection_;
+    PropertyNameType name_;
+    wxVariant value_;
+
+};
+
+clusterUpdater::clusterUpdater(InspectorData::Ptr currentSelection, 
+    const PropertyNameType& name, 
+    const wxVariant& value) : 
+    currentSelection_(currentSelection),
+    name_(name),
+    value_(value)
+{}
+
+clusterUpdater::~clusterUpdater()
+{}
+
+// =================================
+// cluster name updater (abstract)
+// =================================
+
+class clusterNameUpdater : public clusterUpdater
+{
+public:
+    clusterNameUpdater(InspectorData::Ptr currentSelection,
+        const PropertyNameType& name,
+        const wxVariant& value) 
+        : clusterUpdater(currentSelection, name, value) {}
+    virtual ~clusterNameUpdater() {}
+    bool update() override;
+
+private:
+    virtual uint getSelectedClustersListSize() = 0;
+    virtual Data::Cluster* getClusterFrontList() = 0;
+    virtual void onClusterRenamed() = 0;
+
+};
+
+bool clusterNameUpdater::update()
+{
+    if (getSelectedClustersListSize() != 1)
+        return false;
+    Data::ClusterName name;
+    wxStringToString(value_.GetString(), name);
+    name.trim(" \r\n\t");
+    if (!name)
+        return false;
+
+    Data::Cluster* cluster = getClusterFrontList();
+    auto study = Data::Study::Current::Get();
+    if (!(!study) && study->clusterRename(cluster, name))
+    {
+        onClusterRenamed();
+        // Notify
+        cluster->markAsModified();
+        return true;
+    }
+    return false;
+}
+
+// =================================
+// cluster name updater (concrete)
+// =================================
+
+// Thermal cluster name updater
+
+class thermalClusterNameUpdater : public clusterNameUpdater
+{
+public:
+    thermalClusterNameUpdater(InspectorData::Ptr currentSelection,
+        const PropertyNameType& name,
+        const wxVariant& value);
+
+    ~thermalClusterNameUpdater() {}
+    
+private:
+    uint getSelectedClustersListSize() override;
+    Data::Cluster* getClusterFrontList() override;
+    void onClusterRenamed() override;
+private:
+    Data::ThermalCluster* selectedThermalCluster_;
+};
+
+thermalClusterNameUpdater::thermalClusterNameUpdater(InspectorData::Ptr currentSelection,
+    const PropertyNameType& name,
+    const wxVariant& value)
+    : clusterNameUpdater(currentSelection, name, value)
+{
+    selectedThermalCluster_ = *(currentSelection_->ThClusters.begin());
+}
+
+uint thermalClusterNameUpdater::getSelectedClustersListSize()
+{
+    return currentSelection_->ThClusters.size();
+}
+
+Data::Cluster* thermalClusterNameUpdater::getClusterFrontList()
+{
+    return selectedThermalCluster_;
+}
+
+void thermalClusterNameUpdater::onClusterRenamed()
+{
+    OnStudyThermalClusterRenamed(selectedThermalCluster_);
+}
+
+// Renewable cluster name updater
+
+class renewableClusterNameUpdater : public clusterNameUpdater
+{
+public:
+    renewableClusterNameUpdater(InspectorData::Ptr currentSelection,
+        const PropertyNameType& name,
+        const wxVariant& value);
+
+    ~renewableClusterNameUpdater() {}
+
+private:
+    uint getSelectedClustersListSize() override;
+    Data::Cluster* getClusterFrontList() override;
+    void onClusterRenamed() override;
+private:
+    Data::RenewableCluster* selectedRenewableCluster_;
+};
+
+renewableClusterNameUpdater::renewableClusterNameUpdater(InspectorData::Ptr currentSelection,
+    const PropertyNameType& name,
+    const wxVariant& value)
+    : clusterNameUpdater(currentSelection, name, value)
+{
+    selectedRenewableCluster_ = *(currentSelection_->RnClusters.begin());
+}
+
+uint renewableClusterNameUpdater::getSelectedClustersListSize()
+{
+    return currentSelection_->RnClusters.size();
+}
+
+Data::Cluster* renewableClusterNameUpdater::getClusterFrontList()
+{
+    return selectedRenewableCluster_;
+}
+
+void renewableClusterNameUpdater::onClusterRenamed()
+{
+    OnStudyRenewableClusterRenamed(selectedRenewableCluster_);
+}
+
+bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*, /* arg useless, to be removed*/
                                                const PropertyNameType& name,
                                                const wxVariant& value)
 {
@@ -532,26 +696,15 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
     Data::ThermalCluster::Set::iterator end = data->ThClusters.end();
     Data::ThermalCluster::Set::iterator i = data->ThClusters.begin();
 
+    // gp : Caution - this soon will be a smart pointer, but it is currently a old fashion pointer. 
+    clusterUpdater* cluster_updater = nullptr;
+
     if (name == "cluster.name")
     {
-        if (data->ThClusters.size() != 1)
-            return false;
-        Data::ClusterName name;
-        wxStringToString(value.GetString(), name);
-        name.trim(" \r\n\t");
-        if (!name)
-            return false;
+        cluster_updater = new thermalClusterNameUpdater(data, name, value);
 
-        Data::ThermalCluster* cluster = *(data->ThClusters.begin());
-        auto study = Data::Study::Current::Get();
-        if (!(!study) && study->clusterRename(cluster, name))
-        {
-            OnStudyThermalClusterRenamed(cluster);
-            // Notify
-            cluster->markAsModified();
-            return true;
-        }
-        return false;
+        // gp : should be called at the end of the current function, when all refactoring work is finished
+        return cluster_updater->update();
     }
 
     // Group
@@ -1044,26 +1197,15 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
     RenewableCluster::Set::iterator end = data->RnClusters.end();
     RenewableCluster::Set::iterator i = data->RnClusters.begin();
 
+    // gp : Caution - this soon will be a smart pointer, but it is currently a old fashion pointer. 
+    clusterUpdater* cluster_updater = nullptr;
+
     if (name == "rn-cluster.name")
     {
-        if (data->RnClusters.size() != 1)
-            return false;
-        ClusterName name;
-        wxStringToString(value.GetString(), name);
-        name.trim(" \r\n\t");
-        if (!name)
-            return false;
+        cluster_updater = new renewableClusterNameUpdater(data, name, value);
 
-        RenewableCluster* cluster = *(data->RnClusters.begin());
-        auto study = Study::Current::Get();
-        if (!(!study) && study->clusterRename(cluster, name))
-        {
-            OnStudyRenewableClusterRenamed(cluster);
-            // Notify
-            cluster->markAsModified();
-            return true;
-        }
-        return false;
+        // gp : should be called at the end of the current function, when all refactoring work is finished
+        return cluster_updater->update();
     }
 
     // Group
