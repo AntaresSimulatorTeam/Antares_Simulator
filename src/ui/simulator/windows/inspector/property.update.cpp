@@ -617,7 +617,6 @@ public:
                     logs.error() << "The group index is invalid";
                     return false;
                 }
-                // TODO
                 const wxChar* const wName = groups[index];
                 wxStringToString(wName, name);
                 name.trim(" \r\n\t");
@@ -655,8 +654,8 @@ public:
         if (!set.empty())
         {
             const SetType::iterator end = set.end();
-            // for (SetType::iterator i = set.begin(); i != end; ++i)
-            // TODO event OnStudyThermalClusterGroupChanged(*i);
+            for (SetType::iterator i = set.begin(); i != end; ++i)
+              OnStudyClusterGroupChanged(*i);
         }
 
         return true;
@@ -681,7 +680,7 @@ public:
         Accumulator<PClusterInstalled, Add>::Apply(properties.installedCapacity, clusters);
 
         // Notify
-        // TODO OnStudyThermalClusterCommonSettingsChanged();
+        OnCommonSettingsChanged();
 
         if (d > 100)
           pFrame.delayApply();
@@ -713,15 +712,47 @@ public:
         for (auto cluster : clusters)
             cluster->enabled = d;
         // Notify
-        // TODO OnStudyThermalClusterCommonSettingsChanged();
+        OnCommonSettingsChanged();
         return true;
     }
 
-private:
+protected:
     Data::Cluster::Set clusters;
     Properties properties;
     std::vector<const wxChar*> groups;
     Frame& pFrame;
+    virtual void OnCommonSettingsChanged() = 0;
+    virtual void OnStudyClusterGroupChanged(Data::Area*) = 0;
+};
+
+class ClusterContextThermal : public ClusterContext
+{
+public:
+  ClusterContextThermal(InspectorData::Ptr data, Frame& frame) : ClusterContext(kRenewable, data, frame) {}
+private:
+  virtual void OnCommonSettingsChanged() override
+  {
+    OnStudyThermalClusterCommonSettingsChanged();
+  }
+  virtual void OnStudyClusterGroupChanged(Data::Area* area) override
+  {
+    OnStudyThermalClusterGroupChanged(area);
+  }
+};
+
+class ClusterContextRenewable : public ClusterContext
+{
+public:
+  ClusterContextRenewable(InspectorData::Ptr data, Frame& frame) : ClusterContext(kRenewable, data, frame) {}
+private:
+  virtual void OnCommonSettingsChanged() override
+  {
+    OnStudyRenewableClusterCommonSettingsChanged();
+  }
+  virtual void OnStudyClusterGroupChanged(Data::Area* area) override
+  {
+    OnStudyRenewableClusterGroupChanged(area);
+  }
 };
 
 bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
