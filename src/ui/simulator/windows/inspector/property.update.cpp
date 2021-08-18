@@ -657,7 +657,6 @@ public:
             for (SetType::iterator i = set.begin(); i != end; ++i)
               OnStudyClusterGroupChanged(*i);
         }
-
         return true;
     }
 
@@ -729,7 +728,7 @@ protected:
 class ClusterContextThermal : public ClusterContext
 {
 public:
-  ClusterContextThermal(InspectorData::Ptr data, Frame& frame) : ClusterContext(kRenewable, data, frame) {}
+  ClusterContextThermal(InspectorData::Ptr data, Frame& frame) : ClusterContext(kThermal, data, frame) {}
 private:
   virtual void OnCommonSettingsChanged() override
   {
@@ -762,7 +761,6 @@ private:
   {
     OnStudyRenewableClusterRenamed(dynamic_cast<Data::RenewableCluster*>(cluster));
   }
-
 };
 
 bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
