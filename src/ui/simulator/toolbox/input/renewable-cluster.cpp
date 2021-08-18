@@ -116,7 +116,7 @@ void RenewableCluster::internalBuildSubControls()
     // Create a new renewable cluster
     btn = new Antares::Component::Button(this,
                                          wxT("Create a cluster"),
-                                         "images/16x16/thermal_add.png",
+                                         "images/16x16/renewable_add.png",
                                          this,
                                          &RenewableCluster::internalAddPlant);
 
@@ -125,7 +125,7 @@ void RenewableCluster::internalBuildSubControls()
     // Delete
     btn = new Antares::Component::Button(this,
                                          wxT("Delete"),
-                                         "images/16x16/thermal_remove.png",
+                                         "images/16x16/renewable_remove.png",
                                          this,
                                          &RenewableCluster::internalDeletePlant);
     btn->dropDown(true);
