@@ -592,8 +592,8 @@ public:
         auto study = Data::Study::Current::Get();
         if (!(!study) && study->clusterRename(cluster, name))
         {
-            // TODO OnStudyThermalClusterRenamed(cluster);
             // Notify
+            OnStudyClusterRenamed(cluster);
             cluster->markAsModified();
             return true;
         }
@@ -723,6 +723,7 @@ protected:
     Frame& pFrame;
     virtual void OnCommonSettingsChanged() = 0;
     virtual void OnStudyClusterGroupChanged(Data::Area*) = 0;
+    virtual void OnStudyClusterRenamed(Data::Cluster*) = 0;
 };
 
 class ClusterContextThermal : public ClusterContext
@@ -737,6 +738,10 @@ private:
   virtual void OnStudyClusterGroupChanged(Data::Area* area) override
   {
     OnStudyThermalClusterGroupChanged(area);
+  }
+  virtual void OnStudyClusterRenamed(Data::Cluster* cluster) override
+  {
+    OnStudyThermalClusterRenamed(dynamic_cast<Data::ThermalCluster*>(cluster));
   }
 };
 
@@ -753,6 +758,11 @@ private:
   {
     OnStudyRenewableClusterGroupChanged(area);
   }
+  virtual void OnStudyClusterRenamed(Data::Cluster* cluster) override
+  {
+    OnStudyRenewableClusterRenamed(dynamic_cast<Data::RenewableCluster*>(cluster));
+  }
+
 };
 
 bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
