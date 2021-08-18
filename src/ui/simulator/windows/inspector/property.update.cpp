@@ -557,7 +557,7 @@ public:
         wxPGProperty* nominalCapacity;
     };
 
-    ClusterContext(Type t, InspectorData::Ptr data, Frame& frame)
+    ClusterContext(Type t, InspectorData::Ptr data, Frame& frame) : pFrame(frame)
     {
         switch (t)
         {
@@ -683,9 +683,8 @@ public:
         // Notify
         // TODO OnStudyThermalClusterCommonSettingsChanged();
 
-        // TODO
-        // if (d > 100)
-        //   pFrame.delayApply();
+        if (d > 100)
+          pFrame.delayApply();
         return true;
     }
 
@@ -696,7 +695,7 @@ public:
         {
             for (auto cluster : clusters)
                 cluster->nominalCapacity = 0.;
-            // TODO pFrame.delayApply();
+            pFrame.delayApply();
         }
         else
         {
@@ -722,6 +721,7 @@ private:
     Data::Cluster::Set clusters;
     Properties properties;
     std::vector<const wxChar*> groups;
+    Frame& pFrame;
 };
 
 bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
@@ -732,7 +732,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
     if (!data)
         return false;
 
-    ClusterContext context(ClusterContext::kThermal, data, pFrame);
+    ClusterContextThermal context(data, pFrame);
 
     if (name == "cluster.name")
     {
@@ -1133,7 +1133,7 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
     if (!data)
         return false;
 
-    ClusterContext context(ClusterContext::kRenewable, data, pFrame);
+    ClusterContextRenewable context(data, pFrame);
 
     if (name == "rn-cluster.name")
     {
