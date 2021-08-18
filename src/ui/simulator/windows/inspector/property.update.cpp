@@ -44,6 +44,7 @@
 #include <antares/study/area/constants.h>
 #include "../message.h"
 #include "../../application/main/internal-ids.h"
+#include <memory>
 
 using namespace Yuni;
 
@@ -688,12 +689,11 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*, /* arg usel
     Data::ThermalCluster::Set::iterator end = data->ThClusters.end();
     Data::ThermalCluster::Set::iterator i = data->ThClusters.begin();
 
-    // gp : Caution - this soon will be a smart pointer, but it is currently a old fashion pointer. 
-    clusterUpdater* cluster_updater = nullptr;
+    std::unique_ptr<clusterUpdater> cluster_updater;
 
     if (name == "cluster.name")
     {
-        cluster_updater = new thermalClusterNameUpdater(data, value);
+        cluster_updater = std::make_unique<thermalClusterNameUpdater>(data, value);
 
         // gp : should be called at the end of the current function, when all refactoring work is finished
         return cluster_updater->update();
@@ -1189,12 +1189,11 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
     RenewableCluster::Set::iterator end = data->RnClusters.end();
     RenewableCluster::Set::iterator i = data->RnClusters.begin();
 
-    // gp : Caution - this soon will be a smart pointer, but it is currently a old fashion pointer. 
-    clusterUpdater* cluster_updater = nullptr;
+    std::unique_ptr<clusterUpdater> cluster_updater;
 
     if (name == "rn-cluster.name")
     {
-        cluster_updater = new renewableClusterNameUpdater(data, value);
+        cluster_updater = std::make_unique<renewableClusterNameUpdater>(data, value);
 
         // gp : should be called at the end of the current function, when all refactoring work is finished
         return cluster_updater->update();
