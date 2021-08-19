@@ -204,10 +204,14 @@ private:
     wxPGProperty* pPGThClusterReliabilityModel;
     wxPGProperty* pPGThClusterCosts;
     wxPGProperty* pPGThClusterName;
+
+public:
     wxPGProperty* pPGThClusterNominalCapacity;
-    wxPGProperty* pPGThClusterEnabled;
     wxPGProperty* pPGThClusterUnitCount;
     wxPGProperty* pPGThClusterInstalled;
+
+private:
+    wxPGProperty* pPGThClusterEnabled;
     wxPGProperty* pPGThClusterMustRun;
     wxPGProperty* pPGThClusterGroup;
     wxPGProperty* pPGThClusterArea;
@@ -235,10 +239,14 @@ private:
     wxPGProperty* pPGRnClusterGroup;
     wxPGProperty* pPGRnClusterArea;
     wxPGProperty* pPGRnClusterParams;
-    wxPGProperty* pPGRnClusterEnabled;
+
+public:
     wxPGProperty* pPGRnClusterUnitCount;
     wxPGProperty* pPGRnClusterInstalled;
     wxPGProperty* pPGRnClusterNominalCapacity;
+
+private:
+    wxPGProperty* pPGRnClusterEnabled;
     wxPGProperty* pPGRnClusterTSMode;
 
     // About constraints
