@@ -165,84 +165,94 @@ private:
     }
 };
 
-// Thermal ...
-class thermalScBuilderGrid : public basicScBuilderGrid
+class clusterScBuilderGrid : public basicScBuilderGrid
 {
 public:
-    thermalScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
+    clusterScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
      basicScBuilderGrid(control, notebook)
     {
     }
 
-    void create() override
+    virtual void create() override
     {
         page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(
-          notebook_, wxT("thermal"), wxT("Thermal"));
+          notebook_, label().first, label().second);
         createRenderer();
-        control_->updateRules.connect(renderer_,
-                                      &Renderer::thermalScBuilderRenderer::onRulesChanged);
+        connectUpdateRules();
         createGrid();
         addToNotebook();
     }
 
 private:
-    void createRenderer()
-    {
-        renderer_ = new Renderer::thermalScBuilderRenderer(page_.second);
-    }
-    void createGrid() override
+    virtual std::pair<const char*, const char*> label() const = 0;
+    virtual void connectUpdateRules() = 0;
+
+    virtual void createGrid() override
     {
         grid_ = new DatagridType(page_.first, renderer_);
     }
-    void addToNotebook()
+
+    virtual void addToNotebook() override
     {
-        page_.first->add(grid_, wxT("thermal"), wxT("Thermal"));
+        page_.first->add(grid_, label().first, label().second);
         renderer_->control(grid_); // Shouldn't that be inside create() ?
-        page_.first->select(wxT("thermal"));
+        page_.first->select(label().first);
     }
 
-private:
+protected:
     std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page_;
 };
 
+// Thermal clusters ...
+class thermalScBuilderGrid : public clusterScBuilderGrid
+{
+public:
+    thermalScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
+     clusterScBuilderGrid(control, notebook)
+    {
+    }
+
+    virtual void createRenderer() override
+    {
+        renderer_ = new Renderer::thermalScBuilderRenderer(page_.second);
+    }
+
+    virtual void connectUpdateRules() override
+    {
+        control_->updateRules.connect(renderer_,
+                                      &Renderer::thermalScBuilderRenderer::onRulesChanged);
+    }
+
+    virtual std::pair<const char*, const char*> label() const override
+    {
+        return {"thermal", "Thermal"};
+    }
+};
+
 // Renewable clusters ...
-class renewableScBuilderGrid : public basicScBuilderGrid
+class renewableScBuilderGrid : public clusterScBuilderGrid
 {
 public:
     renewableScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
-        basicScBuilderGrid(control, notebook)
+     clusterScBuilderGrid(control, notebook)
     {
     }
 
-    void create() override
-    {
-        page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(
-            notebook_, wxT("renewable"), wxT("Renewable"));
-        createRenderer();
-        control_->updateRules.connect(renderer_,
-            &Renderer::renewableScBuilderRenderer::onRulesChanged);
-        createGrid();
-        addToNotebook();
-    }
-
-private:
-    void createRenderer()
+    virtual void createRenderer() override
     {
         renderer_ = new Renderer::renewableScBuilderRenderer(page_.second);
     }
-    void createGrid() override
+
+    virtual void connectUpdateRules() override
     {
-        grid_ = new DatagridType(page_.first, renderer_);
-    }
-    void addToNotebook()
-    {
-        page_.first->add(grid_, wxT("renewable"), wxT("Renewable"));
-        renderer_->control(grid_); // Shouldn't that be inside create() ?
-        page_.first->select(wxT("renewable"));
+        control_->updateRules.connect(renderer_,
+                                      &Renderer::renewableScBuilderRenderer::onRulesChanged);
     }
 
-private:
-    std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page_;
+    virtual std::pair<const char*, const char*> label() const override
+    {
+        return {"renewable", "Renewable"};
+    }
 };
 
 // Hydro levels ...
