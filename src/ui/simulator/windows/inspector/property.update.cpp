@@ -525,12 +525,6 @@ bool InspectorGrid::onPropertyChanging_Constraint(wxPGProperty*,
 class ClusterContext
 {
 public:
-    enum Type
-    {
-        kThermal,
-        kRenewable
-    };
-
     class Properties
     {
     public:
@@ -554,25 +548,8 @@ public:
         wxPGProperty* nominalCapacity;
     };
 
-    ClusterContext(Type t, InspectorData::Ptr data, Frame& frame) : pFrame(frame)
+  ClusterContext(InspectorData::Ptr data, Frame& frame) : pFrame(frame), clusters()
     {
-        switch (t)
-        {
-        case kThermal:
-            clusters = Data::Cluster::Set(data->ThClusters.begin(), data->ThClusters.end());
-            properties.fromThermal(frame);
-            groups = std::vector<const wxChar*>(std::begin(arrayClusterGroup),
-                                                std::end(arrayClusterGroup));
-            break;
-        case kRenewable:
-            clusters = Data::Cluster::Set(data->RnClusters.begin(), data->RnClusters.end());
-            properties.fromRenewable(frame);
-            groups = std::vector<const wxChar*>(std::begin(arrayRnClusterGroup),
-                                                std::end(arrayRnClusterGroup));
-            break;
-        default:
-            clusters = Data::Cluster::Set(); // TODO : error
-        }
     }
 
     bool changeName(const wxVariant& value)
@@ -730,39 +707,53 @@ protected:
 class ClusterContextThermal : public ClusterContext
 {
 public:
-  ClusterContextThermal(InspectorData::Ptr data, Frame& frame) : ClusterContext(kThermal, data, frame) {}
+    ClusterContextThermal(InspectorData::Ptr data, Frame& frame) : ClusterContext(data, frame)
+    {
+        clusters = Data::Cluster::Set(data->ThClusters.begin(), data->ThClusters.end());
+        properties.fromThermal(frame);
+        groups
+          = std::vector<const wxChar*>(std::begin(arrayClusterGroup), std::end(arrayClusterGroup));
+    }
+
 private:
-  virtual void OnCommonSettingsChanged() override
-  {
-    OnStudyThermalClusterCommonSettingsChanged();
-  }
-  virtual void OnStudyClusterGroupChanged(Data::Area* area) override
-  {
-    OnStudyThermalClusterGroupChanged(area);
-  }
-  virtual void OnStudyClusterRenamed(Data::Cluster* cluster) override
-  {
-    OnStudyThermalClusterRenamed(dynamic_cast<Data::ThermalCluster*>(cluster));
-  }
+    virtual void OnCommonSettingsChanged() override
+    {
+        OnStudyThermalClusterCommonSettingsChanged();
+    }
+    virtual void OnStudyClusterGroupChanged(Data::Area* area) override
+    {
+        OnStudyThermalClusterGroupChanged(area);
+    }
+    virtual void OnStudyClusterRenamed(Data::Cluster* cluster) override
+    {
+        OnStudyThermalClusterRenamed(dynamic_cast<Data::ThermalCluster*>(cluster));
+    }
 };
 
 class ClusterContextRenewable : public ClusterContext
 {
 public:
-  ClusterContextRenewable(InspectorData::Ptr data, Frame& frame) : ClusterContext(kRenewable, data, frame) {}
+    ClusterContextRenewable(InspectorData::Ptr data, Frame& frame) : ClusterContext(data, frame)
+    {
+        clusters = Data::Cluster::Set(data->RnClusters.begin(), data->RnClusters.end());
+        properties.fromRenewable(frame);
+        groups = std::vector<const wxChar*>(std::begin(arrayRnClusterGroup),
+                                            std::end(arrayRnClusterGroup));
+    }
+
 private:
-  virtual void OnCommonSettingsChanged() override
-  {
-    OnStudyRenewableClusterCommonSettingsChanged();
-  }
-  virtual void OnStudyClusterGroupChanged(Data::Area* area) override
-  {
-    OnStudyRenewableClusterGroupChanged(area);
-  }
-  virtual void OnStudyClusterRenamed(Data::Cluster* cluster) override
-  {
-    OnStudyRenewableClusterRenamed(dynamic_cast<Data::RenewableCluster*>(cluster));
-  }
+    virtual void OnCommonSettingsChanged() override
+    {
+        OnStudyRenewableClusterCommonSettingsChanged();
+    }
+    virtual void OnStudyClusterGroupChanged(Data::Area* area) override
+    {
+        OnStudyRenewableClusterGroupChanged(area);
+    }
+    virtual void OnStudyClusterRenamed(Data::Cluster* cluster) override
+    {
+        OnStudyRenewableClusterRenamed(dynamic_cast<Data::RenewableCluster*>(cluster));
+    }
 };
 
 bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
