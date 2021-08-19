@@ -548,7 +548,7 @@ public:
         wxPGProperty* nominalCapacity;
     };
 
-  ClusterContext(InspectorData::Ptr data, Frame& frame) : pFrame(frame), clusters()
+    ClusterContext(InspectorData::Ptr data, Frame& frame) : pFrame(frame), clusters()
     {
     }
 
@@ -629,7 +629,7 @@ public:
         {
             const SetType::iterator end = set.end();
             for (SetType::iterator i = set.begin(); i != end; ++i)
-              OnStudyClusterGroupChanged(*i);
+                OnStudyClusterGroupChanged(*i);
         }
         return true;
     }
@@ -656,7 +656,7 @@ public:
         OnCommonSettingsChanged();
 
         if (d > 100)
-          pFrame.delayApply();
+            pFrame.delayApply();
         return true;
     }
 
@@ -835,8 +835,8 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         // pFrame.delayApply();
         AccumulatorCheck<PClusterMinStablePowerColor>::ApplyTextColor(
           pFrame.pPGThClusterMinStablePower, data->ThClusters);
-        AccumulatorCheck<PClusterNomCapacityColor>::ApplyTextColor(pFrame.pPGThClusterNominalCapacity,
-                                                                   data->ThClusters);
+        AccumulatorCheck<PClusterNomCapacityColor>::ApplyTextColor(
+          pFrame.pPGThClusterNominalCapacity, data->ThClusters);
         AccumulatorCheck<PClusterSpinningColor>::ApplyTextColor(pFrame.pPGThClusterSpinning,
                                                                 data->ThClusters);
         // Notify
@@ -906,8 +906,8 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         // apply check and colour
         AccumulatorCheck<PClusterMinStablePowerColor>::ApplyTextColor(
           pFrame.pPGThClusterMinStablePower, data->ThClusters);
-        AccumulatorCheck<PClusterNomCapacityColor>::ApplyTextColor(pFrame.pPGThClusterNominalCapacity,
-                                                                   data->ThClusters);
+        AccumulatorCheck<PClusterNomCapacityColor>::ApplyTextColor(
+          pFrame.pPGThClusterNominalCapacity, data->ThClusters);
         AccumulatorCheck<PClusterSpinningColor>::ApplyTextColor(pFrame.pPGThClusterSpinning,
                                                                 data->ThClusters);
         // Notify
@@ -1158,7 +1158,8 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
     return false;
 }
 
-bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType& name, const wxVariant& value)
+bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType& name,
+                                                         const wxVariant& value)
 {
     using namespace Data;
     InspectorData::Ptr& data = pCurrentSelection;
