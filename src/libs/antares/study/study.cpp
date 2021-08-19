@@ -159,7 +159,9 @@ void Study::createAsNew()
 
     // Simulations
     parameters.reset();
+    // ... At study creation, renewable cluster is the default mode for RES (Renewable Energy Source)
     parameters.renewableGeneration.rgModelling = Antares::Data::rgClusters;
+
     parameters.yearsFilter = new bool[1];
     parameters.yearsFilter[0] = true;
 
