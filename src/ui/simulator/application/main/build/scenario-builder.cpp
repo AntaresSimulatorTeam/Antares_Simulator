@@ -165,12 +165,11 @@ private:
     }
 };
 
-// Thermal & renewable
-template<class Renderer>
-class commonScBuilderGrid : public basicScBuilderGrid
+// Thermal ...
+class thermalScBuilderGrid : public basicScBuilderGrid
 {
 public:
-    commonScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
+    thermalScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
      basicScBuilderGrid(control, notebook)
     {
     }
@@ -178,10 +177,10 @@ public:
     void create() override
     {
         page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(
-          notebook_, Renderer::internalLabel, Renderer::InternalLabel);
+          notebook_, Renderer::thermalScBuilderRenderer::internalLabel, Renderer::thermalScBuilderRenderer::InternalLabel);
         createRenderer();
         control_->updateRules.connect(renderer_,
-                                      &Renderer::onRulesChanged);
+                                      &Renderer::thermalScBuilderRenderer::onRulesChanged);
         createGrid();
         addToNotebook();
     }
@@ -189,7 +188,7 @@ public:
 private:
     void createRenderer()
     {
-        renderer_ = new Renderer(page_.second);
+        renderer_ = new Renderer::thermalScBuilderRenderer(page_.second);
     }
     void createGrid() override
     {
@@ -197,20 +196,54 @@ private:
     }
     void addToNotebook()
     {
-        page_.first->add(grid_, Renderer::internalLabel, Renderer::InternalLabel);
+        page_.first->add(grid_, Renderer::thermalScBuilderRenderer::internalLabel, Renderer::thermalScBuilderRenderer::InternalLabel);
         renderer_->control(grid_); // Shouldn't that be inside create() ?
-        page_.first->select(Renderer::internalLabel);
+        page_.first->select(Renderer::thermalScBuilderRenderer::internalLabel);
     }
 
 private:
     std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page_;
 };
 
-// Thermal clusters ...
-typedef commonScBuilderGrid<Antares::Component::Datagrid::Renderer::thermalScBuilderRenderer> thermalScBuilderGrid;
-
 // Renewable clusters ...
-typedef commonScBuilderGrid<Antares::Component::Datagrid::Renderer::renewableScBuilderRenderer> renewableScBuilderGrid;
+class renewableScBuilderGrid : public basicScBuilderGrid
+{
+public:
+    renewableScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
+        basicScBuilderGrid(control, notebook)
+    {
+    }
+
+    void create() override
+    {
+        page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(
+            notebook_, Renderer::renewableScBuilderRenderer::internalLabel, Renderer::renewableScBuilderRenderer::InternalLabel);
+        createRenderer();
+        control_->updateRules.connect(renderer_,
+            &Renderer::renewableScBuilderRenderer::onRulesChanged);
+        createGrid();
+        addToNotebook();
+    }
+
+private:
+    void createRenderer()
+    {
+        renderer_ = new Renderer::renewableScBuilderRenderer(page_.second);
+    }
+    void createGrid() override
+    {
+        grid_ = new DatagridType(page_.first, renderer_);
+    }
+    void addToNotebook()
+    {
+        page_.first->add(grid_, Renderer::renewableScBuilderRenderer::internalLabel, Renderer::renewableScBuilderRenderer::InternalLabel);
+        renderer_->control(grid_); // Shouldn't that be inside create() ?
+        page_.first->select(Renderer::renewableScBuilderRenderer::internalLabel);
+    }
+
+private:
+    std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page_;
+};
 
 // Hydro levels ...
 class hydroLevelsScBuilderGrid : public basicScBuilderGrid
