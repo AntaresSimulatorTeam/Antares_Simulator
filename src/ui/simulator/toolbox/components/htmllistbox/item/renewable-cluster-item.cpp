@@ -58,9 +58,7 @@ RenewableClusterItem::~RenewableClusterItem()
 
 wxString RenewableClusterItem::getClusterIconFilePath()
 {
-    // gp : This icon file (link.png) is given here as an example, for test purposes.
-    // gp : It has to be chnaged when renewable icon is ready 
-    return getIconFilePath("images/16x16/link.png");
+    return getIconFilePath("images/16x16/renewable.png");
 }
 
 wxString RenewableClusterItem::htmlContentTail()
