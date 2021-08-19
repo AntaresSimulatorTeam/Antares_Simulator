@@ -697,9 +697,13 @@ public:
             for (auto cluster : clusters)
                 cluster->nominalCapacity = d;
         }
+
         // refresh the installed capacity
         Accumulator<PClusterNomCapacity>::Apply(properties.nominalCapacity, clusters);
         Accumulator<PClusterInstalled, Add>::Apply(properties.installedCapacity, clusters);
+
+        // Notify
+        OnCommonSettingsChanged();
         return true;
     }
 
