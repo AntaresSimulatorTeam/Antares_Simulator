@@ -1,7 +1,27 @@
 ﻿Antares Changelog
 =================
 
-v8.1.0 (08/2021)
+v8.1.0-rc2 (08/2021)
+--------------------
+
+### GUI
+  - Dialogs "Thematic trimming" and "User playlist" are now resizable
+  - Remove warning when opening a old (<8.1) study
+  - When changing advanced parameter "renewable generation modelling", change tab only if current one disappears
+  - When creating a new study, renewable generation modelling is set to "clusters" by default. Note that this change does not affect opening an existing study.
+  - Add RES icons
+
+### Bug fixes
+  - When renewable modelling is set to "aggregated", do not create details-res-<hourly|daily|weekly|monthly|annual>.txt
+  - When renewable modelling is set to "aggregated", do not create "WIND OFFSHORE", etc. columns in values-<hourly|daily|weekly|monthly|annual>.txt
+  - Fix pre-simulation crash when intermodal draw is enabled for renewables
+  - RES cluster production is taken into account in the hydro allocation step as a must-run production
+
+### For developers
+  - Code cleaning & de-duplication
+
+
+v8.1.0-rc1 (08/2021)
 --------------------
 
 ### New features
