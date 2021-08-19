@@ -1014,21 +1014,21 @@ void AdvancedParameters::onRenewableGenerationModelling(Component::Button&, wxMe
     wxMenuItem* it;
     wxString text;
 
-    text = wxStringFromUTF8(RenewableGenerationModellingToCString(Data::rgAggregated));
+    text = wxStringFromUTF8(RenewableGenerationModellingToCString(Data::rgClusters));
     text << wxT("   [default]");
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
         wxEVT_COMMAND_MENU_SELECTED,
-        wxCommandEventHandler(AdvancedParameters::onSelectRGMaggregated),
+        wxCommandEventHandler(AdvancedParameters::onSelectRGMrenewableClusters),
         nullptr,
         this);
 
     text.clear();
-    text = wxStringFromUTF8(RenewableGenerationModellingToCString(Data::rgClusters));
+    text = wxStringFromUTF8(RenewableGenerationModellingToCString(Data::rgAggregated));
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
         wxEVT_COMMAND_MENU_SELECTED,
-        wxCommandEventHandler(AdvancedParameters::onSelectRGMrenewableClusters),
+        wxCommandEventHandler(AdvancedParameters::onSelectRGMaggregated),
         nullptr,
         this);
 }
