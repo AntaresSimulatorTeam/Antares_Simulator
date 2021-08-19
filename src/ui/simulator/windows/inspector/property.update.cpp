@@ -538,20 +538,17 @@ public:
         void fromThermal(Frame& frame)
         {
             unitCount = frame.pPGThClusterUnitCount;
-            enabled = frame.pPGThClusterEnabled;
             installedCapacity = frame.pPGThClusterInstalled;
             nominalCapacity = frame.pPGThClusterNominalCapacity;
         }
         void fromRenewable(Frame& frame)
         {
-            enabled = frame.pPGRnClusterEnabled;
             unitCount = frame.pPGRnClusterUnitCount;
             installedCapacity = frame.pPGRnClusterInstalled;
             nominalCapacity = frame.pPGRnClusterNominalCapacity;
         }
 
         // Members
-        wxPGProperty* enabled;
         wxPGProperty* unitCount;
         wxPGProperty* installedCapacity;
         wxPGProperty* nominalCapacity;
