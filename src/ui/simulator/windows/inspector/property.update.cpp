@@ -683,7 +683,7 @@ public:
         return true;
     }
 
-    void changeNominalCapacity(const wxVariant& value)
+    bool changeNominalCapacity(const wxVariant& value)
     {
         double d = value.GetDouble();
         if (d < 0.)
@@ -700,6 +700,7 @@ public:
         // refresh the installed capacity
         Accumulator<PClusterNomCapacity>::Apply(properties.nominalCapacity, clusters);
         Accumulator<PClusterInstalled, Add>::Apply(properties.installedCapacity, clusters);
+        return true;
     }
 
     bool changeEnabled(const wxVariant& value)
@@ -805,7 +806,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
 
     if (name == "cluster.enabled")
     {
-        context.changeEnabled(value);
+        return context.changeEnabled(value);
     }
 
     // THERMAL-SPECIFIC PROPERTIES
@@ -1189,12 +1190,12 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
     }
     if (name == "rn-cluster.nominal_capacity")
     {
-        context.changeNominalCapacity(value);
+        return context.changeNominalCapacity(value);
     }
 
     if (name == "rn-cluster.enabled")
     {
-        context.changeEnabled(value);
+        return context.changeEnabled(value);
     }
 
     // RENEWABLE-SPECIFIC PROPERTY
