@@ -159,6 +159,7 @@ void Study::createAsNew()
 
     // Simulations
     parameters.reset();
+    parameters.renewableGeneration.rgModelling = Antares::Data::rgClusters;
     parameters.yearsFilter = new bool[1];
     parameters.yearsFilter[0] = true;
 

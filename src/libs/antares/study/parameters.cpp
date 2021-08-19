@@ -281,7 +281,7 @@ void Parameters::reset()
 
     unitCommitment.ucMode = ucHeuristic;
     nbCores.ncMode = ncAvg;
-    renewableGeneration.rgModelling = rgClusters;
+    renewableGeneration.rgModelling = rgAggregated;
     reserveManagement.daMode = daGlobal;
 
     // Misc
