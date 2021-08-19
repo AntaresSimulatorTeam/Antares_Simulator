@@ -48,6 +48,8 @@ public:
     int height() const;
     wxString rowCaption(int rowIndx) const;
     double cellNumericValue(int x, int y) const;
+    static constexpr auto internalLabel = wxT("thermal");
+    static constexpr auto InternalLabel = wxT("Thermal");
 }; // class thermalScBuilderRenderer
 
 } // namespace Renderer
