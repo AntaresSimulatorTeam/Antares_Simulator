@@ -44,6 +44,7 @@
 #include <antares/study/area/constants.h>
 #include "../message.h"
 #include "../../application/main/internal-ids.h"
+#include "property.cluster.update.h"
 
 using namespace Yuni;
 
@@ -522,229 +523,6 @@ bool InspectorGrid::onPropertyChanging_Constraint(wxPGProperty*,
     return false;
 }
 
-class ClusterContext
-{
-public:
-    ClusterContext(InspectorData::Ptr data, Frame& frame) : pFrame(frame), clusters()
-    {
-    }
-
-    bool changeName(const wxVariant& value)
-    {
-        if (clusters.size() != 1)
-            return false;
-        Data::ClusterName name;
-        wxStringToString(value.GetString(), name);
-        name.trim(" \r\n\t");
-        if (!name)
-            return false;
-
-        Data::Cluster* cluster = *(clusters.begin());
-        auto study = Data::Study::Current::Get();
-        if (!(!study) && study->clusterRename(cluster, name))
-        {
-            // Notify
-            OnStudyClusterRenamed(cluster);
-            cluster->markAsModified();
-            return true;
-        }
-        return false;
-    }
-
-    bool changeGroup(const wxVariant& value)
-    {
-        wxString vs = value.GetString();
-        String newgroup;
-        wxStringToString(vs, newgroup);
-        Data::ClusterName name;
-
-        if (not newgroup.empty())
-        {
-            long index;
-            if (newgroup.to(index))
-            {
-                if (index < 0 || index > arrayClusterGroupCount)
-                {
-                    logs.error() << "The group index is invalid";
-                    return false;
-                }
-                const wxChar* const wName = groups[index];
-                wxStringToString(wName, name);
-                name.trim(" \r\n\t");
-                if (!name)
-                    return false;
-            }
-            else
-                name = newgroup;
-        }
-        else
-            name = newgroup;
-
-        // TODO RegEx are good sometimes...
-        name.replace('/', '-');
-        name.replace('\\', '-');
-        name.replace(',', '-');
-        name.replace('(', '-');
-        name.replace(')', '-');
-        name.replace('?', '-');
-        name.replace(':', '-');
-
-        typedef Data::Area* AreaType;
-        typedef std::set<AreaType> SetType;
-        SetType set;
-
-        for (auto cluster : clusters)
-        {
-            if (cluster->group() != name)
-            {
-                cluster->setGroup(name);
-                set.insert(cluster->parentArea);
-            }
-        }
-
-        if (!set.empty())
-        {
-            const SetType::iterator end = set.end();
-            for (SetType::iterator i = set.begin(); i != end; ++i)
-                OnStudyClusterGroupChanged(*i);
-        }
-        return true;
-    }
-
-    bool changeUnit(const wxVariant& value)
-    {
-        uint d = static_cast<uint>(value.GetLong());
-        if (d > 100)
-        {
-            logs.error() << "A cluster can not have more than 100 units";
-            for (auto cluster : clusters)
-                cluster->unitCount = 100;
-            Accumulator<PClusterUnitCount>::Apply(unitCount, clusters);
-        }
-        else
-        {
-            for (auto cluster : clusters)
-                cluster->unitCount = d;
-        }
-        // refresh the installed capacity
-        Accumulator<PClusterInstalled, Add>::Apply(installedCapacity, clusters);
-
-        // Notify
-        OnCommonSettingsChanged();
-
-        if (d > 100)
-            pFrame.delayApply();
-        return true;
-    }
-
-    bool changeNominalCapacity(const wxVariant& value)
-    {
-        double d = value.GetDouble();
-        if (d < 0.)
-        {
-            for (auto cluster : clusters)
-                cluster->nominalCapacity = 0.;
-            pFrame.delayApply();
-        }
-        else
-        {
-            for (auto cluster : clusters)
-                cluster->nominalCapacity = d;
-        }
-
-        // refresh the installed capacity
-        Accumulator<PClusterNomCapacity>::Apply(nominalCapacity, clusters);
-        Accumulator<PClusterInstalled, Add>::Apply(installedCapacity, clusters);
-
-        // Notify
-        OnCommonSettingsChanged();
-        return true;
-    }
-
-    bool changeEnabled(const wxVariant& value)
-    {
-        const bool d = value.GetBool();
-        for (auto cluster : clusters)
-            cluster->enabled = d;
-        // Notify
-        OnCommonSettingsChanged();
-        return true;
-    }
-
-protected:
-    Data::Cluster::Set clusters;
-    std::vector<const wxChar*> groups;
-    Frame& pFrame;
-    wxPGProperty* unitCount;
-    wxPGProperty* installedCapacity;
-    wxPGProperty* nominalCapacity;
-
-private:
-    virtual void OnCommonSettingsChanged() = 0;
-    virtual void OnStudyClusterGroupChanged(Data::Area*) = 0;
-    virtual void OnStudyClusterRenamed(Data::Cluster*) = 0;
-};
-
-class ClusterContextThermal : public ClusterContext
-{
-public:
-    ClusterContextThermal(InspectorData::Ptr data, Frame& frame) : ClusterContext(data, frame)
-    {
-        // wxProperties
-        unitCount = frame.pPGThClusterUnitCount;
-        installedCapacity = frame.pPGThClusterInstalled;
-        nominalCapacity = frame.pPGThClusterNominalCapacity;
-
-        clusters = Data::Cluster::Set(data->ThClusters.begin(), data->ThClusters.end());
-        groups
-          = std::vector<const wxChar*>(std::begin(arrayClusterGroup), std::end(arrayClusterGroup));
-    }
-
-private:
-    virtual void OnCommonSettingsChanged() override
-    {
-        OnStudyThermalClusterCommonSettingsChanged();
-    }
-    virtual void OnStudyClusterGroupChanged(Data::Area* area) override
-    {
-        OnStudyThermalClusterGroupChanged(area);
-    }
-    virtual void OnStudyClusterRenamed(Data::Cluster* cluster) override
-    {
-        OnStudyThermalClusterRenamed(dynamic_cast<Data::ThermalCluster*>(cluster));
-    }
-};
-
-class ClusterContextRenewable : public ClusterContext
-{
-public:
-    ClusterContextRenewable(InspectorData::Ptr data, Frame& frame) : ClusterContext(data, frame)
-    {
-        // wxProperties
-        unitCount = frame.pPGRnClusterUnitCount;
-        installedCapacity = frame.pPGRnClusterInstalled;
-        nominalCapacity = frame.pPGRnClusterNominalCapacity;
-
-        clusters = Data::Cluster::Set(data->RnClusters.begin(), data->RnClusters.end());
-        groups = std::vector<const wxChar*>(std::begin(arrayRnClusterGroup),
-                                            std::end(arrayRnClusterGroup));
-    }
-
-private:
-    virtual void OnCommonSettingsChanged() override
-    {
-        OnStudyRenewableClusterCommonSettingsChanged();
-    }
-    virtual void OnStudyClusterGroupChanged(Data::Area* area) override
-    {
-        OnStudyRenewableClusterGroupChanged(area);
-    }
-    virtual void OnStudyClusterRenamed(Data::Cluster* cluster) override
-    {
-        OnStudyRenewableClusterRenamed(dynamic_cast<Data::RenewableCluster*>(cluster));
-    }
-};
-
 bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
                                                       const PropertyNameType& name,
                                                       const wxVariant& value)
@@ -753,28 +531,28 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
     if (!data)
         return false;
 
-    ClusterContextThermal context(data, pFrame);
+    ClusterUpdaterThermal updater(data, pFrame);
 
     if (name == "cluster.name")
     {
-        return context.changeName(value);
+        return updater.changeName(value);
     }
 
     // Group
     if (name == "cluster.group")
     {
-        return context.changeGroup(value);
+        return updater.changeGroup(value);
     }
 
     // unit
     if (name == "cluster.unit")
     {
-        return context.changeUnit(value);
+        return updater.changeUnit(value);
     }
 
     if (name == "cluster.nominal_capacity")
     {
-        context.changeNominalCapacity(value);
+        updater.changeNominalCapacity(value);
         // apply check and colour
         // specific to thermal
         AccumulatorCheck<PClusterMinStablePowerColor>::ApplyTextColor(
@@ -790,7 +568,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
 
     if (name == "cluster.enabled")
     {
-        return context.changeEnabled(value);
+        return updater.changeEnabled(value);
     }
 
     // THERMAL-SPECIFIC PROPERTIES
@@ -1155,32 +933,32 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
     if (!data)
         return false;
 
-    ClusterContextRenewable context(data, pFrame);
+    ClusterUpdaterRenewable updater(data, pFrame);
 
     if (name == "rn-cluster.name")
     {
-        return context.changeName(value);
+        return updater.changeName(value);
     }
 
     // Group
     if (name == "rn-cluster.group")
     {
-        return context.changeGroup(value);
+        return updater.changeGroup(value);
     }
 
     // unit
     if (name == "rn-cluster.unit")
     {
-        return context.changeUnit(value);
+        return updater.changeUnit(value);
     }
     if (name == "rn-cluster.nominal_capacity")
     {
-        return context.changeNominalCapacity(value);
+        return updater.changeNominalCapacity(value);
     }
 
     if (name == "rn-cluster.enabled")
     {
-        return context.changeEnabled(value);
+        return updater.changeEnabled(value);
     }
 
     // RENEWABLE-SPECIFIC PROPERTY
