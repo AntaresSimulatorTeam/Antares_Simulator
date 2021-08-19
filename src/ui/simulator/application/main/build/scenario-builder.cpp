@@ -175,8 +175,7 @@ public:
 
     virtual void create() override
     {
-        page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(
-          notebook_, label().first, label().second);
+        page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(notebook_, name(), caption());
         createRenderer();
         connectUpdateRules();
         createGrid();
@@ -184,7 +183,8 @@ public:
     }
 
 private:
-    virtual std::pair<const char*, const char*> label() const = 0;
+    virtual const char* name() const = 0;
+    virtual const char* caption() const = 0;
     virtual void connectUpdateRules() = 0;
 
     virtual void createGrid() override
@@ -194,9 +194,9 @@ private:
 
     virtual void addToNotebook() override
     {
-        page_.first->add(grid_, label().first, label().second);
+        page_.first->add(grid_, name(), caption());
         renderer_->control(grid_); // Shouldn't that be inside create() ?
-        page_.first->select(label().first);
+        page_.first->select(name());
     }
 
 protected:
@@ -223,9 +223,14 @@ public:
                                       &Renderer::thermalScBuilderRenderer::onRulesChanged);
     }
 
-    virtual std::pair<const char*, const char*> label() const override
+    virtual const char* name() const override
     {
-        return {"thermal", "Thermal"};
+        return "thermal";
+    }
+
+    virtual const char* caption() const override
+    {
+        return "Thermal";
     }
 };
 
@@ -249,9 +254,14 @@ public:
                                       &Renderer::renewableScBuilderRenderer::onRulesChanged);
     }
 
-    virtual std::pair<const char*, const char*> label() const override
+    virtual const char* name() const override
     {
-        return {"renewable", "Renewable"};
+        return "renewable";
+    }
+
+    virtual const char* caption() const override
+    {
+        return "Renewable";
     }
 };
 
