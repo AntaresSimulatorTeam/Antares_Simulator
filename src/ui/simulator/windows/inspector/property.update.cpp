@@ -525,29 +525,6 @@ bool InspectorGrid::onPropertyChanging_Constraint(wxPGProperty*,
 class ClusterContext
 {
 public:
-    class Properties
-    {
-    public:
-        Properties() = default;
-        void fromThermal(Frame& frame)
-        {
-            unitCount = frame.pPGThClusterUnitCount;
-            installedCapacity = frame.pPGThClusterInstalled;
-            nominalCapacity = frame.pPGThClusterNominalCapacity;
-        }
-        void fromRenewable(Frame& frame)
-        {
-            unitCount = frame.pPGRnClusterUnitCount;
-            installedCapacity = frame.pPGRnClusterInstalled;
-            nominalCapacity = frame.pPGRnClusterNominalCapacity;
-        }
-
-        // Members
-        wxPGProperty* unitCount;
-        wxPGProperty* installedCapacity;
-        wxPGProperty* nominalCapacity;
-    };
-
     ClusterContext(InspectorData::Ptr data, Frame& frame) : pFrame(frame), clusters()
     {
     }
@@ -642,7 +619,7 @@ public:
             logs.error() << "A cluster can not have more than 100 units";
             for (auto cluster : clusters)
                 cluster->unitCount = 100;
-            Accumulator<PClusterUnitCount>::Apply(properties.unitCount, clusters);
+            Accumulator<PClusterUnitCount>::Apply(unitCount, clusters);
         }
         else
         {
@@ -650,7 +627,7 @@ public:
                 cluster->unitCount = d;
         }
         // refresh the installed capacity
-        Accumulator<PClusterInstalled, Add>::Apply(properties.installedCapacity, clusters);
+        Accumulator<PClusterInstalled, Add>::Apply(installedCapacity, clusters);
 
         // Notify
         OnCommonSettingsChanged();
@@ -676,8 +653,8 @@ public:
         }
 
         // refresh the installed capacity
-        Accumulator<PClusterNomCapacity>::Apply(properties.nominalCapacity, clusters);
-        Accumulator<PClusterInstalled, Add>::Apply(properties.installedCapacity, clusters);
+        Accumulator<PClusterNomCapacity>::Apply(nominalCapacity, clusters);
+        Accumulator<PClusterInstalled, Add>::Apply(installedCapacity, clusters);
 
         // Notify
         OnCommonSettingsChanged();
@@ -696,9 +673,13 @@ public:
 
 protected:
     Data::Cluster::Set clusters;
-    Properties properties;
     std::vector<const wxChar*> groups;
     Frame& pFrame;
+    wxPGProperty* unitCount;
+    wxPGProperty* installedCapacity;
+    wxPGProperty* nominalCapacity;
+
+private:
     virtual void OnCommonSettingsChanged() = 0;
     virtual void OnStudyClusterGroupChanged(Data::Area*) = 0;
     virtual void OnStudyClusterRenamed(Data::Cluster*) = 0;
@@ -709,8 +690,12 @@ class ClusterContextThermal : public ClusterContext
 public:
     ClusterContextThermal(InspectorData::Ptr data, Frame& frame) : ClusterContext(data, frame)
     {
+        // wxProperties
+        unitCount = frame.pPGThClusterUnitCount;
+        installedCapacity = frame.pPGThClusterInstalled;
+        nominalCapacity = frame.pPGThClusterNominalCapacity;
+
         clusters = Data::Cluster::Set(data->ThClusters.begin(), data->ThClusters.end());
-        properties.fromThermal(frame);
         groups
           = std::vector<const wxChar*>(std::begin(arrayClusterGroup), std::end(arrayClusterGroup));
     }
@@ -735,8 +720,12 @@ class ClusterContextRenewable : public ClusterContext
 public:
     ClusterContextRenewable(InspectorData::Ptr data, Frame& frame) : ClusterContext(data, frame)
     {
+        // wxProperties
+        unitCount = frame.pPGRnClusterUnitCount;
+        installedCapacity = frame.pPGRnClusterInstalled;
+        nominalCapacity = frame.pPGRnClusterNominalCapacity;
+
         clusters = Data::Cluster::Set(data->RnClusters.begin(), data->RnClusters.end());
-        properties.fromRenewable(frame);
         groups = std::vector<const wxChar*>(std::begin(arrayRnClusterGroup),
                                             std::end(arrayRnClusterGroup));
     }
