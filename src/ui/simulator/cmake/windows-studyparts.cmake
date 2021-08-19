@@ -36,7 +36,6 @@ set(SRC_UI_WINDOWS_STUDYPARTS
 		windows/bindingconstraint/bindingconstraint.cpp
 		windows/bindingconstraint/edit.h
 		windows/bindingconstraint/edit.cpp
-		windows/options/scenario-builder.h
 )
 add_Library(libantares-ui-windows-studyparts  ${SRC_UI_WINDOWS_STUDYPARTS})
 
