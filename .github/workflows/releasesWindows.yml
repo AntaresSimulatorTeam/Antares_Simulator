@@ -94,6 +94,7 @@ jobs:
       shell: bash
       run: |
            rm -rf src/tests/resources/Antares_Simulator_Tests
+           rm -rf src/tests/resources/NonRegTests
            cd _build
            cpack -GNSIS
            export NSIS_NAME=$(ls *.exe)
