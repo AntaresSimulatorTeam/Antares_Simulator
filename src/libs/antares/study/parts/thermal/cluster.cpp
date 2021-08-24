@@ -104,7 +104,8 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
  productionCost(nullptr),
  unitCountLastHour(nullptr),
  productionLastHour(nullptr),
- pminOfAGroup(nullptr)
+ pminOfAGroup(nullptr),
+ doGenerateTS(true)
 {
     // assert
     assert(parent and "A parent for a thermal dispatchable cluster can not be null");
@@ -148,7 +149,8 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  productionCost(nullptr),
  unitCountLastHour(nullptr),
  productionLastHour(nullptr),
- pminOfAGroup(nullptr)
+ pminOfAGroup(nullptr),
+ doGenerateTS(true)
 {
     // assert
     assert(parent and "A parent for a thermal dispatchable cluster can not be null");

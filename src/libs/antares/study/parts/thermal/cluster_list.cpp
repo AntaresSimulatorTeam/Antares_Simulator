@@ -408,6 +408,8 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
             cluster.minStablePower = Math::Max(cluster.minStablePower, d);
             return true; // ignored since 3.7
         }
+        if (p->key == "gen-ts")
+            return p->value.to<bool>(cluster.doGenerateTS);
         break;
     }
     case 'e':
@@ -754,7 +756,8 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
                 s->add("unitCount", c.unitCount);
             if (not Math::Zero(c.nominalCapacity))
                 s->add("nominalCapacity", c.nominalCapacity);
-
+            if (not c.doGenerateTS)
+                s->add("ts-gen", c.doGenerateTS);
             // Min. Stable Power
             if (not Math::Zero(c.minStablePower))
                 s->add("min-stable-power", c.minStablePower);

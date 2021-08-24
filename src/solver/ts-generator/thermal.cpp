@@ -154,6 +154,12 @@ GeneratorTempData::GeneratorTempData(Data::Study& study, Solver::Progression::Ta
 void GeneratorTempData::writeResultsToDisk(const Data::Area& area,
                                            const Data::ThermalCluster& cluster)
 {
+    if(not cluster.doGenerateTS)
+    {
+        ++pProgression;
+        return;
+    }
+
     if (not study.parameters.noOutput)
     {
         pTempFilename.reserve(study.folderOutput.size() + 256);
@@ -672,7 +678,8 @@ bool GenerateThermalTimeSeries(Data::Study& study, uint year)
         {
             auto& cluster = *(it->second);
 
-            (*generator)(area, cluster);
+            if (cluster.doGenerateTS)
+              (*generator)(area, cluster);
 
             ++progression;
 #ifdef ANTARES_SWAP_SUPPORT

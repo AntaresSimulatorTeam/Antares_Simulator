@@ -375,6 +375,8 @@ public:
     */
     double* pminOfAGroup;
 
+    bool doGenerateTS;
+
     friend class ThermalClusterList;
 
     private:
