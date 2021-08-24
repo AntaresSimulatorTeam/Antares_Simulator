@@ -408,8 +408,6 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
             cluster.minStablePower = Math::Max(cluster.minStablePower, d);
             return true; // ignored since 3.7
         }
-        if (p->key == "gen-ts")
-            return p->value.to<bool>(cluster.doGenerateTS);
         break;
     }
     case 'e':
@@ -441,6 +439,8 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
             cluster.setGroup(p->value);
             return true;
         }
+        if (p->key == "gen-ts")
+            return p->value.to<bool>(cluster.doGenerateTS);
         break;
     }
     case 'h':
