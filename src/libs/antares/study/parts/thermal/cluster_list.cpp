@@ -757,7 +757,7 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             if (not Math::Zero(c.nominalCapacity))
                 s->add("nominalCapacity", c.nominalCapacity);
             if (not c.doGenerateTS)
-                s->add("ts-gen", c.doGenerateTS);
+                s->add("gen-ts", c.doGenerateTS);
             // Min. Stable Power
             if (not Math::Zero(c.minStablePower))
                 s->add("min-stable-power", c.minStablePower);
