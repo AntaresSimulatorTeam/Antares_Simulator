@@ -38,7 +38,10 @@ namespace HTMLListbox
 namespace Datasource
 {
 
-ClustersByOrder::ClustersByOrder(HTMLListbox::Component& parent) : IDatasource(parent), pArea(nullptr)
+ClustersByOrder::ClustersByOrder(HTMLListbox::Component& parent) :
+    IDatasource(parent),
+    pArea(nullptr),
+    hasGroupJustChanged_(false)
 {
     OnStudyAreasChanged.connect(this, &ClustersByOrder::onInvalidateAllAreas);
     Forms::ApplWnd::Instance()->onApplicationQuit.connect(this,
@@ -59,6 +62,16 @@ void ClustersByOrder::onAreaChanged(Data::Area* area)
 void ClustersByOrder::onInvalidateAllAreas()
 {
     pArea = nullptr;
+}
+
+void ClustersByOrder::hasGroupChanged(bool b)
+{
+    hasGroupJustChanged_ = true;
+}
+
+bool ClustersByOrder::hasGroupChanged()
+{
+    return hasGroupJustChanged_;
 }
 
 } // namespace Datasource

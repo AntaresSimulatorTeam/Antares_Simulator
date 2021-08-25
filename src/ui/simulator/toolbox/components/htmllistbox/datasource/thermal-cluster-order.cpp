@@ -26,7 +26,6 @@
 */
 
 #include "thermal-cluster-order.h"
-#include "../item/thermal-cluster-item.h"
 #include "../item/group.h"
 #include "../component.h"
 
@@ -40,6 +39,8 @@ namespace HTMLListbox
 {
 namespace Datasource
 {
+
+using namespace Antares::Component::HTMLListbox::Item;
 
 ThermalClustersByOrder::ThermalClustersByOrder(HTMLListbox::Component& parent) :
     ClustersByOrder(parent)
@@ -68,7 +69,18 @@ void GetThermalClusterMap(Data::Area* area, ThermalClusterMap& l, const wxString
 
 void ThermalClustersByOrder::refresh(const wxString& search)
 {
-    pParent.clear();
+    if (hasGroupChanged())
+    {
+        refresh_when_cluster_group_changed(search);
+        hasGroupChanged(false);
+    }        
+    else
+        refresh_by_building_item_list(search);
+}
+
+void ThermalClustersByOrder::refresh_when_cluster_group_changed(const wxString& search)
+{
+    // pParent.clear();
 
     if (pArea)
     {
@@ -76,8 +88,74 @@ void ThermalClustersByOrder::refresh(const wxString& search)
         GetThermalClusterMap(pArea, l, search);
         if (!l.empty())
         {
-            ThermalClusterMap::iterator end = l.end();
-            for (ThermalClusterMap::iterator group_it = l.begin(); group_it != end; ++group_it)
+            int index_item = 0;
+            // std::vector<IItem> items_tmp;
+            for (ThermalClusterMap::iterator group_it = l.begin(); group_it != l.end(); ++group_it)
+            {
+                if (groups_to_items_.find(group_it->first) != groups_to_items_.end())
+                {
+                    auto groupItem = groups_to_items_[group_it->first];
+                    pParent.setElement(groupItem, index_item);
+                }
+                else
+                {
+                    // Group title
+                    wxString s;
+                    s << wxStringFromUTF8(pArea->name);
+                    if (s.size() > 43)
+                    {
+                        s.resize(40);
+                        s += wxT("...");
+                    }
+
+                    if (group_it->first.empty())
+                        s << wxT(" / <i>* no group *</i>");
+                    else
+                        s << wxT(" / ") << group_it->first;
+
+                    auto groupItem = new Group(s);
+                    pParent.add(groupItem);
+
+                }
+
+                index_item++;
+
+                ThermalClusterList& clusterList = group_it->second;
+
+                sortClustersInGroup(clusterList);
+
+                for (ThermalClusterList::iterator j = clusterList.begin(); j != clusterList.end(); ++j)
+                {
+                    
+                    // pParent.setElement(clusters_to_items_[*j].first, index_item);
+
+                    auto thermalClusterItem = clusters_to_items_[*j];
+                    if (index_item + 1 > pParent.size())
+                        pParent.add(thermalClusterItem);
+                    else
+                        pParent.setElement(thermalClusterItem, index_item);
+
+                    index_item++;
+                }
+            }
+        }
+    }
+    pParent.invalidate();
+}
+
+void ThermalClustersByOrder::refresh_by_building_item_list(const wxString& search)
+{
+    pParent.clear();
+    clusters_to_items_.clear();
+
+    if (pArea)
+    {
+        ThermalClusterMap l;
+        GetThermalClusterMap(pArea, l, search);
+        if (!l.empty())
+        {
+            // int index_item = 0;
+            for (ThermalClusterMap::iterator group_it = l.begin(); group_it != l.end(); ++group_it)
             {
                 // Group title
                 wxString s;
@@ -89,15 +167,28 @@ void ThermalClustersByOrder::refresh(const wxString& search)
                 }
 
                 if (group_it->first.empty())
-                        s << wxT(" / <i>* no group *</i>");
+                    s << wxT(" / <i>* no group *</i>");
                 else
-                        s << wxT(" / ") << group_it->first;
+                    s << wxT(" / ") << group_it->first;
 
                 // Refreshing the group
-                pParent.add(new Antares::Component::HTMLListbox::Item::Group(s));
-                
+                auto groupItem = new Group(s);
+                pParent.add(groupItem);
+                groups_to_items_[group_it->first] = groupItem;
+                // index_item++;
+
                 // Refreshing all clusters of the group
-                refreshClustersInGroup(group_it->second);
+                ThermalClusterList& clusterList = group_it->second;
+                sortClustersInGroup(clusterList);
+
+                for (ThermalClusterList::iterator j = clusterList.begin(); j != clusterList.end(); ++j)
+                {
+                    auto thermalClusterItem = new ThermalClusterItem(*j);
+                    pParent.add(thermalClusterItem);
+                    // clusters_to_items_[*j] = std::make_pair(thermalClusterItem, index_item);
+                    clusters_to_items_[*j] = thermalClusterItem;
+                    // index_item++;
+                }
             }
         }
     }
@@ -113,14 +204,25 @@ ThermalClustersByAlphaOrder::ThermalClustersByAlphaOrder(HTMLListbox::Component&
 ThermalClustersByAlphaOrder::~ThermalClustersByAlphaOrder()
 {}
 
+void ThermalClustersByAlphaOrder::sortClustersInGroup(ThermalClusterList& clusterList)
+{
+    clusterList.sort(SortAlphaOrder());
+}
+
+/*
 void ThermalClustersByAlphaOrder::refreshClustersInGroup(ThermalClusterList & clusterList)
 {
     // Added the area as a result
     ThermalClusterList::iterator jend = clusterList.end();
     clusterList.sort(SortAlphaOrder());
     for (ThermalClusterList::iterator j = clusterList.begin(); j != jend; ++j)
-        pParent.add(new Antares::Component::HTMLListbox::Item::ThermalClusterItem(*j));
+    {
+        auto thermalClusterItem = new Antares::Component::HTMLListbox::Item::ThermalClusterItem(*j);
+        pParent.add(thermalClusterItem);
+        clusters_to_items_[*j] = thermalClusterItem;
+    }
 }
+*/
 
 
 
@@ -131,6 +233,12 @@ ThermalClustersByAlphaReverseOrder::ThermalClustersByAlphaReverseOrder(HTMLListb
 ThermalClustersByAlphaReverseOrder::~ThermalClustersByAlphaReverseOrder()
 {}
 
+void ThermalClustersByAlphaReverseOrder::sortClustersInGroup(ThermalClusterList& clusterList)
+{
+    clusterList.sort(SortAlphaReverseOrder());
+}
+
+/*
 void ThermalClustersByAlphaReverseOrder::refreshClustersInGroup(ThermalClusterList& clusterList)
 {
     // Added the area as a result
@@ -139,6 +247,7 @@ void ThermalClustersByAlphaReverseOrder::refreshClustersInGroup(ThermalClusterLi
     for (ThermalClusterList::iterator j = clusterList.begin(); j != jend; ++j)
         pParent.add(new Antares::Component::HTMLListbox::Item::ThermalClusterItem(*j));
 }
+*/
 
 } // namespace Datasource
 } // namespace HTMLListbox

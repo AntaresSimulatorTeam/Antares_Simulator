@@ -76,8 +76,12 @@ public:
     void onAreaChanged(Data::Area* area);
     void onInvalidateAllAreas();
 
+    void hasGroupChanged(bool b);
+    bool hasGroupChanged();
+
 protected:
     Data::Area* pArea;
+    bool hasGroupJustChanged_;
 
 }; // class ClustersByOrder
 

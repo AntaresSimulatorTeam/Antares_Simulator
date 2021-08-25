@@ -147,6 +147,21 @@ void Component::add(Item::IItem::Ptr it)
     invalidate();
 }
 
+void Component::setElement(Item::IItem::Ptr it, int index_item)
+{
+    pItems[index_item] = it;
+}
+
+int  Component::size()
+{
+    return pItems.size();
+}
+
+void Component::force_redraw()
+{
+    pInvalidated = true;
+}
+
 void Component::invalidate()
 {
     if (!pInvalidated)

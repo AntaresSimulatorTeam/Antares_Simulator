@@ -30,6 +30,7 @@
 #include "cluster-order.h"
 #include <map>
 #include <list>
+#include "../item/thermal-cluster-item.h"
 
 namespace Antares
 {
@@ -43,6 +44,7 @@ namespace Datasource
 typedef std::list<Data::ThermalCluster*> ThermalClusterList;
 typedef std::map<wxString, ThermalClusterList> ThermalClusterMap;
 
+using namespace Antares::Component::HTMLListbox::Item;
 
 class ThermalClustersByOrder : public ClustersByOrder
 {
@@ -58,7 +60,17 @@ public:
     void refresh(const wxString& search = wxEmptyString) override;
 
 private:
-    virtual void refreshClustersInGroup(ThermalClusterList& clusterList) = 0;
+    virtual void sortClustersInGroup(ThermalClusterList& clusterList) = 0;
+
+    void refresh_when_cluster_group_changed(const wxString& search);
+    void refresh_by_building_item_list(const wxString& search);
+
+protected:
+    std::map<wxString, IItem*> groups_to_items_;
+    // std::map<Data::ThermalCluster*, std::pair<ThermalClusterItem*, int> > clusters_to_items_;
+    std::map<Data::ThermalCluster*, ThermalClusterItem*> clusters_to_items_;
+
+
 
 }; // ThermalClustersByOrder
 
@@ -86,7 +98,7 @@ public:
     }
     
 private:
-    void refreshClustersInGroup(ThermalClusterList& clusterList);
+    void sortClustersInGroup(ThermalClusterList& clusterList);
 
 }; // class ThermalClustersByAlphaOrder
 
@@ -114,7 +126,7 @@ public:
     }
     
 private:
-    void refreshClustersInGroup(ThermalClusterList& clusterList);
+    void sortClustersInGroup(ThermalClusterList& clusterList);
 
 }; // class ThermalClustersByAlphaReverseOrder
 

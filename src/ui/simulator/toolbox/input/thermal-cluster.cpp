@@ -36,8 +36,6 @@
 #include "../resources.h"
 #include "../create.h"
 #include "../validator.h"
-#include "../components/htmllistbox/datasource/thermal-cluster-order.h"
-#include "../components/htmllistbox/item/thermal-cluster-item.h"
 #include "../components/button.h"
 #include "../../windows/message.h"
 #include "../../application/menus.h"
@@ -96,8 +94,6 @@ ThermalCluster::~ThermalCluster()
     destroyBoundEvents();
 }
 
-using namespace Component::HTMLListbox::Datasource;
-
 void ThermalCluster::internalBuildSubControls()
 {
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
@@ -148,16 +144,16 @@ void ThermalCluster::internalBuildSubControls()
 
     // The listbox
     pThListbox = new Component::HTMLListbox::Component(this);
-    ThermalClustersByAlphaOrder* dsAZ;
-    dsAZ = pThListbox->addDatasource<ThermalClustersByAlphaOrder>();
-    ThermalClustersByAlphaReverseOrder* dsZA;
-    dsZA = pThListbox->addDatasource<ThermalClustersByAlphaReverseOrder>();
+    // ThermalClustersByAlphaOrder* dsAZ;
+    dsAZ_ = pThListbox->addDatasource<ThermalClustersByAlphaOrder>();
+    // ThermalClustersByAlphaReverseOrder* dsZA;
+    dsZA_ = pThListbox->addDatasource<ThermalClustersByAlphaReverseOrder>();
     if (pAreaNotifier)
     {
-        pAreaNotifier->onAreaChanged.connect(dsAZ,
+        pAreaNotifier->onAreaChanged.connect(dsAZ_,
                                              &ThermalClustersByAlphaOrder::onAreaChanged);
         pAreaNotifier->onAreaChanged.connect(
-          dsZA, &ThermalClustersByAlphaReverseOrder::onAreaChanged);
+          dsZA_, &ThermalClustersByAlphaReverseOrder::onAreaChanged);
     }
     sizer->Add(pThListbox, 1, wxALL | wxEXPAND);
     sizer->SetItemMinSize(pThListbox, 100, 200);
@@ -170,6 +166,15 @@ void ThermalCluster::internalBuildSubControls()
 void ThermalCluster::update()
 {
     pThListbox->invalidate();
+    onThermalClusterChanged(nullptr);
+    updateInnerValues();
+}
+
+void ThermalCluster::updateWhenGroupChanges()
+{
+    dsZA_->hasGroupChanged(true);
+    dsAZ_->hasGroupChanged(true);
+    pThListbox->force_redraw();
     onThermalClusterChanged(nullptr);
     updateInnerValues();
 }
@@ -629,7 +634,8 @@ void ThermalCluster::onStudyThermalClusterGroupChanged(Antares::Data::Area* area
 {
     if (area && area == pArea)
     {
-        update();
+        updateWhenGroupChanges();
+        // update();
         MarkTheStudyAsModified();
         Refresh();
     }
