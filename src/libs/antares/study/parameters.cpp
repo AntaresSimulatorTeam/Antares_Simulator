@@ -327,10 +327,11 @@ static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint
 }
 
 static bool SGDIntLoadFamily_General(Parameters& d,
-                               const String& key,
-                               const String& value,
-                               const String& rawvalue,
-                               uint){
+                                     const String& key,
+                                     const String& value,
+                                     const String& rawvalue,
+                                     uint)
+{
     if (key == "active-rules-scenario")
     {
         d.activeRulesScenario = value;
@@ -459,21 +460,22 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     return false;
 }
 static bool SGDIntLoadFamily_Input(Parameters& d,
-                               const String& key,
-                               const String& value,
-                               const String&,
-                               uint){
+                                   const String& key,
+                                   const String& value,
+                                   const String&,
+                                   uint)
+{
     if (key == "import")
         return ConvertCStrToListTimeSeries(value, d.timeSeriesToImport);
 
     return false;
-
 }
 static bool SGDIntLoadFamily_Output(Parameters& d,
-                               const String& key,
-                               const String& value,
-                               const String&,
-                               uint){
+                                    const String& key,
+                                    const String& value,
+                                    const String&,
+                                    uint)
+{
     if (key == "archives")
         return ConvertCStrToListTimeSeries(value, d.timeSeriesToArchive);
     if (key == "storenewset")
@@ -483,10 +485,11 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
     return false;
 }
 static bool SGDIntLoadFamily_Optimization(Parameters& d,
-                               const String& key,
-                               const String& value,
-                               const String&,
-                               uint){
+                                          const String& key,
+                                          const String& value,
+                                          const String&,
+                                          uint)
+{
     if (key == "include-constraints")
         return value.to<bool>(d.include.constraints);
     if (key == "include-hurdlecosts")
@@ -517,18 +520,18 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         try
         {
             d.include.unfeasibleProblemBehavior
-            = Enum::fromString<UnfeasibleProblemBehavior>(string);
+              = Enum::fromString<UnfeasibleProblemBehavior>(string);
         }
         catch (AssertionError& ex)
         {
             logs.warning()
-            << "Assertion error for unfeasible problem behavior from string conversion : "
-            << ex.what();
+              << "Assertion error for unfeasible problem behavior from string conversion : "
+              << ex.what();
 
             result = false;
             d.include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
             logs.warning() << "parameters: invalid unfeasible problem behavior. Got '" << value
-            << "'. reset to " << Enum::toString(d.include.unfeasibleProblemBehavior);
+                           << "'. reset to " << Enum::toString(d.include.unfeasibleProblemBehavior);
         }
         return result;
     }
@@ -567,12 +570,13 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     return false;
 }
 static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
-                               const String& key,
-                               const String& value,
-                               const String&,
-                               uint){
+                                              const String& key,
+                                              const String& value,
+                                              const String&,
+                                              uint)
+{
     if (key == "day-ahead-reserve-management") // after 5.0
-        {
+    {
         auto daReserve = StringToDayAheadReserveManagementMode(value);
         if (daReserve != daReserveUnknown)
         {
@@ -580,10 +584,10 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             return true;
         }
         logs.warning() << "parameters: invalid day ahead reserve management mode. Got '" << value
-        << "'. reset to global mode";
+                       << "'. reset to global mode";
         d.reserveManagement.daMode = daGlobal;
         return false;
-        }
+    }
     if (key == "hydro-heuristic-policy")
     {
         auto hhpolicy = StringToHydroHeuristicPolicy(value);
@@ -593,7 +597,7 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             return true;
         }
         logs.warning() << "parameters: invalid hydro heuristic policy. Got '" << value
-        << "'. Reset to default accommodate rule curves.";
+                       << "'. Reset to default accommodate rule curves.";
         d.hydroHeuristicPolicy.hhPolicy = hhpAccommodateRuleCurves;
         return false;
     }
@@ -606,7 +610,7 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             return true;
         }
         logs.warning() << "parameters: invalid unit commitment mode. Got '" << value
-        << "'. reset to fast mode";
+                       << "'. reset to fast mode";
         d.unitCommitment.ucMode = ucHeuristic;
         return false;
     }
@@ -619,7 +623,7 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             return true;
         }
         logs.warning() << "parameters: invalid initital reservoir levels mode. Got '" << value
-        << "'. reset to cold start mode.";
+                       << "'. reset to cold start mode.";
         d.initialReservoirLevels.iniLevels = irlColdStart;
         return false;
     }
@@ -633,7 +637,7 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             return true;
         }
         logs.warning() << "parameters: invalid number of cores mode. Got '" << value
-        << "'. reset to fast mode";
+                       << "'. reset to fast mode";
         d.nbCores.ncMode = ncMin;
         return false;
     }
@@ -647,7 +651,7 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             return true;
         }
         logs.error() << "parameters: invalid power fluctuations. Got '" << value
-        << "'. reset to 'free modulations'";
+                     << "'. reset to 'free modulations'";
         d.power.fluctuations = lssFreeModulations;
         return false;
     }
@@ -675,7 +679,7 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
         return false;
     }
     if (key == "unit-commitment-mode") // after 5.0
-        {
+    {
         auto ucommitment = StringToUnitCommitmentMode(value);
         if (ucommitment != ucUnknown)
         {
@@ -683,17 +687,18 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             return true;
         }
         logs.warning() << "parameters: invalid unit commitment mode. Got '" << value
-        << "'. reset to fast mode";
+                       << "'. reset to fast mode";
         d.unitCommitment.ucMode = ucHeuristic;
         return false;
-        }
+    }
     return false;
 }
 static bool SGDIntLoadFamily_AdvancedParameters(Parameters& d,
-                               const String& key,
-                               const String& value,
-                               const String&,
-                               uint){
+                                                const String& key,
+                                                const String& value,
+                                                const String&,
+                                                uint)
+{
     if (key == "adequacy-block-size" || key == "adequacy_blocksize")
         return value.to<uint>(d.adequacyBlockSize);
     if (key == "accuracy-on-correlation")
@@ -701,10 +706,11 @@ static bool SGDIntLoadFamily_AdvancedParameters(Parameters& d,
     return false;
 }
 static bool SGDIntLoadFamily_Playlist(Parameters& d,
-                               const String& key,
-                               const String& value,
-                               const String&,
-                               uint){
+                                      const String& key,
+                                      const String& value,
+                                      const String&,
+                                      uint)
+{
     if (key == "playlist_reset")
     {
         bool mode = value.to<bool>();
@@ -762,15 +768,15 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
             {
                 valid = false;
                 logs.warning()
-                << "parameters: invalid MC year index for MC year weight definition. Got '" << y
-                << "'. Value not used";
+                  << "parameters: invalid MC year index for MC year weight definition. Got '" << y
+                  << "'. Value not used";
             }
 
             if (weight < 0.f)
             {
                 valid = false;
                 logs.warning() << "parameters: invalid MC year weight.Got '" << weight
-                << "'. Value not used";
+                               << "'. Value not used";
             }
 
             if (valid)
@@ -784,7 +790,7 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
         {
             logs.warning() << "parameters: invalid MC year index and weight definition. Must be "
                               "defined by [year],[weight] Got '"
-                              << value << "'. Value not used";
+                           << value << "'. Value not used";
             return false;
         }
         return false;
@@ -792,10 +798,11 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
     return false;
 }
 static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
-                               const String& key,
-                               const String& value,
-                               const String&,
-                               uint){
+                                                const String& key,
+                                                const String& value,
+                                                const String&,
+                                                uint)
+{
     if (key == "selected_vars_reset")
     {
         bool mode = value.to<bool>();
@@ -818,12 +825,13 @@ static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
     return false;
 }
 static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
-                               const String& key,
-                               const String& value,
-                               const String&,
-                               uint){
+                                                  const String& key,
+                                                  const String& value,
+                                                  const String&,
+                                                  uint)
+{
     if (key.startsWith("seed")) // seeds
-        {
+    {
         if (key.size() > 5 && key[4] == '_')
         {
             // This block is kept for compatibility with very old studies
@@ -850,15 +858,16 @@ static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
                     return value.to<uint>(d.seed[sd]);
             }
         }
-        }
-        return false;
+    }
+    return false;
 }
 static bool SGDIntLoadFamily_Legacy(Parameters& d,
-                               const String& key,
-                               const String& value,
-                               const String&,
-                               uint version){
-    //Comparisons kept for compatibility reasons
+                                    const String& key,
+                                    const String& value,
+                                    const String&,
+                                    uint version)
+{
+    // Comparisons kept for compatibility reasons
 
     // Same time-series
     if (key == "correlateddraws")
@@ -874,7 +883,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
         return value.to<bool>(d.geographicTrimming);
 
     if (version <= 310 && key == "storetimeseriesnumbers")
-            return value.to<bool>(d.storeTimeseriesNumbers);
+        return value.to<bool>(d.storeTimeseriesNumbers);
 
     // Custom set
     if (key == "customset")
@@ -926,22 +935,23 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     // A temporary buffer, used for the values in lowercase
     String value;
     String sectionName;
-    typedef bool (*Callback)(Parameters&, // [out] Parameter object to load the data into
-            const String&, // [in] Key, comes left to the '=' sign in the .ini file
-            const String&, // [in] Lowercase value, comes right to the '=' sign in the .ini file
-            const String&, // [in] Raw value as writtent right to the '=' sign in the .ini file
-            uint); // [in] Version of the simulator (such as 710)
+    typedef bool (*Callback)(
+      Parameters&,   // [out] Parameter object to load the data into
+      const String&, // [in] Key, comes left to the '=' sign in the .ini file
+      const String&, // [in] Lowercase value, comes right to the '=' sign in the .ini file
+      const String&, // [in] Raw value as writtent right to the '=' sign in the .ini file
+      uint);         // [in] Version of the study (such as 710)
 
-    static const std::map<String,Callback> sectionAssociatedToKeysProcess = {
-            {"general",&SGDIntLoadFamily_General},
-            {"input",&SGDIntLoadFamily_Input},
-            {"output",&SGDIntLoadFamily_Output},
-            {"optimization",&SGDIntLoadFamily_Optimization},
-            {"other preferences",&SGDIntLoadFamily_OtherPreferences},
-            {"advanced parameters",&SGDIntLoadFamily_AdvancedParameters},
-            {"playlist",&SGDIntLoadFamily_Playlist},
-            {"variables selection",&SGDIntLoadFamily_VariablesSelection},
-            {"seeds - mersenne twister",&SGDIntLoadFamily_SeedsMersenneTwister}};
+    static const std::map<String, Callback> sectionAssociatedToKeysProcess
+      = {{"general", &SGDIntLoadFamily_General},
+         {"input", &SGDIntLoadFamily_Input},
+         {"output", &SGDIntLoadFamily_Output},
+         {"optimization", &SGDIntLoadFamily_Optimization},
+         {"other preferences", &SGDIntLoadFamily_OtherPreferences},
+         {"advanced parameters", &SGDIntLoadFamily_AdvancedParameters},
+         {"playlist", &SGDIntLoadFamily_Playlist},
+         {"variables selection", &SGDIntLoadFamily_VariablesSelection},
+         {"seeds - mersenne twister", &SGDIntLoadFamily_SeedsMersenneTwister}};
 
     Callback handleAllKeysInSection;
     // Foreach section on the ini file...
@@ -952,7 +962,8 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
         try
         {
             handleAllKeysInSection = sectionAssociatedToKeysProcess.at(sectionName);
-        } catch (const std::out_of_range&)
+        }
+        catch (const std::out_of_range&)
         {
             // Continue on error
             logs.warning() << ini.filename() << ": '" << section->name << "': Unknown section name";
