@@ -1067,7 +1067,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // Renewable cluster list
     {
         buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
-        ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer, false) and ret;
+        ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer) and ret;
         // flush
         area.renewable.list.flush();
     }

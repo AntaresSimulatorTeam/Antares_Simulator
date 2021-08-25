@@ -382,11 +382,10 @@ int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, const
     return ret;
 }
 
-template<class ClusterT>
-int ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s,
-                                                    const StudyLoadOptions& options,
-                                                    const AnyString& folder,
-                                                    bool fast)
+template<>
+int ClusterList<ThermalCluster>::loadDataSeriesFromFolder(Study& s,
+                                                          const StudyLoadOptions& options,
+                                                          const AnyString& folder)
 {
     if (empty())
         return 1;
@@ -406,8 +405,7 @@ int ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s,
 template<>
 int ClusterList<RenewableCluster>::loadDataSeriesFromFolder(Study& s,
                                                     const StudyLoadOptions& options,
-                                                    const AnyString& folder,
-                                                    bool fast)
+                                                    const AnyString& folder)
 {
     if (empty())
         return 1;
@@ -415,7 +413,7 @@ int ClusterList<RenewableCluster>::loadDataSeriesFromFolder(Study& s,
     int ret = 1;
 
     each([&](Cluster& cluster) {
-        if (cluster.series and !fast)
+        if (cluster.series)
             ret = cluster.loadDataSeriesFromFolder(s, folder) and ret;
 
         ++options.progressTicks;
