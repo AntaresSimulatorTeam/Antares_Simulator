@@ -1008,30 +1008,12 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // Thermal cluster list
     {
-        if (not options.loadOnlyNeeded)
-        {
-            buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
-            ret = area.thermal.list.loadPreproFromFolder(study, options, buffer) and ret;
-            buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
-            ret = area.thermal.list.loadDataSeriesFromFolder(
-                    study, options, buffer, options.loadOnlyNeeded)
-                  and ret;
-        }
-        else
-        {
-            if (study.parameters.isTSGeneratedByPrepro(timeSeriesThermal))
-            {
-                buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
-                ret = area.thermal.list.loadPreproFromFolder(study, options, buffer) and ret;
-            }
-            else
-            {
-                buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
-                ret = area.thermal.list.loadDataSeriesFromFolder(
-                        study, options, buffer, options.loadOnlyNeeded)
-                      and ret;
-            }
-        }
+      buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
+      ret = area.thermal.list.loadPreproFromFolder(study, options, buffer) and ret;
+      buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
+      ret = area.thermal.list.loadDataSeriesFromFolder(
+                                                       study, options, buffer)
+        and ret;
 
         if (study.header.version < 390)
         {

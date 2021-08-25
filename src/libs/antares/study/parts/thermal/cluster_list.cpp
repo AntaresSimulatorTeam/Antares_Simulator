@@ -881,7 +881,7 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
     for (auto it = begin(); it != end(); ++it)
     {
         auto& c = *(it->second);
-        if (c.prepro)
+        if (c.prepro && c.doGenerateTS)
         {
             assert(c.parentArea and "cluster: invalid parent area");
             buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();

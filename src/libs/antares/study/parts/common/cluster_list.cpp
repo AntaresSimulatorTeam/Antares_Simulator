@@ -392,8 +392,8 @@ int ClusterList<ThermalCluster>::loadDataSeriesFromFolder(Study& s,
 
     int ret = 1;
 
-    each([&](ClusterT& cluster) {
-        if (cluster.series and (!fast or !cluster.prepro))
+    each([&](ThermalCluster& cluster) {
+           if (cluster.series && !cluster.doGenerateTS)
             ret = cluster.loadDataSeriesFromFolder(s, folder) and ret;
 
         ++options.progressTicks;
