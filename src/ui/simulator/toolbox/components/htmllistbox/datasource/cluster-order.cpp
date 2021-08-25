@@ -66,7 +66,7 @@ void ClustersByOrder::onInvalidateAllAreas()
 
 void ClustersByOrder::hasGroupChanged(bool b)
 {
-    hasGroupJustChanged_ = true;
+    hasGroupJustChanged_ = b;
 }
 
 bool ClustersByOrder::hasGroupChanged()
