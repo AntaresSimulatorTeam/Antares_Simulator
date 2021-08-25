@@ -157,6 +157,11 @@ int  Component::size()
     return pItems.size();
 }
 
+void Component::resizeTo(int newSize)
+{
+    pItems.resize(newSize);
+}
+
 void Component::force_redraw()
 {
     pInvalidated = true;
@@ -373,7 +378,7 @@ void Component::internalClearTheListbox()
         {
             // For an unknown reason we have to tell to wx to reset to nullptr
             // to force the deletion of our objects...
-            pListbox->SetClientObject(i, nullptr);
+            // pListbox->SetClientObject(i, nullptr);
         }
 
         // Clear the listbox

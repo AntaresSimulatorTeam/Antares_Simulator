@@ -84,6 +84,8 @@ public:
 
     int size();
 
+    void resizeTo(int newSize);
+
     /*!
     ** \brief Add a datasource
     **

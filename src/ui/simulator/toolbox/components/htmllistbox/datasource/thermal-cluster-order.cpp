@@ -67,6 +67,20 @@ void GetThermalClusterMap(Data::Area* area, ThermalClusterMap& l, const wxString
     }
 }
 
+int sizeThermalClusterMap(ThermalClusterMap& l)
+{
+    int size_to_return = 0;
+    for (ThermalClusterMap::iterator group_it = l.begin(); group_it != l.end(); ++group_it)
+    {
+        size_to_return++;
+
+        ThermalClusterList& clusterList = group_it->second;
+        for (ThermalClusterList::iterator j = clusterList.begin(); j != clusterList.end(); ++j)
+            size_to_return++;
+    }
+    return size_to_return;
+}
+
 void ThermalClustersByOrder::refresh(const wxString& search)
 {
     if (hasGroupChanged())
@@ -86,10 +100,11 @@ void ThermalClustersByOrder::refresh_when_cluster_group_changed(const wxString& 
     {
         ThermalClusterMap l;
         GetThermalClusterMap(pArea, l, search);
+        int nombreItems = sizeThermalClusterMap(l);
+        pParent.resizeTo(nombreItems);
         if (!l.empty())
         {
             int index_item = 0;
-            // std::vector<IItem> items_tmp;
             for (ThermalClusterMap::iterator group_it = l.begin(); group_it != l.end(); ++group_it)
             {
                 if (groups_to_items_.find(group_it->first) != groups_to_items_.end())
@@ -114,7 +129,7 @@ void ThermalClustersByOrder::refresh_when_cluster_group_changed(const wxString& 
                         s << wxT(" / ") << group_it->first;
 
                     auto groupItem = new Group(s);
-                    pParent.add(groupItem);
+                    pParent.setElement(groupItem, index_item);
 
                 }
 
@@ -126,27 +141,22 @@ void ThermalClustersByOrder::refresh_when_cluster_group_changed(const wxString& 
 
                 for (ThermalClusterList::iterator j = clusterList.begin(); j != clusterList.end(); ++j)
                 {
-                    
-                    // pParent.setElement(clusters_to_items_[*j].first, index_item);
-
                     auto thermalClusterItem = clusters_to_items_[*j];
-                    if (index_item + 1 > pParent.size())
-                        pParent.add(thermalClusterItem);
-                    else
-                        pParent.setElement(thermalClusterItem, index_item);
+                    pParent.setElement(thermalClusterItem, index_item);
 
                     index_item++;
                 }
             }
         }
     }
-    pParent.invalidate();
+    // pParent.invalidate();
 }
 
 void ThermalClustersByOrder::refresh_by_building_item_list(const wxString& search)
 {
     pParent.clear();
     clusters_to_items_.clear();
+    groups_to_items_.clear();
 
     if (pArea)
     {
@@ -154,7 +164,6 @@ void ThermalClustersByOrder::refresh_by_building_item_list(const wxString& searc
         GetThermalClusterMap(pArea, l, search);
         if (!l.empty())
         {
-            // int index_item = 0;
             for (ThermalClusterMap::iterator group_it = l.begin(); group_it != l.end(); ++group_it)
             {
                 // Group title
@@ -175,7 +184,6 @@ void ThermalClustersByOrder::refresh_by_building_item_list(const wxString& searc
                 auto groupItem = new Group(s);
                 pParent.add(groupItem);
                 groups_to_items_[group_it->first] = groupItem;
-                // index_item++;
 
                 // Refreshing all clusters of the group
                 ThermalClusterList& clusterList = group_it->second;
@@ -185,9 +193,7 @@ void ThermalClustersByOrder::refresh_by_building_item_list(const wxString& searc
                 {
                     auto thermalClusterItem = new ThermalClusterItem(*j);
                     pParent.add(thermalClusterItem);
-                    // clusters_to_items_[*j] = std::make_pair(thermalClusterItem, index_item);
                     clusters_to_items_[*j] = thermalClusterItem;
-                    // index_item++;
                 }
             }
         }
