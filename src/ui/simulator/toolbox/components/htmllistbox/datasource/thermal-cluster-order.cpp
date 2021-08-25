@@ -215,22 +215,6 @@ void ThermalClustersByAlphaOrder::sortClustersInGroup(ThermalClusterList& cluste
     clusterList.sort(SortAlphaOrder());
 }
 
-/*
-void ThermalClustersByAlphaOrder::refreshClustersInGroup(ThermalClusterList & clusterList)
-{
-    // Added the area as a result
-    ThermalClusterList::iterator jend = clusterList.end();
-    clusterList.sort(SortAlphaOrder());
-    for (ThermalClusterList::iterator j = clusterList.begin(); j != jend; ++j)
-    {
-        auto thermalClusterItem = new Antares::Component::HTMLListbox::Item::ThermalClusterItem(*j);
-        pParent.add(thermalClusterItem);
-        clusters_to_items_[*j] = thermalClusterItem;
-    }
-}
-*/
-
-
 
 ThermalClustersByAlphaReverseOrder::ThermalClustersByAlphaReverseOrder(HTMLListbox::Component& parent) :
     ThermalClustersByOrder(parent)
@@ -243,17 +227,6 @@ void ThermalClustersByAlphaReverseOrder::sortClustersInGroup(ThermalClusterList&
 {
     clusterList.sort(SortAlphaReverseOrder());
 }
-
-/*
-void ThermalClustersByAlphaReverseOrder::refreshClustersInGroup(ThermalClusterList& clusterList)
-{
-    // Added the area as a result
-    ThermalClusterList::iterator jend = clusterList.end();
-    clusterList.sort(SortAlphaReverseOrder());
-    for (ThermalClusterList::iterator j = clusterList.begin(); j != jend; ++j)
-        pParent.add(new Antares::Component::HTMLListbox::Item::ThermalClusterItem(*j));
-}
-*/
 
 } // namespace Datasource
 } // namespace HTMLListbox
