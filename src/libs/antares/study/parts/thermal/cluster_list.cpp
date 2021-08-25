@@ -901,5 +901,14 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
     }
     return ret;
 }
+
+void ThermalClusterList::adjustTimeseriesGeneration(bool tsgen)
+{
+    each([&](Data::ThermalCluster& c) {
+        if (!tsgen)
+            c.doGenerateTS = false;
+    });
+}
+
 } // namespace Data
 } // namespace Antares
