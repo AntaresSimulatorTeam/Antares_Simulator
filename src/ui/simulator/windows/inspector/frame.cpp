@@ -534,6 +534,7 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGThClusterVolatilityPlanned = P_FLOAT("Volatility (planned)", "cluster.plannedVolatility");
     pPGThClusterLawForced = P_ENUM("Law (forced)", "cluster.forcedlaw", thermalLaws);
     pPGThClusterLawPlanned = P_ENUM("Law (planned)", "cluster.plannedlaw", thermalLaws);
+    pPGThClusterDoGenerateTS = P_BOOL("Generate TS (override global parameter)", "cluster.gen-ts");
 
     // --- RENEWABLE CLUSTERS ---
     pPGRnClusterSeparator = Group(pg, wxEmptyString, wxEmptyString);
@@ -558,6 +559,7 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGRnClusterNominalCapacity = P_FLOAT("Nominal capacity (MW)", "rn-cluster.nominal_capacity");
     pPGRnClusterInstalled = P_FLOAT("Installed (MW)", "rn-cluster.installed");
     pg->DisableProperty(pPGRnClusterInstalled);
+
     // --- CONSTRAINT ---
     pPGConstraintSeparator = Group(pg, wxEmptyString, wxEmptyString);
     pPGConstraintTitle = Group(pg, wxT("1 CONSTRAINT"), wxT("constraint.title"));
@@ -948,6 +950,8 @@ void Frame::apply(const InspectorData::Ptr& data)
         Accumulator<PClusterFixedCost>::Apply(pPGThClusterFixedCost, data->ThClusters);
         Accumulator<PClusterStartupCost>::Apply(pPGThClusterStartupCost, data->ThClusters);
         Accumulator<PClusterRandomSpread>::Apply(pPGThClusterRandomSpread, data->ThClusters);
+        // Override global TS generation setting, per cluster
+        Accumulator<PClusterDoGenerateTS>::Apply(pPGThClusterDoGenerateTS, data->ThClusters);
 
         // check Nominal capacity with thermal modulation
         AccumulatorCheck<PClusterNomCapacityColor>::ApplyTextColor(pPGThClusterNominalCapacity,
@@ -957,6 +961,9 @@ void Frame::apply(const InspectorData::Ptr& data)
                                                                       data->ThClusters);
         // check Min. Stable Power with thermal modulation
         AccumulatorCheck<PClusterSpinningColor>::ApplyTextColor(pPGThClusterSpinning, data->ThClusters);
+
+
+
     }
 
     pPGThClusterParams->Hide(hide);

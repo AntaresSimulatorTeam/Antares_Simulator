@@ -1293,6 +1293,21 @@ struct PClusterLawPlanned
     }
 };
 
+struct PClusterDoGenerateTS
+{
+    typedef bool Type;
+    static Type Value(const Data::ThermalCluster* cluster)
+    {
+        return cluster->doGenerateTS;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return v ? wxT("True") : wxT("False");
+    }
+};
+
+
+
 struct PRnClusterTSMode
 {
     typedef uint Type;
