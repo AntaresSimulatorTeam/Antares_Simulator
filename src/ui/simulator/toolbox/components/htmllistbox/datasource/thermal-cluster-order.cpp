@@ -41,9 +41,6 @@ namespace HTMLListbox
 namespace Datasource
 {
 
-// gp : to remove ?
-// using namespace Antares::Component::HTMLListbox::Item;
-
 ThermalClustersByOrder::ThermalClustersByOrder(HTMLListbox::Component& parent) :
     ClustersByOrder(parent)
 {}

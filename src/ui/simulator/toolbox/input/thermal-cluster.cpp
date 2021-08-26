@@ -25,27 +25,19 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/wx-wrapper.h>
-#include "thermal-cluster.h"
-#include "../components/captionpanel.h"
 #include "../../application/study.h"
 #include "../../application/main.h"
 #include "../../application/wait.h"
 #include "../../windows/inspector.h"
-#include <assert.h>
 #include "../resources.h"
 #include "../create.h"
-#include "../validator.h"
 #include "../components/button.h"
 #include "../../windows/message.h"
 #include "../../application/menus.h"
 #include <antares/study/scenario-builder/updater.hxx>
 #include <wx/wupdlock.h>
 #include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/statline.h>
-#include <wx/bmpbuttn.h>
-#include <ui/common/lock.h>
+#include "thermal-cluster.h"
 
 using namespace Yuni;
 
