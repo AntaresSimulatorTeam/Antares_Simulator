@@ -961,9 +961,6 @@ void Frame::apply(const InspectorData::Ptr& data)
                                                                       data->ThClusters);
         // check Min. Stable Power with thermal modulation
         AccumulatorCheck<PClusterSpinningColor>::ApplyTextColor(pPGThClusterSpinning, data->ThClusters);
-
-
-
     }
 
     pPGThClusterParams->Hide(hide);
