@@ -104,7 +104,7 @@ void ClustersByOrder::hasGroupChanged(bool b)
     hasGroupJustChanged_ = b;
 }
 
-bool ClustersByOrder::hasGroupChanged()
+bool ClustersByOrder::hasGroupChanged() const
 {
     return hasGroupJustChanged_;
 }

@@ -165,11 +165,10 @@ void RenewableCluster::update()
 
 void RenewableCluster::updateWhenGroupChanges()
 {
-    // Identify the selected data source (AZ or ZA ?)
-    if (pRnListbox->datasource() == dsZA_)
-        dsZA_->hasGroupChanged(true);
-    else
-        dsAZ_->hasGroupChanged(true);
+    // Warn the selected data source (A-Z or Z-A sorting) that a cluster's group changed
+    ClustersByOrder* dataSource = dynamic_cast<ClustersByOrder*>(pRnListbox->datasource());
+    if (dataSource)
+        dataSource->hasGroupChanged(true);
 
     pRnListbox->force_redraw();
     onClusterChanged(nullptr);

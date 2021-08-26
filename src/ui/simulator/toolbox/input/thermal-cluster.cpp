@@ -162,11 +162,10 @@ void ThermalCluster::update()
 
 void ThermalCluster::updateWhenGroupChanges()
 {
-    // Identify the selected data source (AZ or ZA ?)
-    if (pThListbox->datasource() == dsZA_)
-        dsZA_->hasGroupChanged(true);
-    else
-        dsAZ_->hasGroupChanged(true);
+    // Warn the selected data source (A-Z or Z-A sorting) that a cluster's group changed
+    ClustersByOrder* dataSource = dynamic_cast<ClustersByOrder*>(pThListbox->datasource());
+    if (dataSource)
+        dataSource->hasGroupChanged(true);
 
     pThListbox->force_redraw();
     onThermalClusterChanged(nullptr);

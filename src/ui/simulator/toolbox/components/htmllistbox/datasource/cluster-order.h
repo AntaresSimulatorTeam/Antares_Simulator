@@ -82,7 +82,7 @@ public:
     void onInvalidateAllAreas();
 
     void hasGroupChanged(bool b);
-    bool hasGroupChanged();
+    bool hasGroupChanged() const;
 
 private:
     virtual void reordering_items_list(const wxString& search) = 0;
