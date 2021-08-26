@@ -144,9 +144,7 @@ void ThermalCluster::internalBuildSubControls()
 
     // The listbox
     pThListbox = new Component::HTMLListbox::Component(this);
-    // ThermalClustersByAlphaOrder* dsAZ;
     dsAZ_ = pThListbox->addDatasource<ThermalClustersByAlphaOrder>();
-    // ThermalClustersByAlphaReverseOrder* dsZA;
     dsZA_ = pThListbox->addDatasource<ThermalClustersByAlphaReverseOrder>();
     if (pAreaNotifier)
     {
@@ -172,8 +170,12 @@ void ThermalCluster::update()
 
 void ThermalCluster::updateWhenGroupChanges()
 {
-    dsZA_->hasGroupChanged(true);
-    dsAZ_->hasGroupChanged(true);
+    // Identify the selected data source (AZ or ZA ?)
+    if (pThListbox->datasource() == dsZA_)
+        dsZA_->hasGroupChanged(true);
+    else
+        dsAZ_->hasGroupChanged(true);
+
     pThListbox->force_redraw();
     onThermalClusterChanged(nullptr);
     updateInnerValues();
