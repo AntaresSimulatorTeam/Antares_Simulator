@@ -264,6 +264,14 @@ enum
 };
 static const wxChar* thermalLaws[] = {wxT("uniform"), wxT("geometric"), nullptr};
 
+enum
+{
+    localGenTSCount = 3
+};
+
+static const wxChar* localGenTS[]
+  = {wxT("Use global parameter"), wxT("Force generation"), wxT("Force no generation"), nullptr};
+
 static const wxChar* weekday[] = {wxT("Monday"),
                                   wxT("Tuesday"),
                                   wxT("Wednesday"),
@@ -1295,18 +1303,16 @@ struct PClusterLawPlanned
 
 struct PClusterDoGenerateTS
 {
-    typedef bool Type;
+    typedef uint Type;
     static Type Value(const Data::ThermalCluster* cluster)
     {
-        return cluster->doGenerateTS;
+        return (uint)cluster->tsGenBehavior;
     }
     static wxString ConvertToString(const Type v)
     {
-        return v ? wxT("True") : wxT("False");
+        return (v < localGenTSCount) ? localGenTS[v] : nullptr;
     }
 };
-
-
 
 struct PRnClusterTSMode
 {

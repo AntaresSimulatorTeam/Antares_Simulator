@@ -1008,10 +1008,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // Thermal cluster list
     {
-        // If TS generation is disabled in the study, disable it for every thermal cluster
-        area.thermal.list.adjustTimeseriesGeneration(
-          study.parameters.isTSGeneratedByPrepro(timeSeriesThermal));
-
         buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
         ret = area.thermal.list.loadPreproFromFolder(study, options, buffer) and ret;
         buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";

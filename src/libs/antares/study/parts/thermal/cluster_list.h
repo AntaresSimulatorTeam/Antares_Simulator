@@ -88,9 +88,6 @@ public:
     bool savePreproToFolder(const AnyString& folder) const;
 
     bool saveToFolder(const AnyString& folder) const override;
-
-    void adjustTimeseriesGeneration(bool tsgen);
-
 }; // class ThermalClusterList
 } // namespace Data
 } // namespace Antares

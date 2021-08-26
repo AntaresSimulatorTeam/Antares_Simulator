@@ -520,6 +520,18 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Binding constraints
     initializeBindingConstraints(study.bindingConstraints);
 
+    {
+        thermalTSRefresh = gd.timeSeriesToGenerate & timeSeriesThermal;
+        study.areas.each([&](Data::Area& area) {
+            area.thermal.list.each([&](Data::ThermalCluster& cluster) {
+                thermalTSRefresh
+                  = thermalTSRefresh
+                    || cluster.doWeGenerateTS(gd.timeSeriesToGenerate & timeSeriesThermal);
+                logs.notice() << "thermalTSRefresh = " << thermalTSRefresh;
+            });
+        });
+    }
+
 #ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
     // Hydro cost - Infinite
     hydroCostByAreaShouldBeInfinite = new bool[study.areas.size()];

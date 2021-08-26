@@ -1051,9 +1051,9 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
         && (PreproOnly || !year || ((year % pData.refreshIntervalHydro) == 0)))
         GenerateTimeSeries<Data::timeSeriesHydro>(study, year);
     // Thermal
-    if (pData.haveToRefreshTSThermal
-        && (PreproOnly || !year || ((year % pData.refreshIntervalThermal) == 0)))
-        GenerateTimeSeries<Data::timeSeriesThermal>(study, year);
+    const bool global = pData.haveToRefreshTSThermal
+                        && (PreproOnly || !year || ((year % pData.refreshIntervalThermal) == 0));
+    GenerateThermalTimeSeries(study, year, global);
 }
 
 template<class Impl>
@@ -1094,6 +1094,8 @@ uint ISimulation<Impl>::buildSetsOfParallelYears(
         refreshing
           = refreshing
             || (pData.haveToRefreshTSThermal && (!y || ((y % pData.refreshIntervalThermal) == 0)));
+
+        refreshing = refreshing || study.runtime->thermalTSRefresh;
 
         // We build a new set of parallel years if one of these conditions is fulfilled :
         //	- We have to refresh (or regenerate) some or all time series before running the

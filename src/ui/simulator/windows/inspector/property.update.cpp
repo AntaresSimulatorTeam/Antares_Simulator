@@ -924,12 +924,28 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
 
     if (name == "cluster.gen-ts")
     {
-        bool doGenTS = value.GetBool();
+        long index = value.GetLong();
+
+        Data::TSGenerationBehavior behavior = Data::thermalUseGlobalParameter;
+
+        switch (index)
+        {
+        case 0:
+            behavior = Data::thermalUseGlobalParameter;
+            break;
+        case 1:
+            behavior = Data::thermalForceGen;
+            break;
+        case 2:
+            behavior = Data::thermalForceNoGen;
+            break;
+        default:
+            return false;
+        }
+
         for (; i != end; ++i)
-            (*i)->doGenerateTS = doGenTS;
-        // Notify
-        OnStudyThermalClusterCommonSettingsChanged();
-        pFrame.Refresh();
+            (*i)->tsGenBehavior = behavior;
+
         return true;
     }
 

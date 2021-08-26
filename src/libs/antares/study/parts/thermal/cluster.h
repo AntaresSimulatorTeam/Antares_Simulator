@@ -57,6 +57,13 @@ enum ThermalModulation
     thermalModulationMax
 };
 
+enum TSGenerationBehavior
+{
+    thermalUseGlobalParameter = 0,
+    thermalForceGen,
+    thermalForceNoGen
+};
+
 /*!
 ** \brief A single thermal cluster
 */
@@ -209,6 +216,8 @@ public:
     */
     bool checkMinStablePowerWithNewModulation(uint index, double value);
     //@}
+
+    bool doWeGenerateTS(bool global) const;
 
 public:
     /*!
@@ -375,11 +384,11 @@ public:
     */
     double* pminOfAGroup;
 
-    bool doGenerateTS;
+    TSGenerationBehavior tsGenBehavior;
 
     friend class ThermalClusterList;
 
-    private:
+private:
     unsigned int precision() const override;
 }; // class ThermalCluster
 } // namespace Data

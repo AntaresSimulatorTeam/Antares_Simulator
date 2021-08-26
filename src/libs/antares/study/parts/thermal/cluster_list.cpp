@@ -440,7 +440,7 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
             return true;
         }
         if (p->key == "gen-ts")
-            return p->value.to<bool>(cluster.doGenerateTS);
+            return p->value.to(cluster.tsGenBehavior);
         break;
     }
     case 'h':
@@ -756,8 +756,9 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
                 s->add("unitCount", c.unitCount);
             if (not Math::Zero(c.nominalCapacity))
                 s->add("nominalCapacity", c.nominalCapacity);
-            if (not c.doGenerateTS)
-                s->add("gen-ts", c.doGenerateTS);
+            // TS generation
+            if (c.tsGenBehavior != thermalUseGlobalParameter)
+                s->add("gen-ts", c.tsGenBehavior);
             // Min. Stable Power
             if (not Math::Zero(c.minStablePower))
                 s->add("min-stable-power", c.minStablePower);
@@ -881,7 +882,7 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
     for (auto it = begin(); it != end(); ++it)
     {
         auto& c = *(it->second);
-        if (c.prepro && c.doGenerateTS)
+        if (c.prepro)
         {
             assert(c.parentArea and "cluster: invalid parent area");
             buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
@@ -900,14 +901,6 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
         options.pushProgressLogs();
     }
     return ret;
-}
-
-void ThermalClusterList::adjustTimeseriesGeneration(bool tsgen)
-{
-    each([&](Data::ThermalCluster& c) {
-        if (!tsgen)
-            c.doGenerateTS = false;
-    });
 }
 
 } // namespace Data

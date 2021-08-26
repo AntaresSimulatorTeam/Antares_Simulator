@@ -393,7 +393,7 @@ int ClusterList<ThermalCluster>::loadDataSeriesFromFolder(Study& s,
     int ret = 1;
 
     each([&](ThermalCluster& cluster) {
-           if (cluster.series && !cluster.doGenerateTS)
+        if (cluster.series)
             ret = cluster.loadDataSeriesFromFolder(s, folder) and ret;
 
         ++options.progressTicks;
@@ -404,8 +404,8 @@ int ClusterList<ThermalCluster>::loadDataSeriesFromFolder(Study& s,
 
 template<>
 int ClusterList<RenewableCluster>::loadDataSeriesFromFolder(Study& s,
-                                                    const StudyLoadOptions& options,
-                                                    const AnyString& folder)
+                                                            const StudyLoadOptions& options,
+                                                            const AnyString& folder)
 {
     if (empty())
         return 1;

@@ -534,7 +534,7 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGThClusterVolatilityPlanned = P_FLOAT("Volatility (planned)", "cluster.plannedVolatility");
     pPGThClusterLawForced = P_ENUM("Law (forced)", "cluster.forcedlaw", thermalLaws);
     pPGThClusterLawPlanned = P_ENUM("Law (planned)", "cluster.plannedlaw", thermalLaws);
-    pPGThClusterDoGenerateTS = P_BOOL("Generate TS (override global parameter)", "cluster.gen-ts");
+    pPGThClusterDoGenerateTS = P_ENUM("Generate TS", "cluster.gen-ts", localGenTS);
 
     // --- RENEWABLE CLUSTERS ---
     pPGRnClusterSeparator = Group(pg, wxEmptyString, wxEmptyString);

@@ -159,7 +159,8 @@ void Study::createAsNew()
 
     // Simulations
     parameters.reset();
-    // ... At study creation, renewable cluster is the default mode for RES (Renewable Energy Source)
+    // ... At study creation, renewable cluster is the default mode for RES (Renewable Energy
+    // Source)
     parameters.renewableGeneration.rgModelling = Antares::Data::rgClusters;
 
     parameters.yearsFilter = new bool[1];
@@ -302,8 +303,7 @@ void Study::ensureDataAreInitializedAccordingParameters()
     if (parameters.isTSGeneratedByPrepro(timeSeriesWind))
         StudyEnsureDataWindPrepro(this);
     // Thermal
-    if (parameters.isTSGeneratedByPrepro(timeSeriesThermal))
-        StudyEnsureDataThermalPrepro(this);
+    StudyEnsureDataThermalPrepro(this);
 }
 
 void Study::ensureDataAreAllInitialized()
