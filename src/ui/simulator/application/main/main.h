@@ -501,6 +501,7 @@ private:
     void evtOnViewLoad(wxCommandEvent& evt);
     void evtOnViewSolar(wxCommandEvent& evt);
     void evtOnViewWind(wxCommandEvent& evt);
+    void evtOnViewRenewable(wxCommandEvent& evt);
     void evtOnViewHydro(wxCommandEvent& evt);
     void evtOnViewThermal(wxCommandEvent& evt);
     void evtOnViewReservesDSM(wxCommandEvent& evt);

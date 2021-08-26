@@ -119,6 +119,7 @@ EVT_MENU(mnIDViewNotes, ApplWnd::evtOnViewNotes)
 EVT_MENU(mnIDViewLoad, ApplWnd::evtOnViewLoad)
 EVT_MENU(mnIDViewSolar, ApplWnd::evtOnViewSolar)
 EVT_MENU(mnIDViewWind, ApplWnd::evtOnViewWind)
+EVT_MENU(mnIDViewRenewable, ApplWnd::evtOnViewRenewable)
 EVT_MENU(mnIDViewHydro, ApplWnd::evtOnViewHydro)
 EVT_MENU(mnIDViewThermal, ApplWnd::evtOnViewThermal)
 EVT_MENU(mnIDViewMiscGen, ApplWnd::evtOnViewMiscGen)
@@ -491,6 +492,7 @@ void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
         EnableItem(menu, mnIDViewLoad, opened);
         EnableItem(menu, mnIDViewSolar, opened);
         EnableItem(menu, mnIDViewWind, opened);
+        EnableItem(menu, mnIDViewRenewable, opened);
         EnableItem(menu, mnIDViewHydro, opened);
         EnableItem(menu, mnIDViewThermal, opened);
         EnableItem(menu, mnIDViewMiscGen, opened);
