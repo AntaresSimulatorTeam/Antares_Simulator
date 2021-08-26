@@ -373,17 +373,7 @@ void Component::onDraw(wxPaintEvent& evt)
 void Component::internalClearTheListbox()
 {
     if (pListbox && not pListbox->IsEmpty())
-    {
-        for (uint i = 0; i < pListbox->GetCount(); ++i)
-        {
-            // For an unknown reason we have to tell to wx to reset to nullptr
-            // to force the deletion of our objects...
-            // pListbox->SetClientObject(i, nullptr);
-        }
-
-        // Clear the listbox
         pListbox->Clear();
-    }
 }
 
 void Component::onStudyClosed()
