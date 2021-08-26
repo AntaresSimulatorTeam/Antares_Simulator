@@ -30,6 +30,7 @@
 #include "cluster-order.h"
 #include <map>
 #include <list>
+#include "../item/renewable-cluster-item.h"
 
 namespace Antares
 {
@@ -43,6 +44,8 @@ namespace Datasource
 typedef std::list<Data::RenewableCluster*> RenewableClusterList;
 typedef std::map<wxString, RenewableClusterList> RenewableClusterMap;
 
+using namespace Antares::Component::HTMLListbox::Item;
+
 class RenewableClustersByOrder : public ClustersByOrder
 {
 public:
@@ -54,10 +57,16 @@ public:
     virtual ~RenewableClustersByOrder();
     //@}
 
-    void refresh(const wxString& search = wxEmptyString) override;
-
 private:
-    virtual void refreshClustersInGroup(RenewableClusterList& clusterList) = 0;
+    virtual void sortClustersInGroup(RenewableClusterList& clusterList) = 0;
+
+    void reordering_items_list(const wxString& search) override;
+    void rebuilding_items_list(const wxString& search) override;
+
+protected:
+    // gp : to be factored
+    std::map<wxString, IItem*> groups_to_items_;
+    std::map<Data::RenewableCluster*, RenewableClusterItem*> clusters_to_items_;
 
 }; // RenewableClustersByOrder
 
@@ -85,7 +94,7 @@ public:
     }
 
 private:
-    void refreshClustersInGroup(RenewableClusterList& clusterList);
+    void sortClustersInGroup(RenewableClusterList& clusterList) override;
 
 }; // class RenewableClustersByAlphaOrder
 
@@ -113,7 +122,7 @@ public:
     }
 
 private:
-    void refreshClustersInGroup(RenewableClusterList& clusterList);
+    void sortClustersInGroup(RenewableClusterList& clusterList) override;
 
 }; // class RenewableClustersByAlphaReverseOrder
 

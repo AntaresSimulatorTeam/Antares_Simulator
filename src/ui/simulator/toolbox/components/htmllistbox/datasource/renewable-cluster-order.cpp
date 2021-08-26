@@ -66,9 +66,68 @@ void GetRenewableClusterMap(Data::Area* area, RenewableClusterMap& l, const wxSt
     }
 }
 
-void RenewableClustersByOrder::refresh(const wxString& search)
+int sizeRenewableClusterMap(RenewableClusterMap& l)
+{
+    int size_to_return = 0;
+    for (RenewableClusterMap::iterator group_it = l.begin(); group_it != l.end(); ++group_it)
+    {
+        size_to_return++;
+
+        RenewableClusterList& groupClusterList = group_it->second;
+        for (RenewableClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
+            size_to_return++;
+    }
+    return size_to_return;
+}
+
+void RenewableClustersByOrder::reordering_items_list(const wxString& search)
+{
+    if (pArea)
+    {
+        RenewableClusterMap l;
+        GetRenewableClusterMap(pArea, l, search);
+
+        // In case the cluster group is new to the item list, we resize the list 
+        int nombreItems = sizeRenewableClusterMap(l);
+        pParent.resizeTo(nombreItems);
+
+        if (!l.empty())
+        {
+            int index_item = 0;
+            for (RenewableClusterMap::iterator group_it = l.begin(); group_it != l.end(); ++group_it)
+            {
+                wxString groupName = group_it->first;
+                IItem* groupItem;
+                RenewableClusterList& groupClusterList = group_it->second;
+
+                if (groups_to_items_.find(groupName) != groups_to_items_.end())
+                    groupItem = groups_to_items_[groupName];
+                else
+                {
+                    wxString groupTitle = groupNameToGroupTitle(pArea, groupName);
+                    groupItem = new Group(groupTitle);
+                }
+                pParent.setElement(groupItem, index_item);
+                index_item++;
+
+                sortClustersInGroup(groupClusterList);
+
+                for (RenewableClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
+                {
+                    RenewableClusterItem* thClusterItem = clusters_to_items_[*j];
+                    pParent.setElement(thClusterItem, index_item);
+                    index_item++;
+                }
+            }
+        }
+    }
+}
+
+void RenewableClustersByOrder::rebuilding_items_list(const wxString& search)
 {
     pParent.clear();
+    clusters_to_items_.clear();
+    groups_to_items_.clear();
 
     if (pArea)
     {
@@ -76,36 +135,37 @@ void RenewableClustersByOrder::refresh(const wxString& search)
         GetRenewableClusterMap(pArea, l, search);
         if (!l.empty())
         {
-            RenewableClusterMap::iterator end = l.end();
-            for (RenewableClusterMap::iterator group_it = l.begin(); group_it != end; ++group_it)
+            for (RenewableClusterMap::iterator group_it = l.begin(); group_it != l.end(); ++group_it)
             {
-                // Group title
-                wxString s;
-                s << wxStringFromUTF8(pArea->name);
-                if (s.size() > 43)
-                {
-                    s.resize(40);
-                    s += wxT("...");
-                }
-
-                if (group_it->first.empty())
-                    s << wxT(" / <i>* no group *</i>");
-                else
-                    s << wxT(" / ") << group_it->first;
+                wxString groupName = group_it->first;
+                wxString groupTitle = groupNameToGroupTitle(pArea, groupName);
+                RenewableClusterList& groupClusterList = group_it->second;
 
                 // Refreshing the group
-                pParent.add(new Antares::Component::HTMLListbox::Item::Group(s));
+                IItem* groupItem = new Group(groupTitle);
+                pParent.add(groupItem);
+                // Mapping group name to cluster item for possible further usage
+                groups_to_items_[groupName] = groupItem;
 
                 // Refreshing all clusters of the group
-                refreshClustersInGroup(group_it->second);
+                sortClustersInGroup(groupClusterList);
+
+                for (RenewableClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
+                {
+                    RenewableClusterItem* rnClusterItem = new RenewableClusterItem(*j);
+                    pParent.add(rnClusterItem);
+                    // Mapping real cluster to cluster item for possible further usage
+                    clusters_to_items_[*j] = rnClusterItem;
+                }
             }
         }
     }
     pParent.invalidate();
 }
 
-
-
+// -------------------
+// Alphabetic order
+// -------------------
 RenewableClustersByAlphaOrder::RenewableClustersByAlphaOrder(HTMLListbox::Component& parent) :
     RenewableClustersByOrder(parent)
 {}
@@ -113,17 +173,15 @@ RenewableClustersByAlphaOrder::RenewableClustersByAlphaOrder(HTMLListbox::Compon
 RenewableClustersByAlphaOrder::~RenewableClustersByAlphaOrder()
 {}
 
-void RenewableClustersByAlphaOrder::refreshClustersInGroup(RenewableClusterList& clusterList)
+void RenewableClustersByAlphaOrder::sortClustersInGroup(RenewableClusterList& clusterList)
 {
-    // Added the area as a result
-    RenewableClusterList::iterator jend = clusterList.end();
     clusterList.sort(SortAlphaOrder());
-    for (RenewableClusterList::iterator j = clusterList.begin(); j != jend; ++j)
-        pParent.add(new Antares::Component::HTMLListbox::Item::RenewableClusterItem(*j));
 }
 
 
-
+// --------------------------
+// Alphabetic reverse order
+// --------------------------
 RenewableClustersByAlphaReverseOrder::RenewableClustersByAlphaReverseOrder(HTMLListbox::Component& parent) :
     RenewableClustersByOrder(parent)
 {}
@@ -131,13 +189,9 @@ RenewableClustersByAlphaReverseOrder::RenewableClustersByAlphaReverseOrder(HTMLL
 RenewableClustersByAlphaReverseOrder::~RenewableClustersByAlphaReverseOrder()
 {}
 
-void RenewableClustersByAlphaReverseOrder::refreshClustersInGroup(RenewableClusterList& clusterList)
+void RenewableClustersByAlphaReverseOrder::sortClustersInGroup(RenewableClusterList& clusterList)
 {
-    // Added the area as a result
-    RenewableClusterList::iterator jend = clusterList.end();
     clusterList.sort(SortAlphaReverseOrder());
-    for (RenewableClusterList::iterator j = clusterList.begin(); j != jend; ++j)
-        pParent.add(new Antares::Component::HTMLListbox::Item::RenewableClusterItem(*j));
 }
 
 } // namespace Datasource

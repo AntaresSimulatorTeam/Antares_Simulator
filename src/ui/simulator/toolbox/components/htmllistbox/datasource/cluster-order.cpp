@@ -75,6 +75,20 @@ ClustersByOrder::~ClustersByOrder()
     destroyBoundEvents();
 }
 
+void ClustersByOrder::refresh(const wxString& search)
+{
+    if (hasGroupChanged())
+    {
+        // A cluster group just changed.
+        // To keep the changed cluster selected, We have to reorder the items list.
+        // Rebuilding the item list would re-initialize the cluster selection on the first cluster of the list.  
+        reordering_items_list(search);
+        hasGroupChanged(false);
+    }
+    else
+        rebuilding_items_list(search);
+}
+
 void ClustersByOrder::onAreaChanged(Data::Area* area)
 {
     pArea = area;

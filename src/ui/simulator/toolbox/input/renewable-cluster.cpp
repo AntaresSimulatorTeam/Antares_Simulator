@@ -50,8 +50,6 @@
 // #include <ui/common/lock.h>
 
 #include "renewable-cluster.h"
-#include "../components/htmllistbox/item/renewable-cluster-item.h"
-#include "../components/htmllistbox/datasource/renewable-cluster-order.h"
 
 using namespace Yuni;
 
@@ -99,9 +97,6 @@ RenewableCluster::~RenewableCluster()
 {
     destroyBoundEvents();
 }
-
-using namespace Component::HTMLListbox::Datasource;
-
 
 void RenewableCluster::internalBuildSubControls()
 {
@@ -154,17 +149,15 @@ void RenewableCluster::internalBuildSubControls()
     // The listbox
     pRnListbox = new Component::HTMLListbox::Component(this);
     
-    RenewableClustersByAlphaOrder* dsAZ;
-    dsAZ = pRnListbox->addDatasource<RenewableClustersByAlphaOrder>();
-    RenewableClustersByAlphaReverseOrder* dsZA;
-    dsZA = pRnListbox->addDatasource<RenewableClustersByAlphaReverseOrder>();
+    dsAZ_ = pRnListbox->addDatasource<RenewableClustersByAlphaOrder>();
+    dsZA_ = pRnListbox->addDatasource<RenewableClustersByAlphaReverseOrder>();
 
     if (pAreaNotifier)
     {
-        pAreaNotifier->onAreaChanged.connect(dsAZ,
+        pAreaNotifier->onAreaChanged.connect(dsAZ_,
                                              &RenewableClustersByAlphaOrder::onAreaChanged);
         pAreaNotifier->onAreaChanged.connect(
-          dsZA, &RenewableClustersByAlphaReverseOrder::onAreaChanged);
+          dsZA_, &RenewableClustersByAlphaReverseOrder::onAreaChanged);
     }
     
     sizer->Add(pRnListbox, 1, wxALL | wxEXPAND);
@@ -178,6 +171,19 @@ void RenewableCluster::internalBuildSubControls()
 void RenewableCluster::update()
 {
     pRnListbox->invalidate();
+    onClusterChanged(nullptr);
+    updateInnerValues();
+}
+
+void RenewableCluster::updateWhenGroupChanges()
+{
+    // Identify the selected data source (AZ or ZA ?)
+    if (pRnListbox->datasource() == dsZA_)
+        dsZA_->hasGroupChanged(true);
+    else
+        dsAZ_->hasGroupChanged(true);
+
+    pRnListbox->force_redraw();
     onClusterChanged(nullptr);
     updateInnerValues();
 }
@@ -558,7 +564,7 @@ void RenewableCluster::onStudyRenewableClusterGroupChanged(Antares::Data::Area* 
 {
     if (area && area == pArea)
     {
-        update();
+        updateWhenGroupChanges();
         MarkTheStudyAsModified();
         Refresh();
     }

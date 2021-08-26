@@ -73,13 +73,17 @@ public:
  
     virtual const char* icon() const = 0;
 
-    virtual void refresh(const wxString& search = wxEmptyString) = 0;
+    virtual void refresh(const wxString& search = wxEmptyString);
 
     void onAreaChanged(Data::Area* area);
     void onInvalidateAllAreas();
 
     void hasGroupChanged(bool b);
     bool hasGroupChanged();
+
+private:
+    virtual void reordering_items_list(const wxString& search) = 0;
+    virtual void rebuilding_items_list(const wxString& search) = 0;
 
 protected:
     Data::Area* pArea;

@@ -40,7 +40,8 @@ namespace HTMLListbox
 namespace Datasource
 {
 
-using namespace Antares::Component::HTMLListbox::Item;
+// gp : to remove ?
+// using namespace Antares::Component::HTMLListbox::Item;
 
 ThermalClustersByOrder::ThermalClustersByOrder(HTMLListbox::Component& parent) :
     ClustersByOrder(parent)
@@ -79,20 +80,6 @@ int sizeThermalClusterMap(ThermalClusterMap& l)
             size_to_return++;
     }
     return size_to_return;
-}
-
-void ThermalClustersByOrder::refresh(const wxString& search)
-{
-    if (hasGroupChanged())
-    {
-        // A cluster group just changed.
-        // To keep the changed cluster selected, We have to reorder the items list.
-        // Rebuilding the item list would re-initialize the cluster selection on the first cluster of the list.  
-        reordering_items_list(search);
-        hasGroupChanged(false);
-    }        
-    else
-        rebuilding_items_list(search);
 }
 
 void ThermalClustersByOrder::reordering_items_list(const wxString& search)
@@ -159,7 +146,7 @@ void ThermalClustersByOrder::rebuilding_items_list(const wxString& search)
                 // Refreshing the group
                 IItem* groupItem = new Group(groupTitle);
                 pParent.add(groupItem);
-                // Storing the group item in case we need it
+                // Mapping group name to cluster item for possible further usage
                 groups_to_items_[groupName] = groupItem;
 
                 // Refreshing all clusters of the group
@@ -169,7 +156,7 @@ void ThermalClustersByOrder::rebuilding_items_list(const wxString& search)
                 {
                     ThermalClusterItem* thClusterItem = new ThermalClusterItem(*j);
                     pParent.add(thClusterItem);
-                    // Storing the cluster item in case we need it
+                    // Mapping real cluster to cluster item for possible further usage
                     clusters_to_items_[*j] = thClusterItem;
                 }
             }

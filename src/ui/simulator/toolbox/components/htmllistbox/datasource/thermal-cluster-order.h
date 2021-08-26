@@ -57,20 +57,16 @@ public:
     virtual ~ThermalClustersByOrder();
     //@}
 
-    void refresh(const wxString& search = wxEmptyString) override;
-
 private:
     virtual void sortClustersInGroup(ThermalClusterList& clusterList) = 0;
 
-    void reordering_items_list(const wxString& search);
-    void rebuilding_items_list(const wxString& search);
+    void reordering_items_list(const wxString& search) override;
+    void rebuilding_items_list(const wxString& search) override;
 
 protected:
+    // gp : to be factored
     std::map<wxString, IItem*> groups_to_items_;
-    // std::map<Data::ThermalCluster*, std::pair<ThermalClusterItem*, int> > clusters_to_items_;
     std::map<Data::ThermalCluster*, ThermalClusterItem*> clusters_to_items_;
-
-
 
 }; // ThermalClustersByOrder
 
@@ -98,7 +94,7 @@ public:
     }
     
 private:
-    void sortClustersInGroup(ThermalClusterList& clusterList);
+    void sortClustersInGroup(ThermalClusterList& clusterList) override;
 
 }; // class ThermalClustersByAlphaOrder
 
@@ -126,7 +122,7 @@ public:
     }
     
 private:
-    void sortClustersInGroup(ThermalClusterList& clusterList);
+    void sortClustersInGroup(ThermalClusterList& clusterList) override;
 
 }; // class ThermalClustersByAlphaReverseOrder
 

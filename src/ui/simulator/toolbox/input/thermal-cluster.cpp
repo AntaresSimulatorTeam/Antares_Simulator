@@ -637,7 +637,6 @@ void ThermalCluster::onStudyThermalClusterGroupChanged(Antares::Data::Area* area
     if (area && area == pArea)
     {
         updateWhenGroupChanges();
-        // update();
         MarkTheStudyAsModified();
         Refresh();
     }

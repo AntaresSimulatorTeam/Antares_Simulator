@@ -40,6 +40,8 @@
 // #include "../components/htmllistbox/component.h"
 // #include "../components/htmllistbox/item/thermal-cluster.h"
 #include "../components/htmllistbox/item/renewable-cluster-item.h"
+#include "../components/htmllistbox/datasource/renewable-cluster-order.h"
+#include "../components/htmllistbox/item/renewable-cluster-item.h"
 
 namespace Antares
 {
@@ -47,6 +49,9 @@ namespace Toolbox
 {
 namespace InputSelector
 {
+
+using namespace Component::HTMLListbox::Datasource;
+
 /*!
 ** \brief Visual Component for displaying renewable clusters of an arbitrary area
 */
@@ -149,6 +154,8 @@ private:
 
     void delayedSelection(Component::HTMLListbox::Item::IItem::Ptr item);
 
+    void updateWhenGroupChanges();
+
 private:
     //! The current Area
     Antares::Data::Area* pArea;
@@ -162,6 +169,9 @@ private:
     InputSelector::Area* pAreaNotifier;
     //! The last selected thermal cluster
     Component::HTMLListbox::Item::RenewableClusterItem::Ptr pLastSelectedRenewableCluster;
+
+    RenewableClustersByAlphaOrder* dsAZ_;
+    RenewableClustersByAlphaReverseOrder* dsZA_;
 
 }; // class Area
 
