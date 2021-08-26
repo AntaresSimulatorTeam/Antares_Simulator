@@ -482,17 +482,17 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Calendar
     logs.info() << "Generating calendar informations";
     if (study.usedByTheSolver)
-        study.calendar.reset(study.parameters, false);
+        study.calendar.reset(gd, false);
     else
-        study.calendar.reset(study.parameters);
+        study.calendar.reset(gd);
     logs.debug() << "  :: generating calendar dedicated to the output";
-    study.calendarOutput.reset(study.parameters);
+    study.calendarOutput.reset(gd);
     initializeRangeLimits(study, rangeLimits);
 
     // Removing disabled thermal clusters from solver computations
     removeDisabledThermalClustersFromSolverComputations(study);
 
-    switch (study.parameters.renewableGeneration())
+    switch (gd.renewableGeneration())
     {
     case rgClusters:
         // Removing disabled renewable clusters from solver computations
