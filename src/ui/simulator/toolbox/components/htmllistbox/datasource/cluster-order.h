@@ -56,6 +56,8 @@ struct SortAlphaReverseOrder
     }
 };
 
+wxString groupNameToGroupTitle(Data::Area* area, wxString& groupName);
+
 class ClustersByOrder : public Yuni::IEventObserver<ClustersByOrder>, public IDatasource
 {
 public:

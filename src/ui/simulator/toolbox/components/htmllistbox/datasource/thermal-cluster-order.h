@@ -62,8 +62,8 @@ public:
 private:
     virtual void sortClustersInGroup(ThermalClusterList& clusterList) = 0;
 
-    void refresh_when_cluster_group_changed(const wxString& search);
-    void refresh_by_building_item_list(const wxString& search);
+    void reordering_items_list(const wxString& search);
+    void rebuilding_items_list(const wxString& search);
 
 protected:
     std::map<wxString, IItem*> groups_to_items_;
