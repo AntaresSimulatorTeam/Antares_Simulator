@@ -25,9 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "thermal-cluster-order.h"
 #include "../item/group.h"
 #include "../component.h"
+#include "thermal-cluster-order.h"
+#include "../item/thermal-cluster-item.h"
 
 using namespace Yuni;
 
@@ -116,8 +117,8 @@ void ThermalClustersByOrder::reordering_items_list(const wxString& search)
 
                 for (ThermalClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
                 {
-                    ThermalClusterItem* thClusterItem = clusters_to_items_[*j];
-                    pParent.setElement(thClusterItem, index_item);
+                    ClusterItem* clusterItem = clusters_to_items_[*j];
+                    pParent.setElement(clusterItem, index_item);
                     index_item++;
                 }
             }
@@ -154,10 +155,10 @@ void ThermalClustersByOrder::rebuilding_items_list(const wxString& search)
 
                 for (ThermalClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
                 {
-                    ThermalClusterItem* thClusterItem = new ThermalClusterItem(*j);
-                    pParent.add(thClusterItem);
+                    ClusterItem* clusterItem = new ThermalClusterItem(*j);
+                    pParent.add(clusterItem);
                     // Mapping real cluster to cluster item for possible further usage
-                    clusters_to_items_[*j] = thClusterItem;
+                    clusters_to_items_[*j] = clusterItem;
                 }
             }
         }

@@ -30,6 +30,9 @@
 #include "datasource.h"
 #include <yuni/core/event.h>
 #include <antares/study.h>
+#include "../item/cluster-item.h"
+
+using namespace Antares::Component::HTMLListbox::Item;
 
 namespace Antares
 {
@@ -88,6 +91,8 @@ private:
 protected:
     Data::Area* pArea;
     bool hasGroupJustChanged_;
+    std::map<wxString, IItem*> groups_to_items_;
+    std::map<Data::Cluster*, ClusterItem*> clusters_to_items_;
 
 }; // class ClustersByOrder
 

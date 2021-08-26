@@ -30,7 +30,7 @@
 #include "cluster-order.h"
 #include <map>
 #include <list>
-#include "../item/renewable-cluster-item.h"
+// #include "../item/renewable-cluster-item.h"
 
 namespace Antares
 {
@@ -43,8 +43,6 @@ namespace Datasource
 
 typedef std::list<Data::RenewableCluster*> RenewableClusterList;
 typedef std::map<wxString, RenewableClusterList> RenewableClusterMap;
-
-using namespace Antares::Component::HTMLListbox::Item;
 
 class RenewableClustersByOrder : public ClustersByOrder
 {
@@ -62,11 +60,6 @@ private:
 
     void reordering_items_list(const wxString& search) override;
     void rebuilding_items_list(const wxString& search) override;
-
-protected:
-    // gp : to be factored
-    std::map<wxString, IItem*> groups_to_items_;
-    std::map<Data::RenewableCluster*, RenewableClusterItem*> clusters_to_items_;
 
 }; // RenewableClustersByOrder
 

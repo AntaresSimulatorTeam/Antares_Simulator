@@ -25,10 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "renewable-cluster-order.h"
-#include "../item/renewable-cluster-item.h"
 #include "../item/group.h"
 #include "../component.h"
+#include "renewable-cluster-order.h"
+#include "../item/renewable-cluster-item.h"
 
 using namespace Yuni;
 
@@ -114,8 +114,8 @@ void RenewableClustersByOrder::reordering_items_list(const wxString& search)
 
                 for (RenewableClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
                 {
-                    RenewableClusterItem* thClusterItem = clusters_to_items_[*j];
-                    pParent.setElement(thClusterItem, index_item);
+                    ClusterItem* clusterItem = clusters_to_items_[*j];
+                    pParent.setElement(clusterItem, index_item);
                     index_item++;
                 }
             }
@@ -152,10 +152,10 @@ void RenewableClustersByOrder::rebuilding_items_list(const wxString& search)
 
                 for (RenewableClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
                 {
-                    RenewableClusterItem* rnClusterItem = new RenewableClusterItem(*j);
-                    pParent.add(rnClusterItem);
+                    ClusterItem* clusterItem = new RenewableClusterItem(*j);
+                    pParent.add(clusterItem);
                     // Mapping real cluster to cluster item for possible further usage
-                    clusters_to_items_[*j] = rnClusterItem;
+                    clusters_to_items_[*j] = clusterItem;
                 }
             }
         }
