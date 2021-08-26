@@ -520,6 +520,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Binding constraints
     initializeBindingConstraints(study.bindingConstraints);
 
+    // Check if some clusters request TS generation
     {
         thermalTSRefresh = gd.timeSeriesToGenerate & timeSeriesThermal;
         study.areas.each([&](Data::Area& area) {
