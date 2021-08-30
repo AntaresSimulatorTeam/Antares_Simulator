@@ -47,7 +47,7 @@ namespace Antares
 {
 namespace Data
 {
-bool ThermalCluster::doWeGenerateTS(bool global) const
+bool ThermalCluster::doWeGenerateTS(bool global, bool refresh) const
 {
     switch (tsGenBehavior)
     {
@@ -55,7 +55,7 @@ bool ThermalCluster::doWeGenerateTS(bool global) const
     case thermalUseGlobalParameter:
         return global;
     case thermalForceGen:
-        return true;
+        return refresh;
     case thermalForceNoGen:
     default:
         return false;
