@@ -491,8 +491,8 @@ void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
         EnableItem(menu, mnIDViewNotes, opened);
         EnableItem(menu, mnIDViewLoad, opened);
 
-        EnableItem(menu, mnIDViewSolar, opened && not study->parameters.renewableGeneration.isClusters());
-        EnableItem(menu, mnIDViewWind, opened && not study->parameters.renewableGeneration.isClusters());
+        EnableItem(menu, mnIDViewSolar, opened && study->parameters.renewableGeneration.isAggregated());
+        EnableItem(menu, mnIDViewWind, opened && study->parameters.renewableGeneration.isAggregated());
         EnableItem(menu, mnIDViewRenewable, opened && study->parameters.renewableGeneration.isClusters());
 
         EnableItem(menu, mnIDViewHydro, opened);
