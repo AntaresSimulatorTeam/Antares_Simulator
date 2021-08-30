@@ -1898,5 +1898,15 @@ RenewableGenerationModelling Parameters::RenewableGeneration::operator()() const
     return rgModelling;
 }
 
+bool Parameters::RenewableGeneration::isAggregated() const
+{
+    return rgModelling == Antares::Data::rgAggregated;
+}
+
+bool Parameters::RenewableGeneration::isClusters() const
+{
+    return rgModelling == Antares::Data::rgClusters;
+}
+
 } // namespace Data
 } // namespace Antares
