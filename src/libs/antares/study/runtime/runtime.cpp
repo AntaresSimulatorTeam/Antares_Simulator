@@ -528,7 +528,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
                 thermalTSRefresh
                   = thermalTSRefresh
                     || cluster.doWeGenerateTS(gd.timeSeriesToGenerate & timeSeriesThermal);
-                logs.notice() << "thermalTSRefresh = " << thermalTSRefresh;
             });
         });
     }
