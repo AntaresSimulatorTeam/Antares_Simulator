@@ -167,7 +167,7 @@ void ThermalCluster::updateWhenGroupChanges()
     if (dataSource)
         dataSource->hasGroupChanged(true);
 
-    pThListbox->force_redraw();
+    pThListbox->forceRedraw();
     onThermalClusterChanged(nullptr);
     updateInnerValues();
 }

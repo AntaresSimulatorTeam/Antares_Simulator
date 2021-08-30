@@ -170,7 +170,7 @@ void RenewableCluster::updateWhenGroupChanges()
     if (dataSource)
         dataSource->hasGroupChanged(true);
 
-    pRnListbox->force_redraw();
+    pRnListbox->forceRedraw();
     onClusterChanged(nullptr);
     updateInnerValues();
 }

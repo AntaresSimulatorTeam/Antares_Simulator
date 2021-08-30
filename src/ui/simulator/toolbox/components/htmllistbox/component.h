@@ -101,7 +101,7 @@ public:
     */
     void invalidate();
 
-    void force_redraw();
+    void forceRedraw();
 
     /*!
     ** \brief Refresh only the content of all items

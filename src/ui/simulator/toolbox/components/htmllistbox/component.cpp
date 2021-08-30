@@ -162,7 +162,7 @@ void Component::resizeTo(int newSize)
     pItems.resize(newSize);
 }
 
-void Component::force_redraw()
+void Component::forceRedraw()
 {
     pInvalidated = true;
 }
