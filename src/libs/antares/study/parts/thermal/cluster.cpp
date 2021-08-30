@@ -53,7 +53,7 @@ bool ThermalCluster::doWeGenerateTS(bool global, bool refresh) const
     {
     // Generate if global tells us to
     case thermalUseGlobalParameter:
-        return global;
+        return global && refresh;
     case thermalForceGen:
         return refresh;
     case thermalForceNoGen:
