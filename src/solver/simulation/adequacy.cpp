@@ -351,8 +351,9 @@ bool Adequacy::year(Progression::Task& progression,
 
     updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
 
-    logs.info() << "Year " << (numSpace + 1) << " : " 
+    logs.info() << "Year " << (state.year + 1) << " : " 
         <<  pProblemesHebdo[numSpace]->optimizationStatistics_object.toString();
+    state.averageOptimizationTime = pProblemesHebdo[numSpace]->optimizationStatistics_object.getAverageSolveTime();
 
     return true;
 }
@@ -377,17 +378,6 @@ void Adequacy::simulationEnd()
         CallbackBalanceRetrieval callback;
         callback.bind(this, &Adequacy::callbackRetrieveBalanceData);
         PerformQuadraticOptimisation(study, *pProblemesHebdo[0], callback, pNbWeeks);
-    }
-
-    if (pProblemesHebdo)
-    {
-        optimizationStatistics globalStatistics;
-        for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
-        {
-            globalStatistics.add(pProblemesHebdo[numSpace]->optimizationStatistics_object);
-        }
-
-        logs.info() << "Global : "  << globalStatistics.toString();
     }
 }
 

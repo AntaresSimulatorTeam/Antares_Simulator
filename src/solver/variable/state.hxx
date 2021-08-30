@@ -51,6 +51,7 @@ inline void State::startANewYear()
     annualSystemCost = 0.;
     optimalSolutionCost1 = 0.;
     optimalSolutionCost2 = 0.;
+    averageOptimizationTime = 0.;
 }
 
 inline void State::yearEndReset()
