@@ -371,6 +371,8 @@ void AdvancedParameters::onResetToDefault(void*)
         parameters.unitCommitment.ucMode = Data::ucHeuristic;
         parameters.nbCores.ncMode = Data::ncAvg;
 
+        parameters.renewableGeneration.rgModelling = Data::rgAggregated;
+
         refresh();
         MarkTheStudyAsModified();
     }
