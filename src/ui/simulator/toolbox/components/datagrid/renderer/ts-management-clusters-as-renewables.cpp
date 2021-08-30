@@ -453,6 +453,12 @@ IRenderer::CellStyle TSmanagementRenewableCluster::cellStyle(int x, int y) const
         return IRenderer::cellStyleError;
     auto ts = mapping[x];
 
+    // Thermal clusters only
+    if (ts == Data::timeSeriesThermal && 4 <= y && y <= 7)
+    {
+        return IRenderer::cellStyleDefault;
+    }
+
     // Renewable clusters only
     if (ts == Data::timeSeriesRenewable)
         return cellStyleForRenewables(x, y);

@@ -509,6 +509,12 @@ IRenderer::CellStyle TSmanagement::cellStyle(int x, int y) const
     auto ts = mapping[x];
     bool tsGenerator = (0 != (study->parameters.timeSeriesToGenerate & ts));
 
+    // Thermal clusters only
+    if (ts == Data::timeSeriesThermal && 4 <= y && y <= 7)
+    {
+        return IRenderer::cellStyleDefault;
+    }
+
     switch (y)
     {
     case 0:
