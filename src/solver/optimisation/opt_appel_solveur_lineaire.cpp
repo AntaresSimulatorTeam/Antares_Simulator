@@ -77,18 +77,21 @@ public:
         end_ = clock::now();
     }
 
-    long long duration() const {
+    long long duration_ms() const {
         return std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count();
-    }
-
-    std::string toString() const {
-        return std::to_string(duration()) + "ms";
     }
 
 private:
     clock::time_point start_;
     clock::time_point end_;
 };
+
+namespace std {
+    std::string to_string(const TimeMeasurement& tm) 
+    {
+        return std::to_string(tm.duration_ms()) + "ms";
+    }
+}
 
 bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIntervalle)
 {
@@ -167,7 +170,7 @@ RESOLUTION:
                                                   ProblemeAResoudre->NombreDeContraintes);
             }
             measure.tick();
-            ProblemeHebdo->optimizationStatistics_object.addUpdateTime(measure.duration());
+            ProblemeHebdo->optimizationStatistics_object.addUpdateTime(measure.duration_ms());
         }
     }
 
@@ -247,7 +250,7 @@ RESOLUTION:
         }
     }
     measure.tick();
-    ProblemeHebdo->optimizationStatistics_object.addSolveTime(measure.duration());
+    ProblemeHebdo->optimizationStatistics_object.addSolveTime(measure.duration_ms());
 
     if (ProblemeHebdo->ExportMPS == OUI_ANTARES)
     {

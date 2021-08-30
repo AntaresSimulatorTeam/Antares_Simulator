@@ -71,12 +71,14 @@ public:
         if (nbSolve == 0) return 0.0;
         return ((double) totalSolveTime) / nbSolve;
     }
-
-    std::string toString() const
-    {
-        return "average solve time: " + std::to_string(getAverageSolveTime()) + "ms, " 
-            + "average update time: " + std::to_string(getAverageUpdateTime()) + "ms";
-    }
 };
+
+namespace std {
+    inline std::string to_string(const optimizationStatistics& os) 
+    {
+        return "average solve time: " + std::to_string(os.getAverageSolveTime()) + "ms, " 
+            + "average update time: " + std::to_string(os.getAverageUpdateTime()) + "ms";
+    }
+}
 
 #endif

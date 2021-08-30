@@ -226,7 +226,7 @@ bool Economy::year(Progression::Task& progression,
     updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
 
     logs.info() << "Year " << (numSpace + 1) << " : " 
-        <<  pProblemesHebdo[numSpace]->optimizationStatistics_object.toString();
+        <<  std::to_string(pProblemesHebdo[numSpace]->optimizationStatistics_object);
 
     return true;
 }
@@ -261,7 +261,7 @@ void Economy::simulationEnd()
             globalStatistics.add(pProblemesHebdo[numSpace]->optimizationStatistics_object);
         }
 
-        logs.info() << "Global : "  << globalStatistics.toString();
+        logs.info() << "Global : "  << std::to_string(globalStatistics);
     }
 }
 
