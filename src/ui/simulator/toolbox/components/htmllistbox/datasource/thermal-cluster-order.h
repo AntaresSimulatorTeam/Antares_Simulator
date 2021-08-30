@@ -43,7 +43,6 @@ namespace Datasource
 typedef std::list<Data::ThermalCluster*> ThermalClusterList;
 typedef std::map<wxString, ThermalClusterList> ThermalClusterMap;
 
-
 class ThermalClustersByOrder : public ClustersByOrder
 {
 public:
@@ -55,10 +54,11 @@ public:
     virtual ~ThermalClustersByOrder();
     //@}
 
-    void refresh(const wxString& search = wxEmptyString) override;
-
 private:
-    virtual void refreshClustersInGroup(ThermalClusterList& clusterList) = 0;
+    virtual void sortClustersInGroup(ThermalClusterList& clusterList) = 0;
+
+    void reorderItemsList(const wxString& search) override;
+    void rebuildItemsList(const wxString& search) override;
 
 }; // ThermalClustersByOrder
 
@@ -86,7 +86,7 @@ public:
     }
     
 private:
-    void refreshClustersInGroup(ThermalClusterList& clusterList);
+    void sortClustersInGroup(ThermalClusterList& clusterList) override;
 
 }; // class ThermalClustersByAlphaOrder
 
@@ -114,7 +114,7 @@ public:
     }
     
 private:
-    void refreshClustersInGroup(ThermalClusterList& clusterList);
+    void sortClustersInGroup(ThermalClusterList& clusterList) override;
 
 }; // class ThermalClustersByAlphaReverseOrder
 
