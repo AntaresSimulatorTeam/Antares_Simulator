@@ -91,33 +91,30 @@ void ThermalClustersByOrder::reorderItemsList(const wxString& search)
         int nombreItems = sizeThermalClusterMap(l);
         pParent.resizeTo(nombreItems);
 
-        if (!l.empty())
+        int index_item = 0;
+        for (ThermalClusterMap::iterator group_it = l.begin(); group_it != l.end(); ++group_it)
         {
-            int index_item = 0;
-            for (ThermalClusterMap::iterator group_it = l.begin(); group_it != l.end(); ++group_it)
+            wxString groupName = group_it->first;
+            IItem* groupItem;
+            ThermalClusterList& groupClusterList = group_it->second;
+
+            if (groups_to_items_.find(groupName) != groups_to_items_.end())
+                groupItem = groups_to_items_[groupName];
+            else
             {
-                wxString groupName = group_it->first;
-                IItem* groupItem;
-                ThermalClusterList& groupClusterList = group_it->second;
+                wxString groupTitle = groupNameToGroupTitle(pArea, groupName);
+                groupItem = new Group(groupTitle);
+            }
+            pParent.setElement(groupItem, index_item);
+            index_item++;
 
-                if (groups_to_items_.find(groupName) != groups_to_items_.end())
-                    groupItem = groups_to_items_[groupName];
-                else
-                {
-                    wxString groupTitle = groupNameToGroupTitle(pArea, groupName);
-                    groupItem = new Group(groupTitle);
-                }
-                pParent.setElement(groupItem, index_item);
+            sortClustersInGroup(groupClusterList);
+
+            for (ThermalClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
+            {
+                ClusterItem* clusterItem = clusters_to_items_[*j];
+                pParent.setElement(clusterItem, index_item);
                 index_item++;
-
-                sortClustersInGroup(groupClusterList);
-
-                for (ThermalClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
-                {
-                    ClusterItem* clusterItem = clusters_to_items_[*j];
-                    pParent.setElement(clusterItem, index_item);
-                    index_item++;
-                }
             }
         }
     }
@@ -131,32 +128,29 @@ void ThermalClustersByOrder::rebuildItemsList(const wxString& search)
 
     if (pArea)
     {
-        ThermalClusterMap l;
-        GetThermalClusterMap(pArea, l, search);
-        if (!l.empty())
+    ThermalClusterMap l;
+    GetThermalClusterMap(pArea, l, search);
+        for (ThermalClusterMap::iterator group_it = l.begin(); group_it != l.end(); ++group_it)
         {
-            for (ThermalClusterMap::iterator group_it = l.begin(); group_it != l.end(); ++group_it)
+            wxString groupName = group_it->first;
+            wxString groupTitle = groupNameToGroupTitle(pArea, groupName);
+            ThermalClusterList& groupClusterList = group_it->second;
+
+            // Refreshing the group
+            IItem* groupItem = new Group(groupTitle);
+            pParent.add(groupItem);
+            // Mapping group name to cluster item for possible further usage
+            groups_to_items_[groupName] = groupItem;
+
+            // Refreshing all clusters of the group
+            sortClustersInGroup(groupClusterList);
+
+            for (ThermalClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
             {
-                wxString groupName = group_it->first;
-                wxString groupTitle = groupNameToGroupTitle(pArea, groupName);
-                ThermalClusterList& groupClusterList = group_it->second;
-
-                // Refreshing the group
-                IItem* groupItem = new Group(groupTitle);
-                pParent.add(groupItem);
-                // Mapping group name to cluster item for possible further usage
-                groups_to_items_[groupName] = groupItem;
-
-                // Refreshing all clusters of the group
-                sortClustersInGroup(groupClusterList);
-
-                for (ThermalClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
-                {
-                    ClusterItem* clusterItem = new ThermalClusterItem(*j);
-                    pParent.add(clusterItem);
-                    // Mapping real cluster to cluster item for possible further usage
-                    clusters_to_items_[*j] = clusterItem;
-                }
+                ClusterItem* clusterItem = new ThermalClusterItem(*j);
+                pParent.add(clusterItem);
+                // Mapping real cluster to cluster item for possible further usage
+                clusters_to_items_[*j] = clusterItem;
             }
         }
     }
