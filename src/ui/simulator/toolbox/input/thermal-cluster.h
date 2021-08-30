@@ -162,8 +162,8 @@ private:
     //! The last selected thermal cluster
     Component::HTMLListbox::Item::ThermalClusterItem::Ptr pLastSelectedThermalCluster;
 
-    ThermalClustersByAlphaOrder* dsAZ_;
-    ThermalClustersByAlphaReverseOrder* dsZA_;
+    ThermalClustersByAlphaOrder* pDataSourceAZ;
+    ThermalClustersByAlphaReverseOrder* pDataSourceZA;
 
 }; // class Area
 

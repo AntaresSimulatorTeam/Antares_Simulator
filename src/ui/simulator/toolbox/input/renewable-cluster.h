@@ -170,8 +170,8 @@ private:
     //! The last selected thermal cluster
     Component::HTMLListbox::Item::RenewableClusterItem::Ptr pLastSelectedRenewableCluster;
 
-    RenewableClustersByAlphaOrder* dsAZ_;
-    RenewableClustersByAlphaReverseOrder* dsZA_;
+    RenewableClustersByAlphaOrder* pDataSourceAZ;
+    RenewableClustersByAlphaReverseOrder* pDataSourceZA;
 
 }; // class Area
 

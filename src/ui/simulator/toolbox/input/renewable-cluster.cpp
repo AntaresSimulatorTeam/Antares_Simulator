@@ -137,15 +137,15 @@ void RenewableCluster::internalBuildSubControls()
     // The listbox
     pRnListbox = new Component::HTMLListbox::Component(this);
     
-    dsAZ_ = pRnListbox->addDatasource<RenewableClustersByAlphaOrder>();
-    dsZA_ = pRnListbox->addDatasource<RenewableClustersByAlphaReverseOrder>();
+    pDataSourceAZ = pRnListbox->addDatasource<RenewableClustersByAlphaOrder>();
+    pDataSourceZA = pRnListbox->addDatasource<RenewableClustersByAlphaReverseOrder>();
 
     if (pAreaNotifier)
     {
-        pAreaNotifier->onAreaChanged.connect(dsAZ_,
+        pAreaNotifier->onAreaChanged.connect(pDataSourceAZ,
                                              &RenewableClustersByAlphaOrder::onAreaChanged);
         pAreaNotifier->onAreaChanged.connect(
-          dsZA_, &RenewableClustersByAlphaReverseOrder::onAreaChanged);
+          pDataSourceZA, &RenewableClustersByAlphaReverseOrder::onAreaChanged);
     }
     
     sizer->Add(pRnListbox, 1, wxALL | wxEXPAND);

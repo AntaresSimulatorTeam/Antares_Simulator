@@ -136,14 +136,14 @@ void ThermalCluster::internalBuildSubControls()
 
     // The listbox
     pThListbox = new Component::HTMLListbox::Component(this);
-    dsAZ_ = pThListbox->addDatasource<ThermalClustersByAlphaOrder>();
-    dsZA_ = pThListbox->addDatasource<ThermalClustersByAlphaReverseOrder>();
+    pDataSourceAZ = pThListbox->addDatasource<ThermalClustersByAlphaOrder>();
+    pDataSourceZA = pThListbox->addDatasource<ThermalClustersByAlphaReverseOrder>();
     if (pAreaNotifier)
     {
-        pAreaNotifier->onAreaChanged.connect(dsAZ_,
+        pAreaNotifier->onAreaChanged.connect(pDataSourceAZ,
                                              &ThermalClustersByAlphaOrder::onAreaChanged);
         pAreaNotifier->onAreaChanged.connect(
-          dsZA_, &ThermalClustersByAlphaReverseOrder::onAreaChanged);
+          pDataSourceZA, &ThermalClustersByAlphaReverseOrder::onAreaChanged);
     }
     sizer->Add(pThListbox, 1, wxALL | wxEXPAND);
     sizer->SetItemMinSize(pThListbox, 100, 200);
