@@ -80,7 +80,7 @@ int sizeThermalClusterMap(ThermalClusterMap& l)
     return size_to_return;
 }
 
-void ThermalClustersByOrder::reordering_items_list(const wxString& search)
+void ThermalClustersByOrder::reorderItemsList(const wxString& search)
 {
     if (pArea)
     {
@@ -123,7 +123,7 @@ void ThermalClustersByOrder::reordering_items_list(const wxString& search)
     }
 }
 
-void ThermalClustersByOrder::rebuilding_items_list(const wxString& search)
+void ThermalClustersByOrder::rebuildItemsList(const wxString& search)
 {
     pParent.clear();
     clusters_to_items_.clear();

@@ -80,7 +80,7 @@ int sizeRenewableClusterMap(RenewableClusterMap& l)
     return size_to_return;
 }
 
-void RenewableClustersByOrder::reordering_items_list(const wxString& search)
+void RenewableClustersByOrder::reorderItemsList(const wxString& search)
 {
     if (pArea)
     {
@@ -123,7 +123,7 @@ void RenewableClustersByOrder::reordering_items_list(const wxString& search)
     }
 }
 
-void RenewableClustersByOrder::rebuilding_items_list(const wxString& search)
+void RenewableClustersByOrder::rebuildItemsList(const wxString& search)
 {
     pParent.clear();
     clusters_to_items_.clear();

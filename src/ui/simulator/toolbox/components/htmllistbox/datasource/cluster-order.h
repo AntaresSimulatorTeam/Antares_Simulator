@@ -85,8 +85,8 @@ public:
     bool hasGroupChanged() const;
 
 private:
-    virtual void reordering_items_list(const wxString& search) = 0;
-    virtual void rebuilding_items_list(const wxString& search) = 0;
+    virtual void reorderItemsList(const wxString& search) = 0;
+    virtual void rebuildItemsList(const wxString& search) = 0;
 
 protected:
     Data::Area* pArea;

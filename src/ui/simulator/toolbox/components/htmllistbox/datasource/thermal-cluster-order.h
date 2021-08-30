@@ -57,8 +57,8 @@ public:
 private:
     virtual void sortClustersInGroup(ThermalClusterList& clusterList) = 0;
 
-    void reordering_items_list(const wxString& search) override;
-    void rebuilding_items_list(const wxString& search) override;
+    void reorderItemsList(const wxString& search) override;
+    void rebuildItemsList(const wxString& search) override;
 
 }; // ThermalClustersByOrder
 
