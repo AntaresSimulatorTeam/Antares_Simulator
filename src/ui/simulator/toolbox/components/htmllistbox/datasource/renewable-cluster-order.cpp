@@ -112,7 +112,7 @@ void RenewableClustersByOrder::reorderItemsList(const wxString& search)
 
             for (RenewableClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
             {
-                ClusterItem* clusterItem = clusters_to_items_[*j];
+                ClusterItem* clusterItem = pClustersToItems[*j];
                 pParent.setElement(clusterItem, index_item);
                 index_item++;
             }
@@ -123,7 +123,7 @@ void RenewableClustersByOrder::reorderItemsList(const wxString& search)
 void RenewableClustersByOrder::rebuildItemsList(const wxString& search)
 {
     pParent.clear();
-    clusters_to_items_.clear();
+    pClustersToItems.clear();
     groups_to_items_.clear();
 
     if (pArea)
@@ -150,7 +150,7 @@ void RenewableClustersByOrder::rebuildItemsList(const wxString& search)
                 ClusterItem* clusterItem = new RenewableClusterItem(*j);
                 pParent.add(clusterItem);
                 // Mapping real cluster to cluster item for possible further usage
-                clusters_to_items_[*j] = clusterItem;
+                pClustersToItems[*j] = clusterItem;
             }
         }
     }

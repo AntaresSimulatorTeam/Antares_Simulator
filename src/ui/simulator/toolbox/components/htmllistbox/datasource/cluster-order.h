@@ -92,7 +92,7 @@ protected:
     Data::Area* pArea;
     bool hasGroupJustChanged_;
     std::map<wxString, IItem*> groups_to_items_;
-    std::map<Data::Cluster*, ClusterItem*> clusters_to_items_;
+    std::map<Data::Cluster*, ClusterItem*> pClustersToItems;
 
 }; // class ClustersByOrder
 
