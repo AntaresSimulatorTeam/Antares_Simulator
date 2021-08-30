@@ -1095,6 +1095,8 @@ uint ISimulation<Impl>::buildSetsOfParallelYears(
           = refreshing
             || (pData.haveToRefreshTSThermal && (!y || ((y % pData.refreshIntervalThermal) == 0)));
 
+        // Some thermal clusters may override the global parameter.
+        //Therefore, we may want to refresh TS even if pData.haveToRefreshTSThermal == false
         refreshing = refreshing || study.runtime->thermalTSRefresh;
 
         // We build a new set of parallel years if one of these conditions is fulfilled :
