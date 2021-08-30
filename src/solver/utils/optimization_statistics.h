@@ -7,15 +7,16 @@ class optimizationStatistics
 {
 private:
     long long totalSolveTime;
-    long long totalUpdateTime;
     unsigned int nbSolve;
+
+    long long totalUpdateTime;
     unsigned int nbUpdate;
 
 public:
     optimizationStatistics() :
         totalSolveTime(0),
-        totalUpdateTime(0),
         nbSolve(0),
+        totalUpdateTime(0),
         nbUpdate(0)
     {
     }
