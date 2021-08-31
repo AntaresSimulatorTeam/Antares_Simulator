@@ -11,7 +11,6 @@ include("cmake/application.cmake")
 include("cmake/components.cmake")
 include("cmake/components-map.cmake")
 include("cmake/components-button.cmake")
-include("cmake/components-htmllistbox.cmake")
 # Windows
 include("cmake/windows-inspector.cmake")
 include("cmake/windows-options.cmake")
@@ -134,7 +133,6 @@ set(ANTARES_LIBS
 		libantares-ui-components
 		libantares-ui-component-map
 		libantares-ui-component-button
-		libantares-ui-component-htmllistbox
 		libantares-ui-component-wxscrollbox
 		libantares-ui-component-panel
 		libantares-ui-component-frame
