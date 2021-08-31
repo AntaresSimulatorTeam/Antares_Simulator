@@ -152,7 +152,7 @@ inline void BindConstList::eachEnabled(const PredicateT& predicate)
     for (uint i = 0; i != count; ++i)
     {
         auto& constraint = *(pList[i]);
-        if (constraint.enabled())
+        if (constraint.enabled() && !constraint.skipped())
             predicate(constraint);
     }
 }
@@ -164,7 +164,7 @@ inline void BindConstList::eachEnabled(const PredicateT& predicate) const
     for (uint i = 0; i != count; ++i)
     {
         auto& constraint = *(pList[i]);
-        if (constraint.enabled())
+        if (constraint.enabled() && !constraint.skipped())
             predicate(constraint);
     }
 }
