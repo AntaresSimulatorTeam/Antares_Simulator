@@ -25,29 +25,19 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/wx-wrapper.h>
-#include "thermal-cluster.h"
-#include "../components/captionpanel.h"
 #include "../../application/study.h"
 #include "../../application/main.h"
 #include "../../application/wait.h"
 #include "../../windows/inspector.h"
-#include <assert.h>
 #include "../resources.h"
 #include "../create.h"
-#include "../validator.h"
-#include "../components/htmllistbox/datasource/thermal-cluster-order.h"
-#include "../components/htmllistbox/item/thermal-cluster-item.h"
 #include "../components/button.h"
 #include "../../windows/message.h"
 #include "../../application/menus.h"
 #include <antares/study/scenario-builder/updater.hxx>
 #include <wx/wupdlock.h>
 #include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/statline.h>
-#include <wx/bmpbuttn.h>
-#include <ui/common/lock.h>
+#include "thermal-cluster.h"
 
 using namespace Yuni;
 
@@ -95,8 +85,6 @@ ThermalCluster::~ThermalCluster()
 {
     destroyBoundEvents();
 }
-
-using namespace Component::HTMLListbox::Datasource;
 
 void ThermalCluster::internalBuildSubControls()
 {
@@ -148,16 +136,14 @@ void ThermalCluster::internalBuildSubControls()
 
     // The listbox
     pThListbox = new Component::HTMLListbox::Component(this);
-    ThermalClustersByAlphaOrder* dsAZ;
-    dsAZ = pThListbox->addDatasource<ThermalClustersByAlphaOrder>();
-    ThermalClustersByAlphaReverseOrder* dsZA;
-    dsZA = pThListbox->addDatasource<ThermalClustersByAlphaReverseOrder>();
+    pDataSourceAZ = pThListbox->addDatasource<ThermalClustersByAlphaOrder>();
+    pDataSourceZA = pThListbox->addDatasource<ThermalClustersByAlphaReverseOrder>();
     if (pAreaNotifier)
     {
-        pAreaNotifier->onAreaChanged.connect(dsAZ,
+        pAreaNotifier->onAreaChanged.connect(pDataSourceAZ,
                                              &ThermalClustersByAlphaOrder::onAreaChanged);
         pAreaNotifier->onAreaChanged.connect(
-          dsZA, &ThermalClustersByAlphaReverseOrder::onAreaChanged);
+          pDataSourceZA, &ThermalClustersByAlphaReverseOrder::onAreaChanged);
     }
     sizer->Add(pThListbox, 1, wxALL | wxEXPAND);
     sizer->SetItemMinSize(pThListbox, 100, 200);
@@ -170,6 +156,18 @@ void ThermalCluster::internalBuildSubControls()
 void ThermalCluster::update()
 {
     pThListbox->invalidate();
+    onThermalClusterChanged(nullptr);
+    updateInnerValues();
+}
+
+void ThermalCluster::updateWhenGroupChanges()
+{
+    // Warn the selected data source (A-Z or Z-A sorting) that a cluster's group changed
+    ClustersByOrder* dataSource = dynamic_cast<ClustersByOrder*>(pThListbox->datasource());
+    if (dataSource)
+        dataSource->hasGroupChanged(true);
+
+    pThListbox->forceRedraw();
     onThermalClusterChanged(nullptr);
     updateInnerValues();
 }
@@ -629,7 +627,7 @@ void ThermalCluster::onStudyThermalClusterGroupChanged(Antares::Data::Area* area
 {
     if (area && area == pArea)
     {
-        update();
+        updateWhenGroupChanges();
         MarkTheStudyAsModified();
         Refresh();
     }

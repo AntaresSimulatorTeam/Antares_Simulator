@@ -25,10 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "thermal-cluster-order.h"
-#include "../item/thermal-cluster-item.h"
 #include "../item/group.h"
 #include "../component.h"
+#include "thermal-cluster-order.h"
+#include "../item/thermal-cluster-item.h"
 
 using namespace Yuni;
 
@@ -66,46 +66,100 @@ void GetThermalClusterMap(Data::Area* area, ThermalClusterMap& l, const wxString
     }
 }
 
-void ThermalClustersByOrder::refresh(const wxString& search)
+int sizeThermalClusterMap(ThermalClusterMap& l)
+{
+    int size_to_return = 0;
+    for (ThermalClusterMap::iterator group_it = l.begin(); group_it != l.end(); ++group_it)
+    {
+        size_to_return++;
+
+        ThermalClusterList& groupClusterList = group_it->second;
+        for (ThermalClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
+            size_to_return++;
+    }
+    return size_to_return;
+}
+
+void ThermalClustersByOrder::reorderItemsList(const wxString& search)
+{
+    if (pArea)
+    {
+        ThermalClusterMap l;
+        GetThermalClusterMap(pArea, l, search);
+
+        // In case the cluster group is new to the item list, we resize the list 
+        int nombreItems = sizeThermalClusterMap(l);
+        pParent.resizeTo(nombreItems);
+
+        int index_item = 0;
+        for (ThermalClusterMap::iterator group_it = l.begin(); group_it != l.end(); ++group_it)
+        {
+            wxString groupName = group_it->first;
+            IItem* groupItem;
+            ThermalClusterList& groupClusterList = group_it->second;
+
+            if (groups_to_items_.find(groupName) != groups_to_items_.end())
+                groupItem = groups_to_items_[groupName];
+            else
+            {
+                wxString groupTitle = groupNameToGroupTitle(pArea, groupName);
+                groupItem = new Group(groupTitle);
+            }
+            pParent.setElement(groupItem, index_item);
+            index_item++;
+
+            sortClustersInGroup(groupClusterList);
+
+            for (ThermalClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
+            {
+                ClusterItem* clusterItem = pClustersToItems[*j];
+                pParent.setElement(clusterItem, index_item);
+                index_item++;
+            }
+        }
+    }
+}
+
+void ThermalClustersByOrder::rebuildItemsList(const wxString& search)
 {
     pParent.clear();
+    pClustersToItems.clear();
+    groups_to_items_.clear();
 
     if (pArea)
     {
         ThermalClusterMap l;
         GetThermalClusterMap(pArea, l, search);
-        if (!l.empty())
+        for (ThermalClusterMap::iterator group_it = l.begin(); group_it != l.end(); ++group_it)
         {
-            ThermalClusterMap::iterator end = l.end();
-            for (ThermalClusterMap::iterator group_it = l.begin(); group_it != end; ++group_it)
+            wxString groupName = group_it->first;
+            wxString groupTitle = groupNameToGroupTitle(pArea, groupName);
+            ThermalClusterList& groupClusterList = group_it->second;
+
+            // Refreshing the group
+            IItem* groupItem = new Group(groupTitle);
+            pParent.add(groupItem);
+            // Mapping group name to cluster item for possible further usage
+            groups_to_items_[groupName] = groupItem;
+
+            // Refreshing all clusters of the group
+            sortClustersInGroup(groupClusterList);
+
+            for (ThermalClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
             {
-                // Group title
-                wxString s;
-                s << wxStringFromUTF8(pArea->name);
-                if (s.size() > 43)
-                {
-                    s.resize(40);
-                    s += wxT("...");
-                }
-
-                if (group_it->first.empty())
-                        s << wxT(" / <i>* no group *</i>");
-                else
-                        s << wxT(" / ") << group_it->first;
-
-                // Refreshing the group
-                pParent.add(new Antares::Component::HTMLListbox::Item::Group(s));
-                
-                // Refreshing all clusters of the group
-                refreshClustersInGroup(group_it->second);
+                ClusterItem* clusterItem = new ThermalClusterItem(*j);
+                pParent.add(clusterItem);
+                // Mapping real cluster to cluster item for possible further usage
+                pClustersToItems[*j] = clusterItem;
             }
         }
     }
     pParent.invalidate();
 }
 
-
-
+// -------------------
+// Alphabetic order
+// -------------------
 ThermalClustersByAlphaOrder::ThermalClustersByAlphaOrder(HTMLListbox::Component& parent) : 
     ThermalClustersByOrder(parent)
 {}
@@ -113,17 +167,15 @@ ThermalClustersByAlphaOrder::ThermalClustersByAlphaOrder(HTMLListbox::Component&
 ThermalClustersByAlphaOrder::~ThermalClustersByAlphaOrder()
 {}
 
-void ThermalClustersByAlphaOrder::refreshClustersInGroup(ThermalClusterList & clusterList)
+void ThermalClustersByAlphaOrder::sortClustersInGroup(ThermalClusterList& clusterList)
 {
-    // Added the area as a result
-    ThermalClusterList::iterator jend = clusterList.end();
     clusterList.sort(SortAlphaOrder());
-    for (ThermalClusterList::iterator j = clusterList.begin(); j != jend; ++j)
-        pParent.add(new Antares::Component::HTMLListbox::Item::ThermalClusterItem(*j));
 }
 
 
-
+// --------------------------
+// Alphabetic reverse order
+// --------------------------
 ThermalClustersByAlphaReverseOrder::ThermalClustersByAlphaReverseOrder(HTMLListbox::Component& parent) :
     ThermalClustersByOrder(parent)
 {}
@@ -131,13 +183,9 @@ ThermalClustersByAlphaReverseOrder::ThermalClustersByAlphaReverseOrder(HTMLListb
 ThermalClustersByAlphaReverseOrder::~ThermalClustersByAlphaReverseOrder()
 {}
 
-void ThermalClustersByAlphaReverseOrder::refreshClustersInGroup(ThermalClusterList& clusterList)
+void ThermalClustersByAlphaReverseOrder::sortClustersInGroup(ThermalClusterList& clusterList)
 {
-    // Added the area as a result
-    ThermalClusterList::iterator jend = clusterList.end();
     clusterList.sort(SortAlphaReverseOrder());
-    for (ThermalClusterList::iterator j = clusterList.begin(); j != jend; ++j)
-        pParent.add(new Antares::Component::HTMLListbox::Item::ThermalClusterItem(*j));
 }
 
 } // namespace Datasource

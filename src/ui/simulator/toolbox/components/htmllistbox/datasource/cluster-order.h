@@ -30,6 +30,9 @@
 #include "datasource.h"
 #include <yuni/core/event.h>
 #include <antares/study.h>
+#include "../item/cluster-item.h"
+
+using namespace Antares::Component::HTMLListbox::Item;
 
 namespace Antares
 {
@@ -56,6 +59,8 @@ struct SortAlphaReverseOrder
     }
 };
 
+wxString groupNameToGroupTitle(Data::Area* area, wxString& groupName);
+
 class ClustersByOrder : public Yuni::IEventObserver<ClustersByOrder>, public IDatasource
 {
 public:
@@ -71,13 +76,23 @@ public:
  
     virtual const char* icon() const = 0;
 
-    virtual void refresh(const wxString& search = wxEmptyString) = 0;
+    virtual void refresh(const wxString& search = wxEmptyString);
 
     void onAreaChanged(Data::Area* area);
     void onInvalidateAllAreas();
 
+    void hasGroupChanged(bool b);
+    bool hasGroupChanged() const;
+
+private:
+    virtual void reorderItemsList(const wxString& search) = 0;
+    virtual void rebuildItemsList(const wxString& search) = 0;
+
 protected:
     Data::Area* pArea;
+    bool hasGroupJustChanged_;
+    std::map<wxString, IItem*> groups_to_items_;
+    std::map<Data::Cluster*, ClusterItem*> pClustersToItems;
 
 }; // class ClustersByOrder
 

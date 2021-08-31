@@ -25,33 +25,19 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-// #include <antares/wx-wrapper.h>
-// #include "thermal-cluster.h"
-// #include "../components/captionpanel.h"
 #include "../../application/study.h"
 #include "../../application/main.h"
 #include "../../application/wait.h"
 #include "../../windows/inspector.h"
-// #include <assert.h>
 #include "../resources.h"
 #include "../create.h"
-// #include "../validator.h"
-// #include "../components/htmllistbox/datasource/thermal-cluster.h"
-// #include "../components/htmllistbox/item/thermal-cluster.h"
 #include "../components/button.h"
 #include "../../windows/message.h"
 #include "../../application/menus.h"
 #include <antares/study/scenario-builder/updater.hxx>
 #include <wx/wupdlock.h>
 #include <wx/sizer.h>
-// #include <wx/stattext.h>
-// #include <wx/statline.h>
-// #include <wx/bmpbuttn.h>
-// #include <ui/common/lock.h>
-
 #include "renewable-cluster.h"
-#include "../components/htmllistbox/item/renewable-cluster-item.h"
-#include "../components/htmllistbox/datasource/renewable-cluster-order.h"
 
 using namespace Yuni;
 
@@ -99,9 +85,6 @@ RenewableCluster::~RenewableCluster()
 {
     destroyBoundEvents();
 }
-
-using namespace Component::HTMLListbox::Datasource;
-
 
 void RenewableCluster::internalBuildSubControls()
 {
@@ -154,17 +137,15 @@ void RenewableCluster::internalBuildSubControls()
     // The listbox
     pRnListbox = new Component::HTMLListbox::Component(this);
     
-    RenewableClustersByAlphaOrder* dsAZ;
-    dsAZ = pRnListbox->addDatasource<RenewableClustersByAlphaOrder>();
-    RenewableClustersByAlphaReverseOrder* dsZA;
-    dsZA = pRnListbox->addDatasource<RenewableClustersByAlphaReverseOrder>();
+    pDataSourceAZ = pRnListbox->addDatasource<RenewableClustersByAlphaOrder>();
+    pDataSourceZA = pRnListbox->addDatasource<RenewableClustersByAlphaReverseOrder>();
 
     if (pAreaNotifier)
     {
-        pAreaNotifier->onAreaChanged.connect(dsAZ,
+        pAreaNotifier->onAreaChanged.connect(pDataSourceAZ,
                                              &RenewableClustersByAlphaOrder::onAreaChanged);
         pAreaNotifier->onAreaChanged.connect(
-          dsZA, &RenewableClustersByAlphaReverseOrder::onAreaChanged);
+          pDataSourceZA, &RenewableClustersByAlphaReverseOrder::onAreaChanged);
     }
     
     sizer->Add(pRnListbox, 1, wxALL | wxEXPAND);
@@ -178,6 +159,18 @@ void RenewableCluster::internalBuildSubControls()
 void RenewableCluster::update()
 {
     pRnListbox->invalidate();
+    onClusterChanged(nullptr);
+    updateInnerValues();
+}
+
+void RenewableCluster::updateWhenGroupChanges()
+{
+    // Warn the selected data source (A-Z or Z-A sorting) that a cluster's group changed
+    ClustersByOrder* dataSource = dynamic_cast<ClustersByOrder*>(pRnListbox->datasource());
+    if (dataSource)
+        dataSource->hasGroupChanged(true);
+
+    pRnListbox->forceRedraw();
     onClusterChanged(nullptr);
     updateInnerValues();
 }
@@ -558,7 +551,7 @@ void RenewableCluster::onStudyRenewableClusterGroupChanged(Antares::Data::Area* 
 {
     if (area && area == pArea)
     {
-        update();
+        updateWhenGroupChanges();
         MarkTheStudyAsModified();
         Refresh();
     }

@@ -30,6 +30,7 @@
 #include "cluster-order.h"
 #include <map>
 #include <list>
+// #include "../item/renewable-cluster-item.h"
 
 namespace Antares
 {
@@ -54,10 +55,11 @@ public:
     virtual ~RenewableClustersByOrder();
     //@}
 
-    void refresh(const wxString& search = wxEmptyString) override;
-
 private:
-    virtual void refreshClustersInGroup(RenewableClusterList& clusterList) = 0;
+    virtual void sortClustersInGroup(RenewableClusterList& clusterList) = 0;
+
+    void reorderItemsList(const wxString& search) override;
+    void rebuildItemsList(const wxString& search) override;
 
 }; // RenewableClustersByOrder
 
@@ -85,7 +87,7 @@ public:
     }
 
 private:
-    void refreshClustersInGroup(RenewableClusterList& clusterList);
+    void sortClustersInGroup(RenewableClusterList& clusterList) override;
 
 }; // class RenewableClustersByAlphaOrder
 
@@ -113,7 +115,7 @@ public:
     }
 
 private:
-    void refreshClustersInGroup(RenewableClusterList& clusterList);
+    void sortClustersInGroup(RenewableClusterList& clusterList) override;
 
 }; // class RenewableClustersByAlphaReverseOrder
 

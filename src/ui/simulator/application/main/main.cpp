@@ -119,6 +119,7 @@ EVT_MENU(mnIDViewNotes, ApplWnd::evtOnViewNotes)
 EVT_MENU(mnIDViewLoad, ApplWnd::evtOnViewLoad)
 EVT_MENU(mnIDViewSolar, ApplWnd::evtOnViewSolar)
 EVT_MENU(mnIDViewWind, ApplWnd::evtOnViewWind)
+EVT_MENU(mnIDViewRenewable, ApplWnd::evtOnViewRenewable)
 EVT_MENU(mnIDViewHydro, ApplWnd::evtOnViewHydro)
 EVT_MENU(mnIDViewThermal, ApplWnd::evtOnViewThermal)
 EVT_MENU(mnIDViewMiscGen, ApplWnd::evtOnViewMiscGen)
@@ -489,8 +490,11 @@ void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
         EnableItem(menu, mnIDViewSimulation, opened);
         EnableItem(menu, mnIDViewNotes, opened);
         EnableItem(menu, mnIDViewLoad, opened);
-        EnableItem(menu, mnIDViewSolar, opened);
-        EnableItem(menu, mnIDViewWind, opened);
+
+        EnableItem(menu, mnIDViewSolar, opened && study->parameters.renewableGeneration.isAggregated());
+        EnableItem(menu, mnIDViewWind, opened && study->parameters.renewableGeneration.isAggregated());
+        EnableItem(menu, mnIDViewRenewable, opened && study->parameters.renewableGeneration.isClusters());
+
         EnableItem(menu, mnIDViewHydro, opened);
         EnableItem(menu, mnIDViewThermal, opened);
         EnableItem(menu, mnIDViewMiscGen, opened);
@@ -773,28 +777,14 @@ void ApplWnd::onSystemParametersChanged()
     // Do nothing
 }
 
-void ApplWnd::onRenewableGenerationModellingChanged(bool init)
+void ApplWnd::refreshHomePageOnRenewableModellingChanged(bool aggregated, bool init)
 {
-    auto study = Data::Study::Current::Get();
-    if (!study)
-        return;
-
-    const bool aggregated = study->parameters.renewableGeneration() == Antares::Data::rgAggregated;
-
-    for (auto s : {"wind", "solar"}) {
-      // Main window
-      pNotebook->set_page_visibility(wxString(s), aggregated);
-      // Scenario builder pane
-      pScenarioBuilderNotebook->set_page_visibility(wxString(s), aggregated);
-    }
-
     // Main window
+    for (auto s : { "wind", "solar" })
+        pNotebook->set_page_visibility(wxString(s), aggregated);
     pNotebook->set_page_visibility(wxString("renewable"), not aggregated);
 
-    // Scenario builder pane
-    pScenarioBuilderNotebook->set_page_visibility(wxString("renewable"), not aggregated);
-
-    // Visibility in the left panel
+    // Page selection after the renewable modelling changed
     if (!init)
     {
         const Component::Notebook::Page* windPage = pNotebook->find("wind");
@@ -812,6 +802,36 @@ void ApplWnd::onRenewableGenerationModellingChanged(bool init)
         }
         pNotebook->forceRefresh();
     }
+
+}
+
+void ApplWnd::refreshScenarioBuilderPagOnRenewableModellingChanged(bool aggregated)
+{
+    for (auto s : { "wind", "solar" })
+        pScenarioBuilderNotebook->set_page_visibility(wxString(s), aggregated);
+
+    pScenarioBuilderNotebook->set_page_visibility(wxString("renewable"), not aggregated);
+}
+
+void ApplWnd::refreshInputMenuOnRenewableModellingChanged(bool aggregated)
+{
+    auto* menu = GetMenuBar();
+    EnableItem(menu, mnIDViewSolar, aggregated);
+    EnableItem(menu, mnIDViewWind, aggregated);
+    EnableItem(menu, mnIDViewRenewable, not aggregated);
+}
+
+void ApplWnd::onRenewableGenerationModellingChanged(bool init)
+{
+    auto study = Data::Study::Current::Get();
+    if (!study)
+        return;
+
+    const bool aggregated = study->parameters.renewableGeneration.isAggregated();
+
+    refreshHomePageOnRenewableModellingChanged(aggregated, init);
+    refreshScenarioBuilderPagOnRenewableModellingChanged(aggregated);
+    refreshInputMenuOnRenewableModellingChanged(aggregated);
 }
 
 void ApplWnd::gridOperatorSelectedCells(Component::Datagrid::Selection::IOperator* v)
