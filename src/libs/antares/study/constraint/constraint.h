@@ -234,6 +234,8 @@ public:
     const_iterator end() const;
     //@}
 
+    bool skipped() const;
+
     //! \name Values
     //@{
     //! Values for inequalities (const)

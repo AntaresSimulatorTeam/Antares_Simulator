@@ -114,6 +114,11 @@ inline BindingConstraint::const_iterator BindingConstraint::end() const
     return pLinkWeights.end();
 }
 
+inline bool BindingConstraint::skipped() const
+{
+    return !(linkCount() > 0 || enabledClusterCount() > 0);
+}
+
 inline uint BindConstList::size() const
 {
     return (uint)pList.size();

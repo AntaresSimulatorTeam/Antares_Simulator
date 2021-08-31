@@ -113,9 +113,9 @@ wxString LinkOffsets::cellValue(int x, int y) const
         {
             if (constraint->enabled())
             {
-                if (constraint->linkCount() > 0 || constraint->enabledClusterCount() > 0)
-                    return wxT("   Yes   ");
-                return wxT("   Skipped   ");
+                if (constraint->skipped())
+                    return wxT("   Skipped   ");
+                return wxT("   Yes   ");
             }
             return wxT("   Disabled   ");
         }
@@ -403,9 +403,9 @@ wxString ClusterOffsets::cellValue(int x, int y) const
         {
             if (constraint->enabled())
             {
-                if (constraint->linkCount() > 0 || constraint->enabledClusterCount() > 0)
-                    return wxT("   Yes   ");
-                return wxT("   Skipped   ");
+                if (constraint->skipped())
+                    return wxT("   Skipped   ");
+                return wxT("   Yes   ");
             }
             return wxT("   Disabled   ");
         }
