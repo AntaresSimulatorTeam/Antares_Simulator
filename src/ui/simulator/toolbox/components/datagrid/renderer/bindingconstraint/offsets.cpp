@@ -97,24 +97,23 @@ wxString LinkOffsets::cellValue(int x, int y) const
         return wxEmptyString;
     if (y < 5)
     {
+        Data::BindingConstraint* constraint = study->uiinfo->constraint(x);
         switch (y)
         {
         case 0:
-            return wxStringFromUTF8(Data::BindingConstraint::MathOperatorToCString(
-                     (study->uiinfo->constraint(x))->operatorType()))
+            return wxStringFromUTF8(
+                     Data::BindingConstraint::MathOperatorToCString(constraint->operatorType()))
                    << wxT(' ');
         case 1:
-            return wxStringFromUTF8(
-                     Data::BindingConstraint::TypeToCString((study->uiinfo->constraint(x))->type()))
+            return wxStringFromUTF8(Data::BindingConstraint::TypeToCString(constraint->type()))
                    << wxT(' ');
         case 2:
-            return wxString() << (study->uiinfo->constraint(x))->linkCount() << wxT(" links   ");
+            return wxString() << constraint->linkCount() << wxT(" links   ");
         case 3:
         {
-            if ((study->uiinfo->constraint(x))->enabled())
+            if (constraint->enabled())
             {
-                if ((study->uiinfo->constraint(x))->linkCount() > 0
-                    || (study->uiinfo->constraint(x))->enabledClusterCount() > 0)
+                if (constraint->linkCount() > 0 || constraint->enabledClusterCount() > 0)
                     return wxT("   Yes   ");
                 return wxT("   Skipped   ");
             }
@@ -149,6 +148,9 @@ IRenderer::CellStyle LinkOffsets::cellStyle(int x, int y) const
 
     if ((uint)x >= study->uiinfo->constraintCount())
         return IRenderer::cellStyleConstraintDisabled;
+
+    Data::BindingConstraint* constraint = study->uiinfo->constraint(x);
+
     switch (y)
     {
     case 0:
@@ -158,9 +160,8 @@ IRenderer::CellStyle LinkOffsets::cellStyle(int x, int y) const
     case 2:
         return IRenderer::cellStyleConstraintWeightCount;
     case 3:
-        return ((study->uiinfo->constraint(x))->enabled()
-                && ((study->uiinfo->constraint(x))->linkCount() > 0
-                    || (study->uiinfo->constraint(x))->enabledClusterCount() > 0))
+        return (constraint->enabled()
+                && (constraint->linkCount() > 0 || constraint->enabledClusterCount() > 0))
                  ? IRenderer::cellStyleConstraintEnabled
                  : IRenderer::cellStyleConstraintDisabled;
     case 4:
@@ -169,7 +170,7 @@ IRenderer::CellStyle LinkOffsets::cellStyle(int x, int y) const
     default:
     {
         return IRenderer::cellStyleCustom;
-        return (Math::Zero((study->uiinfo->constraint(x))->weight(study->uiinfo->link(y - 5))))
+        return (Math::Zero(constraint->weight(study->uiinfo->link(y - 5))))
                  ? IRenderer::cellStyleConstraintNoWeight
                  : IRenderer::cellStyleConstraintWeight;
     }
@@ -182,7 +183,7 @@ bool LinkOffsets::cellValue(int x, int y, const String& value)
         return false;
 
     auto& uiinfo = *(study->uiinfo);
-    auto* constraint
+    Data::BindingConstraint* constraint
       = ((uint)x < uiinfo.orderedConstraint.size()) ? (uiinfo.constraint(x)) : nullptr;
     if (!constraint)
         return false;
@@ -265,9 +266,9 @@ int LinkOffsets::cellNumericIntValue(int x, int y) const
 {
     if (!study)
         return 0;
-
-    return (y > 4) ? (study->uiinfo->constraint(x))->offset(study->uiinfo->link(y - 5))
-                   : ((y == 3) ? (study->uiinfo->constraint(x))->linkCount() : 0);
+    Data::BindingConstraint* constraint = study->uiinfo->constraint(x);
+    return (y > 4) ? constraint->offset(study->uiinfo->link(y - 5))
+                   : ((y == 3) ? constraint->linkCount() : 0);
 }
 
 int LinkOffsets::width() const
@@ -386,25 +387,23 @@ wxString ClusterOffsets::cellValue(int x, int y) const
         return wxEmptyString;
     if (y < 5)
     {
+        Data::BindingConstraint* constraint = study->uiinfo->constraint(x);
         switch (y)
         {
         case 0:
-            return wxStringFromUTF8(Data::BindingConstraint::MathOperatorToCString(
-                     (study->uiinfo->constraint(x))->operatorType()))
+            return wxStringFromUTF8(
+                     Data::BindingConstraint::MathOperatorToCString(constraint->operatorType()))
                    << wxT(' ');
         case 1:
-            return wxStringFromUTF8(
-                     Data::BindingConstraint::TypeToCString((study->uiinfo->constraint(x))->type()))
+            return wxStringFromUTF8(Data::BindingConstraint::TypeToCString(constraint->type()))
                    << wxT(' ');
         case 2:
-            return wxString() << (study->uiinfo->constraint(x))->clusterCount()
-                              << wxT(" clusters   ");
+            return wxString() << constraint->clusterCount() << wxT(" clusters   ");
         case 3:
         {
-            if ((study->uiinfo->constraint(x))->enabled())
+            if (constraint->enabled())
             {
-                if ((study->uiinfo->constraint(x))->linkCount() > 0
-                    || (study->uiinfo->constraint(x))->enabledClusterCount() > 0)
+                if (constraint->linkCount() > 0 || constraint->enabledClusterCount() > 0)
                     return wxT("   Yes   ");
                 return wxT("   Skipped   ");
             }
@@ -445,6 +444,9 @@ IRenderer::CellStyle ClusterOffsets::cellStyle(int x, int y) const
 
     if ((uint)x >= study->uiinfo->constraintCount())
         return IRenderer::cellStyleConstraintDisabled;
+
+    Data::BindingConstraint* constraint = study->uiinfo->constraint(x);
+
     switch (y)
     {
     case 0:
@@ -454,9 +456,8 @@ IRenderer::CellStyle ClusterOffsets::cellStyle(int x, int y) const
     case 2:
         return IRenderer::cellStyleConstraintWeightCount;
     case 3:
-        return ((study->uiinfo->constraint(x))->enabled()
-                && ((study->uiinfo->constraint(x))->linkCount() > 0
-                    || (study->uiinfo->constraint(x))->enabledClusterCount() > 0))
+        return (constraint->enabled()
+                && (constraint->linkCount() > 0 || constraint->enabledClusterCount() > 0))
                  ? IRenderer::cellStyleConstraintEnabled
                  : IRenderer::cellStyleConstraintDisabled;
     case 4:
@@ -478,7 +479,7 @@ bool ClusterOffsets::cellValue(int x, int y, const String& value)
         return false;
 
     auto& uiinfo = *(study->uiinfo);
-    auto* constraint
+    Data::BindingConstraint* constraint
       = ((uint)x < uiinfo.orderedConstraint.size()) ? (uiinfo.constraint(x)) : nullptr;
     if (!constraint)
         return false;
@@ -565,9 +566,9 @@ int ClusterOffsets::cellNumericIntValue(int x, int y) const
 {
     if (!study)
         return 0;
-
-    return (y > 4) ? (study->uiinfo->constraint(x))->offset(study->uiinfo->cluster(y - 5))
-                   : ((y == 3) ? (study->uiinfo->constraint(x))->clusterCount() : 0);
+    Data::BindingConstraint* constraint = study->uiinfo->constraint(x);
+    return (y > 4) ? constraint->offset(study->uiinfo->cluster(y - 5))
+                   : ((y == 3) ? constraint->clusterCount() : 0);
 }
 
 int ClusterOffsets::width() const
