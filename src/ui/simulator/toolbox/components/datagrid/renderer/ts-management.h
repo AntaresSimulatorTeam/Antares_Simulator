@@ -41,28 +41,28 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class TSmanagement final : public IRenderer
+class TSmanagement : public IRenderer
 {
 public:
     TSmanagement();
     virtual ~TSmanagement();
 
-    virtual int width() const
-    {
-        return 5;
-    }
-    virtual int height() const
+    virtual int width() const = 0;
+
+    int height() const override
     {
         return 13;
     }
 
-    virtual wxString columnCaption(int colIndx) const;
+    virtual wxString columnCaption(int colIndx) const = 0;
 
     virtual wxString rowCaption(int rowIndx) const;
 
-    virtual wxString cellValue(int x, int y) const;
+    virtual Antares::Data::TimeSeries getTSfromColumn(int col) const = 0; // gp : protected ?
+    
+    virtual wxString cellValue(int x, int y);
 
-    virtual double cellNumericValue(int x, int y) const;
+    virtual double cellNumericValue(int x, int y);
 
     virtual bool cellValue(int x, int y, const Yuni::String& value);
 
@@ -93,7 +93,19 @@ protected:
     wxWindow* pControl;
 
 private:
+    virtual bool cellValueForRenewables(int x, int y, const double v) const = 0;
+    virtual double cellNumericValueForRenewables(int x, int y) const = 0;
+    virtual wxString cellValueForRenewables(int x, int y) const = 0;
+
     void onSimulationTSManagementChanged();
+
+protected:
+    bool pConversionToDoubleValid;
+    uint pNumberTS;
+    uint pRefreshSpan;
+    double pValueToDouble;
+    Antares::Data::Correlation::Mode pMode;
+
 
 }; // class TSmanagement
 

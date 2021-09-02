@@ -50,14 +50,11 @@ namespace Datagrid
 {
 namespace Renderer
 {
-TSmanagementRenewableCluster::TSmanagementRenewableCluster() : pControl(nullptr)
-{
-}
+TSmanagementRenewableCluster::TSmanagementRenewableCluster() : TSmanagement()
+{}
 
 TSmanagementRenewableCluster::~TSmanagementRenewableCluster()
-{
-    destroyBoundEvents();
-}
+{}
 
 wxString TSmanagementRenewableCluster::columnCaption(int colIndx) const
 {
@@ -70,251 +67,27 @@ wxString TSmanagementRenewableCluster::columnCaption(int colIndx) const
     return wxEmptyString;
 }
 
-wxString TSmanagementRenewableCluster::rowCaption(int rowIndx) const
+Antares::Data::TimeSeries TSmanagementRenewableCluster::getTSfromColumn(int col) const
 {
-    static const wxChar* const captions[] = {
-      wxT("Ready made TS"),
-      wxT("        Status"),
-      wxT("Stochastic TS"),
-      wxT("        Status"),
-      wxT("        Number"),
-      wxT("        Refresh"),
-      wxT("        Refresh span"),
-      wxT("        Seasonal correlation "),
-      wxT("        Store in input  "),
-      wxT("        Store in output  "),
-      wxT("Draws correlation  "),
-      wxT("        intra-modal"),
-      wxT("        inter-modal"),
-    };
-    if (rowIndx < 13)
-        return captions[rowIndx];
-    return wxEmptyString;
+    return mapping[col];
 }
 
-bool TSmanagementRenewableCluster::cellValueForRenewables(int x, int y, const double v)
+bool TSmanagementRenewableCluster::cellValueForRenewables(int x, int y, const double v) const
 {
-    switch (y)
-    {
-    case 11:
-    {
-        if (Math::Zero(v))
-            study->parameters.intraModal &= ~Data::timeSeriesRenewable;
-        else
-            study->parameters.intraModal |= Data::timeSeriesRenewable;
-        break;
-    }
-    case 12:
-    {
-        if (Math::Zero(v))
-            study->parameters.interModal &= ~Data::timeSeriesRenewable;
-        else
-            study->parameters.interModal |= Data::timeSeriesRenewable;
-        break;
-    }
-    }
-
+    // Does nothing
     return true;
 }
 
-bool TSmanagementRenewableCluster::cellValue(int x, int y, const String& value)
-{
-    if (not study || x < 0 || x > 3)
-        return 0.;
-    auto ts = mapping[x];
-
-    double d;
-    bool conversionValid = value.to(d);
-    if (!conversionValid)
-    {
-        bool b;
-        if (value.to(b))
-        {
-            conversionValid = true;
-            d = (b) ? 1. : 0.;
-        }
-    }
-
-    // Renewable clusters only
-    if (ts == Data::timeSeriesRenewable)
-    {
-        if (not conversionValid)
-            return false;
-        return cellValueForRenewables(x, y, d);
-    }
-
-    switch (y)
-    {
-    case 1:
-    {
-        if (conversionValid)
-        {
-            if (!Math::Zero(d))
-                study->parameters.timeSeriesToGenerate &= ~ts;
-            else
-                study->parameters.timeSeriesToGenerate |= ts;
-            onSimulationTSManagementChanged();
-            return true;
-        }
-        break;
-    }
-    case 3:
-    {
-        if (conversionValid)
-        {
-            if (Math::Zero(d))
-                study->parameters.timeSeriesToGenerate &= ~ts;
-            else
-                study->parameters.timeSeriesToGenerate |= ts;
-            onSimulationTSManagementChanged();
-            return true;
-        }
-        break;
-    }
-    case 4:
-    {
-        if (!conversionValid)
-            break;
-        uint c = (uint)Math::Round(d);
-        if (!c)
-            c = 1;
-        else
-        {
-            if (c > 1000)
-            {
-                logs.debug() << " Number of timeseries hard limit to 1000";
-                c = 1000;
-            }
-        }
-        switch (x)
-        {
-        case 0:
-            study->parameters.nbTimeSeriesLoad = c;
-            return true;
-        case 1:
-            study->parameters.nbTimeSeriesThermal = c;
-            return true;
-        case 2:
-            study->parameters.nbTimeSeriesHydro = c;
-            return true;
-        }
-        onSimulationTSManagementChanged();
-        break;
-    }
-    case 5:
-    {
-        if (conversionValid)
-        {
-            if (Math::Zero(d))
-                study->parameters.timeSeriesToRefresh &= ~ts;
-            else
-                study->parameters.timeSeriesToRefresh |= ts;
-            return true;
-        }
-        break;
-    }
-    case 6:
-    {
-        if (!conversionValid)
-            break;
-        uint refreshSpan = std::max((int)std::round(d), 1);
-        switch (x)
-        {
-        case 0:
-            study->parameters.refreshIntervalLoad = refreshSpan;
-            return true;
-        case 1:
-            study->parameters.refreshIntervalThermal = refreshSpan;
-            return true;
-        case 2:
-            study->parameters.refreshIntervalHydro = refreshSpan;
-            return true;
-        }
-        break;
-    }
-    case 7:
-    {
-        Antares::Data::Correlation::Mode mode = Data::Correlation::modeNone;
-        CString<64, false> s = value;
-        s.trim(" \t");
-        s.toLower();
-        if ((conversionValid && Math::Equals(d, +1.)) || s == "annual" || s == "a")
-            mode = Data::Correlation::modeAnnual;
-        else
-        {
-            if ((conversionValid && Math::Equals(d, -1.)) || s == "monthly" || s == "month"
-                || s == "m")
-                mode = Data::Correlation::modeMonthly;
-        }
-        if (mode != Antares::Data::Correlation::modeNone)
-        {
-            switch (ts)
-            {
-            case Data::timeSeriesLoad:
-                study->preproLoadCorrelation.mode(mode);
-                return true;
-            default:
-                return true;
-            }
-        }
-        break;
-    }
-    case 8:
-    {
-        if (conversionValid)
-        {
-            if (Math::Zero(d))
-                study->parameters.timeSeriesToImport &= ~ts;
-            else
-                study->parameters.timeSeriesToImport |= ts;
-            return true;
-        }
-        break;
-    }
-    case 9:
-    {
-        if (conversionValid)
-        {
-            if (Math::Zero(d))
-                study->parameters.timeSeriesToArchive &= ~ts;
-            else
-                study->parameters.timeSeriesToArchive |= ts;
-            return true;
-        }
-        break;
-    }
-    case 11:
-    {
-        if (conversionValid)
-        {
-            if (Math::Zero(d))
-                study->parameters.intraModal &= ~ts;
-            else
-                study->parameters.intraModal |= ts;
-            return true;
-        }
-        break;
-    }
-    case 12:
-    {
-        if (conversionValid)
-        {
-            if (Math::Zero(d))
-                study->parameters.interModal &= ~ts;
-            else
-                study->parameters.interModal |= ts;
-            return true;
-        }
-        break;
-    }
-    }
-
-    return false;
-}
-
+/*
 double TSmanagementRenewableCluster::cellNumericValue(int x, int y) const
 {
     // Function never called, but has to overload a pure virtual function.
+    return 0.;
+}
+*/
+
+double TSmanagementRenewableCluster::cellNumericValueForRenewables(int x, int y) const
+{
     return 0.;
 }
 
@@ -333,89 +106,6 @@ wxString TSmanagementRenewableCluster::cellValueForRenewables(int x, int y) cons
     }
 
     return wxT("-");
-}
-
-wxString TSmanagementRenewableCluster::cellValue(int x, int y) const
-{
-    if (not study || x < 0 || x > 3)
-        return wxEmptyString;
-    auto ts = mapping[x];
-
-    // Renewable clusters only
-    if (ts == Data::timeSeriesRenewable)
-        return cellValueForRenewables(x, y);
-
-    switch (y)
-    {
-    case 1:
-    {
-        // Status READY made TS
-        return (0 != (study->parameters.timeSeriesToGenerate & ts)) ? wxT("Off") : wxT("On");
-    }
-    case 3:
-    {
-        // Status Stochastic made TS
-        return (0 != (study->parameters.timeSeriesToGenerate & ts)) ? wxT("On") : wxT("Off");
-    }
-    case 4:
-    {
-        switch (x)
-        {
-        case 0:
-            return wxString() << study->parameters.nbTimeSeriesLoad;
-        case 1:
-            return wxString() << study->parameters.nbTimeSeriesThermal;
-        case 2:
-            return wxString() << study->parameters.nbTimeSeriesHydro;
-        }
-        break;
-    }
-    case 5:
-        return (0 != (study->parameters.timeSeriesToRefresh & ts)) ? wxT("Yes") : wxT("No");
-    case 6:
-    {
-        switch (x)
-        {
-        case 0:
-            return wxString() << study->parameters.refreshIntervalLoad;
-        case 1:
-            return wxString() << study->parameters.refreshIntervalThermal;
-        case 2:
-            return wxString() << study->parameters.refreshIntervalHydro;
-        }
-        break;
-    }
-    case 7:
-    {
-        // modeNone
-        // modeAnnual
-        // modeMonthly
-        Data::Correlation::Mode mode = Data::Correlation::modeNone;
-        switch (ts)
-        {
-        case Data::timeSeriesLoad:
-            mode = study->preproLoadCorrelation.mode();
-            break;
-        case Data::timeSeriesHydro:
-            return wxT("annual");
-        case Data::timeSeriesThermal:
-            return wxT("n/a");
-        default:
-            return wxT("--");
-            break;
-        }
-        return (mode == Data::Correlation::modeAnnual) ? wxT("annual") : wxT("monthly");
-    }
-    case 8:
-        return (0 != (study->parameters.timeSeriesToImport & ts)) ? wxT("Yes") : wxT("No");
-    case 9:
-        return (0 != (study->parameters.timeSeriesToArchive & ts)) ? wxT("Yes") : wxT("No");
-    case 11:
-        return (0 != (study->parameters.intraModal & ts)) ? wxT("Yes") : wxT("No");
-    case 12:
-        return (0 != (study->parameters.interModal & ts)) ? wxT("Yes") : wxT("No");
-    }
-    return wxEmptyString;
 }
 
 void TSmanagementRenewableCluster::onSimulationTSManagementChanged()

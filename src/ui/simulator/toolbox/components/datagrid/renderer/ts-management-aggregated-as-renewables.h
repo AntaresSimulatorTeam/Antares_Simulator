@@ -24,14 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_TS_MANAGEMENT_RENEWABLE_CLUSTER_H__
-#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_TS_MANAGEMENT_RENEWABLE_CLUSTER_H__
 
-#include <antares/wx-wrapper.h>
-#include "../renderer.h"
-#include <antares/date.h>
-#include <yuni/core/event.h>
-#include "../../../../application/study.h"
+#pragma once
 
 #include "ts-management.h"
 
@@ -43,15 +37,15 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class TSmanagementRenewableCluster final : public TSmanagement
+class TSmanagementRenewableAggregated final : public TSmanagement
 {
 public:
-    TSmanagementRenewableCluster();
-    virtual ~TSmanagementRenewableCluster();
+    TSmanagementRenewableAggregated();
+    virtual ~TSmanagementRenewableAggregated();
 
     virtual int width() const override
     {
-        return 4;
+        return 5;
     }
 
     virtual wxString columnCaption(int colIndx) const override;
@@ -93,18 +87,16 @@ public:
 //     wxWindow* pControl;
 
 private:
-    bool cellValueForRenewables(int x, int y, const double v) const override;
-    double cellNumericValueForRenewables(int x, int y) const override;
+    bool cellValueForRenewables(int x, int y, const double v) override;
+    double TSmanagement::cellNumericValueForRenewables(int x, int y) const override;
     wxString cellValueForRenewables(int x, int y) const override;
     IRenderer::CellStyle cellStyleForRenewables(int x, int y) const;
 
     void onSimulationTSManagementChanged();
 
-}; // class TSmanagementRenewableCluster
+}; // class TSmanagementRenewableAggregated
 
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
 } // namespace Antares
-
-#endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_TS_MANAGEMENT_RENEWABLE_CLUSTER_H__

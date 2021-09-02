@@ -33,17 +33,6 @@
 
 using namespace Yuni;
 
-// Anonymous namespace: global variable, local scope
-namespace
-{
-enum Antares::Data::TimeSeries mapping[] = {Data::timeSeriesLoad,
-                                            Data::timeSeriesThermal,
-                                            Data::timeSeriesHydro,
-                                            Data::timeSeriesWind,
-                                            Data::timeSeriesSolar,
-                                            Data::timeSeriesRenewable};
-}
-
 namespace Antares
 {
 namespace Component
@@ -52,25 +41,52 @@ namespace Datagrid
 {
 namespace Renderer
 {
+
+bool convertValueToDouble(const String& value, double& returned)
+{
+    bool isConversionValid = value.to(returned);
+    if (!isConversionValid)
+    {
+        bool b;
+        if (value.to(b))
+        {
+            isConversionValid = true;
+            returned = (b) ? 1. : 0.;
+        }
+    }
+    return isConversionValid;
+}
+
+Antares::Data::Correlation::Mode convertValueToCorrelationMode(const String& value, double valueToDouble, bool conversionToDoubleValid)
+{
+    Antares::Data::Correlation::Mode modeToReturn = Data::Correlation::modeNone;
+    CString<64, false> s = value;
+    s.trim(" \t");
+    s.toLower();
+    if ((conversionToDoubleValid && Math::Equals(valueToDouble, +1.)) || s == "annual" || s == "a")
+        modeToReturn = Data::Correlation::modeAnnual;
+    else
+    {
+        if ((conversionToDoubleValid && Math::Equals(valueToDouble, -1.)) || s == "monthly" || s == "month"
+            || s == "m")
+            modeToReturn = Data::Correlation::modeMonthly;
+    }
+    return modeToReturn;
+}
+
 TSmanagement::TSmanagement() : pControl(nullptr)
 {
+    pConversionToDoubleValid = true;
+    pNumberTS = 0;
+    pRefreshSpan = 0;
+    pValueToDouble = -1;
+    pMode = Data::Correlation::modeNone;
 }
+
 
 TSmanagement::~TSmanagement()
 {
     destroyBoundEvents();
-}
-
-wxString TSmanagement::columnCaption(int colIndx) const
-{
-    static const wxChar* const captions[] = {wxT("      Load      "),
-                                             wxT("   Thermal   "),
-                                             wxT("      Hydro      "),
-                                             wxT("      Wind      "),
-                                             wxT("      Solar      ")};
-    if (colIndx < 5)
-        return captions[colIndx];
-    return wxEmptyString;
 }
 
 wxString TSmanagement::rowCaption(int rowIndx) const
@@ -97,29 +113,19 @@ wxString TSmanagement::rowCaption(int rowIndx) const
 
 bool TSmanagement::cellValue(int x, int y, const String& value)
 {
-    if (not study || x < 0 || x > 5)
+    if (not study || x < 0 || x > width())
         return 0.;
-    auto ts = mapping[x];
+    auto ts = getTSfromColumn(x);
 
-    double d;
-    bool conversionValid = value.to(d);
-    if (!conversionValid)
-    {
-        bool b;
-        if (value.to(b))
-        {
-            conversionValid = true;
-            d = (b) ? 1. : 0.;
-        }
-    }
+    pConversionToDoubleValid = convertValueToDouble(value, pValueToDouble);
 
     switch (y)
     {
     case 1:
     {
-        if (conversionValid)
+        if (pConversionToDoubleValid)
         {
-            if (!Math::Zero(d))
+            if (!Math::Zero(pValueToDouble))
                 study->parameters.timeSeriesToGenerate &= ~ts;
             else
                 study->parameters.timeSeriesToGenerate |= ts;
@@ -130,9 +136,9 @@ bool TSmanagement::cellValue(int x, int y, const String& value)
     }
     case 3:
     {
-        if (conversionValid)
+        if (pConversionToDoubleValid)
         {
-            if (Math::Zero(d))
+            if (Math::Zero(pValueToDouble))
                 study->parameters.timeSeriesToGenerate &= ~ts;
             else
                 study->parameters.timeSeriesToGenerate |= ts;
@@ -143,35 +149,29 @@ bool TSmanagement::cellValue(int x, int y, const String& value)
     }
     case 4:
     {
-        if (!conversionValid)
+        if (!pConversionToDoubleValid)
             break;
-        uint c = (uint)Math::Round(d);
-        if (!c)
-            c = 1;
+        pNumberTS = (uint)Math::Round(pValueToDouble);
+        if (!pNumberTS)
+            pNumberTS = 1;
         else
         {
-            if (c > 1000)
+            if (pNumberTS > 1000)
             {
                 logs.debug() << " Number of timeseries hard limit to 1000";
-                c = 1000;
+                pNumberTS = 1000;
             }
         }
         switch (x)
         {
         case 0:
-            study->parameters.nbTimeSeriesLoad = c;
+            study->parameters.nbTimeSeriesLoad = pNumberTS;
             return true;
         case 1:
-            study->parameters.nbTimeSeriesThermal = c;
+            study->parameters.nbTimeSeriesThermal = pNumberTS;
             return true;
         case 2:
-            study->parameters.nbTimeSeriesHydro = c;
-            return true;
-        case 3:
-            study->parameters.nbTimeSeriesWind = c;
-            return true;
-        case 4:
-            study->parameters.nbTimeSeriesSolar = c;
+            study->parameters.nbTimeSeriesHydro = pNumberTS;
             return true;
         }
         onSimulationTSManagementChanged();
@@ -179,9 +179,9 @@ bool TSmanagement::cellValue(int x, int y, const String& value)
     }
     case 5:
     {
-        if (conversionValid)
+        if (pConversionToDoubleValid)
         {
-            if (Math::Zero(d))
+            if (Math::Zero(pValueToDouble))
                 study->parameters.timeSeriesToRefresh &= ~ts;
             else
                 study->parameters.timeSeriesToRefresh |= ts;
@@ -191,57 +191,33 @@ bool TSmanagement::cellValue(int x, int y, const String& value)
     }
     case 6:
     {
-        if (!conversionValid)
+        if (!pConversionToDoubleValid)
             break;
-        uint refreshSpan = std::max((int)std::round(d), 1);
+        pRefreshSpan = std::max((int)std::round(pValueToDouble), 1);
         switch (x)
         {
         case 0:
-            study->parameters.refreshIntervalLoad = refreshSpan;
+            study->parameters.refreshIntervalLoad = pRefreshSpan;
             return true;
         case 1:
-            study->parameters.refreshIntervalThermal = refreshSpan;
+            study->parameters.refreshIntervalThermal = pRefreshSpan;
             return true;
         case 2:
-            study->parameters.refreshIntervalHydro = refreshSpan;
-            return true;
-        case 3:
-            study->parameters.refreshIntervalWind = refreshSpan;
-            return true;
-        case 4:
-            study->parameters.refreshIntervalSolar = refreshSpan;
+            study->parameters.refreshIntervalHydro = pRefreshSpan;
             return true;
         }
         break;
     }
     case 7:
     {
-        Antares::Data::Correlation::Mode mode = Data::Correlation::modeNone;
-        CString<64, false> s = value;
-        s.trim(" \t");
-        s.toLower();
-        if ((conversionValid && Math::Equals(d, +1.)) || s == "annual" || s == "a")
-            mode = Data::Correlation::modeAnnual;
-        else
-        {
-            if ((conversionValid && Math::Equals(d, -1.)) || s == "monthly" || s == "month"
-                || s == "m")
-                mode = Data::Correlation::modeMonthly;
-        }
-        if (mode != Antares::Data::Correlation::modeNone)
+        pMode = convertValueToCorrelationMode(value, pValueToDouble, pConversionToDoubleValid);
+
+        if (pMode != Antares::Data::Correlation::modeNone)
         {
             switch (ts)
             {
             case Data::timeSeriesLoad:
-                study->preproLoadCorrelation.mode(mode);
-                return true;
-            case Data::timeSeriesWind:
-                study->preproWindCorrelation.mode(mode);
-                return true;
-            case Data::timeSeriesSolar:
-                study->preproSolarCorrelation.mode(mode);
-                return true;
-            default:
+                study->preproLoadCorrelation.mode(pMode);
                 return true;
             }
         }
@@ -249,9 +225,9 @@ bool TSmanagement::cellValue(int x, int y, const String& value)
     }
     case 8:
     {
-        if (conversionValid)
+        if (pConversionToDoubleValid)
         {
-            if (Math::Zero(d))
+            if (Math::Zero(pValueToDouble))
                 study->parameters.timeSeriesToImport &= ~ts;
             else
                 study->parameters.timeSeriesToImport |= ts;
@@ -261,9 +237,9 @@ bool TSmanagement::cellValue(int x, int y, const String& value)
     }
     case 9:
     {
-        if (conversionValid)
+        if (pConversionToDoubleValid)
         {
-            if (Math::Zero(d))
+            if (Math::Zero(pValueToDouble))
                 study->parameters.timeSeriesToArchive &= ~ts;
             else
                 study->parameters.timeSeriesToArchive |= ts;
@@ -273,9 +249,9 @@ bool TSmanagement::cellValue(int x, int y, const String& value)
     }
     case 11:
     {
-        if (conversionValid)
+        if (pConversionToDoubleValid)
         {
-            if (Math::Zero(d))
+            if (Math::Zero(pValueToDouble))
                 study->parameters.intraModal &= ~ts;
             else
                 study->parameters.intraModal |= ts;
@@ -285,9 +261,9 @@ bool TSmanagement::cellValue(int x, int y, const String& value)
     }
     case 12:
     {
-        if (conversionValid)
+        if (pConversionToDoubleValid)
         {
-            if (Math::Zero(d))
+            if (Math::Zero(pValueToDouble))
                 study->parameters.interModal &= ~ts;
             else
                 study->parameters.interModal |= ts;
@@ -297,14 +273,14 @@ bool TSmanagement::cellValue(int x, int y, const String& value)
     }
     }
 
-    return false;
+    return cellValueForRenewables(x, y, pConversionToDoubleValid);
 }
 
-double TSmanagement::cellNumericValue(int x, int y) const
+double TSmanagement::cellNumericValue(int x, int y)
 {
-    if (not study || x < 0 || x > 5)
+    if (not study || x < 0 || x > width())
         return 0.;
-    auto ts = mapping[x];
+    auto ts = getTSfromColumn(x);
     switch (y)
     {
     case 0:
@@ -330,10 +306,6 @@ double TSmanagement::cellNumericValue(int x, int y) const
             return study->parameters.nbTimeSeriesThermal;
         case 2:
             return study->parameters.nbTimeSeriesHydro;
-        case 3:
-            return study->parameters.nbTimeSeriesWind;
-        case 4:
-            return study->parameters.nbTimeSeriesSolar;
         }
         break;
     }
@@ -351,10 +323,6 @@ double TSmanagement::cellNumericValue(int x, int y) const
             return study->parameters.refreshIntervalThermal;
         case 2:
             return study->parameters.refreshIntervalHydro;
-        case 3:
-            return study->parameters.refreshIntervalWind;
-        case 4:
-            return study->parameters.refreshIntervalSolar;
         }
         break;
     }
@@ -363,23 +331,13 @@ double TSmanagement::cellNumericValue(int x, int y) const
         // modeNone
         // modeAnnual
         // modeMonthly
-        Data::Correlation::Mode mode = Data::Correlation::modeNone;
+        pMode = Data::Correlation::modeNone;
         switch (ts)
         {
         case Data::timeSeriesLoad:
-            mode = study->preproLoadCorrelation.mode();
-            break;
-        case Data::timeSeriesWind:
-            mode = study->preproWindCorrelation.mode();
-            break;
-        case Data::timeSeriesSolar:
-            mode = study->preproSolarCorrelation.mode();
-            break;
-        default:
-            return 0.;
+            pMode = study->preproLoadCorrelation.mode();
             break;
         }
-        return (mode == Data::Correlation::modeAnnual) ? 1. : -1.;
     }
     case 8:
     {
@@ -398,14 +356,15 @@ double TSmanagement::cellNumericValue(int x, int y) const
         return 0.;
     }
     }
-    return 0.;
+
+    return cellNumericValueForRenewables(x, y);
 }
 
-wxString TSmanagement::cellValue(int x, int y) const
+wxString TSmanagement::cellValue(int x, int y)
 {
-    if (not study || x < 0 || x > 5)
+    if (not study || x < 0 || x > width())
         return wxEmptyString;
-    auto ts = mapping[x];
+    auto ts = getTSfromColumn(x);
     switch (y)
     {
     case 1:
@@ -428,10 +387,6 @@ wxString TSmanagement::cellValue(int x, int y) const
             return wxString() << study->parameters.nbTimeSeriesThermal;
         case 2:
             return wxString() << study->parameters.nbTimeSeriesHydro;
-        case 3:
-            return wxString() << study->parameters.nbTimeSeriesWind;
-        case 4:
-            return wxString() << study->parameters.nbTimeSeriesSolar;
         }
         break;
     }
@@ -447,10 +402,6 @@ wxString TSmanagement::cellValue(int x, int y) const
             return wxString() << study->parameters.refreshIntervalThermal;
         case 2:
             return wxString() << study->parameters.refreshIntervalHydro;
-        case 3:
-            return wxString() << study->parameters.refreshIntervalWind;
-        case 4:
-            return wxString() << study->parameters.refreshIntervalSolar;
         }
         break;
     }
@@ -459,27 +410,19 @@ wxString TSmanagement::cellValue(int x, int y) const
         // modeNone
         // modeAnnual
         // modeMonthly
-        Data::Correlation::Mode mode = Data::Correlation::modeNone;
+        pMode = Data::Correlation::modeNone;
         switch (ts)
         {
         case Data::timeSeriesLoad:
-            mode = study->preproLoadCorrelation.mode();
-            break;
-        case Data::timeSeriesWind:
-            mode = study->preproWindCorrelation.mode();
-            break;
-        case Data::timeSeriesSolar:
-            mode = study->preproSolarCorrelation.mode();
+            pMode = study->preproLoadCorrelation.mode();
             break;
         case Data::timeSeriesHydro:
             return wxT("annual");
         case Data::timeSeriesThermal:
             return wxT("n/a");
         default:
-            return wxT("--");
             break;
         }
-        return (mode == Data::Correlation::modeAnnual) ? wxT("annual") : wxT("monthly");
     }
     case 8:
         return (0 != (study->parameters.timeSeriesToImport & ts)) ? wxT("Yes") : wxT("No");
@@ -490,7 +433,9 @@ wxString TSmanagement::cellValue(int x, int y) const
     case 12:
         return (0 != (study->parameters.interModal & ts)) ? wxT("Yes") : wxT("No");
     }
-    return wxEmptyString;
+
+    return cellValueForRenewables(x, y);
+    // return wxEmptyString;
 }
 
 void TSmanagement::onSimulationTSManagementChanged()
@@ -506,7 +451,7 @@ IRenderer::CellStyle TSmanagement::cellStyle(int x, int y) const
 {
     if (not study || x < 0 || x > 5)
         return IRenderer::cellStyleError;
-    auto ts = mapping[x];
+    auto ts = getTSfromColumn(x);
     bool tsGenerator = (0 != (study->parameters.timeSeriesToGenerate & ts));
 
     switch (y)
