@@ -41,7 +41,7 @@ using namespace Yuni;
     do                                                                                            \
     {                                                                                             \
         const unsigned int tsindx = TS_INDEX(T);                                                  \
-        if (intermodal[tsindx])                                                                   \
+        if (isTSintermodal[tsindx])                                                                   \
         {                                                                                         \
             if (1 != (w = (isTSgenerated[tsindx] ? PREPRO_WIDTH : MTX_WIDTH)))                    \
             {                                                                                     \
@@ -61,7 +61,7 @@ using namespace Yuni;
 #define BUILD_LOG_ENTRY(T, TEXT)     \
     do                               \
     {                                \
-        if (intermodal[TS_INDEX(T)]) \
+        if (isTSintermodal[TS_INDEX(T)]) \
         {                            \
             if (first)               \
             {                        \
@@ -328,6 +328,90 @@ bool checkIntraModalConsistency(uint* nbTimeseriesByMode,
     return true;
 }
 
+bool checkInterModalConsistencyForArea( Data::Area& area,
+                                        const bool* isTSintermodal,
+                                        const bool* isTSgenerated,
+                                        Data::Study& study)
+{
+    // 1. Making a list of TS numbers :
+    //    In this list, we put the numbers of TS of every "inter-modal" mode over the current area.
+    // 2. All elements of this list must be identical
+    
+    // The list containing the numbers of TS of every "inter-modal" mode over the current area
+    std::vector<uint> listNumberTsOverArea;
+
+    auto& parameters = study.parameters;
+
+    // Load : Add load's number of TS in area ...
+    int indexTS = TS_INDEX(Data::timeSeriesLoad);
+    if (isTSintermodal[indexTS])
+    {
+        uint nbTimeSeries = isTSgenerated[indexTS] ? parameters.nbTimeSeriesLoad : area.load.series->series.width;
+        listNumberTsOverArea.push_back(nbTimeSeries);
+    }
+
+    // Solar : Add solar's number of TS in area ...
+    indexTS = TS_INDEX(Data::timeSeriesSolar);
+    if (isTSintermodal[indexTS])
+    {
+        uint nbTimeSeries = isTSgenerated[indexTS] ? parameters.nbTimeSeriesSolar : area.solar.series->series.width;
+        listNumberTsOverArea.push_back(nbTimeSeries);
+    }
+
+    // Wind : Add wind's number of TS in area ...
+    indexTS = TS_INDEX(Data::timeSeriesWind);
+    if (isTSintermodal[indexTS])
+    {
+        uint nbTimeSeries = isTSgenerated[indexTS] ? parameters.nbTimeSeriesWind : area.wind.series->series.width;
+        listNumberTsOverArea.push_back(nbTimeSeries);
+    }
+
+    // Hydro : Add hydro's number of TS in area ...
+    indexTS = TS_INDEX(Data::timeSeriesHydro);
+    if (isTSintermodal[indexTS])
+    {
+        uint nbTimeSeries = isTSgenerated[indexTS] ? parameters.nbTimeSeriesHydro : area.hydro.series->count;
+        listNumberTsOverArea.push_back(nbTimeSeries);
+    }
+
+    // Thermal : Add thermal's number of TS of each cluster in area ...
+    indexTS = TS_INDEX(Data::timeSeriesThermal);
+    if (isTSintermodal[indexTS])
+    {
+        const uint clusterCount = (uint)area.thermal.clusterCount();
+        for (unsigned int j = 0; j != clusterCount; ++j)
+        {
+            auto& cluster = *(area.thermal.clusters[j]);
+            uint nbTimeSeries = isTSgenerated[indexTS] ? parameters.nbTimeSeriesThermal : cluster.series->series.width;
+            listNumberTsOverArea.push_back(nbTimeSeries);
+        }
+    }
+
+    // Renewable clusters : Add renewable's number of TS of each cluster in area ...
+    indexTS = TS_INDEX(Data::timeSeriesRenewable);
+    if (isTSintermodal[indexTS])
+    {
+        const uint clusterCount = (uint)area.renewable.clusterCount();
+        for (unsigned int j = 0; j != clusterCount; ++j)
+        {
+            auto& cluster = *(area.renewable.clusters[j]);
+            uint nbTimeSeries = cluster.series->series.width;
+            listNumberTsOverArea.push_back(nbTimeSeries);
+        }
+    }
+
+    // Now check if all elements of list of TS numbers are identical
+    if (std::adjacent_find(listNumberTsOverArea.begin(), listNumberTsOverArea.end(), std::not_equal_to<uint>()) != listNumberTsOverArea.end())
+    {
+        logs.error() << "Inter-modal correlation: time-series number of inter-modal modes of '" << area.name << "'"
+            << " are not identical";
+
+        return false;
+    }
+
+    return true;
+}
+
 bool TimeSeriesNumbers::Generate(Data::Study& study)
 {
     logs.info() << "Preparing time-series numbers...";
@@ -505,7 +589,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
     // Inter-modal
     // ===============
 
-    const bool intermodal[Data::timeSeriesCount]
+    const bool isTSintermodal[Data::timeSeriesCount]
       = {0 != (Data::timeSeriesLoad & parameters.interModal),
          0 != (Data::timeSeriesHydro & parameters.interModal),
          0 != ((Data::timeSeriesWind & parameters.interModal) && (parameters.renewableGeneration() == Data::rgAggregated)),
@@ -513,7 +597,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
          0 != ((Data::timeSeriesSolar & parameters.interModal) && (parameters.renewableGeneration() == Data::rgAggregated)),
          0 != ((Data::timeSeriesRenewable & parameters.interModal) && (parameters.renewableGeneration() == Data::rgClusters))};
 
-    if (std::any_of(std::begin(intermodal), std::end(intermodal), [](bool x) { return x; }))
+    if (std::any_of(std::begin(isTSintermodal), std::end(isTSintermodal), [](bool x) { return x; }))
     {
         {
             CString<248, false> e = "Checking inter-modal correlation... (";
@@ -527,78 +611,29 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
             logs.info() << e << ')';
         }
 
-        unsigned int w;
-
         auto end = study.areas.end();
         for (auto i = study.areas.begin(); i != end; ++i)
         {
             auto& area = *(i->second);
-            unsigned int r[Data::timeSeriesCount] = {1, 1, 1, 1, 1, 1};
-
-            CORRELATION_CHECK_INTERMODAL_SINGLE_AREA(
-              Data::timeSeriesLoad, parameters.nbTimeSeriesLoad, area.load.series->series.width);
-            CORRELATION_CHECK_INTERMODAL_SINGLE_AREA(
-              Data::timeSeriesSolar, parameters.nbTimeSeriesSolar, area.solar.series->series.width);
-            CORRELATION_CHECK_INTERMODAL_SINGLE_AREA(
-              Data::timeSeriesWind, parameters.nbTimeSeriesWind, area.wind.series->series.width);
-            CORRELATION_CHECK_INTERMODAL_SINGLE_AREA(
-              Data::timeSeriesHydro, parameters.nbTimeSeriesHydro, area.hydro.series->count);
-
-            if (intermodal[TS_INDEX(Data::timeSeriesThermal)])
-            {
-                const unsigned int clusterCount = area.thermal.clusterCount();
-                for (unsigned int j = 0; j != clusterCount; ++j)
-                {
-                    auto& cluster = *(area.thermal.clusters[j]);
-                    CORRELATION_CHECK_INTERMODAL_SINGLE_AREA(Data::timeSeriesThermal,
-                                                             parameters.nbTimeSeriesThermal,
-                                                             cluster.series->series.width);
-                }
-            }
-
-            if (intermodal[TS_INDEX(Data::timeSeriesRenewable)])
-            {
-                const unsigned int clusterCount = area.renewable.clusterCount();
-                for (unsigned int j = 0; j != clusterCount; ++j)
-                {
-                    auto& cluster = *(area.renewable.clusters[j]);
-                    CORRELATION_CHECK_INTERMODAL_SINGLE_AREA(
-                      Data::timeSeriesRenewable, 1, cluster.series->series.width);
-                }
-            }
-
-            unsigned int q = 1;
-            for (unsigned int j = 0; j != Data::timeSeriesCount; ++j)
-            {
-                if (r[j] != 1)
-                {
-                    if (q != 1 && q != r[j])
-                    {
-                        logs.error() << "Inter-modal correlation: Constraint violation: The number "
-                                        "of time-series for '"
-                                     << area.name << "' does not match (found " << r[j]
-                                     << ", expected " << q << ')';
-                        return false;
-                    }
-                    q = r[j];
-                }
-            }
+            
+            if (not checkInterModalConsistencyForArea(area, isTSintermodal, isTSgenerated, study))
+                return false;
 
             Matrix<uint32>* tsNumbers = nullptr;
-            if (intermodal[TS_INDEX(Data::timeSeriesLoad)])
+            if (isTSintermodal[TS_INDEX(Data::timeSeriesLoad)])
                 tsNumbers = &(area.load.series->timeseriesNumbers);
             else
             {
-                if (intermodal[TS_INDEX(Data::timeSeriesSolar)])
+                if (isTSintermodal[TS_INDEX(Data::timeSeriesSolar)])
                     tsNumbers = &(area.solar.series->timeseriesNumbers);
-                else if (intermodal[TS_INDEX(Data::timeSeriesWind)])
+                else if (isTSintermodal[TS_INDEX(Data::timeSeriesWind)])
                     tsNumbers = &(area.wind.series->timeseriesNumbers);
-                else if (intermodal[TS_INDEX(Data::timeSeriesHydro)])
+                else if (isTSintermodal[TS_INDEX(Data::timeSeriesHydro)])
                     tsNumbers = &(area.hydro.series->timeseriesNumbers);
-                else if (intermodal[TS_INDEX(Data::timeSeriesThermal)]
+                else if (isTSintermodal[TS_INDEX(Data::timeSeriesThermal)]
                          && area.thermal.clusterCount() > 0)
                     tsNumbers = &(area.thermal.clusters[0]->series->timeseriesNumbers);
-                else if (intermodal[TS_INDEX(Data::timeSeriesRenewable)]
+                else if (isTSintermodal[TS_INDEX(Data::timeSeriesRenewable)]
                          && area.renewable.clusterCount() > 0)
                     tsNumbers = &(area.renewable.clusters[0]->series->timeseriesNumbers);
             }
@@ -610,22 +645,22 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
                 assert(draw < 100000);
 
                 assert(y < area.load.series->timeseriesNumbers.height);
-                if (intermodal[TS_INDEX(Data::timeSeriesLoad)])
+                if (isTSintermodal[TS_INDEX(Data::timeSeriesLoad)])
                     area.load.series->timeseriesNumbers.entry[0][y] = draw;
 
                 assert(y < area.solar.series->timeseriesNumbers.height);
-                if (intermodal[TS_INDEX(Data::timeSeriesSolar)])
+                if (isTSintermodal[TS_INDEX(Data::timeSeriesSolar)])
                     area.solar.series->timeseriesNumbers.entry[0][y] = draw;
 
                 assert(y < area.wind.series->timeseriesNumbers.height);
-                if (intermodal[TS_INDEX(Data::timeSeriesWind)])
+                if (isTSintermodal[TS_INDEX(Data::timeSeriesWind)])
                     area.wind.series->timeseriesNumbers.entry[0][y] = draw;
 
                 assert(y < area.hydro.series->timeseriesNumbers.height);
-                if (intermodal[TS_INDEX(Data::timeSeriesHydro)])
+                if (isTSintermodal[TS_INDEX(Data::timeSeriesHydro)])
                     area.hydro.series->timeseriesNumbers.entry[0][y] = draw;
 
-                if (intermodal[TS_INDEX(Data::timeSeriesThermal)])
+                if (isTSintermodal[TS_INDEX(Data::timeSeriesThermal)])
                 {
                     unsigned int clusterCount = area.thermal.clusterCount();
                     for (unsigned int i = 0; i != clusterCount; ++i)
@@ -635,7 +670,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
                         cluster.series->timeseriesNumbers.entry[0][y] = draw;
                     }
                 }
-                if (intermodal[TS_INDEX(Data::timeSeriesRenewable)])
+                if (isTSintermodal[TS_INDEX(Data::timeSeriesRenewable)])
                 {
                     unsigned int clusterCount = area.renewable.clusterCount();
                     for (unsigned int i = 0; i != clusterCount; ++i)
