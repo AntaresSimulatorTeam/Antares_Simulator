@@ -37,27 +37,6 @@ using namespace Yuni;
 
 #define TS_INDEX(T) Data::TimeSeriesBitPatternIntoIndex<T>::value
 
-#define CORRELATION_CHECK_INTERMODAL_SINGLE_AREA(T, PREPRO_WIDTH, MTX_WIDTH)                      \
-    do                                                                                            \
-    {                                                                                             \
-        const unsigned int tsindx = TS_INDEX(T);                                                  \
-        if (isTSintermodal[tsindx])                                                                   \
-        {                                                                                         \
-            if (1 != (w = (isTSgenerated[tsindx] ? PREPRO_WIDTH : MTX_WIDTH)))                    \
-            {                                                                                     \
-                if (r[tsindx] != 1 && r[tsindx] != w)                                             \
-                {                                                                                 \
-                    logs.error() << "Inter-modal correlation: Constraint violation: The number "  \
-                                    "of time-series for '"                                        \
-                                 << area.name << "' does not match (found " << w << ", expected " \
-                                 << r[tsindx] << ')';                                             \
-                    return false;                                                                 \
-                }                                                                                 \
-                r[tsindx] = w;                                                                    \
-            }                                                                                     \
-        }                                                                                         \
-    } while (0)
-
 #define BUILD_LOG_ENTRY(T, TEXT)     \
     do                               \
     {                                \
