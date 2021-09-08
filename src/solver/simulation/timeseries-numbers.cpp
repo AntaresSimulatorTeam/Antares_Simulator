@@ -37,15 +37,6 @@ using namespace Yuni;
 
 #define TS_INDEX(T) Data::TimeSeriesBitPatternIntoIndex<T>::value
 
-#define DRAW_A_RANDOM_NUMBER(T, X, PreproSize)                                              \
-                                                                                            \
-    ((!isTSintramodal[TS_INDEX(T)])                                                         \
-                                                                                            \
-       ? ((uint32)(floor((double)(study.runtime->random[Data::seedTimeseriesNumbers].next() \
-                                  * (isTSgenerated[TS_INDEX(T)] ? PreproSize : X.width))))) \
-                                                                                            \
-       : draw_intramodal[TS_INDEX(T)])
-
 #define CORRELATION_CHECK_INTERMODAL_SINGLE_AREA(T, PREPRO_WIDTH, MTX_WIDTH)                      \
     do                                                                                            \
     {                                                                                             \
@@ -517,16 +508,10 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
     const bool intermodal[Data::timeSeriesCount]
       = {0 != (Data::timeSeriesLoad & parameters.interModal),
          0 != (Data::timeSeriesHydro & parameters.interModal),
-         0
-           != ((Data::timeSeriesWind & parameters.interModal)
-               && (parameters.renewableGeneration() == Data::rgAggregated)),
+         0 != ((Data::timeSeriesWind & parameters.interModal) && (parameters.renewableGeneration() == Data::rgAggregated)),
          0 != (Data::timeSeriesThermal & parameters.interModal),
-         0
-           != ((Data::timeSeriesSolar & parameters.interModal)
-               && (parameters.renewableGeneration() == Data::rgAggregated)),
-         0
-           != ((Data::timeSeriesRenewable & parameters.interModal)
-               && (parameters.renewableGeneration() == Data::rgClusters))};
+         0 != ((Data::timeSeriesSolar & parameters.interModal) && (parameters.renewableGeneration() == Data::rgAggregated)),
+         0 != ((Data::timeSeriesRenewable & parameters.interModal) && (parameters.renewableGeneration() == Data::rgClusters))};
 
     if (std::any_of(std::begin(intermodal), std::end(intermodal), [](bool x) { return x; }))
     {
