@@ -382,7 +382,7 @@ bool checkInterModalConsistencyForArea( Data::Area& area,
     // Now check if all elements of list of TS numbers are identical
     if (std::adjacent_find(listNumberTsOverArea.begin(), listNumberTsOverArea.end(), std::not_equal_to<uint>()) != listNumberTsOverArea.end())
     {
-        logs.error() << "Inter-modal correlation: time-series number of inter-modal modes of '" << area.name << "'"
+        logs.error() << "Inter-modal correlation: time-series numbers of inter-modal modes in area '" << area.name << "'"
             << " are not identical";
 
         return false;
