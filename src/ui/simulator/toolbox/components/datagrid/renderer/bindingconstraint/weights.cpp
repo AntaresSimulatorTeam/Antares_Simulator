@@ -146,6 +146,9 @@ IRenderer::CellStyle LinkWeights::cellStyle(int x, int y) const
 
     if ((uint)x >= study->uiinfo->constraintCount())
         return IRenderer::cellStyleConstraintDisabled;
+
+    Data::BindingConstraint* constraint = study->uiinfo->constraint(x);
+
     switch (y)
     {
     case 0:
@@ -155,9 +158,7 @@ IRenderer::CellStyle LinkWeights::cellStyle(int x, int y) const
     case 2:
         return IRenderer::cellStyleConstraintWeightCount;
     case 3:
-        return ((study->uiinfo->constraint(x))->enabled()
-                && ((study->uiinfo->constraint(x))->linkCount() > 0
-                    || (study->uiinfo->constraint(x))->enabledClusterCount() > 0))
+        return (constraint->enabled() && !constraint->skipped())
                  ? IRenderer::cellStyleConstraintEnabled
                  : IRenderer::cellStyleConstraintDisabled;
     case 4:
@@ -448,8 +449,7 @@ IRenderer::CellStyle ClusterWeights::cellStyle(int x, int y) const
     case 2:
         return IRenderer::cellStyleConstraintWeightCount;
     case 3:
-        return (constraint->enabled()
-                && (constraint->linkCount() > 0 || constraint->enabledClusterCount() > 0))
+        return (constraint->enabled() && !constraint->skipped())
                  ? IRenderer::cellStyleConstraintEnabled
                  : IRenderer::cellStyleConstraintDisabled;
     case 4:

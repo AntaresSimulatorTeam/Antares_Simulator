@@ -116,7 +116,7 @@ inline BindingConstraint::const_iterator BindingConstraint::end() const
 
 inline bool BindingConstraint::skipped() const
 {
-    return !(linkCount() > 0 || enabledClusterCount() > 0);
+    return linkCount() == 0 && enabledClusterCount() == 0;
 }
 
 inline uint BindConstList::size() const

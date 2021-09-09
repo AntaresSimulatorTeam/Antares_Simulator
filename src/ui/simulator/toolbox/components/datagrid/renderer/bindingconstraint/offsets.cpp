@@ -160,8 +160,7 @@ IRenderer::CellStyle LinkOffsets::cellStyle(int x, int y) const
     case 2:
         return IRenderer::cellStyleConstraintWeightCount;
     case 3:
-        return (constraint->enabled()
-                && (constraint->linkCount() > 0 || constraint->enabledClusterCount() > 0))
+        return (constraint->enabled() && !constraint->skipped())
                  ? IRenderer::cellStyleConstraintEnabled
                  : IRenderer::cellStyleConstraintDisabled;
     case 4:
@@ -456,8 +455,7 @@ IRenderer::CellStyle ClusterOffsets::cellStyle(int x, int y) const
     case 2:
         return IRenderer::cellStyleConstraintWeightCount;
     case 3:
-        return (constraint->enabled()
-                && (constraint->linkCount() > 0 || constraint->enabledClusterCount() > 0))
+        return (constraint->enabled() && !constraint->skipped())
                  ? IRenderer::cellStyleConstraintEnabled
                  : IRenderer::cellStyleConstraintDisabled;
     case 4:
