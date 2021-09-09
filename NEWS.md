@@ -1,6 +1,18 @@
 ﻿Antares Changelog
 =================
 
+v8.1.0-rc3 (09/2021)
+--------------------
+
+### GUI
+  - Input menu: disable wind/solar or renewable depending on renewable modelling parameter #363
+  - Keep selection on thermal/renewable cluster when group changes #360
+  - Make the notion of default renewable modelling clear #365
+  - Fix status ts management when renewable policy is "clusters" #376
+
+### Bug fixes
+  - Fix hydro allocation. Make sure that the weekly hydro allocation does not depend on the source of fatal production #375
+
 v8.1.0-rc2 (08/2021)
 --------------------
 
