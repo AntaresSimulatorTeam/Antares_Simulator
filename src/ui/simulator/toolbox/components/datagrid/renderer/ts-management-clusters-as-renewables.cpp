@@ -162,7 +162,7 @@ bool TSmanagementRenewableCluster::cellValue(int x, int y, const String& value)
     {
         if (conversionValid)
         {
-            if (!Math::Zero(d))
+            if (Math::Zero(d))
                 study->parameters.timeSeriesToGenerate &= ~ts;
             else
                 study->parameters.timeSeriesToGenerate |= ts;
