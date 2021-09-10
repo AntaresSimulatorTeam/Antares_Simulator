@@ -351,8 +351,7 @@ bool Adequacy::year(Progression::Task& progression,
 
     updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
 
-    logs.info() << "Year " << (state.year + 1) << " : " 
-        <<  pProblemesHebdo[numSpace]->optimizationStatistics_object.toString();
+    logs.info() << pProblemesHebdo[numSpace]->optimizationStatistics_object.toString();
     state.averageOptimizationTime = pProblemesHebdo[numSpace]->optimizationStatistics_object.getAverageSolveTime();
 
     return true;
