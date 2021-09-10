@@ -216,10 +216,10 @@ private:
         Yuni::IO::File::Stream file;
         if (file.open(optimizationTimeFilename, Yuni::IO::OpenMode::append))
         {
-            file << "EXP (ms) : " << round_to_closer_int(optimizationTime.costAverage) << "\n";
-            file << "STD (ms) : " << round_to_closer_int(optimizationTime.costStdDeviation) << "\n";
-            file << "MIN (ms) : " << round_to_closer_int(optimizationTime.costMin) << "\n";
-            file << "MAX (ms) : " << round_to_closer_int(optimizationTime.costMax) << "\n";
+            file << "EXP (ms) : " << optimizationTime.costAverage << "\n";
+            file << "STD (ms) : " << optimizationTime.costStdDeviation << "\n";
+            file << "MIN (ms) : " << optimizationTime.costMin << "\n";
+            file << "MAX (ms) : " << optimizationTime.costMax << "\n";
         }
     }
 
