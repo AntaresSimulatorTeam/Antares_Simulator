@@ -30,7 +30,7 @@
 #include <ui/common/component/scrollbox/scrollbox.h>
 #include "../../toolbox/components/notebook/notebook.h"
 #include "../../toolbox/components/captionpanel.h"
-#include "../../toolbox/components/datagrid/renderer/ts-management-aggragted-as-renewables.h"
+#include "../../toolbox/components/datagrid/renderer/ts-management-aggregated-as-renewables.h"
 #include "../../toolbox/components/datagrid/renderer/ts-management-clusters-as-renewables.h"
 #include "../../application/main.h"
 #include "../../windows/options/advanced/advanced.h"

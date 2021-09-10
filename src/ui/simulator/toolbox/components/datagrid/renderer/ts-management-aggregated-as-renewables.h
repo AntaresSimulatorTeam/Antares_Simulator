@@ -16,7 +16,7 @@ public:
 	TSmanagementAggregatedAsRenewable();
 	~TSmanagementAggregatedAsRenewable();
 
-	wxString TSmanagementRenewableCluster::columnCaption(int colIndx) const override;
+	wxString columnCaption(int colIndx) const override;
 
 }; // class TSmanagementAggregatedAsRenewable
 

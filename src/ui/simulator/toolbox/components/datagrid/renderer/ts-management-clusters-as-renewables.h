@@ -43,7 +43,7 @@ public:
 	TSmanagementRenewableCluster();
 	~TSmanagementRenewableCluster();
 
-	wxString TSmanagementRenewableCluster::columnCaption(int colIndx) const override;
+	wxString columnCaption(int colIndx) const override;
 
 }; // class TSmanagementRenewableCluster
 

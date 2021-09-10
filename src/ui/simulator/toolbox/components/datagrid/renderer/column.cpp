@@ -89,29 +89,29 @@ ColumnHydro::~ColumnHydro()
 // ---------------------
 // Column wind
 // ---------------------
-ColumnHydro::ColumnWind(int nbLines) : Column(nbLines)
+ColumnWind::ColumnWind(int nbLines) : Column(nbLines)
 {}
 
-ColumnHydro::~ColumnWind()
+ColumnWind::~ColumnWind()
 {}
 
 // ---------------------
 // Column Solar
 // ---------------------
-ColumnHydro::ColumnSolar(int nbLines) : Column(nbLines)
+ColumnSolar::ColumnSolar(int nbLines) : Column(nbLines)
 {}
 
-ColumnHydro::~ColumnSolar()
+ColumnSolar::~ColumnSolar()
 {}
 
 
 // -------------------------------
 // Column renewable clusters 
 // -------------------------------
-ColumnHydro::ColumnRenewableClusters(int nbLines) : Column(nbLines)
+ColumnRenewableClusters::ColumnRenewableClusters(int nbLines) : Column(nbLines)
 {}
 
-ColumnHydro::~ColumnRenewableClusters()
+ColumnRenewableClusters::~ColumnRenewableClusters()
 {}
 
 

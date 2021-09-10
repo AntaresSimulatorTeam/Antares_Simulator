@@ -24,7 +24,7 @@ cell::~cell() {}
 blankCell::blankCell() : cell()
 {}
 
-~blankCell::blankCell()
+blankCell::~blankCell()
 {}
 
 wxString blankCell::cellValue() const

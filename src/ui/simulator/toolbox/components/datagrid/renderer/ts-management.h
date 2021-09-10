@@ -30,6 +30,7 @@
 #include <vector>
 #include "../renderer.h"
 #include "column.h"
+#include "../../../../application/study.h"
 
 using namespace std;
 

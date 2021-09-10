@@ -44,13 +44,12 @@ TSmanagementAggregatedAsRenewable::TSmanagementAggregatedAsRenewable() : TSmanag
     columns_.push_back(new ColumnWind(height()));
     columns_.push_back(new ColumnSolar(height()));
 }
-}
 
 TSmanagementAggregatedAsRenewable::~TSmanagementAggregatedAsRenewable()
 {
 }
 
-wxString TSmanagementRenewableCluster::columnCaption(int colIndx) const
+wxString TSmanagementAggregatedAsRenewable::columnCaption(int colIndx) const
 {
     static const wxChar* const captions[] = { wxT("      Load      "),
                                              wxT("   Thermal   "),

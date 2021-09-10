@@ -2,6 +2,11 @@
 
 #pragma once
 
+#include <wx/string.h>
+// #include <yuni/core/system/stdint.h>
+// #include <yuni/core/fwd.h>
+#include <yuni/core/event.h>
+#include "../renderer.h"
 
 namespace Antares
 {
@@ -25,9 +30,14 @@ public:
 
 class blankCell : public cell
 {
+public:
     blankCell();
     ~blankCell();
-}
+    wxString cellValue() const override;
+    double cellNumericValue() const override;
+    bool cellValue(const Yuni::String& value) override;
+    IRenderer::CellStyle cellStyle() const override;
+};
 
 } // namespace Renderer
 } // namespace Datagrid
