@@ -28,8 +28,7 @@
 #pragma once
 
 #include <vector>
-#include "../renderer.h"
-#include "column.h"
+
 
 using namespace std;
 
@@ -41,57 +40,81 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class TSmanagement : public IRenderer
+
+// -------------------
+//  Base column class
+// -------------------
+class Column
 {
 public:
-    TSmanagement();
-    virtual ~TSmanagement();
-
-    virtual wxString columnCaption(int colIndx) const = 0;
-
-    virtual wxString rowCaption(int rowIndx) const;
-
-    virtual wxString cellValue(int x, int y) const;
-
-    virtual double cellNumericValue(int x, int y) const;
-
-    virtual bool cellValue(int x, int y, const Yuni::String& value);
-
-    virtual void resetColors(int, int, wxColour&, wxColour&) const
-    {
-        // Do nothing
-    }
-
-    virtual bool valid() const
-    {
-        return !(!study);
-    }
-
-    virtual uint maxWidthResize() const
-    {
-        return 0;
-    }
-    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
-
-    virtual wxColour horizontalBorderColor(int x, int y) const;
-
-    void control(wxWindow* control)
-    {
-        pControl = control;
-    }
+	Column(int nbLines);
+	virtual ~Column();
+	cell* getLine(int y) const;
 
 protected:
-    virtual int width() const;
-    int height() const;
+	int nbLines_;
+	vector<cell*> cells_;
+};
 
-private:
-    void onSimulationTSManagementChanged();
+// -------------------
+//  Load column
+// -------------------
+class ColumnLoad : public Column
+{
+public:
+	ColumnLoad(int nbLines);
+	virtual ~ColumnLoad();
+};
 
-protected:
-    vector<Column*> columns_;
-    wxWindow* pControl;
+// -------------------
+//  Thermal column
+// -------------------
+class ColumnThermal : public Column
+{
+public:
+	ColumnThermal(int nbLines);
+	virtual ~ColumnThermal();
+};
 
-}; // class TSmanagement
+// -------------------
+//  Hydro column
+// -------------------
+class ColumnHydro : public Column
+{
+public:
+	ColumnHydro(int nbLines);
+	virtual ~ColumnHydro();
+};
+
+// -------------------
+//  Wind column
+// -------------------
+class ColumnWind : public Column
+{
+public:
+	ColumnWind(int nbLines);
+	virtual ~ColumnWind();
+};
+
+// -------------------
+//  Solar column
+// -------------------
+class ColumnSolar : public Column
+{
+public:
+	ColumnSolar(int nbLines);
+	virtual ~ColumnSolar();
+};
+
+// -----------------------------
+//  Renewable clusters column
+// -----------------------------
+class ColumnRenewableClusters : public Column
+{
+public:
+	ColumnRenewableClusters(int nbLines);
+	virtual ~ColumnRenewableClusters();
+};
 
 } // namespace Renderer
 } // namespace Datagrid
