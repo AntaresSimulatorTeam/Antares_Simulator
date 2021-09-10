@@ -151,6 +151,7 @@ public:
         systemCost.endStandardDeviation();
         criterionCost1.endStandardDeviation();
         criterionCost2.endStandardDeviation();
+        optimizationTime.endStandardDeviation();
     };
 
     void writeToOutput()
