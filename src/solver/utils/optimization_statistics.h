@@ -2,6 +2,7 @@
 #define __SOLVER_UTILS_STATISTICS_H__
 
 #include <string>
+#include <cmath>
 
 class optimizationStatistics
 {
@@ -75,8 +76,8 @@ public:
 
     std::string toString() const
     {
-        return "average solve time: " + std::to_string(getAverageSolveTime()) + "ms, " 
-            + "average update time: " + std::to_string(getAverageUpdateTime()) + "ms";
+      return "Average solve time: " + std::to_string(std::lround(getAverageSolveTime())) + "ms, "
+        + "average update time: " + std::to_string(std::lround(getAverageUpdateTime())) + "ms";
     }
 };
 
