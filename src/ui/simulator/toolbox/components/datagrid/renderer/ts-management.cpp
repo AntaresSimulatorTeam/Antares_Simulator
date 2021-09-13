@@ -38,11 +38,27 @@ namespace Datagrid
 {
 namespace Renderer
 {
+
+bool convertToDouble(const String& value, double & valueDouble)
+{
+    bool conversionValid = value.to(valueDouble);
+    if (not conversionValid)
+    {
+        bool b;
+        if (value.to(b))
+        {
+            conversionValid = true;
+            valueDouble = (b) ? 1. : 0.;
+        }
+    }
+    return conversionValid;
+}
+
 TSmanagement::TSmanagement() : pControl(nullptr)
 {
-    columns_.push_back(new ColumnLoad(height()));
-    columns_.push_back(new ColumnThermal(height()));
-    columns_.push_back(new ColumnHydro(height()));
+    columns_.push_back(new ColumnLoad(height(), study));
+    columns_.push_back(new ColumnThermal(height(), study));
+    columns_.push_back(new ColumnHydro(height(), study));
 }
 
 TSmanagement::~TSmanagement()
@@ -88,16 +104,30 @@ wxString TSmanagement::rowCaption(int rowIndx) const
 
 bool TSmanagement::cellValue(int x, int y, const String& value)
 {
-    return columns_[x]->getLine(y)->cellValue(value);
+    if (not study || x < 0 || x > width())
+        return false;
+
+    double valueDouble;
+    if (not convertToDouble(value, valueDouble))
+        return false;
+
+    bool to_return = columns_[x]->getLine(y)->cellValue(valueDouble);
+    onSimulationTSManagementChanged();
+    return to_return;
 }
 
 double TSmanagement::cellNumericValue(int x, int y) const
 {
+    if (not study || x < 0 || x > width())
+        return 0.;
     return columns_[x]->getLine(y)->cellNumericValue();
 }
 
 wxString TSmanagement::cellValue(int x, int y) const
 {
+    if (not study || x < 0 || x > width())
+        return wxEmptyString;
+
     return columns_[x]->getLine(y)->cellValue();
 }
 
@@ -112,6 +142,9 @@ void TSmanagement::onSimulationTSManagementChanged()
 
 IRenderer::CellStyle TSmanagement::cellStyle(int x, int y) const
 {
+    if (not study || x < 0 || x > width())
+        return IRenderer::cellStyleError;
+
     return columns_[x]->getLine(y)->cellStyle();
 }
 

@@ -42,19 +42,25 @@ namespace Datagrid
 namespace Renderer
 {
 
+using namespace Antares::Data;
+
 // -------------------
 //  Base column class
 // -------------------
 class Column
 {
+protected:
+	using study_ptr = Data::Study::Ptr;
+
 public:
-	Column(int nbLines);
+	Column(int nbLines, study_ptr study);
 	virtual ~Column();
 	cell* getLine(int y) const;
 
 protected:
 	int nbLines_;
 	vector<cell*> cells_;
+	TimeSeries tsKind_;
 };
 
 // -------------------
@@ -63,7 +69,7 @@ protected:
 class ColumnLoad : public Column
 {
 public:
-	ColumnLoad(int nbLines);
+	ColumnLoad(int nbLines, study_ptr study);
 	virtual ~ColumnLoad();
 };
 
@@ -73,7 +79,7 @@ public:
 class ColumnThermal : public Column
 {
 public:
-	ColumnThermal(int nbLines);
+	ColumnThermal(int nbLines, study_ptr study);
 	virtual ~ColumnThermal();
 };
 
@@ -83,7 +89,7 @@ public:
 class ColumnHydro : public Column
 {
 public:
-	ColumnHydro(int nbLines);
+	ColumnHydro(int nbLines, study_ptr study);
 	virtual ~ColumnHydro();
 };
 
@@ -93,7 +99,7 @@ public:
 class ColumnWind : public Column
 {
 public:
-	ColumnWind(int nbLines);
+	ColumnWind(int nbLines, study_ptr study);
 	virtual ~ColumnWind();
 };
 
@@ -103,7 +109,7 @@ public:
 class ColumnSolar : public Column
 {
 public:
-	ColumnSolar(int nbLines);
+	ColumnSolar(int nbLines, study_ptr study);
 	virtual ~ColumnSolar();
 };
 
@@ -113,7 +119,7 @@ public:
 class ColumnRenewableClusters : public Column
 {
 public:
-	ColumnRenewableClusters(int nbLines);
+	ColumnRenewableClusters(int nbLines, study_ptr study);
 	virtual ~ColumnRenewableClusters();
 };
 

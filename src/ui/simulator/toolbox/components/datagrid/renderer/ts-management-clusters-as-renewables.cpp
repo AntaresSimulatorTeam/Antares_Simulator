@@ -40,7 +40,7 @@ namespace Renderer
 {
 TSmanagementRenewableCluster::TSmanagementRenewableCluster() : TSmanagement()
 {
-    columns_.push_back(new ColumnRenewableClusters(height()));
+    columns_.push_back(new ColumnRenewableClusters(height(), study));
 }
 
 TSmanagementRenewableCluster::~TSmanagementRenewableCluster()

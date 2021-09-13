@@ -1,6 +1,10 @@
 
 
 #include "cell.h"
+#include <yuni/core/math.h>
+// #include <math.h>
+
+using namespace Yuni;
 
 namespace Antares
 {
@@ -14,36 +18,49 @@ namespace Renderer
 // -------------------
 // Base cell class
 // -------------------
-cell::cell() {}
-cell::~cell() {}
+cell::cell(study_ptr study, TimeSeries ts) : study_(study), tsKind_(ts)
+{
+    if (not study_)
+        return;
+    tsGenerator_ = (0 != (study_->parameters.timeSeriesToGenerate & tsKind_));
+}
 
 
-// -------------------
+// ===================
 // Blank cell
-// -------------------
-blankCell::blankCell() : cell()
-{}
+// ===================
+blankCell::blankCell() : cell(nullptr, timeSeriesCount /*arbitrary, not used here anyway */) {}
+wxString blankCell::cellValue() const { return wxEmptyString; }
+double blankCell::cellNumericValue() const { return 0.; }
+bool blankCell::cellValue(double value) { return false;}
+IRenderer::CellStyle blankCell::cellStyle() const { return IRenderer::cellStyleDefaultDisabled; }
 
-blankCell::~blankCell()
-{}
-
-wxString blankCell::cellValue() const
+// ===================
+// Status cell
+// ===================
+statusCell::statusCell(study_ptr study, TimeSeries ts) : cell(study, ts) {}
+wxString statusCell::cellValue() const
 {
-	return wxEmptyString;
+    return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_)) ? wxT("Off") : wxT("On");
 }
-double blankCell::cellNumericValue() const
-{
-	return 0.;
+double statusCell::cellNumericValue() const
+{ 
+    return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_)) ? 0 : 1.;
 }
-bool blankCell::cellValue(const Yuni::String& value)
-{
-	return false;
+bool statusCell::cellValue(double value)
+{ 
+    if (not Math::Zero(value))
+        study_->parameters.timeSeriesToGenerate &= ~tsKind_;
+    else
+        study_->parameters.timeSeriesToGenerate |= tsKind_;
+    return true;
 }
-IRenderer::CellStyle blankCell::cellStyle() const
-{
-	return IRenderer::cellStyleDefaultDisabled;
+IRenderer::CellStyle statusCell::cellStyle() const
+{ 
+    // Status READY made TS
+    return tsGenerator_ ? IRenderer::cellStyleConstraintNoWeight
+        : IRenderer::cellStyleConstraintWeight;
 }
-
 
 } // namespace Renderer
 } // namespace Datagrid

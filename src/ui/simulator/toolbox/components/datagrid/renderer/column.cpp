@@ -41,16 +41,14 @@ namespace Renderer
 // -------------------
 // Base column class
 // -------------------
-Column::Column(int nbLines) : nbLines_(nbLines)
-{
-	for (int i = 0; i < nbLines_; i++)
-		cells_.push_back(new blankCell());
-}
+Column::Column(int nbLines, study_ptr study) : nbLines_(nbLines)
+{}
 
 Column::~Column()
 {
 	for (int i = 0; i < nbLines_; i++)
-		delete cells_[i];
+		if (cells_[i])
+			delete cells_[i];
 }
 
 cell* Column::getLine(int y) const
@@ -61,8 +59,23 @@ cell* Column::getLine(int y) const
 // ---------------------
 // Column load
 // ---------------------
-ColumnLoad::ColumnLoad(int nbLines) : Column(nbLines)
+ColumnLoad::ColumnLoad(int nbLines, study_ptr study) : Column(nbLines, study) 
 {
+	tsKind_ = timeSeriesLoad;
+
+	cells_.push_back(new blankCell());
+	cells_.push_back(new statusCell(study, tsKind_));
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
 }
 
 ColumnLoad::~ColumnLoad()
@@ -71,8 +84,24 @@ ColumnLoad::~ColumnLoad()
 // ---------------------
 // Column thermal
 // ---------------------
-ColumnThermal::ColumnThermal(int nbLines) : Column(nbLines)
-{}
+ColumnThermal::ColumnThermal(int nbLines, study_ptr study) : Column(nbLines, study) 
+{
+	tsKind_ = timeSeriesThermal;
+
+	cells_.push_back(new blankCell());
+	cells_.push_back(new statusCell(study, tsKind_));
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+}
 
 ColumnThermal::~ColumnThermal()
 {}
@@ -80,8 +109,24 @@ ColumnThermal::~ColumnThermal()
 // ---------------------
 // Column hydro
 // ---------------------
-ColumnHydro::ColumnHydro(int nbLines) : Column(nbLines)
-{}
+ColumnHydro::ColumnHydro(int nbLines, study_ptr study) : Column(nbLines, study)
+{
+	tsKind_ = timeSeriesHydro;
+
+	cells_.push_back(new blankCell());
+	cells_.push_back(new statusCell(study, tsKind_));
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+}
 
 ColumnHydro::~ColumnHydro()
 {}
@@ -89,8 +134,24 @@ ColumnHydro::~ColumnHydro()
 // ---------------------
 // Column wind
 // ---------------------
-ColumnWind::ColumnWind(int nbLines) : Column(nbLines)
-{}
+ColumnWind::ColumnWind(int nbLines, study_ptr study) : Column(nbLines, study)
+{
+	tsKind_ = timeSeriesWind;
+
+	cells_.push_back(new blankCell());
+	cells_.push_back(new statusCell(study, tsKind_));
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+}
 
 ColumnWind::~ColumnWind()
 {}
@@ -98,8 +159,24 @@ ColumnWind::~ColumnWind()
 // ---------------------
 // Column Solar
 // ---------------------
-ColumnSolar::ColumnSolar(int nbLines) : Column(nbLines)
-{}
+ColumnSolar::ColumnSolar(int nbLines, study_ptr study) : Column(nbLines, study)
+{
+	tsKind_ = timeSeriesSolar;
+
+	cells_.push_back(new blankCell());
+	cells_.push_back(new statusCell(study, tsKind_));
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+}
 
 ColumnSolar::~ColumnSolar()
 {}
@@ -108,8 +185,24 @@ ColumnSolar::~ColumnSolar()
 // -------------------------------
 // Column renewable clusters 
 // -------------------------------
-ColumnRenewableClusters::ColumnRenewableClusters(int nbLines) : Column(nbLines)
-{}
+ColumnRenewableClusters::ColumnRenewableClusters(int nbLines, study_ptr study) : Column(nbLines, study)
+{
+	tsKind_ = timeSeriesRenewable;
+
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+	cells_.push_back(new blankCell());
+}
 
 ColumnRenewableClusters::~ColumnRenewableClusters()
 {}
