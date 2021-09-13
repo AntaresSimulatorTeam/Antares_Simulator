@@ -3,7 +3,6 @@
 
 #include <wx/string.h>
 #include "../renderer.h"
-// #include <yuni/core/event.h>
 
 namespace Antares
 {
@@ -16,17 +15,19 @@ namespace Renderer
 
 using namespace Antares::Data;
 
-class cell
+class cell : public Yuni::IEventObserver<cell>
 {
 protected:
     using study_ptr = Data::Study::Ptr;
 public:
     cell(study_ptr study, TimeSeries ts);
-    ~cell() = default;
+    ~cell();
     virtual wxString cellValue() const = 0;
     virtual double cellNumericValue() const = 0;
     virtual bool cellValue(double value) = 0;
     virtual IRenderer::CellStyle cellStyle() const = 0;
+protected:
+    void onStudyLoaded();
 protected:
     study_ptr study_;
     TimeSeries tsKind_;

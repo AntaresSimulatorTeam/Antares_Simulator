@@ -2,7 +2,7 @@
 
 #include "cell.h"
 #include <yuni/core/math.h>
-// #include <math.h>
+#include "application/study.h"
 
 using namespace Yuni;
 
@@ -20,9 +20,21 @@ namespace Renderer
 // -------------------
 cell::cell(study_ptr study, TimeSeries ts) : study_(study), tsKind_(ts)
 {
+    OnStudyLoaded.connect(this, &cell::onStudyLoaded);
+    
     if (not study_)
         return;
     tsGenerator_ = (0 != (study_->parameters.timeSeriesToGenerate & tsKind_));
+}
+
+cell::~cell()
+{
+    destroyBoundEvents();
+}
+
+void cell::onStudyLoaded()
+{
+    study_ = Data::Study::Current::Get();
 }
 
 
