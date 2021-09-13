@@ -192,7 +192,7 @@ list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR})
 message(STATUS "CMAKE_PREFIX_PATH : ${CMAKE_PREFIX_PATH}")
 
 # Build Needed dependencies
-add_subdirectory(antares-deps)
+# add_subdirectory(antares-deps)
 
 #Add needed definition in case of external dependencies compilation
 include (antares-deps/cmake/additionnal-definitions.cmake)

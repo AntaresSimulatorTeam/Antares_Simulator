@@ -35,6 +35,7 @@ cell::~cell()
 void cell::onStudyLoaded()
 {
     study_ = Data::Study::Current::Get();
+    tsGenerator_ = (0 != (study_->parameters.timeSeriesToGenerate & tsKind_));
 }
 
 
