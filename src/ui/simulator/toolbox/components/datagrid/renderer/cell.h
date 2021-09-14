@@ -85,6 +85,21 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
+class RefreshSpanCell : public cell
+{
+public:
+    RefreshSpanCell(TimeSeries ts);
+    ~RefreshSpanCell() = default;
+    wxString cellValue() const override;
+    double cellNumericValue() const override;
+    bool cellValue(double value) override;
+    IRenderer::CellStyle cellStyle() const override;
+private:
+    void onStudyLoaded();
+private:
+    map<TimeSeries, uint*> tsToRefreshSpan_;
+};
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

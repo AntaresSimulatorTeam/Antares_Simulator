@@ -171,6 +171,58 @@ IRenderer::CellStyle RefreshTsCell::cellStyle() const
     return isTSgeneratorOn() ? IRenderer::cellStyleDefault : IRenderer::cellStyleDefaultDisabled;
 }
 
+// ===================
+// Refresh Span cell
+// ===================
+RefreshSpanCell::RefreshSpanCell(TimeSeries ts) : cell(ts)
+{
+    OnStudyLoaded.connect(this, &RefreshSpanCell::onStudyLoaded);
+}
+
+void RefreshSpanCell::onStudyLoaded()
+{
+    tsToRefreshSpan_[timeSeriesLoad] = &(study_->parameters.refreshIntervalLoad);
+    tsToRefreshSpan_[timeSeriesThermal] = &(study_->parameters.refreshIntervalThermal);
+    tsToRefreshSpan_[timeSeriesHydro] = &(study_->parameters.refreshIntervalHydro);
+    tsToRefreshSpan_[timeSeriesWind] = &(study_->parameters.refreshIntervalWind);
+    tsToRefreshSpan_[timeSeriesSolar] = &(study_->parameters.refreshIntervalSolar);
+}
+
+wxString RefreshSpanCell::cellValue() const
+{
+    wxString to_return = wxEmptyString;
+    if (tsToRefreshSpan_.find(tsKind_) != tsToRefreshSpan_.end())
+        to_return = wxString() << *(tsToRefreshSpan_.at(tsKind_));
+    return to_return;
+}
+
+double RefreshSpanCell::cellNumericValue() const
+{
+    uint to_return = 0.;
+    if (tsToRefreshSpan_.find(tsKind_) != tsToRefreshSpan_.end())
+        to_return = *(tsToRefreshSpan_.at(tsKind_));
+    return to_return;
+}
+
+bool RefreshSpanCell::cellValue(double value)
+{
+    uint refreshSpan = std::max((int)std::round(value), 1);
+
+    bool to_return = false;
+    if (tsToRefreshSpan_.find(tsKind_) != tsToRefreshSpan_.end())
+    {
+        *(tsToRefreshSpan_[tsKind_]) = refreshSpan;
+        to_return = true;
+    }
+    return to_return;
+}
+
+IRenderer::CellStyle RefreshSpanCell::cellStyle() const
+{
+    return (isTSgeneratorOn() && 0 != (study_->parameters.timeSeriesToRefresh & tsKind_))
+        ? IRenderer::cellStyleDefault
+        : IRenderer::cellStyleDefaultDisabled;
+}
 
 } // namespace Renderer
 } // namespace Datagrid
