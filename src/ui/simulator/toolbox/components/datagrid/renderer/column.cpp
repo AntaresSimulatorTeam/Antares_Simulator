@@ -67,7 +67,7 @@ ColumnLoad::ColumnLoad(int nbLines) : Column(nbLines)
 	cells_.push_back(new statusCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
+	cells_.push_back(new NumberTsCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
@@ -92,7 +92,7 @@ ColumnThermal::ColumnThermal(int nbLines) : Column(nbLines)
 	cells_.push_back(new statusCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
+	cells_.push_back(new NumberTsCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
@@ -117,7 +117,7 @@ ColumnHydro::ColumnHydro(int nbLines) : Column(nbLines)
 	cells_.push_back(new statusCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
+	cells_.push_back(new NumberTsCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
@@ -142,7 +142,7 @@ ColumnWind::ColumnWind(int nbLines) : Column(nbLines)
 	cells_.push_back(new statusCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
+	cells_.push_back(new NumberTsCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
@@ -167,7 +167,7 @@ ColumnSolar::ColumnSolar(int nbLines) : Column(nbLines)
 	cells_.push_back(new statusCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
+	cells_.push_back(new NumberTsCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());

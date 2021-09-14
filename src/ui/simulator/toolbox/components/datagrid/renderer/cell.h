@@ -3,6 +3,7 @@
 
 #include <wx/string.h>
 #include "../renderer.h"
+#include <map>
 
 namespace Antares
 {
@@ -14,6 +15,7 @@ namespace Renderer
 {
 
 using namespace Antares::Data;
+using namespace std;
 
 class cell : public Yuni::IEventObserver<cell>
 {
@@ -28,10 +30,10 @@ public:
     virtual IRenderer::CellStyle cellStyle() const = 0;
 protected:
     void onStudyLoaded();
+    bool isTSgeneratorOn() const;
 protected:
     study_ptr study_;
     TimeSeries tsKind_;
-    bool tsGenerator_;
 };
 
 class blankCell : public cell
@@ -55,6 +57,21 @@ public:
     double cellNumericValue() const override;
     bool cellValue(double value) override;
     IRenderer::CellStyle cellStyle() const override;
+};
+
+class NumberTsCell : public cell
+{
+public:
+    NumberTsCell(TimeSeries ts);
+    ~NumberTsCell() = default;
+    wxString cellValue() const override;
+    double cellNumericValue() const override;
+    bool cellValue(double value) override;
+    IRenderer::CellStyle cellStyle() const override;
+private:
+    void onStudyLoaded();
+private:
+    map<TimeSeries, uint*> tsToNumberTs_;
 };
 
 } // namespace Renderer

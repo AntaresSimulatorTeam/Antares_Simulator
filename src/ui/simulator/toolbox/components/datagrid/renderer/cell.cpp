@@ -34,9 +34,12 @@ void cell::onStudyLoaded()
 {
     // We are sure study is loaded now.
     study_ = Data::Study::Current::Get();
-    tsGenerator_ = (0 != (study_->parameters.timeSeriesToGenerate & tsKind_));
 }
 
+bool cell::isTSgeneratorOn() const
+{
+    return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_));
+}
 
 // ===================
 // Blank cell
@@ -70,9 +73,71 @@ bool statusCell::cellValue(double value)
 IRenderer::CellStyle statusCell::cellStyle() const
 { 
     // Status READY made TS
-    return tsGenerator_ ? IRenderer::cellStyleConstraintNoWeight
-        : IRenderer::cellStyleConstraintWeight;
+    return isTSgeneratorOn() ? IRenderer::cellStyleConstraintNoWeight : IRenderer::cellStyleConstraintWeight;
 }
+
+// ===================
+// Number TS cell
+// ===================
+NumberTsCell::NumberTsCell(TimeSeries ts) : cell(ts)
+{
+    OnStudyLoaded.connect(this, &NumberTsCell::onStudyLoaded);
+}
+
+void NumberTsCell::onStudyLoaded()
+{
+    tsToNumberTs_[timeSeriesLoad] = &(study_->parameters.nbTimeSeriesLoad);
+    tsToNumberTs_[timeSeriesThermal] = &(study_->parameters.nbTimeSeriesThermal);
+    tsToNumberTs_[timeSeriesHydro] = &(study_->parameters.nbTimeSeriesHydro);
+    tsToNumberTs_[timeSeriesWind] = &(study_->parameters.nbTimeSeriesWind);
+    tsToNumberTs_[timeSeriesSolar] = &(study_->parameters.nbTimeSeriesSolar);
+}
+
+wxString NumberTsCell::cellValue() const
+{
+    wxString to_return = wxEmptyString;
+    if (tsToNumberTs_.find(tsKind_) != tsToNumberTs_.end())
+        to_return = wxString() << *(tsToNumberTs_.at(tsKind_));
+    return to_return; 
+}
+
+double NumberTsCell::cellNumericValue() const
+{
+    uint to_return = 0.;
+    if (tsToNumberTs_.find(tsKind_) != tsToNumberTs_.end())
+        to_return = *(tsToNumberTs_.at(tsKind_));
+    return to_return;
+}
+
+bool NumberTsCell::cellValue(double value)
+{
+    uint nbTimeSeries = (uint)(Math::Round(value));
+    if (not nbTimeSeries)
+        nbTimeSeries = 1;
+    else
+    {
+        if (nbTimeSeries > 1000)
+        {
+            logs.debug() << " Number of timeseries hard limit to 1000";
+            nbTimeSeries = 1000;
+        }
+    }
+
+    bool to_return = false;
+    if (tsToNumberTs_.find(tsKind_) != tsToNumberTs_.end())
+    {
+        *(tsToNumberTs_[tsKind_]) = nbTimeSeries;
+        to_return = true;
+    }
+    return to_return;
+}
+
+IRenderer::CellStyle NumberTsCell::cellStyle() const
+{
+    // default style
+    return isTSgeneratorOn() ? IRenderer::cellStyleDefault : IRenderer::cellStyleDefaultDisabled;
+}
+
 
 } // namespace Renderer
 } // namespace Datagrid
