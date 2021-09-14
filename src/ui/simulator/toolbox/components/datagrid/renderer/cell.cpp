@@ -394,6 +394,73 @@ IRenderer::CellStyle storeToOutputCell::cellStyle() const
         : IRenderer::cellStyleDefaultDisabled;
 }
 
+// ======================
+// Intra modal cell
+// ======================
+intraModalCell::intraModalCell(TimeSeries ts) : cell(ts) {}
+
+wxString intraModalCell::cellValue() const
+{
+    return (0 != (study_->parameters.intraModal & tsKind_)) ? wxT("Yes") : wxT("No");
+}
+
+double intraModalCell::cellNumericValue() const
+{
+    return (0 != (study_->parameters.intraModal & tsKind_)) ? 1. : 0.;
+}
+
+bool intraModalCell::cellValue(const String& value)
+{
+    double valueDouble;
+    if (not convertToDouble(value, valueDouble))
+        return false;
+
+    if (Math::Zero(valueDouble))
+        study_->parameters.intraModal &= ~tsKind_;
+    else
+        study_->parameters.intraModal |= tsKind_;
+    return true;
+}
+
+IRenderer::CellStyle intraModalCell::cellStyle() const
+{
+    return (0 != (study_->parameters.intraModal & tsKind_)) ? IRenderer::cellStyleDefault : IRenderer::cellStyleDefaultDisabled;
+}
+
+// ======================
+// Inter modal cell
+// ======================
+interModalCell::interModalCell(TimeSeries ts) : cell(ts) {}
+
+wxString interModalCell::cellValue() const
+{
+    return (0 != (study_->parameters.interModal & tsKind_)) ? wxT("Yes") : wxT("No");
+}
+
+double interModalCell::cellNumericValue() const
+{
+    return (0 != (study_->parameters.interModal & tsKind_)) ? 1. : 0.;
+}
+
+bool interModalCell::cellValue(const String& value)
+{
+    double valueDouble;
+    if (not convertToDouble(value, valueDouble))
+        return false;
+
+    if (Math::Zero(valueDouble))
+        study_->parameters.interModal &= ~tsKind_;
+    else
+        study_->parameters.interModal |= tsKind_;
+    return true;
+}
+
+IRenderer::CellStyle interModalCell::cellStyle() const
+{
+    return (0 != (study_->parameters.interModal & tsKind_)) ? IRenderer::cellStyleDefault : IRenderer::cellStyleDefaultDisabled;
+}
+
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

@@ -140,6 +140,29 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
+class intraModalCell : public cell
+{
+public:
+    intraModalCell(TimeSeries ts);
+    ~intraModalCell() = default;
+    wxString cellValue() const override;
+    double cellNumericValue() const override;
+    bool cellValue(const String& value) override;
+    IRenderer::CellStyle cellStyle() const override;
+};
+
+class interModalCell : public cell
+{
+public:
+    interModalCell(TimeSeries ts);
+    ~interModalCell() = default;
+    wxString cellValue() const override;
+    double cellNumericValue() const override;
+    bool cellValue(const String& value) override;
+    IRenderer::CellStyle cellStyle() const override;
+};
+
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

@@ -77,8 +77,8 @@ ColumnLoad::ColumnLoad(int nbLines) : Column(nbLines)
 	cells_.push_back(new storeToInputCell(tsKind_));
 	cells_.push_back(new storeToOutputCell(tsKind_));
 	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
+	cells_.push_back(new intraModalCell(tsKind_));
+	cells_.push_back(new interModalCell(tsKind_));
 }
 
 // ---------------------
@@ -99,8 +99,8 @@ ColumnThermal::ColumnThermal(int nbLines) : Column(nbLines)
 	cells_.push_back(new storeToInputCell(tsKind_));
 	cells_.push_back(new storeToOutputCell(tsKind_));
 	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
+	cells_.push_back(new intraModalCell(tsKind_));
+	cells_.push_back(new interModalCell(tsKind_));
 }
 
 // ---------------------
@@ -121,8 +121,8 @@ ColumnHydro::ColumnHydro(int nbLines) : Column(nbLines)
 	cells_.push_back(new storeToInputCell(tsKind_));
 	cells_.push_back(new storeToOutputCell(tsKind_));
 	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
+	cells_.push_back(new intraModalCell(tsKind_));
+	cells_.push_back(new interModalCell(tsKind_));
 }
 
 // ---------------------
@@ -143,8 +143,8 @@ ColumnWind::ColumnWind(int nbLines) : Column(nbLines)
 	cells_.push_back(new storeToInputCell(tsKind_));
 	cells_.push_back(new storeToOutputCell(tsKind_));
 	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
+	cells_.push_back(new intraModalCell(tsKind_));
+	cells_.push_back(new interModalCell(tsKind_));
 }
 
 // ---------------------
@@ -165,8 +165,8 @@ ColumnSolar::ColumnSolar(int nbLines) : Column(nbLines)
 	cells_.push_back(new storeToInputCell(tsKind_));
 	cells_.push_back(new storeToOutputCell(tsKind_));
 	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
+	cells_.push_back(new intraModalCell(tsKind_));
+	cells_.push_back(new interModalCell(tsKind_));
 }
 
 // -------------------------------
@@ -187,8 +187,8 @@ ColumnRenewableClusters::ColumnRenewableClusters(int nbLines) : Column(nbLines)
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
+	cells_.push_back(new intraModalCell(tsKind_));
+	cells_.push_back(new interModalCell(tsKind_));
 }
 
 

@@ -41,10 +41,12 @@ namespace Renderer
 
 TSmanagement::TSmanagement() : pControl(nullptr)
 {
-    // gp : is nb of lines in constructor of columns useful ?
+    // gp : is nb of lines in constructor of columns useful ? Not sure.
     columns_.push_back(new ColumnLoad(height()));
     columns_.push_back(new ColumnThermal(height()));
     columns_.push_back(new ColumnHydro(height()));
+
+    // gp : instead of new + delete operators for columns and cells, prefer smart pointers. 
 }
 
 TSmanagement::~TSmanagement()
