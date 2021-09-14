@@ -68,7 +68,7 @@ ColumnLoad::ColumnLoad(int nbLines) : Column(nbLines)
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new NumberTsCell(tsKind_));
-	cells_.push_back(new blankCell());
+	cells_.push_back(new RefreshTsCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
@@ -77,9 +77,6 @@ ColumnLoad::ColumnLoad(int nbLines) : Column(nbLines)
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 }
-
-ColumnLoad::~ColumnLoad()
-{}
 
 // ---------------------
 // Column thermal
@@ -93,7 +90,7 @@ ColumnThermal::ColumnThermal(int nbLines) : Column(nbLines)
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new NumberTsCell(tsKind_));
-	cells_.push_back(new blankCell());
+	cells_.push_back(new RefreshTsCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
@@ -102,9 +99,6 @@ ColumnThermal::ColumnThermal(int nbLines) : Column(nbLines)
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 }
-
-ColumnThermal::~ColumnThermal()
-{}
 
 // ---------------------
 // Column hydro
@@ -118,7 +112,7 @@ ColumnHydro::ColumnHydro(int nbLines) : Column(nbLines)
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new NumberTsCell(tsKind_));
-	cells_.push_back(new blankCell());
+	cells_.push_back(new RefreshTsCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
@@ -127,9 +121,6 @@ ColumnHydro::ColumnHydro(int nbLines) : Column(nbLines)
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 }
-
-ColumnHydro::~ColumnHydro()
-{}
 
 // ---------------------
 // Column wind
@@ -143,7 +134,7 @@ ColumnWind::ColumnWind(int nbLines) : Column(nbLines)
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new NumberTsCell(tsKind_));
-	cells_.push_back(new blankCell());
+	cells_.push_back(new RefreshTsCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
@@ -152,9 +143,6 @@ ColumnWind::ColumnWind(int nbLines) : Column(nbLines)
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 }
-
-ColumnWind::~ColumnWind()
-{}
 
 // ---------------------
 // Column Solar
@@ -168,7 +156,7 @@ ColumnSolar::ColumnSolar(int nbLines) : Column(nbLines)
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new NumberTsCell(tsKind_));
-	cells_.push_back(new blankCell());
+	cells_.push_back(new RefreshTsCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
@@ -177,10 +165,6 @@ ColumnSolar::ColumnSolar(int nbLines) : Column(nbLines)
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 }
-
-ColumnSolar::~ColumnSolar()
-{}
-
 
 // -------------------------------
 // Column renewable clusters 
@@ -203,9 +187,6 @@ ColumnRenewableClusters::ColumnRenewableClusters(int nbLines) : Column(nbLines)
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 }
-
-ColumnRenewableClusters::~ColumnRenewableClusters()
-{}
 
 
 } // namespace Renderer

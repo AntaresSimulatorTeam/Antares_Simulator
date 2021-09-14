@@ -74,6 +74,17 @@ private:
     map<TimeSeries, uint*> tsToNumberTs_;
 };
 
+class RefreshTsCell : public cell
+{
+public:
+    RefreshTsCell(TimeSeries ts);
+    ~RefreshTsCell() = default;
+    wxString cellValue() const override;
+    double cellNumericValue() const override;
+    bool cellValue(double value) override;
+    IRenderer::CellStyle cellStyle() const override;
+};
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

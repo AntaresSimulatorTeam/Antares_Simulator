@@ -66,61 +66,61 @@ protected:
 // -------------------
 //  Load column
 // -------------------
-class ColumnLoad : public Column
+class ColumnLoad final : public Column
 {
 public:
 	ColumnLoad(int nbLines);
-	virtual ~ColumnLoad();
+	~ColumnLoad() = default;
 };
 
 // -------------------
 //  Thermal column
 // -------------------
-class ColumnThermal : public Column
+class ColumnThermal final : public Column
 {
 public:
 	ColumnThermal(int nbLines);
-	virtual ~ColumnThermal();
+	~ColumnThermal() = default;
 };
 
 // -------------------
 //  Hydro column
 // -------------------
-class ColumnHydro : public Column
+class ColumnHydro final : public Column
 {
 public:
 	ColumnHydro(int nbLines);
-	virtual ~ColumnHydro();
+	~ColumnHydro() = default;
 };
 
 // -------------------
 //  Wind column
 // -------------------
-class ColumnWind : public Column
+class ColumnWind final : public Column
 {
 public:
 	ColumnWind(int nbLines);
-	virtual ~ColumnWind();
+	~ColumnWind() = default;
 };
 
 // -------------------
 //  Solar column
 // -------------------
-class ColumnSolar : public Column
+class ColumnSolar final : public Column
 {
 public:
 	ColumnSolar(int nbLines);
-	virtual ~ColumnSolar();
+	~ColumnSolar() = default;
 };
 
 // -----------------------------
 //  Renewable clusters column
 // -----------------------------
-class ColumnRenewableClusters : public Column
+class ColumnRenewableClusters final : public Column
 {
 public:
 	ColumnRenewableClusters(int nbLines);
-	virtual ~ColumnRenewableClusters();
+	~ColumnRenewableClusters() = default;
 };
 
 } // namespace Renderer

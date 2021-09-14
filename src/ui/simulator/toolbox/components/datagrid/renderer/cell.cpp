@@ -138,6 +138,39 @@ IRenderer::CellStyle NumberTsCell::cellStyle() const
     return isTSgeneratorOn() ? IRenderer::cellStyleDefault : IRenderer::cellStyleDefaultDisabled;
 }
 
+// ===================
+// Refresh TS cell
+// ===================
+RefreshTsCell::RefreshTsCell(TimeSeries ts) : cell(ts)
+{
+    OnStudyLoaded.connect(this, &RefreshTsCell::onStudyLoaded);
+}
+
+wxString RefreshTsCell::cellValue() const
+{
+    return (0 != (study_->parameters.timeSeriesToRefresh & tsKind_)) ? wxT("Yes") : wxT("No");
+}
+
+double RefreshTsCell::cellNumericValue() const
+{
+    return (0 != (study_->parameters.timeSeriesToRefresh & tsKind_)) ? 1. : 0.;
+}
+
+bool RefreshTsCell::cellValue(double value)
+{
+    if (Math::Zero(value))
+        study_->parameters.timeSeriesToRefresh &= ~tsKind_;
+    else
+        study_->parameters.timeSeriesToRefresh |= tsKind_;
+    return true;
+}
+
+IRenderer::CellStyle RefreshTsCell::cellStyle() const
+{
+    // default style
+    return isTSgeneratorOn() ? IRenderer::cellStyleDefault : IRenderer::cellStyleDefaultDisabled;
+}
+
 
 } // namespace Renderer
 } // namespace Datagrid
