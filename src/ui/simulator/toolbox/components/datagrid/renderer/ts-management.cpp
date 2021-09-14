@@ -39,21 +39,6 @@ namespace Datagrid
 namespace Renderer
 {
 
-bool convertToDouble(const String& value, double & valueDouble)
-{
-    bool conversionValid = value.to(valueDouble);
-    if (not conversionValid)
-    {
-        bool b;
-        if (value.to(b))
-        {
-            conversionValid = true;
-            valueDouble = (b) ? 1. : 0.;
-        }
-    }
-    return conversionValid;
-}
-
 TSmanagement::TSmanagement() : pControl(nullptr)
 {
     // gp : is nb of lines in constructor of columns useful ?
@@ -108,11 +93,7 @@ bool TSmanagement::cellValue(int x, int y, const String& value)
     if (not study || x < 0 || x > width())
         return false;
 
-    double valueDouble;
-    if (not convertToDouble(value, valueDouble))
-        return false;
-
-    bool to_return = columns_[x]->getLine(y)->cellValue(valueDouble);
+    bool to_return = columns_[x]->getLine(y)->cellValue(value);
     onSimulationTSManagementChanged();
     return to_return;
 }

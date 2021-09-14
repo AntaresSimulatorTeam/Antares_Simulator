@@ -5,6 +5,9 @@
 #include "../renderer.h"
 #include <map>
 
+using namespace Yuni;
+
+
 namespace Antares
 {
 namespace Component
@@ -26,7 +29,7 @@ public:
     ~cell();
     virtual wxString cellValue() const = 0;
     virtual double cellNumericValue() const = 0;
-    virtual bool cellValue(double value) = 0;
+    virtual bool cellValue(const String& value) = 0;
     virtual IRenderer::CellStyle cellStyle() const = 0;
 protected:
     void onStudyLoaded();
@@ -43,7 +46,7 @@ public:
     ~blankCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(double value) override;
+    bool cellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 };
 
@@ -55,7 +58,7 @@ public:
     ~statusCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(double value) override;
+    bool cellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 };
 
@@ -66,7 +69,7 @@ public:
     ~NumberTsCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(double value) override;
+    bool cellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 private:
     void onStudyLoaded();
@@ -81,7 +84,7 @@ public:
     ~RefreshTsCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(double value) override;
+    bool cellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 };
 
@@ -92,12 +95,27 @@ public:
     ~RefreshSpanCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(double value) override;
+    bool cellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 private:
     void onStudyLoaded();
 private:
     map<TimeSeries, uint*> tsToRefreshSpan_;
+};
+
+class SeasonalCorrelationCell : public cell
+{
+public:
+    SeasonalCorrelationCell(TimeSeries ts);
+    ~SeasonalCorrelationCell() = default;
+    wxString cellValue() const override;
+    double cellNumericValue() const override;
+    bool cellValue(const String& value) override;
+    IRenderer::CellStyle cellStyle() const override;
+private:
+    void onStudyLoaded();
+private:
+    map<TimeSeries, Correlation*> tsToCorrelation_;
 };
 
 } // namespace Renderer

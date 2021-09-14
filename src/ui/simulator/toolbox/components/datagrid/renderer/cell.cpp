@@ -4,8 +4,6 @@
 #include <yuni/core/math.h>
 #include "application/study.h"
 
-using namespace Yuni;
-
 namespace Antares
 {
 namespace Component
@@ -14,6 +12,21 @@ namespace Datagrid
 {
 namespace Renderer
 {
+
+bool convertToDouble(const String& value, double& valueDouble)
+{
+    bool conversionValid = value.to(valueDouble);
+    if (not conversionValid)
+    {
+        bool b;
+        if (value.to(b))
+        {
+            conversionValid = true;
+            valueDouble = (b) ? 1. : 0.;
+        }
+    }
+    return conversionValid;
+}
 
 // -------------------
 // Base cell class
@@ -47,7 +60,7 @@ bool cell::isTSgeneratorOn() const
 blankCell::blankCell() : cell(timeSeriesCount /*arbitrary, not used here anyway */) {}
 wxString blankCell::cellValue() const { return wxEmptyString; }
 double blankCell::cellNumericValue() const { return 0.; }
-bool blankCell::cellValue(double value) { return false;}
+bool blankCell::cellValue(const String& value) { return false;}
 IRenderer::CellStyle blankCell::cellStyle() const { return IRenderer::cellStyleDefaultDisabled; }
 
 // ===================
@@ -62,9 +75,13 @@ double statusCell::cellNumericValue() const
 { 
     return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_)) ? 0 : 1.;
 }
-bool statusCell::cellValue(double value)
+bool statusCell::cellValue(const String& value)
 { 
-    if (not Math::Zero(value))
+    double valueDouble;
+    if (not convertToDouble(value, valueDouble))
+        return false;
+
+    if (not Math::Zero(valueDouble))
         study_->parameters.timeSeriesToGenerate &= ~tsKind_;
     else
         study_->parameters.timeSeriesToGenerate |= tsKind_;
@@ -109,9 +126,13 @@ double NumberTsCell::cellNumericValue() const
     return to_return;
 }
 
-bool NumberTsCell::cellValue(double value)
+bool NumberTsCell::cellValue(const String& value)
 {
-    uint nbTimeSeries = (uint)(Math::Round(value));
+    double valueDouble;
+    if (not convertToDouble(value, valueDouble))
+        return false;
+
+    uint nbTimeSeries = (uint)(Math::Round(valueDouble));
     if (not nbTimeSeries)
         nbTimeSeries = 1;
     else
@@ -156,9 +177,13 @@ double RefreshTsCell::cellNumericValue() const
     return (0 != (study_->parameters.timeSeriesToRefresh & tsKind_)) ? 1. : 0.;
 }
 
-bool RefreshTsCell::cellValue(double value)
+bool RefreshTsCell::cellValue(const String& value)
 {
-    if (Math::Zero(value))
+    double valueDouble;
+    if (not convertToDouble(value, valueDouble))
+        return false;
+
+    if (Math::Zero(valueDouble))
         study_->parameters.timeSeriesToRefresh &= ~tsKind_;
     else
         study_->parameters.timeSeriesToRefresh |= tsKind_;
@@ -204,9 +229,13 @@ double RefreshSpanCell::cellNumericValue() const
     return to_return;
 }
 
-bool RefreshSpanCell::cellValue(double value)
+bool RefreshSpanCell::cellValue(const String& value)
 {
-    uint refreshSpan = std::max((int)std::round(value), 1);
+    double valueDouble;
+    if (not convertToDouble(value, valueDouble))
+        return false;
+    
+    uint refreshSpan = std::max((int)std::round(valueDouble), 1);
 
     bool to_return = false;
     if (tsToRefreshSpan_.find(tsKind_) != tsToRefreshSpan_.end())
@@ -222,6 +251,77 @@ IRenderer::CellStyle RefreshSpanCell::cellStyle() const
     return (isTSgeneratorOn() && 0 != (study_->parameters.timeSeriesToRefresh & tsKind_))
         ? IRenderer::cellStyleDefault
         : IRenderer::cellStyleDefaultDisabled;
+}
+
+// ============================
+//  Seasonal correlation cell
+// ============================
+SeasonalCorrelationCell::SeasonalCorrelationCell(TimeSeries ts) : cell(ts)
+{
+    OnStudyLoaded.connect(this, &SeasonalCorrelationCell::onStudyLoaded);
+}
+
+void SeasonalCorrelationCell::onStudyLoaded()
+{
+    tsToCorrelation_[timeSeriesLoad] = &(study_->preproLoadCorrelation);
+    tsToCorrelation_[timeSeriesWind] = &(study_->preproWindCorrelation);
+    tsToCorrelation_[timeSeriesSolar] = &(study_->preproSolarCorrelation);
+}
+
+wxString SeasonalCorrelationCell::cellValue() const
+{
+    Data::Correlation::Mode mode = Data::Correlation::modeNone;
+    if (tsToCorrelation_.find(tsKind_) != tsToCorrelation_.end())
+        mode = tsToCorrelation_.at(tsKind_)->mode();
+    else if (tsKind_ == Data::timeSeriesHydro)
+        return wxT("annual");
+    else if (tsKind_ == Data::timeSeriesThermal)
+        return wxT("n/a");
+    else
+        return wxT("--");
+    return (mode == Data::Correlation::modeAnnual) ? wxT("annual") : wxT("monthly");
+}
+
+double SeasonalCorrelationCell::cellNumericValue() const
+{
+    Data::Correlation::Mode mode = Data::Correlation::modeNone;
+    if (tsToCorrelation_.find(tsKind_) != tsToCorrelation_.end())
+        mode = tsToCorrelation_.at(tsKind_)->mode();
+    else
+        return 0.;
+    return (mode == Data::Correlation::modeAnnual) ? 1. : -1.;
+}
+
+bool SeasonalCorrelationCell::cellValue(const String& value)
+{
+    double valueDouble;
+    bool convertToDoubleValid = convertToDouble(value, valueDouble);
+
+    Antares::Data::Correlation::Mode mode = Data::Correlation::modeNone;
+    CString<64, false> s = value;
+    s.trim(" \t");
+    s.toLower();
+    if ((convertToDoubleValid && Math::Equals(valueDouble, +1.)) || s == "annual" || s == "a")
+        mode = Data::Correlation::modeAnnual;
+    else
+    {
+        if ((convertToDoubleValid && Math::Equals(valueDouble, -1.)) || s == "monthly" || s == "month" || s == "m")
+            mode = Data::Correlation::modeMonthly;
+    }
+
+    if (mode != Antares::Data::Correlation::modeNone)
+    {
+        if (tsToCorrelation_.find(tsKind_) != tsToCorrelation_.end())
+            tsToCorrelation_.at(tsKind_)->mode(mode);
+        return true;
+    }
+
+    return false;
+}
+
+IRenderer::CellStyle SeasonalCorrelationCell::cellStyle() const
+{
+    return (isTSgeneratorOn()) ? IRenderer::cellStyleDefault : IRenderer::cellStyleDefaultDisabled;
 }
 
 } // namespace Renderer
