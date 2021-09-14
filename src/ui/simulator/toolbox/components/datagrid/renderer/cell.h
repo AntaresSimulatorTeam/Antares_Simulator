@@ -118,6 +118,28 @@ private:
     map<TimeSeries, Correlation*> tsToCorrelation_;
 };
 
+class storeToInputCell : public cell
+{
+public:
+    storeToInputCell(TimeSeries ts);
+    ~storeToInputCell() = default;
+    wxString cellValue() const override;
+    double cellNumericValue() const override;
+    bool cellValue(const String& value) override;
+    IRenderer::CellStyle cellStyle() const override;
+};
+
+class storeToOutputCell : public cell
+{
+public:
+    storeToOutputCell(TimeSeries ts);
+    ~storeToOutputCell() = default;
+    wxString cellValue() const override;
+    double cellNumericValue() const override;
+    bool cellValue(const String& value) override;
+    IRenderer::CellStyle cellStyle() const override;
+};
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

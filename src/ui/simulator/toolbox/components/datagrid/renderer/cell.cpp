@@ -324,6 +324,76 @@ IRenderer::CellStyle SeasonalCorrelationCell::cellStyle() const
     return (isTSgeneratorOn()) ? IRenderer::cellStyleDefault : IRenderer::cellStyleDefaultDisabled;
 }
 
+// =====================
+// Store to input cell
+// =====================
+storeToInputCell::storeToInputCell(TimeSeries ts) : cell(ts) {}
+
+wxString storeToInputCell::cellValue() const
+{
+    return (0 != (study_->parameters.timeSeriesToImport & tsKind_)) ? wxT("Yes") : wxT("No");
+}
+
+double storeToInputCell::cellNumericValue() const
+{
+    return (0 != (study_->parameters.timeSeriesToImport & tsKind_)) ? 1. : 0.;
+}
+
+bool storeToInputCell::cellValue(const String& value)
+{
+    double valueDouble;
+    if (not convertToDouble(value, valueDouble))
+        return false;
+
+    if (Math::Zero(valueDouble))
+        study_->parameters.timeSeriesToImport &= ~tsKind_;
+    else
+        study_->parameters.timeSeriesToImport |= tsKind_;
+    return true;
+}
+
+IRenderer::CellStyle storeToInputCell::cellStyle() const
+{
+    return (isTSgeneratorOn() && 0 != (study_->parameters.timeSeriesToImport & tsKind_))
+        ? IRenderer::cellStyleDefault
+        : IRenderer::cellStyleDefaultDisabled;
+}
+
+// ======================
+// Store to output cell
+// ======================
+storeToOutputCell::storeToOutputCell(TimeSeries ts) : cell(ts) {}
+
+wxString storeToOutputCell::cellValue() const
+{
+    return (0 != (study_->parameters.timeSeriesToArchive & tsKind_)) ? wxT("Yes") : wxT("No");
+}
+
+double storeToOutputCell::cellNumericValue() const
+{
+    return (0 != (study_->parameters.timeSeriesToArchive & tsKind_)) ? 1. : 0.;
+}
+
+bool storeToOutputCell::cellValue(const String& value)
+{
+    double valueDouble;
+    if (not convertToDouble(value, valueDouble))
+        return false;
+
+    if (Math::Zero(valueDouble))
+        study_->parameters.timeSeriesToArchive &= ~tsKind_;
+    else
+        study_->parameters.timeSeriesToArchive |= tsKind_;
+    return true;
+}
+
+IRenderer::CellStyle storeToOutputCell::cellStyle() const
+{
+    return (isTSgeneratorOn() && 0 != (study_->parameters.timeSeriesToArchive & tsKind_))
+        ? IRenderer::cellStyleDefault
+        : IRenderer::cellStyleDefaultDisabled;
+}
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
