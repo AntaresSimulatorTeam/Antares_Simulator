@@ -56,9 +56,10 @@ bool convertToDouble(const String& value, double & valueDouble)
 
 TSmanagement::TSmanagement() : pControl(nullptr)
 {
-    columns_.push_back(new ColumnLoad(height(), study));
-    columns_.push_back(new ColumnThermal(height(), study));
-    columns_.push_back(new ColumnHydro(height(), study));
+    // gp : is nb of lines in constructor of columns useful ?
+    columns_.push_back(new ColumnLoad(height()));
+    columns_.push_back(new ColumnThermal(height()));
+    columns_.push_back(new ColumnHydro(height()));
 }
 
 TSmanagement::~TSmanagement()

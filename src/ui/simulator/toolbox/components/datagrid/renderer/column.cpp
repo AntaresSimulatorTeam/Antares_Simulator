@@ -41,7 +41,7 @@ namespace Renderer
 // -------------------
 // Base column class
 // -------------------
-Column::Column(int nbLines, study_ptr study) : nbLines_(nbLines)
+Column::Column(int nbLines) : nbLines_(nbLines)
 {}
 
 Column::~Column()
@@ -59,12 +59,12 @@ cell* Column::getLine(int y) const
 // ---------------------
 // Column load
 // ---------------------
-ColumnLoad::ColumnLoad(int nbLines, study_ptr study) : Column(nbLines, study) 
+ColumnLoad::ColumnLoad(int nbLines) : Column(nbLines) 
 {
 	tsKind_ = timeSeriesLoad;
 
 	cells_.push_back(new blankCell());
-	cells_.push_back(new statusCell(study, tsKind_));
+	cells_.push_back(new statusCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
@@ -84,12 +84,12 @@ ColumnLoad::~ColumnLoad()
 // ---------------------
 // Column thermal
 // ---------------------
-ColumnThermal::ColumnThermal(int nbLines, study_ptr study) : Column(nbLines, study) 
+ColumnThermal::ColumnThermal(int nbLines) : Column(nbLines) 
 {
 	tsKind_ = timeSeriesThermal;
 
 	cells_.push_back(new blankCell());
-	cells_.push_back(new statusCell(study, tsKind_));
+	cells_.push_back(new statusCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
@@ -109,12 +109,12 @@ ColumnThermal::~ColumnThermal()
 // ---------------------
 // Column hydro
 // ---------------------
-ColumnHydro::ColumnHydro(int nbLines, study_ptr study) : Column(nbLines, study)
+ColumnHydro::ColumnHydro(int nbLines) : Column(nbLines)
 {
 	tsKind_ = timeSeriesHydro;
 
 	cells_.push_back(new blankCell());
-	cells_.push_back(new statusCell(study, tsKind_));
+	cells_.push_back(new statusCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
@@ -134,12 +134,12 @@ ColumnHydro::~ColumnHydro()
 // ---------------------
 // Column wind
 // ---------------------
-ColumnWind::ColumnWind(int nbLines, study_ptr study) : Column(nbLines, study)
+ColumnWind::ColumnWind(int nbLines) : Column(nbLines)
 {
 	tsKind_ = timeSeriesWind;
 
 	cells_.push_back(new blankCell());
-	cells_.push_back(new statusCell(study, tsKind_));
+	cells_.push_back(new statusCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
@@ -159,12 +159,12 @@ ColumnWind::~ColumnWind()
 // ---------------------
 // Column Solar
 // ---------------------
-ColumnSolar::ColumnSolar(int nbLines, study_ptr study) : Column(nbLines, study)
+ColumnSolar::ColumnSolar(int nbLines) : Column(nbLines)
 {
 	tsKind_ = timeSeriesSolar;
 
 	cells_.push_back(new blankCell());
-	cells_.push_back(new statusCell(study, tsKind_));
+	cells_.push_back(new statusCell(tsKind_));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
 	cells_.push_back(new blankCell());
@@ -185,7 +185,7 @@ ColumnSolar::~ColumnSolar()
 // -------------------------------
 // Column renewable clusters 
 // -------------------------------
-ColumnRenewableClusters::ColumnRenewableClusters(int nbLines, study_ptr study) : Column(nbLines, study)
+ColumnRenewableClusters::ColumnRenewableClusters(int nbLines) : Column(nbLines)
 {
 	tsKind_ = timeSeriesRenewable;
 

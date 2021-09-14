@@ -53,7 +53,7 @@ protected:
 	using study_ptr = Data::Study::Ptr;
 
 public:
-	Column(int nbLines, study_ptr study);
+	Column(int nbLines);
 	virtual ~Column();
 	cell* getLine(int y) const;
 
@@ -69,7 +69,7 @@ protected:
 class ColumnLoad : public Column
 {
 public:
-	ColumnLoad(int nbLines, study_ptr study);
+	ColumnLoad(int nbLines);
 	virtual ~ColumnLoad();
 };
 
@@ -79,7 +79,7 @@ public:
 class ColumnThermal : public Column
 {
 public:
-	ColumnThermal(int nbLines, study_ptr study);
+	ColumnThermal(int nbLines);
 	virtual ~ColumnThermal();
 };
 
@@ -89,7 +89,7 @@ public:
 class ColumnHydro : public Column
 {
 public:
-	ColumnHydro(int nbLines, study_ptr study);
+	ColumnHydro(int nbLines);
 	virtual ~ColumnHydro();
 };
 
@@ -99,7 +99,7 @@ public:
 class ColumnWind : public Column
 {
 public:
-	ColumnWind(int nbLines, study_ptr study);
+	ColumnWind(int nbLines);
 	virtual ~ColumnWind();
 };
 
@@ -109,7 +109,7 @@ public:
 class ColumnSolar : public Column
 {
 public:
-	ColumnSolar(int nbLines, study_ptr study);
+	ColumnSolar(int nbLines);
 	virtual ~ColumnSolar();
 };
 
@@ -119,7 +119,7 @@ public:
 class ColumnRenewableClusters : public Column
 {
 public:
-	ColumnRenewableClusters(int nbLines, study_ptr study);
+	ColumnRenewableClusters(int nbLines);
 	virtual ~ColumnRenewableClusters();
 };
 

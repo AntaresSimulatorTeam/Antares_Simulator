@@ -18,13 +18,11 @@ namespace Renderer
 // -------------------
 // Base cell class
 // -------------------
-cell::cell(study_ptr study, TimeSeries ts) : study_(study), tsKind_(ts)
+cell::cell(TimeSeries ts) : tsKind_(ts)
 {
+    // We have to wait for the study to be loaded before initializing data members from study.
+    // That's why constructor delegates to member function onStudyLoaded.
     OnStudyLoaded.connect(this, &cell::onStudyLoaded);
-    
-    if (not study_)
-        return;
-    tsGenerator_ = (0 != (study_->parameters.timeSeriesToGenerate & tsKind_));
 }
 
 cell::~cell()
@@ -34,6 +32,7 @@ cell::~cell()
 
 void cell::onStudyLoaded()
 {
+    // We are sure study is loaded now.
     study_ = Data::Study::Current::Get();
     tsGenerator_ = (0 != (study_->parameters.timeSeriesToGenerate & tsKind_));
 }
@@ -42,7 +41,7 @@ void cell::onStudyLoaded()
 // ===================
 // Blank cell
 // ===================
-blankCell::blankCell() : cell(nullptr, timeSeriesCount /*arbitrary, not used here anyway */) {}
+blankCell::blankCell() : cell(timeSeriesCount /*arbitrary, not used here anyway */) {}
 wxString blankCell::cellValue() const { return wxEmptyString; }
 double blankCell::cellNumericValue() const { return 0.; }
 bool blankCell::cellValue(double value) { return false;}
@@ -51,7 +50,7 @@ IRenderer::CellStyle blankCell::cellStyle() const { return IRenderer::cellStyleD
 // ===================
 // Status cell
 // ===================
-statusCell::statusCell(study_ptr study, TimeSeries ts) : cell(study, ts) {}
+statusCell::statusCell(TimeSeries ts) : cell(ts) {}
 wxString statusCell::cellValue() const
 {
     return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_)) ? wxT("Off") : wxT("On");

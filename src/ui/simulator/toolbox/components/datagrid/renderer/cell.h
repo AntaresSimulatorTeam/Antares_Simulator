@@ -20,7 +20,7 @@ class cell : public Yuni::IEventObserver<cell>
 protected:
     using study_ptr = Data::Study::Ptr;
 public:
-    cell(study_ptr study, TimeSeries ts);
+    cell(TimeSeries ts);
     ~cell();
     virtual wxString cellValue() const = 0;
     virtual double cellNumericValue() const = 0;
@@ -49,15 +49,12 @@ public:
 class statusCell : public cell
 {
 public:
-    statusCell(study_ptr study, TimeSeries ts);
+    statusCell(TimeSeries ts);
     ~statusCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
     bool cellValue(double value) override;
     IRenderer::CellStyle cellStyle() const override;
-
-// private:
-//     TimeSeries tsKind_;
 };
 
 } // namespace Renderer

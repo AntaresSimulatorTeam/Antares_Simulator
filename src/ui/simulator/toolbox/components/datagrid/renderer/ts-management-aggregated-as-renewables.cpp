@@ -41,8 +41,8 @@ namespace Renderer
 
 TSmanagementAggregatedAsRenewable::TSmanagementAggregatedAsRenewable() : TSmanagement()
 {
-    columns_.push_back(new ColumnWind(height(), study));
-    columns_.push_back(new ColumnSolar(height(), study));
+    columns_.push_back(new ColumnWind(height()));
+    columns_.push_back(new ColumnSolar(height()));
 }
 
 TSmanagementAggregatedAsRenewable::~TSmanagementAggregatedAsRenewable()
