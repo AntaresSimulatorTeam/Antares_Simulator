@@ -63,6 +63,19 @@ double blankCell::cellNumericValue() const { return 0.; }
 bool blankCell::cellValue(const String& value) { return false;}
 IRenderer::CellStyle blankCell::cellStyle() const { return IRenderer::cellStyleDefaultDisabled; }
 
+// =================================
+// Inactive renewable cluster cell
+// =================================
+inactiveRenewableClusterCell::inactiveRenewableClusterCell(wxString toPrintInCell) : 
+    cell(timeSeriesCount /*arbitrary, not used here anyway */),
+    toBePrintedInCell_(toPrintInCell)
+{}
+
+wxString inactiveRenewableClusterCell::cellValue() const { return toBePrintedInCell_; }
+double inactiveRenewableClusterCell::cellNumericValue() const { return 0.; }
+bool inactiveRenewableClusterCell::cellValue(const String& value) { return false; }
+IRenderer::CellStyle inactiveRenewableClusterCell::cellStyle() const { return IRenderer::cellStyleDisabled; }
+
 // ===================
 // Status cell
 // ===================

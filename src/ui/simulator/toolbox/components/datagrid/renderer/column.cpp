@@ -177,15 +177,15 @@ ColumnRenewableClusters::ColumnRenewableClusters(int nbLines) : Column(nbLines)
 	tsKind_ = timeSeriesRenewable;
 
 	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
+	cells_.push_back(new inactiveRenewableClusterCell(wxT("On")));
+	cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
+	cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
+	cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
+	cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
+	cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
+	cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
+	cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
+	cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
 	cells_.push_back(new blankCell());
 	cells_.push_back(new intraModalCell(tsKind_));
 	cells_.push_back(new interModalCell(tsKind_));

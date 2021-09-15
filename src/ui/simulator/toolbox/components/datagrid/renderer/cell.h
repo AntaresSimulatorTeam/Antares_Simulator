@@ -50,6 +50,19 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
+class inactiveRenewableClusterCell : public cell
+{
+public:
+    inactiveRenewableClusterCell(wxString toPrintInCell);
+    ~inactiveRenewableClusterCell() = default;
+    wxString cellValue() const override;
+    double cellNumericValue() const override;
+    bool cellValue(const String& value) override;
+    IRenderer::CellStyle cellStyle() const override;
+private:
+    wxString toBePrintedInCell_;
+};
+
 
 class readyMadeTSstatus : public cell
 {
