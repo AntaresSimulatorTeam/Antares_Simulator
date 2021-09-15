@@ -41,20 +41,20 @@ namespace Renderer
 
 TSmanagement::TSmanagement() : pControl(nullptr)
 {
-    // gp : is nb of lines in constructor of columns useful ? Not sure.
-    columns_.push_back(new ColumnLoad(height()));
-    columns_.push_back(new ColumnThermal(height()));
-    columns_.push_back(new ColumnHydro(height()));
+    columns_.push_back(make_unique<ColumnLoad>());
+    columns_.push_back(make_unique<ColumnThermal>());
+    columns_.push_back(make_unique<ColumnHydro>());
+}
 
-    // gp : instead of new + delete operators for columns and cells, prefer smart pointers. 
+void TSmanagement::checkLineNumberInColumns()
+{
+    vector<unique_ptr<Column>>::iterator it;
+    for (it = columns_.begin(); it != columns_.end(); it++)
+        assert((*it)->getNumberOfLines() == MAX_NB_OF_LINES);
 }
 
 TSmanagement::~TSmanagement()
 {
-    vector<Column*>::iterator it;
-    for (it = columns_.begin(); it != columns_.end(); it++)
-        delete *it;
-
     destroyBoundEvents();
 }
 
@@ -65,7 +65,7 @@ int TSmanagement::width() const
 
 int TSmanagement::height() const
 {
-    return 13;
+    return MAX_NB_OF_LINES;
 }
 
 wxString TSmanagement::rowCaption(int rowIndx) const

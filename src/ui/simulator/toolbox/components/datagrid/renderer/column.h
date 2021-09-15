@@ -28,6 +28,8 @@
 #pragma once
 
 #include <vector>
+#include <memory>
+
 #include "cell.h"
 
 
@@ -53,13 +55,13 @@ protected:
 	using study_ptr = Data::Study::Ptr;
 
 public:
-	Column(int nbLines);
-	virtual ~Column();
+	Column();
+	virtual ~Column() = default;
 	cell* getLine(int y) const;
+	int getNumberOfLines() const;
 
 protected:
-	int nbLines_;
-	vector<cell*> cells_;
+	vector<unique_ptr<cell>> cells_;
 	TimeSeries tsKind_;
 };
 
@@ -69,7 +71,7 @@ protected:
 class ColumnLoad final : public Column
 {
 public:
-	ColumnLoad(int nbLines);
+	ColumnLoad();
 	~ColumnLoad() = default;
 };
 
@@ -79,7 +81,7 @@ public:
 class ColumnThermal final : public Column
 {
 public:
-	ColumnThermal(int nbLines);
+	ColumnThermal();
 	~ColumnThermal() = default;
 };
 
@@ -89,7 +91,7 @@ public:
 class ColumnHydro final : public Column
 {
 public:
-	ColumnHydro(int nbLines);
+	ColumnHydro();
 	~ColumnHydro() = default;
 };
 
@@ -99,7 +101,7 @@ public:
 class ColumnWind final : public Column
 {
 public:
-	ColumnWind(int nbLines);
+	ColumnWind();
 	~ColumnWind() = default;
 };
 
@@ -109,7 +111,7 @@ public:
 class ColumnSolar final : public Column
 {
 public:
-	ColumnSolar(int nbLines);
+	ColumnSolar();
 	~ColumnSolar() = default;
 };
 
@@ -119,7 +121,7 @@ public:
 class ColumnRenewableClusters final : public Column
 {
 public:
-	ColumnRenewableClusters(int nbLines);
+	ColumnRenewableClusters();
 	~ColumnRenewableClusters() = default;
 };
 

@@ -41,19 +41,17 @@ namespace Renderer
 // -------------------
 // Base column class
 // -------------------
-Column::Column(int nbLines) : nbLines_(nbLines)
+Column::Column()
 {}
-
-Column::~Column()
-{
-	for (int i = 0; i < nbLines_; i++)
-		if (cells_[i])
-			delete cells_[i];
-}
 
 cell* Column::getLine(int y) const
 {
-	return cells_[y];
+	return cells_[y].get();
+}
+
+int Column::getNumberOfLines() const
+{
+	return cells_.size();
 }
 
 // gp : except ts kind, all column constructors are the same !
@@ -62,133 +60,133 @@ cell* Column::getLine(int y) const
 // ---------------------
 // Column load
 // ---------------------
-ColumnLoad::ColumnLoad(int nbLines) : Column(nbLines) 
+ColumnLoad::ColumnLoad() : Column() 
 {
 	tsKind_ = timeSeriesLoad;
 
-	cells_.push_back(new blankCell());
-	cells_.push_back(new readyMadeTSstatus(tsKind_));
-	cells_.push_back(new blankCell());
-	cells_.push_back(new generatedTSstatus(tsKind_));
-	cells_.push_back(new NumberTsCell(tsKind_));
-	cells_.push_back(new RefreshTsCell(tsKind_));
-	cells_.push_back(new RefreshSpanCell(tsKind_));
-	cells_.push_back(new SeasonalCorrelationCell(tsKind_));
-	cells_.push_back(new storeToInputCell(tsKind_));
-	cells_.push_back(new storeToOutputCell(tsKind_));
-	cells_.push_back(new blankCell());
-	cells_.push_back(new intraModalCell(tsKind_));
-	cells_.push_back(new interModalCell(tsKind_));
+	cells_.push_back(make_unique<blankCell>());
+	cells_.push_back(make_unique<readyMadeTSstatus>(tsKind_));
+	cells_.push_back(make_unique<blankCell>());
+	cells_.push_back(make_unique<generatedTSstatus>(tsKind_));
+	cells_.push_back(make_unique<NumberTsCell>(tsKind_));
+	cells_.push_back(make_unique<RefreshTsCell>(tsKind_));
+	cells_.push_back(make_unique<RefreshSpanCell>(tsKind_));
+	cells_.push_back(make_unique<SeasonalCorrelationCell>(tsKind_));
+	cells_.push_back(make_unique<storeToInputCell>(tsKind_));
+	cells_.push_back(make_unique<storeToOutputCell>(tsKind_));
+	cells_.push_back(make_unique<blankCell>());
+	cells_.push_back(make_unique<intraModalCell>(tsKind_));
+	cells_.push_back(make_unique<interModalCell>(tsKind_));
 }
 
 // ---------------------
 // Column thermal
 // ---------------------
-ColumnThermal::ColumnThermal(int nbLines) : Column(nbLines) 
+ColumnThermal::ColumnThermal() : Column() 
 {
 	tsKind_ = timeSeriesThermal;
 
-	cells_.push_back(new blankCell());
-	cells_.push_back(new readyMadeTSstatus(tsKind_));
-	cells_.push_back(new blankCell());
-	cells_.push_back(new generatedTSstatus(tsKind_));
-	cells_.push_back(new NumberTsCell(tsKind_));
-	cells_.push_back(new RefreshTsCell(tsKind_));
-	cells_.push_back(new RefreshSpanCell(tsKind_));
-	cells_.push_back(new SeasonalCorrelationCell(tsKind_));
-	cells_.push_back(new storeToInputCell(tsKind_));
-	cells_.push_back(new storeToOutputCell(tsKind_));
-	cells_.push_back(new blankCell());
-	cells_.push_back(new intraModalCell(tsKind_));
-	cells_.push_back(new interModalCell(tsKind_));
+	cells_.push_back(make_unique<blankCell>());
+	cells_.push_back(make_unique<readyMadeTSstatus>(tsKind_));
+	cells_.push_back(make_unique<blankCell>());
+	cells_.push_back(make_unique<generatedTSstatus>(tsKind_));
+	cells_.push_back(make_unique<NumberTsCell>(tsKind_));
+	cells_.push_back(make_unique<RefreshTsCell>(tsKind_));
+	cells_.push_back(make_unique<RefreshSpanCell>(tsKind_));
+	cells_.push_back(make_unique<SeasonalCorrelationCell>(tsKind_));
+	cells_.push_back(make_unique<storeToInputCell>(tsKind_));
+	cells_.push_back(make_unique<storeToOutputCell>(tsKind_));
+	cells_.push_back(make_unique<blankCell>());
+	cells_.push_back(make_unique<intraModalCell>(tsKind_));
+	cells_.push_back(make_unique<interModalCell>(tsKind_));
 }
 
 // ---------------------
 // Column hydro
 // ---------------------
-ColumnHydro::ColumnHydro(int nbLines) : Column(nbLines)
+ColumnHydro::ColumnHydro() : Column()
 {
 	tsKind_ = timeSeriesHydro;
 
-	cells_.push_back(new blankCell());
-	cells_.push_back(new readyMadeTSstatus(tsKind_));
-	cells_.push_back(new blankCell());
-	cells_.push_back(new generatedTSstatus(tsKind_));
-	cells_.push_back(new NumberTsCell(tsKind_));
-	cells_.push_back(new RefreshTsCell(tsKind_));
-	cells_.push_back(new RefreshSpanCell(tsKind_));
-	cells_.push_back(new SeasonalCorrelationCell(tsKind_));
-	cells_.push_back(new storeToInputCell(tsKind_));
-	cells_.push_back(new storeToOutputCell(tsKind_));
-	cells_.push_back(new blankCell());
-	cells_.push_back(new intraModalCell(tsKind_));
-	cells_.push_back(new interModalCell(tsKind_));
+	cells_.push_back(make_unique<blankCell>());
+	cells_.push_back(make_unique<readyMadeTSstatus>(tsKind_));
+	cells_.push_back(make_unique<blankCell>());
+	cells_.push_back(make_unique<generatedTSstatus>(tsKind_));
+	cells_.push_back(make_unique<NumberTsCell>(tsKind_));
+	cells_.push_back(make_unique<RefreshTsCell>(tsKind_));
+	cells_.push_back(make_unique<RefreshSpanCell>(tsKind_));
+	cells_.push_back(make_unique<SeasonalCorrelationCell>(tsKind_));
+	cells_.push_back(make_unique<storeToInputCell>(tsKind_));
+	cells_.push_back(make_unique<storeToOutputCell>(tsKind_));
+	cells_.push_back(make_unique<blankCell>());
+	cells_.push_back(make_unique<intraModalCell>(tsKind_));
+	cells_.push_back(make_unique<interModalCell>(tsKind_));
 }
 
 // ---------------------
 // Column wind
 // ---------------------
-ColumnWind::ColumnWind(int nbLines) : Column(nbLines)
+ColumnWind::ColumnWind() : Column()
 {
 	tsKind_ = timeSeriesWind;
 
-	cells_.push_back(new blankCell());
-	cells_.push_back(new readyMadeTSstatus(tsKind_));
-	cells_.push_back(new blankCell());
-	cells_.push_back(new generatedTSstatus(tsKind_));
-	cells_.push_back(new NumberTsCell(tsKind_));
-	cells_.push_back(new RefreshTsCell(tsKind_));
-	cells_.push_back(new RefreshSpanCell(tsKind_));
-	cells_.push_back(new SeasonalCorrelationCell(tsKind_));
-	cells_.push_back(new storeToInputCell(tsKind_));
-	cells_.push_back(new storeToOutputCell(tsKind_));
-	cells_.push_back(new blankCell());
-	cells_.push_back(new intraModalCell(tsKind_));
-	cells_.push_back(new interModalCell(tsKind_));
+	cells_.push_back(make_unique<blankCell>());
+	cells_.push_back(make_unique<readyMadeTSstatus>(tsKind_));
+	cells_.push_back(make_unique<blankCell>());
+	cells_.push_back(make_unique<generatedTSstatus>(tsKind_));
+	cells_.push_back(make_unique<NumberTsCell>(tsKind_));
+	cells_.push_back(make_unique<RefreshTsCell>(tsKind_));
+	cells_.push_back(make_unique<RefreshSpanCell>(tsKind_));
+	cells_.push_back(make_unique<SeasonalCorrelationCell>(tsKind_));
+	cells_.push_back(make_unique<storeToInputCell>(tsKind_));
+	cells_.push_back(make_unique<storeToOutputCell>(tsKind_));
+	cells_.push_back(make_unique<blankCell>());
+	cells_.push_back(make_unique<intraModalCell>(tsKind_));
+	cells_.push_back(make_unique<interModalCell>(tsKind_));
 }
 
 // ---------------------
 // Column Solar
 // ---------------------
-ColumnSolar::ColumnSolar(int nbLines) : Column(nbLines)
+ColumnSolar::ColumnSolar() : Column()
 {
 	tsKind_ = timeSeriesSolar;
 
-	cells_.push_back(new blankCell());
-	cells_.push_back(new readyMadeTSstatus(tsKind_));
-	cells_.push_back(new blankCell());
-	cells_.push_back(new generatedTSstatus(tsKind_));
-	cells_.push_back(new NumberTsCell(tsKind_));
-	cells_.push_back(new RefreshTsCell(tsKind_));
-	cells_.push_back(new RefreshSpanCell(tsKind_));
-	cells_.push_back(new SeasonalCorrelationCell(tsKind_));
-	cells_.push_back(new storeToInputCell(tsKind_));
-	cells_.push_back(new storeToOutputCell(tsKind_));
-	cells_.push_back(new blankCell());
-	cells_.push_back(new intraModalCell(tsKind_));
-	cells_.push_back(new interModalCell(tsKind_));
+	cells_.push_back(make_unique<blankCell>());
+	cells_.push_back(make_unique<readyMadeTSstatus>(tsKind_));
+	cells_.push_back(make_unique<blankCell>());
+	cells_.push_back(make_unique<generatedTSstatus>(tsKind_));
+	cells_.push_back(make_unique<NumberTsCell>(tsKind_));
+	cells_.push_back(make_unique<RefreshTsCell>(tsKind_));
+	cells_.push_back(make_unique<RefreshSpanCell>(tsKind_));
+	cells_.push_back(make_unique<SeasonalCorrelationCell>(tsKind_));
+	cells_.push_back(make_unique<storeToInputCell>(tsKind_));
+	cells_.push_back(make_unique<storeToOutputCell>(tsKind_));
+	cells_.push_back(make_unique<blankCell>());
+	cells_.push_back(make_unique<intraModalCell>(tsKind_));
+	cells_.push_back(make_unique<interModalCell>(tsKind_));
 }
 
 // -------------------------------
 // Column renewable clusters 
 // -------------------------------
-ColumnRenewableClusters::ColumnRenewableClusters(int nbLines) : Column(nbLines)
+ColumnRenewableClusters::ColumnRenewableClusters() : Column()
 {
 	tsKind_ = timeSeriesRenewable;
 
-	cells_.push_back(new blankCell());
-	cells_.push_back(new inactiveRenewableClusterCell(wxT("On")));
-	cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
-	cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
-	cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
-	cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
-	cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
-	cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
-	cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
-	cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
-	cells_.push_back(new blankCell());
-	cells_.push_back(new intraModalCell(tsKind_));
-	cells_.push_back(new interModalCell(tsKind_));
+	cells_.push_back(make_unique<blankCell>());
+	cells_.push_back(make_unique<inactiveRenewableClusterCell>(wxT("On")));
+	cells_.push_back(make_unique<inactiveRenewableClusterCell>(wxT("-")));
+	cells_.push_back(make_unique<inactiveRenewableClusterCell>(wxT("-")));
+	cells_.push_back(make_unique<inactiveRenewableClusterCell>(wxT("-")));
+	cells_.push_back(make_unique<inactiveRenewableClusterCell>(wxT("-")));
+	cells_.push_back(make_unique<inactiveRenewableClusterCell>(wxT("-")));
+	cells_.push_back(make_unique<inactiveRenewableClusterCell>(wxT("-")));
+	cells_.push_back(make_unique<inactiveRenewableClusterCell>(wxT("-")));
+	cells_.push_back(make_unique<inactiveRenewableClusterCell>(wxT("-")));
+	cells_.push_back(make_unique<blankCell>());
+	cells_.push_back(make_unique<intraModalCell>(tsKind_));
+	cells_.push_back(make_unique<interModalCell>(tsKind_));
 }
 
 

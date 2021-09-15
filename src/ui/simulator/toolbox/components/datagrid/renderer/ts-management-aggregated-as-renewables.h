@@ -14,7 +14,7 @@ class TSmanagementAggregatedAsRenewable final : public TSmanagement
 {
 public:
 	TSmanagementAggregatedAsRenewable();
-	~TSmanagementAggregatedAsRenewable();
+	~TSmanagementAggregatedAsRenewable() = default;
 
 	wxString columnCaption(int colIndx) const override;
 

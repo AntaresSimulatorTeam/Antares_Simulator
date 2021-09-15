@@ -40,11 +40,9 @@ namespace Renderer
 {
 TSmanagementRenewableCluster::TSmanagementRenewableCluster() : TSmanagement()
 {
-    columns_.push_back(new ColumnRenewableClusters(height()));
-}
+    columns_.push_back(make_unique<ColumnRenewableClusters>());
 
-TSmanagementRenewableCluster::~TSmanagementRenewableCluster()
-{
+    checkLineNumberInColumns();
 }
 
 wxString TSmanagementRenewableCluster::columnCaption(int colIndx) const

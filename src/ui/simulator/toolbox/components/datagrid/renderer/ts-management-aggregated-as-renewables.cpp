@@ -41,16 +41,16 @@ namespace Renderer
 
 TSmanagementAggregatedAsRenewable::TSmanagementAggregatedAsRenewable() : TSmanagement()
 {
-    columns_.push_back(new ColumnWind(height()));
-    columns_.push_back(new ColumnSolar(height()));
-}
+    columns_.push_back(make_unique<ColumnWind>());
+    columns_.push_back(make_unique<ColumnSolar>());
 
-TSmanagementAggregatedAsRenewable::~TSmanagementAggregatedAsRenewable()
-{
+    checkLineNumberInColumns();
 }
 
 wxString TSmanagementAggregatedAsRenewable::columnCaption(int colIndx) const
 {
+    // gp : columnCaption shoud collect captions from within the columns classes
+
     static const wxChar* const captions[] = { wxT("      Load      "),
                                              wxT("   Thermal   "),
                                              wxT("      Hydro      "),

@@ -41,7 +41,7 @@ class TSmanagementRenewableCluster final : public TSmanagement
 {
 public:
 	TSmanagementRenewableCluster();
-	~TSmanagementRenewableCluster();
+	~TSmanagementRenewableCluster() = default;
 
 	wxString columnCaption(int colIndx) const override;
 
