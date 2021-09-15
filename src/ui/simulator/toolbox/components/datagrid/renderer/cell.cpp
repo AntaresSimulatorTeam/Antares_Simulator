@@ -66,16 +66,17 @@ IRenderer::CellStyle blankCell::cellStyle() const { return IRenderer::cellStyleD
 // ===================
 // Status cell
 // ===================
-statusCell::statusCell(TimeSeries ts) : cell(ts) {}
-wxString statusCell::cellValue() const
+readyMadeTSstatus::readyMadeTSstatus(TimeSeries ts) : cell(ts) {}
+
+wxString readyMadeTSstatus::cellValue() const
 {
     return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_)) ? wxT("Off") : wxT("On");
 }
-double statusCell::cellNumericValue() const
+double readyMadeTSstatus::cellNumericValue() const
 { 
     return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_)) ? 0 : 1.;
 }
-bool statusCell::cellValue(const String& value)
+bool readyMadeTSstatus::cellValue(const String& value)
 { 
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
@@ -87,10 +88,41 @@ bool statusCell::cellValue(const String& value)
         study_->parameters.timeSeriesToGenerate |= tsKind_;
     return true;
 }
-IRenderer::CellStyle statusCell::cellStyle() const
+IRenderer::CellStyle readyMadeTSstatus::cellStyle() const
 { 
     // Status READY made TS
     return isTSgeneratorOn() ? IRenderer::cellStyleConstraintNoWeight : IRenderer::cellStyleConstraintWeight;
+}
+
+
+// ==========================
+// Generated TS status cell
+// ==========================
+generatedTSstatus::generatedTSstatus(TimeSeries ts) : cell(ts) {}
+
+wxString generatedTSstatus::cellValue() const
+{
+    return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_)) ? wxT("On") : wxT("Off");
+}
+double generatedTSstatus::cellNumericValue() const
+{
+    return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_)) ? 1. : 0.;
+}
+bool generatedTSstatus::cellValue(const String& value)
+{
+    double valueDouble;
+    if (not convertToDouble(value, valueDouble))
+        return false;
+
+    if (Math::Zero(valueDouble))
+        study_->parameters.timeSeriesToGenerate &= ~tsKind_;
+    else
+        study_->parameters.timeSeriesToGenerate |= tsKind_;
+    return true;
+}
+IRenderer::CellStyle generatedTSstatus::cellStyle() const
+{
+    return isTSgeneratorOn() ? IRenderer::cellStyleConstraintWeight : IRenderer::cellStyleConstraintNoWeight;
 }
 
 // ===================

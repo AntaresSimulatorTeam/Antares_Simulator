@@ -67,9 +67,9 @@ ColumnLoad::ColumnLoad(int nbLines) : Column(nbLines)
 	tsKind_ = timeSeriesLoad;
 
 	cells_.push_back(new blankCell());
-	cells_.push_back(new statusCell(tsKind_));
+	cells_.push_back(new readyMadeTSstatus(tsKind_));
 	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
+	cells_.push_back(new generatedTSstatus(tsKind_));
 	cells_.push_back(new NumberTsCell(tsKind_));
 	cells_.push_back(new RefreshTsCell(tsKind_));
 	cells_.push_back(new RefreshSpanCell(tsKind_));
@@ -89,9 +89,9 @@ ColumnThermal::ColumnThermal(int nbLines) : Column(nbLines)
 	tsKind_ = timeSeriesThermal;
 
 	cells_.push_back(new blankCell());
-	cells_.push_back(new statusCell(tsKind_));
+	cells_.push_back(new readyMadeTSstatus(tsKind_));
 	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
+	cells_.push_back(new generatedTSstatus(tsKind_));
 	cells_.push_back(new NumberTsCell(tsKind_));
 	cells_.push_back(new RefreshTsCell(tsKind_));
 	cells_.push_back(new RefreshSpanCell(tsKind_));
@@ -111,9 +111,9 @@ ColumnHydro::ColumnHydro(int nbLines) : Column(nbLines)
 	tsKind_ = timeSeriesHydro;
 
 	cells_.push_back(new blankCell());
-	cells_.push_back(new statusCell(tsKind_));
+	cells_.push_back(new readyMadeTSstatus(tsKind_));
 	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
+	cells_.push_back(new generatedTSstatus(tsKind_));
 	cells_.push_back(new NumberTsCell(tsKind_));
 	cells_.push_back(new RefreshTsCell(tsKind_));
 	cells_.push_back(new RefreshSpanCell(tsKind_));
@@ -133,9 +133,9 @@ ColumnWind::ColumnWind(int nbLines) : Column(nbLines)
 	tsKind_ = timeSeriesWind;
 
 	cells_.push_back(new blankCell());
-	cells_.push_back(new statusCell(tsKind_));
+	cells_.push_back(new readyMadeTSstatus(tsKind_));
 	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
+	cells_.push_back(new generatedTSstatus(tsKind_));
 	cells_.push_back(new NumberTsCell(tsKind_));
 	cells_.push_back(new RefreshTsCell(tsKind_));
 	cells_.push_back(new RefreshSpanCell(tsKind_));
@@ -155,9 +155,9 @@ ColumnSolar::ColumnSolar(int nbLines) : Column(nbLines)
 	tsKind_ = timeSeriesSolar;
 
 	cells_.push_back(new blankCell());
-	cells_.push_back(new statusCell(tsKind_));
+	cells_.push_back(new readyMadeTSstatus(tsKind_));
 	cells_.push_back(new blankCell());
-	cells_.push_back(new blankCell());
+	cells_.push_back(new generatedTSstatus(tsKind_));
 	cells_.push_back(new NumberTsCell(tsKind_));
 	cells_.push_back(new RefreshTsCell(tsKind_));
 	cells_.push_back(new RefreshSpanCell(tsKind_));

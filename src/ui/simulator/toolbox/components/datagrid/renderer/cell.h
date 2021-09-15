@@ -51,11 +51,22 @@ public:
 };
 
 
-class statusCell : public cell
+class readyMadeTSstatus : public cell
 {
 public:
-    statusCell(TimeSeries ts);
-    ~statusCell() = default;
+    readyMadeTSstatus(TimeSeries ts);
+    ~readyMadeTSstatus() = default;
+    wxString cellValue() const override;
+    double cellNumericValue() const override;
+    bool cellValue(const String& value) override;
+    IRenderer::CellStyle cellStyle() const override;
+};
+
+class generatedTSstatus : public cell
+{
+public:
+    generatedTSstatus(TimeSeries ts);
+    ~generatedTSstatus() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
     bool cellValue(const String& value) override;
@@ -161,7 +172,6 @@ public:
     bool cellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 };
-
 
 } // namespace Renderer
 } // namespace Datagrid
