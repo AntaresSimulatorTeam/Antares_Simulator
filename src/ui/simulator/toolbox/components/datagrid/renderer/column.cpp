@@ -54,103 +54,12 @@ int Column::getNumberOfLines() const
 	return cells_.size();
 }
 
-// gp : except ts kind, all column constructors are the same !
-// gp : factor classical columns in one
-
+// -------------------- -
+// Classic column
 // ---------------------
-// Column load
-// ---------------------
-ColumnLoad::ColumnLoad() : Column() 
+classicColumn::classicColumn(TimeSeries ts) : Column()
 {
-	tsKind_ = timeSeriesLoad;
-
-	cells_.push_back(make_unique<blankCell>());
-	cells_.push_back(make_unique<readyMadeTSstatus>(tsKind_));
-	cells_.push_back(make_unique<blankCell>());
-	cells_.push_back(make_unique<generatedTSstatus>(tsKind_));
-	cells_.push_back(make_unique<NumberTsCell>(tsKind_));
-	cells_.push_back(make_unique<RefreshTsCell>(tsKind_));
-	cells_.push_back(make_unique<RefreshSpanCell>(tsKind_));
-	cells_.push_back(make_unique<SeasonalCorrelationCell>(tsKind_));
-	cells_.push_back(make_unique<storeToInputCell>(tsKind_));
-	cells_.push_back(make_unique<storeToOutputCell>(tsKind_));
-	cells_.push_back(make_unique<blankCell>());
-	cells_.push_back(make_unique<intraModalCell>(tsKind_));
-	cells_.push_back(make_unique<interModalCell>(tsKind_));
-}
-
-// ---------------------
-// Column thermal
-// ---------------------
-ColumnThermal::ColumnThermal() : Column() 
-{
-	tsKind_ = timeSeriesThermal;
-
-	cells_.push_back(make_unique<blankCell>());
-	cells_.push_back(make_unique<readyMadeTSstatus>(tsKind_));
-	cells_.push_back(make_unique<blankCell>());
-	cells_.push_back(make_unique<generatedTSstatus>(tsKind_));
-	cells_.push_back(make_unique<NumberTsCell>(tsKind_));
-	cells_.push_back(make_unique<RefreshTsCell>(tsKind_));
-	cells_.push_back(make_unique<RefreshSpanCell>(tsKind_));
-	cells_.push_back(make_unique<SeasonalCorrelationCell>(tsKind_));
-	cells_.push_back(make_unique<storeToInputCell>(tsKind_));
-	cells_.push_back(make_unique<storeToOutputCell>(tsKind_));
-	cells_.push_back(make_unique<blankCell>());
-	cells_.push_back(make_unique<intraModalCell>(tsKind_));
-	cells_.push_back(make_unique<interModalCell>(tsKind_));
-}
-
-// ---------------------
-// Column hydro
-// ---------------------
-ColumnHydro::ColumnHydro() : Column()
-{
-	tsKind_ = timeSeriesHydro;
-
-	cells_.push_back(make_unique<blankCell>());
-	cells_.push_back(make_unique<readyMadeTSstatus>(tsKind_));
-	cells_.push_back(make_unique<blankCell>());
-	cells_.push_back(make_unique<generatedTSstatus>(tsKind_));
-	cells_.push_back(make_unique<NumberTsCell>(tsKind_));
-	cells_.push_back(make_unique<RefreshTsCell>(tsKind_));
-	cells_.push_back(make_unique<RefreshSpanCell>(tsKind_));
-	cells_.push_back(make_unique<SeasonalCorrelationCell>(tsKind_));
-	cells_.push_back(make_unique<storeToInputCell>(tsKind_));
-	cells_.push_back(make_unique<storeToOutputCell>(tsKind_));
-	cells_.push_back(make_unique<blankCell>());
-	cells_.push_back(make_unique<intraModalCell>(tsKind_));
-	cells_.push_back(make_unique<interModalCell>(tsKind_));
-}
-
-// ---------------------
-// Column wind
-// ---------------------
-ColumnWind::ColumnWind() : Column()
-{
-	tsKind_ = timeSeriesWind;
-
-	cells_.push_back(make_unique<blankCell>());
-	cells_.push_back(make_unique<readyMadeTSstatus>(tsKind_));
-	cells_.push_back(make_unique<blankCell>());
-	cells_.push_back(make_unique<generatedTSstatus>(tsKind_));
-	cells_.push_back(make_unique<NumberTsCell>(tsKind_));
-	cells_.push_back(make_unique<RefreshTsCell>(tsKind_));
-	cells_.push_back(make_unique<RefreshSpanCell>(tsKind_));
-	cells_.push_back(make_unique<SeasonalCorrelationCell>(tsKind_));
-	cells_.push_back(make_unique<storeToInputCell>(tsKind_));
-	cells_.push_back(make_unique<storeToOutputCell>(tsKind_));
-	cells_.push_back(make_unique<blankCell>());
-	cells_.push_back(make_unique<intraModalCell>(tsKind_));
-	cells_.push_back(make_unique<interModalCell>(tsKind_));
-}
-
-// ---------------------
-// Column Solar
-// ---------------------
-ColumnSolar::ColumnSolar() : Column()
-{
-	tsKind_ = timeSeriesSolar;
+	tsKind_ = ts;
 
 	cells_.push_back(make_unique<blankCell>());
 	cells_.push_back(make_unique<readyMadeTSstatus>(tsKind_));

@@ -41,9 +41,9 @@ namespace Renderer
 
 TSmanagement::TSmanagement() : pControl(nullptr)
 {
-    columns_.push_back(make_unique<ColumnLoad>());
-    columns_.push_back(make_unique<ColumnThermal>());
-    columns_.push_back(make_unique<ColumnHydro>());
+    columns_.push_back(make_unique<classicColumn>(timeSeriesLoad));
+    columns_.push_back(make_unique<classicColumn>(timeSeriesThermal));
+    columns_.push_back(make_unique<classicColumn>(timeSeriesHydro));
 }
 
 void TSmanagement::checkLineNumberInColumns()

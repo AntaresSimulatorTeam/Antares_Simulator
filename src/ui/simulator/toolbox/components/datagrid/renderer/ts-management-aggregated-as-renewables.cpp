@@ -41,8 +41,8 @@ namespace Renderer
 
 TSmanagementAggregatedAsRenewable::TSmanagementAggregatedAsRenewable() : TSmanagement()
 {
-    columns_.push_back(make_unique<ColumnWind>());
-    columns_.push_back(make_unique<ColumnSolar>());
+    columns_.push_back(make_unique<classicColumn>(timeSeriesWind));
+    columns_.push_back(make_unique<classicColumn>(timeSeriesSolar));
 
     checkLineNumberInColumns();
 }

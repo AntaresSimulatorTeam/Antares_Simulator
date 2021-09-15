@@ -66,53 +66,13 @@ protected:
 };
 
 // -------------------
-//  Load column
+//  Classic column
 // -------------------
-class ColumnLoad final : public Column
+class classicColumn final : public Column
 {
 public:
-	ColumnLoad();
-	~ColumnLoad() = default;
-};
-
-// -------------------
-//  Thermal column
-// -------------------
-class ColumnThermal final : public Column
-{
-public:
-	ColumnThermal();
-	~ColumnThermal() = default;
-};
-
-// -------------------
-//  Hydro column
-// -------------------
-class ColumnHydro final : public Column
-{
-public:
-	ColumnHydro();
-	~ColumnHydro() = default;
-};
-
-// -------------------
-//  Wind column
-// -------------------
-class ColumnWind final : public Column
-{
-public:
-	ColumnWind();
-	~ColumnWind() = default;
-};
-
-// -------------------
-//  Solar column
-// -------------------
-class ColumnSolar final : public Column
-{
-public:
-	ColumnSolar();
-	~ColumnSolar() = default;
+	classicColumn(TimeSeries ts);
+	~classicColumn() = default;
 };
 
 // -----------------------------
