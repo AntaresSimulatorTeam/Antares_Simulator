@@ -46,7 +46,7 @@ class cell;
 class Column
 {
 public:
-    Column() = default;
+    Column(Antares::Data::TimeSeries ts);
     ~Column();
     cell* getLine(int y) const;
     int getNumberOfLines() const;
