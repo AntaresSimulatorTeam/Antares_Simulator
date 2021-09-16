@@ -102,20 +102,20 @@ static bool GenerateDeratedMode(Data::Study& study)
 }
 
 
-class TimeSeriesCounter
+class areaTSNumbersListRetriever
 {
 public:
-    TimeSeriesCounter(Data::Study& study) : study_(study) {}
+    areaTSNumbersListRetriever(Data::Study& study) : study_(study) {}
     virtual std::vector<uint> getAreaTimeSeriesNumber(const Data::Area& area) = 0;
     virtual uint getGeneratedTimeSeriesNumber() = 0;
 protected:
     Data::Study& study_;
 };
 
-class loadTimeSeriesCounter : public TimeSeriesCounter
+class areaLoadTSNumbersListRetriever : public areaTSNumbersListRetriever
 {
 public:
-    loadTimeSeriesCounter(Data::Study& study) : TimeSeriesCounter(study) {}
+    areaLoadTSNumbersListRetriever(Data::Study& study) : areaTSNumbersListRetriever(study) {}
     std::vector<uint> getAreaTimeSeriesNumber(const Data::Area& area)
     {
         std::vector<uint> to_return = { area.load.series->series.width };
@@ -124,10 +124,10 @@ public:
     uint getGeneratedTimeSeriesNumber() { return study_.parameters.nbTimeSeriesLoad; }
 };
 
-class hydroTimeSeriesCounter : public TimeSeriesCounter
+class areaHydroTSNumbersListRetriever : public areaTSNumbersListRetriever
 {
 public:
-    hydroTimeSeriesCounter(Data::Study& study) : TimeSeriesCounter(study) {}
+    areaHydroTSNumbersListRetriever(Data::Study& study) : areaTSNumbersListRetriever(study) {}
     std::vector<uint> getAreaTimeSeriesNumber(const Data::Area& area)
     {
         std::vector<uint> to_return = { area.hydro.series->count };
@@ -136,10 +136,10 @@ public:
     uint getGeneratedTimeSeriesNumber() { return study_.parameters.nbTimeSeriesHydro; }
 };
 
-class windTimeSeriesCounter : public TimeSeriesCounter
+class areaWindTSNumbersListRetriever : public areaTSNumbersListRetriever
 {
 public:
-    windTimeSeriesCounter(Data::Study& study) : TimeSeriesCounter(study) {}
+    areaWindTSNumbersListRetriever(Data::Study& study) : areaTSNumbersListRetriever(study) {}
     std::vector<uint> getAreaTimeSeriesNumber(const Data::Area& area)
     {
         std::vector<uint> to_return = { area.wind.series->series.width };
@@ -148,10 +148,10 @@ public:
     uint getGeneratedTimeSeriesNumber() { return study_.parameters.nbTimeSeriesWind; }
 };
 
-class solarTimeSeriesCounter : public TimeSeriesCounter
+class areaSolarTSNumbersListRetriever : public areaTSNumbersListRetriever
 {
 public:
-    solarTimeSeriesCounter(Data::Study& study) : TimeSeriesCounter(study) {}
+    areaSolarTSNumbersListRetriever(Data::Study& study) : areaTSNumbersListRetriever(study) {}
     std::vector<uint> getAreaTimeSeriesNumber(const Data::Area& area)
     {
         std::vector<uint> to_return = { area.solar.series->series.width };
@@ -160,10 +160,10 @@ public:
     uint getGeneratedTimeSeriesNumber() { return study_.parameters.nbTimeSeriesSolar; }
 };
 
-class thermalTimeSeriesCounter : public TimeSeriesCounter
+class areaThermalTSNumbersListRetriever : public areaTSNumbersListRetriever
 {
 public:
-    thermalTimeSeriesCounter(Data::Study& study) : TimeSeriesCounter(study) {}
+    areaThermalTSNumbersListRetriever(Data::Study& study) : areaTSNumbersListRetriever(study) {}
     std::vector<uint> getAreaTimeSeriesNumber(const Data::Area& area)
     {
         std::vector<uint> to_return;
@@ -178,10 +178,10 @@ public:
     uint getGeneratedTimeSeriesNumber() { return study_.parameters.nbTimeSeriesThermal; }
 };
 
-class renewableTimeSeriesCounter : public TimeSeriesCounter
+class areaRenewableTSNumbersListRetriever : public areaTSNumbersListRetriever
 {
 public:
-    renewableTimeSeriesCounter(Data::Study& study) : TimeSeriesCounter(study) {}
+    areaRenewableTSNumbersListRetriever(Data::Study& study) : areaTSNumbersListRetriever(study) {}
     std::vector<uint> getAreaTimeSeriesNumber(const Data::Area& area)
     {
         std::vector<uint> to_return;
@@ -199,7 +199,7 @@ public:
 class InterModalConsistencyChecker
 {
 public:
-    InterModalConsistencyChecker(const TimeSeries ts, const bool* isTSintramodal, const bool* isTSgenerated, TimeSeriesCounter* tsCounter, Data::Study & study)
+    InterModalConsistencyChecker(const TimeSeries ts, const bool* isTSintramodal, const bool* isTSgenerated, areaTSNumbersListRetriever* tsCounter, Data::Study & study)
         : tsCounter_(tsCounter), study_(study), nbTimeseries_(0)
     {
         int indexTS = ts_to_tsIndex.at(ts);
@@ -217,7 +217,7 @@ private:
 private:
     bool isTSintramodal_;
     bool isTSgenerated_;
-    TimeSeriesCounter* tsCounter_;
+    areaTSNumbersListRetriever* tsCounter_;
     Data::Study& study_;
     uint nbTimeseries_;
     string tsTitle_;
@@ -263,48 +263,48 @@ bool checkIntraModalConsistency(uint* nbTimeseriesByMode,
 {
     // Load ...
     int indexTS = TS_INDEX(Data::timeSeriesLoad);
-    loadTimeSeriesCounter loadTScounter(study);
-    InterModalConsistencyChecker loadIntraModalchecker(timeSeriesLoad, isTSintramodal, isTSgenerated, &loadTScounter, study);
+    areaLoadTSNumbersListRetriever loadTSretriever(study);
+    InterModalConsistencyChecker loadIntraModalchecker(timeSeriesLoad, isTSintramodal, isTSgenerated, &loadTSretriever, study);
     if (not loadIntraModalchecker.check())
         return false;
     nbTimeseriesByMode[indexTS] = loadIntraModalchecker.getTimeSeriesNumber();
 
     // Hydro ...
     indexTS = TS_INDEX(Data::timeSeriesHydro);
-    hydroTimeSeriesCounter hydroTScounter(study);
-    InterModalConsistencyChecker hydroIntraModalchecker(timeSeriesHydro, isTSintramodal, isTSgenerated, &hydroTScounter, study);
+    areaHydroTSNumbersListRetriever hydroTSretriever(study);
+    InterModalConsistencyChecker hydroIntraModalchecker(timeSeriesHydro, isTSintramodal, isTSgenerated, &hydroTSretriever, study);
     if (not hydroIntraModalchecker.check())
         return false;
     nbTimeseriesByMode[indexTS] = hydroIntraModalchecker.getTimeSeriesNumber();
 
     // Wind ...
     indexTS = TS_INDEX(Data::timeSeriesWind);
-    windTimeSeriesCounter windTScounter(study);
-    InterModalConsistencyChecker windIntraModalchecker(timeSeriesWind, isTSintramodal, isTSgenerated, &windTScounter, study);
+    areaWindTSNumbersListRetriever windTSretriever(study);
+    InterModalConsistencyChecker windIntraModalchecker(timeSeriesWind, isTSintramodal, isTSgenerated, &windTSretriever, study);
     if (not windIntraModalchecker.check())
         return false;
     nbTimeseriesByMode[indexTS] = windIntraModalchecker.getTimeSeriesNumber();
 
     // Solar ...
     indexTS = TS_INDEX(Data::timeSeriesSolar);
-    solarTimeSeriesCounter solarTScounter(study);
-    InterModalConsistencyChecker solarIntraModalchecker(timeSeriesSolar, isTSintramodal, isTSgenerated, &solarTScounter, study);
+    areaSolarTSNumbersListRetriever solarTSretriever(study);
+    InterModalConsistencyChecker solarIntraModalchecker(timeSeriesSolar, isTSintramodal, isTSgenerated, &solarTSretriever, study);
     if (not solarIntraModalchecker.check())
         return false;
     nbTimeseriesByMode[indexTS] = solarIntraModalchecker.getTimeSeriesNumber();
 
     // Thermal ...
     indexTS = TS_INDEX(Data::timeSeriesThermal);
-    thermalTimeSeriesCounter thermalTScounter(study);
-    InterModalConsistencyChecker thermalIntraModalchecker(timeSeriesThermal, isTSintramodal, isTSgenerated, &thermalTScounter, study);
+    areaThermalTSNumbersListRetriever thermalTSretriever(study);
+    InterModalConsistencyChecker thermalIntraModalchecker(timeSeriesThermal, isTSintramodal, isTSgenerated, &thermalTSretriever, study);
     if (not thermalIntraModalchecker.check())
         return false;
     nbTimeseriesByMode[indexTS] = thermalIntraModalchecker.getTimeSeriesNumber();
 
     // Renewable clusters ...
     indexTS = TS_INDEX(Data::timeSeriesRenewable);
-    renewableTimeSeriesCounter renewableTScounter(study);
-    InterModalConsistencyChecker renewableIntraModalchecker(timeSeriesRenewable, isTSintramodal, isTSgenerated, &renewableTScounter, study);
+    areaRenewableTSNumbersListRetriever renewableTSretriever(study);
+    InterModalConsistencyChecker renewableIntraModalchecker(timeSeriesRenewable, isTSintramodal, isTSgenerated, &renewableTSretriever, study);
     if (not renewableIntraModalchecker.check())
         return false;
     nbTimeseriesByMode[indexTS] = renewableIntraModalchecker.getTimeSeriesNumber();
@@ -451,6 +451,9 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
 
         // Draw TS numbers for non intra-modal TS
         study.areas.each([&](Data::Area& area) {
+
+            // not isTSintramodal || isTSgenerated
+
             // -------------
             // Load ...
             // -------------
