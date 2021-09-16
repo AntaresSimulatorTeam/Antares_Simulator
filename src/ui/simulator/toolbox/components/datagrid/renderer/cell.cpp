@@ -13,7 +13,7 @@ namespace Datagrid
 namespace Renderer
 {
 
-bool convertToDouble(const String& value, double& valueDouble)
+static bool convertToDouble(const String& value, double& valueDouble)
 {
     bool conversionValid = value.to(valueDouble);
     if (not conversionValid)
