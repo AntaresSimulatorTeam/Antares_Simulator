@@ -28,6 +28,7 @@
 #include <algorithm>
 #include <vector>
 #include <map>
+#include <string>
 
 #include <yuni/yuni.h>
 #include "timeseries-numbers.h"
@@ -49,6 +50,15 @@ const map<TimeSeries, int> ts_to_tsIndex = {
     {timeSeriesSolar, 4},
     {timeSeriesRenewable, 5},
     {timeSeriesCount, 6}
+};
+
+const map<TimeSeries, string> ts_to_tsTitle = {
+    {timeSeriesLoad, "load"},
+    {timeSeriesHydro, "hydro"},
+    {timeSeriesWind, "wind"},
+    {timeSeriesThermal, "thermal"},
+    {timeSeriesSolar, "solar"},
+    {timeSeriesRenewable, "renewable clusters"}
 };
 
 #define BUILD_LOG_ENTRY(T, TEXT)     \
@@ -195,13 +205,14 @@ public:
         int indexTS = ts_to_tsIndex.at(ts);
         isTSintramodal_ = isTSintramodal[indexTS];
         isTSgenerated_ = isTSgenerated[indexTS];
+        tsTitle_ = ts_to_tsTitle.at(ts);
     }
     ~InterModalConsistencyChecker() = default;
-
     bool check();
     uint getTimeSeriesNumber() { return nbTimeseries_; }
+
 private:
-    bool checkIntraModalConsistency();
+    bool checkTSconsistency();
 
 private:
     bool isTSintramodal_;
@@ -209,14 +220,14 @@ private:
     TimeSeriesCounter* tsCounter_;
     Data::Study& study_;
     uint nbTimeseries_;
+    string tsTitle_;
 };
 
 bool InterModalConsistencyChecker::check()
 {
-
     if (isTSintramodal_ && not isTSgenerated_)
     {
-        if (not checkIntraModalConsistency())
+        if (not checkTSconsistency())
             return false;
     }
     else
@@ -225,9 +236,9 @@ bool InterModalConsistencyChecker::check()
     return true;
 }
 
-bool InterModalConsistencyChecker::checkIntraModalConsistency()
+bool InterModalConsistencyChecker::checkTSconsistency()
 {
-    logs.info() << "Checking intra-modal correlation: Load";
+    logs.info() << "Checking intra-modal correlation: " << tsTitle_;
     std::vector<uint> listNumberTS;
     for (auto i = study_.areas.begin(); i != study_.areas.end(); ++i)
     {
@@ -238,7 +249,7 @@ bool InterModalConsistencyChecker::checkIntraModalConsistency()
 
     if (std::adjacent_find(listNumberTS.begin(), listNumberTS.end(), std::not_equal_to<uint>()) != listNumberTS.end())
     {
-        logs.error() << "Intra-modal correlation: load numbers of time-series are not equal for all areas";
+        logs.error() << "Intra-modal correlation: " << tsTitle_ << "'s numbers of time-series are not equal for all areas";
         return false;
     }
     nbTimeseries_ = listNumberTS[0];
@@ -258,47 +269,42 @@ bool checkIntraModalConsistency(uint* nbTimeseriesByMode,
         return false;
     nbTimeseriesByMode[indexTS] = loadIntraModalchecker.getTimeSeriesNumber();
 
-
     // Hydro ...
     indexTS = TS_INDEX(Data::timeSeriesHydro);
     hydroTimeSeriesCounter hydroTScounter(study);
-    InterModalConsistencyChecker hydroIntraModalchecker(timeSeriesLoad, isTSintramodal, isTSgenerated, &hydroTScounter, study);
+    InterModalConsistencyChecker hydroIntraModalchecker(timeSeriesHydro, isTSintramodal, isTSgenerated, &hydroTScounter, study);
     if (not hydroIntraModalchecker.check())
         return false;
     nbTimeseriesByMode[indexTS] = hydroIntraModalchecker.getTimeSeriesNumber();
 
-
     // Wind ...
     indexTS = TS_INDEX(Data::timeSeriesWind);
     windTimeSeriesCounter windTScounter(study);
-    InterModalConsistencyChecker windIntraModalchecker(timeSeriesLoad, isTSintramodal, isTSgenerated, &windTScounter, study);
+    InterModalConsistencyChecker windIntraModalchecker(timeSeriesWind, isTSintramodal, isTSgenerated, &windTScounter, study);
     if (not windIntraModalchecker.check())
         return false;
     nbTimeseriesByMode[indexTS] = windIntraModalchecker.getTimeSeriesNumber();
 
-
     // Solar ...
     indexTS = TS_INDEX(Data::timeSeriesSolar);
     solarTimeSeriesCounter solarTScounter(study);
-    InterModalConsistencyChecker solarIntraModalchecker(timeSeriesLoad, isTSintramodal, isTSgenerated, &solarTScounter, study);
+    InterModalConsistencyChecker solarIntraModalchecker(timeSeriesSolar, isTSintramodal, isTSgenerated, &solarTScounter, study);
     if (not solarIntraModalchecker.check())
         return false;
     nbTimeseriesByMode[indexTS] = solarIntraModalchecker.getTimeSeriesNumber();
 
-
     // Thermal ...
     indexTS = TS_INDEX(Data::timeSeriesThermal);
     thermalTimeSeriesCounter thermalTScounter(study);
-    InterModalConsistencyChecker thermalIntraModalchecker(timeSeriesLoad, isTSintramodal, isTSgenerated, &thermalTScounter, study);
+    InterModalConsistencyChecker thermalIntraModalchecker(timeSeriesThermal, isTSintramodal, isTSgenerated, &thermalTScounter, study);
     if (not thermalIntraModalchecker.check())
         return false;
     nbTimeseriesByMode[indexTS] = thermalIntraModalchecker.getTimeSeriesNumber();
 
-
     // Renewable clusters ...
     indexTS = TS_INDEX(Data::timeSeriesRenewable);
     renewableTimeSeriesCounter renewableTScounter(study);
-    InterModalConsistencyChecker renewableIntraModalchecker(timeSeriesLoad, isTSintramodal, isTSgenerated, &renewableTScounter, study);
+    InterModalConsistencyChecker renewableIntraModalchecker(timeSeriesRenewable, isTSintramodal, isTSgenerated, &renewableTScounter, study);
     if (not renewableIntraModalchecker.check())
         return false;
     nbTimeseriesByMode[indexTS] = renewableIntraModalchecker.getTimeSeriesNumber();
