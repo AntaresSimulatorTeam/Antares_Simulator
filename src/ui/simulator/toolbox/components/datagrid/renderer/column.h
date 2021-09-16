@@ -47,7 +47,7 @@ class Column
 {
 public:
     Column() = default;
-    virtual ~Column() = default;
+    ~Column();
     cell* getLine(int y) const;
     int getNumberOfLines() const;
 
@@ -63,7 +63,6 @@ class classicColumn final : public Column
 {
 public:
     classicColumn(Antares::Data::TimeSeries ts);
-    virtual ~classicColumn();
 };
 
 // -----------------------------
@@ -73,7 +72,6 @@ class ColumnRenewableClusters final : public Column
 {
 public:
     ColumnRenewableClusters();
-    virtual ~ColumnRenewableClusters();
 };
 
 } // namespace Renderer

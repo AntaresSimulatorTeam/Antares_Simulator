@@ -49,6 +49,11 @@ int Column::getNumberOfLines() const
     return cells_.size();
 }
 
+Column::~Column()
+{
+    for (auto& c : cells_)
+        delete c;
+}
 // -------------------- -
 // Classic column
 // ---------------------
@@ -70,13 +75,6 @@ classicColumn::classicColumn(TimeSeries ts)
     cells_.push_back(new intraModalCell(tsKind_));
     cells_.push_back(new interModalCell(tsKind_));
 }
-
-classicColumn::~classicColumn()
-{
-    for (auto& c : cells_)
-        delete c;
-}
-
 // -------------------------------
 // Column renewable clusters
 // -------------------------------
@@ -98,13 +96,6 @@ ColumnRenewableClusters::ColumnRenewableClusters()
     cells_.push_back(new intraModalCell(tsKind_));
     cells_.push_back(new interModalCell(tsKind_));
 }
-
-ColumnRenewableClusters::~ColumnRenewableClusters()
-{
-    for (auto& c : cells_)
-        delete c;
-}
-
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
