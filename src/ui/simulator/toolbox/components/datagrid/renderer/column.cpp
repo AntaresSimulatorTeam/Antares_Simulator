@@ -39,7 +39,9 @@ namespace Renderer
 // -------------------
 // Base column class
 // -------------------
-Column::Column(Antares::Data::TimeSeries ts) : tsKind_(ts) {}
+Column::Column(Antares::Data::TimeSeries ts) : tsKind_(ts)
+{
+}
 
 cell* Column::getLine(int y) const
 {
@@ -61,38 +63,38 @@ Column::~Column()
 // ---------------------
 classicColumn::classicColumn(TimeSeries ts) : Column(ts)
 {
-    cells_.push_back(new blankCell());
-    cells_.push_back(new readyMadeTSstatus(tsKind_));
-    cells_.push_back(new blankCell());
-    cells_.push_back(new generatedTSstatus(tsKind_));
-    cells_.push_back(new NumberTsCell(tsKind_));
-    cells_.push_back(new RefreshTsCell(tsKind_));
-    cells_.push_back(new RefreshSpanCell(tsKind_));
-    cells_.push_back(new SeasonalCorrelationCell(tsKind_));
-    cells_.push_back(new storeToInputCell(tsKind_));
-    cells_.push_back(new storeToOutputCell(tsKind_));
-    cells_.push_back(new blankCell());
-    cells_.push_back(new intraModalCell(tsKind_));
-    cells_.push_back(new interModalCell(tsKind_));
+    cells_ = std::vector<cell*>{{new blankCell(),
+                                 new readyMadeTSstatus(tsKind_),
+                                 new blankCell(),
+                                 new generatedTSstatus(tsKind_),
+                                 new NumberTsCell(tsKind_),
+                                 new RefreshTsCell(tsKind_),
+                                 new RefreshSpanCell(tsKind_),
+                                 new SeasonalCorrelationCell(tsKind_),
+                                 new storeToInputCell(tsKind_),
+                                 new storeToOutputCell(tsKind_),
+                                 new blankCell(),
+                                 new intraModalCell(tsKind_),
+                                 new interModalCell(tsKind_)}};
 }
 // -------------------------------
 // Column renewable clusters
 // -------------------------------
-  ColumnRenewableClusters::ColumnRenewableClusters() : Column(timeSeriesRenewable)
+ColumnRenewableClusters::ColumnRenewableClusters() : Column(timeSeriesRenewable)
 {
-    cells_.push_back(new blankCell());
-    cells_.push_back(new inactiveRenewableClusterCell(wxT("On")));
-    cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
-    cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
-    cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
-    cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
-    cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
-    cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
-    cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
-    cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
-    cells_.push_back(new blankCell());
-    cells_.push_back(new intraModalCell(tsKind_));
-    cells_.push_back(new interModalCell(tsKind_));
+    cells_ = std::vector<cell*>{{new blankCell(),
+                                 new inactiveRenewableClusterCell(wxT("On")),
+                                 new inactiveRenewableClusterCell(wxT("-")),
+                                 new inactiveRenewableClusterCell(wxT("-")),
+                                 new inactiveRenewableClusterCell(wxT("-")),
+                                 new inactiveRenewableClusterCell(wxT("-")),
+                                 new inactiveRenewableClusterCell(wxT("-")),
+                                 new inactiveRenewableClusterCell(wxT("-")),
+                                 new inactiveRenewableClusterCell(wxT("-")),
+                                 new inactiveRenewableClusterCell(wxT("-")),
+                                 new blankCell(),
+                                 new intraModalCell(tsKind_),
+                                 new interModalCell(tsKind_)}};
 }
 } // namespace Renderer
 } // namespace Datagrid
