@@ -29,7 +29,6 @@
 
 using namespace Yuni;
 
-
 namespace Antares
 {
 namespace Component
@@ -40,7 +39,7 @@ namespace Renderer
 {
 TSmanagementRenewableCluster::TSmanagementRenewableCluster() : TSmanagement()
 {
-    columns_.push_back(make_unique<ColumnRenewableClusters>());
+    columns_.push_back(new ColumnRenewableClusters());
 
     checkLineNumberInColumns();
 }
@@ -55,8 +54,6 @@ wxString TSmanagementRenewableCluster::columnCaption(int colIndx) const
         return captions[colIndx];
     return wxEmptyString;
 }
-
-
 
 } // namespace Renderer
 } // namespace Datagrid

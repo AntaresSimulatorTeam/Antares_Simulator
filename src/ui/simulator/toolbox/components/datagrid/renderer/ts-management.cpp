@@ -25,6 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "cell.h"
 #include "ts-management.h"
 #include <wx/panel.h>
 
@@ -38,23 +39,25 @@ namespace Datagrid
 {
 namespace Renderer
 {
+using namespace Antares::Data;
 
 TSmanagement::TSmanagement() : pControl(nullptr)
 {
-    columns_.push_back(make_unique<classicColumn>(timeSeriesLoad));
-    columns_.push_back(make_unique<classicColumn>(timeSeriesThermal));
-    columns_.push_back(make_unique<classicColumn>(timeSeriesHydro));
+    columns_.push_back(new classicColumn(timeSeriesLoad));
+    columns_.push_back(new classicColumn(timeSeriesThermal));
+    columns_.push_back(new classicColumn(timeSeriesHydro));
 }
 
 void TSmanagement::checkLineNumberInColumns()
 {
-    vector<unique_ptr<Column>>::iterator it;
-    for (it = columns_.begin(); it != columns_.end(); it++)
+    for (auto it = columns_.begin(); it != columns_.end(); it++)
         assert((*it)->getNumberOfLines() == MAX_NB_OF_LINES);
 }
 
 TSmanagement::~TSmanagement()
 {
+    for (auto& c : columns_)
+        delete c;
     destroyBoundEvents();
 }
 

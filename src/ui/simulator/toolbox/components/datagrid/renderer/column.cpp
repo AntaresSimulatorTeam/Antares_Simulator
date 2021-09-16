@@ -28,7 +28,6 @@
 #include "column.h"
 #include "cell.h"
 
-
 namespace Antares
 {
 namespace Component
@@ -37,67 +36,74 @@ namespace Datagrid
 {
 namespace Renderer
 {
-
 // -------------------
 // Base column class
 // -------------------
-Column::Column()
-{}
-
 cell* Column::getLine(int y) const
 {
-	return cells_[y].get();
+    return cells_[y];
 }
 
 int Column::getNumberOfLines() const
 {
-	return cells_.size();
+    return cells_.size();
 }
 
 // -------------------- -
 // Classic column
 // ---------------------
-classicColumn::classicColumn(TimeSeries ts) : Column()
+classicColumn::classicColumn(TimeSeries ts)
 {
-	tsKind_ = ts;
+    tsKind_ = ts;
 
-	cells_.push_back(make_unique<blankCell>());
-	cells_.push_back(make_unique<readyMadeTSstatus>(tsKind_));
-	cells_.push_back(make_unique<blankCell>());
-	cells_.push_back(make_unique<generatedTSstatus>(tsKind_));
-	cells_.push_back(make_unique<NumberTsCell>(tsKind_));
-	cells_.push_back(make_unique<RefreshTsCell>(tsKind_));
-	cells_.push_back(make_unique<RefreshSpanCell>(tsKind_));
-	cells_.push_back(make_unique<SeasonalCorrelationCell>(tsKind_));
-	cells_.push_back(make_unique<storeToInputCell>(tsKind_));
-	cells_.push_back(make_unique<storeToOutputCell>(tsKind_));
-	cells_.push_back(make_unique<blankCell>());
-	cells_.push_back(make_unique<intraModalCell>(tsKind_));
-	cells_.push_back(make_unique<interModalCell>(tsKind_));
+    cells_.push_back(new blankCell());
+    cells_.push_back(new readyMadeTSstatus(tsKind_));
+    cells_.push_back(new blankCell());
+    cells_.push_back(new generatedTSstatus(tsKind_));
+    cells_.push_back(new NumberTsCell(tsKind_));
+    cells_.push_back(new RefreshTsCell(tsKind_));
+    cells_.push_back(new RefreshSpanCell(tsKind_));
+    cells_.push_back(new SeasonalCorrelationCell(tsKind_));
+    cells_.push_back(new storeToInputCell(tsKind_));
+    cells_.push_back(new storeToOutputCell(tsKind_));
+    cells_.push_back(new blankCell());
+    cells_.push_back(new intraModalCell(tsKind_));
+    cells_.push_back(new interModalCell(tsKind_));
+}
+
+classicColumn::~classicColumn()
+{
+    for (auto& c : cells_)
+        delete c;
 }
 
 // -------------------------------
-// Column renewable clusters 
+// Column renewable clusters
 // -------------------------------
-ColumnRenewableClusters::ColumnRenewableClusters() : Column()
+ColumnRenewableClusters::ColumnRenewableClusters()
 {
-	tsKind_ = timeSeriesRenewable;
+    tsKind_ = timeSeriesRenewable;
 
-	cells_.push_back(make_unique<blankCell>());
-	cells_.push_back(make_unique<inactiveRenewableClusterCell>(wxT("On")));
-	cells_.push_back(make_unique<inactiveRenewableClusterCell>(wxT("-")));
-	cells_.push_back(make_unique<inactiveRenewableClusterCell>(wxT("-")));
-	cells_.push_back(make_unique<inactiveRenewableClusterCell>(wxT("-")));
-	cells_.push_back(make_unique<inactiveRenewableClusterCell>(wxT("-")));
-	cells_.push_back(make_unique<inactiveRenewableClusterCell>(wxT("-")));
-	cells_.push_back(make_unique<inactiveRenewableClusterCell>(wxT("-")));
-	cells_.push_back(make_unique<inactiveRenewableClusterCell>(wxT("-")));
-	cells_.push_back(make_unique<inactiveRenewableClusterCell>(wxT("-")));
-	cells_.push_back(make_unique<blankCell>());
-	cells_.push_back(make_unique<intraModalCell>(tsKind_));
-	cells_.push_back(make_unique<interModalCell>(tsKind_));
+    cells_.push_back(new blankCell());
+    cells_.push_back(new inactiveRenewableClusterCell(wxT("On")));
+    cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
+    cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
+    cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
+    cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
+    cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
+    cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
+    cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
+    cells_.push_back(new inactiveRenewableClusterCell(wxT("-")));
+    cells_.push_back(new blankCell());
+    cells_.push_back(new intraModalCell(tsKind_));
+    cells_.push_back(new interModalCell(tsKind_));
 }
 
+ColumnRenewableClusters::~ColumnRenewableClusters()
+{
+    for (auto& c : cells_)
+        delete c;
+}
 
 } // namespace Renderer
 } // namespace Datagrid

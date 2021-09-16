@@ -28,8 +28,6 @@
 #pragma once
 
 #include <vector>
-#include <memory>
-
 #include "../renderer.h"
 #include "column.h"
 #include "../../../../application/study.h"
@@ -93,7 +91,7 @@ private:
 
 protected:
     const int MAX_NB_OF_LINES = 13;
-    vector<unique_ptr<Column>> columns_;
+    vector<Column*> columns_;
     wxWindow* pControl;
 
 }; // class TSmanagement

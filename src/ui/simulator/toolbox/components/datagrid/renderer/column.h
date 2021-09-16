@@ -28,12 +28,7 @@
 #pragma once
 
 #include <vector>
-#include <memory>
-
-#include "cell.h"
-
-
-using namespace std;
+#include <antares/study/fwd.h>
 
 namespace Antares
 {
@@ -43,26 +38,22 @@ namespace Datagrid
 {
 namespace Renderer
 {
-
-using namespace Antares::Data;
+class cell;
 
 // -------------------
 //  Base column class
 // -------------------
 class Column
 {
-protected:
-	using study_ptr = Data::Study::Ptr;
-
 public:
-	Column();
-	virtual ~Column() = default;
-	cell* getLine(int y) const;
-	int getNumberOfLines() const;
+    Column() = default;
+    virtual ~Column() = default;
+    cell* getLine(int y) const;
+    int getNumberOfLines() const;
 
 protected:
-	vector<unique_ptr<cell>> cells_;
-	TimeSeries tsKind_;
+    std::vector<cell*> cells_;
+    Antares::Data::TimeSeries tsKind_;
 };
 
 // -------------------
@@ -71,8 +62,8 @@ protected:
 class classicColumn final : public Column
 {
 public:
-	classicColumn(TimeSeries ts);
-	~classicColumn() = default;
+    classicColumn(Antares::Data::TimeSeries ts);
+    virtual ~classicColumn();
 };
 
 // -----------------------------
@@ -81,8 +72,8 @@ public:
 class ColumnRenewableClusters final : public Column
 {
 public:
-	ColumnRenewableClusters();
-	~ColumnRenewableClusters() = default;
+    ColumnRenewableClusters();
+    virtual ~ColumnRenewableClusters();
 };
 
 } // namespace Renderer
