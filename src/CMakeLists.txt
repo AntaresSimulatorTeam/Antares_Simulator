@@ -150,13 +150,12 @@ else()
 endif()
 
 
-include("cmake/CodeCoverage.cmake")
 set(CODE_COVERAGE FALSE CACHE BOOL "Enable code coverage")
 if (CODE_COVERAGE)
 	# if code-coverage is ON, force tests build
 	set(BUILD_TESTING ON)
 
-	include(CodeCoverage)
+	include("cmake/CodeCoverage.cmake")
 	code_coverage(NAME code-coverage
 			OUTPUT_DIR coverage
 			EXCLUDE_DIRS tests)
