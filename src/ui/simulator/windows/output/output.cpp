@@ -116,6 +116,7 @@ Component::Component(wxWindow* parent, bool parentIsStandaloneWindow) :
  pLabelItemName(nullptr),
  pBtnValues(nullptr),
  pBtnDetails(nullptr),
+ pBtnDetailsRes(nullptr),
  pBtnID(nullptr),
  pBtnHourly(nullptr),
  pBtnDaily(nullptr),
@@ -348,31 +349,21 @@ void Component::createAllControlsIfNeeded()
                   = Resources::StaticBitmapLoadFromFile(grp, wxID_ANY, "images/16x16/default.png");
                 grp->leftSizer->Add(sbmp, 0, wxALIGN_CENTER);
 
-                btn = new Button(grp->subpanel,
-                                 wxT("General values"),
-                                 nullptr,
-                                 this,
-                                 &Component::onSelectDataLevel);
-                btn->pushed(true);
-                btn->pushedColor(grp);
-                btn->userdata(btn);
-                pBtnValues = btn;
-                hz->Add(btn, 0, wxALL | wxEXPAND);
-                btn = new Button(grp->subpanel,
-                                 wxT("Thermal plants"),
-                                 nullptr,
-                                 this,
-                                 &Component::onSelectDataLevel);
-                btn->pushedColor(grp);
-                btn->userdata(btn);
-                pBtnDetails = btn;
-                hz->Add(btn, 0, wxALL | wxEXPAND);
-                btn = new Button(
-                  grp->subpanel, wxT("Record years"), nullptr, this, &Component::onSelectDataLevel);
-                btn->pushedColor(grp);
-                btn->userdata(btn);
-                hz->Add(btn, 0, wxALL | wxEXPAND);
-                pBtnID = btn;
+                auto addButton = [&](const wxString& caption) -> Button* {
+                    btn = new Button(
+                      grp->subpanel, caption, nullptr, this, &Component::onSelectDataLevel);
+                    btn->pushedColor(grp);
+                    btn->userdata(btn);
+                    hz->Add(btn, 0, wxALL | wxEXPAND);
+                    return btn;
+                };
+
+                pBtnValues = addButton(wxT("General values"));
+                pBtnValues->pushed(true);
+
+                pBtnDetails = addButton(wxT("Thermal plants"));
+                pBtnDetailsRes = addButton(wxT("Ren. clusters"));
+                pBtnID = addButton(wxT("Record years"));
             }
 
             hzori->AddSpacer(5);
@@ -639,6 +630,7 @@ void Component::clear()
 
     pBtnValues = nullptr;
     pBtnDetails = nullptr;
+    pBtnDetailsRes = nullptr;
     pBtnID = nullptr;
 
     pBtnHourly = nullptr;
@@ -1353,6 +1345,7 @@ void Component::copyFrom(const Component& source)
     // Data level
     pBtnValues->pushed(source.pBtnValues->pushed());
     pBtnDetails->pushed(source.pBtnDetails->pushed());
+    pBtnDetailsRes->pushed(source.pBtnDetailsRes->pushed());
     pBtnID->pushed(source.pBtnID->pushed());
     // Time level
     pBtnHourly->pushed(source.pBtnHourly->pushed());
@@ -1607,6 +1600,7 @@ void Component::onSelectDataLevel(void* userdata)
 
     pBtnValues->pushed((userdata == pBtnValues));
     pBtnDetails->pushed((userdata == pBtnDetails));
+    pBtnDetailsRes->pushed((userdata == pBtnDetailsRes));
     pBtnID->pushed((userdata == pBtnID));
     // refresh
     refreshAllPanels();

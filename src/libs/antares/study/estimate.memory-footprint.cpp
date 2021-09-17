@@ -68,25 +68,40 @@ protected:
         for (auto i = pStudy.areas.begin(); i != end; ++i)
         {
             auto& area = *(i->second);
-
-            auto end = area.thermal.list.end();
-            for (auto i = area.thermal.list.begin(); i != end; ++i)
+            // Thermal
             {
-                auto& cluster = *(i->second);
+                auto end = area.thermal.list.end();
+                for (auto i = area.thermal.list.begin(); i != end; ++i)
+                {
+                    auto& cluster = *(i->second);
 
-                if (cluster.series)
-                    cluster.series->estimateMemoryUsage(m);
+                    if (cluster.series)
+                        cluster.series->estimateMemoryUsage(m, timeSeriesThermal);
 
-                if (shouldAbort())
-                    return false;
+                    if (shouldAbort())
+                        return false;
 
-                if (cluster.prepro)
-                    cluster.prepro->estimateMemoryUsage(m);
+                    if (cluster.prepro)
+                        cluster.prepro->estimateMemoryUsage(m);
 
-                if (shouldAbort())
-                    return false;
+                    if (shouldAbort())
+                        return false;
+                }
             }
+            // Renewable
+            {
+                auto end = area.renewable.list.end();
+                for (auto i = area.renewable.list.begin(); i != end; ++i)
+                {
+                    auto& cluster = *(i->second);
 
+                    if (cluster.series)
+                        cluster.series->estimateMemoryUsage(m, timeSeriesRenewable);
+
+                    if (shouldAbort())
+                        return false;
+                }
+            }
             area.estimateMemoryUsage(m);
 
             if (shouldAbort())

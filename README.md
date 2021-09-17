@@ -59,7 +59,7 @@ For installation instructions, please visit [INSTALL.md](INSTALL.md)
 * [CONTRIBUTING](CONTRIBUTING.txt)	     - How to submit patches and discuss about code evolutions
 * [COPYING](COPYING.txt)            - The GPL v3 license.
 * [INSTALL](INSTALL.md)           - Installation and building instructions.
-* [NEWS](NEWS.txt)             - Important modifications between the releases.
+* [NEWS](NEWS.md)                 - Important modifications between the releases.
 * [README](README.md)             - This file.
 * [ROADMAP](ROADMAP.txt)            - Main orientations for further developements 
 * [THANKS](THANKS.txt)             - Attribution notices for external libraries and contributors.

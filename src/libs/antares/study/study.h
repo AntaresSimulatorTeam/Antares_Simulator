@@ -88,7 +88,7 @@ public:
     //! List of disabled links
     typedef std::set<AreaLinkName> DisabledAreaLinkList;
     //! List of disabled thermal clusters
-    typedef std::set<ThermalClusterName> DisabledThermalClusterList;
+    typedef std::set<ClusterName> DisabledThermalClusterList;
 
     //! Extension filename
     typedef Yuni::CString<8, false> FileExtension;
@@ -303,17 +303,15 @@ public:
     bool linkDelete(AreaLink* lnk);
     //@}
 
-    //! \name Thermal clusters
+    //! \name Renewable/thermal clusters
     //@{
     /*!
-    ** \brief Rename a thermal cluster
+    ** \brief Rename a renewable/thermal cluster
     **
     ** \param cluster The cluster
     ** \return True if the operation succeeded, false otherwise
     */
-    bool thermalClusterRename(ThermalCluster* cluster,
-                              ThermalClusterName newName,
-                              bool force = false);
+    bool clusterRename(Cluster* cluster, ClusterName newName);
     //@}
 
     //! \name Read-only

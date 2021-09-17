@@ -213,6 +213,57 @@ inline CString<512, false> thermalTSNumberData::get_prefix() const
     return "t,";
 }
 
+// Renewable ...
+class renewableTSNumberData : public TSNumberData
+{
+public:
+    renewableTSNumberData() : pArea(NULL)
+    {
+    }
+
+    virtual ~renewableTSNumberData()
+    {
+    }
+
+    bool reset(const Study& study);
+    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
+
+    void attachArea(const Area* area)
+    {
+        pArea = area;
+    }
+
+    void set(const Antares::Data::RenewableCluster* cluster, const uint year, uint value);
+    uint get(const Antares::Data::RenewableCluster* cluster, const uint year) const;
+    void apply(Study& study);
+    CString<512, false> get_prefix() const;
+    uint get_tsGenCount(const Study& study) const;
+
+private:
+    //! The attached area, if any
+    const Area* pArea;
+    //! The map between clusters and there line index
+    std::map<const RenewableCluster*, uint> clusterIndexMap;
+};
+
+inline uint renewableTSNumberData::get(const Antares::Data::RenewableCluster* cluster,
+                                       const uint year) const
+{
+    assert(cluster != nullptr);
+    if (clusterIndexMap.find(cluster) != clusterIndexMap.end() && year < pTSNumberRules.height)
+    {
+        uint index = clusterIndexMap.at(cluster);
+        return pTSNumberRules[index][year];
+    }
+
+    return 0;
+}
+
+inline CString<512, false> renewableTSNumberData::get_prefix() const
+{
+    return "r,";
+}
+
 } // namespace ScenarioBuilder
 } // namespace Data
 } // namespace Antares

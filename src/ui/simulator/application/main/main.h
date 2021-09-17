@@ -420,7 +420,8 @@ private:
     void createNBWind();
     //! Create the page about the thermal clusters
     void createNBThermal();
-
+    //! Create the page about the renewable clusters
+    void createNBRenewable();
     //! Create the page about reserves and DSM
     void createNBDSM();
     //! Create the page
@@ -500,6 +501,7 @@ private:
     void evtOnViewLoad(wxCommandEvent& evt);
     void evtOnViewSolar(wxCommandEvent& evt);
     void evtOnViewWind(wxCommandEvent& evt);
+    void evtOnViewRenewable(wxCommandEvent& evt);
     void evtOnViewHydro(wxCommandEvent& evt);
     void evtOnViewThermal(wxCommandEvent& evt);
     void evtOnViewReservesDSM(wxCommandEvent& evt);
@@ -618,6 +620,12 @@ private:
     //!! The system parameters have changed, some pages have to be hidden
     void onSystemParametersChanged();
 
+    // Renewable generation modelling changed, some pages have to be hidden or disabled
+    void onRenewableGenerationModellingChanged(bool init);
+    void refreshHomePageOnRenewableModellingChanged(bool aggregated, bool init);
+    void refreshScenarioBuilderPagOnRenewableModellingChanged(bool aggregated);
+    void refreshInputMenuOnRenewableModellingChanged(bool aggregated);
+
     //! Update the Interface after loaded a study
     void evtOnUpdateInterfaceAfterLoadedStudy(wxCommandEvent& evt);
 
@@ -719,6 +727,9 @@ private:
     Component::Notebook::Page* pageThermalTimeSeries;
     Component::Notebook::Page* pageThermalPrepro;
     Component::Notebook::Page* pageThermalCommon;
+
+    Component::Notebook::Page* pageRenewableClusterList;
+    Component::Notebook::Page* pageRenewableCommon;
 
     Component::Notebook::Page* pageLinksSummary;
     Component::Notebook::Page* pageLinksDetails;

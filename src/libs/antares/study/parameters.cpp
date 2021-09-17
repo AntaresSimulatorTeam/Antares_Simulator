@@ -78,9 +78,33 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
             v |= timeSeriesThermal;
         else if (word == "solar")
             v |= timeSeriesSolar;
+        else if (word == "renewables")
+            v |= timeSeriesRenewable;
         return true;
     });
     return true;
+}
+
+static bool ConvertStringToRenewableGenerationModelling(const AnyString& text, RenewableGenerationModelling & out)
+{
+    CString<24, false> s = text;
+    s.trim();
+    s.toLower();
+    if (s == "aggregated")
+    {
+        out = rgAggregated;
+        return true;
+    }
+    if (s == "clusters") // Using renewable clusters
+    {
+        out = rgClusters;
+        return true;
+    }
+
+    logs.warning() << "parameters: invalid renewable generation modelling. Got '" << text << "'";
+    out = rgUnknown;
+
+    return false;
 }
 
 bool StringToStudyMode(StudyMode& mode, CString<20, false> text)
@@ -257,6 +281,7 @@ void Parameters::reset()
 
     unitCommitment.ucMode = ucHeuristic;
     nbCores.ncMode = ncAvg;
+    renewableGeneration.rgModelling = rgAggregated;
     reserveManagement.daMode = daGlobal;
 
     // Misc
@@ -322,7 +347,12 @@ static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint
             v += ", ";
         v += "solar";
     }
-
+    if (value & timeSeriesRenewable)
+    {
+        if (not v.empty())
+            v += ", ";
+        v += "renewables";
+    }
     s->add(name, v);
 }
 
@@ -691,6 +721,10 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
         d.unitCommitment.ucMode = ucHeuristic;
         return false;
     }
+    // Renewable generation modelling
+    if (key == "renewable-generation-modelling")
+        return ConvertStringToRenewableGenerationModelling(value, d.renewableGeneration.rgModelling);
+
     return false;
 }
 static bool SGDIntLoadFamily_AdvancedParameters(Parameters& d,
@@ -1328,7 +1362,22 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 
     // Prepare output variables print info before the simulation (used to initialize output
     // variables)
-    variablesPrintInfo.prepareForSimulation(thematicTrimming);
+
+    // Force enable/disable when cluster/aggragated production is enabled
+    // This will be deprecated when support for aggragated production is dropped.
+    switch (renewableGeneration()) // Warn the user about that.
+    {
+    case rgClusters:
+        logs.info()
+          << "Cluster renewables were chosen. Output will be disabled for aggregated modes.";
+        break;
+    case rgAggregated:
+        logs.info()
+          << "Aggregate renewables were chosen. Output will be disabled for renewable clusters.";
+        break;
+    }
+    const std::vector<std::string> excluded_vars = renewableGeneration.excludedVariables();
+    variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
 
     switch (mode)
     {
@@ -1364,7 +1413,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 
     if (interModal == timeSeriesLoad || interModal == timeSeriesSolar
         || interModal == timeSeriesWind || interModal == timeSeriesHydro
-        || interModal == timeSeriesThermal)
+        || interModal == timeSeriesThermal || interModal == timeSeriesRenewable)
     {
         // Only one timeseries in interModal correlation, which is the same than nothing
         interModal = 0;
@@ -1634,6 +1683,8 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("shedding-policy", SheddingPolicyToCString(shedding.policy));
         section->add("unit-commitment-mode", UnitCommitmentModeToCString(unitCommitment.ucMode));
         section->add("number-of-cores-mode", NumberOfCoresModeToCString(nbCores.ncMode));
+        section->add("renewable-generation-modelling",
+                     RenewableGenerationModellingToCString(renewableGeneration()));
         section->add("day-ahead-reserve-management",
                      DayAheadReserveManagementModeToCString(reserveManagement.daMode));
     }
@@ -1764,6 +1815,50 @@ bool Parameters::saveToFile(const AnyString& filename) const
     IniFile ini;
     saveToINI(ini);
     return ini.save(filename);
+}
+
+std::vector<std::string> Parameters::RenewableGeneration::excludedVariables() const
+{
+    switch (rgModelling)
+    {
+    /*
+       Order is important because AllVariablesPrintInfo::setPrintStatus
+       does not reset the search pointer.
+
+       Inverting some variable names below may result in some of them not being
+       taken into account.
+    */
+    case rgAggregated:
+        return {"wind offshore",
+                "wind onshore",
+                "solar concrt.",
+                "solar pv",
+                "solar rooft",
+                "renw. 1",
+                "renw. 2",
+                "renw. 3",
+                "renw. 4"};
+    case rgClusters:
+        return {"wind", "solar"};
+    case rgUnknown:
+        return {};
+    }
+    return {};
+}
+
+RenewableGenerationModelling Parameters::RenewableGeneration::operator()() const
+{
+    return rgModelling;
+}
+
+bool Parameters::RenewableGeneration::isAggregated() const
+{
+    return rgModelling == Antares::Data::rgAggregated;
+}
+
+bool Parameters::RenewableGeneration::isClusters() const
+{
+    return rgModelling == Antares::Data::rgClusters;
 }
 
 } // namespace Data

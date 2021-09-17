@@ -147,6 +147,26 @@ void Component::add(Item::IItem::Ptr it)
     invalidate();
 }
 
+void Component::setElement(Item::IItem::Ptr it, int index_item)
+{
+    pItems[index_item] = it;
+}
+
+int  Component::size()
+{
+    return pItems.size();
+}
+
+void Component::resizeTo(int newSize)
+{
+    pItems.resize(newSize);
+}
+
+void Component::forceRedraw()
+{
+    pInvalidated = true;
+}
+
 void Component::invalidate()
 {
     if (!pInvalidated)
@@ -353,17 +373,7 @@ void Component::onDraw(wxPaintEvent& evt)
 void Component::internalClearTheListbox()
 {
     if (pListbox && not pListbox->IsEmpty())
-    {
-        for (uint i = 0; i < pListbox->GetCount(); ++i)
-        {
-            // For an unknown reason we have to tell to wx to reset to nullptr
-            // to force the deletion of our objects...
-            pListbox->SetClientObject(i, nullptr);
-        }
-
-        // Clear the listbox
         pListbox->Clear();
-    }
 }
 
 void Component::onStudyClosed()

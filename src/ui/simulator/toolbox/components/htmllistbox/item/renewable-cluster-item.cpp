@@ -24,9 +24,55 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef _ANTARES_APPLICATION_WINDOWS_OPTIONS_SCENARIO_BUILDER_H__
-#define _ANTARES_APPLICATION_WINDOWS_OPTIONS_SCENARIO_BUILDER_H__
 
-#include "scenario-builder/scenario-builder.h"
+#include "renewable-cluster-item.h"
 
-#endif // _ANTARES_APPLICATION_WINDOWS_OPTIONS_SCENARIO_BUILDER_H__
+using namespace Yuni;
+
+namespace Antares
+{
+namespace Component
+{
+namespace HTMLListbox
+{
+namespace Item
+{
+
+RenewableClusterItem::RenewableClusterItem(Antares::Data::RenewableCluster* a) :
+    ClusterItem(a),
+    pRenewableCluster(a)
+{
+    preloadImages();
+}
+
+RenewableClusterItem::RenewableClusterItem(Antares::Data::RenewableCluster* a, const wxString& additional) :
+    ClusterItem(a, additional),
+    pRenewableCluster(a)
+{
+    preloadImages();
+}
+
+RenewableClusterItem::~RenewableClusterItem()
+{
+}
+
+wxString RenewableClusterItem::getClusterIconFilePath()
+{
+    return getIconFilePath("images/16x16/renewable.png");
+}
+
+wxString RenewableClusterItem::htmlContentTail()
+{
+    // Return nothing 
+    return wxString();
+}
+
+Antares::Data::RenewableCluster* RenewableClusterItem::renewableAggregate() const
+{
+    return pRenewableCluster;
+}
+
+} // namespace Item
+} // namespace HTMLListbox
+} // namespace Component
+} // namespace Antares

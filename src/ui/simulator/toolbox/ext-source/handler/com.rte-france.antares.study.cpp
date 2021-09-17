@@ -71,7 +71,7 @@ static bool AppendCommand(BuildContext& ctx, const AnyString& command, const Any
     if (command == "import-thermal-cluster")
     {
         Data::AreaName from;
-        Data::ThermalClusterName to;
+        Data::ClusterName to;
         String s = value;
         if (s.size() < 3)
             return false;
@@ -338,9 +338,8 @@ static void PreparePasteOperations(Antares::Action::Context* context,
             else
                 create = new Antares::Action::AntaresStudy::Area::Create(i->first, wantedName);
 
-            std::map<Data::ThermalClusterName, bool>::const_iterator send = i->second.end();
-            for (std::map<Data::ThermalClusterName, bool>::const_iterator j = i->second.begin();
-                 j != send;
+            std::map<Data::ClusterName, bool>::const_iterator send = i->second.end();
+            for (std::map<Data::ClusterName, bool>::const_iterator j = i->second.begin(); j != send;
                  ++j)
             {
                 *create += Antares::Action::AntaresStudy::Area::Create::

@@ -24,12 +24,12 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_THERMAL_PLANTS_H__
-#define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_THERMAL_PLANTS_H__
 
-#include "datasource.h"
-#include <yuni/core/event.h>
-#include <antares/study.h>
+#pragma once
+
+#include "cluster-order.h"
+#include <map>
+#include <list>
 
 namespace Antares
 {
@@ -39,70 +39,86 @@ namespace HTMLListbox
 {
 namespace Datasource
 {
-namespace ThermalClusters
-{
-class ByAlphaOrder : public Yuni::IEventObserver<ByAlphaOrder>, public IDatasource
+
+typedef std::list<Data::ThermalCluster*> ThermalClusterList;
+typedef std::map<wxString, ThermalClusterList> ThermalClusterMap;
+
+class ThermalClustersByOrder : public ClustersByOrder
 {
 public:
     //! \name Constructor & Destructor
     //@{
     //! Default Constructor
-    ByAlphaOrder(HTMLListbox::Component& parent);
+    ThermalClustersByOrder(HTMLListbox::Component& parent);
     //! Destructor
-    virtual ~ByAlphaOrder();
+    virtual ~ThermalClustersByOrder();
     //@}
 
-    virtual wxString name() const
+private:
+    virtual void sortClustersInGroup(ThermalClusterList& clusterList) = 0;
+
+    void reorderItemsList(const wxString& search) override;
+    void rebuildItemsList(const wxString& search) override;
+
+}; // ThermalClustersByOrder
+
+
+
+class ThermalClustersByAlphaOrder : public ThermalClustersByOrder
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    //! Default Constructor
+    ThermalClustersByAlphaOrder(HTMLListbox::Component& parent);
+    //! Destructor
+    virtual ~ThermalClustersByAlphaOrder();
+    //@}
+
+    wxString name() const override
     {
         return wxT("Thermal clusters in alphabetical order");
     }
-    virtual const char* icon() const
+
+    const char* icon() const override
     {
         return "images/16x16/sort_alphabet.png";
     }
-    virtual void refresh(const wxString& search = wxEmptyString);
-
-    void onAreaChanged(Data::Area* area);
-    void onInvalidateAllAreas();
-
+    
 private:
-    Data::Area* pArea;
+    void sortClustersInGroup(ThermalClusterList& clusterList) override;
 
-}; // class ByAlphaOrder
+}; // class ThermalClustersByAlphaOrder
 
-class ByAlphaReverseOrder : public Yuni::IEventObserver<ByAlphaReverseOrder>, public IDatasource
+
+
+class ThermalClustersByAlphaReverseOrder : public ThermalClustersByOrder
 {
 public:
     //! \name Constructor & Destructor
     //@{
     //! Default Constructor
-    ByAlphaReverseOrder(HTMLListbox::Component& parent);
+    ThermalClustersByAlphaReverseOrder(HTMLListbox::Component& parent);
     //! Destructor
-    virtual ~ByAlphaReverseOrder();
+    virtual ~ThermalClustersByAlphaReverseOrder();
     //@}
 
     virtual wxString name() const
     {
         return wxT("Thermal clusters in reverse alphabetical order");
     }
+
     virtual const char* icon() const
     {
         return "images/16x16/sort_alphabet_descending.png";
     }
-    virtual void refresh(const wxString& search = wxEmptyString);
-
-    void onAreaChanged(Data::Area* area);
-    void onInvalidateAllAreas();
-
+    
 private:
-    Data::Area* pArea;
+    void sortClustersInGroup(ThermalClusterList& clusterList) override;
 
-}; // class ByAlphaReverseOrder
+}; // class ThermalClustersByAlphaReverseOrder
 
-} // namespace ThermalClusters
 } // namespace Datasource
 } // namespace HTMLListbox
 } // namespace Component
 } // namespace Antares
-
-#endif // __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_THERMAL_PLANTS_H__

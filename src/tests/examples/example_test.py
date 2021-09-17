@@ -11,6 +11,8 @@ import subprocess
 
 import pytest
 
+from read_utils import read_csv
+
 ALL_STUDIES_PATH = Path('../resources/Antares_Simulator_Tests')
 
 @pytest.fixture(scope="session", autouse=True)
@@ -44,12 +46,11 @@ def find_values_hourly_path(output_dir, area, year):
     assert len(op) == 1
     return op[0]
 
-def fetch_hourly_column_values(path, area, year, col_index):
+def fetch_hourly_values(path, area, year):
     output_path = path / 'output'
     hourly_path = find_values_hourly_path(output_path, area, year)
-    # skiprows=7 in order to skip the header of the file
-    col_values = np.loadtxt(hourly_path, delimiter='\t', skiprows=7, usecols=col_index, dtype=float)
-    assert len(col_values == 364 * 24)
+    col_values = read_csv(hourly_path)
+    assert col_values.shape[0] == 364 * 24
     return col_values
 
 def get_integrity_check_values(output : Path) -> np.array :
@@ -552,7 +553,7 @@ def test_hydro_hydro_initialization_1(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "hydro initialization 1"
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     # 26th column = average reservoir level %
-    reservoir_levels = fetch_hourly_column_values(study_path, area='area', year=1, col_index=26)
+    reservoir_levels = fetch_hourly_values(study_path, area='area', year=1)["H. LEV"]
     first_january_midnight = 0
     assert(abs(reservoir_levels[first_january_midnight] - 30) < .05)
 
@@ -560,8 +561,7 @@ def test_hydro_hydro_initialization_1(use_ortools, ortools_solver, solver_path):
 def test_hydro_hydro_initialization_2(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "hydro initialization 2"
     run_study(solver_path, study_path, use_ortools, ortools_solver)
-    # 26th column = average reservoir level %
-    reservoir_levels = fetch_hourly_column_values(study_path, area='area', year=1, col_index=26)
+    reservoir_levels = fetch_hourly_values(study_path, area='area', year=1)["H. LEV"]
     first_march_midnight = 1417
     assert(abs(reservoir_levels[first_march_midnight] - 30) < .05)
 
@@ -569,17 +569,15 @@ def test_hydro_hydro_initialization_2(use_ortools, ortools_solver, solver_path):
 def test_hydro_hydro_preference_1(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "hydro preference 1"
     run_study(solver_path, study_path, use_ortools, ortools_solver)
-    # 26th column = average reservoir level %
-    reservoir_levels = fetch_hourly_column_values(study_path, area='area', year=1, col_index=26)
-    assert(abs(reservoir_levels[-1] - 30.46) < .05)
+    reservoir_levels = fetch_hourly_values(study_path, area='area', year=1)["H. LEV"]
+    assert(abs(reservoir_levels.iat[-1] - 30.46) < .05)
 
 @pytest.mark.short
 def test_hydro_hydro_preference_2(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "hydro preference 2"
     run_study(solver_path, study_path, use_ortools, ortools_solver)
-    # 26th column = average reservoir level %
-    reservoir_levels = fetch_hourly_column_values(study_path, area='area', year=1, col_index=26)
-    assert(reservoir_levels[-1] < 30)
+    reservoir_levels = fetch_hourly_values(study_path, area='area', year=1)["H. LEV"]
+    assert(reservoir_levels.iat[-1] < 30)
 
 @pytest.mark.medium
 def test_000_free_data_sample(use_ortools, ortools_solver, solver_path):

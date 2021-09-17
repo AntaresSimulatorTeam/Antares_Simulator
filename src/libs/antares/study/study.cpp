@@ -159,6 +159,9 @@ void Study::createAsNew()
 
     // Simulations
     parameters.reset();
+    // ... At study creation, renewable cluster is the default mode for RES (Renewable Energy Source)
+    parameters.renewableGeneration.rgModelling = Antares::Data::rgClusters;
+
     parameters.yearsFilter = new bool[1];
     parameters.yearsFilter[0] = true;
 
@@ -246,6 +249,11 @@ void StudyEnsureDataThermalTimeSeries(Study* s)
     AreaListEnsureDataThermalTimeSeries(&s->areas);
 }
 
+void StudyEnsureDataRenewableTimeSeries(Study* s)
+{
+    AreaListEnsureDataRenewableTimeSeries(&s->areas);
+}
+
 void StudyEnsureDataThermalPrepro(Study* s)
 {
     AreaListEnsureDataThermalPrepro(&s->areas);
@@ -279,6 +287,7 @@ void Study::ensureDataAreInitializedAccordingParameters()
     StudyEnsureDataWindTimeSeries(this);
     StudyEnsureDataHydroTimeSeries(this);
     StudyEnsureDataThermalTimeSeries(this);
+    StudyEnsureDataRenewableTimeSeries(this);
 
     // Load
     if (parameters.isTSGeneratedByPrepro(timeSeriesLoad))
@@ -305,6 +314,7 @@ void Study::ensureDataAreAllInitialized()
     StudyEnsureDataWindTimeSeries(this);
     StudyEnsureDataHydroTimeSeries(this);
     StudyEnsureDataThermalTimeSeries(this);
+    StudyEnsureDataRenewableTimeSeries(this);
 
     // TS-Generators
     StudyEnsureDataLoadPrepro(this);
@@ -1071,7 +1081,7 @@ bool Study::areasThermalClustersMinStablePowerValidity(
     return resultat;
 }
 
-bool Study::thermalClusterRename(ThermalCluster* cluster, ThermalClusterName newName, bool)
+bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 {
     // A name must not be empty
     if (!cluster or !newName)
@@ -1084,7 +1094,7 @@ bool Study::thermalClusterRename(ThermalCluster* cluster, ThermalClusterName new
     newName = beautifyname;
 
     // Preparing the new area ID
-    ThermalClusterName newID;
+    ClusterName newID;
     TransformNameIntoID(newName, newID);
     if (!newID)
     {
@@ -1095,51 +1105,68 @@ bool Study::thermalClusterRename(ThermalCluster* cluster, ThermalClusterName new
     Area& area = *cluster->parentArea;
     if (not cluster->parentArea)
     {
-        logs.error() << "renaming thermal cluster: no parent area";
+        logs.error() << "renaming cluster: no parent area";
         return false;
     }
 
     // Checking if the area exists
+    Cluster* found = nullptr;
+
+    enum
     {
-        ThermalCluster* found;
-        if ((found = area.thermal.list.find(newID)))
-        {
-            if (found->name() != newName)
-            {
-                area.invalidateJIT = true;
-                found->name(newName);
-                return true;
-            }
-            return false;
-        }
+        kThermal,
+        kRenewable
+    } type;
+
+    if (dynamic_cast<ThermalCluster*>(cluster))
+    {
+        found = area.thermal.list.find(newID);
+        type = kThermal;
+    }
+    else if (dynamic_cast<RenewableCluster*>(cluster))
+    {
+        found = area.renewable.list.find(newID);
+        type = kRenewable;
     }
 
+    if (found)
+    {
+        if (found->name() != newName)
+        {
+            area.invalidateJIT = true;
+            found->setName(newName);
+            return true;
+        }
+        return false;
+    }
+
+    // gp : to be updated with renewable clusters
     // We must have the scenario rules to rename properly the cluster
     scenarioRulesLoadIfNotAvailable();
 
     // We will temporary override the id of the area in order to have to
     // the new name in the archive
     // Otherwise the values associated to the area will be lost.
-    logs.info() << "  renaming thermal cluster '" << cluster->name() << "' into '" << newName
-                << "'";
-    //	ThermalClusterName oldId   = cluster->id();
-    //	ThermalClusterName oldName = cluster->name();
-    //	cluster->name(newName);
+    logs.info() << "  renaming cluster '" << cluster->name() << "' into '" << newName << "'";
+
     area.invalidateJIT = true;
 
     bool ret = true;
 
     // Archiving data
+    switch (type)
     {
+    case kRenewable:
+        ret = area.renewable.list.rename(cluster->id(), newName);
+        area.renewable.prepareAreaWideIndexes();
+        break;
+    case kThermal:
         ret = area.thermal.list.rename(cluster->id(), newName);
         area.thermal.prepareAreaWideIndexes();
-        ScenarioBuilderUpdater updaterSB(*this);
-
-        // Restoring the old ID
-        //		cluster->name(oldId);
-        // Rename the cluster
-        // ret = area.thermal.list.rename(cluster->id(), newName);
+        break;
     }
+
+    ScenarioBuilderUpdater updaterSB(*this);
 
     if (uiinfo)
         uiinfo->reloadAll();
@@ -1474,7 +1501,7 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
             auto& cname = clustername;
             cname.clear();
 
-            area.thermal.list.each([&](const ThermalCluster& cluster) {
+            area.thermal.list.each([&](const Cluster& cluster) {
                 if (cluster.id().size() > cname.size())
                     cname = cluster.id();
             });

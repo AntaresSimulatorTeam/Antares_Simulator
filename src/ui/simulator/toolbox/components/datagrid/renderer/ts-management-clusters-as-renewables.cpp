@@ -25,13 +25,22 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "simulation.h"
+#include "ts-management-clusters-as-renewables.h"
 #include <wx/panel.h>
 #include <yuni/core/math.h>
 #include <algorithm>
 #include <math.h>
 
 using namespace Yuni;
+
+// Anonymous namespace: global variable, local scope
+namespace
+{
+enum Antares::Data::TimeSeries mapping[] = {Data::timeSeriesLoad,
+                                            Data::timeSeriesThermal,
+                                            Data::timeSeriesHydro,
+                                            Data::timeSeriesRenewable};
+}
 
 namespace Antares
 {
@@ -41,31 +50,27 @@ namespace Datagrid
 {
 namespace Renderer
 {
-SimulationTSManagement::SimulationTSManagement() : pControl(nullptr)
+TSmanagementRenewableCluster::TSmanagementRenewableCluster() : pControl(nullptr)
 {
-    // if (notifier)
-    //	notifier->onSimulationTSManagementChanged.connect(this,
-    //&SimulationTSManagement::onSimulationTSManagementChanged);
 }
 
-SimulationTSManagement::~SimulationTSManagement()
+TSmanagementRenewableCluster::~TSmanagementRenewableCluster()
 {
     destroyBoundEvents();
 }
 
-wxString SimulationTSManagement::columnCaption(int colIndx) const
+wxString TSmanagementRenewableCluster::columnCaption(int colIndx) const
 {
     static const wxChar* const captions[] = {wxT("      Load      "),
                                              wxT("   Thermal   "),
                                              wxT("      Hydro      "),
-                                             wxT("      Wind      "),
-                                             wxT("      Solar      ")};
-    if (colIndx < 5)
+                                             wxT("   Renewable   ")};
+    if (colIndx < 4)
         return captions[colIndx];
     return wxEmptyString;
 }
 
-wxString SimulationTSManagement::rowCaption(int rowIndx) const
+wxString TSmanagementRenewableCluster::rowCaption(int rowIndx) const
 {
     static const wxChar* const captions[] = {
       wxT("Ready made TS"),
@@ -87,15 +92,35 @@ wxString SimulationTSManagement::rowCaption(int rowIndx) const
     return wxEmptyString;
 }
 
-bool SimulationTSManagement::cellValue(int x, int y, const String& value)
+bool TSmanagementRenewableCluster::cellValueForRenewables(int x, int y, const double v)
 {
-    if (not study || x < 0 || x > 4)
+    switch (y)
+    {
+    case 11:
+    {
+        if (Math::Zero(v))
+            study->parameters.intraModal &= ~Data::timeSeriesRenewable;
+        else
+            study->parameters.intraModal |= Data::timeSeriesRenewable;
+        break;
+    }
+    case 12:
+    {
+        if (Math::Zero(v))
+            study->parameters.interModal &= ~Data::timeSeriesRenewable;
+        else
+            study->parameters.interModal |= Data::timeSeriesRenewable;
+        break;
+    }
+    }
+
+    return true;
+}
+
+bool TSmanagementRenewableCluster::cellValue(int x, int y, const String& value)
+{
+    if (not study || x < 0 || x > 3)
         return 0.;
-    enum Antares::Data::TimeSeries mapping[] = {Data::timeSeriesLoad,
-                                                Data::timeSeriesThermal,
-                                                Data::timeSeriesHydro,
-                                                Data::timeSeriesWind,
-                                                Data::timeSeriesSolar};
     auto ts = mapping[x];
 
     double d;
@@ -108,6 +133,14 @@ bool SimulationTSManagement::cellValue(int x, int y, const String& value)
             conversionValid = true;
             d = (b) ? 1. : 0.;
         }
+    }
+
+    // Renewable clusters only
+    if (ts == Data::timeSeriesRenewable)
+    {
+        if (not conversionValid)
+            return false;
+        return cellValueForRenewables(x, y, d);
     }
 
     switch (y)
@@ -164,12 +197,6 @@ bool SimulationTSManagement::cellValue(int x, int y, const String& value)
         case 2:
             study->parameters.nbTimeSeriesHydro = c;
             return true;
-        case 3:
-            study->parameters.nbTimeSeriesWind = c;
-            return true;
-        case 4:
-            study->parameters.nbTimeSeriesSolar = c;
-            return true;
         }
         onSimulationTSManagementChanged();
         break;
@@ -202,12 +229,6 @@ bool SimulationTSManagement::cellValue(int x, int y, const String& value)
         case 2:
             study->parameters.refreshIntervalHydro = refreshSpan;
             return true;
-        case 3:
-            study->parameters.refreshIntervalWind = refreshSpan;
-            return true;
-        case 4:
-            study->parameters.refreshIntervalSolar = refreshSpan;
-            return true;
         }
         break;
     }
@@ -231,12 +252,6 @@ bool SimulationTSManagement::cellValue(int x, int y, const String& value)
             {
             case Data::timeSeriesLoad:
                 study->preproLoadCorrelation.mode(mode);
-                return true;
-            case Data::timeSeriesWind:
-                study->preproWindCorrelation.mode(mode);
-                return true;
-            case Data::timeSeriesSolar:
-                study->preproSolarCorrelation.mode(mode);
                 return true;
             default:
                 return true;
@@ -297,122 +312,39 @@ bool SimulationTSManagement::cellValue(int x, int y, const String& value)
     return false;
 }
 
-double SimulationTSManagement::cellNumericValue(int x, int y) const
+double TSmanagementRenewableCluster::cellNumericValue(int x, int y) const
 {
-    if (not study || x < 0 || x > 4)
-        return 0.;
-    enum Antares::Data::TimeSeries mapping[] = {Data::timeSeriesLoad,
-                                                Data::timeSeriesThermal,
-                                                Data::timeSeriesHydro,
-                                                Data::timeSeriesWind,
-                                                Data::timeSeriesSolar};
-    auto ts = mapping[x];
-    switch (y)
-    {
-    case 0:
-    case 2:
-        break;
-    case 1:
-    {
-        // Status READY made TS
-        return (0 != (study->parameters.timeSeriesToGenerate & ts)) ? 0 : 1.;
-    }
-    case 3:
-    {
-        // Status Stochastic made TS
-        return (0 != (study->parameters.timeSeriesToGenerate & ts)) ? 1. : 0.;
-    }
-    case 4:
-    {
-        switch (x)
-        {
-        case 0:
-            return study->parameters.nbTimeSeriesLoad;
-        case 1:
-            return study->parameters.nbTimeSeriesThermal;
-        case 2:
-            return study->parameters.nbTimeSeriesHydro;
-        case 3:
-            return study->parameters.nbTimeSeriesWind;
-        case 4:
-            return study->parameters.nbTimeSeriesSolar;
-        }
-        break;
-    }
-    case 5:
-    {
-        return (0 != (study->parameters.timeSeriesToRefresh & ts)) ? 1. : 0.;
-    }
-    case 6:
-    {
-        switch (x)
-        {
-        case 0:
-            return study->parameters.refreshIntervalLoad;
-        case 1:
-            return study->parameters.refreshIntervalThermal;
-        case 2:
-            return study->parameters.refreshIntervalHydro;
-        case 3:
-            return study->parameters.refreshIntervalWind;
-        case 4:
-            return study->parameters.refreshIntervalSolar;
-        }
-        break;
-    }
-    case 7:
-    {
-        // modeNone
-        // modeAnnual
-        // modeMonthly
-        Data::Correlation::Mode mode = Data::Correlation::modeNone;
-        switch (ts)
-        {
-        case Data::timeSeriesLoad:
-            mode = study->preproLoadCorrelation.mode();
-            break;
-        case Data::timeSeriesWind:
-            mode = study->preproWindCorrelation.mode();
-            break;
-        case Data::timeSeriesSolar:
-            mode = study->preproSolarCorrelation.mode();
-            break;
-        default:
-            return 0.;
-            break;
-        }
-        return (mode == Data::Correlation::modeAnnual) ? 1. : -1.;
-    }
-    case 8:
-    {
-        return (0 != (study->parameters.timeSeriesToImport & ts)) ? 1. : 0.;
-    }
-    case 9:
-    {
-        return (0 != (study->parameters.timeSeriesToArchive & ts)) ? 1. : 0.;
-    }
-    case 11:
-    {
-        return (0 != (study->parameters.intraModal & ts)) ? 1. : 0.;
-    }
-    case 12:
-    {
-        return 0.;
-    }
-    }
+    // Function never called, but has to overload a pure virtual function.
     return 0.;
 }
 
-wxString SimulationTSManagement::cellValue(int x, int y) const
+wxString TSmanagementRenewableCluster::cellValueForRenewables(int x, int y) const
 {
-    if (not study || x < 0 || x > 4)
+    switch (y)
+    {
+    case 0:
         return wxEmptyString;
-    enum Antares::Data::TimeSeries mapping[] = {Data::timeSeriesLoad,
-                                                Data::timeSeriesThermal,
-                                                Data::timeSeriesHydro,
-                                                Data::timeSeriesWind,
-                                                Data::timeSeriesSolar};
+    case 1:
+        return wxT("On");
+    case 11:
+        return (0 != (study->parameters.intraModal & Data::timeSeriesRenewable)) ? wxT("Yes") : wxT("No");
+    case 12:
+        return (0 != (study->parameters.interModal & Data::timeSeriesRenewable)) ? wxT("Yes") : wxT("No");
+    }
+
+    return wxT("-");
+}
+
+wxString TSmanagementRenewableCluster::cellValue(int x, int y) const
+{
+    if (not study || x < 0 || x > 3)
+        return wxEmptyString;
     auto ts = mapping[x];
+
+    // Renewable clusters only
+    if (ts == Data::timeSeriesRenewable)
+        return cellValueForRenewables(x, y);
+
     switch (y)
     {
     case 1:
@@ -435,10 +367,6 @@ wxString SimulationTSManagement::cellValue(int x, int y) const
             return wxString() << study->parameters.nbTimeSeriesThermal;
         case 2:
             return wxString() << study->parameters.nbTimeSeriesHydro;
-        case 3:
-            return wxString() << study->parameters.nbTimeSeriesWind;
-        case 4:
-            return wxString() << study->parameters.nbTimeSeriesSolar;
         }
         break;
     }
@@ -454,10 +382,6 @@ wxString SimulationTSManagement::cellValue(int x, int y) const
             return wxString() << study->parameters.refreshIntervalThermal;
         case 2:
             return wxString() << study->parameters.refreshIntervalHydro;
-        case 3:
-            return wxString() << study->parameters.refreshIntervalWind;
-        case 4:
-            return wxString() << study->parameters.refreshIntervalSolar;
         }
         break;
     }
@@ -471,12 +395,6 @@ wxString SimulationTSManagement::cellValue(int x, int y) const
         {
         case Data::timeSeriesLoad:
             mode = study->preproLoadCorrelation.mode();
-            break;
-        case Data::timeSeriesWind:
-            mode = study->preproWindCorrelation.mode();
-            break;
-        case Data::timeSeriesSolar:
-            mode = study->preproSolarCorrelation.mode();
             break;
         case Data::timeSeriesHydro:
             return wxT("annual");
@@ -500,7 +418,7 @@ wxString SimulationTSManagement::cellValue(int x, int y) const
     return wxEmptyString;
 }
 
-void SimulationTSManagement::onSimulationTSManagementChanged()
+void TSmanagementRenewableCluster::onSimulationTSManagementChanged()
 {
     if (pControl)
     {
@@ -509,16 +427,36 @@ void SimulationTSManagement::onSimulationTSManagementChanged()
     }
 }
 
-IRenderer::CellStyle SimulationTSManagement::cellStyle(int x, int y) const
+IRenderer::CellStyle TSmanagementRenewableCluster::cellStyleForRenewables(int x, int y) const
 {
-    if (not study || x < 0 || x > 4)
+    switch (y)
+    {
+    case 0:
+        return IRenderer::cellStyleDefault;
+    case 11:
+    {
+        return (0 != (study->parameters.intraModal & Data::timeSeriesRenewable)) ? IRenderer::cellStyleDefault
+            : IRenderer::cellStyleDefaultDisabled;
+    }
+    case 12:
+    {
+        return (0 != (study->parameters.interModal & Data::timeSeriesRenewable)) ? IRenderer::cellStyleDefault
+            : IRenderer::cellStyleDefaultDisabled;
+    }
+    }
+    return CellStyle::cellStyleDisabled;
+}
+
+IRenderer::CellStyle TSmanagementRenewableCluster::cellStyle(int x, int y) const
+{
+    if (not study || x < 0 || x > 3)
         return IRenderer::cellStyleError;
-    enum Antares::Data::TimeSeries mapping[] = {Data::timeSeriesLoad,
-                                                Data::timeSeriesThermal,
-                                                Data::timeSeriesHydro,
-                                                Data::timeSeriesWind,
-                                                Data::timeSeriesSolar};
     auto ts = mapping[x];
+
+    // Renewable clusters only
+    if (ts == Data::timeSeriesRenewable)
+        return cellStyleForRenewables(x, y);
+
     bool tsGenerator = (0 != (study->parameters.timeSeriesToGenerate & ts));
 
     switch (y)
@@ -576,7 +514,7 @@ IRenderer::CellStyle SimulationTSManagement::cellStyle(int x, int y) const
     return tsGenerator ? IRenderer::cellStyleDefault : IRenderer::cellStyleDefaultDisabled;
 }
 
-wxColour SimulationTSManagement::horizontalBorderColor(int x, int y) const
+wxColour TSmanagementRenewableCluster::horizontalBorderColor(int x, int y) const
 {
     if (y == 1 || y == 9)
         return Default::BorderDaySeparator();

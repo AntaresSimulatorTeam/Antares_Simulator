@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SIMULATION_H__
-#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SIMULATION_H__
+#ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_TS_MANAGEMENT_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_TS_MANAGEMENT_H__
 
 #include <antares/wx-wrapper.h>
 #include "../renderer.h"
@@ -41,11 +41,11 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class SimulationTSManagement final : public IRenderer
+class TSmanagement final : public IRenderer
 {
 public:
-    SimulationTSManagement();
-    virtual ~SimulationTSManagement();
+    TSmanagement();
+    virtual ~TSmanagement();
 
     virtual int width() const
     {
@@ -95,11 +95,11 @@ protected:
 private:
     void onSimulationTSManagementChanged();
 
-}; // class SimulationTSManagement
+}; // class TSmanagement
 
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
 } // namespace Antares
 
-#endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SIMULATION_H__
+#endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_TS_MANAGEMENT_H__
