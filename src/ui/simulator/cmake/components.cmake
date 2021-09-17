@@ -181,51 +181,6 @@ SET(SRC_TOOLBOX_COM_DBGRID_FILTER_OPERATORS
 		)
 source_group("Datagrid\\Filter\\Operator" FILES ${SRC_TOOLBOX_COM_DBGRID_FILTER_OPERATORS})
 
-
-
-
-
-SET(SRC_TOOLBOX_COM_HTMLLISTBOX
-		# HTMLListbox
-		toolbox/components/htmllistbox/component.h
-		toolbox/components/htmllistbox/component.hxx
-		toolbox/components/htmllistbox/component.cpp
-		toolbox/components/htmllistbox/item/item.h
-		toolbox/components/htmllistbox/item/item.hxx
-		toolbox/components/htmllistbox/item/item.cpp
-		toolbox/components/htmllistbox/sort.h
-		toolbox/components/htmllistbox/item/info.h toolbox/components/htmllistbox/item/info.cpp
-		toolbox/components/htmllistbox/item/group.h toolbox/components/htmllistbox/item/group.cpp
-		toolbox/components/htmllistbox/item/area.h
-		toolbox/components/htmllistbox/item/area.cpp
-		toolbox/components/htmllistbox/item/area.hxx
-
-		toolbox/components/htmllistbox/item/error.h
-		toolbox/components/htmllistbox/item/error.cpp
-
-		toolbox/components/htmllistbox/item/thermal-cluster.h
-		toolbox/components/htmllistbox/item/thermal-cluster.cpp
-		toolbox/components/htmllistbox/item/thermal-cluster.hxx
-		toolbox/components/htmllistbox/item/bindingconstraint.h
-		toolbox/components/htmllistbox/item/bindingconstraint.cpp
-		toolbox/components/htmllistbox/item/bindingconstraint.hxx
-		toolbox/components/htmllistbox/item/area.hxx
-		toolbox/components/htmllistbox/item/pathlistitem.h
-		toolbox/components/htmllistbox/item/pathlistitem.cpp
-		toolbox/components/htmllistbox/datasource/datasource.h
-		toolbox/components/htmllistbox/datasource/datasource.hxx
-		toolbox/components/htmllistbox/datasource/areas.h
-		toolbox/components/htmllistbox/datasource/areas.cpp
-		toolbox/components/htmllistbox/datasource/thermal-cluster.h
-		toolbox/components/htmllistbox/datasource/thermal-cluster.cpp
-		toolbox/components/htmllistbox/datasource/bindingconstraint.h
-		toolbox/components/htmllistbox/datasource/bindingconstraint.cpp
-)
-source_group("HHTMLListBox" FILES ${SRC_TOOLBOX_COM_HTMLLISTBOX})
-
-
-
-
 SET(SRC_TOOLBOX_COM_NOTEBOOK
 	toolbox/components/notebook/notebook.h
 	toolbox/components/notebook/mapnotebook.h
@@ -249,8 +204,6 @@ add_library(libantares-ui-components
 	${SRC_TOOLBOX_COM_DBGRID_RENDERERS_BINDING_CONSTRAINTS}
 	${SRC_TOOLBOX_COM_DBGRID_FILTER_OPERATORS}
 	${SRC_TOOLBOX_COM_DBGRID}
-	# HTMLLISTBOX
-	${SRC_TOOLBOX_COM_HTMLLISTBOX}
 	# Notebook
 	${SRC_TOOLBOX_COM_NOTEBOOK}
 	)
