@@ -149,6 +149,17 @@ else()
 	set(ANTARES_VERSION_TARGET  "debug")
 endif()
 
+set(CODE_COVERAGE FALSE CACHE BOOL "Enable code coverage")
+if (CODE_COVERAGE)
+	# if code-coverage is ON, force tests build
+	set(BUILD_TESTING ON)
+
+	include(CodeCoverage)
+	code_coverage(NAME code-coverage
+			OUTPUT_DIR coverage
+			EXCLUDE_DIRS tests)
+endif ()
+
 # TODO : removed to be confirmed : old fashion CMake All libraries will be stored in /bin directory
 #set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/${YUNI_TARGET_MODE})
 
