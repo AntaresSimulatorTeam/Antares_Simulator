@@ -149,6 +149,8 @@ else()
 	set(ANTARES_VERSION_TARGET  "debug")
 endif()
 
+
+include("cmake/CodeCoverage.cmake")
 set(CODE_COVERAGE FALSE CACHE BOOL "Enable code coverage")
 if (CODE_COVERAGE)
 	# if code-coverage is ON, force tests build
