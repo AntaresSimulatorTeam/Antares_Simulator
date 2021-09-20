@@ -40,15 +40,11 @@ namespace Renderer
 class TSmanagementRenewableCluster final : public TSmanagement
 {
 public:
-	TSmanagementRenewableCluster();
-	~TSmanagementRenewableCluster() = default;
-
-	wxString columnCaption(int colIndx) const override;
-
+    TSmanagementRenewableCluster();
+    ~TSmanagementRenewableCluster() = default;
 }; // class TSmanagementRenewableCluster
 
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
 } // namespace Antares
-

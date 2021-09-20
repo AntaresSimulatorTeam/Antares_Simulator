@@ -43,9 +43,9 @@ using namespace Antares::Data;
 
 TSmanagement::TSmanagement() : pControl(nullptr)
 {
-    columns_.push_back(new classicColumn(timeSeriesLoad));
-    columns_.push_back(new classicColumn(timeSeriesThermal));
-    columns_.push_back(new classicColumn(timeSeriesHydro));
+    columns_.push_back(new classicColumn(timeSeriesLoad, "      Load      "));
+    columns_.push_back(new classicColumn(timeSeriesThermal, "   Thermal   "));
+    columns_.push_back(new classicColumn(timeSeriesHydro, "      Hydro      "));
 }
 
 void TSmanagement::checkLineNumberInColumns()
@@ -69,6 +69,13 @@ int TSmanagement::width() const
 int TSmanagement::height() const
 {
     return MAX_NB_OF_LINES;
+}
+
+wxString TSmanagement::columnCaption(int colIndx) const
+{
+    if (colIndx < width())
+        return columns_[colIndx]->getCaption();
+    return wxEmptyString;
 }
 
 wxString TSmanagement::rowCaption(int rowIndx) const

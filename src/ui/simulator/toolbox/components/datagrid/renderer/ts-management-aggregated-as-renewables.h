@@ -13,15 +13,11 @@ namespace Renderer
 class TSmanagementAggregatedAsRenewable final : public TSmanagement
 {
 public:
-	TSmanagementAggregatedAsRenewable();
-	~TSmanagementAggregatedAsRenewable() = default;
-
-	wxString columnCaption(int colIndx) const override;
-
+    TSmanagementAggregatedAsRenewable();
+    ~TSmanagementAggregatedAsRenewable() = default;
 }; // class TSmanagementAggregatedAsRenewable
 
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
 } // namespace Antares
-

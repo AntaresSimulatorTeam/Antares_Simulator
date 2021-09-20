@@ -39,26 +39,10 @@ namespace Renderer
 {
 TSmanagementAggregatedAsRenewable::TSmanagementAggregatedAsRenewable() : TSmanagement()
 {
-    columns_.push_back(new classicColumn(Antares::Data::timeSeriesWind));
-    columns_.push_back(new classicColumn(Antares::Data::timeSeriesSolar));
-
+    columns_.push_back(new classicColumn(Antares::Data::timeSeriesWind, "      Wind      "));
+    columns_.push_back(new classicColumn(Antares::Data::timeSeriesSolar, "      Solar      "));
     checkLineNumberInColumns();
 }
-
-wxString TSmanagementAggregatedAsRenewable::columnCaption(int colIndx) const
-{
-    // gp : columnCaption shoud collect captions from within the columns classes
-
-    static const wxChar* const captions[] = {wxT("      Load      "),
-                                             wxT("   Thermal   "),
-                                             wxT("      Hydro      "),
-                                             wxT("      Wind      "),
-                                             wxT("      Solar      ")};
-    if (colIndx < width())
-        return captions[colIndx];
-    return wxEmptyString;
-}
-
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

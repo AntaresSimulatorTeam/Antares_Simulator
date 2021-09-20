@@ -48,7 +48,7 @@ public:
     TSmanagement();
     virtual ~TSmanagement();
 
-    virtual wxString columnCaption(int colIndx) const = 0;
+    virtual wxString columnCaption(int colIndx) const override;
 
     virtual wxString rowCaption(int rowIndx) const;
 

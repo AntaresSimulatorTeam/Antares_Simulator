@@ -43,18 +43,6 @@ TSmanagementRenewableCluster::TSmanagementRenewableCluster() : TSmanagement()
 
     checkLineNumberInColumns();
 }
-
-wxString TSmanagementRenewableCluster::columnCaption(int colIndx) const
-{
-    static const wxChar* const captions[] = {wxT("      Load      "),
-                                             wxT("   Thermal   "),
-                                             wxT("      Hydro      "),
-                                             wxT("   Renewable   ")};
-    if (colIndx < width())
-        return captions[colIndx];
-    return wxEmptyString;
-}
-
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

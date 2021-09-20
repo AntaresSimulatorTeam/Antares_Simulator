@@ -28,6 +28,7 @@
 #pragma once
 
 #include <vector>
+#include <wx/string.h>
 #include <antares/study/fwd.h>
 
 namespace Antares
@@ -46,14 +47,16 @@ class Cell;
 class Column
 {
 public:
-    Column(Antares::Data::TimeSeries ts);
+    Column(Antares::Data::TimeSeries ts, wxString caption);
     ~Column();
     Cell* getLine(int y) const;
     int getNumberOfLines() const;
+    wxString getCaption() const;
 
 protected:
     std::vector<Cell*> cells_;
     Antares::Data::TimeSeries tsKind_;
+    wxString caption_;
 };
 
 // -------------------
@@ -62,7 +65,7 @@ protected:
 class classicColumn final : public Column
 {
 public:
-    classicColumn(Antares::Data::TimeSeries ts);
+    classicColumn(Antares::Data::TimeSeries ts, wxString caption);
 };
 
 // -----------------------------

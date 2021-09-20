@@ -39,13 +39,18 @@ namespace Renderer
 // -------------------
 // Base column class
 // -------------------
-Column::Column(Antares::Data::TimeSeries ts) : tsKind_(ts)
+Column::Column(Antares::Data::TimeSeries ts, wxString c) : tsKind_(ts), caption_(c)
 {
 }
 
 Cell* Column::getLine(int y) const
 {
     return cells_[y];
+}
+
+wxString Column::getCaption() const
+{
+    return caption_;
 }
 
 int Column::getNumberOfLines() const
@@ -61,7 +66,7 @@ Column::~Column()
 // -------------------- -
 // Classic column
 // ---------------------
-classicColumn::classicColumn(TimeSeries ts) : Column(ts)
+classicColumn::classicColumn(TimeSeries ts, wxString c) : Column(ts, c)
 {
     cells_ = {new blankCell(),
               new readyMadeTSstatus(tsKind_),
@@ -80,7 +85,7 @@ classicColumn::classicColumn(TimeSeries ts) : Column(ts)
 // -------------------------------
 // Column renewable clusters
 // -------------------------------
-ColumnRenewableClusters::ColumnRenewableClusters() : Column(timeSeriesRenewable)
+ColumnRenewableClusters::ColumnRenewableClusters() : Column(timeSeriesRenewable, "   Renewable   ")
 {
     cells_ = {new blankCell(),
               new inactiveRenewableClusterCell(wxT("On")),
