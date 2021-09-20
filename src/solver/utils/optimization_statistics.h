@@ -14,12 +14,17 @@ private:
     unsigned int nbUpdate;
 
 public:
-    optimizationStatistics() :
-        totalSolveTime(0),
-        nbSolve(0),
-        totalUpdateTime(0),
-        nbUpdate(0)
+    void reset()
     {
+        totalSolveTime = 0;
+        nbSolve = 0;
+        totalUpdateTime = 0;
+        nbUpdate = 0;
+    }
+
+    optimizationStatistics()
+    {
+        this->reset();
     }
 
     void add(const optimizationStatistics& other)
@@ -47,7 +52,7 @@ public:
         return nbUpdate;
     }
 
-    unsigned int getNbSolve() const 
+    unsigned int getNbSolve() const
     {
         return nbSolve;
     }
@@ -64,20 +69,23 @@ public:
 
     double getAverageUpdateTime() const
     {
-        if (nbUpdate == 0) return 0.0;
-        return ((double) totalUpdateTime) / nbUpdate;
+        if (nbUpdate == 0)
+            return 0.0;
+        return ((double)totalUpdateTime) / nbUpdate;
     }
 
-    double getAverageSolveTime() const 
+    double getAverageSolveTime() const
     {
-        if (nbSolve == 0) return 0.0;
-        return ((double) totalSolveTime) / nbSolve;
+        if (nbSolve == 0)
+            return 0.0;
+        return ((double)totalSolveTime) / nbSolve;
     }
 
     std::string toString() const
     {
-      return "Average solve time: " + std::to_string(std::lround(getAverageSolveTime())) + "ms, "
-        + "average update time: " + std::to_string(std::lround(getAverageUpdateTime())) + "ms";
+        return "Average solve time: " + std::to_string(std::lround(getAverageSolveTime())) + "ms, "
+               + "average update time: " + std::to_string(std::lround(getAverageUpdateTime()))
+               + "ms";
     }
 };
 
