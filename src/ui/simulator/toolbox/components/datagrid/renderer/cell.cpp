@@ -12,7 +12,6 @@ namespace Datagrid
 {
 namespace Renderer
 {
-
 static bool convertToDouble(const String& value, double& valueDouble)
 {
     bool conversionValid = value.to(valueDouble);
@@ -29,27 +28,27 @@ static bool convertToDouble(const String& value, double& valueDouble)
 }
 
 // -------------------
-// Base cell class
+// Base Cell class
 // -------------------
-cell::cell(TimeSeries ts) : tsKind_(ts)
+Cell::Cell(TimeSeries ts) : tsKind_(ts)
 {
     // We have to wait for the study to be loaded before initializing data members from study.
     // That's why constructor delegates to member function onStudyLoaded.
-    OnStudyLoaded.connect(this, &cell::onStudyLoaded);
+    OnStudyLoaded.connect(this, &Cell::onStudyLoaded);
 }
 
-cell::~cell()
+Cell::~Cell()
 {
     destroyBoundEvents();
 }
 
-void cell::onStudyLoaded()
+void Cell::onStudyLoaded()
 {
     // We are sure study is loaded now.
     study_ = Data::Study::Current::Get();
 }
 
-bool cell::isTSgeneratorOn() const
+bool Cell::isTSgeneratorOn() const
 {
     return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_));
 }
@@ -57,40 +56,68 @@ bool cell::isTSgeneratorOn() const
 // ===================
 // Blank cell
 // ===================
-blankCell::blankCell() : cell(timeSeriesCount /*arbitrary, not used here anyway */) {}
-wxString blankCell::cellValue() const { return wxEmptyString; }
-double blankCell::cellNumericValue() const { return 0.; }
-bool blankCell::cellValue(const String& value) { return false;}
-IRenderer::CellStyle blankCell::cellStyle() const { return IRenderer::cellStyleDefaultDisabled; }
+blankCell::blankCell() : Cell(timeSeriesCount /*arbitrary, not used here anyway */)
+{
+}
+wxString blankCell::cellValue() const
+{
+    return wxEmptyString;
+}
+double blankCell::cellNumericValue() const
+{
+    return 0.;
+}
+bool blankCell::cellValue(const String& value)
+{
+    return false;
+}
+IRenderer::CellStyle blankCell::cellStyle() const
+{
+    return IRenderer::cellStyleDefaultDisabled;
+}
 
 // =================================
 // Inactive renewable cluster cell
 // =================================
-inactiveRenewableClusterCell::inactiveRenewableClusterCell(wxString toPrintInCell) : 
-    cell(timeSeriesCount /*arbitrary, not used here anyway */),
-    toBePrintedInCell_(toPrintInCell)
-{}
+inactiveRenewableClusterCell::inactiveRenewableClusterCell(wxString toPrintInCell) :
+ Cell(timeSeriesCount /*arbitrary, not used here anyway */), toBePrintedInCell_(toPrintInCell)
+{
+}
 
-wxString inactiveRenewableClusterCell::cellValue() const { return toBePrintedInCell_; }
-double inactiveRenewableClusterCell::cellNumericValue() const { return 0.; }
-bool inactiveRenewableClusterCell::cellValue(const String& value) { return false; }
-IRenderer::CellStyle inactiveRenewableClusterCell::cellStyle() const { return IRenderer::cellStyleDisabled; }
+wxString inactiveRenewableClusterCell::cellValue() const
+{
+    return toBePrintedInCell_;
+}
+double inactiveRenewableClusterCell::cellNumericValue() const
+{
+    return 0.;
+}
+bool inactiveRenewableClusterCell::cellValue(const String& value)
+{
+    return false;
+}
+IRenderer::CellStyle inactiveRenewableClusterCell::cellStyle() const
+{
+    return IRenderer::cellStyleDisabled;
+}
 
 // ===================
 // Status cell
 // ===================
-readyMadeTSstatus::readyMadeTSstatus(TimeSeries ts) : cell(ts) {}
+readyMadeTSstatus::readyMadeTSstatus(TimeSeries ts) : Cell(ts)
+{
+}
 
 wxString readyMadeTSstatus::cellValue() const
 {
     return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_)) ? wxT("Off") : wxT("On");
 }
 double readyMadeTSstatus::cellNumericValue() const
-{ 
+{
     return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_)) ? 0 : 1.;
 }
 bool readyMadeTSstatus::cellValue(const String& value)
-{ 
+{
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
         return false;
@@ -102,16 +129,18 @@ bool readyMadeTSstatus::cellValue(const String& value)
     return true;
 }
 IRenderer::CellStyle readyMadeTSstatus::cellStyle() const
-{ 
+{
     // Status READY made TS
-    return isTSgeneratorOn() ? IRenderer::cellStyleConstraintNoWeight : IRenderer::cellStyleConstraintWeight;
+    return isTSgeneratorOn() ? IRenderer::cellStyleConstraintNoWeight
+                             : IRenderer::cellStyleConstraintWeight;
 }
-
 
 // ==========================
 // Generated TS status cell
 // ==========================
-generatedTSstatus::generatedTSstatus(TimeSeries ts) : cell(ts) {}
+generatedTSstatus::generatedTSstatus(TimeSeries ts) : Cell(ts)
+{
+}
 
 wxString generatedTSstatus::cellValue() const
 {
@@ -135,13 +164,14 @@ bool generatedTSstatus::cellValue(const String& value)
 }
 IRenderer::CellStyle generatedTSstatus::cellStyle() const
 {
-    return isTSgeneratorOn() ? IRenderer::cellStyleConstraintWeight : IRenderer::cellStyleConstraintNoWeight;
+    return isTSgeneratorOn() ? IRenderer::cellStyleConstraintWeight
+                             : IRenderer::cellStyleConstraintNoWeight;
 }
 
 // ===================
-// Number TS cell
+// Number TS Cell
 // ===================
-NumberTsCell::NumberTsCell(TimeSeries ts) : cell(ts)
+NumberTsCell::NumberTsCell(TimeSeries ts) : Cell(ts)
 {
     OnStudyLoaded.connect(this, &NumberTsCell::onStudyLoaded);
 }
@@ -160,7 +190,7 @@ wxString NumberTsCell::cellValue() const
     wxString to_return = wxEmptyString;
     if (tsToNumberTs_.find(tsKind_) != tsToNumberTs_.end())
         to_return = wxString() << *(tsToNumberTs_.at(tsKind_));
-    return to_return; 
+    return to_return;
 }
 
 double NumberTsCell::cellNumericValue() const
@@ -207,7 +237,7 @@ IRenderer::CellStyle NumberTsCell::cellStyle() const
 // ===================
 // Refresh TS cell
 // ===================
-RefreshTsCell::RefreshTsCell(TimeSeries ts) : cell(ts)
+RefreshTsCell::RefreshTsCell(TimeSeries ts) : Cell(ts)
 {
     OnStudyLoaded.connect(this, &RefreshTsCell::onStudyLoaded);
 }
@@ -244,7 +274,7 @@ IRenderer::CellStyle RefreshTsCell::cellStyle() const
 // ===================
 // Refresh Span cell
 // ===================
-RefreshSpanCell::RefreshSpanCell(TimeSeries ts) : cell(ts)
+RefreshSpanCell::RefreshSpanCell(TimeSeries ts) : Cell(ts)
 {
     OnStudyLoaded.connect(this, &RefreshSpanCell::onStudyLoaded);
 }
@@ -279,7 +309,7 @@ bool RefreshSpanCell::cellValue(const String& value)
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
         return false;
-    
+
     uint refreshSpan = std::max((int)std::round(valueDouble), 1);
 
     bool to_return = false;
@@ -294,14 +324,14 @@ bool RefreshSpanCell::cellValue(const String& value)
 IRenderer::CellStyle RefreshSpanCell::cellStyle() const
 {
     return (isTSgeneratorOn() && 0 != (study_->parameters.timeSeriesToRefresh & tsKind_))
-        ? IRenderer::cellStyleDefault
-        : IRenderer::cellStyleDefaultDisabled;
+             ? IRenderer::cellStyleDefault
+             : IRenderer::cellStyleDefaultDisabled;
 }
 
 // ============================
 //  Seasonal correlation cell
 // ============================
-SeasonalCorrelationCell::SeasonalCorrelationCell(TimeSeries ts) : cell(ts)
+SeasonalCorrelationCell::SeasonalCorrelationCell(TimeSeries ts) : Cell(ts)
 {
     OnStudyLoaded.connect(this, &SeasonalCorrelationCell::onStudyLoaded);
 }
@@ -350,7 +380,8 @@ bool SeasonalCorrelationCell::cellValue(const String& value)
         mode = Data::Correlation::modeAnnual;
     else
     {
-        if ((convertToDoubleValid && Math::Equals(valueDouble, -1.)) || s == "monthly" || s == "month" || s == "m")
+        if ((convertToDoubleValid && Math::Equals(valueDouble, -1.)) || s == "monthly"
+            || s == "month" || s == "m")
             mode = Data::Correlation::modeMonthly;
     }
 
@@ -372,7 +403,9 @@ IRenderer::CellStyle SeasonalCorrelationCell::cellStyle() const
 // =====================
 // Store to input cell
 // =====================
-storeToInputCell::storeToInputCell(TimeSeries ts) : cell(ts) {}
+storeToInputCell::storeToInputCell(TimeSeries ts) : Cell(ts)
+{
+}
 
 wxString storeToInputCell::cellValue() const
 {
@@ -400,14 +433,16 @@ bool storeToInputCell::cellValue(const String& value)
 IRenderer::CellStyle storeToInputCell::cellStyle() const
 {
     return (isTSgeneratorOn() && 0 != (study_->parameters.timeSeriesToImport & tsKind_))
-        ? IRenderer::cellStyleDefault
-        : IRenderer::cellStyleDefaultDisabled;
+             ? IRenderer::cellStyleDefault
+             : IRenderer::cellStyleDefaultDisabled;
 }
 
 // ======================
 // Store to output cell
 // ======================
-storeToOutputCell::storeToOutputCell(TimeSeries ts) : cell(ts) {}
+storeToOutputCell::storeToOutputCell(TimeSeries ts) : Cell(ts)
+{
+}
 
 wxString storeToOutputCell::cellValue() const
 {
@@ -435,14 +470,16 @@ bool storeToOutputCell::cellValue(const String& value)
 IRenderer::CellStyle storeToOutputCell::cellStyle() const
 {
     return (isTSgeneratorOn() && 0 != (study_->parameters.timeSeriesToArchive & tsKind_))
-        ? IRenderer::cellStyleDefault
-        : IRenderer::cellStyleDefaultDisabled;
+             ? IRenderer::cellStyleDefault
+             : IRenderer::cellStyleDefaultDisabled;
 }
 
 // ======================
 // Intra modal cell
 // ======================
-intraModalCell::intraModalCell(TimeSeries ts) : cell(ts) {}
+intraModalCell::intraModalCell(TimeSeries ts) : Cell(ts)
+{
+}
 
 wxString intraModalCell::cellValue() const
 {
@@ -469,13 +506,16 @@ bool intraModalCell::cellValue(const String& value)
 
 IRenderer::CellStyle intraModalCell::cellStyle() const
 {
-    return (0 != (study_->parameters.intraModal & tsKind_)) ? IRenderer::cellStyleDefault : IRenderer::cellStyleDefaultDisabled;
+    return (0 != (study_->parameters.intraModal & tsKind_)) ? IRenderer::cellStyleDefault
+                                                            : IRenderer::cellStyleDefaultDisabled;
 }
 
 // ======================
 // Inter modal cell
 // ======================
-interModalCell::interModalCell(TimeSeries ts) : cell(ts) {}
+interModalCell::interModalCell(TimeSeries ts) : Cell(ts)
+{
+}
 
 wxString interModalCell::cellValue() const
 {
@@ -502,9 +542,9 @@ bool interModalCell::cellValue(const String& value)
 
 IRenderer::CellStyle interModalCell::cellStyle() const
 {
-    return (0 != (study_->parameters.interModal & tsKind_)) ? IRenderer::cellStyleDefault : IRenderer::cellStyleDefaultDisabled;
+    return (0 != (study_->parameters.interModal & tsKind_)) ? IRenderer::cellStyleDefault
+                                                            : IRenderer::cellStyleDefaultDisabled;
 }
-
 
 } // namespace Renderer
 } // namespace Datagrid

@@ -43,7 +43,7 @@ Column::Column(Antares::Data::TimeSeries ts) : tsKind_(ts)
 {
 }
 
-cell* Column::getLine(int y) const
+Cell* Column::getLine(int y) const
 {
     return cells_[y];
 }
@@ -63,38 +63,38 @@ Column::~Column()
 // ---------------------
 classicColumn::classicColumn(TimeSeries ts) : Column(ts)
 {
-    cells_ = std::vector<cell*>{{new blankCell(),
-                                 new readyMadeTSstatus(tsKind_),
-                                 new blankCell(),
-                                 new generatedTSstatus(tsKind_),
-                                 new NumberTsCell(tsKind_),
-                                 new RefreshTsCell(tsKind_),
-                                 new RefreshSpanCell(tsKind_),
-                                 new SeasonalCorrelationCell(tsKind_),
-                                 new storeToInputCell(tsKind_),
-                                 new storeToOutputCell(tsKind_),
-                                 new blankCell(),
-                                 new intraModalCell(tsKind_),
-                                 new interModalCell(tsKind_)}};
+    cells_ = {new blankCell(),
+              new readyMadeTSstatus(tsKind_),
+              new blankCell(),
+              new generatedTSstatus(tsKind_),
+              new NumberTsCell(tsKind_),
+              new RefreshTsCell(tsKind_),
+              new RefreshSpanCell(tsKind_),
+              new SeasonalCorrelationCell(tsKind_),
+              new storeToInputCell(tsKind_),
+              new storeToOutputCell(tsKind_),
+              new blankCell(),
+              new intraModalCell(tsKind_),
+              new interModalCell(tsKind_)};
 }
 // -------------------------------
 // Column renewable clusters
 // -------------------------------
 ColumnRenewableClusters::ColumnRenewableClusters() : Column(timeSeriesRenewable)
 {
-    cells_ = std::vector<cell*>{{new blankCell(),
-                                 new inactiveRenewableClusterCell(wxT("On")),
-                                 new inactiveRenewableClusterCell(wxT("-")),
-                                 new inactiveRenewableClusterCell(wxT("-")),
-                                 new inactiveRenewableClusterCell(wxT("-")),
-                                 new inactiveRenewableClusterCell(wxT("-")),
-                                 new inactiveRenewableClusterCell(wxT("-")),
-                                 new inactiveRenewableClusterCell(wxT("-")),
-                                 new inactiveRenewableClusterCell(wxT("-")),
-                                 new inactiveRenewableClusterCell(wxT("-")),
-                                 new blankCell(),
-                                 new intraModalCell(tsKind_),
-                                 new interModalCell(tsKind_)}};
+    cells_ = {new blankCell(),
+              new inactiveRenewableClusterCell(wxT("On")),
+              new inactiveRenewableClusterCell(wxT("-")),
+              new inactiveRenewableClusterCell(wxT("-")),
+              new inactiveRenewableClusterCell(wxT("-")),
+              new inactiveRenewableClusterCell(wxT("-")),
+              new inactiveRenewableClusterCell(wxT("-")),
+              new inactiveRenewableClusterCell(wxT("-")),
+              new inactiveRenewableClusterCell(wxT("-")),
+              new inactiveRenewableClusterCell(wxT("-")),
+              new blankCell(),
+              new intraModalCell(tsKind_),
+              new interModalCell(tsKind_)};
 }
 } // namespace Renderer
 } // namespace Datagrid

@@ -7,7 +7,6 @@
 
 using namespace Yuni;
 
-
 namespace Antares
 {
 namespace Component
@@ -16,30 +15,32 @@ namespace Datagrid
 {
 namespace Renderer
 {
-
 using namespace Antares::Data;
 using namespace std;
 
-class cell : public Yuni::IEventObserver<cell>
+class Cell : public Yuni::IEventObserver<Cell>
 {
 protected:
     using study_ptr = Data::Study::Ptr;
+
 public:
-    cell(TimeSeries ts);
-    ~cell();
+    Cell(TimeSeries ts);
+    ~Cell();
     virtual wxString cellValue() const = 0;
     virtual double cellNumericValue() const = 0;
     virtual bool cellValue(const String& value) = 0;
     virtual IRenderer::CellStyle cellStyle() const = 0;
+
 protected:
     void onStudyLoaded();
     bool isTSgeneratorOn() const;
+
 protected:
     study_ptr study_;
     TimeSeries tsKind_;
 };
 
-class blankCell : public cell
+class blankCell : public Cell
 {
 public:
     blankCell();
@@ -50,7 +51,7 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class inactiveRenewableClusterCell : public cell
+class inactiveRenewableClusterCell : public Cell
 {
 public:
     inactiveRenewableClusterCell(wxString toPrintInCell);
@@ -59,12 +60,12 @@ public:
     double cellNumericValue() const override;
     bool cellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
+
 private:
     wxString toBePrintedInCell_;
 };
 
-
-class readyMadeTSstatus : public cell
+class readyMadeTSstatus : public Cell
 {
 public:
     readyMadeTSstatus(TimeSeries ts);
@@ -75,7 +76,7 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class generatedTSstatus : public cell
+class generatedTSstatus : public Cell
 {
 public:
     generatedTSstatus(TimeSeries ts);
@@ -86,7 +87,7 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class NumberTsCell : public cell
+class NumberTsCell : public Cell
 {
 public:
     NumberTsCell(TimeSeries ts);
@@ -95,13 +96,15 @@ public:
     double cellNumericValue() const override;
     bool cellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
+
 private:
     void onStudyLoaded();
+
 private:
     map<TimeSeries, uint*> tsToNumberTs_;
 };
 
-class RefreshTsCell : public cell
+class RefreshTsCell : public Cell
 {
 public:
     RefreshTsCell(TimeSeries ts);
@@ -112,7 +115,7 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class RefreshSpanCell : public cell
+class RefreshSpanCell : public Cell
 {
 public:
     RefreshSpanCell(TimeSeries ts);
@@ -121,13 +124,15 @@ public:
     double cellNumericValue() const override;
     bool cellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
+
 private:
     void onStudyLoaded();
+
 private:
     map<TimeSeries, uint*> tsToRefreshSpan_;
 };
 
-class SeasonalCorrelationCell : public cell
+class SeasonalCorrelationCell : public Cell
 {
 public:
     SeasonalCorrelationCell(TimeSeries ts);
@@ -136,13 +141,15 @@ public:
     double cellNumericValue() const override;
     bool cellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
+
 private:
     void onStudyLoaded();
+
 private:
     map<TimeSeries, Correlation*> tsToCorrelation_;
 };
 
-class storeToInputCell : public cell
+class storeToInputCell : public Cell
 {
 public:
     storeToInputCell(TimeSeries ts);
@@ -153,7 +160,7 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class storeToOutputCell : public cell
+class storeToOutputCell : public Cell
 {
 public:
     storeToOutputCell(TimeSeries ts);
@@ -164,7 +171,7 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class intraModalCell : public cell
+class intraModalCell : public Cell
 {
 public:
     intraModalCell(TimeSeries ts);
@@ -175,7 +182,7 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class interModalCell : public cell
+class interModalCell : public Cell
 {
 public:
     interModalCell(TimeSeries ts);

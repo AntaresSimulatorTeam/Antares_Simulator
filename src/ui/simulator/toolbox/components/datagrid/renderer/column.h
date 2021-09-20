@@ -38,7 +38,7 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class cell;
+class Cell;
 
 // -------------------
 //  Base column class
@@ -48,11 +48,11 @@ class Column
 public:
     Column(Antares::Data::TimeSeries ts);
     ~Column();
-    cell* getLine(int y) const;
+    Cell* getLine(int y) const;
     int getNumberOfLines() const;
 
 protected:
-    std::vector<cell*> cells_;
+    std::vector<Cell*> cells_;
     Antares::Data::TimeSeries tsKind_;
 };
 
