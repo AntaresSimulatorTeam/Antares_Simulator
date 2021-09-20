@@ -20,9 +20,6 @@ using namespace std;
 
 class Cell : public Yuni::IEventObserver<Cell>
 {
-protected:
-    using study_ptr = Data::Study::Ptr;
-
 public:
     Cell(TimeSeries ts);
     ~Cell();
@@ -36,7 +33,7 @@ protected:
     bool isTSgeneratorOn() const;
 
 protected:
-    study_ptr study_;
+    Data::Study::Ptr study_;
     TimeSeries tsKind_;
 };
 
