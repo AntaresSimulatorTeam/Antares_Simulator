@@ -147,6 +147,7 @@ public:
     void yearBegin(uint year, unsigned int numSpace);
 
     void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year, uint numSpace);
+    void yearEndBuildPrepareDataForEachRenewableCluster(State& state, uint year, uint numSpace);
     void yearEndBuildForEachThermalCluster(State& state, uint year, uint numSpace);
 
     void yearEndBuild(State& state, uint year);
@@ -165,6 +166,7 @@ public:
     void hourForEachArea(State& state, uint numSpace);
     void hourForEachLink(State& state, uint numSpace);
     void hourForEachThermalCluster(State& state, uint numSpace);
+    void hourForEachRenewableCluster(State& state, uint numSpace);
 
     void hourEnd(State& state, uint hourInTheYear);
 

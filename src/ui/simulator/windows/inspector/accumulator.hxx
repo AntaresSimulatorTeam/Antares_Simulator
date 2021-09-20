@@ -221,7 +221,7 @@ static const uint arrayMinUpDownTimeValue[] = {1, 24, 168, 0};
 
 enum
 {
-    arrayClusterGroupCount = 7
+    arrayClusterGroupCount = 10
 };
 static const wxChar* arrayClusterGroup[] = {wxT("Gas"),
                                             wxT("Hard coal"),
@@ -230,7 +230,33 @@ static const wxChar* arrayClusterGroup[] = {wxT("Gas"),
                                             wxT("Nuclear"),
                                             wxT("Oil"),
                                             wxT("Other"),
+                                            wxT("Other 2"),
+                                            wxT("Other 3"),
+                                            wxT("Other 4"),
                                             nullptr};
+
+enum
+{
+    arrayRnClusterGroupCount = 9
+};
+static const wxChar* arrayRnClusterGroup[] = { wxT("Wind Onshore"),
+                                               wxT("Wind Offshore"),
+                                               wxT("Solar Thermal"),
+                                               wxT("Solar PV"),
+                                               wxT("Solar Rooftop"),
+                                               wxT("Other RES 1"),
+                                               wxT("Other RES 2"),
+                                               wxT("Other RES 3"),
+                                               wxT("Other RES 4"),
+                                               nullptr };
+
+enum
+{
+    renewableTSModeCount = 2
+};
+
+static const wxChar* renewableTSMode[]
+  = {wxT("power generation"), wxT("production factor"), nullptr};
 
 enum
 {
@@ -931,10 +957,13 @@ struct PAreaSpilledEnergyCost
     }
 };
 
+// ----------------
+// THERMAL/RENEWABLE CLUSTERS
+// ----------------
 struct PClusterEnabled
 {
     typedef bool Type;
-    static Type Value(const Data::ThermalCluster* cluster)
+    static Type Value(const Data::Cluster* cluster)
     {
         return cluster->enabled;
     }
@@ -947,7 +976,7 @@ struct PClusterEnabled
 struct PClusterUnitCount
 {
     typedef uint Type;
-    static Type Value(const Data::ThermalCluster* cluster)
+    static Type Value(const Data::Cluster* cluster)
     {
         return cluster->unitCount;
     }
@@ -960,7 +989,7 @@ struct PClusterUnitCount
 struct PClusterNomCapacity
 {
     typedef double Type;
-    static Type Value(const Data::ThermalCluster* cluster)
+    static Type Value(const Data::Cluster* cluster)
     {
         return cluster->nominalCapacity;
     }
@@ -970,6 +999,48 @@ struct PClusterNomCapacity
     }
 };
 
+struct PClusterInstalled
+{
+    typedef double Type;
+    static Type Value(const Data::Cluster* cluster)
+    {
+        return cluster->nominalCapacity * cluster->unitCount;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return DoubleToWxString(v);
+    }
+};
+
+struct PClusterGroup
+{
+    typedef wxString Type;
+    static Type Value(const Data::Cluster* cluster)
+    {
+        return wxStringFromUTF8(cluster->group());
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return v;
+    }
+};
+
+struct PClusterArea
+{
+    typedef wxString Type;
+    static Type Value(const Data::Cluster* cluster)
+    {
+        return wxStringFromUTF8(cluster->parentArea->name);
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return v;
+    }
+};
+
+// ----------------
+// THERMAL CLUSTERS
+// ----------------
 struct PClusterNomCapacityColor
 {
     static wxColor TextColor(Data::ThermalCluster* cluster)
@@ -989,19 +1060,6 @@ struct PClusterNomCapacityColor
     }
 };
 
-struct PClusterInstalled
-{
-    typedef double Type;
-    static Type Value(const Data::ThermalCluster* cluster)
-    {
-        return cluster->nominalCapacity * cluster->unitCount;
-    }
-    static wxString ConvertToString(const Type v)
-    {
-        return DoubleToWxString(v);
-    }
-};
-
 struct PClusterMustRun
 {
     typedef bool Type;
@@ -1012,32 +1070,6 @@ struct PClusterMustRun
     static wxString ConvertToString(const Type v)
     {
         return v ? wxT("True") : wxT("False");
-    }
-};
-
-struct PClusterGroup
-{
-    typedef wxString Type;
-    static Type Value(const Data::ThermalCluster* cluster)
-    {
-        return wxStringFromUTF8(cluster->group());
-    }
-    static wxString ConvertToString(const Type v)
-    {
-        return v;
-    }
-};
-
-struct PClusterArea
-{
-    typedef wxString Type;
-    static Type Value(const Data::ThermalCluster* cluster)
-    {
-        return wxStringFromUTF8(cluster->parentArea->name);
-    }
-    static wxString ConvertToString(const Type v)
-    {
-        return v;
     }
 };
 
@@ -1261,6 +1293,22 @@ struct PClusterLawPlanned
     }
 };
 
+struct PRnClusterTSMode
+{
+    typedef uint Type;
+    static Type Value(const Data::RenewableCluster* cluster)
+    {
+        return cluster->tsMode;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return (v < renewableTSModeCount) ? renewableTSMode[v] : nullptr;
+    }
+};
+
+// -------------------
+// BINDING CONSTRAINTS
+// -------------------
 struct PConstraintName
 {
     typedef wxString Type;
@@ -1312,7 +1360,6 @@ struct PConstraintType
         return wxStringFromUTF8(Data::BindingConstraint::TypeToCString(v));
     }
 };
-
 } // namespace Inspector
 } // namespace Window
 } // namespace Antares

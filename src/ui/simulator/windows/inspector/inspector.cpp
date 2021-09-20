@@ -90,9 +90,10 @@ uint SelectionLinksCount()
     return ((!(!gData)) ? (uint)gData->links.size() : 0);
 }
 
+// gp : do we have to add a renewable counterpart ? Check where it is called
 uint SelectionThermalClusterCount()
 {
-    return ((!(!gData)) ? (uint)gData->clusters.size() : 0);
+    return ((!(!gData)) ? (uint)gData->ThClusters.size() : 0);
 }
 
 uint SelectionBindingConstraintCount()
@@ -100,9 +101,10 @@ uint SelectionBindingConstraintCount()
     return ((!(!gData)) ? (uint)gData->constraints.size() : 0);
 }
 
+// gp : we should add contribution of renewable clusters. Where is this function used and why ? 
 uint SelectionTotalCount()
 {
-    return (!(!gData)) ? (uint)gData->constraints.size() + (uint)gData->clusters.size()
+    return (!(!gData)) ? (uint)gData->constraints.size() + (uint)gData->ThClusters.size()
                            + (uint)gData->links.size() + (uint)gData->areas.size()
                        : 0;
 }
@@ -357,11 +359,12 @@ void AddLink(const Data::AreaLink* link)
     }
 }
 
+// gp : never used - to be removed
 void AddThermalCluster(const Data::ThermalCluster* cluster)
 {
     if (!gData)
         gData = new InspectorData(*Data::Study::Current::Get());
-    if (gData->clusters.insert(const_cast<Data::ThermalCluster*>(cluster)).second)
+    if (gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(cluster)).second)
     {
         gData->empty = false;
         if (gInspector)
@@ -369,6 +372,7 @@ void AddThermalCluster(const Data::ThermalCluster* cluster)
     }
 }
 
+// gp : should we add its renewable counterpart ?
 void AddThermalClusters(const Data::ThermalCluster::Vector& list)
 {
     if (list.empty())
@@ -379,7 +383,7 @@ void AddThermalClusters(const Data::ThermalCluster::Vector& list)
     bool notEmpty = false;
     Data::ThermalCluster::Vector::const_iterator end = list.end();
     for (Data::ThermalCluster::Vector::const_iterator i = list.begin(); i != end; ++i)
-        notEmpty = gData->clusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
+        notEmpty = gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
 
     if (notEmpty)
     {
@@ -389,6 +393,7 @@ void AddThermalClusters(const Data::ThermalCluster::Vector& list)
     }
 }
 
+// gp : should we add its renewable counterpart ?
 void AddThermalClusters(const Data::ThermalCluster::Set& list)
 {
     if (list.empty())
@@ -399,7 +404,7 @@ void AddThermalClusters(const Data::ThermalCluster::Set& list)
     bool notEmpty = false;
     Data::ThermalCluster::Set::const_iterator end = list.end();
     for (Data::ThermalCluster::Set::const_iterator i = list.begin(); i != end; ++i)
-        notEmpty = gData->clusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
+        notEmpty = gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
 
     if (notEmpty)
     {
@@ -441,7 +446,17 @@ void RemoveLink(const Data::AreaLink* link)
 
 void RemoveThermalCluster(const Data::ThermalCluster* cluster)
 {
-    if (!(!gData) && gData->clusters.erase(const_cast<Data::ThermalCluster*>(cluster)))
+    if (!(!gData) && gData->ThClusters.erase(const_cast<Data::ThermalCluster*>(cluster)))
+    {
+        gData->determineEmpty();
+        if (gInspector)
+            gInspector->apply(gData);
+    }
+}
+
+void RemoveRenewableCluster(const Data::RenewableCluster* cluster)
+{
+    if (!(!gData) && gData->RnClusters.erase(const_cast<Data::RenewableCluster*>(cluster)))
     {
         gData->determineEmpty();
         if (gInspector)
@@ -551,13 +566,14 @@ void SelectThermalCluster(const Data::ThermalCluster* cluster)
     gData->clear();
     if (cluster)
     {
-        if (gData->clusters.insert(const_cast<Data::ThermalCluster*>(cluster)).second)
+        if (gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(cluster)).second)
             gData->empty = false;
     }
     if (gInspector)
         gInspector->apply(gData);
 }
 
+// gp : never used - to be removed
 void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters)
 {
     if (!gData)
@@ -570,9 +586,23 @@ void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters)
         auto end = clusters.end();
         for (auto i = clusters.begin(); i != end; ++i)
             notEmpty
-              = (gData->clusters).insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
+              = (gData->ThClusters).insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
 
         if (notEmpty)
+            gData->empty = false;
+    }
+    if (gInspector)
+        gInspector->apply(gData);
+}
+
+void SelectRenewableCluster(const Data::RenewableCluster* cluster)
+{
+    if (!gData)
+        gData = new InspectorData(*Data::Study::Current::Get());
+    gData->clear();
+    if (cluster)
+    {
+        if (gData->RnClusters.insert(const_cast<Data::RenewableCluster*>(cluster)).second)
             gData->empty = false;
     }
     if (gInspector)
@@ -616,11 +646,12 @@ uint CopyToClipboard()
             }
         }
     }
-
+    // gp : to be taken care of for renewable clusters
+    // gp : Find "import-thermal-cluster:" and make same thing for renewables
     // copying thermal plants if any
     {
-        auto end = gData->clusters.end();
-        for (auto i = gData->clusters.begin(); i != end; ++i)
+        auto end = gData->ThClusters.end();
+        for (auto i = gData->ThClusters.begin(); i != end; ++i)
         {
             text << "import-thermal-cluster:" << (*i)->parentArea->name << '@' << (*i)->name()
                  << "\n";
@@ -771,7 +802,8 @@ bool LinksSelected(std::map<Data::AreaName, std::map<Data::AreaName, bool>>& set
     return true;
 }
 
-bool IsThermalClusterSelected(const Data::AreaName& area, const Data::ThermalClusterName& name)
+// gp : never used - to be removed
+bool IsThermalClusterSelected(const Data::AreaName& area, const Data::ClusterName& name)
 {
     (void)area;
     (void)name;

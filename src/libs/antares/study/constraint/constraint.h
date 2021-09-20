@@ -88,7 +88,7 @@ public:
     typedef linkWeightMap::const_iterator const_iterator;
 
     //! Map of weight (for thermal clusters)
-    typedef std::map<const ThermalCluster*, double, CompareThermalClusterName> clusterWeightMap;
+    typedef std::map<const ThermalCluster*, double, CompareClusterName> clusterWeightMap;
     //! Iterator
     typedef clusterWeightMap::iterator thermalIterator;
     //! Const iterator

@@ -114,6 +114,8 @@ public:
     windTSNumberData wind;
     //! Thermal (array [0..pAreaCount - 1])
     thermalTSNumberData* thermal;
+    //! Renewable (array [0..pAreaCount - 1])
+    renewableTSNumberData* renewable;
     //! hydro levels
     hydroLevelsData hydroLevels;
 

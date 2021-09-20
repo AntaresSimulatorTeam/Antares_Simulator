@@ -278,6 +278,8 @@ public:
     */
     Page* find(const wxString& name, bool warn = true);
 
+    void set_page_visibility(const wxString& name, bool visible);
+
     //! \name Theme
     //@{
     /*!

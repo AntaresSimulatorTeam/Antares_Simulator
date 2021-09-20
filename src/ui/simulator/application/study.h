@@ -292,6 +292,16 @@ extern Yuni::Event<void(Data::ThermalCluster*)> OnStudyThermalClusterRenamed;
 extern Yuni::Event<void(Data::Area*)> OnStudyThermalClusterGroupChanged;
 
 /*!
+** \brief Event: The common settings of a renewable cluster has been changed
+**
+** This event may concern one or several renewable clusters.
+*/
+extern Yuni::Event<void()> OnStudyRenewableClusterCommonSettingsChanged;
+
+extern Yuni::Event<void(Data::RenewableCluster*)> OnStudyRenewableClusterRenamed;
+extern Yuni::Event<void(Data::Area*)> OnStudyRenewableClusterGroupChanged;
+
+/*!
 ** \brief Event triggered when the data related to the Scenario Builder are loaded
 **
 ** This event means that some components must update their content.
