@@ -57,10 +57,16 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS
 		toolbox/components/datagrid/renderer/constraintsbuilder/links.cpp
 		toolbox/components/datagrid/renderer/connection.h
 		toolbox/components/datagrid/renderer/connection.cpp
+		toolbox/components/datagrid/renderer/cell.h
+		toolbox/components/datagrid/renderer/cell.cpp
+		toolbox/components/datagrid/renderer/column.h
+		toolbox/components/datagrid/renderer/column.cpp
 		toolbox/components/datagrid/renderer/ts-management.h
 		toolbox/components/datagrid/renderer/ts-management.cpp
 		toolbox/components/datagrid/renderer/ts-management-clusters-as-renewables.h
 		toolbox/components/datagrid/renderer/ts-management-clusters-as-renewables.cpp
+		toolbox/components/datagrid/renderer/ts-management-aggregated-as-renewables.h
+		toolbox/components/datagrid/renderer/ts-management-aggregated-as-renewables.cpp
 		toolbox/components/datagrid/renderer/geographic-trimming-grid.h
 		toolbox/components/datagrid/renderer/geographic-trimming-grid.cpp
 		toolbox/components/datagrid/renderer/select-variables.h

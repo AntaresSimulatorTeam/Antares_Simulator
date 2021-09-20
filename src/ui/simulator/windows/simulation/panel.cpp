@@ -30,7 +30,7 @@
 #include <ui/common/component/scrollbox/scrollbox.h>
 #include "../../toolbox/components/notebook/notebook.h"
 #include "../../toolbox/components/captionpanel.h"
-#include "../../toolbox/components/datagrid/renderer/ts-management.h"
+#include "../../toolbox/components/datagrid/renderer/ts-management-aggregated-as-renewables.h"
 #include "../../toolbox/components/datagrid/renderer/ts-management-clusters-as-renewables.h"
 #include "../../application/main.h"
 #include "../../windows/options/advanced/advanced.h"
@@ -72,23 +72,23 @@ Panel::Panel(wxWindow* parent) : Antares::Component::Panel(parent)
 
     // TS Management
     {
-        typedef Component::Datagrid::Renderer::TSmanagement TSmanagement;
+        typedef Component::Datagrid::Renderer::TSmanagementAggregatedAsRenewable TSmanagementAggregatedAsRenewable;
         typedef Component::Datagrid::Renderer::TSmanagementRenewableCluster TSmanagementRenewableCluster;
         
         verticalSizer_ = new wxBoxSizer(wxVERTICAL);
         verticalSizer_->Add(
             new Component::CaptionPanel(this, wxT("Time-Series Management")), 0, wxALL | wxEXPAND);
 
-        TSmanagement* renderer = new TSmanagement();
+        TSmanagementAggregatedAsRenewable* renderer_agg = new TSmanagementAggregatedAsRenewable();
         TSmanagementRenewableCluster* renderer_rn_cl = new TSmanagementRenewableCluster();
 
-        grid_ts_mgt_ = new DatagridType(this, renderer, wxEmptyString, false, true, true);
+        grid_ts_mgt_ = new DatagridType(this, renderer_agg, wxEmptyString, false, true, true);
         grid_ts_mgt_rn_cluster_ = new DatagridType(this, renderer_rn_cl, wxEmptyString, false, true, true);
 
         verticalSizer_->Add(grid_ts_mgt_, 1, wxALL | wxEXPAND);
         verticalSizer_->Add(grid_ts_mgt_rn_cluster_, 1, wxALL | wxEXPAND);
 
-        renderer->control(grid_ts_mgt_);
+        renderer_agg->control(grid_ts_mgt_);
         renderer_rn_cl->control(grid_ts_mgt_rn_cluster_);
 
         hz->Add(verticalSizer_, 1, wxALL | wxEXPAND);

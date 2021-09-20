@@ -27,7 +27,9 @@
 
 #pragma once
 
-#include "ts-management.h"
+#include <vector>
+#include <wx/string.h>
+#include <antares/study/fwd.h>
 
 namespace Antares
 {
@@ -37,12 +39,43 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class TSmanagementRenewableCluster final : public TSmanagement
+class Cell;
+
+// -------------------
+//  Base column class
+// -------------------
+class Column
 {
 public:
-    TSmanagementRenewableCluster();
-    ~TSmanagementRenewableCluster() = default;
-}; // class TSmanagementRenewableCluster
+    Column(Antares::Data::TimeSeries ts, wxString caption);
+    ~Column();
+    Cell* getLine(int y) const;
+    int getNumberOfLines() const;
+    wxString getCaption() const;
+
+protected:
+    std::vector<Cell*> cells_;
+    Antares::Data::TimeSeries tsKind_;
+    wxString caption_;
+};
+
+// -------------------
+//  Classic column
+// -------------------
+class classicColumn final : public Column
+{
+public:
+    classicColumn(Antares::Data::TimeSeries ts, wxString caption);
+};
+
+// -----------------------------
+//  Renewable clusters column
+// -----------------------------
+class ColumnRenewableClusters final : public Column
+{
+public:
+    ColumnRenewableClusters();
+};
 
 } // namespace Renderer
 } // namespace Datagrid
