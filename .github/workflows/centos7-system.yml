@@ -32,7 +32,7 @@ jobs:
       
     - name: Create docker file with src
       shell: bash
-      run:|
+      run: |
         sh docker\build-docker-file-src.sh
         
     - name: Read antares-deps version
