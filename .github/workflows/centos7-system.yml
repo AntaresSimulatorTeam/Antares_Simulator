@@ -24,17 +24,16 @@ jobs:
       with:
         files: |
           docker/centos7
-    
-    - name: Extract branch name
-      shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF##*/})"
-      id: extract_branch
+
+    - name: Get branch name
+      id: branch-name
+      uses: tj-actions/branch-names@v5
       
     - name: Create docker file with src
       shell: bash
       run: |
         echo "branch name"
-        echo ${{ steps.extract_branch.outputs.branch }}
+        echo ${{ steps.branch-name.outputs.current_branch }}
         cd docker
         sh build-docker-file-src.sh
         
@@ -49,7 +48,7 @@ jobs:
       uses: elgohr/Publish-Docker-Github-Action@master
       env:
         ANTARES_DEPS_VERSION: ${{steps.antares-deps-version.outputs.prop}}
-        ANTARES_SIMULATOR_TAG: ${{ steps.extract_branch.outputs.branch }}
+        ANTARES_SIMULATOR_TAG: ${{ steps.branch-name.outputs.current_branch }}
       with:
         name: antaresrte/rte-antares
         username: ${{ secrets.DOCKER_USERNAME }}
