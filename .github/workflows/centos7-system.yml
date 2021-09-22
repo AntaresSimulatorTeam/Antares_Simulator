@@ -26,15 +26,16 @@ jobs:
           docker/centos7
 
     - name: Read antares-deps version
-      if: steps.changed-files-specific.outputs.any_changed == 'true'
       id: antares-deps-version
+      if: steps.changed-files.outputs.modified_files != ''
       uses: notiz-dev/github-action-json-property@release
       with: 
         path: 'antares-version.json'
         prop_path: 'antares_deps_version'
         
     - name: Docker file push
-      if: steps.changed-files-specific.outputs.any_changed == 'true'
+      id: docker_push
+      if: steps.changed-files.outputs.modified_files != ''
       uses: elgohr/Publish-Docker-Github-Action@master
       env:
         ANTARES_DEPS_VERSION: ${{steps.antares-deps-version.outputs.prop}}
