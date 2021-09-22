@@ -33,6 +33,8 @@ jobs:
     - name: Create docker file with src
       shell: bash
       run: |
+        echo "branch name"
+        echo ${{ steps.extract_branch.outputs.branch }}
         cd docker
         sh build-docker-file-src.sh
         

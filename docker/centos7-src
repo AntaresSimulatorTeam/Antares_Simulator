@@ -1,3 +1,5 @@
+ARG ANTARES_SIMULATOR_TAG
+
 RUN git clone https://github.com/AntaresSimulatorTeam/Antares_Simulator -b ${ANTARES_SIMULATOR_TAG} --single-branch
 RUN cd Antares_Simulator &&\
     git submodule update --init antares-deps
