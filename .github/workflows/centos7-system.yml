@@ -24,6 +24,16 @@ jobs:
       with:
         files: |
           docker/centos7
+    
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF##*/})"
+      id: extract_branch
+      
+    - name: Create docker file with src
+      shell: bash
+      run:|
+        sh docker\build-docker-file-src.sh
         
     - name: Read antares-deps version
       id: antares-deps-version
@@ -36,15 +46,16 @@ jobs:
       uses: elgohr/Publish-Docker-Github-Action@master
       env:
         ANTARES_DEPS_VERSION: ${{steps.antares-deps-version.outputs.prop}}
+        ANTARES_SIMULATOR_TAG: ${{ steps.extract_branch.outputs.branch }}
       with:
         name: antaresrte/rte-antares
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         workdir: docker
-        dockerfile: centos7
+        dockerfile: build-centos7-src
         cache: true
-        tags: centos7-simulator
-        buildargs: ANTARES_DEPS_VERSION
+        tags: centos7-simulator-${{ steps.extract_branch.outputs.branch }}
+        buildargs: ANTARES_DEPS_VERSION, ANTARES_SIMULATOR_TAG
 
   build:
 

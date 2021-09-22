@@ -1,6 +1,5 @@
 FROM centos:7
 
-ARG ANTARES_SIMULATOR_TAG
 ARG ANTARES_DEPS_VERSION
 
 # Install requirements : update repo
@@ -13,7 +12,7 @@ RUN yum install -y epel-release
 RUN yum install -y git redhat-lsb-core gcc gcc-c++ make wget centos-release-scl scl-utils cmake3 devtoolset-7 rpm-build
 
 # Install simulator requirements
-RUN yum install -y openssl-devel curl-devel libuuid-devel wxGTK3-devel boost-test boost-filesystem boost-regex boost-devel
+RUN yum install -y libuuid-devel wxGTK3-devel boost-test boost-filesystem boost-regex boost-devel
     
 # Add python and pip installation for antares-xpansion
 RUN yum install -y python3-pip &&\
