@@ -9,10 +9,11 @@ RUN yum update -y
 RUN yum install -y epel-release 
 
 # Install requirements
-RUN yum install -y git redhat-lsb-core gcc gcc-c++ make wget centos-release-scl scl-utils cmake3 devtoolset-7 rpm-build
+RUN yum install -y git redhat-lsb-core gcc gcc-c++ make wget centos-release-scl scl-utils rpm-build &&
+    yum install -y cmake3 devtoolset-7
 
 # Install simulator requirements
-RUN yum install -y libuuid-devel wxGTK3-devel boost-test boost-filesystem boost-regex boost-devel
+RUN yum install -y unzip libuuid-devel wxGTK3-devel boost-test boost-filesystem boost-regex boost-devel
     
 # Add python and pip installation for antares-xpansion
 RUN yum install -y python3-pip &&\
