@@ -25,11 +25,8 @@ jobs:
         files: |
           docker/centos7
 
-    - name: Get branch name
-      id: branch-name
-      uses: tj-actions/branch-names@v5
-        
     - name: Read antares-deps version
+      if: steps.changed-files-specific.outputs.any_changed == 'true'
       id: antares-deps-version
       uses: notiz-dev/github-action-json-property@release
       with: 
@@ -37,6 +34,7 @@ jobs:
         prop_path: 'antares_deps_version'
         
     - name: Docker file push
+      if: steps.changed-files-specific.outputs.any_changed == 'true'
       uses: elgohr/Publish-Docker-Github-Action@master
       env:
         ANTARES_DEPS_VERSION: ${{steps.antares-deps-version.outputs.prop}}
