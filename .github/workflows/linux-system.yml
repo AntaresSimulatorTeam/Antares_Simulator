@@ -1,4 +1,4 @@
-name: Linux CI (system libs)
+name: Ubuntu CI (system libs)
 
 on:
   push:
