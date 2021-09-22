@@ -28,14 +28,6 @@ jobs:
     - name: Get branch name
       id: branch-name
       uses: tj-actions/branch-names@v5
-      
-    - name: Create docker file with src
-      shell: bash
-      run: |
-        echo "branch name"
-        echo ${{ steps.branch-name.outputs.current_branch }}
-        cd docker
-        sh build-docker-file-src.sh
         
     - name: Read antares-deps version
       id: antares-deps-version
@@ -48,16 +40,15 @@ jobs:
       uses: elgohr/Publish-Docker-Github-Action@master
       env:
         ANTARES_DEPS_VERSION: ${{steps.antares-deps-version.outputs.prop}}
-        ANTARES_SIMULATOR_TAG: ${{ steps.branch-name.outputs.current_branch }}
       with:
         name: antaresrte/rte-antares
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         workdir: docker
-        dockerfile: build-centos7-src
+        dockerfile: centos7
         cache: true
-        tags: centos7-simulator-${{ steps.extract_branch.outputs.branch }}
-        buildargs: ANTARES_DEPS_VERSION, ANTARES_SIMULATOR_TAG
+        tags: centos7-simulator
+        buildargs: ANTARES_DEPS_VERSION
 
   build:
 
