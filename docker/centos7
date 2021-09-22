@@ -1,6 +1,7 @@
 FROM centos:7
 
 ARG ANTARES_DEPS_VERSION
+ARG ANTARES_SIMULATOR_TAG
 
 # Install requirements : update repo
 RUN yum update -y
