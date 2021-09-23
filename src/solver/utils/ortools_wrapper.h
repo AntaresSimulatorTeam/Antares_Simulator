@@ -19,8 +19,7 @@ void ORTOOLS_CorrigerLesBornes(MPSolver* ProbSpx,
                                double* bMin,
                                double* bMax,
                                int* typeVar,
-                               int nbVar,
-                               PROBLEME_SIMPLEXE* Probleme);
+                               int nbVar);
 void ORTOOLS_LibererProbleme(MPSolver* ProbSpx);
 
 #endif
