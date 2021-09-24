@@ -29,6 +29,7 @@
 
 #include <vector>
 #include <iostream> // For std namespace
+#include <limits>   // For std numeric_limits
 #include <sstream>  // For ostringstream
 #include <iomanip>  // For setprecision
 // #include <stdio.h>

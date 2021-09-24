@@ -187,7 +187,7 @@ public:
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
 
         // Get the area
-        pSize = area->thermal.clusterCount;
+        pSize = area->thermal.clusterCount();
         if (pSize)
         {
             AncestorType::pResults.resize(pSize);
@@ -232,14 +232,6 @@ public:
         NextType::initializeFromAreaLink(study, link);
     }
 
-    void initializeFromThermalCluster(Data::Study* study,
-                                      Data::Area* area,
-                                      Data::ThermalCluster* cluster)
-    {
-        // Next
-        NextType::initializeFromThermalCluster(study, area, cluster);
-    }
-
     void simulationBegin()
     {
         // Next
@@ -268,7 +260,7 @@ public:
         for (unsigned int i = 0; i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd]; ++i)
         {
             state.thermalClusterDispatchedUnitsCountForYear[i] += static_cast<uint>(
-              pValuesForTheCurrentYear[numSpace][state.cluster->areaWideIndex].hour[i]);
+              pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i]);
         }
 
         // Next variable
@@ -282,7 +274,7 @@ public:
              i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd];
              ++i)
         {
-            pValuesForTheCurrentYear[numSpace][state.cluster->areaWideIndex].hour[i]
+            pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i]
               = state.thermalClusterDispatchedUnitsCountForYear[i];
         }
 
@@ -352,7 +344,8 @@ public:
     void hourForEachThermalCluster(State& state, unsigned int numSpace)
     {
         // Production for this hour
-        pValuesForTheCurrentYear[numSpace][state.cluster->areaWideIndex].hour[state.hourInTheYear]
+        pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex]
+          .hour[state.hourInTheYear]
           = state.thermalClusterNumberON;
 
         // Next item in the list

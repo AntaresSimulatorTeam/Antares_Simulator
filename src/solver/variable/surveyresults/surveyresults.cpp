@@ -163,7 +163,7 @@ void ExportGridInfosAreas(const Data::Study& study, const String& folder)
         }
 
         // Thermal clusters
-        for (uint i = 0; i != area.thermal.clusterCount; ++i)
+        for (uint i = 0; i != area.thermal.clusterCount(); ++i)
         {
             assert(NULL != area.thermal.clusters[i]);
             auto& cluster = *(area.thermal.clusters[i]);

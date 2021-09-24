@@ -669,7 +669,7 @@ struct PROBLEME_HEBDO
     int* FlexDownDemandPoolOfNode;
 
 #endif
-    public:
+public:
     /* Unknown status */
     int* NbGrpCourbeGuide; // ?
     int* NbGrpOpt;         // ?

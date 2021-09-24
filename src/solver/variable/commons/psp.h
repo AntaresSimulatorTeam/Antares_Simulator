@@ -174,14 +174,6 @@ public:
         NextType::initializeFromAreaLink(study, link);
     }
 
-    void initializeFromThermalCluster(Data::Study* study,
-                                      Data::Area* area,
-                                      Data::ThermalCluster* cluster)
-    {
-        // Next
-        NextType::initializeFromThermalCluster(study, area, cluster);
-    }
-
     template<class R>
     static void InitializeResultsFromStudy(R& results, Data::Study& study)
     {
@@ -203,20 +195,6 @@ public:
     {
         // Next variable
         NextType::yearBegin(year, numSpace);
-    }
-
-    void yearEndBuildPrepareDataForEachThermalCluster(State& state,
-                                                      uint year,
-                                                      unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
-    }
-
-    void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
     }
 
     void yearEndBuild(State& state, unsigned int year)
@@ -255,12 +233,6 @@ public:
     {
         // Next variable
         NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
-    {
-        // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
     }
 
     void hourEnd(State& state, unsigned int hourInTheYear)

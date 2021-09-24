@@ -78,9 +78,33 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
             v |= timeSeriesThermal;
         else if (word == "solar")
             v |= timeSeriesSolar;
+        else if (word == "renewables")
+            v |= timeSeriesRenewable;
         return true;
     });
     return true;
+}
+
+static bool ConvertStringToRenewableGenerationModelling(const AnyString& text, RenewableGenerationModelling & out)
+{
+    CString<24, false> s = text;
+    s.trim();
+    s.toLower();
+    if (s == "aggregated")
+    {
+        out = rgAggregated;
+        return true;
+    }
+    if (s == "clusters") // Using renewable clusters
+    {
+        out = rgClusters;
+        return true;
+    }
+
+    logs.warning() << "parameters: invalid renewable generation modelling. Got '" << text << "'";
+    out = rgUnknown;
+
+    return false;
 }
 
 bool StringToStudyMode(StudyMode& mode, CString<20, false> text)
@@ -257,6 +281,7 @@ void Parameters::reset()
 
     unitCommitment.ucMode = ucHeuristic;
     nbCores.ncMode = ncAvg;
+    renewableGeneration.rgModelling = rgAggregated;
     reserveManagement.daMode = daGlobal;
 
     // Misc
@@ -322,55 +347,264 @@ static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint
             v += ", ";
         v += "solar";
     }
-
+    if (value & timeSeriesRenewable)
+    {
+        if (not v.empty())
+            v += ", ";
+        v += "renewables";
+    }
     s->add(name, v);
 }
 
-static bool SGDIntLoadFamily_A(Parameters& d, const String& key, const String& value, uint)
+static bool SGDIntLoadFamily_General(Parameters& d,
+                                     const String& key,
+                                     const String& value,
+                                     const String& rawvalue,
+                                     uint)
 {
-    if (key == "archives")
-        return ConvertCStrToListTimeSeries(value, d.timeSeriesToArchive);
-    if (key == "adequacy-block-size" || key == "adequacy_blocksize")
-        return value.to<uint>(d.adequacyBlockSize);
-    if (key == "accuracy-on-correlation")
-        return ConvertCStrToListTimeSeries(value, d.timeSeriesAccuracyOnCorrelation);
     if (key == "active-rules-scenario")
     {
         d.activeRulesScenario = value;
         return true;
     }
-
-    // Error
-    return false;
-}
-
-static bool SGDIntLoadFamily_C(Parameters& d, const String& key, const String& value, uint)
-{
-    // Same time-series
-    if (key == "correlateddraws")
-        return ConvertCStrToListTimeSeries(value, d.intraModal);
-
-    // Scenario builder
-    if (key == "custom-ts-numbers")
-        return value.to<bool>(d.useCustomScenario);
     if (key == "custom-scenario")
         return value.to<bool>(d.useCustomScenario);
 
-    // Custom set
-    if (key == "customset")
-        return true; // value ignored
-    // Error
-    return false;
-}
-
-static bool SGDIntLoadFamily_D(Parameters& d, const String& key, const String& value, uint)
-{
     if (key == "derated")
         return value.to<bool>(d.derated);
 
-    if (key == "dayofthe1stjanuary") // before 4.3 - see january.1st
+    if (key == "first-month-in-year")
+        return Date::StringToMonth(d.firstMonthInYear, value);
+
+    if (key == "first.weekday")
+        return Date::StringToDayOfTheWeek(d.firstWeekday, value);
+
+    if (key == "geographic-trimming")
+        return value.to<bool>(d.geographicTrimming);
+
+    if (key == "generate")
+        return ConvertCStrToListTimeSeries(value, d.timeSeriesToGenerate);
+
+    if (key == "horizon")
+    {
+        d.horizon = rawvalue;
+        d.horizon.trim(" \t\n\r");
+        return true;
+    }
+
+    // Same time-series
+    if (key == "intra-modal")
+        return ConvertCStrToListTimeSeries(value, d.intraModal);
+    // Same time-series
+    if (key == "inter-modal")
+        return ConvertCStrToListTimeSeries(value, d.interModal);
+    if (key == "improveunitsstartup")
+        return true; // value.to<bool>(d.improveUnitsStartup);
+
+    if (key == "january.1st") // after 4.3
         return Date::StringToDayOfTheWeek(d.dayOfThe1stJanuary, value);
 
+    if (key == "leapyear")
+        return value.to(d.leapYear);
+
+    if (key == "mode")
+        return StringToStudyMode(d.mode, value);
+
+    if (key == "nbyears")
+    {
+        uint y;
+        if (value.to<uint>(y))
+        {
+            d.years(y);
+            return true;
+        }
+        d.years(1);
+        return false;
+    }
+    if (key == "nbtimeseriesload")
+        return value.to<uint>(d.nbTimeSeriesLoad);
+    if (key == "nbtimeserieshydro")
+        return value.to<uint>(d.nbTimeSeriesHydro);
+    if (key == "nbtimeserieswind")
+        return value.to<uint>(d.nbTimeSeriesWind);
+    if (key == "nbtimeseriesthermal")
+        return value.to<uint>(d.nbTimeSeriesThermal);
+    if (key == "nbtimeseriessolar")
+        return value.to<uint>(d.nbTimeSeriesSolar);
+    // Interval values
+    if (key == "refreshintervalload")
+        return value.to<uint>(d.refreshIntervalLoad);
+    if (key == "refreshintervalhydro")
+        return value.to<uint>(d.refreshIntervalHydro);
+    if (key == "refreshintervalwind")
+        return value.to<uint>(d.refreshIntervalWind);
+    if (key == "refreshintervalthermal")
+        return value.to<uint>(d.refreshIntervalThermal);
+    if (key == "refreshintervalsolar")
+        return value.to<uint>(d.refreshIntervalSolar);
+    // What timeSeries to refresh ?
+    if (key == "refreshtimeseries")
+        return ConvertCStrToListTimeSeries(value, d.timeSeriesToRefresh);
+    // readonly
+    if (key == "readonly")
+        return value.to<bool>(d.readonly);
+
+    if (key == "simulation.start")
+    {
+        uint day;
+        if (not value.to(day))
+            return false;
+        if (day == 0)
+            day = 1;
+        else
+        {
+            if (day > 365)
+                day = 365;
+            --day;
+        }
+        d.simulationDays.first = day;
+        return true;
+    }
+    if (key == "simulation.end")
+    {
+        uint day;
+        if (not value.to(day))
+            return false;
+        if (day == 0)
+            day = 1;
+        else if (day > 365)
+            day = 365;
+        d.simulationDays.end = day; // not included
+        return true;
+    }
+
+    if (key == "thematic-trimming")
+        return value.to<bool>(d.thematicTrimming);
+
+    if (key == "user-playlist")
+        return value.to<bool>(d.userPlaylist);
+
+    if (key == "year-by-year")
+        return value.to<bool>(d.yearByYear);
+
+    return false;
+}
+static bool SGDIntLoadFamily_Input(Parameters& d,
+                                   const String& key,
+                                   const String& value,
+                                   const String&,
+                                   uint)
+{
+    if (key == "import")
+        return ConvertCStrToListTimeSeries(value, d.timeSeriesToImport);
+
+    return false;
+}
+static bool SGDIntLoadFamily_Output(Parameters& d,
+                                    const String& key,
+                                    const String& value,
+                                    const String&,
+                                    uint)
+{
+    if (key == "archives")
+        return ConvertCStrToListTimeSeries(value, d.timeSeriesToArchive);
+    if (key == "storenewset")
+        return value.to<bool>(d.storeTimeseriesNumbers);
+    if (key == "synthesis")
+        return value.to<bool>(d.synthesis);
+    return false;
+}
+static bool SGDIntLoadFamily_Optimization(Parameters& d,
+                                          const String& key,
+                                          const String& value,
+                                          const String&,
+                                          uint)
+{
+    if (key == "include-constraints")
+        return value.to<bool>(d.include.constraints);
+    if (key == "include-hurdlecosts")
+        return value.to<bool>(d.include.hurdleCosts);
+    if (key == "include-loopflowfee") // backward compatibility
+        return true;                  // value.to<bool>(d.include.loopFlowFee);
+    if (key == "include-tc-minstablepower")
+        return value.to<bool>(d.include.thermal.minStablePower);
+    if (key == "include-tc-min-ud-time")
+        return value.to<bool>(d.include.thermal.minUPTime);
+    if (key == "include-dayahead")
+        return value.to<bool>(d.include.reserve.dayAhead);
+    if (key == "include-strategicreserve")
+        return value.to<bool>(d.include.reserve.strategic);
+    if (key == "include-spinningreserve")
+        return value.to<bool>(d.include.reserve.spinning);
+    if (key == "include-primaryreserve")
+        return value.to<bool>(d.include.reserve.primary);
+    if (key == "include-exportmps")
+        return value.to<bool>(d.include.exportMPS);
+    if (key == "include-exportstructure")
+        return value.to<bool>(d.include.exportStructure);
+    if (key == "include-unfeasible-problem-behavior")
+    {
+        bool result = true;
+        const std::string& string = value.to<std::string>();
+
+        try
+        {
+            d.include.unfeasibleProblemBehavior
+              = Enum::fromString<UnfeasibleProblemBehavior>(string);
+        }
+        catch (AssertionError& ex)
+        {
+            logs.warning()
+              << "Assertion error for unfeasible problem behavior from string conversion : "
+              << ex.what();
+
+            result = false;
+            d.include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
+            logs.warning() << "parameters: invalid unfeasible problem behavior. Got '" << value
+                           << "'. reset to " << Enum::toString(d.include.unfeasibleProblemBehavior);
+        }
+        return result;
+    }
+
+    if (key == "link-type")
+    {
+        CString<64, false> v = value;
+        v.trim();
+        v.toLower();
+        if (value == "local")
+            d.linkType = ltLocal;
+        else if (value == "ac")
+            d.linkType = ltAC;
+        else
+            d.linkType = ltLocal;
+        return true;
+    }
+
+    if (key == "simplex-range")
+    {
+        d.simplexOptimizationRange = (!value.ifind("day")) ? sorDay : sorWeek;
+        return true;
+    }
+
+    if (key == "transmission-capacities")
+    {
+        CString<64, false> v = value;
+        v.trim();
+        v.toLower();
+        if (v == "infinite")
+            d.transmissionCapacities = tncInfinite;
+        else
+            d.transmissionCapacities = v.to<bool>() ? tncEnabled : tncIgnore;
+        return true;
+    }
+    return false;
+}
+static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
+                                              const String& key,
+                                              const String& value,
+                                              const String&,
+                                              uint)
+{
     if (key == "day-ahead-reserve-management") // after 5.0
     {
         auto daReserve = StringToDayAheadReserveManagementMode(value);
@@ -383,49 +617,6 @@ static bool SGDIntLoadFamily_D(Parameters& d, const String& key, const String& v
                        << "'. reset to global mode";
         d.reserveManagement.daMode = daGlobal;
         return false;
-    }
-
-    // Error
-    return false;
-}
-
-static bool SGDIntLoadFamily_F(Parameters& d, const String& key, const String& value, uint version)
-{
-    if (key == "filtering" && version < 710)
-        return value.to<bool>(d.geographicTrimming);
-    if (key == "first-month-in-year")
-        return Date::StringToMonth(d.firstMonthInYear, value);
-    if (key == "first.weekday")
-        return Date::StringToDayOfTheWeek(d.firstWeekday, value);
-
-    if (key == "finalhour") // ignored since v4.3
-        return true;        // value.to<uint>(d.finalHour);
-
-    // Error
-    return false;
-}
-
-static bool SGDIntLoadFamily_G(Parameters& d, const String& key, const String& value, uint)
-{
-    if (key == "geographic-trimming")
-        return value.to<bool>(d.geographicTrimming);
-    if (key == "generate")
-        return ConvertCStrToListTimeSeries(value, d.timeSeriesToGenerate);
-    // Error
-    return false;
-}
-
-static bool SGDIntLoadFamily_H(Parameters& d,
-                               const String& key,
-                               const String& value,
-                               const String& rawvalue,
-                               uint)
-{
-    if (key == "horizon")
-    {
-        d.horizon = rawvalue;
-        d.horizon.trim(" \t\n\r");
-        return true;
     }
     if (key == "hydro-heuristic-policy")
     {
@@ -453,44 +644,6 @@ static bool SGDIntLoadFamily_H(Parameters& d,
         d.unitCommitment.ucMode = ucHeuristic;
         return false;
     }
-    // Error
-    return false;
-}
-
-static bool SGDIntLoadFamily_I(Parameters& d, const String& key, const String& value, uint)
-{
-    // Same time-series
-    if (key == "intra-modal")
-        return ConvertCStrToListTimeSeries(value, d.intraModal);
-    // Same time-series
-    if (key == "inter-modal")
-        return ConvertCStrToListTimeSeries(value, d.interModal);
-    if (key == "improveunitsstartup")
-        return true; // value.to<bool>(d.improveUnitsStartup);
-    if (key == "import")
-        return ConvertCStrToListTimeSeries(value, d.timeSeriesToImport);
-    if (key == "include-constraints")
-        return value.to<bool>(d.include.constraints);
-    if (key == "include-hurdlecosts")
-        return value.to<bool>(d.include.hurdleCosts);
-    if (key == "include-loopflowfee") // backward compatibility
-        return true;                  // value.to<bool>(d.include.loopFlowFee);
-    if (key == "include-tc-minstablepower")
-        return value.to<bool>(d.include.thermal.minStablePower);
-    if (key == "include-tc-min-ud-time")
-        return value.to<bool>(d.include.thermal.minUPTime);
-    if (key == "include-dayahead")
-        return value.to<bool>(d.include.reserve.dayAhead);
-    if (key == "include-strategicreserve")
-        return value.to<bool>(d.include.reserve.strategic);
-    if (key == "include-spinningreserve")
-        return value.to<bool>(d.include.reserve.spinning);
-    if (key == "include-primaryreserve")
-        return value.to<bool>(d.include.reserve.primary);
-    if (key == "include-exportmps")
-        return value.to<bool>(d.include.exportMPS);
-    if (key == "include-exportstructure")
-        return value.to<bool>(d.include.exportStructure);
     if (key == "initial-reservoir-levels")
     {
         auto iniLevels = StringToInitialReservoirLevels(value);
@@ -504,94 +657,7 @@ static bool SGDIntLoadFamily_I(Parameters& d, const String& key, const String& v
         d.initialReservoirLevels.iniLevels = irlColdStart;
         return false;
     }
-    if (key == "include-unfeasible-problem-behavior")
-    {
-        bool result = true;
-        const std::string& string = value.to<std::string>();
 
-        try
-        {
-            d.include.unfeasibleProblemBehavior
-              = Enum::fromString<UnfeasibleProblemBehavior>(string);
-        }
-        catch (AssertionError& ex)
-        {
-            logs.warning()
-              << "Assertion error for unfeasible problem behavior from string conversion : "
-              << ex.what();
-
-            result = false;
-            d.include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
-            logs.warning() << "parameters: invalid unfeasible problem behavior. Got '" << value
-                           << "'. reset to " << Enum::toString(d.include.unfeasibleProblemBehavior);
-        }
-
-        return result;
-    }
-
-    // Error
-    return false;
-}
-
-static bool SGDIntLoadFamily_J(Parameters& d, const String& key, const String& value, uint)
-{
-    if (key == "january.1st") // after 4.3
-        return Date::StringToDayOfTheWeek(d.dayOfThe1stJanuary, value);
-    return false;
-}
-
-static bool SGDIntLoadFamily_L(Parameters& d, const String& key, const String& value, uint)
-{
-    if (key == "leapyear")
-        return value.to(d.leapYear);
-    if (key == "link-type")
-    {
-        CString<64, false> v = value;
-        v.trim();
-        v.toLower();
-        if (value == "local")
-            d.linkType = ltLocal;
-        else if (value == "ac")
-            d.linkType = ltAC;
-        else
-            d.linkType = ltLocal;
-        return true;
-    }
-    // Error
-    return false;
-}
-
-static bool SGDIntLoadFamily_M(Parameters& d, const String& key, const String& value, uint)
-{
-    if (key == "mode")
-        return StringToStudyMode(d.mode, value);
-    // Error
-    return false;
-}
-
-static bool SGDIntLoadFamily_N(Parameters& d, const String& key, const String& value, uint)
-{
-    if (key == "nbyears")
-    {
-        uint y;
-        if (value.to<uint>(y))
-        {
-            d.years(y);
-            return true;
-        }
-        d.years(1);
-        return false;
-    }
-    if (key == "nbtimeseriesload")
-        return value.to<uint>(d.nbTimeSeriesLoad);
-    if (key == "nbtimeserieshydro")
-        return value.to<uint>(d.nbTimeSeriesHydro);
-    if (key == "nbtimeserieswind")
-        return value.to<uint>(d.nbTimeSeriesWind);
-    if (key == "nbtimeseriesthermal")
-        return value.to<uint>(d.nbTimeSeriesThermal);
-    if (key == "nbtimeseriessolar")
-        return value.to<uint>(d.nbTimeSeriesSolar);
     if (key == "number-of-cores-mode")
     {
         auto ncores = StringToNumberOfCoresMode(value);
@@ -606,11 +672,78 @@ static bool SGDIntLoadFamily_N(Parameters& d, const String& key, const String& v
         return false;
     }
 
-    // Error
+    if (key == "power-fluctuations")
+    {
+        auto fluctuations = StringToPowerFluctuations(value);
+        if (fluctuations != lssUnknown)
+        {
+            d.power.fluctuations = fluctuations;
+            return true;
+        }
+        logs.error() << "parameters: invalid power fluctuations. Got '" << value
+                     << "'. reset to 'free modulations'";
+        d.power.fluctuations = lssFreeModulations;
+        return false;
+    }
+
+    if (key == "shedding-strategy")
+    {
+        auto strategy = StringToSheddingStrategy(value);
+        if (strategy != shsUnknown)
+        {
+            d.shedding.strategy = strategy;
+            return true;
+        }
+        logs.error() << "parameters: invalid shedding strategy. Got '" << value << "'";
+        return false;
+    }
+    if (key == "shedding-policy")
+    {
+        auto policy = StringToSheddingPolicy(value);
+        if (policy != shpUnknown)
+        {
+            d.shedding.policy = policy;
+            return true;
+        }
+        logs.error() << "parameters: invalid shedding policy. Got '" << value << "'";
+        return false;
+    }
+    if (key == "unit-commitment-mode") // after 5.0
+    {
+        auto ucommitment = StringToUnitCommitmentMode(value);
+        if (ucommitment != ucUnknown)
+        {
+            d.unitCommitment.ucMode = ucommitment;
+            return true;
+        }
+        logs.warning() << "parameters: invalid unit commitment mode. Got '" << value
+                       << "'. reset to fast mode";
+        d.unitCommitment.ucMode = ucHeuristic;
+        return false;
+    }
+    // Renewable generation modelling
+    if (key == "renewable-generation-modelling")
+        return ConvertStringToRenewableGenerationModelling(value, d.renewableGeneration.rgModelling);
+
     return false;
 }
-
-static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& value, uint)
+static bool SGDIntLoadFamily_AdvancedParameters(Parameters& d,
+                                                const String& key,
+                                                const String& value,
+                                                const String&,
+                                                uint)
+{
+    if (key == "adequacy-block-size" || key == "adequacy_blocksize")
+        return value.to<uint>(d.adequacyBlockSize);
+    if (key == "accuracy-on-correlation")
+        return ConvertCStrToListTimeSeries(value, d.timeSeriesAccuracyOnCorrelation);
+    return false;
+}
+static bool SGDIntLoadFamily_Playlist(Parameters& d,
+                                      const String& key,
+                                      const String& value,
+                                      const String&,
+                                      uint)
 {
     if (key == "playlist_reset")
     {
@@ -696,322 +829,137 @@ static bool SGDIntLoadFamily_P(Parameters& d, const String& key, const String& v
         }
         return false;
     }
-
-    if (key == "power-fluctuations")
-    {
-        auto fluctuations = StringToPowerFluctuations(value);
-        if (fluctuations != lssUnknown)
-        {
-            d.power.fluctuations = fluctuations;
-            return true;
-        }
-        logs.error() << "parameters: invalid power fluctuations. Got '" << value
-                     << "'. reset to 'free modulations'";
-        d.power.fluctuations = lssFreeModulations;
-        return false;
-    }
-
-    // Error
     return false;
 }
-
-static bool SGDIntLoadFamily_R(Parameters& d, const String& key, const String& value, uint)
+static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
+                                                const String& key,
+                                                const String& value,
+                                                const String&,
+                                                uint)
 {
-    // Interval values
-    if (key == "refreshintervalload")
-        return value.to<uint>(d.refreshIntervalLoad);
-    if (key == "refreshintervalhydro")
-        return value.to<uint>(d.refreshIntervalHydro);
-    if (key == "refreshintervalwind")
-        return value.to<uint>(d.refreshIntervalWind);
-    if (key == "refreshintervalthermal")
-        return value.to<uint>(d.refreshIntervalThermal);
-    if (key == "refreshintervalsolar")
-        return value.to<uint>(d.refreshIntervalSolar);
-    // What timeSeries to refresh ?
-    if (key == "refreshtimeseries")
-        return ConvertCStrToListTimeSeries(value, d.timeSeriesToRefresh);
-    // readonly
-    if (key == "readonly")
-        return value.to<bool>(d.readonly);
-    // Error
-    return false;
-}
-
-static bool SGDIntLoadFamily_S(Parameters& d, const String& key, const String& value, uint version)
-{
-    switch (key[1]) // second letter
+    if (key == "selected_vars_reset")
     {
-    case 't':
-    {
-        if (key == "storenewset")
-            return value.to<bool>(d.storeTimeseriesNumbers);
-        if (version <= 310)
+        bool mode = value.to<bool>();
+        if (mode)
         {
-            if (key == "storetimeseriesnumbers")
-                return value.to<bool>(d.storeTimeseriesNumbers);
+            for (uint i = 0; i != d.variablesPrintInfo.size(); ++i)
+                d.variablesPrintInfo[i]->enablePrint(true);
         }
-        if (key == "startyear") // ignored from 3.5.3155
-            return true;
-        if (key == "starttime")
-            return true; // ignored since 4.3 // return value.to<uint>(d.startTime);
-
-        return false;
-    }
-    case 'e':
-    {
-        if (key.startsWith("seed")) // seeds
-        {
-            if (key.size() > 5 && key[4] == '_')
-            {
-                // This block is kept for compatibility with very old studies
-                if (key == "seed_load")
-                    return value.to<uint>(d.seed[seedTsGenLoad]);
-                if (key == "seed_wind")
-                    return value.to<uint>(d.seed[seedTsGenWind]);
-                if (key == "seed_hydro")
-                    return value.to<uint>(d.seed[seedTsGenHydro]);
-                if (key == "seed_thermal")
-                    return value.to<uint>(d.seed[seedTsGenThermal]);
-                if (key == "seed_solar")
-                    return value.to<uint>(d.seed[seedTsGenSolar]);
-                if (key == "seed_timeseriesnumbers")
-                    return value.to<uint>(d.seed[seedTimeseriesNumbers]);
-
-                // deprecated
-                if (key == "seed_virtualcost" || key == "seed_misc")
-                    return true; // ignored since 3.8
-            }
-            else
-            {
-                // Looking for the good seed
-                // TODO This algorithm should be replaced with something more efficient
-                for (uint sd = 0; sd != (uint)seedMax; ++sd)
-                {
-                    if (SeedToID((SeedIndex)sd) == key)
-                        return value.to<uint>(d.seed[sd]);
-                }
-            }
-        }
-        if (key == "selected_vars_reset")
-        {
-            bool mode = value.to<bool>();
-            if (mode)
-            {
-                for (uint i = 0; i != d.variablesPrintInfo.size(); ++i)
-                    d.variablesPrintInfo[i]->enablePrint(true);
-            }
-            else
-            {
-                for (uint i = 0; i != d.variablesPrintInfo.size(); ++i)
-                    d.variablesPrintInfo[i]->enablePrint(false);
-            }
-            return true;
-        }
-        if (key == "select_var +")
-            return d.variablesPrintInfo.setPrintStatus(value.to<string>(), true);
-        if (key == "select_var -")
-            return d.variablesPrintInfo.setPrintStatus(value.to<string>(), false);
-
-        return false;
-    }
-    case 'p':
-    {
-        if (key == "spillage_bound") // ignored sinve v3.3
-            return true;
-        if (key == "spillage_cost") // ignored since v3.3
-            return true;
-        return false;
-    }
-    case 'i':
-    {
-        if (key == "simplex-range")
-        {
-            d.simplexOptimizationRange = (!value.ifind("day")) ? sorDay : sorWeek;
-            return true;
-        }
-        if (key == "simulation.start")
-        {
-            uint day;
-            if (not value.to(day))
-                return false;
-            if (day == 0)
-                day = 1;
-            else
-            {
-                if (day > 365)
-                    day = 365;
-                --day;
-            }
-            d.simulationDays.first = day;
-            return true;
-        }
-        if (key == "simulation.end")
-        {
-            uint day;
-            if (not value.to(day))
-                return false;
-            if (day == 0)
-                day = 1;
-            else if (day > 365)
-                day = 365;
-            d.simulationDays.end = day; // not included
-            return true;
-        }
-        break;
-    }
-    case 'h':
-    {
-        if (key == "shedding-strategy")
-        {
-            auto strategy = StringToSheddingStrategy(value);
-            if (strategy != shsUnknown)
-            {
-                d.shedding.strategy = strategy;
-                return true;
-            }
-            logs.error() << "parameters: invalid shedding strategy. Got '" << value << "'";
-            return false;
-        }
-        if (key == "shedding-policy")
-        {
-            auto policy = StringToSheddingPolicy(value);
-            if (policy != shpUnknown)
-            {
-                d.shedding.policy = policy;
-                return true;
-            }
-            logs.error() << "parameters: invalid shedding policy. Got '" << value << "'";
-            return false;
-        }
-
-        if (key == "shedding-strategy-local") // ignored since 4.0
-            return true;
-        if (key == "shedding-strategy-global") // ignored since 4.0
-            return true;
-        break;
-    }
-    default:
-    {
-        if (key == "synthesis")
-            return value.to<bool>(d.synthesis);
-        return false;
-    }
-    }
-
-    // Error
-    return false;
-}
-
-static bool SGDIntLoadFamily_T(Parameters& d, const String& key, const String& value, uint)
-{
-    if (key == "thematic-trimming")
-        return value.to<bool>(d.thematicTrimming);
-    if (key == "transmission-capacities")
-    {
-        CString<64, false> v = value;
-        v.trim();
-        v.toLower();
-        if (v == "infinite")
-            d.transmissionCapacities = tncInfinite;
         else
-            d.transmissionCapacities = v.to<bool>() ? tncEnabled : tncIgnore;
+        {
+            for (uint i = 0; i != d.variablesPrintInfo.size(); ++i)
+                d.variablesPrintInfo[i]->enablePrint(false);
+        }
         return true;
     }
+    if (key == "select_var +")
+        return d.variablesPrintInfo.setPrintStatus(value.to<string>(), true);
+    if (key == "select_var -")
+        return d.variablesPrintInfo.setPrintStatus(value.to<string>(), false);
+    return false;
+}
+static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
+                                                  const String& key,
+                                                  const String& value,
+                                                  const String&,
+                                                  uint)
+{
+    if (key.startsWith("seed")) // seeds
+    {
+        if (key.size() > 5 && key[4] == '_')
+        {
+            // This block is kept for compatibility with very old studies
+            if (key == "seed_load")
+                return value.to<uint>(d.seed[seedTsGenLoad]);
+            if (key == "seed_wind")
+                return value.to<uint>(d.seed[seedTsGenWind]);
+            if (key == "seed_hydro")
+                return value.to<uint>(d.seed[seedTsGenHydro]);
+            if (key == "seed_thermal")
+                return value.to<uint>(d.seed[seedTsGenThermal]);
+            if (key == "seed_solar")
+                return value.to<uint>(d.seed[seedTsGenSolar]);
+            if (key == "seed_timeseriesnumbers")
+                return value.to<uint>(d.seed[seedTimeseriesNumbers]);
+        }
+        else
+        {
+            // Looking for the good seed
+            // TODO This algorithm should be replaced with something more efficient
+            for (uint sd = 0; sd != (uint)seedMax; ++sd)
+            {
+                if (SeedToID((SeedIndex)sd) == key)
+                    return value.to<uint>(d.seed[sd]);
+            }
+        }
+    }
+    return false;
+}
+static bool SGDIntLoadFamily_Legacy(Parameters& d,
+                                    const String& key,
+                                    const String& value,
+                                    const String&,
+                                    uint version)
+{
+    // Comparisons kept for compatibility reasons
+
+    // Same time-series
+    if (key == "correlateddraws")
+        return ConvertCStrToListTimeSeries(value, d.intraModal);
+    // Scenario builder
+    if (key == "custom-ts-numbers")
+        return value.to<bool>(d.useCustomScenario);
+
+    if (key == "dayofthe1stjanuary") // before 4.3 - see january.1st
+        return Date::StringToDayOfTheWeek(d.dayOfThe1stJanuary, value);
+
+    if (key == "filtering" && version < 710)
+        return value.to<bool>(d.geographicTrimming);
+
+    if (version <= 310 && key == "storetimeseriesnumbers")
+        return value.to<bool>(d.storeTimeseriesNumbers);
+
+    // Custom set
+    if (key == "customset")
+        return true; // value ignored
+
+    if (key == "finalhour") // ignored since v4.3
+        return true;        // value.to<uint>(d.finalHour);
+
+    if (key == "startyear") // ignored from 3.5.3155
+        return true;
+
+    if (key == "starttime")
+        return true; // ignored since 4.3 // return value.to<uint>(d.startTime);
+
+    // deprecated
+    if (key == "seed_virtualcost" || key == "seed_misc")
+        return true; // ignored since 3.8
+
+    if (key == "spillage_bound") // ignored sinve v3.3
+        return true;
+
+    if (key == "spillage_cost") // ignored since v3.3
+        return true;
+
+    if (key == "shedding-strategy-local") // ignored since 4.0
+        return true;
+
+    if (key == "shedding-strategy-global") // ignored since 4.0
+        return true;
     // deprecated
     if (key == "thresholdmin")
         return true; // value.to<int>(d.thresholdMinimum);
     if (key == "thresholdmax")
         return true; // value.to<int>(d.thresholdMaximum);
-    // Error
+
     return false;
 }
 
-static bool SGDIntLoadFamily_U(Parameters& d, const String& key, const String& value, uint)
+bool firstKeyLetterIsValid(const String& name)
 {
-    if (key == "user-playlist")
-        return value.to<bool>(d.userPlaylist);
-
-    if (key == "unit-commitment-mode") // after 5.0
-    {
-        auto ucommitment = StringToUnitCommitmentMode(value);
-        if (ucommitment != ucUnknown)
-        {
-            d.unitCommitment.ucMode = ucommitment;
-            return true;
-        }
-        logs.warning() << "parameters: invalid unit commitment mode. Got '" << value
-                       << "'. reset to fast mode";
-        d.unitCommitment.ucMode = ucHeuristic;
-        return false;
-    }
-
-    // Error
-    return false;
-}
-
-static bool SGDIntLoadFamily_Y(Parameters& d, const String& key, const String& value, uint)
-{
-    if (key == "year-by-year")
-        return value.to<bool>(d.yearByYear);
-    // Error
-    return false;
-}
-
-static bool ParametersInternalLoadProperty(Parameters& params,
-                                           const String& key,
-                                           const String& value,
-                                           const String& rawvalue,
-                                           uint version)
-{
-    char c = key.first();
-    if (c < 'a' || c > 'z')
-        return false;
-
-    // Jump table
-    // Do not forget the variable `key` and `value` are identical to
-    // `p->key` and `p->value` except they are already in the lower case format
-    typedef bool (*Callback)(Parameters&, const String&, const String&, uint);
-    static Callback jumper[] = {
-      &SGDIntLoadFamily_A,
-      nullptr,
-      &SGDIntLoadFamily_C,
-      &SGDIntLoadFamily_D,
-      nullptr,
-      &SGDIntLoadFamily_F,
-      &SGDIntLoadFamily_G,
-      nullptr,
-      &SGDIntLoadFamily_I,
-      &SGDIntLoadFamily_J,
-      nullptr,
-      &SGDIntLoadFamily_L,
-      &SGDIntLoadFamily_M,
-      &SGDIntLoadFamily_N,
-      nullptr,
-      &SGDIntLoadFamily_P,
-      nullptr,
-      &SGDIntLoadFamily_R,
-      &SGDIntLoadFamily_S,
-      &SGDIntLoadFamily_T,
-      &SGDIntLoadFamily_U,
-      nullptr,
-      nullptr,
-      nullptr,
-      &SGDIntLoadFamily_Y,
-      nullptr,
-    };
-    if (c == 'h')
-    {
-        // special prototype for H
-        return SGDIntLoadFamily_H(params, key, value, rawvalue, version);
-    }
-    else
-    {
-        int i = c - 'a';
-        if (jumper[i])
-            return (*(jumper[i]))(params, key, value, version);
-    }
-    return false;
+    char firstLetter = name.first();
+    return (firstLetter >= 'a' && firstLetter <= 'z');
 }
 
 bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options)
@@ -1020,24 +968,63 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     reset();
     // A temporary buffer, used for the values in lowercase
     String value;
+    String sectionName;
+    typedef bool (*Callback)(
+      Parameters&,   // [out] Parameter object to load the data into
+      const String&, // [in] Key, comes left to the '=' sign in the .ini file
+      const String&, // [in] Lowercase value, comes right to the '=' sign in the .ini file
+      const String&, // [in] Raw value as writtent right to the '=' sign in the .ini file
+      uint);         // [in] Version of the study (such as 710)
 
+    static const std::map<String, Callback> sectionAssociatedToKeysProcess
+      = {{"general", &SGDIntLoadFamily_General},
+         {"input", &SGDIntLoadFamily_Input},
+         {"output", &SGDIntLoadFamily_Output},
+         {"optimization", &SGDIntLoadFamily_Optimization},
+         {"other preferences", &SGDIntLoadFamily_OtherPreferences},
+         {"advanced parameters", &SGDIntLoadFamily_AdvancedParameters},
+         {"playlist", &SGDIntLoadFamily_Playlist},
+         {"variables selection", &SGDIntLoadFamily_VariablesSelection},
+         {"seeds - mersenne twister", &SGDIntLoadFamily_SeedsMersenneTwister}};
+
+    Callback handleAllKeysInSection;
     // Foreach section on the ini file...
     for (auto* section = ini.firstSection; section; section = section->next)
     {
+        sectionName = section->name;
+        sectionName.toLower();
+        try
+        {
+            handleAllKeysInSection = sectionAssociatedToKeysProcess.at(sectionName);
+        }
+        catch (const std::out_of_range&)
+        {
+            // Continue on error
+            logs.warning() << ini.filename() << ": '" << section->name << "': Unknown section name";
+            continue;
+        }
+
         // Foreach properties in the section
         for (const IniFile::Property* p = section->firstProperty; p; p = p->next)
         {
             if (p->key.empty())
+                continue;
+            if (!firstKeyLetterIsValid(p->key))
                 continue;
             // We convert the key and the value into the lower case format
             value = p->value;
             value.toLower();
 
             // Deal with the current property
-            if (not ParametersInternalLoadProperty(*this, p->key, value, p->value, version))
+            // Do not forget the variable `key` and `value` are identical to
+            // `p->key` and `p->value` except they are already in the lower case format
+            if (not handleAllKeysInSection(*this, p->key, value, p->value, version))
             {
-                // Continue on error
-                logs.warning() << ini.filename() << ": '" << p->key << "': Unknown property";
+                if (not SGDIntLoadFamily_Legacy(*this, p->key, value, p->value, version))
+                {
+                    // Continue on error
+                    logs.warning() << ini.filename() << ": '" << p->key << "': Unknown property";
+                }
             }
         }
     }
@@ -1375,7 +1362,22 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 
     // Prepare output variables print info before the simulation (used to initialize output
     // variables)
-    variablesPrintInfo.prepareForSimulation(thematicTrimming);
+
+    // Force enable/disable when cluster/aggragated production is enabled
+    // This will be deprecated when support for aggragated production is dropped.
+    switch (renewableGeneration()) // Warn the user about that.
+    {
+    case rgClusters:
+        logs.info()
+          << "Cluster renewables were chosen. Output will be disabled for aggregated modes.";
+        break;
+    case rgAggregated:
+        logs.info()
+          << "Aggregate renewables were chosen. Output will be disabled for renewable clusters.";
+        break;
+    }
+    const std::vector<std::string> excluded_vars = renewableGeneration.excludedVariables();
+    variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
 
     switch (mode)
     {
@@ -1411,7 +1413,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 
     if (interModal == timeSeriesLoad || interModal == timeSeriesSolar
         || interModal == timeSeriesWind || interModal == timeSeriesHydro
-        || interModal == timeSeriesThermal)
+        || interModal == timeSeriesThermal || interModal == timeSeriesRenewable)
     {
         // Only one timeseries in interModal correlation, which is the same than nothing
         interModal = 0;
@@ -1681,6 +1683,8 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("shedding-policy", SheddingPolicyToCString(shedding.policy));
         section->add("unit-commitment-mode", UnitCommitmentModeToCString(unitCommitment.ucMode));
         section->add("number-of-cores-mode", NumberOfCoresModeToCString(nbCores.ncMode));
+        section->add("renewable-generation-modelling",
+                     RenewableGenerationModellingToCString(renewableGeneration()));
         section->add("day-ahead-reserve-management",
                      DayAheadReserveManagementModeToCString(reserveManagement.daMode));
     }
@@ -1811,6 +1815,50 @@ bool Parameters::saveToFile(const AnyString& filename) const
     IniFile ini;
     saveToINI(ini);
     return ini.save(filename);
+}
+
+std::vector<std::string> Parameters::RenewableGeneration::excludedVariables() const
+{
+    switch (rgModelling)
+    {
+    /*
+       Order is important because AllVariablesPrintInfo::setPrintStatus
+       does not reset the search pointer.
+
+       Inverting some variable names below may result in some of them not being
+       taken into account.
+    */
+    case rgAggregated:
+        return {"wind offshore",
+                "wind onshore",
+                "solar concrt.",
+                "solar pv",
+                "solar rooft",
+                "renw. 1",
+                "renw. 2",
+                "renw. 3",
+                "renw. 4"};
+    case rgClusters:
+        return {"wind", "solar"};
+    case rgUnknown:
+        return {};
+    }
+    return {};
+}
+
+RenewableGenerationModelling Parameters::RenewableGeneration::operator()() const
+{
+    return rgModelling;
+}
+
+bool Parameters::RenewableGeneration::isAggregated() const
+{
+    return rgModelling == Antares::Data::rgAggregated;
+}
+
+bool Parameters::RenewableGeneration::isClusters() const
+{
+    return rgModelling == Antares::Data::rgClusters;
 }
 
 } // namespace Data

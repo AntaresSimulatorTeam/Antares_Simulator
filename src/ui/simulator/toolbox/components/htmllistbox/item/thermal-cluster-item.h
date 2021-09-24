@@ -24,8 +24,10 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_THERMAL_CLUSTER_HXX__
-#define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_THERMAL_CLUSTER_HXX__
+#ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_THERMAL_CLUSTER_H__
+#define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_THERMAL_CLUSTER_H__
+
+#include "cluster-item.h"
 
 namespace Antares
 {
@@ -35,14 +37,49 @@ namespace HTMLListbox
 {
 namespace Item
 {
-inline Antares::Data::ThermalCluster* ThermalCluster::thermalAggregate() const
+/*!
+** \brief Single item for a thermal cluster.
+**
+** See parent classes for more explanations
+*/
+class ThermalClusterItem : public ClusterItem
 {
-    return pThermalCluster;
-}
+public:
+    //! The smartptr
+    typedef Yuni::SmartPtr<ThermalClusterItem> Ptr;
+
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default Constructor
+    */
+    ThermalClusterItem(Antares::Data::ThermalCluster* a);
+    /*!
+    ** \brief additional Additional HTML content ("<td>my text</td>")
+    */
+    ThermalClusterItem(Antares::Data::ThermalCluster* a, const wxString& additional);
+    //! Destructor
+    virtual ~ThermalClusterItem();
+    //@}
+
+    //! Get the attached area
+    Antares::Data::ThermalCluster* thermalAggregate() const;
+
+private:
+    wxString getClusterIconFilePath() override;
+    wxString htmlContentTail() override;
+
+private:
+    //! The current ThermalCluster
+    Antares::Data::ThermalCluster* pThermalCluster;
+    double pThermalClusterMarketBidCost;
+
+}; // class ThermalClusterItem
 
 } // namespace Item
 } // namespace HTMLListbox
 } // namespace Component
 } // namespace Antares
 
-#endif // __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_THERMAL_CLUSTER_HXX__
+#endif // __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_THERMAL_CLUSTER_H__

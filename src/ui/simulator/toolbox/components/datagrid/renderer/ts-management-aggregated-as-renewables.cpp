@@ -24,27 +24,26 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_TIMESERIES_HXX__
-#define __ANTARES_LIBS_STUDY_PARTS_THERMAL_TIMESERIES_HXX__
+
+#include "ts-management-aggregated-as-renewables.h"
+
+using namespace Yuni;
 
 namespace Antares
 {
-namespace Data
+namespace Component
 {
-inline void DataSeriesThermal::flush()
+namespace Datagrid
 {
-#ifdef ANTARES_SWAP_SUPPORT
-    series.flush();
-    timeseriesNumbers.flush();
-#endif
+namespace Renderer
+{
+TSmanagementAggregatedAsRenewable::TSmanagementAggregatedAsRenewable() : TSmanagement()
+{
+    columns_.push_back(new classicColumn(Antares::Data::timeSeriesWind, "      Wind      "));
+    columns_.push_back(new classicColumn(Antares::Data::timeSeriesSolar, "      Solar      "));
+    checkLineNumberInColumns();
 }
-
-inline Yuni::uint64 DataSeriesThermalMemoryUsage(DataSeriesThermal* t)
-{
-    return (t) ? t->series.memoryUsage() : 0;
-}
-
-} // namespace Data
+} // namespace Renderer
+} // namespace Datagrid
+} // namespace Component
 } // namespace Antares
-
-#endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_TIMESERIES_HXX__

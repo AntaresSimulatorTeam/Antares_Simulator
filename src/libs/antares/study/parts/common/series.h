@@ -24,24 +24,23 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_TIMESERIES_H__
-#define __ANTARES_LIBS_STUDY_PARTS_THERMAL_TIMESERIES_H__
+#ifndef __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
+#define __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 
 #include "../../../array/matrix.h"
 #include "../../fwd.h"
-#include "defines.h"
 
 namespace Antares
 {
 namespace Data
 {
 /*!
-** \brief Data series (Thermal)
+** \brief Data series (Common)
 */
-class DataSeriesThermal
+class DataSeriesCommon
 {
 public:
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+    void estimateMemoryUsage(StudyMemoryUsage&, enum TimeSeries) const;
 
     /*!
     ** \brief Flush memory to swap file
@@ -58,50 +57,16 @@ public:
     **
     ** Merely a matrix of TimeSeriesCount * 8760 values
     */
-    Matrix<double, Yuni::sint32> series;
+    Matrix<double> series;
 
     /*!
     ** \brief Monte-Carlo
     */
     Matrix<Yuni::uint32> timeseriesNumbers;
-
-}; // class DataSeriesThermal
-
-/*!
-** \brief Load thermal data series from a folder
-** \ingroup thermalseries
-**
-** \param t A thermal data series structure
-** \param ag A thermal cluster
-** \param folder The target folder
-** \return A non-zero value if the operation succeeded, 0 otherwise
-*/
-int DataSeriesThermalLoadFromFolder(Study& s,
-                                    DataSeriesThermal* t,
-                                    ThermalCluster* ag,
-                                    const AnyString& folder);
-
-/*!
-** \brief Save thermal data series into a folder
-** \ingroup thermalseries
-**
-** \param t A thermal data series structure
-** \param ag A thermal cluster
-** \param folder The target folder
-** \return A non-zero value if the operation succeeded, 0 otherwise
-*/
-int DataSeriesThermalSaveToFolder(const DataSeriesThermal* t,
-                                  const ThermalCluster* ag,
-                                  const AnyString& folder);
-
-/*!
-** \brief Get the size (bytes) occupied in memory by a `DataSeriesThermal` structure
-*/
-Yuni::uint64 DataSeriesThermalMemoryUsage(DataSeriesThermal* t);
-
+}; // class DataSeriesCommon
 } // namespace Data
 } // namespace Antares
 
 #include "series.hxx"
 
-#endif /* __ANTARES_LIBS_STUDY_PARTS_THERMAL_TIMESERIES_H__ */
+#endif /* __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__ */

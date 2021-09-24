@@ -43,6 +43,7 @@ typedef struct
 typedef struct
 {
     int* ThermiqueParPalier;
+    int* RenouvelableParPalier;
     int Hydraulique;
     int Eolien;
     int Consommation;

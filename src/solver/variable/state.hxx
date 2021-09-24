@@ -47,6 +47,8 @@ inline void State::startANewYear()
            0,
            sizeof(thermalClusterDispatchedUnitsCountForYear));
 
+    memset(renewableClusterProductionForYear, 0, sizeof(renewableClusterProductionForYear));
+
     // Re-initializing annual costs (to be printed in output into separate files)
     annualSystemCost = 0.;
     optimalSolutionCost1 = 0.;
@@ -54,7 +56,7 @@ inline void State::startANewYear()
     averageOptimizationTime = 0.;
 }
 
-inline void State::yearEndReset()
+inline void State::yearEndResetThermal()
 {
     memset(thermalClusterProductionForYear, 0, sizeof(thermalClusterProductionForYear));
     memset(thermalClusterOperatingCostForYear, 0, sizeof(thermalClusterOperatingCostForYear));
@@ -67,11 +69,16 @@ inline void State::yearEndReset()
            sizeof(thermalClusterDispatchedUnitsCountForYear));
 }
 
+inline void State::yearEndResetRenewable()
+{
+    memset(renewableClusterProductionForYear, 0, sizeof(renewableClusterProductionForYear));
+}
+
 inline void State::initFromAreaIndex(const unsigned int areaIndex, uint numSpace)
 {
     area = study.areas[areaIndex];
     scratchpad = area->scratchpad[numSpace];
-    cluster = nullptr;
+    thermalCluster = nullptr;
     timeseriesIndex = NumeroChroniquesTireesParPays[numSpace][areaIndex];
 
     switch (studyMode)

@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.0)
 
 # Version
 set(ANTARES_VERSION_HI	      8)
-set(ANTARES_VERSION_LO	      0)
-set(ANTARES_VERSION_REVISION  3)
+set(ANTARES_VERSION_LO	      1)
+set(ANTARES_VERSION_REVISION  0)
 set(ANTARES_VERSION_YEAR      2021)
 
 set(ANTARES_PUBLISHER	   "RTE France")
@@ -12,7 +12,7 @@ set(ANTARES_WEBSITE	   "https://antares.rte-france.com")
 
 # Beta release
 set(ANTARES_BETA 0)
-#set(ANTARES_RC 3)
+set(ANTARES_RC 0)
 
 # CMAKE - Suppress useless features
 set(CMAKE_SKIP_PREPROCESSED_SOURCE_RULES true)

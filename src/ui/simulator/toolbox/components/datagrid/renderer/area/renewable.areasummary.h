@@ -24,14 +24,10 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SIMULATION_H__
-#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SIMULATION_H__
+#ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_RENEWABLE_SUMMARY_SINGLE_AREA_H__
+#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_RENEWABLE_SUMMARY_SINGLE_AREA_H__
 
-#include <antares/wx-wrapper.h>
-#include "../renderer.h"
-#include <antares/date.h>
-#include <yuni/core/event.h>
-#include "../../../../application/study.h"
+#include "common.areasummary.h"
 
 namespace Antares
 {
@@ -41,65 +37,71 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class SimulationTSManagement final : public IRenderer
+class RenewableClusterSummarySingleArea : public CommonClusterSummarySingleArea
 {
 public:
-    SimulationTSManagement();
-    virtual ~SimulationTSManagement();
+    RenewableClusterSummarySingleArea(wxWindow* control, Toolbox::InputSelector::Area* notifier);
+
+    virtual ~RenewableClusterSummarySingleArea();
 
     virtual int width() const
     {
-        return 5;
+        return 4;
     }
     virtual int height() const
     {
-        return 13;
+        return (pArea) ? pArea->renewable.list.size() : 0;
     }
 
-    virtual wxString columnCaption(int colIndx) const;
+    virtual wxString columnCaption(int colIndx) const override;
 
-    virtual wxString rowCaption(int rowIndx) const;
+    virtual wxString rowCaption(int rowIndx) const override;
 
-    virtual wxString cellValue(int x, int y) const;
+    virtual wxString cellValue(int x, int y) const override;
 
-    virtual double cellNumericValue(int x, int y) const;
+    virtual double cellNumericValue(int x, int y) const override;
 
-    virtual bool cellValue(int x, int y, const Yuni::String& value);
+    virtual bool cellValue(int x, int y, const Yuni::String& v) override;
 
+    /*
     virtual void resetColors(int, int, wxColour&, wxColour&) const
-    {
+    { 
         // Do nothing
     }
 
-    virtual bool valid() const
-    {
-        return !(!study);
-    }
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
 
     virtual uint maxWidthResize() const
     {
         return 0;
     }
-    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
-
-    virtual wxColour horizontalBorderColor(int x, int y) const;
-
-    void control(wxWindow* control)
+    virtual uint maxHeightResize() const
     {
-        pControl = control;
+        return 0;
     }
 
+    virtual bool valid() const
+    {
+        return (pArea != NULL);
+    }
+    */
+
+/*
 protected:
-    wxWindow* pControl;
+    virtual void onAreaChanged(Antares::Data::Area* area);
+    virtual void onStudyClosed() override;
+    void onStudyAreaDelete(Antares::Data::Area* area);
 
 private:
-    void onSimulationTSManagementChanged();
-
-}; // class SimulationTSManagement
+    Antares::Data::Area* pArea;
+    wxWindow* pControl;
+    Toolbox::InputSelector::Area* pAreaNotifier;
+*/
+}; // class RenewableClusterSummarySingleArea
 
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
 } // namespace Antares
 
-#endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SIMULATION_H__
+#endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_RENEWABLE_SUMMARY_SINGLE_AREA_H__

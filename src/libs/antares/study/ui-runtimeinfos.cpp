@@ -80,7 +80,7 @@ void UIRuntimeInfo::reload()
                     set.insert(i->second);
             }
 
-            for (uint j = 0; j < area->thermal.clusterCount; ++j)
+            for (uint j = 0; j < area->thermal.clusterCount(); ++j)
             {
                 ThermalCluster* cluster = area->thermal.clusters[j];
                 pClusters.push_back(cluster);

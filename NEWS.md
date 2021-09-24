@@ -1,6 +1,25 @@
 ﻿Antares Changelog
 =================
 
+v8.1.0 (09/2021)
+--------------------
+
+### New features
+ - Allow up to 9 RES groups (off-shore wind, on-shore wind, rooftop solar, PV solar, etc.) as opposed to wind and solar previously. This allows the user to distinguish between more renewable energy sources. When creating a new study, renewable generation modelling is set to "clusters" by default. This change does not affect opening an existing study. Note that TS generation is not available for these new RES groups.
+ - Add 3 thermal groups, named other, other 2, other 3 and other 4.
+
+### Bug fixes
+  - When a binding constraint is marked as skipped in the GUI, disable it in the solver #366
+
+### GUI
+  - Keep selection on thermal/renewable cluster when its group changes #360
+  - Dialogs "Thematic trimming" and "User playlist" are now resizable
+
+### For developers
+ - Add non-regression tests on each release
+ - Fix vcpkg on Github Actions
+ - Add build cache for Github Actions to speed up the build (Linux only)
+
 v8.0.3 (05/2021)
 --------------------
 
