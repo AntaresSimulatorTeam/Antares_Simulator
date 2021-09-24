@@ -82,7 +82,7 @@ public:
     }
 
     std::string toString() const {
-        return std::to_string(duration_ms()) + "ms";
+        return std::to_string(duration_ms()) + " ms";
     }
 
 private:
