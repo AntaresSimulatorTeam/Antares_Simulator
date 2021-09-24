@@ -17,11 +17,6 @@ void extract_from_MPSolver(MPSolver* solver, PROBLEME_A_RESOUDRE* problemeSimple
 
 void change_MPSolver_objective(MPSolver* solver, double* costs, int nbVar);
 void change_MPSolver_rhs(MPSolver* solver, double* rhs, char* sens, int nbRow);
-void change_MPSolver_variables_bounds(MPSolver* solver,
-                                      double* bMin,
-                                      double* bMax,
-                                      int* typeVar,
-                                      int nbVar);
 
 void transferVariables(MPSolver* solver, double* bMin, double* bMax, double* costs, int nbVar)
 {
@@ -204,28 +199,6 @@ void change_MPSolver_objective(MPSolver* solver, double* costs, int nbVar)
     }
 }
 
-void change_MPSolver_variables_bounds(MPSolver* solver,
-                                      double* bMin,
-                                      double* bMax,
-                                      int* typeVar,
-                                      int nbVar)
-{
-    auto& variables = solver->variables();
-    for (int idxVar = 0; idxVar < nbVar; ++idxVar)
-    {
-        double min_l = ((typeVar[idxVar] == VARIABLE_NON_BORNEE)
-                            || (typeVar[idxVar] == VARIABLE_BORNEE_SUPERIEUREMENT)
-                          ? -MPSolver::infinity()
-                          : bMin[idxVar]);
-        double max_l = ((typeVar[idxVar] == VARIABLE_NON_BORNEE)
-                            || (typeVar[idxVar] == VARIABLE_BORNEE_INFERIEUREMENT)
-                          ? MPSolver::infinity()
-                          : bMax[idxVar]);
-        auto& var = variables[idxVar];
-        var->SetBounds(min_l, max_l);
-    }
-}
-
 void change_MPSolver_rhs(MPSolver* solver, double* rhs, char* sens, int nbRow)
 {
     auto& constraints = solver->constraints();
@@ -354,7 +327,20 @@ extern "C"
                                    int* typeVar,
                                    int nbVar)
     {
-        change_MPSolver_variables_bounds(solver, bMin, bMax, typeVar, nbVar);
+        auto& variables = solver->variables();
+        for (int idxVar = 0; idxVar < nbVar; ++idxVar)
+        {
+            double min_l = ((typeVar[idxVar] == VARIABLE_NON_BORNEE)
+                                || (typeVar[idxVar] == VARIABLE_BORNEE_SUPERIEUREMENT)
+                              ? -MPSolver::infinity()
+                              : bMin[idxVar]);
+            double max_l = ((typeVar[idxVar] == VARIABLE_NON_BORNEE)
+                                || (typeVar[idxVar] == VARIABLE_BORNEE_INFERIEUREMENT)
+                              ? MPSolver::infinity()
+                              : bMax[idxVar]);
+            auto& var = variables[idxVar];
+            var->SetBounds(min_l, max_l);
+        }
     }
 
     void ORTOOLS_LibererProbleme(MPSolver* solver)
