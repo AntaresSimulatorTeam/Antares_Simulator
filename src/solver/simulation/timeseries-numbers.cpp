@@ -405,14 +405,14 @@ bool checkInterModalConsistencyForArea( Data::Area& area,
 void drawTSnumbersForIntraModal(    uint32* intramodal_draws,
                                     const bool* isTSintramodal, 
                                     uint* nbTimeseriesByMode, 
-                                    Data::Study& study)
+                                    MersenneTwister* mersenneTwisterTable)
 {
     for (uint tsKind = 0; tsKind < Data::timeSeriesCount; ++tsKind)
     {
         if (isTSintramodal[tsKind])
         {
             intramodal_draws[tsKind]
-                = (uint32)(floor(study.runtime->random[Data::seedTimeseriesNumbers].next()
+                = (uint32)(floor(mersenneTwisterTable[Data::seedTimeseriesNumbers].next()
                     * nbTimeseriesByMode[tsKind]));
         }
     }
@@ -421,9 +421,9 @@ void drawTSnumbersForIntraModal(    uint32* intramodal_draws,
 void storeTSnumbersForIntraModal(   const bool* isTSintramodal, 
                                     uint32* intramodal_draws, 
                                     uint year, 
-                                    Data::Study& study)
+                                    Data::AreaList& areas)
 {
-    study.areas.each([&](Data::Area& area) {
+    areas.each([&](Data::Area& area) {
         // -------------
         // Load ...
         // -------------
@@ -718,8 +718,8 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
     for (uint year = 0; year < years; ++year)
     {
         // Intra-modal TS : draw and store TS numbres
-        drawTSnumbersForIntraModal(intramodal_draws, isTSintramodal, nbTimeseriesByMode, study);
-        storeTSnumbersForIntraModal(isTSintramodal, intramodal_draws, year, study);
+        drawTSnumbersForIntraModal(intramodal_draws, isTSintramodal, nbTimeseriesByMode, study.runtime->random);
+        storeTSnumbersForIntraModal(isTSintramodal, intramodal_draws, year, study.areas);
 
         // NOT intra-modal TS : draw and store TS numbers
         drawAndStoreTSnumbersForNOTintraModal(isTSintramodal, isTSgenerated, nbTimeseriesByMode, year, study);
