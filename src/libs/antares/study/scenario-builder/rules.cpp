@@ -162,7 +162,7 @@ void Rules::loadFromInstrs(Study& study,
         }
     }
 
-    if (kind_of_scenario == "r" && study.parameters.renewableGeneration() == rgClusters)
+    if (kind_of_scenario == "r" && study.parameters.renewableGeneration.isClusters())
     {
         if (clustername.empty())
             return;
