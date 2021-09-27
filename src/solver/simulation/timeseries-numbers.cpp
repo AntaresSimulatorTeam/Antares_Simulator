@@ -418,8 +418,8 @@ void drawTSnumbersForIntraModal(    uint32* intramodal_draws,
     }
 }
 
-void storeTSnumbersForIntraModal(   const bool* isTSintramodal, 
-                                    uint32* intramodal_draws, 
+void storeTSnumbersForIntraModal(   uint32* intramodal_draws,
+                                    const bool* isTSintramodal,
                                     uint year, 
                                     Data::AreaList& areas)
 {
@@ -719,7 +719,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
     {
         // Intra-modal TS : draw and store TS numbres
         drawTSnumbersForIntraModal(intramodal_draws, isTSintramodal, nbTimeseriesByMode, study.runtime->random);
-        storeTSnumbersForIntraModal(isTSintramodal, intramodal_draws, year, study.areas);
+        storeTSnumbersForIntraModal(intramodal_draws, isTSintramodal, year, study.areas);
 
         // NOT intra-modal TS : draw and store TS numbers
         drawAndStoreTSnumbersForNOTintraModal(isTSintramodal, isTSgenerated, nbTimeseriesByMode, year, study);
