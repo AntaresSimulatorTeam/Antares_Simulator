@@ -154,8 +154,7 @@ RESOLUTION:
                                           ProblemeAResoudre->Xmin,
                                           ProblemeAResoudre->Xmax,
                                           ProblemeAResoudre->TypeDeVariable,
-                                          ProblemeAResoudre->NombreDeVariables,
-                                          &Probleme);
+                                          ProblemeAResoudre->NombreDeVariables);
             }
             else
             {
