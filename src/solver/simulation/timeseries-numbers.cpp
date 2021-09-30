@@ -30,11 +30,9 @@
 #include <map>
 #include <string>
 
-#include <yuni/yuni.h>
+// #include <yuni/yuni.h>
 #include "timeseries-numbers.h"
 #include <antares/study.h>
-#include <antares/study/scenario-builder/sets.h>
-#include "../aleatoire/alea_fonctions.h"
 
 using namespace Yuni;
 using namespace Antares::Data;
