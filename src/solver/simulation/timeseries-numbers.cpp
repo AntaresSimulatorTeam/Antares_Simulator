@@ -30,9 +30,7 @@
 #include <map>
 #include <string>
 
-// #include <yuni/yuni.h>
 #include "timeseries-numbers.h"
-#include <antares/study.h>
 
 using namespace Yuni;
 using namespace Antares::Data;
@@ -690,13 +688,10 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
     const bool isTSintramodal[Data::timeSeriesCount]
       = {0 != (Data::timeSeriesLoad & parameters.intraModal),
          0 != (Data::timeSeriesHydro & parameters.intraModal),
-         0 != ((Data::timeSeriesWind & parameters.intraModal)
-               && (parameters.renewableGeneration() == Data::rgAggregated)),
+         0 != ((Data::timeSeriesWind & parameters.intraModal) && parameters.renewableGeneration.isAggregated()),
          0 != (Data::timeSeriesThermal & parameters.intraModal),
-         0 != ((Data::timeSeriesSolar & parameters.intraModal)
-               && (parameters.renewableGeneration() == Data::rgAggregated)),
-         0 != ((Data::timeSeriesRenewable & parameters.intraModal)
-               && (parameters.renewableGeneration() == Data::rgClusters))};
+         0 != ((Data::timeSeriesSolar & parameters.intraModal) && parameters.renewableGeneration.isAggregated()),
+         0 != ((Data::timeSeriesRenewable & parameters.intraModal) && parameters.renewableGeneration.isClusters()) };
 
     uint nbTimeseriesByMode[Data::timeSeriesCount];
 
@@ -730,10 +725,10 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
     const bool isTSintermodal[Data::timeSeriesCount]
       = {0 != (Data::timeSeriesLoad & parameters.interModal),
          0 != (Data::timeSeriesHydro & parameters.interModal),
-         0 != ((Data::timeSeriesWind & parameters.interModal) && (parameters.renewableGeneration() == Data::rgAggregated)),
+         0 != ((Data::timeSeriesWind & parameters.interModal) && parameters.renewableGeneration.isAggregated()),
          0 != (Data::timeSeriesThermal & parameters.interModal),
-         0 != ((Data::timeSeriesSolar & parameters.interModal) && (parameters.renewableGeneration() == Data::rgAggregated)),
-         0 != ((Data::timeSeriesRenewable & parameters.interModal) && (parameters.renewableGeneration() == Data::rgClusters))};
+         0 != ((Data::timeSeriesSolar & parameters.interModal) && parameters.renewableGeneration.isAggregated()),
+         0 != ((Data::timeSeriesRenewable & parameters.interModal) && parameters.renewableGeneration.isClusters()) };
 
     if (std::any_of(std::begin(isTSintermodal), std::end(isTSintermodal), [](bool x) { return x; }))
     {
