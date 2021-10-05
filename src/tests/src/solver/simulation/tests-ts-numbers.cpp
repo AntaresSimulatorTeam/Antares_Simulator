@@ -21,6 +21,8 @@ void initializeStudy(Study::Ptr study)
 	study->runtime->rangeLimits.year[rangeEnd] = 0;
 	study->runtime->rangeLimits.year[rangeCount] = 1;
 
+	study->parameters.renewableGeneration.toAggregated(); // Default
+
 	study->parameters.intraModal = 0;
 	study->parameters.interModal = 0;
 	study->parameters.timeSeriesToRefresh = 0;
@@ -269,3 +271,35 @@ BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_different_number_of_ready_m
 	BOOST_CHECK(not Generate(*study));
 }
 
+
+BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal____check_inter_modal_consistency_ok)
+{
+	// Creating a study
+	Study::Ptr study = new Study();
+	initializeStudy(study);
+
+	study->parameters.interModal |= timeSeriesLoad;
+	study->parameters.interModal |= timeSeriesWind;
+	study->parameters.interModal |= timeSeriesThermal;
+
+	// Area
+	Area* area = addAreaToStudy(study, "Area");
+	area->resizeAllTimeseriesNumbers(1);
+
+	// ... Load
+	area->load.series->series.resize(5, 1); // Ready made TS for load
+
+	// ... Wind
+	area->wind.series->series.resize(5, 1);	// Ready made TS for load
+
+	// ... Thermal
+	study->parameters.timeSeriesToRefresh |= timeSeriesThermal; // Generated TS for thermal
+	study->parameters.nbTimeSeriesThermal = 5;
+	// ... ... clusters
+	auto thCluster_1 = addClusterToArea<ThermalCluster>(area, "th-cluster-1");
+	auto thCluster_2 = addClusterToArea<ThermalCluster>(area, "th-cluster-2");
+	// ... ... resizing ts number matrices for all clusters of the area
+	area->thermal.resizeAllTimeseriesNumbers(1);
+
+	BOOST_CHECK(Generate(*study));
+}
