@@ -12,6 +12,20 @@ using namespace Antares::Data;
 using namespace Antares::Solver::TimeSeriesNumbers;
 
 
+void initializeStudy(Study::Ptr study)
+{
+	study->parameters.derated = false;
+
+	study->runtime = new StudyRuntimeInfos(1);
+	study->runtime->rangeLimits.year[rangeBegin] = 0;
+	study->runtime->rangeLimits.year[rangeEnd] = 0;
+	study->runtime->rangeLimits.year[rangeCount] = 1;
+
+	study->parameters.intraModal = 0;
+	study->parameters.interModal = 0;
+	study->parameters.timeSeriesToRefresh = 0;
+}
+
 // ========================
 // Add an area to study
 // ========================
@@ -44,14 +58,13 @@ void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
 }
 
 template<class ClusterType>
-std::shared_ptr<ClusterType> addCluster(Study::Ptr study, Area* area, const std::string& clusterName)
+std::shared_ptr<ClusterType> addClusterToArea(Area* area, const std::string& clusterName)
 {
 	auto cluster = std::make_shared<ClusterType>(area);
 	cluster->setName(clusterName);
 
 	// cluster->series->series.resize(nbTS, HOURS_PER_YEAR);
 	addClusterToAreaList(area, cluster);
-	BOOST_CHECK(addedCluster != nullptr);
 
 	return cluster;
 }
@@ -61,37 +74,36 @@ BOOST_AUTO_TEST_CASE(two_areas_with_5_ready_made_ts_on_load___intra_modal_ok)
 {
 	// Creating a study
 	Study::Ptr study = new Study();
+	initializeStudy(study);
 
 	study->parameters.intraModal |= timeSeriesLoad;
 
-	// study->parameters.timeSeriesToRefresh |= 
-
 	Area* area_1 = addAreaToStudy(study, "Area 1");
-	area_1->load.series->series.resize(5, 1 /* height is useless*/);
-
+	area_1->resizeAllTimeseriesNumbers(1);
+	area_1->load.series->series.resize(5, 1);
 
 	Area* area_2 = addAreaToStudy(study, "Area 2");
-	area_2->load.series->series.resize(5, 1 /* height is useless*/);
+	area_2->resizeAllTimeseriesNumbers(1);
+	area_2->load.series->series.resize(5, 1);
 
 	BOOST_CHECK(Generate(*study));
 }
 
-
-BOOST_AUTO_TEST_CASE(two_areas_with_5_and_4_ready_made_ts_on_load___intra_modal_ko)
+BOOST_AUTO_TEST_CASE(two_areas_with_respectively_5_and_4_ready_made_ts_on_load___intra_modal_ko)
 {
 	// Creating a study
 	Study::Ptr study = new Study();
+	initializeStudy(study);
 
 	study->parameters.intraModal |= timeSeriesLoad;
 
-	// study->parameters.timeSeriesToRefresh |= 
-
 	Area* area_1 = addAreaToStudy(study, "Area 1");
-	area_1->load.series->series.resize(5, 1 /* height is useless*/);
-
+	area_1->resizeAllTimeseriesNumbers(1);
+	area_1->load.series->series.resize(5, 1);
 
 	Area* area_2 = addAreaToStudy(study, "Area 2");
-	area_2->load.series->series.resize(4, 1 /* height is useless*/);
+	area_2->resizeAllTimeseriesNumbers(1);
+	area_2->load.series->series.resize(4, 1);
 
 	BOOST_CHECK(not Generate(*study));
 }
@@ -106,7 +118,7 @@ BOOST_AUTO_TEST_CASE(check_intra_modal_for_thermal)
 	study->parameters.intraModal |= timeSeriesThermal;
 
 	Area* area_1 = addAreaToStudy(study, "Area 1");
-	auto thCluster_1 = addCluster<ThermalCluster>(study, area_1, "th-cluster-1");
+	auto thCluster_1 = addClusterToArea<ThermalCluster>(area_1, "th-cluster-1");
 }
 
 BOOST_AUTO_TEST_CASE(check_intra_modal_for_renewable_clusters)
@@ -117,6 +129,6 @@ BOOST_AUTO_TEST_CASE(check_intra_modal_for_renewable_clusters)
 	study->parameters.intraModal |= timeSeriesRenewable;
 
 	Area* area_1 = addAreaToStudy(study, "Area 1");
-	auto rnCluster_1 = addCluster<RenewableCluster>(study, area_1, "rn-cluster-1");
+	auto rnCluster_1 = addClusterToArea<RenewableCluster>(area_1, "rn-cluster-1");
 }
 */

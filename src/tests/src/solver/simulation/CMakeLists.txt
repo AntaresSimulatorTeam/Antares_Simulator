@@ -44,8 +44,10 @@ target_link_libraries(tests-ts-numbers
 							Boost::unit_test_framework
 )
 
+# Storing tests-ts-numbers under the folder Unit-tests in the IDE
+set_target_properties(tests-ts-numbers PROPERTIES FOLDER Unit-tests)
+
 add_test(NAME ts-numbers COMMAND tests-ts-numbers)
 
-
-
+set_property(TEST ts-numbers PROPERTY LABELS TESTLABEL unit)
 
