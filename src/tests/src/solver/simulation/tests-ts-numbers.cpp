@@ -41,14 +41,15 @@ Area* addAreaToStudy(Study::Ptr study, const std::string& areaName)
 // Add a cluster to an area
 // ===========================
 template<class ClusterType>
-void addClusterToAreaList(Area* area, std::shared_ptr<ClusterType> T)
+void addClusterToAreaList(Area* area, std::shared_ptr<ClusterType> cluster)
 {}
 
 template<>
 void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 {
-	auto addedCluster = area->thermal.list.add(cluster);
-	area->thermal.list.mapping[cluster->id()] = addedCluster;
+	area->thermal.clusters.push_back(cluster.get());
+	area->thermal.list.add(cluster);
+	area->thermal.list.mapping[cluster->id()] = cluster;
 }
 
 template<>
@@ -62,8 +63,8 @@ std::shared_ptr<ClusterType> addClusterToArea(Area* area, const std::string& clu
 {
 	auto cluster = std::make_shared<ClusterType>(area);
 	cluster->setName(clusterName);
+	cluster->series = new DataSeriesCommon();
 
-	// cluster->series->series.resize(nbTS, HOURS_PER_YEAR);
 	addClusterToAreaList(area, cluster);
 
 	return cluster;
@@ -78,10 +79,12 @@ BOOST_AUTO_TEST_CASE(two_areas_with_5_ready_made_ts_on_load___intra_modal_ok)
 
 	study->parameters.intraModal |= timeSeriesLoad;
 
+	// Area 1
 	Area* area_1 = addAreaToStudy(study, "Area 1");
 	area_1->resizeAllTimeseriesNumbers(1);
 	area_1->load.series->series.resize(5, 1);
 
+	// Area 2
 	Area* area_2 = addAreaToStudy(study, "Area 2");
 	area_2->resizeAllTimeseriesNumbers(1);
 	area_2->load.series->series.resize(5, 1);
@@ -97,10 +100,12 @@ BOOST_AUTO_TEST_CASE(two_areas_with_respectively_5_and_4_ready_made_ts_on_load__
 
 	study->parameters.intraModal |= timeSeriesLoad;
 
+	// Area 1
 	Area* area_1 = addAreaToStudy(study, "Area 1");
 	area_1->resizeAllTimeseriesNumbers(1);
 	area_1->load.series->series.resize(5, 1);
 
+	// Area 2
 	Area* area_2 = addAreaToStudy(study, "Area 2");
 	area_2->resizeAllTimeseriesNumbers(1);
 	area_2->load.series->series.resize(4, 1);
@@ -109,18 +114,83 @@ BOOST_AUTO_TEST_CASE(two_areas_with_respectively_5_and_4_ready_made_ts_on_load__
 }
 
 
-/*
-BOOST_AUTO_TEST_CASE(check_intra_modal_for_thermal)
+BOOST_AUTO_TEST_CASE(two_areas_3_clusters_with_same_ready_made_ts_numbers___check_intra_modal_ok)
 {
 	// Creating a study
 	Study::Ptr study = new Study();
+	initializeStudy(study);
 
 	study->parameters.intraModal |= timeSeriesThermal;
 
+	// =============
+	// Area 1
+	// =============
 	Area* area_1 = addAreaToStudy(study, "Area 1");
-	auto thCluster_1 = addClusterToArea<ThermalCluster>(area_1, "th-cluster-1");
+	area_1->resizeAllTimeseriesNumbers(1);
+
+	// ... Area 1 : thermal cluster 1
+	auto thCluster_11 = addClusterToArea<ThermalCluster>(area_1, "th-cluster-11");
+	thCluster_11->series->series.resize(4, 1);
+	// ... Area 1 : thermal cluster 2
+	auto thCluster_12 = addClusterToArea<ThermalCluster>(area_1, "th-cluster-12");
+	thCluster_12->series->series.resize(4, 1);
+
+	area_1->thermal.resizeAllTimeseriesNumbers(1);
+
+	// =============
+	// Area 2
+	// =============
+	Area* area_2 = addAreaToStudy(study, "Area 2");
+	area_2->resizeAllTimeseriesNumbers(1);
+	
+	// ... Area 2 : thermal cluster 1
+	auto thCluster_21 = addClusterToArea<ThermalCluster>(area_2, "th-cluster-21");
+	thCluster_21->series->series.resize(4, 1);
+
+	area_2->thermal.resizeAllTimeseriesNumbers(1);
+
+	BOOST_CHECK(Generate(*study));
 }
 
+BOOST_AUTO_TEST_CASE(two_areas_3_clusters_with_different_ready_made_ts_numbers___check_intra_modal_ok)
+{
+	// Creating a study
+	Study::Ptr study = new Study();
+	initializeStudy(study);
+
+	study->parameters.intraModal |= timeSeriesThermal;
+
+	// =============
+	// Area 1
+	// =============
+	Area* area_1 = addAreaToStudy(study, "Area 1");
+	area_1->resizeAllTimeseriesNumbers(1);
+
+	// ... Area 1 : thermal cluster 1
+	auto thCluster_11 = addClusterToArea<ThermalCluster>(area_1, "th-cluster-11");
+	thCluster_11->series->series.resize(4, 1);
+	// ... Area 1 : thermal cluster 2
+	auto thCluster_12 = addClusterToArea<ThermalCluster>(area_1, "th-cluster-12");
+	thCluster_12->series->series.resize(4, 1);
+
+	area_1->thermal.resizeAllTimeseriesNumbers(1);
+
+	// =============
+	// Area 2
+	// =============
+	Area* area_2 = addAreaToStudy(study, "Area 2");
+	area_2->resizeAllTimeseriesNumbers(1);
+
+	// ... Area 2 : thermal cluster 1
+	auto thCluster_21 = addClusterToArea<ThermalCluster>(area_2, "th-cluster-21");
+	thCluster_21->series->series.resize(3, 1);
+
+	area_2->thermal.resizeAllTimeseriesNumbers(1);
+
+	BOOST_CHECK(not Generate(*study));
+}
+
+/*
 BOOST_AUTO_TEST_CASE(check_intra_modal_for_renewable_clusters)
 {
 	// Creating a study
