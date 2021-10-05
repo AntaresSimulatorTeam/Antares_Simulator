@@ -1898,6 +1898,16 @@ RenewableGenerationModelling Parameters::RenewableGeneration::operator()() const
     return rgModelling;
 }
 
+void Parameters::RenewableGeneration::toAggregated()
+{
+    rgModelling = Antares::Data::rgAggregated;
+}
+
+void Parameters::RenewableGeneration::toClusters()
+{
+    rgModelling = Antares::Data::rgClusters;
+}
+
 bool Parameters::RenewableGeneration::isAggregated() const
 {
     return rgModelling == Antares::Data::rgAggregated;
