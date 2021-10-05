@@ -1,0 +1,26 @@
+name: "Generate User Guide pdf"
+description: "Generate User Guide pdf using Sphinx (not supported on windows)"
+outputs:
+  pdf-path:
+    description: "path of the user guide pdf"
+    value: ${{ steps.create.outputs.pdf-path }}
+  pdf-name:
+    description: "name of the user guide pdf"
+    value: ${{ steps.create.outputs.pdf-name }}
+runs:
+  using: "composite"
+  steps:
+    - id: create
+      shell: bash
+      run: |
+        cd docs/pdf-doc-generation-with-sphinx
+        cp -r ../assets/ source/ && cp -r ../reference-guide source/
+        sed -i 's=\\\\)=$=g' source/reference-guide/2-modeling.md
+        sed -i 's=\\\\(=$=g' source/reference-guide/2-modeling.md
+        make latexpdf
+        cd ../../
+        PDF_NAME=antares-UserGuide.pdf
+        PDF_PATH=./$PDF_NAME
+        mv docs/pdf-doc-generation-with-sphinx/build/latex/antaressimulatoruserguide.pdf $PDF_NAME
+        echo "::set-output name=pdf-path::$PDF_PATH"
+        echo "::set-output name=pdf-name::$PDF_NAME"

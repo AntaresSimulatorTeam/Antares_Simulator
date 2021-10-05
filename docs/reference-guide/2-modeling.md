@@ -31,8 +31,6 @@ The scope of this document is exclusively devoted to step (d). Note that equival
 
 The following picture gives a functional view of all that is involved in steps (a) to (e). In this illustration, Step (d), whose goal is to solve the problems introduced in this document, is materialized by the red box.
 
-![](RackMultipart20201119-4-hpmtl9_html_ca6164c8f4d9c041.gif)
-
 The number and the size of the individual problems to solve (a least-cost hydro-thermal unit-commitment and power schedule, with an hourly resolution and throughout a week, over a large interconnected system) make optimization sessions often computer-intensive. Note that the content of the blue ";hydro energy manager"; box appearing on the previous figure, whose purpose is to deal with energy storage issues at the seasonal scale, is not detailed in the present document but in the ";General Reference Guide";.
 
 Depending on user-defined results accuracy requirements, various practical options allow to simplify either the formulation of the weekly UC & dispatch problems (e.g. do not account for constraints associated with operational reserves) or their resolution (i.e. find, for the native MILP, an approximate solution based on two successive LPs). For the sake of simplicity and clarity, the way these options are used to revise the primary problem formulation is not detailed hereafter. Likewise, many simplifications are introduced to keep notations as light as possible. This is why, for instance, the overall sum of load, wind power generation, solar power generation, run of the river generation, and all other kinds of so-called ";must-run"; generation is simply denoted ";load"; in the present document.
