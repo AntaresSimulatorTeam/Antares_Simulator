@@ -1,5 +1,3 @@
-# Antares Simulator
-
 ![antares logo](assets/antares.png)
 
 [![Status][linux_system_svg]][linux_system_link]  [![Status][windows_vcpkg_svg]][windows_vcpkg_link] [![Status][centos7_system_svg]][centos7_system_link]
@@ -24,14 +22,12 @@ Until 2018 it was distributed under the terms of a proprietary license.
 
 In May 2018 RTE decided to release the project under the GPLv3 license.
 
-
-# Links:
+## Links:
 
 - Antares web site :  https://antares-simulator.org
 - RTE web site  : http://www.rte-france.com/
 
-
-# Installation
+## Installation
 
 This software suite has been tested under:
 
@@ -42,7 +38,7 @@ This software suite has been tested under:
 Antares Simulator is built using CMake.
 For installation instructions, please visit [INSTALL.md](INSTALL.md)
 
-# Source Code Content
+## Source Code Content
 
 * [AUTHORS](AUTHORS.txt)           -    Antares Simulator authors
 * [CERTIFICATE](CERTIFICATE.txt)	 - A standard DCO that has to be signed by every contributor

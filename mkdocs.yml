@@ -29,6 +29,7 @@ theme:
 
 nav:
   - Home: index.md
+  - Antares parent
   - 'User guide':
   #    - 'Reference guide': 'reference-guide/1-reference-guide.md'
     - 'Optimisation problem' : 'reference-guide/2-modeling.md'
