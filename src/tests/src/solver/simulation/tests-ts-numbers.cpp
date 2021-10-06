@@ -74,7 +74,7 @@ std::shared_ptr<ClusterType> addClusterToArea(Area* area, const std::string& clu
 }
 
 
-BOOST_AUTO_TEST_CASE(two_areas_with_5_ready_made_ts_on_load___intra_modal_ok)
+BOOST_AUTO_TEST_CASE(two_areas_with_5_ready_made_ts_on_load___intra_modal_OK)
 {
 	// Creating a study
 	Study::Ptr study = new Study();
@@ -84,18 +84,18 @@ BOOST_AUTO_TEST_CASE(two_areas_with_5_ready_made_ts_on_load___intra_modal_ok)
 
 	// Area 1
 	Area* area_1 = addAreaToStudy(study, "Area 1");
-	area_1->resizeAllTimeseriesNumbers(1);
+	area_1->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 	area_1->load.series->series.resize(5, 1);
 
 	// Area 2
 	Area* area_2 = addAreaToStudy(study, "Area 2");
-	area_2->resizeAllTimeseriesNumbers(1);
+	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 	area_2->load.series->series.resize(5, 1);
 
 	BOOST_CHECK(Generate(*study));
 }
 
-BOOST_AUTO_TEST_CASE(two_areas_with_respectively_5_and_4_ready_made_ts_on_load___intra_modal_ko)
+BOOST_AUTO_TEST_CASE(two_areas_with_respectively_5_and_4_ready_made_ts_on_load___intra_modal_KO)
 {
 	// Creating a study
 	Study::Ptr study = new Study();
@@ -105,19 +105,19 @@ BOOST_AUTO_TEST_CASE(two_areas_with_respectively_5_and_4_ready_made_ts_on_load__
 
 	// Area 1
 	Area* area_1 = addAreaToStudy(study, "Area 1");
-	area_1->resizeAllTimeseriesNumbers(1);
 	area_1->load.series->series.resize(5, 1);
+	area_1->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	// Area 2
 	Area* area_2 = addAreaToStudy(study, "Area 2");
-	area_2->resizeAllTimeseriesNumbers(1);
 	area_2->load.series->series.resize(4, 1);
+	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	BOOST_CHECK(not Generate(*study));
 }
 
 
-BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_same_number_of_ready_made_ts___check_intra_modal_ok)
+BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_same_number_of_ready_made_ts___check_intra_modal_OK)
 {
 	// Creating a study
 	Study::Ptr study = new Study();
@@ -129,7 +129,6 @@ BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_same_number_of_ready_made
 	// Area 1
 	// =============
 	Area* area_1 = addAreaToStudy(study, "Area 1");
-	area_1->resizeAllTimeseriesNumbers(1);
 
 	// ... Area 1 : thermal cluster 1
 	auto thCluster_11 = addClusterToArea<ThermalCluster>(area_1, "th-cluster-11");
@@ -138,24 +137,23 @@ BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_same_number_of_ready_made
 	auto thCluster_12 = addClusterToArea<ThermalCluster>(area_1, "th-cluster-12");
 	thCluster_12->series->series.resize(4, 1);
 
-	area_1->thermal.resizeAllTimeseriesNumbers(1);
+	area_1->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	// =============
 	// Area 2
 	// =============
 	Area* area_2 = addAreaToStudy(study, "Area 2");
-	area_2->resizeAllTimeseriesNumbers(1);
-	
+
 	// ... Area 2 : thermal cluster 1
 	auto thCluster_21 = addClusterToArea<ThermalCluster>(area_2, "th-cluster-21");
 	thCluster_21->series->series.resize(4, 1);
 
-	area_2->thermal.resizeAllTimeseriesNumbers(1);
+	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	BOOST_CHECK(Generate(*study));
 }
 
-BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_different_number_of_ready_made_ts___check_intra_modal_ok)
+BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_different_number_of_ready_made_ts___check_intra_modal_OK)
 {
 	// Creating a study
 	Study::Ptr study = new Study();
@@ -167,7 +165,6 @@ BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_different_number_of_ready
 	// Area 1
 	// =============
 	Area* area_1 = addAreaToStudy(study, "Area 1");
-	area_1->resizeAllTimeseriesNumbers(1);
 
 	// ... Area 1 : thermal cluster 1
 	auto thCluster_11 = addClusterToArea<ThermalCluster>(area_1, "th-cluster-11");
@@ -176,24 +173,24 @@ BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_different_number_of_ready
 	auto thCluster_12 = addClusterToArea<ThermalCluster>(area_1, "th-cluster-12");
 	thCluster_12->series->series.resize(4, 1);
 
-	area_1->thermal.resizeAllTimeseriesNumbers(1);
+	area_1->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	// =============
 	// Area 2
 	// =============
 	Area* area_2 = addAreaToStudy(study, "Area 2");
-	area_2->resizeAllTimeseriesNumbers(1);
 
 	// ... Area 2 : thermal cluster 1
 	auto thCluster_21 = addClusterToArea<ThermalCluster>(area_2, "th-cluster-21");
 	thCluster_21->series->series.resize(3, 1);
 
-	area_2->thermal.resizeAllTimeseriesNumbers(1);
+	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+
 
 	BOOST_CHECK(not Generate(*study));
 }
 
-BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_same_number_of_ready_made_ts___check_intra_modal_ok)
+BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_same_number_of_ready_made_ts___check_intra_modal_OK)
 {
 	// Creating a study
 	Study::Ptr study = new Study();
@@ -206,7 +203,6 @@ BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_same_number_of_ready_made_t
 	// Area 1
 	// =============
 	Area* area_1 = addAreaToStudy(study, "Area 1");
-	area_1->resizeAllTimeseriesNumbers(1);
 
 	// ... Area 1 : renewable cluster 1
 	auto rnCluster_11 = addClusterToArea<RenewableCluster>(area_1, "rn-cluster-11");
@@ -215,24 +211,22 @@ BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_same_number_of_ready_made_t
 	auto rnCluster_12 = addClusterToArea<RenewableCluster>(area_1, "rn-cluster-12");
 	rnCluster_12->series->series.resize(4, 1);
 
-	area_1->renewable.resizeAllTimeseriesNumbers(1);
+	area_1->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	// =============
 	// Area 2
 	// =============
 	Area* area_2 = addAreaToStudy(study, "Area 2");
-	area_2->resizeAllTimeseriesNumbers(1);
-
 	// ... Area 2 : renewable cluster 1
 	auto rnCluster_21 = addClusterToArea<RenewableCluster>(area_2, "rn-cluster-21");
 	rnCluster_21->series->series.resize(4, 1);
 
-	area_2->renewable.resizeAllTimeseriesNumbers(1);
+	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	BOOST_CHECK(Generate(*study));
 }
 
-BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_different_number_of_ready_made_ts___check_intra_modal_ko)
+BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_different_number_of_ready_made_ts___check_intra_modal_KO)
 {
 	// Creating a study
 	Study::Ptr study = new Study();
@@ -245,7 +239,6 @@ BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_different_number_of_ready_m
 	// Area 1
 	// =============
 	Area* area_1 = addAreaToStudy(study, "Area 1");
-	area_1->resizeAllTimeseriesNumbers(1);
 
 	// ... Area 1 : renewable cluster 1
 	auto rnCluster_11 = addClusterToArea<RenewableCluster>(area_1, "rn-cluster-11");
@@ -254,25 +247,24 @@ BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_different_number_of_ready_m
 	auto rnCluster_12 = addClusterToArea<RenewableCluster>(area_1, "rn-cluster-12");
 	rnCluster_12->series->series.resize(3, 1); // Caution : number of TS different from previous cluster 
 
-	area_1->renewable.resizeAllTimeseriesNumbers(1);
+	area_1->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	// =============
 	// Area 2
 	// =============
 	Area* area_2 = addAreaToStudy(study, "Area 2");
-	area_2->resizeAllTimeseriesNumbers(1);
 
 	// ... Area 2 : renewable cluster 1
 	auto rnCluster_21 = addClusterToArea<RenewableCluster>(area_2, "rn-cluster-21");
 	rnCluster_21->series->series.resize(4, 1);
 
-	area_2->renewable.resizeAllTimeseriesNumbers(1);
+	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	BOOST_CHECK(not Generate(*study));
 }
 
 
-BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal____check_inter_modal_consistency_ok)
+BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__same_nb_of_ts____check_inter_modal_consistency_OK)
 {
 	// Creating a study
 	Study::Ptr study = new Study();
@@ -284,13 +276,12 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal____ch
 
 	// Area
 	Area* area = addAreaToStudy(study, "Area");
-	area->resizeAllTimeseriesNumbers(1);
-
+	
 	// ... Load
 	area->load.series->series.resize(5, 1); // Ready made TS for load
 
 	// ... Wind
-	area->wind.series->series.resize(5, 1);	// Ready made TS for load
+	area->wind.series->series.resize(5, 1);	// Ready made TS for wind
 
 	// ... Thermal
 	study->parameters.timeSeriesToRefresh |= timeSeriesThermal; // Generated TS for thermal
@@ -298,8 +289,94 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal____ch
 	// ... ... clusters
 	auto thCluster_1 = addClusterToArea<ThermalCluster>(area, "th-cluster-1");
 	auto thCluster_2 = addClusterToArea<ThermalCluster>(area, "th-cluster-2");
-	// ... ... resizing ts number matrices for all clusters of the area
-	area->thermal.resizeAllTimeseriesNumbers(1);
+
+	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	BOOST_CHECK(Generate(*study));
+}
+
+BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__different_nb_of_ts____check_inter_modal_consistency_KO)
+{
+	// Creating a study
+	Study::Ptr study = new Study();
+	initializeStudy(study);
+
+	study->parameters.interModal |= timeSeriesLoad;
+	study->parameters.interModal |= timeSeriesWind;
+	study->parameters.interModal |= timeSeriesThermal;
+
+	// Area
+	Area* area = addAreaToStudy(study, "Area");
+
+	// ... Load
+	area->load.series->series.resize(5, 1); // Ready made TS for load
+
+	// ... Wind
+	area->wind.series->series.resize(5, 1);	// Ready made TS for wind
+
+	// ... Thermal
+	study->parameters.timeSeriesToRefresh |= timeSeriesThermal; // Generated TS for thermal
+	study->parameters.nbTimeSeriesThermal = 4;
+	// ... ... clusters
+	auto thCluster_1 = addClusterToArea<ThermalCluster>(area, "th-cluster-1");
+	auto thCluster_2 = addClusterToArea<ThermalCluster>(area, "th-cluster-2");
+
+	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+
+	BOOST_CHECK(not Generate(*study));
+}
+
+
+BOOST_AUTO_TEST_CASE(one_area__load_renewable_are_turned_to_inter_modal__same_nb_of_ts____check_inter_modal_consistency_OK)
+{
+	// Creating a study
+	Study::Ptr study = new Study();
+	initializeStudy(study);
+
+	study->parameters.renewableGeneration.toClusters();
+
+	study->parameters.interModal |= timeSeriesLoad;
+	study->parameters.interModal |= timeSeriesRenewable;
+
+	// Area
+	Area* area = addAreaToStudy(study, "Area");
+
+	// ... Load
+	area->load.series->series.resize(5, 1); // Ready made TS for load
+
+	// ... Renewable
+	// ... ... clusters
+	auto rnCluster_1 = addClusterToArea<RenewableCluster>(area, "rn-cluster-1");
+	rnCluster_1->series->series.resize(5, 1);
+
+	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+
+	BOOST_CHECK(Generate(*study));
+}
+
+BOOST_AUTO_TEST_CASE(one_area__load_renewable_are_turned_to_inter_modal__different_nb_of_ts____check_inter_modal_consistency_KO)
+{
+	// Creating a study
+	Study::Ptr study = new Study();
+	initializeStudy(study);
+
+	study->parameters.renewableGeneration.toClusters();
+
+	study->parameters.interModal |= timeSeriesLoad;
+	study->parameters.interModal |= timeSeriesRenewable;
+
+	// Area
+	Area* area = addAreaToStudy(study, "Area");
+
+	// ... Load
+	area->load.series->series.resize(5, 1); // Ready made TS for load
+
+	// ... Renewable
+	// ... ... clusters
+	auto rnCluster_1 = addClusterToArea<RenewableCluster>(area, "rn-cluster-1");
+	rnCluster_1->series->series.resize(4, 1);
+
+	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+
+	BOOST_CHECK(not Generate(*study));
 }
