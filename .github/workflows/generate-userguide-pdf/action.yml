@@ -13,14 +13,10 @@ runs:
     - id: create
       shell: bash
       run: |
-        cd docs/pdf-doc-generation-with-sphinx
-        cp -r ../assets/ source/ && cp -r ../reference-guide source/
-        sed -i 's=\\\\)=$=g' source/reference-guide/2-modeling.md
-        sed -i 's=\\\\(=$=g' source/reference-guide/2-modeling.md
-        make latexpdf
-        cd ../../
         PDF_NAME=antares-UserGuide.pdf
-        PDF_PATH=./$PDF_NAME
-        mv docs/pdf-doc-generation-with-sphinx/build/latex/antaressimulatoruserguide.pdf $PDF_NAME
+        cd docs/pdf-doc-generation-with-sphinx
+        bash create_pdf_doc.sh $PDF_NAME
+        mv antaressimulatoruserguide.pdf $PDF_NAME
+        PDF_PATH=docs/pdf-doc-generation-with-sphinx/$PDF_NAME
         echo "::set-output name=pdf-path::$PDF_PATH"
         echo "::set-output name=pdf-name::$PDF_NAME"
