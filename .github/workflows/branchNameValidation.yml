@@ -13,4 +13,4 @@ jobs:
       with:
         regex: '([a-z])+\/([a-z])+' # Regex the branch should match. This example enforces grouping
         allowed_prefixes: 'feature,features,fix,release,doc' # All branches should start with the given prefix
-        ignore: master,develop # Ignore exactly matching branch names from convention
+        ignore: master,develop,doc # Ignore exactly matching branch names from convention
