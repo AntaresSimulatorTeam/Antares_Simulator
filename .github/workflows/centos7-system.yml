@@ -24,6 +24,7 @@ jobs:
       with:
         files: |
           docker/centos7
+          antares-version.json
 
     - name: Read antares-deps version
       id: antares-deps-version
@@ -70,7 +71,7 @@ jobs:
     - name: Configure
       run: |
            source /opt/rh/devtoolset-7/enable
-           cmake3 -B _build -S src -DDEPS_INSTALL_DIR=/rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON
+           cmake3 -B _build -S src -DDEPS_INSTALL_DIR=/rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF
 
     - name: Build
       run: |
