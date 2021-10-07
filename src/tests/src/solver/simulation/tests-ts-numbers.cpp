@@ -465,3 +465,54 @@ BOOST_AUTO_TEST_CASE(load_wind_thermal_in_intra_and_inter_modal____check_all_ts_
 	BOOST_CHECK_EQUAL(thCluster_area_1->series->timeseriesNumbers[0][year], referenceLoadTsNumber);
 	BOOST_CHECK_EQUAL(thCluster_area_2->series->timeseriesNumbers[0][year], referenceLoadTsNumber);
 }
+
+
+BOOST_AUTO_TEST_CASE(chaeck_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_ts)
+{
+	// Creating a study
+	Study::Ptr study = new Study();
+	initializeStudy(study);
+
+	// Generated TS for everyone
+	study->parameters.timeSeriesToRefresh |= timeSeriesLoad;
+	study->parameters.timeSeriesToRefresh |= timeSeriesWind;
+	study->parameters.timeSeriesToRefresh |= timeSeriesSolar;
+	study->parameters.timeSeriesToRefresh |= timeSeriesHydro;
+	study->parameters.timeSeriesToRefresh |= timeSeriesThermal;
+
+	// Number of TS for each energy
+	uint loadNumberOfTs = 10;
+	uint windNumberOfTs = 3;
+	uint solarNumberOfTs = 7;
+	uint hydroNumberOfTs = 9;
+	uint thermalNumberOfTs = 5;
+
+	study->parameters.nbTimeSeriesLoad = loadNumberOfTs;
+	study->parameters.nbTimeSeriesWind = windNumberOfTs;
+	study->parameters.nbTimeSeriesSolar = solarNumberOfTs;
+	study->parameters.nbTimeSeriesHydro = hydroNumberOfTs;
+	study->parameters.nbTimeSeriesThermal = thermalNumberOfTs;
+
+	Area* area = addAreaToStudy(study, "Area");
+
+	// ... Thermal
+	auto thCluster = addClusterToArea<ThermalCluster>(area, "th-cluster");
+
+	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+
+	BOOST_CHECK(Generate(*study));
+
+	// TS number checks : each energy drawn ts numbers are up-bounded with the number of TS of the related energy
+	uint year = 0;
+	uint loadTsNumber = area->load.series->timeseriesNumbers[0][year];
+	uint windTsNumber = area->wind.series->timeseriesNumbers[0][year];
+	uint solarTsNumber = area->solar.series->timeseriesNumbers[0][year];
+	uint hydroTsNumber = area->hydro.series->timeseriesNumbers[0][year];
+	uint thermalTsNumber = thCluster->series->timeseriesNumbers[0][year];
+
+	BOOST_TEST((loadTsNumber >= 0 && loadTsNumber < loadNumberOfTs));
+	BOOST_TEST((windTsNumber >= 0 && windTsNumber < windNumberOfTs));
+	BOOST_TEST((solarTsNumber>= 0 && solarTsNumber < solarNumberOfTs));
+	BOOST_TEST((hydroTsNumber >= 0 && hydroTsNumber < hydroNumberOfTs));
+	BOOST_TEST((thermalTsNumber>= 0 && thermalTsNumber < thermalNumberOfTs));
+}
