@@ -1,3 +1,3 @@
 #!/bin/sh
 
-cat centos7 centos7-src > build-centos7-src
+cat centos7-basic-requirements centos7-clone-antares > build-centos7-src
