@@ -4,7 +4,6 @@ cp -r ../reference-guide source/
 cp -r ../assets/ source/
 # change style for inline latex math \\( -> $ and \\) -> $
 find source/reference-guide/ -type f -name "*.md" -exec sed -i 's=\\\\)=$=g ; s=\\\\(=$=g' {} \;
-find source/reference-guide/ -type f -name "*.md" -exec sed -i 's=\\\\(=$=g' {} \;
 # actually make the pdf
 sphinx-build -M latexpdf source build
 mv build/latex/antaressimulatoruserguide.pdf .

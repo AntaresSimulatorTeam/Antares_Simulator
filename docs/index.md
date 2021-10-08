@@ -16,7 +16,7 @@ are welcome to use the software.
 
 The Antares Simulator project was initiated by RTE (French Electricity
 Transmission system Operator) in 2007. It was developed from the start
-as a cross-platform application (Windows, GNU/Linux ,Unix).
+as a cross-platform application (Windows, GNU/Linux, Unix).
 
 Until 2018 it was distributed under the terms of a proprietary license.
 
