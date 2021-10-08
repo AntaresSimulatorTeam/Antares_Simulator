@@ -41,10 +41,6 @@ nav:
     - 'OR-tools integration' : 'build/ortools-integration.md'
   - 'Changelog': 'CHANGELOG.md'
 
-extra:
-  generator: false
-  version:
-    provider: mike
 plugins:
   - search
 
