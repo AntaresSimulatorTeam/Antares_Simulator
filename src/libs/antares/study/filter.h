@@ -29,6 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+#include <string>
 
 namespace Antares
 {
@@ -50,6 +51,8 @@ enum FilterFlag
 */
 template<class StringT>
 void AppendFilterToString(StringT& out, uint filter);
+
+std::string filterIntoString(uint filter);
 
 /*!
 ** \brief Convert a mere string into filter flags

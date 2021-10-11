@@ -202,39 +202,25 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
     {
         buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id << SEP
                        << "optimization.ini";
-        IO::File::Stream file;
-        if (file.openRW(buffer))
+        
+        IniFile ini;
         {
-            buffer.clear();
-            buffer << "[nodal optimization]\n";
-            buffer << "non-dispatchable-power = "
-                   << ((bool)((area.nodalOptimization & anoNonDispatchPower) != 0) ? "true\n"
-                                                                                   : "false\n");
-            buffer << "dispatchable-hydro-power = "
-                   << ((bool)((area.nodalOptimization & anoDispatchHydroPower) != 0) ? "true\n"
-                                                                                     : "false\n");
-            buffer << "other-dispatchable-power = "
-                   << ((bool)((area.nodalOptimization & anoOtherDispatchPower) != 0) ? "true\n"
-                                                                                     : "false\n");
-            buffer << "spread-unsupplied-energy-cost = " << area.spreadUnsuppliedEnergyCost << '\n';
-            buffer << "spread-spilled-energy-cost = " << area.spreadSpilledEnergyCost << '\n';
+            auto* section = ini.addSection("nodal optimization");
 
-            buffer << '\n';
-            buffer << "[filtering]\n";
-            buffer << "filter-synthesis = ";
-            AppendFilterToString(buffer, area.filterSynthesis);
-            buffer << '\n';
-            buffer << "filter-year-by-year = ";
-            AppendFilterToString(buffer, area.filterYearByYear);
-            buffer << '\n';
-            buffer << '\n';
-            file << buffer;
+            section->add("non-dispatchable-power", (bool)(area.nodalOptimization & anoNonDispatchPower));
+            section->add("dispatchable-hydro-power", (bool)(area.nodalOptimization & anoDispatchHydroPower));
+            section->add("other-dispatchable-power", (bool)(area.nodalOptimization & anoOtherDispatchPower));
+            section->add("spread-unsupplied-energy-cost", area.spreadUnsuppliedEnergyCost);
+            section->add("spread-spilled-energy-cost", area.spreadSpilledEnergyCost);
         }
-        else
         {
-            logs.error() << "I/O error: impossible to write " << buffer;
-            ret = false;
+            auto* section = ini.addSection("filtering");
+            section->add("filter-synthesis", filterIntoString(area.filterSynthesis));
+            section->add("filter-year-by-year", filterIntoString(area.filterYearByYear));
         }
+
+        if (not ini.save(buffer))
+            ret = false;
     }
 
     // Reserves: primary, strategic, dsm, d-1...

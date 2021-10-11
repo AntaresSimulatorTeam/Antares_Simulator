@@ -33,6 +33,44 @@ namespace Antares
 {
 namespace Data
 {
+
+std::string filterIntoString(uint filter)
+{
+    std::string to_return;
+    if (filter & filterHourly)
+        to_return += "hourly";
+
+    if (filter & filterDaily)
+    {
+        if (not to_return.empty())
+            to_return += ", ";
+        to_return += "daily";
+    }
+
+    if (filter & filterWeekly)
+    {
+        if (not to_return.empty())
+            to_return += ", ";
+        to_return += "weekly";
+    }
+
+    if (filter & filterMonthly)
+    {
+        if (not to_return.empty())
+            to_return += ", ";
+        to_return += "monthly";
+    }
+
+    if (filter & filterAnnual)
+    {
+        if (not to_return.empty())
+            to_return += ", ";
+        to_return += "annual";
+    }
+
+    return to_return;
+}
+
 uint StringToFilter(const AnyString& string)
 {
     if (string.empty())
