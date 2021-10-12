@@ -660,7 +660,7 @@ bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
     }
 
     filename.clear() << folder << SEP << "properties.ini";
-    if (not ini.save(filename))
+    if (! ini.save(filename))
         return false;
 
     return ret;

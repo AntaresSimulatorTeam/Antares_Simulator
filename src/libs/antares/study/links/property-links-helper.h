@@ -8,7 +8,7 @@ namespace Antares
 namespace Data
 {
 
-	std::string transmissionCapacitiesToString(TransmissionCapacities & tc)
+	std::string transmissionCapacitiesToString(const TransmissionCapacities & tc)
 	{
 		std::string to_return;
 		switch (tc)
@@ -16,17 +16,17 @@ namespace Data
 		case Data::tncEnabled:
 			to_return = "enabled";
             break;
-		case Data::tncIgnore:
-			to_return = "ignore";
-            break;
 		case Data::tncInfinite:
 			to_return = "infinite";
+            break;
+        default:
+            to_return = "ignore";
             break;
 		}
 		return to_return;
 	}
 
-	std::string assetTypeToString(AssetType & assetType)
+	std::string assetTypeToString(const AssetType & assetType)
 	{
         std::string to_return;
         switch (assetType)
@@ -43,21 +43,18 @@ namespace Data
         case Data::atVirt:
             to_return = "virt";
             break;
-        case Data::atOther:
+        default:
             to_return = "other";
             break;
         }
         return to_return;
 	}
 
-    std::string styleToString(StyleType& style)
+    std::string styleToString(const StyleType& style)
     {
         std::string to_return;
         switch (style)
         {
-        case Data::stPlain:
-            to_return = "plain";
-            break;
         case Data::stDot:
             to_return = "dot";
             break;
@@ -66,6 +63,9 @@ namespace Data
             break;
         case Data::stDotDash:
             to_return = "dotdash";
+            break;
+        default:
+            to_return = "plain";
             break;
         }
         return to_return;
