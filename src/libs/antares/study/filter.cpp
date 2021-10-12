@@ -42,28 +42,28 @@ std::string filterIntoString(uint filter)
 
     if (filter & filterDaily)
     {
-        if (not to_return.empty())
+        if (! to_return.empty())
             to_return += ", ";
         to_return += "daily";
     }
 
     if (filter & filterWeekly)
     {
-        if (not to_return.empty())
+        if (! to_return.empty())
             to_return += ", ";
         to_return += "weekly";
     }
 
     if (filter & filterMonthly)
     {
-        if (not to_return.empty())
+        if (! to_return.empty())
             to_return += ", ";
         to_return += "monthly";
     }
 
     if (filter & filterAnnual)
     {
-        if (not to_return.empty())
+        if (! to_return.empty())
             to_return += ", ";
         to_return += "annual";
     }
