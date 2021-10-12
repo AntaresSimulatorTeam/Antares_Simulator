@@ -46,12 +46,7 @@ enum FilterFlag
     filterAll = (uint)-1,
 };
 
-/*!
-** \brief Append to an arbitrary string all flags that make up the filter
-*/
-template<class StringT>
-void AppendFilterToString(StringT& out, uint filter);
-
+// Convert a filter into a string (obtained by concatenating filter components)
 std::string filterIntoString(uint filter);
 
 /*!
@@ -66,7 +61,5 @@ uint filterIndexToFilter(const uint index);
 
 } // namespace Data
 } // namespace Antares
-
-#include "filter.hxx"
 
 #endif // __ANTARES_LIB_STUDY_FILTER_H__

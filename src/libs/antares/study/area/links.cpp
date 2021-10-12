@@ -35,6 +35,7 @@
 #include "../filter.h"
 #include "constants.h"
 #include "../fwd.h"
+#include <antares/study/links/property-links-helper.h>
 
 using namespace Yuni;
 using namespace Antares;
@@ -626,7 +627,7 @@ bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
     }
 
     String filename;
-    Clob buffer;
+    IniFile ini;
 
     bool ret = true;
 
@@ -635,86 +636,32 @@ bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
     {
         auto& link = *(i->second);
 
-        buffer << '[' << link.with->id << "]\n";
-        // Properties
-        buffer << "hurdles-cost = " << (link.useHurdlesCost ? "true\n" : "false\n");
-        buffer << "loop-flow = " << (link.useLoopFlow ? "true\n" : "false\n");
-        buffer << "use-phase-shifter = " << (link.usePST ? "true\n" : "false\n");
-        switch (link.transmissionCapacities)
-        {
-        case Data::tncEnabled:
-            buffer << "transmission-capacities = enabled\n";
-            break;
-        case Data::tncIgnore:
-            buffer << "transmission-capacities = ignore\n";
-            break;
-        case Data::tncInfinite:
-            buffer << "transmission-capacities = infinite\n";
-            break;
-        }
+        auto* section = ini.addSection(link.with->id);
 
-        switch (link.assetType)
-        {
-        case Data::atAC:
-            buffer << "asset-type = ac\n";
-            break;
-        case Data::atDC:
-            buffer << "asset-type = dc\n";
-            break;
-        case Data::atGas:
-            buffer << "asset-type = gaz\n";
-            break;
-        case Data::atVirt:
-            buffer << "asset-type = virt\n";
-            break;
-        case Data::atOther:
-            buffer << "asset-type = other\n";
-            break;
-        }
-        switch (link.style)
-        {
-        case Data::stPlain:
-            buffer << "link-style = plain\n";
-            break;
-        case Data::stDot:
-            buffer << "link-style = dot\n";
-            break;
-        case Data::stDash:
-            buffer << "link-style = dash\n";
-            break;
-        case Data::stDotDash:
-            buffer << "link-style = dotdash\n";
-            break;
-        }
-        buffer << "link-width = " << link.linkWidth << "\n";
-        buffer << "colorr = " << link.color[0] << "\n";
-        buffer << "colorg = " << link.color[1] << "\n";
-        buffer << "colorb = " << link.color[2] << "\n";
-
-        buffer << "display-comments = " << (link.displayComments ? "true\n" : "false\n");
+        section->add("hurdles-cost", link.useHurdlesCost);
+        section->add("loop-flow", link.useLoopFlow);
+        section->add("use-phase-shifter", link.usePST);
+        section->add("transmission-capacities", transmissionCapacitiesToString(link.transmissionCapacities));
+        section->add("asset-type", assetTypeToString(link.assetType));
+        section->add("link-style", styleToString(link.style));
+        section->add("link-width", link.linkWidth);
+        section->add("colorr", link.color[0]);
+        section->add("colorg", link.color[1]);
+        section->add("colorb", link.color[2]);
+        section->add("display-comments", link.displayComments);
         if (not link.comments.empty())
-            buffer << "comments = " << link.comments << '\n';
-        buffer << "filter-synthesis = ";
-        AppendFilterToString(buffer, link.filterSynthesis);
-        buffer << '\n';
-        buffer << "filter-year-by-year = ";
-        AppendFilterToString(buffer, link.filterYearByYear);
-        buffer << '\n';
-        buffer << '\n';
-
+            section->add("comments", link.comments);
+        section->add("filter-synthesis", filterIntoString(link.filterSynthesis));
+        section->add("filter-year-by-year", filterIntoString(link.filterYearByYear));
+        
         // NTC
         filename.clear() << folder << SEP << link.with->id << ".txt";
         ret = link.data.saveToCSVFile(filename);
     }
 
     filename.clear() << folder << SEP << "properties.ini";
-    IO::File::Stream file;
-    if (!file.openRW(filename))
-    {
-        logs.error() << "I/O error: impossible to write " << filename;
+    if (not ini.save(filename))
         return false;
-    }
-    file << buffer;
 
     return ret;
 }
