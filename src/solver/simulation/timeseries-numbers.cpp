@@ -46,8 +46,7 @@ const map<TimeSeries, int> ts_to_tsIndex = {
     {timeSeriesWind, 2},
     {timeSeriesThermal, 3},
     {timeSeriesSolar, 4},
-    {timeSeriesRenewable, 5},
-    {timeSeriesCount, 6}
+    {timeSeriesRenewable, 5}
 };
 
 const map<TimeSeries, string> ts_to_tsTitle = {
@@ -59,19 +58,22 @@ const map<TimeSeries, string> ts_to_tsTitle = {
     {timeSeriesRenewable, "renewable clusters"}
 };
 
-#define BUILD_LOG_ENTRY(T, TEXT)     \
-    do                               \
-    {                                \
-        if (isTSintermodal[TS_INDEX(T)]) \
-        {                            \
-            if (first)               \
-            {                        \
-                e += ", ";           \
-                first = false;       \
-            }                        \
-            e += TEXT;               \
-        }                            \
-    } while (0)
+void addInterModalTimeSeriesToMessage(const bool* isTSintermodal, std::string & interModalTsMsg)
+{
+    bool isFirstLogged = true;
+
+    map<TimeSeries, int>::const_iterator it = ts_to_tsIndex.begin();
+    for (; it != ts_to_tsIndex.end(); ++it)
+    {
+        if (isTSintermodal[it->second])
+        {
+            if (!isFirstLogged)
+                interModalTsMsg.append(", ");
+            interModalTsMsg.append(ts_to_tsTitle.at(it->first));
+            isFirstLogged = false;
+        }
+    }
+}
 
 namespace Antares
 {
@@ -732,17 +734,10 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
 
     if (std::any_of(std::begin(isTSintermodal), std::end(isTSintermodal), [](bool x) { return x; }))
     {
-        {
-            CString<248, false> e = "Checking inter-modal correlation... (";
-            bool first = true;
-            BUILD_LOG_ENTRY(Data::timeSeriesLoad, "load");
-            BUILD_LOG_ENTRY(Data::timeSeriesSolar, "solar");
-            BUILD_LOG_ENTRY(Data::timeSeriesWind, "wind");
-            BUILD_LOG_ENTRY(Data::timeSeriesHydro, "hydro");
-            BUILD_LOG_ENTRY(Data::timeSeriesThermal, "thermal");
-            BUILD_LOG_ENTRY(Data::timeSeriesRenewable, "renewables");
-            logs.info() << e << ')';
-        }
+        // Logging inter-modal time-series
+        std::string interModalTsMsg = "Checking inter-modal correlation... (";
+        addInterModalTimeSeriesToMessage(isTSintermodal, interModalTsMsg);
+        logs.info() << interModalTsMsg << ')';
 
         auto end = study.areas.end();
         for (auto i = study.areas.begin(); i != end; ++i)
