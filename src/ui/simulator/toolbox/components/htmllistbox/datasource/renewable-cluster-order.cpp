@@ -25,10 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "renewable-cluster-order.h"
-#include "../item/renewable-cluster-item.h"
 #include "../item/group.h"
 #include "../component.h"
+#include "renewable-cluster-order.h"
+#include "../item/renewable-cluster-item.h"
 
 using namespace Yuni;
 
@@ -66,46 +66,100 @@ void GetRenewableClusterMap(Data::Area* area, RenewableClusterMap& l, const wxSt
     }
 }
 
-void RenewableClustersByOrder::refresh(const wxString& search)
+int sizeRenewableClusterMap(RenewableClusterMap& l)
+{
+    int size_to_return = 0;
+    for (RenewableClusterMap::iterator group_it = l.begin(); group_it != l.end(); ++group_it)
+    {
+        size_to_return++;
+
+        RenewableClusterList& groupClusterList = group_it->second;
+        for (RenewableClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
+            size_to_return++;
+    }
+    return size_to_return;
+}
+
+void RenewableClustersByOrder::reorderItemsList(const wxString& search)
+{
+    if (pArea)
+    {
+        RenewableClusterMap l;
+        GetRenewableClusterMap(pArea, l, search);
+
+        // In case the cluster group is new to the item list, we resize the list 
+        int nombreItems = sizeRenewableClusterMap(l);
+        pParent.resizeTo(nombreItems);
+
+        int index_item = 0;
+        for (RenewableClusterMap::iterator group_it = l.begin(); group_it != l.end(); ++group_it)
+        {
+            wxString groupName = group_it->first;
+            IItem* groupItem;
+            RenewableClusterList& groupClusterList = group_it->second;
+
+            if (groups_to_items_.find(groupName) != groups_to_items_.end())
+                groupItem = groups_to_items_[groupName];
+            else
+            {
+                wxString groupTitle = groupNameToGroupTitle(pArea, groupName);
+                groupItem = new Group(groupTitle);
+            }
+            pParent.setElement(groupItem, index_item);
+            index_item++;
+
+            sortClustersInGroup(groupClusterList);
+
+            for (RenewableClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
+            {
+                ClusterItem* clusterItem = pClustersToItems[*j];
+                pParent.setElement(clusterItem, index_item);
+                index_item++;
+            }
+        }
+    }
+}
+
+void RenewableClustersByOrder::rebuildItemsList(const wxString& search)
 {
     pParent.clear();
+    pClustersToItems.clear();
+    groups_to_items_.clear();
 
     if (pArea)
     {
         RenewableClusterMap l;
         GetRenewableClusterMap(pArea, l, search);
-        if (!l.empty())
+        for (RenewableClusterMap::iterator group_it = l.begin(); group_it != l.end(); ++group_it)
         {
-            RenewableClusterMap::iterator end = l.end();
-            for (RenewableClusterMap::iterator group_it = l.begin(); group_it != end; ++group_it)
+            wxString groupName = group_it->first;
+            wxString groupTitle = groupNameToGroupTitle(pArea, groupName);
+            RenewableClusterList& groupClusterList = group_it->second;
+
+            // Refreshing the group
+            IItem* groupItem = new Group(groupTitle);
+            pParent.add(groupItem);
+            // Mapping group name to cluster item for possible further usage
+            groups_to_items_[groupName] = groupItem;
+
+            // Refreshing all clusters of the group
+            sortClustersInGroup(groupClusterList);
+
+            for (RenewableClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
             {
-                // Group title
-                wxString s;
-                s << wxStringFromUTF8(pArea->name);
-                if (s.size() > 43)
-                {
-                    s.resize(40);
-                    s += wxT("...");
-                }
-
-                if (group_it->first.empty())
-                    s << wxT(" / <i>* no group *</i>");
-                else
-                    s << wxT(" / ") << group_it->first;
-
-                // Refreshing the group
-                pParent.add(new Antares::Component::HTMLListbox::Item::Group(s));
-
-                // Refreshing all clusters of the group
-                refreshClustersInGroup(group_it->second);
+                ClusterItem* clusterItem = new RenewableClusterItem(*j);
+                pParent.add(clusterItem);
+                // Mapping real cluster to cluster item for possible further usage
+                pClustersToItems[*j] = clusterItem;
             }
         }
     }
     pParent.invalidate();
 }
 
-
-
+// -------------------
+// Alphabetic order
+// -------------------
 RenewableClustersByAlphaOrder::RenewableClustersByAlphaOrder(HTMLListbox::Component& parent) :
     RenewableClustersByOrder(parent)
 {}
@@ -113,17 +167,15 @@ RenewableClustersByAlphaOrder::RenewableClustersByAlphaOrder(HTMLListbox::Compon
 RenewableClustersByAlphaOrder::~RenewableClustersByAlphaOrder()
 {}
 
-void RenewableClustersByAlphaOrder::refreshClustersInGroup(RenewableClusterList& clusterList)
+void RenewableClustersByAlphaOrder::sortClustersInGroup(RenewableClusterList& clusterList)
 {
-    // Added the area as a result
-    RenewableClusterList::iterator jend = clusterList.end();
     clusterList.sort(SortAlphaOrder());
-    for (RenewableClusterList::iterator j = clusterList.begin(); j != jend; ++j)
-        pParent.add(new Antares::Component::HTMLListbox::Item::RenewableClusterItem(*j));
 }
 
 
-
+// --------------------------
+// Alphabetic reverse order
+// --------------------------
 RenewableClustersByAlphaReverseOrder::RenewableClustersByAlphaReverseOrder(HTMLListbox::Component& parent) :
     RenewableClustersByOrder(parent)
 {}
@@ -131,13 +183,9 @@ RenewableClustersByAlphaReverseOrder::RenewableClustersByAlphaReverseOrder(HTMLL
 RenewableClustersByAlphaReverseOrder::~RenewableClustersByAlphaReverseOrder()
 {}
 
-void RenewableClustersByAlphaReverseOrder::refreshClustersInGroup(RenewableClusterList& clusterList)
+void RenewableClustersByAlphaReverseOrder::sortClustersInGroup(RenewableClusterList& clusterList)
 {
-    // Added the area as a result
-    RenewableClusterList::iterator jend = clusterList.end();
     clusterList.sort(SortAlphaReverseOrder());
-    for (RenewableClusterList::iterator j = clusterList.begin(); j != jend; ++j)
-        pParent.add(new Antares::Component::HTMLListbox::Item::RenewableClusterItem(*j));
 }
 
 } // namespace Datasource

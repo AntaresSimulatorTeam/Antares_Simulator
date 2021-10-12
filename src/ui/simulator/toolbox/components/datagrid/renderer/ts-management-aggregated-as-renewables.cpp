@@ -25,9 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#pragma once
+#include "ts-management-aggregated-as-renewables.h"
 
-#include "ts-management.h"
+using namespace Yuni;
 
 namespace Antares
 {
@@ -37,13 +37,12 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class TSmanagementRenewableCluster final : public TSmanagement
+TSmanagementAggregatedAsRenewable::TSmanagementAggregatedAsRenewable() : TSmanagement()
 {
-public:
-    TSmanagementRenewableCluster();
-    ~TSmanagementRenewableCluster() = default;
-}; // class TSmanagementRenewableCluster
-
+    columns_.push_back(new classicColumn(Antares::Data::timeSeriesWind, "      Wind      "));
+    columns_.push_back(new classicColumn(Antares::Data::timeSeriesSolar, "      Solar      "));
+    checkLineNumberInColumns();
+}
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

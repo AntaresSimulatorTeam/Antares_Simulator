@@ -46,7 +46,8 @@ State::State(Data::Study& s) :
  unitCommitmentMode(s.parameters.unitCommitment.ucMode),
  annualSystemCost(0.),
  optimalSolutionCost1(0.),
- optimalSolutionCost2(0.)
+ optimalSolutionCost2(0.),
+ averageOptimizationTime(0.)
 {
     h2oValueWorkVars.levelUp = 0.;
     h2oValueWorkVars.levelDown = 0.;

@@ -38,7 +38,31 @@ namespace HTMLListbox
 namespace Datasource
 {
 
-ClustersByOrder::ClustersByOrder(HTMLListbox::Component& parent) : IDatasource(parent), pArea(nullptr)
+wxString groupNameToGroupTitle(Data::Area* area, wxString& groupName)
+{
+    // Group title
+    wxString groupTitle;
+
+    groupTitle << wxStringFromUTF8(area->name);
+    if (groupTitle.size() > 43)
+    {
+        groupTitle.resize(40);
+        groupTitle += wxT("...");
+    }
+
+    if (groupName.empty())
+        groupTitle << wxT(" / <i>* no group *</i>");
+    else
+        groupTitle << wxT(" / ") << groupName;
+
+    return groupTitle;
+}
+
+
+ClustersByOrder::ClustersByOrder(HTMLListbox::Component& parent) :
+    IDatasource(parent),
+    pArea(nullptr),
+    hasGroupJustChanged_(false)
 {
     OnStudyAreasChanged.connect(this, &ClustersByOrder::onInvalidateAllAreas);
     Forms::ApplWnd::Instance()->onApplicationQuit.connect(this,
@@ -51,6 +75,20 @@ ClustersByOrder::~ClustersByOrder()
     destroyBoundEvents();
 }
 
+void ClustersByOrder::refresh(const wxString& search)
+{
+    if (hasGroupChanged())
+    {
+        // A cluster group just changed.
+        // To keep the changed cluster selected, We have to reorder the items list.
+        // Rebuilding the item list would re-initialize the cluster selection on the first cluster of the list.  
+        reorderItemsList(search);
+        hasGroupChanged(false);
+    }
+    else
+        rebuildItemsList(search);
+}
+
 void ClustersByOrder::onAreaChanged(Data::Area* area)
 {
     pArea = area;
@@ -59,6 +97,16 @@ void ClustersByOrder::onAreaChanged(Data::Area* area)
 void ClustersByOrder::onInvalidateAllAreas()
 {
     pArea = nullptr;
+}
+
+void ClustersByOrder::hasGroupChanged(bool b)
+{
+    hasGroupJustChanged_ = b;
+}
+
+bool ClustersByOrder::hasGroupChanged() const
+{
+    return hasGroupJustChanged_;
 }
 
 } // namespace Datasource

@@ -1,35 +1,22 @@
 ﻿Antares Changelog
 =================
 
-v8.1.0-rc2 (08/2021)
---------------------
-
-### GUI
-  - Dialogs "Thematic trimming" and "User playlist" are now resizable
-  - Remove warning when opening a old (<8.1) study
-  - When changing advanced parameter "renewable generation modelling", change tab only if current one disappears
-  - When creating a new study, renewable generation modelling is set to "clusters" by default. Note that this change does not affect opening an existing study.
-  - Add RES icons
-
-### Bug fixes
-  - When renewable modelling is set to "aggregated", do not create details-res-<hourly|daily|weekly|monthly|annual>.txt
-  - When renewable modelling is set to "aggregated", do not create "WIND OFFSHORE", etc. columns in values-<hourly|daily|weekly|monthly|annual>.txt
-  - Fix pre-simulation crash when intermodal draw is enabled for renewables
-  - RES cluster production is taken into account in the hydro allocation step as a must-run production
-
-### For developers
-  - Code cleaning & de-duplication
-
-
-v8.1.0-rc1 (08/2021)
+v8.1.0 (09/2021)
 --------------------
 
 ### New features
- - Allow up to 9 RES groups (off-shore wind, on-shore wind, rooftop solar, PV solar, etc.) as opposed to wind and solar previously.
- - Add 3 thermal groups, named other 2, 3 and 4.
+ - Allow up to 9 RES groups (off-shore wind, on-shore wind, rooftop solar, PV solar, etc.) as opposed to wind and solar previously. This allows the user to distinguish between more renewable energy sources. When creating a new study, renewable generation modelling is set to "clusters" by default. This change does not affect opening an existing study. Note that TS generation is not available for these new RES groups.
+ - Add 3 thermal groups, named other, other 2, other 3 and other 4.
+
+### Bug fixes
+  - When a binding constraint is marked as skipped in the GUI, disable it in the solver #366
+
+### GUI
+  - Keep selection on thermal/renewable cluster when its group changes #360
+  - Dialogs "Thematic trimming" and "User playlist" are now resizable
 
 ### For developers
- - Add non-regression tests
+ - Add non-regression tests on each release
  - Fix vcpkg on Github Actions
  - Add build cache for Github Actions to speed up the build (Linux only)
 
