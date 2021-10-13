@@ -349,8 +349,6 @@ wxString SeasonalCorrelationCell::cellValue() const
         mode = tsToCorrelation_.at(tsKind_)->mode();
     else if (tsKind_ == Data::timeSeriesHydro)
         return wxT("annual");
-    else if (tsKind_ == Data::timeSeriesThermal)
-        return wxT("n/a");
     else
         return wxT("--");
     return (mode == Data::Correlation::modeAnnual) ? wxT("annual") : wxT("monthly");
@@ -586,6 +584,12 @@ IRenderer::CellStyle RefreshSpanCellThermal::cellStyle() const
 IRenderer::CellStyle SeasonalCorrelationCellThermal::cellStyle() const
 {
     return IRenderer::cellStyleDefaultDisabled;
+}
+
+// Value
+wxString SeasonalCorrelationCellThermal::cellValue() const
+{
+    return wxT("n/a");
 }
 } // namespace Renderer
 } // namespace Datagrid

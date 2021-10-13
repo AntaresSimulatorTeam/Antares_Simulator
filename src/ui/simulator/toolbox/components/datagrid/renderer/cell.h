@@ -155,7 +155,7 @@ class SeasonalCorrelationCell : public Cell
 public:
     SeasonalCorrelationCell(TimeSeries ts);
     ~SeasonalCorrelationCell() = default;
-    wxString cellValue() const override;
+    virtual wxString cellValue() const override;
     double cellNumericValue() const override;
     bool cellValue(const String& value) override;
     virtual IRenderer::CellStyle cellStyle() const override;
@@ -171,6 +171,7 @@ class SeasonalCorrelationCellThermal : public SeasonalCorrelationCell
 {
 public:
     SeasonalCorrelationCellThermal();
+    virtual wxString cellValue() const override;
     virtual IRenderer::CellStyle cellStyle() const override;
 };
 
