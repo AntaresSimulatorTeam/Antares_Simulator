@@ -59,13 +59,13 @@ public:
     {
         switch (behavior)
         {
-        case Antares::Data::thermalUseGlobalParameter:
+        default:
             string += "use global";
             break;
-        case Antares::Data::thermalForceGen:
+        case Antares::Data::TSGenerationBehavior::forceGen:
             string += "force generation";
             break;
-        case Antares::Data::thermalForceNoGen:
+        case Antares::Data::TSGenerationBehavior::forceNoGen:
             string += "force no generation";
             break;
         }
@@ -97,7 +97,7 @@ template<>
 class Into<Antares::Data::TSGenerationBehavior>
 {
 public:
-    typedef Antares::Data::TSGenerationBehavior TargetType;
+    using TargetType = Antares::Data::TSGenerationBehavior;
     enum
     {
         valid = 1
@@ -108,7 +108,7 @@ public:
     template<class StringT>
     static TargetType Perform(const StringT& s)
     {
-        TargetType behavior = Antares::Data::thermalUseGlobalParameter;
+        TargetType behavior = Antares::Data::TSGenerationBehavior::useGlobalParameter;
         Perform(s, behavior);
         return behavior;
     }

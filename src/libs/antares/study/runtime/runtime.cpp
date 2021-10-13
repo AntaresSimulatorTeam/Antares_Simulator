@@ -466,6 +466,19 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
     }
 }
 
+void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
+{
+    auto& gd = study.parameters;
+    thermalTSRefresh = gd.timeSeriesToGenerate & timeSeriesThermal;
+    study.areas.each([this, &gd](Data::Area& area) {
+        area.thermal.list.each([this, &gd](const Data::ThermalCluster& cluster) {
+            thermalTSRefresh
+              = thermalTSRefresh
+                || cluster.doWeGenerateTS(gd.timeSeriesToGenerate & timeSeriesThermal);
+        });
+    });
+}
+
 bool StudyRuntimeInfos::loadFromStudy(Study& study)
 {
     auto& gd = study.parameters;
@@ -521,16 +534,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     initializeBindingConstraints(study.bindingConstraints);
 
     // Check if some clusters request TS generation
-    {
-        thermalTSRefresh = gd.timeSeriesToGenerate & timeSeriesThermal;
-        study.areas.each([&](Data::Area& area) {
-            area.thermal.list.each([&](Data::ThermalCluster& cluster) {
-                thermalTSRefresh
-                  = thermalTSRefresh
-                    || cluster.doWeGenerateTS(gd.timeSeriesToGenerate & timeSeriesThermal);
-            });
-        });
-    }
+    checkThermalTSGeneration(study);
 
 #ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
     // Hydro cost - Infinite

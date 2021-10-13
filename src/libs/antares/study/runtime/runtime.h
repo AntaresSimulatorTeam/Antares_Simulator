@@ -219,7 +219,7 @@ private:
     void removeDisabledRenewableClustersFromSolverComputations(Study& study);
     void removeAllRenewableClustersFromSolverComputations(Study& study);
     void disableAllFilters(Study& study);
-
+    void checkThermalTSGeneration(Study& study);
 }; // struct StudyRuntimeInfos
 
 /*!

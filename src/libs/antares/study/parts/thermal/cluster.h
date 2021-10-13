@@ -57,11 +57,11 @@ enum ThermalModulation
     thermalModulationMax
 };
 
-enum TSGenerationBehavior
+enum class TSGenerationBehavior
 {
-    thermalUseGlobalParameter = 0,
-    thermalForceGen,
-    thermalForceNoGen
+    useGlobalParameter = 0,
+    forceGen,
+    forceNoGen
 };
 
 /*!
@@ -384,7 +384,7 @@ public:
     */
     double* pminOfAGroup;
 
-    TSGenerationBehavior tsGenBehavior;
+    TSGenerationBehavior tsGenBehavior = TSGenerationBehavior::useGlobalParameter;
 
     friend class ThermalClusterList;
 

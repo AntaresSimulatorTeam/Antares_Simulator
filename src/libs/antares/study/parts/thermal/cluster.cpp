@@ -52,11 +52,10 @@ bool ThermalCluster::doWeGenerateTS(bool global, bool refresh) const
     switch (tsGenBehavior)
     {
     // Generate if global tells us to
-    case thermalUseGlobalParameter:
+    case TSGenerationBehavior::useGlobalParameter:
         return global && refresh;
-    case thermalForceGen:
+    case TSGenerationBehavior::forceGen:
         return refresh;
-    case thermalForceNoGen:
     default:
         return false;
     }
@@ -97,17 +96,17 @@ bool Into<Antares::Data::TSGenerationBehavior>::Perform(AnyString string, Target
 
     if (string.equalsInsensitive("use global"))
     {
-        out = Antares::Data::thermalUseGlobalParameter;
+        out = Antares::Data::TSGenerationBehavior::useGlobalParameter;
         return true;
     }
     if (string.equalsInsensitive("force generation"))
     {
-        out = Antares::Data::thermalForceGen;
+        out = Antares::Data::TSGenerationBehavior::forceGen;
         return true;
     }
     if (string.equalsInsensitive("force no generation"))
     {
-        out = Antares::Data::thermalForceNoGen;
+        out = Antares::Data::TSGenerationBehavior::forceNoGen;
         return true;
     }
     return false;
@@ -149,8 +148,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
  productionCost(nullptr),
  unitCountLastHour(nullptr),
  productionLastHour(nullptr),
- pminOfAGroup(nullptr),
- tsGenBehavior(thermalUseGlobalParameter)
+ pminOfAGroup(nullptr)
 {
     // assert
     assert(parent and "A parent for a thermal dispatchable cluster can not be null");
@@ -194,8 +192,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  productionCost(nullptr),
  unitCountLastHour(nullptr),
  productionLastHour(nullptr),
- pminOfAGroup(nullptr),
- tsGenBehavior(thermalUseGlobalParameter)
+ pminOfAGroup(nullptr)
 {
     // assert
     assert(parent and "A parent for a thermal dispatchable cluster can not be null");

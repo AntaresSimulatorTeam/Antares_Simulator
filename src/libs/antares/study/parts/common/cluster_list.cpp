@@ -221,7 +221,8 @@ void ClusterList<ClusterT>::rebuildIndex()
 }
 
 template<class ClusterT>
-typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::add(const ClusterList<ClusterT>::SharedPtr& newcluster)
+typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::add(
+  const ClusterList<ClusterT>::SharedPtr& newcluster)
 {
     if (newcluster)
     {
@@ -392,9 +393,9 @@ int ClusterList<ThermalCluster>::loadDataSeriesFromFolder(Study& s,
 
     int ret = 1;
 
-    each([&](ThermalCluster& cluster) {
-        if (cluster.series)
-            ret = cluster.loadDataSeriesFromFolder(s, folder) and ret;
+    each([&ret, &options, &s, &folder](ThermalCluster& c) {
+        if (c.series)
+            ret = c.loadDataSeriesFromFolder(s, folder) and ret;
 
         ++options.progressTicks;
         options.pushProgressLogs();
