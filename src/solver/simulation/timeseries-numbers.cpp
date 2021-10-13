@@ -92,6 +92,12 @@ static bool GenerateDeratedMode(Data::Study& study)
             auto& cluster = *(area.thermal.clusters[i]);
             cluster.series->timeseriesNumbers.zero();
         }
+
+        for (uint i = 0; i != area.renewable.clusterCount(); ++i)
+        {
+            auto& cluster = *(area.renewable.clusters[i]);
+            cluster.series->timeseriesNumbers.zero();
+        }
     });
 
     return true;
