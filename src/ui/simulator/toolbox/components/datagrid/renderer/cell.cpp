@@ -327,7 +327,6 @@ IRenderer::CellStyle RefreshSpanCell::cellStyle() const
              ? IRenderer::cellStyleDefault
              : IRenderer::cellStyleDefaultDisabled;
 }
-
 // ============================
 //  Seasonal correlation cell
 // ============================
@@ -546,6 +545,48 @@ IRenderer::CellStyle interModalCell::cellStyle() const
                                                             : IRenderer::cellStyleDefaultDisabled;
 }
 
+// ======================
+// Thermal-specific cells
+// ======================
+// Constructors
+NumberTsCellThermal::NumberTsCellThermal() : NumberTsCell(timeSeriesThermal)
+{
+}
+RefreshTsCellThermal::RefreshTsCellThermal() : RefreshTsCell(timeSeriesThermal)
+{
+}
+RefreshSpanCellThermal::RefreshSpanCellThermal() : RefreshSpanCell(timeSeriesThermal)
+{
+}
+SeasonalCorrelationCellThermal::SeasonalCorrelationCellThermal() :
+ SeasonalCorrelationCell(timeSeriesThermal)
+{
+}
+
+// Style
+IRenderer::CellStyle NumberTsCellThermal::cellStyle() const
+{
+    // default style
+    return IRenderer::cellStyleDefault;
+}
+
+IRenderer::CellStyle RefreshTsCellThermal::cellStyle() const
+{
+    // default style
+    return IRenderer::cellStyleDefault;
+}
+
+IRenderer::CellStyle RefreshSpanCellThermal::cellStyle() const
+{
+    return (0 != (study_->parameters.timeSeriesToRefresh & tsKind_))
+             ? IRenderer::cellStyleDefault
+             : IRenderer::cellStyleDefaultDisabled;
+}
+
+IRenderer::CellStyle SeasonalCorrelationCellThermal::cellStyle() const
+{
+    return IRenderer::cellStyleDefaultDisabled;
+}
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

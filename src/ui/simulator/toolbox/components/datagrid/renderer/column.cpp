@@ -82,6 +82,27 @@ classicColumn::classicColumn(TimeSeries ts, wxString c) : Column(ts, c)
               new intraModalCell(tsKind_),
               new interModalCell(tsKind_)};
 }
+
+// -------------------
+//  Thermal column
+// -------------------
+thermalColumn::thermalColumn() : Column(timeSeriesThermal, "   Thermal   ")
+{
+    cells_ = {new blankCell(),
+              new readyMadeTSstatus(tsKind_),
+              new blankCell(),
+              new generatedTSstatus(tsKind_),
+              new NumberTsCellThermal(),
+              new RefreshTsCellThermal(),
+              new RefreshSpanCellThermal(),
+              new SeasonalCorrelationCellThermal(),
+              new storeToInputCell(tsKind_),
+              new storeToOutputCell(tsKind_),
+              new blankCell(),
+              new intraModalCell(tsKind_),
+              new interModalCell(tsKind_)};
+}
+
 // -------------------------------
 // Column renewable clusters
 // -------------------------------
