@@ -29,6 +29,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <array>
 
 #include "timeseries-numbers.h"
 
@@ -202,7 +203,7 @@ class IntraModalConsistencyChecker
 {
 public:
     IntraModalConsistencyChecker(   const TimeSeries ts,
-                                    const bool* isTSintramodal,
+                                    const array<bool, timeSeriesCount> & isTSintramodal,
                                     const bool* isTSgenerated,
                                     areaNumberOfTSretriever* tsCounter,
                                     Data::Study & study)
@@ -263,7 +264,7 @@ bool IntraModalConsistencyChecker::checkTSconsistency()
 }
 
 bool checkIntraModalConsistency(uint* nbTimeseriesByMode,
-                                const bool* isTSintramodal,
+                                const array<bool, timeSeriesCount> & isTSintramodal,
                                 const bool* isTSgenerated,
                                 Data::Study& study)
 {
@@ -379,7 +380,7 @@ bool checkInterModalConsistencyForArea( Data::Area& area,
 }
 
 void drawTSnumbersForIntraModal(    uint32* intramodal_draws,
-                                    const bool* isTSintramodal, 
+                                    const array<bool, timeSeriesCount> & isTSintramodal,
                                     uint* nbTimeseriesByMode, 
                                     MersenneTwister* mersenneTwisterTable)
 {
@@ -395,7 +396,7 @@ void drawTSnumbersForIntraModal(    uint32* intramodal_draws,
 }
 
 void storeTSnumbersForIntraModal(   uint32* intramodal_draws,
-                                    const bool* isTSintramodal,
+                                    const array<bool, timeSeriesCount> & isTSintramodal,
                                     uint year, 
                                     Data::AreaList& areas)
 {
@@ -470,7 +471,7 @@ void storeTSnumbersForIntraModal(   uint32* intramodal_draws,
     });
 }
 
-void drawAndStoreTSnumbersForNOTintraModal( const bool* isTSintramodal, 
+void drawAndStoreTSnumbersForNOTintraModal( const array<bool, timeSeriesCount> & isTSintramodal,
                                             const bool* isTSgenerated, 
                                             uint* nbTimeseriesByMode, 
                                             uint year, 
@@ -665,7 +666,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
 
     const uint years = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
 
-    const bool isTSintramodal[Data::timeSeriesCount]
+    const array<bool, timeSeriesCount> isTSintramodal
       = {0 != (Data::timeSeriesLoad & parameters.intraModal),
          0 != (Data::timeSeriesHydro & parameters.intraModal),
          0 != ((Data::timeSeriesWind & parameters.intraModal) && parameters.renewableGeneration.isAggregated()),
@@ -673,11 +674,11 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
          0 != ((Data::timeSeriesSolar & parameters.intraModal) && parameters.renewableGeneration.isAggregated()),
          0 != ((Data::timeSeriesRenewable & parameters.intraModal) && parameters.renewableGeneration.isClusters()) };
 
-    uint nbTimeseriesByMode[Data::timeSeriesCount];
+    uint nbTimeseriesByMode[timeSeriesCount];
 
-    uint32 intramodal_draws[Data::timeSeriesCount] = {0, 0, 0, 0, 0, 0};
+    uint32 intramodal_draws[timeSeriesCount] = {0, 0, 0, 0, 0, 0};
 
-    const bool isTSgenerated[Data::timeSeriesCount]
+    const bool isTSgenerated[timeSeriesCount]
       = {0 != (Data::timeSeriesLoad & parameters.timeSeriesToRefresh),
          0 != (Data::timeSeriesHydro & parameters.timeSeriesToRefresh),
          0 != (Data::timeSeriesWind & parameters.timeSeriesToRefresh),
@@ -702,7 +703,7 @@ bool TimeSeriesNumbers::Generate(Data::Study& study)
     // Inter-modal
     // ===============
 
-    const bool isTSintermodal[Data::timeSeriesCount]
+    const bool isTSintermodal[timeSeriesCount]
       = {0 != (Data::timeSeriesLoad & parameters.interModal),
          0 != (Data::timeSeriesHydro & parameters.interModal),
          0 != ((Data::timeSeriesWind & parameters.interModal) && parameters.renewableGeneration.isAggregated()),
