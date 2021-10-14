@@ -549,7 +549,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
           = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
         if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante == CONTRAINTE_JOURNALIERE)
         {
-            
             NbInterco
               = MatriceDesContraintesCouplantes->NombreDInterconnexionsDansLaContrainteCouplante;
             NbClusters
@@ -735,7 +734,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                   Pi,
                   Colonne,
                   NombreDeTermes,
-                  MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante);
+                  MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante,
+                  NomDeLaContrainte);
             }
         }
     }
