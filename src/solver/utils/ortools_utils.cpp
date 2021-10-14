@@ -9,11 +9,9 @@
 
 using namespace operations_research;
 
-template<typename T_PROBLEM>
-MPSolver* convert_to_MPSolver(T_PROBLEM* problemeSimplexe);
+MPSolver* convert_to_MPSolver(PROBLEME_SIMPLEXE* problemeSimplexe);
 
 void extract_from_MPSolver(MPSolver* solver, PROBLEME_SIMPLEXE* problemeSimplexe);
-void extract_from_MPSolver(MPSolver* solver, PROBLEME_A_RESOUDRE* problemeSimplexe);
 
 void change_MPSolver_objective(MPSolver* solver, double* costs, int nbVar);
 void change_MPSolver_rhs(MPSolver* solver, double* rhs, char* sens, int nbRow);
@@ -112,59 +110,6 @@ MPSolver* convert_to_MPSolver(PROBLEME_SIMPLEXE* problemeSimplexe)
                    problemeSimplexe->NombreDeContraintes);
 
     return solver;
-}
-
-MPSolver* convert_to_MPSolver(PROBLEME_A_RESOUDRE* problemeAResoudre)
-{
-    auto& study = *Data::Study::Current::Get();
-
-    // Define solver used depending on study option
-    MPSolver::OptimizationProblemType solverType
-      = OrtoolsUtils().getMixedIntegerOptimProblemType(study.parameters.ortoolsEnumUsed);
-
-    MPSolver* solver = new MPSolver("simple_lp_program", solverType);
-
-    // Create the variables and set objective cost.
-    transferVariables(solver,
-                      problemeAResoudre->Xmin,
-                      problemeAResoudre->Xmax,
-                      problemeAResoudre->CoutLineaire,
-                      problemeAResoudre->NombreDeVariables);
-
-    // Create constraints and set coefs
-    transferRows(solver,
-                 problemeAResoudre->SecondMembre,
-                 problemeAResoudre->Sens,
-                 problemeAResoudre->NombreDeContraintes);
-    transferMatrix(solver,
-                   problemeAResoudre->IndicesDebutDeLigne,
-                   problemeAResoudre->NombreDeTermesDesLignes,
-                   problemeAResoudre->IndicesColonnes,
-                   problemeAResoudre->CoefficientsDeLaMatriceDesContraintes,
-                   problemeAResoudre->NombreDeContraintes);
-
-    return solver;
-}
-
-void extract_from_MPSolver(MPSolver* solver, PROBLEME_A_RESOUDRE* problemePne)
-{
-    auto& variables = solver->variables();
-    int nbVar = problemePne->NombreDeVariables;
-
-    // Extracting variable values and reduced costs
-    for (int idxVar = 0; idxVar < nbVar; ++idxVar)
-    {
-        auto& var = variables[idxVar];
-        problemePne->X[idxVar] = var->solution_value();
-    }
-
-    auto& constraints = solver->constraints();
-    int nbRow = problemePne->NombreDeContraintes;
-    for (int idxRow = 0; idxRow < nbRow; ++idxRow)
-    {
-        auto& row = constraints[idxRow];
-        problemePne->VariablesDualesDesContraintes[idxRow] = row->dual_value();
-    }
 }
 
 void extract_from_MPSolver(MPSolver* solver, PROBLEME_SIMPLEXE* problemeSimplexe)
@@ -272,41 +217,9 @@ MPSolver* solveProblem(PROBLEME_SIMPLEXE* Probleme, MPSolver* ProbSpx)
     return solver;
 }
 
-MPSolver* solveProblem(PROBLEME_A_RESOUDRE* Probleme, MPSolver* ProbSpx)
-{
-    MPSolver* solver = ProbSpx;
-
-    if (solver == NULL)
-    {
-        solver = convert_to_MPSolver(Probleme);
-    }
-
-    MPSolverParameters params;
-    if (Probleme->FaireDuPresolve == NON_PNE)
-    {
-        params.SetIntegerParam(MPSolverParameters::PRESOLVE, MPSolverParameters::PRESOLVE_OFF);
-    }
-    else
-    {
-        params.SetIntegerParam(MPSolverParameters::PRESOLVE, MPSolverParameters::PRESOLVE_ON);
-    }
-
-    if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
-    {
-        extract_from_MPSolver(solver, Probleme);
-    }
-
-    return solver;
-}
-
 extern "C"
 {
     MPSolver* ORTOOLS_Simplexe(PROBLEME_SIMPLEXE* Probleme, MPSolver* ProbSpx)
-    {
-        return solveProblem(Probleme, ProbSpx);
-    }
-
-    MPSolver* ORTOOLS_Simplexe_PNE(PROBLEME_A_RESOUDRE* Probleme, MPSolver* ProbSpx)
     {
         return solveProblem(Probleme, ProbSpx);
     }

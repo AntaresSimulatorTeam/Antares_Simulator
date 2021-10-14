@@ -12,7 +12,6 @@
 using namespace operations_research;
 
 MPSolver* ORTOOLS_Simplexe(PROBLEME_SIMPLEXE* Probleme, MPSolver* ProbSpx);
-MPSolver* ORTOOLS_Simplexe_PNE(PROBLEME_A_RESOUDRE* Probleme, MPSolver* ProbSpx);
 void ORTOOLS_ModifierLeVecteurCouts(MPSolver* ProbSpx, double* costs, int nbVar);
 void ORTOOLS_ModifierLeVecteurSecondMembre(MPSolver* ProbSpx, double* rhs, char* sens, int nbRow);
 void ORTOOLS_CorrigerLesBornes(MPSolver* ProbSpx,
