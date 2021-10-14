@@ -93,7 +93,7 @@ bool OPT_AppelDuSolveurPne(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int Num
     MPSolver* solver = NULL;
     if (ortoolsUsed)
     {
-        solver = ORTOOLS_Simplexe_PNE(&ProblemePourPne, NULL);
+        solver = ORTOOLS_Simplexe_PNE(&ProblemePourPne, NULL, {}, {});
 
         if (ProblemeHebdo->ExportMPS == OUI_ANTARES)
         {

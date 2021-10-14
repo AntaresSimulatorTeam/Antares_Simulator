@@ -30,6 +30,7 @@
 
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
 #include "../utils/optimization_statistics.h"
+#include "../../libs/antares/study/fwd.h"
 
 #define GROSSES_VARIABLES NON_ANTARES
 #define COEFF_GROSSES_VARIABLES 100
@@ -166,6 +167,7 @@ typedef struct
     int* PaysDuPalierDispatch;
     int* NumeroDuPalierDispatch;
     int* OffsetTemporelSurLePalierDispatch;
+    Antares::Data::ConstraintName NomDeLaContrainteCouplante;
 } CONTRAINTES_COUPLANTES;
 
 typedef struct

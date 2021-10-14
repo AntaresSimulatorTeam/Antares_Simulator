@@ -355,6 +355,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
 
             if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante == CONTRAINTE_HORAIRE)
             {
+                std::string NomDeLaContrainte(MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante.c_str());
+                NomDeLaContrainte.insert(0, "bc::hourly::" + std::to_string(ts) + "::");
                 NbInterco = MatriceDesContraintesCouplantes
                               ->NombreDInterconnexionsDansLaContrainteCouplante;
                 NombreDeTermes = 0;
@@ -436,7 +438,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                   Pi,
                   Colonne,
                   NombreDeTermes,
-                  MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante);
+                  MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante,
+                  NomDeLaContrainte);
             }
         }
 
@@ -546,6 +549,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
           = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
         if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante == CONTRAINTE_JOURNALIERE)
         {
+            
             NbInterco
               = MatriceDesContraintesCouplantes->NombreDInterconnexionsDansLaContrainteCouplante;
             NbClusters
@@ -554,6 +558,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
             while (PdtDebut < NombreDePasDeTempsPourUneOptimisation)
             {
                 Jour = NumeroDeJourDuPasDeTemps[PdtDebut];
+                std::string NomDeLaContrainte(MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante.c_str());
+                NomDeLaContrainte.insert(0, "bc::daily::" + std::to_string(Jour) + "::");
                 CorrespondanceCntNativesCntOptimJournalieres
                   = ProblemeHebdo->CorrespondanceCntNativesCntOptimJournalieres[Jour];
                 NombreDeTermes = 0;
@@ -631,7 +637,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                   Pi,
                   Colonne,
                   NombreDeTermes,
-                  MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante);
+                  MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante,
+                  NomDeLaContrainte);
                 PdtDebut += NombreDePasDeTempsDUneJournee;
             }
         }
@@ -651,6 +658,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
             if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante
                 == CONTRAINTE_HEBDOMADAIRE)
             {
+                std::string NomDeLaContrainte(MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante.c_str());
+                NomDeLaContrainte.insert(0, "bc::weekly::");
                 NbInterco = MatriceDesContraintesCouplantes
                               ->NombreDInterconnexionsDansLaContrainteCouplante;
                 NombreDeTermes = 0;

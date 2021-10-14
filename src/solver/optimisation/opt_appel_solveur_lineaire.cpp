@@ -231,7 +231,10 @@ RESOLUTION:
     TimeMeasurement measure;
     if (ortoolsUsed)
     {
-        solver = ORTOOLS_Simplexe(&Probleme, solver);
+        solver = ORTOOLS_Simplexe(&Probleme,
+                                  solver,
+                                  ProblemeAResoudre->NomDesVariables,
+                                  ProblemeAResoudre->NomDesContraintes);
         if (solver != NULL)
         {
             (ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = (void*)solver;
