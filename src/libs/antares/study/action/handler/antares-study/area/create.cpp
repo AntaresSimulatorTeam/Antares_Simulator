@@ -309,7 +309,7 @@ void Create::createActionsForAStandardAreaCopy(Context& ctx, bool copyPosition)
 }
 
 IAction* Create::StandardActionsToCopyThermalCluster(const Data::AreaName& area,
-                                                     const Data::ThermalClusterName& name)
+                                                     const Data::ClusterName& name)
 {
     typedef Antares::Action::AntaresStudy::ThermalCluster::Create NodePlant;
     typedef Antares::Action::AntaresStudy::ThermalCluster::CommonData NodePlantCommonData;

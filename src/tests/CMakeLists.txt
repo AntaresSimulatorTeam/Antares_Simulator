@@ -145,7 +145,14 @@ if(Python3_Interpreter_FOUND)
             WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples"
         )
         set_property(TEST medium-specific PROPERTY LABELS medium-specific sirius)
-        
+
+        # Non-regression tests
+        add_test(
+            NAME non-regression
+            COMMAND Python3::Interpreter -m pytest --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver> nonreg_compare_test.py
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples"
+        )
+        set_property(TEST non-regression PROPERTY LABELS non-regression sirius)
   else()   
       message(FATAL "Module pytest or numpy not installed : can't run python scripts for end to end tests" )
   endif()

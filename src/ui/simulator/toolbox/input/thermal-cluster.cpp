@@ -25,29 +25,19 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/wx-wrapper.h>
-#include "thermal-cluster.h"
-#include "../components/captionpanel.h"
 #include "../../application/study.h"
 #include "../../application/main.h"
 #include "../../application/wait.h"
 #include "../../windows/inspector.h"
-#include <assert.h>
 #include "../resources.h"
 #include "../create.h"
-#include "../validator.h"
-#include "../components/htmllistbox/datasource/thermal-cluster.h"
-#include "../components/htmllistbox/item/thermal-cluster.h"
 #include "../components/button.h"
 #include "../../windows/message.h"
 #include "../../application/menus.h"
 #include <antares/study/scenario-builder/updater.hxx>
 #include <wx/wupdlock.h>
 #include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/statline.h>
-#include <wx/bmpbuttn.h>
-#include <ui/common/lock.h>
+#include "thermal-cluster.h"
 
 using namespace Yuni;
 
@@ -95,8 +85,6 @@ ThermalCluster::~ThermalCluster()
 {
     destroyBoundEvents();
 }
-
-namespace HTMLLsDatasourcesTh = Component::HTMLListbox::Datasource::ThermalClusters;
 
 void ThermalCluster::internalBuildSubControls()
 {
@@ -148,16 +136,14 @@ void ThermalCluster::internalBuildSubControls()
 
     // The listbox
     pThListbox = new Component::HTMLListbox::Component(this);
-    HTMLLsDatasourcesTh::ByAlphaOrder* dsAZ;
-    dsAZ = pThListbox->addDatasource<HTMLLsDatasourcesTh::ByAlphaOrder>();
-    HTMLLsDatasourcesTh::ByAlphaReverseOrder* dsZA;
-    dsZA = pThListbox->addDatasource<HTMLLsDatasourcesTh::ByAlphaReverseOrder>();
+    pDataSourceAZ = pThListbox->addDatasource<ThermalClustersByAlphaOrder>();
+    pDataSourceZA = pThListbox->addDatasource<ThermalClustersByAlphaReverseOrder>();
     if (pAreaNotifier)
     {
-        pAreaNotifier->onAreaChanged.connect(dsAZ,
-                                             &HTMLLsDatasourcesTh::ByAlphaOrder::onAreaChanged);
+        pAreaNotifier->onAreaChanged.connect(pDataSourceAZ,
+                                             &ThermalClustersByAlphaOrder::onAreaChanged);
         pAreaNotifier->onAreaChanged.connect(
-          dsZA, &HTMLLsDatasourcesTh::ByAlphaReverseOrder::onAreaChanged);
+          pDataSourceZA, &ThermalClustersByAlphaReverseOrder::onAreaChanged);
     }
     sizer->Add(pThListbox, 1, wxALL | wxEXPAND);
     sizer->SetItemMinSize(pThListbox, 100, 200);
@@ -170,6 +156,18 @@ void ThermalCluster::internalBuildSubControls()
 void ThermalCluster::update()
 {
     pThListbox->invalidate();
+    onThermalClusterChanged(nullptr);
+    updateInnerValues();
+}
+
+void ThermalCluster::updateWhenGroupChanges()
+{
+    // Warn the selected data source (A-Z or Z-A sorting) that a cluster's group changed
+    ClustersByOrder* dataSource = dynamic_cast<ClustersByOrder*>(pThListbox->datasource());
+    if (dataSource)
+        dataSource->hasGroupChanged(true);
+
+    pThListbox->forceRedraw();
     onThermalClusterChanged(nullptr);
     updateInnerValues();
 }
@@ -219,13 +217,14 @@ void ThermalCluster::renameAggregate(Antares::Data::ThermalCluster* cluster,
                                      const wxString& newName,
                                      const bool broadcast)
 {
+    using namespace Data;
     WIP::Locker wip;
-    if (cluster && pArea && Data::Study::Current::Valid())
+    if (cluster && pArea && Study::Current::Valid())
     {
-        Antares::Data::ThermalClusterName newPlantName;
+        ClusterName newPlantName;
         wxStringToString(newName, newPlantName);
 
-        Data::Study::Current::Get()->thermalClusterRename(cluster, newPlantName);
+        Study::Current::Get()->clusterRename(cluster, newPlantName);
         MarkTheStudyAsModified();
     }
     if (broadcast)
@@ -431,7 +430,7 @@ void ThermalCluster::internalAddPlant(void*)
         uint indx = 1;
 
         // Trying to find an uniq name
-        Antares::Data::ThermalClusterName sFl;
+        Antares::Data::ClusterName sFl;
         sFl.clear() << "new cluster";
         while (pArea->thermal.list.find(sFl))
         {
@@ -443,12 +442,11 @@ void ThermalCluster::internalAddPlant(void*)
         ScenarioBuilderUpdater updaterSB(*study);
 
         // Creating a new cluster
-        Antares::Data::ThermalCluster* cluster = new Antares::Data::ThermalCluster(pArea);
+        auto cluster = std::make_shared<Antares::Data::ThermalCluster>(pArea);
         logs.info() << "adding new thermal cluster " << pArea->id << '.' << sFl;
-        cluster->name(sFl);
+        cluster->setName(sFl);
         cluster->reset();
         pArea->thermal.list.add(cluster);
-        pArea->thermal.list.mapping[cluster->id()] = cluster;
         pArea->thermal.list.rebuildIndex();
         pArea->thermal.prepareAreaWideIndexes();
 
@@ -456,7 +454,7 @@ void ThermalCluster::internalAddPlant(void*)
         update();
         Refresh();
 
-        onThermalClusterChanged(cluster);
+        onThermalClusterChanged(cluster.get());
         MarkTheStudyAsModified();
         updateInnerValues();
 
@@ -493,23 +491,23 @@ void ThermalCluster::internalClonePlant(void*)
         uint indx = 2;
 
         // Trying to find an uniq name
-        Antares::Data::ThermalClusterName copy = selectedPlant.name();
+        Antares::Data::ClusterName copy = selectedPlant.name();
 
-        Data::ThermalClusterName::Size sepPos = copy.find_last_of(' ');
+        Data::ClusterName::Size sepPos = copy.find_last_of(' ');
         if (sepPos != YString::npos)
         {
-            Data::ThermalClusterName suffixChain(copy, sepPos + 1);
+            Data::ClusterName suffixChain(copy, sepPos + 1);
             int suffixNumber = suffixChain.to<int>();
             if (suffixNumber > 0)
             {
-                Data::ThermalClusterName suffixLess(copy, 0, sepPos);
+                Data::ClusterName suffixLess(copy, 0, sepPos);
                 copy = suffixLess;
             }
         }
 
         copy += ' ';
 
-        Antares::Data::ThermalClusterName sFl;
+        Antares::Data::ClusterName sFl;
         sFl << copy << indx; // lowercase
         while (pArea->thermal.list.find(sFl))
         {
@@ -521,14 +519,13 @@ void ThermalCluster::internalClonePlant(void*)
         ScenarioBuilderUpdater updaterSB(*study);
 
         // Creating a new cluster
-        auto* cluster = new Antares::Data::ThermalCluster(pArea);
-        cluster->name(sFl);
+        auto cluster = std::make_shared<Antares::Data::ThermalCluster>(pArea);
+        cluster->setName(sFl);
         cluster->reset();
         // Reset to default values
         cluster->copyFrom(selectedPlant);
 
         pArea->thermal.list.add(cluster);
-        pArea->thermal.list.mapping[cluster->id()] = cluster;
         pArea->thermal.list.rebuildIndex();
         pArea->thermal.prepareAreaWideIndexes();
 
@@ -536,7 +533,7 @@ void ThermalCluster::internalClonePlant(void*)
         update();
         Refresh();
 
-        onThermalClusterChanged(cluster);
+        onThermalClusterChanged(cluster.get());
         MarkTheStudyAsModified();
         updateInnerValues();
 
@@ -571,7 +568,7 @@ void ThermalCluster::onThSelected(Component::HTMLListbox::Item::IItem::Ptr item)
 
 void ThermalCluster::delayedSelection(Component::HTMLListbox::Item::IItem::Ptr item)
 {
-    typedef Component::HTMLListbox::Item::ThermalCluster::Ptr ThPtr;
+    typedef Component::HTMLListbox::Item::ThermalClusterItem::Ptr ThPtr;
     ThPtr a = Component::HTMLListbox::Item::IItem::Ptr::DynamicCast<ThPtr>(item);
     if (a)
     {
@@ -630,7 +627,7 @@ void ThermalCluster::onStudyThermalClusterGroupChanged(Antares::Data::Area* area
 {
     if (area && area == pArea)
     {
-        update();
+        updateWhenGroupChanges();
         MarkTheStudyAsModified();
         Refresh();
     }

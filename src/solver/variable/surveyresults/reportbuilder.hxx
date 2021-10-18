@@ -82,7 +82,7 @@ struct BrowseAllVariables
     enum
     {
         nextFileLevel = (CFile * 2 > (int)Category::maxFileLevel) ? 1 : CFile * 2,
-        nextDataLevel = (CFile * 2 > (int)Category::maxFileLevel) ? CDataLevel * 2 : CDataLevel,
+        nextDataLevel = (CDataLevel * 2 > (int)Category::maxDataLevel) ? 1 : CDataLevel * 2,
         currentValue = NextT::template Statistics<CDataLevel, CFile>::count,
         nextValue = BrowseAllVariables<NextT, nextDataLevel, nextFileLevel>::maxValue,
 
@@ -133,9 +133,6 @@ public:
 
     static void Run(const ListType& list, SurveyResults& results, unsigned int numSpace)
     {
-        // Antares::logs.debug() << "Data: " << Category::DataLevelToCStr<CDataLevel>()
-        //	<< ", Level: " << Category::FileLevelToCStr<CFile>();
-
         if (globalResults)
             RunGlobalResults(list, results);
         else

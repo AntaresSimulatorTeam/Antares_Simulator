@@ -26,6 +26,7 @@
 */
 #include <iomanip>
 #include <sstream>
+#include <limits>
 
 #include <yuni/yuni.h>
 #include <antares/study/study.h>

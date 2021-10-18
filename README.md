@@ -20,7 +20,7 @@ as a cross-platform application (Windows, GNU/Linux ,Unix).
 
 Until 2018 it was distributed under the terms of a proprietary license.
 
-In May 2018 RTE decided to relicense the project under the GPLv3 license.
+In May 2018 RTE decided to release the project under the GPLv3 license.
 
 [linux_system_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Linux%20CI%20(system%20libs)/badge.svg
 
@@ -59,7 +59,7 @@ For installation instructions, please visit [INSTALL.md](INSTALL.md)
 * [CONTRIBUTING](CONTRIBUTING.txt)	     - How to submit patches and discuss about code evolutions
 * [COPYING](COPYING.txt)            - The GPL v3 license.
 * [INSTALL](INSTALL.md)           - Installation and building instructions.
-* [NEWS](NEWS.txt)             - Important modifications between the releases.
+* [NEWS](NEWS.md)                 - Important modifications between the releases.
 * [README](README.md)             - This file.
 * [ROADMAP](ROADMAP.txt)            - Main orientations for further developements 
 * [THANKS](THANKS.txt)             - Attribution notices for external libraries and contributors.

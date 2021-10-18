@@ -476,9 +476,9 @@ void ISimulation<Impl>::estimateMemoryUsage(Antares::Data::StudyMemoryUsage& u)
         auto& area = *areas.byIndex[i];
         tmpAmountMemory += sizeof(NUMERO_CHRONIQUES_TIREES_PAR_PAYS);
         tmpAmountMemory += sizeof(VALEURS_GENEREES_PAR_PAYS);
-        tmpAmountMemory += area.thermal.clusterCount * sizeof(int);
+        tmpAmountMemory += area.thermal.clusterCount() * sizeof(int);
         tmpAmountMemory += 366 * sizeof(double);
-        tmpAmountMemory += area.thermal.clusterCount * sizeof(double);
+        tmpAmountMemory += area.thermal.clusterCount() * sizeof(double);
     }
     u.requiredMemoryForInput += u.nbYearsParallel * tmpAmountMemory;
 
@@ -1461,6 +1461,7 @@ void ISimulation<Impl>::computeAnnualCostsStatistics(
             pAnnualCostsStatistics.systemCost.addCost(state[numSpace].annualSystemCost);
             pAnnualCostsStatistics.criterionCost1.addCost(state[numSpace].optimalSolutionCost1);
             pAnnualCostsStatistics.criterionCost2.addCost(state[numSpace].optimalSolutionCost2);
+            pAnnualCostsStatistics.optimizationTime.addCost(state[numSpace].averageOptimizationTime);
         }
     }
 }

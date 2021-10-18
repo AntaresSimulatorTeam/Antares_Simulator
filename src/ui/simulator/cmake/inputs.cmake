@@ -9,6 +9,8 @@ set(SRC_UI_INPUTS
 		toolbox/input/connection.cpp
 		toolbox/input/thermal-cluster.h
 		toolbox/input/thermal-cluster.cpp
+		toolbox/input/renewable-cluster.h
+		toolbox/input/renewable-cluster.cpp
 		toolbox/input/bindingconstraint.h
 		toolbox/input/bindingconstraint/bindingconstraint.h
 		toolbox/input/bindingconstraint/bindingconstraint.cpp

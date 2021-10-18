@@ -231,6 +231,9 @@ Yuni::uint64 Area::memoryUsage() const
     // Thermal
     ret += thermal.list.memoryUsage();
 
+    // Renewable
+    ret += renewable.list.memoryUsage();
+
     // UI
     if (ui)
         ret += ui->memoryUsage();
@@ -258,7 +261,8 @@ void Area::ensureAllDataAreCreated()
         wind.series = new DataSeriesWind();
     if (!hydro.series)
         hydro.series = new DataSeriesHydro();
-    ThermalClusterListEnsureDataTimeSeries(&thermal.list);
+    thermal.list.ensureDataTimeSeries();
+    renewable.list.ensureDataTimeSeries();
 
     // Prepro
     if (!load.prepro)
@@ -269,7 +273,7 @@ void Area::ensureAllDataAreCreated()
         wind.prepro = new Data::Wind::Prepro();
     if (!hydro.prepro)
         hydro.prepro = new PreproHydro();
-    ThermalClusterListEnsureDataPrepro(&thermal.list);
+    thermal.list.ensureDataPrepro();
 }
 
 void Area::resetToDefaultValues()
@@ -296,6 +300,8 @@ void Area::resetToDefaultValues()
     hydro.allocation.fromArea(id, 1.);
     // Thermal
     thermal.reset();
+    // Renewable
+    renewable.reset();
     // Fatal hors hydro
     miscGen.reset(fhhMax, HOURS_PER_YEAR, true);
     // reserves
@@ -322,8 +328,8 @@ void Area::resetToDefaultValues()
 
     // 		thermal.list.add(ag);
     // 		thermal.list.rebuildIndex();
-    // 		ThermalClusterListEnsureDataPrepro(&thermal.list);
-    // 		ThermalClusterListEnsureDataTimeSeries(&thermal.list);
+    // 		thermal.list.ensureDataPrepro();
+    // 		thermal.list.ensureDataTimeSeries();
     // 	}
     // }
 }
@@ -353,6 +359,7 @@ void Area::resizeAllTimeseriesNumbers(uint n)
         hydro.series->timeseriesNumbers.resize(1, n);
     }
     thermal.resizeAllTimeseriesNumbers(n);
+    renewable.resizeAllTimeseriesNumbers(n);
 }
 
 void Area::estimateMemoryUsage(StudyMemoryUsage& u) const
@@ -389,6 +396,9 @@ void Area::estimateMemoryUsage(StudyMemoryUsage& u) const
     // Thermal
     thermal.estimateMemoryUsage(u);
 
+    // Renewable
+    renewable.estimateMemoryUsage(u);
+
     // Scratchpad
     u.requiredMemoryForInput += sizeof(AreaScratchpad) * u.nbYearsParallel;
 
@@ -411,7 +421,7 @@ void Area::estimateMemoryUsage(StudyMemoryUsage& u) const
 bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) const
 {
     bool noErrorMinStabPow = true;
-    for (uint l = 0; l != thermal.clusterCount; ++l)
+    for (uint l = 0; l != thermal.clusterCount(); ++l)
     {
         auto& cluster = thermal.clusters[l];
         logs.debug() << "cluster : " << cluster->name();
@@ -451,7 +461,8 @@ bool Area::invalidate(bool reload) const
     ret = self.wind.invalidate(reload) and ret;
     // Thermal
     ret = self.thermal.invalidate(reload) and ret;
-
+    // Renewable
+    ret = self.renewable.invalidate(reload) and ret;
     if (not links.empty())
     {
         auto end = self.links.end();
@@ -482,6 +493,8 @@ void Area::markAsModified() const
     wind.markAsModified();
     // Thermal
     thermal.markAsModified();
+    // Renewable
+    renewable.markAsModified();
 
     if (not links.empty())
     {

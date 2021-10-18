@@ -34,6 +34,7 @@
 #include "toolbox/components/datagrid/renderer/scenario-builder-renderer-base.h"
 #include "toolbox/components/datagrid/renderer/scenario-builder-load-renderer.h"
 #include "toolbox/components/datagrid/renderer/scenario-builder-thermal-renderer.h"
+#include "toolbox/components/datagrid/renderer/scenario-builder-renewable-renderer.h"
 #include "toolbox/components/datagrid/renderer/scenario-builder-hydro-renderer.h"
 #include "toolbox/components/datagrid/renderer/scenario-builder-wind-renderer.h"
 #include "toolbox/components/datagrid/renderer/scenario-builder-solar-renderer.h"
@@ -164,44 +165,104 @@ private:
     }
 };
 
-// Thermal ...
-class thermalScBuilderGrid : public basicScBuilderGrid
+class clusterScBuilderGrid : public basicScBuilderGrid
 {
 public:
-    thermalScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
+    clusterScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
      basicScBuilderGrid(control, notebook)
     {
     }
 
-    void create()
+    virtual void create() override
     {
-        page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(
-          notebook_, wxT("thermal"), wxT("Thermal"));
+        page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(notebook_, name(), caption());
         createRenderer();
-        control_->updateRules.connect(renderer_,
-                                      &Renderer::thermalScBuilderRenderer::onRulesChanged);
+        connectUpdateRules();
         createGrid();
         addToNotebook();
     }
 
 private:
-    void createRenderer()
-    {
-        renderer_ = new Renderer::thermalScBuilderRenderer(page_.second);
-    }
-    void createGrid()
+    virtual const char* name() const = 0;
+    virtual const char* caption() const = 0;
+    virtual void connectUpdateRules() = 0;
+
+    virtual void createGrid() override
     {
         grid_ = new DatagridType(page_.first, renderer_);
     }
-    void addToNotebook()
+
+    virtual void addToNotebook() override
     {
-        page_.first->add(grid_, wxT("thermal"), wxT("Thermal"));
+        page_.first->add(grid_, name(), caption());
         renderer_->control(grid_); // Shouldn't that be inside create() ?
-        page_.first->select(wxT("thermal"));
+        page_.first->select(name());
     }
 
-private:
+protected:
     std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page_;
+};
+
+// Thermal clusters ...
+class thermalScBuilderGrid : public clusterScBuilderGrid
+{
+public:
+    thermalScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
+     clusterScBuilderGrid(control, notebook)
+    {
+    }
+
+    virtual void createRenderer() override
+    {
+        renderer_ = new Renderer::thermalScBuilderRenderer(page_.second);
+    }
+
+    virtual void connectUpdateRules() override
+    {
+        control_->updateRules.connect(renderer_,
+                                      &Renderer::thermalScBuilderRenderer::onRulesChanged);
+    }
+
+    virtual const char* name() const override
+    {
+        return "thermal";
+    }
+
+    virtual const char* caption() const override
+    {
+        return "Thermal";
+    }
+};
+
+// Renewable clusters ...
+class renewableScBuilderGrid : public clusterScBuilderGrid
+{
+public:
+    renewableScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
+     clusterScBuilderGrid(control, notebook)
+    {
+    }
+
+    virtual void createRenderer() override
+    {
+        renderer_ = new Renderer::renewableScBuilderRenderer(page_.second);
+    }
+
+    virtual void connectUpdateRules() override
+    {
+        control_->updateRules.connect(renderer_,
+                                      &Renderer::renewableScBuilderRenderer::onRulesChanged);
+    }
+
+    virtual const char* name() const override
+    {
+        return "renewable";
+    }
+
+    virtual const char* caption() const override
+    {
+        return "Renewable";
+    }
 };
 
 // Hydro levels ...
@@ -272,6 +333,9 @@ void ApplWnd::createNBScenarioBuilder()
 
     solarScBuilderGrid solarScBuilder(control, pScenarioBuilderNotebook);
     solarScBuilder.create();
+
+    renewableScBuilderGrid renewableScBuilder(control, pScenarioBuilderNotebook);
+    renewableScBuilder.create();
 
     pScenarioBuilderNotebook->addSeparator();
 

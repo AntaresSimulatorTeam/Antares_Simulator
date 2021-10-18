@@ -80,7 +80,7 @@ struct VCardDispatchableGeneration
         //! Decimal precision
         decimal = 0,
         //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 7,
+        columnCount = 10,
         //! The Spatial aggregation
         spatialAggregate = Category::spatialAggregateSum,
         spatialAggregateMode = Category::spatialAggregateEachYear,
@@ -116,6 +116,13 @@ struct VCardDispatchableGeneration
                 return "MIX. FUEL";
             case 6:
                 return "MISC. DTG";
+            case 7:
+                return "MISC. DTG 2";
+            case 8:
+                return "MISC. DTG 3";
+            case 9:
+                return "MISC. DTG 4";
+
             default:
                 return "<unknown>";
             }
@@ -205,14 +212,6 @@ public:
         NextType::initializeFromAreaLink(study, link);
     }
 
-    void initializeFromThermalCluster(Data::Study* study,
-                                      Data::Area* area,
-                                      Data::ThermalCluster* cluster)
-    {
-        // Next
-        NextType::initializeFromThermalCluster(study, area, cluster);
-    }
-
     void simulationBegin()
     {
         // Next
@@ -231,20 +230,6 @@ public:
             pValuesForTheCurrentYear[numSpace][i].reset();
         // Next variable
         NextType::yearBegin(year, numSpace);
-    }
-
-    void yearEndBuildPrepareDataForEachThermalCluster(State& state,
-                                                      uint year,
-                                                      unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
-    }
-
-    void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
     }
 
     void yearEndBuild(State& state, unsigned int year)
@@ -287,7 +272,7 @@ public:
     void hourForEachThermalCluster(State& state, unsigned int numSpace)
     {
         // Adding the dispatchable generation for the class_name fuel
-        pValuesForTheCurrentYear[numSpace][state.cluster->groupID][state.hourInTheYear]
+        pValuesForTheCurrentYear[numSpace][state.thermalCluster->groupID][state.hourInTheYear]
           += state.thermalClusterProduction;
         // Next item in the list
         NextType::hourForEachThermalCluster(state, numSpace);

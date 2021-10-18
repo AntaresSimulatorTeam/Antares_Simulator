@@ -26,8 +26,6 @@
 */
 
 #include "thermal.areasummary.h"
-#include "../../../refresh.h"
-#include "../../../../../application/study.h"
 
 using namespace Yuni;
 
@@ -40,18 +38,12 @@ namespace Datagrid
 namespace Renderer
 {
 ThermalClusterSummarySingleArea::ThermalClusterSummarySingleArea(
-  wxWindow* control,
-  Toolbox::InputSelector::Area* notifier) :
- pArea(nullptr), pControl(control), pAreaNotifier(notifier)
+    wxWindow* control,
+    Toolbox::InputSelector::Area* notifier) : CommonClusterSummarySingleArea(control, notifier)
 {
-    if (notifier)
-        notifier->onAreaChanged.connect(this, &ThermalClusterSummarySingleArea::onAreaChanged);
 }
 
-ThermalClusterSummarySingleArea::~ThermalClusterSummarySingleArea()
-{
-    destroyBoundEvents();
-}
+ThermalClusterSummarySingleArea::~ThermalClusterSummarySingleArea() {}
 
 wxString ThermalClusterSummarySingleArea::rowCaption(int rowIndx) const
 {
@@ -170,105 +162,6 @@ double ThermalClusterSummarySingleArea::cellNumericValue(int x, int y) const
     return 0.;
 }
 
-void ThermalClusterSummarySingleArea::onAreaChanged(Antares::Data::Area* area)
-{
-    if (pArea != area)
-    {
-        pArea = area;
-        RefreshAllControls(pControl);
-    }
-}
-
-IRenderer::CellStyle ThermalClusterSummarySingleArea::cellStyle(int col, int row) const
-{
-    return (col > 0 and Math::Zero(cellNumericValue(col, row)))
-             ? IRenderer::cellStyleDefaultDisabled
-             : (col == 1 || col == 2) ? IRenderer::cellStyleConstraintWeight
-                                      : IRenderer::cellStyleDefault;
-}
-
-struct NoCheck
-{
-    template<class T>
-    static bool Validate(const T&)
-    {
-        return true;
-    }
-};
-
-struct CheckMinUpDownTime
-{
-    static bool Validate(uint f)
-    {
-        return (f == 1) || (f == 24) || (f == 168);
-    }
-};
-
-struct CheckUnitCount
-{
-    static bool Validate(uint& f)
-    {
-        if (f > 100)
-            f = 100;
-        return true;
-    }
-};
-
-template<class CheckT>
-static bool UpdateUnsignedLong(uint& value, const String& str)
-{
-    uint l;
-    if (str.to(l))
-    {
-        if (value != l and CheckT::Validate(l))
-        {
-            value = l;
-            MarkTheStudyAsModified();
-            OnInspectorRefresh(nullptr);
-            return true;
-        }
-    }
-    return false;
-}
-
-template<class CheckT>
-static bool UpdateDouble(double& value, const String& str)
-{
-    double d;
-    if (str.to(d))
-    {
-        if (not Math::Equals<double>(value, d))
-        {
-            if (CheckT::Validate(d))
-            {
-                value = d;
-                OnInspectorRefresh(nullptr);
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-template<class CheckT>
-static bool UpdateBool(bool& value, const String& str)
-{
-    bool d;
-    if (str.to(d))
-    {
-        if (value != d)
-        {
-            if (CheckT::Validate(d))
-            {
-                value = d;
-                OnInspectorRefresh(nullptr);
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
 bool ThermalClusterSummarySingleArea::cellValue(int x, int y, const String& v)
 {
     auto* cluster = (pArea and (uint) y < pArea->thermal.list.size())
@@ -283,54 +176,42 @@ bool ThermalClusterSummarySingleArea::cellValue(int x, int y, const String& v)
         {
             if (cluster->group() != v)
             {
-                cluster->group(v);
+                cluster->setGroup(v);
                 return true;
             }
             break;
         }
         case 1:
-            return UpdateBool<NoCheck>(cluster->enabled, v);
+            return Update<bool, NoCheck, RefeshInspector>(cluster->enabled, v);
         case 2:
-            return UpdateUnsignedLong<CheckUnitCount>(cluster->unitCount, v);
+            return Update<uint, CheckUnitCount, RefeshInspectorAndMarkAsModified>(cluster->unitCount, v);
         case 3:
-            return UpdateDouble<NoCheck>(cluster->nominalCapacity, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->nominalCapacity, v);
         case 4:
-            return UpdateBool<NoCheck>(cluster->mustrun, v);
+            return Update<bool, NoCheck, RefeshInspector>(cluster->mustrun, v);
         case 5:
-            return UpdateDouble<NoCheck>(cluster->minStablePower, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->minStablePower, v);
         case 6:
-            return UpdateUnsignedLong<CheckMinUpDownTime>(cluster->minUpTime, v);
+            return Update<uint, CheckMinUpDownTime, RefeshInspectorAndMarkAsModified>(cluster->minUpTime, v);
         case 7:
-            return UpdateUnsignedLong<CheckMinUpDownTime>(cluster->minDownTime, v);
+            return Update<uint, CheckMinUpDownTime, RefeshInspectorAndMarkAsModified>(cluster->minDownTime, v);
         case 8:
-            return UpdateDouble<NoCheck>(cluster->spinning, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->spinning, v);
         case 9:
-            return UpdateDouble<NoCheck>(cluster->co2, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->co2, v);
         case 10:
-            return UpdateDouble<NoCheck>(cluster->marginalCost, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->marginalCost, v);
         case 11:
-            return UpdateDouble<NoCheck>(cluster->fixedCost, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->fixedCost, v);
         case 12:
-            return UpdateDouble<NoCheck>(cluster->startupCost, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->startupCost, v);
         case 13:
-            return UpdateDouble<NoCheck>(cluster->marketBidCost, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->marketBidCost, v);
         case 14:
-            return UpdateDouble<NoCheck>(cluster->spreadCost, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->spreadCost, v);
         }
     }
     return false;
-}
-
-void ThermalClusterSummarySingleArea::onStudyClosed()
-{
-    pArea = nullptr;
-    IRenderer::onStudyClosed();
-}
-
-void ThermalClusterSummarySingleArea::onStudyAreaDelete(Antares::Data::Area* area)
-{
-    if (pArea == area)
-        onAreaChanged(nullptr);
 }
 
 } // namespace Renderer

@@ -173,14 +173,6 @@ public:
         NextType::initializeFromAreaLink(study, link);
     }
 
-    void initializeFromThermalCluster(Data::Study* study,
-                                      Data::Area* area,
-                                      Data::ThermalCluster* cluster)
-    {
-        // Next
-        NextType::initializeFromThermalCluster(study, area, cluster);
-    }
-
     void simulationBegin()
     {
         // Next
@@ -198,20 +190,6 @@ public:
         pValuesForTheCurrentYear[numSpace].reset();
         // Next variable
         NextType::yearBegin(year, numSpace);
-    }
-
-    void yearEndBuildPrepareDataForEachThermalCluster(State& state,
-                                                      uint year,
-                                                      unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
-    }
-
-    void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
     }
 
     void yearEndBuild(State& state, unsigned int year)
@@ -262,7 +240,7 @@ public:
         // CO2 = CO2 for the thermal cluster/Mwh * production
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear] +=
           // production for the current thermal dispatchable cluster
-          (state.cluster->co2 * state.thermalClusterProduction);
+          (state.thermalCluster->co2 * state.thermalClusterProduction);
 
         // Next item in the list
         NextType::hourForEachThermalCluster(state, numSpace);
