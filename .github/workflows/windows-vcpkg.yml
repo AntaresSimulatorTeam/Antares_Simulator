@@ -20,7 +20,7 @@ jobs:
         include:
           - os: windows-latest
             triplet: x64-windows
-            vcpkgPackages: wxwidgets boost-test boost-filesystem boost-process boost-dll boost-regex
+            vcpkgPackages: wxwidgets boost-test
     env:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
