@@ -3,18 +3,19 @@
 #include <fstream>
 #include <regex>
 #include <algorithm>
+#include <cassert>
 
 using namespace operations_research;
 
 // TODO : use solver provided by the user ?
-Problem::Problem(PROBLEME_SIMPLEXE* ProbSpx)
+InfeasibleProblemDiag::InfeasibleProblemDiag(PROBLEME_SIMPLEXE* ProbSpx, const std::string& pattern) : mPattern(pattern)
 {
-  mSolver = convert_to_MPSolver(ProbSpx);
+    mSolver = convert_to_MPSolver(ProbSpx);
 }
 
 // TODO : remove all flag
-void Problem::addSlackVariables(const std::string& pattern, bool all) {
-  std::regex rgx(pattern);
+void InfeasibleProblemDiag::addSlackVariables(bool all) {
+  std::regex rgx(mPattern);
   const double infinity = MPSolver::infinity();
   for (auto constraint : mSolver->constraints()) {
     if (all || std::regex_match(constraint->name(), rgx)) {
@@ -35,7 +36,7 @@ void Problem::addSlackVariables(const std::string& pattern, bool all) {
   }
 }
 
-void Problem::buildObjective() {
+void InfeasibleProblemDiag::buildObjective() {
   MPObjective* objective = mSolver->MutableObjective();
   for (MPVariable* variable : mSolver->variables()) {
     objective->SetCoefficient(variable, 0.);
@@ -46,20 +47,24 @@ void Problem::buildObjective() {
   objective->SetMinimization();
 }
 
-MPSolver::ResultStatus Problem::Solve() {
+MPSolver::ResultStatus InfeasibleProblemDiag::Solve() {
   return mSolver->Solve();
 }
 
-InfeasibleProblemReport Problem::produceReport(double threshold) const {
+InfeasibleProblemReport InfeasibleProblemDiag::produceReport() {
+  addSlackVariables(false);
+  buildObjective();
+  assert(mSlackVariables.size() > 0);
+  Solve();
+
   InfeasibleProblemReport r;
   for (MPVariable* slack : mSlackVariables) {
     const double v = slack->solution_value();
-    if (v > threshold)
       r.append(slack->name(), v);
   }
   return r;
 }
 
-Problem::~Problem() {
-  delete mSolver;
+InfeasibleProblemDiag::~InfeasibleProblemDiag() {
+    delete mSolver;
 }

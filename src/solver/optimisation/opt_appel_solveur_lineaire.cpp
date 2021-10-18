@@ -50,6 +50,7 @@ extern "C"
 #include <antares/emergency.h>
 
 #include "../utils/ortools_utils.h"
+#include "../infeasible-diag/problem.h"
 
 #include <chrono>
 
@@ -344,6 +345,10 @@ RESOLUTION:
         logs.error() << "* negative hurdle costs on lines with infinite capacity,";
         logs.error() << "* Hydro reservoir impossible to manage with cumulative options \"hard "
                         "bounds without heuristic\"";
+
+        InfeasibleProblemDiag diag(&Probleme, "(.)*");
+        InfeasibleProblemReport report = diag.produceReport();
+        report.printLargest(10);
 
         // Write MPS only if exportMPSOnError is activated and MPS weren't exported before with
         // ExportMPS option

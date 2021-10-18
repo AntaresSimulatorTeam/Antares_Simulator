@@ -65,12 +65,12 @@ set(SRC_MODEL
 )
 
 add_library(libmodel_antares ${SRC_MODEL})
-target_link_libraries(libmodel_antares PUBLIC libantares-core ortools::ortools sirius_solver)
+target_link_libraries(libmodel_antares PUBLIC libantares-core ortools::ortools sirius_solver libinfeasible_diag)
 
 if(BUILD_SWAP)
 
     add_library(libmodel_antares-swap ${SRC_MODEL})
-    target_link_libraries(libmodel_antares-swap PUBLIC libantares-core-swap ortools::ortools sirius_solver)
+    target_link_libraries(libmodel_antares-swap PUBLIC libantares-core-swap ortools::ortools sirius_solver libinfeasible_diag)
 
     set_target_properties(libmodel_antares-swap
         PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")

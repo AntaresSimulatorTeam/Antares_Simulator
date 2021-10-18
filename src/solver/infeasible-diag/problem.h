@@ -5,16 +5,17 @@
 
 #include "report.h"
 
-class Problem {
+class InfeasibleProblemDiag {
  public:
-  Problem(PROBLEME_SIMPLEXE* ProbSpx);
-  void addSlackVariables(const std::string& pattern, bool all);
-  void buildObjective();
-  operations_research::MPSolver::ResultStatus Solve();
-  void sortSlackVariables();
-  InfeasibleProblemReport produceReport(double threshold) const;
-  ~Problem();
+  InfeasibleProblemDiag(PROBLEME_SIMPLEXE* ProbSpx, const std::string& pattern);
+  InfeasibleProblemReport produceReport();
+  ~InfeasibleProblemDiag();
  protected:
  operations_research::MPSolver* mSolver;
  std::vector<operations_research::MPVariable*> mSlackVariables;
+private:
+  void buildObjective();
+  operations_research::MPSolver::ResultStatus Solve();
+  void addSlackVariables(bool all);
+  const std::string mPattern;
 };

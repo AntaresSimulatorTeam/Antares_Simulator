@@ -1,13 +1,17 @@
+#pragma once
+
 #include <string>
-#include <map>
+#include <vector>
+#include <ostream>
 
 class InfeasibleProblemReport {
  private:
-  std::map<std::string, double> infeasibleConstraints;
+  std::vector<std::pair<std::string, double>> mConstraints;
  public:
   void append(const std::string& constraintName,
-              double value) {
-    // TODO check prior existence of constraintName
-    infeasibleConstraints[constraintName] = value;
-  }
+              double value);
+  void printLargest(int n);
 };
+
+
+
