@@ -10,11 +10,9 @@
 using namespace operations_research;
 
 template<typename T_PROBLEM>
-MPSolver* convert_to_MPSolver(T_PROBLEM* problemeSimplexe,
-                              const std::vector<std::string>& NomDesVariables,
-                              const std::vector<std::string>& NomDesContraintes);
+MPSolver* convert_to_MPSolver(T_PROBLEM* problemeSimplexe);
 
-void extract_from_MPSolver(MPSolver* solver, PROBLEME_SIMPLEXE* problemeSimplexe);
+void extract_from_MPSolver(MPSolver* solver, PROBLEME_NOMME* problemeSimplexe);
 void extract_from_MPSolver(MPSolver* solver, PROBLEME_A_RESOUDRE* problemeSimplexe);
 
 void change_MPSolver_objective(MPSolver* solver, double* costs, int nbVar);
@@ -94,9 +92,7 @@ void transferMatrix(MPSolver* solver,
     }
 }
 
-MPSolver* convert_to_MPSolver(PROBLEME_SIMPLEXE* problemeSimplexe,
-                              const std::vector<std::string>& NomDesVariables,
-                              const std::vector<std::string>& NomDesContraintes)
+MPSolver* convert_to_MPSolver(PROBLEME_NOMME* problemeSimplexe)
 {
     auto& study = *Data::Study::Current::Get();
 
@@ -113,14 +109,14 @@ MPSolver* convert_to_MPSolver(PROBLEME_SIMPLEXE* problemeSimplexe,
                       problemeSimplexe->Xmax,
                       problemeSimplexe->CoutLineaire,
                       problemeSimplexe->NombreDeVariables,
-                      NomDesVariables);
+                      problemeSimplexe->NomDesVariables);
 
     // Create constraints and set coefs
     transferRows(solver,
                  problemeSimplexe->SecondMembre,
                  problemeSimplexe->Sens,
                  problemeSimplexe->NombreDeContraintes,
-                 NomDesContraintes);
+                 problemeSimplexe->NomDesContraintes);
     transferMatrix(solver,
                    problemeSimplexe->IndicesDebutDeLigne,
                    problemeSimplexe->NombreDeTermesDesLignes,
@@ -131,9 +127,7 @@ MPSolver* convert_to_MPSolver(PROBLEME_SIMPLEXE* problemeSimplexe,
     return solver;
 }
 
-MPSolver* convert_to_MPSolver(PROBLEME_A_RESOUDRE* problemeAResoudre,
-                              const std::vector<std::string>& NomDesVariables,
-                              const std::vector<std::string>& NomDesContraintes)
+MPSolver* convert_to_MPSolver(PROBLEME_A_RESOUDRE* problemeAResoudre)
 {
     auto& study = *Data::Study::Current::Get();
 
@@ -149,7 +143,7 @@ MPSolver* convert_to_MPSolver(PROBLEME_A_RESOUDRE* problemeAResoudre,
                       problemeAResoudre->Xmax,
                       problemeAResoudre->CoutLineaire,
                       problemeAResoudre->NombreDeVariables,
-                      NomDesVariables
+                      {}
                       );
 
     // Create constraints and set coefs
@@ -157,7 +151,7 @@ MPSolver* convert_to_MPSolver(PROBLEME_A_RESOUDRE* problemeAResoudre,
                  problemeAResoudre->SecondMembre,
                  problemeAResoudre->Sens,
                  problemeAResoudre->NombreDeContraintes,
-                 NomDesContraintes);
+                 {});
     transferMatrix(solver,
                    problemeAResoudre->IndicesDebutDeLigne,
                    problemeAResoudre->NombreDeTermesDesLignes,
@@ -189,7 +183,7 @@ void extract_from_MPSolver(MPSolver* solver, PROBLEME_A_RESOUDRE* problemePne)
     }
 }
 
-void extract_from_MPSolver(MPSolver* solver, PROBLEME_SIMPLEXE* problemeSimplexe)
+void extract_from_MPSolver(MPSolver* solver, PROBLEME_NOMME* problemeSimplexe)
 {
     auto& variables = solver->variables();
     int nbVar = problemeSimplexe->NombreDeVariables;
@@ -275,18 +269,14 @@ bool solveAndManageStatus(MPSolver* solver, int& resultStatus, MPSolverParameter
     return resultStatus == OUI_SPX;
 }
 
-MPSolver* solveProblem(PROBLEME_SIMPLEXE* Probleme,
-                       MPSolver* ProbSpx,
-                       const std::vector<std::string>& NomDesVariables,
-                       const std::vector<std::string>& NomDesContraintes)
+MPSolver* solveProblem(PROBLEME_NOMME* Probleme,
+                       MPSolver* ProbSpx)
 {
     MPSolver* solver = ProbSpx;
 
     if (solver == NULL)
     {
-        solver = convert_to_MPSolver(Probleme,
-                                     NomDesVariables,
-                                     NomDesContraintes);
+        solver = convert_to_MPSolver(Probleme);
     }
 
     MPSolverParameters params;
@@ -299,17 +289,13 @@ MPSolver* solveProblem(PROBLEME_SIMPLEXE* Probleme,
     return solver;
 }
 
-MPSolver* solveProblem(PROBLEME_A_RESOUDRE* Probleme, MPSolver* ProbSpx,
-                       const std::vector<std::string>& NomDesVariables,
-                       const std::vector<std::string>& NomDesContraintes)
+MPSolver* solveProblem(PROBLEME_A_RESOUDRE* Probleme, MPSolver* ProbSpx)
 {
     MPSolver* solver = ProbSpx;
 
     if (solver == NULL)
     {
-        solver = convert_to_MPSolver(Probleme,
-                                     NomDesVariables,
-                                     NomDesContraintes);
+        solver = convert_to_MPSolver(Probleme);
     }
 
     MPSolverParameters params;
@@ -332,19 +318,15 @@ MPSolver* solveProblem(PROBLEME_A_RESOUDRE* Probleme, MPSolver* ProbSpx,
 
 extern "C"
 {
-    MPSolver* ORTOOLS_Simplexe(PROBLEME_SIMPLEXE* Probleme,
-                               MPSolver* ProbSpx,
-                               const std::vector<std::string>& NomDesVariables,
-                               const std::vector<std::string>& NomDesContraintes)
+    MPSolver* ORTOOLS_Simplexe(PROBLEME_NOMME* Probleme,
+                               MPSolver* ProbSpx)
     {
-        return solveProblem(Probleme, ProbSpx, NomDesVariables, NomDesContraintes);
+        return solveProblem(Probleme, ProbSpx);
     }
 
-  MPSolver* ORTOOLS_Simplexe_PNE(PROBLEME_A_RESOUDRE* Probleme, MPSolver* ProbSpx,
-                                 const std::vector<std::string>& NomDesVariables,
-                                 const std::vector<std::string>& NomDesContraintes)
+  MPSolver* ORTOOLS_Simplexe_PNE(PROBLEME_A_RESOUDRE* Probleme, MPSolver* ProbSpx)
     {
-        return solveProblem(Probleme, ProbSpx, NomDesVariables, NomDesContraintes);
+        return solveProblem(Probleme, ProbSpx);
     }
 
     void ORTOOLS_ModifierLeVecteurCouts(MPSolver* solver, double* costs, int nbVar)
