@@ -44,7 +44,7 @@ jobs:
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=ON
+           cmake -B _build -S src -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_ortools=ON
 
     - name: Build
       run: |
