@@ -11,52 +11,72 @@
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
-fs::path getAntaresRootFromCurrentFolder(const fs::path & path)
+// =========================
+// Output directory finder
+// =========================
+
+class outputDirFinder
+{
+public:
+	outputDirFinder() = default;
+	~outputDirFinder() = default;
+	bool search();
+	fs::path get() { return outputDir_; }
+private:
+	bool findAntaresRoot();
+	bool findOutputFolderFromRoot();
+private:
+	fs::path outputDir_;
+	fs::path antaresRootDir_;
+};
+
+bool outputDirFinder::search()
+{
+	if (not findAntaresRoot())
+		return false;
+	if (not findOutputFolderFromRoot())
+		return false;
+	return true;
+}
+
+bool outputDirFinder::findAntaresRoot()
 {
 	// Goes up incrementaly and search for a ".git" directory, meaning it has reached the Antares
 	// root directory.
-	fs::path path_to_return = path;
-	auto it = path.end();
+	fs::path start_path = fs::current_path();
+	fs::path current_path = start_path;
+	auto it = start_path.end();
 	if (it->string() == "")
 		it--;
-	for (; it != path.begin(); --it)
+	for (; it != start_path.begin(); --it)
 	{
-		bool gitHiddenDirFound = false;
-		for (auto const& dir_entry : fs::directory_iterator{ path_to_return })
+		for (auto const& dir_entry : fs::directory_iterator{ current_path })
 		{
 			fs::path entry = dir_entry.path().filename();
 			if (dir_entry.path().filename() == ".git")
 			{
-				gitHiddenDirFound = true;
-				break;
+				antaresRootDir_ = current_path;
+				return true;
 			}
 		}
-		if (gitHiddenDirFound)
-			break;
-		path_to_return = path_to_return.parent_path();
+		current_path = current_path.parent_path();
 	}
-
-	return path_to_return;
+	return false;
 }
 
-fs::path getSourcefolderFromRoot(const fs::path& rootPath)
+bool outputDirFinder::findOutputFolderFromRoot()
 {
-	fs::path path_to_return(rootPath);
-	path_to_return.append("src").append("tests").append("src").append("libs").append("antares").append("study").append("area");
-	if (!exists(path_to_return) || !is_directory(path_to_return))
-		return rootPath;
-	return path_to_return;
+	outputDir_ = antaresRootDir_;
+	outputDir_.append("src").append("tests").append("src").append("libs").append("antares")
+			  .append("study").append("area").append("out");
+	if (not exists(outputDir_) && not is_directory(outputDir_))
+		return false;
+	return true;
 }
 
-fs::path getOutputfolderFromCurrentDir(const fs::path & path)
-{
-	fs::path antaresRootPath = getAntaresRootFromCurrentFolder(path);
-	fs::path sourceFolder = getSourcefolderFromRoot(antaresRootPath);
-	fs::path outputFolder = sourceFolder.append("out");
-	if (!exists(outputFolder))
-		create_directory(outputFolder);
-	return outputFolder;
-}
+// ==================================
+// Clean ouput from generated files
+// ==================================
 
 void clean_output(const fs::path & outputDir, vector<string> filesToRemove)
 {
@@ -70,7 +90,11 @@ void clean_output(const fs::path & outputDir, vector<string> filesToRemove)
 	}
 }
 
-bool compare_ini_files(const fs::path & outputDir, string fileName, string fileNameRef)
+// ======================================
+// Compare ini files in output folder
+// ======================================
+
+bool compare_ini_files(const fs::path & outputDir, const string & fileName, const string & fileNameRef)
 {
 	fs::path filePath = outputDir;
 	fs::path filePathRef = outputDir;
@@ -104,15 +128,15 @@ BOOST_AUTO_TEST_CASE(one_link_with_default_values)
 	Area* area_1 = study->areaAdd("Area 1");
 	Area* area_2 = study->areaAdd("Area 2");
 	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
-	// Disable link's time-series dump
+	// Reduce size of link's time-series dump (0 Ko)
 	link->data.resize(0, 0);
 
-	fs::path current_dir(fs::current_path());
-	fs::path output_dir = getOutputfolderFromCurrentDir(current_dir);
+	outputDirFinder outputPathFinder;
+	BOOST_CHECK(outputPathFinder.search());
 
+	fs::path output_dir = outputPathFinder.get();
 
 	BOOST_CHECK(AreaLinksSaveToFolder(area_1, output_dir.string().c_str()));
-
 	BOOST_CHECK(compare_ini_files(output_dir, "properties.ini", "properties-ref-0.ini"));
 
 	vector<string> filesToRemove = { "area 2.txt", "properties.ini" };
