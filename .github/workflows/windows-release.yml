@@ -70,7 +70,7 @@ jobs:
       id: antares-deps-version
       uses: notiz-dev/github-action-json-property@release
       with: 
-        path: 'antares-version.json'
+        path: 'antares-deps-version.json'
         prop_path: 'antares_deps_version'
             
     - name: Download pre-compiled librairies
