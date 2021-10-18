@@ -1,5 +1,6 @@
 # Useful variables definitions
 # set(src_solver_simulation "${CMAKE_SOURCE_DIR}/solver/simulation")
+set(CMAKE_CXX_STANDARD 17)
 set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/libs/antares/study")
 
 
@@ -11,12 +12,12 @@ set(SRC_AREA_LINKS_SAVE_TO_FOLDER
 	${src_libs_antares_study}/area/links.cpp
 )
 
-add_executable(test-save-link-properties test-save-link-properties.cpp ${SRC_AREA_LINKS_SAVE_TO_FOLDER})
-
+# add_executable(test-save-link-properties test-save-link-properties.cpp ${SRC_AREA_LINKS_SAVE_TO_FOLDER})
+add_executable(test-save-link-properties test-save-link-properties.cpp)
 
 target_include_directories(test-save-link-properties
 								PRIVATE
-									"${src_libs_antares_study}/area"
+									"${src_libs_antares_study}"
 )
 target_link_libraries(test-save-link-properties
 						PRIVATE
