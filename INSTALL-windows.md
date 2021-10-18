@@ -26,7 +26,7 @@ pip install -r src/tests/examples/requirements.txt
  - [OR-Tools](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) (fork from [RTE](https://github.com/rte-france/or-tools/tree/rte_dev_sirius) based on official OR-Tools github)
  - [wxWidgets](https://github.com/wxWidgets/wxWidgets)
  (Only for the complete Antares Simulator solution with GUI)
- - Boost libraries : test process filesystem regex dll (Only for unit tests)
+ - Boost libraries : test (Only for unit tests)
 
 This section describes the install procedures for the third-party Open source libraries used by ANTARES.
 The install procedure can be done
@@ -64,10 +64,6 @@ Note :
 cd [vcpkg_root]
 vcpkg install wxwidgets:[vcpg-triplet] 
 vcpkg install boost-test:[vcpg-triplet]
-vcpkg install boost-filesystem:[vcpg-triplet]
-vcpkg install boost-process[vcpg-triplet]
-vcpkg install boost-dll:[vcpg-triplet]
-vcpkg install boost-regex:[vcpg-triplet]
 ```
 ### [Automatic librairies compilation from git](#git_compil)
 [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps) is used as a git submodule for automatic librairies compilation from git.

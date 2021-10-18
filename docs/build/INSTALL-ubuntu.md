@@ -28,7 +28,7 @@ pip3 install -r src/src/tests/examples/requirements.txt
  - [OR-Tools](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) (fork from [RTE](https://github.com/rte-france/or-tools/tree/rte_dev_sirius) based on official OR-Tools github)
  - [wxWidgets](https://github.com/wxWidgets/wxWidgets)
  (Only for the complete Antares Simulator solution with GUI)
- - Boost libraries : test process filesystem regex dll (Only for unit tests)
+ - Boost libraries : test (Only for unit tests)
 
 This section describes the install procedures for the third-party Open source libraries used by ANTARES.
 The install procedure can be done
@@ -38,7 +38,7 @@ The install procedure can be done
 
 #### Command to install dependencies
 ```
-sudo apt install uuid-dev libwxgtk3.0-gtk3-dev libboost-test-dev libboost-filesystem-dev libboost-regex-dev libboost-dev
+sudo apt install uuid-dev libwxgtk3.0-gtk3-dev libboost-test-dev
 ```
 
 ### [Automatic librairies compilation from git](#git_compil)
