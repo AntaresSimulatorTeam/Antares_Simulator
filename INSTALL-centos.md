@@ -3,17 +3,7 @@
 [Environnement](#environment) | [CMake version](#cmake-version) | [GCC version](#gcc-version) | [Python version](#python-version) | [Dependencies](#dependencies) | [Building](#building-antares-solution) | [Tests](#tests) | [Installer creation](#installer-creation)
 
 ## C/I status
-| OS     | System librairies | Built in libraries |
-|:-------|--------|------|
-| Centos7  | [![Status][centos_system_svg]][centos_system_link] | [![Status][centos_deps_build_svg]][centos_deps_build_link] |
-
-[centos_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Centos7%20CI%20(deps.%20compilation)/badge.svg
-
-[centos_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Centos7%20CI%20(deps.%20compilation)"
-
-[centos_system_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Centos7%20CI%20(system%20libs)/badge.svg
-
-[centos_system_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Centos7%20CI%20(system%20libs)"
+[![Status][centos_precompiled_svg]][centos_precompiled_link] [![Status][centos_deps_build_svg]][centos_deps_build_link]
  
 ## [CMake version](#cmake-version)
 CMake 3.x must be used.
@@ -214,3 +204,9 @@ There are still some system libraries that must be installed if you want to use 
 sudo yum install epel-release
 sudo yum install curl wxGTK3
 ```
+
+[centos_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Centos7%20CI%20(deps.%20compilation)/badge.svg
+[centos_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Centos7%20CI%20(deps.%20compilation)"
+
+[centos_precompiled_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Centos7%20CI%20(pre-compiled)/badge.svg
+[centos_precompiled_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Centos7%20CI%20(pre-compiled)"

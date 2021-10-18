@@ -3,17 +3,7 @@
 [Environnement](#environment) | [Build tools](#build-tools) |  [Environnement build install](#env-build-install) | [Python version](#python-version) | [Dependencies](#dependencies) | [Building](#building-antares-solution) | [Tests](#tests) | [Installer creation](#installer-creation)
 
 ## C/I status
-| OS     | System librairies | Built in libraries |
-|:-------|--------|------|
-| Ubuntu  | [![Status][linux_system_svg]][linux_system_link] | [![Status][linux_deps_build_svg]][linux_deps_build_link] |
-
-[linux_system_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Linux%20CI%20(system%20libs)/badge.svg
-
-[linux_system_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Linux%20CI%20(system%20libs)"
-
-[linux_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Linux%20CI%20(deps.%20compilation)/badge.svg
-
-[linux_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Linux%20CI%20(deps.%20compilation)"
+[![Status][ubuntu_precompiled_svg]][ubuntu_precompiled_link] [![Status][ubuntu_deps_build_svg]][ubuntu_deps_build_link]
 
 ## [Build tools](#build-tools)
 
@@ -189,3 +179,9 @@ There are still some system libraries that must be installed if you want to use 
 ```
 sudo apt-get install libwxgtk3.0-gtk3-0v5
 ```
+
+[ubuntu_precompiled_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Ubuntu%20CI%20(pre-compiled)/badge.svg
+[ubuntu_precompiled_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Ubuntu%20CI%20(pre-compiled)"
+
+[ubuntu_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Ubuntu%20CI%20(deps.%20compilation)/badge.svg
+[ubuntu_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Ubuntu%20CI%20(deps.%20compilation)"

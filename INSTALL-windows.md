@@ -3,17 +3,7 @@
 [CMake version](#cmake-version) | [Python version](#python-version) | [Dependencies](#dependencies) | [Building](#building-antares-solution) | [Tests](#tests) | [Installer creation](#installer-creation)
 
 ## C/I status
-| OS     | System librairies | Built in libraries |
-|:-------|--------|------|
-| Windows  | [![Status][windows_vcpkg_svg]][windows_vcpkg_link] | [![Status][windows_deps_build_svg]][windows_deps_build_link] |
-
-[windows_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(deps.%20compilation)/badge.svg
-
-[windows_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(deps.%20compilation)"
-
-[windows_vcpkg_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(VCPKG)/badge.svg
-
-[windows_vcpkg_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(VCPKG)"
+[![Status][windows_precompiled_svg]][windows_precompiled_link] [![Status][windows_precompiled_only_svg]][windows_precompiled_only_link] 
 
 ## [CMake version](#cmake-version)
 CMake 3.x must be used. 
@@ -217,3 +207,9 @@ cpack -GNSIS
 ```
 Currently missing in NSIS installer :
 - External libraries sources
+
+[windows_precompiled_only_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(pre-compiled%20only)/badge.svg
+[windows_precompiled_only_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(pre-compiled%20only)"
+
+[windows_precompiled_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(VCPKG%20and%20pre-compiled)/badge.svg
+[windows_precompiled_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(VCPKG%20and%20pre-compiled)"
