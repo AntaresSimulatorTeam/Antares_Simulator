@@ -1,4 +1,4 @@
-name: Release asset upload (Ubuntu)
+name: Ubuntu CI (Release)
 
 on:
   release:
@@ -28,13 +28,21 @@ jobs:
            sudo apt-get update
            sudo apt-get install uuid-dev libcurl4-openssl-dev libssl-dev libwxgtk3.0-gtk3-dev
            sudo apt-get install libboost-test-dev libboost-filesystem-dev libboost-regex-dev libboost-dev
-    
+
+    - name: Read antares-deps version
+      id: antares-deps-version
+      uses: notiz-dev/github-action-json-property@release
+      with: 
+        path: 'antares-deps-version.json'
+        prop_path: 'antares_deps_version'
+        
     - name: Download pre-compiled librairies
-      run: |
-           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v1.0.1/rte-antares-deps-${{matrix.os}}-Release-solver.tar.gz
-           tar -xvf rte-antares-deps-${{matrix.os}}-Release-solver.tar.gz
-           rm -rf rte-antares-deps-${{matrix.os}}-Release-solver.tar.gz
-           
+      uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
+      with:
+        antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
+        os: ${{matrix.os}}
+        os-full-name: Ubuntu-20.04
+        
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
@@ -51,7 +59,7 @@ jobs:
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
+           cmake -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=OFF
            
     - name: Build
       run: |

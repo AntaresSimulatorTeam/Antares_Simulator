@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - release/*
+      - develop
 jobs:
 
   build:
@@ -20,9 +21,11 @@ jobs:
 
     - name: Install libraries
       run: |
-           yum install -y wget git epel-release redhat-lsb-core gcc gcc-c++ make centos-release-scl scl-utils
-           yum install -y unzip libuuid-devel libidn2-devel gtk2-devel
-           yum install -y cmake3 devtoolset-7 rpm-build
+           yum install -y epel-release
+           yum install -y git redhat-lsb-core gcc gcc-c++ make wget centos-release-scl scl-utils rpm-build
+           yum install -y cmake3 devtoolset-7
+           yum install -y rh-git227-git
+           yum install -y unzip libuuid-devel wxGTK3-devel boost-test boost-filesystem boost-regex boost-devel
                       
     
     - uses: nelonoel/branch-name@v1.0.1
@@ -30,12 +33,6 @@ jobs:
     - name: Checkout
       run: |
           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${BRANCH_NAME} .
-    
-    - name: Download pre-compiled librairies
-      run: |
-           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v1.1.0/rte-antares-deps-centos7-Release-all.tar.gz
-           tar -xvf rte-antares-deps-centos7-Release-all.tar.gz
-           rm -rf rte-antares-deps-centos7-Release-all.tar.gz
     
     - name: Init submodule
       run: |
@@ -48,11 +45,14 @@ jobs:
     - name: Configure
       run: |
            source /opt/rh/devtoolset-7/enable
-           cmake3 -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DUSE_PRECOMPILED_EXT=ON
+           #git 2.x must be enabled for Coin compilation with CMake ExternalProject_Add
+           source /opt/rh/rh-git227/enable
+           cmake3 -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=ON
 
     - name: Build
       run: |
            source /opt/rh/devtoolset-7/enable
+           source /opt/rh/rh-git227/enable
            cmake3 --build _build --config release -j2
     
     - name: Run unit tests

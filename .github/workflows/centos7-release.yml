@@ -1,4 +1,4 @@
-name: Release asset upload (Centos7)
+name: Centos7 CI (Release)
 
 on:
   release:
