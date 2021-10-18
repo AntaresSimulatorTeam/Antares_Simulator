@@ -7,26 +7,27 @@
 using namespace operations_research;
 
 // TODO : use solver provided by the user ?
-Problem::Problem() : mSolver("some or-tools problem", MPSolver::OptimizationProblemType::CLP_LINEAR_PROGRAMMING)
+Problem::Problem(PROBLEME_SIMPLEXE* ProbSpx)
 {
+  mSolver = convert_to_MPSolver(ProbSpx);
 }
 
 // TODO : remove all flag
 void Problem::addSlackVariables(const std::string& pattern, bool all) {
   std::regex rgx(pattern);
   const double infinity = MPSolver::infinity();
-  for (auto constraint : mSolver.constraints()) {
+  for (auto constraint : mSolver->constraints()) {
     if (all || std::regex_match(constraint->name(), rgx)) {
       if (constraint->lb() != -infinity) {
         MPVariable* slack;
-        slack = mSolver.MakeNumVar(0, infinity, constraint->name() + "_low");
+        slack = mSolver->MakeNumVar(0, infinity, constraint->name() + "_low");
         constraint->SetCoefficient(slack, 1.);
         mSlackVariables.push_back(slack);
       }
 
       if (constraint->ub() != infinity) {
         MPVariable* slack;
-        slack = mSolver.MakeNumVar(0, infinity, constraint->name() + "_up");
+        slack = mSolver->MakeNumVar(0, infinity, constraint->name() + "_up");
         constraint->SetCoefficient(slack, -1.);
         mSlackVariables.push_back(slack);
       }
@@ -35,8 +36,8 @@ void Problem::addSlackVariables(const std::string& pattern, bool all) {
 }
 
 void Problem::buildObjective() {
-  MPObjective* objective = mSolver.MutableObjective();
-  for (MPVariable* variable : mSolver.variables()) {
+  MPObjective* objective = mSolver->MutableObjective();
+  for (MPVariable* variable : mSolver->variables()) {
     objective->SetCoefficient(variable, 0.);
   }
   for (MPVariable* slack : mSlackVariables) {
@@ -46,7 +47,7 @@ void Problem::buildObjective() {
 }
 
 MPSolver::ResultStatus Problem::Solve() {
-  return mSolver.Solve();
+  return mSolver->Solve();
 }
 
 InfeasibleProblemReport Problem::produceReport(double threshold) const {
@@ -57,4 +58,8 @@ InfeasibleProblemReport Problem::produceReport(double threshold) const {
       r.append(slack->name(), v);
   }
   return r;
+}
+
+Problem::~Problem() {
+  delete mSolver;
 }
