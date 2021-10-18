@@ -5,7 +5,7 @@ on:
     branches:
       - release/*
       - develop
-      - feature/review_github_workflow
+
 jobs:
 
   build:
