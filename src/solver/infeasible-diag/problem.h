@@ -16,6 +16,6 @@ class InfeasibleProblemDiag {
 private:
   void buildObjective();
   operations_research::MPSolver::ResultStatus Solve();
-  void addSlackVariables(bool all);
+  void addSlackVariables();
   const std::string mPattern;
 };

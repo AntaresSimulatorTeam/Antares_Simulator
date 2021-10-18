@@ -13,12 +13,11 @@ InfeasibleProblemDiag::InfeasibleProblemDiag(PROBLEME_SIMPLEXE* ProbSpx, const s
     mSolver = convert_to_MPSolver(ProbSpx);
 }
 
-// TODO : remove all flag
-void InfeasibleProblemDiag::addSlackVariables(bool all) {
+void InfeasibleProblemDiag::addSlackVariables() {
   std::regex rgx(mPattern);
   const double infinity = MPSolver::infinity();
   for (auto constraint : mSolver->constraints()) {
-    if (all || std::regex_match(constraint->name(), rgx)) {
+    if (std::regex_match(constraint->name(), rgx)) {
       if (constraint->lb() != -infinity) {
         MPVariable* slack;
         slack = mSolver->MakeNumVar(0, infinity, constraint->name() + "_low");
@@ -52,7 +51,7 @@ MPSolver::ResultStatus InfeasibleProblemDiag::Solve() {
 }
 
 InfeasibleProblemReport InfeasibleProblemDiag::produceReport() {
-  addSlackVariables(false);
+  addSlackVariables();
   buildObjective();
   assert(mSlackVariables.size() > 0);
   Solve();
