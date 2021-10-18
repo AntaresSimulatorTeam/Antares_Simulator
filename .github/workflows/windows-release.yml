@@ -34,7 +34,12 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: 3.8
-        
+
+    - name: Pre-requisites
+      shell: cmd
+      run: |          
+          choco install wget unzip --no-progress
+          
     # Restore both vcpkg and its artifacts from the GitHub cache service.
     - name: Restore vcpkg and its artifacts.
       uses: actions/cache@v2
