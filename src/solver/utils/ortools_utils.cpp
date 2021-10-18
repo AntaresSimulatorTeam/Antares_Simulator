@@ -9,9 +9,6 @@
 
 using namespace operations_research;
 
-template<typename T_PROBLEM>
-MPSolver* convert_to_MPSolver(T_PROBLEM* problemeSimplexe);
-
 void extract_from_MPSolver(MPSolver* solver, PROBLEME_SIMPLEXE* problemeSimplexe);
 void extract_from_MPSolver(MPSolver* solver, PROBLEME_A_RESOUDRE* problemeSimplexe);
 

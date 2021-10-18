@@ -15,6 +15,7 @@ include("cmake/randomness.cmake")
 include("cmake/simulation.cmake")
 include("cmake/ts-generator.cmake")
 include("cmake/constraints-builder.cmake")
+include("cmake/infeasible-diag.cmake")
 
 #
 # Resource file for Windows

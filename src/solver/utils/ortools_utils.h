@@ -75,3 +75,7 @@ private:
     std::map<OrtoolsSolver, MPSolver::OptimizationProblemType> _solverMixedIntegerProblemOptimMap;
         */
 };
+
+// C-style API
+MPSolver* convert_to_MPSolver(PROBLEME_SIMPLEXE* problemeSimplexe);
+MPSolver* convert_to_MPSolver(PROBLEME_A_RESOUDRE* problemeAResoudre);
