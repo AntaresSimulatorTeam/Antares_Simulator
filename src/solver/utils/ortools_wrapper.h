@@ -4,9 +4,6 @@
 #include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
 
-#include "pne_definition_arguments.h"
-#include "pne_fonctions.h"
-
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
 
 using namespace operations_research;
