@@ -11,6 +11,10 @@ inputs:
     description: 'build type'
     required: false
     default: 'Release'
+  artifact_version:
+    description: 'artifact version defining contents (all or solver)'
+    required: false
+    default: 'solver'
 
 runs:
   using: "composite"
@@ -18,7 +22,7 @@ runs:
   - id: download-extract
     shell: bash
     run: |
-           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${{inputs.antares-deps-version}}/rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}-solver.zip
-           unzip rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}-solver.zip
-           rm -rf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}-solver.zip
+           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${{inputs.antares-deps-version}}/rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}-${{inputs.artifact_version}}.zip
+           unzip rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}-${{inputs.artifact_version}}.zip
+           rm -rf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}-${{inputs.artifact_version}}.zip
            

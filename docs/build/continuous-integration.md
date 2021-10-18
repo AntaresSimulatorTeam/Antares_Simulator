@@ -9,7 +9,7 @@ Here is a description of workflow with their associated status :
 | Ubuntu  |`ubuntu-system-deps-build.yml`|Compilation with system libraries (apt-get) and not system libraries compilation| [![Status][ubuntu_deps_build_svg]][ubuntu_deps_build_link] |
 | Ubuntu  |`ubuntu-release.yml`|Compilation with system libraries (apt-get) and not system libraries compilation for release creation| [![Status][ubuntu_release_svg]][ubuntu_release_link]
 | Windows  |`windows-vcpkg.yml`|Compilation with VCPKG use and pre-compiled not system libraries use| [![Status][windows_precompiled_svg]][windows_precompiled_link] |
-| Windows  |`windows-vcpkg-deps-build.yml`|Compilation with VCPKG use and not system compilation| [![Status][windows_deps_build_svg]][windows_deps_build_link] |
+| Windows  |`windows-pre-compiled-only.yml`|Compilation without VCPKG and with pre-compiled libraries use| [![Status][windows_precompiled_only_svg]][windows_precompiled_only_link] |
 | Windows  |`windows-vcpkg.yml`|Compilation with VCPKG use and pre-compiled not system libraries use for release creation| [![Status][windows_release_svg]][windows_release_link] |
 | Centos7  | `centos7-system.yml`|Compilation with system librairies (`yum`) and pre-compiled not system libraries use| [![Status][centos_precompiled_svg]][centos_precompiled_link] |
 | Centos7  |`centos7-system-deps-build.yml`| Compilation with system librairies (`yum`) and not system libraries compilation| [![Status][centos_deps_build_svg]][centos_deps_build_link] |
@@ -43,11 +43,11 @@ Here is a description of workflow with their associated status :
 [ubuntu_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Ubuntu%20CI%20(deps.%20compilation)/badge.svg
 [ubuntu_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Ubuntu%20CI%20(deps.%20compilation)"
 
-[windows_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(deps.%20compilation)/badge.svg
-[windows_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(deps.%20compilation)"
+[windows_precompiled_only_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(pre-compiled%20only)/badge.svg
+[windows_precompiled_only_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(pre-compiled%20only)"
 
-[windows_precompiled_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(pre-compiled)/badge.svg
-[windows_precompiled_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(pre-compiled)"
+[windows_precompiled_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(VCPKG and pre-compiled)/badge.svg
+[windows_precompiled_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(VCPKG and pre-compiled)"
 
 [windows_release_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(Release)/badge.svg
 [windows_release_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(Release)"

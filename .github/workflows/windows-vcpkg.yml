@@ -1,4 +1,4 @@
-name: Windows CI (pre-compiled)
+name: Windows CI (VCPKG and pre-compiled)
 
 on:
   push:
@@ -78,7 +78,6 @@ jobs:
       uses: ./.github/workflows/download-extract-precompiled-libraries-zip
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
-        antares-version: ${{steps.antares-version.outputs.prop}}
         os: ${{matrix.os}}
         
     - name: Install dependencies
