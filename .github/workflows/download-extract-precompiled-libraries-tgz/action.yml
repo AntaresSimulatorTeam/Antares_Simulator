@@ -23,3 +23,4 @@ runs:
            wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${{inputs.antares-deps-version}}/rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}-solver.tar.gz
            tar -xvf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}-solver.tar.gz
            rm -rf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}-solver.tar.gz
+           
