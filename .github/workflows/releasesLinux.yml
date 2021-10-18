@@ -1,4 +1,4 @@
-name: Release asset upload (Linux)
+name: Release asset upload (Ubuntu)
 
 on:
   release:
