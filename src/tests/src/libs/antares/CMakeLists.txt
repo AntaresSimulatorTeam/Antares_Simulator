@@ -1,3 +1,5 @@
+add_subdirectory(study)
+
 set(src_libs_antares "${CMAKE_SOURCE_DIR}/libs/antares")
 
 

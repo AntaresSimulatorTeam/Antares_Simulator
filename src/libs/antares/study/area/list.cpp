@@ -178,29 +178,6 @@ static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString&
     return true;
 }
 
-bool saveAreaOptimisationIniFile(const Area& area, Clob& buffer, const AnyString& folder)
-{
-    buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id << SEP
-        << "optimization.ini";
-
-    IniFile ini;
-    IniFile::Section* section = ini.addSection("nodal optimization");
-
-    section->add("non-dispatchable-power", (bool)(area.nodalOptimization & anoNonDispatchPower));
-    section->add("dispatchable-hydro-power", (bool)(area.nodalOptimization & anoDispatchHydroPower));
-    section->add("other-dispatchable-power", (bool)(area.nodalOptimization & anoOtherDispatchPower));
-    section->add("spread-unsupplied-energy-cost", area.spreadUnsuppliedEnergyCost);
-    section->add("spread-spilled-energy-cost", area.spreadSpilledEnergyCost);
-
-    section = ini.addSection("filtering");
-    section->add("filter-synthesis", filterIntoString(area.filterSynthesis));
-    section->add("filter-year-by-year", filterIntoString(area.filterYearByYear));
-
-    if (! ini.save(buffer))
-        return false;
-    return true;
-}
-
 static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const AnyString& folder)
 {
     bool ret = true;
@@ -224,7 +201,7 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
     // Nodal optimization
     buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id << SEP
                    << "optimization.ini";
-    ret = saveAreaOptimisationIniFile(area, buffer, folder) and ret;
+    ret = saveAreaOptimisationIniFile(area, buffer) and ret;
 
     // Reserves: primary, strategic, dsm, d-1...
     buffer.clear() << folder << SEP << "input" << SEP << "reserves" << SEP << area.id << ".txt";
@@ -327,6 +304,26 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
 }
 
 } // anonymous namespace
+
+bool saveAreaOptimisationIniFile(const Area& area, const Clob& buffer)
+{
+    IniFile ini;
+    IniFile::Section* section = ini.addSection("nodal optimization");
+
+    section->add("non-dispatchable-power", (bool)(area.nodalOptimization & anoNonDispatchPower));
+    section->add("dispatchable-hydro-power", (bool)(area.nodalOptimization & anoDispatchHydroPower));
+    section->add("other-dispatchable-power", (bool)(area.nodalOptimization & anoOtherDispatchPower));
+    section->add("spread-unsupplied-energy-cost", area.spreadUnsuppliedEnergyCost);
+    section->add("spread-spilled-energy-cost", area.spreadSpilledEnergyCost);
+
+    section = ini.addSection("filtering");
+    section->add("filter-synthesis", filterIntoString(area.filterSynthesis));
+    section->add("filter-year-by-year", filterIntoString(area.filterYearByYear));
+
+    if (!ini.save(buffer))
+        return false;
+    return true;
+}
 
 AreaList::AreaList(Study& study) : byIndex(nullptr), pStudy(study)
 {
