@@ -11,68 +11,6 @@
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
-// =========================
-// Output directory finder
-// =========================
-
-class outputDirFinder
-{
-public:
-	outputDirFinder() = default;
-	~outputDirFinder() = default;
-	bool search();
-	fs::path get() const { return outputDir_; }
-private:
-	bool findAntaresRoot();
-	bool findOutputFolderFromRoot();
-
-	fs::path outputDir_;
-	fs::path antaresRootDir_;
-};
-
-bool outputDirFinder::search()
-{
-	if (not findAntaresRoot())
-		return false;
-	if (not findOutputFolderFromRoot())
-		return false;
-	return true;
-}
-
-bool outputDirFinder::findAntaresRoot()
-{
-	// Goes up incrementaly and search for a ".git" directory, meaning it has reached the Antares
-	// root directory.
-	fs::path start_path = fs::current_path();
-	fs::path current_path = start_path;
-	auto it = start_path.end();
-	if (it->string() == "")
-		it--;
-	for (; it != start_path.begin(); --it)
-	{
-		for (auto const& dir_entry : fs::directory_iterator{ current_path })
-		{
-			if (dir_entry.path().filename() == ".git")
-			{
-				antaresRootDir_ = current_path;
-				return true;
-			}
-		}
-		current_path = current_path.parent_path();
-	}
-	return false;
-}
-
-bool outputDirFinder::findOutputFolderFromRoot()
-{
-	outputDir_ = antaresRootDir_;
-	outputDir_.append("src").append("tests").append("src").append("libs").append("antares")
-			  .append("study").append("area").append("out");
-	if (not exists(outputDir_) && not is_directory(outputDir_))
-		return false;
-	return true;
-}
-
 // ==================================
 // Clean ouput from generated files
 // ==================================
@@ -130,14 +68,29 @@ BOOST_AUTO_TEST_CASE(one_link_with_default_values)
 	// Reduce size of link's time-series dump (0 Ko)
 	link->data.resize(0, 0);
 
-	outputDirFinder outputPathFinder;
-	BOOST_CHECK(outputPathFinder.search());
+	ofstream referenceFile;
+	referenceFile.open("properties-reference.ini");
+	referenceFile << "[area 2]" << endl;
+	referenceFile << "hurdles-cost = false" << endl;
+	referenceFile << "loop-flow = false" << endl;
+	referenceFile << "use-phase-shifter = false" << endl;
+	referenceFile << "transmission-capacities = enabled" << endl;
+	referenceFile << "asset-type = ac" << endl;
+	referenceFile << "link-style = plain" << endl;
+	referenceFile << "link-width = 1" << endl;
+	referenceFile << "colorr = 112" << endl;
+	referenceFile << "colorg = 112" << endl;
+	referenceFile << "colorb = 112" << endl;
+	referenceFile << "display-comments = true" << endl;
+	referenceFile << "filter-synthesis = hourly, daily, weekly, monthly, annual" << endl;
+	referenceFile << "filter-year-by-year = hourly, daily, weekly, monthly, annual" << endl;
+	referenceFile << endl;
+	referenceFile.close();
 
-	fs::path output_dir = outputPathFinder.get();
+	
+	BOOST_CHECK(AreaLinksSaveToFolder(area_1, fs::current_path().string().c_str()));
+	BOOST_CHECK(compare_ini_files(fs::current_path(), "properties.ini", "properties-reference.ini"));
 
-	BOOST_CHECK(AreaLinksSaveToFolder(area_1, output_dir.string().c_str()));
-	BOOST_CHECK(compare_ini_files(output_dir, "properties.ini", "properties-ref-0.ini"));
-
-	vector<string> filesToRemove = { "area 2.txt", "properties.ini" };
-	clean_output(output_dir, filesToRemove);
+	vector<string> filesToRemove = { "area 2.txt", "properties.ini", "properties-reference.ini" };
+	clean_output(fs::current_path(), filesToRemove);
 }
