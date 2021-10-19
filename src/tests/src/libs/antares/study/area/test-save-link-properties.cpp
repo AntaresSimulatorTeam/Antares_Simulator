@@ -21,11 +21,11 @@ public:
 	outputDirFinder() = default;
 	~outputDirFinder() = default;
 	bool search();
-	fs::path get() { return outputDir_; }
+	fs::path get() const { return outputDir_; }
 private:
 	bool findAntaresRoot();
 	bool findOutputFolderFromRoot();
-private:
+
 	fs::path outputDir_;
 	fs::path antaresRootDir_;
 };
@@ -52,7 +52,6 @@ bool outputDirFinder::findAntaresRoot()
 	{
 		for (auto const& dir_entry : fs::directory_iterator{ current_path })
 		{
-			fs::path entry = dir_entry.path().filename();
 			if (dir_entry.path().filename() == ".git")
 			{
 				antaresRootDir_ = current_path;
@@ -78,7 +77,7 @@ bool outputDirFinder::findOutputFolderFromRoot()
 // Clean ouput from generated files
 // ==================================
 
-void clean_output(const fs::path & outputDir, vector<string> filesToRemove)
+void clean_output(const fs::path & outputDir, const vector<string> & filesToRemove)
 {
 	
 	for (int i = 0; i != filesToRemove.size(); i++)
