@@ -1,4 +1,4 @@
-name: Release asset upload (Centos7)
+name: Centos7 CI (Release)
 
 on:
   release:
@@ -19,7 +19,7 @@ jobs:
       id: antares-deps-version
       uses: notiz-dev/github-action-json-property@release
       with: 
-        path: 'antares-version.json'
+        path: 'antares-deps-version.json'
         prop_path: 'antares_deps_version'
     
     - name: Get branch name

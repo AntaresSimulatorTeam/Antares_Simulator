@@ -1,4 +1,4 @@
-name: Centos7 CI (docker image)
+name: Centos7 CI (pre-compiled)
 
 on:
   push:
