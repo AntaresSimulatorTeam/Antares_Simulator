@@ -1,39 +1,22 @@
-# Antares Simulator CMake Build Instructions
+# Introduction
 
-[Supported OS](#supported-os) | [CMake version](#cmake-version) | [Python version](#python-version) |  [Git version](#git-version) | [Dependencies](#dependencies)
+*ANTARES* is developed mainly in **C++**
 
-## C/I status
-| OS     | Status |
-|:-------|--------|
-| Ubuntu  | [![Status][ubuntu_precompiled_svg]][ubuntu_precompiled_link] |
-| Windows  | [![Status][windows_precompiled_svg]][windows_precompiled_link] |
-| Centos7  | [![Status][centos_precompiled_svg]][centos_precompiled_link] |
+This software suite has been tested under:
 
-## [Supported OS](#supported-os)
-*ANTARES* compilation is tested on :
-- Windows see [INSTALL-windows.md](INSTALL-windows.md)
-- Ubuntu see [INSTALL-ubuntu.md](INSTALL-ubuntu.md)
-- Centos7 see [INSTALL-centos.md](INSTALL-centos.md)
+*   Ubuntu 20.04 [![Status][ubuntu_precompiled_svg]][ubuntu_precompiled_link]
+*   Microsoft Windows with Visual Studio 2019 (64-bit) [![Status][windows_precompiled_svg]][windows_precompiled_link]
+*   Centos 7 [![Status][centos_precompiled_svg]][centos_precompiled_link]
 
-## [CMake version](#cmake-version)
-CMake 3.x must be used.
-On some OS it is not available by default on the system.
+*ANTARES* is built using CMake.
 
-## [Python version](#python-version)
-Python 3.x is used for end-to-end test.
+## Build and installation details
 
-## [Git version](#git-version)
-Git version must be above 2.15 for external dependencies build because `--ignore-whitespace` is not used by default and this option is needed during the OR-Tools compilation of ZLib to apply a patch on Windows (see https://github.com/google/or-tools/issues/1193).
-
-## [Dependencies](#deps)
-*ANTARES* depends on severals mandatory libraries.
-- [Sirius Solver](https://github.com/AntaresSimulatorTeam/sirius-solver/tree/Antares_VCPKG) (fork from [RTE](https://github.com/rte-france/sirius-solver/tree/Antares_VCPKG))
-- [OR-Tools](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) (fork from [RTE](https://github.com/rte-france/or-tools/tree/rte_dev_sirius) based on official OR-Tools github)
-- [wxWidgets](https://github.com/wxWidgets/wxWidgets)
-  (Only for the complete Antares Simulator solution with GUI)
-- Boost librairies : test process filesystem regex dll (Only for unit tests)
-
-Installation of these dependencies is described in OS specific *ANTARES* install procedure.
+- [Development requirements](1-Development-requirements.md)
+- [Dependencies](2-Dependencies-install.md)
+- [Build](3-Build.md)
+- [Tests](4-Tests.md)
+- [Installer creation](5-Installer-creation.md)
 
 [ubuntu_precompiled_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Ubuntu%20CI%20(pre-compiled)/badge.svg
 [ubuntu_precompiled_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Ubuntu%20CI%20(pre-compiled)"

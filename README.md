@@ -1,5 +1,5 @@
 # Antares Simulator
-[![Status][ubuntu_precompiled_svg]][ubuntu_precompiled_link]  [![Status][windows_precompiled_svg]][windows_precompiled_link] [![Status][centos_precompiled_svg]][centos_precompiled_link]
+[![Status][ubuntu_precompiled_svg]][ubuntu_precompiled_link]  [![Status][windows_precompiled_svg]][windows_precompiled_link] [![Status][centos_precompiled_svg]][centos_precompiled_link] [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=AntaresSimulatorTeam_Antares_Simulator&metric=alert_status)](https://sonarcloud.io/dashboard?id=AntaresSimulatorTeam_Antares_Simulator)
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
