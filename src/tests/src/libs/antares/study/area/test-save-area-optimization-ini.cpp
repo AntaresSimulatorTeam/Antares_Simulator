@@ -31,44 +31,27 @@ void clean_output(const vector<string>& filesToRemove)
 // Compare ini files in output folder
 // ======================================
 
-bool compare_ini_files(const string& fileName, const string& fileNameRef)
+string readFileIntoString(const string& path) {
+	ifstream input_file;
+	input_file.open(path);
+	return string(istreambuf_iterator<char>(input_file), istreambuf_iterator<char>());
+}
+
+bool compare_files(const string& fileName_1, const string& fileName_2)
 {
-	ifstream in1(fileName);
-	ifstream in2(fileNameRef);
-
-	while ((!in1.eof()) && (!in2.eof()))
-	{
-		string line1, line2;
-		getline(in1, line1);
-		getline(in2, line2);
-		if (line1 != line2)
-		{
-			in1.close();
-			in2.close();
-			return false;
-		}
-	}
-
-	in1.close();
-	in2.close();
+	string content_1 = readFileIntoString(fileName_1);
+	string content_2 = readFileIntoString(fileName_2);
+	if (content_1.compare(content_2))
+		return false;
 	return true;
 }
 
 bool fileContainsLine(const string& fileName, const string& line_to_find)
 {
-	ifstream in(fileName);
-	while (!in.eof())
-	{
-		string line;
-		getline(in, line);
-		if (line == line_to_find)
-		{
-			in.close();
-			return true;
-		}
-	}
-	in.close();
-	return false;
+	string fileContent = readFileIntoString(fileName);
+	if (fileContent.find(line_to_find) == string::npos)
+		return false;
+	return true;
 }
 
 BOOST_AUTO_TEST_CASE(one_area_with_default_params)
@@ -100,7 +83,7 @@ BOOST_AUTO_TEST_CASE(one_area_with_default_params)
 	referenceFile << endl;
 	referenceFile.close();
 
-	BOOST_CHECK(compare_ini_files(generatedIniFileName, referenceIniFileName));
+	BOOST_CHECK(compare_files(generatedIniFileName, referenceIniFileName));
 
 	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
 	clean_output(filesToRemove);
@@ -143,7 +126,7 @@ BOOST_AUTO_TEST_CASE(one_area_with_none_default_params)
 	referenceFile << endl;
 	referenceFile.close();
 
-	BOOST_CHECK(compare_ini_files(generatedIniFileName, referenceIniFileName));
+	BOOST_CHECK(compare_files(generatedIniFileName, referenceIniFileName));
 
 	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
 	clean_output(filesToRemove);
@@ -180,7 +163,7 @@ BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_nonDispatchPower__other_params_t
 	referenceFile.close();
 
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
-	BOOST_CHECK(compare_ini_files(generatedIniFileName, referenceIniFileName));
+	BOOST_CHECK(compare_files(generatedIniFileName, referenceIniFileName));
 
 	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
 	clean_output(filesToRemove);
@@ -218,7 +201,7 @@ BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_dispatchHydroPower__other_params
 	referenceFile.close();
 
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
-	BOOST_CHECK(compare_ini_files(generatedIniFileName, referenceIniFileName));
+	BOOST_CHECK(compare_files(generatedIniFileName, referenceIniFileName));
 
 	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
 	clean_output(filesToRemove);
@@ -255,7 +238,7 @@ BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_otherDispatchablePower__other_pa
 	referenceFile.close();
 
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
-	BOOST_CHECK(compare_ini_files(generatedIniFileName, referenceIniFileName));
+	BOOST_CHECK(compare_files(generatedIniFileName, referenceIniFileName));
 
 	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
 	clean_output(filesToRemove);
@@ -292,7 +275,7 @@ BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_non_or_other_DispatchPower__othe
 	referenceFile.close();
 
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
-	BOOST_CHECK(compare_ini_files(generatedIniFileName, referenceIniFileName));
+	BOOST_CHECK(compare_files(generatedIniFileName, referenceIniFileName));
 
 	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
 	clean_output(filesToRemove);
@@ -333,6 +316,46 @@ BOOST_AUTO_TEST_CASE(one_area_with_spilled_energy_cost_negative__other_params_to
 
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "spread-spilled-energy-cost = -1.000000"));
+
+	vector<string> filesToRemove = { generatedIniFileName };
+	clean_output(filesToRemove);
+}
+
+BOOST_AUTO_TEST_CASE(one_area_with_synthesis_to_hourly_monthly_annual__other_params_to_default)
+{
+	Study::Ptr study = new Study();
+	Area* area = study->areaAdd("Area");
+
+	string generatedIniFileName = "optimization.ini";
+
+	// Setting area's properties
+	area->filterSynthesis = filterWeekly | filterMonthly | filterAnnual;
+
+	Yuni::Clob path_to_generated_file;
+	path_to_generated_file << fs::current_path().append(generatedIniFileName).string();
+
+	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
+	BOOST_CHECK(fileContainsLine(generatedIniFileName, "filter-synthesis = weekly, monthly, annual"));
+
+	vector<string> filesToRemove = { generatedIniFileName };
+	clean_output(filesToRemove);
+}
+
+BOOST_AUTO_TEST_CASE(one_area_with_year_by_year_to_daily_monthly__other_params_to_default)
+{
+	Study::Ptr study = new Study();
+	Area* area = study->areaAdd("Area");
+
+	string generatedIniFileName = "optimization.ini";
+
+	// Setting area's properties
+	area->filterYearByYear = filterDaily | filterMonthly;
+
+	Yuni::Clob path_to_generated_file;
+	path_to_generated_file << fs::current_path().append(generatedIniFileName).string();
+
+	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
+	BOOST_CHECK(fileContainsLine(generatedIniFileName, "filter-year-by-year = daily, monthly"));
 
 	vector<string> filesToRemove = { generatedIniFileName };
 	clean_output(filesToRemove);
