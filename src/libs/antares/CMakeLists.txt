@@ -187,6 +187,12 @@ set(SRC_AREAS
 	)
 source_group("study\\area" FILES ${SRC_AREAS})
 
+set(SRC_LINKS
+	study/links/property-links-helper.h
+)
+source_group("study\\links" FILES ${SRC_LINKS})
+
+
 set(SRC_STUDY_AREA_UI
 	study/area/ui.h
 	study/area/ui.hxx
@@ -474,7 +480,6 @@ set(SRC
 
 	# Filter
 	study/filter.h
-	study/filter.hxx
 	study/filter.cpp
 
 	mersenne-twister/mersenne-twister.h
@@ -524,6 +529,7 @@ macro(ADD_ANTARES_CORE name)
 		${SRC_MATRIX}
 		${SRC_TIMEELAPSED}
 		${SRC_AREAS}
+		${SRC_LINKS}
 		${SRC_XCAST}
 		${SRC_STUDY_AREA_UI}
 		${SRC_STUDY_ACTIONS}
