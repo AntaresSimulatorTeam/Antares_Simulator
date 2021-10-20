@@ -41,12 +41,15 @@ bool compare_ini_files(const string & fileName, const string & fileNameRef)
 		getline(in1, line1);
 		getline(in2, line2);
 		if (line1 != line2)
+		{
+			in1.close();
+			in2.close();
 			return false;
+		}
 	}
 
 	in1.close();
 	in2.close();
-
 	return true;
 }
 
@@ -58,7 +61,10 @@ bool fileContainsLine(const string& fileName, const string& line_to_find)
 		string line;
 		getline(in, line);
 		if (line == line_to_find)
+		{
+			in.close();
 			return true;
+		}
 	}
 	in.close();
 	return false;

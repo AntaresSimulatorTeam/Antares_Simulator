@@ -15,7 +15,7 @@ target_link_libraries(test-save-link-properties
 							libmodel_antares
 )
 
-# Storing tests-ts-numbers under the folder Unit-tests in the IDE
+# Storing test-save-link-properties under the folder Unit-tests in the IDE
 set_target_properties(test-save-link-properties PROPERTIES FOLDER Unit-tests)
 
 add_test(NAME save-link-properties COMMAND test-save-link-properties)
