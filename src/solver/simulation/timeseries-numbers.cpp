@@ -37,25 +37,22 @@ using namespace Yuni;
 using namespace Antares::Data;
 using namespace std;
 
-const map<TimeSeries, int> ts_to_tsIndex = { 
-    {timeSeriesLoad, 0},
-    {timeSeriesHydro, 1}, 
-    {timeSeriesWind, 2},
-    {timeSeriesThermal, 3},
-    {timeSeriesSolar, 4},
-    {timeSeriesRenewable, 5}
-};
+const map<TimeSeries, int> ts_to_tsIndex = {{timeSeriesLoad, 0},
+                                            {timeSeriesHydro, 1},
+                                            {timeSeriesWind, 2},
+                                            {timeSeriesThermal, 3},
+                                            {timeSeriesSolar, 4},
+                                            {timeSeriesRenewable, 5}};
 
-const map<TimeSeries, string> ts_to_tsTitle = {
-    {timeSeriesLoad, "load"},
-    {timeSeriesHydro, "hydro"},
-    {timeSeriesWind, "wind"},
-    {timeSeriesThermal, "thermal"},
-    {timeSeriesSolar, "solar"},
-    {timeSeriesRenewable, "renewable clusters"}
-};
+const map<TimeSeries, string> ts_to_tsTitle = {{timeSeriesLoad, "load"},
+                                               {timeSeriesHydro, "hydro"},
+                                               {timeSeriesWind, "wind"},
+                                               {timeSeriesThermal, "thermal"},
+                                               {timeSeriesSolar, "solar"},
+                                               {timeSeriesRenewable, "renewable clusters"}};
 
-void addInterModalTimeSeriesToMessage(const array<bool, timeSeriesCount> & isTSintermodal, std::string & interModalTsMsg)
+void addInterModalTimeSeriesToMessage(const array<bool, timeSeriesCount>& isTSintermodal,
+                                      std::string& interModalTsMsg)
 {
     bool isFirstLogged = true;
 
@@ -104,13 +101,15 @@ static bool GenerateDeratedMode(Study& study)
     return true;
 }
 
-
 class areaNumberOfTSretriever
 {
 public:
-    areaNumberOfTSretriever(Study& study) : study_(study) {}
+    areaNumberOfTSretriever(Study& study) : study_(study)
+    {
+    }
     virtual std::vector<uint> getAreaTimeSeriesNumber(const Area& area) = 0;
     virtual uint getGeneratedTimeSeriesNumber() = 0;
+
 protected:
     Study& study_;
 };
@@ -118,59 +117,81 @@ protected:
 class loadAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
-    loadAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study) {}
+    loadAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
+    {
+    }
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
     {
-        std::vector<uint> to_return = { area.load.series->series.width };
+        std::vector<uint> to_return = {area.load.series->series.width};
         return to_return;
     }
-    uint getGeneratedTimeSeriesNumber() { return study_.parameters.nbTimeSeriesLoad; }
+    uint getGeneratedTimeSeriesNumber()
+    {
+        return study_.parameters.nbTimeSeriesLoad;
+    }
 };
 
 class hydroAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
-    hydroAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study) {}
+    hydroAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
+    {
+    }
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
     {
-        std::vector<uint> to_return = { area.hydro.series->count };
+        std::vector<uint> to_return = {area.hydro.series->count};
         return to_return;
     }
-    uint getGeneratedTimeSeriesNumber() { return study_.parameters.nbTimeSeriesHydro; }
+    uint getGeneratedTimeSeriesNumber()
+    {
+        return study_.parameters.nbTimeSeriesHydro;
+    }
 };
 
 class windAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
-    windAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study) {}
+    windAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
+    {
+    }
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
     {
-        std::vector<uint> to_return = { area.wind.series->series.width };
+        std::vector<uint> to_return = {area.wind.series->series.width};
         return to_return;
     }
-    uint getGeneratedTimeSeriesNumber() { return study_.parameters.nbTimeSeriesWind; }
+    uint getGeneratedTimeSeriesNumber()
+    {
+        return study_.parameters.nbTimeSeriesWind;
+    }
 };
 
 class solarAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
-    solarAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study) {}
+    solarAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
+    {
+    }
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
     {
-        std::vector<uint> to_return = { area.solar.series->series.width };
+        std::vector<uint> to_return = {area.solar.series->series.width};
         return to_return;
     }
-    uint getGeneratedTimeSeriesNumber() { return study_.parameters.nbTimeSeriesSolar; }
+    uint getGeneratedTimeSeriesNumber()
+    {
+        return study_.parameters.nbTimeSeriesSolar;
+    }
 };
 
 class thermalAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
-    thermalAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study) {}
+    thermalAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
+    {
+    }
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
     {
         std::vector<uint> to_return;
-        uint clusterCount = (uint) area.thermal.clusterCount();
+        uint clusterCount = (uint)area.thermal.clusterCount();
         for (uint i = 0; i != clusterCount; ++i)
         {
             auto& cluster = *(area.thermal.clusters[i]);
@@ -178,17 +199,22 @@ public:
         }
         return to_return;
     }
-    uint getGeneratedTimeSeriesNumber() { return study_.parameters.nbTimeSeriesThermal; }
+    uint getGeneratedTimeSeriesNumber()
+    {
+        return study_.parameters.nbTimeSeriesThermal;
+    }
 };
 
 class renewClustersAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
-    renewClustersAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study) {}
+    renewClustersAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
+    {
+    }
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
     {
         std::vector<uint> to_return;
-        uint clusterCount = (uint) area.renewable.clusterCount();
+        uint clusterCount = (uint)area.renewable.clusterCount();
         for (uint i = 0; i != clusterCount; ++i)
         {
             auto& cluster = *(area.renewable.clusters[i]);
@@ -196,18 +222,21 @@ public:
         }
         return to_return;
     }
-    uint getGeneratedTimeSeriesNumber() { return 1; }
+    uint getGeneratedTimeSeriesNumber()
+    {
+        return 1;
+    }
 };
 
 class IntraModalConsistencyChecker
 {
 public:
-    IntraModalConsistencyChecker(   const TimeSeries ts,
-                                    const array<bool, timeSeriesCount> & isTSintramodal,
-                                    const array<bool, timeSeriesCount> & isTSgenerated,
-                                    areaNumberOfTSretriever* tsCounter,
-                                    Study & study)
-        : tsCounter_(tsCounter), study_(study), nbTimeseries_(0)
+    IntraModalConsistencyChecker(const TimeSeries ts,
+                                 const array<bool, timeSeriesCount>& isTSintramodal,
+                                 const array<bool, timeSeriesCount>& isTSgenerated,
+                                 areaNumberOfTSretriever* tsCounter,
+                                 Study& study) :
+     tsCounter_(tsCounter), study_(study), nbTimeseries_(0)
     {
         int indexTS = ts_to_tsIndex.at(ts);
         isTSintramodal_ = isTSintramodal[indexTS];
@@ -216,7 +245,10 @@ public:
     }
     ~IntraModalConsistencyChecker() = default;
     bool check();
-    uint getTimeSeriesNumber() { return nbTimeseries_; }
+    uint getTimeSeriesNumber()
+    {
+        return nbTimeseries_;
+    }
 
 private:
     bool checkTSconsistency();
@@ -254,30 +286,34 @@ bool IntraModalConsistencyChecker::checkTSconsistency()
         listNumberTS.insert(listNumberTS.end(), areaNumberTSList.begin(), areaNumberTSList.end());
     }
 
-    if (std::adjacent_find(listNumberTS.begin(), listNumberTS.end(), std::not_equal_to<uint>()) != listNumberTS.end())
+    if (std::adjacent_find(listNumberTS.begin(), listNumberTS.end(), std::not_equal_to<uint>())
+        != listNumberTS.end())
     {
-        logs.error() << "Intra-modal correlation: " << tsTitle_ << "'s numbers of time-series are not equal for all areas";
+        logs.error() << "Intra-modal correlation: " << tsTitle_
+                     << "'s numbers of time-series are not equal for all areas";
         return false;
     }
     nbTimeseries_ = listNumberTS[0];
     return true;
 }
 
-bool checkIntraModalConsistency(array<uint, timeSeriesCount> & nbTimeseriesByMode,
-                                const array<bool, timeSeriesCount> & isTSintramodal,
-                                const array<bool, timeSeriesCount> & isTSgenerated,
+bool checkIntraModalConsistency(array<uint, timeSeriesCount>& nbTimeseriesByMode,
+                                const array<bool, timeSeriesCount>& isTSintramodal,
+                                const array<bool, timeSeriesCount>& isTSgenerated,
                                 Study& study)
 {
-    // Initialization of a map associating a time-series to an object that retrieves 
-    // the number of time series inside an area 
+    // Initialization of a map associating a time-series to an object that retrieves
+    // the number of time series inside an area
     using mapTStoRetriever = map<TimeSeries, shared_ptr<areaNumberOfTSretriever>>;
     mapTStoRetriever ts_to_numberOfTSretrievers;
     ts_to_numberOfTSretrievers[timeSeriesLoad] = make_shared<loadAreaNumberOfTSretriever>(study);
     ts_to_numberOfTSretrievers[timeSeriesHydro] = make_shared<hydroAreaNumberOfTSretriever>(study);
     ts_to_numberOfTSretrievers[timeSeriesWind] = make_shared<windAreaNumberOfTSretriever>(study);
     ts_to_numberOfTSretrievers[timeSeriesSolar] = make_shared<solarAreaNumberOfTSretriever>(study);
-    ts_to_numberOfTSretrievers[timeSeriesThermal] = make_shared<thermalAreaNumberOfTSretriever>(study);
-    ts_to_numberOfTSretrievers[timeSeriesRenewable] = make_shared<renewClustersAreaNumberOfTSretriever>(study);
+    ts_to_numberOfTSretrievers[timeSeriesThermal]
+      = make_shared<thermalAreaNumberOfTSretriever>(study);
+    ts_to_numberOfTSretrievers[timeSeriesRenewable]
+      = make_shared<renewClustersAreaNumberOfTSretriever>(study);
 
     // Loop over TS kind and check intra-modal consistency
     mapTStoRetriever::iterator it = ts_to_numberOfTSretrievers.begin();
@@ -286,8 +322,9 @@ bool checkIntraModalConsistency(array<uint, timeSeriesCount> & nbTimeseriesByMod
         const TimeSeries tsKind = it->first;
         areaNumberOfTSretriever* tsRetriever = (it->second).get();
         int indexTS = ts_to_tsIndex.at(it->first);
-        IntraModalConsistencyChecker intraModalchecker(tsKind, isTSintramodal, isTSgenerated, tsRetriever, study);
-        if (! intraModalchecker.check())
+        IntraModalConsistencyChecker intraModalchecker(
+          tsKind, isTSintramodal, isTSgenerated, tsRetriever, study);
+        if (!intraModalchecker.check())
             return false;
         nbTimeseriesByMode[indexTS] = intraModalchecker.getTimeSeriesNumber();
     }
@@ -295,15 +332,15 @@ bool checkIntraModalConsistency(array<uint, timeSeriesCount> & nbTimeseriesByMod
     return true;
 }
 
-bool checkInterModalConsistencyForArea( Area& area,
-                                        const array<bool, timeSeriesCount> & isTSintermodal,
-                                        const array<bool, timeSeriesCount> & isTSgenerated,
-                                        Study& study)
+bool checkInterModalConsistencyForArea(Area& area,
+                                       const array<bool, timeSeriesCount>& isTSintermodal,
+                                       const array<bool, timeSeriesCount>& isTSgenerated,
+                                       Study& study)
 {
     // 1. Making a list of TS numbers :
     //    In this list, we put the numbers of TS of every "inter-modal" mode over the current area.
     // 2. All elements of this list must be identical
-    
+
     // The list containing the numbers of TS of every "inter-modal" mode over the current area
     std::vector<uint> listNumberTsOverArea;
 
@@ -313,7 +350,8 @@ bool checkInterModalConsistencyForArea( Area& area,
     int indexTS = ts_to_tsIndex.at(timeSeriesLoad);
     if (isTSintermodal[indexTS])
     {
-        uint nbTimeSeries = isTSgenerated[indexTS] ? parameters.nbTimeSeriesLoad : area.load.series->series.width;
+        uint nbTimeSeries
+          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesLoad : area.load.series->series.width;
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
@@ -321,7 +359,8 @@ bool checkInterModalConsistencyForArea( Area& area,
     indexTS = ts_to_tsIndex.at(timeSeriesSolar);
     if (isTSintermodal[indexTS])
     {
-        uint nbTimeSeries = isTSgenerated[indexTS] ? parameters.nbTimeSeriesSolar : area.solar.series->series.width;
+        uint nbTimeSeries
+          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesSolar : area.solar.series->series.width;
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
@@ -329,7 +368,8 @@ bool checkInterModalConsistencyForArea( Area& area,
     indexTS = ts_to_tsIndex.at(timeSeriesWind);
     if (isTSintermodal[indexTS])
     {
-        uint nbTimeSeries = isTSgenerated[indexTS] ? parameters.nbTimeSeriesWind : area.wind.series->series.width;
+        uint nbTimeSeries
+          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesWind : area.wind.series->series.width;
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
@@ -337,7 +377,8 @@ bool checkInterModalConsistencyForArea( Area& area,
     indexTS = ts_to_tsIndex.at(timeSeriesHydro);
     if (isTSintermodal[indexTS])
     {
-        uint nbTimeSeries = isTSgenerated[indexTS] ? parameters.nbTimeSeriesHydro : area.hydro.series->count;
+        uint nbTimeSeries
+          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesHydro : area.hydro.series->count;
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
@@ -349,7 +390,8 @@ bool checkInterModalConsistencyForArea( Area& area,
         for (uint j = 0; j != clusterCount; ++j)
         {
             auto& cluster = *(area.thermal.clusters[j]);
-            uint nbTimeSeries = isTSgenerated[indexTS] ? parameters.nbTimeSeriesThermal : cluster.series->series.width;
+            uint nbTimeSeries = isTSgenerated[indexTS] ? parameters.nbTimeSeriesThermal
+                                                       : cluster.series->series.width;
             listNumberTsOverArea.push_back(nbTimeSeries);
         }
     }
@@ -368,10 +410,14 @@ bool checkInterModalConsistencyForArea( Area& area,
     }
 
     // Now check if all elements of list of TS numbers are identical
-    if (std::adjacent_find(listNumberTsOverArea.begin(), listNumberTsOverArea.end(), std::not_equal_to<uint>()) != listNumberTsOverArea.end())
+    if (std::adjacent_find(
+          listNumberTsOverArea.begin(), listNumberTsOverArea.end(), std::not_equal_to<uint>())
+        != listNumberTsOverArea.end())
     {
-        logs.error() << "Inter-modal correlation: time-series numbers of inter-modal modes in area '" << area.name << "'"
-            << " are not identical";
+        logs.error()
+          << "Inter-modal correlation: time-series numbers of inter-modal modes in area '"
+          << area.name << "'"
+          << " are not identical";
 
         return false;
     }
@@ -379,26 +425,25 @@ bool checkInterModalConsistencyForArea( Area& area,
     return true;
 }
 
-void drawTSnumbersForIntraModal(    array<uint32, timeSeriesCount> & intramodal_draws,
-                                    const array<bool, timeSeriesCount> & isTSintramodal,
-                                    array<uint, timeSeriesCount> & nbTimeseriesByMode,
-                                    MersenneTwister* mersenneTwisterTable)
+void drawTSnumbersForIntraModal(array<uint32, timeSeriesCount>& intramodal_draws,
+                                const array<bool, timeSeriesCount>& isTSintramodal,
+                                array<uint, timeSeriesCount>& nbTimeseriesByMode,
+                                MersenneTwister* mersenneTwisterTable)
 {
     for (uint tsKind = 0; tsKind < timeSeriesCount; ++tsKind)
     {
         if (isTSintramodal[tsKind])
         {
-            intramodal_draws[tsKind]
-                = (uint32)(floor(mersenneTwisterTable[seedTimeseriesNumbers].next()
-                    * nbTimeseriesByMode[tsKind]));
+            intramodal_draws[tsKind] = (uint32)(floor(
+              mersenneTwisterTable[seedTimeseriesNumbers].next() * nbTimeseriesByMode[tsKind]));
         }
     }
 }
 
-void storeTSnumbersForIntraModal(   const array<uint32, timeSeriesCount> & intramodal_draws,
-                                    const array<bool, timeSeriesCount> & isTSintramodal,
-                                    uint year, 
-                                    AreaList& areas)
+void storeTSnumbersForIntraModal(const array<uint32, timeSeriesCount>& intramodal_draws,
+                                 const array<bool, timeSeriesCount>& isTSintramodal,
+                                 uint year,
+                                 AreaList& areas)
 {
     areas.each([&](Area& area) {
         // -------------
@@ -407,7 +452,7 @@ void storeTSnumbersForIntraModal(   const array<uint32, timeSeriesCount> & intra
         assert(year < area.load.series->timeseriesNumbers.height);
         int indexTS = ts_to_tsIndex.at(timeSeriesLoad);
 
-        if (isTSintramodal[indexTS])       
+        if (isTSintramodal[indexTS])
             area.load.series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
 
         // -------------
@@ -471,11 +516,11 @@ void storeTSnumbersForIntraModal(   const array<uint32, timeSeriesCount> & intra
     });
 }
 
-void drawAndStoreTSnumbersForNOTintraModal( const array<bool, timeSeriesCount> & isTSintramodal,
-                                            const array<bool, timeSeriesCount> & isTSgenerated,
-                                            array<uint, timeSeriesCount> & nbTimeseriesByMode,
-                                            uint year, 
-                                            Study& study)
+void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& isTSintramodal,
+                                           const array<bool, timeSeriesCount>& isTSgenerated,
+                                           array<uint, timeSeriesCount>& nbTimeseriesByMode,
+                                           uint year,
+                                           Study& study)
 {
     study.areas.each([&](Area& area) {
         // -------------
@@ -487,8 +532,8 @@ void drawAndStoreTSnumbersForNOTintraModal( const array<bool, timeSeriesCount> &
         {
             uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
                                                        : area.load.series->series.width;
-            area.load.series->timeseriesNumbers[0][year] = (uint32)(
-                floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+            area.load.series->timeseriesNumbers[0][year]
+              = (uint32)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }
 
         // -------------
@@ -501,7 +546,7 @@ void drawAndStoreTSnumbersForNOTintraModal( const array<bool, timeSeriesCount> &
             uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
                                                        : area.solar.series->series.width;
             area.solar.series->timeseriesNumbers[0][year]
-                = (uint32)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+              = (uint32)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }
 
         // -------------
@@ -514,8 +559,7 @@ void drawAndStoreTSnumbersForNOTintraModal( const array<bool, timeSeriesCount> &
             uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
                                                        : area.wind.series->series.width;
             area.wind.series->timeseriesNumbers[0][year]
-                = (uint32)(floor(study.runtime->random[seedTimeseriesNumbers].next()
-                    * nbTimeSeries));
+              = (uint32)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }
 
         // -------------
@@ -525,10 +569,10 @@ void drawAndStoreTSnumbersForNOTintraModal( const array<bool, timeSeriesCount> &
 
         if (not isTSintramodal[indexTS])
         {
-            uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
-                                                       : area.hydro.series->ror.width;
+            uint nbTimeSeries
+              = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS] : area.hydro.series->ror.width;
             area.hydro.series->timeseriesNumbers[0][year]
-                = (uint32)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+              = (uint32)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }
 
         // -------------
@@ -548,9 +592,8 @@ void drawAndStoreTSnumbersForNOTintraModal( const array<bool, timeSeriesCount> &
                 {
                     uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
                                                                : cluster->series->series.width;
-                    cluster->series->timeseriesNumbers.entry[0][year]
-                        = (uint32)(floor(study.runtime->random[seedTimeseriesNumbers].next()
-                            * nbTimeSeries));
+                    cluster->series->timeseriesNumbers.entry[0][year] = (uint32)(
+                      floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
                 }
             }
         }
@@ -572,16 +615,17 @@ void drawAndStoreTSnumbersForNOTintraModal( const array<bool, timeSeriesCount> &
                 {
                     uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
                                                                : cluster->series->series.width;
-                    cluster->series->timeseriesNumbers.entry[0][year]
-                        = (uint32)(floor(study.runtime->random[seedTimeseriesNumbers].next()
-                            * nbTimeSeries));
+                    cluster->series->timeseriesNumbers.entry[0][year] = (uint32)(
+                      floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
                 }
             }
         }
     });
 }
 
-Matrix<uint32>* getFirstTSnumberInterModalMatrixFoundInArea(Area & area, const array<bool, timeSeriesCount> & isTSintermodal)
+Matrix<uint32>* getFirstTSnumberInterModalMatrixFoundInArea(
+  Area& area,
+  const array<bool, timeSeriesCount>& isTSintermodal)
 {
     Matrix<uint32>* tsNumbersMtx = nullptr;
     if (isTSintermodal[ts_to_tsIndex.at(timeSeriesLoad)])
@@ -595,10 +639,10 @@ Matrix<uint32>* getFirstTSnumberInterModalMatrixFoundInArea(Area & area, const a
         else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesHydro)])
             tsNumbersMtx = &(area.hydro.series->timeseriesNumbers);
         else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesThermal)]
-            && area.thermal.clusterCount() > 0)
+                 && area.thermal.clusterCount() > 0)
             tsNumbersMtx = &(area.thermal.clusters[0]->series->timeseriesNumbers);
         else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesRenewable)]
-            && area.renewable.clusterCount() > 0)
+                 && area.renewable.clusterCount() > 0)
             tsNumbersMtx = &(area.renewable.clusters[0]->series->timeseriesNumbers);
     }
     assert(tsNumbersMtx);
@@ -606,10 +650,10 @@ Matrix<uint32>* getFirstTSnumberInterModalMatrixFoundInArea(Area & area, const a
     return tsNumbersMtx;
 }
 
-void applyMatrixDrawsToInterModalModesInArea( Matrix<uint32>* tsNumbersMtx,
-                                        Area& area,
-                                        const array<bool, timeSeriesCount> & isTSintermodal,
-                                        const uint years)
+void applyMatrixDrawsToInterModalModesInArea(Matrix<uint32>* tsNumbersMtx,
+                                             Area& area,
+                                             const array<bool, timeSeriesCount>& isTSintermodal,
+                                             const uint years)
 {
     for (uint year = 0; year < years; ++year)
     {
@@ -669,10 +713,13 @@ bool TimeSeriesNumbers::Generate(Study& study)
     const array<bool, timeSeriesCount> isTSintramodal
       = {(bool)(timeSeriesLoad & parameters.intraModal),
          (bool)(timeSeriesHydro & parameters.intraModal),
-         (bool)(timeSeriesWind & parameters.intraModal) && parameters.renewableGeneration.isAggregated(),
+         (bool)(timeSeriesWind & parameters.intraModal)
+           && parameters.renewableGeneration.isAggregated(),
          (bool)(timeSeriesThermal & parameters.intraModal),
-         (bool)(timeSeriesSolar & parameters.intraModal) && parameters.renewableGeneration.isAggregated(),
-         (bool)(timeSeriesRenewable & parameters.intraModal) && parameters.renewableGeneration.isClusters() };
+         (bool)(timeSeriesSolar & parameters.intraModal)
+           && parameters.renewableGeneration.isAggregated(),
+         (bool)(timeSeriesRenewable & parameters.intraModal)
+           && parameters.renewableGeneration.isClusters()};
 
     array<uint, timeSeriesCount> nbTimeseriesByMode;
 
@@ -692,11 +739,13 @@ bool TimeSeriesNumbers::Generate(Study& study)
     for (uint year = 0; year < years; ++year)
     {
         // Intra-modal TS : draw and store TS numbres
-        drawTSnumbersForIntraModal(intramodal_draws, isTSintramodal, nbTimeseriesByMode, study.runtime->random);
+        drawTSnumbersForIntraModal(
+          intramodal_draws, isTSintramodal, nbTimeseriesByMode, study.runtime->random);
         storeTSnumbersForIntraModal(intramodal_draws, isTSintramodal, year, study.areas);
 
         // NOT intra-modal TS : draw and store TS numbers
-        drawAndStoreTSnumbersForNOTintraModal(isTSintramodal, isTSgenerated, nbTimeseriesByMode, year, study);
+        drawAndStoreTSnumbersForNOTintraModal(
+          isTSintramodal, isTSgenerated, nbTimeseriesByMode, year, study);
     }
 
     // ===============
@@ -706,10 +755,13 @@ bool TimeSeriesNumbers::Generate(Study& study)
     const array<bool, timeSeriesCount> isTSintermodal
       = {(bool)(timeSeriesLoad & parameters.interModal),
          (bool)(timeSeriesHydro & parameters.interModal),
-         (bool)(timeSeriesWind & parameters.interModal) && parameters.renewableGeneration.isAggregated(),
+         (bool)(timeSeriesWind & parameters.interModal)
+           && parameters.renewableGeneration.isAggregated(),
          (bool)(timeSeriesThermal & parameters.interModal),
-         (bool)(timeSeriesSolar & parameters.interModal) && parameters.renewableGeneration.isAggregated(),
-         (bool)(timeSeriesRenewable & parameters.interModal) && parameters.renewableGeneration.isClusters() };
+         (bool)(timeSeriesSolar & parameters.interModal)
+           && parameters.renewableGeneration.isAggregated(),
+         (bool)(timeSeriesRenewable & parameters.interModal)
+           && parameters.renewableGeneration.isClusters()};
 
     if (std::any_of(std::begin(isTSintermodal), std::end(isTSintermodal), [](bool x) { return x; }))
     {
@@ -725,7 +777,8 @@ bool TimeSeriesNumbers::Generate(Study& study)
             if (not checkInterModalConsistencyForArea(area, isTSintermodal, isTSgenerated, study))
                 return false;
 
-            Matrix<uint32>* tsNumbersMtx = getFirstTSnumberInterModalMatrixFoundInArea(area, isTSintermodal);
+            Matrix<uint32>* tsNumbersMtx
+              = getFirstTSnumberInterModalMatrixFoundInArea(area, isTSintermodal);
 
             applyMatrixDrawsToInterModalModesInArea(tsNumbersMtx, area, isTSintermodal, years);
         }
