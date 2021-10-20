@@ -30,44 +30,27 @@ void clean_output(const vector<string> & filesToRemove)
 // Compare ini files in output folder
 // ======================================
 
-bool compare_ini_files(const string & fileName, const string & fileNameRef)
+string readFileIntoString(const string& path) {
+	ifstream input_file;
+	input_file.open(path);
+	return string(istreambuf_iterator<char>(input_file), istreambuf_iterator<char>());
+}
+
+bool compare_files(const string& fileName_1, const string& fileName_2)
 {
-	ifstream in1(fileName);
-	ifstream in2(fileNameRef);
-
-	while ((!in1.eof()) && (!in2.eof()))
-	{
-		string line1, line2;
-		getline(in1, line1);
-		getline(in2, line2);
-		if (line1 != line2)
-		{
-			in1.close();
-			in2.close();
-			return false;
-		}
-	}
-
-	in1.close();
-	in2.close();
+	string content_1 = readFileIntoString(fileName_1);
+	string content_2 = readFileIntoString(fileName_2);
+	if (content_1.compare(content_2))
+		return false;
 	return true;
 }
 
 bool fileContainsLine(const string& fileName, const string& line_to_find)
 {
-	ifstream in(fileName);
-	while (!in.eof())
-	{
-		string line;
-		getline(in, line);
-		if (line == line_to_find)
-		{
-			in.close();
-			return true;
-		}
-	}
-	in.close();
-	return false;
+	string fileContent = readFileIntoString(fileName);
+	if (fileContent.find(line_to_find) == string::npos)
+		return false;
+	return true;
 }
 
 BOOST_AUTO_TEST_CASE(one_link_with_default_values)
@@ -105,7 +88,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_default_values)
 	referenceFile.close();
 	
 	BOOST_CHECK(AreaLinksSaveToFolder(area_1, fs::current_path().string().c_str()));
-	BOOST_CHECK(compare_ini_files(generatedIniFileName, referenceIniFileName));
+	BOOST_CHECK(compare_files(generatedIniFileName, referenceIniFileName));
 
 	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName, referenceIniFileName };
 	clean_output(filesToRemove);
@@ -158,7 +141,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_none_default_values)
 	referenceFile.close();
 
 	BOOST_CHECK(AreaLinksSaveToFolder(area_1, fs::current_path().string().c_str()));
-	BOOST_CHECK(compare_ini_files(generatedIniFileName, referenceIniFileName));
+	BOOST_CHECK(compare_files(generatedIniFileName, referenceIniFileName));
 
 	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName, referenceIniFileName };
 	clean_output(filesToRemove);
@@ -200,7 +183,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_transmission_capacity_to_ignore__all_others_p
 	referenceFile.close();
 
 	BOOST_CHECK(AreaLinksSaveToFolder(area_1, fs::current_path().string().c_str()));
-	BOOST_CHECK(compare_ini_files(generatedIniFileName, referenceIniFileName));
+	BOOST_CHECK(compare_files(generatedIniFileName, referenceIniFileName));
 
 	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName, referenceIniFileName };
 	clean_output(filesToRemove);
