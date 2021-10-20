@@ -4,7 +4,7 @@
 
 #include <boost/test/included/unit_test.hpp>
 #include <filesystem>
-// #include <string>
+#include <string>
 
 #include <study.h>
 #include <filter.h>
@@ -55,15 +55,18 @@ BOOST_AUTO_TEST_CASE(one_area_with_default_params)
 	Study::Ptr study = new Study();
 	Area* area = study->areaAdd("Area");
 
+	string generatedIniFileName = "optimization.ini";
+	string referenceIniFileName = "optimization-reference.ini";
+
 	// Buffer containing the path of the generated file
 	Yuni::Clob buffer;
-	buffer << fs::current_path().append("optimization.ini").string();
+	buffer << fs::current_path().append(generatedIniFileName).string();
 
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, buffer));
 
-	// Reference properties.ini file
+	// Reference optimization.ini file
 	ofstream referenceFile;
-	referenceFile.open("optimization-reference.ini");
+	referenceFile.open(referenceIniFileName);
 	referenceFile << "[nodal optimization]" << endl;
 	referenceFile << "non-dispatchable-power = true" << endl;
 	referenceFile << "dispatchable-hydro-power = true" << endl;
@@ -77,9 +80,9 @@ BOOST_AUTO_TEST_CASE(one_area_with_default_params)
 	referenceFile << endl;
 	referenceFile.close();
 
-	BOOST_CHECK(compare_ini_files("optimization.ini", "optimization-reference.ini"));
+	BOOST_CHECK(compare_ini_files(generatedIniFileName, referenceIniFileName));
 
-	vector<string> filesToRemove = { "optimization.ini", "optimization-reference.ini" };
+	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
 	clean_output(filesToRemove);
 }
 
@@ -88,6 +91,9 @@ BOOST_AUTO_TEST_CASE(one_area_with_none_default_params)
 {
 	Study::Ptr study = new Study();
 	Area* area = study->areaAdd("Area");
+
+	string generatedIniFileName = "optimization.ini";
+	string referenceIniFileName = "optimization-reference.ini";
 
 	// Setting area's properties
 	area->nodalOptimization = 0;
@@ -98,13 +104,13 @@ BOOST_AUTO_TEST_CASE(one_area_with_none_default_params)
 
 	// Buffer containing the path of the generated file
 	Yuni::Clob buffer;
-	buffer << fs::current_path().append("optimization.ini").string();
+	buffer << fs::current_path().append(generatedIniFileName).string();
 
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, buffer));
 
-	// Reference properties.ini file
+	// Reference optimization.ini file
 	ofstream referenceFile;
-	referenceFile.open("optimization-reference.ini");
+	referenceFile.open(referenceIniFileName);
 	referenceFile << "[nodal optimization]" << endl;
 	referenceFile << "non-dispatchable-power = false" << endl;
 	referenceFile << "dispatchable-hydro-power = false" << endl;
@@ -118,8 +124,8 @@ BOOST_AUTO_TEST_CASE(one_area_with_none_default_params)
 	referenceFile << endl;
 	referenceFile.close();
 
-	BOOST_CHECK(compare_ini_files("optimization.ini", "optimization-reference.ini"));
+	BOOST_CHECK(compare_ini_files(generatedIniFileName, referenceIniFileName));
 
-	vector<string> filesToRemove = { "optimization.ini", "optimization-reference.ini" };
+	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
 	clean_output(filesToRemove);
 }
