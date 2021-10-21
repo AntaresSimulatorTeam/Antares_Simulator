@@ -287,8 +287,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
             CorrespondanceCntNativesCntOptim->NumeroDeContraintePourEviterLesChargesFictives[Pays]
               = ProblemeAResoudre->NombreDeContraintes;
 
+            NomDeLaContrainte
+              = "fict_load::" + std::to_string(ts) + "::" + ProblemeHebdo->NomsDesPays[Pays];
+
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '<');
+              ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '<', NomDeLaContrainte);
         }
 
         for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
