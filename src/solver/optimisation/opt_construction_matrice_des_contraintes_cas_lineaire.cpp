@@ -88,6 +88,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
     double* Pi;
     int* Colonne;
 
+    std::string NomDeLaContrainte;
+
     auto& study = *Study::Current::Get();
     bool exportStructure = ProblemeHebdo->ExportStructure;
 
@@ -355,8 +357,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
 
             if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante == CONTRAINTE_HORAIRE)
             {
-                std::string NomDeLaContrainte(MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante.c_str());
-                NomDeLaContrainte.insert(0, "bc::hourly::" + std::to_string(ts) + "::");
                 NbInterco = MatriceDesContraintesCouplantes
                               ->NombreDInterconnexionsDansLaContrainteCouplante;
                 NombreDeTermes = 0;
@@ -432,6 +432,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                 CorrespondanceCntNativesCntOptim
                   ->NumeroDeContrainteDesContraintesCouplantes[CntCouplante]
                   = ProblemeAResoudre->NombreDeContraintes;
+
+                NomDeLaContrainte
+                  = "bc::hourly::" + std::to_string(ts)
+                    + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante.c_str();
 
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                   ProblemeAResoudre,
@@ -557,8 +561,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
             while (PdtDebut < NombreDePasDeTempsPourUneOptimisation)
             {
                 Jour = NumeroDeJourDuPasDeTemps[PdtDebut];
-                std::string NomDeLaContrainte(MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante.c_str());
-                NomDeLaContrainte.insert(0, "bc::daily::" + std::to_string(Jour) + "::");
                 CorrespondanceCntNativesCntOptimJournalieres
                   = ProblemeHebdo->CorrespondanceCntNativesCntOptimJournalieres[Jour];
                 NombreDeTermes = 0;
@@ -631,6 +633,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                   ->NumeroDeContrainteDesContraintesCouplantes[CntCouplante]
                   = ProblemeAResoudre->NombreDeContraintes;
 
+                NomDeLaContrainte
+                  = "bc::daily::" + std::to_string(Jour)
+                    + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante.c_str();
+
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                   ProblemeAResoudre,
                   Pi,
@@ -657,8 +663,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
             if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante
                 == CONTRAINTE_HEBDOMADAIRE)
             {
-                std::string NomDeLaContrainte(MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante.c_str());
-                NomDeLaContrainte.insert(0, "bc::weekly::");
                 NbInterco = MatriceDesContraintesCouplantes
                               ->NombreDInterconnexionsDansLaContrainteCouplante;
                 NombreDeTermes = 0;
@@ -728,6 +732,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                 CorrespondanceCntNativesCntOptimHebdomadaires
                   ->NumeroDeContrainteDesContraintesCouplantes[CntCouplante]
                   = ProblemeAResoudre->NombreDeContraintes;
+
+                NomDeLaContrainte
+                  = std::string("bc::weekly::")
+                    + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante.c_str();
 
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                   ProblemeAResoudre,
