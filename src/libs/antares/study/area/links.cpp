@@ -270,12 +270,12 @@ static bool AreaLinksInternalLoadFromProperty(Study& study,
     }
     if (key == "filter-synthesis")
     {
-        link.filterSynthesis = StringToFilter(value);
+        link.filterSynthesis = stringIntoDatePrecision(value);
         return true;
     }
     if (key == "filter-year-by-year")
     {
-        link.filterYearByYear = StringToFilter(value);
+        link.filterYearByYear = stringIntoDatePrecision(value);
         return true;
     }
     if (study.header.version < 330)
@@ -651,8 +651,8 @@ bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
         section->add("display-comments", link.displayComments);
         if (not link.comments.empty())
             section->add("comments", link.comments);
-        section->add("filter-synthesis", filterIntoString(link.filterSynthesis));
-        section->add("filter-year-by-year", filterIntoString(link.filterYearByYear));
+        section->add("filter-synthesis", datePrecisionIntoString(link.filterSynthesis));
+        section->add("filter-year-by-year", datePrecisionIntoString(link.filterYearByYear));
         
         // NTC
         filename.clear() << folder << SEP << link.with->id << ".txt";

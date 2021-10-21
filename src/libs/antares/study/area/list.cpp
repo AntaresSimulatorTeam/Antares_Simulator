@@ -317,8 +317,8 @@ bool saveAreaOptimisationIniFile(const Area& area, const Clob& buffer)
     section->add("spread-spilled-energy-cost", area.spreadSpilledEnergyCost);
 
     section = ini.addSection("filtering");
-    section->add("filter-synthesis", filterIntoString(area.filterSynthesis));
-    section->add("filter-year-by-year", filterIntoString(area.filterYearByYear));
+    section->add("filter-synthesis", datePrecisionIntoString(area.filterSynthesis));
+    section->add("filter-year-by-year", datePrecisionIntoString(area.filterYearByYear));
 
     return ini.save(buffer);
 }
@@ -1091,12 +1091,12 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                     }
                     if (tmp == "filter-synthesis")
                     {
-                        area.filterSynthesis = StringToFilter(p->value);
+                        area.filterSynthesis = stringIntoDatePrecision(p->value);
                         continue;
                     }
                     if (tmp == "filter-year-by-year")
                     {
-                        area.filterYearByYear = StringToFilter(p->value);
+                        area.filterYearByYear = stringIntoDatePrecision(p->value);
                         continue;
                     }
                     if (tmp == "spread-unsupplied-energy-cost")

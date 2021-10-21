@@ -46,18 +46,18 @@ enum FilterFlag
     filterAll = (uint)-1,
 };
 
-// Convert a filter into a string (obtained by concatenating filter components)
-std::string filterIntoString(uint filter);
+// Convert a date precision filter into a string (obtained by concatenating filter components)
+std::string datePrecisionIntoString(uint datePrecisionFilter);
 
 /*!
-** \brief Convert a mere string into filter flags
+** \brief Convert a string into date precision filter flags
 */
-uint StringToFilter(const AnyString& string);
+uint stringIntoDatePrecision(const AnyString& string);
 
 /*!
 ** \brief Convert a filter indices into filter flags
 */
-uint filterIndexToFilter(const uint index);
+uint addTimeIntervallToDatePrecisionFilter(const uint index);
 
 } // namespace Data
 } // namespace Antares
