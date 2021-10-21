@@ -1,6 +1,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <string_view>
 #include "files-helper.h"
 
 namespace fs = std::filesystem;
@@ -33,19 +34,16 @@ bool files_identical(const string& fileName_1, const string& fileName_2)
 {
 	string content_1 = readFileIntoString(fileName_1);
 	string content_2 = readFileIntoString(fileName_2);
-	if (content_1 == content_2)
-		return true;
-	return false;
+	return content_1 == content_2;
 }
 
 // ============================
 // Finds a string in a file
 // ============================
 
-bool fileContainsLine(const string& fileName, const string& line_to_find)
+bool fileContainsLine(const string& fileName, string_view line_to_find)
 {
-	string fileContent = readFileIntoString(fileName);
-	if (fileContent.find(line_to_find) == string::npos)
+	if (string fileContent = readFileIntoString(fileName); fileContent.find(line_to_find) == string::npos)
 		return false;
 	return true;
 }
