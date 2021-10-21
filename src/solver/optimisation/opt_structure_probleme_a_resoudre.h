@@ -141,6 +141,7 @@ typedef struct
     double* Pi;
     int* Colonne;
 
+    /* Nommage des variables & contraintes */
     std::vector<std::string> NomDesVariables, NomDesContraintes;
 } PROBLEME_ANTARES_A_RESOUDRE;
 
