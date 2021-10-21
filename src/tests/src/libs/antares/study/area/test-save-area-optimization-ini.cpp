@@ -15,14 +15,13 @@
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
+const string generatedIniFileName = "properties.ini";
+const string referenceIniFileName = "properties-reference.ini";
 
 BOOST_AUTO_TEST_CASE(one_area_with_default_params)
 {
 	Study::Ptr study = new Study();
 	Area* area = study->areaAdd("Area");
-
-	string generatedIniFileName = "optimization.ini";
-	string referenceIniFileName = "optimization-reference.ini";
 
 	Yuni::Clob path_to_generated_file;
 	path_to_generated_file << fs::current_path().append(generatedIniFileName).string();
@@ -45,10 +44,10 @@ BOOST_AUTO_TEST_CASE(one_area_with_default_params)
 	referenceFile << endl;
 	referenceFile.close();
 
-	BOOST_CHECK(compare_files(generatedIniFileName, referenceIniFileName));
+	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
 
 	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }
 
 
@@ -56,9 +55,6 @@ BOOST_AUTO_TEST_CASE(one_area_with_none_default_params)
 {
 	Study::Ptr study = new Study();
 	Area* area = study->areaAdd("Area");
-
-	string generatedIniFileName = "optimization.ini";
-	string referenceIniFileName = "optimization-reference.ini";
 
 	// Setting area's properties
 	area->nodalOptimization = 0;
@@ -88,19 +84,16 @@ BOOST_AUTO_TEST_CASE(one_area_with_none_default_params)
 	referenceFile << endl;
 	referenceFile.close();
 
-	BOOST_CHECK(compare_files(generatedIniFileName, referenceIniFileName));
+	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
 
 	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }
 
 BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_nonDispatchPower__other_params_to_default)
 {
 	Study::Ptr study = new Study();
 	Area* area = study->areaAdd("Area");
-
-	string generatedIniFileName = "optimization.ini";
-	string referenceIniFileName = "optimization-reference.ini";
 
 	// Setting area's properties
 	area->nodalOptimization = anoNonDispatchPower;
@@ -125,10 +118,10 @@ BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_nonDispatchPower__other_params_t
 	referenceFile.close();
 
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
-	BOOST_CHECK(compare_files(generatedIniFileName, referenceIniFileName));
+	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
 
 	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }
 
 
@@ -136,9 +129,6 @@ BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_dispatchHydroPower__other_params
 {
 	Study::Ptr study = new Study();
 	Area* area = study->areaAdd("Area");
-
-	string generatedIniFileName = "optimization.ini";
-	string referenceIniFileName = "optimization-reference.ini";
 
 	// Setting area's properties
 	area->nodalOptimization = anoDispatchHydroPower;
@@ -163,19 +153,16 @@ BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_dispatchHydroPower__other_params
 	referenceFile.close();
 
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
-	BOOST_CHECK(compare_files(generatedIniFileName, referenceIniFileName));
+	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
 
 	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }
 
 BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_otherDispatchablePower__other_params_to_default)
 {
 	Study::Ptr study = new Study();
 	Area* area = study->areaAdd("Area");
-
-	string generatedIniFileName = "optimization.ini";
-	string referenceIniFileName = "optimization-reference.ini";
 
 	// Setting area's properties
 	area->nodalOptimization = anoOtherDispatchPower;
@@ -200,19 +187,16 @@ BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_otherDispatchablePower__other_pa
 	referenceFile.close();
 
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
-	BOOST_CHECK(compare_files(generatedIniFileName, referenceIniFileName));
+	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
 
 	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }
 
 BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_non_or_other_DispatchPower__other_params_to_default)
 {
 	Study::Ptr study = new Study();
 	Area* area = study->areaAdd("Area");
-
-	string generatedIniFileName = "optimization.ini";
-	string referenceIniFileName = "optimization-reference.ini";
 
 	// Setting area's properties
 	area->nodalOptimization = anoOtherDispatchPower | anoNonDispatchPower;
@@ -237,18 +221,16 @@ BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_non_or_other_DispatchPower__othe
 	referenceFile.close();
 
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
-	BOOST_CHECK(compare_files(generatedIniFileName, referenceIniFileName));
+	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
 
 	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }
 
 BOOST_AUTO_TEST_CASE(one_area_with_unsupplied_energy_cost_negative__other_params_to_default)
 {
 	Study::Ptr study = new Study();
 	Area* area = study->areaAdd("Area");
-
-	string generatedIniFileName = "optimization.ini";
 
 	// Setting area's properties
 	area->spreadUnsuppliedEnergyCost = -1.;
@@ -260,15 +242,13 @@ BOOST_AUTO_TEST_CASE(one_area_with_unsupplied_energy_cost_negative__other_params
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "spread-unsupplied-energy-cost = -1.000000"));
 
 	vector<string> filesToRemove = { generatedIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }
 
 BOOST_AUTO_TEST_CASE(one_area_with_spilled_energy_cost_negative__other_params_to_default)
 {
 	Study::Ptr study = new Study();
 	Area* area = study->areaAdd("Area");
-
-	string generatedIniFileName = "optimization.ini";
 
 	// Setting area's properties
 	area->spreadSpilledEnergyCost = -1.;
@@ -280,15 +260,13 @@ BOOST_AUTO_TEST_CASE(one_area_with_spilled_energy_cost_negative__other_params_to
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "spread-spilled-energy-cost = -1.000000"));
 
 	vector<string> filesToRemove = { generatedIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }
 
 BOOST_AUTO_TEST_CASE(one_area_with_synthesis_to_hourly_monthly_annual__other_params_to_default)
 {
 	Study::Ptr study = new Study();
 	Area* area = study->areaAdd("Area");
-
-	string generatedIniFileName = "optimization.ini";
 
 	// Setting area's properties
 	area->filterSynthesis = filterWeekly | filterMonthly | filterAnnual;
@@ -300,15 +278,13 @@ BOOST_AUTO_TEST_CASE(one_area_with_synthesis_to_hourly_monthly_annual__other_par
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "filter-synthesis = weekly, monthly, annual"));
 
 	vector<string> filesToRemove = { generatedIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }
 
 BOOST_AUTO_TEST_CASE(one_area_with_year_by_year_to_daily_monthly__other_params_to_default)
 {
 	Study::Ptr study = new Study();
 	Area* area = study->areaAdd("Area");
-
-	string generatedIniFileName = "optimization.ini";
 
 	// Setting area's properties
 	area->filterYearByYear = filterDaily | filterMonthly;
@@ -320,5 +296,5 @@ BOOST_AUTO_TEST_CASE(one_area_with_year_by_year_to_daily_monthly__other_params_t
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "filter-year-by-year = daily, monthly"));
 
 	vector<string> filesToRemove = { generatedIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }

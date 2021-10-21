@@ -14,6 +14,8 @@
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
+const string generatedIniFileName = "properties.ini";
+const string referenceIniFileName = "properties-reference.ini";
 
 BOOST_AUTO_TEST_CASE(one_link_with_default_values)
 {
@@ -21,9 +23,6 @@ BOOST_AUTO_TEST_CASE(one_link_with_default_values)
 	Area* area_1 = study->areaAdd("Area 1");
 	Area* area_2 = study->areaAdd("Area 2");
 	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
-
-	string generatedIniFileName = "properties.ini";
-	string referenceIniFileName = "properties-reference.ini";
 
 	// Setting link properties
 	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
@@ -50,10 +49,10 @@ BOOST_AUTO_TEST_CASE(one_link_with_default_values)
 	referenceFile.close();
 	
 	BOOST_CHECK(AreaLinksSaveToFolder(area_1, fs::current_path().string().c_str()));
-	BOOST_CHECK(compare_files(generatedIniFileName, referenceIniFileName));
+	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
 
 	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName, referenceIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }
 
 BOOST_AUTO_TEST_CASE(one_link_with_none_default_values)
@@ -62,9 +61,6 @@ BOOST_AUTO_TEST_CASE(one_link_with_none_default_values)
 	Area* area_1 = study->areaAdd("Area 1");
 	Area* area_2 = study->areaAdd("Area 2");
 	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
-
-	string generatedIniFileName = "properties.ini";
-	string referenceIniFileName = "properties-reference.ini";
 
 	// Setting link properties
 	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
@@ -103,10 +99,10 @@ BOOST_AUTO_TEST_CASE(one_link_with_none_default_values)
 	referenceFile.close();
 
 	BOOST_CHECK(AreaLinksSaveToFolder(area_1, fs::current_path().string().c_str()));
-	BOOST_CHECK(compare_files(generatedIniFileName, referenceIniFileName));
+	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
 
 	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName, referenceIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }
 
 
@@ -116,9 +112,6 @@ BOOST_AUTO_TEST_CASE(one_link_with_transmission_capacity_to_ignore__all_others_p
 	Area* area_1 = study->areaAdd("Area 1");
 	Area* area_2 = study->areaAdd("Area 2");
 	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
-
-	string generatedIniFileName = "properties.ini";
-	string referenceIniFileName = "properties-reference.ini";
 
 	// Setting link properties
 	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
@@ -145,10 +138,10 @@ BOOST_AUTO_TEST_CASE(one_link_with_transmission_capacity_to_ignore__all_others_p
 	referenceFile.close();
 
 	BOOST_CHECK(AreaLinksSaveToFolder(area_1, fs::current_path().string().c_str()));
-	BOOST_CHECK(compare_files(generatedIniFileName, referenceIniFileName));
+	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
 
 	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName, referenceIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }
 
 BOOST_AUTO_TEST_CASE(one_link_with_transmission_capacity_to_ignore__ini_file_contains_matching_line)
@@ -158,8 +151,6 @@ BOOST_AUTO_TEST_CASE(one_link_with_transmission_capacity_to_ignore__ini_file_con
 	Area* area_2 = study->areaAdd("Area 2");
 	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
 
-	string generatedIniFileName = "properties.ini";
-
 	// Setting link properties
 	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
 	link->transmissionCapacities = tncIgnore;
@@ -168,7 +159,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_transmission_capacity_to_ignore__ini_file_con
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "transmission-capacities = ignore"));
 
 	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }
 
 BOOST_AUTO_TEST_CASE(one_link_with_asset_type_to_gas__ini_file_contains_matching_line)
@@ -178,8 +169,6 @@ BOOST_AUTO_TEST_CASE(one_link_with_asset_type_to_gas__ini_file_contains_matching
 	Area* area_2 = study->areaAdd("Area 2");
 	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
 
-	string generatedIniFileName = "properties.ini";
-
 	// Setting link properties
 	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
 	link->assetType = atGas;
@@ -188,7 +177,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_asset_type_to_gas__ini_file_contains_matching
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "asset-type = gaz"));
 
 	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }
 
 BOOST_AUTO_TEST_CASE(one_link_with_asset_type_to_virtual__ini_file_contains_matching_line)
@@ -198,8 +187,6 @@ BOOST_AUTO_TEST_CASE(one_link_with_asset_type_to_virtual__ini_file_contains_matc
 	Area* area_2 = study->areaAdd("Area 2");
 	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
 
-	string generatedIniFileName = "properties.ini";
-
 	// Setting link properties
 	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
 	link->assetType = atVirt;
@@ -208,7 +195,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_asset_type_to_virtual__ini_file_contains_matc
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "asset-type = virt"));
 
 	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }
 
 BOOST_AUTO_TEST_CASE(one_link_with_asset_type_to_other__ini_file_contains_matching_line)
@@ -218,8 +205,6 @@ BOOST_AUTO_TEST_CASE(one_link_with_asset_type_to_other__ini_file_contains_matchi
 	Area* area_2 = study->areaAdd("Area 2");
 	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
 
-	string generatedIniFileName = "properties.ini";
-
 	// Setting link properties
 	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
 	link->assetType = atOther;
@@ -228,7 +213,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_asset_type_to_other__ini_file_contains_matchi
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "asset-type = other"));
 
 	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }
 
 BOOST_AUTO_TEST_CASE(one_link_with_style_to_dot__ini_file_contains_matching_line)
@@ -238,8 +223,6 @@ BOOST_AUTO_TEST_CASE(one_link_with_style_to_dot__ini_file_contains_matching_line
 	Area* area_2 = study->areaAdd("Area 2");
 	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
 
-	string generatedIniFileName = "properties.ini";
-
 	// Setting link properties
 	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
 	link->style = stDot;
@@ -248,7 +231,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_style_to_dot__ini_file_contains_matching_line
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "link-style = dot"));
 
 	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }
 
 BOOST_AUTO_TEST_CASE(one_link_with_style_to_dotdash__ini_file_contains_matching_line)
@@ -258,8 +241,6 @@ BOOST_AUTO_TEST_CASE(one_link_with_style_to_dotdash__ini_file_contains_matching_
 	Area* area_2 = study->areaAdd("Area 2");
 	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
 
-	string generatedIniFileName = "properties.ini";
-
 	// Setting link properties
 	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
 	link->style = stDotDash;
@@ -268,7 +249,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_style_to_dotdash__ini_file_contains_matching_
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "link-style = dotdash"));
 
 	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }
 
 BOOST_AUTO_TEST_CASE(one_link_with_synthesis_to_hourly_monthly_annual__ini_file_contains_matching_line)
@@ -278,8 +259,6 @@ BOOST_AUTO_TEST_CASE(one_link_with_synthesis_to_hourly_monthly_annual__ini_file_
 	Area* area_2 = study->areaAdd("Area 2");
 	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
 
-	string generatedIniFileName = "properties.ini";
-
 	// Setting link properties
 	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
 	link->filterSynthesis = filterWeekly | filterMonthly | filterAnnual;
@@ -288,7 +267,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_synthesis_to_hourly_monthly_annual__ini_file_
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "filter-synthesis = weekly, monthly, annual"));
 
 	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }
 
 BOOST_AUTO_TEST_CASE(one_link_with_year_by_year_to_daily_monthly__ini_file_contains_matching_line)
@@ -298,8 +277,6 @@ BOOST_AUTO_TEST_CASE(one_link_with_year_by_year_to_daily_monthly__ini_file_conta
 	Area* area_2 = study->areaAdd("Area 2");
 	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
 
-	string generatedIniFileName = "properties.ini";
-
 	// Setting link properties
 	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
 	link->filterYearByYear = filterDaily | filterMonthly;
@@ -308,5 +285,5 @@ BOOST_AUTO_TEST_CASE(one_link_with_year_by_year_to_daily_monthly__ini_file_conta
 	BOOST_CHECK(fileContainsLine(generatedIniFileName, "filter-year-by-year = daily, monthly"));
 
 	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName };
-	clean_output(filesToRemove);
+	remove_files(filesToRemove);
 }

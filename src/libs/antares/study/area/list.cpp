@@ -310,9 +310,9 @@ bool saveAreaOptimisationIniFile(const Area& area, const Clob& buffer)
     IniFile ini;
     IniFile::Section* section = ini.addSection("nodal optimization");
 
-    section->add("non-dispatchable-power", (bool)(area.nodalOptimization & anoNonDispatchPower));
-    section->add("dispatchable-hydro-power", (bool)(area.nodalOptimization & anoDispatchHydroPower));
-    section->add("other-dispatchable-power", (bool)(area.nodalOptimization & anoOtherDispatchPower));
+    section->add("non-dispatchable-power", static_cast<bool>(area.nodalOptimization & anoNonDispatchPower));
+    section->add("dispatchable-hydro-power", static_cast<bool>(area.nodalOptimization & anoDispatchHydroPower));
+    section->add("other-dispatchable-power", static_cast<bool>(area.nodalOptimization & anoOtherDispatchPower));
     section->add("spread-unsupplied-energy-cost", area.spreadUnsuppliedEnergyCost);
     section->add("spread-spilled-energy-cost", area.spreadSpilledEnergyCost);
 
@@ -320,9 +320,7 @@ bool saveAreaOptimisationIniFile(const Area& area, const Clob& buffer)
     section->add("filter-synthesis", filterIntoString(area.filterSynthesis));
     section->add("filter-year-by-year", filterIntoString(area.filterYearByYear));
 
-    if (!ini.save(buffer))
-        return false;
-    return true;
+    return ini.save(buffer);
 }
 
 AreaList::AreaList(Study& study) : byIndex(nullptr), pStudy(study)

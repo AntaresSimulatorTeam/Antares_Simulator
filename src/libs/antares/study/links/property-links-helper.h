@@ -10,65 +10,47 @@ namespace Data
 
 	std::string transmissionCapacitiesToString(const TransmissionCapacities & tc)
 	{
-		std::string to_return;
 		switch (tc)
 		{
 		case Data::tncEnabled:
-			to_return = "enabled";
-            break;
+			return "enabled";
 		case Data::tncInfinite:
-			to_return = "infinite";
-            break;
+			return "infinite";
         default:
-            to_return = "ignore";
-            break;
+            return "ignore";
 		}
-		return to_return;
 	}
 
 	std::string assetTypeToString(const AssetType & assetType)
 	{
-        std::string to_return;
         switch (assetType)
         {
         case Data::atAC:
-            to_return = "ac";
-            break;
+            return "ac";
         case Data::atDC:
-            to_return = "dc";
-            break;
+            return "dc";
         case Data::atGas:
-            to_return = "gaz";
-            break;
+            return "gaz";
         case Data::atVirt:
-            to_return = "virt";
-            break;
+            return "virt";
         default:
-            to_return = "other";
-            break;
+            return "other";
         }
-        return to_return;
 	}
 
     std::string styleToString(const StyleType& style)
     {
-        std::string to_return;
         switch (style)
         {
         case Data::stDot:
-            to_return = "dot";
-            break;
+            return "dot";
         case Data::stDash:
-            to_return = "dash";
-            break;
+            return "dash";
         case Data::stDotDash:
-            to_return = "dotdash";
-            break;
+            return "dotdash";
         default:
-            to_return = "plain";
-            break;
+            return "plain";
         }
-        return to_return;
     }
 }
 }

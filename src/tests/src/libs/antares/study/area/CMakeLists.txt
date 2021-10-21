@@ -5,7 +5,12 @@ set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/libs/antares/study")
 # ================================
 # Tests on link's properties.ini
 # ================================
-add_executable(test-save-link-properties test-save-link-properties.cpp)
+set(SRC_LINK_PROPERTIES
+	files-helper.h
+	files-helper.cpp
+	test-save-link-properties.cpp
+)
+add_executable(test-save-link-properties ${SRC_LINK_PROPERTIES})
 
 target_include_directories(test-save-link-properties
 								PRIVATE
@@ -28,7 +33,12 @@ set_property(TEST save-link-properties PROPERTY LABELS TESTLABEL unit)
 # ===================================
 # Tests on area's optimization.ini
 # ===================================
-add_executable(test-save-area-optimization-ini test-save-area-optimization-ini.cpp)
+set(SRC_AREA_OPTIMIZATION
+	files-helper.h
+	files-helper.cpp
+	test-save-area-optimization-ini.cpp
+)
+add_executable(test-save-area-optimization-ini ${SRC_AREA_OPTIMIZATION})
 
 target_include_directories(test-save-area-optimization-ini
 								PRIVATE
