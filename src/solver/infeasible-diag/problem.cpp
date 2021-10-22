@@ -16,7 +16,7 @@ InfeasibleProblemDiag::InfeasibleProblemDiag(PROBLEME_SIMPLEXE* ProbSpx,
                                              const std::string& pattern) :
  mPattern(pattern)
 {
-    mSolver = convert_to_MPSolver(ProbSpx);
+    mSolver = std::unique_ptr<MPSolver>(convert_to_MPSolver(ProbSpx));
 }
 
 void InfeasibleProblemDiag::addSlackVariables()
@@ -81,11 +81,6 @@ InfeasibleProblemReport InfeasibleProblemDiag::produceReport()
         r.append(slack->name(), v);
     }
     return r;
-}
-
-InfeasibleProblemDiag::~InfeasibleProblemDiag()
-{
-    delete mSolver;
 }
 } // namespace Optimization
 } // namespace Antares
