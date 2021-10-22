@@ -1006,6 +1006,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
         CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
         CorrespondanceCntNativesCntOptim = ProblemeHebdo->CorrespondanceCntNativesCntOptim[Pdt];
 
+        int ts = study.runtime->weekInTheYear[numSpace] * 168 + Pdt;
+
         for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
         {
             if (ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->SuiviNiveauHoraire
@@ -1062,8 +1064,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                 CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesNiveauxPays[Pays]
                   = ProblemeAResoudre->NombreDeContraintes;
 
+                NomDeLaContrainte
+                  = "hydro_level::" + std::to_string(ts) + "::" + ProblemeHebdo->NomsDesPays[Pays];
+
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                  ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=');
+                  ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=', NomDeLaContrainte);
             }
             else
                 CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesNiveauxPays[Pays] = -1;
