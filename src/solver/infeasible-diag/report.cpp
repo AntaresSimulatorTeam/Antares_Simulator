@@ -23,6 +23,9 @@ void InfeasibleProblemReport::printLargest(unsigned int n)
 {
     std::sort(std::begin(mConstraints), std::end(mConstraints), compareSlackSolutions);
 
+    if (n > mConstraints.size())
+        n = mConstraints.size();
+
     for (unsigned int ii = 0; ii < n; ++ii)
         Antares::logs.info() << mConstraints[ii].first << ": " << mConstraints[ii].second;
 }
