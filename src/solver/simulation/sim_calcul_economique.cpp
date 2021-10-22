@@ -606,7 +606,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             }
 
             // Renewable
-            if (parameters.renewableGeneration().isClusters())
+            if (parameters.renewableGeneration.isClusters())
             {
                 area.renewable.list.each([&](const RenewableCluster& cluster) {
                     assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
