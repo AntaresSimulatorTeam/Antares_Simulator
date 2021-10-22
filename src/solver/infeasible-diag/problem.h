@@ -19,14 +19,14 @@ public:
     InfeasibleProblemDiag(PROBLEME_SIMPLEXE* ProbSpx, const std::string& pattern);
     InfeasibleProblemReport produceReport();
 
-protected:
-    std::unique_ptr<operations_research::MPSolver> mSolver;
-    std::vector<operations_research::MPVariable*> mSlackVariables;
-
 private:
     void buildObjective();
-    operations_research::MPSolver::ResultStatus Solve();
     void addSlackVariables();
+    operations_research::MPSolver::ResultStatus Solve();
+
+private:
+    std::unique_ptr<operations_research::MPSolver> mSolver;
+    std::vector<operations_research::MPVariable*> mSlackVariables;
     const std::string mPattern;
 };
 } // namespace Optimization
