@@ -20,14 +20,14 @@ void InfeasibleProblemDiag::addSlackVariables() {
     if (std::regex_match(constraint->name(), rgx)) {
       if (constraint->lb() != -infinity) {
         MPVariable* slack;
-        slack = mSolver->MakeNumVar(0, infinity, constraint->name() + "_low");
+        slack = mSolver->MakeNumVar(0, infinity, constraint->name() + "::low");
         constraint->SetCoefficient(slack, 1.);
         mSlackVariables.push_back(slack);
       }
 
       if (constraint->ub() != infinity) {
         MPVariable* slack;
-        slack = mSolver->MakeNumVar(0, infinity, constraint->name() + "_up");
+        slack = mSolver->MakeNumVar(0, infinity, constraint->name() + "::up");
         constraint->SetCoefficient(slack, -1.);
         mSlackVariables.push_back(slack);
       }
