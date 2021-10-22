@@ -11,7 +11,6 @@ namespace Antares
 {
 namespace Optimization
 {
-// TODO : use solver provided by the user ?
 InfeasibleProblemDiag::InfeasibleProblemDiag(PROBLEME_SIMPLEXE* ProbSpx,
                                              const std::string& pattern) :
  mPattern(pattern)
@@ -23,7 +22,7 @@ void InfeasibleProblemDiag::addSlackVariables()
 {
     std::regex rgx(mPattern);
     const double infinity = MPSolver::infinity();
-    for (auto constraint : mSolver->constraints())
+    for (MPConstraint* constraint : mSolver->constraints())
     {
         if (std::regex_match(constraint->name(), rgx))
         {
@@ -50,12 +49,12 @@ void InfeasibleProblemDiag::buildObjective()
 {
     MPObjective* objective = mSolver->MutableObjective();
     // Reset objective function
-    for (MPVariable* variable : mSolver->variables())
+    for (const MPVariable* variable : mSolver->variables())
     {
         objective->SetCoefficient(variable, 0.);
     }
     // Only slack variables have a non-zero cost
-    for (MPVariable* slack : mSlackVariables)
+    for (const MPVariable* slack : mSlackVariables)
     {
         objective->SetCoefficient(slack, 1.);
     }
@@ -75,10 +74,9 @@ InfeasibleProblemReport InfeasibleProblemDiag::produceReport()
     Solve();
 
     InfeasibleProblemReport r;
-    for (MPVariable* slack : mSlackVariables)
+    for (const MPVariable* slack : mSlackVariables)
     {
-        const double v = slack->solution_value();
-        r.append(slack->name(), v);
+        r.append(slack->name(), slack->solution_value());
     }
     return r;
 }

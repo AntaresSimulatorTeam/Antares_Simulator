@@ -2,8 +2,9 @@
 #include <antares/logs.h>
 #include <algorithm>
 
-static bool compareConstraints(const std::pair<std::string, double>& a,
-                               const std::pair<std::string, double>& b)
+using SlackSolution = Antares::Optimization::InfeasibleProblemReport::SlackSolution;
+
+static bool compareSlackSolutions(const SlackSolution& a, const SlackSolution& b)
 {
     return a.second > b.second;
 }
@@ -18,10 +19,11 @@ void InfeasibleProblemReport::append(const std::string& constraintName, double v
     mConstraints.push_back({constraintName, value});
 }
 
-void InfeasibleProblemReport::printLargest(int n)
+void InfeasibleProblemReport::printLargest(unsigned int n)
 {
-    std::sort(std::begin(mConstraints), std::end(mConstraints), compareConstraints);
-    for (int ii = 0; ii < n; ++ii)
+    std::sort(std::begin(mConstraints), std::end(mConstraints), compareSlackSolutions);
+
+    for (unsigned int ii = 0; ii < n; ++ii)
         Antares::logs.info() << mConstraints[ii].first << ": " << mConstraints[ii].second;
 }
 } // namespace Optimization
