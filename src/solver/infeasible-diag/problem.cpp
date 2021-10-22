@@ -37,9 +37,11 @@ void InfeasibleProblemDiag::addSlackVariables() {
 
 void InfeasibleProblemDiag::buildObjective() {
   MPObjective* objective = mSolver->MutableObjective();
+  // Reset objective function
   for (MPVariable* variable : mSolver->variables()) {
     objective->SetCoefficient(variable, 0.);
   }
+  // Only slack variables have a non-zero cost
   for (MPVariable* slack : mSlackVariables) {
     objective->SetCoefficient(slack, 1.);
   }

@@ -2,7 +2,9 @@
 
 #include <string>
 #include <vector>
-#include <ostream>
+
+// Report class, without OR-Tools dependency in its API
+// Only dependency is in the implementation
 
 class InfeasibleProblemReport {
  private:
