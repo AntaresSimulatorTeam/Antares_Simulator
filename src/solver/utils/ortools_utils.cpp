@@ -12,13 +12,13 @@ using namespace operations_research;
 template<typename T_PROBLEM>
 MPSolver* convert_to_MPSolver(T_PROBLEM* problemeSimplexe);
 
-void extract_from_MPSolver(MPSolver* solver, PROBLEME_NOMME* problemeSimplexe);
-void extract_from_MPSolver(MPSolver* solver, PROBLEME_A_RESOUDRE* problemeSimplexe);
+void extract_from_MPSolver(const MPSolver* solver, PROBLEME_NOMME* problemeSimplexe);
+void extract_from_MPSolver(const MPSolver* solver, PROBLEME_A_RESOUDRE* problemeSimplexe);
 
 void change_MPSolver_objective(MPSolver* solver, double* costs, int nbVar);
 void change_MPSolver_rhs(MPSolver* solver, double* rhs, char* sens, int nbRow);
 
-void transferVariables(MPSolver* solver, double* bMin, double* bMax, double* costs, int nbVar, const std::vector<std::string>& NomDesVariables)
+void transferVariables(MPSolver* solver, const double* bMin, const double* bMax, const double* costs, int nbVar, const std::vector<std::string>& NomDesVariables)
 {
     MPObjective* const objective = solver->MutableObjective();
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
@@ -29,7 +29,7 @@ void transferVariables(MPSolver* solver, double* bMin, double* bMax, double* cos
             min_l = bMin[idxVar];
         }
         double max_l = bMax[idxVar];
-        MPVariable* x;
+        const MPVariable* x;
         if (NomDesVariables[idxVar].empty()) {
           std::ostringstream oss;
           oss << "x" << idxVar;
@@ -41,7 +41,7 @@ void transferVariables(MPSolver* solver, double* bMin, double* bMax, double* cos
     }
 }
 
-void transferRows(MPSolver* solver, double* rhs, char* sens, int nbRow, const std::vector<std::string>& NomDesContraintes)
+void transferRows(MPSolver* solver, const double* rhs, const char* sens, int nbRow, const std::vector<std::string>& NomDesContraintes)
 {
     for (int idxRow = 0; idxRow < nbRow; ++idxRow)
     {
@@ -162,7 +162,7 @@ MPSolver* convert_to_MPSolver(PROBLEME_A_RESOUDRE* problemeAResoudre)
     return solver;
 }
 
-void extract_from_MPSolver(MPSolver* solver, PROBLEME_A_RESOUDRE* problemePne)
+void extract_from_MPSolver(const MPSolver* solver, PROBLEME_A_RESOUDRE* problemePne)
 {
     auto& variables = solver->variables();
     int nbVar = problemePne->NombreDeVariables;
@@ -183,7 +183,7 @@ void extract_from_MPSolver(MPSolver* solver, PROBLEME_A_RESOUDRE* problemePne)
     }
 }
 
-void extract_from_MPSolver(MPSolver* solver, PROBLEME_NOMME* problemeSimplexe)
+void extract_from_MPSolver(const MPSolver* solver, PROBLEME_NOMME* problemeSimplexe)
 {
     auto& variables = solver->variables();
     int nbVar = problemeSimplexe->NombreDeVariables;
