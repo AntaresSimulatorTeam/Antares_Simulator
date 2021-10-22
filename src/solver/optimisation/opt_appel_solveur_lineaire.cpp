@@ -66,23 +66,29 @@ using namespace Yuni;
 #define SNPRINTF snprintf
 #endif
 
-class TimeMeasurement {
+class TimeMeasurement
+{
     using clock = std::chrono::steady_clock;
+
 public:
-    TimeMeasurement() {
+    TimeMeasurement()
+    {
         start_ = clock::now();
         end_ = start_;
     }
-    
-    void tick() {
+
+    void tick()
+    {
         end_ = clock::now();
     }
 
-    long long duration_ms() const {
+    long long duration_ms() const
+    {
         return std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count();
     }
 
-    std::string toString() const {
+    std::string toString() const
+    {
         return std::to_string(duration_ms()) + " ms";
     }
 
@@ -346,8 +352,8 @@ RESOLUTION:
         logs.error() << "* Hydro reservoir impossible to manage with cumulative options \"hard "
                         "bounds without heuristic\"";
 
-        InfeasibleProblemDiag diag(&Probleme, "(.)*");
-        InfeasibleProblemReport report = diag.produceReport();
+        Optimization::InfeasibleProblemDiag diag(&Probleme, "(.)*");
+        Optimization::InfeasibleProblemReport report = diag.produceReport();
         report.printLargest(10);
 
         // Write MPS only if exportMPSOnError is activated and MPS weren't exported before with
