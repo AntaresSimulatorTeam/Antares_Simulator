@@ -586,7 +586,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             assert(&scratchpad);
             assert((uint)indx < scratchpad.ts.load.height);
             assert((uint)tsIndex.Consommation < scratchpad.ts.load.width);
-            if (parameters.renewableGeneration() == rgAggregated)
+            if (parameters.renewableGeneration.isAggregated())
             {
                 assert((uint)indx < scratchpad.ts.solar.height);
                 assert((uint)indx < scratchpad.ts.wind.height);
@@ -598,7 +598,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
               = scratchpad.miscGenSum[indx] + ror[tsFatalIndex][indx] + scratchpad.mustrunSum[indx];
 
-            if (parameters.renewableGeneration() == rgAggregated)
+            if (parameters.renewableGeneration.isAggregated())
             {
                 problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
                   += scratchpad.ts.wind[tsIndex.Eolien][indx]
@@ -606,7 +606,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             }
 
             // Renewable
-            if (parameters.renewableGeneration() == rgClusters)
+            if (parameters.renewableGeneration().isClusters())
             {
                 area.renewable.list.each([&](const RenewableCluster& cluster) {
                     assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
