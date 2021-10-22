@@ -3,17 +3,7 @@
 [Environnement](#environment) | [CMake version](#cmake-version) | [GCC version](#gcc-version) | [Python version](#python-version) | [Dependencies](#dependencies) | [Building](#building-antares-solution) | [Tests](#tests) | [Installer creation](#installer-creation)
 
 ## C/I status
-| OS     | System librairies | Built in libraries |
-|:-------|--------|------|
-| Centos7  | [![Status][centos_system_svg]][centos_system_link] | [![Status][centos_deps_build_svg]][centos_deps_build_link] |
-
-[centos_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Centos7%20CI%20(deps.%20compilation)/badge.svg
-
-[centos_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Centos7%20CI%20(deps.%20compilation)"
-
-[centos_system_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Centos7%20CI%20(system%20libs)/badge.svg
-
-[centos_system_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Centos7%20CI%20(system%20libs)"
+[![Status][centos_precompiled_svg]][centos_precompiled_link] [![Status][centos_deps_build_svg]][centos_deps_build_link]
  
 ## [CMake version](#cmake-version)
 CMake 3.x must be used.
@@ -57,7 +47,7 @@ pip3 install -r src/tests/examples/requirements.txt
  - [OR-Tools](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) (fork from [RTE](https://github.com/rte-france/or-tools/tree/rte_dev_sirius) based on official OR-Tools github)
  - [wxWidgets](https://github.com/wxWidgets/wxWidgets)
  (Only for the complete Antares Simulator solution with GUI)
- - Boost libraries : test process filesystem regex dll (Only for unit tests)
+ - Boost libraries : test (Only for unit tests)
 
 This section describes the install procedures for the third-party Open source libraries used by ANTARES.
 The install procedure can be done
@@ -67,7 +57,7 @@ The install procedure can be done
 
 #### Yum commands
 ```
-sudo yum install redhat-lsb-core curl-devel wxGTK3-devel boost-test boost-filesystem boost-regex boost-devel unzip
+sudo yum install redhat-lsb-core wxGTK3-devel boost-test boost-devel unzip
 ```
 ### [Automatic librairies compilation from git](#git_compil)
 [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps) is used as a git submodule for automatic librairies compilation from git.
@@ -214,3 +204,9 @@ There are still some system libraries that must be installed if you want to use 
 sudo yum install epel-release
 sudo yum install curl wxGTK3
 ```
+
+[centos_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Centos7%20CI%20(deps.%20compilation)/badge.svg
+[centos_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Centos7%20CI%20(deps.%20compilation)"
+
+[centos_precompiled_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Centos7%20CI%20(pre-compiled)/badge.svg
+[centos_precompiled_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Centos7%20CI%20(pre-compiled)"
