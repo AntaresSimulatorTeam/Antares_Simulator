@@ -1,4 +1,4 @@
-name: Release asset upload (Centos7)
+name: Centos7 CI (Release)
 
 on:
   release:
@@ -9,23 +9,51 @@ env:
   
 jobs:
 
+  docker_publish:
+  
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master 
+
+    - name: Read antares-deps version
+      id: antares-deps-version
+      uses: notiz-dev/github-action-json-property@release
+      with: 
+        path: 'antares-deps-version.json'
+        prop_path: 'antares_deps_version'
+    
+    - name: Get branch name
+      id: branch-name
+      uses: tj-actions/branch-names@v5
+      
+    - name: Create docker file with src
+      shell: bash
+      run: |
+        cd docker
+        sh build-docker-file-src.sh
+        
+    - name: Docker file push
+      uses: elgohr/Publish-Docker-Github-Action@master
+      env:
+        ANTARES_DEPS_VERSION: ${{steps.antares-deps-version.outputs.prop}}
+        ANTARES_SIMULATOR_TAG: ${{ steps.extract_branch.outputs.branch }}
+      with:
+        name: antaresrte/rte-antares
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        workdir: docker
+        dockerfile: build-centos7-src
+        cache: true
+        tags: centos7-simulator-${{ steps.extract_branch.outputs.branch }}
+        buildargs: ANTARES_DEPS_VERSION, ANTARES_SIMULATOR_TAG
+
   windows:
 
     runs-on: ubuntu-latest
-    container: 'centos:7'
+    needs: docker_publish
+    container: 'antaresrte/rte-antares:centos7-simulator'
 
     steps:
-    
-    - name: Set up Python
-      run: |
-           yum update -y
-           yum install -y python3 python3-pip
-          
-    - name: Install mandatory system libraries
-      run: |
-           yum install -y wget git epel-release redhat-lsb-core gcc gcc-c++ make centos-release-scl scl-utils
-           yum install -y openssl-devel curl-devel libuuid-devel wxGTK3-devel boost-test boost-filesystem boost-regex boost-devel 
-           yum install -y cmake3 devtoolset-7 rpm-build
            
     - uses: nelonoel/branch-name@v1.0.1
     
@@ -35,26 +63,16 @@ jobs:
     
     - name: Get release
       id: get_release
-      uses: bruceadams/get-release@v1.2.0      
-           
-    - name: Download pre-compiled librairies
-      run: |
-           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v1.1.0/rte-antares-deps-centos7-Release-solver.tar.gz
-           tar -xvf rte-antares-deps-centos7-Release-solver.tar.gz
-           rm -rf rte-antares-deps-centos7-Release-solver.tar.gz
+      uses: bruceadams/get-release@v1.2.0
            
     - name: Init submodule
       run: |
            git submodule update --init --recursive src
-          
-    - name: Install dependencies
-      run: |
-          pip3 install -r src/tests/examples/requirements.txt
-    
+           
     - name: Configure
       run: |
            source /opt/rh/devtoolset-7/enable
-           cmake3 -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
+           cmake3 -B _build -S src -DDEPS_INSTALL_DIR=/rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
     
     - name: Build
       run: |

@@ -42,9 +42,6 @@ namespace Component
 {
 namespace Datagrid
 {
-// Forward declaration
-class Component;
-
 namespace Renderer
 {
 template<class T = double, class ReadWriteT = T, uint PrecisionT = 6>
