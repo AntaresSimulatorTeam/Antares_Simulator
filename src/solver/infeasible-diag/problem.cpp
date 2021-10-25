@@ -49,10 +49,7 @@ void InfeasibleProblemDiag::buildObjective()
 {
     MPObjective* objective = mSolver->MutableObjective();
     // Reset objective function
-    for (const MPVariable* variable : mSolver->variables())
-    {
-        objective->SetCoefficient(variable, 0.);
-    }
+    objective->Clear();
     // Only slack variables have a non-zero cost
     for (const MPVariable* slack : mSlackVariables)
     {
