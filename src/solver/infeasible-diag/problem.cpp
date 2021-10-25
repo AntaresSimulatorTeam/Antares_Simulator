@@ -72,8 +72,11 @@ InfeasibleProblemReport InfeasibleProblemDiag::produceReport()
     buildObjective();
     if (mSlackVariables.size() == 0)
         throw std::runtime_error(
-          "No constraints have been pre-selected. Cannot generate infeasibility report.");
-    Solve();
+          "Cannot generate infeasibility report: no constraints have been pre-selected");
+    MPSolver::ResultStatus s = Solve();
+    if (s != MPSolver::OPTIMAL)
+        throw std::runtime_error(
+          "Cannot generate infeasibility report: linear problem could not be solved");
 
     InfeasibleProblemReport r;
     for (const MPVariable* slack : mSlackVariables)
