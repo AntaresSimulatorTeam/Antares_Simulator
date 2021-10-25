@@ -109,18 +109,37 @@ wxString ScBuilderRendererBase::cellValue(int x, int y) const
     return (Math::Zero(d)) ? wxString() << wxT("rand") : wxString() << (uint)d;
 }
 
+static IRenderer::CellStyle alternateEnabledDisabled(int rowIndex, bool enabled)
+{
+    if (enabled)
+    {
+        if (rowIndex % 2 == 0)
+            return IRenderer::cellStyleDefaultCenter;
+        else
+            return IRenderer::cellStyleDefaultCenterAlternate;
+    }
+    else
+    {
+        if (rowIndex % 2 == 0)
+            return IRenderer::cellStyleDefaultCenterDisabled;
+        else
+            return IRenderer::cellStyleDefaultCenterAlternateDisabled;
+    }
+}
+
 IRenderer::CellStyle ScBuilderRendererBase::cellStyle(int x, int y) const
 {
-    bool valid = (!(!study) && !(!pRules) && Math::Zero(cellNumericValue(x, y)));
+    if (Math::Zero(cellNumericValue(x, y)))
+        return alternateEnabledDisabled(y, false);
+
+    bool valid = (!(!study) && !(!pRules));
     if (valid)
     {
         auto& parameters = study->parameters;
         if (parameters.userPlaylist && parameters.yearsFilter)
-            valid = !parameters.yearsFilter[x];
+            valid = parameters.yearsFilter[x];
     }
-    return (valid)
-             ? ((y % 2) ? cellStyleDefaultCenterAlternateDisabled : cellStyleDefaultCenterDisabled)
-             : ((y % 2) ? cellStyleDefaultCenterAlternate : cellStyleDefaultCenter);
+    return alternateEnabledDisabled(y, valid);
 }
 
 void ScBuilderRendererBase::onStudyClosed()
