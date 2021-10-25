@@ -5,65 +5,115 @@
 #include <boost/test/included/unit_test.hpp>
 #include <filesystem>
 #include <string>
+#include <vector>
+#include <map>
 
 #include <study.h>
 #include <filter.h>
 
 #include "files-helper.h"
 
+using namespace std;
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
 const string generatedIniFileName = "properties.ini";
 const string referenceIniFileName = "properties-reference.ini";
 
+class referenceIniFile
+{
+public:
+	referenceIniFile();
+	~referenceIniFile() = default;
+	string name() { return name_; }
+	void save();
+
+	void set_property(string key,  string value) { properties_[key] = value; }
+private:
+	string name_;
+	vector<string> property_names_; // Keeps the properties ordered in the file
+	map<string, string> properties_;
+};
+
+referenceIniFile::referenceIniFile() : name_("properties-reference.ini")
+{
+	property_names_ = { "hurdles-cost", "loop-flow", "use-phase-shifter", "transmission-capacities",
+						"asset-type", "link-style", "link-width", "colorr", "colorg", "colorb",
+						"display-comments", "filter-synthesis", "filter-year-by-year" };
+
+	properties_["hurdles-cost"] = "false";
+	properties_["loop-flow"] = "false";
+	properties_["use-phase-shifter"] = "false";
+	properties_["transmission-capacities"] = "enabled";
+	properties_["asset-type"] = "ac";
+	properties_["link-style"] = "plain";
+	properties_["link-width"] = "1";
+	properties_["colorr"] = "112";
+	properties_["colorg"] = "112";
+	properties_["colorb"] = "112";
+	properties_["display-comments"] = "true";
+	properties_["filter-synthesis"] = "hourly, daily, weekly, monthly, annual";
+	properties_["filter-year-by-year"] = "hourly, daily, weekly, monthly, annual";
+}
+
+void referenceIniFile::save()
+{
+	ofstream file;
+	file.open(name_);
+	file << "[area 2]" << endl;
+	for (int i = 0; i < property_names_.size(); ++i)
+		file << property_names_[i] << " = " << properties_[property_names_[i]] << endl;
+	file << endl;
+}
+
+
+struct Fixture
+{
+	Fixture()
+	{
+		study = new Study();
+		area_1 = study->areaAdd("Area 1");
+		area_2 = study->areaAdd("Area 2");
+	}
+
+	AreaLink* createLinkBetweenAreas(Area* area_1, Area* area_2)
+	{
+		AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
+		link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
+		return link;
+	}
+
+	void saveAreaLinksOntoDisk(Area* area) { BOOST_CHECK(AreaLinksSaveToFolder(area, fs::current_path().string().c_str())); }
+
+	~Fixture() 
+	{
+		vector<string> filesToRemove = { "area 2.txt", generatedIniFileName, referenceIniFileName };
+		remove_files(filesToRemove);
+	}
+
+	Study::Ptr study;
+	Area* area_1;
+	Area* area_2;
+};
+
+BOOST_FIXTURE_TEST_SUITE(s, Fixture)
+
 BOOST_AUTO_TEST_CASE(one_link_with_default_values)
 {
-	Study::Ptr study = new Study();
-	Area* area_1 = study->areaAdd("Area 1");
-	Area* area_2 = study->areaAdd("Area 2");
-	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
+	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
 
-	// Setting link properties
-	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
-	// link's properties are default 
+	saveAreaLinksOntoDisk(area_1);
 
-	// Reference properties.ini file
-	ofstream referenceFile;
-	referenceFile.open(referenceIniFileName);
-	referenceFile << "[area 2]" << endl;
-	referenceFile << "hurdles-cost = false" << endl;
-	referenceFile << "loop-flow = false" << endl;
-	referenceFile << "use-phase-shifter = false" << endl;
-	referenceFile << "transmission-capacities = enabled" << endl;
-	referenceFile << "asset-type = ac" << endl;
-	referenceFile << "link-style = plain" << endl;
-	referenceFile << "link-width = 1" << endl;
-	referenceFile << "colorr = 112" << endl;
-	referenceFile << "colorg = 112" << endl;
-	referenceFile << "colorb = 112" << endl;
-	referenceFile << "display-comments = true" << endl;
-	referenceFile << "filter-synthesis = hourly, daily, weekly, monthly, annual" << endl;
-	referenceFile << "filter-year-by-year = hourly, daily, weekly, monthly, annual" << endl;
-	referenceFile << endl;
-	referenceFile.close();
-	
-	BOOST_CHECK(AreaLinksSaveToFolder(area_1, fs::current_path().string().c_str()));
-	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
+	referenceIniFile referenceFile;
+	referenceFile.save();
 
-	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName, referenceIniFileName };
-	remove_files(filesToRemove);
+	BOOST_CHECK(files_identical(generatedIniFileName, referenceFile.name()));
 }
+
 
 BOOST_AUTO_TEST_CASE(one_link_with_none_default_values)
 {
-	Study::Ptr study = new Study();
-	Area* area_1 = study->areaAdd("Area 1");
-	Area* area_2 = study->areaAdd("Area 2");
-	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
-
-	// Setting link properties
-	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
+	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
 	link->useHurdlesCost = true;
 	link->useLoopFlow = true;
 	link->usePST = true;
@@ -78,212 +128,110 @@ BOOST_AUTO_TEST_CASE(one_link_with_none_default_values)
 	link->filterSynthesis = filterNone;
 	link->filterYearByYear = filterHourly | filterDaily;
 
-	// Reference properties.ini file 
-	ofstream referenceFile;
-	referenceFile.open(referenceIniFileName);
-	referenceFile << "[area 2]" << endl;
-	referenceFile << "hurdles-cost = true" << endl;
-	referenceFile << "loop-flow = true" << endl;
-	referenceFile << "use-phase-shifter = true" << endl;
-	referenceFile << "transmission-capacities = infinite" << endl;
-	referenceFile << "asset-type = dc" << endl;
-	referenceFile << "link-style = dash" << endl;
-	referenceFile << "link-width = 3" << endl;
-	referenceFile << "colorr = 10" << endl;
-	referenceFile << "colorg = 9" << endl;
-	referenceFile << "colorb = 8" << endl;
-	referenceFile << "display-comments = false" << endl;
-	referenceFile << "filter-synthesis = " << endl;
-	referenceFile << "filter-year-by-year = hourly, daily" << endl;
-	referenceFile << endl;
-	referenceFile.close();
+	saveAreaLinksOntoDisk(area_1);
 
-	BOOST_CHECK(AreaLinksSaveToFolder(area_1, fs::current_path().string().c_str()));
-	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
+	referenceIniFile referenceFile;
+	referenceFile.set_property("hurdles-cost", "true");
+	referenceFile.set_property("loop-flow", "true");
+	referenceFile.set_property("use-phase-shifter", "true");
+	referenceFile.set_property("transmission-capacities", "infinite");
+	referenceFile.set_property("asset-type", "dc");
+	referenceFile.set_property("link-style", "dash");
+	referenceFile.set_property("link-width", "3");
+	referenceFile.set_property("colorr", "10");
+	referenceFile.set_property("colorg", "9");
+	referenceFile.set_property("colorb", "8");
+	referenceFile.set_property("display-comments", "false");
+	referenceFile.set_property("filter-synthesis", "");
+	referenceFile.set_property("filter-year-by-year", "hourly, daily");
+	referenceFile.save();
 
-	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName, referenceIniFileName };
-	remove_files(filesToRemove);
+	BOOST_CHECK(files_identical(generatedIniFileName, referenceFile.name()));
 }
 
 
 BOOST_AUTO_TEST_CASE(one_link_with_transmission_capacity_to_ignore__all_others_properties_are_default)
 {
-	Study::Ptr study = new Study();
-	Area* area_1 = study->areaAdd("Area 1");
-	Area* area_2 = study->areaAdd("Area 2");
-	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
-
-	// Setting link properties
-	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
+	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
 	link->transmissionCapacities = tncIgnore;
 
-	// Reference properties.ini file
-	ofstream referenceFile;
-	referenceFile.open(referenceIniFileName);
-	referenceFile << "[area 2]" << endl;
-	referenceFile << "hurdles-cost = false" << endl;
-	referenceFile << "loop-flow = false" << endl;
-	referenceFile << "use-phase-shifter = false" << endl;
-	referenceFile << "transmission-capacities = ignore" << endl; // Value tested here : ignore
-	referenceFile << "asset-type = ac" << endl;
-	referenceFile << "link-style = plain" << endl;
-	referenceFile << "link-width = 1" << endl;
-	referenceFile << "colorr = 112" << endl;
-	referenceFile << "colorg = 112" << endl;
-	referenceFile << "colorb = 112" << endl;
-	referenceFile << "display-comments = true" << endl;
-	referenceFile << "filter-synthesis = hourly, daily, weekly, monthly, annual" << endl;
-	referenceFile << "filter-year-by-year = hourly, daily, weekly, monthly, annual" << endl;
-	referenceFile << endl;
-	referenceFile.close();
+	saveAreaLinksOntoDisk(area_1);
 
-	BOOST_CHECK(AreaLinksSaveToFolder(area_1, fs::current_path().string().c_str()));
-	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
+	referenceIniFile referenceFile;
+	referenceFile.set_property("transmission-capacities", "ignore");
+	referenceFile.save();
 
-	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName, referenceIniFileName };
-	remove_files(filesToRemove);
-}
-
-BOOST_AUTO_TEST_CASE(one_link_with_transmission_capacity_to_ignore__ini_file_contains_matching_line)
-{
-	Study::Ptr study = new Study();
-	Area* area_1 = study->areaAdd("Area 1");
-	Area* area_2 = study->areaAdd("Area 2");
-	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
-
-	// Setting link properties
-	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
-	link->transmissionCapacities = tncIgnore;
-
-	BOOST_CHECK(AreaLinksSaveToFolder(area_1, fs::current_path().string().c_str()));
-	BOOST_CHECK(fileContainsLine(generatedIniFileName, "transmission-capacities = ignore"));
-
-	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName };
-	remove_files(filesToRemove);
+	BOOST_CHECK(files_identical(generatedIniFileName, referenceFile.name()));
 }
 
 BOOST_AUTO_TEST_CASE(one_link_with_asset_type_to_gas__ini_file_contains_matching_line)
 {
-	Study::Ptr study = new Study();
-	Area* area_1 = study->areaAdd("Area 1");
-	Area* area_2 = study->areaAdd("Area 2");
-	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
-
-	// Setting link properties
-	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
+	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
 	link->assetType = atGas;
 
-	BOOST_CHECK(AreaLinksSaveToFolder(area_1, fs::current_path().string().c_str()));
-	BOOST_CHECK(fileContainsLine(generatedIniFileName, "asset-type = gaz"));
+	saveAreaLinksOntoDisk(area_1);
 
-	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName };
-	remove_files(filesToRemove);
+	BOOST_CHECK(fileContainsLine(generatedIniFileName, "asset-type = gaz"));
 }
 
 BOOST_AUTO_TEST_CASE(one_link_with_asset_type_to_virtual__ini_file_contains_matching_line)
 {
-	Study::Ptr study = new Study();
-	Area* area_1 = study->areaAdd("Area 1");
-	Area* area_2 = study->areaAdd("Area 2");
-	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
-
-	// Setting link properties
-	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
+	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
 	link->assetType = atVirt;
 
-	BOOST_CHECK(AreaLinksSaveToFolder(area_1, fs::current_path().string().c_str()));
-	BOOST_CHECK(fileContainsLine(generatedIniFileName, "asset-type = virt"));
+	saveAreaLinksOntoDisk(area_1);
 
-	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName };
-	remove_files(filesToRemove);
+	BOOST_CHECK(fileContainsLine(generatedIniFileName, "asset-type = virt"));
 }
 
 BOOST_AUTO_TEST_CASE(one_link_with_asset_type_to_other__ini_file_contains_matching_line)
 {
-	Study::Ptr study = new Study();
-	Area* area_1 = study->areaAdd("Area 1");
-	Area* area_2 = study->areaAdd("Area 2");
-	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
-
-	// Setting link properties
-	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
+	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
 	link->assetType = atOther;
 
-	BOOST_CHECK(AreaLinksSaveToFolder(area_1, fs::current_path().string().c_str()));
-	BOOST_CHECK(fileContainsLine(generatedIniFileName, "asset-type = other"));
+	saveAreaLinksOntoDisk(area_1);
 
-	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName };
-	remove_files(filesToRemove);
+	BOOST_CHECK(fileContainsLine(generatedIniFileName, "asset-type = other"));
 }
 
 BOOST_AUTO_TEST_CASE(one_link_with_style_to_dot__ini_file_contains_matching_line)
 {
-	Study::Ptr study = new Study();
-	Area* area_1 = study->areaAdd("Area 1");
-	Area* area_2 = study->areaAdd("Area 2");
-	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
-
-	// Setting link properties
-	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
+	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
 	link->style = stDot;
 
-	BOOST_CHECK(AreaLinksSaveToFolder(area_1, fs::current_path().string().c_str()));
-	BOOST_CHECK(fileContainsLine(generatedIniFileName, "link-style = dot"));
+	saveAreaLinksOntoDisk(area_1);
 
-	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName };
-	remove_files(filesToRemove);
+	BOOST_CHECK(fileContainsLine(generatedIniFileName, "link-style = dot"));
 }
 
 BOOST_AUTO_TEST_CASE(one_link_with_style_to_dotdash__ini_file_contains_matching_line)
 {
-	Study::Ptr study = new Study();
-	Area* area_1 = study->areaAdd("Area 1");
-	Area* area_2 = study->areaAdd("Area 2");
-	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
-
-	// Setting link properties
-	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
+	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
 	link->style = stDotDash;
 
-	BOOST_CHECK(AreaLinksSaveToFolder(area_1, fs::current_path().string().c_str()));
-	BOOST_CHECK(fileContainsLine(generatedIniFileName, "link-style = dotdash"));
+	saveAreaLinksOntoDisk(area_1);
 
-	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName };
-	remove_files(filesToRemove);
+	BOOST_CHECK(fileContainsLine(generatedIniFileName, "link-style = dotdash"));
 }
 
 BOOST_AUTO_TEST_CASE(one_link_with_synthesis_to_hourly_monthly_annual__ini_file_contains_matching_line)
 {
-	Study::Ptr study = new Study();
-	Area* area_1 = study->areaAdd("Area 1");
-	Area* area_2 = study->areaAdd("Area 2");
-	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
-
-	// Setting link properties
-	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
+	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
 	link->filterSynthesis = filterWeekly | filterMonthly | filterAnnual;
 
-	BOOST_CHECK(AreaLinksSaveToFolder(area_1, fs::current_path().string().c_str()));
-	BOOST_CHECK(fileContainsLine(generatedIniFileName, "filter-synthesis = weekly, monthly, annual"));
+	saveAreaLinksOntoDisk(area_1);
 
-	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName };
-	remove_files(filesToRemove);
+	BOOST_CHECK(fileContainsLine(generatedIniFileName, "filter-synthesis = weekly, monthly, annual"));
 }
 
 BOOST_AUTO_TEST_CASE(one_link_with_year_by_year_to_daily_monthly__ini_file_contains_matching_line)
 {
-	Study::Ptr study = new Study();
-	Area* area_1 = study->areaAdd("Area 1");
-	Area* area_2 = study->areaAdd("Area 2");
-	AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
-
-	// Setting link properties
-	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
+	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
 	link->filterYearByYear = filterDaily | filterMonthly;
 
-	BOOST_CHECK(AreaLinksSaveToFolder(area_1, fs::current_path().string().c_str()));
-	BOOST_CHECK(fileContainsLine(generatedIniFileName, "filter-year-by-year = daily, monthly"));
+	saveAreaLinksOntoDisk(area_1);
 
-	vector<string> filesToRemove = { "area 2.txt", generatedIniFileName };
-	remove_files(filesToRemove);
+	BOOST_CHECK(fileContainsLine(generatedIniFileName, "filter-year-by-year = daily, monthly"));
 }
+
+BOOST_AUTO_TEST_SUITE_END()
