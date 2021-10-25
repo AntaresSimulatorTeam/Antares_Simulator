@@ -3,7 +3,7 @@
 #include <fstream>
 #include <regex>
 #include <algorithm>
-#include <cassert>
+#include <stdexcept>
 
 using namespace operations_research;
 
@@ -70,7 +70,9 @@ InfeasibleProblemReport InfeasibleProblemDiag::produceReport()
 {
     addSlackVariables();
     buildObjective();
-    assert(mSlackVariables.size() > 0);
+    if (mSlackVariables.size() == 0)
+        throw std::runtime_error(
+          "No constraints have been pre-selected. Cannot generate infeasibility report.");
     Solve();
 
     InfeasibleProblemReport r;
