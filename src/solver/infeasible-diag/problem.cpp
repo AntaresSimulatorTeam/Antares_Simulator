@@ -73,7 +73,7 @@ InfeasibleProblemReport InfeasibleProblemDiag::produceReport()
         throw std::runtime_error(
           "Cannot generate infeasibility report: no constraints have been pre-selected");
     buildObjective();
-    MPSolver::ResultStatus s = Solve();
+    const MPSolver::ResultStatus s = Solve();
     if (s != MPSolver::OPTIMAL)
         throw std::runtime_error(
           "Cannot generate infeasibility report: linear problem could not be solved");
