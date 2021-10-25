@@ -69,10 +69,10 @@ MPSolver::ResultStatus InfeasibleProblemDiag::Solve()
 InfeasibleProblemReport InfeasibleProblemDiag::produceReport()
 {
     addSlackVariables();
-    buildObjective();
     if (mSlackVariables.size() == 0)
         throw std::runtime_error(
           "Cannot generate infeasibility report: no constraints have been pre-selected");
+    buildObjective();
     MPSolver::ResultStatus s = Solve();
     if (s != MPSolver::OPTIMAL)
         throw std::runtime_error(
