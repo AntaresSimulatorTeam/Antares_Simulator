@@ -438,7 +438,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
 
                 NomDeLaContrainte
                   = "bc::hourly::" + std::to_string(ts)
-                    + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante.c_str();
+                    + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
 
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                   ProblemeAResoudre,
@@ -638,7 +638,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
 
                 NomDeLaContrainte
                   = "bc::daily::" + std::to_string(Jour)
-                    + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante.c_str();
+                    + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
 
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                   ProblemeAResoudre,
@@ -738,7 +738,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
 
                 NomDeLaContrainte
                   = std::string("bc::weekly::")
-                    + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante.c_str();
+                    + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
 
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                   ProblemeAResoudre,
