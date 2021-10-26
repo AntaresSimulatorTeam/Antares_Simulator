@@ -195,7 +195,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         PtMat->NombreDInterconnexionsDansLaContrainteCouplante = bc.linkCount;
         PtMat->NombreDePaliersDispatchDansLaContrainteCouplante = bc.clusterCount;
         PtMat->NombreDElementsDansLaContrainteCouplante = bc.linkCount + bc.clusterCount;
-        PtMat->NomDeLaContrainteCouplante = bc.name.c_str();
+        PtMat->NomDeLaContrainteCouplante = bc.name;
         switch (bc.type)
         {
         case BindingConstraint::typeHourly:

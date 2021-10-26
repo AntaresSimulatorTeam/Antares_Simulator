@@ -93,7 +93,7 @@ public:
     int* clusterOffset;
     long* clusterIndex;
     long* clustersAreaIndex;
-    ConstraintName name;
+    const char* name;
 };
 
 /*!
