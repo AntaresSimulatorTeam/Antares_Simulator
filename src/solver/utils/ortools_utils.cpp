@@ -12,7 +12,7 @@ using namespace operations_research;
 template<typename T_PROBLEM>
 MPSolver* convert_to_MPSolver(T_PROBLEM* problemeSimplexe);
 
-void extract_from_MPSolver(const MPSolver* solver, PROBLEME_NOMME* problemeSimplexe);
+void extract_from_MPSolver(const MPSolver* solver, PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
 void extract_from_MPSolver(const MPSolver* solver, PROBLEME_A_RESOUDRE* problemeSimplexe);
 
 void change_MPSolver_objective(MPSolver* solver, double* costs, int nbVar);
@@ -92,7 +92,7 @@ void transferMatrix(MPSolver* solver,
     }
 }
 
-MPSolver* convert_to_MPSolver(PROBLEME_NOMME* problemeSimplexe)
+MPSolver* convert_to_MPSolver(PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
     auto& study = *Data::Study::Current::Get();
 
@@ -183,7 +183,7 @@ void extract_from_MPSolver(const MPSolver* solver, PROBLEME_A_RESOUDRE* probleme
     }
 }
 
-void extract_from_MPSolver(const MPSolver* solver, PROBLEME_NOMME* problemeSimplexe)
+void extract_from_MPSolver(const MPSolver* solver, PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
     auto& variables = solver->variables();
     int nbVar = problemeSimplexe->NombreDeVariables;
@@ -269,7 +269,7 @@ bool solveAndManageStatus(MPSolver* solver, int& resultStatus, MPSolverParameter
     return resultStatus == OUI_SPX;
 }
 
-MPSolver* solveProblem(PROBLEME_NOMME* Probleme,
+MPSolver* solveProblem(PROBLEME_SIMPLEXE_NOMME* Probleme,
                        MPSolver* ProbSpx)
 {
     MPSolver* solver = ProbSpx;
@@ -318,7 +318,7 @@ MPSolver* solveProblem(PROBLEME_A_RESOUDRE* Probleme, MPSolver* ProbSpx)
 
 extern "C"
 {
-    MPSolver* ORTOOLS_Simplexe(PROBLEME_NOMME* Probleme,
+    MPSolver* ORTOOLS_Simplexe(PROBLEME_SIMPLEXE_NOMME* Probleme,
                                MPSolver* ProbSpx)
     {
         return solveProblem(Probleme, ProbSpx);

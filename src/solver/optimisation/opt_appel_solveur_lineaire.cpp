@@ -101,7 +101,7 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
 
     PROBLEME_SPX* ProbSpx;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    PROBLEME_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
+    PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
                             ProblemeAResoudre->NomDesContraintes);
     PremierPassage = OUI_ANTARES;
     MPSolver* solver;
