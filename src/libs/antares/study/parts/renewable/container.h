@@ -111,7 +111,7 @@ public:
     // Only available from the solver
     inline size_t clusterCount() const
     {
-        return clusters.size();
+        return list.size();
     }
 }; // class PartRenewable
 

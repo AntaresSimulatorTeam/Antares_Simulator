@@ -128,7 +128,7 @@ public:
 
     // Return unit count
     inline size_t clusterCount() const {
-        return clusters.size();
+        return list.size();
     }
 }; // class PartThermal
 
