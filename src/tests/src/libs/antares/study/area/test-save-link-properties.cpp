@@ -25,35 +25,37 @@ class referenceIniFile
 public:
 	referenceIniFile();
 	~referenceIniFile() = default;
-	string name() { return name_; }
+	string name() const { return name_; }
 	void save();
 
-	void set_property(string key,  string value) { properties_[key] = value; }
+	void set_property(const string & key,  const string & value) { properties_[key] = value; }
 private:
-	string name_;
-	vector<string> property_names_; // Keeps the properties ordered in the file
+	string name_ = referenceIniFileName;
+
+	// Keeps the properties ordered in the file
+	vector<string> property_names_ = {
+		"hurdles-cost", "loop-flow", "use-phase-shifter", "transmission-capacities",
+		"asset-type", "link-style", "link-width", "colorr", "colorg", "colorb",
+		"display-comments", "filter-synthesis", "filter-year-by-year" };
+
 	map<string, string> properties_;
 };
 
-referenceIniFile::referenceIniFile() : name_("properties-reference.ini")
+referenceIniFile::referenceIniFile()
 {
-	property_names_ = { "hurdles-cost", "loop-flow", "use-phase-shifter", "transmission-capacities",
-						"asset-type", "link-style", "link-width", "colorr", "colorg", "colorb",
-						"display-comments", "filter-synthesis", "filter-year-by-year" };
-
-	properties_["hurdles-cost"] = "false";
-	properties_["loop-flow"] = "false";
-	properties_["use-phase-shifter"] = "false";
-	properties_["transmission-capacities"] = "enabled";
-	properties_["asset-type"] = "ac";
-	properties_["link-style"] = "plain";
-	properties_["link-width"] = "1";
-	properties_["colorr"] = "112";
-	properties_["colorg"] = "112";
-	properties_["colorb"] = "112";
-	properties_["display-comments"] = "true";
-	properties_["filter-synthesis"] = "hourly, daily, weekly, monthly, annual";
-	properties_["filter-year-by-year"] = "hourly, daily, weekly, monthly, annual";
+	properties_[property_names_[0]] = "false";
+	properties_[property_names_[1]] = "false";
+	properties_[property_names_[2]] = "false";
+	properties_[property_names_[3]] = "enabled";
+	properties_[property_names_[4]] = "ac";
+	properties_[property_names_[5]] = "plain";
+	properties_[property_names_[6]] = "1";
+	properties_[property_names_[7]] = "112";
+	properties_[property_names_[8]] = "112";
+	properties_[property_names_[9]] = "112";
+	properties_[property_names_[10]] = "true";
+	properties_[property_names_[11]] = "hourly, daily, weekly, monthly, annual";
+	properties_[property_names_[12]] = "hourly, daily, weekly, monthly, annual";
 }
 
 void referenceIniFile::save()
@@ -69,21 +71,15 @@ void referenceIniFile::save()
 
 struct Fixture
 {
-	Fixture()
+	Fixture(const Fixture & f) = delete;
+	Fixture(const Fixture && f) = delete;
+	Fixture & operator= (const Fixture & f) = delete;
+	Fixture& operator= (const Fixture && f) = delete;
+	Fixture() : study(new Study())
 	{
-		study = new Study();
 		area_1 = study->areaAdd("Area 1");
 		area_2 = study->areaAdd("Area 2");
 	}
-
-	AreaLink* createLinkBetweenAreas(Area* area_1, Area* area_2)
-	{
-		AreaLink* link = AreaAddLinkBetweenAreas(area_1, area_2, false);
-		link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
-		return link;
-	}
-
-	void saveAreaLinksOntoDisk(Area* area) { BOOST_CHECK(AreaLinksSaveToFolder(area, fs::current_path().string().c_str())); }
 
 	~Fixture() 
 	{
@@ -95,6 +91,18 @@ struct Fixture
 	Area* area_1;
 	Area* area_2;
 };
+
+AreaLink* createLinkBetweenAreas(Area* a1, Area* a2)
+{
+	AreaLink* link = AreaAddLinkBetweenAreas(a1, a2, false);
+	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
+	return link;
+}
+
+void saveAreaLinksOntoDisk(Area* area)
+{
+	BOOST_CHECK(AreaLinksSaveToFolder(area, fs::current_path().string().c_str()));
+}
 
 BOOST_FIXTURE_TEST_SUITE(s, Fixture)
 
