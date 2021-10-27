@@ -50,7 +50,7 @@ extern "C"
 #include <antares/emergency.h>
 
 #include "../utils/ortools_utils.h"
-#include "../infeasible-diag/problem.h"
+#include "../infeasible-problem-analysis/problem.h"
 
 #include <chrono>
 

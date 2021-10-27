@@ -7,6 +7,7 @@ if(MSVC)
 endif(MSVC)
 
 
+include("cmake/infeasible-problem-analysis.cmake")
 include("cmake/solver.cmake")
 include("cmake/hydro.cmake")
 include("cmake/main.cmake")
@@ -15,7 +16,6 @@ include("cmake/randomness.cmake")
 include("cmake/simulation.cmake")
 include("cmake/ts-generator.cmake")
 include("cmake/constraints-builder.cmake")
-include("cmake/infeasible-diag.cmake")
 
 #
 # Resource file for Windows
