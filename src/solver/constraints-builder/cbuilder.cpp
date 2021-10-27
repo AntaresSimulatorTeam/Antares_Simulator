@@ -113,17 +113,6 @@ bool CBuilder::update(bool applyCheckBox)
         std::set<double> impedances;
 
         uint columnImpedance = (uint)Data::fhlImpedances;
-        /*
-        //! NTC Direct
-fhlNTCDirect = 0,
-//! NTC Indirect
-fhlNTCIndirect,
-//! Loop flow,
-fhlLoopFlow,
-/! P.shift min,
-fhlPShiftMinus,
-//! P.shift max,
-fhlPShiftPlus,*/
 
         auto k = *i;
         // load the impedance

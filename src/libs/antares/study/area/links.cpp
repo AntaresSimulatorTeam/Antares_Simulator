@@ -48,7 +48,9 @@ namespace Data
 AreaLink::AreaLink() :
  from(nullptr),
  with(nullptr),
- data(fhlMax, HOURS_PER_YEAR),
+ parameters(fhlMax, HOURS_PER_YEAR),
+ directCapacities(1, HOURS_PER_YEAR),
+ indirectCapacities(1, HOURS_PER_YEAR),
  useLoopFlow(false),
  usePST(false),
  useHurdlesCost(false),
@@ -82,12 +84,14 @@ void AreaLink::detach()
 
 void AreaLink::resetToDefaultValues()
 {
-    data.reset(fhlMax, HOURS_PER_YEAR, true);
+    parameters.reset(fhlMax, HOURS_PER_YEAR, true);
+    directCapacities.reset(1, HOURS_PER_YEAR, true);
+    indirectCapacities.reset(1, HOURS_PER_YEAR, true);
 
-    for (uint i = 0; i != data.height; ++i)
+    for (uint i = 0; i != HOURS_PER_YEAR; ++i)
     {
-        data[fhlNTCDirect][i] = 1.;
-        data[fhlNTCIndirect][i] = 1.;
+        directCapacities[0][i] = 1.;
+        indirectCapacities[0][i] = 1.;
     }
     useLoopFlow = false;
     usePST = false;
@@ -125,19 +129,23 @@ void AreaLink::reverse()
     from->links[with->id] = this;
 
     // Making sure that we have the data
-    data.invalidate(true);
+    directCapacities.invalidate(true);
+    indirectCapacities.invalidate(true);
 
     // inverting NTC values
-    double* tmp = new double[data.height];
-    size_t siz = sizeof(double) * data.height;
+    double* tmp = new double[directCapacities.height];
+    size_t size = sizeof(double) * directCapacities.height;
 
-    memcpy(tmp, data[fhlNTCDirect], siz);
-    memcpy(data[fhlNTCDirect], data[fhlNTCIndirect], siz);
-    memcpy(data[fhlNTCIndirect], tmp, siz);
+    memcpy(tmp, directCapacities[0], size);
+    memcpy(directCapacities[0], indirectCapacities[0], size);
+    memcpy(indirectCapacities[0], tmp, size);
     delete tmp;
 
-    data.markAsModified();
-    data.flush();
+    directCapacities.markAsModified();
+    indirectCapacities.markAsModified();
+
+    directCapacities.flush();
+    indirectCapacities.flush();
 }
 
 bool AreaLink::isVisibleOnLayer(const size_t& layerID) const
@@ -336,38 +344,58 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
 
         if (study.header.version < 320)
         {
-            link.data.resize(fhlMax, HOURS_PER_YEAR);
-            link.data.zero();
-            if (link.data.jit)
+            // gp : refactor this part : avoid code duplication
+            link.parameters.resize(fhlMax, HOURS_PER_YEAR);
+            link.parameters.zero();
+            if (link.parameters.jit)
             {
-                link.data.jit->options |= Matrix<>::optFixedSize;
-                link.data.markAsModified();
+                link.parameters.jit->options |= Matrix<>::optFixedSize;
+                link.parameters.markAsModified();
+            }
+
+            link.directCapacities.resize(1, HOURS_PER_YEAR);
+            link.directCapacities.zero();
+            if (link.directCapacities.jit)
+            {
+                link.directCapacities.jit->options |= Matrix<>::optFixedSize;
+                link.directCapacities.markAsModified();
+            }
+
+            link.indirectCapacities.resize(1, HOURS_PER_YEAR);
+            link.indirectCapacities.zero();
+            if (link.indirectCapacities.jit)
+            {
+                link.indirectCapacities.jit->options |= Matrix<>::optFixedSize;
+                link.indirectCapacities.markAsModified();
             }
 
             Matrix<double> tmp;
-            // NTC
+            // NTC direct
             buffer.clear() << folder << SEP << link.with->id << SEP << "direct."
                            << study.inputExtension;
             ret = tmp.loadFromCSVFile(
                     buffer, 1, 8760, Matrix<>::optFixedSize | Matrix<>::optImmediate)
                   && ret;
-            link.data.pasteToColumn(fhlNTCDirect, tmp[0]);
+            link.directCapacities.pasteToColumn(0, tmp[0]);
+            link.directCapacities.markAsModified();
 
+            // NTC indirect
             buffer.clear() << folder << SEP << link.with->id << SEP << "indirect."
                            << study.inputExtension;
             ret = tmp.loadFromCSVFile(
                     buffer, 1, 8760, Matrix<>::optFixedSize | Matrix<>::optImmediate)
                   && ret;
-            link.data.pasteToColumn(fhlNTCIndirect, tmp[0]);
+            link.indirectCapacities.pasteToColumn(0, tmp[0]);
+            link.indirectCapacities.markAsModified();
 
+            // Impedances
             buffer.clear() << folder << SEP << link.with->id << SEP << "impedances."
                            << study.inputExtension;
             ret = tmp.loadFromCSVFile(
                     buffer, 1, 8760, Matrix<>::optFixedSize | Matrix<>::optImmediate)
                   && ret;
-            link.data.pasteToColumn(fhlImpedances, tmp[0]);
-
-            link.data.markAsModified();
+            link.parameters.pasteToColumn(fhlImpedances, tmp[0]);
+            link.parameters.markAsModified();
         }
         else if (study.header.version < 630)
         {
@@ -377,34 +405,32 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                 JIT::enabled = false; // Allowing to read the area's daily max power
                 enabledModeIsChanged = true;
             }
-            buffer.clear() << folder << SEP << link.with->id << ".txt";
-            ret
-              = link.data.loadFromCSVFile(buffer, 5, HOURS_PER_YEAR, Matrix<>::optFixedSize) && ret;
-            double temp[5][HOURS_PER_YEAR];
 
-            auto& TCD = link.data[fhlNTCDirect];
-            auto& TCI = link.data[fhlNTCIndirect];
-            auto& impedances = link.data[2];
-            auto& HCD = link.data[3];
-            auto& HCI = link.data[4];
+            // Resize link's data container
+            link.parameters.resize(fhlMax, HOURS_PER_YEAR);
+            link.directCapacities.resize(1, HOURS_PER_YEAR);
+            link.indirectCapacities.resize(1, HOURS_PER_YEAR);
+
+            // Initialize link's data container
+            link.parameters.zero();
+            link.directCapacities.zero();
+            link.indirectCapacities.zero();
+
+            // Load link's data
+            buffer.clear() << folder << SEP << link.with->id << ".txt";
+            Matrix<> tmpMatrix;
+            ret = tmpMatrix.loadFromCSVFile(buffer, 5, HOURS_PER_YEAR, Matrix<>::optFixedSize) && ret;
+
+            // Store data into link's data container
             for (int i = 0; i < HOURS_PER_YEAR; i++)
             {
-                temp[fhlNTCDirect][i] = TCD[i];
-                temp[fhlNTCIndirect][i] = TCI[i];
-                temp[fhlImpedances][i] = impedances[i];
-                temp[fhlHurdlesCostDirect][i] = HCD[i];
-                temp[fhlHurdlesCostIndirect][i] = HCI[i];
+                link.directCapacities[0][i] = tmpMatrix[0][i];
+                link.indirectCapacities[0][i] = tmpMatrix[1][i];
+                link.parameters[fhlImpedances][i] = tmpMatrix[2][i];
+                link.parameters[fhlHurdlesCostDirect][i] = tmpMatrix[3][i];
+                link.parameters[fhlHurdlesCostIndirect][i] = tmpMatrix[4][i];
             }
-            link.data.resize(fhlMax, HOURS_PER_YEAR);
-            link.data.zero();
-            for (int i = 0; i < HOURS_PER_YEAR; i++)
-            {
-                link.data[fhlNTCDirect][i] = temp[fhlNTCDirect][i];
-                link.data[fhlNTCIndirect][i] = temp[fhlNTCIndirect][i];
-                link.data[fhlImpedances][i] = temp[fhlImpedances][i];
-                link.data[fhlHurdlesCostDirect][i] = temp[fhlHurdlesCostDirect][i];
-                link.data[fhlHurdlesCostIndirect][i] = temp[fhlHurdlesCostIndirect][i];
-            }
+
             if (enabledModeIsChanged)
                 JIT::enabled = true; // Back to the previous loading mode.
         }

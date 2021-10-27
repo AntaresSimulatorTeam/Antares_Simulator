@@ -132,9 +132,10 @@ public:
     /*!
     ** \brief Data related to the link
     **
-    ** \see enum LinkDataIndex
     */
-    Matrix<> data;
+    Matrix<> parameters;
+    Matrix<> directCapacities;
+    Matrix<> indirectCapacities;
 
     //! Flag for using loop flow
     bool useLoopFlow;
