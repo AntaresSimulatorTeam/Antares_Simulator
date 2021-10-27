@@ -16,7 +16,7 @@ class InfeasibleProblemAnalysis
 {
 public:
     InfeasibleProblemAnalysis() = delete;
-    InfeasibleProblemAnalysis(PROBLEME_SIMPLEXE* ProbSpx, const std::string& pattern);
+    InfeasibleProblemAnalysis(PROBLEME_SIMPLEXE_NOMME* ProbSpx, const std::string& pattern);
     InfeasibleProblemReport produceReport(std::size_t nbSlackVariablesInReport);
 
 private:

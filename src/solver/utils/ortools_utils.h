@@ -77,5 +77,5 @@ private:
 };
 
 // C-style API
-MPSolver* convert_to_MPSolver(PROBLEME_SIMPLEXE* problemeSimplexe);
+MPSolver* convert_to_MPSolver(PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
 MPSolver* convert_to_MPSolver(PROBLEME_A_RESOUDRE* problemeAResoudre);

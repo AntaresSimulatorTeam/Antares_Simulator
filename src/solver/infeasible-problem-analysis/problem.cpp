@@ -11,7 +11,7 @@ namespace Antares
 {
 namespace Optimization
 {
-InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(PROBLEME_SIMPLEXE* ProbSpx,
+InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(PROBLEME_SIMPLEXE_NOMME* ProbSpx,
                                                      const std::string& pattern) :
  mPattern(pattern)
 {
