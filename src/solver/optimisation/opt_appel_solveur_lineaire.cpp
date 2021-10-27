@@ -352,10 +352,10 @@ RESOLUTION:
         logs.error() << "* Hydro reservoir impossible to manage with cumulative options \"hard "
                         "bounds without heuristic\"";
 
-        Optimization::InfeasibleProblemAnalysis diag(&Probleme, "(.)*");
+        Optimization::InfeasibleProblemAnalysis analysis(&Probleme, "(.)*");
         try
         {
-            Optimization::InfeasibleProblemReport report = diag.produceReport();
+            Optimization::InfeasibleProblemReport report = analysis.produceReport();
             report.printLargest(10);
         }
         catch (const std::runtime_error ex)
