@@ -13,12 +13,20 @@ Constraint::Constraint(const std::string& input, double slack_value) :
 
 std::size_t Constraint::extractItems()
 {
-    std::size_t pos = 0;
-    std::size_t new_pos;
-    while ((new_pos = mInput.find("::", pos)) != std::string::npos)
+    auto b = mInput.begin();
+    auto e = mInput.end();
+    size_t new_pos;
+    for (size_t pos = 0; pos < mInput.size();)
     {
-        mItems.emplace_back(mInput.begin() + pos, mInput.begin() + new_pos);
-        pos = new_pos;
+        new_pos = mInput.find("::", pos);
+        if (new_pos == std::string::npos)
+        {
+            mItems.emplace_back(b + pos, e);
+            break;
+        }
+        if (new_pos > pos)
+            mItems.emplace_back(b + pos, b + new_pos);
+        pos = new_pos + 2;
     }
     return mItems.size();
 }
