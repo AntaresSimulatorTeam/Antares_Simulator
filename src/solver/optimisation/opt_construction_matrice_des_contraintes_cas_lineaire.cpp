@@ -90,13 +90,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
 
     std::string NomDeLaContrainte;
 
-    auto& study = *Study::Current::Get();
+    Study::Ptr study = Study::Current::Get();
     bool exportStructure = ProblemeHebdo->ExportStructure;
 
     if (exportStructure)
     {
-        OPT_ExportInterco(study, ProblemeHebdo, numSpace);
-        OPT_ExportAreaName(study, ProblemeHebdo, numSpace);
+        OPT_ExportInterco(*study, ProblemeHebdo, numSpace);
+        OPT_ExportAreaName(*study, ProblemeHebdo, numSpace);
     }
 
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
@@ -121,7 +121,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
 
     for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
     {
-        int tsInYear = study.runtime->weekInTheYear[numSpace] * 168 + Pdt;
+        int tsInYear = study->runtime->weekInTheYear[numSpace] * 168 + Pdt;
 
         CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
         CorrespondanceCntNativesCntOptim = ProblemeHebdo->CorrespondanceCntNativesCntOptim[Pdt];
@@ -1006,7 +1006,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
         CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
         CorrespondanceCntNativesCntOptim = ProblemeHebdo->CorrespondanceCntNativesCntOptim[Pdt];
 
-        int tsInYear = study.runtime->weekInTheYear[numSpace] * 168 + Pdt;
+        int tsInYear = study->runtime->weekInTheYear[numSpace] * 168 + Pdt;
 
         for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
         {
@@ -1196,11 +1196,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
     // Export structure
     if (exportStructure)
     {
-        OPT_ExportVariables(study, varname, "variables", "txt", numSpace);
+        OPT_ExportVariables(*study, varname, "variables", "txt", numSpace);
 
         // TODO : for now empty constraints.txt file needed
         std::vector<std::string> conname;
-        OPT_ExportVariables(study, conname, "constraints", "txt", numSpace);
+        OPT_ExportVariables(*study, conname, "constraints", "txt", numSpace);
     }
 
     return;
