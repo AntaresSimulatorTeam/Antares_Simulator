@@ -19,15 +19,21 @@ void InfeasibleProblemReport::append(const std::string& constraintName, double v
     mConstraints.emplace_back(constraintName, value);
 }
 
-void InfeasibleProblemReport::printLargest(std::size_t n)
+void InfeasibleProblemReport::print() const
+{
+    for (const auto& c : mConstraints)
+        Antares::logs.info() << c.first << ": " << c.second;
+}
+
+void InfeasibleProblemReport::trimTo(std::size_t n)
 {
     std::sort(std::begin(mConstraints), std::end(mConstraints), compareSlackSolutions);
 
     if (n > mConstraints.size())
         n = mConstraints.size();
 
-    for (unsigned int ii = 0; ii < n; ++ii)
-        Antares::logs.info() << mConstraints[ii].first << ": " << mConstraints[ii].second;
+    mConstraints.resize(n);
 }
+
 } // namespace Optimization
 } // namespace Antares

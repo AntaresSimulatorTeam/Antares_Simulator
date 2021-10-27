@@ -353,16 +353,17 @@ RESOLUTION:
                         "bounds without heuristic\"";
 
         Optimization::InfeasibleProblemAnalysis analysis(&Probleme, "(.)*");
+        Optimization::InfeasibleProblemReport report;
         try
         {
-            Optimization::InfeasibleProblemReport report = analysis.produceReport();
-            logs.info() << "Infeasibility analysis gives the following results :";
-            report.printLargest(10);
+            report = analysis.produceReport(10);
         }
         catch (const std::logic_error& ex)
         {
             logs.error() << ex.what();
         }
+        logs.info() << "Infeasibility analysis gives the following results :";
+        report.print();
 
         // Write MPS only if exportMPSOnError is activated and MPS weren't exported before with
         // ExportMPS option

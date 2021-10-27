@@ -12,7 +12,7 @@ namespace Antares
 namespace Optimization
 {
 InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(PROBLEME_SIMPLEXE* ProbSpx,
-                                             const std::string& pattern) :
+                                                     const std::string& pattern) :
  mPattern(pattern)
 {
     mSolver = std::unique_ptr<MPSolver>(convert_to_MPSolver(ProbSpx));
@@ -63,7 +63,8 @@ MPSolver::ResultStatus InfeasibleProblemAnalysis::Solve() const
     return mSolver->Solve();
 }
 
-InfeasibleProblemReport InfeasibleProblemAnalysis::produceReport()
+InfeasibleProblemReport InfeasibleProblemAnalysis::produceReport(
+  std::size_t nbSlackVariablesInReport)
 {
     addSlackVariables();
     if (mSlackVariables.empty())
@@ -80,6 +81,8 @@ InfeasibleProblemReport InfeasibleProblemAnalysis::produceReport()
     {
         r.append(slack->name(), slack->solution_value());
     }
+
+    r.trimTo(nbSlackVariablesInReport);
     return r;
 }
 } // namespace Optimization
