@@ -1,0 +1,116 @@
+#include <cassert>
+
+#include "constraint.h"
+
+namespace Antares
+{
+namespace Optimization
+{
+Constraint::Constraint(const std::string& input, double slack_value) :
+ mInput(input), mSlackValue(slack_value)
+{
+}
+
+std::size_t Constraint::extractItems()
+{
+    std::size_t pos = 0;
+    std::size_t new_pos;
+    while ((new_pos = mInput.find("::", pos)) != std::string::npos)
+    {
+        mItems.emplace_back(mInput.begin() + pos, mInput.begin() + new_pos);
+        pos = new_pos;
+    }
+    return mItems.size();
+}
+
+const std::string& Constraint::getInput() const
+{
+    return mInput;
+}
+
+double Constraint::getSlackValue() const
+{
+    return mSlackValue;
+}
+
+std::string Constraint::getAreaName() const
+{
+    if (getType() == ConstraintType::binding_constraint_hourly
+        || getType() == ConstraintType::binding_constraint_daily
+        || getType() == ConstraintType::binding_constraint_weekly)
+        return "<none>";
+    return mItems[2];
+}
+
+std::string Constraint::getTimeStepInYear() const
+{
+    switch (getType())
+    {
+    case ConstraintType::binding_constraint_hourly:
+    case ConstraintType::binding_constraint_daily:
+        return mItems[2];
+    case ConstraintType::fictitious_load:
+    case ConstraintType::hydro_reservoir_level:
+        return mItems[1];
+    default:
+        return "-1";
+    }
+}
+
+ConstraintType Constraint::getType() const
+{
+    assert(mItems.size() > 2);
+    if (mItems[0] == "bc")
+    {
+        if (mItems[1] == "hourly")
+            return ConstraintType::binding_constraint_hourly;
+        if (mItems[1] == "daily")
+            return ConstraintType::binding_constraint_daily;
+        if (mItems[2] == "weekly")
+            return ConstraintType::binding_constraint_weekly;
+    }
+    if (mItems[0] == "fict_load")
+        return ConstraintType::fictitious_load;
+    if (mItems[0] == "hydro_level")
+        return ConstraintType::hydro_reservoir_level;
+
+    return ConstraintType::none;
+}
+
+std::string Constraint::getBindingConstraintName() const
+{
+    switch (getType())
+    {
+    case ConstraintType::binding_constraint_hourly:
+    case ConstraintType::binding_constraint_daily:
+        return mItems[3];
+    case ConstraintType::binding_constraint_weekly:
+        return mItems[2];
+    default:
+        return "<unknown>";
+    }
+}
+
+std::string Constraint::prettyPrint() const
+{
+    switch (getType())
+    {
+    case ConstraintType::binding_constraint_hourly:
+        return "Hourly binding constraint '" + getBindingConstraintName() + "' at time step "
+               + getTimeStepInYear();
+    case ConstraintType::binding_constraint_daily:
+        return "Daily binding constraint '" + getBindingConstraintName() + "' at time step "
+               + getTimeStepInYear();
+    case ConstraintType::binding_constraint_weekly:
+        return "Weekly binding constraint '" + getBindingConstraintName();
+
+    case ConstraintType::fictitious_load:
+        return "Last resort  shedding status at area " + getAreaName();
+    case ConstraintType::hydro_reservoir_level:
+        return "Hydro reservoir constraint at area " + getAreaName();
+    default:
+        return "<unknown>";
+    }
+}
+} // namespace Optimization
+} // namespace Antares

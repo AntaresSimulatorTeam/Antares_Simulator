@@ -109,7 +109,7 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
     PROBLEME_SPX* ProbSpx;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
-                            ProblemeAResoudre->NomDesContraintes);
+                                     ProblemeAResoudre->NomDesContraintes);
     PremierPassage = OUI_ANTARES;
     MPSolver* solver;
 
@@ -240,8 +240,7 @@ RESOLUTION:
     TimeMeasurement measure;
     if (ortoolsUsed)
     {
-        solver = ORTOOLS_Simplexe(&Probleme,
-                                  solver);
+        solver = ORTOOLS_Simplexe(&Probleme, solver);
         if (solver != NULL)
         {
             (ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = (void*)solver;
@@ -366,7 +365,7 @@ RESOLUTION:
             logs.error() << ex.what();
         }
         logs.info() << "Infeasibility analysis gives the following results :";
-        report.print();
+        report.prettyPrint();
 
         // Write MPS only if exportMPSOnError is activated and MPS weren't exported before with
         // ExportMPS option

@@ -1,12 +1,13 @@
 #include "report.h"
+#include "constraint.h"
 #include <antares/logs.h>
 #include <algorithm>
+#include <regex>
 
-using SlackSolution = Antares::Optimization::InfeasibleProblemReport::SlackSolution;
-
-static bool compareSlackSolutions(const SlackSolution& a, const SlackSolution& b)
+static bool compareSlackSolutions(const Antares::Optimization::Constraint& a,
+                                  const Antares::Optimization::Constraint& b)
 {
-    return a.second > b.second;
+    return a.getSlackValue() > b.getSlackValue();
 }
 
 namespace Antares
@@ -19,10 +20,20 @@ void InfeasibleProblemReport::append(const std::string& constraintName, double v
     mConstraints.emplace_back(constraintName, value);
 }
 
-void InfeasibleProblemReport::print() const
+void InfeasibleProblemReport::rawPrint() const
 {
     for (const auto& c : mConstraints)
-        Antares::logs.info() << c.first << ": " << c.second;
+        Antares::logs.info() << c.getInput() << ": " << c.getSlackValue();
+}
+
+void InfeasibleProblemReport::prettyPrint()
+{
+    for (auto& c : mConstraints)
+    {
+        if (!c.extractItems())
+            return;
+        Antares::logs.info() << c.prettyPrint();
+    }
 }
 
 void InfeasibleProblemReport::trimTo(std::size_t n)
