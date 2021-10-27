@@ -11,14 +11,14 @@ namespace Antares
 {
 namespace Optimization
 {
-InfeasibleProblemDiag::InfeasibleProblemDiag(PROBLEME_SIMPLEXE* ProbSpx,
+InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(PROBLEME_SIMPLEXE* ProbSpx,
                                              const std::string& pattern) :
  mPattern(pattern)
 {
     mSolver = std::unique_ptr<MPSolver>(convert_to_MPSolver(ProbSpx));
 }
 
-void InfeasibleProblemDiag::addSlackVariables()
+void InfeasibleProblemAnalysis::addSlackVariables()
 {
     std::regex rgx(mPattern);
     const double infinity = MPSolver::infinity();
@@ -45,7 +45,7 @@ void InfeasibleProblemDiag::addSlackVariables()
     }
 }
 
-void InfeasibleProblemDiag::buildObjective()
+void InfeasibleProblemAnalysis::buildObjective()
 {
     MPObjective* objective = mSolver->MutableObjective();
     // Reset objective function
@@ -58,12 +58,12 @@ void InfeasibleProblemDiag::buildObjective()
     objective->SetMinimization();
 }
 
-MPSolver::ResultStatus InfeasibleProblemDiag::Solve()
+MPSolver::ResultStatus InfeasibleProblemAnalysis::Solve()
 {
     return mSolver->Solve();
 }
 
-InfeasibleProblemReport InfeasibleProblemDiag::produceReport()
+InfeasibleProblemReport InfeasibleProblemAnalysis::produceReport()
 {
     addSlackVariables();
     if (mSlackVariables.size() == 0)

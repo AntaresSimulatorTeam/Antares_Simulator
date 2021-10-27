@@ -12,11 +12,11 @@ namespace Antares
 {
 namespace Optimization
 {
-class InfeasibleProblemDiag
+class InfeasibleProblemAnalysis
 {
 public:
-    InfeasibleProblemDiag() = delete;
-    InfeasibleProblemDiag(PROBLEME_SIMPLEXE* ProbSpx, const std::string& pattern);
+    InfeasibleProblemAnalysis() = delete;
+    InfeasibleProblemAnalysis(PROBLEME_SIMPLEXE* ProbSpx, const std::string& pattern);
     InfeasibleProblemReport produceReport();
 
 private:

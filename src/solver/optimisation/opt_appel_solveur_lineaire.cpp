@@ -352,7 +352,7 @@ RESOLUTION:
         logs.error() << "* Hydro reservoir impossible to manage with cumulative options \"hard "
                         "bounds without heuristic\"";
 
-        Optimization::InfeasibleProblemDiag diag(&Probleme, "(.)*");
+        Optimization::InfeasibleProblemAnalysis diag(&Probleme, "(.)*");
         try
         {
             Optimization::InfeasibleProblemReport report = diag.produceReport();
