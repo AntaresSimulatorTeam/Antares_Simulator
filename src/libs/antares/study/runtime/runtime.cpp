@@ -180,7 +180,7 @@ static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
         break;
     }
     logs.debug() << "copying constraint " << rti.operatorType << ' ' << b.name();
-    rti.name = b.name().c_str();
+    rti.name = b.name();
     rti.linkCount = b.linkCount();
     rti.clusterCount = b.enabledClusterCount();
     assert(rti.linkCount < 50000000 and "Seems a bit large...");    // arbitrary value
