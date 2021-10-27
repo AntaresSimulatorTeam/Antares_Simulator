@@ -105,9 +105,11 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
     char PremierPassage;
     double CoutOpt;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    PROBLEME_SIMPLEXE Probleme;
+
     PROBLEME_SPX* ProbSpx;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
+                            ProblemeAResoudre->NomDesContraintes);
     PremierPassage = OUI_ANTARES;
     MPSolver* solver;
 
@@ -238,7 +240,8 @@ RESOLUTION:
     TimeMeasurement measure;
     if (ortoolsUsed)
     {
-        solver = ORTOOLS_Simplexe(&Probleme, solver);
+        solver = ORTOOLS_Simplexe(&Probleme,
+                                  solver);
         if (solver != NULL)
         {
             (ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = (void*)solver;

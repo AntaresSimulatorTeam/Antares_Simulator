@@ -9,31 +9,36 @@
 
 using namespace operations_research;
 
-void extract_from_MPSolver(MPSolver* solver, PROBLEME_SIMPLEXE* problemeSimplexe);
-void extract_from_MPSolver(MPSolver* solver, PROBLEME_A_RESOUDRE* problemeSimplexe);
+void extract_from_MPSolver(const MPSolver* solver, PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
+void extract_from_MPSolver(const MPSolver* solver, PROBLEME_A_RESOUDRE* problemeSimplexe);
 
 void change_MPSolver_objective(MPSolver* solver, double* costs, int nbVar);
 void change_MPSolver_rhs(MPSolver* solver, double* rhs, char* sens, int nbRow);
 
-void transferVariables(MPSolver* solver, double* bMin, double* bMax, double* costs, int nbVar)
+void transferVariables(MPSolver* solver, const double* bMin, const double* bMax, const double* costs, int nbVar, const std::vector<std::string>& NomDesVariables)
 {
     MPObjective* const objective = solver->MutableObjective();
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
-        std::ostringstream oss;
-        oss << "x" << idxVar;
         double min_l = 0.0;
         if (bMin != NULL)
         {
             min_l = bMin[idxVar];
         }
         double max_l = bMax[idxVar];
-        auto x = solver->MakeNumVar(min_l, max_l, oss.str());
+        const MPVariable* x;
+        if (NomDesVariables[idxVar].empty()) {
+          std::ostringstream oss;
+          oss << "x" << idxVar;
+          x = solver->MakeNumVar(min_l, max_l, oss.str());
+        } else {
+          x = solver->MakeNumVar(min_l, max_l, NomDesVariables[idxVar]);
+        }
         objective->SetCoefficient(x, costs[idxVar]);
     }
 }
 
-void transferRows(MPSolver* solver, double* rhs, char* sens, int nbRow)
+void transferRows(MPSolver* solver, const double* rhs, const char* sens, int nbRow, const std::vector<std::string>& NomDesContraintes)
 {
     for (int idxRow = 0; idxRow < nbRow; ++idxRow)
     {
@@ -50,9 +55,15 @@ void transferRows(MPSolver* solver, double* rhs, char* sens, int nbRow)
         {
             bMin = rhs[idxRow];
         }
-        std::ostringstream oss;
-        oss << "c" << idxRow;
-        MPConstraint* const ct = solver->MakeRowConstraint(bMin, bMax, oss.str());
+        if (NomDesContraintes[idxRow].empty()) {
+          std::ostringstream oss;
+          oss << "c" << idxRow;
+          solver->MakeRowConstraint(bMin, bMax, oss.str());
+        }
+        else
+        {
+          solver->MakeRowConstraint(bMin, bMax, NomDesContraintes[idxRow]);
+        }
     }
 }
 
@@ -78,7 +89,7 @@ void transferMatrix(MPSolver* solver,
     }
 }
 
-MPSolver* convert_to_MPSolver(PROBLEME_SIMPLEXE* problemeSimplexe)
+MPSolver* convert_to_MPSolver(PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
     auto& study = *Data::Study::Current::Get();
 
@@ -94,13 +105,15 @@ MPSolver* convert_to_MPSolver(PROBLEME_SIMPLEXE* problemeSimplexe)
                       problemeSimplexe->Xmin,
                       problemeSimplexe->Xmax,
                       problemeSimplexe->CoutLineaire,
-                      problemeSimplexe->NombreDeVariables);
+                      problemeSimplexe->NombreDeVariables,
+                      problemeSimplexe->NomDesVariables);
 
     // Create constraints and set coefs
     transferRows(solver,
                  problemeSimplexe->SecondMembre,
                  problemeSimplexe->Sens,
-                 problemeSimplexe->NombreDeContraintes);
+                 problemeSimplexe->NombreDeContraintes,
+                 problemeSimplexe->NomDesContraintes);
     transferMatrix(solver,
                    problemeSimplexe->IndicesDebutDeLigne,
                    problemeSimplexe->NombreDeTermesDesLignes,
@@ -126,13 +139,16 @@ MPSolver* convert_to_MPSolver(PROBLEME_A_RESOUDRE* problemeAResoudre)
                       problemeAResoudre->Xmin,
                       problemeAResoudre->Xmax,
                       problemeAResoudre->CoutLineaire,
-                      problemeAResoudre->NombreDeVariables);
+                      problemeAResoudre->NombreDeVariables,
+                      {}
+                      );
 
     // Create constraints and set coefs
     transferRows(solver,
                  problemeAResoudre->SecondMembre,
                  problemeAResoudre->Sens,
-                 problemeAResoudre->NombreDeContraintes);
+                 problemeAResoudre->NombreDeContraintes,
+                 {});
     transferMatrix(solver,
                    problemeAResoudre->IndicesDebutDeLigne,
                    problemeAResoudre->NombreDeTermesDesLignes,
@@ -143,7 +159,7 @@ MPSolver* convert_to_MPSolver(PROBLEME_A_RESOUDRE* problemeAResoudre)
     return solver;
 }
 
-void extract_from_MPSolver(MPSolver* solver, PROBLEME_A_RESOUDRE* problemePne)
+void extract_from_MPSolver(const MPSolver* solver, PROBLEME_A_RESOUDRE* problemePne)
 {
     auto& variables = solver->variables();
     int nbVar = problemePne->NombreDeVariables;
@@ -164,7 +180,7 @@ void extract_from_MPSolver(MPSolver* solver, PROBLEME_A_RESOUDRE* problemePne)
     }
 }
 
-void extract_from_MPSolver(MPSolver* solver, PROBLEME_SIMPLEXE* problemeSimplexe)
+void extract_from_MPSolver(const MPSolver* solver, PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
     auto& variables = solver->variables();
     int nbVar = problemeSimplexe->NombreDeVariables;
@@ -250,7 +266,8 @@ bool solveAndManageStatus(MPSolver* solver, int& resultStatus, MPSolverParameter
     return resultStatus == OUI_SPX;
 }
 
-MPSolver* solveProblem(PROBLEME_SIMPLEXE* Probleme, MPSolver* ProbSpx)
+MPSolver* solveProblem(PROBLEME_SIMPLEXE_NOMME* Probleme,
+                       MPSolver* ProbSpx)
 {
     MPSolver* solver = ProbSpx;
 
@@ -298,12 +315,13 @@ MPSolver* solveProblem(PROBLEME_A_RESOUDRE* Probleme, MPSolver* ProbSpx)
 
 extern "C"
 {
-    MPSolver* ORTOOLS_Simplexe(PROBLEME_SIMPLEXE* Probleme, MPSolver* ProbSpx)
+    MPSolver* ORTOOLS_Simplexe(PROBLEME_SIMPLEXE_NOMME* Probleme,
+                               MPSolver* ProbSpx)
     {
         return solveProblem(Probleme, ProbSpx);
     }
 
-    MPSolver* ORTOOLS_Simplexe_PNE(PROBLEME_A_RESOUDRE* Probleme, MPSolver* ProbSpx)
+  MPSolver* ORTOOLS_Simplexe_PNE(PROBLEME_A_RESOUDRE* Probleme, MPSolver* ProbSpx)
     {
         return solveProblem(Probleme, ProbSpx);
     }

@@ -54,8 +54,11 @@ set(RTESOLVER_OPT
 		optimisation/opt_export_structure.h
 		optimisation/opt_export_structure.cpp
 
+        utils/ortools_utils.h
 		utils/ortools_utils.cpp
-
+        
+        utils/named_problem.h
+        utils/named_problem.cpp
 	)
 
 

@@ -166,6 +166,7 @@ typedef struct
     int* PaysDuPalierDispatch;
     int* NumeroDuPalierDispatch;
     int* OffsetTemporelSurLePalierDispatch;
+    const char* NomDeLaContrainteCouplante;
 } CONTRAINTES_COUPLANTES;
 
 typedef struct
