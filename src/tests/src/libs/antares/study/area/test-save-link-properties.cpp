@@ -66,6 +66,7 @@ void referenceIniFile::save()
 	for (int i = 0; i < property_names_.size(); ++i)
 		file << property_names_[i] << " = " << properties_[property_names_[i]] << endl;
 	file << endl;
+	file.close();
 }
 
 

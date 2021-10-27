@@ -15,286 +15,210 @@
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
-const string generatedIniFileName = "properties.ini";
-const string referenceIniFileName = "properties-reference.ini";
+const string generatedIniFileName = "optimization.ini";
+const string referenceIniFileName = "optimization-reference.ini";
+
+struct Fixture
+{
+	Fixture(const Fixture& f) = delete;
+	Fixture(const Fixture&& f) = delete;
+	Fixture& operator= (const Fixture& f) = delete;
+	Fixture& operator= (const Fixture&& f) = delete;
+	Fixture() : area(study->areaAdd("Area"))
+	{
+		path_to_generated_file << fs::current_path().append(generatedIniFileName).string();
+	}
+
+	~Fixture()
+	{
+		vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
+		remove_files(filesToRemove);
+	}
+
+	Study::Ptr study = new Study();
+	Area* area;
+	Yuni::Clob path_to_generated_file;
+};
+
+class referenceIniFile
+{
+public:
+	referenceIniFile();
+	~referenceIniFile() = default;
+	string name() const { return name_; }
+	void save();
+
+	void set_property(const string& key, const string& value) { properties_[key] = value; }
+private:
+	void save_section(string_view sectionTitle, vector<string>& section_properties, ofstream& file);
+
+	string name_ = referenceIniFileName;
+	vector<string> nodal_property_names_ = {
+		"non-dispatchable-power", "dispatchable-hydro-power", "other-dispatchable-power", 
+		"spread-unsupplied-energy-cost", "spread-spilled-energy-cost" };
+	vector<string> filtering_property_names_ = { "filter-synthesis", "filter-year-by-year" };
+	map<string, string> properties_;
+};
+
+referenceIniFile::referenceIniFile()
+{
+	properties_[nodal_property_names_[0]] = "true";
+	properties_[nodal_property_names_[1]] = "true";
+	properties_[nodal_property_names_[2]] = "true";
+	properties_[nodal_property_names_[3]] = "0.000000";
+	properties_[nodal_property_names_[4]] = "0.000000";
+	properties_[filtering_property_names_[0]] = "hourly, daily, weekly, monthly, annual";
+	properties_[filtering_property_names_[1]] = "hourly, daily, weekly, monthly, annual";
+}
+
+void referenceIniFile::save()
+{
+	ofstream file;
+	file.open(name_);
+	save_section("[nodal optimization]", nodal_property_names_, file);
+	save_section("[filtering]", filtering_property_names_, file);
+	file.close();
+}
+
+void referenceIniFile::save_section(string_view sectionTitle, vector<string>& sectionProperties, ofstream & file)
+{
+	file << sectionTitle << endl;
+	for (int i = 0; i < sectionProperties.size(); ++i)
+		file << sectionProperties[i] << " = " << properties_[sectionProperties[i]] << endl;
+	file << endl;
+}
+
+BOOST_FIXTURE_TEST_SUITE(s, Fixture)
 
 BOOST_AUTO_TEST_CASE(one_area_with_default_params)
 {
-	Study::Ptr study = new Study();
-	Area* area = study->areaAdd("Area");
-
-	Yuni::Clob path_to_generated_file;
-	path_to_generated_file << fs::current_path().append(generatedIniFileName).string();
-
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
 
-	// Creation of reference .ini file
-	ofstream referenceFile;
-	referenceFile.open(referenceIniFileName);
-	referenceFile << "[nodal optimization]" << endl;
-	referenceFile << "non-dispatchable-power = true" << endl;
-	referenceFile << "dispatchable-hydro-power = true" << endl;
-	referenceFile << "other-dispatchable-power = true" << endl;
-	referenceFile << "spread-unsupplied-energy-cost = 0.000000" << endl;
-	referenceFile << "spread-spilled-energy-cost = 0.000000" << endl;
-	referenceFile << endl;
-	referenceFile << "[filtering]" << endl;
-	referenceFile << "filter-synthesis = hourly, daily, weekly, monthly, annual" << endl;
-	referenceFile << "filter-year-by-year = hourly, daily, weekly, monthly, annual" << endl;
-	referenceFile << endl;
-	referenceFile.close();
+	referenceIniFile referenceFile;
+	referenceFile.save();
 
-	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
-
-	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
-	remove_files(filesToRemove);
+	BOOST_CHECK(files_identical(generatedIniFileName, referenceFile.name()));
 }
-
 
 BOOST_AUTO_TEST_CASE(one_area_with_none_default_params)
 {
-	Study::Ptr study = new Study();
-	Area* area = study->areaAdd("Area");
-
-	// Setting area's properties
 	area->nodalOptimization = 0;
 	area->spreadUnsuppliedEnergyCost = 2.;
 	area->spreadSpilledEnergyCost = 3.;
 	area->filterSynthesis = filterNone;
 	area->filterYearByYear = filterHourly | filterDaily;
 
-	Yuni::Clob path_to_generated_file;
-	path_to_generated_file << fs::current_path().append(generatedIniFileName).string();
-
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
 
-	// Creation of reference .ini file
-	ofstream referenceFile;
-	referenceFile.open(referenceIniFileName);
-	referenceFile << "[nodal optimization]" << endl;
-	referenceFile << "non-dispatchable-power = false" << endl;
-	referenceFile << "dispatchable-hydro-power = false" << endl;
-	referenceFile << "other-dispatchable-power = false" << endl;
-	referenceFile << "spread-unsupplied-energy-cost = 2.000000" << endl;
-	referenceFile << "spread-spilled-energy-cost = 3.000000" << endl;
-	referenceFile << endl;
-	referenceFile << "[filtering]" << endl;
-	referenceFile << "filter-synthesis = " << endl;
-	referenceFile << "filter-year-by-year = hourly, daily" << endl;
-	referenceFile << endl;
-	referenceFile.close();
+	referenceIniFile referenceFile;
+	referenceFile.set_property("non-dispatchable-power", "false");
+	referenceFile.set_property("dispatchable-hydro-power", "false");
+	referenceFile.set_property("other-dispatchable-power", "false");
+	referenceFile.set_property("spread-unsupplied-energy-cost", "2.000000");
+	referenceFile.set_property("spread-spilled-energy-cost", "3.000000");
+	referenceFile.set_property("filter-synthesis", "");
+	referenceFile.set_property("filter-year-by-year", "hourly, daily");
+	referenceFile.save();
 
-	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
-
-	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
-	remove_files(filesToRemove);
+	BOOST_CHECK(files_identical(generatedIniFileName, referenceFile.name()));
 }
 
 BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_nonDispatchPower__other_params_to_default)
 {
-	Study::Ptr study = new Study();
-	Area* area = study->areaAdd("Area");
-
-	// Setting area's properties
 	area->nodalOptimization = anoNonDispatchPower;
 
-	Yuni::Clob path_to_generated_file;
-	path_to_generated_file << fs::current_path().append(generatedIniFileName).string();
-
-	// Creation of reference .ini file
-	ofstream referenceFile;
-	referenceFile.open(referenceIniFileName);
-	referenceFile << "[nodal optimization]" << endl;
-	referenceFile << "non-dispatchable-power = true" << endl;
-	referenceFile << "dispatchable-hydro-power = false" << endl;
-	referenceFile << "other-dispatchable-power = false" << endl;
-	referenceFile << "spread-unsupplied-energy-cost = 0.000000" << endl;
-	referenceFile << "spread-spilled-energy-cost = 0.000000" << endl;
-	referenceFile << endl;
-	referenceFile << "[filtering]" << endl;
-	referenceFile << "filter-synthesis = hourly, daily, weekly, monthly, annual" << endl;
-	referenceFile << "filter-year-by-year = hourly, daily, weekly, monthly, annual" << endl;
-	referenceFile << endl;
-	referenceFile.close();
-
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
-	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
 
-	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
-	remove_files(filesToRemove);
+	referenceIniFile referenceFile;
+	referenceFile.set_property("non-dispatchable-power", "true");
+	referenceFile.set_property("dispatchable-hydro-power", "false");
+	referenceFile.set_property("other-dispatchable-power", "false");
+	referenceFile.save();
+
+	BOOST_CHECK(files_identical(generatedIniFileName, referenceFile.name()));
 }
+
 
 
 BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_dispatchHydroPower__other_params_to_default)
 {
-	Study::Ptr study = new Study();
-	Area* area = study->areaAdd("Area");
-
-	// Setting area's properties
 	area->nodalOptimization = anoDispatchHydroPower;
 
-	Yuni::Clob path_to_generated_file;
-	path_to_generated_file << fs::current_path().append(generatedIniFileName).string();
-
-	// Creation of reference .ini file
-	ofstream referenceFile;
-	referenceFile.open(referenceIniFileName);
-	referenceFile << "[nodal optimization]" << endl;
-	referenceFile << "non-dispatchable-power = false" << endl;
-	referenceFile << "dispatchable-hydro-power = true" << endl;
-	referenceFile << "other-dispatchable-power = false" << endl;
-	referenceFile << "spread-unsupplied-energy-cost = 0.000000" << endl;
-	referenceFile << "spread-spilled-energy-cost = 0.000000" << endl;
-	referenceFile << endl;
-	referenceFile << "[filtering]" << endl;
-	referenceFile << "filter-synthesis = hourly, daily, weekly, monthly, annual" << endl;
-	referenceFile << "filter-year-by-year = hourly, daily, weekly, monthly, annual" << endl;
-	referenceFile << endl;
-	referenceFile.close();
-
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
-	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
 
-	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
-	remove_files(filesToRemove);
+	referenceIniFile referenceFile;
+	referenceFile.set_property("non-dispatchable-power", "false");
+	referenceFile.set_property("dispatchable-hydro-power", "true");
+	referenceFile.set_property("other-dispatchable-power", "false");
+	referenceFile.save();
+
+	BOOST_CHECK(files_identical(generatedIniFileName, referenceFile.name()));
 }
 
 BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_otherDispatchablePower__other_params_to_default)
 {
-	Study::Ptr study = new Study();
-	Area* area = study->areaAdd("Area");
-
-	// Setting area's properties
 	area->nodalOptimization = anoOtherDispatchPower;
 
-	Yuni::Clob path_to_generated_file;
-	path_to_generated_file << fs::current_path().append(generatedIniFileName).string();
-
-	// Creation of reference .ini file
-	ofstream referenceFile;
-	referenceFile.open(referenceIniFileName);
-	referenceFile << "[nodal optimization]" << endl;
-	referenceFile << "non-dispatchable-power = false" << endl;
-	referenceFile << "dispatchable-hydro-power = false" << endl;
-	referenceFile << "other-dispatchable-power = true" << endl;
-	referenceFile << "spread-unsupplied-energy-cost = 0.000000" << endl;
-	referenceFile << "spread-spilled-energy-cost = 0.000000" << endl;
-	referenceFile << endl;
-	referenceFile << "[filtering]" << endl;
-	referenceFile << "filter-synthesis = hourly, daily, weekly, monthly, annual" << endl;
-	referenceFile << "filter-year-by-year = hourly, daily, weekly, monthly, annual" << endl;
-	referenceFile << endl;
-	referenceFile.close();
-
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
-	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
 
-	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
-	remove_files(filesToRemove);
+	referenceIniFile referenceFile;
+	referenceFile.set_property("non-dispatchable-power", "false");
+	referenceFile.set_property("dispatchable-hydro-power", "false");
+	referenceFile.set_property("other-dispatchable-power", "true");
+	referenceFile.save();
+
+	BOOST_CHECK(files_identical(generatedIniFileName, referenceFile.name()));
 }
 
 BOOST_AUTO_TEST_CASE(one_area_with_nodal_opt_to_non_or_other_DispatchPower__other_params_to_default)
 {
-	Study::Ptr study = new Study();
-	Area* area = study->areaAdd("Area");
-
-	// Setting area's properties
 	area->nodalOptimization = anoOtherDispatchPower | anoNonDispatchPower;
 
-	Yuni::Clob path_to_generated_file;
-	path_to_generated_file << fs::current_path().append(generatedIniFileName).string();
-
-	// Creation of reference .ini file
-	ofstream referenceFile;
-	referenceFile.open(referenceIniFileName);
-	referenceFile << "[nodal optimization]" << endl;
-	referenceFile << "non-dispatchable-power = true" << endl;
-	referenceFile << "dispatchable-hydro-power = false" << endl;
-	referenceFile << "other-dispatchable-power = true" << endl;
-	referenceFile << "spread-unsupplied-energy-cost = 0.000000" << endl;
-	referenceFile << "spread-spilled-energy-cost = 0.000000" << endl;
-	referenceFile << endl;
-	referenceFile << "[filtering]" << endl;
-	referenceFile << "filter-synthesis = hourly, daily, weekly, monthly, annual" << endl;
-	referenceFile << "filter-year-by-year = hourly, daily, weekly, monthly, annual" << endl;
-	referenceFile << endl;
-	referenceFile.close();
-
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
-	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
 
-	vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
-	remove_files(filesToRemove);
+	referenceIniFile referenceFile;
+	referenceFile.set_property("non-dispatchable-power", "true");
+	referenceFile.set_property("dispatchable-hydro-power", "false");
+	referenceFile.set_property("other-dispatchable-power", "true");
+	referenceFile.save();
+
+	BOOST_CHECK(files_identical(generatedIniFileName, referenceIniFileName));
 }
 
 BOOST_AUTO_TEST_CASE(one_area_with_unsupplied_energy_cost_negative__other_params_to_default)
 {
-	Study::Ptr study = new Study();
-	Area* area = study->areaAdd("Area");
-
-	// Setting area's properties
 	area->spreadUnsuppliedEnergyCost = -1.;
 
-	Yuni::Clob path_to_generated_file;
-	path_to_generated_file << fs::current_path().append(generatedIniFileName).string();
-
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
-	BOOST_CHECK(fileContainsLine(generatedIniFileName, "spread-unsupplied-energy-cost = -1.000000"));
 
-	vector<string> filesToRemove = { generatedIniFileName };
-	remove_files(filesToRemove);
+	BOOST_CHECK(fileContainsLine(generatedIniFileName, "spread-unsupplied-energy-cost = -1.000000"));
 }
 
 BOOST_AUTO_TEST_CASE(one_area_with_spilled_energy_cost_negative__other_params_to_default)
 {
-	Study::Ptr study = new Study();
-	Area* area = study->areaAdd("Area");
-
-	// Setting area's properties
 	area->spreadSpilledEnergyCost = -1.;
 
-	Yuni::Clob path_to_generated_file;
-	path_to_generated_file << fs::current_path().append(generatedIniFileName).string();
-
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
-	BOOST_CHECK(fileContainsLine(generatedIniFileName, "spread-spilled-energy-cost = -1.000000"));
 
-	vector<string> filesToRemove = { generatedIniFileName };
-	remove_files(filesToRemove);
+	BOOST_CHECK(fileContainsLine(generatedIniFileName, "spread-spilled-energy-cost = -1.000000"));
 }
 
 BOOST_AUTO_TEST_CASE(one_area_with_synthesis_to_hourly_monthly_annual__other_params_to_default)
 {
-	Study::Ptr study = new Study();
-	Area* area = study->areaAdd("Area");
-
-	// Setting area's properties
 	area->filterSynthesis = filterWeekly | filterMonthly | filterAnnual;
 
-	Yuni::Clob path_to_generated_file;
-	path_to_generated_file << fs::current_path().append(generatedIniFileName).string();
-
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
-	BOOST_CHECK(fileContainsLine(generatedIniFileName, "filter-synthesis = weekly, monthly, annual"));
 
-	vector<string> filesToRemove = { generatedIniFileName };
-	remove_files(filesToRemove);
+	BOOST_CHECK(fileContainsLine(generatedIniFileName, "filter-synthesis = weekly, monthly, annual"));
 }
 
 BOOST_AUTO_TEST_CASE(one_area_with_year_by_year_to_daily_monthly__other_params_to_default)
 {
-	Study::Ptr study = new Study();
-	Area* area = study->areaAdd("Area");
-
-	// Setting area's properties
 	area->filterYearByYear = filterDaily | filterMonthly;
 
-	Yuni::Clob path_to_generated_file;
-	path_to_generated_file << fs::current_path().append(generatedIniFileName).string();
-
 	BOOST_CHECK(saveAreaOptimisationIniFile(*area, path_to_generated_file));
-	BOOST_CHECK(fileContainsLine(generatedIniFileName, "filter-year-by-year = daily, monthly"));
 
-	vector<string> filesToRemove = { generatedIniFileName };
-	remove_files(filesToRemove);
+	BOOST_CHECK(fileContainsLine(generatedIniFileName, "filter-year-by-year = daily, monthly"));
 }
+
+BOOST_AUTO_TEST_SUITE_END()
