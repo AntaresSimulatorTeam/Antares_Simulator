@@ -47,7 +47,7 @@ std::string Constraint::getAreaName() const
         || getType() == ConstraintType::binding_constraint_daily
         || getType() == ConstraintType::binding_constraint_weekly)
         return "<none>";
-    return mItems[2];
+    return mItems.at(2);
 }
 
 std::string Constraint::getTimeStepInYear() const
@@ -56,10 +56,10 @@ std::string Constraint::getTimeStepInYear() const
     {
     case ConstraintType::binding_constraint_hourly:
     case ConstraintType::binding_constraint_daily:
-        return mItems[2];
+        return mItems.at(2);
     case ConstraintType::fictitious_load:
     case ConstraintType::hydro_reservoir_level:
-        return mItems[1];
+        return mItems.at(1);
     default:
         return "-1";
     }
@@ -67,19 +67,19 @@ std::string Constraint::getTimeStepInYear() const
 
 ConstraintType Constraint::getType() const
 {
-    assert(mItems.size() > 2);
-    if (mItems[0] == "bc")
+    assert(mItems.size() > 1);
+    if (mItems.at(0) == "bc")
     {
-        if (mItems[1] == "hourly")
+        if (mItems.at(1) == "hourly")
             return ConstraintType::binding_constraint_hourly;
-        if (mItems[1] == "daily")
+        if (mItems.at(1) == "daily")
             return ConstraintType::binding_constraint_daily;
-        if (mItems[2] == "weekly")
+        if (mItems.at(1) == "weekly")
             return ConstraintType::binding_constraint_weekly;
     }
-    if (mItems[0] == "fict_load")
+    if (mItems.at(0) == "fict_load")
         return ConstraintType::fictitious_load;
-    if (mItems[0] == "hydro_level")
+    if (mItems.at(0) == "hydro_level")
         return ConstraintType::hydro_reservoir_level;
 
     return ConstraintType::none;
@@ -91,9 +91,9 @@ std::string Constraint::getBindingConstraintName() const
     {
     case ConstraintType::binding_constraint_hourly:
     case ConstraintType::binding_constraint_daily:
-        return mItems[3];
+        return mItems.at(3);
     case ConstraintType::binding_constraint_weekly:
-        return mItems[2];
+        return mItems.at(2);
     default:
         return "<unknown>";
     }
@@ -104,18 +104,18 @@ std::string Constraint::prettyPrint() const
     switch (getType())
     {
     case ConstraintType::binding_constraint_hourly:
-        return "Hourly binding constraint '" + getBindingConstraintName() + "' at time step "
+        return "Hourly binding constraint '" + getBindingConstraintName() + "' at day "
                + getTimeStepInYear();
     case ConstraintType::binding_constraint_daily:
-        return "Daily binding constraint '" + getBindingConstraintName() + "' at time step "
+        return "Daily binding constraint '" + getBindingConstraintName() + "' at hour "
                + getTimeStepInYear();
     case ConstraintType::binding_constraint_weekly:
         return "Weekly binding constraint '" + getBindingConstraintName();
 
     case ConstraintType::fictitious_load:
-        return "Last resort  shedding status at area " + getAreaName();
+      return "Last resort  shedding status at area '" + getAreaName() + "' at hour " + getTimeStepInYear();
     case ConstraintType::hydro_reservoir_level:
-        return "Hydro reservoir constraint at area " + getAreaName();
+        return "Hydro reservoir constraint at area '" + getAreaName() + "' at hour " + getTimeStepInYear();
     default:
         return "<unknown>";
     }
