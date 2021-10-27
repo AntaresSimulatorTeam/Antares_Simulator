@@ -16,7 +16,7 @@ public:
     using SlackSolution = std::pair<std::string, double>;
     InfeasibleProblemReport() = default;
     void append(const std::string& constraintName, double value);
-    void printLargest(unsigned int n);
+    void printLargest(std::size_t n);
 
 private:
     std::vector<SlackSolution> mConstraints;

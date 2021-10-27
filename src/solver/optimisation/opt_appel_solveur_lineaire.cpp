@@ -359,7 +359,7 @@ RESOLUTION:
             logs.info() << "Infeasibility analysis gives the following results :";
             report.printLargest(10);
         }
-        catch (const std::runtime_error ex)
+        catch (const std::logic_error& ex)
         {
             logs.error() << ex.what();
         }

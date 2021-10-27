@@ -16,10 +16,10 @@ namespace Optimization
 void InfeasibleProblemReport::append(const std::string& constraintName, double value)
 {
     // TODO check prior existence of constraintName
-    mConstraints.push_back({constraintName, value});
+    mConstraints.emplace_back(constraintName, value);
 }
 
-void InfeasibleProblemReport::printLargest(unsigned int n)
+void InfeasibleProblemReport::printLargest(std::size_t n)
 {
     std::sort(std::begin(mConstraints), std::end(mConstraints), compareSlackSolutions);
 

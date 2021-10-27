@@ -45,7 +45,7 @@ void InfeasibleProblemAnalysis::addSlackVariables()
     }
 }
 
-void InfeasibleProblemAnalysis::buildObjective()
+void InfeasibleProblemAnalysis::buildObjective() const
 {
     MPObjective* objective = mSolver->MutableObjective();
     // Reset objective function
@@ -58,7 +58,7 @@ void InfeasibleProblemAnalysis::buildObjective()
     objective->SetMinimization();
 }
 
-MPSolver::ResultStatus InfeasibleProblemAnalysis::Solve()
+MPSolver::ResultStatus InfeasibleProblemAnalysis::Solve() const
 {
     return mSolver->Solve();
 }
@@ -66,13 +66,13 @@ MPSolver::ResultStatus InfeasibleProblemAnalysis::Solve()
 InfeasibleProblemReport InfeasibleProblemAnalysis::produceReport()
 {
     addSlackVariables();
-    if (mSlackVariables.size() == 0)
-        throw std::runtime_error(
+    if (mSlackVariables.empty())
+        throw std::logic_error(
           "Cannot generate infeasibility report: no constraints have been pre-selected");
     buildObjective();
     const MPSolver::ResultStatus s = Solve();
     if (s != MPSolver::OPTIMAL && s != MPSolver::FEASIBLE)
-        throw std::runtime_error(
+        throw std::domain_error(
           "Cannot generate infeasibility report: linear problem could not be solved");
 
     InfeasibleProblemReport r;

@@ -20,11 +20,10 @@ public:
     InfeasibleProblemReport produceReport();
 
 private:
-    void buildObjective();
+    void buildObjective() const;
     void addSlackVariables();
-    operations_research::MPSolver::ResultStatus Solve();
+    operations_research::MPSolver::ResultStatus Solve() const;
 
-private:
     std::unique_ptr<operations_research::MPSolver> mSolver;
     std::vector<operations_research::MPVariable*> mSlackVariables;
     const std::string mPattern;
