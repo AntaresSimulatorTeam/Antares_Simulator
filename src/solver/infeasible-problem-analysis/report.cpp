@@ -26,7 +26,6 @@ void InfeasibleProblemReport::printLargest(unsigned int n)
     if (n > mConstraints.size())
         n = mConstraints.size();
 
-    Antares::logs.info() << "Infeasibility analysis gives the following results :";
     for (unsigned int ii = 0; ii < n; ++ii)
         Antares::logs.info() << mConstraints[ii].first << ": " << mConstraints[ii].second;
 }

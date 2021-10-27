@@ -356,6 +356,7 @@ RESOLUTION:
         try
         {
             Optimization::InfeasibleProblemReport report = analysis.produceReport();
+            logs.info() << "Infeasibility analysis gives the following results :";
             report.printLargest(10);
         }
         catch (const std::runtime_error ex)
