@@ -57,7 +57,7 @@ private:
 		"non-dispatchable-power", "dispatchable-hydro-power", "other-dispatchable-power", 
 		"spread-unsupplied-energy-cost", "spread-spilled-energy-cost" };
 	vector<string> filtering_property_names_ = { "filter-synthesis", "filter-year-by-year" };
-	map<string, string> properties_;
+	map<string, string, less<>> properties_;
 };
 
 referenceIniFile::referenceIniFile()

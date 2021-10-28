@@ -38,7 +38,7 @@ private:
 		"asset-type", "link-style", "link-width", "colorr", "colorg", "colorb",
 		"display-comments", "filter-synthesis", "filter-year-by-year" };
 
-	map<string, string> properties_;
+	map<string, string, less<>> properties_;
 };
 
 referenceIniFile::referenceIniFile()
@@ -109,7 +109,8 @@ BOOST_FIXTURE_TEST_SUITE(s, Fixture)
 
 BOOST_AUTO_TEST_CASE(one_link_with_default_values)
 {
-	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
+	
+	createLinkBetweenAreas(area_1, area_2);
 
 	saveAreaLinksOntoDisk(area_1);
 
