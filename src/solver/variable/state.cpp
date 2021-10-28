@@ -62,6 +62,8 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
 
     // alias to the current thermal cluster
     thermalCluster = area->thermal.clusters[clusterAreaWideIndex];
+    if (!thermalCluster->enabled)
+        return;
     // Getting its production (only if in economy mode)
     if (studyMode != Data::stdmAdequacyDraft)
     {
