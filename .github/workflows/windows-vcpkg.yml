@@ -115,6 +115,10 @@ jobs:
          fi
       shell: bash
 
+    - name: Remove Chocolatey's CPack
+      if: runner.os == 'Windows'
+      run: del /F /Q %ChocolateyInstall%/bin/cpack.exe
+
     - name: NSIS Installer creation
       shell: bash
       run: |
