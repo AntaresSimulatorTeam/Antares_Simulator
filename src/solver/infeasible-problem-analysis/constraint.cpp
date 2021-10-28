@@ -107,15 +107,17 @@ std::string Constraint::prettyPrint() const
         return "Hourly binding constraint '" + getBindingConstraintName() + "' at day "
                + getTimeStepInYear();
     case ConstraintType::binding_constraint_daily:
-        return "Daily binding constraint '" + getBindingConstraintName() + "' at hour "
+        return "Daily binding constraint '" + getBindingConstraintName() + "' at day "
                + getTimeStepInYear();
     case ConstraintType::binding_constraint_weekly:
         return "Weekly binding constraint '" + getBindingConstraintName();
 
     case ConstraintType::fictitious_load:
-      return "Last resort shedding status at area '" + getAreaName() + "' at hour " + getTimeStepInYear();
+        return "Last resort shedding status at area '" + getAreaName() + "' at hour "
+               + getTimeStepInYear();
     case ConstraintType::hydro_reservoir_level:
-        return "Hydro reservoir constraint at area '" + getAreaName() + "' at hour " + getTimeStepInYear();
+        return "Hydro reservoir constraint at area '" + getAreaName() + "' at hour "
+               + getTimeStepInYear();
     default:
         return "<unknown>";
     }

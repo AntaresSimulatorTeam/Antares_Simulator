@@ -30,8 +30,8 @@ public:
 
     // Extract items, check consistency
     std::size_t extractItems();
-
     std::string prettyPrint() const;
+    ConstraintType getType() const;
 
 private:
     std::string mInput;
@@ -40,7 +40,6 @@ private:
 
     // Get specific items
     std::string getAreaName() const;
-    ConstraintType getType() const;
     std::string getTimeStepInYear() const;
     std::string getBindingConstraintName() const;
 };

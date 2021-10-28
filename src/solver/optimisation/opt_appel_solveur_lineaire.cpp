@@ -347,12 +347,6 @@ RESOLUTION:
         {
             logs.info() << " Solver: Safe resolution failed";
         }
-        logs.error() << "Infeasible linear problem encountered. Possible causes:";
-        logs.error() << "* binding constraints,";
-        logs.error() << "* last resort shedding status,";
-        logs.error() << "* negative hurdle costs on lines with infinite capacity,";
-        logs.error() << "* Hydro reservoir impossible to manage with cumulative options \"hard "
-                        "bounds without heuristic\"";
 
         Optimization::InfeasibleProblemAnalysis analysis(&Probleme, ".+::.+");
         Optimization::InfeasibleProblemReport report;
@@ -364,7 +358,7 @@ RESOLUTION:
         {
             logs.error() << ex.what();
         }
-        logs.info() << "Infeasibility analysis gives the following results :";
+
         report.prettyPrint();
 
         // Write MPS only if exportMPSOnError is activated and MPS weren't exported before with
