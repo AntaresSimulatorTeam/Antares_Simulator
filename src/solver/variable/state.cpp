@@ -285,6 +285,8 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex,
 
         // Get cluster properties
         Data::ThermalCluster* currentCluster = area->thermal.clusters[clusterAreaWideIndex];
+        if (!currentCluster->enabled)
+            return;
         uint serieIndex = timeseriesIndex->ThermiqueParPalier[clusterAreaWideIndex];
 
         assert(endHourForCurrentYear <= Variable::maxHoursInAYear);
