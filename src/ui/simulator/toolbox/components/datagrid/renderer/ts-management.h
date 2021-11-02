@@ -24,14 +24,15 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_TS_MANAGEMENT_H__
-#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_TS_MANAGEMENT_H__
 
-#include <antares/wx-wrapper.h>
+#pragma once
+
+#include <vector>
 #include "../renderer.h"
-#include <antares/date.h>
-#include <yuni/core/event.h>
+#include "column.h"
 #include "../../../../application/study.h"
+
+using namespace std;
 
 namespace Antares
 {
@@ -41,22 +42,13 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class TSmanagement final : public IRenderer
+class TSmanagement : public IRenderer
 {
 public:
     TSmanagement();
     virtual ~TSmanagement();
 
-    virtual int width() const
-    {
-        return 5;
-    }
-    virtual int height() const
-    {
-        return 13;
-    }
-
-    virtual wxString columnCaption(int colIndx) const;
+    virtual wxString columnCaption(int colIndx) const override;
 
     virtual wxString rowCaption(int rowIndx) const;
 
@@ -90,10 +82,17 @@ public:
     }
 
 protected:
-    wxWindow* pControl;
+    virtual int width() const;
+    int height() const;
+    void checkLineNumberInColumns();
 
 private:
     void onSimulationTSManagementChanged();
+
+protected:
+    const int MAX_NB_OF_LINES = 13;
+    vector<Column*> columns_;
+    wxWindow* pControl;
 
 }; // class TSmanagement
 
@@ -101,5 +100,3 @@ private:
 } // namespace Datagrid
 } // namespace Component
 } // namespace Antares
-
-#endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_TS_MANAGEMENT_H__

@@ -29,6 +29,7 @@
 #define __SOLVER_SIMULATION_ECO_STRUCTS_H__
 
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
+#include "../utils/optimization_statistics.h"
 
 #define GROSSES_VARIABLES NON_ANTARES
 #define COEFF_GROSSES_VARIABLES 100
@@ -575,6 +576,7 @@ struct PROBLEME_HEBDO
     double* previousYearFinalLevels;
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration;
 
+    optimizationStatistics optimizationStatistics_object;
     /* Hydro management */
     double* CoefficientEcretementPMaxHydraulique;
     bool hydroHotStart;

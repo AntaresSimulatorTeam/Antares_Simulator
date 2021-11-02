@@ -24,14 +24,10 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_TS_MANAGEMENT_RENEWABLE_CLUSTER_H__
-#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_TS_MANAGEMENT_RENEWABLE_CLUSTER_H__
 
-#include <antares/wx-wrapper.h>
-#include "../renderer.h"
-#include <antares/date.h>
-#include <yuni/core/event.h>
-#include "../../../../application/study.h"
+#pragma once
+
+#include "ts-management.h"
 
 namespace Antares
 {
@@ -41,69 +37,14 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class TSmanagementRenewableCluster final : public IRenderer
+class TSmanagementRenewableCluster final : public TSmanagement
 {
 public:
     TSmanagementRenewableCluster();
-    virtual ~TSmanagementRenewableCluster();
-
-    virtual int width() const
-    {
-        return 4;
-    }
-    virtual int height() const
-    {
-        return 13;
-    }
-
-    virtual wxString columnCaption(int colIndx) const;
-
-    virtual wxString rowCaption(int rowIndx) const;
-
-    virtual wxString cellValue(int x, int y) const;
-
-    virtual double cellNumericValue(int x, int y) const;
-
-    virtual bool cellValue(int x, int y, const Yuni::String& value);
-
-    virtual void resetColors(int, int, wxColour&, wxColour&) const
-    {
-        // Do nothing
-    }
-
-    virtual bool valid() const
-    {
-        return !(!study);
-    }
-
-    virtual uint maxWidthResize() const
-    {
-        return 0;
-    }
-    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
-
-    virtual wxColour horizontalBorderColor(int x, int y) const;
-
-    void control(wxWindow* control)
-    {
-        pControl = control;
-    }
-
-protected:
-    wxWindow* pControl;
-
-private:
-    bool cellValueForRenewables(int x, int y, const double v);
-    wxString cellValueForRenewables(int x, int y) const;
-    IRenderer::CellStyle cellStyleForRenewables(int x, int y) const;
-
-    void onSimulationTSManagementChanged();
-
+    ~TSmanagementRenewableCluster() = default;
 }; // class TSmanagementRenewableCluster
 
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
 } // namespace Antares
-
-#endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_TS_MANAGEMENT_RENEWABLE_CLUSTER_H__
