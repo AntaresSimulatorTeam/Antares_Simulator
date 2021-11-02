@@ -3,7 +3,6 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/included/unit_test.hpp>
-#include <filesystem>
 #include <string>
 #include <vector>
 #include <map>
@@ -15,7 +14,7 @@
 
 using namespace std;
 using namespace Antares::Data;
-namespace fs = std::filesystem;
+
 
 const string generatedIniFileName = "properties.ini";
 const string referenceIniFileName = "properties-reference.ini";
