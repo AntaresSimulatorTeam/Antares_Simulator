@@ -115,15 +115,12 @@ jobs:
          fi
       shell: bash
 
-    - name: Remove Chocolatey's CPack
-      if: runner.os == 'Windows'
-      run: Remove-Item -Path %ChocolateyInstall%/bin/cpack.exe
-
     - name: NSIS Installer creation
       shell: bash
       run: |
            rm -rf src/tests/resources/Antares_Simulator_Tests
            rm -rf src/tests/resources/NonRegTests
+           rm "C:\ProgramData\Chocolatey\bin\cpack.exe"
            cd _build
            cpack -GNSIS
            export NSIS_NAME=$(ls *.exe)
@@ -132,7 +129,6 @@ jobs:
     - name: .zip creation
       run: |
            cd _build
-           rm "C:\ProgramData\Chocolatey\bin\cpack.exe"
            cpack -G ZIP
 
     - name: Installer upload

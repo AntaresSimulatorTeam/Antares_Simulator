@@ -70,6 +70,7 @@ jobs:
            rm -rf src/tests/resources/Antares_Simulator_Tests
            rm -rf src/tests/resources/NonRegTests
            cd _build
+           rm "C:\ProgramData\Chocolatey\bin\cpack.exe"
            cpack -GNSIS
            export NSIS_NAME=$(ls *.exe)
            echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
@@ -77,7 +78,6 @@ jobs:
     - name: .zip creation
       run: |
            cd _build
-           rm "C:\ProgramData\Chocolatey\bin\cpack.exe"
            cpack -G ZIP
            
     - name: Installer upload
