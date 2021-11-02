@@ -1,11 +1,9 @@
-
-#include <filesystem>
 #include <fstream>
 #include <string_view>
 #include "files-helper.h"
 
 using namespace std;
-namespace fs = std::filesystem;
+
 
 // ==================================
 // Remove a list of files
