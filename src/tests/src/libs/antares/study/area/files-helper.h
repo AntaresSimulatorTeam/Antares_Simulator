@@ -4,14 +4,21 @@
 #include <vector>
 #include <string_view>
 
+// Using GCC
 #ifdef __GNUC__
+// Recent versions of GCC support std::filesystem
 #if __GNUC__ > 7
 #include <filesystem>
 namespace fs = std::filesystem;
 #else
+// Older versions support std::experimental::filesystem
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
 #endif
+// Not using GCC
+#else
+#include <filesystem>
+namespace fs = std::filesystem;
 #endif
 
 
