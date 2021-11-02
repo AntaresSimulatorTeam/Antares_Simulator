@@ -510,9 +510,9 @@ BOOST_AUTO_TEST_CASE(chaeck_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of
 	uint hydroTsNumber = area->hydro.series->timeseriesNumbers[0][year];
 	uint thermalTsNumber = thCluster->series->timeseriesNumbers[0][year];
 
-	BOOST_CHECK(loadTsNumber >= 0 && loadTsNumber < loadNumberOfTs);
-	BOOST_CHECK(windTsNumber >= 0 && windTsNumber < windNumberOfTs);
-	BOOST_CHECK(solarTsNumber>= 0 && solarTsNumber < solarNumberOfTs);
-	BOOST_CHECK(hydroTsNumber >= 0 && hydroTsNumber < hydroNumberOfTs);
-	BOOST_CHECK(thermalTsNumber>= 0 && thermalTsNumber < thermalNumberOfTs);
+	BOOST_CHECK(loadTsNumber < loadNumberOfTs);
+	BOOST_CHECK(windTsNumber < windNumberOfTs);
+	BOOST_CHECK(solarTsNumber < solarNumberOfTs);
+	BOOST_CHECK(hydroTsNumber < hydroNumberOfTs);
+	BOOST_CHECK(thermalTsNumber < thermalNumberOfTs);
 }

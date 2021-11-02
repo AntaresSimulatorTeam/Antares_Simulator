@@ -168,13 +168,13 @@ void HydroManagement::prepareNetDemand(uint numSpace)
                                                  : scratchpad.originalMustrunSum[hour]);
 
             // Aggregated renewable production: wind & solar
-            if (parameters.renewableGeneration() == Antares::Data::rgAggregated)
+            if (parameters.renewableGeneration.isAggregated())
             {
                 netdemand -= scratchpad.ts.solar[ptchro.Solar][hour]
                              + scratchpad.ts.wind[ptchro.Eolien][hour];
             }
             // Renewable clusters, if enabled
-            else if (parameters.renewableGeneration() == Antares::Data::rgClusters)
+            else if (parameters.renewableGeneration.isClusters())
             {
                 area.renewable.list.each([&](const Antares::Data::RenewableCluster& cluster) {
                     assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
