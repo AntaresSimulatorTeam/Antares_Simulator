@@ -26,13 +26,13 @@ void transferVariables(MPSolver* solver, const double* bMin, const double* bMax,
         }
         double max_l = bMax[idxVar];
         const MPVariable* x;
+        std::string varName;
         if (NomDesVariables[idxVar].empty()) {
-          std::ostringstream oss;
-          oss << "x" << idxVar;
-          x = solver->MakeNumVar(min_l, max_l, oss.str());
+          varName = "x" + std::to_string(idxVar);
         } else {
-          x = solver->MakeNumVar(min_l, max_l, NomDesVariables[idxVar]);
+          varName = NomDesVariables[idxVar];
         }
+        x = solver->MakeNumVar(min_l, max_l, varName);
         objective->SetCoefficient(x, costs[idxVar]);
     }
 }
@@ -54,15 +54,14 @@ void transferRows(MPSolver* solver, const double* rhs, const char* sens, int nbR
         {
             bMin = rhs[idxRow];
         }
-        if (NomDesContraintes[idxRow].empty()) {
-          std::ostringstream oss;
-          oss << "c" << idxRow;
-          solver->MakeRowConstraint(bMin, bMax, oss.str());
-        }
+
+        std::string constraintName;
+        if (NomDesContraintes[idxRow].empty())
+          constraintName = "c" + std::to_string(idxRow);
         else
-        {
-          solver->MakeRowConstraint(bMin, bMax, NomDesContraintes[idxRow]);
-        }
+          constraintName = NomDesContraintes[idxRow];
+
+        solver->MakeRowConstraint(bMin, bMax, constraintName);
     }
 }
 
