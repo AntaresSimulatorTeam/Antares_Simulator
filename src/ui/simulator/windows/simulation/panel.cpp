@@ -121,7 +121,7 @@ void Panel::onRenewableGenerationModellingChanged(bool)
     if (!study)
         return;
     
-    if (study->parameters.renewableGeneration() == Antares::Data::rgAggregated)
+    if (study->parameters.renewableGeneration.isAggregated())
     {
         verticalSizer_->Hide(grid_ts_mgt_rn_cluster_);
         verticalSizer_->Show(grid_ts_mgt_);
