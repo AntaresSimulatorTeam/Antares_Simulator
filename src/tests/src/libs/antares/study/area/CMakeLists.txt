@@ -22,6 +22,11 @@ target_link_libraries(test-save-link-properties
 							libantares-core
 							libmodel_antares
 )
+# Linux
+if(UNIX AND NOT APPLE)
+target_link_libraries(test-save-area-optimization-ini PRIVATE stdc++fs)
+endif()
+
 
 # Storing test-save-link-properties under the folder Unit-tests in the IDE
 set_target_properties(test-save-link-properties PROPERTIES FOLDER Unit-tests)
@@ -50,6 +55,12 @@ target_link_libraries(test-save-area-optimization-ini
 							libantares-core
 							libmodel_antares
 )
+
+# Linux
+if(UNIX AND NOT APPLE)
+target_link_libraries(test-save-area-optimization-ini PRIVATE stdc++fs)
+endif()
+
 
 # Storing test-save-area-optimization-ini under the folder Unit-tests in the IDE
 set_target_properties(test-save-area-optimization-ini PROPERTIES FOLDER Unit-tests)
