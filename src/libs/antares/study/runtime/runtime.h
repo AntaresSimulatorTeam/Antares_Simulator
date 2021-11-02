@@ -27,8 +27,10 @@
 #ifndef __ANTARES_LIBS_STUDY_RUNTIME_RUNTIME_INFOS_H__
 #define __ANTARES_LIBS_STUDY_RUNTIME_RUNTIME_INFOS_H__
 
+#include <string>
 #include "../study.h"
 #include "../../mersenne-twister/mersenne-twister.h"
+
 
 namespace Antares
 {
@@ -93,7 +95,7 @@ public:
     int* clusterOffset;
     long* clusterIndex;
     long* clustersAreaIndex;
-    ConstraintName name;
+    std::string name;
 };
 
 /*!
