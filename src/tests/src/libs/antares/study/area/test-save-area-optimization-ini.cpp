@@ -3,7 +3,6 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/included/unit_test.hpp>
-#include <filesystem>
 #include <string>
 
 #include <study.h>
@@ -13,7 +12,6 @@
 #include "files-helper.h"
 
 using namespace Antares::Data;
-namespace fs = std::filesystem;
 
 const string generatedIniFileName = "optimization.ini";
 const string referenceIniFileName = "optimization-reference.ini";
