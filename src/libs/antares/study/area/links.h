@@ -100,6 +100,10 @@ public:
     ** \brief Mark the data associated to the link as modified
     */
     void markAsModified() const;
+
+    void setPathToDataFile(const AnyString& path) { pathToDataFile = path; }
+    
+    bool loadDataFromCVSfile(uint loadOptions);
     //@}
 
     //! \name Memory management
@@ -117,6 +121,8 @@ public:
     bool isVisibleOnLayer(const size_t& layerID) const;
 
     Yuni::String getName() const;
+
+    void flush();
 
 public:
     //! \name Graph
@@ -194,6 +200,8 @@ public:
     StyleType style;
     //! link width
     int linkWidth;
+
+    AnyString pathToDataFile;
 
 }; // class AreaLink
 

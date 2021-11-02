@@ -301,13 +301,13 @@ void SIM_RenseignementProblemeHoraireAdequation(long Heure)
             {
                 ProblemeHoraireAdequation.ValeursEffectivesNTC[i]
                   = study.runtime->areaLink[(long)(fabs(NTCAPrendre) - 1)]
-                      ->data.entry[fhlNTCIndirect][Heure];
+                      ->indirectCapacities[0][Heure];
             }
             if (NTCAPrendre < 0.)
             {
                 ProblemeHoraireAdequation.ValeursEffectivesNTC[i]
                   = study.runtime->areaLink[(long)(fabs(NTCAPrendre) - 1)]
-                      ->data.entry[fhlNTCDirect][Heure];
+                      ->directCapacities[0][Heure];
             }
         }
     }

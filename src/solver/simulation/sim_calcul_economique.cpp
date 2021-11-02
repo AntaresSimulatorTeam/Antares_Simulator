@@ -336,9 +336,9 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             COUTS_DE_TRANSPORT* couts = problem.CoutDeTransport[k];
             couts->IntercoGereeAvecDesCouts = OUI_ANTARES;
             const double* direct
-              = ((const double*)((void*)lnk->data[fhlHurdlesCostDirect])) + PasDeTempsDebut;
+              = ((const double*)((void*)lnk->parameters[fhlHurdlesCostDirect])) + PasDeTempsDebut;
             const double* indirect
-              = ((const double*)((void*)lnk->data[fhlHurdlesCostIndirect])) + PasDeTempsDebut;
+              = ((const double*)((void*)lnk->parameters[fhlHurdlesCostIndirect])) + PasDeTempsDebut;
             memcpy(couts->CoutDeTransportOrigineVersExtremite, direct, pasDeTempsSizeDouble);
             memcpy(couts->CoutDeTransportOrigineVersExtremiteRef, direct, pasDeTempsSizeDouble);
             memcpy(couts->CoutDeTransportExtremiteVersOrigine, indirect, pasDeTempsSizeDouble);
@@ -354,7 +354,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         else
             problem.CoutDeTransport[k]->IntercoGereeAvecLoopFlow = NON_ANTARES;
 
-        lnk->data.flush();
+        lnk->flush();
     }
 
     if (studyruntime.bindingConstraintCount)
@@ -535,12 +535,14 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             for (uint k = 0; k != linkCount; ++k)
             {
                 auto& lnk = *(studyruntime.areaLink[k]);
+                /* gp : these asserts will be done in another way later
                 assert((uint)indx < lnk.data.height);
                 assert((uint)fhlNTCDirect < lnk.data.width);
                 assert((uint)fhlNTCIndirect < lnk.data.width);
-                ntc->ValeurDeNTCOrigineVersExtremite[k] = lnk.data[fhlNTCDirect][indx];
-                ntc->ValeurDeNTCExtremiteVersOrigine[k] = lnk.data[fhlNTCIndirect][indx];
-                ntc->ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.data[fhlLoopFlow][indx];
+                */
+                ntc->ValeurDeNTCOrigineVersExtremite[k] = lnk.directCapacities[0][indx];
+                ntc->ValeurDeNTCExtremiteVersOrigine[k] = lnk.indirectCapacities[0][indx];
+                ntc->ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][indx];
             }
         }
 

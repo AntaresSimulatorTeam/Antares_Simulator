@@ -87,15 +87,12 @@ bool CBuilder::update(bool applyCheckBox)
     Vector enabledACLines;
     pMesh.clear();
 
-    // update impedances from study file and computa impedance changes
+    // Update impedances from study file and compute impedance changes
 
     for (auto i = pLink.begin(); i != pLink.end(); i++)
     {
-        // try to open the file
-        if (!(*i)->dataLink->loadFromCSVFile((*i)->ptr->data.jit->sourceFilename,
-                                             Data::fhlMax,
-                                             (uint)8760,
-                                             Matrix<>::optImmediate))
+        // Try to open the file
+        if (not (*i)->ptr->loadDataFromCVSfile(Matrix<>::optImmediate))
             return false;
     }
 
@@ -106,71 +103,65 @@ bool CBuilder::update(bool applyCheckBox)
             (*i)->ptr->useLoopFlow = includeLoopFlow;
 
             (*i)->ptr->usePST = includePhaseShift;
-            // onConnectionChanged(link->ptr);
-            // OnStudyLinkChanged(link->ptr);
         }
         // set used to count the number of different impedances
         std::set<double> impedances;
 
         uint columnImpedance = (uint)Data::fhlImpedances;
 
-        auto k = *i;
         // load the impedance
-        auto dataLink = k->dataLink;
-
         // Can probably be improved (below) !!!
-        k->nImpedanceChanges = 0;
-        k->avgImpedance
-          = dataLink->entry[columnImpedance][0]; // or used a function created in matrix.h
+        (*i)->nImpedanceChanges = 0;
+        (*i)->avgImpedance = (*i)->ptr->parameters[columnImpedance][0];
         uint hour;
-        for (uint x = 1; x < dataLink->height; x++)
+        for (uint x = 1; x < HOURS_PER_YEAR; x++)
         {
             hour = x - 1;
-            if (dataLink->entry[columnImpedance][x] != dataLink->entry[columnImpedance][hour])
+            if ((*i)->ptr->parameters[columnImpedance][x] != (*i)->ptr->parameters[columnImpedance][hour])
             {
-                impedances.insert(dataLink->entry[columnImpedance][x]);
+                impedances.insert((*i)->ptr->parameters[columnImpedance][x]);
             }
 
             if (includeLoopFlow) // check validity of loopflow against NTC
             {
-                if ((-1.0 * dataLink->entry[Data::fhlNTCIndirect][hour]
-                     > dataLink->entry[Data::fhlLoopFlow][hour])
-                    || (dataLink->entry[Data::fhlNTCDirect][hour]
-                        < dataLink->entry[Data::fhlLoopFlow][hour]))
+                if ((-1.0 * (*i)->ptr->indirectCapacities[0][hour]
+                     > (*i)->ptr->parameters[Data::fhlLoopFlow][hour])
+                    || ((*i)->ptr->directCapacities[0][hour]
+                        < (*i)->ptr->parameters[Data::fhlLoopFlow][hour]))
                 {
                     logs.error() << "Error on loop flow to NTC comparison validity at hour " << x
-                                 << " for line " << k->getName();
+                                 << " for line " << (*i)->getName();
                     return false;
                 }
                 if (checkNodalLoopFlow) // check validity of loop flow values (sum = 0 at node)
                 {
                     double sum = 0.0;
-                    for (auto lnk : areaToLinks[k->ptr->from])
+                    for (auto lnk : areaToLinks[(*i)->ptr->from])
                     {
-                        sum += k->ptr->from == lnk->ptr->from
-                                 ? -1 * lnk->dataLink->entry[Data::fhlLoopFlow][hour]
-                                 : lnk->dataLink->entry[Data::fhlLoopFlow][hour];
+                        sum += (*i)->ptr->from == lnk->ptr->from
+                                 ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
+                                 : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
                     }
 
                     if (sum != 0.0)
                     {
                         logs.error() << "Error on loop flow sum validity (!= 0) at hour " << x
-                                     << " on node " << k->ptr->from->id;
+                                     << " on node " << (*i)->ptr->from->id;
                         return false;
                     }
 
                     sum = 0.0;
-                    for (auto lnk : areaToLinks[k->ptr->with])
+                    for (auto lnk : areaToLinks[(*i)->ptr->with])
                     {
-                        sum += k->ptr->with == lnk->ptr->from
-                                 ? -1 * lnk->dataLink->entry[Data::fhlLoopFlow][hour]
-                                 : lnk->dataLink->entry[Data::fhlLoopFlow][hour];
+                        sum += (*i)->ptr->with == lnk->ptr->from
+                                 ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
+                                 : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
                     }
 
                     if (sum != 0.0)
                     {
                         logs.error() << "Error on loop flow sum validity (!= 0) at hour " << x
-                                     << " on node " << k->ptr->with->id;
+                                     << " on node " << (*i)->ptr->with->id;
                         return false;
                     }
                 }
@@ -178,41 +169,41 @@ bool CBuilder::update(bool applyCheckBox)
 
             if (includePhaseShift) // check validity of phase-shift
             {
-                if (dataLink->entry[Data::fhlPShiftMinus][hour]
-                    != dataLink->entry[Data::fhlPShiftPlus][hour])
+                if ((*i)->ptr->parameters[Data::fhlPShiftMinus][hour]
+                    != (*i)->ptr->parameters[Data::fhlPShiftPlus][hour])
                 {
-                    k->hasPShiftsEqual = false;
+                    (*i)->hasPShiftsEqual = false;
                 }
 
-                if (dataLink->entry[Data::fhlPShiftMinus][hour]
-                    > dataLink->entry[Data::fhlPShiftPlus][hour])
+                if ((*i)->ptr->parameters[Data::fhlPShiftMinus][hour]
+                    > (*i)->ptr->parameters[Data::fhlPShiftPlus][hour])
                 {
                     logs.error() << "Error on phase shift calendar validity at hour " << x
-                                 << " for line " << k->getName();
+                                 << " for line " << (*i)->getName();
                     return false;
                 }
             }
         }
 
-        k->nImpedanceChanges = (uint)impedances.size();
+        (*i)->nImpedanceChanges = (uint)impedances.size();
 
-        if (k->nImpedanceChanges > 0)
+        if ((*i)->nImpedanceChanges > 0)
         {
-            for (uint x = 1; x < dataLink->height; x++)
+            for (uint x = 1; x < HOURS_PER_YEAR; x++)
             {
-                k->avgImpedance += dataLink->entry[columnImpedance][x];
+                (*i)->avgImpedance += (*i)->ptr->parameters[columnImpedance][x];
             }
-            k->avgImpedance /= dataLink->height;
+            (*i)->avgImpedance /= HOURS_PER_YEAR;
         }
         // To improve (above) !!
-        k->avgImpedance = 1;
+        (*i)->avgImpedance = 1;
 
-        if (k->nImpedanceChanges == 0 && k->avgImpedance == 0)
+        if ((*i)->nImpedanceChanges == 0 && (*i)->avgImpedance == 0)
         {
-            k->enabled = false;
+            (*i)->enabled = false;
         }
 
-        k->weight = k->getWeightWithImpedance();
+        (*i)->weight = (*i)->getWeightWithImpedance();
     }
 
     for (auto i = pLink.begin(); i != pLink.end(); i++)
@@ -299,11 +290,8 @@ bool CBuilder::deletePreviousConstraints()
 
     for (auto i = pLink.begin(); i != pLink.end(); i++)
     {
-        // try to open the file
-        if (!(*i)->dataLink->loadFromCSVFile((*i)->ptr->data.jit->sourceFilename,
-                                             Data::fhlMax,
-                                             (uint)8760,
-                                             Matrix<>::optImmediate))
+        // Try to open the file
+        if (not (*i)->ptr->loadDataFromCVSfile(Matrix<>::optImmediate))
             return false;
     }
 
@@ -312,8 +300,6 @@ bool CBuilder::deletePreviousConstraints()
         (*i)->ptr->useLoopFlow = false;
 
         (*i)->ptr->usePST = false;
-        // onConnectionChanged(link->ptr);
-        // OnStudyLinkChanged(link->ptr);
     }
 
     return true;

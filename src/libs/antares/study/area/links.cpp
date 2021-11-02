@@ -296,6 +296,13 @@ static bool AreaLinksInternalLoadFromProperty(Study& study,
 
 } // anonymous namespace
 
+void logLinkDataCheckError(Study& study, AreaLink& link)
+{
+    logs.error() << "Link (" << link.from->name << "/" << link.with->name
+        << "): Invalid values";
+    study.gotFatalError = true;
+}
+
 bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyString& folder)
 {
     // Assert
@@ -374,7 +381,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             buffer.clear() << folder << SEP << link.with->id << SEP << "direct."
                            << study.inputExtension;
             ret = tmp.loadFromCSVFile(
-                    buffer, 1, 8760, Matrix<>::optFixedSize | Matrix<>::optImmediate)
+                    buffer, 1, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate)
                   && ret;
             link.directCapacities.pasteToColumn(0, tmp[0]);
             link.directCapacities.markAsModified();
@@ -383,7 +390,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             buffer.clear() << folder << SEP << link.with->id << SEP << "indirect."
                            << study.inputExtension;
             ret = tmp.loadFromCSVFile(
-                    buffer, 1, 8760, Matrix<>::optFixedSize | Matrix<>::optImmediate)
+                    buffer, 1, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate)
                   && ret;
             link.indirectCapacities.pasteToColumn(0, tmp[0]);
             link.indirectCapacities.markAsModified();
@@ -392,7 +399,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             buffer.clear() << folder << SEP << link.with->id << SEP << "impedances."
                            << study.inputExtension;
             ret = tmp.loadFromCSVFile(
-                    buffer, 1, 8760, Matrix<>::optFixedSize | Matrix<>::optImmediate)
+                    buffer, 1, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate)
                   && ret;
             link.parameters.pasteToColumn(fhlImpedances, tmp[0]);
             link.parameters.markAsModified();
@@ -422,13 +429,13 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             ret = tmpMatrix.loadFromCSVFile(buffer, 5, HOURS_PER_YEAR, Matrix<>::optFixedSize) && ret;
 
             // Store data into link's data container
-            for (int i = 0; i < HOURS_PER_YEAR; i++)
+            for (int h = 0; h < HOURS_PER_YEAR; h++)
             {
-                link.directCapacities[0][i] = tmpMatrix[0][i];
-                link.indirectCapacities[0][i] = tmpMatrix[1][i];
-                link.parameters[fhlImpedances][i] = tmpMatrix[2][i];
-                link.parameters[fhlHurdlesCostDirect][i] = tmpMatrix[3][i];
-                link.parameters[fhlHurdlesCostIndirect][i] = tmpMatrix[4][i];
+                link.directCapacities[0][h] = tmpMatrix[0][h];
+                link.indirectCapacities[0][h] = tmpMatrix[1][h];
+                link.parameters[fhlImpedances][h] = tmpMatrix[2][h];
+                link.parameters[fhlHurdlesCostDirect][h] = tmpMatrix[3][h];
+                link.parameters[fhlHurdlesCostIndirect][h] = tmpMatrix[4][h];
             }
 
             if (enabledModeIsChanged)
@@ -437,102 +444,63 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         else
         {
             buffer.clear() << folder << SEP << link.with->id << ".txt";
-            ret = link.data.loadFromCSVFile(buffer, fhlMax, HOURS_PER_YEAR, Matrix<>::optFixedSize)
-                  && ret;
+            link.setPathToDataFile(buffer);
+            ret = link.loadDataFromCVSfile(Matrix<>::optFixedSize) && ret;
         }
+
+        // Checks on loaded link's data
         if (study.usedByTheSolver)
         {
-            bool fatal = false;
-            for (int colNum = 0; colNum < fhlMax; colNum++)
+            // Short names for link's properties
+            auto& directCapacities = link.directCapacities[0];
+            auto& indirectCapacities = link.indirectCapacities[0];
+            auto& directHurdlesCost = link.parameters[fhlHurdlesCostDirect];
+            auto& indirectHurdlesCost = link.parameters[fhlHurdlesCostIndirect];
+            auto& loopFlow = link.parameters[fhlLoopFlow];
+            auto& PShiftMinus = link.parameters[fhlPShiftMinus];
+            auto& PShiftPlus = link.parameters[fhlPShiftPlus];
+            
+            // Checks on direct capacities
+            for (int h = 0; h < HOURS_PER_YEAR; h++)
             {
-                switch (colNum)
+                if (directCapacities[h] < 0. || directCapacities[h] < loopFlow[h])
                 {
-                case Data::fhlNTCDirect:
-                {
-                    auto& col = link.data[colNum];
-                    auto& colLoopFlow = link.data[Data::fhlLoopFlow];
-                    for (int i = 0; i < HOURS_PER_YEAR; i++)
-                    {
-                        if ((col[i] < 0.) || (col[i] < colLoopFlow[i]))
-                        {
-                            fatal = true;
-                            break;
-                        }
-                    }
-                    break;
-                }
-                case Data::fhlNTCIndirect:
-                {
-                    auto& col = link.data[colNum];
-                    auto& colLoopFlow = link.data[Data::fhlLoopFlow];
-                    for (int i = 0; i < HOURS_PER_YEAR; i++)
-                    {
-                        if ((col[i] < 0.) || ((col[i] + colLoopFlow[i]) < 0))
-                        {
-                            fatal = true;
-                            break;
-                        }
-                    }
-                    break;
-                }
-                case Data::fhlHurdlesCostDirect:
-                {
-                    auto& col = link.data[colNum];
-                    auto& colHurdleCostsIndirect = link.data[Data::fhlHurdlesCostIndirect];
-                    for (int i = 0; i < HOURS_PER_YEAR; i++)
-                    {
-                        if (col[i] + colHurdleCostsIndirect[i] < 0)
-                        {
-                            fatal = true;
-                            break;
-                        }
-                    }
-                    break;
-                }
-                case Data::fhlHurdlesCostIndirect:
-                {
-                    auto& col = link.data[colNum];
-                    auto& colHurdleCostsDirect = link.data[Data::fhlHurdlesCostDirect];
-                    for (int i = 0; i < HOURS_PER_YEAR; i++)
-                    {
-                        if (col[i] + colHurdleCostsDirect[i] < 0)
-                        {
-                            fatal = true;
-                            break;
-                        }
-                    }
-                    break;
-                }
-                case 4:
-                    break;
-                case 5:
-                    break;
-                case 6:
-                    break;
-                case Data::fhlPShiftPlus:
-                {
-                    auto& col = link.data[colNum];
-                    auto& colPShiftMinus = link.data[Data::fhlPShiftMinus];
-                    for (int i = 0; i < HOURS_PER_YEAR; i++)
-                    {
-                        if (col[i] < colPShiftMinus[i])
-                        {
-                            fatal = true;
-                            break;
-                        }
-                    }
-                    break;
-                }
+                    logLinkDataCheckError(study, link);
+                    return false;
                 }
             }
-            if (fatal)
+
+            // Checks on indirect capacities
+            for (int h = 0; h < HOURS_PER_YEAR; h++)
             {
-                logs.error() << "Link (" << link.from->name << "/" << link.with->name
-                             << "): Invalid values";
-                study.gotFatalError = true;
-                return false;
+                if (indirectCapacities[h] < 0. || indirectCapacities[h] + loopFlow[h] < 0)
+                {
+                    logLinkDataCheckError(study, link);
+                    return false;
+                }
+            }
+
+            // Checks on hurdle costs
+            for (int h = 0; h < HOURS_PER_YEAR; h++)
+            {
+                if (directHurdlesCost[h] + indirectHurdlesCost[h] < 0)
+                {
+                    logLinkDataCheckError(study, link);
+                    return false;
+                }
+            }
+
+            // Checks on P. shift min and max
+            for (int h = 0; h < HOURS_PER_YEAR; h++)
+            {
+                if (PShiftPlus[h] < PShiftMinus[h])
+                {
+                    logLinkDataCheckError(study, link);
+                    return false;
+                }
             }
         }
+
         // Inifile
         const IniFile::Property* p = s->firstProperty;
         for (; p; p = p->next)
@@ -547,16 +515,16 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         if (study.header.version < 400)
         {
             // Before 3.9, it was possible to set hurdle costs below
-            // LINK_MINIMAL_HURDLE_COSTS_NOT_NULL which is a mistake (see virtual costs) Starting
-            // from 3.9, the UI does not longer allow values below
+            // LINK_MINIMAL_HURDLE_COSTS_NOT_NULL which is a mistake (see virtual costs).
+            // Starting from 3.9, the UI does not longer allow values below
             // LINK_MINIMAL_HURDLE_COSTS_NOT_NULL but we have to normalize the hurdle costs for
             // older studies. We can not directly use 0 it will bring too much damage to the results
-            link.data.invalidate(true);
-            auto& hurdleCostsD = link.data[Data::fhlHurdlesCostDirect];
-            auto& hurdleCostsI = link.data[Data::fhlHurdlesCostIndirect];
+            link.parameters.invalidate(true);
+            auto& hurdleCostsD = link.parameters[Data::fhlHurdlesCostDirect];
+            auto& hurdleCostsI = link.parameters[Data::fhlHurdlesCostIndirect];
             bool rounding = false;
 
-            for (uint h = 0; h != link.data.height; ++h)
+            for (uint h = 0; h != link.parameters.height; ++h)
             {
                 if (Math::Abs(hurdleCostsD[h]) < LINK_MINIMAL_HURDLE_COSTS_NOT_NULL)
                 {
@@ -583,7 +551,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                     }
                 }
             }
-            link.data.markAsModified();
+            link.parameters.markAsModified();
 
             if (rounding)
             {
@@ -602,8 +570,8 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         {
             if (not link.useHurdlesCost || not study.parameters.include.hurdleCosts)
             {
-                link.data.columnToZero(Data::fhlHurdlesCostDirect);
-                link.data.columnToZero(Data::fhlHurdlesCostIndirect);
+                link.parameters.columnToZero(Data::fhlHurdlesCostDirect);
+                link.parameters.columnToZero(Data::fhlHurdlesCostIndirect);
             }
             // Global Optimization override
             if (study.parameters.transmissionCapacities != Data::tncEnabled)
@@ -616,23 +584,25 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             case Data::tncIgnore:
             {
                 // Ignore transmission capacities
-                link.data.columnToZero(Data::fhlNTCDirect);
-                link.data.columnToZero(Data::fhlNTCIndirect);
+                link.directCapacities.zero();
+                link.indirectCapacities.zero();
                 break;
             }
             case Data::tncInfinite:
             {
                 // Copper plate mode
                 auto infinity = +std::numeric_limits<double>::infinity();
-                link.data.fillColumn(Data::fhlNTCDirect, +infinity);
-                link.data.fillColumn(Data::fhlNTCIndirect, +infinity);
+                link.directCapacities.fillColumn(0, +infinity);
+                link.indirectCapacities.fillColumn(0, +infinity);
                 break;
             }
             }
         }
 
         // memory swap
-        link.data.flush();
+        link.parameters.flush();
+        link.directCapacities.flush();
+        link.indirectCapacities.flush();
     }
 
     return ret;
@@ -730,7 +700,24 @@ bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
 
         // NTC
         filename.clear() << folder << SEP << link.with->id << ".txt";
-        ret = link.data.saveToCSVFile(filename);
+
+        Matrix<> tmpMatrixToPrint;
+        tmpMatrixToPrint.resize(8, HOURS_PER_YEAR);
+        tmpMatrixToPrint.zero();
+
+        // Fill the matrix to print
+        for (int h = 0; h < HOURS_PER_YEAR; h++)
+        {
+            tmpMatrixToPrint[0][h] = link.directCapacities[0][h];
+            tmpMatrixToPrint[1][h] = link.indirectCapacities[0][h];
+            tmpMatrixToPrint[2][h] = link.parameters[fhlHurdlesCostDirect][h];
+            tmpMatrixToPrint[3][h] = link.parameters[fhlHurdlesCostIndirect][h];
+            tmpMatrixToPrint[4][h] = link.parameters[fhlImpedances][h];
+            tmpMatrixToPrint[5][h] = link.parameters[fhlLoopFlow][h];
+            tmpMatrixToPrint[6][h] = link.parameters[fhlPShiftMinus][h];
+            tmpMatrixToPrint[7][h] = link.parameters[fhlPShiftPlus][h];
+        }
+        ret = tmpMatrixToPrint.saveToCSVFile(filename);
     }
 
     filename.clear() << folder << SEP << "properties.ini";
@@ -782,17 +769,48 @@ void AreaLink::estimateMemoryUsage(StudyMemoryUsage& u) const
 
 Yuni::uint64 AreaLink::memoryUsage() const
 {
-    return (sizeof(AreaLink) + data.valuesMemoryUsage());
+    Yuni::uint64 to_return = sizeof(AreaLink);
+    to_return += parameters.valuesMemoryUsage();
+    to_return += directCapacities.valuesMemoryUsage();
+    to_return += indirectCapacities.valuesMemoryUsage();
+
+    return to_return;
 }
 
 bool AreaLink::invalidate(bool reload) const
 {
-    return data.invalidate(reload);
+    return parameters.invalidate(reload) && directCapacities.invalidate(reload)
+                                         && indirectCapacities.invalidate(reload) ;
 }
 
 void AreaLink::markAsModified() const
 {
-    data.markAsModified();
+    parameters.markAsModified();
+    directCapacities.markAsModified();
+    indirectCapacities.markAsModified();
+}
+
+bool AreaLink::loadDataFromCVSfile(uint loadOptions)
+{
+    // Load link's data
+    Matrix<> tmpMatrix;
+    if (not tmpMatrix.loadFromCSVFile(pathToDataFile, 8, HOURS_PER_YEAR, loadOptions))
+        return false;
+
+    // Store data into link's data container
+    for (int h = 0; h < HOURS_PER_YEAR; h++)
+    {
+        directCapacities[0][h] = tmpMatrix[0][h];
+        indirectCapacities[0][h] = tmpMatrix[1][h];
+        parameters[fhlHurdlesCostDirect][h] = tmpMatrix[2][h];
+        parameters[fhlHurdlesCostIndirect][h] = tmpMatrix[3][h];
+        parameters[fhlImpedances][h] = tmpMatrix[4][h];
+        parameters[fhlLoopFlow][h] = tmpMatrix[5][h];
+        parameters[fhlPShiftMinus][h] = tmpMatrix[6][h];
+        parameters[fhlPShiftPlus][h] = tmpMatrix[7][h];
+    }
+
+    return true;
 }
 
 String AreaLink::getName() const
@@ -800,6 +818,13 @@ String AreaLink::getName() const
     String s;
     s << from->name << "/" << with->name;
     return s;
+}
+
+void AreaLink::flush()
+{
+    parameters.flush();
+    directCapacities.flush();
+    indirectCapacities.flush();
 }
 
 } // namespace Data
