@@ -122,7 +122,7 @@ MPSolver* convert_to_MPSolver(PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
     return solver;
 }
 
-void extract_from_MPSolver(const MPSolver* solver, PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
+void extract_from_MPSolver(MPSolver* solver, PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
     auto& variables = solver->variables();
     int nbVar = problemeSimplexe->NombreDeVariables;
