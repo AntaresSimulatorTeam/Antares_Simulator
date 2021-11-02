@@ -58,7 +58,6 @@ void InfeasibleProblemReport::prettyPrint()
         Antares::logs.error() << "* Binding constraints,";
     }
 
-    // TODO: analyse hurdle costs & NTCs to rule out this possibility
     Antares::logs.error() << "* Negative hurdle costs on lines with infinite capacity (rare).";
 }
 
