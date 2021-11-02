@@ -24,7 +24,7 @@ target_link_libraries(test-save-link-properties
 )
 # Linux
 if(UNIX AND NOT APPLE)
-target_link_libraries(test-save-area-optimization-ini PRIVATE stdc++fs)
+target_link_libraries(test-save-link-properties PRIVATE stdc++fs)
 endif()
 
 
