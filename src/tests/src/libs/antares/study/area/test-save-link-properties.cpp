@@ -95,7 +95,12 @@ struct Fixture
 AreaLink* createLinkBetweenAreas(Area* a1, Area* a2)
 {
 	AreaLink* link = AreaAddLinkBetweenAreas(a1, a2, false);
-	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
+
+	// Reduce size of link's time-series dump to 0 Ko
+	link->parameters.resize(0, 0);
+	link->directCapacities.resize(0, 0);
+	link->indirectCapacities.resize(0, 0);
+
 	return link;
 }
 

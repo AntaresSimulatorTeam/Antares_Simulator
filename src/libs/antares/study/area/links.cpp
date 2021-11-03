@@ -654,11 +654,20 @@ bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
         filename.clear() << folder << SEP << link.with->id << ".txt";
 
         Matrix<> tmpMatrixToPrint;
-        tmpMatrixToPrint.resize(8, HOURS_PER_YEAR);
+
+        // Matrix to print's number of columns
+        uint nbColumnsOfMatrixToPrint = link.parameters.width + link.directCapacities.width + link.indirectCapacities.width;
+
+        // Matrix to print's number of lines
+        assert(link.parameters.height == link.directCapacities.height);
+        assert(link.parameters.height == link.indirectCapacities.height);
+        uint nbLinesOfMatrixToPrint = link.parameters.height;
+        
+        tmpMatrixToPrint.resize(nbColumnsOfMatrixToPrint, nbLinesOfMatrixToPrint);
         tmpMatrixToPrint.zero();
 
         // Fill the matrix to print
-        for (int h = 0; h < HOURS_PER_YEAR; h++)
+        for (int h = 0; h < nbLinesOfMatrixToPrint; h++)
         {
             tmpMatrixToPrint[0][h] = link.directCapacities[0][h];
             tmpMatrixToPrint[1][h] = link.indirectCapacities[0][h];
