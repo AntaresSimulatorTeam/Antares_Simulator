@@ -1,9 +1,6 @@
 #ifndef __ORTOOLS_WRAPPER__
 #define __ORTOOLS_WRAPPER__
 
-#include "pne_definition_arguments.h"
-#include "pne_fonctions.h"
-
 #include "named_problem.h"
 
 using namespace operations_research;
