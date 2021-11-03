@@ -179,7 +179,7 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
     if (name.startsWith("area.filtering-synthesis."))
     {
         AnyString precision(name, 25);
-        uint flag = Data::StringToFilter(precision);
+        uint flag = Data::stringIntoDatePrecision(precision);
         if (!flag)
             return false;
 
@@ -198,7 +198,7 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
     if (name.startsWith("area.filtering-year-by-year."))
     {
         AnyString precision(name, 28);
-        uint flag = Data::StringToFilter(precision);
+        uint flag = Data::stringIntoDatePrecision(precision);
         if (!flag)
             return false;
 
@@ -428,7 +428,7 @@ bool InspectorGrid::onPropertyChanging_L(wxPGProperty*,
     if (name.startsWith("link.filtering-synthesis."))
     {
         AnyString precision(name, 25);
-        uint flag = Data::StringToFilter(precision);
+        uint flag = Data::stringIntoDatePrecision(precision);
         if (!flag)
             return false;
 
@@ -453,7 +453,7 @@ bool InspectorGrid::onPropertyChanging_L(wxPGProperty*,
     if (name.startsWith("link.filtering-year-by-year."))
     {
         AnyString precision(name, 28);
-        uint flag = Data::StringToFilter(precision);
+        uint flag = Data::stringIntoDatePrecision(precision);
         if (!flag)
             return false;
 

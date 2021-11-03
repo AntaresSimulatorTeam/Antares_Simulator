@@ -29,6 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+#include <string>
 
 namespace Antares
 {
@@ -45,25 +46,20 @@ enum FilterFlag
     filterAll = (uint)-1,
 };
 
-/*!
-** \brief Append to an arbitrary string all flags that make up the filter
-*/
-template<class StringT>
-void AppendFilterToString(StringT& out, uint filter);
+// Convert a date precision filter into a string (obtained by concatenating filter components)
+std::string datePrecisionIntoString(uint datePrecisionFilter);
 
 /*!
-** \brief Convert a mere string into filter flags
+** \brief Convert a string into date precision filter flags
 */
-uint StringToFilter(const AnyString& string);
+uint stringIntoDatePrecision(const AnyString& string);
 
 /*!
 ** \brief Convert a filter indices into filter flags
 */
-uint filterIndexToFilter(const uint index);
+uint addTimeIntervallToDatePrecisionFilter(const uint index);
 
 } // namespace Data
 } // namespace Antares
-
-#include "filter.hxx"
 
 #endif // __ANTARES_LIB_STUDY_FILTER_H__

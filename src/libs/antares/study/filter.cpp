@@ -33,7 +33,45 @@ namespace Antares
 {
 namespace Data
 {
-uint StringToFilter(const AnyString& string)
+
+std::string datePrecisionIntoString(uint datePrecisionFilter)
+{
+    std::string to_return;
+    if (datePrecisionFilter & filterHourly)
+        to_return += "hourly";
+
+    if (datePrecisionFilter & filterDaily)
+    {
+        if (! to_return.empty())
+            to_return += ", ";
+        to_return += "daily";
+    }
+
+    if (datePrecisionFilter & filterWeekly)
+    {
+        if (! to_return.empty())
+            to_return += ", ";
+        to_return += "weekly";
+    }
+
+    if (datePrecisionFilter & filterMonthly)
+    {
+        if (! to_return.empty())
+            to_return += ", ";
+        to_return += "monthly";
+    }
+
+    if (datePrecisionFilter & filterAnnual)
+    {
+        if (! to_return.empty())
+            to_return += ", ";
+        to_return += "annual";
+    }
+
+    return to_return;
+}
+
+uint stringIntoDatePrecision(const AnyString& string)
 {
     if (string.empty())
         return filterNone;
@@ -73,7 +111,7 @@ uint StringToFilter(const AnyString& string)
     return flag;
 }
 
-uint filterIndexToFilter(const uint index)
+uint addTimeIntervallToDatePrecisionFilter(const uint index)
 {
     uint flag = 0;
     switch (index)
