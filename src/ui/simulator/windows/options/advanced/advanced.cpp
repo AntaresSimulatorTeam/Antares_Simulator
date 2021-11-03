@@ -1041,7 +1041,7 @@ void AdvancedParameters::onSelectRGMaggregated(wxCommandEvent& evt)
         return;
     auto& study = *Data::Study::Current::Get();
 
-    if (study.parameters.renewableGeneration() != Data::rgAggregated)
+    if (!study.parameters.renewableGeneration.isAggregated())
     {
         study.parameters.renewableGeneration.rgModelling = Data::rgAggregated;
         MarkTheStudyAsModified();
@@ -1056,7 +1056,7 @@ void AdvancedParameters::onSelectRGMrenewableClusters(wxCommandEvent& evt)
         return;
     auto& study = *Data::Study::Current::Get();
 
-    if (study.parameters.renewableGeneration() != Data::rgClusters)
+    if (!study.parameters.renewableGeneration.isClusters())
     {
         study.parameters.renewableGeneration.rgModelling = Data::rgClusters;
         MarkTheStudyAsModified();
