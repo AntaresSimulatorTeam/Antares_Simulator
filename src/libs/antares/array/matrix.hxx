@@ -1553,10 +1553,9 @@ inline void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>* rhs)
 }
 
 template<class T, class ReadWriteT>
-template<class U, class V>
-void Matrix<T, ReadWriteT>::swap(Matrix<U, V>& rhs)
+void Matrix<T, ReadWriteT>::swap(Matrix<T, ReadWriteT>& rhs)
 {
-  static_assert(Yuni::Static::Type::StrictlyEqual<T, U>::Yes);
+  // argument deduction lookup (ADL)
   using std::swap;
   swap(this->width, rhs.width);
   swap(this->height, rhs.height);
