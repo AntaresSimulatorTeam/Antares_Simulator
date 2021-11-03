@@ -1553,6 +1553,18 @@ inline void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>* rhs)
 }
 
 template<class T, class ReadWriteT>
+template<class U, class V>
+void Matrix<T, ReadWriteT>::swap(Matrix<U, V>& rhs)
+{
+  static_assert(Yuni::Static::Type::StrictlyEqual<T, U>::Yes);
+  using std::swap;
+  swap(this->width, rhs.width);
+  swap(this->height, rhs.height);
+  swap(this->entry, rhs.entry);
+  swap(this->jit, rhs.jit);
+}
+
+template<class T, class ReadWriteT>
 inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(const Matrix<T, ReadWriteT>& rhs)
 {
     copyFrom(rhs);

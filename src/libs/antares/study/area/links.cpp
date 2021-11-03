@@ -133,14 +133,8 @@ void AreaLink::reverse()
     directCapacities.invalidate(true);
     indirectCapacities.invalidate(true);
 
-    // inverting NTC values
-    double* tmp = new double[directCapacities.height];
-    size_t size = sizeof(double) * directCapacities.height;
-
-    memcpy(tmp, directCapacities[0], size);
-    memcpy(directCapacities[0], indirectCapacities[0], size);
-    memcpy(indirectCapacities[0], tmp, size);
-    delete tmp;
+    // invert NTC values
+    directCapacities.swap(indirectCapacities);
 
     directCapacities.markAsModified();
     indirectCapacities.markAsModified();
