@@ -445,7 +445,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         {
             buffer.clear() << folder << SEP << link.with->id << ".txt";
             link.setPathToDataFile(buffer);
-            ret = link.loadDataFromCVSfile(Matrix<>::optFixedSize) && ret;
+            ret = link.loadDataFromCVSfile(Matrix<>::optFixedSize | Matrix<>::optImmediate) && ret;
         }
 
         // Checks on loaded link's data
