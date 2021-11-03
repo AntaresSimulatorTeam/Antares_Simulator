@@ -145,7 +145,7 @@ public:
     /*!
     ** \brief Swap contents of Matrix with another
     */
-    void swap(MatrixType& rhs);
+    void swap(MatrixType& rhs) noexcept;
     //@}
 
     //! \name File manipulation

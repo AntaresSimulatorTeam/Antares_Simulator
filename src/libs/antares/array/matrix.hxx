@@ -1554,7 +1554,7 @@ inline void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>* rhs)
 }
 
 template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::swap(Matrix<T, ReadWriteT>& rhs)
+void Matrix<T, ReadWriteT>::swap(Matrix<T, ReadWriteT>& rhs) noexcept
 {
   // argument deduction lookup (ADL)
   using std::swap;
