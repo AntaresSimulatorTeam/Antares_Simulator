@@ -31,6 +31,7 @@
 #include <yuni/core/string.h>
 #include <yuni/core/math.h>
 #include <logs.h>
+#include <utility>
 #include "../string-to-double.h"
 #include "../io/statistics.h"
 #include "matrix-to-buffer.h"
