@@ -25,7 +25,7 @@ private:
     operations_research::MPSolver::ResultStatus Solve() const;
 
     std::unique_ptr<operations_research::MPSolver> mSolver;
-    std::vector<operations_research::MPVariable*> mSlackVariables;
+    std::vector<const operations_research::MPVariable*> mSlackVariables;
     const std::string mPattern;
 };
 } // namespace Optimization
