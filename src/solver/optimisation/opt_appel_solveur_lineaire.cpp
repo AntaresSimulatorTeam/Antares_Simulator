@@ -51,6 +51,7 @@ extern "C"
 
 #include "../utils/ortools_utils.h"
 #include "../infeasible-problem-analysis/problem.h"
+#include "../infeasible-problem-analysis/exceptions.h"
 
 #include <chrono>
 
@@ -354,7 +355,11 @@ RESOLUTION:
         {
             report = analysis.produceReport(10);
         }
-        catch (const std::logic_error& ex)
+        catch (const Optimization::SlackVariablesEmpty& ex)
+        {
+            logs.error() << ex.what();
+        }
+        catch (const Optimization::ProblemResolutionFailed& ex)
         {
             logs.error() << ex.what();
         }

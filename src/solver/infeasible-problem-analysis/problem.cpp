@@ -1,9 +1,9 @@
 #include "problem.h"
+#include "exceptions.h"
 
 #include <fstream>
 #include <regex>
 #include <algorithm>
-#include <stdexcept>
 
 using namespace operations_research;
 
@@ -72,12 +72,12 @@ InfeasibleProblemReport InfeasibleProblemAnalysis::produceReport(
 {
     addSlackVariables();
     if (mSlackVariables.empty())
-        throw std::logic_error(
+        throw SlackVariablesEmpty(
           "Cannot generate infeasibility report: no constraints have been selected");
     buildObjective();
     const MPSolver::ResultStatus s = Solve();
     if (s != MPSolver::OPTIMAL && s != MPSolver::FEASIBLE)
-        throw std::domain_error(
+        throw ProblemResolutionFailed(
           "Linear problem could not be solved, and infeasibility analysis could not help");
 
     InfeasibleProblemReport r;
