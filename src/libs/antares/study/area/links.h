@@ -103,7 +103,7 @@ public:
 
     void setPathToDataFile(const AnyString& path) { pathToDataFile = path; }
     
-    bool loadDataFromCVSfile(uint loadOptions);
+    bool loadDataFromCSVfile(uint loadOptions);
     //@}
 
     //! \name Memory management
