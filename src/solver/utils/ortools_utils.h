@@ -77,10 +77,5 @@ private:
 };
 
 // C API
-#ifdef __cplusplus
-extern "C" {
-#endif
-MPSolver* convert_to_MPSolver(PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
-#ifdef __cplusplus
-}
-#endif
+MPSolver* convert_to_MPSolver(const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
+

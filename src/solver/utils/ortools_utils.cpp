@@ -87,7 +87,7 @@ void transferMatrix(MPSolver* solver,
     }
 }
 
-MPSolver* convert_to_MPSolver(PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
+MPSolver* convert_to_MPSolver(const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
     auto& study = *Data::Study::Current::Get();
 
