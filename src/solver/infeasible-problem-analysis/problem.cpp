@@ -75,19 +75,19 @@ InfeasibleProblemReport InfeasibleProblemAnalysis::produceReport(
         throw SlackVariablesEmpty(
           "Cannot generate infeasibility report: no constraints have been selected");
     buildObjective();
-    const MPSolver::ResultStatus s = Solve();
-    if (s != MPSolver::OPTIMAL && s != MPSolver::FEASIBLE)
+    const MPSolver::ResultStatus status = Solve();
+    if (s != MPSolver::OPTIMAL && status != MPSolver::FEASIBLE)
         throw ProblemResolutionFailed(
           "Linear problem could not be solved, and infeasibility analysis could not help");
 
-    InfeasibleProblemReport r;
+    InfeasibleProblemReport report;
     for (const MPVariable* slack : mSlackVariables)
     {
-        r.append(slack->name(), slack->solution_value());
+        report.append(slack->name(), slack->solution_value());
     }
 
-    r.trimTo(nbSlackVariablesInReport);
-    return r;
+    report.trimTo(nbSlackVariablesInReport);
+    return report;
 }
 } // namespace Optimization
 } // namespace Antares

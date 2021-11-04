@@ -25,15 +25,15 @@ void transferVariables(MPSolver* solver, const double* bMin, const double* bMax,
             min_l = bMin[idxVar];
         }
         double max_l = bMax[idxVar];
-        const MPVariable* x;
+        const MPVariable* var;
         std::string varName;
         if (NomDesVariables[idxVar].empty()) {
           varName = "x" + std::to_string(idxVar);
         } else {
           varName = NomDesVariables[idxVar];
         }
-        x = solver->MakeNumVar(min_l, max_l, varName);
-        objective->SetCoefficient(x, costs[idxVar]);
+        var = solver->MakeNumVar(min_l, max_l, varName);
+        objective->SetCoefficient(var, costs[idxVar]);
     }
 }
 
