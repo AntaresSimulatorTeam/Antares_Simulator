@@ -104,7 +104,7 @@ std::string Constraint::prettyPrint() const
     switch (getType())
     {
     case ConstraintType::binding_constraint_hourly:
-        return "Hourly binding constraint '" + getBindingConstraintName() + "' at day "
+        return "Hourly binding constraint '" + getBindingConstraintName() + "' at hour "
                + getTimeStepInYear();
     case ConstraintType::binding_constraint_daily:
         return "Daily binding constraint '" + getBindingConstraintName() + "' at day "
