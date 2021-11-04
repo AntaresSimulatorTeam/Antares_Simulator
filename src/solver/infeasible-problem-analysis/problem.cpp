@@ -20,6 +20,10 @@ InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(PROBLEME_SIMPLEXE_NOMME* Pr
 
 void InfeasibleProblemAnalysis::addSlackVariables()
 {
+    // We assess that less than 1 every 3 constraint will match
+    // the regex. If more, push_back may force the copy of memory blocks.
+    // This should not happen in most cases.
+    mSlackVariables.reserve(mSolver->NumConstraints() / 3);
     std::regex rgx(mPattern);
     const double infinity = MPSolver::infinity();
     for (MPConstraint* constraint : mSolver->constraints())
