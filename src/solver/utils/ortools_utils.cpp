@@ -56,10 +56,11 @@ void transferRows(MPSolver* solver, const double* rhs, const char* sens, int nbR
         }
 
         std::string constraintName;
-        if (NomDesContraintes[idxRow].empty())
+        if (NomDesContraintes[idxRow].empty()) {
           constraintName = "c" + std::to_string(idxRow);
-        else
+        } else {
           constraintName = NomDesContraintes[idxRow];
+        }
 
         solver->MakeRowConstraint(bMin, bMax, constraintName);
     }
