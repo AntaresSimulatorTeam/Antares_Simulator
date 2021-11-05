@@ -141,6 +141,13 @@ public:
     void copyFrom(const Matrix<U, V>* rhs);
     //@}
 
+    //@{
+    /*!
+    ** \brief Swap contents of Matrix with another
+    */
+    void swap(MatrixType& rhs) noexcept;
+    //@}
+
     //! \name File manipulation
     //@{
     /*!
