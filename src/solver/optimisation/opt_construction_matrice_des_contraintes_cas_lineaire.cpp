@@ -288,7 +288,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
               = ProblemeAResoudre->NombreDeContraintes;
 
             NomDeLaContrainte
-              = "fict_load::" + std::to_string(timeStepInYear) + "::" + ProblemeHebdo->NomsDesPays[Pays];
+              = "fict_load::" + std::to_string(timeStepInYear+1) + "::" + ProblemeHebdo->NomsDesPays[Pays];
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '<', NomDeLaContrainte);
@@ -436,9 +436,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                   ->NumeroDeContrainteDesContraintesCouplantes[CntCouplante]
                   = ProblemeAResoudre->NombreDeContraintes;
 
-                NomDeLaContrainte
-                  = "bc::hourly::" + std::to_string(timeStepInYear)
-                    + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
+                NomDeLaContrainte = "bc::hourly::" + std::to_string(timeStepInYear + 1) + "::"
+                                    + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
 
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                   ProblemeAResoudre,
@@ -636,9 +635,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                   ->NumeroDeContrainteDesContraintesCouplantes[CntCouplante]
                   = ProblemeAResoudre->NombreDeContraintes;
 
-                NomDeLaContrainte
-                  = "bc::daily::" + std::to_string(Jour)
-                    + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
+                NomDeLaContrainte = "bc::daily::" + std::to_string(Jour + 1) + "::"
+                                    + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
 
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                   ProblemeAResoudre,
@@ -736,9 +734,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                   ->NumeroDeContrainteDesContraintesCouplantes[CntCouplante]
                   = ProblemeAResoudre->NombreDeContraintes;
 
-                NomDeLaContrainte
-                  = std::string("bc::weekly::")
-                    + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
+                NomDeLaContrainte = std::string("bc::weekly::")
+                                    + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
 
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                   ProblemeAResoudre,
@@ -1064,8 +1061,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                 CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesNiveauxPays[Pays]
                   = ProblemeAResoudre->NombreDeContraintes;
 
-                NomDeLaContrainte
-                  = "hydro_level::" + std::to_string(timeStepInYear) + "::" + ProblemeHebdo->NomsDesPays[Pays];
+                NomDeLaContrainte = "hydro_level::" + std::to_string(timeStepInYear + 1)
+                                    + "::" + ProblemeHebdo->NomsDesPays[Pays];
 
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                   ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=', NomDeLaContrainte);
