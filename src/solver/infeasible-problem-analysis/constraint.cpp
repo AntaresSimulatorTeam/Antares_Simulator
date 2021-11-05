@@ -6,34 +6,31 @@ namespace Antares
 {
 namespace Optimization
 {
-Constraint::Constraint(const std::string& input, double slack_value) :
- mInput(input), mSlackValue(slack_value)
+Constraint::Constraint(const std::string& input, const double slackValue) :
+ mInput(input), mSlackValue(slackValue)
 {
 }
 
 std::size_t Constraint::extractItems()
 {
-    auto b = mInput.begin();
-    auto e = mInput.end();
-    size_t new_pos;
-    for (size_t pos = 0; pos < mInput.size();)
+    const auto beg = mInput.begin();
+    const auto end = mInput.end();
+    std::size_t newPos = 0;
+    const size_t sepSize = 2;
+    for (std::size_t pos = 0; pos < mInput.size(); pos = newPos + sepSize)
     {
-        new_pos = mInput.find("::", pos);
-        if (new_pos == std::string::npos)
+        newPos = mInput.find("::", pos);
+        if (newPos == std::string::npos)
         {
-            mItems.emplace_back(b + pos, e);
+            mItems.emplace_back(beg + pos, end);
             break;
         }
-        if (new_pos > pos)
-            mItems.emplace_back(b + pos, b + new_pos);
-        pos = new_pos + 2;
+        if (newPos > pos)
+        {
+            mItems.emplace_back(beg + pos, beg + newPos);
+        }
     }
     return mItems.size();
-}
-
-const std::string& Constraint::getInput() const
-{
-    return mInput;
 }
 
 double Constraint::getSlackValue() const
@@ -44,9 +41,11 @@ double Constraint::getSlackValue() const
 std::string Constraint::getAreaName() const
 {
     if (getType() == ConstraintType::binding_constraint_hourly
-        || getType() == ConstraintType::binding_constraint_daily
-        || getType() == ConstraintType::binding_constraint_weekly)
+        || (getType() == ConstraintType::binding_constraint_daily)
+        || (getType() == ConstraintType::binding_constraint_weekly))
+    {
         return "<none>";
+    }
     return mItems.at(2);
 }
 
@@ -65,23 +64,38 @@ std::string Constraint::getTimeStepInYear() const
     }
 }
 
+static ConstraintType bindingConstraintPeriodicity(const std::string& in)
+{
+    if (in == "hourly")
+    {
+        return ConstraintType::binding_constraint_hourly;
+    }
+    if (in == "daily")
+    {
+        return ConstraintType::binding_constraint_daily;
+    }
+    if (in == "weekly")
+    {
+        return ConstraintType::binding_constraint_weekly;
+    }
+    return ConstraintType::none;
+}
+
 ConstraintType Constraint::getType() const
 {
     assert(mItems.size() > 1);
     if (mItems.at(0) == "bc")
     {
-        if (mItems.at(1) == "hourly")
-            return ConstraintType::binding_constraint_hourly;
-        if (mItems.at(1) == "daily")
-            return ConstraintType::binding_constraint_daily;
-        if (mItems.at(1) == "weekly")
-            return ConstraintType::binding_constraint_weekly;
+        return bindingConstraintPeriodicity(mItems.at(1));
     }
     if (mItems.at(0) == "fict_load")
+    {
         return ConstraintType::fictitious_load;
+    }
     if (mItems.at(0) == "hydro_level")
+    {
         return ConstraintType::hydro_reservoir_level;
-
+    }
     return ConstraintType::none;
 }
 

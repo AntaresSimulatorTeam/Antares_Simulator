@@ -14,8 +14,8 @@ class InfeasibleProblemReport
 {
 public:
     InfeasibleProblemReport() = delete;
-    InfeasibleProblemReport(const std::vector<const operations_research::MPVariable*>&,
-                            std::size_t);
+    InfeasibleProblemReport(
+      const std::vector<const operations_research::MPVariable*>& slackVariables);
     void prettyPrint();
 
 private:

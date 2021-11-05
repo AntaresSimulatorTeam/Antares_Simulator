@@ -10,12 +10,12 @@ namespace Optimization
 class SlackVariablesEmpty : public std::runtime_error
 {
 public:
-    SlackVariablesEmpty(const std::string&);
+    explicit SlackVariablesEmpty(const std::string& message);
 };
 class ProblemResolutionFailed : public std::runtime_error
 {
 public:
-    ProblemResolutionFailed(const std::string&);
+    explicit ProblemResolutionFailed(const std::string& message);
 };
 } // namespace Optimization
 } // namespace Antares

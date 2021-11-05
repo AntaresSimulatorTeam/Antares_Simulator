@@ -22,10 +22,9 @@ class Constraint
 public:
     // Construct object
     Constraint() = default;
-    Constraint(const std::string& input, double slack_value);
+    Constraint(const std::string& input, const double slackValue);
 
     // Raw members
-    const std::string& getInput() const;
     double getSlackValue() const;
 
     // Extract items, check consistency

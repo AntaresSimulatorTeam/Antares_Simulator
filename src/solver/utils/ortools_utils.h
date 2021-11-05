@@ -76,6 +76,11 @@ private:
         */
 };
 
-// C API
-MPSolver* convert_to_MPSolver(const PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
-
+namespace Antares
+{
+namespace Optimization
+{
+MPSolver* convert_to_MPSolver(
+  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
+}
+} // namespace Antares

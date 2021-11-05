@@ -1,5 +1,9 @@
 #include "exceptions.h"
 
+/* This file contains exceptions that can be thrown by the
+   infeasible problem analyser.
+*/
+
 namespace Antares
 {
 namespace Optimization

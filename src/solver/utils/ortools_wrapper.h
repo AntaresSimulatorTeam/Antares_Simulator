@@ -5,7 +5,7 @@
 
 using namespace operations_research;
 
-MPSolver* ORTOOLS_Simplexe(PROBLEME_SIMPLEXE_NOMME* Probleme,
+MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* ProbSpx);
 void ORTOOLS_ModifierLeVecteurCouts(MPSolver* ProbSpx, double* costs, int nbVar);
 void ORTOOLS_ModifierLeVecteurSecondMembre(MPSolver* ProbSpx, double* rhs, char* sens, int nbRow);

@@ -15,8 +15,7 @@ namespace Antares
 namespace Optimization
 {
 InfeasibleProblemReport::InfeasibleProblemReport(
-  const std::vector<const operations_research::MPVariable*>& slackVariables,
-  std::size_t nbConstraints)
+  const std::vector<const operations_research::MPVariable*>& slackVariables)
 {
     for (const operations_research::MPVariable* slack : slackVariables)
     {
@@ -35,8 +34,10 @@ void InfeasibleProblemReport::extractItems()
 {
     for (auto& c : mConstraints)
     {
-        if (!c.extractItems())
+        if (c.extractItems() == 0)
+        {
             return;
+        }
         mTypes[c.getType()]++;
     }
 }
@@ -71,7 +72,7 @@ void InfeasibleProblemReport::prettyPrint()
 
 void InfeasibleProblemReport::trim()
 {
-    std::sort(std::begin(mConstraints), std::end(mConstraints), compareSlackSolutions);
+    std::sort(std::begin(mConstraints), std::end(mConstraints), ::compareSlackSolutions);
     if (nbVariables <= mConstraints.size())
     {
         mConstraints.resize(nbVariables);
