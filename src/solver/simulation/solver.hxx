@@ -1051,9 +1051,14 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
         && (PreproOnly || !year || ((year % pData.refreshIntervalHydro) == 0)))
         GenerateTimeSeries<Data::timeSeriesHydro>(study, year);
     // Thermal
-    const bool global = pData.haveToRefreshTSThermal;
+    Data::GlobalTSGenerationBehavior globalBehavior;
+    if (pData.haveToRefreshTSThermal) {
+      globalBehavior = Data::GlobalTSGenerationBehavior::generate;
+    } else {
+      globalBehavior = Data::GlobalTSGenerationBehavior::doNotGenerate;
+    }
     const bool refresh = PreproOnly || !year || ((year % pData.refreshIntervalThermal) == 0);
-    GenerateThermalTimeSeries(study, year, global, refresh);
+    GenerateThermalTimeSeries(study, year, globalBehavior, refresh);
 }
 
 template<class Impl>

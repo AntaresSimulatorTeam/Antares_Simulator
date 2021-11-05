@@ -47,14 +47,14 @@ namespace Antares
 {
 namespace Data
 {
-bool ThermalCluster::doWeGenerateTS(bool global, bool refresh) const
+bool ThermalCluster::doWeGenerateTS(GlobalTSGenerationBehavior global, bool refresh) const
 {
     switch (tsGenBehavior)
     {
     // Generate if global tells us to
-    case TSGenerationBehavior::useGlobalParameter:
-        return global && refresh;
-    case TSGenerationBehavior::forceGen:
+    case LocalTSGenerationBehavior::useGlobalParameter:
+        return (global == GlobalTSGenerationBehavior::generate) && refresh;
+    case LocalTSGenerationBehavior::forceGen:
         return refresh;
     default:
         return false;
@@ -88,7 +88,7 @@ bool Into<Antares::Data::ThermalLaw>::Perform(AnyString string, TargetType& out)
     return false;
 }
 
-bool Into<Antares::Data::TSGenerationBehavior>::Perform(AnyString string, TargetType& out)
+bool Into<Antares::Data::LocalTSGenerationBehavior>::Perform(AnyString string, TargetType& out)
 {
     string.trim();
     if (string.empty())
@@ -96,17 +96,17 @@ bool Into<Antares::Data::TSGenerationBehavior>::Perform(AnyString string, Target
 
     if (string.equalsInsensitive("use global"))
     {
-        out = Antares::Data::TSGenerationBehavior::useGlobalParameter;
+        out = Antares::Data::LocalTSGenerationBehavior::useGlobalParameter;
         return true;
     }
     if (string.equalsInsensitive("force generation"))
     {
-        out = Antares::Data::TSGenerationBehavior::forceGen;
+        out = Antares::Data::LocalTSGenerationBehavior::forceGen;
         return true;
     }
     if (string.equalsInsensitive("force no generation"))
     {
-        out = Antares::Data::TSGenerationBehavior::forceNoGen;
+        out = Antares::Data::LocalTSGenerationBehavior::forceNoGen;
         return true;
     }
     return false;

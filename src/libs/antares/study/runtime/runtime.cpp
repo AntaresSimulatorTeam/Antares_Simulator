@@ -470,11 +470,17 @@ void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
 {
     auto& gd = study.parameters;
     thermalTSRefresh = gd.timeSeriesToGenerate & timeSeriesThermal;
-    study.areas.each([this, &gd](Data::Area& area) {
-        area.thermal.list.each([this, &gd](const Data::ThermalCluster& cluster) {
+    Data::GlobalTSGenerationBehavior globalBehavior;
+    if (gd.timeSeriesToGenerate & timeSeriesThermal) {
+        globalBehavior = Data::GlobalTSGenerationBehavior::generate;
+    } else {
+        globalBehavior = Data::GlobalTSGenerationBehavior::doNotGenerate;
+    }
+    study.areas.each([this, &gd, globalBehavior](Data::Area& area) {
+          area.thermal.list.each([this, &gd, globalBehavior](const Data::ThermalCluster& cluster) {
             thermalTSRefresh
               = thermalTSRefresh
-                || cluster.doWeGenerateTS(gd.timeSeriesToGenerate & timeSeriesThermal);
+                || cluster.doWeGenerateTS(globalBehavior);
         });
     });
 }
@@ -494,10 +500,12 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
 
     // Calendar
     logs.info() << "Generating calendar informations";
-    if (study.usedByTheSolver)
+    if (study.usedByTheSolver) {
         study.calendar.reset(gd, false);
-    else
+    }
+    else {
         study.calendar.reset(gd);
+    }
     logs.debug() << "  :: generating calendar dedicated to the output";
     study.calendarOutput.reset(gd);
     initializeRangeLimits(study, rangeLimits);

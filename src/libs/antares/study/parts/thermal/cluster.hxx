@@ -52,21 +52,21 @@ public:
 };
 
 template<class CStringT>
-class Append<CStringT, Antares::Data::TSGenerationBehavior>
+class Append<CStringT, Antares::Data::LocalTSGenerationBehavior>
 {
 public:
-    static void Perform(CStringT& string, Antares::Data::TSGenerationBehavior behavior)
+    static void Perform(CStringT& string, Antares::Data::LocalTSGenerationBehavior behavior)
     {
         switch (behavior)
         {
-        default:
-            string += "use global";
-            break;
-        case Antares::Data::TSGenerationBehavior::forceGen:
+        case Antares::Data::LocalTSGenerationBehavior::forceGen:
             string += "force generation";
             break;
-        case Antares::Data::TSGenerationBehavior::forceNoGen:
+        case Antares::Data::LocalTSGenerationBehavior::forceNoGen:
             string += "force no generation";
+            break;
+        default:
+            string += "use global";
             break;
         }
     }
@@ -94,10 +94,10 @@ public:
 };
 
 template<>
-class Into<Antares::Data::TSGenerationBehavior>
+class Into<Antares::Data::LocalTSGenerationBehavior>
 {
 public:
-    using TargetType = Antares::Data::TSGenerationBehavior;
+    using TargetType = Antares::Data::LocalTSGenerationBehavior;
     enum
     {
         valid = 1
@@ -108,7 +108,7 @@ public:
     template<class StringT>
     static TargetType Perform(const StringT& s)
     {
-        TargetType behavior = Antares::Data::TSGenerationBehavior::useGlobalParameter;
+        TargetType behavior = Antares::Data::LocalTSGenerationBehavior::useGlobalParameter;
         Perform(s, behavior);
         return behavior;
     }
