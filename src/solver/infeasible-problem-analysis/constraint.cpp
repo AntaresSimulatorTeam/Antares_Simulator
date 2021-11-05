@@ -16,8 +16,9 @@ std::size_t Constraint::extractItems()
     const auto beg = mInput.begin();
     const auto end = mInput.end();
     std::size_t newPos = 0;
-    const size_t sepSize = 2;
-    for (std::size_t pos = 0; pos < mInput.size(); pos = newPos + sepSize)
+    const std::size_t sepSize = 2;
+    const std::size_t inputSize = mInput.size();
+    for (std::size_t pos = 0; pos < inputSize; pos = newPos + sepSize)
     {
         newPos = mInput.find("::", pos);
         if (newPos == std::string::npos)
@@ -40,7 +41,7 @@ double Constraint::getSlackValue() const
 
 std::string Constraint::getAreaName() const
 {
-    if (getType() == ConstraintType::binding_constraint_hourly
+    if ((getType() == ConstraintType::binding_constraint_hourly)
         || (getType() == ConstraintType::binding_constraint_daily)
         || (getType() == ConstraintType::binding_constraint_weekly))
     {

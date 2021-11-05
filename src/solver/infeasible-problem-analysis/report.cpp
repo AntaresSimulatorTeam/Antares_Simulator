@@ -2,7 +2,6 @@
 #include "constraint.h"
 #include <antares/logs.h>
 #include <algorithm>
-#include <map>
 
 static bool compareSlackSolutions(const Antares::Optimization::Constraint& a,
                                   const Antares::Optimization::Constraint& b)
@@ -59,9 +58,10 @@ void InfeasibleProblemReport::prettyPrintImpl()
     {
         Antares::logs.error() << "* Last resort shedding status,";
     }
-    if (mTypes[ConstraintType::binding_constraint_hourly] > 0
-        || mTypes[ConstraintType::binding_constraint_daily] > 0
-        || mTypes[ConstraintType::binding_constraint_weekly] > 0)
+    const unsigned int bcCount = mTypes[ConstraintType::binding_constraint_hourly]
+                                 + mTypes[ConstraintType::binding_constraint_daily]
+                                 + mTypes[ConstraintType::binding_constraint_weekly];
+    if (bcCount > 0)
     {
         Antares::logs.error() << "* Binding constraints,";
     }

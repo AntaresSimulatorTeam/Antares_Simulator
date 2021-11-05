@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include "constraint.h"
 #include "ortools/linear_solver/linear_solver.h"
@@ -14,7 +15,7 @@ class InfeasibleProblemReport
 {
 public:
     InfeasibleProblemReport() = delete;
-    InfeasibleProblemReport(
+    explicit InfeasibleProblemReport(
       const std::vector<const operations_research::MPVariable*>& slackVariables);
     void prettyPrint();
 

@@ -141,6 +141,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     NombreDeTermes++;
 
                     if (exportStructure)
+                    {
                         OPT_Export_add_variable(
                           varname,
                           Var,
@@ -148,6 +149,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                           Pays,
                           Interco,
                           timeStepInYear);
+                    }
                 }
                 Interco = ProblemeHebdo->IndexSuivantIntercoOrigine[Interco];
             }
@@ -162,6 +164,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     NombreDeTermes++;
 
                     if (exportStructure)
+                    {
                         OPT_Export_add_variable(
                           varname,
                           Var,
@@ -169,6 +172,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                           Pays,
                           Interco,
                           timeStepInYear);
+                    }
                 }
                 Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
             }
@@ -186,12 +190,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     NombreDeTermes++;
 
                     if (exportStructure)
+                    {
                         OPT_Export_add_variable(varname,
                                                 Var,
                                                 Enum::ExportStructDict::PalierThermique,
                                                 Pays,
                                                 Palier,
                                                 timeStepInYear);
+                    }
                 }
             }
 
@@ -203,8 +209,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                 NombreDeTermes++;
 
                 if (exportStructure)
+                {
                     OPT_Export_add_variable(
                       varname, Var, Enum::ExportStructDict::ProdHyd, Pays, timeStepInYear);
+                }
             }
 
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDePompage[Pays];
@@ -223,11 +231,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                 NombreDeTermes++;
 
                 if (exportStructure)
+                {
                     OPT_Export_add_variable(varname,
                                             Var,
                                             Enum::ExportStructDict::DefaillancePositive,
                                             Pays,
                                             timeStepInYear);
+                }
             }
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[Pays];
             if (Var >= 0)
@@ -237,11 +247,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                 NombreDeTermes++;
 
                 if (exportStructure)
+                {
                     OPT_Export_add_variable(varname,
                                             Var,
                                             Enum::ExportStructDict::DefaillanceNegative,
                                             Pays,
                                             timeStepInYear);
+                }
             }
 
             CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesBilansPays[Pays]
@@ -265,12 +277,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     NombreDeTermes++;
 
                     if (exportStructure)
+                    {
                         OPT_Export_add_variable(varname,
                                                 Var,
                                                 Enum::ExportStructDict::PalierThermique,
                                                 Pays,
                                                 Palier,
                                                 timeStepInYear);
+                    }
                 }
             }
 
@@ -282,8 +296,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                 NombreDeTermes++;
 
                 if (exportStructure)
+                {
                     OPT_Export_add_variable(
                       varname, Var, Enum::ExportStructDict::ProdHyd, Pays, timeStepInYear);
+                }
             }
 
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[Pays];
@@ -294,11 +310,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                 NombreDeTermes++;
 
                 if (exportStructure)
+                {
                     OPT_Export_add_variable(varname,
                                             Var,
                                             Enum::ExportStructDict::DefaillanceNegative,
                                             Pays,
                                             timeStepInYear);
+                }
             }
 
             CorrespondanceCntNativesCntOptim->NumeroDeContraintePourEviterLesChargesFictives[Pays]
@@ -325,12 +343,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     NombreDeTermes++;
 
                     if (exportStructure)
+                    {
                         OPT_Export_add_variable(varname,
                                                 Var,
                                                 Enum::ExportStructDict::DefaillanceNegative,
                                                 Pays,
                                                 timeStepInYear,
                                                 timeStepInYear);
+                    }
                 }
                 Var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
@@ -341,12 +361,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     NombreDeTermes++;
 
                     if (exportStructure)
+                    {
                         OPT_Export_add_variable(
                           varname,
                           Var,
                           Enum::ExportStructDict::CoutOrigineVersExtremiteDeLInterconnexion,
                           Interco,
                           timeStepInYear);
+                    }
                 }
                 Var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
@@ -357,12 +379,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     NombreDeTermes++;
 
                     if (exportStructure)
+                    {
                         OPT_Export_add_variable(
                           varname,
                           Var,
                           Enum::ExportStructDict::CoutExtremiteVersOrigineDeLInterconnexion,
                           Interco,
                           timeStepInYear);
+                    }
                 }
 
                 CorrespondanceCntNativesCntOptim->NumeroDeContrainteDeDissociationDeFlux[Interco]
@@ -444,12 +468,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                         NombreDeTermes++;
 
                         if (exportStructure)
+                        {
                             OPT_Export_add_variable(
                               varname,
                               Var,
                               Enum::ExportStructDict::CorrespondanceVarNativesVarOptim,
                               Palier,
                               Pdt1);
+                        }
                     }
                 }
 
