@@ -14,16 +14,21 @@ namespace Antares
 {
 namespace Optimization
 {
+InfeasibleProblemReport::InfeasibleProblemReport(
+  const std::vector<const operations_research::MPVariable*>& slackVariables,
+  std::size_t nbConstraints)
+{
+    for (const operations_research::MPVariable* slack : slackVariables)
+    {
+        append(slack->name(), slack->solution_value());
+    }
+    trim();
+}
+
 void InfeasibleProblemReport::append(const std::string& constraintName, double value)
 {
     // TODO check prior existence of constraintName
     mConstraints.emplace_back(constraintName, value);
-}
-
-void InfeasibleProblemReport::rawPrint() const
-{
-    for (const auto& c : mConstraints)
-        Antares::logs.info() << c.getInput() << ": " << c.getSlackValue();
 }
 
 void InfeasibleProblemReport::prettyPrint()
@@ -61,14 +66,13 @@ void InfeasibleProblemReport::prettyPrint()
     Antares::logs.error() << "* Negative hurdle costs on lines with infinite capacity (rare).";
 }
 
-void InfeasibleProblemReport::trimTo(std::size_t n)
+void InfeasibleProblemReport::trim()
 {
     std::sort(std::begin(mConstraints), std::end(mConstraints), compareSlackSolutions);
-
-    if (n > mConstraints.size())
-        n = mConstraints.size();
-
-    mConstraints.resize(n);
+    if (nbVariables <= mConstraints.size())
+    {
+        mConstraints.resize(nbVariables);
+    }
 }
 
 } // namespace Optimization

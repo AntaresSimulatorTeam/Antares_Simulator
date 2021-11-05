@@ -11,9 +11,7 @@ namespace Antares
 {
 namespace Optimization
 {
-InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(PROBLEME_SIMPLEXE_NOMME* ProbSpx,
-                                                     const std::string& pattern) :
- mPattern(pattern)
+InfeasibleProblemAnalysis::InfeasibleProblemAnalysis(PROBLEME_SIMPLEXE_NOMME* ProbSpx)
 {
     mSolver = std::unique_ptr<MPSolver>(convert_to_MPSolver(ProbSpx));
 }
@@ -67,8 +65,7 @@ MPSolver::ResultStatus InfeasibleProblemAnalysis::Solve() const
     return mSolver->Solve();
 }
 
-InfeasibleProblemReport InfeasibleProblemAnalysis::produceReport(
-  std::size_t nbSlackVariablesInReport)
+InfeasibleProblemReport InfeasibleProblemAnalysis::produceReport()
 {
     addSlackVariables();
     if (mSlackVariables.empty())
@@ -76,17 +73,11 @@ InfeasibleProblemReport InfeasibleProblemAnalysis::produceReport(
           "Cannot generate infeasibility report: no constraints have been selected");
     buildObjective();
     const MPSolver::ResultStatus status = Solve();
-    if (s != MPSolver::OPTIMAL && status != MPSolver::FEASIBLE)
+    if (status != MPSolver::OPTIMAL && status != MPSolver::FEASIBLE)
         throw ProblemResolutionFailed(
           "Linear problem could not be solved, and infeasibility analysis could not help");
-
-    InfeasibleProblemReport report;
-    for (const MPVariable* slack : mSlackVariables)
-    {
-        report.append(slack->name(), slack->solution_value());
-    }
-
-    report.trimTo(nbSlackVariablesInReport);
+    const std::size_t nbConstraintsInReport = 10;
+    InfeasibleProblemReport report(mSlackVariables, nbConstraintsInReport);
     return report;
 }
 } // namespace Optimization

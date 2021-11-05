@@ -5,7 +5,6 @@
 #include <memory>
 
 #include "../utils/ortools_utils.h"
-
 #include "report.h"
 
 namespace Antares
@@ -16,8 +15,8 @@ class InfeasibleProblemAnalysis
 {
 public:
     InfeasibleProblemAnalysis() = delete;
-    InfeasibleProblemAnalysis(PROBLEME_SIMPLEXE_NOMME* ProbSpx, const std::string& pattern);
-    InfeasibleProblemReport produceReport(std::size_t nbSlackVariablesInReport);
+    InfeasibleProblemAnalysis(PROBLEME_SIMPLEXE_NOMME* ProbSpx);
+    InfeasibleProblemReport produceReport();
 
 private:
     void buildObjective() const;
@@ -26,7 +25,7 @@ private:
 
     std::unique_ptr<operations_research::MPSolver> mSolver;
     std::vector<const operations_research::MPVariable*> mSlackVariables;
-    const std::string mPattern;
+    const std::string mPattern = ".+::.+";
 };
 } // namespace Optimization
 } // namespace Antares

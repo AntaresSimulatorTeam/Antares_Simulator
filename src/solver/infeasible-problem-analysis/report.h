@@ -4,9 +4,7 @@
 #include <vector>
 
 #include "constraint.h"
-
-// Report class, without OR-Tools dependency in its API
-// Only dependency is in the implementation
+#include "ortools/linear_solver/linear_solver.h"
 
 namespace Antares
 {
@@ -15,15 +13,16 @@ namespace Optimization
 class InfeasibleProblemReport
 {
 public:
-    using SlackSolution = std::pair<std::string, double>;
-    InfeasibleProblemReport() = default;
-    void append(const std::string& constraintName, double value);
-    void trimTo(std::size_t nbSlackVariables);
-    void rawPrint() const;
+    InfeasibleProblemReport() = delete;
+    InfeasibleProblemReport(const std::vector<const operations_research::MPVariable*>&,
+                            std::size_t);
     void prettyPrint();
 
 private:
+    void trim();
+    void append(const std::string& constraintName, double value);
     std::vector<Constraint> mConstraints;
+    const unsigned int nbVariables = 10;
 };
 } // namespace Optimization
 } // namespace Antares

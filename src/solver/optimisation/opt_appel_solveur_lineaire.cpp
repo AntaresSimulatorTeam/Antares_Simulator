@@ -349,11 +349,12 @@ RESOLUTION:
             logs.info() << " Solver: Safe resolution failed";
         }
 
-        Optimization::InfeasibleProblemAnalysis analysis(&Probleme, ".+::.+");
-        Optimization::InfeasibleProblemReport report;
+        Optimization::InfeasibleProblemAnalysis analysis(&Probleme);
+        logs.notice() << " Solver: Starting infeasibility analysis...";
         try
         {
-            report = analysis.produceReport(10);
+            Optimization::InfeasibleProblemReport report = analysis.produceReport();
+            report.prettyPrint();
         }
         catch (const Optimization::SlackVariablesEmpty& ex)
         {
@@ -363,8 +364,6 @@ RESOLUTION:
         {
             logs.error() << ex.what();
         }
-
-        report.prettyPrint();
 
         // Write MPS only if exportMPSOnError is activated and MPS weren't exported before with
         // ExportMPS option
