@@ -621,26 +621,57 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
     }
 
     return ret;
-}
+} // End AreaLinksLoadFromFolder(...)
 
-bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
+
+bool saveAreaLinksTimeSeriesToFolder(const Area* area, const char* const folder)
 {
-    /* Assert */
-    assert(area);
-    assert(folder);
+    String filename;
+    bool success = true;
 
-    // Initialize
-    if (!IO::Directory::Create(folder))
+    auto end = area->links.end();
+    for (auto i = area->links.begin(); i != end; ++i)
     {
-        logs.error() << folder << ": Impossible to create the folder";
-        return false;
+        auto& link = *(i->second);
+
+        Matrix<> tmpMatrixToPrint;
+
+        // Number of columns of matrix to print
+        uint nbColumnsOfMatrixToPrint = link.parameters.width + link.directCapacities.width + link.indirectCapacities.width;
+
+        // Matrix to print's number of lines
+        assert(link.parameters.height == link.directCapacities.height);
+        assert(link.parameters.height == link.indirectCapacities.height);
+        uint nbLinesOfMatrixToPrint = link.parameters.height;
+
+        tmpMatrixToPrint.resize(nbColumnsOfMatrixToPrint, nbLinesOfMatrixToPrint);
+        tmpMatrixToPrint.zero();
+
+        // Fill the matrix to print
+        for (uint h = 0; h < nbLinesOfMatrixToPrint; h++)
+        {
+            tmpMatrixToPrint[0][h] = link.directCapacities[0][h];
+            tmpMatrixToPrint[1][h] = link.indirectCapacities[0][h];
+            tmpMatrixToPrint[2][h] = link.parameters[fhlHurdlesCostDirect][h];
+            tmpMatrixToPrint[3][h] = link.parameters[fhlHurdlesCostIndirect][h];
+            tmpMatrixToPrint[4][h] = link.parameters[fhlImpedances][h];
+            tmpMatrixToPrint[5][h] = link.parameters[fhlLoopFlow][h];
+            tmpMatrixToPrint[6][h] = link.parameters[fhlPShiftMinus][h];
+            tmpMatrixToPrint[7][h] = link.parameters[fhlPShiftPlus][h];
+        }
+
+        filename.clear() << folder << SEP << link.with->id << ".txt";
+        success = tmpMatrixToPrint.saveToCSVFile(filename) && success;
     }
 
+    return success;
+}
+
+bool saveAreaLinksConfigurationFileToFolder(const Area* area, const char* const folder)
+{
     String filename;
     IniFile ini;
-
-    bool ret = true;
-
+    
     auto end = area->links.end();
     for (auto i = area->links.begin(); i != end; ++i)
     {
@@ -663,43 +694,32 @@ bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
             section->add("comments", link.comments);
         section->add("filter-synthesis", datePrecisionIntoString(link.filterSynthesis));
         section->add("filter-year-by-year", datePrecisionIntoString(link.filterYearByYear));
-        
-        // NTC
-        filename.clear() << folder << SEP << link.with->id << ".txt";
-
-        Matrix<> tmpMatrixToPrint;
-
-        // Matrix to print's number of columns
-        uint nbColumnsOfMatrixToPrint = link.parameters.width + link.directCapacities.width + link.indirectCapacities.width;
-
-        // Matrix to print's number of lines
-        assert(link.parameters.height == link.directCapacities.height);
-        assert(link.parameters.height == link.indirectCapacities.height);
-        uint nbLinesOfMatrixToPrint = link.parameters.height;
-        
-        tmpMatrixToPrint.resize(nbColumnsOfMatrixToPrint, nbLinesOfMatrixToPrint);
-        tmpMatrixToPrint.zero();
-
-        // Fill the matrix to print
-        for (int h = 0; h < nbLinesOfMatrixToPrint; h++)
-        {
-            tmpMatrixToPrint[0][h] = link.directCapacities[0][h];
-            tmpMatrixToPrint[1][h] = link.indirectCapacities[0][h];
-            tmpMatrixToPrint[2][h] = link.parameters[fhlHurdlesCostDirect][h];
-            tmpMatrixToPrint[3][h] = link.parameters[fhlHurdlesCostIndirect][h];
-            tmpMatrixToPrint[4][h] = link.parameters[fhlImpedances][h];
-            tmpMatrixToPrint[5][h] = link.parameters[fhlLoopFlow][h];
-            tmpMatrixToPrint[6][h] = link.parameters[fhlPShiftMinus][h];
-            tmpMatrixToPrint[7][h] = link.parameters[fhlPShiftPlus][h];
-        }
-        ret = tmpMatrixToPrint.saveToCSVFile(filename);
     }
 
     filename.clear() << folder << SEP << "properties.ini";
-    if (! ini.save(filename))
+    return ini.save(filename);
+}
+
+bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
+{
+    /* Assert */
+    assert(area);
+    assert(folder);
+
+    // Initialize
+    if (!IO::Directory::Create(folder))
+    {
+        logs.error() << folder << ": Impossible to create the folder";
+        return false;
+    }
+
+    if (not saveAreaLinksConfigurationFileToFolder(area, folder))
         return false;
 
-    return ret;
+    if (not saveAreaLinksTimeSeriesToFolder(area, folder))
+        return false;
+
+    return true;
 }
 
 void AreaLinkRemove(AreaLink* l)
