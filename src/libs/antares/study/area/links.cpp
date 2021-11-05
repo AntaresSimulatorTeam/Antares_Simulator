@@ -626,6 +626,15 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
 
 bool saveAreaLinksTimeSeriesToFolder(const Area* area, const char* const folder)
 {
+    // Initialize
+    String capacitiesFolder;
+    capacitiesFolder << folder << SEP << "capacities";
+    if (!IO::Directory::Create(capacitiesFolder))
+    {
+        logs.error() << capacitiesFolder << ": Impossible to create the folder";
+        return false;
+    }
+
     String filename;
     bool success = true;
 
@@ -634,34 +643,17 @@ bool saveAreaLinksTimeSeriesToFolder(const Area* area, const char* const folder)
     {
         auto& link = *(i->second);
 
-        Matrix<> tmpMatrixToPrint;
+        // Save parameters : 6 time series
+        filename.clear() << folder << SEP << link.with->id << "_parameters.txt";
+        success = link.parameters.saveToCSVFile(filename) && success;
 
-        // Number of columns of matrix to print
-        uint nbColumnsOfMatrixToPrint = link.parameters.width + link.directCapacities.width + link.indirectCapacities.width;
+        // Save direct capacities time series
+        filename.clear() << capacitiesFolder << SEP << link.with->id << "_direct.txt";
+        success = link.directCapacities.saveToCSVFile(filename) && success;
 
-        // Matrix to print's number of lines
-        assert(link.parameters.height == link.directCapacities.height);
-        assert(link.parameters.height == link.indirectCapacities.height);
-        uint nbLinesOfMatrixToPrint = link.parameters.height;
-
-        tmpMatrixToPrint.resize(nbColumnsOfMatrixToPrint, nbLinesOfMatrixToPrint);
-        tmpMatrixToPrint.zero();
-
-        // Fill the matrix to print
-        for (uint h = 0; h < nbLinesOfMatrixToPrint; h++)
-        {
-            tmpMatrixToPrint[0][h] = link.directCapacities[0][h];
-            tmpMatrixToPrint[1][h] = link.indirectCapacities[0][h];
-            tmpMatrixToPrint[2][h] = link.parameters[fhlHurdlesCostDirect][h];
-            tmpMatrixToPrint[3][h] = link.parameters[fhlHurdlesCostIndirect][h];
-            tmpMatrixToPrint[4][h] = link.parameters[fhlImpedances][h];
-            tmpMatrixToPrint[5][h] = link.parameters[fhlLoopFlow][h];
-            tmpMatrixToPrint[6][h] = link.parameters[fhlPShiftMinus][h];
-            tmpMatrixToPrint[7][h] = link.parameters[fhlPShiftPlus][h];
-        }
-
-        filename.clear() << folder << SEP << link.with->id << ".txt";
-        success = tmpMatrixToPrint.saveToCSVFile(filename) && success;
+        // Save indirect capacities time series
+        filename.clear() << capacitiesFolder << SEP << link.with->id << "_indirect.txt";
+        success = link.indirectCapacities.saveToCSVFile(filename) && success;
     }
 
     return success;
