@@ -42,9 +42,8 @@ void InfeasibleProblemReport::extractItems()
     }
 }
 
-void InfeasibleProblemReport::prettyPrint()
+void InfeasibleProblemReport::prettyPrintImpl()
 {
-    extractItems();
     Antares::logs.error() << "The following constraints are suspicious (first = most suspicious)";
     for (const auto& c : mConstraints)
     {
@@ -68,6 +67,12 @@ void InfeasibleProblemReport::prettyPrint()
     }
 
     Antares::logs.error() << "* Negative hurdle costs on lines with infinite capacity (rare).";
+}
+
+void InfeasibleProblemReport::prettyPrint()
+{
+    extractItems();
+    prettyPrintImpl();
 }
 
 void InfeasibleProblemReport::trim()

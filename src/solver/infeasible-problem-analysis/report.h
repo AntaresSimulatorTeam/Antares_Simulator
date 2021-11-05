@@ -21,6 +21,7 @@ public:
 private:
     void trim();
     void extractItems();
+    void prettyPrintImpl();
     void append(const std::string& constraintName, double value);
     std::vector<Constraint> mConstraints;
     std::map<ConstraintType, unsigned int> mTypes;
