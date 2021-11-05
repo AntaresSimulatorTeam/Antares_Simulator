@@ -31,34 +31,37 @@ void InfeasibleProblemReport::append(const std::string& constraintName, double v
     mConstraints.emplace_back(constraintName, value);
 }
 
-void InfeasibleProblemReport::prettyPrint()
+void InfeasibleProblemReport::extractItems()
 {
-    std::map<ConstraintType, unsigned int> countTypes;
     for (auto& c : mConstraints)
     {
         if (!c.extractItems())
             return;
+        mTypes[c.getType()]++;
     }
-    Antares::logs.error() << "Infeasible problem encountered. The following constraints are "
-                             "suspicious (first = most suspicious)";
+}
+
+void InfeasibleProblemReport::prettyPrint()
+{
+    extractItems();
+    Antares::logs.error() << "The following constraints are suspicious (first = most suspicious)";
     for (const auto& c : mConstraints)
     {
         Antares::logs.error() << c.prettyPrint();
-        countTypes[c.getType()]++;
     }
     Antares::logs.error() << "Possible causes of infeasibility:";
-    if (countTypes[ConstraintType::hydro_reservoir_level] > 0)
+    if (mTypes[ConstraintType::hydro_reservoir_level] > 0)
     {
         Antares::logs.error() << "* Hydro reservoir impossible to manage with cumulative options "
                                  "\"hard bounds without heuristic\"";
     }
-    if (countTypes[ConstraintType::fictitious_load] > 0)
+    if (mTypes[ConstraintType::fictitious_load] > 0)
     {
         Antares::logs.error() << "* Last resort shedding status,";
     }
-    if (countTypes[ConstraintType::binding_constraint_hourly] > 0
-        || countTypes[ConstraintType::binding_constraint_daily] > 0
-        || countTypes[ConstraintType::binding_constraint_weekly] > 0)
+    if (mTypes[ConstraintType::binding_constraint_hourly] > 0
+        || mTypes[ConstraintType::binding_constraint_daily] > 0
+        || mTypes[ConstraintType::binding_constraint_weekly] > 0)
     {
         Antares::logs.error() << "* Binding constraints,";
     }
