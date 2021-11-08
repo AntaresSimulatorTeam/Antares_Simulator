@@ -156,6 +156,16 @@ void SIM_AllocationTableaux()
             }
         }
     }
+    NumeroChroniquesTireesParInterconnexion
+      = (NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION**)MemAlloc(study.maxNbYearsInParallel
+                                                                * sizeof(void*));
+    const auto intercoCount = study.runtime->interconnectionsCount;
+    for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
+    {
+        NumeroChroniquesTireesParInterconnexion[numSpace]
+          = (NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION*)MemAlloc(
+            intercoCount * sizeof(NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION*));
+    }
 
     if (not study.parameters.adequacyDraft())
     {
@@ -191,14 +201,20 @@ void SIM_DesallocationTableaux()
 
                 MemFree(ValeursGenereesParPays[numSpace][i]);
             }
-            MemFree(NumeroChroniquesTireesParPays[numSpace]);
             MemFree(ValeursGenereesParPays[numSpace]);
+            MemFree(NumeroChroniquesTireesParPays[numSpace]);
+        }
+        for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
+        {
+            MemFree(NumeroChroniquesTireesParInterconnexion[numSpace]);
         }
     }
     MemFree(NumeroChroniquesTireesParPays);
     MemFree(ValeursGenereesParPays);
+    MemFree(NumeroChroniquesTireesParInterconnexion);
     NumeroChroniquesTireesParPays = NULL;
     ValeursGenereesParPays = NULL;
+    NumeroChroniquesTireesParInterconnexion = NULL;
 
     MemFree(DonneesParPays);
     DonneesParPays = NULL;

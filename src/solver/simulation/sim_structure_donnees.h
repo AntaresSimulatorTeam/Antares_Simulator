@@ -52,6 +52,11 @@ typedef struct
 
 typedef struct
 {
+    int TransmissionCapacities;
+} NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION;
+
+typedef struct
+{
     double* HydrauliqueModulableQuotidien; /* indice par jour */
     double* AleaCoutDeProductionParPalier; /* epsilon sur le cout de production */
     double* NiveauxReservoirsDebutJours;   // Niveaux (quotidiens) du reservoir de début de jour (en

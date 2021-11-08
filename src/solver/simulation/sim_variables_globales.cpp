@@ -39,6 +39,7 @@ char AppelEnModeSimulateur;
 
 VALEURS_GENEREES_PAR_PAYS*** ValeursGenereesParPays;
 NUMERO_CHRONIQUES_TIREES_PAR_PAYS*** NumeroChroniquesTireesParPays;
+NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION** NumeroChroniquesTireesParInterconnexion;
 
 PROBLEME_HORAIRE_ADEQUATION ProblemeHoraireAdequation;
 VALEURS_ANNUELLES** ValeursAnnuellesAdequation;
