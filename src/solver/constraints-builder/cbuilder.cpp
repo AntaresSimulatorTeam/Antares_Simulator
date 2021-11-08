@@ -98,15 +98,21 @@ bool CBuilder::update(bool applyCheckBox)
         // ... Load parameters from a data file 
         YString dataFilename = link->parameters.jit->sourceFilename;
         if (not link->parameters.loadFromCSVFile(dataFilename, Data::fhlMax, HOURS_PER_YEAR, Matrix<>::optImmediate))
+        {
             return false;
+        }
         // ... Load direct capacities from a data file 
         dataFilename = link->directCapacities.jit->sourceFilename;
         if (not link->directCapacities.loadFromCSVFile(dataFilename, Data::fhlMax, HOURS_PER_YEAR, Matrix<>::optImmediate))
+        {
             return false;
+        }
         // ... Load indirect capacities from a data file 
         dataFilename = link->indirectCapacities.jit->sourceFilename;
         if (not link->indirectCapacities.loadFromCSVFile(dataFilename, Data::fhlMax, HOURS_PER_YEAR, Matrix<>::optImmediate))
+        {
             return false;
+        }
     }
 
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)

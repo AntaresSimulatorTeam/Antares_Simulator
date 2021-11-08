@@ -298,7 +298,7 @@ void logLinkDataCheckError(Study& study, AreaLink& link)
     study.gotFatalError = true;
 }
 
-bool linkLoadTimeSeries_version_under_320(AreaLink& link, const AnyString& folder, Study& study)
+static bool linkLoadTimeSeries_version_under_320(AreaLink& link, const AnyString& folder, Study& study)
 {
     String buffer;
     bool ret = true;
@@ -352,7 +352,7 @@ bool linkLoadTimeSeries_version_under_320(AreaLink& link, const AnyString& folde
     return ret;
 }
 
-bool linkLoadTimeSeries_version_320_to_630(AreaLink& link, const AnyString& folder)
+static bool linkLoadTimeSeries_version_320_to_630(AreaLink& link, const AnyString& folder)
 {
     String buffer;
     bool ret = true;
@@ -395,15 +395,18 @@ bool linkLoadTimeSeries_version_320_to_630(AreaLink& link, const AnyString& fold
     return ret;
 }
 
-bool linkLoadTimeSeries_version_630_to_820(AreaLink& link, const AnyString& folder)
+static bool linkLoadTimeSeries_version_630_to_820(AreaLink& link, const AnyString& folder)
 {
     String buffer;    
     buffer.clear() << folder << SEP << link.with->id << ".txt";
 
     // Load link's data
     Matrix<> tmpMatrix;
-    if (not tmpMatrix.loadFromCSVFile(buffer, 8, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate))
+    const uint matrixWidth = 8;
+    if (not tmpMatrix.loadFromCSVFile(buffer, matrixWidth, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate))
+    {
         return false;
+    }
 
     // Store data into link's data container
     for (int h = 0; h < HOURS_PER_YEAR; h++)
@@ -421,7 +424,7 @@ bool linkLoadTimeSeries_version_630_to_820(AreaLink& link, const AnyString& fold
     return true;
 }
 
-bool linkLoadTimeSeries(AreaLink& link, const AnyString& folder)
+static bool linkLoadTimeSeries(AreaLink& link, const AnyString& folder)
 {
     String capacitiesFolder;
     capacitiesFolder << folder << SEP << "capacities";
@@ -496,8 +499,9 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             ret = linkLoadTimeSeries_version_320_to_630(link, folder) && ret;
         else if (study.header.version < 820)
             ret = linkLoadTimeSeries_version_630_to_820(link, folder) && ret;
-        else
+        else {
             ret = linkLoadTimeSeries(link, folder) && ret;
+        }
 
         // Checks on loaded link's data
         if (study.usedByTheSolver)
