@@ -100,10 +100,6 @@ public:
     ** \brief Mark the data associated to the link as modified
     */
     void markAsModified() const;
-
-    void setPathToDataFile(const AnyString& path) { pathToDataFile = path; }
-    
-    bool loadDataFromCSVfile(uint loadOptions);
     //@}
 
     //! \name Memory management
@@ -200,9 +196,6 @@ public:
     StyleType style;
     //! link width
     int linkWidth;
-
-    AnyString pathToDataFile;
-
 }; // class AreaLink
 
 struct CompareLinkName final

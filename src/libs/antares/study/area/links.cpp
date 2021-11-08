@@ -395,21 +395,53 @@ bool linkLoadTimeSeries_version_320_to_630(AreaLink& link, const AnyString& fold
     return ret;
 }
 
-/*
-            buffer.clear() << folder << SEP << link.with->id << ".txt";
-            link.setPathToDataFile(buffer);
-            ret = link.loadDataFromCSVfile(Matrix<>::optFixedSize | Matrix<>::optImmediate) && ret;
-*/
 bool linkLoadTimeSeries_version_630_to_820(AreaLink& link, const AnyString& folder)
 {
-    String buffer;
-    bool ret = true;
-    
+    String buffer;    
     buffer.clear() << folder << SEP << link.with->id << ".txt";
-    link.setPathToDataFile(buffer);
-    ret = link.loadDataFromCSVfile(Matrix<>::optFixedSize | Matrix<>::optImmediate) && ret;
 
-    return ret;
+    // Load link's data
+    Matrix<> tmpMatrix;
+    if (not tmpMatrix.loadFromCSVFile(buffer, 8, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate))
+        return false;
+
+    // Store data into link's data container
+    for (int h = 0; h < HOURS_PER_YEAR; h++)
+    {
+        link.directCapacities[0][h] = tmpMatrix[0][h];
+        link.indirectCapacities[0][h] = tmpMatrix[1][h];
+        link.parameters[fhlHurdlesCostDirect][h] = tmpMatrix[2][h];
+        link.parameters[fhlHurdlesCostIndirect][h] = tmpMatrix[3][h];
+        link.parameters[fhlImpedances][h] = tmpMatrix[4][h];
+        link.parameters[fhlLoopFlow][h] = tmpMatrix[5][h];
+        link.parameters[fhlPShiftMinus][h] = tmpMatrix[6][h];
+        link.parameters[fhlPShiftPlus][h] = tmpMatrix[7][h];
+    }
+
+    return true;
+}
+
+bool linkLoadTimeSeries(AreaLink& link, const AnyString& folder)
+{
+    String capacitiesFolder;
+    capacitiesFolder << folder << SEP << "capacities";
+
+    String filename;
+    bool success = true;
+
+    // Read link's parameters times series
+    filename.clear() << folder << SEP << link.with->id << "_parameters.txt";
+    success = link.parameters.loadFromCSVFile(filename) && success;
+
+    // Read link's direct capacities time series
+    filename.clear() << capacitiesFolder << SEP << link.with->id << "_direct.txt";
+    success = link.directCapacities.loadFromCSVFile(filename) && success;
+
+    // Read link's indirect capacities time series
+    filename.clear() << capacitiesFolder << SEP << link.with->id << "_indirect.txt";
+    success = link.indirectCapacities.loadFromCSVFile(filename) && success;
+
+    return success;
 }
 
 bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyString& folder)
@@ -462,8 +494,10 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             ret = linkLoadTimeSeries_version_under_320(link, folder, study) && ret;
         else if (study.header.version < 630)
             ret = linkLoadTimeSeries_version_320_to_630(link, folder) && ret;
-        else
+        else if (study.header.version < 820)
             ret = linkLoadTimeSeries_version_630_to_820(link, folder) && ret;
+        else
+            ret = linkLoadTimeSeries(link, folder) && ret;
 
         // Checks on loaded link's data
         if (study.usedByTheSolver)
@@ -770,29 +804,6 @@ void AreaLink::markAsModified() const
     parameters.markAsModified();
     directCapacities.markAsModified();
     indirectCapacities.markAsModified();
-}
-
-bool AreaLink::loadDataFromCSVfile(uint loadOptions)
-{
-    // Load link's data
-    Matrix<> tmpMatrix;
-    if (not tmpMatrix.loadFromCSVFile(pathToDataFile, 8, HOURS_PER_YEAR, loadOptions))
-        return false;
-
-    // Store data into link's data container
-    for (int h = 0; h < HOURS_PER_YEAR; h++)
-    {
-        directCapacities[0][h] = tmpMatrix[0][h];
-        indirectCapacities[0][h] = tmpMatrix[1][h];
-        parameters[fhlHurdlesCostDirect][h] = tmpMatrix[2][h];
-        parameters[fhlHurdlesCostIndirect][h] = tmpMatrix[3][h];
-        parameters[fhlImpedances][h] = tmpMatrix[4][h];
-        parameters[fhlLoopFlow][h] = tmpMatrix[5][h];
-        parameters[fhlPShiftMinus][h] = tmpMatrix[6][h];
-        parameters[fhlPShiftPlus][h] = tmpMatrix[7][h];
-    }
-
-    return true;
 }
 
 String AreaLink::getName() const

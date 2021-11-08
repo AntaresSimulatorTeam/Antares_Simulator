@@ -91,8 +91,21 @@ bool CBuilder::update(bool applyCheckBox)
 
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
     {
-        // Try to open the file
-        if (not (*linkInfoIt)->ptr->loadDataFromCSVfile(Matrix<>::optImmediate))
+        auto linkInfo = *linkInfoIt;
+        Data::AreaLink* link = linkInfo->ptr;
+
+        // Try to open link data files
+        // ... Load parameters from a data file 
+        YString dataFilename = link->parameters.jit->sourceFilename;
+        if (not link->parameters.loadFromCSVFile(dataFilename, Data::fhlMax, HOURS_PER_YEAR, Matrix<>::optImmediate))
+            return false;
+        // ... Load direct capacities from a data file 
+        dataFilename = link->directCapacities.jit->sourceFilename;
+        if (not link->directCapacities.loadFromCSVFile(dataFilename, Data::fhlMax, HOURS_PER_YEAR, Matrix<>::optImmediate))
+            return false;
+        // ... Load indirect capacities from a data file 
+        dataFilename = link->indirectCapacities.jit->sourceFilename;
+        if (not link->indirectCapacities.loadFromCSVFile(dataFilename, Data::fhlMax, HOURS_PER_YEAR, Matrix<>::optImmediate))
             return false;
     }
 
@@ -293,16 +306,11 @@ bool CBuilder::deletePreviousConstraints()
 
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
     {
-        // Try to open the file
-        if (not (*linkInfoIt)->ptr->loadDataFromCSVfile(Matrix<>::optImmediate))
-            return false;
-    }
+        auto linkInfo = *linkInfoIt;
+        Data::AreaLink* link = linkInfo->ptr;
 
-    for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
-    {
-        (*linkInfoIt)->ptr->useLoopFlow = false;
-
-        (*linkInfoIt)->ptr->usePST = false;
+        link->useLoopFlow = false;
+        link->usePST = false;
     }
 
     return true;
