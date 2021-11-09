@@ -15,7 +15,7 @@ class InfeasibleProblemAnalysis
 {
 public:
     InfeasibleProblemAnalysis() = delete;
-    explicit InfeasibleProblemAnalysis(PROBLEME_SIMPLEXE_NOMME* ProbSpx);
+    explicit InfeasibleProblemAnalysis(const PROBLEME_SIMPLEXE_NOMME* ProbSpx);
     InfeasibleProblemReport produceReport();
 
 private:

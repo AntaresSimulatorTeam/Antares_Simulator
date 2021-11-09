@@ -25,7 +25,6 @@ InfeasibleProblemReport::InfeasibleProblemReport(
 
 void InfeasibleProblemReport::append(const std::string& constraintName, double value)
 {
-    // TODO check prior existence of constraintName
     mConstraints.emplace_back(constraintName, value);
 }
 
