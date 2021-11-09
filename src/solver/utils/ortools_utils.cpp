@@ -76,10 +76,10 @@ static void transferRows(MPSolver* solver,
 }
 
 static void transferMatrix(const MPSolver* solver,
-                           int* indexRows,
-                           int* terms,
-                           int* indexCols,
-                           double* coeffs,
+                           const int* indexRows,
+                           const int* terms,
+                           const int* indexCols,
+                           const double* coeffs,
                            int nbRow)
 {
     auto variables = solver->variables();
