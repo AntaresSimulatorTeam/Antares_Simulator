@@ -172,7 +172,7 @@ static void change_MPSolver_objective(MPSolver* solver, const double* costs, int
     }
 }
 
-static void change_MPSolver_rhs(MPSolver* solver, double* rhs, char* sens, int nbRow)
+static void change_MPSolver_rhs(MPSolver* solver, const double* rhs, const char* sens, int nbRow)
 {
     auto& constraints = solver->constraints();
     for (int idxRow = 0; idxRow < nbRow; ++idxRow)
@@ -245,27 +245,29 @@ MPSolver* solveProblem(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
     return solver;
 }
 
-
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* ProbSpx)
 {
     return solveProblem(Probleme, ProbSpx);
 }
 
-void ORTOOLS_ModifierLeVecteurCouts(MPSolver* solver, double* costs, int nbVar)
+void ORTOOLS_ModifierLeVecteurCouts(MPSolver* solver, const double* costs, int nbVar)
 {
     change_MPSolver_objective(solver, costs, nbVar);
 }
 
-void ORTOOLS_ModifierLeVecteurSecondMembre(MPSolver* solver, double* rhs, char* sens, int nbRow)
+void ORTOOLS_ModifierLeVecteurSecondMembre(MPSolver* solver,
+                                           const double* rhs,
+                                           const char* sens,
+                                           int nbRow)
 {
     change_MPSolver_rhs(solver, rhs, sens, nbRow);
 }
 
 void ORTOOLS_CorrigerLesBornes(MPSolver* solver,
-                               double* bMin,
-                               double* bMax,
-                               int* typeVar,
+                               const double* bMin,
+                               const double* bMax,
+                               const int* typeVar,
                                int nbVar)
 {
     auto& variables = solver->variables();
@@ -288,7 +290,6 @@ void ORTOOLS_LibererProbleme(MPSolver* solver)
 {
     delete solver;
 }
-
 
 using namespace Antares::Data;
 
