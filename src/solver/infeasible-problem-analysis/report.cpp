@@ -41,7 +41,7 @@ void InfeasibleProblemReport::extractItems()
     }
 }
 
-void InfeasibleProblemReport::prettyPrintImpl()
+void InfeasibleProblemReport::logSuspiciousConstraints()
 {
     Antares::logs.error() << "The following constraints are suspicious (first = most suspicious)";
     for (const auto& c : mConstraints)
@@ -72,7 +72,7 @@ void InfeasibleProblemReport::prettyPrintImpl()
 void InfeasibleProblemReport::prettyPrint()
 {
     extractItems();
-    prettyPrintImpl();
+    logSuspiciousConstraints();
 }
 
 void InfeasibleProblemReport::trim()
