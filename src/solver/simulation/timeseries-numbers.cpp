@@ -286,6 +286,9 @@ bool IntraModalConsistencyChecker::checkTSconsistency()
         listNumberTS.insert(listNumberTS.end(), areaNumberTSList.begin(), areaNumberTSList.end());
     }
 
+    // Remove 1 from the number of time series list
+    listNumberTS.erase(std::remove(listNumberTS.begin(), listNumberTS.end(), 1), listNumberTS.end());
+
     if (std::adjacent_find(listNumberTS.begin(), listNumberTS.end(), std::not_equal_to<uint>())
         != listNumberTS.end())
     {
