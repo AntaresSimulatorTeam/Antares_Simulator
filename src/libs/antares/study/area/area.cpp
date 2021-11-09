@@ -360,6 +360,7 @@ void Area::resizeAllTimeseriesNumbers(uint n)
     }
     thermal.resizeAllTimeseriesNumbers(n);
     renewable.resizeAllTimeseriesNumbers(n);
+    // TODO: resize also for links
 }
 
 void Area::estimateMemoryUsage(StudyMemoryUsage& u) const
