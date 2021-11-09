@@ -412,6 +412,9 @@ bool checkInterModalConsistencyForArea(Area& area,
         }
     }
 
+    // Remove 1 from the number of time series list
+    listNumberTsOverArea.erase(std::remove(listNumberTsOverArea.begin(), listNumberTsOverArea.end(), 1), listNumberTsOverArea.end());
+
     // Now check if all elements of list of TS numbers are identical
     if (std::adjacent_find(
           listNumberTsOverArea.begin(), listNumberTsOverArea.end(), std::not_equal_to<uint>())
