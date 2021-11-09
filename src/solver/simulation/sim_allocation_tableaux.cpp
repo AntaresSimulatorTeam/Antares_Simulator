@@ -214,7 +214,7 @@ void SIM_DesallocationTableaux()
     MemFree(NumeroChroniquesTireesParInterconnexion);
     NumeroChroniquesTireesParPays = NULL;
     ValeursGenereesParPays = NULL;
-    NumeroChroniquesTireesParInterconnexion = NULL;
+    NumeroChroniquesTireesParInterconnexion = nullptr;
 
     MemFree(DonneesParPays);
     DonneesParPays = NULL;

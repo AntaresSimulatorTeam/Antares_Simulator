@@ -179,14 +179,15 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
     // each link
     for (unsigned int i = 0; i < runtime.interconnectionsCount; ++i)
     {
-      AreaLink* link = runtime.areaLink[i];
-      assert(year < link->timeseriesNumbers.width);
-      NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION& ptchro = NumeroChroniquesTireesParInterconnexion[numSpace][i];
-      const uint directWidth = link->directCapacities.width;
-      const uint indirectWidth = link->indirectCapacities.width;
-      assert(directWidth == indirectWidth);
-      ptchro.TransmissionCapacities
-        = (directWidth != 1) ? (long)link->timeseriesNumbers[0][year] : 0; // zero-based
+        AreaLink* link = runtime.areaLink[i];
+        assert(year < link->timeseriesNumbers.width);
+        NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION& ptchro
+          = NumeroChroniquesTireesParInterconnexion[numSpace][i];
+        const uint directWidth = link->directCapacities.width;
+        const uint indirectWidth = link->indirectCapacities.width;
+        assert(directWidth == indirectWidth);
+        ptchro.TransmissionCapacities
+          = (directWidth != 1) ? link->timeseriesNumbers[0][year] : 0; // zero-based
     }
 }
 
