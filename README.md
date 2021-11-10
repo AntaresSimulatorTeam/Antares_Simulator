@@ -1,5 +1,5 @@
 # Antares Simulator
-[![Status][linux_system_svg]][linux_system_link]  [![Status][windows_vcpkg_svg]][windows_vcpkg_link] [![Status][centos7_system_svg]][centos7_system_link]
+[![Status][ubuntu_precompiled_svg]][ubuntu_precompiled_link]  [![Status][windows_precompiled_svg]][windows_precompiled_link] [![Status][centos_precompiled_svg]][centos_precompiled_link]
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
@@ -45,9 +45,9 @@ In May 2018 RTE decided to release the project under the GPLv3 license.
 
 This software suite has been tested under:
 
-*   Ubuntu 20.04 [![Status][linux_system_svg]][linux_system_link] 
-*   Microsoft Windows with Visual Studio 2019 (64-bit) [![Status][windows_vcpkg_svg]][windows_vcpkg_link]
-*   Centos7 [![Status][centos7_system_svg]][centos7_system_link] 
+*   Ubuntu 20.04 [![Status][ubuntu_precompiled_svg]][ubuntu_precompiled_link] 
+*   Microsoft Windows with Visual Studio 2019 (64-bit) [![Status][windows_precompiled_svg]][windows_precompiled_link]
+*   Centos7 [![Status][centos_precompiled_svg]][centos_precompiled_link] 
 
 Antares Simulator is built using CMake.
 For installation instructions, please visit [INSTALL.md](INSTALL.md)
@@ -73,3 +73,13 @@ For installation instructions, please visit [INSTALL.md](INSTALL.md)
 * [src/simulator/](src/simulator)     - Time-series generation, Monte-Carlo simulation and weekly optimization modelling.
 * [src/tools/](src/tools)        - miscellaneous tools for dataset management. 
 * [src/ui/](src/ui)           - Graphic user interface. 
+
+
+[ubuntu_precompiled_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Ubuntu%20CI%20(pre-compiled)/badge.svg
+[ubuntu_precompiled_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Ubuntu%20CI%20(pre-compiled)"
+
+[windows_precompiled_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(VCPKG%20and%20pre-compiled)/badge.svg
+[windows_precompiled_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(VCPKG%20and%20pre-compiled)"
+
+[centos_precompiled_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Centos7%20CI%20(pre-compiled)/badge.svg
+[centos_precompiled_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Centos7%20CI%20(pre-compiled)"

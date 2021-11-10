@@ -1,0 +1,27 @@
+FROM centos:7
+
+ARG ANTARES_DEPS_VERSION
+
+# Install requirements : update repo
+RUN yum update -y
+
+# Install requirements : install epel
+RUN yum install -y epel-release 
+
+# Install requirements
+RUN yum install -y git redhat-lsb-core make wget centos-release-scl scl-utils rpm-build &&\
+    yum install -y cmake3 devtoolset-9 &&\
+    yum install -y rh-git227-git
+
+# Install simulator requirements
+RUN yum install -y unzip libuuid-devel wxGTK3-devel boost-test boost-devel
+    
+# Add python and pip installation
+RUN yum install -y python3-pip &&\
+    python3 -m pip install --upgrade pip &&\
+    pip3 install pytest numpy pandas
+
+# Download and extract pre-compiled libraries
+RUN wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${ANTARES_DEPS_VERSION}/rte-antares-deps-centos7-Release-solver.tar.gz
+RUN tar -xvf rte-antares-deps-centos7-Release-solver.tar.gz
+RUN rm -rf rte-antares-deps-centos7-Release-solver.tar.gz

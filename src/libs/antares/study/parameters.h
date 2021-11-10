@@ -443,6 +443,8 @@ public:
         RenewableGenerationModelling rgModelling;
         std::vector<std::string> excludedVariables() const;
         RenewableGenerationModelling operator()() const;
+        void toAggregated();
+        void toClusters();
         bool isAggregated() const;
         bool isClusters() const;
     };

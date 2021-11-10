@@ -1,0 +1,26 @@
+name: "Download extract .tgz precompiled libraries"
+description: "Download and extract .tgz precompiled libraries from antares-deps and antares-simulator repository"
+inputs:
+  antares-deps-version:
+    description: 'antares-deps version'
+    required: true
+  os:
+    description: 'operational system used for github action'
+    required: true  
+  os-full-name:
+    description: 'full operational system name used (for example Centos-7.9.2009 or Ubuntu-20.04'
+    required: true
+  buildtype:
+    description: 'build type'
+    required: false
+    default: 'Release'
+runs:
+  using: "composite"
+  steps: 
+  - id: download-extract
+    shell: bash
+    run: |
+           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${{inputs.antares-deps-version}}/rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}-solver.tar.gz
+           tar -xvf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}-solver.tar.gz
+           rm -rf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}-solver.tar.gz
+           

@@ -75,7 +75,7 @@ bool geographicTrimmingGrid::cellValue(int col, int row, const Yuni::String& val
         uint& filterToModify = (col < 5) ? getYearByYearFilter(row) : getSynthesisFilter(row);
 
         // Hourly ? Daily ? weekly ? ...
-        uint flag = Data::filterIndexToFilter(col % 5);
+        uint flag = Data::addTimeIntervallToDatePrecisionFilter(col % 5);
         if (!flag)
             return false;
 
@@ -108,7 +108,7 @@ double geographicTrimmingGrid::cellNumericValue(int col, int row) const
         // year-by-year trimming or synthesis trimming ?
         uint& filter = (col < 5) ? getYearByYearFilter(row) : getSynthesisFilter(row);
 
-        return (0 != (filter & Data::filterIndexToFilter(col % 5)));
+        return (0 != (filter & Data::addTimeIntervallToDatePrecisionFilter(col % 5)));
     }
 
     return 0.;
@@ -122,7 +122,7 @@ wxString geographicTrimmingGrid::cellValue(int col, int row) const
         // year-by-year trimming or synthesis trimming ?
         uint& filter = (col < 5) ? getYearByYearFilter(row) : getSynthesisFilter(row);
 
-        return (0 != (filter & Data::filterIndexToFilter(col % 5))) ? wxT("True") : wxT("False");
+        return (0 != (filter & Data::addTimeIntervallToDatePrecisionFilter(col % 5))) ? wxT("True") : wxT("False");
     }
     return wxEmptyString;
 }
@@ -135,11 +135,11 @@ IRenderer::CellStyle geographicTrimmingGrid::cellStyle(int col, int row) const
         uint& filter = (col < 5) ? getYearByYearFilter(row) : getSynthesisFilter(row);
 
         if (col < 5)
-            return (0 != (filter & Data::filterIndexToFilter(col % 5)))
+            return (0 != (filter & Data::addTimeIntervallToDatePrecisionFilter(col % 5)))
                      ? IRenderer::cellStyleFilterYearByYearOn
                      : IRenderer::cellStyleFilterYearByYearOff;
         else
-            return (0 != (filter & Data::filterIndexToFilter(col % 5)))
+            return (0 != (filter & Data::addTimeIntervallToDatePrecisionFilter(col % 5)))
                      ? IRenderer::cellStyleFilterSynthesisOn
                      : IRenderer::cellStyleFilterSynthesisOff;
     }

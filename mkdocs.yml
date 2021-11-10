@@ -31,7 +31,7 @@ nav:
   - 'Home': index.md
   - 'Antares ecosystem' : 'https://antares-doc.readthedocs.io'
   - 'User guide':
-  #    - 'Reference guide': 'reference-guide/1-reference-guide.md'
+    - 'Reference guide': 'reference-guide/1-reference-guide.md'
     - 'Optimisation problem' : 'reference-guide/2-modeling.md'
   - 'Build':
     - 'Introduction': 'build/0-INSTALL.md'
@@ -39,6 +39,7 @@ nav:
     - 'Ubuntu': 'build/INSTALL-ubuntu.md'
     - 'CentOS': 'build/INSTALL-centos.md'
     - 'OR-tools integration' : 'build/ortools-integration.md'
+    - 'Continuous Integration' : 'build/continuous-integration.md'
   - 'Changelog': 'CHANGELOG.md'
 
 plugins:
