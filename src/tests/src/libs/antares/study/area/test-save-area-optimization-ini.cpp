@@ -4,6 +4,7 @@
 
 #include <boost/test/included/unit_test.hpp>
 #include <string>
+#include <filesystem>
 
 #include <study.h>
 #include <filter.h>
@@ -12,6 +13,7 @@
 #include "files-helper.h"
 
 using namespace Antares::Data;
+namespace fs = std::filesystem;
 
 const string generatedIniFileName = "optimization.ini";
 const string referenceIniFileName = "optimization-reference.ini";
