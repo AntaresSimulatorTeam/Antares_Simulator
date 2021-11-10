@@ -478,10 +478,10 @@ void drawTSnumbersForIntraModal(array<uint32, timeSeriesCount>& intramodal_draws
     {
         if (isTSintramodal[tsKind])
         {
-            if (tsIndex_to_ts.at(tsKind) == timeSeriesTransmissionCapacities && nbTimeseriesByMode[tsKind] == 1)
+            if (/*tsIndex_to_ts.at(tsKind) == timeSeriesTransmissionCapacities && */ nbTimeseriesByMode[tsKind] == 1)
             {
                 // Random generator (mersenne-twister) must not be called here
-                // in order to avoid a shift in the random generator results 
+                // in order to avoid a shift in the random generator results
                 // that would cause a change of Antares results
                 intramodal_draws[tsKind] = 0;
             }
@@ -681,8 +681,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
             {
                 if (not isTSintramodal[indexTS])
                 {
-                    uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
-                                                               : cluster->series->series.width;
+                    uint nbTimeSeries = cluster->series->series.width;
                     cluster->series->timeseriesNumbers.entry[0][year] = (uint32)(
                       floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
                 }
@@ -700,8 +699,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
             {
                 auto& link = *(it->second);
 
-                uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
-                                                           : link.directCapacities.width;
+                uint nbTimeSeries = link.directCapacities.width;
                 if (nbTimeSeries == 1)
                 {
                     // Random generator (mersenne-twister) must not be called here
