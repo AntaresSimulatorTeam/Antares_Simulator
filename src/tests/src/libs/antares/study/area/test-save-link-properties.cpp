@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <filesystem>
 
 #include <study.h>
 #include <filter.h>
@@ -14,7 +15,7 @@
 
 using namespace std;
 using namespace Antares::Data;
-
+namespace fs = std::filesystem;
 
 const string generatedIniFileName = "properties.ini";
 const string referenceIniFileName = "properties-reference.ini";

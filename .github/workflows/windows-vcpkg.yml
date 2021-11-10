@@ -120,7 +120,6 @@ jobs:
       run: |
            rm -rf src/tests/resources/Antares_Simulator_Tests
            rm -rf src/tests/resources/NonRegTests
-           rm "C:\ProgramData\Chocolatey\bin\cpack.exe"
            cd _build
            cpack -GNSIS
            export NSIS_NAME=$(ls *.exe)
