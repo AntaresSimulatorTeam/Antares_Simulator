@@ -172,7 +172,7 @@ static void change_MPSolver_objective(MPSolver* solver, const double* costs, int
     }
 }
 
-static void change_MPSolver_rhs(MPSolver* solver, const double* rhs, const char* sens, int nbRow)
+static void change_MPSolver_rhs(const MPSolver* solver, const double* rhs, const char* sens, int nbRow)
 {
     auto& constraints = solver->constraints();
     for (int idxRow = 0; idxRow < nbRow; ++idxRow)
