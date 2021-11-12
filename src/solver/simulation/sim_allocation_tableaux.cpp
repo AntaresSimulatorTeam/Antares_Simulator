@@ -159,7 +159,7 @@ void SIM_AllocationTableaux()
     NumeroChroniquesTireesParInterconnexion
       = (NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION**)MemAlloc(study.maxNbYearsInParallel
                                                                 * sizeof(void*));
-    const auto intercoCount = study.runtime->interconnectionsCount;
+    const uint intercoCount = study.areas.areaLinkCount();
     for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
     {
         NumeroChroniquesTireesParInterconnexion[numSpace]
