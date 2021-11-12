@@ -100,6 +100,10 @@ public:
     ** \brief Mark the data associated to the link as modified
     */
     void markAsModified() const;
+
+    void setPathToDataFile(const AnyString& path) { pathToDataFile = path; }
+    
+    bool loadDataFromCSVfile(uint loadOptions);
     //@}
 
     //! \name Memory management
@@ -118,6 +122,8 @@ public:
 
     Yuni::String getName() const;
 
+    void flush();
+
 public:
     //! \name Graph
     //@{
@@ -132,9 +138,10 @@ public:
     /*!
     ** \brief Data related to the link
     **
-    ** \see enum LinkDataIndex
     */
-    Matrix<> data;
+    Matrix<> parameters;
+    Matrix<> directCapacities;
+    Matrix<> indirectCapacities;
 
     //! Flag for using loop flow
     bool useLoopFlow;
@@ -193,6 +200,8 @@ public:
     StyleType style;
     //! link width
     int linkWidth;
+
+    AnyString pathToDataFile;
 
 }; // class AreaLink
 

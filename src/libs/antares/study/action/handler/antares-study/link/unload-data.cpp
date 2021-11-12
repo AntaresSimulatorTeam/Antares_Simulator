@@ -79,7 +79,9 @@ bool UnloadData::performWL(Context& ctx)
 
         if (source && source != ctx.link)
         {
-            source->data.unloadFromMemory();
+            source->parameters.unloadFromMemory();
+            source->directCapacities.unloadFromMemory();
+            source->indirectCapacities.unloadFromMemory();
             return true;
         }
     }

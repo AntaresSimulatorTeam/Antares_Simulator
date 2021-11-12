@@ -74,12 +74,17 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
         for (uint j = 0; j < study.runtime->interconnectionsCount; ++j)
         {
-            auto& mtx = study.runtime->areaLink[j]->data;
-            ntcValues.ResistanceApparente[j] = mtx[Data::fhlImpedances][decalPasDeTemps];
-            ntcValues.ValeurDeNTCOrigineVersExtremite[j] = mtx[Data::fhlNTCDirect][decalPasDeTemps];
-            ntcValues.ValeurDeNTCExtremiteVersOrigine[j]
-              = mtx[Data::fhlNTCIndirect][decalPasDeTemps];
-            mtx.flush();
+            auto* link = study.runtime->areaLink[j];
+
+            auto& mtxParamaters = link->parameters;
+            auto& mtxDirectCapacities = link->directCapacities;
+            auto& mtxIndirectCapacities = link->indirectCapacities;
+
+            ntcValues.ResistanceApparente[j] = mtxParamaters[Data::fhlImpedances][decalPasDeTemps];
+            ntcValues.ValeurDeNTCOrigineVersExtremite[j] = mtxDirectCapacities[0][decalPasDeTemps];
+            ntcValues.ValeurDeNTCExtremiteVersOrigine[j] = mtxIndirectCapacities[0][decalPasDeTemps];
+
+            link->flush();
         }
     }
 
@@ -192,18 +197,18 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
     for (uint j = 0; j < study.runtime->interconnectionsCount; ++j)
     {
         auto& lnk = *(study.runtime->areaLink[j]);
-        auto& impedances = lnk.data[Data::fhlImpedances];
+        auto& impedances = lnk.parameters[Data::fhlImpedances];
 
         for (uint hour = 0; hour < maxHours; ++hour)
         {
             if (Math::Abs(impedances[hour]) >= 1e-100)
             {
-                lnk.data.flush();
+                lnk.parameters.flush();
                 return true;
             }
         }
 
-        lnk.data.flush();
+        lnk.parameters.flush();
     }
     return false;
 }

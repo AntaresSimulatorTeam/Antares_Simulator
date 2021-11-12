@@ -69,33 +69,33 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
             int i = 0;
             for (auto line = loop.begin(); line != loop.end(); line++, i++)
             {
-                impedanceVector.push_back((*line)->dataLink->entry[columnImpedance][hour]);
+                impedanceVector.push_back((*line)->ptr->parameters[columnImpedance][hour]);
                 /*PN-TODO: Check the formula (page 3)*/
                 if (currentCycle.opType == Data::BindingConstraint::opEquality)
-                    ub += ((*line)->dataLink->entry[columnImpedance][hour]
-                             * (*line)->dataLink->entry[columnLoopFlow][hour] * includeLoopFlow
-                           + (*line)->dataLink->entry[Data::fhlPShiftMinus][hour]
+                    ub += ((*line)->ptr->parameters[columnImpedance][hour]
+                             * (*line)->ptr->parameters[columnLoopFlow][hour] * includeLoopFlow
+                           + (*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
                                * includePhaseShift)
                           * currentCycle.sign[i];
                 else if (currentCycle.opType == Data::BindingConstraint::opBoth
                          && hour + 1 <= calendarEnd && hour + 1 >= calendarStart)
                 {
-                    ub += ((*line)->dataLink->entry[columnImpedance][hour]
-                           * (*line)->dataLink->entry[columnLoopFlow][hour] * includeLoopFlow)
+                    ub += ((*line)->ptr->parameters[columnImpedance][hour]
+                           * (*line)->ptr->parameters[columnLoopFlow][hour] * includeLoopFlow)
                             * currentCycle.sign[i]
-                          + std::min(((*line)->dataLink->entry[Data::fhlPShiftMinus][hour]
+                          + std::min(((*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
                                       * includePhaseShift)
                                        * currentCycle.sign[i],
-                                     ((*line)->dataLink->entry[Data::fhlPShiftPlus][hour]
+                                     ((*line)->ptr->parameters[Data::fhlPShiftPlus][hour]
                                       * includePhaseShift)
                                        * currentCycle.sign[i]);
-                    lb += ((*line)->dataLink->entry[columnImpedance][hour]
-                           * (*line)->dataLink->entry[columnLoopFlow][hour] * includeLoopFlow)
+                    lb += ((*line)->ptr->parameters[columnImpedance][hour]
+                           * (*line)->ptr->parameters[columnLoopFlow][hour] * includeLoopFlow)
                             * currentCycle.sign[i]
-                          + std::max(((*line)->dataLink->entry[Data::fhlPShiftMinus][hour]
+                          + std::max(((*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
                                       * includePhaseShift)
                                        * currentCycle.sign[i],
-                                     ((*line)->dataLink->entry[Data::fhlPShiftPlus][hour]
+                                     ((*line)->ptr->parameters[Data::fhlPShiftPlus][hour]
                                       * includePhaseShift)
                                        * currentCycle.sign[i]);
                 }
@@ -106,7 +106,7 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
                 }
 
                 wm[(*line)]
-                  = (*line)->dataLink->entry[columnImpedance][hour] * currentCycle.sign[i];
+                  = (*line)->ptr->parameters[columnImpedance][hour] * currentCycle.sign[i];
             }
 
             State& st = currentCycle.getState(impedanceVector);

@@ -31,6 +31,7 @@
 #include <yuni/core/string.h>
 #include <yuni/core/math.h>
 #include <logs.h>
+#include <utility>
 #include "../string-to-double.h"
 #include "../io/statistics.h"
 #include "matrix-to-buffer.h"
@@ -1550,6 +1551,17 @@ inline void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>* rhs)
 {
     if (rhs)
         copyFrom(*rhs);
+}
+
+template<class T, class ReadWriteT>
+void Matrix<T, ReadWriteT>::swap(Matrix<T, ReadWriteT>& rhs) noexcept
+{
+  // argument deduction lookup (ADL)
+  using std::swap;
+  swap(this->width, rhs.width);
+  swap(this->height, rhs.height);
+  swap(this->entry, rhs.entry);
+  swap(this->jit, rhs.jit);
 }
 
 template<class T, class ReadWriteT>

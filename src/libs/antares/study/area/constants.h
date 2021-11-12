@@ -33,14 +33,10 @@ namespace Data
 {
 struct CompareAreaName;
 
-enum LinkDataIndex
+enum LinkParameterIndex
 {
-    //! NTC Direct
-    fhlNTCDirect = 0,
-    //! NTC Indirect
-    fhlNTCIndirect,
     //! Hurdles cost, Direct
-    fhlHurdlesCostDirect,
+    fhlHurdlesCostDirect = 0,
     //! Hurdles cost, Indirect
     fhlHurdlesCostIndirect,
     //! Impedances,

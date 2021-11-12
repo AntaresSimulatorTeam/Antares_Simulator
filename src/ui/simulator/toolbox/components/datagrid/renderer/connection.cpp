@@ -63,10 +63,12 @@ wxString Connection::columnCaption(int colIndx) const
 {
     switch (colIndx)
     {
+    /* gp : temporarily removed. Must be introduced in another form later
     case Data::fhlNTCDirect:
         return wxT(" TRANS. CAPACITY \nDirect   ");
     case Data::fhlNTCIndirect:
         return wxT(" TRANS. CAPACITY \nIndirect");
+    */
     case Data::fhlHurdlesCostDirect:
         return wxT(" HURDLES COST \nDirect");
     case Data::fhlHurdlesCostIndirect:
@@ -85,7 +87,7 @@ wxString Connection::columnCaption(int colIndx) const
 
 void Connection::onConnectionChanged(Data::AreaLink* link)
 {
-    this->matrix((link) ? &(link->data) : NULL);
+    this->matrix((link) ? &(link->parameters) : NULL);
     if (pControl)
     {
         pControl->InvalidateBestSize();
@@ -98,10 +100,12 @@ IRenderer::CellStyle Connection::cellStyle(int col, int row) const
     double cellvalue = cellNumericValue(col, row);
     switch (col)
     {
+    /* gp : temporarily removed. Must be introduced in another form later
     case Data::fhlNTCDirect:
         break;
     case Data::fhlNTCIndirect:
         break;
+    */
     case Data::fhlHurdlesCostDirect:
     {
         double cellvalueHrdlCostIndirect = cellNumericValue(col + 1, row);
@@ -127,6 +131,7 @@ IRenderer::CellStyle Connection::cellStyle(int col, int row) const
                                 : Renderer::Matrix<>::cellStyle(col, row);
     case Data::fhlLoopFlow:
     {
+        /* gp : temporarily removed. Must be introduced in another form later
         double ntcDirect = cellNumericValue(Data::fhlNTCDirect, row);
         double ntcIndirect = cellNumericValue(Data::fhlNTCIndirect, row);
         if ((ntcDirect < cellvalue))
@@ -137,6 +142,7 @@ IRenderer::CellStyle Connection::cellStyle(int col, int row) const
         {
             return IRenderer::cellStyleError;
         }
+        */
         break;
     }
     case Data::fhlPShiftMinus:
@@ -183,6 +189,7 @@ bool Connection::cellValue(int x, int y, const Yuni::String& value)
 {
     switch (x)
     {
+    /* gp : temporarily removed. Must be introduced in another form later
     case Data::fhlNTCDirect:
     case Data::fhlNTCIndirect:
     {
@@ -193,6 +200,7 @@ bool Connection::cellValue(int x, int y, const Yuni::String& value)
             return Renderer::Matrix<>::cellValue(x, y, "0");
         break;
     }
+    */
     case Data::fhlHurdlesCostDirect:
     case Data::fhlHurdlesCostIndirect:
     default:
