@@ -24,7 +24,7 @@ jobs:
       run: |
            yum install -y epel-release
            yum install -y git redhat-lsb-core gcc gcc-c++ make wget centos-release-scl scl-utils rpm-build
-           yum install -y cmake3 devtoolset-7
+           yum install -y cmake3 devtoolset-9
            yum install -y rh-git227-git
            yum install -y unzip libuuid-devel wxGTK3-devel boost-test boost-devel
                       
@@ -45,14 +45,14 @@ jobs:
 
     - name: Configure
       run: |
-           source /opt/rh/devtoolset-7/enable
+           source /opt/rh/devtoolset-9/enable
            #git 2.x must be enabled for Coin compilation with CMake ExternalProject_Add
            source /opt/rh/rh-git227/enable
            cmake3 -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_ortools=ON
 
     - name: Build
       run: |
-           source /opt/rh/devtoolset-7/enable
+           source /opt/rh/devtoolset-9/enable
            source /opt/rh/rh-git227/enable
            cmake3 --build _build --config release -j2
     
