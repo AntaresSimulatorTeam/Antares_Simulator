@@ -2,9 +2,9 @@
 Before build, make sure that dependencies are installed (see [here](2-Dependencies-install.md) for more informations)
 
 ## Environnement settings
-On Centos enable `devtoolset-7` and `rh-git227`:
+On Centos enable `devtoolset-9` and `rh-git227`:
 ```
-scl enable devtoolset-7 bash
+scl enable devtoolset-9 bash
 source /opt/rh/rh-git227/enable
 ```
 ## Update git submodule

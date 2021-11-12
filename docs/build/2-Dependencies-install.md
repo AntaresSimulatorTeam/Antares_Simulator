@@ -50,7 +50,7 @@ The install procedure can be done
 
     ```
     sudo yum install git redhat-lsb-core gcc gcc-c++ make wget centos-release-scl scl-utils rpm-build
-    sudo yum install cmake3 devtoolset-7
+    sudo yum install cmake3 devtoolset-9
     sudo yum install libuuid-devel unzip wxGTK3-devel boost-test boost-devel
     ```
 === "Ubuntu (apt-get)"
