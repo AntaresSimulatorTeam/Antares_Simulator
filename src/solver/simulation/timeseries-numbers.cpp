@@ -69,6 +69,14 @@ void addInterModalTimeSeriesToMessage(const array<bool, timeSeriesCount>& isTSin
     }
 }
 
+struct CompareClass {
+  inline bool operator()(uint a, uint b) const {
+    if (a == 1 || b == 1)
+      return false; // ignore 1 values
+    return a != b;
+  }
+};
+
 namespace Antares
 {
 namespace Solver
@@ -286,7 +294,7 @@ bool IntraModalConsistencyChecker::checkTSconsistency()
         listNumberTS.insert(listNumberTS.end(), areaNumberTSList.begin(), areaNumberTSList.end());
     }
 
-    if (std::adjacent_find(listNumberTS.begin(), listNumberTS.end(), std::not_equal_to<uint>())
+    if (std::adjacent_find(listNumberTS.begin(), listNumberTS.end(), CompareClass())
         != listNumberTS.end())
     {
         logs.error() << "Intra-modal correlation: " << tsTitle_
@@ -409,9 +417,8 @@ bool checkInterModalConsistencyForArea(Area& area,
         }
     }
 
-    // Now check if all elements of list of TS numbers are identical
-    if (std::adjacent_find(
-          listNumberTsOverArea.begin(), listNumberTsOverArea.end(), std::not_equal_to<uint>())
+    // Now check if all elements of list of TS numbers are identical or equal to 1
+    if (std::adjacent_find(listNumberTsOverArea.begin(), listNumberTsOverArea.end(), CompareClass())
         != listNumberTsOverArea.end())
     {
         logs.error()
