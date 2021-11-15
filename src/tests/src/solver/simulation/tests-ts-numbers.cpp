@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(two_areas_with_5_ready_made_ts_on_load___check_intra_modal_
 	BOOST_CHECK_EQUAL(area_1->load.series->timeseriesNumbers[0][year], area_2->load.series->timeseriesNumbers[0][year]);
 }
 
-BOOST_AUTO_TEST_CASE(two_areas_with_respectively_5_and_4_ready_made_ts_on_load___check_intra_modal_consistency_KO)
+static bool intermodal_load_two_areas(unsigned width_area_1, unsigned width_area_2)
 {
 	// Creating a study
 	Study::Ptr study = new Study();
@@ -109,17 +109,26 @@ BOOST_AUTO_TEST_CASE(two_areas_with_respectively_5_and_4_ready_made_ts_on_load__
 
 	// Area 1
 	Area* area_1 = addAreaToStudy(study, "Area 1");
-	area_1->load.series->series.resize(5, 1);
+	area_1->load.series->series.resize(width_area_1, 1);
 	area_1->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	// Area 2
 	Area* area_2 = addAreaToStudy(study, "Area 2");
-	area_2->load.series->series.resize(4, 1);
+	area_2->load.series->series.resize(width_area_2, 1);
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	BOOST_CHECK(not Generate(*study));
+	return Generate(*study);
 }
 
+BOOST_AUTO_TEST_CASE(two_areas_with_respectively_5_and_4_ready_made_ts_on_load___check_intra_modal_consistency_KO)
+{
+    BOOST_CHECK(!intermodal_load_two_areas(5, 4));
+}
+
+BOOST_AUTO_TEST_CASE(two_areas_with_respectively_5_and_1_ready_made_ts_on_load___check_intra_modal_consistency_OK)
+{
+    BOOST_CHECK(intermodal_load_two_areas(5, 1));
+}
 
 BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_same_number_of_ready_made_ts___check_intra_modal_consistency_OK)
 {
