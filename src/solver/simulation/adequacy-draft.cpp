@@ -87,7 +87,7 @@ bool AdequacyDraft::year(Progression::Task& progression,
         state.eensSystemIS = 0.;
         state.eensSystemCN = 0.;
 
-        SIM_RenseignementProblemeHoraireAdequation(hour);
+        SIM_RenseignementProblemeHoraireAdequation(hour, numSpace);
         SIM_CalculFlotHoraireAdequation();
 
         variables.hourBegin(state.hourInTheYear);

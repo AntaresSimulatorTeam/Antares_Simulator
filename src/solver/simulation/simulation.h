@@ -68,7 +68,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                                     uint numSpace,
                                     const int);
 
-void SIM_RenseignementProblemeHoraireAdequation(long);
+void SIM_RenseignementProblemeHoraireAdequation(long, uint);
 
 void SIM_RenseignementValeursPourTouteLAnnee(const Antares::Data::Study& study, uint numSpace);
 
