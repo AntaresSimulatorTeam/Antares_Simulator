@@ -276,9 +276,9 @@ void SIM_RenseignementValeursPourTouteLAnnee(const Antares::Data::Study& study, 
 
 void SIM_RenseignementProblemeHoraireAdequation(long Heure, uint numSpace)
 {
-    auto& study = *Data::Study::Current::Get();
+    auto study = Data::Study::Current::Get();
 
-    for (uint i = 0; i < study.areas.size(); i++)
+    for (uint i = 0; i < study->areas.size(); i++)
     {
         DONNEES_ADEQUATION& PtHoraire = *(ProblemeHoraireAdequation.DonneesParPays[i]);
         const VALEURS_ANNUELLES& PtAnnuel = *(ValeursAnnuellesAdequation[i]);
@@ -299,7 +299,7 @@ void SIM_RenseignementProblemeHoraireAdequation(long Heure, uint numSpace)
         if (fabs(NTCAPrendre) > 0.5)
         {
             const uint linkIdx = (long)(fabs(NTCAPrendre) - 1);
-            const AreaLink* link = study.runtime->areaLink[linkIdx];
+            const AreaLink* link = study->runtime->areaLink[linkIdx];
             uint tsIndex = NumeroChroniquesTireesParInterconnexion[numSpace][linkIdx].TransmissionCapacities;
             if (NTCAPrendre > 0.)
             {
