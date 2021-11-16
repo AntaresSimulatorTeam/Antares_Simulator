@@ -301,14 +301,15 @@ bool IntraModalConsistencyChecker::checkTSconsistency()
         return false;
     }
 
-    std::remove_if(listNumberTS.begin(), listNumberTS.end(), [](uint x) { return x == 1; });
-    if (listNumberTS.empty())
-    { // Nothing left: all elements were equal to 1 or list was previously empty
+    std::vector<uint>::iterator result
+      = find_if(listNumberTS.begin(), listNumberTS.end(), [](uint x) -> bool { return x != 1; });
+    if (result == listNumberTS.end())
+    { // All elements are equal to 1 or list is empty
         nbTimeseries_ = 1;
     }
     else
     {
-        nbTimeseries_ = listNumberTS.front();
+        nbTimeseries_ = *result;
     }
     return true;
 }
