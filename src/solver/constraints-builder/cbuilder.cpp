@@ -127,14 +127,17 @@ bool CBuilder::update(bool applyCheckBox)
 
             if (includeLoopFlow) // check validity of loopflow against NTC
             {
-                if ((-1.0 * link->indirectCapacities[0][hour]
-                     > link->parameters[Data::fhlLoopFlow][hour])
-                    || (link->directCapacities[0][hour]
-                        < link->parameters[Data::fhlLoopFlow][hour]))
+                for (uint tsIndex = 0; tsIndex < link->indirectCapacities.width; ++tsIndex)
                 {
-                    logs.error() << "Error on loop flow to NTC comparison validity at hour " << x
-                                 << " for line " << linkInfo->getName();
-                    return false;
+                    if ((-1.0 * link->indirectCapacities[tsIndex][hour]
+                         > link->parameters[Data::fhlLoopFlow][hour])
+                        || (link->directCapacities[tsIndex][hour]
+                            < link->parameters[Data::fhlLoopFlow][hour]))
+                    {
+                        logs.error() << "Error on loop flow to NTC comparison validity at hour "
+                                     << x << " for line " << linkInfo->getName();
+                        return false;
+                    }
                 }
                 if (checkNodalLoopFlow) // check validity of loop flow values (sum = 0 at node)
                 {
