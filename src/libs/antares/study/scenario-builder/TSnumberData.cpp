@@ -367,13 +367,16 @@ void thermalTSNumberData::apply(Study& study)
     for (uint clusterIndex = 0; clusterIndex != clusterCount; ++clusterIndex)
     {
         auto& cluster = *(area.thermal.clusters[clusterIndex]);
-        // alias to the current column
-        assert(clusterIndex < pTSNumberRules.width);
-        auto& col = pTSNumberRules[clusterIndex];
+        if (cluster.enabled)
+        {
+            // alias to the current column
+            assert(clusterIndex < pTSNumberRules.width);
+            auto& col = pTSNumberRules[clusterIndex];
 
-        logprefix.clear() << "Thermal: Area '" << area.name << "', cluster: '" << cluster.name()
-                          << "': ";
-        ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountThermal);
+            logprefix.clear() << "Thermal: Area '" << area.name << "', cluster: '" << cluster.name()
+                              << "': ";
+            ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountThermal);
+        }
     }
 }
 
@@ -417,12 +420,15 @@ void renewableTSNumberData::apply(Study& study)
     {
         auto& cluster = *(area.renewable.clusters[clusterIndex]);
         // alias to the current column
-        assert(clusterIndex < pTSNumberRules.width);
-        auto& col = pTSNumberRules[clusterIndex];
+        if (cluster.enabled)
+        {
+            assert(clusterIndex < pTSNumberRules.width);
+            auto& col = pTSNumberRules[clusterIndex];
 
-        logprefix.clear() << "Renewable: Area '" << area.name << "', cluster: '" << cluster.name()
-                          << "': ";
-        ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountRenewable);
+            logprefix.clear() << "Renewable: Area '" << area.name << "', cluster: '"
+                              << cluster.name() << "': ";
+            ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountRenewable);
+        }
     }
 }
 
