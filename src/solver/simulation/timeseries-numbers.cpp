@@ -300,7 +300,16 @@ bool IntraModalConsistencyChecker::checkTSconsistency()
                      << "'s numbers of time-series are not equal for all areas";
         return false;
     }
-    nbTimeseries_ = listNumberTS[0];
+
+    std::remove_if(listNumberTS.begin(), listNumberTS.end(), [](uint x) { return x == 1; });
+    if (listNumberTS.empty())
+    { // Nothing left: all elements were equal to 1 or list was previously empty
+        nbTimeseries_ = 1;
+    }
+    else
+    {
+        nbTimeseries_ = listNumberTS.front();
+    }
     return true;
 }
 
