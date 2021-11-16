@@ -795,6 +795,7 @@ void AreaLink::flush()
     parameters.flush();
     directCapacities.flush();
     indirectCapacities.flush();
+    timeseriesNumbers.flush();
 }
 
 } // namespace Data
