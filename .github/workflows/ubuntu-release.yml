@@ -1,0 +1,101 @@
+name: Ubuntu CI (Release)
+
+on:
+  release:
+    types: [created]
+
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+  
+jobs:
+
+  windows:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+
+    steps:
+    - uses: actions/checkout@v2 
+    
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.2.0
+      
+    - name: Install mandatory system libraries
+      run: |
+           sudo apt-get update
+           sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
+           sudo apt-get install libboost-test-dev
+
+    - name: Read antares-deps version
+      id: antares-deps-version
+      uses: notiz-dev/github-action-json-property@release
+      with: 
+        path: 'antares-deps-version.json'
+        prop_path: 'antares_deps_version'
+        
+    - name: Download pre-compiled librairies
+      uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
+      with:
+        antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
+        os: ${{matrix.os}}
+        os-full-name: Ubuntu-20.04
+        
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+          
+    - name: Install dependencies
+      run: |
+          python -m pip install --upgrade pip
+          pip3 install -r src/tests/examples/requirements.txt
+           
+    - name: Init submodule
+      run: |
+           git submodule update --init --recursive src
+
+    - name: Configure
+      run: |
+           cmake -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=OFF
+           
+    - name: Build
+      run: |
+           cmake --build _build --config release -j2    
+           
+    - name: Running unit tests
+      run: |
+           cd _build
+           ctest -C release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
+
+    - name: Installer .deb creation
+      run: |
+           cd _build
+           cpack -G DEB
+           export DEB_NAME=$(ls *.deb)
+           echo "DEB_NAME=$DEB_NAME" >> $GITHUB_ENV
+           
+    - name: .tar.gz creation
+      run: |
+           cd _build
+           cpack -G TGZ
+           export TGZ_NAME=$(ls *.tar.gz)
+           echo "TGZ_NAME=$TGZ_NAME" >> $GITHUB_ENV
+           
+    - name: Upload .deb
+      uses: actions/upload-release-asset@v1.0.2
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: _build/${{env.DEB_NAME}}
+        asset_name: ${{env.DEB_NAME}}
+        asset_content_type: application/octet-stream
+        
+    - name: Upload .tar.gz
+      uses: actions/upload-release-asset@v1.0.2
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: _build/${{env.TGZ_NAME}}
+        asset_name: ${{env.TGZ_NAME}}
+        asset_content_type: application/octet-stream

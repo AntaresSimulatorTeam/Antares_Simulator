@@ -162,11 +162,26 @@ void HydroManagement::prepareNetDemand(uint numSpace)
             auto dayYear = study.calendar.hours[hour].dayYear;
 
             double netdemand
-              = +scratchpad.ts.load[ptchro.Consommation][hour]
-                - scratchpad.ts.wind[ptchro.Eolien][hour] - scratchpad.miscGenSum[hour]
-                - scratchpad.ts.solar[ptchro.Solar][hour] - ror[hour]
+              = +scratchpad.ts.load[ptchro.Consommation][hour] - scratchpad.miscGenSum[hour]
+                - ror[hour]
                 - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
                                                  : scratchpad.originalMustrunSum[hour]);
+
+            // Aggregated renewable production: wind & solar
+            if (parameters.renewableGeneration.isAggregated())
+            {
+                netdemand -= scratchpad.ts.solar[ptchro.Solar][hour]
+                             + scratchpad.ts.wind[ptchro.Eolien][hour];
+            }
+            // Renewable clusters, if enabled
+            else if (parameters.renewableGeneration.isClusters())
+            {
+                area.renewable.list.each([&](const Antares::Data::RenewableCluster& cluster) {
+                    assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
+                    netdemand -= cluster.valueAtTimeStep(
+                      ptchro.RenouvelableParPalier[cluster.areaWideIndex], hour);
+                });
+            }
 
             assert(!Math::NaN(netdemand)
                    && "hydro management: NaN detected when calculating the net demande");

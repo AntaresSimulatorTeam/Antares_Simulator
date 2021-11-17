@@ -60,7 +60,7 @@ MCPlaylist::MCPlaylist(wxFrame* parent) :
           wxT("MC Playlist"),
           wxDefaultPosition,
           wxSize(380, 410),
-          wxCLOSE_BOX | wxCAPTION)
+          wxCLOSE_BOX | wxCAPTION | wxRESIZE_BORDER)
 {
     assert(parent);
 

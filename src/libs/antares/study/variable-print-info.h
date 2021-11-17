@@ -113,7 +113,8 @@ public:
 
     bool setPrintStatus(string varname, bool printStatus);
 
-    void prepareForSimulation(bool userSelection);
+    void prepareForSimulation(bool userSelection,
+                              const std::vector<std::string>& excluded_vars = {});
 
     // Incremental search for the variable, then get the print status.
     bool searchIncrementally_getPrintStatus(string var_name) const;

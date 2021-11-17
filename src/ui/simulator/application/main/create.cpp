@@ -36,11 +36,11 @@
 #include <wx/richtext/richtexthtml.h>
 
 #include <antares/logs.h>
-#include "../../toolbox/resources.h"
-#include "../../toolbox/locales.h"
+#include "toolbox/resources.h"
+#include "toolbox/locales.h"
 #include "internal-data.h"
-#include "../../windows/version.h"
-#include "../../config.h"
+#include "windows/version.h"
+#include "config.h"
 #include "drag-drop.hxx"
 
 // Antares study
@@ -48,46 +48,48 @@
 #include <antares/sys/appdata.h>
 
 // Create toolbox
-#include "../../toolbox/create.h"
+#include "toolbox/create.h"
 // Panel
 #include <ui/common/component/panel.h>
 // Map
-#include "../../toolbox/components/map/component.h"
+#include "toolbox/components/map/component.h"
 // WIP Panel
-#include "../../toolbox/components/wip-panel.h"
+#include "toolbox/components/wip-panel.h"
 // Datagrid
-#include "../../toolbox/components/datagrid/component.h"
-#include "../../toolbox/components/datagrid/gridhelper.h"
-#include "../../toolbox/components/datagrid/renderer/connection.h"
-#include "../../toolbox/components/datagrid/renderer/area/dsm.h"
-#include "../../toolbox/components/datagrid/renderer/area/misc.h"
-#include "../../toolbox/components/datagrid/renderer/area/timeseries.h"
-#include "../../toolbox/components/datagrid/renderer/links/summary.h"
-#include "../../toolbox/components/datagrid/renderer/layers.h"
-#include "../../toolbox/input/area.h"
-#include "../../toolbox/input/connection.h"
-#include "../../toolbox/input/bindingconstraint.h"
+#include "toolbox/components/datagrid/component.h"
+#include "toolbox/components/datagrid/gridhelper.h"
+#include "toolbox/components/datagrid/renderer/connection.h"
+#include "toolbox/components/datagrid/renderer/area/dsm.h"
+#include "toolbox/components/datagrid/renderer/area/misc.h"
+#include "toolbox/components/datagrid/renderer/area/timeseries.h"
+#include "toolbox/components/datagrid/renderer/links/summary.h"
+#include "toolbox/components/datagrid/renderer/layers.h"
+#include "toolbox/input/area.h"
+#include "toolbox/input/connection.h"
+#include "toolbox/input/bindingconstraint.h"
 // MainPanel
-#include "../../toolbox/components/mainpanel.h"
+#include "toolbox/components/mainpanel.h"
 
 // Windows
-#include "../../windows/connection.h"
-#include "../../windows/simulation/panel.h"
-#include "../../windows/thermal/panel.h"
-#include "../../windows/correlation/correlation.h"
-#include "../../windows/bindingconstraint/bindingconstraint.h"
-#include "../../windows/analyzer/analyzer.h"
-#include "../../windows/inspector/inspector.h"
+#include "windows/connection.h"
+#include "windows/simulation/panel.h"
+#include "windows/thermal/panel.h"
+#include "windows/renewables/panel.h"
+#include "windows/correlation/correlation.h"
+#include "windows/bindingconstraint/bindingconstraint.h"
+#include "windows/analyzer/analyzer.h"
+#include "windows/inspector/inspector.h"
+#include "windows/options/advanced/advanced.h"
 
 // Standard page
 #include "build/standard-page.hxx"
 // Wait
 #include "../wait.h"
 // startup wizard
-#include "../../windows/startupwizard.h"
-#include "../../toolbox/dispatcher/study.h"
+#include "windows/startupwizard.h"
+#include "toolbox/dispatcher/study.h"
 // license
-#include "../../windows/message.h"
+#include "windows/message.h"
 
 using namespace Yuni;
 
@@ -458,6 +460,8 @@ void ApplWnd::internalInitialize()
     OnStudyEndUpdate.connect(&MemoryFlushEndUpdate);
     // System parameter
     OnStudySettingsChanged.connect(this, &ApplWnd::onSystemParametersChanged);
+    // Advanced parameters
+    Window::Options::OnRenewableGenerationModellingChanged.connect(this, &ApplWnd::onRenewableGenerationModellingChanged);
 
     // Update the status bar
     resetDefaultStatusBarText();
@@ -565,6 +569,9 @@ void ApplWnd::createAllComponentsNeededByTheMainNotebook()
     // Solar
     createNBSolar();
 
+    // Renewable
+    createNBRenewable();
+
     // Separator
     pNotebook->addSeparator();
 
@@ -633,6 +640,20 @@ void ApplWnd::createNBThermal()
     pageThermalPrepro = panel->pageThermalPrepro;
     pageThermalCommon = panel->pageThermalCommon;
     pageThermalClusterList = panel->pageThermalClusterList;
+}
+
+void ApplWnd::createNBRenewable()
+{
+    assert(pNotebook);
+
+    auto* panel = new Window::Renewable::Panel(pNotebook);
+    pNotebook->add(panel, wxT("renewable"), wxT("Renewable"));
+
+    // gp : to be adapted
+    // pageThermalTimeSeries = panel->pageThermalTimeSeries;
+    // pageThermalPrepro = panel->pageThermalPrepro;
+    pageRenewableCommon = panel->pageRenewableCommon;
+    pageRenewableClusterList = panel->pageRenewableClusterList;
 }
 
 void ApplWnd::createNBBindingConstraints()

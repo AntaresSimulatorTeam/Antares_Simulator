@@ -727,6 +727,8 @@ void Panel::loadDataFromFile()
         filename << "values";
     else if (pComponent->pBtnDetails->pushed())
         filename << "details";
+    else if (pComponent->pBtnDetailsRes->pushed())
+        filename << "details-res";
     else if (pComponent->pBtnID->pushed())
         filename << "id";
 

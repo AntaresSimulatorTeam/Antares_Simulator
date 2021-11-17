@@ -213,7 +213,8 @@ private:
     //! Prepare all thermal clusters in 'must-run' mode
     void initializeThermalClustersInMustRunMode(Study& study);
     void removeDisabledThermalClustersFromSolverComputations(Study& study);
-
+    void removeDisabledRenewableClustersFromSolverComputations(Study& study);
+    void removeAllRenewableClustersFromSolverComputations(Study& study);
     void disableAllFilters(Study& study);
 
 }; // struct StudyRuntimeInfos

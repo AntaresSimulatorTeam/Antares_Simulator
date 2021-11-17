@@ -1,0 +1,71 @@
+docs_dir: docs
+site_name: Antares Simulator Documentation
+repo_url: https://github.com/AntaresSimulatorTeam/Antares_Simulator
+edit_uri: edit/doc/docs/
+
+theme:
+  name: material
+  logo: assets/logo.png
+  favicon: assets/Icone.png
+  prev_next_buttons_location: none
+  features:
+    - navigation.instant
+    - navigation.top
+    - navigation.expand
+  #  - navigation.sections
+  #   - header.autohide
+  #   - toc.separate
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: antares
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+
+nav:
+  - 'Home': index.md
+  - 'Antares ecosystem' : 'https://antares-doc.readthedocs.io'
+  - 'User guide':
+    - 'Reference guide': 'reference-guide/1-reference-guide.md'
+    - 'Optimisation problem' : 'reference-guide/2-modeling.md'
+  - 'Build':
+    - 'Introduction': 'build/0-INSTALL.md'
+    - 'Development requirements': 'build/1-Development-requirements.md'
+    - 'Dependencies install': 'build/2-Dependencies-install.md'
+    - 'Build': 'build/3-Build.md'
+    - 'Tests': 'build/4-Tests.md'
+    - 'Installer creation': 'build/5-Installer-creation.md'
+    - 'Continuous Integration' : 'build/continuous-integration.md'
+    - 'OR-tools integration' : 'build/ortools-integration.md'
+  - 'Changelog': 'CHANGELOG.md'
+
+plugins:
+  - search
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - https://code.jquery.com/jquery-3.6.0.min.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+
+markdown_extensions:
+  - attr_list
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed
+
+copyright: Copyright &copy; 2007 - 2021 RTE

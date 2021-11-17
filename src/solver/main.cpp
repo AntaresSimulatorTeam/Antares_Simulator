@@ -216,7 +216,7 @@ bool SolverApplication::prepare(int argc, char* argv[])
 
             auto NombreDePaliersThermiques = area.thermal.list.size();
 
-            for (uint l = 0; l != area.thermal.clusterCount; ++l) //
+            for (uint l = 0; l != area.thermal.clusterCount(); ++l) //
             {
                 auto& cluster = *(area.thermal.clusters[l]);
                 auto PmaxDUnGroupeDuPalierThermique = cluster.nominalCapacityWithSpinning;

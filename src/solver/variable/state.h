@@ -33,7 +33,6 @@
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_structure_probleme_economique.h"
 #include "../simulation/sim_extern_variables_globales.h"
-#include <antares/study/parts/hydro/container.h>
 
 namespace Antares
 {
@@ -77,6 +76,16 @@ public:
     void initFromThermalClusterIndex(const unsigned int areaWideIndex, uint numSpace);
 
     /*!
+    ** \brief Initialize some variable according a renewable cluster index
+    **
+    ** We assume here that the variables related to an area
+    ** are properly initialized.
+    **
+    ** \param areaWideIndex Index of the renewable cluster for the current area
+    */
+    void initFromRenewableClusterIndex(const unsigned int areaWideIndex, uint numSpace);
+
+    /*!
     ** \brief End the year by smoothing the thermal units run
     ** We assume here that the variables related to an area
     ** are properly initialized.
@@ -91,9 +100,14 @@ public:
     void startANewYear();
 
     /*!
-    ** \brief Reset internal data for end of year calculations
+    ** \brief Reset thermal internal data for end of year calculations
     */
-    void yearEndReset();
+    void yearEndResetThermal();
+
+    /*!
+    ** \brief Reset renewable internal data for end of year calculations
+    */
+    void yearEndResetRenewable();
 
 public:
     //! Current year
@@ -110,7 +124,9 @@ public:
     //! The current area
     Data::Area* area;
     //! The current thermal cluster
-    Data::ThermalCluster* cluster;
+    Data::ThermalCluster* thermalCluster;
+    //! The current renewable cluster
+    Data::RenewableCluster* renewableCluster;
     //! The Scratchpad for the current area
     Data::AreaScratchpad* scratchpad;
     //! The current link
@@ -170,6 +186,9 @@ public:
     //! Minimum power of the cluster for the whole year
     double thermalClusterPMinOfTheClusterForYear[Variable::maxHoursInAYear];
 
+    double renewableClusterProduction;
+    double renewableClusterProductionForYear[Variable::maxHoursInAYear];
+
     //! Dispatchable margin for the current area (valid only from weekForEachArea)
     const double* dispatchableMargin;
     //@}
@@ -208,6 +227,8 @@ public:
     double optimalSolutionCost1;
     // Sum of the weekly optimal costs over the year (second optimisation step)
     double optimalSolutionCost2;
+    // Average time spent in optimization over the year (ms)
+    double averageOptimizationTime;
     // -----------------------------------------------------------------
 }; // class State
 

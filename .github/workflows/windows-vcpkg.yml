@@ -1,4 +1,4 @@
-name: Windows CI (VCPKG)
+name: Windows CI (VCPKG and pre-compiled)
 
 on:
   push:
@@ -13,7 +13,6 @@ jobs:
   windows:
 
     runs-on: ${{ matrix.os }}
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       matrix:
         os: [windows-latest]
@@ -21,33 +20,66 @@ jobs:
         include:
           - os: windows-latest
             triplet: x64-windows
-            vcpkgCommitId: 'ee17a685087a6886e5681e355d36cd784f0dd2c8'
-            vcpkgPackages: openssl curl wxwidgets boost-test boost-process boost-filesystem boost-dll boost-regex
-
+            vcpkgPackages: wxwidgets boost-test
+    env:
+      # Indicates the location of the vcpkg as a Git submodule of the project repository.
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+      
     steps:
-    - uses: actions/checkout@v2 
+    - uses: actions/checkout@v2    
 
-    - name : Install deps with VCPKG
-      uses: lukka/run-vcpkg@v4
-      id: runvcpkg
-      with:
-        vcpkgArguments: '${{ matrix.vcpkgPackages }}'
-        vcpkgTriplet: '${{ matrix.triplet }}'
-        vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
-        vcpkgGitCommitId: '${{ matrix.vcpkgCommitId }}'
-        
-    - name: Download pre-compiled librairies
-      run: |
-           choco install wget
-           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v1.0.1/rte-antares-deps-${{matrix.os}}-x64-Release-solver.zip
-           Expand-Archive ./rte-antares-deps-${{matrix.os}}-x64-Release-solver.zip -DestinationPath .
-           rm rte-antares-deps-${{matrix.os}}-x64-Release-solver.zip
-           
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
         python-version: 3.8
+      
+    - name: Pre-requisites
+      shell: cmd
+      run: |          
+          choco install wget unzip --no-progress
           
+    - name : Init VCPKG submodule
+      run: |
+          git submodule update --init vcpkg
+        
+    # Restore both vcpkg and its artifacts from the GitHub cache service.
+    - name: Restore vcpkg and its artifacts.
+      uses: actions/cache@v2
+      with:
+        # The first path is the location of vcpkg (it contains the vcpkg executable and data files).
+        # The other paths starting with '!' are exclusions: they contain termporary files generated during the build of the installed packages.
+        path: |
+          ${{ env.VCPKG_ROOT }}
+          !${{ env.VCPKG_ROOT }}/buildtrees
+          !${{ env.VCPKG_ROOT }}/packages
+          !${{ env.VCPKG_ROOT }}/downloads
+        # The key is composed in a way that it gets properly invalidated: this must happen whenever vcpkg's Git commit id changes, or the list of packages changes. In this case a cache miss must happen and a new entry with a new key with be pushed to GitHub the cache service.
+        # The key includes: hash of the vcpkg.json file, the hash of the vcpkg Git commit id, and the used vcpkg's triplet. The vcpkg's commit id would suffice, but computing an hash out it does not harm.
+        # Note: given a key, the cache content is immutable. If a cache entry has been created improperly, in order the recreate the right content the key must be changed as well, and it must be brand new (i.e. not existing already).
+        key: |
+          ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ matrix.triplet }}-invalidate
+    
+    - name : Install deps with VCPKG
+      run: |
+          cd vcpkg
+          ./bootstrap-vcpkg.sh
+          vcpkg install ${{matrix.vcpkgPackages}} --triplet ${{matrix.triplet}}
+          rm -rf buildtrees packages downloads
+      shell: bash
+      
+    - name: Read antares-deps version
+      id: antares-deps-version
+      uses: notiz-dev/github-action-json-property@release
+      with: 
+        path: 'antares-deps-version.json'
+        prop_path: 'antares_deps_version'
+            
+    - name: Download pre-compiled librairies
+      uses: ./.github/workflows/download-extract-precompiled-libraries-zip
+      with:
+        antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
+        os: ${{matrix.os}}
+        
     - name: Install dependencies
       run: |
           python -m pip install --upgrade pip
@@ -56,10 +88,10 @@ jobs:
     - name: Init submodule
       run: |
            git submodule update --init --recursive src
-        
+           
     - name: Configure
       run: |
-           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DVCPKG_ROOT=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }} -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON  -DBUILD_OUTPUT_TEST=ON
+           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DVCPKG_ROOT=${{env.VCPKG_ROOT}} -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON  -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF
 
     - name: Build
       run: |
@@ -70,12 +102,28 @@ jobs:
            cd _build
            ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
 
+    - name: Inject slug/short variables
+      uses: rlespinasse/github-slug-action@v3.x
 
-    - name: Installer creation
+    - name : Run non-regression tests
       run: |
-           Remove-Item .\src\tests\resources\Antares_Simulator_Tests\ -Recurse -Force
+         if [[ "${{ env.GITHUB_REF_SLUG }}" =~ "release" ]]; then
+            cd _build
+            ctest -C Release --output-on-failure -L "non-regression"
+         else
+            echo "Non-regression tests were not run"
+         fi
+      shell: bash
+
+    - name: NSIS Installer creation
+      shell: bash
+      run: |
+           rm -rf src/tests/resources/Antares_Simulator_Tests
+           rm -rf src/tests/resources/NonRegTests
            cd _build
            cpack -GNSIS
+           export NSIS_NAME=$(ls *.exe)
+           echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
            
     - name: .zip creation
       run: |
@@ -86,7 +134,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: antares-installer-64bits
-        path: _build/rte-antares-*.*.*-installer-*.exe
+        path: _build/${{env.NSIS_NAME}}
         
     - name: Archive upload
       uses: actions/upload-artifact@v2

@@ -34,7 +34,6 @@ namespace Data
 // Forward declaration
 class ThermalCluster;
 class ThermalClusterList;
-class DataSeriesThermal;
 class PreproThermal;
 
 } // namespace Data

@@ -77,6 +77,7 @@ enum MenusID
     mnIDViewLoad,
     mnIDViewSolar,
     mnIDViewWind,
+    mnIDViewRenewable,
     mnIDViewHydro,
     mnIDViewThermal,
     mnIDViewMiscGen,

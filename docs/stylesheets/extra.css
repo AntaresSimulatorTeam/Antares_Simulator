@@ -1,0 +1,11 @@
+[data-md-color-scheme="antares"] {
+    --md-primary-fg-color:        #002a5e;
+    --md-primary-fg-color--light: #00a3ca;
+    --md-primary-fg-color--dark:  #112446;
+    --md-typeset-a-color:  #00a3ca; /* text link color*/
+    --md-accent-fg-color: #ff9800; /* link color on hover*/
+}
+[data-md-color-scheme="slate"] {
+    --md-hue: 213; /* [0, 360] */
+    --md-accent-fg-color: #ff9800;
+}

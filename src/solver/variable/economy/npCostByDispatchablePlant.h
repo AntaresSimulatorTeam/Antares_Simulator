@@ -190,7 +190,7 @@ public:
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
 
         // Get the area
-        pSize = area->thermal.clusterCount;
+        pSize = area->thermal.clusterCount();
         if (pSize)
         {
             AncestorType::pResults.resize(pSize);
@@ -235,14 +235,6 @@ public:
         NextType::initializeFromAreaLink(study, link);
     }
 
-    void initializeFromThermalCluster(Data::Study* study,
-                                      Data::Area* area,
-                                      Data::ThermalCluster* cluster)
-    {
-        // Next
-        NextType::initializeFromThermalCluster(study, area, cluster);
-    }
-
     void simulationBegin()
     {
         // Next
@@ -264,14 +256,6 @@ public:
         NextType::yearBegin(year, numSpace);
     }
 
-    void yearEndBuildPrepareDataForEachThermalCluster(State& state,
-                                                      uint year,
-                                                      unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
-    }
-
     void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
     {
         // Get end year calculations
@@ -279,7 +263,7 @@ public:
              i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd];
              ++i)
         {
-            pValuesForTheCurrentYear[numSpace][state.cluster->areaWideIndex].hour[i]
+            pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i]
               = state.thermalClusterNonProportionalCostForYear[i];
         }
 
@@ -350,8 +334,8 @@ public:
     {
         // Total Non Proportional cost for this hour
         // NP = startup cost + fixed cost
-        // pValuesForTheCurrentYear[state.cluster->areaWideIndex].hour[state.hourInTheYear] +=
-        // production for the current thermal dispatchable cluster
+        // pValuesForTheCurrentYear[state.thermalCluster->areaWideIndex].hour[state.hourInTheYear]
+        // += production for the current thermal dispatchable cluster
         //	(state.thermalClusterNonProportionalCost);
 
         // Next item in the list
