@@ -61,7 +61,7 @@ public:
     **
     ** \param tstype Type of the timeseries
     */
-    Rules();
+    Rules(Study& study);
     //! Destructor
     ~Rules();
     //@}
@@ -71,20 +71,19 @@ public:
     /*!
     ** \brief Initialize data from the study
     */
-    bool reset(const Study& study);
+    bool reset();
 
     /*!
     ** \brief Load information from a single line (extracted from an INI file)
     */
-    void loadFromInstrs(Study& study,
-                        const AreaName::Vector& instrs,
+    void loadFromInstrs(const AreaName::Vector& instrs,
                         String value,
                         bool updaterMode);
 
     /*!
     ** \brief Export the data into a mere INI file
     */
-    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
+    void saveToINIFile(Yuni::IO::File::Stream& file) const;
     //@}
 
     //! Get the number of areas
@@ -98,7 +97,7 @@ public:
     **
     ** This method is only useful when launched from the solver.
     */
-    void apply(Study& study);
+    void apply();
 
     // When current rule is the active one, sends warnings for disabled clusters.
     void sendWarningsForDisabledClusters();
@@ -112,14 +111,18 @@ public:
     hydroTSNumberData hydro;
     //! Wind
     windTSNumberData wind;
+
+    // gp : change these 2 arrays into std containers, like std::vector 
     //! Thermal (array [0..pAreaCount - 1])
     thermalTSNumberData* thermal;
     //! Renewable (array [0..pAreaCount - 1])
     renewableTSNumberData* renewable;
+
     //! hydro levels
     hydroLevelsData hydroLevels;
 
 private:
+    Study& study_;
     //! Total number of areas
     uint pAreaCount;
     //! Name of the rules

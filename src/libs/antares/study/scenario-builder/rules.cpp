@@ -39,53 +39,54 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
-Rules::Rules() :
- load(), solar(), hydro(), wind(), thermal(), renewable(), hydroLevels(), pAreaCount(0)
+Rules::Rules(Study& study) : 
+    study_(study), load(), solar(), hydro(), wind(), thermal(), renewable(), hydroLevels(), pAreaCount(0)
 {
 }
 
 Rules::~Rules()
 {
     delete[] thermal;
+    delete[] renewable;
 }
 
-void Rules::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
+void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
 {
     file << "[" << pName << "]\n";
     if (pAreaCount)
     {
         // load
-        load.saveToINIFile(study, file);
+        load.saveToINIFile(study_, file);
         // solar
-        solar.saveToINIFile(study, file);
+        solar.saveToINIFile(study_, file);
         // hydro
-        hydro.saveToINIFile(study, file);
+        hydro.saveToINIFile(study_, file);
         // wind
-        wind.saveToINIFile(study, file);
+        wind.saveToINIFile(study_, file);
         // Thermal, each area
         for (uint i = 0; i != pAreaCount; ++i)
         {
-            thermal[i].saveToINIFile(study, file);
-            renewable[i].saveToINIFile(study, file);
+            thermal[i].saveToINIFile(study_, file);
+            renewable[i].saveToINIFile(study_, file);
         }
         // hydro levels
-        hydroLevels.saveToINIFile(study, file);
+        hydroLevels.saveToINIFile(study_, file);
     }
     file << '\n';
 }
 
-bool Rules::reset(const Study& study)
+bool Rules::reset()
 {
     // Alias to the current study
-    assert(&study != nullptr);
+    assert(&study_ != nullptr);
 
     // The new area count
-    pAreaCount = study.areas.size();
+    pAreaCount = study_.areas.size();
 
-    load.reset(study);
-    solar.reset(study);
-    hydro.reset(study);
-    wind.reset(study);
+    load.reset(study_);
+    solar.reset(study_);
+    hydro.reset(study_);
+    wind.reset(study_);
 
     // Thermal
     delete[] thermal;
@@ -93,8 +94,8 @@ bool Rules::reset(const Study& study)
 
     for (uint i = 0; i != pAreaCount; ++i)
     {
-        thermal[i].attachArea(study.areas.byIndex[i]);
-        thermal[i].reset(study);
+        thermal[i].attachArea(study_.areas.byIndex[i]);
+        thermal[i].reset(study_);
     }
 
     // Renewable
@@ -103,16 +104,15 @@ bool Rules::reset(const Study& study)
 
     for (uint i = 0; i != pAreaCount; ++i)
     {
-        renewable[i].attachArea(study.areas.byIndex[i]);
-        renewable[i].reset(study);
+        renewable[i].attachArea(study_.areas.byIndex[i]);
+        renewable[i].reset(study_);
     }
 
-    hydroLevels.reset(study);
+    hydroLevels.reset(study_);
     return true;
 }
 
-void Rules::loadFromInstrs(Study& study,
-                           const AreaName::Vector& instrs,
+void Rules::loadFromInstrs(const AreaName::Vector& instrs,
                            String value,
                            bool updaterMode = false)
 {
@@ -126,7 +126,7 @@ void Rules::loadFromInstrs(Study& study,
     if (kind_of_scenario.size() > 2)
         return;
 
-    Data::Area* area = study.areas.find(areaname);
+    Data::Area* area = study_.areas.find(areaname);
     if (!area)
     {
         // silently ignore the error
@@ -153,7 +153,7 @@ void Rules::loadFromInstrs(Study& study,
         else
         {
             bool isTheActiveRule
-              = (pName.toLower() == study.parameters.activeRulesScenario.toLower());
+              = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
             if (not updaterMode and isTheActiveRule)
             {
                 string clusterId = (area->id).to<string>() + "." + clustername.to<string>();
@@ -162,7 +162,7 @@ void Rules::loadFromInstrs(Study& study,
         }
     }
 
-    if (kind_of_scenario == "r" && study.parameters.renewableGeneration.isClusters())
+    if (kind_of_scenario == "r" && study_.parameters.renewableGeneration.isClusters())
     {
         if (clustername.empty())
             return;
@@ -177,7 +177,7 @@ void Rules::loadFromInstrs(Study& study,
         else
         {
             bool isTheActiveRule
-              = (pName.toLower() == study.parameters.activeRulesScenario.toLower());
+              = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
             if (not updaterMode and isTheActiveRule)
             {
                 string clusterId = (area->id).to<string>() + "." + clustername.to<string>();
@@ -217,20 +217,20 @@ void Rules::loadFromInstrs(Study& study,
     }
 }
 
-void Rules::apply(Study& study)
+void Rules::apply()
 {
     if (pAreaCount)
     {
-        load.apply(study);
-        solar.apply(study);
-        hydro.apply(study);
-        wind.apply(study);
+        load.apply(study_);
+        solar.apply(study_);
+        hydro.apply(study_);
+        wind.apply(study_);
         for (uint i = 0; i != pAreaCount; ++i)
         {
-            thermal[i].apply(study);
-            renewable[i].apply(study);
+            thermal[i].apply(study_);
+            renewable[i].apply(study_);
         }
-        hydroLevels.apply(study);
+        hydroLevels.apply(study_);
     }
 }
 
