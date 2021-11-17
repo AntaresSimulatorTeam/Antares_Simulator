@@ -687,9 +687,9 @@ void applyMatrixDrawsToInterModalModesInArea(Matrix<uint32>* tsNumbersMtx,
                                              const array<bool, timeSeriesCount>& isTSintermodal,
                                              const array<bool, timeSeriesCount>& isTSgenerated,
                                              const uint years,
-                                             Study& study)
+                                             const Study& study)
 {
-    Parameters& parameters = study.parameters;
+    const Parameters& parameters = study.parameters;
 
     for (uint year = 0; year < years; ++year)
     {
