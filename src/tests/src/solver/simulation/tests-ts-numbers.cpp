@@ -357,10 +357,89 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__same
 
 	// TS number checks
 	uint year = 0;
+	BOOST_CHECK_EQUAL(area->load.series->timeseriesNumbers[0][year], 0);
+
+	uint drawnTsNbForWind = area->wind.series->timeseriesNumbers[0][year];
+	BOOST_CHECK_EQUAL(thCluster_1->series->timeseriesNumbers[0][year], drawnTsNbForWind);
+	BOOST_CHECK_EQUAL(thCluster_2->series->timeseriesNumbers[0][year], drawnTsNbForWind);
+}
+
+
+BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__same_nb_of_ts_except_1_for_wind_check_inter_modal_consistency_OK)
+{
+	// Creating a study
+	Study::Ptr study = new Study();
+	initializeStudy(study);
+
+	study->parameters.interModal |= timeSeriesLoad;
+	study->parameters.interModal |= timeSeriesWind;
+	study->parameters.interModal |= timeSeriesThermal;
+
+	// Area
+	Area* area = addAreaToStudy(study, "Area");
+
+	// ... Load
+	area->load.series->series.resize(100, 1); // Ready made TS for load
+
+	// ... Wind
+	area->wind.series->series.resize(1, 1);	// Ready made TS for wind
+
+	// ... Thermal
+	study->parameters.timeSeriesToRefresh |= timeSeriesThermal; // Generated TS for thermal
+	study->parameters.nbTimeSeriesThermal = 100;
+	// ... ... clusters
+	auto thCluster_1 = addClusterToArea<ThermalCluster>(area, "th-cluster-1");
+	auto thCluster_2 = addClusterToArea<ThermalCluster>(area, "th-cluster-2");
+
+	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+
+	BOOST_CHECK(Generate(*study));
+
+	// TS number checks
+	uint year = 0;
+	BOOST_CHECK_EQUAL(area->wind.series->timeseriesNumbers[0][year], 0);
+
+	uint drawnTsNbForLoad = area->load.series->timeseriesNumbers[0][year];
+	BOOST_CHECK_EQUAL(thCluster_1->series->timeseriesNumbers[0][year], drawnTsNbForLoad);
+	BOOST_CHECK_EQUAL(thCluster_2->series->timeseriesNumbers[0][year], drawnTsNbForLoad);
+}
+
+BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__10_TS_for_everyone_except_thermal_cluster_has_1_TS__check_inter_modal_consistency_OK)
+{
+	// Creating a study
+	Study::Ptr study = new Study();
+	initializeStudy(study);
+
+	study->parameters.interModal |= timeSeriesLoad;
+	study->parameters.interModal |= timeSeriesWind;
+	study->parameters.interModal |= timeSeriesThermal;
+
+	// Area
+	Area* area = addAreaToStudy(study, "Area");
+
+	// ... Load
+	area->load.series->series.resize(10, 1); // Ready made TS for load
+
+	// ... Wind
+	area->wind.series->series.resize(10, 1);	// Ready made TS for wind
+
+	// ... Thermal
+	// ... ... clusters
+	auto thCluster_1 = addClusterToArea<ThermalCluster>(area, "th-cluster-1");
+	auto thCluster_2 = addClusterToArea<ThermalCluster>(area, "th-cluster-2");
+	thCluster_1->series->series.resize(10, 1);
+	thCluster_2->series->series.resize(1, 1); // Only 1 TS for this thermal cluster
+
+	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+
+	BOOST_CHECK(Generate(*study));
+
+	// TS number checks
+	uint year = 0;
 	uint drawnTsNbForLoad = area->load.series->timeseriesNumbers[0][year];
 	BOOST_CHECK_EQUAL(area->wind.series->timeseriesNumbers[0][year], drawnTsNbForLoad);
 	BOOST_CHECK_EQUAL(thCluster_1->series->timeseriesNumbers[0][year], drawnTsNbForLoad);
-	BOOST_CHECK_EQUAL(thCluster_2->series->timeseriesNumbers[0][year], drawnTsNbForLoad);
+	BOOST_CHECK_EQUAL(thCluster_2->series->timeseriesNumbers[0][year], 0);
 }
 
 BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__different_nb_of_ts____check_inter_modal_consistency_KO)
