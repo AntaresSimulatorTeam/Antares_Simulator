@@ -76,7 +76,7 @@ public:
     /*!
     ** \brief Load information from a single line (extracted from an INI file)
     */
-    void loadFromInstrs(const AreaName::Vector& instrs,
+    void readLine(const AreaName::Vector& splitKey,
                         String value,
                         bool updaterMode);
 
@@ -122,6 +122,18 @@ public:
     hydroLevelsData hydroLevels;
 
 private:
+    // Member methods
+    void readThermalCluster(const AreaName::Vector& instrs, String value, bool updaterMode);
+    void readRenewableCluster(const AreaName::Vector& instrs, String value, bool updaterMode);
+    void readLoad(const AreaName::Vector& instrs, String value, bool updaterMode);
+    void readWind(const AreaName::Vector& instrs, String value, bool updaterMode);
+    void readHydro(const AreaName::Vector& instrs, String value, bool updaterMode);
+    void readSolar(const AreaName::Vector& instrs, String value, bool updaterMode);
+    void readHydroLevels(const AreaName::Vector& instrs, String value, bool updaterMode);
+
+    Data::Area* getArea(const AreaName& areaname, bool updaterMode);
+
+    // Member data 
     Study& study_;
     //! Total number of areas
     uint pAreaCount;

@@ -184,13 +184,13 @@ bool Sets::internalLoadFromINIFile(const AnyString& filename)
         // Create a new ruleset
         Rules::Ptr rulesetptr = createNew(name);
         Rules& ruleset = *rulesetptr;
-        AreaName::Vector instrs;
+        AreaName::Vector splitKey;
 
         for (auto* p = section.firstProperty; p != nullptr; p = p->next)
         {
-            p->key.split(instrs, ",", true, false);
-            if (instrs.size() > 2)
-                ruleset.loadFromInstrs(instrs, p->value, inUpdaterMode);
+            p->key.split(splitKey, ",", true, false);
+            if (splitKey.size() > 2)
+                ruleset.readLine(splitKey, p->value, inUpdaterMode);
         }
 
         ruleset.sendWarningsForDisabledClusters();

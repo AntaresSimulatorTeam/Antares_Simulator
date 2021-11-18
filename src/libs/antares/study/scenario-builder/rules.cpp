@@ -112,20 +112,8 @@ bool Rules::reset()
     return true;
 }
 
-void Rules::loadFromInstrs(const AreaName::Vector& instrs,
-                           String value,
-                           bool updaterMode = false)
+Data::Area* Rules::getArea(const AreaName& areaname, bool updaterMode)
 {
-    assert(instrs.size() > 2);
-
-    const AreaName& kind_of_scenario = instrs[0]; // load, thermal, hydro, ..., hydro levels, ... ?
-    const uint year = instrs[2].to<uint>();
-    const AreaName& areaname = instrs[1];
-    const ClusterName& clustername = (instrs.size() == 4) ? instrs[3] : "";
-
-    if (kind_of_scenario.size() > 2)
-        return;
-
     Data::Area* area = study_.areas.find(areaname);
     if (!area)
     {
@@ -133,88 +121,166 @@ void Rules::loadFromInstrs(const AreaName::Vector& instrs,
         if (not updaterMode)
             logs.warning() << "[scenario-builder] The area '" << areaname << "' has not been found";
 
-        return;
     }
+    return area;
+}
+
+void Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, bool updaterMode)
+{
+    const AreaName& areaname = splitKey[1];
+    const uint year = splitKey[2].to<uint>();
+    const ClusterName& clustername = splitKey[3];
+
+    if (clustername.empty())
+        return;
+
+    Data::Area* area = getArea(areaname, updaterMode);
+    if (! area)
+        return;
+
+    const ThermalCluster* cluster = area->thermal.list.find(clustername);
+    if (not cluster)
+        cluster = area->thermal.mustrunList.find(clustername);
+
+    if (cluster)
+    {
+        uint val = fromStringToTSnumber(value);
+        thermal[area->index].set(cluster, year, val);
+    }
+    else
+    {
+        bool isTheActiveRule = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
+        if (not updaterMode and isTheActiveRule)
+        {
+            string clusterId = (area->id).to<string>() + "." + clustername.to<string>();
+            disabledClustersOnRuleActive[clusterId].push_back(year);
+        }
+    }
+}
+
+void Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value, bool updaterMode)
+{
+    const AreaName& areaname = splitKey[1];
+    const uint year = splitKey[2].to<uint>();
+    const ClusterName& clustername = splitKey[3];
+
+    if (not study_.parameters.renewableGeneration.isClusters())
+        return;
+
+    if (clustername.empty())
+        return;
+
+    Data::Area* area = getArea(areaname, updaterMode);
+    if (!area)
+        return;
+
+    const RenewableCluster* cluster = area->renewable.list.find(clustername);
+
+    if (cluster)
+    {
+        uint val = fromStringToTSnumber(value);
+        renewable[area->index].set(cluster, year, val);
+    }
+    else
+    {
+        bool isTheActiveRule = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
+        if (not updaterMode and isTheActiveRule)
+        {
+            string clusterId = (area->id).to<string>() + "." + clustername.to<string>();
+            disabledClustersOnRuleActive[clusterId].push_back(year);
+        }
+    }
+}
+
+void Rules::readLoad(const AreaName::Vector& splitKey, String value, bool updaterMode)
+{
+    const AreaName& areaname = splitKey[1];
+    const uint year = splitKey[2].to<uint>();
+
+    Data::Area* area = getArea(areaname, updaterMode);
+    if (!area)
+        return;
+
+    uint val = fromStringToTSnumber(value);
+    load.set(area->index, year, val);
+}
+
+void Rules::readWind(const AreaName::Vector& splitKey, String value, bool updaterMode)
+{
+    const uint year = splitKey[2].to<uint>();
+    const AreaName& areaname = splitKey[1];
+
+    Data::Area* area = getArea(areaname, updaterMode);
+    if (!area)
+        return;
+
+    uint val = fromStringToTSnumber(value);
+    wind.set(area->index, year, val);
+}
+
+void Rules::readHydro(const AreaName::Vector& splitKey, String value, bool updaterMode)
+{
+    const uint year = splitKey[2].to<uint>();
+    const AreaName& areaname = splitKey[1];
+
+    Data::Area* area = getArea(areaname, updaterMode);
+    if (!area)
+        return;
+
+    uint val = fromStringToTSnumber(value);
+    hydro.set(area->index, year, val);
+}
+
+void Rules::readSolar(const AreaName::Vector& splitKey, String value, bool updaterMode)
+{
+    const uint year = splitKey[2].to<uint>();
+    const AreaName& areaname = splitKey[1];
+
+    Data::Area* area = getArea(areaname, updaterMode);
+    if (!area)
+        return;
+
+    uint val = fromStringToTSnumber(value);
+    solar.set(area->index, year, val);
+}
+
+void Rules::readHydroLevels(const AreaName::Vector& splitKey, String value, bool updaterMode)
+{
+    const uint year = splitKey[2].to<uint>();
+    const AreaName& areaname = splitKey[1];
+
+    Data::Area* area = getArea(areaname, updaterMode);
+    if (!area)
+        return;
+
+    double val = fromStringToHydroLevel(value, 1.);
+    hydroLevels.set(area->index, year, val);
+}
+
+void Rules::readLine(const AreaName::Vector& splitKey,
+                           String value,
+                           bool updaterMode = false)
+{
+    assert(splitKey.size() > 2);
+
+    const AreaName& kind_of_scenario = splitKey[0]; // load, thermal, hydro, ..., hydro levels, ...
+    if (kind_of_scenario.size() > 2)
+        return;
 
     if (kind_of_scenario == "t")
-    {
-        if (clustername.empty())
-            return;
-
-        const ThermalCluster* cluster = area->thermal.list.find(clustername);
-        if (not cluster)
-            cluster = area->thermal.mustrunList.find(clustername);
-
-        if (cluster)
-        {
-            uint val = fromStringToTSnumber(value);
-            thermal[area->index].set(cluster, year, val);
-        }
-        else
-        {
-            bool isTheActiveRule
-              = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
-            if (not updaterMode and isTheActiveRule)
-            {
-                string clusterId = (area->id).to<string>() + "." + clustername.to<string>();
-                disabledClustersOnRuleActive[clusterId].push_back(year);
-            }
-        }
-    }
-
-    if (kind_of_scenario == "r" && study_.parameters.renewableGeneration.isClusters())
-    {
-        if (clustername.empty())
-            return;
-
-        const RenewableCluster* cluster = area->renewable.list.find(clustername);
-
-        if (cluster)
-        {
-            uint val = fromStringToTSnumber(value);
-            renewable[area->index].set(cluster, year, val);
-        }
-        else
-        {
-            bool isTheActiveRule
-              = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
-            if (not updaterMode and isTheActiveRule)
-            {
-                string clusterId = (area->id).to<string>() + "." + clustername.to<string>();
-                disabledClustersOnRuleActive[clusterId].push_back(year);
-            }
-        }
-    }
-
+        readThermalCluster(splitKey, value, updaterMode);
+    if (kind_of_scenario == "r")
+        readRenewableCluster(splitKey, value, updaterMode);
     if (kind_of_scenario == "l")
-    {
-        uint val = fromStringToTSnumber(value);
-        load.set(area->index, year, val);
-    }
-
+        readLoad(splitKey, value, updaterMode);
     if (kind_of_scenario == "w")
-    {
-        uint val = fromStringToTSnumber(value);
-        wind.set(area->index, year, val);
-    }
-
+        readWind(splitKey, value, updaterMode);
     if (kind_of_scenario == "h")
-    {
-        uint val = fromStringToTSnumber(value);
-        hydro.set(area->index, year, val);
-    }
-
+        readHydro(splitKey, value, updaterMode);
     if (kind_of_scenario == "s")
-    {
-        uint val = fromStringToTSnumber(value);
-        solar.set(area->index, year, val);
-    }
-
+        readSolar(splitKey, value, updaterMode);
     if (kind_of_scenario == "hl")
-    {
-        double val = fromStringToHydroLevel(value, 1.);
-        hydroLevels.set(area->index, year, val);
-    }
+        readHydroLevels(splitKey, value, updaterMode);
 }
 
 void Rules::apply()
