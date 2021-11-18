@@ -216,45 +216,63 @@ void Connections::update()
 
     // UPSTREAM / DOWNSTREEAM
     // Root Node
-    localRootId = pListbox->AppendItem(rootId, wxString(wxT("Upstream / Downstream")), 2);
+    localRootId = pListbox->AppendItem(rootId, wxString(wxT("By area")), 2);
     pListbox->SetItemBold(localRootId, true);
+
+    std::map<Data::AreaName, std::vector<std::pair<Data::AreaLink*, bool>>> areaLinks;
     {
         const Data::Area::Map::iterator end = study.areas.end();
         for (Data::Area::Map::iterator i = study.areas.begin(); i != end; ++i)
         {
-            // Reference to the area
-            Data::Area& area = *(i->second);
-            if (area.isVisibleOnLayer(layerID))
+            Data::Area* area = i->second;
+            if (area->isVisibleOnLayer(layerID))
             {
-                wxTreeItemId id;
-                // Foreach Interconnection for the area
-                const Data::AreaLink::Map::iterator end = area.links.end();
-                for (Data::AreaLink::Map::iterator i = area.links.begin(); i != end; ++i)
+                const Data::AreaLink::Map::iterator end = area->links.end();
+                for (Data::AreaLink::Map::iterator i = area->links.begin(); i != end; ++i)
                 {
                     Data::AreaLink* lnk = i->second;
-
                     if (lnk->isVisibleOnLayer(layerID))
                     {
-                        if (!id)
-                        {
-                            // We have to create the item corresponding to the area
-                            id = pListbox->AppendItem(
-                              localRootId,
-                              wxString() << wxT(' ') << wxStringFromUTF8(area.name) << wxT(' '),
-                              1,
-                              1);
-                            pListbox->SetItemBold(id, true);
-                        }
-                        // Adding the item for the interconnection
-                        /* wxTreeItemId itemID = */ pListbox->AppendItem(
-                          id, /*parent*/
-                          // caption
-                          wxString() << wxT(' ') << wxStringFromUTF8(lnk->with->name) << wxT(' '),
-                          0,
-                          0,
-                          new TreeLeaf(lnk));
+                        areaLinks[area->name].push_back({lnk, true});
+                        areaLinks[lnk->with->name].push_back({lnk, false});
                     }
                 }
+            }
+        }
+    }
+
+    {
+        for (const auto& al : areaLinks)
+        {
+            // Reference to the area
+            wxTreeItemId id;
+            // Foreach Interconnection for the area
+            const auto end = al.second.end();
+            for (auto i = al.second.begin(); i != end; ++i)
+            {
+                Data::AreaLink* lnk = i->first;
+                const bool isAreaOriginOfLink = i->second;
+
+                if (!id)
+                {
+                    // We have to create the item corresponding to the area
+                    id = pListbox->AppendItem(
+                      localRootId,
+                      wxString() << wxT(' ') << wxStringFromUTF8(al.first) << wxT(' '),
+                      1,
+                      1);
+                    pListbox->SetItemBold(id, true);
+                }
+                // Adding the item for the interconnection
+                /* wxTreeItemId itemID = */ pListbox->AppendItem(
+                  id, /*parent*/
+                  // caption
+                  wxString() << wxT(
+                    ' ') << wxStringFromUTF8(isAreaOriginOfLink ? lnk->with->name : lnk->from->name)
+                             << wxT(' '),
+                  0,
+                  0,
+                  new TreeLeaf(lnk));
             }
         }
     }
