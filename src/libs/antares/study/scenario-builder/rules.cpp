@@ -39,8 +39,8 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
-Rules::Rules(Study& study) : 
-    study_(study), load(), solar(), hydro(), wind(), thermal(), renewable(), hydroLevels(), pAreaCount(0)
+    Rules::Rules(Study& study) :
+        load(), solar(), hydro(), wind(), thermal(), renewable(), hydroLevels(), linksNtc(), study_(study), pAreaCount(0)
 {
 }
 
@@ -48,6 +48,7 @@ Rules::~Rules()
 {
     delete[] thermal;
     delete[] renewable;
+    delete[] linksNtc;
 }
 
 void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
@@ -68,6 +69,7 @@ void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
         {
             thermal[i].saveToINIFile(study_, file);
             renewable[i].saveToINIFile(study_, file);
+            linksNtc[i].saveToINIFile(study_, file);
         }
         // hydro levels
         hydroLevels.saveToINIFile(study_, file);
@@ -109,6 +111,18 @@ bool Rules::reset()
     }
 
     hydroLevels.reset(study_);
+
+    // Renewable
+    delete[] linksNtc;
+    linksNtc = new ntcTSNumberData[pAreaCount];
+
+    for (uint i = 0; i != pAreaCount; ++i)
+    {
+        linksNtc[i].attachArea(study_.areas.byIndex[i]);
+        linksNtc[i].reset(study_);
+    }
+
+
     return true;
 }
 
@@ -257,6 +271,41 @@ void Rules::readHydroLevels(const AreaName::Vector& splitKey, String value, bool
     hydroLevels.set(area->index, year, val);
 }
 
+Data::AreaLink* Rules::getLink(const AreaName& areaName, const AreaName& targetAreaName, bool updaterMode)
+{
+    Data::AreaLink* link = study_.areas.findLink(areaName, targetAreaName);
+    if (!link)
+    {
+        // silently ignore the error
+        if (not updaterMode)
+            logs.warning() << "[scenario-builder] The link '" << areaName << " / " << targetAreaName << "' has not been found";
+
+    }
+    return link;
+}
+
+void Rules::readLink(const AreaName::Vector& splitKey, String value, bool updaterMode)
+{
+    const AreaName& areaName = splitKey[1];
+    const AreaName& targetAreaName = splitKey[2];
+    const uint year = splitKey[2].to<uint>();
+
+    Data::Area* area = getArea(areaName, updaterMode);
+    if (!area)
+        return;
+
+    const Data::Area* targetArea = getArea(targetAreaName, updaterMode);
+    if (!targetArea)
+        return;
+
+    AreaLink* link = getLink(areaName, targetAreaName, updaterMode);
+    if (!link)
+        return;
+
+    uint val = fromStringToTSnumber(value);
+    linksNtc[area->index].set(link, year, val);
+}
+
 void Rules::readLine(const AreaName::Vector& splitKey,
                            String value,
                            bool updaterMode = false)
@@ -281,6 +330,8 @@ void Rules::readLine(const AreaName::Vector& splitKey,
         readSolar(splitKey, value, updaterMode);
     if (kind_of_scenario == "hl")
         readHydroLevels(splitKey, value, updaterMode);
+    if (kind_of_scenario == "tc")
+        readLink(splitKey, value, updaterMode);
 }
 
 void Rules::apply()

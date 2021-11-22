@@ -105,6 +105,14 @@ inline bool CheckValidity<Data::DataSeriesHydro>(uint value,
     return (!tsGenMax) ? (value < data.count) : (value < tsGenMax);
 }
 
+template<>
+inline bool CheckValidity<Data::AreaLink>(uint value,
+                                          const Data::AreaLink& data,
+                                          uint tsGenMax)
+{
+    return value < data.directCapacities.width;
+}
+
 template<class StringT, class D>
 static void ApplyToMatrix(uint& errors,
                           StringT& logprefix,
@@ -149,7 +157,9 @@ static void ApplyToMatrix(uint& errors,
 
 // =============== TSNumberData derived classes ===============
 
+// ================================
 // Load ...
+// ================================
 uint loadTSNumberData::get_tsGenCount(const Study& study) const
 {
     // General data
@@ -183,7 +193,11 @@ void loadTSNumberData::apply(Study& study)
     }
 }
 
+
+// ================================
 // Wind ...
+// ================================
+
 uint windTSNumberData::get_tsGenCount(const Study& study) const
 {
     // General data
@@ -217,7 +231,11 @@ void windTSNumberData::apply(/*const*/ Study& study)
     }
 }
 
+
+// ================================
 // Solar ...
+// ================================
+
 uint solarTSNumberData::get_tsGenCount(const Study& study) const
 {
     // General data
@@ -251,7 +269,11 @@ void solarTSNumberData::apply(Study& study)
     }
 }
 
+
+// ================================
 // Hydro ...
+// ================================
+
 uint hydroTSNumberData::get_tsGenCount(const Study& study) const
 {
     // General data
@@ -285,7 +307,11 @@ void hydroTSNumberData::apply(Study& study)
     }
 }
 
+
+// ================================
 // Thermal ...
+// ================================
+
 bool thermalTSNumberData::reset(const Study& study)
 {
     assert(&study != nullptr);
@@ -316,7 +342,6 @@ void thermalTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stre
     if (!pArea)
         return;
 
-// Foreach year
 #ifndef NDEBUG
     if (pTSNumberRules.width)
     {
@@ -324,9 +349,10 @@ void thermalTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stre
     }
 #endif
 
+    // Foreach thermal cluster...
     for (uint index = 0; index != pTSNumberRules.width; ++index)
     {
-        // Foreach thermal cluster...
+        // Foreach year ...
         for (uint y = 0; y != pTSNumberRules.height; ++y)
         {
             const uint val = get(pArea->thermal.list.byIndex[index], y);
@@ -388,6 +414,9 @@ uint thermalTSNumberData::get_tsGenCount(const Study& study) const
     return tsGenThermal ? parameters.nbTimeSeriesThermal : 0u;
 }
 
+// ================================
+// Renewable clusters ...
+// ================================
 void renewableTSNumberData::set(const Antares::Data::RenewableCluster* cluster,
                                 const uint year,
                                 uint value)
@@ -486,6 +515,97 @@ bool renewableTSNumberData::reset(const Study& study)
     // Resize
     pTSNumberRules.reset(clusterCount, nbYears);
     return true;
+}
+
+
+// ================================
+// Transmission capacities ...
+// ================================
+bool ntcTSNumberData::reset(const Study& study)
+{
+    assert(&study != nullptr);
+
+    const uint nbYears = study.parameters.nbYears;
+    assert(pArea != nullptr);
+
+    uint linkCount = pArea->links.size();
+
+    // Resize
+    pTSNumberRules.reset(linkCount, nbYears);
+    return true;
+}
+
+void ntcTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
+{
+    // Prefix
+    CString<512, false> prefix;
+    prefix += get_prefix();
+
+    if (!pArea)
+        return;
+
+#ifndef NDEBUG
+    if (pTSNumberRules.width)
+    {
+        assert(pTSNumberRules.width == pArea->links.size());
+    }
+#endif
+
+    for (auto i = pArea->links.begin(); i != pArea->links.end(); ++i)
+    {
+        auto* link = i->second;
+        for (uint y = 0; y != pTSNumberRules.height; ++y)
+        {
+            const uint val = pTSNumberRules[link->index][y];
+            // Equals to zero means 'auto', which is the default mode
+            if (!val)
+                continue;
+            file << prefix << pArea->id << "," << i->first << "," << y << " = " << val << "\n";
+        }
+    }
+}
+
+void ntcTSNumberData::set(const Antares::Data::AreaLink* link,
+    const uint year,
+    uint value)
+{
+    assert(link != nullptr);
+    if (linksIndexMap.find(link) == linksIndexMap.end())
+        linksIndexMap[link] = link->index;
+    if (year < pTSNumberRules.height)
+        pTSNumberRules[linksIndexMap[link]][year] = value;
+}
+
+void ntcTSNumberData::apply(Study& study)
+{
+    CString<512, false> logprefix;
+    // Errors
+    uint errors = 0;
+
+    // Alias to the current area
+    assert(pArea != nullptr);
+    assert(pArea->index < study.areas.size());
+    Area& area = *(study.areas.byIndex[pArea->index]);
+    // The total number of clusters for the area
+    // WARNING: We may have some thermal clusters with the `mustrun` option
+    uint linkCount = (uint)area.links.size();
+
+    const uint ntcGeneratedTScount = get_tsGenCount(study);
+
+    for (auto i = pArea->links.begin(); i != pArea->links.end(); ++i)
+    {
+        auto* link = i->second;
+        uint linkIndex = link->index;
+        assert(linkIndex < pTSNumberRules.width);
+        auto& col = pTSNumberRules[linkIndex];
+        logprefix.clear() << "NTC: Area '" << area.name << "', link: '" << link->getName() << "': ";
+        ApplyToMatrix(errors, logprefix, *link, col, ntcGeneratedTScount);
+    }
+}
+
+uint ntcTSNumberData::get_tsGenCount(const Study& study) const
+{
+    return 0;
 }
 
 } // namespace ScenarioBuilder

@@ -163,6 +163,7 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
     link->from = area;
     link->with = with;
     area->links[with->id] = link;
+    area->buildLinksIndexes();
     return link;
 }
 
@@ -702,30 +703,32 @@ bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
     return ret;
 }
 
-void AreaLinkRemove(AreaLink* l)
+void AreaLinkRemove(AreaLink* link)
 {
-    if (!l)
+    if (!link)
         return;
 
     // Asserts
-    assert(l->from);
-    assert(l->with);
+    assert(link->from);
+    assert(link->with);
 
-    Area* f = l->from;
-    if (f && !f->links.empty())
+    Area* areaFrom = link->from;
+    if (areaFrom && !areaFrom->links.empty())
     {
-        f->detachLinkFromID(l->with->id);
-        f->detachLinkFromID(l->from->id);
+        areaFrom->detachLinkFromID(link->with->id);
+        areaFrom->detachLinkFromID(link->from->id);
     }
 
-    Area* t = l->with;
-    if (t && !t->links.empty())
+    Area* areaTo = link->with;
+    if (areaTo && !areaTo->links.empty())
     {
-        t->detachLinkFromID(l->with->id);
-        t->detachLinkFromID(l->from->id);
+        areaTo->detachLinkFromID(link->with->id);
+        areaTo->detachLinkFromID(link->from->id);
     }
 
-    delete l;
+    delete link;
+
+    areaFrom->buildLinksIndexes();
 }
 
 void AreaLink::estimateMemoryUsage(StudyMemoryUsage& u) const

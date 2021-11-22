@@ -135,6 +135,7 @@ public:
     void detachLinkFromItsPointer(const AreaLink* lnk);
     //@}
 
+    void buildLinksIndexes();
     /*!
     ** \brief Ensure all data are created
     */

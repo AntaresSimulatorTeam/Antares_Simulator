@@ -61,7 +61,7 @@ public:
     **
     ** \param tstype Type of the timeseries
     */
-    Rules(Study& study);
+    explicit Rules(Study& study);
     //! Destructor
     ~Rules();
     //@}
@@ -112,7 +112,7 @@ public:
     //! Wind
     windTSNumberData wind;
 
-    // gp : change these 2 arrays into std containers, like std::vector 
+    // gp : change these 3 arrays into std containers, like std::vector 
     //! Thermal (array [0..pAreaCount - 1])
     thermalTSNumberData* thermal;
     //! Renewable (array [0..pAreaCount - 1])
@@ -120,6 +120,9 @@ public:
 
     //! hydro levels
     hydroLevelsData hydroLevels;
+
+    // 
+    ntcTSNumberData* linksNtc;
 
 private:
     // Member methods
@@ -130,8 +133,10 @@ private:
     void readHydro(const AreaName::Vector& instrs, String value, bool updaterMode);
     void readSolar(const AreaName::Vector& instrs, String value, bool updaterMode);
     void readHydroLevels(const AreaName::Vector& instrs, String value, bool updaterMode);
+    void readLink(const AreaName::Vector& instrs, String value, bool updaterMode);
 
     Data::Area* getArea(const AreaName& areaname, bool updaterMode);
+    Data::AreaLink* getLink(const AreaName& areaName, const AreaName& targetAreaName, bool updaterMode);
 
     // Member data 
     Study& study_;

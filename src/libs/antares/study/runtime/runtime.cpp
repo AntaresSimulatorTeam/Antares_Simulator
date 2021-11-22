@@ -143,10 +143,11 @@ static void StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos
     r.areaLink = new AreaLinkPointer[r.interconnectionsCount];
 
     uint indx = 0;
-    uint areaIndx = 0;
 
     study.areas.each([&](Data::Area& area) {
-        areaIndx = 0;
+
+        area.buildLinksIndexes();
+
         auto end = area.links.end();
         for (auto i = area.links.begin(); i != end; ++i)
         {
@@ -154,9 +155,7 @@ static void StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos
 
             r.areaLink[indx] = link;
             link->index = indx;
-            link->indexForArea = areaIndx;
             ++indx;
-            ++areaIndx;
         }
     });
 }
