@@ -69,13 +69,6 @@ void addInterModalTimeSeriesToMessage(const array<bool, timeSeriesCount>& isTSin
     }
 }
 
-inline bool compareWidth(uint a, uint b)
-{
-    if (a == 1 || b == 1)
-        return false; // ignore 1 values
-    return a != b;
-}
-
 namespace Antares
 {
 namespace Solver
@@ -293,7 +286,9 @@ bool IntraModalConsistencyChecker::checkTSconsistency()
         listNumberTS.insert(listNumberTS.end(), areaNumberTSList.begin(), areaNumberTSList.end());
     }
 
-    if (std::adjacent_find(listNumberTS.begin(), listNumberTS.end(), compareWidth)
+    if (std::adjacent_find(listNumberTS.begin(),
+                           listNumberTS.end(),
+                           Antares::Solver::TimeSeriesNumbers::compareWidth)
         != listNumberTS.end())
     {
         logs.error() << "Intra-modal correlation: " << tsTitle_
@@ -427,7 +422,9 @@ bool checkInterModalConsistencyForArea(Area& area,
     }
 
     // Now check if all elements of list of TS numbers are identical or equal to 1
-    if (std::adjacent_find(listNumberTsOverArea.begin(), listNumberTsOverArea.end(), compareWidth)
+    if (std::adjacent_find(listNumberTsOverArea.begin(),
+                           listNumberTsOverArea.end(),
+                           Antares::Solver::TimeSeriesNumbers::compareWidth)
         != listNumberTsOverArea.end())
     {
         logs.error()
@@ -729,6 +726,13 @@ void applyMatrixDrawsToInterModalModesInArea(Matrix<uint32>* tsNumbersMtx,
             }
         }
     }
+}
+
+bool TimeSeriesNumbers::compareWidth(uint a, uint b)
+{
+    if (a == 1 || b == 1)
+        return false; // ignore 1 values
+    return a != b;
 }
 
 bool TimeSeriesNumbers::Generate(Study& study)

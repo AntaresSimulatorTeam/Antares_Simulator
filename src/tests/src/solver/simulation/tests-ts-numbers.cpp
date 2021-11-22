@@ -7,6 +7,8 @@
 #include <study.h>
 #include <timeseries-numbers.h>
 
+#include <algorithm> // std::adjacent_find
+
 using namespace Yuni;
 using namespace Antares::Data;
 using namespace Antares::Solver::TimeSeriesNumbers;
@@ -562,4 +564,28 @@ BOOST_AUTO_TEST_CASE(chaeck_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of
 	BOOST_CHECK(solarTsNumber < solarNumberOfTs);
 	BOOST_CHECK(hydroTsNumber < hydroNumberOfTs);
 	BOOST_CHECK(thermalTsNumber < thermalNumberOfTs);
+}
+
+BOOST_AUTO_TEST_CASE(test_compare_function_ok)
+{
+    std::vector<uint> list = {4, 4, 4, 4};
+    auto find_result = std::adjacent_find(
+      list.begin(), list.end(), Antares::Solver::TimeSeriesNumbers::compareWidth);
+    BOOST_CHECK(find_result == list.end());
+}
+
+BOOST_AUTO_TEST_CASE(test_compare_function_ok_2)
+{
+    std::vector<uint> list = {1, 2, 1, 1, 2};
+    auto find_result = std::adjacent_find(
+      list.begin(), list.end(), Antares::Solver::TimeSeriesNumbers::compareWidth);
+    BOOST_CHECK(find_result == list.end());
+}
+
+BOOST_AUTO_TEST_CASE(test_compare_function_ko)
+{
+    std::vector<uint> list = {1, 2, 1, 3, 2};
+    auto find_result = std::adjacent_find(
+      list.begin(), list.end(), Antares::Solver::TimeSeriesNumbers::compareWidth);
+    BOOST_CHECK(find_result != list.end());
 }
