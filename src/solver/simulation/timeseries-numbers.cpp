@@ -455,8 +455,6 @@ void drawTSnumbersForIntraModal(array<uint32, timeSeriesCount>& intramodal_draws
 
 void storeTSnumbersForIntraModal(const array<uint32, timeSeriesCount>& intramodal_draws,
                                  const array<bool, timeSeriesCount>& isTSintramodal,
-                                 const array<bool, timeSeriesCount>& isTSgenerated,
-                                 const array<uint, timeSeriesCount>& nbTimeseriesByMode,
                                  uint year,
                                  AreaList& areas)
 {
@@ -466,33 +464,27 @@ void storeTSnumbersForIntraModal(const array<uint32, timeSeriesCount>& intramoda
         // -------------
         assert(year < area.load.series->timeseriesNumbers.height);
         int indexTS = ts_to_tsIndex.at(timeSeriesLoad);
-        uint nbTSForModeAndArea
-          = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS] : area.load.series->series.width;
+
         if (isTSintramodal[indexTS])
-            area.load.series->timeseriesNumbers[0][year]
-              = (nbTSForModeAndArea == 1) ? 0 : intramodal_draws[indexTS];
+            area.load.series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
 
         // -------------
         // Solar ...
         // -------------
         assert(year < area.solar.series->timeseriesNumbers.height);
         indexTS = ts_to_tsIndex.at(timeSeriesSolar);
-        nbTSForModeAndArea
-          = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS] : area.solar.series->series.width;
+
         if (isTSintramodal[indexTS])
-            area.solar.series->timeseriesNumbers[0][year]
-              = (nbTSForModeAndArea == 1) ? 0 : intramodal_draws[indexTS];
+            area.solar.series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
 
         // -------------
         // Wind ...
         // -------------
         assert(year < area.wind.series->timeseriesNumbers.height);
         indexTS = ts_to_tsIndex.at(timeSeriesWind);
-        nbTSForModeAndArea
-          = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS] : area.wind.series->series.width;
+
         if (isTSintramodal[indexTS])
-            area.wind.series->timeseriesNumbers[0][year]
-              = (nbTSForModeAndArea == 1) ? 0 : intramodal_draws[indexTS];
+            area.wind.series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
 
         // -------------
         // Hydro ...
@@ -500,11 +492,9 @@ void storeTSnumbersForIntraModal(const array<uint32, timeSeriesCount>& intramoda
         assert(year < area.hydro.series->timeseriesNumbers.height);
         indexTS = ts_to_tsIndex.at(timeSeriesHydro);
 
-        nbTSForModeAndArea
-          = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS] : area.hydro.series->count;
         if (isTSintramodal[indexTS])
-            area.hydro.series->timeseriesNumbers[0][year]
-              = (nbTSForModeAndArea == 1) ? 0 : intramodal_draws[indexTS];
+            area.hydro.series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
+
         // -------------
         // Thermal ...
         // -------------
@@ -516,11 +506,8 @@ void storeTSnumbersForIntraModal(const array<uint32, timeSeriesCount>& intramoda
             for (auto i = area.thermal.list.mapping.begin(); i != end_th_clusters; ++i)
             {
                 ThermalClusterList::SharedPtr cluster = i->second;
-                nbTSForModeAndArea = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
-                                                            : cluster->series->series.width;
                 if (cluster->enabled)
-                    cluster->series->timeseriesNumbers.entry[0][year]
-                      = (nbTSForModeAndArea == 1) ? 0 : intramodal_draws[indexTS];
+                    cluster->series->timeseriesNumbers.entry[0][year] = intramodal_draws[indexTS];
             }
         }
 
@@ -535,11 +522,8 @@ void storeTSnumbersForIntraModal(const array<uint32, timeSeriesCount>& intramoda
             for (auto j = area.renewable.list.cluster.begin(); j != end_rn_clusters; ++j)
             {
                 RenewableClusterList::SharedPtr cluster = j->second;
-                nbTSForModeAndArea = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
-                                                            : cluster->series->series.width;
                 if (cluster->enabled)
-                    cluster->series->timeseriesNumbers.entry[0][year]
-                      = (nbTSForModeAndArea == 1) ? 0 : intramodal_draws[indexTS];
+                    cluster->series->timeseriesNumbers.entry[0][year] = intramodal_draws[indexTS];
             }
         }
     });
@@ -599,7 +583,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         if (not isTSintramodal[indexTS])
         {
             uint nbTimeSeries
-              = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS] : area.hydro.series->count;
+              = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS] : area.hydro.series->ror.width;
             area.hydro.series->timeseriesNumbers[0][year]
               = (uint32)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }
@@ -777,8 +761,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
         // Intra-modal TS : draw and store TS numbres
         drawTSnumbersForIntraModal(
           intramodal_draws, isTSintramodal, nbTimeseriesByMode, study.runtime->random);
-        storeTSnumbersForIntraModal(
-          intramodal_draws, isTSintramodal, isTSgenerated, nbTimeseriesByMode, year, study.areas);
+        storeTSnumbersForIntraModal(intramodal_draws, isTSintramodal, year, study.areas);
 
         // NOT intra-modal TS : draw and store TS numbers
         drawAndStoreTSnumbersForNOTintraModal(
