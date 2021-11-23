@@ -274,9 +274,10 @@ void SIM_RenseignementValeursPourTouteLAnnee(const Antares::Data::Study& study, 
     }
 }
 
-void SIM_RenseignementProblemeHoraireAdequation(long Heure, uint numSpace)
+void SIM_RenseignementProblemeHoraireAdequation(long Heure)
 {
     auto study = Data::Study::Current::Get();
+    const uint numSpace = 0; // numSpace is always 0 in adq-draft
 
     for (uint i = 0; i < study->areas.size(); i++)
     {
