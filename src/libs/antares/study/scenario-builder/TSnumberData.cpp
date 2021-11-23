@@ -537,12 +537,12 @@ bool ntcTSNumberData::reset(const Study& study)
 
 void ntcTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
 {
+    if (!pArea)
+        return;
+    
     // Prefix
     CString<512, false> prefix;
     prefix += get_prefix();
-
-    if (!pArea)
-        return;
 
 #ifndef NDEBUG
     if (pTSNumberRules.width)

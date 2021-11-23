@@ -122,7 +122,7 @@ public:
     hydroLevelsData hydroLevels;
 
     // 
-    ntcTSNumberData* linksNtc;
+    ntcTSNumberData* linksNTC;
 
 private:
     // Member methods
@@ -136,7 +136,7 @@ private:
     void readLink(const AreaName::Vector& instrs, String value, bool updaterMode);
 
     Data::Area* getArea(const AreaName& areaname, bool updaterMode);
-    Data::AreaLink* getLink(const AreaName& areaName, const AreaName& targetAreaName, bool updaterMode);
+    Data::AreaLink* getLink(const AreaName& fromAreaName, const AreaName& toAreaName, bool updaterMode);
 
     // Member data 
     Study& study_;

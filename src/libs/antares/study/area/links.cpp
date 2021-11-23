@@ -126,8 +126,13 @@ void AreaLink::reverse()
     // Reset the pointers
     this->from = from;
     this->with = with;
-    //
+    // Re-attach the link to its origin area
     from->links[with->id] = this;
+
+    // Updating both areas' links local numbering
+    from->buildLinksIndexes();
+    with->buildLinksIndexes();
+
 
     // Making sure that we have the data
     directCapacities.invalidate(true);
