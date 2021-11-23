@@ -71,7 +71,7 @@ void PartThermal::prepareAreaWideIndexes()
 {
     // Copy the list with all thermal clusters
     // And init the areaWideIndex (unique index for a given area)
-    if (!list.size()) {
+    if (list.empty()) {
         clusters.clear();
         return;
     }
