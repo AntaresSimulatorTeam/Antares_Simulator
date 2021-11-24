@@ -274,7 +274,7 @@ void SIM_RenseignementValeursPourTouteLAnnee(const Antares::Data::Study& study, 
     }
 }
 
-void SIM_RenseignementProblemeHoraireAdequation(long Heure)
+void SIM_RenseignementProblemeHoraireAdequation(uint Heure)
 {
     auto study = Data::Study::Current::Get();
     const uint numSpace = 0; // numSpace is always 0 in adq-draft
@@ -299,7 +299,7 @@ void SIM_RenseignementProblemeHoraireAdequation(long Heure)
 
         if (fabs(NTCAPrendre) > 0.5)
         {
-            const uint linkIdx = (long)(fabs(NTCAPrendre) - 1);
+            const uint linkIdx = static_cast<uint>(fabs(NTCAPrendre) - 1);
             const AreaLink* link = study->runtime->areaLink[linkIdx];
             uint tsIndex = NumeroChroniquesTireesParInterconnexion[numSpace][linkIdx].TransmissionCapacities;
             if (NTCAPrendre > 0.)
