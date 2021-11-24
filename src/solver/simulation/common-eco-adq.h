@@ -48,10 +48,18 @@ namespace Simulation
 typedef Solver::Variable::Economy::VCardBalance AvgExchangeVCardBalance;
 typedef Variable::Storage<AvgExchangeVCardBalance>::ResultsType AvgExchangeResults;
 
+typedef Solver::Variable::Economy::VCardNTC VCardNTC;
+typedef Variable::Storage<VCardNTC>::ResultsType AvgNTCResults;
+
 /*!
 ** \brief Delegate to retrieve balance data (for a given area) of the simulation
 */
 typedef Yuni::Bind<AvgExchangeResults*(Data::Area*)> CallbackBalanceRetrieval;
+
+/*!
+** \brief Delegate to retrieve average NTC (for a given link) of the simulation
+*/
+typedef Yuni::Bind<AvgNTCResults*(Data::AreaLink*)> CallbackNTCRetrieval;
 
 /*!
 ** \brief Compute then random unserved energy cost and the new random hydro virtual cost for all
@@ -85,7 +93,8 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study);
 */
 void PerformQuadraticOptimisation(Data::Study& study,
                                   PROBLEME_HEBDO& problem,
-                                  CallbackBalanceRetrieval& callback,
+                                  CallbackBalanceRetrieval& callbackBalance,
+                                  CallbackNTCRetrieval& callbackNTC,
                                   unsigned int nbWeeks);
 
 /*!

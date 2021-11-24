@@ -96,6 +96,7 @@ protected:
 
 private:
     AvgExchangeResults* callbackRetrieveBalanceData(Data::Area* area);
+    AvgNTCResults* callbackRetrieveAverageNTC(Data::AreaLink* link);
 
 private:
     uint pNbWeeks;

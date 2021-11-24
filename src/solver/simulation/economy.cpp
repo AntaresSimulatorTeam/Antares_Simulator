@@ -245,13 +245,25 @@ AvgExchangeResults* Economy::callbackRetrieveBalanceData(Data::Area* area)
     return balance;
 }
 
+AvgNTCResults* Economy::callbackRetrieveAverageNTC(Data::AreaLink* link)
+{
+    AvgNTCResults* ntc = nullptr;
+    variables.retrieveResultsForLink<Variable::Economy::VCardNTC>(&ntc, link);
+    return ntc;
+}
+
 void Economy::simulationEnd()
 {
     if (!preproOnly && study.runtime->interconnectionsCount > 0)
     {
-        CallbackBalanceRetrieval callback;
-        callback.bind(this, &Economy::callbackRetrieveBalanceData);
-        PerformQuadraticOptimisation(study, *pProblemesHebdo[0], callback, pNbWeeks);
+        CallbackBalanceRetrieval callbackBalance;
+        callbackBalance.bind(this, &Economy::callbackRetrieveBalanceData);
+
+        CallbackNTCRetrieval callbackNTC;
+        callbackNTC.bind(this, &Economy::callbackRetrieveAverageNTC);
+
+        PerformQuadraticOptimisation(
+          study, *pProblemesHebdo[0], callbackBalance, callbackNTC, pNbWeeks);
     }
 }
 

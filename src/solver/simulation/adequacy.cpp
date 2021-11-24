@@ -371,13 +371,24 @@ AvgExchangeResults* Adequacy::callbackRetrieveBalanceData(Data::Area* area)
     return balance;
 }
 
+AvgNTCResults* Adequacy::callbackRetrieveAverageNTC(Data::AreaLink* link)
+{
+    AvgNTCResults* ntc = nullptr;
+    variables.retrieveResultsForLink<Variable::Economy::VCardNTC>(&ntc, link);
+    return ntc;
+}
+
 void Adequacy::simulationEnd()
 {
     if (!preproOnly && study.runtime->interconnectionsCount > 0)
     {
-        CallbackBalanceRetrieval callback;
-        callback.bind(this, &Adequacy::callbackRetrieveBalanceData);
-        PerformQuadraticOptimisation(study, *pProblemesHebdo[0], callback, pNbWeeks);
+        CallbackBalanceRetrieval callbackBalance;
+        callbackBalance.bind(this, &Adequacy::callbackRetrieveBalanceData);
+
+        CallbackNTCRetrieval callbackNTC;
+        callbackNTC.bind(this, &Adequacy::callbackRetrieveAverageNTC);
+        PerformQuadraticOptimisation(
+          study, *pProblemesHebdo[0], callbackBalance, callbackNTC, pNbWeeks);
     }
 }
 
