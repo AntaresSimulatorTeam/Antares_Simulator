@@ -296,8 +296,7 @@ bool IntraModalConsistencyChecker::checkTSconsistency()
         return false;
     }
 
-    std::vector<uint>::iterator result
-      = find_if(listNumberTS.begin(), listNumberTS.end(), [](uint x) -> bool { return x != 1; });
+    auto result = find_if(listNumberTS.begin(), listNumberTS.end(), [](uint x) { return x != 1; });
     if (result == listNumberTS.end())
     { // All elements are equal to 1 or list is empty
         nbTimeseries_ = 1;
