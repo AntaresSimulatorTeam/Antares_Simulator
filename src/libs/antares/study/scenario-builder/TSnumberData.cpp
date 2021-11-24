@@ -528,7 +528,7 @@ bool ntcTSNumberData::reset(const Study& study)
     const uint nbYears = study.parameters.nbYears;
     assert(pArea != nullptr);
 
-    uint linkCount = pArea->links.size();
+    uint linkCount = (uint)pArea->links.size();
 
     // Resize
     pTSNumberRules.reset(linkCount, nbYears);
@@ -556,7 +556,7 @@ void ntcTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& 
         auto* link = i->second;
         for (uint y = 0; y != pTSNumberRules.height; ++y)
         {
-            const uint val = pTSNumberRules[link->index][y];
+            const uint val = pTSNumberRules[link->indexForArea][y];
             // Equals to zero means 'auto', which is the default mode
             if (!val)
                 continue;
@@ -571,7 +571,7 @@ void ntcTSNumberData::set(const Antares::Data::AreaLink* link,
 {
     assert(link != nullptr);
     if (linksIndexMap.find(link) == linksIndexMap.end())
-        linksIndexMap[link] = link->index;
+        linksIndexMap[link] = link->indexForArea;
     if (year < pTSNumberRules.height)
         pTSNumberRules[linksIndexMap[link]][year] = value;
 }
@@ -586,16 +586,13 @@ void ntcTSNumberData::apply(Study& study)
     assert(pArea != nullptr);
     assert(pArea->index < study.areas.size());
     Area& area = *(study.areas.byIndex[pArea->index]);
-    // The total number of clusters for the area
-    // WARNING: We may have some thermal clusters with the `mustrun` option
-    uint linkCount = (uint)area.links.size();
 
     const uint ntcGeneratedTScount = get_tsGenCount(study);
 
     for (auto i = pArea->links.begin(); i != pArea->links.end(); ++i)
     {
         auto* link = i->second;
-        uint linkIndex = link->index;
+        uint linkIndex = link->indexForArea;
         assert(linkIndex < pTSNumberRules.width);
         auto& col = pTSNumberRules[linkIndex];
         logprefix.clear() << "NTC: Area '" << area.name << "', link: '" << link->getName() << "': ";

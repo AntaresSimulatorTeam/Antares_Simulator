@@ -110,7 +110,9 @@ inline double TSNumberData::get_value(uint x, uint y) const
 
 // =============== TSNumberData derived classes ===============
 
+// =====================
 // Load ...
+// =====================
 class loadTSNumberData : public TSNumberData
 {
 public:
@@ -124,7 +126,9 @@ inline CString<512, false> loadTSNumberData::get_prefix() const
     return "l,";
 }
 
+// =====================
 // Wind ...
+// =====================
 class windTSNumberData : public TSNumberData
 {
 public:
@@ -138,7 +142,9 @@ inline CString<512, false> windTSNumberData::get_prefix() const
     return "w,";
 }
 
+// =====================
 // Solar ...
+// =====================
 class solarTSNumberData : public TSNumberData
 {
 public:
@@ -178,7 +184,7 @@ inline CString<512, false> hydroTSNumberData::get_prefix() const
 class thermalTSNumberData : public TSNumberData
 {
 public:
-    thermalTSNumberData() : pArea(NULL)
+    thermalTSNumberData() : pArea(nullptr)
     {
     }
 
@@ -230,7 +236,7 @@ inline CString<512, false> thermalTSNumberData::get_prefix() const
 class renewableTSNumberData : public TSNumberData
 {
 public:
-    renewableTSNumberData() : pArea(NULL)
+    renewableTSNumberData() : pArea(nullptr)
     {
     }
 
@@ -285,7 +291,7 @@ inline CString<512, false> renewableTSNumberData::get_prefix() const
 class ntcTSNumberData : public TSNumberData
 {
 public:
-    ntcTSNumberData() : pArea(NULL)
+    ntcTSNumberData() : pArea(nullptr)
     {
     }
 
