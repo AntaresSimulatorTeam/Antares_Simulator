@@ -49,7 +49,7 @@ typedef Solver::Variable::Economy::VCardBalance AvgExchangeVCardBalance;
 typedef Variable::Storage<AvgExchangeVCardBalance>::ResultsType AvgExchangeResults;
 
 typedef Solver::Variable::Economy::VCardNTC VCardNTC;
-typedef Variable::Storage<VCardNTC>::ResultsType AvgNTCResults;
+typedef Variable::Storage<VCardNTC>::ResultsType AvgNTC;
 
 /*!
 ** \brief Delegate to retrieve balance data (for a given area) of the simulation
@@ -59,7 +59,7 @@ typedef Yuni::Bind<AvgExchangeResults*(Data::Area*)> CallbackBalanceRetrieval;
 /*!
 ** \brief Delegate to retrieve average NTC (for a given link) of the simulation
 */
-typedef Yuni::Bind<AvgNTCResults*(Data::AreaLink*)> CallbackNTCRetrieval;
+typedef Yuni::Bind<AvgNTC*(Data::AreaLink*)> CallbackNTCRetrieval;
 
 /*!
 ** \brief Compute then random unserved energy cost and the new random hydro virtual cost for all

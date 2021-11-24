@@ -371,9 +371,9 @@ AvgExchangeResults* Adequacy::callbackRetrieveBalanceData(Data::Area* area)
     return balance;
 }
 
-AvgNTCResults* Adequacy::callbackRetrieveAverageNTC(Data::AreaLink* link)
+AvgNTC* Adequacy::callbackRetrieveAverageNTC(Data::AreaLink* link)
 {
-    AvgNTCResults* ntc = nullptr;
+    AvgNTC* ntc = nullptr;
     variables.retrieveResultsForLink<Variable::Economy::VCardNTC>(&ntc, link);
     return ntc;
 }

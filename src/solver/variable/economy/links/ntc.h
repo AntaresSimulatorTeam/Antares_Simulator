@@ -165,9 +165,6 @@ public:
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
 
-        yearsWeight = study.parameters.getYearsWeight();
-        yearsWeightSum = study.parameters.getYearsWeightSum();
-
         // Average on all years
         for (uint i = 0; i != VCardType::columnCount; ++i)
         {
@@ -281,9 +278,6 @@ public:
 
     void hourForEachLink(State& state, unsigned int numSpace)
     {
-        // Ratio take into account MC year weight
-        float ratio = yearsWeight[state.year] / yearsWeightSum;
-
         assert(state.link != NULL);
         auto& linkDirectCapa = state.link->directCapacities;
         auto& linkIndirectCapa = state.link->indirectCapacities;
@@ -339,8 +333,6 @@ public:
     }
 
 private:
-    std::vector<float> yearsWeight;
-    float yearsWeightSum;
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     typename VCardType::IntermediateValuesType pValuesForYearLocalReport;

@@ -245,9 +245,9 @@ AvgExchangeResults* Economy::callbackRetrieveBalanceData(Data::Area* area)
     return balance;
 }
 
-AvgNTCResults* Economy::callbackRetrieveAverageNTC(Data::AreaLink* link)
+AvgNTC* Economy::callbackRetrieveAverageNTC(Data::AreaLink* link)
 {
-    AvgNTCResults* ntc = nullptr;
+    AvgNTC* ntc = nullptr;
     variables.retrieveResultsForLink<Variable::Economy::VCardNTC>(&ntc, link);
     return ntc;
 }
