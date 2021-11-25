@@ -134,7 +134,7 @@ public:
     enum
     {
         //! How many items have we got
-        count = 1 + NextT::count,
+        count = 2 + NextT::count,
     };
 
     template<int CDataLevel, int CFile>
