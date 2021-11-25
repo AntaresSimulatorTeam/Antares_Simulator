@@ -80,9 +80,9 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
             if (avgNTC)
             {
                 ntcValues.ValeurDeNTCOrigineVersExtremite[j]
-                  = avgNTC[0]->avgdata.hourly[decalPasDeTemps];
+                  = (*avgNTC)[0].avgdata.hourly[decalPasDeTemps];
                 ntcValues.ValeurDeNTCExtremiteVersOrigine[j]
-                  = avgNTC[1]->avgdata.hourly[decalPasDeTemps];
+                  = (*avgNTC)[1].avgdata.hourly[decalPasDeTemps];
             }
             else
             {
