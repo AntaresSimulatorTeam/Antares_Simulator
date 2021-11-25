@@ -288,7 +288,7 @@ void Rules::readLink(const AreaName::Vector& splitKey, String value, bool update
 {
     const AreaName& fromAreaName = splitKey[1];
     const AreaName& toAreaName = splitKey[2];
-    const uint year = splitKey[2].to<uint>();
+    const uint year = splitKey[3].to<uint>();
 
     Data::Area* fromArea = getArea(fromAreaName, updaterMode);
     if (!fromArea)
