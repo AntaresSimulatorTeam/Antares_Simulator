@@ -1,14 +1,14 @@
-General reference guide v8.1.0
+General reference guide v8.1.1
 
 # Introduction
 
-This document describes all the main features of the **Antares\_Simulator** package, version 8.1.0.
+This document describes all the main features of the **Antares\_Simulator** package, version 8.1.1.
 
 It gives useful general information regarding the way data are handled and processed,
 as well as how the Graphic User Interface (GUI) works. To keep this documentation
 as compact as possible, many redundant details (how to mouse-select, etc.) are omitted.
 
-Some features described in this guide are not fully operational in 8.1.0 version.
+Some features described in this guide are not fully operational in 8.1.1 version.
 Features not yet available appear in grey in the GUI.
 
 Real-life use of the software involves a learning curve process that cannot be supported by a
@@ -246,7 +246,7 @@ the study's folder but the user may modify it. The default name of a new study i
 
 The other "input" subcommands here below are used to move from one active window to another.
 Note that the availability of the __Wind__, __Solar__, and __Renewable__ subcommands depend on the advanced 
-parameter *"Renewable Generation modeling"* described in [miscellaneous](#Miscellaneous).
+parameter *"Renewable Generation modeling"* described in [miscellaneous](#miscellaneous).
 
 - **System Maps**
 - **Simulation**
@@ -315,16 +315,17 @@ File structures are detailed in [Output Files](#output-files).
 ## Run
 
 - **Monte Carlo Simulation** Runs either an economy simulation, an adequacy simulation, or a "draft" simulation,
-depending on the values of the parameters set in the "simulation" active window (see [Active windows](#active-windows)).
+depending on the values of the parameters set in the "simulation" active window (see [Simulation window](#simulation)).
 If hardware resources and simulation settings allow it, simulations benefit from full multi-threading
-(see [System requirements](#ystem-requirements))
+(see [System requirements](#9-system-requirements))
 
 - **Time-series Generators** Runs any or all of the Antares stochastic time-series generators,
-depending on the values of the parameters set in the "simulation" active window (see [Active windows](#active-windows))
+depending on the values of the parameters set in the "simulation" active window (see [Simulation window](#simulation)), and 
+each cluster's "Generate TS" parameter (see [Thermal window](#thermal))
 
 - **Time-series Analyzer** Runs the Antares historical time-series analyzer.
 The parameters of this module are defined by a specific active window, available only on launching the analyzer
-(see [Time-series analysis and generation](#time-series-analysis-and-generation))
+(see [Time-series analysis and generation](#6-time-series-analysis-and-generation))
 
 - **Kirchhoff's Constraints Generator** Runs the Antares Kirchhoff's Constraints Generator.
 The parameters of this module are defined by a specific active window, available only on launching the KCG
@@ -350,8 +351,10 @@ Bypassing the GUI is possible (see [Miscellaneous](#miscellaneous)).
 
 - **MC Scenario builder** For each Monte-Carlo year of the simulation defined in the "Simulation" window,
 this command allows to state, for each kind of time-series, whether it should be randomly drawn from
-the available set (be it ready-made or Antares-generated)_ _ **OR** _ _should take a user-defined value
+the available set (be it ready-made or Antares-generated) _**OR**_ should take a user-defined value
 (in the former case, the default "rand" value should be kept; in the latter, the value should be the reference number of the time-series to use). Multiple simulation profiles can be defined and archived. The default active profile gives the "rand" status for all time-series in all areas (full probabilistic simulation).
+
+  Regarding Hydro time-series, the scenario builder gives, in addition to the assignment of a specific number to use for the inflows time-series, the ability to define the initial reservoir level to use for each MC year.
 
 - **MC Scenario playlist** For each Monte-Carlo year of the simulation defined in the "Simulation" active window, 
 this command allows to state whether a MC year prepared for the simulation should be actually simulated or not.
@@ -359,6 +362,9 @@ This feature allows, for instance, to refine a previous simulation by excluding 
 whose detailed analysis may have shown that they were not physically realistic. A different typical use consists
 in replaying only a small number of years of specific interest (for instance, years in the course of which Min or Max
 values of a given variable were encountered in a previous simulation).
+
+  In addition, each MC year i=1, …, N can be given a relative “weight” \\(W_i\\)  in the simulation (default value: 1). The expectation and standard deviation of all random variables will then be computed as if the scenarios simulated were sampled from a probability density function in which MC year i is given the probability 
+  $$\frac{W_{i}}{\sum_{j=1,...,N}{W_{j}}}$$
 
 - **Optimization preferences** Defines a set of options related to the optimization core used in the simulations.
 The set of preferences is study-specific; it can be changed at any time and saved along with study data.
@@ -402,6 +408,7 @@ that are more numerical than physical. The set of parameters is study-specific a
       - Numeric Quality : solar `[standard | high]`
     - Other preferences
       - Reservoir Level Initialization `[cold start | hot start]`
+      - Hydro Heuristic policy `[accomodate rule curves | maximize generation]`
       - Hydro Pricing mode `[fast|accurate]`
       - Power fluctuations `[free modulations | minimize excursions | minimize ramping]`
       - Shedding policy `[shave peaks | minimize duration]`
@@ -417,7 +424,7 @@ that are more numerical than physical. The set of parameters is study-specific a
 for this package)
 
 - **Resources monitor** Indicates the amounts of RAM and disk space currently used and those required for a simulation
-in the available modes (see [System requirements](#ystem-requirements)).
+in the available modes (see [System requirements](#9-system-requirements)).
 Note that the "disk requirement" amount does not include the footprint of the specific "mps" files that may have
 to be written aside from the regular output (see previous § "optimization preferences").
 Besides, the resources monitor shows the number of CPU cores available on the machine Antares is running on.
@@ -540,7 +547,7 @@ These two parts are detailed hereafter.
 For the different kinds of time-series that Antares manages in a non-deterministic way (load, thermal generation, hydro power, wind power, solar power or renewable depending on the option chosen):
 
 1. **Choice of the kind of time-series to use**  
-Either « ready-made » or «stochastic » (i.e. Antares-generated), defined by setting the value to either "on" or "off"
+Either « ready-made » or «stochastic » (i.e. Antares-generated), defined by setting the value to either "on" or "off". Note that for Thermal time-series, the cluster-wise parameter may overrule this global parameter (see Thermal window description below).
 
 2. **For stochastic TS only**:
     - **Number** Number of TS to generate
@@ -549,7 +556,7 @@ Either « ready-made » or «stochastic » (i.e. Antares-generated), defined by 
 
     - **Refresh span** Number of MC years at the end of which the renewal will be performed (if so required)
 
-    - **Seasonal correlation** ("monthly" or "annual") Indicates whether the spatial correlation matrices to use are defined month by month or if a single annual matrix for the whole year should rather be used (see [Time-series analysis and generation](#time-series-analysis-and-generation))
+    - **Seasonal correlation** ("monthly" or "annual") Indicates whether the spatial correlation matrices to use are defined month by month or if a single annual matrix for the whole year should rather be used (see [Time-series analysis and generation](#6-time-series-analysis-and-generation))
 
     - **Store in input**
         - **Yes** the generated time-series will be stored in the INPUT in replacement of the original ones (wherever they may come from)
@@ -598,29 +605,26 @@ The user may pick any area appearing in the list and is then given access to dif
     Versatile "Filter" functions allow quick access to user-specified sections of data
 (e.g. display only the load expected in the Wednesdays of January, at 09:00, for time-series #12 to #19). Hourly load is expressed in round numbers and in MW. If a smaller unit has to be used, the user should define accordingly ALL the data of the study (size of thermal plants, interconnection capacities, etc.)
 
-    - Note that:
+    - _Note that:_
     
-        - If the "intra-modal correlated draw" option has not been selected in the_ **simulation** _window,
+        - _If the "intra-modal correlated draw" option has not been selected in the_ **simulation** _window,
       MC adequacy or economy simulations can take place even if the number of time-series is not the same
-      in all areas (e.g. 2 , 5 , 1 , 45 ,...)
-        - If the "intra-modal correlated draws" option has been selected in the_ **simulation** _window,
-      every area should have either one single time-series or the same given number (e.g. 25 , 25 , 1 , 25...)
+      in all areas (e.g. 2 , 5 , 1 , 45 ,...)_
+        - _If the "intra-modal correlated draws" option has been selected in the_ **simulation** _window,
+      every area should have either one single time-series or the same given number (e.g. 25 , 25 , 1 , 25...)_
         
-        - The "spatial correlation" tab gives access to the inter-area correlation matrices that will be used
-      by the stochastic generator if it is activated. Different sub-tabs are available for the definition of 12 monthly
-      correlation matrices and of an overall annual correlation matrix.
+    - The "spatial correlation" tab gives access to the inter-area correlation matrices that will be used
+    by the stochastic generator if it is activated. Different sub-tabs are available for the definition of 12 monthly
+    correlation matrices and of an overall annual correlation matrix.
+    A matrix A must meet three conditions to be a valid correlation matrix:
+      $$\forall i,\ \forall j,\ {A_{ii} = 100; -100 \le A_{ij} \le 100}; A\ symmetric; A\ positive\ semi\mbox{-}definite$$
+      When given invalid matrices, the TS generator emits an infeasibility diagnosis
 
-            A matrix A must meet three conditions to be a valid correlation matrix:
+    - The "local data" tab is used to set the parameters of the stochastic generator.
+    These parameters are presented in four sub-tabs whose content is presented in
+    [Time-series analysis and generation](#6-time-series-analysis-and-generation).
 
-            $$\forall i,\ \forall j,\ {A_{ii} = 100; -100 \le A_{ij} \le 100}; A\ symmetric; A\ positive\ semi\mbox{-}definite$$
-      
-            When given invalid matrices, the TS generator emits an infeasibility diagnosis
-
-        - The "local data" tab is used to set the parameters of the stochastic generator.
-      These parameters are presented in four sub-tabs whose content is presented in
-      [Time-series analysis and generation](#time-series-analysis-and-generation).
-
-        - The "digest" tab displays for all areas a short account of the local data
+    - The "digest" tab displays for all areas a short account of the local data
 
 ### Thermal
 
@@ -649,18 +653,18 @@ the generation expected on Sundays at midnight, for all time-series).
 
     Hourly thermal generation is expressed in round numbers and in MW. If a smaller unit has to be used, the user should define accordingly ALL the data of the study (Wind generation, interconnection capacities, load, hydro generation, solar, etc.)
 
-    - Note that:
+    - _Note that:_
 
-        - If the "intra-modal correlated draws" option has not been selected in the_ **simulation**_window,
+        - _If the "intra-modal correlated draws" option has not been selected in the_ **simulation** _window,
       MC adequacy or economy simulations can take place even if the number of time-series is not the same in all
-      areas (e.g. 2, 5, 1, 45,etc.)
+      areas (e.g. 2, 5, 1, 45,etc.)_
 
-        - If the "intra-modal correlated draws" option has been selected in the_ **simulation**_window,
+        - _If the "intra-modal correlated draws" option has been selected in the_ **simulation** _window,
       every area should have either one single time-series or the same given number (e.g. 25, 25, 1, 25, etc.).
       Note that, unlike the other time-series (load, hydro, etc.), which depend on meteorological conditions and
       are therefore inter-area-correlated, the thermal plants time-series should usually be considered as uncorrelated.
       Using the "correlated draws" feature makes sense only in the event of having to play predefined scenarios
-      (outside regular MC scope)
+      (outside regular MC scope)_
 
 
 - The "TS generator" tab is used to set the parameters of the stochastic generator.
@@ -690,6 +694,14 @@ Durations are expressed in days and rates belong to [0 , 1].
     - _Default contribution to the spinning reserve (% of nominal capacity)_
     - _CO2 tons emitted per electric MWh_
     - _Marginal operating cost (€/MWh)_
+    - _Volatility (forced): a parameter between 0 and 1, see section [Time-series generation (thermal)](#time-series-generation-thermal)_
+    - _Volatility (planned): a parameter between 0 and 1, see section [Time-series generation (thermal)](#time-series-generation-thermal)_
+    - _Law (forced): Probabilistic law used for the generation of the forced outage time-series, can be set to either uniform or geometric_
+    - _Law (planned): Probabilistic law used for the generation of the planned outage time-series, can be set to either uniform or geometric_
+    - _Generate TS: Parameter to specify the behavior of this cluster for TS generation. **This cluster-wise parameter takes priority over the study-wide one.** It can hold three values:_
+      - _Force generation: TS for this cluster will be generated_
+      - _Force no generation: TS for this cluster will not be generated_
+      - _Use global parameter: Will use the parameter for the study (the one in the [Simulation Window](#simulation))._
     - _Fixed cost (No-Load heat cost) (€ / hour of operation )_
     - _Start-up cost (€/start-up)_
     - _Market bid (€/MWh)_
@@ -734,14 +746,14 @@ In the main Window, the user may pick any area appearing in the list and is then
         - Change the number of columns (function name: resize)
         - Adjust the values associated with the current first day of the year (function name: shift rows)
 
-    - Note that:
+    - _Note that:_
 
-        - For a given area, the number of ROR time-series and SP times-series **must** be identical
-        - If the "intra-modal correlated draws" option was not selected in the **simulation** window,
+        - _For a given area, the number of ROR time-series and SP times-series **must** be identical_
+        - _If the "intra-modal correlated draws" option was not selected in the_ **simulation** _window,
       MC adequacy or economy simulations can take place even if the number of hydro time-series is not the same 
-      in all areas (e.g. 2 , 5 , 1 , 45 ,...)
-        - If the "intra-modal correlated draws" option was selected in the **simulation** window, every 
-      area should have either one single time-series or the same given number (e.g. 25 , 25 , 1 , 25...)
+      in all areas (e.g. 2 , 5 , 1 , 45 ,...)_
+        - _If the "intra-modal correlated draws" option was selected in the_ **simulation** _window, every 
+      area should have either one single time-series or the same given number (e.g. 25 , 25 , 1 , 25...)_
     
 
 - _The "spatial correlation" tab gives access to an annual inter-area correlation matrix that will be used by the stochastic generator if it is activated. Correlations are expressed in percentages, hence to be valid this matrix must be symmetric, p.s.d, with a main diagonal of 100s and all terms lying between (-100 ,+100)_
@@ -888,21 +900,19 @@ The user may pick any area appearing in the list and is then given access to dif
 
     Hourly wind generation is expressed in round numbers and in MW. If a smaller unit has to be used, the user should define accordingly ALL the data of the study (size of thermal plants, interconnection capacities, load, etc.)
 
-    - Note that:
+    - _Note that:_
 
-        - If the "intra-modal correlated draws" option has not been selected in the **simulation** window, MC adequacy or economy simulations can take place even if the number of time-series is not the same in all areas (e.g. 2, 5, 1,45, ...)
+        - _If the "intra-modal correlated draws" option has not been selected in the_ **simulation** _window, MC adequacy or economy simulations can take place even if the number of time-series is not the same in all areas (e.g. 2, 5, 1,45, ...)_
 
-        - If the "intra-modal correlated draws" option has been selected in the **simulation** window, every area should have either one single time-series or the same given number (e.g. 25, 25, 1, 25, ...)
+        - _If the "intra-modal correlated draws" option has been selected in the_ **simulation** _window, every area should have either one single time-series or the same given number (e.g. 25, 25, 1, 25, ...)_
 
 - The "spatial correlation" tab gives access to the inter-area correlation matrices that will be used by the stochastic generator if it is activated. Different sub-tabs are available for the definition of 12 monthly correlation matrices and an overall annual correlation matrix.
-
-    A matrix A must meet three conditions to be a valid correlation matrix:
-
+  
+  A matrix A must meet three conditions to be a valid correlation matrix:
     $$\forall i,\ \forall j,\ {A_{ii} = 100; -100 \le A_{ij} \le 100}; A\ symmetric; A\ positive\ semi\mbox{-}definite$$
-
     When given invalid matrices, the TS generator emits an infeasibility diagnosis
 
-- The "local data" tab is used to set the parameters of the stochastic generator. These parameters are presented in four subtabs whose content is presented in [Time-series analysis and generation](#time-series-analysis-and-generation).
+- The "local data" tab is used to set the parameters of the stochastic generator. These parameters are presented in four subtabs whose content is presented in [Time-series analysis and generation](#6-time-series-analysis-and-generation).
 
 - The "digest" tab displays for all areas a short account of the local data
 
@@ -944,7 +954,7 @@ _The user may pick any area appearing in the list and is then given access to di
     When given invalid matrices, the TS generator emits an infeasibility diagnosis
 
 
-- _The "local data" tab is used to set the parameters of the stochastic generator. These parameters are presented in four subtabs whose content is presented in [Time-series analysis and generation](#time-series-analysis-and-generation)._
+- _The "local data" tab is used to set the parameters of the stochastic generator. These parameters are presented in four subtabs whose content is presented in [Time-series analysis and generation](#6-time-series-analysis-and-generation).
 
 - _The "digest" tab displays for all areas a short account of the local data_
 
@@ -1428,7 +1438,7 @@ The stationary processes are defined at a monthly scale. For each month, there a
 
 - Four parameters for the definition of the marginal law
 
-TS Gen. Parameters : $$\alpha, \beta, \gamma\ and\ \delta$$
+TS Gen. Parameters : \\(\alpha\\), \\(\beta\\), \\(\gamma\\) and \\(\delta\\)
 
 | **Law** | $$\alpha$$ | $$\beta$$ | $$\gamma$$ | $$\delta$$ | **Expectation** | **Variance** |
 |---------|:----------:|:---------:|:----------:|:----------:|:---------------:|:------------:|
@@ -1438,21 +1448,21 @@ TS Gen. Parameters : $$\alpha, \beta, \gamma\ and\ \delta$$
 | Weibull | &gt;=1 <br/> &lt;50 | &gt;0 | N/A | N/A | $$\beta \Gamma (1 + {1\over\alpha})$$ | $$\beta^2[\Gamma(1+{2\over \alpha}) - \Gamma (1 + {1\over \alpha})^2]$$ |
 | Gamma | &gt;=1 <br/> &lt;50 | &gt;0 | N/A | N/A | $$\alpha * \beta$$ | $$\alpha * \beta^2$$ |
 
-Uniform: uniform defined on $$(\gamma, \delta)$$.
+Uniform: uniform defined on (\\(\gamma\\), \\(\delta\\)).
 
-Beta: Beta $$(\alpha, \beta)$$ defined on $$(\gamma, \delta)$$.
+Beta: Beta (\\(\alpha\\), \\(\beta\\)) defined on (\\(\gamma\\), \\(\delta\\)).
 
-Normal: expectation $$\alpha$$, standard deviation $$\beta$$.
+Normal: expectation \\(\alpha\\), standard deviation \\(\beta\\).
 
-Weibull: shape $$\alpha$$, scale $$\beta$$, defined on $$(0,+\infty)$$.
+Weibull: shape \\(\alpha\\), scale \\(\beta\\), defined on (0,+\\(\infty\\)).
 
-Gamma: shape $$\alpha$$, scale $$\beta$$, defined on $$(0, +\infty)$$.
+Gamma: shape \\(\alpha\\), scale \\(\beta\\), defined on (0, +\\(\infty\\)).
 
 In the expressions of expectation and variance, $$\Gamma(x)$$ is the standard Euler Function
 
 - Two parameters for the definition of the autocorrelation function
 
-**TS Gen. Parameters : $$\theta\ and\ \mu$$**
+**TS Gen. Parameters : \\(\theta\\) and \\(\mu\\)**
 
 | **Law** | $$\theta$$ | $$\mu$$ | **Corr(Xt, Xt+h)** |
 |-----|----|-----|--------|
@@ -1463,7 +1473,7 @@ $$\Phi(\theta, \mu, h)\ =\ {1\over A}\ *\ \sum_{i=0, \mu}{\ \sum_{j=h, h+\mu}{e^
 
 **with $$A=\mu + 2 \sum_{i=1, \mu; j=1, \mu; j > i}{e^{-\theta(j-i)}}$$**
 
-(\*) Obtained by the generation of purely exponentially autocorrelated values (parameter $$\theta$$ ) followed by a moving average transformation (parameter $$\mu$$ ). $$\theta$$ and $$\mu$$ should be carefully chosen so as to accommodate at best the experimental data at hand. If meaningful historical data are available, this identification may be directly made using the Antares time-series analyzer.
+(\*) Obtained by the generation of purely exponentially autocorrelated values (parameter \\(\theta\\) ) followed by a moving average transformation (parameter \\(\mu\\) ). \\(\theta\\) and \\(\mu\\) should be carefully chosen so as to accommodate at best the experimental data at hand. If meaningful historical data are available, this identification may be directly made using the Antares time-series analyzer.
 
 ## Time-series generation (load, wind, solar): GUI
 
@@ -1471,7 +1481,7 @@ _The section of the GUI specific to the generation of wind, solar and load time-
 
 1. **Spatial correlation matrices that are located within the "spatial correlation" tab of each path "Wind|Solar|Load / &lt;area\_name&gt;"**
 
-_This tab contains a workspace for the description of 12 monthly spatial correlation matrices_ $$\Xi$$ _and one annual correlation matrix. For the stochastic generators to work properly, these matrices must meet the usual requirements (matrices must be p.s.d, symmetric, with all terms between -100 and +100, and a main diagonal made of 100s). If this is not the case, generators will emit an infeasibility diagnosis. Matrices can be either set up manually OR automatically filled out by the time-series analyzer (see next paragraph)._
+_This tab contains a workspace for the description of 12 monthly spatial correlation matrices_ \\(\Xi\\) _and one annual correlation matrix. For the stochastic generators to work properly, these matrices must meet the usual requirements (matrices must be p.s.d, symmetric, with all terms between -100 and +100, and a main diagonal made of 100s). If this is not the case, generators will emit an infeasibility diagnosis. Matrices can be either set up manually OR automatically filled out by the time-series analyzer (see next paragraph)._
 
 _Depending on the choices made in the main "simulation" window, the matrices used will be either the 12 monthly matrices or the annual matrix. Whether to use the first or the second option depends on the quality of the statistical data at hand: with high quality data (for instance, that derived from the analysis of a very large pool of historical data), use of monthly correlations is recommended because monthly differences between matrices have a physical meaning ; with less robust data (derived from a handful of historical data,…), use of the single annual correlation matrix should be preferred because it smooths out the numeric noise which impairs the monthly matrices._
 
@@ -1479,7 +1489,7 @@ _Depending on the choices made in the main "simulation" window, the matrices use
 
 **FOUR PARAMETERS**
 
-- _Capacity: This first parameter is used to scale up time-series generated on the basis of the ($$\alpha,\ \beta,\ \gamma,\ \delta,\ \theta,\ \mu$$) parameters described previously in the "principles" paragraph, together with coefficients characterizing the diurnal pattern (see below)_
+- _Capacity: This first parameter is used to scale up time-series generated on the basis of the (\\(\alpha\\), \\(\beta\\), \\(\gamma\\), \\(\delta\\), \\(\theta\\), \\(\mu\\)) parameters described previously in the "principles" paragraph, together with coefficients characterizing the diurnal pattern (see below)_
 
 - _Distribution: This second parameter gives the type of marginal distribution of the stationary stochastic processes to generate (Beta, Weibull, Normal, Gamma, Uniform)_
 
@@ -1499,7 +1509,7 @@ _Depending on the choices made in the main "simulation" window, the matrices use
 
 - _Subtab "Coefficients"_
 
-_A twelve-month table of values for the primary parameters_ $$\alpha,\ \beta,\ \gamma,\ \delta,\ \theta,\ \mu$$ <br/>
+_A twelve-month table of values for the primary parameters_ \\(\alpha\\), \\(\beta\\), \\(\gamma\\), \\(\delta\\), \\(\theta\\), \\(\mu\\) <br/>
 _This table may be either filled out manually or automatically (use of the time-series analyzer)_
 
 - _Subtab "Translation"_
@@ -1556,7 +1566,7 @@ _The primary TS analyzer window shows two tabs:_
 - _Keep the same:_
 
     - _Type of distribution_ <br/>
-      _Values for_ $\alpha,\ \beta,\ \gamma,\ \delta$$ _and for the diurnal–seasonal pattern (table of 12 X 24 values)_ <br/>
+      _Values for_ \\(\alpha\\), \\(\beta\\), \\(\gamma\\), \\(\delta\\) _and for the diurnal–seasonal pattern (table of 12 X 24 values)_ <br/>
       _Value for the "capacity" parameter (the analyzer automatically sets it to 1)_
 
 - _Besides:_
@@ -1570,11 +1580,11 @@ _The primary TS analyzer window shows two tabs:_
 
 - _Analyzer settings_
 
-    - _Short-term autocorrelation adjustment (\%)_
-    - _Long-term autocorrelation adjustment (\%)_ <br/>
-      These two parameters are used by Antares as targets for the fitting of $$\theta$$ and $$\mu$$ parameters. For instance, if the historical time-series autocorrelation function is such that Corr(T,T+ 18 hours)=90 \% and Corr(T,T+60 hours)= 50\%, and if the parameters in the analyzer are (ST = 90\%,LT = 50\%) , then it will search values of $$\theta$$ and $$\mu$$ matching the historical autocorr.function in two points(18 hours, 60 hours).
+    - _Short-term autocorrelation adjustment (%)_
+    - _Long-term autocorrelation adjustment (%)_ <br/>
+      These two parameters are used by Antares as targets for the fitting of \\(\theta\\) and \\(\mu\\) parameters. For instance, if the historical time-series autocorrelation function is such that Corr(T,T+ 18 hours)=90 % and Corr(T,T+60 hours)= 50%, and if the parameters in the analyzer are (ST = 90%,LT = 50%) , then it will search values of \\(\theta\\) and \\(\mu\\) matching the historical autocorr.function in two points(18 hours, 60 hours).
 
-    - _Trimming threshold (\%)_ <br/>
+    - _Trimming threshold (%)_ <br/>
       _In the spatial correlation matrices, terms lower than the threshold will be replaced by zeroes_
 
 - _Input data_
@@ -1590,15 +1600,19 @@ _The primary TS analyzer window shows two tabs:_
 
 - **Use of the "detrended" mode in the first Tab is mandatory** _(use of the "raw" mode would produce wrong correlation matrices)_
 
-- **Short- and Long- Term autocorrelation parameters in the second Tab must be identical and set to 99\%** _(to ensure that auto-correlation be assessed for the shortest possible time lag, i.e. one hour)_
+- **Short- and Long- Term autocorrelation parameters in the second Tab must be identical and set to 99%** _(to ensure that auto-correlation be assessed for the shortest possible time lag, i.e. one hour)_
 
 **NOTICE** _For the whole year, the analyzer delivers a table of 12x24 hourly shape-factors consistent with the 12 sets of parameters identified for the stationary stochastic processes. The content of the table depends on the mode of analysis chosen:_
 
-"**raw"** _analysis: for each month, the sum of the 24 hourly shape-factors is equal to 24 (i.e. each term is a modulation around the daily average)._
+**"raw"** _analysis: for each month, the sum of the 24 hourly shape-factors is equal to 24 (i.e. each term is a modulation around the daily average)._
 
-"**detrended"** _analysis: for the whole year, hourly coefficients are expressed relatively to the annual hourly peak of the (zero-mean) signal absolute value. (i.e. all factors belong to the [0,1] interval)_
+**"detrended"** _analysis: for the whole year, hourly coefficients are expressed relatively to the annual hourly peak of the (zero-mean) signal absolute value. (i.e. all factors belong to the [0,1] interval)_
 
 ## Time-series generation (thermal)
+
+_The thermal time-series generation will only be launched:_
+  - _On thermal clusters that have the Generated TS parameter set to “Force generation”_
+  - _And, when in the Simulation window, the Stochastic TS parameter for Thermal is set to "On”, on the thermal clusters that have the Generated TS parameter set to "Use global parameter"._
 
 _The stochastic generator for time-series of available dispatchable power generation works, for each plant of each set (cluster), with the following parameters:_
 
@@ -1666,10 +1680,10 @@ _In complement to the average value of the duration D of outages beginning on a 
 
 **NOTE:** _A geometric law associated with a volatility parameter V yielding a characteristic parameter F (according to the previous formulas) will produce a distribution summarized by:_
 
-- _63 \% of values in the interval [F, D]_
-- _23 \% of values in the interval [D, 2D-F]_
-- _12 \% of values in the interval [2D-F, 4D-3F]_
-- _2 \% of values in the interval [4D-3F, infinite)_
+- _63 % of values in the interval [F, D]_
+- _23 % of values in the interval [D, 2D-F]_
+- _12 % of values in the interval [2D-F, 4D-3F]_
+- _2 % of values in the interval [4D-3F, infinite)_
 
 **Remark:** _Antares is able to provide these options because it involves more than a simple Markov chain mechanism (intrinsically limited to : law = geometric, volatility = 1)_
 
@@ -1677,7 +1691,7 @@ _In complement to the average value of the duration D of outages beginning on a 
 
 _The concept of outage rate is not always clearly distinguished from the notion of failure rate, to which it is closely related._
 
-_Outage rates OR represent the average_ **proportion** _of time during which a plant is unavailable (for instance, OR = 5.2\%)._
+_Outage rates OR represent the average_ **proportion** _of time during which a plant is unavailable (for instance, OR = 5.2%)._
 
 _Failure rates FR represent the average_ **number** _of outages_ **starting** _during a period of time of a given length (for instance, FR = 1.5 per year). If the time step is short enough (typically one day, which is the value used in Antares), the failure rates are always lower than 1 (for instance, FR = (1.5 / 365) per day)._
 
@@ -1743,15 +1757,15 @@ _These parameters are used by the time-series generator as constraints that_ **c
 
 _Exemples (for simplicity'sake, they are described here with only one value instead of 365):_
 
-_Cluster size = 100 PO rate =10\% PO Min Nb=0 PO Max Nb= 100_
+_Cluster size = 100 PO rate =10% PO Min Nb=0 PO Max Nb= 100_
 
 - _Actual number in [0,100], average = 10, wide fluctuations (unconstrained)_
 
-_Cluster size = 100 PO rate =10\% PO Min Nb=7 PO Max Nb= 11_
+_Cluster size = 100 PO rate =10% PO Min Nb=7 PO Max Nb= 11_
 
 - _Actual number in [7,11], average = 10 (to remain within the bounds, some outages will be anticipated, while others will be delayed)_
 
-_Cluster size = 100 PO rate =0\% PO Min Nb=10 PO Max Nb= 10_
+_Cluster size = 100 PO rate =0% PO Min Nb=10 PO Max Nb= 10_
 
 - _Actual number =10 (to remain within the bounds, outages are set up even if none come from random draws)_
 
@@ -1809,9 +1823,9 @@ _FOD(1) = 10 (days)_
 
 _POD(1) = 28 (days)_
 
-_FOR(1) = 0.0695 # 7 \%_
+_FOR(1) = 0.0695 # 7 %_
 
-_POR(1) = 0.0245 # 2.5 \%_
+_POR(1) = 0.0245 # 2.5 %_
 
 _These values should eventually (using the GUI or other means) be assigned to the first seven days of January._
 
@@ -1923,7 +1937,7 @@ _Besides, all of them need not be modeled with the same level of accuracy in a s
 _Several classes of reserves may therefore be used in Antares; how to use them at best depend on the kind and quality of operational data at hand, and on the aim of the studies to carry out; though all kinds of reserves may always be defined in the INPUT dataset, the set of reserves that will effectively be used depends on the kind of simulations to run. Note that any or all classes of reserves may be ignored in a given simulation (without being removed from the INPUT dataset) by setting the matching "optimization preference" to "ignore reserve X":_
 
 - _**Pre-allocated reserve on dispatchable thermal plants (R0)**_ <br/>
-  _This reserve (which corresponds to the parameter "spinning" attached to the thermal plants) is expressed as a percentage of the nominal capacity of the plants. It is simply used as a derating parameter: for instance, a 1000 MW plant with a 2.5\% spinning parameter will not be able to generate more than 975 MW. It is important to notice that, if the plant is not scheduled on, it will NOT contribute to the spinning reserve (to be effectively available, the 25 MW of reserve would need the plant to be started). This first class of reserve is available for_ **Adequacy** _as well as for_ **Economy** _simulations but is not taken into account in_ **Draft** _simulations._
+  _This reserve (which corresponds to the parameter "spinning" attached to the thermal plants) is expressed as a percentage of the nominal capacity of the plants. It is simply used as a derating parameter: for instance, a 1000 MW plant with a 2.5% spinning parameter will not be able to generate more than 975 MW. It is important to notice that, if the plant is not scheduled on, it will NOT contribute to the spinning reserve (to be effectively available, the 25 MW of reserve would need the plant to be started). This first class of reserve is available for_ **Adequacy** _as well as for_ **Economy** _simulations but is not taken into account in_ **Draft** _simulations._
 
 
 - _**Primary and strategic reserves (R1,R2):**_ <br/>
@@ -2032,7 +2046,7 @@ Extreme cases are:
 
 All following parameters are related to the generic zone \\(z\\)
 
-\\(\alpha$$ &nbsp;&nbsp;&nbsp;&nbsp; "inter-monthly generation breakdown" parameter
+\\(\alpha\\) "inter-monthly generation breakdown" parameter
 
 \\(\beta\\) "inter-daily generation breakdown" parameter
 
@@ -2403,11 +2417,11 @@ The metrics displayed in the "Annual system cost" file take the form of four val
 
 - Maximum UASC
 
-As with all other random variables displayed in the Antares Output section, the computed standard deviation of the variable can be used to give a measure of the confidence interval attached to the estimate of the expectation. For a number of Monte-Carlo years N, the law of large numbers states for instance that there is a 95 \% probability for the actual expectation of ASC to lie within the interval:
+As with all other random variables displayed in the Antares Output section, the computed standard deviation of the variable can be used to give a measure of the confidence interval attached to the estimate of the expectation. For a number of Monte-Carlo years N, the law of large numbers states for instance that there is a 95 % probability for the actual expectation of ASC to lie within the interval:
 
 **EASC +/- 1.96 (SASC / sqrt(N))**
 
-There is also a 99.8 \% probability that it lies within the interval:
+There is also a 99.8 % probability that it lies within the interval:
 
 **EASC +/- 3 (SASC / sqrt(N))**
 
@@ -2498,7 +2512,7 @@ _On starting the simulation of a new Monte-Carlo year, the reservoir level to co
 - _The Monte-Carlo year considered is not the first to simulate, or does not belong to the first batch of years to be simulated in parallel. In sequential runtime mode, that means that year #N may start with the level reached at the end of year #(N-1). In parallel runtime mode, if the simulation is carried out with batches of B years over as many CPU cores, years of the k-th batch_
   _# 19_ _may start with the ending levels of the years processed in the (k-1)-th batch._
 
-- _The parallelization context (see [System requirements](#ystem-requirements)) must be set so as to ensure that the M Monte-Carlo years to simulate will be processed in a round number of K consecutive batches of B years in parallel (i.e. M = K\*B and all time-series refresh intervals are exact multiple of B)._
+- _The parallelization context (see [System requirements](#9-system-requirements)) must be set so as to ensure that the M Monte-Carlo years to simulate will be processed in a round number of K consecutive batches of B years in parallel (i.e. M = K\*B and all time-series refresh intervals are exact multiple of B)._
 
 _The first year of the simulation, and more generally years belonging to the first simulation batch in parallel mode, are initialized as they would be in the cold start option._
 
@@ -2516,15 +2530,15 @@ _This parameter can take the two values "Accommodate rule curves" or "Maximize g
 
 **General:**
 
-_This parameter is meant to define how the reservoir level should be managed throughout the year, with emphasis put either on the respect of rule curves or on the maximization of the use of natural inflows._
+_This parameter is meant to define how the reservoir level should be managed throughout the year, either with emphasis put on the respect of rule curves or on the maximization of the use of natural inflows._
 
 **Accommodate rule curves:**
 
-_Upper and lower rule curves are accommodated in both monthly and daily heuristic stages (described page 58). In the second stage, violations of the lower rule curve are avoided as much as possible (penalty cost on Y. higher than penalty cost on Y).  This policy may result in a restriction of the overall yearly energy generated from the natural inflows._
+_Upper and lower rule curves are accommodated in both monthly and daily heuristic stages (described page 58). In the second stage, violations of the lower rule curve are avoided as much as possible (penalty cost on \\(\Psi\\). higher than penalty cost on Y).  This policy may result in a restriction of the overall yearly energy generated from the natural inflows._
 
 **Maximize generation:**
 
-_Upper and lower rule curves are accommodated in both monthly and daily heuristic stages (described page 58). In the second stage, incomplete use of natural inflows is avoided as much as possible (penalty cost on Y higher than penalty cost on Y). This policy may result in violations of the lower rule curve._
+_Upper and lower rule curves are accommodated in both monthly and daily heuristic stages (described page 58). In the second stage, incomplete use of natural inflows is avoided as much as possible (penalty cost on Y higher than penalty cost on \\(\Psi\\)). This policy may result in violations of the lower rule curve._
 
 ## The "Hydro Pricing mode" advanced parameter
 
@@ -2829,33 +2843,34 @@ There are special exceptions to the terms and conditions of the license as they 
 
 Antares\_Simulator is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with Antares\_Simulator. If not, see &lt;http://www.gnu.org/licenses/ &gt;.
+You should have received a copy of the GNU General Public License along with Antares\_Simulator. If not, see &lt;[https://www.gnu.org/licenses/](https://www.gnu.org/licenses/)  &gt;.
 
-**Antares\_Simulator 8.1.0 uses external libraries and makes extensive use of the following persons' or companies code. Source and binary forms of these programs are distributed along with Antares\_Simulator with NO WARRANTY:**
+**Antares\_Simulator 8.1.1 uses external libraries and makes extensive use of the following persons' or companies code. Source and binary forms of these programs are distributed along with Antares\_Simulator with NO WARRANTY:**
 
-- Wxwidgets 3.0.2 Copyright (c) 1998-2017 The wxWidget Team  
-  license: wxWindows Library License,V3.1 https://spdx.org/licenses/wxWindows.html
+- Wxwidgets 3.1.3 Copyright (c) 1998-2017 The wxWidget Team  
+  [https://github.com/wxWidgets/wxWidgets.git](https://github.com/wxWidgets/wxWidgets.git)  
+  license: wxWindows Library License,V3.1 [https://spdx.org/licenses/wxWindows.html](https://spdx.org/licenses/wxWindows.html)
 
-- libYuni 1.1.0 https://github.com/libyuni  
-  license: Mozilla Public License 2.0 https://spdx.org/licenses/MPL-2.0.html
+- libYuni 1.1.0 [https://github.com/libyuni](https://github.com/libyuni)  
+  license: Mozilla Public License 2.0 [https://spdx.org/licenses/MPL-2.0.html](https://spdx.org/licenses/MPL-2.0.html)
 
 - Mersenne Twister Copyright (c) 1997-2002 M.Matsumoto and T.Nishimura  
-  license: 3-clause BSD https://spdx.org/licenses/BSD-3-Clause.html
+  license: 3-clause BSD [https://spdx.org/licenses/BSD-3-Clause.html](https://spdx.org/licenses/BSD-3-Clause.html)
 
 - strtod library Copyright (c) 1988-1993 The Regents of the University of California  
   Copyright (c) 1994 Sun Microsystems, Inc  
-  license: ISC license https://spdx.org/licenses/ISC.html
+  license: ISC license [https://spdx.org/licenses/ISC.html](https://spdx.org/licenses/ISC.html)
 
 - Sirius\_Solver Copyright (c) 2007-2018 RTE  
-  https://github.com/rte-france/sirius-solver.git  
-  license: Apache 2.0	https://spdx.org/licenses/Apache-2.0.html
+  [https://github.com/rte-france/sirius-solver.git](https://github.com/rte-france/sirius-solver.git)  
+  license: Apache 2.0	[https://spdx.org/licenses/Apache-2.0.html](https://spdx.org/licenses/Apache-2.0.html)
 
 - OR-Tools Copyright (c) 2010-2020 Google LLC  
-  https://github.com/rte-france/or-tools.git  
-  license: Apache 2.0	https://spdx.org/licenses/Apache-2.0.html
+  [https://github.com/rte-france/or-tools.git](https://github.com/rte-france/or-tools.git)  
+  license: Apache 2.0	[https://spdx.org/licenses/Apache-2.0.html](https://spdx.org/licenses/Apache-2.0.html)
 
 
-[1](#sdfootnote1anc)For simplicity's sake, the _**Antares\_Simulator**_ 8.1.0 application will as of now be simply denoted "Antares".
+[1](#sdfootnote1anc)For simplicity's sake, the _**Antares\_Simulator**_ 8.1.1 application will as of now be simply denoted "Antares".
 
 [2](#sdfootnote2anc) A detailed expression of the basic mathematical problem solved in the red box of the following figure can be found in the document "Optimization problems formulation".
 
@@ -2909,6 +2924,6 @@ You should have received a copy of the GNU General Public License along with Ant
 
 [26](#sdfootnote26anc) The smallest bundle in this case is the ninth (year number 97 to year number 100). The first 8 bundles involve 12 MC years each
 
-Copyright © RTE 2007-2021 – Version 8.1.0
+Copyright © RTE 2007-2021 – Version 8.1.1
 
-Last Rev : H. Antoine - 21 SEPT 2021
+Last Rev : H. Antoine - 25 NOV 2021
