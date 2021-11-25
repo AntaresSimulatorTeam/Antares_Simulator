@@ -101,6 +101,7 @@ jobs:
       run: |
            cd _build
            ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
+      shell: bash
 
     - name: Inject slug/short variables
       uses: rlespinasse/github-slug-action@v3.x
