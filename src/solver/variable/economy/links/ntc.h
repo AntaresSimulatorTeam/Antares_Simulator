@@ -74,7 +74,7 @@ struct VCardNTC
         //! File level (provided by the type of the results)
         categoryFileLevel = 0, // No output is produced, this is just a temporary variable
                                //! Precision (views)
-        precision = Category::all,
+        precision = Category::hourly,
         //! Indentation (GUI)
         nodeDepthForGUI = +0,
         //! Decimal precision
