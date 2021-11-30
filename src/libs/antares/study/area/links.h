@@ -69,6 +69,8 @@ public:
     ~AreaLink();
     //@}
 
+    bool loadTimeSeries(Study& study, const AnyString& folder);
+
     //! \name Area
     //@{
     /*!

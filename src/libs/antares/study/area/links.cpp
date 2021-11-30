@@ -72,6 +72,25 @@ AreaLink::~AreaLink()
 {
 }
 
+// Forward declarations
+static bool linkLoadTimeSeries_for_version_under_320(AreaLink& link, const AnyString& folder, Study& study);
+static bool linkLoadTimeSeries_for_version_from_320_to_630(AreaLink& link, const AnyString& folder);
+static bool linkLoadTimeSeries_for_version_from_630_to_810(AreaLink& link, const AnyString& folder);
+static bool linkLoadTimeSeries_for_version_820_and_later(AreaLink& link, const AnyString& folder);
+
+bool AreaLink::loadTimeSeries(Study& study, const AnyString& folder)
+{
+    if (study.header.version < 320)
+        return linkLoadTimeSeries_for_version_under_320(*this, folder, study);
+    else if (study.header.version < 630)
+        return linkLoadTimeSeries_for_version_from_320_to_630(*this, folder);
+    else if (study.header.version < 820)
+        return linkLoadTimeSeries_for_version_from_630_to_810(*this, folder);
+    else {
+        return linkLoadTimeSeries_for_version_820_and_later(*this, folder);
+    }
+}
+
 void AreaLink::detach()
 {
     assert(from);
@@ -298,7 +317,7 @@ void logLinkDataCheckError(Study& study, AreaLink& link)
     study.gotFatalError = true;
 }
 
-static bool linkLoadTimeSeries_version_under_320(AreaLink& link, const AnyString& folder, Study& study)
+static bool linkLoadTimeSeries_for_version_under_320(AreaLink& link, const AnyString& folder, Study& study)
 {
     String buffer;
     bool ret = true;
@@ -352,7 +371,7 @@ static bool linkLoadTimeSeries_version_under_320(AreaLink& link, const AnyString
     return ret;
 }
 
-static bool linkLoadTimeSeries_version_320_to_630(AreaLink& link, const AnyString& folder)
+static bool linkLoadTimeSeries_for_version_from_320_to_630(AreaLink& link, const AnyString& folder)
 {
     String buffer;
     bool ret = true;
@@ -395,7 +414,7 @@ static bool linkLoadTimeSeries_version_320_to_630(AreaLink& link, const AnyStrin
     return ret;
 }
 
-static bool linkLoadTimeSeries_version_630_to_820(AreaLink& link, const AnyString& folder)
+static bool linkLoadTimeSeries_for_version_from_630_to_810(AreaLink& link, const AnyString& folder)
 {
     String buffer;    
     buffer.clear() << folder << SEP << link.with->id << ".txt";
@@ -424,7 +443,7 @@ static bool linkLoadTimeSeries_version_630_to_820(AreaLink& link, const AnyStrin
     return true;
 }
 
-static bool linkLoadTimeSeries(AreaLink& link, const AnyString& folder)
+static bool linkLoadTimeSeries_for_version_820_and_later(AreaLink& link, const AnyString& folder)
 {
     String capacitiesFolder;
     capacitiesFolder << folder << SEP << "capacities";
@@ -493,15 +512,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         link.comments.clear();
         link.displayComments = true;
 
-        if (study.header.version < 320)
-            ret = linkLoadTimeSeries_version_under_320(link, folder, study) && ret;
-        else if (study.header.version < 630)
-            ret = linkLoadTimeSeries_version_320_to_630(link, folder) && ret;
-        else if (study.header.version < 820)
-            ret = linkLoadTimeSeries_version_630_to_820(link, folder) && ret;
-        else {
-            ret = linkLoadTimeSeries(link, folder) && ret;
-        }
+        ret = link.loadTimeSeries(study, folder) && ret;
 
         // Checks on loaded link's data
         if (study.usedByTheSolver)
