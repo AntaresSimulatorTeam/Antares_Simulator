@@ -218,7 +218,11 @@ bool GrabOptionsFromCommandLine(int argc,
     // Version
     if (optVersion)
     {
+#ifdef GIT_SHA1_SHORT_STRING
+        std::cout << ANTARES_VERSION_STR <<  " (revision " <<GIT_SHA1_SHORT_STRING << ")" << std::endl;
+#else
         std::cout << ANTARES_VERSION_STR << std::endl;
+#endif
         return false;
     }
 

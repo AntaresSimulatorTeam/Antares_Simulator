@@ -38,5 +38,7 @@
 //! git revision (SHA-1)
 #cmakedefine GIT_SHA1_SHORT @GIT_SHA1_SHORT@
 
+#define GIT_SHA1_SHORT_STRING "@GIT_SHA1_SHORT@"
+
 #endif // __ANTARES_CONFIG_H__
 
