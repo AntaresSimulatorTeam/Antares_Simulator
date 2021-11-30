@@ -31,7 +31,7 @@ if(Python3_Interpreter_FOUND)
       #Initialize test repository
       find_package(Git QUIET)
 
-        set(ANTARES_TEST_TAG "master")
+        set(ANTARES_TEST_TAG "8.1.1")
 
         message(STATUS "Submodule test update with ${ANTARES_TEST_TAG} tag")
 
