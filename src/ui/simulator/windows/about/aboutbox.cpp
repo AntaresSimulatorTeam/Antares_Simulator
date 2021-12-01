@@ -944,11 +944,11 @@ AboutBox::AboutBox(wxWindow* parent) :
     version->SetForegroundColour(wxColour(90, 90, 90));
     sv->Add(version, 0, wxALL | wxEXPAND);
 
-#ifdef GIT_SHA1_SHORT
+#ifdef GIT_SHA1_SHORT_STRING
     sv->AddSpacer(1);
     // git sha-1 (short)
     vstr.clear();
-    vstr << wxT("git revision: " STRING(GIT_SHA1_SHORT));
+    vstr << wxT("git revision: " GIT_SHA1_SHORT_STRING);
     wxStaticText* SHA1Text = Component::CreateLabel(this, vstr, false, true);
     SHA1Text->SetBackgroundColour(wxColour(255, 255, 255));
     SHA1Text->SetForegroundColour(wxColour(90, 90, 90));
