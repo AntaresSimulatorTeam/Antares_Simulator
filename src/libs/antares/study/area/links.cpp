@@ -317,7 +317,15 @@ void logLinkDataCheckError(Study& study, AreaLink& link)
     study.gotFatalError = true;
 }
 
-static bool linkLoadTimeSeries_for_version_under_320(AreaLink& link, const AnyString& folder, Study& study)
+void logLinkDataCheckErrorDirectIndirect(Study& study, AreaLink& link, uint direct, uint indirect)
+{
+    logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
+                 << " direct TS "
+                 << " and " << indirect << " indirect TS, expected the same number";
+    study.gotFatalError = true;
+}
+
+bool linkLoadTimeSeries_for_version_under_320(AreaLink& link, const AnyString& folder, Study& study)
 {
     String buffer;
     bool ret = true;
@@ -518,34 +526,44 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         if (study.usedByTheSolver)
         {
             // Short names for link's properties
-            auto& directCapacities = link.directCapacities[0];
-            auto& indirectCapacities = link.indirectCapacities[0];
+            const uint nbDirectTS = link.directCapacities.width;
+            const uint nbIndirectTS = link.indirectCapacities.width;
+            if (nbDirectTS != nbIndirectTS) {
+                logLinkDataCheckErrorDirectIndirect(study, link, nbDirectTS, nbIndirectTS);
+                return false;
+            }
+
             auto& directHurdlesCost = link.parameters[fhlHurdlesCostDirect];
             auto& indirectHurdlesCost = link.parameters[fhlHurdlesCostIndirect];
             auto& loopFlow = link.parameters[fhlLoopFlow];
             auto& PShiftMinus = link.parameters[fhlPShiftMinus];
             auto& PShiftPlus = link.parameters[fhlPShiftPlus];
-            
-            // Checks on direct capacities
-            for (int h = 0; h < HOURS_PER_YEAR; h++)
+
+            for (uint indexTS = 0; indexTS < nbDirectTS; ++indexTS)
             {
-                if (directCapacities[h] < 0. || directCapacities[h] < loopFlow[h])
+                auto& directCapacities = link.directCapacities[indexTS];
+                auto& indirectCapacities = link.indirectCapacities[indexTS];
+
+                // Checks on direct capacities
+                for (int h = 0; h < HOURS_PER_YEAR; h++)
                 {
-                    logLinkDataCheckError(study, link);
-                    return false;
+                    if (directCapacities[h] < 0. || directCapacities[h] < loopFlow[h])
+                    {
+                        logLinkDataCheckError(study, link);
+                        return false;
+                    }
+                }
+
+                // Checks on indirect capacities
+                for (int h = 0; h < HOURS_PER_YEAR; h++)
+                {
+                    if (indirectCapacities[h] < 0. || indirectCapacities[h] + loopFlow[h] < 0)
+                    {
+                        logLinkDataCheckError(study, link);
+                        return false;
+                    }
                 }
             }
-
-            // Checks on indirect capacities
-            for (int h = 0; h < HOURS_PER_YEAR; h++)
-            {
-                if (indirectCapacities[h] < 0. || indirectCapacities[h] + loopFlow[h] < 0)
-                {
-                    logLinkDataCheckError(study, link);
-                    return false;
-                }
-            }
-
             // Checks on hurdle costs
             for (int h = 0; h < HOURS_PER_YEAR; h++)
             {
@@ -833,6 +851,7 @@ void AreaLink::flush()
     parameters.flush();
     directCapacities.flush();
     indirectCapacities.flush();
+    timeseriesNumbers.flush();
 }
 
 } // namespace Data

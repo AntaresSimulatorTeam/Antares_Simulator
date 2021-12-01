@@ -141,6 +141,9 @@ public:
     Matrix<> directCapacities;
     Matrix<> indirectCapacities;
 
+    //! Monte-Carlo
+    Matrix<Yuni::uint32> timeseriesNumbers;
+
     //! Flag for using loop flow
     bool useLoopFlow;
 
