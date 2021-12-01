@@ -29,7 +29,7 @@ endif()
 
 
 # Storing test-sc-builder-file-read-line under the folder Unit-tests in the IDE
-set_target_properties(test-sc-builder-file-read-line PROPERTIES FOLDER Unit-tests)
+set_target_properties(test-sc-builder-file-read-line PROPERTIES FOLDER Unit-tests/sc-builder)
 
 add_test(NAME sc-builder-file-read-line COMMAND test-sc-builder-file-read-line)
 

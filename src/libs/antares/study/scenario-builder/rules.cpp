@@ -79,9 +79,6 @@ void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
 
 bool Rules::reset()
 {
-    // Alias to the current study
-    assert(&study_ != nullptr);
-
     // The new area count
     pAreaCount = study_.areas.size();
 

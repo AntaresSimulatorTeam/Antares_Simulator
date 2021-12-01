@@ -1536,7 +1536,6 @@ bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const Ar
 #endif
     });
     
-    // gp : do we really need to rebuild the area's link indexes here ?
     area->buildLinksIndexes();
 
     return true;
