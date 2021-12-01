@@ -41,7 +41,7 @@ namespace ScenarioBuilder
 /*!
 ** \brief Interface for scenario builder data (time series, hydro levels, ...)
 */
-class dataInterface : private Yuni::NonCopyable<dataInterface>
+class dataInterface
 {
 public:
     //! \name Data manupulation

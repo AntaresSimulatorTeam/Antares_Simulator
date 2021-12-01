@@ -722,6 +722,7 @@ void AreaLinkRemove(AreaLink* link)
     {
         areaFrom->detachLinkFromID(link->with->id);
         areaFrom->detachLinkFromID(link->from->id);
+        areaFrom->buildLinksIndexes();
     }
 
     Area* areaTo = link->with;
@@ -732,8 +733,6 @@ void AreaLinkRemove(AreaLink* link)
     }
 
     delete link;
-
-    areaFrom->buildLinksIndexes();
 }
 
 void AreaLink::estimateMemoryUsage(StudyMemoryUsage& u) const

@@ -44,13 +44,6 @@ namespace ScenarioBuilder
 {
 }
 
-Rules::~Rules()
-{
-    delete[] thermal;
-    delete[] renewable;
-    delete[] linksNTC;
-}
-
 void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
 {
     file << "[" << pName << "]\n";
@@ -88,8 +81,8 @@ bool Rules::reset()
     wind.reset(study_);
 
     // Thermal
-    delete[] thermal;
-    thermal = new thermalTSNumberData[pAreaCount];
+    thermal.clear();
+    thermal.resize(pAreaCount);
 
     for (uint i = 0; i != pAreaCount; ++i)
     {
@@ -98,8 +91,8 @@ bool Rules::reset()
     }
 
     // Renewable
-    delete[] renewable;
-    renewable = new renewableTSNumberData[pAreaCount];
+    renewable.clear();
+    renewable.resize(pAreaCount);
 
     for (uint i = 0; i != pAreaCount; ++i)
     {
@@ -109,9 +102,9 @@ bool Rules::reset()
 
     hydroLevels.reset(study_);
 
-    // link NTC
-    delete[] linksNTC;
-    linksNTC = new ntcTSNumberData[pAreaCount];
+    // links NTC
+    linksNTC.clear();
+    linksNTC.resize(pAreaCount);
 
     for (uint i = 0; i != pAreaCount; ++i)
     {

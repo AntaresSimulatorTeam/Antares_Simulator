@@ -63,7 +63,7 @@ public:
     */
     explicit Rules(Study& study);
     //! Destructor
-    ~Rules();
+    ~Rules() = default;
     //@}
 
     //! \name Data manupulation
@@ -114,15 +114,15 @@ public:
 
     // gp : change these 3 arrays into std containers, like std::vector 
     //! Thermal (array [0..pAreaCount - 1])
-    thermalTSNumberData* thermal;
+    std::vector<thermalTSNumberData> thermal;
     //! Renewable (array [0..pAreaCount - 1])
-    renewableTSNumberData* renewable;
+    std::vector<renewableTSNumberData> renewable;
 
     //! hydro levels
     hydroLevelsData hydroLevels;
 
-    // 
-    ntcTSNumberData* linksNTC;
+    // Links NTC
+    std::vector<ntcTSNumberData> linksNTC;
 
 private:
     // Member methods
