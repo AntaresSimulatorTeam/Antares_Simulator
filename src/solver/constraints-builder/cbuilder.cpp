@@ -91,8 +91,12 @@ bool CBuilder::update(bool applyCheckBox)
 
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
     {
-        // Try to open the file
-        if (not (*linkInfoIt)->ptr->loadDataFromCSVfile(Matrix<>::optImmediate))
+        auto linkInfo = *linkInfoIt;
+        Data::AreaLink* link = linkInfo->ptr;
+
+        // Try to open link data files
+        YString dataFilename = link->parameters.jit->sourceFilename;
+        if (not link->loadTimeSeries(*pStudy, dataFilename))
             return false;
     }
 
@@ -296,16 +300,16 @@ bool CBuilder::deletePreviousConstraints()
 
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
     {
-        // Try to open the file
-        if (not (*linkInfoIt)->ptr->loadDataFromCSVfile(Matrix<>::optImmediate))
+        auto linkInfo = *linkInfoIt;
+        Data::AreaLink* link = linkInfo->ptr;
+
+        // Try to open link data files
+        YString dataFilename = link->parameters.jit->sourceFilename;
+        if (not link->loadTimeSeries(*pStudy, dataFilename))
             return false;
-    }
 
-    for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
-    {
-        (*linkInfoIt)->ptr->useLoopFlow = false;
-
-        (*linkInfoIt)->ptr->usePST = false;
+        link->useLoopFlow = false;
+        link->usePST = false;
     }
 
     return true;
