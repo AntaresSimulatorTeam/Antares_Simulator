@@ -341,7 +341,7 @@ private:
     bool storeTimeseriesNumbersForHydro(Study& study);
     bool storeTimeseriesNumbersForThermal(Study& study);
     bool storeTimeseriesNumbersForRenewable(Study& study);
-
+    bool storeTimeseriesNumbersForTransmissionCapacities(Study& study);
 }; // class Area
 
 bool saveAreaOptimisationIniFile(const Area& area, const Yuni::Clob& buffer);

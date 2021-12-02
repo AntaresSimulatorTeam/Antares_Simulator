@@ -887,6 +887,7 @@ void TimeSeriesNumbers::StoreTimeseriesIntoOuput(Study& study)
         study.storeTimeSeriesNumbers<timeSeriesWind>();
         study.storeTimeSeriesNumbers<timeSeriesThermal>();
         study.storeTimeSeriesNumbers<timeSeriesRenewable>();
+        study.storeTimeSeriesNumbers<timeSeriesTransmissionCapacities>();
     }
 }
 

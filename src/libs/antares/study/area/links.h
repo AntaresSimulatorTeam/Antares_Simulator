@@ -71,6 +71,8 @@ public:
 
     bool loadTimeSeries(Study& study, const AnyString& folder);
 
+    bool storeTimeseriesNumbers(Study& study, const AnyString& folder) const;
+
     //! \name Area
     //@{
     /*!

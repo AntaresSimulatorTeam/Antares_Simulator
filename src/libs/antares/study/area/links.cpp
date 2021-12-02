@@ -40,6 +40,17 @@
 using namespace Yuni;
 using namespace Antares;
 
+namespace // anonymous
+{
+struct TSNumbersPredicate
+{
+    uint32 operator()(uint32 value) const
+    {
+        return value + 1;
+    }
+};
+} // namespace
+
 #define SEP (IO::Separator)
 
 namespace Antares
@@ -233,6 +244,14 @@ bool AreaLink::loadTimeSeries(Study& study, const AnyString& folder)
     else {
         return linkLoadTimeSeries_for_version_820_and_later(folder);
     }
+}
+
+bool AreaLink::storeTimeseriesNumbers(Study& study, const AnyString& folder) const
+{
+    TSNumbersPredicate predicate;
+    YString filename;
+    filename << folder << SEP << with->id;
+    return timeseriesNumbers.saveToCSVFile(filename, 0, true, predicate);
 }
 
 void AreaLink::detach()
