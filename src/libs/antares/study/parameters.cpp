@@ -80,6 +80,8 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
             v |= timeSeriesSolar;
         else if (word == "renewables")
             v |= timeSeriesRenewable;
+        else if (word == "ntc")
+            v |= timeSeriesTransmissionCapacities;
         return true;
     });
     return true;
@@ -352,6 +354,12 @@ static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint
         if (not v.empty())
             v += ", ";
         v += "renewables";
+    }
+    if (value & timeSeriesTransmissionCapacities)
+    {
+        if (not v.empty())
+            v += ", ";
+        v += "ntc";
     }
     s->add(name, v);
 }
@@ -1195,6 +1203,24 @@ void Parameters::fixBadValues()
         refreshIntervalThermal = 1;
         logs.error() << "The thermal time-series must be refreshed but the interval is equal to 0. "
                         "Auto-Reset to a safe value (1).";
+    }
+    if (timeSeriesTransmissionCapacities & timeSeriesToGenerate != 0)
+    {
+        timeSeriesToGenerate &= ~timeSeriesTransmissionCapacities;
+        logs.error() << "Time-series generation is not available for transmission capacities. It "
+                        "will be automatically disabled.";
+    }
+    if (timeSeriesTransmissionCapacities & timeSeriesToRefresh != 0)
+    {
+        timeSeriesToRefresh &= ~timeSeriesTransmissionCapacities;
+        logs.error() << "Time-series refresh is not available for transmission capacities. It will "
+                        "be automatically disabled.";
+    }
+    if (timeSeriesTransmissionCapacities & interModal != 0)
+    {
+        interModal &= ~timeSeriesTransmissionCapacities;
+        logs.error() << "Inter-modal correlation is not available for transmission capacities. It "
+                        "will be automatically disabled.";
     }
 }
 
