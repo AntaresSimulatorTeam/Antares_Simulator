@@ -37,18 +37,6 @@ using namespace Yuni;
 using namespace Antares::Data;
 using namespace std;
 
-std::map<int, TimeSeries> swapTSandTSindex(const std::map<TimeSeries, int>& map)
-{
-    std::map<int, TimeSeries> map_swaped;
-
-    std::map<TimeSeries, int>::const_iterator it = map.begin();
-    for (it = map.begin(); it != map.end(); it++)
-    {
-        map_swaped[it->second] = it->first;
-    }
-    return map_swaped;
-}
-
 const map<TimeSeries, int> ts_to_tsIndex = {{timeSeriesLoad, 0},
                                             {timeSeriesHydro, 1},
                                             {timeSeriesWind, 2},
@@ -56,8 +44,6 @@ const map<TimeSeries, int> ts_to_tsIndex = {{timeSeriesLoad, 0},
                                             {timeSeriesSolar, 4},
                                             {timeSeriesRenewable, 5},
                                             {timeSeriesTransmissionCapacities, 6}};
-
-const map<int, TimeSeries> tsIndex_to_ts = swapTSandTSindex(ts_to_tsIndex);
 
 const map<TimeSeries, string> ts_to_tsTitle = {{timeSeriesLoad, "load"},
                                                {timeSeriesHydro, "hydro"},
@@ -484,7 +470,7 @@ void drawTSnumbersForIntraModal(array<uint32, timeSeriesCount>& intramodal_draws
     {
         if (isTSintramodal[tsKind])
         {
-            if (/*tsIndex_to_ts.at(tsKind) == timeSeriesTransmissionCapacities && */ nbTimeseriesByMode[tsKind] == 1)
+            if (((1 << tsKind) == timeSeriesTransmissionCapacities) && nbTimeseriesByMode[tsKind] == 1)
             {
                 // Random generator (mersenne-twister) must not be called here
                 // in order to avoid a shift in the random generator results
