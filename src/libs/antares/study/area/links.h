@@ -69,6 +69,8 @@ public:
     ~AreaLink();
     //@}
 
+    bool loadTimeSeries(Study& study, const AnyString& folder);
+
     //! \name Area
     //@{
     /*!
@@ -100,10 +102,6 @@ public:
     ** \brief Mark the data associated to the link as modified
     */
     void markAsModified() const;
-
-    void setPathToDataFile(const AnyString& path) { pathToDataFile = path; }
-    
-    bool loadDataFromCSVfile(uint loadOptions);
     //@}
 
     //! \name Memory management
@@ -123,6 +121,12 @@ public:
     Yuni::String getName() const;
 
     void flush();
+
+private:
+    bool linkLoadTimeSeries_for_version_under_320(const AnyString& folder, Study& study);
+    bool linkLoadTimeSeries_for_version_from_320_to_630(const AnyString& folder);
+    bool linkLoadTimeSeries_for_version_from_630_to_810(const AnyString& folder);
+    bool linkLoadTimeSeries_for_version_820_and_later(const AnyString& folder);
 
 public:
     //! \name Graph
@@ -203,9 +207,6 @@ public:
     StyleType style;
     //! link width
     int linkWidth;
-
-    AnyString pathToDataFile;
-
 }; // class AreaLink
 
 struct CompareLinkName final

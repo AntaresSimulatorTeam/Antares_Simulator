@@ -326,17 +326,25 @@ bool IntraModalConsistencyChecker::checkTSconsistency()
         listNumberTS.insert(listNumberTS.end(), areaNumberTSList.begin(), areaNumberTSList.end());
     }
 
-    // Remove 1 from the number of time series list
-    listNumberTS.erase(std::remove(listNumberTS.begin(), listNumberTS.end(), 1), listNumberTS.end());
-
-    if (std::adjacent_find(listNumberTS.begin(), listNumberTS.end(), std::not_equal_to<uint>())
+    if (std::adjacent_find(listNumberTS.begin(),
+                           listNumberTS.end(),
+                           Antares::Solver::TimeSeriesNumbers::compareWidth)
         != listNumberTS.end())
     {
         logs.error() << "Intra-modal correlation: " << tsTitle_
                      << "'s numbers of time-series are not equal for all areas";
         return false;
     }
-    nbTimeseries_ = listNumberTS[0];
+
+    auto result = find_if(listNumberTS.begin(), listNumberTS.end(), [](uint x) { return x != 1; });
+    if (result == listNumberTS.end())
+    { // All elements are equal to 1 or list is empty
+        nbTimeseries_ = 1;
+    }
+    else
+    {
+        nbTimeseries_ = *result;
+    }
     return true;
 }
 
@@ -450,12 +458,10 @@ bool checkInterModalConsistencyForArea(Area& area,
         }
     }
 
-    // Remove 1 from the number of time series list
-    listNumberTsOverArea.erase(std::remove(listNumberTsOverArea.begin(), listNumberTsOverArea.end(), 1), listNumberTsOverArea.end());
-
-    // Now check if all elements of list of TS numbers are identical
-    if (std::adjacent_find(
-          listNumberTsOverArea.begin(), listNumberTsOverArea.end(), std::not_equal_to<uint>())
+    // Now check if all elements of list of TS numbers are identical or equal to 1
+    if (std::adjacent_find(listNumberTsOverArea.begin(),
+                           listNumberTsOverArea.end(),
+                           Antares::Solver::TimeSeriesNumbers::compareWidth)
         != listNumberTsOverArea.end())
     {
         logs.error()
@@ -792,6 +798,13 @@ void applyMatrixDrawsToInterModalModesInArea(Matrix<uint32>* tsNumbersMtx,
             }
         }
     }
+}
+
+bool TimeSeriesNumbers::compareWidth(uint a, uint b)
+{
+    if (a == 1 || b == 1)
+        return false; // ignore 1 values
+    return a != b;
 }
 
 bool TimeSeriesNumbers::Generate(Study& study)

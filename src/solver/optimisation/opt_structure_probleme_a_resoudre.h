@@ -27,6 +27,9 @@
 #ifndef __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__
 #define __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__
 
+#include <vector>
+#include <string>
+
 #define PREMIERE_OPTIMISATION 1
 #define DEUXIEME_OPTIMISATION 2
 
@@ -138,6 +141,9 @@ typedef struct
     double* Pi;
     int* Colonne;
 
+    /* Nommage des variables & contraintes */
+    std::vector<std::string> NomDesVariables;
+    std::vector<std::string> NomDesContraintes;
 } PROBLEME_ANTARES_A_RESOUDRE;
 
 #endif /* __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__ */
