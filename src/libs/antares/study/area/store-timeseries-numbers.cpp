@@ -161,12 +161,16 @@ bool Area::storeTimeseriesNumbersForTransmissionCapacities(Study& study)
     }
 
     bool ret = true;
-    for (auto& link : links) {
-        if (link.second == nullptr) {
-          logs.error() << "Unexpected nullptr encountered for area " << id;
-          return false;
-        } else {
-          ret = link.second->storeTimeseriesNumbers(study, study.buffer) && ret;
+    for (auto& link : links)
+    {
+        if (link.second == nullptr)
+        {
+            logs.error() << "Unexpected nullptr encountered for area " << id;
+            return false;
+        }
+        else
+        {
+            ret = link.second->storeTimeseriesNumbers(study, study.buffer) && ret;
         }
     }
     return ret;
