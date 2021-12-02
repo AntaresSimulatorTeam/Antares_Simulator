@@ -815,7 +815,10 @@ bool TimeSeriesNumbers::Generate(Study& study)
 
     array<uint, timeSeriesCount> nbTimeseriesByMode;
 
-    array<uint32, timeSeriesCount> intramodal_draws = {0, 0, 0, 0, 0, 0};
+    array<uint32, timeSeriesCount> intramodal_draws;
+    std::fill(intramodal_draws.begin(),
+              intramodal_draws.end(),
+              0);
 
     const array<bool, timeSeriesCount> isTSgenerated
       = {(bool)(timeSeriesLoad & parameters.timeSeriesToRefresh),
