@@ -81,9 +81,9 @@ bool AdequacyDraft::year(Progression::Task& progression,
 
     state.startANewYear();
 
-    for (unsigned int hour = pStartHour; hour != pFinalHour; ++hour)
+    for (uint hour = pStartHour; hour != pFinalHour; ++hour)
     {
-        state.hourInTheYear = (unsigned int)hour;
+        state.hourInTheYear = hour;
         state.eensSystemIS = 0.;
         state.eensSystemCN = 0.;
 
