@@ -429,6 +429,11 @@ bool storeToInputCell::cellValue(const String& value)
 
 IRenderer::CellStyle storeToInputCell::cellStyle() const
 {
+    // Special case: generation might be forced for some thermal clusters
+    if (tsKind_ == timeSeriesThermal)
+    {
+        return IRenderer::cellStyleDefault;
+    }
     return (isTSgeneratorOn() && 0 != (study_->parameters.timeSeriesToImport & tsKind_))
              ? IRenderer::cellStyleDefault
              : IRenderer::cellStyleDefaultDisabled;
@@ -466,6 +471,11 @@ bool storeToOutputCell::cellValue(const String& value)
 
 IRenderer::CellStyle storeToOutputCell::cellStyle() const
 {
+    // Special case: generation might be forced for some thermal clusters
+    if (tsKind_ == timeSeriesThermal)
+    {
+        return IRenderer::cellStyleDefault;
+    }
     return (isTSgeneratorOn() && 0 != (study_->parameters.timeSeriesToArchive & tsKind_))
              ? IRenderer::cellStyleDefault
              : IRenderer::cellStyleDefaultDisabled;
@@ -576,9 +586,8 @@ IRenderer::CellStyle RefreshTsCellThermal::cellStyle() const
 
 IRenderer::CellStyle RefreshSpanCellThermal::cellStyle() const
 {
-    return (0 != (study_->parameters.timeSeriesToRefresh & tsKind_))
-             ? IRenderer::cellStyleDefault
-             : IRenderer::cellStyleDefaultDisabled;
+    // Special case: generation might be forced for some thermal clusters
+    return IRenderer::cellStyleDefault;
 }
 
 IRenderer::CellStyle SeasonalCorrelationCellThermal::cellStyle() const
