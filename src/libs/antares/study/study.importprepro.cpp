@@ -38,6 +38,7 @@ namespace Data
 {
 bool Study::importTimeseriesIntoInput()
 {
+    // Special case: some thermal clusters may force TS generation
     const bool importThermal = parameters.haveToImport(timeSeriesThermal) && runtime->thermalTSRefresh;
     // Something to import ?
     if (parameters.timeSeriesToImport && parameters.timeSeriesToGenerate || importThermal)
