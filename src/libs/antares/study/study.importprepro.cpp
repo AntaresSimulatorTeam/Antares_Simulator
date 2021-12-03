@@ -30,9 +30,6 @@
 
 using namespace Yuni;
 
-#define HAVE_TO_IMPORT(X) \
-    ((parameters.timeSeriesToImport & X) && (parameters.timeSeriesToGenerate & X))
-
 #define SEP IO::Separator
 
 namespace Antares
@@ -41,8 +38,9 @@ namespace Data
 {
 bool Study::importTimeseriesIntoInput()
 {
+    const bool importThermal = parameters.haveToImport(timeSeriesThermal) && runtime->thermalTSRefresh;
     // Something to import ?
-    if (parameters.timeSeriesToImport && parameters.timeSeriesToGenerate)
+    if (parameters.timeSeriesToImport && parameters.timeSeriesToGenerate || importThermal)
     {
         // Return status
         bool ret = true;
@@ -54,7 +52,7 @@ bool Study::importTimeseriesIntoInput()
         Solver::Progression::Task progression(*this, Solver::Progression::sectImportTS);
 
         // Load
-        if (HAVE_TO_IMPORT(timeSeriesLoad))
+        if (parameters.haveToImport(timeSeriesLoad))
         {
             logs.info() << "Importing load timeseries...";
             areas.each([&](const Data::Area& area) {
@@ -66,7 +64,7 @@ bool Study::importTimeseriesIntoInput()
         }
 
         // Solar
-        if (HAVE_TO_IMPORT(timeSeriesSolar))
+        if (parameters.haveToImport(timeSeriesSolar))
         {
             logs.info() << "Importing solar timeseries...";
             areas.each([&](const Data::Area& area) {
@@ -79,7 +77,7 @@ bool Study::importTimeseriesIntoInput()
         }
 
         // Hydro
-        if (HAVE_TO_IMPORT(timeSeriesHydro))
+        if (parameters.haveToImport(timeSeriesHydro))
         {
             logs.info() << "Importing hydro timeseries...";
             areas.each([&](const Data::Area& area) {
@@ -91,7 +89,7 @@ bool Study::importTimeseriesIntoInput()
         }
 
         // Wind
-        if (HAVE_TO_IMPORT(timeSeriesWind))
+        if (parameters.haveToImport(timeSeriesWind))
         {
             logs.info() << "Importing wind timeseries...";
             areas.each([&](const Data::Area& area) {
@@ -103,7 +101,7 @@ bool Study::importTimeseriesIntoInput()
         }
 
         // Thermal
-        if (HAVE_TO_IMPORT(timeSeriesThermal))
+        if (importThermal)
         {
             logs.info() << "Importing thermal timeseries...";
             String msg;

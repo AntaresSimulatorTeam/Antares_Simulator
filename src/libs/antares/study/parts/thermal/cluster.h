@@ -223,7 +223,7 @@ public:
     bool checkMinStablePowerWithNewModulation(uint index, double value);
     //@}
 
-    bool doWeGenerateTS(GlobalTSGenerationBehavior global, bool refresh = true) const;
+    bool doWeGenerateTS(GlobalTSGenerationBehavior global, bool refresh) const;
 
 public:
     /*!

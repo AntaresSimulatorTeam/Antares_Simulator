@@ -471,16 +471,17 @@ void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
     auto& gd = study.parameters;
     thermalTSRefresh = gd.timeSeriesToGenerate & timeSeriesThermal;
     Data::GlobalTSGenerationBehavior globalBehavior;
-    if (gd.timeSeriesToGenerate & timeSeriesThermal) {
+    if (gd.timeSeriesToGenerate & timeSeriesThermal)
+    {
         globalBehavior = Data::GlobalTSGenerationBehavior::generate;
-    } else {
+    }
+    else
+    {
         globalBehavior = Data::GlobalTSGenerationBehavior::doNotGenerate;
     }
     study.areas.each([this, &gd, globalBehavior](Data::Area& area) {
-          area.thermal.list.each([this, &gd, globalBehavior](const Data::ThermalCluster& cluster) {
-            thermalTSRefresh
-              = thermalTSRefresh
-                || cluster.doWeGenerateTS(globalBehavior);
+        area.thermal.list.each([this, &gd, globalBehavior](const Data::ThermalCluster& cluster) {
+            thermalTSRefresh = thermalTSRefresh || cluster.doWeGenerateTS(globalBehavior, true);
         });
     });
 }
