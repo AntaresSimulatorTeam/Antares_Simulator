@@ -33,7 +33,9 @@
 using namespace Yuni;
 
 #define SEP IO::Separator
-#define DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES "ntc"
+namespace {
+    static const YString DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES = "ntc";
+}
 
 namespace Antares
 {
@@ -161,7 +163,7 @@ bool Area::storeTimeseriesNumbersForTransmissionCapacities(Study& study)
     }
 
     bool ret = true;
-    for (auto& link : links)
+    for (const auto& link : links)
     {
         if (link.second == nullptr)
         {
@@ -170,7 +172,7 @@ bool Area::storeTimeseriesNumbersForTransmissionCapacities(Study& study)
         }
         else
         {
-            ret = link.second->storeTimeseriesNumbers(study, study.buffer) && ret;
+            ret = link.second->storeTimeseriesNumbers(study.buffer) && ret;
         }
     }
     return ret;

@@ -233,10 +233,9 @@ public:
 class areaLinksTransCapaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
-    areaLinksTransCapaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
-    {
-    }
-    std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
+    using areaNumberOfTSretriever::areaNumberOfTSretriever;
+    virtual ~areaLinksTransCapaNumberOfTSretriever() = default;
+    std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
         std::vector<uint> to_return;
         
@@ -248,7 +247,7 @@ public:
         }
         return to_return;
     }
-    uint getGeneratedTimeSeriesNumber()
+    uint getGeneratedTimeSeriesNumber() override
     {
         return 1;
     }

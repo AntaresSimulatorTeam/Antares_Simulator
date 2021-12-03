@@ -357,7 +357,7 @@ static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint
     }
     if (value & timeSeriesTransmissionCapacities)
     {
-        if (not v.empty())
+        if (!v.empty())
             v += ", ";
         v += "ntc";
     }
@@ -1112,6 +1112,10 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     // Attempt to fix bad values if any
     fixBadValues();
 
+    fixRefreshIntervals();
+
+    fixGenRefreshForNTC();
+
     // Specific action before launching a simulation
     if (options.usedByTheSolver)
         prepareForSimulation(options);
@@ -1119,6 +1123,62 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     // We currently always returns true to not block any loading process
     // Anyway we already have reported all problems
     return true;
+}
+
+void Parameters::fixRefreshIntervals()
+{
+    if (timeSeriesLoad & timeSeriesToRefresh && 0 == refreshIntervalLoad)
+    {
+        refreshIntervalLoad = 1;
+        logs.error() << "The load time-series must be refreshed but the interval is equal to 0. "
+                        "Auto-Reset to a safe value (1).";
+    }
+    if (timeSeriesSolar & timeSeriesToRefresh && 0 == refreshIntervalSolar)
+    {
+        refreshIntervalSolar = 1;
+        logs.error() << "The solar time-series must be refreshed but the interval is equal to 0. "
+                        "Auto-Reset to a safe value (1).";
+    }
+    if (timeSeriesHydro & timeSeriesToRefresh && 0 == refreshIntervalHydro)
+    {
+        refreshIntervalHydro = 1;
+        logs.error() << "The hydro time-series must be refreshed but the interval is equal to 0. "
+                        "Auto-Reset to a safe value (1).";
+    }
+    if (timeSeriesWind & timeSeriesToRefresh && 0 == refreshIntervalWind)
+    {
+        refreshIntervalWind = 1;
+        logs.error() << "The wind time-series must be refreshed but the interval is equal to 0. "
+                        "Auto-Reset to a safe value (1).";
+    }
+    if (timeSeriesThermal & timeSeriesToRefresh && 0 == refreshIntervalThermal)
+    {
+        refreshIntervalThermal = 1;
+        logs.error() << "The thermal time-series must be refreshed but the interval is equal to 0. "
+                        "Auto-Reset to a safe value (1).";
+    }
+}
+
+void Parameters::fixGenRefreshForNTC()
+{
+    if (timeSeriesTransmissionCapacities & timeSeriesToGenerate != 0)
+    {
+        timeSeriesToGenerate &= ~timeSeriesTransmissionCapacities;
+        logs.error() << "Time-series generation is not available for transmission capacities. It "
+                        "will be automatically disabled.";
+    }
+    if (timeSeriesTransmissionCapacities & timeSeriesToRefresh != 0)
+    {
+        timeSeriesToRefresh &= ~timeSeriesTransmissionCapacities;
+        logs.error() << "Time-series refresh is not available for transmission capacities. It will "
+                        "be automatically disabled.";
+    }
+    if (timeSeriesTransmissionCapacities & interModal != 0)
+    {
+        interModal &= ~timeSeriesTransmissionCapacities;
+        logs.error() << "Inter-modal correlation is not available for transmission capacities. It "
+                        "will be automatically disabled.";
+    }
 }
 
 void Parameters::fixBadValues()
@@ -1173,55 +1233,6 @@ void Parameters::fixBadValues()
         nbTimeSeriesWind = 1;
     if (!nbTimeSeriesSolar)
         nbTimeSeriesSolar = 1;
-
-    if (timeSeriesLoad & timeSeriesToRefresh && 0 == refreshIntervalLoad)
-    {
-        refreshIntervalLoad = 1;
-        logs.error() << "The load time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesSolar & timeSeriesToRefresh && 0 == refreshIntervalSolar)
-    {
-        refreshIntervalSolar = 1;
-        logs.error() << "The solar time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesHydro & timeSeriesToRefresh && 0 == refreshIntervalHydro)
-    {
-        refreshIntervalHydro = 1;
-        logs.error() << "The hydro time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesWind & timeSeriesToRefresh && 0 == refreshIntervalWind)
-    {
-        refreshIntervalWind = 1;
-        logs.error() << "The wind time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesThermal & timeSeriesToRefresh && 0 == refreshIntervalThermal)
-    {
-        refreshIntervalThermal = 1;
-        logs.error() << "The thermal time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesTransmissionCapacities & timeSeriesToGenerate != 0)
-    {
-        timeSeriesToGenerate &= ~timeSeriesTransmissionCapacities;
-        logs.error() << "Time-series generation is not available for transmission capacities. It "
-                        "will be automatically disabled.";
-    }
-    if (timeSeriesTransmissionCapacities & timeSeriesToRefresh != 0)
-    {
-        timeSeriesToRefresh &= ~timeSeriesTransmissionCapacities;
-        logs.error() << "Time-series refresh is not available for transmission capacities. It will "
-                        "be automatically disabled.";
-    }
-    if (timeSeriesTransmissionCapacities & interModal != 0)
-    {
-        interModal &= ~timeSeriesTransmissionCapacities;
-        logs.error() << "Inter-modal correlation is not available for transmission capacities. It "
-                        "will be automatically disabled.";
-    }
 }
 
 void Parameters::resetYearsWeigth()

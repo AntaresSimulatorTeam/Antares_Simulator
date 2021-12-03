@@ -246,7 +246,7 @@ bool AreaLink::loadTimeSeries(Study& study, const AnyString& folder)
     }
 }
 
-bool AreaLink::storeTimeseriesNumbers(Study& study, const AnyString& folder) const
+bool AreaLink::storeTimeseriesNumbers(const AnyString& folder) const
 {
     TSNumbersPredicate predicate;
     YString filename;
