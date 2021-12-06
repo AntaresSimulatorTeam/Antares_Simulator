@@ -89,8 +89,8 @@ Rules::Ptr Sets::createNew(const RulesScenarioName& name)
         return nullptr;
 
     // The rule set does not exist, creating a new empty one
-    Rules::Ptr newRulesSet = new Rules();
-    newRulesSet->reset(*pStudy);
+    Rules::Ptr newRulesSet = new Rules(*pStudy);
+    newRulesSet->reset();
     newRulesSet->pName = name;
     pMap[id] = newRulesSet;
     return newRulesSet;
@@ -156,7 +156,7 @@ bool Sets::internalSaveToIniFile(const AnyString& filename) const
         // Export the informations of the current ruleset
         const Rules::Ptr& ruleset = i->second;
         if (!(!ruleset))
-            ruleset->saveToINIFile(*pStudy, file);
+            ruleset->saveToINIFile(file);
     }
     return true;
 }
@@ -184,13 +184,13 @@ bool Sets::internalLoadFromINIFile(const AnyString& filename)
         // Create a new ruleset
         Rules::Ptr rulesetptr = createNew(name);
         Rules& ruleset = *rulesetptr;
-        AreaName::Vector instrs;
+        AreaName::Vector splitKey;
 
         for (auto* p = section.firstProperty; p != nullptr; p = p->next)
         {
-            p->key.split(instrs, ",", true, false);
-            if (instrs.size() > 2)
-                ruleset.loadFromInstrs(*pStudy, instrs, p->value, inUpdaterMode);
+            p->key.split(splitKey, ",", true, false);
+            if (splitKey.size() > 2)
+                ruleset.readLine(splitKey, p->value, inUpdaterMode);
         }
 
         ruleset.sendWarningsForDisabledClusters();

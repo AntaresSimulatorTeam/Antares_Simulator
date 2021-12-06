@@ -48,7 +48,7 @@ void ApplyCustomScenario(Data::Study& study)
         Data::ScenarioBuilder::Rules::Ptr rules = study.scenarioRules->find(id);
         if (!(!rules))
         {
-            rules->apply(study);
+            rules->apply();
         }
         else
             logs.error() << "Scenario Builder: Impossible to find the active ruleset '" << rulename

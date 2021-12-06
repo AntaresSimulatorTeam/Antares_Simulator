@@ -1139,7 +1139,23 @@ $$X3 > 0$$
 
 $$X1 + X3 < 7$$
 
-_These commitments are obviously impossible to meet and, if the economic simulator is run on a dataset including such a set of constraints, it will produce an infeasibility diagnosis._
+_These commitments are obviously impossible to meet and, if the economic simulator is run on a dataset including such a set of constraints, it will produce an infeasibility analysis that looks like the following._
+```
+[solver][notic]  Solver: Starting infeasibility analysis...
+[solver][error] The following constraints are suspicious (first = most suspicious)
+[solver][error] Hydro reservoir constraint at area 'Germany' at hour 124
+[solver][error] Hydro reservoir constraint at area 'Germany' at hour 128
+[solver][error] Hydro reservoir constraint at area 'Germany' at hour 137
+[solver][error] Hydro reservoir constraint at area 'Germany' at hour 140
+[solver][error] Hydro reservoir constraint at area 'Germany' at hour 133
+[solver][error] Hydro reservoir constraint at area 'Germany' at hour 139
+[solver][error] Hydro reservoir constraint at area 'Germany' at hour 136
+[solver][error] Hydro reservoir constraint at area 'Germany' at hour 130
+[solver][error] Hydro reservoir constraint at area 'Germany' at hour 142
+[solver][error] Hydro reservoir constraint at area 'Germany' at hour 123
+```
+
+This report should help you identify constraints that generate infeasible linear optimization problems such what is presented above.
 
 _The advanced preference "Unfeasible Problems Behavior" gives to the user the ability to choose between four different strategies regarding these situations._
 

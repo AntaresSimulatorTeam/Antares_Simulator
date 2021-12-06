@@ -61,7 +61,7 @@ public:
     **
     ** \param tstype Type of the timeseries
     */
-    Rules();
+    Rules(Study& study);
     //! Destructor
     ~Rules();
     //@}
@@ -71,20 +71,19 @@ public:
     /*!
     ** \brief Initialize data from the study
     */
-    bool reset(const Study& study);
+    bool reset();
 
     /*!
     ** \brief Load information from a single line (extracted from an INI file)
     */
-    void loadFromInstrs(Study& study,
-                        const AreaName::Vector& instrs,
+    void readLine(const AreaName::Vector& splitKey,
                         String value,
                         bool updaterMode);
 
     /*!
     ** \brief Export the data into a mere INI file
     */
-    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
+    void saveToINIFile(Yuni::IO::File::Stream& file) const;
     //@}
 
     //! Get the number of areas
@@ -98,7 +97,7 @@ public:
     **
     ** This method is only useful when launched from the solver.
     */
-    void apply(Study& study);
+    void apply();
 
     // When current rule is the active one, sends warnings for disabled clusters.
     void sendWarningsForDisabledClusters();
@@ -112,14 +111,30 @@ public:
     hydroTSNumberData hydro;
     //! Wind
     windTSNumberData wind;
+
+    // gp : change these 2 arrays into std containers, like std::vector 
     //! Thermal (array [0..pAreaCount - 1])
     thermalTSNumberData* thermal;
     //! Renewable (array [0..pAreaCount - 1])
     renewableTSNumberData* renewable;
+
     //! hydro levels
     hydroLevelsData hydroLevels;
 
 private:
+    // Member methods
+    void readThermalCluster(const AreaName::Vector& instrs, String value, bool updaterMode);
+    void readRenewableCluster(const AreaName::Vector& instrs, String value, bool updaterMode);
+    void readLoad(const AreaName::Vector& instrs, String value, bool updaterMode);
+    void readWind(const AreaName::Vector& instrs, String value, bool updaterMode);
+    void readHydro(const AreaName::Vector& instrs, String value, bool updaterMode);
+    void readSolar(const AreaName::Vector& instrs, String value, bool updaterMode);
+    void readHydroLevels(const AreaName::Vector& instrs, String value, bool updaterMode);
+
+    Data::Area* getArea(const AreaName& areaname, bool updaterMode);
+
+    // Member data 
+    Study& study_;
     //! Total number of areas
     uint pAreaCount;
     //! Name of the rules

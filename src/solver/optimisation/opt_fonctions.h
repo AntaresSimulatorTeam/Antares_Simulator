@@ -77,7 +77,8 @@ void OPT_ChargerLaContrainteDansLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOU
                                                         double*,
                                                         int*,
                                                         int,
-                                                        char);
+                                                        char,
+                                                        const std::string& NomDeLaContrainte = "");
 void OPT_ChainagesDesIntercoPartantDUnNoeud(PROBLEME_HEBDO*);
 
 void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO*);
