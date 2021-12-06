@@ -34,7 +34,7 @@ using namespace Yuni;
 
 #define SEP IO::Separator
 namespace {
-    static const YString DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES = "ntc";
+    const YString DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES = "ntc";
 }
 
 namespace Antares
@@ -146,7 +146,7 @@ bool Area::storeTimeseriesNumbersForRenewable(Study& study)
     return ret;
 }
 
-bool Area::storeTimeseriesNumbersForTransmissionCapacities(Study& study)
+bool Area::storeTimeseriesNumbersForTransmissionCapacities(Study& study) const
 {
     // No links originating from this area
     // do not create an empty directory

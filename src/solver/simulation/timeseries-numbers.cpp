@@ -241,7 +241,7 @@ public:
         
         for (auto it = area.links.begin(); it != area.links.end(); ++it)
         {
-            auto& link = *(it->second);
+            const auto& link = *(it->second);
             to_return.push_back(link.directCapacities.width);
             to_return.push_back(link.indirectCapacities.width);
         }
@@ -587,7 +587,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         // -------------
         int indexTS = ts_to_tsIndex.at(timeSeriesLoad);
 
-        if (not isTSintramodal[indexTS])
+        if (!isTSintramodal[indexTS])
         {
             uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
                                                        : area.load.series->series.width;
@@ -600,7 +600,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         // -------------
         indexTS = ts_to_tsIndex.at(timeSeriesSolar);
 
-        if (not isTSintramodal[indexTS])
+        if (!isTSintramodal[indexTS])
         {
             uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
                                                        : area.solar.series->series.width;
@@ -613,7 +613,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         // -------------
         indexTS = ts_to_tsIndex.at(timeSeriesWind);
 
-        if (not isTSintramodal[indexTS])
+        if (!isTSintramodal[indexTS])
         {
             uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
                                                        : area.wind.series->series.width;
@@ -626,7 +626,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         // -------------
         indexTS = ts_to_tsIndex.at(timeSeriesHydro);
 
-        if (not isTSintramodal[indexTS])
+        if (!isTSintramodal[indexTS])
         {
             uint nbTimeSeries
               = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS] : area.hydro.series->ror.width;
@@ -647,7 +647,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
                 study.runtime->random[seedTimeseriesNumbers].next();
             else
             {
-                if (not isTSintramodal[indexTS])
+                if (!isTSintramodal[indexTS])
                 {
                     uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
                                                                : cluster->series->series.width;
@@ -670,7 +670,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
                 study.runtime->random[seedTimeseriesNumbers].next();
             else
             {
-                if (not isTSintramodal[indexTS])
+                if (!isTSintramodal[indexTS])
                 {
                     uint nbTimeSeries = cluster->series->series.width;
                     cluster->series->timeseriesNumbers.entry[0][year] = (uint32)(
@@ -684,7 +684,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         // -------------------------------
         indexTS = ts_to_tsIndex.at(timeSeriesTransmissionCapacities);
 
-        if (not isTSintramodal[indexTS])
+        if (!isTSintramodal[indexTS])
         {
             for (auto it = area.links.begin(); it != area.links.end(); ++it)
             {
