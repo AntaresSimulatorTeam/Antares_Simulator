@@ -250,7 +250,7 @@ bool AreaLink::storeTimeseriesNumbers(const AnyString& folder) const
 {
     TSNumbersPredicate predicate;
     YString filename;
-    filename << folder << SEP << with->id;
+    filename << folder << SEP << with->id << ".txt";
     return timeseriesNumbers.saveToCSVFile(filename, 0, true, predicate);
 }
 
