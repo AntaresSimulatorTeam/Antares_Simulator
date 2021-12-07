@@ -3,8 +3,9 @@ NODU is the number of dispatched units, defined for each cluster at every hour f
 
 ### Introduction
 Thermal clusters are of two types:
-    - Must-run
-    - Controllable
+
+* Must-run
+* Controllable
     
 Must-run clusters are always on. For controllable clusters, a heuristic method is used to determine at each hour its state (ON/OFF) and its production level.
 
@@ -29,9 +30,9 @@ If there are no fixed costs, this duration is set to 1 year: no unit will be res
 
 There are three possibilities:
 
-    - `dur == 0`: the cluster is very versatile: it is not too costly to restart it.
-    - `dur == endHourForCurrentYear`: the cluster is either must-run, or very costly to start.
-    - `0 < dur < endHourForCurrentYear`. Intermediate case: it can sometimes be profitable to restart the cluster, but not always.
+* `dur == 0`: the cluster is very versatile: it is not too costly to restart it.
+* `dur == endHourForCurrentYear`: the cluster is either must-run, or very costly to start.
+* `0 < dur < endHourForCurrentYear`. Intermediate case: it can sometimes be profitable to restart the cluster, but not always.
 
 ### Computation of the minimal number of ON units at each hour
 This depends on the unit-comittment mode chosen, the min-stable power, and the nominal capacity with spinning reserve. 
@@ -94,7 +95,10 @@ This is by far the most complicated part. The algorithm is run only if `dur > 0`
 ### Computation of the NODU for each cluster
 ```cpp
 // For each hour h in a year
-(dur == 0) ? (NODU[h] = ON_min[h]) : (NODU[h] = ON_opt[h]);
+if (dur == 0)
+    NODU[h] = ON_min[h];
+else
+    NODU[h] = ON_opt[h];
 
 // NODU cannot be exceed the unit count
 if (NODU[h] > currentCluster->unitCount)
@@ -102,4 +106,4 @@ if (NODU[h] > currentCluster->unitCount)
 
 ```
 
-If the cluster is very flexible, NODU is the minimal number of clusters. Otherwise, it is the optimal number of clusters from the [optimal ON algorithm](#computation-of-the-nodu-for-each-cluster).
+If the cluster is very flexible (`dur == 0`), NODU is the minimal number of clusters. Otherwise, it is the optimal number of clusters from the [optimal ON algorithm](#computation-of-the-optimal-number-of-on-units-at-each-hour).
