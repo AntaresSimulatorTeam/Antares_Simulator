@@ -1307,6 +1307,7 @@ _The area files that belong to the « values » class display_ **122** _fields c
 | NP COST | Non-proportional costs of the dispatchable plants (start-up and fixed costs) |
 | NODU | Number of Dispatched Units<sup>13</sup> |
 
+More information about how [NODU is computed](NODU.md)
 
 ### Economy and Adequacy, interconnection results [14]
 **10** _files resulting from the combination of the following attributes:_
