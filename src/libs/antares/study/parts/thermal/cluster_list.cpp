@@ -888,7 +888,7 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
             if (result and study.usedByTheSolver)
             {
                 // checking NPO max
-                result = c.prepro->normalizeAndCheckNPO(c.name(), c.unitCount);
+                result = c.prepro->normalizeAndCheckNPO(c.name(), c.unitCount, c.parentArea->name);
             }
 
             ret = result and ret;

@@ -116,7 +116,7 @@ public:
     **
     ** This method should only be used by the solver
     */
-    bool normalizeAndCheckNPO(const AnyString& clustername, uint clusterSize);
+    bool normalizeAndCheckNPO(const AnyString& clustername, uint clusterSize, const AnyString& areaname);
 
 public:
     //! All {FO,PO}{Duration,Rate} annual values
