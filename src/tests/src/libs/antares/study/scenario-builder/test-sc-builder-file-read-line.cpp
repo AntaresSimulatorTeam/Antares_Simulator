@@ -14,11 +14,7 @@ using namespace Antares::Data;
 // ===========================
 // Add a cluster to an area
 // ===========================
-template<class ClusterType>
-void addClusterToAreaList(Area* area, std::shared_ptr<ClusterType> cluster)
-{}
 
-template<>
 void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 {
 	area->thermal.clusters.push_back(cluster.get());
@@ -26,7 +22,6 @@ void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 	area->thermal.list.mapping[cluster->id()] = cluster;
 }
 
-template<>
 void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
 {
 	area->renewable.clusters.push_back(cluster.get());
@@ -55,7 +50,7 @@ struct Fixture
 	Fixture(const Fixture && f) = delete;
 	Fixture & operator= (const Fixture & f) = delete;
 	Fixture& operator= (const Fixture && f) = delete;
-	Fixture() : study(new Study()), my_rule(*study)
+	Fixture() : my_rule(*study)
 	{
 		// Set study parameters
 		study->parameters.nbYears = 20;
@@ -138,9 +133,9 @@ struct Fixture
 		BOOST_CHECK(my_rule.reset());
 	}
 
-	~Fixture() {}
+	~Fixture() = default;
 
-	Study::Ptr study;
+	Study::Ptr study = new Study();
 	Area* area_1;
 	Area* area_2;
 	Area* area_3;

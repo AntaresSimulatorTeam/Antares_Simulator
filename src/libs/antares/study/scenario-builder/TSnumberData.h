@@ -184,9 +184,7 @@ inline CString<512, false> hydroTSNumberData::get_prefix() const
 class thermalTSNumberData : public TSNumberData
 {
 public:
-    thermalTSNumberData() : pArea(nullptr)
-    {
-    }
+    thermalTSNumberData() = default;
 
     bool reset(const Study& study);
     void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
@@ -204,7 +202,7 @@ public:
 
 private:
     //! The attached area, if any
-    const Area* pArea;
+    const Area* pArea = nullptr;
     //! The map between clusters and there line index
     std::map<const ThermalCluster*, uint> clusterIndexMap;
 };
@@ -236,9 +234,7 @@ inline CString<512, false> thermalTSNumberData::get_prefix() const
 class renewableTSNumberData : public TSNumberData
 {
 public:
-    renewableTSNumberData() : pArea(nullptr)
-    {
-    }
+    renewableTSNumberData() = default;
 
     virtual ~renewableTSNumberData()
     {
@@ -260,7 +256,7 @@ public:
 
 private:
     //! The attached area, if any
-    const Area* pArea;
+    const Area* pArea = nullptr;
     //! The map between clusters and there line index
     std::map<const RenewableCluster*, uint> clusterIndexMap;
 };
@@ -291,9 +287,7 @@ inline CString<512, false> renewableTSNumberData::get_prefix() const
 class ntcTSNumberData : public TSNumberData
 {
 public:
-    ntcTSNumberData() : pArea(nullptr)
-    {
-    }
+    ntcTSNumberData() = default;
 
     bool reset(const Study& study);
     void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
@@ -311,7 +305,7 @@ public:
 
 private:
     //! The attached area, if any
-    const Area* pArea;
+    const Area* pArea = nullptr;
     //! The map between links and their line index
     std::map<const AreaLink*, uint> linksIndexMap;
 };

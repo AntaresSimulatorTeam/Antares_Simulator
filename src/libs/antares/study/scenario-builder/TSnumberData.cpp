@@ -388,7 +388,7 @@ void thermalTSNumberData::apply(Study& study)
     Area& area = *(study.areas.byIndex[pArea->index]);
     // The total number of clusters for the area
     // WARNING: We may have some thermal clusters with the `mustrun` option
-    uint clusterCount = area.thermal.clusterCount();
+    auto clusterCount = (uint)area.thermal.clusterCount();
 
     const uint tsGenCountThermal = get_tsGenCount(study);
 
@@ -440,7 +440,7 @@ void renewableTSNumberData::apply(Study& study)
     Area& area = *(study.areas.byIndex[pArea->index]);
     // The total number of clusters for the area
     // WARNING: We may have some renewable clusters with the `mustrun` option
-    uint clusterCount = area.renewable.clusterCount();
+    auto clusterCount = (uint)area.renewable.clusterCount();
 
     const uint tsGenCountRenewable = get_tsGenCount(study);
 
@@ -528,7 +528,7 @@ bool ntcTSNumberData::reset(const Study& study)
     const uint nbYears = study.parameters.nbYears;
     assert(pArea != nullptr);
 
-    uint linkCount = (uint)pArea->links.size();
+    auto linkCount = (uint)pArea->links.size();
 
     // Resize
     pTSNumberRules.reset(linkCount, nbYears);

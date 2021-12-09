@@ -145,7 +145,7 @@ private:
     //! Name of the rules
     RulesScenarioName pName;
     // Disabled clusters when current rule is active (useful for sending warnings)
-    map<string, vector<uint>> disabledClustersOnRuleActive;
+    map<string, vector<uint>, less<>> disabledClustersOnRuleActive;
     // Friend !
     friend class Sets;
 

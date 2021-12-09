@@ -39,8 +39,7 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
-    Rules::Rules(Study& study) :
-        load(), solar(), hydro(), wind(), thermal(), renewable(), hydroLevels(), linksNTC(), study_(study), pAreaCount(0)
+Rules::Rules(Study& study) : study_(study), pAreaCount(0)
 {
 }
 
@@ -119,11 +118,10 @@ bool Rules::reset()
 Data::Area* Rules::getArea(const AreaName& areaname, bool updaterMode)
 {
     Data::Area* area = study_.areas.find(areaname);
-    if (!area)
+    if (!area && not updaterMode)
     {
         // silently ignore the error
-        if (not updaterMode)
-            logs.warning() << "[scenario-builder] The area '" << areaname << "' has not been found";
+        logs.warning() << "[scenario-builder] The area '" << areaname << "' has not been found";
 
     }
     return area;
@@ -264,11 +262,10 @@ void Rules::readHydroLevels(const AreaName::Vector& splitKey, String value, bool
 Data::AreaLink* Rules::getLink(const AreaName& fromAreaName, const AreaName& toAreaName, bool updaterMode)
 {
     Data::AreaLink* link = study_.areas.findLink(fromAreaName, toAreaName);
-    if (!link)
+    if (!link && not updaterMode)
     {
         // silently ignore the error
-        if (not updaterMode)
-            logs.warning() << "[scenario-builder] The link '" << fromAreaName << " / " << toAreaName << "' has not been found";
+        logs.warning() << "[scenario-builder] The link '" << fromAreaName << " / " << toAreaName << "' has not been found";
 
     }
     return link;
