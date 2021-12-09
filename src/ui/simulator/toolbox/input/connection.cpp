@@ -277,42 +277,6 @@ void Connections::update()
         }
     }
 
-    // Flat
-    // Root Node
-    localRootId = pListbox->AppendItem(rootId, wxString(wxT("Flat")), 2);
-    pListbox->SetItemBold(localRootId, true);
-    {
-        const Data::Area::Map::iterator end = study.areas.end();
-        for (Data::Area::Map::iterator i = study.areas.begin(); i != end; ++i)
-        {
-            // Reference to the area
-            Data::Area& area = *(i->second);
-
-            if (area.isVisibleOnLayer(layerID))
-            {
-                // Foreach Interconnection for the area
-                const Data::AreaLink::Map::iterator end = area.links.end();
-                for (Data::AreaLink::Map::iterator i = area.links.begin(); i != end; ++i)
-                {
-                    Data::AreaLink* lnk = i->second;
-
-                    if (lnk->isVisibleOnLayer(layerID))
-                    {
-                        // Adding the item for the interconnection
-                        /*wxTreeItemId itemID = */ pListbox->AppendItem(
-                          localRootId, /*parent*/
-                          // caption
-                          wxString() << wxT(' ') << wxStringFromUTF8(lnk->from->name) << wxT(" / ")
-                                     << wxStringFromUTF8(lnk->with->name) << wxT(' '),
-                          0,
-                          0,
-                          new TreeLeaf(lnk));
-                    }
-                }
-            }
-        }
-    }
-
     // Expand all items and subitems
     pListbox->SetQuickBestSize(true);
     pListbox->ExpandAll();
