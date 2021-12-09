@@ -138,8 +138,7 @@ void Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
 
     Data::Area* area = getArea(areaname, updaterMode);
     if (! area)
-    return area;
-}
+        return;
 
     const ThermalCluster* cluster = area->thermal.list.find(clustername);
     if (not cluster)
