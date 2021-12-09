@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 
 # Version
 set(ANTARES_VERSION_HI	      8)
-set(ANTARES_VERSION_LO	      1)
+set(ANTARES_VERSION_LO	      2)
 set(ANTARES_VERSION_REVISION  0)
 set(ANTARES_VERSION_YEAR      2021)
 
@@ -48,6 +48,14 @@ if(${ANTARES_RC})
 else()
 	set (ANTARES_RC 0)
 endif()
+
+# git SHA-1
+find_package(Git QUIET)
+execute_process(COMMAND
+  "${GIT_EXECUTABLE}" describe --match=NeVeRmAtCh --abbrev=7 --always --dirty
+  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+  OUTPUT_VARIABLE GIT_SHA1_SHORT
+  ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 # Build Configuration
 if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")

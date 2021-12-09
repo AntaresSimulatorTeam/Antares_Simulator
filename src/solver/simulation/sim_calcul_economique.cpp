@@ -195,7 +195,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         PtMat->NombreDInterconnexionsDansLaContrainteCouplante = bc.linkCount;
         PtMat->NombreDePaliersDispatchDansLaContrainteCouplante = bc.clusterCount;
         PtMat->NombreDElementsDansLaContrainteCouplante = bc.linkCount + bc.clusterCount;
-
+        PtMat->NomDeLaContrainteCouplante = bc.name.c_str();
         switch (bc.type)
         {
         case BindingConstraint::typeHourly:
@@ -535,13 +535,15 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             for (uint k = 0; k != linkCount; ++k)
             {
                 auto& lnk = *(studyruntime.areaLink[k]);
-                /* gp : these asserts will be done in another way later
-                assert((uint)indx < lnk.data.height);
-                assert((uint)fhlNTCDirect < lnk.data.width);
-                assert((uint)fhlNTCIndirect < lnk.data.width);
-                */
-                ntc->ValeurDeNTCOrigineVersExtremite[k] = lnk.directCapacities[0][indx];
-                ntc->ValeurDeNTCExtremiteVersOrigine[k] = lnk.indirectCapacities[0][indx];
+                const int tsIndex
+                  = NumeroChroniquesTireesParInterconnexion[numSpace][k].TransmissionCapacities;
+
+                assert((uint)indx < lnk.directCapacities.height);
+                assert((uint)tsIndex < lnk.directCapacities.width);
+                assert((uint)tsIndex < lnk.indirectCapacities.width);
+
+                ntc->ValeurDeNTCOrigineVersExtremite[k] = lnk.directCapacities[tsIndex][indx];
+                ntc->ValeurDeNTCExtremiteVersOrigine[k] = lnk.indirectCapacities[tsIndex][indx];
                 ntc->ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][indx];
             }
         }

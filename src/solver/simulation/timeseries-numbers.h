@@ -43,6 +43,8 @@ bool Generate(Data::Study& study);
 
 void StoreTimeseriesIntoOuput(Data::Study& study);
 
+// Exported for unit-tests
+bool compareWidth(uint a, uint b);
 } // namespace TimeSeriesNumbers
 } // namespace Solver
 } // namespace Antares

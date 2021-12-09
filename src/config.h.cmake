@@ -35,5 +35,8 @@
 //! RC version
 #cmakedefine ANTARES_RC     @ANTARES_RC@
 
+//! git revision (SHA-1)
+#define GIT_SHA1_SHORT_STRING "@GIT_SHA1_SHORT@"
+
 #endif // __ANTARES_CONFIG_H__
 

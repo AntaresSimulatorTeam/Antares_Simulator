@@ -112,11 +112,11 @@ public:
     //! Wind
     windTSNumberData wind;
 
-    // gp : change these 3 arrays into std containers, like std::vector 
     //! Thermal (array [0..pAreaCount - 1])
     std::vector<thermalTSNumberData> thermal;
     //! Renewable (array [0..pAreaCount - 1])
     std::vector<renewableTSNumberData> renewable;
+
 
     //! hydro levels
     hydroLevelsData hydroLevels;

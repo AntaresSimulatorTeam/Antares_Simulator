@@ -725,6 +725,9 @@ bool AreaLinksLoadFromFolder(Study& s, AreaList* l, Area* area, const AnyString&
 */
 bool AreaLinksSaveToFolder(const Area* area, const char* const folder);
 
+// Save a given area's interconnexions configuration file into a folder
+bool saveAreaLinksConfigurationFileToFolder(const Area* area, const char* const folder);
+
 /*!
 ** \brief Clear all interconnection from an area
 */
