@@ -7,14 +7,17 @@ Michael   	Boulade 	V4-V6
 Michel    	Doquet  	V1-V7
 Damien    	Gerard  	V2-V5
 Robert    	Gonzalez	V2-V5
+Jean-Marie Kerloch  V7-V8
 Sylvain   	Marandon	V6-V7
 Eric      	Momot   	V1-V2
 Papa      	Ndiaye  	V5-V7
-Guillaume 	Pierre  	V5-V7
+Florian    Omnes    V7-V8
+Guillaume 	Pierre  	V5-V8
+Andrea     Sgattoni V6-V8
 Frederique	Verrier 	V1-V2
 Li        	Wu      	V5
  
 Artwork
 =======
 
-Damien     Gérard
+Damien     GÃ©rard
