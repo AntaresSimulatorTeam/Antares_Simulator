@@ -715,7 +715,7 @@ def test_renewables_ts_prod_factor_cluster_disabled(use_ortools, ortools_solver,
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform=="windows",
+@pytest.mark.skipif(sys.platform.startswith("win"),
                     reason="No way to fix this now.")
 def test_disabled_thermal_cluster(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "Disabled_thermal_clusters"
