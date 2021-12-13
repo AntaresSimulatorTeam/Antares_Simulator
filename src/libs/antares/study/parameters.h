@@ -145,6 +145,17 @@ public:
     void fixBadValues();
 
     /*!
+    ** \brief Try to detect then fix refresh intervals
+    */    
+    void fixRefreshIntervals();
+
+    /*!
+    ** \brief Try to detect then fix TS generation/refresh parameters
+    *         for NTC
+    */
+    void fixGenRefreshForNTC();
+
+    /*!
     ** \brief Check if some general data seem valid
     **
     ** \return The error if any (stErrNone otherwise)
