@@ -294,7 +294,7 @@ void PreproThermal::reset()
     }
 }
 
-bool PreproThermal::normalizeAndCheckNPO(const AnyString& clustername, uint clusterSize, const AnyString& areaname)
+bool PreproThermal::normalizeAndCheckNPO(const AnyString& areaname, const AnyString& clustername, uint clusterSize)
 {
     // alias to our data columns
     auto& columnNPOMax = data[npoMax];
