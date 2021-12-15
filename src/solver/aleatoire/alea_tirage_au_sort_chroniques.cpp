@@ -180,7 +180,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
     for (unsigned int i = 0; i < runtime.interconnectionsCount; ++i)
     {
         AreaLink* link = runtime.areaLink[i];
-        assert(year < link->timeseriesNumbers.width);
+        assert(year < link->timeseriesNumbers.height);
         NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION& ptchro
           = NumeroChroniquesTireesParInterconnexion[numSpace][i];
         const uint directWidth = link->directCapacities.width;
