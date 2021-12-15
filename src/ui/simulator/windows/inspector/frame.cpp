@@ -529,12 +529,13 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGThClusterRandomSpread = P_FLOAT("Spread (\u20AC/MWh)", "cluster.opcost_spread");
 
     pPGThClusterReliabilityModel
-      = Category(pg, wxT("Reliability model"), wxT("cluster.reliabilitymodel"));
+      = Category(pg, wxT("Timeseries generation"), wxT("cluster.reliabilitymodel"));
+    pPGThClusterDoGenerateTS = P_ENUM("Generate timeseries", "cluster.gen-ts", localGenTS);
     pPGThClusterVolatilityForced = P_FLOAT("Volatility (forced)", "cluster.forcedVolatility");
     pPGThClusterVolatilityPlanned = P_FLOAT("Volatility (planned)", "cluster.plannedVolatility");
     pPGThClusterLawForced = P_ENUM("Law (forced)", "cluster.forcedlaw", thermalLaws);
     pPGThClusterLawPlanned = P_ENUM("Law (planned)", "cluster.plannedlaw", thermalLaws);
-    pPGThClusterDoGenerateTS = P_ENUM("Generate TS", "cluster.gen-ts", localGenTS);
+
 
     // --- RENEWABLE CLUSTERS ---
     pPGRnClusterSeparator = Group(pg, wxEmptyString, wxEmptyString);
