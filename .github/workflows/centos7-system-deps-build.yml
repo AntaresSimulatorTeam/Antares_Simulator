@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - release/*
+      - develop
+
 jobs:
 
   build:
@@ -32,12 +34,6 @@ jobs:
     - name: Checkout
       run: |
           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${BRANCH_NAME} .
-    
-    - name: Download pre-compiled librairies
-      run: |
-           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v1.1.0/rte-antares-deps-centos7-Release-all.tar.gz
-           tar -xvf rte-antares-deps-centos7-Release-all.tar.gz
-           rm -rf rte-antares-deps-centos7-Release-all.tar.gz
     
     - name: Init submodule
       run: |

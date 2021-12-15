@@ -1,9 +1,10 @@
-name: Windows CI (deps. compilation)
+name: Windows CI (pre-compiled only)
 
 on:
   push:
     branches:
       - release/*
+      - develop
 jobs:
 
   windows:
@@ -13,22 +14,34 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest]
-
+      
     steps:
     - uses: actions/checkout@v2
-    
-    - name: Download pre-compiled librairies
-      run: |
-           choco install wget
-           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v1.0.1/rte-antares-deps-${{matrix.os}}-x64-Release-all.zip
-           Expand-Archive ./rte-antares-deps-${{matrix.os}}-x64-Release-all.zip -DestinationPath .
-           rm rte-antares-deps-${{matrix.os}}-x64-Release-all.zip
            
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
         python-version: 3.8
-          
+        
+    - name: Pre-requisites
+      shell: cmd
+      run: |          
+          choco install wget unzip --no-progress
+      
+    - name: Read antares-deps version
+      id: antares-deps-version
+      uses: notiz-dev/github-action-json-property@release
+      with: 
+        path: 'antares-deps-version.json'
+        prop_path: 'antares_deps_version'
+        
+    - name: Download pre-compiled librairies
+      uses: ./.github/workflows/download-extract-precompiled-libraries-zip
+      with:
+        antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
+        os: ${{matrix.os}}
+        artifact_version: all
+        
     - name: Install dependencies
       run: |
           python -m pip install --upgrade pip
@@ -40,7 +53,7 @@ jobs:
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DUSE_PRECOMPILED_EXT=ON
+           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=OFF -DUSE_PRECOMPILED_EXT=ON
            
     - name: Build
       run: |
@@ -51,11 +64,15 @@ jobs:
            cd _build
            ctest -C Release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
 
-    - name: Installer creation
+    - name: NSIS Installer creation
+      shell: bash
       run: |
-           Remove-Item .\src\tests\resources\Antares_Simulator_Tests\ -Recurse -Force
+           rm -rf src/tests/resources/Antares_Simulator_Tests
+           rm -rf src/tests/resources/NonRegTests
            cd _build
            cpack -GNSIS
+           export NSIS_NAME=$(ls *.exe)
+           echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
            
     - name: .zip creation
       run: |
@@ -66,7 +83,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: antares-installer-64bits
-        path: _build/rte-antares-*.*.*-installer-*.exe
+        path: _build/${{env.NSIS_NAME}}
         
     - name: Archive upload
       uses: actions/upload-artifact@v2
