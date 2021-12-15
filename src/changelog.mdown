@@ -1,5 +1,21 @@
 ﻿Antares Changelog
 =================
+v8.1.1 (12/2021)
+--------------------
+
+### Bug fixes
+   - Fix segfault occurring randomly when thermal clusters are disabled (#472)
+   - Execution times when the Sirius solver is used in conjunction with OR-Tools are now similar as with Sirius alone. This is a result of [this fix](https://github.com/AntaresSimulatorTeam/or-tools/pull/1), related to "hot-start".
+
+### GUI
+  - Speed up scrolling (#395)
+  - Warn the user about disabled renewable clusters only when relevant (#386)
+
+### Packages
+Include antares-analyzer into .zip and .tar.gz archives (#470). This is especially useful if you use the portable version of Antares.
+
+### For developers
+In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in particular gcc 9. This allows for C++17 features to be used without hassle.
 
 v8.1.0 (09/2021)
 --------------------
