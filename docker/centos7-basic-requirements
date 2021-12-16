@@ -18,7 +18,7 @@ RUN yum install -y unzip libuuid-devel wxGTK3-devel boost-test boost-filesystem 
 # Add python and pip installation
 RUN yum install -y python3-pip &&\
     python3 -m pip install --upgrade pip &&\
-    pip3 install pytest numpy
+    pip3 install pytest numpy pandas
 
 # Download and extract pre-compiled libraries
 RUN wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${ANTARES_DEPS_VERSION}/rte-antares-deps-centos7-Release-solver.tar.gz
