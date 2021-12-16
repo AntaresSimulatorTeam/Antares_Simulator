@@ -43,6 +43,11 @@ inline const RulesScenarioName& Rules::name() const
     return pName;
 }
 
+inline void Rules::setName(RulesScenarioName name)
+{
+    pName = name;
+}
+
 } // namespace ScenarioBuilder
 } // namespace Data
 } // namespace Antares
