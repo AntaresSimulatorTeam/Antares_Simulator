@@ -66,6 +66,6 @@ endif()
 # Storing test-sc-builder-file-savee under the folder Unit-tests in the IDE
 set_target_properties(test-sc-builder-file-save PROPERTIES FOLDER Unit-tests/sc-builder)
 
-add_test(NAME sc-builder-file-save COMMAND sc-builder-save)
+add_test(NAME sc-builder-file-save COMMAND test-sc-builder-file-save)
 
 set_property(TEST sc-builder-file-save PROPERTY LABELS TESTLABEL unit)
