@@ -65,7 +65,7 @@ public:
     **
     ** This method is only useful when launched from the solver.
     */
-    virtual void apply(Study& study) = 0;
+    virtual bool apply(Study& study) = 0;
 
 }; // class dataInterface
 

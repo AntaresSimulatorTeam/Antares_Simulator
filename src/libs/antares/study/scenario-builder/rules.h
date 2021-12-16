@@ -76,7 +76,7 @@ public:
     /*!
     ** \brief Load information from a single line (extracted from an INI file)
     */
-    void readLine(const AreaName::Vector& splitKey,
+    bool readLine(const AreaName::Vector& splitKey,
                         String value,
                         bool updaterMode);
 
@@ -97,7 +97,7 @@ public:
     **
     ** This method is only useful when launched from the solver.
     */
-    void apply();
+    bool apply();
 
     // When current rule is the active one, sends warnings for disabled clusters.
     void sendWarningsForDisabledClusters();
@@ -127,14 +127,14 @@ public:
 
 private:
     // Member methods
-    void readThermalCluster(const AreaName::Vector& instrs, String value, bool updaterMode);
-    void readRenewableCluster(const AreaName::Vector& instrs, String value, bool updaterMode);
-    void readLoad(const AreaName::Vector& instrs, String value, bool updaterMode);
-    void readWind(const AreaName::Vector& instrs, String value, bool updaterMode);
-    void readHydro(const AreaName::Vector& instrs, String value, bool updaterMode);
-    void readSolar(const AreaName::Vector& instrs, String value, bool updaterMode);
-    void readHydroLevels(const AreaName::Vector& instrs, String value, bool updaterMode);
-    void readLink(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readThermalCluster(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readRenewableCluster(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readLoad(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readWind(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readHydro(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readSolar(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readHydroLevels(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readLink(const AreaName::Vector& instrs, String value, bool updaterMode);
 
     Data::Area* getArea(const AreaName& areaname, bool updaterMode);
     Data::AreaLink* getLink(const AreaName& fromAreaName, const AreaName& toAreaName, bool updaterMode);
