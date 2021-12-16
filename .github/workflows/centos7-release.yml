@@ -37,7 +37,7 @@ jobs:
         workdir: docker
         dockerfile: centos7-basic-requirements
         cache: true
-        tags: centos7-simulator-${{ steps.branch_name.outputs.branch }}
+        tags: centos7-simulator
         buildargs: ANTARES_DEPS_VERSION
 
   build:
