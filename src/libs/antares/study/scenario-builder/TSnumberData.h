@@ -324,7 +324,7 @@ inline uint ntcTSNumberData::get(const Antares::Data::AreaLink* link, const uint
 
 inline CString<512, false> ntcTSNumberData::get_prefix() const
 {
-    return "tc,";
+    return "ntc,";
 }
 
 } // namespace ScenarioBuilder

@@ -350,7 +350,7 @@ BOOST_AUTO_TEST_CASE(on_link_area1_area2_and_on_year_0__ntc_TS_number_10_is_chos
 {	
 	AreaName yearNumber = "0";
 	String tsNumber = "10";
-	AreaName::Vector splitKey = {"tc", "area 1", "area 2", yearNumber};
+	AreaName::Vector splitKey = {"ntc", "area 1", "area 2", yearNumber};
 	BOOST_CHECK(my_rule.readLine(splitKey, tsNumber, false));
 	
 	BOOST_CHECK_EQUAL(my_rule.linksNTC[area_1->index].get(link_12, yearNumber.to<uint>()), tsNumber.to<uint>());
@@ -363,7 +363,7 @@ BOOST_AUTO_TEST_CASE(on_link_area1_area3_and_on_year_15__ntc_TS_number_7_is_chos
 {
 	AreaName yearNumber = "15";
 	String tsNumber = "7";
-	AreaName::Vector splitKey = { "tc", "area 1", "area 3", yearNumber };
+	AreaName::Vector splitKey = { "ntc", "area 1", "area 3", yearNumber };
 	BOOST_CHECK(my_rule.readLine(splitKey, tsNumber, false));
 
 	BOOST_CHECK_EQUAL(my_rule.linksNTC[area_1->index].get(link_13, yearNumber.to<uint>()), tsNumber.to<uint>());
@@ -376,7 +376,7 @@ BOOST_AUTO_TEST_CASE(on_link_area2_area3_and_on_year_19__ntc_TS_number_6_is_chos
 {
 	AreaName yearNumber = "19";
 	String tsNumber = "6";
-	AreaName::Vector splitKey = { "tc", "area 2", "area 3", yearNumber };
+	AreaName::Vector splitKey = { "ntc", "area 2", "area 3", yearNumber };
 	BOOST_CHECK(my_rule.readLine(splitKey, tsNumber, false));
 
 	BOOST_CHECK_EQUAL(my_rule.linksNTC[area_2->index].get(link_23, yearNumber.to<uint>()), tsNumber.to<uint>());

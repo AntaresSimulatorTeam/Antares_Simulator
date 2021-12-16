@@ -311,7 +311,7 @@ bool Rules::readLine(const AreaName::Vector& splitKey,
         return false;
 
     const AreaName& kind_of_scenario = splitKey[0]; // load, thermal, hydro, ..., hydro levels, ...
-    if (kind_of_scenario.size() > 2)
+    if (kind_of_scenario.size() > 3)
         return false;
 
     if (kind_of_scenario == "t")
@@ -328,7 +328,7 @@ bool Rules::readLine(const AreaName::Vector& splitKey,
         return readSolar(splitKey, value, updaterMode);
     else if (kind_of_scenario == "hl")
         return readHydroLevels(splitKey, value, updaterMode);
-    else if (kind_of_scenario == "tc")
+    else if (kind_of_scenario == "ntc")
         return readLink(splitKey, value, updaterMode);
     return false;
 }
