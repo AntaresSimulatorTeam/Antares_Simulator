@@ -220,15 +220,16 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
 
     // Read link's parameters times series
     filename.clear() << folder << SEP << with->id << "_parameters.txt";
-    success = parameters.loadFromCSVFile(filename) && success;
+    const uint matrixWidth = 6;
+    success = parameters.loadFromCSVFile(filename, matrixWidth, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate) && success;
 
     // Read link's direct capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_direct.txt";
-    success = directCapacities.loadFromCSVFile(filename) && success;
+    success = directCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate) && success;
 
     // Read link's indirect capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_indirect.txt";
-    success = indirectCapacities.loadFromCSVFile(filename) && success;
+    success = indirectCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate) && success;
 
     return success;
 }
