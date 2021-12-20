@@ -78,7 +78,7 @@ public:
     /*
     ** Give the study an access to TS numbers scenarii
     */
-    virtual void apply(Study& study) = 0;
+    virtual bool apply(Study& study) = 0;
 
 protected:
     virtual CString<512, false> get_prefix() const = 0;
@@ -116,7 +116,7 @@ inline double TSNumberData::get_value(uint x, uint y) const
 class loadTSNumberData : public TSNumberData
 {
 public:
-    void apply(Study& study);
+    bool apply(Study& study);
     CString<512, false> get_prefix() const;
     uint get_tsGenCount(const Study& study) const;
 };
@@ -132,7 +132,7 @@ inline CString<512, false> loadTSNumberData::get_prefix() const
 class windTSNumberData : public TSNumberData
 {
 public:
-    void apply(Study& study);
+    bool apply(Study& study);
     CString<512, false> get_prefix() const;
     uint get_tsGenCount(const Study& study) const;
 };
@@ -148,7 +148,7 @@ inline CString<512, false> windTSNumberData::get_prefix() const
 class solarTSNumberData : public TSNumberData
 {
 public:
-    void apply(Study& study);
+    bool apply(Study& study);
     CString<512, false> get_prefix() const;
     uint get_tsGenCount(const Study& study) const;
 };
@@ -166,7 +166,7 @@ inline CString<512, false> solarTSNumberData::get_prefix() const
 class hydroTSNumberData : public TSNumberData
 {
 public:
-    void apply(Study& study);
+    bool apply(Study& study);
     CString<512, false> get_prefix() const;
     uint get_tsGenCount(const Study& study) const;
 };
@@ -196,7 +196,7 @@ public:
 
     void set(const Antares::Data::ThermalCluster* cluster, const uint year, uint value);
     uint get(const Antares::Data::ThermalCluster* cluster, const uint year) const;
-    void apply(Study& study);
+    bool apply(Study& study);
     CString<512, false> get_prefix() const;
     uint get_tsGenCount(const Study& study) const;
 
@@ -250,7 +250,7 @@ public:
 
     void set(const Antares::Data::RenewableCluster* cluster, const uint year, uint value);
     uint get(const Antares::Data::RenewableCluster* cluster, const uint year) const;
-    void apply(Study& study);
+    bool apply(Study& study);
     CString<512, false> get_prefix() const;
     uint get_tsGenCount(const Study& study) const;
 
@@ -299,7 +299,7 @@ public:
 
     void set(const Antares::Data::AreaLink* link, const uint year, uint value);
     uint get(const Antares::Data::AreaLink* link, const uint year) const;
-    void apply(Study& study);
+    bool apply(Study& study);
     CString<512, false> get_prefix() const;
     uint get_tsGenCount(const Study& study) const;
 
@@ -324,7 +324,7 @@ inline uint ntcTSNumberData::get(const Antares::Data::AreaLink* link, const uint
 
 inline CString<512, false> ntcTSNumberData::get_prefix() const
 {
-    return "tc,";
+    return "ntc,";
 }
 
 } // namespace ScenarioBuilder

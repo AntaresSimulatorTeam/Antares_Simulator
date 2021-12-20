@@ -127,18 +127,18 @@ Data::Area* Rules::getArea(const AreaName& areaname, bool updaterMode)
     return area;
 }
 
-void Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, bool updaterMode)
 {
     const AreaName& areaname = splitKey[1];
     const uint year = splitKey[2].to<uint>();
     const ClusterName& clustername = splitKey[3];
 
     if (clustername.empty())
-        return;
+        return false;
 
     Data::Area* area = getArea(areaname, updaterMode);
     if (! area)
-        return;
+        return false;
 
     const ThermalCluster* cluster = area->thermal.list.find(clustername);
     if (not cluster)
@@ -156,25 +156,27 @@ void Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
         {
             string clusterId = (area->id).to<string>() + "." + clustername.to<string>();
             disabledClustersOnRuleActive[clusterId].push_back(year);
+            return false;
         }
     }
+    return true;
 }
 
-void Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value, bool updaterMode)
 {
     const AreaName& areaname = splitKey[1];
     const uint year = splitKey[2].to<uint>();
     const ClusterName& clustername = splitKey[3];
 
     if (not study_.parameters.renewableGeneration.isClusters())
-        return;
+        return false;
 
     if (clustername.empty())
-        return;
+        return false;
 
     Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
-        return;
+        return false;
 
     const RenewableCluster* cluster = area->renewable.list.find(clustername);
 
@@ -190,73 +192,80 @@ void Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
         {
             string clusterId = (area->id).to<string>() + "." + clustername.to<string>();
             disabledClustersOnRuleActive[clusterId].push_back(year);
+            return false;
         }
     }
+    return true;
 }
 
-void Rules::readLoad(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readLoad(const AreaName::Vector& splitKey, String value, bool updaterMode)
 {
     const AreaName& areaname = splitKey[1];
     const uint year = splitKey[2].to<uint>();
 
     Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
-        return;
+        return false;
 
     uint val = fromStringToTSnumber(value);
     load.set(area->index, year, val);
+    return true;
 }
 
-void Rules::readWind(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readWind(const AreaName::Vector& splitKey, String value, bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
 
     Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
-        return;
+        return false;
 
     uint val = fromStringToTSnumber(value);
     wind.set(area->index, year, val);
+    return true;
 }
 
-void Rules::readHydro(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readHydro(const AreaName::Vector& splitKey, String value, bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
 
     Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
-        return;
+        return false;
 
     uint val = fromStringToTSnumber(value);
     hydro.set(area->index, year, val);
+    return true;
 }
 
-void Rules::readSolar(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readSolar(const AreaName::Vector& splitKey, String value, bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
 
     Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
-        return;
+        return false;
 
     uint val = fromStringToTSnumber(value);
     solar.set(area->index, year, val);
+    return true;
 }
 
-void Rules::readHydroLevels(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readHydroLevels(const AreaName::Vector& splitKey, String value, bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
 
     Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
-        return;
+        return false;
 
     double val = fromStringToHydroLevel(value, 1.);
     hydroLevels.set(area->index, year, val);
+    return true;
 }
 
 Data::AreaLink* Rules::getLink(const AreaName& fromAreaName, const AreaName& toAreaName, bool updaterMode)
@@ -271,7 +280,7 @@ Data::AreaLink* Rules::getLink(const AreaName& fromAreaName, const AreaName& toA
     return link;
 }
 
-void Rules::readLink(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readLink(const AreaName::Vector& splitKey, String value, bool updaterMode)
 {
     const AreaName& fromAreaName = splitKey[1];
     const AreaName& toAreaName = splitKey[2];
@@ -279,64 +288,71 @@ void Rules::readLink(const AreaName::Vector& splitKey, String value, bool update
 
     Data::Area* fromArea = getArea(fromAreaName, updaterMode);
     if (!fromArea)
-        return;
+        return false;
 
     const Data::Area* toArea = getArea(toAreaName, updaterMode);
     if (!toArea)
-        return;
+        return false;
 
     AreaLink* link = getLink(fromAreaName, toAreaName, updaterMode);
     if (!link)
-        return;
+        return false;
 
     uint val = fromStringToTSnumber(value);
     linksNTC[fromArea->index].set(link, year, val);
+    return true;
 }
 
-void Rules::readLine(const AreaName::Vector& splitKey,
+bool Rules::readLine(const AreaName::Vector& splitKey,
                            String value,
                            bool updaterMode = false)
 {
-    assert(splitKey.size() > 2);
+    if (splitKey.size() <= 2)
+        return false;
 
     const AreaName& kind_of_scenario = splitKey[0]; // load, thermal, hydro, ..., hydro levels, ...
-    if (kind_of_scenario.size() > 2)
-        return;
+    if (kind_of_scenario.size() > 3)
+        return false;
 
     if (kind_of_scenario == "t")
-        readThermalCluster(splitKey, value, updaterMode);
-    if (kind_of_scenario == "r")
-        readRenewableCluster(splitKey, value, updaterMode);
-    if (kind_of_scenario == "l")
-        readLoad(splitKey, value, updaterMode);
-    if (kind_of_scenario == "w")
-        readWind(splitKey, value, updaterMode);
-    if (kind_of_scenario == "h")
-        readHydro(splitKey, value, updaterMode);
-    if (kind_of_scenario == "s")
-        readSolar(splitKey, value, updaterMode);
-    if (kind_of_scenario == "hl")
-        readHydroLevels(splitKey, value, updaterMode);
-    if (kind_of_scenario == "tc")
-        readLink(splitKey, value, updaterMode);
+        return readThermalCluster(splitKey, value, updaterMode);
+    else if (kind_of_scenario == "r")
+        return readRenewableCluster(splitKey, value, updaterMode);
+    else if (kind_of_scenario == "l")
+        return readLoad(splitKey, value, updaterMode);
+    else if (kind_of_scenario == "w")
+        return readWind(splitKey, value, updaterMode);
+    else if (kind_of_scenario == "h")
+        return readHydro(splitKey, value, updaterMode);
+    else if (kind_of_scenario == "s")
+        return readSolar(splitKey, value, updaterMode);
+    else if (kind_of_scenario == "hl")
+        return readHydroLevels(splitKey, value, updaterMode);
+    else if (kind_of_scenario == "ntc")
+        return readLink(splitKey, value, updaterMode);
+    return false;
 }
 
-void Rules::apply()
+bool Rules::apply()
 {
+    bool returned_status = true;
     if (pAreaCount)
     {
-        load.apply(study_);
-        solar.apply(study_);
-        hydro.apply(study_);
-        wind.apply(study_);
+        returned_status = returned_status && load.apply(study_);
+        returned_status = returned_status && solar.apply(study_);
+        returned_status = returned_status && hydro.apply(study_);
+        returned_status = returned_status && wind.apply(study_);
         for (uint i = 0; i != pAreaCount; ++i)
         {
-            thermal[i].apply(study_);
-            renewable[i].apply(study_);
-            linksNTC[i].apply(study_);
+            returned_status = returned_status && thermal[i].apply(study_);
+            returned_status = returned_status && renewable[i].apply(study_);
+            returned_status = returned_status && linksNTC[i].apply(study_);
         }
-        hydroLevels.apply(study_);
+        returned_status = returned_status && hydroLevels.apply(study_);
     }
+    else
+        returned_status = false;
+    return returned_status;
 }
 
 void Rules::sendWarningsForDisabledClusters()

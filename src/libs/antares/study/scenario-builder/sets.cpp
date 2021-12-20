@@ -193,8 +193,7 @@ bool Sets::internalLoadFromINIFile(const AnyString& filename)
         for (auto* p = section.firstProperty; p != nullptr; p = p->next)
         {
             p->key.split(splitKey, ",", true, false);
-            if (splitKey.size() > 2)
-                ruleset.readLine(splitKey, p->value, inUpdaterMode);
+            ruleset.readLine(splitKey, p->value, inUpdaterMode);
         }
 
         ruleset.sendWarningsForDisabledClusters();
