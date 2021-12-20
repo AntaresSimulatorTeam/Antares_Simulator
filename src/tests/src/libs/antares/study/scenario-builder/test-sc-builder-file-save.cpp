@@ -128,6 +128,7 @@ struct commonFixture
 		area_2->hydro.series->count = nbReadyMadeTS;
 		area_3->hydro.series->count = nbReadyMadeTS;
 
+		// Links
 		link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);
 		link_12->directCapacities.resize(15, 1);
 
@@ -207,11 +208,17 @@ struct saveFixture : public commonFixture
 {
 	saveFixture() : commonFixture() {}
 	~saveFixture();
+	void saveScenarioBuilder();
 
 	// Data members
 	std::string  path_to_generated_file = fs::current_path().append(generatedScBuilderFileName).string();
 	referenceScBuilderFile referenceFile;
 };
+
+void saveFixture::saveScenarioBuilder()
+{
+	study->scenarioRules->saveToINIFile(path_to_generated_file);
+}
 
 saveFixture::~saveFixture()
 {
@@ -225,14 +232,14 @@ saveFixture::~saveFixture()
 
 BOOST_FIXTURE_TEST_SUITE(s, saveFixture)
 
-
-BOOST_AUTO_TEST_CASE(on_area2_and_year_11_chosen_ts_number_is_6__generated_and_ref_sc_buider_files_are_identical)
+// ====================
+// Tests on Load
+// ====================
+BOOST_AUTO_TEST_CASE(LOAD__on_area2_and_year_11_chosen_ts_number_is_6__generated_and_ref_sc_buider_files_are_identical)
 {
-	// Preparing the test
 	my_rule->load.set(area_2->index, 11, 6);
 
-	// Save scenario builder
-	study->scenarioRules->saveToINIFile(path_to_generated_file);
+	saveScenarioBuilder();
 
 	// Build reference scenario builder file
 	referenceFile.append("[my rule name]");
@@ -240,6 +247,222 @@ BOOST_AUTO_TEST_CASE(on_area2_and_year_11_chosen_ts_number_is_6__generated_and_r
 	referenceFile.write();
 
 	BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
+}
+
+BOOST_AUTO_TEST_CASE(LOAD__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+{
+	my_rule->load.set(area_3->index, 7, 2);
+	my_rule->load.set(area_2->index, 11, 6);
+	my_rule->load.set(area_1->index, 5, 12);
+	my_rule->load.set(area_3->index, 8, 3);
+	my_rule->load.set(area_2->index, 10, 4);
+	my_rule->load.set(area_1->index, 18, 1);
+
+	saveScenarioBuilder();
+
+	// Build reference scenario builder file
+	referenceFile.append("[my rule name]");
+	referenceFile.append("l,area 1,5 = 12");
+	referenceFile.append("l,area 1,18 = 1");
+	referenceFile.append("l,area 2,10 = 4");
+	referenceFile.append("l,area 2,11 = 6");
+	referenceFile.append("l,area 3,7 = 2");
+	referenceFile.append("l,area 3,8 = 3");
+	referenceFile.write();
+
+	BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
+}
+
+
+// ====================
+// Tests on Wind
+// ====================
+BOOST_AUTO_TEST_CASE(WIND__on_area3_and_year_19_chosen_ts_number_is_17__generated_and_ref_sc_buider_files_are_identical)
+{
+	my_rule->wind.set(area_3->index, 19, 17);
+
+	saveScenarioBuilder();
+
+	// Build reference scenario builder file
+	referenceFile.append("[my rule name]");
+	referenceFile.append("w,area 3,19 = 17");
+	referenceFile.write();
+
+	BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
+}
+
+// ====================
+// Tests on Solar
+// ====================
+BOOST_AUTO_TEST_CASE(SOLAR__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+{
+	my_rule->solar.set(area_1->index, 9, 9);
+	my_rule->solar.set(area_3->index, 18, 7);
+	my_rule->solar.set(area_1->index, 5, 8);
+
+	saveScenarioBuilder();
+
+	// Build reference scenario builder file
+	referenceFile.append("[my rule name]");
+	referenceFile.append("s,area 1,5 = 8");
+	referenceFile.append("s,area 1,9 = 9");
+	referenceFile.append("s,area 3,18 = 7");
+	referenceFile.write();
+
+	BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
+}
+
+
+// =================
+// Tests on Hydro
+// =================
+BOOST_AUTO_TEST_CASE(HYDRO__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+{
+	my_rule->hydro.set(area_2->index, 17, 12);
+	my_rule->hydro.set(area_3->index, 18, 7);
+	my_rule->hydro.set(area_1->index, 5, 8);
+
+	saveScenarioBuilder();
+
+	// Build reference scenario builder file
+	referenceFile.append("[my rule name]");
+	referenceFile.append("h,area 1,5 = 8");
+	referenceFile.append("h,area 2,17 = 12");
+	referenceFile.append("h,area 3,18 = 7");
+	referenceFile.write();
+
+	BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
+}
+
+// ===========================
+// Tests on Thermal clusters
+// ===========================
+BOOST_AUTO_TEST_CASE(THERMAL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+{
+	my_rule->thermal[area_3->index].set(thCluster_31.get(), 5, 13);
+	my_rule->thermal[area_1->index].set(thCluster_11.get(), 19, 8);
+	my_rule->thermal[area_1->index].set(thCluster_12.get(), 2, 4);
+
+	saveScenarioBuilder();
+
+	// Build reference scenario builder file
+	referenceFile.append("[my rule name]");
+	referenceFile.append("t,area 1,19,th-cluster-11 = 8");
+	referenceFile.append("t,area 1,2,th-cluster-12 = 4");
+	referenceFile.append("t,area 3,5,th-cluster-31 = 13");
+
+	referenceFile.write();
+
+	BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
+}
+
+
+// =============================
+// Tests on Renewable clusters
+// =============================
+BOOST_AUTO_TEST_CASE(RENEWABLE_CLUSTERS__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+{
+	my_rule->renewable[area_3->index].set(rnCluster_32.get(), 5, 13);
+	my_rule->renewable[area_2->index].set(rnCluster_21.get(), 19, 8);
+	my_rule->renewable[area_3->index].set(rnCluster_31.get(), 2, 4);
+
+	saveScenarioBuilder();
+
+	// Build reference scenario builder file
+	referenceFile.append("[my rule name]");
+	referenceFile.append("r,area 2,19,rn-cluster-21 = 8");
+	referenceFile.append("r,area 3,2,rn-cluster-31 = 4");
+	referenceFile.append("r,area 3,5,rn-cluster-32 = 13");
+
+	referenceFile.write();
+
+	BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
+}
+
+// ========================
+// Tests on Hydro levels
+// ========================
+BOOST_AUTO_TEST_CASE(HYDRO_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+{
+	my_rule->hydroLevels.set(area_1->index, 9, 9);
+	my_rule->hydroLevels.set(area_3->index, 18, 7);
+	my_rule->hydroLevels.set(area_1->index, 5, 8);
+
+	saveScenarioBuilder();
+
+	// Build reference scenario builder file
+	referenceFile.append("[my rule name]");
+	referenceFile.append("hl,area 1,5 = 8");
+	referenceFile.append("hl,area 1,9 = 9");
+	referenceFile.append("hl,area 3,18 = 7");
+	referenceFile.write();
+
+	BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
+}
+
+// ======================
+// Tests on Links NTC
+// ======================
+BOOST_AUTO_TEST_CASE(LINKS_NTC__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+{
+	my_rule->linksNTC[area_1->index].set(link_12, 5, 13);
+	my_rule->linksNTC[area_1->index].set(link_13, 19, 8);
+	my_rule->linksNTC[area_2->index].set(link_23, 2, 4);
+
+	saveScenarioBuilder();
+
+	// Build reference scenario builder file
+	referenceFile.append("[my rule name]");
+	referenceFile.append("ntc,area 1,area 2,5 = 13");
+	referenceFile.append("ntc,area 1,area 3,19 = 8");
+	referenceFile.append("ntc,area 2,area 3,2 = 4");
+
+	referenceFile.write();
+
+	BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
+}
+
+
+// ================================
+// Tests on All assets together
+// ================================
+BOOST_AUTO_TEST_CASE(ALL_TOGETHER__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
+{
+	my_rule->load.set(area_2->index, 11, 6);
+	my_rule->load.set(area_3->index, 7, 2);
+	my_rule->solar.set(area_1->index, 9, 9);
+	my_rule->solar.set(area_3->index, 15, 8);
+	my_rule->hydro.set(area_3->index, 18, 7);
+	my_rule->wind.set(area_3->index, 19, 17);
+	my_rule->thermal[area_3->index].set(thCluster_31.get(), 5, 13);
+	my_rule->thermal[area_1->index].set(thCluster_11.get(), 19, 8);
+	my_rule->renewable[area_3->index].set(rnCluster_32.get(), 5, 13);
+	my_rule->linksNTC[area_1->index].set(link_13, 19, 8);
+	my_rule->linksNTC[area_2->index].set(link_23, 2, 4);
+	my_rule->hydroLevels.set(area_1->index, 5, 8);
+
+	saveScenarioBuilder();
+
+	// Build reference scenario builder file
+	referenceFile.append("[my rule name]");
+	referenceFile.append("l,area 2,11 = 6");
+	referenceFile.append("l,area 3,7 = 2");
+	referenceFile.append("s,area 1,9 = 9");
+	referenceFile.append("s,area 3,15 = 8");
+	referenceFile.append("h,area 3,18 = 7");
+	referenceFile.append("w,area 3,19 = 17");
+	referenceFile.append("t,area 1,19,th-cluster-11 = 8");
+	referenceFile.append("ntc,area 1,area 3,19 = 8");
+	referenceFile.append("ntc,area 2,area 3,2 = 4");
+	referenceFile.append("t,area 3,5,th-cluster-31 = 13");
+	referenceFile.append("r,area 3,5,rn-cluster-32 = 13");
+	referenceFile.append("hl,area 1,5 = 8");
+	referenceFile.write();
+
+	BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
+	/*
+	
+	*/
 }
 
 BOOST_AUTO_TEST_SUITE_END()
