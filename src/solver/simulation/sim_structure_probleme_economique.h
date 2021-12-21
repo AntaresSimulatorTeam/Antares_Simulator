@@ -369,11 +369,8 @@ public:
 
         level = level + inflows[step] - turb[step] + pumpRatio * pump[step];
 
-        if (Yuni::Math::Zero(level))
+        if (level < 0.)
             level = 0.;
-
-        if (Yuni::Math::Zero(1. - level))
-            level = capacity;
 
         if (level > capacity)
         {
