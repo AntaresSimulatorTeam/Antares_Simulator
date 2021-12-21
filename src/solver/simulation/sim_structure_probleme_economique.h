@@ -369,9 +369,6 @@ public:
 
         level = level + inflows[step] - turb[step] + pumpRatio * pump[step];
 
-        if (level < 0.)
-            level = 0.;
-
         if (level > capacity)
         {
             ovf[step] = level - capacity;
