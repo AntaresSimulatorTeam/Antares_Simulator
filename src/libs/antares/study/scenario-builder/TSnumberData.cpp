@@ -146,7 +146,7 @@ static bool ApplyToMatrix(uint& errors,
                         logs.warning() << "scenario-builder: " << logprefix
                                        << "value out of bounds for the year " << (y + 1);
                 }
-                status_to_return = status_to_return && false;
+                status_to_return = false;
                 continue;
             }
             // Ok, assign. The value provided by the interface is user-friendly
