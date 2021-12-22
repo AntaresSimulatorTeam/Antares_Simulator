@@ -1049,6 +1049,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     // Renewable cluster list
+    if (study.header.version >= 810)
     {
         buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
         ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer, false) and ret;
@@ -1211,6 +1212,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     }
 
     // Renewable data, specific to areas
+    if (pStudy.header.version >= 810)
     {
         // The cluster list must be loaded before the method
         // Study::ensureDataAreInitializedAccordingParameters() is called
