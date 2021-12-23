@@ -91,6 +91,7 @@ public:
 
     //! Name of the rules set
     const RulesScenarioName& name() const;
+    void setName(RulesScenarioName name);
 
     /*!
     ** \brief Apply the changes to the timeseries number matrices
@@ -147,8 +148,6 @@ private:
     RulesScenarioName pName;
     // Disabled clusters when current rule is active (useful for sending warnings)
     map<string, vector<uint>> disabledClustersOnRuleActive;
-    // Friend !
-    friend class Sets;
 
 }; // class Rules
 

@@ -56,7 +56,7 @@ void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
         hydro.saveToINIFile(study_, file);
         // wind
         wind.saveToINIFile(study_, file);
-        // Thermal, each area
+        // Thermal clusters, renewable clusters, links NTS : each area
         for (uint i = 0; i != pAreaCount; ++i)
         {
             thermal[i].saveToINIFile(study_, file);

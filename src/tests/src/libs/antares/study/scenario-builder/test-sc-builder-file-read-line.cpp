@@ -86,6 +86,7 @@ struct Fixture
 		area_2->hydro.series->count = nbReadyMadeTS;
 		area_3->hydro.series->count = nbReadyMadeTS;
 
+		// Links
 		link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);
 		link_12->directCapacities.resize(15, 1);
 
