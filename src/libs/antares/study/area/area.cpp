@@ -544,5 +544,18 @@ const AreaLink* Area::findLinkByID(const AreaName& id) const
     return (i != links.end()) ? i->second : nullptr;
 }
 
+void Area::buildLinksIndexes()
+{
+    uint areaIndx = 0;
+
+    auto end = links.end();
+    for (auto i = links.begin(); i != end; ++i)
+    {
+        auto* link = i->second;
+        link->indexForArea = areaIndx;
+        ++areaIndx;
+    }
+}
+
 } // namespace Data
 } // namespace Antares

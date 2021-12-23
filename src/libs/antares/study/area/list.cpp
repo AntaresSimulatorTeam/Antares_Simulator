@@ -1535,6 +1535,8 @@ bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const Ar
         assert(oldCount == a.links.size() and "We must have the same number of items in the list");
 #endif
     });
+    
+    area->buildLinksIndexes();
 
     return true;
 }
