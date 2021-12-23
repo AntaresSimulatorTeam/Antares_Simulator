@@ -75,7 +75,6 @@
 #include "../economy/links/congestionFeeAbs.h"
 #include "../economy/links/marginalCost.h"
 #include "../economy/links/congestionProbability.h"
-#include "../economy/links/ntc.h"
 
 namespace Antares
 {
@@ -96,7 +95,7 @@ typedef Variable::Economy::FlowLinear            // Flow linear
       <Variable::Economy::MarginalCost           // Marginal Cost
        <Variable::Economy::CongestionProbability // Congestion Probability (+/-)
         <Variable::Economy::HurdleCosts          // Hurdle costs
-         <Variable::Economy::NTC<>>>>>>>>>
+         <>>>>>>>>
     VariablePerLink;
 // forward declaration
 class Links;

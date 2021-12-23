@@ -97,7 +97,6 @@ protected:
 
 private:
     AvgExchangeResults* callbackRetrieveBalanceData(Data::Area* area);
-    AvgNTC* callbackRetrieveAverageNTC(Data::AreaLink* link);
     bool simplexIsRequired(uint hourInTheYear, uint numSpace) const;
 
 private:

@@ -37,6 +37,8 @@
 
 #include "solver.h" // for definition of type yearRandomNumbers
 
+#include <vector>
+
 namespace Antares
 {
 namespace Solver
@@ -48,18 +50,10 @@ namespace Simulation
 typedef Solver::Variable::Economy::VCardBalance AvgExchangeVCardBalance;
 typedef Variable::Storage<AvgExchangeVCardBalance>::ResultsType AvgExchangeResults;
 
-typedef Solver::Variable::Economy::VCardNTC VCardNTC;
-typedef Variable::Storage<VCardNTC>::ResultsType AvgNTC;
-
 /*!
 ** \brief Delegate to retrieve balance data (for a given area) of the simulation
 */
 typedef Yuni::Bind<AvgExchangeResults*(Data::Area*)> CallbackBalanceRetrieval;
-
-/*!
-** \brief Delegate to retrieve average NTC (for a given link) of the simulation
-*/
-typedef Yuni::Bind<AvgNTC*(Data::AreaLink*)> CallbackNTCRetrieval;
 
 /*!
 ** \brief Compute then random unserved energy cost and the new random hydro virtual cost for all
@@ -94,7 +88,6 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study);
 void PerformQuadraticOptimisation(Data::Study& study,
                                   PROBLEME_HEBDO& problem,
                                   CallbackBalanceRetrieval& callbackBalance,
-                                  CallbackNTCRetrieval& callbackNTC,
                                   unsigned int nbWeeks);
 
 /*!
@@ -175,6 +168,19 @@ void updatingWeeklyFinalHydroLevel(const Data::Study& study,
 ** \param problem The weekly problem, living over the whole simuation.
 */
 void updatingAnnualFinalHydroLevel(const Data::Study& study, PROBLEME_HEBDO& problem);
+
+/*
+** \brief Compute the weighted average NTC for a link
+**
+** \param study The Antares study
+** \param link The link
+** \param Weighted average NTC for the direct direction
+** \param Weighted average NTC for the indirect direction
+*/
+int retrieveAverageNTC(const Data::Study& study,
+                       const Data::AreaLink* link,
+                       std::vector<float>& avgDirect,
+                       std::vector<float>& avgIndirect);
 
 } // namespace Simulation
 } // namespace Solver

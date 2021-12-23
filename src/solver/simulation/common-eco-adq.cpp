@@ -49,7 +49,6 @@ namespace Simulation
 static void RecalculDesEchangesMoyens(Data::Study& study,
                                       PROBLEME_HEBDO& problem,
                                       CallbackBalanceRetrieval& callbackBalance,
-                                      CallbackNTCRetrieval& callbackNTC,
                                       int PasDeTempsDebut)
 {
     for (uint i = 0; i < (uint)problem.NombreDePasDeTemps; i++)
@@ -73,16 +72,15 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
             }
         }
 
+        std::vector<float> avgDirect, avgIndirect;
         for (uint j = 0; j < study.runtime->interconnectionsCount; ++j)
         {
             auto* link = study.runtime->areaLink[j];
-            auto* avgNTC = callbackNTC(link);
-            if (avgNTC)
+            int ret = retrieveAverageNTC(study, link, avgDirect, avgIndirect);
+            if (!ret)
             {
-                ntcValues.ValeurDeNTCOrigineVersExtremite[j]
-                  = (*avgNTC)[0].avgdata.hourly[decalPasDeTemps];
-                ntcValues.ValeurDeNTCExtremiteVersOrigine[j]
-                  = (*avgNTC)[1].avgdata.hourly[decalPasDeTemps];
+                ntcValues.ValeurDeNTCOrigineVersExtremite[j] = avgDirect[decalPasDeTemps];
+                ntcValues.ValeurDeNTCExtremiteVersOrigine[j] = avgIndirect[decalPasDeTemps];
             }
             else
             {
@@ -224,7 +222,6 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
 void PerformQuadraticOptimisation(Data::Study& study,
                                   PROBLEME_HEBDO& problem,
                                   CallbackBalanceRetrieval& callbackBalance,
-                                  CallbackNTCRetrieval& callbackNTC,
                                   uint nbWeeks)
 {
     uint startTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
@@ -238,8 +235,7 @@ void PerformQuadraticOptimisation(Data::Study& study,
         for (uint w = 0; w != nbWeeks; ++w)
         {
             int PasDeTempsDebut = startTime + (w * problem.NombreDePasDeTemps);
-            RecalculDesEchangesMoyens(
-              study, problem, callbackBalance, callbackNTC, PasDeTempsDebut);
+            RecalculDesEchangesMoyens(study, problem, callbackBalance, PasDeTempsDebut);
         }
     }
     else
@@ -361,6 +357,35 @@ void PrepareRandomNumbers(Data::Study& study,
         }
         indexArea++;
     });
+}
+
+int retrieveAverageNTC(const Data::Study& study,
+                       const Data::AreaLink* link,
+                       std::vector<float>& avgDirect,
+                       std::vector<float>& avgIndirect)
+{
+    auto yearsWeight = study.parameters.getYearsWeight();
+    auto yearsWeightSum = study.parameters.getYearsWeightSum();
+    const auto width = link->directCapacities.width;
+    avgDirect.assign(HOURS_PER_YEAR, 0);
+    avgIndirect.assign(HOURS_PER_YEAR, 0);
+
+    for (uint y = 0; y < study.parameters.nbYears; y++)
+    {
+        Yuni::uint32 tsNumber = (width == 1) ? 0 : link->timeseriesNumbers[0][y];
+        for (uint h = 0; h < HOURS_PER_YEAR; h++)
+        {
+            avgDirect[h] += link->directCapacities[tsNumber][h] * yearsWeight[y];
+            avgIndirect[h] += link->indirectCapacities[tsNumber][h] * yearsWeight[y];
+        }
+    }
+
+    for (uint h = 0; h < HOURS_PER_YEAR; h++)
+    {
+        avgDirect[h] /= yearsWeightSum;
+        avgIndirect[h] /= yearsWeightSum;
+    }
+    return 0;
 }
 
 } // namespace Simulation
