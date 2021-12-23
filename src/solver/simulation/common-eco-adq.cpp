@@ -48,7 +48,7 @@ namespace Simulation
 {
 static void RecalculDesEchangesMoyens(Data::Study& study,
                                       PROBLEME_HEBDO& problem,
-                                      CallbackBalanceRetrieval& callbackBalance,
+                                      const CallbackBalanceRetrieval& callbackBalance,
                                       int PasDeTempsDebut)
 {
     for (uint i = 0; i < (uint)problem.NombreDePasDeTemps; i++)
@@ -72,7 +72,8 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
             }
         }
 
-        std::vector<float> avgDirect, avgIndirect;
+        std::vector<double> avgDirect;
+        std::vector<double> avgIndirect;
         for (uint j = 0; j < study.runtime->interconnectionsCount; ++j)
         {
             auto* link = study.runtime->areaLink[j];
@@ -219,10 +220,10 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
     return false;
 }
 
-void PerformQuadraticOptimisation(Data::Study& study,
-                                  PROBLEME_HEBDO& problem,
-                                  CallbackBalanceRetrieval& callbackBalance,
-                                  uint nbWeeks)
+void ComputeFlowQuad(Data::Study& study,
+                     PROBLEME_HEBDO& problem,
+                     const CallbackBalanceRetrieval& callbackBalance,
+                     uint nbWeeks)
 {
     uint startTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
 
@@ -361,8 +362,8 @@ void PrepareRandomNumbers(Data::Study& study,
 
 int retrieveAverageNTC(const Data::Study& study,
                        const Data::AreaLink* link,
-                       std::vector<float>& avgDirect,
-                       std::vector<float>& avgIndirect)
+                       std::vector<double>& avgDirect,
+                       std::vector<double>& avgIndirect)
 {
     auto yearsWeight = study.parameters.getYearsWeight();
     auto yearsWeightSum = study.parameters.getYearsWeightSum();

@@ -251,8 +251,7 @@ void Economy::simulationEnd()
     {
         CallbackBalanceRetrieval callbackBalance;
         callbackBalance.bind(this, &Economy::callbackRetrieveBalanceData);
-
-        PerformQuadraticOptimisation(study, *pProblemesHebdo[0], callbackBalance, pNbWeeks);
+        ComputeFlowQuad(study, *pProblemesHebdo[0], callbackBalance, pNbWeeks);
     }
 }
 

@@ -85,10 +85,10 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study);
 /*!
 ** \brief Perform the quadratic optimization (links) (eco+adq)
 */
-void PerformQuadraticOptimisation(Data::Study& study,
-                                  PROBLEME_HEBDO& problem,
-                                  CallbackBalanceRetrieval& callbackBalance,
-                                  unsigned int nbWeeks);
+void ComputeFlowQuad(Data::Study& study,
+                     PROBLEME_HEBDO& problem,
+                     const CallbackBalanceRetrieval& callbackBalance,
+                     unsigned int nbWeeks);
 
 /*!
 ** \brief Hydro Remix
@@ -179,8 +179,8 @@ void updatingAnnualFinalHydroLevel(const Data::Study& study, PROBLEME_HEBDO& pro
 */
 int retrieveAverageNTC(const Data::Study& study,
                        const Data::AreaLink* link,
-                       std::vector<float>& avgDirect,
-                       std::vector<float>& avgIndirect);
+                       std::vector<double>& avgDirect,
+                       std::vector<double>& avgIndirect);
 
 } // namespace Simulation
 } // namespace Solver

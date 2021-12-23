@@ -377,7 +377,7 @@ void Adequacy::simulationEnd()
         CallbackBalanceRetrieval callbackBalance;
         callbackBalance.bind(this, &Adequacy::callbackRetrieveBalanceData);
 
-        PerformQuadraticOptimisation(study, *pProblemesHebdo[0], callbackBalance, pNbWeeks);
+        ComputeFlowQuad(study, *pProblemesHebdo[0], callbackBalance, pNbWeeks);
     }
 }
 
