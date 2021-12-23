@@ -52,16 +52,11 @@ target_include_directories(test-sc-builder-file-save
 )
 
 target_link_libraries(test-sc-builder-file-save
-						PRIVATE
-							Boost::unit_test_framework
-							libantares-core
-							libmodel_antares
+  PRIVATE
+						Boost::unit_test_framework
+						libantares-core
+						libmodel_antares
 )
-
-# Linux
-if(UNIX AND NOT APPLE)
-target_link_libraries(test-sc-builder-file-save PRIVATE stdc++fs)
-endif()
 
 # Storing test-sc-builder-file-savee under the folder Unit-tests in the IDE
 set_target_properties(test-sc-builder-file-save PROPERTIES FOLDER Unit-tests/sc-builder)
