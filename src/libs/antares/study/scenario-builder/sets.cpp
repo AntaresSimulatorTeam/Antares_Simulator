@@ -48,6 +48,12 @@ Sets::~Sets()
 {
 }
 
+void Sets::setStudy(Study& study)
+{
+    pStudy = &study;
+    assert(pStudy && "Invalid study");
+}
+
 void Sets::clear()
 {
     assert(pStudy && "Invalid study");
@@ -59,9 +65,7 @@ bool Sets::loadFromStudy(Study& study)
     if (not study.usedByTheSolver)
         logs.info() << "  Loading data for the scenario builder overlay";
 
-    // Reset / clear
-    pStudy = &study;
-    assert(pStudy && "Invalid study");
+    setStudy(study);
 
     // Loading from the INI file
     String filename;
@@ -91,7 +95,7 @@ Rules::Ptr Sets::createNew(const RulesScenarioName& name)
     // The rule set does not exist, creating a new empty one
     Rules::Ptr newRulesSet = new Rules(*pStudy);
     newRulesSet->reset();
-    newRulesSet->pName = name;
+    newRulesSet->setName(name);
     pMap[id] = newRulesSet;
     return newRulesSet;
 }
@@ -111,7 +115,7 @@ Rules::Ptr Sets::rename(const RulesScenarioName& lname, const RulesScenarioName&
         return nullptr;
     Rules::Ptr rules = i->second;
     pMap.erase(i);
-    rules->pName = newname;
+    rules->setName(newname);
     pMap[id] = rules;
     return rules;
 }
