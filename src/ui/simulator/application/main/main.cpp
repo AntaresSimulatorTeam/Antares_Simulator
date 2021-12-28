@@ -257,7 +257,8 @@ ApplWnd::ApplWnd() :
  pageRenewableClusterList(nullptr),
  pageRenewableCommon(nullptr),
  pageLinksSummary(nullptr),
- pageLinksDetails(nullptr),
+ pageLinksParameters(nullptr),
+ pageLinksNTC(nullptr),
  pageNodalOptim(nullptr),
  pWndBindingConstraints(nullptr),
  pGridSelectionOperator(new Component::Datagrid::Selection::CellCount()),
@@ -986,8 +987,10 @@ void ApplWnd::selectAllDefaultPages()
         pageRenewableClusterList->select();
     if (pageRenewableCommon)
         pageRenewableCommon->select();
-    if (pageLinksDetails)
-        pageLinksDetails->select();
+    if (pageLinksParameters)
+        pageLinksParameters->select();
+    if (pageLinksNTC)
+        pageLinksNTC->select();
     if (pageWindPreproDailyProfile)
         pageWindPreproDailyProfile->select();
     if (pWndBindingConstraints)

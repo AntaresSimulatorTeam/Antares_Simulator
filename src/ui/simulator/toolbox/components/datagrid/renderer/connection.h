@@ -42,7 +42,7 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class Connection final : public Renderer::Matrix<>
+class Connection : public Renderer::Matrix<>
 {
 public:
     Connection(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
@@ -57,8 +57,6 @@ public:
         return Renderer::Matrix<>::height();
     }
 
-    virtual wxString columnCaption(int colIndx) const;
-
     virtual wxString rowCaption(int rowIndx) const;
 
     virtual wxString cellValue(int x, int y) const
@@ -71,12 +69,9 @@ public:
         return Renderer::Matrix<>::cellNumericValue(x, y);
     }
 
-    virtual bool cellValue(int x, int y, const Yuni::String& value);
+    virtual bool cellValue(int x, int y, const Yuni::String& value) = 0;
 
-    virtual void resetColors(int, int, wxColour&, wxColour&) const
-    {
-        // Do nothing
-    }
+    virtual void resetColors(int, int, wxColour&, wxColour&) const { /* Do nothing*/ }
 
     virtual wxColour horizontalBorderColor(int x, int y) const;
 
@@ -89,7 +84,7 @@ public:
     {
         return 0;
     }
-    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const = 0;
 
     virtual Date::Precision precision()
     {
@@ -100,9 +95,69 @@ protected:
     wxWindow* pControl;
 
 private:
+    virtual void setMatrix(Data::AreaLink* link) = 0;
     void onConnectionChanged(Data::AreaLink* link);
 
-}; // class ARendererArea
+}; // class Connection
+
+// ===========================
+// Parameters grid renderer
+// ===========================
+class connectionParameters final : public Connection
+{
+public:
+    connectionParameters(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
+    ~connectionParameters() = default;
+    wxString columnCaption(int colIndx) const override;
+    bool cellValue(int x, int y, const Yuni::String& value) override;
+    IRenderer::CellStyle cellStyle(int col, int row) const override;
+
+private:
+    void setMatrix(Data::AreaLink* link) override;
+
+    Antares::Matrix<>* direct_ntc_ = nullptr;
+    Antares::Matrix<>* indirect_ntc_ = nullptr;
+};
+
+// ===========================
+// NTC grid renderer
+// ===========================
+class connectionNTC : public Connection
+{
+public:
+    connectionNTC(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
+    ~connectionNTC() = default;
+    bool cellValue(int x, int y, const Yuni::String& value) override;
+    IRenderer::CellStyle cellStyle(int col, int row) const override;
+
+private:
+    virtual void setMatrix(Data::AreaLink* link) = 0;
+};
+
+// ----------------
+// Direct
+// ----------------
+class connectionNTCdirect : public connectionNTC
+{
+public:
+    connectionNTCdirect(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
+    ~connectionNTCdirect() = default;
+private:
+    void setMatrix(Data::AreaLink* link);
+};
+
+// ----------------
+// Indirect
+// ----------------
+class connectionNTCindirect : public connectionNTC
+{
+public:
+    connectionNTCindirect(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
+    ~connectionNTCindirect() = default;
+private:
+    void setMatrix(Data::AreaLink* link);
+};
+
 
 } // namespace Renderer
 } // namespace Datagrid

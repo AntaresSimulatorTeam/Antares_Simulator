@@ -706,16 +706,22 @@ void ApplWnd::createNBInterconnections()
 
     // Create a standard page with an input selector
     std::pair<Component::Notebook*, Toolbox::InputSelector::Connections*> page
-      = createStdNotebookPage<Toolbox::InputSelector::Connections>(
-        pNotebook, wxT("interconnections"), wxT("Links"));
+            = createStdNotebookPage<Toolbox::InputSelector::Connections>(
+                        pNotebook, wxT("interconnections"), 
+                        wxT("Links"));
 
-    // Interco
-    pageLinksDetails
-      = page.first->add(new Window::Interconnection(page.first, page.second), wxT("  Details  "));
+    // links parameters time series
+    pageLinksParameters
+      = page.first->add(new Window::Interconnection(page.first, page.second, new Window::linkParametersGrid()), wxT(" Parameters "));
+
+    // links NTC time series
+    pageLinksNTC
+        = page.first->add(new Window::Interconnection(page.first, page.second, new Window::linkNTCgrid()), wxT(" Transmission capacities "));
+
     pageLinksSummary = page.first->add(
-      new Component::Datagrid::Component(
-        page.first, new Component::Datagrid::Renderer::Links::Summary(page.first)),
-      wxT(" Summary "));
+            new Component::Datagrid::Component(
+            page.first, new Component::Datagrid::Renderer::Links::Summary(page.first)),
+            wxT(" Summary "));
 }
 
 void ApplWnd::onMapDblClick(Map::Component& /*sender*/)

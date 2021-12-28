@@ -34,6 +34,7 @@
 #include <wx/sizer.h>
 #include "../application/menus.h"
 #include <wx/textdlg.h>
+#include <wx/statline.h>
 
 using namespace Yuni;
 
@@ -41,7 +42,43 @@ namespace Antares
 {
 namespace Window
 {
-Interconnection::Interconnection(wxWindow* parent, Toolbox::InputSelector::Connections* notifier) :
+
+    void linkParametersGrid::add(wxBoxSizer* sizer, wxWindow* parent, Interconnection* intercoWindow, Toolbox::InputSelector::Connections* notifier)
+    {
+        sizer->Add(new Component::Datagrid::Component(
+            parent, new Component::Datagrid::Renderer::connectionParameters(intercoWindow, notifier)),
+            1,
+            wxALL | wxEXPAND | wxFIXED_MINSIZE);
+    }
+
+    void linkNTCgrid::add(wxBoxSizer* sizer, wxWindow* parent, Interconnection* intercoWindow, Toolbox::InputSelector::Connections* notifier)
+    {
+        // Size proportion of the current sizer's child among all sizer's children.
+        // Here, all children have the same proportion.
+        int gridSizeProportion = 1;
+        // Size of the border around a grid, inside the sizer. 
+        int borderSizeAroundGrid = 5;
+
+        sizer->Add(new Component::Datagrid::Component(
+            parent, new Component::Datagrid::Renderer::connectionNTCdirect(intercoWindow, notifier),
+            wxT("Direct")),
+            gridSizeProportion,
+            wxALL | wxEXPAND | wxFIXED_MINSIZE,
+            borderSizeAroundGrid);
+
+        sizer->Add(new wxStaticLine(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL),
+            0,
+            wxALL | wxEXPAND);
+
+        sizer->Add(new Component::Datagrid::Component(
+            parent, new Component::Datagrid::Renderer::connectionNTCindirect(intercoWindow, notifier),
+            wxT("Indirect")),
+            gridSizeProportion,
+            wxALL | wxEXPAND | wxFIXED_MINSIZE,
+            borderSizeAroundGrid);
+    }
+
+Interconnection::Interconnection(wxWindow* parent, Toolbox::InputSelector::Connections* notifier, linkGrid* link_grid) :
  wxScrolledWindow(parent),
  pLink(nullptr),
  pLinkName(),
@@ -60,16 +97,16 @@ Interconnection::Interconnection(wxWindow* parent, Toolbox::InputSelector::Conne
     mainsizer->Add(pLinkData, 1, wxALL | wxEXPAND);
     mainsizer->Hide(pLinkData);
 
-    auto* sizer = new wxBoxSizer(wxVERTICAL);
-    pLinkData->SetSizer(sizer);
+    auto* sizer_vertical = new wxBoxSizer(wxVERTICAL);
+    pLinkData->SetSizer(sizer_vertical);
 
-    wxFlexGridSizer* s = new wxFlexGridSizer(0, 0, 10);
-    pGridSizer = s;
-    s->AddGrowableCol(1, 0);
+    wxFlexGridSizer* sizer_flex_grid = new wxFlexGridSizer(0, 0, 10);
+    pGridSizer = sizer_flex_grid;
+    sizer_flex_grid->AddGrowableCol(1, 0);
     auto* gridHZ = new wxBoxSizer(wxHORIZONTAL);
     gridHZ->AddSpacer(20);
-    gridHZ->Add(s, 0, wxALL | wxEXPAND);
-    sizer->Add(gridHZ, 0, wxALL | wxEXPAND, 6);
+    gridHZ->Add(sizer_flex_grid, 0, wxALL | wxEXPAND);
+    sizer_vertical->Add(gridHZ, 0, wxALL | wxEXPAND, 6);
 
     wxStaticText* label;
     Component::Button* button;
@@ -84,8 +121,8 @@ Interconnection::Interconnection(wxWindow* parent, Toolbox::InputSelector::Conne
         onPopup.bind(this, &Interconnection::onPopupMenuLink);
         button->onPopupMenu(onPopup);
         pLinkName = button;
-        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        sizer_flex_grid->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        sizer_flex_grid->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
     }
     // Caption
     {
@@ -97,11 +134,11 @@ Interconnection::Interconnection(wxWindow* parent, Toolbox::InputSelector::Conne
                                        &Interconnection::onButtonEditCaption);
         auto* lhz = new wxBoxSizer(wxHORIZONTAL);
         pCaptionText = Component::CreateLabel(pLinkData, wxEmptyString);
-        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        sizer_flex_grid->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         lhz->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         lhz->AddSpacer(2);
         lhz->Add(pCaptionText, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        s->Add(lhz, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        sizer_flex_grid->Add(lhz, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
         pLabelCaption = label;
         pCaptionDataSizer = lhz;
@@ -115,8 +152,8 @@ Interconnection::Interconnection(wxWindow* parent, Toolbox::InputSelector::Conne
         button->menu(true);
         onPopup.bind(this, &Interconnection::onPopupMenuHurdlesCosts);
         button->onPopupMenu(onPopup);
-        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        sizer_flex_grid->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        sizer_flex_grid->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pHurdlesCost = button;
     }
     // Transmission capacities
@@ -126,8 +163,8 @@ Interconnection::Interconnection(wxWindow* parent, Toolbox::InputSelector::Conne
         button->menu(true);
         onPopup.bind(this, &Interconnection::onPopupMenuTransmissionCapacities);
         button->onPopupMenu(onPopup);
-        s->AddSpacer(10);
-        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        sizer_flex_grid->AddSpacer(10);
+        sizer_flex_grid->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pCopperPlate = button;
     }
     // Asset Type
@@ -137,37 +174,37 @@ Interconnection::Interconnection(wxWindow* parent, Toolbox::InputSelector::Conne
         button->menu(true);
         onPopup.bind(this, &Interconnection::onPopupMenuAssetType);
         button->onPopupMenu(onPopup);
-        s->AddSpacer(10);
-        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        sizer_flex_grid->AddSpacer(10);
+        sizer_flex_grid->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pAssetType = button;
     }
     // Loop flow
     {
         button = new Component::Button(pLinkData, wxT("loop flow"), "images/16x16/light_green.png");
-        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        sizer_flex_grid->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pLoopFlow = button;
     }
     // Phase Shifter
     {
         button
           = new Component::Button(pLinkData, wxT("phase shifter"), "images/16x16/light_green.png");
-        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        sizer_flex_grid->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pPhaseShift = button;
     }
 
-    sizer->AddSpacer(4);
+    sizer_vertical->AddSpacer(4);
 
-    auto* p = new Component::Panel(pLinkData);
-    p->SetSize(1, 1);
-    p->SetBackgroundColour(wxColour(200, 200, 200));
-    sizer->Add(p, 0, wxALL | wxEXPAND, 4);
+    auto* subGridPanel = new Component::Panel(pLinkData);
+    subGridPanel->SetSize(1, 1);
+    subGridPanel->SetBackgroundColour(wxColour(200, 200, 200));
+    sizer_vertical->Add(subGridPanel, 0, wxALL | wxEXPAND, 4);
 
-    sizer->Add(new Component::Datagrid::Component(
-                 pLinkData, new Component::Datagrid::Renderer::Connection(this, notifier)),
-               1,
-               wxALL | wxEXPAND | wxFIXED_MINSIZE);
+    // Interconnection grid
+    auto* sub_sizer_horizontal = new wxBoxSizer(wxHORIZONTAL);
+    link_grid->add(sub_sizer_horizontal, pLinkData, this, notifier);
+    sizer_vertical->Add(sub_sizer_horizontal, 1, wxALL | wxEXPAND);
 
-    sizer->Layout();
+    sizer_vertical->Layout();
 
     mainsizer->Layout();
 

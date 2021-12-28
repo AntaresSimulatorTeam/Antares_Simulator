@@ -732,7 +732,8 @@ private:
     Component::Notebook::Page* pageRenewableCommon;
 
     Component::Notebook::Page* pageLinksSummary;
-    Component::Notebook::Page* pageLinksDetails;
+    Component::Notebook::Page* pageLinksParameters;
+    Component::Notebook::Page* pageLinksNTC;
 
     Component::Notebook::Page* pageNodalOptim;
 
