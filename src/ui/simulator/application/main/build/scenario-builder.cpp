@@ -57,9 +57,8 @@ protected:
 
 public:
     basicScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
-     control_(control), notebook_(notebook), renderer_(nullptr)
-    {
-    }
+        control_(control), notebook_(notebook), renderer_(nullptr)
+    {}
 
     virtual void create()
     {
@@ -91,8 +90,7 @@ class loadScBuilderGrid : public basicScBuilderGrid
 public:
     loadScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
      basicScBuilderGrid(control, notebook)
-    {
-    }
+    {}
 
 private:
     void createRenderer()
@@ -111,8 +109,7 @@ class hydroScBuilderGrid : public basicScBuilderGrid
 public:
     hydroScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
      basicScBuilderGrid(control, notebook)
-    {
-    }
+    {}
 
 private:
     void createRenderer()
@@ -131,8 +128,7 @@ class windScBuilderGrid : public basicScBuilderGrid
 public:
     windScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
      basicScBuilderGrid(control, notebook)
-    {
-    }
+    {}
 
 private:
     void createRenderer()
@@ -151,8 +147,7 @@ class solarScBuilderGrid : public basicScBuilderGrid
 public:
     solarScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
      basicScBuilderGrid(control, notebook)
-    {
-    }
+    {}
 
 private:
     void createRenderer()
@@ -170,14 +165,13 @@ class clusterScBuilderGrid : public basicScBuilderGrid
 public:
     clusterScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
      basicScBuilderGrid(control, notebook)
-    {
-    }
+    {}
 
     virtual void create() override
     {
         page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(notebook_, name(), caption());
         createRenderer();
-        connectUpdateRules();
+        control_->updateRules.connect(renderer_, &Renderer::ScBuilderRendererBase::onRulesChanged);
         createGrid();
         addToNotebook();
     }
@@ -185,7 +179,6 @@ public:
 private:
     virtual const char* name() const = 0;
     virtual const char* caption() const = 0;
-    virtual void connectUpdateRules() = 0;
 
     virtual void createGrid() override
     {
@@ -209,18 +202,11 @@ class thermalScBuilderGrid : public clusterScBuilderGrid
 public:
     thermalScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
      clusterScBuilderGrid(control, notebook)
-    {
-    }
+    {}
 
     virtual void createRenderer() override
     {
         renderer_ = new Renderer::thermalScBuilderRenderer(page_.second);
-    }
-
-    virtual void connectUpdateRules() override
-    {
-        control_->updateRules.connect(renderer_,
-                                      &Renderer::thermalScBuilderRenderer::onRulesChanged);
     }
 
     virtual const char* name() const override
@@ -240,18 +226,11 @@ class renewableScBuilderGrid : public clusterScBuilderGrid
 public:
     renewableScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
      clusterScBuilderGrid(control, notebook)
-    {
-    }
+    {}
 
     virtual void createRenderer() override
     {
         renderer_ = new Renderer::renewableScBuilderRenderer(page_.second);
-    }
-
-    virtual void connectUpdateRules() override
-    {
-        control_->updateRules.connect(renderer_,
-                                      &Renderer::renewableScBuilderRenderer::onRulesChanged);
     }
 
     virtual const char* name() const override
@@ -272,8 +251,7 @@ public:
     hydroLevelsScBuilderGrid(Window::ScenarioBuilder::Panel* control,
                              Component::Notebook* notebook) :
      basicScBuilderGrid(control, notebook)
-    {
-    }
+    {}
 
 private:
     void createRenderer()
@@ -304,8 +282,7 @@ void ApplWnd::createNBScenarioBuilder()
 {
     // Scenario Builder
     pScenarioBuilderNotebook = new Component::Notebook(pSectionNotebook);
-    pScenarioBuilderNotebook->onPageChanged.connect(
-      this, &ApplWnd::onScenarioBuilderNotebookPageChanging);
+    pScenarioBuilderNotebook->onPageChanged.connect(this, &ApplWnd::onScenarioBuilderNotebookPageChanging);
     pSectionNotebook->add(pScenarioBuilderNotebook, wxT("scenariobuilder"), wxT("scenariobuilder"));
 
     // Title
