@@ -62,24 +62,26 @@ public:
 
     virtual void create()
     {
+        addAreaSelectorPage();
         createRenderer();
-        connectUpdateRulesEventToFunction();
         createGrid();
-        addToNotebook();
-        renderer_->control(grid_);
+        addGridToNotebook();
+        connectUpdateRulesEventToFunction();
     }
 
 protected:
+    virtual void addAreaSelectorPage() {/* by default : does nothing */ }
     virtual void createRenderer() = 0;
     virtual void createGrid()
     {
         grid_ = new DatagridType(notebook_, renderer_);
+        renderer_->control(grid_);
     }
     void connectUpdateRulesEventToFunction()
     {
         control_->updateRules.connect(renderer_, &Renderer::ScBuilderRendererBase::onRulesChanged);
     }
-    virtual void addToNotebook() = 0;
+    virtual void addGridToNotebook() = 0;
 
 protected:
     Window::ScenarioBuilder::Panel* control_;
@@ -101,7 +103,7 @@ private:
     {
         renderer_ = new Renderer::loadScBuilderRenderer();
     }
-    void addToNotebook()
+    void addGridToNotebook()
     {
         notebook_->add(grid_, wxT("load"), wxT("Load"));
     }
@@ -120,7 +122,7 @@ private:
     {
         renderer_ = new Renderer::hydroScBuilderRenderer();
     }
-    void addToNotebook()
+    void addGridToNotebook()
     {
         notebook_->add(grid_, wxT("hydro"), wxT("Hydro"));
     }
@@ -139,7 +141,7 @@ private:
     {
         renderer_ = new Renderer::windScBuilderRenderer();
     }
-    void addToNotebook()
+    void addGridToNotebook()
     {
         notebook_->add(grid_, wxT("wind"), wxT("Wind"));
     }
@@ -158,7 +160,7 @@ private:
     {
         renderer_ = new Renderer::solarScBuilderRenderer();
     }
-    void addToNotebook()
+    void addGridToNotebook()
     {
         notebook_->add(grid_, wxT("solar"), wxT("Solar"));
     }
@@ -168,36 +170,32 @@ class clusterScBuilderGrid : public basicScBuilderGrid
 {
 public:
     clusterScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
-     basicScBuilderGrid(control, notebook)
+        basicScBuilderGrid(control, notebook)
     {}
-
-    virtual void create() override
-    {
-        page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(notebook_, name(), caption());
-        createRenderer();
-        connectUpdateRulesEventToFunction();
-        createGrid();
-        addToNotebook();
-    }
 
 private:
     virtual const char* name() const = 0;
     virtual const char* caption() const = 0;
 
-    virtual void createGrid() override
+    void addAreaSelectorPage() override
     {
-        grid_ = new DatagridType(page_.first, renderer_);
+        area_selector_page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(notebook_, name(), caption());
     }
 
-    virtual void addToNotebook() override
+    virtual void createGrid() override
     {
-        page_.first->add(grid_, name(), caption());
-        renderer_->control(grid_); // Shouldn't that be inside create() ?
-        page_.first->select(name());
+        grid_ = new DatagridType(area_selector_page_.first, renderer_);
+        renderer_->control(grid_);
+    }
+
+    virtual void addGridToNotebook() override
+    {
+        area_selector_page_.first->add(grid_, name(), caption());
+        area_selector_page_.first->select(name());
     }
 
 protected:
-    std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page_;
+    std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> area_selector_page_;
 };
 
 // Thermal clusters ...
@@ -205,12 +203,12 @@ class thermalScBuilderGrid : public clusterScBuilderGrid
 {
 public:
     thermalScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
-     clusterScBuilderGrid(control, notebook)
+        clusterScBuilderGrid(control, notebook)
     {}
 
     virtual void createRenderer() override
     {
-        renderer_ = new Renderer::thermalScBuilderRenderer(page_.second);
+        renderer_ = new Renderer::thermalScBuilderRenderer(area_selector_page_.second);
     }
 
     virtual const char* name() const override
@@ -234,7 +232,7 @@ public:
 
     virtual void createRenderer() override
     {
-        renderer_ = new Renderer::renewableScBuilderRenderer(page_.second);
+        renderer_ = new Renderer::renewableScBuilderRenderer(area_selector_page_.second);
     }
 
     virtual const char* name() const override
@@ -262,7 +260,7 @@ private:
     {
         renderer_ = new Renderer::hydroLevelsScBuilderRenderer();
     }
-    void addToNotebook()
+    void addGridToNotebook()
     {
         notebook_->add(grid_, wxT("hydro levels"), wxT("Hydro Levels"));
     }
