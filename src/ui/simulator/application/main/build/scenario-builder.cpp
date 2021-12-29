@@ -63,7 +63,7 @@ public:
     virtual void create()
     {
         createRenderer();
-        control_->updateRules.connect(renderer_, &Renderer::ScBuilderRendererBase::onRulesChanged);
+        connectUpdateRulesEventToFunction();
         createGrid();
         addToNotebook();
         renderer_->control(grid_);
@@ -74,6 +74,10 @@ protected:
     virtual void createGrid()
     {
         grid_ = new DatagridType(notebook_, renderer_);
+    }
+    void connectUpdateRulesEventToFunction()
+    {
+        control_->updateRules.connect(renderer_, &Renderer::ScBuilderRendererBase::onRulesChanged);
     }
     virtual void addToNotebook() = 0;
 
@@ -171,7 +175,7 @@ public:
     {
         page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(notebook_, name(), caption());
         createRenderer();
-        control_->updateRules.connect(renderer_, &Renderer::ScBuilderRendererBase::onRulesChanged);
+        connectUpdateRulesEventToFunction();
         createGrid();
         addToNotebook();
     }
