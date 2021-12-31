@@ -38,12 +38,13 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class renewableScBuilderRenderer : public ScBuilderRendererBase
+class renewableScBuilderRenderer : public ScBuilderRendererAreasAsRows
 {
 public:
     renewableScBuilderRenderer(Toolbox::InputSelector::Area* notifier);
-    bool valid() const;
     ~renewableScBuilderRenderer();
+
+    bool valid() const;
     bool cellValue(int x, int y, const Yuni::String& value);
     int height() const;
     wxString rowCaption(int rowIndx) const;

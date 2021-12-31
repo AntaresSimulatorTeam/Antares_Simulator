@@ -38,12 +38,13 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class thermalScBuilderRenderer : public ScBuilderRendererBase
+class thermalScBuilderRenderer : public ScBuilderRendererAreasAsRows
 {
 public:
     thermalScBuilderRenderer(Toolbox::InputSelector::Area* notifier);
-    bool valid() const;
     ~thermalScBuilderRenderer();
+
+    bool valid() const;
     bool cellValue(int x, int y, const Yuni::String& value);
     int height() const;
     wxString rowCaption(int rowIndx) const;

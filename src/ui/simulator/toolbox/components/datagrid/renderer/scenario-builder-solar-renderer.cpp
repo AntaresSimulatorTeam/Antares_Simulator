@@ -39,7 +39,7 @@ namespace Datagrid
 {
 namespace Renderer
 {
-solarScBuilderRenderer::solarScBuilderRenderer() : ScBuilderRendererBase()
+solarScBuilderRenderer::solarScBuilderRenderer() : ScBuilderRendererAreasAsRows()
 {
 }
 

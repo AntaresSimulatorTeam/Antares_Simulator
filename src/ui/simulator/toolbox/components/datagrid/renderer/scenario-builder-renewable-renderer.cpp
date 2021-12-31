@@ -40,7 +40,7 @@ namespace Datagrid
 namespace Renderer
 {
 renewableScBuilderRenderer::renewableScBuilderRenderer(Toolbox::InputSelector::Area* notifier) :
- ScBuilderRendererBase()
+    ScBuilderRendererAreasAsRows()
 {
     if (notifier)
     {

@@ -37,11 +37,12 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class hydroLevelsScBuilderRenderer : public ScBuilderRendererBase
+class hydroLevelsScBuilderRenderer : public ScBuilderRendererAreasAsRows
 {
 public:
     hydroLevelsScBuilderRenderer();
     ~hydroLevelsScBuilderRenderer();
+
     wxString cellValue(int x, int y) const;
     bool cellValue(int x, int y, const Yuni::String& value);
     double cellNumericValue(int x, int y) const;

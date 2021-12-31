@@ -39,7 +39,7 @@ namespace Datagrid
 {
 namespace Renderer
 {
-windScBuilderRenderer::windScBuilderRenderer() : ScBuilderRendererBase()
+windScBuilderRenderer::windScBuilderRenderer() : ScBuilderRendererAreasAsRows()
 {
 }
 

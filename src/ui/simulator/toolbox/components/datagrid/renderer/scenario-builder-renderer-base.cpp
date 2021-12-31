@@ -38,24 +38,16 @@ namespace Datagrid
 {
 namespace Renderer
 {
-ScBuilderRendererBase::ScBuilderRendererBase() : pControl(nullptr), pArea(nullptr)
+// ==================================
+// Scenario builder base class
+// ==================================
+ScBuilderRendererBase::ScBuilderRendererBase() : pControl(nullptr) //, pArea(nullptr)  // gp : not needed for ntc
 {
 }
 
 ScBuilderRendererBase::~ScBuilderRendererBase()
 {
     destroyBoundEvents();
-}
-
-void ScBuilderRendererBase::onAreaChanged(Data::Area* area)
-{
-    if (area != pArea)
-    {
-        pArea = area;
-        onRefresh();
-        if (pControl)
-            pControl->Refresh();
-    }
 }
 
 void ScBuilderRendererBase::onRulesChanged(Data::ScenarioBuilder::Rules::Ptr rules)
@@ -70,37 +62,14 @@ void ScBuilderRendererBase::onRulesChanged(Data::ScenarioBuilder::Rules::Ptr rul
     }
 }
 
-bool ScBuilderRendererBase::valid() const
-{
-    return !(!study) && pRules && study->areas.size() != 0 && !(!pRules);
-}
-
 int ScBuilderRendererBase::width() const
 {
     return (!study || !pRules) ? 0 : (int)study->parameters.nbYears;
 }
 
-int ScBuilderRendererBase::height() const
-{
-    if (!(!study) && !(!pRules))
-        return (int)pRules->areaCount();
-    return 0;
-}
-
 wxString ScBuilderRendererBase::columnCaption(int x) const
 {
     return wxString(wxT("year ")) << (1 + x);
-}
-
-wxString ScBuilderRendererBase::rowCaption(int rowIndx) const
-{
-    if (!(!study) && !(!pRules))
-    {
-        if ((uint)rowIndx < study->areas.size())
-            return wxString() << wxT(" ") << wxStringFromUTF8(study->areas.byIndex[rowIndx]->name)
-                              << wxT("  ");
-    }
-    return wxEmptyString;
 }
 
 wxString ScBuilderRendererBase::cellValue(int x, int y) const
@@ -144,9 +113,59 @@ IRenderer::CellStyle ScBuilderRendererBase::cellStyle(int x, int y) const
 
 void ScBuilderRendererBase::onStudyClosed()
 {
-    pArea = nullptr;
+    // pArea = nullptr;
     pRules = nullptr;
     IRenderer::onStudyClosed();
+}
+
+
+
+// ==================================================
+// Scenario builder with areas as rows 
+// ==================================================
+ScBuilderRendererAreasAsRows::ScBuilderRendererAreasAsRows() :
+    ScBuilderRendererBase(),
+    pArea(nullptr)
+{}
+
+int ScBuilderRendererAreasAsRows::height() const
+{
+    if (!(!study) && !(!pRules))
+        return (int)pRules->areaCount();
+    return 0;
+}
+
+wxString ScBuilderRendererAreasAsRows::rowCaption(int rowIndx) const
+{
+    if (!(!study) && !(!pRules))
+    {
+        if ((uint)rowIndx < study->areas.size())
+            return wxString() << wxT(" ") << wxStringFromUTF8(study->areas.byIndex[rowIndx]->name)
+            << wxT("  ");
+    }
+    return wxEmptyString;
+}
+
+bool ScBuilderRendererAreasAsRows::valid() const
+{
+    return !(!study) && pRules && study->areas.size() != 0 && !(!pRules);
+}
+
+void ScBuilderRendererAreasAsRows::onAreaChanged(Data::Area* area)
+{
+    if (area != pArea)
+    {
+        pArea = area;
+        onRefresh();
+        if (pControl)
+            pControl->Refresh();
+    }
+}
+
+void ScBuilderRendererAreasAsRows::onStudyClosed()
+{
+    pArea = nullptr;
+    ScBuilderRendererBase::onStudyClosed();
 }
 
 } // namespace Renderer

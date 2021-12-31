@@ -39,7 +39,7 @@ namespace Datagrid
 {
 namespace Renderer
 {
-hydroScBuilderRenderer::hydroScBuilderRenderer() : ScBuilderRendererBase()
+hydroScBuilderRenderer::hydroScBuilderRenderer() : ScBuilderRendererAreasAsRows()
 {
 }
 

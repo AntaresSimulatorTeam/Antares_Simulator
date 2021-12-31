@@ -41,38 +41,28 @@ namespace Renderer
 class ScBuilderRendererBase : public IRenderer
 {
 public:
-    //! \name Constructors & Destructor
-    //@{
-    /*!
-    ** \brief Constructor with a given timeseries
-    */
-    ScBuilderRendererBase();
-    /*!
-    ** \brief Constructor for thermal
-    */
-    //! Destructor
+    ScBuilderRendererBase();        // gp : to be adapted for ntc
     virtual ~ScBuilderRendererBase();
-    //@}
 
     virtual int width() const;
-    virtual int height() const;
+    virtual int height() const = 0;     // gp : to be redefined for ntc // used to be concrete
 
     virtual wxString columnCaption(int colIndx) const;
 
-    virtual wxString rowCaption(int rowIndx) const;
+    virtual wxString rowCaption(int rowIndx) const = 0;     // gp : to be redefined for ntc // used to be concrete
 
     virtual wxString cellValue(int x, int y) const;
 
-    virtual double cellNumericValue(int x, int y) const = 0;
+    virtual double cellNumericValue(int x, int y) const = 0;    // gp : to be redefined for ntc
 
-    virtual bool cellValue(int x, int y, const Yuni::String& value) = 0;
+    virtual bool cellValue(int x, int y, const Yuni::String& value) = 0;    // gp : to be redefined for ntc
 
     virtual void resetColors(int, int, wxColour&, wxColour&) const
     {
         // Do nothing
     }
 
-    virtual bool valid() const;
+    virtual bool valid() const = 0;     // gp : to be redefined for ntc // used to be concrete
 
     virtual uint maxWidthResize() const
     {
@@ -90,15 +80,39 @@ public:
     void onRulesChanged(Data::ScenarioBuilder::Rules::Ptr rules);
 
 protected:
-    void onAreaChanged(Data::Area* area);
-    virtual void onStudyClosed();
+    // void onAreaChanged(Data::Area* area);       // gp : not needed for ntc
+    virtual void onStudyClosed();               // gp : to be adapted for ntc
 
 protected:
     wxWindow* pControl;
-    Data::Area* pArea;
+    // Data::Area* pArea;      // gp : not needed for ntc
     Data::ScenarioBuilder::Rules::Ptr pRules;
 
 }; // class ScBuilderRendererBase
+
+
+
+class ScBuilderRendererAreasAsRows : public ScBuilderRendererBase
+{
+public:
+    ScBuilderRendererAreasAsRows();
+    virtual ~ScBuilderRendererAreasAsRows() = default;
+
+    int height() const override;
+    virtual wxString rowCaption(int rowIndx) const override;
+
+    virtual double cellNumericValue(int x, int y) const = 0;
+    virtual bool cellValue(int x, int y, const Yuni::String& value) = 0;
+
+    bool valid() const override;
+
+protected:
+    void onAreaChanged(Data::Area* area);
+    void onStudyClosed() override;
+
+protected:
+    Data::Area* pArea;
+};  // class ScBuilderRendererAreasAsRows
 
 } // namespace Renderer
 } // namespace Datagrid

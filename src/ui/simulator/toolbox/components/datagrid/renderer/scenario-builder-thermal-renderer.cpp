@@ -40,7 +40,7 @@ namespace Datagrid
 namespace Renderer
 {
 thermalScBuilderRenderer::thermalScBuilderRenderer(Toolbox::InputSelector::Area* notifier) :
- ScBuilderRendererBase()
+    ScBuilderRendererAreasAsRows()
 {
     if (notifier)
     {
@@ -50,8 +50,7 @@ thermalScBuilderRenderer::thermalScBuilderRenderer(Toolbox::InputSelector::Area*
 }
 
 thermalScBuilderRenderer::~thermalScBuilderRenderer()
-{
-}
+{}
 
 bool thermalScBuilderRenderer::valid() const
 {

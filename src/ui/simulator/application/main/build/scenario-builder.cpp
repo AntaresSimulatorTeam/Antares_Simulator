@@ -39,6 +39,7 @@
 #include "toolbox/components/datagrid/renderer/scenario-builder-wind-renderer.h"
 #include "toolbox/components/datagrid/renderer/scenario-builder-solar-renderer.h"
 #include "toolbox/components/datagrid/renderer/scenario-builder-hydro-levels-renderer.h"
+#include "toolbox/components/datagrid/renderer/scenario-builder-ntc-renderer.h"
 
 using namespace Yuni;
 using namespace Component::Datagrid;
@@ -62,7 +63,7 @@ public:
 
     virtual void create()
     {
-        addAreaSelectorPage();
+        addSelectorPage();
         createRenderer();
         createGrid();
         addGridToNotebook();
@@ -70,7 +71,12 @@ public:
     }
 
 protected:
-    virtual void addAreaSelectorPage() {/* by default : does nothing */ }
+    virtual void addSelectorPage()
+    { 
+        // In the scenario builder, a selector page can be an area or link selector page.
+        // For example : for thermal, you need to select an area to get a grid (rows : clusters, columns : years) 
+        // by default : does nothing. Should be overloaded to add a selector page
+    }
     virtual void createRenderer() = 0;
     virtual void createGrid()
     {
@@ -166,6 +172,26 @@ private:
     }
 };
 
+// Links NTC ...
+class ntcScBuilderGrid final : public basicScBuilderGrid
+{
+public:
+    ntcScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
+        basicScBuilderGrid(control, notebook)
+    {}
+
+private:
+    void createRenderer()
+    {
+        renderer_ = new Renderer::ntcScBuilderRenderer();
+    }
+    void addGridToNotebook()
+    {
+        notebook_->add(grid_, wxT("ntc"), wxT("NTC"));
+    }
+};
+
+
 class clusterScBuilderGrid : public basicScBuilderGrid
 {
 public:
@@ -177,7 +203,7 @@ private:
     virtual const char* name() const = 0;
     virtual const char* caption() const = 0;
 
-    void addAreaSelectorPage() override
+    void addSelectorPage() override
     {
         area_selector_page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(notebook_, name(), caption());
     }
@@ -199,7 +225,7 @@ protected:
 };
 
 // Thermal clusters ...
-class thermalScBuilderGrid : public clusterScBuilderGrid
+class thermalScBuilderGrid final : public clusterScBuilderGrid
 {
 public:
     thermalScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
@@ -223,7 +249,7 @@ public:
 };
 
 // Renewable clusters ...
-class renewableScBuilderGrid : public clusterScBuilderGrid
+class renewableScBuilderGrid final : public clusterScBuilderGrid
 {
 public:
     renewableScBuilderGrid(Window::ScenarioBuilder::Panel* control, Component::Notebook* notebook) :
@@ -312,6 +338,9 @@ void ApplWnd::createNBScenarioBuilder()
 
     solarScBuilderGrid solarScBuilder(control, pScenarioBuilderNotebook);
     solarScBuilder.create();
+
+    ntcScBuilderGrid ntcScBuilder(control, pScenarioBuilderNotebook);
+    ntcScBuilder.create();
 
     renewableScBuilderGrid renewableScBuilder(control, pScenarioBuilderNotebook);
     renewableScBuilder.create();
