@@ -373,7 +373,7 @@ void Adequacy::simulationEnd()
         std::vector<AvgExchangeResults*> balance(nbAreas, nullptr);
         for (uint areaIndex = 0; areaIndex < nbAreas; ++areaIndex)
         {
-            Data::Area* area = study.areas.byIndex[areaIndex];
+            const Data::Area* area = study.areas.byIndex[areaIndex];
             variables.retrieveResultsForArea<Variable::Economy::VCardBalance>(&balance[areaIndex],
                                                                               area);
         }
