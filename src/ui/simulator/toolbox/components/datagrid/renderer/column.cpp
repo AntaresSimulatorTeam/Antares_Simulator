@@ -39,7 +39,7 @@ namespace Renderer
 // -------------------
 // Base column class
 // -------------------
-Column::Column(Antares::Data::TimeSeries ts, wxString c) : tsKind_(ts), caption_(c)
+Column::Column(Antares::Data::TimeSeries ts, wxString caption) : tsKind_(ts), caption_(caption)
 {
 }
 
@@ -60,13 +60,13 @@ int Column::getNumberOfLines() const
 
 Column::~Column()
 {
-    for (auto& c : cells_)
-        delete c;
+    for (auto& cell : cells_)
+        delete cell;
 }
 // -------------------- -
 // Classic column
 // ---------------------
-classicColumn::classicColumn(TimeSeries ts, wxString c) : Column(ts, c)
+classicColumn::classicColumn(TimeSeries ts, wxString caption) : Column(ts, caption)
 {
     cells_ = {new blankCell(),
               new readyMadeTSstatus(tsKind_),
@@ -82,25 +82,48 @@ classicColumn::classicColumn(TimeSeries ts, wxString c) : Column(ts, c)
               new intraModalCell(tsKind_),
               new interModalCell(tsKind_)};
 }
+
 // -------------------------------
 // Column renewable clusters
 // -------------------------------
 ColumnRenewableClusters::ColumnRenewableClusters() : Column(timeSeriesRenewable, "   Renewable   ")
 {
     cells_ = {new blankCell(),
-              new inactiveRenewableClusterCell(wxT("On")),
-              new inactiveRenewableClusterCell(wxT("-")),
-              new inactiveRenewableClusterCell(wxT("-")),
-              new inactiveRenewableClusterCell(wxT("-")),
-              new inactiveRenewableClusterCell(wxT("-")),
-              new inactiveRenewableClusterCell(wxT("-")),
-              new inactiveRenewableClusterCell(wxT("-")),
-              new inactiveRenewableClusterCell(wxT("-")),
-              new inactiveRenewableClusterCell(wxT("-")),
+              new inactiveCell(wxT("On")),
+              new inactiveCell(wxT("-")),
+              new inactiveCell(wxT("-")),
+              new inactiveCell(wxT("-")),
+              new inactiveCell(wxT("-")),
+              new inactiveCell(wxT("-")),
+              new inactiveCell(wxT("-")),
+              new inactiveCell(wxT("-")),
+              new inactiveCell(wxT("-")),
               new blankCell(),
               new intraModalCell(tsKind_),
               new interModalCell(tsKind_)};
 }
+
+
+// -------------------------------
+// Column for NTC
+// -------------------------------
+ColumnNTC::ColumnNTC() : Column(timeSeriesTransmissionCapacities, "     NTC     ")
+{
+    cells_ = {  new blankCell(),
+                new inactiveCell(wxT("On")),
+                new inactiveCell(wxT("-")),
+                new inactiveCell(wxT("-")),
+                new inactiveCell(wxT("-")),
+                new inactiveCell(wxT("-")),
+                new inactiveCell(wxT("-")),
+                new inactiveCell(wxT("-")),
+                new inactiveCell(wxT("-")),
+                new inactiveCell(wxT("-")),
+                new blankCell(),
+                new intraModalCell(tsKind_),
+                new inactiveCell(wxT("-")) };
+}
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

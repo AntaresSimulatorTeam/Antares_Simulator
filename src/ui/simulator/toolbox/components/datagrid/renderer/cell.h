@@ -48,11 +48,11 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class inactiveRenewableClusterCell : public Cell
+class inactiveCell : public Cell
 {
 public:
-    inactiveRenewableClusterCell(wxString toPrintInCell);
-    ~inactiveRenewableClusterCell() = default;
+    inactiveCell(wxString toPrintInCell);
+    ~inactiveCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
     bool cellValue(const String& value) override;
