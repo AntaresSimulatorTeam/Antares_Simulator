@@ -142,15 +142,15 @@ public:
     BindingConstraint::Set orderedConstraint;
     //! All binding constraints according their operator (<, > and = only)
     ByOperatorAndType byOperator;
-
+    //! Number of links
+    uint pLinkCount;
+    //! Vector containing links
+    AreaLink::Vector pLink;
 private:
     Study& pStudy;
-    uint pLinkCount;
-    uint pClusterCount;
-    AreaLink::Vector pLink;
     BindingConstraint::Vector pConstraint;
+    uint pClusterCount;
     ThermalCluster::Vector pClusters;
-
 }; // class UIRuntimeInfo
 
 } // namespace Data

@@ -860,6 +860,11 @@ String AreaLink::getName() const
     return s;
 }
 
+AreaLink::NamePair AreaLink::getNamePair() const
+{
+    return NamePair(from->name, with->name);
+}
+
 void AreaLink::flush()
 {
     parameters.flush();

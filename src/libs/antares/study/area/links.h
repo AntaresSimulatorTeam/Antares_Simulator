@@ -58,6 +58,8 @@ public:
     //! Map of links
     typedef std::map<AreaName, AreaLink*> Map;
 
+    typedef std::pair<Yuni::String, Yuni::String> NamePair;
+
 public:
     //! \name Constructor & Destructor
     //@{
@@ -129,6 +131,7 @@ private:
     bool linkLoadTimeSeries_for_version_from_320_to_630(const AnyString& folder);
     bool linkLoadTimeSeries_for_version_from_630_to_810(const AnyString& folder);
     bool linkLoadTimeSeries_for_version_820_and_later(const AnyString& folder);
+    NamePair getNamePair() const;
 
 public:
     //! \name Graph
@@ -209,13 +212,15 @@ public:
     StyleType style;
     //! link width
     int linkWidth;
+
+    friend struct CompareLinkName;
 }; // class AreaLink
 
 struct CompareLinkName final
 {
     inline bool operator()(const AreaLink* s1, const AreaLink* s2) const
     {
-        return (s1->getName().toLower() < s2->getName().toLower());
+        return s1->getNamePair() < s2->getNamePair();
     }
 };
 
