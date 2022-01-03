@@ -252,6 +252,14 @@ void Connection::createANewConnectionIfNeeded()
             else
                 pAttachedAreaLink = Data::AreaListAddLink(&study->areas, sB.c_str(), sA.c_str());
 
+            // Force the refresh of runtime data
+            logs.debug() << "  Asking to reload UI runtime data";
+            auto* info = Data::Study::Current::Get()->uiinfo;
+            if (info)
+            {
+                info->reload();
+            }
+
             pAttachedAreaLink->resetToDefaultValues();
             OnStudyLinkAdded(pAttachedAreaLink);
             study->uiinfo->reload();
