@@ -41,28 +41,28 @@ namespace Renderer
 class ScBuilderRendererBase : public IRenderer
 {
 public:
-    ScBuilderRendererBase();        // gp : to be adapted for ntc
+    ScBuilderRendererBase();
     virtual ~ScBuilderRendererBase();
 
     virtual int width() const;
-    virtual int height() const = 0;     // gp : to be redefined for ntc // used to be concrete
+    virtual int height() const = 0;
 
     virtual wxString columnCaption(int colIndx) const;
 
-    virtual wxString rowCaption(int rowIndx) const = 0;     // gp : to be redefined for ntc // used to be concrete
+    virtual wxString rowCaption(int rowIndx) const = 0;
 
     virtual wxString cellValue(int x, int y) const;
 
-    virtual double cellNumericValue(int x, int y) const = 0;    // gp : to be redefined for ntc
+    virtual double cellNumericValue(int x, int y) const = 0;
 
-    virtual bool cellValue(int x, int y, const Yuni::String& value) = 0;    // gp : to be redefined for ntc
+    virtual bool cellValue(int x, int y, const Yuni::String& value) = 0;
 
     virtual void resetColors(int, int, wxColour&, wxColour&) const
     {
         // Do nothing
     }
 
-    virtual bool valid() const = 0;     // gp : to be redefined for ntc // used to be concrete
+    virtual bool valid() const = 0;
 
     virtual uint maxWidthResize() const
     {

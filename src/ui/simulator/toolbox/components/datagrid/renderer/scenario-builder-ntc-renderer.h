@@ -14,8 +14,8 @@ namespace Renderer
 class ntcScBuilderRenderer : public ScBuilderRendererBase
 {
 public:
-    ntcScBuilderRenderer() = default;
-    ~ntcScBuilderRenderer() = default;
+    ntcScBuilderRenderer();
+    ~ntcScBuilderRenderer();
 
     bool valid() const;
     int height() const;
@@ -23,6 +23,9 @@ public:
 
     bool cellValue(int x, int y, const Yuni::String& value);
     double cellNumericValue(int x, int y) const;
+private:
+    void onStudyChanged(Data::Study& study);
+    Data::AreaLink::Vector* pLink;
 }; // class ntcScBuilderRenderer
 
 } // namespace Renderer
