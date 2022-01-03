@@ -107,7 +107,7 @@ ColumnRenewableClusters::ColumnRenewableClusters() : Column(timeSeriesRenewable,
 // -------------------------------
 // Column for NTC
 // -------------------------------
-ColumnNTC::ColumnNTC() : Column(timeSeriesTransmissionCapacities, "     NTC     ")
+ColumnNTC::ColumnNTC() : Column(timeSeriesTransmissionCapacities, "  Links NTC  ")
 {
     cells_ = {  new blankCell(),
                 new inactiveCell(wxT("On")),

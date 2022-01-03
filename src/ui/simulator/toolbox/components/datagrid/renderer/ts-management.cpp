@@ -46,7 +46,6 @@ TSmanagement::TSmanagement() : pControl(nullptr)
     columns_.push_back(new classicColumn(timeSeriesLoad, "      Load      "));
     columns_.push_back(new classicColumn(timeSeriesThermal, "   Thermal   "));
     columns_.push_back(new classicColumn(timeSeriesHydro, "      Hydro      "));
-    columns_.push_back(new ColumnNTC());
 }
 
 void TSmanagement::checkLineNumberInColumns()
