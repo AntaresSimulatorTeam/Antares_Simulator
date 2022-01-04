@@ -49,9 +49,9 @@ namespace Renderer
     {
       // Unlikely, but can happen if the study has not yet been loaded into memory
       if (!pLink)
-        return "";
+        return wxEmptyString;
       if (rowIndx >= pLink->size())
-        return "";
+        return wxEmptyString;
       return (*pLink)[rowIndx]->getName().c_str();
     }
 
