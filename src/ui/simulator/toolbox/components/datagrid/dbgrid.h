@@ -92,6 +92,9 @@ public:
         pColorMappingRowLabels = false;
     }
 
+    // For synchronizing scroll with another grid purpose
+    void setOtherGrid(DBGrid* otherGrid);
+
 private:
     //! Get if the data are ready for the grid
     bool dataAreReady() const;
@@ -135,6 +138,8 @@ private:
     wxPoint pCurrentPosition;
     bool pAllowRefresh;
     bool pColorMappingRowLabels;
+    // The other grid we want scroll synchronously with
+    DBGrid* otherGrid_ = nullptr;
 
     DECLARE_EVENT_TABLE();
 

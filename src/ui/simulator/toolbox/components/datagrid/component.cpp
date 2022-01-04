@@ -240,6 +240,7 @@ public:
 
     //! The real datagrid component
     DBGrid* grid;
+
     //! Custom implementation of wxGridTable
     VGridHelper* gridHelper;
     //! Cell renderer
@@ -1512,6 +1513,11 @@ void Component::scroll(wxScrolledWindow* component)
     int x, y;
     component->GetViewStart(&x, &y);
     internal.grid->Scroll(x, y);
+}
+
+void Component::setOtherGrid(Component* other)
+{ 
+    pInternal->grid->setOtherGrid(other->pInternal->grid);
 }
 
 wxScrolledWindow* Component::gridAsScrolledWindow()

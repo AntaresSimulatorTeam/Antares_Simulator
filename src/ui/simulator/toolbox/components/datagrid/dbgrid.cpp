@@ -669,7 +669,19 @@ void DBGrid::onScroll(wxScrollWinEvent& evt)
     Renderer::IRenderer* r = ((Component*)GetParent())->renderer();
     if (r)
         r->onScroll();
+
+    // Synchronize scrolling with another grid
+    if (otherGrid_ != nullptr)
+    {
+        otherGrid_->Scroll(GetScrollPos(wxHORIZONTAL), GetScrollPos(wxVERTICAL));
+    }
+
     evt.Skip();
+}
+
+void DBGrid::setOtherGrid(DBGrid* otherGrid)
+{
+    otherGrid_ = otherGrid;
 }
 
 } // namespace Datagrid

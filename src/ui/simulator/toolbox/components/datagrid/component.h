@@ -149,6 +149,9 @@ public:
     ;
     //@}
 
+    // For synchronizing scroll with another grid purpose
+    void setOtherGrid(Component* other);
+
     //! \name Modification
     //@{
     //! Get if the component can mark the study as modified if a single cell is modified

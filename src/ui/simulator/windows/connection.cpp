@@ -59,23 +59,37 @@ namespace Window
         // Size of the border around a grid, inside the sizer. 
         int borderSizeAroundGrid = 5;
 
-        sizer->Add(new Component::Datagrid::Component(
-            parent, new Component::Datagrid::Renderer::connectionNTCdirect(intercoWindow, notifier),
-            wxT("Direct")),
+        // Grid for direct NTC
+        Component::Datagrid::Component* gridDirect = new Component::Datagrid::Component(
+            parent, 
+            new Component::Datagrid::Renderer::connectionNTCdirect(intercoWindow, notifier),
+            wxT("Direct"));
+
+        sizer->Add(
+            gridDirect,
             gridSizeProportion,
             wxALL | wxEXPAND | wxFIXED_MINSIZE,
             borderSizeAroundGrid);
 
+        // Vertical separator
         sizer->Add(new wxStaticLine(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL),
             0,
             wxALL | wxEXPAND);
 
-        sizer->Add(new Component::Datagrid::Component(
+        // Grid for indirect NTC
+        Component::Datagrid::Component* gridIndirect = new Component::Datagrid::Component(
             parent, new Component::Datagrid::Renderer::connectionNTCindirect(intercoWindow, notifier),
-            wxT("Indirect")),
+            wxT("Indirect"));
+
+        sizer->Add(
+            gridIndirect,
             gridSizeProportion,
             wxALL | wxEXPAND | wxFIXED_MINSIZE,
             borderSizeAroundGrid);
+
+        // Synchronize the scroll bars of the two grids
+        gridDirect->setOtherGrid(gridIndirect);
+        gridIndirect->setOtherGrid(gridDirect);
     }
 
 Interconnection::Interconnection(wxWindow* parent, Toolbox::InputSelector::Connections* notifier, linkGrid* link_grid) :
