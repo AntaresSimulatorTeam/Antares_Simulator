@@ -58,7 +58,7 @@ public:
     //! Map of links
     typedef std::map<AreaName, AreaLink*> Map;
 
-    typedef std::pair<Yuni::String, Yuni::String> NamePair;
+    using NamePair = std::pair<Yuni::String, Yuni::String>;
 
 public:
     //! \name Constructor & Destructor
