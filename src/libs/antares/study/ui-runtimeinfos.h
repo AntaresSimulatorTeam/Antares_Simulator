@@ -144,7 +144,7 @@ public:
     ByOperatorAndType byOperator;
     //! Number of links
     uint pLinkCount;
-    //! Vector containing links
+    //! Vector of pointers to links, in lexicographic order
     AreaLink::Vector pLink;
 private:
     Study& pStudy;
