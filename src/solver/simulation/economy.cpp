@@ -238,19 +238,27 @@ void Economy::incrementProgression(Progression::Task& progression)
         ++progression;
 }
 
+// Retrieve weighted average balance for each area
+static std::vector<AvgExchangeResults*> retrieveBalance(
+  const Data::Study& study,
+  Solver::Variable::Economy::AllVariables& variables)
+{
+    const uint nbAreas = study.areas.size();
+    std::vector<AvgExchangeResults*> balance(nbAreas, nullptr);
+    for (uint areaIndex = 0; areaIndex < nbAreas; ++areaIndex)
+    {
+        const Data::Area* area = study.areas.byIndex[areaIndex];
+        variables.retrieveResultsForArea<Variable::Economy::VCardBalance>(&balance[areaIndex],
+                                                                          area);
+    }
+    return balance;
+}
+
 void Economy::simulationEnd()
 {
     if (!preproOnly && study.runtime->interconnectionsCount > 0)
     {
-        // Retrieve weighted average balance for each area
-        const uint nbAreas = study.areas.size();
-        std::vector<AvgExchangeResults*> balance(nbAreas, nullptr);
-        for (uint areaIndex = 0; areaIndex < nbAreas; ++areaIndex)
-        {
-            const Data::Area* area = study.areas.byIndex[areaIndex];
-            variables.retrieveResultsForArea<Variable::Economy::VCardBalance>(&balance[areaIndex],
-                                                                              area);
-        }
+        auto balance = retrieveBalance(study, variables);
         ComputeFlowQuad(study, *pProblemesHebdo[0], balance, pNbWeeks);
     }
 }

@@ -76,7 +76,12 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
         for (uint j = 0; j < study.runtime->interconnectionsCount; ++j)
         {
             auto* link = study.runtime->areaLink[j];
-            int ret = retrieveAverageNTC(study, link, avgDirect, avgIndirect);
+            int ret = retrieveAverageNTC(
+              study, link->directCapacities, link->timeseriesNumbers, avgDirect);
+
+            ret = retrieveAverageNTC(
+                    study, link->indirectCapacities, link->timeseriesNumbers, avgIndirect)
+                  && ret;
             if (!ret)
             {
                 ntcValues.ValeurDeNTCOrigineVersExtremite[j] = avgDirect[decalPasDeTemps];
@@ -360,30 +365,27 @@ void PrepareRandomNumbers(Data::Study& study,
 }
 
 int retrieveAverageNTC(const Data::Study& study,
-                       const Data::AreaLink* link,
-                       std::vector<double>& avgDirect,
-                       std::vector<double>& avgIndirect)
+                       const Matrix<>& capacities,
+                       const Matrix<Yuni::uint32>& tsNumbers,
+                       std::vector<double>& avg)
 {
     auto yearsWeight = study.parameters.getYearsWeight();
     auto yearsWeightSum = study.parameters.getYearsWeightSum();
-    const auto width = link->directCapacities.width;
-    avgDirect.assign(HOURS_PER_YEAR, 0);
-    avgIndirect.assign(HOURS_PER_YEAR, 0);
+    const auto width = capacities.width;
+    avg.assign(HOURS_PER_YEAR, 0);
 
     for (uint y = 0; y < study.parameters.nbYears; y++)
     {
-        Yuni::uint32 tsNumber = (width == 1) ? 0 : link->timeseriesNumbers[0][y];
+        Yuni::uint32 tsNumber = (width == 1) ? 0 : tsNumbers[0][y];
         for (uint h = 0; h < HOURS_PER_YEAR; h++)
         {
-            avgDirect[h] += link->directCapacities[tsNumber][h] * yearsWeight[y];
-            avgIndirect[h] += link->indirectCapacities[tsNumber][h] * yearsWeight[y];
+            avg[h] += capacities[tsNumber][h] * yearsWeight[y];
         }
     }
 
     for (uint h = 0; h < HOURS_PER_YEAR; h++)
     {
-        avgDirect[h] /= yearsWeightSum;
-        avgIndirect[h] /= yearsWeightSum;
+        avg[h] /= yearsWeightSum;
     }
     return 0;
 }

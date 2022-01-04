@@ -173,9 +173,9 @@ void updatingAnnualFinalHydroLevel(const Data::Study& study, PROBLEME_HEBDO& pro
 ** \param Weighted average NTC for the indirect direction
 */
 int retrieveAverageNTC(const Data::Study& study,
-                       const Data::AreaLink* link,
-                       std::vector<double>& avgDirect,
-                       std::vector<double>& avgIndirect);
+                       const Matrix<>& capacities,
+                       const Matrix<Yuni::uint32>& tsNumbers,
+                       std::vector<double>& avg);
 
 } // namespace Simulation
 } // namespace Solver
