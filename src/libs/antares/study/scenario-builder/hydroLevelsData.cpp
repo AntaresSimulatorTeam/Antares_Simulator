@@ -85,9 +85,10 @@ void hydroLevelsData::set_value(uint x, uint y, double value)
     pHydroLevelsRules.entry[y][x] = value;
 }
 
-void hydroLevelsData::apply(Study& study)
+bool hydroLevelsData::apply(Study& study)
 {
     study.scenarioHydroLevels.copyFrom(pHydroLevelsRules);
+    return true;
 }
 
 } // namespace ScenarioBuilder
