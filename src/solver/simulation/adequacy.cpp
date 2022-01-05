@@ -364,20 +364,28 @@ void Adequacy::incrementProgression(Progression::Task& progression)
         ++progression;
 }
 
-AvgExchangeResults* Adequacy::callbackRetrieveBalanceData(Data::Area* area)
+// Retrieve weighted average balance for each area
+static std::vector<AvgExchangeResults*> retrieveBalance(
+  const Data::Study& study,
+  Solver::Variable::Adequacy::AllVariables& variables)
 {
-    AvgExchangeResults* balance = nullptr;
-    variables.retrieveResultsForArea<Variable::Economy::VCardBalance>(&balance, area);
+    const uint nbAreas = study.areas.size();
+    std::vector<AvgExchangeResults*> balance(nbAreas, nullptr);
+    for (uint areaIndex = 0; areaIndex < nbAreas; ++areaIndex)
+    {
+        const Data::Area* area = study.areas.byIndex[areaIndex];
+        variables.retrieveResultsForArea<Variable::Economy::VCardBalance>(&balance[areaIndex],
+                                                                          area);
+    }
     return balance;
 }
+
 void Adequacy::simulationEnd()
 {
     if (!preproOnly && study.runtime->interconnectionsCount > 0)
     {
-        CallbackBalanceRetrieval callbackBalance;
-        callbackBalance.bind(this, &Adequacy::callbackRetrieveBalanceData);
-
-        ComputeFlowQuad(study, *pProblemesHebdo[0], callbackBalance, pNbWeeks);
+        auto balance = retrieveBalance(study, variables);
+        ComputeFlowQuad(study, *pProblemesHebdo[0], balance, pNbWeeks);
     }
 }
 

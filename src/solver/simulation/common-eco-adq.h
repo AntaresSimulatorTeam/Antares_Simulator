@@ -51,11 +51,6 @@ typedef Solver::Variable::Economy::VCardBalance AvgExchangeVCardBalance;
 typedef Variable::Storage<AvgExchangeVCardBalance>::ResultsType AvgExchangeResults;
 
 /*!
-** \brief Delegate to retrieve balance data (for a given area) of the simulation
-*/
-typedef Yuni::Bind<AvgExchangeResults*(Data::Area*)> CallbackBalanceRetrieval;
-
-/*!
 ** \brief Compute then random unserved energy cost and the new random hydro virtual cost for all
 *areas
 **
@@ -87,7 +82,7 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study);
 */
 void ComputeFlowQuad(Data::Study& study,
                      PROBLEME_HEBDO& problem,
-                     const CallbackBalanceRetrieval& callbackBalance,
+                     const std::vector<AvgExchangeResults*>& balance,
                      unsigned int nbWeeks);
 
 /*!
@@ -178,9 +173,9 @@ void updatingAnnualFinalHydroLevel(const Data::Study& study, PROBLEME_HEBDO& pro
 ** \param Weighted average NTC for the indirect direction
 */
 int retrieveAverageNTC(const Data::Study& study,
-                       const Data::AreaLink* link,
-                       std::vector<double>& avgDirect,
-                       std::vector<double>& avgIndirect);
+                       const Matrix<>& capacities,
+                       const Matrix<Yuni::uint32>& tsNumbers,
+                       std::vector<double>& avg);
 
 } // namespace Simulation
 } // namespace Solver
