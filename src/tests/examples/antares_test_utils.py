@@ -94,7 +94,11 @@ def compare_directory(result_dir, reference_dir):
     assert (result_dir.is_dir())
     assert (reference_dir.is_dir())
 
-    uncompared_file_name = ['id-daily.txt', 'id-hourly.txt']
+    uncompared_file_name = ['id-hourly.txt',
+                            'id-daily.txt',
+                            'id-weekly.txt',
+                            'id-monthly.txt',
+                            'id-annual.txt']
 
     for x in result_dir.iterdir():
         if x.is_dir():
