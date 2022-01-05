@@ -82,7 +82,7 @@ public:
 
     virtual uint maxWidthResize() const
     {
-        return 0;
+        return 1000;
     }
     virtual IRenderer::CellStyle cellStyle(int col, int row) const = 0;
 
