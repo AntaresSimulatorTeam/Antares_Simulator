@@ -48,7 +48,7 @@ namespace Simulation
 {
 static void RecalculDesEchangesMoyens(Data::Study& study,
                                       PROBLEME_HEBDO& problem,
-                                      CallbackBalanceRetrieval& callback,
+                                      const std::vector<AvgExchangeResults*>& balance,
                                       int PasDeTempsDebut)
 {
     for (uint i = 0; i < (uint)problem.NombreDePasDeTemps; i++)
@@ -58,12 +58,11 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
         for (uint j = 0; j < study.areas.size(); ++j)
         {
-            auto* balance = callback(study.areas.byIndex[j]);
-            assert(balance && "Impossible to find the variable");
-            if (balance)
+            assert(balance[j] && "Impossible to find the variable");
+            if (balance[j])
             {
                 problem.SoldeMoyenHoraire[i]->SoldeMoyenDuPays[j]
-                  = balance->avgdata.hourly[decalPasDeTemps];
+                  = balance[j]->avgdata.hourly[decalPasDeTemps];
             }
             else
             {
@@ -72,17 +71,29 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
             }
         }
 
+        std::vector<double> avgDirect;
+        std::vector<double> avgIndirect;
         for (uint j = 0; j < study.runtime->interconnectionsCount; ++j)
         {
             auto* link = study.runtime->areaLink[j];
+            int ret = retrieveAverageNTC(
+              study, link->directCapacities, link->timeseriesNumbers, avgDirect);
+
+            ret = retrieveAverageNTC(
+                    study, link->indirectCapacities, link->timeseriesNumbers, avgIndirect)
+                  && ret;
+            if (!ret)
+            {
+                ntcValues.ValeurDeNTCOrigineVersExtremite[j] = avgDirect[decalPasDeTemps];
+                ntcValues.ValeurDeNTCExtremiteVersOrigine[j] = avgIndirect[decalPasDeTemps];
+            }
+            else
+            {
+                assert(false && "invalid NTC");
+            }
 
             auto& mtxParamaters = link->parameters;
-            auto& mtxDirectCapacities = link->directCapacities;
-            auto& mtxIndirectCapacities = link->indirectCapacities;
-
             ntcValues.ResistanceApparente[j] = mtxParamaters[Data::fhlImpedances][decalPasDeTemps];
-            ntcValues.ValeurDeNTCOrigineVersExtremite[j] = mtxDirectCapacities[0][decalPasDeTemps];
-            ntcValues.ValeurDeNTCExtremiteVersOrigine[j] = mtxIndirectCapacities[0][decalPasDeTemps];
 
             link->flush();
         }
@@ -213,10 +224,10 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
     return false;
 }
 
-void PerformQuadraticOptimisation(Data::Study& study,
-                                  PROBLEME_HEBDO& problem,
-                                  CallbackBalanceRetrieval& callback,
-                                  uint nbWeeks)
+void ComputeFlowQuad(Data::Study& study,
+                     PROBLEME_HEBDO& problem,
+                     const std::vector<AvgExchangeResults*>& balance,
+                     uint nbWeeks)
 {
     uint startTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
 
@@ -229,7 +240,7 @@ void PerformQuadraticOptimisation(Data::Study& study,
         for (uint w = 0; w != nbWeeks; ++w)
         {
             int PasDeTempsDebut = startTime + (w * problem.NombreDePasDeTemps);
-            RecalculDesEchangesMoyens(study, problem, callback, PasDeTempsDebut);
+            RecalculDesEchangesMoyens(study, problem, balance, PasDeTempsDebut);
         }
     }
     else
@@ -351,6 +362,32 @@ void PrepareRandomNumbers(Data::Study& study,
         }
         indexArea++;
     });
+}
+
+int retrieveAverageNTC(const Data::Study& study,
+                       const Matrix<>& capacities,
+                       const Matrix<Yuni::uint32>& tsNumbers,
+                       std::vector<double>& avg)
+{
+    auto yearsWeight = study.parameters.getYearsWeight();
+    auto yearsWeightSum = study.parameters.getYearsWeightSum();
+    const auto width = capacities.width;
+    avg.assign(HOURS_PER_YEAR, 0);
+
+    for (uint y = 0; y < study.parameters.nbYears; y++)
+    {
+        Yuni::uint32 tsNumber = (width == 1) ? 0 : tsNumbers[0][y];
+        for (uint h = 0; h < HOURS_PER_YEAR; h++)
+        {
+            avg[h] += capacities[tsNumber][h] * yearsWeight[y];
+        }
+    }
+
+    for (uint h = 0; h < HOURS_PER_YEAR; h++)
+    {
+        avg[h] /= yearsWeightSum;
+    }
+    return 0;
 }
 
 } // namespace Simulation
