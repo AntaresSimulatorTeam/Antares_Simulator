@@ -130,6 +130,9 @@ DBGrid::~DBGrid()
     auto* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
         mainFrm->disableGridOperatorIfGrid(this);
+
+    pParentComponent = nullptr;
+    otherGrid_ = nullptr;
 }
 
 void DBGrid::onGridSelectCell(wxGridEvent& evt)
