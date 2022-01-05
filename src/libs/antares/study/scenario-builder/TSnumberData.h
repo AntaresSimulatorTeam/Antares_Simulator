@@ -158,7 +158,6 @@ inline CString<512, false> solarTSNumberData::get_prefix() const
     return "s,";
 }
 
-
 // =====================
 // Hydro ...
 // =====================
@@ -175,7 +174,6 @@ inline CString<512, false> hydroTSNumberData::get_prefix() const
 {
     return "h,";
 }
-
 
 // =====================
 // Thermal ...
@@ -203,21 +201,17 @@ public:
 private:
     //! The attached area, if any
     const Area* pArea = nullptr;
-    //! The map between clusters and there line index
-    std::map<const ThermalCluster*, uint> clusterIndexMap;
 };
-
 
 inline uint thermalTSNumberData::get(const Antares::Data::ThermalCluster* cluster,
                                      const uint year) const
 {
     assert(cluster != nullptr);
-    if (clusterIndexMap.find(cluster) != clusterIndexMap.end() && year < pTSNumberRules.height)
+    if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
     {
-        uint index = clusterIndexMap.at(cluster);
+        const uint index = cluster->areaWideIndex;
         return pTSNumberRules[index][year];
     }
-
     return 0;
 }
 
@@ -225,7 +219,6 @@ inline CString<512, false> thermalTSNumberData::get_prefix() const
 {
     return "t,";
 }
-
 
 // =====================
 // Renewable ...
@@ -257,20 +250,17 @@ public:
 private:
     //! The attached area, if any
     const Area* pArea = nullptr;
-    //! The map between clusters and there line index
-    std::map<const RenewableCluster*, uint> clusterIndexMap;
 };
 
 inline uint renewableTSNumberData::get(const Antares::Data::RenewableCluster* cluster,
                                        const uint year) const
 {
     assert(cluster != nullptr);
-    if (clusterIndexMap.find(cluster) != clusterIndexMap.end() && year < pTSNumberRules.height)
+    if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
     {
-        uint index = clusterIndexMap.at(cluster);
+        const uint index = cluster->areaWideIndex;
         return pTSNumberRules[index][year];
     }
-
     return 0;
 }
 
@@ -278,7 +268,6 @@ inline CString<512, false> renewableTSNumberData::get_prefix() const
 {
     return "r,";
 }
-
 
 // =================================
 // Transmission capacities ...
@@ -306,19 +295,16 @@ public:
 private:
     //! The attached area, if any
     const Area* pArea = nullptr;
-    //! The map between links and their line index
-    std::map<const AreaLink*, uint> linksIndexMap;
 };
 
 inline uint ntcTSNumberData::get(const Antares::Data::AreaLink* link, const uint year) const
 {
     assert(link != nullptr);
-    if (linksIndexMap.find(link) != linksIndexMap.end() && year < pTSNumberRules.height)
+    if (year < pTSNumberRules.height && link->indexForArea < pTSNumberRules.width)
     {
-        uint index = linksIndexMap.at(link);
+        const uint index = link->indexForArea;
         return pTSNumberRules[index][year];
     }
-
     return 0;
 }
 
