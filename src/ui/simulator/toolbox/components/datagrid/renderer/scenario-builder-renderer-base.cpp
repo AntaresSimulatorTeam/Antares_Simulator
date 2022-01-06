@@ -41,7 +41,7 @@ namespace Renderer
 // ==================================
 // Scenario builder base class
 // ==================================
-ScBuilderRendererBase::ScBuilderRendererBase() : pControl(nullptr) //, pArea(nullptr)  // gp : not needed for ntc
+ScBuilderRendererBase::ScBuilderRendererBase() : pControl(nullptr)
 {
 }
 
@@ -113,7 +113,6 @@ IRenderer::CellStyle ScBuilderRendererBase::cellStyle(int x, int y) const
 
 void ScBuilderRendererBase::onStudyClosed()
 {
-    // pArea = nullptr;
     pRules = nullptr;
     IRenderer::onStudyClosed();
 }
@@ -124,8 +123,7 @@ void ScBuilderRendererBase::onStudyClosed()
 // Scenario builder with areas as rows 
 // ==================================================
 ScBuilderRendererAreasAsRows::ScBuilderRendererAreasAsRows() :
-    ScBuilderRendererBase(),
-    pArea(nullptr)
+    ScBuilderRendererBase()
 {}
 
 int ScBuilderRendererAreasAsRows::height() const

@@ -111,7 +111,7 @@ protected:
     void onStudyClosed() override;
 
 protected:
-    Data::Area* pArea;
+    Data::Area* pArea = nullptr;
 };  // class ScBuilderRendererAreasAsRows
 
 } // namespace Renderer
