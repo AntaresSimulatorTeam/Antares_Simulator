@@ -207,6 +207,8 @@ private:
     //! Internal states varaibles
     // This variable is mainly used to reduce header dependencies
     InternalState* pInternal;
+    // Outside Component instance, for simultaneous actions with the current Component
+    Component* otherComponent_ = nullptr;
 
     // nakama
     friend class InternalState;

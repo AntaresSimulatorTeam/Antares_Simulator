@@ -176,6 +176,8 @@ public:
     //! The original component
     Component* component;
 
+    // Component* otherComponent_ = nullptr;
+
     //! Datagrid caption
     wxString caption;
 
@@ -859,78 +861,13 @@ void Component::createModifyPanel(wxSizer* sizer, bool copypasteOnly, bool reado
         }
     }
 
-    if (false and not copypasteOnly)
-    {
-        ssz->AddSpacer(5);
-
-        // default values
-        internal.modifier.selectedSet = modifierValues;
-        internal.modifier.selectedAction = (uint)ModifierOperatorsData<modifierValues>::opPlus;
-
-        auto* grp = new Antares::Component::PanelGroup(this);
-        ssz->Add(grp, 0, wxALL | wxEXPAND);
-        internal.modifier.ui.sizer = ssz;
-
-        auto* sbmp
-          = Resources::StaticBitmapLoadFromFile(grp, wxID_ANY, "images/16x16/update_values.png");
-        grp->leftSizer->Add(sbmp, 0, wxALL | wxALIGN_CENTRE_VERTICAL);
-
-        auto* hz = grp->subpanel->GetSizer();
-        auto* operatorGroup
-          = new Antares::Component::Button(grp->subpanel, wxT("Change values"), nullptr);
-        operatorGroup->bold(true);
-        operatorGroup->menu(true);
-        operatorGroup->onPopupMenu(this, &Component::onPopupMenuModifierSet);
-
-        hz->Add(operatorGroup, 0, wxALL | wxEXPAND);
-        internal.modifier.ui.btnSetSelector = operatorGroup;
-
-        auto* operatorSelector = new Antares::Component::Button(grp->subpanel, wxT("+"), nullptr);
-        operatorSelector->menu(true);
-        operatorSelector->onPopupMenu(this, &Component::onPopupMenuModifierOperators);
-        auto color = operatorSelector->GetBackgroundColour();
-        color.Set((unsigned char)Math::MinMax<int>(color.Red() + 20, 0, 255),
-                  (unsigned char)Math::MinMax<int>(color.Green() + 20, 0, 255),
-                  (unsigned char)Math::MinMax<int>(color.Blue() + 20, 0, 255));
-        operatorSelector->SetBackgroundColour(color);
-        hz->Add(operatorSelector, 0, wxALL | wxEXPAND);
-        internal.modifier.ui.btnActionSelector = operatorSelector;
-
-        auto* textValue = new wxTextCtrl(grp->subpanel,
-                                         wxID_ANY,
-                                         wxT("0"),
-                                         wxDefaultPosition,
-                                         wxSize(42, 18),
-                                         wxBORDER_NONE); // , Toolbox::Validator::Numeric());
-        hz->Add(textValue, 0, wxALL | wxALIGN_CENTER_VERTICAL);
-        internal.modifier.ui.textValue = textValue;
-
-        auto* btnSelectCalendar
-          = new Antares::Component::Button(grp->subpanel, wxT("(date not set)"));
-        btnSelectCalendar->menu(true);
-        hz->Add(btnSelectCalendar, 0, wxALL | wxALIGN_CENTER_VERTICAL);
-        btnSelectCalendar->onPopupMenu(pInternal, &InternalState::onPickDate);
-        internal.modifier.ui.btnSelectCalendar = btnSelectCalendar;
-
-        Antares::Component::AddVerticalSeparator(grp->subpanel, hz, 2);
-        auto* apply = new Antares::Component::Button(
-          grp->subpanel, wxT("Apply"), nullptr, this, &Component::onModifyAll);
-        internal.modifier.ui.btnApply = apply;
-        hz->Add(apply, 0, wxALL | wxEXPAND);
-
-        internal.modifier.ui.sizerForInput = hz;
-        internal.updaterModifiersControls();
-    }
-    else
-    {
-        internal.modifier.ui.textValue = nullptr;
-        internal.modifier.ui.btnSelectCalendar = nullptr;
-        internal.modifier.ui.btnSetSelector = nullptr;
-        internal.modifier.ui.btnActionSelector = nullptr;
-        internal.modifier.ui.btnApply = nullptr;
-        internal.modifier.ui.sizer = nullptr;
-        internal.modifier.ui.sizerForInput = nullptr;
-    }
+    internal.modifier.ui.textValue = nullptr;
+    internal.modifier.ui.btnSelectCalendar = nullptr;
+    internal.modifier.ui.btnSetSelector = nullptr;
+    internal.modifier.ui.btnActionSelector = nullptr;
+    internal.modifier.ui.btnApply = nullptr;
+    internal.modifier.ui.sizer = nullptr;
+    internal.modifier.ui.sizerForInput = nullptr;
 
     // End of the layout
     sizer->Add(ssz, 0, wxALL | wxEXPAND, 2);
@@ -1517,7 +1454,10 @@ void Component::scroll(wxScrolledWindow* component)
 
 void Component::setOtherGrid(Component* other)
 { 
-    pInternal->grid->setOtherGrid(other->pInternal->grid);
+    // Store other Component, for simultaneous grid resize
+    otherComponent_ = other;
+    // For scrolling current grid and other grid simultaneously
+    pInternal->grid->setOtherGrid(other->grid());
 }
 
 wxScrolledWindow* Component::gridAsScrolledWindow()
@@ -1549,18 +1489,36 @@ void Component::onModifyAll(void*)
     String value;
     wxStringToString(internal.modifier.ui.textValue->GetValue(), value);
 
+    ModifierSet selectedSet         = internal.modifier.selectedSet;
+    uint selectedAction             = internal.modifier.selectedAction;
+    Renderer::IRenderer* renderer   = internal.renderer;
+    VGridHelper* gridHelper         = internal.gridHelper;
     //
     onBeginUpdate();
-    wxString str;
 
-    ModifierOperators::ApplyChanges(internal.modifier.selectedSet,
-                                    internal.modifier.selectedAction,
+    ModifierOperators::ApplyChanges(selectedSet,
+                                    selectedAction,
                                     value,
-                                    internal.renderer,
-                                    internal.gridHelper);
+                                    renderer,
+                                    gridHelper);
 
     internal.renderer->onRefresh();
     onEndUpdate();
+
+    // Apply resize columns action on the other grid (if any)
+    if (otherComponent_ &&
+        selectedSet == ModifierSet::modifierDataset && 
+        selectedAction == (uint)ModifierOperatorsData<modifierDataset>::opResizeColumns)
+    {
+        otherComponent_->onBeginUpdate();
+        ModifierOperators::ApplyChanges(selectedSet,
+                                        selectedAction,
+                                        value,
+                                        otherComponent_->pInternal->renderer,
+                                        nullptr);
+        otherComponent_->pInternal->renderer->onRefresh();
+        otherComponent_->onEndUpdate();
+    }
 }
 
 void Component::onComboUpdated(wxCommandEvent& evt)
