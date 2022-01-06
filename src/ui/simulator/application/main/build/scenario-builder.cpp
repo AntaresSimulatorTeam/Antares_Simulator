@@ -45,6 +45,7 @@ using namespace Yuni;
 
 using namespace Component;
 using namespace Component::Datagrid;
+using namespace Toolbox;
 
 
 namespace Antares
@@ -67,7 +68,7 @@ public:
 
     Notebook::Page* createPage()
     {
-        addSelectorPage();
+        addAreaSelectorPage();
         createRenderer();
         rendererHandlesRulesEvent();
         createGrid();
@@ -75,7 +76,7 @@ public:
     }
 
 protected:
-    virtual void addSelectorPage()
+    virtual void addAreaSelectorPage()
     { 
         // In the scenario builder, a selector page can be an area or link selector page.
         // For example : for thermal, you need to select an area to get a grid (rows : clusters, columns : years) 
@@ -208,9 +209,9 @@ private:
     virtual const char* name() const = 0;
     virtual const char* caption() const = 0;
 
-    void addSelectorPage() override
+    void addAreaSelectorPage() override
     {
-        area_selector_page_ = createStdNotebookPage<Toolbox::InputSelector::Area>(notebook_, name(), caption());
+        area_selector_page_ = createStdNotebookPage<InputSelector::Area>(notebook_, name(), caption());
     }
 
     void createGrid() override
@@ -227,7 +228,13 @@ private:
     }
 
 protected:
-    std::pair<Notebook*, Toolbox::InputSelector::Area*> area_selector_page_;
+    InputSelector::Area* areaSelectorPage()
+    {
+        return area_selector_page_.second;
+    }
+
+private:
+    std::pair<Notebook*, InputSelector::Area*> area_selector_page_;
     Notebook::Page* notebookPage_ = nullptr;
 };
 
@@ -241,7 +248,7 @@ public:
 
     virtual void createRenderer() override
     {
-        renderer_ = new Renderer::thermalScBuilderRenderer(area_selector_page_.second);
+        renderer_ = new Renderer::thermalScBuilderRenderer(areaSelectorPage());
     }
 
     virtual const char* name() const override
@@ -265,7 +272,7 @@ public:
 
     virtual void createRenderer() override
     {
-        renderer_ = new Renderer::renewableScBuilderRenderer(area_selector_page_.second);
+        renderer_ = new Renderer::renewableScBuilderRenderer(areaSelectorPage());
     }
 
     virtual const char* name() const override
