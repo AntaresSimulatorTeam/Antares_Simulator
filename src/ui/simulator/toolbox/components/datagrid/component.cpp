@@ -1478,6 +1478,18 @@ void Component::markTheStudyAsModified(bool flag)
         pInternal->shouldMarkStudyModifiedWhenModifyingCell = flag;
 }
 
+void Component::runSelectedAction(uint selectedSet, uint selectedAction, String value, VGridHelper* gridHelper)
+{
+    onBeginUpdate();
+    ModifierOperators::ApplyChanges((ModifierSet)selectedSet,
+                                    selectedAction,
+                                    value,
+                                    pInternal->renderer,
+                                    gridHelper);
+    pInternal->renderer->onRefresh();
+    onEndUpdate();
+}
+
 void Component::onModifyAll(void*)
 {
     assert(pInternal);
@@ -1491,33 +1503,16 @@ void Component::onModifyAll(void*)
 
     ModifierSet selectedSet         = internal.modifier.selectedSet;
     uint selectedAction             = internal.modifier.selectedAction;
-    Renderer::IRenderer* renderer   = internal.renderer;
     VGridHelper* gridHelper         = internal.gridHelper;
-    //
-    onBeginUpdate();
 
-    ModifierOperators::ApplyChanges(selectedSet,
-                                    selectedAction,
-                                    value,
-                                    renderer,
-                                    gridHelper);
+    runSelectedAction(selectedSet, selectedAction, value, gridHelper);
 
-    internal.renderer->onRefresh();
-    onEndUpdate();
-
-    // Apply resize columns action on the other grid (if any)
     if (otherComponent_ &&
         selectedSet == ModifierSet::modifierDataset && 
         selectedAction == (uint)ModifierOperatorsData<modifierDataset>::opResizeColumns)
     {
-        otherComponent_->onBeginUpdate();
-        ModifierOperators::ApplyChanges(selectedSet,
-                                        selectedAction,
-                                        value,
-                                        otherComponent_->pInternal->renderer,
-                                        nullptr);
-        otherComponent_->pInternal->renderer->onRefresh();
-        otherComponent_->onEndUpdate();
+        // Apply resize columns action on the other grid (if any)
+        otherComponent_->runSelectedAction(selectedSet, selectedAction, value, nullptr);
     }
 }
 

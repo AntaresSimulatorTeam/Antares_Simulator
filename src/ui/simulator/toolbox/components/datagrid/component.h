@@ -171,6 +171,8 @@ private:
     */
     void internalShowDatagrid(bool v);
 
+    void runSelectedAction(uint selectedSet, uint selectedAction, Yuni::String value, VGridHelper* gridHelper);
+
     /*!
     ** \brief Modify all visible cells
     */
