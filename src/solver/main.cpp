@@ -30,6 +30,7 @@
 #include <yuni/core/system/suspend.h>
 #include <stdarg.h>
 #include <new>
+#include <stdexcept>
 
 #include "config.h"
 #include <antares/study/study.h>
@@ -140,8 +141,7 @@ bool SolverApplication::prepare(int argc, char* argv[])
     pParameters = &(pStudy->parameters);
 
     // Loading the study
-    if (not readDataForTheStudy(options))
-        return false;
+    readDataForTheStudy(options);
 
     // LISTE DE CHECKS ...
 
@@ -394,7 +394,7 @@ void SolverApplication::processCaption(const AnyString& caption)
     pArgv = Yuni::Process::Rename(pArgc, pArgv, caption);
 }
 
-bool SolverApplication::readDataForTheStudy(Data::StudyLoadOptions& options)
+void SolverApplication::readDataForTheStudy(Data::StudyLoadOptions& options)
 {
     processCaption(String() << "antares: loading \"" << pSettings.studyFolder << "\"");
     auto& study = *pStudy;
@@ -419,12 +419,11 @@ bool SolverApplication::readDataForTheStudy(Data::StudyLoadOptions& options)
     }
 
     if (study.gotFatalError)
-        return false;
+        throw std::runtime_error("Got a fatal error reading the study.");
 
     if (study.areas.empty())
     {
-        logs.fatal() << "no area found";
-        return false;
+        throw std::runtime_error("No area found. A valid study contains contains at least one.");
     }
 
     // no output ?
@@ -475,7 +474,7 @@ bool SolverApplication::readDataForTheStudy(Data::StudyLoadOptions& options)
     if (not pSettings.noOutput)
     {
         if (not study.checkForFilenameLimits(true))
-            return false;
+            throw std::runtime_error("Invalid file names detected");
 
         // comments
         {
@@ -500,7 +499,7 @@ bool SolverApplication::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Runtime data dedicated for the solver
     if (not study.initializeRuntimeInfos())
-        return false;
+        throw std::runtime_error("Error initializing runtime infos");
 
     // Apply transformations needed by the solver only (and not the interface for example)
     study.performTransformationsBeforeLaunchingSimulation();
@@ -510,8 +509,6 @@ bool SolverApplication::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Random-numbers generators
     initializeRandomNumberGenerators();
-
-    return true;
 }
 
 SolverApplication::~SolverApplication()
@@ -588,8 +585,15 @@ int main(int argc, char** argv)
     int ret = EXIT_FAILURE;
 
     auto* application = new SolverApplication();
-    if (application->prepare(argc, argv))
-        ret = application->execute();
+    try {
+        application->prepare(argc, argv);
+    }
+    catch (const std::runtime_error& e)
+    {
+        logs.error() << e.what();
+        AntaresSolverEmergencyShutdown();
+    }
+    ret = application->execute();
     delete application;
 
     FreeUTF8Arguments(argc, argv);

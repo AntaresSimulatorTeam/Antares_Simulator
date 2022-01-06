@@ -117,7 +117,7 @@ private:
     /*!
      * \brief Load data of the study from a local or remote folder
      */
-    bool readDataForTheStudy(Antares::Data::StudyLoadOptions& options);
+    void readDataForTheStudy(Antares::Data::StudyLoadOptions& options);
 
     void runSimulationInAdequacyMode();
     void runSimulationInAdequacyDraftMode();
