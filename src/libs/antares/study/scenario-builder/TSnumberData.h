@@ -52,12 +52,12 @@ public:
     /*!
     ** \brief Reset data from the study
     */
-    bool reset(const Study& study);
+    bool reset(const Study& study) override;
 
     /*!
     ** \brief Export the data into a mere INI file
     */
-    virtual void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
+    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
 
     /*!
     ** \brief Assign a single value
@@ -117,7 +117,7 @@ class loadTSNumberData : public TSNumberData
 {
 public:
     bool apply(Study& study);
-    CString<512, false> get_prefix() const;
+    CString<512, false> get_prefix() const override;
     uint get_tsGenCount(const Study& study) const;
 };
 
@@ -133,7 +133,7 @@ class windTSNumberData : public TSNumberData
 {
 public:
     bool apply(Study& study);
-    CString<512, false> get_prefix() const;
+    CString<512, false> get_prefix() const override;
     uint get_tsGenCount(const Study& study) const;
 };
 
@@ -148,8 +148,8 @@ inline CString<512, false> windTSNumberData::get_prefix() const
 class solarTSNumberData : public TSNumberData
 {
 public:
-    bool apply(Study& study);
-    CString<512, false> get_prefix() const;
+    bool apply(Study& study) override;
+    CString<512, false> get_prefix() const override;
     uint get_tsGenCount(const Study& study) const;
 };
 
@@ -165,8 +165,8 @@ inline CString<512, false> solarTSNumberData::get_prefix() const
 class hydroTSNumberData : public TSNumberData
 {
 public:
-    bool apply(Study& study);
-    CString<512, false> get_prefix() const;
+    bool apply(Study& study) override;
+    CString<512, false> get_prefix() const override;
     uint get_tsGenCount(const Study& study) const;
 };
 
@@ -184,8 +184,8 @@ class thermalTSNumberData : public TSNumberData
 public:
     thermalTSNumberData() = default;
 
-    bool reset(const Study& study);
-    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
+    bool reset(const Study& study) override;
+    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
 
     void attachArea(const Area* area)
     {
@@ -194,8 +194,8 @@ public:
 
     void set(const Antares::Data::ThermalCluster* cluster, const uint year, uint value);
     uint get(const Antares::Data::ThermalCluster* cluster, const uint year) const;
-    bool apply(Study& study);
-    CString<512, false> get_prefix() const;
+    bool apply(Study& study) override;
+    CString<512, false> get_prefix() const override;
     uint get_tsGenCount(const Study& study) const;
 
 private:
@@ -233,8 +233,8 @@ public:
     {
     }
 
-    bool reset(const Study& study);
-    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
+    bool reset(const Study& study) override;
+    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
 
     void attachArea(const Area* area)
     {
@@ -243,8 +243,8 @@ public:
 
     void set(const Antares::Data::RenewableCluster* cluster, const uint year, uint value);
     uint get(const Antares::Data::RenewableCluster* cluster, const uint year) const;
-    bool apply(Study& study);
-    CString<512, false> get_prefix() const;
+    bool apply(Study& study) override;
+    CString<512, false> get_prefix() const override;
     uint get_tsGenCount(const Study& study) const;
 
 private:
@@ -277,19 +277,20 @@ class ntcTSNumberData : public TSNumberData
 {
 public:
     ntcTSNumberData() = default;
+    virtual ~ntcTSNumberData() = default;
 
-    bool reset(const Study& study);
-    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
+    bool reset(const Study& study) override;
+    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
 
     void attachArea(const Area* area)
     {
         pArea = area;
     }
 
-    void set(const Antares::Data::AreaLink* link, const uint year, uint value);
+    void setDataForLink(const Antares::Data::AreaLink* link, const uint year, uint value);
     uint get(const Antares::Data::AreaLink* link, const uint year) const;
-    bool apply(Study& study);
-    CString<512, false> get_prefix() const;
+    bool apply(Study& study) override;
+    CString<512, false> get_prefix() const override;
     uint get_tsGenCount(const Study& study) const;
 
 private:

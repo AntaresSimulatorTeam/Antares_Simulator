@@ -112,11 +112,11 @@ inline bool CheckValidity<Data::AreaLink>(uint value, const Data::AreaLink& data
 }
 
 template<class StringT, class D>
-static bool ApplyToMatrix(uint& errors,
-                          StringT& logprefix,
-                          D& data,
-                          const TSNumberData::MatrixType::ColumnType& years,
-                          uint tsGenMax)
+bool ApplyToMatrix(uint& errors,
+                   StringT& logprefix,
+                   D& data,
+                   const TSNumberData::MatrixType::ColumnType& years,
+                   uint tsGenMax)
 {
     bool status_to_return = true;
 
@@ -569,21 +569,23 @@ void ntcTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& 
     }
 #endif
 
-    for (auto i = pArea->links.begin(); i != pArea->links.end(); ++i)
+    for (auto i : pArea->links)
     {
-        auto* link = i->second;
+        const auto* link = i.second;
         for (uint y = 0; y != pTSNumberRules.height; ++y)
         {
             const uint val = pTSNumberRules[link->indexForArea][y];
             // Equals to zero means 'auto', which is the default mode
             if (!val)
                 continue;
-            file << prefix << pArea->id << "," << i->first << "," << y << " = " << val << "\n";
+            file << prefix << pArea->id << "," << i.first << "," << y << " = " << val << "\n";
         }
     }
 }
 
-void ntcTSNumberData::set(const Antares::Data::AreaLink* link, const uint year, uint value)
+void ntcTSNumberData::setDataForLink(const Antares::Data::AreaLink* link,
+                                     const uint year,
+                                     uint value)
 {
     assert(link != nullptr);
     if (year < pTSNumberRules.height && link->indexForArea < pTSNumberRules.width)
@@ -600,13 +602,13 @@ bool ntcTSNumberData::apply(Study& study)
     // Alias to the current area
     assert(pArea != nullptr);
     assert(pArea->index < study.areas.size());
-    Area& area = *(study.areas.byIndex[pArea->index]);
+    const Area& area = *(study.areas.byIndex[pArea->index]);
 
     const uint ntcGeneratedTScount = get_tsGenCount(study);
 
-    for (auto i = pArea->links.begin(); i != pArea->links.end(); ++i)
+    for (auto i : pArea->links)
     {
-        auto* link = i->second;
+        auto* link = i.second;
         uint linkIndex = link->indexForArea;
         assert(linkIndex < pTSNumberRules.width);
         auto& col = pTSNumberRules[linkIndex];

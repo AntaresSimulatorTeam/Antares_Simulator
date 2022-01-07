@@ -111,7 +111,6 @@ bool Rules::reset()
         linksNTC[i].reset(study_);
     }
 
-
     return true;
 }
 
@@ -122,7 +121,6 @@ Data::Area* Rules::getArea(const AreaName& areaname, bool updaterMode)
     {
         // silently ignore the error
         logs.warning() << "[scenario-builder] The area '" << areaname << "' has not been found";
-
     }
     return area;
 }
@@ -137,7 +135,7 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
         return false;
 
     Data::Area* area = getArea(areaname, updaterMode);
-    if (! area)
+    if (!area)
         return false;
 
     const ThermalCluster* cluster = area->thermal.list.find(clustername);
@@ -268,14 +266,16 @@ bool Rules::readHydroLevels(const AreaName::Vector& splitKey, String value, bool
     return true;
 }
 
-Data::AreaLink* Rules::getLink(const AreaName& fromAreaName, const AreaName& toAreaName, bool updaterMode)
+Data::AreaLink* Rules::getLink(const AreaName& fromAreaName,
+                               const AreaName& toAreaName,
+                               bool updaterMode)
 {
     Data::AreaLink* link = study_.areas.findLink(fromAreaName, toAreaName);
     if (!link && not updaterMode)
     {
         // silently ignore the error
-        logs.warning() << "[scenario-builder] The link '" << fromAreaName << " / " << toAreaName << "' has not been found";
-
+        logs.warning() << "[scenario-builder] The link '" << fromAreaName << " / " << toAreaName
+                       << "' has not been found";
     }
     return link;
 }
@@ -299,13 +299,11 @@ bool Rules::readLink(const AreaName::Vector& splitKey, String value, bool update
         return false;
 
     uint val = fromStringToTSnumber(value);
-    linksNTC[fromArea->index].set(link, year, val);
+    linksNTC[fromArea->index].setDataForLink(link, year, val);
     return true;
 }
 
-bool Rules::readLine(const AreaName::Vector& splitKey,
-                           String value,
-                           bool updaterMode = false)
+bool Rules::readLine(const AreaName::Vector& splitKey, String value, bool updaterMode = false)
 {
     if (splitKey.size() <= 2)
         return false;
