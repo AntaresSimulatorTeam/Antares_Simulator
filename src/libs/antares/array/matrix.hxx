@@ -237,6 +237,13 @@ Matrix<T, ReadWriteT>::Matrix(const Matrix<T, ReadWriteT>& rhs) :
 }
 
 template<class T, class ReadWriteT>
+Matrix<T, ReadWriteT>::Matrix(Matrix<T, ReadWriteT>&& rhs) noexcept
+{
+    // use Matrix::operator=(Matrix&& rhs)
+    *this = std::move(rhs);
+}
+
+template<class T, class ReadWriteT>
 template<class U, class V>
 Matrix<T, ReadWriteT>::Matrix(const Matrix<U, V>& rhs) :
  width(0), height(0), entry(nullptr), jit(nullptr)
@@ -1556,18 +1563,37 @@ inline void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>* rhs)
 template<class T, class ReadWriteT>
 void Matrix<T, ReadWriteT>::swap(Matrix<T, ReadWriteT>& rhs) noexcept
 {
-  // argument deduction lookup (ADL)
-  using std::swap;
-  swap(this->width, rhs.width);
-  swap(this->height, rhs.height);
-  swap(this->entry, rhs.entry);
-  swap(this->jit, rhs.jit);
+    // argument deduction lookup (ADL)
+    using std::swap;
+    swap(this->width, rhs.width);
+    swap(this->height, rhs.height);
+    swap(this->entry, rhs.entry);
+    swap(this->jit, rhs.jit);
 }
 
 template<class T, class ReadWriteT>
 inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(const Matrix<T, ReadWriteT>& rhs)
 {
     copyFrom(rhs);
+    return *this;
+}
+
+template<class T, class ReadWriteT>
+inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(Matrix<T, ReadWriteT>&& rhs) noexcept
+{
+    width = rhs.width;
+    height = rhs.height;
+    jit = rhs.jit;
+    if (0 == width or 0 == height)
+    {
+        entry = nullptr;
+        width = 0;
+        height = 0;
+    }
+    else
+    {
+        entry = rhs.entry;
+    }
     return *this;
 }
 
