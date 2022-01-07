@@ -10,6 +10,8 @@ SET(SRC_WINDOW_INSPECTOR
 	windows/inspector/grid.h
 	windows/inspector/grid.cpp
 	windows/inspector/property.update.cpp
+	windows/inspector/property.cluster.update.cpp
+	windows/inspector/property.cluster.update.h
 	windows/inspector/data.h
 	windows/inspector/data.hxx
 	windows/inspector/data.cpp

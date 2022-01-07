@@ -33,62 +33,19 @@
 
 #include "opt_fonctions.h"
 
-void OPT_ChargerLaContrainteAPartirDePi(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                                        double* Pi,
-                                        char SensContrainte)
-{
-    int NombreDeVariables;
-    int NombreDeContraintes;
-    int NombreDeTermes;
-    int NombreDeTermesDeLaContrainte;
-    int Var;
-
-    NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
-    NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
-    NombreDeTermes = ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes;
-
-    NombreDeTermesDeLaContrainte = 0;
-    ProblemeAResoudre->IndicesDebutDeLigne[NombreDeContraintes] = NombreDeTermes;
-    for (Var = 0; Var < NombreDeVariables; Var++)
-    {
-        if (Pi[Var] == 0.0)
-            continue;
-        ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[NombreDeTermes] = Pi[Var];
-        ProblemeAResoudre->IndicesColonnes[NombreDeTermes] = Var;
-        NombreDeTermesDeLaContrainte++;
-        NombreDeTermes++;
-        if (NombreDeTermes == ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes)
-        {
-            OPT_AugmenterLaTailleDeLaMatriceDesContraintes(ProblemeAResoudre);
-        }
-    }
-    ProblemeAResoudre->NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermesDeLaContrainte;
-
-    ProblemeAResoudre->Sens[NombreDeContraintes] = SensContrainte;
-    NombreDeContraintes++;
-
-    ProblemeAResoudre->NombreDeContraintes = NombreDeContraintes;
-    ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = NombreDeTermes;
-
-    return;
-}
-
 void OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
   double* Pi,
   int* Colonne,
   int NombreDeTermesDeLaContrainte,
-  char SensContrainte)
+  char SensContrainte,
+  const std::string& NomDeLaContrainte)
 {
-    int i;
-    int NombreDeTermes;
-    int NombreDeContraintes;
-
-    NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
-    NombreDeTermes = ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes;
+    int& NombreDeTermes = ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes;
+    int& NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
 
     ProblemeAResoudre->IndicesDebutDeLigne[NombreDeContraintes] = NombreDeTermes;
-    for (i = 0; i < NombreDeTermesDeLaContrainte; i++)
+    for (int i = 0; i < NombreDeTermesDeLaContrainte; i++)
     {
         ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[NombreDeTermes] = Pi[i];
         ProblemeAResoudre->IndicesColonnes[NombreDeTermes] = Colonne[i];
@@ -99,12 +56,10 @@ void OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
         }
     }
     ProblemeAResoudre->NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermesDeLaContrainte;
+    ProblemeAResoudre->NomDesContraintes[NombreDeContraintes] = NomDeLaContrainte;
 
     ProblemeAResoudre->Sens[NombreDeContraintes] = SensContrainte;
     NombreDeContraintes++;
-
-    ProblemeAResoudre->NombreDeContraintes = NombreDeContraintes;
-    ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = NombreDeTermes;
 
     return;
 }

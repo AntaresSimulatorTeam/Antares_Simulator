@@ -33,8 +33,6 @@
 #include "../../../config.h"
 #include "../../toolbox/resources.h"
 #include "../../windows/aboutbox.h"
-#include "../../windows/proxy/proxysetup.h"
-#include "../../../internet/license.h"
 #include "../../toolbox/dispatcher/study.h"
 #include "../../windows/message.h"
 #include <antares/study/version.h>
@@ -102,30 +100,6 @@ void ApplWnd::evtOnHelpPDFSystemMapEditorReferenceGuide(wxCommandEvent&)
 void ApplWnd::evtOnHelpPDFExamplesLibrary(wxCommandEvent&)
 {
     OpenPDF("help/antares-examples-library.pdf");
-}
-
-void ApplWnd::evtOnHelpContinueOnline(wxCommandEvent&)
-{
-    pOnLineConsent.setGDPRStatus(true);
-}
-
-void ApplWnd::evtOnHelpContinueOffline(wxCommandEvent&)
-{
-    pOnLineConsent.setGDPRStatus(false);
-}
-
-void ApplWnd::evtOnShowID(wxCommandEvent&)
-{
-    Antares::License::Properties hostproperties;
-    Antares::License::Properties licenseproperties;
-    Yuni::String tmp;
-
-    Antares::License::RetrieveHostProperties(hostproperties, tmp);
-    auto hostid = hostproperties[(tmp = "k")];
-
-    Window::Message message(this, wxT(""), hostid.c_str(), "", "images/128x128/antares.png");
-    message.add(Window::Message::btnOk, true);
-    message.showModal();
 }
 
 } // namespace Forms

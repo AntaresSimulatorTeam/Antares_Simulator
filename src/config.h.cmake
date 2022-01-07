@@ -27,11 +27,6 @@
 //! The Website for RTE
 # define ANTARES_WEBSITE              "@ANTARES_WEBSITE@"
 
-# define								ANTARES_PROXY_PARAMETERS_FILENAME	"ProxyConnexionParameters.ini"
-
-# define								ANTARES_SERVER_SCRIPT_ROOT				"/check/"
-
-# define								ANTARES_CA_BUNDLE					"ca-bundle.crt"
 // ----------------------------------------------------------------------------
 
 //! Beta version
@@ -39,6 +34,9 @@
 
 //! RC version
 #cmakedefine ANTARES_RC     @ANTARES_RC@
+
+//! git revision (SHA-1)
+#define GIT_SHA1_SHORT_STRING "@GIT_SHA1_SHORT@"
 
 #endif // __ANTARES_CONFIG_H__
 

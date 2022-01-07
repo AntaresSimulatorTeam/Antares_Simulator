@@ -114,6 +114,11 @@ inline BindingConstraint::const_iterator BindingConstraint::end() const
     return pLinkWeights.end();
 }
 
+inline bool BindingConstraint::skipped() const
+{
+    return linkCount() == 0 && enabledClusterCount() == 0;
+}
+
 inline uint BindConstList::size() const
 {
     return (uint)pList.size();
@@ -147,7 +152,7 @@ inline void BindConstList::eachEnabled(const PredicateT& predicate)
     for (uint i = 0; i != count; ++i)
     {
         auto& constraint = *(pList[i]);
-        if (constraint.enabled())
+        if (constraint.enabled() && !constraint.skipped())
             predicate(constraint);
     }
 }
@@ -159,7 +164,7 @@ inline void BindConstList::eachEnabled(const PredicateT& predicate) const
     for (uint i = 0; i != count; ++i)
     {
         auto& constraint = *(pList[i]);
-        if (constraint.enabled())
+        if (constraint.enabled() && !constraint.skipped())
             predicate(constraint);
     }
 }

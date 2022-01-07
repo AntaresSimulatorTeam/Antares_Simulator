@@ -270,6 +270,11 @@ public:
     PartThermal thermal;
     //@}
 
+    //! \name Renewable
+    //@{
+    PartRenewable renewable;
+    //@}
+
     //! \name Interconnections
     //@{
     //! All connections with this area
@@ -335,8 +340,11 @@ private:
     bool storeTimeseriesNumbersForWind(Study& study);
     bool storeTimeseriesNumbersForHydro(Study& study);
     bool storeTimeseriesNumbersForThermal(Study& study);
+    bool storeTimeseriesNumbersForRenewable(Study& study);
 
 }; // class Area
+
+bool saveAreaOptimisationIniFile(const Area& area, const Yuni::Clob& buffer);
 
 /*!
 ** \brief A list of areas
@@ -821,6 +829,11 @@ void AreaListEnsureDataHydroPrepro(AreaList* l);
 ** \brief Ensure data for thermal time-series are initialized
 */
 void AreaListEnsureDataThermalTimeSeries(AreaList* l);
+
+/*!
+** \brief Ensure data for renewable time-series are initialized
+*/
+void AreaListEnsureDataRenewableTimeSeries(AreaList* l);
 
 /*!
 ** \brief Ensure data for thermal prepro are initialized

@@ -28,8 +28,7 @@
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_CONTAINER_H__
 
 #include <yuni/yuni.h>
-#include "../../fwd.h"
-#include "cluster.h"
+#include "cluster_list.h"
 
 namespace Antares
 {
@@ -125,11 +124,12 @@ public:
     ** This list is mainly used to ensure the same order of the
     ** thermal clusters in the outputs.
     */
-    ThermalCluster** clusters;
-    //! How many clusters have we got ?
-    // Only available from the solver
-    uint clusterCount;
+    std::vector<ThermalCluster*> clusters;
 
+    // Return unit count
+    inline size_t clusterCount() const {
+        return clusters.size();
+    }
 }; // class PartThermal
 
 } // namespace Data

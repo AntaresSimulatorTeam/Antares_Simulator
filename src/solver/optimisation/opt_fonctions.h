@@ -73,12 +73,12 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO*);
 void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO*);
 double OPT_CalculerAireMaxPminJour(int, int, int, int, int*, int*);
 
-void OPT_ChargerLaContrainteAPartirDePi(PROBLEME_ANTARES_A_RESOUDRE*, double*, char);
 void OPT_ChargerLaContrainteDansLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*,
                                                         double*,
                                                         int*,
                                                         int,
-                                                        char);
+                                                        char,
+                                                        const std::string& NomDeLaContrainte = "");
 void OPT_ChainagesDesIntercoPartantDUnNoeud(PROBLEME_HEBDO*);
 
 void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO*);

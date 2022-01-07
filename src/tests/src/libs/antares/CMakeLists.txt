@@ -1,3 +1,5 @@
+add_subdirectory(study)
+
 set(src_libs_antares "${CMAKE_SOURCE_DIR}/libs/antares")
 
 
@@ -35,6 +37,7 @@ set(SRC_TEST_MATRIX_SAVE
 	)
 
 add_executable(tests-matrix-save ${SRC_TEST_MATRIX_SAVE})
+
 target_include_directories(tests-matrix-save
 								PRIVATE
 									"${src_libs_antares}/array"

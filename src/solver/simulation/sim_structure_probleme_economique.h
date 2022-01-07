@@ -29,6 +29,8 @@
 #define __SOLVER_SIMULATION_ECO_STRUCTS_H__
 
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
+#include "../utils/optimization_statistics.h"
+#include "../../libs/antares/study/fwd.h"
 
 #define GROSSES_VARIABLES NON_ANTARES
 #define COEFF_GROSSES_VARIABLES 100
@@ -165,6 +167,7 @@ typedef struct
     int* PaysDuPalierDispatch;
     int* NumeroDuPalierDispatch;
     int* OffsetTemporelSurLePalierDispatch;
+    const char* NomDeLaContrainteCouplante;
 } CONTRAINTES_COUPLANTES;
 
 typedef struct
@@ -365,12 +368,6 @@ public:
         excessDown = 0.;
 
         level = level + inflows[step] - turb[step] + pumpRatio * pump[step];
-
-        if (Yuni::Math::Zero(level))
-            level = 0.;
-
-        if (Yuni::Math::Zero(1. - level))
-            level = capacity;
 
         if (level > capacity)
         {
@@ -575,6 +572,7 @@ struct PROBLEME_HEBDO
     double* previousYearFinalLevels;
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration;
 
+    optimizationStatistics optimizationStatistics_object;
     /* Hydro management */
     double* CoefficientEcretementPMaxHydraulique;
     bool hydroHotStart;
@@ -665,29 +663,12 @@ struct PROBLEME_HEBDO
     int* FlexUpDemandPoolOfNode;
     int* FlexDownOfferPoolOfNode;
     int* FlexDownDemandPoolOfNode;
-#endif
 
+#endif
+public:
     /* Unknown status */
     int* NbGrpCourbeGuide; // ?
     int* NbGrpOpt;         // ?
-
-    class MatriceContraintes
-    {
-    public:
-        MatriceContraintes();
-
-        ~MatriceContraintes();
-
-        double* pi;
-        int* columns;
-
-        void reserve(unsigned int c);
-
-    private:
-        unsigned int pCapacity;
-    };
-
-    MatriceContraintes matriceContraintes;
 
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 

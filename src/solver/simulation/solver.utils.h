@@ -29,6 +29,7 @@
 
 #include <vector>
 #include <iostream> // For std namespace
+#include <limits>   // For std numeric_limits
 #include <sstream>  // For ostringstream
 #include <iomanip>  // For setprecision
 // #include <stdio.h>
@@ -135,6 +136,7 @@ public:
     {
         systemCostFilename << s.folderOutput << SEP << "annualSystemCost.txt";
         criterionsCostsFilename << s.folderOutput << SEP << "checkIntegrity.txt";
+        optimizationTimeFilename << s.folderOutput << SEP << "timeStatistics.txt";
     };
 
     void setNbPerformedYears(uint n)
@@ -142,6 +144,7 @@ public:
         systemCost.setNbPerformedYears(n);
         criterionCost1.setNbPerformedYears(n);
         criterionCost2.setNbPerformedYears(n);
+        optimizationTime.setNbPerformedYears(n);
     };
 
     void endStandardDeviations()
@@ -149,12 +152,14 @@ public:
         systemCost.endStandardDeviation();
         criterionCost1.endStandardDeviation();
         criterionCost2.endStandardDeviation();
+        optimizationTime.endStandardDeviation();
     };
 
     void writeToOutput()
     {
         writeSystemCostToOutput();
         writeCriterionCostsToOutput();
+        writeOptimizationTimeToOutput();
     };
 
     std::string to_scientific(const double d)
@@ -208,15 +213,29 @@ private:
         }
     };
 
+    void writeOptimizationTimeToOutput()
+    {
+        Yuni::IO::File::Stream file;
+        if (file.open(optimizationTimeFilename, Yuni::IO::OpenMode::append))
+        {
+            file << "EXP (ms) : " << optimizationTime.costAverage << "\n";
+            file << "STD (ms) : " << optimizationTime.costStdDeviation << "\n";
+            file << "MIN (ms) : " << optimizationTime.costMin << "\n";
+            file << "MAX (ms) : " << optimizationTime.costMax << "\n";
+        }
+    }
+
 public:
     // Costs
     costStatistics systemCost;
     costStatistics criterionCost1;
     costStatistics criterionCost2;
+    costStatistics optimizationTime;
 
 private:
     Yuni::String systemCostFilename;
     Yuni::String criterionsCostsFilename;
+    Yuni::String optimizationTimeFilename;
     char conversionBuffer[256]; // Used to round a double to the closer integer
 };
 

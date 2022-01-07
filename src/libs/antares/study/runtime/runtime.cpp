@@ -30,8 +30,8 @@
 #include "../parameters.h"
 #include "../../date.h"
 #include <limits>
+#include <functional>
 #include "../../emergency.h"
-#include "../../../../internet/limits.h"
 #include "../memory-usage.h"
 #include "../../config.h"
 #include "../filter.h"
@@ -44,11 +44,9 @@ namespace Antares
 {
 namespace Data
 {
-static bool StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos& r)
+static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos& r)
 {
     uint areaCount = study.areas.size();
-    if (License::Limits::areaCount and areaCount > License::Limits::areaCount)
-        return false;
 
     // For each area
     for (uint a = 0; a != areaCount; ++a)
@@ -136,10 +134,9 @@ static bool StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         r.thermalPlantTotalCount += area.thermal.list.size();
         r.thermalPlantTotalCountMustRun += area.thermal.mustrunList.size();
     }
-    return true;
 }
 
-static bool StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos& r)
+static void StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos& r)
 {
     r.interconnectionsCount = study.areas.areaLinkCount();
     typedef AreaLink* AreaLinkPointer;
@@ -162,7 +159,6 @@ static bool StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos
             ++areaIndx;
         }
     });
-    return true;
 }
 
 template<enum BindingConstraint::Column C>
@@ -184,6 +180,7 @@ static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
         break;
     }
     logs.debug() << "copying constraint " << rti.operatorType << ' ' << b.name();
+    rti.name = b.name().c_str();
     rti.linkCount = b.linkCount();
     rti.clusterCount = b.enabledClusterCount();
     assert(rti.linkCount < 50000000 and "Seems a bit large...");    // arbitrary value
@@ -472,9 +469,6 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
 
 bool StudyRuntimeInfos::loadFromStudy(Study& study)
 {
-    if (License::Limits::areaCount and study.areas.size() > License::Limits::areaCount)
-        return false;
-
     auto& gd = study.parameters;
 
     nbYears = gd.nbYears;
@@ -499,12 +493,28 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Removing disabled thermal clusters from solver computations
     removeDisabledThermalClustersFromSolverComputations(study);
 
+    switch (study.parameters.renewableGeneration())
+    {
+    case rgClusters:
+        // Removing disabled renewable clusters from solver computations
+        removeDisabledRenewableClustersFromSolverComputations(study);
+        break;
+    case rgAggregated:
+        // Removing all renewable clusters from solver computations
+        removeAllRenewableClustersFromSolverComputations(study);
+        break;
+    case rgUnknown:
+    default:
+        logs.warning() << "Invalid value for renewable generation";
+        break;
+    }
+
     // Must-run mode
     initializeThermalClustersInMustRunMode(study);
 
     // Areas
-    if (not StudyRuntimeInfosInitializeAllAreas(study, *this))
-        return false;
+    StudyRuntimeInfosInitializeAllAreas(study, *this);
+
     // Area links
     StudyRuntimeInfosInitializeAreaLinks(study, *this);
 
@@ -574,7 +584,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     return true;
 }
 
-bool StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
+void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
 {
     logs.info();
     logs.info() << "Optimizing the thermal clusters in 'must-run' mode...";
@@ -589,14 +599,8 @@ bool StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
         if (mode != stdmAdequacyDraft)
             count += area.thermal.prepareClustersInMustRunMode();
 
-        if (area.thermal.clusterCount > maxThermalClustersForSingleArea)
-            maxThermalClustersForSingleArea = area.thermal.clusterCount;
-
-        if (License::Limits::thermalClusterCount)
-        {
-            if (area.thermal.clusterCount > License::Limits::thermalClusterCount)
-                return false;
-        }
+        if (area.thermal.clusterCount() > maxThermalClustersForSingleArea)
+            maxThermalClustersForSingleArea = area.thermal.clusterCount();
     }
 
     switch (count)
@@ -612,35 +616,66 @@ bool StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
     }
     // space
     logs.info();
-
-    return true;
 }
 
-void StudyRuntimeInfos::removeDisabledThermalClustersFromSolverComputations(Study& study)
+static void removeClusters(Study& study,
+                           const char* type,
+                           std::function<uint(Area&)> eachArea,
+                           bool verbose = true)
 {
-    logs.info();
-    logs.info() << "Removing disabled thermal clusters in from solver computations...";
-
-    // The number of thermal clusters in 'must-run' mode
+    if (verbose)
+    {
+        logs.info();
+        logs.info() << "Removing disabled " << type << " clusters in from solver computations...";
+    }
     uint count = 0;
     // each area...
     for (uint a = 0; a != study.areas.size(); ++a)
     {
         Area& area = *(study.areas.byIndex[a]);
-        count += area.thermal.removeDisabledClusters();
+        count += eachArea(area);
     }
 
-    switch (count)
+    if (verbose)
     {
-    case 0:
-        logs.info() << "No disabled thermal cluster removed before solver computations";
-        break;
-    default:
-        logs.info() << "Found " << count
-                    << " disabled thermal clusters and removed them before solver computations";
+        switch (count)
+        {
+        case 0:
+            logs.info() << "No disabled " << type << " cluster removed before solver computations";
+            break;
+        default:
+            logs.info() << "Found " << count << " disabled " << type
+                        << " clusters and removed them before solver computations";
+        }
     }
-    // space
-    logs.info();
+}
+
+void StudyRuntimeInfos::removeDisabledThermalClustersFromSolverComputations(Study& study)
+{
+    removeClusters(
+      study, "thermal", [](Area& area) { return area.thermal.removeDisabledClusters(); });
+}
+
+void StudyRuntimeInfos::removeDisabledRenewableClustersFromSolverComputations(Study& study)
+{
+    removeClusters(study, "renewable", [](Area& area) {
+        uint ret = area.renewable.removeDisabledClusters();
+        if (ret > 0)
+            area.renewable.prepareAreaWideIndexes();
+        return ret;
+    });
+}
+
+void StudyRuntimeInfos::removeAllRenewableClustersFromSolverComputations(Study& study)
+{
+    removeClusters(
+      study,
+      "renewable",
+      [](Area& area) {
+          area.renewable.reset();
+          return 0;
+      },
+      false);
 }
 
 StudyRuntimeInfos::~StudyRuntimeInfos()

@@ -77,6 +77,7 @@ enum MenusID
     mnIDViewLoad,
     mnIDViewSolar,
     mnIDViewWind,
+    mnIDViewRenewable,
     mnIDViewHydro,
     mnIDViewThermal,
     mnIDViewMiscGen,
@@ -161,9 +162,6 @@ enum MenusID
     mnIDHelpPDFExamplesLibrary,
     mnIDHelpAbout,
     mnIDHelpVisitRTEWebSite,
-    mnIDHelpContinueOnline,
-    mnIDHelpContinueOffline,
-    mnIDHelpShowID,
     //@}
 
     //! \name Misc

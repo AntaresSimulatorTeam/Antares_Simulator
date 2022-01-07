@@ -67,6 +67,20 @@ BOOST_AUTO_TEST_CASE(one_column__3_rows)
 	BOOST_REQUIRE_EQUAL(mtx.data, "size:1x3\n1.50\n-3.55\n0.66\n");
 }
 
+BOOST_AUTO_TEST_CASE(one_column__3_rows_thermal)
+{
+	Matrix_easy_to_fill<double, double> mtx(3, 1, { 1., -3., 2. });
+	mtx.saveToCSVFile("path/to/an/output/file", 2, true);
+	BOOST_REQUIRE_EQUAL(mtx.data, "size:1x3\n1\n-3\n2\n");
+}
+
+BOOST_AUTO_TEST_CASE(one_column__3_rows_renw)
+{
+	Matrix_easy_to_fill<double, double> mtx(3, 1, { 1.3333, -3.66666, 2. });
+	mtx.saveToCSVFile("path/to/an/output/file", 4, true);
+	BOOST_REQUIRE_EQUAL(mtx.data, "size:1x3\n1.3333\n-3.6667\n2\n");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 

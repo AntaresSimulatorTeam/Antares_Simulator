@@ -281,6 +281,7 @@ wxMenu* ApplWnd::createMenuInput()
     Menu::CreateItem(pMenuInput, mnIDViewLoad, wxT("View  Load"), nullptr, wxT("View 'Load'"));
     Menu::CreateItem(pMenuInput, mnIDViewSolar, wxT("View  Solar"), nullptr, wxT("View 'Solar'"));
     Menu::CreateItem(pMenuInput, mnIDViewWind, wxT("View  Wind"), nullptr, wxT("View 'Wind'"));
+    Menu::CreateItem(pMenuInput, mnIDViewRenewable, wxT("View  Renewable"), nullptr, wxT("View 'Wind'"));
     Menu::CreateItem(pMenuInput, mnIDViewHydro, wxT("View  Hydro"), nullptr, wxT("View 'Hydro'"));
     Menu::CreateItem(
       pMenuInput, mnIDViewThermal, wxT("View  Thermal"), nullptr, wxT("View 'Thermal'"));
@@ -595,22 +596,6 @@ wxMenu* ApplWnd::createMenuHelp()
 
     pMenuHelp->AppendSeparator();
 
-    Menu::CreateItem(pMenuHelp,
-                     mnIDHelpContinueOnline,
-                     wxT("Continue online"),
-                     nullptr,
-                     wxT("Allow gathering of  anonymous usage metrics"));
-    Menu::CreateItem(pMenuHelp,
-                     mnIDHelpContinueOffline,
-                     wxT("Continue offline"),
-                     nullptr,
-                     wxT("Stop gathering of  anonymous usage metrics"));
-
-    Menu::CreateItem(
-      pMenuHelp, mnIDHelpShowID, wxT("Show signature"), nullptr, wxT("Show unique signature"));
-
-    pMenuHelp->AppendSeparator();
-
     Menu::CreateItem(pMenuHelp, mnIDHelpAbout, wxT("About Antares"), nullptr, wxT("About Antares"));
 
     return pMenuHelp;
@@ -652,8 +637,7 @@ void ApplWnd::evtOnOpenStudyFolderInExplorer(wxCommandEvent&)
             wxExecute(wxString(wxT("explorer.exe \""))
                       << wxStringFromUTF8(study->folder) << wxT("\""));
         else
-            wxExecute(wxString(wxT("xdg-open \""))
-                      << wxStringFromUTF8(study->folder) << wxT("\""));
+            wxExecute(wxString(wxT("xdg-open \"")) << wxStringFromUTF8(study->folder) << wxT("\""));
     }
 }
 
@@ -723,6 +707,12 @@ void ApplWnd::evtOnViewWind(wxCommandEvent&)
 {
     pSectionNotebook->select(wxT("input"));
     pNotebook->select(wxT("wind"));
+}
+
+void ApplWnd::evtOnViewRenewable(wxCommandEvent&)
+{
+    pSectionNotebook->select(wxT("input"));
+    pNotebook->select(wxT("renewable"));
 }
 
 void ApplWnd::evtOnViewHydro(wxCommandEvent&)

@@ -50,6 +50,10 @@ extern "C"
 #include <antares/emergency.h>
 
 #include "../utils/ortools_utils.h"
+#include "../infeasible-problem-analysis/problem.h"
+#include "../infeasible-problem-analysis/exceptions.h"
+
+#include <chrono>
 
 using namespace operations_research;
 
@@ -63,6 +67,37 @@ using namespace Yuni;
 #define SNPRINTF snprintf
 #endif
 
+class TimeMeasurement
+{
+    using clock = std::chrono::steady_clock;
+
+public:
+    TimeMeasurement()
+    {
+        start_ = clock::now();
+        end_ = start_;
+    }
+
+    void tick()
+    {
+        end_ = clock::now();
+    }
+
+    long long duration_ms() const
+    {
+        return std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count();
+    }
+
+    std::string toString() const
+    {
+        return std::to_string(duration_ms()) + " ms";
+    }
+
+private:
+    clock::time_point start_;
+    clock::time_point end_;
+};
+
 bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIntervalle)
 {
     int Var;
@@ -71,9 +106,11 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
     char PremierPassage;
     double CoutOpt;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    PROBLEME_SIMPLEXE Probleme;
+
     PROBLEME_SPX* ProbSpx;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
+                                                   ProblemeAResoudre->NomDesContraintes);
     PremierPassage = OUI_ANTARES;
     MPSolver* solver;
 
@@ -114,6 +151,7 @@ RESOLUTION:
             Probleme.Contexte = BRANCH_AND_BOUND_OU_CUT_NOEUD;
             Probleme.BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
 
+            TimeMeasurement measure;
             if (ortoolsUsed)
             {
                 ORTOOLS_ModifierLeVecteurCouts(
@@ -126,8 +164,7 @@ RESOLUTION:
                                           ProblemeAResoudre->Xmin,
                                           ProblemeAResoudre->Xmax,
                                           ProblemeAResoudre->TypeDeVariable,
-                                          ProblemeAResoudre->NombreDeVariables,
-                                          &Probleme);
+                                          ProblemeAResoudre->NombreDeVariables);
             }
             else
             {
@@ -138,6 +175,8 @@ RESOLUTION:
                                                   ProblemeAResoudre->Sens,
                                                   ProblemeAResoudre->NombreDeContraintes);
             }
+            measure.tick();
+            ProblemeHebdo->optimizationStatistics_object.addUpdateTime(measure.duration_ms());
         }
     }
 
@@ -199,6 +238,7 @@ RESOLUTION:
 
     Probleme.NombreDeContraintesCoupes = 0;
 
+    TimeMeasurement measure;
     if (ortoolsUsed)
     {
         solver = ORTOOLS_Simplexe(&Probleme, solver);
@@ -215,6 +255,8 @@ RESOLUTION:
             (ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
         }
     }
+    measure.tick();
+    ProblemeHebdo->optimizationStatistics_object.addSolveTime(measure.duration_ms());
 
     if (ProblemeHebdo->ExportMPS == OUI_ANTARES)
     {
@@ -306,12 +348,22 @@ RESOLUTION:
         {
             logs.info() << " Solver: Safe resolution failed";
         }
-        logs.error() << "Infeasible linear problem encountered. Possible causes:";
-        logs.error() << "* binding constraints,";
-        logs.error() << "* last resort shedding status,";
-        logs.error() << "* negative hurdle costs on lines with infinite capacity,";
-        logs.error() << "* Hydro reservoir impossible to manage with cumulative options \"hard "
-                        "bounds without heuristic\"";
+
+        Optimization::InfeasibleProblemAnalysis analysis(&Probleme);
+        logs.notice() << " Solver: Starting infeasibility analysis...";
+        try
+        {
+            Optimization::InfeasibleProblemReport report = analysis.produceReport();
+            report.prettyPrint();
+        }
+        catch (const Optimization::SlackVariablesEmpty& ex)
+        {
+            logs.error() << ex.what();
+        }
+        catch (const Optimization::ProblemResolutionFailed& ex)
+        {
+            logs.error() << ex.what();
+        }
 
         // Write MPS only if exportMPSOnError is activated and MPS weren't exported before with
         // ExportMPS option

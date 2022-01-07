@@ -36,11 +36,11 @@
 #include <wx/richtext/richtexthtml.h>
 
 #include <antares/logs.h>
-#include "../../toolbox/resources.h"
-#include "../../toolbox/locales.h"
+#include "toolbox/resources.h"
+#include "toolbox/locales.h"
 #include "internal-data.h"
-#include "../../windows/version.h"
-#include "../../config.h"
+#include "windows/version.h"
+#include "config.h"
 #include "drag-drop.hxx"
 
 // Antares study
@@ -48,46 +48,48 @@
 #include <antares/sys/appdata.h>
 
 // Create toolbox
-#include "../../toolbox/create.h"
+#include "toolbox/create.h"
 // Panel
 #include <ui/common/component/panel.h>
 // Map
-#include "../../toolbox/components/map/component.h"
+#include "toolbox/components/map/component.h"
 // WIP Panel
-#include "../../toolbox/components/wip-panel.h"
+#include "toolbox/components/wip-panel.h"
 // Datagrid
-#include "../../toolbox/components/datagrid/component.h"
-#include "../../toolbox/components/datagrid/gridhelper.h"
-#include "../../toolbox/components/datagrid/renderer/connection.h"
-#include "../../toolbox/components/datagrid/renderer/area/dsm.h"
-#include "../../toolbox/components/datagrid/renderer/area/misc.h"
-#include "../../toolbox/components/datagrid/renderer/area/timeseries.h"
-#include "../../toolbox/components/datagrid/renderer/links/summary.h"
-#include "../../toolbox/components/datagrid/renderer/layers.h"
-#include "../../toolbox/input/area.h"
-#include "../../toolbox/input/connection.h"
-#include "../../toolbox/input/bindingconstraint.h"
+#include "toolbox/components/datagrid/component.h"
+#include "toolbox/components/datagrid/gridhelper.h"
+#include "toolbox/components/datagrid/renderer/connection.h"
+#include "toolbox/components/datagrid/renderer/area/dsm.h"
+#include "toolbox/components/datagrid/renderer/area/misc.h"
+#include "toolbox/components/datagrid/renderer/area/timeseries.h"
+#include "toolbox/components/datagrid/renderer/links/summary.h"
+#include "toolbox/components/datagrid/renderer/layers.h"
+#include "toolbox/input/area.h"
+#include "toolbox/input/connection.h"
+#include "toolbox/input/bindingconstraint.h"
 // MainPanel
-#include "../../toolbox/components/mainpanel.h"
+#include "toolbox/components/mainpanel.h"
 
 // Windows
-#include "../../windows/connection.h"
-#include "../../windows/simulation/panel.h"
-#include "../../windows/thermal/panel.h"
-#include "../../windows/correlation/correlation.h"
-#include "../../windows/bindingconstraint/bindingconstraint.h"
-#include "../../windows/analyzer/analyzer.h"
-#include "../../windows/inspector/inspector.h"
+#include "windows/connection.h"
+#include "windows/simulation/panel.h"
+#include "windows/thermal/panel.h"
+#include "windows/renewables/panel.h"
+#include "windows/correlation/correlation.h"
+#include "windows/bindingconstraint/bindingconstraint.h"
+#include "windows/analyzer/analyzer.h"
+#include "windows/inspector/inspector.h"
+#include "windows/options/advanced/advanced.h"
 
 // Standard page
 #include "build/standard-page.hxx"
 // Wait
 #include "../wait.h"
 // startup wizard
-#include "../../windows/startupwizard.h"
-#include "../../toolbox/dispatcher/study.h"
+#include "windows/startupwizard.h"
+#include "toolbox/dispatcher/study.h"
 // license
-#include "check-license-at-startup.hxx"
+#include "windows/message.h"
 
 using namespace Yuni;
 
@@ -458,91 +460,23 @@ void ApplWnd::internalInitialize()
     OnStudyEndUpdate.connect(&MemoryFlushEndUpdate);
     // System parameter
     OnStudySettingsChanged.connect(this, &ApplWnd::onSystemParametersChanged);
+    // Advanced parameters
+    Window::Options::OnRenewableGenerationModellingChanged.connect(this, &ApplWnd::onRenewableGenerationModellingChanged);
 
     // Update the status bar
     resetDefaultStatusBarText();
 
     Thaw();
 
-    // temporary disabled while checking the license
-    Enable(false);
-    installUserLicense();
-
-    if (pOnLineConsent.checkGDPRStatus())
-    {
-        installUserLicense(true);
-        Antares::License::statusOnline = Antares::License::Status::stInitialize;
-        // check the license informations
-        // (in another thread - it can take some time)
-        DispatchCheckAntaresLicense();
-    }
-    else
-    {
-        // Enable(true);// not enough, show the startup wizard!!!!
-        // logs.info() << "Launching startup wizard";
-        //			Window::StartupWizard::Show();
-        Antares::License::statusOnline = Antares::License::Status::stNotRequested;
-        Yuni::Bind<void()> callback;
-        callback.bind(&CheckAntaresLicense, true);
-        Antares::Dispatcher::Post(callback);
-    }
-}
-
-void ApplWnd::installUserLicense(bool online)
-{
-    String activationKey = online ? ANTARES_ONLINE_ACTIVATION_KEY : ANTARES_OFFLINE_ACTIVATION_KEY;
-
-    // creating a copy of the activation key, since CheckActivationKeyValidity
-    // may modify our variable
-    String activationKeyToInstall = activationKey;
-    activationKeyToInstall.trim();
-    activationKeyToInstall.replace("\r", "");
-
-    if (not Antares::License::CheckActivationKeyValidity(Data::versionLatest, activationKey))
-    {
-        logs.error() << "The activation key is invalid";
-        return;
-    }
-
-    // Installation for all users ?
-    bool allusers = false;
-
-    // Installation filename
-    String filename;
-
-    if (not OperatingSystem::FindAntaresLocalAppData(filename, allusers))
-    {
-        logs.error() << "impossible to find the local app data";
-        return;
-    }
-
-    if (not IO::Directory::Create(filename))
-    {
-        logs.error()
-          << "impossible to install the license. Please check your user account privileges";
-        return;
-    }
-
-    // the license filename
-    filename << IO::Separator << "antares-" << ANTARES_VERSION << ".hwb";
-
-    if (not IO::File::SetContent(filename, activationKeyToInstall))
-    {
-        logs.error()
-          << "impossible to install the license. Please check your user account privileges";
-        return;
-    }
+    // Starting Antares
+    auto* mainfrm = Antares::Forms::ApplWnd::Instance();
+    ::Bind<void()> callback;
+    callback.bind(mainfrm, &Antares::Forms::ApplWnd::startAntares);
+    Antares::Dispatcher::GUI::Post(callback); // ms, arbitrary
 }
 
 void ApplWnd::startAntares()
 {
-    // Reset the status bar to display the new informations
-    // extracted from the license
-    resetDefaultStatusBarText();
-
-    // re-enable the main form
-    Enable(true);
-
     if (not logs.logfile())
     {
         wxString msg = wxT("Impossible to create the log file.\n");
@@ -635,6 +569,9 @@ void ApplWnd::createAllComponentsNeededByTheMainNotebook()
     // Solar
     createNBSolar();
 
+    // Renewable
+    createNBRenewable();
+
     // Separator
     pNotebook->addSeparator();
 
@@ -703,6 +640,20 @@ void ApplWnd::createNBThermal()
     pageThermalPrepro = panel->pageThermalPrepro;
     pageThermalCommon = panel->pageThermalCommon;
     pageThermalClusterList = panel->pageThermalClusterList;
+}
+
+void ApplWnd::createNBRenewable()
+{
+    assert(pNotebook);
+
+    auto* panel = new Window::Renewable::Panel(pNotebook);
+    pNotebook->add(panel, wxT("renewable"), wxT("Renewable"));
+
+    // gp : to be adapted
+    // pageThermalTimeSeries = panel->pageThermalTimeSeries;
+    // pageThermalPrepro = panel->pageThermalPrepro;
+    pageRenewableCommon = panel->pageRenewableCommon;
+    pageRenewableClusterList = panel->pageRenewableClusterList;
 }
 
 void ApplWnd::createNBBindingConstraints()

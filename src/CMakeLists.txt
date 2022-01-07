@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.0)
 
 # Version
 set(ANTARES_VERSION_HI	      8)
-set(ANTARES_VERSION_LO	      0)
-set(ANTARES_VERSION_REVISION  2)
+set(ANTARES_VERSION_LO	      1)
+set(ANTARES_VERSION_REVISION  0)
 set(ANTARES_VERSION_YEAR      2021)
 
 set(ANTARES_PUBLISHER	   "RTE France")
@@ -12,7 +12,7 @@ set(ANTARES_WEBSITE	   "https://antares.rte-france.com")
 
 # Beta release
 set(ANTARES_BETA 0)
-#set(ANTARES_RC 3)
+set(ANTARES_RC 0)
 
 # CMAKE - Suppress useless features
 set(CMAKE_SKIP_PREPROCESSED_SOURCE_RULES true)
@@ -48,6 +48,14 @@ if(${ANTARES_RC})
 else()
 	set (ANTARES_RC 0)
 endif()
+
+# git SHA-1
+find_package(Git QUIET)
+execute_process(COMMAND
+  "${GIT_EXECUTABLE}" describe --match=NeVeRmAtCh --abbrev=7 --always --dirty
+  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+  OUTPUT_VARIABLE GIT_SHA1_SHORT
+  ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 # Build Configuration
 if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
@@ -149,6 +157,18 @@ else()
 	set(ANTARES_VERSION_TARGET  "debug")
 endif()
 
+
+set(CODE_COVERAGE FALSE CACHE BOOL "Enable code coverage")
+if (CODE_COVERAGE)
+	# if code-coverage is ON, force tests build
+	set(BUILD_TESTING ON)
+
+	include("cmake/CodeCoverage.cmake")
+	code_coverage(NAME code-coverage
+			OUTPUT_DIR coverage
+			EXCLUDE_DIRS tests)
+endif ()
+
 # TODO : removed to be confirmed : old fashion CMake All libraries will be stored in /bin directory
 #set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/${YUNI_TARGET_MODE})
 
@@ -193,14 +213,6 @@ message(STATUS "CMAKE_PREFIX_PATH : ${CMAKE_PREFIX_PATH}")
 
 # Build Needed dependencies
 add_subdirectory(antares-deps)
-
-# Define needed external library
-
-#libcurl
-find_package(CURL REQUIRED)
-
-#openssl	
-find_package(OpenSSL REQUIRED)
 
 #Add needed definition in case of external dependencies compilation
 include (antares-deps/cmake/additionnal-definitions.cmake)
@@ -257,7 +269,6 @@ OMESSAGE("") # empty line
 
 # Sub Directories
 add_subdirectory(libs) 		#antares-core fswalker
-add_subdirectory(internet) 	#libantares-license base64 keys
 
 if(BUILD_UI)
 	add_subdirectory(ui)		#all antares ui libs + antares simulator
@@ -369,8 +380,8 @@ else()
 	set(CPACK_PACKAGE_VERSION_MINOR ${ANTARES_VERSION_LO})
 	set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION})
 	
-	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libcurl4,libwxgtk3.0-gtk3-0v5")
-    set(CPACK_RPM_PACKAGE_REQUIRES "openssl,curl,wxGTK3")
+	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-gtk3-0v5")
+    set(CPACK_RPM_PACKAGE_REQUIRES "wxGTK3")
     set(CPACK_RPM_PACKAGE_AUTOREQPROV "0")
 
 	configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")

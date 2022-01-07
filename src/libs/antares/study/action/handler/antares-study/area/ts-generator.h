@@ -76,7 +76,7 @@ protected:
 private:
     Data::TimeSeries pType;
     Data::AreaName pOriginalAreaName;
-    Data::ThermalClusterName pOriginalPlantName;
+    Data::ClusterName pOriginalPlantName;
 
 }; // class DataTSGenerator
 

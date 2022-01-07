@@ -38,7 +38,6 @@
 #include "../../config.h"
 #include "../filter.h"
 #include "constants.h"
-#include "../../../internet/limits.h"
 
 #define SEP IO::Separator
 
@@ -200,43 +199,9 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
     }
 
     // Nodal optimization
-    {
-        buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id << SEP
-                       << "optimization.ini";
-        IO::File::Stream file;
-        if (file.openRW(buffer))
-        {
-            buffer.clear();
-            buffer << "[nodal optimization]\n";
-            buffer << "non-dispatchable-power = "
-                   << ((bool)((area.nodalOptimization & anoNonDispatchPower) != 0) ? "true\n"
-                                                                                   : "false\n");
-            buffer << "dispatchable-hydro-power = "
-                   << ((bool)((area.nodalOptimization & anoDispatchHydroPower) != 0) ? "true\n"
-                                                                                     : "false\n");
-            buffer << "other-dispatchable-power = "
-                   << ((bool)((area.nodalOptimization & anoOtherDispatchPower) != 0) ? "true\n"
-                                                                                     : "false\n");
-            buffer << "spread-unsupplied-energy-cost = " << area.spreadUnsuppliedEnergyCost << '\n';
-            buffer << "spread-spilled-energy-cost = " << area.spreadSpilledEnergyCost << '\n';
-
-            buffer << '\n';
-            buffer << "[filtering]\n";
-            buffer << "filter-synthesis = ";
-            AppendFilterToString(buffer, area.filterSynthesis);
-            buffer << '\n';
-            buffer << "filter-year-by-year = ";
-            AppendFilterToString(buffer, area.filterYearByYear);
-            buffer << '\n';
-            buffer << '\n';
-            file << buffer;
-        }
-        else
-        {
-            logs.error() << "I/O error: impossible to write " << buffer;
-            ret = false;
-        }
-    }
+    buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id << SEP
+                   << "optimization.ini";
+    ret = saveAreaOptimisationIniFile(area, buffer) and ret;
 
     // Reserves: primary, strategic, dsm, d-1...
     buffer.clear() << folder << SEP << "input" << SEP << "reserves" << SEP << area.id << ".txt";
@@ -318,18 +283,45 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
     {
         buffer.clear() << folder << SEP << "input" << SEP << "thermal" << SEP << "clusters" << SEP
                        << area.id;
-        ret = ThermalClusterListSaveToFolder(&area.thermal.list, buffer) and ret;
+        ret = area.thermal.list.saveToFolder(buffer) and ret;
 
         buffer.clear() << folder << SEP << "input" << SEP << "thermal" << SEP << "prepro";
-        ret = ThermalClusterListSavePreproToFolder(&area.thermal.list, buffer) and ret;
+        ret = area.thermal.list.savePreproToFolder(buffer) and ret;
         buffer.clear() << folder << SEP << "input" << SEP << "thermal" << SEP << "series";
-        ret = ThermalClusterListSaveDataSeriesToFolder(&area.thermal.list, buffer) and ret;
+        ret = area.thermal.list.saveDataSeriesToFolder(buffer) and ret;
     }
 
+    // Renewable cluster list
+    {
+        buffer.clear() << folder << SEP << "input" << SEP << "renewables" << SEP << "clusters"
+                       << SEP << area.id;
+        ret = area.renewable.list.saveToFolder(buffer) and ret;
+
+        buffer.clear() << folder << SEP << "input" << SEP << "renewables" << SEP << "series";
+        ret = area.renewable.list.saveDataSeriesToFolder(buffer) and ret;
+    }
     return ret;
 }
 
 } // anonymous namespace
+
+bool saveAreaOptimisationIniFile(const Area& area, const Clob& buffer)
+{
+    IniFile ini;
+    IniFile::Section* section = ini.addSection("nodal optimization");
+
+    section->add("non-dispatchable-power", static_cast<bool>(area.nodalOptimization & anoNonDispatchPower));
+    section->add("dispatchable-hydro-power", static_cast<bool>(area.nodalOptimization & anoDispatchHydroPower));
+    section->add("other-dispatchable-power", static_cast<bool>(area.nodalOptimization & anoOtherDispatchPower));
+    section->add("spread-unsupplied-energy-cost", area.spreadUnsuppliedEnergyCost);
+    section->add("spread-spilled-energy-cost", area.spreadSpilledEnergyCost);
+
+    section = ini.addSection("filtering");
+    section->add("filter-synthesis", datePrecisionIntoString(area.filterSynthesis));
+    section->add("filter-year-by-year", datePrecisionIntoString(area.filterYearByYear));
+
+    return ini.save(buffer);
+}
 
 AreaList::AreaList(Study& study) : byIndex(nullptr), pStudy(study)
 {
@@ -1003,11 +995,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (not options.loadOnlyNeeded)
         {
             buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
-            ret = ThermalClusterListLoadPreproFromFolder(study, options, &area.thermal.list, buffer)
-                  and ret;
+            ret = area.thermal.list.loadPreproFromFolder(study, options, buffer) and ret;
             buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
-            ret = ThermalClusterListLoadDataSeriesFromFolder(
-                    study, options, &area.thermal.list, buffer, options.loadOnlyNeeded)
+            ret = area.thermal.list.loadDataSeriesFromFolder(
+                    study, options, buffer, options.loadOnlyNeeded)
                   and ret;
         }
         else
@@ -1015,15 +1006,13 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             if (study.parameters.isTSGeneratedByPrepro(timeSeriesThermal))
             {
                 buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
-                ret = ThermalClusterListLoadPreproFromFolder(
-                        study, options, &area.thermal.list, buffer)
-                      and ret;
+                ret = area.thermal.list.loadPreproFromFolder(study, options, buffer) and ret;
             }
             else
             {
                 buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
-                ret = ThermalClusterListLoadDataSeriesFromFolder(
-                        study, options, &area.thermal.list, buffer, options.loadOnlyNeeded)
+                ret = area.thermal.list.loadDataSeriesFromFolder(
+                        study, options, buffer, options.loadOnlyNeeded)
                       and ret;
             }
         }
@@ -1047,7 +1036,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                 // applying the new naming convention
                 String newname;
                 BeautifyName(newname, cluster->name());
-                study.thermalClusterRename(cluster, newname, true);
+                study.clusterRename(cluster, newname);
             }
         }
 
@@ -1057,6 +1046,15 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
         // flush
         area.thermal.list.flush();
+    }
+
+    // Renewable cluster list
+    if (study.header.version >= 810)
+    {
+        buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
+        ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer, false) and ret;
+        // flush
+        area.renewable.list.flush();
     }
 
     // Nodal Optimization
@@ -1094,12 +1092,12 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                     }
                     if (tmp == "filter-synthesis")
                     {
-                        area.filterSynthesis = StringToFilter(p->value);
+                        area.filterSynthesis = stringIntoDatePrecision(p->value);
                         continue;
                     }
                     if (tmp == "filter-year-by-year")
                     {
-                        area.filterYearByYear = StringToFilter(p->value);
+                        area.filterYearByYear = stringIntoDatePrecision(p->value);
                         continue;
                     }
                     if (tmp == "spread-unsupplied-energy-cost")
@@ -1179,12 +1177,6 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         buffer.clear() << pStudy.folderInput << SEP << "areas" << SEP << "list."
                        << pStudy.inputExtension;
         ret = loadListFromFile(buffer) and ret;
-
-        if (License::Limits::areaCount)
-        {
-            if (options.usedByTheSolver and size() > License::Limits::areaCount)
-                return false;
-        }
     }
 
     // Hydro
@@ -1216,12 +1208,25 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             buffer.clear() << pStudy.folderInput << thermalPlant << area.id;
             ret = area.thermal.list.loadFromFolder(pStudy, buffer.c_str(), &area) and ret;
             area.thermal.prepareAreaWideIndexes();
-            if (License::Limits::thermalClusterCount)
-            {
-                if (options.usedByTheSolver
-                    and area.thermal.list.size() > License::Limits::thermalClusterCount)
-                    return false;
-            }
+        }
+    }
+
+    // Renewable data, specific to areas
+    if (pStudy.header.version >= 810)
+    {
+        // The cluster list must be loaded before the method
+        // Study::ensureDataAreInitializedAccordingParameters() is called
+        // in order to allocate data with all renewable clusters.
+        CString<30, false> renewablePlant;
+        renewablePlant << SEP << "renewables" << SEP << "clusters" << SEP;
+
+        auto end = areas.end();
+        for (auto i = areas.begin(); i != end; ++i)
+        {
+            Area& area = *(i->second);
+            buffer.clear() << pStudy.folderInput << renewablePlant << area.id;
+            ret = area.renewable.list.loadFromFolder(buffer.c_str(), &area) and ret;
+            area.renewable.prepareAreaWideIndexes();
         }
     }
 
@@ -1415,15 +1420,19 @@ void AreaListEnsureDataHydroPrepro(AreaList* l)
 void AreaListEnsureDataThermalTimeSeries(AreaList* l)
 {
     assert(l);
+    l->each([&](Data::Area& area) { area.thermal.list.ensureDataTimeSeries(); });
+}
 
-    l->each([&](Data::Area& area) { ThermalClusterListEnsureDataTimeSeries(&area.thermal.list); });
+void AreaListEnsureDataRenewableTimeSeries(AreaList* l)
+{
+    assert(l);
+    l->each([&](Data::Area& area) { area.renewable.list.ensureDataTimeSeries(); });
 }
 
 void AreaListEnsureDataThermalPrepro(AreaList* l)
 {
     assert(l and "The area list must not be nullptr");
-
-    l->each([&](Data::Area& area) { ThermalClusterListEnsureDataPrepro(&area.thermal.list); });
+    l->each([&](Data::Area& area) { area.thermal.list.ensureDataPrepro(); });
 }
 
 uint64 AreaList::memoryUsage() const
@@ -1667,7 +1676,7 @@ ThermalCluster* AreaList::findClusterFromINIKey(const AnyString& key)
     if (offset == AreaName::npos or (0 == offset) or (offset == key.size() - 1))
         return nullptr;
     AreaName parentName(key.c_str(), offset);
-    ThermalClusterName id(key.c_str() + offset + 1, key.size() - (offset + 1));
+    ClusterName id(key.c_str() + offset + 1, key.size() - (offset + 1));
     Area* parentArea = findFromName(parentName);
     if (parentArea == nullptr)
         return nullptr;
