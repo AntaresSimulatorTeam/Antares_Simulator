@@ -529,11 +529,13 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGThClusterRandomSpread = P_FLOAT("Spread (\u20AC/MWh)", "cluster.opcost_spread");
 
     pPGThClusterReliabilityModel
-      = Category(pg, wxT("Reliability model"), wxT("cluster.reliabilitymodel"));
+      = Category(pg, wxT("Timeseries generation"), wxT("cluster.reliabilitymodel"));
+    pPGThClusterDoGenerateTS = P_ENUM("Generate timeseries", "cluster.gen-ts", localGenTS);
     pPGThClusterVolatilityForced = P_FLOAT("Volatility (forced)", "cluster.forcedVolatility");
     pPGThClusterVolatilityPlanned = P_FLOAT("Volatility (planned)", "cluster.plannedVolatility");
     pPGThClusterLawForced = P_ENUM("Law (forced)", "cluster.forcedlaw", thermalLaws);
     pPGThClusterLawPlanned = P_ENUM("Law (planned)", "cluster.plannedlaw", thermalLaws);
+
 
     // --- RENEWABLE CLUSTERS ---
     pPGRnClusterSeparator = Group(pg, wxEmptyString, wxEmptyString);
@@ -558,6 +560,7 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGRnClusterNominalCapacity = P_FLOAT("Nominal capacity (MW)", "rn-cluster.nominal_capacity");
     pPGRnClusterInstalled = P_FLOAT("Installed (MW)", "rn-cluster.installed");
     pg->DisableProperty(pPGRnClusterInstalled);
+
     // --- CONSTRAINT ---
     pPGConstraintSeparator = Group(pg, wxEmptyString, wxEmptyString);
     pPGConstraintTitle = Group(pg, wxT("1 CONSTRAINT"), wxT("constraint.title"));
@@ -948,6 +951,8 @@ void Frame::apply(const InspectorData::Ptr& data)
         Accumulator<PClusterFixedCost>::Apply(pPGThClusterFixedCost, data->ThClusters);
         Accumulator<PClusterStartupCost>::Apply(pPGThClusterStartupCost, data->ThClusters);
         Accumulator<PClusterRandomSpread>::Apply(pPGThClusterRandomSpread, data->ThClusters);
+        // Override global TS generation setting, per cluster
+        Accumulator<PClusterDoGenerateTS>::Apply(pPGThClusterDoGenerateTS, data->ThClusters);
 
         // check Nominal capacity with thermal modulation
         AccumulatorCheck<PClusterNomCapacityColor>::ApplyTextColor(pPGThClusterNominalCapacity,

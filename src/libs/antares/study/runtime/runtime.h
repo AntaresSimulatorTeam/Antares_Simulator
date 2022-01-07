@@ -165,6 +165,9 @@ public:
     uint thermalPlantTotalCount;
     uint thermalPlantTotalCountMustRun;
 
+    //! Override enable/disable TS generation per cluster
+    bool thermalTSRefresh;
+
     //! The maximum number of clusters for each area
     uint maxThermalClustersForSingleArea;
 
@@ -219,7 +222,7 @@ private:
     void removeDisabledRenewableClustersFromSolverComputations(Study& study);
     void removeAllRenewableClustersFromSolverComputations(Study& study);
     void disableAllFilters(Study& study);
-
+    void checkThermalTSGeneration(Study& study);
 }; // struct StudyRuntimeInfos
 
 /*!

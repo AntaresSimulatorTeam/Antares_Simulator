@@ -992,30 +992,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // Thermal cluster list
     {
-        if (not options.loadOnlyNeeded)
-        {
-            buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
-            ret = area.thermal.list.loadPreproFromFolder(study, options, buffer) and ret;
-            buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
-            ret = area.thermal.list.loadDataSeriesFromFolder(
-                    study, options, buffer, options.loadOnlyNeeded)
-                  and ret;
-        }
-        else
-        {
-            if (study.parameters.isTSGeneratedByPrepro(timeSeriesThermal))
-            {
-                buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
-                ret = area.thermal.list.loadPreproFromFolder(study, options, buffer) and ret;
-            }
-            else
-            {
-                buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
-                ret = area.thermal.list.loadDataSeriesFromFolder(
-                        study, options, buffer, options.loadOnlyNeeded)
-                      and ret;
-            }
-        }
+        buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
+        ret = area.thermal.list.loadPreproFromFolder(study, options, buffer) && ret;
+        buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
+        ret = area.thermal.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
 
         if (study.header.version < 390)
         {
@@ -1052,7 +1032,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     if (study.header.version >= 810)
     {
         buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
-        ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer, false) and ret;
+        ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
         // flush
         area.renewable.list.flush();
     }

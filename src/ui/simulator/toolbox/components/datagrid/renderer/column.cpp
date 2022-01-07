@@ -24,9 +24,25 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#include <memory>
 
 #include "column.h"
 #include "cell.h"
+
+// Anonymous namespace
+namespace
+{
+template<class T, class... Args>
+inline T* factory(Args... args)
+{
+    T* ptr = new (std::nothrow) T(args...);
+    if (ptr == nullptr)
+    {
+        Antares::logs.error() << "Resource allocation failed";
+    }
+    return ptr;
+}
+} // namespace
 
 namespace Antares
 {
@@ -68,38 +84,59 @@ Column::~Column()
 // ---------------------
 classicColumn::classicColumn(TimeSeries ts, wxString c) : Column(ts, c)
 {
-    cells_ = {new blankCell(),
-              new readyMadeTSstatus(tsKind_),
-              new blankCell(),
-              new generatedTSstatus(tsKind_),
-              new NumberTsCell(tsKind_),
-              new RefreshTsCell(tsKind_),
-              new RefreshSpanCell(tsKind_),
-              new SeasonalCorrelationCell(tsKind_),
-              new storeToInputCell(tsKind_),
-              new storeToOutputCell(tsKind_),
-              new blankCell(),
-              new intraModalCell(tsKind_),
-              new interModalCell(tsKind_)};
+    cells_ = {::factory<blankCell>(),
+              ::factory<readyMadeTSstatus>(tsKind_),
+              ::factory<blankCell>(),
+              ::factory<generatedTSstatus>(tsKind_),
+              ::factory<NumberTsCell>(tsKind_),
+              ::factory<RefreshTsCell>(tsKind_),
+              ::factory<RefreshSpanCell>(tsKind_),
+              ::factory<SeasonalCorrelationCell>(tsKind_),
+              ::factory<storeToInputCell>(tsKind_),
+              ::factory<storeToOutputCell>(tsKind_),
+              ::factory<blankCell>(),
+              ::factory<intraModalCell>(tsKind_),
+              ::factory<interModalCell>(tsKind_)};
 }
+
+// -------------------
+//  Thermal column
+// -------------------
+thermalColumn::thermalColumn() : Column(timeSeriesThermal, "   Thermal   ")
+{
+    cells_ = {::factory<blankCell>(),
+              ::factory<readyMadeTSstatus>(tsKind_),
+              ::factory<blankCell>(),
+              ::factory<generatedTSstatus>(tsKind_),
+              ::factory<NumberTsCellThermal>(),
+              ::factory<RefreshTsCellThermal>(),
+              ::factory<RefreshSpanCellThermal>(),
+              ::factory<SeasonalCorrelationCellThermal>(),
+              ::factory<storeToInputCell>(tsKind_),
+              ::factory<storeToOutputCell>(tsKind_),
+              ::factory<blankCell>(),
+              ::factory<intraModalCell>(tsKind_),
+              ::factory<interModalCell>(tsKind_)};
+}
+
 // -------------------------------
 // Column renewable clusters
 // -------------------------------
 ColumnRenewableClusters::ColumnRenewableClusters() : Column(timeSeriesRenewable, "   Renewable   ")
 {
-    cells_ = {new blankCell(),
-              new inactiveRenewableClusterCell(wxT("On")),
-              new inactiveRenewableClusterCell(wxT("-")),
-              new inactiveRenewableClusterCell(wxT("-")),
-              new inactiveRenewableClusterCell(wxT("-")),
-              new inactiveRenewableClusterCell(wxT("-")),
-              new inactiveRenewableClusterCell(wxT("-")),
-              new inactiveRenewableClusterCell(wxT("-")),
-              new inactiveRenewableClusterCell(wxT("-")),
-              new inactiveRenewableClusterCell(wxT("-")),
-              new blankCell(),
-              new intraModalCell(tsKind_),
-              new interModalCell(tsKind_)};
+    cells_ = {::factory<blankCell>(),
+              ::factory<inactiveRenewableClusterCell>(wxT("On")),
+              ::factory<inactiveRenewableClusterCell>(wxT("-")),
+              ::factory<inactiveRenewableClusterCell>(wxT("-")),
+              ::factory<inactiveRenewableClusterCell>(wxT("-")),
+              ::factory<inactiveRenewableClusterCell>(wxT("-")),
+              ::factory<inactiveRenewableClusterCell>(wxT("-")),
+              ::factory<inactiveRenewableClusterCell>(wxT("-")),
+              ::factory<inactiveRenewableClusterCell>(wxT("-")),
+              ::factory<inactiveRenewableClusterCell>(wxT("-")),
+              ::factory<blankCell>(),
+              ::factory<intraModalCell>(tsKind_),
+              ::factory<interModalCell>(tsKind_)};
 }
 } // namespace Renderer
 } // namespace Datagrid

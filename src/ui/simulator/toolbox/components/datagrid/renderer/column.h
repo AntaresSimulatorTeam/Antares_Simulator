@@ -68,6 +68,15 @@ public:
     classicColumn(Antares::Data::TimeSeries ts, wxString caption);
 };
 
+// -------------------
+//  Thermal column
+// -------------------
+class thermalColumn final : public Column
+{
+public:
+    thermalColumn();
+};
+
 // -----------------------------
 //  Renewable clusters column
 // -----------------------------

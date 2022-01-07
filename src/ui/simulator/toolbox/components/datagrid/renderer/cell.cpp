@@ -327,7 +327,6 @@ IRenderer::CellStyle RefreshSpanCell::cellStyle() const
              ? IRenderer::cellStyleDefault
              : IRenderer::cellStyleDefaultDisabled;
 }
-
 // ============================
 //  Seasonal correlation cell
 // ============================
@@ -350,8 +349,6 @@ wxString SeasonalCorrelationCell::cellValue() const
         mode = tsToCorrelation_.at(tsKind_)->mode();
     else if (tsKind_ == Data::timeSeriesHydro)
         return wxT("annual");
-    else if (tsKind_ == Data::timeSeriesThermal)
-        return wxT("n/a");
     else
         return wxT("--");
     return (mode == Data::Correlation::modeAnnual) ? wxT("annual") : wxT("monthly");
@@ -432,6 +429,11 @@ bool storeToInputCell::cellValue(const String& value)
 
 IRenderer::CellStyle storeToInputCell::cellStyle() const
 {
+    // Special case: generation might be forced for some thermal clusters
+    if (tsKind_ == timeSeriesThermal)
+    {
+        return IRenderer::cellStyleDefault;
+    }
     return (isTSgeneratorOn() && 0 != (study_->parameters.timeSeriesToImport & tsKind_))
              ? IRenderer::cellStyleDefault
              : IRenderer::cellStyleDefaultDisabled;
@@ -469,6 +471,11 @@ bool storeToOutputCell::cellValue(const String& value)
 
 IRenderer::CellStyle storeToOutputCell::cellStyle() const
 {
+    // Special case: generation might be forced for some thermal clusters
+    if (tsKind_ == timeSeriesThermal)
+    {
+        return IRenderer::cellStyleDefault;
+    }
     return (isTSgeneratorOn() && 0 != (study_->parameters.timeSeriesToArchive & tsKind_))
              ? IRenderer::cellStyleDefault
              : IRenderer::cellStyleDefaultDisabled;
@@ -546,6 +553,53 @@ IRenderer::CellStyle interModalCell::cellStyle() const
                                                             : IRenderer::cellStyleDefaultDisabled;
 }
 
+// ======================
+// Thermal-specific cells
+// ======================
+// Constructors
+NumberTsCellThermal::NumberTsCellThermal() : NumberTsCell(timeSeriesThermal)
+{
+}
+RefreshTsCellThermal::RefreshTsCellThermal() : RefreshTsCell(timeSeriesThermal)
+{
+}
+RefreshSpanCellThermal::RefreshSpanCellThermal() : RefreshSpanCell(timeSeriesThermal)
+{
+}
+SeasonalCorrelationCellThermal::SeasonalCorrelationCellThermal() :
+ SeasonalCorrelationCell(timeSeriesThermal)
+{
+}
+
+// Style
+IRenderer::CellStyle NumberTsCellThermal::cellStyle() const
+{
+    // default style
+    return IRenderer::cellStyleDefault;
+}
+
+IRenderer::CellStyle RefreshTsCellThermal::cellStyle() const
+{
+    // default style
+    return IRenderer::cellStyleDefault;
+}
+
+IRenderer::CellStyle RefreshSpanCellThermal::cellStyle() const
+{
+    // Special case: generation might be forced for some thermal clusters
+    return IRenderer::cellStyleDefault;
+}
+
+IRenderer::CellStyle SeasonalCorrelationCellThermal::cellStyle() const
+{
+    return IRenderer::cellStyleDefaultDisabled;
+}
+
+// Value
+wxString SeasonalCorrelationCellThermal::cellValue() const
+{
+    return wxT("n/a");
+}
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

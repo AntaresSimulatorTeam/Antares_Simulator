@@ -88,7 +88,6 @@ public:
     bool savePreproToFolder(const AnyString& folder) const;
 
     bool saveToFolder(const AnyString& folder) const override;
-
 }; // class ThermalClusterList
 } // namespace Data
 } // namespace Antares

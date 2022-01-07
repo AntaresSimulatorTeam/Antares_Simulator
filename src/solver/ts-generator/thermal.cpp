@@ -649,7 +649,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 }
 } // namespace
 
-bool GenerateThermalTimeSeries(Data::Study& study, uint year)
+bool GenerateThermalTimeSeries(Data::Study& study, uint year, Data::GlobalTSGenerationBehavior globalBehavior, bool refresh)
 {
     logs.info();
     logs.info() << "Generating the thermal time-series";
@@ -672,7 +672,9 @@ bool GenerateThermalTimeSeries(Data::Study& study, uint year)
         {
             auto& cluster = *(it->second);
 
-            (*generator)(area, cluster);
+            if (cluster.doWeGenerateTS(globalBehavior, refresh)) {
+                (*generator)(area, cluster);
+            }
 
             ++progression;
 #ifdef ANTARES_SWAP_SUPPORT

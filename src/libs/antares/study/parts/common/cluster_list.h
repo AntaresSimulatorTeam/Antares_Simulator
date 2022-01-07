@@ -248,8 +248,7 @@ public:
 
     int loadDataSeriesFromFolder(Study& study,
                                  const StudyLoadOptions& options,
-                                 const AnyString& folder,
-                                 bool fast);
+                                 const AnyString& folder);
 
     int saveDataSeriesToFolder(const AnyString& folder) const;
 
