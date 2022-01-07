@@ -214,8 +214,6 @@ bool SolverApplication::prepare(int argc, char* argv[])
             // Alias de la zone courant
             auto& area = *(pStudy->areas.byIndex[i]);
 
-            auto NombreDePaliersThermiques = area.thermal.list.size();
-
             for (uint l = 0; l != area.thermal.clusterCount(); ++l) //
             {
                 auto& cluster = *(area.thermal.clusters[l]);
