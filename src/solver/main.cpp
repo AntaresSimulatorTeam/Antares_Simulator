@@ -30,12 +30,12 @@
 #include <yuni/core/system/suspend.h>
 #include <stdarg.h>
 #include <new>
-#include <stdexcept>
 
 #include "config.h"
 #include <antares/study/study.h>
 #include <antares/logs.h>
 #include "main.h"
+#include "exceptions.h"
 #include "../ui/common/winmain.hxx"
 
 #include <time.h>
@@ -419,11 +419,11 @@ void SolverApplication::readDataForTheStudy(Data::StudyLoadOptions& options)
     }
 
     if (study.gotFatalError)
-        throw std::runtime_error("Got a fatal error reading the study.");
+        throw Error::ReadingStudy();
 
     if (study.areas.empty())
     {
-        throw std::runtime_error("No area found. A valid study contains contains at least one.");
+        throw Error::NoAreas();
     }
 
     // no output ?
@@ -474,7 +474,7 @@ void SolverApplication::readDataForTheStudy(Data::StudyLoadOptions& options)
     if (not pSettings.noOutput)
     {
         if (not study.checkForFilenameLimits(true))
-            throw std::runtime_error("Invalid file names detected");
+            throw Error::InvalidFileName();
 
         // comments
         {
@@ -499,7 +499,7 @@ void SolverApplication::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Runtime data dedicated for the solver
     if (not study.initializeRuntimeInfos())
-        throw std::runtime_error("Error initializing runtime infos");
+        throw Error::RuntimeInfoInitialization();
 
     // Apply transformations needed by the solver only (and not the interface for example)
     study.performTransformationsBeforeLaunchingSimulation();
@@ -585,7 +585,8 @@ int main(int argc, char** argv)
     int ret = EXIT_FAILURE;
 
     auto* application = new SolverApplication();
-    try {
+    try
+    {
         application->prepare(argc, argv);
     }
     catch (const std::runtime_error& e)
