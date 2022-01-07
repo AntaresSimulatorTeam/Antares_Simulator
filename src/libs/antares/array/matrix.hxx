@@ -1584,7 +1584,7 @@ inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(Matrix<T, ReadWri
     width = rhs.width;
     height = rhs.height;
     jit = rhs.jit;
-    if (0 == width or 0 == height)
+    if (0 == width || 0 == height)
     {
         entry = nullptr;
         width = 0;

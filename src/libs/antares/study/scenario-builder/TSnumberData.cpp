@@ -569,9 +569,9 @@ void ntcTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& 
     }
 #endif
 
-    for (auto i : pArea->links)
+    for (const auto& i : pArea->links)
     {
-        const auto* link = i.second;
+        const Data::AreaLink* link = i.second;
         for (uint y = 0; y != pTSNumberRules.height; ++y)
         {
             const uint val = pTSNumberRules[link->indexForArea][y];
