@@ -706,22 +706,28 @@ void ApplWnd::createNBInterconnections()
 
     // Create a standard page with an input selector
     std::pair<Component::Notebook*, Toolbox::InputSelector::Connections*> page
-            = createStdNotebookPage<Toolbox::InputSelector::Connections>(
-                        pNotebook, wxT("interconnections"), 
-                        wxT("Links"));
+      = createStdNotebookPage<Toolbox::InputSelector::Connections>(
+        pNotebook, wxT("interconnections"), wxT("Links"));
 
-    // links parameters time series
-    pageLinksParameters
-      = page.first->add(new Window::Interconnection(page.first, page.second, new Window::linkParametersGrid()), wxT(" Parameters "));
+    {
+        // links parameters time series
+        auto* lpg = new Window::linkParametersGrid();
+        auto* interco = new Window::Interconnection(page.first, page.second, lpg);
+        pageLinksParameters = page.first->add(interco, wxT(" Parameters "));
+    }
 
     // links NTC time series
-    pageLinksNTC
-        = page.first->add(new Window::Interconnection(page.first, page.second, new Window::linkNTCgrid()), wxT(" Transmission capacities "));
+    {
+        auto* ntcGrid = new Window::linkNTCgrid();
+        auto* interco = new Window::Interconnection(page.first, page.second, ntcGrid);
+        pageLinksNTC = page.first->add(interco, wxT(" Transmission capacities "));
+    }
 
-    pageLinksSummary = page.first->add(
-            new Component::Datagrid::Component(
-            page.first, new Component::Datagrid::Renderer::Links::Summary(page.first)),
-            wxT(" Summary "));
+    {
+        auto* summary = new Component::Datagrid::Renderer::Links::Summary(page.first);
+        auto* component = new Component::Datagrid::Component(page.first, summary);
+        pageLinksSummary = page.first->add(component, wxT(" Summary "));
+    }
 }
 
 void ApplWnd::onMapDblClick(Map::Component& /*sender*/)
