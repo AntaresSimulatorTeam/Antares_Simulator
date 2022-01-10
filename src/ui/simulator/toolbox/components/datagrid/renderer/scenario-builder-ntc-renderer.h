@@ -20,11 +20,11 @@ public:
     ntcScBuilderRenderer(const ntcScBuilderRenderer&) = delete;
 
     bool valid() const;
-    int height() const;
-    wxString rowCaption(int rowIndx) const;
+    int height() const override;
+    wxString rowCaption(int rowIndx) const override;
 
-    bool cellValue(int x, int y, const Yuni::String& value);
-    double cellNumericValue(int x, int y) const;
+    bool cellValue(int x, int y, const Yuni::String& value) override;
+    double cellNumericValue(int x, int y) const override;
 
 private:
     void onStudyChanged(Data::Study& study);

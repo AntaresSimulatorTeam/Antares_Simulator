@@ -51,7 +51,7 @@ public:
 
     virtual wxString rowCaption(int rowIndx) const override = 0;
 
-    virtual wxString cellValue(int x, int y) const;
+    virtual wxString cellValue(int x, int y) const override;
 
     virtual double cellNumericValue(int x, int y) const = 0;
 
@@ -80,12 +80,10 @@ public:
     void onRulesChanged(Data::ScenarioBuilder::Rules::Ptr rules);
 
 protected:
-    // void onAreaChanged(Data::Area* area);       // gp : not needed for ntc
-    virtual void onStudyClosed();               // gp : to be adapted for ntc
+    virtual void onStudyClosed();
 
 protected:
-    wxWindow* pControl;
-    // Data::Area* pArea;      // gp : not needed for ntc
+    wxWindow* pControl = nullptr;
     Data::ScenarioBuilder::Rules::Ptr pRules;
 
 }; // class ScBuilderRendererBase

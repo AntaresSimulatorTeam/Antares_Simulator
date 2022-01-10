@@ -41,9 +41,8 @@ namespace Renderer
 // ==================================
 // Scenario builder base class
 // ==================================
-ScBuilderRendererBase::ScBuilderRendererBase() : pControl(nullptr)
-{
-}
+ScBuilderRendererBase::ScBuilderRendererBase()
+{}
 
 ScBuilderRendererBase::~ScBuilderRendererBase()
 {
