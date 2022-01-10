@@ -61,8 +61,8 @@ protected:
     typedef Component::Datagrid::Component DatagridType;
 
 public:
-    basicScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
-        scBuilderPanel_(scBuilderPanel), notebook_(notebook)
+    basicScBuilderPageMaker(Window::ScenarioBuilder::Panel* scenarioBuilderPanel, Notebook* notebook) :
+        scBuilderPanel_(scenarioBuilderPanel), notebook_(notebook)
     {}
     virtual ~basicScBuilderPageMaker() = default;
 
@@ -113,8 +113,8 @@ private:
 class simpleScBuilderPageMaker : public basicScBuilderPageMaker
 {
 public:
-    simpleScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
-        basicScBuilderPageMaker(scBuilderPanel, notebook)
+    simpleScBuilderPageMaker(Window::ScenarioBuilder::Panel* scenarioBuilderPanel, Notebook* notebook) :
+        basicScBuilderPageMaker(scenarioBuilderPanel, notebook)
     {}
     virtual ~simpleScBuilderPageMaker() = default;
 
@@ -135,8 +135,8 @@ private:
 class loadScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
 public:
-    loadScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
-        simpleScBuilderPageMaker(scBuilderPanel, notebook)
+    loadScBuilderPageMaker(Window::ScenarioBuilder::Panel* scenarioBuilderPanel, Notebook* notebook) :
+        simpleScBuilderPageMaker(scenarioBuilderPanel, notebook)
     {}
 
 private:
@@ -154,8 +154,8 @@ private:
 class hydroScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
 public:
-    hydroScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
-        simpleScBuilderPageMaker(scBuilderPanel, notebook)
+    hydroScBuilderPageMaker(Window::ScenarioBuilder::Panel* scenarioBuilderPanel, Notebook* notebook) :
+        simpleScBuilderPageMaker(scenarioBuilderPanel, notebook)
     {}
 
 private:
@@ -173,8 +173,8 @@ private:
 class windScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
 public:
-    windScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
-        simpleScBuilderPageMaker(scBuilderPanel, notebook)
+    windScBuilderPageMaker(Window::ScenarioBuilder::Panel* scenarioBuilderPanel, Notebook* notebook) :
+        simpleScBuilderPageMaker(scenarioBuilderPanel, notebook)
     {}
 
 private:
@@ -192,8 +192,8 @@ private:
 class solarScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
 public:
-    solarScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
-        simpleScBuilderPageMaker(scBuilderPanel, notebook)
+    solarScBuilderPageMaker(Window::ScenarioBuilder::Panel* scenarioBuilderPanel, Notebook* notebook) :
+        simpleScBuilderPageMaker(scenarioBuilderPanel, notebook)
     {}
 
 private:
@@ -211,8 +211,8 @@ private:
 class hydroLevelsScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
 public:
-    hydroLevelsScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
-        simpleScBuilderPageMaker(scBuilderPanel, notebook)
+    hydroLevelsScBuilderPageMaker(Window::ScenarioBuilder::Panel* scenarioBuilderPanel, Notebook* notebook) :
+        simpleScBuilderPageMaker(scenarioBuilderPanel, notebook)
     {}
 
 private:
@@ -230,8 +230,8 @@ private:
 class ntcScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
 public:
-    ntcScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
-        simpleScBuilderPageMaker(scBuilderPanel, notebook)
+    ntcScBuilderPageMaker(Window::ScenarioBuilder::Panel* scenarioBuilderPanel, Notebook* notebook) :
+        simpleScBuilderPageMaker(scenarioBuilderPanel, notebook)
     {}
 
 private:
@@ -249,8 +249,8 @@ private:
 class clusterScBuilderPageMaker : public basicScBuilderPageMaker
 {
 public:
-    clusterScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
-        basicScBuilderPageMaker(scBuilderPanel, notebook)
+    clusterScBuilderPageMaker(Window::ScenarioBuilder::Panel* scenarioBuilderPanel, Notebook* notebook) :
+        basicScBuilderPageMaker(scenarioBuilderPanel, notebook)
     {}
 
 private:
@@ -287,8 +287,8 @@ private:
 class thermalScBuilderPageMaker final : public clusterScBuilderPageMaker
 {
 public:
-    thermalScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
-        clusterScBuilderPageMaker(scBuilderPanel, notebook)
+    thermalScBuilderPageMaker(Window::ScenarioBuilder::Panel* scenarioBuilderPanel, Notebook* notebook) :
+        clusterScBuilderPageMaker(scenarioBuilderPanel, notebook)
     {}
 
     Renderer::ScBuilderRendererBase* getRenderer() override
@@ -311,8 +311,8 @@ public:
 class renewableScBuilderPageMaker final : public clusterScBuilderPageMaker
 {
 public:
-    renewableScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
-     clusterScBuilderPageMaker(scBuilderPanel, notebook)
+    renewableScBuilderPageMaker(Window::ScenarioBuilder::Panel* scenarioBuilderPanel, Notebook* notebook) :
+     clusterScBuilderPageMaker(scenarioBuilderPanel, notebook)
     {}
 
     Renderer::ScBuilderRendererBase* getRenderer() override
@@ -353,9 +353,8 @@ void ApplWnd::createNBScenarioBuilder()
     pSectionNotebook->add(pScenarioBuilderNotebook, wxT("scenariobuilder"), wxT("scenariobuilder"));
 
     // Title
-    Window::ScenarioBuilder::Panel* scBuilderPanel
-      = new Window::ScenarioBuilder::Panel(pScenarioBuilderNotebook);
-    pScenarioBuilderNotebook->addCommonControlTop(scBuilderPanel, 0, wxPoint(100, 60));
+    auto* scenarioBuilderPanel = new Window::ScenarioBuilder::Panel(pScenarioBuilderNotebook);
+    pScenarioBuilderNotebook->addCommonControlTop(scenarioBuilderPanel, 0, wxPoint(100, 60));
 
     // Back to standard edition
     pScenarioBuilderNotebook->add(
@@ -363,30 +362,30 @@ void ApplWnd::createNBScenarioBuilder()
     pScenarioBuilderNotebook->addSeparator();
 
     // Creating scenario builder notebook's tabs
-    loadScBuilderPageMaker loadSBpageMaker(scBuilderPanel, pScenarioBuilderNotebook);
+    loadScBuilderPageMaker loadSBpageMaker(scenarioBuilderPanel, pScenarioBuilderNotebook);
     pageScBuilderLoad = loadSBpageMaker.createPage();
 
-    thermalScBuilderPageMaker thermalSBpageMaker(scBuilderPanel, pScenarioBuilderNotebook);
+    thermalScBuilderPageMaker thermalSBpageMaker(scenarioBuilderPanel, pScenarioBuilderNotebook);
     pageScBuilderThermal = thermalSBpageMaker.createPage();
 
-    hydroScBuilderPageMaker hydroSBpageMaker(scBuilderPanel, pScenarioBuilderNotebook);
+    hydroScBuilderPageMaker hydroSBpageMaker(scenarioBuilderPanel, pScenarioBuilderNotebook);
     pageScBuilderHydro = hydroSBpageMaker.createPage();
 
-    windScBuilderPageMaker windSBpageMaker(scBuilderPanel, pScenarioBuilderNotebook);
+    windScBuilderPageMaker windSBpageMaker(scenarioBuilderPanel, pScenarioBuilderNotebook);
     pageScBuilderWind = windSBpageMaker.createPage();
 
-    solarScBuilderPageMaker solarSBpageMaker(scBuilderPanel, pScenarioBuilderNotebook);
+    solarScBuilderPageMaker solarSBpageMaker(scenarioBuilderPanel, pScenarioBuilderNotebook);
     pageScBuilderSolar = solarSBpageMaker.createPage();
 
-    ntcScBuilderPageMaker ntcSBpageMaker(scBuilderPanel, pScenarioBuilderNotebook);
+    ntcScBuilderPageMaker ntcSBpageMaker(scenarioBuilderPanel, pScenarioBuilderNotebook);
     pageScBuilderNTC = ntcSBpageMaker.createPage();
 
-    renewableScBuilderPageMaker renewableSBpageMaker(scBuilderPanel, pScenarioBuilderNotebook);
+    renewableScBuilderPageMaker renewableSBpageMaker(scenarioBuilderPanel, pScenarioBuilderNotebook);
     pageScBuilderRenewable = renewableSBpageMaker.createPage();
 
     pScenarioBuilderNotebook->addSeparator();
 
-    hydroLevelsScBuilderPageMaker hydroLevelsSBpageMaker(scBuilderPanel, pScenarioBuilderNotebook);
+    hydroLevelsScBuilderPageMaker hydroLevelsSBpageMaker(scenarioBuilderPanel, pScenarioBuilderNotebook);
     pageScBuilderHydroLevels = hydroLevelsSBpageMaker.createPage();
 }
 
