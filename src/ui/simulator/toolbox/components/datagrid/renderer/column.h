@@ -47,7 +47,7 @@ class Cell;
 class Column
 {
 public:
-    Column(Antares::Data::TimeSeries ts, wxString caption);
+    Column(Antares::Data::TimeSeries ts, const wxString& caption);
     virtual ~Column();
     Cell* getLine(int y) const;
     int getNumberOfLines() const;
@@ -65,8 +65,8 @@ protected:
 class classicColumn final : public Column
 {
 public:
-    classicColumn(Antares::Data::TimeSeries ts, wxString caption);
-    ~classicColumn() = default;
+    classicColumn(Antares::Data::TimeSeries ts, const wxString& caption);
+    ~classicColumn() override = default;
 };
 
 // -----------------------------
@@ -76,7 +76,7 @@ class ColumnRenewableClusters final : public Column
 {
 public:
     ColumnRenewableClusters();
-    ~ColumnRenewableClusters() = default;
+    ~ColumnRenewableClusters() override = default;
 };
 
 // -------------------------------
@@ -86,7 +86,7 @@ class ColumnNTC final : public Column
 {
 public:
     ColumnNTC();
-    ~ColumnNTC() = default;
+    ~ColumnNTC() override = default;
 };
 
 } // namespace Renderer

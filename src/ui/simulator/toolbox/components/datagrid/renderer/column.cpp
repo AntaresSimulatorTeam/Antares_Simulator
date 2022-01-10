@@ -33,7 +33,7 @@
 template<class T, class... Args>
 T* factory(Args... args)
 {
-    T* r = new (std::nothrow) T(args...);
+    auto r = new (std::nothrow) T(args...);
     if (r == nullptr)
     {
         logs.error() << "Error allocating memory";
@@ -52,7 +52,7 @@ namespace Renderer
 // -------------------
 // Base column class
 // -------------------
-Column::Column(Antares::Data::TimeSeries ts, wxString caption) : tsKind_(ts), caption_(caption)
+Column::Column(Antares::Data::TimeSeries ts, const wxString& caption) : tsKind_(ts), caption_(caption)
 {
 }
 
@@ -79,7 +79,7 @@ Column::~Column()
 // -------------------- -
 // Classic column
 // ---------------------
-classicColumn::classicColumn(TimeSeries ts, wxString caption) : Column(ts, caption)
+classicColumn::classicColumn(TimeSeries ts, const wxString& caption) : Column(ts, caption)
 {
     cells_ = {factory<blankCell>(),
               factory<readyMadeTSstatus>(tsKind_),
