@@ -15,7 +15,6 @@ class ntcScBuilderRenderer : public ScBuilderRendererBase
 {
 public:
     ntcScBuilderRenderer();
-    virtual ~ntcScBuilderRenderer();
 
     ntcScBuilderRenderer& operator=(const ntcScBuilderRenderer&) = delete;
     ntcScBuilderRenderer(const ntcScBuilderRenderer&) = delete;
@@ -29,7 +28,7 @@ public:
 
 private:
     void onStudyChanged(Data::Study& study);
-    Data::AreaLink::Vector* pListOfLinks;
+    Data::AreaLink::Vector* pListOfLinks = nullptr;
 }; // class ntcScBuilderRenderer
 
 } // namespace Renderer

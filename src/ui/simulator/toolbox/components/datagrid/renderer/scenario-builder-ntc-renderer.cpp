@@ -15,14 +15,9 @@ namespace Datagrid
 {
 namespace Renderer
 {
-ntcScBuilderRenderer::ntcScBuilderRenderer() : pListOfLinks(nullptr)
+ntcScBuilderRenderer::ntcScBuilderRenderer()
 {
     OnStudyChanged.connect(this, &ntcScBuilderRenderer::onStudyChanged);
-}
-
-ntcScBuilderRenderer::~ntcScBuilderRenderer()
-{
-    destroyBoundEvents();
 }
 
 void ntcScBuilderRenderer::onStudyChanged(Data::Study& study)

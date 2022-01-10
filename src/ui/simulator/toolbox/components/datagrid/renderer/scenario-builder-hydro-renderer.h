@@ -41,7 +41,6 @@ class hydroScBuilderRenderer : public ScBuilderRendererAreasAsRows
 {
 public:
     hydroScBuilderRenderer();
-    ~hydroScBuilderRenderer();
 
     bool cellValue(int x, int y, const Yuni::String& value);
     double cellNumericValue(int x, int y) const;

@@ -49,10 +49,6 @@ renewableScBuilderRenderer::renewableScBuilderRenderer(Toolbox::InputSelector::A
     }
 }
 
-renewableScBuilderRenderer::~renewableScBuilderRenderer()
-{
-}
-
 bool renewableScBuilderRenderer::valid() const
 {
     return !(!study) && pRules && study->areas.size() != 0 && !(!pRules) && pArea;

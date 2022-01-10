@@ -43,10 +43,6 @@ hydroScBuilderRenderer::hydroScBuilderRenderer() : ScBuilderRendererAreasAsRows(
 {
 }
 
-hydroScBuilderRenderer::~hydroScBuilderRenderer()
-{
-}
-
 bool hydroScBuilderRenderer::cellValue(int x, int y, const Yuni::String& value)
 {
     if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears)

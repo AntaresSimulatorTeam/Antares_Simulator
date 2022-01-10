@@ -44,12 +44,12 @@ public:
     ScBuilderRendererBase();
     virtual ~ScBuilderRendererBase();
 
-    virtual int width() const;
-    virtual int height() const = 0;
+    virtual int width() const override;
+    virtual int height() const override = 0;
 
     virtual wxString columnCaption(int colIndx) const;
 
-    virtual wxString rowCaption(int rowIndx) const = 0;
+    virtual wxString rowCaption(int rowIndx) const override = 0;
 
     virtual wxString cellValue(int x, int y) const;
 
@@ -62,7 +62,7 @@ public:
         // Do nothing
     }
 
-    virtual bool valid() const = 0;
+    virtual bool valid() const override = 0;
 
     virtual uint maxWidthResize() const
     {

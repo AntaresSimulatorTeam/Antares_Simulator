@@ -43,10 +43,6 @@ solarScBuilderRenderer::solarScBuilderRenderer() : ScBuilderRendererAreasAsRows(
 {
 }
 
-solarScBuilderRenderer::~solarScBuilderRenderer()
-{
-}
-
 bool solarScBuilderRenderer::cellValue(int x, int y, const Yuni::String& value)
 {
     if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears)

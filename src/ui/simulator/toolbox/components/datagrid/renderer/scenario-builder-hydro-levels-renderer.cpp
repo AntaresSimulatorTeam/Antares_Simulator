@@ -42,10 +42,6 @@ hydroLevelsScBuilderRenderer::hydroLevelsScBuilderRenderer() : ScBuilderRenderer
 {
 }
 
-hydroLevelsScBuilderRenderer::~hydroLevelsScBuilderRenderer()
-{
-}
-
 wxString hydroLevelsScBuilderRenderer::cellValue(int x, int y) const
 {
     const double d = cellNumericValue(x, y);
