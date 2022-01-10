@@ -76,27 +76,27 @@ IRenderer::CellStyle blankCell::cellStyle() const
     return IRenderer::cellStyleDefaultDisabled;
 }
 
-// =================================
-// Inactive renewable cluster cell
-// =================================
-inactiveRenewableClusterCell::inactiveRenewableClusterCell(wxString toPrintInCell) :
+// ========================
+// Inactive cell
+// ========================
+inactiveCell::inactiveCell(wxString toPrintInCell) :
  Cell(timeSeriesCount /*arbitrary, not used here anyway */), toBePrintedInCell_(toPrintInCell)
 {
 }
 
-wxString inactiveRenewableClusterCell::cellValue() const
+wxString inactiveCell::cellValue() const
 {
     return toBePrintedInCell_;
 }
-double inactiveRenewableClusterCell::cellNumericValue() const
+double inactiveCell::cellNumericValue() const
 {
     return 0.;
 }
-bool inactiveRenewableClusterCell::cellValue(const String& value)
+bool inactiveCell::cellValue(const String& value)
 {
     return false;
 }
-IRenderer::CellStyle inactiveRenewableClusterCell::cellStyle() const
+IRenderer::CellStyle inactiveCell::cellStyle() const
 {
     return IRenderer::cellStyleDisabled;
 }
