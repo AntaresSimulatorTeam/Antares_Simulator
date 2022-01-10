@@ -41,7 +41,6 @@ class hydroLevelsScBuilderRenderer : public ScBuilderRendererAreasAsRows
 {
 public:
     hydroLevelsScBuilderRenderer();
-    ~hydroLevelsScBuilderRenderer();
 
     wxString cellValue(int x, int y) const;
     bool cellValue(int x, int y, const Yuni::String& value);

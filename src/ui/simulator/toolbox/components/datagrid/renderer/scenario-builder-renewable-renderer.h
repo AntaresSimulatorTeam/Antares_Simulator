@@ -42,7 +42,6 @@ class renewableScBuilderRenderer : public ScBuilderRendererAreasAsRows
 {
 public:
     renewableScBuilderRenderer(Toolbox::InputSelector::Area* notifier);
-    ~renewableScBuilderRenderer();
 
     bool valid() const;
     bool cellValue(int x, int y, const Yuni::String& value);

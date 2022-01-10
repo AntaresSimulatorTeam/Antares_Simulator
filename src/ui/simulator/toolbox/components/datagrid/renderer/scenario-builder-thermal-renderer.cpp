@@ -49,9 +49,6 @@ thermalScBuilderRenderer::thermalScBuilderRenderer(Toolbox::InputSelector::Area*
     }
 }
 
-thermalScBuilderRenderer::~thermalScBuilderRenderer()
-{}
-
 bool thermalScBuilderRenderer::valid() const
 {
     return !(!study) && pRules && study->areas.size() != 0 && !(!pRules) && pArea;

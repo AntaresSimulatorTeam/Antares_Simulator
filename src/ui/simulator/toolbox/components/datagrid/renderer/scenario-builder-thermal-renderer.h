@@ -42,7 +42,7 @@ class thermalScBuilderRenderer : public ScBuilderRendererAreasAsRows
 {
 public:
     thermalScBuilderRenderer(Toolbox::InputSelector::Area* notifier);
-    ~thermalScBuilderRenderer();
+    ~thermalScBuilderRenderer() = default;
 
     bool valid() const;
     bool cellValue(int x, int y, const Yuni::String& value);
