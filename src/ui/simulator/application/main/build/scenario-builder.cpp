@@ -81,12 +81,8 @@ protected:
     DatagridType* grid() { return grid_; }
 
 private:
-    virtual void addAreaSelectorPage()
-    {
-        // In the scenario builder, a selector page can be an area or link selector page.
-        // For example : for thermal, you need to select an area to get a grid (rows : clusters, columns : years) 
-        // by default : does nothing. Should be overloaded to add a selector page
-    }
+    virtual void addAreaSelectorPage() = 0;
+
     virtual Renderer::ScBuilderRendererBase* getRenderer() = 0;
     virtual void createRenderer()
     {
@@ -101,10 +97,7 @@ private:
         grid_ = getGrid();
         renderer()->control(grid_);
     }
-    virtual DatagridType* getGrid()
-    {
-        return new DatagridType(notebook_, renderer_);
-    }
+    virtual DatagridType* getGrid() = 0;
     virtual Notebook::Page* addPageToNotebook() = 0;
 
 private:
@@ -114,15 +107,36 @@ private:
     DatagridType* grid_ = nullptr;
 };
 
-// class simpleScBuilderPageMaker : public basicScBuilderPageMaker
-// {};
+
+// Simple scenario builder page maker : makes page with no area selector
+
+class simpleScBuilderPageMaker : public basicScBuilderPageMaker
+{
+public:
+    simpleScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
+        basicScBuilderPageMaker(scBuilderPanel, notebook)
+    {}
+    virtual ~simpleScBuilderPageMaker() = default;
+
+private:
+    virtual void addAreaSelectorPage() override
+    {
+        // In the scenario builder, a selector page can be an area or link selector page.
+        // For example : for thermal, you need to select an area to get a grid (rows : clusters, columns : years) 
+        // by default : does nothing. Should be overloaded to add a selector page
+    }
+    virtual DatagridType* getGrid() override
+    {
+        return new DatagridType(notebook(), renderer());
+    }
+};
 
 // Load ...
-class loadScBuilderPageMaker : public basicScBuilderPageMaker
+class loadScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
 public:
     loadScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
-     basicScBuilderPageMaker(scBuilderPanel, notebook)
+        simpleScBuilderPageMaker(scBuilderPanel, notebook)
     {}
 
 private:
@@ -137,11 +151,11 @@ private:
 };
 
 // Hydro ...
-class hydroScBuilderPageMaker : public basicScBuilderPageMaker
+class hydroScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
 public:
     hydroScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
-     basicScBuilderPageMaker(scBuilderPanel, notebook)
+        simpleScBuilderPageMaker(scBuilderPanel, notebook)
     {}
 
 private:
@@ -156,11 +170,11 @@ private:
 };
 
 // Wind ...
-class windScBuilderPageMaker : public basicScBuilderPageMaker
+class windScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
 public:
     windScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
-     basicScBuilderPageMaker(scBuilderPanel, notebook)
+        simpleScBuilderPageMaker(scBuilderPanel, notebook)
     {}
 
 private:
@@ -175,11 +189,11 @@ private:
 };
 
 // Solar ...
-class solarScBuilderPageMaker : public basicScBuilderPageMaker
+class solarScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
 public:
     solarScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
-     basicScBuilderPageMaker(scBuilderPanel, notebook)
+        simpleScBuilderPageMaker(scBuilderPanel, notebook)
     {}
 
 private:
@@ -193,12 +207,31 @@ private:
     }
 };
 
+// Hydro levels ...
+class hydroLevelsScBuilderPageMaker final : public simpleScBuilderPageMaker
+{
+public:
+    hydroLevelsScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
+        simpleScBuilderPageMaker(scBuilderPanel, notebook)
+    {}
+
+private:
+    Renderer::ScBuilderRendererBase* getRenderer() override
+    {
+        return new Renderer::hydroLevelsScBuilderRenderer();
+    }
+    Notebook::Page* addPageToNotebook()
+    {
+        return notebook()->add(grid(), wxT("hydro levels"), wxT("Hydro Levels"));
+    }
+};
+
 // Links NTC ...
-class ntcScBuilderPageMaker final : public basicScBuilderPageMaker
+class ntcScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
 public:
     ntcScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
-        basicScBuilderPageMaker(scBuilderPanel, notebook)
+        simpleScBuilderPageMaker(scBuilderPanel, notebook)
     {}
 
 private:
@@ -295,26 +328,6 @@ public:
     virtual const char* caption() const override
     {
         return "Renewable";
-    }
-};
-
-// Hydro levels ...
-class hydroLevelsScBuilderPageMaker : public basicScBuilderPageMaker
-{
-public:
-    hydroLevelsScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel,
-                             Notebook* notebook) :
-     basicScBuilderPageMaker(scBuilderPanel, notebook)
-    {}
-
-private:
-    Renderer::ScBuilderRendererBase* getRenderer() override
-    {
-        return new Renderer::hydroLevelsScBuilderRenderer();
-    }
-    Notebook::Page* addPageToNotebook()
-    {
-        return notebook()->add(grid(), wxT("hydro levels"), wxT("Hydro Levels"));
     }
 };
 
