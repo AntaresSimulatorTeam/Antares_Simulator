@@ -61,8 +61,8 @@ protected:
     typedef Component::Datagrid::Component DatagridType;
 
 public:
-    basicScBuilderPageMaker(Window::ScenarioBuilder::Panel* control, Notebook* notebook) :
-        control_(control), notebook_(notebook), renderer_(nullptr)
+    basicScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
+        scBuilderPanel_(scBuilderPanel), notebook_(notebook)
     {}
     virtual ~basicScBuilderPageMaker() = default;
 
@@ -76,48 +76,63 @@ public:
     }
 
 protected:
+    Notebook* notebook() { return notebook_; }
+    Renderer::ScBuilderRendererBase* renderer() { return renderer_; }
+    DatagridType* grid() { return grid_; }
+
+private:
     virtual void addAreaSelectorPage()
-    { 
+    {
         // In the scenario builder, a selector page can be an area or link selector page.
         // For example : for thermal, you need to select an area to get a grid (rows : clusters, columns : years) 
         // by default : does nothing. Should be overloaded to add a selector page
     }
-    virtual void createRenderer() = 0;
-    virtual void createGrid()
+    virtual Renderer::ScBuilderRendererBase* getRenderer() = 0;
+    virtual void createRenderer()
     {
-        grid_ = new DatagridType(notebook_, renderer_);
-        renderer_->control(grid_);
+        renderer_ = getRenderer();
     }
     void rendererHandlesRulesEvent()
     {
-        control_->updateRules.connect(renderer_, &Renderer::ScBuilderRendererBase::onRulesChanged);
+        scBuilderPanel_->updateRules.connect(renderer_, &Renderer::ScBuilderRendererBase::onRulesChanged);
+    }
+    void createGrid()
+    {
+        grid_ = getGrid();
+        renderer()->control(grid_);
+    }
+    virtual DatagridType* getGrid()
+    {
+        return new DatagridType(notebook_, renderer_);
     }
     virtual Notebook::Page* addPageToNotebook() = 0;
 
-protected:
-    Window::ScenarioBuilder::Panel* control_;
+private:
+    Window::ScenarioBuilder::Panel* scBuilderPanel_;
     Notebook* notebook_;
     Renderer::ScBuilderRendererBase* renderer_ = nullptr;
     DatagridType* grid_ = nullptr;
-    // Notebook::Page* notebookPage_ = nullptr;
 };
+
+// class simpleScBuilderPageMaker : public basicScBuilderPageMaker
+// {};
 
 // Load ...
 class loadScBuilderPageMaker : public basicScBuilderPageMaker
 {
 public:
-    loadScBuilderPageMaker(Window::ScenarioBuilder::Panel* control, Notebook* notebook) :
-     basicScBuilderPageMaker(control, notebook)
+    loadScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
+     basicScBuilderPageMaker(scBuilderPanel, notebook)
     {}
 
 private:
-    void createRenderer()
+    Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        renderer_ = new Renderer::loadScBuilderRenderer();
+        return new Renderer::loadScBuilderRenderer();
     }
     Notebook::Page* addPageToNotebook()
     {
-        return notebook_->add(grid_, wxT("load"), wxT("Load"));
+        return notebook()->add(grid(), wxT("load"), wxT("Load"));
     }
 };
 
@@ -125,18 +140,18 @@ private:
 class hydroScBuilderPageMaker : public basicScBuilderPageMaker
 {
 public:
-    hydroScBuilderPageMaker(Window::ScenarioBuilder::Panel* control, Notebook* notebook) :
-     basicScBuilderPageMaker(control, notebook)
+    hydroScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
+     basicScBuilderPageMaker(scBuilderPanel, notebook)
     {}
 
 private:
-    void createRenderer()
+    Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        renderer_ = new Renderer::hydroScBuilderRenderer();
+        return new Renderer::hydroScBuilderRenderer();
     }
     Notebook::Page* addPageToNotebook()
     {
-        return notebook_->add(grid_, wxT("hydro"), wxT("Hydro"));
+        return notebook()->add(grid(), wxT("hydro"), wxT("Hydro"));
     }
 };
 
@@ -144,18 +159,18 @@ private:
 class windScBuilderPageMaker : public basicScBuilderPageMaker
 {
 public:
-    windScBuilderPageMaker(Window::ScenarioBuilder::Panel* control, Notebook* notebook) :
-     basicScBuilderPageMaker(control, notebook)
+    windScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
+     basicScBuilderPageMaker(scBuilderPanel, notebook)
     {}
 
 private:
-    void createRenderer()
+    Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        renderer_ = new Renderer::windScBuilderRenderer();
+        return new Renderer::windScBuilderRenderer();
     }
     Notebook::Page* addPageToNotebook()
     {
-        return notebook_->add(grid_, wxT("wind"), wxT("Wind"));
+        return notebook()->add(grid(), wxT("wind"), wxT("Wind"));
     }
 };
 
@@ -163,18 +178,18 @@ private:
 class solarScBuilderPageMaker : public basicScBuilderPageMaker
 {
 public:
-    solarScBuilderPageMaker(Window::ScenarioBuilder::Panel* control, Notebook* notebook) :
-     basicScBuilderPageMaker(control, notebook)
+    solarScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
+     basicScBuilderPageMaker(scBuilderPanel, notebook)
     {}
 
 private:
-    void createRenderer()
+    Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        renderer_ = new Renderer::solarScBuilderRenderer();
+        return new Renderer::solarScBuilderRenderer();
     }
     Notebook::Page* addPageToNotebook()
     {
-        return notebook_->add(grid_, wxT("solar"), wxT("Solar"));
+        return notebook()->add(grid(), wxT("solar"), wxT("Solar"));
     }
 };
 
@@ -182,18 +197,18 @@ private:
 class ntcScBuilderPageMaker final : public basicScBuilderPageMaker
 {
 public:
-    ntcScBuilderPageMaker(Window::ScenarioBuilder::Panel* control, Notebook* notebook) :
-        basicScBuilderPageMaker(control, notebook)
+    ntcScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
+        basicScBuilderPageMaker(scBuilderPanel, notebook)
     {}
 
 private:
-    void createRenderer()
+    Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        renderer_ = new Renderer::ntcScBuilderRenderer();
+        return new Renderer::ntcScBuilderRenderer();
     }
     Notebook::Page* addPageToNotebook()
     {
-        return notebook_->add(grid_, wxT("ntc"), wxT("NTC"));
+        return notebook()->add(grid(), wxT("ntc"), wxT("NTC"));
     }
 };
 
@@ -201,8 +216,8 @@ private:
 class clusterScBuilderPageMaker : public basicScBuilderPageMaker
 {
 public:
-    clusterScBuilderPageMaker(Window::ScenarioBuilder::Panel* control, Notebook* notebook) :
-        basicScBuilderPageMaker(control, notebook)
+    clusterScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
+        basicScBuilderPageMaker(scBuilderPanel, notebook)
     {}
 
 private:
@@ -211,18 +226,15 @@ private:
 
     void addAreaSelectorPage() override
     {
-        area_selector_page_ = createStdNotebookPage<InputSelector::Area>(notebook_, name(), caption());
+        area_selector_page_ = createStdNotebookPage<InputSelector::Area>(notebook(), name(), caption());
     }
-
-    void createGrid() override
+    DatagridType* getGrid() override
     {
-        grid_ = new DatagridType(area_selector_page_.first, renderer_);
-        renderer_->control(grid_);
+        return new DatagridType(area_selector_page_.first, renderer());
     }
-
     Notebook::Page* addPageToNotebook() override
     {
-        notebookPage_ = area_selector_page_.first->add(grid_, name(), caption());
+        notebookPage_ = area_selector_page_.first->add(grid(), name(), caption());
         area_selector_page_.first->select(name());
         return notebookPage_;
     }
@@ -242,13 +254,13 @@ private:
 class thermalScBuilderPageMaker final : public clusterScBuilderPageMaker
 {
 public:
-    thermalScBuilderPageMaker(Window::ScenarioBuilder::Panel* control, Notebook* notebook) :
-        clusterScBuilderPageMaker(control, notebook)
+    thermalScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
+        clusterScBuilderPageMaker(scBuilderPanel, notebook)
     {}
 
-    virtual void createRenderer() override
+    Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        renderer_ = new Renderer::thermalScBuilderRenderer(areaSelectorPage());
+        return new Renderer::thermalScBuilderRenderer(areaSelectorPage());
     }
 
     virtual const char* name() const override
@@ -266,13 +278,13 @@ public:
 class renewableScBuilderPageMaker final : public clusterScBuilderPageMaker
 {
 public:
-    renewableScBuilderPageMaker(Window::ScenarioBuilder::Panel* control, Notebook* notebook) :
-     clusterScBuilderPageMaker(control, notebook)
+    renewableScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel, Notebook* notebook) :
+     clusterScBuilderPageMaker(scBuilderPanel, notebook)
     {}
 
-    virtual void createRenderer() override
+    Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        renderer_ = new Renderer::renewableScBuilderRenderer(areaSelectorPage());
+        return  new Renderer::renewableScBuilderRenderer(areaSelectorPage());
     }
 
     virtual const char* name() const override
@@ -290,19 +302,19 @@ public:
 class hydroLevelsScBuilderPageMaker : public basicScBuilderPageMaker
 {
 public:
-    hydroLevelsScBuilderPageMaker(Window::ScenarioBuilder::Panel* control,
+    hydroLevelsScBuilderPageMaker(Window::ScenarioBuilder::Panel* scBuilderPanel,
                              Notebook* notebook) :
-     basicScBuilderPageMaker(control, notebook)
+     basicScBuilderPageMaker(scBuilderPanel, notebook)
     {}
 
 private:
-    void createRenderer()
+    Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        renderer_ = new Renderer::hydroLevelsScBuilderRenderer();
+        return new Renderer::hydroLevelsScBuilderRenderer();
     }
     Notebook::Page* addPageToNotebook()
     {
-        return notebook_->add(grid_, wxT("hydro levels"), wxT("Hydro Levels"));
+        return notebook()->add(grid(), wxT("hydro levels"), wxT("Hydro Levels"));
     }
 };
 
@@ -328,9 +340,9 @@ void ApplWnd::createNBScenarioBuilder()
     pSectionNotebook->add(pScenarioBuilderNotebook, wxT("scenariobuilder"), wxT("scenariobuilder"));
 
     // Title
-    Window::ScenarioBuilder::Panel* control
+    Window::ScenarioBuilder::Panel* scBuilderPanel
       = new Window::ScenarioBuilder::Panel(pScenarioBuilderNotebook);
-    pScenarioBuilderNotebook->addCommonControlTop(control, 0, wxPoint(100, 60));
+    pScenarioBuilderNotebook->addCommonControlTop(scBuilderPanel, 0, wxPoint(100, 60));
 
     // Back to standard edition
     pScenarioBuilderNotebook->add(
@@ -338,30 +350,30 @@ void ApplWnd::createNBScenarioBuilder()
     pScenarioBuilderNotebook->addSeparator();
 
     // Creating scenario builder notebook's tabs
-    loadScBuilderPageMaker loadSBpageMaker(control, pScenarioBuilderNotebook);
+    loadScBuilderPageMaker loadSBpageMaker(scBuilderPanel, pScenarioBuilderNotebook);
     pageScBuilderLoad = loadSBpageMaker.createPage();
 
-    thermalScBuilderPageMaker thermalSBpageMaker(control, pScenarioBuilderNotebook);
+    thermalScBuilderPageMaker thermalSBpageMaker(scBuilderPanel, pScenarioBuilderNotebook);
     pageScBuilderThermal = thermalSBpageMaker.createPage();
 
-    hydroScBuilderPageMaker hydroSBpageMaker(control, pScenarioBuilderNotebook);
+    hydroScBuilderPageMaker hydroSBpageMaker(scBuilderPanel, pScenarioBuilderNotebook);
     pageScBuilderHydro = hydroSBpageMaker.createPage();
 
-    windScBuilderPageMaker windSBpageMaker(control, pScenarioBuilderNotebook);
+    windScBuilderPageMaker windSBpageMaker(scBuilderPanel, pScenarioBuilderNotebook);
     pageScBuilderWind = windSBpageMaker.createPage();
 
-    solarScBuilderPageMaker solarSBpageMaker(control, pScenarioBuilderNotebook);
+    solarScBuilderPageMaker solarSBpageMaker(scBuilderPanel, pScenarioBuilderNotebook);
     pageScBuilderSolar = solarSBpageMaker.createPage();
 
-    ntcScBuilderPageMaker ntcSBpageMaker(control, pScenarioBuilderNotebook);
+    ntcScBuilderPageMaker ntcSBpageMaker(scBuilderPanel, pScenarioBuilderNotebook);
     pageScBuilderNTC = ntcSBpageMaker.createPage();
 
-    renewableScBuilderPageMaker renewableSBpageMaker(control, pScenarioBuilderNotebook);
+    renewableScBuilderPageMaker renewableSBpageMaker(scBuilderPanel, pScenarioBuilderNotebook);
     pageScBuilderRenewable = renewableSBpageMaker.createPage();
 
     pScenarioBuilderNotebook->addSeparator();
 
-    hydroLevelsScBuilderPageMaker hydroLevelsSBpageMaker(control, pScenarioBuilderNotebook);
+    hydroLevelsScBuilderPageMaker hydroLevelsSBpageMaker(scBuilderPanel, pScenarioBuilderNotebook);
     pageScBuilderHydroLevels = hydroLevelsSBpageMaker.createPage();
 }
 
