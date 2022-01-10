@@ -546,7 +546,7 @@ SolverApplication::~SolverApplication()
 static void NotEnoughMemory()
 {
     logs.fatal() << "Not enough memory. aborting.";
-    exit(42);
+    AntaresSolverEmergencyShutdown(42);
 }
 
 /*!
