@@ -42,55 +42,60 @@ namespace Antares
 {
 namespace Window
 {
+void linkParametersGrid::add(wxBoxSizer* sizer,
+                             wxWindow* parent,
+                             Interconnection* intercoWindow,
+                             Toolbox::InputSelector::Connections* notifier)
+{
+    sizer->Add(
+      new Component::Datagrid::Component(
+        parent, new Component::Datagrid::Renderer::connectionParameters(intercoWindow, notifier)),
+      1,
+      wxALL | wxEXPAND | wxFIXED_MINSIZE);
+}
 
-    void linkParametersGrid::add(wxBoxSizer* sizer, wxWindow* parent, Interconnection* intercoWindow, Toolbox::InputSelector::Connections* notifier)
+void linkNTCgrid::add(wxBoxSizer* sizer,
+                      wxWindow* parent,
+                      Interconnection* intercoWindow,
+                      Toolbox::InputSelector::Connections* notifier)
+{
+    // Size proportion of the current sizer's child among all sizer's children.
+    // Here, all children have the same proportion.
+    int gridSizeProportion = 1;
+    // Size of the border around a grid, inside the sizer.
+    int borderSizeAroundGrid = 5;
+    Component::Datagrid::Component* gridDirect = nullptr;
+    Component::Datagrid::Component* gridIndirect = nullptr;
+    // Grid for direct NTC
     {
-        sizer->Add(new Component::Datagrid::Component(
-            parent, new Component::Datagrid::Renderer::connectionParameters(intercoWindow, notifier)),
-            1,
-            wxALL | wxEXPAND | wxFIXED_MINSIZE);
-    }
-
-    void linkNTCgrid::add(wxBoxSizer* sizer, wxWindow* parent, Interconnection* intercoWindow, Toolbox::InputSelector::Connections* notifier)
-    {
-        // Size proportion of the current sizer's child among all sizer's children.
-        // Here, all children have the same proportion.
-        int gridSizeProportion = 1;
-        // Size of the border around a grid, inside the sizer. 
-        int borderSizeAroundGrid = 5;
-
-        // Grid for direct NTC
-        Component::Datagrid::Component* gridDirect = new Component::Datagrid::Component(
-            parent, 
-            new Component::Datagrid::Renderer::connectionNTCdirect(intercoWindow, notifier),
-            wxT("Direct"));
+        auto* connectionDirect
+          = new Component::Datagrid::Renderer::connectionNTCdirect(intercoWindow, notifier);
+        gridDirect = new Component::Datagrid::Component(parent, connectionDirect, wxT("Direct"));
 
         sizer->Add(
-            gridDirect,
-            gridSizeProportion,
-            wxALL | wxEXPAND | wxFIXED_MINSIZE,
-            borderSizeAroundGrid);
-
-        // Vertical separator
-        sizer->Add(new wxStaticLine(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL),
-            0,
-            wxALL | wxEXPAND);
-
-        // Grid for indirect NTC
-        Component::Datagrid::Component* gridIndirect = new Component::Datagrid::Component(
-            parent, new Component::Datagrid::Renderer::connectionNTCindirect(intercoWindow, notifier),
-            wxT("Indirect"));
-
-        sizer->Add(
-            gridIndirect,
-            gridSizeProportion,
-            wxALL | wxEXPAND | wxFIXED_MINSIZE,
-            borderSizeAroundGrid);
-
-        // Synchronize the scroll bars of the two grids
-        gridDirect->setOtherGrid(gridIndirect);
-        gridIndirect->setOtherGrid(gridDirect);
+          gridDirect, gridSizeProportion, wxALL | wxEXPAND | wxFIXED_MINSIZE, borderSizeAroundGrid);
     }
+    // Vertical separator
+    sizer->Add(new wxStaticLine(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL),
+               0,
+               wxALL | wxEXPAND);
+
+    // Grid for indirect NTC
+    {
+        auto* connectionIndirect
+          = new Component::Datagrid::Renderer::connectionNTCindirect(intercoWindow, notifier);
+        gridIndirect
+          = new Component::Datagrid::Component(parent, connectionIndirect, wxT("Indirect"));
+
+        sizer->Add(gridIndirect,
+                   gridSizeProportion,
+                   wxALL | wxEXPAND | wxFIXED_MINSIZE,
+                   borderSizeAroundGrid);
+    }
+    // Synchronize the scroll bars of the two grids
+    gridDirect->setOtherGrid(gridIndirect);
+    gridIndirect->setOtherGrid(gridDirect);
+}
 
 Interconnection::Interconnection(wxWindow* parent, Toolbox::InputSelector::Connections* notifier, linkGrid* link_grid) :
  wxScrolledWindow(parent),
