@@ -38,10 +38,6 @@ namespace Datagrid
 {
 namespace Renderer
 {
-hydroLevelsScBuilderRenderer::hydroLevelsScBuilderRenderer() : ScBuilderRendererAreasAsRows()
-{
-}
-
 wxString hydroLevelsScBuilderRenderer::cellValue(int x, int y) const
 {
     const double d = cellNumericValue(x, y);

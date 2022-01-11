@@ -40,26 +40,15 @@ namespace Datagrid
 namespace Renderer
 {
 thermalScBuilderRenderer::thermalScBuilderRenderer(Toolbox::InputSelector::Area* notifier) :
-    ScBuilderRendererAreasAsRows()
-{
-    if (notifier)
-    {
-        // Event: The current selected area
-        notifier->onAreaChanged.connect(this, &thermalScBuilderRenderer::onAreaChanged);
-    }
-}
-
-bool thermalScBuilderRenderer::valid() const
-{
-    return !(!study) && pRules && study->areas.size() != 0 && !(!pRules) && pArea;
-}
+    ScBuilderRendererForAreaSelector(notifier)
+{}
 
 int thermalScBuilderRenderer::height() const
 {
     if (!(!study) && !(!pRules))
     {
-        if (pArea)
-            return (int)pArea->thermal.list.size();
+        if (selectedArea())
+            return (int)selectedArea()->thermal.list.size();
     }
     return 0;
 }
@@ -68,9 +57,9 @@ wxString thermalScBuilderRenderer::rowCaption(int rowIndx) const
 {
     if (!(!study) && !(!pRules))
     {
-        if (pArea && (uint)rowIndx < pArea->thermal.list.size())
+        if (selectedArea() && (uint)rowIndx < selectedArea()->thermal.list.size())
             return wxString() << wxT(" ")
-                              << wxStringFromUTF8(pArea->thermal.list.byIndex[rowIndx]->name())
+                              << wxStringFromUTF8(selectedArea()->thermal.list.byIndex[rowIndx]->name())
                               << wxT("  ");
     }
     return wxEmptyString;
@@ -80,13 +69,13 @@ bool thermalScBuilderRenderer::cellValue(int x, int y, const String& value)
 {
     if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears)
     {
-        if (pArea && (uint)y < pArea->thermal.list.size())
+        if (selectedArea() && (uint)y < selectedArea()->thermal.list.size())
         {
-            assert(pArea->index < pRules->areaCount());
-            assert((uint)y < pRules->thermal[pArea->index].width());
-            assert((uint)x < pRules->thermal[pArea->index].height());
+            assert(selectedArea()->index < pRules->areaCount());
+            assert((uint)y < pRules->thermal[selectedArea()->index].width());
+            assert((uint)x < pRules->thermal[selectedArea()->index].height());
             uint val = fromStringToTSnumber(value);
-            pRules->thermal[pArea->index].set(pArea->thermal.list.byIndex[y], x, val);
+            pRules->thermal[selectedArea()->index].set(selectedArea()->thermal.list.byIndex[y], x, val);
             return true;
         }
     }
@@ -97,11 +86,11 @@ double thermalScBuilderRenderer::cellNumericValue(int x, int y) const
 {
     if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears)
     {
-        if (pArea && (uint)y < pArea->thermal.list.size())
+        if (selectedArea() && (uint)y < selectedArea()->thermal.list.size())
         {
-            assert((uint)y < pRules->thermal[pArea->index].width());
-            assert((uint)x < pRules->thermal[pArea->index].height());
-            return pRules->thermal[pArea->index].get_value(x, y);
+            assert((uint)y < pRules->thermal[selectedArea()->index].width());
+            assert((uint)x < pRules->thermal[selectedArea()->index].height());
+            return pRules->thermal[selectedArea()->index].get_value(x, y);
         }
     }
     return 0.;

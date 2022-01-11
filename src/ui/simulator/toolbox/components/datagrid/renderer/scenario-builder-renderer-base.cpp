@@ -41,8 +41,6 @@ namespace Renderer
 // ==================================
 // Scenario builder base class
 // ==================================
-ScBuilderRendererBase::ScBuilderRendererBase()
-{}
 
 ScBuilderRendererBase::~ScBuilderRendererBase()
 {
@@ -117,13 +115,9 @@ void ScBuilderRendererBase::onStudyClosed()
 }
 
 
-
-// ==================================================
-// Scenario builder with areas as rows 
-// ==================================================
-ScBuilderRendererAreasAsRows::ScBuilderRendererAreasAsRows() :
-    ScBuilderRendererBase()
-{}
+// ========================================
+// Class ScBuilderRendererAreasAsRows
+// ========================================
 
 int ScBuilderRendererAreasAsRows::height() const
 {
@@ -148,7 +142,25 @@ bool ScBuilderRendererAreasAsRows::valid() const
     return !(!study) && pRules && study->areas.size() != 0 && !(!pRules);
 }
 
-void ScBuilderRendererAreasAsRows::onAreaChanged(Data::Area* area)
+// ========================================
+// Class ScBuilderRendererForAreaSelector
+// ========================================
+ScBuilderRendererForAreaSelector::ScBuilderRendererForAreaSelector(Toolbox::InputSelector::Area* notifier)
+{
+    if (notifier)
+    {
+        // Event: The current selected area
+        notifier->onAreaChanged.connect(this, &ScBuilderRendererForAreaSelector::onAreaChanged);
+    }
+}
+
+void ScBuilderRendererForAreaSelector::onStudyClosed()
+{
+    pArea = nullptr;
+    ScBuilderRendererBase::onStudyClosed();
+}
+
+void ScBuilderRendererForAreaSelector::onAreaChanged(Data::Area* area)
 {
     if (area != pArea)
     {
@@ -159,10 +171,9 @@ void ScBuilderRendererAreasAsRows::onAreaChanged(Data::Area* area)
     }
 }
 
-void ScBuilderRendererAreasAsRows::onStudyClosed()
+bool ScBuilderRendererForAreaSelector::valid() const
 {
-    pArea = nullptr;
-    ScBuilderRendererBase::onStudyClosed();
+    return !(!study) && pRules && study->areas.size() != 0 && !(!pRules) && pArea;
 }
 
 } // namespace Renderer

@@ -739,6 +739,7 @@ private:
     Window::BindingConstraint* pWndBindingConstraints;
 
     // Secnario buider pages
+    Component::Notebook::Page* pScenarioBuilderMainPage;
     Component::Notebook::Page* pageScBuilderLoad;
     Component::Notebook::Page* pageScBuilderThermal;
     Component::Notebook::Page* pageScBuilderHydro;

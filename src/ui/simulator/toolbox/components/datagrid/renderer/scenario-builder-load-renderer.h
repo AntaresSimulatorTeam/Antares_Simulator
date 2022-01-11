@@ -40,7 +40,7 @@ namespace Renderer
 class loadScBuilderRenderer : public ScBuilderRendererAreasAsRows
 {
 public:
-    loadScBuilderRenderer();
+    loadScBuilderRenderer() = default;
 
     bool cellValue(int x, int y, const Yuni::String& value);
     double cellNumericValue(int x, int y) const;

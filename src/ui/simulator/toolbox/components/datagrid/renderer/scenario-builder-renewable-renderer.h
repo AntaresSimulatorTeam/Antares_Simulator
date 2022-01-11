@@ -28,7 +28,6 @@
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_RENEWABLE_SCENARIO_BUILDER_H__
 
 #include "scenario-builder-renderer-base.h"
-#include "../../../../toolbox/input/area.h"
 
 namespace Antares
 {
@@ -38,16 +37,15 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class renewableScBuilderRenderer : public ScBuilderRendererAreasAsRows
+class renewableScBuilderRenderer : public ScBuilderRendererForAreaSelector
 {
 public:
     renewableScBuilderRenderer(Toolbox::InputSelector::Area* notifier);
 
-    bool valid() const;
-    bool cellValue(int x, int y, const Yuni::String& value);
-    int height() const;
-    wxString rowCaption(int rowIndx) const;
-    double cellNumericValue(int x, int y) const;
+    bool cellValue(int x, int y, const Yuni::String& value) override;
+    int height() const override;
+    wxString rowCaption(int rowIndx) const override;
+    double cellNumericValue(int x, int y) const override;
 }; // class renewableScBuilderRenderer
 
 } // namespace Renderer

@@ -350,7 +350,7 @@ void ApplWnd::createNBScenarioBuilder()
     // Scenario Builder
     pScenarioBuilderNotebook = new Notebook(pSectionNotebook);
     pScenarioBuilderNotebook->onPageChanged.connect(this, &ApplWnd::onScenarioBuilderNotebookPageChanging);
-    pSectionNotebook->add(pScenarioBuilderNotebook, wxT("scenariobuilder"), wxT("scenariobuilder"));
+    pScenarioBuilderMainPage = pSectionNotebook->add(pScenarioBuilderNotebook, wxT("scenariobuilder"), wxT("scenariobuilder"));
 
     // Title
     auto* scenarioBuilderPanel = new Window::ScenarioBuilder::Panel(pScenarioBuilderNotebook);

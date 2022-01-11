@@ -40,7 +40,7 @@ namespace Renderer
 class hydroLevelsScBuilderRenderer : public ScBuilderRendererAreasAsRows
 {
 public:
-    hydroLevelsScBuilderRenderer();
+    hydroLevelsScBuilderRenderer() = default;
 
     wxString cellValue(int x, int y) const;
     bool cellValue(int x, int y, const Yuni::String& value);

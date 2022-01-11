@@ -29,6 +29,7 @@
 
 #include "../renderer.h"
 #include <antares/study/scenario-builder/rules.h>
+#include "../../../../toolbox/input/area.h"
 
 namespace Antares
 {
@@ -41,7 +42,7 @@ namespace Renderer
 class ScBuilderRendererBase : public IRenderer
 {
 public:
-    ScBuilderRendererBase();
+    ScBuilderRendererBase() = default;
     virtual ~ScBuilderRendererBase();
 
     virtual int width() const override;
@@ -53,9 +54,9 @@ public:
 
     virtual wxString cellValue(int x, int y) const override;
 
-    virtual double cellNumericValue(int x, int y) const = 0;
+    virtual double cellNumericValue(int x, int y) const override = 0;
 
-    virtual bool cellValue(int x, int y, const Yuni::String& value) = 0;
+    virtual bool cellValue(int x, int y, const Yuni::String& value) override = 0;
 
     virtual void resetColors(int, int, wxColour&, wxColour&) const
     {
@@ -64,11 +65,11 @@ public:
 
     virtual bool valid() const override = 0;
 
-    virtual uint maxWidthResize() const
+    virtual uint maxWidthResize() const override
     {
         return 0;
     }
-    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const override;
 
     void control(wxWindow* control)
     {
@@ -89,28 +90,56 @@ protected:
 }; // class ScBuilderRendererBase
 
 
-
+// -------------------------------------------------------------------
+// Class ScBuilderRendererAreasAsRows
+//      Renderer for a scenario builder grid of which lines are
+//      names of area.
+// ------------------------------------------------------------------
 class ScBuilderRendererAreasAsRows : public ScBuilderRendererBase
 {
 public:
-    ScBuilderRendererAreasAsRows();
+    ScBuilderRendererAreasAsRows() = default;
     virtual ~ScBuilderRendererAreasAsRows() = default;
 
     int height() const override;
-    virtual wxString rowCaption(int rowIndx) const override;
+    wxString rowCaption(int rowIndx) const override;
 
-    virtual double cellNumericValue(int x, int y) const = 0;
-    virtual bool cellValue(int x, int y, const Yuni::String& value) = 0;
+    virtual double cellNumericValue(int x, int y) const override = 0;
+    virtual bool cellValue(int x, int y, const Yuni::String& value) override = 0;
+
+    bool valid() const override;
+};
+
+
+// -------------------------------------------------------------------
+// Class ScBuilderRendererForAreaSelector
+//      Renderer for a scenario builder grid of which lines depend
+//      on the selected area.
+//      Example : grid lines are clusters of an area.
+// ------------------------------------------------------------------
+class ScBuilderRendererForAreaSelector : public ScBuilderRendererBase
+{
+public:
+    ScBuilderRendererForAreaSelector(Toolbox::InputSelector::Area* notifier);
+    virtual ~ScBuilderRendererForAreaSelector() = default;
+
+    virtual int height() const override = 0;
+    virtual wxString rowCaption(int rowIndx) const override = 0;
+
+    virtual double cellNumericValue(int x, int y) const override = 0;
+    virtual bool cellValue(int x, int y, const Yuni::String& value) override = 0;
 
     bool valid() const override;
 
 protected:
     void onAreaChanged(Data::Area* area);
     void onStudyClosed() override;
+    Data::Area* selectedArea() const { return pArea; }
 
-protected:
+private:
     Data::Area* pArea = nullptr;
-};  // class ScBuilderRendererAreasAsRows
+};
+
 
 } // namespace Renderer
 } // namespace Datagrid
