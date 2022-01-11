@@ -47,11 +47,10 @@ void linkParametersGrid::add(wxBoxSizer* sizer,
                              Interconnection* intercoWindow,
                              Toolbox::InputSelector::Connections* notifier)
 {
-    sizer->Add(
-      new Component::Datagrid::Component(
-        parent, new Component::Datagrid::Renderer::connectionParameters(intercoWindow, notifier)),
-      1,
-      wxALL | wxEXPAND | wxFIXED_MINSIZE);
+    auto* connParam
+      = new Component::Datagrid::Renderer::connectionParameters(intercoWindow, notifier);
+    auto* component = new Component::Datagrid::Component(parent, connParam);
+    sizer->Add(component, 1, wxALL | wxEXPAND | wxFIXED_MINSIZE);
 }
 
 void linkNTCgrid::add(wxBoxSizer* sizer,
@@ -97,7 +96,9 @@ void linkNTCgrid::add(wxBoxSizer* sizer,
     gridIndirect->setOtherGrid(gridDirect);
 }
 
-Interconnection::Interconnection(wxWindow* parent, Toolbox::InputSelector::Connections* notifier, linkGrid* link_grid) :
+Interconnection::Interconnection(wxWindow* parent,
+                                 Toolbox::InputSelector::Connections* notifier,
+                                 linkGrid* link_grid) :
  wxScrolledWindow(parent),
  pLink(nullptr),
  pLinkName(),
