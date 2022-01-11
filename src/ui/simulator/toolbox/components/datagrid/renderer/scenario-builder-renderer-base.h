@@ -71,9 +71,9 @@ public:
     }
     virtual IRenderer::CellStyle cellStyle(int col, int row) const override;
 
-    void control(wxWindow* control)
+    void control(wxWindow* gridPanel)
     {
-        pControl = control;
+        pGridPanel = gridPanel;
     }
 
 public:
@@ -82,10 +82,12 @@ public:
 
 protected:
     virtual void onStudyClosed();
+    wxWindow* gridPanel() { return pGridPanel; }
 
 protected:
-    wxWindow* pControl = nullptr;
     Data::ScenarioBuilder::Rules::Ptr pRules;
+private:
+    wxWindow* pGridPanel = nullptr;
 
 }; // class ScBuilderRendererBase
 
@@ -120,7 +122,7 @@ public:
 class ScBuilderRendererForAreaSelector : public ScBuilderRendererBase
 {
 public:
-    ScBuilderRendererForAreaSelector(Toolbox::InputSelector::Area* notifier);
+    explicit ScBuilderRendererForAreaSelector(Toolbox::InputSelector::Area* notifier);
     virtual ~ScBuilderRendererForAreaSelector() = default;
 
     virtual int height() const override = 0;

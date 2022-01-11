@@ -54,8 +54,8 @@ void ScBuilderRendererBase::onRulesChanged(Data::ScenarioBuilder::Rules::Ptr rul
         pRules = rules;
         invalidate = true;
         onRefresh();
-        if (pControl)
-            RefreshAllControls(pControl);
+        if (gridPanel())
+            RefreshAllControls(gridPanel());
     }
 }
 
@@ -150,7 +150,7 @@ ScBuilderRendererForAreaSelector::ScBuilderRendererForAreaSelector(Toolbox::Inpu
     if (notifier)
     {
         // Event: The current selected area
-        notifier->onAreaChanged.connect(this, &ScBuilderRendererForAreaSelector::onAreaChanged);
+        Toolbox::InputSelector::Area::onAreaChanged.connect(this, &ScBuilderRendererForAreaSelector::onAreaChanged);
     }
 }
 
@@ -166,8 +166,8 @@ void ScBuilderRendererForAreaSelector::onAreaChanged(Data::Area* area)
     {
         pArea = area;
         onRefresh();
-        if (pControl)
-            pControl->Refresh();
+        if (gridPanel())
+            gridPanel()->Refresh();
     }
 }
 
