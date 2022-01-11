@@ -35,44 +35,6 @@
 #include "aleatoire/alea_fonctions.h"
 #include "optimisation/opt_fonctions.h"
 
-#define SOLVER_ERR_LICENSE 1
-#define SOLVER_ERR_OTHER 2
-#define SOLVER_CHECKLICENCE_OK 3
-
-/*!
-** \brief Common variables used in the main loops
-*/
-#define COMMON_VARIABLES_SIMULATION                                         \
-    const int haveToRefreshTSHydro                                          \
-      = (pRuntimeInfos->parameters->timeSeriesToRefresh & timeSeriesHydro); \
-    const int haveToRefreshTSWind                                           \
-      = (pRuntimeInfos->parameters->timeSeriesToRefresh & timeSeriesWind);  \
-    const int haveToRefreshTSThermal                                        \
-      = (pRuntimeInfos->parameters->timeSeriesToRefresh & timeSeriesThermal)
-// const int haveToRefreshTSLoad = (pRuntimeInfos->parameters->timeSeriesToRefresh & timeSeriesLoad)
-
-/*!
-** \brief Re-generate time-series if needed
-**
-** From time to time, the time-series must be regenerated (often
-** every 500 years).
-**
-** \warning The order _must_ remain
-**
-** \param IT The current monte-carlo year to process
-*/
-#define REGENERATE_TIMESERIES(IT)                                                                \
-    do                                                                                           \
-    {                                                                                            \
-        if (haveToRefreshTSHydro && (IT % pRuntimeInfos->parameters->refreshIntervalHydro == 0)) \
-            PreproGenerateTimeSeriesHydro(IT);                                                   \
-        if (haveToRefreshTSWind && (IT % pRuntimeInfos->parameters->refreshIntervalWind == 0))   \
-            PreproGenerateTimeSeriesWind(IT);                                                    \
-        if (haveToRefreshTSThermal                                                               \
-            && (IT % pRuntimeInfos->parameters->refreshIntervalThermal == 0))                    \
-            PreproGenerateTimeSeriesThermal(IT);                                                 \
-    } while (0)
-
 class SolverApplication
  : public Yuni::IEventObserver<SolverApplication, Yuni::Policy::SingleThreaded>
 {

@@ -1883,6 +1883,17 @@ std::vector<std::string> Parameters::RenewableGeneration::excludedVariables() co
     return {};
 }
 
+bool Parameters::haveToImport(int tsKind) const
+{
+    if (tsKind == timeSeriesThermal)
+    {
+        // Special case: some clusters might override the global parameter,
+        // see Cluster::doWeGenerateTS
+        return timeSeriesToImport & tsKind;
+    }
+    return (timeSeriesToImport & tsKind) && (timeSeriesToGenerate & tsKind);
+}
+
 RenewableGenerationModelling Parameters::RenewableGeneration::operator()() const
 {
     return rgModelling;

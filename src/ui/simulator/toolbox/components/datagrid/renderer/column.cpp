@@ -24,22 +24,27 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#include <memory>
 
 #include "column.h"
 #include "cell.h"
 #include <antares/logs.h>
 #include <memory>
 
-template<class T, class... Args>
-T* factory(Args... args)
+// Anonymous namespace
+namespace
 {
-    auto r = new (std::nothrow) T(args...);
-    if (r == nullptr)
+template<class T, class... Args>
+inline T* factory(Args... args)
+{
+    T* ptr = new (std::nothrow) T(args...);
+    if (ptr == nullptr)
     {
-        logs.error() << "Error allocating memory";
+        Antares::logs.error() << "Resource allocation failed";
     }
-    return r;
+    return ptr;
 }
+} // namespace
 
 namespace Antares
 {
@@ -81,19 +86,39 @@ Column::~Column()
 // ---------------------
 classicColumn::classicColumn(TimeSeries ts, const wxString& caption) : Column(ts, caption)
 {
-    cells_ = {factory<blankCell>(),
-              factory<readyMadeTSstatus>(tsKind_),
-              factory<blankCell>(),
-              factory<generatedTSstatus>(tsKind_),
-              factory<NumberTsCell>(tsKind_),
-              factory<RefreshTsCell>(tsKind_),
-              factory<RefreshSpanCell>(tsKind_),
-              factory<SeasonalCorrelationCell>(tsKind_),
-              factory<storeToInputCell>(tsKind_),
-              factory<storeToOutputCell>(tsKind_),
-              factory<blankCell>(),
-              factory<intraModalCell>(tsKind_),
-              factory<interModalCell>(tsKind_)};
+    cells_ = {::factory<blankCell>(),
+              ::factory<readyMadeTSstatus>(tsKind_),
+              ::factory<blankCell>(),
+              ::factory<generatedTSstatus>(tsKind_),
+              ::factory<NumberTsCell>(tsKind_),
+              ::factory<RefreshTsCell>(tsKind_),
+              ::factory<RefreshSpanCell>(tsKind_),
+              ::factory<SeasonalCorrelationCell>(tsKind_),
+              ::factory<storeToInputCell>(tsKind_),
+              ::factory<storeToOutputCell>(tsKind_),
+              ::factory<blankCell>(),
+              ::factory<intraModalCell>(tsKind_),
+              ::factory<interModalCell>(tsKind_)};
+}
+
+// -------------------
+//  Thermal column
+// -------------------
+thermalColumn::thermalColumn() : Column(timeSeriesThermal, "   Thermal   ")
+{
+    cells_ = {::factory<blankCell>(),
+              ::factory<readyMadeTSstatus>(tsKind_),
+              ::factory<blankCell>(),
+              ::factory<generatedTSstatus>(tsKind_),
+              ::factory<NumberTsCellThermal>(),
+              ::factory<RefreshTsCellThermal>(),
+              ::factory<RefreshSpanCellThermal>(),
+              ::factory<SeasonalCorrelationCellThermal>(),
+              ::factory<storeToInputCell>(tsKind_),
+              ::factory<storeToOutputCell>(tsKind_),
+              ::factory<blankCell>(),
+              ::factory<intraModalCell>(tsKind_),
+              ::factory<interModalCell>(tsKind_)};
 }
 
 // -------------------------------
@@ -101,19 +126,19 @@ classicColumn::classicColumn(TimeSeries ts, const wxString& caption) : Column(ts
 // -------------------------------
 ColumnRenewableClusters::ColumnRenewableClusters() : Column(timeSeriesRenewable, "   Renewable   ")
 {
-    cells_ = {factory<blankCell>(),
-              factory<inactiveCell>(wxT("On")),
-              factory<inactiveCell>(wxT("-")),
-              factory<inactiveCell>(wxT("-")),
-              factory<inactiveCell>(wxT("-")),
-              factory<inactiveCell>(wxT("-")),
-              factory<inactiveCell>(wxT("-")),
-              factory<inactiveCell>(wxT("-")),
-              factory<inactiveCell>(wxT("-")),
-              factory<inactiveCell>(wxT("-")),
-              factory<blankCell>(),
-              factory<intraModalCell>(tsKind_),
-              factory<interModalCell>(tsKind_)};
+    cells_ = {::factory<blankCell>(),
+              ::factory<inactiveCell>(wxT("On")),
+              ::factory<inactiveCell>(wxT("-")),
+              ::factory<inactiveCell>(wxT("-")),
+              ::factory<inactiveCell>(wxT("-")),
+              ::factory<inactiveCell>(wxT("-")),
+              ::factory<inactiveCell>(wxT("-")),
+              ::factory<inactiveCell>(wxT("-")),
+              ::factory<inactiveCell>(wxT("-")),
+              ::factory<inactiveCell>(wxT("-")),
+              ::factory<blankCell>(),
+              ::factory<intraModalCell>(tsKind_),
+              ::factory<interModalCell>(tsKind_)};
 }
 
 // -------------------------------
@@ -121,19 +146,19 @@ ColumnRenewableClusters::ColumnRenewableClusters() : Column(timeSeriesRenewable,
 // -------------------------------
 ColumnNTC::ColumnNTC() : Column(timeSeriesTransmissionCapacities, "  Links NTC  ")
 {
-    cells_ = {factory<blankCell>(),
-              factory<inactiveCell>(wxT("On")),
-              factory<inactiveCell>(wxT("-")),
-              factory<inactiveCell>(wxT("-")),
-              factory<inactiveCell>(wxT("-")),
-              factory<inactiveCell>(wxT("-")),
-              factory<inactiveCell>(wxT("-")),
-              factory<inactiveCell>(wxT("-")),
-              factory<inactiveCell>(wxT("-")),
-              factory<inactiveCell>(wxT("-")),
-              factory<blankCell>(),
-              factory<intraModalCell>(tsKind_),
-              factory<inactiveCell>(wxT("-"))};
+    cells_ = {::factory<blankCell>(),
+              ::factory<inactiveCell>(wxT("On")),
+              ::factory<inactiveCell>(wxT("-")),
+              ::factory<inactiveCell>(wxT("-")),
+              ::factory<inactiveCell>(wxT("-")),
+              ::factory<inactiveCell>(wxT("-")),
+              ::factory<inactiveCell>(wxT("-")),
+              ::factory<inactiveCell>(wxT("-")),
+              ::factory<inactiveCell>(wxT("-")),
+              ::factory<inactiveCell>(wxT("-")),
+              ::factory<blankCell>(),
+              ::factory<intraModalCell>(tsKind_),
+              ::factory<inactiveCell>(wxT("-"))};
 }
 
 } // namespace Renderer

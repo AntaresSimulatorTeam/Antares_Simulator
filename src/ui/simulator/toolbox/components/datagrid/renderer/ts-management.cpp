@@ -44,7 +44,7 @@ using namespace Antares::Data;
 TSmanagement::TSmanagement() : pControl(nullptr)
 {
     columns_.push_back(new classicColumn(timeSeriesLoad, "      Load      "));
-    columns_.push_back(new classicColumn(timeSeriesThermal, "   Thermal   "));
+    columns_.push_back(new thermalColumn());
     columns_.push_back(new classicColumn(timeSeriesHydro, "      Hydro      "));
 }
 

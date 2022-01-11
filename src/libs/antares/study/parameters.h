@@ -197,6 +197,9 @@ public:
     */
     void setYearWeight(int year, float weight);
 
+    // Do we create files in the input folder ?
+    bool haveToImport(int tsKind) const;
+
 public:
     //! \name Mode
     //@{

@@ -30,7 +30,7 @@ public:
 
 protected:
     void onStudyLoaded();
-    bool isTSgeneratorOn() const;
+    virtual bool isTSgeneratorOn() const;
 
 protected:
     Data::Study::Ptr study_;
@@ -92,13 +92,20 @@ public:
     wxString cellValue() const override;
     double cellNumericValue() const override;
     bool cellValue(const String& value) override;
-    IRenderer::CellStyle cellStyle() const override;
+    virtual IRenderer::CellStyle cellStyle() const override;
 
 private:
     void onStudyLoaded();
 
 private:
     map<TimeSeries, uint*> tsToNumberTs_;
+};
+
+class NumberTsCellThermal : public NumberTsCell
+{
+public:
+    NumberTsCellThermal();
+    virtual IRenderer::CellStyle cellStyle() const override;
 };
 
 class RefreshTsCell : public Cell
@@ -109,7 +116,14 @@ public:
     wxString cellValue() const override;
     double cellNumericValue() const override;
     bool cellValue(const String& value) override;
-    IRenderer::CellStyle cellStyle() const override;
+    virtual IRenderer::CellStyle cellStyle() const override;
+};
+
+class RefreshTsCellThermal : public RefreshTsCell
+{
+public:
+    RefreshTsCellThermal();
+    virtual IRenderer::CellStyle cellStyle() const override;
 };
 
 class RefreshSpanCell : public Cell
@@ -120,7 +134,7 @@ public:
     wxString cellValue() const override;
     double cellNumericValue() const override;
     bool cellValue(const String& value) override;
-    IRenderer::CellStyle cellStyle() const override;
+    virtual IRenderer::CellStyle cellStyle() const override;
 
 private:
     void onStudyLoaded();
@@ -129,21 +143,36 @@ private:
     map<TimeSeries, uint*> tsToRefreshSpan_;
 };
 
+class RefreshSpanCellThermal : public RefreshSpanCell
+{
+public:
+    RefreshSpanCellThermal();
+    virtual IRenderer::CellStyle cellStyle() const override;
+};
+
 class SeasonalCorrelationCell : public Cell
 {
 public:
     SeasonalCorrelationCell(TimeSeries ts);
     ~SeasonalCorrelationCell() = default;
-    wxString cellValue() const override;
+    virtual wxString cellValue() const override;
     double cellNumericValue() const override;
     bool cellValue(const String& value) override;
-    IRenderer::CellStyle cellStyle() const override;
+    virtual IRenderer::CellStyle cellStyle() const override;
 
 private:
     void onStudyLoaded();
 
 private:
     map<TimeSeries, Correlation*> tsToCorrelation_;
+};
+
+class SeasonalCorrelationCellThermal : public SeasonalCorrelationCell
+{
+public:
+    SeasonalCorrelationCellThermal();
+    virtual wxString cellValue() const override;
+    virtual IRenderer::CellStyle cellStyle() const override;
 };
 
 class storeToInputCell : public Cell
