@@ -41,7 +41,6 @@ namespace Renderer
 wxString hydroLevelsScBuilderRenderer::cellValue(int x, int y) const
 {
     const double d = cellNumericValue(x, y);
-
     return (std::isnan(d)) ? wxString() << wxT("rand") : wxString() << fromHydroLevelToString(d);
 }
 

@@ -138,7 +138,6 @@ class loadScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
     using simpleScBuilderPageMaker::simpleScBuilderPageMaker;
 
-private:
     Renderer::ScBuilderRendererBase* getRenderer() override
     {
         return new Renderer::loadScBuilderRenderer();
@@ -154,7 +153,6 @@ class hydroScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
     using simpleScBuilderPageMaker::simpleScBuilderPageMaker;
 
-private:
     Renderer::ScBuilderRendererBase* getRenderer() override
     {
         return new Renderer::hydroScBuilderRenderer();
@@ -169,7 +167,6 @@ private:
 class windScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
     using simpleScBuilderPageMaker::simpleScBuilderPageMaker;
-private:
     Renderer::ScBuilderRendererBase* getRenderer() override
     {
         return new Renderer::windScBuilderRenderer();
@@ -185,7 +182,6 @@ class solarScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
     using simpleScBuilderPageMaker::simpleScBuilderPageMaker;
 
-private:
     Renderer::ScBuilderRendererBase* getRenderer() override
     {
         return new Renderer::solarScBuilderRenderer();
@@ -201,7 +197,6 @@ class hydroLevelsScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
     using simpleScBuilderPageMaker::simpleScBuilderPageMaker;
 
-private:
     Renderer::ScBuilderRendererBase* getRenderer() override
     {
         return new Renderer::hydroLevelsScBuilderRenderer();
@@ -217,7 +212,6 @@ class ntcScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
     using simpleScBuilderPageMaker::simpleScBuilderPageMaker;
 
-private:
     Renderer::ScBuilderRendererBase* getRenderer() override
     {
         return new Renderer::ntcScBuilderRenderer();
@@ -233,7 +227,6 @@ class clusterScBuilderPageMaker : public basicScBuilderPageMaker
 {
     using basicScBuilderPageMaker::basicScBuilderPageMaker;
 
-private:
     virtual const char* name() const = 0;
     virtual const char* caption() const = 0;
 

@@ -45,27 +45,16 @@ public:
     ScBuilderRendererBase() = default;
     virtual ~ScBuilderRendererBase();
 
-    virtual int width() const override;
-    virtual int height() const override = 0;
-
-    virtual wxString columnCaption(int colIndx) const;
-
-    virtual wxString rowCaption(int rowIndx) const override = 0;
-
+    int width() const override;
+    virtual wxString columnCaption(int colIndx) const override;
     virtual wxString cellValue(int x, int y) const override;
 
-    virtual double cellNumericValue(int x, int y) const override = 0;
-
-    virtual bool cellValue(int x, int y, const Yuni::String& value) override = 0;
-
-    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    virtual void resetColors(int, int, wxColour&, wxColour&) const override
     {
         // Do nothing
     }
 
-    virtual bool valid() const override = 0;
-
-    virtual uint maxWidthResize() const override
+    uint maxWidthResize() const override
     {
         return 0;
     }
@@ -106,9 +95,6 @@ public:
     int height() const override;
     wxString rowCaption(int rowIndx) const override;
 
-    virtual double cellNumericValue(int x, int y) const override = 0;
-    virtual bool cellValue(int x, int y, const Yuni::String& value) override = 0;
-
     bool valid() const override;
 };
 
@@ -122,14 +108,8 @@ public:
 class ScBuilderRendererForAreaSelector : public ScBuilderRendererBase
 {
 public:
-    explicit ScBuilderRendererForAreaSelector(Toolbox::InputSelector::Area* notifier);
+    explicit ScBuilderRendererForAreaSelector(const Toolbox::InputSelector::Area* notifier);
     virtual ~ScBuilderRendererForAreaSelector() = default;
-
-    virtual int height() const override = 0;
-    virtual wxString rowCaption(int rowIndx) const override = 0;
-
-    virtual double cellNumericValue(int x, int y) const override = 0;
-    virtual bool cellValue(int x, int y, const Yuni::String& value) override = 0;
 
     bool valid() const override;
 

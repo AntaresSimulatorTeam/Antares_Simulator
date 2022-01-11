@@ -145,7 +145,7 @@ bool ScBuilderRendererAreasAsRows::valid() const
 // ========================================
 // Class ScBuilderRendererForAreaSelector
 // ========================================
-ScBuilderRendererForAreaSelector::ScBuilderRendererForAreaSelector(Toolbox::InputSelector::Area* notifier)
+ScBuilderRendererForAreaSelector::ScBuilderRendererForAreaSelector(const Toolbox::InputSelector::Area* notifier)
 {
     if (notifier)
     {
@@ -173,7 +173,7 @@ void ScBuilderRendererForAreaSelector::onAreaChanged(Data::Area* area)
 
 bool ScBuilderRendererForAreaSelector::valid() const
 {
-    return !(!study) && pRules && study->areas.size() != 0 && !(!pRules) && pArea;
+    return !(!study) && pRules && not study->areas.empty() && !(!pRules) && pArea;
 }
 
 } // namespace Renderer

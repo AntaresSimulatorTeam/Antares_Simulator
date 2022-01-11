@@ -19,7 +19,7 @@ public:
     ntcScBuilderRenderer& operator=(const ntcScBuilderRenderer&) = delete;
     ntcScBuilderRenderer(const ntcScBuilderRenderer&) = delete;
 
-    bool valid() const;
+    bool valid() const override;
     int height() const override;
     wxString rowCaption(int rowIndx) const override;
 
