@@ -583,8 +583,8 @@ void ntcTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& 
 }
 
 void ntcTSNumberData::set(const Antares::Data::AreaLink* link,
-    const uint year,
-    uint value)
+                          const uint year,
+                          uint value)
 {
     assert(link != nullptr);
     if (linksIndexMap.find(link) == linksIndexMap.end())

@@ -39,74 +39,50 @@ namespace Datagrid
 {
 namespace Renderer
 {
-renewableScBuilderRenderer::renewableScBuilderRenderer(Toolbox::InputSelector::Area* notifier) :
- ScBuilderRendererBase()
-{
-    if (notifier)
-    {
-        // Event: The current selected area
-        notifier->onAreaChanged.connect(this, &renewableScBuilderRenderer::onAreaChanged);
-    }
-}
-
-renewableScBuilderRenderer::~renewableScBuilderRenderer()
-{
-}
-
-bool renewableScBuilderRenderer::valid() const
-{
-    return !(!study) && pRules && study->areas.size() != 0 && !(!pRules) && pArea;
-}
 
 int renewableScBuilderRenderer::height() const
 {
-    if (!(!study) && !(!pRules))
+    if (!(!study) && !(!pRules) && selectedArea())
     {
-        if (pArea)
-            return (int)pArea->renewable.list.size();
+        return (int)selectedArea()->renewable.list.size();
     }
     return 0;
 }
 
 wxString renewableScBuilderRenderer::rowCaption(int rowIndx) const
 {
-    if (!(!study) && !(!pRules))
+    if (!(!study) && !(!pRules) && selectedArea() && (uint)rowIndx < selectedArea()->renewable.list.size())
     {
-        if (pArea && (uint)rowIndx < pArea->renewable.list.size())
-            return wxString() << wxT(" ")
-                              << wxStringFromUTF8(pArea->renewable.list.byIndex[rowIndx]->name())
-                              << wxT("  ");
+        return wxString() << wxT(" ")
+                            << wxStringFromUTF8(selectedArea()->renewable.list.byIndex[rowIndx]->name())
+                            << wxT("  ");
     }
     return wxEmptyString;
 }
 
 bool renewableScBuilderRenderer::cellValue(int x, int y, const String& value)
 {
-    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears)
+    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears && 
+        selectedArea() && (uint)y < selectedArea()->renewable.list.size())
     {
-        if (pArea && (uint)y < pArea->renewable.list.size())
-        {
-            assert(pArea->index < pRules->areaCount());
-            assert((uint)y < pRules->renewable[pArea->index].width());
-            assert((uint)x < pRules->renewable[pArea->index].height());
-            uint val = fromStringToTSnumber(value);
-            pRules->renewable[pArea->index].set(pArea->renewable.list.byIndex[y], x, val);
-            return true;
-        }
+        assert(selectedArea()->index < pRules->areaCount());
+        assert((uint)y < pRules->renewable[selectedArea()->index].width());
+        assert((uint)x < pRules->renewable[selectedArea()->index].height());
+        uint val = fromStringToTSnumber(value);
+        pRules->renewable[selectedArea()->index].set(selectedArea()->renewable.list.byIndex[y], x, val);
+        return true;
     }
     return false;
 }
 
 double renewableScBuilderRenderer::cellNumericValue(int x, int y) const
 {
-    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears)
+    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears && selectedArea() && 
+        (uint)y < selectedArea()->renewable.list.size())
     {
-        if (pArea && (uint)y < pArea->renewable.list.size())
-        {
-            assert((uint)y < pRules->renewable[pArea->index].width());
-            assert((uint)x < pRules->renewable[pArea->index].height());
-            return pRules->renewable[pArea->index].get_value(x, y);
-        }
+        assert((uint)y < pRules->renewable[selectedArea()->index].width());
+        assert((uint)x < pRules->renewable[selectedArea()->index].height());
+        return pRules->renewable[selectedArea()->index].get_value(x, y);
     }
     return 0.;
 }

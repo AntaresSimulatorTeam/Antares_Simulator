@@ -52,7 +52,6 @@ void UIRuntimeInfo::reload()
     pLink.clear();
     pClusters.clear();
     pClusterCount = 0;
-    pLinkCount = 0;
     orderedAreasAndLinks.clear();
 
     // Building an ordered list of areas then links
@@ -101,7 +100,6 @@ void UIRuntimeInfo::reload()
             for (; j != jend; ++j)
             {
                 pLink.push_back(*j);
-                ++pLinkCount;
             }
         }
         std::sort(pLink.begin(), pLink.end(), CompareLinkName());

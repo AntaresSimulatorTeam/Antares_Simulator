@@ -738,6 +738,17 @@ private:
 
     Window::BindingConstraint* pWndBindingConstraints;
 
+    // Secnario buider pages
+    Component::Notebook::Page* pScenarioBuilderMainPage;
+    Component::Notebook::Page* pageScBuilderLoad;
+    Component::Notebook::Page* pageScBuilderThermal;
+    Component::Notebook::Page* pageScBuilderHydro;
+    Component::Notebook::Page* pageScBuilderWind;
+    Component::Notebook::Page* pageScBuilderSolar;
+    Component::Notebook::Page* pageScBuilderNTC;
+    Component::Notebook::Page* pageScBuilderRenewable;
+    Component::Notebook::Page* pageScBuilderHydroLevels;
+
     //! The current grid operator to use on selected cells
     Component::Datagrid::Selection::IOperator* pGridSelectionOperator;
     wxGrid* pGridSelectionAttachedGrid;

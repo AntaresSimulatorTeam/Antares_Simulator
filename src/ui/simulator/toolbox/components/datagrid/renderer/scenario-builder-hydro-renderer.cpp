@@ -39,13 +39,6 @@ namespace Datagrid
 {
 namespace Renderer
 {
-hydroScBuilderRenderer::hydroScBuilderRenderer() : ScBuilderRendererBase()
-{
-}
-
-hydroScBuilderRenderer::~hydroScBuilderRenderer()
-{
-}
 
 bool hydroScBuilderRenderer::cellValue(int x, int y, const Yuni::String& value)
 {
