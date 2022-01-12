@@ -49,8 +49,8 @@ void linkParametersGrid::add(wxBoxSizer* sizer,
                              Interconnection* intercoWindow,
                              Toolbox::InputSelector::Connections* notifier)
 {
-    auto* connParam
-      = new_check_allocation<Component::Datagrid::Renderer::connectionParameters>(intercoWindow, notifier);
+    auto* connParam = new_check_allocation<Component::Datagrid::Renderer::connectionParameters>(
+      intercoWindow, notifier);
     auto* component = new_check_allocation<Component::Datagrid::Component>(parent, connParam);
     sizer->Add(component, 1, wxALL | wxEXPAND | wxFIXED_MINSIZE);
 }
@@ -68,30 +68,31 @@ void linkNTCgrid::add(wxBoxSizer* sizer,
     Component::Datagrid::Component* gridDirect = nullptr;
     Component::Datagrid::Component* gridIndirect = nullptr;
     // Grid for direct NTC
-    {
-        auto* connectionDirect
-          = new_check_allocation<Component::Datagrid::Renderer::connectionNTCdirect>(intercoWindow, notifier);
-        gridDirect = new_check_allocation<Component::Datagrid::Component>(parent, connectionDirect, wxT("Direct"));
+    auto* connectionDirect
+      = new_check_allocation<Component::Datagrid::Renderer::connectionNTCdirect>(intercoWindow,
+                                                                                 notifier);
+    gridDirect = new_check_allocation<Component::Datagrid::Component>(
+      parent, connectionDirect, wxT("Direct"));
 
-        sizer->Add(
-          gridDirect, gridSizeProportion, wxALL | wxEXPAND | wxFIXED_MINSIZE, borderSizeAroundGrid);
-    }
+    sizer->Add(
+      gridDirect, gridSizeProportion, wxALL | wxEXPAND | wxFIXED_MINSIZE, borderSizeAroundGrid);
+
     // Vertical separator
-    sizer->Add(new_check_allocation<wxStaticLine>(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL),
+    sizer->Add(new_check_allocation<wxStaticLine>(
+                 parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL),
                0,
                wxALL | wxEXPAND);
 
     // Grid for indirect NTC
-    {
-        auto* connectionIndirect
-          = new_check_allocation<Component::Datagrid::Renderer::connectionNTCindirect>(intercoWindow, notifier);
-        gridIndirect = new_check_allocation<Component::Datagrid::Component>(parent, connectionIndirect, wxT("Indirect"));
+    auto* connectionIndirect
+      = new_check_allocation<Component::Datagrid::Renderer::connectionNTCindirect>(intercoWindow,
+                                                                                   notifier);
+    gridIndirect = new_check_allocation<Component::Datagrid::Component>(
+      parent, connectionIndirect, wxT("Indirect"));
 
-        sizer->Add(gridIndirect,
-                   gridSizeProportion,
-                   wxALL | wxEXPAND | wxFIXED_MINSIZE,
-                   borderSizeAroundGrid);
-    }
+    sizer->Add(
+      gridIndirect, gridSizeProportion, wxALL | wxEXPAND | wxFIXED_MINSIZE, borderSizeAroundGrid);
+
     // Synchronize the scroll bars of the two grids
     gridDirect->setOtherGrid(gridIndirect);
     gridIndirect->setOtherGrid(gridDirect);
@@ -136,7 +137,8 @@ Interconnection::Interconnection(wxWindow* parent,
     // Binding constraints
     {
         label = Component::CreateLabel(pLinkData, wxT("Link"), false, true);
-        button = new_check_allocation<Component::Button>(pLinkData, wxT("local values"), "images/16x16/link.png");
+        button = new_check_allocation<Component::Button>(
+          pLinkData, wxT("local values"), "images/16x16/link.png");
         button->menu(true);
         button->bold(true);
         onPopup.bind(this, &Interconnection::onPopupMenuLink);
@@ -168,8 +170,8 @@ Interconnection::Interconnection(wxWindow* parent,
     // Hurdle costs
     {
         label = Component::CreateLabel(pLinkData, wxT("Local values"), false, true);
-        button
-          = new_check_allocation<Component::Button>(pLinkData, wxT("local values"), "images/16x16/light_green.png");
+        button = new_check_allocation<Component::Button>(
+          pLinkData, wxT("local values"), "images/16x16/light_green.png");
         button->menu(true);
         onPopup.bind(this, &Interconnection::onPopupMenuHurdlesCosts);
         button->onPopupMenu(onPopup);
@@ -190,8 +192,8 @@ Interconnection::Interconnection(wxWindow* parent,
     }
     // Asset Type
     {
-        button
-          = new_check_allocation<Component::Button>(pLinkData, wxT("Asset type"), "images/16x16/light_green.png");
+        button = new_check_allocation<Component::Button>(
+          pLinkData, wxT("Asset type"), "images/16x16/light_green.png");
         button->menu(true);
         onPopup.bind(this, &Interconnection::onPopupMenuAssetType);
         button->onPopupMenu(onPopup);
@@ -201,14 +203,15 @@ Interconnection::Interconnection(wxWindow* parent,
     }
     // Loop flow
     {
-        button = new_check_allocation<Component::Button>(pLinkData, wxT("loop flow"), "images/16x16/light_green.png");
+        button = new_check_allocation<Component::Button>(
+          pLinkData, wxT("loop flow"), "images/16x16/light_green.png");
         sizer_flex_grid->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pLoopFlow = button;
     }
     // Phase Shifter
     {
-        button
-          = new_check_allocation<Component::Button>(pLinkData, wxT("phase shifter"), "images/16x16/light_green.png");
+        button = new_check_allocation<Component::Button>(
+          pLinkData, wxT("phase shifter"), "images/16x16/light_green.png");
         sizer_flex_grid->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pPhaseShift = button;
     }

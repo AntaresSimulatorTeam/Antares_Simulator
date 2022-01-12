@@ -712,25 +712,22 @@ void ApplWnd::createNBInterconnections()
       = createStdNotebookPage<Toolbox::InputSelector::Connections>(
         pNotebook, wxT("interconnections"), wxT("Links"));
 
-    {
-        // links parameters time series
-        auto* lpg = new_check_allocation<Window::linkParametersGrid>();
-        auto* interco = new_check_allocation<Window::Interconnection>(page.first, page.second, lpg);
-        pageLinksParameters = page.first->add(interco, wxT(" Parameters "));
-    }
+    // links parameters time series
+    auto* lpg = new_check_allocation<Window::linkParametersGrid>();
+    auto* intercoParam
+      = new_check_allocation<Window::Interconnection>(page.first, page.second, lpg);
+    pageLinksParameters = page.first->add(intercoParam, wxT(" Parameters "));
 
     // links NTC time series
-    {
-        auto* ntcGrid = new_check_allocation<Window::linkNTCgrid>();
-        auto* interco = new_check_allocation<Window::Interconnection>(page.first, page.second, ntcGrid);
-        pageLinksNTC = page.first->add(interco, wxT(" Transmission capacities "));
-    }
+    auto* ntcGrid = new_check_allocation<Window::linkNTCgrid>();
+    auto* intercoGrid
+      = new_check_allocation<Window::Interconnection>(page.first, page.second, ntcGrid);
+    pageLinksNTC = page.first->add(intercoGrid, wxT(" Transmission capacities "));
 
-    {
-        auto* summary = new_check_allocation<Component::Datagrid::Renderer::Links::Summary>(page.first);
-        auto* component = new_check_allocation<Component::Datagrid::Component>(page.first, summary);
-        pageLinksSummary = page.first->add(component, wxT(" Summary "));
-    }
+    // Summary
+    auto* summary = new_check_allocation<Component::Datagrid::Renderer::Links::Summary>(page.first);
+    auto* component = new_check_allocation<Component::Datagrid::Component>(page.first, summary);
+    pageLinksSummary = page.first->add(component, wxT(" Summary "));
 }
 
 void ApplWnd::onMapDblClick(Map::Component& /*sender*/)

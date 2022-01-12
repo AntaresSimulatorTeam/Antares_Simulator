@@ -239,11 +239,6 @@ bool connectionNTC::cellValue(int x, int y, const Yuni::String& value)
     return Renderer::Matrix<>::cellValue(x, y, value);
 }
 
-IRenderer::CellStyle connectionNTC::cellStyle(int col, int row) const
-{
-    return Renderer::Matrix<>::cellStyle(col, row);
-}
-
 // ----------------
 // Direct
 // ----------------
