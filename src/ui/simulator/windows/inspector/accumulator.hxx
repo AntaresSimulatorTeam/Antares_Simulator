@@ -28,6 +28,7 @@
 #define ANTARES_WINDOWS_INSPECTOR_ACCUMULATOR_HXX__
 
 #include <antares/study/filter.h>
+#include <array>
 
 namespace Antares
 {
@@ -269,6 +270,7 @@ enum
     localGenTSCount = 3
 };
 
+// + 1 for nullptr
 static const std::array<const wxChar*, localGenTSCount + 1> localGenTS
   = {wxT("Use global parameter"), wxT("Force generation"), wxT("Force no generation"), nullptr};
 
