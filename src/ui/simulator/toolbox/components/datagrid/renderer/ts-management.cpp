@@ -105,7 +105,7 @@ bool TSmanagement::cellValue(int x, int y, const String& value)
     if (not study || x < 0 || x > width())
         return false;
 
-    bool to_return = columns_[x]->getLine(y)->cellValue(value);
+    bool to_return = columns_[x]->getLine(y)->setCellValue(value);
     onSimulationTSManagementChanged();
     return to_return;
 }

@@ -25,7 +25,7 @@ public:
     ~Cell();
     virtual wxString cellValue() const = 0;
     virtual double cellNumericValue() const = 0;
-    virtual bool cellValue(const String& value) = 0;
+    virtual bool setCellValue(const String& value) = 0;
     virtual IRenderer::CellStyle cellStyle() const = 0;
 
 protected:
@@ -44,7 +44,7 @@ public:
     ~blankCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 };
 
@@ -55,7 +55,7 @@ public:
     ~inactiveCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 
 private:
@@ -69,7 +69,7 @@ public:
     ~readyMadeTSstatus() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 };
 
@@ -80,7 +80,7 @@ public:
     ~generatedTSstatus() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 };
 
@@ -91,7 +91,7 @@ public:
     ~NumberTsCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 
 private:
@@ -115,7 +115,7 @@ public:
     ~RefreshTsCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 };
 
@@ -133,7 +133,7 @@ public:
     ~RefreshSpanCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 
 private:
@@ -157,7 +157,7 @@ public:
     ~SeasonalCorrelationCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 
 private:
@@ -182,7 +182,7 @@ public:
     ~storeToInputCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 };
 
@@ -193,7 +193,7 @@ public:
     ~storeToOutputCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 };
 
@@ -204,7 +204,7 @@ public:
     ~intraModalCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 };
 
@@ -215,7 +215,7 @@ public:
     ~interModalCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 };
 

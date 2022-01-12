@@ -269,7 +269,7 @@ enum
     localGenTSCount = 3
 };
 
-static const wxChar* const localGenTS[]
+static const std::array<const wxChar*, localGenTSCount + 1> localGenTS
   = {wxT("Use global parameter"), wxT("Force generation"), wxT("Force no generation"), nullptr};
 
 static const wxChar* weekday[] = {wxT("Monday"),
