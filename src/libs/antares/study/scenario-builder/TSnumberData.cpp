@@ -594,7 +594,7 @@ void ntcTSNumberData::setDataForLink(const Antares::Data::AreaLink* link,
 
 bool ntcTSNumberData::apply(Study& study)
 {
-    bool status_to_return = true;
+    bool ret = true;
     CString<512, false> logprefix;
     // Errors
     uint errors = 0;
@@ -606,17 +606,16 @@ bool ntcTSNumberData::apply(Study& study)
 
     const uint ntcGeneratedTScount = get_tsGenCount(study);
 
-    for (auto i : pArea->links)
+    for (const auto& i : pArea->links)
     {
         auto* link = i.second;
         uint linkIndex = link->indexForArea;
         assert(linkIndex < pTSNumberRules.width);
         auto& col = pTSNumberRules[linkIndex];
         logprefix.clear() << "NTC: Area '" << area.name << "', link: '" << link->getName() << "': ";
-        status_to_return
-          = status_to_return && ApplyToMatrix(errors, logprefix, *link, col, ntcGeneratedTScount);
+        ret = ret && ApplyToMatrix(errors, logprefix, *link, col, ntcGeneratedTScount);
     }
-    return status_to_return;
+    return ret;
 }
 
 uint ntcTSNumberData::get_tsGenCount(const Study& study) const

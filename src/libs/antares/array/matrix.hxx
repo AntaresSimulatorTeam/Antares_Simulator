@@ -1594,6 +1594,8 @@ inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(Matrix<T, ReadWri
     {
         entry = rhs.entry;
     }
+    // Prevent spurious de-allocation from rhs's destructor
+    rhs.entry = nullptr;
     return *this;
 }
 
