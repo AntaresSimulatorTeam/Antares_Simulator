@@ -411,7 +411,7 @@ bool thermalTSNumberData::apply(Study& study)
         auto& cluster = *(area.thermal.clusters[clusterIndex]);
         // alias to the current column
         assert(clusterIndex < pTSNumberRules.width);
-        auto& col = pTSNumberRules[clusterIndex];
+        const auto& col = pTSNumberRules[clusterIndex];
 
         logprefix.clear() << "Thermal: Area '" << area.name << "', cluster: '" << cluster.name()
                           << "': ";
@@ -465,7 +465,7 @@ bool renewableTSNumberData::apply(Study& study)
         auto& cluster = *(area.renewable.clusters[clusterIndex]);
         // alias to the current column
         assert(clusterIndex < pTSNumberRules.width);
-        auto& col = pTSNumberRules[clusterIndex];
+        const auto& col = pTSNumberRules[clusterIndex];
 
         logprefix.clear() << "Renewable: Area '" << area.name << "', cluster: '" << cluster.name()
                           << "': ";
@@ -611,7 +611,7 @@ bool ntcTSNumberData::apply(Study& study)
         auto* link = i.second;
         uint linkIndex = link->indexForArea;
         assert(linkIndex < pTSNumberRules.width);
-        auto& col = pTSNumberRules[linkIndex];
+        const auto& col = pTSNumberRules[linkIndex];
         logprefix.clear() << "NTC: Area '" << area.name << "', link: '" << link->getName() << "': ";
         ret = ret && ApplyToMatrix(errors, logprefix, *link, col, ntcGeneratedTScount);
     }
