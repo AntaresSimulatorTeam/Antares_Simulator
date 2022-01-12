@@ -215,10 +215,10 @@ IRenderer::CellStyle connectionParameters::cellStyle(int col, int row) const
 
 void connectionParameters::setMatrix(Data::AreaLink* link)
 {
-    matrix((link) ? &(link->parameters) : nullptr);
+    matrix(link ? &(link->parameters) : nullptr);
 
-    direct_ntc_ = (link) ? &(link->directCapacities) : nullptr;
-    indirect_ntc_ = (link) ? &(link->indirectCapacities) : nullptr;
+    direct_ntc_ = link ? &(link->directCapacities) : nullptr;
+    indirect_ntc_ = link ? &(link->indirectCapacities) : nullptr;
 }
 
 // ===========================
@@ -252,7 +252,7 @@ connectionNTCdirect::connectionNTCdirect(wxWindow* parent, Toolbox::InputSelecto
 {}
 void connectionNTCdirect::setMatrix(Data::AreaLink* link)
 {
-    matrix((link) ? &(link->directCapacities) : nullptr);
+    matrix(link ? &(link->directCapacities) : nullptr);
 }
 
 // ----------------
@@ -263,7 +263,7 @@ connectionNTCindirect::connectionNTCindirect(wxWindow* parent, Toolbox::InputSel
 {}
 void connectionNTCindirect::setMatrix(Data::AreaLink* link)
 {
-    matrix((link) ? &(link->indirectCapacities) : nullptr);
+    matrix(link ? &(link->indirectCapacities) : nullptr);
 }
 
 

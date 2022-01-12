@@ -49,7 +49,7 @@ namespace Window
     {
     public:
         linkGrid() = default;
-        ~linkGrid() = default;
+        virtual ~linkGrid() = default;
         virtual void add(wxBoxSizer* sizer, wxWindow* parent, Interconnection* intercoWindow, Toolbox::InputSelector::Connections* notifier) = 0;
     };
 
@@ -57,7 +57,7 @@ namespace Window
     {
     public:
         linkParametersGrid() = default;
-        ~linkParametersGrid() = default;
+        ~linkParametersGrid() override = default;
         void add(wxBoxSizer* sizer, wxWindow* parent, Interconnection* intercoWindow, Toolbox::InputSelector::Connections* notifier) override;
     };
 
@@ -65,7 +65,7 @@ namespace Window
     {
     public:
         linkNTCgrid() = default;
-        ~linkNTCgrid() = default;
+        ~linkNTCgrid() override = default;
         void add(wxBoxSizer* sizer, wxWindow* parent, Interconnection* intercoWindow, Toolbox::InputSelector::Connections* notifier) override;
     };
 

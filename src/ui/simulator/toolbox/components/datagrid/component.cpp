@@ -176,8 +176,6 @@ public:
     //! The original component
     Component* component;
 
-    // Component* otherComponent_ = nullptr;
-
     //! Datagrid caption
     wxString caption;
 
@@ -806,7 +804,7 @@ void Component::onEndUpdate()
     }
 }
 
-void Component::createModifyPanel(wxSizer* sizer, bool copypasteOnly, bool readonly)
+void Component::createModifyPanel(wxSizer* sizer, bool /*copypasteOnly*/, bool readonly)
 {
     // internal variable for GUI components and other stuff
     auto& internal = *pInternal;

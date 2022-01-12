@@ -69,7 +69,7 @@ public:
         return Renderer::Matrix<>::cellNumericValue(x, y);
     }
 
-    virtual void resetColors(int, int, wxColour&, wxColour&) const { /* Do nothing*/ }
+    void resetColors(int, int, wxColour&, wxColour&) const override { /* Do nothing*/ }
 
     virtual wxColour horizontalBorderColor(int x, int y) const;
 
@@ -78,13 +78,13 @@ public:
         return Renderer::Matrix<>::valid();
     }
 
-    virtual uint maxWidthResize() const
+    uint maxWidthResize() const override
     {
         return 1000;
     }
     IRenderer::CellStyle cellStyle(int col, int row);
 
-    virtual Date::Precision precision()
+    Date::Precision precision() override
     {
         return Date::hourly;
     }
@@ -124,7 +124,7 @@ class connectionNTC : public Connection
 {
 public:
     connectionNTC(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
-    ~connectionNTC() = default;
+    ~connectionNTC() override = default;
     bool cellValue(int x, int y, const Yuni::String& value) override;
     IRenderer::CellStyle cellStyle(int col, int row) const override;
 
@@ -139,7 +139,7 @@ class connectionNTCdirect : public connectionNTC
 {
 public:
     connectionNTCdirect(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
-    ~connectionNTCdirect() = default;
+    ~connectionNTCdirect() override = default;
 private:
     void setMatrix(Data::AreaLink* link);
 };
@@ -151,7 +151,7 @@ class connectionNTCindirect : public connectionNTC
 {
 public:
     connectionNTCindirect(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
-    ~connectionNTCindirect() = default;
+    ~connectionNTCindirect() override = default;
 private:
     void setMatrix(Data::AreaLink* link);
 };
