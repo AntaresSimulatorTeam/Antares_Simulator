@@ -118,7 +118,7 @@ bool ApplyToMatrix(uint& errors,
                    const TSNumberData::MatrixType::ColumnType& years,
                    uint tsGenMax)
 {
-    bool status_to_return = true;
+    bool ret = true;
 
     // In this case, m.height represents the total number of years
     const uint nbYears = data.timeseriesNumbers.height;
@@ -144,7 +144,7 @@ bool ApplyToMatrix(uint& errors,
                         logs.warning() << "scenario-builder: " << logprefix
                                        << "value out of bounds for the year " << (y + 1);
                 }
-                status_to_return = false;
+                ret = false;
                 continue;
             }
             // Ok, assign. The value provided by the interface is user-friendly
@@ -153,7 +153,7 @@ bool ApplyToMatrix(uint& errors,
         }
     }
 
-    return status_to_return;
+    return ret;
 }
 
 } // anonymous namespace
@@ -174,7 +174,7 @@ uint loadTSNumberData::get_tsGenCount(const Study& study) const
 
 bool loadTSNumberData::apply(Study& study)
 {
-    bool status_to_return = true;
+    bool ret = true;
     CString<512, false> logprefix;
     // Errors
     uint errors = 0;
@@ -193,11 +193,9 @@ bool loadTSNumberData::apply(Study& study)
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
         logprefix.clear() << "Load: Area '" << area.name << "': ";
-        status_to_return
-          = status_to_return
-            && ApplyToMatrix(errors, logprefix, *area.load.series, col, tsGenCountLoad);
+        ret = ret && ApplyToMatrix(errors, logprefix, *area.load.series, col, tsGenCountLoad);
     }
-    return status_to_return;
+    return ret;
 }
 
 // ================================
@@ -215,7 +213,7 @@ uint windTSNumberData::get_tsGenCount(const Study& study) const
 
 bool windTSNumberData::apply(/*const*/ Study& study)
 {
-    bool status_to_return = true;
+    bool ret = true;
     CString<512, false> logprefix;
     // Errors
     uint errors = 0;
@@ -234,11 +232,9 @@ bool windTSNumberData::apply(/*const*/ Study& study)
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
         logprefix.clear() << "Wind: Area '" << area.name << "': ";
-        status_to_return
-          = status_to_return
-            && ApplyToMatrix(errors, logprefix, *area.wind.series, col, tsGenCountWind);
+        ret = ret && ApplyToMatrix(errors, logprefix, *area.wind.series, col, tsGenCountWind);
     }
-    return status_to_return;
+    return ret;
 }
 
 // ================================
@@ -256,7 +252,7 @@ uint solarTSNumberData::get_tsGenCount(const Study& study) const
 
 bool solarTSNumberData::apply(Study& study)
 {
-    bool status_to_return = true;
+    bool ret = true;
     CString<512, false> logprefix;
     // Errors
     uint errors = 0;
@@ -275,11 +271,9 @@ bool solarTSNumberData::apply(Study& study)
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
         logprefix.clear() << "Solar: Area '" << area.name << "': ";
-        status_to_return
-          = status_to_return
-            && ApplyToMatrix(errors, logprefix, *area.solar.series, col, tsGenCountSolar);
+        ret = ret && ApplyToMatrix(errors, logprefix, *area.solar.series, col, tsGenCountSolar);
     }
-    return status_to_return;
+    return ret;
 }
 
 // ================================
@@ -297,7 +291,7 @@ uint hydroTSNumberData::get_tsGenCount(const Study& study) const
 
 bool hydroTSNumberData::apply(Study& study)
 {
-    bool status_to_return = true;
+    bool ret = true;
     CString<512, false> logprefix;
     // Errors
     uint errors = 0;
@@ -316,11 +310,9 @@ bool hydroTSNumberData::apply(Study& study)
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
         logprefix.clear() << "Hydro: Area '" << area.name << "': ";
-        status_to_return
-          = status_to_return
-            && ApplyToMatrix(errors, logprefix, *area.hydro.series, col, tsGenCountHydro);
+        ret = ret && ApplyToMatrix(errors, logprefix, *area.hydro.series, col, tsGenCountHydro);
     }
-    return status_to_return;
+    return ret;
 }
 
 // ================================
@@ -391,7 +383,7 @@ void thermalTSNumberData::set(const Antares::Data::ThermalCluster* cluster,
 
 bool thermalTSNumberData::apply(Study& study)
 {
-    bool status_to_return = true;
+    bool ret = true;
     CString<512, false> logprefix;
     // Errors
     uint errors = 0;
@@ -415,11 +407,9 @@ bool thermalTSNumberData::apply(Study& study)
 
         logprefix.clear() << "Thermal: Area '" << area.name << "', cluster: '" << cluster.name()
                           << "': ";
-        status_to_return
-          = status_to_return
-            && ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountThermal);
+        ret = ret && ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountThermal);
     }
-    return status_to_return;
+    return ret;
 }
 
 uint thermalTSNumberData::get_tsGenCount(const Study& study) const
@@ -445,7 +435,7 @@ void renewableTSNumberData::set(const Antares::Data::RenewableCluster* cluster,
 
 bool renewableTSNumberData::apply(Study& study)
 {
-    bool status_to_return = true;
+    bool ret = true;
     CString<512, false> logprefix;
     // Errors
     uint errors = 0;
@@ -469,11 +459,9 @@ bool renewableTSNumberData::apply(Study& study)
 
         logprefix.clear() << "Renewable: Area '" << area.name << "', cluster: '" << cluster.name()
                           << "': ";
-        status_to_return
-          = status_to_return
-            && ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountRenewable);
+        ret = ret && ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountRenewable);
     }
-    return status_to_return;
+    return ret;
 }
 
 uint renewableTSNumberData::get_tsGenCount(const Study& study) const
