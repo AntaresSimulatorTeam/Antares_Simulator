@@ -134,6 +134,28 @@ bool connectionParameters::cellValue(int x, int y, const Yuni::String& value)
     return Renderer::Matrix<>::cellValue(x, y, value);
 }
 
+static bool checkLoopFlow(const Antares::Matrix<>* direct_ntc,
+                          const Antares::Matrix<>* indirect_ntc,
+                          double cellvalue,
+                          int row)
+{
+    for (int ts = 0; ts < direct_ntc->width; ts++)
+    {
+        const double ntcDirect = direct_ntc->entry[ts][row];
+        const double ntcIndirect = indirect_ntc->entry[ts][row];
+
+        if (ntcDirect < cellvalue)
+        {
+            return false;
+        }
+        if (cellvalue < 0. && std::abs(cellvalue) > ntcIndirect)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 IRenderer::CellStyle connectionParameters::cellStyle(int col, int row) const
 {
     double cellvalue = cellNumericValue(col, row);
@@ -161,23 +183,11 @@ IRenderer::CellStyle connectionParameters::cellStyle(int col, int row) const
     }
     case Data::fhlImpedances:
         return (cellvalue < 0.) ? IRenderer::cellStyleWarning
-            : Renderer::Matrix<>::cellStyle(col, row);
+                                : Renderer::Matrix<>::cellStyle(col, row);
     case Data::fhlLoopFlow:
     {
-        for (int ts = 0; ts < direct_ntc_->width; ts++)
-        {
-            double ntcDirect = direct_ntc_->entry[ts][row];
-            double ntcIndirect = indirect_ntc_->entry[ts][row];
-
-            if (ntcDirect < cellvalue)
-            {
-                return IRenderer::cellStyleError;
-            }
-            if (cellvalue < 0. && std::abs(cellvalue) > ntcIndirect)
-            {
-                return IRenderer::cellStyleError;
-            }
-        }
+        if (!checkLoopFlow(direct_ntc_, indirect_ntc_, cellvalue, row))
+            return IRenderer::cellStyleError;
         break;
     }
     case Data::fhlPShiftMinus:
@@ -207,7 +217,7 @@ void connectionParameters::setMatrix(Data::AreaLink* link)
 {
     matrix((link) ? &(link->parameters) : nullptr);
 
-    direct_ntc_ = (link) ?  &(link->directCapacities) : nullptr;
+    direct_ntc_ = (link) ? &(link->directCapacities) : nullptr;
     indirect_ntc_ = (link) ? &(link->indirectCapacities) : nullptr;
 }
 
