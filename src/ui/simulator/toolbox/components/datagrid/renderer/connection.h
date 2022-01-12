@@ -59,7 +59,7 @@ public:
 
     virtual wxString rowCaption(int rowIndx) const;
 
-    virtual wxString cellValue(int x, int y) const
+    wxString cellValue(int x, int y) const override
     {
         return Renderer::Matrix<>::cellValue(x, y);
     }
@@ -68,8 +68,6 @@ public:
     {
         return Renderer::Matrix<>::cellNumericValue(x, y);
     }
-
-    virtual bool cellValue(int x, int y, const Yuni::String& value) = 0;
 
     virtual void resetColors(int, int, wxColour&, wxColour&) const { /* Do nothing*/ }
 
@@ -84,7 +82,7 @@ public:
     {
         return 1000;
     }
-    virtual IRenderer::CellStyle cellStyle(int col, int row) const = 0;
+    IRenderer::CellStyle cellStyle(int col, int row);
 
     virtual Date::Precision precision()
     {
