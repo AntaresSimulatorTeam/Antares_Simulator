@@ -40,8 +40,8 @@ namespace Renderer
 class thermalScBuilderRenderer : public ScBuilderRendererForAreaSelector
 {
 public:
-    thermalScBuilderRenderer(Toolbox::InputSelector::Area* notifier);
-    ~thermalScBuilderRenderer() = default;
+    using ScBuilderRendererForAreaSelector::ScBuilderRendererForAreaSelector;
+    ~thermalScBuilderRenderer() override = default;
 
     bool cellValue(int x, int y, const Yuni::String& value) override;
     int height() const override;

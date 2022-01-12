@@ -46,10 +46,10 @@ public:
     virtual ~ScBuilderRendererBase();
 
     int width() const override;
-    virtual wxString columnCaption(int colIndx) const override;
-    virtual wxString cellValue(int x, int y) const override;
+    wxString columnCaption(int colIndx) const override;
+    wxString cellValue(int x, int y) const override;
 
-    virtual void resetColors(int, int, wxColour&, wxColour&) const override
+    void resetColors(int, int, wxColour&, wxColour&) const override
     {
         // Do nothing
     }
@@ -58,7 +58,7 @@ public:
     {
         return 0;
     }
-    virtual IRenderer::CellStyle cellStyle(int col, int row) const override;
+    IRenderer::CellStyle cellStyle(int col, int row) const override;
 
     void control(wxWindow* gridPanel)
     {
@@ -90,7 +90,7 @@ class ScBuilderRendererAreasAsRows : public ScBuilderRendererBase
 {
 public:
     ScBuilderRendererAreasAsRows() = default;
-    virtual ~ScBuilderRendererAreasAsRows() = default;
+    ~ScBuilderRendererAreasAsRows() override = default;
 
     int height() const override;
     wxString rowCaption(int rowIndx) const override;
@@ -109,7 +109,7 @@ class ScBuilderRendererForAreaSelector : public ScBuilderRendererBase
 {
 public:
     explicit ScBuilderRendererForAreaSelector(const Toolbox::InputSelector::Area* notifier);
-    virtual ~ScBuilderRendererForAreaSelector() = default;
+    ~ScBuilderRendererForAreaSelector() override = default;
 
     bool valid() const override;
 

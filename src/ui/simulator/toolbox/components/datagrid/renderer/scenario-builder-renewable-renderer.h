@@ -40,7 +40,8 @@ namespace Renderer
 class renewableScBuilderRenderer : public ScBuilderRendererForAreaSelector
 {
 public:
-    renewableScBuilderRenderer(Toolbox::InputSelector::Area* notifier);
+    using ScBuilderRendererForAreaSelector::ScBuilderRendererForAreaSelector;
+    ~renewableScBuilderRenderer() override = default;
 
     bool cellValue(int x, int y, const Yuni::String& value) override;
     int height() const override;

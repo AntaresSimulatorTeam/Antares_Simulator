@@ -118,7 +118,7 @@ class simpleScBuilderPageMaker : public basicScBuilderPageMaker
     using basicScBuilderPageMaker::basicScBuilderPageMaker;
 
 public:
-    virtual ~simpleScBuilderPageMaker() = default;
+    ~simpleScBuilderPageMaker() override = default;
 
 private:
     void addAreaSelectorPage() override

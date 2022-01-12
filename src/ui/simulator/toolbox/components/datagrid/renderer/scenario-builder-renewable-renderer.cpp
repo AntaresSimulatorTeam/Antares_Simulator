@@ -39,9 +39,6 @@ namespace Datagrid
 {
 namespace Renderer
 {
-renewableScBuilderRenderer::renewableScBuilderRenderer(Toolbox::InputSelector::Area* notifier) :
-    ScBuilderRendererForAreaSelector(notifier)
-{}
 
 int renewableScBuilderRenderer::height() const
 {

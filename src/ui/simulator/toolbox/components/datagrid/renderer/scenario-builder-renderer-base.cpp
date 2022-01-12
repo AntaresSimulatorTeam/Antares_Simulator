@@ -173,7 +173,7 @@ void ScBuilderRendererForAreaSelector::onAreaChanged(Data::Area* area)
 
 bool ScBuilderRendererForAreaSelector::valid() const
 {
-    return !(!study) && pRules && not study->areas.empty() && !(!pRules) && pArea;
+    return !(!study) && pRules && !study->areas.empty() && !(!pRules) && pArea;
 }
 
 } // namespace Renderer

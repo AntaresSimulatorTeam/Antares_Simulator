@@ -39,9 +39,6 @@ namespace Datagrid
 {
 namespace Renderer
 {
-thermalScBuilderRenderer::thermalScBuilderRenderer(Toolbox::InputSelector::Area* notifier) :
-    ScBuilderRendererForAreaSelector(notifier)
-{}
 
 int thermalScBuilderRenderer::height() const
 {
