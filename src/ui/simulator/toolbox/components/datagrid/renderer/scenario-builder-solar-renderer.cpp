@@ -39,13 +39,6 @@ namespace Datagrid
 {
 namespace Renderer
 {
-solarScBuilderRenderer::solarScBuilderRenderer() : ScBuilderRendererBase()
-{
-}
-
-solarScBuilderRenderer::~solarScBuilderRenderer()
-{
-}
 
 bool solarScBuilderRenderer::cellValue(int x, int y, const Yuni::String& value)
 {
