@@ -62,7 +62,7 @@ bool ntcScBuilderRenderer::cellValue(int x, int y, const String& value)
     const Data::AreaLink* link = (*pListOfLinks)[y];
     const uint areaIndex = link->from->index;
     uint val = fromStringToTSnumber(value);
-    pRules->linksNTC[areaIndex].set(link, x, val);
+    pRules->linksNTC[areaIndex].setDataForLink(link, x, val);
     return true;
 }
 
