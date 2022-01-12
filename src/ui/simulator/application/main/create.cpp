@@ -47,6 +47,9 @@
 #include <antares/study.h>
 #include <antares/sys/appdata.h>
 
+// Antares memory allocation check
+#include <antares/memory/new_check.hxx>
+
 // Create toolbox
 #include "toolbox/create.h"
 // Panel
@@ -92,6 +95,7 @@
 #include "windows/message.h"
 
 using namespace Yuni;
+using namespace Antares::MemoryUtils;
 
 namespace Antares
 {
@@ -703,7 +707,6 @@ void ApplWnd::createNBMisc()
 void ApplWnd::createNBInterconnections()
 {
     assert(pNotebook);
-
     // Create a standard page with an input selector
     std::pair<Component::Notebook*, Toolbox::InputSelector::Connections*> page
       = createStdNotebookPage<Toolbox::InputSelector::Connections>(
@@ -711,21 +714,21 @@ void ApplWnd::createNBInterconnections()
 
     {
         // links parameters time series
-        auto* lpg = new Window::linkParametersGrid();
-        auto* interco = new Window::Interconnection(page.first, page.second, lpg);
+        auto* lpg = new_check_allocation<Window::linkParametersGrid>();
+        auto* interco = new_check_allocation<Window::Interconnection>(page.first, page.second, lpg);
         pageLinksParameters = page.first->add(interco, wxT(" Parameters "));
     }
 
     // links NTC time series
     {
-        auto* ntcGrid = new Window::linkNTCgrid();
-        auto* interco = new Window::Interconnection(page.first, page.second, ntcGrid);
+        auto* ntcGrid = new_check_allocation<Window::linkNTCgrid>();
+        auto* interco = new_check_allocation<Window::Interconnection>(page.first, page.second, ntcGrid);
         pageLinksNTC = page.first->add(interco, wxT(" Transmission capacities "));
     }
 
     {
-        auto* summary = new Component::Datagrid::Renderer::Links::Summary(page.first);
-        auto* component = new Component::Datagrid::Component(page.first, summary);
+        auto* summary = new_check_allocation<Component::Datagrid::Renderer::Links::Summary>(page.first);
+        auto* component = new_check_allocation<Component::Datagrid::Component>(page.first, summary);
         pageLinksSummary = page.first->add(component, wxT(" Summary "));
     }
 }

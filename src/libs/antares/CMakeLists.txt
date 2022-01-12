@@ -389,6 +389,9 @@ set(SRC
 	# Memory wrapper
 	sys/mem-wrapper.h  sys/mem-wrapper.c
 
+    # new check allocation
+    memory/new_check.hxx
+
 	# appdata
 	sys/appdata.h
 	sys/appdata.cpp
