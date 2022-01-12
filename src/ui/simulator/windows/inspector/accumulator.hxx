@@ -1303,7 +1303,7 @@ struct PClusterLawPlanned
 
 struct PClusterDoGenerateTS
 {
-    typedef uint Type;
+    using Type = uint;
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return (uint)cluster->tsGenBehavior;
