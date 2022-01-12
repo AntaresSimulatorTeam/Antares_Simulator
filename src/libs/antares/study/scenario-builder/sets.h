@@ -65,6 +65,8 @@ public:
     ~Sets();
     //@}
 
+    void setStudy(Study& study);
+
     //! \name Data manupulation
     //@{
     /*!

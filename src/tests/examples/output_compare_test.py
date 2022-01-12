@@ -714,3 +714,16 @@ def test_renewables_ts_prod_factor_cluster_disabled(use_ortools, ortools_solver,
     study_path = ALL_STUDIES_PATH / "short-tests" / "renewable-ts-prod-factor-cluster-disabled"
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     check_output_values(study_path)
+
+@pytest.mark.short
+def test_ntc_intramodal_two_links_two_timeseries(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "NTC intramodal"
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    check_output_values(study_path)
+
+@pytest.mark.short
+def test_ntc_sc_builder(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "Multiple NTC sc-builder"
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    check_output_values(study_path)
+    

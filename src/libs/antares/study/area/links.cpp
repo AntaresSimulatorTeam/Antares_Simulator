@@ -309,8 +309,13 @@ void AreaLink::reverse()
     // Reset the pointers
     this->from = from;
     this->with = with;
-    //
+    // Re-attach the link to its origin area
     from->links[with->id] = this;
+
+    // Updating both areas' links local numbering
+    from->buildLinksIndexes();
+    with->buildLinksIndexes();
+
 
     // Making sure that we have the data
     directCapacities.invalidate(true);
@@ -346,6 +351,7 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
     link->from = area;
     link->with = with;
     area->links[with->id] = link;
+    area->buildLinksIndexes();
     return link;
 }
 
@@ -796,30 +802,23 @@ bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
     return true;
 }
 
-void AreaLinkRemove(AreaLink* l)
+void AreaLinkRemove(AreaLink* link)
 {
-    if (!l)
+    if (!link)
         return;
 
     // Asserts
-    assert(l->from);
-    assert(l->with);
+    assert(link->from);
+    assert(link->with);
 
-    Area* f = l->from;
-    if (f && !f->links.empty())
+    Area* areaFrom = link->from;
+    if (areaFrom && !areaFrom->links.empty())
     {
-        f->detachLinkFromID(l->with->id);
-        f->detachLinkFromID(l->from->id);
+        areaFrom->detachLinkFromID(link->with->id);
+        areaFrom->buildLinksIndexes();
     }
 
-    Area* t = l->with;
-    if (t && !t->links.empty())
-    {
-        t->detachLinkFromID(l->with->id);
-        t->detachLinkFromID(l->from->id);
-    }
-
-    delete l;
+    delete link;
 }
 
 void AreaLink::estimateMemoryUsage(StudyMemoryUsage& u) const

@@ -40,6 +40,7 @@ namespace Renderer
 TSmanagementRenewableCluster::TSmanagementRenewableCluster() : TSmanagement()
 {
     columns_.push_back(new ColumnRenewableClusters());
+    columns_.push_back(new ColumnNTC());
 
     checkLineNumberInColumns();
 }
