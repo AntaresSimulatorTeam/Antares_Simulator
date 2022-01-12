@@ -741,3 +741,5 @@ def test_ntc_sc_builder(use_ortools, ortools_solver, solver_path):
 @pytest.mark.short
 def test_ntc_intramodal_two_links_two_timeseries(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "NTC intramodal"
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    check_output_values(study_path)
