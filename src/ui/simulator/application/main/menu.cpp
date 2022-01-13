@@ -673,6 +673,12 @@ void ApplWnd::evtOnViewOutput(wxCommandEvent& evt)
     }
 }
 
+void ApplWnd::viewLatestOutput()
+{
+    OnStudyUpdateOutputInfo(ListOfOutputsForTheCurrentStudy, latestOutput);
+    pSectionNotebook->select(wxT("output"), true);
+}
+
 void ApplWnd::evtOnViewSystem(wxCommandEvent&)
 {
     pSectionNotebook->select(wxT("input"));

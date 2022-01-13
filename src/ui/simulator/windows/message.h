@@ -92,6 +92,8 @@ public:
         btnUpgrade,
         //! Standard button: continue
         btnContinue,
+        //! Standard button: view simulation results
+        btnViewResults,
         //! Standard button: quit
         btnQuit
     };

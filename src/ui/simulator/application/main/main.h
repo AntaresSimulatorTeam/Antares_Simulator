@@ -39,6 +39,7 @@
 #include "config.h"
 #include <ui/common/component/frame/local-frame.h>
 #include <antares/study.h>
+#include <antares/study/output.h>
 
 namespace Antares
 {
@@ -361,6 +362,7 @@ public:
     //! Retrieve the internal data (const)
     const MainFormData* data() const;
     //@}
+    void viewLatestOutput();
 
 public:
     //! Event: The application is about to quit
@@ -773,6 +775,9 @@ private:
 
     //! Current Equipment page
     uint pCurrentEquipmentPage;
+
+    // Pointer to latest output
+    Data::Output::Ptr latestOutput;
 
     // friends
     template<class WindowT>

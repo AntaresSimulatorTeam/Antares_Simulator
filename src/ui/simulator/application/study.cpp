@@ -139,6 +139,14 @@ inline static void ResetLastOpenedFilepath()
 #endif
 }
 
+static void viewResults()
+{
+    auto* mainFrm = Forms::ApplWnd::Instance();
+    if (!mainFrm)
+        return;
+    mainFrm->viewLatestOutput();
+}
+
 static void TheSimulationIsComplete(const wxString& duration)
 {
     if (IsGUIAboutToQuit() or not Data::Study::Current::Valid())
@@ -152,7 +160,17 @@ static void TheSimulationIsComplete(const wxString& duration)
                                 wxString()
                                   << wxT("Time to complete the simulation : ") << duration);
         message.add(Window::Message::btnContinue);
-        message.showModal();
+        message.add(Window::Message::btnViewResults);
+        switch (message.showModal())
+        {
+        case Window::Message::btnViewResults:
+            viewResults();
+            break;
+        case Window::Message::btnContinue:
+        default:
+            // Do nothing
+            break;
+        }
     }
 }
 
