@@ -231,6 +231,12 @@ bool PreflightVersion20(StudyCleaningInfos* infos)
     e.add("input/solar/prepro/correlation.ini");
     e.add("input/thermal/areas.ini");
 
+    // Also exclude custom files/folders provided by the user
+    bool ret = infos->customExclude.words(":", [&e](AnyString& word) {
+        e.add(word);
+        return true;
+    });
+
     // Post
     p.add("logs");
     p.add("output");
