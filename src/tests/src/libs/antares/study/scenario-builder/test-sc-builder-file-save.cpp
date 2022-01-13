@@ -405,9 +405,9 @@ BOOST_AUTO_TEST_CASE(HYDRO_LEVEL__TS_number_for_many_areas_and_years__generated_
 // ======================
 BOOST_AUTO_TEST_CASE(LINKS_NTC__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical)
 {
-	my_rule->linksNTC[area_1->index].set(link_12, 5, 13);
-	my_rule->linksNTC[area_1->index].set(link_13, 19, 8);
-	my_rule->linksNTC[area_2->index].set(link_23, 2, 4);
+	my_rule->linksNTC[area_1->index].setDataForLink(link_12, 5, 13);
+	my_rule->linksNTC[area_1->index].setDataForLink(link_13, 19, 8);
+	my_rule->linksNTC[area_2->index].setDataForLink(link_23, 2, 4);
 
 	saveScenarioBuilder();
 
@@ -437,8 +437,8 @@ BOOST_AUTO_TEST_CASE(ALL_TOGETHER__TS_number_for_many_areas_and_years__generated
 	my_rule->thermal[area_3->index].set(thCluster_31.get(), 5, 13);
 	my_rule->thermal[area_1->index].set(thCluster_11.get(), 19, 8);
 	my_rule->renewable[area_3->index].set(rnCluster_32.get(), 5, 13);
-	my_rule->linksNTC[area_1->index].set(link_13, 19, 8);
-	my_rule->linksNTC[area_2->index].set(link_23, 2, 4);
+	my_rule->linksNTC[area_1->index].setDataForLink(link_13, 19, 8);
+	my_rule->linksNTC[area_2->index].setDataForLink(link_23, 2, 4);
 	my_rule->hydroLevels.set(area_1->index, 5, 8);
 
 	saveScenarioBuilder();
