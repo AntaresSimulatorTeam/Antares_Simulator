@@ -731,12 +731,24 @@ private:
     Component::Notebook::Page* pageRenewableClusterList;
     Component::Notebook::Page* pageRenewableCommon;
 
-    Component::Notebook::Page* pageLinksSummary;
-    Component::Notebook::Page* pageLinksDetails;
+    Component::Notebook::Page* pageLinksSummary = nullptr;
+    Component::Notebook::Page* pageLinksParameters = nullptr;
+    Component::Notebook::Page* pageLinksNTC = nullptr;
 
     Component::Notebook::Page* pageNodalOptim;
 
     Window::BindingConstraint* pWndBindingConstraints;
+
+    // Secnario buider pages
+    Component::Notebook::Page* pScenarioBuilderMainPage;
+    Component::Notebook::Page* pageScBuilderLoad;
+    Component::Notebook::Page* pageScBuilderThermal;
+    Component::Notebook::Page* pageScBuilderHydro;
+    Component::Notebook::Page* pageScBuilderWind;
+    Component::Notebook::Page* pageScBuilderSolar;
+    Component::Notebook::Page* pageScBuilderNTC;
+    Component::Notebook::Page* pageScBuilderRenewable;
+    Component::Notebook::Page* pageScBuilderHydroLevels;
 
     //! The current grid operator to use on selected cells
     Component::Datagrid::Selection::IOperator* pGridSelectionOperator;

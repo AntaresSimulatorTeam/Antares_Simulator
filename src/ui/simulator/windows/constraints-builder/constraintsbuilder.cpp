@@ -477,15 +477,6 @@ void ConstraintsBuilderWizard::onIncludeLoopFlow(wxCommandEvent& evt)
     pCBuilder->setUpToDate(false);
     pCBuilder->saveCBuilderToFile();
 
-    // update all lines in the study
-    /*for (auto link : pCBuilder->pLink)
-    {
-            link->ptr->useLoopFlow = value;
-            //onConnectionChanged(link->ptr);
-            OnStudyLinkChanged(link->ptr);
-    }
-    MarkTheStudyAsModified();*/
-    // Forms::ApplWnd::Instance()->pageLinksDetails->refresh();
     pGrid->forceRefresh();
 }
 
@@ -498,15 +489,6 @@ void ConstraintsBuilderWizard::onUsePhaseShift(wxCommandEvent& evt)
     pCBuilder->setUpToDate(false);
     pCBuilder->saveCBuilderToFile();
 
-    // update all lines in the study
-    /*for (auto link : pCBuilder->pLink)
-    {
-            link->ptr->usePST = value;
-            //onConnectionChanged(link->ptr);
-            OnStudyLinkChanged(link->ptr);
-    }*/
-    // MarkTheStudyAsModified();
-    // Forms::ApplWnd::Instance()->pageLinksDetails->refresh();
     pGrid->forceRefresh();
 }
 
