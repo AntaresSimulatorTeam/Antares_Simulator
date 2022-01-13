@@ -102,5 +102,10 @@ void ApplWnd::evtOnHelpPDFExamplesLibrary(wxCommandEvent&)
     OpenPDF("help/antares-examples-library.pdf");
 }
 
+void ApplWnd::evtOnHelpOnlineDocumentation(wxCommandEvent&)
+{
+    wxLaunchDefaultBrowser("https://antares-simulator.readthedocs.io/");
+}
+
 } // namespace Forms
 } // namespace Antares

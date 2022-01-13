@@ -594,6 +594,12 @@ wxMenu* ApplWnd::createMenuHelp()
                      "images/16x16/help.png",
                      wxT("Open PDF : Examples library"));
 
+    Menu::CreateItem(pMenuHelp,
+                     mnIDHelpOnlineDocumentation,
+                     wxT("Online documentation"),
+                     "images/16x16/world.png",
+                     wxT("Open online documentation"));
+
     pMenuHelp->AppendSeparator();
 
     Menu::CreateItem(pMenuHelp, mnIDHelpAbout, wxT("About Antares"), nullptr, wxT("About Antares"));

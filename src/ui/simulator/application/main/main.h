@@ -596,6 +596,8 @@ private:
     void evtOnHelpPDFSystemMapEditorReferenceGuide(wxCommandEvent& evt);
     //! Event: PDF Examples library
     void evtOnHelpPDFExamplesLibrary(wxCommandEvent& evt);
+    //! Event: online documentation
+    void evtOnHelpOnlineDocumentation(wxCommandEvent& evt);
 
     //@}
 
