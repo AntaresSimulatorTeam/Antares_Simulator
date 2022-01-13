@@ -151,7 +151,6 @@ int main(int argc, char* argv[])
         updater.mrproper = optMrProper;
         if (!optExclude.empty())
         {
-            logs.notice() << optExclude;
             updater.exclude = optExclude;
         }
         updater.lookup(optInput);
