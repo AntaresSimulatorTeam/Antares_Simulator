@@ -116,15 +116,16 @@ int main(int argc, char* argv[])
         options.remainingArguments(optInput);
         // Output
         options.add(optInput, 'i', "input", "An input folder where to look for studies");
+        // Exclude some files/folders
+        options.add(optExclude,
+                    'e',
+                    "exclude",
+                    "Colon-separated list of excluded files/folders to prevent from destruction. Exemple : --exclude fileA:directoryB:fileC");
+
         // Format
         options.addFlag(optPrintOnly, ' ', "dry", "List the folder only and do nothing");
 
         options.addFlag(optMrProper, ' ', "mrproper", "Suppress the outputs and logs files");
-
-        options.add(optExclude,
-                    ' ',
-                    "exclude",
-                    "Colon-separated list of excluded files/folders to prevent from destruction");
 
         // Version
         bool optVersion = false;
