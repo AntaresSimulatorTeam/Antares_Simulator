@@ -104,7 +104,7 @@ void ApplWnd::evtOnHelpPDFExamplesLibrary(wxCommandEvent&)
 
 void ApplWnd::evtOnHelpOnlineDocumentation(wxCommandEvent&)
 {
-    wxLaunchDefaultBrowser("https://antares-simulator.readthedocs.io/");
+    wxLaunchDefaultBrowser(ANTARES_ONLINE_DOC);
 }
 
 } // namespace Forms
