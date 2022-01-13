@@ -82,7 +82,6 @@ public:
     {
         return 1000;
     }
-    IRenderer::CellStyle cellStyle(int col, int row);
 
     Date::Precision precision() override
     {
