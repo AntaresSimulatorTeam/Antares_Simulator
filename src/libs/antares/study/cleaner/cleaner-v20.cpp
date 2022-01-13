@@ -232,7 +232,7 @@ bool PreflightVersion20(StudyCleaningInfos* infos)
     e.add("input/thermal/areas.ini");
 
     // Also exclude custom files/folders provided by the user
-    infos->customExclude.words(":", [&e](AnyString& word) {
+    infos->customExclude.words(":", [&e](const AnyString& word) {
         e.add(word);
         return true;
     });
