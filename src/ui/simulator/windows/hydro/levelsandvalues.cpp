@@ -71,14 +71,6 @@ void LevelsAndValues::createComponents()
     wxBoxSizer* ssGrids = new wxBoxSizer(wxHORIZONTAL);
     pSupport->SetSizer(ssGrids);
 
-    const wxSize ourDefaultSize(55, wxDefaultSize.GetHeight());
-
-    enum
-    {
-        right = wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL,
-        left = wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
-    };
-
     ssGrids->Add(new Component::Datagrid::Component(
                    pSupport,
                    new Component::Datagrid::Renderer::ReservoirLevels(this, pInputAreaSelector),

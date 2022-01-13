@@ -731,8 +731,9 @@ private:
     Component::Notebook::Page* pageRenewableClusterList;
     Component::Notebook::Page* pageRenewableCommon;
 
-    Component::Notebook::Page* pageLinksSummary;
-    Component::Notebook::Page* pageLinksDetails;
+    Component::Notebook::Page* pageLinksSummary = nullptr;
+    Component::Notebook::Page* pageLinksParameters = nullptr;
+    Component::Notebook::Page* pageLinksNTC = nullptr;
 
     Component::Notebook::Page* pageNodalOptim;
 
