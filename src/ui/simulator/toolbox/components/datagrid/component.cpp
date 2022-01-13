@@ -707,8 +707,7 @@ Component::Component(wxWindow* parent,
                      bool copypasteOnly,
                      bool readonly,
                      bool hasLayerFilter) :
-
- Panel(parent)
+ Panel(parent), ComponentRefresh(pInternal)
 {
     pInternal = new InternalState();
     auto& internal = *pInternal;
@@ -960,13 +959,13 @@ void Component::createModifyPanelValues(wxSizer* sizer, bool copypasteOnly)
     sizer->Layout();
 }
 
-void Component::forceRefreshDelayed()
+void ComponentRefresh::forceRefreshDelayed()
 {
     if (pInternal)
         Dispatcher::GUI::Post(pInternal, &InternalState::forceRefresh);
 }
 
-void Component::forceRefresh()
+void ComponentRefresh::forceRefresh()
 {
     if (pInternal)
         pInternal->forceRefresh();
@@ -1405,7 +1404,7 @@ void Component::onStudyClosed()
     }
 }
 
-void Component::enableRefresh(bool enabled)
+void ComponentRefresh::enableRefresh(bool enabled)
 {
     assert(pInternal);
     auto& internal = *pInternal;
@@ -1451,7 +1450,7 @@ void Component::scroll(wxScrolledWindow* component)
 }
 
 void Component::setOtherGrid(Component* other)
-{ 
+{
     // Store other Component, for simultaneous grid resize
     otherComponent_ = other;
     // For scrolling current grid and other grid simultaneously
