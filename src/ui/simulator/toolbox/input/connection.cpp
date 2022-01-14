@@ -221,22 +221,19 @@ void Connections::update()
 
     // For each area, list the links related to it. For each link, the area is either
     // its origin or extremity.
-    std::map<
-      Data::AreaName,
-      std::vector<std::pair<Data::AreaLink* /*pointer to link*/,
-                            bool /*true if area is the origin of the link, false otherwise*/>>>
-      areaToListOfLinks;
+    using ListOfLinks
+      = std::vector<std::pair<Data::AreaLink* /*pointer to link*/,
+                              bool /*true if area is the origin of the link, false otherwise*/>>;
+    std::map<Data::AreaName, ListOfLinks> areaToListOfLinks;
     {
-        const Data::Area::Map::iterator end = study.areas.end();
-        for (Data::Area::Map::iterator i = study.areas.begin(); i != end; ++i)
+        for (const auto& namedArea : study.areas)
         {
-            Data::Area* area = i->second;
+            Data::Area* area = namedArea.second;
             if (area->isVisibleOnLayer(layerID))
             {
-                const Data::AreaLink::Map::iterator end = area->links.end();
-                for (Data::AreaLink::Map::iterator i = area->links.begin(); i != end; ++i)
+                for (const auto& namedLink : area->links)
                 {
-                    Data::AreaLink* lnk = i->second;
+                    Data::AreaLink* lnk = namedLink.second;
                     if (lnk->isVisibleOnLayer(layerID))
                     {
                         areaToListOfLinks[area->name].push_back({lnk, true});
