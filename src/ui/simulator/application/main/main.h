@@ -777,7 +777,7 @@ private:
     uint pCurrentEquipmentPage;
 
     // Pointer to latest output
-    Data::Output::Ptr latestOutput;
+    Data::Output::Ptr latestOutput = nullptr;
 
     // friends
     template<class WindowT>
