@@ -111,14 +111,11 @@ Study::Study(bool forTheSolver) :
 
 Study::~Study()
 {
-    logs.debug() << "  :: destroying study " << (void*)this;
     clear();
 }
 
 void Study::clear()
 {
-    logs.debug() << "  :: clear study";
-
     // Releasing runtime infos
     FreeAndNil(runtime);
     FreeAndNil(scenarioRules);
