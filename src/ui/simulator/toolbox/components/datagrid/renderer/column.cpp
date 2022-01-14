@@ -24,6 +24,7 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#include <memory>
 
 #include "column.h"
 #include "cell.h"
@@ -42,7 +43,8 @@ namespace Renderer
 // -------------------
 // Base column class
 // -------------------
-Column::Column(Antares::Data::TimeSeries ts, const wxString& caption) : tsKind_(ts), caption_(caption)
+Column::Column(Antares::Data::TimeSeries ts, const wxString& caption) :
+ tsKind_(ts), caption_(caption)
 {
 }
 
@@ -79,6 +81,26 @@ classicColumn::classicColumn(TimeSeries ts, const wxString& caption) : Column(ts
               new_check_allocation<RefreshTsCell>(tsKind_),
               new_check_allocation<RefreshSpanCell>(tsKind_),
               new_check_allocation<SeasonalCorrelationCell>(tsKind_),
+              new_check_allocation<storeToInputCell>(tsKind_),
+              new_check_allocation<storeToOutputCell>(tsKind_),
+              new_check_allocation<blankCell>(),
+              new_check_allocation<intraModalCell>(tsKind_),
+              new_check_allocation<interModalCell>(tsKind_)};
+}
+
+// -------------------
+//  Thermal column
+// -------------------
+thermalColumn::thermalColumn() : Column(timeSeriesThermal, "   Thermal   ")
+{
+    cells_ = {new_check_allocation<blankCell>(),
+              new_check_allocation<readyMadeTSstatus>(tsKind_),
+              new_check_allocation<blankCell>(),
+              new_check_allocation<generatedTSstatus>(tsKind_),
+              new_check_allocation<NumberTsCellThermal>(),
+              new_check_allocation<RefreshTsCellThermal>(),
+              new_check_allocation<RefreshSpanCellThermal>(),
+              new_check_allocation<SeasonalCorrelationCellThermal>(),
               new_check_allocation<storeToInputCell>(tsKind_),
               new_check_allocation<storeToOutputCell>(tsKind_),
               new_check_allocation<blankCell>(),

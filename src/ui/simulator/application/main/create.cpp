@@ -465,7 +465,8 @@ void ApplWnd::internalInitialize()
     // System parameter
     OnStudySettingsChanged.connect(this, &ApplWnd::onSystemParametersChanged);
     // Advanced parameters
-    Window::Options::OnRenewableGenerationModellingChanged.connect(this, &ApplWnd::onRenewableGenerationModellingChanged);
+    Window::Options::OnRenewableGenerationModellingChanged.connect(
+      this, &ApplWnd::onRenewableGenerationModellingChanged);
 
     // Update the status bar
     resetDefaultStatusBarText();

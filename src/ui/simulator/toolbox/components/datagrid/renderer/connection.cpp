@@ -41,8 +41,7 @@ namespace Datagrid
 namespace Renderer
 {
 Connection::Connection(wxWindow* control, Toolbox::InputSelector::Connections* notifier) :
-    Renderer::Matrix<>(control),
-    pControl(control)
+ Renderer::Matrix<>(control), pControl(control)
 {
     if (notifier)
         notifier->onConnectionChanged.connect(this, &Connection::onConnectionChanged);
@@ -90,9 +89,11 @@ wxColour Connection::horizontalBorderColor(int x, int y) const
 // ===========================
 // Parameters grid renderer
 // ===========================
-connectionParameters::connectionParameters(wxWindow* parent, Toolbox::InputSelector::Connections* notifier) :
-    Connection(parent, notifier)
-{}
+connectionParameters::connectionParameters(wxWindow* parent,
+                                           Toolbox::InputSelector::Connections* notifier) :
+ Connection(parent, notifier)
+{
+}
 
 wxString connectionParameters::columnCaption(int colIndx) const
 {
@@ -225,8 +226,9 @@ void connectionParameters::setMatrix(Data::AreaLink* link)
 // NTC grid renderer
 // ===========================
 connectionNTC::connectionNTC(wxWindow* parent, Toolbox::InputSelector::Connections* notifier) :
-    Connection(parent, notifier)
-{}
+ Connection(parent, notifier)
+{
+}
 
 bool connectionNTC::cellValue(int x, int y, const Yuni::String& value)
 {
@@ -242,9 +244,11 @@ bool connectionNTC::cellValue(int x, int y, const Yuni::String& value)
 // ----------------
 // Direct
 // ----------------
-connectionNTCdirect::connectionNTCdirect(wxWindow* parent, Toolbox::InputSelector::Connections* notifier) :
-    connectionNTC(parent, notifier)
-{}
+connectionNTCdirect::connectionNTCdirect(wxWindow* parent,
+                                         Toolbox::InputSelector::Connections* notifier) :
+ connectionNTC(parent, notifier)
+{
+}
 void connectionNTCdirect::setMatrix(Data::AreaLink* link)
 {
     matrix(link ? &(link->directCapacities) : nullptr);
@@ -253,14 +257,15 @@ void connectionNTCdirect::setMatrix(Data::AreaLink* link)
 // ----------------
 // Indirect
 // ----------------
-connectionNTCindirect::connectionNTCindirect(wxWindow* parent, Toolbox::InputSelector::Connections* notifier) :
-    connectionNTC(parent, notifier)
-{}
+connectionNTCindirect::connectionNTCindirect(wxWindow* parent,
+                                             Toolbox::InputSelector::Connections* notifier) :
+ connectionNTC(parent, notifier)
+{
+}
 void connectionNTCindirect::setMatrix(Data::AreaLink* link)
 {
     matrix(link ? &(link->indirectCapacities) : nullptr);
 }
-
 
 } // namespace Renderer
 } // namespace Datagrid

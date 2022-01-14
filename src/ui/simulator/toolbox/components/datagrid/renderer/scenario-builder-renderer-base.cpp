@@ -114,7 +114,6 @@ void ScBuilderRendererBase::onStudyClosed()
     IRenderer::onStudyClosed();
 }
 
-
 // ========================================
 // Class ScBuilderRendererAreasAsRows
 // ========================================
@@ -132,7 +131,7 @@ wxString ScBuilderRendererAreasAsRows::rowCaption(int rowIndx) const
     {
         if ((uint)rowIndx < study->areas.size())
             return wxString() << wxT(" ") << wxStringFromUTF8(study->areas.byIndex[rowIndx]->name)
-            << wxT("  ");
+                              << wxT("  ");
     }
     return wxEmptyString;
 }
@@ -145,12 +144,14 @@ bool ScBuilderRendererAreasAsRows::valid() const
 // ========================================
 // Class ScBuilderRendererForAreaSelector
 // ========================================
-ScBuilderRendererForAreaSelector::ScBuilderRendererForAreaSelector(const Toolbox::InputSelector::Area* notifier)
+ScBuilderRendererForAreaSelector::ScBuilderRendererForAreaSelector(
+  const Toolbox::InputSelector::Area* notifier)
 {
     if (notifier)
     {
         // Event: The current selected area
-        Toolbox::InputSelector::Area::onAreaChanged.connect(this, &ScBuilderRendererForAreaSelector::onAreaChanged);
+        Toolbox::InputSelector::Area::onAreaChanged.connect(
+          this, &ScBuilderRendererForAreaSelector::onAreaChanged);
     }
 }
 

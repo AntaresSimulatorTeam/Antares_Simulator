@@ -37,16 +37,8 @@ namespace Solver
 namespace TSGenerator
 {
 // forward declaration
-// Thermal - see thermal.cpp
-bool GenerateThermalTimeSeries(Data::Study& study, uint year);
 // Hydro - see hydro.cpp
 bool GenerateHydroTimeSeries(Data::Study& study, uint year);
-
-template<>
-inline bool GenerateTimeSeries<Data::timeSeriesThermal>(Data::Study& study, uint year)
-{
-    return GenerateThermalTimeSeries(study, year);
-}
 
 template<>
 inline bool GenerateTimeSeries<Data::timeSeriesHydro>(Data::Study& study, uint year)

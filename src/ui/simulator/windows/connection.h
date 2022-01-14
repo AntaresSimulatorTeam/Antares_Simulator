@@ -42,39 +42,51 @@ namespace Window
 **
 */
 
-    // Forward declaration
-    class Interconnection;
+// Forward declaration
+class Interconnection;
 
-    class linkGrid
-    {
-    public:
-        linkGrid() = default;
-        virtual ~linkGrid() = default;
-        virtual void add(wxBoxSizer* sizer, wxWindow* parent, Interconnection* intercoWindow, Toolbox::InputSelector::Connections* notifier) = 0;
-    };
+class linkGrid
+{
+public:
+    linkGrid() = default;
+    virtual ~linkGrid() = default;
+    virtual void add(wxBoxSizer* sizer,
+                     wxWindow* parent,
+                     Interconnection* intercoWindow,
+                     Toolbox::InputSelector::Connections* notifier)
+      = 0;
+};
 
-    class linkParametersGrid : public linkGrid
-    {
-    public:
-        linkParametersGrid() = default;
-        ~linkParametersGrid() override = default;
-        void add(wxBoxSizer* sizer, wxWindow* parent, Interconnection* intercoWindow, Toolbox::InputSelector::Connections* notifier) override;
-    };
+class linkParametersGrid : public linkGrid
+{
+public:
+    linkParametersGrid() = default;
+    ~linkParametersGrid() override = default;
+    void add(wxBoxSizer* sizer,
+             wxWindow* parent,
+             Interconnection* intercoWindow,
+             Toolbox::InputSelector::Connections* notifier) override;
+};
 
-    class linkNTCgrid : public linkGrid
-    {
-    public:
-        linkNTCgrid() = default;
-        ~linkNTCgrid() override = default;
-        void add(wxBoxSizer* sizer, wxWindow* parent, Interconnection* intercoWindow, Toolbox::InputSelector::Connections* notifier) override;
-    };
+class linkNTCgrid : public linkGrid
+{
+public:
+    linkNTCgrid() = default;
+    ~linkNTCgrid() override = default;
+    void add(wxBoxSizer* sizer,
+             wxWindow* parent,
+             Interconnection* intercoWindow,
+             Toolbox::InputSelector::Connections* notifier) override;
+};
 
 class Interconnection : public wxScrolledWindow, public Yuni::IEventObserver<Interconnection>
 {
 public:
     //! \name Constructor & Destructor
     //@{
-    Interconnection(wxWindow* parent, Toolbox::InputSelector::Connections* notifier, linkGrid* link_grid);
+    Interconnection(wxWindow* parent,
+                    Toolbox::InputSelector::Connections* notifier,
+                    linkGrid* link_grid);
     //! Destructor
     virtual ~Interconnection();
     //@}

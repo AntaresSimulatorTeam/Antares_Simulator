@@ -151,10 +151,10 @@ Interconnection::Interconnection(wxWindow* parent,
     {
         label = Component::CreateLabel(pLinkData, wxT("Caption"), false, true);
         button = new_check_allocation<Component::Button>(pLinkData,
-                                       wxT(""),
-                                       "images/16x16/document.png",
-                                       this,
-                                       &Interconnection::onButtonEditCaption);
+                                                         wxT(""),
+                                                         "images/16x16/document.png",
+                                                         this,
+                                                         &Interconnection::onButtonEditCaption);
         auto* lhz = new_check_allocation<wxBoxSizer>(wxHORIZONTAL);
         pCaptionText = Component::CreateLabel(pLinkData, wxEmptyString);
         sizer_flex_grid->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);

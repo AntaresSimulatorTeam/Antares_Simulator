@@ -71,15 +71,18 @@ public:
 
 protected:
     virtual void onStudyClosed();
-    wxWindow* gridPanel() { return pGridPanel; }
+    wxWindow* gridPanel()
+    {
+        return pGridPanel;
+    }
 
 protected:
     Data::ScenarioBuilder::Rules::Ptr pRules;
+
 private:
     wxWindow* pGridPanel = nullptr;
 
 }; // class ScBuilderRendererBase
-
 
 // -------------------------------------------------------------------
 // Class ScBuilderRendererAreasAsRows
@@ -98,7 +101,6 @@ public:
     bool valid() const override;
 };
 
-
 // -------------------------------------------------------------------
 // Class ScBuilderRendererForAreaSelector
 //      Renderer for a scenario builder grid of which lines depend
@@ -116,12 +118,14 @@ public:
 protected:
     void onAreaChanged(Data::Area* area);
     void onStudyClosed() override;
-    Data::Area* selectedArea() const { return pArea; }
+    Data::Area* selectedArea() const
+    {
+        return pArea;
+    }
 
 private:
     Data::Area* pArea = nullptr;
 };
-
 
 } // namespace Renderer
 } // namespace Datagrid

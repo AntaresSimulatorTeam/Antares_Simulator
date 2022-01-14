@@ -122,33 +122,62 @@ static void PreflightVersion20_area(PathList& e, PathList& p, const Area* area, 
     e.add(buffer);
 
     // Thermal
-    buffer.clear() << "input/thermal/series/" << id;
-    p.add(buffer);
-    buffer.clear() << "input/thermal/prepro/" << id;
-    p.add(buffer);
-    buffer.clear() << "input/thermal/clusters/" << id;
-    p.add(buffer);
-    buffer.clear() << "input/thermal/clusters/" << id << "/list.ini";
-    e.add(buffer);
-
-    auto end = area->thermal.list.end();
-    for (auto i = area->thermal.list.begin(); i != end; ++i)
     {
-        // Reference to the thermal cluster
-        auto& cluster = *(i->second);
-
-        buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster.id();
+        buffer.clear() << "input/thermal/series/" << id;
         p.add(buffer);
-        buffer.clear() << "input/thermal/series/" << id << '/' << cluster.id();
+        buffer.clear() << "input/thermal/prepro/" << id;
+        p.add(buffer);
+        buffer.clear() << "input/thermal/clusters/" << id;
+        p.add(buffer);
+        buffer.clear() << "input/thermal/clusters/" << id << "/list.ini";
+        e.add(buffer);
+
+        auto end = area->thermal.list.end();
+        for (auto i = area->thermal.list.begin(); i != end; ++i)
+        {
+            // Reference to the thermal cluster
+            auto& cluster = *(i->second);
+
+            buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster.id();
+            p.add(buffer);
+            buffer.clear() << "input/thermal/series/" << id << '/' << cluster.id();
+            p.add(buffer);
+
+            buffer.clear() << "input/thermal/series/" << id << '/' << cluster.id() << "/series.txt";
+            e.add(buffer);
+
+            buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster.id() << "/data.txt";
+            e.add(buffer);
+            buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster.id()
+                           << "/modulation.txt";
+            e.add(buffer);
+        }
+    }
+
+    // Renewable clusters
+    {
+        buffer.clear() << "input/renewables/series/" << id;
         p.add(buffer);
 
-        buffer.clear() << "input/thermal/series/" << id << '/' << cluster.id() << "/series.txt";
+        buffer.clear() << "input/renewables/clusters/" << id;
+        p.add(buffer);
+
+        buffer.clear() << "input/renewables/clusters/" << id << "/list.ini";
         e.add(buffer);
 
-        buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster.id() << "/data.txt";
-        e.add(buffer);
-        buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster.id() << "/modulation.txt";
-        e.add(buffer);
+        auto end = area->renewable.list.end();
+        for (auto i = area->renewable.list.begin(); i != end; ++i)
+        {
+            // Reference to the thermal cluster
+            auto& cluster = *(i->second);
+
+            buffer.clear() << "input/renewables/series/" << id << '/' << cluster.id();
+            p.add(buffer);
+
+            buffer.clear() << "input/renewables/series/" << id << '/' << cluster.id()
+                           << "/series.txt";
+            e.add(buffer);
+        }
     }
 
     // Misc-gen
@@ -252,6 +281,9 @@ bool PreflightVersion20(StudyCleaningInfos* infos)
     p.add("input/thermal/prepro");
     p.add("input/thermal/series");
     p.add("input/thermal/clusters");
+    p.add("input/renewables");
+    p.add("input/renewables/series");
+    p.add("input/renewables/clusters");
     p.add("input/hydro");
     p.add("input/hydro/allocation");
     p.add("input/hydro/series");
@@ -292,6 +324,14 @@ bool PreflightVersion20(StudyCleaningInfos* infos)
                 // Load all thermal clusters
                 buffer.clear() << infos->folder << "/input/thermal/clusters/" << area->id;
                 if (not area->thermal.list.loadFromFolder(*study, buffer.c_str(), area))
+                {
+                    delete arealist;
+                    delete study;
+                    return false;
+                }
+
+                buffer.clear() << infos->folder << "/input/renewables/clusters/" << area->id;
+                if (not area->renewable.list.loadFromFolder(buffer.c_str(), area))
                 {
                     delete arealist;
                     delete study;

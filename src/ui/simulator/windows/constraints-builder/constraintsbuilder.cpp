@@ -476,7 +476,7 @@ void ConstraintsBuilderWizard::onIncludeLoopFlow(wxCommandEvent& evt)
     pCBuilder->setLoopFlowInclusion(value);
     pCBuilder->setUpToDate(false);
     pCBuilder->saveCBuilderToFile();
-    
+
     pGrid->forceRefresh();
 }
 
@@ -488,7 +488,7 @@ void ConstraintsBuilderWizard::onUsePhaseShift(wxCommandEvent& evt)
     pCBuilder->setPhaseShiftInclusion(value);
     pCBuilder->setUpToDate(false);
     pCBuilder->saveCBuilderToFile();
-    
+
     pGrid->forceRefresh();
 }
 

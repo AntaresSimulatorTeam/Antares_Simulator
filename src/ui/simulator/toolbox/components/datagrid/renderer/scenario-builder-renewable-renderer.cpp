@@ -39,7 +39,6 @@ namespace Datagrid
 {
 namespace Renderer
 {
-
 int renewableScBuilderRenderer::height() const
 {
     if (!(!study) && !(!pRules) && selectedArea())
@@ -51,25 +50,27 @@ int renewableScBuilderRenderer::height() const
 
 wxString renewableScBuilderRenderer::rowCaption(int rowIndx) const
 {
-    if (!(!study) && !(!pRules) && selectedArea() && (uint)rowIndx < selectedArea()->renewable.list.size())
+    if (!(!study) && !(!pRules) && selectedArea()
+        && (uint)rowIndx < selectedArea()->renewable.list.size())
     {
-        return wxString() << wxT(" ")
-                            << wxStringFromUTF8(selectedArea()->renewable.list.byIndex[rowIndx]->name())
-                            << wxT("  ");
+        return wxString() << wxT(
+                 " ") << wxStringFromUTF8(selectedArea()->renewable.list.byIndex[rowIndx]->name())
+                          << wxT("  ");
     }
     return wxEmptyString;
 }
 
 bool renewableScBuilderRenderer::cellValue(int x, int y, const String& value)
 {
-    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears && 
-        selectedArea() && (uint)y < selectedArea()->renewable.list.size())
+    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears && selectedArea()
+        && (uint)y < selectedArea()->renewable.list.size())
     {
         assert(selectedArea()->index < pRules->areaCount());
         assert((uint)y < pRules->renewable[selectedArea()->index].width());
         assert((uint)x < pRules->renewable[selectedArea()->index].height());
         uint val = fromStringToTSnumber(value);
-        pRules->renewable[selectedArea()->index].set(selectedArea()->renewable.list.byIndex[y], x, val);
+        pRules->renewable[selectedArea()->index].set(
+          selectedArea()->renewable.list.byIndex[y], x, val);
         return true;
     }
     return false;
@@ -77,8 +78,8 @@ bool renewableScBuilderRenderer::cellValue(int x, int y, const String& value)
 
 double renewableScBuilderRenderer::cellNumericValue(int x, int y) const
 {
-    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears && selectedArea() && 
-        (uint)y < selectedArea()->renewable.list.size())
+    if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears && selectedArea()
+        && (uint)y < selectedArea()->renewable.list.size())
     {
         assert((uint)y < pRules->renewable[selectedArea()->index].width());
         assert((uint)x < pRules->renewable[selectedArea()->index].height());

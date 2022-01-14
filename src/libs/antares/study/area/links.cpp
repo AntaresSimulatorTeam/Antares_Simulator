@@ -83,7 +83,6 @@ AreaLink::~AreaLink()
 {
 }
 
-
 bool AreaLink::linkLoadTimeSeries_for_version_under_320(const AnyString& folder, Study& study)
 {
     String buffer;
@@ -116,20 +115,17 @@ bool AreaLink::linkLoadTimeSeries_for_version_under_320(const AnyString& folder,
 
     uint loadOptions = Matrix<>::optFixedSize | Matrix<>::optImmediate;
     // NTC direct
-    buffer.clear() << folder << SEP << with->id << SEP << "direct."
-        << study.inputExtension;
+    buffer.clear() << folder << SEP << with->id << SEP << "direct." << study.inputExtension;
     ret = directCapacities.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, loadOptions) && ret;
     directCapacities.markAsModified();
 
     // NTC indirect
-    buffer.clear() << folder << SEP << with->id << SEP << "indirect."
-        << study.inputExtension;
+    buffer.clear() << folder << SEP << with->id << SEP << "indirect." << study.inputExtension;
     ret = indirectCapacities.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, loadOptions) && ret;
     indirectCapacities.markAsModified();
 
     // Impedances
-    buffer.clear() << folder << SEP << with->id << SEP << "impedances."
-        << study.inputExtension;
+    buffer.clear() << folder << SEP << with->id << SEP << "impedances." << study.inputExtension;
     Matrix<double> tmp;
     ret = tmp.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, loadOptions) && ret;
     parameters.pasteToColumn(fhlImpedances, tmp[0]);
@@ -163,7 +159,9 @@ bool AreaLink::linkLoadTimeSeries_for_version_from_320_to_630(const AnyString& f
     // Load link's data
     buffer.clear() << folder << SEP << with->id << ".txt";
     Matrix<> tmpMatrix;
-    ret = tmpMatrix.loadFromCSVFile(buffer, 5, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate) && ret;
+    ret = tmpMatrix.loadFromCSVFile(
+            buffer, 5, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate)
+          && ret;
 
     // Store data into link's data container
     for (int h = 0; h < HOURS_PER_YEAR; h++)
@@ -189,7 +187,8 @@ bool AreaLink::linkLoadTimeSeries_for_version_from_630_to_810(const AnyString& f
     // Load link's data
     Matrix<> tmpMatrix;
     const uint matrixWidth = 8;
-    if (not tmpMatrix.loadFromCSVFile(buffer, matrixWidth, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate))
+    if (not tmpMatrix.loadFromCSVFile(
+          buffer, matrixWidth, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate))
     {
         return false;
     }
@@ -221,15 +220,21 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
     // Read link's parameters times series
     filename.clear() << folder << SEP << with->id << "_parameters.txt";
     const uint matrixWidth = 6;
-    success = parameters.loadFromCSVFile(filename, matrixWidth, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate) && success;
+    success
+      = parameters.loadFromCSVFile(
+          filename, matrixWidth, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate)
+        && success;
 
     // Read link's direct capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_direct.txt";
-    success = directCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate) && success;
+    success = directCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate)
+              && success;
 
     // Read link's indirect capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_indirect.txt";
-    success = indirectCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate) && success;
+    success
+      = indirectCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate)
+        && success;
 
     return success;
 }
@@ -242,7 +247,8 @@ bool AreaLink::loadTimeSeries(Study& study, const AnyString& folder)
         return linkLoadTimeSeries_for_version_from_320_to_630(folder);
     else if (study.header.version < 820)
         return linkLoadTimeSeries_for_version_from_630_to_810(folder);
-    else {
+    else
+    {
         return linkLoadTimeSeries_for_version_820_and_later(folder);
     }
 }
@@ -315,7 +321,6 @@ void AreaLink::reverse()
     // Updating both areas' links local numbering
     from->buildLinksIndexes();
     with->buildLinksIndexes();
-
 
     // Making sure that we have the data
     directCapacities.invalidate(true);
@@ -482,8 +487,7 @@ static bool AreaLinksInternalLoadFromProperty(Study& study,
 
 void logLinkDataCheckError(Study& study, AreaLink& link)
 {
-    logs.error() << "Link (" << link.from->name << "/" << link.with->name
-        << "): Invalid values";
+    logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Invalid values";
     study.gotFatalError = true;
 }
 
@@ -549,7 +553,8 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             // Short names for link's properties
             const uint nbDirectTS = link.directCapacities.width;
             const uint nbIndirectTS = link.indirectCapacities.width;
-            if (nbDirectTS != nbIndirectTS) {
+            if (nbDirectTS != nbIndirectTS)
+            {
                 logLinkDataCheckErrorDirectIndirect(study, link, nbDirectTS, nbIndirectTS);
                 return false;
             }
@@ -711,7 +716,6 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
     return ret;
 } // End AreaLinksLoadFromFolder(...)
 
-
 bool saveAreaLinksTimeSeriesToFolder(const Area* area, const char* const folder)
 {
     // Initialize
@@ -751,7 +755,7 @@ bool saveAreaLinksConfigurationFileToFolder(const Area* area, const char* const 
 {
     String filename;
     IniFile ini;
-    
+
     auto end = area->links.end();
     for (auto i = area->links.begin(); i != end; ++i)
     {
@@ -762,7 +766,8 @@ bool saveAreaLinksConfigurationFileToFolder(const Area* area, const char* const 
         section->add("hurdles-cost", link.useHurdlesCost);
         section->add("loop-flow", link.useLoopFlow);
         section->add("use-phase-shifter", link.usePST);
-        section->add("transmission-capacities", transmissionCapacitiesToString(link.transmissionCapacities));
+        section->add("transmission-capacities",
+                     transmissionCapacitiesToString(link.transmissionCapacities));
         section->add("asset-type", assetTypeToString(link.assetType));
         section->add("link-style", styleToString(link.style));
         section->add("link-width", link.linkWidth);
@@ -843,7 +848,7 @@ Yuni::uint64 AreaLink::memoryUsage() const
 bool AreaLink::invalidate(bool reload) const
 {
     return parameters.invalidate(reload) && directCapacities.invalidate(reload)
-                                         && indirectCapacities.invalidate(reload) ;
+           && indirectCapacities.invalidate(reload);
 }
 
 void AreaLink::markAsModified() const

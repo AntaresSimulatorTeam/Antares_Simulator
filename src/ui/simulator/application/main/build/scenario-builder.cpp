@@ -47,7 +47,6 @@ using namespace Component;
 using namespace Component::Datagrid;
 using namespace Toolbox;
 
-
 namespace Antares
 {
 namespace Forms
@@ -61,9 +60,11 @@ protected:
     typedef Component::Datagrid::Component DatagridType;
 
 public:
-    basicScBuilderPageMaker(Window::ScenarioBuilder::Panel* scenarioBuilderPanel, Notebook* notebook) :
-        scBuilderPanel_(scenarioBuilderPanel), notebook_(notebook)
-    {}
+    basicScBuilderPageMaker(Window::ScenarioBuilder::Panel* scenarioBuilderPanel,
+                            Notebook* notebook) :
+     scBuilderPanel_(scenarioBuilderPanel), notebook_(notebook)
+    {
+    }
     virtual ~basicScBuilderPageMaker() = default;
 
     Notebook::Page* createPage()
@@ -76,9 +77,18 @@ public:
     }
 
 protected:
-    Notebook* notebook() { return notebook_; }
-    Renderer::ScBuilderRendererBase* renderer() { return renderer_; }
-    DatagridType* grid() { return grid_; }
+    Notebook* notebook()
+    {
+        return notebook_;
+    }
+    Renderer::ScBuilderRendererBase* renderer()
+    {
+        return renderer_;
+    }
+    DatagridType* grid()
+    {
+        return grid_;
+    }
 
 private:
     // Private methods
@@ -92,7 +102,8 @@ private:
     }
     void rendererHandlesRulesEvent()
     {
-        scBuilderPanel_->updateRules.connect(renderer_, &Renderer::ScBuilderRendererBase::onRulesChanged);
+        scBuilderPanel_->updateRules.connect(renderer_,
+                                             &Renderer::ScBuilderRendererBase::onRulesChanged);
     }
     void createGrid()
     {
@@ -110,7 +121,6 @@ private:
     DatagridType* grid_ = nullptr;
 };
 
-
 // Simple scenario builder page maker : makes page with no area selector
 
 class simpleScBuilderPageMaker : public basicScBuilderPageMaker
@@ -124,8 +134,8 @@ private:
     void addAreaSelectorPage() override
     {
         // In the scenario builder, a selector page can be an area or link selector page.
-        // For example : for thermal, you need to select an area to get a grid (rows : clusters, columns : years) 
-        // by default : does nothing. Should be overloaded to add a selector page
+        // For example : for thermal, you need to select an area to get a grid (rows : clusters,
+        // columns : years) by default : does nothing. Should be overloaded to add a selector page
     }
     DatagridType* getGrid() override
     {
@@ -222,7 +232,6 @@ class ntcScBuilderPageMaker final : public simpleScBuilderPageMaker
     }
 };
 
-
 class clusterScBuilderPageMaker : public basicScBuilderPageMaker
 {
     using basicScBuilderPageMaker::basicScBuilderPageMaker;
@@ -232,7 +241,8 @@ class clusterScBuilderPageMaker : public basicScBuilderPageMaker
 
     void addAreaSelectorPage() override
     {
-        area_selector_page_ = createStdNotebookPage<InputSelector::Area>(notebook(), name(), caption());
+        area_selector_page_
+          = createStdNotebookPage<InputSelector::Area>(notebook(), name(), caption());
     }
     DatagridType* getGrid() override
     {
@@ -286,7 +296,7 @@ class renewableScBuilderPageMaker final : public clusterScBuilderPageMaker
 public:
     Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        return  new Renderer::renewableScBuilderRenderer(areaSelectorPage());
+        return new Renderer::renewableScBuilderRenderer(areaSelectorPage());
     }
 
     const char* name() const override
@@ -318,8 +328,10 @@ void ApplWnd::createNBScenarioBuilder()
 {
     // Scenario Builder
     pScenarioBuilderNotebook = new Notebook(pSectionNotebook);
-    pScenarioBuilderNotebook->onPageChanged.connect(this, &ApplWnd::onScenarioBuilderNotebookPageChanging);
-    pScenarioBuilderMainPage = pSectionNotebook->add(pScenarioBuilderNotebook, wxT("scenariobuilder"), wxT("scenariobuilder"));
+    pScenarioBuilderNotebook->onPageChanged.connect(
+      this, &ApplWnd::onScenarioBuilderNotebookPageChanging);
+    pScenarioBuilderMainPage = pSectionNotebook->add(
+      pScenarioBuilderNotebook, wxT("scenariobuilder"), wxT("scenariobuilder"));
 
     // Title
     auto* scenarioBuilderPanel = new Window::ScenarioBuilder::Panel(pScenarioBuilderNotebook);
@@ -349,12 +361,14 @@ void ApplWnd::createNBScenarioBuilder()
     ntcScBuilderPageMaker ntcSBpageMaker(scenarioBuilderPanel, pScenarioBuilderNotebook);
     pageScBuilderNTC = ntcSBpageMaker.createPage();
 
-    renewableScBuilderPageMaker renewableSBpageMaker(scenarioBuilderPanel, pScenarioBuilderNotebook);
+    renewableScBuilderPageMaker renewableSBpageMaker(scenarioBuilderPanel,
+                                                     pScenarioBuilderNotebook);
     pageScBuilderRenewable = renewableSBpageMaker.createPage();
 
     pScenarioBuilderNotebook->addSeparator();
 
-    hydroLevelsScBuilderPageMaker hydroLevelsSBpageMaker(scenarioBuilderPanel, pScenarioBuilderNotebook);
+    hydroLevelsScBuilderPageMaker hydroLevelsSBpageMaker(scenarioBuilderPanel,
+                                                         pScenarioBuilderNotebook);
     pageScBuilderHydroLevels = hydroLevelsSBpageMaker.createPage();
 }
 

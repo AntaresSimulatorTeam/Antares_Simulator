@@ -67,7 +67,7 @@ double blankCell::cellNumericValue() const
 {
     return 0.;
 }
-bool blankCell::cellValue(const String& value)
+bool blankCell::setCellValue(const String& value)
 {
     return false;
 }
@@ -92,7 +92,7 @@ double inactiveCell::cellNumericValue() const
 {
     return 0.;
 }
-bool inactiveCell::cellValue(const String& value)
+bool inactiveCell::setCellValue(const String& value)
 {
     return false;
 }
@@ -116,7 +116,7 @@ double readyMadeTSstatus::cellNumericValue() const
 {
     return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_)) ? 0 : 1.;
 }
-bool readyMadeTSstatus::cellValue(const String& value)
+bool readyMadeTSstatus::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
@@ -150,7 +150,7 @@ double generatedTSstatus::cellNumericValue() const
 {
     return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_)) ? 1. : 0.;
 }
-bool generatedTSstatus::cellValue(const String& value)
+bool generatedTSstatus::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
@@ -201,7 +201,7 @@ double NumberTsCell::cellNumericValue() const
     return to_return;
 }
 
-bool NumberTsCell::cellValue(const String& value)
+bool NumberTsCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
@@ -252,7 +252,7 @@ double RefreshTsCell::cellNumericValue() const
     return (0 != (study_->parameters.timeSeriesToRefresh & tsKind_)) ? 1. : 0.;
 }
 
-bool RefreshTsCell::cellValue(const String& value)
+bool RefreshTsCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
@@ -304,7 +304,7 @@ double RefreshSpanCell::cellNumericValue() const
     return to_return;
 }
 
-bool RefreshSpanCell::cellValue(const String& value)
+bool RefreshSpanCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
@@ -327,7 +327,6 @@ IRenderer::CellStyle RefreshSpanCell::cellStyle() const
              ? IRenderer::cellStyleDefault
              : IRenderer::cellStyleDefaultDisabled;
 }
-
 // ============================
 //  Seasonal correlation cell
 // ============================
@@ -350,8 +349,6 @@ wxString SeasonalCorrelationCell::cellValue() const
         mode = tsToCorrelation_.at(tsKind_)->mode();
     else if (tsKind_ == Data::timeSeriesHydro)
         return wxT("annual");
-    else if (tsKind_ == Data::timeSeriesThermal)
-        return wxT("n/a");
     else
         return wxT("--");
     return (mode == Data::Correlation::modeAnnual) ? wxT("annual") : wxT("monthly");
@@ -367,7 +364,7 @@ double SeasonalCorrelationCell::cellNumericValue() const
     return (mode == Data::Correlation::modeAnnual) ? 1. : -1.;
 }
 
-bool SeasonalCorrelationCell::cellValue(const String& value)
+bool SeasonalCorrelationCell::setCellValue(const String& value)
 {
     double valueDouble;
     bool convertToDoubleValid = convertToDouble(value, valueDouble);
@@ -417,7 +414,7 @@ double storeToInputCell::cellNumericValue() const
     return (0 != (study_->parameters.timeSeriesToImport & tsKind_)) ? 1. : 0.;
 }
 
-bool storeToInputCell::cellValue(const String& value)
+bool storeToInputCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
@@ -432,6 +429,11 @@ bool storeToInputCell::cellValue(const String& value)
 
 IRenderer::CellStyle storeToInputCell::cellStyle() const
 {
+    // Special case: generation might be forced for some thermal clusters
+    if (tsKind_ == timeSeriesThermal)
+    {
+        return IRenderer::cellStyleDefault;
+    }
     return (isTSgeneratorOn() && 0 != (study_->parameters.timeSeriesToImport & tsKind_))
              ? IRenderer::cellStyleDefault
              : IRenderer::cellStyleDefaultDisabled;
@@ -454,7 +456,7 @@ double storeToOutputCell::cellNumericValue() const
     return (0 != (study_->parameters.timeSeriesToArchive & tsKind_)) ? 1. : 0.;
 }
 
-bool storeToOutputCell::cellValue(const String& value)
+bool storeToOutputCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
@@ -469,6 +471,11 @@ bool storeToOutputCell::cellValue(const String& value)
 
 IRenderer::CellStyle storeToOutputCell::cellStyle() const
 {
+    // Special case: generation might be forced for some thermal clusters
+    if (tsKind_ == timeSeriesThermal)
+    {
+        return IRenderer::cellStyleDefault;
+    }
     return (isTSgeneratorOn() && 0 != (study_->parameters.timeSeriesToArchive & tsKind_))
              ? IRenderer::cellStyleDefault
              : IRenderer::cellStyleDefaultDisabled;
@@ -491,7 +498,7 @@ double intraModalCell::cellNumericValue() const
     return (0 != (study_->parameters.intraModal & tsKind_)) ? 1. : 0.;
 }
 
-bool intraModalCell::cellValue(const String& value)
+bool intraModalCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
@@ -527,7 +534,7 @@ double interModalCell::cellNumericValue() const
     return (0 != (study_->parameters.interModal & tsKind_)) ? 1. : 0.;
 }
 
-bool interModalCell::cellValue(const String& value)
+bool interModalCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
@@ -546,6 +553,53 @@ IRenderer::CellStyle interModalCell::cellStyle() const
                                                             : IRenderer::cellStyleDefaultDisabled;
 }
 
+// ======================
+// Thermal-specific cells
+// ======================
+// Constructors
+NumberTsCellThermal::NumberTsCellThermal() : NumberTsCell(timeSeriesThermal)
+{
+}
+RefreshTsCellThermal::RefreshTsCellThermal() : RefreshTsCell(timeSeriesThermal)
+{
+}
+RefreshSpanCellThermal::RefreshSpanCellThermal() : RefreshSpanCell(timeSeriesThermal)
+{
+}
+SeasonalCorrelationCellThermal::SeasonalCorrelationCellThermal() :
+ SeasonalCorrelationCell(timeSeriesThermal)
+{
+}
+
+// Style
+IRenderer::CellStyle NumberTsCellThermal::cellStyle() const
+{
+    // default style
+    return IRenderer::cellStyleDefault;
+}
+
+IRenderer::CellStyle RefreshTsCellThermal::cellStyle() const
+{
+    // default style
+    return IRenderer::cellStyleDefault;
+}
+
+IRenderer::CellStyle RefreshSpanCellThermal::cellStyle() const
+{
+    // Special case: generation might be forced for some thermal clusters
+    return IRenderer::cellStyleDefault;
+}
+
+IRenderer::CellStyle SeasonalCorrelationCellThermal::cellStyle() const
+{
+    return IRenderer::cellStyleDefaultDisabled;
+}
+
+// Value
+wxString SeasonalCorrelationCellThermal::cellValue() const
+{
+    return wxT("n/a");
+}
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

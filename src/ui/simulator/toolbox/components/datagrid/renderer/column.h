@@ -69,6 +69,15 @@ public:
     ~classicColumn() override = default;
 };
 
+// -------------------
+//  Thermal column
+// -------------------
+class thermalColumn final : public Column
+{
+public:
+    thermalColumn();
+};
+
 // -----------------------------
 //  Renewable clusters column
 // -----------------------------

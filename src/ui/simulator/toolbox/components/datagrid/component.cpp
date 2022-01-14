@@ -1475,14 +1475,14 @@ void Component::markTheStudyAsModified(bool flag)
         pInternal->shouldMarkStudyModifiedWhenModifyingCell = flag;
 }
 
-void Component::runSelectedAction(uint selectedSet, uint selectedAction, String value, VGridHelper* gridHelper)
+void Component::runSelectedAction(uint selectedSet,
+                                  uint selectedAction,
+                                  String value,
+                                  VGridHelper* gridHelper)
 {
     onBeginUpdate();
-    ModifierOperators::ApplyChanges((ModifierSet)selectedSet,
-                                    selectedAction,
-                                    value,
-                                    pInternal->renderer,
-                                    gridHelper);
+    ModifierOperators::ApplyChanges(
+      (ModifierSet)selectedSet, selectedAction, value, pInternal->renderer, gridHelper);
     pInternal->renderer->onRefresh();
     onEndUpdate();
 }
@@ -1498,15 +1498,14 @@ void Component::onModifyAll(void*)
     String value;
     wxStringToString(internal.modifier.ui.textValue->GetValue(), value);
 
-    ModifierSet selectedSet         = internal.modifier.selectedSet;
-    uint selectedAction             = internal.modifier.selectedAction;
-    VGridHelper* gridHelper         = internal.gridHelper;
+    ModifierSet selectedSet = internal.modifier.selectedSet;
+    uint selectedAction = internal.modifier.selectedAction;
+    VGridHelper* gridHelper = internal.gridHelper;
 
     runSelectedAction(selectedSet, selectedAction, value, gridHelper);
 
-    if (otherComponent_ &&
-        selectedSet == ModifierSet::modifierDataset && 
-        selectedAction == (uint)ModifierOperatorsData<modifierDataset>::opResizeColumns)
+    if (otherComponent_ && selectedSet == ModifierSet::modifierDataset
+        && selectedAction == (uint)ModifierOperatorsData<modifierDataset>::opResizeColumns)
     {
         // Apply resize columns action on the other grid (if any)
         otherComponent_->runSelectedAction(selectedSet, selectedAction, value, nullptr);

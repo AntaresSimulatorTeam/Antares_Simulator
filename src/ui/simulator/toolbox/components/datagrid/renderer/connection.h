@@ -69,7 +69,9 @@ public:
         return Renderer::Matrix<>::cellNumericValue(x, y);
     }
 
-    void resetColors(int, int, wxColour&, wxColour&) const override { /* Do nothing*/ }
+    void resetColors(int, int, wxColour&, wxColour&) const override
+    { /* Do nothing*/
+    }
 
     virtual wxColour horizontalBorderColor(int x, int y) const;
 

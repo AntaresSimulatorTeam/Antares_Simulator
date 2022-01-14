@@ -489,9 +489,12 @@ void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
         EnableItem(menu, mnIDViewNotes, opened);
         EnableItem(menu, mnIDViewLoad, opened);
 
-        EnableItem(menu, mnIDViewSolar, opened && study->parameters.renewableGeneration.isAggregated());
-        EnableItem(menu, mnIDViewWind, opened && study->parameters.renewableGeneration.isAggregated());
-        EnableItem(menu, mnIDViewRenewable, opened && study->parameters.renewableGeneration.isClusters());
+        EnableItem(
+          menu, mnIDViewSolar, opened && study->parameters.renewableGeneration.isAggregated());
+        EnableItem(
+          menu, mnIDViewWind, opened && study->parameters.renewableGeneration.isAggregated());
+        EnableItem(
+          menu, mnIDViewRenewable, opened && study->parameters.renewableGeneration.isClusters());
 
         EnableItem(menu, mnIDViewHydro, opened);
         EnableItem(menu, mnIDViewThermal, opened);
@@ -778,7 +781,7 @@ void ApplWnd::onSystemParametersChanged()
 void ApplWnd::refreshHomePageOnRenewableModellingChanged(bool aggregated, bool init)
 {
     // Main window
-    for (auto s : { "wind", "solar" })
+    for (auto s : {"wind", "solar"})
         pNotebook->set_page_visibility(wxString(s), aggregated);
     pNotebook->set_page_visibility(wxString("renewable"), not aggregated);
 
@@ -800,12 +803,11 @@ void ApplWnd::refreshHomePageOnRenewableModellingChanged(bool aggregated, bool i
         }
         pNotebook->forceRefresh();
     }
-
 }
 
 void ApplWnd::refreshScenarioBuilderPagOnRenewableModellingChanged(bool aggregated)
 {
-    for (auto s : { "wind", "solar" })
+    for (auto s : {"wind", "solar"})
         pScenarioBuilderNotebook->set_page_visibility(wxString(s), aggregated);
 
     pScenarioBuilderNotebook->set_page_visibility(wxString("renewable"), not aggregated);
