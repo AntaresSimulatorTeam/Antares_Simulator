@@ -219,7 +219,13 @@ void Connections::update()
     localRootId = pListbox->AppendItem(rootId, wxString(wxT("By area")), 2);
     pListbox->SetItemBold(localRootId, true);
 
-    std::map<Data::AreaName, std::vector<std::pair<Data::AreaLink*, bool>>> areaLinks;
+    // For each area, list the links related to it. For each link, the area is either
+    // its origin or extremity.
+    std::map<
+      Data::AreaName,
+      std::vector<std::pair<Data::AreaLink* /*pointer to link*/,
+                            bool /*true if area is the origin of the link, false otherwise*/>>>
+      areaToListOfLinks;
     {
         const Data::Area::Map::iterator end = study.areas.end();
         for (Data::Area::Map::iterator i = study.areas.begin(); i != end; ++i)
@@ -233,8 +239,8 @@ void Connections::update()
                     Data::AreaLink* lnk = i->second;
                     if (lnk->isVisibleOnLayer(layerID))
                     {
-                        areaLinks[area->name].push_back({lnk, true});
-                        areaLinks[lnk->with->name].push_back({lnk, false});
+                        areaToListOfLinks[area->name].push_back({lnk, true});
+                        areaToListOfLinks[lnk->with->name].push_back({lnk, false});
                     }
                 }
             }
@@ -242,7 +248,7 @@ void Connections::update()
     }
 
     {
-        for (const auto& al : areaLinks)
+        for (const auto& al : areaToListOfLinks)
         {
             // Reference to the area
             wxTreeItemId id;
