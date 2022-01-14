@@ -96,7 +96,7 @@ bool CBuilder::update(bool applyCheckBox)
 
         // Try to open link data files
         YString dataFilename = link->parameters.jit->sourceFilename;
-        if (not link->loadTimeSeries(*pStudy, dataFilename))
+        if (!link->loadTimeSeries(*pStudy, dataFilename))
             return false;
     }
 
@@ -305,7 +305,7 @@ bool CBuilder::deletePreviousConstraints()
 
         // Try to open link data files
         YString dataFilename = link->parameters.jit->sourceFilename;
-        if (not link->loadTimeSeries(*pStudy, dataFilename))
+        if (!link->loadTimeSeries(*pStudy, dataFilename))
             return false;
 
         link->useLoopFlow = false;
@@ -317,7 +317,7 @@ bool CBuilder::deletePreviousConstraints()
 
 bool CBuilder::saveCBuilderToFile(const String& filename) const
 {
-    if (not Data::Study::Current::Valid())
+    if (!Data::Study::Current::Valid())
         return false;
     String tmp;
     auto& study = *Data::Study::Current::Get();

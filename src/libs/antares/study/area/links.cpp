@@ -187,7 +187,7 @@ bool AreaLink::linkLoadTimeSeries_for_version_from_630_to_810(const AnyString& f
     // Load link's data
     Matrix<> tmpMatrix;
     const uint matrixWidth = 8;
-    if (not tmpMatrix.loadFromCSVFile(
+    if (!tmpMatrix.loadFromCSVFile(
           buffer, matrixWidth, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate))
     {
         return false;
@@ -485,13 +485,13 @@ static bool AreaLinksInternalLoadFromProperty(Study& study,
 
 } // anonymous namespace
 
-void logLinkDataCheckError(Study& study, AreaLink& link)
+void logLinkDataCheckError(Study& study, const AreaLink& link)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Invalid values";
     study.gotFatalError = true;
 }
 
-void logLinkDataCheckErrorDirectIndirect(Study& study, AreaLink& link, uint direct, uint indirect)
+void logLinkDataCheckErrorDirectIndirect(Study& study, const AreaLink& link, uint direct, uint indirect)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
                  << " direct TS "
@@ -512,7 +512,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         buffer << folder << SEP << "properties.ini";
 
     IniFile ini;
-    if (not ini.open(buffer))
+    if (!ini.open(buffer))
         return 0;
 
     bool ret = true;
@@ -678,7 +678,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         // From the solver only
         if (study.usedByTheSolver)
         {
-            if (not link.useHurdlesCost || not study.parameters.include.hurdleCosts)
+            if (!link.useHurdlesCost || !study.parameters.include.hurdleCosts)
             {
                 link.parameters.columnToZero(Data::fhlHurdlesCostDirect);
                 link.parameters.columnToZero(Data::fhlHurdlesCostIndirect);
@@ -775,7 +775,7 @@ bool saveAreaLinksConfigurationFileToFolder(const Area* area, const char* const 
         section->add("colorg", link.color[1]);
         section->add("colorb", link.color[2]);
         section->add("display-comments", link.displayComments);
-        if (not link.comments.empty())
+        if (!link.comments.empty())
             section->add("comments", link.comments);
         section->add("filter-synthesis", datePrecisionIntoString(link.filterSynthesis));
         section->add("filter-year-by-year", datePrecisionIntoString(link.filterYearByYear));
@@ -798,10 +798,10 @@ bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
         return false;
     }
 
-    if (not saveAreaLinksConfigurationFileToFolder(area, folder))
+    if (!saveAreaLinksConfigurationFileToFolder(area, folder))
         return false;
 
-    if (not saveAreaLinksTimeSeriesToFolder(area, folder))
+    if (!saveAreaLinksTimeSeriesToFolder(area, folder))
         return false;
 
     return true;

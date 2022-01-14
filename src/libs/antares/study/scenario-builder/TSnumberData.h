@@ -116,9 +116,9 @@ inline double TSNumberData::get_value(uint x, uint y) const
 class loadTSNumberData : public TSNumberData
 {
 public:
-    bool apply(Study& study);
+    bool apply(Study& study) override;
     CString<512, false> get_prefix() const override;
-    uint get_tsGenCount(const Study& study) const;
+    uint get_tsGenCount(const Study& study) const override;
 };
 
 inline CString<512, false> loadTSNumberData::get_prefix() const
@@ -132,9 +132,9 @@ inline CString<512, false> loadTSNumberData::get_prefix() const
 class windTSNumberData : public TSNumberData
 {
 public:
-    bool apply(Study& study);
+    bool apply(Study& study) override;
     CString<512, false> get_prefix() const override;
-    uint get_tsGenCount(const Study& study) const;
+    uint get_tsGenCount(const Study& study) const override;
 };
 
 inline CString<512, false> windTSNumberData::get_prefix() const
@@ -150,7 +150,7 @@ class solarTSNumberData : public TSNumberData
 public:
     bool apply(Study& study) override;
     CString<512, false> get_prefix() const override;
-    uint get_tsGenCount(const Study& study) const;
+    uint get_tsGenCount(const Study& study) const override;
 };
 
 inline CString<512, false> solarTSNumberData::get_prefix() const
@@ -167,7 +167,7 @@ class hydroTSNumberData : public TSNumberData
 public:
     bool apply(Study& study) override;
     CString<512, false> get_prefix() const override;
-    uint get_tsGenCount(const Study& study) const;
+    uint get_tsGenCount(const Study& study) const override;
 };
 
 inline CString<512, false> hydroTSNumberData::get_prefix() const
@@ -196,7 +196,7 @@ public:
     uint get(const Antares::Data::ThermalCluster* cluster, const uint year) const;
     bool apply(Study& study) override;
     CString<512, false> get_prefix() const override;
-    uint get_tsGenCount(const Study& study) const;
+    uint get_tsGenCount(const Study& study) const override;
 
 private:
     //! The attached area, if any
@@ -245,7 +245,7 @@ public:
     uint get(const Antares::Data::RenewableCluster* cluster, const uint year) const;
     bool apply(Study& study) override;
     CString<512, false> get_prefix() const override;
-    uint get_tsGenCount(const Study& study) const;
+    uint get_tsGenCount(const Study& study) const override;
 
 private:
     //! The attached area, if any
@@ -291,7 +291,7 @@ public:
     uint get(const Antares::Data::AreaLink* link, const uint year) const;
     bool apply(Study& study) override;
     CString<512, false> get_prefix() const override;
-    uint get_tsGenCount(const Study& study) const;
+    uint get_tsGenCount(const Study& study) const override;
 
 private:
     //! The attached area, if any

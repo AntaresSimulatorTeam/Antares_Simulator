@@ -117,7 +117,7 @@ bool Rules::reset()
 Data::Area* Rules::getArea(const AreaName& areaname, bool updaterMode)
 {
     Data::Area* area = study_.areas.find(areaname);
-    if (!area && not updaterMode)
+    if (!area && !updaterMode)
     {
         // silently ignore the error
         logs.warning() << "[scenario-builder] The area '" << areaname << "' has not been found";
@@ -139,7 +139,7 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
         return false;
 
     const ThermalCluster* cluster = area->thermal.list.find(clustername);
-    if (not cluster)
+    if (!cluster)
         cluster = area->thermal.mustrunList.find(clustername);
 
     if (cluster)
@@ -150,7 +150,7 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
     else
     {
         bool isTheActiveRule = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
-        if (not updaterMode and isTheActiveRule)
+        if (!updaterMode and isTheActiveRule)
         {
             string clusterId = (area->id).to<string>() + "." + clustername.to<string>();
             disabledClustersOnRuleActive[clusterId].push_back(year);
@@ -166,7 +166,7 @@ bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
     const uint year = splitKey[2].to<uint>();
     const ClusterName& clustername = splitKey[3];
 
-    if (not study_.parameters.renewableGeneration.isClusters())
+    if (!study_.parameters.renewableGeneration.isClusters())
         return false;
 
     if (clustername.empty())
@@ -186,7 +186,7 @@ bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
     else
     {
         bool isTheActiveRule = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
-        if (not updaterMode and isTheActiveRule)
+        if (!updaterMode and isTheActiveRule)
         {
             string clusterId = (area->id).to<string>() + "." + clustername.to<string>();
             disabledClustersOnRuleActive[clusterId].push_back(year);
@@ -201,7 +201,7 @@ bool Rules::readLoad(const AreaName::Vector& splitKey, String value, bool update
     const AreaName& areaname = splitKey[1];
     const uint year = splitKey[2].to<uint>();
 
-    Data::Area* area = getArea(areaname, updaterMode);
+    const Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
         return false;
 
@@ -215,7 +215,7 @@ bool Rules::readWind(const AreaName::Vector& splitKey, String value, bool update
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
 
-    Data::Area* area = getArea(areaname, updaterMode);
+    const Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
         return false;
 
@@ -229,7 +229,7 @@ bool Rules::readHydro(const AreaName::Vector& splitKey, String value, bool updat
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
 
-    Data::Area* area = getArea(areaname, updaterMode);
+    const Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
         return false;
 
@@ -243,7 +243,7 @@ bool Rules::readSolar(const AreaName::Vector& splitKey, String value, bool updat
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
 
-    Data::Area* area = getArea(areaname, updaterMode);
+    const Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
         return false;
 
@@ -257,7 +257,7 @@ bool Rules::readHydroLevels(const AreaName::Vector& splitKey, String value, bool
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
 
-    Data::Area* area = getArea(areaname, updaterMode);
+    const Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
         return false;
 
@@ -271,7 +271,7 @@ Data::AreaLink* Rules::getLink(const AreaName& fromAreaName,
                                bool updaterMode)
 {
     Data::AreaLink* link = study_.areas.findLink(fromAreaName, toAreaName);
-    if (!link && not updaterMode)
+    if (!link && !updaterMode)
     {
         // silently ignore the error
         logs.warning() << "[scenario-builder] The link '" << fromAreaName << " / " << toAreaName

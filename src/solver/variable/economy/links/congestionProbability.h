@@ -277,8 +277,8 @@ public:
         float ratio = yearsWeight[state.year] / yearsWeightSum;
 
         assert(state.link != NULL);
-        auto& linkDirectCapa = state.link->directCapacities;
-        auto& linkIndirectCapa = state.link->indirectCapacities;
+        const auto& linkDirectCapa = state.link->directCapacities;
+        const auto& linkIndirectCapa = state.link->indirectCapacities;
         const int tsIndex = NumeroChroniquesTireesParInterconnexion[numSpace][state.link->index]
                               .TransmissionCapacities;
         // CONG. PROB +
