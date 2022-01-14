@@ -104,7 +104,7 @@ private:
     //! The settings given from the command line
     Settings pSettings;
     //! The current Antares study
-    Antares::Data::Study::Ptr pStudy;
+    Antares::Data::Study::Ptr pStudy = nullptr;
     //! General data related to the current study
     Antares::Data::Parameters* pParameters;
     //! The total number of errors which have been generated

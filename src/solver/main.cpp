@@ -306,6 +306,10 @@ void SolverApplication::onLogMessage(int level, const Yuni::String& /*message*/)
 
 int SolverApplication::execute()
 {
+    if(!pStudy)
+    {
+        return 1;
+    }
     processCaption(String() << "antares: running \"" << pStudy->header.caption << "\"");
 
     SystemMemoryLogger memoryReport;
