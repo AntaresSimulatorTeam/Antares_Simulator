@@ -25,6 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <antares/memory/new_check.hxx>
+
 #include "application/main/main.h"
 #include "toolbox/components/datagrid/component.h"
 #include "standard-page.hxx"
@@ -46,6 +48,7 @@ using namespace Yuni;
 using namespace Component;
 using namespace Component::Datagrid;
 using namespace Toolbox;
+using namespace Antares::MemoryUtils;
 
 namespace Antares
 {
@@ -139,7 +142,7 @@ private:
     }
     DatagridType* getGrid() override
     {
-        return new DatagridType(notebook(), renderer());
+        return new_check_allocation<DatagridType>(notebook(), renderer());
     }
 };
 
@@ -150,7 +153,7 @@ class loadScBuilderPageMaker final : public simpleScBuilderPageMaker
 
     Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        return new Renderer::loadScBuilderRenderer();
+        return new_check_allocation<Renderer::loadScBuilderRenderer>();
     }
     Notebook::Page* addPageToNotebook() override
     {
@@ -165,7 +168,7 @@ class hydroScBuilderPageMaker final : public simpleScBuilderPageMaker
 
     Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        return new Renderer::hydroScBuilderRenderer();
+        return new_check_allocation<Renderer::hydroScBuilderRenderer>();
     }
     Notebook::Page* addPageToNotebook() override
     {
@@ -179,7 +182,7 @@ class windScBuilderPageMaker final : public simpleScBuilderPageMaker
     using simpleScBuilderPageMaker::simpleScBuilderPageMaker;
     Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        return new Renderer::windScBuilderRenderer();
+        return new_check_allocation<Renderer::windScBuilderRenderer>();
     }
     Notebook::Page* addPageToNotebook() override
     {
@@ -194,7 +197,7 @@ class solarScBuilderPageMaker final : public simpleScBuilderPageMaker
 
     Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        return new Renderer::solarScBuilderRenderer();
+        return new_check_allocation<Renderer::solarScBuilderRenderer>();
     }
     Notebook::Page* addPageToNotebook() override
     {
@@ -209,7 +212,7 @@ class hydroLevelsScBuilderPageMaker final : public simpleScBuilderPageMaker
 
     Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        return new Renderer::hydroLevelsScBuilderRenderer();
+        return new_check_allocation<Renderer::hydroLevelsScBuilderRenderer>();
     }
     Notebook::Page* addPageToNotebook() override
     {
@@ -224,7 +227,7 @@ class ntcScBuilderPageMaker final : public simpleScBuilderPageMaker
 
     Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        return new Renderer::ntcScBuilderRenderer();
+        return new_check_allocation<Renderer::ntcScBuilderRenderer>();
     }
     Notebook::Page* addPageToNotebook() override
     {
@@ -246,7 +249,7 @@ class clusterScBuilderPageMaker : public basicScBuilderPageMaker
     }
     DatagridType* getGrid() override
     {
-        return new DatagridType(area_selector_page_.first, renderer());
+        return new_check_allocation<DatagridType>(area_selector_page_.first, renderer());
     }
     Notebook::Page* addPageToNotebook() override
     {
@@ -274,7 +277,7 @@ class thermalScBuilderPageMaker final : public clusterScBuilderPageMaker
 public:
     Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        return new Renderer::thermalScBuilderRenderer(areaSelectorPage());
+        return new_check_allocation<Renderer::thermalScBuilderRenderer>(areaSelectorPage());
     }
 
     const char* name() const override
@@ -296,7 +299,7 @@ class renewableScBuilderPageMaker final : public clusterScBuilderPageMaker
 public:
     Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        return new Renderer::renewableScBuilderRenderer(areaSelectorPage());
+        return new_check_allocation<Renderer::renewableScBuilderRenderer>(areaSelectorPage());
     }
 
     const char* name() const override
@@ -327,19 +330,21 @@ void ApplWnd::onOutputNotebookPageChanging(Notebook::Page& page)
 void ApplWnd::createNBScenarioBuilder()
 {
     // Scenario Builder
-    pScenarioBuilderNotebook = new Notebook(pSectionNotebook);
+    pScenarioBuilderNotebook = new_check_allocation<Notebook>(pSectionNotebook);
     pScenarioBuilderNotebook->onPageChanged.connect(
       this, &ApplWnd::onScenarioBuilderNotebookPageChanging);
     pScenarioBuilderMainPage = pSectionNotebook->add(
       pScenarioBuilderNotebook, wxT("scenariobuilder"), wxT("scenariobuilder"));
 
     // Title
-    auto* scenarioBuilderPanel = new Window::ScenarioBuilder::Panel(pScenarioBuilderNotebook);
+    auto* scenarioBuilderPanel
+      = new_check_allocation<Window::ScenarioBuilder::Panel>(pScenarioBuilderNotebook);
     pScenarioBuilderNotebook->addCommonControlTop(scenarioBuilderPanel, 0, wxPoint(100, 60));
 
     // Back to standard edition
-    pScenarioBuilderNotebook->add(
-      new wxPanel(pScenarioBuilderNotebook), wxT("back"), wxT("  Back to input data"));
+    pScenarioBuilderNotebook->add(new_check_allocation<wxPanel>(pScenarioBuilderNotebook),
+                                  wxT("back"),
+                                  wxT("  Back to input data"));
     pScenarioBuilderNotebook->addSeparator();
 
     // Creating scenario builder notebook's tabs
@@ -374,17 +379,16 @@ void ApplWnd::createNBScenarioBuilder()
 
 void ApplWnd::createNBOutputViewer()
 {
-    wxWindow* output = new Window::OutputViewer::Component(pSectionNotebook);
+    wxWindow* output = new_check_allocation<Window::OutputViewer::Component>(pSectionNotebook);
     pSectionNotebook->add(output, wxT("output"), wxT("output"));
     return;
-    pOutputViewerNotebook = new Notebook(pSectionNotebook);
+    pOutputViewerNotebook = new_check_allocation<Notebook>(pSectionNotebook);
     pOutputViewerNotebook->onPageChanged.connect(this,
                                                  &ApplWnd::onScenarioBuilderNotebookPageChanging);
     pSectionNotebook->add(pOutputViewerNotebook, wxT("output"), wxT("output"));
 
     // Back to standard edition
-    pOutputViewerNotebook->add(
-      new wxPanel(pOutputViewerNotebook), wxT("back"), wxT("  Back to input data"));
+    pOutputViewerNotebook->add(new_check_allocation<wxPanel>(pOutputViewerNotebook), wxT("back"), wxT("  Back to input data"));
     pOutputViewerNotebook->addSeparator();
 }
 
