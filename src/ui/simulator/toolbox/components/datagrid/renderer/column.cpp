@@ -32,6 +32,21 @@
 
 using namespace Antares::MemoryUtils;
 
+// Anonymous namespace
+namespace
+{
+template<class T, class... Args>
+inline T* factory(Args... args)
+{
+    T* ptr = new (std::nothrow) T(args...);
+    if (ptr == nullptr)
+    {
+        Antares::logs.error() << "Resource allocation failed";
+    }
+    return ptr;
+}
+} // namespace
+
 namespace Antares
 {
 namespace Component
