@@ -194,8 +194,8 @@ int SolverApplication::prepare(int argc, char* argv[])
                   << it->second
                   << ". Conflict between Min Stable Power, Pnom, spinning and capacity modulation.";
             }
-
-            return false;
+            // TODO : create & throw exception
+            return 1;
         }
     }
 
@@ -260,7 +260,7 @@ int SolverApplication::prepare(int argc, char* argv[])
     else
         logs.info() << "  The progression is disabled";
 
-    return true;
+    return 0;
 }
 
 void SolverApplication::initializeRandomNumberGenerators()
