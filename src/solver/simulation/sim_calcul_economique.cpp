@@ -144,18 +144,21 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                : NON_ANTARES);
 
         problem.CaracteristiquesHydrauliques[i]->SuiviNiveauHoraire
-          = ((area.hydro.reservoirManagement && !area.hydro.useHeuristicTarget) ? OUI_ANTARES
-                                                                                : NON_ANTARES);
-
-        problem.CaracteristiquesHydrauliques[i]->AccurateWaterValue = NON_ANTARES;
-        if (problem.WaterValueAccurate == OUI_ANTARES
-            && problem.CaracteristiquesHydrauliques[i]->TurbinageEntreBornes == OUI_ANTARES)
-            problem.CaracteristiquesHydrauliques[i]->AccurateWaterValue = OUI_ANTARES;
-
+          = ((area.hydro.reservoirManagement
+              && (problem.OptimisationAuPasHebdomadaire == OUI_ANTARES)
+              && (!area.hydro.useHeuristicTarget
+                  || problem.CaracteristiquesHydrauliques[i]->PresenceDePompageModulable
+                       == OUI_ANTARES))
+               ? OUI_ANTARES
+               : NON_ANTARES);
         problem.CaracteristiquesHydrauliques[i]->DirectLevelAccess = NON_ANTARES;
-        if (problem.WaterValueAccurate == OUI_ANTARES
-            && problem.CaracteristiquesHydrauliques[i]->SuiviNiveauHoraire == OUI_ANTARES)
+        problem.CaracteristiquesHydrauliques[i]->AccurateWaterValue = NON_ANTARES;
+        if (problem.WaterValueAccurate == OUI_ANTARES && area.hydro.useWaterValue)
+        {
+            problem.CaracteristiquesHydrauliques[i]->AccurateWaterValue = OUI_ANTARES;
+            problem.CaracteristiquesHydrauliques[i]->SuiviNiveauHoraire = OUI_ANTARES;
             problem.CaracteristiquesHydrauliques[i]->DirectLevelAccess = OUI_ANTARES;
+        }
 
         problem.CaracteristiquesHydrauliques[i]->TailleReservoir = area.hydro.reservoirCapacity;
 
@@ -872,7 +875,8 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                     if (area.hydro.reservoirManagement) /* No need to include the condition "use
                                                            water value" */
                     {
-                        if (not area.hydro.useHeuristicTarget)
+                        if (problem.CaracteristiquesHydrauliques[k]->SuiviNiveauHoraire
+                            == OUI_ANTARES)
                         {
                             for (uint j = 0; j < 7; ++j)
                             {
@@ -887,7 +891,8 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                             }
                         }
 
-                        if (area.hydro.useHeuristicTarget)
+                        if (problem.CaracteristiquesHydrauliques[k]->SuiviNiveauHoraire
+                            == NON_ANTARES)
                         {
                             double WNI = 0.;
                             for (uint j = 0; j < 7; ++j)
