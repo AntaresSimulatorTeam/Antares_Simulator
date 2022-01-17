@@ -34,8 +34,8 @@
 #include "config.h"
 #include <antares/study/study.h>
 #include <antares/logs.h>
+#include <antares/exception/LoadingError.hpp>
 #include "main.h"
-#include "exceptions.h"
 #include "../ui/common/winmain.hxx"
 
 #include <time.h>
@@ -104,8 +104,7 @@ bool SolverApplication::prepare(int argc, char* argv[])
     options.usedByTheSolver = true;
 
     // Parse arguments and store usefull values
-    if (not GrabOptionsFromCommandLine(argc, argv, pSettings, options))
-        return false;
+    GrabOptionsFromCommandLine(argc, argv, pSettings, options);
 
     // Determine the log filename to use for this simulation
     resetLogFilename();

@@ -65,7 +65,7 @@ public:
 /*!
 ** \brief Interprete options given in command line
 */
-bool GrabOptionsFromCommandLine(int argc,
+void GrabOptionsFromCommandLine(int argc,
                                 char* argv[],
                                 Settings& settings,
                                 Antares::Data::StudyLoadOptions& options);

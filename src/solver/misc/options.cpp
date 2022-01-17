@@ -45,6 +45,7 @@
 
 #include <antares/memory/memory.h>
 #include <antares/exception/AssertionError.hpp>
+#include <antares/exception/LoadingError.hpp>
 #include <antares/Enum.hpp>
 
 #include "utils/ortools_utils.h"
@@ -53,7 +54,7 @@ using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
-bool GrabOptionsFromCommandLine(int argc,
+void GrabOptionsFromCommandLine(int argc,
                                 char* argv[],
                                 Settings& settings,
                                 Antares::Data::StudyLoadOptions& options)
@@ -219,11 +220,12 @@ bool GrabOptionsFromCommandLine(int argc,
     if (optVersion)
     {
 #ifdef GIT_SHA1_SHORT_STRING
-        std::cout << ANTARES_VERSION_STR <<  " (revision " << GIT_SHA1_SHORT_STRING << ")" << std::endl;
+        std::cout << ANTARES_VERSION_STR << " (revision " << GIT_SHA1_SHORT_STRING << ")"
+                  << std::endl;
 #else
         std::cout << ANTARES_VERSION_STR << std::endl;
 #endif
-        return false;
+        return;
     }
 
     // PID
@@ -233,7 +235,7 @@ bool GrabOptionsFromCommandLine(int argc,
         if (pidfile.openRW(optPID))
             pidfile << ProcessID();
         else
-            logs.error() << "impossible to write pid file " << optPID;
+            throw Error::WritingPID(optPID);
     }
 
     // Simulation name
@@ -242,8 +244,7 @@ bool GrabOptionsFromCommandLine(int argc,
 
     if (options.nbYears > 50000)
     {
-        logs.error() << "Invalid number of MC years";
-        return false;
+        throw Error::InvalidNumberOfMCYears(options.nbYears);
     }
 
     if (options.maxNbYearsInParallel)
@@ -251,8 +252,7 @@ bool GrabOptionsFromCommandLine(int argc,
 
     if (options.enableParallel && options.forceParallel)
     {
-        logs.error() << "Options --parallel and --force-parallel are incompatible";
-        return false;
+        throw Error::IncompatibleParallelOptions();
     }
 
     if (not settings.simplexOptimRange.empty())
@@ -267,9 +267,7 @@ bool GrabOptionsFromCommandLine(int argc,
                 options.simplexOptimizationRange = Data::sorDay;
             else
             {
-                logs.error() << "Invalid command line value for --optimization-range ('day' or "
-                                "'week' expected)";
-                return false;
+                throw Error::InvalidOptimizationRange();
             }
         }
     }
@@ -295,9 +293,7 @@ bool GrabOptionsFromCommandLine(int argc,
         }
         default:
         {
-            logs.error() << "Only one simulation mode is allowed: --expansion, --economy, "
-                            "--adequacy or --adequacy-draft";
-            return false;
+            throw Error::InvalidSimulationMode();
         }
         }
     }
@@ -310,8 +306,7 @@ bool GrabOptionsFromCommandLine(int argc,
     {
         if (availableSolverList.empty())
         {
-            logs.error() << "No ortools solvers available. Can't use '" << ortoolsSolver << "'.";
-            return false;
+            throw Error::InvalidSolver(ortoolsSolver);
         }
 
         // Default is first available solver
@@ -346,34 +341,26 @@ bool GrabOptionsFromCommandLine(int argc,
         // Checking if the path exists
         if (not IO::Directory::Exists(optStudyFolder))
         {
-            logs.error() << "The folder `" << optStudyFolder << "` does not exist.";
-            return false;
+            throw Error::StudyFolderDoesNotExist(optStudyFolder);
         }
 
         // Checking the version
         auto version = StudyTryToFindTheVersion(optStudyFolder);
         if (version == versionUnknown)
         {
-            logs.fatal() << "The folder `" << optStudyFolder
-                         << "` does not seem to be a valid study";
-            return false;
+            throw Error::InvalidStudy(optStudyFolder);
         }
         else
         {
             if ((uint)version > (uint)versionLatest)
             {
-                logs.error() << "Invalid version for the study : found `" << VersionToCStr(version)
-                             << "`, expected <=`" << VersionToCStr((Version)versionLatest) << '`';
-                return false;
+                throw Error::InvalidVersion(VersionToCStr(version),
+                                            VersionToCStr((Version)versionLatest));
             }
         }
 
         // Copying the result
         settings.studyFolder = optStudyFolder;
-
-        return true;
     }
-
-    logs.error() << "A study folder is required. Use '--help' for more information";
-    return false;
+    throw Error::NoStudyProvided();
 }
