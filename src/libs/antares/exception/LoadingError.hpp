@@ -30,6 +30,7 @@
 #include <stdexcept>
 #include <yuni/yuni.h>
 #include <yuni/string.h>
+#include <antares/study/fwd.h>
 
 namespace Antares
 {
@@ -83,6 +84,18 @@ public:
     explicit IncompatibleParallelOptions();
 };
 
+class IncompatibleOptRangeHydroPricing : public std::runtime_error
+{
+public:
+    explicit IncompatibleOptRangeHydroPricing();
+};
+
+class IncompatibleOptRangeUCMode : public std::runtime_error
+{
+public:
+    explicit IncompatibleOptRangeUCMode();
+};
+
 class InvalidOptimizationRange : public std::runtime_error
 {
 public:
@@ -118,5 +131,18 @@ class InvalidVersion : public std::runtime_error
 public:
     explicit InvalidVersion(const char* version, const char* latest);
 };
+
+class IncompatibleDailyOptHeuristicForArea : public std::runtime_error
+{
+public:
+    explicit IncompatibleDailyOptHeuristicForArea(const Antares::Data::AreaName& name);
+};
+
+class WritingProgressFile : public std::runtime_error
+{
+public:
+    explicit WritingProgressFile(const Yuni::String& study);
+};
+
 } // namespace Error
 } // namespace Antares

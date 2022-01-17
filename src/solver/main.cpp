@@ -151,9 +151,7 @@ int SolverApplication::prepare(int argc, char* argv[])
     if ((pParameters->simplexOptimizationRange == Antares::Data::SimplexOptimization::sorDay)
         && (pParameters->hydroPricing.hpMode == Antares::Data::HydroPricingMode::hpMILP))
     {
-        logs.error()
-          << "Simplexe optimization range and hydro pricing mode : values are not compatible ";
-        return false;
+        throw Error::IncompatibleOptRangeHydroPricing();
     }
 
     // CHECK incompatible de choix simultané des options « simplex range= daily » et «
@@ -161,9 +159,7 @@ int SolverApplication::prepare(int argc, char* argv[])
     if ((pParameters->simplexOptimizationRange == Antares::Data::SimplexOptimization::sorDay)
         && (pParameters->unitCommitment.ucMode == Antares::Data::UnitCommitmentMode::ucMILP))
     {
-        logs.error()
-          << "Simplexe optimization range and unit commitment mode : values are not compatible ";
-        return false;
+        throw Error::IncompatibleOptRangeUCMode();
     }
 
     // CHECK
@@ -176,10 +172,7 @@ int SolverApplication::prepare(int argc, char* argv[])
             auto& area = *(pStudy->areas.byIndex[i]);
             if (!area.hydro.useHeuristicTarget)
             {
-                logs.error() << "Area " << area.name
-                             << " : simplex daily optimization and use heuristic target == no are "
-                                "not compatible.";
-                return false;
+                throw Error::IncompatibleDailyOptHeuristicForArea(area.name);
             }
         }
     }
@@ -260,8 +253,7 @@ int SolverApplication::prepare(int argc, char* argv[])
         pStudy->buffer.clear() << pStudy->folderOutput << SEP << "about-the-study" << SEP << "map";
         if (not pStudy->progression.saveToFile(pStudy->buffer))
         {
-            logs.error() << "I/O error: impossible to write " << pStudy->buffer;
-            return false;
+            throw Error::WritingProgressFile(pStudy->buffer);
         }
         pStudy->progression.start();
     }
@@ -595,10 +587,11 @@ int main(int argc, char** argv)
         AntaresSolverEmergencyShutdown();
     }
     // User asks for version
-    if (ret != 0) {
-         FreeUTF8Arguments(argc, argv);
-         delete application;
-         return EXIT_SUCCESS;
+    if (ret != 0)
+    {
+        FreeUTF8Arguments(argc, argv);
+        delete application;
+        return EXIT_SUCCESS;
     }
 
     ret = application->execute();

@@ -77,5 +77,31 @@ IncompatibleParallelOptions::IncompatibleParallelOptions() :
  std::runtime_error("Options --parallel and --force-parallel are incompatible")
 {
 }
+
+IncompatibleOptRangeHydroPricing::IncompatibleOptRangeHydroPricing() :
+ std::runtime_error(
+   "Simplex optimization range and hydro pricing mode : values are not compatible ")
+{
+}
+
+IncompatibleOptRangeUCMode::IncompatibleOptRangeUCMode() :
+ std::runtime_error(
+   "Simplexe optimization range and unit commitment mode : values are not compatible")
+{
+}
+
+IncompatibleDailyOptHeuristicForArea::IncompatibleDailyOptHeuristicForArea(
+  const Antares::Data::AreaName& name) :
+ std::runtime_error(
+   std::string("Area ") + name.c_str()
+   + " : simplex daily optimization and use heuristic target == no are not compatible")
+{
+}
+
+WritingProgressFile::WritingProgressFile(const Yuni::String& file) :
+ std::runtime_error(std::string("I/O error: impossible to write ") + file.c_str())
+{
+}
+
 } // namespace Error
 } // namespace Antares
