@@ -54,7 +54,7 @@ using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
-void GrabOptionsFromCommandLine(int argc,
+int  GrabOptionsFromCommandLine(int argc,
                                 char* argv[],
                                 Settings& settings,
                                 Antares::Data::StudyLoadOptions& options)
@@ -225,7 +225,7 @@ void GrabOptionsFromCommandLine(int argc,
 #else
         std::cout << ANTARES_VERSION_STR << std::endl;
 #endif
-        return;
+        return 1;
     }
 
     // PID
@@ -331,7 +331,11 @@ void GrabOptionsFromCommandLine(int argc,
     }
 
     // The study folder
-    if (not optStudyFolder.empty())
+    if (optStudyFolder.empty())
+    {
+        throw Error::NoStudyProvided();
+    }
+    else
     {
         // Making the path absolute
         String abspath;
@@ -362,5 +366,5 @@ void GrabOptionsFromCommandLine(int argc,
         // Copying the result
         settings.studyFolder = optStudyFolder;
     }
-    throw Error::NoStudyProvided();
+    return 0;
 }

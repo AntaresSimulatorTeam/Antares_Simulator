@@ -88,7 +88,7 @@ SolverApplication::SolverApplication() :
     resetProcessPriority();
 }
 
-bool SolverApplication::prepare(int argc, char* argv[])
+int SolverApplication::prepare(int argc, char* argv[])
 {
     pArgc = argc;
     pArgv = argv;
@@ -104,7 +104,9 @@ bool SolverApplication::prepare(int argc, char* argv[])
     options.usedByTheSolver = true;
 
     // Parse arguments and store usefull values
-    GrabOptionsFromCommandLine(argc, argv, pSettings, options);
+    int ret = GrabOptionsFromCommandLine(argc, argv, pSettings, options);
+    if (ret != 0)
+        return 1;
 
     // Determine the log filename to use for this simulation
     resetLogFilename();
@@ -584,13 +586,21 @@ int main(int argc, char** argv)
     auto* application = new SolverApplication();
     try
     {
-        application->prepare(argc, argv);
+        ret = application->prepare(argc, argv);
     }
+    // Catch errors
     catch (const std::runtime_error& e)
     {
         logs.error() << e.what();
         AntaresSolverEmergencyShutdown();
     }
+    // User asks for version
+    if (ret != 0) {
+         FreeUTF8Arguments(argc, argv);
+         delete application;
+         return EXIT_SUCCESS;
+    }
+
     ret = application->execute();
     delete application;
 

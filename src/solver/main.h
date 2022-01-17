@@ -56,7 +56,7 @@ public:
     **
     ** \return False if the operation failed.
     */
-    bool prepare(int argc, char* argv[]);
+    int prepare(int argc, char* argv[]);
 
     /*!
     ** \brief Execute the simulation
