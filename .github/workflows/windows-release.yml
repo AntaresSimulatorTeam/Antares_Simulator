@@ -31,9 +31,9 @@ jobs:
       uses: bruceadams/get-release@v1.2.0
            
     - name: Set up Python
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: '3.x'
 
     - name: Pre-requisites
       shell: cmd

@@ -31,7 +31,7 @@ if(Python3_Interpreter_FOUND)
       #Initialize test repository
       find_package(Git QUIET)
 
-        set(ANTARES_TEST_TAG "multiple-ntc")
+        set(ANTARES_TEST_TAG "v8.2")
 
         message(STATUS "Submodule test update with ${ANTARES_TEST_TAG} tag")
 
@@ -51,7 +51,7 @@ if(Python3_Interpreter_FOUND)
             message(FATAL_ERROR "git checkout ${ANTARES_TEST_TAG} failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
         endif()
         
-        macro(examples_tests use_ortools ortools_solver)
+        macro(run_examples_tests use_ortools ortools_solver)
         
             if(${use_ortools})
                 SET(SHORT_EXAMPLES_NAME short-examples-ortools-${ortools_solver})
@@ -98,7 +98,7 @@ if(Python3_Interpreter_FOUND)
         
         endmacro()
         
-        macro(output_tests use_ortools ortools_solver)
+        macro(run_output_tests use_ortools ortools_solver)
         
             if(${use_ortools})
                 SET(SHORT_NAME short-output-ortools-${ortools_solver})                
@@ -123,12 +123,12 @@ if(Python3_Interpreter_FOUND)
         
         endmacro()
                 
-        examples_tests(false "sirius")
-        examples_tests(true "sirius")
-        examples_tests(true "coin")
+        run_examples_tests(false "sirius")
+        run_examples_tests(true "sirius")
+        run_examples_tests(true "coin")
         
         if (BUILD_OUTPUT_TEST)
-            output_tests(false, "sirius")
+            run_output_tests(false, "sirius")
         endif()
         
         # Specific tests
