@@ -126,7 +126,7 @@ public:
     ** \param defaultButton True to make it the default result
     ** \param space The space to add after before this button
     */
-    void add(const wxString& caption, uint value, bool defaultButton = false, int space = 3);
+    void add(const wxString& caption, DefaultButtonType value, bool defaultButton = false, int space = 3);
 
     /*!
     ** \brief Add a predefined button
@@ -183,7 +183,7 @@ public:
 
 private:
     //! Event: A button has been clicked
-    void onButtonClick(void* userdata);
+    void onButtonClick(DefaultButtonType userdata);
     //
     void prepareShowModal();
 
@@ -199,7 +199,7 @@ private:
     //! Sizer where the spotlight component will be found
     wxSizer* pListSizer;
     //! The return status code
-    uint pReturnStatus;
+    DefaultButtonType pReturnStatus;
     //! Recommended width
     uint pRecommendedWidth;
     //! Empty panel
