@@ -28,8 +28,11 @@
 #include "../settings.h"
 #include "../tools/remover.h"
 #include "../../../../application/study.h"
+
 #include <yuni/core/math.h>
 #include <yuni/core/math/distance.h>
+
+#include <antares/study/scenario-builder/updater.hxx>
 
 using namespace Yuni;
 
@@ -239,6 +242,7 @@ void Connection::createANewConnectionIfNeeded()
         const Node* bb = dynamic_cast<Node*>(pB);
         if (aa && bb && aa->attachedArea() && bb->attachedArea())
         {
+            ScenarioBuilderUpdater updaterSB(*study);
             // Making a copy to avoid unexpected behavior when working on
             // the same string.
             const Data::AreaName sA = aa->attachedArea()->id;

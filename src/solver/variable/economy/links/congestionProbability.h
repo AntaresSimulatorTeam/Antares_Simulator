@@ -277,14 +277,17 @@ public:
         float ratio = yearsWeight[state.year] / yearsWeightSum;
 
         assert(state.link != NULL);
-        auto& linkdata = state.link->data;
+        const auto& linkDirectCapa = state.link->directCapacities;
+        const auto& linkIndirectCapa = state.link->indirectCapacities;
+        const int tsIndex = NumeroChroniquesTireesParInterconnexion[numSpace][state.link->index]
+                              .TransmissionCapacities;
         // CONG. PROB +
         if (state.ntc->ValeurDuFlux[state.link->index]
-            > +linkdata.entry[Data::fhlNTCDirect][state.hourInTheYear] - 10e-6)
+            > +linkDirectCapa.entry[tsIndex][state.hourInTheYear] - 10e-6)
             pValuesForTheCurrentYear[numSpace][0].hour[state.hourInTheYear] += 100.0 * ratio;
         // CONG. PROB -
         if (state.ntc->ValeurDuFlux[state.link->index]
-            < -linkdata.entry[Data::fhlNTCIndirect][state.hourInTheYear] + 10e-6)
+            < -linkIndirectCapa.entry[tsIndex][state.hourInTheYear] + 10e-6)
             pValuesForTheCurrentYear[numSpace][1].hour[state.hourInTheYear] += 100.0 * ratio;
 
         // Next item in the list

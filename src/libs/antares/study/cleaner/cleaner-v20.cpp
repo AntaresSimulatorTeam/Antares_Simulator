@@ -199,6 +199,8 @@ static void PreflightVersion20_area(PathList& e, PathList& p, const Area* area, 
     // Interconnections
     buffer.clear() << "input/links/" << id;
     p.add(buffer);
+    buffer.clear() << "input/links/" << id << "/capacities";
+    p.add(buffer);
     buffer.clear() << "input/links/" << id << "/properties.ini";
     e.add(buffer);
 }
@@ -210,9 +212,15 @@ static void PreflightVersion20_interco(PathList& p, const Area* area, StringT& b
     for (auto i = area->links.begin(); i != end; ++i)
     {
         auto& link = *(i->second);
+        // Parameters
+        buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << link.with->id << "_parameters" << ".txt";
+        p.add(buffer);
 
-        buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << link.with->id
-                       << ".txt";
+        // Indirect capacities
+        buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << "capacities" << SEP << link.with->id << "_direct" << ".txt";
+        p.add(buffer);
+        // Direct capacities
+        buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << "capacities" << SEP << link.with->id << "_indirect" << ".txt";
         p.add(buffer);
     }
 }
@@ -251,6 +259,12 @@ bool PreflightVersion20(StudyCleaningInfos* infos)
     e.add("input/load/prepro/correlation.ini");
     e.add("input/solar/prepro/correlation.ini");
     e.add("input/thermal/areas.ini");
+
+    // Also exclude custom files/folders provided by the user
+    infos->customExclude.words(":", [&e](const AnyString& word) {
+        e.add(word);
+        return true;
+    });
 
     // Post
     p.add("logs");

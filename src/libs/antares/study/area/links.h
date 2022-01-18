@@ -58,6 +58,8 @@ public:
     //! Map of links
     typedef std::map<AreaName, AreaLink*> Map;
 
+    using NamePair = std::pair<Yuni::String, Yuni::String>;
+
 public:
     //! \name Constructor & Destructor
     //@{
@@ -68,6 +70,10 @@ public:
     //! Destructor
     ~AreaLink();
     //@}
+
+    bool loadTimeSeries(Study& study, const AnyString& folder);
+
+    bool storeTimeseriesNumbers(const AnyString& folder) const;
 
     //! \name Area
     //@{
@@ -118,6 +124,15 @@ public:
 
     Yuni::String getName() const;
 
+    void flush();
+
+private:
+    bool linkLoadTimeSeries_for_version_under_320(const AnyString& folder, Study& study);
+    bool linkLoadTimeSeries_for_version_from_320_to_630(const AnyString& folder);
+    bool linkLoadTimeSeries_for_version_from_630_to_810(const AnyString& folder);
+    bool linkLoadTimeSeries_for_version_820_and_later(const AnyString& folder);
+    NamePair getNamePair() const;
+
 public:
     //! \name Graph
     //@{
@@ -132,9 +147,13 @@ public:
     /*!
     ** \brief Data related to the link
     **
-    ** \see enum LinkDataIndex
     */
-    Matrix<> data;
+    Matrix<> parameters;
+    Matrix<> directCapacities;
+    Matrix<> indirectCapacities;
+
+    //! Monte-Carlo
+    Matrix<Yuni::uint32> timeseriesNumbers;
 
     //! Flag for using loop flow
     bool useLoopFlow;
@@ -194,13 +213,14 @@ public:
     //! link width
     int linkWidth;
 
+    friend struct CompareLinkName;
 }; // class AreaLink
 
 struct CompareLinkName final
 {
     inline bool operator()(const AreaLink* s1, const AreaLink* s2) const
     {
-        return (s1->getName().toLower() < s2->getName().toLower());
+        return s1->getNamePair() < s2->getNamePair();
     }
 };
 
