@@ -54,7 +54,4 @@ extern VALEURS_ANNUELLES** ValeursAnnuellesAdequation;
 extern RESULTATS_PAR_INTERCONNEXION** ResultatsParInterconnexion;
 extern RESULTATS_PAR_CONTRAINTE_COUPLANTE** ResultatsParContrainteCouplante;
 
-/* Gestion des anomalies */
-extern COMPTE_RENDU CompteRendu;
-
 #endif /* __SOLVER_SIMULATION_EXTERN_H__ */
