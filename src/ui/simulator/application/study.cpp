@@ -152,7 +152,10 @@ static void TheSimulationIsComplete(const wxString& duration)
                                 wxString()
                                   << wxT("Time to complete the simulation : ") << duration);
         message.add(Window::Message::btnContinue);
-        message.showModal();
+        message.add(Window::Message::btnViewResults);
+        const uint userChoice = message.showModal();
+        if (userChoice == Window::Message::btnViewResults)
+            mainFrm->viewLatestOutput();
     }
 }
 

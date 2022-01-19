@@ -64,12 +64,12 @@ namespace Antares
 {
 namespace Component
 {
-template<class T, class StringT>
+template<class T, class StringT, class UserDataT = void*>
 wxButton* CreateButton(wxWindow* parent,
                        const StringT& caption,
                        T* object,
-                       void (T::*method)(void*),
-                       void* userdata)
+                       void (T::*method)(UserDataT),
+                       UserDataT userdata)
 {
     // type alias
     typedef ::Antares::Private::Component::CustomWxButton ButtonType;
@@ -83,7 +83,7 @@ wxButton* CreateButton(wxWindow* parent,
     // Event
     if (object)
     {
-        typedef void (T::*MemberType)(void*);
+        typedef void (T::*MemberType)(UserDataT);
         button->onUserClick.bind(
           const_cast<T*>(object), reinterpret_cast<MemberType>(method), userdata);
     }
