@@ -126,10 +126,10 @@ int main(int argc, char** argv)
 
     int ret = EXIT_FAILURE;
 
-    auto* application = new Antares::Solver::Application();
+    Antares::Solver::Application application;
     try
     {
-        ret = application->prepare(argc, argv);
+        ret = application.prepare(argc, argv);
     }
     // Catch errors
     catch (const Error::LoadingError& e)
@@ -141,12 +141,10 @@ int main(int argc, char** argv)
     if (ret != 0)
     {
         FreeUTF8Arguments(argc, argv);
-        delete application;
         return EXIT_SUCCESS;
     }
 
-    ret = application->execute();
-    delete application;
+    ret = application.execute();
 
     FreeUTF8Arguments(argc, argv);
 
