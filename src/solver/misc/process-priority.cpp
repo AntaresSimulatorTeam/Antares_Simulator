@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "../main.h"
+#include "../application.h"
 #ifdef YUNI_OS_WINDOWS
 #include <yuni/core/system/windows.hdr.h>
 #include <yuni/core/system/cpu.h>
@@ -35,7 +35,11 @@ using namespace Yuni;
 using namespace Antares;
 #endif
 
-void SolverApplication::resetProcessPriority()
+namespace Antares
+{
+namespace Solver
+{
+void Application::resetProcessPriority()
 {
 #ifdef YUNI_OS_WINDOWS
     if (System::CPU::Count() <= 2)
@@ -45,3 +49,5 @@ void SolverApplication::resetProcessPriority()
     }
 #endif
 }
+} // namespace Solver
+} // namespace Antares

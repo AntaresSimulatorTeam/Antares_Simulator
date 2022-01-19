@@ -27,8 +27,10 @@
 #ifndef __MAIN_HXX__
 #define __MAIN_HXX__
 
+#include "application.h"
+
 template<class SimulationT>
-void SolverApplication::runSimulation()
+void Application::runSimulation()
 {
     // The variable simulation _must_ not be allocated on the stack
     // You might encounter some strange issues otherwise

@@ -25,17 +25,21 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "../main.h"
+#include "../application.h"
 #include "../simulation/solver.h"
 #include "../simulation/adequacy.h"
 #include <antares/logs.h>
 
-using namespace Antares;
-
-void SolverApplication::runSimulationInAdequacyMode()
+namespace Antares
+{
+namespace Solver
+{
+void Application::runSimulationInAdequacyMode()
 {
     // Type of the simulation
     typedef Solver::Simulation::ISimulation<Solver::Simulation::Adequacy> SimulationType;
 
     runSimulation<SimulationType>();
 }
+} // namespace Solver
+} // namespace Antares
