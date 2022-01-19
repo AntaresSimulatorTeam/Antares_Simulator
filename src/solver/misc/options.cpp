@@ -74,8 +74,6 @@ int  GrabOptionsFromCommandLine(int argc,
     bool optForceAdequacy = false;
     bool optForceAdequacyDraft = false;
 
-    // options.nbYears = 1
-    // String optStudyFolder = "C:\\Users\\damigera\\Desktop\\036 PSP strategies-2-Det pumping";
     String optStudyFolder;
 
     // The parser
@@ -121,7 +119,7 @@ int  GrabOptionsFromCommandLine(int argc,
     {
         availableSolverListStr += *it + ";";
     }
-    // Remove last ;
+    // Remove last semicolumn
     if (!availableSolverListStr.empty())
         availableSolverListStr.pop_back();
 
@@ -274,28 +272,19 @@ int  GrabOptionsFromCommandLine(int argc,
 
     // Forcing simulation mode
     {
-        uint mask = optForceExpansion + optForceEconomy + optForceAdequacy + optForceAdequacyDraft;
-        switch (mask)
-        {
-        case 0:
-            break;
-        case 1:
-        {
-            if (optForceExpansion)
-                options.forceMode = stdmExpansion;
-            else if (optForceEconomy)
-                options.forceMode = stdmEconomy;
-            else if (optForceAdequacy)
-                options.forceMode = stdmAdequacy;
-            else if (optForceAdequacyDraft)
-                options.forceMode = stdmAdequacyDraft;
-            break;
-        }
-        default:
-        {
+        uint number_of_enabled_force_options = optForceExpansion + optForceEconomy + optForceAdequacy + optForceAdequacyDraft;
+
+        if(number_of_enabled_force_options > 1){
             throw Error::InvalidSimulationMode();
         }
-        }
+        if (optForceExpansion)
+            options.forceMode = stdmExpansion;
+        else if (optForceEconomy)
+            options.forceMode = stdmEconomy;
+        else if (optForceAdequacy)
+            options.forceMode = stdmAdequacy;
+        else if (optForceAdequacyDraft)
+            options.forceMode = stdmAdequacyDraft;
     }
 
     // define ortools global values
