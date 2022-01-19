@@ -36,109 +36,115 @@ namespace Antares
 {
 namespace Error
 {
-class StudyFolderDoesNotExist : public std::runtime_error
+class LoadingError : public std::runtime_error
+{
+public:
+    using std::runtime_error::runtime_error;
+};
+
+class StudyFolderDoesNotExist : public LoadingError
 {
 public:
     explicit StudyFolderDoesNotExist(const Yuni::String& folder);
 };
 
-class ReadingStudy : public std::runtime_error
+class ReadingStudy : public LoadingError
 {
 public:
     explicit ReadingStudy();
 };
 
-class NoAreas : public std::runtime_error
+class NoAreas : public LoadingError
 {
 public:
     explicit NoAreas();
 };
 
-class InvalidFileName : public std::runtime_error
+class InvalidFileName : public LoadingError
 {
 public:
     explicit InvalidFileName();
 };
 
-class RuntimeInfoInitialization : public std::runtime_error
+class RuntimeInfoInitialization : public LoadingError
 {
 public:
     explicit RuntimeInfoInitialization();
 };
 
-class WritingPID : public std::runtime_error
+class WritingPID : public LoadingError
 {
 public:
     explicit WritingPID(const Yuni::String& file);
 };
 
-class InvalidNumberOfMCYears : public std::runtime_error
+class InvalidNumberOfMCYears : public LoadingError
 {
 public:
     explicit InvalidNumberOfMCYears(uint nbYears);
 };
 
-class IncompatibleParallelOptions : public std::runtime_error
+class IncompatibleParallelOptions : public LoadingError
 {
 public:
     explicit IncompatibleParallelOptions();
 };
 
-class IncompatibleOptRangeHydroPricing : public std::runtime_error
+class IncompatibleOptRangeHydroPricing : public LoadingError
 {
 public:
     explicit IncompatibleOptRangeHydroPricing();
 };
 
-class IncompatibleOptRangeUCMode : public std::runtime_error
+class IncompatibleOptRangeUCMode : public LoadingError
 {
 public:
     explicit IncompatibleOptRangeUCMode();
 };
 
-class InvalidOptimizationRange : public std::runtime_error
+class InvalidOptimizationRange : public LoadingError
 {
 public:
     explicit InvalidOptimizationRange();
 };
 
-class InvalidSimulationMode : public std::runtime_error
+class InvalidSimulationMode : public LoadingError
 {
 public:
     explicit InvalidSimulationMode();
 };
 
-class InvalidSolver : public std::runtime_error
+class InvalidSolver : public LoadingError
 {
 public:
     explicit InvalidSolver(const std::string& solver);
 };
 
-class InvalidStudy : public std::runtime_error
+class InvalidStudy : public LoadingError
 {
 public:
     explicit InvalidStudy(const Yuni::String& study);
 };
 
-class NoStudyProvided : public std::runtime_error
+class NoStudyProvided : public LoadingError
 {
 public:
     explicit NoStudyProvided();
 };
 
-class InvalidVersion : public std::runtime_error
+class InvalidVersion : public LoadingError
 {
 public:
     explicit InvalidVersion(const char* version, const char* latest);
 };
 
-class IncompatibleDailyOptHeuristicForArea : public std::runtime_error
+class IncompatibleDailyOptHeuristicForArea : public LoadingError
 {
 public:
     explicit IncompatibleDailyOptHeuristicForArea(const Antares::Data::AreaName& name);
 };
 
-class WritingProgressFile : public std::runtime_error
+class WritingProgressFile : public LoadingError
 {
 public:
     explicit WritingProgressFile(const Yuni::String& study);

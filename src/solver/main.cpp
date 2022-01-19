@@ -581,7 +581,7 @@ int main(int argc, char** argv)
         ret = application->prepare(argc, argv);
     }
     // Catch errors
-    catch (const std::runtime_error& e)
+    catch (const Error::LoadingError& e)
     {
         logs.error() << e.what();
         AntaresSolverEmergencyShutdown();
