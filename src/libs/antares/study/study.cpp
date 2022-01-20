@@ -1607,5 +1607,25 @@ void Study::removeTimeseriesIfTSGeneratorEnabled()
     }
 }
 
+void Study::computePThetaInfForThermalClusters()
+{
+  for (uint i = 0; i != this->areas.size(); i++)
+    {
+      // Alias de la zone courant
+      auto& area = *(this->areas.byIndex[i]);
+
+      for (uint j = 0; j < area.thermal.list.size(); j++)
+        {
+          // Alias du cluster courant
+          auto& cluster = area.thermal.list.byIndex[j];
+          for (uint k = 0; k < HOURS_PER_YEAR; k++)
+            cluster->PthetaInf[k] = cluster->modulation[Data::thermalMinGenModulation][k]
+              * cluster->unitCount * cluster->nominalCapacity;
+        }
+    }
+}
+
+
+
 } // namespace Data
 } // namespace Antares

@@ -608,8 +608,8 @@ public:
     ** Should be call then all inforation is suplied in to the thermal clusters.
     */
     bool areasThermalClustersMinStablePowerValidity(std::map<int, YString>& areaClusterNames) const;
+    void computePThetaInfForThermalClusters();
 
-public:
     //! Header (general information about the study)
     StudyHeader header;
 

@@ -239,22 +239,7 @@ int Application::execute()
     memoryReport.interval(1000 * 60 * 5); // 5 minutes
     memoryReport.start();
 
-    //! Calculate (*pMatrix)[Data::thermalMinGenModulation][y] * pCluster->unitCount *
-    //! pCluster->nominalCapacity;
-    for (uint i = 0; i != pStudy->areas.size(); i++)
-    {
-        // Alias de la zone courant
-        auto& area = *(pStudy->areas.byIndex[i]);
-
-        for (uint j = 0; j < area.thermal.list.size(); j++)
-        {
-            // Alias du cluster courant
-            auto& cluster = area.thermal.list.byIndex[j];
-            for (uint k = 0; k < 8760; k++)
-                cluster->PthetaInf[k] = cluster->modulation[Data::thermalMinGenModulation][k]
-                                        * cluster->unitCount * cluster->nominalCapacity;
-        }
-    }
+    pStudy->computePThetaInfForThermalClusters();
 
     // Run the simulation
     {
