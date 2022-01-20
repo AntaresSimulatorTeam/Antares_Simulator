@@ -65,9 +65,9 @@ public:
 /*!
 ** \brief Interprete options given in command line
 */
-int GrabOptionsFromCommandLine(int argc,
-                               char* argv[],
-                               Settings& settings,
-                               Antares::Data::StudyLoadOptions& options);
+void GrabOptionsFromCommandLine(int argc,
+                                char* argv[],
+                                Settings& settings,
+                                Antares::Data::StudyLoadOptions& options);
 
 #endif /* __SOLVER_MISC_GETOPT_H__ */

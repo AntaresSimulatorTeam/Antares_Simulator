@@ -12,6 +12,28 @@
 #include <yuni/io/io.h>
 #include <yuni/datetime/timestamp.h>
 #include <yuni/core/process/rename.h>
+
+namespace
+{
+void checkStudyVersion(const AnyString& optStudyFolder)
+{
+    using namespace Antares::Data;
+    auto version = StudyTryToFindTheVersion(optStudyFolder);
+    if (version == versionUnknown)
+    {
+        throw Error::InvalidStudy(optStudyFolder);
+    }
+    else
+    {
+        if ((uint)version > (uint)versionLatest)
+        {
+            throw Error::InvalidVersion(VersionToCStr(version),
+                                        VersionToCStr((Version)versionLatest));
+        }
+    }
+}
+} // namespace
+
 namespace Antares
 {
 namespace Solver
@@ -21,7 +43,7 @@ Application::Application() : pStudy(nullptr), pParameters(nullptr), pErrorCount(
     resetProcessPriority();
 }
 
-int Application::prepare(int argc, char* argv[])
+void Application::prepare(int argc, char* argv[])
 {
     pArgc = argc;
     pArgv = argv;
@@ -37,9 +59,10 @@ int Application::prepare(int argc, char* argv[])
     options.usedByTheSolver = true;
 
     // Parse arguments and store usefull values
-    int ret = GrabOptionsFromCommandLine(argc, argv, pSettings, options);
-    if (ret != 0)
-        return 1;
+    GrabOptionsFromCommandLine(argc, argv, pSettings, options);
+
+    // Checking the version
+    checkStudyVersion(pSettings.studyFolder);
 
     // Determine the log filename to use for this simulation
     resetLogFilename();
@@ -121,14 +144,10 @@ int Application::prepare(int argc, char* argv[])
         std::map<int, YString> areaClusterNames;
         if (!(pStudy->areasThermalClustersMinStablePowerValidity(areaClusterNames)))
         {
+            Error::ThermalClusterHelper helper;
             for (const auto& it : areaClusterNames)
-            {
-                logs.fatal()
-                  << it.second
-                  << ". Conflict between Min Stable Power, Pnom, spinning and capacity modulation.";
-            }
-            // TODO : create & throw exception
-            return 1;
+                helper.append(it.second);
+            throw Error::InvalidParametersForThermalClusters(helper);
         }
     }
 
@@ -193,8 +212,6 @@ int Application::prepare(int argc, char* argv[])
     }
     else
         logs.info() << "  The progression is disabled";
-
-    return 0;
 }
 
 void Application::initializeRandomNumberGenerators()
@@ -350,7 +367,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Errors
     if (pErrorCount || pWarningCount || study.gotFatalError)
     {
-        if (pErrorCount|| !pSettings.ignoreWarningsErrors)
+        if (pErrorCount || !pSettings.ignoreWarningsErrors)
         {
             // The loading of the study produces warnings and/or errors
             // As the option '--force' is not given, we can not continue

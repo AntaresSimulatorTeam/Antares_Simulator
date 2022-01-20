@@ -95,5 +95,31 @@ WritingProgressFile::WritingProgressFile(const Yuni::String& file) :
 {
 }
 
+void ThermalClusterHelper::append(const Yuni::String clusterName)
+{
+    clusterNames.push_back(clusterName);
+}
+
+std::string ThermalClusterHelper::finalize() const
+{
+    std::string startMessage("Conflict between Min Stable Power, Pnom, spinning and capacity "
+                             "modulation for the following clusters :");
+    std::string clusters;
+    for (const auto& it : clusterNames)
+    {
+        clusters += it.c_str();
+        clusters += ";";
+    }
+    if (!clusters.empty())
+        clusters.pop_back(); // Remove final semicolon
+    return startMessage + clusters;
+}
+
+InvalidParametersForThermalClusters::InvalidParametersForThermalClusters(
+  const ThermalClusterHelper& helper) :
+ LoadingError(helper.finalize())
+{
+}
+
 } // namespace Error
 } // namespace Antares

@@ -126,7 +126,7 @@ int main(int argc, char** argv)
     Antares::Solver::Application application;
     try
     {
-        ret = application.prepare(argc, argv);
+        application.prepare(argc, argv);
     }
     // Catch errors
     catch (const Error::LoadingError& e)

@@ -54,7 +54,7 @@ using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
-int  GrabOptionsFromCommandLine(int argc,
+void GrabOptionsFromCommandLine(int argc,
                                 char* argv[],
                                 Settings& settings,
                                 Antares::Data::StudyLoadOptions& options)
@@ -223,7 +223,7 @@ int  GrabOptionsFromCommandLine(int argc,
 #else
         std::cout << ANTARES_VERSION_STR << std::endl;
 #endif
-        return 1;
+        return;
     }
 
     // PID
@@ -272,9 +272,11 @@ int  GrabOptionsFromCommandLine(int argc,
 
     // Forcing simulation mode
     {
-        uint number_of_enabled_force_options = optForceExpansion + optForceEconomy + optForceAdequacy + optForceAdequacyDraft;
+        uint number_of_enabled_force_options
+          = optForceExpansion + optForceEconomy + optForceAdequacy + optForceAdequacyDraft;
 
-        if(number_of_enabled_force_options > 1){
+        if (number_of_enabled_force_options > 1)
+        {
             throw Error::InvalidSimulationMode();
         }
         if (optForceExpansion)
@@ -321,39 +323,19 @@ int  GrabOptionsFromCommandLine(int argc,
 
     // The study folder
     if (optStudyFolder.empty())
-    {
         throw Error::NoStudyProvided();
-    }
-    else
+
+    // Making the path absolute
+    String abspath;
+    IO::MakeAbsolute(abspath, optStudyFolder);
+    IO::Normalize(optStudyFolder, abspath);
+
+    // Checking if the path exists
+    if (not IO::Directory::Exists(optStudyFolder))
     {
-        // Making the path absolute
-        String abspath;
-        IO::MakeAbsolute(abspath, optStudyFolder);
-        IO::Normalize(optStudyFolder, abspath);
-
-        // Checking if the path exists
-        if (not IO::Directory::Exists(optStudyFolder))
-        {
-            throw Error::StudyFolderDoesNotExist(optStudyFolder);
-        }
-
-        // Checking the version
-        auto version = StudyTryToFindTheVersion(optStudyFolder);
-        if (version == versionUnknown)
-        {
-            throw Error::InvalidStudy(optStudyFolder);
-        }
-        else
-        {
-            if ((uint)version > (uint)versionLatest)
-            {
-                throw Error::InvalidVersion(VersionToCStr(version),
-                                            VersionToCStr((Version)versionLatest));
-            }
-        }
-
-        // Copying the result
-        settings.studyFolder = optStudyFolder;
+        throw Error::StudyFolderDoesNotExist(optStudyFolder);
     }
-    return 0;
+
+    // Copying the result
+    settings.studyFolder = optStudyFolder;
 }

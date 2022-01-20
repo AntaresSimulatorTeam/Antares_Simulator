@@ -33,7 +33,7 @@ public:
     **
     ** \return False if the operation failed.
     */
-    int prepare(int argc, char* argv[]);
+    void prepare(int argc, char* argv[]);
 
     /*!
     ** \brief Execute the simulation
@@ -45,7 +45,7 @@ public:
     /*!
     ** \brief Reset the process priority (Windows only)
     */
-    void resetProcessPriority();
+    void resetProcessPriority() const;
 
 private:
     /*!
