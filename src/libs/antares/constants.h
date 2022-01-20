@@ -41,6 +41,9 @@
 /*! Enable / Disable the expansion mode */
 #define STUDY_MODE_EXPANSION 0
 
+/*! Max number of MC years */
+#define MAX_NB_MC_YEARS 50000
+
 /*! */
 /* # define ANTARES_USE_GLOBAL_MAXIMUM_COST 0 */
 

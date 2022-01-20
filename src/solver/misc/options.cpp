@@ -47,6 +47,7 @@
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/Enum.hpp>
+#include <antares/constants.h>
 
 #include "utils/ortools_utils.h"
 
@@ -240,7 +241,7 @@ void GrabOptionsFromCommandLine(int argc,
     if (not optName.empty())
         settings.simulationName = optName;
 
-    if (options.nbYears > 50000)
+    if (options.nbYears > MAX_NB_MC_YEARS)
     {
         throw Error::InvalidNumberOfMCYears(options.nbYears);
     }
