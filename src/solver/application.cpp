@@ -102,7 +102,7 @@ int Application::prepare(int argc, char* argv[])
     {
         for (uint i = 0; i < pStudy->areas.size(); ++i)
         {
-            auto& area = *(pStudy->areas.byIndex[i]);
+            const auto& area = *(pStudy->areas.byIndex[i]);
             if (!area.hydro.useHeuristicTarget)
             {
                 throw Error::IncompatibleDailyOptHeuristicForArea(area.name);
@@ -121,10 +121,10 @@ int Application::prepare(int argc, char* argv[])
         std::map<int, YString> areaClusterNames;
         if (!(pStudy->areasThermalClustersMinStablePowerValidity(areaClusterNames)))
         {
-            for (auto it = areaClusterNames.begin(); it != areaClusterNames.end(); it++)
+            for (const auto& it : areaClusterNames)
             {
                 logs.fatal()
-                  << it->second
+                  << it.second
                   << ". Conflict between Min Stable Power, Pnom, spinning and capacity modulation.";
             }
             // TODO : create & throw exception
@@ -143,7 +143,7 @@ int Application::prepare(int argc, char* argv[])
 
             for (uint l = 0; l != area.thermal.clusterCount(); ++l) //
             {
-                auto& cluster = *(area.thermal.clusters[l]);
+                const auto& cluster = *(area.thermal.clusters[l]);
                 auto PmaxDUnGroupeDuPalierThermique = cluster.nominalCapacityWithSpinning;
                 auto PminDUnGroupeDuPalierThermique
                   = (cluster.nominalCapacityWithSpinning < cluster.minStablePower)
@@ -200,7 +200,7 @@ int Application::prepare(int argc, char* argv[])
 void Application::initializeRandomNumberGenerators()
 {
     logs.info() << "Initializing random number generators...";
-    auto& parameters = pStudy->parameters;
+    const auto& parameters = pStudy->parameters;
     auto& runtime = *pStudy->runtime;
 
     for (uint i = 0; i != Data::seedMax; ++i)
@@ -269,8 +269,7 @@ int Application::execute()
         case Data::stdmAdequacyDraft:
             runSimulationInAdequacyDraftMode();
             break;
-        case Data::stdmUnknown:
-        case Data::stdmMax:
+        default:
             break;
         }
     }

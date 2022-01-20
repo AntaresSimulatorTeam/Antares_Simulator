@@ -23,8 +23,10 @@ public:
     /*!
     ** \brief Destructor
     */
-    ~Application();
+    ~Application() final;
     //@}
+
+    Application(const Application&) = delete;
 
     /*!
     ** \brief Initialize data before launching the simulation
@@ -75,7 +77,6 @@ private:
 
     void processCaption(const Yuni::String& caption);
 
-private:
     //! The settings given from the command line
     Settings pSettings;
     //! The current Antares study
