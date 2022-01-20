@@ -51,7 +51,7 @@ int Application::prepare(int argc, char* argv[])
 
 #ifdef ANTARES_SWAP_SUPPORT
     // Changing the swap folder
-    if (not pSettings.swap.empty())
+    if (!pSettings.swap.empty())
     {
         logs.info() << "  memory pool: scratch folder:" << pSettings.swap;
         Antares::memory.cacheFolder(pSettings.swap);
@@ -185,7 +185,7 @@ int Application::prepare(int argc, char* argv[])
     {
         pStudy->buffer.clear() << pStudy->folderOutput << Yuni::IO::Separator << "about-the-study"
                                << Yuni::IO::Separator << "map";
-        if (not pStudy->progression.saveToFile(pStudy->buffer))
+        if (!pStudy->progression.saveToFile(pStudy->buffer))
         {
             throw Error::WritingProgressFile(pStudy->buffer);
         }
@@ -292,7 +292,7 @@ void Application::resetLogFilename()
     logfile << pSettings.studyFolder << Yuni::IO::Separator << "logs";
 
     // Making sure that the folder
-    if (not Yuni::IO::Directory::Create(logfile))
+    if (!Yuni::IO::Directory::Create(logfile))
     {
         logs.fatal() << "Impossible to create the log folder. Aborting now.";
         logs.info() << "  Target: " << logfile;
@@ -307,7 +307,7 @@ void Application::resetLogFilename()
     // Assigning the log filename
     logs.logfile(logfile);
 
-    if (not logs.logfileIsOpened())
+    if (!logs.logfileIsOpened())
     {
         logs.error() << "Impossible to create " << logfile;
         AntaresSolverEmergencyShutdown(); // will never return
@@ -328,16 +328,16 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     AppelEnModeSimulateur = OUI_ANTARES;
 
     // Name of the simulation
-    if (not pSettings.simulationName.empty())
+    if (!pSettings.simulationName.empty())
         study.simulation.name = pSettings.simulationName;
 
     // Force some options
-    options.prepareOutput = not pSettings.noOutput;
+    options.prepareOutput = !pSettings.noOutput;
     options.ignoreConstraints = pSettings.ignoreConstraints;
     options.loadOnlyNeeded = true;
 
     // Load the study from a folder
-    if (study.loadFromFolder(pSettings.studyFolder, options) and not study.gotFatalError)
+    if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
     {
         logs.info() << "The study is loaded.";
         logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
@@ -355,7 +355,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     study.parameters.noOutput = pSettings.noOutput;
 
     // Name of the simulation (again, if the value has been overwritten)
-    if (not pSettings.simulationName.empty())
+    if (!pSettings.simulationName.empty())
         study.simulation.name = pSettings.simulationName;
 
     // Removing all callbacks, which are no longer needed
@@ -369,9 +369,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     }
 
     // Errors
-    if (pErrorCount or pWarningCount or study.gotFatalError)
+    if (pErrorCount || pWarningCount || study.gotFatalError)
     {
-        if (pErrorCount or not pSettings.ignoreWarningsErrors)
+        if (pErrorCount|| !pSettings.ignoreWarningsErrors)
         {
             // The loading of the study produces warnings and/or errors
             // As the option '--force' is not given, we can not continue
@@ -388,7 +388,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             // Actually importing the log file is useless here.
             // However, since we have warnings/errors, it allows to have a piece of
             // log when the unexpected happens.
-            if (not study.parameters.noOutput)
+            if (!study.parameters.noOutput)
                 study.importLogsToOutputFolder();
             // empty line
             logs.info();
@@ -396,9 +396,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     }
 
     // Checking for filename length limits
-    if (not pSettings.noOutput)
+    if (!pSettings.noOutput)
     {
-        if (not study.checkForFilenameLimits(true))
+        if (!study.checkForFilenameLimits(true))
             throw Error::InvalidFileName();
 
         // comments
@@ -406,7 +406,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             study.buffer.clear() << study.folderOutput << Yuni::IO::Separator
                                  << "simulation-comments.txt";
 
-            if (not pSettings.commentFile.empty())
+            if (!pSettings.commentFile.empty())
             {
                 Yuni::IO::Directory::Create(study.folderOutput);
                 if (Yuni::IO::errNone
@@ -418,14 +418,14 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             }
             else
             {
-                if (not Yuni::IO::File::CreateEmptyFile(study.buffer))
+                if (!Yuni::IO::File::CreateEmptyFile(study.buffer))
                     logs.error() << study.buffer << ": impossible to overwrite its content";
             }
         }
     }
 
     // Runtime data dedicated for the solver
-    if (not study.initializeRuntimeInfos())
+    if (!study.initializeRuntimeInfos())
         throw Error::RuntimeInfoInitialization();
 
     // Apply transformations needed by the solver only (and not the interface for example)
@@ -449,7 +449,7 @@ Application::~Application()
         logs.info() << LOG_UI_SOLVER_DONE;
 
         // Copy the log file
-        if (not pStudy->parameters.noOutput)
+        if (!pStudy->parameters.noOutput)
             pStudy->importLogsToOutputFolder();
 
         // simulation

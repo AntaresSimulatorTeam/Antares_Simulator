@@ -34,7 +34,7 @@ void Application::runSimulation()
 {
     SimulationT simulation(*pStudy, pSettings);
     simulation.run();
-    if (not(pSettings.noOutput || pSettings.tsGeneratorsOnly))
+    if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
         simulation.writeResults(/*synthesis:*/ true);
 }
 
