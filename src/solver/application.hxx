@@ -32,16 +32,10 @@
 template<class SimulationT>
 void Application::runSimulation()
 {
-    // The variable simulation _must_ not be allocated on the stack
-    // You might encounter some strange issues otherwise
-    auto* simulation = new SimulationT(*pStudy, pSettings);
-    // Let's go
-    simulation->run();
-    // write the results of the simulation
+    SimulationT simulation(*pStudy, pSettings);
+    simulation.run();
     if (not(pSettings.noOutput || pSettings.tsGeneratorsOnly))
-        simulation->writeResults(/*synthesis:*/ true);
-    // Release
-    delete simulation;
+        simulation.writeResults(/*synthesis:*/ true);
 }
 
 #endif // __MAIN_HXX__
