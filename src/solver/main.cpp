@@ -141,7 +141,7 @@ int main(int argc, char** argv)
         return EXIT_SUCCESS;
     }
 
-    ret = application.execute();
+    application.execute();
 
     FreeUTF8Arguments(argc, argv);
 

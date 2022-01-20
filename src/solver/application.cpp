@@ -231,7 +231,7 @@ void Application::onLogMessage(int level, const Yuni::String& /*message*/)
     }
 }
 
-int Application::execute()
+void Application::execute()
 {
     processCaption(Yuni::String() << "antares: running \"" << pStudy->header.caption << "\"");
 
@@ -264,9 +264,6 @@ int Application::execute()
 
     // Stop the display of the progression
     pStudy->progression.stop();
-
-    // exit status
-    return 0;
 }
 
 void Application::resetLogFilename()

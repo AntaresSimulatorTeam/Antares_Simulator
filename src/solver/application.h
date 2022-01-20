@@ -40,7 +40,7 @@ public:
     **
     ** \return Exit status
     */
-    int execute();
+    void execute();
 
     /*!
     ** \brief Reset the process priority (Windows only)
