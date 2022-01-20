@@ -242,21 +242,19 @@ void Application::execute()
     pStudy->computePThetaInfForThermalClusters();
 
     // Run the simulation
+    switch (pStudy->runtime->mode)
     {
-        switch (pStudy->runtime->mode)
-        {
-        case Data::stdmEconomy:
-            runSimulationInEconomicMode();
-            break;
-        case Data::stdmAdequacy:
-            runSimulationInAdequacyMode();
-            break;
-        case Data::stdmAdequacyDraft:
-            runSimulationInAdequacyDraftMode();
-            break;
-        default:
-            break;
-        }
+    case Data::stdmEconomy:
+        runSimulationInEconomicMode();
+        break;
+    case Data::stdmAdequacy:
+        runSimulationInAdequacyMode();
+        break;
+    case Data::stdmAdequacyDraft:
+        runSimulationInAdequacyDraftMode();
+        break;
+    default:
+        break;
     }
 
     // Importing Time-Series if asked
