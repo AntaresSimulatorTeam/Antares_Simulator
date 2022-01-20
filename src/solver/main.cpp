@@ -121,8 +121,6 @@ int main(int argc, char** argv)
         return 42;
     }
 
-    int ret = EXIT_FAILURE;
-
     Antares::Solver::Application application;
     try
     {
@@ -134,12 +132,6 @@ int main(int argc, char** argv)
         logs.error() << e.what();
         AntaresSolverEmergencyShutdown();
     }
-    // User asks for version
-    if (ret != 0)
-    {
-        FreeUTF8Arguments(argc, argv);
-        return EXIT_SUCCESS;
-    }
 
     application.execute();
 
@@ -148,5 +140,5 @@ int main(int argc, char** argv)
     // to avoid a bug from wxExecute, we should wait a little before returning
     SuspendMilliSeconds(200 /*ms*/);
 
-    return ret;
+    return EXIT_SUCCESS;
 }
