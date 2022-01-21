@@ -60,6 +60,8 @@ public:
     //! Swap folder
     Yuni::String swap;
 
+    setStudyFolder(const Yuni::String StudyFolder& folder);
+    void reset();
 }; // class Settings
 
 /*!

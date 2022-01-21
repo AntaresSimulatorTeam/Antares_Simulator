@@ -60,15 +60,7 @@ void GrabOptionsFromCommandLine(int argc,
                                 Settings& settings,
                                 Antares::Data::StudyLoadOptions& options)
 {
-    // Reset
-    settings.studyFolder.clear();
-    settings.simulationName.clear();
-    settings.commentFile.clear();
-    settings.ignoreWarningsErrors = 0;
-    settings.tsGeneratorsOnly = false;
-    settings.noOutput = false;
-    settings.displayProgression = false;
-    settings.ignoreConstraints = false;
+    settings.reset();
 
     bool optForceExpansion = false;
     bool optForceEconomy = false;
@@ -338,4 +330,14 @@ void GrabOptionsFromCommandLine(int argc,
 
     // Copying the result
     settings.studyFolder = optStudyFolder;
+Settings::reset()
+{
+    studyFolder.clear();
+    simulationName.clear();
+    commentFile.clear();
+    ignoreWarningsErrors = 0;
+    tsGeneratorsOnly = false;
+    noOutput = false;
+    displayProgression = false;
+    ignoreConstraints = false;
 }
