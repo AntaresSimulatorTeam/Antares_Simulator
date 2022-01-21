@@ -253,7 +253,7 @@ bool Memory::createNewSwapFileWL()
     info->filename << pCacheFolder << SEP << pSwapFilePrefix << pSwapFilePrefixProcessID
                    << (int)pSwapFile.size() << ".antares-swap";
 
-    if (not info->openSwapFile((uint)pSwapFile.size(), false))
+    if (!info->openSwapFile((uint)pSwapFile.size(), false))
     {
         delete info;
         waitForSwapFileDeletion = true;

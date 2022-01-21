@@ -1612,7 +1612,7 @@ void Study::computePThetaInfForThermalClusters() const
   for (uint i = 0; i != this->areas.size(); i++)
     {
       // Alias de la zone courant
-      auto& area = *(this->areas.byIndex[i]);
+      const auto& area = *(this->areas.byIndex[i]);
 
       for (uint j = 0; j < area.thermal.list.size(); j++)
         {

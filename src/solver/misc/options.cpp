@@ -202,7 +202,7 @@ void GrabOptionsFromCommandLine(int argc,
 void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options)
 {
     const auto& optPID = settings.PID;
-    if (not optPID.empty())
+    if (!optPID.empty())
     {
         IO::File::Stream pidfile;
         if (pidfile.openRW(optPID))
@@ -228,7 +228,7 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
         throw Error::IncompatibleParallelOptions();
     }
 
-    if (not settings.simplexOptimRange.empty())
+    if (!settings.simplexOptimRange.empty())
     {
         settings.simplexOptimRange.trim(" \t");
         settings.simplexOptimRange.toLower();
@@ -249,47 +249,13 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     checkOrtoolsSolver(options);
 
     // PID
-    if (not optPID.empty())
+    if (!optPID.empty())
     {
         IO::File::Stream pidfile;
         if (pidfile.openRW(optPID))
             pidfile << ProcessID();
         else
             throw Error::WritingPID(optPID);
-    }
-
-    // Simulation name
-    if (not options.simulationName.empty())
-        settings.simulationName = options.simulationName;
-
-    if (options.nbYears > MAX_NB_MC_YEARS)
-    {
-        throw Error::InvalidNumberOfMCYears(options.nbYears);
-    }
-
-    if (options.maxNbYearsInParallel)
-        options.forceParallel = true;
-
-    if (options.enableParallel && options.forceParallel)
-    {
-        throw Error::IncompatibleParallelOptions();
-    }
-
-    if (not settings.simplexOptimRange.empty())
-    {
-        settings.simplexOptimRange.trim(" \t");
-        settings.simplexOptimRange.toLower();
-        if (settings.simplexOptimRange == "week")
-            options.simplexOptimizationRange = Data::sorWeek;
-        else
-        {
-            if (settings.simplexOptimRange == "day")
-                options.simplexOptimizationRange = Data::sorDay;
-            else
-            {
-                throw Error::InvalidOptimizationRange();
-            }
-        }
     }
 }
 
@@ -340,7 +306,7 @@ void Settings::checkAndSetStudyFolder(Yuni::String folder)
     IO::Normalize(folder, abspath);
 
     // Checking if the path exists
-    if (not IO::Directory::Exists(folder))
+    if (!IO::Directory::Exists(folder))
     {
         throw Error::StudyFolderDoesNotExist(folder);
     }
