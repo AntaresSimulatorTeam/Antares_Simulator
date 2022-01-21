@@ -38,7 +38,7 @@ namespace Antares
 {
 namespace Solver
 {
-Application::Application() : pStudy(nullptr), pParameters(nullptr), pErrorCount(0), pWarningCount(0)
+Application::Application()
 {
     resetProcessPriority();
 }

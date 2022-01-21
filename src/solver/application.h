@@ -80,13 +80,13 @@ private:
     //! The settings given from the command line
     Settings pSettings;
     //! The current Antares study
-    Antares::Data::Study::Ptr pStudy;
+    Antares::Data::Study::Ptr pStudy = nullptr;
     //! General data related to the current study
-    Antares::Data::Parameters* pParameters;
+    Antares::Data::Parameters* pParameters = nullptr;
     //! The total number of errors which have been generated
-    uint pErrorCount;
+    uint pErrorCount = 0;
     //! The total muber of warnings which have been generated
-    uint pWarningCount;
+    uint pWarningCount = 0;
 
     int pArgc;
     char** pArgv;
