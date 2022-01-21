@@ -55,19 +55,27 @@ using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
+static std::string availableOrToolsSolversString()
+{
+    const std::list<std::string> availableSolverList
+      = OrtoolsUtils().getAvailableOrtoolsSolverName();
+    std::string availableSolverListStr;
+    for (auto it = availableSolverList.begin(); it != availableSolverList.end(); it++)
+    {
+        availableSolverListStr += *it + ";";
+    }
+    // Remove last semicolumn
+    if (!availableSolverListStr.empty())
+        availableSolverListStr.pop_back();
+    return availableSolverListStr;
+}
+
 void GrabOptionsFromCommandLine(int argc,
                                 char* argv[],
                                 Settings& settings,
                                 Antares::Data::StudyLoadOptions& options)
 {
     settings.reset();
-
-    bool optForceExpansion = false;
-    bool optForceEconomy = false;
-    bool optForceAdequacy = false;
-    bool optForceAdequacyDraft = false;
-
-    String optStudyFolder;
 
     GetOpt::Parser parser;
 
@@ -76,16 +84,17 @@ void GrabOptionsFromCommandLine(int argc,
     // Simulation mode
     parser.addParagraph("Simulation");
     // --input
-    parser.addFlag(optStudyFolder, 'i', "input", "Study folder");
+    parser.addFlag(options.studyFolder, 'i', "input", "Study folder");
     // --expansion
-    parser.addFlag(optForceExpansion, ' ', "expansion", "Force the simulation in expansion mode");
+    parser.addFlag(
+      options.forceExpansion, ' ', "expansion", "Force the simulation in expansion mode");
     // --economy
-    parser.addFlag(optForceEconomy, ' ', "economy", "Force the simulation in economy mode");
+    parser.addFlag(options.forceEconomy, ' ', "economy", "Force the simulation in economy mode");
     // --adequacy
-    parser.addFlag(optForceAdequacy, ' ', "adequacy", "Force the simulation in adequacy mode");
+    parser.addFlag(options.forceAdequacy, ' ', "adequacy", "Force the simulation in adequacy mode");
     // --draft
     parser.addFlag(
-      optForceAdequacyDraft, ' ', "draft", "Force the simulation in adequacy-draft mode");
+      options.forceAdequacyDraft, ' ', "draft", "Force the simulation in adequacy-draft mode");
     // --parallel
     parser.addFlag(
       options.enableParallel, ' ', "parallel", "Enable the parallel computation of MC years");
@@ -95,38 +104,21 @@ void GrabOptionsFromCommandLine(int argc,
                "force-parallel",
                "Override the max number of years computed simultaneously");
 
-    bool useOrtools = false;
-
     // add option for ortools use
     // --use-ortools
-    parser.addFlag(useOrtools, ' ', "use-ortools", "Use ortools library to launch solver");
-
-    // add option for ortools solver used
-    std::string ortoolsSolver;
-
-    // Define available solver list
-    std::list<std::string> availableSolverList = OrtoolsUtils().getAvailableOrtoolsSolverName();
-    std::string availableSolverListStr;
-    for (auto it = availableSolverList.begin(); it != availableSolverList.end(); it++)
-    {
-        availableSolverListStr += *it + ";";
-    }
-    // Remove last semicolumn
-    if (!availableSolverListStr.empty())
-        availableSolverListStr.pop_back();
+    parser.addFlag(options.useOrtools, ' ', "use-ortools", "Use ortools library to launch solver");
 
     //--ortools-solver
-    parser.add(ortoolsSolver,
+    parser.add(options.ortoolsSolver,
                ' ',
                "ortools-solver",
                "Ortools solver used for simulation (only available with use-ortools "
                "option)\nAvailable solver list : "
-                 + availableSolverListStr);
+                 + availableOrToolsSolversString());
 
     parser.addParagraph("\nParameters");
     // --name
-    String optName;
-    parser.add(optName, 'n', "name", "Set the name of the new simulation to VALUE");
+    parser.add(settings.simulationName, 'n', "name", "Set the name of the new simulation to VALUE");
     // --generators-only
     parser.addFlag(
       settings.tsGeneratorsOnly, 'g', "generators-only", "Run the time-series generators only");
@@ -193,32 +185,23 @@ void GrabOptionsFromCommandLine(int argc,
     );
 
     // --pid
-    String optPID;
-    parser.add(optPID, 'p', "pid", "Specify the file where to write the process ID");
+    parser.add(settings.PID, 'p', "pid", "Specify the file where to write the process ID");
 
     // --version
-    bool optVersion = false;
-    parser.addFlag(optVersion, 'v', "version", "Print the version of the solver and exit");
 
-    parser.remainingArguments(optStudyFolder);
+    parser.addFlag(
+      options.displayVersion, 'v', "version", "Print the version of the solver and exit");
+
+    parser.remainingArguments(options.studyFolder);
 
     // Ask to parse the command line
     if (!parser(argc, argv))
         throw Error::CommandLineArguments(parser.errors());
+}
 
-    // Version
-    if (optVersion)
-    {
-#ifdef GIT_SHA1_SHORT_STRING
-        std::cout << ANTARES_VERSION_STR << " (revision " << GIT_SHA1_SHORT_STRING << ")"
-                  << std::endl;
-#else
-        std::cout << ANTARES_VERSION_STR << std::endl;
-#endif
-        return;
-    }
-
-    // PID
+void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options)
+{
+    const auto& optPID = settings.PID;
     if (not optPID.empty())
     {
         IO::File::Stream pidfile;
@@ -229,8 +212,8 @@ void GrabOptionsFromCommandLine(int argc,
     }
 
     // Simulation name
-    if (not optName.empty())
-        settings.simulationName = optName;
+    if (!options.simulationName.empty())
+        settings.simulationName = options.simulationName;
 
     if (options.nbYears > MAX_NB_MC_YEARS)
     {
@@ -262,34 +245,64 @@ void GrabOptionsFromCommandLine(int argc,
         }
     }
 
-    // Forcing simulation mode
-    {
-        uint number_of_enabled_force_options
-          = optForceExpansion + optForceEconomy + optForceAdequacy + optForceAdequacyDraft;
+    options.checkForceSimulationMode();
+    checkOrtoolsSolver(options);
 
-        if (number_of_enabled_force_options > 1)
-        {
-            throw Error::InvalidSimulationMode();
-        }
-        if (optForceExpansion)
-            options.forceMode = stdmExpansion;
-        else if (optForceEconomy)
-            options.forceMode = stdmEconomy;
-        else if (optForceAdequacy)
-            options.forceMode = stdmAdequacy;
-        else if (optForceAdequacyDraft)
-            options.forceMode = stdmAdequacyDraft;
+    // PID
+    if (not optPID.empty())
+    {
+        IO::File::Stream pidfile;
+        if (pidfile.openRW(optPID))
+            pidfile << ProcessID();
+        else
+            throw Error::WritingPID(optPID);
     }
 
-    // define ortools global values
-    options.ortoolsUsed = useOrtools;
+    // Simulation name
+    if (not options.simulationName.empty())
+        settings.simulationName = options.simulationName;
 
-    // ortools solver
-    if (useOrtools)
+    if (options.nbYears > MAX_NB_MC_YEARS)
     {
+        throw Error::InvalidNumberOfMCYears(options.nbYears);
+    }
+
+    if (options.maxNbYearsInParallel)
+        options.forceParallel = true;
+
+    if (options.enableParallel && options.forceParallel)
+    {
+        throw Error::IncompatibleParallelOptions();
+    }
+
+    if (not settings.simplexOptimRange.empty())
+    {
+        settings.simplexOptimRange.trim(" \t");
+        settings.simplexOptimRange.toLower();
+        if (settings.simplexOptimRange == "week")
+            options.simplexOptimizationRange = Data::sorWeek;
+        else
+        {
+            if (settings.simplexOptimRange == "day")
+                options.simplexOptimizationRange = Data::sorDay;
+            else
+            {
+                throw Error::InvalidOptimizationRange();
+            }
+        }
+    }
+}
+
+void checkOrtoolsSolver(Data::StudyLoadOptions& options)
+{
+    // ortools solver
+    if (options.useOrtools)
+    {
+        const std::list<std::string> availableSolverList
+          = OrtoolsUtils().getAvailableOrtoolsSolverName();
         if (availableSolverList.empty())
         {
-            throw Error::InvalidSolver(ortoolsSolver);
+            throw Error::InvalidSolver(options.ortoolsSolver);
         }
 
         // Default is first available solver
@@ -298,39 +311,45 @@ void GrabOptionsFromCommandLine(int argc,
 
         // Check if solver is available
         bool found
-          = (std::find(availableSolverList.begin(), availableSolverList.end(), ortoolsSolver)
+          = (std::find(
+               availableSolverList.begin(), availableSolverList.end(), options.ortoolsSolver)
              != availableSolverList.end());
 
         if (found)
         {
-            options.ortoolsEnumUsed
-              = Antares::Data::Enum::fromString<Antares::Data::OrtoolsSolver>(ortoolsSolver);
+            options.ortoolsEnumUsed = Antares::Data::Enum::fromString<Antares::Data::OrtoolsSolver>(
+              options.ortoolsSolver);
         }
         else
         {
-            logs.warning() << "Invalid ortools-solver option. Got '" << ortoolsSolver
+            logs.warning() << "Invalid ortools-solver option. Got '" << options.ortoolsSolver
                            << "'. reset to " << Enum::toString(options.ortoolsEnumUsed);
         }
     }
+}
 
+void Settings::checkAndSetStudyFolder(Yuni::String folder)
+{
     // The study folder
-    if (optStudyFolder.empty())
+    if (folder.empty())
         throw Error::NoStudyProvided();
 
     // Making the path absolute
     String abspath;
-    IO::MakeAbsolute(abspath, optStudyFolder);
-    IO::Normalize(optStudyFolder, abspath);
+    IO::MakeAbsolute(abspath, folder);
+    IO::Normalize(folder, abspath);
 
     // Checking if the path exists
-    if (not IO::Directory::Exists(optStudyFolder))
+    if (not IO::Directory::Exists(folder))
     {
-        throw Error::StudyFolderDoesNotExist(optStudyFolder);
+        throw Error::StudyFolderDoesNotExist(folder);
     }
 
     // Copying the result
-    settings.studyFolder = optStudyFolder;
-Settings::reset()
+    studyFolder = folder;
+}
+
+void Settings::reset()
 {
     studyFolder.clear();
     simulationName.clear();

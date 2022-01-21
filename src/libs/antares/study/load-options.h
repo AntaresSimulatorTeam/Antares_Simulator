@@ -49,6 +49,10 @@ public:
     //! Push a new log entry according to the local progress data
     void pushProgressLogs() const;
 
+    void printVersion() const;
+
+    void checkForceSimulationMode();
+
 public:
     //! The number of MC years (non-zero to force the value)
     uint nbYears;
@@ -97,6 +101,20 @@ public:
     //! The current number of ticks
     mutable uint progressTicks;
 
+    //! Display version number and exit
+    bool displayVersion = false;
+
+    //! Simulation mode
+    bool forceExpansion = false;
+    bool forceEconomy = false;
+    bool forceAdequacy = false;
+    bool forceAdequacyDraft = false;
+
+    YString studyFolder;
+    YString simulationName;
+    std::string ortoolsSolver;
+
+    bool useOrtools = false;
 }; // class StudyLoadOptions
 
 } // namespace Data

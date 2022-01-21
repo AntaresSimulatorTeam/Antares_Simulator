@@ -82,6 +82,7 @@ private:
     int pArgc;
     char** pArgv;
 
+    bool shouldExecute = true;
 }; // class Application
 } // namespace Solver
 } // namespace Antares

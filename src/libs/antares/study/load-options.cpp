@@ -27,6 +27,9 @@
 
 #include "load-options.h"
 #include "../logs.h"
+#include "../config.h"
+
+#include <antares/exception/LoadingError.hpp>
 
 namespace Antares
 {
@@ -48,7 +51,8 @@ StudyLoadOptions::StudyLoadOptions() :
  maxNbYearsInParallel(0),
  usedByTheSolver(false),
  ortoolsUsed(false),
- ortoolsEnumUsed(OrtoolsSolver::sirius)
+ ortoolsEnumUsed(OrtoolsSolver::sirius),
+ displayVersion(false)
 {
 }
 
@@ -62,5 +66,32 @@ void StudyLoadOptions::pushProgressLogs() const
     }
 }
 
+void StudyLoadOptions::printVersion() const
+{
+#ifdef GIT_SHA1_SHORT_STRING
+    std::cout << ANTARES_VERSION_STR << " (revision " << GIT_SHA1_SHORT_STRING << ")" << std::endl;
+#else
+    std::cout << ANTARES_VERSION_STR << std::endl;
+#endif
+}
+
+void StudyLoadOptions::checkForceSimulationMode()
+{
+    const uint number_of_enabled_force_options
+      = forceExpansion + forceEconomy + forceAdequacy + forceAdequacyDraft;
+
+    if (number_of_enabled_force_options > 1)
+    {
+        throw Error::InvalidSimulationMode();
+    }
+    if (forceExpansion)
+        forceMode = stdmExpansion;
+    else if (forceEconomy)
+        forceMode = stdmEconomy;
+    else if (forceAdequacy)
+        forceMode = stdmAdequacy;
+    else if (forceAdequacyDraft)
+        forceMode = stdmAdequacyDraft;
+}
 } // namespace Data
 } // namespace Antares

@@ -61,6 +61,17 @@ void Application::prepare(int argc, char* argv[])
     // Parse arguments and store usefull values
     GrabOptionsFromCommandLine(argc, argv, pSettings, options);
 
+    if (options.displayVersion)
+    {
+        options.printVersion();
+        shouldExecute = false;
+        return;
+    }
+
+    checkAndCorrectSettingsAndOptions(pSettings, options);
+
+    pSettings.checkAndSetStudyFolder(options.studyFolder);
+
     // Checking the version
     checkStudyVersion(pSettings.studyFolder);
 
@@ -247,6 +258,9 @@ void Application::onLogMessage(int level, const Yuni::String& /*message*/)
 
 void Application::execute()
 {
+    if (!shouldExecute)
+        return;
+
     processCaption(Yuni::String() << "antares: running \"" << pStudy->header.caption << "\"");
 
     SystemMemoryLogger memoryReport;

@@ -60,7 +60,9 @@ public:
     //! Swap folder
     Yuni::String swap;
 
-    setStudyFolder(const Yuni::String StudyFolder& folder);
+    Yuni::String PID;
+
+    void checkAndSetStudyFolder(Yuni::String folder);
     void reset();
 }; // class Settings
 
@@ -72,4 +74,7 @@ void GrabOptionsFromCommandLine(int argc,
                                 Settings& settings,
                                 Antares::Data::StudyLoadOptions& options);
 
+void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options);
+
+void checkOrtoolsSolver(Data::StudyLoadOptions& options);
 #endif /* __SOLVER_MISC_GETOPT_H__ */
