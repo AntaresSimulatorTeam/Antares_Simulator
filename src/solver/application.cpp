@@ -144,10 +144,7 @@ void Application::prepare(int argc, char* argv[])
         std::map<int, YString> areaClusterNames;
         if (!(pStudy->areasThermalClustersMinStablePowerValidity(areaClusterNames)))
         {
-            Error::ThermalClusterHelper helper;
-            for (const auto& it : areaClusterNames)
-                helper.append(it.second);
-            throw Error::InvalidParametersForThermalClusters(helper);
+            throw Error::InvalidParametersForThermalClusters(areaClusterNames);
         }
     }
 

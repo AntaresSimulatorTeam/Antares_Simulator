@@ -95,19 +95,14 @@ WritingProgressFile::WritingProgressFile(const Yuni::String& file) :
 {
 }
 
-void ThermalClusterHelper::append(const Yuni::String clusterName)
+static std::string buildInvalidParametersMessage(const std::map<int, Yuni::String>& clusterNames)
 {
-    clusterNames.push_back(clusterName);
-}
-
-std::string ThermalClusterHelper::finalize() const
-{
-    std::string startMessage("Conflict between Min Stable Power, Pnom, spinning and capacity "
-                             "modulation for the following clusters :");
+    const std::string startMessage("Conflict between Min Stable Power, Pnom, spinning and capacity "
+                                   "modulation for the following clusters : ");
     std::string clusters;
     for (const auto& it : clusterNames)
     {
-        clusters += it.c_str();
+        clusters += it.second.c_str();
         clusters += ";";
     }
     if (!clusters.empty())
@@ -116,8 +111,8 @@ std::string ThermalClusterHelper::finalize() const
 }
 
 InvalidParametersForThermalClusters::InvalidParametersForThermalClusters(
-  const ThermalClusterHelper& helper) :
- LoadingError(helper.finalize())
+  const std::map<int, Yuni::String>& clusterNames) :
+ LoadingError(buildInvalidParametersMessage(clusterNames))
 {
 }
 

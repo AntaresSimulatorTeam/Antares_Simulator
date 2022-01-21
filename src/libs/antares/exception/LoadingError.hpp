@@ -28,7 +28,7 @@
 #pragma once
 
 #include <stdexcept>
-#include <list>
+#include <map>
 
 #include <yuni/yuni.h>
 #include <yuni/string.h>
@@ -152,20 +152,10 @@ public:
     explicit WritingProgressFile(const Yuni::String& study);
 };
 
-class ThermalClusterHelper
-{
-public:
-    void append(const Yuni::String clusterName);
-    std::string finalize() const;
-
-private:
-    std::list<Yuni::String> clusterNames;
-};
-
 class InvalidParametersForThermalClusters : public LoadingError
 {
 public:
-    explicit InvalidParametersForThermalClusters(const ThermalClusterHelper& helper);
+    explicit InvalidParametersForThermalClusters(const std::map<int, Yuni::String>& clusterNames);
 };
 
 } // namespace Error
