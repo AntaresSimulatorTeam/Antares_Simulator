@@ -278,7 +278,7 @@ void Application::execute()
     pStudy->progression.stop();
 }
 
-void Application::resetLogFilename()
+void Application::resetLogFilename() const
 {
     // Assigning the log file
     Yuni::String logfile;

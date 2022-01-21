@@ -51,7 +51,7 @@ private:
     /*!
     ** \brief Reset the log filename and open it
     */
-    void resetLogFilename();
+    void resetLogFilename() const;
 
     /*!
      * \brief Load data of the study from a local or remote folder
