@@ -38,8 +38,10 @@ void Application::runSimulationInAdequacyMode()
 {
     // Type of the simulation
     typedef Solver::Simulation::ISimulation<Solver::Simulation::Adequacy> SimulationType;
-
-    runSimulation<SimulationType>();
+    SimulationType simulation(*pStudy, pSettings);
+    simulation.run();
+    if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
+        simulation.writeResults(/*synthesis:*/ true);
 }
 } // namespace Solver
 } // namespace Antares

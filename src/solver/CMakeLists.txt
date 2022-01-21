@@ -70,7 +70,7 @@ macro(solver_app name swap)
 		mps/mps_global.c
 		${SRCS}
 		main.cpp
-        application.h application.cpp application.hxx
+        application.h application.cpp
 	)
 	
 	set(ANTARES_SOLVER_LIBS		

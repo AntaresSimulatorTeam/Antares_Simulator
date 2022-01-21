@@ -66,15 +66,6 @@ private:
 
     void onLogMessage(int level, const YString& message);
 
-    /*!
-    ** \brief Run an arbitrary simulation
-    **
-    ** see main/{adequacy.cpp, economy.cpp, adequacy-draft.cpp} for specific
-    ** instanciation
-    */
-    template<class SimulationT>
-    void runSimulation();
-
     void processCaption(const Yuni::String& caption);
 
     //! The settings given from the command line
@@ -92,7 +83,5 @@ private:
     char** pArgv;
 
 }; // class Application
-
-#include "application.hxx"
 } // namespace Solver
 } // namespace Antares
