@@ -1607,7 +1607,7 @@ void Study::removeTimeseriesIfTSGeneratorEnabled()
     }
 }
 
-void Study::computePThetaInfForThermalClusters()
+void Study::computePThetaInfForThermalClusters() const
 {
   for (uint i = 0; i != this->areas.size(); i++)
     {
