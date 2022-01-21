@@ -158,5 +158,10 @@ public:
     explicit InvalidParametersForThermalClusters(const std::map<int, Yuni::String>& clusterNames);
 };
 
+class CommandLineArguments : public LoadingError
+{
+public:
+    explicit CommandLineArguments(uint errors);
+};
 } // namespace Error
 } // namespace Antares

@@ -212,7 +212,7 @@ void GrabOptionsFromCommandLine(int argc,
 
     // Ask to parse the command line
     if (!parser(argc, argv))
-        exit(parser.errors() ? 1 : 0);
+        throw Error::CommandLineArguments(parser.errors());
 
     // Version
     if (optVersion)

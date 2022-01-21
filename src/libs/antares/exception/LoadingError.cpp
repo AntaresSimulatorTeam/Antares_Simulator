@@ -116,5 +116,10 @@ InvalidParametersForThermalClusters::InvalidParametersForThermalClusters(
 {
 }
 
+CommandLineArguments::CommandLineArguments(uint errors) :
+ LoadingError("Invalid command-line arguments provided : " + std::to_string(errors) + " error(s) found")
+{
+}
+
 } // namespace Error
 } // namespace Antares
