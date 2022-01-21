@@ -32,6 +32,15 @@ void checkStudyVersion(const AnyString& optStudyFolder)
         }
     }
 }
+
+void printVersion()
+{
+#ifdef GIT_SHA1_SHORT_STRING
+    std::cout << ANTARES_VERSION_STR << " (revision " << GIT_SHA1_SHORT_STRING << ")" << std::endl;
+#else
+    std::cout << ANTARES_VERSION_STR << std::endl;
+#endif
+}
 } // namespace
 
 namespace Antares
@@ -63,7 +72,7 @@ void Application::prepare(int argc, char* argv[])
 
     if (options.displayVersion)
     {
-        options.printVersion();
+        printVersion();
         shouldExecute = false;
         return;
     }

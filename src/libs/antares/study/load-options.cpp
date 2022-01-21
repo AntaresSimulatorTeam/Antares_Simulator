@@ -66,15 +66,6 @@ void StudyLoadOptions::pushProgressLogs() const
     }
 }
 
-void StudyLoadOptions::printVersion() const
-{
-#ifdef GIT_SHA1_SHORT_STRING
-    std::cout << ANTARES_VERSION_STR << " (revision " << GIT_SHA1_SHORT_STRING << ")" << std::endl;
-#else
-    std::cout << ANTARES_VERSION_STR << std::endl;
-#endif
-}
-
 void StudyLoadOptions::checkForceSimulationMode()
 {
     const uint number_of_enabled_force_options

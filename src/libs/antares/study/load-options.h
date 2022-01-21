@@ -49,8 +49,6 @@ public:
     //! Push a new log entry according to the local progress data
     void pushProgressLogs() const;
 
-    void printVersion() const;
-
     void checkForceSimulationMode();
 
 public:
