@@ -203,10 +203,10 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
                    << "optimization.ini";
     ret = saveAreaOptimisationIniFile(area, buffer) and ret;
 
-    //Adequancy ini
+    //Adequacy ini
     buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id << SEP
-                   << "adequancy_patch.ini";
-    ret = saveAreaAdequancyPatchIniFile(area, buffer) and ret;
+                   << "adequacy_patch.ini";
+    ret = saveAreaAdequacyPatchIniFile(area, buffer) and ret;
 
     // Reserves: primary, strategic, dsm, d-1...
     buffer.clear() << folder << SEP << "input" << SEP << "reserves" << SEP << area.id << ".txt";
@@ -328,12 +328,12 @@ bool saveAreaOptimisationIniFile(const Area& area, const Clob& buffer)
     return ini.save(buffer);
 }
 
-bool saveAreaAdequancyPatchIniFile(const Area& area, const Clob& buffer)
+bool saveAreaAdequacyPatchIniFile(const Area& area, const Clob& buffer)
 {
     IniFile ini;
-    IniFile::Section* section = ini.addSection("adequancy-patch");
-    bool bUseAdequancyPatch = false; //adq: this should be later replaced with area.bUseAdequancyPatch
-    section->add("use-adequancy-patch", static_cast<bool>(bUseAdequancyPatch));
+    IniFile::Section* section = ini.addSection("adequacy-patch");
+    bool bUseAdequacyPatch = false; //adq: this should be later replaced with area.bUseAdequacyPatch
+    section->add("use-adequacy-patch", static_cast<bool>(bUseAdequacyPatch));
     return ini.save(buffer);
 }
 

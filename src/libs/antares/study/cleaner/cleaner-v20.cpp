@@ -195,7 +195,7 @@ static void PreflightVersion20_area(PathList& e, PathList& p, const Area* area, 
     e.add(buffer);
     buffer.clear() << "input/areas/" << id << "/optimization.ini";
     e.add(buffer);
-    buffer.clear() << "input/areas/" << id << "/adequancy_patch.ini";
+    buffer.clear() << "input/areas/" << id << "/adequacy_patch.ini";
     e.add(buffer);
 
     // Interconnections
