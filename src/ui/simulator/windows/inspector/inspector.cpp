@@ -164,12 +164,11 @@ void SelectStudy(const Data::Study::Ptr& study)
         gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
 
     gData->clear();
-    // TODO[FO]
-    // if (study)
-    // {
-    //   if (gData->studies.insert(study))
-    //              gData->empty = false;
-    // }
+    if (study)
+    {
+        if (gData->studies.insert(study).second)
+            gData->empty = false;
+    }
 
     if (gInspector)
         gInspector->apply(gData);
@@ -179,14 +178,13 @@ void AddStudy(const Data::Study::Ptr& study)
 {
     if (!gData)
         gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
-    
-    // TODO[FO]
-    // if (gData->studies.insert(const_cast<Data::Study*>(study)).second)
-    // {
-    //     gData->empty = false;
-    //     if (gInspector)
-    //         gInspector->apply(gData);
-    // }
+
+    if (gData->studies.insert(study).second)
+    {
+        gData->empty = false;
+        if (gInspector)
+            gInspector->apply(gData);
+    }
 }
 
 void SelectArea(const Data::Area* area)
