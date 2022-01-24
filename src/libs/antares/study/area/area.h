@@ -347,6 +347,8 @@ private:
 
 bool saveAreaOptimisationIniFile(const Area& area, const Yuni::Clob& buffer);
 
+bool saveAreaAdequacyPatchIniFile(const Area& area, const Yuni::Clob& buffer);
+
 /*!
 ** \brief A list of areas
 **

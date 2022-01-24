@@ -203,6 +203,11 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
                    << "optimization.ini";
     ret = saveAreaOptimisationIniFile(area, buffer) and ret;
 
+    //Adequacy ini
+    buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id << SEP
+                   << "adequacy_patch.ini";
+    ret = saveAreaAdequacyPatchIniFile(area, buffer) and ret;
+
     // Reserves: primary, strategic, dsm, d-1...
     buffer.clear() << folder << SEP << "input" << SEP << "reserves" << SEP << area.id << ".txt";
     ret = area.reserves.saveToCSVFile(buffer) and ret;
@@ -320,6 +325,15 @@ bool saveAreaOptimisationIniFile(const Area& area, const Clob& buffer)
     section->add("filter-synthesis", datePrecisionIntoString(area.filterSynthesis));
     section->add("filter-year-by-year", datePrecisionIntoString(area.filterYearByYear));
 
+    return ini.save(buffer);
+}
+
+bool saveAreaAdequacyPatchIniFile(const Area& area, const Clob& buffer)
+{
+    IniFile ini;
+    IniFile::Section* section = ini.addSection("adequacy-patch");
+    bool bUseAdequacyPatch = false; //adq: this should be later replaced with area.bUseAdequacyPatch
+    section->add("use-adequacy-patch", static_cast<bool>(bUseAdequacyPatch));
     return ini.save(buffer);
 }
 
