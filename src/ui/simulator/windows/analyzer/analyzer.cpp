@@ -77,87 +77,6 @@ namespace // anonymous
 {
 static wxString gLastFolderForTSAnalyzer;
 
-class FileSearchProvider final : public Antares::Component::Spotlight::IProvider
-{
-public:
-    //! The spotlight component (alias)
-    typedef Antares::Component::Spotlight Spotlight;
-
-public:
-    //! \name Constructor & Destructor
-    //@{
-    /*!
-    ** \brief Default constructor
-    */
-    FileSearchProvider()
-    {
-    }
-    //! Destructor
-    virtual ~FileSearchProvider()
-    {
-    }
-    //@}
-
-    /*!
-    ** \brief Perform a new search
-    */
-    virtual void search(Spotlight::IItem::Vector& out,
-                        const Spotlight::SearchToken::Vector& tokens,
-                        const Yuni::String& text = "") override
-    {
-        if (tokens.empty())
-        {
-            foreach (auto& filename, pFiles)
-            {
-                auto item = std::make_shared<Spotlight::IItem>();
-                item->caption(filename);
-                item->addTag("F", 210, 210, 255);
-                out.push_back(item);
-            }
-        }
-        else
-        {
-            foreach (auto& filename, pFiles)
-            {
-                foreach (auto& tokenname, tokens)
-                {
-                    if (filename.icontains(tokenname->text))
-                    {
-                        auto item = std::make_shared<Spotlight::IItem>();
-                        item->caption(filename);
-                        item->addTag("F", 210, 210, 255);
-                        out.push_back(item);
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    /*!
-    ** \brief An item has been selected
-    */
-    virtual bool onSelect(Spotlight::IItem::Ptr&) override
-    {
-        return false;
-    }
-
-    void onFileSearchAdd(const String& filename)
-    {
-        pFiles.push_back(filename);
-    }
-
-    void onFileSearchClear()
-    {
-        pFiles.clear();
-    }
-
-private:
-    //! List of files
-    String::Vector pFiles;
-
-}; // class Layer
-
 class AnalyzeSourceFolder final : public Yuni::Thread::IThread
 {
 public:
@@ -548,6 +467,57 @@ private:
 
 } // anonymous namespace
 
+void FileSearchProvider::search(Spotlight::IItem::Vector& out,
+                                const Spotlight::SearchToken::Vector& tokens,
+                                const Yuni::String& text)
+{
+    if (tokens.empty())
+    {
+        foreach (auto& filename, pFiles)
+        {
+            auto item = std::make_shared<Spotlight::IItem>();
+            item->caption(filename);
+            item->addTag("F", 210, 210, 255);
+            out.push_back(item);
+        }
+    }
+    else
+    {
+        foreach (auto& filename, pFiles)
+        {
+            foreach (auto& tokenname, tokens)
+            {
+                if (filename.icontains(tokenname->text))
+                {
+                    auto item = std::make_shared<Spotlight::IItem>();
+                    item->caption(filename);
+                    item->addTag("F", 210, 210, 255);
+                    out.push_back(item);
+                    break;
+                }
+            }
+        }
+    }
+}
+
+/*!
+** \brief An item has been selected
+*/
+bool FileSearchProvider::onSelect(Spotlight::IItem::Ptr&)
+{
+    return false;
+}
+
+void FileSearchProvider::onFileSearchAdd(const YString& filename)
+{
+    pFiles.push_back(filename);
+}
+
+void FileSearchProvider::onFileSearchClear()
+{
+    pFiles.clear();
+}
+
 void AnalyzerWizard::ResetLastFolderToCurrentStudyUser()
 {
     // nothing to do if there is no study
@@ -740,11 +710,10 @@ AnalyzerWizard::AnalyzerWizard(wxFrame* parent) :
             files->AddSpacer(6);
 
             pFileSearch = new Component::Spotlight(panelTS, 0);
-            auto provider = std::make_shared<FileSearchProvider>();
-            // TODO[FO]
-            // onFileSearchAdd.connect(provider, &FileSearchProvider::onFileSearchAdd);
-            // onFileSearchClear.connect(provider, &FileSearchProvider::onFileSearchClear);
-            pFileSearch->provider(provider);
+            mProvider = std::shared_ptr<FileSearchProvider>(new FileSearchProvider());
+            onFileSearchAdd.connect(mProvider.get(), &FileSearchProvider::onFileSearchAdd);
+            onFileSearchClear.connect(mProvider.get(), &FileSearchProvider::onFileSearchClear);
+            pFileSearch->provider(mProvider);
             files->Add(pFileSearch, 1, wxALL | wxEXPAND);
 
             split->AddSpacer(5);

@@ -44,6 +44,48 @@ namespace Antares
 {
 namespace Window
 {
+class FileSearchProvider final : public Antares::Component::Spotlight::IProvider
+{
+public:
+    //! The spotlight component (alias)
+    typedef Antares::Component::Spotlight Spotlight;
+
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    FileSearchProvider()
+    {
+    }
+    //! Destructor
+    virtual ~FileSearchProvider()
+    {
+    }
+    //@}
+
+    /*!
+    ** \brief Perform a new search
+    */
+    virtual void search(Spotlight::IItem::Vector& out,
+                        const Spotlight::SearchToken::Vector& tokens,
+                        const Yuni::String& text = "") override;
+
+    /*!
+    ** \brief An item has been selected
+    */
+    virtual bool onSelect(Spotlight::IItem::Ptr&) override;
+
+    void onFileSearchAdd(const YString& filename);
+
+    void onFileSearchClear();
+
+private:
+    //! List of files
+    YString::Vector pFiles;
+};
+
 class AnalyzerWizard final : public wxDialog
 {
 public:
@@ -199,6 +241,8 @@ private:
 
     typedef Component::Datagrid::Renderer::Analyzer::Areas RendererType;
     RendererType* pRenderer;
+
+    std::shared_ptr<FileSearchProvider> mProvider;
 
     DECLARE_EVENT_TABLE()
 
