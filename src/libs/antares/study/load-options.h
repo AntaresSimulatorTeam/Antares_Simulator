@@ -90,7 +90,7 @@ public:
     bool ortoolsUsed;
 
     //! Ortool solver used for simulation
-    OrtoolsSolver ortoolsEnumUsed;
+    OrtoolsSolver ortoolsEnumUsed = OrtoolsSolver::sirius;
 
     //! Temporary string for passing log message
     mutable Yuni::String logMessage;

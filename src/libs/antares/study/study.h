@@ -607,7 +607,6 @@ public:
     *cluster in the all area in the study.
     ** Should be call then all inforation is suplied in to the thermal clusters.
     */
-    bool areasThermalClustersMinStablePowerValidity(std::map<int, YString>& areaClusterNames) const;
     void computePThetaInfForThermalClusters() const;
 
     //! Header (general information about the study)
@@ -935,6 +934,9 @@ void StudyEnsureDataThermalTimeSeries(Study* s);
 ** \see Study::ensureDataAreAllInitializedAccordingParameters()
 */
 void StudyEnsureDataThermalPrepro(Study* s);
+
+bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,
+                                                std::map<int, YString>& areaClusterNames);
 
 } // namespace Data
 } // namespace Antares

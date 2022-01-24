@@ -28,6 +28,8 @@ public:
 
     Application(const Application&) = delete;
 
+    Application& operator=(const Application&) = delete;
+
     /*!
     ** \brief Initialize data before launching the simulation
     **

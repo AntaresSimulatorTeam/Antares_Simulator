@@ -41,6 +41,105 @@ void printVersion()
     std::cout << ANTARES_VERSION_STR << std::endl;
 #endif
 }
+
+// CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing
+// = MILP ».
+void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
+                                   Antares::Data::HydroPricingMode hpMode)
+{
+    if (optRange == Antares::Data::SimplexOptimization::sorDay
+        && hpMode == Antares::Data::HydroPricingMode::hpMILP)
+    {
+        throw Error::IncompatibleOptRangeHydroPricing();
+    }
+}
+
+// CHECK incompatible de choix simultané des options « simplex range= daily » et «
+// unit-commitment = MILP ».
+void checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optRange,
+                                         Antares::Data::UnitCommitmentMode ucMode)
+{
+    if (optRange == Antares::Data::SimplexOptimization::sorDay
+        && ucMode == Antares::Data::UnitCommitmentMode::ucMILP)
+    {
+        throw Error::IncompatibleOptRangeUCMode();
+    }
+}
+
+// Daily simplex optimisation and any area's use heurictic target turned to "No" are not
+// compatible.
+void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange,
+                                     const Antares::Data::AreaList& areas)
+{
+    if (optRange == Antares::Data::SimplexOptimization::sorDay)
+    {
+        for (uint i = 0; i < areas.size(); ++i)
+        {
+            const auto& area = *(areas.byIndex[i]);
+            if (!area.hydro.useHeuristicTarget)
+            {
+                throw Error::IncompatibleDailyOptHeuristicForArea(area.name);
+            }
+        }
+    }
+}
+
+void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas)
+{
+    if (tsGenThermal)
+    {
+        std::map<int, YString> areaClusterNames;
+        if (!(areasThermalClustersMinStablePowerValidity(areas, areaClusterNames)))
+        {
+            throw Error::InvalidParametersForThermalClusters(areaClusterNames);
+        }
+    }
+
+    // CHECK PuissanceDisponible
+    /* Caracteristiques des paliers thermiques */
+    if (!tsGenThermal) // no time series generation asked (off mode)
+    {
+        for (uint i = 0; i < areas.size(); ++i)
+        {
+            // Alias de la zone courant
+            auto& area = *(areas.byIndex[i]);
+
+            for (uint l = 0; l != area.thermal.clusterCount(); ++l) //
+            {
+                const auto& cluster = *(area.thermal.clusters[l]);
+                auto PmaxDUnGroupeDuPalierThermique = cluster.nominalCapacityWithSpinning;
+                auto PminDUnGroupeDuPalierThermique
+                  = (cluster.nominalCapacityWithSpinning < cluster.minStablePower)
+                      ? cluster.nominalCapacityWithSpinning
+                      : cluster.minStablePower;
+
+                bool condition = false;
+                bool report = false;
+
+                for (uint y = 0; y != cluster.series->series.height; ++y)
+                {
+                    for (uint x = 0; x != cluster.series->series.width; ++x)
+                    {
+                        auto rightpart = PminDUnGroupeDuPalierThermique
+                                         * ceil(cluster.series->series.entry[x][y]
+                                                / PmaxDUnGroupeDuPalierThermique);
+                        condition = rightpart > cluster.series->series.entry[x][y];
+                        if (condition)
+                        {
+                            cluster.series->series.entry[x][y] = rightpart;
+                            report = true;
+                        }
+                    }
+                }
+
+                if (report)
+                    logs.warning() << "Area : " << area.name << " cluster name : " << cluster.name()
+                                   << " available power lifted to match Pmin and Pnom requirements";
+            }
+        }
+    }
+}
+
 } // namespace
 
 namespace Antares
@@ -122,95 +221,20 @@ void Application::prepare(int argc, char* argv[])
 
     // LISTE DE CHECKS ...
 
-    // CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing
-    // = MILP ».
-    if ((pParameters->simplexOptimizationRange == Antares::Data::SimplexOptimization::sorDay)
-        && (pParameters->hydroPricing.hpMode == Antares::Data::HydroPricingMode::hpMILP))
-    {
-        throw Error::IncompatibleOptRangeHydroPricing();
-    }
+    checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
+                                  pParameters->hydroPricing.hpMode);
 
-    // CHECK incompatible de choix simultané des options « simplex range= daily » et «
-    // unit-commitment = MILP ».
-    if ((pParameters->simplexOptimizationRange == Antares::Data::SimplexOptimization::sorDay)
-        && (pParameters->unitCommitment.ucMode == Antares::Data::UnitCommitmentMode::ucMILP))
-    {
-        throw Error::IncompatibleOptRangeUCMode();
-    }
+    checkSimplexRangeUnitCommitmentMode(pParameters->simplexOptimizationRange,
+                                        pParameters->unitCommitment.ucMode);
 
-    // CHECK
-    // Daily simplex optimisation and any area's use heurictic target turned to "No" are not
-    // compatible.
-    if (pParameters->simplexOptimizationRange == Antares::Data::SimplexOptimization::sorDay)
-    {
-        for (uint i = 0; i < pStudy->areas.size(); ++i)
-        {
-            const auto& area = *(pStudy->areas.byIndex[i]);
-            if (!area.hydro.useHeuristicTarget)
-            {
-                throw Error::IncompatibleDailyOptHeuristicForArea(area.name);
-            }
-        }
-    }
+    checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
     // CHECK MinStablePower
     bool tsGenThermal = (0
                          != (pStudy->parameters.timeSeriesToGenerate
                              & Antares::Data::TimeSeries::timeSeriesThermal));
-    logs.debug() << "tsGenThermal = " << tsGenThermal;
 
-    if (tsGenThermal)
-    {
-        std::map<int, YString> areaClusterNames;
-        if (!(pStudy->areasThermalClustersMinStablePowerValidity(areaClusterNames)))
-        {
-            throw Error::InvalidParametersForThermalClusters(areaClusterNames);
-        }
-    }
-
-    // CHECK PuissanceDisponible
-    /* Caracteristiques des paliers thermiques */
-    if (!tsGenThermal) // no time series generation asked (off mode)
-    {
-        for (uint i = 0; i < pStudy->areas.size(); ++i)
-        {
-            // Alias de la zone courant
-            auto& area = *(pStudy->areas.byIndex[i]);
-
-            for (uint l = 0; l != area.thermal.clusterCount(); ++l) //
-            {
-                const auto& cluster = *(area.thermal.clusters[l]);
-                auto PmaxDUnGroupeDuPalierThermique = cluster.nominalCapacityWithSpinning;
-                auto PminDUnGroupeDuPalierThermique
-                  = (cluster.nominalCapacityWithSpinning < cluster.minStablePower)
-                      ? cluster.nominalCapacityWithSpinning
-                      : cluster.minStablePower;
-
-                bool condition = false;
-                bool report = false;
-
-                for (uint y = 0; y != cluster.series->series.height; ++y)
-                {
-                    for (uint x = 0; x != cluster.series->series.width; ++x)
-                    {
-                        auto rightpart = PminDUnGroupeDuPalierThermique
-                                         * ceil(cluster.series->series.entry[x][y]
-                                                / PmaxDUnGroupeDuPalierThermique);
-                        condition = rightpart > cluster.series->series.entry[x][y];
-                        if (condition)
-                        {
-                            cluster.series->series.entry[x][y] = rightpart;
-                            report = true;
-                        }
-                    }
-                }
-
-                if (report)
-                    logs.warning() << "Area : " << area.name << " cluster name : " << cluster.name()
-                                   << " available power lifted to match Pmin and Pnom requirements";
-            }
-        }
-    }
+    checkMinStablePower(tsGenThermal, pStudy->areas);
 
     // Start the progress meter
     pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);

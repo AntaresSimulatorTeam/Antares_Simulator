@@ -50,9 +50,7 @@ StudyLoadOptions::StudyLoadOptions() :
  forceParallel(false),
  maxNbYearsInParallel(0),
  usedByTheSolver(false),
- ortoolsUsed(false),
- ortoolsEnumUsed(OrtoolsSolver::sirius),
- displayVersion(false)
+ ortoolsUsed(false)
 {
 }
 
@@ -69,7 +67,8 @@ void StudyLoadOptions::pushProgressLogs() const
 void StudyLoadOptions::checkForceSimulationMode()
 {
     const uint number_of_enabled_force_options
-      = forceExpansion + forceEconomy + forceAdequacy + forceAdequacyDraft;
+      = static_cast<uint>(forceExpansion) + static_cast<uint>(forceEconomy)
+        + static_cast<uint>(forceAdequacy) + static_cast<uint>(forceAdequacyDraft);
 
     if (number_of_enabled_force_options > 1)
     {
