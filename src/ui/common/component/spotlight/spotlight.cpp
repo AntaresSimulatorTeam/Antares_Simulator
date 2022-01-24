@@ -274,7 +274,7 @@ void Spotlight::search(const String& text)
     else
     {
         // Extract all tokens
-        SearchToken::VectorPtr tokens;
+        auto tokens = std::make_shared<SearchToken::Vector>();
         if (not text.empty())
             convertRawTextIntoSearchTokenVector(*tokens, text);
 
@@ -282,7 +282,7 @@ void Spotlight::search(const String& text)
         if (pLayerFilter)
             layerName = std::string(pLayerFilter->GetValue().mb_str());
         // Results
-        IItem::VectorPtr results;
+        auto results = std::make_shared<IItem::Vector>();
         provider->search(*results, *tokens, layerName);
 
         pResults = results;
