@@ -29,13 +29,14 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+#include <memory>
 #include <set>
 
 class StudyData final
 {
 public:
     //! The most suitable smart pointer
-    typedef Yuni::SmartPtr<StudyData> Ptr;
+    typedef std::shared_ptr<StudyData> Ptr;
     //! Vector
     typedef std::vector<Ptr> Vector;
     //! Short string

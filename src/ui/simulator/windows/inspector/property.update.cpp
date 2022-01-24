@@ -79,7 +79,7 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
             Data::AreaName name;
             wxStringToString(value.GetString(), name);
 
-            bool result = StudyRenameArea(area, name, &(data->study));
+            bool result = StudyRenameArea(area, name, data->study.get());
             return result;
         }
         return false;
@@ -223,18 +223,18 @@ bool InspectorGrid::onPropertyChanging_C(wxPGProperty*,
 {
     // Reference to the current study
     InspectorData::Ptr& data = pCurrentSelection;
-    auto& study = (!data) ? *Data::Study::Current::Get() : data->study;
+    auto study = Data::Study::Current::Get();
 
     if (name == "common.study.name")
     {
-        wxStringToString(value.GetString(), study.header.caption);
+        wxStringToString(value.GetString(), study->header.caption);
         auto& mainFrm = *Antares::Forms::ApplWnd::Instance();
         mainFrm.mainPanel()->refreshFromStudy();
         return true;
     }
     if (name == "common.study.author")
     {
-        wxStringToString(value.GetString(), study.header.author);
+        wxStringToString(value.GetString(), study->header.author);
         auto& mainFrm = *Antares::Forms::ApplWnd::Instance();
         mainFrm.mainPanel()->refreshFromStudy();
         return true;

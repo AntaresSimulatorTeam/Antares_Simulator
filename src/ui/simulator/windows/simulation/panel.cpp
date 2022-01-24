@@ -59,10 +59,11 @@ Panel::Panel(wxWindow* parent) : Antares::Component::Panel(parent)
         auto* vs = new wxBoxSizer(wxVERTICAL);
         vs->Add(new Component::CaptionPanel(this, wxT("General Parameters")), 0, wxALL | wxEXPAND);
 
-        auto* inspector = new Window::Inspector::Frame(this);
-        pUpdateInfoStudy.bind(inspector, &Window::Inspector::Frame::apply);
-        vs->Add(inspector, 1, wxALL | wxEXPAND);
-        vs->SetItemMinSize(inspector, 300, 200);
+        auto inspector = std::make_shared<Window::Inspector::Frame>(this);
+        // TODO[FO]
+        // pUpdateInfoStudy.bind(inspector, &Window::Inspector::Frame::apply);
+        vs->Add(inspector.get(), 1, wxALL | wxEXPAND);
+        vs->SetItemMinSize(inspector.get(), 300, 200);
 
         hz->Add(vs, 0, wxALL | wxEXPAND);
     }
@@ -143,7 +144,7 @@ void Panel::onDelayedStudyLoaded()
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        auto* data = new Window::Inspector::InspectorData(*study);
+        auto data = std::make_shared<Window::Inspector::InspectorData>(study);
         data->studies.insert(study);
         pUpdateInfoStudy(data);
     }
@@ -156,7 +157,7 @@ void Panel::onUpdatePlaylist()
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        auto* data = new Window::Inspector::InspectorData(*study);
+        auto data = std::make_shared<Window::Inspector::InspectorData>(study);
         data->studies.insert(study);
         pUpdateInfoStudy(data);
     }

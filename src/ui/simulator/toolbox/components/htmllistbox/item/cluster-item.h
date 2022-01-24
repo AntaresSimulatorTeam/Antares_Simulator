@@ -30,6 +30,8 @@
 #include "item.h"
 #include <antares/study.h>
 
+#include <memory>
+
 namespace Antares
 {
 namespace Component
@@ -47,7 +49,7 @@ namespace Item
     {
     public:
         //! The smartptr
-        // typedef Yuni::SmartPtr<ClusterItem> Ptr;
+        // typedef std::shared_ptr<ClusterItem> Ptr;
 
     public:
         // Default constructor

@@ -30,6 +30,7 @@
 #include <antares/wx-wrapper.h>
 #include "../renderer.h"
 #include "../../../../application/study.h"
+#include <memory>
 #include <vector>
 
 namespace Antares
@@ -89,7 +90,7 @@ class LogEntryContainer
 {
 public:
     //! The most suitable smart pointer for the class
-    typedef Yuni::SmartPtr<LogEntryContainer> Ptr;
+    typedef std::shared_ptr<LogEntryContainer> Ptr;
 
 public:
     LogEntryContainer() : longestLine(0), maxCharForALine(0)

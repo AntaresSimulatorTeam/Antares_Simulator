@@ -101,7 +101,7 @@ void ByAlphaOrder::refresh(const wxString& search)
     {
         l.sort(SortAlphaOrder());
         const Data::Area::List::const_iterator end = l.end();
-        pParent.add(new Antares::Component::HTMLListbox::Item::Group(wxT("A-Z")));
+        pParent.add(std::make_shared<Antares::Component::HTMLListbox::Item::Group>(wxT("A-Z")));
         wxString add;
         char lastC = '\0';
         for (Data::Area::List::const_iterator i = l.begin(); i != end; ++i)
@@ -114,7 +114,7 @@ void ByAlphaOrder::refresh(const wxString& search)
                     << wxString::FromAscii(lastC) << wxT("</font></b></td>");
             }
             // Added the area as a result
-            pParent.add(new Antares::Component::HTMLListbox::Item::Area(*i, add));
+            pParent.add(std::make_shared<Antares::Component::HTMLListbox::Item::Area>(*i, add));
         }
     }
     pParent.invalidate();
@@ -138,7 +138,7 @@ void ByAlphaReverseOrder::refresh(const wxString& search)
     {
         l.sort(SortAlphaReverseOrder());
         const Data::Area::List::const_iterator end = l.end();
-        pParent.add(new Antares::Component::HTMLListbox::Item::Group(wxT("Z-A")));
+        pParent.add(std::make_shared<Antares::Component::HTMLListbox::Item::Group>(wxT("Z-A")));
         wxString add;
         char lastC = '\0';
         for (Data::Area::List::const_iterator i = l.begin(); i != end; ++i)
@@ -151,7 +151,7 @@ void ByAlphaReverseOrder::refresh(const wxString& search)
                     << wxString::FromAscii(lastC) << wxT("</font></b></td>");
             }
             // Added the area as a result
-            pParent.add(new Antares::Component::HTMLListbox::Item::Area(*i, add));
+            pParent.add(std::make_shared<Antares::Component::HTMLListbox::Item::Area>(*i, add));
         }
     }
     pParent.invalidate();
@@ -180,7 +180,7 @@ void ByColor::refresh(const wxString& search)
             for (Data::Area::List::iterator i = l.begin(); i != end; ++i)
             {
                 // Added the area as a result
-                pParent.add(new Antares::Component::HTMLListbox::Item::Area(*i));
+                pParent.add(std::make_shared<Antares::Component::HTMLListbox::Item::Area>(*i));
             }
         }
     }

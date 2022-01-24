@@ -30,6 +30,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <map>
+#include <memory>
 #include <functional>
 #include "study.h"
 
@@ -41,7 +42,7 @@ class Output final
 {
 public:
     //! Smartptr
-    typedef Yuni::SmartPtr<Output> Ptr;
+    typedef std::shared_ptr<Output> Ptr;
     //! List
     typedef std::list<Ptr> List;
     //! Title

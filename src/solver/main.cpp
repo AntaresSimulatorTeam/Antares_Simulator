@@ -134,7 +134,7 @@ bool SolverApplication::prepare(int argc, char* argv[])
     logs.callback.connect(this, &SolverApplication::onLogMessage);
 
     // Allocate a study
-    pStudy = new Data::Study(true /* for the solver */);
+    pStudy = std::make_shared<Data::Study>(true /* for the solver */);
 
     // Setting global variables for backward compatibility
     Data::Study::Current::Set(pStudy);

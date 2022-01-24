@@ -27,15 +27,17 @@
 #ifndef __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_SEPARATOR_H__
 #define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_SEPARATOR_H__
 
+#include <memory>
+
 class Separator final : public IItem
 {
 public:
     //! Ptr
-    typedef Yuni::SmartPtr<Separator> Ptr;
+    typedef std::shared_ptr<Separator> Ptr;
     //! Vector of items
     typedef std::vector<Ptr> Vector;
     //! Vector Ptr
-    typedef Yuni::SmartPtr<Vector> VectorPtr;
+    typedef std::shared_ptr<Vector> VectorPtr;
 
 public:
     //! \name Constructor & Destructor

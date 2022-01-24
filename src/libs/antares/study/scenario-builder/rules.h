@@ -33,6 +33,7 @@
 #include "TSnumberData.h"
 #include "hydroLevelsData.h"
 #include <map>
+#include <memory>
 
 namespace Antares
 {
@@ -47,7 +48,7 @@ class Rules final : private Yuni::NonCopyable<Rules>
 {
 public:
     //! Smart pointer
-    typedef Yuni::SmartPtr<Rules> Ptr;
+    typedef std::shared_ptr<Rules> Ptr;
     //! Map
     typedef std::map<RulesScenarioName, Ptr> Map;
     //! Map ID

@@ -48,6 +48,8 @@
 #include "load-options.h"
 #include "../date.h"
 
+#include <memory>
+
 #include "equipments/equipments.h" // experimental
 
 //# include "../../../solver/variable/state.h"
@@ -63,8 +65,8 @@ class Study final : public Yuni::NonCopyable<Study>, public IObject
 {
 public:
     //! The most suitable smart pointer for the class
-    typedef IObject::SmartPtr<Study>::Ptr Ptr;
-    // typedef Yuni::SmartPtr<Study>  Ptr;
+    typedef std::shared_ptr<Study> Ptr;
+    // typedef std::shared_ptr<Study>  Ptr;
     //! Set of studies
     typedef std::set<Ptr> Set;
     //! List of studies

@@ -27,15 +27,17 @@
 #ifndef __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_TEXT_H__
 #define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_TEXT_H__
 
+#include <memory>
+
 class Text : public IItem
 {
 public:
     //! Ptr
-    typedef Yuni::SmartPtr<Text> Ptr;
+    typedef std::shared_ptr<Text> Ptr;
     //! Vector of items
     typedef std::vector<Ptr> Vector;
     //! Vector Ptr
-    typedef Yuni::SmartPtr<Vector> VectorPtr;
+    typedef std::shared_ptr<Vector> VectorPtr;
 
 public:
     //! \name Constructor & Destructor

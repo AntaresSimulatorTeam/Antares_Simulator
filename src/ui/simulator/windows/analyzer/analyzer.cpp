@@ -109,7 +109,7 @@ public:
         {
             foreach (auto& filename, pFiles)
             {
-                auto* item = new Spotlight::IItem();
+                auto item = std::make_shared<Spotlight::IItem>();
                 item->caption(filename);
                 item->addTag("F", 210, 210, 255);
                 out.push_back(item);
@@ -123,7 +123,7 @@ public:
                 {
                     if (filename.icontains(tokenname->text))
                     {
-                        auto* item = new Spotlight::IItem();
+                        auto item = std::make_shared<Spotlight::IItem>();
                         item->caption(filename);
                         item->addTag("F", 210, 210, 255);
                         out.push_back(item);
@@ -174,7 +174,6 @@ public:
     virtual ~AnalyzeSourceFolder()
     {
         stop();
-        delete pMapping;
     }
 
     void folder(const wxString& f)
@@ -204,7 +203,7 @@ protected:
         pDataMutex.unlock();
 
         if (not pMapping)
-            pMapping = new AnalyzerWizard::FileMapping();
+            pMapping = std::make_shared<AnalyzerWizard::FileMapping>();
         else
             pMapping->clear();
 
@@ -274,7 +273,7 @@ private:
     AnalyzerWizard& pForm;
     Mutex pDataMutex;
     String pFolder;
-    AnalyzerWizard::FileMapping* pMapping;
+    AnalyzerWizard::FileMappingPtr pMapping;
 
 }; // class AnalyzeSourceFolder
 
@@ -741,9 +740,10 @@ AnalyzerWizard::AnalyzerWizard(wxFrame* parent) :
             files->AddSpacer(6);
 
             pFileSearch = new Component::Spotlight(panelTS, 0);
-            auto* provider = new FileSearchProvider();
-            onFileSearchAdd.connect(provider, &FileSearchProvider::onFileSearchAdd);
-            onFileSearchClear.connect(provider, &FileSearchProvider::onFileSearchClear);
+            auto provider = std::make_shared<FileSearchProvider>();
+            // TODO[FO]
+            // onFileSearchAdd.connect(provider, &FileSearchProvider::onFileSearchAdd);
+            // onFileSearchClear.connect(provider, &FileSearchProvider::onFileSearchClear);
             pFileSearch->provider(provider);
             files->Add(pFileSearch, 1, wxALL | wxEXPAND);
 
@@ -1276,7 +1276,7 @@ void AnalyzerWizard::updateInfoForTempFolder()
     }
 }
 
-void AnalyzerWizard::fileMapping(FileMapping* m)
+void AnalyzerWizard::fileMapping(FileMappingPtr m)
 {
     pFileMapping = m;
 

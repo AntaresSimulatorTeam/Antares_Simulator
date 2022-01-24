@@ -165,7 +165,7 @@ Component::~Component()
 }
 
 void Component::displayMiniFrame(wxWindow* parent,
-                                 Antares::Component::Spotlight::IProvider* provider,
+                                 Antares::Component::Spotlight::IProvider::Ptr provider,
                                  int width,
                                  bool searchInput,
                                  bool groups)
@@ -681,7 +681,7 @@ void Component::onDropDownComparison(Button&, wxMenu&, void* userdata)
     if (GUIIsLock() or !userdata)
         return;
     Button* btn = (Button*)userdata;
-    displayMiniFrame(btn, new Provider::Comparison(*this), 120, false, false);
+    displayMiniFrame(btn, std::make_shared<Provider::Comparison>(*this), 120, false, false);
 }
 
 void Component::onDropDownOutputs(Button& button, wxMenu&, void* userdata)
@@ -706,10 +706,10 @@ void Component::onDropDownOutputs(Button& button, wxMenu&, void* userdata)
     if (uiinfo && uiinfo->isVirtual())
     {
         // In this case, there will be only one item "close the tab"
-        displayMiniFrame(&button, new Provider::Outputs(*this, uiinfo), 150, false, false);
+      displayMiniFrame(&button, std::make_shared<Provider::Outputs>(*this, uiinfo), 150, false, false);
     }
     else
-        displayMiniFrame(&button, new Provider::Outputs(*this, uiinfo), 380, true, false);
+      displayMiniFrame(&button, std::make_shared<Provider::Outputs>(*this, uiinfo), 380, true, false);
 }
 
 void Component::onDropDownDetachMenu(Button&, wxMenu& menu, void* userdata)
@@ -769,7 +769,7 @@ void Component::onDropDownDetachMenu(Button&, wxMenu& menu, void* userdata)
         assert(!(!tab));
 
         if (tab->btnItem)
-            displayMiniFrame(tab->btnItem, new SpotlightProvider(this, layer));
+          displayMiniFrame(tab->btnItem, std::make_shared<SpotlightProvider>(this, layer));
     }
 }
 
@@ -953,7 +953,7 @@ void Component::internalUpdate()
         }
         else
         {
-            tab = new Tab(*this);
+            tab = std::make_shared<Tab>(*this);
             pTabs.push_back(tab);
 
             // Obviously the control does not exist yet. We have to create it
@@ -1093,7 +1093,7 @@ void Component::treeDataClear()
     GUILocker locker;
     if (pSpotlight)
     {
-        auto* provider = new SpotlightProviderGlobalSelection(this);
+        auto provider = std::make_shared<SpotlightProviderGlobalSelection>(this);
         pSpotlight->provider(provider);
     }
 }
@@ -1116,7 +1116,7 @@ void Component::treeDataUpdate()
     pHasYearByYear = false;
     pHasConcatenedDataset = false;
 
-    auto* provider = new SpotlightProviderGlobalSelection(this);
+    auto provider = std::make_shared<SpotlightProviderGlobalSelection>(this);
     pSpotlight->provider(provider);
 
     // All clusters, for all areas
@@ -1190,7 +1190,7 @@ void Component::treeDataUpdateWL(const Content& content)
     assert(areas && "invalid list of areas");
     assert(links && "invalid list of links");
 
-    auto* provider = new SpotlightProviderGlobalSelection(this);
+    auto provider = std::make_shared<SpotlightProviderGlobalSelection>(this);
 
     // year by year
     checkYearByYearMode();
@@ -1297,7 +1297,7 @@ void Component::noSimulationData()
 {
     if (pSpotlight)
     {
-        auto* provider = new SpotlightProviderGlobalSelection(this);
+        auto provider = std::make_shared<SpotlightProviderGlobalSelection>(this);
         provider->addText("(No simulation data)");
         pSpotlight->provider(provider);
     }
@@ -1310,7 +1310,7 @@ void Component::treeDataWaiting()
 {
     if (pSpotlight)
     {
-        auto* provider = new SpotlightProviderGlobalSelection(this);
+        auto provider = std::make_shared<SpotlightProviderGlobalSelection>(this);
         provider->addText("loading...");
         pSpotlight->provider(provider);
     }
@@ -2121,7 +2121,7 @@ void Component::allYearsOrYearByYearSelector(Button&, wxMenu&, void*)
 
     GUILocker locker;
     closeSubFrames();
-    displayMiniFrame(pBtnAllYears, new SpotlightProviderMCAll(this), 220, false, false);
+    displayMiniFrame(pBtnAllYears, std::make_shared<SpotlightProviderMCAll>(this), 220, false, false);
 }
 
 void Component::incrementYearByYear(void*)
@@ -2226,7 +2226,7 @@ void Component::dropDownAllVariables(Button& button, wxMenu&, void*)
 
     GUILocker locker;
     closeSubFrames();
-    displayMiniFrame(&button, new Provider::Variables(this), 350);
+    displayMiniFrame(&button, std::make_shared<Provider::Variables>(this), 350);
 }
 
 void Component::refreshCurrentYear()

@@ -671,7 +671,7 @@ void ConstraintsBuilderWizard::enableAll(bool v)
     pBtnBuild->Enable(false);
 }
 
-void ConstraintsBuilderWizard::fileMapping(FileMapping* m)
+void ConstraintsBuilderWizard::fileMapping(FileMappingPtr m)
 {
     pFileMapping = m;
 

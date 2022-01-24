@@ -38,6 +38,8 @@
 #include <ui/common/lock.h>
 #include "../../../application/wait.h"
 
+#include <memory>
+
 using namespace Yuni;
 
 namespace Antares
@@ -50,7 +52,7 @@ Yuni::Atomic::Int<32> Panel::pPanelsInCallingLoadDataFromFile = 0;
 
 namespace // anonymous
 {
-static std::map<YString, SmartPtr<Yuni::Mutex>> mutexForFiles;
+static std::map<YString, std::shared_ptr<Yuni::Mutex>> mutexForFiles;
 static Yuni::Mutex mutexToAccessToLockFiles;
 
 static inline void DefaultBckColour(Antares::Component::Panel* panel)
@@ -493,12 +495,12 @@ void Panel::executeAggregator()
     delete exec;
 }
 
-SmartPtr<Yuni::Mutex> ProvideLockingForFileLocking(const YString& filename)
+std::shared_ptr<Yuni::Mutex> ProvideLockingForFileLocking(const YString& filename)
 {
     Yuni::MutexLocker locker(mutexToAccessToLockFiles);
     auto& ptr = mutexForFiles[filename];
     if (!ptr)
-        ptr = new Yuni::Mutex();
+        ptr = std::shared_ptr<Yuni::Mutex>();
     return ptr;
 }
 

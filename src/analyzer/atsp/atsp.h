@@ -28,6 +28,7 @@
 #define __PREPROCESSOR_ATSP_H__
 
 #include <yuni/yuni.h>
+#include <memory>
 #include <yuni/core/string.h>
 #include <antares/study/xcast/xcast.h>
 #include <antares/study.h>
@@ -38,7 +39,7 @@ class ATSP final
 {
 public:
     //! The most suitable smart pointer for the class
-    typedef Yuni::SmartPtr<ATSP> Ptr;
+    typedef std::shared_ptr<ATSP> Ptr;
 
 public:
     //! \name Constructor & Destructor

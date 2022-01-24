@@ -36,11 +36,13 @@
 #include <yuni/job/queue/service.h>
 #include <yuni/io/file.h>
 
+#include <memory>
+
 class JobFileReader final : public Yuni::Job::IJob
 {
 public:
     //! The most suitable smart pointer
-    typedef Yuni::SmartPtr<JobFileReader> Ptr;
+    typedef std::shared_ptr<JobFileReader> Ptr;
     enum
     {
         maxRows = 8800,

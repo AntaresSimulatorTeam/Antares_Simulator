@@ -40,6 +40,8 @@
 #include <yuni/thread/thread.h>
 #include <yuni/core/event.h>
 
+#include <memory>
+
 namespace Antares
 {
 namespace Window
@@ -52,7 +54,7 @@ public:
     //!
     typedef Component::Datagrid::Renderer::ConstraintsBuilder::Links::Record::Vector RecordVector;
     //! Smartptr for file mapping
-    typedef Yuni::SmartPtr<FileMapping> FileMappingPtr;
+    typedef std::shared_ptr<FileMapping> FileMappingPtr;
 
     enum IDs
     {
@@ -92,7 +94,7 @@ public:
     void onUpdateInfiniteValue(wxCommandEvent& evt);
     //@}
 
-    void fileMapping(FileMapping* m);
+    void fileMapping(FileMappingPtr m);
 
     /*!
     ** \brief Force the refresh of the grid

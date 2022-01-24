@@ -147,7 +147,7 @@ public:
             auto end = pOutputs.end();
             for (auto i = pOutputs.begin(); i != end; ++i, ++index)
             {
-                auto* item = new Spotlight::IItem();
+                auto item = std::make_shared<Spotlight::IItem>();
                 extractNumber(i->first, title, number);
                 item->caption(title);
                 item->tag = index;
@@ -168,7 +168,7 @@ public:
                     const String& text = (*ti)->text;
                     if (i->first.icontains(text))
                     {
-                        auto* item = new Spotlight::IItem();
+                        auto item = std::make_shared<Spotlight::IItem>();
                         item->caption(i->first);
                         item->tag = index;
                         item->addTag("example", 177, 209, 245);
@@ -766,7 +766,7 @@ void StartupWizard::showAllExamples()
         width = 320,
 #endif
     };
-    Component::Spotlight::FrameShow(pBtnExamples, new ExampleProvider(pExFolder), 0, width);
+    Component::Spotlight::FrameShow(pBtnExamples, std::make_shared<ExampleProvider>(pExFolder), 0, width);
     if (pBtnExamples)
         pBtnExamples->Enable(true);
 }

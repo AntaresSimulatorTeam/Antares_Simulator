@@ -135,7 +135,7 @@ private:
 
 WalkerThread::WalkerThread(Statistics& stats) : pFileJob(nullptr), pOriginalStatistics(stats)
 {
-    pJobCounter = new Atomic::Int<32>();
+    pJobCounter = std::make_shared<Atomic::Int<32>>();
     pShouldStop = false;
 
     MutexLocker locker(gsMutex);
@@ -514,16 +514,9 @@ void Walker::retrieveStatistics(Statistics& out)
     out = pStats;
 }
 
-void Walker::add(IExtension::Ptr& extension)
+void Walker::add(IExtension::Ptr extension)
 {
     if (!(!extension))
         pExtensions.push_back(extension);
 }
-
-void Walker::add(IExtension* extension)
-{
-    if (extension)
-        pExtensions.push_back(extension);
-}
-
 } // namespace FSWalker

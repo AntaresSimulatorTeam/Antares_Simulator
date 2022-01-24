@@ -167,7 +167,7 @@ static void PrepareTheWork(const String::Vector& outputs,
         }
 
         // The new output
-        Output::Ptr output = new Output(info.directory(), columns);
+        auto output = std::make_shared<Output>(info.directory(), columns);
         if (!output)
             continue;
 
@@ -408,7 +408,7 @@ static void ReadCommandLineOptions(int argc, char** argv)
                 newname.clear() << "areas/" << areaname;
 
             logs.info() << "registered " << newname;
-            studydata.push_back(new StudyData(newname, index++));
+            studydata.push_back(std::make_shared<StudyData>(newname, index++));
         }
         {
             String::Vector split;
@@ -427,7 +427,7 @@ static void ReadCommandLineOptions(int argc, char** argv)
                 newname.clear() << "links" << SEP;
                 newname << split[0] << " - " << split[1];
                 logs.info() << "registered " << newname;
-                studydata.push_back(new StudyData(newname, index++));
+                studydata.push_back(std::make_shared<StudyData>(newname, index++));
             }
         }
     }
@@ -438,7 +438,7 @@ static void ReadCommandLineOptions(int argc, char** argv)
     for (uint i = 0; i != optTimes.size(); ++i)
     {
         for (uint j = 0; j != optDatum.size(); ++j)
-            dataFiles.push_back(new DataFile(optDatum[j], optTimes[i], dataIndex++));
+            dataFiles.push_back(std::make_shared<DataFile>(optDatum[j], optTimes[i], dataIndex++));
     }
     optDatum.clear();
     optTimes.clear();

@@ -49,6 +49,8 @@
 #include <ui/common/component/spotlight.h>
 #include <ui/common/lock.h>
 
+#include <memory>
+
 using namespace Yuni;
 
 #define SEP Yuni::IO::Separator
@@ -78,11 +80,11 @@ class LogFile final : public Antares::Component::Spotlight::IItem
 {
 public:
     //! Ptr
-    typedef Yuni::SmartPtr<LogFile> Ptr;
+    typedef std::shared_ptr<LogFile> Ptr;
     //! Vector of items
     typedef std::vector<Ptr> Vector;
     //! Vector Ptr
-    typedef Yuni::SmartPtr<Vector> VectorPtr;
+    typedef std::shared_ptr<Vector> VectorPtr;
 
 public:
     //! \name Constructor & Destructor
@@ -175,7 +177,7 @@ public:
         {
             if (pAllSimuLogs.empty())
             {
-                out.push_back(new Spotlight::Text("  (no file available)"));
+                out.push_back(std::make_shared<Spotlight::Text>("  (no file available)"));
                 hasAtLeastOneStudyLogEntry = true;
             }
             else
@@ -187,7 +189,7 @@ public:
                     {
                         hasAtLeastOneStudyLogEntry = true;
 
-                        auto* item = new LogFile();
+                        auto item = std::make_shared<LogFile>();
                         item->caption(i->first);
                         item->filename = i->second;
                         item->image(pBmpFile);
@@ -223,7 +225,7 @@ public:
                             continue;
 
                         hasAtLeastOneStudyLogEntry = true;
-                        auto* item = new LogFile();
+                        auto item = std::make_shared<LogFile>();
                         item->caption(i->first);
                         item->filename = i->second;
                         item->image(pBmpFile);
@@ -236,13 +238,13 @@ public:
         if (pShowAll)
         {
             if (hasAtLeastOneStudyLogEntry)
-                out.push_back(new Spotlight::Text());
-            out.push_back(new Spotlight::Text(" UI logs"));
-            out.push_back(new Spotlight::Separator());
+                out.push_back(std::make_shared<Spotlight::Text>());
+            out.push_back(std::make_shared<Spotlight::Text>(" UI logs"));
+            out.push_back(std::make_shared<Spotlight::Separator>());
             {
                 if (pAllUILogs.empty())
                 {
-                    out.push_back(new Spotlight::Text("  (no file available)"));
+                    out.push_back(std::make_shared<Spotlight::Text>("  (no file available)"));
                 }
                 else
                 {
@@ -251,7 +253,7 @@ public:
                         auto end = pAllUILogs.end();
                         for (auto i = pAllUILogs.begin(); i != end; ++i)
                         {
-                            auto* item = new LogFile();
+                            auto item = std::make_shared<LogFile>();
                             item->caption(i->first);
                             item->filename = i->second;
                             item->image(pBmpFile);
@@ -281,7 +283,7 @@ public:
                                 continue;
 
                             ++count;
-                            LogFile* item = new LogFile();
+                            auto item = std::make_shared<LogFile>();
                             item->caption(i->first);
                             item->filename = i->second;
                             item->image(pBmpFile);
@@ -289,7 +291,7 @@ public:
                         }
 
                         if (0 == count)
-                            out.push_back(new Spotlight::Text("  (no result found)"));
+                            out.push_back(std::make_shared<Spotlight::Text>("  (no result found)"));
                     }
                 }
             }
@@ -298,7 +300,7 @@ public:
 
     virtual bool onSelect(Spotlight::IItem::Ptr& item) override
     {
-        LogFile::Ptr logfile = Spotlight::IItem::Ptr::DynamicCast<LogFile::Ptr>(item);
+        auto logfile = std::dynamic_pointer_cast<LogFile>(item);
         if (!logfile)
             return false;
         pFrame.loadFromFile(logfile->filename);
@@ -417,8 +419,8 @@ protected:
         }
 
         // reset
-        pEntries = new LogEntryContainer();
-        pEntriesErrors = new LogEntryContainer();
+        pEntries = std::make_shared<LogEntryContainer>();
+        pEntriesErrors = std::make_shared<LogEntryContainer>();
         pLineIndex = 0u;
 
         // Read the file
@@ -668,9 +670,9 @@ private:
     //! The verbosity level extracted from the log file
     YString verbosity;
     //! All entries
-    LogEntryContainer* pEntries;
+    LogEntryContainer::Ptr pEntries;
     //! All entries, warning or error
-    LogEntryContainer* pEntriesErrors;
+    LogEntryContainer::Ptr pEntriesErrors;
     //! Current line within the file
     uint pLineIndex;
     //! Buffer for reading for the file
@@ -724,8 +726,9 @@ StudyLogs::StudyLogs(wxFrame* parent) :
         // List of all available log files
         {
             Component::Spotlight* spotlight = new Component::Spotlight(panelAllFiles, 0);
-            FileListProvider* provider = new FileListProvider(*this);
-            onRefreshListOfFiles.connect(provider, &FileListProvider::refreshFileList);
+            auto provider = std::make_shared<FileListProvider>(*this);
+            // TODO[FO]
+            //onRefreshListOfFiles.connect(provider, &FileListProvider::refreshFileList);
             spotlight->provider(provider);
 
             {

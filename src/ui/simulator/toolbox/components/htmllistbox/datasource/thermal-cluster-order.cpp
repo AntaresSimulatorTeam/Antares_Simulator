@@ -95,7 +95,7 @@ void ThermalClustersByOrder::reorderItemsList(const wxString& search)
         for (ThermalClusterMap::iterator group_it = l.begin(); group_it != l.end(); ++group_it)
         {
             wxString groupName = group_it->first;
-            IItem* groupItem;
+            IItem::Ptr groupItem;
             ThermalClusterList& groupClusterList = group_it->second;
 
             if (groups_to_items_.find(groupName) != groups_to_items_.end())
@@ -103,7 +103,7 @@ void ThermalClustersByOrder::reorderItemsList(const wxString& search)
             else
             {
                 wxString groupTitle = groupNameToGroupTitle(pArea, groupName);
-                groupItem = new Group(groupTitle);
+                groupItem = std::make_shared<Group>(groupTitle);
             }
             pParent.setElement(groupItem, index_item);
             index_item++;
@@ -112,7 +112,7 @@ void ThermalClustersByOrder::reorderItemsList(const wxString& search)
 
             for (ThermalClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
             {
-                ClusterItem* clusterItem = pClustersToItems[*j];
+                auto clusterItem = pClustersToItems[*j];
                 pParent.setElement(clusterItem, index_item);
                 index_item++;
             }
@@ -137,7 +137,7 @@ void ThermalClustersByOrder::rebuildItemsList(const wxString& search)
             ThermalClusterList& groupClusterList = group_it->second;
 
             // Refreshing the group
-            IItem* groupItem = new Group(groupTitle);
+            auto groupItem = std::make_shared<Group>(groupTitle);
             pParent.add(groupItem);
             // Mapping group name to cluster item for possible further usage
             groups_to_items_[groupName] = groupItem;
@@ -147,7 +147,7 @@ void ThermalClustersByOrder::rebuildItemsList(const wxString& search)
 
             for (ThermalClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
             {
-                ClusterItem* clusterItem = new ThermalClusterItem(*j);
+                auto clusterItem = std::make_shared<ThermalClusterItem>(*j);
                 pParent.add(clusterItem);
                 // Mapping real cluster to cluster item for possible further usage
                 pClustersToItems[*j] = clusterItem;

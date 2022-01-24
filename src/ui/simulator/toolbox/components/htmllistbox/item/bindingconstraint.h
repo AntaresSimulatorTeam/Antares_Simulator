@@ -30,6 +30,8 @@
 #include "item.h"
 #include <antares/study.h>
 
+#include <memory>
+
 namespace Antares
 {
 namespace Component
@@ -49,7 +51,7 @@ class BindingConstraint : public IItem
 {
 public:
     //! The smartptr
-    typedef Yuni::SmartPtr<BindingConstraint> Ptr;
+    typedef std::shared_ptr<BindingConstraint> Ptr;
 
 public:
     /*!

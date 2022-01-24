@@ -29,6 +29,8 @@
 
 #include <antares/wx-wrapper.h>
 
+#include <memory>
+
 namespace Antares
 {
 namespace Component
@@ -51,7 +53,7 @@ class IItem
 {
 public:
     //! The most suitable smartptr for this class
-    typedef Yuni::SmartPtr<IItem> Ptr;
+    typedef std::shared_ptr<IItem> Ptr;
     //! Item list
     typedef std::vector<Ptr> List;
 

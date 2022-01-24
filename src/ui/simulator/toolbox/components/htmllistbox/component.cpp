@@ -208,7 +208,7 @@ void Component::internalUpdateItems()
     if (pItems.empty())
     {
         // Keep the user informed that there is nothing to display
-        pListbox->Append(wxEmptyString, new CustomClientData(new Item::Info(wxT("No item"))));
+        pListbox->Append(wxEmptyString, new CustomClientData(std::make_shared<Item::Info>(wxT("No item"))));
         if (pLastSelectedItem)
         {
             pLastSelectedItem = nullptr;

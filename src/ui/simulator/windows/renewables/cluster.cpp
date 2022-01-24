@@ -52,13 +52,14 @@ CommonProperties::CommonProperties(wxWindow* parent,
     pMainSizer = sizer;
     SetSizer(sizer);
 
-    auto* inspector = new Window::Inspector::Frame(this);
-    pUpdateInfoAboutPlant.bind(inspector, &Window::Inspector::Frame::apply);
+    auto inspector = std::make_shared<Window::Inspector::Frame>(this);
+    // TODO[FO]
+    //    pUpdateInfoAboutPlant.bind(inspector, &Window::Inspector::Frame::apply);
 
     wxBoxSizer* vs = new wxBoxSizer(wxVERTICAL);
-    vs->Add(inspector, 1, wxALL | wxEXPAND);
+    vs->Add(inspector.get(), 1, wxALL | wxEXPAND);
     sizer->Add(vs, 0, wxALL | wxEXPAND);
-    sizer->SetItemMinSize(inspector, 280, 50);
+    sizer->SetItemMinSize(inspector.get(), 280, 50);
 
     // Connection with the notifier
     renewableEventConnect();
@@ -79,9 +80,10 @@ void CommonProperties::onClusterChanged(Data::RenewableCluster* cluster)
 {
     if (cluster)
     {
-        auto* data = new Window::Inspector::InspectorData(*Data::Study::Current::Get());
-        data->RnClusters.insert(cluster);
-        pUpdateInfoAboutPlant(data);
+        auto data = Window::Inspector::InspectorData(Data::Study::Current::Get());
+        data.RnClusters.insert(cluster);
+        // TODO[FO]
+        // pUpdateInfoAboutPlant(data);
     }
     else
         pUpdateInfoAboutPlant(nullptr);

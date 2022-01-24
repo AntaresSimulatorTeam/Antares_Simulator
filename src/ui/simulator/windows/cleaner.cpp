@@ -255,7 +255,7 @@ void StudyCleaner::studyFolder(const wxString& folder)
 
     // We are working !
     pListbox->clear();
-    *(pListbox) += new Component::HTMLListbox::Item::Info(wxT("Gathering informations..."));
+    *(pListbox) += std::make_shared<Component::HTMLListbox::Item::Info>(wxT("Gathering informations..."));
     pLblInfos->SetLabel(wxT("Gathering informations..."));
     GetSizer()->Show(pBtnGo, false, true);
     GetSizer()->Show(pBtnRefresh, false, true);
@@ -356,14 +356,14 @@ void StudyCleaner::updateGUI(bool hasItems)
         const PathList::const_iterator end = pInfos->intruders.end();
         for (PathList::const_iterator i = pInfos->intruders.begin(); i != end; ++i)
         {
-            *(pListbox) += new Component::HTMLListbox::Item::PathListItem(i->first, i->second);
+            *(pListbox) += std::make_shared<Component::HTMLListbox::Item::PathListItem>(i->first, i->second);
             hasAtLeastOneItem = true;
         }
         pBtnGo->Enable(true);
     }
     else
     {
-        *(pListbox) += new Component::HTMLListbox::Item::Info(wxT("The folder is clean."));
+        *(pListbox) += std::make_shared<Component::HTMLListbox::Item::Info>(wxT("The folder is clean."));
         pBtnGo->Enable(false);
     }
 

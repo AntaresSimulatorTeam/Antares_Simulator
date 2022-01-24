@@ -40,6 +40,7 @@
 #include <wx/minifram.h>
 
 #include <iostream>
+#include <memory>
 
 using namespace Yuni;
 
@@ -273,7 +274,7 @@ void Spotlight::search(const String& text)
     else
     {
         // Extract all tokens
-        auto* tokens = new SearchToken::Vector();
+        SearchToken::VectorPtr tokens;
         if (not text.empty())
             convertRawTextIntoSearchTokenVector(*tokens, text);
 
@@ -281,7 +282,7 @@ void Spotlight::search(const String& text)
         if (pLayerFilter)
             layerName = std::string(pLayerFilter->GetValue().mb_str());
         // Results
-        auto* results = new IItem::Vector();
+        IItem::VectorPtr results;
         provider->search(*results, *tokens, layerName);
 
         pResults = results;
@@ -338,7 +339,7 @@ void Spotlight::convertRawTextIntoSearchTokenVector(SearchToken::Vector& out,
             continue;
 
         // Adding a new search token
-        auto* searchToken = new SearchToken();
+        auto searchToken = std::make_shared<SearchToken>();
         searchToken->text.assign(tok.c_str() + offset, tok.size() - offset);
         searchToken->weight = weight;
         out.push_back(searchToken);
@@ -541,7 +542,7 @@ void Spotlight::itemHeight(uint h)
 class FrameShowData
 {
 public:
-    typedef SmartPtr<FrameShowData> Ptr;
+    typedef std::shared_ptr<FrameShowData> Ptr;
 
     static void ReExecute(const Ptr& data)
     {
@@ -575,7 +576,7 @@ void Spotlight::FrameShow(wxWindow* parent,
         globalSpotlight = nullptr;
         frame->Close();
 
-        FrameShowData::Ptr data = new FrameShowData();
+        auto data = std::make_shared<FrameShowData>();
         data->parent = parent;
         data->provider = provider;
         data->flags = flags;
