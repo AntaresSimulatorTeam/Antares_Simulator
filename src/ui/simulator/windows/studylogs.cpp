@@ -46,7 +46,6 @@
 #include "../toolbox/components/datagrid/component.h"
 #include "../toolbox/components/datagrid/renderer/logfile.h"
 #include <ui/common/component/panel.h>
-#include <ui/common/component/spotlight.h>
 #include <ui/common/lock.h>
 
 #include <memory>
@@ -62,17 +61,6 @@ namespace Window
 BEGIN_EVENT_TABLE(StudyLogs, wxFrame)
 EVT_CLOSE(StudyLogs::onClose)
 END_EVENT_TABLE()
-
-class CompareDesc final
-{
-public:
-    inline bool operator()(const wxString& s1, const wxString& s2) const
-    {
-        return s2 < s1;
-    }
-};
-
-typedef std::map<wxString, String, CompareDesc> MapFileList;
 
 namespace // anonymous
 {
@@ -106,9 +94,7 @@ public:
 
 }; // class Text
 
-} // anonymous namespace
-
-static inline void FindAllLogFiles(MapFileList& filelist, wxRegEx& regex, const AnyString& folder)
+inline void FindAllLogFiles(MapFileList& filelist, wxRegEx& regex, const AnyString& folder)
 {
     filelist.clear();
     uint64 totalSize = 0u;
@@ -151,63 +137,118 @@ static inline void FindAllLogFiles(MapFileList& filelist, wxRegEx& regex, const 
         }
     }
 }
+} // anonymous namespace
 
-class FileListProvider final : public Component::Spotlight::IProvider
+FileListProvider::FileListProvider(StudyLogs& frame) :
+ pFrame(frame), pAutoTriggerSelection(true), pShowAll(false)
 {
-public:
-    typedef Antares::Component::Spotlight Spotlight;
+    pBmpFile = Resources::BitmapLoadFromFile("images/16x16/logs.png");
+}
 
-public:
-    FileListProvider(StudyLogs& frame) : pFrame(frame), pAutoTriggerSelection(true), pShowAll(false)
-    {
-        pBmpFile = Resources::BitmapLoadFromFile("images/16x16/logs.png");
-    }
+FileListProvider::~FileListProvider()
+{
+    delete pBmpFile;
+    destroyBoundEvents(); // avoid corrupt vtable
+}
 
-    virtual ~FileListProvider()
+void FileListProvider::search(Spotlight::IItem::Vector& out,
+                              const Spotlight::SearchToken::Vector& tokens,
+                              const Yuni::String& text)
+{
+    bool hasAtLeastOneStudyLogEntry = false;
     {
-        delete pBmpFile;
-        destroyBoundEvents(); // avoid corrupt vtable
-    }
-
-    virtual void search(Spotlight::IItem::Vector& out,
-                        const Spotlight::SearchToken::Vector& tokens,
-                        const Yuni::String& text = "") override
-    {
-        bool hasAtLeastOneStudyLogEntry = false;
+        if (pAllSimuLogs.empty())
         {
-            if (pAllSimuLogs.empty())
+            out.push_back(std::make_shared<Spotlight::Text>("  (no file available)"));
+            hasAtLeastOneStudyLogEntry = true;
+        }
+        else
+        {
+            if (tokens.empty())
+            {
+                auto end = pAllSimuLogs.end();
+                for (auto i = pAllSimuLogs.begin(); i != end; ++i)
+                {
+                    hasAtLeastOneStudyLogEntry = true;
+
+                    auto item = std::make_shared<LogFile>();
+                    item->caption(i->first);
+                    item->filename = i->second;
+                    item->image(pBmpFile);
+                    if (pAutoTriggerSelection)
+                    {
+                        pAutoTriggerSelection = false;
+                        item->select();
+                        pFrame.loadFromFile(i->second);
+                    }
+                    out.push_back(item);
+                }
+            }
+            else
+            {
+                String entry;
+                Spotlight::SearchToken::Vector::const_iterator tend = tokens.end();
+                auto end = pAllSimuLogs.end();
+                for (auto i = pAllSimuLogs.begin(); i != end; ++i)
+                {
+                    wxStringToString(i->first, entry);
+                    bool gotcha = false;
+                    for (auto ti = tokens.begin(); ti != tend; ++ti)
+                    {
+                        const String& text = (*ti)->text;
+                        if (entry.icontains(text))
+                        {
+                            gotcha = true;
+                            break;
+                        }
+                    }
+
+                    if (not gotcha)
+                        continue;
+
+                    hasAtLeastOneStudyLogEntry = true;
+                    auto item = std::make_shared<LogFile>();
+                    item->caption(i->first);
+                    item->filename = i->second;
+                    item->image(pBmpFile);
+                    out.push_back(item);
+                }
+            }
+        }
+    }
+
+    if (pShowAll)
+    {
+        if (hasAtLeastOneStudyLogEntry)
+            out.push_back(std::make_shared<Spotlight::Text>());
+        out.push_back(std::make_shared<Spotlight::Text>(" UI logs"));
+        out.push_back(std::make_shared<Spotlight::Separator>());
+        {
+            if (pAllUILogs.empty())
             {
                 out.push_back(std::make_shared<Spotlight::Text>("  (no file available)"));
-                hasAtLeastOneStudyLogEntry = true;
             }
             else
             {
                 if (tokens.empty())
                 {
-                    auto end = pAllSimuLogs.end();
-                    for (auto i = pAllSimuLogs.begin(); i != end; ++i)
+                    auto end = pAllUILogs.end();
+                    for (auto i = pAllUILogs.begin(); i != end; ++i)
                     {
-                        hasAtLeastOneStudyLogEntry = true;
-
                         auto item = std::make_shared<LogFile>();
                         item->caption(i->first);
                         item->filename = i->second;
                         item->image(pBmpFile);
-                        if (pAutoTriggerSelection)
-                        {
-                            pAutoTriggerSelection = false;
-                            item->select();
-                            pFrame.loadFromFile(i->second);
-                        }
                         out.push_back(item);
                     }
                 }
                 else
                 {
                     String entry;
-                    Spotlight::SearchToken::Vector::const_iterator tend = tokens.end();
-                    auto end = pAllSimuLogs.end();
-                    for (auto i = pAllSimuLogs.begin(); i != end; ++i)
+                    uint count = 0;
+                    auto tend = tokens.end();
+                    auto end = pAllUILogs.end();
+                    for (auto i = pAllUILogs.begin(); i != end; ++i)
                     {
                         wxStringToString(i->first, entry);
                         bool gotcha = false;
@@ -220,135 +261,65 @@ public:
                                 break;
                             }
                         }
-
                         if (not gotcha)
                             continue;
 
-                        hasAtLeastOneStudyLogEntry = true;
+                        ++count;
                         auto item = std::make_shared<LogFile>();
                         item->caption(i->first);
                         item->filename = i->second;
                         item->image(pBmpFile);
                         out.push_back(item);
                     }
-                }
-            }
-        }
 
-        if (pShowAll)
-        {
-            if (hasAtLeastOneStudyLogEntry)
-                out.push_back(std::make_shared<Spotlight::Text>());
-            out.push_back(std::make_shared<Spotlight::Text>(" UI logs"));
-            out.push_back(std::make_shared<Spotlight::Separator>());
-            {
-                if (pAllUILogs.empty())
-                {
-                    out.push_back(std::make_shared<Spotlight::Text>("  (no file available)"));
-                }
-                else
-                {
-                    if (tokens.empty())
-                    {
-                        auto end = pAllUILogs.end();
-                        for (auto i = pAllUILogs.begin(); i != end; ++i)
-                        {
-                            auto item = std::make_shared<LogFile>();
-                            item->caption(i->first);
-                            item->filename = i->second;
-                            item->image(pBmpFile);
-                            out.push_back(item);
-                        }
-                    }
-                    else
-                    {
-                        String entry;
-                        uint count = 0;
-                        auto tend = tokens.end();
-                        auto end = pAllUILogs.end();
-                        for (auto i = pAllUILogs.begin(); i != end; ++i)
-                        {
-                            wxStringToString(i->first, entry);
-                            bool gotcha = false;
-                            for (auto ti = tokens.begin(); ti != tend; ++ti)
-                            {
-                                const String& text = (*ti)->text;
-                                if (entry.icontains(text))
-                                {
-                                    gotcha = true;
-                                    break;
-                                }
-                            }
-                            if (not gotcha)
-                                continue;
-
-                            ++count;
-                            auto item = std::make_shared<LogFile>();
-                            item->caption(i->first);
-                            item->filename = i->second;
-                            item->image(pBmpFile);
-                            out.push_back(item);
-                        }
-
-                        if (0 == count)
-                            out.push_back(std::make_shared<Spotlight::Text>("  (no result found)"));
-                    }
+                    if (0 == count)
+                        out.push_back(std::make_shared<Spotlight::Text>("  (no result found)"));
                 }
             }
         }
     }
+}
 
-    virtual bool onSelect(Spotlight::IItem::Ptr& item) override
-    {
-        auto logfile = std::dynamic_pointer_cast<LogFile>(item);
-        if (!logfile)
-            return false;
-        pFrame.loadFromFile(logfile->filename);
-        return true;
-    }
-
-    virtual bool onSelect(const Spotlight::IItem::Vector&) override
-    {
+bool FileListProvider::onSelect(Spotlight::IItem::Ptr& item)
+{
+    auto logfile = std::dynamic_pointer_cast<LogFile>(item);
+    if (!logfile)
         return false;
-    }
+    pFrame.loadFromFile(logfile->filename);
+    return true;
+}
 
-    void refreshFileList(bool showAll)
+bool FileListProvider::onSelect(const Spotlight::IItem::Vector&)
+{
+    return false;
+}
+
+void FileListProvider::refreshFileList(bool showAll)
+{
+    auto study = Data::Study::Current::Get();
+    wxRegEx regex(wxT("([a-zA-Z_]+)-([0-9]{8})-([0-9]{6})\\.log"));
+    String folder;
+    pAllSimuLogs.clear();
+    pAllUILogs.clear();
+
+    // Simulation LOGS
+    if (!(!study) and not study->folder.empty())
     {
-        auto study = Data::Study::Current::Get();
-        wxRegEx regex(wxT("([a-zA-Z_]+)-([0-9]{8})-([0-9]{6})\\.log"));
-        String folder;
-        pAllSimuLogs.clear();
-        pAllUILogs.clear();
-
-        // Simulation LOGS
-        if (!(!study) and not study->folder.empty())
-        {
-            folder.clear() << study->folder << SEP << "logs";
-            FindAllLogFiles(pAllSimuLogs, regex, folder);
-        }
-
-        // UI Simulator
-        pShowAll = showAll;
-        if (showAll)
-        {
-            folder.clear();
-            IO::ExtractFilePath(folder, logs.logfile());
-            FindAllLogFiles(pAllUILogs, regex, folder);
-        }
-
-        redoResearch();
+        folder.clear() << study->folder << SEP << "logs";
+        FindAllLogFiles(pAllSimuLogs, regex, folder);
     }
 
-private:
-    StudyLogs& pFrame;
-    //! Flag to know if the component must trigger the selection of an item
-    bool pAutoTriggerSelection;
-    bool pShowAll;
-    MapFileList pAllSimuLogs;
-    MapFileList pAllUILogs;
-    wxBitmap* pBmpFile;
+    // UI Simulator
+    pShowAll = showAll;
+    if (showAll)
+    {
+        folder.clear();
+        IO::ExtractFilePath(folder, logs.logfile());
+        FindAllLogFiles(pAllUILogs, regex, folder);
+    }
 
-}; // class FileListProvider
+    redoResearch();
+}
 
 class JobGUIUpdate final : public Yuni::Job::IJob
 {
@@ -726,10 +697,9 @@ StudyLogs::StudyLogs(wxFrame* parent) :
         // List of all available log files
         {
             Component::Spotlight* spotlight = new Component::Spotlight(panelAllFiles, 0);
-            auto provider = std::make_shared<FileListProvider>(*this);
-            // TODO[FO]
-            //onRefreshListOfFiles.connect(provider, &FileListProvider::refreshFileList);
-            spotlight->provider(provider);
+            mProvider = std::make_shared<FileListProvider>(*this);
+            onRefreshListOfFiles.connect(mProvider.get(), &FileListProvider::refreshFileList);
+            spotlight->provider(mProvider);
 
             {
                 wxBoxSizer* hz = new wxBoxSizer(wxHORIZONTAL);

@@ -40,14 +40,54 @@
 #include "../application/study.h"
 #include "../toolbox/components/datagrid/renderer/logfile.h"
 #include <ui/common/component/frame/local-frame.h>
+#include <ui/common/component/spotlight.h>
 
 namespace Antares
 {
 namespace Window
 {
-/*!
-** \brief `Save As` Dialog
-*/
+namespace
+{
+class CompareDesc final
+{
+public:
+    inline bool operator()(const wxString& s1, const wxString& s2) const
+    {
+        return s2 < s1;
+    }
+};
+typedef std::map<wxString, YString, CompareDesc> MapFileList;
+} // namespace
+
+class StudyLogs;
+
+class FileListProvider final : public Component::Spotlight::IProvider
+{
+public:
+    typedef Antares::Component::Spotlight Spotlight;
+    typedef std::shared_ptr<FileListProvider> Ptr;
+
+public:
+    FileListProvider(StudyLogs& frame);
+    virtual ~FileListProvider();
+
+    virtual void search(Spotlight::IItem::Vector& out,
+                        const Spotlight::SearchToken::Vector& tokens,
+                        const Yuni::String& text = "") override;
+    virtual bool onSelect(Spotlight::IItem::Ptr& item) override;
+    virtual bool onSelect(const Spotlight::IItem::Vector&) override;
+    void refreshFileList(bool showAll);
+
+private:
+    StudyLogs& pFrame;
+    //! Flag to know if the component must trigger the selection of an item
+    bool pAutoTriggerSelection;
+    bool pShowAll;
+    MapFileList pAllSimuLogs;
+    MapFileList pAllUILogs;
+    wxBitmap* pBmpFile;
+}; // class FileListProvider
+
 class StudyLogs final : public Component::Frame::WxLocalFrame
 {
 public:
@@ -155,6 +195,8 @@ private:
 
     //! Flag to display all log files
     bool pShowAllLogsFiles;
+
+    FileListProvider::Ptr mProvider;
 
     //! Event: refresh all files
     Yuni::Event<void(bool)> onRefreshListOfFiles;
