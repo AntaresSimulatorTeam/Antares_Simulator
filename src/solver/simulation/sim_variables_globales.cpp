@@ -46,5 +46,3 @@ VALEURS_ANNUELLES** ValeursAnnuellesAdequation;
 
 RESULTATS_PAR_INTERCONNEXION** ResultatsParInterconnexion;
 RESULTATS_PAR_CONTRAINTE_COUPLANTE** ResultatsParContrainteCouplante;
-
-COMPTE_RENDU CompteRendu;

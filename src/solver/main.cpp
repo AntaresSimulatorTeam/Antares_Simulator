@@ -569,17 +569,6 @@ int main(int argc, char** argv)
     // Disabling the log notice about disk space reservation
     Antares::Memory::InformAboutDiskSpaceReservation = false;
 
-    // TODO It would be nice if it were removed...
-    // This jump is only required by the internal solver
-    CompteRendu.AnomalieDetectee = NON_ANTARES;
-    setjmp(CompteRendu.Env);
-    if (CompteRendu.AnomalieDetectee == OUI_ANTARES)
-    {
-        logs.error() << "Error...";
-        AntaresSolverEmergencyShutdown(); // will never return
-        return 42;
-    }
-
     int ret = EXIT_FAILURE;
 
     auto* application = new SolverApplication();
