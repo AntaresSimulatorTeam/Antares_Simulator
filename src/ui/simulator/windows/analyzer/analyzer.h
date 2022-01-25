@@ -85,11 +85,11 @@ class AnalyzerWizard final : public wxDialog
 {
 public:
     //! File mapping
-    typedef Component::Datagrid::Renderer::Analyzer::Areas::Map FileMapping;
+    using FileMapping = Component::Datagrid::Renderer::Analyzer::Areas::Map;
     //!
-    typedef Component::Datagrid::Renderer::Analyzer::Areas::Record::Vector RecordVector;
+    using RecordVector = Component::Datagrid::Renderer::Analyzer::Areas::Record::Vector;
     //! Smartptr for file mapping
-    typedef std::shared_ptr<FileMapping> FileMappingPtr;
+    using FileMappingPtr = std::shared_ptr<FileMapping>;
 
     enum IDs
     {
@@ -234,7 +234,7 @@ private:
 
     bool pUpdating;
 
-    typedef Component::Datagrid::Renderer::Analyzer::Areas RendererType;
+    using RendererType = Component::Datagrid::Renderer::Analyzer::Areas;
     RendererType* pRenderer;
 
     std::shared_ptr<FileSearchProvider> mProvider;

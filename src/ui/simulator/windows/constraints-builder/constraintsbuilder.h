@@ -50,11 +50,11 @@ class ConstraintsBuilderWizard final : public wxDialog
 {
 public:
     //! File mapping
-    typedef Component::Datagrid::Renderer::ConstraintsBuilder::Links::Map FileMapping;
+    using FileMapping = Component::Datagrid::Renderer::ConstraintsBuilder::Links::Map;
     //!
-    typedef Component::Datagrid::Renderer::ConstraintsBuilder::Links::Record::Vector RecordVector;
+    using RecordVector = Component::Datagrid::Renderer::ConstraintsBuilder::Links::Record::Vector;
     //! Smartptr for file mapping
-    typedef std::shared_ptr<FileMapping> FileMappingPtr;
+    using FileMappingPtr = std::shared_ptr<FileMapping>;
 
     enum IDs
     {
@@ -171,7 +171,7 @@ private:
 
     FileMappingPtr pFileMapping;
 
-    typedef Component::Datagrid::Renderer::ConstraintsBuilder::Links RendererType;
+    using RendererType = Component::Datagrid::Renderer::ConstraintsBuilder::Links;
     RendererType* pRenderer;
 
     CBuilder* pCBuilder;

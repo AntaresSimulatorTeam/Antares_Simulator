@@ -53,9 +53,9 @@ class IItem
 {
 public:
     //! The most suitable smartptr for this class
-    typedef std::shared_ptr<IItem> Ptr;
+    using Ptr = std::shared_ptr<IItem>;
     //! Item list
-    typedef std::vector<Ptr> List;
+    using List = std::vector<Ptr>;
 
 public:
     //! \name Constructor & Destructor

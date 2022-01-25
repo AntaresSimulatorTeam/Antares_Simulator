@@ -51,7 +51,7 @@ class Area : public IItem
 {
 public:
     //! The smartptr
-    typedef std::shared_ptr<Area> Ptr;
+    using Ptr = std::shared_ptr<Area>;
 
 public:
     /*!

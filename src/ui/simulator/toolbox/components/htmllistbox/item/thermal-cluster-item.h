@@ -47,8 +47,7 @@ namespace Item
 class ThermalClusterItem : public ClusterItem
 {
 public:
-    //! The smartptr
-    typedef std::shared_ptr<ThermalClusterItem> Ptr;
+    using Ptr = std::shared_ptr<ThermalClusterItem>;
 
 public:
     //! \name Constructor & Destructor

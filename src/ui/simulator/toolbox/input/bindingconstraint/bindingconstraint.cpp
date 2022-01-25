@@ -55,9 +55,8 @@ namespace InputSelector
 class SpotlightProviderConstraint final : public Component::Spotlight::IProvider
 {
 public:
-    typedef Antares::Component::Spotlight Spotlight;
+    using Spotlight = Antares::Component::Spotlight;
 
-public:
     SpotlightProviderConstraint(Toolbox::InputSelector::BindingConstraint* component) :
      pComponent(component)
     {

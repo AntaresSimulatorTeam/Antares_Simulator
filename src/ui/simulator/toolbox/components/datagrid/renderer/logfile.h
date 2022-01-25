@@ -90,7 +90,7 @@ class LogEntryContainer
 {
 public:
     //! The most suitable smart pointer for the class
-    typedef std::shared_ptr<LogEntryContainer> Ptr;
+    using Ptr = std::shared_ptr<LogEntryContainer>;
 
 public:
     LogEntryContainer() : longestLine(0), maxCharForALine(0)

@@ -47,8 +47,7 @@ namespace Item
 class RenewableClusterItem : public ClusterItem
 {
 public:
-    //! The smartptr
-    typedef std::shared_ptr<RenewableClusterItem> Ptr;
+    using Ptr = std::shared_ptr<RenewableClusterItem>;
 
 public:
     //! \name Constructor & Destructor

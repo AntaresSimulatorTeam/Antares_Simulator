@@ -43,9 +43,8 @@ class ItemConstraint : public Component::Spotlight::IItem
 {
 public:
     //! Smart ptr
-    typedef std::shared_ptr<ItemConstraint> Ptr;
+    using Ptr = std::shared_ptr<ItemConstraint>;
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!

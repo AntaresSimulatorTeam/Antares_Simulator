@@ -47,7 +47,7 @@ class PathListItem : public IItem
 {
 public:
     //! The smartptr
-    typedef std::shared_ptr<PathListItem> Ptr;
+    using Ptr = std::shared_ptr<PathListItem>;
 
 public:
     static bool HtmlContent(wxString& out,

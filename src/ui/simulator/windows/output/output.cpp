@@ -678,7 +678,7 @@ void Component::update(const Data::Output::List& list, const Data::Output::Ptr& 
 
 void Component::onDropDownComparison(Button&, wxMenu&, void* userdata)
 {
-    if (GUIIsLock() or !userdata)
+    if (GUIIsLock() || !userdata)
         return;
     Button* btn = (Button*)userdata;
     displayMiniFrame(btn, std::make_shared<Provider::Comparison>(*this), 120, false, false);
@@ -706,10 +706,12 @@ void Component::onDropDownOutputs(Button& button, wxMenu&, void* userdata)
     if (uiinfo && uiinfo->isVirtual())
     {
         // In this case, there will be only one item "close the tab"
-      displayMiniFrame(&button, std::make_shared<Provider::Outputs>(*this, uiinfo), 150, false, false);
+        displayMiniFrame(
+          &button, std::make_shared<Provider::Outputs>(*this, uiinfo), 150, false, false);
     }
     else
-      displayMiniFrame(&button, std::make_shared<Provider::Outputs>(*this, uiinfo), 380, true, false);
+        displayMiniFrame(
+          &button, std::make_shared<Provider::Outputs>(*this, uiinfo), 380, true, false);
 }
 
 void Component::onDropDownDetachMenu(Button&, wxMenu& menu, void* userdata)
@@ -731,7 +733,7 @@ void Component::onDropDownDetachMenu(Button&, wxMenu& menu, void* userdata)
     else
         pCurrentLayerForMenu = nullptr;
 
-    if (!uiinfo or uiinfo->isVirtual() or !pCurrentLayerForMenu)
+    if (!uiinfo || uiinfo->isVirtual() || !pCurrentLayerForMenu)
         return;
 
     // wxWindow* form = (pParentWindow) ? pParentWindow : Forms::ApplWnd::Instance();
@@ -769,7 +771,7 @@ void Component::onDropDownDetachMenu(Button&, wxMenu& menu, void* userdata)
         assert(!(!tab));
 
         if (tab->btnItem)
-          displayMiniFrame(tab->btnItem, std::make_shared<SpotlightProvider>(this, layer));
+            displayMiniFrame(tab->btnItem, std::make_shared<SpotlightProvider>(this, layer));
     }
 }
 
@@ -869,7 +871,7 @@ void Component::internalUpdate()
     // must remain. Otherwise the pointer might be invalid
     closeSubFrames();
 
-    if (!pControlsAlreadyCreated or !pSizerForBtnOutputs)
+    if (!pControlsAlreadyCreated || !pSizerForBtnOutputs)
         return;
 
     // reset the pointer
@@ -1128,9 +1130,9 @@ void Component::treeDataUpdate()
     // Looking for the first real output (and not a virtual layer)
     for (uint i = 0; i != (uint)pSelections.size(); ++i)
     {
-        auto* layer = pSelections[i];
+        const auto* layer = pSelections[i];
         // We may not have a study output info for virtual layers
-        if (not layer or not layer->selection)
+        if (!layer || !layer->selection)
             continue;
 
         // We will use the first available as reference
@@ -1201,7 +1203,7 @@ void Component::treeDataUpdateWL(const Content& content)
     //	provider->addAdequacy();
 
     // Browsing all areas, adding only areas available in all outputs
-    if (not areas->empty())
+    if (!areas->empty())
     {
         auto areaEnd = areas->end();
 
@@ -1236,7 +1238,7 @@ void Component::treeDataUpdateWL(const Content& content)
     }
 
     // Browsing all links, adding only links available in all outputs
-    if (not links->empty())
+    if (!links->empty())
     {
         auto linkEnd = links->end();
         for (auto linkIt = links->begin(); linkIt != linkEnd; ++linkIt)
@@ -1252,7 +1254,7 @@ void Component::treeDataUpdateWL(const Content& content)
     }
 
     // Clusters
-    if (not content.clusters.empty() && pCurrentClusters)
+    if (!content.clusters.empty() && pCurrentClusters)
     {
         auto areaEnd = content.clusters.end();
         for (auto areaI = content.clusters.begin(); areaI != areaEnd; ++areaI)
@@ -1272,16 +1274,16 @@ void Component::treeDataUpdateWL(const Content& content)
 
     // Adding (at the end), all areas / links that are not available
     // in all outputs
-    if (not uncommonAreas.empty() or not uncommonLinks.empty())
+    if (!uncommonAreas.empty() || !uncommonLinks.empty())
     {
-        if (not uncommonAreas.empty())
+        if (!uncommonAreas.empty())
         {
             auto areaEnd = uncommonAreas.end();
             for (auto areaIt = uncommonAreas.begin(); areaIt != areaEnd; ++areaIt)
                 provider->addUncommonAreaName(*areaIt);
         }
 
-        if (not uncommonLinks.empty())
+        if (!uncommonLinks.empty())
         {
             auto linkEnd = uncommonLinks.end();
             for (auto linkIt = uncommonLinks.begin(); linkIt != linkEnd; ++linkIt)
@@ -1325,7 +1327,7 @@ void Component::copyFrom(const Component& source)
 
     pOutputs = source.pOutputs;
 
-    if (not pSelections.empty())
+    if (!pSelections.empty())
     {
         for (uint i = 0; i != (uint)pSelections.size(); ++i)
             delete pSelections[i];
@@ -1464,7 +1466,7 @@ uint Component::outputSelectionsAdd(Data::Output::Ptr output)
 
 const char* Component::imageForLayerPlaceOrder(const Layer* so) const
 {
-    if (!so or pSelections.empty())
+    if (!so || pSelections.empty())
         return "images/16x16/empty.png";
 
     uint count = 0;
@@ -1489,7 +1491,7 @@ const char* Component::imageForLayerPlaceOrder(const Layer* so) const
 
 const char* Component::imageForLayerPlaceOrder(const Data::Output::Ptr& so) const
 {
-    if (!so or pSelections.empty())
+    if (!so || pSelections.empty())
         return "images/16x16/empty.png";
 
     uint count = 0;
@@ -1514,7 +1516,7 @@ const char* Component::imageForLayerPlaceOrder(const Data::Output::Ptr& so) cons
 
 int Component::imageIndexForOutput(const Data::Output::Ptr& so) const
 {
-    if (!so or pSelections.empty())
+    if (!so || pSelections.empty())
         return -2;
 
     uint count = 0;
@@ -1552,7 +1554,7 @@ void Component::rebuildIndexes()
 
 void Component::removeOutput(Layer* layer)
 {
-    if (!layer or GUIIsLock())
+    if (!layer || GUIIsLock())
         return;
 
     GUILocker locker;
@@ -1657,7 +1659,7 @@ void Component::mergeOutputs()
     foreach (auto* layer, pSelections)
     {
         // We may not have a study output info for virtual layers
-        if (!layer or !layer->selection)
+        if (!layer || !layer->selection)
             continue;
         // The path of the output
         const String& path = (layer->selection)->path;
@@ -1766,7 +1768,7 @@ bool Component::checkAreaIsCommonToAllOutputs(const Data::AreaName& name)
     {
         auto* layer = pSelections[i];
         // We may not have a study output info for virtual layers
-        if (!layer or !layer->selection)
+        if (!layer || !layer->selection)
             continue;
 
         // We will use the first available as reference
@@ -1801,7 +1803,7 @@ void Component::checkYearByYearMode()
     foreach (auto* layer, pSelections)
     {
         // We may not have a study output info for virtual layers
-        if (!layer or !layer->selection)
+        if (!layer || !layer->selection)
             continue;
 
         // We will use the first available as reference
@@ -1845,7 +1847,7 @@ bool Component::checkLinkIsCommonToAllOutputs(const Data::AreaLinkName& name)
     {
         Layer* layer = pSelections[i];
         // We may not have a study output info for virtual layers
-        if (not layer or not layer->selection)
+        if (!layer || !layer->selection)
             continue;
 
         // We will use the first available as reference
@@ -2121,7 +2123,8 @@ void Component::allYearsOrYearByYearSelector(Button&, wxMenu&, void*)
 
     GUILocker locker;
     closeSubFrames();
-    displayMiniFrame(pBtnAllYears, std::make_shared<SpotlightProviderMCAll>(this), 220, false, false);
+    displayMiniFrame(
+      pBtnAllYears, std::make_shared<SpotlightProviderMCAll>(this), 220, false, false);
 }
 
 void Component::incrementYearByYear(void*)
@@ -2245,9 +2248,9 @@ void Component::ConvertVarNameToID(String& id, const String& name)
     for (String::const_utf8iterator i = name.utf8begin(); i != end; ++i)
     {
         char c = String::ToLower((char)(*i));
-        if (!c or (not String::IsDigit(c) and not String::IsAlpha(c)))
+        if (!c || (!String::IsDigit(c) && !String::IsAlpha(c)))
         {
-            if (not previousSpace)
+            if (!previousSpace)
             {
                 id += '-';
                 previousSpace = true;

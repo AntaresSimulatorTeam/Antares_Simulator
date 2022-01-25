@@ -51,7 +51,7 @@ class BindingConstraint : public IItem
 {
 public:
     //! The smartptr
-    typedef std::shared_ptr<BindingConstraint> Ptr;
+    using Ptr = std::shared_ptr<BindingConstraint>;
 
 public:
     /*!

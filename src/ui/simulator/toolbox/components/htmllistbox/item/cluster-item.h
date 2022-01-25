@@ -40,70 +40,65 @@ namespace HTMLListbox
 {
 namespace Item
 {
-    /*!
-    ** \brief Single item for an abstract cluster
-    **
-    ** See parent classes for more explanations
-    */
-    class ClusterItem : public IItem
+/*!
+** \brief Single item for an abstract cluster
+**
+** See parent classes for more explanations
+*/
+class ClusterItem : public IItem
+{
+public:
+    // Default constructor
+    ClusterItem(Antares::Data::Cluster* a);
+
+    // Additional Additional HTML content ("<td>my text</td>")
+    ClusterItem(Antares::Data::Cluster* a, const wxString& additional);
+
+    // Destructor
+    virtual ~ClusterItem();
+
+    bool interactive() const override
     {
-    public:
-        //! The smartptr
-        // typedef std::shared_ptr<ClusterItem> Ptr;
+        return true;
+    }
 
-    public:
-        // Default constructor
-        ClusterItem(Antares::Data::Cluster* a);
-        
-        // Additional Additional HTML content ("<td>my text</td>")
-        ClusterItem(Antares::Data::Cluster* a, const wxString& additional);
+    // Get the HTML Content for the item
+    wxString htmlContent(const wxString& searchString);
 
-        // Destructor
-        virtual ~ClusterItem();
+protected:
+    /*!
+    ** \brief Add a portion of Html from a cluster to a string
+    **
+    ** A very simple equivalent html code would be :
+    ** \code
+    ** <td>cluster name</td>
+    ** \endcode
+    **
+    ** \param[in,out] out The string where the result will be appended
+    ** \param cluster The cluster
+    ** \param searchString The string to highlight
+    ** return True if something has been highlighted, false otherwise
+    */
+    bool HtmlContent(wxString& out, Data::Cluster* cluster, const wxString& searchString);
 
-        bool interactive() const override
-        {
-            return true;
-        }
+    wxString getIconFilePath(const AnyString& filename);
+    void preloadImages();
 
-        // Get the HTML Content for the item
-        wxString htmlContent(const wxString& searchString);
+private:
+    virtual wxString getClusterIconFilePath() = 0;
+    virtual wxString htmlContentTail() = 0;
 
-    protected:
-        /*!
-        ** \brief Add a portion of Html from a cluster to a string
-        **
-        ** A very simple equivalent html code would be :
-        ** \code
-        ** <td>cluster name</td>
-        ** \endcode
-        **
-        ** \param[in,out] out The string where the result will be appended
-        ** \param cluster The cluster
-        ** \param searchString The string to highlight
-        ** return True if something has been highlighted, false otherwise
-        */
-        bool HtmlContent(wxString& out, Data::Cluster* cluster, const wxString& searchString);
+protected:
+    // The current cluster
+    Antares::Data::Cluster* pCluster;
 
-        wxString getIconFilePath(const AnyString& filename);
-        void preloadImages();
+    // Additional text
+    const wxString pText;
+    wxString pIconFileEnabled;
+    wxString pIconFileDisabled;
+    wxString pClusterIconFilePath;
 
-    private:
-        virtual wxString getClusterIconFilePath() = 0;
-        virtual wxString htmlContentTail() = 0;
-
-    protected:
-        // The current cluster
-        Antares::Data::Cluster* pCluster;
-
-        // Additional text
-        const wxString pText;
-        wxString pIconFileEnabled;
-        wxString pIconFileDisabled;
-        wxString pClusterIconFilePath;
-
-    }; // class ClusterItem
-
+}; // class ClusterItem
 
 } // namespace Item
 } // namespace HTMLListbox

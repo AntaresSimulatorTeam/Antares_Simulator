@@ -78,7 +78,7 @@ private:
     class Item final
     {
     public:
-        typedef std::shared_ptr<Item> Ptr;
+        using Ptr = std::shared_ptr<Item>;
 
     public:
         Item(const Type t, Yuni::String::Ptr d) : type(t), data(d)

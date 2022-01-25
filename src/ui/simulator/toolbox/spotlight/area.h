@@ -42,10 +42,8 @@ namespace Spotlight
 class ItemArea : public Component::Spotlight::IItem
 {
 public:
-    //! Smart ptr
-    typedef std::shared_ptr<ItemArea> Ptr;
+    using Ptr = std::shared_ptr<ItemArea>;
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
