@@ -71,7 +71,7 @@ public:
     WalkerThread(Statistics& stats);
     ~WalkerThread();
 
-    void dispatchJob(IJob::Ptr job);
+    void dispatchJob(IJob::Ptr job) const;
 
     void run();
 
@@ -98,7 +98,7 @@ protected:
                           sint64 modified,
                           uint64 size);
 
-    void waitForAllJobs();
+    void waitForAllJobs() const;
 
 private:
     class DirectoryContext final : private Yuni::NonCopyable<DirectoryContext>
@@ -383,7 +383,7 @@ void WalkerThread::walk(const String& path)
     logs.info() << logPrefix << "operation completed";
 }
 
-void WalkerThread::waitForAllJobs()
+void WalkerThread::waitForAllJobs() const
 {
     // Previous number of jobs
     int lastremain = -1;
@@ -424,7 +424,7 @@ void WalkerThread::waitForAllJobs()
     }
 }
 
-void WalkerThread::dispatchJob(IJob::Ptr job)
+void WalkerThread::dispatchJob(IJob::Ptr job) const
 {
     // get the shared counter
     job->pJobCounter = pJobCounter;
