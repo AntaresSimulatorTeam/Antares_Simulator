@@ -36,7 +36,7 @@ class IProvider : public Yuni::IEventObserver<Spotlight>
 {
 public:
     //! ptr
-    typedef std::shared_ptr<IProvider> Ptr;
+    using Ptr = std::shared_ptr<IProvider>;
 
 public:
     //! \name Constructor & Destructor

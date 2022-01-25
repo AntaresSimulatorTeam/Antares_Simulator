@@ -33,13 +33,13 @@ class IItem
 {
 public:
     //! Ptr
-    typedef std::shared_ptr<IItem> Ptr;
+    using Ptr = std::shared_ptr<IItem>;
     //! Vector of items
-    typedef std::vector<Ptr> Vector;
+    using Vector = std::vector<Ptr>;
     //! Vector Ptr
-    typedef std::shared_ptr<Vector> VectorPtr;
+    using VectorPtr = std::shared_ptr<Vector>;
     //! Group
-    typedef Yuni::CString<64, false> GroupType;
+    using GroupType = Yuni::CString<64, false>;
 
     class IPart
     {
@@ -62,9 +62,9 @@ public:
     {
     public:
         //! The most suitable smart pointer
-        typedef std::shared_ptr<Tag> Ptr;
+        using Ptr =std::shared_ptr<Tag>;
         //! Vector
-        typedef std::vector<Ptr> Vector;
+        using Vector = std::vector<Ptr>;
 
     public:
         template<class StringT>

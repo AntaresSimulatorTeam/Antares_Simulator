@@ -36,9 +36,9 @@ class StudyData final
 {
 public:
     //! The most suitable smart pointer
-    typedef std::shared_ptr<StudyData> Ptr;
+    using Ptr = std::shared_ptr<StudyData>;
     //! Vector
-    typedef std::vector<Ptr> Vector;
+    using Vector = std::vector<Ptr>;
     //! Short string
     typedef Yuni::CString<10, false> ShortString;
     //! Short string

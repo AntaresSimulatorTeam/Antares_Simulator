@@ -37,7 +37,7 @@ class Output final
 {
 public:
     //! The most suitable smart pointer
-    typedef std::shared_ptr<Output> Ptr;
+    using Ptr = std::shared_ptr<Output>;
     //! A folder name (short length)
     typedef Yuni::CString<10, false> FolderName;
     //! Column name

@@ -50,7 +50,7 @@ public:
     //
     typedef Yuni::CString<128, false> IDType;
     //! Value
-    typedef std::shared_ptr<T> TypePtr;
+    using  TypePtr = std::shared_ptr<T>;
 
     //! Map of Item
     typedef std::map<IDType, TypePtr> MapType;

@@ -33,11 +33,11 @@ class Text : public IItem
 {
 public:
     //! Ptr
-    typedef std::shared_ptr<Text> Ptr;
+    using Ptr = std::shared_ptr<Text>;
     //! Vector of items
-    typedef std::vector<Ptr> Vector;
+    using Vector = std::vector<Ptr>;
     //! Vector Ptr
-    typedef std::shared_ptr<Vector> VectorPtr;
+    using VectorPtr = std::shared_ptr<Vector>;
 
 public:
     //! \name Constructor & Destructor

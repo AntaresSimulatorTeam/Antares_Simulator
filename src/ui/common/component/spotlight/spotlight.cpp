@@ -542,7 +542,7 @@ void Spotlight::itemHeight(uint h)
 class FrameShowData
 {
 public:
-    typedef std::shared_ptr<FrameShowData> Ptr;
+    using Ptr = std::shared_ptr<FrameShowData>;
 
     static void ReExecute(const Ptr& data)
     {

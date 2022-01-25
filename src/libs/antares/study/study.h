@@ -65,8 +65,7 @@ class Study final : public Yuni::NonCopyable<Study>, public IObject
 {
 public:
     //! The most suitable smart pointer for the class
-    typedef std::shared_ptr<Study> Ptr;
-    // typedef std::shared_ptr<Study>  Ptr;
+    using Ptr = std::shared_ptr<Study>;
     //! Set of studies
     typedef std::set<Ptr> Set;
     //! List of studies

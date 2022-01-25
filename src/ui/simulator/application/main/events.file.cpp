@@ -64,7 +64,7 @@ class ItemWindow : public Component::Spotlight::IItem
 {
 public:
     //! Smart ptr
-    typedef std::shared_ptr<ItemWindow> Ptr;
+    using Ptr = std::shared_ptr<ItemWindow>;
 
     explicit ItemWindow(const Yuni::String& title, int id) : title(title), id(id)
     {

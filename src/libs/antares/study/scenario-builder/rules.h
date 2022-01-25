@@ -48,7 +48,7 @@ class Rules final : private Yuni::NonCopyable<Rules>
 {
 public:
     //! Smart pointer
-    typedef std::shared_ptr<Rules> Ptr;
+    using  Ptr = std::shared_ptr<Rules>;
     //! Map
     typedef std::map<RulesScenarioName, Ptr> Map;
     //! Map ID

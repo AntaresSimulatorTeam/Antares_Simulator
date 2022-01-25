@@ -61,7 +61,7 @@ class IExtension
 {
 public:
     //! Most suitable smart pointer
-    typedef std::shared_ptr<IExtension> Ptr;
+    using Ptr = std::shared_ptr<IExtension>;
     //! List
     typedef std::vector<Ptr> Vector;
 

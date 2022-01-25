@@ -42,7 +42,7 @@ class JobFileReader final : public Yuni::Job::IJob
 {
 public:
     //! The most suitable smart pointer
-    typedef std::shared_ptr<JobFileReader> Ptr;
+    using Ptr = std::shared_ptr<JobFileReader>;
     enum
     {
         maxRows = 8800,

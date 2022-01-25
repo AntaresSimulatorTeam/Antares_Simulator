@@ -39,7 +39,7 @@ class ATSP final
 {
 public:
     //! The most suitable smart pointer for the class
-    typedef std::shared_ptr<ATSP> Ptr;
+    using Ptr = std::shared_ptr<ATSP>;
 
 public:
     //! \name Constructor & Destructor

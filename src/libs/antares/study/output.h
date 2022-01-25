@@ -42,7 +42,7 @@ class Output final
 {
 public:
     //! Smartptr
-    typedef std::shared_ptr<Output> Ptr;
+    using Ptr = std::shared_ptr<Output>;
     //! List
     typedef std::list<Ptr> List;
     //! Title
