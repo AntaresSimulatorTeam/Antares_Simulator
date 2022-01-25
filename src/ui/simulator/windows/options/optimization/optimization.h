@@ -115,6 +115,7 @@ private:
     Component::Button* pBtnSimplexOptimizationRange;
 
     Component::Button* pBtnExportMPS;
+    Component::Button* pBtnAdequacyPatch;
     Component::Button* pBtnUnfeasibleProblemBehavior;
     bool* pTargetRef;
 
