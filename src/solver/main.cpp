@@ -270,7 +270,7 @@ bool SolverApplication::prepare(int argc, char* argv[])
     return true;
 }
 
-void SolverApplication::initializeRandomNumberGenerators()
+void SolverApplication::initializeRandomNumberGenerators() const
 {
     logs.info() << "Initializing random number generators...";
     auto& parameters = pStudy->parameters;
