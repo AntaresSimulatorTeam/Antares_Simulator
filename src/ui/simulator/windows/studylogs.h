@@ -67,7 +67,7 @@ public:
     typedef Antares::Component::Spotlight Spotlight;
     typedef std::shared_ptr<FileListProvider> Ptr;
 
-    FileListProvider(StudyLogs& frame);
+    explicit FileListProvider(StudyLogs& frame);
     ~FileListProvider() override;
 
     FileListProvider(const FileListProvider&) = delete;
