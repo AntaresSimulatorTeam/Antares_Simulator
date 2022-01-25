@@ -212,7 +212,7 @@ protected:
 
         gLastOpenedStudyFolder = pFolder;
         LastPathForOpeningAFile.clear() << sFl << SEP << "user";
-        if (not IO::Directory::Exists(LastPathForOpeningAFile))
+        if (!IO::Directory::Exists(LastPathForOpeningAFile))
             LastPathForOpeningAFile = sFl;
 
         // We have a valid study. Go ahead
@@ -319,7 +319,7 @@ protected:
             study->markAsModified();
 
             // The Scenario Builder Data must be available to perform a full save
-            if (not study->scenarioRules)
+            if (!study->scenarioRules)
                 study->scenarioRulesCreate();
         }
 
@@ -337,7 +337,7 @@ protected:
             IO::Directory::Remove(targetUser);
             IO::Directory::Remove(targetLogs);
 
-            if (not study->folder.empty())
+            if (!study->folder.empty())
             {
                 // Warning : The target folder must not be cleaned up before
                 // Copy the original folder
@@ -511,10 +511,10 @@ bool CheckIfInsideAStudyFolder(const AnyString& path, bool quiet)
 {
     String location;
     String title;
-    if (not Data::Study::IsInsideStudyFolder(path, location, title))
+    if (!Data::Study::IsInsideStudyFolder(path, location, title))
         return false;
 
-    if (not quiet)
+    if (!quiet)
     {
         auto& mainFrm = *Forms::ApplWnd::Instance();
         Window::Message message(&mainFrm,
@@ -586,7 +586,7 @@ void ResetTheModifierState(bool v)
     auto study = Data::Study::Current::Get();
     gInMemoryRevisionIncrement = 0;
     gStudyHasBeenModified = v;
-    if (not study)
+    if (!study)
         Forms::ApplWnd::Instance()->title();
     else
         Forms::ApplWnd::Instance()->title(wxStringFromUTF8(study->header.caption));
@@ -612,7 +612,7 @@ bool CloseTheStudy(bool updateGUI)
     // deletion
     auto study = Data::Study::Current::Get();
 
-    if (not study or !Forms::ApplWnd::Instance())
+    if (!study or !Forms::ApplWnd::Instance())
         return false;
 
     GUILocker locker;
@@ -846,7 +846,7 @@ SaveResult SaveStudy()
 
 SaveResult SaveStudyAs(const String& path, bool copyoutput, bool copyuserdata, bool copylogs)
 {
-    if (not Data::Study::Current::Valid() || path.empty())
+    if (!Data::Study::Current::Valid() || path.empty())
         return svsCancel;
 
     // alias to the current study
@@ -858,7 +858,7 @@ SaveResult SaveStudyAs(const String& path, bool copyoutput, bool copyuserdata, b
     String newPath;
     IO::Normalize(newPath, path);
 
-    if (not study->folder.empty())
+    if (!study->folder.empty())
     {
         String oldP = study->folder;
         String newP = newPath;
@@ -931,7 +931,7 @@ SaveResult ExportMap(const Yuni::String& path,
                      int nbSplitParts,
                      Antares::Map::mapImageFormat format)
 {
-    if (not Data::Study::Current::Valid() || path.empty())
+    if (!Data::Study::Current::Valid() || path.empty())
         return svsCancel;
 
     // alias to the current study
@@ -1071,7 +1071,7 @@ void OpenStudyFromFolder(wxString folder)
     if (Data::Study::Current::Valid())
     {
         auto study = Data::Study::Current::Get();
-        if (not study->folder.empty())
+        if (!study->folder.empty())
         {
             Menu::AddRecentFile(mainFrm.menuRecentFiles(),
                                 wxStringFromUTF8(study->header.caption),
@@ -1113,12 +1113,12 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
                              bool useOrtools,
                              const std::string& ortoolsSolver)
 {
-    if (not study) // A valid study would be better
+    if (!study) // A valid study would be better
     {
         logs.fatal() << "Internal error: Please provide a valid study";
         return;
     }
-    if (not Forms::ApplWnd::Instance())
+    if (!Forms::ApplWnd::Instance())
         return;
     if (IsGUIAboutToQuit())
         return;
@@ -1142,7 +1142,7 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
 
         // Where is our solver ?
         String solverLocation;
-        if (not Solver::FindLocation(solverLocation, Data::versionUnknown, features))
+        if (!Solver::FindLocation(solverLocation, Data::versionUnknown, features))
         {
             logs.error() << "Impossible to find the program `antares-solver`.";
             return;
@@ -1193,7 +1193,7 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
             AppendWithQuotes(cmd, solverLocation);
 
             // Name of the simulation
-            if (not simuName.empty())
+            if (!simuName.empty())
             {
                 cmd << ' ';
                 tmp.clear() << "--name=" << simuName;
@@ -1204,7 +1204,7 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
             cmd << " --progress";
 
             // Comments
-            if (not commentFile.empty())
+            if (!commentFile.empty())
             {
                 cmd << ' ';
                 tmp.clear() << "--comment-file=" << commentFile;
@@ -1222,11 +1222,11 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
             // Temp folder
             {
                 String cacheFolder = Antares::memory.cacheFolder();
-                if (not cacheFolder.empty())
+                if (!cacheFolder.empty())
                 {
                     if (cacheFolder.last() == '\\' || cacheFolder.last() == '/')
                         cacheFolder.removeLast();
-                    if (not cacheFolder.empty())
+                    if (!cacheFolder.empty())
                     {
                         cmd << ' ';
                         tmp.clear() << "--swap-folder=" << cacheFolder;
