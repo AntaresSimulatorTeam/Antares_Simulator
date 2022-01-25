@@ -408,7 +408,8 @@ static void ReadCommandLineOptions(int argc, char** argv)
                 newname.clear() << "areas/" << areaname;
 
             logs.info() << "registered " << newname;
-            studydata.push_back(std::make_shared<StudyData>(newname, index++));
+            studydata.push_back(std::make_shared<StudyData>(newname, index));
+            index++;
         }
         {
             String::Vector split;
@@ -427,7 +428,8 @@ static void ReadCommandLineOptions(int argc, char** argv)
                 newname.clear() << "links" << SEP;
                 newname << split[0] << " - " << split[1];
                 logs.info() << "registered " << newname;
-                studydata.push_back(std::make_shared<StudyData>(newname, index++));
+                studydata.push_back(std::make_shared<StudyData>(newname, index));
+                index++;
             }
         }
     }
@@ -438,7 +440,10 @@ static void ReadCommandLineOptions(int argc, char** argv)
     for (uint i = 0; i != optTimes.size(); ++i)
     {
         for (uint j = 0; j != optDatum.size(); ++j)
-            dataFiles.push_back(std::make_shared<DataFile>(optDatum[j], optTimes[i], dataIndex++));
+        {
+            dataFiles.push_back(std::make_shared<DataFile>(optDatum[j], optTimes[i], dataIndex));
+            dataIndex++;
+        }
     }
     optDatum.clear();
     optTimes.clear();
