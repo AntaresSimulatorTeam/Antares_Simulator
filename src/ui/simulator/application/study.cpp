@@ -141,7 +141,7 @@ inline static void ResetLastOpenedFilepath()
 
 static void TheSimulationIsComplete(const wxString& duration)
 {
-    if (IsGUIAboutToQuit() or not Data::Study::Current::Valid())
+    if (IsGUIAboutToQuit() || !Data::Study::Current::Valid())
         return;
     auto* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
@@ -305,7 +305,7 @@ protected:
         // so that the run window is up to date.
         study->getNumberOfCores(false, 0);
 
-        if (pSaveAs or pShouldInvalidateStudy)
+        if (pSaveAs || pShouldInvalidateStudy)
         {
             logs.info() << "Preparing study";
             // If the user save the study as something, we have to invalidate
@@ -390,7 +390,7 @@ protected:
             study->scenarioRulesDestroy();
         }
 
-        if (pSaveAs or LastPathForOpeningAFile.empty())
+        if (pSaveAs || LastPathForOpeningAFile.empty())
             LastPathForOpeningAFile.clear() << pFolder << SEP << "user";
 
         SystemParameterHaveChanged = true;
@@ -544,7 +544,7 @@ void MemoryFlushEndUpdate()
 
 bool CanPerformMemoryFlush()
 {
-    return not gMemoryFlushRefCount;
+    return !gMemoryFlushRefCount;
 }
 
 uint64 StudyInMemoryRevisionID()
@@ -612,7 +612,7 @@ bool CloseTheStudy(bool updateGUI)
     // deletion
     auto study = Data::Study::Current::Get();
 
-    if (not study or not Forms::ApplWnd::Instance())
+    if (not study or !Forms::ApplWnd::Instance())
         return false;
 
     GUILocker locker;
@@ -729,7 +729,7 @@ void NewStudy()
 SaveResult SaveStudy()
 {
     auto studyptr = Data::Study::Current::Get();
-    if (!studyptr or not Forms::ApplWnd::Instance())
+    if (!studyptr or !Forms::ApplWnd::Instance())
         return svsCancel;
 
     GUILocker locker;
@@ -756,7 +756,7 @@ SaveResult SaveStudy()
 
     // SaveAs required
     // Especially when the study is readonly (by lock or written in the general data)
-    if (study.folder.empty() or study.readonly())
+    if (study.folder.empty() || study.readonly())
         return Window::SaveAs::Execute(&mainFrm, studyptr);
 
     // We want to invalidate the whole study when upgrading
@@ -846,7 +846,7 @@ SaveResult SaveStudy()
 
 SaveResult SaveStudyAs(const String& path, bool copyoutput, bool copyuserdata, bool copylogs)
 {
-    if (not Data::Study::Current::Valid() or path.empty())
+    if (not Data::Study::Current::Valid() || path.empty())
         return svsCancel;
 
     // alias to the current study
@@ -931,7 +931,7 @@ SaveResult ExportMap(const Yuni::String& path,
                      int nbSplitParts,
                      Antares::Map::mapImageFormat format)
 {
-    if (not Data::Study::Current::Valid() or path.empty())
+    if (not Data::Study::Current::Valid() || path.empty())
         return svsCancel;
 
     // alias to the current study
@@ -1006,7 +1006,7 @@ void UpdateGUIFromStudyState()
 void OpenStudyFromFolder(wxString folder)
 {
     // It is important on Windows to not have the final backslash
-    if ('\\' == folder.Last() or '/' == folder.Last())
+    if ('\\' == folder.Last() || '/' == folder.Last())
         folder.RemoveLast();
 
     // Getting the version of the study
@@ -1224,7 +1224,7 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
                 String cacheFolder = Antares::memory.cacheFolder();
                 if (not cacheFolder.empty())
                 {
-                    if (cacheFolder.last() == '\\' or cacheFolder.last() == '/')
+                    if (cacheFolder.last() == '\\' || cacheFolder.last() == '/')
                         cacheFolder.removeLast();
                     if (not cacheFolder.empty())
                     {
@@ -1331,7 +1331,7 @@ void RefreshListOfOutputsForTheCurrentStudy()
 
 bool StudyRenameArea(Data::Area* area, const AnyString& newname, Data::Study* study)
 {
-    if (!area or newname.empty())
+    if (!area || newname.empty())
         return false;
 
     auto currentstudy = Data::Study::Current::Get();
