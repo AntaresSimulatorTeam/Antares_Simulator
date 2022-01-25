@@ -70,6 +70,9 @@ public:
     FileListProvider(StudyLogs& frame);
     ~FileListProvider() override;
 
+    FileListProvider(const FileListProvider&) = delete;
+    FileListProvider& operator=(const FileListProvider&) = delete;
+
     void search(Spotlight::IItem::Vector& out,
                         const Spotlight::SearchToken::Vector& tokens,
                         const Yuni::String& text = "") override;
