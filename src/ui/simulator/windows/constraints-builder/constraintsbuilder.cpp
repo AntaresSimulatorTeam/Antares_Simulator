@@ -604,7 +604,7 @@ void ConstraintsBuilderWizard::onDelete(void*)
     if (not Data::Study::Current::Valid())
         return;
     auto studyptr = Data::Study::Current::Get();
-    if (not studyptr)
+    if (!studyptr)
         return;
     auto& study = *studyptr;
 

@@ -623,7 +623,7 @@ void SelectRenewableCluster(const Data::RenewableCluster* cluster)
 uint CopyToClipboard()
 {
     auto studyptr = Data::Study::Current::Get();
-    if (not studyptr || not gData)
+    if (!studyptr || !gData)
         return 0; // nothing was copied
 
     // alias to the current study

@@ -67,15 +67,14 @@ public:
     typedef Antares::Component::Spotlight Spotlight;
     typedef std::shared_ptr<FileListProvider> Ptr;
 
-public:
     FileListProvider(StudyLogs& frame);
-    virtual ~FileListProvider();
+    ~FileListProvider() override;
 
-    virtual void search(Spotlight::IItem::Vector& out,
+    void search(Spotlight::IItem::Vector& out,
                         const Spotlight::SearchToken::Vector& tokens,
                         const Yuni::String& text = "") override;
-    virtual bool onSelect(Spotlight::IItem::Ptr& item) override;
-    virtual bool onSelect(const Spotlight::IItem::Vector&) override;
+    bool onSelect(Spotlight::IItem::Ptr& item) override;
+    bool onSelect(const Spotlight::IItem::Vector&) override;
     void refreshFileList(bool showAll);
 
 private:

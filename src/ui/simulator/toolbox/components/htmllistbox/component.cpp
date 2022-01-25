@@ -286,7 +286,7 @@ void Component::updateHtmlContent()
     {
         for (uint i = 0; i < pListbox->GetCount(); ++i)
         {
-            auto* cd = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(i));
+            const auto* cd = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(i));
             if (cd)
                 pListbox->SetString(i, cd->item->htmlContent(wxEmptyString));
         }
@@ -298,7 +298,7 @@ void Component::onSelectionChanged(wxCommandEvent& evt)
     if (not GUIIsLock() && pListbox)
     {
         GUILocker locker;
-        auto* c = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(evt.GetSelection()));
+        const auto* c = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(evt.GetSelection()));
         if (c)
         {
             pLastSelectedItem = c->item;
@@ -312,7 +312,7 @@ void Component::onSelectionDblClick(wxCommandEvent& evt)
     if (not GUIIsLock() && pListbox)
     {
         GUILocker locker;
-        auto* c = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(evt.GetSelection()));
+        const auto* c = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(evt.GetSelection()));
         if (c)
         {
             pLastSelectedItem = c->item;

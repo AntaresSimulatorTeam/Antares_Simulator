@@ -48,34 +48,29 @@ class FileSearchProvider final : public Antares::Component::Spotlight::IProvider
 {
 public:
     //! The spotlight component (alias)
-    typedef Antares::Component::Spotlight Spotlight;
+    using Spotlight = Antares::Component::Spotlight;
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
     ** \brief Default constructor
     */
-    FileSearchProvider()
-    {
-    }
+    FileSearchProvider() = default;
     //! Destructor
-    virtual ~FileSearchProvider()
-    {
-    }
+    ~FileSearchProvider() override = default;
     //@}
 
     /*!
     ** \brief Perform a new search
     */
-    virtual void search(Spotlight::IItem::Vector& out,
-                        const Spotlight::SearchToken::Vector& tokens,
-                        const Yuni::String& text = "") override;
+    void search(Spotlight::IItem::Vector& out,
+                const Spotlight::SearchToken::Vector& tokens,
+                const Yuni::String& text = "") override;
 
     /*!
     ** \brief An item has been selected
     */
-    virtual bool onSelect(Spotlight::IItem::Ptr&) override;
+    bool onSelect(Spotlight::IItem::Ptr&) override;
 
     void onFileSearchAdd(const YString& filename);
 

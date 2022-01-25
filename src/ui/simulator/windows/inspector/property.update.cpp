@@ -60,7 +60,7 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
                                          const PropertyNameType& name,
                                          const wxVariant& value)
 {
-    InspectorData::Ptr& data = pCurrentSelection;
+    const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
 
@@ -222,7 +222,6 @@ bool InspectorGrid::onPropertyChanging_C(wxPGProperty*,
                                          const wxVariant& value)
 {
     // Reference to the current study
-    InspectorData::Ptr& data = pCurrentSelection;
     auto study = Data::Study::Current::Get();
 
     if (name == "common.study.name")
@@ -246,7 +245,7 @@ bool InspectorGrid::onPropertyChanging_L(wxPGProperty*,
                                          const PropertyNameType& name,
                                          const wxVariant& value)
 {
-    InspectorData::Ptr& data = pCurrentSelection;
+    const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
 
@@ -483,7 +482,7 @@ bool InspectorGrid::onPropertyChanging_Constraint(wxPGProperty*,
                                                   const PropertyNameType& name,
                                                   const wxVariant& value)
 {
-    InspectorData::Ptr& data = pCurrentSelection;
+    const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
     Data::BindingConstraint::Set::iterator end = data->constraints.end();
@@ -527,7 +526,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
                                                       const PropertyNameType& name,
                                                       const wxVariant& value)
 {
-    InspectorData::Ptr& data = pCurrentSelection;
+    const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
 
@@ -956,7 +955,7 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
                                                          const wxVariant& value)
 {
     using namespace Data;
-    InspectorData::Ptr& data = pCurrentSelection;
+    const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
 
@@ -1020,7 +1019,7 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
                                          const PropertyNameType& name,
                                          const wxVariant& value)
 {
-    InspectorData::Ptr& data = pCurrentSelection;
+    const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
 
