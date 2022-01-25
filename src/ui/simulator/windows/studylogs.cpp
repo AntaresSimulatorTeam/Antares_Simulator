@@ -142,12 +142,11 @@ inline void FindAllLogFiles(MapFileList& filelist, wxRegEx& regex, const AnyStri
 FileListProvider::FileListProvider(StudyLogs& frame) :
  pFrame(frame), pAutoTriggerSelection(true), pShowAll(false)
 {
-    pBmpFile = Resources::BitmapLoadFromFile("images/16x16/logs.png");
+    pBmpFile = std::shared_ptr<wxBitmap>(Resources::BitmapLoadFromFile("images/16x16/logs.png"));
 }
 
 FileListProvider::~FileListProvider()
 {
-    delete pBmpFile;
     destroyBoundEvents(); // avoid corrupt vtable
 }
 
@@ -174,7 +173,7 @@ void FileListProvider::search(Spotlight::IItem::Vector& out,
                     auto item = std::make_shared<LogFile>();
                     item->caption(i->first);
                     item->filename = i->second;
-                    item->image(pBmpFile);
+                    item->image(pBmpFile.get());
                     if (pAutoTriggerSelection)
                     {
                         pAutoTriggerSelection = false;
@@ -210,7 +209,7 @@ void FileListProvider::search(Spotlight::IItem::Vector& out,
                     auto item = std::make_shared<LogFile>();
                     item->caption(i->first);
                     item->filename = i->second;
-                    item->image(pBmpFile);
+                    item->image(pBmpFile.get());
                     out.push_back(item);
                 }
             }
@@ -238,7 +237,7 @@ void FileListProvider::search(Spotlight::IItem::Vector& out,
                         auto item = std::make_shared<LogFile>();
                         item->caption(i->first);
                         item->filename = i->second;
-                        item->image(pBmpFile);
+                        item->image(pBmpFile.get());
                         out.push_back(item);
                     }
                 }
@@ -268,7 +267,7 @@ void FileListProvider::search(Spotlight::IItem::Vector& out,
                         auto item = std::make_shared<LogFile>();
                         item->caption(i->first);
                         item->filename = i->second;
-                        item->image(pBmpFile);
+                        item->image(pBmpFile.get());
                         out.push_back(item);
                     }
 

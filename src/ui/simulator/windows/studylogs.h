@@ -87,7 +87,7 @@ private:
     bool pShowAll;
     MapFileList pAllSimuLogs;
     MapFileList pAllUILogs;
-    wxBitmap* pBmpFile;
+    std::shared_ptr<wxBitmap> pBmpFile;
 }; // class FileListProvider
 
 class StudyLogs final : public Component::Frame::WxLocalFrame
