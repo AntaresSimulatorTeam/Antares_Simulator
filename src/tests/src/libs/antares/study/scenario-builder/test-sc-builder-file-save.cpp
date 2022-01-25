@@ -94,6 +94,7 @@ struct commonFixture
     commonFixture& operator=(const commonFixture&& f) = delete;
     commonFixture()
     {
+        study = std::make_shared<Study>();
         // Set study parameters
         study->parameters.nbYears = 20;
         study->parameters.timeSeriesToGenerate
@@ -184,7 +185,7 @@ struct commonFixture
     ~commonFixture() = default;
 
     // Data members
-    std::shared_ptr<Study> study;;
+    std::shared_ptr<Study> study;
     Area* area_1;
     Area* area_2;
     Area* area_3;
