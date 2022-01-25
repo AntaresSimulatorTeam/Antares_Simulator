@@ -184,7 +184,7 @@ struct commonFixture
     ~commonFixture() = default;
 
     // Data members
-    Study::Ptr study = std::make_shared<Study>();
+    std::shared_ptr<Study> study;;
     Area* area_1;
     Area* area_2;
     Area* area_3;

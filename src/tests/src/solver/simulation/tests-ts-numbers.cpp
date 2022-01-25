@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE(test_compare_function_three_distinct_values_KO)
 BOOST_AUTO_TEST_CASE(two_areas_with_5_ready_made_ts_on_load___check_intra_modal_consistency_OK)
 {
 	// Creating a study
-    Study::Ptr study = std::make_shared<Study>();
+    auto study = std::make_shared<Study>();
 	initializeStudy(study);
 
 	study->parameters.intraModal |= timeSeriesLoad;
@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE(two_areas_with_5_ready_made_ts_on_load___check_intra_modal_
 static bool intermodal_load_two_areas(unsigned width_area_1, unsigned width_area_2)
 {
 	// Creating a study
-    Study::Ptr study = std::make_shared<Study>();
+    auto study = std::make_shared<Study>();
 	initializeStudy(study);
 
 	study->parameters.intraModal |= timeSeriesLoad;
@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE(two_areas_with_respectively_5_and_1_ready_made_ts_on_load__
 BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_same_number_of_ready_made_ts___check_intra_modal_consistency_OK)
 {
 	// Creating a study
-	Study::Ptr study = std::make_shared<Study>();
+	auto study = std::make_shared<Study>();
 	initializeStudy(study);
 
 	study->parameters.intraModal |= timeSeriesThermal;
@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_same_number_of_ready_made
 BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_respectively_4_1_4_ready_made_ts___check_intra_modal_consistency_OK)
 {
 	// Creating a study
-	Study::Ptr study = std::make_shared<Study>();
+	auto study = std::make_shared<Study>();
 	initializeStudy(study);
 
 	study->parameters.intraModal |= timeSeriesThermal;
@@ -240,7 +240,7 @@ BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_respectively_4_1_4_ready_
 BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_different_number_of_ready_made_ts___check_intra_modal_consistency_KO)
 {
 	// Creating a study
-	Study::Ptr study = std::make_shared<Study>();
+	auto study = std::make_shared<Study>();
 	initializeStudy(study);
 
 	study->parameters.intraModal |= timeSeriesThermal;
@@ -277,7 +277,7 @@ BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_different_number_of_ready
 BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_same_number_of_ready_made_ts___check_intra_modal_consistency_OK)
 {
 	// Creating a study
-	Study::Ptr study = std::make_shared<Study>();
+	auto study = std::make_shared<Study>();
 	initializeStudy(study);
 
 	study->parameters.intraModal |= timeSeriesRenewable;
@@ -319,7 +319,7 @@ BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_same_number_of_ready_made_t
 BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_respectively_4_4_1_ready_made_ts___check_intra_modal_consistency_OK)
 {
 	// Creating a study
-	Study::Ptr study = std::make_shared<Study>();
+	auto study = std::make_shared<Study>();
 	initializeStudy(study);
 
 	study->parameters.intraModal |= timeSeriesRenewable;
@@ -360,7 +360,7 @@ BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_respectively_4_4_1_ready_ma
 BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_different_number_of_ready_made_ts___check_intra_modal_consistency_KO)
 {
 	// Creating a study
-	Study::Ptr study = std::make_shared<Study>();
+	auto study = std::make_shared<Study>();
 	initializeStudy(study);
 
 	study->parameters.intraModal |= timeSeriesRenewable;
@@ -401,7 +401,7 @@ BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_different_number_of_ready_m
 BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__same_nb_of_ts____check_inter_modal_consistency_OK)
 {
 	// Creating a study
-	Study::Ptr study = std::make_shared<Study>();
+	auto study = std::make_shared<Study>();
 	initializeStudy(study);
 
 	study->parameters.interModal |= timeSeriesLoad;
@@ -439,7 +439,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__same
 BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__same_nb_of_ts_except_1_for_load_check_inter_modal_consistency_OK)
 {
 	// Creating a study
-	Study::Ptr study = std::make_shared<Study>();
+	auto study = std::make_shared<Study>();
 	initializeStudy(study);
 
 	study->parameters.interModal |= timeSeriesLoad;
@@ -477,7 +477,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__same
 BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__different_nb_of_ts____check_inter_modal_consistency_KO)
 {
 	// Creating a study
-	Study::Ptr study = std::make_shared<Study>();
+	auto study = std::make_shared<Study>();
 	initializeStudy(study);
 
 	study->parameters.interModal |= timeSeriesLoad;
@@ -509,7 +509,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__diff
 BOOST_AUTO_TEST_CASE(one_area__load_renewable_are_turned_to_inter_modal__same_nb_of_ts____check_inter_modal_consistency_OK)
 {
 	// Creating a study
-	Study::Ptr study = std::make_shared<Study>();
+	auto study = std::make_shared<Study>();
 	initializeStudy(study);
 
 	study->parameters.renewableGeneration.toClusters();
@@ -540,7 +540,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_renewable_are_turned_to_inter_modal__same_nb
 BOOST_AUTO_TEST_CASE(one_area__load_renewable_are_turned_to_inter_modal__different_nb_of_ts____check_inter_modal_consistency_KO)
 {
 	// Creating a study
-	Study::Ptr study = std::make_shared<Study>();
+	auto study = std::make_shared<Study>();
 	initializeStudy(study);
 
 	study->parameters.renewableGeneration.toClusters();
@@ -567,7 +567,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_renewable_are_turned_to_inter_modal__differe
 BOOST_AUTO_TEST_CASE(one_area__load_renewable_are_turned_to_inter_modal_with_respectively_5_1_TS____check_inter_modal_consistency_KO)
 {
 	// Creating a study
-	Study::Ptr study = std::make_shared<Study>();
+	auto study = std::make_shared<Study>();
 	initializeStudy(study);
 
 	study->parameters.renewableGeneration.toClusters();
@@ -598,7 +598,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_renewable_are_turned_to_inter_modal_with_res
 BOOST_AUTO_TEST_CASE(load_wind_thermal_in_intra_and_inter_modal____check_all_ts_numbers_are_equal)
 {
 	// Creating a study
-	Study::Ptr study = std::make_shared<Study>();
+	auto study = std::make_shared<Study>();
 	initializeStudy(study);
 
 	// Intra-modal for load, wind and thermal
@@ -659,7 +659,7 @@ BOOST_AUTO_TEST_CASE(load_wind_thermal_in_intra_and_inter_modal____check_all_ts_
 BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_ts)
 {
 	// Creating a study
-	Study::Ptr study = std::make_shared<Study>();
+	auto study = std::make_shared<Study>();
 	initializeStudy(study);
 
 	// Generated TS for everyone

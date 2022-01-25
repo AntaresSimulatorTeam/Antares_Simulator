@@ -29,7 +29,7 @@
 
 #include <antares/wx-wrapper.h>
 #include "../renderer.h"
-#include <memory.h>
+#include <memory>
 #include <antares/study.h>
 
 namespace Antares
