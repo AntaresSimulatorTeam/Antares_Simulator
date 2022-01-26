@@ -352,6 +352,12 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
     if (warning && area->id > with->id)
         logs.warning() << "Link: `" << area->id << "` - `" << with->id << "`: Invalid orientation";
 
+    if (area->id == with->id)
+    {
+        logs.error() << "The area named '" << area->id << "' has a link to itself";
+        return nullptr;
+    }
+
     AreaLink* link = new AreaLink();
     link->from = area;
     link->with = with;
