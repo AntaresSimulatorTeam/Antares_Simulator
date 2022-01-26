@@ -95,7 +95,7 @@ WritingProgressFile::WritingProgressFile(const Yuni::String& file) :
 {
 }
 
-static std::string buildInvalidParametersMessage(const std::map<int, Yuni::String>& clusterNames)
+std::string InvalidParametersForThermalClusters::buildMessage(const std::map<int, Yuni::String>& clusterNames) const
 {
     const std::string startMessage("Conflict between Min Stable Power, Pnom, spinning and capacity "
                                    "modulation for the following clusters : ");
@@ -112,7 +112,7 @@ static std::string buildInvalidParametersMessage(const std::map<int, Yuni::Strin
 
 InvalidParametersForThermalClusters::InvalidParametersForThermalClusters(
   const std::map<int, Yuni::String>& clusterNames) :
- LoadingError(buildInvalidParametersMessage(clusterNames))
+ LoadingError(buildMessage(clusterNames))
 {
 }
 
