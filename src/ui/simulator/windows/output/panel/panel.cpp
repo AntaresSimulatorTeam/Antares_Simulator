@@ -500,7 +500,7 @@ std::shared_ptr<Yuni::Mutex> ProvideLockingForFileLocking(const YString& filenam
     Yuni::MutexLocker locker(mutexToAccessToLockFiles);
     auto& ptr = mutexForFiles[filename];
     if (!ptr)
-        ptr = std::shared_ptr<Yuni::Mutex>();
+        ptr = std::make_shared<Yuni::Mutex>();
     return ptr;
 }
 
