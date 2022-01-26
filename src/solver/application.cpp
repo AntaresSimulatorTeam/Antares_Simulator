@@ -167,7 +167,11 @@ void Application::prepare(int argc, char* argv[])
     options.usedByTheSolver = true;
 
     // Parse arguments and store usefull values
-    GrabOptionsFromCommandLine(argc, argv, pSettings, options);
+    auto parser = CreateParser(pSettings, options);
+
+    // Ask to parse the command line
+    if (!parser(argc, argv))
+        throw Error::CommandLineArguments(parser.errors());
 
     if (options.displayVersion)
     {

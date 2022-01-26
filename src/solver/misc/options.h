@@ -29,6 +29,8 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+#include <yuni/core/getopt.h>
+
 #include <antares/study/study.h>
 
 /*!
@@ -69,10 +71,7 @@ public:
 /*!
 ** \brief Interprete options given in command line
 */
-void GrabOptionsFromCommandLine(int argc,
-                                char* argv[],
-                                Settings& settings,
-                                Antares::Data::StudyLoadOptions& options);
+Yuni::GetOpt::Parser CreateParser(Settings& settings, Antares::Data::StudyLoadOptions& options);
 
 void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options);
 

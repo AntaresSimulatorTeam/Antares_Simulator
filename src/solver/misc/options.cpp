@@ -27,7 +27,6 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/system/process.h>
-#include <yuni/core/getopt.h>
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
 
@@ -70,10 +69,7 @@ static std::string availableOrToolsSolversString()
     return availableSolverListStr;
 }
 
-void GrabOptionsFromCommandLine(int argc,
-                                char* argv[],
-                                Settings& settings,
-                                Antares::Data::StudyLoadOptions& options)
+GetOpt::Parser CreateParser(Settings& settings, Antares::Data::StudyLoadOptions& options)
 {
     settings.reset();
 
@@ -194,9 +190,7 @@ void GrabOptionsFromCommandLine(int argc,
 
     parser.remainingArguments(options.studyFolder);
 
-    // Ask to parse the command line
-    if (!parser(argc, argv))
-        throw Error::CommandLineArguments(parser.errors());
+    return parser;
 }
 
 void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options)
