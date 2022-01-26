@@ -159,6 +159,24 @@ static void TheSimulationIsComplete(const wxString& duration)
     }
 }
 
+static void finalizeSaveExport(Data::Study::Ptr study, Forms::ApplWnd& frame)
+{
+    Menu::AddRecentFile(frame.menuRecentFiles(),
+                        wxStringFromUTF8(study->header.caption),
+                        wxStringFromUTF8(study->folder));
+
+    // Rebuild the menu
+    Menu::RebuildRecentFiles(frame.menuRecentFiles());
+
+    gLastOpenedStudyFolder = wxStringFromUTF8(study->folder);
+
+    RefreshListOfOutputsForTheCurrentStudy();
+
+    frame.refreshMenuInput();
+    frame.refreshMenuOptions(study);
+    frame.refreshStudyLogs();
+}
+
 namespace // anonymous
 {
 class JobOpenStudy final : public Toolbox::Jobs::Job
@@ -906,21 +924,7 @@ SaveResult SaveStudyAs(const String& path, bool copyoutput, bool copyuserdata, b
         OnStudySavedAs();
     }
 
-    Menu::AddRecentFile(mainFrm.menuRecentFiles(),
-                        wxStringFromUTF8(study->header.caption),
-                        wxStringFromUTF8(study->folder));
-
-    // Rebuild the menu
-    Menu::RebuildRecentFiles(mainFrm.menuRecentFiles());
-
-    gLastOpenedStudyFolder = wxStringFromUTF8(study->folder);
-
-    RefreshListOfOutputsForTheCurrentStudy();
-
-    mainFrm.refreshMenuInput();
-    mainFrm.refreshMenuOptions(study);
-    mainFrm.refreshStudyLogs();
-
+    finalizeSaveExport(study, mainFrm);
     return svsSaved;
 }
 
@@ -978,21 +982,7 @@ SaveResult ExportMap(const Yuni::String& path,
         OnStudySavedAs();
     }
 
-    Menu::AddRecentFile(mainFrm.menuRecentFiles(),
-                        wxStringFromUTF8(study->header.caption),
-                        wxStringFromUTF8(study->folder));
-
-    // Rebuild the menu
-    Menu::RebuildRecentFiles(mainFrm.menuRecentFiles());
-
-    gLastOpenedStudyFolder = wxStringFromUTF8(study->folder);
-
-    RefreshListOfOutputsForTheCurrentStudy();
-
-    mainFrm.refreshMenuInput();
-    mainFrm.refreshMenuOptions(study);
-    mainFrm.refreshStudyLogs();
-
+    finalizeSaveExport(study, mainFrm);
     return svsSaved;
 }
 
