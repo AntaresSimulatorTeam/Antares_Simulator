@@ -166,10 +166,16 @@ void Application::prepare(int argc, char* argv[])
     Data::StudyLoadOptions options;
     options.usedByTheSolver = true;
 
-    // Parse arguments and store usefull values
+    // Bind pSettings / options members to command line arguments
+    // Something like bind("--foo", options.foo);
+    // So that option.foo will be assigned <value>
+    // if the user provides --foo <value>.
+    // CAUTION
+    // The parser contains references to members of pSettings and options,
+    // don't de-allocate these.
     auto parser = CreateParser(pSettings, options);
 
-    // Ask to parse the command line
+    // Parse the command line arguments
     if (!parser(argc, argv))
         throw Error::CommandLineArguments(parser.errors());
 
@@ -180,11 +186,11 @@ void Application::prepare(int argc, char* argv[])
         return;
     }
 
+    // Perform some checks
     checkAndCorrectSettingsAndOptions(pSettings, options);
 
     pSettings.checkAndSetStudyFolder(options.studyFolder);
 
-    // Checking the version
     checkStudyVersion(pSettings.studyFolder);
 
     // Determine the log filename to use for this simulation
@@ -223,8 +229,8 @@ void Application::prepare(int argc, char* argv[])
     // Loading the study
     readDataForTheStudy(options);
 
-    // LISTE DE CHECKS ...
-
+    // Some more checks require the existence of pParameters, hence of a study.
+    // Their execution is delayed up to this point.
     checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
                                   pParameters->hydroPricing.hpMode);
 
@@ -233,7 +239,6 @@ void Application::prepare(int argc, char* argv[])
 
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
-    // CHECK MinStablePower
     bool tsGenThermal = (0
                          != (pStudy->parameters.timeSeriesToGenerate
                              & Antares::Data::TimeSeries::timeSeriesThermal));

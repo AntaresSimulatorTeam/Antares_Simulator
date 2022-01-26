@@ -188,6 +188,8 @@ GetOpt::Parser CreateParser(Settings& settings, Antares::Data::StudyLoadOptions&
     parser.addFlag(
       options.displayVersion, 'v', "version", "Print the version of the solver and exit");
 
+    // The last argument is the study folder.
+    // Unlike all other arguments, it does not need to be given after a --flag.
     parser.remainingArguments(options.studyFolder);
 
     return parser;
