@@ -94,16 +94,17 @@ struct commonFixture
     commonFixture& operator=(const commonFixture&& f) = delete;
     commonFixture()
     {
+        study = std::make_shared<Study>();
         // Set study parameters
-        study.parameters.nbYears = 20;
-        study.parameters.timeSeriesToGenerate
+        study->parameters.nbYears = 20;
+        study->parameters.timeSeriesToGenerate
           = 0; // No generated time-series, only ready made time-series
 
         // Add areas
-        area_1 = study.areaAdd("Area 1");
-        area_2 = study.areaAdd("Area 2");
-        area_3 = study.areaAdd("Area 3");
-        study.areas.rebuildIndexes();
+        area_1 = study->areaAdd("Area 1");
+        area_2 = study->areaAdd("Area 2");
+        area_3 = study->areaAdd("Area 3");
+        study->areas.rebuildIndexes();
 
         // Load : set the nb of ready made TS
         uint nbReadyMadeTS = 13;
@@ -170,21 +171,21 @@ struct commonFixture
         area_3->renewable.prepareAreaWideIndexes();
 
         // Resize all TS numbers storage (1 column x nbYears lines)
-        area_1->resizeAllTimeseriesNumbers(study.parameters.nbYears);
-        area_2->resizeAllTimeseriesNumbers(study.parameters.nbYears);
-        area_3->resizeAllTimeseriesNumbers(study.parameters.nbYears);
+        area_1->resizeAllTimeseriesNumbers(study->parameters.nbYears);
+        area_2->resizeAllTimeseriesNumbers(study->parameters.nbYears);
+        area_3->resizeAllTimeseriesNumbers(study->parameters.nbYears);
 
         // Scenario builder initialization
-        study.scenarioRules = new ScenarioBuilder::Sets();
-        study.scenarioRules->setStudy(study);
-        my_rule = study.scenarioRules->createNew("my rule name");
+        study->scenarioRules = new ScenarioBuilder::Sets();
+        study->scenarioRules->setStudy(*study);
+        my_rule = study->scenarioRules->createNew("my rule name");
         BOOST_CHECK(my_rule->reset());
     }
 
     ~commonFixture() = default;
 
     // Data members
-    Study study;
+    std::shared_ptr<Study> study;
     Area* area_1;
     Area* area_2;
     Area* area_3;
@@ -221,7 +222,7 @@ struct saveFixture : public commonFixture
 
 void saveFixture::saveScenarioBuilder()
 {
-    study.scenarioRules->saveToINIFile(path_to_generated_file);
+    study->scenarioRules->saveToINIFile(path_to_generated_file);
 }
 
 saveFixture::~saveFixture()
