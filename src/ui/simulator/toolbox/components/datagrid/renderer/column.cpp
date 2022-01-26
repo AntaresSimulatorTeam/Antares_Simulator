@@ -28,6 +28,9 @@
 
 #include "column.h"
 #include "cell.h"
+#include <antares/memory/new_check.hxx>
+
+using namespace Antares::MemoryUtils;
 
 // Anonymous namespace
 namespace
@@ -55,7 +58,8 @@ namespace Renderer
 // -------------------
 // Base column class
 // -------------------
-Column::Column(Antares::Data::TimeSeries ts, wxString c) : tsKind_(ts), caption_(c)
+Column::Column(Antares::Data::TimeSeries ts, const wxString& caption) :
+ tsKind_(ts), caption_(caption)
 {
 }
 
@@ -76,27 +80,27 @@ int Column::getNumberOfLines() const
 
 Column::~Column()
 {
-    for (auto& c : cells_)
-        delete c;
+    for (auto& cell : cells_)
+        delete cell;
 }
 // -------------------- -
 // Classic column
 // ---------------------
-classicColumn::classicColumn(TimeSeries ts, wxString c) : Column(ts, c)
+classicColumn::classicColumn(TimeSeries ts, const wxString& caption) : Column(ts, caption)
 {
-    cells_ = {::factory<blankCell>(),
-              ::factory<readyMadeTSstatus>(tsKind_),
-              ::factory<blankCell>(),
-              ::factory<generatedTSstatus>(tsKind_),
-              ::factory<NumberTsCell>(tsKind_),
-              ::factory<RefreshTsCell>(tsKind_),
-              ::factory<RefreshSpanCell>(tsKind_),
-              ::factory<SeasonalCorrelationCell>(tsKind_),
-              ::factory<storeToInputCell>(tsKind_),
-              ::factory<storeToOutputCell>(tsKind_),
-              ::factory<blankCell>(),
-              ::factory<intraModalCell>(tsKind_),
-              ::factory<interModalCell>(tsKind_)};
+    cells_ = {new_check_allocation<blankCell>(),
+              new_check_allocation<readyMadeTSstatus>(tsKind_),
+              new_check_allocation<blankCell>(),
+              new_check_allocation<generatedTSstatus>(tsKind_),
+              new_check_allocation<NumberTsCell>(tsKind_),
+              new_check_allocation<RefreshTsCell>(tsKind_),
+              new_check_allocation<RefreshSpanCell>(tsKind_),
+              new_check_allocation<SeasonalCorrelationCell>(tsKind_),
+              new_check_allocation<storeToInputCell>(tsKind_),
+              new_check_allocation<storeToOutputCell>(tsKind_),
+              new_check_allocation<blankCell>(),
+              new_check_allocation<intraModalCell>(tsKind_),
+              new_check_allocation<interModalCell>(tsKind_)};
 }
 
 // -------------------
@@ -104,19 +108,19 @@ classicColumn::classicColumn(TimeSeries ts, wxString c) : Column(ts, c)
 // -------------------
 thermalColumn::thermalColumn() : Column(timeSeriesThermal, "   Thermal   ")
 {
-    cells_ = {::factory<blankCell>(),
-              ::factory<readyMadeTSstatus>(tsKind_),
-              ::factory<blankCell>(),
-              ::factory<generatedTSstatus>(tsKind_),
-              ::factory<NumberTsCellThermal>(),
-              ::factory<RefreshTsCellThermal>(),
-              ::factory<RefreshSpanCellThermal>(),
-              ::factory<SeasonalCorrelationCellThermal>(),
-              ::factory<storeToInputCell>(tsKind_),
-              ::factory<storeToOutputCell>(tsKind_),
-              ::factory<blankCell>(),
-              ::factory<intraModalCell>(tsKind_),
-              ::factory<interModalCell>(tsKind_)};
+    cells_ = {new_check_allocation<blankCell>(),
+              new_check_allocation<readyMadeTSstatus>(tsKind_),
+              new_check_allocation<blankCell>(),
+              new_check_allocation<generatedTSstatus>(tsKind_),
+              new_check_allocation<NumberTsCellThermal>(),
+              new_check_allocation<RefreshTsCellThermal>(),
+              new_check_allocation<RefreshSpanCellThermal>(),
+              new_check_allocation<SeasonalCorrelationCellThermal>(),
+              new_check_allocation<storeToInputCell>(tsKind_),
+              new_check_allocation<storeToOutputCell>(tsKind_),
+              new_check_allocation<blankCell>(),
+              new_check_allocation<intraModalCell>(tsKind_),
+              new_check_allocation<interModalCell>(tsKind_)};
 }
 
 // -------------------------------
@@ -124,20 +128,41 @@ thermalColumn::thermalColumn() : Column(timeSeriesThermal, "   Thermal   ")
 // -------------------------------
 ColumnRenewableClusters::ColumnRenewableClusters() : Column(timeSeriesRenewable, "   Renewable   ")
 {
-    cells_ = {::factory<blankCell>(),
-              ::factory<inactiveRenewableClusterCell>(wxT("On")),
-              ::factory<inactiveRenewableClusterCell>(wxT("-")),
-              ::factory<inactiveRenewableClusterCell>(wxT("-")),
-              ::factory<inactiveRenewableClusterCell>(wxT("-")),
-              ::factory<inactiveRenewableClusterCell>(wxT("-")),
-              ::factory<inactiveRenewableClusterCell>(wxT("-")),
-              ::factory<inactiveRenewableClusterCell>(wxT("-")),
-              ::factory<inactiveRenewableClusterCell>(wxT("-")),
-              ::factory<inactiveRenewableClusterCell>(wxT("-")),
-              ::factory<blankCell>(),
-              ::factory<intraModalCell>(tsKind_),
-              ::factory<interModalCell>(tsKind_)};
+    cells_ = {new_check_allocation<blankCell>(),
+              new_check_allocation<inactiveCell>(wxT("On")),
+              new_check_allocation<inactiveCell>(wxT("-")),
+              new_check_allocation<inactiveCell>(wxT("-")),
+              new_check_allocation<inactiveCell>(wxT("-")),
+              new_check_allocation<inactiveCell>(wxT("-")),
+              new_check_allocation<inactiveCell>(wxT("-")),
+              new_check_allocation<inactiveCell>(wxT("-")),
+              new_check_allocation<inactiveCell>(wxT("-")),
+              new_check_allocation<inactiveCell>(wxT("-")),
+              new_check_allocation<blankCell>(),
+              new_check_allocation<intraModalCell>(tsKind_),
+              new_check_allocation<interModalCell>(tsKind_)};
 }
+
+// -------------------------------
+// Column for NTC
+// -------------------------------
+ColumnNTC::ColumnNTC() : Column(timeSeriesTransmissionCapacities, "  Links NTC  ")
+{
+    cells_ = {new_check_allocation<blankCell>(),
+              new_check_allocation<inactiveCell>(wxT("On")),
+              new_check_allocation<inactiveCell>(wxT("-")),
+              new_check_allocation<inactiveCell>(wxT("-")),
+              new_check_allocation<inactiveCell>(wxT("-")),
+              new_check_allocation<inactiveCell>(wxT("-")),
+              new_check_allocation<inactiveCell>(wxT("-")),
+              new_check_allocation<inactiveCell>(wxT("-")),
+              new_check_allocation<inactiveCell>(wxT("-")),
+              new_check_allocation<inactiveCell>(wxT("-")),
+              new_check_allocation<blankCell>(),
+              new_check_allocation<intraModalCell>(tsKind_),
+              new_check_allocation<inactiveCell>(wxT("-"))};
+}
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

@@ -274,11 +274,12 @@ void SIM_RenseignementValeursPourTouteLAnnee(const Antares::Data::Study& study, 
     }
 }
 
-void SIM_RenseignementProblemeHoraireAdequation(long Heure)
+void SIM_RenseignementProblemeHoraireAdequation(uint Heure)
 {
-    auto& study = *Data::Study::Current::Get();
+    auto study = Data::Study::Current::Get();
+    const uint numSpace = 0; // numSpace is always 0 in adq-draft
 
-    for (uint i = 0; i < study.areas.size(); i++)
+    for (uint i = 0; i < study->areas.size(); i++)
     {
         DONNEES_ADEQUATION& PtHoraire = *(ProblemeHoraireAdequation.DonneesParPays[i]);
         const VALEURS_ANNUELLES& PtAnnuel = *(ValeursAnnuellesAdequation[i]);
@@ -295,19 +296,19 @@ void SIM_RenseignementProblemeHoraireAdequation(long Heure)
     for (long i = 0; i < ProblemeHoraireAdequation.NombreDElementsChainage; ++i)
     {
         double NTCAPrendre = ProblemeHoraireAdequation.QuellesNTCPrendre[i];
+
         if (fabs(NTCAPrendre) > 0.5)
         {
+            const uint linkIdx = static_cast<uint>(fabs(NTCAPrendre) - 1);
+            const AreaLink* link = study->runtime->areaLink[linkIdx];
+            uint tsIndex = NumeroChroniquesTireesParInterconnexion[numSpace][linkIdx].TransmissionCapacities;
             if (NTCAPrendre > 0.)
             {
-                ProblemeHoraireAdequation.ValeursEffectivesNTC[i]
-                  = study.runtime->areaLink[(long)(fabs(NTCAPrendre) - 1)]
-                      ->data.entry[fhlNTCIndirect][Heure];
+               ProblemeHoraireAdequation.ValeursEffectivesNTC[i] = link->indirectCapacities[tsIndex][Heure];
             }
             if (NTCAPrendre < 0.)
             {
-                ProblemeHoraireAdequation.ValeursEffectivesNTC[i]
-                  = study.runtime->areaLink[(long)(fabs(NTCAPrendre) - 1)]
-                      ->data.entry[fhlNTCDirect][Heure];
+                ProblemeHoraireAdequation.ValeursEffectivesNTC[i] = link->directCapacities[tsIndex][Heure];
             }
         }
     }

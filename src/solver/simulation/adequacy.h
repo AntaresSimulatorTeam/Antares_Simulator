@@ -96,7 +96,6 @@ protected:
     void initializeState(Variable::State& state, uint numSpace);
 
 private:
-    AvgExchangeResults* callbackRetrieveBalanceData(Data::Area* area);
     bool simplexIsRequired(uint hourInTheYear, uint numSpace) const;
 
 private:

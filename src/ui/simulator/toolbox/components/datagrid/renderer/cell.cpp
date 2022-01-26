@@ -67,7 +67,7 @@ double blankCell::cellNumericValue() const
 {
     return 0.;
 }
-bool blankCell::cellValue(const String& value)
+bool blankCell::setCellValue(const String& value)
 {
     return false;
 }
@@ -76,27 +76,27 @@ IRenderer::CellStyle blankCell::cellStyle() const
     return IRenderer::cellStyleDefaultDisabled;
 }
 
-// =================================
-// Inactive renewable cluster cell
-// =================================
-inactiveRenewableClusterCell::inactiveRenewableClusterCell(wxString toPrintInCell) :
+// ========================
+// Inactive cell
+// ========================
+inactiveCell::inactiveCell(wxString toPrintInCell) :
  Cell(timeSeriesCount /*arbitrary, not used here anyway */), toBePrintedInCell_(toPrintInCell)
 {
 }
 
-wxString inactiveRenewableClusterCell::cellValue() const
+wxString inactiveCell::cellValue() const
 {
     return toBePrintedInCell_;
 }
-double inactiveRenewableClusterCell::cellNumericValue() const
+double inactiveCell::cellNumericValue() const
 {
     return 0.;
 }
-bool inactiveRenewableClusterCell::cellValue(const String& value)
+bool inactiveCell::setCellValue(const String& value)
 {
     return false;
 }
-IRenderer::CellStyle inactiveRenewableClusterCell::cellStyle() const
+IRenderer::CellStyle inactiveCell::cellStyle() const
 {
     return IRenderer::cellStyleDisabled;
 }
@@ -116,7 +116,7 @@ double readyMadeTSstatus::cellNumericValue() const
 {
     return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_)) ? 0 : 1.;
 }
-bool readyMadeTSstatus::cellValue(const String& value)
+bool readyMadeTSstatus::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
@@ -150,7 +150,7 @@ double generatedTSstatus::cellNumericValue() const
 {
     return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_)) ? 1. : 0.;
 }
-bool generatedTSstatus::cellValue(const String& value)
+bool generatedTSstatus::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
@@ -201,7 +201,7 @@ double NumberTsCell::cellNumericValue() const
     return to_return;
 }
 
-bool NumberTsCell::cellValue(const String& value)
+bool NumberTsCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
@@ -252,7 +252,7 @@ double RefreshTsCell::cellNumericValue() const
     return (0 != (study_->parameters.timeSeriesToRefresh & tsKind_)) ? 1. : 0.;
 }
 
-bool RefreshTsCell::cellValue(const String& value)
+bool RefreshTsCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
@@ -304,7 +304,7 @@ double RefreshSpanCell::cellNumericValue() const
     return to_return;
 }
 
-bool RefreshSpanCell::cellValue(const String& value)
+bool RefreshSpanCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
@@ -364,7 +364,7 @@ double SeasonalCorrelationCell::cellNumericValue() const
     return (mode == Data::Correlation::modeAnnual) ? 1. : -1.;
 }
 
-bool SeasonalCorrelationCell::cellValue(const String& value)
+bool SeasonalCorrelationCell::setCellValue(const String& value)
 {
     double valueDouble;
     bool convertToDoubleValid = convertToDouble(value, valueDouble);
@@ -414,7 +414,7 @@ double storeToInputCell::cellNumericValue() const
     return (0 != (study_->parameters.timeSeriesToImport & tsKind_)) ? 1. : 0.;
 }
 
-bool storeToInputCell::cellValue(const String& value)
+bool storeToInputCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
@@ -456,7 +456,7 @@ double storeToOutputCell::cellNumericValue() const
     return (0 != (study_->parameters.timeSeriesToArchive & tsKind_)) ? 1. : 0.;
 }
 
-bool storeToOutputCell::cellValue(const String& value)
+bool storeToOutputCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
@@ -498,7 +498,7 @@ double intraModalCell::cellNumericValue() const
     return (0 != (study_->parameters.intraModal & tsKind_)) ? 1. : 0.;
 }
 
-bool intraModalCell::cellValue(const String& value)
+bool intraModalCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
@@ -534,7 +534,7 @@ double interModalCell::cellNumericValue() const
     return (0 != (study_->parameters.interModal & tsKind_)) ? 1. : 0.;
 }
 
-bool interModalCell::cellValue(const String& value)
+bool interModalCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))

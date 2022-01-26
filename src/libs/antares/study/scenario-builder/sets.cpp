@@ -48,6 +48,12 @@ Sets::~Sets()
 {
 }
 
+void Sets::setStudy(Study& study)
+{
+    pStudy = &study;
+    assert(pStudy && "Invalid study");
+}
+
 void Sets::clear()
 {
     assert(pStudy && "Invalid study");
@@ -59,9 +65,7 @@ bool Sets::loadFromStudy(Study& study)
     if (not study.usedByTheSolver)
         logs.info() << "  Loading data for the scenario builder overlay";
 
-    // Reset / clear
-    pStudy = &study;
-    assert(pStudy && "Invalid study");
+    setStudy(study);
 
     // Loading from the INI file
     String filename;
@@ -89,9 +93,9 @@ Rules::Ptr Sets::createNew(const RulesScenarioName& name)
         return nullptr;
 
     // The rule set does not exist, creating a new empty one
-    Rules::Ptr newRulesSet = new Rules();
-    newRulesSet->reset(*pStudy);
-    newRulesSet->pName = name;
+    Rules::Ptr newRulesSet = new Rules(*pStudy);
+    newRulesSet->reset();
+    newRulesSet->setName(name);
     pMap[id] = newRulesSet;
     return newRulesSet;
 }
@@ -111,7 +115,7 @@ Rules::Ptr Sets::rename(const RulesScenarioName& lname, const RulesScenarioName&
         return nullptr;
     Rules::Ptr rules = i->second;
     pMap.erase(i);
-    rules->pName = newname;
+    rules->setName(newname);
     pMap[id] = rules;
     return rules;
 }
@@ -156,7 +160,7 @@ bool Sets::internalSaveToIniFile(const AnyString& filename) const
         // Export the informations of the current ruleset
         const Rules::Ptr& ruleset = i->second;
         if (!(!ruleset))
-            ruleset->saveToINIFile(*pStudy, file);
+            ruleset->saveToINIFile(file);
     }
     return true;
 }
@@ -184,13 +188,12 @@ bool Sets::internalLoadFromINIFile(const AnyString& filename)
         // Create a new ruleset
         Rules::Ptr rulesetptr = createNew(name);
         Rules& ruleset = *rulesetptr;
-        AreaName::Vector instrs;
+        AreaName::Vector splitKey;
 
         for (auto* p = section.firstProperty; p != nullptr; p = p->next)
         {
-            p->key.split(instrs, ",", true, false);
-            if (instrs.size() > 2)
-                ruleset.loadFromInstrs(*pStudy, instrs, p->value, inUpdaterMode);
+            p->key.split(splitKey, ",", true, false);
+            ruleset.readLine(splitKey, p->value, inUpdaterMode);
         }
 
         ruleset.sendWarningsForDisabledClusters();

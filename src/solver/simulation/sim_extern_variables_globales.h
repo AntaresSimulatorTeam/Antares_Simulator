@@ -40,6 +40,7 @@ extern char AppelEnModeSimulateur;
 /* Valeurs generees de maniere aleatoire */
 extern VALEURS_GENEREES_PAR_PAYS*** ValeursGenereesParPays;
 extern NUMERO_CHRONIQUES_TIREES_PAR_PAYS*** NumeroChroniquesTireesParPays;
+extern NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION** NumeroChroniquesTireesParInterconnexion;
 
 /* Optimisation */
 /*-Economique-*/

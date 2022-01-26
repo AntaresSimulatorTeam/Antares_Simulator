@@ -84,7 +84,7 @@ struct Fixture
 
 	~Fixture() 
 	{
-		vector<string> filesToRemove = { "area 2.txt", generatedIniFileName, referenceIniFileName };
+		vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
 		remove_files(filesToRemove);
 	}
 
@@ -96,20 +96,18 @@ struct Fixture
 AreaLink* createLinkBetweenAreas(Area* a1, Area* a2)
 {
 	AreaLink* link = AreaAddLinkBetweenAreas(a1, a2, false);
-	link->data.resize(0, 0);	// Reduce size of link's time-series dump to 0 Ko
 	return link;
 }
 
 void saveAreaLinksOntoDisk(Area* area)
 {
-	BOOST_CHECK(AreaLinksSaveToFolder(area, fs::current_path().string().c_str()));
+	BOOST_CHECK(saveAreaLinksConfigurationFileToFolder(area, fs::current_path().string().c_str()));
 }
 
 BOOST_FIXTURE_TEST_SUITE(s, Fixture)
 
 BOOST_AUTO_TEST_CASE(one_link_with_default_values)
 {
-	
 	createLinkBetweenAreas(area_1, area_2);
 
 	saveAreaLinksOntoDisk(area_1);

@@ -91,6 +91,8 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS
 		toolbox/components/datagrid/renderer/scenario-builder-solar-renderer.h
 		toolbox/components/datagrid/renderer/scenario-builder-hydro-levels-renderer.h
 		toolbox/components/datagrid/renderer/scenario-builder-hydro-levels-renderer.cpp
+		toolbox/components/datagrid/renderer/scenario-builder-ntc-renderer.h
+		toolbox/components/datagrid/renderer/scenario-builder-ntc-renderer.cpp
 		toolbox/components/datagrid/renderer/layers.cpp
 		toolbox/components/datagrid/renderer/layers.h
 		)

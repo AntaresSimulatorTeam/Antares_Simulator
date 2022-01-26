@@ -732,3 +732,15 @@ def test_ts_gen_select_thermal_cluster_refresh_force_gen(use_ortools, ortools_so
     study_path = ALL_STUDIES_PATH / "short-tests" / "Thermal refresh/"
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     check_output_values(study_path)
+
+@pytest.mark.short
+def test_ntc_sc_builder(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "Multiple NTC sc-builder"
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    check_output_values(study_path)
+    
+@pytest.mark.short
+def test_ntc_intramodal_two_links_two_timeseries(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "NTC intramodal"
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    check_output_values(study_path)

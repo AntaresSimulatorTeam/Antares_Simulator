@@ -28,6 +28,7 @@
 #define ANTARES_WINDOWS_INSPECTOR_ACCUMULATOR_HXX__
 
 #include <antares/study/filter.h>
+#include <array>
 
 namespace Antares
 {
@@ -269,7 +270,8 @@ enum
     localGenTSCount = 3
 };
 
-static const wxChar* const localGenTS[]
+// + 1 for nullptr
+static const std::array<const wxChar*, localGenTSCount + 1> localGenTS
   = {wxT("Use global parameter"), wxT("Force generation"), wxT("Force no generation"), nullptr};
 
 static const wxChar* weekday[] = {wxT("Monday"),
@@ -1303,7 +1305,7 @@ struct PClusterLawPlanned
 
 struct PClusterDoGenerateTS
 {
-    typedef uint Type;
+    using Type = uint;
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return (uint)cluster->tsGenBehavior;
