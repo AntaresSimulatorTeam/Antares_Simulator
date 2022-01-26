@@ -416,6 +416,9 @@ public:
         //! a flag to export all mps files
         bool exportMPS;
 
+        //! a flag to use Adequacy patch
+        bool adequacyPatch;
+
         //! a flag to export structure needed for Antares XPansion
         bool exportStructure;
 
