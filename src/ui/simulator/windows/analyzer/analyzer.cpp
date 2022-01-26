@@ -231,7 +231,6 @@ protected:
         // alias
         typedef Component::Datagrid::Renderer::Analyzer::Areas::Record Record;
 
-        auto& mapping = *pMapping;
         Record record;
         String s;
 
@@ -295,8 +294,8 @@ protected:
             s.clear() << "Checking " << record.fileToSearch << "...";
             pForm.info(s);
 
-            auto it = mapping.find(record.fileToSearch);
-            if (it == mapping.end() or !record.fileToSearch)
+            auto it = pMapping->find(record.fileToSearch);
+            if (it == pMapping->end() or !record.fileToSearch)
             {
                 pRecord.mutex.lock();
                 pRecord.array[i].status = Record::stNotFound;

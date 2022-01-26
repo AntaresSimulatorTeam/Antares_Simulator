@@ -30,7 +30,6 @@
 #include <yuni/yuni.h>
 #include <yuni/job/job.h>
 #include <vector>
-#include <memory>
 #include <map>
 #include <set>
 
@@ -130,7 +129,6 @@ class Content;
 typedef std::map<Yuni::String, Content*> ContentMap;
 
 //! Smart pointer on a job
-// typedef std::shared_ptr<Job>  JobPtr;
 typedef Yuni::Job::IJob::Ptr::Promote<Job>::Ptr JobPtr;
 
 //! Array of jobs

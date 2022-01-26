@@ -42,8 +42,7 @@ namespace Action
 class Context
 {
 public:
-    //! The most suitable smart ptr for the class
-    using  Ptr = std::shared_ptr<Context>;
+    using Ptr = std::shared_ptr<Context>;
     //! Map of properties
     typedef std::map<Yuni::String, Yuni::String> Properties;
     //! Local view

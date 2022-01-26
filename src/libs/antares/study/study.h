@@ -64,7 +64,6 @@ namespace Data
 class Study final : public Yuni::NonCopyable<Study>, public IObject
 {
 public:
-    //! The most suitable smart pointer for the class
     using Ptr = std::shared_ptr<Study>;
     //! Set of studies
     typedef std::set<Ptr> Set;
