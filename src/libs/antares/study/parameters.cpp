@@ -304,7 +304,7 @@ void Parameters::reset()
     simplexOptimizationRange = sorWeek;
 
     include.exportMPS = false;
-    include.adequacyPatch = false; // parameter-reset method
+    include.adequacyPatch = false;
     include.exportStructure = false;
 
     include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
@@ -1544,7 +1544,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring min up/down time for thermal clusters";
     if (!include.exportMPS)
         logs.info() << "  :: ignoring export mps";
-    if (!include.adequacyPatch) // Windows-LogViewer
+    if (!include.adequacyPatch)
         logs.info() << "  :: ignoring adequacy patch";
     if (!include.exportStructure)
         logs.info() << "  :: ignoring export structure";
@@ -1705,7 +1705,7 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-primaryreserve", include.reserve.primary);
 
         section->add("include-exportmps", include.exportMPS);
-        section->add("include-adequacypatch", include.adequacyPatch); // generaldata.ini, parameters.ini file
+        section->add("include-adequacypatch", include.adequacyPatch); 
         section->add("include-exportstructure", include.exportStructure);
 
         // Unfeasible problem behavior

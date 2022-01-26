@@ -491,7 +491,7 @@ void Optimization::refresh()
     ResetButton(pBtnSpinningReserve, study.parameters.include.reserve.spinning);
     // Export mps
     ResetButtonSpecify(pBtnExportMPS, study.parameters.include.exportMPS);
-    // Export adequacy patch
+    // Adequacy patch
     ResetButtonSpecify(pBtnAdequacyPatch, study.parameters.include.adequacyPatch);
 
 
