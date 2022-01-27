@@ -212,10 +212,8 @@ protected:
         prefix << '[' << directory << "] ";
 
         FSWalker::Walker walker(prefix);
-        walker.add(
-          std::shared_ptr<FSWalker::IExtension>(new (std::nothrow) AntaresStudy(dateLimit)));
-        walker.add(
-          std::shared_ptr<FSWalker::IExtension>(new (std::nothrow) ModifiedINode(dateLimit)));
+        walker.add(std::make_shared<AntaresStudy>(dateLimit));
+        walker.add(std::make_shared<ModifiedINode>(dateLimit));
 
         // start
         walker.directory(directory);
