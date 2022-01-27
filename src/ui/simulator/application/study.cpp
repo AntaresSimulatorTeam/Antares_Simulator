@@ -581,6 +581,29 @@ void MarkTheStudyAsModified()
     }
 }
 
+static bool StudyHasThermalBehavior(const Data::Study::Ptr& study,
+                                    Data::LocalTSGenerationBehavior behavior)
+{
+    bool ret = false;
+    using Behavior = Data::LocalTSGenerationBehavior;
+    study->areas.each([&ret, behavior](const Data::Area& area) {
+        area.thermal.list.each([&ret, behavior](const Data::ThermalCluster& cluster) {
+            ret = (cluster.tsGenBehavior == behavior) || ret;
+        });
+    });
+    return ret;
+}
+
+bool StudyHasThermalForceGen(const Data::Study::Ptr& study)
+{
+    return StudyHasThermalBehavior(study, Data::LocalTSGenerationBehavior::forceGen);
+}
+
+bool StudyHasThermalForceNoGen(const Data::Study::Ptr& study)
+{
+    return StudyHasThermalBehavior(study, Data::LocalTSGenerationBehavior::forceNoGen);
+}
+
 void ResetTheModifierState(bool v)
 {
     auto study = Data::Study::Current::Get();
