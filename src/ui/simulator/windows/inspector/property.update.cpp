@@ -945,7 +945,9 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
 
         for (; i != end; ++i)
             (*i)->tsGenBehavior = behavior;
-
+        // Notify
+        OnStudyThermalClusterCommonSettingsChanged();
+        pFrame.Refresh();
         return true;
     }
 
