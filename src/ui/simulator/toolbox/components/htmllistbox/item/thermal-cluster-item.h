@@ -73,8 +73,6 @@ private:
 private:
     //! The current ThermalCluster
     Antares::Data::ThermalCluster* pThermalCluster;
-    double pThermalClusterMarketBidCost;
-
 }; // class ThermalClusterItem
 
 } // namespace Item

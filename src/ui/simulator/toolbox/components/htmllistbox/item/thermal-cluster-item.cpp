@@ -40,7 +40,6 @@ namespace Item
 
 ThermalClusterItem::ThermalClusterItem(Antares::Data::ThermalCluster* a) :
     ClusterItem(a),
-    pThermalClusterMarketBidCost(a->marketBidCost),
     pThermalCluster(a)
 {
     preloadImages();
@@ -48,7 +47,6 @@ ThermalClusterItem::ThermalClusterItem(Antares::Data::ThermalCluster* a) :
 
 ThermalClusterItem::ThermalClusterItem(Antares::Data::ThermalCluster* a, const wxString& additional) :
     ClusterItem(a, additional),
-    pThermalClusterMarketBidCost(a->marketBidCost),
     pThermalCluster(a)
 {
     preloadImages();
@@ -67,7 +65,7 @@ wxString ThermalClusterItem::htmlContentTail()
 {
     wxString tail_to_return;
     tail_to_return
-        << Math::Round(pThermalClusterMarketBidCost, 3)
+        << Math::Round(pThermalCluster->marketBidCost, 3)
         << wxT(" <font color=\"#DD3311\">\u20AC/MWh</font></font></td>")
         << wxT("<td width=5></td>");
     return tail_to_return;
