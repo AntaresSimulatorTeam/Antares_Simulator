@@ -203,7 +203,7 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
                    << "optimization.ini";
     ret = saveAreaOptimisationIniFile(area, buffer) and ret;
 
-    //Adequacy ini
+    // Adequacy ini
     buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id << SEP
                    << "adequacy_patch.ini";
     ret = saveAreaAdequacyPatchIniFile(area, buffer) and ret;
@@ -315,9 +315,12 @@ bool saveAreaOptimisationIniFile(const Area& area, const Clob& buffer)
     IniFile ini;
     IniFile::Section* section = ini.addSection("nodal optimization");
 
-    section->add("non-dispatchable-power", static_cast<bool>(area.nodalOptimization & anoNonDispatchPower));
-    section->add("dispatchable-hydro-power", static_cast<bool>(area.nodalOptimization & anoDispatchHydroPower));
-    section->add("other-dispatchable-power", static_cast<bool>(area.nodalOptimization & anoOtherDispatchPower));
+    section->add("non-dispatchable-power",
+                 static_cast<bool>(area.nodalOptimization & anoNonDispatchPower));
+    section->add("dispatchable-hydro-power",
+                 static_cast<bool>(area.nodalOptimization & anoDispatchHydroPower));
+    section->add("other-dispatchable-power",
+                 static_cast<bool>(area.nodalOptimization & anoOtherDispatchPower));
     section->add("spread-unsupplied-energy-cost", area.spreadUnsuppliedEnergyCost);
     section->add("spread-spilled-energy-cost", area.spreadSpilledEnergyCost);
 
@@ -332,8 +335,9 @@ bool saveAreaAdequacyPatchIniFile(const Area& area, const Clob& buffer)
 {
     IniFile ini;
     IniFile::Section* section = ini.addSection("adequacy-patch");
-    bool bUseAdequacyPatch = false; //adq: this should be later replaced with area.bUseAdequacyPatch
-    section->add("use-adequacy-patch", static_cast<bool>(bUseAdequacyPatch));
+    bool bUseAdequacyPatch = false; // adq: this should be later replaced with
+                                    // area.bUseAdequacyPatch
+    section->add("use-adequacy-patch", bUseAdequacyPatch));
     return ini.save(buffer);
 }
 
@@ -1531,7 +1535,7 @@ bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const Ar
         assert(oldCount == a.links.size() and "We must have the same number of items in the list");
 #endif
     });
-    
+
     area->buildLinksIndexes();
 
     return true;

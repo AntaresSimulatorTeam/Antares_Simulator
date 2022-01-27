@@ -323,7 +323,6 @@ Optimization::Optimization(wxWindow* parent) :
         pBtnAdequacyPatch = button;
     }
 
-
     // Unfeasible problem behavior
     {
         label = Component::CreateLabel(this, wxT("Unfeasible problem behavior"));
@@ -493,7 +492,6 @@ void Optimization::refresh()
     ResetButtonSpecify(pBtnExportMPS, study.parameters.include.exportMPS);
     // Adequacy patch
     ResetButtonSpecify(pBtnAdequacyPatch, study.parameters.include.adequacyPatch);
-
 
     // Unfeasible problem behavior
     pBtnUnfeasibleProblemBehavior->image(

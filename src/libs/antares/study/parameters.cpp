@@ -87,7 +87,8 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
     return true;
 }
 
-static bool ConvertStringToRenewableGenerationModelling(const AnyString& text, RenewableGenerationModelling & out)
+static bool ConvertStringToRenewableGenerationModelling(const AnyString& text,
+                                                        RenewableGenerationModelling& out)
 {
     CString<24, false> s = text;
     s.trim();
@@ -734,7 +735,8 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
     }
     // Renewable generation modelling
     if (key == "renewable-generation-modelling")
-        return ConvertStringToRenewableGenerationModelling(value, d.renewableGeneration.rgModelling);
+        return ConvertStringToRenewableGenerationModelling(value,
+                                                           d.renewableGeneration.rgModelling);
 
     return false;
 }
@@ -1705,7 +1707,7 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-primaryreserve", include.reserve.primary);
 
         section->add("include-exportmps", include.exportMPS);
-        section->add("include-adequacypatch", include.adequacyPatch); 
+        section->add("include-adequacypatch", include.adequacyPatch);
         section->add("include-exportstructure", include.exportStructure);
 
         // Unfeasible problem behavior
