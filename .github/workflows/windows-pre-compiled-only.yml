@@ -17,11 +17,6 @@ jobs:
       
     steps:
     - uses: actions/checkout@v2
-           
-    - name: Set up Python
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
         
     - name: Pre-requisites
       shell: cmd
