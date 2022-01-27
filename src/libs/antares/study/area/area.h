@@ -225,6 +225,8 @@ public:
     uint index;
     //! Enabled
     bool enabled;
+    //! Use adequacy patch for this area
+    bool bUseAdequacyPatch;
     /*@}*/
 
     //! \name Associate data */

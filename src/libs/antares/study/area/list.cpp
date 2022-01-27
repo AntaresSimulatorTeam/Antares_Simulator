@@ -332,8 +332,7 @@ bool saveAreaAdequacyPatchIniFile(const Area& area, const Clob& buffer)
 {
     IniFile ini;
     IniFile::Section* section = ini.addSection("adequacy-patch");
-    bool bUseAdequacyPatch = false; //adq: this should be later replaced with area.bUseAdequacyPatch
-    section->add("use-adequacy-patch", static_cast<bool>(bUseAdequacyPatch));
+    section->add("use-adequacy-patch", static_cast<bool>(area.bUseAdequacyPatch));
     return ini.save(buffer);
 }
 
@@ -1049,6 +1048,30 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
         // flush
         area.renewable.list.flush();
+    }
+
+    // Adequacy patch
+    if (study.header.version >= 820)
+    {
+        buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
+                       << "adequacy_patch.ini";
+        IniFile ini;
+        if (ini.open(buffer))
+        {
+            auto* section = ini.find("adequacy-patch");
+            for (auto* p = section->firstProperty; p; p = p->next)
+            {
+                bool value = p->value.to<bool>();
+                CString<30, false> tmp;
+                tmp = p->key;
+                tmp.toLower();
+                if (tmp == "use-adequacy-patch")
+                {
+                    area.bUseAdequacyPatch = value;
+                    continue;
+                }
+            }
+        }
     }
 
     // Nodal Optimization

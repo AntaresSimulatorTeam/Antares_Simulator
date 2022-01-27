@@ -184,6 +184,8 @@ private:
     wxPGProperty* pPGUnsupplied;
     wxPGProperty* pPGSpilled;
     wxPGProperty* pPGAreaName;
+    wxPGProperty* pPGAreaAdequacyPatchTitle;
+    wxPGProperty* pPGAreaAUsedequacyPatch;
     wxPGProperty* pPGAreaColor;
     wxPGProperty* pPGAreaLinks;
     wxPGProperty* pPGAreaPlants;

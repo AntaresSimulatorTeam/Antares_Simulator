@@ -397,6 +397,9 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
       pPGAreaResort,
       new wxBoolProperty(wxT("other dispatch. power"), wxT("area.other_dispatch_power"), false));
 
+    pPGAreaAdequacyPatchTitle = Category(pg, wxT("Adequacy Patch"), wxT("area.adequacy_patch_title"));
+    pPGAreaAUsedequacyPatch = page->Append(new wxBoolProperty(wxT("use adequacy patch"), wxT("area.use_adequacy_patch"), false));
+
     pPGAreaLocalization = Category(pg, wxT("Localization"), wxT("area.localization"));
     P_INT("x", "area.x");
     P_INT("y", "area.y");
@@ -785,6 +788,9 @@ void Frame::apply(const InspectorData::Ptr& data)
             pPGAreaName->SetValueFromString(wxStringFromUTF8((*(data->areas.begin()))->name));
         // Area color
         Accumulator<PAreaColor>::Apply(pPGAreaColor, data->areas);
+        // Adequacy patch
+        if (!multiple)
+            Accumulator<PAreaAdequacyPatch>::Apply(pPGAreaAUsedequacyPatch, data->areas);
         // Area position
         if (!multiple)
         {
@@ -835,6 +841,7 @@ void Frame::apply(const InspectorData::Ptr& data)
     }
     pPGAreaOptimization->Hide(hide);
     pPGAreaResort->Hide(hide);
+    pPGAreaAdequacyPatchTitle->Hide(hide);
     pPGAreaLocalization->Hide(hide || multiple);
     pPGAreaDeps->Hide(hide);
 
