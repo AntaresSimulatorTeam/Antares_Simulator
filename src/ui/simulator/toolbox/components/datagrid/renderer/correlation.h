@@ -46,7 +46,7 @@ public:
     class IDatasource
     {
     public:
-        typedef std::shared_ptr<IDatasource> Ptr;
+        using Ptr = std::shared_ptr<IDatasource>;
 
     public:
         IDatasource()
