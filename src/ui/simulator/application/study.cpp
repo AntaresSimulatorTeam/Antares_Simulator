@@ -585,7 +585,6 @@ static bool StudyHasThermalBehavior(const Data::Study::Ptr& study,
                                     Data::LocalTSGenerationBehavior behavior)
 {
     bool ret = false;
-    using Behavior = Data::LocalTSGenerationBehavior;
     study->areas.each([&ret, behavior](const Data::Area& area) {
         area.thermal.list.each([&ret, behavior](const Data::ThermalCluster& cluster) {
             ret = (cluster.tsGenBehavior == behavior) || ret;
