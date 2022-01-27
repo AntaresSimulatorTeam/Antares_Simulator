@@ -98,6 +98,7 @@ namespace Item
         const wxString pText;
         wxString pIconFileEnabled;
         wxString pIconFileDisabled;
+        wxString pIconFileRefresh;
         wxString pClusterIconFilePath;
 
     }; // class ClusterItem

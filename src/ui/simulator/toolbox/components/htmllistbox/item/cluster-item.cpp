@@ -64,6 +64,7 @@ void ClusterItem::preloadImages()
     {
         pIconFileEnabled = getIconFilePath("images/16x16/light_green.png");
         pIconFileDisabled = getIconFilePath("images/16x16/light_orange.png");
+        pIconFileRefresh = getIconFilePath("images/16x16/refresh.png");
         pClusterIconFilePath = getClusterIconFilePath();
     }
 }
@@ -79,6 +80,14 @@ bool ClusterItem::HtmlContent(wxString& out, Data::Cluster* cluster, const wxStr
     else
     {
         out << wxT("<td width=30 align=center><img src=\"") << pIconFileDisabled << wxT("\"></td>");
+    }
+
+    // Specific to thermal clusters
+    Data::ThermalCluster* thermal = dynamic_cast<Data::ThermalCluster*>(cluster);
+    if (thermal)
+    {
+        if (thermal->tsGenBehavior == Data::LocalTSGenerationBehavior::forceGen)
+            out << wxT("<td width=30 align=center><img src=\"") << pIconFileRefresh << wxT("\"></td>");          
     }
 
     out << wxT("<td width=20 align=center><img src=\"") << pClusterIconFilePath << wxT("\"></td>");
