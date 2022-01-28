@@ -172,6 +172,17 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
         OnStudyNodalOptimizationChanged();
         return true;
     }
+    if (name == "area.use_adequacy_patch")
+    {
+        auto* area = *i;
+        if (area)
+        {
+            area->bUseAdequacyPatch = value.GetBool();
+            OnStudyAreaUseAdequacyPatchChanged();
+            return true;
+        }
+        return false;
+    }
     if (name == "area.links_count")
         return false;
     if (name == "area.cluster_count")
@@ -926,7 +937,8 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
     {
         long index = value.GetLong();
 
-        Data::LocalTSGenerationBehavior behavior = Data::LocalTSGenerationBehavior::useGlobalParameter;
+        Data::LocalTSGenerationBehavior behavior
+          = Data::LocalTSGenerationBehavior::useGlobalParameter;
 
         switch (index)
         {

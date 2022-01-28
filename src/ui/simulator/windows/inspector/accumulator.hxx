@@ -906,6 +906,19 @@ struct PAreaUnsuppliedEnergyCost
     }
 };
 
+struct PAreaAdequacyPatch
+{
+    typedef bool Type;
+    static Type Value(const Data::Area* area)
+    {
+        return area->bUseAdequacyPatch;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return v ? wxT("True") : wxT("False");
+    }
+};
+
 template<enum Data::AreaNodalOptimization O>
 struct PAreaResortStatus
 {
