@@ -937,7 +937,8 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
     {
         long index = value.GetLong();
 
-        Data::LocalTSGenerationBehavior behavior = Data::LocalTSGenerationBehavior::useGlobalParameter;
+        Data::LocalTSGenerationBehavior behavior
+          = Data::LocalTSGenerationBehavior::useGlobalParameter;
 
         switch (index)
         {
