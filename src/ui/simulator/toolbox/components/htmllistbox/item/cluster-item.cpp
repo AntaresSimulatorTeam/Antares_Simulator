@@ -81,12 +81,13 @@ bool ClusterItem::HtmlContent(wxString& out, Data::Cluster* cluster, const wxStr
 
     // Specific to thermal clusters
     const auto thermal = dynamic_cast<Data::ThermalCluster*>(cluster);
-    if (thermal && thermal->tsGenBehavior == Data::LocalTSGenerationBehavior::forceGen)
+    using Behavior = Data::LocalTSGenerationBehavior;
+    if (thermal && thermal->tsGenBehavior == Behavior::forceGen)
     {
         out << wxT("<td width=20 align=center><img src=\"") << pIconFileRefresh << wxT("\"></td>");
     }
 
-    if (thermal && thermal->tsGenBehavior == Data::LocalTSGenerationBehavior::forceNoGen)
+    if (thermal && thermal->tsGenBehavior == Behavior::forceNoGen)
     {
         out << wxT("<td width=20 align=center><img src=\"") << pIconFileNoRefresh
             << wxT("\"></td>");
