@@ -93,7 +93,7 @@ namespace Item
     protected:
         // The current cluster
         Antares::Data::Cluster* pCluster;
-
+    private:
         // Additional text
         const wxString pText;
         wxString pIconFileEnabled;
