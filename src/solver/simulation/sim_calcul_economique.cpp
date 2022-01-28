@@ -89,6 +89,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
           ? OUI_ANTARES
           : NON_ANTARES;
 
+    problem.OptimisationAuPasHebdomadaire
+      = (parameters.simplexOptimizationRange == Data::sorWeek) ? OUI_ANTARES : NON_ANTARES;
+
     switch (parameters.power.fluctuations)
     {
     case Data::lssFreeModulations:
@@ -273,9 +276,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.NombreDePaliersThermiques = NombrePaliers;
 
     problem.LeProblemeADejaEteInstancie = NON_ANTARES;
-
-    problem.OptimisationAuPasHebdomadaire
-      = (parameters.simplexOptimizationRange == Data::sorWeek) ? OUI_ANTARES : NON_ANTARES;
 }
 
 void SIM_InitialisationResultats()
