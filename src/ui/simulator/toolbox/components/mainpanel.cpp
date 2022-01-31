@@ -101,26 +101,6 @@ void MainPanel::addProperty(wxDC& dc,
     posY += st.GetHeight() + 1;
 }
 
-static wxString thermalTSBehaviorTag(Data::Study::Ptr study)
-{
-    // Some thermal clusters force gen, some force no TS generation
-    wxString s;
-    const bool forceGen = StudyHasThermalForceGen(study);
-    const bool forceNoGen = StudyHasThermalForceNoGen(study);
-    if (forceGen && forceNoGen)
-        s << wxT("[G|NG]");
-    else
-    {
-        // Some thermal clusters force TS generation
-        if (forceGen)
-            s << wxT("[G]");
-        // Some thermal clusters force no TS generation
-        if (forceNoGen)
-            s << wxT("[NG]");
-    }
-    return s;
-}
-
 void MainPanel::onDraw(wxPaintEvent&)
 {
     // The font re-used for each drawing
@@ -170,25 +150,23 @@ void MainPanel::onDraw(wxPaintEvent&)
             wxFont f = dc.GetFont();
             f.SetWeight(wxFONTWEIGHT_BOLD);
             dc.SetFont(f);
-            wxString caption;
 
             if (study->header.version != (uint)Data::versionLatest)
             {
+                wxString s;
                 if (StudyHasBeenModified())
-                    caption << wxT("(*) ");
-                caption << pStudyCaption << wxT(" (v")
-                        << Data::VersionToWStr((Data::Version(study->header.version))) << wxT(")");
+                    s << wxT("(*) ");
+                s << pStudyCaption << wxT(" (v")
+                  << Data::VersionToWStr((Data::Version(study->header.version))) << wxT(")");
+                addProperty(dc, name, s, size, posY);
             }
             else
             {
                 if (not StudyHasBeenModified())
-                    caption << pStudyCaption;
+                    addProperty(dc, name, pStudyCaption, size, posY);
                 else
-                    caption << wxT("(*) ") << pStudyCaption;
+                    addProperty(dc, name, wxString() << wxT("(*) ") << pStudyCaption, size, posY);
             }
-            caption << " " << thermalTSBehaviorTag(study);
-            addProperty(dc, name, caption, size, posY);
-
             f.SetWeight(wxFONTWEIGHT_LIGHT);
             dc.SetFont(f);
         }

@@ -131,16 +131,6 @@ bool StudyRenameArea(Data::Area* area, const AnyString& newname, Data::Study::Pt
 void MarkTheStudyAsModified();
 
 /*!
-** \brief Test thermal clusters for forced TS generation
-*/
-bool StudyHasThermalForceGen(const Data::Study::Ptr& study);
-
-/*!
-** \brief Test thermal clusters for prevented TS generation
-*/
-bool StudyHasThermalForceNoGen(const Data::Study::Ptr& study);
-
-/*!
 ** \brief Mark the study as modified (only if identical to the current one)
 */
 void MarkTheStudyAsModified(const Data::Study::Ptr& study);
