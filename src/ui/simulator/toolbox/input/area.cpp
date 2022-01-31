@@ -237,6 +237,10 @@ protected:
                 CString<32, false> text;
                 text << area->thermal.list.size();
                 item->addRightTag(text, 210, 217, 216);
+                if (area->thermal.hasForcedTimeseriesGeneration())
+                    item->addRightTag(wxT("G"), 52, 235, 64);
+                if (area->thermal.hasForcedNoTimeseriesGeneration())
+                    item->addRightTag(wxT("NG"), 235, 100, 52);
             }
         }
         if (0 != (equipment & Data::timeSeriesRenewable))

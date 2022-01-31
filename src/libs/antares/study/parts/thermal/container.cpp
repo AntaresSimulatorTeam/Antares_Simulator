@@ -169,5 +169,32 @@ void PartThermal::reset()
     list.clear();
     clusters.clear();
 }
+
+bool PartThermal::hasForcedTimeseriesGeneration() const
+{
+    using Behavior = LocalTSGenerationBehavior;
+    for (const auto& it : list)
+    {
+        if (it.second->tsGenBehavior == Behavior::forceGen)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool PartThermal::hasForcedNoTimeseriesGeneration() const
+{
+    using Behavior = LocalTSGenerationBehavior;
+    for (const auto& it : list)
+    {
+        if (it.second->tsGenBehavior == Behavior::forceNoGen)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 } // namespace Data
 } // namespace Antares
