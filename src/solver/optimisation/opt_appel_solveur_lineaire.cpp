@@ -406,7 +406,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     auto& study = *Data::Study::Current::Get();
     Flot = study.createCriterionFileIntoOutput(numSpace);
     if (!Flot)
-        exit(2);
+        AntaresSolverEmergencyShutdown(2);
 
     fprintf(Flot, "* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);
 
@@ -532,7 +532,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     Flot = study.createMPSFileIntoOutput(numSpace);
 
     if (!Flot)
-        exit(2);
+        AntaresSolverEmergencyShutdown(2);
 
     fprintf(Flot, "* Number of variables:   %d\n", NombreDeVariables);
     fprintf(Flot, "* Number of constraints: %d\n", NombreDeContraintes);
@@ -561,8 +561,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
                     "des sens reconnus\n",
                     __FUNCTION__,
                     Sens[Cnt]);
-            AntaresSolverEmergencyShutdown();
-            exit(0);
+            AntaresSolverEmergencyShutdown(2);
         }
     }
 

@@ -44,6 +44,7 @@
 #include "../../config.h"
 
 #include <antares/memory/memory.h>
+#include <antares/emergency.h>
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hpp>
 
@@ -213,7 +214,7 @@ bool GrabOptionsFromCommandLine(int argc,
 
     // Ask to parse the command line
     if (!getopt(argc, argv))
-        exit(getopt.errors() ? 1 : 0);
+        AntaresSolverEmergencyShutdown(getopt.errors() ? 1 : 0);
 
     // Version
     if (optVersion)

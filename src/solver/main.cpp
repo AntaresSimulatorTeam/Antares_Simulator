@@ -134,7 +134,7 @@ bool SolverApplication::prepare(int argc, char* argv[])
     logs.callback.connect(this, &SolverApplication::onLogMessage);
 
     // Allocate a study
-    pStudy = new Data::Study(true /* for the solver */);
+    pStudy = std::make_shared<Data::Study>(true /* for the solver */);
 
     // Setting global variables for backward compatibility
     Data::Study::Current::Set(pStudy);
@@ -270,7 +270,7 @@ bool SolverApplication::prepare(int argc, char* argv[])
     return true;
 }
 
-void SolverApplication::initializeRandomNumberGenerators()
+void SolverApplication::initializeRandomNumberGenerators() const
 {
     logs.info() << "Initializing random number generators...";
     auto& parameters = pStudy->parameters;
@@ -541,7 +541,7 @@ SolverApplication::~SolverApplication()
 static void NotEnoughMemory()
 {
     logs.fatal() << "Not enough memory. aborting.";
-    exit(42);
+    AntaresSolverEmergencyShutdown(42);
 }
 
 /*!

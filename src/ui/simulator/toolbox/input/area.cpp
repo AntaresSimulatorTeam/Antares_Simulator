@@ -182,11 +182,10 @@ public:
         if (!Data::Study::Current::Valid() || GUIIsLock())
             return false;
         GUILocker locker;
-        typedef Toolbox::Spotlight::ItemArea::Ptr ItemArea;
-        ItemArea itemarea = Spotlight::IItem::Ptr::DynamicCast<ItemArea>(item);
+        auto itemarea = std::dynamic_pointer_cast<Toolbox::Spotlight::ItemArea>(item);
         if (!(!itemarea))
         {
-            auto* area = itemarea->area;
+            auto area = itemarea->area;
             if (area)
             {
                 // pAutoTriggerSelection = false;
@@ -226,7 +225,7 @@ protected:
     {
         assert(area && "Invalid area");
 
-        auto* item = new Toolbox::Spotlight::ItemArea(area);
+        auto item = std::make_shared<Toolbox::Spotlight::ItemArea>(area);
         if (area->id == pLastAreaID)
             item->select();
 
@@ -393,7 +392,7 @@ void Area::internalBuildSubControls()
         OnMapLayerAdded.connect(spotlight, &Component::Spotlight::onMapLayerAdded);
         OnMapLayerRemoved.connect(spotlight, &Component::Spotlight::onMapLayerRemoved);
         OnMapLayerRenamed.connect(spotlight, &Component::Spotlight::onMapLayerRenamed);
-        spotlight->provider(new SpotlightProviderArea());
+        spotlight->provider(std::make_shared<SpotlightProviderArea>());
         wxBoxSizer* hz = new wxBoxSizer(wxHORIZONTAL);
         hz->AddSpacer(5);
         hz->Add(spotlight, 1, wxALL | wxEXPAND);

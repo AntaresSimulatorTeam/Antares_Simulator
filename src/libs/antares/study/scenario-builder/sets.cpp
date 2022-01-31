@@ -93,7 +93,7 @@ Rules::Ptr Sets::createNew(const RulesScenarioName& name)
         return nullptr;
 
     // The rule set does not exist, creating a new empty one
-    Rules::Ptr newRulesSet = new Rules(*pStudy);
+    auto newRulesSet = std::make_shared<Rules>(*pStudy);
     newRulesSet->reset();
     newRulesSet->setName(name);
     pMap[id] = newRulesSet;

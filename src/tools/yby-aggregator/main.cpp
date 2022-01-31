@@ -40,6 +40,7 @@
 #include <antares/memory/memory.h>
 #include <antares/hostinfo.h>
 #include <antares/locale.h>
+#include <antares/emergency.h>
 #include "../../config.h"
 
 #include "output.h"
@@ -167,7 +168,7 @@ static void PrepareTheWork(const String::Vector& outputs,
         }
 
         // The new output
-        Output::Ptr output = new Output(info.directory(), columns);
+        auto output = std::make_shared<Output>(info.directory(), columns);
         if (!output)
             continue;
 
@@ -330,7 +331,7 @@ static void ReadCommandLineOptions(int argc, char** argv)
         if (!options(argc, argv))
         {
             LocalPolicy::Close();
-            exit(options.errors() ? 1 : 0);
+            AntaresSolverEmergencyShutdown(options.errors() ? 1 : 0);
         }
 
         if (optVersion)
@@ -343,19 +344,19 @@ static void ReadCommandLineOptions(int argc, char** argv)
         {
             logs.error() << "Please provide at least one study output";
             LocalPolicy::Close();
-            exit(1);
+            AntaresSolverEmergencyShutdown(1);
         }
         if (optAreas.empty() && optLinks.empty())
         {
             logs.error() << "Please provide at least one area or one link for the aggregation";
             LocalPolicy::Close();
-            exit(1);
+            AntaresSolverEmergencyShutdown(1);
         }
         if (optColumns.empty())
         {
             logs.error() << "Please provide at least one column to find out";
             LocalPolicy::Close();
-            exit(1);
+            AntaresSolverEmergencyShutdown(1);
         }
 
         // PID
@@ -408,7 +409,8 @@ static void ReadCommandLineOptions(int argc, char** argv)
                 newname.clear() << "areas/" << areaname;
 
             logs.info() << "registered " << newname;
-            studydata.push_back(new StudyData(newname, index++));
+            studydata.push_back(std::make_shared<StudyData>(newname, index));
+            index++;
         }
         {
             String::Vector split;
@@ -427,7 +429,8 @@ static void ReadCommandLineOptions(int argc, char** argv)
                 newname.clear() << "links" << SEP;
                 newname << split[0] << " - " << split[1];
                 logs.info() << "registered " << newname;
-                studydata.push_back(new StudyData(newname, index++));
+                studydata.push_back(std::make_shared<StudyData>(newname, index));
+                index++;
             }
         }
     }
@@ -438,7 +441,10 @@ static void ReadCommandLineOptions(int argc, char** argv)
     for (uint i = 0; i != optTimes.size(); ++i)
     {
         for (uint j = 0; j != optDatum.size(); ++j)
-            dataFiles.push_back(new DataFile(optDatum[j], optTimes[i], dataIndex++));
+        {
+            dataFiles.push_back(std::make_shared<DataFile>(optDatum[j], optTimes[i], dataIndex));
+            dataIndex++;
+        }
     }
     optDatum.clear();
     optTimes.clear();

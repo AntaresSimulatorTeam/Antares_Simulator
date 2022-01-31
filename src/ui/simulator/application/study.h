@@ -123,7 +123,7 @@ void UpdateGUIFromStudyState();
 /*!
 ** \brief Rename an area immediatly
 */
-bool StudyRenameArea(Data::Area* area, const AnyString& newname, Data::Study::Ptr study = nullptr);
+bool StudyRenameArea(Data::Area* area, const AnyString& newname, Data::Study* study = nullptr);
 
 /*!
 ** \brief Mark the current study as modified

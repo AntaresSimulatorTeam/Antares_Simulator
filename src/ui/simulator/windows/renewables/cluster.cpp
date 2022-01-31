@@ -64,8 +64,8 @@ CommonProperties::CommonProperties(wxWindow* parent,
     renewableEventConnect();
 
     OnStudyRenewableClusterRenamed.connect(this, &CommonProperties::onStudyRenewableClusterRenamed);
-    OnStudyRenewableClusterCommonSettingsChanged.connect(this,
-                                                       &CommonProperties::renewableSettingsChanged);
+    OnStudyRenewableClusterCommonSettingsChanged.connect(
+      this, &CommonProperties::renewableSettingsChanged);
     OnStudyClosed.connect(this, &CommonProperties::onStudyClosed);
 }
 
@@ -79,9 +79,9 @@ void CommonProperties::onClusterChanged(Data::RenewableCluster* cluster)
 {
     if (cluster)
     {
-        auto* data = new Window::Inspector::InspectorData(*Data::Study::Current::Get());
-        data->RnClusters.insert(cluster);
-        pUpdateInfoAboutPlant(data);
+      auto data = std::make_shared<Window::Inspector::InspectorData>(Data::Study::Current::Get());
+      data->RnClusters.insert(cluster);
+      pUpdateInfoAboutPlant(data);
     }
     else
         pUpdateInfoAboutPlant(nullptr);
@@ -98,8 +98,7 @@ void CommonProperties::onStudyClosed()
 void CommonProperties::renewableEventConnect()
 {
     if (pNotifier)
-        pNotifier->onClusterChanged.connect(this,
-                                                   &CommonProperties::onClusterChanged);
+        pNotifier->onClusterChanged.connect(this, &CommonProperties::onClusterChanged);
 }
 
 void CommonProperties::renewableEventDisconnect()

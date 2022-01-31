@@ -30,6 +30,8 @@
 #include "item.h"
 #include <antares/study.h>
 
+#include <memory>
+
 namespace Antares
 {
 namespace Component
@@ -45,10 +47,6 @@ namespace Item
 */
 class ClusterItem : public IItem
 {
-public:
-    //! The smartptr
-    // typedef Yuni::SmartPtr<ClusterItem> Ptr;
-
 public:
     // Default constructor
     ClusterItem(Antares::Data::Cluster* a);

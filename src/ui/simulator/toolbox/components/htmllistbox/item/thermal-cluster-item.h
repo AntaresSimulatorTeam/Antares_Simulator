@@ -29,6 +29,8 @@
 
 #include "cluster-item.h"
 
+#include <memory>
+
 namespace Antares
 {
 namespace Component
@@ -45,8 +47,7 @@ namespace Item
 class ThermalClusterItem : public ClusterItem
 {
 public:
-    //! The smartptr
-    typedef Yuni::SmartPtr<ThermalClusterItem> Ptr;
+    using Ptr = std::shared_ptr<ThermalClusterItem>;
 
 public:
     //! \name Constructor & Destructor
