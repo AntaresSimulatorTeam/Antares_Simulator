@@ -1122,9 +1122,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
     /* For each area with ad hoc properties, two possible sets of two additional constraints */
     for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
     {
-        char PumpAvailable
-          = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDePompageModulable;
-
         if (ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->AccurateWaterValue == OUI_ANTARES
             && ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->DirectLevelAccess == OUI_ANTARES)
         /*  equivalence constraint : StockFinal- Niveau[T]= 0*/
