@@ -53,25 +53,25 @@ public:
 class ReadingStudy : public LoadingError
 {
 public:
-    explicit ReadingStudy();
+    ReadingStudy();
 };
 
 class NoAreas : public LoadingError
 {
 public:
-    explicit NoAreas();
+    NoAreas();
 };
 
 class InvalidFileName : public LoadingError
 {
 public:
-    explicit InvalidFileName();
+    InvalidFileName();
 };
 
 class RuntimeInfoInitialization : public LoadingError
 {
 public:
-    explicit RuntimeInfoInitialization();
+    RuntimeInfoInitialization();
 };
 
 class WritingPID : public LoadingError
@@ -89,31 +89,31 @@ public:
 class IncompatibleParallelOptions : public LoadingError
 {
 public:
-    explicit IncompatibleParallelOptions();
+    IncompatibleParallelOptions();
 };
 
 class IncompatibleOptRangeHydroPricing : public LoadingError
 {
 public:
-    explicit IncompatibleOptRangeHydroPricing();
+    IncompatibleOptRangeHydroPricing();
 };
 
 class IncompatibleOptRangeUCMode : public LoadingError
 {
 public:
-    explicit IncompatibleOptRangeUCMode();
+    IncompatibleOptRangeUCMode();
 };
 
 class InvalidOptimizationRange : public LoadingError
 {
 public:
-    explicit InvalidOptimizationRange();
+    InvalidOptimizationRange();
 };
 
 class InvalidSimulationMode : public LoadingError
 {
 public:
-    explicit InvalidSimulationMode();
+    InvalidSimulationMode();
 };
 
 class InvalidSolver : public LoadingError
@@ -131,13 +131,13 @@ public:
 class NoStudyProvided : public LoadingError
 {
 public:
-    explicit NoStudyProvided();
+    NoStudyProvided();
 };
 
 class InvalidVersion : public LoadingError
 {
 public:
-    explicit InvalidVersion(const char* version, const char* latest);
+    InvalidVersion(const char* version, const char* latest);
 };
 
 class IncompatibleDailyOptHeuristicForArea : public LoadingError
