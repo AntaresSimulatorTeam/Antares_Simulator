@@ -220,7 +220,7 @@ void Application::prepare(int argc, char* argv[])
     logs.callback.connect(this, &Application::onLogMessage);
 
     // Allocate a study
-    pStudy = new Data::Study(true /* for the solver */);
+    pStudy = std::make_shared<Antares::Data::Study>(true /* for the solver */);
 
     // Setting global variables for backward compatibility
     Data::Study::Current::Set(pStudy);
