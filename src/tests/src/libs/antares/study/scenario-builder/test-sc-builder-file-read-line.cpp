@@ -136,7 +136,7 @@ struct Fixture
 
 	~Fixture() = default;
 
-	Study::Ptr study = new Study();
+    Study::Ptr study = std::make_shared<Study>();
 	Area* area_1;
 	Area* area_2;
 	Area* area_3;

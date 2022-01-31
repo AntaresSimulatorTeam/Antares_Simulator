@@ -27,6 +27,8 @@
 #ifndef __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_PROVIDER_HXX__
 #define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_PROVIDER_HXX__
 
+#include <memory>
+
 /*!
 ** \brief Data Provider
 */
@@ -34,7 +36,7 @@ class IProvider : public Yuni::IEventObserver<Spotlight>
 {
 public:
     //! ptr
-    typedef Yuni::SmartPtr<IProvider> Ptr;
+    using Ptr = std::shared_ptr<IProvider>;
 
 public:
     //! \name Constructor & Destructor

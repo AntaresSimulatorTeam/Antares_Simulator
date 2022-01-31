@@ -28,8 +28,6 @@ add_library(libantares-ui-component-htmllistbox
 		toolbox/components/htmllistbox/item/pathlistitem.cpp
 		toolbox/components/htmllistbox/datasource/datasource.h
 		toolbox/components/htmllistbox/datasource/datasource.hxx
-		toolbox/components/htmllistbox/datasource/areas.h
-		toolbox/components/htmllistbox/datasource/areas.cpp
 
         toolbox/components/htmllistbox/datasource/cluster-order.h
         toolbox/components/htmllistbox/datasource/cluster-order.cpp

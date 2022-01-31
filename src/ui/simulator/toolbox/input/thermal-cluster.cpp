@@ -568,8 +568,7 @@ void ThermalCluster::onThSelected(Component::HTMLListbox::Item::IItem::Ptr item)
 
 void ThermalCluster::delayedSelection(Component::HTMLListbox::Item::IItem::Ptr item)
 {
-    typedef Component::HTMLListbox::Item::ThermalClusterItem::Ptr ThPtr;
-    ThPtr a = Component::HTMLListbox::Item::IItem::Ptr::DynamicCast<ThPtr>(item);
+    auto a = dynamic_pointer_cast<Component::HTMLListbox::Item::ThermalClusterItem>(item);
     if (a)
     {
         // Lock the window to prevent flickering

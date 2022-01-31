@@ -30,6 +30,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <map>
+#include <memory>
 #include <set>
 #include <cassert>
 #include "../inifile.h"
@@ -49,7 +50,7 @@ public:
     //
     typedef Yuni::CString<128, false> IDType;
     //! Value
-    typedef Yuni::SmartPtr<T, Yuni::Policy::Ownership::ReferenceCounted> TypePtr;
+    using  TypePtr = std::shared_ptr<T>;
 
     //! Map of Item
     typedef std::map<IDType, TypePtr> MapType;

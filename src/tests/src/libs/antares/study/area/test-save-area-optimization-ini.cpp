@@ -35,7 +35,7 @@ struct Fixture
 		remove_files(filesToRemove);
 	}
 
-	Study::Ptr study = new Study();
+    Study::Ptr study = std::make_shared<Study>();
 	Area* area;
 	Yuni::Clob path_to_generated_file;
 };
