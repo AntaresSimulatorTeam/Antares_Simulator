@@ -26,6 +26,8 @@
 # define ANTARES_PUBLISHER            "@ANTARES_PUBLISHER@"
 //! The Website for RTE
 # define ANTARES_WEBSITE              "@ANTARES_WEBSITE@"
+//! URL for the online documentation
+#define ANTARES_ONLINE_DOC            "@ANTARES_ONLINE_DOC@"
 
 // ----------------------------------------------------------------------------
 

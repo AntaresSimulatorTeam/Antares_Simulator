@@ -27,17 +27,19 @@
 #ifndef __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_IITEM_H__
 #define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_IITEM_H__
 
+#include <memory>
+
 class IItem
 {
 public:
     //! Ptr
-    typedef Yuni::SmartPtr<IItem> Ptr;
+    using Ptr = std::shared_ptr<IItem>;
     //! Vector of items
-    typedef std::vector<Ptr> Vector;
+    using Vector = std::vector<Ptr>;
     //! Vector Ptr
-    typedef Yuni::SmartPtr<Vector> VectorPtr;
+    using VectorPtr = std::shared_ptr<Vector>;
     //! Group
-    typedef Yuni::CString<64, false> GroupType;
+    using GroupType = Yuni::CString<64, false>;
 
     class IPart
     {
@@ -60,9 +62,9 @@ public:
     {
     public:
         //! The most suitable smart pointer
-        typedef Yuni::SmartPtr<Tag> Ptr;
+        using Ptr =std::shared_ptr<Tag>;
         //! Vector
-        typedef std::vector<Ptr> Vector;
+        using Vector = std::vector<Ptr>;
 
     public:
         template<class StringT>

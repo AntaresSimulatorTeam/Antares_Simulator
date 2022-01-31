@@ -233,7 +233,7 @@ void Message::prepareShowModal()
     else
     {
         if (pSpotlight)
-            pSpotlight->provider(new MessageProvider(pItemList));
+          pSpotlight->provider(std::make_shared<MessageProvider>(pItemList));
         sizer->Show(pListSizer, true);
         pSpace->Show(false);
     }
@@ -285,7 +285,7 @@ uint Message::showModal()
 
 void Message::appendError(const AnyString& text)
 {
-    auto* item = new Component::Spotlight::IItem();
+    auto item = std::make_shared<Component::Spotlight::IItem>();
     item->caption(text);
     item->addTag("   error   ", 230, 30, 30);
     pItemList.push_back(item);
@@ -293,7 +293,7 @@ void Message::appendError(const AnyString& text)
 
 void Message::appendWarning(const AnyString& text)
 {
-    auto* item = new Component::Spotlight::IItem();
+    auto item = std::make_shared<Component::Spotlight::IItem>();
     item->caption(text);
     item->addTag(" warning ", 255, 176, 79);
     pItemList.push_back(item);

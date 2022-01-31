@@ -33,7 +33,7 @@ namespace Window
 {
 namespace Inspector
 {
-InspectorData::InspectorData(Antares::Data::Study& s) : study(s), empty(true)
+InspectorData::InspectorData(Antares::Data::Study::Ptr s) : study(s), empty(true)
 {
 }
 
