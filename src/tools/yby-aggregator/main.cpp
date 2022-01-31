@@ -40,6 +40,7 @@
 #include <antares/memory/memory.h>
 #include <antares/hostinfo.h>
 #include <antares/locale.h>
+#include <antares/emergency.h>
 #include "../../config.h"
 
 #include "output.h"
@@ -330,7 +331,7 @@ static void ReadCommandLineOptions(int argc, char** argv)
         if (!options(argc, argv))
         {
             LocalPolicy::Close();
-            exit(options.errors() ? 1 : 0);
+            AntaresSolverEmergencyShutdown(options.errors() ? 1 : 0);
         }
 
         if (optVersion)
@@ -343,19 +344,19 @@ static void ReadCommandLineOptions(int argc, char** argv)
         {
             logs.error() << "Please provide at least one study output";
             LocalPolicy::Close();
-            exit(1);
+            AntaresSolverEmergencyShutdown(1);
         }
         if (optAreas.empty() && optLinks.empty())
         {
             logs.error() << "Please provide at least one area or one link for the aggregation";
             LocalPolicy::Close();
-            exit(1);
+            AntaresSolverEmergencyShutdown(1);
         }
         if (optColumns.empty())
         {
             logs.error() << "Please provide at least one column to find out";
             LocalPolicy::Close();
-            exit(1);
+            AntaresSolverEmergencyShutdown(1);
         }
 
         // PID
