@@ -60,10 +60,13 @@ void ClusterItem::preloadImages()
     {
         pIconFileEnabled = getIconFilePath("images/16x16/light_green.png");
         pIconFileDisabled = getIconFilePath("images/16x16/light_orange.png");
-        pIconFileRefresh = getIconFilePath("images/16x16/refresh.png");
-        pIconFileNoRefresh = getIconFilePath("images/16x16/norefresh.png");
         pClusterIconFilePath = getClusterIconFilePath();
     }
+}
+
+void ClusterItem::addAdditionalIcons(wxString& out) const
+{
+    // No additional icons should be added by default
 }
 
 bool ClusterItem::HtmlContent(wxString& out, Data::Cluster* cluster, const wxString& searchString)
@@ -80,18 +83,7 @@ bool ClusterItem::HtmlContent(wxString& out, Data::Cluster* cluster, const wxStr
     }
 
     // Specific to thermal clusters
-    const auto thermal = dynamic_cast<Data::ThermalCluster*>(cluster);
-    using Behavior = Data::LocalTSGenerationBehavior;
-    if (thermal && thermal->tsGenBehavior == Behavior::forceGen)
-    {
-        out << wxT("<td width=20 align=center><img src=\"") << pIconFileRefresh << wxT("\"></td>");
-    }
-
-    if (thermal && thermal->tsGenBehavior == Behavior::forceNoGen)
-    {
-        out << wxT("<td width=20 align=center><img src=\"") << pIconFileNoRefresh
-            << wxT("\"></td>");
-    }
+    addAdditionalIcons(out);
 
     out << wxT("<td width=20 align=center><img src=\"") << pClusterIconFilePath << wxT("\"></td>");
     out << wxT("<td width=8></td><td nowrap><font size=\"-1\"");

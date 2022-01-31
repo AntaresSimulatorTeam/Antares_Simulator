@@ -70,7 +70,12 @@ private:
     wxString getClusterIconFilePath() override;
     wxString htmlContentTail() override;
 
-private:
+    wxString pIconFileRefresh;
+    wxString pIconFileNoRefresh;
+
+    void preloadAdditionalIcons();
+    void addAdditionalIcons(wxString& out) const override;
+
     //! The current ThermalCluster
     Antares::Data::ThermalCluster* pThermalCluster;
 }; // class ThermalClusterItem

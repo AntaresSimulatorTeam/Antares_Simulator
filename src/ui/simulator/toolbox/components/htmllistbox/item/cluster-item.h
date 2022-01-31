@@ -67,6 +67,8 @@ public:
     // Get the HTML Content for the item
     wxString htmlContent(const wxString& searchString);
 
+    virtual void addAdditionalIcons(wxString& out) const;
+
 protected:
     /*!
     ** \brief Add a portion of Html from a cluster to a string
@@ -91,7 +93,7 @@ private:
     virtual wxString htmlContentTail() = 0;
 
 protected:
-    // The current cluster
+    // The current generic cluster
     Antares::Data::Cluster* pCluster;
 
 private:
@@ -99,8 +101,6 @@ private:
     const wxString pText;
     wxString pIconFileEnabled;
     wxString pIconFileDisabled;
-    wxString pIconFileRefresh;
-    wxString pIconFileNoRefresh;
     wxString pClusterIconFilePath;
 
 }; // class ClusterItem
