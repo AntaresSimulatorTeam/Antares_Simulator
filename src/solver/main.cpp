@@ -85,7 +85,7 @@ along with Antares_Simulator.If not, see <http://www.gnu.org/licenses/>.\n\
 static void NotEnoughMemory()
 {
     logs.fatal() << "Not enough memory. aborting.";
-    exit(42);
+    AntaresSolverEmergencyShutdown(42);
 }
 
 /*!
