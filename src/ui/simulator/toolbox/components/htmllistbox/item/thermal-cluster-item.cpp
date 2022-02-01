@@ -63,8 +63,8 @@ wxString ThermalClusterItem::getClusterIconFilePath()
 
 void ThermalClusterItem::preloadAdditionalIcons()
 {
-    pIconFileRefresh = getIconFilePath("images/16x16/refresh.png");
-    pIconFileNoRefresh = getIconFilePath("images/16x16/norefresh.png");
+    pIconFileRefresh = getIconFilePath("images/16x16/G.png");
+    pIconFileNoRefresh = getIconFilePath("images/16x16/NG.png");
 }
 
 wxString ThermalClusterItem::htmlContentTail()
