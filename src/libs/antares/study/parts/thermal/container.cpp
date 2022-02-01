@@ -31,6 +31,8 @@
 #include "container.h"
 #include "../../../logs.h"
 
+#include <algorithm>
+
 using namespace Yuni;
 using namespace Antares;
 
@@ -38,6 +40,8 @@ namespace Antares
 {
 namespace Data
 {
+using NamedCluster = std::pair<ClusterName, ThermalClusterList::SharedPtr>;
+
 PartThermal::PartThermal() :
  unsuppliedEnergyCost(0.), spilledEnergyCost(0.)
 {
@@ -173,27 +177,17 @@ void PartThermal::reset()
 bool PartThermal::hasForcedTimeseriesGeneration() const
 {
     using Behavior = LocalTSGenerationBehavior;
-    for (const auto& it : list)
-    {
-        if (it.second->tsGenBehavior == Behavior::forceGen)
-        {
-            return true;
-        }
-    }
-    return false;
+    return std::any_of(list.begin(), list.end(), [](const NamedCluster& namedCluster) {
+        return namedCluster.second->tsGenBehavior == Behavior::forceGen;
+    });
 }
 
 bool PartThermal::hasForcedNoTimeseriesGeneration() const
 {
     using Behavior = LocalTSGenerationBehavior;
-    for (const auto& it : list)
-    {
-        if (it.second->tsGenBehavior == Behavior::forceNoGen)
-        {
-            return true;
-        }
-    }
-    return false;
+    return std::any_of(list.begin(), list.end(), [](const NamedCluster& namedCluster) {
+        return namedCluster.second->tsGenBehavior == Behavior::forceNoGen;
+    });
 }
 
 } // namespace Data
