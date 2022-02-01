@@ -194,20 +194,13 @@ private:
             bool isFirstPerformedYearOfSimulation
               = isFirstPerformedYearOfASet[y] && not firstSetParallelWithAPerformedYearWasRun;
             std::list<uint> failedWeekList;
-            if (not simulationObj->year(progression,
-                                        state[numSpace],
-                                        numSpace,
-                                        randomForCurrentYear,
-                                        failedWeekList,
-                                        isFirstPerformedYearOfSimulation))
-            {
-                // Something goes wrong with this year. We have to restarting it
-                yearFailed[y] = true;
-            }
-            else
-            {
-                yearFailed[y] = false;
-            }
+
+            yearFailed[y] = !simulationObj->year(progression,
+                                                 state[numSpace],
+                                                 numSpace,
+                                                 randomForCurrentYear,
+                                                 failedWeekList,
+                                                 isFirstPerformedYearOfSimulation))
 
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
