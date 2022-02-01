@@ -133,7 +133,7 @@ inline bool IRenderer::circularShiftRowsUntilDate(MonthName, uint)
     return false; // not implemented
 }
 
-inline void IRenderer::applyLayerFiltering(size_t layerID, VGridHelper* gridHelper)
+inline void IRenderer::applyLayerFiltering(size_t /* layerID */, VGridHelper* /* gridHelper */)
 {
 }
 
