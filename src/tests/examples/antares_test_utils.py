@@ -64,9 +64,12 @@ def skip_folder(folder):
     return False
 
 def skip_file(file):
-    if file in ['id-daily.txt', 'id-hourly.txt']:
-        return True
-    return False
+    ignored_files = ['id-hourly.txt',
+                     'id-daily.txt',
+                     'id-weekly.txt',
+                     'id-monthly',
+                     'id-annual.txt']
+    return file in ignored_files
 
 def find_simulation_files(reference_folder, other_folder):
     list_files_to_compare = []
