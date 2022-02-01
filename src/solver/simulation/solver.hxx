@@ -200,7 +200,7 @@ private:
                                                  numSpace,
                                                  randomForCurrentYear,
                                                  failedWeekList,
-                                                 isFirstPerformedYearOfSimulation))
+                                                 isFirstPerformedYearOfSimulation);
 
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
