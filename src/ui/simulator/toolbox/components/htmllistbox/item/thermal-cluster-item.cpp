@@ -56,11 +56,6 @@ ThermalClusterItem::~ThermalClusterItem()
 {
 }
 
-wxString ThermalClusterItem::getClusterIconFilePath()
-{
-    return getIconFilePath("images/16x16/thermal.png");
-}
-
 void ThermalClusterItem::preloadAdditionalIcons()
 {
     pIconFileRefresh = getIconFilePath("images/16x16/G.png");

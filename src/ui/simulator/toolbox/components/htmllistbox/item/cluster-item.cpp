@@ -60,7 +60,6 @@ void ClusterItem::preloadImages()
     {
         pIconFileEnabled = getIconFilePath("images/16x16/light_green.png");
         pIconFileDisabled = getIconFilePath("images/16x16/light_orange.png");
-        pClusterIconFilePath = getClusterIconFilePath();
     }
 }
 
@@ -85,7 +84,6 @@ bool ClusterItem::HtmlContent(wxString& out, Data::Cluster* cluster, const wxStr
     // Specific to thermal clusters
     addAdditionalIcons(out);
 
-    out << wxT("<td width=20 align=center><img src=\"") << pClusterIconFilePath << wxT("\"></td>");
     out << wxT("<td width=8></td><td nowrap><font size=\"-1\"");
 
     wxString name = wxStringFromUTF8(cluster->name());

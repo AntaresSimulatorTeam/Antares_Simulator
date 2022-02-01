@@ -56,11 +56,6 @@ RenewableClusterItem::~RenewableClusterItem()
 {
 }
 
-wxString RenewableClusterItem::getClusterIconFilePath()
-{
-    return getIconFilePath("images/16x16/renewable.png");
-}
-
 wxString RenewableClusterItem::htmlContentTail()
 {
     // Return nothing 

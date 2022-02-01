@@ -68,7 +68,6 @@ public:
     Antares::Data::ThermalCluster* thermalAggregate() const;
 
 private:
-    wxString getClusterIconFilePath() override;
     wxString htmlContentTail() override;
 
     wxString pIconFileRefresh;

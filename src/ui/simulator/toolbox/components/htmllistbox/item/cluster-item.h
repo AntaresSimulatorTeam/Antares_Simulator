@@ -87,7 +87,6 @@ protected:
     void preloadImages();
 
 private:
-    virtual wxString getClusterIconFilePath() = 0;
     virtual wxString htmlContentTail() = 0;
 
 protected:
@@ -99,7 +98,6 @@ private:
     const wxString pText;
     wxString pIconFileEnabled;
     wxString pIconFileDisabled;
-    wxString pClusterIconFilePath;
 
 }; // class ClusterItem
 
