@@ -97,7 +97,7 @@ def compare_directory(result_dir, reference_dir):
     uncompared_file_name = ['id-hourly.txt',
                             'id-daily.txt',
                             'id-weekly.txt',
-                            'id-monthly',
+                            'id-monthly.txt',
                             'id-annual.txt']
 
     for x in result_dir.iterdir():
