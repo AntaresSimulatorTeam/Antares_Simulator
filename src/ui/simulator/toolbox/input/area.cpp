@@ -235,11 +235,14 @@ protected:
             {
                 CString<32, false> text;
                 text << area->thermal.list.size();
-                item->addRightTag(text, 210, 217, 216);
+                const Yuni::uint8 R_COLOR = 210;
+                const Yuni::uint8 G_COLOR = 217;
+                const Yuni::uint8 B_COLOR = 216;
+                item->addRightTag(text, R_COLOR, G_COLOR, B_COLOR);
                 if (area->thermal.hasForcedTimeseriesGeneration())
-                    item->addRightTag(wxT("G"), 52, 235, 64);
+                    item->addRightTag(wxT("G"), R_COLOR, G_COLOR, B_COLOR);
                 if (area->thermal.hasForcedNoTimeseriesGeneration())
-                    item->addRightTag(wxT("NG"), 235, 100, 52);
+                    item->addRightTag(wxT("NG"), R_COLOR, G_COLOR, B_COLOR);
             }
         }
         if (0 != (equipment & Data::timeSeriesRenewable))
