@@ -624,9 +624,6 @@ int main(int argc, char* argv[])
 
     if (Progress::Total > 0)
     {
-        // Disabling the log notice about disk space reservation
-        Antares::Memory::InformAboutDiskSpaceReservation = false;
-
         // Run all jobs
         progressBar.stop();
         logs.info();
