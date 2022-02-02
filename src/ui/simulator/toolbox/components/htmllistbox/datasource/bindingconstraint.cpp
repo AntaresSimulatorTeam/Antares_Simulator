@@ -101,7 +101,8 @@ void ByAlphaOrder::refresh(const wxString& search)
             // Added the area as a result
             auto jend = l.end();
             for (auto j = l.begin(); j != jend; ++j)
-                pParent.add(new Antares::Component::HTMLListbox::Item::BindingConstraint(*j));
+                pParent.add(
+                  std::make_shared<Antares::Component::HTMLListbox::Item::BindingConstraint>(*j));
         }
     }
     pParent.invalidate();
@@ -131,7 +132,8 @@ void ByAlphaReverseOrder::refresh(const wxString& search)
             // Added the area as a result
             BindingConstraintList::iterator jend = l.end();
             for (BindingConstraintList::iterator j = l.begin(); j != jend; ++j)
-                pParent.add(new Antares::Component::HTMLListbox::Item::BindingConstraint(*j));
+                pParent.add(
+                  std::make_shared<Antares::Component::HTMLListbox::Item::BindingConstraint>(*j));
         }
     }
     pParent.invalidate();

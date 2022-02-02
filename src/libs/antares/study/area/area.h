@@ -135,6 +135,7 @@ public:
     void detachLinkFromItsPointer(const AreaLink* lnk);
     //@}
 
+    void buildLinksIndexes();
     /*!
     ** \brief Ensure all data are created
     */
@@ -341,8 +342,10 @@ private:
     bool storeTimeseriesNumbersForHydro(Study& study);
     bool storeTimeseriesNumbersForThermal(Study& study);
     bool storeTimeseriesNumbersForRenewable(Study& study);
-
+    bool storeTimeseriesNumbersForTransmissionCapacities(Study& study) const;
 }; // class Area
+
+bool saveAreaOptimisationIniFile(const Area& area, const Yuni::Clob& buffer);
 
 /*!
 ** \brief A list of areas
@@ -721,6 +724,9 @@ bool AreaLinksLoadFromFolder(Study& s, AreaList* l, Area* area, const AnyString&
 ** \return True if the operation succeeded, 0 otherwise
 */
 bool AreaLinksSaveToFolder(const Area* area, const char* const folder);
+
+// Save a given area's interconnexions configuration file into a folder
+bool saveAreaLinksConfigurationFileToFolder(const Area* area, const char* const folder);
 
 /*!
 ** \brief Clear all interconnection from an area

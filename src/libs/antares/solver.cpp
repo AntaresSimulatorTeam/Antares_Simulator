@@ -74,10 +74,10 @@ bool FindLocation(String& location, Data::Version /*version*/, Solver::Feature f
     }
     else
     {
-        searchpaths.directories.push_back(s.clear() << "/usr/local/bin/");
-        searchpaths.directories.push_back(s.clear() << "/usr/bin/");
         searchpaths.directories.push_back((s = root) << "/../../solver");
         searchpaths.directories.push_back(root); // TGZ package
+        searchpaths.directories.push_back(s.clear() << "/usr/local/bin/");
+        searchpaths.directories.push_back(s.clear() << "/usr/bin/");
     }
 
     bool success = false;

@@ -43,6 +43,9 @@ enum
 };
 static const wxFont font(wxFontInfo(fontSize).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
 
+// Speeds up the scrolling in list box
+static const int NbPixelsPerVerticalScrollUnit = 10;
+
 BEGIN_EVENT_TABLE(ListboxPanel, wxScrolledWindow)
 EVT_PAINT(ListboxPanel::onDraw)
 EVT_ERASE_BACKGROUND(ListboxPanel::onEraseBackground)
@@ -89,8 +92,9 @@ void ListboxPanel::onMouseMotion(wxMouseEvent& evt)
 
     long y = evt.GetY();
     int vy;
-    GetViewStart(nullptr, &vy);
-    y += vy;
+    GetViewStart(nullptr, &vy); // Gives view start in scroll units, not in pixels
+    // Convert view start height into pixels
+    y += vy * NbPixelsPerVerticalScrollUnit;
 
     if (!(pFlags & Spotlight::optNoSearchInput))
     {
@@ -154,7 +158,9 @@ void ListboxPanel::onDraw(wxPaintEvent&)
     int maxHeight;
     GetClientSize(nullptr, &maxHeight);
     int offsetY;
-    GetViewStart(nullptr, &offsetY);
+    GetViewStart(nullptr, &offsetY); // Gives view start in scroll units, not in pixels
+    // Convert view start height into pixels
+    offsetY *= NbPixelsPerVerticalScrollUnit;
     maxHeight += offsetY;
 
     // The DC
@@ -290,10 +296,19 @@ void ListboxPanel::updateItems(const Spotlight::IItem::VectorPtr& vptr,
         pLonguestGroupName.clear();
 
     // Resetting the scrollbars
+    int NbVerticalScrollUnitsInWindow = 0;
     if (!(pFlags & Spotlight::optNoSearchInput))
-        SetScrollbars(1, 1, 1, (count)*pParent->itemHeight() + searchResultTextHeight + 2);
+    {
+        NbVerticalScrollUnitsInWindow = (count * pParent->itemHeight() + searchResultTextHeight + 2)
+                                        / NbPixelsPerVerticalScrollUnit;
+        SetScrollbars(1, NbPixelsPerVerticalScrollUnit, 1, NbVerticalScrollUnitsInWindow);
+    }
     else
-        SetScrollbars(1, 1, 1, (count)*pParent->itemHeight() + 2);
+    {
+        NbVerticalScrollUnitsInWindow
+          = (count * pParent->itemHeight() + 2) / NbPixelsPerVerticalScrollUnit;
+        SetScrollbars(1, NbPixelsPerVerticalScrollUnit, 1, NbVerticalScrollUnitsInWindow);
+    }
 
     pItems = vptr;
     pTokens = tokens;

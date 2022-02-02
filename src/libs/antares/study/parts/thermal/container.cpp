@@ -38,8 +38,7 @@ namespace Antares
 {
 namespace Data
 {
-PartThermal::PartThermal() :
- unsuppliedEnergyCost(0.), spilledEnergyCost(0.)
+PartThermal::PartThermal() : unsuppliedEnergyCost(0.), spilledEnergyCost(0.)
 {
 }
 
@@ -71,8 +70,11 @@ void PartThermal::prepareAreaWideIndexes()
 {
     // Copy the list with all thermal clusters
     // And init the areaWideIndex (unique index for a given area)
-    if (!list.size())
+    if (list.empty())
+    {
+        clusters.clear();
         return;
+    }
 
     clusters = std::vector<ThermalCluster*>(list.size());
 

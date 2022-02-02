@@ -60,7 +60,7 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
                                          const PropertyNameType& name,
                                          const wxVariant& value)
 {
-    InspectorData::Ptr& data = pCurrentSelection;
+    const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
 
@@ -79,7 +79,7 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
             Data::AreaName name;
             wxStringToString(value.GetString(), name);
 
-            bool result = StudyRenameArea(area, name, &(data->study));
+            bool result = StudyRenameArea(area, name, data->study.get());
             return result;
         }
         return false;
@@ -179,7 +179,7 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
     if (name.startsWith("area.filtering-synthesis."))
     {
         AnyString precision(name, 25);
-        uint flag = Data::StringToFilter(precision);
+        uint flag = Data::stringIntoDatePrecision(precision);
         if (!flag)
             return false;
 
@@ -198,7 +198,7 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
     if (name.startsWith("area.filtering-year-by-year."))
     {
         AnyString precision(name, 28);
-        uint flag = Data::StringToFilter(precision);
+        uint flag = Data::stringIntoDatePrecision(precision);
         if (!flag)
             return false;
 
@@ -222,19 +222,18 @@ bool InspectorGrid::onPropertyChanging_C(wxPGProperty*,
                                          const wxVariant& value)
 {
     // Reference to the current study
-    InspectorData::Ptr& data = pCurrentSelection;
-    auto& study = (!data) ? *Data::Study::Current::Get() : data->study;
+    auto study = Data::Study::Current::Get();
 
     if (name == "common.study.name")
     {
-        wxStringToString(value.GetString(), study.header.caption);
+        wxStringToString(value.GetString(), study->header.caption);
         auto& mainFrm = *Antares::Forms::ApplWnd::Instance();
         mainFrm.mainPanel()->refreshFromStudy();
         return true;
     }
     if (name == "common.study.author")
     {
-        wxStringToString(value.GetString(), study.header.author);
+        wxStringToString(value.GetString(), study->header.author);
         auto& mainFrm = *Antares::Forms::ApplWnd::Instance();
         mainFrm.mainPanel()->refreshFromStudy();
         return true;
@@ -246,7 +245,7 @@ bool InspectorGrid::onPropertyChanging_L(wxPGProperty*,
                                          const PropertyNameType& name,
                                          const wxVariant& value)
 {
-    InspectorData::Ptr& data = pCurrentSelection;
+    const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
 
@@ -428,7 +427,7 @@ bool InspectorGrid::onPropertyChanging_L(wxPGProperty*,
     if (name.startsWith("link.filtering-synthesis."))
     {
         AnyString precision(name, 25);
-        uint flag = Data::StringToFilter(precision);
+        uint flag = Data::stringIntoDatePrecision(precision);
         if (!flag)
             return false;
 
@@ -453,7 +452,7 @@ bool InspectorGrid::onPropertyChanging_L(wxPGProperty*,
     if (name.startsWith("link.filtering-year-by-year."))
     {
         AnyString precision(name, 28);
-        uint flag = Data::StringToFilter(precision);
+        uint flag = Data::stringIntoDatePrecision(precision);
         if (!flag)
             return false;
 
@@ -483,7 +482,7 @@ bool InspectorGrid::onPropertyChanging_Constraint(wxPGProperty*,
                                                   const PropertyNameType& name,
                                                   const wxVariant& value)
 {
-    InspectorData::Ptr& data = pCurrentSelection;
+    const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
     Data::BindingConstraint::Set::iterator end = data->constraints.end();
@@ -527,7 +526,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
                                                       const PropertyNameType& name,
                                                       const wxVariant& value)
 {
-    InspectorData::Ptr& data = pCurrentSelection;
+    const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
 
@@ -922,6 +921,34 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         return true;
     }
 
+    if (name == "cluster.gen-ts")
+    {
+        long index = value.GetLong();
+
+        Data::LocalTSGenerationBehavior behavior
+          = Data::LocalTSGenerationBehavior::useGlobalParameter;
+
+        switch (index)
+        {
+        case 0:
+            behavior = Data::LocalTSGenerationBehavior::useGlobalParameter;
+            break;
+        case 1:
+            behavior = Data::LocalTSGenerationBehavior::forceGen;
+            break;
+        case 2:
+            behavior = Data::LocalTSGenerationBehavior::forceNoGen;
+            break;
+        default:
+            return false;
+        }
+
+        for (; i != end; ++i)
+            (*i)->tsGenBehavior = behavior;
+
+        return true;
+    }
+
     return false;
 }
 
@@ -929,7 +956,7 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
                                                          const wxVariant& value)
 {
     using namespace Data;
-    InspectorData::Ptr& data = pCurrentSelection;
+    const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
 
@@ -993,7 +1020,7 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
                                          const PropertyNameType& name,
                                          const wxVariant& value)
 {
-    InspectorData::Ptr& data = pCurrentSelection;
+    const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
 

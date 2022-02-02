@@ -72,18 +72,21 @@ Panel::Panel(wxWindow* parent) : Antares::Component::Panel(parent)
 
     // TS Management
     {
-        typedef Component::Datagrid::Renderer::TSmanagementAggregatedAsRenewable TSmanagementAggregatedAsRenewable;
-        typedef Component::Datagrid::Renderer::TSmanagementRenewableCluster TSmanagementRenewableCluster;
-        
+        typedef Component::Datagrid::Renderer::TSmanagementAggregatedAsRenewable
+          TSmanagementAggregatedAsRenewable;
+        typedef Component::Datagrid::Renderer::TSmanagementRenewableCluster
+          TSmanagementRenewableCluster;
+
         verticalSizer_ = new wxBoxSizer(wxVERTICAL);
         verticalSizer_->Add(
-            new Component::CaptionPanel(this, wxT("Time-Series Management")), 0, wxALL | wxEXPAND);
+          new Component::CaptionPanel(this, wxT("Time-Series Management")), 0, wxALL | wxEXPAND);
 
         TSmanagementAggregatedAsRenewable* renderer_agg = new TSmanagementAggregatedAsRenewable();
         TSmanagementRenewableCluster* renderer_rn_cl = new TSmanagementRenewableCluster();
 
         grid_ts_mgt_ = new DatagridType(this, renderer_agg, wxEmptyString, false, true, true);
-        grid_ts_mgt_rn_cluster_ = new DatagridType(this, renderer_rn_cl, wxEmptyString, false, true, true);
+        grid_ts_mgt_rn_cluster_
+          = new DatagridType(this, renderer_rn_cl, wxEmptyString, false, true, true);
 
         verticalSizer_->Add(grid_ts_mgt_, 1, wxALL | wxEXPAND);
         verticalSizer_->Add(grid_ts_mgt_rn_cluster_, 1, wxALL | wxEXPAND);
@@ -97,7 +100,8 @@ Panel::Panel(wxWindow* parent) : Antares::Component::Panel(parent)
     SetSizer(hz);
 
     // External events
-    Options::OnRenewableGenerationModellingChanged.connect(this, &Panel::onRenewableGenerationModellingChanged);
+    Options::OnRenewableGenerationModellingChanged.connect(
+      this, &Panel::onRenewableGenerationModellingChanged);
     OnStudyClosed.connect(this, &Panel::onStudyClosed);
     OnStudyUpdatePlaylist.connect(this, &Panel::onUpdatePlaylist);
 }
@@ -120,8 +124,8 @@ void Panel::onRenewableGenerationModellingChanged(bool)
     auto study = Data::Study::Current::Get();
     if (!study)
         return;
-    
-    if (study->parameters.renewableGeneration() == Antares::Data::rgAggregated)
+
+    if (study->parameters.renewableGeneration.isAggregated())
     {
         verticalSizer_->Hide(grid_ts_mgt_rn_cluster_);
         verticalSizer_->Show(grid_ts_mgt_);
@@ -134,7 +138,7 @@ void Panel::onRenewableGenerationModellingChanged(bool)
         grid_ts_mgt_rn_cluster_->forceRefresh();
     }
     verticalSizer_->Layout();
-    
+
     Dispatcher::GUI::Post(this, &Panel::onDelayedStudyLoaded, 20 /*ms*/);
 }
 
@@ -143,7 +147,7 @@ void Panel::onDelayedStudyLoaded()
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        auto* data = new Window::Inspector::InspectorData(*study);
+        auto data = std::make_shared<Window::Inspector::InspectorData>(study);
         data->studies.insert(study);
         pUpdateInfoStudy(data);
     }
@@ -156,7 +160,7 @@ void Panel::onUpdatePlaylist()
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        auto* data = new Window::Inspector::InspectorData(*study);
+        auto data = std::make_shared<Window::Inspector::InspectorData>(study);
         data->studies.insert(study);
         pUpdateInfoStudy(data);
     }

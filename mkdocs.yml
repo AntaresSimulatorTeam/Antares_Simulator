@@ -35,9 +35,12 @@ nav:
     - 'Optimisation problem' : 'reference-guide/2-modeling.md'
   - 'Build':
     - 'Introduction': 'build/0-INSTALL.md'
-    - 'Windows': 'build/INSTALL-windows.md'
-    - 'Ubuntu': 'build/INSTALL-ubuntu.md'
-    - 'CentOS': 'build/INSTALL-centos.md'
+    - 'Development requirements': 'build/1-Development-requirements.md'
+    - 'Dependencies install': 'build/2-Dependencies-install.md'
+    - 'Build': 'build/3-Build.md'
+    - 'Tests': 'build/4-Tests.md'
+    - 'Installer creation': 'build/5-Installer-creation.md'
+    - 'Continuous Integration' : 'build/continuous-integration.md'
     - 'OR-tools integration' : 'build/ortools-integration.md'
   - 'Changelog': 'CHANGELOG.md'
 

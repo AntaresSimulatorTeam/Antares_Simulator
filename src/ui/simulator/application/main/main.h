@@ -39,6 +39,7 @@
 #include "config.h"
 #include <ui/common/component/frame/local-frame.h>
 #include <antares/study.h>
+#include <antares/study/output.h>
 
 namespace Antares
 {
@@ -361,6 +362,7 @@ public:
     //! Retrieve the internal data (const)
     const MainFormData* data() const;
     //@}
+    void viewLatestOutput();
 
 public:
     //! Event: The application is about to quit
@@ -596,6 +598,8 @@ private:
     void evtOnHelpPDFSystemMapEditorReferenceGuide(wxCommandEvent& evt);
     //! Event: PDF Examples library
     void evtOnHelpPDFExamplesLibrary(wxCommandEvent& evt);
+    //! Event: online documentation
+    void evtOnHelpOnlineDocumentation(wxCommandEvent& evt);
 
     //@}
 
@@ -731,12 +735,24 @@ private:
     Component::Notebook::Page* pageRenewableClusterList;
     Component::Notebook::Page* pageRenewableCommon;
 
-    Component::Notebook::Page* pageLinksSummary;
-    Component::Notebook::Page* pageLinksDetails;
+    Component::Notebook::Page* pageLinksSummary = nullptr;
+    Component::Notebook::Page* pageLinksParameters = nullptr;
+    Component::Notebook::Page* pageLinksNTC = nullptr;
 
     Component::Notebook::Page* pageNodalOptim;
 
     Window::BindingConstraint* pWndBindingConstraints;
+
+    // Secnario buider pages
+    Component::Notebook::Page* pScenarioBuilderMainPage;
+    Component::Notebook::Page* pageScBuilderLoad;
+    Component::Notebook::Page* pageScBuilderThermal;
+    Component::Notebook::Page* pageScBuilderHydro;
+    Component::Notebook::Page* pageScBuilderWind;
+    Component::Notebook::Page* pageScBuilderSolar;
+    Component::Notebook::Page* pageScBuilderNTC;
+    Component::Notebook::Page* pageScBuilderRenewable;
+    Component::Notebook::Page* pageScBuilderHydroLevels;
 
     //! The current grid operator to use on selected cells
     Component::Datagrid::Selection::IOperator* pGridSelectionOperator;
@@ -773,6 +789,9 @@ private:
 
     //! Current Equipment page
     uint pCurrentEquipmentPage;
+
+    // Pointer to latest output
+    Data::Output::Ptr latestOutput = nullptr;
 
     // friends
     template<class WindowT>

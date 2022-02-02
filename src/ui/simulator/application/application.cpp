@@ -38,6 +38,7 @@
 #include <antares/jit.h>
 #include <antares/logs.h>
 #include <antares/memory/memory.h>
+#include <antares/emergency.h>
 #include <wx/config.h>
 #include "../windows/message.h"
 #include <antares/sys/appdata.h>
@@ -153,7 +154,7 @@ static void NotEnoughMemory()
         message.showModal();
     }
     logs.error() << "Not enough memory. aborting.";
-    exit(42);
+    AntaresSolverEmergencyShutdown(42);
 }
 
 #ifndef YUNI_OS_WINDOWS

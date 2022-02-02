@@ -116,6 +116,11 @@ public:
     Matrix(const Matrix& rhs);
 
     /*!
+    ** \brief Move constructor
+    */
+    Matrix(Matrix&& rhs) noexcept;
+
+    /*!
     ** \brief Copy constructor
     */
     template<class U, class V>
@@ -139,6 +144,13 @@ public:
 
     template<class U, class V>
     void copyFrom(const Matrix<U, V>* rhs);
+    //@}
+
+    //@{
+    /*!
+    ** \brief Swap contents of Matrix with another
+    */
+    void swap(MatrixType& rhs) noexcept;
     //@}
 
     //! \name File manipulation
@@ -457,9 +469,13 @@ public:
     //@{
     //! Assignement
     Matrix& operator=(const Matrix& rhs);
+
+    Matrix& operator=(Matrix&& rhs) noexcept;
+
     //! Assignement
     template<class U>
     Matrix& operator=(const Matrix<U>& rhs);
+
     //! operator []
     ColumnType& operator[](uint column);
     const ColumnType& operator[](uint column) const;

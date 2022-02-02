@@ -472,12 +472,6 @@ public:
     void dumpSwapFilesInfos() const;
     //@}
 
-public:
-    /*!
-    ** \brief Flag to produce logs when reserving disk spacoe (enabled by default)
-    */
-    static bool InformAboutDiskSpaceReservation;
-
 private:
     /*!
     ** \brief Allocate a new memory data block

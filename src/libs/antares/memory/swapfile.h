@@ -53,7 +53,7 @@ public:
     /*!
     ** \brief Open a new swap file
     */
-    bool openSwapFile(uint count);
+    bool openSwapFile(uint count, bool displayDiskLogs);
 
 public:
 #ifdef YUNI_OS_WINDOWS

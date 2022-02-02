@@ -27,6 +27,9 @@
 
 #include "load-options.h"
 #include "../logs.h"
+#include "../config.h"
+
+#include <antares/exception/LoadingError.hpp>
 
 namespace Antares
 {
@@ -47,8 +50,7 @@ StudyLoadOptions::StudyLoadOptions() :
  forceParallel(false),
  maxNbYearsInParallel(0),
  usedByTheSolver(false),
- ortoolsUsed(false),
- ortoolsEnumUsed(OrtoolsSolver::sirius)
+ ortoolsUsed(false)
 {
 }
 
@@ -62,5 +64,24 @@ void StudyLoadOptions::pushProgressLogs() const
     }
 }
 
+void StudyLoadOptions::checkForceSimulationMode()
+{
+    const uint number_of_enabled_force_options
+      = static_cast<uint>(forceExpansion) + static_cast<uint>(forceEconomy)
+        + static_cast<uint>(forceAdequacy) + static_cast<uint>(forceAdequacyDraft);
+
+    if (number_of_enabled_force_options > 1)
+    {
+        throw Error::InvalidSimulationMode();
+    }
+    if (forceExpansion)
+        forceMode = stdmExpansion;
+    else if (forceEconomy)
+        forceMode = stdmEconomy;
+    else if (forceAdequacy)
+        forceMode = stdmAdequacy;
+    else if (forceAdequacyDraft)
+        forceMode = stdmAdequacyDraft;
+}
 } // namespace Data
 } // namespace Antares

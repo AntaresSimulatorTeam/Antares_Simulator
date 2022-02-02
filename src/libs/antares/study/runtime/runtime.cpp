@@ -143,10 +143,10 @@ static void StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos
     r.areaLink = new AreaLinkPointer[r.interconnectionsCount];
 
     uint indx = 0;
-    uint areaIndx = 0;
 
     study.areas.each([&](Data::Area& area) {
-        areaIndx = 0;
+        area.buildLinksIndexes();
+
         auto end = area.links.end();
         for (auto i = area.links.begin(); i != end; ++i)
         {
@@ -154,9 +154,7 @@ static void StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos
 
             r.areaLink[indx] = link;
             link->index = indx;
-            link->indexForArea = areaIndx;
             ++indx;
-            ++areaIndx;
         }
     });
 }
@@ -180,6 +178,7 @@ static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
         break;
     }
     logs.debug() << "copying constraint " << rti.operatorType << ' ' << b.name();
+    rti.name = b.name().c_str();
     rti.linkCount = b.linkCount();
     rti.clusterCount = b.enabledClusterCount();
     assert(rti.linkCount < 50000000 and "Seems a bit large...");    // arbitrary value
@@ -466,6 +465,26 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
     }
 }
 
+void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
+{
+    const auto& gd = study.parameters;
+    thermalTSRefresh = gd.timeSeriesToGenerate & timeSeriesThermal;
+    Data::GlobalTSGenerationBehavior globalBehavior;
+    if (gd.timeSeriesToGenerate & timeSeriesThermal)
+    {
+        globalBehavior = Data::GlobalTSGenerationBehavior::generate;
+    }
+    else
+    {
+        globalBehavior = Data::GlobalTSGenerationBehavior::doNotGenerate;
+    }
+    study.areas.each([this, globalBehavior](Data::Area& area) {
+        area.thermal.list.each([this, globalBehavior](const Data::ThermalCluster& cluster) {
+            thermalTSRefresh = thermalTSRefresh || cluster.doWeGenerateTS(globalBehavior, true);
+        });
+    });
+}
+
 bool StudyRuntimeInfos::loadFromStudy(Study& study)
 {
     auto& gd = study.parameters;
@@ -482,17 +501,21 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Calendar
     logs.info() << "Generating calendar informations";
     if (study.usedByTheSolver)
-        study.calendar.reset(study.parameters, false);
+    {
+        study.calendar.reset(gd, false);
+    }
     else
-        study.calendar.reset(study.parameters);
+    {
+        study.calendar.reset(gd);
+    }
     logs.debug() << "  :: generating calendar dedicated to the output";
-    study.calendarOutput.reset(study.parameters);
+    study.calendarOutput.reset(gd);
     initializeRangeLimits(study, rangeLimits);
 
     // Removing disabled thermal clusters from solver computations
     removeDisabledThermalClustersFromSolverComputations(study);
 
-    switch (study.parameters.renewableGeneration())
+    switch (gd.renewableGeneration())
     {
     case rgClusters:
         // Removing disabled renewable clusters from solver computations
@@ -519,6 +542,9 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
 
     // Binding constraints
     initializeBindingConstraints(study.bindingConstraints);
+
+    // Check if some clusters request TS generation
+    checkThermalTSGeneration(study);
 
 #ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
     // Hydro cost - Infinite

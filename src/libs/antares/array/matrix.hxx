@@ -31,6 +31,7 @@
 #include <yuni/core/string.h>
 #include <yuni/core/math.h>
 #include <logs.h>
+#include <utility>
 #include "../string-to-double.h"
 #include "../io/statistics.h"
 #include "matrix-to-buffer.h"
@@ -233,6 +234,13 @@ Matrix<T, ReadWriteT>::Matrix(const Matrix<T, ReadWriteT>& rhs) :
             memcpy(entry[i], rhs.entry[i], sizeof(T) * height);
         }
     }
+}
+
+template<class T, class ReadWriteT>
+Matrix<T, ReadWriteT>::Matrix(Matrix<T, ReadWriteT>&& rhs) noexcept
+{
+    // use Matrix::operator=(Matrix&& rhs)
+    *this = std::move(rhs);
 }
 
 template<class T, class ReadWriteT>
@@ -1553,9 +1561,41 @@ inline void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>* rhs)
 }
 
 template<class T, class ReadWriteT>
+void Matrix<T, ReadWriteT>::swap(Matrix<T, ReadWriteT>& rhs) noexcept
+{
+    // argument deduction lookup (ADL)
+    using std::swap;
+    swap(this->width, rhs.width);
+    swap(this->height, rhs.height);
+    swap(this->entry, rhs.entry);
+    swap(this->jit, rhs.jit);
+}
+
+template<class T, class ReadWriteT>
 inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(const Matrix<T, ReadWriteT>& rhs)
 {
     copyFrom(rhs);
+    return *this;
+}
+
+template<class T, class ReadWriteT>
+inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(Matrix<T, ReadWriteT>&& rhs) noexcept
+{
+    width = rhs.width;
+    height = rhs.height;
+    jit = rhs.jit;
+    if (0 == width || 0 == height)
+    {
+        entry = nullptr;
+        width = 0;
+        height = 0;
+    }
+    else
+    {
+        entry = rhs.entry;
+    }
+    // Prevent spurious de-allocation from rhs's destructor
+    rhs.entry = nullptr;
     return *this;
 }
 

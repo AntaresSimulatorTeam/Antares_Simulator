@@ -43,6 +43,26 @@ using namespace Antares;
 
 #define SEP IO::Separator
 
+namespace Antares
+{
+namespace Data
+{
+bool ThermalCluster::doWeGenerateTS(GlobalTSGenerationBehavior global, bool refresh) const
+{
+    switch (tsGenBehavior)
+    {
+    // Generate if global tells us to
+    case LocalTSGenerationBehavior::useGlobalParameter:
+        return (global == GlobalTSGenerationBehavior::generate) && refresh;
+    case LocalTSGenerationBehavior::forceGen:
+        return refresh;
+    default:
+        return false;
+    }
+}
+} // namespace Data
+} // namespace Antares
+
 namespace Yuni
 {
 namespace Extension
@@ -63,6 +83,30 @@ bool Into<Antares::Data::ThermalLaw>::Perform(AnyString string, TargetType& out)
     if (string.equalsInsensitive("geometric"))
     {
         out = Antares::Data::thermalLawGeometric;
+        return true;
+    }
+    return false;
+}
+
+bool Into<Antares::Data::LocalTSGenerationBehavior>::Perform(AnyString string, TargetType& out)
+{
+    string.trim();
+    if (string.empty())
+        return false;
+
+    if (string.equalsInsensitive("use global"))
+    {
+        out = Antares::Data::LocalTSGenerationBehavior::useGlobalParameter;
+        return true;
+    }
+    if (string.equalsInsensitive("force generation"))
+    {
+        out = Antares::Data::LocalTSGenerationBehavior::forceGen;
+        return true;
+    }
+    if (string.equalsInsensitive("force no generation"))
+    {
+        out = Antares::Data::LocalTSGenerationBehavior::forceNoGen;
         return true;
     }
     return false;
@@ -709,7 +753,8 @@ bool ThermalCluster::checkMinStablePowerWithNewModulation(uint index, double val
     return checkMinStablePower();
 }
 
-unsigned int ThermalCluster::precision() const {
+unsigned int ThermalCluster::precision() const
+{
     return 0;
 }
 } // namespace Data

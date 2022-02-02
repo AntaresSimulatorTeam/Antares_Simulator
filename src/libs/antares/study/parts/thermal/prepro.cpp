@@ -294,7 +294,9 @@ void PreproThermal::reset()
     }
 }
 
-bool PreproThermal::normalizeAndCheckNPO(const AnyString& clustername, uint clusterSize)
+bool PreproThermal::normalizeAndCheckNPO(const AnyString& areaname,
+                                         const AnyString& clustername,
+                                         uint clusterSize)
 {
     // alias to our data columns
     auto& columnNPOMax = data[npoMax];
@@ -320,7 +322,7 @@ bool PreproThermal::normalizeAndCheckNPO(const AnyString& clustername, uint clus
         {
             if (++errors < maxErrors)
             {
-                logs.error() << clustername
+                logs.error() << clustername << " in area " << areaname
                              << ": NPO min can not be greater than NPO max (hour: " << (y + 1)
                              << ", npo-min: " << columnNPOMin[y] << ", npo-max: " << columnNPOMax[y]
                              << ')';
@@ -329,7 +331,8 @@ bool PreproThermal::normalizeAndCheckNPO(const AnyString& clustername, uint clus
     }
 
     if (errors >= maxErrors)
-        logs.error() << clustername << ": too many errors. skipping (total: " << errors << ')';
+        logs.error() << clustername << " in area " << areaname
+                     << ": too many errors. skipping (total: " << errors << ')';
 
     if (normalized)
         logs.info() << "  NPO max for the thermal cluster '" << clustername

@@ -30,6 +30,7 @@
 
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
 #include "../utils/optimization_statistics.h"
+#include "../../libs/antares/study/fwd.h"
 
 #define GROSSES_VARIABLES NON_ANTARES
 #define COEFF_GROSSES_VARIABLES 100
@@ -166,6 +167,7 @@ typedef struct
     int* PaysDuPalierDispatch;
     int* NumeroDuPalierDispatch;
     int* OffsetTemporelSurLePalierDispatch;
+    const char* NomDeLaContrainteCouplante;
 } CONTRAINTES_COUPLANTES;
 
 typedef struct
@@ -367,12 +369,6 @@ public:
 
         level = level + inflows[step] - turb[step] + pumpRatio * pump[step];
 
-        if (Yuni::Math::Zero(level))
-            level = 0.;
-
-        if (Yuni::Math::Zero(1. - level))
-            level = capacity;
-
         if (level > capacity)
         {
             ovf[step] = level - capacity;
@@ -559,7 +555,6 @@ struct PROBLEME_HEBDO
 
     int* NumeroDeContrainteDeSoldeDEchange;
 
-    int* NumeroDeContrainteBorneStockFinal;
     int* NumeroDeContrainteEquivalenceStockFinal;
     int* NumeroDeContrainteExpressionStockFinal;
 

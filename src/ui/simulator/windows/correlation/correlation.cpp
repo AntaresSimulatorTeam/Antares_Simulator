@@ -74,7 +74,7 @@ CorrelationPanel::CorrelationPanel(wxWindow* parent, int timeseries) : wxPanel(p
     // Init
     pData = new CorrelationPanelData();
     pData->timeseries = timeseries;
-    pData->datasource = new DatasourceAlphaOrder();
+    pData->datasource = std::make_shared<DatasourceAlphaOrder>();
     for (uint i = 0; i != 12 + 1; ++i)
     {
         pData->renderer[i] = new Component::Datagrid::Renderer::CorrelationMatrix();
@@ -204,7 +204,7 @@ CorrelationPanel::~CorrelationPanel()
 
 void CorrelationPanel::onStudyLoaded()
 {
-    pData->datasource = new DatasourceAlphaOrder();
+    pData->datasource = std::make_shared<DatasourceAlphaOrder>();
     updateAllDatasources();
     pPageAnnual->select();
 }
@@ -290,19 +290,19 @@ void CorrelationPanel::updateAllDatasources()
 
 void CorrelationPanel::onSortAlpha(wxCommandEvent&)
 {
-    pData->datasource = new DatasourceAlphaOrder();
+    pData->datasource = std::make_shared<DatasourceAlphaOrder>();
     updateAllDatasources();
 }
 
 void CorrelationPanel::onSortAlphaReverse(wxCommandEvent&)
 {
-    pData->datasource = new DatasourceReverseAlphaOrder();
+    pData->datasource = std::make_shared<DatasourceReverseAlphaOrder>();
     updateAllDatasources();
 }
 
 void CorrelationPanel::onSortColor(wxCommandEvent&)
 {
-    pData->datasource = new DatasourceColorOrder();
+    pData->datasource = std::make_shared<DatasourceColorOrder>();
     updateAllDatasources();
 }
 

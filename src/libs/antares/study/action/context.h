@@ -32,6 +32,7 @@
 #include <map>
 #include <yuni/core/string.h>
 #include <yuni/core/bind.h>
+#include <memory>
 #include "action.h"
 
 namespace Antares
@@ -41,8 +42,7 @@ namespace Action
 class Context
 {
 public:
-    //! The most suitable smart ptr for the class
-    typedef Yuni::SmartPtr<Context> Ptr;
+    using Ptr = std::shared_ptr<Context>;
     //! Map of properties
     typedef std::map<Yuni::String, Yuni::String> Properties;
     //! Local view

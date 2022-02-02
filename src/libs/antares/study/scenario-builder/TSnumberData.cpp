@@ -105,13 +105,21 @@ inline bool CheckValidity<Data::DataSeriesHydro>(uint value,
     return (!tsGenMax) ? (value < data.count) : (value < tsGenMax);
 }
 
-template<class StringT, class D>
-static void ApplyToMatrix(uint& errors,
-                          StringT& logprefix,
-                          D& data,
-                          const TSNumberData::MatrixType::ColumnType& years,
-                          uint tsGenMax)
+template<>
+inline bool CheckValidity<Data::AreaLink>(uint value, const Data::AreaLink& data, uint tsGenMax)
 {
+    return value < data.directCapacities.width;
+}
+
+template<class StringT, class D>
+bool ApplyToMatrix(uint& errors,
+                   StringT& logprefix,
+                   D& data,
+                   const TSNumberData::MatrixType::ColumnType& years,
+                   uint tsGenMax)
+{
+    bool ret = true;
+
     // In this case, m.height represents the total number of years
     const uint nbYears = data.timeseriesNumbers.height;
     // The matrix m has only one column
@@ -136,6 +144,7 @@ static void ApplyToMatrix(uint& errors,
                         logs.warning() << "scenario-builder: " << logprefix
                                        << "value out of bounds for the year " << (y + 1);
                 }
+                ret = false;
                 continue;
             }
             // Ok, assign. The value provided by the interface is user-friendly
@@ -143,13 +152,17 @@ static void ApplyToMatrix(uint& errors,
             target[y] = tsNum;
         }
     }
+
+    return ret;
 }
 
 } // anonymous namespace
 
 // =============== TSNumberData derived classes ===============
 
+// ================================
 // Load ...
+// ================================
 uint loadTSNumberData::get_tsGenCount(const Study& study) const
 {
     // General data
@@ -159,8 +172,9 @@ uint loadTSNumberData::get_tsGenCount(const Study& study) const
     return tsGenLoad ? parameters.nbTimeSeriesLoad : 0u;
 }
 
-void loadTSNumberData::apply(Study& study)
+bool loadTSNumberData::apply(Study& study)
 {
+    bool ret = true;
     CString<512, false> logprefix;
     // Errors
     uint errors = 0;
@@ -179,11 +193,15 @@ void loadTSNumberData::apply(Study& study)
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
         logprefix.clear() << "Load: Area '" << area.name << "': ";
-        ApplyToMatrix(errors, logprefix, *area.load.series, col, tsGenCountLoad);
+        ret = ret && ApplyToMatrix(errors, logprefix, *area.load.series, col, tsGenCountLoad);
     }
+    return ret;
 }
 
+// ================================
 // Wind ...
+// ================================
+
 uint windTSNumberData::get_tsGenCount(const Study& study) const
 {
     // General data
@@ -193,8 +211,9 @@ uint windTSNumberData::get_tsGenCount(const Study& study) const
     return tsGenWind ? parameters.nbTimeSeriesWind : 0u;
 }
 
-void windTSNumberData::apply(/*const*/ Study& study)
+bool windTSNumberData::apply(/*const*/ Study& study)
 {
+    bool ret = true;
     CString<512, false> logprefix;
     // Errors
     uint errors = 0;
@@ -213,11 +232,15 @@ void windTSNumberData::apply(/*const*/ Study& study)
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
         logprefix.clear() << "Wind: Area '" << area.name << "': ";
-        ApplyToMatrix(errors, logprefix, *area.wind.series, col, tsGenCountWind);
+        ret = ret && ApplyToMatrix(errors, logprefix, *area.wind.series, col, tsGenCountWind);
     }
+    return ret;
 }
 
+// ================================
 // Solar ...
+// ================================
+
 uint solarTSNumberData::get_tsGenCount(const Study& study) const
 {
     // General data
@@ -227,8 +250,9 @@ uint solarTSNumberData::get_tsGenCount(const Study& study) const
     return tsGenSolar ? parameters.nbTimeSeriesSolar : 0u;
 }
 
-void solarTSNumberData::apply(Study& study)
+bool solarTSNumberData::apply(Study& study)
 {
+    bool ret = true;
     CString<512, false> logprefix;
     // Errors
     uint errors = 0;
@@ -247,11 +271,15 @@ void solarTSNumberData::apply(Study& study)
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
         logprefix.clear() << "Solar: Area '" << area.name << "': ";
-        ApplyToMatrix(errors, logprefix, *area.solar.series, col, tsGenCountSolar);
+        ret = ret && ApplyToMatrix(errors, logprefix, *area.solar.series, col, tsGenCountSolar);
     }
+    return ret;
 }
 
+// ================================
 // Hydro ...
+// ================================
+
 uint hydroTSNumberData::get_tsGenCount(const Study& study) const
 {
     // General data
@@ -261,8 +289,9 @@ uint hydroTSNumberData::get_tsGenCount(const Study& study) const
     return tsGenHydro ? parameters.nbTimeSeriesHydro : 0u;
 }
 
-void hydroTSNumberData::apply(Study& study)
+bool hydroTSNumberData::apply(Study& study)
 {
+    bool ret = true;
     CString<512, false> logprefix;
     // Errors
     uint errors = 0;
@@ -281,11 +310,15 @@ void hydroTSNumberData::apply(Study& study)
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
         logprefix.clear() << "Hydro: Area '" << area.name << "': ";
-        ApplyToMatrix(errors, logprefix, *area.hydro.series, col, tsGenCountHydro);
+        ret = ret && ApplyToMatrix(errors, logprefix, *area.hydro.series, col, tsGenCountHydro);
     }
+    return ret;
 }
 
+// ================================
 // Thermal ...
+// ================================
+
 bool thermalTSNumberData::reset(const Study& study)
 {
     assert(&study != nullptr);
@@ -316,7 +349,6 @@ void thermalTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stre
     if (!pArea)
         return;
 
-// Foreach year
 #ifndef NDEBUG
     if (pTSNumberRules.width)
     {
@@ -324,9 +356,10 @@ void thermalTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stre
     }
 #endif
 
+    // Foreach thermal cluster...
     for (uint index = 0; index != pTSNumberRules.width; ++index)
     {
-        // Foreach thermal cluster...
+        // Foreach year ...
         for (uint y = 0; y != pTSNumberRules.height; ++y)
         {
             const uint val = get(pArea->thermal.list.byIndex[index], y);
@@ -344,14 +377,13 @@ void thermalTSNumberData::set(const Antares::Data::ThermalCluster* cluster,
                               uint value)
 {
     assert(cluster != nullptr);
-    if (clusterIndexMap.find(cluster) == clusterIndexMap.end())
-        clusterIndexMap[cluster] = cluster->areaWideIndex;
-    if (year < pTSNumberRules.height)
-        pTSNumberRules[clusterIndexMap[cluster]][year] = value;
+    if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
+        pTSNumberRules[cluster->areaWideIndex][year] = value;
 }
 
-void thermalTSNumberData::apply(Study& study)
+bool thermalTSNumberData::apply(Study& study)
 {
+    bool ret = true;
     CString<512, false> logprefix;
     // Errors
     uint errors = 0;
@@ -362,7 +394,7 @@ void thermalTSNumberData::apply(Study& study)
     Area& area = *(study.areas.byIndex[pArea->index]);
     // The total number of clusters for the area
     // WARNING: We may have some thermal clusters with the `mustrun` option
-    uint clusterCount = area.thermal.clusterCount();
+    auto clusterCount = (uint)area.thermal.clusterCount();
 
     const uint tsGenCountThermal = get_tsGenCount(study);
 
@@ -371,12 +403,13 @@ void thermalTSNumberData::apply(Study& study)
         auto& cluster = *(area.thermal.clusters[clusterIndex]);
         // alias to the current column
         assert(clusterIndex < pTSNumberRules.width);
-        auto& col = pTSNumberRules[clusterIndex];
+        const auto& col = pTSNumberRules[clusterIndex];
 
         logprefix.clear() << "Thermal: Area '" << area.name << "', cluster: '" << cluster.name()
                           << "': ";
-        ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountThermal);
+        ret = ret && ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountThermal);
     }
+    return ret;
 }
 
 uint thermalTSNumberData::get_tsGenCount(const Study& study) const
@@ -388,19 +421,21 @@ uint thermalTSNumberData::get_tsGenCount(const Study& study) const
     return tsGenThermal ? parameters.nbTimeSeriesThermal : 0u;
 }
 
+// ================================
+// Renewable clusters ...
+// ================================
 void renewableTSNumberData::set(const Antares::Data::RenewableCluster* cluster,
                                 const uint year,
                                 uint value)
 {
     assert(cluster != nullptr);
-    if (clusterIndexMap.find(cluster) == clusterIndexMap.end())
-        clusterIndexMap[cluster] = cluster->areaWideIndex;
-    if (year < pTSNumberRules.height)
-        pTSNumberRules[clusterIndexMap[cluster]][year] = value;
+    if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
+        pTSNumberRules[cluster->areaWideIndex][year] = value;
 }
 
-void renewableTSNumberData::apply(Study& study)
+bool renewableTSNumberData::apply(Study& study)
 {
+    bool ret = true;
     CString<512, false> logprefix;
     // Errors
     uint errors = 0;
@@ -411,7 +446,7 @@ void renewableTSNumberData::apply(Study& study)
     Area& area = *(study.areas.byIndex[pArea->index]);
     // The total number of clusters for the area
     // WARNING: We may have some renewable clusters with the `mustrun` option
-    uint clusterCount = area.renewable.clusterCount();
+    auto clusterCount = (uint)area.renewable.clusterCount();
 
     const uint tsGenCountRenewable = get_tsGenCount(study);
 
@@ -420,12 +455,13 @@ void renewableTSNumberData::apply(Study& study)
         auto& cluster = *(area.renewable.clusters[clusterIndex]);
         // alias to the current column
         assert(clusterIndex < pTSNumberRules.width);
-        auto& col = pTSNumberRules[clusterIndex];
+        const auto& col = pTSNumberRules[clusterIndex];
 
         logprefix.clear() << "Renewable: Area '" << area.name << "', cluster: '" << cluster.name()
                           << "': ";
-        ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountRenewable);
+        ret = ret && ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountRenewable);
     }
+    return ret;
 }
 
 uint renewableTSNumberData::get_tsGenCount(const Study& study) const
@@ -486,6 +522,93 @@ bool renewableTSNumberData::reset(const Study& study)
     // Resize
     pTSNumberRules.reset(clusterCount, nbYears);
     return true;
+}
+
+// ================================
+// Transmission capacities ...
+// ================================
+bool ntcTSNumberData::reset(const Study& study)
+{
+    assert(&study != nullptr);
+
+    const uint nbYears = study.parameters.nbYears;
+    assert(pArea != nullptr);
+
+    auto linkCount = (uint)pArea->links.size();
+
+    // Resize
+    pTSNumberRules.reset(linkCount, nbYears);
+    return true;
+}
+
+void ntcTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
+{
+    if (!pArea)
+        return;
+
+    // Prefix
+    CString<512, false> prefix;
+    prefix += get_prefix();
+
+#ifndef NDEBUG
+    if (pTSNumberRules.width)
+    {
+        assert(pTSNumberRules.width == pArea->links.size());
+    }
+#endif
+
+    for (const auto& i : pArea->links)
+    {
+        const Data::AreaLink* link = i.second;
+        for (uint y = 0; y != pTSNumberRules.height; ++y)
+        {
+            const uint val = pTSNumberRules[link->indexForArea][y];
+            // Equals to zero means 'auto', which is the default mode
+            if (!val)
+                continue;
+            file << prefix << pArea->id << "," << i.first << "," << y << " = " << val << "\n";
+        }
+    }
+}
+
+void ntcTSNumberData::setDataForLink(const Antares::Data::AreaLink* link,
+                                     const uint year,
+                                     uint value)
+{
+    assert(link != nullptr);
+    if (year < pTSNumberRules.height && link->indexForArea < pTSNumberRules.width)
+        pTSNumberRules[link->indexForArea][year] = value;
+}
+
+bool ntcTSNumberData::apply(Study& study)
+{
+    bool ret = true;
+    CString<512, false> logprefix;
+    // Errors
+    uint errors = 0;
+
+    // Alias to the current area
+    assert(pArea != nullptr);
+    assert(pArea->index < study.areas.size());
+    const Area& area = *(study.areas.byIndex[pArea->index]);
+
+    const uint ntcGeneratedTScount = get_tsGenCount(study);
+
+    for (const auto& i : pArea->links)
+    {
+        auto* link = i.second;
+        uint linkIndex = link->indexForArea;
+        assert(linkIndex < pTSNumberRules.width);
+        const auto& col = pTSNumberRules[linkIndex];
+        logprefix.clear() << "NTC: Area '" << area.name << "', link: '" << link->getName() << "': ";
+        ret = ret && ApplyToMatrix(errors, logprefix, *link, col, ntcGeneratedTScount);
+    }
+    return ret;
+}
+
+uint ntcTSNumberData::get_tsGenCount(const Study& study) const
+{
+    return 0;
 }
 
 } // namespace ScenarioBuilder

@@ -38,11 +38,15 @@ namespace Datagrid
 namespace Renderer
 {
 RenewableClusterSummarySingleArea::RenewableClusterSummarySingleArea(
-    wxWindow* control,
-    Toolbox::InputSelector::Area* notifier) : CommonClusterSummarySingleArea(control, notifier)
-{}
+  wxWindow* control,
+  Toolbox::InputSelector::Area* notifier) :
+ CommonClusterSummarySingleArea(control, notifier)
+{
+}
 
-RenewableClusterSummarySingleArea::~RenewableClusterSummarySingleArea() {}
+RenewableClusterSummarySingleArea::~RenewableClusterSummarySingleArea()
+{
+}
 
 wxString RenewableClusterSummarySingleArea::rowCaption(int rowIndx) const
 {
@@ -67,8 +71,8 @@ wxString RenewableClusterSummarySingleArea::columnCaption(int colIndx) const
 wxString RenewableClusterSummarySingleArea::cellValue(int x, int y) const
 {
     Data::RenewableCluster* cluster = (pArea and (uint) y < pArea->renewable.list.size())
-                                      ? pArea->renewable.list.byIndex[y]
-                                      : nullptr;
+                                        ? pArea->renewable.list.byIndex[y]
+                                        : nullptr;
     switch (x)
     {
     case 0:
@@ -86,8 +90,8 @@ wxString RenewableClusterSummarySingleArea::cellValue(int x, int y) const
 double RenewableClusterSummarySingleArea::cellNumericValue(int x, int y) const
 {
     Data::RenewableCluster* cluster = (pArea and (uint) y < pArea->renewable.list.size())
-                                      ? pArea->renewable.list.byIndex[y]
-                                      : nullptr;
+                                        ? pArea->renewable.list.byIndex[y]
+                                        : nullptr;
     // gp : do we wish to have the line empty if cluster disabled
     // if (!cluster->enabled)
     //     return 0.;
@@ -127,7 +131,8 @@ bool RenewableClusterSummarySingleArea::cellValue(int x, int y, const String& v)
         case 1:
             return Update<bool, NoCheck, RefeshInspector>(cluster->enabled, v);
         case 2:
-            return Update<uint, CheckUnitCount, RefeshInspectorAndMarkAsModified>(cluster->unitCount, v);
+            return Update<uint, CheckUnitCount, RefeshInspectorAndMarkAsModified>(
+              cluster->unitCount, v);
         case 3:
             return Update<double, NoCheck, RefeshInspector>(cluster->nominalCapacity, v);
         }

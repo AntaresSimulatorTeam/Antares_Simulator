@@ -350,6 +350,11 @@ void Area::resizeAllTimeseriesNumbers(uint n)
         solar.series->timeseriesNumbers.clear();
         wind.series->timeseriesNumbers.clear();
         hydro.series->timeseriesNumbers.clear();
+        for (auto& namedLink : links)
+        {
+            AreaLink* link = namedLink.second;
+            link->timeseriesNumbers.clear();
+        }
     }
     else
     {
@@ -357,6 +362,11 @@ void Area::resizeAllTimeseriesNumbers(uint n)
         solar.series->timeseriesNumbers.resize(1, n);
         wind.series->timeseriesNumbers.resize(1, n);
         hydro.series->timeseriesNumbers.resize(1, n);
+        for (auto& namedLink : links)
+        {
+            AreaLink* link = namedLink.second;
+            link->timeseriesNumbers.resize(1, n);
+        }
     }
     thermal.resizeAllTimeseriesNumbers(n);
     renewable.resizeAllTimeseriesNumbers(n);
@@ -532,6 +542,19 @@ const AreaLink* Area::findLinkByID(const AreaName& id) const
 {
     auto i = links.find(id);
     return (i != links.end()) ? i->second : nullptr;
+}
+
+void Area::buildLinksIndexes()
+{
+    uint areaIndx = 0;
+
+    auto end = links.end();
+    for (auto i = links.begin(); i != end; ++i)
+    {
+        auto* link = i->second;
+        link->indexForArea = areaIndx;
+        ++areaIndx;
+    }
 }
 
 } // namespace Data

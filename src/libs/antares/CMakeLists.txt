@@ -187,6 +187,12 @@ set(SRC_AREAS
 	)
 source_group("study\\area" FILES ${SRC_AREAS})
 
+set(SRC_LINKS
+	study/links/property-links-helper.h
+)
+source_group("study\\links" FILES ${SRC_LINKS})
+
+
 set(SRC_STUDY_AREA_UI
 	study/area/ui.h
 	study/area/ui.hxx
@@ -348,6 +354,9 @@ set(SRC_EXCEPTION
 	exception/UnfeasibleProblemError.cpp
     # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
 	exception/UnfeasibleProblemError.hpp
+
+    exception/LoadingError.cpp
+    exception/LoadingError.hpp
 	)
 source_group("exception" FILES ${SRC_EXCEPTION})
 
@@ -382,6 +391,9 @@ set(SRC
 
 	# Memory wrapper
 	sys/mem-wrapper.h  sys/mem-wrapper.c
+
+    # new check allocation
+    memory/new_check.hxx
 
 	# appdata
 	sys/appdata.h
@@ -474,7 +486,6 @@ set(SRC
 
 	# Filter
 	study/filter.h
-	study/filter.hxx
 	study/filter.cpp
 
 	mersenne-twister/mersenne-twister.h
@@ -524,6 +535,7 @@ macro(ADD_ANTARES_CORE name)
 		${SRC_MATRIX}
 		${SRC_TIMEELAPSED}
 		${SRC_AREAS}
+		${SRC_LINKS}
 		${SRC_XCAST}
 		${SRC_STUDY_AREA_UI}
 		${SRC_STUDY_ACTIONS}
