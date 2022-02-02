@@ -107,7 +107,7 @@ SwapFileInfo::~SwapFileInfo()
     }
 }
 
-  bool SwapFileInfo::openSwapFile(uint count, bool displayDiskLogs)
+bool SwapFileInfo::openSwapFile(uint count, bool displayDiskLogs)
 {
     if (displayDiskLogs)
         logs.info() << "Reserving disk space...";
