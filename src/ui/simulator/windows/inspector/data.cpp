@@ -57,8 +57,8 @@ void InspectorData::clear()
 
 uint InspectorData::totalNbOfItems() const
 {
-    return (uint)areas.size() + (uint)links.size() + (uint)ThClusters.size() + (uint)RnClusters.size()
-           + (uint)constraints.size();
+    return (uint)areas.size() + (uint)links.size() + (uint)ThClusters.size()
+           + (uint)RnClusters.size() + (uint)constraints.size();
 }
 
 } // namespace Inspector

@@ -31,7 +31,6 @@
 #include "../study.h"
 #include "../../mersenne-twister/mersenne-twister.h"
 
-
 namespace Antares
 {
 /*

@@ -152,7 +152,7 @@ void Component::setElement(Item::IItem::Ptr it, int index_item)
     pItems[index_item] = it;
 }
 
-int  Component::size()
+int Component::size()
 {
     return pItems.size();
 }
@@ -208,7 +208,8 @@ void Component::internalUpdateItems()
     if (pItems.empty())
     {
         // Keep the user informed that there is nothing to display
-        pListbox->Append(wxEmptyString, new CustomClientData(std::make_shared<Item::Info>(wxT("No item"))));
+        pListbox->Append(wxEmptyString,
+                         new CustomClientData(std::make_shared<Item::Info>(wxT("No item"))));
         if (pLastSelectedItem)
         {
             pLastSelectedItem = nullptr;
@@ -298,7 +299,8 @@ void Component::onSelectionChanged(wxCommandEvent& evt)
     if (not GUIIsLock() && pListbox)
     {
         GUILocker locker;
-        const auto* c = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(evt.GetSelection()));
+        const auto* c
+          = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(evt.GetSelection()));
         if (c)
         {
             pLastSelectedItem = c->item;
@@ -312,7 +314,8 @@ void Component::onSelectionDblClick(wxCommandEvent& evt)
     if (not GUIIsLock() && pListbox)
     {
         GUILocker locker;
-        const auto* c = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(evt.GetSelection()));
+        const auto* c
+          = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(evt.GetSelection()));
         if (c)
         {
             pLastSelectedItem = c->item;

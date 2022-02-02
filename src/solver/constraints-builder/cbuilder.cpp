@@ -219,7 +219,8 @@ bool CBuilder::update(bool applyCheckBox)
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
     {
         if ((*linkInfoIt)->enabled
-            && ((*linkInfoIt)->type == Antares::Data::atAC /*|| (*linkInfoIt)->type == linkInfo::tyACPST*/))
+            && ((*linkInfoIt)->type
+                == Antares::Data::atAC /*|| (*linkInfoIt)->type == linkInfo::tyACPST*/))
             enabledACLines.push_back(*linkInfoIt);
     }
 

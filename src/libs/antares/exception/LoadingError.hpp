@@ -156,6 +156,7 @@ class InvalidParametersForThermalClusters : public LoadingError
 {
 public:
     explicit InvalidParametersForThermalClusters(const std::map<int, Yuni::String>& clusterNames);
+
 private:
     std::string buildMessage(const std::map<int, Yuni::String>& clusterNames) const;
 };

@@ -281,7 +281,8 @@ wxMenu* ApplWnd::createMenuInput()
     Menu::CreateItem(pMenuInput, mnIDViewLoad, wxT("View  Load"), nullptr, wxT("View 'Load'"));
     Menu::CreateItem(pMenuInput, mnIDViewSolar, wxT("View  Solar"), nullptr, wxT("View 'Solar'"));
     Menu::CreateItem(pMenuInput, mnIDViewWind, wxT("View  Wind"), nullptr, wxT("View 'Wind'"));
-    Menu::CreateItem(pMenuInput, mnIDViewRenewable, wxT("View  Renewable"), nullptr, wxT("View 'Wind'"));
+    Menu::CreateItem(
+      pMenuInput, mnIDViewRenewable, wxT("View  Renewable"), nullptr, wxT("View 'Wind'"));
     Menu::CreateItem(pMenuInput, mnIDViewHydro, wxT("View  Hydro"), nullptr, wxT("View 'Hydro'"));
     Menu::CreateItem(
       pMenuInput, mnIDViewThermal, wxT("View  Thermal"), nullptr, wxT("View 'Thermal'"));

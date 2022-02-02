@@ -95,7 +95,8 @@ WritingProgressFile::WritingProgressFile(const Yuni::String& file) :
 {
 }
 
-std::string InvalidParametersForThermalClusters::buildMessage(const std::map<int, Yuni::String>& clusterNames) const
+std::string InvalidParametersForThermalClusters::buildMessage(
+  const std::map<int, Yuni::String>& clusterNames) const
 {
     const std::string startMessage("Conflict between Min Stable Power, Pnom, spinning and capacity "
                                    "modulation for the following clusters : ");
@@ -117,7 +118,8 @@ InvalidParametersForThermalClusters::InvalidParametersForThermalClusters(
 }
 
 CommandLineArguments::CommandLineArguments(uint errors) :
- LoadingError("Invalid command-line arguments provided : " + std::to_string(errors) + " error(s) found")
+ LoadingError("Invalid command-line arguments provided : " + std::to_string(errors)
+              + " error(s) found")
 {
 }
 

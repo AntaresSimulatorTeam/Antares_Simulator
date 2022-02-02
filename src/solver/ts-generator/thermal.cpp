@@ -649,7 +649,10 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 }
 } // namespace
 
-bool GenerateThermalTimeSeries(Data::Study& study, uint year, Data::GlobalTSGenerationBehavior globalBehavior, bool refresh)
+bool GenerateThermalTimeSeries(Data::Study& study,
+                               uint year,
+                               Data::GlobalTSGenerationBehavior globalBehavior,
+                               bool refresh)
 {
     logs.info();
     logs.info() << "Generating the thermal time-series";
@@ -672,7 +675,8 @@ bool GenerateThermalTimeSeries(Data::Study& study, uint year, Data::GlobalTSGene
         {
             auto& cluster = *(it->second);
 
-            if (cluster.doWeGenerateTS(globalBehavior, refresh)) {
+            if (cluster.doWeGenerateTS(globalBehavior, refresh))
+            {
                 (*generator)(area, cluster);
             }
 

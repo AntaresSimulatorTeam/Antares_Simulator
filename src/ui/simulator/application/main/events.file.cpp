@@ -105,7 +105,7 @@ public:
 
             if (tokens.empty())
             {
-              out.push_back(std::make_shared<ItemWindow>(frame->frameTitle(), elemIdx));
+                out.push_back(std::make_shared<ItemWindow>(frame->frameTitle(), elemIdx));
             }
             else
             {
@@ -113,7 +113,7 @@ public:
                 {
                     if (frame->frameTitle().icontains(tokens[si]->text))
                     {
-                      out.push_back(std::make_shared<ItemWindow>(frame->frameTitle(), elemIdx));
+                        out.push_back(std::make_shared<ItemWindow>(frame->frameTitle(), elemIdx));
                         break; // -> tokens foreach
                     }
                 } // tokens foreach

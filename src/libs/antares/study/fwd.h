@@ -504,12 +504,12 @@ const char* NumberOfCoresModeToCString(NumberOfCoresMode ncores);
 NumberOfCoresMode StringToNumberOfCoresMode(const AnyString& text);
 
 /*
-* Renewable generation modelling
-*/
+ * Renewable generation modelling
+ */
 enum RenewableGenerationModelling
 {
     rgAggregated = 0, // Default
-    rgClusters, // Using renewable clusters
+    rgClusters,       // Using renewable clusters
     rgUnknown,
 };
 

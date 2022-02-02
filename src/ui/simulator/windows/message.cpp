@@ -194,8 +194,7 @@ Message::~Message()
 void Message::add(const wxString& caption, DefaultButtonType value, bool defaultButton, int space)
 {
     // We will use the userdata (a pointer) as a container for an int (value)
-    auto* btn = Component::CreateButton(
-      pPanel, caption, this, &Message::onButtonClick, value);
+    auto* btn = Component::CreateButton(pPanel, caption, this, &Message::onButtonClick, value);
 
     if (defaultButton)
     {
@@ -233,7 +232,7 @@ void Message::prepareShowModal()
     else
     {
         if (pSpotlight)
-          pSpotlight->provider(std::make_shared<MessageProvider>(pItemList));
+            pSpotlight->provider(std::make_shared<MessageProvider>(pItemList));
         sizer->Show(pListSizer, true);
         pSpace->Show(false);
     }

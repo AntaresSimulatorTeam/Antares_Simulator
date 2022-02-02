@@ -46,7 +46,6 @@ namespace Window
 {
 namespace Options
 {
-
 Yuni::Event<void(bool)> OnRenewableGenerationModellingChanged;
 
 static void Title(wxWindow* parent, wxSizer* sizer, const wxChar* text, bool margintop = true)
@@ -436,7 +435,8 @@ void AdvancedParameters::refresh()
     text = wxStringFromUTF8(NumberOfCoresModeToCString(study.parameters.nbCores.ncMode));
     pBtnNumberOfCores->caption(text);
 
-    text = wxStringFromUTF8(RenewableGenerationModellingToCString(study.parameters.renewableGeneration()));
+    text = wxStringFromUTF8(
+      RenewableGenerationModellingToCString(study.parameters.renewableGeneration()));
     pBtnRenewableGenModelling->caption(text);
 
     text = wxStringFromUTF8(
@@ -1021,18 +1021,18 @@ void AdvancedParameters::onRenewableGenerationModelling(Component::Button&, wxMe
     text << wxT("   [default]");
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
-        wxEVT_COMMAND_MENU_SELECTED,
-        wxCommandEventHandler(AdvancedParameters::onSelectRGMaggregated),
-        nullptr,
-        this);
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(AdvancedParameters::onSelectRGMaggregated),
+                 nullptr,
+                 this);
 
     text = wxStringFromUTF8(RenewableGenerationModellingToCString(Data::rgClusters));
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
-        wxEVT_COMMAND_MENU_SELECTED,
-        wxCommandEventHandler(AdvancedParameters::onSelectRGMrenewableClusters),
-        nullptr,
-        this);
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(AdvancedParameters::onSelectRGMrenewableClusters),
+                 nullptr,
+                 this);
 }
 
 void AdvancedParameters::onSelectRGMaggregated(wxCommandEvent& evt)

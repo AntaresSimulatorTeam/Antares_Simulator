@@ -40,13 +40,14 @@ namespace HTMLListbox
 {
 namespace Datasource
 {
-
 RenewableClustersByOrder::RenewableClustersByOrder(HTMLListbox::Component& parent) :
-ClustersByOrder(parent)
-{}
+ ClustersByOrder(parent)
+{
+}
 
 RenewableClustersByOrder::~RenewableClustersByOrder()
-{}
+{
+}
 
 void GetRenewableClusterMap(Data::Area* area, RenewableClusterMap& l, const wxString& search)
 {
@@ -74,7 +75,9 @@ int sizeRenewableClusterMap(RenewableClusterMap& l)
         size_to_return++;
 
         RenewableClusterList& groupClusterList = group_it->second;
-        for (RenewableClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
+        for (RenewableClusterList::iterator j = groupClusterList.begin();
+             j != groupClusterList.end();
+             ++j)
             size_to_return++;
     }
     return size_to_return;
@@ -87,7 +90,7 @@ void RenewableClustersByOrder::reorderItemsList(const wxString& search)
         RenewableClusterMap l;
         GetRenewableClusterMap(pArea, l, search);
 
-        // In case the cluster group is new to the item list, we resize the list 
+        // In case the cluster group is new to the item list, we resize the list
         int nombreItems = sizeRenewableClusterMap(l);
         pParent.resizeTo(nombreItems);
 
@@ -110,7 +113,9 @@ void RenewableClustersByOrder::reorderItemsList(const wxString& search)
 
             sortClustersInGroup(groupClusterList);
 
-            for (RenewableClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
+            for (RenewableClusterList::iterator j = groupClusterList.begin();
+                 j != groupClusterList.end();
+                 ++j)
             {
                 auto clusterItem = pClustersToItems[*j];
                 pParent.setElement(clusterItem, index_item);
@@ -145,7 +150,9 @@ void RenewableClustersByOrder::rebuildItemsList(const wxString& search)
             // Refreshing all clusters of the group
             sortClustersInGroup(groupClusterList);
 
-            for (RenewableClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
+            for (RenewableClusterList::iterator j = groupClusterList.begin();
+                 j != groupClusterList.end();
+                 ++j)
             {
                 auto clusterItem = std::make_shared<RenewableClusterItem>(*j);
                 pParent.add(clusterItem);
@@ -161,27 +168,31 @@ void RenewableClustersByOrder::rebuildItemsList(const wxString& search)
 // Alphabetic order
 // -------------------
 RenewableClustersByAlphaOrder::RenewableClustersByAlphaOrder(HTMLListbox::Component& parent) :
-    RenewableClustersByOrder(parent)
-{}
+ RenewableClustersByOrder(parent)
+{
+}
 
 RenewableClustersByAlphaOrder::~RenewableClustersByAlphaOrder()
-{}
+{
+}
 
 void RenewableClustersByAlphaOrder::sortClustersInGroup(RenewableClusterList& clusterList)
 {
     clusterList.sort(SortAlphaOrder());
 }
 
-
 // --------------------------
 // Alphabetic reverse order
 // --------------------------
-RenewableClustersByAlphaReverseOrder::RenewableClustersByAlphaReverseOrder(HTMLListbox::Component& parent) :
-    RenewableClustersByOrder(parent)
-{}
+RenewableClustersByAlphaReverseOrder::RenewableClustersByAlphaReverseOrder(
+  HTMLListbox::Component& parent) :
+ RenewableClustersByOrder(parent)
+{
+}
 
 RenewableClustersByAlphaReverseOrder::~RenewableClustersByAlphaReverseOrder()
-{}
+{
+}
 
 void RenewableClustersByAlphaReverseOrder::sortClustersInGroup(RenewableClusterList& clusterList)
 {

@@ -62,7 +62,7 @@ public:
     {
     public:
         //! The most suitable smart pointer
-        using Ptr =std::shared_ptr<Tag>;
+        using Ptr = std::shared_ptr<Tag>;
         //! Vector
         using Vector = std::vector<Ptr>;
 

@@ -129,7 +129,7 @@ inline void Spotlight::IItem::addTag(const StringT& text,
                                      Yuni::uint8 g,
                                      Yuni::uint8 b)
 {
-  pLeftTags.push_back(std::make_shared<Tag>(text, r, g, b));
+    pLeftTags.push_back(std::make_shared<Tag>(text, r, g, b));
 }
 
 template<class StringT>

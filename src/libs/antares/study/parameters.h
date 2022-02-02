@@ -146,7 +146,7 @@ public:
 
     /*!
     ** \brief Try to detect then fix refresh intervals
-    */    
+    */
     void fixRefreshIntervals();
 
     /*!

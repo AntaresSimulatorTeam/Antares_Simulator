@@ -301,14 +301,17 @@ void SIM_RenseignementProblemeHoraireAdequation(uint Heure)
         {
             const uint linkIdx = static_cast<uint>(fabs(NTCAPrendre) - 1);
             const AreaLink* link = study->runtime->areaLink[linkIdx];
-            uint tsIndex = NumeroChroniquesTireesParInterconnexion[numSpace][linkIdx].TransmissionCapacities;
+            uint tsIndex
+              = NumeroChroniquesTireesParInterconnexion[numSpace][linkIdx].TransmissionCapacities;
             if (NTCAPrendre > 0.)
             {
-               ProblemeHoraireAdequation.ValeursEffectivesNTC[i] = link->indirectCapacities[tsIndex][Heure];
+                ProblemeHoraireAdequation.ValeursEffectivesNTC[i]
+                  = link->indirectCapacities[tsIndex][Heure];
             }
             if (NTCAPrendre < 0.)
             {
-                ProblemeHoraireAdequation.ValeursEffectivesNTC[i] = link->directCapacities[tsIndex][Heure];
+                ProblemeHoraireAdequation.ValeursEffectivesNTC[i]
+                  = link->directCapacities[tsIndex][Heure];
             }
         }
     }
