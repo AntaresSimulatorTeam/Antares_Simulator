@@ -65,7 +65,7 @@ public:
 
     /*
     virtual void resetColors(int, int, wxColour&, wxColour&) const
-    { 
+    {
         // Do nothing
     }
 
@@ -86,17 +86,17 @@ public:
     }
     */
 
-/*
-protected:
-    virtual void onAreaChanged(Antares::Data::Area* area);
-    virtual void onStudyClosed() override;
-    void onStudyAreaDelete(Antares::Data::Area* area);
+    /*
+    protected:
+        virtual void onAreaChanged(Antares::Data::Area* area);
+        virtual void onStudyClosed() override;
+        void onStudyAreaDelete(Antares::Data::Area* area);
 
-private:
-    Antares::Data::Area* pArea;
-    wxWindow* pControl;
-    Toolbox::InputSelector::Area* pAreaNotifier;
-*/
+    private:
+        Antares::Data::Area* pArea;
+        wxWindow* pControl;
+        Toolbox::InputSelector::Area* pAreaNotifier;
+    */
 }; // class RenewableClusterSummarySingleArea
 
 } // namespace Renderer

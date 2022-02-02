@@ -766,7 +766,8 @@ void StartupWizard::showAllExamples()
         width = 320,
 #endif
     };
-    Component::Spotlight::FrameShow(pBtnExamples, std::make_shared<ExampleProvider>(pExFolder), 0, width);
+    Component::Spotlight::FrameShow(
+      pBtnExamples, std::make_shared<ExampleProvider>(pExFolder), 0, width);
     if (pBtnExamples)
         pBtnExamples->Enable(true);
 }

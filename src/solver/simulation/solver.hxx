@@ -1052,10 +1052,13 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
         GenerateTimeSeries<Data::timeSeriesHydro>(study, year);
     // Thermal
     Data::GlobalTSGenerationBehavior globalBehavior;
-    if (pData.haveToRefreshTSThermal) {
-      globalBehavior = Data::GlobalTSGenerationBehavior::generate;
-    } else {
-      globalBehavior = Data::GlobalTSGenerationBehavior::doNotGenerate;
+    if (pData.haveToRefreshTSThermal)
+    {
+        globalBehavior = Data::GlobalTSGenerationBehavior::generate;
+    }
+    else
+    {
+        globalBehavior = Data::GlobalTSGenerationBehavior::doNotGenerate;
     }
     const bool refresh = PreproOnly || !year || ((year % pData.refreshIntervalThermal) == 0);
     GenerateThermalTimeSeries(study, year, globalBehavior, refresh);
@@ -1101,7 +1104,7 @@ uint ISimulation<Impl>::buildSetsOfParallelYears(
             || (pData.haveToRefreshTSThermal && (!y || ((y % pData.refreshIntervalThermal) == 0)));
 
         // Some thermal clusters may override the global parameter.
-        //Therefore, we may want to refresh TS even if pData.haveToRefreshTSThermal == false
+        // Therefore, we may want to refresh TS even if pData.haveToRefreshTSThermal == false
         refreshing = refreshing || study.runtime->thermalTSRefresh;
 
         // We build a new set of parallel years if one of these conditions is fulfilled :
@@ -1470,7 +1473,8 @@ void ISimulation<Impl>::computeAnnualCostsStatistics(
             pAnnualCostsStatistics.systemCost.addCost(state[numSpace].annualSystemCost);
             pAnnualCostsStatistics.criterionCost1.addCost(state[numSpace].optimalSolutionCost1);
             pAnnualCostsStatistics.criterionCost2.addCost(state[numSpace].optimalSolutionCost2);
-            pAnnualCostsStatistics.optimizationTime.addCost(state[numSpace].averageOptimizationTime);
+            pAnnualCostsStatistics.optimizationTime.addCost(
+              state[numSpace].averageOptimizationTime);
         }
     }
 }

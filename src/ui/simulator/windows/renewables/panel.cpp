@@ -45,19 +45,19 @@ namespace Window
 {
 namespace Renewable
 {
-Panel::Panel(Component::Notebook* parent) : Component::Panel(parent),
+Panel::Panel(Component::Notebook* parent) :
+ Component::Panel(parent),
  pageRenewableCommon(nullptr),
  pNotebookCluster(nullptr),
  pAreaForCommonData(nullptr),
  pAreaSelector(nullptr),
  pStudyRevisionIncrement((Yuni::uint64)-1)
 {
-    
     // A sizer for our panel
     wxSizer* mainsizer = new wxBoxSizer(wxVERTICAL);
 
     std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page;
-    
+
     // First initialization
     {
         Component::Notebook* n = new Component::Notebook(this, Component::Notebook::orTop);
@@ -157,11 +157,11 @@ void Panel::onClusterChanged(Data::RenewableCluster* cluster)
 {
     if (pNotebookCluster)
     {
-        pNotebookCluster->caption(
-          (cluster && cluster->parentArea)
-            ? wxString() << wxStringFromUTF8(cluster->parentArea->name) << wxT(", ")
-                         << wxStringFromUTF8(cluster->name()) << wxT("  ")
-            : wxString());
+        pNotebookCluster->caption((cluster && cluster->parentArea)
+                                    ? wxString()
+                                        << wxStringFromUTF8(cluster->parentArea->name) << wxT(", ")
+                                        << wxStringFromUTF8(cluster->name()) << wxT("  ")
+                                    : wxString());
     }
 }
 

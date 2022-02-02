@@ -645,7 +645,7 @@ void SpotlightProviderMCAll::search(Spotlight::IItem::Vector& out,
 
     if (pComponent->pCurrentLOD != lodDetailedResultsWithConcatenation || tokens.empty())
     {
-      item = std::make_shared<IItem>();
+        item = std::make_shared<IItem>();
         item->countedAsResult(false);
         item->caption("MC Synthesis");
         item->group("Views");

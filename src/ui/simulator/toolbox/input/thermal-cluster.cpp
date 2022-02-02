@@ -142,8 +142,8 @@ void ThermalCluster::internalBuildSubControls()
     {
         pAreaNotifier->onAreaChanged.connect(pDataSourceAZ,
                                              &ThermalClustersByAlphaOrder::onAreaChanged);
-        pAreaNotifier->onAreaChanged.connect(
-          pDataSourceZA, &ThermalClustersByAlphaReverseOrder::onAreaChanged);
+        pAreaNotifier->onAreaChanged.connect(pDataSourceZA,
+                                             &ThermalClustersByAlphaReverseOrder::onAreaChanged);
     }
     sizer->Add(pThListbox, 1, wxALL | wxEXPAND);
     sizer->SetItemMinSize(pThListbox, 100, 200);

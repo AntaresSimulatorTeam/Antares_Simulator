@@ -296,7 +296,7 @@ void CorrelationPanel::onSortAlpha(wxCommandEvent&)
 
 void CorrelationPanel::onSortAlphaReverse(wxCommandEvent&)
 {
-  pData->datasource = std::make_shared<DatasourceReverseAlphaOrder>();
+    pData->datasource = std::make_shared<DatasourceReverseAlphaOrder>();
     updateAllDatasources();
 }
 

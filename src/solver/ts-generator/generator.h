@@ -45,7 +45,10 @@ namespace TSGenerator
 template<enum Data::TimeSeries T>
 bool GenerateTimeSeries(Data::Study& study, uint year);
 
-bool GenerateThermalTimeSeries(Data::Study& study, uint year, Data::GlobalTSGenerationBehavior globalBehavior, bool refresh);
+bool GenerateThermalTimeSeries(Data::Study& study,
+                               uint year,
+                               Data::GlobalTSGenerationBehavior globalBehavior,
+                               bool refresh);
 
 /*!
 ** \brief Destroy all TS Generators

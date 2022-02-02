@@ -497,7 +497,10 @@ void logLinkDataCheckError(Study& study, const AreaLink& link)
     study.gotFatalError = true;
 }
 
-void logLinkDataCheckErrorDirectIndirect(Study& study, const AreaLink& link, uint direct, uint indirect)
+void logLinkDataCheckErrorDirectIndirect(Study& study,
+                                         const AreaLink& link,
+                                         uint direct,
+                                         uint indirect)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
                  << " direct TS "

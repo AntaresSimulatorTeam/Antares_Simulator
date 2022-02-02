@@ -48,7 +48,7 @@ class Rules final : private Yuni::NonCopyable<Rules>
 {
 public:
     //! Smart pointer
-    using  Ptr = std::shared_ptr<Rules>;
+    using Ptr = std::shared_ptr<Rules>;
     //! Map
     typedef std::map<RulesScenarioName, Ptr> Map;
     //! Map ID
@@ -77,9 +77,7 @@ public:
     /*!
     ** \brief Load information from a single line (extracted from an INI file)
     */
-    bool readLine(const AreaName::Vector& splitKey,
-                        String value,
-                        bool updaterMode);
+    bool readLine(const AreaName::Vector& splitKey, String value, bool updaterMode);
 
     /*!
     ** \brief Export the data into a mere INI file
@@ -119,8 +117,6 @@ public:
     //! Renewable (array [0..pAreaCount - 1])
     std::vector<renewableTSNumberData> renewable;
 
-
-
     //! hydro levels
     hydroLevelsData hydroLevels;
 
@@ -139,9 +135,11 @@ private:
     bool readLink(const AreaName::Vector& instrs, String value, bool updaterMode);
 
     Data::Area* getArea(const AreaName& areaname, bool updaterMode);
-    Data::AreaLink* getLink(const AreaName& fromAreaName, const AreaName& toAreaName, bool updaterMode);
+    Data::AreaLink* getLink(const AreaName& fromAreaName,
+                            const AreaName& toAreaName,
+                            bool updaterMode);
 
-    // Member data 
+    // Member data
     Study& study_;
     //! Total number of areas
     uint pAreaCount;
