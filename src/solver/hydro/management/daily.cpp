@@ -40,6 +40,7 @@
 #include <cassert>
 #include <limits>
 #include <variable/state.h>
+#include <array>
 
 using namespace Yuni;
 
@@ -59,17 +60,17 @@ enum
 struct DebugData
 {
     using PerArea = HydroManagement::PerArea;
-    double OPP[366];
-    double DTG[366];
+    std::array<double, 366> OPP;
+    std::array<double, 366> DTG;
 
-    double OVF[365];
-    double DEV[365];
-    double VIO[365];
-    double deviationMax[12];
-    double violationMax[12];
-    double WASTE[12];
-    double CoutTotal[12];
-    double previousMonthWaste[12];
+    std::array<double, 365> OVF;
+    std::array<double, 365> DEV;
+    std::array<double, 365> VIO;
+    std::array<double, 12> deviationMax;
+    std::array<double, 12> violationMax;
+    std::array<double, 12> WASTE;
+    std::array<double, 12> CoutTotal;
+    std::array<double, 12> previousMonthWaste;
 
     const PerArea& data;
     const VALEURS_GENEREES_PAR_PAYS& valgen;
