@@ -93,7 +93,7 @@ struct DebugData
             CoutTotal[i] = 0.;
         }
     }
-    void writeTurb(const String& folderOutput, const String& filename, uint y)
+    void writeTurb(const String& folderOutput, const String& filename, uint y) const
     {
         String folder;
         folder << folderOutput << SEP << "debug" << SEP << "solver" << SEP << (1 + y);
