@@ -152,12 +152,10 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     auto const& valgen = *ValeursGenereesParPays[numSpace][z];
 
-    DebugData* debugData;
+    std::shared_ptr<DebugData> debugData(nullptr);
 
     if (study.parameters.hydroDebug)
-        debugData = new DebugData(data, valgen);
-    else
-        debugData = nullptr;
+        debugData = std::make_shared<DebugData>(data, valgen);
 
     for (uint month = 0; month != 12; ++month)
     {
@@ -346,7 +344,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             DONNEES_MENSUELLES_ETENDUES& problem = *H2O2_J_Instanciation();
             H2O2_J_apply_costs(h2o2_optim_costs, problem);
 
-            if (debugData != nullptr)
+            if (debugData)
                 debugData->previousMonthWaste[realmonth]
                   = wasteFromPreviousMonth / reservoirCapacity;
 
@@ -377,7 +375,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             {
             case OUI:
 
-                if (debugData != nullptr)
+                if (debugData)
                 {
                     debugData->deviationMax[realmonth] = problem.deviationMax;
                     debugData->violationMax[realmonth] = problem.violationMax;
@@ -393,7 +391,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
                     valgen.NiveauxReservoirsFinJours[day] = problem.niveauxFinJours[dayMonth];
 
-                    if (debugData != nullptr)
+                    if (debugData)
                     {
                         debugData->OVF[day] = problem.overflows[dayMonth];
                         debugData->DEV[day] = problem.deviations[dayMonth];
@@ -430,8 +428,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
         state.problemeHebdo->previousSimulationFinalLevel[z]
           = valgen.NiveauxReservoirsDebutJours[firstDaySimu] * reservoirCapacity;
 
-        // TODO: move to member function ?
-        if (debugData != nullptr)
+        if (debugData)
         {
             String folder;
             folder << study.folderOutput << SEP << "debug" << SEP << "solver" << SEP << (1 + y);
@@ -507,9 +504,6 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             }
         }
     }
-    // De-allocate debug data if necessary
-    if (debugData)
-        delete debugData;
 }
 
 void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& state,
