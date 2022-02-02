@@ -487,7 +487,6 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         return true;
     }
 
-    // Error
     if (key == "thematic-trimming")
         return value.to<bool>(d.thematicTrimming);
 
