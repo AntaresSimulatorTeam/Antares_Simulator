@@ -42,8 +42,7 @@ namespace Data
 {
 using NamedCluster = std::pair<ClusterName, ThermalClusterList::SharedPtr>;
 
-PartThermal::PartThermal() :
- unsuppliedEnergyCost(0.), spilledEnergyCost(0.)
+PartThermal::PartThermal() : unsuppliedEnergyCost(0.), spilledEnergyCost(0.)
 {
 }
 
@@ -75,7 +74,8 @@ void PartThermal::prepareAreaWideIndexes()
 {
     // Copy the list with all thermal clusters
     // And init the areaWideIndex (unique index for a given area)
-    if (list.empty()) {
+    if (list.empty())
+    {
         clusters.clear();
         return;
     }
