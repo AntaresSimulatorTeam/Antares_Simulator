@@ -125,7 +125,10 @@ def compare_directory(result_dir, reference_dir):
                     try:
                         pd.testing.assert_series_equal(ref_df[col_name], output_df[col_name], atol=atol, rtol=rtol)
                     except AssertionError: # Catch and re-raise exception to print col_name & tolerances
-                        raise AssertionError(f"In file {x.name}, columns {col_name} have differences (atol={atol}, rtol={rtol})")
+                        difference = ref_df[col_name].compare(output_df[col_name])
+                        if difference.size != 0:
+                            print("%s : %s" % (os.path.sep.join(x.absolute().parts[-4:]), col_name))
+                            print(difference)
 
 
 def check_output_values(study_path):

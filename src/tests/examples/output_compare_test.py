@@ -7,6 +7,8 @@ from antares_test_utils import *
 ## TESTS ##
 @pytest.mark.short
 def test_001_one_node_passive(use_ortools, ortools_solver, solver_path):
+    print()
+    print("Running the tests")
     study_path = ALL_STUDIES_PATH / "short-tests" / "001 One node - passive"
     enable_study_output(study_path, True)
     run_study(solver_path, study_path, use_ortools, ortools_solver)
@@ -447,6 +449,7 @@ def test_064_probabilistic_exchange_capacity(use_ortools, ortools_solver, solver
     enable_study_output(study_path, False)
     check_output_values(study_path)
 
+
 @pytest.mark.short
 @pytest.mark.skipif(sys.platform=="linux",
                     reason="Results different between linux and windows.")
@@ -456,6 +459,7 @@ def test_065_pumped_storage_plant_explicit_model_01(use_ortools, ortools_solver,
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     enable_study_output(study_path, False)
     check_output_values(study_path)
+
 
 @pytest.mark.short
 @pytest.mark.skipif(sys.platform=="linux",
