@@ -93,15 +93,17 @@ def enable_study_output(study_path, enable):
 def compare_directory(result_dir, reference_dir):
     assert (result_dir.is_dir())
     assert (reference_dir.is_dir())
+    # no_diff = True
 
     uncompared_file_name = ['id-daily.txt', 'id-hourly.txt']
 
     for x in result_dir.iterdir():
+        # print(os.path.sep.join(x.absolute().parts[-4:]))
         if x.is_dir():
             if x.name != 'grid':
+                # no_diff = no_diff and compare_directory(x, reference_dir / x.name)
                 compare_directory(x, reference_dir / x.name)
         else:
-
 
             if not x.name in uncompared_file_name:
                 output_df = read_csv(x)
@@ -129,10 +131,21 @@ def compare_directory(result_dir, reference_dir):
                         if difference.size != 0:
                             print("\n%s : %s" % (os.path.sep.join(x.absolute().parts[-4:]), col_name))
                             print(difference)
+                            # print("Errors occured")
+                            raise AssertionError()
+                            # no_diff = False
+    # if not no_diff:
+    #    print("diff = True")
+    # return no_diff
 
 
 def check_output_values(study_path):
     result_dir = find_output_result_dir(study_path / 'output')
     reference_dir = find_output_result_dir(study_path / 'reference')
     compare_directory(result_dir, reference_dir)
+    # failure = compare_directory(result_dir, reference_dir)
+    # print("removing outputs")
     remove_outputs(study_path)
+    # if failure:
+    #    assert False
+
