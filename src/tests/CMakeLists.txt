@@ -116,7 +116,7 @@ if(Python3_Interpreter_FOUND)
             # Short tests
             add_test(
                 NAME ${SHORT_NAME}
-                COMMAND Python3::Interpreter -m pytest -m short --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver> ${use_ortools_option} --ortools-solver=${ortools_solver} output_compare_test.py
+                COMMAND Python3::Interpreter -m pytest -m short --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver> ${use_ortools_option} --ortools-solver=${ortools_solver} output_compare_test.py -v -s
                 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples"
             )
             set_property(TEST ${SHORT_NAME} PROPERTY LABELS short-output ${ADDITIONNAL_LABELS})            

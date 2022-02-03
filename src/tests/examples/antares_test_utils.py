@@ -127,7 +127,7 @@ def compare_directory(result_dir, reference_dir):
                     except AssertionError: # Catch and re-raise exception to print col_name & tolerances
                         difference = ref_df[col_name].compare(output_df[col_name])
                         if difference.size != 0:
-                            print("%s : %s" % (os.path.sep.join(x.absolute().parts[-4:]), col_name))
+                            print("\n%s : %s" % (os.path.sep.join(x.absolute().parts[-4:]), col_name))
                             print(difference)
 
 
