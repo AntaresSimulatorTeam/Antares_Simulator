@@ -101,7 +101,7 @@ uint SelectionBindingConstraintCount()
     return ((!(!gData)) ? (uint)gData->constraints.size() : 0);
 }
 
-// gp : we should add contribution of renewable clusters. Where is this function used and why ? 
+// gp : we should add contribution of renewable clusters. Where is this function used and why ?
 uint SelectionTotalCount()
 {
     return (!(!gData)) ? (uint)gData->constraints.size() + (uint)gData->ThClusters.size()
@@ -386,7 +386,8 @@ void AddThermalClusters(const Data::ThermalCluster::Vector& list)
     bool notEmpty = false;
     Data::ThermalCluster::Vector::const_iterator end = list.end();
     for (Data::ThermalCluster::Vector::const_iterator i = list.begin(); i != end; ++i)
-        notEmpty = gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
+        notEmpty
+          = gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
 
     if (notEmpty)
     {
@@ -407,7 +408,8 @@ void AddThermalClusters(const Data::ThermalCluster::Set& list)
     bool notEmpty = false;
     Data::ThermalCluster::Set::const_iterator end = list.end();
     for (Data::ThermalCluster::Set::const_iterator i = list.begin(); i != end; ++i)
-        notEmpty = gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
+        notEmpty
+          = gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
 
     if (notEmpty)
     {
@@ -595,8 +597,8 @@ void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters)
         bool notEmpty = false;
         auto end = clusters.end();
         for (auto i = clusters.begin(); i != end; ++i)
-            notEmpty
-              = (gData->ThClusters).insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
+            notEmpty = (gData->ThClusters).insert(const_cast<Data::ThermalCluster*>(*i)).second
+                       || notEmpty;
 
         if (notEmpty)
             gData->empty = false;

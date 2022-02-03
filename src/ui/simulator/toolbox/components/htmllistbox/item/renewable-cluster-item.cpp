@@ -37,17 +37,15 @@ namespace HTMLListbox
 {
 namespace Item
 {
-
 RenewableClusterItem::RenewableClusterItem(Antares::Data::RenewableCluster* a) :
-    ClusterItem(a),
-    pRenewableCluster(a)
+ ClusterItem(a), pRenewableCluster(a)
 {
     preloadImages();
 }
 
-RenewableClusterItem::RenewableClusterItem(Antares::Data::RenewableCluster* a, const wxString& additional) :
-    ClusterItem(a, additional),
-    pRenewableCluster(a)
+RenewableClusterItem::RenewableClusterItem(Antares::Data::RenewableCluster* a,
+                                           const wxString& additional) :
+ ClusterItem(a, additional), pRenewableCluster(a)
 {
     preloadImages();
 }
@@ -58,7 +56,7 @@ RenewableClusterItem::~RenewableClusterItem()
 
 wxString RenewableClusterItem::htmlContentTail()
 {
-    // Return nothing 
+    // Return nothing
     return wxString();
 }
 

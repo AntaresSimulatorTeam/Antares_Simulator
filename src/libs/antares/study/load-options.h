@@ -49,6 +49,8 @@ public:
     //! Push a new log entry according to the local progress data
     void pushProgressLogs() const;
 
+    void checkForceSimulationMode();
+
 public:
     //! The number of MC years (non-zero to force the value)
     uint nbYears;
@@ -88,7 +90,7 @@ public:
     bool ortoolsUsed;
 
     //! Ortool solver used for simulation
-    OrtoolsSolver ortoolsEnumUsed;
+    OrtoolsSolver ortoolsEnumUsed = OrtoolsSolver::sirius;
 
     //! Temporary string for passing log message
     mutable Yuni::String logMessage;
@@ -97,6 +99,20 @@ public:
     //! The current number of ticks
     mutable uint progressTicks;
 
+    //! Display version number and exit
+    bool displayVersion = false;
+
+    //! Simulation mode
+    bool forceExpansion = false;
+    bool forceEconomy = false;
+    bool forceAdequacy = false;
+    bool forceAdequacyDraft = false;
+
+    YString studyFolder;
+    YString simulationName;
+    std::string ortoolsSolver;
+
+    bool useOrtools = false;
 }; // class StudyLoadOptions
 
 } // namespace Data

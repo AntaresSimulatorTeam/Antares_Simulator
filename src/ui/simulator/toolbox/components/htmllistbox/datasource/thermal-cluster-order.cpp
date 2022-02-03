@@ -40,13 +40,14 @@ namespace HTMLListbox
 {
 namespace Datasource
 {
-
 ThermalClustersByOrder::ThermalClustersByOrder(HTMLListbox::Component& parent) :
-    ClustersByOrder(parent)
-{}
+ ClustersByOrder(parent)
+{
+}
 
 ThermalClustersByOrder::~ThermalClustersByOrder()
-{}
+{
+}
 
 void GetThermalClusterMap(Data::Area* area, ThermalClusterMap& l, const wxString& search)
 {
@@ -74,7 +75,8 @@ int sizeThermalClusterMap(ThermalClusterMap& l)
         size_to_return++;
 
         ThermalClusterList& groupClusterList = group_it->second;
-        for (ThermalClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
+        for (ThermalClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end();
+             ++j)
             size_to_return++;
     }
     return size_to_return;
@@ -87,7 +89,7 @@ void ThermalClustersByOrder::reorderItemsList(const wxString& search)
         ThermalClusterMap l;
         GetThermalClusterMap(pArea, l, search);
 
-        // In case the cluster group is new to the item list, we resize the list 
+        // In case the cluster group is new to the item list, we resize the list
         int nombreItems = sizeThermalClusterMap(l);
         pParent.resizeTo(nombreItems);
 
@@ -110,7 +112,9 @@ void ThermalClustersByOrder::reorderItemsList(const wxString& search)
 
             sortClustersInGroup(groupClusterList);
 
-            for (ThermalClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
+            for (ThermalClusterList::iterator j = groupClusterList.begin();
+                 j != groupClusterList.end();
+                 ++j)
             {
                 auto clusterItem = pClustersToItems[*j];
                 pParent.setElement(clusterItem, index_item);
@@ -145,7 +149,9 @@ void ThermalClustersByOrder::rebuildItemsList(const wxString& search)
             // Refreshing all clusters of the group
             sortClustersInGroup(groupClusterList);
 
-            for (ThermalClusterList::iterator j = groupClusterList.begin(); j != groupClusterList.end(); ++j)
+            for (ThermalClusterList::iterator j = groupClusterList.begin();
+                 j != groupClusterList.end();
+                 ++j)
             {
                 auto clusterItem = std::make_shared<ThermalClusterItem>(*j);
                 pParent.add(clusterItem);
@@ -160,28 +166,32 @@ void ThermalClustersByOrder::rebuildItemsList(const wxString& search)
 // -------------------
 // Alphabetic order
 // -------------------
-ThermalClustersByAlphaOrder::ThermalClustersByAlphaOrder(HTMLListbox::Component& parent) : 
-    ThermalClustersByOrder(parent)
-{}
+ThermalClustersByAlphaOrder::ThermalClustersByAlphaOrder(HTMLListbox::Component& parent) :
+ ThermalClustersByOrder(parent)
+{
+}
 
 ThermalClustersByAlphaOrder::~ThermalClustersByAlphaOrder()
-{}
+{
+}
 
 void ThermalClustersByAlphaOrder::sortClustersInGroup(ThermalClusterList& clusterList)
 {
     clusterList.sort(SortAlphaOrder());
 }
 
-
 // --------------------------
 // Alphabetic reverse order
 // --------------------------
-ThermalClustersByAlphaReverseOrder::ThermalClustersByAlphaReverseOrder(HTMLListbox::Component& parent) :
-    ThermalClustersByOrder(parent)
-{}
+ThermalClustersByAlphaReverseOrder::ThermalClustersByAlphaReverseOrder(
+  HTMLListbox::Component& parent) :
+ ThermalClustersByOrder(parent)
+{
+}
 
 ThermalClustersByAlphaReverseOrder::~ThermalClustersByAlphaReverseOrder()
-{}
+{
+}
 
 void ThermalClustersByAlphaReverseOrder::sortClustersInGroup(ThermalClusterList& clusterList)
 {

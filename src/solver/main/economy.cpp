@@ -25,17 +25,23 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "../main.h"
+#include "../application.h"
 #include "../simulation/solver.h"
 #include "../simulation/economy.h"
 #include <antares/logs.h>
 
-using namespace Antares;
-
-void SolverApplication::runSimulationInEconomicMode()
+namespace Antares
+{
+namespace Solver
+{
+void Application::runSimulationInEconomicMode()
 {
     // Type of the simulation
     typedef Solver::Simulation::ISimulation<Solver::Simulation::Economy> SimulationType;
-
-    runSimulation<SimulationType>();
+    SimulationType simulation(*pStudy, pSettings);
+    simulation.run();
+    if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
+        simulation.writeResults(/*synthesis:*/ true);
 }
+} // namespace Solver
+} // namespace Antares

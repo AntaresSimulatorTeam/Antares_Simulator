@@ -33,7 +33,6 @@ namespace Antares
 {
 namespace Data
 {
-
 std::string datePrecisionIntoString(uint datePrecisionFilter)
 {
     std::string to_return;
@@ -42,28 +41,28 @@ std::string datePrecisionIntoString(uint datePrecisionFilter)
 
     if (datePrecisionFilter & filterDaily)
     {
-        if (! to_return.empty())
+        if (!to_return.empty())
             to_return += ", ";
         to_return += "daily";
     }
 
     if (datePrecisionFilter & filterWeekly)
     {
-        if (! to_return.empty())
+        if (!to_return.empty())
             to_return += ", ";
         to_return += "weekly";
     }
 
     if (datePrecisionFilter & filterMonthly)
     {
-        if (! to_return.empty())
+        if (!to_return.empty())
             to_return += ", ";
         to_return += "monthly";
     }
 
     if (datePrecisionFilter & filterAnnual)
     {
-        if (! to_return.empty())
+        if (!to_return.empty())
             to_return += ", ";
         to_return += "annual";
     }

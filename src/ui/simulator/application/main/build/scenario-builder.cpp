@@ -388,7 +388,9 @@ void ApplWnd::createNBOutputViewer()
     pSectionNotebook->add(pOutputViewerNotebook, wxT("output"), wxT("output"));
 
     // Back to standard edition
-    pOutputViewerNotebook->add(new_check_allocation<wxPanel>(pOutputViewerNotebook), wxT("back"), wxT("  Back to input data"));
+    pOutputViewerNotebook->add(new_check_allocation<wxPanel>(pOutputViewerNotebook),
+                               wxT("back"),
+                               wxT("  Back to input data"));
     pOutputViewerNotebook->addSeparator();
 }
 

@@ -74,8 +74,8 @@ public:
     FileListProvider& operator=(const FileListProvider&) = delete;
 
     void search(Spotlight::IItem::Vector& out,
-                        const Spotlight::SearchToken::Vector& tokens,
-                        const Yuni::String& text = "") override;
+                const Spotlight::SearchToken::Vector& tokens,
+                const Yuni::String& text = "") override;
     bool onSelect(Spotlight::IItem::Ptr& item) override;
     bool onSelect(const Spotlight::IItem::Vector&) override;
     void refreshFileList(bool showAll);
