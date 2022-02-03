@@ -144,7 +144,7 @@ struct DebugData
                              const Date::Calendar& calendar,
                              int initReservoirLvlMonth,
                              uint y,
-                             const Data::AreaName areaName) const
+                             const Data::AreaName& areaName) const
     {
         String buffer;
         buffer << folder << SEP << "debug" << SEP << "solver" << SEP << (1 + y);

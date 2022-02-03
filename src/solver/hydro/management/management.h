@@ -103,18 +103,18 @@ private:
     double GammaVariable(double a);
     //@}
 
-public:
-    //! Reference to the study
-    Data::Study& study;
-    //! General data
-    Data::Parameters& parameters;
-
-public:
     enum
     {
         //! The maximum number of days in a year
         dayYearCount = 366
     };
+
+
+public:
+    //! Reference to the study
+    Data::Study& study;
+    //! General data
+    Data::Parameters& parameters;
 
     //! Temporary data
     struct PerArea
