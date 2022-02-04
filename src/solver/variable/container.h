@@ -123,6 +123,10 @@ public:
     void simulationEnd();
     //@}
 
+    void logCaption(){
+      NextType::logCaption();
+    }
+
     //! \name Years events
     //@{
     /*!

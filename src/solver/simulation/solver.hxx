@@ -435,11 +435,15 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
             newPath << "mc-all";
         else
         {
+            ImplementationType::variables.logCaption();
+
             CString<10, false> tmp;
             tmp = (year + 1);
             newPath << "mc-ind" << IO::Separator << "00000";
             newPath.overwriteRight(tmp);
         }
+
+
 
         // Dumping
         if (IO::Directory::Create(newPath))

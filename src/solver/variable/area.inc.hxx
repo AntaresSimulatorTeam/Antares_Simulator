@@ -122,6 +122,18 @@ void Areas<NEXTTYPE>::simulationBegin()
 }
 
 template<>
+void Areas<NEXTTYPE>::logCaption()
+{
+    for (uint i = 0; i != pAreaCount; ++i)
+    {
+        pAreas[i].logCaption();
+        if (Antares::Memory::swapSupport)
+            Antares::memory.flushAll();
+    }
+}
+
+
+template<>
 void Areas<NEXTTYPE>::simulationEnd()
 {
     for (uint i = 0; i != pAreaCount; ++i)

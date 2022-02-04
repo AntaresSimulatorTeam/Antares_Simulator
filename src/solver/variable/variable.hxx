@@ -224,6 +224,13 @@ inline void IVariable<ChildT, NextT, VCardT>::simulationEnd()
 }
 
 template<class ChildT, class NextT, class VCardT>
+inline void IVariable<ChildT, NextT, VCardT>::logCaption()
+{
+    logs.info() << VCardT::Caption();
+    NextType::logCaption();
+}
+
+template<class ChildT, class NextT, class VCardT>
 inline void IVariable<ChildT, NextT, VCardT>::yearBegin(uint year)
 {
     // Next variable

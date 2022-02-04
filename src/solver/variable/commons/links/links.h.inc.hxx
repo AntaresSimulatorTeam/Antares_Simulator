@@ -144,6 +144,9 @@ public:
     void simulationBegin();
     void simulationEnd();
 
+    void logCaption();
+
+
     void yearBegin(uint year, unsigned int numSpace);
 
     void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year, uint numSpace);

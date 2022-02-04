@@ -395,6 +395,12 @@ public:
         RightType::localBuildAnnualSurveyReport(results, fileLevel, precision);
     }
 
+    void logCaption()
+    {
+      LeftType::logCaption();
+      RightType::logCaption();
+    }
+
 }; // class Join
 
 } // namespace Variable

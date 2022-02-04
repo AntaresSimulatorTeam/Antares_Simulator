@@ -141,6 +141,12 @@ inline void SetsOfAreas<NextT>::simulationBegin()
 }
 
 template<class NextT>
+inline void SetsOfAreas<NextT>::logCaption()
+{
+    // Nothing to do here
+}
+
+template<class NextT>
 inline void SetsOfAreas<NextT>::simulationEnd()
 {
     // Nothing to do here

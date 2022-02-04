@@ -43,6 +43,8 @@
 #include "categories.h"
 #include "info.h"
 
+#include <antares/logs.h>
+
 namespace Antares
 {
 namespace Solver
@@ -177,6 +179,8 @@ public:
     */
     void simulationEnd();
     //@}
+
+    void logCaption();
 
     //! \name Year
     //@{

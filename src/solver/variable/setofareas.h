@@ -137,6 +137,7 @@ public:
 
     void simulationBegin();
     void simulationEnd();
+    void logCaption();
 
     void yearBegin(unsigned int year, unsigned int numSpace);
 

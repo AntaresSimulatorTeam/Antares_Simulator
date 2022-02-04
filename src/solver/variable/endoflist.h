@@ -177,6 +177,8 @@ public:
         UNUSED_VARIABLE(numSpace);
     }
 
+    static void logCaption(){}
+
     template<class V>
     void computeSpatialAggregatesSummary(V&, std::map<unsigned int, unsigned int>&, unsigned int)
     {

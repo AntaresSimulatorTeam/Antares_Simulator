@@ -93,6 +93,17 @@ void Links::simulationBegin()
     }
 }
 
+void Links::logCaption()
+{
+    for (uint i = 0; i != pLinkCount; ++i)
+    {
+        pLinks[i].logCaption();
+        if (Antares::Memory::swapSupport)
+            Antares::memory.flushAll();
+    }
+}
+
+
 void Links::simulationEnd()
 {
     for (uint i = 0; i != pLinkCount; ++i)
