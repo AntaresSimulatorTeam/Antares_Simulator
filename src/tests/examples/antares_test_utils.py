@@ -1,11 +1,13 @@
 from pathlib import Path
-import os
+from os import walk
+from os.path import basename, sep
 import sys
 import glob
 import shutil
 
 import pandas as pd
 import subprocess
+import abc
 
 from study import Study
 
@@ -13,33 +15,12 @@ import pytest
 from trim_column_name import trim_digit_after_last_dot
 from read_utils import read_csv
 
-ALL_STUDIES_PATH = Path('../resources/Antares_Simulator_Tests')
+ALL_STUDIES_PATH = Path('../resources/Antares_Simulator_Tests').resolve()
 
-RTOL_OVERRIDE_LINUX = {"CO2 EMIS." : 1e-3, "FLOW LIN." : 1e-3 , "UCAP LIN." : 1e-3, "H. INFL" : 1e-3 , "H. STOR" : 1e-3 , "H. OVFL" : 1e-3 , "OV. COST" : 1e-3 , "LIGNITE" : 1e-3 , "CONG. FEE (ABS.)" : 1e-3 , "sb" : 1e-3 , "MARG. COST" : 1e-3 , "DTG MRG" : 1e-3 , "BALANCE" : 1e-3 , "BASE" : 1e-3 , "MRG. PRICE" : 1e-3 , "OP. COST" : 1e-3 , "SEMI BASE" : 1e-3 ,"COAL" : 1e-3 , "MAX MRG" : 1e-3 , "UNSP. ENRG" : 1e-3}
-ATOL_OVERRIDE_LINUX = {"CO2 EMIS." : 1, "CONG. FEE (ALG.)" : 1, "FLOW LIN." : 1, "UCAP LIN." : 1, "peak" : 1, "PEAK" : 1, "H. INFL" : 1, "H. STOR" : 1, "HURDLE COST" : 1, "H. OVFL" : 1 , "LOAD" : 1, "CONG. FEE (ABS.)" : 1 , "sb" : 1 , "MISC. DTG" : 1 , "DTG MRG" : 1 , "BALANCE" : 1 , "BASE" : 1 , "OP. COST" : 1 , "SEMI BASE" : 1 , "COAL" : 1 , "p" : 1 , "MAX MRG" : 1 , "UNSP. ENRG" : 1 , "SOLAR" : 1 , "b" : 1 , "NODU" : 1 , "H. ROR" : 1}
-
-def searching_all_directories(directory):
-    dir_path = Path(directory)
-    assert(dir_path.is_dir())
-    dir_list = []
-    for x in dir_path.iterdir():
-        if x.is_dir():
-            dir_list.append(x)
-    return dir_list
-
-def find_output_result_dir(output_dir):
-    list_output_dir = searching_all_directories(output_dir)
-    assert len(list_output_dir) == 1
-
-    list_dir = searching_all_directories(list_output_dir[0])
-
-    dir_list = []
-    for x in list_dir:
-        dir_path = Path(x)
-        if dir_path.is_dir() and (dir_path.name == "adequacy" or dir_path.name == "economy" or dir_path.name == "adequacy-draft"):
-            dir_list.append(x)
-    assert len(dir_list) == 1
-    return dir_list[0]
+def find_simulation_folder(output_dir):
+    for root, dirs, files in walk(output_dir):
+        if basename(root) in ["adequacy", "economy", "adequacy-draft"]:
+            return Path(root)
 
 def get_headers(df) -> set :
     return set(df.columns)
@@ -66,19 +47,6 @@ def launch_solver(solver_path, study_path, use_ortools = False, ortools_solver =
     # TODO check return value
     assert "Solver returned error" not in output[0].decode('utf-8')
 
-def generate_reference_values(solver_path, path, use_ortools, ortools_solver):
-
-    enable_study_output(path,True)
-
-    reference_path = path / 'reference'
-    os.makedirs(reference_path, exist_ok=True)
-    launch_solver(solver_path,path, use_ortools, ortools_solver)
-
-    output_path = path / 'output'
-
-    result_dir = find_output_result_dir(output_path)
-    shutil.copytree(result_dir, reference_path / 'output' / result_dir.name)
-
 def run_study(solver_path, path, use_ortools, ortools_solver):
     # Launch antares-solver
     launch_solver(solver_path, path, use_ortools, ortools_solver)
@@ -90,62 +58,118 @@ def enable_study_output(study_path, enable):
     synthesis_value = "true" if enable else "false"
     st.set_variable(variable = "synthesis", value = synthesis_value, file_nick_name="general")
 
-def compare_directory(result_dir, reference_dir):
-    assert (result_dir.is_dir())
-    assert (reference_dir.is_dir())
-    # no_diff = True
+def skip_folder(folder):
+    if basename(folder) == 'grid':
+        return True
+    return False
 
-    uncompared_file_name = ['id-daily.txt', 'id-hourly.txt']
+def skip_file(file):
+    if file in ['id-daily.txt', 'id-hourly.txt']:
+        return True
+    return False
 
-    for x in result_dir.iterdir():
-        # print(os.path.sep.join(x.absolute().parts[-4:]))
-        if x.is_dir():
-            if x.name != 'grid':
-                # no_diff = no_diff and compare_directory(x, reference_dir / x.name)
-                compare_directory(x, reference_dir / x.name)
-        else:
+def find_simulation_files(reference_folder, other_folder):
+    list_files_to_compare = []
 
-            if not x.name in uncompared_file_name:
-                output_df = read_csv(x)
-                ref_df = read_csv(reference_dir / x.name)
+    # Walk through (or traverse) the reference folder
+    for current_folder, sub_folders, files in walk(reference_folder):
+        if skip_folder(current_folder):
+            continue
 
-                reference_headers = get_headers(ref_df)
-                output_headers = get_headers(output_df)
+        for file in files:
+            if skip_file(file):
+                continue
+            current_file_path = Path(current_folder) / file
+            list_files_to_compare.append((current_file_path, other_folder / current_file_path.relative_to(reference_folder)))
 
-                assert reference_headers.issubset(output_headers), f"The following column(s) is missing from the output {reference_headers.difference(output_headers)}"
+    return list_files_to_compare
 
-                for col_name in reference_headers:
-                    rtol = 1e-4
-                    atol = 0
+def compare_simulation_files(simulation_files, tol):
+    REF_INDEX = 0
+    OTHER_INDEX = 1
+    at_least_one_diff = False
+    for file_pair in simulation_files:
+        # Read reference and simulation (other) files
+        ref_data_frame = read_csv(file_pair[REF_INDEX])
+        other_data_frame = read_csv(file_pair[OTHER_INDEX])
 
-                    if sys.platform=="linux":
-                        trimmed_name = trim_digit_after_last_dot(col_name)
-                        if trimmed_name in RTOL_OVERRIDE_LINUX:
-                            rtol = RTOL_OVERRIDE_LINUX[trimmed_name]
-                        if trimmed_name in ATOL_OVERRIDE_LINUX:
-                            atol = ATOL_OVERRIDE_LINUX[trimmed_name]
-                    try:
-                        pd.testing.assert_series_equal(ref_df[col_name], output_df[col_name], atol=atol, rtol=rtol)
-                    except AssertionError: # Catch and re-raise exception to print col_name & tolerances
-                        difference = ref_df[col_name].compare(output_df[col_name])
-                        if difference.size != 0:
-                            print("\n%s : %s" % (os.path.sep.join(x.absolute().parts[-4:]), col_name))
-                            print(difference)
-                            # print("Errors occured")
-                            raise AssertionError()
-                            # no_diff = False
-    # if not no_diff:
-    #    print("diff = True")
-    # return no_diff
+        # Check that reference column titles are a subset of the simulation titles
+        ref_column_titles = get_headers(ref_data_frame)
+        other_column_titles = get_headers(other_data_frame)
+        assert ref_column_titles.issubset(other_column_titles),\
+               f"The following column(s) is missing in the reference {ref_column_titles.difference(other_column_titles)}"
 
+        for col_name in ref_column_titles:
+            try:
+                pd.testing.assert_series_equal(ref_data_frame[col_name], other_data_frame[col_name], \
+                                               atol=tol.absolute(col_name), rtol=tol.relative(col_name))
+            except AssertionError:  # Catch and re-raise exception to print col_name & tolerances
+                difference = ref_data_frame[col_name].compare(other_data_frame[col_name])
+                if difference.size != 0:
+                    print("\n%s : %s" % (sep.join(file_pair[REF_INDEX].absolute().parts[-4:]), col_name))
+                    print(difference)
+                    at_least_one_diff = True
+
+    return not at_least_one_diff
+
+class Tolerances(metaclass=abc.ABCMeta):
+    default_abs_tol = 0
+    default_rel_tol = 1e-4
+
+    @abc.abstractmethod
+    def absolute(self, col_name):
+        pass
+    @abc.abstractmethod
+    def relative(self, col_name):
+        pass
+
+class Linux_tolerances(Tolerances):
+    RTOL_LINUX = {"CO2 EMIS.": 1e-3, "FLOW LIN.": 1e-3, "UCAP LIN.": 1e-3, "H. INFL": 1e-3, "H. STOR": 1e-3,
+                           "H. OVFL": 1e-3, "OV. COST": 1e-3, "LIGNITE": 1e-3, "CONG. FEE (ABS.)": 1e-3, "sb": 1e-3,
+                           "MARG. COST": 1e-3, "DTG MRG": 1e-3, "BALANCE": 1e-3, "BASE": 1e-3, "MRG. PRICE": 1e-3,
+                           "OP. COST": 1e-3, "SEMI BASE": 1e-3, "COAL": 1e-3, "MAX MRG": 1e-3, "UNSP. ENRG": 1e-3}
+    ATOL_LINUX = {"CO2 EMIS.": 1, "CONG. FEE (ALG.)": 1, "FLOW LIN.": 1, "UCAP LIN.": 1, "peak": 1, "PEAK": 1,
+                           "H. INFL": 1, "H. STOR": 1, "HURDLE COST": 1, "H. OVFL": 1, "LOAD": 1, "CONG. FEE (ABS.)": 1,
+                           "sb": 1, "MISC. DTG": 1, "DTG MRG": 1, "BALANCE": 1, "BASE": 1, "OP. COST": 1,
+                           "SEMI BASE": 1, "COAL": 1, "p": 1, "MAX MRG": 1, "UNSP. ENRG": 1, "SOLAR": 1, "b": 1,
+                           "NODU": 1, "H. ROR": 1}
+    def absolute(self, col_name):
+        trimmed_col_name = trim_digit_after_last_dot(col_name)
+        if trimmed_col_name in self.ATOL_LINUX:
+            return self.ATOL_LINUX[trimmed_col_name]
+        return self.default_abs_tol
+
+    def relative(self, col_name):
+        trimmed_col_name = trim_digit_after_last_dot(col_name)
+        if trimmed_col_name in self.RTOL_LINUX:
+            return self.RTOL_LINUX[trimmed_col_name]
+        return self.default_rel_tol
+
+class Win_tolerances(Tolerances):
+    RTOL_WIN = {}
+    ATOL_WIN = {}
+    def absolute(self, col_name):
+        return self.default_abs_tol
+
+    def relative(self, col_name):
+        return self.default_rel_tol
+
+
+def get_tolerances():
+    if sys.platform == "linux":
+        return Linux_tolerances()
+    elif sys.platform == "win32":
+        return Win_tolerances()
+    else:
+        print("Unknown OS")
+        raise AssertionError()
 
 def check_output_values(study_path):
-    result_dir = find_output_result_dir(study_path / 'output')
-    reference_dir = find_output_result_dir(study_path / 'reference')
-    compare_directory(result_dir, reference_dir)
-    # failure = compare_directory(result_dir, reference_dir)
-    # print("removing outputs")
+    reference_folder = find_simulation_folder(study_path / 'reference')
+    other_folder = find_simulation_folder(study_path / 'output')
+    simulation_files = find_simulation_files(reference_folder, other_folder)
+    tolerances = get_tolerances()
+    if not compare_simulation_files(simulation_files, tolerances):
+        raise AssertionError()
     remove_outputs(study_path)
-    # if failure:
-    #    assert False
 
