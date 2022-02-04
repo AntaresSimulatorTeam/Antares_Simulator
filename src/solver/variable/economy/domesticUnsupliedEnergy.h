@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_UnsupliedEnergy_H__
-#define __SOLVER_VARIABLE_ECONOMY_UnsupliedEnergy_H__
+#ifndef __SOLVER_VARIABLE_ECONOMY_DomesticUnsupliedEnergy_H__
+#define __SOLVER_VARIABLE_ECONOMY_DomesticUnsupliedEnergy_H__
 
 #include "../variable.h"
 
@@ -37,12 +37,12 @@ namespace Variable
 {
 namespace Economy
 {
-struct VCardUnsupliedEnergy
+struct VCardDomesticUnsupliedEnergy
 {
     //! Caption
     static const char* Caption()
     {
-        return "UNSP. ENRG";
+        return "DENS";
     }
     //! Unit
     static const char* Unit()
@@ -52,7 +52,7 @@ struct VCardUnsupliedEnergy
     //! The short description of the variable
     static const char* Description()
     {
-        return "Unsuplied Energy (demand that cannot be satisfied)";
+        return "Domestic Energy Not Served (demand that cannot be satisfied before exchange)";
     }
 
     //! The expecte results
@@ -64,7 +64,7 @@ struct VCardUnsupliedEnergy
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardUnsupliedEnergy VCardForSpatialAggregate;
+    typedef VCardDomesticUnsupliedEnergy VCardForSpatialAggregate; 
 
     enum
     {
@@ -102,16 +102,16 @@ struct VCardUnsupliedEnergy
 **   the thermal dispatchable clusters
 */
 template<class NextT = Container::EndOfList>
-class UnsupliedEnergy
- : public Variable::IVariable<UnsupliedEnergy<NextT>, NextT, VCardUnsupliedEnergy>
+class DomesticUnsupliedEnergy
+ : public Variable::IVariable<DomesticUnsupliedEnergy<NextT>, NextT, VCardDomesticUnsupliedEnergy>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardUnsupliedEnergy VCardType;
+    typedef VCardDomesticUnsupliedEnergy VCardType;
     //! Ancestor
-    typedef Variable::IVariable<UnsupliedEnergy<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<DomesticUnsupliedEnergy<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -138,7 +138,7 @@ public:
     };
 
 public:
-    ~UnsupliedEnergy()
+    ~DomesticUnsupliedEnergy()
     {
         delete[] pValuesForTheCurrentYear;
     }
@@ -279,11 +279,11 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class UnsupliedEnergy
+}; // class DomesticUnsupliedEnergy
 
 } // namespace Economy
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
 
-#endif // __SOLVER_VARIABLE_ECONOMY_UnsupliedEnergy_H__
+#endif // __SOLVER_VARIABLE_ECONOMY_DomesticUnsupliedEnergy_H__
