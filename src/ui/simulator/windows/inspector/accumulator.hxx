@@ -322,6 +322,12 @@ static const wxChar* studyMode[] = {wxT("Economy"),
 #endif
                                     nullptr};
 
+
+static const wxChar* adequacyPatchMode[] = {wxT("Not used"),
+                                    wxT("Physical area"),
+                                    wxT("Virtual area"),
+                                    nullptr}; 
+
 struct Unique
 {
     template<class T>
@@ -906,18 +912,29 @@ struct PAreaUnsuppliedEnergyCost
     }
 };
 
-struct PAreaAdequacyPatch
+
+struct PAdequacyPatchMode
 {
-    typedef bool Type;
+    typedef Data::AdequacyPatchMode Type;
     static Type Value(const Data::Area* area)
     {
-        return area->bUseAdequacyPatch;
+        return area->adequacyPatchMode;
     }
     static wxString ConvertToString(const Type v)
     {
-        return v ? wxT("True") : wxT("False");
+        switch (v)
+        {
+        case Data::adqmNotUsed:
+            return wxT("Not used");
+        case Data::adqmUsedAsPhysicalArea:
+            return wxT("Physical area");
+        case Data::adqmUsedAsVirtualArea:
+            return wxT("Virtual area");
+        }
+        return wxEmptyString;
     }
 };
+
 
 template<enum Data::AreaNodalOptimization O>
 struct PAreaResortStatus

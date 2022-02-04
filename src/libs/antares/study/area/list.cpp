@@ -335,7 +335,23 @@ bool saveAreaAdequacyPatchIniFile(const Area& area, const Clob& buffer)
 {
     IniFile ini;
     IniFile::Section* section = ini.addSection("adequacy-patch");
-    section->add("use-adequacy-patch", area.bUseAdequacyPatch);
+    int value;
+    switch(area.adequacyPatchMode)
+    {
+    case Data::adqmNotUsed: 
+        value = 0;
+        break;
+    case Data::adqmUsedAsPhysicalArea: 
+        value = 1;
+        break;
+    case Data::adqmUsedAsVirtualArea: 
+        value = 2;
+        break;
+    default: 
+        value = 0;
+        break;
+    }
+    section->add("adequacy-patch-mode", value);
     return ini.save(buffer);
 }
 
@@ -1064,13 +1080,27 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             auto* section = ini.find("adequacy-patch");
             for (auto* p = section->firstProperty; p; p = p->next)
             {
-                bool value = p->value.to<bool>();
                 CString<30, false> tmp;
                 tmp = p->key;
                 tmp.toLower();
-                if (tmp == "use-adequacy-patch")
+                if (tmp == "adequacy-patch-mode")
                 {
-                    area.bUseAdequacyPatch = value;
+                    auto value = p->value.to<int>();
+                    switch(value)
+                    {
+                        case 0: 
+                        area.adequacyPatchMode = Data::adqmNotUsed;
+                        break;
+                        case 1: 
+                        area.adequacyPatchMode = Data::adqmUsedAsPhysicalArea;
+                        break;
+                        case 2: 
+                        area.adequacyPatchMode = Data::adqmUsedAsVirtualArea;
+                        break;
+                        default: 
+                        area.adequacyPatchMode = Data::adqmNotUsed;
+                        break;
+                    }
                     continue;
                 }
             }

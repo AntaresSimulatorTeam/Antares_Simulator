@@ -116,6 +116,21 @@ enum StudyMode
 
 }; // enum StudyMode
 
+
+/*!
+** \brief Types of Adequacy patch mode
+*/
+enum AdequacyPatchMode
+{
+    //! Area out of the adq-patch (area does not use adq-patch)
+    adqmNotUsed = 0,
+    //! Physical Area in the adq-patch (physical area use adq-patch)
+    adqmUsedAsPhysicalArea,
+    //! Virtual Area in the adq-patch (virtual area use adq-patch)
+    adqmUsedAsVirtualArea
+
+}; // enum AdequacyPatchMode
+
 /*
 ** \brief Simplex optimizations
 */
