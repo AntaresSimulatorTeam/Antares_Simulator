@@ -93,11 +93,11 @@ void Links::simulationBegin()
     }
 }
 
-void Links::logCaption()
+void Links::logCaption(std::map<const char*, int>& out)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
-        pLinks[i].logCaption();
+        pLinks[i].logCaption(out);
         if (Antares::Memory::swapSupport)
             Antares::memory.flushAll();
     }

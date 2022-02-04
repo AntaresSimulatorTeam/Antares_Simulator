@@ -224,10 +224,10 @@ inline void IVariable<ChildT, NextT, VCardT>::simulationEnd()
 }
 
 template<class ChildT, class NextT, class VCardT>
-inline void IVariable<ChildT, NextT, VCardT>::logCaption()
+inline void IVariable<ChildT, NextT, VCardT>::logCaption(std::map<const char*, int>& out)
 {
-    logs.info() << VCardT::Caption();
-    NextType::logCaption();
+    out[VCardT::Caption()] = VCardT::columnCount;
+    NextType::logCaption(out);
 }
 
 template<class ChildT, class NextT, class VCardT>

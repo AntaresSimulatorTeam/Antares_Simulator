@@ -44,6 +44,8 @@
 #include "info.h"
 
 #include <antares/logs.h>
+#include <map>
+
 
 namespace Antares
 {
@@ -180,7 +182,7 @@ public:
     void simulationEnd();
     //@}
 
-    void logCaption();
+    void logCaption(std::map<const char*, int>&);
 
     //! \name Year
     //@{

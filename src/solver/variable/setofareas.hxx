@@ -141,7 +141,7 @@ inline void SetsOfAreas<NextT>::simulationBegin()
 }
 
 template<class NextT>
-inline void SetsOfAreas<NextT>::logCaption()
+inline void SetsOfAreas<NextT>::logCaption(std::map<const char*, int>&)
 {
     // Nothing to do here
 }

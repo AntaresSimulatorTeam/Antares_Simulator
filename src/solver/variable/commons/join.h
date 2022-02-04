@@ -395,10 +395,10 @@ public:
         RightType::localBuildAnnualSurveyReport(results, fileLevel, precision);
     }
 
-    void logCaption()
+    void logCaption(std::map<const char*, int>& out)
     {
-      LeftType::logCaption();
-      RightType::logCaption();
+      LeftType::logCaption(out);
+      RightType::logCaption(out);
     }
 
 }; // class Join

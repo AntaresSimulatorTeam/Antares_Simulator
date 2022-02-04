@@ -122,11 +122,11 @@ void Areas<NEXTTYPE>::simulationBegin()
 }
 
 template<>
-void Areas<NEXTTYPE>::logCaption()
+void Areas<NEXTTYPE>::logCaption(std::map<const char*, int>& out)
 {
     for (uint i = 0; i != pAreaCount; ++i)
     {
-        pAreas[i].logCaption();
+        pAreas[i].logCaption(out);
         if (Antares::Memory::swapSupport)
             Antares::memory.flushAll();
     }

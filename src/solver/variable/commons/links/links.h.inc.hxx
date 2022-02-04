@@ -144,7 +144,7 @@ public:
     void simulationBegin();
     void simulationEnd();
 
-    void logCaption();
+    void logCaption(std::map<const char*, int>&);
 
 
     void yearBegin(uint year, unsigned int numSpace);

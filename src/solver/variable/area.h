@@ -136,7 +136,7 @@ public:
 
     void simulationBegin();
     void simulationEnd();
-    void logCaption();
+    void logCaption(std::map<const char*, int>&);
 
     void yearBegin(uint year, uint numSpace);
     //	void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year);
