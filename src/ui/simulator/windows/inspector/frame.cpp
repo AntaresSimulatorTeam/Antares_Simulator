@@ -399,7 +399,8 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
 
     pPGAreaAdequacyPatchTitle
       = Category(pg, wxT("Adequacy Patch"), wxT("area.adequacy_patch_title"));
-    pPGAreaAdequacyPatchMode = page->Append(new wxEnumProperty(wxT("adequacy patch mode"), wxT("area.adequacy_patch_mode"), adequacyPatchMode));
+    pPGAreaAdequacyPatchMode = page->Append(new wxEnumProperty(
+      wxT("adequacy patch mode"), wxT("area.adequacy_patch_mode"), adequacyPatchMode));
 
     pPGAreaLocalization = Category(pg, wxT("Localization"), wxT("area.localization"));
     P_INT("x", "area.x");

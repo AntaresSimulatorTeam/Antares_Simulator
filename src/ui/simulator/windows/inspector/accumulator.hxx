@@ -322,11 +322,8 @@ static const wxChar* studyMode[] = {wxT("Economy"),
 #endif
                                     nullptr};
 
-
-static const wxChar* adequacyPatchMode[] = {wxT("Not used"),
-                                    wxT("Physical area"),
-                                    wxT("Virtual area"),
-                                    nullptr}; 
+static const wxChar* adequacyPatchMode[]
+  = {wxT("Not used"), wxT("Physical area"), wxT("Virtual area"), nullptr};
 
 struct Unique
 {
@@ -912,7 +909,6 @@ struct PAreaUnsuppliedEnergyCost
     }
 };
 
-
 struct PAdequacyPatchMode
 {
     typedef Data::AdequacyPatchMode Type;
@@ -934,7 +930,6 @@ struct PAdequacyPatchMode
         return wxEmptyString;
     }
 };
-
 
 template<enum Data::AreaNodalOptimization O>
 struct PAreaResortStatus
