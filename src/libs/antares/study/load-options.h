@@ -111,8 +111,6 @@ public:
     YString studyFolder;
     YString simulationName;
     std::string ortoolsSolver;
-
-    bool useOrtools = false;
 }; // class StudyLoadOptions
 
 } // namespace Data

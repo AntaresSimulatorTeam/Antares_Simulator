@@ -103,7 +103,7 @@ GetOpt::Parser CreateParser(Settings& settings, Antares::Data::StudyLoadOptions&
 
     // add option for ortools use
     // --use-ortools
-    parser.addFlag(options.useOrtools, ' ', "use-ortools", "Use ortools library to launch solver");
+    parser.addFlag(options.ortoolsUsed, ' ', "use-ortools", "Use ortools library to launch solver");
 
     //--ortools-solver
     parser.add(options.ortoolsSolver,
@@ -259,7 +259,7 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
 void checkOrtoolsSolver(Data::StudyLoadOptions& options)
 {
     // ortools solver
-    if (options.useOrtools)
+    if (options.ortoolsUsed)
     {
         const std::list<std::string> availableSolverList
           = OrtoolsUtils().getAvailableOrtoolsSolverName();
