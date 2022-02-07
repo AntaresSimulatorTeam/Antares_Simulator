@@ -98,7 +98,7 @@ struct VCardDomesticUnsupliedEnergy
 }; // class VCard
 
 /*!
-** \brief C02 Average value of the overrall UnsupliedEnergy emissions expected from all
+** \brief C02 Average value of the overrall DomesticUnsupliedEnergy emissions expected from all
 **   the thermal dispatchable clusters
 */
 template<class NextT = Container::EndOfList>
@@ -235,10 +235,10 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        // Total UnsupliedEnergy emissions
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] =
-          // Current Hydro Storage generation
-          state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek];
+        // Total DomesticUnsupliedEnergy emissions
+        pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
+          = 123; // Connect to DENS values in the similar manner like below
+        // state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek];
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);
