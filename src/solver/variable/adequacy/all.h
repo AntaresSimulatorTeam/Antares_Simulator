@@ -57,7 +57,6 @@
 #include "../economy/waterValue.h"
 #include "../economy/hydroCost.h"
 #include "../economy/unsupliedEnergy.h"
-#include "../economy/domesticUnsupliedEnergy.h"
 #include "../adequacy/spilledEnergy.h"
 #include "../economy/productionByDispatchablePlant.h"
 #include "../economy/productionByRenewablePlant.h"
@@ -136,7 +135,6 @@ typedef                             // Prices
                       <Variable::Economy::WaterValue        // Water values
                        <Variable::Economy::HydroCost        // Hydro costs
                         <Variable::Economy::UnsupliedEnergy // Unsuplied Energy
-                        <Variable::Economy::DomesticUnsupliedEnergy // Domestic Unsuplied Energy
                          <Variable::Adequacy::SpilledEnergy // Spilled Energy
                           <Variable::Economy::LOLD          // LOLD
                            <Variable::Economy::LOLP         // LOLP
@@ -145,7 +143,7 @@ typedef                             // Prices
                                 Variable::Economy::Marge // OP. MRG
                                 // Links
                                 <Variable::Adequacy::Links // All links
-                                 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -202,8 +200,6 @@ typedef // Prices
                                             Common::SpatialAggregate<
                                               Variable::Economy::UnsupliedEnergy,
                                               Common::SpatialAggregate<
-                                              Variable::Economy::DomesticUnsupliedEnergy,
-                                              Common::SpatialAggregate<
                                                 Variable::Adequacy::SpilledEnergy,
                                                 // LOLD
                                                 Common::SpatialAggregate<
@@ -217,7 +213,7 @@ typedef // Prices
                                                         Variable::Economy::DispatchableGenMargin,
                                                         Common::SpatialAggregate<
                                                           Variable::Economy::
-                                                            Marge>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                            Marge>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef Variable::Join<
