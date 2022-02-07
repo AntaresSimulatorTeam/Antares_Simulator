@@ -41,7 +41,7 @@ def launch_solver(solver_path, study_path, use_ortools = False, ortools_solver =
     if use_ortools:
         command.append('--use-ortools')
         command.append('--ortools-solver='+ortools_solver)
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=None)
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
     output = process.communicate()
 
     # TODO check return value
@@ -84,6 +84,24 @@ def find_simulation_files(reference_folder, other_folder):
 
     return list_files_to_compare
 
+def print_comparison_report(ref_data_frame, other_data_frame, file_path, col_name):
+    # Max number of rows to be printed in the report
+    pd.set_option("display.max_rows", 10)
+
+    # At this stage, report contains only 2 comulms with lines that differ
+    comparison_report = ref_data_frame[col_name].compare(other_data_frame[col_name])
+
+    # Renaming columns
+    comparison_report = comparison_report.rename(columns={'self': 'reference', 'other': 'results'})
+
+    # Print title of the comparison report
+    print("\n%s : %s" % (file_path, col_name))
+
+    # Add a column that contains the differences
+    comparison_report['diff'] = comparison_report['reference'] - comparison_report['results']
+    
+    print(comparison_report)
+
 def compare_simulation_files(simulation_files, tol):
     REF_INDEX = 0
     OTHER_INDEX = 1
@@ -104,11 +122,11 @@ def compare_simulation_files(simulation_files, tol):
                 pd.testing.assert_series_equal(ref_data_frame[col_name], other_data_frame[col_name], \
                                                atol=tol.absolute(col_name), rtol=tol.relative(col_name))
             except AssertionError:  # Catch and re-raise exception to print col_name & tolerances
-                difference = ref_data_frame[col_name].compare(other_data_frame[col_name])
-                if difference.size != 0:
-                    print("\n%s : %s" % (sep.join(file_pair[REF_INDEX].absolute().parts[-4:]), col_name))
-                    print(difference)
-                    at_least_one_diff = True
+                # Reduced path of files we're comparing
+                file_path = sep.join(file_pair[REF_INDEX].absolute().parts[-4:])
+
+                print_comparison_report(ref_data_frame, other_data_frame, file_path, col_name)
+                at_least_one_diff = True
 
     return not at_least_one_diff
 
