@@ -145,7 +145,7 @@ typedef                             // Prices
                                 Variable::Economy::Marge // OP. MRG
                                 // Links
                                 <Variable::Adequacy::Links // All links
-                                 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -217,7 +217,7 @@ typedef // Prices
                                                         Variable::Economy::DispatchableGenMargin,
                                                         Common::SpatialAggregate<
                                                           Variable::Economy::
-                                                            Marge>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                            Marge>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef Variable::Join<

@@ -161,7 +161,7 @@ typedef          // Prices
                                                             // MBO 25/02/2016 - refs: #55
                                  // Links
                                  <Variable::Economy::Links // All links
-                                  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -241,7 +241,7 @@ typedef // Prices
                                                           Common::SpatialAggregate<
                                                             NbOfDispatchedUnits // MBO 25/02/2016 -
                                                                                 // refs: #55
-                                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef Variable::Join<
