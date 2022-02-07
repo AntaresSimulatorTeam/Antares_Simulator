@@ -64,7 +64,7 @@ struct VCardDomesticUnsupliedEnergy
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardDomesticUnsupliedEnergy VCardForSpatialAggregate; 
+    typedef VCardDomesticUnsupliedEnergy VCardForSpatialAggregate;
 
     enum
     {
