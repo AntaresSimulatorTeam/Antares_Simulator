@@ -1,5 +1,31 @@
 Antares Changelog
 =================
+v8.2.0-rc1 (02/2022)
+--------------------
+
+### New features
+- Multiple timeseries for link capacities (NTC). It is now possible to establish different scenarios for the capacity of a link. Users can now take partial or total outages for links into account #520
+- Infeasible problem analyzer. When the underlying problem has no solution, list the most suspicious constraints in a report. This should help users identify faulty binding constraints #431
+- Add a hydro-debug switch that allows the printing of some useful debug data in heuristic mode #254
+
+### GUI
+- Add a "view results" button in the dialog that appears when a simulation has been completed #511
+- Help menu : add an "online documentation" item #509
+- Improve UI for new thermal parameter "tsGenBehavior" #534
+
+### Bug fixes
+- Remove a useless constraint when water values are used in "accurate" mode. The management of reservoirs of small capacity should be more realistic. This feature was contributed by M. Doquet #524
+- Prevent an area from having a link to itself #531
+- Fix crash when the study folder does not exist #521
+- Fix crash when failing to load a study #502
+
+### For developers
+- Remove calls to exit() #505. Provide consistent return values for antares-solver by fixing a segfault related to the log object #522
+- Remove calls to setjmp, goto's big brother #527
+- Large refactor of antares-solver's main function, hoping to make error management easier to understand #521
+- Use std::shared_ptr instead of Yuni::SmartPtr in most cases #529
+- Simplify and clean some parts of the code #537, #538, #540
+
 v8.1.1 (01/2022)
 --------------------
 
