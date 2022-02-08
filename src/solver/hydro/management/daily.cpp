@@ -102,20 +102,14 @@ struct DebugData
      lowLevel(lowLevel),
      reservoirCapacity(reservoirCapacity)
     {
-        for (int i = 0; i < 365; i++)
-        {
-            OVF[i] = 0.;
-            DEV[i] = 0.;
-            VIO[i] = 0.;
-        }
+        OVF.fill(0);
+        DEV.fill(0);
+        VIO.fill(0);
 
-        for (int i = 0; i < 12; i++)
-        {
-            deviationMax[i] = 0.;
-            violationMax[i] = 0.;
-            WASTE[i] = 0.;
-            CoutTotal[i] = 0.;
-        }
+        deviationMax.fill(0);
+        violationMax.fill(0);
+        WASTE.fill(0);
+        CoutTotal.fill(0);
     }
 
     void writeTurb(const String& folderOutput, const String& filename, uint y) const
