@@ -98,8 +98,7 @@ def print_comparison_report(ref_data_frame, other_data_frame, file_path, col_nam
     print("\n%s : %s" % (file_path, col_name))
 
     # Add a column that contains the differences
-    comparison_report['diff'] = comparison_report['reference'] - comparison_report['results']
-    
+    comparison_report['diff'] = comparison_report['results'] - comparison_report['reference']
     print(comparison_report)
 
 def compare_simulation_files(simulation_files, tol):
