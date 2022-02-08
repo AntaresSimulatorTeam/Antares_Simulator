@@ -129,47 +129,45 @@ def compare_simulation_files(simulation_files, tol):
 
     return not at_least_one_diff
 
-class Tolerances(metaclass=abc.ABCMeta):
+class Tolerances():
+    RTOL = {}
+    ATOL = {}
     default_abs_tol = 0
     default_rel_tol = 1e-4
 
-    @abc.abstractmethod
     def absolute(self, col_name):
-        pass
-    @abc.abstractmethod
+        trimmed_col_name = trim_digit_after_last_dot(col_name)
+        if trimmed_col_name in self.ATOL:
+            return self.ATOL[trimmed_col_name]
+        return self.default_abs_tol
+
     def relative(self, col_name):
-        pass
+        trimmed_col_name = trim_digit_after_last_dot(col_name)
+        if trimmed_col_name in self.RTOL:
+            return self.RTOL[trimmed_col_name]
+        return self.default_rel_tol
+
+    def set_relative(self, name, value):
+        self.RTOL[name] = value
+
+    def set_absolute(self, name, value):
+        self.ATOL[name] = value
 
 class Linux_tolerances(Tolerances):
-    RTOL_LINUX = {"CO2 EMIS.": 1e-3, "FLOW LIN.": 1e-3, "UCAP LIN.": 1e-3, "H. INFL": 1e-3, "H. STOR": 1e-3,
+    def __init__(self):
+        self.RTOL = {"CO2 EMIS.": 1e-3, "FLOW LIN.": 1e-3, "UCAP LIN.": 1e-3, "H. INFL": 1e-3, "H. STOR": 1e-3,
                            "H. OVFL": 1e-3, "OV. COST": 1e-3, "LIGNITE": 1e-3, "CONG. FEE (ABS.)": 1e-3, "sb": 1e-3,
                            "MARG. COST": 1e-3, "DTG MRG": 1e-3, "BALANCE": 1e-3, "BASE": 1e-3, "MRG. PRICE": 1e-3,
                            "OP. COST": 1e-3, "SEMI BASE": 1e-3, "COAL": 1e-3, "MAX MRG": 1e-3, "UNSP. ENRG": 1e-3}
-    ATOL_LINUX = {"CO2 EMIS.": 1, "CONG. FEE (ALG.)": 1, "FLOW LIN.": 1, "UCAP LIN.": 1, "peak": 1, "PEAK": 1,
+        self.ATOL = {"CO2 EMIS.": 1, "CONG. FEE (ALG.)": 1, "FLOW LIN.": 1, "UCAP LIN.": 1, "peak": 1, "PEAK": 1,
                            "H. INFL": 1, "H. STOR": 1, "HURDLE COST": 1, "H. OVFL": 1, "LOAD": 1, "CONG. FEE (ABS.)": 1,
                            "sb": 1, "MISC. DTG": 1, "DTG MRG": 1, "BALANCE": 1, "BASE": 1, "OP. COST": 1,
                            "SEMI BASE": 1, "COAL": 1, "p": 1, "MAX MRG": 1, "UNSP. ENRG": 1, "SOLAR": 1, "b": 1,
                            "NODU": 1, "H. ROR": 1}
-    def absolute(self, col_name):
-        trimmed_col_name = trim_digit_after_last_dot(col_name)
-        if trimmed_col_name in self.ATOL_LINUX:
-            return self.ATOL_LINUX[trimmed_col_name]
-        return self.default_abs_tol
-
-    def relative(self, col_name):
-        trimmed_col_name = trim_digit_after_last_dot(col_name)
-        if trimmed_col_name in self.RTOL_LINUX:
-            return self.RTOL_LINUX[trimmed_col_name]
-        return self.default_rel_tol
 
 class Win_tolerances(Tolerances):
-    RTOL_WIN = {}
-    ATOL_WIN = {}
-    def absolute(self, col_name):
-        return self.default_abs_tol
-
-    def relative(self, col_name):
-        return self.default_rel_tol
+    def __init__(self):
+        pass
 
 
 def get_tolerances():
@@ -181,11 +179,10 @@ def get_tolerances():
         print("Unknown OS")
         raise AssertionError()
 
-def check_output_values(study_path):
+def check_output_values(study_path, tolerances):
     reference_folder = find_simulation_folder(study_path / 'reference')
     other_folder = find_simulation_folder(study_path / 'output')
     simulation_files = find_simulation_files(reference_folder, other_folder)
-    tolerances = get_tolerances()
     if not compare_simulation_files(simulation_files, tolerances):
         raise AssertionError()
     remove_outputs(study_path)
