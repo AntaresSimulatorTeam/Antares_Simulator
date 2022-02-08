@@ -60,9 +60,9 @@ enum
 struct DebugData
 {
     using PerArea = HydroManagement::PerArea;
-    using InflowsT = Matrix<double, Yuni::sint32>::ColumnType;
-    using MaxPowerT = Matrix<double, double>::ColumnType;
-    using ReservoirLevelT = Matrix<double>::ColumnType;
+    using InflowsType = Matrix<double, Yuni::sint32>::ColumnType;
+    using MaxPowerType = Matrix<double, double>::ColumnType;
+    using ReservoirLevelType = Matrix<double>::ColumnType;
 
     std::array<double, 366> OPP;
     std::array<double, 366> DTG;
@@ -78,20 +78,20 @@ struct DebugData
 
     const PerArea& data;
     const VALEURS_GENEREES_PAR_PAYS& valgen;
-    const InflowsT& srcinflows;
-    const MaxPowerT& maxP;
-    const MaxPowerT& maxE;
+    const InflowsType& srcinflows;
+    const MaxPowerType& maxP;
+    const MaxPowerType& maxE;
     const double* dtg;
-    const ReservoirLevelT& lowLevel;
+    const ReservoirLevelType& lowLevel;
     const double reservoirCapacity;
 
     DebugData(const PerArea& data,
               const VALEURS_GENEREES_PAR_PAYS& valgen,
-              const InflowsT& srcinflows,
-              const MaxPowerT& maxP,
-              const MaxPowerT& maxE,
+              const InflowsType& srcinflows,
+              const MaxPowerType& maxP,
+              const MaxPowerType& maxE,
               const double* dtg,
-              const ReservoirLevelT& lowLevel,
+              const ReservoirLevelType& lowLevel,
               double reservoirCapacity) :
      data(data),
      valgen(valgen),
@@ -275,7 +275,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             assert(dYear < 366);
             scratchpad.optimalMaxPower[dYear] = maxP[dYear];
 
-            if (debugData != nullptr)
+            if (debugData)
                 debugData->OPP[dYear] = maxP[dYear] * maxE[dYear];
         }
 
@@ -351,7 +351,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                     dtg[day + dayYear] = srcinflows[dayYear + day];
             }
 
-            if (debugData != nullptr)
+            if (debugData)
             {
                 for (uint day = 0; day != daysPerMonth; ++day)
                 {
@@ -420,7 +420,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 #endif
         }
 
-        if (debugData != nullptr)
+        if (debugData)
         {
             String filename;
             filename << "daily." << area.name << ".txt";
