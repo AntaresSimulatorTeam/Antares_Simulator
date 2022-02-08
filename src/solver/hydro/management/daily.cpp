@@ -117,6 +117,7 @@ struct DebugData
             CoutTotal[i] = 0.;
         }
     }
+
     void writeTurb(const String& folderOutput, const String& filename, uint y) const
     {
         String folder;
@@ -182,32 +183,29 @@ struct DebugData
                     for (uint day = firstDay; day != endDay; ++day)
                     {
                         double turbines
-                          = valgen.HydrauliqueModulableQuotidien[day] / this->reservoirCapacity;
+                          = valgen.HydrauliqueModulableQuotidien[day] / reservoirCapacity;
                         double niveauDeb = valgen.NiveauxReservoirsDebutJours[day];
                         double niveauFin = valgen.NiveauxReservoirsFinJours[day];
-                        double apports = this->srcinflows[day] / this->reservoirCapacity;
-                        double turbMax
-                          = this->maxP[day] * this->maxE[day] / this->reservoirCapacity;
-                        double turbCible = this->dtg[day] / this->reservoirCapacity;
-                        double turbCibleUpdated
-                          = this->dtg[day] / this->reservoirCapacity
-                            + this->previousMonthWaste[realmonth] / daysPerMonth;
-                        file << day << '\t' << '\t' << dayMonth << '\t' << this->lowLevel[day] * 100
+                        double apports = srcinflows[day] / reservoirCapacity;
+                        double turbMax = maxP[day] * maxE[day] / reservoirCapacity;
+                        double turbCible = dtg[day] / reservoirCapacity;
+                        double turbCibleUpdated = dtg[day] / reservoirCapacity
+                                                  + previousMonthWaste[realmonth] / daysPerMonth;
+                        file << day << '\t' << '\t' << dayMonth << '\t' << lowLevel[day] * 100
                              << '\t' << apports * 100 << '\t' << turbMax * 100 << '\t'
                              << turbCible * 100 << '\t' << turbCibleUpdated * 100 << '\t' << '\t'
                              << niveauDeb * 100 << '\t' << niveauFin * 100 << '\t' << turbines * 100
-                             << '\t' << this->OVF[day] * 100 << '\t' << this->DEV[day] * 100 << '\t'
-                             << this->VIO[day] * 100;
+                             << '\t' << OVF[day] * 100 << '\t' << DEV[day] * 100 << '\t'
+                             << VIO[day] * 100;
                         if (dayMonth == 1)
                         {
-                            file << '\t' << this->deviationMax[realmonth] * 100 << '\t' << '\t'
-                                 << this->violationMax[realmonth] * 100 << '\t' << '\t'
-                                 << this->WASTE[realmonth] * 100 << '\t'
-                                 << this->CoutTotal[realmonth] << '\t'
-                                 << (data.MOG[realmonth] / this->reservoirCapacity) * 100 << '\t'
-                                 << '\t' << '\t' << '\t' << '\t'
-                                 << (data.MOG[realmonth] / this->reservoirCapacity
-                                     + this->previousMonthWaste[realmonth])
+                            file << '\t' << deviationMax[realmonth] * 100 << '\t' << '\t'
+                                 << violationMax[realmonth] * 100 << '\t' << '\t'
+                                 << WASTE[realmonth] * 100 << '\t' << CoutTotal[realmonth] << '\t'
+                                 << (data.MOG[realmonth] / reservoirCapacity) * 100 << '\t' << '\t'
+                                 << '\t' << '\t' << '\t'
+                                 << (data.MOG[realmonth] / reservoirCapacity
+                                     + previousMonthWaste[realmonth])
                                       * 100;
                         }
                         file << '\n';
