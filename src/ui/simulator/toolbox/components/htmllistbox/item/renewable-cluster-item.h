@@ -68,7 +68,6 @@ public:
     Antares::Data::RenewableCluster* renewableAggregate() const;
 
 private:
-    wxString getClusterIconFilePath() override;
     wxString htmlContentTail() override;
 
 private:
