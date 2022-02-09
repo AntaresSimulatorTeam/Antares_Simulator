@@ -263,7 +263,7 @@ void OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO
         if (ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->AccurateWaterValue == OUI_ANTARES)
         {
             ProblemeAResoudre->NombreDeContraintes
-              += 2; /* Final Stock Level : (1 equivalence cnt + 1 expression cnt )*/
+              += 2; /* Final Stock Level : (1 bound cnt or 1 equivalence cnt)+ 1 expression cnt */
         }
     }
 

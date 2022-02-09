@@ -555,6 +555,7 @@ struct PROBLEME_HEBDO
 
     int* NumeroDeContrainteDeSoldeDEchange;
 
+    int* NumeroDeContrainteBorneStockFinal;
     int* NumeroDeContrainteEquivalenceStockFinal;
     int* NumeroDeContrainteExpressionStockFinal;
 
