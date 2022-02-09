@@ -81,6 +81,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
     problem.NumeroDeContrainteMaxPompage = (int*)MemAlloc(nbPays * sizeof(int));
     problem.NumeroDeContrainteDeSoldeDEchange = (int*)MemAlloc(nbPays * sizeof(int));
 
+    problem.NumeroDeContrainteBorneStockFinal = (int*)MemAlloc(nbPays * sizeof(int));
     problem.NumeroDeContrainteEquivalenceStockFinal = (int*)MemAlloc(nbPays * sizeof(int));
     problem.NumeroDeContrainteExpressionStockFinal = (int*)MemAlloc(nbPays * sizeof(int));
 
@@ -908,6 +909,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     MemFree(problem.NumeroDeContrainteMaxPompage);
     MemFree(problem.NumeroDeContrainteDeSoldeDEchange);
 
+    MemFree(problem.NumeroDeContrainteBorneStockFinal);
     MemFree(problem.NumeroDeContrainteEquivalenceStockFinal);
     MemFree(problem.NumeroDeContrainteExpressionStockFinal);
     MemFree(problem.NumeroDeVariableStockFinal);
