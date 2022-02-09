@@ -23,7 +23,7 @@ jobs:
       uses: tj-actions/changed-files@v1.1.2
       with:
         files: |
-          docker/centos7
+          docker/centos7-basic-requirements
           antares-deps-version.json
 
     - name: Read antares-deps version
