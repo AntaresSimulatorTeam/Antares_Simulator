@@ -14,7 +14,6 @@ v8.2.0-rc1 (02/2022)
 - Improve UI for new thermal parameter "tsGenBehavior" #534
 
 ### Bug fixes
-- Remove a useless constraint when water values are used in "accurate" mode. The management of reservoirs of small capacity should be more realistic. This feature was contributed by M. Doquet #524
 - Prevent an area from having a link to itself #531
 - Fix crash when the study folder does not exist #521
 - Fix crash when failing to load a study #502
