@@ -707,7 +707,17 @@ def test_playlist_psp_misc_ndg(use_ortools, ortools_solver, solver_path):
     enable_study_output(study_path, True)
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     enable_study_output(study_path, False)
+
+    var_names = ['CCGT_new', 'CCGT-old-2', 'CONG. FEE (ABS.)', 'CONG. FEE (ALG.)', 'gas_ccgt new', 'gas_ccgt old 1']
+    var_names.extend(['gas_ccgt old 2', 'gas_conventional old 1', 'gas_ocgt new', 'gas_ocgt old', 'hard coal_new'])
+    var_names.extend(['hard coal_old 1', 'HURDLE COST', 'LIGNITE', 'lignite_new', 'lignite_old 1', 'lignite_old 2'])
+    var_names.extend(['Lignite-old-1', 'Lignite-old-2', 'NP COST', 'nuclear_nuclear', 'OCGT_new', 'OCGT-old'])
+    var_names.extend(['SOLAR'])
+
     tolerances = get_tolerances()
+    for var_name in var_names:
+        tolerances.set_absolute(var_name, 1)
+
     check_output_values(study_path, tolerances)
 
 @pytest.mark.short
@@ -841,7 +851,10 @@ def test_ts_gen_select_thermal_cluster_stochastic(use_ortools, ortools_solver, s
 def test_ts_gen_select_thermal_cluster_refresh_force_gen(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "Thermal refresh/"
     run_study(solver_path, study_path, use_ortools, ortools_solver)
+
     tolerances = get_tolerances()
+    tolerances.set_absolute('cluster', 1)
+
     check_output_values(study_path, tolerances)
 
 @pytest.mark.short
