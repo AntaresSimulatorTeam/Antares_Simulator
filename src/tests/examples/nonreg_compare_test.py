@@ -464,6 +464,7 @@ def test_h700_26(use_ortools, ortools_solver, solver_path):
 @pytest.mark.non_regression
 @pytest.mark.valid_hydro
 @pytest.mark.short
+@pytest.mark.skip("TODO restore run for v8.2")
 def test_h700_27(use_ortools, ortools_solver, solver_path):
     study_path = NONREG_STUDIES_PATH / "valid-hydro" / "H700-27"
     enable_study_output(study_path, True)
