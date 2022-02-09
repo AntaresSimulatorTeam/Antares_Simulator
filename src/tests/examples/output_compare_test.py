@@ -728,7 +728,8 @@ def test_unfeasible_problem_06(use_ortools, ortools_solver, solver_path):
     enable_study_output(study_path, True)
     st = Study(str(study_path))
     st.set_variable(variable="include-unfeasible-problem-behavior", value="warning-dry", file_nick_name="general")
-    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    send_std_error_to = subprocess.DEVNULL
+    run_study(solver_path, study_path, use_ortools, ortools_solver, send_std_error_to)
     enable_study_output(study_path, False)
     tolerances = get_tolerances()
     check_output_values(study_path, tolerances)
@@ -741,7 +742,8 @@ def test_unfeasible_problem_07(use_ortools, ortools_solver, solver_path):
     enable_study_output(study_path, True)
     st = Study(str(study_path))
     st.set_variable(variable="include-unfeasible-problem-behavior", value="warning-dry", file_nick_name="general")
-    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    send_std_error_to = subprocess.DEVNULL
+    run_study(solver_path, study_path, use_ortools, ortools_solver, send_std_error_to)
     enable_study_output(study_path, False)
     tolerances = get_tolerances()
     check_output_values(study_path, tolerances)
@@ -754,7 +756,8 @@ def test_unfeasible_problem_08(use_ortools, ortools_solver, solver_path):
     enable_study_output(study_path, True)
     st = Study(str(study_path))
     st.set_variable(variable="include-unfeasible-problem-behavior", value="warning-dry", file_nick_name="general")
-    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    send_std_error_to = subprocess.DEVNULL
+    run_study(solver_path, study_path, use_ortools, ortools_solver, send_std_error_to)
     enable_study_output(study_path, False)
     tolerances = get_tolerances()
     check_output_values(study_path, tolerances)
@@ -767,7 +770,8 @@ def test_unfeasible_problem_09(use_ortools, ortools_solver, solver_path):
     enable_study_output(study_path, True)
     st = Study(str(study_path))
     st.set_variable(variable="include-unfeasible-problem-behavior", value="warning-dry", file_nick_name="general")
-    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    send_std_error_to = subprocess.DEVNULL
+    run_study(solver_path, study_path, use_ortools, ortools_solver, send_std_error_to)
     enable_study_output(study_path, False)
     tolerances = get_tolerances()
     check_output_values(study_path, tolerances)
@@ -780,7 +784,8 @@ def test_unfeasible_problem_10(use_ortools, ortools_solver, solver_path):
     enable_study_output(study_path, True)
     st = Study(str(study_path))
     st.set_variable(variable="include-unfeasible-problem-behavior", value="warning-dry", file_nick_name="general")
-    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    send_std_error_to = subprocess.DEVNULL
+    run_study(solver_path, study_path, use_ortools, ortools_solver, send_std_error_to)
     enable_study_output(study_path, False)
     tolerances = get_tolerances()
     check_output_values(study_path, tolerances)

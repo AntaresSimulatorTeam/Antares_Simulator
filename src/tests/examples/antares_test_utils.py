@@ -31,7 +31,7 @@ def remove_outputs(study_path):
     for f in files:
         shutil.rmtree(f)
 
-def launch_solver(solver_path, study_path, use_ortools = False, ortools_solver = "sirius"):
+def run_study(solver_path, study_path, use_ortools = False, ortools_solver = "sirius", std_error = None):
     # Clean study output
     remove_outputs(study_path)
 
@@ -46,10 +46,6 @@ def launch_solver(solver_path, study_path, use_ortools = False, ortools_solver =
 
     # TODO check return value
     assert "Solver returned error" not in output[0].decode('utf-8')
-
-def run_study(solver_path, path, use_ortools, ortools_solver):
-    # Launch antares-solver
-    launch_solver(solver_path, path, use_ortools, ortools_solver)
 
 def enable_study_output(study_path, enable):
     st = Study(str(study_path))
