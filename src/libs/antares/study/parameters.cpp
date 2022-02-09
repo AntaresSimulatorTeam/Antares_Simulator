@@ -521,6 +521,9 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
         return value.to<bool>(d.storeTimeseriesNumbers);
     if (key == "synthesis")
         return value.to<bool>(d.synthesis);
+    if (key == "hydro-debug")
+        return value.to<bool>(d.hydroDebug);
+
     return false;
 }
 static bool SGDIntLoadFamily_Optimization(Parameters& d,
@@ -1652,6 +1655,8 @@ void Parameters::saveToINI(IniFile& ini) const
         auto* section = ini.addSection("output");
         section->add("synthesis", synthesis);
         section->add("storeNewSet", storeTimeseriesNumbers);
+        if (hydroDebug)
+            section->add("hydro-debug", hydroDebug);
         ParametersSaveTimeSeries(section, "archives", timeSeriesToArchive);
     }
 

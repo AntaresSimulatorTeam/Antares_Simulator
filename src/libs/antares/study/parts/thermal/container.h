@@ -103,6 +103,18 @@ public:
     */
     void markAsModified() const;
 
+    /*!
+    ** \brief Some clusters force the generation of timeseries,
+        overriding the global (study) parameter.
+    */
+    bool hasForcedTimeseriesGeneration() const;
+
+    /*!
+    ** \brief Some clusters prevent the generation of timeseries,
+        overriding the global (study) parameter.
+    */
+    bool hasForcedNoTimeseriesGeneration() const;
+
 public:
     //! The unsupplied energy cost (Euros/MWh)
     double unsuppliedEnergyCost;

@@ -515,6 +515,8 @@ public:
     bool noOutput;
     //@}
 
+    bool hydroDebug;
+
     //! \name Seeds
     //@{
     //! Seeds

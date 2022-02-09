@@ -60,8 +60,12 @@ void ClusterItem::preloadImages()
     {
         pIconFileEnabled = getIconFilePath("images/16x16/light_green.png");
         pIconFileDisabled = getIconFilePath("images/16x16/light_orange.png");
-        pClusterIconFilePath = getClusterIconFilePath();
     }
+}
+
+void ClusterItem::addAdditionalIcons(wxString& out) const
+{
+    // No additional icons should be added by default
 }
 
 bool ClusterItem::HtmlContent(wxString& out, Data::Cluster* cluster, const wxString& searchString)
@@ -70,14 +74,16 @@ bool ClusterItem::HtmlContent(wxString& out, Data::Cluster* cluster, const wxStr
 
     if (cluster->enabled)
     {
-        out << wxT("<td width=30 align=center><img src=\"") << pIconFileEnabled << wxT("\"></td>");
+        out << wxT("<td width=20 align=center><img src=\"") << pIconFileEnabled << wxT("\"></td>");
     }
     else
     {
-        out << wxT("<td width=30 align=center><img src=\"") << pIconFileDisabled << wxT("\"></td>");
+        out << wxT("<td width=20 align=center><img src=\"") << pIconFileDisabled << wxT("\"></td>");
     }
 
-    out << wxT("<td width=20 align=center><img src=\"") << pClusterIconFilePath << wxT("\"></td>");
+    // Specific to thermal clusters
+    addAdditionalIcons(out);
+
     out << wxT("<td width=8></td><td nowrap><font size=\"-1\"");
 
     wxString name = wxStringFromUTF8(cluster->name());
