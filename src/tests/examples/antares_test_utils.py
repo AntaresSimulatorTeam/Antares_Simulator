@@ -1,5 +1,5 @@
 from pathlib import Path
-from os import walk
+from os import walk, environ
 from os.path import basename, sep
 import sys
 import glob
@@ -17,6 +17,10 @@ from read_utils import read_csv
 
 ALL_STUDIES_PATH = Path('../resources/Antares_Simulator_Tests').resolve()
 
+def raise_assertion(message):
+    test_name = environ.get('PYTEST_CURRENT_TEST').split('::')[-1].split(' ')[0]
+    raise AssertionError("%s::%s" % (test_name, message))
+
 def find_simulation_folder(output_dir):
     for root, dirs, files in walk(output_dir):
         if basename(root) in ["adequacy", "economy", "adequacy-draft"]:
@@ -31,7 +35,7 @@ def remove_outputs(study_path):
     for f in files:
         shutil.rmtree(f)
 
-def launch_solver(solver_path, study_path, use_ortools = False, ortools_solver = "sirius"):
+def run_study(solver_path, study_path, use_ortools = False, ortools_solver = "sirius", std_error = None):
     # Clean study output
     remove_outputs(study_path)
 
@@ -45,11 +49,8 @@ def launch_solver(solver_path, study_path, use_ortools = False, ortools_solver =
     output = process.communicate()
 
     # TODO check return value
-    assert "Solver returned error" not in output[0].decode('utf-8')
-
-def run_study(solver_path, path, use_ortools, ortools_solver):
-    # Launch antares-solver
-    launch_solver(solver_path, path, use_ortools, ortools_solver)
+    if "Solver returned error" in output[0].decode('utf-8'):
+        raise_assertion("Solver returned error")
 
 def enable_study_output(study_path, enable):
     st = Study(str(study_path))
@@ -59,9 +60,7 @@ def enable_study_output(study_path, enable):
     st.set_variable(variable = "synthesis", value = synthesis_value, file_nick_name="general")
 
 def skip_folder(folder):
-    if basename(folder) == 'grid':
-        return True
-    return False
+    return basename(folder) in ['grid']
 
 def skip_file(file):
     ignored_files = ['id-hourly.txt',
@@ -116,8 +115,9 @@ def compare_simulation_files(simulation_files, tol):
         # Check that reference column titles are a subset of the simulation titles
         ref_column_titles = get_headers(ref_data_frame)
         other_column_titles = get_headers(other_data_frame)
-        assert ref_column_titles.issubset(other_column_titles),\
-               f"The following column(s) is missing in the reference {ref_column_titles.difference(other_column_titles)}"
+        if not ref_column_titles.issubset(other_column_titles):
+            message = f"The following column(s) is missing in the reference {ref_column_titles.difference(other_column_titles)}"
+            raise_assertion(message)
 
         for col_name in ref_column_titles:
             try:
@@ -179,14 +179,13 @@ def get_tolerances():
     elif sys.platform == "win32":
         return Win_tolerances()
     else:
-        print("Unknown OS")
-        raise AssertionError()
+        raise_assertion("Unknown OS")
 
 def check_output_values(study_path, tolerances):
     reference_folder = find_simulation_folder(study_path / 'reference')
     other_folder = find_simulation_folder(study_path / 'output')
     simulation_files = find_simulation_files(reference_folder, other_folder)
     if not compare_simulation_files(simulation_files, tolerances):
-        raise AssertionError()
+        raise_assertion("Comparison failed")
     remove_outputs(study_path)
 
