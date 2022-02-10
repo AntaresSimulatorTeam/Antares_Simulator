@@ -103,15 +103,6 @@ def check_integrity_second_opt(path):
 
     np.testing.assert_allclose(reference_values[4:8], output_values[4:8], rtol=1e-3, atol=0)
 
-def generate_reference_integrity(solver_path, path):
-    reference_path = path / 'reference'
-    os.makedirs(reference_path, exist_ok=True)
-    launch_solver(solver_path,path)
-
-    output_path = path / 'output'
-    integrity_path = find_integrity_path(output_path)
-    shutil.copy2(integrity_path, reference_path / 'checkIntegrity.txt')
-
 def run_study(solver_path, path, use_ortools, ortools_solver):
     # Launch antares-solver
     launch_solver(solver_path, path, use_ortools, ortools_solver)

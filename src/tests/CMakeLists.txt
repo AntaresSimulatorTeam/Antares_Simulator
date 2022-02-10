@@ -157,7 +157,7 @@ if(Python3_Interpreter_FOUND)
         # Non-regression tests
         add_test(
             NAME non-regression
-            COMMAND Python3::Interpreter -m pytest --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver> nonreg_compare_test.py
+            COMMAND Python3::Interpreter -m pytest --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver> nonreg_compare_test.py --tb=line -v -s
             WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples"
         )
         set_property(TEST non-regression PROPERTY LABELS non-regression sirius)
