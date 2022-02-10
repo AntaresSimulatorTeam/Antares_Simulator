@@ -51,6 +51,14 @@ if(Python3_Interpreter_FOUND)
             message(FATAL_ERROR "git checkout ${ANTARES_TEST_TAG} failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
         endif()
         
+        # Checkout non-regression tests repo on current tag
+        execute_process(COMMAND ${GIT_EXECUTABLE} checkout ${ANTARES_TEST_TAG}
+                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/resources/NonRegTests
+                        RESULT_VARIABLE GIT_SUBMOD_RESULT)
+        if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+            message(FATAL_ERROR "git checkout ${ANTARES_TEST_TAG} failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+        endif()
+        
         macro(run_examples_tests use_ortools ortools_solver)
         
             if(${use_ortools})
