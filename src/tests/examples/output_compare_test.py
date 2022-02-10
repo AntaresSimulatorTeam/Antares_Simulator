@@ -643,9 +643,9 @@ def test_playlist_psp_misc_ndg(use_ortools, ortools_solver, solver_path):
 
     var_names = ['CCGT_new', 'CCGT-old-2', 'CONG. FEE (ABS.)', 'CONG. FEE (ALG.)', 'gas_ccgt new', 'gas_ccgt old 1']
     var_names.extend(['gas_ccgt old 2', 'gas_conventional old 1', 'gas_ocgt new', 'gas_ocgt old', 'hard coal_new'])
-    var_names.extend(['hard coal_old 1', 'HURDLE COST', 'LIGNITE', 'lignite_new', 'lignite_old 1', 'lignite_old 2'])
-    var_names.extend(['Lignite-old-1', 'Lignite-old-2', 'NP COST', 'nuclear_nuclear', 'OCGT_new', 'OCGT-old'])
-    var_names.extend(['SOLAR'])
+    var_names.extend(['hard coal_old 1', 'HURDLE COST', 'LIGNITE', 'lignite_new', 'Lignite-new', 'lignite_old 1'])
+    var_names.extend(['lignite_old 2', 'Lignite-old-1', 'Lignite-old-2', 'NP COST', 'nuclear_nuclear', 'OCGT_new'])
+    var_names.extend(['OCGT-old', 'SOLAR'])
 
     tolerances = get_tolerances()
     for var_name in var_names:
