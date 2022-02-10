@@ -182,12 +182,12 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
             s.toLower();
             s.trim();
 
-            if (s == "not used" || s == "0")
-                area->adequacyPatchMode = Data::adqmNotUsed;
-            else if (s == "physical area" || s == "1")
-                area->adequacyPatchMode = Data::adqmUsedAsPhysicalArea;
-            else if (s == "virtual area" || s == "2")
-                area->adequacyPatchMode = Data::adqmUsedAsVirtualArea;
+            if (s == "virtual area" || s == "0")
+                area->adequacyPatchMode = Data::adqmVirtualArea;
+            else if (s == "physical area outside patch" || s == "1")
+                area->adequacyPatchMode = Data::adqmPhysicalAreaOutsideAdqPatch;
+            else if (s == "physical area inside patch" || s == "2")
+                area->adequacyPatchMode = Data::adqmPhysicalAreaInsideAdqPatch;
 
             OnStudyAreaUseAdequacyPatchChanged();
             return true;

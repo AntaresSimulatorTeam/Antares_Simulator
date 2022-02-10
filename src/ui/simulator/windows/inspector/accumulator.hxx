@@ -323,7 +323,7 @@ static const wxChar* studyMode[] = {wxT("Economy"),
                                     nullptr};
 
 static const wxChar* adequacyPatchMode[]
-  = {wxT("Not used"), wxT("Physical area"), wxT("Virtual area"), nullptr};
+  = {wxT("virtual area"), wxT("physical area outside patch"), wxT("physical area inside patch"), nullptr};
 
 struct Unique
 {
@@ -920,12 +920,12 @@ struct PAdequacyPatchMode
     {
         switch (v)
         {
-        case Data::adqmNotUsed:
-            return wxT("Not used");
-        case Data::adqmUsedAsPhysicalArea:
-            return wxT("Physical area");
-        case Data::adqmUsedAsVirtualArea:
-            return wxT("Virtual area");
+        case Data::adqmVirtualArea:
+            return wxT("virtual area");
+        case Data::adqmPhysicalAreaOutsideAdqPatch:
+            return wxT("physical area outside patch");
+        case Data::adqmPhysicalAreaInsideAdqPatch:
+            return wxT("physical area inside patch");
         }
         return wxEmptyString;
     }

@@ -121,12 +121,12 @@ enum StudyMode
 */
 enum AdequacyPatchMode
 {
-    //! Area out of the adq-patch (area does not use adq-patch)
-    adqmNotUsed = 0,
-    //! Physical Area in the adq-patch (physical area use adq-patch)
-    adqmUsedAsPhysicalArea,
-    //! Virtual Area in the adq-patch (virtual area use adq-patch)
-    adqmUsedAsVirtualArea
+    //! Virtual area in adq patch
+    adqmVirtualArea = 0,
+    //! Physical Area outside the adq-patch
+    adqmPhysicalAreaOutsideAdqPatch,
+    //! Physical Area inside the adq-patch
+    adqmPhysicalAreaInsideAdqPatch
 
 }; // enum AdequacyPatchMode
 
