@@ -30,37 +30,44 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 
-class TimeElapsed final
+namespace TimeElapsed
+{
+class Aggregator;
+
+class Timer final
 {
 public:
     //! Default constructor
-    TimeElapsed(bool verbose = true);
+    Timer() = delete;
 
     //! Copy constructor
-    TimeElapsed(const TimeElapsed& rhs) : text(rhs.text), pStartTime(rhs.pStartTime), verbose(rhs.verbose)
-    {
-    }
+    Timer(const Timer& rhs) = default;
 
     //! Constructor with a default text
-    explicit TimeElapsed(const AnyString& text, bool verbose = true) : text(text), verbose(verbose)
-    {
-        reset();
-    }
+    explicit Timer(const AnyString& userText,
+                   const AnyString& logText = "",
+                   bool verbose = true,
+                   Aggregator* aggregator = nullptr);
 
     //! Destructor
-    ~TimeElapsed();
+    ~Timer();
 
     void reset();
 
 public:
     //! The text to display at the end
-    Yuni::ShortString256 text;
+    Yuni::ShortString256 userText;
 
 private:
     //! timestamp when the timer started
     yint64 pStartTime;
     //! Display text on destruction
     bool verbose;
-}; // class TimeElapsed
+    //! Aggregation into a single file for automation
+    Aggregator* pAggregator;
+    // Aggregation
+    Yuni::ShortString256 logText;
+}; // class Timer
+} // namespace TimeElapsed
 
 #endif // __ANTARES_LIBS_TIME_ELAPSED__TIME_ELAPSED_H__

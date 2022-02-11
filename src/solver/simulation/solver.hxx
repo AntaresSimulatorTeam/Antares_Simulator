@@ -30,9 +30,9 @@
 #include "../variable/constants.h"
 #include <antares/logs.h>
 #include <antares/date.h>
+#include <antares/timeelapsed.h>
 #include "../variable/print.h"
 #include <yuni/io/io.h>
-#include <antares/timeelapsed.h>
 #include "../aleatoire/alea_fonctions.h"
 #include "timeseries-numbers.h"
 #include "apply-scenario.h"
@@ -255,7 +255,9 @@ private:
 };
 
 template<class Impl>
-inline ISimulation<Impl>::ISimulation(Data::Study& study, const ::Settings& settings) :
+inline ISimulation<Impl>::ISimulation(Data::Study& study,
+                                      const ::Settings& settings,
+                                      TimeElapsed::Aggregator* aggregator) :
  ImplementationType(study),
  study(study),
  settings(settings),
@@ -264,7 +266,8 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study, const ::Settings& sett
  pYearByYear(study.parameters.yearByYear),
  pHydroManagement(study),
  pFirstSetParallelWithAPerformedYearWasRun(false),
- pAnnualCostsStatistics(study)
+ pAnnualCostsStatistics(study),
+ pTimeElapsedAggregator(aggregator)
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -375,7 +378,7 @@ void ISimulation<Impl>::run()
             ImplementationType::initializeState(state[numSpace], numSpace);
 
         logs.info() << " Starting the simulation";
-        TimeElapsed time("MC Years");
+        TimeElapsed::Timer time("MC Years", "mc_years", true, pTimeElapsedAggregator);
         uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
         loopThroughYears(0, finalYear, state);
 

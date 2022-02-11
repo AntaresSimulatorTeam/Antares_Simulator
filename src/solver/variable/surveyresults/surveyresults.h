@@ -32,7 +32,7 @@
 #include "../constants.h"
 #include <antares/study.h>
 #include "../categories.h"
-#include <antares/timeelapsed/timeelapsed.h>
+#include <antares/timeelapsed.h>
 #include "data.h"
 #include <antares/study/variable-print-info.h>
 

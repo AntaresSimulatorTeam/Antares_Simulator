@@ -3,6 +3,7 @@
 #include "misc/options.h"
 #include <antares/study.h>
 #include <antares/study/load-options.h>
+#include <antares/timeelapsed.h>
 #include "simulation/simulation.h"
 
 #include <yuni/core/string.h>
@@ -85,6 +86,8 @@ private:
     char** pArgv;
 
     bool shouldExecute = true;
+
+    TimeElapsed::Aggregator pTimeElapsedAggregator;
 }; // class Application
 } // namespace Solver
 } // namespace Antares

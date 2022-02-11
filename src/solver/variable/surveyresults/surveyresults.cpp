@@ -202,7 +202,6 @@ void ExportGridInfosAreas(const Data::Study& study, const String& folder)
 }
 
 SurveyResultsData::SurveyResultsData(const Data::Study& s, const String& o) :
- time("Survey report"),
  columnIndex((uint)-1),
  thermalCluster(nullptr),
  area(nullptr),

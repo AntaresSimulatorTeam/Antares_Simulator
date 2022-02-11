@@ -5,6 +5,7 @@
 #include <antares/hostinfo.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/emergency.h>
+#include <antares/timeelapsed.h>
 #include "../config.h"
 
 #include "misc/system-memory.h"
@@ -386,10 +387,13 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     options.loadOnlyNeeded = true;
 
     // Load the study from a folder
-    if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
     {
-        logs.info() << "The study is loaded.";
-        logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+      TimeElapsed::Timer timer("Study Loading", "study_loading", true, &pTimeElapsedAggregator);
+      if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
+        {
+          logs.info() << "The study is loaded.";
+          logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+        }
     }
 
     if (study.gotFatalError)

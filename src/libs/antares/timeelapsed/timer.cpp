@@ -26,7 +26,8 @@
 */
 
 #include <yuni/yuni.h>
-#include "timeelapsed.h"
+#include "timer.h"
+#include "aggregator.h"
 #include "../logs.h"
 #include <math.h>
 #include <yuni/core/system/gettimeofday.h>
@@ -40,27 +41,32 @@ static inline sint64 MilliSecTimer()
     return tv.tv_sec * 1000 + tv.tv_usec / 1000;
 }
 
-inline static sint64 usec_timer()
+namespace TimeElapsed
 {
-    Yuni::timeval tv;
-    YUNI_SYSTEM_GETTIMEOFDAY(&tv, NULL);
-    return tv.tv_sec * 1000000 + tv.tv_usec;
-}
-
-TimeElapsed::TimeElapsed() : pStartTime(MilliSecTimer())
-{
-}
-
-void TimeElapsed::reset()
+void Timer::reset()
 {
     pStartTime = MilliSecTimer();
 }
 
-TimeElapsed::~TimeElapsed()
+Timer::Timer(const AnyString& userText,
+             const AnyString& logText,
+             bool verbose,
+             Aggregator* aggregator) :
+ userText(userText), verbose(verbose), logText(logText), pAggregator(aggregator)
 {
+    reset();
+}
+
+Timer::~Timer()
+{
+    const sint64 delta_ms = MilliSecTimer() - pStartTime;
     if (verbose)
     {
-    Antares::logs.info() << " Elapsed time: " << text << ": " << (MilliSecTimer() - pStartTime)
-                         << "ms";
+        Antares::logs.info() << " Elapsed time: " << userText << ": " << delta_ms << "ms";
+    }
+    if (pAggregator)
+    {
+        pAggregator->append(logText, delta_ms);
     }
 }
+} // namespace TimeElapsed

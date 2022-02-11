@@ -31,7 +31,7 @@
 #include "../constants.h"
 #include <yuni/core/string.h>
 #include <antares/study.h>
-#include <antares/timeelapsed/timeelapsed.h>
+#include <antares/timeelapsed.h>
 
 namespace Antares
 {
@@ -64,7 +64,6 @@ public:
     bool createDigestFile();
 
 public:
-    TimeElapsed time;
     //! The current column index
     unsigned int columnIndex;
 
