@@ -88,6 +88,7 @@ private:
     bool shouldExecute = true;
 
     TimeElapsed::Aggregator pTimeElapsedAggregator;
+    std::shared_ptr<TimeElapsed::IWriter> mTimeElapsedWriter;
 }; // class Application
 } // namespace Solver
 } // namespace Antares

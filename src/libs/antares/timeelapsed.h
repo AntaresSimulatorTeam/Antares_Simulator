@@ -29,5 +29,6 @@
 
 #include "timeelapsed/timer.h"
 #include "timeelapsed/aggregator.h"
+#include "timeelapsed/writer.h"
 
 #endif // __ANTARES_LIBS_TIMEELAPSED_H__

@@ -16,4 +16,9 @@ void Aggregator::append(const Yuni::ShortString256& text, Yuni::sint64 duration_
         mInfoMap.emplace(text, Info(duration_ms, 1));
     }
 }
+
+void Aggregator::flush(IWriter& writer)
+{
+    writer.flush(mInfoMap);
+}
 } // namespace TimeElapsed

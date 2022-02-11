@@ -388,11 +388,11 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Load the study from a folder
     {
-      TimeElapsed::Timer timer("Study Loading", "study_loading", true, &pTimeElapsedAggregator);
-      if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
+        TimeElapsed::Timer timer("Study Loading", "study_loading", true, &pTimeElapsedAggregator);
+        if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
         {
-          logs.info() << "The study is loaded.";
-          logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+            logs.info() << "The study is loaded.";
+            logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
         }
     }
 
@@ -402,6 +402,15 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     if (study.areas.empty())
     {
         throw Error::NoAreas();
+    }
+
+    // Prepare time measurement file
+    // study.folderOutput is defined by Study::loadFromFolder, which MUST be called before
+    study.buffer.clear() << study.folderOutput << Yuni::IO::Separator << "time_mesurement.txt";
+    mTimeElapsedWriter = std::make_shared<TimeElapsed::FileWriter>(study.buffer);
+    if (!mTimeElapsedWriter->checkAndPrepareOutput())
+    {
+        throw Error::CreatingTimeMeasurementFile(study.buffer);
     }
 
     // no output ?
@@ -518,6 +527,7 @@ Application::~Application()
         LocalPolicy::Close();
         logs.info() << "Done.";
     }
+    pTimeElapsedAggregator.flush(*mTimeElapsedWriter);
 }
 } // namespace Solver
 } // namespace Antares
