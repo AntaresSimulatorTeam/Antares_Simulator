@@ -28,7 +28,7 @@
 #define __ANTARES_LIBS_TIME_ELAPSED__TIME_ELAPSED_H__
 
 #include <yuni/yuni.h>
-#include <yuni/core/string.h>
+#include <yuni/string.h>
 
 namespace TimeElapsed
 {
