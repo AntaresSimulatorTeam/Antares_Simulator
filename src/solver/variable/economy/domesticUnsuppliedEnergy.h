@@ -42,7 +42,7 @@ struct VCardDomesticUnsuppliedEnergy
     //! Caption
     static const char* Caption()
     {
-        return "DENS";
+        return "LOCAL UNSP. ENRG";
     }
     //! Unit
     static const char* Unit()

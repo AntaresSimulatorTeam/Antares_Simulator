@@ -145,7 +145,7 @@ typedef          // Prices
                       <WaterValue        // Water values
                        <HydroCost        // Hydro costs
                         <UnsupliedEnergy // Unsuplied Energy
-                         <DomesticUnsuppliedEnergy // Domestic Unsuplied Energy
+                         <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
                           <SpilledEnergy          // Spilled Energy
                            <LOLD                  // LOLD
                             <LOLP                 // LOLP
