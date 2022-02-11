@@ -58,6 +58,9 @@ void TimeElapsed::reset()
 
 TimeElapsed::~TimeElapsed()
 {
+    if (verbose)
+    {
     Antares::logs.info() << " Elapsed time: " << text << ": " << (MilliSecTimer() - pStartTime)
                          << "ms";
+    }
 }

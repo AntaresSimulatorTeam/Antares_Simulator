@@ -34,15 +34,15 @@ class TimeElapsed final
 {
 public:
     //! Default constructor
-    TimeElapsed();
+    TimeElapsed(bool verbose = true);
 
     //! Copy constructor
-    TimeElapsed(const TimeElapsed& rhs) : text(rhs.text), pStartTime(rhs.pStartTime)
+    TimeElapsed(const TimeElapsed& rhs) : text(rhs.text), pStartTime(rhs.pStartTime), verbose(rhs.verbose)
     {
     }
 
     //! Constructor with a default text
-    explicit TimeElapsed(const AnyString& text) : text(text)
+    explicit TimeElapsed(const AnyString& text, bool verbose = true) : text(text), verbose(verbose)
     {
         reset();
     }
@@ -59,7 +59,8 @@ public:
 private:
     //! timestamp when the timer started
     yint64 pStartTime;
-
+    //! Display text on destruction
+    bool verbose;
 }; // class TimeElapsed
 
 #endif // __ANTARES_LIBS_TIME_ELAPSED__TIME_ELAPSED_H__
