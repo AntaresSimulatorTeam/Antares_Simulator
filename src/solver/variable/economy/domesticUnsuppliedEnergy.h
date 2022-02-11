@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_DomesticUnsupliedEnergy_H__
-#define __SOLVER_VARIABLE_ECONOMY_DomesticUnsupliedEnergy_H__
+#ifndef __SOLVER_VARIABLE_ECONOMY_DomesticUnsuppliedEnergy_H__
+#define __SOLVER_VARIABLE_ECONOMY_DomesticUnsuppliedEnergy_H__
 
 #include "../variable.h"
 
@@ -37,7 +37,7 @@ namespace Variable
 {
 namespace Economy
 {
-struct VCardDomesticUnsupliedEnergy
+struct VCardDomesticUnsuppliedEnergy
 {
     //! Caption
     static const char* Caption()
@@ -64,7 +64,7 @@ struct VCardDomesticUnsupliedEnergy
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardDomesticUnsupliedEnergy VCardForSpatialAggregate;
+    typedef VCardDomesticUnsuppliedEnergy VCardForSpatialAggregate;
 
     enum
     {
@@ -98,20 +98,20 @@ struct VCardDomesticUnsupliedEnergy
 }; // class VCard
 
 /*!
-** \brief C02 Average value of the overrall DomesticUnsupliedEnergy emissions expected from all
+** \brief C02 Average value of the overrall DomesticUnsuppliedEnergy emissions expected from all
 **   the thermal dispatchable clusters
 */
 template<class NextT = Container::EndOfList>
-class DomesticUnsupliedEnergy
- : public Variable::IVariable<DomesticUnsupliedEnergy<NextT>, NextT, VCardDomesticUnsupliedEnergy>
+class DomesticUnsuppliedEnergy
+ : public Variable::IVariable<DomesticUnsuppliedEnergy<NextT>, NextT, VCardDomesticUnsuppliedEnergy>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardDomesticUnsupliedEnergy VCardType;
+    typedef VCardDomesticUnsuppliedEnergy VCardType;
     //! Ancestor
-    typedef Variable::IVariable<DomesticUnsupliedEnergy<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<DomesticUnsuppliedEnergy<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -138,7 +138,7 @@ public:
     };
 
 public:
-    ~DomesticUnsupliedEnergy()
+    ~DomesticUnsuppliedEnergy()
     {
         delete[] pValuesForTheCurrentYear;
     }
@@ -235,7 +235,7 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        // Total DomesticUnsupliedEnergy emissions
+        // Total DomesticUnsuppliedEnergy emissions
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
           = 123; // Connect to DENS values in the similar manner like below
         // state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek];
@@ -279,11 +279,11 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class DomesticUnsupliedEnergy
+}; // class DomesticUnsuppliedEnergy
 
 } // namespace Economy
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
 
-#endif // __SOLVER_VARIABLE_ECONOMY_DomesticUnsupliedEnergy_H__
+#endif // __SOLVER_VARIABLE_ECONOMY_DomesticUnsuppliedEnergy_H__

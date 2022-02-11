@@ -129,7 +129,7 @@ set(SRC_VARIABLE_ECONOMY
 		variable/economy/waterValue.h
 		variable/economy/hydroCost.h
 		variable/economy/unsupliedEnergy.h
-		variable/economy/domesticUnsupliedEnergy.h
+		variable/economy/domesticUnsuppliedEnergy.h
 		variable/economy/spilledEnergy.h
 		variable/economy/dispatchableGeneration.h
 		variable/economy/productionByDispatchablePlant.h

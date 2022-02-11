@@ -59,7 +59,7 @@
 #include "waterValue.h"
 #include "hydroCost.h"
 #include "unsupliedEnergy.h"
-#include "domesticUnsupliedEnergy.h"
+#include "domesticUnsuppliedEnergy.h"
 #include "spilledEnergy.h"
 
 #include "lold.h"
@@ -145,7 +145,7 @@ typedef          // Prices
                       <WaterValue        // Water values
                        <HydroCost        // Hydro costs
                         <UnsupliedEnergy // Unsuplied Energy
-                         <DomesticUnsupliedEnergy // Domestic Unsuplied Energy
+                         <DomesticUnsuppliedEnergy // Domestic Unsuplied Energy
                           <SpilledEnergy          // Spilled Energy
                            <LOLD                  // LOLD
                             <LOLP                 // LOLP
@@ -216,7 +216,7 @@ typedef // Prices
                                           Common::SpatialAggregate<
                                             UnsupliedEnergy,
                                             Common::SpatialAggregate<
-                                              DomesticUnsupliedEnergy,
+                                              DomesticUnsuppliedEnergy,
                                               Common::SpatialAggregate<
                                                 SpilledEnergy,
                                                 // LOLD
