@@ -116,6 +116,20 @@ enum StudyMode
 
 }; // enum StudyMode
 
+/*!
+** \brief Types of Adequacy patch mode
+*/
+enum AdequacyPatchMode
+{
+    //! Virtual area in adq patch
+    adqmVirtualArea = 0,
+    //! Physical Area outside the adq-patch
+    adqmPhysicalAreaOutsideAdqPatch,
+    //! Physical Area inside the adq-patch
+    adqmPhysicalAreaInsideAdqPatch
+
+}; // enum AdequacyPatchMode
+
 /*
 ** \brief Simplex optimizations
 */
@@ -504,12 +518,12 @@ const char* NumberOfCoresModeToCString(NumberOfCoresMode ncores);
 NumberOfCoresMode StringToNumberOfCoresMode(const AnyString& text);
 
 /*
-* Renewable generation modelling
-*/
+ * Renewable generation modelling
+ */
 enum RenewableGenerationModelling
 {
     rgAggregated = 0, // Default
-    rgClusters, // Using renewable clusters
+    rgClusters,       // Using renewable clusters
     rgUnknown,
 };
 

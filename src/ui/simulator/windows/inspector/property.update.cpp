@@ -172,12 +172,23 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
         OnStudyNodalOptimizationChanged();
         return true;
     }
-    if (name == "area.use_adequacy_patch")
+    if (name == "area.adequacy_patch_mode")
     {
         auto* area = *i;
         if (area)
         {
-            area->bUseAdequacyPatch = value.GetBool();
+            String s;
+            wxStringToString(value.GetString(), s);
+            s.toLower();
+            s.trim();
+
+            if (s == "virtual area" || s == "0")
+                area->adequacyPatchMode = Data::adqmVirtualArea;
+            else if (s == "physical area outside patch" || s == "1")
+                area->adequacyPatchMode = Data::adqmPhysicalAreaOutsideAdqPatch;
+            else if (s == "physical area inside patch" || s == "2")
+                area->adequacyPatchMode = Data::adqmPhysicalAreaInsideAdqPatch;
+
             OnStudyAreaUseAdequacyPatchChanged();
             return true;
         }
