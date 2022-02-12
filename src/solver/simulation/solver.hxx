@@ -437,7 +437,7 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
         {
             std::map<const char*, int> cols;
             ImplementationType::variables.logCaption(cols);
-            for(const auto& [k,v] : cols)
+            for (const auto& [k, v] : cols)
                 logs.info() << k << " " << v;
 
             CString<10, false> tmp;

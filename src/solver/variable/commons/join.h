@@ -397,8 +397,8 @@ public:
 
     void logCaption(std::map<const char*, int>& out)
     {
-      LeftType::logCaption(out);
-      RightType::logCaption(out);
+        LeftType::logCaption(out);
+        RightType::logCaption(out);
     }
 
 }; // class Join

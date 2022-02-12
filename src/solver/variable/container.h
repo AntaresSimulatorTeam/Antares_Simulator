@@ -123,8 +123,9 @@ public:
     void simulationEnd();
     //@}
 
-    void logCaption(std::map<const char*, int>& out){
-      NextType::logCaption(out);
+    void logCaption(std::map<const char*, int>& out)
+    {
+        NextType::logCaption(out);
     }
 
     //! \name Years events

@@ -132,7 +132,6 @@ void Areas<NEXTTYPE>::logCaption(std::map<const char*, int>& out)
     }
 }
 
-
 template<>
 void Areas<NEXTTYPE>::simulationEnd()
 {

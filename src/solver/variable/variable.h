@@ -46,7 +46,6 @@
 #include <antares/logs.h>
 #include <map>
 
-
 namespace Antares
 {
 namespace Solver

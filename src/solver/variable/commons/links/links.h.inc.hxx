@@ -146,7 +146,6 @@ public:
 
     void logCaption(std::map<const char*, int>&);
 
-
     void yearBegin(uint year, unsigned int numSpace);
 
     void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year, uint numSpace);

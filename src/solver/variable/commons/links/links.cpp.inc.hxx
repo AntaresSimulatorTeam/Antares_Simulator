@@ -103,7 +103,6 @@ void Links::logCaption(std::map<const char*, int>& out)
     }
 }
 
-
 void Links::simulationEnd()
 {
     for (uint i = 0; i != pLinkCount; ++i)
