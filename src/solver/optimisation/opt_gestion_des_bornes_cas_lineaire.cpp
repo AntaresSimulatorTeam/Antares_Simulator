@@ -140,6 +140,10 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
     double* Xmin;
     double* Xmax;
     int* TypeDeVariable;
+    int StartNode;
+    int EndNode;
+    uint StartNodeAdequacyPatchType;
+    uint EndNodeAdequacyPatchType;
 
     VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
@@ -177,10 +181,19 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
             CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
 
-            Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+            StartNode = ProblemeHebdo->PaysOrigineDeLInterconnexion[Interco];
+            EndNode = ProblemeHebdo->PaysExtremiteDeLInterconnexion[Interco];
 
-            Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+            if (1 == OUI_ANTARES)
+            {
+                Xmax[Var] = Xmin[Var] = 0.;
+            }
+            else
+            {
+                Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
 
+                Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+            }
             if (Math::Infinite(Xmax[Var]) == 1)
             {
                 if (Math::Infinite(Xmin[Var]) == -1)
@@ -203,12 +216,13 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             AdresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[Interco]);
             AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
 
-            if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
+            if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES) // use Hurdle Cost ignore = 0
             {
                 Var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
-
-                if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
+                if (1 == OUI_ANTARES)
+                    Xmax[Var] = 0.;
+                else if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
                     Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco]
                                 - ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
                 else
@@ -226,7 +240,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
 
                 Var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
-                if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
+                if (1 == OUI_ANTARES)
+                    Xmax[Var] = 0.;
+                else if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
                     Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]
                                 + ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
                 else
