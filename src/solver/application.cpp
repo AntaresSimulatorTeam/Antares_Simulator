@@ -406,7 +406,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Prepare time measurement file
     // study.folderOutput is defined by Study::loadFromFolder, which MUST be called before
-    study.buffer.clear() << study.folderOutput << Yuni::IO::Separator << "time_mesurement.txt";
+    study.buffer.clear() << study.folderOutput << Yuni::IO::Separator << "time_measurement.txt";
     mTimeElapsedWriter = std::make_shared<TimeElapsed::FileWriter>(study.buffer);
     if (!mTimeElapsedWriter->checkAndPrepareOutput())
     {
