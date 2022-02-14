@@ -10,12 +10,11 @@ namespace TimeElapsed
 class FileWriter : public IWriter
 {
 public:
-    explicit FileWriter(const Yuni::String& filename);
-    bool checkAndPrepareOutput() override;
+    FileWriter() = default;
+    bool setOutputFile(const Yuni::String& filename);
     void flush(const InfoMapType& imt) override;
 
 private:
-    const Yuni::String mFilename;
     Yuni::IO::File::Stream mOutputFile;
 };
 } // namespace TimeElapsed

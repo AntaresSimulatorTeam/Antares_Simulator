@@ -5,15 +5,11 @@
 
 namespace TimeElapsed
 {
-FileWriter::FileWriter(const Yuni::String& filename) : mFilename(filename)
+bool FileWriter::setOutputFile(const Yuni::String& filename)
 {
-}
-
-bool FileWriter::checkAndPrepareOutput()
-{
-    if (!mOutputFile.openRW(mFilename))
+    if (!mOutputFile.openRW(filename))
     {
-        Antares::logs.error() << "I/O error: " << mFilename
+        Antares::logs.error() << "I/O error: " << filename
                               << ": Impossible to write the file (not enough permission ?)";
         return false;
     }
