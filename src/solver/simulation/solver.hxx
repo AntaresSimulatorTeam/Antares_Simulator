@@ -1035,19 +1035,43 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     // Load
     if (pData.haveToRefreshTSLoad
         && (PreproOnly || !year || ((year % pData.refreshIntervalLoad) == 0)))
+      {
+        TimeElapsed::Timer timer("TS generation for load",
+                           "tsgen_load",
+                           true,
+                           pTimeElapsedAggregator);
         GenerateTimeSeries<Data::timeSeriesLoad>(study, year);
+      }
     // Solar
     if (pData.haveToRefreshTSSolar
         && (PreproOnly || !year || ((year % pData.refreshIntervalSolar) == 0)))
+      {
+        TimeElapsed::Timer timer("TS generation for solar",
+                           "tsgen_solar",
+                           true,
+                           pTimeElapsedAggregator);
         GenerateTimeSeries<Data::timeSeriesSolar>(study, year);
+      }
     // Wind
     if (pData.haveToRefreshTSWind
         && (PreproOnly || !year || ((year % pData.refreshIntervalWind) == 0)))
+      {
+        TimeElapsed::Timer timer("TS generation for wind",
+                           "tsgen_wind",
+                           true,
+                           pTimeElapsedAggregator);
         GenerateTimeSeries<Data::timeSeriesWind>(study, year);
+      }
     // Hydro
     if (pData.haveToRefreshTSHydro
         && (PreproOnly || !year || ((year % pData.refreshIntervalHydro) == 0)))
+      {
+        TimeElapsed::Timer timer("TS generation for hydro",
+                           "tsgen_hydro",
+                           true,
+                           pTimeElapsedAggregator);
         GenerateTimeSeries<Data::timeSeriesHydro>(study, year);
+      }
     // Thermal
     Data::GlobalTSGenerationBehavior globalBehavior;
     if (pData.haveToRefreshTSThermal)
@@ -1059,7 +1083,13 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
         globalBehavior = Data::GlobalTSGenerationBehavior::doNotGenerate;
     }
     const bool refresh = PreproOnly || !year || ((year % pData.refreshIntervalThermal) == 0);
+    {
+      TimeElapsed::Timer timer("TS generation for thermal",
+                               "tsgen_thermal",
+                               true,
+                               pTimeElapsedAggregator);
     GenerateThermalTimeSeries(study, year, globalBehavior, refresh);
+    }
 }
 
 template<class Impl>
