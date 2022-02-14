@@ -150,6 +150,10 @@ namespace Solver
 Application::Application()
 {
     resetProcessPriority();
+    pTotalTimer = std::make_shared<TimeElapsed::Timer>("Total",
+                                                       "total",
+                                                       true,
+                                                       &pTimeElapsedAggregator);
 }
 
 void Application::prepare(int argc, char* argv[])
@@ -527,6 +531,7 @@ Application::~Application()
         LocalPolicy::Close();
         logs.info() << "Done.";
     }
+    pTotalTimer.reset();
     pTimeElapsedAggregator.flush(*mTimeElapsedWriter);
 }
 } // namespace Solver
