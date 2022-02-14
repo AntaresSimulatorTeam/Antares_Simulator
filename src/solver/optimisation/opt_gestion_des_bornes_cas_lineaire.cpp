@@ -182,7 +182,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             StartNodeAdequacyPatchType = ProblemeHebdo->StartAreaAdequacyPatchType[Interco];
             EndNodeAdequacyPatchType = ProblemeHebdo->EndAreaAdequacyPatchType[Interco];
             
-            if (1 == OUI_ANTARES)
+            if (1 == OUI_ANTARES && !(StartNodeAdequacyPatchType == 0 && EndNodeAdequacyPatchType == 0))
             {
                 Xmax[Var] = Xmin[Var] = 0.;
             }
@@ -218,7 +218,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                 Var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
 
-                if (1 == OUI_ANTARES)
+                if (1 == OUI_ANTARES && !(StartNodeAdequacyPatchType == 0 && EndNodeAdequacyPatchType == 0))
                     Xmax[Var] = 0.;
                 else
                 {
@@ -242,7 +242,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                 Var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
                         
-                if (1 == OUI_ANTARES)
+                if (1 == OUI_ANTARES && !(StartNodeAdequacyPatchType == 0 && EndNodeAdequacyPatchType == 0))
                     Xmax[Var] = 0.;
                 else
                 {
