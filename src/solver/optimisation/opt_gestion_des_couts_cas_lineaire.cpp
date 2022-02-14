@@ -227,16 +227,12 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* ProblemeHebdo,
                   *= ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PumpingRatio;
                 ProblemeAResoudre->CoutLineaire[Var] *= -1.;
             }
-
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeDebordement[Pays];
             if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
             {
                 ProblemeAResoudre->CoutLineaire[Var]
-                  = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->WeeklyWaterValueStateRegular;
-                ProblemeAResoudre->CoutLineaire[Var] *= 1.001;
-                ProblemeAResoudre->CoutLineaire[Var] += 1.e-03;
+                  = ProblemeHebdo->CoutDeDefaillanceNegative[Pays];
             }
-
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeNiveau[Pays];
             if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
             {

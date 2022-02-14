@@ -139,7 +139,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                : NON_ANTARES);
 
         problem.CaracteristiquesHydrauliques[i]->PumpingRatio = area.hydro.pumpingEfficiency;
-
+        problem.CaracteristiquesHydrauliques[i]->SansHeuristique
+          = ((area.hydro.reservoirManagement && !area.hydro.useHeuristicTarget) ? OUI_ANTARES
+                                                                                : NON_ANTARES);
         problem.CaracteristiquesHydrauliques[i]->TurbinageEntreBornes
           = ((area.hydro.reservoirManagement
               && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway))
@@ -716,7 +718,10 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
                 if (area.hydro.reservoirManagement)
                 {
-                    if (not area.hydro.useHeuristicTarget)
+                    if (not area.hydro.useHeuristicTarget
+                        || (problem.CaracteristiquesHydrauliques[k]->PresenceDePompageModulable
+                              == OUI_ANTARES
+                            && problem.OptimisationAuPasHebdomadaire == OUI_ANTARES))
                     {
                         for (uint j = 0; j < 7; ++j)
                         {
@@ -734,7 +739,11 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                         }
                     }
 
-                    if (area.hydro.useHeuristicTarget && area.hydro.useLeeway)
+                    if (area.hydro.useHeuristicTarget
+                        && (area.hydro.useLeeway
+                            || (problem.CaracteristiquesHydrauliques[k]->PresenceDePompageModulable
+                                  == OUI_ANTARES
+                                && problem.OptimisationAuPasHebdomadaire == NON_ANTARES)))
                     {
                         double* DGU = problem.CaracteristiquesHydrauliques[k]
                                         ->MaxEnergieHydrauParIntervalleOptimise;
@@ -749,9 +758,11 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                           = problem.CaracteristiquesHydrauliques[k]->NiveauInitialReservoir;
 
                         double LUB = area.hydro.leewayUpperBound;
-
+                        if (!area.hydro.useLeeway)
+                            LUB = 1;
                         double LLB = area.hydro.leewayLowerBound;
-
+                        if (!area.hydro.useLeeway)
+                            LLB = 1;
                         double DGM
                           = problem.CaracteristiquesHydrauliques[k]->WeeklyGeneratingModulation;
 

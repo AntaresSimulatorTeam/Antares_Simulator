@@ -968,7 +968,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
           = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable;
         char TurbEntreBornes
           = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->TurbinageEntreBornes;
-        if (presenceHydro == OUI_ANTARES && TurbEntreBornes == OUI_ANTARES)
+        if (presenceHydro == OUI_ANTARES
+            && (TurbEntreBornes == OUI_ANTARES
+                || ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDePompageModulable
+                     == OUI_ANTARES))
         {
             NombreDeTermes = 0;
             for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
@@ -992,7 +995,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
         else
             ProblemeHebdo->NumeroDeContrainteMinEnergieHydraulique[Pays] = -1;
 
-        if (presenceHydro == OUI_ANTARES && TurbEntreBornes == OUI_ANTARES)
+        if (presenceHydro == OUI_ANTARES
+            && (TurbEntreBornes == OUI_ANTARES
+                || ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDePompageModulable
+                     == OUI_ANTARES))
         {
             NombreDeTermes = 0;
             for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)

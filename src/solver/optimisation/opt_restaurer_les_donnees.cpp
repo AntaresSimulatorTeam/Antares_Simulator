@@ -131,7 +131,8 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo)
 
             CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraire[Pdt]
               = CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraireRef[Pdt];
-
+            if (CaracteristiquesHydrauliques->SansHeuristique = OUI_ANTARES)
+                continue;
             Jour = NumeroDeJourDuPasDeTemps[Pdt];
             PmaxHydEcretee = CaracteristiquesHydrauliques->CntEnergieH2OParJour[Jour];
             PmaxHydEcretee *= ProblemeHebdo->CoefficientEcretementPMaxHydraulique[Pays];

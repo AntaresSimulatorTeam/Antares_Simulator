@@ -295,7 +295,7 @@ typedef struct
     double WeeklyWaterValueStateDown;
 
     char TurbinageEntreBornes;
-
+    char SansHeuristique;
     char SuiviNiveauHoraire;
 
     double* NiveauHoraireSup;

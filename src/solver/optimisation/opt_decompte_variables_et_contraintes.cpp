@@ -177,9 +177,15 @@ void OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO
         if (Pump == OUI_ANTARES && TurbEntreBornes == NON_ANTARES
             && MonitorHourlyLev == NON_ANTARES)
         {
-            ProblemeAResoudre->NombreDeContraintes++;
-
-            ProblemeAResoudre->NombreDeContraintes++;
+            ProblemeAResoudre->NombreDeContraintes
+              += 2; /* 2 constraints bounding the overall energy generated over the period (10a in
+                       the reference document) */
+            ProblemeAResoudre
+              ->NombreDeContraintes++; /* 1 constraint setting the level variation over the period
+                                          (10b in the reference document) */
+            ProblemeAResoudre
+              ->NombreDeContraintes++; /* 1 constraint bounding the overall energy pumped over the
+                                          period (10c in the reference document) */
         }
 
         if (Pump == NON_ANTARES && TurbEntreBornes == OUI_ANTARES
@@ -221,14 +227,23 @@ void OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO
 
             ProblemeAResoudre->NombreDeContraintes += NombreDePasDeTempsPourUneOptimisation;
         }
-
         if (Pump == OUI_ANTARES && TurbEntreBornes == NON_ANTARES
             && MonitorHourlyLev == OUI_ANTARES)
         {
-            logs.fatal() << "Level explicit modeling requires flexible generation";
-            AntaresSolverEmergencyShutdown();
+            ProblemeAResoudre->NombreDeContraintes
+              += 2; /* 2 constraints bounding the overall energy generated over the period (10a in
+                       the reference document) */
+            ProblemeAResoudre
+              ->NombreDeContraintes++; /* 1 constraint setting the level variation over the period
+                                          (10b in the reference document) */
+            ProblemeAResoudre
+              ->NombreDeContraintes++; /* 1 constraint bounding the overall energy pumped over the
+                                          period (10c in the reference document) */
+            ProblemeAResoudre->NombreDeContraintes
+              += NombreDePasDeTempsPourUneOptimisation; /* T constraints expressing the level hourly
+                                                           variations (14a in the reference
+                                                           document) */
         }
-
         if (Pump == NON_ANTARES && TurbEntreBornes == NON_ANTARES
             && MonitorHourlyLev == OUI_ANTARES)
         {

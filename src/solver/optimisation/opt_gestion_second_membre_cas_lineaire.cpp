@@ -436,7 +436,10 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
           = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable;
         char TurbEntreBornes
           = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->TurbinageEntreBornes;
-        if (presenceHydro == OUI_ANTARES && TurbEntreBornes == OUI_ANTARES)
+        if (presenceHydro == OUI_ANTARES
+            && (TurbEntreBornes == OUI_ANTARES
+                || ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDePompageModulable
+                     == OUI_ANTARES))
         {
             Cnt = NumeroDeContrainteMinEnergieHydraulique[Pays];
             if (Cnt >= 0)
@@ -455,7 +458,10 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
           = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable;
         char TurbEntreBornes
           = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->TurbinageEntreBornes;
-        if (presenceHydro == OUI_ANTARES && TurbEntreBornes == OUI_ANTARES)
+        if (presenceHydro == OUI_ANTARES
+            && (TurbEntreBornes == OUI_ANTARES
+                || ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDePompageModulable
+                     == OUI_ANTARES))
         {
             Cnt = NumeroDeContrainteMaxEnergieHydraulique[Pays];
             if (Cnt >= 0)
