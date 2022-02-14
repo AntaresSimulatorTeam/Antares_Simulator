@@ -140,8 +140,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
     double* Xmin;
     double* Xmax;
     int* TypeDeVariable;
-    int StartNode;
-    int EndNode;
     uint StartNodeAdequacyPatchType;
     uint EndNodeAdequacyPatchType;
 
@@ -181,9 +179,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
             CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
 
-            StartNode = ProblemeHebdo->PaysOrigineDeLInterconnexion[Interco];
-            EndNode = ProblemeHebdo->PaysExtremiteDeLInterconnexion[Interco];
-
+            StartNodeAdequacyPatchType = ProblemeHebdo->StartAreaAdequacyPatchType[Interco];
+            EndNodeAdequacyPatchType = ProblemeHebdo->EndAreaAdequacyPatchType[Interco];
+            
             if (1 == OUI_ANTARES)
             {
                 Xmax[Var] = Xmin[Var] = 0.;
@@ -219,6 +217,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             {
                 Var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+
                 if (1 == OUI_ANTARES)
                     Xmax[Var] = 0.;
                 else
@@ -242,6 +241,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
 
                 Var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+                        
                 if (1 == OUI_ANTARES)
                     Xmax[Var] = 0.;
                 else

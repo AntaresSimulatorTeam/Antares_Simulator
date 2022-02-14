@@ -62,6 +62,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 
     problem.PaysExtremiteDeLInterconnexion = (int*)MemAlloc(linkCount * sizeof(int));
     problem.PaysOrigineDeLInterconnexion = (int*)MemAlloc(linkCount * sizeof(int));
+    problem.StartAreaAdequacyPatchType = (int*)MemAlloc(linkCount * sizeof(int));
+    problem.EndAreaAdequacyPatchType = (int*)MemAlloc(linkCount * sizeof(int));
     problem.CoutDeTransport = (COUTS_DE_TRANSPORT**)MemAlloc(linkCount * sizeof(void*));
     problem.IndexDebutIntercoOrigine = (int*)MemAlloc(nbPays * sizeof(int));
     problem.IndexDebutIntercoExtremite = (int*)MemAlloc(nbPays * sizeof(int));
@@ -591,6 +593,8 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 
     MemFree(problem.PaysExtremiteDeLInterconnexion);
     MemFree(problem.PaysOrigineDeLInterconnexion);
+    MemFree(problem.StartAreaAdequacyPatchType);
+    MemFree(problem.EndAreaAdequacyPatchType);
     MemFree(problem.IndexDebutIntercoOrigine);
     MemFree(problem.IndexDebutIntercoExtremite);
     MemFree(problem.IndexSuivantIntercoOrigine);
