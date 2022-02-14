@@ -377,10 +377,12 @@ void ISimulation<Impl>::run()
         for (uint numSpace = 0; numSpace != pNbMaxPerformedYearsInParallel; ++numSpace)
             ImplementationType::initializeState(state[numSpace], numSpace);
 
-        logs.info() << " Starting the simulation";
-        TimeElapsed::Timer time("MC Years", "mc_years", true, pTimeElapsedAggregator);
-        uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
-        loopThroughYears(0, finalYear, state);
+        {
+            logs.info() << " Starting the simulation";
+            TimeElapsed::Timer time("MC Years", "mc_years", true, pTimeElapsedAggregator);
+            uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
+            loopThroughYears(0, finalYear, state);
+        }
 
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
