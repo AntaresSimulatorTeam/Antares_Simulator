@@ -202,13 +202,13 @@ IRenderer::CellStyle ATimeSeries::cellStyle(int col, int row) const
 // Clusters ...
 // =========================
 
-
 // ----------------------
 //   CLUSTER COMMON
 // ----------------------
 
 TimeSeriesCluster::TimeSeriesCluster(wxWindow* control) : AncestorType(control)
-{}
+{
+}
 
 TimeSeriesCluster::~TimeSeriesCluster()
 {
@@ -289,7 +289,7 @@ IRenderer::CellStyle TimeSeriesCluster::cellStyle(int col, int row) const
 wxColour TimeSeriesCluster::verticalBorderColor(int x, int y) const
 {
     return (x == AncestorType::width() - 1) ? Default::BorderHighlightColor()
-        : IRenderer::verticalBorderColor(x, y);
+                                            : IRenderer::verticalBorderColor(x, y);
 }
 
 wxColour TimeSeriesCluster::horizontalBorderColor(int x, int y) const
@@ -314,17 +314,18 @@ wxColour TimeSeriesCluster::horizontalBorderColor(int x, int y) const
 // ----------------------
 
 TimeSeriesThermalCluster::TimeSeriesThermalCluster(
-    wxWindow* control,
-    Toolbox::InputSelector::ThermalCluster* notifier) :
-    TimeSeriesCluster(control)
+  wxWindow* control,
+  Toolbox::InputSelector::ThermalCluster* notifier) :
+ TimeSeriesCluster(control)
 {
     if (notifier)
         notifier->onThermalClusterChanged.connect(
-            this, &TimeSeriesThermalCluster::internalThermalClusterChanged);
+          this, &TimeSeriesThermalCluster::internalThermalClusterChanged);
 }
 
 TimeSeriesThermalCluster::~TimeSeriesThermalCluster()
-{}
+{
+}
 
 void TimeSeriesThermalCluster::onStudyClosed()
 {
@@ -337,17 +338,18 @@ void TimeSeriesThermalCluster::onStudyClosed()
 // ----------------------
 
 TimeSeriesRenewableCluster::TimeSeriesRenewableCluster(
-    wxWindow* control,
-    Toolbox::InputSelector::RenewableCluster* notifier) :
-    TimeSeriesCluster(control)
+  wxWindow* control,
+  Toolbox::InputSelector::RenewableCluster* notifier) :
+ TimeSeriesCluster(control)
 {
     if (notifier)
         notifier->onClusterChanged.connect(
-            this, &TimeSeriesRenewableCluster::internalRenewableClusterChanged);
+          this, &TimeSeriesRenewableCluster::internalRenewableClusterChanged);
 }
 
 TimeSeriesRenewableCluster::~TimeSeriesRenewableCluster()
-{}
+{
+}
 
 void TimeSeriesRenewableCluster::onStudyClosed()
 {

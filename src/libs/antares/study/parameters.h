@@ -146,7 +146,7 @@ public:
 
     /*!
     ** \brief Try to detect then fix refresh intervals
-    */    
+    */
     void fixRefreshIntervals();
 
     /*!
@@ -514,6 +514,8 @@ public:
     // This variable is not stored within the study but only used by the solver
     bool noOutput;
     //@}
+
+    bool hydroDebug;
 
     //! \name Seeds
     //@{

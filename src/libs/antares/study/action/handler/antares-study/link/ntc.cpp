@@ -85,7 +85,6 @@ bool NTC::performWL(Context& ctx)
             ctx.link->directCapacities.invalidate(true);
             ctx.link->directCapacities.pasteToColumn(0, source->directCapacities.entry[0]);
 
-
             // Indirect capacities
             source->indirectCapacities.invalidate(true);
             ctx.link->indirectCapacities.invalidate(true);

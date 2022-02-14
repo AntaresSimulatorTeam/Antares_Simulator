@@ -117,7 +117,7 @@ static bool AppendCommand(BuildContext& ctx, const AnyString& command, const Any
     return false;
 }
 
-bool checkConstraintSupportingElementsIntegrity(const Antares::Action::Context* context,
+bool checkConstraintSupportingElementsIntegrity(const Antares::Action::Context::Ptr context,
                                                 const BuildContext* ctx)
 {
     for (auto i = ctx->constraint.begin(); i != ctx->constraint.end(); ++i)
@@ -163,7 +163,7 @@ bool checkConstraintSupportingElementsIntegrity(const Antares::Action::Context* 
     return true;
 }
 
-bool checkLinkSupportingElementsIntegrity(const Antares::Action::Context* context,
+bool checkLinkSupportingElementsIntegrity(const Antares::Action::Context::Ptr context,
                                           const BuildContext* ctx)
 {
     bool missingAreasInClipboard = false;
@@ -195,7 +195,7 @@ bool checkLinkSupportingElementsIntegrity(const Antares::Action::Context* contex
     return true;
 }
 
-static void PreparePasteOperations(Antares::Action::Context* context,
+static void PreparePasteOperations(Antares::Action::Context::Ptr context,
                                    const String& text,
                                    uint offset,
                                    bool forceDialog)
@@ -519,7 +519,7 @@ void AntaresStudy(Data::Study& target,
         targetLayerID = mainMap->getActiveLayerID();
 
     // Context for all actions
-    auto* context = new Antares::Action::Context(target, targetLayerID);
+    auto context = std::make_shared<Antares::Action::Context>(target, targetLayerID);
 
     // If the path of the study where items should be extracted is the same than the current opened
     // study, we can directly use it
@@ -538,7 +538,6 @@ void AntaresStudy(Data::Study& target,
 
         if (not job->study())
         {
-            delete context;
             return;
         }
         context->extStudy = job->study();

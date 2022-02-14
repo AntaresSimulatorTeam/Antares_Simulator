@@ -531,11 +531,11 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGThClusterReliabilityModel
       = Category(pg, wxT("Timeseries generation"), wxT("cluster.reliabilitymodel"));
     pPGThClusterDoGenerateTS = P_ENUM("Generate timeseries", "cluster.gen-ts", localGenTS.data())
-    pPGThClusterVolatilityForced = P_FLOAT("Volatility (forced)", "cluster.forcedVolatility");
+      pPGThClusterVolatilityForced
+      = P_FLOAT("Volatility (forced)", "cluster.forcedVolatility");
     pPGThClusterVolatilityPlanned = P_FLOAT("Volatility (planned)", "cluster.plannedVolatility");
     pPGThClusterLawForced = P_ENUM("Law (forced)", "cluster.forcedlaw", thermalLaws);
     pPGThClusterLawPlanned = P_ENUM("Law (planned)", "cluster.plannedlaw", thermalLaws);
-
 
     // --- RENEWABLE CLUSTERS ---
     pPGRnClusterSeparator = Group(pg, wxEmptyString, wxEmptyString);
@@ -547,7 +547,7 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     for (uint i = 0; i != arrayRnClusterGroupCount; ++i)
         RnGroupChoices.Add(arrayRnClusterGroup[i], i);
     pPGRnClusterGroup = page->Append(
-        new wxEditEnumProperty(wxT("group"), wxT("rn-cluster.group"), RnGroupChoices, wxEmptyString));
+      new wxEditEnumProperty(wxT("group"), wxT("rn-cluster.group"), RnGroupChoices, wxEmptyString));
 
     pPGRnClusterArea = P_STRING("area", "rn-cluster.area");
     pg->DisableProperty(pPGRnClusterArea);
@@ -695,17 +695,17 @@ void Frame::apply(const InspectorData::Ptr& data)
 
     wxSizer* sizer = GetSizer();
 
-    auto& study = (!data) ? *Data::Study::Current::Get() : data->study;
+    auto study = Data::Study::Current::Get();
     wxPGProperty* p;
     bool hide;
     bool multiple;
 
-    if (pAllowAnyObject and &study)
+    if (pAllowAnyObject and study)
     {
         if (pPGCommonStudyName and pPGCommonStudyAuthor)
         {
-            pPGCommonStudyName->SetValueFromString(wxStringFromUTF8(study.header.caption));
-            pPGCommonStudyAuthor->SetValueFromString(wxStringFromUTF8(study.header.author));
+            pPGCommonStudyName->SetValueFromString(wxStringFromUTF8(study->header.caption));
+            pPGCommonStudyAuthor->SetValueFromString(wxStringFromUTF8(study->header.author));
         }
     }
     else
@@ -776,7 +776,7 @@ void Frame::apply(const InspectorData::Ptr& data)
     // -----
     pPGAreaSeparator->Hide(hide);
     pPGAreaGeneral->Hide(hide);
-    pPGAreaFilteringStatus->Hide(!(!hide and &study and study.parameters.geographicTrimming));
+    pPGAreaFilteringStatus->Hide(!(!hide and &study and study->parameters.geographicTrimming));
     if (!hide)
     {
         pPGAreaName->Hide(multiple);
@@ -844,7 +844,7 @@ void Frame::apply(const InspectorData::Ptr& data)
     hide = !data || data->links.empty();
     multiple = (data and data->links.size() > 1);
     pPGLinkSeparator->Hide(hide);
-    pPGLinkFilteringStatus->Hide(!(!hide and &study and study.parameters.geographicTrimming));
+    pPGLinkFilteringStatus->Hide(!(!hide and &study and study->parameters.geographicTrimming));
     p = PROPERTY("link.title");
     p->Hide(hide);
     if (!hide)
@@ -940,8 +940,10 @@ void Frame::apply(const InspectorData::Ptr& data)
         // CO2
         Accumulator<PClusterCO2>::Apply(pPGThClusterCO2, data->ThClusters);
         // Volatility
-        Accumulator<PClusterVolatilityPlanned>::Apply(pPGThClusterVolatilityPlanned, data->ThClusters);
-        Accumulator<PClusterVolatilityForced>::Apply(pPGThClusterVolatilityForced, data->ThClusters);
+        Accumulator<PClusterVolatilityPlanned>::Apply(pPGThClusterVolatilityPlanned,
+                                                      data->ThClusters);
+        Accumulator<PClusterVolatilityForced>::Apply(pPGThClusterVolatilityForced,
+                                                     data->ThClusters);
         // Laws
         Accumulator<PClusterLawPlanned>::Apply(pPGThClusterLawPlanned, data->ThClusters);
         Accumulator<PClusterLawForced>::Apply(pPGThClusterLawForced, data->ThClusters);
@@ -961,7 +963,8 @@ void Frame::apply(const InspectorData::Ptr& data)
         AccumulatorCheck<PClusterMinStablePowerColor>::ApplyTextColor(pPGThClusterMinStablePower,
                                                                       data->ThClusters);
         // check Min. Stable Power with thermal modulation
-        AccumulatorCheck<PClusterSpinningColor>::ApplyTextColor(pPGThClusterSpinning, data->ThClusters);
+        AccumulatorCheck<PClusterSpinningColor>::ApplyTextColor(pPGThClusterSpinning,
+                                                                data->ThClusters);
     }
 
     pPGThClusterParams->Hide(hide);
@@ -984,7 +987,7 @@ void Frame::apply(const InspectorData::Ptr& data)
         {
             p->SetLabel(wxT("RENEWABLE CLUSTER"));
             pPGRnClusterName->SetValueFromString(
-                wxStringFromUTF8((*(data->RnClusters.begin()))->name()));
+              wxStringFromUTF8((*(data->RnClusters.begin()))->name()));
         }
         else
             p->SetLabel(wxString() << data->RnClusters.size() << wxT(" RENEWABLE CLUSTERS"));

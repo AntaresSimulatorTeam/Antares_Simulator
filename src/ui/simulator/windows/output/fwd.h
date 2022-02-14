@@ -129,7 +129,6 @@ class Content;
 typedef std::map<Yuni::String, Content*> ContentMap;
 
 //! Smart pointer on a job
-// typedef Yuni::SmartPtr<Job>  JobPtr;
 typedef Yuni::Job::IJob::Ptr::Promote<Job>::Ptr JobPtr;
 
 //! Array of jobs

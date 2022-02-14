@@ -34,11 +34,11 @@ class SearchToken final
 {
 public:
     //! The most suitable smart point for the class
-    typedef Yuni::SmartPtr<SearchToken> Ptr;
+    using Ptr = std::shared_ptr<SearchToken>;
     //! Vector of search tokens
-    typedef std::vector<Ptr> Vector;
+    using Vector = std::vector<Ptr>;
     //! Vector ptr
-    typedef Yuni::SmartPtr<Vector> VectorPtr;
+    using VectorPtr = std::shared_ptr<Vector>;
 
 public:
     SearchToken() : weight(1.f)

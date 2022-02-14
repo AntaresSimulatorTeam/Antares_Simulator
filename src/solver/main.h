@@ -85,7 +85,7 @@ private:
     void runSimulationInAdequacyDraftMode();
     void runSimulationInEconomicMode();
 
-    void initializeRandomNumberGenerators();
+    void initializeRandomNumberGenerators() const;
 
     void onLogMessage(int level, const YString& message);
 

@@ -87,7 +87,8 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
     return true;
 }
 
-static bool ConvertStringToRenewableGenerationModelling(const AnyString& text, RenewableGenerationModelling & out)
+static bool ConvertStringToRenewableGenerationModelling(const AnyString& text,
+                                                        RenewableGenerationModelling& out)
 {
     CString<24, false> s = text;
     s.trim();
@@ -520,6 +521,9 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
         return value.to<bool>(d.storeTimeseriesNumbers);
     if (key == "synthesis")
         return value.to<bool>(d.synthesis);
+    if (key == "hydro-debug")
+        return value.to<bool>(d.hydroDebug);
+
     return false;
 }
 static bool SGDIntLoadFamily_Optimization(Parameters& d,
@@ -731,7 +735,8 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
     }
     // Renewable generation modelling
     if (key == "renewable-generation-modelling")
-        return ConvertStringToRenewableGenerationModelling(value, d.renewableGeneration.rgModelling);
+        return ConvertStringToRenewableGenerationModelling(value,
+                                                           d.renewableGeneration.rgModelling);
 
     return false;
 }
@@ -1650,6 +1655,8 @@ void Parameters::saveToINI(IniFile& ini) const
         auto* section = ini.addSection("output");
         section->add("synthesis", synthesis);
         section->add("storeNewSet", storeTimeseriesNumbers);
+        if (hydroDebug)
+            section->add("hydro-debug", hydroDebug);
         ParametersSaveTimeSeries(section, "archives", timeSeriesToArchive);
     }
 

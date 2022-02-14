@@ -219,7 +219,7 @@ void Panel::onStudyChanged(Data::Study& study)
     pDeleteList.clear();
     pRenameList.clear();
 
-    if (!&study or !study.scenarioRules)
+    if (!study.scenarioRules)
         pRules = nullptr;
 
     Dispatcher::GUI::Post(this, &Panel::update, 20);

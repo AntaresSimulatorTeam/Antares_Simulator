@@ -142,8 +142,8 @@ void ThermalCluster::internalBuildSubControls()
     {
         pAreaNotifier->onAreaChanged.connect(pDataSourceAZ,
                                              &ThermalClustersByAlphaOrder::onAreaChanged);
-        pAreaNotifier->onAreaChanged.connect(
-          pDataSourceZA, &ThermalClustersByAlphaReverseOrder::onAreaChanged);
+        pAreaNotifier->onAreaChanged.connect(pDataSourceZA,
+                                             &ThermalClustersByAlphaReverseOrder::onAreaChanged);
     }
     sizer->Add(pThListbox, 1, wxALL | wxEXPAND);
     sizer->SetItemMinSize(pThListbox, 100, 200);
@@ -568,8 +568,7 @@ void ThermalCluster::onThSelected(Component::HTMLListbox::Item::IItem::Ptr item)
 
 void ThermalCluster::delayedSelection(Component::HTMLListbox::Item::IItem::Ptr item)
 {
-    typedef Component::HTMLListbox::Item::ThermalClusterItem::Ptr ThPtr;
-    ThPtr a = Component::HTMLListbox::Item::IItem::Ptr::DynamicCast<ThPtr>(item);
+    auto a = dynamic_pointer_cast<Component::HTMLListbox::Item::ThermalClusterItem>(item);
     if (a)
     {
         // Lock the window to prevent flickering

@@ -135,12 +135,8 @@ public:
     //@{
     //! Operator +=
     Component& operator+=(Item::IItem::Ptr it);
-    //! Operator +=
-    Component& operator+=(Item::IItem* it);
     //! Operator <<
     Component& operator<<(Item::IItem::Ptr it);
-    //! Operator <<
-    Component& operator<<(Item::IItem* it);
     //@}
 
 public:

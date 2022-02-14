@@ -347,8 +347,8 @@ public:
     double cellNumericValue(int x, int y) const override;
 
     void resetColors(int, int, wxColour&, wxColour&) const override
-    { 
-        //Do nothing
+    {
+        // Do nothing
     }
 
     bool cellValue(int x, int y, const Yuni::String& value) override
@@ -378,7 +378,6 @@ public:
 
 class TimeSeriesThermalCluster final : public TimeSeriesCluster
 {
-
 public:
     TimeSeriesThermalCluster(wxWindow* control, Toolbox::InputSelector::ThermalCluster* notifier);
 
@@ -393,7 +392,6 @@ protected:
     void onStudyClosed() override;
 };
 
-
 // ----------------------
 //   RENEWABLE CLUSTERS
 // ----------------------
@@ -401,7 +399,8 @@ protected:
 class TimeSeriesRenewableCluster final : public TimeSeriesCluster
 {
 public:
-    TimeSeriesRenewableCluster(wxWindow* control, Toolbox::InputSelector::RenewableCluster* notifier);
+    TimeSeriesRenewableCluster(wxWindow* control,
+                               Toolbox::InputSelector::RenewableCluster* notifier);
 
     virtual ~TimeSeriesRenewableCluster();
 

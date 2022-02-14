@@ -77,10 +77,9 @@ protected:
                                        const PropertyNameType& name,
                                        const wxVariant& value);
     bool onPropertyChanging_ThermalCluster(wxPGProperty*,
-                                    const PropertyNameType& name,
-                                    const wxVariant& value);
-    bool onPropertyChanging_RenewableClusters(const PropertyNameType& name,
-                                              const wxVariant& value);
+                                           const PropertyNameType& name,
+                                           const wxVariant& value);
+    bool onPropertyChanging_RenewableClusters(const PropertyNameType& name, const wxVariant& value);
     bool onPropertyChanging_L(wxPGProperty*, const PropertyNameType& name, const wxVariant& value);
     bool onPropertyChanging_S(wxPGProperty*, const PropertyNameType& name, const wxVariant& value);
 

@@ -31,6 +31,8 @@
 #include <ui/common/component/spotlight.h>
 #include <antares/study.h>
 
+#include <memory>
+
 namespace Antares
 {
 namespace Toolbox
@@ -41,9 +43,8 @@ class ItemConstraint : public Component::Spotlight::IItem
 {
 public:
     //! Smart ptr
-    typedef Yuni::SmartPtr<ItemConstraint> Ptr;
+    using Ptr = std::shared_ptr<ItemConstraint>;
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!

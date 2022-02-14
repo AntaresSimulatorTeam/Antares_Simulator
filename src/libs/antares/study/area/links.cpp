@@ -352,6 +352,12 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
     if (warning && area->id > with->id)
         logs.warning() << "Link: `" << area->id << "` - `" << with->id << "`: Invalid orientation";
 
+    if (area->id == with->id)
+    {
+        logs.error() << "The area named '" << area->id << "' has a link to itself";
+        return nullptr;
+    }
+
     AreaLink* link = new AreaLink();
     link->from = area;
     link->with = with;
@@ -491,7 +497,10 @@ void logLinkDataCheckError(Study& study, const AreaLink& link)
     study.gotFatalError = true;
 }
 
-void logLinkDataCheckErrorDirectIndirect(Study& study, const AreaLink& link, uint direct, uint indirect)
+void logLinkDataCheckErrorDirectIndirect(Study& study,
+                                         const AreaLink& link,
+                                         uint direct,
+                                         uint indirect)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
                  << " direct TS "

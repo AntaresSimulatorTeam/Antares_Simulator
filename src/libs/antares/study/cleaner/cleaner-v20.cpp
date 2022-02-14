@@ -213,14 +213,20 @@ static void PreflightVersion20_interco(PathList& p, const Area* area, StringT& b
     {
         auto& link = *(i->second);
         // Parameters
-        buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << link.with->id << "_parameters" << ".txt";
+        buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << link.with->id
+                       << "_parameters"
+                       << ".txt";
         p.add(buffer);
 
         // Indirect capacities
-        buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << "capacities" << SEP << link.with->id << "_direct" << ".txt";
+        buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << "capacities"
+                       << SEP << link.with->id << "_direct"
+                       << ".txt";
         p.add(buffer);
         // Direct capacities
-        buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << "capacities" << SEP << link.with->id << "_indirect" << ".txt";
+        buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << "capacities"
+                       << SEP << link.with->id << "_indirect"
+                       << ".txt";
         p.add(buffer);
     }
 }

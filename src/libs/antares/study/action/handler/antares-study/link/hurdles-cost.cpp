@@ -83,10 +83,12 @@ bool HurdlesCost::performWL(Context& ctx)
             source->parameters.invalidate(true);
             ctx.link->parameters.invalidate(true);
 
-            ctx.link->parameters.pasteToColumn((uint)Data::fhlHurdlesCostDirect,
-                                         source->parameters.entry[Data::fhlHurdlesCostDirect]);
-            ctx.link->parameters.pasteToColumn((uint)Data::fhlHurdlesCostIndirect,
-                                         source->parameters.entry[Data::fhlHurdlesCostIndirect]);
+            ctx.link->parameters.pasteToColumn(
+              (uint)Data::fhlHurdlesCostDirect,
+              source->parameters.entry[Data::fhlHurdlesCostDirect]);
+            ctx.link->parameters.pasteToColumn(
+              (uint)Data::fhlHurdlesCostIndirect,
+              source->parameters.entry[Data::fhlHurdlesCostIndirect]);
             ctx.link->useHurdlesCost = source->useHurdlesCost;
 
             ctx.link->assetType = source->assetType;
