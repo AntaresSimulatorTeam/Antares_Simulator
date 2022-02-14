@@ -191,7 +191,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             else
             {
                 Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-
                 Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
             }
             if (Math::Infinite(Xmax[Var]) == 1)
@@ -222,13 +221,16 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                         ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
                 if (1 == OUI_ANTARES)
                     Xmax[Var] = 0.;
-                else if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
-                    Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco]
-                                - ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
                 else
-                    Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+                {
+                    if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
+                        Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco]
+                                    - ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
+                    else
+                        Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
 
-                Xmax[Var] += 0.01;
+                    Xmax[Var] += 0.01;
+                }
                 TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
                 if (Math::Infinite(Xmax[Var]) == 1)
                 {
@@ -242,13 +244,16 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                         ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
                 if (1 == OUI_ANTARES)
                     Xmax[Var] = 0.;
-                else if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
-                    Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]
-                                + ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
                 else
-                    Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco];
+                {
+                    if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
+                        Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]
+                                    + ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
+                    else
+                        Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco];
 
-                Xmax[Var] += 0.01;
+                    Xmax[Var] += 0.01;
+                }
                 TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
                 if (Math::Infinite(Xmax[Var]) == 1)
                 {
