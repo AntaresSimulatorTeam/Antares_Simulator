@@ -66,7 +66,7 @@ def skip_file(file):
     ignored_files = ['id-hourly.txt',
                      'id-daily.txt',
                      'id-weekly.txt',
-                     'id-monthly',
+                     'id-monthly.txt',
                      'id-annual.txt']
     return file in ignored_files
 
