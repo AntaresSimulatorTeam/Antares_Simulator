@@ -37,7 +37,7 @@ using namespace Yuni;
 static inline sint64 MilliSecTimer()
 {
     Yuni::timeval tv;
-    YUNI_SYSTEM_GETTIMEOFDAY(&tv, NULL);
+    YUNI_SYSTEM_GETTIMEOFDAY(&tv, nullptr);
     return tv.tv_sec * 1000 + tv.tv_usec / 1000;
 }
 
@@ -52,7 +52,7 @@ Timer::Timer(const AnyString& userText,
              const AnyString& logText,
              bool verbose,
              Aggregator* aggregator) :
- userText(userText), verbose(verbose), logText(logText), pAggregator(aggregator)
+userText(userText), logText(logText), verbose(verbose), pAggregator(aggregator)
 {
     reset();
 }

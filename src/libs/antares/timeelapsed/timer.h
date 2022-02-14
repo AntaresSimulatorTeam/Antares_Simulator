@@ -41,7 +41,8 @@ public:
     Timer() = delete;
 
     //! Copy constructor
-    Timer(const Timer& rhs) = default;
+    Timer(const Timer& rhs) = delete;
+    Timer& operator=(const Timer& rhs) = delete;
 
     //! Constructor with a default text
     explicit Timer(const AnyString& userText,
@@ -54,19 +55,17 @@ public:
 
     void reset();
 
-public:
+private:
     //! The text to display at the end
     Yuni::ShortString256 userText;
-
-private:
+    // Aggregation
+    Yuni::ShortString256 logText;
     //! timestamp when the timer started
     yint64 pStartTime;
     //! Display text on destruction
     bool verbose;
     //! Aggregation into a single file for automation
     Aggregator* pAggregator;
-    // Aggregation
-    Yuni::ShortString256 logText;
 }; // class Timer
 } // namespace TimeElapsed
 

@@ -17,7 +17,7 @@ void Aggregator::append(const Yuni::ShortString256& text, Yuni::sint64 duration_
     }
 }
 
-void Aggregator::flush(IWriter& writer)
+void Aggregator::flush(IWriter& writer) const
 {
     writer.flush(mInfoMap);
 }

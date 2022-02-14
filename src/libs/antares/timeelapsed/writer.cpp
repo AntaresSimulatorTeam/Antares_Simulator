@@ -11,7 +11,7 @@ FileWriter::FileWriter(const Yuni::String& filename) : mFilename(filename)
 
 bool FileWriter::checkAndPrepareOutput()
 {
-    if (not mOutputFile.openRW(mFilename))
+    if (!mOutputFile.openRW(mFilename))
     {
         Antares::logs.error() << "I/O error: " << mFilename
                               << ": Impossible to write the file (not enough permission ?)";

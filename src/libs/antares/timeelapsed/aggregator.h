@@ -12,7 +12,7 @@ class Aggregator final
 {
 public:
     void append(const Yuni::ShortString256& text, Yuni::sint64 duration_ms);
-    void flush(IWriter& writer);
+    void flush(IWriter& writer) const;
 
 private:
     InfoMapType mInfoMap;
