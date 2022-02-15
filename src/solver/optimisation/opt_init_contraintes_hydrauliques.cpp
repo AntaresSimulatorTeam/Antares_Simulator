@@ -106,7 +106,10 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
           = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable;
         char TurbEntreBornes
           = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->TurbinageEntreBornes;
-        if (presenceHydro == OUI_ANTARES && TurbEntreBornes == OUI_ANTARES)
+        if (presenceHydro == OUI_ANTARES
+            && (TurbEntreBornes == OUI_ANTARES
+                || ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDePompageModulable
+                     == OUI_ANTARES))
         {
             MinEnergieHydrauParIntervalleOptimise
               = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]
