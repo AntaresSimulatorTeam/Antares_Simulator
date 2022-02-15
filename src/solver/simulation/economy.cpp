@@ -147,9 +147,9 @@ bool Economy::year(Progression::Task& progression,
         try
         {
             /*
-            if (pProblemesHebdo[numSpace].AdequacyFirstStep){
+            if (pProblemesHebdo[numSpace]->AdequacyFirstStep){
                 OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
-                pProblemesHebdo[numSpace].AdequacyFirstStep = false;
+                pProblemesHebdo[numSpace]->AdequacyFirstStep = false;
             }
             */
             OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
