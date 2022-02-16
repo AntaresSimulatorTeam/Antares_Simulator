@@ -33,10 +33,9 @@ namespace Antares
 {
 namespace Action
 {
-Context::Context(Data::Study& targetStudy, const size_t layer) :
+Context::Context(Data::Study::Ptr targetStudy, const size_t layer) :
  study(targetStudy),
  extStudy(nullptr),
- shouldDestroyExtStudy(false),
  layerID(layer),
  area(nullptr),
  cluster(nullptr),
@@ -44,15 +43,6 @@ Context::Context(Data::Study& targetStudy, const size_t layer) :
  originalPlant(nullptr),
  constraint(nullptr)
 {
-}
-
-Context::~Context()
-{
-    if (extStudy && shouldDestroyExtStudy)
-    {
-        delete extStudy;
-        extStudy = nullptr;
-    }
 }
 
 void Context::reset()

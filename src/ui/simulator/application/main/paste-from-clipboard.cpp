@@ -143,7 +143,7 @@ void PreparePasteFromClipboard(const String& text, bool forceDialog)
     {
         auto study = Data::Study::Current::Get();
         if (!(!study))
-            Antares::ExtSource::Handler::AntaresStudy(*study, text, line + 1, map, forceDialog);
+            Antares::ExtSource::Handler::AntaresStudy(study, text, line + 1, map, forceDialog);
         return;
     }
 }

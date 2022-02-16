@@ -434,14 +434,13 @@ void PerformerDialog::closeWindow()
             // Unselect from the inspector
             Antares::Window::Inspector::Unselect();
             // ReAdjust all interconnections
-            study.areas.fixOrientationForAllInterconnections(study.bindingConstraints);
+            study->areas.fixOrientationForAllInterconnections(study->bindingConstraints);
             // reload the UI infos
-            study.uiinfo->reloadAll();
+            study->uiinfo->reloadAll();
             // Mark the study as modified
             MarkTheStudyAsModified();
 
             // updating the map
-            // There is no good reason to have a nullptr pointer here but just in case...
             auto* map = mainFrm.map();
             if (map)
             {
@@ -451,8 +450,7 @@ void PerformerDialog::closeWindow()
 
             // Reload runtime data
             auto currentStudy = Data::Study::Current::Get();
-            if (currentStudy
-                != Data::Study::Ptr(&study)) // TODO use smartptr for Action::Context::study
+            if (currentStudy != study)
                 currentStudy->uiinfo->reloadAll();
         }
     }
