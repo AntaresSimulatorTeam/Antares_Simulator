@@ -314,6 +314,7 @@ static const wxChar* calendarWeeks[] = {wxT("MON  -  SUN"),
                                         wxT("SUN  -  SAT"),
                                         nullptr};
 
+// TODO : move to separate file
 static const wxChar* studyMode[] = {wxT("Economy"),
                                     wxT("Adequacy"),
                                     wxT("draft"),
@@ -448,6 +449,8 @@ struct PStudyMode
             return wxT("Adequacy");
         case Data::stdmAdequacyDraft:
             return wxT("Draft");
+        case Data::stdmExpansion:
+            return wxT("Expansion");
         case Data::stdmUnknown:
         case Data::stdmMax:
             return wxEmptyString;

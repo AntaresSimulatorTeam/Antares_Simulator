@@ -708,19 +708,6 @@ void Frame::apply(const InspectorData::Ptr& data)
             pPGCommonStudyAuthor->SetValueFromString(wxStringFromUTF8(study->header.author));
         }
     }
-    else
-    {
-        if (&study)
-        {
-            // ugly hack : to allow self refresh when several properties
-            // are modified in the same time
-            if (not pAlreadyConnectedToSimulationChangesEvent)
-            {
-                OnStudySimulationSettingsChanged.connect(this, &Frame::delayApply);
-                pAlreadyConnectedToSimulationChangesEvent = true;
-            }
-        }
-    }
 
     // STUDIES
     hide = !data || data->studies.empty();
@@ -776,7 +763,7 @@ void Frame::apply(const InspectorData::Ptr& data)
     // -----
     pPGAreaSeparator->Hide(hide);
     pPGAreaGeneral->Hide(hide);
-    pPGAreaFilteringStatus->Hide(!(!hide and &study and study->parameters.geographicTrimming));
+    pPGAreaFilteringStatus->Hide(!(!hide and study and study->parameters.geographicTrimming));
     if (!hide)
     {
         pPGAreaName->Hide(multiple);
@@ -844,7 +831,7 @@ void Frame::apply(const InspectorData::Ptr& data)
     hide = !data || data->links.empty();
     multiple = (data and data->links.size() > 1);
     pPGLinkSeparator->Hide(hide);
-    pPGLinkFilteringStatus->Hide(!(!hide and &study and study->parameters.geographicTrimming));
+    pPGLinkFilteringStatus->Hide(!(!hide and study and study->parameters.geographicTrimming));
     p = PROPERTY("link.title");
     p->Hide(hide);
     if (!hide)

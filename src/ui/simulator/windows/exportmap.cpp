@@ -511,7 +511,6 @@ void ExportMap::onExportMap(void*)
     // The user data and the output can only be copied if it is not
     // a fresh study
     bool srcFolderNotEmpty = not pStudy->folder.empty();
-    bool split = srcFolderNotEmpty and pSplit and pSplit->GetValue();
     int nbSplitParts
       = srcFolderNotEmpty and pSplitNumberChoice and pSplitNumberChoice->GetSelection();
     std::list<uint16_t> layers(1, 1); // list of the layers ID to save on disk

@@ -458,7 +458,7 @@ void Component::removeLayer(Antares::Component::MapNotebook::Page& page)
     }
 }
 
-void Component::drawerVisible(bool v)
+void Component::drawerVisible(bool /* v */)
 {
     wxSizer* sizer = GetSizer();
     if (sizer)
@@ -649,6 +649,8 @@ bool Component::saveToImageFile(const AnyString& filePath,
         return svgDC.IsOk();
         // break;
     }
+    case mfFormatCount:
+        return false;
     }
 
     return true; // all was fine
