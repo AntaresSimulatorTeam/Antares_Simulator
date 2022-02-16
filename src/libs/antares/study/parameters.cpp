@@ -651,9 +651,9 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             d.hydroPricing.hpMode = hpricing;
             return true;
         }
-        logs.warning() << "parameters: invalid unit commitment mode. Got '" << value
+        logs.warning() << "parameters: invalid hydro pricing mode. Got '" << value
                        << "'. reset to fast mode";
-        d.unitCommitment.ucMode = ucHeuristic;
+        d.hydroPricing.hpMode = hpHeuristic;
         return false;
     }
     if (key == "initial-reservoir-levels")
