@@ -566,7 +566,7 @@ void MapNotebook::MapTabs::onMouseLeave(wxMouseEvent& evt)
 MapNotebook::MapTabs::tabButton::tabButton(std::string imagePath,
                                            MapTabs* parentFrame,
                                            BtnType t,
-                                           char* hoverImagePath) :
+                                           const char* hoverImagePath) :
  hoverImage(nullptr), parentTabFrame(parentFrame), pBoundingBox(nullptr), drawHover(false), type(t)
 {
     buttonImage = Resources::BitmapLoadFromFile(imagePath.c_str());
