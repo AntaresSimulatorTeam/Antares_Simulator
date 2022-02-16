@@ -147,50 +147,56 @@ bool Economy::year(Progression::Task& progression,
         try
         {
             
-            if (pProblemesHebdo[numSpace]->AdequacyFirstStep){
+            if (pProblemesHebdo[numSpace]->AdequacyFirstStep)
+            {
                 logs.debug() << "### AdequcyFirstStep";
                 OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
                 pProblemesHebdo[numSpace]->AdequacyFirstStep = false;
-            }
-
-            //save DENS value from 1st run inside densValues
-            int numberOfAreas = pProblemesHebdo[numSpace]->NombreDePays;
-            int numberOfTimesteps = pProblemesHebdo[numSpace]->NombreDePasDeTemps;
-            double* densValues = (double*)malloc((numberOfAreas * numberOfTimesteps) * sizeof(double));
-            for(int pays = 0; pays < numberOfAreas; ++pays)
-            {
-                for(int step = 0; step < numberOfTimesteps; ++step)
+            
+                //save DENS value from 1st run inside densValues
+                int numberOfAreas = pProblemesHebdo[numSpace]->NombreDePays;
+                int numberOfTimesteps = pProblemesHebdo[numSpace]->NombreDePasDeTemps;
+                double* densValues = (double*)malloc((numberOfAreas * numberOfTimesteps) * sizeof(double));
+                for(int pays = 0; pays < numberOfAreas; ++pays)
                 {
-                    densValues[pays * numberOfTimesteps + step] = pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive[step];
-                    logs.debug() << "##1:" << pays << ":" << step << ":" << densValues[pays * numberOfTimesteps + step];
-                }
-            }            
+                    for(int step = 0; step < numberOfTimesteps; ++step)
+                    {
+                        densValues[pays * numberOfTimesteps + step] = pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive[step];
+                        logs.debug() << "##1:" << pays << ":" << step << ":" << densValues[pays * numberOfTimesteps + step];
+                    }
+                }            
 
-            ::SIM_RenseignementProblemeHebdo(*pProblemesHebdo[numSpace], state, numSpace, hourInTheYear); //??? it is correct
-            // Todo: need to update pProblemesHebdo[numSpace] with densValues before 2nd run.
-            // OPT_UpdateDENS(pProblemesHebdo[numSpace], numSpace, densValues); //Todo
+                ::SIM_RenseignementProblemeHebdo(*pProblemesHebdo[numSpace], state, numSpace, hourInTheYear); //??? it is correct
+                // Todo: need to update pProblemesHebdo[numSpace] with densValues before 2nd run.
+                // OPT_UpdateDENS(pProblemesHebdo[numSpace], numSpace, densValues); //Todo
 
-            OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
+                OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
 
-            for(int pays = 0; pays < numberOfAreas; ++pays)
-            {
-                for(int step = 0; step < numberOfTimesteps; ++step)
+                for(int pays = 0; pays < numberOfAreas; ++pays)
                 {
-                    //should be the same as ##1 if nothing changes
-                    logs.debug() << "##2:" << pays << ":" << step << ":"
-                    << pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive[step];
+                    for(int step = 0; step < numberOfTimesteps; ++step)
+                    {
+                        //should be the same as ##1 if nothing changes
+                        logs.debug() << "##2:" << pays << ":" << step << ":"
+                        << pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive[step];
+                    }
                 }
-            }
 
-            //set DENS value in result from densValues and MemFree
-            for(int pays = 0; pays < numberOfAreas; ++pays)
-            {
-                for(int step = 0; step < numberOfTimesteps; ++step)
+                //set DENS value in result from densValues and MemFree
+                for(int pays = 0; pays < numberOfAreas; ++pays)
                 {
-                    pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDENS[step] = densValues[pays * numberOfTimesteps + step];
+                    for(int step = 0; step < numberOfTimesteps; ++step)
+                    {
+                        pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDENS[step] = densValues[pays * numberOfTimesteps + step];
+                    }
                 }
+                MemFree(densValues);
             }
-            MemFree(densValues);
+            else
+            {
+                //this is normal routine without adq patch
+                OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
+            }
 
             DispatchableMarginForAllAreas(
               study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
