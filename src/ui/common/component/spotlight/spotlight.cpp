@@ -296,8 +296,6 @@ void Spotlight::search(const String& text)
 void Spotlight::convertRawTextIntoSearchTokenVector(SearchToken::Vector& out,
                                                     const Yuni::String& text)
 {
-    // assert
-    assert(&out != NULL);
     assert(out.empty() && "The provided vector of search tokens must be empty");
     assert(not text.empty() && "The provided text must not be empty");
 

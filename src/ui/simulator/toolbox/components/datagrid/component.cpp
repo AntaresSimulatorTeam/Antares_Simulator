@@ -1277,13 +1277,6 @@ void Component::copyAllToClipboard()
 
 static void PasteFromClipboard(DBGrid& grid, VGridHelper& gridHelper)
 {
-    if (!(&grid) or !(&gridHelper))
-    {
-        assert(false and "paste from clipboard: invalid grid");
-        assert(false and "paste from clipboard: invalid gridHelper");
-        return;
-    }
-
     String::Vector rows;
     {
         String s;

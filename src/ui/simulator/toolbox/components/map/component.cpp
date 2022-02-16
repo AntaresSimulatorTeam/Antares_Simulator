@@ -548,8 +548,6 @@ Data::Study::Ptr Component::attachedStudy()
 
 bool Component::loadFromStudy(Data::Study& study)
 {
-    assert(&study != NULL && "invalid study");
-
     if (!pMapActiveLayer)
         return false;
 
