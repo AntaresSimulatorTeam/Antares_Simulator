@@ -166,19 +166,20 @@ bool Economy::year(Progression::Task& progression,
                 }
             }            
 
+            ::SIM_RenseignementProblemeHebdo(*pProblemesHebdo[numSpace], state, numSpace, hourInTheYear); //??? it is correct
             // Todo: need to update pProblemesHebdo[numSpace] with densValues before 2nd run.
             // OPT_UpdateDENS(pProblemesHebdo[numSpace], numSpace, densValues); //Todo
 
             OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
 
-            // for(int pays = 0; pays < numberOfAreas; ++pays)
-            // {
-            //     for(int step = 0; step < numberOfTimesteps; ++step)
-            //     {
-            //         logs.debug() << "##2" << pays << ":" << step << ":"
-            //         << pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive[step];
-            //     }
-            // }  
+            for(int pays = 0; pays < numberOfAreas; ++pays)
+            {
+                for(int step = 0; step < numberOfTimesteps; ++step)
+                {
+                    logs.debug() << "##2:" << pays << ":" << step << ":"
+                    << pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive[step];
+                }
+            }  
             MemFree(densValues);
 
             DispatchableMarginForAllAreas(
