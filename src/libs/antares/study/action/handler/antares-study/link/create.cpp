@@ -104,10 +104,10 @@ bool Create::prepareWL(Context& ctx)
     Antares::Data::Area* areaTo;
     Data::AreaName id;
     TransformNameIntoID(from, id);
-    areaFrom = ctx.study.areas.find(id);
+    areaFrom = ctx.study->areas.find(id);
     id.clear();
     TransformNameIntoID(to, id);
-    areaTo = ctx.study.areas.find(id);
+    areaTo = ctx.study->areas.find(id);
 
     if (areaFrom && areaTo)
     {
@@ -152,10 +152,10 @@ bool Create::performWL(Context& ctx)
     Antares::Data::Area* areaTo;
     Data::AreaName id;
     TransformNameIntoID(from, id);
-    areaFrom = ctx.study.areas.find(id);
+    areaFrom = ctx.study->areas.find(id);
     id.clear();
     TransformNameIntoID(to, id);
-    areaTo = ctx.study.areas.find(id);
+    areaTo = ctx.study->areas.find(id);
 
     if (areaFrom && areaTo)
     {
@@ -167,7 +167,7 @@ bool Create::performWL(Context& ctx)
             logs.debug() << "[study-action] The link " << areaFrom->id << " - " << areaTo->id
                          << " has been created";
             ctx.link = AreaListAddLink(
-              &(ctx.study.areas), areaFrom->id.c_str(), areaTo->id.c_str(), false);
+              &(ctx.study->areas), areaFrom->id.c_str(), areaTo->id.c_str(), false);
             ctx.link->resetToDefaultValues();
             ctx.autoselectLinks.push_back(ctx.link);
             return true;
