@@ -437,8 +437,8 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
         {
             std::map<const char*, int> cols;
             ImplementationType::variables.logCaption(cols);
-            for (const auto& [k, v] : cols)
-                logs.info() << k << " " << v;
+            for (const auto& it : cols)
+                logs.info() << it.first << " " << it.second;
 
             CString<10, false> tmp;
             tmp = (year + 1);
