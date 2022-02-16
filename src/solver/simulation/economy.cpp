@@ -146,13 +146,41 @@ bool Economy::year(Progression::Task& progression,
 
         try
         {
-            /*
+            
             if (pProblemesHebdo[numSpace]->AdequacyFirstStep){
+                logs.debug() << "### AdequcyFirstStep";
                 OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
                 pProblemesHebdo[numSpace]->AdequacyFirstStep = false;
             }
-            */
+
+            //save DENS value from 1st run inside densValues
+            int numberOfAreas = pProblemesHebdo[numSpace]->NombreDePays;
+            int numberOfTimesteps = pProblemesHebdo[numSpace]->NombreDePasDeTemps;
+            double* densValues = (double*)malloc((numberOfAreas * numberOfTimesteps) * sizeof(double));
+            for(int pays = 0; pays < numberOfAreas; ++pays)
+            {
+                for(int step = 0; step < numberOfTimesteps; ++step)
+                {
+                    densValues[pays * numberOfTimesteps + step] = pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive[step];
+                    logs.debug() << "##1:" << pays << ":" << step << ":" << densValues[pays * numberOfTimesteps + step];
+                }
+            }            
+
+            // Todo: need to update pProblemesHebdo[numSpace] with densValues before 2nd run.
+            // OPT_UpdateDENS(pProblemesHebdo[numSpace], numSpace, densValues); //Todo
+
             OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
+
+            // for(int pays = 0; pays < numberOfAreas; ++pays)
+            // {
+            //     for(int step = 0; step < numberOfTimesteps; ++step)
+            //     {
+            //         logs.debug() << "##2" << pays << ":" << step << ":"
+            //         << pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive[step];
+            //     }
+            // }  
+            MemFree(densValues);
+
             DispatchableMarginForAllAreas(
               study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
 
