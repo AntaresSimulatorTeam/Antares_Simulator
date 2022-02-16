@@ -176,10 +176,20 @@ bool Economy::year(Progression::Task& progression,
             {
                 for(int step = 0; step < numberOfTimesteps; ++step)
                 {
+                    //should be the same as ##1 if nothing changes
                     logs.debug() << "##2:" << pays << ":" << step << ":"
                     << pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive[step];
                 }
-            }  
+            }
+
+            //set DENS value in result from densValues and MemFree
+            for(int pays = 0; pays < numberOfAreas; ++pays)
+            {
+                for(int step = 0; step < numberOfTimesteps; ++step)
+                {
+                    pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDENS[step] = densValues[pays * numberOfTimesteps + step];
+                }
+            }
             MemFree(densValues);
 
             DispatchableMarginForAllAreas(

@@ -423,6 +423,7 @@ typedef struct
 typedef struct
 {
     double* ValeursHorairesDeDefaillancePositive;
+    double* ValeursHorairesDENS; //adq patch DENS
     double* ValeursHorairesDeDefaillancePositiveUp;
     double* ValeursHorairesDeDefaillancePositiveDown;
     double* ValeursHorairesDeDefaillancePositiveAny;

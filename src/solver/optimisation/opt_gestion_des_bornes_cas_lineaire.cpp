@@ -404,6 +404,11 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                 ProblemeHebdo->ResultatsHoraires[Pays]
                   ->ValeursHorairesDeDefaillancePositive[PdtHebdo]
                   = 0.0;
+
+                ProblemeHebdo->ResultatsHoraires[Pays]
+                  ->ValeursHorairesDENS[PdtHebdo]
+                  = 0.0; //adq patch init
+
                 AdresseDuResultat = &(ProblemeHebdo->ResultatsHoraires[Pays]
                                         ->ValeursHorairesDeDefaillancePositive[PdtHebdo]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;

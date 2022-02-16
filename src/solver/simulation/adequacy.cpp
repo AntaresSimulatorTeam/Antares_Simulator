@@ -280,6 +280,9 @@ bool Adequacy::year(Progression::Task& progression,
                 memset(hourlyResults.ValeursHorairesDeDefaillancePositive,
                        0,
                        sizeof(double) * nbHoursInAWeek);
+                memset(hourlyResults.ValeursHorairesDENS,
+                       0,
+                       sizeof(double) * nbHoursInAWeek);
                 memset(hourlyResults.ValeursHorairesDeDefaillanceNegative,
                        0,
                        sizeof(double) * nbHoursInAWeek);
