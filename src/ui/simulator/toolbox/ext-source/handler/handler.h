@@ -49,7 +49,7 @@ typedef std::map<Key, Value> PropertyMap;
 /*!
 ** \brief Paste from the clipboard items from an Antares Study
 */
-void AntaresStudy(Data::Study& target,
+void AntaresStudy(Data::Study::Ptr target,
                   const Yuni::String& content,
                   uint offset,
                   PropertyMap& map,
