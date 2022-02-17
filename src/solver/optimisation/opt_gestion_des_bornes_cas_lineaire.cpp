@@ -41,6 +41,7 @@
 #include "spx_constantes_externes.h"
 
 #define EPSILON_DEFAILLANCE 1e-3
+#define ADEQUACY_MAX 10e+12
 #include <antares/logs.h>
 #include <antares/study.h>
 #include <antares/emergency.h>
@@ -119,6 +120,48 @@ double OPT_SommeDesPminThermiques(PROBLEME_HEBDO* ProblemeHebdo, int Pays, int P
     return (SommeDesPminThermiques);
 }
 
+uint SetNTCForAdequacyFirstStep(bool AdequacyFirstStep,
+                                uint StartNodeAdequacyPatchType,
+                                uint EndNodeAdequacyPatchType,
+                                bool SetToZero12LinksForAdequacyPatch,
+                                bool SetToZero11LinksForAdequacyPatch)
+{
+    if (AdequacyFirstStep)
+    {
+        if (StartNodeAdequacyPatchType == Data::adqmPhysicalAreaInsideAdqPatch
+            && EndNodeAdequacyPatchType == Data::adqmPhysicalAreaInsideAdqPatch)
+            return Data::setToZero;
+        else if (StartNodeAdequacyPatchType == Data::adqmPhysicalAreaOutsideAdqPatch
+                 && EndNodeAdequacyPatchType == Data::adqmPhysicalAreaInsideAdqPatch)
+        {
+            if (SetToZero12LinksForAdequacyPatch)
+                return Data::setToZero;
+            else
+                return Data::setEndStartToZero;
+        }
+        else if (StartNodeAdequacyPatchType == Data::adqmPhysicalAreaInsideAdqPatch
+                 && EndNodeAdequacyPatchType == Data::adqmPhysicalAreaOutsideAdqPatch)
+        {
+            if (SetToZero12LinksForAdequacyPatch)
+                return Data::setToZero;
+            else
+                return Data::setStartEndToZero;
+        }
+        else if (StartNodeAdequacyPatchType == Data::adqmPhysicalAreaOutsideAdqPatch
+                 && EndNodeAdequacyPatchType == Data::adqmPhysicalAreaOutsideAdqPatch)
+        {
+            if (SetToZero11LinksForAdequacyPatch)
+                return Data::setToZero;
+            else
+                return Data::leaveLocalValues;
+        }
+        else
+            return Data::leaveLocalValues;
+    }
+    else
+        return Data::leaveLocalValues;
+}
+
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHebdo,
                                                             const int PremierPdtDeLIntervalle,
                                                             const int DernierPdtDeLIntervalle,
@@ -140,8 +183,12 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
     double* Xmin;
     double* Xmax;
     int* TypeDeVariable;
+    bool AdequacyFirstStep;
     uint StartNodeAdequacyPatchType;
     uint EndNodeAdequacyPatchType;
+    bool SetToZero12LinksForAdequacyPatch;
+    bool SetToZero11LinksForAdequacyPatch;
+    uint SetToZeroLinkNTCForAdequacyPatchFirstStep;
 
     VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
@@ -162,6 +209,10 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
     Xmax = ProblemeAResoudre->Xmax;
     TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
 
+    AdequacyFirstStep = true; // ProblemeHebdo->AdequacyFirstStep;
+    SetToZero12LinksForAdequacyPatch = false; // connect to UI options
+    SetToZero11LinksForAdequacyPatch = true; // connect to UI options
+
     for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
     {
         AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
@@ -181,10 +232,29 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
 
             StartNodeAdequacyPatchType = ProblemeHebdo->StartAreaAdequacyPatchType[Interco];
             EndNodeAdequacyPatchType = ProblemeHebdo->EndAreaAdequacyPatchType[Interco];
-            
-            if (1 == OUI_ANTARES && !(StartNodeAdequacyPatchType == 0 && EndNodeAdequacyPatchType == 0))
+            SetToZeroLinkNTCForAdequacyPatchFirstStep
+              = SetNTCForAdequacyFirstStep(AdequacyFirstStep,
+                                           StartNodeAdequacyPatchType,
+                                           EndNodeAdequacyPatchType,
+                                           SetToZero12LinksForAdequacyPatch,
+                                           SetToZero11LinksForAdequacyPatch);
+
+            if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::setToZero)
             {
-                Xmax[Var] = Xmin[Var] = 0.;
+                Xmax[Var] = 0.;
+                Xmin[Var] = 0.;
+            }
+            else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::setStartEndToZero)
+            {
+                Xmax[Var] = 0.;
+                Xmin[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco] > ADEQUACY_MAX
+                              ? -ADEQUACY_MAX
+                              : -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+            }
+            else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::setEndStartToZero)
+            {
+                Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+                Xmin[Var] = 0.;
             }
             else
             {
@@ -218,11 +288,12 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                 Var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
 
-                if (1 == OUI_ANTARES && !(StartNodeAdequacyPatchType == 0 && EndNodeAdequacyPatchType == 0))
+                if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::setToZero
+                    || SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::setStartEndToZero)
                     Xmax[Var] = 0.;
                 else
                 {
-                    if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
+                    if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)   // Interco managed with loop flows
                         Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco]
                                     - ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
                     else
@@ -241,8 +312,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
 
                 Var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
-                        
-                if (1 == OUI_ANTARES && !(StartNodeAdequacyPatchType == 0 && EndNodeAdequacyPatchType == 0))
+
+                if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::setToZero
+                    || SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::setEndStartToZero)
                     Xmax[Var] = 0.;
                 else
                 {

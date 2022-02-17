@@ -130,6 +130,22 @@ enum AdequacyPatchMode
 
 }; // enum AdequacyPatchMode
 
+/*!
+** \brief Setting NTC for Adequacy patch first step
+*/
+enum NTC
+{
+    //! Leave NTC local values
+    leaveLocalValues = 0,
+    //! Set NTC to zero
+    setToZero,
+    //! set only start->end NTC to zero
+    setStartEndToZero,
+    //! set only end->start NTC to zero
+    setEndStartToZero
+
+}; // enum NTC
+
 /*
 ** \brief Simplex optimizations
 */
