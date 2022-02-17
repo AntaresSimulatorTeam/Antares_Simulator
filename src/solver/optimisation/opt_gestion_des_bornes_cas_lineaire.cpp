@@ -504,5 +504,3 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
 
     return;
 }
-
-
