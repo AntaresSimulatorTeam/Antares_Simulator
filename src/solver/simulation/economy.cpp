@@ -146,13 +146,47 @@ bool Economy::year(Progression::Task& progression,
 
         try
         {
-            /*
-            if (pProblemesHebdo[numSpace].AdequacyFirstStep){
+            if (pProblemesHebdo[numSpace]->AdequacyFirstStep){
+                logs.debug() << "### AdequacyFirstStep";
+                // Solve once
                 OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
-                pProblemesHebdo[numSpace].AdequacyFirstStep = false;
+                pProblemesHebdo[numSpace]->AdequacyFirstStep = false;
+                pProblemesHebdo[numSpace]->optimizationStatistics_object.reset(); // Do we need to reset statistics of pProblemesHebdo[numSpace] ?
+
+                // Reset pProblemeHebdo
+                // We identified that AT LEAST
+                // CntEnergieH2OParIntervalleOptimise
+                // CntEnergieH2OParIntervalleOptimiseRef
+                // and InflowForTimeInterval
+                // are modified during the OPT_OptimisationHebdomadaire and need to be reset to prior values or else the next solver execution crashes
+
+                // Solution 1
+                // We isolate the lines 823-870 + 990-993 of the sim_calcul_economique.cpp file, make them in a function and use it here,
+                // Here's a placeholder, to simulate what it ends up doing in our test case :
+                double CntEnergieH2OParIntervalleOptimise = 4800;
+                double CntEnergieH2OParIntervalleOptimiseRef = 4800;
+                double InflowForTimeInterval = 4800;
+                for (uint j = 0; j < 7; ++j)
+                {
+                    pProblemesHebdo[numSpace]->CaracteristiquesHydrauliques[0]->CntEnergieH2OParIntervalleOptimise[j] = CntEnergieH2OParIntervalleOptimise;
+                    pProblemesHebdo[numSpace]->CaracteristiquesHydrauliques[0]->CntEnergieH2OParIntervalleOptimiseRef[j] = CntEnergieH2OParIntervalleOptimiseRef;
+                    pProblemesHebdo[numSpace]->CaracteristiquesHydrauliques[0]->InflowForTimeInterval[j] = InflowForTimeInterval;
+                }
+
+                // Solution 2
+                ::SIM_RenseignementProblemeHebdo(*pProblemesHebdo[numSpace], state, numSpace, hourInTheYear); // does it not touch too much stuff ? Should we try to focus only the hydro stuff ?
+
+                // Solution 3
+                // we thought of using
+                // OPT_RestaurerLesDonnees(pProblemesHebdo[numSpace]); //-> Ne fonctionne pas car la reference a aussi ete changee par le calcul
+
+                // Second solve that gives error if hydro param of pProblemeHebdo are not reset
+                OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
             }
-            */
-            OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
+            else {
+                //this is normal routine without adq patch
+                OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
+            }
             DispatchableMarginForAllAreas(
               study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
 
