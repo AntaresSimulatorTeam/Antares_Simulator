@@ -263,7 +263,11 @@ const wxChar* calendarWeeks[] = {wxT("MON  -  SUN"),
                                  nullptr};
 
 const wxChar* studyMode[]
-  = {wxT("Economy"), wxT("Adequacy"), wxT("Draft"), wxT("Expansion"), nullptr};
+  = {wxT("Economy"), wxT("Adequacy"), wxT("Draft"),
+#if STUDY_MODE_EXPANSION
+     wxT("Expansion"),
+#endif
+     nullptr};
 } // namespace Inspector
 } // namespace Window
 } // namespace Antares
