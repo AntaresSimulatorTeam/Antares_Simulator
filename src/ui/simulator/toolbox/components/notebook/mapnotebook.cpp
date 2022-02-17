@@ -522,6 +522,7 @@ void MapNotebook::MapTabs::onMouseMove(wxMouseEvent& evt)
     wxPoint pos(evt.GetPosition().x, evt.GetPosition().y);
 
     if (addPageButton->pBoundingBox)
+    {
         if (addPageButton->pBoundingBox->Contains(pos))
         {
             addPageButton->onMouseEnter();
@@ -530,8 +531,10 @@ void MapNotebook::MapTabs::onMouseMove(wxMouseEvent& evt)
         {
             addPageButton->onMouseLeave();
         }
+    }
 
     if (leftTabScroll->isVisible)
+    {
         if (leftTabScroll->pBoundingBox->Contains(pos))
         {
             leftTabScroll->onMouseEnter();
@@ -540,8 +543,10 @@ void MapNotebook::MapTabs::onMouseMove(wxMouseEvent& evt)
         {
             leftTabScroll->onMouseLeave();
         }
+    }
 
     if (rightTabScroll->isVisible)
+    {
         if (rightTabScroll->pBoundingBox->Contains(pos))
         {
             rightTabScroll->onMouseEnter();
@@ -550,11 +555,12 @@ void MapNotebook::MapTabs::onMouseMove(wxMouseEvent& evt)
         {
             rightTabScroll->onMouseLeave();
         }
+    }
 
     return;
 }
 
-void MapNotebook::MapTabs::onMouseLeave(wxMouseEvent& evt)
+void MapNotebook::MapTabs::onMouseLeave(wxMouseEvent& /* evt */)
 {
     rightTabScroll->onMouseLeave();
 

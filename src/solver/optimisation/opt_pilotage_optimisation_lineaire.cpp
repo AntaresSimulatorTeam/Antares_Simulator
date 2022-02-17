@@ -38,11 +38,6 @@
 
 bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    char CalculerLesPmin;
-    char CalculerLesPmax;
-    char FaireDerniereOptimisation;
-
     int Pays;
 
     if (ProblemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
@@ -81,8 +76,6 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo, uint numSpa
 
         ProblemeHebdo->LeProblemeADejaEteInstancie = OUI_ANTARES;
     }
-
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
     OPT_VerifierPresenceReserveJmoins1(ProblemeHebdo);
 

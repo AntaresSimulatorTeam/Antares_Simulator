@@ -101,31 +101,31 @@ private:
     Toolbox::InputSelector::Area* pInputAreaSelector;
     Data::Area* pArea;
     bool pComponentsAreReady;
-    Component::Panel* pSupport;
-    wxTextCtrl* pIntermonthlyBreakdown;
-    wxTextCtrl* pInterdailyBreakdown;
-    wxTextCtrl* pIntradailyModulation;
-    wxTextCtrl* pReservoirCapacity;
-    wxTextCtrl* pLeewayUpperBound;
-    wxTextCtrl* pLeewayLowerBound;
-    wxTextCtrl* pPumpingEfficiency;
-    wxWindow* pLabelReservoirCapacity;
-    wxWindow* pLabelUseWaterValues;
-    wxWindow* pLabelHardBounds;
-    wxWindow* pLabelUseHeuristicTarget;
-    wxWindow* pLabelLeewayLow;
-    wxWindow* pLabelLeewayUp;
-    wxWindow* pLabelUseLeeway;
-    wxWindow* pLabelPowerToLevel;
+    Component::Panel* pSupport = nullptr;
+    wxTextCtrl* pIntermonthlyBreakdown = nullptr;
+    wxTextCtrl* pInterdailyBreakdown = nullptr;
+    wxTextCtrl* pIntradailyModulation = nullptr;
+    wxTextCtrl* pReservoirCapacity = nullptr;
+    wxTextCtrl* pLeewayUpperBound = nullptr;
+    wxTextCtrl* pLeewayLowerBound = nullptr;
+    wxTextCtrl* pPumpingEfficiency = nullptr;
+    wxWindow* pLabelReservoirCapacity = nullptr;
+    wxWindow* pLabelUseWaterValues = nullptr;
+    wxWindow* pLabelHardBounds = nullptr;
+    wxWindow* pLabelUseHeuristicTarget = nullptr;
+    wxWindow* pLabelLeewayLow = nullptr;
+    wxWindow* pLabelLeewayUp = nullptr;
+    wxWindow* pLabelUseLeeway = nullptr;
+    wxWindow* pLabelPowerToLevel = nullptr;
 
-    Component::Button* pReservoirManagement;
-    Component::Button* pFollowLoad;
-    Component::Button* pUseLeeway;
-    Component::Button* pUseWaterValue;
-    Component::Button* pHardBoundsOnRuleCurves;
-    Component::Button* pInitializeReservoirLevelDate;
-    Component::Button* pUseHeuristicTarget;
-    Component::Button* pPowerToLevel;
+    Component::Button* pReservoirManagement = nullptr;
+    Component::Button* pFollowLoad = nullptr;
+    Component::Button* pUseLeeway = nullptr;
+    Component::Button* pUseWaterValue = nullptr;
+    Component::Button* pHardBoundsOnRuleCurves = nullptr;
+    Component::Button* pInitializeReservoirLevelDate = nullptr;
+    Component::Button* pUseHeuristicTarget = nullptr;
+    Component::Button* pPowerToLevel = nullptr;
 
 }; // class Management
 

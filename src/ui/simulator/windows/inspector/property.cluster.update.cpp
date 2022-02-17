@@ -13,7 +13,7 @@ namespace Window
 namespace Inspector
 {
 // ClusterUpdater
-ClusterUpdater::ClusterUpdater(InspectorData::Ptr data, Frame& frame) : pFrame(frame), clusters()
+ClusterUpdater::ClusterUpdater(Frame& frame) : pFrame(frame)
 {
 }
 bool ClusterUpdater::changeName(const wxVariant& value)
@@ -47,7 +47,7 @@ bool ClusterUpdater::changeGroup(const wxVariant& value)
 
     if (not newgroup.empty())
     {
-        long index;
+        uint index;
         if (newgroup.to(index))
         {
             if (index < 0 || index > groups.size())
@@ -160,7 +160,7 @@ bool ClusterUpdater::changeEnabled(const wxVariant& value)
 
 // ClusterUpdaterThermal
 ClusterUpdaterThermal::ClusterUpdaterThermal(InspectorData::Ptr data, Frame& frame) :
- ClusterUpdater(data, frame)
+ ClusterUpdater(frame)
 {
     // wxProperties
     unitCount = frame.pPGThClusterUnitCount;
@@ -186,7 +186,7 @@ void ClusterUpdaterThermal::OnStudyClusterRenamed(Data::Cluster* cluster)
 
 // ClusterUpdaterRenewable
 ClusterUpdaterRenewable::ClusterUpdaterRenewable(InspectorData::Ptr data, Frame& frame) :
- ClusterUpdater(data, frame)
+ ClusterUpdater(frame)
 {
     // wxProperties
     unitCount = frame.pPGRnClusterUnitCount;

@@ -545,7 +545,7 @@ void Interconnection::onSelectAssetTypeVirt(wxCommandEvent&)
 
 void Interconnection::onSelectAssetTypeOther(wxCommandEvent&)
 {
-    if (pLink && pLink->assetType != Data::tncInfinite)
+    if (pLink && static_cast<Data::TransmissionCapacities>(pLink->assetType) != Data::tncInfinite)
     {
         pLink->assetType = Data::atOther;
         onConnectionChanged(pLink);

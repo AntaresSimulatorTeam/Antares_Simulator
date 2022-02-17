@@ -50,18 +50,12 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* ProblemeHeb
     int Var;
     int Index;
     int PdtHebdo;
-    double CoutDeDemarrage;
-    char ContrainteDeReserveJMoins1ParZone;
-    int PdtJourMoins1;
-    int NombreDePasDeTempsPourUneOptimisation;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     double* CoutLineaire;
     PALIERS_THERMIQUES* PaliersThermiquesDuPays;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-    ContrainteDeReserveJMoins1ParZone = ProblemeHebdo->ContrainteDeReserveJMoins1ParZone;
     CoutLineaire = ProblemeAResoudre->CoutLineaire;
 
     for (PdtHebdo = PremierPdtDeLIntervalle, PdtJour = 0; PdtHebdo < DernierPdtDeLIntervalle;

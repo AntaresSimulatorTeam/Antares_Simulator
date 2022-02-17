@@ -112,7 +112,7 @@ Notebook::~Notebook()
 }
 
 Notebook::Tabs::Tabs(wxWindow* parent, Notebook& notebook) :
- Panel(parent), pCachedSize(0, 0), pNotebook(notebook), pRect(), pMaxFound(0)
+ Panel(parent), pNotebook(notebook), pCachedSize(0, 0), pMaxFound(0)
 {
     SetBackgroundStyle(wxBG_STYLE_CUSTOM); // Needed by Windows
     pCachedSize.x = 150;

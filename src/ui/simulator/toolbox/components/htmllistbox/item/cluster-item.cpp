@@ -63,7 +63,7 @@ void ClusterItem::preloadImages()
     }
 }
 
-void ClusterItem::addAdditionalIcons(wxString& out) const
+void ClusterItem::addAdditionalIcons(wxString& /* out */) const
 {
     // No additional icons should be added by default
 }

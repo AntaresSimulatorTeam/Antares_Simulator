@@ -663,7 +663,6 @@ void InternalState::onMapLayerRemoved(const wxString* text)
     // event
     if (pLayerFilter)
     {
-        auto hzCombo = pLayerFilter->GetContainingSizer();
         auto pos = pLayerFilter->FindString(*text);
         if (pos != wxNOT_FOUND)
         {
@@ -1505,7 +1504,7 @@ void Component::onModifyAll(void*)
     }
 }
 
-void Component::onComboUpdated(wxCommandEvent& evt)
+void Component::onComboUpdated(wxCommandEvent& /* evt */)
 {
     auto study = Data::Study::Current::Get();
     if (!study)
