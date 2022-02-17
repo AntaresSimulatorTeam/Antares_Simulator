@@ -34,6 +34,7 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
+#include "adequacy_patch.h"
 #include <math.h>
 #include <yuni/core/math.h>
 #include <limits.h>
@@ -118,48 +119,6 @@ double OPT_SommeDesPminThermiques(PROBLEME_HEBDO* ProblemeHebdo, int Pays, int P
     }
 
     return (SommeDesPminThermiques);
-}
-
-uint SetNTCForAdequacyFirstStep(bool AdequacyFirstStep,
-                                uint StartNodeAdequacyPatchType,
-                                uint EndNodeAdequacyPatchType,
-                                bool SetToZero12LinksForAdequacyPatch,
-                                bool SetToZero11LinksForAdequacyPatch)
-{
-    if (AdequacyFirstStep)
-    {
-        if (StartNodeAdequacyPatchType == Data::adqmPhysicalAreaInsideAdqPatch
-            && EndNodeAdequacyPatchType == Data::adqmPhysicalAreaInsideAdqPatch)
-            return Data::setToZero;
-        else if (StartNodeAdequacyPatchType == Data::adqmPhysicalAreaOutsideAdqPatch
-                 && EndNodeAdequacyPatchType == Data::adqmPhysicalAreaInsideAdqPatch)
-        {
-            if (SetToZero12LinksForAdequacyPatch)
-                return Data::setToZero;
-            else
-                return Data::setEndStartToZero;
-        }
-        else if (StartNodeAdequacyPatchType == Data::adqmPhysicalAreaInsideAdqPatch
-                 && EndNodeAdequacyPatchType == Data::adqmPhysicalAreaOutsideAdqPatch)
-        {
-            if (SetToZero12LinksForAdequacyPatch)
-                return Data::setToZero;
-            else
-                return Data::setStartEndToZero;
-        }
-        else if (StartNodeAdequacyPatchType == Data::adqmPhysicalAreaOutsideAdqPatch
-                 && EndNodeAdequacyPatchType == Data::adqmPhysicalAreaOutsideAdqPatch)
-        {
-            if (SetToZero11LinksForAdequacyPatch)
-                return Data::setToZero;
-            else
-                return Data::leaveLocalValues;
-        }
-        else
-            return Data::leaveLocalValues;
-    }
-    else
-        return Data::leaveLocalValues;
 }
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHebdo,
