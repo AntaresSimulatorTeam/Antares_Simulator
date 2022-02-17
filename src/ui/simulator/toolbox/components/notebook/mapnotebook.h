@@ -126,12 +126,12 @@ public:
 
             BtnType type;
             wxPoint coords;
-            wxBitmap* buttonImage;
-            wxBitmap* hoverImage;
+            wxBitmap* buttonImage = nullptr;
+            wxBitmap* hoverImage = nullptr;
             wxRect* pBoundingBox;
-            MapTabs* parentTabFrame;
+            MapTabs* parentTabFrame = nullptr;
             bool isVisible;
-            bool drawHover;
+            bool drawHover = false;
         };
 
         int sizingOffset;

@@ -573,7 +573,7 @@ MapNotebook::MapTabs::tabButton::tabButton(std::string imagePath,
                                            MapTabs* parentFrame,
                                            BtnType t,
                                            const char* hoverImagePath) :
- hoverImage(nullptr), parentTabFrame(parentFrame), pBoundingBox(nullptr), drawHover(false), type(t)
+ type(t), parentTabFrame(parentFrame)
 {
     buttonImage = Resources::BitmapLoadFromFile(imagePath.c_str());
     isVisible = false;

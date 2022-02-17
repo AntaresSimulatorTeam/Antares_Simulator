@@ -46,11 +46,11 @@ public:
     Matrix_load_bypass(uint height, uint width, const vector<T>& vec) :
      Matrix_easy_to_fill<T, ReadWriteT>(height, width, vec), loadFromCSVFile_called(false){};
 
-    bool loadFromCSVFile(const AnyString& filename,
-                         uint minWidth,
-                         uint maxHeight,
-                         uint options = Matrix<T, ReadWriteT>::optNone,
-                         BufferType* buffer = NULL) override
+    bool loadFromCSVFile(const AnyString& /* filename */,
+                         uint /* minWidth */,
+                         uint /* maxHeight */,
+                         uint /* options */,
+                         BufferType* /* buffer */) override
     {
         loadFromCSVFile_called = true;
         return true;
