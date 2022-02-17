@@ -1,3 +1,4 @@
+#include <antares/xpansion.h>
 #include "constants.h"
 
 namespace Antares

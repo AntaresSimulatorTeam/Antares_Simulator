@@ -535,7 +535,6 @@ void Notebook::Tabs::drawItemOnCanvasSelected(Page* page,
 
         size_t size = page->subPages.size();
         size_t subTabSize = h / (size + 1);
-        int subPos = subTabSize >> 1;
         if (size == 0)
         {
             dc.DrawText(page->caption(),
@@ -553,7 +552,7 @@ void Notebook::Tabs::drawItemOnCanvasSelected(Page* page,
         {
             dc.DrawText(
               page->caption(), 15, pos + (subTabSize >> 1) - (textExtent.GetHeight() >> 1));
-            for (int i = 0; i < size; i++)
+            for (size_t i = 0; i < size; i++)
             {
                 wxSize subpageTextExtent = dc.GetTextExtent(page->subPages[i]->caption());
 
