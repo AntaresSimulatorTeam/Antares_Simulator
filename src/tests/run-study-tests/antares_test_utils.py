@@ -54,15 +54,11 @@ class unfeasible_problem(check_interface):
 #   Checks factory
 #   ==============
 class check_factory:
-    def __init__(self):
-        self.study_path = None
-        print('check_factory constructor')
+    def __init__(self, study_path = None):
+        self.study_path = study_path
 
     def set_study_path(self, study_path):
         self.study_path = study_path
-
-    def print_study_path(self):
-        print('\nstudy path : %s' % self.study_path)
 
     def get(self, check_type):
         print('get with : %s' % check_type)
@@ -84,6 +80,7 @@ class check_factory:
 # Abstract class
 class study_run_interface(metaclass=abc.ABCMeta):
     def __init__(self, study_path, solver_path, use_ortools, ortools_solver):
+        print("Study run base constructor")
         self.study_path = study_path
         self.solver_path = solver_path
         self.use_ortools = use_ortools
@@ -93,38 +90,34 @@ class study_run_interface(metaclass=abc.ABCMeta):
     def run(self):
         pass
 
-class study_run(study_run_interface):
-    def __init__(self, study_path, solver_path, use_ortools, ortools_solver):
-        study_run_interface.__init__(study_path, solver_path, use_ortools, ortools_solver)
+    def base_run(self):
+        print("   Base run")
 
+class study_run(study_run_interface):
     def run(self):
-        study_run_interface.run()
+        self.base_run()
 
 
 class study_run_print_outputs(study_run_interface):
-    def __init__(self, study_path, solver_path, use_ortools, ortools_solver):
-        study_run_interface.__init__(study_path, solver_path, use_ortools, ortools_solver)
-
     def run(self):
-        # Enabling outputs here
-        study_run_interface.run()
-        # Disabling outputs here
+        print("   Enabling the output")
+        self.base_run()
+        print("   Disabling the output")
 
 #   Execution factory
 #   -----------------
 class study_execution_factory:
-    def __init__(self, solver_path, use_ortools, ortools_solver):
-        self.study_path = None
+    def __init__(self, study_path, solver_path, use_ortools, ortools_solver):
+        self.study_path = study_path
         self.solver_path = solver_path
         self.use_ortools = use_ortools
         self.ortools_solver = ortools_solver
 
-    def set_study_path(self, study_path):
-        self.study_path = study_path
-
-    def get(checks):
+    def get(self, checks):
         if checks.output_results_needed():
-            return
+            return study_run_print_outputs(self.study_path, self.solver_path, self.use_ortools, self.ortools_solver)
+        else:
+            return study_run(self.study_path, self.solver_path, self.use_ortools, self.ortools_solver)
 
 
 
