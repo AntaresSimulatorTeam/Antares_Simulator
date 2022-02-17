@@ -24,7 +24,7 @@ class output_compare(check_interface):
 
     def run(self):
         # To be done
-        pass
+        print("running check : %s" % self.__class__.__name__)
 
 class integrity_compare(check_interface):
     def need_output_results(self):
@@ -32,7 +32,7 @@ class integrity_compare(check_interface):
 
     def run(self):
         # To be done
-        pass
+        print("running check : %s" % self.__class__.__name__)
 
 class reservoir_levels(check_interface):
     def need_output_results(self):
@@ -40,7 +40,7 @@ class reservoir_levels(check_interface):
 
     def run(self):
         # To be done
-        pass
+        print("running check : %s" % self.__class__.__name__)
 
 class unfeasible_problem(check_interface):
     def need_output_results(self):
@@ -48,7 +48,7 @@ class unfeasible_problem(check_interface):
 
     def run(self):
         # To be done
-        pass
+        print("running check : %s" % self.__class__.__name__)
 
 #   ==============
 #   Checks factory
@@ -61,7 +61,6 @@ class check_factory:
         self.study_path = study_path
 
     def get(self, check_type):
-        print('get with : %s' % check_type)
         if check_type == 'output_compare':
             return output_compare(self.study_path)
         elif check_type == 'integrity_compare':
@@ -80,7 +79,6 @@ class check_factory:
 # Abstract class
 class study_run_interface(metaclass=abc.ABCMeta):
     def __init__(self, study_path, solver_path, use_ortools, ortools_solver):
-        print("Study run base constructor")
         self.study_path = study_path
         self.solver_path = solver_path
         self.use_ortools = use_ortools
@@ -108,6 +106,7 @@ class study_run_print_outputs(study_run_interface):
 #   -----------------
 class study_execution_factory:
     def __init__(self, study_path, solver_path, use_ortools, ortools_solver):
+        print("study path : %s" % study_path)
         self.study_path = study_path
         self.solver_path = solver_path
         self.use_ortools = use_ortools

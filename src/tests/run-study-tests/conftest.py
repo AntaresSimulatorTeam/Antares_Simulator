@@ -17,6 +17,3 @@ def use_ortools(request):
 def solver_path(request):
     return request.config.getoption("--solver-path")
 
-@pytest.fixture()
-def study_path(request):
-    return request.param
