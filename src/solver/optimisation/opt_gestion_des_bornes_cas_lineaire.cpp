@@ -394,20 +394,35 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                 if (AllMustRunGeneration->AllMustRunGenerationOfArea[Pays] > 0.)
                     MaxAllMustRunGenerationOfArea
                       = AllMustRunGeneration->AllMustRunGenerationOfArea[Pays];
-
+                
                 C = C + MaxAllMustRunGenerationOfArea;
                 if (C >= 0.)
                     Xmax[Var] = C + 1e-5;
                 else
                     Xmax[Var] = 0.;
 
+                //adq patch: update ENS <= DENS
+                if(ProblemeHebdo->UseAdequacyPatch == true)
+                {
+                    if(ProblemeHebdo->AdequacyFirstStep == true)
+                    {
+                        ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo] = 0.0; //adq patch init if 1st run
+                    }
+                    else if(ProblemeHebdo->AdequacyFirstStep == false) //2nd run update upper bound with DENS
+                    {
+                        if(ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo] >= 0.)
+                        {
+                            Xmax[Var] = ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo] + 1e-5;
+                            // logs.debug() << "opt_gestion_bornes:" << Pays << ":" << PdtHebdo << ":Xmax[Var] = " << Xmax[Var];
+                        }
+                        else
+                            Xmax[Var] = 0.;
+                    }
+                }
+
                 ProblemeHebdo->ResultatsHoraires[Pays]
                   ->ValeursHorairesDeDefaillancePositive[PdtHebdo]
                   = 0.0;
-
-                ProblemeHebdo->ResultatsHoraires[Pays]
-                  ->ValeursHorairesDENS[PdtHebdo]
-                  = 0.0; //adq patch init
 
                 AdresseDuResultat = &(ProblemeHebdo->ResultatsHoraires[Pays]
                                         ->ValeursHorairesDeDefaillancePositive[PdtHebdo]);
@@ -489,3 +504,5 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
 
     return;
 }
+
+

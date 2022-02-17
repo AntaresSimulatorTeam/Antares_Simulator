@@ -574,6 +574,7 @@ struct PROBLEME_HEBDO
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration;
 
     /* Adequacy Patch */
+    bool UseAdequacyPatch;
     bool AdequacyFirstStep;
 
     optimizationStatistics optimizationStatistics_object;
@@ -591,7 +592,6 @@ struct PROBLEME_HEBDO
     double* coutOptimalSolution2;
 
     COUTS_MARGINAUX_ZONES_DE_RESERVE** CoutsMarginauxDesContraintesDeReserveParZone;
-
     /* Unused for now, will be used in future revisions */
 #if 0
     char SecondeOptimisationRelaxee;

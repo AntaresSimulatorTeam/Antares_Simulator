@@ -63,6 +63,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.hydroHotStart
       = (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart);
 
+    problem.UseAdequacyPatch = parameters.include.adequacyPatch;
     problem.AdequacyFirstStep = parameters.include.adequacyPatch;
 
     problem.WaterValueAccurate
