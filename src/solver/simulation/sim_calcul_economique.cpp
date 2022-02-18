@@ -598,7 +598,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
             uint tsFatalIndex = (uint)tsIndex.Hydraulique < ror.width ? tsIndex.Hydraulique : 0;
             double& mustRunGen = problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k];
-            if (parameters.renewableGeneration() == rgAggregated)
+            if (parameters.renewableGeneration.isAggregated())
             {
                 mustRunGen = scratchpad.ts.wind[tsIndex.Eolien][indx]
                              + scratchpad.ts.solar[tsIndex.Solar][indx]
