@@ -401,24 +401,14 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                 else
                     Xmax[Var] = 0.;
 
-                // adq patch: update ENS <= DENS
-                if (ProblemeHebdo->UseAdequacyPatch == true)
-                {
-                    if (ProblemeHebdo->AdequacyFirstStep == true)
-                        ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo]
-                          = 0.0; // adq patch init if 1st run
-                    else if (ProblemeHebdo->AdequacyFirstStep
-                             == false) // 2nd run update upper bound with DENS
-                    {
-                        if (ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo]
-                            >= 0.)
-                            Xmax[Var] = ProblemeHebdo->ResultatsHoraires[Pays]
-                                          ->ValeursHorairesDENS[PdtHebdo]
-                                        + 1e-5;
-                        else
-                            Xmax[Var] = 0.;
-                    }
-                }
+                // adq patch: update ENS <= DENS in 2nd run
+                if (ProblemeHebdo->UseAdequacyPatch == true
+                    && ProblemeHebdo->AdequacyFirstStep == false)
+                    if (ProblemeHebdo->AreaAdequacyPatchMode[Pays]
+                        == Data::adqmPhysicalAreaInsideAdqPatch)
+                        Xmax[Var]
+                          = ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo]
+                            + 1e-5;
 
                 ProblemeHebdo->ResultatsHoraires[Pays]
                   ->ValeursHorairesDeDefaillancePositive[PdtHebdo]

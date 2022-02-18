@@ -153,13 +153,21 @@ bool Economy::year(Progression::Task& progression,
                 pProblemesHebdo[numSpace]->AdequacyFirstStep = false;
 
                 for (int pays = 0; pays < pProblemesHebdo[numSpace]->NombreDePays; ++pays)
-                    for (int step = 0; step < pProblemesHebdo[numSpace]->NombreDePasDeTemps; ++step)
-                        pProblemesHebdo[numSpace]
-                          ->ResultatsHoraires[pays]
-                          ->ValeursHorairesDENS[step]
-                          = pProblemesHebdo[numSpace]
-                              ->ResultatsHoraires[pays]
-                              ->ValeursHorairesDeDefaillancePositive[step];
+                {
+                    if (pProblemesHebdo[numSpace]->AreaAdequacyPatchMode[pays]
+                        == Data::adqmPhysicalAreaInsideAdqPatch)
+                        memcpy(
+                          pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDENS,
+                          pProblemesHebdo[numSpace]
+                            ->ResultatsHoraires[pays]
+                            ->ValeursHorairesDeDefaillancePositive,
+                          pProblemesHebdo[numSpace]->NombreDePasDeTemps * sizeof(double));
+                    else
+                        memset(
+                          pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDENS,
+                          0,
+                          pProblemesHebdo[numSpace]->NombreDePasDeTemps * sizeof(double));
+                }
 
                 ::SIM_RenseignementProblemeHebdo(
                   *pProblemesHebdo[numSpace], state, numSpace, hourInTheYear); // todo ? correct

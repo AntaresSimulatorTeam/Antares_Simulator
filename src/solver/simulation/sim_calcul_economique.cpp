@@ -114,6 +114,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         auto& area = *(study.areas[i]);
 
         problem.NomsDesPays[i] = area.id.c_str();
+        problem.AreaAdequacyPatchMode[i] = area.adequacyPatchMode;
 
         problem.CoutDeDefaillancePositive[i] = area.thermal.unsuppliedEnergyCost;
 

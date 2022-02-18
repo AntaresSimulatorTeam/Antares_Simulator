@@ -479,6 +479,7 @@ struct PROBLEME_HEBDO
     char OptimisationAvecCoutsDeDemarrage;
     int NombreDePays;
     const char** NomsDesPays;
+    int* AreaAdequacyPatchMode;
     int NombreDePaliersThermiques;
 
     int NombreDInterconnexions;

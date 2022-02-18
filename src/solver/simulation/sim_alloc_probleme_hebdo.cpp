@@ -59,6 +59,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         problem.BruitSurCoutHydraulique[p] = (double*)MemAlloc(8784 * sizeof(double));
 
     problem.NomsDesPays = (const char**)MemAlloc(nbPays * sizeof(char*));
+    problem.AreaAdequacyPatchMode = (int*)MemAlloc(nbPays * sizeof(int));
 
     problem.PaysExtremiteDeLInterconnexion = (int*)MemAlloc(linkCount * sizeof(int));
     problem.PaysOrigineDeLInterconnexion = (int*)MemAlloc(linkCount * sizeof(int));
@@ -590,6 +591,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     uint nbPays = study.areas.size();
 
     MemFree(problem.NomsDesPays);
+    MemFree(problem.AreaAdequacyPatchMode);
 
     MemFree(problem.PaysExtremiteDeLInterconnexion);
     MemFree(problem.PaysOrigineDeLInterconnexion);
