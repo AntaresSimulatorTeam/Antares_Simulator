@@ -461,7 +461,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositive
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
         problem.ResultatsHoraires[k]->ValeursHorairesDENS
-          = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double)); //adq patch          
+          = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double)); // adq patch
         problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveUp
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
         problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveDown

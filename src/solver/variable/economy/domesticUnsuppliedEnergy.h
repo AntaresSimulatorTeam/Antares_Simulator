@@ -236,7 +236,8 @@ public:
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         // Total DomesticUnsuppliedEnergy emissions
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = state.hourlyResults->ValeursHorairesDENS[state.hourInTheWeek];
+        pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
+          = state.hourlyResults->ValeursHorairesDENS[state.hourInTheWeek];
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);

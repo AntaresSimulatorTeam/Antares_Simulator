@@ -146,50 +146,27 @@ bool Economy::year(Progression::Task& progression,
 
         try
         {
-            
             if (pProblemesHebdo[numSpace]->UseAdequacyPatch)
             {
-                logs.debug() << "Use adequacy patch: 1st run...";
-                //todo need to change interconnection links property before 1st run
                 pProblemesHebdo[numSpace]->AdequacyFirstStep = true;
                 OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
                 pProblemesHebdo[numSpace]->AdequacyFirstStep = false;
-            
-                int numberOfAreas = pProblemesHebdo[numSpace]->NombreDePays;
-                int numberOfTimesteps = pProblemesHebdo[numSpace]->NombreDePasDeTemps;
 
-                //save DENS from 1st run
-                for(int pays = 0; pays < numberOfAreas; ++pays)
-                {
-                    for(int step = 0; step < numberOfTimesteps; ++step)
-                    {
-                        pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDENS[step]
-                            = pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive[step];
-                        // logs.debug() << "##0:" << pays << ":" << step << ":" << pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDENS[step];
-                    }
-                }            
+                for (int pays = 0; pays < pProblemesHebdo[numSpace]->NombreDePays; ++pays)
+                    for (int step = 0; step < pProblemesHebdo[numSpace]->NombreDePasDeTemps; ++step)
+                        pProblemesHebdo[numSpace]
+                          ->ResultatsHoraires[pays]
+                          ->ValeursHorairesDENS[step]
+                          = pProblemesHebdo[numSpace]
+                              ->ResultatsHoraires[pays]
+                              ->ValeursHorairesDeDefaillancePositive[step];
 
-                //todo need to change interconnection link property before second run
-                ::SIM_RenseignementProblemeHebdo(*pProblemesHebdo[numSpace], state, numSpace, hourInTheYear); //??? it is correct
-
-                //todo need to change interconnection link property before second run
-                logs.debug() << "Use adequacy patch: 2nd run...";
+                ::SIM_RenseignementProblemeHebdo(
+                  *pProblemesHebdo[numSpace], state, numSpace, hourInTheYear); // todo ? correct
                 OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
-
-                // for(int pays = 0; pays < numberOfAreas; ++pays)
-                //     for(int step = 0; step < numberOfTimesteps; ++step)
-                //         //should be the same as ##1 if nothing changes
-                //         logs.debug() << "After 2nd run ##2 ENS:" << pays << ":" << step << ":"
-                //         << pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive[step];
-
-                // for(int pays = 0; pays < numberOfAreas; ++pays)
-                //     for(int step = 0; step < numberOfTimesteps; ++step)
-                //         logs.debug() << "After 2nd run ##3 DENS:" << pays << ":" << step << ":"
-                //             << pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDENS[step];
             }
             else
             {
-                //this is normal routine without adq patch
                 OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
             }
 
