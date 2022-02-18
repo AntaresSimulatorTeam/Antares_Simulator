@@ -242,7 +242,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             AdresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[Interco]);
             AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
 
-            if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES) // use Hurdle Cost ignore = 0
+            if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
             {
                 Var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
@@ -252,7 +252,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                     Xmax[Var] = 0.;
                 else
                 {
-                    if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)   // Interco managed with loop flows
+                    if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
                         Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco]
                                     - ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
                     else

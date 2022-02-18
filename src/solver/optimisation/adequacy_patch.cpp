@@ -25,13 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
 #include "../simulation/simulation.h"
 #include "adequacy_patch.h"
 
 using namespace Antares;
 using namespace Antares::Data;
-
 
 uint SetNTCForAdequacyFirstStep(bool AdequacyFirstStep,
                                 uint StartNodeAdequacyPatchType,
