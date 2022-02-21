@@ -12,7 +12,6 @@ on:
 jobs:
 
   doc_generation:
-    runs-on: ubuntu-latest
     uses: ./.github/workflows/build-userguide.yml
     with:
       artifact_name: pdf-doc
