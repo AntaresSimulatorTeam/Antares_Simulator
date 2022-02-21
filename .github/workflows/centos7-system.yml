@@ -8,6 +8,7 @@ on:
       - features/*
       - fix/*
       - release/*
+      - doc/*
 jobs:
 
   doc_generation:
