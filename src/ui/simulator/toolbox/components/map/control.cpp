@@ -644,6 +644,7 @@ void Control::performActionForSelectedTool()
         refresh();
     }
     pLastSelectedTool = nullptr;
+    pRemoverForSelection = nullptr;
     pMouseAction = mouseActionNone;
 }
 
