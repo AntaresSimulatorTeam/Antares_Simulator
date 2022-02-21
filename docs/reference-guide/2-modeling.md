@@ -389,10 +389,10 @@ In cases where the power system is equipped with phase-shifting transformers who
 
 | Notation             | Explanation                                                                                                        |
 | ------------         | -------------                                                                                                      |
-| \\(\Pi\_{l}^{+shift} \in \mathbb{R}\_{+}\\)  | Maximum positive shifting ability of a device equipping l|
-| \\(\Pi^{+shift} \in \mathbb{R}^L}\\) | Snapshots formed by all positive synchronous deviations \\(\Pi\_{l}^{+shift} \in \mathbb{R}\_{+}\\) |
-| \\(\Pi\_{l}^{+shift} \in \mathbb{R}\_{-}\\)  | Maximum negative shifting ability of a device equipping l|
-| \\(\Pi^{-shift} \in \mathbb{R}^L}\\) | Snapshots formed by all negative synchronous deviations \\(\Pi\_{l}^{-shift} \in \mathbb{R}\_{-}\\) |
+| \\(\Pi\_{l}^{+shift} \in \mathbb{R}\_{+}\\)  | Maximum positive shifting ability of a device equipping link \\(l\\)|
+| \\(\Pi^{+shift} \in \mathbb{R}^{L}\\) | Snapshots formed by all positive synchronous deviations \\(\Pi\_{l}^{+shift} \in \mathbb{R}\_{+}\\) |
+| \\(\Pi\_{l}^{+shift} \in \mathbb{R}\_{-}\\)  | Maximum negative shifting ability of a device equipping link \\(l\\)|
+| \\(\Pi^{-shift} \in \mathbb{R}^{L}\\) | Snapshots formed by all negative synchronous deviations \\(\Pi\_{l}^{-shift} \in \mathbb{R}\_{-}\\) |
 
 The enhancement of the model with a representation of the phase-shifting components of the real system then requires to re-formulate as follows the binding constraints defined in 7.2:
 
