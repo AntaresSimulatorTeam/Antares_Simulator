@@ -281,6 +281,7 @@ private:
     {
        if (pMapActiveLayer)
            pMapActiveLayer->addNewNode(N);
+       setFocus();
     }
 
     void onToggleMouseSelectionArea(void*);

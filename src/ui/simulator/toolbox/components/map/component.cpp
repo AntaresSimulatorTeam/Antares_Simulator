@@ -903,6 +903,7 @@ void Component::onNew(void*)
 {
     if (pMapActiveLayer)
         pMapActiveLayer->addNewNode();
+    setFocus();
 }
 
 void Component::evtPopupCopy(wxCommandEvent&)

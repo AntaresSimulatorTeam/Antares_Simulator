@@ -1211,6 +1211,7 @@ void Control::keyPressed(wxKeyEvent& evt)
             removeTools(Tool::lifeSpanMouseSelection);
             pMouseAction = mouseActionNone;
             pLastSelectedTool = nullptr;
+            pRemoverForSelection = nullptr;
             refresh();
         }
         break;
