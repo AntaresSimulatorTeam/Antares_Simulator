@@ -36,6 +36,7 @@
 #include "nodes/bindingconstraint.h"
 
 #include "controls/addtools.h"
+#include "tools/remover.h"
 #include "component.h"
 #include "../../../application/main/main.h"
 #include "../../../windows/inspector.h"
@@ -475,7 +476,7 @@ void Control::addToolsForCurrentSelection()
           nodes.selectedItemsAsConnectionCount(),
           wxPoint(pSelectionBox.first.x + 1, pSelectionBox.first.y + 2),
           wxPoint(pSelectionBox.first.x + 4, pSelectionBox.first.y + pSelectionBox.second.y - 1));
-        helper();
+        pRemoverForSelection = helper();
     }
 }
 
@@ -689,6 +690,7 @@ void Control::mouseLeftDown(wxMouseEvent&)
                     nodes.unselectAll();
                     pSelectionBox.first = pCurrentMousePositionGraph;
                     pSelectionBox.second = pCurrentMousePositionGraph;
+                    pRemoverForSelection = nullptr;
                     pMouseAction = mouseActionSelectionBox;
                 }
             }
@@ -1196,9 +1198,21 @@ void Control::keyPressed(wxKeyEvent& evt)
         pMouseAction = mouseActionNone;
         pLastSelectedTool = nullptr;
         refresh();
+        break;
     }
     case WXK_DELETE:
     {
+        if (pRemoverForSelection
+            && pRemoverForSelection->onMouseUp(pCurrentMousePositionGraph.x,
+                                               pCurrentMousePositionGraph.y))
+        {
+            pSelectionBox.second.x = 0;
+            pSelectionBox.second.y = 0;
+            removeTools(Tool::lifeSpanMouseSelection);
+            pMouseAction = mouseActionNone;
+            pLastSelectedTool = nullptr;
+            refresh();
+        }
         break;
     }
     case WXK_CONTROL:
