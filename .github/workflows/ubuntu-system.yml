@@ -10,6 +10,11 @@ on:
       - release/*
 jobs:
 
+  doc_generation:
+    uses: ./.github/workflows/build-userguide.yml
+    with:
+      artifact_name: pdf-doc
+
   build:
 
     runs-on: ${{ matrix.os }}
@@ -38,6 +43,12 @@ jobs:
       with: 
         path: 'antares-deps-version.json'
         prop_path: 'antares_deps_version'
+
+    - name: Download userguide
+      uses: actions/download-artifact@v2
+      with:
+        name: pdf-doc
+        path: docs/ref_guides
         
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
