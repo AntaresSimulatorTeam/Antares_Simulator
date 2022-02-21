@@ -711,8 +711,8 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             {
                 // Copper plate mode
                 auto infinity = +std::numeric_limits<double>::infinity();
-                link.directCapacities.fillColumn(0, +infinity);
-                link.indirectCapacities.fillColumn(0, +infinity);
+                link.directCapacities.fill(+infinity);
+                link.indirectCapacities.fill(+infinity);
                 break;
             }
             }
