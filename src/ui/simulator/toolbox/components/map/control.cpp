@@ -36,7 +36,6 @@
 #include "nodes/bindingconstraint.h"
 
 #include "controls/addtools.h"
-#include "tools/remover.h"
 #include "component.h"
 #include "../../../application/main/main.h"
 #include "../../../windows/inspector.h"
