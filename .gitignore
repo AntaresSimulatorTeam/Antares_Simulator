@@ -79,3 +79,4 @@ buildDebian
 
 # pytest
 __pycache__
+venv/
