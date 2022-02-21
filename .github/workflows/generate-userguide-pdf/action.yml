@@ -13,10 +13,10 @@ runs:
     - id: create
       shell: bash
       run: |
-        PDF_NAME=antares-UserGuide.pdf
+        PDF_NAME=antares-general-reference-guide.pdf
         cd docs/pdf-doc-generation-with-sphinx
         bash create_pdf_doc.sh $PDF_NAME
         mv antaressimulatoruserguide.pdf $PDF_NAME
-        PDF_PATH=docs/pdf-doc-generation-with-sphinx/$PDF_NAME
+        PDF_PATH=docs/$PDF_NAME
         echo "::set-output name=pdf-path::$PDF_PATH"
         echo "::set-output name=pdf-name::$PDF_NAME"
