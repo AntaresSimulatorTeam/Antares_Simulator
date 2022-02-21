@@ -62,15 +62,13 @@ Note that this independency assumption may sometimes be too lax, because in many
 1. Use of an economic signal (typically, a shadow ";water value";) yielded by an external preliminary stochastic dynamic programming optimization of the use of energy-constrained resources.
 2. Use of heuristics that provide an assessment of the relevant energy credits that should be used for each period, fitted so as to accommodate with sufficient versatility different operational rules.
 
-Quite different is the situation that prevails in expansion studies, in which weekly problems cannot at all be separated from a formal standpoint, because new assets should be paid for all year-long, regardless of the fact that they are used or not during such or such week : the generic expansion problem encompasses therefore all the weeks of all the Monte-Carlo years at the same time. It will be further denoted \\(\mathcal{P}\\).
+Quite different is the situation that prevails in expansion studies, in which weekly problems cannot at all be separated from a formal standpoint, because new assets should be paid for all year-long, regardless of the fact that they are used or not during such or such week : the generic expansion problem encompasses therefore all the weeks of all the Monte-Carlo years at the same time. More details can be found in the Antares Xpansion documentation.
 
 The next sections of this document develop the following subjects:
 
-- Notations used for \\(\mathcal{P}^k\\) and \\(\mathcal{P}\\)
+- Notations used for \\(\mathcal{P}^k\\)
 
 - Formulation of \\(\mathcal{P}^k\\)
-
-- Formulation of \\(\mathcal{P}\\)
 
 - Complements to the standard problems (how to make **Antares\_Simulator** work as a SCOPF )
 
@@ -172,7 +170,7 @@ The next sections of this document develop the following subjects:
 
 ### 3.5 Binding constraints
 
-In both \\(\mathcal{P}^k\\) and \\(\mathcal{P}\\), the need for a versatile modelling of the power system calls for the introduction of an arbitrary number of linear binding constraints between system's variables throughout the grid, expressed either in terms of hourly power, daily energies or weekly energies.
+In problems \\(\mathcal{P}^k\\), the need for a versatile modelling of the power system calls for the introduction of an arbitrary number of linear binding constraints between system's variables throughout the grid, expressed either in terms of hourly power, daily energies or weekly energies.
 These constraints may bind together synchronous flows as well as thermal units power outputs. They may be related to synchronous values or bear on different times.
 Herebelow, the generic notation size is used for the relevant dimension of the set to which parameters belong.
 
@@ -353,42 +351,54 @@ Minimum running and not-running durations contribute to the unit-commitment plan
 
 All constraints to previously defined for regular operation conditions are repeated with replacement of all variables by their twins when they exist.
 
-Besides, in the expression of constraints , all occurrences of are replaced by
+Besides, in the expression of constraints , all occurrences of are replaced by D_n + S_n$$
 
-## 5 Formulation of problem
+## 5 Antares as a SCOPF ("flow-based model")
 
-### 5.1 Objective
-FIXME
-
-### 5.2 Constraints
-
-## 6 Antares as a SCOPF ("FB model")
-
-When problems and do not include any instance of so-called ";binding constraints"; and if no market pools are defined, the flows within the grid are only committed to meet the bounds set on the initial transmission capacities, potentially reinforced by investments (problem ).In other words, there are no electrical laws enforcing any particular pattern on the flows, even though hurdles costs and may influence flow directions through an economic signal.
+When problems \\(\mathcal{P}^k\\) do not include any instance of so-called ";binding constraints"; and if no market pools are defined, the flows within the grid are only committed to meet the bounds set on the initial transmission capacities, potentially reinforced by investments (problem ).In other words, there are no electrical laws enforcing any particular pattern on the flows, even though hurdles costs and may influence flow directions through an economic signal.
 
 In the general case, such a raw backbone model is a very simplified representation of a real power system whose topology and consistency are much more complex. While the full detailed modeling of the system within Antares is most often out of the question, it may happen that additional data and/or observations can be incorporated in the problems solved by the software.
 
 In a particularly favorable case, various upstream studies, taking account the detailed system characteristics in different operation conditions (generating units outages and/or grid components outages N, N-1 , N-k,…) may prove able to provide a translation of all relevant system limits as a set of additional linear constraints on the power flowing on the graph handled by Antares.
 
-These can therefore be readily translated as ";hourly binding constraints";, without any loss of information. This kind of model will be further referred to as a "FB model". Its potential downside is the fact that data may prove to be volatile in short-term studies and difficult to assess in long-term studies.
+These can therefore be readily translated as ";hourly binding constraints";, without any loss of information. This kind of model will be further referred to as a "flow-based model". Its potential downside is the fact that data may prove to be volatile in short-term studies and difficult to assess in long-term studies.
 
 ## 7 Antares as a SCOPF ("KL model")
 
-When a full FB model cannot be set up (lack of robust data for the relevant horizon), it remains possible that classical power system studies carried on the detailed system yield sufficient information to enrich the raw backbone model. An occurrence of particular interest is when these studies show that the physics of the active power flow within the real system can be valuably approached by considering that the edges of behave as simple impedances .This model can be further improved if a residual (passive) loop flow is to be expected on the real system when all nodes have a zero net import and export balance (situation typically encountered when individual nodes actually represent large regions of the real system). This passive loop flow should therefore be added to the classical flow dictated by Kirchhoff's rules on the basis of impedances . This model will be further referred to as a "KL model". Different categories of binding constraints, presented hereafter, make it possible to implement this feature in and
+When a full flow-based model cannot be set up (lack of robust data for the relevant horizon), it remains possible that classical power system studies carried on the detailed system yield sufficient information to enrich the raw backbone model. An occurrence of particular interest is when these studies show that the physics of the active power flow within the real system can be valuably approached by considering that the edges of behave as simple impedances .This model can be further improved if a residual (passive) loop flow is to be expected on the real system when all nodes have a zero net import and export balance (situation typically encountered when individual nodes actually represent large regions of the real system). This passive loop flow should therefore be added to the classical flow dictated by Kirchhoff's rules on the basis of impedances . This model will be further referred to as a "KL model". Different categories of binding constraints, presented hereafter, make it possible to implement this feature in and
 
 ### 7.1 Implementation of Kirchhoff's second law
 
-The implementation ofKirchhoff's second law for the reference state calls for the following additional hourly binding constraints:
+The implementation ofKirchhoff's second law for the reference state calls for the following additional hourly binding \\(L+1-N\\) constraints:
+
+\\(
+\forall t \in T, C\_{g}^t Diag(Z\_{l}) \tilde{F}\_{t} = 0
+\\)
 
 ### 7.2 Implementation of a passive loop flow
 
 In cases where a residual passive loop flow should be incorporated in the model to complete the enforcement of regular Kirchhoff's rules, the binding constraints mentioned in 7.1 should be replaced by:
 
+\\(
+\forall t \in T, C\_{g}^t Diag(Z\_{l}) \tilde{F}\_{t} = C\_{g}^t Diag(Z\_{l}) \tilde{\phi}\_{t}
+\\)
+
 ### 7.3 Modelling of phase-shifting transformers
 
 In cases where the power system is equipped with phase-shifting transformers whose ratings are known, ad hoc classical power studies can be carried out to identify the minimum and maximum flow deviations and phase-shift that each component may induce on the grid. The following additional notations are in order:
 
+| Notation             | Explanation                                                                                                        |
+| ------------         | -------------                                                                                                      |
+| \\(\Pi\_{l}^{+shift} \in \mathbb{R}\_{+}\\)  | Maximum positive shifting ability of a device equipping l|
+| \\(\Pi^{+shift} \in \mathbb{R}^L}\\) | Snapshots formed by all positive synchronous deviations \\(\Pi\_{l}^{+shift} \in \mathbb{R}\_{+}\\) |
+| \\(\Pi\_{l}^{+shift} \in \mathbb{R}\_{-}\\)  | Maximum negative shifting ability of a device equipping l|
+| \\(\Pi^{-shift} \in \mathbb{R}^L}\\) | Snapshots formed by all negative synchronous deviations \\(\Pi\_{l}^{-shift} \in \mathbb{R}\_{-}\\) |
+
 The enhancement of the model with a representation of the phase-shifting components of the real system then requires to re-formulate as follows the binding constraints defined in 7.2:
+
+\\(
+\forall t \in T, C\_{g}^t Diag(Z\_{l}) \tilde{\phi}\_{t} - \Pi^{-shift} \leq C\_{g}^t Diag(Z\_{l}) \tilde{F}\_{t} \leq C\_{g}^t Diag(Z\_{l}) \tilde{\phi}\_{t} + \Pi^{+shift}
+\\)
 
 ### 7.4 Modelling of DC components
 
@@ -410,11 +420,7 @@ To work appropriately, such a hybrid model needs an additional auxiliary layer t
 
 ## 9 Miscellaneous
 
-### 9.1 Modelling of generation investments in
-
-The assessment of the desired level of expansion of any segment of the generating fleet can be carried out with a model in which the potential reinforcements of the fleet are assumed to be actually commissioned from the start but located on virtual nodes connected to the real system through virtual lines with a zero initial capacity. Relevant generation assets costs and capacities should then be assigned to the virtual connections, and the investment in new generation can be optimized ";by proxy"; through the identification of the optimal expansion of the virtual connections.
-
-### 9.2 Modelling of pumped storage power plants
+### 9.1 Modelling of pumped storage power plants
 
 A number of specific equipments, as well as particular operation rules or commercial agreements, can be modelled with appropriate use of binding constraints. A typical case is that of a pumped storage power plant operated with a daily or weekly cycle. Such a component can be modelled as a set of two virtual nodes connected to the real grid through one-way lines. On one node is attached a virtual load with zero VOLL, which may absorb power from the system. On the other node is installed a virtual generating unit with zero operation cost, which may send power to the system. The flows on the two virtual lines are bound together by a daily or weekly constraint (depending on the PSP cycle duration), with a weight set to fit the PSP efficiency ratio. Besides, time offsets may be included in the constraints to take into account considerations regarding the volume of the PSP reservoir (additional energy constraint).
 
