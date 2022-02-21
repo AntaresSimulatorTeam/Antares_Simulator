@@ -179,6 +179,7 @@ void Control::reset()
 
     // Delete all tools to avoid persistent tools after reloading a study
     pLastSelectedTool = nullptr;
+    pRemoverForSelection = nullptr;
     removeTools();
 }
 
