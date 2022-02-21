@@ -11,10 +11,6 @@ def study_path(request):
     return request.param
 
 @pytest.fixture
-def checkFactory(study_path):
-    return check_factory(study_path)
-
-@pytest.fixture
 def studyExecutionFactory(study_path, solver_path, use_ortools, ortools_solver):
     return study_execution_factory(study_path, solver_path, use_ortools, ortools_solver)
 
@@ -47,14 +43,15 @@ def setup(studyExecutionFactory, checks):
 ## TESTS ##
 @pytest.mark.short
 @pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "short-tests" / "001 One node - passive"], indirect=True)
-def test_1(checkFactory, checks):
-    checks.add(check = checkFactory.get('output_compare'), system = 'win32')
-    checks.add(check = checkFactory.get('integrity_compare'))
-    checks.add(check = checkFactory.get('reservoir_levels'))
+def test_1(checks, study_path):
+    checks.add(check = output_compare(study_path), system = 'win32')
+    checks.add(check = integrity_compare(study_path))
+    checks.add(check = reservoir_levels(study_path))
 
 
 @pytest.mark.short
 @pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "short-tests" / "002 Thermal fleet - Base"], indirect=True)
-def test_2(checkFactory, checks):
-    checks.add(check = checkFactory.get('integrity_compare'), system = 'win32')
-    checks.add(check = checkFactory.get('unfeasible_problem'))
+def test_2(checks, study_path):
+    checks.add(check = integrity_compare(study_path), system = 'win32')
+    checks.add(check = unfeasible_problem(study_path))
+    # raise AssertionError("Comparison failed")
