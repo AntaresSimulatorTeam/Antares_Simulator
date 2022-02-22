@@ -52,6 +52,51 @@ def run_study(solver_path, study_path, use_ortools = False, ortools_solver = "si
     if "Solver returned error" in output[0].decode('utf-8'):
         raise_assertion("Solver returned error")
 
+# ===============================================================
+# Old functions : can be used for generating reference results
+# ===============================================================
+import os
+def searching_all_directories(directory):
+    dir_path = Path(directory)
+    assert(dir_path.is_dir())
+    dir_list = []
+    for x in dir_path.iterdir():
+        if x.is_dir():
+            dir_list.append(x)
+    return dir_list
+
+def find_output_result_dir(output_dir):
+    list_output_dir = searching_all_directories(output_dir)
+    assert len(list_output_dir) == 1
+
+    list_dir = searching_all_directories(list_output_dir[0])
+
+    dir_list = []
+    for x in list_dir:
+        dir_path = Path(x)
+        if dir_path.is_dir() and (dir_path.name == "adequacy" or dir_path.name == "economy" or dir_path.name == "adequacy-draft"):
+            dir_list.append(x)
+    assert len(dir_list) == 1
+    return dir_list[0]
+def generate_reference_values(solver_path, path, use_ortools, ortools_solver):
+
+    enable_study_output(path,True)
+
+    reference_path = path / 'reference'
+    if os.path.isdir(reference_path):
+        shutil.rmtree(reference_path)
+
+    os.makedirs(reference_path, exist_ok=True)
+    run_study(solver_path,path, use_ortools, ortools_solver)
+
+    output_path = path / 'output'
+
+    result_dir = find_output_result_dir(output_path)
+    shutil.copytree(result_dir, reference_path / 'output' / result_dir.name)
+# ===============================================================
+# End old functions
+# ===============================================================
+
 def enable_study_output(study_path, enable):
     st = Study(str(study_path))
     st.check_files_existence()
