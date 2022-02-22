@@ -62,6 +62,8 @@ wxString Connection::rowCaption(int row) const
 void Connection::onConnectionChanged(Data::AreaLink* link)
 {
     setMatrix(link);
+    if (link)
+        useLoopFlow = link->useLoopFlow;
     if (pControl)
     {
         pControl->InvalidateBestSize();
@@ -137,24 +139,42 @@ bool connectionParameters::cellValue(int x, int y, const Yuni::String& value)
 
 static bool checkLoopFlow(const Antares::Matrix<>* direct_ntc,
                           const Antares::Matrix<>* indirect_ntc,
-                          double cellvalue,
-                          int row)
+                          double loopflow,
+                          int row,
+                          bool useLoopFlow)
 {
+    if (!useLoopFlow)
+        return true;
+
     for (int ts = 0; ts < direct_ntc->width; ts++)
     {
         const double ntcDirect = direct_ntc->entry[ts][row];
         const double ntcIndirect = indirect_ntc->entry[ts][row];
 
-        if (ntcDirect < cellvalue)
+        if (ntcDirect < loopflow)
         {
             return false;
         }
-        if (cellvalue < 0. && std::abs(cellvalue) > ntcIndirect)
+        if (loopflow < 0. && std::abs(loopflow) > ntcIndirect)
         {
             return false;
         }
     }
     return true;
+}
+
+static bool checkLoopFlowNTCDirect(double ntcDirect, double loopFlow, bool useLoopFlow)
+{
+    if (!useLoopFlow)
+        return true;
+    return ntcDirect >= loopFlow;
+}
+
+static bool checkLoopFlowNTCIndirect(double ntcIndirect, double loopFlow, bool useLoopFlow)
+{
+    if (!useLoopFlow)
+        return true;
+    return (loopFlow >= 0) || (std::abs(loopFlow) <= ntcIndirect);
 }
 
 IRenderer::CellStyle connectionParameters::cellStyle(int col, int row) const
@@ -187,8 +207,8 @@ IRenderer::CellStyle connectionParameters::cellStyle(int col, int row) const
                                 : Renderer::Matrix<>::cellStyle(col, row);
     case Data::fhlLoopFlow:
     {
-        if (!checkLoopFlow(direct_ntc_, indirect_ntc_, cellvalue, row))
-            return IRenderer::cellStyleError;
+        if (!checkLoopFlow(direct_ntc_, indirect_ntc_, cellvalue, row, useLoopFlow))
+            return IRenderer::cellStyleWarning;
         break;
     }
     case Data::fhlPShiftMinus:
@@ -252,8 +272,21 @@ connectionNTCdirect::connectionNTCdirect(wxWindow* parent,
 void connectionNTCdirect::setMatrix(Data::AreaLink* link)
 {
     matrix(link ? &(link->directCapacities) : nullptr);
+    parameters = link ? &(link->parameters) : nullptr;
 }
 
+IRenderer::CellStyle connectionNTCdirect::cellStyle(int col, int row) const
+{
+    if (!parameters)
+        return Renderer::Matrix<>::cellStyle(col, row);
+
+    const double loopFlow = (*parameters)[Data::fhlLoopFlow][row];
+    const double ntcDirect = Renderer::Matrix<>::cellNumericValue(col, row);
+    if (!checkLoopFlowNTCDirect(ntcDirect, loopFlow, useLoopFlow))
+        return IRenderer::cellStyleWarning;
+
+    return Renderer::Matrix<>::cellStyle(col, row);
+}
 // ----------------
 // Indirect
 // ----------------
@@ -265,6 +298,20 @@ connectionNTCindirect::connectionNTCindirect(wxWindow* parent,
 void connectionNTCindirect::setMatrix(Data::AreaLink* link)
 {
     matrix(link ? &(link->indirectCapacities) : nullptr);
+    parameters = link ? &(link->parameters) : nullptr;
+}
+
+IRenderer::CellStyle connectionNTCindirect::cellStyle(int col, int row) const
+{
+    if (!parameters)
+        return Renderer::Matrix<>::cellStyle(col, row);
+
+    const double loopFlow = (*parameters)[Data::fhlLoopFlow][row];
+    const double ntcInirect = Renderer::Matrix<>::cellNumericValue(col, row);
+    if (!checkLoopFlowNTCIndirect(ntcInirect, loopFlow, useLoopFlow))
+        return IRenderer::cellStyleWarning;
+
+    return Renderer::Matrix<>::cellStyle(col, row);
 }
 
 } // namespace Renderer

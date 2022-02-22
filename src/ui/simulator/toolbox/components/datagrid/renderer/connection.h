@@ -92,6 +92,7 @@ public:
 
 protected:
     wxWindow* pControl;
+    bool useLoopFlow = false;
 
 private:
     virtual void setMatrix(Data::AreaLink* link) = 0;
@@ -137,9 +138,11 @@ class connectionNTCdirect : public connectionNTC
 public:
     connectionNTCdirect(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
     ~connectionNTCdirect() override = default;
+    IRenderer::CellStyle cellStyle(int col, int row) const override;
 
 private:
     void setMatrix(Data::AreaLink* link) override;
+    Antares::Matrix<>* parameters;
 };
 
 // ----------------
@@ -150,9 +153,11 @@ class connectionNTCindirect : public connectionNTC
 public:
     connectionNTCindirect(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
     ~connectionNTCindirect() override = default;
+    IRenderer::CellStyle cellStyle(int col, int row) const override;
 
 private:
     void setMatrix(Data::AreaLink* link) override;
+    Antares::Matrix<>* parameters;
 };
 
 } // namespace Renderer
