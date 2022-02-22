@@ -98,6 +98,13 @@ void linkNTCgrid::add(wxBoxSizer* sizer,
     gridIndirect->setOtherGrid(gridDirect);
 }
 
+// Events to update a link property in all Interconnection objects (upper banner for any link view) 
+Yuni::Event<void(Antares::Data::AreaLink*)> onTransmissionCapacitiesUsageChanges;
+Yuni::Event<void(Antares::Data::AreaLink*)> onHurdleCostsUsageChanges;
+Yuni::Event<void(Antares::Data::AreaLink*)> onAssetTypeChanges;
+Yuni::Event<void(Antares::Data::AreaLink*)> onLinkCaptionChanges;
+
+
 Interconnection::Interconnection(wxWindow* parent,
                                  Toolbox::InputSelector::Connections* notifier,
                                  linkGrid* link_grid) :
@@ -148,6 +155,7 @@ Interconnection::Interconnection(wxWindow* parent,
         sizer_flex_grid->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
     }
     // Caption
+    onLinkCaptionChanges.connect(this, &Interconnection::updateLinkCaption);
     {
         label = Component::CreateLabel(pLinkData, wxT("Caption"), false, true);
         button = new_check_allocation<Component::Button>(pLinkData,
@@ -168,6 +176,7 @@ Interconnection::Interconnection(wxWindow* parent,
     }
 
     // Hurdle costs
+    onHurdleCostsUsageChanges.connect(this, &Interconnection::updateHurdleCostsUsage);
     {
         label = Component::CreateLabel(pLinkData, wxT("Local values"), false, true);
         button = new_check_allocation<Component::Button>(
@@ -179,7 +188,9 @@ Interconnection::Interconnection(wxWindow* parent,
         sizer_flex_grid->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pHurdlesCost = button;
     }
+
     // Transmission capacities
+    onTransmissionCapacitiesUsageChanges.connect(this, &Interconnection::updateTransmissionCapacityUsage);
     {
         button = new_check_allocation<Component::Button>(
           pLinkData, wxT("Transmission capacities"), "images/16x16/light_green.png");
@@ -191,6 +202,7 @@ Interconnection::Interconnection(wxWindow* parent,
         pCopperPlate = button;
     }
     // Asset Type
+    onAssetTypeChanges.connect(this, &Interconnection::updateAssetType);
     {
         button = new_check_allocation<Component::Button>(
           pLinkData, wxT("Asset type"), "images/16x16/light_green.png");
@@ -279,94 +291,125 @@ void Interconnection::onConnectionChanged(Data::AreaLink* link)
         pLinkName->caption(wxStringFromUTF8(link->from->name)
                            << wxT("  /  ") << wxStringFromUTF8(link->with->name));
 
-        if (pLink->comments.empty())
-        {
-            pGridSizer->Hide(pLabelCaption);
-            pGridSizer->Hide(pCaptionDataSizer);
-        }
-        else
-        {
-            pCaptionText->SetLabel(wxStringFromUTF8(pLink->comments));
-            pGridSizer->Show(pLabelCaption);
-            pGridSizer->Show(pCaptionDataSizer);
-        }
+        updateLinkCaption(link);
 
-        if (link->useHurdlesCost)
-        {
-            pHurdlesCost->caption(wxT("Use hurdles costs"));
-            pHurdlesCost->image("images/16x16/light_green.png");
-        }
-        else
-        {
-            pHurdlesCost->caption(wxT("Ignore hurdles costs"));
-            pHurdlesCost->image("images/16x16/light_orange.png");
-        }
-        if (link->useLoopFlow)
-        {
-            pLoopFlow->caption(wxT("Account for loop flows"));
-            pLoopFlow->image("images/16x16/light_green.png");
-        }
-        else
-        {
-            pLoopFlow->caption(wxT("Ignore loop flows"));
-            pLoopFlow->image("images/16x16/light_orange.png");
-        }
+        updateHurdleCostsUsage(link);
 
-        if (link->usePST)
-        {
-            pPhaseShift->caption(wxT("Tune PST"));
-            pPhaseShift->image("images/16x16/light_green.png");
-        }
-        else
-        {
-            pPhaseShift->caption(wxT("Ignore PST "));
-            pPhaseShift->image("images/16x16/light_orange.png");
-        }
+        updateLoopFlowUsage(link);
 
-        switch (link->transmissionCapacities)
-        {
-        case Data::tncEnabled:
-            pCopperPlate->caption(wxT("Use transmission capacities"));
-            pCopperPlate->image("images/16x16/light_green.png");
-            break;
-        case Data::tncIgnore:
-            pCopperPlate->caption(wxT("Set transmission capacities to null"));
-            pCopperPlate->image("images/16x16/light_orange.png");
-            break;
-        case Data::tncInfinite:
-            pCopperPlate->caption(wxT("Set transmission capacities to infinite"));
-            pCopperPlate->image("images/16x16/infinity.png");
-            break;
-        }
+        updatePhaseShifter(link);
 
-        switch (link->assetType)
-        {
-        case Data::atAC:
-            pAssetType->caption(wxT("Asset type: AC"));
-            pAssetType->image("images/16x16/light_green.png");
-            break;
-        case Data::atDC:
-            pAssetType->caption(wxT("Asset type: DC"));
-            pAssetType->image("images/16x16/light_orange.png");
-            break;
-        case Data::atGas:
-            pAssetType->caption(wxT("Asset type: Gas"));
-            pAssetType->image("images/16x16/light_orange.png");
-            break;
-        case Data::atVirt:
-            pAssetType->caption(wxT("Asset type: Virtual"));
-            pAssetType->image("images/16x16/light_orange.png");
-            break;
-        case Data::atOther:
-            pAssetType->caption(wxT("Asset type: other"));
-            pAssetType->image("images/16x16/light_orange.png");
-            break;
-        }
+        updateTransmissionCapacityUsage(link);
+
+        updateAssetType(link);
     }
 
     sizer->Layout();
     this->FitInside(); // ask the sizer about the needed size
     this->SetScrollRate(5, 5);
+}
+
+void Interconnection::updatePhaseShifter(Antares::Data::AreaLink* link)
+{
+    if (link->usePST)
+    {
+        pPhaseShift->caption(wxT("Tune PST"));
+        pPhaseShift->image("images/16x16/light_green.png");
+    }
+    else
+    {
+        pPhaseShift->caption(wxT("Ignore PST "));
+        pPhaseShift->image("images/16x16/light_orange.png");
+    }
+}
+
+void Interconnection::updateLoopFlowUsage(Antares::Data::AreaLink* link)
+{
+    if (link->useLoopFlow)
+    {
+        pLoopFlow->caption(wxT("Account for loop flows"));
+        pLoopFlow->image("images/16x16/light_green.png");
+    }
+    else
+    {
+        pLoopFlow->caption(wxT("Ignore loop flows"));
+        pLoopFlow->image("images/16x16/light_orange.png");
+    }
+}
+
+void Interconnection::updateLinkCaption(Data::AreaLink* link)
+{
+    if (link->comments.empty())
+    {
+        pGridSizer->Hide(pLabelCaption);
+        pGridSizer->Hide(pCaptionDataSizer);
+    }
+    else
+    {
+        pCaptionText->SetLabel(wxStringFromUTF8(link->comments));
+        pGridSizer->Show(pLabelCaption);
+        pGridSizer->Show(pCaptionDataSizer);
+    }
+}
+
+void Interconnection::updateTransmissionCapacityUsage(Data::AreaLink* link)
+{
+    switch (link->transmissionCapacities)
+    {
+    case Data::tncEnabled:
+        pCopperPlate->caption(wxT("Use transmission capacities"));
+        pCopperPlate->image("images/16x16/light_green.png");
+        break;
+    case Data::tncIgnore:
+        pCopperPlate->caption(wxT("Set transmission capacities to null"));
+        pCopperPlate->image("images/16x16/light_orange.png");
+        break;
+    case Data::tncInfinite:
+        pCopperPlate->caption(wxT("Set transmission capacities to infinite"));
+        pCopperPlate->image("images/16x16/infinity.png");
+        break;
+    }
+}
+
+void Interconnection::updateHurdleCostsUsage(Data::AreaLink* link)
+{
+    if (link->useHurdlesCost)
+    {
+        pHurdlesCost->caption(wxT("Use hurdles costs"));
+        pHurdlesCost->image("images/16x16/light_green.png");
+    }
+    else
+    {
+        pHurdlesCost->caption(wxT("Ignore hurdles costs"));
+        pHurdlesCost->image("images/16x16/light_orange.png");
+    }
+}
+
+void Interconnection::updateAssetType(Antares::Data::AreaLink* link)
+{
+    switch (link->assetType)
+    {
+    case Data::atAC:
+        pAssetType->caption(wxT("Asset type: AC"));
+        pAssetType->image("images/16x16/light_green.png");
+        break;
+    case Data::atDC:
+        pAssetType->caption(wxT("Asset type: DC"));
+        pAssetType->image("images/16x16/light_orange.png");
+        break;
+    case Data::atGas:
+        pAssetType->caption(wxT("Asset type: Gas"));
+        pAssetType->image("images/16x16/light_orange.png");
+        break;
+    case Data::atVirt:
+        pAssetType->caption(wxT("Asset type: Virtual"));
+        pAssetType->image("images/16x16/light_orange.png");
+        break;
+    case Data::atOther:
+        pAssetType->caption(wxT("Asset type: other"));
+        pAssetType->image("images/16x16/light_orange.png");
+        break;
+    }
 }
 
 void Interconnection::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*)
@@ -409,6 +452,7 @@ void Interconnection::onSelectTransCapInclude(wxCommandEvent&)
         onConnectionChanged(pLink);
         MarkTheStudyAsModified();
         OnInspectorRefresh(nullptr);
+        onTransmissionCapacitiesUsageChanges(pLink);
     }
 }
 
@@ -420,6 +464,7 @@ void Interconnection::onSelectTransCapIgnore(wxCommandEvent&)
         onConnectionChanged(pLink);
         MarkTheStudyAsModified();
         OnInspectorRefresh(nullptr);
+        onTransmissionCapacitiesUsageChanges(pLink);
     }
 }
 
@@ -487,6 +532,7 @@ void Interconnection::onSelectAssetTypeAC(wxCommandEvent&)
         onConnectionChanged(pLink);
         MarkTheStudyAsModified();
         OnInspectorRefresh(nullptr);
+        onAssetTypeChanges(pLink);
         pLink->color[0] = 112;
         pLink->color[1] = 112;
         pLink->color[2] = 112;
@@ -503,6 +549,7 @@ void Interconnection::onSelectAssetTypeDC(wxCommandEvent&)
         onConnectionChanged(pLink);
         MarkTheStudyAsModified();
         OnInspectorRefresh(nullptr);
+        onAssetTypeChanges(pLink);
         pLink->color[0] = 0;
         pLink->color[1] = 255;
         pLink->color[2] = 0;
@@ -519,6 +566,7 @@ void Interconnection::onSelectAssetTypeGas(wxCommandEvent&)
         onConnectionChanged(pLink);
         MarkTheStudyAsModified();
         OnInspectorRefresh(nullptr);
+        onAssetTypeChanges(pLink);
         pLink->color[0] = 0;
         pLink->color[1] = 128;
         pLink->color[2] = 255;
@@ -535,6 +583,7 @@ void Interconnection::onSelectAssetTypeVirt(wxCommandEvent&)
         onConnectionChanged(pLink);
         MarkTheStudyAsModified();
         OnInspectorRefresh(nullptr);
+        onAssetTypeChanges(pLink);
         pLink->color[0] = 255;
         pLink->color[1] = 0;
         pLink->color[2] = 128;
@@ -551,6 +600,7 @@ void Interconnection::onSelectAssetTypeOther(wxCommandEvent&)
         onConnectionChanged(pLink);
         MarkTheStudyAsModified();
         OnInspectorRefresh(nullptr);
+        onAssetTypeChanges(pLink);
         pLink->color[0] = 255;
         pLink->color[1] = 128;
         pLink->color[2] = 0;
@@ -588,6 +638,7 @@ void Interconnection::onSelectIncludeHurdlesCosts(wxCommandEvent&)
         onConnectionChanged(pLink);
         MarkTheStudyAsModified();
         OnInspectorRefresh(nullptr);
+        onHurdleCostsUsageChanges(pLink);
     }
 }
 
@@ -599,6 +650,7 @@ void Interconnection::onSelectIgnoreHurdlesCosts(wxCommandEvent&)
         onConnectionChanged(pLink);
         MarkTheStudyAsModified();
         OnInspectorRefresh(nullptr);
+        onHurdleCostsUsageChanges(pLink);
     }
 }
 
@@ -642,6 +694,7 @@ void Interconnection::onButtonEditCaption(void*)
             MarkTheStudyAsModified();
             onConnectionChanged(pLink);
             OnInspectorRefresh(nullptr);
+            onLinkCaptionChanges(pLink);
         }
     }
 }
