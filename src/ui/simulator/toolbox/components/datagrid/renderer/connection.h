@@ -92,7 +92,7 @@ public:
 
 protected:
     wxWindow* pControl;
-    bool useLoopFlow = false;
+    bool mUseLoopFlow = false;
 
 private:
     virtual void setMatrix(Data::AreaLink* link) = 0;
