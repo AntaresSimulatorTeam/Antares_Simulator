@@ -128,6 +128,9 @@ public:
     connectionNTC(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
     ~connectionNTC() override = default;
     bool cellValue(int x, int y, const Yuni::String& value) override;
+
+protected:
+    Antares::Matrix<>::ColumnType* mLoopFlowData = nullptr;
 };
 
 // ----------------
@@ -142,7 +145,6 @@ public:
 
 private:
     void setMatrix(Data::AreaLink* link) override;
-    Antares::Matrix<>* parameters;
 };
 
 // ----------------
@@ -157,7 +159,6 @@ public:
 
 private:
     void setMatrix(Data::AreaLink* link) override;
-    Antares::Matrix<>* parameters;
 };
 
 } // namespace Renderer

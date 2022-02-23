@@ -272,15 +272,15 @@ connectionNTCdirect::connectionNTCdirect(wxWindow* parent,
 void connectionNTCdirect::setMatrix(Data::AreaLink* link)
 {
     matrix(link ? &(link->directCapacities) : nullptr);
-    parameters = link ? &(link->parameters) : nullptr;
+    mLoopFlowData = link ? &(link->parameters[Data::fhlLoopFlow]) : nullptr;
 }
 
 IRenderer::CellStyle connectionNTCdirect::cellStyle(int col, int row) const
 {
-    if (!parameters)
+    if (!mLoopFlowData)
         return Renderer::Matrix<>::cellStyle(col, row);
 
-    const double loopFlow = (*parameters)[Data::fhlLoopFlow][row];
+    const double loopFlow = (*mLoopFlowData)[row];
     const double ntcDirect = Renderer::Matrix<>::cellNumericValue(col, row);
     if (!checkLoopFlowNTCDirect(ntcDirect, loopFlow, mUseLoopFlow))
         return IRenderer::cellStyleWarning;
@@ -298,15 +298,15 @@ connectionNTCindirect::connectionNTCindirect(wxWindow* parent,
 void connectionNTCindirect::setMatrix(Data::AreaLink* link)
 {
     matrix(link ? &(link->indirectCapacities) : nullptr);
-    parameters = link ? &(link->parameters) : nullptr;
+    mLoopFlowData = link ? &(link->parameters[Data::fhlLoopFlow]) : nullptr;
 }
 
 IRenderer::CellStyle connectionNTCindirect::cellStyle(int col, int row) const
 {
-    if (!parameters)
+    if (!mLoopFlowData)
         return Renderer::Matrix<>::cellStyle(col, row);
 
-    const double loopFlow = (*parameters)[Data::fhlLoopFlow][row];
+    const double loopFlow = (*mLoopFlowData)[row];
     const double ntcIndirect = Renderer::Matrix<>::cellNumericValue(col, row);
     if (!checkLoopFlowNTCIndirect(ntcIndirect, loopFlow, mUseLoopFlow))
         return IRenderer::cellStyleWarning;
