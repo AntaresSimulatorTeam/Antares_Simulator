@@ -119,16 +119,16 @@ private:
     void onStudyLinkChanged(Data::AreaLink* link);
 
     // For a given link, update transmission capacity usage 
-    void updateTransmissionCapacityUsage(Data::AreaLink* link);
+    void updateTransmissionCapacityUsage(const Data::AreaLink* link);
     // For a given link, update hurdle costs usage
-    void updateHurdleCostsUsage(Data::AreaLink* link);
+    void updateHurdleCostsUsage(const Data::AreaLink* link);
     // For a given link, update asset type
-    void updateAssetType(Data::AreaLink* link);
+    void updateAssetType(const Data::AreaLink* link);
     // For a given link, update its caption
-    void updateLinkCaption(Data::AreaLink* link);
+    void updateLinkCaption(const Data::AreaLink* link);
 
-    void updateLoopFlowUsage(Antares::Data::AreaLink* link);
-    void updatePhaseShifter(Antares::Data::AreaLink* link);
+    void updateLoopFlowUsage(const Data::AreaLink* link);
+    void updatePhaseShifter(const Data::AreaLink* link);
 
 private:
     //! Pointer to the current link
