@@ -99,10 +99,10 @@ void linkNTCgrid::add(wxBoxSizer* sizer,
 }
 
 // Events to update a link property in all Interconnection objects (upper banner for any link view) 
-Yuni::Event<void(Antares::Data::AreaLink*)> onTransmissionCapacitiesUsageChanges;
-Yuni::Event<void(Antares::Data::AreaLink*)> onHurdleCostsUsageChanges;
-Yuni::Event<void(Antares::Data::AreaLink*)> onAssetTypeChanges;
-Yuni::Event<void(Antares::Data::AreaLink*)> onLinkCaptionChanges;
+Yuni::Event<void(const Antares::Data::AreaLink*)> onTransmissionCapacitiesUsageChanges;
+Yuni::Event<void(const Antares::Data::AreaLink*)> onHurdleCostsUsageChanges;
+Yuni::Event<void(const Antares::Data::AreaLink*)> onAssetTypeChanges;
+Yuni::Event<void(const Antares::Data::AreaLink*)> onLinkCaptionChanges;
 
 
 Interconnection::Interconnection(wxWindow* parent,
@@ -309,7 +309,7 @@ void Interconnection::onConnectionChanged(Data::AreaLink* link)
     this->SetScrollRate(5, 5);
 }
 
-void Interconnection::updatePhaseShifter(Antares::Data::AreaLink* link)
+void Interconnection::updatePhaseShifter(const Data::AreaLink* link)
 {
     if (link->usePST)
     {
@@ -323,7 +323,7 @@ void Interconnection::updatePhaseShifter(Antares::Data::AreaLink* link)
     }
 }
 
-void Interconnection::updateLoopFlowUsage(Antares::Data::AreaLink* link)
+void Interconnection::updateLoopFlowUsage(const Data::AreaLink* link)
 {
     if (link->useLoopFlow)
     {
@@ -337,7 +337,7 @@ void Interconnection::updateLoopFlowUsage(Antares::Data::AreaLink* link)
     }
 }
 
-void Interconnection::updateLinkCaption(Data::AreaLink* link)
+void Interconnection::updateLinkCaption(const Data::AreaLink* link)
 {
     if (link->comments.empty())
     {
@@ -352,7 +352,7 @@ void Interconnection::updateLinkCaption(Data::AreaLink* link)
     }
 }
 
-void Interconnection::updateTransmissionCapacityUsage(Data::AreaLink* link)
+void Interconnection::updateTransmissionCapacityUsage(const Data::AreaLink* link)
 {
     switch (link->transmissionCapacities)
     {
@@ -371,7 +371,7 @@ void Interconnection::updateTransmissionCapacityUsage(Data::AreaLink* link)
     }
 }
 
-void Interconnection::updateHurdleCostsUsage(Data::AreaLink* link)
+void Interconnection::updateHurdleCostsUsage(const Data::AreaLink* link)
 {
     if (link->useHurdlesCost)
     {
@@ -385,7 +385,7 @@ void Interconnection::updateHurdleCostsUsage(Data::AreaLink* link)
     }
 }
 
-void Interconnection::updateAssetType(Antares::Data::AreaLink* link)
+void Interconnection::updateAssetType(const Data::AreaLink* link)
 {
     switch (link->assetType)
     {
