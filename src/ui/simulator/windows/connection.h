@@ -34,6 +34,8 @@
 #include "../toolbox/components/button.h"
 #include <wx/sizer.h>
 
+#include "../application/menus.h"
+
 namespace Antares
 {
 namespace Window
@@ -78,6 +80,159 @@ public:
              Toolbox::InputSelector::Connections* notifier) override;
 };
 
+
+
+class NTCusage : public wxFrame
+{
+public:
+    Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)> onPopup;
+public:
+    NTCusage() = default;
+    ~NTCusage() = default;
+
+    void addParent(wxWindow* parent)
+    {
+        parents_.push_back(parent);
+        button_ = new Component::Button(parent, wxT("Transmission capacities"), icon_);
+        button_->menu(true);
+        onPopup.bind(this, &NTCusage::onPopupMenuTransmissionCapacities);
+        button_->onPopupMenu(onPopup);
+    }
+    void addPage(wxWindow* page)
+    {
+        pages_.push_back(page);
+    }
+    void addToSizer(wxFlexGridSizer* sizer)
+    {
+        sizer->AddSpacer(10);
+        sizer->Add(button_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+    }
+
+    void update(Data::AreaLink* link)
+    {
+        currentLink_ = link;
+
+        switch (link->transmissionCapacities)
+        {
+        case Data::tncEnabled:
+            button_->caption(wxT("Use transmission capacities"));
+            button_->image("images/16x16/light_green.png");
+            break;
+        case Data::tncIgnore:
+            button_->caption(wxT("Set transmission capacities to null"));
+            button_->image("images/16x16/light_orange.png");
+            break;
+        case Data::tncInfinite:
+            button_->caption(wxT("Set transmission capacities to infinite"));
+            button_->image("images/16x16/infinity.png");
+            break;
+        }
+        // button_->Refresh(); // Does not refresh the other tab
+    }
+
+    bool isEmpty()
+    {
+        return !button_;
+    }
+
+private:
+    void onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*)
+    {
+        wxMenuItem* it;
+
+        it = Menu::CreateItem(&menu,
+            wxID_ANY,
+            wxT("Use transmission capacities"),
+            "images/16x16/light_green.png",
+            wxEmptyString);
+        menu.Connect(it->GetId(),
+            wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler(NTCusage::onSelectTransCapInclude),
+            nullptr,
+            this);
+
+        it = Menu::CreateItem(
+            &menu, wxID_ANY, wxT("Set to null"), "images/16x16/light_orange.png", wxEmptyString);
+        menu.Connect(it->GetId(),
+            wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler(NTCusage::onSelectTransCapIgnore),
+            nullptr,
+            this);
+
+        it = Menu::CreateItem(
+            &menu, wxID_ANY, wxT("Set to infinite"), "images/16x16/infinity.png", wxEmptyString);
+        menu.Connect(it->GetId(),
+            wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler(NTCusage::onSelectTransCapInfinite),
+            nullptr,
+            this);
+    }
+
+    void onSelectTransCapInclude(wxCommandEvent&)
+    {
+        if (!currentLink_)
+            return;
+
+        currentLink_->transmissionCapacities = Data::tncEnabled;
+        update(currentLink_);
+
+        /*
+        for (std::vector<wxWindow*>::iterator it = parents_.begin(); it != parents_.end(); it++)
+            (*it)->Refresh();
+        for (std::vector<wxWindow*>::iterator it = pages_.begin(); it != pages_.end(); it++)
+            (*it)->Refresh();
+        */
+
+        MarkTheStudyAsModified();
+        OnInspectorRefresh(nullptr);
+    }
+
+    void onSelectTransCapIgnore(wxCommandEvent&)
+    {
+        if (!currentLink_)
+            return;
+
+        currentLink_->transmissionCapacities = Data::tncIgnore;
+        update(currentLink_);
+
+        /*
+        for (std::vector<wxWindow*>::iterator it = parents_.begin(); it != parents_.end(); it++)
+            (*it)->Refresh();
+        for (std::vector<wxWindow*>::iterator it = pages_.begin(); it != pages_.end(); it++)
+            (*it)->Refresh();
+        */
+
+        MarkTheStudyAsModified();
+        OnInspectorRefresh(nullptr);
+    }
+
+    void onSelectTransCapInfinite(wxCommandEvent&)
+    {
+        if (!currentLink_)
+            return;
+        currentLink_->transmissionCapacities = Data::tncInfinite;
+        update(currentLink_);
+
+        /*
+        for (std::vector<wxWindow*>::iterator it = parents_.begin(); it != parents_.end(); it++)
+            (*it)->Refresh();
+        for (std::vector<wxWindow*>::iterator it = pages_.begin(); it != pages_.end(); it++)
+            (*it)->Refresh();
+        */
+
+        MarkTheStudyAsModified();
+        OnInspectorRefresh(nullptr);
+    }
+
+private:
+    std::vector<wxWindow*> parents_;
+    std::vector<wxWindow*> pages_;
+    wxString caption_ = wxT("Transmission capacities");
+    const char* icon_ = "images/16x16/light_green.png";
+    Component::Button* button_ = nullptr;
+    Data::AreaLink* currentLink_ = nullptr;
+};
+
 class Interconnection : public wxScrolledWindow, public Yuni::IEventObserver<Interconnection>
 {
 public:
@@ -85,7 +240,7 @@ public:
     //@{
     Interconnection(wxWindow* parent,
                     Toolbox::InputSelector::Connections* notifier,
-                    linkGrid* link_grid);
+                    linkGrid* link_grid, NTCusage* ntc_usage);
     //! Destructor
     virtual ~Interconnection();
     //@}
@@ -146,7 +301,8 @@ private:
     // !Phase shifter
     Component::Button* pPhaseShift;
     //! Copper Plate
-    Component::Button* pCopperPlate;
+    // Component::Button* pCopperPlate;
+    NTCusage* ntc_usage_ = nullptr;
     //! Asset type
     Component::Button* pAssetType;
     //! Caption

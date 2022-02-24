@@ -114,14 +114,15 @@ Yuni::Event<void(const Antares::Data::AreaLink*)> onLinkCaptionChanges;
 
 Interconnection::Interconnection(wxWindow* parent,
                                  Toolbox::InputSelector::Connections* notifier,
-                                 linkGrid* link_grid) :
+                                 linkGrid* link_grid, NTCusage* ntc_usage) :
  wxScrolledWindow(parent),
  pLink(nullptr),
  pLinkName(),
  pHurdlesCost(nullptr),
  pLoopFlow(nullptr),
  pPhaseShift(nullptr),
- pCopperPlate(nullptr),
+ // pCopperPlate(nullptr),
+ ntc_usage_(ntc_usage),
  pAssetType(nullptr)
 {
     auto* mainsizer = new_check_allocation<wxBoxSizer>(wxVERTICAL);
@@ -139,20 +140,19 @@ Interconnection::Interconnection(wxWindow* parent,
     wxFlexGridSizer* sizer_flex_grid = new_check_allocation<wxFlexGridSizer>(0, 0, 10);
     pGridSizer = sizer_flex_grid;
     sizer_flex_grid->AddGrowableCol(1, 0);
-    auto* gridHZ = new_check_allocation<wxBoxSizer>(wxHORIZONTAL);
-    gridHZ->AddSpacer(20);
-    gridHZ->Add(sizer_flex_grid, 0, wxALL | wxEXPAND);
-    sizer_vertical->Add(gridHZ, 0, wxALL | wxEXPAND, 6);
+    auto* sizer_horizontal = new_check_allocation<wxBoxSizer>(wxHORIZONTAL);
+    sizer_horizontal->AddSpacer(20);
+    sizer_horizontal->Add(sizer_flex_grid, 0, wxALL | wxEXPAND);
+    sizer_vertical->Add(sizer_horizontal, 0, wxALL | wxEXPAND, 6);
 
     wxStaticText* label;
     Component::Button* button;
     Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)> onPopup;
 
-    // Binding constraints
+    // Link caption
     {
         label = Component::CreateLabel(pLinkData, wxT("Link"), false, true);
-        button = new_check_allocation<Component::Button>(
-          pLinkData, wxT("local values"), "images/16x16/link.png");
+        button = new_check_allocation<Component::Button>(pLinkData, wxT("local values"), "images/16x16/link.png");
         button->menu(true);
         button->bold(true);
         onPopup.bind(this, &Interconnection::onPopupMenuLink);
@@ -196,6 +196,7 @@ Interconnection::Interconnection(wxWindow* parent,
         pHurdlesCost = button;
     }
 
+    /*
     // Transmission capacities
     onTransmissionCapacitiesUsageChanges.connect(this, &Interconnection::updateTransmissionCapacityUsage);
     {
@@ -208,6 +209,11 @@ Interconnection::Interconnection(wxWindow* parent,
         sizer_flex_grid->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pCopperPlate = button;
     }
+    */
+    ntc_usage_->addParent(pLinkData);
+    ntc_usage_->addPage(parent);
+    ntc_usage_->addToSizer(sizer_flex_grid);
+
     // Asset Type
     onAssetTypeChanges.connect(this, &Interconnection::updateAssetType);
     {
@@ -275,7 +281,7 @@ bool Interconnection::checkLinkView(Data::AreaLink* link)
     if (not sizer)
         return false;
 
-    if (not pLinkName || not pHurdlesCost || not pCopperPlate)
+    if (not pLinkName || not pHurdlesCost || ntc_usage_->isEmpty())
     {
         pLink = nullptr;
         sizer->Hide(pLinkData);
@@ -323,7 +329,8 @@ void Interconnection::updateLinkView(Data::AreaLink* link)
 
     updatePhaseShifter(link);
 
-    updateTransmissionCapacityUsage(link);
+    // updateTransmissionCapacityUsage(link);
+    ntc_usage_->update(link);
 
     updateAssetType(link);
 
@@ -384,6 +391,7 @@ void Interconnection::updateLinkCaption(const Data::AreaLink* link)
     }
 }
 
+/*
 void Interconnection::updateTransmissionCapacityUsage(const Data::AreaLink* link)
 {
     switch (link->transmissionCapacities)
@@ -402,6 +410,7 @@ void Interconnection::updateTransmissionCapacityUsage(const Data::AreaLink* link
         break;
     }
 }
+*/
 
 void Interconnection::updateHurdleCostsUsage(const Data::AreaLink* link)
 {
@@ -444,6 +453,7 @@ void Interconnection::updateAssetType(const Data::AreaLink* link)
     }
 }
 
+/*
 void Interconnection::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*)
 {
     wxMenuItem* it;
@@ -508,6 +518,7 @@ void Interconnection::onSelectTransCapInfinite(wxCommandEvent&)
     MarkTheStudyAsModified();
     OnInspectorRefresh(nullptr);
 }
+*/
 
 void Interconnection::onPopupMenuAssetType(Component::Button&, wxMenu& menu, void*)
 {
