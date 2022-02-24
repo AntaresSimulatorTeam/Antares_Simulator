@@ -118,6 +118,10 @@ private:
 
     void onStudyLinkChanged(Data::AreaLink* link);
 
+    bool checkLinkView(Data::AreaLink* link);
+    void updateLinkView(Data::AreaLink* link);
+    void finalizeView();
+
     // For a given link, update transmission capacity usage 
     void updateTransmissionCapacityUsage(const Data::AreaLink* link);
     // For a given link, update hurdle costs usage

@@ -258,51 +258,76 @@ Interconnection::~Interconnection()
 
 void Interconnection::onConnectionChanged(Data::AreaLink* link)
 {
+    if (checkLinkView(link))
+        updateLinkView(link);
+}
+
+bool Interconnection::checkLinkView(Data::AreaLink* link)
+{
     auto* sizer = GetSizer();
     if (not sizer)
-        return;
+        return false;
 
     if (not pLinkName || not pHurdlesCost || not pCopperPlate)
     {
         pLink = nullptr;
         sizer->Hide(pLinkData);
         sizer->Show(pNoLink);
-        return;
+        return false;
     }
 
     if (not link)
     {
         if (not pLink) // already well set - avoid useless refresh
-            return;
+            return false;
         pLinkName->caption(wxEmptyString);
         pLink = nullptr;
         sizer->Hide(pLinkData);
         sizer->Show(pNoLink);
+        finalizeView();
+        return false;
     }
-    else
-    {
-        assert(link->from);
-        assert(link->with);
 
-        pLink = link;
-        sizer->Show(pLinkData);
-        sizer->Hide(pNoLink);
+    return true;
+}
 
-        pLinkName->caption(wxStringFromUTF8(link->from->name)
-                           << wxT("  /  ") << wxStringFromUTF8(link->with->name));
 
-        updateLinkCaption(link);
+void Interconnection::updateLinkView(Data::AreaLink* link)
+{
+    assert(link->from);
+    assert(link->with);
 
-        updateHurdleCostsUsage(link);
+    auto* sizer = GetSizer();
+    if (not sizer)
+        return;
 
-        updateLoopFlowUsage(link);
+    pLink = link;
+    sizer->Show(pLinkData);
+    sizer->Hide(pNoLink);
 
-        updatePhaseShifter(link);
+    pLinkName->caption(wxStringFromUTF8(link->from->name)
+        << wxT("  /  ") << wxStringFromUTF8(link->with->name));
 
-        updateTransmissionCapacityUsage(link);
+    updateLinkCaption(link);
 
-        updateAssetType(link);
-    }
+    updateHurdleCostsUsage(link);
+
+    updateLoopFlowUsage(link);
+
+    updatePhaseShifter(link);
+
+    updateTransmissionCapacityUsage(link);
+
+    updateAssetType(link);
+
+    finalizeView();
+}
+
+void Interconnection::finalizeView()
+{
+    auto* sizer = GetSizer();
+    if (not sizer)
+        return;
 
     sizer->Layout();
     this->FitInside(); // ask the sizer about the needed size
@@ -446,37 +471,35 @@ void Interconnection::onPopupMenuTransmissionCapacities(Component::Button&, wxMe
 
 void Interconnection::onSelectTransCapInclude(wxCommandEvent&)
 {
-    if (pLink && pLink->transmissionCapacities != Data::tncEnabled)
-    {
-        pLink->transmissionCapacities = Data::tncEnabled;
-        onConnectionChanged(pLink);
-        MarkTheStudyAsModified();
-        OnInspectorRefresh(nullptr);
-        onTransmissionCapacitiesUsageChanges(pLink);
-    }
+    if (!pLink)
+        return;
+
+    pLink->transmissionCapacities = Data::tncEnabled;
+    onTransmissionCapacitiesUsageChanges(pLink);
+    MarkTheStudyAsModified();
+    OnInspectorRefresh(nullptr);
 }
 
 void Interconnection::onSelectTransCapIgnore(wxCommandEvent&)
 {
-    if (pLink && pLink->transmissionCapacities != Data::tncIgnore)
-    {
-        pLink->transmissionCapacities = Data::tncIgnore;
-        onConnectionChanged(pLink);
-        MarkTheStudyAsModified();
-        OnInspectorRefresh(nullptr);
-        onTransmissionCapacitiesUsageChanges(pLink);
-    }
+    if (!pLink)
+        return;
+
+    pLink->transmissionCapacities = Data::tncIgnore;
+    onTransmissionCapacitiesUsageChanges(pLink);
+    MarkTheStudyAsModified();
+    OnInspectorRefresh(nullptr);
 }
 
 void Interconnection::onSelectTransCapInfinite(wxCommandEvent&)
 {
-    if (pLink && pLink->transmissionCapacities != Data::tncInfinite)
-    {
-        pLink->transmissionCapacities = Data::tncInfinite;
-        onConnectionChanged(pLink);
-        MarkTheStudyAsModified();
-        OnInspectorRefresh(nullptr);
-    }
+    if (!pLink)
+        return;
+
+    pLink->transmissionCapacities = Data::tncInfinite;
+    onTransmissionCapacitiesUsageChanges(pLink);
+    MarkTheStudyAsModified();
+    OnInspectorRefresh(nullptr);
 }
 
 void Interconnection::onPopupMenuAssetType(Component::Button&, wxMenu& menu, void*)
@@ -526,87 +549,82 @@ void Interconnection::onPopupMenuAssetType(Component::Button&, wxMenu& menu, voi
 
 void Interconnection::onSelectAssetTypeAC(wxCommandEvent&)
 {
-    if (pLink && pLink->assetType != Data::atAC)
-    {
-        pLink->assetType = Data::atAC;
-        onConnectionChanged(pLink);
-        MarkTheStudyAsModified();
-        OnInspectorRefresh(nullptr);
-        onAssetTypeChanges(pLink);
-        pLink->color[0] = 112;
-        pLink->color[1] = 112;
-        pLink->color[2] = 112;
-        pLink->style = Data::stPlain;
-        pLink->linkWidth = 1;
-    }
+    if (!pLink)
+        return;
+
+    pLink->assetType = Data::atAC;
+    onAssetTypeChanges(pLink);
+    MarkTheStudyAsModified();
+    OnInspectorRefresh(nullptr);
+    pLink->color[0] = 112;
+    pLink->color[1] = 112;
+    pLink->color[2] = 112;
+    pLink->style = Data::stPlain;
+    pLink->linkWidth = 1;
 }
 
 void Interconnection::onSelectAssetTypeDC(wxCommandEvent&)
 {
-    if (pLink && pLink->assetType != Data::atDC)
-    {
-        pLink->assetType = Data::atDC;
-        onConnectionChanged(pLink);
-        MarkTheStudyAsModified();
-        OnInspectorRefresh(nullptr);
-        onAssetTypeChanges(pLink);
-        pLink->color[0] = 0;
-        pLink->color[1] = 255;
-        pLink->color[2] = 0;
-        pLink->style = Data::stDash;
-        pLink->linkWidth = 2;
-    }
+    if (!pLink)
+        return;
+
+    pLink->assetType = Data::atDC;
+    onAssetTypeChanges(pLink);
+    MarkTheStudyAsModified();
+    OnInspectorRefresh(nullptr);
+    pLink->color[0] = 0;
+    pLink->color[1] = 255;
+    pLink->color[2] = 0;
+    pLink->style = Data::stDash;
+    pLink->linkWidth = 2;
 }
 
 void Interconnection::onSelectAssetTypeGas(wxCommandEvent&)
 {
-    if (pLink && pLink->assetType != Data::atGas)
-    {
-        pLink->assetType = Data::atGas;
-        onConnectionChanged(pLink);
-        MarkTheStudyAsModified();
-        OnInspectorRefresh(nullptr);
-        onAssetTypeChanges(pLink);
-        pLink->color[0] = 0;
-        pLink->color[1] = 128;
-        pLink->color[2] = 255;
-        pLink->style = Data::stPlain;
-        pLink->linkWidth = 3;
-    }
+    if (!pLink)
+        return;
+
+    pLink->assetType = Data::atGas;
+    onAssetTypeChanges(pLink);
+    MarkTheStudyAsModified();
+    OnInspectorRefresh(nullptr);
+    pLink->color[0] = 0;
+    pLink->color[1] = 128;
+    pLink->color[2] = 255;
+    pLink->style = Data::stPlain;
+    pLink->linkWidth = 3;
 }
 
 void Interconnection::onSelectAssetTypeVirt(wxCommandEvent&)
 {
-    if (pLink && pLink->assetType != Data::atVirt)
-    {
-        pLink->assetType = Data::atVirt;
-        onConnectionChanged(pLink);
-        MarkTheStudyAsModified();
-        OnInspectorRefresh(nullptr);
-        onAssetTypeChanges(pLink);
-        pLink->color[0] = 255;
-        pLink->color[1] = 0;
-        pLink->color[2] = 128;
-        pLink->style = Data::stDotDash;
-        pLink->linkWidth = 2;
-    }
+    if (!pLink)
+        return;
+
+    pLink->assetType = Data::atVirt;
+    onAssetTypeChanges(pLink);
+    MarkTheStudyAsModified();
+    OnInspectorRefresh(nullptr);
+    pLink->color[0] = 255;
+    pLink->color[1] = 0;
+    pLink->color[2] = 128;
+    pLink->style = Data::stDotDash;
+    pLink->linkWidth = 2;
 }
 
 void Interconnection::onSelectAssetTypeOther(wxCommandEvent&)
 {
-    if (pLink && pLink->assetType != Data::tncInfinite)
-    {
-        pLink->assetType = Data::atOther;
-        onConnectionChanged(pLink);
-        MarkTheStudyAsModified();
-        OnInspectorRefresh(nullptr);
-        onAssetTypeChanges(pLink);
-        pLink->color[0] = 255;
-        pLink->color[1] = 128;
-        pLink->color[2] = 0;
-        pLink->style = Data::stDot;
-        pLink->linkWidth = 2;
-    }
+    if (!pLink)
+        return;
+
+    pLink->assetType = Data::atOther;
+    onAssetTypeChanges(pLink);
+    MarkTheStudyAsModified();
+    OnInspectorRefresh(nullptr);
+    pLink->color[0] = 255;
+    pLink->color[1] = 128;
+    pLink->color[2] = 0;
+    pLink->style = Data::stDot;
+    pLink->linkWidth = 2;
 }
 
 void Interconnection::onPopupMenuHurdlesCosts(Component::Button&, wxMenu& menu, void*)
@@ -632,26 +650,24 @@ void Interconnection::onPopupMenuHurdlesCosts(Component::Button&, wxMenu& menu, 
 
 void Interconnection::onSelectIncludeHurdlesCosts(wxCommandEvent&)
 {
-    if (pLink && not pLink->useHurdlesCost)
-    {
-        pLink->useHurdlesCost = true;
-        onConnectionChanged(pLink);
-        MarkTheStudyAsModified();
-        OnInspectorRefresh(nullptr);
-        onHurdleCostsUsageChanges(pLink);
-    }
+    if (!pLink)
+        return;
+
+    pLink->useHurdlesCost = true;
+    onHurdleCostsUsageChanges(pLink);
+    MarkTheStudyAsModified();
+    OnInspectorRefresh(nullptr);
 }
 
 void Interconnection::onSelectIgnoreHurdlesCosts(wxCommandEvent&)
 {
-    if (pLink && pLink->useHurdlesCost)
-    {
-        pLink->useHurdlesCost = false;
-        onConnectionChanged(pLink);
-        MarkTheStudyAsModified();
-        OnInspectorRefresh(nullptr);
-        onHurdleCostsUsageChanges(pLink);
-    }
+    if (!pLink)
+        return;
+
+    pLink->useHurdlesCost = false;
+    onHurdleCostsUsageChanges(pLink);
+    MarkTheStudyAsModified();
+    OnInspectorRefresh(nullptr);
 }
 
 void Interconnection::onPopupMenuLink(Component::Button&, wxMenu& menu, void*)
@@ -692,9 +708,8 @@ void Interconnection::onButtonEditCaption(void*)
         {
             pLink->comments = text;
             MarkTheStudyAsModified();
-            onConnectionChanged(pLink);
-            OnInspectorRefresh(nullptr);
             onLinkCaptionChanges(pLink);
+            OnInspectorRefresh(nullptr);
         }
     }
 }
