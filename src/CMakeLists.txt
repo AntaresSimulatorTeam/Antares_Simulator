@@ -13,7 +13,7 @@ set(ANTARES_ONLINE_DOC "https://antares-simulator.readthedocs.io/")
 
 # Beta release
 set(ANTARES_BETA 0)
-set(ANTARES_RC 0)
+set(ANTARES_RC 2)
 
 # CMAKE - Suppress useless features
 set(CMAKE_SKIP_PREPROCESSED_SOURCE_RULES true)
