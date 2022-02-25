@@ -1,6 +1,8 @@
 Antares Changelog
 =================
 v8.2.0-rc2 (02/2022)
+--------------------
+
 ### Bug fixes
 - Fix bug related to links with infinite capacity with multiple time-series #567 (*)
 - Ignore disabled MC years for the computation of the FLOW QUAD output variable #558 (*)
