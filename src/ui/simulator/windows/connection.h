@@ -80,38 +80,31 @@ public:
              Toolbox::InputSelector::Connections* notifier) override;
 };
 
-
-
-class NTCusage : public wxFrame
+class NTCusage : public wxFrame, public Yuni::IEventObserver<NTCusage>
 {
 public:
-    Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)> onPopup;
-public:
-    NTCusage() = default;
-    ~NTCusage() = default;
-
-    void addParent(wxWindow* parent)
+    NTCusage(wxWindow* parent,
+        Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)>& onPopup,
+        wxFlexGridSizer* sizer_flex_grid)
     {
-        parents_.push_back(parent);
-        button_ = new Component::Button(parent, wxT("Transmission capacities"), icon_);
+        onTransmissionCapacitiesUsageChanges.connect(this, &NTCusage::update);
+        button_ = new Component::Button(parent, wxT("Transmission capacities"), "images/16x16/light_green.png");
         button_->menu(true);
         onPopup.bind(this, &NTCusage::onPopupMenuTransmissionCapacities);
         button_->onPopupMenu(onPopup);
-    }
-    void addPage(wxWindow* page)
-    {
-        pages_.push_back(page);
-    }
-    void addToSizer(wxFlexGridSizer* sizer)
-    {
-        sizer->AddSpacer(10);
-        sizer->Add(button_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        sizer_flex_grid->AddSpacer(10);
+        sizer_flex_grid->Add(button_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
     }
 
-    void update(Data::AreaLink* link)
+    ~NTCusage() = default;
+
+    void setCurrentLink(Data::AreaLink* link)
     {
         currentLink_ = link;
+    }
 
+    void update(const Data::AreaLink* link)
+    {
         switch (link->transmissionCapacities)
         {
         case Data::tncEnabled:
@@ -127,7 +120,6 @@ public:
             button_->image("images/16x16/infinity.png");
             break;
         }
-        // button_->Refresh(); // Does not refresh the other tab
     }
 
     bool isEmpty()
@@ -174,15 +166,7 @@ private:
             return;
 
         currentLink_->transmissionCapacities = Data::tncEnabled;
-        update(currentLink_);
-
-        /*
-        for (std::vector<wxWindow*>::iterator it = parents_.begin(); it != parents_.end(); it++)
-            (*it)->Refresh();
-        for (std::vector<wxWindow*>::iterator it = pages_.begin(); it != pages_.end(); it++)
-            (*it)->Refresh();
-        */
-
+        onTransmissionCapacitiesUsageChanges(currentLink_);
         MarkTheStudyAsModified();
         OnInspectorRefresh(nullptr);
     }
@@ -193,15 +177,7 @@ private:
             return;
 
         currentLink_->transmissionCapacities = Data::tncIgnore;
-        update(currentLink_);
-
-        /*
-        for (std::vector<wxWindow*>::iterator it = parents_.begin(); it != parents_.end(); it++)
-            (*it)->Refresh();
-        for (std::vector<wxWindow*>::iterator it = pages_.begin(); it != pages_.end(); it++)
-            (*it)->Refresh();
-        */
-
+        onTransmissionCapacitiesUsageChanges(currentLink_);
         MarkTheStudyAsModified();
         OnInspectorRefresh(nullptr);
     }
@@ -211,24 +187,14 @@ private:
         if (!currentLink_)
             return;
         currentLink_->transmissionCapacities = Data::tncInfinite;
-        update(currentLink_);
-
-        /*
-        for (std::vector<wxWindow*>::iterator it = parents_.begin(); it != parents_.end(); it++)
-            (*it)->Refresh();
-        for (std::vector<wxWindow*>::iterator it = pages_.begin(); it != pages_.end(); it++)
-            (*it)->Refresh();
-        */
-
+        onTransmissionCapacitiesUsageChanges(currentLink_);
         MarkTheStudyAsModified();
         OnInspectorRefresh(nullptr);
     }
 
+public:
+    static Yuni::Event<void(const Antares::Data::AreaLink*)> onTransmissionCapacitiesUsageChanges;
 private:
-    std::vector<wxWindow*> parents_;
-    std::vector<wxWindow*> pages_;
-    wxString caption_ = wxT("Transmission capacities");
-    const char* icon_ = "images/16x16/light_green.png";
     Component::Button* button_ = nullptr;
     Data::AreaLink* currentLink_ = nullptr;
 };
@@ -240,7 +206,7 @@ public:
     //@{
     Interconnection(wxWindow* parent,
                     Toolbox::InputSelector::Connections* notifier,
-                    linkGrid* link_grid, NTCusage* ntc_usage);
+                    linkGrid* link_grid);
     //! Destructor
     virtual ~Interconnection();
     //@}
@@ -251,7 +217,7 @@ private:
     */
     void onConnectionChanged(Data::AreaLink* link);
 
-    void onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*);
+    // void onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*);
     void onSelectTransCapInclude(wxCommandEvent&);
     void onSelectTransCapIgnore(wxCommandEvent&);
     void onSelectTransCapInfinite(wxCommandEvent&);
@@ -278,7 +244,7 @@ private:
     void finalizeView();
 
     // For a given link, update transmission capacity usage 
-    void updateTransmissionCapacityUsage(const Data::AreaLink* link);
+    // void updateTransmissionCapacityUsage(const Data::AreaLink* link);
     // For a given link, update hurdle costs usage
     void updateHurdleCostsUsage(const Data::AreaLink* link);
     // For a given link, update asset type

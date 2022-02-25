@@ -99,10 +99,11 @@ void linkNTCgrid::add(wxBoxSizer* sizer,
 }
 
 // Events to update a link property in all Interconnection objects (upper banner for any link view) 
-Yuni::Event<void(const Antares::Data::AreaLink*)> onTransmissionCapacitiesUsageChanges;
 Yuni::Event<void(const Antares::Data::AreaLink*)> onHurdleCostsUsageChanges;
 Yuni::Event<void(const Antares::Data::AreaLink*)> onAssetTypeChanges;
 Yuni::Event<void(const Antares::Data::AreaLink*)> onLinkCaptionChanges;
+
+Yuni::Event<void(const Antares::Data::AreaLink*)> NTCusage::onTransmissionCapacitiesUsageChanges;
 
 
 // Events to update a link property in all Interconnection objects (upper banner for any link view) 
@@ -114,15 +115,14 @@ Yuni::Event<void(const Antares::Data::AreaLink*)> onLinkCaptionChanges;
 
 Interconnection::Interconnection(wxWindow* parent,
                                  Toolbox::InputSelector::Connections* notifier,
-                                 linkGrid* link_grid, NTCusage* ntc_usage) :
+                                 linkGrid* link_grid) :
  wxScrolledWindow(parent),
  pLink(nullptr),
  pLinkName(),
  pHurdlesCost(nullptr),
  pLoopFlow(nullptr),
  pPhaseShift(nullptr),
- // pCopperPlate(nullptr),
- ntc_usage_(ntc_usage),
+ ntc_usage_(nullptr),
  pAssetType(nullptr)
 {
     auto* mainsizer = new_check_allocation<wxBoxSizer>(wxVERTICAL);
@@ -196,23 +196,8 @@ Interconnection::Interconnection(wxWindow* parent,
         pHurdlesCost = button;
     }
 
-    /*
-    // Transmission capacities
-    onTransmissionCapacitiesUsageChanges.connect(this, &Interconnection::updateTransmissionCapacityUsage);
-    {
-        button = new_check_allocation<Component::Button>(
-          pLinkData, wxT("Transmission capacities"), "images/16x16/light_green.png");
-        button->menu(true);
-        onPopup.bind(this, &Interconnection::onPopupMenuTransmissionCapacities);
-        button->onPopupMenu(onPopup);
-        sizer_flex_grid->AddSpacer(10);
-        sizer_flex_grid->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pCopperPlate = button;
-    }
-    */
-    ntc_usage_->addParent(pLinkData);
-    ntc_usage_->addPage(parent);
-    ntc_usage_->addToSizer(sizer_flex_grid);
+    // Transmission capacities usage button
+    ntc_usage_ = new NTCusage(pLinkData, onPopup, sizer_flex_grid);
 
     // Asset Type
     onAssetTypeChanges.connect(this, &Interconnection::updateAssetType);
@@ -330,6 +315,7 @@ void Interconnection::updateLinkView(Data::AreaLink* link)
     updatePhaseShifter(link);
 
     // updateTransmissionCapacityUsage(link);
+    ntc_usage_->setCurrentLink(link);
     ntc_usage_->update(link);
 
     updateAssetType(link);
@@ -391,27 +377,6 @@ void Interconnection::updateLinkCaption(const Data::AreaLink* link)
     }
 }
 
-/*
-void Interconnection::updateTransmissionCapacityUsage(const Data::AreaLink* link)
-{
-    switch (link->transmissionCapacities)
-    {
-    case Data::tncEnabled:
-        pCopperPlate->caption(wxT("Use transmission capacities"));
-        pCopperPlate->image("images/16x16/light_green.png");
-        break;
-    case Data::tncIgnore:
-        pCopperPlate->caption(wxT("Set transmission capacities to null"));
-        pCopperPlate->image("images/16x16/light_orange.png");
-        break;
-    case Data::tncInfinite:
-        pCopperPlate->caption(wxT("Set transmission capacities to infinite"));
-        pCopperPlate->image("images/16x16/infinity.png");
-        break;
-    }
-}
-*/
-
 void Interconnection::updateHurdleCostsUsage(const Data::AreaLink* link)
 {
     if (link->useHurdlesCost)
@@ -452,73 +417,6 @@ void Interconnection::updateAssetType(const Data::AreaLink* link)
         break;
     }
 }
-
-/*
-void Interconnection::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*)
-{
-    wxMenuItem* it;
-
-    it = Menu::CreateItem(&menu,
-                          wxID_ANY,
-                          wxT("Use transmission capacities"),
-                          "images/16x16/light_green.png",
-                          wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Interconnection::onSelectTransCapInclude),
-                 nullptr,
-                 this);
-
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Set to null"), "images/16x16/light_orange.png", wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Interconnection::onSelectTransCapIgnore),
-                 nullptr,
-                 this);
-
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Set to infinite"), "images/16x16/infinity.png", wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Interconnection::onSelectTransCapInfinite),
-                 nullptr,
-                 this);
-}
-
-void Interconnection::onSelectTransCapInclude(wxCommandEvent&)
-{
-    if (!pLink)
-        return;
-
-    pLink->transmissionCapacities = Data::tncEnabled;
-    onTransmissionCapacitiesUsageChanges(pLink);
-    MarkTheStudyAsModified();
-    OnInspectorRefresh(nullptr);
-}
-
-void Interconnection::onSelectTransCapIgnore(wxCommandEvent&)
-{
-    if (!pLink)
-        return;
-
-    pLink->transmissionCapacities = Data::tncIgnore;
-    onTransmissionCapacitiesUsageChanges(pLink);
-    MarkTheStudyAsModified();
-    OnInspectorRefresh(nullptr);
-}
-
-void Interconnection::onSelectTransCapInfinite(wxCommandEvent&)
-{
-    if (!pLink)
-        return;
-
-    pLink->transmissionCapacities = Data::tncInfinite;
-    onTransmissionCapacitiesUsageChanges(pLink);
-    MarkTheStudyAsModified();
-    OnInspectorRefresh(nullptr);
-}
-*/
 
 void Interconnection::onPopupMenuAssetType(Component::Button&, wxMenu& menu, void*)
 {

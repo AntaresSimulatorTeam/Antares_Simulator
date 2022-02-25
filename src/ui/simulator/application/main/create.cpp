@@ -713,16 +713,14 @@ void ApplWnd::createNBInterconnections()
       = createStdNotebookPage<Toolbox::InputSelector::Connections>(
         pNotebook, wxT("interconnections"), wxT("Links"));
 
-    auto* ntc_usage = new Window::NTCusage();
-
     // links parameters time series
     auto* parametersGrid = new_check_allocation<Window::linkParametersGrid>();
-    auto* intercoParam = new_check_allocation<Window::Interconnection>(page.first, page.second, parametersGrid, ntc_usage);
+    auto* intercoParam = new_check_allocation<Window::Interconnection>(page.first, page.second, parametersGrid);
     pageLinksParameters = page.first->add(intercoParam, wxT(" Parameters "));
 
     // links NTC time series
     auto* ntcGrid = new_check_allocation<Window::linkNTCgrid>();
-    auto* intercoGrid = new_check_allocation<Window::Interconnection>(page.first, page.second, ntcGrid, ntc_usage);
+    auto* intercoGrid = new_check_allocation<Window::Interconnection>(page.first, page.second, ntcGrid);
     pageLinksNTC = page.first->add(intercoGrid, wxT(" Transmission capacities "));
 
     // Summary
