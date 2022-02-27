@@ -35,6 +35,7 @@
 #include <wx/sizer.h>
 
 #include "../application/menus.h"
+#include "link-property-buttons.h"
 
 namespace Antares
 {
@@ -80,124 +81,7 @@ public:
              Toolbox::InputSelector::Connections* notifier) override;
 };
 
-class NTCusage : public wxFrame, public Yuni::IEventObserver<NTCusage>
-{
-public:
-    NTCusage(wxWindow* parent,
-        Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)>& onPopup,
-        wxFlexGridSizer* sizer_flex_grid)
-    {
-        onTransmissionCapacitiesUsageChanges.connect(this, &NTCusage::update);
-        button_ = new Component::Button(parent, wxT("Transmission capacities"), "images/16x16/light_green.png");
-        button_->menu(true);
-        onPopup.bind(this, &NTCusage::onPopupMenuTransmissionCapacities);
-        button_->onPopupMenu(onPopup);
-        sizer_flex_grid->AddSpacer(10);
-        sizer_flex_grid->Add(button_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-    }
 
-    ~NTCusage() = default;
-
-    void setCurrentLink(Data::AreaLink* link)
-    {
-        currentLink_ = link;
-    }
-
-    void update(const Data::AreaLink* link)
-    {
-        switch (link->transmissionCapacities)
-        {
-        case Data::tncEnabled:
-            button_->caption(wxT("Use transmission capacities"));
-            button_->image("images/16x16/light_green.png");
-            break;
-        case Data::tncIgnore:
-            button_->caption(wxT("Set transmission capacities to null"));
-            button_->image("images/16x16/light_orange.png");
-            break;
-        case Data::tncInfinite:
-            button_->caption(wxT("Set transmission capacities to infinite"));
-            button_->image("images/16x16/infinity.png");
-            break;
-        }
-    }
-
-    bool isEmpty()
-    {
-        return !button_;
-    }
-
-private:
-    void onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*)
-    {
-        wxMenuItem* it;
-
-        it = Menu::CreateItem(&menu,
-            wxID_ANY,
-            wxT("Use transmission capacities"),
-            "images/16x16/light_green.png",
-            wxEmptyString);
-        menu.Connect(it->GetId(),
-            wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler(NTCusage::onSelectTransCapInclude),
-            nullptr,
-            this);
-
-        it = Menu::CreateItem(
-            &menu, wxID_ANY, wxT("Set to null"), "images/16x16/light_orange.png", wxEmptyString);
-        menu.Connect(it->GetId(),
-            wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler(NTCusage::onSelectTransCapIgnore),
-            nullptr,
-            this);
-
-        it = Menu::CreateItem(
-            &menu, wxID_ANY, wxT("Set to infinite"), "images/16x16/infinity.png", wxEmptyString);
-        menu.Connect(it->GetId(),
-            wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler(NTCusage::onSelectTransCapInfinite),
-            nullptr,
-            this);
-    }
-
-    void onSelectTransCapInclude(wxCommandEvent&)
-    {
-        if (!currentLink_)
-            return;
-
-        currentLink_->transmissionCapacities = Data::tncEnabled;
-        onTransmissionCapacitiesUsageChanges(currentLink_);
-        MarkTheStudyAsModified();
-        OnInspectorRefresh(nullptr);
-    }
-
-    void onSelectTransCapIgnore(wxCommandEvent&)
-    {
-        if (!currentLink_)
-            return;
-
-        currentLink_->transmissionCapacities = Data::tncIgnore;
-        onTransmissionCapacitiesUsageChanges(currentLink_);
-        MarkTheStudyAsModified();
-        OnInspectorRefresh(nullptr);
-    }
-
-    void onSelectTransCapInfinite(wxCommandEvent&)
-    {
-        if (!currentLink_)
-            return;
-        currentLink_->transmissionCapacities = Data::tncInfinite;
-        onTransmissionCapacitiesUsageChanges(currentLink_);
-        MarkTheStudyAsModified();
-        OnInspectorRefresh(nullptr);
-    }
-
-public:
-    static Yuni::Event<void(const Antares::Data::AreaLink*)> onTransmissionCapacitiesUsageChanges;
-private:
-    Component::Button* button_ = nullptr;
-    Data::AreaLink* currentLink_ = nullptr;
-};
 
 class Interconnection : public wxScrolledWindow, public Yuni::IEventObserver<Interconnection>
 {
@@ -217,7 +101,6 @@ private:
     */
     void onConnectionChanged(Data::AreaLink* link);
 
-    // void onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*);
     void onSelectTransCapInclude(wxCommandEvent&);
     void onSelectTransCapIgnore(wxCommandEvent&);
     void onSelectTransCapInfinite(wxCommandEvent&);
@@ -243,8 +126,6 @@ private:
     void updateLinkView(Data::AreaLink* link);
     void finalizeView();
 
-    // For a given link, update transmission capacity usage 
-    // void updateTransmissionCapacityUsage(const Data::AreaLink* link);
     // For a given link, update hurdle costs usage
     void updateHurdleCostsUsage(const Data::AreaLink* link);
     // For a given link, update asset type

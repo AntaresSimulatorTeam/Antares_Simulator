@@ -103,8 +103,6 @@ Yuni::Event<void(const Antares::Data::AreaLink*)> onHurdleCostsUsageChanges;
 Yuni::Event<void(const Antares::Data::AreaLink*)> onAssetTypeChanges;
 Yuni::Event<void(const Antares::Data::AreaLink*)> onLinkCaptionChanges;
 
-Yuni::Event<void(const Antares::Data::AreaLink*)> NTCusage::onTransmissionCapacitiesUsageChanges;
-
 
 // Events to update a link property in all Interconnection objects (upper banner for any link view) 
 Yuni::Event<void(const Antares::Data::AreaLink*)> onTransmissionCapacitiesUsageChanges;
@@ -315,7 +313,6 @@ void Interconnection::updateLinkView(Data::AreaLink* link)
     updatePhaseShifter(link);
 
     // updateTransmissionCapacityUsage(link);
-    ntc_usage_->setCurrentLink(link);
     ntc_usage_->update(link);
 
     updateAssetType(link);
