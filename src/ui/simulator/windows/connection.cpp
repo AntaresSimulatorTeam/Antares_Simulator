@@ -143,20 +143,21 @@ Interconnection::Interconnection(wxWindow* parent,
     sizer_horizontal->Add(sizer_flex_grid, 0, wxALL | wxEXPAND);
     sizer_vertical->Add(sizer_horizontal, 0, wxALL | wxEXPAND, 6);
 
-    wxStaticText* label;
     Component::Button* button;
     Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)> onPopup;
 
+    // Label "Link"
+    wxStaticText* label = Component::CreateLabel(pLinkData, wxT("Link"), false, true);
+    sizer_flex_grid->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+
     // Link caption
     {
-        label = Component::CreateLabel(pLinkData, wxT("Link"), false, true);
         button = new_check_allocation<Component::Button>(pLinkData, wxT("local values"), "images/16x16/link.png");
         button->menu(true);
         button->bold(true);
         onPopup.bind(this, &Interconnection::onPopupMenuLink);
         button->onPopupMenu(onPopup);
         pLinkName = button;
-        sizer_flex_grid->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         sizer_flex_grid->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
     }
     // Caption
