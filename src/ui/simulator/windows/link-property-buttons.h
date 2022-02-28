@@ -11,6 +11,9 @@ namespace Antares
 namespace Window
 {
 
+// =========================
+// NTC usage button
+// =========================
 class ntcUsageButton : public wxFrame, public Yuni::IEventObserver<ntcUsageButton>
 {
 public:
@@ -18,10 +21,10 @@ public:
              Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)>& onPopup,
              wxFlexGridSizer* sizer_flex_grid);
 
-    ~ntcUsageButton() = default;
+    ~ntcUsageButton();
 
     void update(Data::AreaLink* link);
-    bool isEmpty();
+    bool isEmpty() { return !button_; }
 
 private:
     void onPopupMenu(Component::Button&, wxMenu& menu, void*);
@@ -31,6 +34,7 @@ private:
     void onSelectSetToInfinite(wxCommandEvent&);
 
     void broadCastChange();
+    void broadCastChangeOutside();
 
 public:
     static Yuni::Event<void(Antares::Data::AreaLink*)> onTransmissionCapacitiesUsageChanges;
@@ -40,6 +44,9 @@ private:
 };
 
 
+// =========================
+// Caption button
+// =========================
 class captionButton : public wxFrame, public Yuni::IEventObserver<ntcUsageButton>
 {
 public:
@@ -47,24 +54,30 @@ public:
         Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)>& onPopup,
         wxFlexGridSizer* sizer_flex_grid);
 
-    ~captionButton() = default;
+    ~captionButton();
 
     void update(Data::AreaLink* link);
-    bool isEmpty();
+    bool isEmpty() { return !button_; }
+    void setCaption(const wxString caption) { button_->caption(caption); }
 
 private:
     void onPopupMenu(Component::Button&, wxMenu& menu, void*);
 
-    void onSelectUseNTC(wxCommandEvent&);
-    void onSelectSetToNull(wxCommandEvent&);
-    void onSelectSetToInfinite(wxCommandEvent&);
+    void onEditCaption(wxCommandEvent&);
+    void onButtonEditCaption(void*);
 
     void broadCastChange();
+    void broadCastChangeOutside();
 
 public:
-    static Yuni::Event<void(Antares::Data::AreaLink*)> onTransmissionCapacitiesUsageChanges;
+    static Yuni::Event<void(Antares::Data::AreaLink*)> onLinkCaptionChanges;
 private:
     Component::Button* button_ = nullptr;
+    Component::Button* alias_button_ = nullptr;
+    wxBoxSizer* local_horizontal_sizer_ = nullptr;
+    wxStaticText* caption_label_ = nullptr;
+    wxWindow* caption_text_ = nullptr;
+    wxFlexGridSizer* sizer_flex_grid_;
     Data::AreaLink* currentLink_ = nullptr;
 };
 

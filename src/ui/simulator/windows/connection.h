@@ -135,8 +135,6 @@ private:
 private:
     //! Pointer to the current link
     Data::AreaLink* pLink;
-    //! Button which display the name of the current link
-    Component::Button* pLinkName;
     //! Hudrles costs
     Component::Button* pHurdlesCost;
     //! Loop flow
@@ -145,20 +143,15 @@ private:
     Component::Button* pPhaseShift;
 
     ntcUsageButton* ntcUsageButton_ = nullptr;
+    captionButton* captionButton_ = nullptr;
+
     //! Asset type
     Component::Button* pAssetType;
-    //! Caption
-    wxWindow* pCaptionText;
+ 
     //! No Link
     wxWindow* pNoLink;
     //! Link data
     wxWindow* pLinkData;
-
-    //! The main grid sizer
-    wxSizer* pGridSizer;
-    //!
-    wxWindow* pLabelCaption;
-    wxSizer* pCaptionDataSizer;
 
 }; // class Interconnection
 

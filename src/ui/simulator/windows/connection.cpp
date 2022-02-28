@@ -101,7 +101,6 @@ void linkNTCgrid::add(wxBoxSizer* sizer,
 // Events to update a link property in all Interconnection objects (upper banner for any link view) 
 Yuni::Event<void(const Antares::Data::AreaLink*)> onHurdleCostsUsageChanges;
 Yuni::Event<void(const Antares::Data::AreaLink*)> onAssetTypeChanges;
-Yuni::Event<void(const Antares::Data::AreaLink*)> onLinkCaptionChanges;
 
 
 // Events to update a link property in all Interconnection objects (upper banner for any link view) 
@@ -116,7 +115,6 @@ Interconnection::Interconnection(wxWindow* parent,
                                  linkGrid* link_grid) :
  wxScrolledWindow(parent),
  pLink(nullptr),
- pLinkName(),
  pHurdlesCost(nullptr),
  pLoopFlow(nullptr),
  pPhaseShift(nullptr),
@@ -136,7 +134,6 @@ Interconnection::Interconnection(wxWindow* parent,
     pLinkData->SetSizer(sizer_vertical);
 
     wxFlexGridSizer* sizer_flex_grid = new_check_allocation<wxFlexGridSizer>(0, 0, 10);
-    pGridSizer = sizer_flex_grid;
     sizer_flex_grid->AddGrowableCol(1, 0);
     auto* sizer_horizontal = new_check_allocation<wxBoxSizer>(wxHORIZONTAL);
     sizer_horizontal->AddSpacer(20);
@@ -150,36 +147,8 @@ Interconnection::Interconnection(wxWindow* parent,
     wxStaticText* label = Component::CreateLabel(pLinkData, wxT("Link"), false, true);
     sizer_flex_grid->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
-    // Link caption
-    {
-        button = new_check_allocation<Component::Button>(pLinkData, wxT("local values"), "images/16x16/link.png");
-        button->menu(true);
-        button->bold(true);
-        onPopup.bind(this, &Interconnection::onPopupMenuLink);
-        button->onPopupMenu(onPopup);
-        pLinkName = button;
-        sizer_flex_grid->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-    }
-    // Caption
-    onLinkCaptionChanges.connect(this, &Interconnection::updateLinkCaption);
-    {
-        label = Component::CreateLabel(pLinkData, wxT("Caption"), false, true);
-        button = new_check_allocation<Component::Button>(pLinkData,
-                                                         wxT(""),
-                                                         "images/16x16/document.png",
-                                                         this,
-                                                         &Interconnection::onButtonEditCaption);
-        auto* lhz = new_check_allocation<wxBoxSizer>(wxHORIZONTAL);
-        pCaptionText = Component::CreateLabel(pLinkData, wxEmptyString);
-        sizer_flex_grid->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-        lhz->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        lhz->AddSpacer(2);
-        lhz->Add(pCaptionText, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        sizer_flex_grid->Add(lhz, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-
-        pLabelCaption = label;
-        pCaptionDataSizer = lhz;
-    }
+    // Link caption button
+    captionButton_ = new captionButton(pLinkData, onPopup, sizer_flex_grid);
 
     // Hurdle costs
     onHurdleCostsUsageChanges.connect(this, &Interconnection::updateHurdleCostsUsage);
@@ -195,7 +164,7 @@ Interconnection::Interconnection(wxWindow* parent,
         pHurdlesCost = button;
     }
 
-    // Transmission capacities usage button
+    // Link transmission capacities usage button
     ntcUsageButton_ = new ntcUsageButton(pLinkData, onPopup, sizer_flex_grid);
 
     // Asset Type
@@ -265,7 +234,7 @@ bool Interconnection::checkLinkView(Data::AreaLink* link)
     if (not sizer)
         return false;
 
-    if (not pLinkName || not pHurdlesCost || ntcUsageButton_->isEmpty())
+    if (captionButton_->isEmpty() || not pHurdlesCost || ntcUsageButton_->isEmpty())
     {
         pLink = nullptr;
         sizer->Hide(pLinkData);
@@ -277,7 +246,7 @@ bool Interconnection::checkLinkView(Data::AreaLink* link)
     {
         if (not pLink) // already well set - avoid useless refresh
             return false;
-        pLinkName->caption(wxEmptyString);
+        captionButton_->setCaption(wxEmptyString);
         pLink = nullptr;
         sizer->Hide(pLinkData);
         sizer->Show(pNoLink);
@@ -302,10 +271,9 @@ void Interconnection::updateLinkView(Data::AreaLink* link)
     sizer->Show(pLinkData);
     sizer->Hide(pNoLink);
 
-    pLinkName->caption(wxStringFromUTF8(link->from->name)
-        << wxT("  /  ") << wxStringFromUTF8(link->with->name));
-
-    updateLinkCaption(link);
+    wxString linkCaption = wxStringFromUTF8(link->from->name) << wxT("  /  ") << wxStringFromUTF8(link->with->name);
+    captionButton_->setCaption(linkCaption);
+    captionButton_->update(link);
 
     updateHurdleCostsUsage(link);
 
@@ -356,21 +324,6 @@ void Interconnection::updateLoopFlowUsage(const Data::AreaLink* link)
     {
         pLoopFlow->caption(wxT("Ignore loop flows"));
         pLoopFlow->image("images/16x16/light_orange.png");
-    }
-}
-
-void Interconnection::updateLinkCaption(const Data::AreaLink* link)
-{
-    if (link->comments.empty())
-    {
-        pGridSizer->Hide(pLabelCaption);
-        pGridSizer->Hide(pCaptionDataSizer);
-    }
-    else
-    {
-        pCaptionText->SetLabel(wxStringFromUTF8(link->comments));
-        pGridSizer->Show(pLabelCaption);
-        pGridSizer->Show(pCaptionDataSizer);
     }
 }
 
@@ -581,50 +534,6 @@ void Interconnection::onSelectIgnoreHurdlesCosts(wxCommandEvent&)
     onHurdleCostsUsageChanges(pLink);
     MarkTheStudyAsModified();
     OnInspectorRefresh(nullptr);
-}
-
-void Interconnection::onPopupMenuLink(Component::Button&, wxMenu& menu, void*)
-{
-    wxMenuItem* it;
-
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Edit caption"), "images/16x16/document.png", wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Interconnection::onEditCaption),
-                 nullptr,
-                 this);
-}
-
-void Interconnection::onEditCaption(wxCommandEvent&)
-{
-    onButtonEditCaption(nullptr);
-}
-
-void Interconnection::onButtonEditCaption(void*)
-{
-    if (not pLink)
-        return;
-
-    wxTextEntryDialog dialog(this,
-                             wxT("Please enter the new link's caption :"),
-                             wxT("Caption"),
-                             wxStringFromUTF8(pLink->comments),
-                             wxOK | wxCANCEL);
-
-    if (dialog.ShowModal() == wxID_OK)
-    {
-        String text;
-        wxStringToString(dialog.GetValue(), text);
-        text.trim();
-        if (text != pLink->comments)
-        {
-            pLink->comments = text;
-            MarkTheStudyAsModified();
-            onLinkCaptionChanges(pLink);
-            OnInspectorRefresh(nullptr);
-        }
-    }
 }
 
 void Interconnection::onStudyLinkChanged(Data::AreaLink* link)
