@@ -234,5 +234,28 @@ namespace Window
             sizer_flex_grid_->Show(local_horizontal_sizer_);
         }
     }
+
+    // =========================
+    // Loop flow usage button
+    // =========================
+    loopFlowUsageButton::loopFlowUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid)
+    {
+        button_ = new Component::Button(parent, wxT("loop flow"), "images/16x16/light_green.png");
+        sizer_flex_grid->Add(button_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+    }
+
+    void loopFlowUsageButton::update(Data::AreaLink* link)
+    {
+        if (link->useLoopFlow)
+        {
+            button_->caption(wxT("Account for loop flows"));
+            button_->image("images/16x16/light_green.png");
+        }
+        else
+        {
+            button_->caption(wxT("Ignore loop flows"));
+            button_->image("images/16x16/light_orange.png");
+        }
+    }
 }
 }

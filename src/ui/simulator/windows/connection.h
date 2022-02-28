@@ -112,10 +112,6 @@ private:
     void onSelectIncludeHurdlesCosts(wxCommandEvent&);
     void onSelectIgnoreHurdlesCosts(wxCommandEvent&);
 
-    void onPopupMenuLink(Component::Button&, wxMenu& menu, void*);
-    void onEditCaption(wxCommandEvent&);
-    void onButtonEditCaption(void*);
-
     void onStudyLinkChanged(Data::AreaLink* link);
 
     bool checkLinkView(Data::AreaLink* link);
@@ -137,13 +133,13 @@ private:
     Data::AreaLink* pLink;
     //! Hudrles costs
     Component::Button* pHurdlesCost;
-    //! Loop flow
-    Component::Button* pLoopFlow;
+
     // !Phase shifter
     Component::Button* pPhaseShift;
 
     ntcUsageButton* ntcUsageButton_ = nullptr;
     captionButton* captionButton_ = nullptr;
+    loopFlowUsageButton* loopFlowUsageButton_ = nullptr;
 
     //! Asset type
     Component::Button* pAssetType;

@@ -116,9 +116,7 @@ Interconnection::Interconnection(wxWindow* parent,
  wxScrolledWindow(parent),
  pLink(nullptr),
  pHurdlesCost(nullptr),
- pLoopFlow(nullptr),
  pPhaseShift(nullptr),
- ntcUsageButton_(nullptr),
  pAssetType(nullptr)
 {
     auto* mainsizer = new_check_allocation<wxBoxSizer>(wxVERTICAL);
@@ -179,13 +177,10 @@ Interconnection::Interconnection(wxWindow* parent,
         sizer_flex_grid->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pAssetType = button;
     }
-    // Loop flow
-    {
-        button = new_check_allocation<Component::Button>(
-          pLinkData, wxT("loop flow"), "images/16x16/light_green.png");
-        sizer_flex_grid->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pLoopFlow = button;
-    }
+    
+    // Loop flow usage
+    loopFlowUsageButton_ = new loopFlowUsageButton(pLinkData, sizer_flex_grid);
+
     // Phase Shifter
     {
         button = new_check_allocation<Component::Button>(
@@ -277,7 +272,7 @@ void Interconnection::updateLinkView(Data::AreaLink* link)
 
     updateHurdleCostsUsage(link);
 
-    updateLoopFlowUsage(link);
+    loopFlowUsageButton_->update(link);
 
     updatePhaseShifter(link);
 
@@ -310,20 +305,6 @@ void Interconnection::updatePhaseShifter(const Data::AreaLink* link)
     {
         pPhaseShift->caption(wxT("Ignore PST "));
         pPhaseShift->image("images/16x16/light_orange.png");
-    }
-}
-
-void Interconnection::updateLoopFlowUsage(const Data::AreaLink* link)
-{
-    if (link->useLoopFlow)
-    {
-        pLoopFlow->caption(wxT("Account for loop flows"));
-        pLoopFlow->image("images/16x16/light_green.png");
-    }
-    else
-    {
-        pLoopFlow->caption(wxT("Ignore loop flows"));
-        pLoopFlow->image("images/16x16/light_orange.png");
     }
 }
 

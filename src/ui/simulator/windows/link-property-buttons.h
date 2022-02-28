@@ -81,5 +81,21 @@ private:
     Data::AreaLink* currentLink_ = nullptr;
 };
 
+
+// =========================
+// Loop flow usage button
+// =========================
+class loopFlowUsageButton : public wxFrame, public Yuni::IEventObserver<ntcUsageButton>
+{
+public:
+    loopFlowUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid);
+
+    ~loopFlowUsageButton() = default;
+
+    void update(Data::AreaLink* link);
+
+private:
+    Component::Button* button_ = nullptr;
+};
 }
 }
