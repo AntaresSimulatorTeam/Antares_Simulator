@@ -11,14 +11,14 @@ namespace Antares
 namespace Window
 {
 
-class NTCusage : public wxFrame, public Yuni::IEventObserver<NTCusage>
+class ntcUsageButton : public wxFrame, public Yuni::IEventObserver<ntcUsageButton>
 {
 public:
-    NTCusage(wxWindow* parent,
+    ntcUsageButton(wxWindow* parent,
              Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)>& onPopup,
              wxFlexGridSizer* sizer_flex_grid);
 
-    ~NTCusage() = default;
+    ~ntcUsageButton() = default;
 
     void update(Data::AreaLink* link);
     bool isEmpty();

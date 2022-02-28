@@ -120,7 +120,7 @@ Interconnection::Interconnection(wxWindow* parent,
  pHurdlesCost(nullptr),
  pLoopFlow(nullptr),
  pPhaseShift(nullptr),
- ntc_usage_(nullptr),
+ ntcUsageButton_(nullptr),
  pAssetType(nullptr)
 {
     auto* mainsizer = new_check_allocation<wxBoxSizer>(wxVERTICAL);
@@ -195,7 +195,7 @@ Interconnection::Interconnection(wxWindow* parent,
     }
 
     // Transmission capacities usage button
-    ntc_usage_ = new NTCusage(pLinkData, onPopup, sizer_flex_grid);
+    ntcUsageButton_ = new ntcUsageButton(pLinkData, onPopup, sizer_flex_grid);
 
     // Asset Type
     onAssetTypeChanges.connect(this, &Interconnection::updateAssetType);
@@ -264,7 +264,7 @@ bool Interconnection::checkLinkView(Data::AreaLink* link)
     if (not sizer)
         return false;
 
-    if (not pLinkName || not pHurdlesCost || ntc_usage_->isEmpty())
+    if (not pLinkName || not pHurdlesCost || ntcUsageButton_->isEmpty())
     {
         pLink = nullptr;
         sizer->Hide(pLinkData);
@@ -312,8 +312,7 @@ void Interconnection::updateLinkView(Data::AreaLink* link)
 
     updatePhaseShifter(link);
 
-    // updateTransmissionCapacityUsage(link);
-    ntc_usage_->update(link);
+    ntcUsageButton_->update(link);
 
     updateAssetType(link);
 

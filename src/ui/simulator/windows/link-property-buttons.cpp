@@ -9,22 +9,22 @@ namespace Antares
 namespace Window
 {
 
-    Yuni::Event<void(Antares::Data::AreaLink*)> NTCusage::onTransmissionCapacitiesUsageChanges;
+    Yuni::Event<void(Antares::Data::AreaLink*)> ntcUsageButton::onTransmissionCapacitiesUsageChanges;
     
-    NTCusage::NTCusage(wxWindow* parent,
+    ntcUsageButton::ntcUsageButton(wxWindow* parent,
                        Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)>& onPopup,
                        wxFlexGridSizer* sizer_flex_grid)
     {
-        onTransmissionCapacitiesUsageChanges.connect(this, &NTCusage::update);
+        onTransmissionCapacitiesUsageChanges.connect(this, &ntcUsageButton::update);
         button_ = new Component::Button(parent, wxT("Transmission capacities"), "images/16x16/light_green.png");
         button_->menu(true);
-        onPopup.bind(this, &NTCusage::onPopupMenu);
+        onPopup.bind(this, &ntcUsageButton::onPopupMenu);
         button_->onPopupMenu(onPopup);
         sizer_flex_grid->AddSpacer(10);
         sizer_flex_grid->Add(button_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
     }
 
-    void NTCusage::update(Data::AreaLink* link)
+    void ntcUsageButton::update(Data::AreaLink* link)
     {
         currentLink_ = link;
 
@@ -45,12 +45,12 @@ namespace Window
         }
     }
 
-    bool NTCusage::isEmpty()
+    bool ntcUsageButton::isEmpty()
     {
         return !button_;
     }
 
-    void NTCusage::onPopupMenu(Component::Button&, wxMenu& menu, void*)
+    void ntcUsageButton::onPopupMenu(Component::Button&, wxMenu& menu, void*)
     {
         wxMenuItem* it;
 
@@ -61,7 +61,7 @@ namespace Window
             wxEmptyString);
         menu.Connect(it->GetId(),
             wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler(NTCusage::onSelectUseNTC),
+            wxCommandEventHandler(ntcUsageButton::onSelectUseNTC),
             nullptr,
             this);
 
@@ -69,7 +69,7 @@ namespace Window
             &menu, wxID_ANY, wxT("Set to null"), "images/16x16/light_orange.png", wxEmptyString);
         menu.Connect(it->GetId(),
             wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler(NTCusage::onSelectSetToNull),
+            wxCommandEventHandler(ntcUsageButton::onSelectSetToNull),
             nullptr,
             this);
 
@@ -77,12 +77,12 @@ namespace Window
             &menu, wxID_ANY, wxT("Set to infinite"), "images/16x16/infinity.png", wxEmptyString);
         menu.Connect(it->GetId(),
             wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler(NTCusage::onSelectSetToInfinite),
+            wxCommandEventHandler(ntcUsageButton::onSelectSetToInfinite),
             nullptr,
             this);
     }
 
-    void NTCusage::onSelectUseNTC(wxCommandEvent&)
+    void ntcUsageButton::onSelectUseNTC(wxCommandEvent&)
     {
         if (!currentLink_)
             return;
@@ -90,7 +90,7 @@ namespace Window
         broadCastChange();
     }
 
-    void NTCusage::onSelectSetToNull(wxCommandEvent&)
+    void ntcUsageButton::onSelectSetToNull(wxCommandEvent&)
     {
         if (!currentLink_)
             return;
@@ -98,7 +98,7 @@ namespace Window
         broadCastChange();
     }
 
-    void NTCusage::onSelectSetToInfinite(wxCommandEvent&)
+    void ntcUsageButton::onSelectSetToInfinite(wxCommandEvent&)
     {
         if (!currentLink_)
             return;
@@ -106,7 +106,7 @@ namespace Window
         broadCastChange();
     }
 
-    void NTCusage::broadCastChange()
+    void ntcUsageButton::broadCastChange()
     {
         onTransmissionCapacitiesUsageChanges(currentLink_);
         MarkTheStudyAsModified();

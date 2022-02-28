@@ -101,10 +101,6 @@ private:
     */
     void onConnectionChanged(Data::AreaLink* link);
 
-    void onSelectTransCapInclude(wxCommandEvent&);
-    void onSelectTransCapIgnore(wxCommandEvent&);
-    void onSelectTransCapInfinite(wxCommandEvent&);
-
     void onPopupMenuAssetType(Component::Button&, wxMenu& menu, void*);
     void onSelectAssetTypeAC(wxCommandEvent&);
     void onSelectAssetTypeDC(wxCommandEvent&);
@@ -147,9 +143,8 @@ private:
     Component::Button* pLoopFlow;
     // !Phase shifter
     Component::Button* pPhaseShift;
-    //! Copper Plate
-    // Component::Button* pCopperPlate;
-    NTCusage* ntc_usage_ = nullptr;
+
+    ntcUsageButton* ntcUsageButton_ = nullptr;
     //! Asset type
     Component::Button* pAssetType;
     //! Caption
