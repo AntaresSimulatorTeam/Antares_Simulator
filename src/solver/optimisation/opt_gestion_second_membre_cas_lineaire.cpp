@@ -514,6 +514,20 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
     for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
     {
         if (ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->AccurateWaterValue == OUI_ANTARES
+            && ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->DirectLevelAccess == NON_ANTARES)
+        {
+            Cnt = ProblemeHebdo->NumeroDeContrainteBorneStockFinal[Pays];
+            if (Cnt >= 0)
+            {
+                SecondMembre[Cnt]
+                  = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->LevelForTimeInterval
+                    + ProblemeHebdo->CaracteristiquesHydrauliques[Pays]
+                        ->InflowForTimeInterval[NumeroDeLIntervalle];
+
+                AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = NULL;
+            }
+        }
+        if (ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->AccurateWaterValue == OUI_ANTARES
             && ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->DirectLevelAccess == OUI_ANTARES)
         {
             Cnt = ProblemeHebdo->NumeroDeContrainteEquivalenceStockFinal[Pays];

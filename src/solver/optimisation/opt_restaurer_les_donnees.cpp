@@ -142,6 +142,13 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo)
             {
                 PmaxHydUplift = CaracteristiquesHydrauliques->ContrainteDePmaxPompageHoraire[Pdt];
                 PmaxHydUplift *= ProblemeHebdo->CoefficientEcretementPMaxHydraulique[Pays];
+                // The uplifted energy  cannot, throughout the week, exceed the remaining stock
+                if (PmaxHydUplift * double(168)
+                    > CaracteristiquesHydrauliques->NiveauInitialReservoir)
+                {
+                    PmaxHydUplift
+                      = CaracteristiquesHydrauliques->NiveauInitialReservoir / double(168);
+                }
 
                 if (PmaxHydEcretee < PmaxHydUplift)
                     PmaxHydEcretee = PmaxHydUplift;

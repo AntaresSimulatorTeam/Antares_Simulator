@@ -369,13 +369,18 @@ int retrieveAverageNTC(const Data::Study& study,
                        const Matrix<Yuni::uint32>& tsNumbers,
                        std::vector<double>& avg)
 {
-    auto yearsWeight = study.parameters.getYearsWeight();
-    auto yearsWeightSum = study.parameters.getYearsWeightSum();
+    const auto& parameters = study.parameters;
+
+    const auto& yearsWeight = parameters.getYearsWeight();
+    const auto& yearsWeightSum = parameters.getYearsWeightSum();
+    const auto& yearsFilter = parameters.yearsFilter;
     const auto width = capacities.width;
     avg.assign(HOURS_PER_YEAR, 0);
 
     for (uint y = 0; y < study.parameters.nbYears; y++)
     {
+        if (!yearsFilter[y])
+            continue;
         Yuni::uint32 tsNumber = (width == 1) ? 0 : tsNumbers[0][y];
         for (uint h = 0; h < HOURS_PER_YEAR; h++)
         {

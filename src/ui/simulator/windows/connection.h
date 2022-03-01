@@ -53,8 +53,7 @@ public:
     virtual void add(wxBoxSizer* sizer,
                      wxWindow* parent,
                      Interconnection* intercoWindow,
-                     Toolbox::InputSelector::Connections* notifier)
-      = 0;
+                     Toolbox::InputSelector::Connections* notifier) = 0;
 };
 
 class linkParametersGrid : public linkGrid
@@ -118,6 +117,22 @@ private:
     void onButtonEditCaption(void*);
 
     void onStudyLinkChanged(Data::AreaLink* link);
+
+    bool checkLinkView(Data::AreaLink* link);
+    void updateLinkView(Data::AreaLink* link);
+    void finalizeView();
+
+    // For a given link, update transmission capacity usage 
+    void updateTransmissionCapacityUsage(const Data::AreaLink* link);
+    // For a given link, update hurdle costs usage
+    void updateHurdleCostsUsage(const Data::AreaLink* link);
+    // For a given link, update asset type
+    void updateAssetType(const Data::AreaLink* link);
+    // For a given link, update its caption
+    void updateLinkCaption(const Data::AreaLink* link);
+
+    void updateLoopFlowUsage(const Data::AreaLink* link);
+    void updatePhaseShifter(const Data::AreaLink* link);
 
 private:
     //! Pointer to the current link

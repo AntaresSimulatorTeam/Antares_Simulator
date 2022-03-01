@@ -248,7 +248,7 @@ static void PreparePasteOperations(Antares::Action::Context::Ptr context,
         begin = end + 1;
     } while (!stop);
 
-    if (context->extStudy->header.version != context->study.header.version)
+    if (context->extStudy->header.version != context->study->header.version)
     {
         logs.error() << "Impossible to paste data from a study with a different version number.";
         return;
@@ -263,20 +263,11 @@ static void PreparePasteOperations(Antares::Action::Context::Ptr context,
     if (not checkLinkSupportingElementsIntegrity(context, &ctx))
         return;
 
-    if (ctx.modifiedWhenCopied && context->shouldDestroyExtStudy)
-    {
-        // We have to check that the study was not modified when copied
-        // since we are re-loading the whole study, the data may not be up-to-date
-        logs.error()
-          << "Impossible to paste data from another instance. Please save the changes before.";
-        return;
-    }
-
     bool copyPosition = !ctx.shouldOverwriteArea;
 
     // Build the tree
     // Checking if the study comes from another folder
-    if (context->extStudy->folder != context->study.folder)
+    if (context->extStudy->folder != context->study->folder)
     {
         ctx.shouldOverwriteArea = true;
         copyPosition = true;
@@ -432,7 +423,7 @@ public:
                         wxT("Gathering informations about the study"),
                         "images/32x32/open.png"),
      pFolder(folder),
-     pStudy(NULL)
+     pStudy(nullptr)
     {
     }
     //! Destructor
@@ -445,7 +436,7 @@ public:
         pFolder = f;
     }
 
-    Data::Study* study() const
+    Data::Study::Ptr study() const
     {
         return pStudy;
     }
@@ -461,7 +452,7 @@ protected:
         wxStringToString(pFolder, sFl);
 
         {
-            auto* study = new Data::Study(); // new study
+            auto study = std::make_shared<Data::Study>(); // new study
 
             // Load all data
             Data::StudyLoadOptions options;
@@ -489,13 +480,13 @@ private:
     //! The folder where the study is located
     wxString pFolder;
     //! Our study
-    Data::Study* pStudy;
+    Data::Study::Ptr pStudy;
 
 }; // class JobOpenStudy
 
 } // anonymous namespace
 
-void AntaresStudy(Data::Study& target,
+void AntaresStudy(Data::Study::Ptr target,
                   const String& content,
                   uint offset,
                   PropertyMap& map,
@@ -510,7 +501,7 @@ void AntaresStudy(Data::Study& target,
     auto& path = map["path"];
 
     // update area name id set
-    target.areas.updateNameIDSet();
+    target->areas.updateNameIDSet();
 
     Map::Component* mainMap = Antares::Forms::ApplWnd::Instance()->map();
     size_t targetLayerID = 0;
@@ -522,10 +513,9 @@ void AntaresStudy(Data::Study& target,
 
     // If the path of the study where items should be extracted is the same than the current opened
     // study, we can directly use it
-    if (!path || path == target.folder)
+    if (!path || path == target->folder)
     {
-        context->extStudy = &target;
-        context->shouldDestroyExtStudy = false;
+        context->extStudy = target;
 
         PreparePasteOperations(context, content, offset, forceDialog);
     }
@@ -540,7 +530,6 @@ void AntaresStudy(Data::Study& target,
             return;
         }
         context->extStudy = job->study();
-        context->shouldDestroyExtStudy = true;
 
         job->Destroy();
 

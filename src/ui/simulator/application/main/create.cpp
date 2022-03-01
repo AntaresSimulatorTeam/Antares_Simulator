@@ -710,15 +710,13 @@ void ApplWnd::createNBInterconnections()
         pNotebook, wxT("interconnections"), wxT("Links"));
 
     // links parameters time series
-    auto* lpg = new_check_allocation<Window::linkParametersGrid>();
-    auto* intercoParam
-      = new_check_allocation<Window::Interconnection>(page.first, page.second, lpg);
+    auto* parametersGrid = new_check_allocation<Window::linkParametersGrid>();
+    auto* intercoParam = new_check_allocation<Window::Interconnection>(page.first, page.second, parametersGrid);
     pageLinksParameters = page.first->add(intercoParam, wxT(" Parameters "));
 
     // links NTC time series
     auto* ntcGrid = new_check_allocation<Window::linkNTCgrid>();
-    auto* intercoGrid
-      = new_check_allocation<Window::Interconnection>(page.first, page.second, ntcGrid);
+    auto* intercoGrid = new_check_allocation<Window::Interconnection>(page.first, page.second, ntcGrid);
     pageLinksNTC = page.first->add(intercoGrid, wxT(" Transmission capacities "));
 
     // Summary
