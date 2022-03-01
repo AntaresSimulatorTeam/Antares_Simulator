@@ -11,20 +11,31 @@ namespace Antares
 {
 namespace Window
 {
+    
+    // ==================================
+    // Abstract modifiable link button
+    // ==================================
+
+    Yuni::Event<void(Antares::Data::AreaLink*)> modifiableLinkButton::onSelectionChanges;
+
+    modifiableLinkButton::modifiableLinkButton()
+    {
+        onSelectionChanges.connect(this, &modifiableLinkButton::update);
+        onPopup_.bind(this, &modifiableLinkButton::onPopupMenu);
+    }
+    
+
     // =========================
     // NTC usage button
-    // =========================
-    Yuni::Event<void(Antares::Data::AreaLink*)> ntcUsageButton::onTransmissionCapacitiesUsageChanges;
-    
+    // =========================    
     ntcUsageButton::ntcUsageButton(wxWindow* parent,
-                       Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)>& onPopup,
                        wxFlexGridSizer* sizer_flex_grid)
+        : modifiableLinkButton()
     {
-        onTransmissionCapacitiesUsageChanges.connect(this, &ntcUsageButton::update);
         button_ = new Component::Button(parent, wxT("Transmission capacities"), "images/16x16/light_green.png");
         button_->menu(true);
-        onPopup.bind(this, &ntcUsageButton::onPopupMenu);
-        button_->onPopupMenu(onPopup);
+        button_->onPopupMenu(onPopup_);
+
         sizer_flex_grid->AddSpacer(10);
         sizer_flex_grid->Add(button_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
     }
@@ -112,7 +123,7 @@ namespace Window
 
     void ntcUsageButton::broadCastChange()
     {
-        onTransmissionCapacitiesUsageChanges(currentLink_);
+        onSelectionChanges(currentLink_);
         broadCastChangeOutside();
     }
 
@@ -128,23 +139,19 @@ namespace Window
     // =========================
     using namespace Yuni;
 
-    Yuni::Event<void(Antares::Data::AreaLink*)> captionButton::onLinkCaptionChanges;
-
     captionButton::captionButton(wxWindow* parent,                           
-        Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)>& onPopup,
         wxFlexGridSizer* sizer_flex_grid)
-        : sizer_flex_grid_(sizer_flex_grid)
+        : modifiableLinkButton(), sizer_flex_grid_(sizer_flex_grid)
     {
         // Link caption
         button_ = new Component::Button(parent, wxT("local values"), "images/16x16/link.png");
         button_->menu(true);
         button_->bold(true);
-        onPopup.bind(this, &captionButton::onPopupMenu);
-        button_->onPopupMenu(onPopup);
+        button_->onPopupMenu(onPopup_);
+
         sizer_flex_grid_->Add(button_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
         // Alias caption
-        onLinkCaptionChanges.connect(this, &captionButton::update);
         caption_label_ = Component::CreateLabel(parent, wxT("Caption"), false, true);
         alias_button_ = new Component::Button(parent, wxT(""), "images/16x16/document.png",
                                               this,
@@ -208,7 +215,8 @@ namespace Window
 
     void captionButton::broadCastChange()
     {
-        onLinkCaptionChanges(currentLink_);
+        onSelectionChanges(currentLink_);
+
         broadCastChangeOutside();
     }
 

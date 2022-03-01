@@ -12,22 +12,55 @@ namespace Window
 {
 
 // =========================
+// Abstract link button
+// =========================
+class linkButton : public wxFrame
+{
+public:
+    virtual void update(Data::AreaLink* link) = 0;
+protected:
+    Component::Button* button_ = nullptr;
+};
+
+
+// ==================================
+// Abstract modifiable link button
+// ==================================
+class modifiableLinkButton : public linkButton, public Yuni::IEventObserver<modifiableLinkButton>
+{
+public:
+    static Yuni::Event<void(Antares::Data::AreaLink*)> onSelectionChanges;
+
+public:
+    modifiableLinkButton();
+    ~modifiableLinkButton() = default;
+
+    bool isEmpty() { return !button_; }
+
+protected:
+    virtual void onPopupMenu(Component::Button&, wxMenu& menu, void*) = 0;
+
+protected:
+    Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)> onPopup_;
+    Data::AreaLink* currentLink_ = nullptr;
+};
+
+
+// =========================
 // NTC usage button
 // =========================
-class ntcUsageButton : public wxFrame, public Yuni::IEventObserver<ntcUsageButton>
+class ntcUsageButton : public modifiableLinkButton
 {
 public:
     ntcUsageButton(wxWindow* parent,
-             Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)>& onPopup,
-             wxFlexGridSizer* sizer_flex_grid);
+                   wxFlexGridSizer* sizer_flex_grid);
 
     ~ntcUsageButton();
 
-    void update(Data::AreaLink* link);
-    bool isEmpty() { return !button_; }
+    void update(Data::AreaLink* link) override;
 
 private:
-    void onPopupMenu(Component::Button&, wxMenu& menu, void*);
+    void onPopupMenu(Component::Button&, wxMenu& menu, void*) override;
 
     void onSelectUseNTC(wxCommandEvent&);
     void onSelectSetToNull(wxCommandEvent&);
@@ -36,32 +69,25 @@ private:
     void broadCastChange();
     void broadCastChangeOutside();
 
-public:
-    static Yuni::Event<void(Antares::Data::AreaLink*)> onTransmissionCapacitiesUsageChanges;
-private:
-    Component::Button* button_ = nullptr;
-    Data::AreaLink* currentLink_ = nullptr;
 };
 
 
 // =========================
 // Caption button
 // =========================
-class captionButton : public wxFrame, public Yuni::IEventObserver<ntcUsageButton>
+class captionButton : public modifiableLinkButton
 {
 public:
     captionButton(wxWindow* parent,
-        Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)>& onPopup,
-        wxFlexGridSizer* sizer_flex_grid);
+                  wxFlexGridSizer* sizer_flex_grid);
 
     ~captionButton();
 
-    void update(Data::AreaLink* link);
-    bool isEmpty() { return !button_; }
+    void update(Data::AreaLink* link) override;
     void setCaption(const wxString caption) { button_->caption(caption); }
 
 private:
-    void onPopupMenu(Component::Button&, wxMenu& menu, void*);
+    void onPopupMenu(Component::Button&, wxMenu& menu, void*) override;
 
     void onEditCaption(wxCommandEvent&);
     void onButtonEditCaption(void*);
@@ -69,33 +95,26 @@ private:
     void broadCastChange();
     void broadCastChangeOutside();
 
-public:
-    static Yuni::Event<void(Antares::Data::AreaLink*)> onLinkCaptionChanges;
 private:
-    Component::Button* button_ = nullptr;
     Component::Button* alias_button_ = nullptr;
     wxBoxSizer* local_horizontal_sizer_ = nullptr;
     wxStaticText* caption_label_ = nullptr;
     wxWindow* caption_text_ = nullptr;
     wxFlexGridSizer* sizer_flex_grid_;
-    Data::AreaLink* currentLink_ = nullptr;
 };
 
 
 // =========================
 // Loop flow usage button
 // =========================
-class loopFlowUsageButton : public wxFrame, public Yuni::IEventObserver<ntcUsageButton>
+class loopFlowUsageButton : public linkButton
 {
 public:
     loopFlowUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid);
 
     ~loopFlowUsageButton() = default;
 
-    void update(Data::AreaLink* link);
-
-private:
-    Component::Button* button_ = nullptr;
+    void update(Data::AreaLink* link) override;
 };
 }
 }

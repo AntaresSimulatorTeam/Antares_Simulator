@@ -146,7 +146,7 @@ Interconnection::Interconnection(wxWindow* parent,
     sizer_flex_grid->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
     // Link caption button
-    captionButton_ = new captionButton(pLinkData, onPopup, sizer_flex_grid);
+    captionButton_ = new captionButton(pLinkData, sizer_flex_grid);
 
     // Hurdle costs
     onHurdleCostsUsageChanges.connect(this, &Interconnection::updateHurdleCostsUsage);
@@ -163,7 +163,7 @@ Interconnection::Interconnection(wxWindow* parent,
     }
 
     // Link transmission capacities usage button
-    ntcUsageButton_ = new ntcUsageButton(pLinkData, onPopup, sizer_flex_grid);
+    ntcUsageButton_ = new ntcUsageButton(pLinkData, sizer_flex_grid);
 
     // Asset Type
     onAssetTypeChanges.connect(this, &Interconnection::updateAssetType);
