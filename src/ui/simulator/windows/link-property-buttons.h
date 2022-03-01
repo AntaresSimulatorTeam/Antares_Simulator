@@ -26,14 +26,14 @@ protected:
 // ==================================
 // Abstract modifiable link button
 // ==================================
-class modifiableLinkButton : public linkButton, public Yuni::IEventObserver<modifiableLinkButton>
+class menuLinkButton : public linkButton, public Yuni::IEventObserver<menuLinkButton>
 {
 public:
     static Yuni::Event<void(Antares::Data::AreaLink*)> onSelectionChanges;
 
 public:
-    modifiableLinkButton();
-    ~modifiableLinkButton() = default;
+    menuLinkButton();
+    ~menuLinkButton() = default;
 
     bool isEmpty() { return !button_; }
 
@@ -49,7 +49,7 @@ protected:
 // =========================
 // NTC usage button
 // =========================
-class ntcUsageButton : public modifiableLinkButton
+class ntcUsageButton : public menuLinkButton
 {
 public:
     ntcUsageButton(wxWindow* parent,
@@ -75,7 +75,7 @@ private:
 // =========================
 // Caption button
 // =========================
-class captionButton : public modifiableLinkButton
+class captionButton : public menuLinkButton
 {
 public:
     captionButton(wxWindow* parent,

@@ -13,15 +13,15 @@ namespace Window
 {
     
     // ==================================
-    // Abstract modifiable link button
+    // Abstract menu link button
     // ==================================
 
-    Yuni::Event<void(Antares::Data::AreaLink*)> modifiableLinkButton::onSelectionChanges;
+    Yuni::Event<void(Antares::Data::AreaLink*)> menuLinkButton::onSelectionChanges;
 
-    modifiableLinkButton::modifiableLinkButton()
+    menuLinkButton::menuLinkButton()
     {
-        onSelectionChanges.connect(this, &modifiableLinkButton::update);
-        onPopup_.bind(this, &modifiableLinkButton::onPopupMenu);
+        onSelectionChanges.connect(this, &menuLinkButton::update);
+        onPopup_.bind(this, &menuLinkButton::onPopupMenu);
     }
     
 
@@ -30,7 +30,7 @@ namespace Window
     // =========================    
     ntcUsageButton::ntcUsageButton(wxWindow* parent,
                        wxFlexGridSizer* sizer_flex_grid)
-        : modifiableLinkButton()
+        : menuLinkButton()
     {
         button_ = new Component::Button(parent, wxT("Transmission capacities"), "images/16x16/light_green.png");
         button_->menu(true);
@@ -141,7 +141,7 @@ namespace Window
 
     captionButton::captionButton(wxWindow* parent,                           
         wxFlexGridSizer* sizer_flex_grid)
-        : modifiableLinkButton(), sizer_flex_grid_(sizer_flex_grid)
+        : menuLinkButton(), sizer_flex_grid_(sizer_flex_grid)
     {
         // Link caption
         button_ = new Component::Button(parent, wxT("local values"), "images/16x16/link.png");
