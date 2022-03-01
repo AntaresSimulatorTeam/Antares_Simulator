@@ -23,6 +23,24 @@ namespace Window
         onSelectionChanges.connect(this, &menuLinkButton::update);
         onPopup_.bind(this, &menuLinkButton::onPopupMenu);
     }
+
+    menuLinkButton::~menuLinkButton()
+    {
+        currentLink_ = nullptr;
+        destroyBoundEvents();
+    }
+
+    void menuLinkButton::broadCastChange()
+    {
+        onSelectionChanges(currentLink_);
+        broadCastChangeOutside();
+    }
+
+    void menuLinkButton::broadCastChangeOutside()
+    {
+        MarkTheStudyAsModified();
+        OnInspectorRefresh(nullptr);
+    }
     
 
     // =========================
@@ -39,11 +57,7 @@ namespace Window
         sizer_flex_grid->AddSpacer(10);
         sizer_flex_grid->Add(button_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
     }
-    ntcUsageButton::~ntcUsageButton()
-    {
-        currentLink_ = nullptr;
-        destroyBoundEvents();
-    }
+
     void ntcUsageButton::update(Data::AreaLink* link)
     {
         currentLink_ = link;
@@ -121,18 +135,6 @@ namespace Window
         broadCastChange();
     }
 
-    void ntcUsageButton::broadCastChange()
-    {
-        onSelectionChanges(currentLink_);
-        broadCastChangeOutside();
-    }
-
-    void ntcUsageButton::broadCastChangeOutside()
-    {
-        MarkTheStudyAsModified();
-        OnInspectorRefresh(nullptr);
-    }
-
 
     // =========================
     // Caption button
@@ -163,12 +165,6 @@ namespace Window
         local_horizontal_sizer_->AddSpacer(2);
         local_horizontal_sizer_->Add(caption_text_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         sizer_flex_grid_->Add(local_horizontal_sizer_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-    }
-
-    captionButton::~captionButton()
-    {
-        currentLink_ = nullptr;
-        destroyBoundEvents();
     }
 
     void captionButton::onPopupMenu(Component::Button&, wxMenu& menu, void*)
@@ -213,19 +209,6 @@ namespace Window
         }
     }
 
-    void captionButton::broadCastChange()
-    {
-        onSelectionChanges(currentLink_);
-
-        broadCastChangeOutside();
-    }
-
-    void captionButton::broadCastChangeOutside()
-    {
-        MarkTheStudyAsModified();
-        OnInspectorRefresh(nullptr);
-    }
-
     void captionButton::update(Data::AreaLink* link)
     {
         currentLink_ = link;
@@ -242,6 +225,7 @@ namespace Window
             sizer_flex_grid_->Show(local_horizontal_sizer_);
         }
     }
+
 
     // =========================
     // Loop flow usage button

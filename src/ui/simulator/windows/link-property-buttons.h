@@ -33,12 +33,15 @@ public:
 
 public:
     menuLinkButton();
-    ~menuLinkButton() = default;
+    virtual ~menuLinkButton();
 
     bool isEmpty() { return !button_; }
 
 protected:
     virtual void onPopupMenu(Component::Button&, wxMenu& menu, void*) = 0;
+
+    void broadCastChange();
+    void broadCastChangeOutside();
 
 protected:
     Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)> onPopup_;
@@ -55,7 +58,7 @@ public:
     ntcUsageButton(wxWindow* parent,
                    wxFlexGridSizer* sizer_flex_grid);
 
-    ~ntcUsageButton();
+    ~ntcUsageButton() = default;
 
     void update(Data::AreaLink* link) override;
 
@@ -65,9 +68,6 @@ private:
     void onSelectUseNTC(wxCommandEvent&);
     void onSelectSetToNull(wxCommandEvent&);
     void onSelectSetToInfinite(wxCommandEvent&);
-
-    void broadCastChange();
-    void broadCastChangeOutside();
 
 };
 
@@ -81,7 +81,7 @@ public:
     captionButton(wxWindow* parent,
                   wxFlexGridSizer* sizer_flex_grid);
 
-    ~captionButton();
+    ~captionButton() = default;
 
     void update(Data::AreaLink* link) override;
     void setCaption(const wxString caption) { button_->caption(caption); }
@@ -91,9 +91,6 @@ private:
 
     void onEditCaption(wxCommandEvent&);
     void onButtonEditCaption(void*);
-
-    void broadCastChange();
-    void broadCastChangeOutside();
 
 private:
     Component::Button* alias_button_ = nullptr;
