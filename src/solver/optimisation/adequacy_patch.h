@@ -24,9 +24,29 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+
 #ifndef __SOLVER_ADEQUACY_FUNCTIONS_H__
 #define __SOLVER_ADEQUACY_FUNCTIONS_H__
 
+/*!
+ * Determines if a link capacity needs to be set to 0. Only changes something if used during the
+ * AdequacyFirstStep.
+ *
+ * @param AdequacyFirstStep boolean for the first run of the optimization used by the adequacy patch
+ *
+ * @param StartNodeAdequacyPatchType uint: The adq type of the node at the start of the link.
+ *
+ * @param EndNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
+ *
+ * @param SetToZero12LinksForAdequacyPatch bool: Switch to cut links from nodes of adq type 1
+ * towards nodes of adq type 2
+ *
+ * @param SetToZero11LinksForAdequacyPatch bool: Switch to cut links from nodes of adq type 1
+ * towards nodes of adq type 1
+ *
+ * @return uint from an enumeration that describes the type of restrictions to put on this link for
+ * adq purposes.
+ */
 uint SetNTCForAdequacyFirstStep(bool AdequacyFirstStep,
                                 uint StartNodeAdequacyPatchType,
                                 uint EndNodeAdequacyPatchType,
