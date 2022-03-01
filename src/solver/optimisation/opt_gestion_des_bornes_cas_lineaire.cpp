@@ -254,7 +254,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
 
                 Var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
-
                 if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
                     Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]
                                 + ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
