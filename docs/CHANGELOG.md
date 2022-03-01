@@ -1,5 +1,22 @@
 Antares Changelog
 =================
+v8.2.0-rc2 (02/2022)
+--------------------
+
+### Bug fixes
+- Fix bug related to links with infinite capacity with multiple time-series #567 (*)
+- Ignore disabled MC years for the computation of the FLOW QUAD output variable #558 (*)
+- Make sure that NTC time-series are loaded only when necessary #552 (*)
+- Restore results for non-regression tests #556. Minor differences were introduced in v8.1.0 and v8.2.0-rc1.
+- Fix bug in scenario-builder related to short-circuit evaluation #576 (*)
+
+(*) That bug was introduced in v8.2.0-rc1.
+
+### GUI
+- Restore old view for links #557
+- Improve cell styles when loop-flow is enabled for a link #571
+- Fix refresh issues for link parameters #572
+
 v8.2.0-rc1 (02/2022)
 --------------------
 
