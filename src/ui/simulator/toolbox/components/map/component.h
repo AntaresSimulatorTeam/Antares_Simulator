@@ -275,11 +275,14 @@ private:
 
     void onNew(void*);
     void onNewDropdown(Antares::Component::Button&, wxMenu& menu, void*);
-    void evtNewArea(wxCommandEvent&);
-    void evtNewArea2(wxCommandEvent&);
-    void evtNewArea4(wxCommandEvent&);
-    void evtNewArea6(wxCommandEvent&);
-    void evtNewArea8(wxCommandEvent&);
+
+    template<unsigned int N>
+    inline void evtNewArea(wxCommandEvent&)
+    {
+       if (pMapActiveLayer)
+           pMapActiveLayer->addNewNode(N);
+       setFocus();
+    }
 
     void onToggleMouseSelectionArea(void*);
     void onToggleMouseSelectionLink(void*);
