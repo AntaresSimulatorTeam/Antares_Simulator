@@ -73,7 +73,7 @@ AreaLink::AreaLink() :
  displayComments(true),
  filterSynthesis(filterAll),
  filterYearByYear(filterAll),
- // color{112, 112, 112},
+ color{112, 112, 112},
  style(stPlain),
  linkWidth(1)
 {
