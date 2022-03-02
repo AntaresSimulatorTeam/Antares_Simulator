@@ -113,5 +113,19 @@ public:
 
     void update(Data::AreaLink* link) override;
 };
+
+// ============================
+// Phase shifter usage button
+// ============================
+class phaseShifterUsageButton : public linkButton
+{
+public:
+    phaseShifterUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid);
+
+    ~phaseShifterUsageButton() = default;
+
+    void update(Data::AreaLink* link) override;
+};
+
 }
 }

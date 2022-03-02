@@ -123,20 +123,16 @@ private:
     // For a given link, update asset type
     void updateAssetType(const Data::AreaLink* link);
 
-    void updatePhaseShifter(const Data::AreaLink* link);
-
 private:
     //! Pointer to the current link
     Data::AreaLink* pLink;
     //! Hudrles costs
     Component::Button* pHurdlesCost;
 
-    // !Phase shifter
-    Component::Button* pPhaseShift;
-
     ntcUsageButton* ntcUsageButton_ = nullptr;
     captionButton* captionButton_ = nullptr;
     loopFlowUsageButton* loopFlowUsageButton_ = nullptr;
+    phaseShifterUsageButton* phaseShifterUsageButton_ = nullptr;
 
     //! Asset type
     Component::Button* pAssetType;

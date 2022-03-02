@@ -150,7 +150,6 @@ namespace Window
         button_->menu(true);
         button_->bold(true);
         button_->onPopupMenu(onPopup_);
-
         sizer_flex_grid_->Add(button_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
         // Alias caption
@@ -249,5 +248,30 @@ namespace Window
             button_->image("images/16x16/light_orange.png");
         }
     }
-}
-}
+
+
+    // ============================
+    // Phase shifter usage button
+    // ============================
+    phaseShifterUsageButton::phaseShifterUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid)
+    {
+        button_ = new Component::Button(parent, wxT("phase shifter"), "images/16x16/light_green.png");
+        sizer_flex_grid->Add(button_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+    }
+
+    void phaseShifterUsageButton::update(Data::AreaLink* link)
+    {
+        if (link->usePST)
+        {
+            button_->caption(wxT("Tune PST"));
+            button_->image("images/16x16/light_green.png");
+        }
+        else
+        {
+            button_->caption(wxT("Ignore PST "));
+            button_->image("images/16x16/light_orange.png");
+        }
+    }
+
+}   // End namespace Window 
+}   // End namespace Antares 

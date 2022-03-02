@@ -116,7 +116,6 @@ Interconnection::Interconnection(wxWindow* parent,
  wxScrolledWindow(parent),
  pLink(nullptr),
  pHurdlesCost(nullptr),
- pPhaseShift(nullptr),
  pAssetType(nullptr)
 {
     auto* mainsizer = new_check_allocation<wxBoxSizer>(wxVERTICAL);
@@ -178,16 +177,11 @@ Interconnection::Interconnection(wxWindow* parent,
         pAssetType = button;
     }
     
-    // Loop flow usage
+    // Loop flow usage button
     loopFlowUsageButton_ = new loopFlowUsageButton(pLinkData, sizer_flex_grid);
 
-    // Phase Shifter
-    {
-        button = new_check_allocation<Component::Button>(
-          pLinkData, wxT("phase shifter"), "images/16x16/light_green.png");
-        sizer_flex_grid->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pPhaseShift = button;
-    }
+    // Phase Shifter usage button
+    phaseShifterUsageButton_ = new phaseShifterUsageButton(pLinkData, sizer_flex_grid);
 
     sizer_vertical->AddSpacer(4);
 
@@ -274,7 +268,7 @@ void Interconnection::updateLinkView(Data::AreaLink* link)
 
     loopFlowUsageButton_->update(link);
 
-    updatePhaseShifter(link);
+    phaseShifterUsageButton_->update(link);
 
     ntcUsageButton_->update(link);
 
@@ -292,20 +286,6 @@ void Interconnection::finalizeView()
     sizer->Layout();
     this->FitInside(); // ask the sizer about the needed size
     this->SetScrollRate(5, 5);
-}
-
-void Interconnection::updatePhaseShifter(const Data::AreaLink* link)
-{
-    if (link->usePST)
-    {
-        pPhaseShift->caption(wxT("Tune PST"));
-        pPhaseShift->image("images/16x16/light_green.png");
-    }
-    else
-    {
-        pPhaseShift->caption(wxT("Ignore PST "));
-        pPhaseShift->image("images/16x16/light_orange.png");
-    }
 }
 
 void Interconnection::updateHurdleCostsUsage(const Data::AreaLink* link)
