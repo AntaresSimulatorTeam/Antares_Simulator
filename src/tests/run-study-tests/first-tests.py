@@ -2,7 +2,8 @@ import pytest
 from pathlib import Path
 import sys
 
-from antares_test_utils import *
+from checks_on_results import *
+from study_run import *
 
 ALL_STUDIES_PATH = Path('../resources/Antares_Simulator_Tests').resolve()
 
