@@ -27,14 +27,7 @@
 #ifndef __ANTARES_APPLICATION_WINDOW_INTERCONNECTIONS_H__
 #define __ANTARES_APPLICATION_WINDOW_INTERCONNECTIONS_H__
 
-#include <antares/wx-wrapper.h>
-#include "../toolbox/components/datagrid/component.h"
-#include "../toolbox/input/connection.h"
 #include "../toolbox/components/datagrid/renderer/connection.h"
-#include "../toolbox/components/button.h"
-#include <wx/sizer.h>
-
-#include "../application/menus.h"
 #include "link-property-buttons.h"
 
 namespace Antares

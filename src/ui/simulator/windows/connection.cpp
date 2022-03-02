@@ -26,14 +26,9 @@
 */
 
 #include "connection.h"
-#include <wx/stattext.h>
-#include <wx/checkbox.h>
-#include "../toolbox/validator.h"
 #include "../toolbox/create.h"
 #include <ui/common/component/panel.h>
 #include <wx/sizer.h>
-#include "../application/menus.h"
-#include <wx/textdlg.h>
 #include <wx/statline.h>
 #include <antares/memory/new_check.hxx>
 
@@ -130,31 +125,27 @@ Interconnection::Interconnection(wxWindow* parent,
     sizer_horizontal->Add(sizer_flex_grid, 0, wxALL | wxEXPAND);
     sizer_vertical->Add(sizer_horizontal, 0, wxALL | wxEXPAND, 6);
 
-    Component::Button* button;
-    Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)> onPopup;
-
     // Label "Link"
     wxStaticText* label = Component::CreateLabel(pLinkData, wxT("Link"), false, true);
     sizer_flex_grid->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
     // Link caption button
-    captionButton_ = new captionButton(pLinkData, sizer_flex_grid);
-
+    captionButton_ = new_check_allocation<captionButton>(pLinkData, sizer_flex_grid);
 
     // Hurdle costs button
-    hurdleCostsUsageButton_ = new hurdleCostsUsageButton(pLinkData, sizer_flex_grid);
+    hurdleCostsUsageButton_ = new_check_allocation<hurdleCostsUsageButton>(pLinkData, sizer_flex_grid);
 
     // Link transmission capacities usage button
-    ntcUsageButton_ = new ntcUsageButton(pLinkData, sizer_flex_grid);
+    ntcUsageButton_ = new_check_allocation<ntcUsageButton>(pLinkData, sizer_flex_grid);
 
     // Asset Type button
-    assetTypeButton_ = new assetTypeButton(pLinkData, sizer_flex_grid);
+    assetTypeButton_ = new_check_allocation<assetTypeButton>(pLinkData, sizer_flex_grid);
     
     // Loop flow usage button
-    loopFlowUsageButton_ = new loopFlowUsageButton(pLinkData, sizer_flex_grid);
+    loopFlowUsageButton_ = new_check_allocation<loopFlowUsageButton>(pLinkData, sizer_flex_grid);
 
     // Phase Shifter usage button
-    phaseShifterUsageButton_ = new phaseShifterUsageButton(pLinkData, sizer_flex_grid);
+    phaseShifterUsageButton_ = new_check_allocation<phaseShifterUsageButton>(pLinkData, sizer_flex_grid);
 
     sizer_vertical->AddSpacer(4);
 

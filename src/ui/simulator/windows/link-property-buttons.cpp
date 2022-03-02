@@ -5,7 +5,9 @@
 #include "../application/study.h"
 #include "../toolbox/create.h"
 #include "link-property-buttons.h"
+#include <antares/memory/new_check.hxx>
 
+using namespace Antares::MemoryUtils;
 
 namespace Antares
 {
@@ -50,7 +52,7 @@ namespace Window
                        wxFlexGridSizer* sizer_flex_grid)
         : menuLinkButton()
     {
-        button_ = new Component::Button(parent, wxT("Transmission capacities"), "images/16x16/light_green.png");
+        button_ = new_check_allocation<Component::Button>(parent, wxT("Transmission capacities"), "images/16x16/light_green.png");
         button_->menu(true);
         button_->onPopupMenu(onPopup_);
 
@@ -145,7 +147,7 @@ namespace Window
     {
         wxStaticText* label = Component::CreateLabel(parent, wxT("Local values"), false, true);
 
-        button_ = new Component::Button(parent, wxT("local values"), "images/16x16/light_green.png");
+        button_ = new_check_allocation<Component::Button>(parent, wxT("local values"), "images/16x16/light_green.png");
         button_->menu(true);
         button_->onPopupMenu(onPopup_);
 
@@ -216,7 +218,7 @@ namespace Window
                                      wxFlexGridSizer* sizer_flex_grid)
         : menuLinkButton()
     {
-        button_ = new Component::Button(parent, wxT("Asset type"), "images/16x16/light_green.png");
+        button_ = new_check_allocation<Component::Button>(parent, wxT("Asset type"), "images/16x16/light_green.png");
         button_->menu(true);
         button_->onPopupMenu(onPopup_);
 
@@ -385,7 +387,7 @@ namespace Window
         : menuLinkButton(), sizer_flex_grid_(sizer_flex_grid)
     {
         // Link caption
-        button_ = new Component::Button(parent, wxT("local values"), "images/16x16/link.png");
+        button_ = new_check_allocation<Component::Button>(parent, wxT("local values"), "images/16x16/link.png");
         button_->menu(true);
         button_->bold(true);
         button_->onPopupMenu(onPopup_);
@@ -393,7 +395,7 @@ namespace Window
 
         // Alias caption
         caption_label_ = Component::CreateLabel(parent, wxT("Caption"), false, true);
-        alias_button_ = new Component::Button(parent, wxT(""), "images/16x16/document.png",
+        alias_button_ = new_check_allocation<Component::Button>(parent, wxT(""), "images/16x16/document.png",
                                               this,
                                               &captionButton::onButtonEditCaption);
         local_horizontal_sizer_ = new wxBoxSizer(wxHORIZONTAL);
@@ -470,7 +472,7 @@ namespace Window
     // =========================
     loopFlowUsageButton::loopFlowUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid)
     {
-        button_ = new Component::Button(parent, wxT("loop flow"), "images/16x16/light_green.png");
+        button_ = new_check_allocation<Component::Button>(parent, wxT("loop flow"), "images/16x16/light_green.png");
         sizer_flex_grid->Add(button_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
     }
 
@@ -494,7 +496,7 @@ namespace Window
     // ============================
     phaseShifterUsageButton::phaseShifterUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid)
     {
-        button_ = new Component::Button(parent, wxT("phase shifter"), "images/16x16/light_green.png");
+        button_ = new_check_allocation<Component::Button>(parent, wxT("phase shifter"), "images/16x16/light_green.png");
         sizer_flex_grid->Add(button_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
     }
 
