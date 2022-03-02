@@ -24,7 +24,7 @@ protected:
 
 
 // ==================================
-// Abstract modifiable link button
+// Abstract menu link button
 // ==================================
 class menuLinkButton : public linkButton, public Yuni::IEventObserver<menuLinkButton>
 {
@@ -71,6 +71,52 @@ private:
 
 };
 
+
+// ============================
+// Hurdle costs usage button
+// ============================
+class hurdleCostsUsageButton : public menuLinkButton
+{
+public:
+    hurdleCostsUsageButton(wxWindow* parent,
+        wxFlexGridSizer* sizer_flex_grid);
+
+    ~hurdleCostsUsageButton() = default;
+
+    void update(Data::AreaLink* link) override;
+
+private:
+    void onPopupMenu(Component::Button&, wxMenu& menu, void*) override;
+
+    void onSelectUse(wxCommandEvent&);
+    void onSelectIgnore(wxCommandEvent&);
+
+};
+
+
+// =========================
+// Asset type button
+// =========================
+class assetTypeButton : public menuLinkButton
+{
+public:
+    assetTypeButton(wxWindow* parent,
+        wxFlexGridSizer* sizer_flex_grid);
+
+    ~assetTypeButton() = default;
+
+    void update(Data::AreaLink* link) override;
+
+private:
+    void onPopupMenu(Component::Button&, wxMenu& menu, void*) override;
+
+    void onSelectAC(wxCommandEvent&);
+    void onSelectDC(wxCommandEvent&);
+    void onSelectGas(wxCommandEvent&);
+    void onSelectVirt(wxCommandEvent&);
+    void onSelectOther(wxCommandEvent&);
+
+};
 
 // =========================
 // Caption button

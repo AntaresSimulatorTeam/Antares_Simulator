@@ -136,6 +136,245 @@ namespace Window
     }
 
 
+    // ============================
+    // Hurdle costs usage button
+    // ============================
+    hurdleCostsUsageButton::hurdleCostsUsageButton(wxWindow* parent,
+                                                   wxFlexGridSizer* sizer_flex_grid)
+        : menuLinkButton()
+    {
+        wxStaticText* label = Component::CreateLabel(parent, wxT("Local values"), false, true);
+
+        button_ = new Component::Button(parent, wxT("local values"), "images/16x16/light_green.png");
+        button_->menu(true);
+        button_->onPopupMenu(onPopup_);
+
+        sizer_flex_grid->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        sizer_flex_grid->Add(button_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+    }
+
+    void hurdleCostsUsageButton::update(Data::AreaLink* link)
+    {
+        currentLink_ = link;
+
+        if (link->useHurdlesCost)
+        {
+            button_->caption(wxT("Use hurdles costs"));
+            button_->image("images/16x16/light_green.png");
+        }
+        else
+        {
+            button_->caption(wxT("Ignore hurdles costs"));
+            button_->image("images/16x16/light_orange.png");
+        }
+    }
+
+    void hurdleCostsUsageButton::onPopupMenu(Component::Button&, wxMenu& menu, void*)
+    {
+        wxMenuItem* it;
+
+        it = Menu::CreateItem(
+            &menu, wxID_ANY, wxT("Use hurdles costs"), "images/16x16/light_green.png", wxEmptyString);
+        menu.Connect(it->GetId(),
+            wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler(hurdleCostsUsageButton::onSelectUse),
+            nullptr,
+            this);
+
+        it = Menu::CreateItem(
+            &menu, wxID_ANY, wxT("Ignore"), "images/16x16/light_orange.png", wxEmptyString);
+        menu.Connect(it->GetId(),
+            wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler(hurdleCostsUsageButton::onSelectIgnore),
+            nullptr,
+            this);
+    }
+
+    void hurdleCostsUsageButton::onSelectUse(wxCommandEvent&)
+    {
+        if (!currentLink_)
+            return;
+
+        currentLink_->useHurdlesCost = true;
+        broadCastChange();
+    }
+
+    void hurdleCostsUsageButton::onSelectIgnore(wxCommandEvent&)
+    {
+        if (!currentLink_)
+            return;
+
+        currentLink_->useHurdlesCost = false;
+        broadCastChange();
+    }
+
+
+    // =========================
+    // Asset type button
+    // =========================
+    assetTypeButton::assetTypeButton(wxWindow* parent,
+                                     wxFlexGridSizer* sizer_flex_grid)
+        : menuLinkButton()
+    {
+        button_ = new Component::Button(parent, wxT("Asset type"), "images/16x16/light_green.png");
+        button_->menu(true);
+        button_->onPopupMenu(onPopup_);
+
+        sizer_flex_grid->AddSpacer(10);
+        sizer_flex_grid->Add(button_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+    }
+
+    void assetTypeButton::update(Data::AreaLink* link)
+    {
+        currentLink_ = link;
+
+        switch (link->assetType)
+        {
+        case Data::atAC:
+            button_->caption(wxT("Asset type: AC"));
+            button_->image("images/16x16/light_green.png");
+            break;
+        case Data::atDC:
+            button_->caption(wxT("Asset type: DC"));
+            button_->image("images/16x16/light_orange.png");
+            break;
+        case Data::atGas:
+            button_->caption(wxT("Asset type: Gas"));
+            button_->image("images/16x16/light_orange.png");
+            break;
+        case Data::atVirt:
+            button_->caption(wxT("Asset type: Virtual"));
+            button_->image("images/16x16/light_orange.png");
+            break;
+        case Data::atOther:
+            button_->caption(wxT("Asset type: other"));
+            button_->image("images/16x16/light_orange.png");
+            break;
+        }
+    }
+
+    void assetTypeButton::onPopupMenu(Component::Button&, wxMenu& menu, void*)
+    {
+        wxMenuItem* it;
+
+        it = Menu::CreateItem(
+            &menu, wxID_ANY, wxT("Set to AC"), "images/16x16/light_green.png", wxEmptyString);
+        menu.Connect(it->GetId(),
+            wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler(assetTypeButton::onSelectAC),
+            nullptr,
+            this);
+
+        it = Menu::CreateItem(
+            &menu, wxID_ANY, wxT("Set to DC"), "images/16x16/light_orange.png", wxEmptyString);
+        menu.Connect(it->GetId(),
+            wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler(assetTypeButton::onSelectDC),
+            nullptr,
+            this);
+
+        it = Menu::CreateItem(
+            &menu, wxID_ANY, wxT("Set to Gas"), "images/16x16/light_orange.png", wxEmptyString);
+        menu.Connect(it->GetId(),
+            wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler(assetTypeButton::onSelectGas),
+            nullptr,
+            this);
+
+        it = Menu::CreateItem(
+            &menu, wxID_ANY, wxT("Set to Virt"), "images/16x16/light_orange.png", wxEmptyString);
+        menu.Connect(it->GetId(),
+            wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler(assetTypeButton::onSelectVirt),
+            nullptr,
+            this);
+
+        it = Menu::CreateItem(
+            &menu, wxID_ANY, wxT("Set to other"), "images/16x16/light_orange.png", wxEmptyString);
+        menu.Connect(it->GetId(),
+            wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler(assetTypeButton::onSelectOther),
+            nullptr,
+            this);
+    }
+
+    void assetTypeButton::onSelectAC(wxCommandEvent&)
+    {
+        if (!currentLink_)
+            return;
+
+        currentLink_->assetType = Data::atAC;
+        broadCastChange();
+
+        currentLink_->color[0] = 112;
+        currentLink_->color[1] = 112;
+        currentLink_->color[2] = 112;
+        currentLink_->style = Data::stPlain;
+        currentLink_->linkWidth = 1;
+    }
+
+    void assetTypeButton::onSelectDC(wxCommandEvent&)
+    {
+        if (!currentLink_)
+            return;
+
+        currentLink_->assetType = Data::atDC;
+        broadCastChange();
+
+        currentLink_->color[0] = 0;
+        currentLink_->color[1] = 255;
+        currentLink_->color[2] = 0;
+        currentLink_->style = Data::stDash;
+        currentLink_->linkWidth = 2;
+    }
+
+    void assetTypeButton::onSelectGas(wxCommandEvent&)
+    {
+        if (!currentLink_)
+            return;
+
+        currentLink_->assetType = Data::atGas;
+        broadCastChange();
+
+        currentLink_->color[0] = 0;
+        currentLink_->color[1] = 128;
+        currentLink_->color[2] = 255;
+        currentLink_->style = Data::stPlain;
+        currentLink_->linkWidth = 3;
+    }
+
+    void assetTypeButton::onSelectVirt(wxCommandEvent&)
+    {
+        if (!currentLink_)
+            return;
+
+        currentLink_->assetType = Data::atVirt;
+        broadCastChange();
+
+        currentLink_->color[0] = 255;
+        currentLink_->color[1] = 0;
+        currentLink_->color[2] = 128;
+        currentLink_->style = Data::stDotDash;
+        currentLink_->linkWidth = 2;
+    }
+
+    void assetTypeButton::onSelectOther(wxCommandEvent&)
+    {
+        if (!currentLink_)
+            return;
+
+        currentLink_->assetType = Data::atOther;
+        broadCastChange();
+
+        currentLink_->color[0] = 255;
+        currentLink_->color[1] = 128;
+        currentLink_->color[2] = 0;
+        currentLink_->style = Data::stDot;
+        currentLink_->linkWidth = 2;
+    }
+
+
+
     // =========================
     // Caption button
     // =========================

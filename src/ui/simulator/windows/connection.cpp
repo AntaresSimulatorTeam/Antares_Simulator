@@ -98,10 +98,6 @@ void linkNTCgrid::add(wxBoxSizer* sizer,
     gridIndirect->setOtherGrid(gridDirect);
 }
 
-// Events to update a link property in all Interconnection objects (upper banner for any link view) 
-Yuni::Event<void(const Antares::Data::AreaLink*)> onHurdleCostsUsageChanges;
-Yuni::Event<void(const Antares::Data::AreaLink*)> onAssetTypeChanges;
-
 
 // Events to update a link property in all Interconnection objects (upper banner for any link view) 
 Yuni::Event<void(const Antares::Data::AreaLink*)> onTransmissionCapacitiesUsageChanges;
@@ -112,11 +108,8 @@ Yuni::Event<void(const Antares::Data::AreaLink*)> onLinkCaptionChanges;
 
 Interconnection::Interconnection(wxWindow* parent,
                                  Toolbox::InputSelector::Connections* notifier,
-                                 linkGrid* link_grid) :
- wxScrolledWindow(parent),
- pLink(nullptr),
- pHurdlesCost(nullptr),
- pAssetType(nullptr)
+                                 linkGrid* link_grid)
+        : wxScrolledWindow(parent), pLink(nullptr)
 {
     auto* mainsizer = new_check_allocation<wxBoxSizer>(wxVERTICAL);
     SetSizer(mainsizer);
@@ -147,35 +140,15 @@ Interconnection::Interconnection(wxWindow* parent,
     // Link caption button
     captionButton_ = new captionButton(pLinkData, sizer_flex_grid);
 
-    // Hurdle costs
-    onHurdleCostsUsageChanges.connect(this, &Interconnection::updateHurdleCostsUsage);
-    {
-        label = Component::CreateLabel(pLinkData, wxT("Local values"), false, true);
-        button = new_check_allocation<Component::Button>(
-          pLinkData, wxT("local values"), "images/16x16/light_green.png");
-        button->menu(true);
-        onPopup.bind(this, &Interconnection::onPopupMenuHurdlesCosts);
-        button->onPopupMenu(onPopup);
-        sizer_flex_grid->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-        sizer_flex_grid->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pHurdlesCost = button;
-    }
+
+    // Hurdle costs button
+    hurdleCostsUsageButton_ = new hurdleCostsUsageButton(pLinkData, sizer_flex_grid);
 
     // Link transmission capacities usage button
     ntcUsageButton_ = new ntcUsageButton(pLinkData, sizer_flex_grid);
 
-    // Asset Type
-    onAssetTypeChanges.connect(this, &Interconnection::updateAssetType);
-    {
-        button = new_check_allocation<Component::Button>(
-          pLinkData, wxT("Asset type"), "images/16x16/light_green.png");
-        button->menu(true);
-        onPopup.bind(this, &Interconnection::onPopupMenuAssetType);
-        button->onPopupMenu(onPopup);
-        sizer_flex_grid->AddSpacer(10);
-        sizer_flex_grid->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pAssetType = button;
-    }
+    // Asset Type button
+    assetTypeButton_ = new assetTypeButton(pLinkData, sizer_flex_grid);
     
     // Loop flow usage button
     loopFlowUsageButton_ = new loopFlowUsageButton(pLinkData, sizer_flex_grid);
@@ -223,7 +196,7 @@ bool Interconnection::checkLinkView(Data::AreaLink* link)
     if (not sizer)
         return false;
 
-    if (captionButton_->isEmpty() || not pHurdlesCost || ntcUsageButton_->isEmpty())
+    if (captionButton_->isEmpty() || hurdleCostsUsageButton_->isEmpty() || ntcUsageButton_->isEmpty())
     {
         pLink = nullptr;
         sizer->Hide(pLinkData);
@@ -262,17 +235,13 @@ void Interconnection::updateLinkView(Data::AreaLink* link)
 
     wxString linkCaption = wxStringFromUTF8(link->from->name) << wxT("  /  ") << wxStringFromUTF8(link->with->name);
     captionButton_->setCaption(linkCaption);
+    
     captionButton_->update(link);
-
-    updateHurdleCostsUsage(link);
-
+    hurdleCostsUsageButton_->update(link);
     loopFlowUsageButton_->update(link);
-
     phaseShifterUsageButton_->update(link);
-
     ntcUsageButton_->update(link);
-
-    updateAssetType(link);
+    assetTypeButton_->update(link);
 
     finalizeView();
 }
@@ -286,215 +255,6 @@ void Interconnection::finalizeView()
     sizer->Layout();
     this->FitInside(); // ask the sizer about the needed size
     this->SetScrollRate(5, 5);
-}
-
-void Interconnection::updateHurdleCostsUsage(const Data::AreaLink* link)
-{
-    if (link->useHurdlesCost)
-    {
-        pHurdlesCost->caption(wxT("Use hurdles costs"));
-        pHurdlesCost->image("images/16x16/light_green.png");
-    }
-    else
-    {
-        pHurdlesCost->caption(wxT("Ignore hurdles costs"));
-        pHurdlesCost->image("images/16x16/light_orange.png");
-    }
-}
-
-void Interconnection::updateAssetType(const Data::AreaLink* link)
-{
-    switch (link->assetType)
-    {
-    case Data::atAC:
-        pAssetType->caption(wxT("Asset type: AC"));
-        pAssetType->image("images/16x16/light_green.png");
-        break;
-    case Data::atDC:
-        pAssetType->caption(wxT("Asset type: DC"));
-        pAssetType->image("images/16x16/light_orange.png");
-        break;
-    case Data::atGas:
-        pAssetType->caption(wxT("Asset type: Gas"));
-        pAssetType->image("images/16x16/light_orange.png");
-        break;
-    case Data::atVirt:
-        pAssetType->caption(wxT("Asset type: Virtual"));
-        pAssetType->image("images/16x16/light_orange.png");
-        break;
-    case Data::atOther:
-        pAssetType->caption(wxT("Asset type: other"));
-        pAssetType->image("images/16x16/light_orange.png");
-        break;
-    }
-}
-
-void Interconnection::onPopupMenuAssetType(Component::Button&, wxMenu& menu, void*)
-{
-    wxMenuItem* it;
-
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Set to AC"), "images/16x16/light_green.png", wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Interconnection::onSelectAssetTypeAC),
-                 nullptr,
-                 this);
-
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Set to DC"), "images/16x16/light_orange.png", wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Interconnection::onSelectAssetTypeDC),
-                 nullptr,
-                 this);
-
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Set to Gas"), "images/16x16/light_orange.png", wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Interconnection::onSelectAssetTypeGas),
-                 nullptr,
-                 this);
-
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Set to Virt"), "images/16x16/light_orange.png", wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Interconnection::onSelectAssetTypeVirt),
-                 nullptr,
-                 this);
-
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Set to other"), "images/16x16/light_orange.png", wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Interconnection::onSelectAssetTypeOther),
-                 nullptr,
-                 this);
-}
-
-void Interconnection::onSelectAssetTypeAC(wxCommandEvent&)
-{
-    if (!pLink)
-        return;
-
-    pLink->assetType = Data::atAC;
-    onAssetTypeChanges(pLink);
-    MarkTheStudyAsModified();
-    OnInspectorRefresh(nullptr);
-    pLink->color[0] = 112;
-    pLink->color[1] = 112;
-    pLink->color[2] = 112;
-    pLink->style = Data::stPlain;
-    pLink->linkWidth = 1;
-}
-
-void Interconnection::onSelectAssetTypeDC(wxCommandEvent&)
-{
-    if (!pLink)
-        return;
-
-    pLink->assetType = Data::atDC;
-    onAssetTypeChanges(pLink);
-    MarkTheStudyAsModified();
-    OnInspectorRefresh(nullptr);
-    pLink->color[0] = 0;
-    pLink->color[1] = 255;
-    pLink->color[2] = 0;
-    pLink->style = Data::stDash;
-    pLink->linkWidth = 2;
-}
-
-void Interconnection::onSelectAssetTypeGas(wxCommandEvent&)
-{
-    if (!pLink)
-        return;
-
-    pLink->assetType = Data::atGas;
-    onAssetTypeChanges(pLink);
-    MarkTheStudyAsModified();
-    OnInspectorRefresh(nullptr);
-    pLink->color[0] = 0;
-    pLink->color[1] = 128;
-    pLink->color[2] = 255;
-    pLink->style = Data::stPlain;
-    pLink->linkWidth = 3;
-}
-
-void Interconnection::onSelectAssetTypeVirt(wxCommandEvent&)
-{
-    if (!pLink)
-        return;
-
-    pLink->assetType = Data::atVirt;
-    onAssetTypeChanges(pLink);
-    MarkTheStudyAsModified();
-    OnInspectorRefresh(nullptr);
-    pLink->color[0] = 255;
-    pLink->color[1] = 0;
-    pLink->color[2] = 128;
-    pLink->style = Data::stDotDash;
-    pLink->linkWidth = 2;
-}
-
-void Interconnection::onSelectAssetTypeOther(wxCommandEvent&)
-{
-    if (!pLink)
-        return;
-
-    pLink->assetType = Data::atOther;
-    onAssetTypeChanges(pLink);
-    MarkTheStudyAsModified();
-    OnInspectorRefresh(nullptr);
-    pLink->color[0] = 255;
-    pLink->color[1] = 128;
-    pLink->color[2] = 0;
-    pLink->style = Data::stDot;
-    pLink->linkWidth = 2;
-}
-
-void Interconnection::onPopupMenuHurdlesCosts(Component::Button&, wxMenu& menu, void*)
-{
-    wxMenuItem* it;
-
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Use hurdles costs"), "images/16x16/light_green.png", wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Interconnection::onSelectIncludeHurdlesCosts),
-                 nullptr,
-                 this);
-
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Ignore"), "images/16x16/light_orange.png", wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Interconnection::onSelectIgnoreHurdlesCosts),
-                 nullptr,
-                 this);
-}
-
-void Interconnection::onSelectIncludeHurdlesCosts(wxCommandEvent&)
-{
-    if (!pLink)
-        return;
-
-    pLink->useHurdlesCost = true;
-    onHurdleCostsUsageChanges(pLink);
-    MarkTheStudyAsModified();
-    OnInspectorRefresh(nullptr);
-}
-
-void Interconnection::onSelectIgnoreHurdlesCosts(wxCommandEvent&)
-{
-    if (!pLink)
-        return;
-
-    pLink->useHurdlesCost = false;
-    onHurdleCostsUsageChanges(pLink);
-    MarkTheStudyAsModified();
-    OnInspectorRefresh(nullptr);
 }
 
 void Interconnection::onStudyLinkChanged(Data::AreaLink* link)

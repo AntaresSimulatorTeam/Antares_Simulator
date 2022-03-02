@@ -101,41 +101,22 @@ private:
     */
     void onConnectionChanged(Data::AreaLink* link);
 
-    void onPopupMenuAssetType(Component::Button&, wxMenu& menu, void*);
-    void onSelectAssetTypeAC(wxCommandEvent&);
-    void onSelectAssetTypeDC(wxCommandEvent&);
-    void onSelectAssetTypeGas(wxCommandEvent&);
-    void onSelectAssetTypeVirt(wxCommandEvent&);
-    void onSelectAssetTypeOther(wxCommandEvent&);
-
-    void onPopupMenuHurdlesCosts(Component::Button&, wxMenu& menu, void*);
-    void onSelectIncludeHurdlesCosts(wxCommandEvent&);
-    void onSelectIgnoreHurdlesCosts(wxCommandEvent&);
-
     void onStudyLinkChanged(Data::AreaLink* link);
 
     bool checkLinkView(Data::AreaLink* link);
     void updateLinkView(Data::AreaLink* link);
     void finalizeView();
 
-    // For a given link, update hurdle costs usage
-    void updateHurdleCostsUsage(const Data::AreaLink* link);
-    // For a given link, update asset type
-    void updateAssetType(const Data::AreaLink* link);
-
 private:
     //! Pointer to the current link
     Data::AreaLink* pLink;
-    //! Hudrles costs
-    Component::Button* pHurdlesCost;
 
     ntcUsageButton* ntcUsageButton_ = nullptr;
     captionButton* captionButton_ = nullptr;
+    hurdleCostsUsageButton* hurdleCostsUsageButton_ = nullptr;
+    assetTypeButton* assetTypeButton_ = nullptr;
     loopFlowUsageButton* loopFlowUsageButton_ = nullptr;
     phaseShifterUsageButton* phaseShifterUsageButton_ = nullptr;
-
-    //! Asset type
-    Component::Button* pAssetType;
  
     //! No Link
     wxWindow* pNoLink;
