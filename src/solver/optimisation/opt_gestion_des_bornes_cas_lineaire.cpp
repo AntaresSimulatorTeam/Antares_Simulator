@@ -34,6 +34,7 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
+#include "adequacy_patch.h"
 #include <math.h>
 #include <yuni/core/math.h>
 #include <limits.h>
@@ -140,6 +141,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
     double* Xmin;
     double* Xmax;
     int* TypeDeVariable;
+    bool AdequacyFirstStep;
+    uint SetToZeroLinkNTCForAdequacyPatchFirstStep;
 
     VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
@@ -160,6 +163,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
     Xmax = ProblemeAResoudre->Xmax;
     TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
 
+    AdequacyFirstStep = true; // ProblemeHebdo->AdequacyFirstStep;
+
     for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
     {
         AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
@@ -177,10 +182,33 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
             CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
 
-            Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+            SetToZeroLinkNTCForAdequacyPatchFirstStep
+              = SetNTCForAdequacyFirstStep(AdequacyFirstStep,
+                                           ProblemeHebdo->StartAreaAdequacyPatchType[Interco],
+                                           ProblemeHebdo->EndAreaAdequacyPatchType[Interco],
+                                           true,
+                                           true);
 
-            Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
-
+            if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::setToZero)
+            {
+                Xmax[Var] = 0.;
+                Xmin[Var] = 0.;
+            }
+            else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::setStartEndToZero)
+            {
+                Xmax[Var] = 0.;
+                Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+            }
+            else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::setEndStartToZero)
+            {
+                Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+                Xmin[Var] = 0.;
+            }
+            else
+            {
+                Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+                Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+            }
             if (Math::Infinite(Xmax[Var]) == 1)
             {
                 if (Math::Infinite(Xmin[Var]) == -1)

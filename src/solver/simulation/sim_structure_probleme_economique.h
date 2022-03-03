@@ -485,6 +485,8 @@ struct PROBLEME_HEBDO
     int NombreDInterconnexions;
     int* PaysOrigineDeLInterconnexion;
     int* PaysExtremiteDeLInterconnexion;
+    int* StartAreaAdequacyPatchType;
+    int* EndAreaAdequacyPatchType;
     COUTS_DE_TRANSPORT** CoutDeTransport;
 
     VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTC;

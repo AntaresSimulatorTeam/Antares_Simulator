@@ -188,7 +188,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     {
         auto& link = *(study.runtime->areaLink[i]);
         problem.PaysOrigineDeLInterconnexion[i] = link.from->index;
+        problem.StartAreaAdequacyPatchType[i] = link.from->adequacyPatchMode;
         problem.PaysExtremiteDeLInterconnexion[i] = link.with->index;
+        problem.EndAreaAdequacyPatchType[i] = link.with->adequacyPatchMode;
     }
 
     for (uint i = 0; i < study.runtime->bindingConstraintCount; ++i)
