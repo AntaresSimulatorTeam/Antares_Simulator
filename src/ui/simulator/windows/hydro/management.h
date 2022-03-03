@@ -99,8 +99,8 @@ private:
 private:
     //! The input area selector
     Toolbox::InputSelector::Area* pInputAreaSelector;
-    Data::Area* pArea;
-    bool pComponentsAreReady;
+    Data::Area* pArea = nullptr;
+    bool pComponentsAreReady = false;
     Component::Panel* pSupport = nullptr;
     wxTextCtrl* pIntermonthlyBreakdown = nullptr;
     wxTextCtrl* pInterdailyBreakdown = nullptr;

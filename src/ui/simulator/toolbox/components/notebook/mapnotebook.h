@@ -128,7 +128,7 @@ public:
             wxPoint coords;
             wxBitmap* buttonImage = nullptr;
             wxBitmap* hoverImage = nullptr;
-            wxRect* pBoundingBox;
+            wxRect* pBoundingBox = nullptr;
             MapTabs* parentTabFrame = nullptr;
             bool isVisible;
             bool drawHover = false;

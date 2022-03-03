@@ -180,19 +180,19 @@ public:
     wxString caption;
 
     //! Flag to mark the study as modified if cells are updated
-    bool shouldMarkStudyModifiedWhenModifyingCell;
+    bool shouldMarkStudyModifiedWhenModifyingCell = true;
 
     //! The main sizer with all components that the user expects to see
     wxSizer* sizerForAllComponents;
     wxSizer* toolbarSizer;
     wxSizer* toolbarSizerValues;
 
-    wxComboBox* pLayerFilter;
+    wxComboBox* pLayerFilter = nullptr;
     std::vector<int> layerFilteredIndices;
     //! The attached renderer
     Renderer::IRenderer* renderer;
     //! Precision
-    Date::Precision precision;
+    Date::Precision precision = Date::stepAny;
 
     struct
     {
@@ -239,26 +239,19 @@ public:
     //@}
 
     //! The real datagrid component
-    DBGrid* grid;
+    DBGrid* grid = nullptr;
 
     //! Custom implementation of wxGridTable
-    VGridHelper* gridHelper;
+    VGridHelper* gridHelper = nullptr;
     //! Cell renderer
-    AntaresWxGridRenderer* cellRenderer;
+    AntaresWxGridRenderer* cellRenderer = nullptr;
 
     //! Counter used for beginUpdate / endUpdate
-    uint updateCount;
+    uint updateCount = 0;
 
 }; // class InternalState
 
-InternalState::InternalState() :
- shouldMarkStudyModifiedWhenModifyingCell(true),
- precision(Date::stepAny),
- grid(nullptr),
- gridHelper(nullptr),
- cellRenderer(nullptr),
- updateCount(0),
- pLayerFilter(nullptr)
+InternalState::InternalState()
 {
     filter.component = nullptr;
     filter.sizer = nullptr;

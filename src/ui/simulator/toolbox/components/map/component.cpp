@@ -458,7 +458,7 @@ void Component::removeLayer(Antares::Component::MapNotebook::Page& page)
     }
 }
 
-void Component::drawerVisible(bool /* v */)
+void Component::drawerVisible()
 {
     wxSizer* sizer = GetSizer();
     if (sizer)
