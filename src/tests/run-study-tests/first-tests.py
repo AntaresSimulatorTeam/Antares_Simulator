@@ -1,8 +1,11 @@
 import pytest
-from pathlib import Path
-import sys
+from check_on_results.check_general import check_list
 
-from checks_on_results import *
+from check_on_results.output_compare import output_compare
+from check_on_results.integrity_compare import integrity_compare
+from check_on_results.reservoir_levels import reservoir_levels
+from check_on_results.unfeasible_problem import unfeasible_problem
+
 from study_run import *
 from results_remover import *
 from print_results_handler import *
@@ -62,8 +65,6 @@ def test_1(checks, study_path):
     checks.add(check = output_compare(study_path), system = 'win32')
     checks.add(check = integrity_compare(study_path))
     checks.add(check = reservoir_levels(study_path))
-
-
 
 
 @pytest.mark.short
