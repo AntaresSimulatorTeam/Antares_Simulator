@@ -26,7 +26,7 @@ namespace Antares
 {
 namespace Statistics
 {
-void HasReadFromDisk(Yuni::uint64 size)
+void HasReadFromDisk(Yuni::uint64 /* size */)
 {
 }
 } // namespace Statistics
@@ -115,8 +115,8 @@ public:
     Matrix_mock_load_to_buffer(uint height, uint width, const vector<T>& vec) :
      Matrix<T, ReadWriteT>(height, width, vec), fake_mtx_error_when_loading_(IO::errNone){};
 
-    IO::Error loadFromFileToBuffer(typename Matrix<T, ReadWriteT>::BufferType& buffer,
-                                   const AnyString& filename) const override
+    IO::Error loadFromFileToBuffer(typename Matrix<T, ReadWriteT>::BufferType& /* buffer */,
+                                   const AnyString& /* filename */) const override
     {
         return fake_mtx_error_when_loading_;
     }
