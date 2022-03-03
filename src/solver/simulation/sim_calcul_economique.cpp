@@ -63,6 +63,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.hydroHotStart
       = (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart);
 
+    problem.UseAdequacyPatch = parameters.include.adequacyPatch;
+    problem.AdequacyFirstStep = parameters.include.adequacyPatch;
+
     problem.WaterValueAccurate
       = (study.parameters.hydroPricing.hpMode == Antares::Data::HydroPricingMode::hpMILP)
           ? OUI_ANTARES
@@ -111,6 +114,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         auto& area = *(study.areas[i]);
 
         problem.NomsDesPays[i] = area.id.c_str();
+        problem.AreaAdequacyPatchMode[i] = area.adequacyPatchMode;
 
         problem.CoutDeDefaillancePositive[i] = area.thermal.unsuppliedEnergyCost;
 

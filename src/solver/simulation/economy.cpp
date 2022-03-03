@@ -146,7 +146,38 @@ bool Economy::year(Progression::Task& progression,
 
         try
         {
-            OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
+            if (pProblemesHebdo[numSpace]->UseAdequacyPatch)
+            {
+                pProblemesHebdo[numSpace]->AdequacyFirstStep = true;
+                OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
+                pProblemesHebdo[numSpace]->AdequacyFirstStep = false;
+
+                for (int pays = 0; pays < pProblemesHebdo[numSpace]->NombreDePays; ++pays)
+                {
+                    if (pProblemesHebdo[numSpace]->AreaAdequacyPatchMode[pays]
+                        == Data::adqmPhysicalAreaInsideAdqPatch)
+                        memcpy(
+                          pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDENS,
+                          pProblemesHebdo[numSpace]
+                            ->ResultatsHoraires[pays]
+                            ->ValeursHorairesDeDefaillancePositive,
+                          pProblemesHebdo[numSpace]->NombreDePasDeTemps * sizeof(double));
+                    else
+                        memset(
+                          pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDENS,
+                          0,
+                          pProblemesHebdo[numSpace]->NombreDePasDeTemps * sizeof(double));
+                }
+
+                ::SIM_RenseignementProblemeHebdo(
+                  *pProblemesHebdo[numSpace], state, numSpace, hourInTheYear); // todo ? correct
+                OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
+            }
+            else
+            {
+                OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
+            }
+
             DispatchableMarginForAllAreas(
               study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
 

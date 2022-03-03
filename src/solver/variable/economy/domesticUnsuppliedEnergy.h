@@ -237,8 +237,7 @@ public:
     {
         // Total DomesticUnsuppliedEnergy emissions
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-          = 0; // Connect to DENS values in the similar manner like below
-        // state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek];
+          = state.hourlyResults->ValeursHorairesDENS[state.hourInTheWeek];
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);

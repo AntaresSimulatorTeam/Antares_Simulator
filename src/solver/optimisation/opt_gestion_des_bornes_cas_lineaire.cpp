@@ -401,9 +401,18 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                 else
                     Xmax[Var] = 0.;
 
+                // adq patch: update ENS <= DENS in 2nd run
+                if (ProblemeHebdo->UseAdequacyPatch == true
+                    && ProblemeHebdo->AdequacyFirstStep == false)
+                    if (ProblemeHebdo->AreaAdequacyPatchMode[Pays]
+                        == Data::adqmPhysicalAreaInsideAdqPatch)
+                        Xmax[Var]
+                          = ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo];
+
                 ProblemeHebdo->ResultatsHoraires[Pays]
                   ->ValeursHorairesDeDefaillancePositive[PdtHebdo]
                   = 0.0;
+
                 AdresseDuResultat = &(ProblemeHebdo->ResultatsHoraires[Pays]
                                         ->ValeursHorairesDeDefaillancePositive[PdtHebdo]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
