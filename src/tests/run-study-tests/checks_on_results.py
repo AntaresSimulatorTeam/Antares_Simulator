@@ -64,6 +64,7 @@ class check_list:
 
 
     def output_results_needed(self):
+        # print("output_results_needed :", self.check_objects)
         for check in self.check_objects:
             if check.need_output_results():
                 return True
