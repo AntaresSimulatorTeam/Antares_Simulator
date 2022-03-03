@@ -532,7 +532,7 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
       = Category(pg, wxT("Timeseries generation"), wxT("cluster.reliabilitymodel"));
     pPGThClusterDoGenerateTS
       = P_ENUM("Generate timeseries", "cluster.gen-ts", localGenTS);
-      = P_FLOAT("Volatility (forced)", "cluster.forcedVolatility");
+    pPGThClusterVolatilityForced  = P_FLOAT("Volatility (forced)", "cluster.forcedVolatility");
     pPGThClusterVolatilityPlanned = P_FLOAT("Volatility (planned)", "cluster.plannedVolatility");
     pPGThClusterLawForced = P_ENUM("Law (forced)", "cluster.forcedlaw", thermalLaws);
     pPGThClusterLawPlanned = P_ENUM("Law (planned)", "cluster.plannedlaw", thermalLaws);
@@ -706,6 +706,16 @@ void Frame::apply(const InspectorData::Ptr& data)
         {
             pPGCommonStudyName->SetValueFromString(wxStringFromUTF8(study->header.caption));
             pPGCommonStudyAuthor->SetValueFromString(wxStringFromUTF8(study->header.author));
+        }
+    }
+    else
+    {
+      // ugly hack : to allow self refresh when several properties
+      // are modified in the same time
+      if (not pAlreadyConnectedToSimulationChangesEvent)
+        {
+          OnStudySimulationSettingsChanged.connect(this, &Frame::delayApply);
+          pAlreadyConnectedToSimulationChangesEvent = true;
         }
     }
 
