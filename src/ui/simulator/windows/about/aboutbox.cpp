@@ -51,10 +51,13 @@ Michael		Boulade		V4 - V6\n\
 Michel		Doquet		V1 - V7\n\
 Damien		Gerard		V3 - V5\n\
 Robert		Gonzalez		V3 - V5\n\
+Jean-Marie		Kerloch		V7-V8\n\
 Sylvain		Marandon		V6 - V7\n\
 Eric		Momot		V1 - V2\n\
 Papa		Ndiaye		V5 - V7\n\
-Guillaume		Pierre		V5 - V7\n\
+Florian		Omnes	V7-V8\n\
+Guillaume		Pierre		V5 - V8\n\
+Andrea		Sgattoni		V6-V8\n\
 Frederique	Verrier		V1 - V2\n\
 Li		Wu		V5\n\
 \n\
