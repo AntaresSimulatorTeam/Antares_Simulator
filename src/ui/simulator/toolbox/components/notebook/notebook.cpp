@@ -1003,7 +1003,7 @@ bool Notebook::select(const wxString& name, bool triggerEvents)
     return false;
 }
 
-Notebook::Page* Notebook::find(const wxString& name, bool warn)
+Notebook::Page* Notebook::find(const wxString& name)
 {
     foreach (auto* page, pPages)
     {
@@ -1012,12 +1012,9 @@ Notebook::Page* Notebook::find(const wxString& name, bool warn)
     }
 
 #ifndef NDEBUG
-    if (warn)
-    {
-        String sname;
-        wxStringToString(name, sname);
-        logs.warning() << "notebook: impossible to find '" << sname << "'";
-    }
+    String sname;
+    wxStringToString(name, sname);
+    logs.warning() << "notebook: impossible to find '" << sname << "'";
 #endif
     return nullptr;
 }

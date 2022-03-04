@@ -91,7 +91,7 @@ MapNotebook::MapNotebook(wxWindow* parent, Notebook::Orientation orientation) :
 
 void MapNotebook::onMapLayerChanged(const wxString* text)
 {
-    if (find(*text, false) != nullptr)
+    if (find(*text) != nullptr)
         select(*text);
 }
 
