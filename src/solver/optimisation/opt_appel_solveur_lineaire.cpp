@@ -54,6 +54,7 @@ extern "C"
 #include "../infeasible-problem-analysis/exceptions.h"
 
 #include <chrono>
+#include <cmath>
 
 using namespace operations_research;
 
@@ -66,6 +67,16 @@ using namespace Yuni;
 #else
 #define SNPRINTF snprintf
 #endif
+
+#define TOLERANCE 1e-3
+void CoeffRound(char* out, size_t buf_size, const char* fmt, double coeff)
+{
+  if (std::fabs(std::round(coeff) - coeff) < TOLERANCE)
+      SNPRINTF(out, buf_size, "%ld", static_cast<long int>(std::round(coeff)));
+  else
+      SNPRINTF(out, buf_size, fmt, coeff);
+}
+#undef TOLERANCE
 
 class TimeMeasurement
 {
@@ -570,14 +581,14 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     {
         if (CoutLineaire[Var] != 0.0)
         {
-            SNPRINTF(Nombre, 1024, "%-.10lf", CoutLineaire[Var]);
+            CoeffRound(Nombre, 1024, "%-.10lf", CoutLineaire[Var]);
             fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, Nombre);
         }
 
         il = Cdeb[Var];
         while (il >= 0)
         {
-            SNPRINTF(Nombre, 1024, "%-.10lf", CoefficientsDeLaMatriceDesContraintes[il]);
+            CoeffRound(Nombre, 1024, "%-.10lf", CoefficientsDeLaMatriceDesContraintes[il]);
             fprintf(Flot, "    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il], Nombre);
             il = Csui[il];
         }
@@ -588,7 +599,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     {
         if (SecondMembre[Cnt] != 0.0)
         {
-            SNPRINTF(Nombre, 1024, "%-.9lf", SecondMembre[Cnt]);
+            CoeffRound(Nombre, 1024, "%-.9lf", SecondMembre[Cnt]);
             fprintf(Flot, "    RHSVAL    R%07d  %s\n", Cnt, Nombre);
         }
     }
@@ -599,7 +610,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     {
         if (TypeDeBorneDeLaVariable[Var] == VARIABLE_FIXE)
         {
-            SNPRINTF(Nombre, 1024, "%-.9lf", Xmin[Var]);
+            CoeffRound(Nombre, 1024, "%-.9lf", Xmin[Var]);
 
             fprintf(Flot, " FX BNDVALUE  C%07d  %s\n", Var, Nombre);
             continue;
@@ -609,11 +620,11 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
         {
             if (Xmin[Var] != 0.0)
             {
-                SNPRINTF(Nombre, 1024, "%-.9lf", Xmin[Var]);
+                CoeffRound(Nombre, 1024, "%-.9lf", Xmin[Var]);
                 fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, Nombre);
             }
 
-            SNPRINTF(Nombre, 1024, "%-.9lf", Xmax[Var]);
+            CoeffRound(Nombre, 1024, "%-.9lf", Xmax[Var]);
             fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, Nombre);
         }
 
@@ -621,7 +632,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
         {
             if (Xmin[Var] != 0.0)
             {
-                SNPRINTF(Nombre, 1024, "%-.9lf", Xmin[Var]);
+                CoeffRound(Nombre, 1024, "%-.9lf", Xmin[Var]);
                 fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, Nombre);
             }
         }
@@ -631,7 +642,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
             fprintf(Flot, " MI BNDVALUE  C%07d\n", Var);
             if (Xmax[Var] != 0.0)
             {
-                SNPRINTF(Nombre, 1024, "%-.9lf", Xmax[Var]);
+                CoeffRound(Nombre, 1024, "%-.9lf", Xmax[Var]);
                 fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, Nombre);
             }
         }
