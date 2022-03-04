@@ -880,7 +880,7 @@ AboutBox::AboutBox(wxWindow* parent) :
     textSizer->Add(
       Resources::StaticBitmapLoadFromFile(this, wxID_ANY, "images/128x128/antares.png"),
       0,
-      wxALL | wxALIGN_TOP | wxALIGN_CENTER_HORIZONTAL);
+      wxALL | wxALIGN_TOP);
     textSizer->AddSpacer(15);
 
     auto* sv = new wxBoxSizer(wxVERTICAL);
@@ -1031,7 +1031,7 @@ AboutBox::AboutBox(wxWindow* parent) :
     // Close button
     {
         auto* btn = Component::CreateButton(pPanel, wxT("   Close   "), this, &AboutBox::onClose);
-        pPanelSizer->Add(btn, 0, wxFIXED_MINSIZE | wxALIGN_CENTRE_VERTICAL | wxALL);
+        pPanelSizer->Add(btn, 0, wxFIXED_MINSIZE | wxALL);
         pPanelSizer->Add(5, 2);
         btn->SetDefault();
         btn->SetFocus();
