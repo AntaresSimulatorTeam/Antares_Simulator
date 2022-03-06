@@ -527,7 +527,7 @@ void SaveAs::onSave(void*)
 
     // Closing the Window
     pResult = svsSaved;
-    Dispatcher::GUI::Close(this);
+    this->Close();
 
     mainFrm.saveStudyAs(path, copyOutput, copyUserData, copyLogs);
 }
