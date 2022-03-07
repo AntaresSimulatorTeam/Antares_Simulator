@@ -21,7 +21,7 @@ jobs:
         include:
           - os: windows-latest
             triplet: x64-windows
-            vcpkgCommitId: 'ee17a685087a6886e5681e355d36cd784f0dd2c8'
+            vcpkgCommitId: 'c64c0fdac572ca43ea5ae018fc408ddced50d5b1'
             vcpkgPackages: openssl curl wxwidgets boost-test boost-process boost-filesystem boost-dll boost-regex
 
     steps:
