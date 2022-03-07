@@ -44,7 +44,7 @@ using namespace Yuni;
 
 #define SEP IO::Separator
 
-#define HYDRO_DAILY_SOLVER_DEBUG 0
+#define HYDRO_DAILY_SOLVER_DEBUG 1
 
 namespace Antares
 {
