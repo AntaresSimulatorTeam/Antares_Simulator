@@ -29,6 +29,8 @@
 
 #include "cluster-item.h"
 
+#include <memory>
+
 namespace Antares
 {
 namespace Component
@@ -45,8 +47,7 @@ namespace Item
 class ThermalClusterItem : public ClusterItem
 {
 public:
-    //! The smartptr
-    typedef Yuni::SmartPtr<ThermalClusterItem> Ptr;
+    using Ptr = std::shared_ptr<ThermalClusterItem>;
 
 public:
     //! \name Constructor & Destructor
@@ -67,14 +68,16 @@ public:
     Antares::Data::ThermalCluster* thermalAggregate() const;
 
 private:
-    wxString getClusterIconFilePath() override;
     wxString htmlContentTail() override;
 
-private:
+    wxString pIconFileRefresh;
+    wxString pIconFileNoRefresh;
+
+    void preloadAdditionalIcons();
+    void addAdditionalIcons(wxString& out) const override;
+
     //! The current ThermalCluster
     Antares::Data::ThermalCluster* pThermalCluster;
-    double pThermalClusterMarketBidCost;
-
 }; // class ThermalClusterItem
 
 } // namespace Item

@@ -95,7 +95,7 @@ private:
 
 }; // class Panel
 
-} // namespace Thermal
+} // namespace Renewable
 } // namespace Window
 } // namespace Antares
 

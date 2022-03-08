@@ -49,7 +49,6 @@ namespace Toolbox
 {
 namespace InputSelector
 {
-
 using namespace Component::HTMLListbox::Datasource;
 
 /*!

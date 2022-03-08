@@ -39,7 +39,6 @@ namespace Window
 {
 namespace Options
 {
-
 extern Yuni::Event<void(bool)> OnRenewableGenerationModellingChanged;
 
 /*!

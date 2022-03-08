@@ -54,7 +54,6 @@ private:
     void renewableEventConnect();
     void renewableEventDisconnect();
 
-
     void onStudyRenewableClusterRenamed(Data::RenewableCluster* cluster);
 
     void renewableSettingsChanged();

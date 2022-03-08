@@ -69,7 +69,8 @@ macro(solver_app name swap)
 		mps/mps_extern_global.h
 		mps/mps_global.c
 		${SRCS}
-		main.h exceptions.h main.hxx main.cpp
+		main.cpp
+        application.h application.cpp
 	)
 	
 	set(ANTARES_SOLVER_LIBS		

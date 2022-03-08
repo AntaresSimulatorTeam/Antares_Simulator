@@ -107,9 +107,9 @@ SwapFileInfo::~SwapFileInfo()
     }
 }
 
-bool SwapFileInfo::openSwapFile(uint count)
+bool SwapFileInfo::openSwapFile(uint count, bool displayDiskLogs)
 {
-    if (::Antares::Memory::InformAboutDiskSpaceReservation)
+    if (displayDiskLogs)
         logs.info() << "Reserving disk space...";
 
     {

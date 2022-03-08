@@ -33,8 +33,9 @@
 using namespace Yuni;
 
 #define SEP IO::Separator
-namespace {
-    const YString DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES = "ntc";
+namespace
+{
+const YString DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES = "ntc";
 }
 
 namespace Antares

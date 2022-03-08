@@ -604,7 +604,7 @@ void ConstraintsBuilderWizard::onDelete(void*)
     if (not Data::Study::Current::Valid())
         return;
     auto studyptr = Data::Study::Current::Get();
-    if (not studyptr)
+    if (!studyptr)
         return;
     auto& study = *studyptr;
 
@@ -671,7 +671,7 @@ void ConstraintsBuilderWizard::enableAll(bool v)
     pBtnBuild->Enable(false);
 }
 
-void ConstraintsBuilderWizard::fileMapping(FileMapping* m)
+void ConstraintsBuilderWizard::fileMapping(FileMappingPtr m)
 {
     pFileMapping = m;
 

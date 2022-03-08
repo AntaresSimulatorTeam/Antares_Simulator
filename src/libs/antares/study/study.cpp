@@ -1049,35 +1049,6 @@ bool Study::areaRename(Area* area, AreaName newName)
     return ret;
 }
 
-bool Study::areasThermalClustersMinStablePowerValidity(
-  std::map<int, YString>& areaClusterNames) const
-{
-    YString areaname = "";
-    bool resultat = true;
-    auto endarea = areas.end();
-    int count = 0;
-
-    for (auto areait = areas.begin(); areait != endarea; areait++)
-    {
-        areaname = areait->second->name;
-        logs.debug() << "areaname : " << areaname;
-
-        std::vector<YString> clusternames;
-
-        if (not areait->second->thermalClustersMinStablePowerValidity(clusternames))
-        {
-            for (auto it = clusternames.begin(); it != clusternames.end(); it++)
-            {
-                logs.debug() << "areaname : " << areaname << " ; clustername : " << (*it);
-                YString res = "Area : " + areaname + " cluster name : " + (*it).c_str();
-                areaClusterNames.insert(std::pair<int, YString>(count++, res));
-            }
-            resultat = false;
-        }
-    }
-    return resultat;
-}
-
 bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 {
     // A name must not be empty
@@ -1602,6 +1573,53 @@ void Study::removeTimeseriesIfTSGeneratorEnabled()
         if (0 != (parameters.timeSeriesToGenerate & timeSeriesThermal))
             areas.removeThermalTimeseries();
     }
+}
+
+void Study::computePThetaInfForThermalClusters() const
+{
+    for (uint i = 0; i != this->areas.size(); i++)
+    {
+        // Alias de la zone courant
+        const auto& area = *(this->areas.byIndex[i]);
+
+        for (uint j = 0; j < area.thermal.list.size(); j++)
+        {
+            // Alias du cluster courant
+            auto& cluster = area.thermal.list.byIndex[j];
+            for (uint k = 0; k < HOURS_PER_YEAR; k++)
+                cluster->PthetaInf[k] = cluster->modulation[Data::thermalMinGenModulation][k]
+                                        * cluster->unitCount * cluster->nominalCapacity;
+        }
+    }
+}
+
+bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,
+                                                std::map<int, YString>& areaClusterNames)
+{
+    YString areaname = "";
+    bool resultat = true;
+    auto endarea = areas.end();
+    int count = 0;
+
+    for (auto areait = areas.begin(); areait != endarea; areait++)
+    {
+        areaname = areait->second->name;
+        logs.debug() << "areaname : " << areaname;
+
+        std::vector<YString> clusternames;
+
+        if (not areait->second->thermalClustersMinStablePowerValidity(clusternames))
+        {
+            for (auto it = clusternames.begin(); it != clusternames.end(); it++)
+            {
+                logs.debug() << "areaname : " << areaname << " ; clustername : " << (*it);
+                YString res = "Area : " + areaname + " cluster name : " + (*it).c_str();
+                areaClusterNames.insert(std::pair<int, YString>(count++, res));
+            }
+            resultat = false;
+        }
+    }
+    return resultat;
 }
 
 } // namespace Data

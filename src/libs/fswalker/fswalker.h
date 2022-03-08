@@ -35,6 +35,8 @@
 #include "statistics.h"
 #include "job.h"
 
+#include <memory>
+
 namespace FSWalker
 {
 enum Flow
@@ -59,7 +61,7 @@ class IExtension
 {
 public:
     //! Most suitable smart pointer
-    typedef Yuni::SmartPtr<IExtension> Ptr;
+    using Ptr = std::shared_ptr<IExtension>;
     //! List
     typedef std::vector<Ptr> Vector;
 
@@ -133,9 +135,7 @@ public:
     explicit Walker(const AnyString& logprefix);
     ~Walker();
 
-    void add(IExtension::Ptr& extension);
-
-    void add(IExtension* extension);
+    void add(IExtension::Ptr extension);
 
     void directory(const AnyString& path);
 

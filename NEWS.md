@@ -1,4 +1,4 @@
 ﻿Antares Changelog
 =================
 
-Please refer to [doc/CHANGELOG.md](doc/CHANGELOG.md) 
+Please refer to [docs/CHANGELOG.md](docs/CHANGELOG.md)

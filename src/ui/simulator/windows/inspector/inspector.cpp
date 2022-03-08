@@ -101,7 +101,7 @@ uint SelectionBindingConstraintCount()
     return ((!(!gData)) ? (uint)gData->constraints.size() : 0);
 }
 
-// gp : we should add contribution of renewable clusters. Where is this function used and why ? 
+// gp : we should add contribution of renewable clusters. Where is this function used and why ?
 uint SelectionTotalCount()
 {
     return (!(!gData)) ? (uint)gData->constraints.size() + (uint)gData->ThClusters.size()
@@ -158,15 +158,15 @@ void Show()
     Antares::Dispatcher::GUI::Refresh(gInspector);
 }
 
-void SelectStudy(const Data::Study* study)
+void SelectStudy(const Data::Study::Ptr& study)
 {
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
 
     gData->clear();
     if (study)
     {
-        if (gData->studies.insert(const_cast<Data::Study*>(study)).second)
+        if (gData->studies.insert(study).second)
             gData->empty = false;
     }
 
@@ -174,12 +174,12 @@ void SelectStudy(const Data::Study* study)
         gInspector->apply(gData);
 }
 
-void AddStudy(const Data::Study* study)
+void AddStudy(const Data::Study::Ptr& study)
 {
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
 
-    if (gData->studies.insert(const_cast<Data::Study*>(study)).second)
+    if (gData->studies.insert(study).second)
     {
         gData->empty = false;
         if (gInspector)
@@ -190,7 +190,7 @@ void AddStudy(const Data::Study* study)
 void SelectArea(const Data::Area* area)
 {
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
 
     gData->clear();
     if (area)
@@ -206,7 +206,7 @@ void SelectArea(const Data::Area* area)
 void AddArea(const Data::Area* area)
 {
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
 
     if (gData->areas.insert(const_cast<Data::Area*>(area)).second)
     {
@@ -222,7 +222,7 @@ void AddAreas(const Data::Area::Vector& list)
         return;
 
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
 
     bool notEmpty = false;
     Data::Area::Vector::const_iterator end = list.end();
@@ -247,7 +247,7 @@ void AddAreas(const Data::Area::Set& list)
         return;
 
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
 
     bool notEmpty = false;
     Data::Area::Set::const_iterator end = list.end();
@@ -272,7 +272,7 @@ void AddLinks(const Data::AreaLink::Vector& list)
         return;
 
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
 
     bool notEmpty = false;
     Data::AreaLink::Vector::const_iterator end = list.end();
@@ -292,7 +292,7 @@ void AddLinks(const Data::AreaLink::Set& list)
     if (list.empty())
         return;
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
 
     bool notEmpty = false;
     Data::AreaLink::Set::const_iterator end = list.end();
@@ -315,7 +315,8 @@ const Data::AreaLink::Set& getLinks()
 void AddBindingConstraint(const Data::BindingConstraint* constraint)
 {
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+
     typedef Data::BindingConstraint* ConstraintPtr;
     if (gData->constraints.insert(const_cast<ConstraintPtr>(constraint)).second)
     {
@@ -330,7 +331,7 @@ void AddBindingConstraints(const Data::BindingConstraint::Set& list)
     if (list.empty())
         return;
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
 
     typedef Data::BindingConstraint StudyConstraintType;
     bool notEmpty = false;
@@ -350,7 +351,8 @@ void AddBindingConstraints(const Data::BindingConstraint::Set& list)
 void AddLink(const Data::AreaLink* link)
 {
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+
     if (gData->links.insert(const_cast<Data::AreaLink*>(link)).second)
     {
         gData->empty = false;
@@ -363,7 +365,8 @@ void AddLink(const Data::AreaLink* link)
 void AddThermalCluster(const Data::ThermalCluster* cluster)
 {
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+
     if (gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(cluster)).second)
     {
         gData->empty = false;
@@ -378,12 +381,13 @@ void AddThermalClusters(const Data::ThermalCluster::Vector& list)
     if (list.empty())
         return;
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
 
     bool notEmpty = false;
     Data::ThermalCluster::Vector::const_iterator end = list.end();
     for (Data::ThermalCluster::Vector::const_iterator i = list.begin(); i != end; ++i)
-        notEmpty = gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
+        notEmpty
+          = gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
 
     if (notEmpty)
     {
@@ -399,12 +403,13 @@ void AddThermalClusters(const Data::ThermalCluster::Set& list)
     if (list.empty())
         return;
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
 
     bool notEmpty = false;
     Data::ThermalCluster::Set::const_iterator end = list.end();
     for (Data::ThermalCluster::Set::const_iterator i = list.begin(); i != end; ++i)
-        notEmpty = gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
+        notEmpty
+          = gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
 
     if (notEmpty)
     {
@@ -467,7 +472,8 @@ void RemoveRenewableCluster(const Data::RenewableCluster* cluster)
 void SelectAreas(const Data::Area::Vector& areas)
 {
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+
     gData->clear();
     if (!areas.empty())
     {
@@ -489,7 +495,8 @@ void SelectAreas(const Data::Area::Vector& areas)
 void SelectAreas(const Data::Area::Set& areas)
 {
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+
     gData->clear();
     if (!areas.empty())
     {
@@ -511,7 +518,8 @@ void SelectAreas(const Data::Area::Set& areas)
 void SelectBindingConstraints(const Data::BindingConstraint::Vector& list)
 {
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+
     gData->clear();
     if (!list.empty())
     {
@@ -530,7 +538,8 @@ void SelectBindingConstraints(const Data::BindingConstraint::Vector& list)
 void SelectLink(const Data::AreaLink* lnk)
 {
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+
     gData->clear();
     if (lnk)
     {
@@ -544,7 +553,8 @@ void SelectLink(const Data::AreaLink* lnk)
 void SelectLinks(const Data::AreaLink::Vector& lnks)
 {
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+
     gData->clear();
     if (!lnks.empty())
     {
@@ -562,7 +572,8 @@ void SelectLinks(const Data::AreaLink::Vector& lnks)
 void SelectThermalCluster(const Data::ThermalCluster* cluster)
 {
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+
     gData->clear();
     if (cluster)
     {
@@ -577,7 +588,8 @@ void SelectThermalCluster(const Data::ThermalCluster* cluster)
 void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters)
 {
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+
     gData->clear();
 
     if (not clusters.empty())
@@ -585,8 +597,8 @@ void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters)
         bool notEmpty = false;
         auto end = clusters.end();
         for (auto i = clusters.begin(); i != end; ++i)
-            notEmpty
-              = (gData->ThClusters).insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
+            notEmpty = (gData->ThClusters).insert(const_cast<Data::ThermalCluster*>(*i)).second
+                       || notEmpty;
 
         if (notEmpty)
             gData->empty = false;
@@ -598,7 +610,8 @@ void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters)
 void SelectRenewableCluster(const Data::RenewableCluster* cluster)
 {
     if (!gData)
-        gData = new InspectorData(*Data::Study::Current::Get());
+        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+
     gData->clear();
     if (cluster)
     {
@@ -612,7 +625,7 @@ void SelectRenewableCluster(const Data::RenewableCluster* cluster)
 uint CopyToClipboard()
 {
     auto studyptr = Data::Study::Current::Get();
-    if (not studyptr || not gData)
+    if (!studyptr || !gData)
         return 0; // nothing was copied
 
     // alias to the current study

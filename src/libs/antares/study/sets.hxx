@@ -130,7 +130,7 @@ void Sets<T>::defaultForAreas()
     opts.comments = "Spatial aggregates on all areas";
     opts.output = false;
     opts.rules.push_back(Rule(ruleFilter, new String("add-all")));
-    T* item = new T();
+    auto item = std::make_shared<T>();
     add("all areas", item, opts);
 }
 
@@ -226,7 +226,7 @@ bool Sets<T>::loadFromFile(const StringT& filename)
                 continue;
 
             // Creating a new section
-            T* item = new T();
+            auto item = std::make_shared<T>();
             Options opts;
             opts.caption = section->name;
 

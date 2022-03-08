@@ -36,6 +36,8 @@
 #include <antares/array/matrix.h>
 #include <yuni/core/event.h>
 
+#include <memory>
+
 namespace Antares
 {
 namespace Private
@@ -167,7 +169,7 @@ private:
 ** This variable is cleared when the study is closed or the user get back
 ** to the input
 */
-Yuni::SmartPtr<Yuni::Mutex> ProvideLockingForFileLocking(const YString& filename);
+std::shared_ptr<Yuni::Mutex> ProvideLockingForFileLocking(const YString& filename);
 
 /*!
 ** \brief Clear all mutex for file locking

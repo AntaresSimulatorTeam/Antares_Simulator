@@ -524,6 +524,9 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
         return value.to<bool>(d.storeTimeseriesNumbers);
     if (key == "synthesis")
         return value.to<bool>(d.synthesis);
+    if (key == "hydro-debug")
+        return value.to<bool>(d.hydroDebug);
+
     return false;
 }
 static bool SGDIntLoadFamily_Optimization(Parameters& d,
@@ -657,9 +660,9 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             d.hydroPricing.hpMode = hpricing;
             return true;
         }
-        logs.warning() << "parameters: invalid unit commitment mode. Got '" << value
+        logs.warning() << "parameters: invalid hydro pricing mode. Got '" << value
                        << "'. reset to fast mode";
-        d.unitCommitment.ucMode = ucHeuristic;
+        d.hydroPricing.hpMode = hpHeuristic;
         return false;
     }
     if (key == "initial-reservoir-levels")
@@ -1663,6 +1666,8 @@ void Parameters::saveToINI(IniFile& ini) const
         auto* section = ini.addSection("output");
         section->add("synthesis", synthesis);
         section->add("storeNewSet", storeTimeseriesNumbers);
+        if (hydroDebug)
+            section->add("hydro-debug", hydroDebug);
         ParametersSaveTimeSeries(section, "archives", timeSeriesToArchive);
     }
 

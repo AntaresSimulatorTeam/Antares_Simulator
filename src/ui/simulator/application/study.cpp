@@ -142,7 +142,7 @@ inline static void ResetLastOpenedFilepath()
 
 static void TheSimulationIsComplete(const wxString& duration)
 {
-    if (IsGUIAboutToQuit() or not Data::Study::Current::Valid())
+    if (IsGUIAboutToQuit() || !Data::Study::Current::Valid())
         return;
     auto* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
@@ -158,6 +158,24 @@ static void TheSimulationIsComplete(const wxString& duration)
         if (userChoice == Window::Message::btnViewResults)
             mainFrm->viewLatestOutput();
     }
+}
+
+static void finalizeSaveExport(Data::Study::Ptr study, Forms::ApplWnd& frame)
+{
+    Menu::AddRecentFile(frame.menuRecentFiles(),
+                        wxStringFromUTF8(study->header.caption),
+                        wxStringFromUTF8(study->folder));
+
+    // Rebuild the menu
+    Menu::RebuildRecentFiles(frame.menuRecentFiles());
+
+    gLastOpenedStudyFolder = wxStringFromUTF8(study->folder);
+
+    RefreshListOfOutputsForTheCurrentStudy();
+
+    frame.refreshMenuInput();
+    frame.refreshMenuOptions(study);
+    frame.refreshStudyLogs();
 }
 
 namespace // anonymous
@@ -198,7 +216,7 @@ protected:
         String sFl;
         wxStringToString(pFolder, sFl);
 
-        auto* study = new Data::Study(); // new study
+        auto study = std::make_shared<Data::Study>(); // new study
 
         // Load all data
         Data::StudyLoadOptions options;
@@ -213,7 +231,7 @@ protected:
 
         gLastOpenedStudyFolder = pFolder;
         LastPathForOpeningAFile.clear() << sFl << SEP << "user";
-        if (not IO::Directory::Exists(LastPathForOpeningAFile))
+        if (!IO::Directory::Exists(LastPathForOpeningAFile))
             LastPathForOpeningAFile = sFl;
 
         // We have a valid study. Go ahead
@@ -238,7 +256,7 @@ private:
 class JobSaveStudy final : public Toolbox::Jobs::Job
 {
 public:
-    JobSaveStudy(Data::Study& study,
+    JobSaveStudy(Data::Study::Ptr study,
                  const String& folder,
                  bool copyOutput = false,
                  bool copyUserData = false,
@@ -287,7 +305,7 @@ public:
 
 public:
     //! Reference to the study to save
-    Data::Study& study;
+    Data::Study::Ptr study;
 
 protected:
     /*!
@@ -300,28 +318,28 @@ protected:
         logs.info() << "  Destination: " << pFolder;
 
         // making sure that all internal data are allocated
-        study.ensureDataAreAllInitialized();
+        study->ensureDataAreAllInitialized();
 
         // Updating the number of logical cores to use when saving the study
         // so that the run window is up to date.
-        study.getNumberOfCores(false, 0);
+        study->getNumberOfCores(false, 0);
 
-        if (pSaveAs or pShouldInvalidateStudy)
+        if (pSaveAs || pShouldInvalidateStudy)
         {
             logs.info() << "Preparing study";
             // If the user save the study as something, we have to invalidate
             // all data (and load all missing files)
-            study.areas.each([&](Data::Area& area) {
+            study->areas.each([&](Data::Area& area) {
                 logs.info() << "Preparing the area " << area.name;
                 area.invalidate(true);
             });
-            study.invalidate(true);
+            study->invalidate(true);
             // We have to mark the whole study as modified
-            study.markAsModified();
+            study->markAsModified();
 
             // The Scenario Builder Data must be available to perform a full save
-            if (not study.scenarioRules)
-                study.scenarioRulesCreate();
+            if (!study->scenarioRules)
+                study->scenarioRulesCreate();
         }
 
         if (pSaveAs)
@@ -338,7 +356,7 @@ protected:
             IO::Directory::Remove(targetUser);
             IO::Directory::Remove(targetLogs);
 
-            if (not study.folder.empty())
+            if (!study->folder.empty())
             {
                 // Warning : The target folder must not be cleaned up before
                 // Copy the original folder
@@ -349,7 +367,7 @@ protected:
                 if (pCopyOutput)
                 {
                     pTitle = "Copying files from the output folder";
-                    src << study.folder << SEP << "output";
+                    src << study->folder << SEP << "output";
                     logs.info() << "   from " << src;
                     logs.info() << "   to   " << targetOutput;
                     if (targetOutput != src)
@@ -360,7 +378,7 @@ protected:
                 {
                     pTitle = "Copying files from the user folder";
                     logs.info() << "Copying files from the user folder";
-                    src.clear() << study.folder << SEP << "user";
+                    src.clear() << study->folder << SEP << "user";
                     logs.info() << "   from " << src;
                     logs.info() << "   to   " << targetUser;
                     if (targetUser != src)
@@ -371,7 +389,7 @@ protected:
                 {
                     pTitle = "Copying log files";
                     logs.info() << "Copying log files";
-                    src.clear() << study.folder << SEP << "logs";
+                    src.clear() << study->folder << SEP << "logs";
                     logs.info() << "   from " << src;
                     logs.info() << "   to   " << targetLogs;
                     if (targetLogs != src)
@@ -381,17 +399,17 @@ protected:
         }     // save as
 
         // Save the study (only changes in the most cases)
-        study.saveToFolder(pFolder);
+        study->saveToFolder(pFolder);
 
         // Scenario Builder
-        if (pCanReleaseScenarioBuilder && study.scenarioRules)
+        if (pCanReleaseScenarioBuilder && study->scenarioRules)
         {
             logs.debug()
               << "[ui] releasing the scenario builder data, since the page is not opened";
-            study.scenarioRulesDestroy();
+            study->scenarioRulesDestroy();
         }
 
-        if (pSaveAs or LastPathForOpeningAFile.empty())
+        if (pSaveAs || LastPathForOpeningAFile.empty())
             LastPathForOpeningAFile.clear() << pFolder << SEP << "user";
 
         SystemParameterHaveChanged = true;
@@ -512,10 +530,10 @@ bool CheckIfInsideAStudyFolder(const AnyString& path, bool quiet)
 {
     String location;
     String title;
-    if (not Data::Study::IsInsideStudyFolder(path, location, title))
+    if (!Data::Study::IsInsideStudyFolder(path, location, title))
         return false;
 
-    if (not quiet)
+    if (!quiet)
     {
         auto& mainFrm = *Forms::ApplWnd::Instance();
         Window::Message message(&mainFrm,
@@ -545,7 +563,7 @@ void MemoryFlushEndUpdate()
 
 bool CanPerformMemoryFlush()
 {
-    return not gMemoryFlushRefCount;
+    return !gMemoryFlushRefCount;
 }
 
 uint64 StudyInMemoryRevisionID()
@@ -587,7 +605,7 @@ void ResetTheModifierState(bool v)
     auto study = Data::Study::Current::Get();
     gInMemoryRevisionIncrement = 0;
     gStudyHasBeenModified = v;
-    if (not study)
+    if (!study)
         Forms::ApplWnd::Instance()->title();
     else
         Forms::ApplWnd::Instance()->title(wxStringFromUTF8(study->header.caption));
@@ -613,7 +631,7 @@ bool CloseTheStudy(bool updateGUI)
     // deletion
     auto study = Data::Study::Current::Get();
 
-    if (not study or not Forms::ApplWnd::Instance())
+    if (!study or !Forms::ApplWnd::Instance())
         return false;
 
     GUILocker locker;
@@ -698,7 +716,7 @@ void NewStudy()
     logs.info();
     logs.checkpoint() << "Creating a new study";
 
-    auto* study = new Data::Study();
+    auto study = std::make_shared<Data::Study>();
     study->createAsNew();
 
     // reset the new current study
@@ -730,7 +748,7 @@ void NewStudy()
 SaveResult SaveStudy()
 {
     auto studyptr = Data::Study::Current::Get();
-    if (!studyptr or not Forms::ApplWnd::Instance())
+    if (!studyptr or !Forms::ApplWnd::Instance())
         return svsCancel;
 
     GUILocker locker;
@@ -757,7 +775,7 @@ SaveResult SaveStudy()
 
     // SaveAs required
     // Especially when the study is readonly (by lock or written in the general data)
-    if (study.folder.empty() or study.readonly())
+    if (study.folder.empty() || study.readonly())
         return Window::SaveAs::Execute(&mainFrm, studyptr);
 
     // We want to invalidate the whole study when upgrading
@@ -785,7 +803,7 @@ SaveResult SaveStudy()
             shouldInvalidateStudy = true;
             break;
         case Window::Message::btnSaveAs:
-            return Window::SaveAs::Execute(&mainFrm, &study);
+            return Window::SaveAs::Execute(&mainFrm, studyptr);
         default:
             return svsCancel;
         }
@@ -803,7 +821,7 @@ SaveResult SaveStudy()
     mainFrm.SetStatusText(wxString() << wxT("  Saving ") << wxStringFromUTF8(study.folder));
 
     // Save the study
-    auto* job = new JobSaveStudy(study, study.folder);
+    auto* job = new JobSaveStudy(studyptr, study.folder);
     if (shouldInvalidateStudy)
         job->shouldInvalidateStudy();
     job->run();
@@ -847,11 +865,11 @@ SaveResult SaveStudy()
 
 SaveResult SaveStudyAs(const String& path, bool copyoutput, bool copyuserdata, bool copylogs)
 {
-    if (not Data::Study::Current::Valid() or path.empty())
+    if (!Data::Study::Current::Valid() || path.empty())
         return svsCancel;
 
     // alias to the current study
-    auto& study = *Data::Study::Current::Get();
+    auto study = Data::Study::Current::Get();
     // alias to the main form
     auto& mainFrm = *Forms::ApplWnd::Instance();
 
@@ -859,9 +877,9 @@ SaveResult SaveStudyAs(const String& path, bool copyoutput, bool copyuserdata, b
     String newPath;
     IO::Normalize(newPath, path);
 
-    if (not study.folder.empty())
+    if (!study->folder.empty())
     {
-        String oldP = study.folder;
+        String oldP = study->folder;
         String newP = newPath;
         newP.removeTrailingSlash();
         oldP.removeTrailingSlash();
@@ -898,30 +916,16 @@ SaveResult SaveStudyAs(const String& path, bool copyoutput, bool copyuserdata, b
 
         // The binding constraints data must be reloaded since the current
         // code is not able to dynamically reload it by itself
-        study.ensureDataAreLoadedForAllBindingConstraints();
+        study->ensureDataAreLoadedForAllBindingConstraints();
         // Reload runtime info about the study (Paranoid, should not be required)
-        if (study.uiinfo)
-            study.uiinfo->reloadAll();
+        if (study->uiinfo)
+            study->uiinfo->reloadAll();
 
         // GUIFlagInvalidateAreas = true;
         OnStudySavedAs();
     }
 
-    Menu::AddRecentFile(mainFrm.menuRecentFiles(),
-                        wxStringFromUTF8(study.header.caption),
-                        wxStringFromUTF8(study.folder));
-
-    // Rebuild the menu
-    Menu::RebuildRecentFiles(mainFrm.menuRecentFiles());
-
-    gLastOpenedStudyFolder = wxStringFromUTF8(study.folder);
-
-    RefreshListOfOutputsForTheCurrentStudy();
-
-    mainFrm.refreshMenuInput();
-    mainFrm.refreshMenuOptions(&study);
-    mainFrm.refreshStudyLogs();
-
+    finalizeSaveExport(study, mainFrm);
     return svsSaved;
 }
 
@@ -932,11 +936,11 @@ SaveResult ExportMap(const Yuni::String& path,
                      int nbSplitParts,
                      Antares::Map::mapImageFormat format)
 {
-    if (not Data::Study::Current::Valid() or path.empty())
+    if (!Data::Study::Current::Valid() || path.empty())
         return svsCancel;
 
     // alias to the current study
-    auto& study = *Data::Study::Current::Get();
+    auto study = Data::Study::Current::Get();
     // alias to the main form
     auto& mainFrm = *Forms::ApplWnd::Instance();
 
@@ -970,30 +974,16 @@ SaveResult ExportMap(const Yuni::String& path,
 
         // The binding constraints data must be reloaded since the current
         // code is not able to dynamically reload it by itself
-        study.ensureDataAreLoadedForAllBindingConstraints();
+        study->ensureDataAreLoadedForAllBindingConstraints();
         // Reload runtime info about the study (Paranoid, should not be required)
-        if (study.uiinfo)
-            study.uiinfo->reloadAll();
+        if (study->uiinfo)
+            study->uiinfo->reloadAll();
 
         // GUIFlagInvalidateAreas = true;
         OnStudySavedAs();
     }
 
-    Menu::AddRecentFile(mainFrm.menuRecentFiles(),
-                        wxStringFromUTF8(study.header.caption),
-                        wxStringFromUTF8(study.folder));
-
-    // Rebuild the menu
-    Menu::RebuildRecentFiles(mainFrm.menuRecentFiles());
-
-    gLastOpenedStudyFolder = wxStringFromUTF8(study.folder);
-
-    RefreshListOfOutputsForTheCurrentStudy();
-
-    mainFrm.refreshMenuInput();
-    mainFrm.refreshMenuOptions(&study);
-    mainFrm.refreshStudyLogs();
-
+    finalizeSaveExport(study, mainFrm);
     return svsSaved;
 }
 
@@ -1007,7 +997,7 @@ void UpdateGUIFromStudyState()
 void OpenStudyFromFolder(wxString folder)
 {
     // It is important on Windows to not have the final backslash
-    if ('\\' == folder.Last() or '/' == folder.Last())
+    if ('\\' == folder.Last() || '/' == folder.Last())
         folder.RemoveLast();
 
     // Getting the version of the study
@@ -1071,12 +1061,12 @@ void OpenStudyFromFolder(wxString folder)
 
     if (Data::Study::Current::Valid())
     {
-        auto& study = *Data::Study::Current::Get();
-        if (not study.folder.empty())
+        auto study = Data::Study::Current::Get();
+        if (!study->folder.empty())
         {
             Menu::AddRecentFile(mainFrm.menuRecentFiles(),
-                                wxStringFromUTF8(study.header.caption),
-                                wxStringFromUTF8(study.folder));
+                                wxStringFromUTF8(study->header.caption),
+                                wxStringFromUTF8(study->folder));
         }
     }
     // Lock the window to prevent flickering
@@ -1114,12 +1104,12 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
                              bool useOrtools,
                              const std::string& ortoolsSolver)
 {
-    if (not study) // A valid study would be better
+    if (!study) // A valid study would be better
     {
         logs.fatal() << "Internal error: Please provide a valid study";
         return;
     }
-    if (not Forms::ApplWnd::Instance())
+    if (!Forms::ApplWnd::Instance())
         return;
     if (IsGUIAboutToQuit())
         return;
@@ -1143,7 +1133,7 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
 
         // Where is our solver ?
         String solverLocation;
-        if (not Solver::FindLocation(solverLocation, Data::versionUnknown, features))
+        if (!Solver::FindLocation(solverLocation, Data::versionUnknown, features))
         {
             logs.error() << "Impossible to find the program `antares-solver`.";
             return;
@@ -1194,7 +1184,7 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
             AppendWithQuotes(cmd, solverLocation);
 
             // Name of the simulation
-            if (not simuName.empty())
+            if (!simuName.empty())
             {
                 cmd << ' ';
                 tmp.clear() << "--name=" << simuName;
@@ -1205,7 +1195,7 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
             cmd << " --progress";
 
             // Comments
-            if (not commentFile.empty())
+            if (!commentFile.empty())
             {
                 cmd << ' ';
                 tmp.clear() << "--comment-file=" << commentFile;
@@ -1223,11 +1213,11 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
             // Temp folder
             {
                 String cacheFolder = Antares::memory.cacheFolder();
-                if (not cacheFolder.empty())
+                if (!cacheFolder.empty())
                 {
-                    if (cacheFolder.last() == '\\' or cacheFolder.last() == '/')
+                    if (cacheFolder.last() == '\\' || cacheFolder.last() == '/')
                         cacheFolder.removeLast();
-                    if (not cacheFolder.empty())
+                    if (!cacheFolder.empty())
                     {
                         cmd << ' ';
                         tmp.clear() << "--swap-folder=" << cacheFolder;
@@ -1330,18 +1320,18 @@ void RefreshListOfOutputsForTheCurrentStudy()
         mainfrm->refreshMenuOutput();
 }
 
-bool StudyRenameArea(Data::Area* area, const AnyString& newname, Data::Study::Ptr study)
+bool StudyRenameArea(Data::Area* area, const AnyString& newname, Data::Study* study)
 {
-    if (!area or newname.empty())
+    if (!area || newname.empty())
         return false;
 
     auto currentstudy = Data::Study::Current::Get();
     if (!study)
-        study = currentstudy;
+        study = currentstudy.get();
     if (!study)
         return false;
 
-    if (study == currentstudy)
+    if (study == currentstudy.get())
     {
         wxBusyInfo wait(wxT("renaming area..."));
         OnStudyBeginUpdate();

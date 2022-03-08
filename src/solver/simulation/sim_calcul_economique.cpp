@@ -501,7 +501,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                         for (int hour = 0; hour < 24; hour++)
                             problem.CaracteristiquesHydrauliques[k]
                               ->NiveauHoraireInf[24 * day + hour]
-                              = levelInterpolBeg + (hour + 1) * delta;
+                              = levelInterpolBeg + hour * delta;
 
                         levelInterpolBeg
                           = maxLvl[weekDayIndex[day]]
@@ -514,7 +514,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                         for (int hour = 0; hour < 24; hour++)
                             problem.CaracteristiquesHydrauliques[k]
                               ->NiveauHoraireSup[24 * day + hour]
-                              = levelInterpolBeg + (hour + 1) * delta;
+                              = levelInterpolBeg + hour * delta;
                     }
                 }
             }
@@ -530,8 +530,6 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             }
         }
     }
-
-    double PuissanceMinDuPalierThermiqueDeReference = 0;
 
     for (int j = 0; j < problem.NombreDePasDeTemps; ++j, ++indx)
     {

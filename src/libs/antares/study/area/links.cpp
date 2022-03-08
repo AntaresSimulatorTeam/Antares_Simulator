@@ -227,13 +227,13 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
 
     // Read link's direct capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_direct.txt";
-    success = directCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate)
+    success = directCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR)
               && success;
 
     // Read link's indirect capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_indirect.txt";
     success
-      = indirectCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate)
+      = indirectCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR)
         && success;
 
     return success;
@@ -351,6 +351,12 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
 
     if (warning && area->id > with->id)
         logs.warning() << "Link: `" << area->id << "` - `" << with->id << "`: Invalid orientation";
+
+    if (area->id == with->id)
+    {
+        logs.error() << "The area named '" << area->id << "' has a link to itself";
+        return nullptr;
+    }
 
     AreaLink* link = new AreaLink();
     link->from = area;
@@ -491,7 +497,10 @@ void logLinkDataCheckError(Study& study, const AreaLink& link)
     study.gotFatalError = true;
 }
 
-void logLinkDataCheckErrorDirectIndirect(Study& study, const AreaLink& link, uint direct, uint indirect)
+void logLinkDataCheckErrorDirectIndirect(Study& study,
+                                         const AreaLink& link,
+                                         uint direct,
+                                         uint indirect)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
                  << " direct TS "
@@ -702,8 +711,8 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             {
                 // Copper plate mode
                 auto infinity = +std::numeric_limits<double>::infinity();
-                link.directCapacities.fillColumn(0, +infinity);
-                link.indirectCapacities.fillColumn(0, +infinity);
+                link.directCapacities.fill(infinity);
+                link.indirectCapacities.fill(infinity);
                 break;
             }
             }
