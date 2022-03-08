@@ -23,7 +23,7 @@ class print_results_handler:
 
     def do_we_enable_results(self, check_list):
         # print()
-        # print("results already enabled : %r" % self.results_already_enabled())
+        print("results already enabled : %r" % self.results_already_enabled())
         # print("output results needed : %r" % check_list.output_results_needed())
         return check_list.output_results_needed() and not self.results_already_enabled()
 

@@ -1,11 +1,6 @@
 import subprocess
-
 from pathlib import Path
-from os import environ
-
-def raise_assertion(message):
-    test_name = environ.get('PYTEST_CURRENT_TEST').split('::')[-1].split(' ')[0]
-    raise AssertionError("%s::%s" % (test_name, message))
+from assertions import raise_assertion
 
 class study_run:
     def __init__(self, study_path, solver_path, use_ortools, ortools_solver):
