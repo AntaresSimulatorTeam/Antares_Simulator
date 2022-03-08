@@ -61,6 +61,21 @@ static void ResetButton(Component::Button* button, bool value)
     }
 }
 
+static void ResetButtonAdequacyPatch(Component::Button* button, bool value)
+{
+    assert(button != NULL);
+    if (value)
+    {
+        button->image("images/16x16/light_orange.png");
+        button->caption(wxT("set to null"));
+    }
+    else
+    {
+        button->image("images/16x16/light_green.png");
+        button->caption(wxT("local values"));
+    }
+}
+
 static void ResetButtonSpecify(Component::Button* button, bool value)
 {
     assert(button != NULL);
@@ -322,6 +337,37 @@ Optimization::Optimization(wxWindow* parent) :
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnAdequacyPatch = button;
     }
+    // Transmission capacities (NTC) from physical areas outside adequacy patch (area type 1) to
+    // physical areas inside adequacy patch (area type 2). Used in the first step of adequacy patch
+    // local matching rule.
+    {
+        label = Component::CreateLabel(this, wxT("NTC from physical areas outside to physical areas inside adequacy patch"));
+        button = new Component::Button(this, wxT("Day"), "images/16x16/light_green.png");
+        button->SetBackgroundColour(bgColor);
+        button->menu(true);
+        onPopup.bind(this,
+                     &Optimization::onPopupMenuAdequacyPatch,
+                     PopupInfo(study.parameters.setToZero12LinksForAdequacyPatch, wxT("NTC")));
+        button->onPopupMenu(onPopup);
+        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        pBtnAdequacyPatchNTC12 = button;
+    }
+    // Transmission capacities (NTC) between physical areas outside adequacy patch (area type 1).
+    // Used in the first step of adequacy patch local matching rule.
+    {
+        label = Component::CreateLabel(this, wxT("NTC between physical areas outside adequacy patch"));
+        button = new Component::Button(this, wxT("Day"), "images/16x16/light_green.png");
+        button->SetBackgroundColour(bgColor);
+        button->menu(true);
+        onPopup.bind(this,
+                     &Optimization::onPopupMenuAdequacyPatch,
+                     PopupInfo(study.parameters.setToZero11LinksForAdequacyPatch, wxT("NTC")));
+        button->onPopupMenu(onPopup);
+        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        pBtnAdequacyPatchNTC11 = button;
+    }
 
     // Unfeasible problem behavior
     {
@@ -443,6 +489,8 @@ void Optimization::onResetToDefault(void*)
             study.parameters.include.reserve.spinning = true;
             study.parameters.include.exportMPS = false;
             study.parameters.include.adequacyPatch = false;
+            study.parameters.setToZero12LinksForAdequacyPatch = true;
+            study.parameters.setToZero11LinksForAdequacyPatch = true;
             study.parameters.simplexOptimizationRange = Data::sorWeek;
 
             study.parameters.include.unfeasibleProblemBehavior
@@ -492,6 +540,14 @@ void Optimization::refresh()
     ResetButtonSpecify(pBtnExportMPS, study.parameters.include.exportMPS);
     // Adequacy patch
     ResetButtonSpecify(pBtnAdequacyPatch, study.parameters.include.adequacyPatch);
+    // NTC from physical areas outside adequacy patch (area type 1) to physical areas inside
+    // adequacy patch (area type 2). Used in the first step of adequacy patch local matching rule.
+    ResetButtonAdequacyPatch(pBtnAdequacyPatchNTC12,
+                             study.parameters.setToZero12LinksForAdequacyPatch);
+    // NTC between physical areas outside adequacy patch (area type 1). Used in the first step of
+    // adequacy patch local matching rule.
+    ResetButtonAdequacyPatch(pBtnAdequacyPatchNTC11,
+                             study.parameters.setToZero11LinksForAdequacyPatch);
 
     // Unfeasible problem behavior
     pBtnUnfeasibleProblemBehavior->image(
@@ -529,6 +585,36 @@ void Optimization::onPopupMenu(Component::Button&, wxMenu& menu, void*, const Po
                  this);
     it = Menu::CreateItem(
       &menu, wxID_ANY, wxT("ignore"), "images/16x16/light_orange.png", wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(Optimization::onSelectModeIgnore),
+                 nullptr,
+                 this);
+}
+
+void Optimization::onPopupMenuAdequacyPatch(Component::Button&,
+                                            wxMenu& menu,
+                                            void*,
+                                            const PopupInfo& info)
+{
+    pTargetRef = &info.rval;
+    wxMenuItem* it;
+
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxString() << wxT("set to null"),
+                          "images/16x16/light_orange.png",
+                          wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(Optimization::onSelectModeInclude),
+                 nullptr,
+                 this);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxString() << wxT("local values (") << info.text << wxT(")"),
+                          "images/16x16/light_green.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(Optimization::onSelectModeIgnore),

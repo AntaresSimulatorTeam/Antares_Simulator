@@ -579,6 +579,8 @@ struct PROBLEME_HEBDO
     /* Adequacy Patch */
     bool UseAdequacyPatch;
     bool AdequacyFirstStep;
+    bool Ntc12;
+    bool Ntc11;
 
     optimizationStatistics optimizationStatistics_object;
     /* Hydro management */

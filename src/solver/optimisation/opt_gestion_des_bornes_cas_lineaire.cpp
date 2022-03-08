@@ -163,7 +163,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
     Xmax = ProblemeAResoudre->Xmax;
     TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
 
-    AdequacyFirstStep = true; // ProblemeHebdo->AdequacyFirstStep;
+    AdequacyFirstStep = ProblemeHebdo->AdequacyFirstStep;
 
     for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
     {
@@ -186,8 +186,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
               = SetNTCForAdequacyFirstStep(AdequacyFirstStep,
                                            ProblemeHebdo->StartAreaAdequacyPatchType[Interco],
                                            ProblemeHebdo->EndAreaAdequacyPatchType[Interco],
-                                           true,
-                                           true);
+                                           ProblemeHebdo->Ntc12,
+                                           ProblemeHebdo->Ntc11);
 
             if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::setToZero)
             {
