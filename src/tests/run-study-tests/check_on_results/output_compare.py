@@ -5,7 +5,9 @@ from pathlib import Path
 from check_on_results.tolerances import get_tolerances
 
 from check_on_results.check_general import check_interface
-from assertions import raise_assertion
+from utils.assertions import raise_assertion
+from utils.csv import read_csv
+
 
 class output_compare(check_interface):
     def __init__(self, study_path, tolerances = get_tolerances()):
@@ -88,18 +90,6 @@ def compare_simulation_files(simulation_files, tol):
 
     return not at_least_one_diff
 
-def read_csv(file_name):
-    def cols(col_name):
-        # Ignore columns with an empty name, labelled "Unammed.N" by pandas
-        return (col_name not in ['Area', 'system', 'annual', 'monthly', 'weekly', 'daily', 'hourly']) and "Unnamed" not in col_name
-
-    ignore_rows = [0,1,2,3,5,6]
-    return pandas.read_csv(file_name,
-                        skiprows=ignore_rows,
-                        sep='\t',
-                        usecols=cols,
-                        low_memory=False,
-                        dtype=float)
 
 def print_comparison_report(ref_data_frame, other_data_frame, file_path, col_name):
     # Max number of rows to be printed in the report

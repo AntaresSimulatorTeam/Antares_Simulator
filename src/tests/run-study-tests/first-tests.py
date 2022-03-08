@@ -5,7 +5,7 @@ from check_on_results.tolerances import get_tolerances
 from check_on_results.output_compare import output_compare
 
 from check_on_results.integrity_compare import integrity_compare
-from check_on_results.reservoir_levels import reservoir_levels
+from check_on_results.check_hydro_level import check_hydro_level
 from check_on_results.unfeasible_problem import unfeasible_problem
 
 from study_run import *
@@ -46,18 +46,22 @@ def setup(simulation, printResults, checks, resutsRemover):
     print() # To next line after current test status (PASSED or ERROR) is printed
 
     # Teardown : actions done after the current test
-    printResults.enable_if_needed(checks)
-    simulation.run()
-    printResults.back_to_previous_state()
+    try:
+        printResults.enable_if_needed(checks)
+        simulation.run()
+        printResults.back_to_previous_state()
 
-    # ... Make all checks of the current test
-    checks.run()
+        # ... Make all checks of the current test
+        checks.run()
 
     # ... Remove results on disk
+    except:
+        resutsRemover.run()
+        raise_assertion("An exception occured")
+
     resutsRemover.run()
 
     print('End of test')
-
 
 # --------------------------------------------------------------
 # Example of a test with output AND check integrity comparisons
@@ -67,7 +71,6 @@ def setup(simulation, printResults, checks, resutsRemover):
 def test_1(checks, study_path):
     checks.add(check = output_compare(study_path), system = 'win32')
     checks.add(check = integrity_compare(study_path))
-    checks.add(check = reservoir_levels(study_path))
 
 
 @pytest.mark.short
@@ -75,6 +78,7 @@ def test_1(checks, study_path):
 def test_2(checks, study_path):
     checks.add(check = integrity_compare(study_path), system = 'win32')
     checks.add(check = unfeasible_problem(study_path))
+
 
 # --------------------------------------------------------------
 # Example of a test with output comparison implying tolerances
@@ -97,3 +101,26 @@ def test_3(checks, study_path):
 
     # Add an "output comparison" to check list
     checks.add(check=output_compare(study_path, tolerances), system='win32')
+
+
+
+@pytest.mark.short
+@pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "short-tests" / "hydro initialization 1"], indirect=True)
+def test_check_initial_hydro_level(checks, study_path):
+    first_hour_of_january = 0
+    checks.add(check=check_hydro_level(study_path, date_in_hours=first_hour_of_january, level=30, tolerance=.05))
+
+
+
+@pytest.mark.short
+@pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "short-tests" / "hydro initialization 2"], indirect=True)
+def test_check_hydro_level_at_1st_hour_of_march(checks, study_path):
+    first_hour_of_march = 1417
+    checks.add(check=check_hydro_level(study_path, date_in_hours=first_hour_of_march, level=30, tolerance=.05))
+
+
+@pytest.mark.short
+@pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "short-tests" / "hydro preference 1"], indirect=True)
+def test_check_hydro_level_at_last_hour_of_simulation(checks, study_path):
+    last_hour_of_simulation = -1
+    checks.add(check=check_hydro_level(study_path, date_in_hours=last_hour_of_simulation, level=30.46, tolerance=.05))

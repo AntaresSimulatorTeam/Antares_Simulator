@@ -1,6 +1,6 @@
 import subprocess
 from pathlib import Path
-from assertions import raise_assertion
+from utils.assertions import raise_assertion
 
 class study_run:
     def __init__(self, study_path, solver_path, use_ortools, ortools_solver):
