@@ -791,8 +791,7 @@ void Frame::apply(const InspectorData::Ptr& data)
         // Area color
         Accumulator<PAreaColor>::Apply(pPGAreaColor, data->areas);
         // Adequacy patch
-        if (!multiple)
-            Accumulator<PAdequacyPatchMode>::Apply(pPGAreaAdequacyPatchMode, data->areas);
+        Accumulator<PAdequacyPatchMode>::Apply(pPGAreaAdequacyPatchMode, data->areas);
         // Area position
         if (!multiple)
         {
