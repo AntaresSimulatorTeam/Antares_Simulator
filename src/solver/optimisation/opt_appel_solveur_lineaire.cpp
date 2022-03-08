@@ -786,12 +786,8 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
         }
         else
         {
-            fprintf(Flot,
-                    "OPT_EcrireJeuDeDonneesMPS : le sens de la contrainte %c ne fait pas partie "
-                    "des sens reconnus\n",
-                    Sens[Cnt]);
-            AntaresSolverEmergencyShutdown();
-            exit(0);
+          logs.error() << "OPT_EcrireJeuDeDonneesMPS : Wrong direction for constraint no. " << Sens[Cnt];
+          AntaresSolverEmergencyShutdown();
         }
     }
 
