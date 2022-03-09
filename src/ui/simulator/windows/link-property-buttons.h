@@ -22,7 +22,7 @@ public:
 protected:
     virtual Component::Button* makeButton(wxWindow* parent) = 0;
 
-    Component::Button* getButton() { return button_; }
+    Component::Button* getButton() const { return button_; }
     void setButton(Component::Button* button) { button_ = button; }
 
 private:
@@ -38,21 +38,20 @@ class menuLinkButton : public linkButton, public Yuni::IEventObserver<menuLinkBu
 public:
     static Yuni::Event<void(Antares::Data::AreaLink*)> onSelectionChanges;
 
-public:
     menuLinkButton();
     virtual ~menuLinkButton();
 
-    bool hasNoButton() { return !getButton(); }
+    bool hasNoButton() const { return !getButton(); }
 
 protected:
-    Data::AreaLink* getCurrentLink() { return currentLink_; }
+    Data::AreaLink* getCurrentLink() const { return currentLink_; }
     void setCurrentLink(Data::AreaLink* link) { currentLink_ = link; }
 
     virtual void onPopupMenu(Component::Button&, wxMenu& menu, void*) = 0;
     void bindButtonToPopupMenu();
 
     void broadCastChange();
-    void broadCastChangeOutside();
+    void broadCastChangeOutside() const;
 
 private:
     Data::AreaLink* currentLink_ = nullptr;
@@ -68,8 +67,6 @@ class ntcUsageButton : public menuLinkButton
 public:
     ntcUsageButton(wxWindow* parent,
                    wxFlexGridSizer* sizer_flex_grid);
-
-    ~ntcUsageButton() = default;
 
     void update(Data::AreaLink* link) override;
 
@@ -91,9 +88,7 @@ class hurdleCostsUsageButton : public menuLinkButton
 {
 public:
     hurdleCostsUsageButton(wxWindow* parent,
-        wxFlexGridSizer* sizer_flex_grid);
-
-    ~hurdleCostsUsageButton() = default;
+                           wxFlexGridSizer* sizer_flex_grid);
 
     void update(Data::AreaLink* link) override;
 
@@ -114,9 +109,7 @@ class assetTypeButton : public menuLinkButton
 {
 public:
     assetTypeButton(wxWindow* parent,
-        wxFlexGridSizer* sizer_flex_grid);
-
-    ~assetTypeButton() = default;
+                    wxFlexGridSizer* sizer_flex_grid);
 
     void update(Data::AreaLink* link) override;
 
@@ -141,10 +134,8 @@ public:
     captionButton(wxWindow* parent,
                   wxFlexGridSizer* sizer_flex_grid);
 
-    ~captionButton() = default;
-
     void update(Data::AreaLink* link) override;
-    void setCaption(const wxString caption) { getButton()->caption(caption); }
+    void setCaption(const wxString& caption) { getButton()->caption(caption); }
 
 private:
     Component::Button* makeButton(wxWindow* parent) override;
@@ -153,7 +144,7 @@ private:
     void onEditCaption(wxCommandEvent&);
     void onButtonEditCaption(void*);
 
-private:
+    // Private data members
     Component::Button* alias_button_ = nullptr;
     wxBoxSizer* local_horizontal_sizer_ = nullptr;
     wxStaticText* caption_label_ = nullptr;
@@ -170,8 +161,6 @@ class loopFlowUsageButton : public linkButton
 public:
     loopFlowUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid);
 
-    ~loopFlowUsageButton() = default;
-
     void update(Data::AreaLink* link) override;
 
 private:
@@ -185,8 +174,6 @@ class phaseShifterUsageButton : public linkButton
 {
 public:
     phaseShifterUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid);
-
-    ~phaseShifterUsageButton() = default;
 
     void update(Data::AreaLink* link) override;
 private:

@@ -104,7 +104,7 @@ Yuni::Event<void(const Antares::Data::AreaLink*)> onLinkCaptionChanges;
 Interconnection::Interconnection(wxWindow* parent,
                                  Toolbox::InputSelector::Connections* notifier,
                                  linkGrid* link_grid)
-        : wxScrolledWindow(parent), pLink(nullptr)
+        : wxScrolledWindow(parent)
 {
     auto* mainsizer = new_check_allocation<wxBoxSizer>(wxVERTICAL);
     SetSizer(mainsizer);

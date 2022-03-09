@@ -43,7 +43,7 @@ namespace Window
         broadCastChangeOutside();
     }
 
-    void menuLinkButton::broadCastChangeOutside()
+    void menuLinkButton::broadCastChangeOutside() const
     {
         MarkTheStudyAsModified();
         OnInspectorRefresh(nullptr);

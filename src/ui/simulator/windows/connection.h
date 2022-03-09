@@ -102,7 +102,7 @@ private:
 
 private:
     //! Pointer to the current link
-    Data::AreaLink* pLink;
+    Data::AreaLink* pLink = nullptr;
 
     ntcUsageButton* ntcUsageButton_ = nullptr;
     captionButton* captionButton_ = nullptr;
