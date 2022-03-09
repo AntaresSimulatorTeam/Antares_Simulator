@@ -18,7 +18,12 @@ class linkButton : public wxFrame
 {
 public:
     virtual void update(Data::AreaLink* link) = 0;
+
 protected:
+    Component::Button* getButton() { return button_; }
+    void setButton(Component::Button* button) { button_ = button; }
+
+private:
     Component::Button* button_ = nullptr;
 };
 
@@ -35,9 +40,12 @@ public:
     menuLinkButton();
     virtual ~menuLinkButton();
 
-    bool isEmpty() { return !button_; }
+    bool hasNoButton() { return !getButton(); }
 
 protected:
+    Data::AreaLink* getCurrentLink() { return currentLink_; }
+    void setCurrentLink(Data::AreaLink* link) { currentLink_ = link; }
+
     virtual void onPopupMenu(Component::Button&, wxMenu& menu, void*) = 0;
 
     void broadCastChange();
@@ -45,6 +53,8 @@ protected:
 
 protected:
     Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)> onPopup_;
+
+private:
     Data::AreaLink* currentLink_ = nullptr;
 };
 
@@ -130,7 +140,7 @@ public:
     ~captionButton() = default;
 
     void update(Data::AreaLink* link) override;
-    void setCaption(const wxString caption) { button_->caption(caption); }
+    void setCaption(const wxString caption) { getButton()->caption(caption); }
 
 private:
     void onPopupMenu(Component::Button&, wxMenu& menu, void*) override;

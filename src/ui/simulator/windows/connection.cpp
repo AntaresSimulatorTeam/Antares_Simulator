@@ -187,7 +187,7 @@ bool Interconnection::checkLinkView(Data::AreaLink* link)
     if (not sizer)
         return false;
 
-    if (captionButton_->isEmpty() || hurdleCostsUsageButton_->isEmpty() || ntcUsageButton_->isEmpty())
+    if (captionButton_->hasNoButton() || hurdleCostsUsageButton_->hasNoButton() || ntcUsageButton_->hasNoButton())
     {
         pLink = nullptr;
         sizer->Hide(pLinkData);
