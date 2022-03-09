@@ -155,7 +155,7 @@ bool Economy::year(Progression::Task& progression,
                 for (int pays = 0; pays < pProblemesHebdo[numSpace]->NombreDePays; ++pays)
                 {
                     if (pProblemesHebdo[numSpace]->AreaAdequacyPatchMode[pays]
-                        == Data::adqmPhysicalAreaInsideAdqPatch)
+                        == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
                         memcpy(
                           pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDENS,
                           pProblemesHebdo[numSpace]
@@ -169,8 +169,10 @@ bool Economy::year(Progression::Task& progression,
                           pProblemesHebdo[numSpace]->NombreDePasDeTemps * sizeof(double));
                 }
 
+                // TODO check if we need to cut SIM_RenseignementProblemeHebdo and just pick out the
+                // part that we need
                 ::SIM_RenseignementProblemeHebdo(
-                  *pProblemesHebdo[numSpace], state, numSpace, hourInTheYear); // todo ? correct
+                  *pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
                 OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
             }
             else

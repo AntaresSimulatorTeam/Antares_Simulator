@@ -116,36 +116,6 @@ enum StudyMode
 
 }; // enum StudyMode
 
-/*!
-** \brief Types of Adequacy patch mode
-*/
-enum AdequacyPatchMode
-{
-    //! Virtual area in adq patch
-    adqmVirtualArea = 0,
-    //! Physical Area outside the adq-patch
-    adqmPhysicalAreaOutsideAdqPatch,
-    //! Physical Area inside the adq-patch
-    adqmPhysicalAreaInsideAdqPatch
-
-}; // enum AdequacyPatchMode
-
-/*!
-** \brief Setting NTC for Adequacy patch first step
-*/
-enum NTC
-{
-    //! Leave NTC local values
-    leaveLocalValues = 0,
-    //! Set NTC to zero
-    setToZero,
-    //! set only start->end NTC to zero
-    setStartEndToZero,
-    //! set only end->start NTC to zero
-    setEndStartToZero
-
-}; // enum NTC
-
 /*
 ** \brief Simplex optimizations
 */
@@ -584,6 +554,47 @@ class TSNumberRules;
 class Sets;
 
 } // namespace ScenarioBuilder
+} // namespace Data
+} // namespace Antares
+
+namespace Antares
+{
+namespace Data
+{
+namespace AdequacyPatch
+{
+
+/*!
+** \brief Types of Adequacy patch mode
+*/
+enum AdequacyPatchMode
+{
+    //! Virtual area in adq patch
+    adqmVirtualArea = 0,
+    //! Physical Area outside the adq-patch
+    adqmPhysicalAreaOutsideAdqPatch,
+    //! Physical Area inside the adq-patch
+    adqmPhysicalAreaInsideAdqPatch
+
+}; // enum AdequacyPatchMode
+
+/*!
+** \brief Setting NTC for Adequacy patch first step
+*/
+enum NTC
+{
+    //! Leave NTC local values
+    leaveLocalValues = 0,
+    //! Set NTC to zero
+    setToZero,
+    //! set only origine->extremity NTC to zero
+    setOrigineExtremityToZero,
+    //! set only extremity->origine NTC to zero
+    setExtremityOrigineToZero
+
+}; // enum NTC
+
+} // namespace AdequacyPatch
 } // namespace Data
 } // namespace Antares
 

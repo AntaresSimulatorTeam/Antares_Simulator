@@ -338,13 +338,13 @@ bool saveAreaAdequacyPatchIniFile(const Area& area, const Clob& buffer)
     int value;
     switch (area.adequacyPatchMode)
     {
-    case Data::adqmVirtualArea:
+    case Data::AdequacyPatch::adqmVirtualArea:
         value = 0;
         break;
-    case Data::adqmPhysicalAreaOutsideAdqPatch:
+    case Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch:
         value = 1;
         break;
-    case Data::adqmPhysicalAreaInsideAdqPatch:
+    case Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch:
         value = 2;
         break;
     default:
@@ -1089,16 +1089,16 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                     switch (value)
                     {
                     case 0:
-                        area.adequacyPatchMode = Data::adqmVirtualArea;
+                        area.adequacyPatchMode = Data::AdequacyPatch::adqmVirtualArea;
                         break;
                     case 1:
-                        area.adequacyPatchMode = Data::adqmPhysicalAreaOutsideAdqPatch;
+                        area.adequacyPatchMode = Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch;
                         break;
                     case 2:
-                        area.adequacyPatchMode = Data::adqmPhysicalAreaInsideAdqPatch;
+                        area.adequacyPatchMode = Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch;
                         break;
                     default:
-                        area.adequacyPatchMode = Data::adqmPhysicalAreaOutsideAdqPatch;
+                        area.adequacyPatchMode = Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch;
                         break;
                     }
                     continue;

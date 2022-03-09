@@ -911,7 +911,7 @@ struct PAreaUnsuppliedEnergyCost
 
 struct PAdequacyPatchMode
 {
-    typedef Data::AdequacyPatchMode Type;
+    typedef Data::AdequacyPatch::AdequacyPatchMode Type;
     static Type Value(const Data::Area* area)
     {
         return area->adequacyPatchMode;
@@ -920,11 +920,11 @@ struct PAdequacyPatchMode
     {
         switch (v)
         {
-        case Data::adqmVirtualArea:
+        case Data::AdequacyPatch::adqmVirtualArea:
             return wxT("virtual area");
-        case Data::adqmPhysicalAreaOutsideAdqPatch:
+        case Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch:
             return wxT("physical area outside patch");
-        case Data::adqmPhysicalAreaInsideAdqPatch:
+        case Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch:
             return wxT("physical area inside patch");
         }
         return wxEmptyString;

@@ -174,25 +174,26 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
     }
     if (name == "area.adequacy_patch_mode")
     {
-        auto* area = *i;
-        if (area)
+        for (; i != end; ++i)
         {
-            String s;
-            wxStringToString(value.GetString(), s);
-            s.toLower();
-            s.trim();
+            auto* area = *i;
+            if (area)
+            {
+                String s;
+                wxStringToString(value.GetString(), s);
+                s.toLower();
+                s.trim();
 
-            if (s == "virtual area" || s == "0")
-                area->adequacyPatchMode = Data::adqmVirtualArea;
-            else if (s == "physical area outside patch" || s == "1")
-                area->adequacyPatchMode = Data::adqmPhysicalAreaOutsideAdqPatch;
-            else if (s == "physical area inside patch" || s == "2")
-                area->adequacyPatchMode = Data::adqmPhysicalAreaInsideAdqPatch;
-
-            OnStudyAreaUseAdequacyPatchChanged();
-            return true;
+                if (s == "virtual area" || s == "0")
+                    area->adequacyPatchMode = Data::AdequacyPatch::adqmVirtualArea;
+                else if (s == "physical area outside patch" || s == "1")
+                    area->adequacyPatchMode = Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch;
+                else if (s == "physical area inside patch" || s == "2")
+                    area->adequacyPatchMode = Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch;
+            }
         }
-        return false;
+        OnStudyAreaUseAdequacyPatchChanged();
+        return true;
     }
     if (name == "area.links_count")
         return false;

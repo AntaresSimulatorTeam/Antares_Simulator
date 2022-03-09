@@ -189,17 +189,17 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                                            ProblemeHebdo->Ntc12,
                                            ProblemeHebdo->Ntc11);
 
-            if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::setToZero)
+            if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::AdequacyPatch::setToZero)
             {
                 Xmax[Var] = 0.;
                 Xmin[Var] = 0.;
             }
-            else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::setStartEndToZero)
+            else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::AdequacyPatch::setOrigineExtremityToZero)
             {
                 Xmax[Var] = 0.;
                 Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
             }
-            else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::setEndStartToZero)
+            else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::AdequacyPatch::setExtremityOrigineToZero)
             {
                 Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
                 Xmin[Var] = 0.;
@@ -433,9 +433,10 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                 if (ProblemeHebdo->UseAdequacyPatch == true
                     && ProblemeHebdo->AdequacyFirstStep == false)
                     if (ProblemeHebdo->AreaAdequacyPatchMode[Pays]
-                        == Data::adqmPhysicalAreaInsideAdqPatch)
-                        Xmax[Var]
-                          = ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo];
+                        == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+                        Xmax[Var] = min(
+                          Xmax[Var],
+                          ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo]);
 
                 ProblemeHebdo->ResultatsHoraires[Pays]
                   ->ValeursHorairesDeDefaillancePositive[PdtHebdo]

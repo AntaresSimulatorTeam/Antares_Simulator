@@ -226,7 +226,7 @@ public:
     //! Enabled
     bool enabled;
     //! Use adequacy patch for this area
-    Data::AdequacyPatchMode adequacyPatchMode;
+    Data::AdequacyPatch::AdequacyPatchMode adequacyPatchMode;
     /*@}*/
 
     //! \name Associate data */

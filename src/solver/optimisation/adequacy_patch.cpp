@@ -30,6 +30,7 @@
 
 using namespace Antares;
 using namespace Antares::Data;
+using namespace Antares::Data::AdequacyPatch;
 
 uint SetNTCForAdequacyFirstStep(bool AdequacyFirstStep,
                                 uint StartNodeAdequacyPatchType,
@@ -39,36 +40,36 @@ uint SetNTCForAdequacyFirstStep(bool AdequacyFirstStep,
 {
     if (AdequacyFirstStep)
     {
-        if (StartNodeAdequacyPatchType == Data::adqmPhysicalAreaInsideAdqPatch
-            && EndNodeAdequacyPatchType == Data::adqmPhysicalAreaInsideAdqPatch)
-            return Data::setToZero;
-        else if (StartNodeAdequacyPatchType == Data::adqmPhysicalAreaOutsideAdqPatch
-                 && EndNodeAdequacyPatchType == Data::adqmPhysicalAreaInsideAdqPatch)
+        if (StartNodeAdequacyPatchType == adqmPhysicalAreaInsideAdqPatch
+            && EndNodeAdequacyPatchType == adqmPhysicalAreaInsideAdqPatch)
+            return setToZero;
+        else if (StartNodeAdequacyPatchType == adqmPhysicalAreaOutsideAdqPatch
+                 && EndNodeAdequacyPatchType == adqmPhysicalAreaInsideAdqPatch)
         {
             if (SetToZero12LinksForAdequacyPatch)
-                return Data::setToZero;
+                return setToZero;
             else
-                return Data::setEndStartToZero;
+                return setExtremityOrigineToZero;
         }
-        else if (StartNodeAdequacyPatchType == Data::adqmPhysicalAreaInsideAdqPatch
-                 && EndNodeAdequacyPatchType == Data::adqmPhysicalAreaOutsideAdqPatch)
+        else if (StartNodeAdequacyPatchType == adqmPhysicalAreaInsideAdqPatch
+                 && EndNodeAdequacyPatchType == adqmPhysicalAreaOutsideAdqPatch)
         {
             if (SetToZero12LinksForAdequacyPatch)
-                return Data::setToZero;
+                return setToZero;
             else
-                return Data::setStartEndToZero;
+                return setOrigineExtremityToZero;
         }
-        else if (StartNodeAdequacyPatchType == Data::adqmPhysicalAreaOutsideAdqPatch
-                 && EndNodeAdequacyPatchType == Data::adqmPhysicalAreaOutsideAdqPatch)
+        else if (StartNodeAdequacyPatchType == adqmPhysicalAreaOutsideAdqPatch
+                 && EndNodeAdequacyPatchType == adqmPhysicalAreaOutsideAdqPatch)
         {
             if (SetToZero11LinksForAdequacyPatch)
-                return Data::setToZero;
+                return setToZero;
             else
-                return Data::leaveLocalValues;
+                return leaveLocalValues;
         }
         else
-            return Data::leaveLocalValues;
+            return leaveLocalValues;
     }
     else
-        return Data::leaveLocalValues;
+        return leaveLocalValues;
 }
