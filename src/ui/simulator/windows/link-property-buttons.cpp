@@ -436,7 +436,7 @@ namespace Window
 
     void captionButton::onButtonEditCaption(void*)
     {
-        if (not getCurrentLink())
+        if (!getCurrentLink())
             return;
 
         wxTextEntryDialog dialog(this,
