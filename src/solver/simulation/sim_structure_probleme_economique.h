@@ -37,6 +37,8 @@
 
 #include <yuni/core/math.h>
 
+using namespace Antares::Data::AdequacyPatch;
+
 typedef struct
 {
     int* NumeroDeVariableDeLInterconnexion;
@@ -479,14 +481,14 @@ struct PROBLEME_HEBDO
     char OptimisationAvecCoutsDeDemarrage;
     int NombreDePays;
     const char** NomsDesPays;
-    int* AreaAdequacyPatchMode;
+    AdequacyPatchMode* AreaAdequacyPatchMode;
     int NombreDePaliersThermiques;
 
     int NombreDInterconnexions;
     int* PaysOrigineDeLInterconnexion;
     int* PaysExtremiteDeLInterconnexion;
-    int* StartAreaAdequacyPatchType;
-    int* EndAreaAdequacyPatchType;
+    AdequacyPatchMode* StartAreaAdequacyPatchType;
+    AdequacyPatchMode* EndAreaAdequacyPatchType;
     COUTS_DE_TRANSPORT** CoutDeTransport;
 
     VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTC;

@@ -59,12 +59,15 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         problem.BruitSurCoutHydraulique[p] = (double*)MemAlloc(8784 * sizeof(double));
 
     problem.NomsDesPays = (const char**)MemAlloc(nbPays * sizeof(char*));
-    problem.AreaAdequacyPatchMode = (int*)MemAlloc(nbPays * sizeof(int));
+    problem.AreaAdequacyPatchMode
+      = (Data::AdequacyPatch::AdequacyPatchMode*)MemAlloc(nbPays * sizeof(int));
 
     problem.PaysExtremiteDeLInterconnexion = (int*)MemAlloc(linkCount * sizeof(int));
     problem.PaysOrigineDeLInterconnexion = (int*)MemAlloc(linkCount * sizeof(int));
-    problem.StartAreaAdequacyPatchType = (int*)MemAlloc(linkCount * sizeof(int));
-    problem.EndAreaAdequacyPatchType = (int*)MemAlloc(linkCount * sizeof(int));
+    problem.StartAreaAdequacyPatchType
+      = (Data::AdequacyPatch::AdequacyPatchMode*)MemAlloc(linkCount * sizeof(int));
+    problem.EndAreaAdequacyPatchType
+      = (Data::AdequacyPatch::AdequacyPatchMode*)MemAlloc(linkCount * sizeof(int));
     problem.CoutDeTransport = (COUTS_DE_TRANSPORT**)MemAlloc(linkCount * sizeof(void*));
     problem.IndexDebutIntercoOrigine = (int*)MemAlloc(nbPays * sizeof(int));
     problem.IndexDebutIntercoExtremite = (int*)MemAlloc(nbPays * sizeof(int));

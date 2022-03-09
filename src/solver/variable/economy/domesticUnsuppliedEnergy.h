@@ -42,7 +42,7 @@ struct VCardDomesticUnsuppliedEnergy
     //! Caption
     static const char* Caption()
     {
-        return "LOCAL UNSP. ENRG";
+        return "DENS";
     }
     //! Unit
     static const char* Unit()
@@ -52,7 +52,7 @@ struct VCardDomesticUnsuppliedEnergy
     //! The short description of the variable
     static const char* Description()
     {
-        return "Domestic Energy Not Served (demand that cannot be satisfied before exchange)";
+        return "Domestic Unsupplied Energy (demand that cannot be satisfied without interconnections/links)";
     }
 
     //! The expecte results
