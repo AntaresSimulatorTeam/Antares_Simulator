@@ -20,6 +20,8 @@ public:
     virtual void update(Data::AreaLink* link) = 0;
 
 protected:
+    virtual Component::Button* makeButton(wxWindow* parent) = 0;
+
     Component::Button* getButton() { return button_; }
     void setButton(Component::Button* button) { button_ = button; }
 
@@ -47,15 +49,14 @@ protected:
     void setCurrentLink(Data::AreaLink* link) { currentLink_ = link; }
 
     virtual void onPopupMenu(Component::Button&, wxMenu& menu, void*) = 0;
+    void bindButtonToPopupMenu();
 
     void broadCastChange();
     void broadCastChangeOutside();
 
-protected:
-    Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)> onPopup_;
-
 private:
     Data::AreaLink* currentLink_ = nullptr;
+    Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)> onPopup_;
 };
 
 
@@ -73,6 +74,7 @@ public:
     void update(Data::AreaLink* link) override;
 
 private:
+    Component::Button* makeButton(wxWindow* parent) override;
     void onPopupMenu(Component::Button&, wxMenu& menu, void*) override;
 
     void onSelectUseNTC(wxCommandEvent&);
@@ -96,6 +98,7 @@ public:
     void update(Data::AreaLink* link) override;
 
 private:
+    Component::Button* makeButton(wxWindow* parent) override;
     void onPopupMenu(Component::Button&, wxMenu& menu, void*) override;
 
     void onSelectUse(wxCommandEvent&);
@@ -118,6 +121,7 @@ public:
     void update(Data::AreaLink* link) override;
 
 private:
+    Component::Button* makeButton(wxWindow* parent) override;
     void onPopupMenu(Component::Button&, wxMenu& menu, void*) override;
 
     void onSelectAC(wxCommandEvent&);
@@ -143,6 +147,7 @@ public:
     void setCaption(const wxString caption) { getButton()->caption(caption); }
 
 private:
+    Component::Button* makeButton(wxWindow* parent) override;
     void onPopupMenu(Component::Button&, wxMenu& menu, void*) override;
 
     void onEditCaption(wxCommandEvent&);
@@ -168,6 +173,9 @@ public:
     ~loopFlowUsageButton() = default;
 
     void update(Data::AreaLink* link) override;
+
+private:
+    Component::Button* makeButton(wxWindow* parent) override;
 };
 
 // ============================
@@ -181,6 +189,8 @@ public:
     ~phaseShifterUsageButton() = default;
 
     void update(Data::AreaLink* link) override;
+private:
+    Component::Button* makeButton(wxWindow* parent) override;
 };
 
 }

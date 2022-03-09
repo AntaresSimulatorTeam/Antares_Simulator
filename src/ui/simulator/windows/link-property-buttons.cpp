@@ -32,6 +32,11 @@ namespace Window
         destroyBoundEvents();
     }
 
+    void menuLinkButton::bindButtonToPopupMenu()
+    {
+        getButton()->onPopupMenu(onPopup_);
+    }
+
     void menuLinkButton::broadCastChange()
     {
         onSelectionChanges(getCurrentLink());
@@ -52,12 +57,17 @@ namespace Window
                        wxFlexGridSizer* sizer_flex_grid)
         : menuLinkButton()
     {
-        setButton(new_check_allocation<Component::Button>(parent, wxT("Transmission capacities"), "images/16x16/light_green.png"));
+        setButton(makeButton(parent));
         getButton()->menu(true);
-        getButton()->onPopupMenu(onPopup_);
+        bindButtonToPopupMenu();
 
         sizer_flex_grid->AddSpacer(10);
         sizer_flex_grid->Add(getButton(), 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+    }
+
+    Component::Button* ntcUsageButton::makeButton(wxWindow* parent)
+    {
+        return new_check_allocation<Component::Button>(parent, wxT("Transmission capacities"), "images/16x16/light_green.png");
     }
 
     void ntcUsageButton::update(Data::AreaLink* link)
@@ -149,12 +159,17 @@ namespace Window
     {
         wxStaticText* label = Component::CreateLabel(parent, wxT("Local values"), false, true);
 
-        setButton(new_check_allocation<Component::Button>(parent, wxT("local values"), "images/16x16/light_green.png"));
+        setButton(makeButton(parent));
         getButton()->menu(true);
-        getButton()->onPopupMenu(onPopup_);
+        bindButtonToPopupMenu();
 
         sizer_flex_grid->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         sizer_flex_grid->Add(getButton(), 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+    }
+
+    Component::Button* hurdleCostsUsageButton::makeButton(wxWindow* parent)
+    {
+        return new_check_allocation<Component::Button>(parent, wxT("local values"), "images/16x16/light_green.png");
     }
 
     void hurdleCostsUsageButton::update(Data::AreaLink* link)
@@ -220,12 +235,17 @@ namespace Window
                                      wxFlexGridSizer* sizer_flex_grid)
         : menuLinkButton()
     {
-        setButton(new_check_allocation<Component::Button>(parent, wxT("Asset type"), "images/16x16/light_green.png"));
+        setButton(makeButton(parent));
         getButton()->menu(true);
-        getButton()->onPopupMenu(onPopup_);
+        bindButtonToPopupMenu();
 
         sizer_flex_grid->AddSpacer(10);
         sizer_flex_grid->Add(getButton(), 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+    }
+
+    Component::Button* assetTypeButton::makeButton(wxWindow* parent)
+    {
+        return new_check_allocation<Component::Button>(parent, wxT("Asset type"), "images/16x16/light_green.png");
     }
 
     void assetTypeButton::update(Data::AreaLink* link)
@@ -391,10 +411,10 @@ namespace Window
         : menuLinkButton(), sizer_flex_grid_(sizer_flex_grid)
     {
         // Link caption
-        setButton(new_check_allocation<Component::Button>(parent, wxT("local values"), "images/16x16/link.png"));
+        setButton(makeButton(parent));
         getButton()->menu(true);
         getButton()->bold(true);
-        getButton()->onPopupMenu(onPopup_);
+        bindButtonToPopupMenu();
         sizer_flex_grid_->Add(getButton(), 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
         // Alias caption
@@ -409,6 +429,11 @@ namespace Window
         local_horizontal_sizer_->AddSpacer(2);
         local_horizontal_sizer_->Add(caption_text_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         sizer_flex_grid_->Add(local_horizontal_sizer_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+    }
+
+    Component::Button* captionButton::makeButton(wxWindow* parent)
+    {
+        return new_check_allocation<Component::Button>(parent, wxT("local values"), "images/16x16/link.png");
     }
 
     void captionButton::onPopupMenu(Component::Button&, wxMenu& menu, void*)
@@ -476,8 +501,13 @@ namespace Window
     // =========================
     loopFlowUsageButton::loopFlowUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid)
     {
-        setButton(new_check_allocation<Component::Button>(parent, wxT("loop flow"), "images/16x16/light_green.png"));
+        setButton(makeButton(parent));
         sizer_flex_grid->Add(getButton(), 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+    }
+
+    Component::Button* loopFlowUsageButton::makeButton(wxWindow* parent)
+    {
+        return new_check_allocation<Component::Button>(parent, wxT("loop flow"), "images/16x16/light_green.png");
     }
 
     void loopFlowUsageButton::update(Data::AreaLink* link)
@@ -500,8 +530,13 @@ namespace Window
     // ============================
     phaseShifterUsageButton::phaseShifterUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid)
     {
-        setButton(new_check_allocation<Component::Button>(parent, wxT("phase shifter"), "images/16x16/light_green.png"));
+        setButton(makeButton(parent));
         sizer_flex_grid->Add(getButton(), 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+    }
+
+    Component::Button* phaseShifterUsageButton::makeButton(wxWindow* parent)
+    {
+        return new_check_allocation<Component::Button>(parent, wxT("phase shifter"), "images/16x16/light_green.png");
     }
 
     void phaseShifterUsageButton::update(Data::AreaLink* link)
