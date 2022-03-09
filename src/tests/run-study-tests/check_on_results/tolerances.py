@@ -1,4 +1,5 @@
 import sys
+from utils.assertions import raise_assertion
 
 def trim_digit_after_last_dot(s : str) -> str:
     '''

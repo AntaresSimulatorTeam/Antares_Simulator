@@ -8,9 +8,9 @@ from check_on_results.integrity_compare import integrity_compare
 from check_on_results.check_hydro_level import check_hydro_level
 from check_on_results.unfeasible_problem import unfeasible_problem
 
-from study_run import *
-from results_remover import *
-from print_results_handler import *
+from actions_on_study.study_run import *
+from actions_on_study.results_remover import *
+from actions_on_study.print_results_handler import *
 
 ALL_STUDIES_PATH = Path('../resources/Antares_Simulator_Tests').resolve()
 

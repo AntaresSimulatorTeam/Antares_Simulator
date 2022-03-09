@@ -1,4 +1,4 @@
-from study_input_handler import *
+from actions_on_study.study_input_handler import *
 
 class print_results_handler:
     def __init__(self, study_path):
