@@ -449,7 +449,7 @@ void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
         || Nombre == NULL)
     {
         logs.fatal() << "Not enough memory";
-        AntaresSolverEmergencyShutdown();
+        AntaresSolverEmergencyShutdown(2);
     }
 
     for (Var = 0; Var < Pb->NombreDeVariables; Var++)
@@ -488,7 +488,7 @@ void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
     Flot = study->createFileIntoOutputWithExtension("fixed-part", "mps", numSpace);
 
     if (!Flot)
-        exit(2);
+        AntaresSolverEmergencyShutdown(2);
 
     fprintf(Flot, "* Number of variables:   %d\n", Pb->NombreDeVariables);
     fprintf(Flot, "* Number of constraints: %d\n", Pb->NombreDeContraintes);
@@ -517,7 +517,6 @@ void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
                     "partie des sens reconnus\n",
                     Pb->Sens[Cnt]);
             AntaresSolverEmergencyShutdown();
-            exit(0);
         }
     }
 
@@ -555,7 +554,7 @@ void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
     if (Nombre == NULL)
     {
         logs.fatal() << "Not enough memory";
-        AntaresSolverEmergencyShutdown();
+        AntaresSolverEmergencyShutdown(2);
     }
 
     // gp : to be changed
@@ -563,7 +562,7 @@ void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
     Flot = study->createFileIntoOutputWithExtension("variable-part", "mps", numSpace);
 
     if (!Flot)
-        exit(2);
+        AntaresSolverEmergencyShutdown(2);
 
     fprintf(Flot, "* Number of variables:   %d\n", Pb->NombreDeVariables);
     fprintf(Flot, "* Number of constraints: %d\n", Pb->NombreDeContraintes);
