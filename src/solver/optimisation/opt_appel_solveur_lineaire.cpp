@@ -117,8 +117,8 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
     ProbSpx = (PROBLEME_SPX*)((ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[(int)NumIntervalle]);
     solver = (MPSolver*)((ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[(int)NumIntervalle]);
 
-    auto& study = *Data::Study::Current::Get();
-    bool ortoolsUsed = study.parameters.ortoolsUsed;
+    auto study = Data::Study::Current::Get();
+    bool ortoolsUsed = study->parameters.ortoolsUsed;
 
 RESOLUTION:
 
@@ -403,8 +403,8 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     else
         CoutOptimalDeLaSolution = Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
 
-    auto& study = *Data::Study::Current::Get();
-    Flot = study.createFileIntoOutputWithExtension("criterion", "txt", numSpace);
+    auto study = Data::Study::Current::Get();
+    Flot = study->createFileIntoOutputWithExtension("criterion", "txt", numSpace);
     if (!Flot)
         exit(2);
 
@@ -484,8 +484,8 @@ void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
 
     free(Cder);
 
-    auto& study = *Data::Study::Current::Get();
-    Flot = study.createFileIntoOutputWithExtension("fixed-part", "mps", numSpace);
+    auto study = Data::Study::Current::Get();
+    Flot = study->createFileIntoOutputWithExtension("fixed-part", "mps", numSpace);
 
     if (!Flot)
         exit(2);
@@ -559,8 +559,8 @@ void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
     }
 
     // gp : to be changed
-    auto& study = *Data::Study::Current::Get();
-    Flot = study.createFileIntoOutputWithExtension("variable-part", "mps", numSpace);
+    auto study = Data::Study::Current::Get();
+    Flot = study->createFileIntoOutputWithExtension("variable-part", "mps", numSpace);
 
     if (!Flot)
         exit(2);
@@ -758,8 +758,8 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
 
     free(Cder);
 
-    auto& study = *Data::Study::Current::Get();
-    Flot = study.createFileIntoOutputWithExtension("problem", "mps", numSpace);
+    auto study = Data::Study::Current::Get();
+    Flot = study->createFileIntoOutputWithExtension("problem", "mps", numSpace);
 
     if (!Flot)
         exit(2);
