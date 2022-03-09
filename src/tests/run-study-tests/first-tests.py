@@ -14,6 +14,25 @@ from print_results_handler import *
 
 ALL_STUDIES_PATH = Path('../resources/Antares_Simulator_Tests').resolve()
 
+
+class check_handler:
+    def __init__(self, simulation, print_results_handler, results_remover):
+        self.simulation = simulation
+        self.print_results_handler = print_results_handler
+        self.results_remover = results_remover
+
+    def run(self, checks):
+        self.print_results_handler.enable_if_needed(checks)
+        self.simulation.run()
+        checks.run()
+
+    def clean(self):
+        self.print_results_handler.back_to_previous_state()
+        self.results_remover.run()
+
+# ================
+# Fixtures
+# ================
 @pytest.fixture()
 def study_path(request):
     return request.param
@@ -26,58 +45,44 @@ def resutsRemover(study_path):
 def simulation(study_path, solver_path, use_ortools, ortools_solver):
     return study_run(study_path, solver_path, use_ortools, ortools_solver)
 
-@pytest.fixture
-def checks():
-    return check_list()
 
 @pytest.fixture
 def printResults(study_path):
     return print_results_handler(study_path)
 
+
 @pytest.fixture(autouse=True)
-def setup(simulation, printResults, checks, resutsRemover):
+def check_runner(simulation, printResults, resutsRemover):
     # Actions done before the current test
-    # ==> nothing to run here
-    print("\nTest begins")
+    # print("\nTest begins")
+    my_check_handler = check_handler(simulation, printResults, resutsRemover)
 
     # Running the current test here
-    yield
-
-    print() # To next line after current test status (PASSED or ERROR) is printed
+    yield my_check_handler
 
     # Teardown : actions done after the current test
-    try:
-        printResults.enable_if_needed(checks)
-        simulation.run()
-        printResults.back_to_previous_state()
-
-        # ... Make all checks of the current test
-        checks.run()
-
-    # ... Remove results on disk
-    except:
-        resutsRemover.run()
-        raise_assertion("An exception occured")
-
-    resutsRemover.run()
-
-    print('End of test')
+    my_check_handler.clean()
+    # print('End of test')
 
 # --------------------------------------------------------------
 # Example of a test with output AND check integrity comparisons
 # --------------------------------------------------------------
-@pytest.mark.short
+
 @pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "short-tests" / "001 One node - passive"], indirect=True)
-def test_1(checks, study_path):
+def test_1(study_path, check_runner):
+    checks= check_list()
     checks.add(check = output_compare(study_path), system = 'win32')
     checks.add(check = integrity_compare(study_path))
+    check_runner.run(checks)
 
 
 @pytest.mark.short
 @pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "short-tests" / "002 Thermal fleet - Base"], indirect=True)
-def test_2(checks, study_path):
+def test_2(study_path, check_runner):
+    checks = check_list()
     checks.add(check = integrity_compare(study_path), system = 'win32')
     checks.add(check = unfeasible_problem(study_path))
+    check_runner.run(checks)
 
 
 # --------------------------------------------------------------
@@ -85,7 +90,7 @@ def test_2(checks, study_path):
 # --------------------------------------------------------------
 @pytest.mark.short
 @pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "short-tests" / "playlist-psp-misc-ndg"], indirect=True)
-def test_3(checks, study_path):
+def test_3(study_path, check_runner):
     # Build tolerances for an "output comparison"
     var_collection = ['CCGT_new', 'CCGT-old-2', 'CONG. FEE (ABS.)', 'CONG. FEE (ALG.)', 'gas_ccgt new', 'gas_ccgt old 1']
     var_collection.extend(['gas_ccgt old 2', 'gas_conventional old 1', 'gas_ocgt new', 'gas_ocgt old', 'hard coal_new'])
@@ -96,31 +101,34 @@ def test_3(checks, study_path):
     tolerances = get_tolerances()
     tolerances.set_absolute(var_collection, 1)
 
-    # var_collection = ['gas_ccgt old 2']
-    # tolerances.set_relative(var_collection, 30.)
-
     # Add an "output comparison" to check list
+    checks = check_list()
     checks.add(check=output_compare(study_path, tolerances), system='win32')
 
-
+    check_runner.run(checks)
 
 @pytest.mark.short
 @pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "short-tests" / "hydro initialization 1"], indirect=True)
-def test_check_initial_hydro_level(checks, study_path):
+def test_check_initial_hydro_level(study_path, check_runner):
     first_hour_of_january = 0
+    checks = check_list()
     checks.add(check=check_hydro_level(study_path, date_in_hours=first_hour_of_january, level=30, tolerance=.05))
-
+    check_runner.run(checks)
 
 
 @pytest.mark.short
 @pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "short-tests" / "hydro initialization 2"], indirect=True)
-def test_check_hydro_level_at_1st_hour_of_march(checks, study_path):
+def test_check_hydro_level_at_1st_hour_of_march(study_path, check_runner):
     first_hour_of_march = 1417
+    checks = check_list()
     checks.add(check=check_hydro_level(study_path, date_in_hours=first_hour_of_march, level=30, tolerance=.05))
+    check_runner.run(checks)
 
 
 @pytest.mark.short
 @pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "short-tests" / "hydro preference 1"], indirect=True)
-def test_check_hydro_level_at_last_hour_of_simulation(checks, study_path):
+def test_check_hydro_level_at_last_hour_of_simulation(study_path, check_runner):
     last_hour_of_simulation = -1
+    checks = check_list()
     checks.add(check=check_hydro_level(study_path, date_in_hours=last_hour_of_simulation, level=30.46, tolerance=.05))
+    check_runner.run(checks)

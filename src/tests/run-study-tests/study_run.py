@@ -10,7 +10,6 @@ class study_run:
         self.ortools_solver = ortools_solver
 
     def run(self):
-        print("   Base run")
         solver_full_path = str(Path(self.solver_path).resolve())
 
         command = [solver_full_path, "-i", str(self.study_path)]

@@ -9,7 +9,7 @@ class resuts_remover:
         self.list_to_remove.append(study_path / 'logs')
 
     def run(self):
-        print("Removing results" )
+        # print("Removing results" )
         for dir in self.list_to_remove:
             if isdir(dir):
                 shutil.rmtree(dir)
