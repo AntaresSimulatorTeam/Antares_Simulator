@@ -354,6 +354,9 @@ set(SRC_EXCEPTION
 	exception/UnfeasibleProblemError.cpp
     # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
 	exception/UnfeasibleProblemError.hpp
+
+    exception/LoadingError.cpp
+    exception/LoadingError.hpp
 	)
 source_group("exception" FILES ${SRC_EXCEPTION})
 
@@ -388,6 +391,9 @@ set(SRC
 
 	# Memory wrapper
 	sys/mem-wrapper.h  sys/mem-wrapper.c
+
+    # new check allocation
+    memory/new_check.hxx
 
 	# appdata
 	sys/appdata.h

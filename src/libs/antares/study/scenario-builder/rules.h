@@ -33,6 +33,7 @@
 #include "TSnumberData.h"
 #include "hydroLevelsData.h"
 #include <map>
+#include <memory>
 
 namespace Antares
 {
@@ -47,7 +48,7 @@ class Rules final : private Yuni::NonCopyable<Rules>
 {
 public:
     //! Smart pointer
-    typedef Yuni::SmartPtr<Rules> Ptr;
+    using Ptr = std::shared_ptr<Rules>;
     //! Map
     typedef std::map<RulesScenarioName, Ptr> Map;
     //! Map ID
@@ -61,9 +62,9 @@ public:
     **
     ** \param tstype Type of the timeseries
     */
-    Rules();
+    explicit Rules(Study& study);
     //! Destructor
-    ~Rules();
+    ~Rules() = default;
     //@}
 
     //! \name Data manupulation
@@ -71,20 +72,17 @@ public:
     /*!
     ** \brief Initialize data from the study
     */
-    bool reset(const Study& study);
+    bool reset();
 
     /*!
     ** \brief Load information from a single line (extracted from an INI file)
     */
-    void loadFromInstrs(Study& study,
-                        const AreaName::Vector& instrs,
-                        String value,
-                        bool updaterMode);
+    bool readLine(const AreaName::Vector& splitKey, String value, bool updaterMode);
 
     /*!
     ** \brief Export the data into a mere INI file
     */
-    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
+    void saveToINIFile(Yuni::IO::File::Stream& file) const;
     //@}
 
     //! Get the number of areas
@@ -92,13 +90,14 @@ public:
 
     //! Name of the rules set
     const RulesScenarioName& name() const;
+    void setName(RulesScenarioName name);
 
     /*!
     ** \brief Apply the changes to the timeseries number matrices
     **
     ** This method is only useful when launched from the solver.
     */
-    void apply(Study& study);
+    bool apply();
 
     // When current rule is the active one, sends warnings for disabled clusters.
     void sendWarningsForDisabledClusters();
@@ -112,22 +111,42 @@ public:
     hydroTSNumberData hydro;
     //! Wind
     windTSNumberData wind;
+
     //! Thermal (array [0..pAreaCount - 1])
-    thermalTSNumberData* thermal;
+    std::vector<thermalTSNumberData> thermal;
     //! Renewable (array [0..pAreaCount - 1])
-    renewableTSNumberData* renewable;
+    std::vector<renewableTSNumberData> renewable;
+
     //! hydro levels
     hydroLevelsData hydroLevels;
 
+    // Links NTC
+    std::vector<ntcTSNumberData> linksNTC;
+
 private:
+    // Member methods
+    bool readThermalCluster(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readRenewableCluster(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readLoad(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readWind(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readHydro(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readSolar(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readHydroLevels(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readLink(const AreaName::Vector& instrs, String value, bool updaterMode);
+
+    Data::Area* getArea(const AreaName& areaname, bool updaterMode);
+    Data::AreaLink* getLink(const AreaName& fromAreaName,
+                            const AreaName& toAreaName,
+                            bool updaterMode);
+
+    // Member data
+    Study& study_;
     //! Total number of areas
     uint pAreaCount;
     //! Name of the rules
     RulesScenarioName pName;
     // Disabled clusters when current rule is active (useful for sending warnings)
     map<string, vector<uint>> disabledClustersOnRuleActive;
-    // Friend !
-    friend class Sets;
 
 }; // class Rules
 

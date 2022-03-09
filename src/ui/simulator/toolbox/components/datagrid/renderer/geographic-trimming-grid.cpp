@@ -122,7 +122,9 @@ wxString geographicTrimmingGrid::cellValue(int col, int row) const
         // year-by-year trimming or synthesis trimming ?
         uint& filter = (col < 5) ? getYearByYearFilter(row) : getSynthesisFilter(row);
 
-        return (0 != (filter & Data::addTimeIntervallToDatePrecisionFilter(col % 5))) ? wxT("True") : wxT("False");
+        return (0 != (filter & Data::addTimeIntervallToDatePrecisionFilter(col % 5)))
+                 ? wxT("True")
+                 : wxT("False");
     }
     return wxEmptyString;
 }

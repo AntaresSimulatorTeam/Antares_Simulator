@@ -68,6 +68,9 @@ inline void Message::add(DefaultButtonType btn, bool defaultButton, int space)
     case btnContinue:
         add(wxT("Continue"), btn, defaultButton, space);
         break;
+    case btnViewResults:
+        add(wxT("View results"), btn, defaultButton, space);
+        break;
     case btnQuit:
         add(wxT("Quit the program"), btn, defaultButton, space);
         break;

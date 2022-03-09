@@ -28,6 +28,7 @@
 #define ANTARES_WINDOWS_INSPECTOR_ACCUMULATOR_HXX__
 
 #include <antares/study/filter.h>
+#include <array>
 
 namespace Antares
 {
@@ -239,16 +240,16 @@ enum
 {
     arrayRnClusterGroupCount = 9
 };
-static const wxChar* arrayRnClusterGroup[] = { wxT("Wind Onshore"),
-                                               wxT("Wind Offshore"),
-                                               wxT("Solar Thermal"),
-                                               wxT("Solar PV"),
-                                               wxT("Solar Rooftop"),
-                                               wxT("Other RES 1"),
-                                               wxT("Other RES 2"),
-                                               wxT("Other RES 3"),
-                                               wxT("Other RES 4"),
-                                               nullptr };
+static const wxChar* arrayRnClusterGroup[] = {wxT("Wind Onshore"),
+                                              wxT("Wind Offshore"),
+                                              wxT("Solar Thermal"),
+                                              wxT("Solar PV"),
+                                              wxT("Solar Rooftop"),
+                                              wxT("Other RES 1"),
+                                              wxT("Other RES 2"),
+                                              wxT("Other RES 3"),
+                                              wxT("Other RES 4"),
+                                              nullptr};
 
 enum
 {
@@ -263,6 +264,15 @@ enum
     thermalLawCount = 2
 };
 static const wxChar* thermalLaws[] = {wxT("uniform"), wxT("geometric"), nullptr};
+
+enum
+{
+    localGenTSCount = 3
+};
+
+// + 1 for nullptr
+static const std::array<const wxChar*, localGenTSCount + 1> localGenTS
+  = {wxT("Use global parameter"), wxT("Force generation"), wxT("Force no generation"), nullptr};
 
 static const wxChar* weekday[] = {wxT("Monday"),
                                   wxT("Tuesday"),
@@ -1290,6 +1300,19 @@ struct PClusterLawPlanned
     static wxString ConvertToString(const Type v)
     {
         return (v < thermalLawCount) ? thermalLaws[v] : nullptr;
+    }
+};
+
+struct PClusterDoGenerateTS
+{
+    using Type = uint;
+    static Type Value(const Data::ThermalCluster* cluster)
+    {
+        return (uint)cluster->tsGenBehavior;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return (v < localGenTSCount) ? localGenTS[v] : nullptr;
     }
 };
 

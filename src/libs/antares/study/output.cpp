@@ -72,7 +72,7 @@ protected:
 
         if (pExtension == ".antares-output")
         {
-            auto* info = new Data::Output(parent);
+            auto info = std::make_shared<Data::Output>(parent);
             if (info->valid())
                 pList.push_back(info);
             return IO::flowSkip;

@@ -40,6 +40,7 @@ extern char AppelEnModeSimulateur;
 /* Valeurs generees de maniere aleatoire */
 extern VALEURS_GENEREES_PAR_PAYS*** ValeursGenereesParPays;
 extern NUMERO_CHRONIQUES_TIREES_PAR_PAYS*** NumeroChroniquesTireesParPays;
+extern NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION** NumeroChroniquesTireesParInterconnexion;
 
 /* Optimisation */
 /*-Economique-*/
@@ -52,8 +53,5 @@ extern VALEURS_ANNUELLES** ValeursAnnuellesAdequation;
 /*-Economique-*/
 extern RESULTATS_PAR_INTERCONNEXION** ResultatsParInterconnexion;
 extern RESULTATS_PAR_CONTRAINTE_COUPLANTE** ResultatsParContrainteCouplante;
-
-/* Gestion des anomalies */
-extern COMPTE_RENDU CompteRendu;
 
 #endif /* __SOLVER_SIMULATION_EXTERN_H__ */

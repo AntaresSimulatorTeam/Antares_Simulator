@@ -25,12 +25,12 @@ public:
     ~Cell();
     virtual wxString cellValue() const = 0;
     virtual double cellNumericValue() const = 0;
-    virtual bool cellValue(const String& value) = 0;
+    virtual bool setCellValue(const String& value) = 0;
     virtual IRenderer::CellStyle cellStyle() const = 0;
 
 protected:
     void onStudyLoaded();
-    bool isTSgeneratorOn() const;
+    virtual bool isTSgeneratorOn() const;
 
 protected:
     Data::Study::Ptr study_;
@@ -44,18 +44,18 @@ public:
     ~blankCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class inactiveRenewableClusterCell : public Cell
+class inactiveCell : public Cell
 {
 public:
-    inactiveRenewableClusterCell(wxString toPrintInCell);
-    ~inactiveRenewableClusterCell() = default;
+    inactiveCell(wxString toPrintInCell);
+    ~inactiveCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 
 private:
@@ -69,7 +69,7 @@ public:
     ~readyMadeTSstatus() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 };
 
@@ -80,7 +80,7 @@ public:
     ~generatedTSstatus() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 };
 
@@ -91,7 +91,7 @@ public:
     ~NumberTsCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 
 private:
@@ -101,6 +101,13 @@ private:
     map<TimeSeries, uint*> tsToNumberTs_;
 };
 
+class NumberTsCellThermal : public NumberTsCell
+{
+public:
+    NumberTsCellThermal();
+    IRenderer::CellStyle cellStyle() const override;
+};
+
 class RefreshTsCell : public Cell
 {
 public:
@@ -108,7 +115,14 @@ public:
     ~RefreshTsCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
+    IRenderer::CellStyle cellStyle() const override;
+};
+
+class RefreshTsCellThermal : public RefreshTsCell
+{
+public:
+    RefreshTsCellThermal();
     IRenderer::CellStyle cellStyle() const override;
 };
 
@@ -119,7 +133,7 @@ public:
     ~RefreshSpanCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 
 private:
@@ -129,14 +143,21 @@ private:
     map<TimeSeries, uint*> tsToRefreshSpan_;
 };
 
+class RefreshSpanCellThermal : public RefreshSpanCell
+{
+public:
+    RefreshSpanCellThermal();
+    IRenderer::CellStyle cellStyle() const override;
+};
+
 class SeasonalCorrelationCell : public Cell
 {
 public:
     SeasonalCorrelationCell(TimeSeries ts);
     ~SeasonalCorrelationCell() = default;
-    wxString cellValue() const override;
+    virtual wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 
 private:
@@ -146,6 +167,14 @@ private:
     map<TimeSeries, Correlation*> tsToCorrelation_;
 };
 
+class SeasonalCorrelationCellThermal : public SeasonalCorrelationCell
+{
+public:
+    SeasonalCorrelationCellThermal();
+    wxString cellValue() const override;
+    IRenderer::CellStyle cellStyle() const override;
+};
+
 class storeToInputCell : public Cell
 {
 public:
@@ -153,7 +182,7 @@ public:
     ~storeToInputCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 };
 
@@ -164,7 +193,7 @@ public:
     ~storeToOutputCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 };
 
@@ -175,7 +204,7 @@ public:
     ~intraModalCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 };
 
@@ -186,7 +215,7 @@ public:
     ~interModalCell() = default;
     wxString cellValue() const override;
     double cellNumericValue() const override;
-    bool cellValue(const String& value) override;
+    bool setCellValue(const String& value) override;
     IRenderer::CellStyle cellStyle() const override;
 };
 

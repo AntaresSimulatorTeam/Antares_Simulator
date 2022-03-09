@@ -77,7 +77,7 @@ public:
 
     void set_value(uint x, uint y, double value);
 
-    void apply(Study& study);
+    bool apply(Study& study);
 
 private:
     //! Hydro levels overlay (0 if auto)

@@ -310,9 +310,12 @@ bool saveAreaOptimisationIniFile(const Area& area, const Clob& buffer)
     IniFile ini;
     IniFile::Section* section = ini.addSection("nodal optimization");
 
-    section->add("non-dispatchable-power", static_cast<bool>(area.nodalOptimization & anoNonDispatchPower));
-    section->add("dispatchable-hydro-power", static_cast<bool>(area.nodalOptimization & anoDispatchHydroPower));
-    section->add("other-dispatchable-power", static_cast<bool>(area.nodalOptimization & anoOtherDispatchPower));
+    section->add("non-dispatchable-power",
+                 static_cast<bool>(area.nodalOptimization & anoNonDispatchPower));
+    section->add("dispatchable-hydro-power",
+                 static_cast<bool>(area.nodalOptimization & anoDispatchHydroPower));
+    section->add("other-dispatchable-power",
+                 static_cast<bool>(area.nodalOptimization & anoOtherDispatchPower));
     section->add("spread-unsupplied-energy-cost", area.spreadUnsuppliedEnergyCost);
     section->add("spread-spilled-energy-cost", area.spreadSpilledEnergyCost);
 
@@ -992,30 +995,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // Thermal cluster list
     {
-        if (not options.loadOnlyNeeded)
-        {
-            buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
-            ret = area.thermal.list.loadPreproFromFolder(study, options, buffer) and ret;
-            buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
-            ret = area.thermal.list.loadDataSeriesFromFolder(
-                    study, options, buffer, options.loadOnlyNeeded)
-                  and ret;
-        }
-        else
-        {
-            if (study.parameters.isTSGeneratedByPrepro(timeSeriesThermal))
-            {
-                buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
-                ret = area.thermal.list.loadPreproFromFolder(study, options, buffer) and ret;
-            }
-            else
-            {
-                buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
-                ret = area.thermal.list.loadDataSeriesFromFolder(
-                        study, options, buffer, options.loadOnlyNeeded)
-                      and ret;
-            }
-        }
+        buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
+        ret = area.thermal.list.loadPreproFromFolder(study, options, buffer) && ret;
+        buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
+        ret = area.thermal.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
 
         if (study.header.version < 390)
         {
@@ -1052,7 +1035,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     if (study.header.version >= 810)
     {
         buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
-        ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer, false) and ret;
+        ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
         // flush
         area.renewable.list.flush();
     }
@@ -1537,6 +1520,8 @@ bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const Ar
         assert(oldCount == a.links.size() and "We must have the same number of items in the list");
 #endif
     });
+
+    area->buildLinksIndexes();
 
     return true;
 }

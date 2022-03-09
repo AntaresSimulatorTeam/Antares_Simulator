@@ -439,6 +439,10 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
             cluster.setGroup(p->value);
             return true;
         }
+        if (p->key == "gen-ts")
+        {
+            return p->value.to(cluster.tsGenBehavior);
+        }
         break;
     }
     case 'h':
@@ -754,7 +758,11 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
                 s->add("unitCount", c.unitCount);
             if (not Math::Zero(c.nominalCapacity))
                 s->add("nominalCapacity", c.nominalCapacity);
-
+            // TS generation
+            if (c.tsGenBehavior != LocalTSGenerationBehavior::useGlobalParameter)
+            {
+                s->add("gen-ts", c.tsGenBehavior);
+            }
             // Min. Stable Power
             if (not Math::Zero(c.minStablePower))
                 s->add("min-stable-power", c.minStablePower);
@@ -898,5 +906,6 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
     }
     return ret;
 }
+
 } // namespace Data
 } // namespace Antares

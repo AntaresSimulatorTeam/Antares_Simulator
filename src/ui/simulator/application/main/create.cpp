@@ -47,6 +47,9 @@
 #include <antares/study.h>
 #include <antares/sys/appdata.h>
 
+// Antares memory allocation check
+#include <antares/memory/new_check.hxx>
+
 // Create toolbox
 #include "toolbox/create.h"
 // Panel
@@ -92,6 +95,7 @@
 #include "windows/message.h"
 
 using namespace Yuni;
+using namespace Antares::MemoryUtils;
 
 namespace Antares
 {
@@ -461,7 +465,8 @@ void ApplWnd::internalInitialize()
     // System parameter
     OnStudySettingsChanged.connect(this, &ApplWnd::onSystemParametersChanged);
     // Advanced parameters
-    Window::Options::OnRenewableGenerationModellingChanged.connect(this, &ApplWnd::onRenewableGenerationModellingChanged);
+    Window::Options::OnRenewableGenerationModellingChanged.connect(
+      this, &ApplWnd::onRenewableGenerationModellingChanged);
 
     // Update the status bar
     resetDefaultStatusBarText();
@@ -703,19 +708,25 @@ void ApplWnd::createNBMisc()
 void ApplWnd::createNBInterconnections()
 {
     assert(pNotebook);
-
     // Create a standard page with an input selector
     std::pair<Component::Notebook*, Toolbox::InputSelector::Connections*> page
       = createStdNotebookPage<Toolbox::InputSelector::Connections>(
         pNotebook, wxT("interconnections"), wxT("Links"));
 
-    // Interco
-    pageLinksDetails
-      = page.first->add(new Window::Interconnection(page.first, page.second), wxT("  Details  "));
-    pageLinksSummary = page.first->add(
-      new Component::Datagrid::Component(
-        page.first, new Component::Datagrid::Renderer::Links::Summary(page.first)),
-      wxT(" Summary "));
+    // links parameters time series
+    auto* parametersGrid = new_check_allocation<Window::linkParametersGrid>();
+    auto* intercoParam = new_check_allocation<Window::Interconnection>(page.first, page.second, parametersGrid);
+    pageLinksParameters = page.first->add(intercoParam, wxT(" Parameters "));
+
+    // links NTC time series
+    auto* ntcGrid = new_check_allocation<Window::linkNTCgrid>();
+    auto* intercoGrid = new_check_allocation<Window::Interconnection>(page.first, page.second, ntcGrid);
+    pageLinksNTC = page.first->add(intercoGrid, wxT(" Transmission capacities "));
+
+    // Summary
+    auto* summary = new_check_allocation<Component::Datagrid::Renderer::Links::Summary>(page.first);
+    auto* component = new_check_allocation<Component::Datagrid::Component>(page.first, summary);
+    pageLinksSummary = page.first->add(component, wxT(" Summary "));
 }
 
 void ApplWnd::onMapDblClick(Map::Component& /*sender*/)

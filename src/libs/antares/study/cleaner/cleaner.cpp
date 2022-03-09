@@ -26,6 +26,7 @@
 */
 
 #include <yuni/yuni.h>
+#include <yuni/string.h>
 #include "../cleaner.h"
 #include "../../sys/mem-wrapper.h"
 #include "versions.h"
@@ -136,5 +137,9 @@ Yuni::uint64 StudyCleaningInfos::totalSize() const
     return intruders.totalSizeInBytes();
 }
 
+void StudyCleaningInfos::setCustomExcludeList(const Yuni::String& c)
+{
+    customExclude = c;
+}
 } // namespace Data
 } // namespace Antares

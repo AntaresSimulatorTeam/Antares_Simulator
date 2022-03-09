@@ -51,6 +51,27 @@ public:
     }
 };
 
+template<class CStringT>
+class Append<CStringT, Antares::Data::LocalTSGenerationBehavior>
+{
+public:
+    static void Perform(CStringT& string, Antares::Data::LocalTSGenerationBehavior behavior)
+    {
+        switch (behavior)
+        {
+        case Antares::Data::LocalTSGenerationBehavior::forceGen:
+            string += "force generation";
+            break;
+        case Antares::Data::LocalTSGenerationBehavior::forceNoGen:
+            string += "force no generation";
+            break;
+        default:
+            string += "use global";
+            break;
+        }
+    }
+};
+
 template<>
 class Into<Antares::Data::ThermalLaw>
 {
@@ -69,6 +90,27 @@ public:
         TargetType law = Antares::Data::thermalLawUniform;
         Perform(s, law);
         return law;
+    }
+};
+
+template<>
+class Into<Antares::Data::LocalTSGenerationBehavior>
+{
+public:
+    using TargetType = Antares::Data::LocalTSGenerationBehavior;
+    enum
+    {
+        valid = 1
+    };
+
+    static bool Perform(AnyString string, TargetType& out);
+
+    template<class StringT>
+    static TargetType Perform(const StringT& s)
+    {
+        TargetType behavior = Antares::Data::LocalTSGenerationBehavior::useGlobalParameter;
+        Perform(s, behavior);
+        return behavior;
     }
 };
 

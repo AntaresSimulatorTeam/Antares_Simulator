@@ -206,9 +206,11 @@ enum TimeSeries
     timeSeriesSolar = 16,
     //! TimeSeries : Renewable
     timeSeriesRenewable = 32,
+    //! TimeSeries : Renewable
+    timeSeriesTransmissionCapacities = 64,
 
     //! The maximum number of time-series that we can encounter
-    timeSeriesCount = 6,
+    timeSeriesCount = 7,
 
 }; // enum TimeSeries
 
@@ -502,12 +504,12 @@ const char* NumberOfCoresModeToCString(NumberOfCoresMode ncores);
 NumberOfCoresMode StringToNumberOfCoresMode(const AnyString& text);
 
 /*
-* Renewable generation modelling
-*/
+ * Renewable generation modelling
+ */
 enum RenewableGenerationModelling
 {
     rgAggregated = 0, // Default
-    rgClusters, // Using renewable clusters
+    rgClusters,       // Using renewable clusters
     rgUnknown,
 };
 

@@ -145,6 +145,17 @@ public:
     void fixBadValues();
 
     /*!
+    ** \brief Try to detect then fix refresh intervals
+    */
+    void fixRefreshIntervals();
+
+    /*!
+    ** \brief Try to detect then fix TS generation/refresh parameters
+    *         for NTC
+    */
+    void fixGenRefreshForNTC();
+
+    /*!
     ** \brief Check if some general data seem valid
     **
     ** \return The error if any (stErrNone otherwise)
@@ -185,6 +196,9 @@ public:
     ** \param weight MC year weight
     */
     void setYearWeight(int year, float weight);
+
+    // Do we create files in the input folder ?
+    bool haveToImport(int tsKind) const;
 
 public:
     //! \name Mode
@@ -500,6 +514,8 @@ public:
     // This variable is not stored within the study but only used by the solver
     bool noOutput;
     //@}
+
+    bool hydroDebug;
 
     //! \name Seeds
     //@{

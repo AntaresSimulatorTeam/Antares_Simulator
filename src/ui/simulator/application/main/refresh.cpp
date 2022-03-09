@@ -129,7 +129,6 @@ void ApplWnd::refreshMenuOutput()
     // Informations about the outputs
     Map map;
     TemporalMap orderByTime;
-    Data::Output::Ptr last;
     uint lastTimestamp = 0;
     wxMenuItem* item;
 
@@ -143,7 +142,7 @@ void ApplWnd::refreshMenuOutput()
             if ((*i)->timestamp > lastTimestamp)
             {
                 lastTimestamp = (*i)->timestamp;
-                last = *i;
+                latestOutput = *i;
             }
         }
     }

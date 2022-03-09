@@ -112,7 +112,7 @@ bool Weights::performWL(Context& ctx)
             {
                 tr.bind(this, &Weights::translate);
             }
-            ctx.constraint->copyWeights(ctx.study, *source, true, tr);
+            ctx.constraint->copyWeights(*ctx.study, *source, true, tr);
             pCurrentContext = nullptr;
             return true;
         }

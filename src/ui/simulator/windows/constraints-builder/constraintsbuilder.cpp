@@ -477,15 +477,6 @@ void ConstraintsBuilderWizard::onIncludeLoopFlow(wxCommandEvent& evt)
     pCBuilder->setUpToDate(false);
     pCBuilder->saveCBuilderToFile();
 
-    // update all lines in the study
-    /*for (auto link : pCBuilder->pLink)
-    {
-            link->ptr->useLoopFlow = value;
-            //onConnectionChanged(link->ptr);
-            OnStudyLinkChanged(link->ptr);
-    }
-    MarkTheStudyAsModified();*/
-    // Forms::ApplWnd::Instance()->pageLinksDetails->refresh();
     pGrid->forceRefresh();
 }
 
@@ -498,15 +489,6 @@ void ConstraintsBuilderWizard::onUsePhaseShift(wxCommandEvent& evt)
     pCBuilder->setUpToDate(false);
     pCBuilder->saveCBuilderToFile();
 
-    // update all lines in the study
-    /*for (auto link : pCBuilder->pLink)
-    {
-            link->ptr->usePST = value;
-            //onConnectionChanged(link->ptr);
-            OnStudyLinkChanged(link->ptr);
-    }*/
-    // MarkTheStudyAsModified();
-    // Forms::ApplWnd::Instance()->pageLinksDetails->refresh();
     pGrid->forceRefresh();
 }
 
@@ -622,7 +604,7 @@ void ConstraintsBuilderWizard::onDelete(void*)
     if (not Data::Study::Current::Valid())
         return;
     auto studyptr = Data::Study::Current::Get();
-    if (not studyptr)
+    if (!studyptr)
         return;
     auto& study = *studyptr;
 
@@ -689,7 +671,7 @@ void ConstraintsBuilderWizard::enableAll(bool v)
     pBtnBuild->Enable(false);
 }
 
-void ConstraintsBuilderWizard::fileMapping(FileMapping* m)
+void ConstraintsBuilderWizard::fileMapping(FileMappingPtr m)
 {
     pFileMapping = m;
 

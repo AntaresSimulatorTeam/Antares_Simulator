@@ -336,9 +336,9 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             COUTS_DE_TRANSPORT* couts = problem.CoutDeTransport[k];
             couts->IntercoGereeAvecDesCouts = OUI_ANTARES;
             const double* direct
-              = ((const double*)((void*)lnk->data[fhlHurdlesCostDirect])) + PasDeTempsDebut;
+              = ((const double*)((void*)lnk->parameters[fhlHurdlesCostDirect])) + PasDeTempsDebut;
             const double* indirect
-              = ((const double*)((void*)lnk->data[fhlHurdlesCostIndirect])) + PasDeTempsDebut;
+              = ((const double*)((void*)lnk->parameters[fhlHurdlesCostIndirect])) + PasDeTempsDebut;
             memcpy(couts->CoutDeTransportOrigineVersExtremite, direct, pasDeTempsSizeDouble);
             memcpy(couts->CoutDeTransportOrigineVersExtremiteRef, direct, pasDeTempsSizeDouble);
             memcpy(couts->CoutDeTransportExtremiteVersOrigine, indirect, pasDeTempsSizeDouble);
@@ -354,7 +354,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         else
             problem.CoutDeTransport[k]->IntercoGereeAvecLoopFlow = NON_ANTARES;
 
-        lnk->data.flush();
+        lnk->flush();
     }
 
     if (studyruntime.bindingConstraintCount)
@@ -493,7 +493,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                         for (int hour = 0; hour < 24; hour++)
                             problem.CaracteristiquesHydrauliques[k]
                               ->NiveauHoraireInf[24 * day + hour]
-                              = levelInterpolBeg + (hour + 1) * delta;
+                              = levelInterpolBeg + hour * delta;
 
                         levelInterpolBeg
                           = maxLvl[weekDayIndex[day]]
@@ -506,7 +506,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                         for (int hour = 0; hour < 24; hour++)
                             problem.CaracteristiquesHydrauliques[k]
                               ->NiveauHoraireSup[24 * day + hour]
-                              = levelInterpolBeg + (hour + 1) * delta;
+                              = levelInterpolBeg + hour * delta;
                     }
                 }
             }
@@ -523,8 +523,6 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         }
     }
 
-    double PuissanceMinDuPalierThermiqueDeReference = 0;
-
     for (int j = 0; j < problem.NombreDePasDeTemps; ++j, ++indx)
     {
         VALEURS_DE_NTC_ET_RESISTANCES* ntc = problem.ValeursDeNTC[j];
@@ -535,12 +533,16 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             for (uint k = 0; k != linkCount; ++k)
             {
                 auto& lnk = *(studyruntime.areaLink[k]);
-                assert((uint)indx < lnk.data.height);
-                assert((uint)fhlNTCDirect < lnk.data.width);
-                assert((uint)fhlNTCIndirect < lnk.data.width);
-                ntc->ValeurDeNTCOrigineVersExtremite[k] = lnk.data[fhlNTCDirect][indx];
-                ntc->ValeurDeNTCExtremiteVersOrigine[k] = lnk.data[fhlNTCIndirect][indx];
-                ntc->ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.data[fhlLoopFlow][indx];
+                const int tsIndex
+                  = NumeroChroniquesTireesParInterconnexion[numSpace][k].TransmissionCapacities;
+
+                assert((uint)indx < lnk.directCapacities.height);
+                assert((uint)tsIndex < lnk.directCapacities.width);
+                assert((uint)tsIndex < lnk.indirectCapacities.width);
+
+                ntc->ValeurDeNTCOrigineVersExtremite[k] = lnk.directCapacities[tsIndex][indx];
+                ntc->ValeurDeNTCExtremiteVersOrigine[k] = lnk.indirectCapacities[tsIndex][indx];
+                ntc->ValeurDeLoopFlowOrigineVersExtremite[k] = lnk.parameters[fhlLoopFlow][indx];
             }
         }
 

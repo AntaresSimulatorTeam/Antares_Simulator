@@ -604,8 +604,7 @@ def test_playlist_23(use_ortools, ortools_solver, solver_path):
     check_output_values(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform=="linux",
-                    reason="Results different between linux and windows.")
+@pytest.mark.skip("TODO restore Windows run for v8.2")
 def test_playlist_psp_misc_ndg(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "playlist-psp-misc-ndg"
     enable_study_output(study_path, True)
@@ -712,5 +711,36 @@ def test_renewables_2_cluster_ts_prod_factor(use_ortools, ortools_solver, solver
 @pytest.mark.short
 def test_renewables_ts_prod_factor_cluster_disabled(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "renewable-ts-prod-factor-cluster-disabled"
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    check_output_values(study_path)
+
+@pytest.mark.short
+def test_ts_gen_select_thermal_cluster_readymade(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "TS gen select thermal cluster - ready made"
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    check_output_values(study_path)
+
+@pytest.mark.short
+def test_ts_gen_select_thermal_cluster_stochastic(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "TS gen select thermal cluster - stochastic"
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    check_output_values(study_path)
+
+@pytest.mark.short
+@pytest.mark.skip("TODO restore Windows run for v8.2")
+def test_ts_gen_select_thermal_cluster_refresh_force_gen(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "Thermal refresh/"
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    check_output_values(study_path)
+
+@pytest.mark.short
+def test_ntc_sc_builder(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "Multiple NTC sc-builder"
+    run_study(solver_path, study_path, use_ortools, ortools_solver)
+    check_output_values(study_path)
+    
+@pytest.mark.short
+def test_ntc_intramodal_two_links_two_timeseries(use_ortools, ortools_solver, solver_path):
+    study_path = ALL_STUDIES_PATH / "short-tests" / "NTC intramodal"
     run_study(solver_path, study_path, use_ortools, ortools_solver)
     check_output_values(study_path)

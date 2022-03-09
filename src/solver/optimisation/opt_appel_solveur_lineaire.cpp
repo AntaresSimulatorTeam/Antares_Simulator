@@ -406,7 +406,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     auto study = Data::Study::Current::Get();
     Flot = study->createFileIntoOutputWithExtension("criterion", "txt", numSpace);
     if (!Flot)
-        exit(2);
+        AntaresSolverEmergencyShutdown(2);
 
     fprintf(Flot, "* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);
 
@@ -762,7 +762,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     Flot = study->createFileIntoOutputWithExtension("problem", "mps", numSpace);
 
     if (!Flot)
-        exit(2);
+        AntaresSolverEmergencyShutdown(2);
 
     fprintf(Flot, "* Number of variables:   %d\n", NombreDeVariables);
     fprintf(Flot, "* Number of constraints: %d\n", NombreDeContraintes);

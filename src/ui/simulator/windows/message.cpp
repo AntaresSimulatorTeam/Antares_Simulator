@@ -94,7 +94,7 @@ Message::Message(wxWindow* parent,
                  const char* icon) :
  wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize),
  pSpotlight(nullptr),
- pReturnStatus(-1),
+ pReturnStatus(btnStartID),
  pRecommendedWidth(0)
 {
     // Informations about the study
@@ -191,11 +191,10 @@ Message::~Message()
         sizer->Clear(true);
 }
 
-void Message::add(const wxString& caption, uint value, bool defaultButton, int space)
+void Message::add(const wxString& caption, DefaultButtonType value, bool defaultButton, int space)
 {
     // We will use the userdata (a pointer) as a container for an int (value)
-    auto* btn = Component::CreateButton(
-      pPanel, caption, this, &Message::onButtonClick, reinterpret_cast<void*>(value));
+    auto* btn = Component::CreateButton(pPanel, caption, this, &Message::onButtonClick, value);
 
     if (defaultButton)
     {
@@ -208,9 +207,9 @@ void Message::add(const wxString& caption, uint value, bool defaultButton, int s
     pPanelSizer->AddSpacer(space);
 }
 
-void Message::onButtonClick(void* userdata)
+void Message::onButtonClick(DefaultButtonType userdata)
 {
-    pReturnStatus = (uint)((size_t)(userdata));
+    pReturnStatus = userdata;
     Dispatcher::GUI::Close(this);
 }
 
@@ -233,7 +232,7 @@ void Message::prepareShowModal()
     else
     {
         if (pSpotlight)
-            pSpotlight->provider(new MessageProvider(pItemList));
+            pSpotlight->provider(std::make_shared<MessageProvider>(pItemList));
         sizer->Show(pListSizer, true);
         pSpace->Show(false);
     }
@@ -285,7 +284,7 @@ uint Message::showModal()
 
 void Message::appendError(const AnyString& text)
 {
-    auto* item = new Component::Spotlight::IItem();
+    auto item = std::make_shared<Component::Spotlight::IItem>();
     item->caption(text);
     item->addTag("   error   ", 230, 30, 30);
     pItemList.push_back(item);
@@ -293,7 +292,7 @@ void Message::appendError(const AnyString& text)
 
 void Message::appendWarning(const AnyString& text)
 {
-    auto* item = new Component::Spotlight::IItem();
+    auto item = std::make_shared<Component::Spotlight::IItem>();
     item->caption(text);
     item->addTag(" warning ", 255, 176, 79);
     pItemList.push_back(item);
