@@ -141,7 +141,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
     double* Xmin;
     double* Xmax;
     int* TypeDeVariable;
-    bool AdequacyFirstStep;
     uint SetToZeroLinkNTCForAdequacyPatchFirstStep;
 
     VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
@@ -163,8 +162,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
     Xmax = ProblemeAResoudre->Xmax;
     TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
 
-    AdequacyFirstStep = ProblemeHebdo->AdequacyFirstStep;
-
     for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
     {
         AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
@@ -183,11 +180,11 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
 
             SetToZeroLinkNTCForAdequacyPatchFirstStep
-              = SetNTCForAdequacyFirstStep(AdequacyFirstStep,
+              = SetNTCForAdequacyFirstStep(ProblemeHebdo->adqPatch.AdequacyFirstStep,
                                            ProblemeHebdo->StartAreaAdequacyPatchType[Interco],
                                            ProblemeHebdo->EndAreaAdequacyPatchType[Interco],
-                                           ProblemeHebdo->Ntc12,
-                                           ProblemeHebdo->Ntc11);
+                                           ProblemeHebdo->adqPatch.Ntc12,
+                                           ProblemeHebdo->adqPatch.Ntc11);
 
             if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::AdequacyPatch::setToZero)
             {
@@ -430,8 +427,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                     Xmax[Var] = 0.;
 
                 // adq patch: update ENS <= DENS in 2nd run
-                if (ProblemeHebdo->UseAdequacyPatch == true
-                    && ProblemeHebdo->AdequacyFirstStep == false)
+                if (ProblemeHebdo->adqPatch.UseAdequacyPatch == true
+                    && ProblemeHebdo->adqPatch.AdequacyFirstStep == false)
                     if (ProblemeHebdo->AreaAdequacyPatchMode[Pays]
                         == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
                         Xmax[Var] = min(

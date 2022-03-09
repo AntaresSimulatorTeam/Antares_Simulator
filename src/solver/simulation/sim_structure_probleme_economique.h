@@ -579,10 +579,13 @@ struct PROBLEME_HEBDO
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration;
 
     /* Adequacy Patch */
-    bool UseAdequacyPatch;
-    bool AdequacyFirstStep;
-    bool Ntc12;
-    bool Ntc11;
+    struct AdequacyPatchStruct
+    {
+        bool UseAdequacyPatch;
+        bool AdequacyFirstStep;
+        bool Ntc12;
+        bool Ntc11;
+    } adqPatch;
 
     optimizationStatistics optimizationStatistics_object;
     /* Hydro management */
