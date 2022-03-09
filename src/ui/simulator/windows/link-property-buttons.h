@@ -20,8 +20,6 @@ public:
     virtual void update(Data::AreaLink* link) = 0;
 
 protected:
-    virtual Component::Button* makeButton(wxWindow* parent) = 0;
-
     Component::Button* getButton() const { return button_; }
     void setButton(Component::Button* button) { button_ = button; }
 
@@ -48,9 +46,9 @@ protected:
     void setCurrentLink(Data::AreaLink* link) { currentLink_ = link; }
 
     virtual void onPopupMenu(Component::Button&, wxMenu& menu, void*) = 0;
-    void bindButtonToPopupMenu();
+    void bindButtonToPopupMenu() const;
 
-    void broadCastChange();
+    void broadCastChange() const;
     void broadCastChangeOutside() const;
 
 private:
@@ -71,7 +69,6 @@ public:
     void update(Data::AreaLink* link) override;
 
 private:
-    Component::Button* makeButton(wxWindow* parent) override;
     void onPopupMenu(Component::Button&, wxMenu& menu, void*) override;
 
     void onSelectUseNTC(wxCommandEvent&);
@@ -93,7 +90,6 @@ public:
     void update(Data::AreaLink* link) override;
 
 private:
-    Component::Button* makeButton(wxWindow* parent) override;
     void onPopupMenu(Component::Button&, wxMenu& menu, void*) override;
 
     void onSelectUse(wxCommandEvent&);
@@ -114,7 +110,6 @@ public:
     void update(Data::AreaLink* link) override;
 
 private:
-    Component::Button* makeButton(wxWindow* parent) override;
     void onPopupMenu(Component::Button&, wxMenu& menu, void*) override;
 
     void onSelectAC(wxCommandEvent&);
@@ -135,10 +130,9 @@ public:
                   wxFlexGridSizer* sizer_flex_grid);
 
     void update(Data::AreaLink* link) override;
-    void setCaption(const wxString& caption) { getButton()->caption(caption); }
+    void setCaption(const wxString& caption) const { getButton()->caption(caption); }
 
 private:
-    Component::Button* makeButton(wxWindow* parent) override;
     void onPopupMenu(Component::Button&, wxMenu& menu, void*) override;
 
     void onEditCaption(wxCommandEvent&);
@@ -162,9 +156,6 @@ public:
     loopFlowUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid);
 
     void update(Data::AreaLink* link) override;
-
-private:
-    Component::Button* makeButton(wxWindow* parent) override;
 };
 
 // ============================
@@ -176,8 +167,6 @@ public:
     phaseShifterUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid);
 
     void update(Data::AreaLink* link) override;
-private:
-    Component::Button* makeButton(wxWindow* parent) override;
 };
 
 }
