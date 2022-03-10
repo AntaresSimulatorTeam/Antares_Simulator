@@ -25,19 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/mersenne-twister/mersenne-twister.h>
 #include "h2o2_j_donnees_optimisation.h"
 #include "antares/study/fwd.h"
-#include <functional> // std::reference_wrapper
-
-namespace Constants
-{
-constexpr double denom = 1e3;
-constexpr unsigned int seed = 0x79683264; // "hyd2" in hexa
-} // namespace Constants
 
 Hydro_problem_costs::Hydro_problem_costs(const Data::Study& study)
 {
+    noiseGenerator.reset(Constants::seed);
     end_days_levels = -1. / 32.;
     overflow = 32 * 68. + 1.;
     deviations = 1.;
@@ -58,15 +51,4 @@ Hydro_problem_costs::Hydro_problem_costs(const Data::Study& study)
 
     deviationMax = 2.0;
     violationMax = 68.0;
-}
-
-void Hydro_problem_costs::apply_noise()
-{
-    Antares::MersenneTwister noiseGenerator;
-    noiseGenerator.reset(Constants::seed); // Arbitrary seed, hard-coded since we don't really want
-                                           // the user to change it
-    const std::vector<std::reference_wrapper<double>> variables
-      = {end_days_levels, overflow, deviations, violations, waste, deviationMax, violationMax};
-    for (auto variable : variables)
-        variable += noiseGenerator() / Constants::denom;
 }
