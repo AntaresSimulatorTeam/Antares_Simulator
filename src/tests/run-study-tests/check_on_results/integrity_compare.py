@@ -21,18 +21,12 @@ class integrity_compare(check_interface):
 
     def run(self):
         print("running check : %s" % self.__class__.__name__)
-        self.check_integrity_first_opt()
-        self.check_integrity_second_opt()
+        self.compare_files()
 
-    def check_integrity_first_opt(self):
+    def compare_files(self):
         reference_values = get_integrity_check_values(self.ref_folder)
         output_values = get_integrity_check_values(self.path_to_output)
-        numpy.testing.assert_allclose(reference_values[0:4], output_values[0:4], rtol=1e-3, atol=0)
-
-    def check_integrity_second_opt(self):
-        reference_values = get_integrity_check_values(self.ref_folder)
-        output_values = get_integrity_check_values(self.path_to_output)
-        numpy.testing.assert_allclose(reference_values[4:8], output_values[4:8], rtol=1e-3, atol=0)
+        numpy.testing.assert_allclose(reference_values[0:8], output_values[0:8], rtol=1e-3, atol=0)
 
 
 def get_integrity_check_values(output : Path) -> numpy.array :
