@@ -56,12 +56,6 @@ jobs:
            ls -1
            cmake --build _build --config release -j2
 
-    - name: Run unit tests
-      run: |
-           cd _build
-           ctest -C Release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
-
-
     - name: Installer .deb creation
       run: |
            cd _build
@@ -84,3 +78,7 @@ jobs:
         name: antares-ubuntu-deb
         path: _build/*.deb
 
+    - name: Run unit tests
+      run: |
+           cd _build
+           ctest -C Release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools

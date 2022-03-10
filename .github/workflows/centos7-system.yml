@@ -59,11 +59,6 @@ jobs:
            source /opt/rh/devtoolset-7/enable
            cmake3 --build _build --config Release -j2
     
-    - name: Run unit tests
-      run: |
-           cd _build
-           ctest3 -C Release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
-           
     - name: Installer .rpm creation
       run: |
            cd _build
@@ -86,3 +81,7 @@ jobs:
         name: antares-centos7-rpm
         path: _build/*.rpm
 
+    - name: Run unit tests
+      run: |
+           cd _build
+           ctest3 -C Release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
