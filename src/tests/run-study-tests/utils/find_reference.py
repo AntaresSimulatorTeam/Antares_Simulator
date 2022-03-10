@@ -1,6 +1,8 @@
 from os import walk
 from os.path import basename
 
+from utils.assertions import raise_assertion
+
 class reference_folder_finder:
     def __init__(self, study_path):
         self.study_path = study_path
@@ -24,3 +26,9 @@ class reference_folder_finder:
 
     def skip_folder(self, folder):
         return basename(folder) in self.skipped_folders_when_searching
+
+def find_reference_folder(study_path):
+    ref_folder_finder = reference_folder_finder(study_path)
+    if not ref_folder_finder.find():
+        raise_assertion("Reference folder not found")
+    return ref_folder_finder.get()

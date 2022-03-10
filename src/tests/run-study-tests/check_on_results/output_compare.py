@@ -6,7 +6,7 @@ from check_on_results.tolerances import get_tolerances
 
 from check_on_results.check_general import check_interface
 from utils.assertions import raise_assertion
-from utils.find_reference import reference_folder_finder
+from utils.find_reference import find_reference_folder
 from utils.csv import read_csv
 
 
@@ -15,12 +15,7 @@ class output_compare(check_interface):
         check_interface.__init__(self, study_path)
         self.path_to_output = self.study_path / 'output'
         self.tol = tolerances
-
-        # Find reference folder
-        self.ref_folder_finder = reference_folder_finder(study_path)
-        if not self.ref_folder_finder.find():
-            raise_assertion("Reference folder not found")
-        self.ref_folder = self.ref_folder_finder.get()
+        self.ref_folder = find_reference_folder(self.study_path)
 
     def need_output_results(self):
         return True
