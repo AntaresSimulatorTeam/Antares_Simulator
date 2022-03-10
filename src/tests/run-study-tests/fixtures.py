@@ -43,7 +43,7 @@ def printResults(study_path):
 @pytest.fixture(autouse=True)
 def check_runner(simulation, printResults, resutsRemover):
     # Actions done before the current test
-    # print("\nTest begins")
+    print("\nTest begins")
     my_check_handler = check_handler(simulation, printResults, resutsRemover)
 
     # Running the current test here
@@ -51,4 +51,4 @@ def check_runner(simulation, printResults, resutsRemover):
 
     # Teardown : actions done after the current test
     my_check_handler.clean()
-    # print('End of test')
+    print('\nEnd of test')
