@@ -16,7 +16,7 @@ class reference_folder_finder:
                 return True
 
             if self.skip_folder(current_folder):
-                continue
+                sub_folders[:] = []
 
         return False
 
