@@ -13,6 +13,7 @@ set(SRC_EXT_SOLVER_H2O_DAILY
 	hydro/daily/h2o_j_resoudre_le_probleme_lineaire.c
 	hydro/daily/h2o_j_lisser_les_sur_turbines.c
 	hydro/daily/h2o_j_sys.h
+    hydro/daily/h2o_j_ajouter_bruit_au_cout.cpp
 )
 
 set(SRC_EXT_SOLVER_H2O_MONTHLY

@@ -44,6 +44,7 @@ main(int argc, char** argv)
     NbReservoirs = 100;
 
     DonneesMensuelles = H2O_J_Instanciation();
+    H2O_J_AjouterBruitAuCout(DonnesMensuelles);
 
     NbPdt = 28;
     for (Nb = 0; Nb < NombreDAnnees; Nb++)
