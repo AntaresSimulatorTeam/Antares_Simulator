@@ -168,6 +168,8 @@ public:
         return violationMax;
     }
 
+    void apply_noise();
+
 private:
     double end_days_levels;
     double overflow;

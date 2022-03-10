@@ -313,6 +313,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 #endif
 
         Hydro_problem_costs h2o2_optim_costs(study);
+        h2o2_optim_costs.apply_noise();
 
         for (uint month = 0; month != 12; ++month)
         {
