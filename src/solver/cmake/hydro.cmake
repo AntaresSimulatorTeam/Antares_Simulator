@@ -26,6 +26,7 @@ set(SRC_EXT_SOLVER_H2O_MONTHLY
 	hydro/monthly/h2o_m_initialiser_les_second_membre.c
 	hydro/monthly/h2o_m_instanciation.c
 	hydro/monthly/h2o_m_optimiser_une_annee.c
+    hydro/monthly/h2o_m_ajouter_bruit.cpp
 	hydro/monthly/h2o_m_resoudre_le_probleme_lineaire.c
 	hydro/monthly/h2o_m_sys.h
 )

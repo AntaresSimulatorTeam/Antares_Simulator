@@ -42,7 +42,7 @@ extern "C"
     void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES*);
     void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES*);
     void H2O_M_ResoudreLeProblemeLineaire(DONNEES_ANNUELLES*, int);
-
+    void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES*);
 #ifdef __cplusplus
 }
 #endif

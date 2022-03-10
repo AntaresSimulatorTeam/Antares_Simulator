@@ -59,18 +59,21 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES* DonneesAnnuel
     X = ProblemeLineairePartieVariable->X;
     CoutLineaire = ProblemeLineairePartieFixe->CoutLineaire;
 
+    // NumeroDeVariableVolume[0]
     X[0] = DonneesAnnuelles->Volume[0];
     Xmin[0] = DonneesAnnuelles->Volume[0];
     Xmax[0] = DonneesAnnuelles->Volume[0];
 
     Var = 0;
 
+    // NumeroDeVariableVolume[Pdt]
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         CoutLineaire[Var] = 0.0;
         Var++;
     }
 
+    // NumeroDeVariableTurbine[Pdt]
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         Xmax[Var] = TurbineMax[Pdt];
@@ -78,33 +81,39 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES* DonneesAnnuel
         Var++;
     }
 
+    // NumeroDeVariableDepassementVolumeMax[Pdt]
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         CoutLineaire[Var] = CoutDepassementVolume;
         Var++;
     }
 
+    // NumeroDeVariableDepassementVolumeMin[Pdt]
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         CoutLineaire[Var] = CoutDepassementVolume;
         Var++;
     }
 
+    // NumeroDeLaVariableViolMaxVolumeMin
     CoutLineaire[Var] = DonneesAnnuelles->CoutViolMaxDuVolumeMin;
     Var++;
 
+    // NumeroDeVariableDEcartPositifAuTurbineCible
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         CoutLineaire[Var] = 1.0;
         Var++;
     }
 
+    // NumeroDeVariableDEcartNegatifAuTurbineCible
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         CoutLineaire[Var] = 1.0;
         Var++;
     }
 
+    // NumeroDeLaVariableXi
     CoutLineaire[Var] = 1.0;
     Var++;
 
