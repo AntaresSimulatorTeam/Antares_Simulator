@@ -231,6 +231,9 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
           filename, fhlMax, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate)
         && success;
 
+    if (enabledModeIsChanged)
+        JIT::enabled = true; // Back to the previous loading mode.
+
     // Read link's direct capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_direct.txt";
     success = directCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR)
@@ -241,9 +244,6 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
     success
       = indirectCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR)
         && success;
-
-    if (enabledModeIsChanged)
-        JIT::enabled = true; // Back to the previous loading mode.
 
     return success;
 }
