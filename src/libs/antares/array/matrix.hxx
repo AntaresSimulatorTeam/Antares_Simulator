@@ -425,10 +425,11 @@ bool Matrix<T, ReadWriteT>::loadFromCSVFile(const AnyString& filename,
 template<class T, class ReadWriteT>
 bool Matrix<T, ReadWriteT>::saveToCSVFile(const AnyString& filename,
                                           uint precision,
-                                          bool print_dimensions) const
+                                          bool print_dimensions,
+                                          bool saveEvenIfAllZero) const
 {
     PredicateIdentity predicate;
-    return internalSaveCSVFile(filename, precision, print_dimensions, predicate);
+    return internalSaveCSVFile(filename, precision, print_dimensions, predicate, saveEvenIfAllZero);
 }
 
 template<class T, class ReadWriteT>
@@ -436,9 +437,10 @@ template<class PredicateT>
 bool Matrix<T, ReadWriteT>::saveToCSVFile(const AnyString& filename,
                                           uint precision,
                                           bool print_dimensions,
-                                          PredicateT& predicate) const
+                                          PredicateT& predicate,
+                                          bool saveEvenIfAllZero) const
 {
-    return internalSaveCSVFile(filename, precision, print_dimensions, predicate);
+    return internalSaveCSVFile(filename, precision, print_dimensions, predicate, saveEvenIfAllZero);
 }
 
 template<class T, class ReadWriteT>
@@ -1193,7 +1195,8 @@ template<class PredicateT>
 void Matrix<T, ReadWriteT>::saveToBuffer(std::string& data,
                                          uint precision,
                                          bool print_dimensions,
-                                         PredicateT& predicate) const
+                                         PredicateT& predicate,
+                                         bool saveEvenIfAllZero) const
 {
     using namespace Yuni;
     enum
@@ -1202,7 +1205,7 @@ void Matrix<T, ReadWriteT>::saveToBuffer(std::string& data,
         isDecimal = Static::Type::IsDecimal<ReadWriteType>::Yes,
     };
 
-    if (not print_dimensions and containsOnlyZero(predicate))
+    if ((not print_dimensions and containsOnlyZero(predicate)) && !saveEvenIfAllZero)
         // Does nothing if the matrix only contains zero
         return;
 
@@ -1246,7 +1249,8 @@ template<class PredicateT>
 bool Matrix<T, ReadWriteT>::internalSaveCSVFile(const AnyString& filename,
                                                 uint precision,
                                                 bool print_dimensions,
-                                                PredicateT& predicate) const
+                                                PredicateT& predicate,
+                                                bool saveEvenIfAllZero) const
 {
     JIT::just_in_time_manager jit_mgr(jit, filename);
 
@@ -1278,7 +1282,7 @@ bool Matrix<T, ReadWriteT>::internalSaveCSVFile(const AnyString& filename,
     {
         std::string buffer;
 
-        saveToBuffer(buffer, precision, print_dimensions, predicate);
+        saveToBuffer(buffer, precision, print_dimensions, predicate, saveEvenIfAllZero);
         Statistics::HasWrittenToDisk(buffer.size());
 
         saveBufferToFile(buffer, file);
