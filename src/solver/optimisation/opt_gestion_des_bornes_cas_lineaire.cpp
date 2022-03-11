@@ -141,7 +141,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
     double* Xmin;
     double* Xmax;
     int* TypeDeVariable;
-    uint SetToZeroLinkNTCForAdequacyPatchFirstStep;
+    Data::AdequacyPatch::NTC SetToZeroLinkNTCForAdequacyPatchFirstStep;
 
     VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
