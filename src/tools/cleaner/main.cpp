@@ -120,7 +120,8 @@ int main(int argc, char* argv[])
         options.add(optExclude,
                     'e',
                     "exclude",
-                    "Colon-separated list of excluded files/folders to prevent from destruction. Exemple : --exclude fileA:directoryB:fileC");
+                    "Colon-separated list of excluded files/folders to prevent from destruction. "
+                    "Exemple : --exclude fileA:directoryB:fileC");
 
         // Format
         options.addFlag(optPrintOnly, ' ', "dry", "List the folder only and do nothing");

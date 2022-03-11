@@ -29,17 +29,18 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+#include <memory>
 #include <set>
 
 class DataFile final
 {
 public:
     //! The most suitable smart pointer
-    typedef Yuni::SmartPtr<DataFile> Ptr;
+    using Ptr = std::shared_ptr<DataFile>;
     //! Vector
-    typedef std::vector<Ptr> Vector;
+    using Vector = std::vector<Ptr>;
     //! Short string
-    typedef Yuni::CString<10, false> ShortString;
+    using ShortString = Yuni::CString<10, false>;
 
 public:
     template<class StringT, class StringT2>

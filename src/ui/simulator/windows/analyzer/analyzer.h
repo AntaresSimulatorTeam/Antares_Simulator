@@ -38,19 +38,58 @@
 #include <yuni/thread/thread.h>
 #include <yuni/core/event.h>
 
+#include <memory>
+
 namespace Antares
 {
 namespace Window
 {
+class FileSearchProvider final : public Antares::Component::Spotlight::IProvider
+{
+public:
+    //! The spotlight component (alias)
+    using Spotlight = Antares::Component::Spotlight;
+
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    FileSearchProvider() = default;
+    //! Destructor
+    ~FileSearchProvider() override = default;
+    //@}
+
+    /*!
+    ** \brief Perform a new search
+    */
+    void search(Spotlight::IItem::Vector& out,
+                const Spotlight::SearchToken::Vector& tokens,
+                const Yuni::String& text = "") override;
+
+    /*!
+    ** \brief An item has been selected
+    */
+    bool onSelect(Spotlight::IItem::Ptr&) override;
+
+    void onFileSearchAdd(const YString& filename);
+
+    void onFileSearchClear();
+
+private:
+    //! List of files
+    YString::Vector pFiles;
+};
+
 class AnalyzerWizard final : public wxDialog
 {
 public:
     //! File mapping
-    typedef Component::Datagrid::Renderer::Analyzer::Areas::Map FileMapping;
+    using FileMapping = Component::Datagrid::Renderer::Analyzer::Areas::Map;
     //!
-    typedef Component::Datagrid::Renderer::Analyzer::Areas::Record::Vector RecordVector;
+    using RecordVector = Component::Datagrid::Renderer::Analyzer::Areas::Record::Vector;
     //! Smartptr for file mapping
-    typedef Yuni::SmartPtr<FileMapping> FileMappingPtr;
+    using FileMappingPtr = std::shared_ptr<FileMapping>;
 
     enum IDs
     {
@@ -87,7 +126,7 @@ public:
     void info(const Yuni::NullPtr&);
     void info(const AnyString& text);
 
-    void fileMapping(FileMapping* m);
+    void fileMapping(FileMappingPtr m);
 
     /*!
     ** \brief Force the refresh of the grid
@@ -195,8 +234,10 @@ private:
 
     bool pUpdating;
 
-    typedef Component::Datagrid::Renderer::Analyzer::Areas RendererType;
+    using RendererType = Component::Datagrid::Renderer::Analyzer::Areas;
     RendererType* pRenderer;
+
+    std::shared_ptr<FileSearchProvider> mProvider;
 
     DECLARE_EVENT_TABLE()
 

@@ -38,12 +38,15 @@ namespace Datagrid
 namespace Renderer
 {
 ThermalClusterSummarySingleArea::ThermalClusterSummarySingleArea(
-    wxWindow* control,
-    Toolbox::InputSelector::Area* notifier) : CommonClusterSummarySingleArea(control, notifier)
+  wxWindow* control,
+  Toolbox::InputSelector::Area* notifier) :
+ CommonClusterSummarySingleArea(control, notifier)
 {
 }
 
-ThermalClusterSummarySingleArea::~ThermalClusterSummarySingleArea() {}
+ThermalClusterSummarySingleArea::~ThermalClusterSummarySingleArea()
+{
+}
 
 wxString ThermalClusterSummarySingleArea::rowCaption(int rowIndx) const
 {
@@ -184,7 +187,8 @@ bool ThermalClusterSummarySingleArea::cellValue(int x, int y, const String& v)
         case 1:
             return Update<bool, NoCheck, RefeshInspector>(cluster->enabled, v);
         case 2:
-            return Update<uint, CheckUnitCount, RefeshInspectorAndMarkAsModified>(cluster->unitCount, v);
+            return Update<uint, CheckUnitCount, RefeshInspectorAndMarkAsModified>(
+              cluster->unitCount, v);
         case 3:
             return Update<double, NoCheck, RefeshInspector>(cluster->nominalCapacity, v);
         case 4:
@@ -192,9 +196,11 @@ bool ThermalClusterSummarySingleArea::cellValue(int x, int y, const String& v)
         case 5:
             return Update<double, NoCheck, RefeshInspector>(cluster->minStablePower, v);
         case 6:
-            return Update<uint, CheckMinUpDownTime, RefeshInspectorAndMarkAsModified>(cluster->minUpTime, v);
+            return Update<uint, CheckMinUpDownTime, RefeshInspectorAndMarkAsModified>(
+              cluster->minUpTime, v);
         case 7:
-            return Update<uint, CheckMinUpDownTime, RefeshInspectorAndMarkAsModified>(cluster->minDownTime, v);
+            return Update<uint, CheckMinUpDownTime, RefeshInspectorAndMarkAsModified>(
+              cluster->minDownTime, v);
         case 8:
             return Update<double, NoCheck, RefeshInspector>(cluster->spinning, v);
         case 9:

@@ -151,8 +151,7 @@ bool AntaresStudyAnalyzerJob::shouldBeDestroyed() const
 class FolderRemover : public FSWalker::IJob
 {
 public:
-    // typedef SmartPtr<FolderRemover> Ptr;
-    typedef Yuni::Job::IJob::Ptr::Promote<FolderRemover>::Ptr Ptr;
+    using Ptr = Yuni::Job::IJob::Ptr::Promote<FolderRemover>::Ptr;
 
 public:
     FolderRemover(const String& folder) : folder(folder), userdata(nullptr), timeout(100)

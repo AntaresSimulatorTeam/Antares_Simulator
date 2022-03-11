@@ -69,11 +69,11 @@ void Unselect();
 /*!
 ** \brief Clear the selection then Add a study
 */
-void SelectStudy(const Data::Study* study);
+void SelectStudy(const Data::Study::Ptr& study);
 /*!
 ** \brief Add a study into the selection
 */
-void AddStudy(const Data::Study* study);
+void AddStudy(const Data::Study::Ptr& study);
 //@}
 
 //! \name Areas

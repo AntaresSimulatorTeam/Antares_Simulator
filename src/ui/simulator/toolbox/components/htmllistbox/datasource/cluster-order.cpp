@@ -37,7 +37,6 @@ namespace HTMLListbox
 {
 namespace Datasource
 {
-
 wxString groupNameToGroupTitle(Data::Area* area, wxString& groupName)
 {
     // Group title
@@ -58,15 +57,12 @@ wxString groupNameToGroupTitle(Data::Area* area, wxString& groupName)
     return groupTitle;
 }
 
-
 ClustersByOrder::ClustersByOrder(HTMLListbox::Component& parent) :
-    IDatasource(parent),
-    pArea(nullptr),
-    hasGroupJustChanged_(false)
+ IDatasource(parent), pArea(nullptr), hasGroupJustChanged_(false)
 {
     OnStudyAreasChanged.connect(this, &ClustersByOrder::onInvalidateAllAreas);
     Forms::ApplWnd::Instance()->onApplicationQuit.connect(this,
-        &ClustersByOrder::onInvalidateAllAreas);
+                                                          &ClustersByOrder::onInvalidateAllAreas);
 }
 
 //! Destructor
@@ -81,7 +77,8 @@ void ClustersByOrder::refresh(const wxString& search)
     {
         // A cluster group just changed.
         // To keep the changed cluster selected, We have to reorder the items list.
-        // Rebuilding the item list would re-initialize the cluster selection on the first cluster of the list.  
+        // Rebuilding the item list would re-initialize the cluster selection on the first cluster
+        // of the list.
         reorderItemsList(search);
         hasGroupChanged(false);
     }

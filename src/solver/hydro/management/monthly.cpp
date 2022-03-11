@@ -42,8 +42,6 @@ using namespace Yuni;
 
 #define SEP IO::Separator
 
-#define HYDRO_MONTHLY_SOLVER_DEBUG 0
-
 namespace Antares
 {
 template<class ProblemT>
@@ -245,7 +243,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
         }
 #endif
 
-#if HYDRO_MONTHLY_SOLVER_DEBUG != 0
+        if (study.parameters.hydroDebug)
         {
             String folder;
             folder << study.folderOutput << SEP << "debug" << SEP << "solver" << SEP << (1 + y);
@@ -293,7 +291,6 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                 }
             }
         }
-#endif
     });
 }
 

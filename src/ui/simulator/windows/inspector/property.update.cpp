@@ -60,7 +60,7 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
                                          const PropertyNameType& name,
                                          const wxVariant& value)
 {
-    InspectorData::Ptr& data = pCurrentSelection;
+    const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
 
@@ -79,7 +79,7 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
             Data::AreaName name;
             wxStringToString(value.GetString(), name);
 
-            bool result = StudyRenameArea(area, name, &(data->study));
+            bool result = StudyRenameArea(area, name, data->study.get());
             return result;
         }
         return false;
@@ -245,19 +245,18 @@ bool InspectorGrid::onPropertyChanging_C(wxPGProperty*,
                                          const wxVariant& value)
 {
     // Reference to the current study
-    InspectorData::Ptr& data = pCurrentSelection;
-    auto& study = (!data) ? *Data::Study::Current::Get() : data->study;
+    auto study = Data::Study::Current::Get();
 
     if (name == "common.study.name")
     {
-        wxStringToString(value.GetString(), study.header.caption);
+        wxStringToString(value.GetString(), study->header.caption);
         auto& mainFrm = *Antares::Forms::ApplWnd::Instance();
         mainFrm.mainPanel()->refreshFromStudy();
         return true;
     }
     if (name == "common.study.author")
     {
-        wxStringToString(value.GetString(), study.header.author);
+        wxStringToString(value.GetString(), study->header.author);
         auto& mainFrm = *Antares::Forms::ApplWnd::Instance();
         mainFrm.mainPanel()->refreshFromStudy();
         return true;
@@ -269,7 +268,7 @@ bool InspectorGrid::onPropertyChanging_L(wxPGProperty*,
                                          const PropertyNameType& name,
                                          const wxVariant& value)
 {
-    InspectorData::Ptr& data = pCurrentSelection;
+    const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
 
@@ -506,7 +505,7 @@ bool InspectorGrid::onPropertyChanging_Constraint(wxPGProperty*,
                                                   const PropertyNameType& name,
                                                   const wxVariant& value)
 {
-    InspectorData::Ptr& data = pCurrentSelection;
+    const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
     Data::BindingConstraint::Set::iterator end = data->constraints.end();
@@ -550,7 +549,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
                                                       const PropertyNameType& name,
                                                       const wxVariant& value)
 {
-    InspectorData::Ptr& data = pCurrentSelection;
+    const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
 
@@ -948,20 +947,19 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
     if (name == "cluster.gen-ts")
     {
         long index = value.GetLong();
-
-        Data::LocalTSGenerationBehavior behavior
-          = Data::LocalTSGenerationBehavior::useGlobalParameter;
+        using Behavior = Data::LocalTSGenerationBehavior;
+        auto behavior = Behavior::useGlobalParameter;
 
         switch (index)
         {
         case 0:
-            behavior = Data::LocalTSGenerationBehavior::useGlobalParameter;
+            behavior = Behavior::useGlobalParameter;
             break;
         case 1:
-            behavior = Data::LocalTSGenerationBehavior::forceGen;
+            behavior = Behavior::forceGen;
             break;
         case 2:
-            behavior = Data::LocalTSGenerationBehavior::forceNoGen;
+            behavior = Behavior::forceNoGen;
             break;
         default:
             return false;
@@ -969,7 +967,9 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
 
         for (; i != end; ++i)
             (*i)->tsGenBehavior = behavior;
-
+        // Notify
+        OnStudyThermalClusterCommonSettingsChanged();
+        pFrame.Refresh();
         return true;
     }
 
@@ -980,7 +980,7 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
                                                          const wxVariant& value)
 {
     using namespace Data;
-    InspectorData::Ptr& data = pCurrentSelection;
+    const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
 
@@ -1044,7 +1044,7 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
                                          const PropertyNameType& name,
                                          const wxVariant& value)
 {
-    InspectorData::Ptr& data = pCurrentSelection;
+    const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
         return false;
 

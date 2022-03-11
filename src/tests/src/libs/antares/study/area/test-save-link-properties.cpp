@@ -76,7 +76,7 @@ struct Fixture
 	Fixture(const Fixture && f) = delete;
 	Fixture & operator= (const Fixture & f) = delete;
 	Fixture& operator= (const Fixture && f) = delete;
-	Fixture() : study(new Study())
+    Fixture() : study(std::make_shared<Study>())
 	{
 		area_1 = study->areaAdd("Area 1");
 		area_2 = study->areaAdd("Area 2");

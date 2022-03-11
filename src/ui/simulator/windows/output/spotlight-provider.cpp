@@ -32,6 +32,8 @@
 #include "../../toolbox/resources.h"
 #include <ui/common/lock.h>
 
+#include <memory>
+
 using namespace Yuni;
 
 namespace Antares
@@ -46,7 +48,7 @@ class ItemAreaLink final : public Antares::Component::Spotlight::IItem
 {
 public:
     //! Smart ptr
-    typedef Yuni::SmartPtr<ItemAreaLink> Ptr;
+    typedef std::shared_ptr<ItemAreaLink> Ptr;
 
 public:
     //! \name Constructor & Destructor
@@ -151,14 +153,14 @@ void SpotlightProvider::search(Spotlight::IItem::Vector& out,
 
     // Reattach
     {
-        auto* item = new Spotlight::IItem();
+        auto item = std::make_shared<Spotlight::IItem>();
         item->caption("Unpin");
         item->countedAsResult(false);
 
         if (pBmpReattach)
             item->image(*pBmpReattach);
         out.push_back(item);
-        out.push_back(new Spotlight::Separator());
+        out.push_back(std::make_shared<Spotlight::Separator>());
     }
 
     const auto& content = *it->second;
@@ -239,7 +241,7 @@ void SpotlightProvider::search(Spotlight::IItem::Vector& out,
 
 void SpotlightProvider::appendAreaName(Spotlight::IItem::Vector& out, const String& name)
 {
-    auto* item = new ItemAreaLink(stArea, name);
+    auto item = std::make_shared<ItemAreaLink>(stArea, name);
     if (item)
     {
         if (name.first() == '@')
@@ -262,7 +264,7 @@ void SpotlightProvider::appendAreaName(Spotlight::IItem::Vector& out, const Stri
 
 void SpotlightProvider::appendLinkName(Spotlight::IItem::Vector& out, const String& name)
 {
-    auto* item = new ItemAreaLink(stLink, name);
+    auto item = std::make_shared<ItemAreaLink>(stLink, name);
     if (item)
     {
         item->group("LINKS");
@@ -279,7 +281,7 @@ bool SpotlightProvider::onSelect(Spotlight::IItem::Ptr& item)
     if (!pLayer || GUIIsLock() || !pComponent)
         return false;
 
-    ItemAreaLink::Ptr arealink = Spotlight::IItem::Ptr::DynamicCast<ItemAreaLink::Ptr>(item);
+    auto arealink = std::dynamic_pointer_cast<ItemAreaLink>(item);
     if (not arealink)
     {
         // Restoring the global selection
@@ -305,7 +307,7 @@ void SpotlightProviderGlobalSelection::appendSetName(Spotlight::IItem::Vector& o
                                                      const String& name,
                                                      const char* grp)
 {
-    auto* item = new ItemAreaLink(stArea, name);
+    auto item = std::make_shared<ItemAreaLink>(stArea, name);
     item->group(grp);
     if (pBmpGroup)
         item->image(*pBmpGroup);
@@ -316,7 +318,7 @@ void SpotlightProviderGlobalSelection::appendAreaName(Spotlight::IItem::Vector& 
                                                       const String& name,
                                                       const char* grp)
 {
-    auto* item = new ItemAreaLink(stArea, name);
+    auto item = std::make_shared<ItemAreaLink>(stArea, name);
     item->group(grp);
     if (pBmpArea)
         item->image(*pBmpArea);
@@ -327,7 +329,7 @@ void SpotlightProviderGlobalSelection::appendLinkName(Spotlight::IItem::Vector& 
                                                       const String& name,
                                                       const char* grp)
 {
-    auto* item = new ItemAreaLink(stLink, name);
+    auto item = std::make_shared<ItemAreaLink>(stLink, name);
     item->group(grp);
     if (pBmpLink)
         item->image(*pBmpLink);
@@ -411,7 +413,7 @@ void SpotlightProviderGlobalSelection::search(Spotlight::IItem::Vector& out,
             if (caption.first() == '@')
                 continue;
 
-            ItemAreaLink::Ptr arealink = Spotlight::IItem::Ptr::DynamicCast<ItemAreaLink::Ptr>(*i);
+            auto arealink = std::dynamic_pointer_cast<ItemAreaLink>(*i);
 
             if (arealink && arealink->selectionType == stArea)
             {
@@ -474,8 +476,7 @@ void SpotlightProviderGlobalSelection::search(Spotlight::IItem::Vector& out,
             continue;
         }
 
-        ItemAreaLink::Ptr arealink = Spotlight::IItem::Ptr::DynamicCast<ItemAreaLink::Ptr>(*i);
-
+        auto arealink = std::dynamic_pointer_cast<ItemAreaLink>(*i);
         if (arealink && arealink->selectionType == stArea)
         {
             auto aEnd = study.areas.end();
@@ -563,7 +564,7 @@ bool SpotlightProviderGlobalSelection::onSelect(Spotlight::IItem::Ptr& item)
     if (GUIIsLock() || !pComponent)
         return false;
 
-    ItemAreaLink::Ptr arealink = Spotlight::IItem::Ptr::DynamicCast<ItemAreaLink::Ptr>(item);
+    auto arealink = std::dynamic_pointer_cast<ItemAreaLink>(item);
     if (!(!arealink))
     {
         // Restoring the global selection
@@ -578,7 +579,7 @@ bool SpotlightProviderGlobalSelection::onSelect(Spotlight::IItem::Ptr& item)
 
 void SpotlightProviderGlobalSelection::addText(const String& name)
 {
-    auto* item = new Spotlight::IItem();
+    auto item = std::make_shared<Spotlight::IItem>();
     item->countedAsResult(false);
     item->caption(name);
     items.push_back(item);
@@ -586,7 +587,7 @@ void SpotlightProviderGlobalSelection::addText(const String& name)
 
 void SpotlightProviderGlobalSelection::addEconomy()
 {
-    auto* item = new Spotlight::IItem();
+    auto item = std::make_shared<Spotlight::IItem>();
     item->countedAsResult(false);
     item->addTag(" economy ", 200, 200, 200);
     items.push_back(item);
@@ -594,7 +595,7 @@ void SpotlightProviderGlobalSelection::addEconomy()
 
 void SpotlightProviderGlobalSelection::addAdequacy()
 {
-    auto* item = new Spotlight::IItem();
+    auto item = std::make_shared<Spotlight::IItem>();
     item->countedAsResult(false);
     item->addTag(" adequacy ", 200, 200, 200);
     items.push_back(item);
@@ -602,7 +603,7 @@ void SpotlightProviderGlobalSelection::addAdequacy()
 
 void SpotlightProviderGlobalSelection::addNoCommonItem()
 {
-    auto* item = new Spotlight::IItem();
+    auto item = std::make_shared<Spotlight::IItem>();
     item->countedAsResult(false);
     item->caption("No common item");
     item->group("Outputs");
@@ -640,11 +641,11 @@ void SpotlightProviderMCAll::search(Spotlight::IItem::Vector& out,
                                     const Yuni::String& text)
 {
     typedef Spotlight::IItem IItem;
-    IItem* item;
+    IItem::Ptr item;
 
     if (pComponent->pCurrentLOD != lodDetailedResultsWithConcatenation || tokens.empty())
     {
-        item = new IItem();
+        item = std::make_shared<IItem>();
         item->countedAsResult(false);
         item->caption("MC Synthesis");
         item->group("Views");
@@ -655,7 +656,7 @@ void SpotlightProviderMCAll::search(Spotlight::IItem::Vector& out,
 
         if (pComponent->pHasYearByYear)
         {
-            item = new IItem();
+            item = std::make_shared<IItem>();
             item->caption("Year-by-year");
             item->countedAsResult(false);
             String text;
@@ -670,7 +671,7 @@ void SpotlightProviderMCAll::search(Spotlight::IItem::Vector& out,
 
         if (pComponent->pHasConcatenedDataset)
         {
-            item = new IItem();
+            item = std::make_shared<IItem>();
             item->caption("Variable per variable");
             item->countedAsResult(false);
             item->group("Views");
