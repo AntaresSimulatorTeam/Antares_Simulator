@@ -7,13 +7,13 @@ from check_on_results.tolerances import get_tolerances
 from check_on_results.check_general import check_interface
 from utils.assertions import raise_assertion
 from utils.find_reference import find_reference_folder
+from utils.find_output import find_output_folder
 from utils.csv import read_csv
 
 
 class output_compare(check_interface):
     def __init__(self, study_path, tolerances = get_tolerances()):
         check_interface.__init__(self, study_path)
-        self.path_to_output = self.study_path / 'output'
         self.tol = tolerances
         self.ref_folder = find_reference_folder(self.study_path)
 
@@ -24,7 +24,9 @@ class output_compare(check_interface):
         print("running check : %s" % self.__class__.__name__)
 
         reference_folder = find_simulation_folder(self.ref_folder)
-        other_folder = find_simulation_folder(self.path_to_output)
+
+        path_to_output = find_output_folder(self.study_path)
+        other_folder = find_simulation_folder(path_to_output)
 
         simulation_files = find_simulation_files(reference_folder, other_folder)
         if not compare_simulation_files(simulation_files, self.tol):

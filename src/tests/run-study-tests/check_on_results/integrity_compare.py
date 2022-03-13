@@ -4,11 +4,11 @@ import numpy
 from utils.assertions import raise_assertion
 from check_on_results.check_general import check_interface
 from utils.find_reference import find_reference_folder
+from utils.find_output import find_output_folder
 
 class integrity_compare(check_interface):
     def __init__(self, study_path):
         check_interface.__init__(self, study_path)
-        self.path_to_output = self.study_path / 'output'
         self.ref_folder = find_reference_folder(self.study_path)
 
     def need_output_results(self):
@@ -20,7 +20,10 @@ class integrity_compare(check_interface):
 
     def compare_files(self):
         reference_values = get_integrity_check_values(self.ref_folder)
-        output_values = get_integrity_check_values(self.path_to_output)
+
+        path_to_output = find_output_folder(self.study_path)
+        output_values = get_integrity_check_values(path_to_output)
+
         numpy.testing.assert_allclose(reference_values[0:8], output_values[0:8], rtol=1e-3, atol=0)
 
 

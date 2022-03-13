@@ -1,12 +1,14 @@
+import pytest
+from pathlib import Path
+
 from check_on_results.check_general import check_list
-
 from check_on_results.tolerances import get_tolerances
-
 from check_on_results.output_compare import output_compare
 from check_on_results.integrity_compare import integrity_compare
 from check_on_results.check_hydro_level import check_hydro_level
 from check_on_results.unfeasible_problem import unfeasible_problem
 
+from fixtures import check_runner, study_path, simulation, printResults, resutsRemover
 from fixtures import *
 
 ALL_STUDIES_PATH = Path('../resources/Antares_Simulator_Tests').resolve()
@@ -17,10 +19,11 @@ ALL_STUDIES_PATH = Path('../resources/Antares_Simulator_Tests').resolve()
 
 @pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "short-tests" / "001 One node - passive"], indirect=True)
 def test_1(study_path, check_runner):
-    checks= check_list()
+    checks = check_list()
     checks.add(check = output_compare(study_path), system = 'win32')
     checks.add(check = integrity_compare(study_path))
     check_runner.run(checks)
+
 
 
 @pytest.mark.short

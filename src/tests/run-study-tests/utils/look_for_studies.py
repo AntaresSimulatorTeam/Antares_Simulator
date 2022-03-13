@@ -9,17 +9,11 @@ def look_for_studies(root_folder):
             sub_folders[:] = []
 
         if 'study.antares' in files:
-            to_return.append(current_folder)
+            to_return.append(Path(current_folder))
             continue
 
     return to_return
 
 def skip_folder(folder):
     return basename(folder) in ['input', 'layers', 'settings', 'logs', 'output']
-
-# Test on function "look_for_studies"
-ALL_STUDIES_PATH = Path('../../resources/Antares_Simulator_Tests').resolve()
-list_studies = look_for_studies(ALL_STUDIES_PATH)
-for study_path in list_studies:
-    print("%s" % study_path)
 
