@@ -32,11 +32,11 @@ using namespace Antares;
 using namespace Antares::Data;
 using namespace Antares::Data::AdequacyPatch;
 
-uint SetNTCForAdequacyFirstStep(bool AdequacyFirstStep,
-                                uint StartNodeAdequacyPatchType,
-                                uint EndNodeAdequacyPatchType,
-                                bool SetToZero12LinksForAdequacyPatch,
-                                bool SetToZero11LinksForAdequacyPatch)
+NTC SetNTCForAdequacyFirstStep(bool AdequacyFirstStep,
+                               AdequacyPatchMode StartNodeAdequacyPatchType,
+                               AdequacyPatchMode EndNodeAdequacyPatchType,
+                               bool SetToZero12LinksForAdequacyPatch,
+                               bool SetToZero11LinksForAdequacyPatch)
 {
     if (AdequacyFirstStep)
     {
