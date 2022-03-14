@@ -90,7 +90,7 @@ namespace Window
 
     void ntcUsageButton::onPopupMenu(Component::Button&, wxMenu& menu, void*)
     {
-        wxMenuItem* it;
+        const wxMenuItem* it;
 
         it = Menu::CreateItem(&menu,
             wxID_ANY,
@@ -180,7 +180,7 @@ namespace Window
 
     void hurdleCostsUsageButton::onPopupMenu(Component::Button&, wxMenu& menu, void*)
     {
-        wxMenuItem* it;
+        const wxMenuItem* it;
 
         it = Menu::CreateItem(
             &menu, wxID_ANY, wxT("Use hurdles costs"), "images/16x16/light_green.png", wxEmptyString);
@@ -266,7 +266,7 @@ namespace Window
 
     void assetTypeButton::onPopupMenu(Component::Button&, wxMenu& menu, void*)
     {
-        wxMenuItem* it;
+        const wxMenuItem* it;
 
         it = Menu::CreateItem(
             &menu, wxID_ANY, wxT("Set to AC"), "images/16x16/light_green.png", wxEmptyString);
@@ -418,7 +418,7 @@ namespace Window
 
     void captionButton::onPopupMenu(Component::Button&, wxMenu& menu, void*)
     {
-        wxMenuItem* it;
+        const wxMenuItem* it;
 
         it = Menu::CreateItem(
             &menu, wxID_ANY, wxT("Edit caption"), "images/16x16/document.png", wxEmptyString);

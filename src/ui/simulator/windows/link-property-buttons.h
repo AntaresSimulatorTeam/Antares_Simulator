@@ -37,7 +37,7 @@ public:
     static Yuni::Event<void(Antares::Data::AreaLink*)> onSelectionChanges;
 
     menuLinkButton();
-    virtual ~menuLinkButton();
+    ~menuLinkButton() override;
 
     bool hasNoButton() const { return !getButton(); }
 
