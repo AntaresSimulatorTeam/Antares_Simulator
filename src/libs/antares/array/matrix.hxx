@@ -1205,7 +1205,7 @@ void Matrix<T, ReadWriteT>::saveToBuffer(std::string& data,
         isDecimal = Static::Type::IsDecimal<ReadWriteType>::Yes,
     };
 
-    if ((not print_dimensions and containsOnlyZero(predicate)) && !saveEvenIfAllZero)
+    if (not print_dimensions and (containsOnlyZero(predicate) and not saveEvenIfAllZero))
         // Does nothing if the matrix only contains zero
         return;
 
