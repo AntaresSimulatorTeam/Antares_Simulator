@@ -1,5 +1,4 @@
 import pytest
-from pathlib import Path
 
 from check_on_results.check_general import check_list
 from check_on_results.tolerances import get_tolerances
