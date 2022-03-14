@@ -94,13 +94,6 @@ void linkNTCgrid::add(wxBoxSizer* sizer,
 }
 
 
-// Events to update a link property in all Interconnection objects (upper banner for any link view) 
-Yuni::Event<void(const Antares::Data::AreaLink*)> onTransmissionCapacitiesUsageChanges;
-Yuni::Event<void(const Antares::Data::AreaLink*)> onHurdleCostsUsageChanges;
-Yuni::Event<void(const Antares::Data::AreaLink*)> onAssetTypeChanges;
-Yuni::Event<void(const Antares::Data::AreaLink*)> onLinkCaptionChanges;
-
-
 Interconnection::Interconnection(wxWindow* parent,
                                  Toolbox::InputSelector::Connections* notifier,
                                  linkGrid* link_grid)
