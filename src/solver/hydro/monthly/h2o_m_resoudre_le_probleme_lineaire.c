@@ -102,7 +102,7 @@ RESOLUTION:
     Probleme->NombreMaxDIterations = -1;
     Probleme->DureeMaxDuCalcul = -1.;
 
-    Probleme->CoutLineaire = ProblemeLineairePartieFixe->CoutLineaire;
+    Probleme->CoutLineaire = ProblemeLineairePartieFixe->CoutLineaireBruite;
     Probleme->X = ProblemeLineairePartieVariable->X;
     Probleme->Xmin = ProblemeLineairePartieVariable->Xmin;
     Probleme->Xmax = ProblemeLineairePartieVariable->Xmax;
@@ -180,7 +180,13 @@ RESOLUTION:
         ProblemeHydraulique->CoutDeLaSolution = 0.0;
         for (Var = 0; Var < Probleme->NombreDeVariables; Var++)
         {
-            ProblemeHydraulique->CoutDeLaSolution += Probleme->CoutLineaire[Var] * Probleme->X[Var];
+            ProblemeHydraulique->CoutDeLaSolution += ProblemeLineairePartieFixe->CoutLineaire[Var] * Probleme->X[Var];
+        }
+
+        ProblemeHydraulique->CoutDeLaSolutionBruite = 0.0;
+        for (Var = 0; Var < Probleme->NombreDeVariables; Var++)
+        {
+            ProblemeHydraulique->CoutDeLaSolutionBruite += ProblemeLineairePartieFixe->CoutLineaireBruite[Var] * Probleme->X[Var];
         }
 
         DonneesAnnuelles->ResultatsValides = OUI;

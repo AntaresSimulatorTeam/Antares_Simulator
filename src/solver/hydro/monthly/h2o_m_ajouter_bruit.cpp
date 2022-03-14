@@ -12,7 +12,8 @@ constexpr unsigned int seed = 0x79686d64; // "hydm" in hexa
 void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES* DonneesAnnuelles)
 {
     CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables;
-    double* CoutLineaire;
+    const double* CoutLineaire;
+    double* CoutLineaireBruite;
     int Var;
     int Pdt;
     int NbPdt;
@@ -24,6 +25,7 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES* DonneesAnnuelles)
         ProblemeLineairePartieFixe = ProblemeHydraulique->ProblemeLineairePartieFixe;
         CorrespondanceDesVariables = ProblemeHydraulique->CorrespondanceDesVariables;
         CoutLineaire = ProblemeLineairePartieFixe->CoutLineaire;
+        CoutLineaireBruite = ProblemeLineairePartieFixe->CoutLineaireBruite;
         NbPdt = DonneesAnnuelles->NombreDePasDeTemps;
     }
 
@@ -43,12 +45,12 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES* DonneesAnnuelles)
         for (Pdt = 0; Pdt < NbPdt; Pdt++)
         {
             Var = variable[Pdt];
-            CoutLineaire[Var] += noiseGenerator() / Constants::denom;
+            CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() / Constants::denom;
         }
     }
     Var = CorrespondanceDesVariables->NumeroDeLaVariableViolMaxVolumeMin;
-    CoutLineaire[Var] += noiseGenerator() / Constants::denom;
+    CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() / Constants::denom;
 
     Var = CorrespondanceDesVariables->NumeroDeLaVariableXi;
-    CoutLineaire[Var] += noiseGenerator() / Constants::denom;
+    CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() / Constants::denom;
 }
