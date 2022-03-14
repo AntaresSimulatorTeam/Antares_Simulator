@@ -345,7 +345,7 @@ MemoryStatistics::MemoryStatistics(wxWindow* parent) :
     auto* hz = new wxBoxSizer(wxHORIZONTAL);
     hz->Add(Resources::StaticBitmapLoadFromFile(this, wxID_ANY, "images/64x64/cpu.png"),
             0,
-            wxALL | wxALIGN_TOP | wxALIGN_CENTER_HORIZONTAL);
+            wxALL | wxALIGN_TOP | wxALIGN_CENTER);
     hz->Add(gridSizer, 1, wxALL | wxEXPAND);
     sizer->Add(hz, 1, wxALL | wxEXPAND, 20);
 
