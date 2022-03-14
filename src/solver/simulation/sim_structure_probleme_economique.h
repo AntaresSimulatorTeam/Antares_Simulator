@@ -35,6 +35,7 @@
 #define GROSSES_VARIABLES NON_ANTARES
 #define COEFF_GROSSES_VARIABLES 100
 
+#include <memory>
 #include <yuni/core/math.h>
 
 using namespace Antares::Data::AdequacyPatch;
@@ -472,6 +473,13 @@ typedef struct
     double* CoutsMarginauxHorairesDeLaReserveParZone;
 } COUTS_MARGINAUX_ZONES_DE_RESERVE;
 
+struct AdequacyPatchParameters
+{
+    bool AdequacyFirstStep;
+    bool Ntc12;
+    bool Ntc11;
+};
+
 struct PROBLEME_HEBDO
 {
     /* Business problem */
@@ -579,13 +587,7 @@ struct PROBLEME_HEBDO
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration;
 
     /* Adequacy Patch */
-    struct AdequacyPatchStruct
-    {
-        bool UseAdequacyPatch;
-        bool AdequacyFirstStep;
-        bool Ntc12;
-        bool Ntc11;
-    } adqPatch;
+    std::unique_ptr<AdequacyPatchParameters> adqPatch = nullptr;
 
     optimizationStatistics optimizationStatistics_object;
     /* Hydro management */
