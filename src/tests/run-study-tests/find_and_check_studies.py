@@ -9,7 +9,7 @@ from check_on_results.tolerances import get_tolerances
 from check_on_results.output_compare import output_compare
 from check_on_results.integrity_compare import integrity_compare
 
-from fixtures import check_runner, study_path, simulation, printResults, resutsRemover
+from fixtures import *
 from utils.look_for_studies import look_for_studies
 
 

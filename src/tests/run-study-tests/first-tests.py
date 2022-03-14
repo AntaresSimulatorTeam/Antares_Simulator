@@ -8,7 +8,6 @@ from check_on_results.integrity_compare import integrity_compare
 from check_on_results.check_hydro_level import check_hydro_level
 from check_on_results.unfeasible_problem import unfeasible_problem
 
-from fixtures import check_runner, study_path, simulation, printResults, resutsRemover
 from fixtures import *
 
 ALL_STUDIES_PATH = Path('../resources/Antares_Simulator_Tests').resolve()
