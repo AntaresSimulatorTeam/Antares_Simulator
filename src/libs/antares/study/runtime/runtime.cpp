@@ -145,7 +145,6 @@ static void StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos
     uint indx = 0;
 
     study.areas.each([&](Data::Area& area) {
-
         area.buildLinksIndexes();
 
         auto end = area.links.end();
@@ -501,10 +500,12 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
 
     // Calendar
     logs.info() << "Generating calendar informations";
-    if (study.usedByTheSolver) {
+    if (study.usedByTheSolver)
+    {
         study.calendar.reset(gd, false);
     }
-    else {
+    else
+    {
         study.calendar.reset(gd);
     }
     logs.debug() << "  :: generating calendar dedicated to the output";

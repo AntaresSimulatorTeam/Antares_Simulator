@@ -30,6 +30,8 @@
 #include <yuni/yuni.h>
 #include <yuni/core/static/types.h>
 
+#include <memory>
+
 namespace Antares
 {
 namespace Solver
@@ -348,42 +350,11 @@ void List<NextT>::exportSurveyResults(bool global,
         logs.info() << "Exporting the annual results";
 
     // Structure for the survey results
-    enum
-    {
-        // We want to know exactly the number of columns required to generate
-        // any reports (e.g. single file, va-, de- ...)
-        // For that, we will ask to all variable in any situation (e.g. categories)
-        // the number of columns that we need.
-        // Obviously we want the maximum value to only instanciate once
-        // a big matrix, which will be needed anyway in the worst case.
-        // CAUTION :
-        //		This total max number of columns over all reports was useful when all output
-        // variables were automatically printed. 		It is no longer used since we've
-        // offered the
-        // possibility of selecting the output variables to be printed. 		Note that it
-        // is computed at
-        // compile time using recurrences. 		We keep it here because it is the model of
-        // the newer (runtime) way to compute any report's max number of columns 		in
-        // the
-        // context of a possible user's choice of variables to be printed. 		As this
-        // choice is necessarily made at runtime, this computation has to be made at runtime as
-        // well.
-        maxColumnsNeededForExportation = BrowseAllVariables<NextType>::maxValue,
-    };
-
-    /* -- Old way to create an instance of the survey results class : deprecated since we can choose
-     * variables to be printed (see comments above) */
-    // The survey itself.
-    // warning: Like the simulation itself, this variable _must_ not be allocated on the stack.
-    // This could lead to strange issues hard to solve (especially on Windows).
-    // logs.debug() << "  (for " << static_cast<unsigned int>(maxColumnsNeededForExportation) << "
-    // columns)"; auto* survey = new SurveyResults(maxColumnsNeededForExportation, *pStudy, output);
-
     // Getting the any report's max number of columns
     uint nbColumnsNeededForExportation = pStudy->parameters.variablesPrintInfo.getMaxColumnsCount();
     logs.debug() << "  (for " << nbColumnsNeededForExportation << " columns)";
 
-    auto* survey = new SurveyResults(nbColumnsNeededForExportation, *pStudy, output);
+    auto survey = std::make_shared<SurveyResults>(nbColumnsNeededForExportation, *pStudy, output);
 
     // Year by year ?
     survey->yearByYearResults = !global;
@@ -410,9 +381,6 @@ void List<NextT>::exportSurveyResults(bool global,
         // Building the survey results for each possible state
         Builder::Run(*this, *survey, numSpace);
     }
-
-    // Release
-    delete survey;
 }
 
 } // namespace Container

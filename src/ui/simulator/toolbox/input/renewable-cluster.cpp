@@ -47,8 +47,8 @@ namespace Toolbox
 {
 namespace InputSelector
 {
-    RenewableCluster::RenewableCluster(wxWindow* parent, InputSelector::Area* area) :
-        AInput(parent), pArea(nullptr), pTotalMW(nullptr), pImageList(16, 16), pAreaNotifier(area)
+RenewableCluster::RenewableCluster(wxWindow* parent, InputSelector::Area* area) :
+ AInput(parent), pArea(nullptr), pTotalMW(nullptr), pImageList(16, 16), pAreaNotifier(area)
 {
     SetSize(300, 330);
 
@@ -75,8 +75,8 @@ namespace InputSelector
         area->onAreaChanged.connect(this, &RenewableCluster::areaHasChanged);
 
     OnStudyRenewableClusterRenamed.connect(this, &RenewableCluster::onStudyRenewableClusterRenamed);
-    OnStudyRenewableClusterGroupChanged.connect(this,
-                                              &RenewableCluster::onStudyRenewableClusterGroupChanged);
+    OnStudyRenewableClusterGroupChanged.connect(
+      this, &RenewableCluster::onStudyRenewableClusterGroupChanged);
     OnStudyRenewableClusterCommonSettingsChanged.connect(
       this, &RenewableCluster::onStudyRenewableClusterCommonSettingsChanged);
 }
@@ -136,7 +136,7 @@ void RenewableCluster::internalBuildSubControls()
 
     // The listbox
     pRnListbox = new Component::HTMLListbox::Component(this);
-    
+
     pDataSourceAZ = pRnListbox->addDatasource<RenewableClustersByAlphaOrder>();
     pDataSourceZA = pRnListbox->addDatasource<RenewableClustersByAlphaReverseOrder>();
 
@@ -144,10 +144,10 @@ void RenewableCluster::internalBuildSubControls()
     {
         pAreaNotifier->onAreaChanged.connect(pDataSourceAZ,
                                              &RenewableClustersByAlphaOrder::onAreaChanged);
-        pAreaNotifier->onAreaChanged.connect(
-          pDataSourceZA, &RenewableClustersByAlphaReverseOrder::onAreaChanged);
+        pAreaNotifier->onAreaChanged.connect(pDataSourceZA,
+                                             &RenewableClustersByAlphaReverseOrder::onAreaChanged);
     }
-    
+
     sizer->Add(pRnListbox, 1, wxALL | wxEXPAND);
     sizer->SetItemMinSize(pRnListbox, 100, 200);
     pRnListbox->onItemSelected.connect(this, &RenewableCluster::onRnSelected);
@@ -276,7 +276,8 @@ void RenewableCluster::internalDeletePlant(void*)
         onClusterChanged(nullptr);
 
         // We have to rebuild the scenario builder data, if required
-        ScenarioBuilderUpdater updaterSB(*study); // this will create a temp file, and save it during destructor call
+        ScenarioBuilderUpdater updaterSB(
+          *study); // this will create a temp file, and save it during destructor call
 
         if (pArea->renewable.list.remove(toDelete->id()))
         {
@@ -505,11 +506,9 @@ void RenewableCluster::onRnSelected(Component::HTMLListbox::Item::IItem::Ptr ite
     Dispatcher::GUI::Post(callback, 30);
 }
 
-
 void RenewableCluster::delayedSelection(Component::HTMLListbox::Item::IItem::Ptr item)
 {
-    typedef Component::HTMLListbox::Item::RenewableClusterItem::Ptr RnPtr;
-    RnPtr a = Component::HTMLListbox::Item::IItem::Ptr::DynamicCast<RnPtr>(item);
+    auto a = dynamic_pointer_cast<Component::HTMLListbox::Item::RenewableClusterItem>(item);
     if (a)
     {
         // Lock the window to prevent flickering
@@ -532,7 +531,7 @@ void RenewableCluster::onDeleteDropdown(Antares::Component::Button&, wxMenu& men
 
     it = Menu::CreateItem(
       &menu, wxID_ANY, wxT("Delete the selected cluster"), "images/16x16/thermal_remove.png");
-    
+
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(RenewableCluster::evtPopupDelete),

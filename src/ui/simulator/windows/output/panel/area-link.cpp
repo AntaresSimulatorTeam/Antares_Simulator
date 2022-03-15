@@ -34,6 +34,7 @@
 #include <yuni/job/job.h>
 #include "area-link-renderer.h"
 #include <ui/common/lock.h>
+#include <memory>
 #include <limits>
 
 using namespace Yuni;
@@ -78,7 +79,7 @@ class JobMatrix : public Yuni::Job::IJob, public Yuni::IEventObserver<JobMatrix>
 {
 public:
     //! Smart pointer
-    typedef SmartPtr<JobMatrix> Ptr;
+    typedef std::shared_ptr<JobMatrix> Ptr;
     //! Matrix type
     typedef ::Antares::Private::OutputViewerData::Panel::MatrixType MatrixType;
 
@@ -182,7 +183,7 @@ class JobAggregator : public Yuni::Job::IJob, public Yuni::IEventObserver<JobAgg
 {
 public:
     //! Smart pointer
-    typedef SmartPtr<JobAggregator> Ptr;
+    typedef std::shared_ptr<JobAggregator> Ptr;
     //! Matrix type
     typedef Panel::MatrixType MatrixType;
 

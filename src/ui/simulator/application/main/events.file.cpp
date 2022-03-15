@@ -52,6 +52,8 @@
 #include <ui/common/component/spotlight.h>
 #include <ui/common/component/frame/registry.h>
 
+#include <memory>
+
 using namespace Yuni;
 
 namespace Antares
@@ -62,7 +64,7 @@ class ItemWindow : public Component::Spotlight::IItem
 {
 public:
     //! Smart ptr
-    typedef Yuni::SmartPtr<ItemWindow> Ptr;
+    using Ptr = std::shared_ptr<ItemWindow>;
 
     explicit ItemWindow(const Yuni::String& title, int id) : title(title), id(id)
     {
@@ -103,7 +105,7 @@ public:
 
             if (tokens.empty())
             {
-                out.push_back(new ItemWindow(frame->frameTitle(), elemIdx));
+                out.push_back(std::make_shared<ItemWindow>(frame->frameTitle(), elemIdx));
             }
             else
             {
@@ -111,7 +113,7 @@ public:
                 {
                     if (frame->frameTitle().icontains(tokens[si]->text))
                     {
-                        out.push_back(new ItemWindow(frame->frameTitle(), elemIdx));
+                        out.push_back(std::make_shared<ItemWindow>(frame->frameTitle(), elemIdx));
                         break; // -> tokens foreach
                     }
                 } // tokens foreach
@@ -121,7 +123,7 @@ public:
 
     virtual bool onSelect(Spotlight::IItem::Ptr& item)
     {
-        ItemWindow::Ptr itemwin = Spotlight::IItem::Ptr::DynamicCast<ItemWindow::Ptr>(item);
+        auto itemwin = std::dynamic_pointer_cast<ItemWindow>(item);
         if (!itemwin)
             return false;
 
@@ -181,7 +183,7 @@ RaiseWindowBox::RaiseWindowBox(wxWindow* parent) :
 
     {
         Component::Spotlight* spotlight = new Component::Spotlight(this, 0);
-        spotlight->provider(new SpotlightProviderWindows());
+        spotlight->provider(std::make_shared<SpotlightProviderWindows>());
         wxBoxSizer* hz = new wxBoxSizer(wxHORIZONTAL);
         hz->AddSpacer(5);
         hz->Add(spotlight, 1, wxALL | wxEXPAND);

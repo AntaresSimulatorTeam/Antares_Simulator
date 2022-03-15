@@ -42,7 +42,6 @@ namespace HTMLListbox
 {
 namespace Datasource
 {
-
 struct SortAlphaOrder
 {
     inline bool operator()(const Data::Cluster* a, const Data::Cluster* b)
@@ -73,7 +72,7 @@ public:
     //@}
 
     virtual wxString name() const = 0;
- 
+
     virtual const char* icon() const = 0;
 
     virtual void refresh(const wxString& search = wxEmptyString);
@@ -91,11 +90,10 @@ private:
 protected:
     Data::Area* pArea;
     bool hasGroupJustChanged_;
-    std::map<wxString, IItem*> groups_to_items_;
-    std::map<Data::Cluster*, ClusterItem*> pClustersToItems;
+    std::map<wxString, IItem::Ptr> groups_to_items_;
+    std::map<Data::Cluster*, ClusterItem::Ptr> pClustersToItems;
 
 }; // class ClustersByOrder
-
 
 } // namespace Datasource
 } // namespace HTMLListbox

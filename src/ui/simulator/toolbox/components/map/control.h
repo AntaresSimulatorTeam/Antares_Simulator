@@ -330,6 +330,7 @@ private:
     wxPoint pCurrentClientSize;
     wxPoint pLastMousePosition;
     Tool::Tool* pLastSelectedTool;
+    Tool::Tool* pRemoverForSelection = nullptr;
 
     MouseAction pMouseAction;
     BoundingBox pSelectionBox;

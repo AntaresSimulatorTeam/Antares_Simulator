@@ -32,6 +32,7 @@
 #include <map>
 #include <yuni/core/string.h>
 #include <yuni/core/bind.h>
+#include <memory>
 #include "action.h"
 
 namespace Antares
@@ -41,8 +42,7 @@ namespace Action
 class Context
 {
 public:
-    //! The most suitable smart ptr for the class
-    typedef Yuni::SmartPtr<Context> Ptr;
+    using Ptr = std::shared_ptr<Context>;
     //! Map of properties
     typedef std::map<Yuni::String, Yuni::String> Properties;
     //! Local view
@@ -57,9 +57,9 @@ public:
 public:
     //! \name Constructor & Destructor
     //@{
-    explicit Context(Data::Study& targetStudy, const size_t layer = 0);
+    explicit Context(Data::Study::Ptr targetStudy, const size_t layer = 0);
     //! Destructor
-    ~Context();
+    ~Context() = default;
     //@}
 
     /*!
@@ -69,12 +69,9 @@ public:
 
 public:
     //! The target study
-    // TODO : use smart ptr here
-    Data::Study& study;
+    Data::Study::Ptr study;
     //! An optional external study, which will be destroyed with this class
-    // TODO : use smart ptr here
-    Data::Study* extStudy;
-    bool shouldDestroyExtStudy;
+    Data::Study::Ptr extStudy;
 
     // The current Layer
     const size_t layerID;

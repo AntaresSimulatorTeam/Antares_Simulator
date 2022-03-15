@@ -30,13 +30,14 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <set>
+#include <memory>
 #include "result.h"
 
 class Output final
 {
 public:
     //! The most suitable smart pointer
-    typedef Yuni::SmartPtr<Output> Ptr;
+    using Ptr = std::shared_ptr<Output>;
     //! A folder name (short length)
     typedef Yuni::CString<10, false> FolderName;
     //! Column name

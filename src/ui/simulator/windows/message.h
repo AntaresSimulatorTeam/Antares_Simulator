@@ -126,7 +126,10 @@ public:
     ** \param defaultButton True to make it the default result
     ** \param space The space to add after before this button
     */
-    void add(const wxString& caption, DefaultButtonType value, bool defaultButton = false, int space = 3);
+    void add(const wxString& caption,
+             DefaultButtonType value,
+             bool defaultButton = false,
+             int space = 3);
 
     /*!
     ** \brief Add a predefined button
