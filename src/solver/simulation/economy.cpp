@@ -146,11 +146,11 @@ bool Economy::year(Progression::Task& progression,
 
         try
         {
-            if (pProblemesHebdo[numSpace]->UseAdequacyPatch)
+            if (pProblemesHebdo[numSpace]->adqPatch)
             {
-                pProblemesHebdo[numSpace]->AdequacyFirstStep = true;
+                pProblemesHebdo[numSpace]->adqPatch->AdequacyFirstStep = true;
                 OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
-                pProblemesHebdo[numSpace]->AdequacyFirstStep = false;
+                pProblemesHebdo[numSpace]->adqPatch->AdequacyFirstStep = false;
 
                 for (int pays = 0; pays < pProblemesHebdo[numSpace]->NombreDePays; ++pays)
                 {
