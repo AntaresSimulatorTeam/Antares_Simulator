@@ -373,10 +373,10 @@ Optimization::Optimization(wxWindow* parent) :
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->AddSpacer(2);
     }
-    SubTitle(this, s, wxT("Adeqaucy Patch"));
+    SubTitle(this, s, wxT("Adequacy Patch"));
     // Adequacy patch
     {
-        label = Component::CreateLabel(this, wxT("Adequacy patch"));
+        label = Component::CreateLabel(this, wxT("Enable Adequacy patch"));
         button = new Component::Button(this, wxT("true"), "images/16x16/light_green.png");
         button->SetBackgroundColour(bgColor);
         button->menu(true);
