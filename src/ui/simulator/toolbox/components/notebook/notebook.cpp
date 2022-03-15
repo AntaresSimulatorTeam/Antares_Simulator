@@ -1010,12 +1010,6 @@ Notebook::Page* Notebook::find(const wxString& name)
         if (page->name() == name)
             return page;
     }
-
-#ifndef NDEBUG
-    String sname;
-    wxStringToString(name, sname);
-    logs.warning() << "notebook: impossible to find '" << sname << "'";
-#endif
     return nullptr;
 }
 
