@@ -29,7 +29,6 @@ def test_1(study_path, check_runner):
 def test_2(study_path, check_runner):
     checks = check_list()
     checks.add(check = integrity_compare(study_path), system = 'win32')
-    checks.add(check = unfeasible_problem(study_path))
     check_runner.run(checks)
 
 

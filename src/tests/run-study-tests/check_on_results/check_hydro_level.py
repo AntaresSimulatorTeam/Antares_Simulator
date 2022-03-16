@@ -13,7 +13,7 @@ class check_hydro_level(check_interface):
 
 
     def need_output_results(self):
-        return False
+        return True
 
     def run(self):
         print("running check : %s" % self.__class__.__name__)
