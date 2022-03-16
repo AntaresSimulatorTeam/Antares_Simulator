@@ -11,7 +11,7 @@ class simulation_success(check_interface):
         self.success_expected = success_expected
 
     def need_output_results(self):
-        return True
+        return False
 
     def run(self):
         print("running check : %s" % self.__class__.__name__)
