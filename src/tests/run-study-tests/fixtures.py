@@ -10,14 +10,21 @@ class check_handler:
         self.print_results_handler = print_results_handler
         self.results_remover = results_remover
 
+    def get_simulation(self):
+        return self.simulation
+
     def run(self, checks):
         self.print_results_handler.enable_if_needed(checks)
         self.simulation.run()
         checks.run()
 
-    def clean(self):
-        self.print_results_handler.back_to_previous_state()
+        # In theory, removing results should occur in the teardown.
+        # But making it happen here allows to call several simulation runs
+        # in a single test and clear results after each run.
         self.results_remover.run()
+
+    def teardown(self):
+        self.print_results_handler.back_to_previous_state()
 
 # ================
 # Fixtures
@@ -50,5 +57,5 @@ def check_runner(simulation, printResults, resutsRemover):
     yield my_check_handler
 
     # Teardown : actions done after the current test
-    my_check_handler.clean()
+    my_check_handler.teardown()
     print('\nEnd of test')

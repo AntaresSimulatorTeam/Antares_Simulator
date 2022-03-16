@@ -1,7 +1,6 @@
 from pathlib import Path
 import numpy
 
-from utils.assertions import raise_assertion
 from check_on_results.check_general import check_interface
 from utils.find_reference import find_reference_folder
 from utils.find_output import find_output_folder
