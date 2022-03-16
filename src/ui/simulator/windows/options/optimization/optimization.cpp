@@ -46,6 +46,21 @@ namespace Window
 {
 namespace Options
 {
+static void SubTitle(wxWindow* parent, wxSizer* sizer, const wxChar* text, bool margintop = true)
+{
+    if (margintop)
+    {
+        sizer->AddSpacer(25);
+        sizer->AddSpacer(25);
+    }
+
+    auto* label = Component::CreateLabel(parent, text, true);
+
+    sizer->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+    sizer->AddSpacer(5);
+    sizer->AddSpacer(5);
+    sizer->AddSpacer(5);
+}
 static void ResetButton(Component::Button* button, bool value)
 {
     assert(button != NULL);
@@ -322,10 +337,46 @@ Optimization::Optimization(wxWindow* parent) :
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnExportMPS = button;
     }
+    // Unfeasible problem behavior
+    {
+        label = Component::CreateLabel(this, wxT("Unfeasible problem behavior"));
 
+        const Data::UnfeasibleProblemBehavior& defaultValue
+          = Data::UnfeasibleProblemBehavior::ERROR_DRY;
+        button = new Component::Button(
+          this, Data::getDisplayName(defaultValue), Data::getIcon(defaultValue));
+        button->SetBackgroundColour(bgColor);
+        button->menu(true);
+        onPopup.bind(this, &Optimization::onPopupMenuUnfeasibleBehavior);
+        button->onPopupMenu(onPopup);
+        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        pBtnUnfeasibleProblemBehavior = button;
+    }
+
+    // Simplex optimization range
+    {
+        label = Component::CreateLabel(this, wxT("Simplex optimization range"));
+        button = new Component::Button(this, wxT("Day"), "images/16x16/calendar_day.png");
+        button->SetBackgroundColour(bgColor);
+        button->menu(true);
+        button->onPopupMenu(this, &Optimization::onPopupMenuSimplex);
+
+        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        pBtnSimplexOptimizationRange = button;
+    }
+    if (0)
+    {
+        label = Component::CreateLabel(
+          this, wxT("Weekly binding constraints will be ignored"), false, false, -1);
+        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        s->AddSpacer(2);
+    }
+    SubTitle(this, s, wxT("Adequacy Patch"));
     // Adequacy patch
     {
-        label = Component::CreateLabel(this, wxT("Adequacy patch"));
+        label = Component::CreateLabel(this, wxT("Enable Adequacy patch"));
         button = new Component::Button(this, wxT("true"), "images/16x16/light_green.png");
         button->SetBackgroundColour(bgColor);
         button->menu(true);
@@ -367,43 +418,6 @@ Optimization::Optimization(wxWindow* parent) :
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnAdequacyPatchNTC11 = button;
-    }
-
-    // Unfeasible problem behavior
-    {
-        label = Component::CreateLabel(this, wxT("Unfeasible problem behavior"));
-
-        const Data::UnfeasibleProblemBehavior& defaultValue
-          = Data::UnfeasibleProblemBehavior::ERROR_DRY;
-        button = new Component::Button(
-          this, Data::getDisplayName(defaultValue), Data::getIcon(defaultValue));
-        button->SetBackgroundColour(bgColor);
-        button->menu(true);
-        onPopup.bind(this, &Optimization::onPopupMenuUnfeasibleBehavior);
-        button->onPopupMenu(onPopup);
-        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pBtnUnfeasibleProblemBehavior = button;
-    }
-
-    // Simplex optimization range
-    {
-        label = Component::CreateLabel(this, wxT("Simplex optimization range"));
-        button = new Component::Button(this, wxT("Day"), "images/16x16/calendar_day.png");
-        button->SetBackgroundColour(bgColor);
-        button->menu(true);
-        button->onPopupMenu(this, &Optimization::onPopupMenuSimplex);
-
-        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pBtnSimplexOptimizationRange = button;
-    }
-    if (0)
-    {
-        label = Component::CreateLabel(
-          this, wxT("Weekly binding constraints will be ignored"), false, false, -1);
-        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-        s->AddSpacer(2);
     }
 
     {
