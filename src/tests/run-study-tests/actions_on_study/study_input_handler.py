@@ -1,5 +1,6 @@
 import os
-import sys
+
+from utils.assertions import raise_assertion
 
 class study_input_handler:
 	"""
@@ -18,6 +19,8 @@ class study_input_handler:
 		self.files_path["desktop"] 	= self.study_dir + os.sep + "Desktop.ini"
 		self.files_path["general"] 	= self.study_dir + os.sep + "settings" + os.sep + "generaldata.ini"
 		self.files_path["study"] 	= self.study_dir + os.sep + "study.antares"
+
+		self.check_files_existence()
 		
 	def check_files_existence(self):
 		"""
@@ -25,8 +28,7 @@ class study_input_handler:
 		"""
 		for file_path in self.files_path.values():
 			if not os.path.isfile(file_path):
-				print("	File does not exist : %s" % file_path)
-				sys.exit(1)
+				raise_assertion("File does not exist : %s" % file_path)
 
 	def get_value(self, variable, file_nick_name):
 		"""

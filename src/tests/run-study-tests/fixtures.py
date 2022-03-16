@@ -5,17 +5,19 @@ from actions_on_study.results_remover import *
 from actions_on_study.print_results_handler import *
 
 class check_handler:
-    def __init__(self, simulation, print_results_handler, results_remover):
+    def __init__(self, simulation, results_remover):
         self.simulation = simulation
-        self.print_results_handler = print_results_handler
         self.results_remover = results_remover
+        self.checks = None
 
     def get_simulation(self):
         return self.simulation
 
     def run(self, checks):
-        self.print_results_handler.enable_if_needed(checks)
         self.simulation.run()
+
+        # Store check list for teardown
+        self.checks = checks
         checks.run()
 
         # In theory, removing results should occur in the teardown.
@@ -24,7 +26,9 @@ class check_handler:
         self.results_remover.run()
 
     def teardown(self):
-        self.print_results_handler.back_to_previous_state()
+        study_modifiers = self.checks.study_modifiers()
+        for modifier in study_modifiers:
+            modifier.rewind()
 
 # ================
 # Fixtures
@@ -51,7 +55,7 @@ def printResults(study_path):
 def check_runner(simulation, printResults, resutsRemover):
     # Actions done before the current test
     print("\nTest begins")
-    my_check_handler = check_handler(simulation, printResults, resutsRemover)
+    my_check_handler = check_handler(simulation, resutsRemover)
 
     # Running the current test here
     yield my_check_handler

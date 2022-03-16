@@ -6,7 +6,6 @@ class print_results_handler:
         self.do_we_enable = False
 
         self.study_handler = study_input_handler(str(self.study_path))
-        self.study_handler.check_files_existence()
 
     def results_already_enabled(self):
         if self.study_handler.get_value(variable = "synthesis", file_nick_name="general") == 'false':

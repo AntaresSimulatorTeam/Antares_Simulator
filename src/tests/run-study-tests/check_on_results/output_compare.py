@@ -8,6 +8,7 @@ from check_on_results.check_general import check_interface
 from utils.assertions import raise_assertion
 from utils.find_reference import find_reference_folder
 from utils.find_output import find_output_folder
+from actions_on_study.study_modifier import study_modifier
 from utils.csv import read_csv
 
 
@@ -17,8 +18,10 @@ class output_compare(check_interface):
         self.tol = tolerances
         self.ref_folder = find_reference_folder(self.study_path)
 
-    def need_output_results(self):
-        return True
+        print_results = study_modifier(self.study_path, study_parameter="synthesis", new_value="true",
+                                       study_file_id="general")
+        print_results.activate()
+        self.study_modifiers_.append(print_results)
 
     def run(self):
         print("running check : %s" % self.__class__.__name__)

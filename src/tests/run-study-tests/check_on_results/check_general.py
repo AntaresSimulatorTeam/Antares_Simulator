@@ -6,15 +6,14 @@ import abc
 class check_interface(metaclass=abc.ABCMeta):
     def __init__(self, study_path):
         self.study_path = study_path
-
-    @abc.abstractmethod
-    def need_output_results(self):
-        pass
+        self.study_modifiers_ = []
 
     @abc.abstractmethod
     def run(self):
         pass
 
+    def study_modifiers(self):
+        return self.study_modifiers_
 
 
 class check_list:
@@ -26,12 +25,11 @@ class check_list:
             return
         self.check_objects.append(check)
 
-
-    def output_results_needed(self):
+    def study_modifiers(self):
+        modifiers = []
         for check in self.check_objects:
-            if check.need_output_results():
-                return True
-        return False
+            modifiers.extend(check.study_modifiers())
+        return modifiers
 
     def run(self):
         for check in self.check_objects:

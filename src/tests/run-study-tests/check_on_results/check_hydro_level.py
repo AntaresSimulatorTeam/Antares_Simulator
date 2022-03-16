@@ -2,6 +2,7 @@ from pathlib import Path
 
 from utils.csv import read_csv
 from check_on_results.check_general import check_interface
+from actions_on_study.study_modifier import study_modifier
 from utils.assertions import raise_assertion
 
 class check_hydro_level(check_interface):
@@ -11,9 +12,10 @@ class check_hydro_level(check_interface):
         self.level = level
         self.tol = tolerance
 
-
-    def need_output_results(self):
-        return True
+        print_results = study_modifier(self.study_path, study_parameter="synthesis", new_value="true",
+                                       study_file_id="general")
+        print_results.activate()
+        self.study_modifiers_.append(print_results)
 
     def run(self):
         print("running check : %s" % self.__class__.__name__)
