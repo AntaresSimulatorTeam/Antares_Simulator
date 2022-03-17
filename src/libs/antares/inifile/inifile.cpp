@@ -249,8 +249,8 @@ bool IniFile::open(const AnyString& filename, bool warnings)
 // reading the file
 // So the optimization should be useless
 #ifndef YUNI_OS_WINDOWS
-    if (0 == IO::File::Size(filename))
-        return true;
+    if (!IO::File::Exists(filename))
+        return false;
 #endif
 
     // Load the file
