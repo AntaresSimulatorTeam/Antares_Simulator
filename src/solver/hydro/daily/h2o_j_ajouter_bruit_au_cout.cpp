@@ -4,7 +4,7 @@
 
 namespace Constants
 {
-constexpr double denom = 1e3;
+constexpr double noiseAmplitude = 1e-3;
 constexpr unsigned int seed = 0x79686a64; // "hydj" in hexa
 } // namespace Constants
 
@@ -22,14 +22,14 @@ void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES* donnesMensuelles)
     {
         for (int j = 0; j < ProblemeLineairePartieFixe[i]->NombreDeVariables; j++)
         {
-            ProblemeLineairePartieFixe[i]->CoutLineaire[j] += noiseGenerator() / Constants::denom;
+            ProblemeLineairePartieFixe[i]->CoutLineaire[j] += noiseGenerator() * Constants::noiseAmplitude;
         }
 
         ProblemeLineairePartieFixe[i]
           ->CoutLineaire[CorrespondanceDesVariables[i]->NumeroDeLaVariableMu]
-          += noiseGenerator() / Constants::denom;
+          += noiseGenerator() * Constants::noiseAmplitude;
         ProblemeLineairePartieFixe[i]
           ->CoutLineaire[CorrespondanceDesVariables[i]->NumeroDeLaVariableXi]
-          += noiseGenerator() / Constants::denom;
+          += noiseGenerator() * Constants::noiseAmplitude;
     }
 }

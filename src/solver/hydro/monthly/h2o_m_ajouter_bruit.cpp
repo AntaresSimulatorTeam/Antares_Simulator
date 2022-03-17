@@ -5,7 +5,7 @@
 
 namespace Constants
 {
-constexpr double denom = 1e3;
+constexpr double noiseAmplitude = 1e-3;
 constexpr unsigned int seed = 0x79686d64; // "hydm" in hexa
 } // namespace Constants
 
@@ -45,12 +45,12 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES* DonneesAnnuelles)
         for (Pdt = 0; Pdt < NbPdt; Pdt++)
         {
             Var = variable[Pdt];
-            CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() / Constants::denom;
+            CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
         }
     }
     Var = CorrespondanceDesVariables->NumeroDeLaVariableViolMaxVolumeMin;
-    CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() / Constants::denom;
+    CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
 
     Var = CorrespondanceDesVariables->NumeroDeLaVariableXi;
-    CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() / Constants::denom;
+    CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
 }

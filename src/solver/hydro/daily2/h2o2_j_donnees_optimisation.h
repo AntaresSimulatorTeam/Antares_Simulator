@@ -137,7 +137,7 @@ typedef struct
 
 namespace Constants
 {
-constexpr double denom = 1e3;
+constexpr double noiseAmplitude = 1e-3;
 constexpr unsigned int seed = 0x79683264; // "hyd2" in hexa
 } // namespace Constants
 
@@ -148,31 +148,31 @@ public:
 
     inline double get_end_days_levels_cost() const
     {
-        return end_days_levels + noiseGenerator() / Constants::denom;
+        return end_days_levels + noiseGenerator() * Constants::noiseAmplitude;
     }
     inline double get_overflow_cost() const
     {
-        return overflow + noiseGenerator() / Constants::denom;
+        return overflow + noiseGenerator() * Constants::noiseAmplitude;
     }
     inline double get_deviations_cost() const
     {
-        return deviations + noiseGenerator() / Constants::denom;
+        return deviations + noiseGenerator() * Constants::noiseAmplitude;
     }
     inline double get_violations_cost() const
     {
-        return violations + noiseGenerator() / Constants::denom;
+        return violations + noiseGenerator() * Constants::noiseAmplitude;
     }
     inline double get_waste_cost() const
     {
-        return waste + noiseGenerator() / Constants::denom;
+        return waste + noiseGenerator() * Constants::noiseAmplitude;
     }
     inline double get_deviationMax_cost() const
     {
-        return deviationMax + noiseGenerator() / Constants::denom;
+        return deviationMax + noiseGenerator() * Constants::noiseAmplitude;
     }
     inline double get_violationMax_cost() const
     {
-        return violationMax + noiseGenerator() / Constants::denom;
+        return violationMax + noiseGenerator() * Constants::noiseAmplitude;
     }
 
 private:
