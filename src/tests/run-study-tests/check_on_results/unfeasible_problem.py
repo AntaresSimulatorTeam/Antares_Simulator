@@ -1,6 +1,7 @@
 
 from check_on_results.check_general import check_interface, check_list
 from check_on_results.check_logs_content import check_logs_content
+from check_on_results.sim_return_code import simulation_success
 from actions_on_study.study_modifier import study_modifier
 from utils.assertions import raise_assertion
 
@@ -30,6 +31,11 @@ class behavior_flag:
     def error_or_warning_keyword(self):
         return self.error_or_warning_converter[self.split_behavior[0]]
 
+    def contains_warning(self):
+        if self.split_behavior[0] == 'warning':
+            return True
+        return False
+
     def contains_verbose(self):
         if self.split_behavior[1] == 'verbose':
             return True
@@ -37,7 +43,7 @@ class behavior_flag:
 
 
 class unfeasible_problem(check_interface):
-    def __init__(self, study_path, new_behavior="error-verbose", checks_on_weeks = []):
+    def __init__(self, study_path, new_behavior="error-verbose", checks_on_weeks = [], simulation = None):
         check_interface.__init__(self, study_path)
 
         # Unfeasible problem behavior flag
@@ -50,6 +56,9 @@ class unfeasible_problem(check_interface):
 
         # List of weeks on which we make checks
         self.checks_on_weeks = checks_on_weeks
+
+        # Store simulation
+        self.simulation = simulation
 
         # We have a list of checks to run here
         self.checks = check_list()
@@ -64,6 +73,10 @@ class unfeasible_problem(check_interface):
         self.checks.add(check = check_logs_content(self.study_path,
                                                    self.new_behavior_flag.error_or_warning_keyword(),
                                                    self.checks_on_weeks))
+
+        self.checks.add(check = simulation_success(self.study_path,
+                                                   simulation=self.simulation,
+                                                   success_expected=self.new_behavior_flag.contains_warning()))
 
         # self.checks.add(check = self.make_mps_check())
 
