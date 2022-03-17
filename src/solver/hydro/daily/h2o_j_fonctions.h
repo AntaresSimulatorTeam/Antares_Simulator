@@ -36,7 +36,6 @@ extern "C"
     DONNEES_MENSUELLES* H2O_J_Instanciation(void);
 
     void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES*);
-    char H2O_J_EcrireJeuDeDonneesLineaireAuFormatMPS(DONNEES_MENSUELLES*, FILE*);
     void H2O_J_Free(DONNEES_MENSUELLES*);
     void H2O_J_ConstruireLesContraintes(int,
                                         int*,
