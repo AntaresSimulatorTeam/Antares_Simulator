@@ -19,15 +19,12 @@ class check_handler:
         self.checks = checks
         checks.run()
 
-        # In theory, removing results should occur in the teardown.
-        # But making it happen here allows to call several simulation runs
-        # in a single test and clear results after each run.
-        self.results_remover.run()
-
     def teardown(self):
         study_modifiers = self.checks.study_modifiers()
         for modifier in study_modifiers:
             modifier.rewind()
+
+        self.results_remover.run()
 
 # ================
 # Fixtures

@@ -24,8 +24,9 @@ class study_run:
             command.append('--use-ortools')
             command.append('--ortools-solver=' + self.ortools_solver)
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-        self.return_code = process.returncode
         output = process.communicate()
+
+        self.return_code = process.returncode
 
         if not self.raise_exception_at_failure:
             return

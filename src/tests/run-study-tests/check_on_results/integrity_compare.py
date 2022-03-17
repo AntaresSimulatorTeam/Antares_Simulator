@@ -10,9 +10,6 @@ class integrity_compare(check_interface):
         check_interface.__init__(self, study_path)
         self.ref_folder = find_reference_folder(self.study_path)
 
-    def need_output_results(self):
-        return False
-
     def run(self):
         print("running check : %s" % self.__class__.__name__)
         self.compare_files()

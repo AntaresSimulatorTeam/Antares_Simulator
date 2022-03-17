@@ -13,24 +13,25 @@ ALL_STUDIES_PATH = Path('../resources/Antares_Simulator_Tests').resolve()
 # --------------------------------------------------------------
 
 @pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "specific-tests" / "unfeasible-problem" / "unfeasible_problem_01"], indirect=True)
-def test_1(study_path, check_runner):
-
-    weeks_list_error = []
-    weeks_list_error.append(weeks_in_year(year=3, weeks=[19]))
+def test_unfeasible_problem_01__error_verbose(study_path, check_runner):
+    errors_on_weeks = []
+    errors_on_weeks.append(weeks_in_year(year=3, weeks=[19]))
 
     checks = check_list()
-    checks.add(check = unfeasible_problem(study_path, new_behavior="error-verbose", checks_on_weeks=weeks_list_error))
+    checks.add(check = unfeasible_problem(study_path, new_behavior="error-verbose", checks_on_weeks=errors_on_weeks))
     checks.add(check = simulation_success(study_path, simulation=check_runner.get_simulation(), success_expected=False))
     check_runner.run(checks)
 
-    weeks_list_warning = []
-    weeks_list_warning.append(weeks_in_year(year=3, weeks=[19]))
-    weeks_list_warning.append(weeks_in_year(year=6, weeks=[42, 43, 49]))
-    weeks_list_warning.append(weeks_in_year(year=7, weeks=[19]))
-    weeks_list_warning.append(weeks_in_year(year=8, weeks=[19]))
+@pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "specific-tests" / "unfeasible-problem" / "unfeasible_problem_01"], indirect=True)
+def test_unfeasible_problem_01__warning_verbose(study_path, check_runner):
+    warnings_on_weeks = []
+    warnings_on_weeks.append(weeks_in_year(year=3, weeks=[19]))
+    warnings_on_weeks.append(weeks_in_year(year=6, weeks=[42, 43, 49]))
+    warnings_on_weeks.append(weeks_in_year(year=7, weeks=[19]))
+    warnings_on_weeks.append(weeks_in_year(year=8, weeks=[19]))
 
     checks = check_list()
-    checks.add(check = unfeasible_problem(study_path, new_behavior="warning-verbose", checks_on_weeks=weeks_list_warning))
+    checks.add(check = unfeasible_problem(study_path, new_behavior="warning-verbose", checks_on_weeks=warnings_on_weeks))
     checks.add(check = simulation_success(study_path, simulation=check_runner.get_simulation(), success_expected=True))
     check_runner.run(checks)
 
