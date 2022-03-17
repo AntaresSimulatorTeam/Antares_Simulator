@@ -54,7 +54,7 @@ int DataSeriesThermalSaveToFolder(const DataSeriesThermal* t,
             int ret = 1;
             buffer.clear() << folder << SEP << ag->parentArea->id << SEP << ag->id() << SEP
                            << "series.txt";
-            ret = t->series.saveToCSVFile(buffer, 0) && ret;
+            ret = t->series.saveToCSVFile(buffer) && ret;
 
             return ret;
         }
