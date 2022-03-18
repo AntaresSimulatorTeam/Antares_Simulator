@@ -70,7 +70,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
             if (data.series.width == 1)
                 data.timeseriesNumbers[0][year] = 0;
 
-            ptchro.Consommation = (long)data.timeseriesNumbers[0][year];
+            ptchro.Consommation = data.timeseriesNumbers[0][year];
         }
         // Solar
         {
@@ -80,7 +80,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
             if (data.series.width == 1)
                 data.timeseriesNumbers[0][year] = 0;
 
-            ptchro.Solar = (long)data.timeseriesNumbers[0][year];
+            ptchro.Solar = data.timeseriesNumbers[0][year];
         }
         // Hydro
         {
@@ -90,7 +90,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
             if (data.count == 1)
                 data.timeseriesNumbers[0][year] = 0;
 
-            ptchro.Hydraulique = (long)data.timeseriesNumbers[0][year];
+            ptchro.Hydraulique = data.timeseriesNumbers[0][year];
             // Hydro - mod
             memset(ptvalgen.HydrauliqueModulableQuotidien, 0, nbDaysPerYearDouble);
         }
@@ -102,7 +102,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
             if (data.series.width == 1)
                 data.timeseriesNumbers[0][year] = 0;
 
-            ptchro.Eolien = (long)data.timeseriesNumbers[0][year];
+            ptchro.Eolien = data.timeseriesNumbers[0][year];
         }
         // Renewable
         {
@@ -122,7 +122,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
                 if (data.series.width == 1)
                     data.timeseriesNumbers[0][year] = 0;
 
-                ptchro.RenouvelableParPalier[index] = (long)data.timeseriesNumbers[0][year];
+                ptchro.RenouvelableParPalier[index] = data.timeseriesNumbers[0][year];
             }
         }
 
@@ -151,7 +151,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
 
                 // the matrix data.series should be properly initialized at this stage
                 // because the ts-generator has already been launched
-                ptchro.ThermiqueParPalier[index] = (long)data.timeseriesNumbers[0][year];
+                ptchro.ThermiqueParPalier[index] = data.timeseriesNumbers[0][year];
 
                 if (EconomicModeT)
                 {
