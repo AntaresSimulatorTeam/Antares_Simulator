@@ -27,6 +27,7 @@
 
 #include "../simulation/simulation.h"
 #include "adequacy_patch.h"
+#include <map>
 
 namespace Antares
 {
@@ -43,33 +44,37 @@ AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
 {
     if (AdequacyFirstStep)
     {
-        if (OriginNodeAdequacyPatchType == adqmPhysicalAreaInsideAdqPatch
-            && ExtremityNodeAdequacyPatchType == adqmPhysicalAreaInsideAdqPatch)
-            return setToZero;
-        else if (OriginNodeAdequacyPatchType == adqmPhysicalAreaOutsideAdqPatch
-                 && ExtremityNodeAdequacyPatchType == adqmPhysicalAreaInsideAdqPatch)
-        {
-            if (SetToZero12LinksForAdequacyPatch)
-                return setToZero;
-            else
-                return setExtremityOrigineToZero;
-        }
-        else if (OriginNodeAdequacyPatchType == adqmPhysicalAreaInsideAdqPatch
-                 && ExtremityNodeAdequacyPatchType == adqmPhysicalAreaOutsideAdqPatch)
-        {
-            if (SetToZero12LinksForAdequacyPatch)
-                return setToZero;
-            else
-                return setOrigineExtremityToZero;
-        }
-        else if (OriginNodeAdequacyPatchType == adqmPhysicalAreaOutsideAdqPatch
-                 && ExtremityNodeAdequacyPatchType == adqmPhysicalAreaOutsideAdqPatch)
-        {
-            if (SetToZero11LinksForAdequacyPatch)
-                return setToZero;
-            else
-                return leaveLocalValues;
-        }
+        std::map<std::pair<AdequacyPatchMode, AdequacyPatchMode>,
+                 LinkCapacityForAdequacyPatchFirstStep>
+          behaviorMap;
+
+        behaviorMap.insert(std::make_pair(
+          std::make_pair(adqmPhysicalAreaInsideAdqPatch, adqmPhysicalAreaInsideAdqPatch),
+          setToZero));
+        behaviorMap.insert(std::make_pair(
+          std::make_pair(adqmPhysicalAreaOutsideAdqPatch, adqmPhysicalAreaInsideAdqPatch),
+          (SetToZero12LinksForAdequacyPatch) ? setToZero : setExtremityOrigineToZero));
+        behaviorMap.insert(std::make_pair(
+          std::make_pair(adqmPhysicalAreaInsideAdqPatch, adqmPhysicalAreaOutsideAdqPatch),
+          (SetToZero12LinksForAdequacyPatch) ? setToZero : setOrigineExtremityToZero));
+        behaviorMap.insert(std::make_pair(
+          std::make_pair(adqmPhysicalAreaOutsideAdqPatch, adqmPhysicalAreaOutsideAdqPatch),
+          (SetToZero11LinksForAdequacyPatch) ? setToZero : leaveLocalValues));
+        behaviorMap.insert(
+          std::make_pair(std::make_pair(adqmVirtualArea, adqmVirtualArea), leaveLocalValues));
+        behaviorMap.insert(std::make_pair(
+          std::make_pair(adqmVirtualArea, adqmPhysicalAreaOutsideAdqPatch), leaveLocalValues));
+        behaviorMap.insert(std::make_pair(
+          std::make_pair(adqmPhysicalAreaOutsideAdqPatch, adqmVirtualArea), leaveLocalValues));
+        behaviorMap.insert(std::make_pair(
+          std::make_pair(adqmVirtualArea, adqmPhysicalAreaInsideAdqPatch), leaveLocalValues));
+        behaviorMap.insert(std::make_pair(
+          std::make_pair(adqmPhysicalAreaInsideAdqPatch, adqmVirtualArea), leaveLocalValues));
+
+        auto search = behaviorMap.find(
+          std::make_pair(OriginNodeAdequacyPatchType, ExtremityNodeAdequacyPatchType));
+        if (search != behaviorMap.end())
+            return search->second;
         else
             return leaveLocalValues;
     }
