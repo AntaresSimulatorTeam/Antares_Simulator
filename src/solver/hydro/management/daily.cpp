@@ -44,7 +44,7 @@ using namespace Yuni;
 
 #define SEP IO::Separator
 
-#define HYDRO_DAILY_SOLVER_DEBUG 1
+#define HYDRO_DAILY_SOLVER_DEBUG 0
 
 namespace Antares
 {
@@ -213,6 +213,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             uint endDay = firstDay + daysPerMonth;
 
             DONNEES_MENSUELLES& problem = *H2O_J_Instanciation();
+            H2O_J_AjouterBruitAuCout(&problem);
             problem.NombreDeJoursDuMois = (int)daysPerMonth;
             problem.TurbineDuMois = data.MOG[realmonth];
 
