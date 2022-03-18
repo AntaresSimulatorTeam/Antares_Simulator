@@ -47,10 +47,11 @@
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-NTC SetNTCForAdequacyFirstStep(bool AdequacyFirstStep,
-                               AdequacyPatchMode StartNodeAdequacyPatchType,
-                               AdequacyPatchMode EndNodeAdequacyPatchType,
-                               bool SetToZero12LinksForAdequacyPatch,
-                               bool SetToZero11LinksForAdequacyPatch);
+LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
+  bool AdequacyFirstStep,
+  AdequacyPatchMode StartNodeAdequacyPatchType,
+  AdequacyPatchMode EndNodeAdequacyPatchType,
+  bool SetToZero12LinksForAdequacyPatch,
+  bool SetToZero11LinksForAdequacyPatch);
 
 #endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */
