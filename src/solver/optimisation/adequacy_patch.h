@@ -56,8 +56,8 @@ namespace AdequacyPatch
  */
 LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
   bool AdequacyFirstStep,
-  AdequacyPatchMode StartNodeAdequacyPatchType,
-  AdequacyPatchMode EndNodeAdequacyPatchType,
+  AdequacyPatchMode OriginNodeAdequacyPatchType,
+  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
   bool SetToZero12LinksForAdequacyPatch,
   bool SetToZero11LinksForAdequacyPatch);
 

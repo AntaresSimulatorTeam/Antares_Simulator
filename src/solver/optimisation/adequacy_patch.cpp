@@ -36,34 +36,34 @@ namespace AdequacyPatch
 {
 AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
   bool AdequacyFirstStep,
-  AdequacyPatch::AdequacyPatchMode StartNodeAdequacyPatchType,
-  AdequacyPatch::AdequacyPatchMode EndNodeAdequacyPatchType,
+  AdequacyPatch::AdequacyPatchMode OriginNodeAdequacyPatchType,
+  AdequacyPatch::AdequacyPatchMode ExtremityNodeAdequacyPatchType,
   bool SetToZero12LinksForAdequacyPatch,
   bool SetToZero11LinksForAdequacyPatch)
 {
     if (AdequacyFirstStep)
     {
-        if (StartNodeAdequacyPatchType == adqmPhysicalAreaInsideAdqPatch
-            && EndNodeAdequacyPatchType == adqmPhysicalAreaInsideAdqPatch)
+        if (OriginNodeAdequacyPatchType == adqmPhysicalAreaInsideAdqPatch
+            && ExtremityNodeAdequacyPatchType == adqmPhysicalAreaInsideAdqPatch)
             return setToZero;
-        else if (StartNodeAdequacyPatchType == adqmPhysicalAreaOutsideAdqPatch
-                 && EndNodeAdequacyPatchType == adqmPhysicalAreaInsideAdqPatch)
+        else if (OriginNodeAdequacyPatchType == adqmPhysicalAreaOutsideAdqPatch
+                 && ExtremityNodeAdequacyPatchType == adqmPhysicalAreaInsideAdqPatch)
         {
             if (SetToZero12LinksForAdequacyPatch)
                 return setToZero;
             else
                 return setExtremityOrigineToZero;
         }
-        else if (StartNodeAdequacyPatchType == adqmPhysicalAreaInsideAdqPatch
-                 && EndNodeAdequacyPatchType == adqmPhysicalAreaOutsideAdqPatch)
+        else if (OriginNodeAdequacyPatchType == adqmPhysicalAreaInsideAdqPatch
+                 && ExtremityNodeAdequacyPatchType == adqmPhysicalAreaOutsideAdqPatch)
         {
             if (SetToZero12LinksForAdequacyPatch)
                 return setToZero;
             else
                 return setOrigineExtremityToZero;
         }
-        else if (StartNodeAdequacyPatchType == adqmPhysicalAreaOutsideAdqPatch
-                 && EndNodeAdequacyPatchType == adqmPhysicalAreaOutsideAdqPatch)
+        else if (OriginNodeAdequacyPatchType == adqmPhysicalAreaOutsideAdqPatch
+                 && ExtremityNodeAdequacyPatchType == adqmPhysicalAreaOutsideAdqPatch)
         {
             if (SetToZero11LinksForAdequacyPatch)
                 return setToZero;
