@@ -28,6 +28,13 @@
 #ifndef __SOLVER_ADEQUACY_FUNCTIONS_H__
 #define __SOLVER_ADEQUACY_FUNCTIONS_H__
 
+namespace Antares
+{
+namespace Data
+{
+namespace AdequacyPatch
+{
+
 /*!
  * Determines if a link capacity needs to be set to 0. Only changes something if used during the
  * AdequacyFirstStep.
@@ -53,5 +60,9 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
   AdequacyPatchMode EndNodeAdequacyPatchType,
   bool SetToZero12LinksForAdequacyPatch,
   bool SetToZero11LinksForAdequacyPatch);
+
+} // namespace AdequacyPatch
+} // namespace Data
+} // namespace Antares
 
 #endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */

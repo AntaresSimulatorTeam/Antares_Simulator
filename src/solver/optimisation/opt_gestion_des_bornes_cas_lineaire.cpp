@@ -183,11 +183,12 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             if (ProblemeHebdo->adqPatch)
             {
                 SetToZeroLinkNTCForAdequacyPatchFirstStep
-                  = SetNTCForAdequacyFirstStep(ProblemeHebdo->adqPatch->AdequacyFirstStep,
-                                               ProblemeHebdo->StartAreaAdequacyPatchType[Interco],
-                                               ProblemeHebdo->EndAreaAdequacyPatchType[Interco],
-                                               ProblemeHebdo->adqPatch->Ntc12,
-                                               ProblemeHebdo->adqPatch->Ntc11);
+                  = Antares::Data::AdequacyPatch::SetNTCForAdequacyFirstStep(
+                    ProblemeHebdo->adqPatch->AdequacyFirstStep,
+                    ProblemeHebdo->StartAreaAdequacyPatchType[Interco],
+                    ProblemeHebdo->EndAreaAdequacyPatchType[Interco],
+                    ProblemeHebdo->adqPatch->Ntc12,
+                    ProblemeHebdo->adqPatch->Ntc11);
             }
             else
                 SetToZeroLinkNTCForAdequacyPatchFirstStep = Data::AdequacyPatch::leaveLocalValues;

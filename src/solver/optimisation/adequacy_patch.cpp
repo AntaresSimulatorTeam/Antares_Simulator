@@ -28,9 +28,12 @@
 #include "../simulation/simulation.h"
 #include "adequacy_patch.h"
 
-using namespace Antares;
-using namespace Antares::Data;
-
+namespace Antares
+{
+namespace Data
+{
+namespace AdequacyPatch
+{
 AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
   bool AdequacyFirstStep,
   AdequacyPatch::AdequacyPatchMode StartNodeAdequacyPatchType,
@@ -73,3 +76,7 @@ AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
     else
         return leaveLocalValues;
 }
+
+} // namespace AdequacyPatch
+} // namespace Data
+} // namespace Antares
