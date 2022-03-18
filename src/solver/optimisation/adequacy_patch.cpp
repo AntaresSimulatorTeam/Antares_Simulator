@@ -36,20 +36,14 @@ namespace Data
 namespace AdequacyPatch
 {
 AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
-  bool AdequacyFirstStep,
   AdequacyPatch::AdequacyPatchMode OriginNodeAdequacyPatchType,
   AdequacyPatch::AdequacyPatchMode ExtremityNodeAdequacyPatchType,
   std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep>& behaviorMap)
 {
-    if (AdequacyFirstStep)
-    {
-        auto search = behaviorMap.find(
-          std::make_pair(OriginNodeAdequacyPatchType, ExtremityNodeAdequacyPatchType));
-        if (search != behaviorMap.end())
-            return search->second;
-        else
-            return leaveLocalValues;
-    }
+    auto search = behaviorMap.find(
+      std::make_pair(OriginNodeAdequacyPatchType, ExtremityNodeAdequacyPatchType));
+    if (search != behaviorMap.end())
+        return search->second;
     else
         return leaveLocalValues;
 }
@@ -83,6 +77,55 @@ std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep> GenerateLinkRestriction
       std::make_pair(adqmPhysicalAreaInsideAdqPatch, adqmVirtualArea), leaveLocalValues));
 
     return behaviorMap;
+}
+
+void setBoundsAdqPatch(double& Xmax,
+                       double& Xmin,
+                       VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
+                       const int Interco,
+                       PROBLEME_HEBDO* ProblemeHebdo,
+                       std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep>& behaviorMap)
+{
+    Data::AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep
+      SetToZeroLinkNTCForAdequacyPatchFirstStep;
+
+    SetToZeroLinkNTCForAdequacyPatchFirstStep
+      = Antares::Data::AdequacyPatch::SetNTCForAdequacyFirstStep(
+        ProblemeHebdo->StartAreaAdequacyPatchType[Interco],
+        ProblemeHebdo->EndAreaAdequacyPatchType[Interco],
+        behaviorMap);
+
+    if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::AdequacyPatch::setToZero)
+    {
+        Xmax = 0.;
+        Xmin = 0.;
+    }
+    else if (SetToZeroLinkNTCForAdequacyPatchFirstStep
+             == Data::AdequacyPatch::setOrigineExtremityToZero)
+    {
+        Xmax = 0.;
+        Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+    }
+    else if (SetToZeroLinkNTCForAdequacyPatchFirstStep
+             == Data::AdequacyPatch::setExtremityOrigineToZero)
+    {
+        Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+        Xmin = 0.;
+    }
+    else
+    {
+        Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+        Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+    }
+}
+
+void setBoundsNoAdqPatch(double& Xmax,
+                         double& Xmin,
+                         VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
+                         const int Interco)
+{
+    Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+    Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
 }
 
 } // namespace AdequacyPatch

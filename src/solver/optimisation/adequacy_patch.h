@@ -38,10 +38,7 @@ namespace AdequacyPatch
 {
 
 /*!
- * Determines if a link capacity needs to be set to 0. Only changes something if used during the
- * AdequacyFirstStep.
- *
- * @param AdequacyFirstStep boolean for the first run of the optimization used by the adequacy patch
+ * Determines restriction type for transmission links for first step of adequacy patch.
  *
  * @param OriginNodeAdequacyPatchType uint: The adq type of the node at the start of the link.
  *
@@ -54,7 +51,6 @@ namespace AdequacyPatch
  * adq purposes.
  */
 LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
-  bool AdequacyFirstStep,
   AdequacyPatchMode OriginNodeAdequacyPatchType,
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
   std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep>& behaviorMap);
@@ -75,6 +71,28 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
 std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep> GenerateLinkRestrictionMapForAdqFirstStep(
   bool SetToZero12LinksForAdequacyPatch,
   bool SetToZero11LinksForAdequacyPatch);
+
+/*!
+ * Sets link bounds for first step of adequacy patch.
+ *
+ * @return double: upper and lower link bounds.
+ */
+void setBoundsAdqPatch(double& Xmax,
+                       double& Xmin,
+                       VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
+                       const int Interco,
+                       PROBLEME_HEBDO* ProblemeHebdo,
+                       std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep>& behaviorMap);
+
+/*!
+ * Sets link bounds when adequacy patch is not used or when first step of adequacy patch is false.
+ *
+ * @return double: upper and lower link bounds
+ */
+void setBoundsNoAdqPatch(double& Xmax,
+                         double& Xmin,
+                         VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
+                         const int Interco);
 
 } // namespace AdequacyPatch
 } // namespace Data

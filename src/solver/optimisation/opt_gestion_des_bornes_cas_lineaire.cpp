@@ -141,11 +141,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
     double* Xmin;
     double* Xmax;
     int* TypeDeVariable;
-    Data::AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep
-      SetToZeroLinkNTCForAdequacyPatchFirstStep;
-    std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep> BehaviorMap;
-    if (ProblemeHebdo->adqPatch)
-        BehaviorMap = GenerateLinkRestrictionMapForAdqFirstStep(
+    std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep> AdqPatchBehaviorMap;
+    if (ProblemeHebdo->adqPatch && ProblemeHebdo->adqPatch->AdequacyFirstStep)
+        AdqPatchBehaviorMap = GenerateLinkRestrictionMapForAdqFirstStep(
           ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq,
           ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq);
 
@@ -185,38 +183,11 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
             CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
 
-            if (ProblemeHebdo->adqPatch)
-            {
-                SetToZeroLinkNTCForAdequacyPatchFirstStep
-                  = Antares::Data::AdequacyPatch::SetNTCForAdequacyFirstStep(
-                    ProblemeHebdo->adqPatch->AdequacyFirstStep,
-                    ProblemeHebdo->StartAreaAdequacyPatchType[Interco],
-                    ProblemeHebdo->EndAreaAdequacyPatchType[Interco],
-                    BehaviorMap);
-            }
+            if (ProblemeHebdo->adqPatch && ProblemeHebdo->adqPatch->AdequacyFirstStep)
+                setBoundsAdqPatch(Xmax[Var], Xmin[Var], ValeursDeNTC, Interco, ProblemeHebdo, AdqPatchBehaviorMap);
             else
-                SetToZeroLinkNTCForAdequacyPatchFirstStep = Data::AdequacyPatch::leaveLocalValues;
+                setBoundsNoAdqPatch(Xmax[Var], Xmin[Var], ValeursDeNTC, Interco);
 
-            if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::AdequacyPatch::setToZero)
-            {
-                Xmax[Var] = 0.;
-                Xmin[Var] = 0.;
-            }
-            else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::AdequacyPatch::setOrigineExtremityToZero)
-            {
-                Xmax[Var] = 0.;
-                Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
-            }
-            else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::AdequacyPatch::setExtremityOrigineToZero)
-            {
-                Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-                Xmin[Var] = 0.;
-            }
-            else
-            {
-                Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-                Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
-            }
             if (Math::Infinite(Xmax[Var]) == 1)
             {
                 if (Math::Infinite(Xmin[Var]) == -1)
