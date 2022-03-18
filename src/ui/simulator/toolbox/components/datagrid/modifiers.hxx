@@ -254,8 +254,8 @@ struct ModifierOperatorsData<modifierDataset>
 {
     enum Operator
     {
-        opShiftRows,
         opResizeColumns,
+        opShiftRows,
         opMax
     };
 
