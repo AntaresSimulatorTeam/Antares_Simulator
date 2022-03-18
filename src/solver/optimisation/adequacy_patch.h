@@ -57,8 +57,7 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
   bool AdequacyFirstStep,
   AdequacyPatchMode OriginNodeAdequacyPatchType,
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep>
-    &behaviorMap);
+  std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep>& behaviorMap);
 
 /*!
  * Generates map containing all possible relations of start&end area adq patch mode taking into
@@ -73,9 +72,9 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
  * @return map defining link capacity restrictions is constructed according to the start&end area
  * adequacy patch mode and user interface input options (first two function parameters).
  */
-std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep>
-  GenerateLinkRestrictionMapForAdqFirstStep(bool SetToZero12LinksForAdequacyPatch,
-                                            bool SetToZero11LinksForAdequacyPatch);
+std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep> GenerateLinkRestrictionMapForAdqFirstStep(
+  bool SetToZero12LinksForAdequacyPatch,
+  bool SetToZero11LinksForAdequacyPatch);
 
 } // namespace AdequacyPatch
 } // namespace Data
