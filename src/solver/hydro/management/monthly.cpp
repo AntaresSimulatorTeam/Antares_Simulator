@@ -165,6 +165,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
         indexArea++;
 
         double solutionCost = 0.;
+        double solutionCostNoised = 0.;
 
         if (area.hydro.reservoirManagement)
         {
@@ -208,6 +209,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                 }
                 data.MOL[initReservoirLvlMonth] = lvi;
                 solutionCost = problem.ProblemeHydraulique->CoutDeLaSolution;
+                solutionCostNoised = problem.ProblemeHydraulique->CoutDeLaSolutionBruite;
 
                 break;
             }
@@ -262,10 +264,16 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                         file << "Initial Reservoir Level : unrelevant (no reservoir mgmt)\n";
                     file << "\n";
 
-                    std::stringstream stream;
-                    stream << std::fixed << std::setprecision(13) << solutionCost;
-                    std::string cs = stream.str();
-                    file << "Solution cost : " << cs << "\n\n";
+                    auto writeSolutionCost = [&file](const std::string& caption, double cost)
+                                             {
+                                               std::stringstream stream;
+                                               stream << caption << std::fixed << std::setprecision(13) << cost;
+                                               std::string cs = stream.str();
+                                               file << cs << "\n";
+                                             };
+                    writeSolutionCost("Solution cost : ", solutionCost);
+                    writeSolutionCost("Solution cost (noised) : ", solutionCostNoised);
+                    file << "\n\n";
 
                     file << '\t' << "\tInflows" << '\t' << "\tTarget Gen."
                          << "\tTurbined"
