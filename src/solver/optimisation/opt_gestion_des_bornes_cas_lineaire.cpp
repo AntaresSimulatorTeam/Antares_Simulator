@@ -143,6 +143,12 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
     int* TypeDeVariable;
     Data::AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep
       SetToZeroLinkNTCForAdequacyPatchFirstStep;
+    std::map<std::pair<AdequacyPatchMode, AdequacyPatchMode>, LinkCapacityForAdequacyPatchFirstStep>
+      BehaviorMap;
+    if (ProblemeHebdo->adqPatch)
+        BehaviorMap = GenerateLinkRestrictionMapForAdqFirstStep(
+          ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq,
+          ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq);
 
     VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
@@ -187,9 +193,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                     ProblemeHebdo->adqPatch->AdequacyFirstStep,
                     ProblemeHebdo->StartAreaAdequacyPatchType[Interco],
                     ProblemeHebdo->EndAreaAdequacyPatchType[Interco],
-                    ProblemeHebdo->adqPatch
-                      ->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq,
-                    ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq);
+                    BehaviorMap);
             }
             else
                 SetToZeroLinkNTCForAdequacyPatchFirstStep = Data::AdequacyPatch::leaveLocalValues;
