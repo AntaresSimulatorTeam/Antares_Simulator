@@ -143,7 +143,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
     int* TypeDeVariable;
     Data::AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep
       SetToZeroLinkNTCForAdequacyPatchFirstStep;
-    std::map<std::pair<AdequacyPatchMode, AdequacyPatchMode>, LinkCapacityForAdequacyPatchFirstStep>
+    std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep>
       BehaviorMap;
     if (ProblemeHebdo->adqPatch)
         BehaviorMap = GenerateLinkRestrictionMapForAdqFirstStep(

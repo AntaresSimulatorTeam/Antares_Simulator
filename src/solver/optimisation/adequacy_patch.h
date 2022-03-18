@@ -28,6 +28,8 @@
 #ifndef __SOLVER_ADEQUACY_FUNCTIONS_H__
 #define __SOLVER_ADEQUACY_FUNCTIONS_H__
 
+typedef std::pair<AdequacyPatchMode, AdequacyPatchMode> adqPair;
+
 namespace Antares
 {
 namespace Data
@@ -55,7 +57,7 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
   bool AdequacyFirstStep,
   AdequacyPatchMode OriginNodeAdequacyPatchType,
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  std::map<std::pair<AdequacyPatchMode, AdequacyPatchMode>, LinkCapacityForAdequacyPatchFirstStep>
+  std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep>
     &behaviorMap);
 
 /*!
@@ -71,7 +73,7 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
  * @return map defining link capacity restrictions is constructed according to the start&end area
  * adequacy patch mode and user interface input options (first two function parameters).
  */
-std::map<std::pair<AdequacyPatchMode, AdequacyPatchMode>, LinkCapacityForAdequacyPatchFirstStep>
+std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep>
   GenerateLinkRestrictionMapForAdqFirstStep(bool SetToZero12LinksForAdequacyPatch,
                                             bool SetToZero11LinksForAdequacyPatch);
 

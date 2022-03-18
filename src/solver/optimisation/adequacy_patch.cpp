@@ -39,7 +39,7 @@ AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
   bool AdequacyFirstStep,
   AdequacyPatch::AdequacyPatchMode OriginNodeAdequacyPatchType,
   AdequacyPatch::AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  std::map<std::pair<AdequacyPatchMode, AdequacyPatchMode>, LinkCapacityForAdequacyPatchFirstStep>
+  std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep>
     &behaviorMap)
 {
     if (AdequacyFirstStep)
@@ -55,11 +55,11 @@ AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
         return leaveLocalValues;
 }
 
-std::map<std::pair<AdequacyPatchMode, AdequacyPatchMode>, LinkCapacityForAdequacyPatchFirstStep>
+std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep>
   GenerateLinkRestrictionMapForAdqFirstStep(bool SetToZero12LinksForAdequacyPatch,
                                             bool SetToZero11LinksForAdequacyPatch)
 {
-    std::map<std::pair<AdequacyPatchMode, AdequacyPatchMode>, LinkCapacityForAdequacyPatchFirstStep>
+    std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep>
       behaviorMap;
 
     behaviorMap.insert(std::make_pair(
