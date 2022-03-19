@@ -123,5 +123,10 @@ CommandLineArguments::CommandLineArguments(uint errors) :
 {
 }
 
+IncompatibleStudyModeForAdqPatch::IncompatibleStudyModeForAdqPatch() :
+ LoadingError("Adequacy Patch can only be used with Economy Simulation Mode")
+{
+}
+
 } // namespace Error
 } // namespace Antares
