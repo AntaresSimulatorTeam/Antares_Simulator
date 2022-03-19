@@ -112,6 +112,34 @@ bool Economy::simulationBegin()
     return true;
 }
 
+void OPT_OptimisationHebdomadaireAdqPatch(PROBLEME_HEBDO* pProblemeHebdo,
+                                          Variable::State& state,
+                                          uint numSpace,
+                                          int hourInTheYear)
+{
+    pProblemeHebdo->adqPatch->AdequacyFirstStep = true;
+    OPT_OptimisationHebdomadaire(pProblemeHebdo, numSpace);
+    pProblemeHebdo->adqPatch->AdequacyFirstStep = false;
+
+    for (int pays = 0; pays < pProblemeHebdo->NombreDePays; ++pays)
+    {
+        if (pProblemeHebdo->AreaAdequacyPatchMode[pays]
+            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+            memcpy(pProblemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDENS,
+                   pProblemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive,
+                   pProblemeHebdo->NombreDePasDeTemps * sizeof(double));
+        else
+            memset(pProblemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDENS,
+                   0,
+                   pProblemeHebdo->NombreDePasDeTemps * sizeof(double));
+    }
+
+    // TODO check if we need to cut SIM_RenseignementProblemeHebdo and just pick out the
+    // part that we need
+    ::SIM_RenseignementProblemeHebdo(*pProblemeHebdo, state, numSpace, hourInTheYear);
+    OPT_OptimisationHebdomadaire(pProblemeHebdo, numSpace);
+}
+
 bool Economy::year(Progression::Task& progression,
                    Variable::State& state,
                    uint numSpace,
@@ -148,32 +176,8 @@ bool Economy::year(Progression::Task& progression,
         {
             if (pProblemesHebdo[numSpace]->adqPatch)
             {
-                pProblemesHebdo[numSpace]->adqPatch->AdequacyFirstStep = true;
-                OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
-                pProblemesHebdo[numSpace]->adqPatch->AdequacyFirstStep = false;
-
-                for (int pays = 0; pays < pProblemesHebdo[numSpace]->NombreDePays; ++pays)
-                {
-                    if (pProblemesHebdo[numSpace]->AreaAdequacyPatchMode[pays]
-                        == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
-                        memcpy(
-                          pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDENS,
-                          pProblemesHebdo[numSpace]
-                            ->ResultatsHoraires[pays]
-                            ->ValeursHorairesDeDefaillancePositive,
-                          pProblemesHebdo[numSpace]->NombreDePasDeTemps * sizeof(double));
-                    else
-                        memset(
-                          pProblemesHebdo[numSpace]->ResultatsHoraires[pays]->ValeursHorairesDENS,
-                          0,
-                          pProblemesHebdo[numSpace]->NombreDePasDeTemps * sizeof(double));
-                }
-
-                // TODO check if we need to cut SIM_RenseignementProblemeHebdo and just pick out the
-                // part that we need
-                ::SIM_RenseignementProblemeHebdo(
-                  *pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
-                OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
+                OPT_OptimisationHebdomadaireAdqPatch(
+                  pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
             }
             else
             {

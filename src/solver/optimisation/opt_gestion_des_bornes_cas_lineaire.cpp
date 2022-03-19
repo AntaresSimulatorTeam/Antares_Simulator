@@ -178,7 +178,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
         {
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
             CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
-            
+
             if (ProblemeHebdo->adqPatch)
             {
                 SetToZeroLinkNTCForAdequacyPatchFirstStep
@@ -196,12 +196,14 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                 Xmax[Var] = 0.;
                 Xmin[Var] = 0.;
             }
-            else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::AdequacyPatch::setOrigineExtremityToZero)
+            else if (SetToZeroLinkNTCForAdequacyPatchFirstStep
+                     == Data::AdequacyPatch::setOrigineExtremityToZero)
             {
                 Xmax[Var] = 0.;
                 Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
             }
-            else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::AdequacyPatch::setExtremityOrigineToZero)
+            else if (SetToZeroLinkNTCForAdequacyPatchFirstStep
+                     == Data::AdequacyPatch::setExtremityOrigineToZero)
             {
                 Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
                 Xmin[Var] = 0.;
@@ -432,12 +434,12 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                     Xmax[Var] = 0.;
 
                 // adq patch: update ENS <= DENS in 2nd run
-                if (ProblemeHebdo->adqPatch && ProblemeHebdo->adqPatch->AdequacyFirstStep == false)
-                    if (ProblemeHebdo->AreaAdequacyPatchMode[Pays]
-                        == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
-                        Xmax[Var] = min(
-                          Xmax[Var],
-                          ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo]);
+                if (ProblemeHebdo->adqPatch && ProblemeHebdo->adqPatch->AdequacyFirstStep == false
+                    && ProblemeHebdo->AreaAdequacyPatchMode[Pays]
+                         == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+                    Xmax[Var]
+                      = min(Xmax[Var],
+                            ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo]);
 
                 ProblemeHebdo->ResultatsHoraires[Pays]
                   ->ValeursHorairesDeDefaillancePositive[PdtHebdo]
