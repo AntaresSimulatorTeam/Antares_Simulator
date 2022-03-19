@@ -426,7 +426,7 @@ typedef struct
 typedef struct
 {
     double* ValeursHorairesDeDefaillancePositive;
-    double* ValeursHorairesDENS; // adq patch DENS
+    double* ValeursHorairesDENS; // adq patch domestic unsupplied energy
     double* ValeursHorairesDeDefaillancePositiveUp;
     double* ValeursHorairesDeDefaillancePositiveDown;
     double* ValeursHorairesDeDefaillancePositiveAny;
