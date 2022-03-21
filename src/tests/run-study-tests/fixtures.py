@@ -2,12 +2,13 @@ import pytest
 
 from actions_on_study.study_run import *
 from actions_on_study.results_remover import *
+from check_on_results.check_general import check_list
 
 class check_handler:
     def __init__(self, simulation, results_remover):
         self.simulation = simulation
         self.results_remover = results_remover
-        self.checks = None
+        self.checks = check_list()
 
     def get_simulation(self):
         return self.simulation
