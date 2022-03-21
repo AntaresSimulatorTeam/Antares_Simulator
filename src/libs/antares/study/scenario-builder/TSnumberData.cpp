@@ -560,13 +560,21 @@ void ntcTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& 
     for (const auto& i : pArea->links)
     {
         const Data::AreaLink* link = i.second;
+        // When renaming an area, it may happen that from->id and with-> are
+        // not in the expected. In that case, we need to swap them prior to writing.
+        Data::AreaName fromID = link->from->id;
+        Data::AreaName withID = link->with->id;
+        if (fromID > withID)
+        {
+            swap(fromID, withID);
+        }
         for (uint y = 0; y != pTSNumberRules.height; ++y)
         {
             const uint val = pTSNumberRules[link->indexForArea][y];
             // Equals to zero means 'auto', which is the default mode
             if (!val)
                 continue;
-            file << prefix << pArea->id << "," << i.first << "," << y << " = " << val << "\n";
+            file << prefix << fromID << "," << withID << "," << y << " = " << val << "\n";
         }
     }
 }
