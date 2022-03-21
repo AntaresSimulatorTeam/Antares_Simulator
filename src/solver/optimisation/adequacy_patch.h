@@ -28,8 +28,6 @@
 #ifndef __SOLVER_ADEQUACY_FUNCTIONS_H__
 #define __SOLVER_ADEQUACY_FUNCTIONS_H__
 
-typedef std::pair<AdequacyPatchMode, AdequacyPatchMode> adqPair;
-
 namespace Antares
 {
 namespace Data
@@ -44,8 +42,8 @@ namespace AdequacyPatch
  *
  * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
  *
- * @param behaviorMap map: map containing link capacity restrictions for every possible combination
- * of adq types for node at start and node at end of the link.
+ * @param behaviorMap std::map: map containing link capacity restrictions for every possible
+ * combination of adq types for node at start and node at end of the link.
  *
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
@@ -65,8 +63,9 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
  * @param SetToZero11LinksForAdequacyPatch bool: Switch to cut links from nodes of adq type 1
  * towards nodes of adq type 1
  *
- * @return map defining link capacity restrictions is constructed according to the start&end area
- * adequacy patch mode and user interface input options (first two function parameters).
+ * @return std::map: map defining link capacity restrictions is constructed according to the
+ * start&end area adequacy patch mode and user interface input options (first two function
+ * parameters).
  */
 std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep> GenerateLinkRestrictionMapForAdqFirstStep(
   bool SetToZero12LinksForAdequacyPatch,
@@ -75,19 +74,16 @@ std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep> GenerateLinkRestriction
 /*!
  * Sets link bounds for first step of adequacy patch.
  *
- * @return double: upper and lower link bounds.
  */
 void setBoundsAdqPatch(double& Xmax,
                        double& Xmin,
                        VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
                        const int Interco,
-                       PROBLEME_HEBDO* ProblemeHebdo,
-                       std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep>& behaviorMap);
+                       PROBLEME_HEBDO* ProblemeHebdo);
 
 /*!
  * Sets link bounds when adequacy patch is not used or when first step of adequacy patch is false.
  *
- * @return double: upper and lower link bounds
  */
 void setBoundsNoAdqPatch(double& Xmax,
                          double& Xmin,

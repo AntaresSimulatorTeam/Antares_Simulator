@@ -35,6 +35,7 @@ namespace Data
 {
 namespace AdequacyPatch
 {
+
 AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
   AdequacyPatch::AdequacyPatchMode OriginNodeAdequacyPatchType,
   AdequacyPatch::AdequacyPatchMode ExtremityNodeAdequacyPatchType,
@@ -83,8 +84,7 @@ void setBoundsAdqPatch(double& Xmax,
                        double& Xmin,
                        VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
                        const int Interco,
-                       PROBLEME_HEBDO* ProblemeHebdo,
-                       std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep>& behaviorMap)
+                       PROBLEME_HEBDO* ProblemeHebdo)
 {
     Data::AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep
       SetToZeroLinkNTCForAdequacyPatchFirstStep;
@@ -93,7 +93,7 @@ void setBoundsAdqPatch(double& Xmax,
       = Antares::Data::AdequacyPatch::SetNTCForAdequacyFirstStep(
         ProblemeHebdo->StartAreaAdequacyPatchType[Interco],
         ProblemeHebdo->EndAreaAdequacyPatchType[Interco],
-        behaviorMap);
+        ProblemeHebdo->adqPatch->AdqBehaviorMap);
 
     if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::AdequacyPatch::setToZero)
     {
