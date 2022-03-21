@@ -161,21 +161,26 @@ void HydroManagement::prepareNetDemand(uint numSpace)
             auto realmonth = study.calendar.months[month].realmonth;
             auto dayYear = study.calendar.hours[hour].dayYear;
 
-            double netdemand
-              = +scratchpad.ts.load[ptchro.Consommation][hour] - scratchpad.miscGenSum[hour]
-                - ror[hour]
-                - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
-                                                 : scratchpad.originalMustrunSum[hour]);
+            double netdemand = 0;
 
             // Aggregated renewable production: wind & solar
             if (parameters.renewableGeneration() == Antares::Data::rgAggregated)
             {
-                netdemand -= scratchpad.ts.solar[ptchro.Solar][hour]
-                             + scratchpad.ts.wind[ptchro.Eolien][hour];
+                netdemand = +scratchpad.ts.load[ptchro.Consommation][hour]
+                            - scratchpad.ts.wind[ptchro.Eolien][hour] - scratchpad.miscGenSum[hour]
+                            - scratchpad.ts.solar[ptchro.Solar][hour] - ror[hour]
+                            - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
+                                                             : scratchpad.originalMustrunSum[hour]);
             }
+
             // Renewable clusters, if enabled
             else if (parameters.renewableGeneration() == Antares::Data::rgClusters)
             {
+                netdemand = scratchpad.ts.load[ptchro.Consommation][hour]
+                            - scratchpad.miscGenSum[hour] - ror[hour]
+                            - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
+                                                             : scratchpad.originalMustrunSum[hour]);
+
                 area.renewable.list.each([&](const Antares::Data::RenewableCluster& cluster) {
                     assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
                     netdemand -= cluster.valueAtTimeStep(

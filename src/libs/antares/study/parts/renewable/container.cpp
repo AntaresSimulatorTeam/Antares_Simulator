@@ -103,7 +103,11 @@ uint PartRenewable::removeDisabledClusters()
     for (auto& cluster : disabledClusters)
         list.remove(cluster);
 
-    return disabledClusters.size();
+    const auto count = disabledClusters.size();
+    if (count)
+        list.rebuildIndex();
+
+    return count;
 }
 
 void PartRenewable::reset()
