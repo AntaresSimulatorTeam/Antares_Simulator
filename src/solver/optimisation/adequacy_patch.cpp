@@ -54,18 +54,10 @@ std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep> GenerateLinkRestriction
   bool SetToZero11LinksForAdequacyPatch)
 {
     std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep> behaviorMap;
-
+    // No transfer of energy possible between physical areas part of the adequacy patch
     behaviorMap.insert(std::make_pair(
       std::make_pair(adqmPhysicalAreaInsideAdqPatch, adqmPhysicalAreaInsideAdqPatch), setToZero));
-    behaviorMap.insert(std::make_pair(
-      std::make_pair(adqmPhysicalAreaOutsideAdqPatch, adqmPhysicalAreaInsideAdqPatch),
-      (SetToZero12LinksForAdequacyPatch) ? setToZero : setExtremityOrigineToZero));
-    behaviorMap.insert(std::make_pair(
-      std::make_pair(adqmPhysicalAreaInsideAdqPatch, adqmPhysicalAreaOutsideAdqPatch),
-      (SetToZero12LinksForAdequacyPatch) ? setToZero : setOrigineExtremityToZero));
-    behaviorMap.insert(std::make_pair(
-      std::make_pair(adqmPhysicalAreaOutsideAdqPatch, adqmPhysicalAreaOutsideAdqPatch),
-      (SetToZero11LinksForAdequacyPatch) ? setToZero : leaveLocalValues));
+    // all else remains the same
     behaviorMap.insert(
       std::make_pair(std::make_pair(adqmVirtualArea, adqmVirtualArea), leaveLocalValues));
     behaviorMap.insert(std::make_pair(
@@ -76,6 +68,28 @@ std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep> GenerateLinkRestriction
       std::make_pair(adqmVirtualArea, adqmPhysicalAreaInsideAdqPatch), leaveLocalValues));
     behaviorMap.insert(std::make_pair(
       std::make_pair(adqmPhysicalAreaInsideAdqPatch, adqmVirtualArea), leaveLocalValues));
+    // except if the options SetToZero12LinksForAdequacyPatch and/or SetToZero11LinksForAdequacyPatch are
+    if (SetToZero12LinksForAdequacyPatch){
+      behaviorMap.insert(std::make_pair(
+      std::make_pair(adqmPhysicalAreaOutsideAdqPatch, adqmPhysicalAreaInsideAdqPatch), setToZero));
+      behaviorMap.insert(std::make_pair(
+      std::make_pair(adqmPhysicalAreaInsideAdqPatch, adqmPhysicalAreaOutsideAdqPatch), setToZero));
+    }
+    else{
+      behaviorMap.insert(std::make_pair(
+      std::make_pair(adqmPhysicalAreaOutsideAdqPatch, adqmPhysicalAreaInsideAdqPatch), setExtremityOrigineToZero));
+      behaviorMap.insert(std::make_pair(
+      std::make_pair(adqmPhysicalAreaInsideAdqPatch, adqmPhysicalAreaOutsideAdqPatch), setOrigineExtremityToZero));
+    }
+
+    if (SetToZero11LinksForAdequacyPatch){
+      behaviorMap.insert(std::make_pair(
+      std::make_pair(adqmPhysicalAreaOutsideAdqPatch, adqmPhysicalAreaOutsideAdqPatch), setToZero));
+    }
+    else {
+      behaviorMap.insert(std::make_pair(
+      std::make_pair(adqmPhysicalAreaOutsideAdqPatch, adqmPhysicalAreaOutsideAdqPatch), leaveLocalValues));
+    }
 
     return behaviorMap;
 }
