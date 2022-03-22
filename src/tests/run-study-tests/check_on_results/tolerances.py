@@ -39,13 +39,13 @@ class Tolerances():
             return self.RTOL[trimmed_col_name]
         return self.default_rel_tol
 
-    def set_relative(self, var_collection, value):
-        for var in var_collection:
-            self.RTOL[var] = value
+    def set_relative(self, tol_collection):
+        for key, value in tol_collection.items():
+            self.RTOL[key] = value
 
-    def set_absolute(self, var_collection, value):
-        for var in var_collection:
-            self.ATOL[var] = value
+    def set_absolute(self, tol_collection = {}):
+        for key, value in tol_collection.items():
+            self.ATOL[key] = value
 
 class Linux_tolerances(Tolerances):
     def __init__(self):

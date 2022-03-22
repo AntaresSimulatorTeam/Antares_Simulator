@@ -44,8 +44,11 @@ def test_3(study_path, check_runner):
     var_collection.extend(['lignite_old 2', 'Lignite-old-1', 'Lignite-old-2', 'NP COST', 'nuclear_nuclear', 'OCGT_new'])
     var_collection.extend(['OCGT-old', 'SOLAR'])
 
+    absolute_tolerances = {}
+    absolute_tolerances.update(dict.fromkeys(var_collection, 1))
+
     tolerances = get_tolerances()
-    tolerances.set_absolute(var_collection, 1)
+    tolerances.set_absolute(absolute_tolerances)
 
     # Add an "output comparison" to check list
     checks = check_list()
