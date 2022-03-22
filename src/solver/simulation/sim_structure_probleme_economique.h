@@ -37,8 +37,10 @@
 
 #include <memory>
 #include <yuni/core/math.h>
+#include <map>
 
 using namespace Antares::Data::AdequacyPatch;
+typedef std::pair<AdequacyPatchMode, AdequacyPatchMode> adqPair;
 
 typedef struct
 {
@@ -476,8 +478,9 @@ typedef struct
 struct AdequacyPatchParameters
 {
     bool AdequacyFirstStep;
-    bool Ntc12;
-    bool Ntc11;
+    bool LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq;
+    bool LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq;
+    std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep> AdqBehaviorMap;
 };
 
 struct PROBLEME_HEBDO
