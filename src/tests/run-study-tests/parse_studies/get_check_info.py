@@ -38,7 +38,8 @@ def get_studies_check_info(study_path_list):
 # ================
 ROOT_FOLDER = Path('../../resources/study-collection-sample').resolve()
 
-study_path_list = [ROOT_FOLDER / "short-tests" / "001 One node - passive"]
+# study_path_list = [ROOT_FOLDER / "short-tests" / "001 One node - passive"]
+study_path_list = [ROOT_FOLDER / "short-tests" / "playlist-psp-misc-ndg"]
 
 studies_check_info = get_studies_check_info(study_path_list)
 print("study_path_list :")
