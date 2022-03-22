@@ -28,12 +28,7 @@
 #ifndef __SOLVER_ADEQUACY_FUNCTIONS_H__
 #define __SOLVER_ADEQUACY_FUNCTIONS_H__
 
-namespace Antares
-{
-namespace Data
-{
-namespace AdequacyPatch
-{
+using namespace Antares::Data;
 
 /*!
  * Determines restriction type for transmission links for first step of adequacy patch.
@@ -90,8 +85,5 @@ void setBoundsNoAdqPatch(double& Xmax,
                          VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
                          const int Interco);
 
-} // namespace AdequacyPatch
-} // namespace Data
-} // namespace Antares
 
 #endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */

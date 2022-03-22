@@ -29,17 +29,12 @@
 #include "adequacy_patch.h"
 #include <map>
 
-namespace Antares
-{
-namespace Data
-{
-namespace AdequacyPatch
-{
+using namespace Antares::Data;
 
 AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
   AdequacyPatch::AdequacyPatchMode OriginNodeAdequacyPatchType,
   AdequacyPatch::AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep>& behaviorMap)
+  std::map<adqPair, AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep>& behaviorMap)
 {
     auto search = behaviorMap.find(
       std::make_pair(OriginNodeAdequacyPatchType, ExtremityNodeAdequacyPatchType));
@@ -49,46 +44,46 @@ AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
         return leaveLocalValues;
 }
 
-std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep> GenerateLinkRestrictionMapForAdqFirstStep(
+std::map<adqPair, AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep> GenerateLinkRestrictionMapForAdqFirstStep(
   bool SetToZero12LinksForAdequacyPatch,
   bool SetToZero11LinksForAdequacyPatch)
 {
-    std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep> behaviorMap;
+    std::map<adqPair, AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep> behaviorMap;
     // No transfer of energy possible between physical areas part of the adequacy patch
     behaviorMap.insert(std::make_pair(
-      std::make_pair(adqmPhysicalAreaInsideAdqPatch, adqmPhysicalAreaInsideAdqPatch), setToZero));
+      std::make_pair(AdequacyPatch::adqmPhysicalAreaInsideAdqPatch, AdequacyPatch::adqmPhysicalAreaInsideAdqPatch), AdequacyPatch::setToZero));
     // all else remains the same
     behaviorMap.insert(
-      std::make_pair(std::make_pair(adqmVirtualArea, adqmVirtualArea), leaveLocalValues));
+      std::make_pair(std::make_pair(AdequacyPatch::adqmVirtualArea, AdequacyPatch::adqmVirtualArea), AdequacyPatch::leaveLocalValues));
     behaviorMap.insert(std::make_pair(
-      std::make_pair(adqmVirtualArea, adqmPhysicalAreaOutsideAdqPatch), leaveLocalValues));
+      std::make_pair(AdequacyPatch::adqmVirtualArea, AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch), AdequacyPatch::leaveLocalValues));
     behaviorMap.insert(std::make_pair(
-      std::make_pair(adqmPhysicalAreaOutsideAdqPatch, adqmVirtualArea), leaveLocalValues));
+      std::make_pair(AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch, AdequacyPatch::adqmVirtualArea), AdequacyPatch::leaveLocalValues));
     behaviorMap.insert(std::make_pair(
-      std::make_pair(adqmVirtualArea, adqmPhysicalAreaInsideAdqPatch), leaveLocalValues));
+      std::make_pair(AdequacyPatch::adqmVirtualArea, AdequacyPatch::adqmPhysicalAreaInsideAdqPatch), AdequacyPatch::leaveLocalValues));
     behaviorMap.insert(std::make_pair(
-      std::make_pair(adqmPhysicalAreaInsideAdqPatch, adqmVirtualArea), leaveLocalValues));
+      std::make_pair(AdequacyPatch::adqmPhysicalAreaInsideAdqPatch, AdequacyPatch::adqmVirtualArea), AdequacyPatch::leaveLocalValues));
     // except if the options SetToZero12LinksForAdequacyPatch and/or SetToZero11LinksForAdequacyPatch are
     if (SetToZero12LinksForAdequacyPatch){
       behaviorMap.insert(std::make_pair(
-      std::make_pair(adqmPhysicalAreaOutsideAdqPatch, adqmPhysicalAreaInsideAdqPatch), setToZero));
+      std::make_pair(AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch, AdequacyPatch::adqmPhysicalAreaInsideAdqPatch), AdequacyPatch::setToZero));
       behaviorMap.insert(std::make_pair(
-      std::make_pair(adqmPhysicalAreaInsideAdqPatch, adqmPhysicalAreaOutsideAdqPatch), setToZero));
+      std::make_pair(AdequacyPatch::adqmPhysicalAreaInsideAdqPatch, AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch), AdequacyPatch::setToZero));
     }
     else{
       behaviorMap.insert(std::make_pair(
-      std::make_pair(adqmPhysicalAreaOutsideAdqPatch, adqmPhysicalAreaInsideAdqPatch), setExtremityOrigineToZero));
+      std::make_pair(AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch, AdequacyPatch::adqmPhysicalAreaInsideAdqPatch), AdequacyPatch::setExtremityOrigineToZero));
       behaviorMap.insert(std::make_pair(
-      std::make_pair(adqmPhysicalAreaInsideAdqPatch, adqmPhysicalAreaOutsideAdqPatch), setOrigineExtremityToZero));
+      std::make_pair(AdequacyPatch::adqmPhysicalAreaInsideAdqPatch, AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch), AdequacyPatch::setOrigineExtremityToZero));
     }
 
     if (SetToZero11LinksForAdequacyPatch){
       behaviorMap.insert(std::make_pair(
-      std::make_pair(adqmPhysicalAreaOutsideAdqPatch, adqmPhysicalAreaOutsideAdqPatch), setToZero));
+      std::make_pair(AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch, AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch), AdequacyPatch::setToZero));
     }
     else {
       behaviorMap.insert(std::make_pair(
-      std::make_pair(adqmPhysicalAreaOutsideAdqPatch, adqmPhysicalAreaOutsideAdqPatch), leaveLocalValues));
+      std::make_pair(AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch, AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch), AdequacyPatch::leaveLocalValues));
     }
 
     return behaviorMap;
@@ -100,28 +95,28 @@ void setBoundsAdqPatch(double& Xmax,
                        const int Interco,
                        PROBLEME_HEBDO* ProblemeHebdo)
 {
-    Data::AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep
+    AdequacyPatch::LinkCapacityForAdequacyPatchFirstStep
       SetToZeroLinkNTCForAdequacyPatchFirstStep;
 
     SetToZeroLinkNTCForAdequacyPatchFirstStep
-      = Antares::Data::AdequacyPatch::SetNTCForAdequacyFirstStep(
+      = SetNTCForAdequacyFirstStep(
         ProblemeHebdo->StartAreaAdequacyPatchType[Interco],
         ProblemeHebdo->EndAreaAdequacyPatchType[Interco],
         ProblemeHebdo->adqPatch->AdqBehaviorMap);
 
-    if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::AdequacyPatch::setToZero)
+    if (SetToZeroLinkNTCForAdequacyPatchFirstStep == AdequacyPatch::setToZero)
     {
         Xmax = 0.;
         Xmin = 0.;
     }
     else if (SetToZeroLinkNTCForAdequacyPatchFirstStep
-             == Data::AdequacyPatch::setOrigineExtremityToZero)
+             == AdequacyPatch::setOrigineExtremityToZero)
     {
         Xmax = 0.;
         Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
     }
     else if (SetToZeroLinkNTCForAdequacyPatchFirstStep
-             == Data::AdequacyPatch::setExtremityOrigineToZero)
+             == AdequacyPatch::setExtremityOrigineToZero)
     {
         Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
         Xmin = 0.;
@@ -142,6 +137,3 @@ void setBoundsNoAdqPatch(double& Xmax,
     Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
 }
 
-} // namespace AdequacyPatch
-} // namespace Data
-} // namespace Antares
