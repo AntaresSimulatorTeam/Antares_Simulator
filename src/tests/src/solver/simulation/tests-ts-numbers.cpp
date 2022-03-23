@@ -233,7 +233,6 @@ BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_respectively_4_1_4_ready_
 
 	// TS number checks
 	uint year = 0;
-	BOOST_CHECK_EQUAL(thCluster_12->series->timeseriesNumbers[0][year], thCluster_11->series->timeseriesNumbers[0][year]);
 	BOOST_CHECK_EQUAL(thCluster_21->series->timeseriesNumbers[0][year], thCluster_11->series->timeseriesNumbers[0][year]);
 }
 
@@ -354,7 +353,6 @@ BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_respectively_4_4_1_ready_ma
 	// TS number checks
 	uint year = 0;
 	BOOST_CHECK_EQUAL(rnCluster_12->series->timeseriesNumbers[0][year], rnCluster_11->series->timeseriesNumbers[0][year]);
-	BOOST_CHECK_EQUAL(rnCluster_21->series->timeseriesNumbers[0][year], rnCluster_11->series->timeseriesNumbers[0][year]);
 }
 
 BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_different_number_of_ready_made_ts___check_intra_modal_consistency_KO)
