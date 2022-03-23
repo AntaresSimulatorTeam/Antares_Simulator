@@ -811,11 +811,13 @@ static void fixTSNumbersWhenWidthIsOne(Study& study,
     study.areas.each([&](Area& area) {
         uint nbTimeSeries;
         int indexTS;
+
         // Load
         indexTS = ts_to_tsIndex.at(timeSeriesLoad);
         nbTimeSeries
           = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS] : area.load.series->series.width;
         fixTSNumbersSingleAreaSingleMode(area.load.series->timeseriesNumbers, nbTimeSeries, years);
+
         // Solar
         indexTS = ts_to_tsIndex.at(timeSeriesSolar);
         nbTimeSeries
@@ -847,6 +849,7 @@ static void fixTSNumbersWhenWidthIsOne(Study& study,
                   cluster.series->timeseriesNumbers, nbTimeSeries, years);
             }
         }
+
         // Renewables
         {
             uint clusterCount = (uint)area.renewable.clusterCount();
@@ -858,6 +861,7 @@ static void fixTSNumbersWhenWidthIsOne(Study& study,
                   cluster.series->timeseriesNumbers, nbTimeSeries, years);
             }
         }
+
         // NTC
         indexTS = ts_to_tsIndex.at(timeSeriesTransmissionCapacities);
         for (auto it = area.links.begin(); it != area.links.end(); ++it)
