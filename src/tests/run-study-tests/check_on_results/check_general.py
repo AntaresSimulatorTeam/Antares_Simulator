@@ -2,7 +2,7 @@ import sys
 import abc
 
 
-# Abstract base class
+# Base class for any check class
 class check_interface(metaclass=abc.ABCMeta):
     def __init__(self, study_path):
         self.study_path = study_path

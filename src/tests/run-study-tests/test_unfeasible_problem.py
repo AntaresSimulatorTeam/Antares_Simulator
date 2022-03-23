@@ -24,6 +24,17 @@ def test_unfeasible_problem_01__error_verbose(study_path, check_runner):
     check_runner.run(checks)
 
 @pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "specific-tests" / "unfeasible-problem" / "unfeasible_problem_01"], indirect=True)
+def test_unfeasible_problem_01__error_dry(study_path, check_runner):
+    errors_on_weeks = []
+    errors_on_weeks.append(weeks_in_year(year=3, weeks=[19]))
+
+    checks = check_list()
+    checks.add(check = unfeasible_problem(study_path, new_behavior="error-dry",
+                                          checks_on_weeks=errors_on_weeks,
+                                          simulation=check_runner.get_simulation()))
+    check_runner.run(checks)
+
+@pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "specific-tests" / "unfeasible-problem" / "unfeasible_problem_01"], indirect=True)
 def test_unfeasible_problem_01__warning_verbose(study_path, check_runner):
     warnings_on_weeks = []
     warnings_on_weeks.append(weeks_in_year(year=3, weeks=[19]))
@@ -33,6 +44,20 @@ def test_unfeasible_problem_01__warning_verbose(study_path, check_runner):
 
     checks = check_list()
     checks.add(check = unfeasible_problem(study_path, new_behavior="warning-verbose",
+                                          checks_on_weeks=warnings_on_weeks,
+                                          simulation=check_runner.get_simulation()))
+    check_runner.run(checks)
+
+@pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "specific-tests" / "unfeasible-problem" / "unfeasible_problem_01"], indirect=True)
+def test_unfeasible_problem_01__warning_dry(study_path, check_runner):
+    warnings_on_weeks = []
+    warnings_on_weeks.append(weeks_in_year(year=3, weeks=[19]))
+    warnings_on_weeks.append(weeks_in_year(year=6, weeks=[42, 43, 49]))
+    warnings_on_weeks.append(weeks_in_year(year=7, weeks=[19]))
+    warnings_on_weeks.append(weeks_in_year(year=8, weeks=[19]))
+
+    checks = check_list()
+    checks.add(check = unfeasible_problem(study_path, new_behavior="warning-dry",
                                           checks_on_weeks=warnings_on_weeks,
                                           simulation=check_runner.get_simulation()))
     check_runner.run(checks)

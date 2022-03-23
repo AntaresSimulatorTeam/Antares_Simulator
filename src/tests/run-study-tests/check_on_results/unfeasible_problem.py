@@ -2,6 +2,8 @@
 from check_on_results.check_general import check_interface, check_list
 from check_on_results.check_logs_content import check_logs_content
 from check_on_results.sim_return_code import simulation_success
+from check_on_results.check_no_mps import check_no_mps
+from check_on_results.check_mps_existence import check_mps_existence
 from actions_on_study.study_modifier import study_modifier
 from utils.assertions import check
 
@@ -78,14 +80,11 @@ class unfeasible_problem(check_interface):
                                                    simulation=self.simulation,
                                                    success_expected=self.new_behavior_flag.contains_warning()))
 
-        # self.checks.add(check = self.make_mps_check())
+        self.checks.add(check = self.make_mps_check())
 
     def make_mps_check(self):
-        pass
-        """
         if self.new_behavior_flag.contains_verbose():
             return check_mps_existence(self.study_path, self.checks_on_weeks)
         else:
             return check_no_mps(self.study_path)
-        """
 

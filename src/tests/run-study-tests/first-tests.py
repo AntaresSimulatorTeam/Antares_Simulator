@@ -61,7 +61,7 @@ def test_3(study_path, check_runner):
 def test_check_initial_hydro_level(study_path, check_runner):
     first_hour_of_january = 0
     checks = check_list()
-    checks.add(check=check_hydro_level(study_path, date_in_hours=first_hour_of_january, level=30, tolerance=.05))
+    checks.add(check=check_hydro_level(study_path, hour_in_year=first_hour_of_january, level=30, tolerance=.05))
     check_runner.run(checks)
 
 
@@ -70,7 +70,7 @@ def test_check_initial_hydro_level(study_path, check_runner):
 def test_check_hydro_level_at_1st_hour_of_march(study_path, check_runner):
     first_hour_of_march = 1417
     checks = check_list()
-    checks.add(check=check_hydro_level(study_path, date_in_hours=first_hour_of_march, level=30, tolerance=.05))
+    checks.add(check=check_hydro_level(study_path, hour_in_year=first_hour_of_march, level=30, tolerance=.05))
     check_runner.run(checks)
 
 
@@ -79,5 +79,5 @@ def test_check_hydro_level_at_1st_hour_of_march(study_path, check_runner):
 def test_check_hydro_level_at_last_hour_of_simulation(study_path, check_runner):
     last_hour_of_simulation = -1
     checks = check_list()
-    checks.add(check=check_hydro_level(study_path, date_in_hours=last_hour_of_simulation, level=30.46, tolerance=.05))
+    checks.add(check=check_hydro_level(study_path, hour_in_year=last_hour_of_simulation, level=30.46, tolerance=.05))
     check_runner.run(checks)

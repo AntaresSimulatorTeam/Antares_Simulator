@@ -36,8 +36,8 @@ def fetch_hourly_values(path, area, year):
     return col_values
 
 def find_values_hourly_path(output_dir, area, year):
-    op = []
-    for path in Path(output_dir).rglob(f'mc-ind/{year:05d}/areas/{area}/values-hourly.txt'):
-        op.append(path)
-    assert len(op) == 1
-    return op[0]
+    files_found = []
+    for path in output_dir.rglob(f'mc-ind/{year:05d}/areas/{area}/values-hourly.txt'):
+        files_found.append(path)
+    assert len(files_found) == 1
+    return files_found[0]

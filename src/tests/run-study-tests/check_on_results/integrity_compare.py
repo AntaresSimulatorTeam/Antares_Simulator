@@ -36,8 +36,8 @@ def get_integrity_check_values(output : Path) -> numpy.array :
     return output_values
 
 def find_integrity_path(output_dir):
-    op = []
+    files_found = []
     for path in Path(output_dir).rglob('checkIntegrity.txt'):
-        op.append(path)
-    assert len(op) == 1
-    return op[0]
+        files_found.append(path)
+    assert len(files_found) == 1
+    return files_found[0]
