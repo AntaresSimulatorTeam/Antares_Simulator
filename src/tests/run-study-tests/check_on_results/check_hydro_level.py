@@ -6,9 +6,9 @@ from actions_on_study.study_modifier import study_modifier
 from utils.assertions import check
 
 class check_hydro_level(check_interface):
-    def __init__(self, study_path, date_in_hours, level, tolerance):
+    def __init__(self, study_path, hour_in_year, level, tolerance):
         super().__init__(study_path)
-        self.date_in_hours = date_in_hours
+        self.hour_in_year = hour_in_year
         self.level = level
         self.tol = tolerance
 
