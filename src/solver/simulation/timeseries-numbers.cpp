@@ -545,7 +545,7 @@ void storeTSnumbersForIntraModal(const array<uint32, timeSeriesCount>& intramoda
             {
                 ThermalClusterList::SharedPtr cluster = i->second;
                 if (cluster->enabled)
-                    cluster->series->timeseriesNumbers.entry[0][year] = intramodal_draws[indexTS];
+                    cluster->series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
             }
         }
 
@@ -561,7 +561,7 @@ void storeTSnumbersForIntraModal(const array<uint32, timeSeriesCount>& intramoda
             {
                 RenewableClusterList::SharedPtr cluster = j->second;
                 if (cluster->enabled)
-                    cluster->series->timeseriesNumbers.entry[0][year] = intramodal_draws[indexTS];
+                    cluster->series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
             }
         }
 
@@ -657,7 +657,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
                 {
                     uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
                                                                : cluster->series->series.width;
-                    cluster->series->timeseriesNumbers.entry[0][year] = (uint32)(
+                    cluster->series->timeseriesNumbers[0][year] = (uint32)(
                       floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
                 }
             }
@@ -678,8 +678,9 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
             {
                 if (!isTSintramodal[indexTS])
                 {
+                    // There is no TS generation for renewable clusters
                     uint nbTimeSeries = cluster->series->series.width;
-                    cluster->series->timeseriesNumbers.entry[0][year] = (uint32)(
+                    cluster->series->timeseriesNumbers[0][year] = (uint32)(
                       floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
                 }
             }
@@ -695,8 +696,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
             for (auto it = area.links.begin(); it != area.links.end(); ++it)
             {
                 auto& link = *(it->second);
-
-                uint nbTimeSeries = link.directCapacities.width;
+                const uint nbTimeSeries = link.directCapacities.width;
                 if (nbTimeSeries == 1)
                 {
                     // Random generator (mersenne-twister) must not be called here
@@ -753,19 +753,19 @@ void applyMatrixDrawsToInterModalModesInArea(Matrix<uint32>* tsNumbersMtx,
 
         assert(year < area.load.series->timeseriesNumbers.height);
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesLoad)])
-            area.load.series->timeseriesNumbers.entry[0][year] = draw;
+            area.load.series->timeseriesNumbers[0][year] = draw;
 
         assert(year < area.solar.series->timeseriesNumbers.height);
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesSolar)])
-            area.solar.series->timeseriesNumbers.entry[0][year] = draw;
+            area.solar.series->timeseriesNumbers[0][year] = draw;
 
         assert(year < area.wind.series->timeseriesNumbers.height);
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesWind)])
-            area.wind.series->timeseriesNumbers.entry[0][year] = draw;
+            area.wind.series->timeseriesNumbers[0][year] = draw;
 
         assert(year < area.hydro.series->timeseriesNumbers.height);
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesHydro)])
-            area.hydro.series->timeseriesNumbers.entry[0][year] = draw;
+            area.hydro.series->timeseriesNumbers[0][year] = draw;
 
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesThermal)])
         {
@@ -774,7 +774,7 @@ void applyMatrixDrawsToInterModalModesInArea(Matrix<uint32>* tsNumbersMtx,
             {
                 auto& cluster = *(area.thermal.clusters[i]);
                 assert(year < cluster.series->timeseriesNumbers.height);
-                cluster.series->timeseriesNumbers.entry[0][year] = draw;
+                cluster.series->timeseriesNumbers[0][year] = draw;
             }
         }
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesRenewable)])
@@ -784,7 +784,7 @@ void applyMatrixDrawsToInterModalModesInArea(Matrix<uint32>* tsNumbersMtx,
             {
                 auto& cluster = *(area.renewable.clusters[i]);
                 assert(year < cluster.series->timeseriesNumbers.height);
-                cluster.series->timeseriesNumbers.entry[0][year] = draw;
+                cluster.series->timeseriesNumbers[0][year] = draw;
             }
         }
     }
