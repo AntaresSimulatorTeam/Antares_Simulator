@@ -417,6 +417,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
 
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char Type)
 {
+    using PSN = Antares::Optimization::PROBLEME_SIMPLEXE_NOMME;
     FILE* Flot;
     int Cnt;
     int Var;
@@ -429,7 +430,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     int* NumeroDeContrainte;
     int* Csui;
     double CoutOpt;
-    PROBLEME_SIMPLEXE* Probleme;
+    PSN* Probleme;
 
     int NombreDeVariables;
     int* TypeDeBorneDeLaVariable;
@@ -446,7 +447,9 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     int ExistenceDUneSolution;
     double* X;
 
-    Probleme = (PROBLEME_SIMPLEXE*)Prob;
+    Probleme = static_cast<PSN*>(Prob);
+    const std::vector<std::string>& NomDesVariables = Probleme->NomDesVariables;
+    const std::vector<std::string>& NomDesContraintes = Probleme->NomDesContraintes;
 
     ExistenceDUneSolution = Probleme->ExistenceDUneSolution;
     if (ExistenceDUneSolution == OUI_SPX)
@@ -544,15 +547,15 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     {
         if (Sens[Cnt] == '=')
         {
-            fprintf(Flot, " E  R%07d\n", Cnt);
+            fprintf(Flot, " E  %s\n", NomDesContraintes[Cnt].c_str());
         }
         else if (Sens[Cnt] == '<')
         {
-            fprintf(Flot, " L  R%07d\n", Cnt);
+            fprintf(Flot, " L  %s\n", NomDesContraintes[Cnt].c_str());
         }
         else if (Sens[Cnt] == '>')
         {
-            fprintf(Flot, " G  R%07d\n", Cnt);
+            fprintf(Flot, " G  %s\n", NomDesContraintes[Cnt].c_str());
         }
         else
         {
@@ -571,14 +574,15 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
         if (CoutLineaire[Var] != 0.0)
         {
             SNPRINTF(Nombre, 1024, "%-.10lf", CoutLineaire[Var]);
-            fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, Nombre);
+            fprintf(Flot, "    %s  OBJECTIF  %s\n", NomDesVariables[Var].c_str(), Nombre);
         }
 
         il = Cdeb[Var];
         while (il >= 0)
         {
             SNPRINTF(Nombre, 1024, "%-.10lf", CoefficientsDeLaMatriceDesContraintes[il]);
-            fprintf(Flot, "    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il], Nombre);
+            Cnt = NumeroDeContrainte[il];
+            fprintf(Flot, "    %s  %s  %s\n", NomDesVariables[Var].c_str(), NomDesContraintes[Cnt].c_str(), Nombre);
             il = Csui[il];
         }
     }
@@ -589,7 +593,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
         if (SecondMembre[Cnt] != 0.0)
         {
             SNPRINTF(Nombre, 1024, "%-.9lf", SecondMembre[Cnt]);
-            fprintf(Flot, "    RHSVAL    R%07d  %s\n", Cnt, Nombre);
+            fprintf(Flot, "    RHSVAL    %s  %s\n", NomDesContraintes[Cnt].c_str(), Nombre);
         }
     }
 
@@ -601,7 +605,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
         {
             SNPRINTF(Nombre, 1024, "%-.9lf", Xmin[Var]);
 
-            fprintf(Flot, " FX BNDVALUE  C%07d  %s\n", Var, Nombre);
+            fprintf(Flot, " FX BNDVALUE  %s  %s\n", NomDesVariables[Var].c_str(), Nombre);
             continue;
         }
 
@@ -610,11 +614,11 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
             if (Xmin[Var] != 0.0)
             {
                 SNPRINTF(Nombre, 1024, "%-.9lf", Xmin[Var]);
-                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, Nombre);
+                fprintf(Flot, " LO BNDVALUE  %s  %s\n", NomDesVariables[Var].c_str(), Nombre);
             }
 
             SNPRINTF(Nombre, 1024, "%-.9lf", Xmax[Var]);
-            fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, Nombre);
+            fprintf(Flot, " UP BNDVALUE  %s  %s\n", NomDesVariables[Var].c_str(), Nombre);
         }
 
         if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_INFERIEUREMENT)
@@ -622,23 +626,23 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
             if (Xmin[Var] != 0.0)
             {
                 SNPRINTF(Nombre, 1024, "%-.9lf", Xmin[Var]);
-                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, Nombre);
+                fprintf(Flot, " LO BNDVALUE  %s  %s\n", NomDesVariables[Var].c_str(), Nombre);
             }
         }
 
         if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_SUPERIEUREMENT)
         {
-            fprintf(Flot, " MI BNDVALUE  C%07d\n", Var);
+            fprintf(Flot, " MI BNDVALUE  %s\n", NomDesVariables[Var].c_str());
             if (Xmax[Var] != 0.0)
             {
                 SNPRINTF(Nombre, 1024, "%-.9lf", Xmax[Var]);
-                fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, Nombre);
+                fprintf(Flot, " UP BNDVALUE  %s  %s\n", NomDesVariables[Var].c_str(), Nombre);
             }
         }
 
         if (TypeDeBorneDeLaVariable[Var] == VARIABLE_NON_BORNEE)
         {
-            fprintf(Flot, " FR BNDVALUE  C%07d\n", Var);
+            fprintf(Flot, " FR BNDVALUE  %s\n", NomDesVariables[Var].c_str());
         }
     }
 

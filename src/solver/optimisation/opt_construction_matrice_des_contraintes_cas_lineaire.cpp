@@ -116,7 +116,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
 
     // For now only variable are exported, can't define name for constraints export
     int nvars = ProblemeAResoudre->NombreDeVariables;
-    std::vector<std::string> varname;
+    std::vector<std::string>& varname = ProblemeAResoudre->NomDesVariables;
     varname.assign(nvars, "");
 
     for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
