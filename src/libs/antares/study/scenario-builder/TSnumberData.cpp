@@ -561,15 +561,11 @@ void ntcTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& 
     {
         const Data::AreaLink* link = i.second;
         /*
-          When renaming an area, it may happen that from->id and with->id
-          are not in the expected order. In that case, we need to swap them prior to writing.
+          When renaming an area, it may happen that i.first is not the name
+          of the supporting area. We only trust from->id and to->id.
         */
-        Data::AreaName fromID = link->from->id;
-        Data::AreaName withID = link->with->id;
-        if (fromID > withID)
-        {
-            swap(fromID, withID);
-        }
+        const Data::AreaName& fromID = link->from->id;
+        const Data::AreaName& withID = link->with->id;
         for (uint y = 0; y != pTSNumberRules.height; ++y)
         {
             const uint val = pTSNumberRules[link->indexForArea][y];
