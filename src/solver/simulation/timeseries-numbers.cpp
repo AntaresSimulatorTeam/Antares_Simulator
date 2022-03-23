@@ -790,6 +790,85 @@ void applyMatrixDrawsToInterModalModesInArea(Matrix<uint32>* tsNumbersMtx,
     }
 }
 
+// Set tsNumbers to 1 for all years if only one TS is present
+static void fixTSNumbersSingleAreaSingleMode(Matrix<uint32>& tsNumbers, uint width, uint years)
+{
+    if (width == 1)
+    {
+        for (uint year = 0; year < years; year++)
+        {
+            tsNumbers[0][year] = 0;
+        }
+    }
+}
+
+static void fixTSNumbersWhenWidthIsOne(Study& study,
+                                       const array<bool, timeSeriesCount>& isTSgenerated,
+                                       const array<uint, timeSeriesCount>& nbTimeseriesByMode)
+{
+    const uint years = 1 + study.runtime->rangeLimits.year[rangeEnd];
+
+    study.areas.each([&](Area& area) {
+        uint nbTimeSeries;
+        int indexTS;
+        // Load
+        indexTS = ts_to_tsIndex.at(timeSeriesLoad);
+        nbTimeSeries
+          = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS] : area.load.series->series.width;
+        fixTSNumbersSingleAreaSingleMode(area.load.series->timeseriesNumbers, nbTimeSeries, years);
+        // Solar
+        indexTS = ts_to_tsIndex.at(timeSeriesSolar);
+        nbTimeSeries
+          = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS] : area.solar.series->series.width;
+        fixTSNumbersSingleAreaSingleMode(area.solar.series->timeseriesNumbers, nbTimeSeries, years);
+
+        // Wind
+        indexTS = ts_to_tsIndex.at(timeSeriesWind);
+        nbTimeSeries
+          = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS] : area.wind.series->series.width;
+        fixTSNumbersSingleAreaSingleMode(area.wind.series->timeseriesNumbers, nbTimeSeries, years);
+
+        // Hydro
+        indexTS = ts_to_tsIndex.at(timeSeriesHydro);
+        nbTimeSeries
+          = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS] : area.hydro.series->count;
+        fixTSNumbersSingleAreaSingleMode(area.hydro.series->timeseriesNumbers, nbTimeSeries, years);
+
+        // Thermal
+        {
+            indexTS = ts_to_tsIndex.at(timeSeriesThermal);
+            const uint clusterCount = (uint)area.thermal.clusterCount();
+            for (uint i = 0; i != clusterCount; ++i)
+            {
+                auto& cluster = *(area.thermal.clusters[i]);
+                nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
+                                                      : cluster.series->series.width;
+                fixTSNumbersSingleAreaSingleMode(
+                  cluster.series->timeseriesNumbers, nbTimeSeries, years);
+            }
+        }
+        // Renewables
+        {
+            uint clusterCount = (uint)area.renewable.clusterCount();
+            for (uint i = 0; i != clusterCount; ++i)
+            {
+                auto& cluster = *(area.renewable.clusters[i]);
+                nbTimeSeries = cluster.series->series.width;
+                fixTSNumbersSingleAreaSingleMode(
+                  cluster.series->timeseriesNumbers, nbTimeSeries, years);
+            }
+        }
+        // NTC
+        indexTS = ts_to_tsIndex.at(timeSeriesTransmissionCapacities);
+        for (auto it = area.links.begin(); it != area.links.end(); ++it)
+        {
+            auto link = it->second;
+            nbTimeSeries = link->directCapacities.width;
+            fixTSNumbersSingleAreaSingleMode(link->timeseriesNumbers, nbTimeSeries, years);
+        }
+    });
+}
+
 bool TimeSeriesNumbers::compareWidth(uint a, uint b)
 {
     if (a == 1 || b == 1)
@@ -885,6 +964,8 @@ bool TimeSeriesNumbers::Generate(Study& study)
             applyMatrixDrawsToInterModalModesInArea(tsNumbersMtx, area, isTSintermodal, years);
         }
     }
+
+    fixTSNumbersWhenWidthIsOne(study, isTSgenerated, nbTimeseriesByMode);
 
     return true;
 }
