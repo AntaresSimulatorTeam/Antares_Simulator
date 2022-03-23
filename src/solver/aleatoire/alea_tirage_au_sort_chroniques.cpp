@@ -65,44 +65,33 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
 
         // Load
         {
-            Data::DataSeriesLoad& data = *area.load.series;
+            const Data::DataSeriesLoad& data = *area.load.series;
             assert(year < data.timeseriesNumbers.height);
-            if (data.series.width == 1)
-                data.timeseriesNumbers[0][year] = 0;
-
-            ptchro.Consommation = (long)data.timeseriesNumbers[0][year];
+            ptchro.Consommation
+              = (data.series.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
         }
         // Solar
         {
-            Data::DataSeriesSolar& data = *area.solar.series;
+            const Data::DataSeriesSolar& data = *area.solar.series;
             assert(year < data.timeseriesNumbers.height);
-
-            if (data.series.width == 1)
-                data.timeseriesNumbers[0][year] = 0;
-
-            ptchro.Solar = (long)data.timeseriesNumbers[0][year];
+            ptchro.Solar
+              = (data.series.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
         }
         // Hydro
         {
-            Data::DataSeriesHydro& data = *area.hydro.series;
+            const Data::DataSeriesHydro& data = *area.hydro.series;
             assert(year < data.timeseriesNumbers.height);
-
-            if (data.count == 1)
-                data.timeseriesNumbers[0][year] = 0;
-
-            ptchro.Hydraulique = (long)data.timeseriesNumbers[0][year];
+            ptchro.Hydraulique
+              = (data.count != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
             // Hydro - mod
             memset(ptvalgen.HydrauliqueModulableQuotidien, 0, nbDaysPerYearDouble);
         }
         // Wind
         {
-            Data::DataSeriesWind& data = *area.wind.series;
+            const Data::DataSeriesWind& data = *area.wind.series;
             assert(year < data.timeseriesNumbers.height);
-
-            if (data.series.width == 1)
-                data.timeseriesNumbers[0][year] = 0;
-
-            ptchro.Eolien = (long)data.timeseriesNumbers[0][year];
+            ptchro.Eolien
+              = (data.series.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
         }
         // Renewable
         {
@@ -115,14 +104,13 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
                     continue;
                 }
 
-                auto& data = *cluster->series;
+                const auto& data = *cluster->series;
                 assert(year < data.timeseriesNumbers.height);
                 unsigned int index = cluster->areaWideIndex;
 
-                if (data.series.width == 1)
-                    data.timeseriesNumbers[0][year] = 0;
-
-                ptchro.RenouvelableParPalier[index] = (long)data.timeseriesNumbers[0][year];
+                ptchro.RenouvelableParPalier[index] = (data.series.width != 1)
+                                                        ? (long)data.timeseriesNumbers[0][year]
+                                                        : 0; // zero-based
             }
         }
 
@@ -142,16 +130,15 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
                     continue;
                 }
 
-                auto& data = *cluster->series;
+                const auto& data = *cluster->series;
                 assert(year < data.timeseriesNumbers.height);
                 unsigned int index = cluster->areaWideIndex;
 
-                if (data.series.width == 1)
-                    data.timeseriesNumbers[0][year] = 0;
-
                 // the matrix data.series should be properly initialized at this stage
                 // because the ts-generator has already been launched
-                ptchro.ThermiqueParPalier[index] = (long)data.timeseriesNumbers[0][year];
+                ptchro.ThermiqueParPalier[index] = (data.series.width != 1)
+                                                     ? (long)data.timeseriesNumbers[0][year]
+                                                     : 0; // zero-based
 
                 if (EconomicModeT)
                 {
@@ -199,13 +186,8 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
         const uint directWidth = link->directCapacities.width;
         const uint indirectWidth = link->indirectCapacities.width;
         assert(directWidth == indirectWidth);
-
-        if (directWidth == 1)
-        {
-            link->timeseriesNumbers[0][year] = 0;
-        }
-
-        ptchro.TransmissionCapacities = link->timeseriesNumbers[0][year];
+        ptchro.TransmissionCapacities
+          = (directWidth != 1) ? link->timeseriesNumbers[0][year] : 0; // zero-based
     }
 }
 
