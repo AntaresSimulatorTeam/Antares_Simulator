@@ -70,6 +70,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
       problem.adqPatch->Ntc11 = parameters.setToZero11LinksForAdequacyPatch;
     }
 
+    if (parameters.include.adequacyPatch){
+      problem.adequacyPatchRuntimeData.initialize(study);
+    }
+
     problem.WaterValueAccurate
       = (study.parameters.hydroPricing.hpMode == Antares::Data::HydroPricingMode::hpMILP)
           ? OUI_ANTARES
@@ -118,7 +122,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         auto& area = *(study.areas[i]);
 
         problem.NomsDesPays[i] = area.id.c_str();
-        problem.AreaAdequacyPatchMode[i] = area.adequacyPatchMode;
 
         problem.CoutDeDefaillancePositive[i] = area.thermal.unsuppliedEnergyCost;
 
@@ -192,9 +195,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     {
         auto& link = *(study.runtime->areaLink[i]);
         problem.PaysOrigineDeLInterconnexion[i] = link.from->index;
-        problem.StartAreaAdequacyPatchType[i] = link.from->adequacyPatchMode;
         problem.PaysExtremiteDeLInterconnexion[i] = link.with->index;
-        problem.EndAreaAdequacyPatchType[i] = link.with->adequacyPatchMode;
     }
 
     for (uint i = 0; i < study.runtime->bindingConstraintCount; ++i)

@@ -183,8 +183,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             {
                 SetToZeroLinkNTCForAdequacyPatchFirstStep
                   = SetNTCForAdequacyFirstStep(ProblemeHebdo->adqPatch->AdequacyFirstStep,
-                                               ProblemeHebdo->StartAreaAdequacyPatchType[Interco],
-                                               ProblemeHebdo->EndAreaAdequacyPatchType[Interco],
+                                               ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco],
+                                               ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco],
                                                ProblemeHebdo->adqPatch->Ntc12,
                                                ProblemeHebdo->adqPatch->Ntc11);
             }
@@ -435,7 +435,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
 
                 // adq patch: update ENS <= DENS in 2nd run
                 if (ProblemeHebdo->adqPatch && ProblemeHebdo->adqPatch->AdequacyFirstStep == false
-                    && ProblemeHebdo->AreaAdequacyPatchMode[Pays]
+                    && ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Pays]
                          == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
                     Xmax[Var]
                       = min(Xmax[Var],
