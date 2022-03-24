@@ -67,22 +67,19 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
         {
             const Data::DataSeriesLoad& data = *area.load.series;
             assert(year < data.timeseriesNumbers.height);
-            ptchro.Consommation
-              = (data.series.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+            ptchro.Consommation = data.timeseriesNumbers[0][year];
         }
         // Solar
         {
             const Data::DataSeriesSolar& data = *area.solar.series;
             assert(year < data.timeseriesNumbers.height);
-            ptchro.Solar
-              = (data.series.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+            ptchro.Solar = data.timeseriesNumbers[0][year];
         }
         // Hydro
         {
             const Data::DataSeriesHydro& data = *area.hydro.series;
             assert(year < data.timeseriesNumbers.height);
-            ptchro.Hydraulique
-              = (data.count != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+            ptchro.Hydraulique = data.timeseriesNumbers[0][year];
             // Hydro - mod
             memset(ptvalgen.HydrauliqueModulableQuotidien, 0, nbDaysPerYearDouble);
         }
@@ -90,8 +87,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
         {
             const Data::DataSeriesWind& data = *area.wind.series;
             assert(year < data.timeseriesNumbers.height);
-            ptchro.Eolien
-              = (data.series.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+            ptchro.Eolien = data.timeseriesNumbers[0][year];
         }
         // Renewable
         {
@@ -108,9 +104,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
                 assert(year < data.timeseriesNumbers.height);
                 unsigned int index = cluster->areaWideIndex;
 
-                ptchro.RenouvelableParPalier[index] = (data.series.width != 1)
-                                                        ? (long)data.timeseriesNumbers[0][year]
-                                                        : 0; // zero-based
+                ptchro.RenouvelableParPalier[index] = data.timeseriesNumbers[0][year];
             }
         }
 
@@ -136,9 +130,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
 
                 // the matrix data.series should be properly initialized at this stage
                 // because the ts-generator has already been launched
-                ptchro.ThermiqueParPalier[index] = (data.series.width != 1)
-                                                     ? (long)data.timeseriesNumbers[0][year]
-                                                     : 0; // zero-based
+                ptchro.ThermiqueParPalier[index] = data.timeseriesNumbers[0][year];
 
                 if (EconomicModeT)
                 {
@@ -186,8 +178,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
         const uint directWidth = link->directCapacities.width;
         const uint indirectWidth = link->indirectCapacities.width;
         assert(directWidth == indirectWidth);
-        ptchro.TransmissionCapacities
-          = (directWidth != 1) ? link->timeseriesNumbers[0][year] : 0; // zero-based
+        ptchro.TransmissionCapacities = link->timeseriesNumbers[0][year];
     }
 }
 
