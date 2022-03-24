@@ -31,6 +31,7 @@
 #include "../../date.h"
 #include <limits>
 #include <functional>
+#include <vector>
 #include "../../emergency.h"
 #include "../memory-usage.h"
 #include "../../config.h"
@@ -485,6 +486,23 @@ void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
     });
 }
 
+static void checkMiscGenUsed(const AreaList& areas)
+{
+    std::vector<Data::AreaName> areasWithMiscGen;
+    areas.each([&areasWithMiscGen](const Data::Area& area) {
+        if (!area.miscGen.containsOnlyZero())
+            areasWithMiscGen.push_back(area.name);
+    });
+    if (!areasWithMiscGen.empty())
+    {
+        logs.warning() << "Misc. gen is deprecated and will be removed from a future version. "
+                          "Please use renewable clusters instead. Found "
+                       << areasWithMiscGen.size() << " areas with misc. gen :";
+        for (auto& areaName : areasWithMiscGen)
+            logs.warning() << areaName;
+    }
+}
+
 bool StudyRuntimeInfos::loadFromStudy(Study& study)
 {
     auto& gd = study.parameters;
@@ -545,6 +563,9 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
 
     // Check if some clusters request TS generation
     checkThermalTSGeneration(study);
+
+    // Warn the user against using "misc. gen", which is a deprecated feature
+    checkMiscGenUsed(study.areas);
 
 #ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
     // Hydro cost - Infinite
