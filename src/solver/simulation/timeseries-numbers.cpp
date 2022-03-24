@@ -808,7 +808,7 @@ static void fixTSNumbersWhenWidthIsOne(Study& study,
 {
     const uint years = 1 + study.runtime->rangeLimits.year[rangeEnd];
 
-    study.areas.each([&](Area& area) {
+    study.areas.each([&years, &isTSgenerated, &nbTimeseriesByMode](Area& area) {
         uint nbTimeSeries;
         int indexTS;
 
@@ -839,7 +839,7 @@ static void fixTSNumbersWhenWidthIsOne(Study& study,
         // Thermal
         {
             indexTS = ts_to_tsIndex.at(timeSeriesThermal);
-            const uint clusterCount = (uint)area.thermal.clusterCount();
+            const auto clusterCount = (uint)area.thermal.clusterCount();
             for (uint i = 0; i != clusterCount; ++i)
             {
                 auto& cluster = *(area.thermal.clusters[i]);
@@ -852,7 +852,7 @@ static void fixTSNumbersWhenWidthIsOne(Study& study,
 
         // Renewables
         {
-            uint clusterCount = (uint)area.renewable.clusterCount();
+            const auto clusterCount = (uint)area.renewable.clusterCount();
             for (uint i = 0; i != clusterCount; ++i)
             {
                 auto& cluster = *(area.renewable.clusters[i]);
@@ -864,12 +864,14 @@ static void fixTSNumbersWhenWidthIsOne(Study& study,
 
         // NTC
         indexTS = ts_to_tsIndex.at(timeSeriesTransmissionCapacities);
-        for (auto it = area.links.begin(); it != area.links.end(); ++it)
-        {
-            auto link = it->second;
-            nbTimeSeries = link->directCapacities.width;
-            fixTSNumbersSingleAreaSingleMode(link->timeseriesNumbers, nbTimeSeries, years);
-        }
+        std::for_each(
+          area.links.cbegin(),
+          area.links.cend(),
+          [&years, &nbTimeSeries](const std::pair<Data::AreaName, Data::AreaLink*>& it) {
+              auto link = it.second;
+              nbTimeSeries = link->directCapacities.width;
+              fixTSNumbersSingleAreaSingleMode(link->timeseriesNumbers, nbTimeSeries, years);
+          });
     });
 }
 
