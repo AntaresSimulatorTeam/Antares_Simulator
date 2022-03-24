@@ -1,9 +1,7 @@
 import json
 import os.path
-from pathlib import Path
 
-
-class checkReader:
+class checksJsonReader:
     def __init__(self, study_path):
         self.study_path = study_path
         self.check_data_file = study_path / "check-config.json"
@@ -37,11 +35,11 @@ class jsonCollector:
 
     def collect(self):
         for study_path in self.study_paths_:
-            check_reader = checkReader(study_path)
-            if check_reader.json_file_exists():
-                check_reader.read()
-                self.pairs_.extend(check_reader.get_checks())
-                self.test_ids_.extend(check_reader.get_ids())
+            checks_json_reader = checksJsonReader(study_path)
+            if checks_json_reader.json_file_exists():
+                checks_json_reader.read()
+                self.pairs_.extend(checks_json_reader.get_checks())
+                self.test_ids_.extend(checks_json_reader.get_ids())
 
     def pairs(self):
         return self.pairs_

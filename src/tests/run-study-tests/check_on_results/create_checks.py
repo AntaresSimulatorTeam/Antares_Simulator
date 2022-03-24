@@ -1,3 +1,4 @@
+from check_on_results.check_general import check_list
 from check_on_results.output_compare import output_compare
 from check_on_results.integrity_compare import integrity_compare
 from check_on_results.check_hydro_level import check_hydro_level
@@ -6,15 +7,15 @@ from check_on_results.tolerances import get_tolerances
 
 
 def create_checks(study_path, checks_data = {}, simulation = None):
-    checks = []
+    checks = check_list()
     if "output_compare" in checks_data:
-        checks.append(create_output_compare(study_path, checks_data["output_compare"]))
+        checks.add(create_output_compare(study_path, checks_data["output_compare"]))
     if "integrity_compare" in checks_data:
-        checks.append(create_intergrity_compare(study_path, checks_data["integrity_compare"]))
+        checks.add(create_intergrity_compare(study_path, checks_data["integrity_compare"]))
     if "hydro_level" in checks_data:
-        checks.append(create_check_hydro_level(study_path, checks_data["hydro_level"]))
+        checks.add(create_check_hydro_level(study_path, checks_data["hydro_level"]))
     if "unfeasible_problem" in checks_data:
-        checks.append(create_unfeasible_problem(study_path, checks_data["unfeasible_problem"], simulation))
+        checks.add(create_unfeasible_problem(study_path, checks_data["unfeasible_problem"], simulation))
 
     return checks
 
