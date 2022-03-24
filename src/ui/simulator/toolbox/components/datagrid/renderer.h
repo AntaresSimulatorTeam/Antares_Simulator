@@ -118,6 +118,13 @@ public:
     */
     virtual int width() const = 0;
 
+    //! \name Sizes
+    //@{
+    /*!
+    ** \brief Width excluding agregated columns such as min, max, average, etc.
+    */
+    virtual int widthExcludingAgregatedColumns() const;
+
     /*!
     ** \brief The effective height of the grid
     */
