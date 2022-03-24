@@ -11,7 +11,7 @@ def create_checks(study_path, checks_data = {}, simulation = None):
     if "output_compare" in checks_data:
         checks.add(create_output_compare(study_path, checks_data["output_compare"]))
     if "integrity_compare" in checks_data:
-        checks.add(create_intergrity_compare(study_path, checks_data["integrity_compare"]))
+        checks.add(create_intergrity_compare(study_path))
     if "hydro_level" in checks_data:
         checks.add(create_check_hydro_level(study_path, checks_data["hydro_level"]))
     if "unfeasible_problem" in checks_data:
@@ -36,7 +36,7 @@ def create_output_compare(study_path, parameters = {}):
 # --------------------------------------
 # integrity_compare object creation
 # --------------------------------------
-def create_intergrity_compare(study_path, parameters = {}):
+def create_intergrity_compare(study_path):
     return integrity_compare(study_path)
 
 # --------------------------------------

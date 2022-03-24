@@ -1,20 +1,26 @@
 import json
+from jsonschema import validate
 import os.path
 
 class checksJsonReader:
     def __init__(self, study_path):
         self.study_path = study_path
-        self.check_data_file = study_path / "check-config.json"
+        self.json_file = study_path / "check-config.json"
 
         self.test_pairs = []
         self.test_ids = []
 
     def json_file_exists(self):
-        return os.path.isfile(self.check_data_file)
+        return os.path.isfile(self.json_file)
 
     def read(self):
-        with open(self.check_data_file) as json_file:
+        with open(self.json_file, "r") as json_file:
             test_collection = json.load(json_file)
+
+        with open("./parse_studies/json_schema.json", "r") as file:
+            valid_dictionary = json.load(file)
+
+        validate_json(test_collection, valid_dictionary)
 
         for test in test_collection:
             self.test_ids.append(test["name"])
@@ -25,6 +31,13 @@ class checksJsonReader:
     def get_checks(self):
         return self.test_pairs
 
+
+def validate_json(data_to_validate, valid_dictionary):
+    try:
+        validate(data_to_validate, valid_dictionary)
+    except Exception as valid_err:
+        print("Validation KO: {}".format(valid_err))
+        raise valid_err
 
 
 class jsonCollector:
