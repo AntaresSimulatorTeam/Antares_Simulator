@@ -386,6 +386,7 @@ void ISimulation<Impl>::run()
 
         ImplementationType::variables.simulationEnd();
 
+        // Export ts-numbers into output
         TimeSeriesNumbers::StoreTimeseriesIntoOuput(study);
 
         // Spatial clusters
