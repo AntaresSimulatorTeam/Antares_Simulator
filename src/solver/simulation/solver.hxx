@@ -361,8 +361,6 @@ void ISimulation<Impl>::run()
         if (parameters.useCustomScenario)
             ApplyCustomScenario(study);
 
-        TimeSeriesNumbers::StoreTimeseriesIntoOuput(study);
-
         // Launching the simulation for all years
         logs.info() << "MC-Years : [" << (study.runtime->rangeLimits.year[Data::rangeBegin] + 1)
                     << " .. " << (1 + study.runtime->rangeLimits.year[Data::rangeEnd])
@@ -387,6 +385,8 @@ void ISimulation<Impl>::run()
         ImplementationType::simulationEnd();
 
         ImplementationType::variables.simulationEnd();
+
+        TimeSeriesNumbers::StoreTimeseriesIntoOuput(study);
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.
