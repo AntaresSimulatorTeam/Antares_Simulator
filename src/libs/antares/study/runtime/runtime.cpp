@@ -495,11 +495,11 @@ static void checkMiscGenUsed(const AreaList& areas)
     });
     if (!areasWithMiscGen.empty())
     {
-        logs.warning() << "Misc. gen is deprecated and will be removed from a future version. "
-                          "Please use renewable clusters instead. Found "
-                       << areasWithMiscGen.size() << " areas with misc. gen :";
+        logs.info() << "Misc. gen is deprecated, "
+                       "please use renewable clusters instead. Found "
+                    << areasWithMiscGen.size() << " areas with misc. gen :";
         for (const auto& areaName : areasWithMiscGen)
-            logs.warning() << areaName;
+            logs.info() << areaName;
     }
 }
 
