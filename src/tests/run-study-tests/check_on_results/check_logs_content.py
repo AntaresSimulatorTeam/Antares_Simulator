@@ -11,8 +11,8 @@ class check_logs_content(check_interface):
 
         check(log_level in ["warns", "fatal"], "Unknown log level : %s" % log_level)
 
+    @check_interface.print_check_name
     def run(self):
-        super().print_check_name()
         path_to_output_folder = find_output_folder(self.study_path)
         path_to_log_file = find_logs_file(path_to_output_folder)
 

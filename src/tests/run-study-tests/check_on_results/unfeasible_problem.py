@@ -62,8 +62,8 @@ class unfeasible_problem(check_interface):
         self.checks = check_list()
         self.fill_check_list()
 
+    @check_interface.print_check_name
     def run(self):
-        super().print_check_name()
         self.checks.run()
 
     def check_name(self):

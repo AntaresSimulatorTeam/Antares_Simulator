@@ -23,8 +23,8 @@ class output_compare(check_interface):
         print_results.activate()
         self.study_modifiers_.append(print_results)
 
+    @check_interface.print_check_name
     def run(self):
-        super().print_check_name()
         reference_folder = find_simulation_folder(self.ref_folder)
 
         path_to_output = find_output_folder(self.study_path)
