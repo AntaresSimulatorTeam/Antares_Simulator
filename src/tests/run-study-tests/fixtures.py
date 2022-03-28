@@ -45,7 +45,6 @@ def simulation(study_path, solver_path, use_ortools, ortools_solver):
 @pytest.fixture(autouse=True)
 def check_runner(simulation, resutsRemover):
     # Actions done before the current test
-    print("\nTest begins")
     my_check_handler = check_handler(simulation, resutsRemover)
 
     # Running the current test here
@@ -53,4 +52,3 @@ def check_runner(simulation, resutsRemover):
 
     # Teardown : actions done after the current test
     my_check_handler.teardown()
-    print('\nEnd of test')

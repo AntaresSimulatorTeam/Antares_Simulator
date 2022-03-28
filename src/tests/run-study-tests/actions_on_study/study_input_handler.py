@@ -1,6 +1,6 @@
 import os
 
-from utils.assertions import raise_assertion
+from utils.assertions import check
 
 class study_input_handler:
 	def __init__(self, study_root_directory):
@@ -16,8 +16,7 @@ class study_input_handler:
 		
 	def check_files_existence(self):
 		for file_path in self.files_path.values():
-			if not os.path.isfile(file_path):
-				raise_assertion("File does not exist : %s" % file_path)
+			check(os.path.isfile(file_path), "File does not exist : %s" % file_path)
 
 	def get_value(self, variable, file_nick_name):
 		# File path

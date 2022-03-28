@@ -5,7 +5,7 @@ from pathlib import Path
 from check_on_results.tolerances import get_tolerances
 
 from check_on_results.check_general import check_interface
-from utils.assertions import raise_assertion
+from utils.assertions import check
 from utils.find_reference import find_reference_folder
 from utils.find_output import find_output_folder
 from actions_on_study.study_modifier import study_modifier
@@ -31,8 +31,8 @@ class output_compare(check_interface):
         other_folder = find_simulation_folder(path_to_output)
 
         simulation_files = find_simulation_files(reference_folder, other_folder)
-        if not compare_simulation_files(simulation_files, self.tol):
-            raise_assertion("Results comparison failed")
+
+        check(compare_simulation_files(simulation_files, self.tol), "Results comparison failed")
 
     def check_name(self):
         return "output compare"
@@ -82,9 +82,9 @@ def compare_simulation_files(simulation_files, tol):
         # Check that reference column titles are a subset of the simulation titles
         ref_column_titles = get_headers(ref_data_frame)
         other_column_titles = get_headers(other_data_frame)
-        if not ref_column_titles.issubset(other_column_titles):
-            message = f"The following column(s) is missing in the reference {ref_column_titles.difference(other_column_titles)}"
-            raise_assertion(message)
+
+        check(ref_column_titles.issubset(other_column_titles),
+              f"The following column(s) is missing in the reference {ref_column_titles.difference(other_column_titles)}")
 
         for col_name in ref_column_titles:
             try:
