@@ -60,6 +60,7 @@ void H2O_M_Free(DONNEES_ANNUELLES* DonneesAnnuelles)
     free(ProblemeHydraulique->CorrespondanceDesVariables);
 
     free((ProblemeHydraulique->ProblemeLineairePartieFixe)->CoutLineaire);
+    free((ProblemeHydraulique->ProblemeLineairePartieFixe)->CoutLineaireBruite);
     free((ProblemeHydraulique->ProblemeLineairePartieFixe)->TypeDeVariable);
     free((ProblemeHydraulique->ProblemeLineairePartieFixe)->Sens);
     free((ProblemeHydraulique->ProblemeLineairePartieFixe)->IndicesDebutDeLigne);
