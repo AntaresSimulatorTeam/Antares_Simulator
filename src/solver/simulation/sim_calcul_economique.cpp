@@ -611,24 +611,25 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             }
 
             uint tsFatalIndex = (uint)tsIndex.Hydraulique < ror.width ? tsIndex.Hydraulique : 0;
-            problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
-              = scratchpad.miscGenSum[indx] + ror[tsFatalIndex][indx] + scratchpad.mustrunSum[indx];
-
+            double& mustRunGen = problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
-                problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
-                  += scratchpad.ts.wind[tsIndex.Eolien][indx]
-                     + scratchpad.ts.solar[tsIndex.Solar][indx];
+                mustRunGen = scratchpad.ts.wind[tsIndex.Eolien][indx]
+                             + scratchpad.ts.solar[tsIndex.Solar][indx]
+                             + scratchpad.miscGenSum[indx] + ror[tsFatalIndex][indx]
+                             + scratchpad.mustrunSum[indx];
             }
 
             // Renewable
             if (parameters.renewableGeneration.isClusters())
             {
+                mustRunGen = scratchpad.miscGenSum[indx] + ror[tsFatalIndex][indx]
+                             + scratchpad.mustrunSum[indx];
+
                 area.renewable.list.each([&](const RenewableCluster& cluster) {
                     assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
-                    problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
-                      += cluster.valueAtTimeStep(
-                        tsIndex.RenouvelableParPalier[cluster.areaWideIndex], (uint)indx);
+                    mustRunGen += cluster.valueAtTimeStep(
+                      tsIndex.RenouvelableParPalier[cluster.areaWideIndex], (uint)indx);
                 });
             }
 
