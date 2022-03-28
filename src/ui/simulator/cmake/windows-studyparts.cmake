@@ -30,6 +30,8 @@ set(SRC_UI_WINDOWS_STUDYPARTS
 		windows/renewables/panel.cpp
 		windows/connection.h
 		windows/connection.cpp
+		windows/link-property-buttons.h
+		windows/link-property-buttons.cpp
 		windows/scenario-builder/panel.h
 		windows/scenario-builder/panel.cpp
 		windows/bindingconstraint/bindingconstraint.h

@@ -299,6 +299,7 @@ bool Rules::readLink(const AreaName::Vector& splitKey, String value, bool update
         return false;
 
     uint val = fromStringToTSnumber(value);
+    fromArea = link->from;
     linksNTC[fromArea->index].setDataForLink(link, year, val);
     return true;
 }

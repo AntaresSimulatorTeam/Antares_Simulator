@@ -258,7 +258,7 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
         vS = new wxBoxSizer(wxVERTICAL);
 
         vS->AddSpacer(15);
-        vS->Add(Antares::Component::CreateLabel(panelGrid, wxT(" to "), true), 0, wxALIGN_BOTTOM);
+        vS->Add(Antares::Component::CreateLabel(panelGrid, wxT(" to "), true), 0, wxALIGN_NOT);
         hS->Add(vS, 0, wxALIGN_LEFT);
 
         hS->AddSpacer(5);

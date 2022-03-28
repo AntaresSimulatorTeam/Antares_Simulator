@@ -759,7 +759,7 @@ StudyLogs::StudyLogs(wxFrame* parent) :
         pBtnLogFilenameRefresh->bold(true);
         pBtnLogFilenameRefresh->caption(wxT("Please select a log file"));
         infosizer->AddSpacer(5);
-        infosizer->Add(pBtnLogFilenameRefresh, 0, wxALL | wxALIGN_CENTER_VERTICAL);
+        infosizer->Add(pBtnLogFilenameRefresh, 0, wxALL | wxALIGN_CENTER);
         infosizer->AddSpacer(1);
 
         auto* pathsizer = new wxBoxSizer(wxHORIZONTAL);
