@@ -5,7 +5,7 @@ from utils.find_output import find_output_folder
 
 class check_logs_content(check_interface):
     def __init__(self, study_path, log_level="warns", faulty_weeks=[]):
-        check_interface.__init__(self, study_path)
+        super().__init__(study_path)
         self.log_level = log_level
         self.expected_faulty_weeks = faulty_weeks
 
@@ -13,7 +13,7 @@ class check_logs_content(check_interface):
             raise_assertion("Unknown log level : %s" % log_level)
 
     def run(self):
-        print("running check : %s" % self.__class__.__name__)
+        super().print_check_name()
         path_to_output_folder = find_output_folder(self.study_path)
         path_to_log_file = find_logs_file(path_to_output_folder)
 
@@ -41,6 +41,10 @@ class check_logs_content(check_interface):
         # Report of lines not found
         for i in range(len(lines_to_find)):
             assert match_lines[i], "'" + lines_to_find[i] + "'" + " log not found in simulation.log"
+
+    @check_interface.print_name_decorator
+    def check_name(self):
+        return "unfeasible problem logs"
 
 
 def find_logs_file(path_to_output_folder):

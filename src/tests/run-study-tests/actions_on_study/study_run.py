@@ -8,12 +8,12 @@ class study_run:
         self.solver_path = solver_path
         self.use_ortools = use_ortools
         self.ortools_solver = ortools_solver
-        self.raise_exception_at_failure = True
+        self.raise_exception_on_failure = True
         self.return_code = 0
 
     def no_exception_raised_at_failure(self):
         # Tell the run not to raise an exception when run fails
-        self.raise_exception_at_failure = False
+        self.raise_exception_on_failure = False
 
     def run(self):
         print("Running the study")
@@ -28,7 +28,7 @@ class study_run:
 
         self.return_code = process.returncode
 
-        if not self.raise_exception_at_failure:
+        if not self.raise_exception_on_failure:
             return
         # TODO check return value
         if "Solver returned error" in output[0].decode('utf-8'):

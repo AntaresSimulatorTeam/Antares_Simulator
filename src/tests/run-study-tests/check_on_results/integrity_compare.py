@@ -7,12 +7,15 @@ from utils.find_output import find_output_folder
 
 class integrity_compare(check_interface):
     def __init__(self, study_path):
-        check_interface.__init__(self, study_path)
+        super().__init__(study_path)
         self.ref_folder = find_reference_folder(self.study_path)
 
     def run(self):
-        print("running check : %s" % self.__class__.__name__)
+        super().print_check_name()
         self.compare_files()
+
+    def check_name(self):
+        return "integrity compare"
 
     def compare_files(self):
         reference_values = get_integrity_check_values(self.ref_folder)

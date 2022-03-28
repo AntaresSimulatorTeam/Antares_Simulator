@@ -14,7 +14,7 @@ from utils.csv import read_csv
 
 class output_compare(check_interface):
     def __init__(self, study_path, tolerances = get_tolerances()):
-        check_interface.__init__(self, study_path)
+        super().__init__(study_path)
         self.tol = tolerances
         self.ref_folder = find_reference_folder(self.study_path)
 
@@ -24,8 +24,7 @@ class output_compare(check_interface):
         self.study_modifiers_.append(print_results)
 
     def run(self):
-        print("running check : %s" % self.__class__.__name__)
-
+        super().print_check_name()
         reference_folder = find_simulation_folder(self.ref_folder)
 
         path_to_output = find_output_folder(self.study_path)
@@ -34,6 +33,9 @@ class output_compare(check_interface):
         simulation_files = find_simulation_files(reference_folder, other_folder)
         if not compare_simulation_files(simulation_files, self.tol):
             raise_assertion("Results comparison failed")
+
+    def check_name(self):
+        return "output compare"
 
 
 def find_simulation_folder(output_dir):

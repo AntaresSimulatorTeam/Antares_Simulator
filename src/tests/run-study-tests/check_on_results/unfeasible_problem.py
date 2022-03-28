@@ -44,7 +44,7 @@ class behavior_flag:
 
 class unfeasible_problem(check_interface):
     def __init__(self, study_path, new_behavior="error-verbose", checks_on_weeks = [], simulation = None):
-        check_interface.__init__(self, study_path)
+        super().__init__(study_path)
 
         # Unfeasible problem behavior flag
         self.new_behavior_flag = behavior_flag(new_behavior)
@@ -65,9 +65,11 @@ class unfeasible_problem(check_interface):
         self.fill_check_list()
 
     def run(self):
-        # To be done
-        print("running check : %s" % self.__class__.__name__)
+        super().print_check_name()
         self.checks.run()
+
+    def check_name(self):
+        return "unfeasible problem"
 
     def fill_check_list(self):
         self.checks.add(check = check_logs_content(self.study_path,

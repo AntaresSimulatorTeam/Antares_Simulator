@@ -7,7 +7,7 @@ from utils.assertions import raise_assertion
 
 class check_hydro_level(check_interface):
     def __init__(self, study_path, date_in_hours, level, tolerance):
-        check_interface.__init__(self, study_path)
+        super().__init__(study_path)
         self.date_in_hours = date_in_hours
         self.level = level
         self.tol = tolerance
@@ -18,10 +18,14 @@ class check_hydro_level(check_interface):
         self.study_modifiers_.append(print_results)
 
     def run(self):
-        print("running check : %s" % self.__class__.__name__)
+        super().print_check_name()
         reservoir_levels = fetch_hourly_values(self.study_path, area='area', year=1)["H. LEV"]
         if not abs(reservoir_levels.iat[self.date_in_hours] - self.level) < self.tol:
-            raise_assertion("Hydro level not correct : %.2f" % reservoir_levels[self.date_in_hours])
+            message = "Hydro level not correct : %.2f, expected : %.2f" % (reservoir_levels[self.date_in_hours], self.level)
+            raise_assertion(message)
+
+    def check_name(self):
+        return "hydro level"
 
 def fetch_hourly_values(path, area, year):
     output_path = path / 'output'
