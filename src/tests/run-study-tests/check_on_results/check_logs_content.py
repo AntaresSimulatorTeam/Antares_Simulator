@@ -1,5 +1,5 @@
 from check_on_results.check_general import check_interface
-from utils.assertions import raise_assertion
+from utils.assertions import check, raise_assertion
 from utils.find_output import find_output_folder
 
 
@@ -9,8 +9,7 @@ class check_logs_content(check_interface):
         self.log_level = log_level
         self.expected_faulty_weeks = faulty_weeks
 
-        if log_level not in ["warns", "fatal"]:
-            raise_assertion("Unknown log level : %s" % log_level)
+        check(log_level in ["warns", "fatal"], "Unknown log level : %s" % log_level)
 
     def run(self):
         super().print_check_name()
@@ -42,7 +41,6 @@ class check_logs_content(check_interface):
         for i in range(len(lines_to_find)):
             assert match_lines[i], "'" + lines_to_find[i] + "'" + " log not found in simulation.log"
 
-    @check_interface.print_name_decorator
     def check_name(self):
         return "unfeasible problem logs"
 

@@ -50,8 +50,8 @@ def test_3(study_path, check_runner):
     # Add an "output comparison" to check list
     checks = check_list()
     checks.add(check=output_compare(study_path, tolerances), system='win32')
-
     check_runner.run(checks)
+
 
 @pytest.mark.short
 @pytest.mark.parametrize('study_path', [ALL_STUDIES_PATH / "short-tests" / "hydro initialization 1"], indirect=True)

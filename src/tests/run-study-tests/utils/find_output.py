@@ -1,7 +1,7 @@
 from re import match
 from os.path import isdir, basename
 
-from utils.assertions import raise_assertion
+from utils.assertions import check
 
 class output_folder_finder:
     def __init__(self, study_path):
@@ -20,15 +20,6 @@ class output_folder_finder:
 
 def find_output_folder(study_path):
     output_folder_finder_ = output_folder_finder(study_path)
-    if not output_folder_finder_.find():
-        raise_assertion("Output folder not found")
+    check(output_folder_finder_.find(), "Output folder not found")
     return output_folder_finder_.get()
-
-"""
-from pathlib import Path
-STUDY_FOLDER = Path('d:/') / 'Users' / 'pierregui' / "Desktop" / "NTC" / "studies" / "NTC-2-areas"
-
-found = find_output_folder(STUDY_FOLDER)
-print("Found : %r" % found)
-"""
 

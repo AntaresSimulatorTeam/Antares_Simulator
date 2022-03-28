@@ -11,7 +11,7 @@ class study_run:
         self.raise_exception_on_failure = True
         self.return_code = 0
 
-    def no_exception_raised_at_failure(self):
+    def no_exception_raised_on_failure(self):
         # Tell the run not to raise an exception when run fails
         self.raise_exception_on_failure = False
 

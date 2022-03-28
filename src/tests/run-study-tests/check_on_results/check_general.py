@@ -19,7 +19,6 @@ class check_interface(metaclass=abc.ABCMeta):
     def print_check_name(self):
         print("Running check : %s" % self.check_name())
 
-
     def study_modifiers(self):
         return self.study_modifiers_
 

@@ -1,7 +1,7 @@
 from os import walk
 from os.path import basename
 
-from utils.assertions import raise_assertion
+from utils.assertions import check
 
 class reference_folder_finder:
     def __init__(self, study_path):
@@ -29,6 +29,5 @@ class reference_folder_finder:
 
 def find_reference_folder(study_path):
     ref_folder_finder = reference_folder_finder(study_path)
-    if not ref_folder_finder.find():
-        raise_assertion("Reference folder not found")
+    check(ref_folder_finder.find(), ref_folder_finder.find())
     return ref_folder_finder.get()

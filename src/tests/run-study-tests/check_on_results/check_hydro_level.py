@@ -3,7 +3,7 @@ from pathlib import Path
 from utils.csv import read_csv
 from check_on_results.check_general import check_interface
 from actions_on_study.study_modifier import study_modifier
-from utils.assertions import raise_assertion
+from utils.assertions import check
 
 class check_hydro_level(check_interface):
     def __init__(self, study_path, date_in_hours, level, tolerance):
@@ -20,12 +20,12 @@ class check_hydro_level(check_interface):
     def run(self):
         super().print_check_name()
         reservoir_levels = fetch_hourly_values(self.study_path, area='area', year=1)["H. LEV"]
-        if not abs(reservoir_levels.iat[self.date_in_hours] - self.level) < self.tol:
-            message = "Hydro level not correct : %.2f, expected : %.2f" % (reservoir_levels[self.date_in_hours], self.level)
-            raise_assertion(message)
+        err_msg = "Hydro level not correct : %.2f, expected : %.2f" % (reservoir_levels.iat[self.date_in_hours], self.level)
+        check(abs(reservoir_levels.iat[self.date_in_hours] - self.level) < self.tol, err_msg)
 
     def check_name(self):
         return "hydro level"
+
 
 def fetch_hourly_values(path, area, year):
     output_path = path / 'output'

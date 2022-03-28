@@ -3,7 +3,7 @@ from check_on_results.check_general import check_interface, check_list
 from check_on_results.check_logs_content import check_logs_content
 from check_on_results.sim_return_code import simulation_success
 from actions_on_study.study_modifier import study_modifier
-from utils.assertions import raise_assertion
+from utils.assertions import check
 
 
 class weeks_in_year:
@@ -21,12 +21,10 @@ class behavior_flag:
 
     def check_conformity(self):
         self.split_behavior = self.raw_behavior.split('-')
-        if len(self.split_behavior) != 2:
-            raise_assertion("behavior incorrect : %s" % self.raw_behavior)
-        if self.split_behavior[0] not in ['error', 'warning']:
-            raise_assertion("behavior incorrect : %s" % self.raw_behavior)
-        if self.split_behavior[1] not in ['dry', 'verbose']:
-            raise_assertion("behavior incorrect : %s" % self.raw_behavior)
+        error_message = "behavior incorrect : %s" % self.raw_behavior
+        check(len(self.split_behavior) == 2, error_message)
+        check(self.split_behavior[0] in ['error', 'warning'], error_message)
+        check(self.split_behavior[1] in ['dry', 'verbose'], error_message)
 
     def error_or_warning_keyword(self):
         return self.error_or_warning_converter[self.split_behavior[0]]
