@@ -37,8 +37,11 @@ using namespace Antares::Data;
  *
  * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
  *
- * @param behaviorMap std::map: map containing link capacity restrictions for every possible
- * combination of adq types for node at start and node at end of the link.
+ * @param SetToZero12LinksForAdequacyPatch bool: Switch to cut links from nodes outside adq patch
+ * (type 1) towards nodes inside adq patch (type 2).
+ *
+ * @param SetToZero11LinksForAdequacyPatch bool: Switch to cut links between nodes outside adq patch
+ * (type 1).
  *
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
@@ -46,44 +49,59 @@ using namespace Antares::Data;
 LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
   AdequacyPatchMode OriginNodeAdequacyPatchType,
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep>& behaviorMap);
+  bool SetToZero12LinksForAdequacyPatch,
+  bool SetToZero11LinksForAdequacyPatch);
 
 /*!
- * Generates map containing all possible relations of start&end area adq patch mode taking into
- * consideration user interface input options.
+ * Determines restriction type for transmission links for first step of adequacy patch, when start
+ * node is inside adq path (type 2).
  *
- * @param SetToZero12LinksForAdequacyPatch bool: Switch to cut links from nodes of adq type 1
- * towards nodes of adq type 2
+ * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
  *
- * @param SetToZero11LinksForAdequacyPatch bool: Switch to cut links from nodes of adq type 1
- * towards nodes of adq type 1
+ * @param SetToZero12LinksForAdequacyPatch bool: Switch to cut links from nodes outside adq patch
+ * (type 1) towards nodes inside adq patch (type 2).
  *
- * @return std::map: map defining link capacity restrictions is constructed according to the
- * start&end area adequacy patch mode and user interface input options (first two function
- * parameters).
+ * @return uint from an enumeration that describes the type of restrictions to put on this link for
+ * adq purposes.
  */
-std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep> GenerateLinkRestrictionMapForAdqFirstStep(
+LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
+  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
+  bool SetToZero12LinksForAdequacyPatch);
+
+/*!
+ * Determines restriction type for transmission links for first step of adequacy patch, when start
+ * node is outside adq path (type 1).
+ *
+ * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
+ *
+ * @param SetToZero12LinksForAdequacyPatch bool: Switch to cut links from nodes outside adq patch
+ * (type 1) towards nodes inside adq patch (type 2).
+ *
+ * @param SetToZero11LinksForAdequacyPatch bool: Switch to cut links between nodes outside adq patch
+ * (type 1).
+ *
+ * @return uint from an enumeration that describes the type of restrictions to put on this link for
+ * adq purposes.
+ */
+LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeOutsideAdq(
+  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
   bool SetToZero12LinksForAdequacyPatch,
   bool SetToZero11LinksForAdequacyPatch);
 
 /*!
  * Sets link bounds for first step of adequacy patch.
- *
  */
 void setBoundsAdqPatch(double& Xmax,
                        double& Xmin,
                        VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
                        const int Interco,
                        PROBLEME_HEBDO* ProblemeHebdo);
-
 /*!
  * Sets link bounds when adequacy patch is not used or when first step of adequacy patch is false.
- *
  */
 void setBoundsNoAdqPatch(double& Xmax,
                          double& Xmin,
                          VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
                          const int Interco);
-
 
 #endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */
