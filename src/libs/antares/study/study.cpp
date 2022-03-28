@@ -1022,12 +1022,12 @@ bool Study::areaRename(Area* area, AreaName newName)
     // Updating all hydro allocation
     areas.each([&](Data::Area& areait) { areait.hydro.allocation.rename(oldid, newid); });
 
+    ScenarioBuilderUpdater updaterSB(*this);
     bool ret = true;
 
     // Archiving data
     {
         CorrelationUpdater updater(*this);
-        ScenarioBuilderUpdater updaterSB(*this);
 
         // Restoring the old ID
         area->id = oldid;

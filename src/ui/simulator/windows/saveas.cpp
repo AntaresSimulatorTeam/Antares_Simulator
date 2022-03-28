@@ -421,23 +421,21 @@ void SaveAs::onSave(void*)
     auto& mainFrm = *Forms::ApplWnd::Instance();
 
     // Checking for the root folder
+    if (System::windows)
     {
         String rootFolder;
         Resources::GetRootFolder(rootFolder);
         rootFolder.toLower();
         rootFolder << IO::Separator;
 
-        if (System::windows)
+        // On a clean windows installation, we are in a `bin` folder
+        if (rootFolder.endsWith("\\bin\\"))
         {
-            // On a clean windows installation, we are in a `bin` folder
-            if (rootFolder.endsWith("\\bin\\"))
-            {
-                rootFolder += "..\\";
-                String tmp;
-                IO::Normalize(tmp, rootFolder);
-                rootFolder = tmp;
-                rootFolder << IO::Separator;
-            }
+            rootFolder += "..\\";
+            String tmp;
+            IO::Normalize(tmp, rootFolder);
+            rootFolder = tmp;
+            rootFolder << IO::Separator;
         }
 
         String pathCopy = path;
@@ -527,7 +525,7 @@ void SaveAs::onSave(void*)
 
     // Closing the Window
     pResult = svsSaved;
-    Dispatcher::GUI::Close(this);
+    this->Close();
 
     mainFrm.saveStudyAs(path, copyOutput, copyUserData, copyLogs);
 }

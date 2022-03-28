@@ -575,7 +575,7 @@ public:
     **
     ** \param oldid ID of the area to rename
     ** \param newName The new name for the area
-    ** \return True if the operation succeeded (the area has been renammed)
+    ** \return True if the operation succeeded (the area has been renamed)
     **   false otherwise (if another area has the same name)
     **
     ** \warning This function invalidates the index of all areas. If you need
@@ -589,7 +589,7 @@ public:
     ** \param oldid ID of the area to rename
     ** \param newID The new area ID
     ** \param newName The new name for the area
-    ** \return True if the operation succeeded (the area has been renammed)
+    ** \return True if the operation succeeded (the area has been renamed)
     **   false otherwise (if another area has the same name)
     **
     ** \warning This function invalidates the index of all areas. If you need

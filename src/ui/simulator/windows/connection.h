@@ -27,12 +27,8 @@
 #ifndef __ANTARES_APPLICATION_WINDOW_INTERCONNECTIONS_H__
 #define __ANTARES_APPLICATION_WINDOW_INTERCONNECTIONS_H__
 
-#include <antares/wx-wrapper.h>
-#include "../toolbox/components/datagrid/component.h"
-#include "../toolbox/input/connection.h"
 #include "../toolbox/components/datagrid/renderer/connection.h"
-#include "../toolbox/components/button.h"
-#include <wx/sizer.h>
+#include "link-property-buttons.h"
 
 namespace Antares
 {
@@ -78,6 +74,8 @@ public:
              Toolbox::InputSelector::Connections* notifier) override;
 };
 
+
+
 class Interconnection : public wxScrolledWindow, public Yuni::IEventObserver<Interconnection>
 {
 public:
@@ -96,71 +94,27 @@ private:
     */
     void onConnectionChanged(Data::AreaLink* link);
 
-    void onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*);
-    void onSelectTransCapInclude(wxCommandEvent&);
-    void onSelectTransCapIgnore(wxCommandEvent&);
-    void onSelectTransCapInfinite(wxCommandEvent&);
-
-    void onPopupMenuAssetType(Component::Button&, wxMenu& menu, void*);
-    void onSelectAssetTypeAC(wxCommandEvent&);
-    void onSelectAssetTypeDC(wxCommandEvent&);
-    void onSelectAssetTypeGas(wxCommandEvent&);
-    void onSelectAssetTypeVirt(wxCommandEvent&);
-    void onSelectAssetTypeOther(wxCommandEvent&);
-
-    void onPopupMenuHurdlesCosts(Component::Button&, wxMenu& menu, void*);
-    void onSelectIncludeHurdlesCosts(wxCommandEvent&);
-    void onSelectIgnoreHurdlesCosts(wxCommandEvent&);
-
-    void onPopupMenuLink(Component::Button&, wxMenu& menu, void*);
-    void onEditCaption(wxCommandEvent&);
-    void onButtonEditCaption(void*);
-
     void onStudyLinkChanged(Data::AreaLink* link);
 
     bool checkLinkView(Data::AreaLink* link);
     void updateLinkView(Data::AreaLink* link);
     void finalizeView();
 
-    // For a given link, update transmission capacity usage 
-    void updateTransmissionCapacityUsage(const Data::AreaLink* link);
-    // For a given link, update hurdle costs usage
-    void updateHurdleCostsUsage(const Data::AreaLink* link);
-    // For a given link, update asset type
-    void updateAssetType(const Data::AreaLink* link);
-    // For a given link, update its caption
-    void updateLinkCaption(const Data::AreaLink* link);
-
-    void updateLoopFlowUsage(const Data::AreaLink* link);
-    void updatePhaseShifter(const Data::AreaLink* link);
-
 private:
     //! Pointer to the current link
-    Data::AreaLink* pLink;
-    //! Button which display the name of the current link
-    Component::Button* pLinkName;
-    //! Hudrles costs
-    Component::Button* pHurdlesCost;
-    //! Loop flow
-    Component::Button* pLoopFlow;
-    // !Phase shifter
-    Component::Button* pPhaseShift;
-    //! Copper Plate
-    Component::Button* pCopperPlate;
-    //! Asset type
-    Component::Button* pAssetType;
-    //! Caption
-    wxWindow* pCaptionText;
+    Data::AreaLink* pLink = nullptr;
+
+    ntcUsageButton* ntcUsageButton_ = nullptr;
+    captionButton* captionButton_ = nullptr;
+    hurdleCostsUsageButton* hurdleCostsUsageButton_ = nullptr;
+    assetTypeButton* assetTypeButton_ = nullptr;
+    loopFlowUsageButton* loopFlowUsageButton_ = nullptr;
+    phaseShifterUsageButton* phaseShifterUsageButton_ = nullptr;
+ 
     //! No Link
     wxWindow* pNoLink;
     //! Link data
     wxWindow* pLinkData;
-
-    //! The main grid sizer
-    wxSizer* pGridSizer;
-    //!
-    wxWindow* pLabelCaption;
-    wxSizer* pCaptionDataSizer;
 
 }; // class Interconnection
 

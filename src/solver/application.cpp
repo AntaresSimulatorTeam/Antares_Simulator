@@ -84,6 +84,16 @@ void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange
     }
 }
 
+// Adequacy Patch can only be used with Economy Study/Simulation Mode.
+void checkAdqPatchStudyModeEconomuOnly(const bool adqPatchOn,
+                                       const Antares::Data::StudyMode studyMode)
+{
+    if ((studyMode != Antares::Data::StudyMode::stdmEconomy) && adqPatchOn)
+    {
+        throw Error::IncompatibleStudyModeForAdqPatch();
+    }
+}
+
 void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas)
 {
     if (tsGenThermal)
@@ -238,6 +248,8 @@ void Application::prepare(int argc, char* argv[])
                                         pParameters->unitCommitment.ucMode);
 
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
+
+    checkAdqPatchStudyModeEconomuOnly(pParameters->include.adequacyPatch, pParameters->mode);
 
     bool tsGenThermal = (0
                          != (pStudy->parameters.timeSeriesToGenerate

@@ -28,15 +28,29 @@
 #ifndef __SOLVER_ADEQUACY_FUNCTIONS_H__
 #define __SOLVER_ADEQUACY_FUNCTIONS_H__
 
+using namespace Antares::Data;
+
 /*!
- * Determines if a link capacity needs to be set to 0. Only changes something if used during the
- * AdequacyFirstStep.
+ * Determines restriction type for transmission links for first step of adequacy patch.
  *
- * @param AdequacyFirstStep boolean for the first run of the optimization used by the adequacy patch
+ * @param OriginNodeAdequacyPatchType uint: The adq type of the node at the start of the link.
  *
- * @param StartNodeAdequacyPatchType uint: The adq type of the node at the start of the link.
+ * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
  *
- * @param EndNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
+ * @param behaviorMap std::map: map containing link capacity restrictions for every possible
+ * combination of adq types for node at start and node at end of the link.
+ *
+ * @return uint from an enumeration that describes the type of restrictions to put on this link for
+ * adq purposes.
+ */
+LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
+  AdequacyPatchMode OriginNodeAdequacyPatchType,
+  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
+  std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep>& behaviorMap);
+
+/*!
+ * Generates map containing all possible relations of start&end area adq patch mode taking into
+ * consideration user interface input options.
  *
  * @param SetToZero12LinksForAdequacyPatch bool: Switch to cut links from nodes of adq type 1
  * towards nodes of adq type 2
@@ -44,13 +58,32 @@
  * @param SetToZero11LinksForAdequacyPatch bool: Switch to cut links from nodes of adq type 1
  * towards nodes of adq type 1
  *
- * @return uint from an enumeration that describes the type of restrictions to put on this link for
- * adq purposes.
+ * @return std::map: map defining link capacity restrictions is constructed according to the
+ * start&end area adequacy patch mode and user interface input options (first two function
+ * parameters).
  */
-NTC SetNTCForAdequacyFirstStep(bool AdequacyFirstStep,
-                               AdequacyPatchMode StartNodeAdequacyPatchType,
-                               AdequacyPatchMode EndNodeAdequacyPatchType,
-                               bool SetToZero12LinksForAdequacyPatch,
-                               bool SetToZero11LinksForAdequacyPatch);
+std::map<adqPair, LinkCapacityForAdequacyPatchFirstStep> GenerateLinkRestrictionMapForAdqFirstStep(
+  bool SetToZero12LinksForAdequacyPatch,
+  bool SetToZero11LinksForAdequacyPatch);
+
+/*!
+ * Sets link bounds for first step of adequacy patch.
+ *
+ */
+void setBoundsAdqPatch(double& Xmax,
+                       double& Xmin,
+                       VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
+                       const int Interco,
+                       PROBLEME_HEBDO* ProblemeHebdo);
+
+/*!
+ * Sets link bounds when adequacy patch is not used or when first step of adequacy patch is false.
+ *
+ */
+void setBoundsNoAdqPatch(double& Xmax,
+                         double& Xmin,
+                         VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
+                         const int Interco);
+
 
 #endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */

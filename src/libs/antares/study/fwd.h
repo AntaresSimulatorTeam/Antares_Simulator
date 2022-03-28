@@ -579,9 +579,9 @@ enum AdequacyPatchMode
 }; // enum AdequacyPatchMode
 
 /*!
-** \brief Setting NTC for Adequacy patch first step
+** \brief Setting Link Capacity (NTC) for Adequacy patch first step
 */
-enum NTC
+enum LinkCapacityForAdequacyPatchFirstStep
 {
     //! Leave NTC local values
     leaveLocalValues = 0,

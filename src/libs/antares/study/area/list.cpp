@@ -1575,7 +1575,7 @@ bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const Ar
 #ifndef NDEBUG
         uint oldCount = (uint)a.links.size();
 #endif
-        // Renamming the entry
+        // Renaming the entry
 
         link->invalidate(true);
         link->markAsModified();

@@ -141,8 +141,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
     double* Xmin;
     double* Xmax;
     int* TypeDeVariable;
-    Data::AdequacyPatch::NTC SetToZeroLinkNTCForAdequacyPatchFirstStep;
-
+    
     VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PALIERS_THERMIQUES* PaliersThermiquesDuPays;
@@ -178,39 +177,12 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
         {
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
             CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
-            
-            if (ProblemeHebdo->adqPatch)
-            {
-                SetToZeroLinkNTCForAdequacyPatchFirstStep
-                  = SetNTCForAdequacyFirstStep(ProblemeHebdo->adqPatch->AdequacyFirstStep,
-                                               ProblemeHebdo->StartAreaAdequacyPatchType[Interco],
-                                               ProblemeHebdo->EndAreaAdequacyPatchType[Interco],
-                                               ProblemeHebdo->adqPatch->Ntc12,
-                                               ProblemeHebdo->adqPatch->Ntc11);
-            }
-            else
-                SetToZeroLinkNTCForAdequacyPatchFirstStep = Data::AdequacyPatch::leaveLocalValues;
 
-            if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::AdequacyPatch::setToZero)
-            {
-                Xmax[Var] = 0.;
-                Xmin[Var] = 0.;
-            }
-            else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::AdequacyPatch::setOrigineExtremityToZero)
-            {
-                Xmax[Var] = 0.;
-                Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
-            }
-            else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == Data::AdequacyPatch::setExtremityOrigineToZero)
-            {
-                Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-                Xmin[Var] = 0.;
-            }
+            if (ProblemeHebdo->adqPatch && ProblemeHebdo->adqPatch->AdequacyFirstStep)
+                setBoundsAdqPatch(Xmax[Var], Xmin[Var], ValeursDeNTC, Interco, ProblemeHebdo);
             else
-            {
-                Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-                Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
-            }
+                setBoundsNoAdqPatch(Xmax[Var], Xmin[Var], ValeursDeNTC, Interco);
+
             if (Math::Infinite(Xmax[Var]) == 1)
             {
                 if (Math::Infinite(Xmin[Var]) == -1)
@@ -432,12 +404,12 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                     Xmax[Var] = 0.;
 
                 // adq patch: update ENS <= DENS in 2nd run
-                if (ProblemeHebdo->adqPatch && ProblemeHebdo->adqPatch->AdequacyFirstStep == false)
-                    if (ProblemeHebdo->AreaAdequacyPatchMode[Pays]
-                        == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
-                        Xmax[Var] = min(
-                          Xmax[Var],
-                          ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo]);
+                if (ProblemeHebdo->adqPatch && ProblemeHebdo->adqPatch->AdequacyFirstStep == false
+                    && ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Pays]
+                         == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+                    Xmax[Var]
+                      = min(Xmax[Var],
+                            ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo]);
 
                 ProblemeHebdo->ResultatsHoraires[Pays]
                   ->ValeursHorairesDeDefaillancePositive[PdtHebdo]
