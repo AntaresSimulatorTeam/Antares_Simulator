@@ -1,4 +1,4 @@
-from actions_on_study.study_input_handler import *
+from actions_on_study.study_input_handler import study_input_handler
 
 class study_modifier:
 
@@ -8,7 +8,7 @@ class study_modifier:
         self.file_id = study_file_id
         self.new_value = new_value
 
-        self.study_input_handler = study_input_handler(str(self.study_path))
+        self.study_input_handler = study_input_handler(self.study_path)
         self.original_value = self.get_value()
 
     def get_value(self):
