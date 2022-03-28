@@ -45,8 +45,7 @@ Area* addAreaToStudy(Study::Ptr study, const std::string& areaName)
 // Add a cluster to an area
 // ===========================
 template<class ClusterType>
-void addClusterToAreaList(Area* area, std::shared_ptr<ClusterType> cluster)
-{}
+void addClusterToAreaList(Area* area, std::shared_ptr<ClusterType> cluster);
 
 template<>
 void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
@@ -196,7 +195,7 @@ BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_same_number_of_ready_made
 	BOOST_CHECK_EQUAL(thCluster_21->series->timeseriesNumbers[0][year], thCluster_11->series->timeseriesNumbers[0][year]);
 }
 
-BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_respectively_4_1_4_ready_made_ts___check_intra_modal_consistency_OK)
+BOOST_AUTO_TEST_CASE(two_areas_2_thermal_clusters_with_respectively_4_4_ready_made_ts___check_intra_modal_consistency_OK)
 {
 	// Creating a study
 	auto study = std::make_shared<Study>();
@@ -212,9 +211,6 @@ BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_respectively_4_1_4_ready_
 	// ... Area 1 : thermal cluster 1
 	auto thCluster_11 = addClusterToArea<ThermalCluster>(area_1, "th-cluster-11");
 	thCluster_11->series->series.resize(4, 1);
-	// ... Area 1 : thermal cluster 2
-	auto thCluster_12 = addClusterToArea<ThermalCluster>(area_1, "th-cluster-12");
-	thCluster_12->series->series.resize(1, 1);
 
 	area_1->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
@@ -315,7 +311,7 @@ BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_same_number_of_ready_made_t
 }
 
 
-BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_respectively_4_4_1_ready_made_ts___check_intra_modal_consistency_OK)
+BOOST_AUTO_TEST_CASE(two_areas_2_renew_clusters_with_respectively_4_4_ready_made_ts___check_intra_modal_consistency_OK)
 {
 	// Creating a study
 	auto study = std::make_shared<Study>();
@@ -342,9 +338,6 @@ BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_respectively_4_4_1_ready_ma
 	// Area 2
 	// =============
 	Area* area_2 = addAreaToStudy(study, "Area 2");
-	// ... Area 2 : renewable cluster 1
-	auto rnCluster_21 = addClusterToArea<RenewableCluster>(area_2, "rn-cluster-21");
-	rnCluster_21->series->series.resize(1, 1);
 
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
