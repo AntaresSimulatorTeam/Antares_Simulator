@@ -496,7 +496,7 @@ static void checkMiscGenUsed(const AreaList& areas)
     if (!areasWithMiscGen.empty())
     {
         logs.info() << "Misc. gen is deprecated, "
-                       "please use renewable clusters instead. Found "
+                       "consider using renewable clusters instead. Found "
                     << areasWithMiscGen.size() << " areas with misc. gen :";
         for (const auto& areaName : areasWithMiscGen)
             logs.info() << areaName;
