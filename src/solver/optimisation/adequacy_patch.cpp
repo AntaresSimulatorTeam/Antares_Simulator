@@ -100,8 +100,8 @@ void setBoundsAdqPatch(double& Xmax,
 
     SetToZeroLinkNTCForAdequacyPatchFirstStep
       = SetNTCForAdequacyFirstStep(
-        ProblemeHebdo->StartAreaAdequacyPatchType[Interco],
-        ProblemeHebdo->EndAreaAdequacyPatchType[Interco],
+        ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco],
+        ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco],
         ProblemeHebdo->adqPatch->AdqBehaviorMap);
 
     if (SetToZeroLinkNTCForAdequacyPatchFirstStep == AdequacyPatch::setToZero)

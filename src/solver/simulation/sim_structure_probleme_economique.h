@@ -31,6 +31,7 @@
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
 #include "../utils/optimization_statistics.h"
 #include "../../libs/antares/study/fwd.h"
+#include "../../libs/antares/study/study.h"
 
 #define GROSSES_VARIABLES NON_ANTARES
 #define COEFF_GROSSES_VARIABLES 100
@@ -322,6 +323,28 @@ typedef struct
                                       constraint on final level*/
 } ENERGIES_ET_PUISSANCES_HYDRAULIQUES;
 
+class AdequacyPatchRuntimeData
+{
+public:
+    std::vector<AdequacyPatchMode> areaMode;
+    std::vector<AdequacyPatchMode> originAreaType;
+    std::vector<AdequacyPatchMode> extremityAreaType; 
+    void initialize(Antares::Data::Study& study)
+    {
+        for (uint i = 0; i != study.areas.size(); ++i)
+        {
+            auto& area = *(study.areas[i]);
+            areaMode.push_back(area.adequacyPatchMode);
+        }
+        for (uint i = 0; i < study.runtime->interconnectionsCount; ++i)
+        {
+            auto& link = *(study.runtime->areaLink[i]);
+            originAreaType.push_back(link.from->adequacyPatchMode);
+            extremityAreaType.push_back(link.with->adequacyPatchMode);
+        }
+    }
+};
+
 class computeTimeStepLevel
 {
 private:
@@ -492,14 +515,11 @@ struct PROBLEME_HEBDO
     char OptimisationAvecCoutsDeDemarrage;
     int NombreDePays;
     const char** NomsDesPays;
-    AdequacyPatchMode* AreaAdequacyPatchMode;
     int NombreDePaliersThermiques;
 
     int NombreDInterconnexions;
     int* PaysOrigineDeLInterconnexion;
     int* PaysExtremiteDeLInterconnexion;
-    AdequacyPatchMode* StartAreaAdequacyPatchType;
-    AdequacyPatchMode* EndAreaAdequacyPatchType;
     COUTS_DE_TRANSPORT** CoutDeTransport;
 
     VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTC;
@@ -591,7 +611,8 @@ struct PROBLEME_HEBDO
 
     /* Adequacy Patch */
     std::unique_ptr<AdequacyPatchParameters> adqPatch = nullptr;
-
+    AdequacyPatchRuntimeData adequacyPatchRuntimeData;
+    
     optimizationStatistics optimizationStatistics_object;
     /* Hydro management */
     double* CoefficientEcretementPMaxHydraulique;
