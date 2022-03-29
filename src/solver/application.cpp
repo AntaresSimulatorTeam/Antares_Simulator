@@ -176,8 +176,8 @@ void Application::prepare(int argc, char* argv[])
     auto parser = CreateParser(pSettings, options);
 
     // Parse the command line arguments
-    if (!parser(argc, argv))
-        throw Error::CommandLineArguments(parser.errors());
+    if (!parser->operator()(argc, argv))
+        throw Error::CommandLineArguments(parser->errors());
 
     if (options.displayVersion)
     {
