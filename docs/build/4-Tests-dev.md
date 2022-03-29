@@ -60,6 +60,7 @@ TODO
 
 ## Workflow
 The workflow is the following:
+
 1. Create a release in Antares_Simulator_Tests_NR (only if new studies are introduced). Tag it `X`.
 2. Create a release in SimTest (only if a new feature is introduced) from Antares_Simulator_Tests_NR, tag `X` and Antares_Simulator, tag `Y`.
 3. Use the release in SimTest to compare results of tag `Z` in Antares_Simulator. In this step, `pytest` is used as well as the `config.json` configuration files to test new results against the reference results.
