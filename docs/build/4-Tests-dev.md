@@ -6,11 +6,13 @@ Note:
 
 ## Repositories
 There are two repositories :
+
 - [Antares_Simulator_Tests_NR](https://github.com/AntaresSimulatorTeam/Antares_Simulator_Tests_NR) contains the study batches. These batches are published in releases and do not contain any result.
 - [SimTest](https://github.com/AntaresSimulatorTeam/SimTest) contains the study batches as well as some reference results.
 
 ## Antares_Simulator_Tests_NR
 This repository publishes releases. Each release contains the following files :
+
 - `study-batches.txt`, a newline-separated list of study batches. A study batch is a group of Antares studies in the same directory. Note that some studies may also be placed in a sub-directory.
 - Archives containing the study batches.
 
