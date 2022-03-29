@@ -1,6 +1,6 @@
-# Tests
+# Tests (user)
 
-Tests compilation  can be enabled at configure time using the option `-DBUILD_TESTING=ON` (`OFF` by default)
+Tests compilation can be enabled at configure time using the option `-DBUILD_TESTING=ON` (`OFF` by default). It is required only for unit-tests and end-to-end tests.
 
 After build, tests can be run with ``ctest`` :
 
