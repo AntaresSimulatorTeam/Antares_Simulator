@@ -74,7 +74,7 @@ std::shared_ptr<GetOpt::Parser> CreateParser(Settings& settings, Antares::Data::
 {
     settings.reset();
 
-    std::shared_ptr<GetOpt::Parser> parser = std::make_shared<GetOpt::Parser>();
+    auto parser = std::make_shared<GetOpt::Parser>();
 
     parser->addParagraph(String() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << "\n");
 
