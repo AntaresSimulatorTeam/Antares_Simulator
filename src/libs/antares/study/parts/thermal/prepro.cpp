@@ -180,7 +180,8 @@ bool PreproThermal::loadFromFolder(Study& study,
         data.markAsModified();
     }
 
-    if (study.usedByTheSolver)
+    bool thermalTSareGenerated = study.parameters.isTSGeneratedByPrepro(timeSeriesThermal);
+    if (study.usedByTheSolver && thermalTSareGenerated)
     {
         auto& colFoRate = data[foRate];
         auto& colPoRate = data[poRate];
