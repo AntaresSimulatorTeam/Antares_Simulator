@@ -15,14 +15,14 @@ class checksJsonReader:
 
     def read(self):
         with open(self.json_file, "r") as json_file:
-            test_collection = json.load(json_file)
+            json_file_content = json.load(json_file)
 
         with open("./parse_studies/json_schema.json", "r") as file:
-            valid_dictionary = json.load(file)
+            json_schema = json.load(file)
 
-        validate_json(test_collection, valid_dictionary)
+        validate_json(json_file_content, json_schema)
 
-        for test in test_collection:
+        for test in json_file_content:
             self.test_ids.append(test["name"])
             self.test_pairs.append((self.study_path, test["checks"]))
 
@@ -32,9 +32,9 @@ class checksJsonReader:
         return self.test_pairs
 
 
-def validate_json(data_to_validate, valid_dictionary):
+def validate_json(json_file_content, json_schema):
     try:
-        validate(data_to_validate, valid_dictionary)
+        validate(json_file_content, json_schema)
     except Exception as valid_err:
         print("Validation KO: {}".format(valid_err))
         raise valid_err
