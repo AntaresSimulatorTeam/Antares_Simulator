@@ -27,7 +27,7 @@ Please report misprints or other errors to:
 
 # General content of Antares\_Simulator sessions
 
-A typical **Antares\_Simulator** [1] session involves different steps that are usually run in sequence,
+A typical **Antares\_Simulator** [^1] session involves different steps that are usually run in sequence,
 either automatically or with some degree of man-in-the-loop control, depending on the kind of study to perform.
 
 These steps most often involve:
@@ -48,7 +48,7 @@ each of the scenarios produced in (c)
 The scope of this document is to give a detailed description of the software involved in
 step (1) to (5) mostly based on a functional approach, leaving thereby aside a significant
 part of the mathematical content involved in several of these steps.
-[2] The following picture gives a functional view of all that is involved in steps (a) to (e).
+[^2] The following picture gives a functional view of all that is involved in steps (a) to (e).
 
 ![Antares_Process](Antares_Process.png)
 
@@ -111,7 +111,7 @@ the simulator's GUI. Likewise, all results in the output data can be displayed a
 its standard GUI is actually meant to be able to provide, on a stand-alone basis, all the features required to access
 input and output in a user-friendly way.
 
-In addition to that, the Antares simulator may come [3] with or without functional extensions that provide additional
+In addition to that, the Antares simulator may come [^3] with or without functional extensions that provide additional
 ways to handle input and output data.
 
 These extensions take the form of companion applications whose documentation is independent of that of the main simulator.
@@ -384,7 +384,7 @@ given back their regular capacities (infinite for those being set on "set to inf
     - _Strategic reserve (include / ignore)_
     - _Spinning reserve (include / ignore)_
     - _Export mps (false/true)_
-    - _Simplex optimization range # 4_ _(day / week)_
+    - _Simplex optimization range [^4] _(day / week)_
     - _Unfeasible problems behavior (Error Dry/ Error Verbose/ Warning Dry/ Warning Verbose_
 
 - **Advanced parameters** Advanced Parameters allow to adjust the simulation behavior regarding issues
@@ -467,11 +467,11 @@ These two parts are detailed hereafter.
 
 - **Simulation**
 
-    - _Mode:_ Economy, Adequacy, Draft [5]
+    - _Mode:_ Economy, Adequacy, Draft [^5]
     - _First day:_ First day of the simulation (e.g. 8 for a simulation beginning on the second week of the first 
   month of the year)
     - _Last day:_ Last day of the simulation (e.g. 28 for a simulation ending on the fourth week of the first month
-  of the year) [6]
+  of the year) [^6]
 
 - **Calendar**
 
@@ -506,7 +506,7 @@ These two parts are detailed hereafter.
          - **Automatic** All prepared MC years will actually be simulated.
 
          - **Custom** The years to simulate are defined in a list. To set up this list, choose in the main menu:
-       Configure/ MC scenario playlist [7].
+       Configure/ MC scenario playlist [^7].
 
 - **Output profile**
 
@@ -517,7 +517,7 @@ These two parts are detailed hereafter.
 
     - Year-by-Year: 
         - **False** No individual results will be printed out
-        - **True** For each simulated year, detailed results will be printed out in an individual directory [8]:  
+        - **True** For each simulated year, detailed results will be printed out in an individual directory [^8]:  
       `Study_name/OUTPUT/simu_tag/Economy/mc-i-number
 
     - Geographic Trimming:
@@ -1060,7 +1060,7 @@ _The five parameters, used in economy or adequacy simulations (not in draft), ar
 - "_Hurdle cost": set by the user to state whether (linear) transmission fees should be taken into account or not in economy and adequacy simulations_
 - "_Transmission capacities": set by the user to state whether the capacities to consider are those indicated in 8760-hour arrays or if zero or infinite values should be used instead (actual values / set to zero / set to infinite)_
 - "_Asset type": set by the user to state whether the link is either an AC component (subject to Kirchhoff's laws), a DC component, or another type of asset_
-- "_Account for loop flows": set by the KCG<sup>9</sup> to include (or not) passive loop flows in the formulation of the constraints enforcing Kirchhoff's laws_
+- "_Account for loop flows": set by the KCG [^9] to include (or not) passive loop flows in the formulation of the constraints enforcing Kirchhoff's laws_
 - "_Account for PST": set by the KCG to include (or not) the settings of phase-shifting transformers in the formulation of the constraints enforcing Kirchhoff's laws_
 
 _The eight 8760-hour times-series are:_
@@ -1104,7 +1104,7 @@ $$ c= 1, ..., C : \sum_{i \in C}{sign(l,c)F_lZ_l = 0}$$
 
 _Note that such specific binding constraints can be automatically generated within Antares by using the auxiliary module "Kirchhoff's Constraints Generator" further described in [Kirchhoff Constraints Generator](#kirchhoff-constraints-generator)._
 
-_Aside from such sets of constraints, which may help to give realistic geographic patterns to the flows, completely different sets of constraints may be also defined, such as those set up by the market organization, which may define precise perimeters for valid commercial flows # 10._
+_Aside from such sets of constraints, which may help to give realistic geographic patterns to the flows, completely different sets of constraints may be also defined, such as those set up by the market organization, which may define precise perimeters for valid commercial flows [^10]._
 
 _More generally, Antares allows to define three categories of binding constraints between transmission flows and/or power generated from generating units:_
 
@@ -1247,7 +1247,7 @@ _As a consequence, both "Adequacy" and "Economy" simulations yield the same valu
 
 _The files and their content are hereafter described._
 
-### Economy and Adequacy, area results [11]
+### Economy and Adequacy, area results [^11]
 
 **15** _files resulting from the combination of the following attributes:_
 **[values | id | details] X [hourly | daily | weekly | monthly | annual]**
@@ -1274,7 +1274,7 @@ _The area files that belong to the « values » class display_ **122** _fields c
 | MRG. PRICE | LMP : overall economic effect of a local 1MW load increase |
 | CO2 EMIS. | Amount of CO2 emitted by all dispatchable thermal plants |
 | BALANCE | Overall Import/export balance of the area (positive value : export) |
-| ROW BAL | Import/export with areas outside the modeled system (positive value: import)<sup>12</sup> |
+| ROW BAL | Import/export with areas outside the modeled system (positive value: import) [^12] |
 | PSP | User-defined settings for pumping and subsequent generating |
 | MISC. NDG | Miscellaneous non dispatchable generation |
 | LOAD | Demand (including DSM potential if relevant) |
@@ -1315,10 +1315,10 @@ _The area files that belong to the « values » class display_ **122** _fields c
 | DTG | MRG Disp. Ther. Gen. (AVL DTG – sum of all dispatched thermal generation) |
 | MAX | MRG Maximum margin: operational margin obtained if the hydro storage energy of the week were used to maximise margins instead of minimizing costs |
 | NP COST | Non-proportional costs of the dispatchable plants (start-up and fixed costs) |
-| NODU | Number of Dispatched Units<sup>13</sup> |
+| NODU | Number of Dispatched Units [^13] |
 
 
-### Economy and Adequacy, interconnection results [14]
+### Economy and Adequacy, interconnection results [^14]
 **10** _files resulting from the combination of the following attributes:_
 **[values | id] X [hourly | daily | weekly | monthly | annual]**
 
@@ -1881,14 +1881,14 @@ _In other words, it is possible to make Antares work as a genuine DC OPF, provid
 _The declaration of binding constraints can be made manually through the regular GUI. However, it is preferable not to carry out this task that way because there are many different possible formulations, among which some are better than others:_
 
 - _In a fully connected graph (V, E), there are as many binding constraints to write down as there are cycles in any cycle basis of the graph, which amounts to (E+1-V). The number of different possible basis is equal to that of spanning trees, which can be assessed by the Kirchhoff's theorem_
-  _# 15_
+  _[^15]_
 
 - _Among all cycle basis, some should be preferred to others because they lead to a sparser constraint matrix._
 
 _To get around this issue, the KCG is an autonomous Antares module (much like the time-series analyzer) which automatically instantiates a set of adequate binding constraints that will enforce Kirchhoff's law on the AC subgraph of the power system. The graph cycle basis associated with the generated constraints is optimal, in that sense that it leads to a constraint matrix as sparse as possible._
 
 _To achieve that, the KCG implements an efficient algorithm yielding a minimal cycle basis_
-_# 16_ _and, for all cycles of the chosen basis, generates constraints of the form:_
+_[^16]_ _and, for all cycles of the chosen basis, generates constraints of the form:_
 
 $$c= 1, ..., C : \sum_{l \in C}{sign(l,c)F_lZ_l} = 0$$
 
@@ -2516,8 +2516,8 @@ _More precisely:_
   Standard Deviation: (1/3) (Upper bound-Lower bound)
 
 - The random number generator used for that purpose works with a dedicated seed that ensures that results can be reproduced
-  [17] from one run to another, regardless of the simulation runtime mode (sequential or parallel)
-  and regardless of the number of Monte-Carlo years to be simulated [18].
+  [^17] from one run to another, regardless of the simulation runtime mode (sequential or parallel)
+  and regardless of the number of Monte-Carlo years to be simulated [^18].
 
 **Hot Start:**
 
@@ -2526,7 +2526,7 @@ _On starting the simulation of a new Monte-Carlo year, the reservoir level to co
 - _The simulation calendar is defined throughout the whole year, and the simulation starts on the day chosen for initializing the reservoir levels of all Areas._
 
 - _The Monte-Carlo year considered is not the first to simulate, or does not belong to the first batch of years to be simulated in parallel. In sequential runtime mode, that means that year #N may start with the level reached at the end of year #(N-1). In parallel runtime mode, if the simulation is carried out with batches of B years over as many CPU cores, years of the k-th batch_
-  _# 19_ _may start with the ending levels of the years processed in the (k-1)-th batch._
+  _[^19]_ _may start with the ending levels of the years processed in the (k-1)-th batch._
 
 - _The parallelization context (see [System requirements](#9-system-requirements)) must be set so as to ensure that the M Monte-Carlo years to simulate will be processed in a round number of K consecutive batches of B years in parallel (i.e. M = K\*B and all time-series refresh intervals are exact multiple of B)._
 
@@ -2587,7 +2587,7 @@ _Simulations carried out in "fast" mode are less demanding in computer resources
 
 **General:**
 
-_In its native form # 20, the weekly optimization problem belongs to the MILP (Mixed Integer Linear Program) class. The Integer variables reflect, for each time step, the operational status (running or not) of each thermal unit. Besides, the amount of power generated from each unit can be described as a so-called semi-continuous variable (its value is either 0 or some point within the interval [Pmin , Pmax]). Finally, the periods during which each unit is either generating or not cannot be shorter than minimal (on- and off-) thresholds depending on its technology._
+_In its native form [^20], the weekly optimization problem belongs to the MILP (Mixed Integer Linear Program) class. The Integer variables reflect, for each time step, the operational status (running or not) of each thermal unit. Besides, the amount of power generated from each unit can be described as a so-called semi-continuous variable (its value is either 0 or some point within the interval [Pmin , Pmax]). Finally, the periods during which each unit is either generating or not cannot be shorter than minimal (on- and off-) thresholds depending on its technology._
 
 _The Unit Commitment mode parameter defines two different ways to address the issue of the mathematical resolution of this problem. In both cases, two successive so-called "relaxed" LP global optimizations are carried out. In-between those two LPs, a number of local IP (unit commitment of each thermal cluster) are carried out._
 
@@ -2659,16 +2659,16 @@ _Provided that hardware resources are large enough, this mode may reduce signifi
 _To benefit from multi-threading, the simulation must be run in the following context:_
 
 - _In the "run" window, the option "parallel" must be selected_
-  _# 21_
+  _[^21]_
 - _The simulation mode must be either "Adequacy" or "Economy"_
-  _# 22_
+  _[^22]_
 
 _When the "parallel" solver option is used, each Monte-Carlo year is dispatched as an individual process on the available CPU cores._ <br/>
 _The number of such individual processes depends on the characteristics of the local hardware and on the value given to the study-dependent " __**simulation cores**__" advanced parameter. This parameter can take five different values (Minimum, Low, Medium, High, Maximum). The number of independent processes resulting from the combination (local hardware + study settings) is given in the following table, which shows the CPU allowances granted in the different configurations._
 
 **<ins>Simulation Cores:</ins>**
 
-| _Machine_ <br/> _Size # 23_ | _Minimum_ | _Low_ | _Medium_ | _Large_ | _Maximum_ |
+| _Machine_ <br/> _Size [^23]_ | _Minimum_ | _Low_ | _Medium_ | _Large_ | _Maximum_ |
 |:---:|:---:|:---:|:---:|:---:|:---:|
 | _1_ | 1 | 1 | 1 | 1 | 1 |
 | _2_ | 1 | 1 | 1 | 2 | 2 |
@@ -2694,16 +2694,16 @@ _simulation cores:_ **nn** _reduced to_ **pp**
 - _Refresh status :_ **No**
 - _Refresh status :_ **Yes**_, refresh span =_ _**Ki \* (CPU allowance)**_ _, with_ **Ki &gt;= 1**
 
-_Examples of reduction from an initial allowance of 12 cores are given hereafter. The reduced allowance is the size of the_ **smallest** _bundle of parallel years between two consecutive "refresh" (it indicates the slowest point of the simulation # 24). Note that RAM requirements displayed in the resources monitor are, contrariwise, assessed on the basis on the **largest** bundle of parallel years encountered in the simulation)._
+_Examples of reduction from an initial allowance of 12 cores are given hereafter. The reduced allowance is the size of the_ **smallest** _bundle of parallel years between two consecutive "refresh" (it indicates the slowest point of the simulation [^24]). Note that RAM requirements displayed in the resources monitor are, contrariwise, assessed on the basis on the **largest** bundle of parallel years encountered in the simulation)._
 
-Built-in TS generators status / refresh span # 25 | **Reduced Allowance (from 12)**
+Built-in TS generators status / refresh span [^25] | **Reduced Allowance (from 12)**
 
 | Load | Thermal | Hydro | Wind | Solar | MC Years : 80 | MC years: 400 |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | _50_ | _1_ | _50_ | _50_ | _50_ | 1 | 1 |
 | _No_ | _10_ | _50_ | _No_ | _No_ | 10 | 10 |
 | _No_ | _11_ | _50_ | _No_ | _No_ | 5 | 1 |
-| _No_ | _100_ | _100_ | _100_ | _100_ | **No reduction** | 4 # 26 |
+| _No_ | _100_ | _100_ | _100_ | _100_ | **No reduction** | 4 [^26] |
 | **No** | **12** | **12** | **12** | **No** | **No reduction** | **No reduction** |
 | **12** | **24** | **48** | **48** | **36** | **No reduction** | **No reduction** |
 
@@ -2886,59 +2886,59 @@ You should have received a copy of the GNU General Public License along with Ant
   license: Apache 2.0	[https://spdx.org/licenses/Apache-2.0.html](https://spdx.org/licenses/Apache-2.0.html)
 
 
-[1](#sdfootnote1anc)For simplicity's sake, the _**Antares\_Simulator**_ 8.1.1 application will as of now be simply denoted "Antares".
+[^1]: For simplicity's sake, the _**Antares\_Simulator**_ 8.1.1 application will as of now be simply denoted "Antares".
 
-[2](#sdfootnote2anc) A detailed expression of the basic mathematical problem solved in the red box of the following figure can be found in the document "Optimization problems formulation".
+[^2]: A detailed expression of the basic mathematical problem solved in the red box of the following figure can be found in the document "Optimization problems formulation".
 
-[3](#sdfootnote3anc) Many various graphic extensions (under the form of programs written in the R language) are available at :
+[^3]: Many various graphic extensions (under the form of programs written in the R language) are available at :
 
 [https://cran.r-project.org/web/packages/antaresViz/index.html](https://cran.r-project.org/web/packages/antaresViz/index.html)
 
-[4](#sdfootnote4anc)_Weekly optimization performs a more refined unit commitment, especially when the level selected in the "advanced parameters" menu is "accurate"._
+[^4]:_Weekly optimization performs a more refined unit commitment, especially when the level selected in the "advanced parameters" menu is "accurate"._
 
-[5](#sdfootnote5anc) "Economy" simulations make a full use of Antares optimization capabilities. They require economic as well as technical input data and may demand a lot of computer resources. "Adequacy" simulations are faster and require only technical input data. Their results are limited to adequacy indicators. "Draft" simulations are highly simplified adequacy simulations, in which binding constraints (e.g. DC flow rules) are ignored, while hydro storage is assumed to be able to provide its nominal maximum power whenever needed. As a consequence, draft simulations are biased towards optimism. They are, however, much faster than adequacy and economic simulations.
+[^5]: "Economy" simulations make a full use of Antares optimization capabilities. They require economic as well as technical input data and may demand a lot of computer resources. "Adequacy" simulations are faster and require only technical input data. Their results are limited to adequacy indicators. "Draft" simulations are highly simplified adequacy simulations, in which binding constraints (e.g. DC flow rules) are ignored, while hydro storage is assumed to be able to provide its nominal maximum power whenever needed. As a consequence, draft simulations are biased towards optimism. They are, however, much faster than adequacy and economic simulations.
 
-[6](#sdfootnote6anc)In Economy an Adequacy simulations, these should be chosen so as to make the simulation span a round number of weeks. If not, the simulation span will be truncated: for instance, (1, 365) will be interpreted as (1, 364), i.e. 52 weeks (the last day of the last month will not be simulated). In Draft simulations, the simulation is always carried out on 8760 hours.
+[^6]: In Economy an Adequacy simulations, these should be chosen so as to make the simulation span a round number of weeks. If not, the simulation span will be truncated: for instance, (1, 365) will be interpreted as (1, 364), i.e. 52 weeks (the last day of the last month will not be simulated). In Draft simulations, the simulation is always carried out on 8760 hours.
 
-[7](#sdfootnote7anc) changing the number of MC years will reset the playlist to its default value ; not available in Draft simulations
+[^7]: changing the number of MC years will reset the playlist to its default value ; not available in Draft simulations
 
-[8](#sdfootnote8anc)Not available in Draft simulations
+[^8]: Not available in Draft simulations
 
-[9](#sdfootnote9anc)KCG : Kirchhoff's constraints generator (see section 7)
+[^9]: KCG : Kirchhoff's constraints generator (see section 7)
 
-[10](#sdfootnote10anc)A typical case is given by the "Flow-Based" framework today implemented in a large portion of the European electricity market.
+[^10]: A typical case is given by the "Flow-Based" framework today implemented in a large portion of the European electricity market.
 
-[11](#sdfootnote11anc)This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
+[^11]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
 
-[12](#sdfootnote12anc)Value identical to that defined under the same name in the "Misc Gen" input section.
+[^12]: Value identical to that defined under the same name in the "Misc Gen" input section.
 
-[13](#sdfootnote13anc)NODU and NP Cost do not appear in "Adequacy" results since these variables are irrelevant in that context
+[^13]: NODU and NP Cost do not appear in "Adequacy" results since these variables are irrelevant in that context
 
-[14](#sdfootnote14anc)This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
+[^14]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
 
-[15](#sdfootnote15anc) The number of spanning trees is equal to the absolute value of any cofactor of the graph incidence matrix
+[^15]: The number of spanning trees is equal to the absolute value of any cofactor of the graph incidence matrix
 
-[16](#sdfootnote16anc) Mehlhorn K., Michail D. (2005) _Implementing Minimum Cycle Basis Algorithms_. In: Experimental and Efficient Algorithms. WEA 2005. Lecture Notes in Computer Science, vol 3503.
+[^16]: Mehlhorn K., Michail D. (2005) _Implementing Minimum Cycle Basis Algorithms_. In: Experimental and Efficient Algorithms. WEA 2005. Lecture Notes in Computer Science, vol 3503.
 
-[17](#sdfootnote17anc)As long as the System's list of Areas does not change
+[^17]: As long as the System's list of Areas does not change
 
-[18](#sdfootnote18anc)E.g. : if three playlists A,B,C are defined over 1000 years (A: years 1 to 1000, B: years 1 to 100, C: Years 13,42,57,112), initial reservoir levels in each Area are identical in the playlists' intersection (years 13,42,57)
+[^18]:E.g. : if three playlists A,B,C are defined over 1000 years (A: years 1 to 1000, B: years 1 to 100, C: Years 13,42,57,112), initial reservoir levels in each Area are identical in the playlists' intersection (years 13,42,57)
 
-[19](#sdfootnote19anc)If the playlist is full, these years have numbers # (k-1)B+1 ,…., #kB
+[^19]: If the playlist is full, these years have numbers # (k-1)B+1 ,…., #kB
 
-[20](#sdfootnote20anc)Described in the note "Optimization Problems Formulation"
+[^20]: Described in the note "Optimization Problems Formulation"
 
-[21](#sdfootnote21anc) Options « default » and « swap » do not perform multi-threaded optimizations
+[^21]: Options « default » and « swap » do not perform multi-threaded optimizations
 
-[22](#sdfootnote22anc) The « draft » mode is not multi-threaded
+[^22]: The « draft » mode is not multi-threaded
 
-[23](#sdfootnote23anc) This hardware characteristic, independent from Antares general parameters and from study parameters, can be checked with the Resources monitor tool ([Commands](#commands))
+[^23]: This hardware characteristic, independent from Antares general parameters and from study parameters, can be checked with the Resources monitor tool ([Commands](#commands))
 
-[24](#sdfootnote24anc)When the number of MC years to run is smaller than the allowance, the parallel run includes all of these years in a single bundle and there is no "reduced allowance" message
+[^24]: When the number of MC years to run is smaller than the allowance, the parallel run includes all of these years in a single bundle and there is no "reduced allowance" message
 
-[25](#sdfootnote25anc) The Table indicates either the refresh status (No) or the refresh span (the associated refresh status "yes" is implicit)
+[^25]: The Table indicates either the refresh status (No) or the refresh span (the associated refresh status "yes" is implicit)
 
-[26](#sdfootnote26anc) The smallest bundle in this case is the ninth (year number 97 to year number 100). The first 8 bundles involve 12 MC years each
+[^26]: The smallest bundle in this case is the ninth (year number 97 to year number 100).The first 8 bundles involve 12 MC years each
 
 Copyright © RTE 2007-2021 – Version 8.1.1
 
