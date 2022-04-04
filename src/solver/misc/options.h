@@ -72,7 +72,7 @@ public:
 /*!
 ** \brief Interprete options given in command line
 */
-std::shared_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, Antares::Data::StudyLoadOptions& options);
+std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, Antares::Data::StudyLoadOptions& options);
 
 void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options);
 
