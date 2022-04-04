@@ -225,6 +225,8 @@ public:
 
     bool doWeGenerateTS(GlobalTSGenerationBehavior global, bool refresh) const;
 
+    bool doWeGenerateTS(bool globalTSgeneration) const;
+
 public:
     /*!
     ** \brief The group ID

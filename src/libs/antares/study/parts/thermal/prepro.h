@@ -65,7 +65,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    PreproThermal();
+    PreproThermal(ThermalCluster* thermalCluster);
     //@}
 
     bool invalidate(bool reload) const;
@@ -89,9 +89,7 @@ public:
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
     bool loadFromFolder(Study& study,
-                        const AnyString& folder,
-                        const AreaName& areaID,
-                        const AnyString& clustername);
+                        const AnyString& folder);
 
     /*!
     ** \brief Save settings used by the thermal prepro to a folder
@@ -116,9 +114,9 @@ public:
     **
     ** This method should only be used by the solver
     */
-    bool normalizeAndCheckNPO(const AnyString& areaname,
-                              const AnyString& clustername,
-                              uint clusterSize);
+    bool normalizeAndCheckNPO();
+private:
+    ThermalCluster* itsThermalCluster = nullptr;
 
 public:
     //! All {FO,PO}{Duration,Rate} annual values

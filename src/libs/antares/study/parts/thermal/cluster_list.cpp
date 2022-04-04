@@ -719,9 +719,9 @@ void ThermalClusterList::ensureDataPrepro()
     auto end = cluster.end();
     for (auto it = cluster.begin(); it != end; ++it)
     {
-        auto& c = *(it->second);
-        if (not c.prepro)
-            c.prepro = new PreproThermal();
+        auto c = it->second;
+        if (not c->prepro)
+            c->prepro = new PreproThermal(c.get());
     }
 }
 
@@ -891,12 +891,13 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
             assert(c.parentArea and "cluster: invalid parent area");
             buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
 
-            bool result = c.prepro->loadFromFolder(study, buffer, c.parentArea->id, c.id());
+            bool result = c.prepro->loadFromFolder(study, buffer);
 
             if (result and study.usedByTheSolver)
             {
                 // checking NPO max
-                result = c.prepro->normalizeAndCheckNPO(c.parentArea->name, c.name(), c.unitCount);
+                // result = c.prepro->normalizeAndCheckNPO(c.parentArea->name, c.name(), c.unitCount);
+                result = c.prepro->normalizeAndCheckNPO();
             }
 
             ret = result and ret;
