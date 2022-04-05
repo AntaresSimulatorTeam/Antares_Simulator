@@ -152,13 +152,11 @@ inline bool Memory::Array<T>::needFlush() const
 #endif
 }
 
-#ifndef ANTARES_SWAP_SUPPORT
-// If the support is not available, we define an empty method
 inline void Memory::flushAll()
 {
     // Do nothing
 }
-#endif
+
 
 template<class T>
 inline void Memory::Array<T>::flush() const
