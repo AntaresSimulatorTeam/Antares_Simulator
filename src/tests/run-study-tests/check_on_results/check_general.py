@@ -13,12 +13,12 @@ class check_interface(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def check_name(self):
+    def name(self):
         pass
 
-    def print_check_name(child_run):
+    def print_name(child_run):
         def wrapper(self):
-            print("Running check : %s" % self.check_name())
+            print("Running check : %s" % self.name())
             child_run(self)
         return wrapper
 

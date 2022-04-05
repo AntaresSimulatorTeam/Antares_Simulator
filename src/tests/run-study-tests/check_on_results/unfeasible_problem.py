@@ -64,11 +64,11 @@ class unfeasible_problem(check_interface):
         self.checks = check_list()
         self.fill_check_list()
 
-    @check_interface.print_check_name
+    @check_interface.print_name
     def run(self):
         self.checks.run()
 
-    def check_name(self):
+    def name(self):
         return "unfeasible problem"
 
     def fill_check_list(self):

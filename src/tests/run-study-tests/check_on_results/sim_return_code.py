@@ -10,11 +10,11 @@ class simulation_success(check_interface):
 
         self.success_expected = success_expected
 
-    @check_interface.print_check_name
+    @check_interface.print_name
     def run(self):
         success = self.simulation.success()
         check(not self.success_expected or success, 'Simulation failed, but success was expected.')
         check(self.success_expected or not success, 'Simulation succeeded, but failure was expected.')
 
-    def check_name(self):
+    def name(self):
         return "simulation success"

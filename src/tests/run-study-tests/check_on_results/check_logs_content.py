@@ -11,7 +11,7 @@ class check_logs_content(check_interface):
 
         check(log_level in ["warns", "fatal"], "Unknown log level : %s" % log_level)
 
-    @check_interface.print_check_name
+    @check_interface.print_name
     def run(self):
         path_to_output_folder = find_output_folder(self.study_path)
         path_to_log_file = find_logs_file(path_to_output_folder)
@@ -41,7 +41,7 @@ class check_logs_content(check_interface):
         for i in range(len(lines_to_find)):
             assert match_lines[i], "'" + lines_to_find[i] + "'" + " log not found in simulation.log"
 
-    def check_name(self):
+    def name(self):
         return "unfeasible problem logs"
 
 

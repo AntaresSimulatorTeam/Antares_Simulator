@@ -10,11 +10,11 @@ class integrity_compare(check_interface):
         super().__init__(study_path)
         self.ref_folder = find_reference_folder(self.study_path)
 
-    @check_interface.print_check_name
+    @check_interface.print_name
     def run(self):
         self.compare_files()
 
-    def check_name(self):
+    def name(self):
         return "integrity compare"
 
     def compare_files(self):

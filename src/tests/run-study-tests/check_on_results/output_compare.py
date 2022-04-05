@@ -23,7 +23,7 @@ class output_compare(check_interface):
         print_results.activate()
         self.study_modifiers_.append(print_results)
 
-    @check_interface.print_check_name
+    @check_interface.print_name
     def run(self):
         reference_folder = find_simulation_folder(self.ref_folder)
 
@@ -34,7 +34,7 @@ class output_compare(check_interface):
 
         check(compare_simulation_files(simulation_files, self.tol), "Results comparison failed")
 
-    def check_name(self):
+    def name(self):
         return "output compare"
 
 

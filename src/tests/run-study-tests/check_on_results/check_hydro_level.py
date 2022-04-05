@@ -17,13 +17,13 @@ class check_hydro_level(check_interface):
         print_results.activate()
         self.study_modifiers_.append(print_results)
 
-    @check_interface.print_check_name
+    @check_interface.print_name
     def run(self):
         reservoir_levels = fetch_hourly_values(self.study_path, area='area', year=1)["H. LEV"]
         err_msg = "Hydro level not correct : %.2f, expected : %.2f" % (reservoir_levels.iat[self.hour_in_year], self.level)
         check(abs(reservoir_levels.iat[self.hour_in_year] - self.level) < self.tol, err_msg)
 
-    def check_name(self):
+    def name(self):
         return "hydro level"
 
 
