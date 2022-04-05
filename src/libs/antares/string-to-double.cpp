@@ -49,6 +49,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <errno.h>
+#include <limits>
 
 #ifndef TRUE
 #define TRUE 1
@@ -152,6 +153,28 @@ double mystrtod(const char* string, char** endPtr)
         if (*p == '+')
             p += 1;
         sign = FALSE;
+    }
+
+    // Match "+inf" with +infinity
+    // Match "inf" with +infinity
+    // Match "-inf" with -infinity
+    if (*p == 'i')
+    {
+        p++;
+        if (*p == 'n')
+        {
+            p++;
+            if (*p == 'f')
+            {
+                fraction = std::numeric_limits<double>::infinity();
+                p++;
+                goto done;
+            }
+        }
+        else
+        {
+            // TODO : handle garbage values such as ide, idzee, etc.
+        }
     }
 
     /*
