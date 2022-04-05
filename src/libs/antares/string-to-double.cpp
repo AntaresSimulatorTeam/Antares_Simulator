@@ -173,7 +173,9 @@ double mystrtod(const char* string, char** endPtr)
         }
         else
         {
-            // TODO : handle garbage values such as ide, idzee, etc.
+            // Handle garbage values such as ide, idzee, etc.
+            // The handler will detect that p != '\0' and consider it an error
+            goto done;
         }
     }
 
