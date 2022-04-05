@@ -374,9 +374,6 @@ set(SRC
 	locale.h
 	locale.cpp
 
-	string-to-double.h
-	string-to-double.cpp
-
 	emergency.h emergency.cpp
 
 	# wx-wrapper
