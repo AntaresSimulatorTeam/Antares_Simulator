@@ -2,15 +2,16 @@ from pathlib import Path
 import numpy
 
 from check_on_results.check_general import check_interface
+from check_decorators.print_name import printNameDecorator
 from utils.find_reference import find_reference_folder
 from utils.find_output import find_output_folder
 
+@printNameDecorator
 class integrity_compare(check_interface):
     def __init__(self, study_path):
         super().__init__(study_path)
         self.ref_folder = find_reference_folder(self.study_path)
 
-    @check_interface.print_name
     def run(self):
         self.compare_files()
 

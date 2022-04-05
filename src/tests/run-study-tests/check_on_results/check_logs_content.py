@@ -1,8 +1,9 @@
 from check_on_results.check_general import check_interface
+from check_decorators.print_name import printNameDecorator
 from utils.assertions import check, raise_assertion
 from utils.find_output import find_output_folder
 
-
+@printNameDecorator
 class check_logs_content(check_interface):
     def __init__(self, study_path, log_level="warns", faulty_weeks=[]):
         super().__init__(study_path)
@@ -11,7 +12,6 @@ class check_logs_content(check_interface):
 
         check(log_level in ["warns", "fatal"], "Unknown log level : %s" % log_level)
 
-    @check_interface.print_name
     def run(self):
         path_to_output_folder = find_output_folder(self.study_path)
         path_to_log_file = find_logs_file(path_to_output_folder)

@@ -2,9 +2,11 @@ from pathlib import Path
 
 from utils.csv import read_csv
 from check_on_results.check_general import check_interface
+from check_decorators.print_name import printNameDecorator
 from actions_on_study.study_modifier import study_modifier
 from utils.assertions import check
 
+@printNameDecorator
 class check_hydro_level(check_interface):
     def __init__(self, study_path, hour_in_year, level, tolerance):
         super().__init__(study_path)
@@ -17,7 +19,6 @@ class check_hydro_level(check_interface):
         print_results.activate()
         self.study_modifiers_.append(print_results)
 
-    @check_interface.print_name
     def run(self):
         reservoir_levels = fetch_hourly_values(self.study_path, area='area', year=1)["H. LEV"]
         err_msg = "Hydro level not correct : %.2f, expected : %.2f" % (reservoir_levels.iat[self.hour_in_year], self.level)

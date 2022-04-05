@@ -1,5 +1,6 @@
 
 from check_on_results.check_general import check_interface, check_list
+from check_decorators.print_name import printNameDecorator
 from check_on_results.check_logs_content import check_logs_content
 from check_on_results.sim_return_code import simulation_success
 from check_on_results.check_no_mps import check_no_mps
@@ -41,7 +42,7 @@ class behavior_flag:
             return True
         return False
 
-
+@printNameDecorator
 class unfeasible_problem(check_interface):
     def __init__(self, study_path, new_behavior="error-verbose", checks_on_weeks = [], simulation = None):
         super().__init__(study_path)
@@ -64,7 +65,6 @@ class unfeasible_problem(check_interface):
         self.checks = check_list()
         self.fill_check_list()
 
-    @check_interface.print_name
     def run(self):
         self.checks.run()
 

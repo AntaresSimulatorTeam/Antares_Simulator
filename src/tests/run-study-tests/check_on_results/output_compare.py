@@ -5,6 +5,7 @@ from pathlib import Path
 from check_on_results.tolerances import get_tolerances
 
 from check_on_results.check_general import check_interface
+from check_decorators.print_name import printNameDecorator
 from utils.assertions import check
 from utils.find_reference import find_reference_folder
 from utils.find_output import find_output_folder
@@ -12,6 +13,7 @@ from actions_on_study.study_modifier import study_modifier
 from utils.csv import read_csv
 
 
+@printNameDecorator
 class output_compare(check_interface):
     def __init__(self, study_path, tolerances = get_tolerances()):
         super().__init__(study_path)
@@ -23,7 +25,6 @@ class output_compare(check_interface):
         print_results.activate()
         self.study_modifiers_.append(print_results)
 
-    @check_interface.print_name
     def run(self):
         reference_folder = find_simulation_folder(self.ref_folder)
 
