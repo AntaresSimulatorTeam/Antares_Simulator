@@ -152,12 +152,6 @@ inline bool Memory::Array<T>::needFlush() const
 #endif
 }
 
-inline void Memory::flushAll()
-{
-    // Do nothing
-}
-
-
 template<class T>
 inline void Memory::Array<T>::flush() const
 {
