@@ -245,14 +245,6 @@ bool IniFile::open(const AnyString& filename, bool warnings)
     clear();
     pFilename = filename;
 
-// On Windows, getting the size of the file will be as costly as directly
-// reading the file
-// So the optimization should be useless
-#ifndef YUNI_OS_WINDOWS
-    if (0 == IO::File::Size(filename))
-        return true;
-#endif
-
     // Load the file
     IO::File::Stream file;
     if (file.open(filename))

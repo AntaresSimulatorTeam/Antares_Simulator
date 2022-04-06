@@ -30,7 +30,6 @@
 
 DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation();
 void H2O2_J_OptimiserUnMois(DONNEES_MENSUELLES_ETENDUES*);
-char H2O2_J_EcrireJeuDeDonneesLineaireAuFormatMPS(DONNEES_MENSUELLES_ETENDUES*, FILE*);
 void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES*);
 void H2O2_J_ConstruireLesContraintes(int,
                                      int*,

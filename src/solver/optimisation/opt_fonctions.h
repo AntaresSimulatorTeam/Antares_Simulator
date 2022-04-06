@@ -104,6 +104,4 @@ void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*);
 double OPT_SommeDesPminThermiques(PROBLEME_HEBDO*, int, int);
 
-void RenseignerDonneesCoutsDemarrage(PROBLEME_HEBDO*);
-
 #endif /* __SOLVER_OPTIMISATION_FUNCTIONS_H__ */
