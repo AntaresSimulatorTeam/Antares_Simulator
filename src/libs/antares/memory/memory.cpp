@@ -596,7 +596,7 @@ void* Memory::acquireMapping(Handle handle, volatile void* pointer)
     return nullptr;
 }
 
-void Memory::flushAll()
+void Memory::flushAll() const
 {
 #ifdef ANTARES_SWAP_SUPPORT
     Yuni::MutexLocker locker(gMutex);

@@ -416,7 +416,7 @@ public:
     /*!
     ** \brief Flush all memory into swap files
     */
-    void flushAll();
+    void flushAll() const;
 
     /*!
     ** \brief Get the amount of memory currently used
