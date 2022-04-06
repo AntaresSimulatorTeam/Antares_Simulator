@@ -299,6 +299,7 @@ bool Rules::readLink(const AreaName::Vector& splitKey, String value, bool update
         return false;
 
     uint val = fromStringToTSnumber(value);
+    fromArea = link->from;
     linksNTC[fromArea->index].setDataForLink(link, year, val);
     return true;
 }
@@ -336,17 +337,17 @@ bool Rules::apply()
     bool returned_status = true;
     if (pAreaCount)
     {
-        returned_status = returned_status && load.apply(study_);
-        returned_status = returned_status && solar.apply(study_);
-        returned_status = returned_status && hydro.apply(study_);
-        returned_status = returned_status && wind.apply(study_);
+        returned_status = load.apply(study_) && returned_status;
+        returned_status = solar.apply(study_) && returned_status;
+        returned_status = hydro.apply(study_) && returned_status;
+        returned_status = wind.apply(study_) && returned_status;
         for (uint i = 0; i != pAreaCount; ++i)
         {
-            returned_status = returned_status && thermal[i].apply(study_);
-            returned_status = returned_status && renewable[i].apply(study_);
-            returned_status = returned_status && linksNTC[i].apply(study_);
+            returned_status = thermal[i].apply(study_) && returned_status;
+            returned_status = renewable[i].apply(study_) && returned_status;
+            returned_status = linksNTC[i].apply(study_) && returned_status;
         }
-        returned_status = returned_status && hydroLevels.apply(study_);
+        returned_status = hydroLevels.apply(study_) && returned_status;
     }
     else
         returned_status = false;

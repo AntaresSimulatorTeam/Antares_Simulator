@@ -35,6 +35,7 @@
 #include "common-eco-adq.h"
 #include <antares/logs.h>
 #include <cassert>
+#include <map>
 #include "simulation.h"
 #include "../aleatoire/alea_fonctions.h"
 
@@ -369,17 +370,34 @@ int retrieveAverageNTC(const Data::Study& study,
                        const Matrix<Yuni::uint32>& tsNumbers,
                        std::vector<double>& avg)
 {
-    auto yearsWeight = study.parameters.getYearsWeight();
-    auto yearsWeightSum = study.parameters.getYearsWeightSum();
+    const auto& parameters = study.parameters;
+
+    const auto& yearsWeight = parameters.getYearsWeight();
+    const auto& yearsWeightSum = parameters.getYearsWeightSum();
+    const auto& yearsFilter = parameters.yearsFilter;
     const auto width = capacities.width;
     avg.assign(HOURS_PER_YEAR, 0);
 
+    std::map<Yuni::uint32, double> weightOfTS;
+
     for (uint y = 0; y < study.parameters.nbYears; y++)
     {
-        Yuni::uint32 tsNumber = (width == 1) ? 0 : tsNumbers[0][y];
+        if (!yearsFilter[y])
+            continue;
+
+        Yuni::uint32 tsIndex = (width == 1) ? 0 : tsNumbers[0][y];
+        weightOfTS[tsIndex] += yearsWeight[y];
+    }
+
+    // No need for the year number, only the TS index is required
+    for (const auto& it : weightOfTS)
+    {
+        const Yuni::uint32 tsIndex = it.first;
+        const double weight = it.second;
+
         for (uint h = 0; h < HOURS_PER_YEAR; h++)
         {
-            avg[h] += capacities[tsNumber][h] * yearsWeight[y];
+            avg[h] += capacities[tsIndex][h] * weight;
         }
     }
 

@@ -66,32 +66,32 @@ bool CorrelationPost::performWL(Context& ctx)
             switch (pType)
             {
             case Data::timeSeriesLoad:
-                ctx.study.preproLoadCorrelation.copyFrom(ctx.extStudy->preproLoadCorrelation,
-                                                         *ctx.extStudy,
-                                                         pOriginalAreaName,
-                                                         ctx.areaNameMapping,
-                                                         ctx.study);
+                ctx.study->preproLoadCorrelation.copyFrom(ctx.extStudy->preproLoadCorrelation,
+                                                          *ctx.extStudy,
+                                                          pOriginalAreaName,
+                                                          ctx.areaNameMapping,
+                                                          *ctx.study);
                 break;
             case Data::timeSeriesSolar:
-                ctx.study.preproSolarCorrelation.copyFrom(ctx.extStudy->preproSolarCorrelation,
-                                                          *ctx.extStudy,
-                                                          pOriginalAreaName,
-                                                          ctx.areaNameMapping,
-                                                          ctx.study);
+                ctx.study->preproSolarCorrelation.copyFrom(ctx.extStudy->preproSolarCorrelation,
+                                                           *ctx.extStudy,
+                                                           pOriginalAreaName,
+                                                           ctx.areaNameMapping,
+                                                           *ctx.study);
                 break;
             case Data::timeSeriesWind:
-                ctx.study.preproWindCorrelation.copyFrom(ctx.extStudy->preproWindCorrelation,
-                                                         *ctx.extStudy,
-                                                         pOriginalAreaName,
-                                                         ctx.areaNameMapping,
-                                                         ctx.study);
-                break;
-            case Data::timeSeriesHydro:
-                ctx.study.preproHydroCorrelation.copyFrom(ctx.extStudy->preproHydroCorrelation,
+                ctx.study->preproWindCorrelation.copyFrom(ctx.extStudy->preproWindCorrelation,
                                                           *ctx.extStudy,
                                                           pOriginalAreaName,
                                                           ctx.areaNameMapping,
-                                                          ctx.study);
+                                                          *ctx.study);
+                break;
+            case Data::timeSeriesHydro:
+                ctx.study->preproHydroCorrelation.copyFrom(ctx.extStudy->preproHydroCorrelation,
+                                                           *ctx.extStudy,
+                                                           pOriginalAreaName,
+                                                           ctx.areaNameMapping,
+                                                           *ctx.study);
                 break;
             default:
                 break;

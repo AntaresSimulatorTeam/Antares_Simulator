@@ -112,7 +112,7 @@ bool Offsets::performWL(Context& ctx)
             {
                 tr.bind(this, &Offsets::translate);
             }
-            ctx.constraint->copyOffsets(ctx.study, *source, true, tr);
+            ctx.constraint->copyOffsets(*ctx.study, *source, true, tr);
             pCurrentContext = nullptr;
             return true;
         }

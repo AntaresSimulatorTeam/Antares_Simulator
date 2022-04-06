@@ -92,6 +92,7 @@ public:
 
 protected:
     wxWindow* pControl;
+    bool mUseLoopFlow = false;
 
 private:
     virtual void setMatrix(Data::AreaLink* link) = 0;
@@ -127,6 +128,11 @@ public:
     connectionNTC(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
     ~connectionNTC() override = default;
     bool cellValue(int x, int y, const Yuni::String& value) override;
+    IRenderer::CellStyle cellStyle(int col, int row) const override;
+    virtual bool checkLoopFlow(double ntcIndirect, double loopFlow) const = 0;
+
+protected:
+    Antares::Matrix<>::ColumnType* mLoopFlowData = nullptr;
 };
 
 // ----------------
@@ -137,6 +143,7 @@ class connectionNTCdirect : public connectionNTC
 public:
     connectionNTCdirect(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
     ~connectionNTCdirect() override = default;
+    bool checkLoopFlow(double ntcIndirect, double loopFlow) const override;
 
 private:
     void setMatrix(Data::AreaLink* link) override;
@@ -150,6 +157,7 @@ class connectionNTCindirect : public connectionNTC
 public:
     connectionNTCindirect(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
     ~connectionNTCindirect() override = default;
+    bool checkLoopFlow(double ntcIndirect, double loopFlow) const override;
 
 private:
     void setMatrix(Data::AreaLink* link) override;

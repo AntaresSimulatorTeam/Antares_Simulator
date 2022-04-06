@@ -193,7 +193,7 @@ bool loadTSNumberData::apply(Study& study)
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
         logprefix.clear() << "Load: Area '" << area.name << "': ";
-        ret = ret && ApplyToMatrix(errors, logprefix, *area.load.series, col, tsGenCountLoad);
+        ret = ApplyToMatrix(errors, logprefix, *area.load.series, col, tsGenCountLoad) && ret;
     }
     return ret;
 }
@@ -232,7 +232,7 @@ bool windTSNumberData::apply(/*const*/ Study& study)
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
         logprefix.clear() << "Wind: Area '" << area.name << "': ";
-        ret = ret && ApplyToMatrix(errors, logprefix, *area.wind.series, col, tsGenCountWind);
+        ret = ApplyToMatrix(errors, logprefix, *area.wind.series, col, tsGenCountWind) && ret;
     }
     return ret;
 }
@@ -271,7 +271,7 @@ bool solarTSNumberData::apply(Study& study)
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
         logprefix.clear() << "Solar: Area '" << area.name << "': ";
-        ret = ret && ApplyToMatrix(errors, logprefix, *area.solar.series, col, tsGenCountSolar);
+        ret = ApplyToMatrix(errors, logprefix, *area.solar.series, col, tsGenCountSolar) && ret;
     }
     return ret;
 }
@@ -310,7 +310,7 @@ bool hydroTSNumberData::apply(Study& study)
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
         logprefix.clear() << "Hydro: Area '" << area.name << "': ";
-        ret = ret && ApplyToMatrix(errors, logprefix, *area.hydro.series, col, tsGenCountHydro);
+        ret = ApplyToMatrix(errors, logprefix, *area.hydro.series, col, tsGenCountHydro) && ret;
     }
     return ret;
 }
@@ -407,7 +407,7 @@ bool thermalTSNumberData::apply(Study& study)
 
         logprefix.clear() << "Thermal: Area '" << area.name << "', cluster: '" << cluster.name()
                           << "': ";
-        ret = ret && ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountThermal);
+        ret = ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountThermal) && ret;
     }
     return ret;
 }
@@ -459,7 +459,7 @@ bool renewableTSNumberData::apply(Study& study)
 
         logprefix.clear() << "Renewable: Area '" << area.name << "', cluster: '" << cluster.name()
                           << "': ";
-        ret = ret && ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountRenewable);
+        ret = ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountRenewable) && ret;
     }
     return ret;
 }
@@ -560,13 +560,19 @@ void ntcTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& 
     for (const auto& i : pArea->links)
     {
         const Data::AreaLink* link = i.second;
+        /*
+          When renaming an area, it may happen that i.first is not the name
+          of the supporting area. We only trust from->id and to->id.
+        */
+        const Data::AreaName& fromID = link->from->id;
+        const Data::AreaName& withID = link->with->id;
         for (uint y = 0; y != pTSNumberRules.height; ++y)
         {
             const uint val = pTSNumberRules[link->indexForArea][y];
             // Equals to zero means 'auto', which is the default mode
             if (!val)
                 continue;
-            file << prefix << pArea->id << "," << i.first << "," << y << " = " << val << "\n";
+            file << prefix << fromID << "," << withID << "," << y << " = " << val << "\n";
         }
     }
 }
@@ -601,7 +607,7 @@ bool ntcTSNumberData::apply(Study& study)
         assert(linkIndex < pTSNumberRules.width);
         const auto& col = pTSNumberRules[linkIndex];
         logprefix.clear() << "NTC: Area '" << area.name << "', link: '" << link->getName() << "': ";
-        ret = ret && ApplyToMatrix(errors, logprefix, *link, col, ntcGeneratedTScount);
+        ret = ApplyToMatrix(errors, logprefix, *link, col, ntcGeneratedTScount) && ret;
     }
     return ret;
 }

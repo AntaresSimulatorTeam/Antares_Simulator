@@ -1,8 +1,24 @@
 Antares Changelog
 =================
-v8.2.0-rc1 (02/2022)
---------------------
 
+v8.2.1 (03/2022)
+--------------------
+### Bug fixes
+- Fix scenario builder data loss when renaming area #610
+- Write 1 in the ts-numbers when series.width == 1 #609
+- Add noise to the cost vector in the allocation problems to enforce uniqueness #622
+- Linux only : fix segfault occurring when an INI file does not exist #606
+
+### GUI
+- Place "Dataset > Resize columns to..." in first position #607
+- Allow that all NTC be 0 in one direction #595
+- Fix occasional crash when opening the links panel #594
+- Linux only : fix frozen window occurring after a "Save as..." #586
+- Linux only : fix impossibility to save a study #600
+- Developer version only : fix assertion errors in the GUI #584
+
+v8.2.0 (03/2022)
+--------------------
 ### New features
 - Multiple timeseries for link capacities (NTC). It is now possible to establish different scenarios for the capacity of a link. Users can now take partial or total outages for links into account #520
 - Infeasible problem analyzer. When the underlying problem has no solution, list the most suspicious constraints in a report. This should help users identify faulty binding constraints #431
@@ -12,6 +28,7 @@ v8.2.0-rc1 (02/2022)
 - Add a "view results" button in the dialog that appears when a simulation has been completed #511
 - Help menu : add an "online documentation" item #509
 - Improve UI for new thermal parameter "tsGenBehavior" #534
+- Improve cell styles when loop-flow is enabled for a link #571
 
 ### Bug fixes
 - Prevent an area from having a link to itself #531

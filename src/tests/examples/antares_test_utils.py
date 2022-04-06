@@ -80,26 +80,29 @@ def find_output_result_dir(output_dir):
     return dir_list[0]
 def generate_reference_values(solver_path, path, use_ortools, ortools_solver):
 
-    enable_study_output(path,True)
+    synthesis_value = "true" if enable else "false"
+    st.set_variable(variable = "synthesis", value = synthesis_value, file_nick_name="general")
 
     reference_path = path / 'reference'
     os.makedirs(reference_path, exist_ok=True)
     run_study(solver_path,path, use_ortools, ortools_solver)
 
-    output_path = path / 'output'
+def skip_file(file):
+    return file in ['id-daily.txt', 'id-hourly.txt']
 
-    result_dir = find_output_result_dir(output_path)
-    shutil.copytree(result_dir, reference_path / 'output' / result_dir.name)
+def find_simulation_files(reference_folder, other_folder):
+    list_files_to_compare = []
 # ===============================================================
 # End old functions
 # ===============================================================
 
-def enable_study_output(study_path, enable):
-    st = Study(str(study_path))
-    st.check_files_existence()
+        for file in files:
+            if skip_file(file):
+                continue
+            current_file_path = Path(current_folder) / file
+            list_files_to_compare.append((current_file_path, other_folder / current_file_path.relative_to(reference_folder)))
 
-    synthesis_value = "true" if enable else "false"
-    st.set_variable(variable = "synthesis", value = synthesis_value, file_nick_name="general")
+    return list_files_to_compare
 
 def skip_folder(folder):
     return basename(folder) in ['grid']
