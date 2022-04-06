@@ -70,11 +70,11 @@ static std::string availableOrToolsSolversString()
     return availableSolverListStr;
 }
 
-std::shared_ptr<GetOpt::Parser> CreateParser(Settings& settings, Antares::Data::StudyLoadOptions& options)
+std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings, Antares::Data::StudyLoadOptions& options)
 {
     settings.reset();
 
-    auto parser = std::make_shared<GetOpt::Parser>();
+    auto parser = std::unique_ptr<GetOpt::Parser>(new GetOpt::Parser());
 
     parser->addParagraph(String() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << "\n");
 
