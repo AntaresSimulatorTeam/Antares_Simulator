@@ -512,6 +512,11 @@ public:
     //! Transmission capacities between physical areas outside adequacy patch (area type 1). NTC is
     //! set to null (if true) only in the first step of adequacy patch local matching rule.
     bool setToZero11LinksForAdequacyPatch;
+    // PTO (Price Taking Order) for adequacy patch. User can choose between DENS and Load.
+    AdequacyPatch::AdequacyPatchPTO adqPatchPriceTakingOrder;
+    // Select whether the intermediate result before the application of the curtailment sharing is
+    // to be kept in the results
+    bool adqPatchSaveIntermediateResults;
 
     //! \name Scenariio Builder - Rules
     //@{

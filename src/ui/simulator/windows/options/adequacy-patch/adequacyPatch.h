@@ -73,12 +73,15 @@ private:
     void onClose(void*);
     void onResetToDefault(void*);
 
+    void onSelectPtoIsDens(wxCommandEvent&);
+    void onSelectPtoIsLoad(wxCommandEvent&);
     void onSelectModeInclude(wxCommandEvent& evt);
     void onSelectModeIgnore(wxCommandEvent& evt);
 
     void onPopupMenu(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
     void onPopupMenuSpecify(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
-    void onPopupMenuAdequacyPatch(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
+    void onPopupMenuNTC(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
+    void onPopupMenuPTO(Component::Button&, wxMenu& menu, void*);
 
     void onInternalMotion(wxMouseEvent&);
 
@@ -86,6 +89,8 @@ private:
     Component::Button* pBtnAdequacyPatch;
     Component::Button* pBtnAdequacyPatchNTC12;
     Component::Button* pBtnAdequacyPatchNTC11;
+    Component::Button* pBtnAdequacyPatchPTO;
+    Component::Button* pBtnAdequacyPatchSaveIntermediateResults;
     bool* pTargetRef;
 
 }; // class AdequacyPatchOptions

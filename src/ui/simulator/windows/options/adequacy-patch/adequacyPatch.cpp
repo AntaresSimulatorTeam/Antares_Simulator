@@ -46,21 +46,21 @@ namespace Window
 {
 namespace Options
 {
-static void SubTitle(wxWindow* parent, wxSizer* sizer, const wxChar* text, bool margintop = true)
-{
-    if (margintop)
-    {
-        sizer->AddSpacer(25);
-        sizer->AddSpacer(25);
-    }
+// static void SubTitle(wxWindow* parent, wxSizer* sizer, const wxChar* text, bool margintop = true)
+// {
+//     if (margintop)
+//     {
+//         sizer->AddSpacer(25);
+//         sizer->AddSpacer(25);
+//     }
 
-    auto* label = Component::CreateLabel(parent, text, true);
+//     auto* label = Component::CreateLabel(parent, text, true);
 
-    sizer->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-    sizer->AddSpacer(5);
-    sizer->AddSpacer(5);
-    sizer->AddSpacer(5);
-}
+//     sizer->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+//     sizer->AddSpacer(5);
+//     sizer->AddSpacer(5);
+//     sizer->AddSpacer(5);
+// }
 
 static void ResetButton(Component::Button* button, bool value)
 {
@@ -77,7 +77,7 @@ static void ResetButton(Component::Button* button, bool value)
     }
 }
 
-static void ResetButtonAdequacyPatch(Component::Button* button, bool value)
+static void ResetButtonNTC(Component::Button* button, bool value)
 {
     assert(button != NULL);
     if (value)
@@ -89,6 +89,21 @@ static void ResetButtonAdequacyPatch(Component::Button* button, bool value)
     {
         button->image("images/16x16/light_green.png");
         button->caption(wxT("local values"));
+    }
+}
+
+static void ResetButtonPTO(Component::Button* button, Data::AdequacyPatch::AdequacyPatchPTO value)
+{
+    assert(button != NULL);
+    if (value == Data::AdequacyPatch::AdequacyPatchPTO::adqPtoIsLoad)
+    {
+        button->image("images/16x16/light_orange.png");
+        button->caption(wxT("Load"));
+    }
+    else
+    {
+        button->image("images/16x16/light_green.png");
+        button->caption(wxT("DENS"));
     }
 }
 
@@ -184,8 +199,8 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
     Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)> onPopup;
 
    
-    SubTitle(this, s, wxT("Adequacy Patch"));
-    // Adequacy patch
+    // SubTitle(this, s, wxT("Adequacy Patch"));
+    // Enable Adequacy Patch
     {
         label = Component::CreateLabel(this, wxT("Enable Adequacy patch"));
         button = new Component::Button(this, wxT("true"), "images/16x16/light_green.png");
@@ -208,7 +223,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         button->SetBackgroundColour(bgColor);
         button->menu(true);
         onPopup.bind(this,
-                     &AdequacyPatchOptions::onPopupMenuAdequacyPatch,
+                     &AdequacyPatchOptions::onPopupMenuNTC,
                      PopupInfo(study.parameters.setToZero12LinksForAdequacyPatch, wxT("NTC")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -223,12 +238,39 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         button->SetBackgroundColour(bgColor);
         button->menu(true);
         onPopup.bind(this,
-                     &AdequacyPatchOptions::onPopupMenuAdequacyPatch,
+                     &AdequacyPatchOptions::onPopupMenuNTC,
                      PopupInfo(study.parameters.setToZero11LinksForAdequacyPatch, wxT("NTC")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnAdequacyPatchNTC11 = button;
+    }
+    // PTO (Price Taking Order). User can choose between DENS and Load
+    {
+        label = Component::CreateLabel(this, wxT("Price taking order"));
+        button = new Component::Button(this, wxT("Day"), "images/16x16/light_green.png");
+        button->SetBackgroundColour(bgColor);
+        button->menu(true);
+        onPopup.bind(this, &AdequacyPatchOptions::onPopupMenuPTO);
+        button->onPopupMenu(onPopup);
+        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        pBtnAdequacyPatchPTO = button;
+    }
+    // Select whether the intermediate result before the application of the curtailment sharing is
+    // to be kept in the results
+    {
+        label = Component::CreateLabel(this, wxT("Save intermediate results"));
+        button = new Component::Button(this, wxT("true"), "images/16x16/light_green.png");
+        button->SetBackgroundColour(bgColor);
+        button->menu(true);
+        onPopup.bind(this,
+                     &AdequacyPatchOptions::onPopupMenuSpecify,
+                     PopupInfo(study.parameters.adqPatchSaveIntermediateResults, wxT("true")));
+        button->onPopupMenu(onPopup);
+        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        pBtnAdequacyPatchSaveIntermediateResults = button;
     }
 
     {
@@ -302,11 +344,14 @@ void AdequacyPatchOptions::onResetToDefault(void*)
         if (message.showModal() == Window::Message::btnContinue)
         {
             auto& study = *studyptr;
-           
+
             study.parameters.include.adequacyPatch = false;
             study.parameters.setToZero12LinksForAdequacyPatch = true;
             study.parameters.setToZero11LinksForAdequacyPatch = true;
-            
+            study.parameters.adqPatchPriceTakingOrder
+              = Data::AdequacyPatch::AdequacyPatchPTO::adqPtoIsDens;
+            study.parameters.adqPatchSaveIntermediateResults = false;
+
             refresh();
             MarkTheStudyAsModified();
             return;
@@ -331,12 +376,15 @@ void AdequacyPatchOptions::refresh()
     ResetButtonSpecify(pBtnAdequacyPatch, study.parameters.include.adequacyPatch);
     // NTC from physical areas outside adequacy patch (area type 1) to physical areas inside
     // adequacy patch (area type 2). Used in the first step of adequacy patch local matching rule.
-    ResetButtonAdequacyPatch(pBtnAdequacyPatchNTC12,
-                             study.parameters.setToZero12LinksForAdequacyPatch);
+    ResetButtonNTC(pBtnAdequacyPatchNTC12, study.parameters.setToZero12LinksForAdequacyPatch);
     // NTC between physical areas outside adequacy patch (area type 1). Used in the first step of
     // adequacy patch local matching rule.
-    ResetButtonAdequacyPatch(pBtnAdequacyPatchNTC11,
-                             study.parameters.setToZero11LinksForAdequacyPatch);
+    ResetButtonNTC(pBtnAdequacyPatchNTC11, study.parameters.setToZero11LinksForAdequacyPatch);
+    // Price taking order (PTO) for adequacy patch
+    ResetButtonPTO(pBtnAdequacyPatchPTO, study.parameters.adqPatchPriceTakingOrder);
+    // Save intermediate results for adequacy patch
+    ResetButtonSpecify(pBtnAdequacyPatchSaveIntermediateResults,
+                       study.parameters.adqPatchSaveIntermediateResults);
 }
 
 void AdequacyPatchOptions::onPopupMenu(Component::Button&, wxMenu& menu, void*, const PopupInfo& info)
@@ -363,7 +411,7 @@ void AdequacyPatchOptions::onPopupMenu(Component::Button&, wxMenu& menu, void*, 
                  this);
 }
 
-void AdequacyPatchOptions::onPopupMenuAdequacyPatch(Component::Button&,
+void AdequacyPatchOptions::onPopupMenuNTC(Component::Button&,
                                             wxMenu& menu,
                                             void*,
                                             const PopupInfo& info)
@@ -389,6 +437,26 @@ void AdequacyPatchOptions::onPopupMenuAdequacyPatch(Component::Button&,
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(AdequacyPatchOptions::onSelectModeIgnore),
+                 nullptr,
+                 this);
+}
+
+void AdequacyPatchOptions::onPopupMenuPTO(Component::Button&, wxMenu& menu, void*)
+{
+    wxMenuItem* it;
+
+    it = Menu::CreateItem(
+      &menu, wxID_ANY, wxString() << wxT("DENS"), "images/16x16/light_green.png", wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(AdequacyPatchOptions::onSelectPtoIsDens),
+                 nullptr,
+                 this);
+    it = Menu::CreateItem(
+      &menu, wxID_ANY, wxT("Load"), "images/16x16/light_orange.png", wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(AdequacyPatchOptions::onSelectPtoIsLoad),
                  nullptr,
                  this);
 }
@@ -437,6 +505,34 @@ void AdequacyPatchOptions::onSelectModeIgnore(wxCommandEvent&)
         refresh();
     }
     pTargetRef = nullptr;
+}
+
+void AdequacyPatchOptions::onSelectPtoIsDens(wxCommandEvent&)
+{
+    auto study = Data::Study::Current::Get();
+    if (!(!study))
+    {
+        if (study->parameters.adqPatchPriceTakingOrder != Data::AdequacyPatch::adqPtoIsDens)
+        {
+            study->parameters.adqPatchPriceTakingOrder = Data::AdequacyPatch::adqPtoIsDens;
+            refresh();
+            MarkTheStudyAsModified();
+        }
+    }
+}
+
+void AdequacyPatchOptions::onSelectPtoIsLoad(wxCommandEvent&)
+{
+    auto study = Data::Study::Current::Get();
+    if (!(!study))
+    {
+        if (study->parameters.adqPatchPriceTakingOrder != Data::AdequacyPatch::adqPtoIsLoad)
+        {
+            study->parameters.adqPatchPriceTakingOrder = Data::AdequacyPatch::adqPtoIsLoad;
+            refresh();
+            MarkTheStudyAsModified();
+        }
+    }
 }
 
 } // namespace Options

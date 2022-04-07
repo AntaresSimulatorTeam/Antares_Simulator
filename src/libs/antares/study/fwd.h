@@ -594,6 +594,18 @@ enum LinkCapacityForAdequacyPatchFirstStep
 
 }; // enum NTC
 
+/*!
+** \brief Types of Price Taking Order for Adequacy patch
+*/
+enum AdequacyPatchPTO
+{
+    //! PTO is DENS
+    adqPtoIsDens = 0,
+    //! PTO is Load
+    adqPtoIsLoad
+
+}; // enum AdequacyPatchPTO
+
 } // namespace AdequacyPatch
 } // namespace Data
 } // namespace Antares
