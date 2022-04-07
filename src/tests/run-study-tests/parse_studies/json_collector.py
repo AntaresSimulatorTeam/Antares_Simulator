@@ -43,7 +43,8 @@ class checksRetriever:
             return
 
         for test in self.json_file_content:
-            self.test_ids.append(test["name"])
+            study_path_id = self.study_path.parts[-2] + " / " + self.study_path.parts[-1]
+            self.test_ids.append(test["name"] + "  (%s)" % study_path_id)
             self.test_pairs.append((self.study_path, test["checks"]))
 
     def json_file_exists(self) -> bool:
