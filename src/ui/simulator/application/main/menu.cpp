@@ -449,11 +449,6 @@ wxMenu* ApplWnd::createMenuOptions()
                      wxT("MC Scenario playlist"),
                      "images/16x16/orderedlist.png",
                      wxT("Configure MC Scenario playlist"));
-    Menu::CreateItem(pMenuOptions,
-                     mnIDOptionConfigureAdequacyPatch,
-                     wxT("Adequacy Patch"),
-                     "images/16x16/orderedlist.png",
-                     wxT("Configure Adequacy Patch"));
 
     pMenuOptions->AppendSeparator();
 
@@ -468,6 +463,11 @@ wxMenu* ApplWnd::createMenuOptions()
                           "images/16x16/empty.png",
                           wxT("Set advanced parameters"));
     it->Enable(false);
+    Menu::CreateItem(pMenuOptions,
+                     mnIDOptionConfigureAdequacyPatch,
+                     wxT("Adequacy Patch"),
+                     "images/16x16/orderedlist.png",
+                     wxT("Configure Adequacy Patch"));
 
     return pMenuOptions;
 }
