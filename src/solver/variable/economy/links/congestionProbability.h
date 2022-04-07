@@ -157,7 +157,8 @@ public:
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
 
-        pRatio = 100. / (double)study.runtime->rangeLimits.year[Data::rangeCount];
+        yearsWeight = study.parameters.getYearsWeight();
+        yearsWeightSum = study.parameters.getYearsWeightSum();
 
         // Average on all years
         for (uint i = 0; i != VCardType::columnCount; ++i)
@@ -192,14 +193,6 @@ public:
         NextType::initializeFromAreaLink(study, link);
     }
 
-    void initializeFromThermalCluster(Data::Study* study,
-                                      Data::Area* area,
-                                      Data::ThermalCluster* cluster)
-    {
-        // Next
-        NextType::initializeFromThermalCluster(study, area, cluster);
-    }
-
     void simulationBegin()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; ++numSpace)
@@ -229,20 +222,6 @@ public:
 
         // Next variable
         NextType::yearBegin(year, numSpace);
-    }
-
-    void yearEndBuildPrepareDataForEachThermalCluster(State& state,
-                                                      uint year,
-                                                      unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
-    }
-
-    void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
     }
 
     void yearEndBuild(State& state, unsigned int year)
@@ -292,24 +271,24 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
-    {
-        // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
-    }
-
     void hourForEachLink(State& state, unsigned int numSpace)
     {
+        // Ratio take into account MC year weight
+        float ratio = yearsWeight[state.year] / yearsWeightSum;
+
         assert(state.link != NULL);
-        auto& linkdata = state.link->data;
+        const auto& linkDirectCapa = state.link->directCapacities;
+        const auto& linkIndirectCapa = state.link->indirectCapacities;
+        const int tsIndex = NumeroChroniquesTireesParInterconnexion[numSpace][state.link->index]
+                              .TransmissionCapacities;
         // CONG. PROB +
         if (state.ntc->ValeurDuFlux[state.link->index]
-            > +linkdata.entry[Data::fhlNTCDirect][state.hourInTheYear] - 10e-6)
-            pValuesForTheCurrentYear[numSpace][0].hour[state.hourInTheYear] += pRatio;
+            > +linkDirectCapa.entry[tsIndex][state.hourInTheYear] - 10e-6)
+            pValuesForTheCurrentYear[numSpace][0].hour[state.hourInTheYear] += 100.0 * ratio;
         // CONG. PROB -
         if (state.ntc->ValeurDuFlux[state.link->index]
-            < -linkdata.entry[Data::fhlNTCIndirect][state.hourInTheYear] + 10e-6)
-            pValuesForTheCurrentYear[numSpace][1].hour[state.hourInTheYear] += pRatio;
+            < -linkIndirectCapa.entry[tsIndex][state.hourInTheYear] + 10e-6)
+            pValuesForTheCurrentYear[numSpace][1].hour[state.hourInTheYear] += 100.0 * ratio;
 
         // Next item in the list
         NextType::hourForEachLink(state, numSpace);
@@ -375,7 +354,8 @@ public:
     }
 
 private:
-    double pRatio;
+    std::vector<float> yearsWeight;
+    float yearsWeightSum;
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     typename VCardType::IntermediateValuesType pValuesForYearLocalReport;

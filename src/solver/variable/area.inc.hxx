@@ -147,7 +147,7 @@ void Areas<NEXTTYPE>::hourForEachArea(State& state, uint numSpace)
         variablesForArea.hourForEachArea(state, numSpace);
 
         // For each thermal cluster
-        for (uint j = 0; j != area.thermal.clusterCount; ++j)
+        for (uint j = 0; j != area.thermal.clusterCount(); ++j)
         {
             // Intiializing the state for the current thermal cluster
             state.initFromThermalClusterIndex(j, numSpace);
@@ -155,6 +155,15 @@ void Areas<NEXTTYPE>::hourForEachArea(State& state, uint numSpace)
             variablesForArea.hourForEachThermalCluster(state, numSpace);
 
         } // for each thermal cluster
+
+        // For each renewable cluster
+        for (uint j = 0; j != area.renewable.clusterCount(); ++j)
+        {
+            // Intitializing the state for the current thermal cluster
+            state.initFromRenewableClusterIndex(j, numSpace);
+            // Variables
+            variablesForArea.hourForEachRenewableCluster(state, numSpace);
+        } // for each renewable cluster
 
         // All links
         auto end = area.links.end();
@@ -227,10 +236,10 @@ void Areas<NEXTTYPE>::yearEndBuild(State& state, uint year, uint numSpace)
         auto& variablesForArea = pAreas[area.index];
 
         // For each thermal cluster
-        for (uint j = 0; j != area.thermal.clusterCount; ++j)
+        for (uint j = 0; j != area.thermal.clusterCount(); ++j)
         {
-            state.cluster = area.thermal.clusters[j];
-            state.yearEndReset();
+            state.thermalCluster = area.thermal.clusters[j];
+            state.yearEndResetThermal();
 
             // Variables
             variablesForArea.yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
@@ -241,6 +250,16 @@ void Areas<NEXTTYPE>::yearEndBuild(State& state, uint year, uint numSpace)
             // Variables
             variablesForArea.yearEndBuildForEachThermalCluster(state, year, numSpace);
         } // for each thermal cluster
+
+        // For each renewable cluster
+        for (uint j = 0; j != area.renewable.clusterCount(); ++j)
+        {
+            state.renewableCluster = area.renewable.clusters[j];
+            state.yearEndResetRenewable();
+
+            // Variables
+            variablesForArea.yearEndBuildPrepareDataForEachRenewableCluster(state, year, numSpace);
+        } // for each renewable cluster
     });   // for each area
 }
 

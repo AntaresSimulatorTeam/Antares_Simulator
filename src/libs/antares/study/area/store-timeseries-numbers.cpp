@@ -33,6 +33,10 @@
 using namespace Yuni;
 
 #define SEP IO::Separator
+namespace
+{
+const YString DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES = "ntc";
+}
 
 namespace Antares
 {
@@ -114,8 +118,8 @@ bool Area::storeTimeseriesNumbersForWind(Study& study)
 
 bool Area::storeTimeseriesNumbersForThermal(Study& study)
 {
-    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP << "thermal" << SEP
-                         << id;
+    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP
+                         << thermal.list.typeID() << SEP << id;
 
     if (!IO::Directory::Create(study.buffer))
     {
@@ -128,5 +132,51 @@ bool Area::storeTimeseriesNumbersForThermal(Study& study)
     return ret;
 }
 
+bool Area::storeTimeseriesNumbersForRenewable(Study& study)
+{
+    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP
+                         << renewable.list.typeID() << SEP << id;
+
+    if (!IO::Directory::Create(study.buffer))
+    {
+        logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
+        return false;
+    }
+
+    bool ret = renewable.list.storeTimeseriesNumbers(study);
+    return ret;
+}
+
+bool Area::storeTimeseriesNumbersForTransmissionCapacities(Study& study) const
+{
+    // No links originating from this area
+    // do not create an empty directory
+    if (links.empty())
+        return true;
+
+    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP
+                         << DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES << SEP << id;
+
+    if (!IO::Directory::Create(study.buffer))
+    {
+        logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
+        return false;
+    }
+
+    bool ret = true;
+    for (const auto& link : links)
+    {
+        if (link.second == nullptr)
+        {
+            logs.error() << "Unexpected nullptr encountered for area " << id;
+            return false;
+        }
+        else
+        {
+            ret = link.second->storeTimeseriesNumbers(study.buffer) && ret;
+        }
+    }
+    return ret;
+}
 } // namespace Data
 } // namespace Antares

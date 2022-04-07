@@ -80,6 +80,12 @@ public:
     */
     void add(Item::IItem::Ptr it);
 
+    void setElement(Item::IItem::Ptr it, int index_item);
+
+    int size();
+
+    void resizeTo(int newSize);
+
     /*!
     ** \brief Add a datasource
     **
@@ -94,6 +100,8 @@ public:
     ** \brief Force a visual refresh of the component
     */
     void invalidate();
+
+    void forceRedraw();
 
     /*!
     ** \brief Refresh only the content of all items
@@ -127,12 +135,8 @@ public:
     //@{
     //! Operator +=
     Component& operator+=(Item::IItem::Ptr it);
-    //! Operator +=
-    Component& operator+=(Item::IItem* it);
     //! Operator <<
     Component& operator<<(Item::IItem::Ptr it);
-    //! Operator <<
-    Component& operator<<(Item::IItem* it);
     //@}
 
 public:

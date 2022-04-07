@@ -32,7 +32,6 @@ SET(SRC_APPLICATION
 		application/main/disabler.h
 		application/main/main.cpp
 		application/main/create.cpp
-		application/main/check-license-at-startup.hxx
 		application/main/drag-drop.hxx
 		application/main/wip.cpp
 		application/main/statusbar.cpp

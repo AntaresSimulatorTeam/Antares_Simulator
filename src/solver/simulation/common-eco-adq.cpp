@@ -35,6 +35,7 @@
 #include "common-eco-adq.h"
 #include <antares/logs.h>
 #include <cassert>
+#include <map>
 #include "simulation.h"
 #include "../aleatoire/alea_fonctions.h"
 
@@ -48,7 +49,7 @@ namespace Simulation
 {
 static void RecalculDesEchangesMoyens(Data::Study& study,
                                       PROBLEME_HEBDO& problem,
-                                      CallbackBalanceRetrieval& callback,
+                                      const std::vector<AvgExchangeResults*>& balance,
                                       int PasDeTempsDebut)
 {
     for (uint i = 0; i < (uint)problem.NombreDePasDeTemps; i++)
@@ -58,12 +59,11 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
         for (uint j = 0; j < study.areas.size(); ++j)
         {
-            auto* balance = callback(study.areas.byIndex[j]);
-            assert(balance && "Impossible to find the variable");
-            if (balance)
+            assert(balance[j] && "Impossible to find the variable");
+            if (balance[j])
             {
                 problem.SoldeMoyenHoraire[i]->SoldeMoyenDuPays[j]
-                  = balance->avgdata.hourly[decalPasDeTemps];
+                  = balance[j]->avgdata.hourly[decalPasDeTemps];
             }
             else
             {
@@ -72,14 +72,31 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
             }
         }
 
+        std::vector<double> avgDirect;
+        std::vector<double> avgIndirect;
         for (uint j = 0; j < study.runtime->interconnectionsCount; ++j)
         {
-            auto& mtx = study.runtime->areaLink[j]->data;
-            ntcValues.ResistanceApparente[j] = mtx[Data::fhlImpedances][decalPasDeTemps];
-            ntcValues.ValeurDeNTCOrigineVersExtremite[j] = mtx[Data::fhlNTCDirect][decalPasDeTemps];
-            ntcValues.ValeurDeNTCExtremiteVersOrigine[j]
-              = mtx[Data::fhlNTCIndirect][decalPasDeTemps];
-            mtx.flush();
+            auto* link = study.runtime->areaLink[j];
+            int ret = retrieveAverageNTC(
+              study, link->directCapacities, link->timeseriesNumbers, avgDirect);
+
+            ret = retrieveAverageNTC(
+                    study, link->indirectCapacities, link->timeseriesNumbers, avgIndirect)
+                  && ret;
+            if (!ret)
+            {
+                ntcValues.ValeurDeNTCOrigineVersExtremite[j] = avgDirect[decalPasDeTemps];
+                ntcValues.ValeurDeNTCExtremiteVersOrigine[j] = avgIndirect[decalPasDeTemps];
+            }
+            else
+            {
+                assert(false && "invalid NTC");
+            }
+
+            auto& mtxParamaters = link->parameters;
+            ntcValues.ResistanceApparente[j] = mtxParamaters[Data::fhlImpedances][decalPasDeTemps];
+
+            link->flush();
         }
     }
 
@@ -176,7 +193,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
             }
         }
 
-        for (uint j = 0; j != area.thermal.clusterCount; ++j)
+        for (uint j = 0; j != area.thermal.clusterCount(); ++j)
         {
             Data::ThermalCluster* cluster = area.thermal.clusters[j];
             cluster->unitCountLastHour[numSpace] = 0;
@@ -192,26 +209,26 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
     for (uint j = 0; j < study.runtime->interconnectionsCount; ++j)
     {
         auto& lnk = *(study.runtime->areaLink[j]);
-        auto& impedances = lnk.data[Data::fhlImpedances];
+        auto& impedances = lnk.parameters[Data::fhlImpedances];
 
         for (uint hour = 0; hour < maxHours; ++hour)
         {
             if (Math::Abs(impedances[hour]) >= 1e-100)
             {
-                lnk.data.flush();
+                lnk.parameters.flush();
                 return true;
             }
         }
 
-        lnk.data.flush();
+        lnk.parameters.flush();
     }
     return false;
 }
 
-void PerformQuadraticOptimisation(Data::Study& study,
-                                  PROBLEME_HEBDO& problem,
-                                  CallbackBalanceRetrieval& callback,
-                                  uint nbWeeks)
+void ComputeFlowQuad(Data::Study& study,
+                     PROBLEME_HEBDO& problem,
+                     const std::vector<AvgExchangeResults*>& balance,
+                     uint nbWeeks)
 {
     uint startTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
 
@@ -224,7 +241,7 @@ void PerformQuadraticOptimisation(Data::Study& study,
         for (uint w = 0; w != nbWeeks; ++w)
         {
             int PasDeTempsDebut = startTime + (w * problem.NombreDePasDeTemps);
-            RecalculDesEchangesMoyens(study, problem, callback, PasDeTempsDebut);
+            RecalculDesEchangesMoyens(study, problem, balance, PasDeTempsDebut);
         }
     }
     else
@@ -346,6 +363,49 @@ void PrepareRandomNumbers(Data::Study& study,
         }
         indexArea++;
     });
+}
+
+int retrieveAverageNTC(const Data::Study& study,
+                       const Matrix<>& capacities,
+                       const Matrix<Yuni::uint32>& tsNumbers,
+                       std::vector<double>& avg)
+{
+    const auto& parameters = study.parameters;
+
+    const auto& yearsWeight = parameters.getYearsWeight();
+    const auto& yearsWeightSum = parameters.getYearsWeightSum();
+    const auto& yearsFilter = parameters.yearsFilter;
+    const auto width = capacities.width;
+    avg.assign(HOURS_PER_YEAR, 0);
+
+    std::map<Yuni::uint32, double> weightOfTS;
+
+    for (uint y = 0; y < study.parameters.nbYears; y++)
+    {
+        if (!yearsFilter[y])
+            continue;
+
+        Yuni::uint32 tsIndex = (width == 1) ? 0 : tsNumbers[0][y];
+        weightOfTS[tsIndex] += yearsWeight[y];
+    }
+
+    // No need for the year number, only the TS index is required
+    for (const auto& it : weightOfTS)
+    {
+        const Yuni::uint32 tsIndex = it.first;
+        const double weight = it.second;
+
+        for (uint h = 0; h < HOURS_PER_YEAR; h++)
+        {
+            avg[h] += capacities[tsIndex][h] * weight;
+        }
+    }
+
+    for (uint h = 0; h < HOURS_PER_YEAR; h++)
+    {
+        avg[h] /= yearsWeightSum;
+    }
+    return 0;
 }
 
 } // namespace Simulation

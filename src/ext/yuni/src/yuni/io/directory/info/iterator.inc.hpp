@@ -1,245 +1,240 @@
 #ifndef __YUNI_IO_DIRECTORY_INFO_ITERATOR_H__
-# define __YUNI_IO_DIRECTORY_INFO_ITERATOR_H__
-
+#define __YUNI_IO_DIRECTORY_INFO_ITERATOR_H__
 
 // !!! Do not use includes here
 
 public:
+struct Model
+{
+    // Forward declarations
+    class NullIterator;
+    template<uint FlagsT>
+    class Iterator;
 
-	struct Model
-	{
+    class NullIterator
+    {
+    public:
+        //! The type of the orignal object
+        typedef String value_type;
+        //! An uintegral type
+        typedef uint64 uint64ype;
+        //! A signed integral type
+        typedef sint64 difference_type;
 
-		// Forward declarations
-		class NullIterator;
-		template<uint FlagsT> class Iterator;
+        enum
+        {
+            //! A non-zero value if the iterator can go forward
+            canGoForward = true,
+            //! A non-zero value if the iterator can go backward
+            canGoBackward = false,
+        };
 
+    protected:
+        NullIterator()
+        {
+        }
 
-		class NullIterator
-		{
-		public:
-			//! The type of the orignal object
-			typedef String value_type;
-			//! An uintegral type
-			typedef uint64  uint64ype;
-			//! A signed integral type
-			typedef sint64  difference_type;
+        NullIterator(const NullIterator&)
+        {
+        }
 
-			enum
-			{
-				//! A non-zero value if the iterator can go forward
-				canGoForward  = true,
-				//! A non-zero value if the iterator can go backward
-				canGoBackward = false,
-			};
+        template<class ModelT>
+        NullIterator(const ModelT&)
+        {
+        }
 
+        static void forward(difference_type)
+        {
+            // Do nothing
+        }
 
-		protected:
-			NullIterator()
-			{}
+        template<class ModelT>
+        static void reset(const ModelT&)
+        {
+            // Do nothing
+        }
 
-			NullIterator(const NullIterator&)
-			{}
+        bool equals(const NullIterator&)
+        {
+            return true;
+        }
 
-			template<class ModelT> NullIterator(const ModelT&)
-			{}
+        template<class ModelT>
+        bool equals(const ModelT& model)
+        {
+            return (model.pData == NULL);
+        }
 
-			static void forward(difference_type)
-			{
-				// Do nothing
-			}
+        template<class ModelT>
+        difference_type distance(const ModelT&) const
+        {
+            return 0;
+        }
 
-			template<class ModelT>
-			static void reset(const ModelT&)
-			{
-				// Do nothing
-			}
+        // ::Char& operator * ()
 
-			bool equals(const NullIterator&)
-			{
-				return true;
-			}
+        // ::Char* operator -> ()
 
-			template<class ModelT> bool equals(const ModelT& model)
-			{
-				return (model.pData == NULL);
-			}
+    }; // class NullIterator
 
-			template<class ModelT>
-			difference_type distance(const ModelT&) const
-			{
-				return 0;
-			}
+    /*!
+    ** \brief
+    **
+    ** \tparam FlagsT See enum Yuni::IO::Directory::Info::OptionIterator
+    ** \see enum Yuni::IO::Directory::Info::OptionIterator
+    */
+    template<uint FlagsT>
+    class Iterator
+    {
+    public:
+        //! The type of the orignal object
+        typedef String value_type;
+        //! An uintegral type
+        typedef uint64 uint64ype;
+        //! A signed integral type
+        typedef sint64 difference_type;
 
-			// ::Char& operator * ()
+        enum
+        {
+            //! A non-zero value if the iterator can go forward
+            canGoForward = true,
+            //! A non-zero value if the iterator can go backward
+            canGoBackward = false,
+        };
 
-			// ::Char* operator -> ()
+    public:
+        bool isFile() const
+        {
+            return Private::IO::Directory::IteratorDataIsFile(pData);
+        }
 
-		}; // class NullIterator
+        bool isFolder() const
+        {
+            return Private::IO::Directory::IteratorDataIsFolder(pData);
+        }
 
+        const String& filename() const
+        {
+            return Private::IO::Directory::IteratorDataFilename(pData);
+        }
 
+        const String& parent() const
+        {
+            return Private::IO::Directory::IteratorDataParentName(pData);
+        }
 
-		/*!
-		** \brief
-		**
-		** \tparam FlagsT See enum Yuni::IO::Directory::Info::OptionIterator
-		** \see enum Yuni::IO::Directory::Info::OptionIterator
-		*/
-		template<uint FlagsT>
-		class Iterator
-		{
-		public:
-			//! The type of the orignal object
-			typedef String value_type;
-			//! An uintegral type
-			typedef uint64 uint64ype;
-			//! A signed integral type
-			typedef sint64 difference_type;
+        //! Size in bytes
+        uint64 size() const
+        {
+            return Private::IO::Directory::IteratorDataSize(pData);
+        }
 
-			enum
-			{
-				//! A non-zero value if the iterator can go forward
-				canGoForward  = true,
-				//! A non-zero value if the iterator can go backward
-				canGoBackward = false,
-			};
+        //! Date of the last modification
+        sint64 modified() const
+        {
+            return Private::IO::Directory::IteratorDataModified(pData);
+        }
 
-		public:
-			bool isFile() const
-			{
-				return Private::IO::Directory::IteratorDataIsFile(pData);
-			}
+        bool valid() const
+        {
+            return pData != NULL;
+        }
 
-			bool isFolder() const
-			{
-				return Private::IO::Directory::IteratorDataIsFolder(pData);
-			}
+        bool operator!() const
+        {
+            return !pData;
+        }
 
-			const String& filename() const
-			{
-				return Private::IO::Directory::IteratorDataFilename(pData);
-			}
+    protected:
+        Iterator() : pData(NULL)
+        {
+        }
+        template<class StringT>
+        explicit Iterator(const StringT& directory)
+        {
+            // Initializing
+            pData = Private::IO::Directory::IteratorDataCreate(AnyString(directory), FlagsT);
+            // We must forward once to get the first item
+            forward();
+        }
 
-			const String& parent() const
-			{
-				return Private::IO::Directory::IteratorDataParentName(pData);
-			}
+        Iterator(const NullIterator&) : pData(NULL)
+        {
+        }
 
-			//! Size in bytes
-			uint64 size() const
-			{
-				return Private::IO::Directory::IteratorDataSize(pData);
-			}
+        Iterator(const Iterator& copy) : pData(Private::IO::Directory::IteratorDataCopy(copy.pData))
+        {
+        }
 
-			//! Date of the last modification
-			sint64 modified() const
-			{
-				return Private::IO::Directory::IteratorDataModified(pData);
-			}
+        ~Iterator()
+        {
+            Private::IO::Directory::IteratorDataFree(pData);
+        }
 
-			bool valid() const
-			{
-				return pData != NULL;
-			}
+        void forward()
+        {
+            pData = Private::IO::Directory::IteratorDataNext(pData);
+        }
 
-			bool operator ! () const
-			{
-				return !pData;
-			}
+        void forward(difference_type n)
+        {
+            while (n > 0)
+            {
+                forward();
+                --n;
+            }
+        }
 
-		protected:
-			Iterator() :
-				pData(NULL)
-			{}
-			template<class StringT> explicit Iterator(const StringT& directory)
-			{
-				// Initializing
-				pData = Private::IO::Directory::IteratorDataCreate(AnyString(directory), FlagsT);
-				// We must forward once to get the first item
-				forward();
-			}
+        template<class ModelT>
+        void reset(const ModelT& model)
+        {
+            if (pData)
+                Private::IO::Directory::IteratorDataFree(pData);
+            pData = Private::IO::Directory::IteratorDataCopy(model.pData);
+        }
 
-			Iterator(const NullIterator&) :
-				pData(NULL)
-			{}
+        template<class ModelT>
+        difference_type distance(const ModelT&) const
+        {
+            return 0;
+        }
 
-			Iterator(const Iterator& copy) :
-				pData(Private::IO::Directory::IteratorDataCopy(copy.pData))
-			{
-			}
+        bool equals(const NullIterator&) const
+        {
+            return (pData == NULL);
+        }
 
-			~Iterator()
-			{
-				Private::IO::Directory::IteratorDataFree(pData);
-			}
+        template<class ModelT>
+        bool equals(const ModelT& model) const
+        {
+            return (not pData and not model.pData);
+        }
 
-			void forward()
-			{
-				pData = Private::IO::Directory::IteratorDataNext(pData);
-			}
+        const String& operator*()
+        {
+            assert(pData != NULL);
+            return Private::IO::Directory::IteratorDataName(pData);
+        }
 
-			void forward(difference_type n)
-			{
-				while (n > 0)
-				{
-					forward();
-					--n;
-				}
-			}
+        const String* operator->()
+        {
+            assert(pData != NULL);
+            return &Private::IO::Directory::IteratorDataName(pData);
+        }
 
-			template<class ModelT>
-			void reset(const ModelT& model)
-			{
-				if (pData)
-					Private::IO::Directory::IteratorDataFree(pData);
-				pData = Private::IO::Directory::IteratorDataCopy(model.pData);
-			}
+        Iterator& operator=(const Iterator& copy)
+        {
+            Private::IO::Directory::IteratorDataFree(pData);
+            pData = Private::IO::Directory::IteratorDataCopy(copy.pData);
+            return *this;
+        }
 
-			template<class ModelT>
-			difference_type distance(const ModelT&) const
-			{
-				return 0;
-			}
+    private:
+        //! Platform-dependant data implementation
+        Private::IO::Directory::IteratorData* pData;
 
-			bool equals(const NullIterator&) const
-			{
-				return (pData == NULL);
-			}
+    }; // class Iterator
 
-			template<class ModelT>
-			bool equals(const ModelT& model) const
-			{
-				return (not pData and not model.pData);
-			}
-
-			const String& operator * ()
-			{
-				assert(pData != NULL);
-				return Private::IO::Directory::IteratorDataName(pData);
-			}
-
-			const String* operator -> ()
-			{
-				assert(pData != NULL);
-				return &Private::IO::Directory::IteratorDataName(pData);
-			}
-
-			Iterator& operator = (const Iterator& copy)
-			{
-				Private::IO::Directory::IteratorDataFree(pData);
-				pData = Private::IO::Directory::IteratorDataCopy(copy.pData);
-				return *this;
-			}
-
-		private:
-			//! Platform-dependant data implementation
-			Private::IO::Directory::IteratorData* pData;
-
-		}; // class Iterator
-
-
-
-	}; // class Model
-
-
+}; // class Model
 
 #endif // __YUNI_IO_DIRECTORY_INFO_ITERATOR_H__

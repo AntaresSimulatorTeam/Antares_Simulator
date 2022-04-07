@@ -68,6 +68,7 @@ public:
         }
 
         auto* cleaner = new Data::StudyCleaningInfos(folder);
+        cleaner->setCustomExcludeList(exclude);
         cleaner->onProgress.bind(&onProgress);
         if (cleaner->analyze())
             cleaner->performCleanup();
@@ -88,7 +89,7 @@ public:
 public:
     bool listOnly;
     bool mrproper;
-
+    Yuni::String exclude;
 }; // class StudyFinderCleaner
 
 int main(int argc, char* argv[])
@@ -103,6 +104,8 @@ int main(int argc, char* argv[])
     bool optPrintOnly = false;
     bool optMrProper = false;
 
+    Yuni::String optExclude;
+
     // Command Line options
     {
         // Parser
@@ -113,6 +116,13 @@ int main(int argc, char* argv[])
         options.remainingArguments(optInput);
         // Output
         options.add(optInput, 'i', "input", "An input folder where to look for studies");
+        // Exclude some files/folders
+        options.add(optExclude,
+                    'e',
+                    "exclude",
+                    "Colon-separated list of excluded files/folders to prevent from destruction. "
+                    "Exemple : --exclude fileA:directoryB:fileC");
+
         // Format
         options.addFlag(optPrintOnly, ' ', "dry", "List the folder only and do nothing");
 
@@ -141,6 +151,10 @@ int main(int argc, char* argv[])
         StudyFinderCleaner updater;
         updater.listOnly = optPrintOnly;
         updater.mrproper = optMrProper;
+        if (!optExclude.empty())
+        {
+            updater.exclude = optExclude;
+        }
         updater.lookup(optInput);
         updater.wait();
     }

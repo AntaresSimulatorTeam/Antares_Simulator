@@ -25,6 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <limits>
+
 #include "opt_structure_probleme_a_resoudre.h"
 
 #include "../simulation/simulation.h"
@@ -34,6 +36,13 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
+
+/*
+ pi_define.h doesn't include this header, yet it uses struct jmp_buf.
+ It would be nice to remove this include, but would require to change pi_define.h,
+ which isn't part of Antares
+*/
+#include <setjmp.h>
 
 extern "C"
 {

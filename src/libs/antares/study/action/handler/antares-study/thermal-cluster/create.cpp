@@ -68,12 +68,12 @@ bool Create::prepareWL(Context& ctx)
     }
 
     // Computing the futur ID of the area
-    Data::ThermalClusterName id;
+    Data::ClusterName id;
     const Data::ThermalCluster* clusterFound = nullptr;
 
     // finding the final area
     const Data::AreaName& areaMapping = ctx.areaNameMapping[pOriginalAreaName];
-    const Data::Area* area = ctx.study.areas.findFromName(areaMapping);
+    const Data::Area* area = ctx.study->areas.findFromName(areaMapping);
     bool forceAreaCreate = ctx.areaForceCreate[pOriginalAreaName];
     bool forcePlantCreate = ctx.clusterForceCreate[pOriginalAreaName];
 
@@ -159,7 +159,7 @@ bool Create::performWL(Context& ctx)
     ctx.cluster = nullptr;
     if (ctx.area)
     {
-        Data::ThermalClusterName id;
+        Data::ClusterName id;
 
         // source cluster
         Data::Area* source = ctx.extStudy->areas.findFromName(pOriginalAreaName);
@@ -178,9 +178,9 @@ bool Create::performWL(Context& ctx)
         if (!ctx.cluster)
         {
             ctx.cluster = new Data::ThermalCluster(ctx.area);
-            ctx.cluster->name(pFuturPlantName);
+            ctx.cluster->setName(pFuturPlantName);
             ctx.cluster->reset();
-            (ctx.area)->thermal.list.add(ctx.cluster);
+            (ctx.area)->thermal.list.add(std::shared_ptr<Data::ThermalCluster>(ctx.cluster));
             (ctx.area)->thermal.list.rebuildIndex();
             (ctx.area)->thermal.prepareAreaWideIndexes();
         }

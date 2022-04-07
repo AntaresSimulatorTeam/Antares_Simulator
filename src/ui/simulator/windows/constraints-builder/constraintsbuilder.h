@@ -40,6 +40,8 @@
 #include <yuni/thread/thread.h>
 #include <yuni/core/event.h>
 
+#include <memory>
+
 namespace Antares
 {
 namespace Window
@@ -48,11 +50,11 @@ class ConstraintsBuilderWizard final : public wxDialog
 {
 public:
     //! File mapping
-    typedef Component::Datagrid::Renderer::ConstraintsBuilder::Links::Map FileMapping;
+    using FileMapping = Component::Datagrid::Renderer::ConstraintsBuilder::Links::Map;
     //!
-    typedef Component::Datagrid::Renderer::ConstraintsBuilder::Links::Record::Vector RecordVector;
+    using RecordVector = Component::Datagrid::Renderer::ConstraintsBuilder::Links::Record::Vector;
     //! Smartptr for file mapping
-    typedef Yuni::SmartPtr<FileMapping> FileMappingPtr;
+    using FileMappingPtr = std::shared_ptr<FileMapping>;
 
     enum IDs
     {
@@ -92,7 +94,7 @@ public:
     void onUpdateInfiniteValue(wxCommandEvent& evt);
     //@}
 
-    void fileMapping(FileMapping* m);
+    void fileMapping(FileMappingPtr m);
 
     /*!
     ** \brief Force the refresh of the grid
@@ -169,7 +171,7 @@ private:
 
     FileMappingPtr pFileMapping;
 
-    typedef Component::Datagrid::Renderer::ConstraintsBuilder::Links RendererType;
+    using RendererType = Component::Datagrid::Renderer::ConstraintsBuilder::Links;
     RendererType* pRenderer;
 
     CBuilder* pCBuilder;

@@ -70,21 +70,13 @@ public:
     double avgImpedance;
     Data::AreaLink* ptr;
 
-    Matrix<double>* dataLink;
-
 public:
     double getWeightWithImpedance() const;
     Yuni::String getName() const;
 
-    linkInfo()
-    {
-        dataLink = new Matrix<>;
-    }
+    linkInfo() = default;
 
-    ~linkInfo()
-    {
-        delete dataLink;
-    }
+    ~linkInfo() = default;
 
     struct comparepWeight
     {
@@ -155,9 +147,9 @@ public:
             if ((*line)->nImpedanceChanges > 0
                 || ((*line)->type == Antares::Data::atAC && (!(*line)->hasPShiftsEqual)))
                 opType = Data::BindingConstraint::opBoth;
-            impedances.push_back((*line)->dataLink->entry[columnImpedance][0]);
+            impedances.push_back((*line)->ptr->parameters[columnImpedance][0]);
 
-            time = (*line)->dataLink->height; /*BC loading always expects 8786 values heigth will
+            time = HOURS_PER_YEAR; /*BC loading always expects 8786 values heigth will
                                                  have to be resized*/
 
             if (line == linkList.begin())

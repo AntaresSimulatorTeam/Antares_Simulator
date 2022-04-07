@@ -33,6 +33,7 @@
 #include "../inifile/inifile.h"
 #include "hostname.hxx"
 #include "../config.h"
+#include <antares/emergency.h>
 #include <yuni/core/system/environment.h>
 #include <yuni/core/system/process.h>
 #include <yuni/core/system/username.h>
@@ -230,15 +231,6 @@ bool Open(bool expandEntries)
     (*entries)[(key = "localpolicy.user.path")] = pathLocalPolicy;
     (*entries)[(key = "localpolicy.allusers.path")] = pathLocalPolicyAllUsers;
 
-    // license
-    (*entries)[(key = "license.user.path")].clear()
-      << localAppData << SEP << "antares-" << ANTARES_VERSION << ".hwb";
-    (*entries)[(key = "license.allusers.path")].clear()
-      << localAppDataAllUsers << SEP << "antares-" << ANTARES_VERSION << ".hwb";
-
-    if ((*entries).count((key = "license.servers")) == 0)
-        (*entries)[key].clear();
-
     if (expandEntries)
         ExpansionWL();
     return true;
@@ -405,14 +397,14 @@ void CheckRootPrefix(const char* argv0)
         if (IO::IsAbsolute(adapter))
         {
             if (0 != adapter.ifind(i->second))
-                exit(EXIT_FAILURE);
+                AntaresSolverEmergencyShutdown(EXIT_FAILURE);
         }
         else
         {
             String absfilename;
             IO::MakeAbsolute(absfilename, adapter);
             if (0 != absfilename.ifind(i->second))
-                exit(EXIT_FAILURE);
+                AntaresSolverEmergencyShutdown(EXIT_FAILURE);
         }
     }
 }

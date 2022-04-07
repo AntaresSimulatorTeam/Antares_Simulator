@@ -111,8 +111,8 @@ private:
     class Tab
     {
     public:
-        //! SmartPtr
-        typedef Yuni::SmartPtr<Tab> Ptr;
+        //! std::shared_ptr
+        typedef std::shared_ptr<Tab> Ptr;
         //! Vector
         typedef std::vector<Ptr> Vector;
 
@@ -216,7 +216,7 @@ private:
     ** \brief Display a frame with the given data provider
     */
     void displayMiniFrame(wxWindow* parent,
-                          Antares::Component::Spotlight::IProvider* provider,
+                          Antares::Component::Spotlight::IProvider::Ptr provider,
                           int width = 340,
                           bool searchInput = true,
                           bool groups = true);
@@ -356,6 +356,8 @@ private:
     Button* pBtnValues;
     //! Data level: details
     Button* pBtnDetails;
+    //! Data level: details-res
+    Button* pBtnDetailsRes;
     //! Data level: id
     Button* pBtnID;
 

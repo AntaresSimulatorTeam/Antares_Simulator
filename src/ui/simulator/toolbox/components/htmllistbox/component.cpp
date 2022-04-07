@@ -147,6 +147,26 @@ void Component::add(Item::IItem::Ptr it)
     invalidate();
 }
 
+void Component::setElement(Item::IItem::Ptr it, int index_item)
+{
+    pItems[index_item] = it;
+}
+
+int Component::size()
+{
+    return pItems.size();
+}
+
+void Component::resizeTo(int newSize)
+{
+    pItems.resize(newSize);
+}
+
+void Component::forceRedraw()
+{
+    pInvalidated = true;
+}
+
 void Component::invalidate()
 {
     if (!pInvalidated)
@@ -188,7 +208,8 @@ void Component::internalUpdateItems()
     if (pItems.empty())
     {
         // Keep the user informed that there is nothing to display
-        pListbox->Append(wxEmptyString, new CustomClientData(new Item::Info(wxT("No item"))));
+        pListbox->Append(wxEmptyString,
+                         new CustomClientData(std::make_shared<Item::Info>(wxT("No item"))));
         if (pLastSelectedItem)
         {
             pLastSelectedItem = nullptr;
@@ -266,7 +287,7 @@ void Component::updateHtmlContent()
     {
         for (uint i = 0; i < pListbox->GetCount(); ++i)
         {
-            auto* cd = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(i));
+            const auto* cd = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(i));
             if (cd)
                 pListbox->SetString(i, cd->item->htmlContent(wxEmptyString));
         }
@@ -278,7 +299,8 @@ void Component::onSelectionChanged(wxCommandEvent& evt)
     if (not GUIIsLock() && pListbox)
     {
         GUILocker locker;
-        auto* c = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(evt.GetSelection()));
+        const auto* c
+          = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(evt.GetSelection()));
         if (c)
         {
             pLastSelectedItem = c->item;
@@ -292,7 +314,8 @@ void Component::onSelectionDblClick(wxCommandEvent& evt)
     if (not GUIIsLock() && pListbox)
     {
         GUILocker locker;
-        auto* c = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(evt.GetSelection()));
+        const auto* c
+          = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(evt.GetSelection()));
         if (c)
         {
             pLastSelectedItem = c->item;
@@ -353,17 +376,7 @@ void Component::onDraw(wxPaintEvent& evt)
 void Component::internalClearTheListbox()
 {
     if (pListbox && not pListbox->IsEmpty())
-    {
-        for (uint i = 0; i < pListbox->GetCount(); ++i)
-        {
-            // For an unknown reason we have to tell to wx to reset to nullptr
-            // to force the deletion of our objects...
-            pListbox->SetClientObject(i, nullptr);
-        }
-
-        // Clear the listbox
         pListbox->Clear();
-    }
 }
 
 void Component::onStudyClosed()

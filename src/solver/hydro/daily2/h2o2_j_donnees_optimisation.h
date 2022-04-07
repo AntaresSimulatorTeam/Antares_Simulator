@@ -30,6 +30,7 @@
 #include "../daily/h2o_j_sys.h"
 #include "../daily/h2o_j_donnees_optimisation.h"
 #include <antares/study/study.h>
+#include <antares/mersenne-twister/mersenne-twister.h>
 
 #define LINFINI 1.e+80
 
@@ -134,6 +135,12 @@ typedef struct
 
 } PROBLEME_HYDRAULIQUE_ETENDU;
 
+namespace Constants
+{
+constexpr double noiseAmplitude = 1e-3;
+constexpr unsigned int seed = 0x79683264; // "hyd2" in hexa
+} // namespace Constants
+
 class Hydro_problem_costs
 {
 public:
@@ -141,31 +148,31 @@ public:
 
     inline double get_end_days_levels_cost() const
     {
-        return end_days_levels;
+        return end_days_levels + noiseGenerator() * Constants::noiseAmplitude;
     }
     inline double get_overflow_cost() const
     {
-        return overflow;
+        return overflow + noiseGenerator() * Constants::noiseAmplitude;
     }
     inline double get_deviations_cost() const
     {
-        return deviations;
+        return deviations + noiseGenerator() * Constants::noiseAmplitude;
     }
     inline double get_violations_cost() const
     {
-        return violations;
+        return violations + noiseGenerator() * Constants::noiseAmplitude;
     }
     inline double get_waste_cost() const
     {
-        return waste;
+        return waste + noiseGenerator() * Constants::noiseAmplitude;
     }
     inline double get_deviationMax_cost() const
     {
-        return deviationMax;
+        return deviationMax + noiseGenerator() * Constants::noiseAmplitude;
     }
     inline double get_violationMax_cost() const
     {
-        return violationMax;
+        return violationMax + noiseGenerator() * Constants::noiseAmplitude;
     }
 
 private:
@@ -176,6 +183,8 @@ private:
     double waste;
     double deviationMax;
     double violationMax;
+
+    mutable Antares::MersenneTwister noiseGenerator;
 };
 
 #endif

@@ -47,7 +47,7 @@ public:
                       const wxPoint& top,
                       const wxPoint& bottom);
 
-    void operator()();
+    Tool::Tool* operator()();
 
 private:
     template<class T>
@@ -80,7 +80,7 @@ private:
 
     void createToolsForRealNodes();
     void createToolsForConnections();
-    void createCommonTools(const bool haveRealNodes, const bool haveConnections);
+    Tool::Tool* createCommonTools(const bool haveRealNodes, const bool haveConnections);
 
 private:
     Manager& pManager;

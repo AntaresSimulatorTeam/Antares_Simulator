@@ -48,6 +48,8 @@
 #include "load-options.h"
 #include "../date.h"
 
+#include <memory>
+
 #include "equipments/equipments.h" // experimental
 
 //# include "../../../solver/variable/state.h"
@@ -62,9 +64,7 @@ namespace Data
 class Study final : public Yuni::NonCopyable<Study>, public IObject
 {
 public:
-    //! The most suitable smart pointer for the class
-    typedef IObject::SmartPtr<Study>::Ptr Ptr;
-    // typedef Yuni::SmartPtr<Study>  Ptr;
+    using Ptr = std::shared_ptr<Study>;
     //! Set of studies
     typedef std::set<Ptr> Set;
     //! List of studies
@@ -88,7 +88,7 @@ public:
     //! List of disabled links
     typedef std::set<AreaLinkName> DisabledAreaLinkList;
     //! List of disabled thermal clusters
-    typedef std::set<ThermalClusterName> DisabledThermalClusterList;
+    typedef std::set<ClusterName> DisabledThermalClusterList;
 
     //! Extension filename
     typedef Yuni::CString<8, false> FileExtension;
@@ -303,17 +303,15 @@ public:
     bool linkDelete(AreaLink* lnk);
     //@}
 
-    //! \name Thermal clusters
+    //! \name Renewable/thermal clusters
     //@{
     /*!
-    ** \brief Rename a thermal cluster
+    ** \brief Rename a renewable/thermal cluster
     **
     ** \param cluster The cluster
     ** \return True if the operation succeeded, false otherwise
     */
-    bool thermalClusterRename(ThermalCluster* cluster,
-                              ThermalClusterName newName,
-                              bool force = false);
+    bool clusterRename(Cluster* cluster, ClusterName newName);
     //@}
 
     //! \name Read-only
@@ -581,9 +579,8 @@ public:
     *cluster in the all area in the study.
     ** Should be call then all inforation is suplied in to the thermal clusters.
     */
-    bool areasThermalClustersMinStablePowerValidity(std::map<int, YString>& areaClusterNames) const;
+    void computePThetaInfForThermalClusters() const;
 
-public:
     //! Header (general information about the study)
     StudyHeader header;
 
@@ -909,6 +906,9 @@ void StudyEnsureDataThermalTimeSeries(Study* s);
 ** \see Study::ensureDataAreAllInitializedAccordingParameters()
 */
 void StudyEnsureDataThermalPrepro(Study* s);
+
+bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,
+                                                std::map<int, YString>& areaClusterNames);
 
 } // namespace Data
 } // namespace Antares

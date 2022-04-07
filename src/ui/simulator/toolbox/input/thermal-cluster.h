@@ -37,7 +37,9 @@
 #include <wx/stattext.h>
 #include <wx/imaglist.h>
 #include "../components/htmllistbox/component.h"
-#include "../components/htmllistbox/item/thermal-cluster.h"
+#include "../components/htmllistbox/item/thermal-cluster-item.h"
+#include "../components/htmllistbox/datasource/thermal-cluster-order.h"
+#include "../components/htmllistbox/item/thermal-cluster-item.h"
 
 namespace Antares
 {
@@ -45,6 +47,8 @@ namespace Toolbox
 {
 namespace InputSelector
 {
+using namespace Component::HTMLListbox::Datasource;
+
 /*!
 ** \brief Visual Component for displaying thermal clusters of an arbitrary area
 */
@@ -141,6 +145,8 @@ private:
 
     void delayedSelection(Component::HTMLListbox::Item::IItem::Ptr item);
 
+    void updateWhenGroupChanges();
+
 private:
     //! The current Area
     Antares::Data::Area* pArea;
@@ -153,7 +159,10 @@ private:
     //! The area notifier
     InputSelector::Area* pAreaNotifier;
     //! The last selected thermal cluster
-    Component::HTMLListbox::Item::ThermalCluster::Ptr pLastSelectedThermalCluster;
+    Component::HTMLListbox::Item::ThermalClusterItem::Ptr pLastSelectedThermalCluster;
+
+    ThermalClustersByAlphaOrder* pDataSourceAZ;
+    ThermalClustersByAlphaReverseOrder* pDataSourceZA;
 
 }; // class Area
 

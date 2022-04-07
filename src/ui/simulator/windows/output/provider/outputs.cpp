@@ -35,6 +35,8 @@
 #include <antares/study/study.h>
 #include <antares/study/memory-usage.h>
 
+#include <memory>
+
 using namespace Yuni;
 
 namespace Antares
@@ -51,11 +53,11 @@ class OutputSpotlightItem : public Antares::Component::Spotlight::IItem
 {
 public:
     //! Ptr
-    typedef Yuni::SmartPtr<OutputSpotlightItem> Ptr;
+    typedef std::shared_ptr<OutputSpotlightItem> Ptr;
     //! Vector of items
     typedef std::vector<Ptr> Vector;
     //! Vector Ptr
-    typedef Yuni::SmartPtr<Vector> VectorPtr;
+    typedef std::shared_ptr<Vector> VectorPtr;
 
 public:
     OutputSpotlightItem()
@@ -104,7 +106,7 @@ void Outputs::search(Spotlight::IItem::Vector& out,
     // More than one tab: we would like to be able to close the current one
     if (pLayer && pComponent.pTabs.size() > 1)
     {
-        auto* item = new OutputSpotlightItem();
+        auto item = std::make_shared<OutputSpotlightItem>();
         item->caption("Close the tab");
         item->image(pBmpClose);
         item->tag = -1;
@@ -119,7 +121,7 @@ void Outputs::search(Spotlight::IItem::Vector& out,
     {
         // OutputSpotlightItem
         if (pLayer && pComponent.pTabs.size() > 1)
-            out.push_back(new Spotlight::Separator());
+            out.push_back(std::make_shared<Spotlight::Separator>());
 
         Data::Output::Ptr outputSelected;
         if (pLayer)
@@ -158,7 +160,7 @@ void Outputs::search(Spotlight::IItem::Vector& out,
                     continue;
             }
 
-            auto* item = new OutputSpotlightItem();
+            auto item = std::make_shared<OutputSpotlightItem>();
             if (output->version != (uint)Data::versionLatest)
             {
                 CString<16, false> text;
@@ -207,8 +209,7 @@ void Outputs::search(Spotlight::IItem::Vector& out,
 
 bool Outputs::onSelect(Spotlight::IItem::Ptr& item)
 {
-    OutputSpotlightItem::Ptr withlayer
-      = Spotlight::IItem::Ptr::DynamicCast<OutputSpotlightItem::Ptr>(item);
+    auto withlayer = std::dynamic_pointer_cast<OutputSpotlightItem>(item);
     if (!item)
         return true;
 

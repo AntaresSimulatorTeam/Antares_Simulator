@@ -89,8 +89,8 @@ void CommonProperties::onThermalClusterChanged(Data::ThermalCluster* cluster)
 {
     if (cluster)
     {
-        auto* data = new Window::Inspector::InspectorData(*Data::Study::Current::Get());
-        data->clusters.insert(cluster);
+        auto data = std::make_shared<Window::Inspector::InspectorData>(Data::Study::Current::Get());
+        data->ThClusters.insert(cluster);
         pUpdateInfoAboutPlant(data);
     }
     else
@@ -103,24 +103,6 @@ void CommonProperties::onThermalClusterChanged(Data::ThermalCluster* cluster)
 void CommonProperties::onStudyClosed()
 {
     onThermalClusterChanged(nullptr);
-}
-
-void CommonProperties::onUpdAggregateListDueToGroupChange()
-{
-    if (pGroupHasChanged)
-    {
-        pGroupHasChanged = false;
-        if (pNotifier)
-        {
-            thermalEventDisconnect();
-            pNotifier->update();
-            pNotifier->Refresh();
-
-            // (Re) Connection with the notifier
-            pNotifier->UpdateWindowUI();
-            thermalEventConnect();
-        }
-    }
 }
 
 void CommonProperties::thermalEventConnect()

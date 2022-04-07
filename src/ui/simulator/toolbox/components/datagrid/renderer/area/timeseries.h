@@ -31,6 +31,7 @@
 #include "../area.h"
 #include "../matrix.h"
 #include "../../../../input/thermal-cluster.h"
+#include "../../../../input/renewable-cluster.h"
 #include <antares/date.h>
 #include "../../../../../application/study.h"
 
@@ -298,75 +299,118 @@ protected:
     }
 };
 
-class TimeSeriesThermalCluster final : public Renderer::Matrix<double, yint32>
+// =========================
+// Clusters ...
+// =========================
+
+// ----------------------
+//   CLUSTER COMMON
+// ----------------------
+
+class TimeSeriesCluster : public Renderer::Matrix<double>
 {
 public:
-    typedef Renderer::Matrix<double, Yuni::sint32> AncestorType;
+    typedef Renderer::Matrix<double> AncestorType;
 
+public:
+    TimeSeriesCluster(wxWindow* control);
+    virtual ~TimeSeriesCluster();
+
+    int width() const override
+    {
+        return AncestorType::width() + 3;
+    }
+
+    int height() const override
+    {
+        return AncestorType::height();
+    }
+
+    int internalWidth() const override
+    {
+        return AncestorType::width();
+    }
+    int internalHeight() const override
+    {
+        return AncestorType::height();
+    }
+
+    wxString columnCaption(int colIndx) const override;
+
+    wxString rowCaption(int rowIndx) const override
+    {
+        return AncestorType::rowCaption(rowIndx);
+    }
+
+    wxString cellValue(int x, int y) const override;
+
+    double cellNumericValue(int x, int y) const override;
+
+    void resetColors(int, int, wxColour&, wxColour&) const override
+    {
+        // Do nothing
+    }
+
+    bool cellValue(int x, int y, const Yuni::String& value) override
+    {
+        return AncestorType::cellValue(x, y, value);
+    }
+
+    IRenderer::CellStyle cellStyle(int col, int row) const override;
+
+    wxColour verticalBorderColor(int x, int y) const override;
+    wxColour horizontalBorderColor(int x, int y) const override;
+
+    uint maxHeightResize() const override
+    {
+        return HOURS_PER_YEAR;
+    }
+
+    Date::Precision precision() override
+    {
+        return Date::hourly;
+    }
+};
+
+// ----------------------
+//   THERMAL CLUSTERS
+// ----------------------
+
+class TimeSeriesThermalCluster final : public TimeSeriesCluster
+{
 public:
     TimeSeriesThermalCluster(wxWindow* control, Toolbox::InputSelector::ThermalCluster* notifier);
 
     virtual ~TimeSeriesThermalCluster();
 
-    virtual int width() const
-    {
-        return AncestorType::width() + 3;
-    }
-    virtual int height() const
-    {
-        return AncestorType::height();
-    }
-
-    virtual int internalWidth() const
-    {
-        return AncestorType::width();
-    }
-    virtual int internalHeight() const
-    {
-        return AncestorType::height();
-    }
-
-    virtual wxString columnCaption(int colIndx) const;
-
-    virtual wxString rowCaption(int rowIndx) const
-    {
-        return AncestorType::rowCaption(rowIndx);
-    }
-
-    virtual wxString cellValue(int x, int y) const;
-
-    virtual double cellNumericValue(int x, int y) const;
-
-    virtual bool cellValue(int x, int y, const Yuni::String& value)
-    {
-        return AncestorType::cellValue(x, y, value);
-    }
-
-    virtual void resetColors(int, int, wxColour&, wxColour&) const
-    { /*Do nothing*/
-    }
-
-    IRenderer::CellStyle cellStyle(int col, int row) const;
-
-    virtual wxColour verticalBorderColor(int x, int y) const;
-    virtual wxColour horizontalBorderColor(int x, int y) const;
-
-    virtual uint maxHeightResize() const
-    {
-        return HOURS_PER_YEAR;
-    }
-
-    virtual Date::Precision precision()
-    {
-        return Date::hourly;
-    }
-
 protected:
-    virtual void internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster)
+    void internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster)
     {
         matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->series) : NULL);
     }
-    virtual void onStudyClosed();
+
+    void onStudyClosed() override;
+};
+
+// ----------------------
+//   RENEWABLE CLUSTERS
+// ----------------------
+
+class TimeSeriesRenewableCluster final : public TimeSeriesCluster
+{
+public:
+    TimeSeriesRenewableCluster(wxWindow* control,
+                               Toolbox::InputSelector::RenewableCluster* notifier);
+
+    virtual ~TimeSeriesRenewableCluster();
+
+private:
+    void internalRenewableClusterChanged(Antares::Data::RenewableCluster* cluster)
+    {
+        matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->series) : NULL);
+    }
+
+    void onStudyClosed() override;
 };
 
 } // namespace Renderer

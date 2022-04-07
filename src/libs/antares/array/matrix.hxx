@@ -31,6 +31,7 @@
 #include <yuni/core/string.h>
 #include <yuni/core/math.h>
 #include <logs.h>
+#include <utility>
 #include "../string-to-double.h"
 #include "../io/statistics.h"
 #include "matrix-to-buffer.h"
@@ -236,6 +237,13 @@ Matrix<T, ReadWriteT>::Matrix(const Matrix<T, ReadWriteT>& rhs) :
 }
 
 template<class T, class ReadWriteT>
+Matrix<T, ReadWriteT>::Matrix(Matrix<T, ReadWriteT>&& rhs) noexcept
+{
+    // use Matrix::operator=(Matrix&& rhs)
+    *this = std::move(rhs);
+}
+
+template<class T, class ReadWriteT>
 template<class U, class V>
 Matrix<T, ReadWriteT>::Matrix(const Matrix<U, V>& rhs) :
  width(0), height(0), entry(nullptr), jit(nullptr)
@@ -417,10 +425,11 @@ bool Matrix<T, ReadWriteT>::loadFromCSVFile(const AnyString& filename,
 template<class T, class ReadWriteT>
 bool Matrix<T, ReadWriteT>::saveToCSVFile(const AnyString& filename,
                                           uint precision,
-                                          bool print_dimensions) const
+                                          bool print_dimensions,
+                                          bool saveEvenIfAllZero) const
 {
     PredicateIdentity predicate;
-    return internalSaveCSVFile(filename, precision, print_dimensions, predicate);
+    return internalSaveCSVFile(filename, precision, print_dimensions, predicate, saveEvenIfAllZero);
 }
 
 template<class T, class ReadWriteT>
@@ -428,9 +437,10 @@ template<class PredicateT>
 bool Matrix<T, ReadWriteT>::saveToCSVFile(const AnyString& filename,
                                           uint precision,
                                           bool print_dimensions,
-                                          PredicateT& predicate) const
+                                          PredicateT& predicate,
+                                          bool saveEvenIfAllZero) const
 {
-    return internalSaveCSVFile(filename, precision, print_dimensions, predicate);
+    return internalSaveCSVFile(filename, precision, print_dimensions, predicate, saveEvenIfAllZero);
 }
 
 template<class T, class ReadWriteT>
@@ -1185,7 +1195,8 @@ template<class PredicateT>
 void Matrix<T, ReadWriteT>::saveToBuffer(std::string& data,
                                          uint precision,
                                          bool print_dimensions,
-                                         PredicateT& predicate) const
+                                         PredicateT& predicate,
+                                         bool saveEvenIfAllZero) const
 {
     using namespace Yuni;
     enum
@@ -1194,7 +1205,7 @@ void Matrix<T, ReadWriteT>::saveToBuffer(std::string& data,
         isDecimal = Static::Type::IsDecimal<ReadWriteType>::Yes,
     };
 
-    if (not print_dimensions and containsOnlyZero(predicate))
+    if (not print_dimensions and (containsOnlyZero(predicate) and not saveEvenIfAllZero))
         // Does nothing if the matrix only contains zero
         return;
 
@@ -1238,7 +1249,8 @@ template<class PredicateT>
 bool Matrix<T, ReadWriteT>::internalSaveCSVFile(const AnyString& filename,
                                                 uint precision,
                                                 bool print_dimensions,
-                                                PredicateT& predicate) const
+                                                PredicateT& predicate,
+                                                bool saveEvenIfAllZero) const
 {
     JIT::just_in_time_manager jit_mgr(jit, filename);
 
@@ -1270,7 +1282,7 @@ bool Matrix<T, ReadWriteT>::internalSaveCSVFile(const AnyString& filename,
     {
         std::string buffer;
 
-        saveToBuffer(buffer, precision, print_dimensions, predicate);
+        saveToBuffer(buffer, precision, print_dimensions, predicate, saveEvenIfAllZero);
         Statistics::HasWrittenToDisk(buffer.size());
 
         saveBufferToFile(buffer, file);
@@ -1553,9 +1565,41 @@ inline void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>* rhs)
 }
 
 template<class T, class ReadWriteT>
+void Matrix<T, ReadWriteT>::swap(Matrix<T, ReadWriteT>& rhs) noexcept
+{
+    // argument deduction lookup (ADL)
+    using std::swap;
+    swap(this->width, rhs.width);
+    swap(this->height, rhs.height);
+    swap(this->entry, rhs.entry);
+    swap(this->jit, rhs.jit);
+}
+
+template<class T, class ReadWriteT>
 inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(const Matrix<T, ReadWriteT>& rhs)
 {
     copyFrom(rhs);
+    return *this;
+}
+
+template<class T, class ReadWriteT>
+inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(Matrix<T, ReadWriteT>&& rhs) noexcept
+{
+    width = rhs.width;
+    height = rhs.height;
+    jit = rhs.jit;
+    if (0 == width || 0 == height)
+    {
+        entry = nullptr;
+        width = 0;
+        height = 0;
+    }
+    else
+    {
+        entry = rhs.entry;
+    }
+    // Prevent spurious de-allocation from rhs's destructor
+    rhs.entry = nullptr;
     return *this;
 }
 

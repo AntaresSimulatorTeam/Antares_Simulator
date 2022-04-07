@@ -194,20 +194,13 @@ private:
             bool isFirstPerformedYearOfSimulation
               = isFirstPerformedYearOfASet[y] && not firstSetParallelWithAPerformedYearWasRun;
             std::list<uint> failedWeekList;
-            if (not simulationObj->year(progression,
-                                        state[numSpace],
-                                        numSpace,
-                                        randomForCurrentYear,
-                                        failedWeekList,
-                                        isFirstPerformedYearOfSimulation))
-            {
-                // Something goes wrong with this year. We have to restarting it
-                yearFailed[y] = true;
-            }
-            else
-            {
-                yearFailed[y] = false;
-            }
+
+            yearFailed[y] = !simulationObj->year(progression,
+                                                 state[numSpace],
+                                                 numSpace,
+                                                 randomForCurrentYear,
+                                                 failedWeekList,
+                                                 isFirstPerformedYearOfSimulation);
 
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
@@ -368,8 +361,6 @@ void ISimulation<Impl>::run()
         if (parameters.useCustomScenario)
             ApplyCustomScenario(study);
 
-        TimeSeriesNumbers::StoreTimeseriesIntoOuput(study);
-
         // Launching the simulation for all years
         logs.info() << "MC-Years : [" << (study.runtime->rangeLimits.year[Data::rangeBegin] + 1)
                     << " .. " << (1 + study.runtime->rangeLimits.year[Data::rangeEnd])
@@ -394,6 +385,9 @@ void ISimulation<Impl>::run()
         ImplementationType::simulationEnd();
 
         ImplementationType::variables.simulationEnd();
+
+        // Export ts-numbers into output
+        TimeSeriesNumbers::StoreTimeseriesIntoOuput(study);
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.
@@ -476,9 +470,9 @@ void ISimulation<Impl>::estimateMemoryUsage(Antares::Data::StudyMemoryUsage& u)
         auto& area = *areas.byIndex[i];
         tmpAmountMemory += sizeof(NUMERO_CHRONIQUES_TIREES_PAR_PAYS);
         tmpAmountMemory += sizeof(VALEURS_GENEREES_PAR_PAYS);
-        tmpAmountMemory += area.thermal.clusterCount * sizeof(int);
+        tmpAmountMemory += area.thermal.clusterCount() * sizeof(int);
         tmpAmountMemory += 366 * sizeof(double);
-        tmpAmountMemory += area.thermal.clusterCount * sizeof(double);
+        tmpAmountMemory += area.thermal.clusterCount() * sizeof(double);
     }
     u.requiredMemoryForInput += u.nbYearsParallel * tmpAmountMemory;
 
@@ -1051,9 +1045,17 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
         && (PreproOnly || !year || ((year % pData.refreshIntervalHydro) == 0)))
         GenerateTimeSeries<Data::timeSeriesHydro>(study, year);
     // Thermal
-    if (pData.haveToRefreshTSThermal
-        && (PreproOnly || !year || ((year % pData.refreshIntervalThermal) == 0)))
-        GenerateTimeSeries<Data::timeSeriesThermal>(study, year);
+    Data::GlobalTSGenerationBehavior globalBehavior;
+    if (pData.haveToRefreshTSThermal)
+    {
+        globalBehavior = Data::GlobalTSGenerationBehavior::generate;
+    }
+    else
+    {
+        globalBehavior = Data::GlobalTSGenerationBehavior::doNotGenerate;
+    }
+    const bool refresh = PreproOnly || !year || ((year % pData.refreshIntervalThermal) == 0);
+    GenerateThermalTimeSeries(study, year, globalBehavior, refresh);
 }
 
 template<class Impl>
@@ -1094,6 +1096,10 @@ uint ISimulation<Impl>::buildSetsOfParallelYears(
         refreshing
           = refreshing
             || (pData.haveToRefreshTSThermal && (!y || ((y % pData.refreshIntervalThermal) == 0)));
+
+        // Some thermal clusters may override the global parameter.
+        // Therefore, we may want to refresh TS even if pData.haveToRefreshTSThermal == false
+        refreshing = refreshing || study.runtime->thermalTSRefresh;
 
         // We build a new set of parallel years if one of these conditions is fulfilled :
         //	- We have to refresh (or regenerate) some or all time series before running the
@@ -1461,6 +1467,8 @@ void ISimulation<Impl>::computeAnnualCostsStatistics(
             pAnnualCostsStatistics.systemCost.addCost(state[numSpace].annualSystemCost);
             pAnnualCostsStatistics.criterionCost1.addCost(state[numSpace].optimalSolutionCost1);
             pAnnualCostsStatistics.criterionCost2.addCost(state[numSpace].optimalSolutionCost2);
+            pAnnualCostsStatistics.optimizationTime.addCost(
+              state[numSpace].averageOptimizationTime);
         }
     }
 }

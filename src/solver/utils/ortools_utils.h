@@ -5,10 +5,8 @@
 #include <antares/study/OrtoolsSolver.hpp>
 
 #include "ortools/linear_solver/linear_solver.h"
-extern "C"
-{
+
 #include "ortools_wrapper.h"
-}
 
 using namespace operations_research;
 
@@ -75,3 +73,12 @@ private:
     std::map<OrtoolsSolver, MPSolver::OptimizationProblemType> _solverMixedIntegerProblemOptimMap;
         */
 };
+
+namespace Antares
+{
+namespace Optimization
+{
+MPSolver* convert_to_MPSolver(
+  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
+}
+} // namespace Antares

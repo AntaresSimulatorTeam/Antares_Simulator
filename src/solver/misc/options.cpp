@@ -27,7 +27,6 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/system/process.h>
-#include <yuni/core/getopt.h>
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
 
@@ -44,8 +43,11 @@
 #include "../../config.h"
 
 #include <antares/memory/memory.h>
+#include <antares/emergency.h>
 #include <antares/exception/AssertionError.hpp>
+#include <antares/exception/LoadingError.hpp>
 #include <antares/Enum.hpp>
+#include <antares/constants.h>
 
 #include "utils/ortools_utils.h"
 
@@ -53,143 +55,121 @@ using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
-bool GrabOptionsFromCommandLine(int argc,
-                                char* argv[],
-                                Settings& settings,
-                                Antares::Data::StudyLoadOptions& options)
+static std::string availableOrToolsSolversString()
 {
-    // Reset
-    settings.studyFolder.clear();
-    settings.simulationName.clear();
-    settings.commentFile.clear();
-    settings.ignoreWarningsErrors = 0;
-    settings.tsGeneratorsOnly = false;
-    settings.noOutput = false;
-    settings.displayProgression = false;
-    settings.ignoreConstraints = false;
-
-    bool optForceExpansion = false;
-    bool optForceEconomy = false;
-    bool optForceAdequacy = false;
-    bool optForceAdequacyDraft = false;
-
-    // options.nbYears = 1
-    // String optStudyFolder = "C:\\Users\\damigera\\Desktop\\036 PSP strategies-2-Det pumping";
-    String optStudyFolder;
-
-    // The parser
-    GetOpt::Parser getopt;
-
-    getopt.addParagraph(String() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << "\n");
-
-    // Simulation mode
-    getopt.addParagraph("Simulation");
-    // --input
-    getopt.addFlag(optStudyFolder, 'i', "input", "Study folder");
-    // --expansion
-    getopt.addFlag(optForceExpansion, ' ', "expansion", "Force the simulation in expansion mode");
-    // --economy
-    getopt.addFlag(optForceEconomy, ' ', "economy", "Force the simulation in economy mode");
-    // --adequacy
-    getopt.addFlag(optForceAdequacy, ' ', "adequacy", "Force the simulation in adequacy mode");
-    // --draft
-    getopt.addFlag(
-      optForceAdequacyDraft, ' ', "draft", "Force the simulation in adequacy-draft mode");
-    // --parallel
-    getopt.addFlag(
-      options.enableParallel, ' ', "parallel", "Enable the parallel computation of MC years");
-    // --force-parallel
-    getopt.add(options.maxNbYearsInParallel,
-               ' ',
-               "force-parallel",
-               "Override the max number of years computed simultaneously");
-
-    bool useOrtools = false;
-
-    // add option for ortools use
-    // --use-ortools
-    getopt.addFlag(useOrtools, ' ', "use-ortools", "Use ortools library to launch solver");
-
-    // add option for ortools solver used
-    std::string ortoolsSolver;
-
-    // Define available solver list
-    std::list<std::string> availableSolverList = OrtoolsUtils().getAvailableOrtoolsSolverName();
+    const std::list<std::string> availableSolverList
+      = OrtoolsUtils().getAvailableOrtoolsSolverName();
     std::string availableSolverListStr;
     for (auto it = availableSolverList.begin(); it != availableSolverList.end(); it++)
     {
         availableSolverListStr += *it + ";";
     }
-    // Remove last ;
+    // Remove last semicolumn
     if (!availableSolverListStr.empty())
         availableSolverListStr.pop_back();
+    return availableSolverListStr;
+}
+
+std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings, Antares::Data::StudyLoadOptions& options)
+{
+    settings.reset();
+
+    auto parser = std::unique_ptr<GetOpt::Parser>(new GetOpt::Parser());
+
+    parser->addParagraph(String() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << "\n");
+
+    // Simulation mode
+    parser->addParagraph("Simulation");
+    // --input
+    parser->addFlag(options.studyFolder, 'i', "input", "Study folder");
+    // --expansion
+    parser->addFlag(
+      options.forceExpansion, ' ', "expansion", "Force the simulation in expansion mode");
+    // --economy
+    parser->addFlag(options.forceEconomy, ' ', "economy", "Force the simulation in economy mode");
+    // --adequacy
+    parser->addFlag(options.forceAdequacy, ' ', "adequacy", "Force the simulation in adequacy mode");
+    // --draft
+    parser->addFlag(
+      options.forceAdequacyDraft, ' ', "draft", "Force the simulation in adequacy-draft mode");
+    // --parallel
+    parser->addFlag(
+      options.enableParallel, ' ', "parallel", "Enable the parallel computation of MC years");
+    // --force-parallel
+    parser->add(options.maxNbYearsInParallel,
+               ' ',
+               "force-parallel",
+               "Override the max number of years computed simultaneously");
+
+    // add option for ortools use
+    // --use-ortools
+    parser->addFlag(options.ortoolsUsed, ' ', "use-ortools", "Use ortools library to launch solver");
 
     //--ortools-solver
-    getopt.add(ortoolsSolver,
+    parser->add(options.ortoolsSolver,
                ' ',
                "ortools-solver",
                "Ortools solver used for simulation (only available with use-ortools "
                "option)\nAvailable solver list : "
-                 + availableSolverListStr);
+                 + availableOrToolsSolversString());
 
-    getopt.addParagraph("\nParameters");
+    parser->addParagraph("\nParameters");
     // --name
-    String optName;
-    getopt.add(optName, 'n', "name", "Set the name of the new simulation to VALUE");
+    parser->add(settings.simulationName, 'n', "name", "Set the name of the new simulation to VALUE");
     // --generators-only
-    getopt.addFlag(
+    parser->addFlag(
       settings.tsGeneratorsOnly, 'g', "generators-only", "Run the time-series generators only");
 
     // --comment-file
-    getopt.add(settings.commentFile,
+    parser->add(settings.commentFile,
                'c',
                "comment-file",
                "Specify the file to copy as comments of the simulation");
     // --force
-    getopt.addFlag(settings.ignoreWarningsErrors, 'f', "force", "Ignore all warnings at loading");
+    parser->addFlag(settings.ignoreWarningsErrors, 'f', "force", "Ignore all warnings at loading");
     // --no-output
-    getopt.addFlag(
+    parser->addFlag(
       settings.noOutput, ' ', "no-output", "Do not write the results in the output folder");
     // --year
-    getopt.add(options.nbYears, 'y', "year", "Override the number of MC years");
+    parser->add(options.nbYears, 'y', "year", "Override the number of MC years");
     // --year-by-year
-    getopt.addFlag(options.forceYearByYear,
+    parser->addFlag(options.forceYearByYear,
                    ' ',
                    "year-by-year",
                    "Force the writing the result output for each year (economy only)");
     // --derated
-    getopt.addFlag(options.forceDerated, ' ', "derated", "Force the derated mode");
+    parser->addFlag(options.forceDerated, ' ', "derated", "Force the derated mode");
 
-    getopt.addParagraph("\nOptimization");
+    parser->addParagraph("\nOptimization");
 
     // --optimization-range
-    getopt.addFlag(settings.simplexOptimRange,
+    parser->addFlag(settings.simplexOptimRange,
                    ' ',
                    "optimization-range",
                    "Force the simplex optimization range ('day' or 'week')");
 
     // --no-constraints
-    getopt.addFlag(settings.ignoreConstraints, ' ', "no-constraints", "Ignore all constraints");
+    parser->addFlag(settings.ignoreConstraints, ' ', "no-constraints", "Ignore all constraints");
 
     // --no-ts-import
-    getopt.addFlag(options.noTimeseriesImportIntoInput,
+    parser->addFlag(options.noTimeseriesImportIntoInput,
                    ' ',
                    "no-ts-import",
                    "Do not import timeseries into the input folder. This option might be useful "
                    "for running old studies without upgrading them");
 
     // --mps-export
-    getopt.addFlag(options.mpsToExport,
+    parser->addFlag(options.mpsToExport,
                    ' ',
                    "mps-export",
                    "Export in the mps format the optimization problems.");
 
-    getopt.addParagraph("\nMisc.");
+    parser->addParagraph("\nMisc.");
     // --progress
-    getopt.addFlag(
+    parser->addFlag(
       settings.displayProgression, ' ', "progress", "Display the progress of each task");
     // --swap
-    getopt.add(settings.swap,
+    parser->add(settings.swap,
                ' ',
                "swap-folder",
 #ifdef ANTARES_SWAP_SUPPORT
@@ -202,44 +182,39 @@ bool GrabOptionsFromCommandLine(int argc,
     );
 
     // --pid
-    String optPID;
-    getopt.add(optPID, 'p', "pid", "Specify the file where to write the process ID");
+    parser->add(settings.PID, 'p', "pid", "Specify the file where to write the process ID");
 
     // --version
-    bool optVersion = false;
-    getopt.addFlag(optVersion, 'v', "version", "Print the version of the solver and exit");
 
-    getopt.remainingArguments(optStudyFolder);
+    parser->addFlag(
+      options.displayVersion, 'v', "version", "Print the version of the solver and exit");
 
-    // Ask to parse the command line
-    if (!getopt(argc, argv))
-        exit(getopt.errors() ? 1 : 0);
+    // The last argument is the study folder.
+    // Unlike all other arguments, it does not need to be given after a --flag.
+    parser->remainingArguments(options.studyFolder);
 
-    // Version
-    if (optVersion)
-    {
-        std::cout << ANTARES_VERSION_STR << std::endl;
-        return false;
-    }
+    return parser;
+}
 
-    // PID
-    if (not optPID.empty())
+void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options)
+{
+    const auto& optPID = settings.PID;
+    if (!optPID.empty())
     {
         IO::File::Stream pidfile;
         if (pidfile.openRW(optPID))
             pidfile << ProcessID();
         else
-            logs.error() << "impossible to write pid file " << optPID;
+            throw Error::WritingPID(optPID);
     }
 
     // Simulation name
-    if (not optName.empty())
-        settings.simulationName = optName;
+    if (!options.simulationName.empty())
+        settings.simulationName = options.simulationName;
 
-    if (options.nbYears > 50000)
+    if (options.nbYears > MAX_NB_MC_YEARS)
     {
-        logs.error() << "Invalid number of MC years";
-        return false;
+        throw Error::InvalidNumberOfMCYears(options.nbYears);
     }
 
     if (options.maxNbYearsInParallel)
@@ -247,11 +222,10 @@ bool GrabOptionsFromCommandLine(int argc,
 
     if (options.enableParallel && options.forceParallel)
     {
-        logs.error() << "Options --parallel and --force-parallel are incompatible";
-        return false;
+        throw Error::IncompatibleParallelOptions();
     }
 
-    if (not settings.simplexOptimRange.empty())
+    if (!settings.simplexOptimRange.empty())
     {
         settings.simplexOptimRange.trim(" \t");
         settings.simplexOptimRange.toLower();
@@ -263,51 +237,35 @@ bool GrabOptionsFromCommandLine(int argc,
                 options.simplexOptimizationRange = Data::sorDay;
             else
             {
-                logs.error() << "Invalid command line value for --optimization-range ('day' or "
-                                "'week' expected)";
-                return false;
+                throw Error::InvalidOptimizationRange();
             }
         }
     }
 
-    // Forcing simulation mode
+    options.checkForceSimulationMode();
+    checkOrtoolsSolver(options);
+
+    // PID
+    if (!optPID.empty())
     {
-        uint mask = optForceExpansion + optForceEconomy + optForceAdequacy + optForceAdequacyDraft;
-        switch (mask)
-        {
-        case 0:
-            break;
-        case 1:
-        {
-            if (optForceExpansion)
-                options.forceMode = stdmExpansion;
-            else if (optForceEconomy)
-                options.forceMode = stdmEconomy;
-            else if (optForceAdequacy)
-                options.forceMode = stdmAdequacy;
-            else if (optForceAdequacyDraft)
-                options.forceMode = stdmAdequacyDraft;
-            break;
-        }
-        default:
-        {
-            logs.error() << "Only one simulation mode is allowed: --expansion, --economy, "
-                            "--adequacy or --adequacy-draft";
-            return false;
-        }
-        }
+        IO::File::Stream pidfile;
+        if (pidfile.openRW(optPID))
+            pidfile << ProcessID();
+        else
+            throw Error::WritingPID(optPID);
     }
+}
 
-    // define ortools global values
-    options.ortoolsUsed = useOrtools;
-
+void checkOrtoolsSolver(Data::StudyLoadOptions& options)
+{
     // ortools solver
-    if (useOrtools)
+    if (options.ortoolsUsed)
     {
+        const std::list<std::string> availableSolverList
+          = OrtoolsUtils().getAvailableOrtoolsSolverName();
         if (availableSolverList.empty())
         {
-            logs.error() << "No ortools solvers available. Can't use '" << ortoolsSolver << "'.";
-            return false;
+            throw Error::InvalidSolver(options.ortoolsSolver);
         }
 
         // Default is first available solver
@@ -316,60 +274,52 @@ bool GrabOptionsFromCommandLine(int argc,
 
         // Check if solver is available
         bool found
-          = (std::find(availableSolverList.begin(), availableSolverList.end(), ortoolsSolver)
+          = (std::find(
+               availableSolverList.begin(), availableSolverList.end(), options.ortoolsSolver)
              != availableSolverList.end());
 
         if (found)
         {
-            options.ortoolsEnumUsed
-              = Antares::Data::Enum::fromString<Antares::Data::OrtoolsSolver>(ortoolsSolver);
+            options.ortoolsEnumUsed = Antares::Data::Enum::fromString<Antares::Data::OrtoolsSolver>(
+              options.ortoolsSolver);
         }
         else
         {
-            logs.warning() << "Invalid ortools-solver option. Got '" << ortoolsSolver
+            logs.warning() << "Invalid ortools-solver option. Got '" << options.ortoolsSolver
                            << "'. reset to " << Enum::toString(options.ortoolsEnumUsed);
         }
     }
+}
 
+void Settings::checkAndSetStudyFolder(Yuni::String folder)
+{
     // The study folder
-    if (not optStudyFolder.empty())
+    if (folder.empty())
+        throw Error::NoStudyProvided();
+
+    // Making the path absolute
+    String abspath;
+    IO::MakeAbsolute(abspath, folder);
+    IO::Normalize(folder, abspath);
+
+    // Checking if the path exists
+    if (!IO::Directory::Exists(folder))
     {
-        // Making the path absolute
-        String abspath;
-        IO::MakeAbsolute(abspath, optStudyFolder);
-        IO::Normalize(optStudyFolder, abspath);
-
-        // Checking if the path exists
-        if (not IO::Directory::Exists(optStudyFolder))
-        {
-            logs.error() << "The folder `" << optStudyFolder << "` does not exist.";
-            return false;
-        }
-
-        // Checking the version
-        auto version = StudyTryToFindTheVersion(optStudyFolder);
-        if (version == versionUnknown)
-        {
-            logs.fatal() << "The folder `" << optStudyFolder
-                         << "` does not seem to be a valid study";
-            return false;
-        }
-        else
-        {
-            if ((uint)version > (uint)versionLatest)
-            {
-                logs.error() << "Invalid version for the study : found `" << VersionToCStr(version)
-                             << "`, expected <=`" << VersionToCStr((Version)versionLatest) << '`';
-                return false;
-            }
-        }
-
-        // Copying the result
-        settings.studyFolder = optStudyFolder;
-
-        return true;
+        throw Error::StudyFolderDoesNotExist(folder);
     }
 
-    logs.error() << "A study folder is required. Use '--help' for more information";
-    return false;
+    // Copying the result
+    studyFolder = folder;
+}
+
+void Settings::reset()
+{
+    studyFolder.clear();
+    simulationName.clear();
+    commentFile.clear();
+    ignoreWarningsErrors = 0;
+    tsGeneratorsOnly = false;
+    noOutput = false;
+    displayProgression = false;
+    ignoreConstraints = false;
 }

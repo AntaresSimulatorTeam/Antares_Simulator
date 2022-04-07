@@ -57,7 +57,6 @@
 #include "../../application/study.h"
 #include <antares/config.h>
 #include <antares/io/statistics.h>
-#include "../../../../internet/limits.h"
 
 using namespace Yuni;
 
@@ -78,87 +77,6 @@ namespace // anonymous
 {
 static wxString gLastFolderForTSAnalyzer;
 
-class FileSearchProvider final : public Antares::Component::Spotlight::IProvider
-{
-public:
-    //! The spotlight component (alias)
-    typedef Antares::Component::Spotlight Spotlight;
-
-public:
-    //! \name Constructor & Destructor
-    //@{
-    /*!
-    ** \brief Default constructor
-    */
-    FileSearchProvider()
-    {
-    }
-    //! Destructor
-    virtual ~FileSearchProvider()
-    {
-    }
-    //@}
-
-    /*!
-    ** \brief Perform a new search
-    */
-    virtual void search(Spotlight::IItem::Vector& out,
-                        const Spotlight::SearchToken::Vector& tokens,
-                        const Yuni::String& text = "") override
-    {
-        if (tokens.empty())
-        {
-            foreach (auto& filename, pFiles)
-            {
-                auto* item = new Spotlight::IItem();
-                item->caption(filename);
-                item->addTag("F", 210, 210, 255);
-                out.push_back(item);
-            }
-        }
-        else
-        {
-            foreach (auto& filename, pFiles)
-            {
-                foreach (auto& tokenname, tokens)
-                {
-                    if (filename.icontains(tokenname->text))
-                    {
-                        auto* item = new Spotlight::IItem();
-                        item->caption(filename);
-                        item->addTag("F", 210, 210, 255);
-                        out.push_back(item);
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    /*!
-    ** \brief An item has been selected
-    */
-    virtual bool onSelect(Spotlight::IItem::Ptr&) override
-    {
-        return false;
-    }
-
-    void onFileSearchAdd(const String& filename)
-    {
-        pFiles.push_back(filename);
-    }
-
-    void onFileSearchClear()
-    {
-        pFiles.clear();
-    }
-
-private:
-    //! List of files
-    String::Vector pFiles;
-
-}; // class Layer
-
 class AnalyzeSourceFolder final : public Yuni::Thread::IThread
 {
 public:
@@ -175,7 +93,6 @@ public:
     virtual ~AnalyzeSourceFolder()
     {
         stop();
-        delete pMapping;
     }
 
     void folder(const wxString& f)
@@ -205,7 +122,7 @@ protected:
         pDataMutex.unlock();
 
         if (not pMapping)
-            pMapping = new AnalyzerWizard::FileMapping();
+            pMapping = std::make_shared<AnalyzerWizard::FileMapping>();
         else
             pMapping->clear();
 
@@ -275,7 +192,7 @@ private:
     AnalyzerWizard& pForm;
     Mutex pDataMutex;
     String pFolder;
-    AnalyzerWizard::FileMapping* pMapping;
+    AnalyzerWizard::FileMappingPtr pMapping;
 
 }; // class AnalyzeSourceFolder
 
@@ -314,7 +231,6 @@ protected:
         // alias
         typedef Component::Datagrid::Renderer::Analyzer::Areas::Record Record;
 
-        auto& mapping = *pMapping;
         Record record;
         String s;
 
@@ -378,8 +294,8 @@ protected:
             s.clear() << "Checking " << record.fileToSearch << "...";
             pForm.info(s);
 
-            auto it = mapping.find(record.fileToSearch);
-            if (it == mapping.end() or !record.fileToSearch)
+            auto it = pMapping->find(record.fileToSearch);
+            if (it == pMapping->end() or !record.fileToSearch)
             {
                 pRecord.mutex.lock();
                 pRecord.array[i].status = Record::stNotFound;
@@ -549,6 +465,57 @@ private:
 };
 
 } // anonymous namespace
+
+void FileSearchProvider::search(Spotlight::IItem::Vector& out,
+                                const Spotlight::SearchToken::Vector& tokens,
+                                const Yuni::String& text)
+{
+    if (tokens.empty())
+    {
+        foreach (auto& filename, pFiles)
+        {
+            auto item = std::make_shared<Spotlight::IItem>();
+            item->caption(filename);
+            item->addTag("F", 210, 210, 255);
+            out.push_back(item);
+        }
+    }
+    else
+    {
+        foreach (auto& filename, pFiles)
+        {
+            foreach (auto& tokenname, tokens)
+            {
+                if (filename.icontains(tokenname->text))
+                {
+                    auto item = std::make_shared<Spotlight::IItem>();
+                    item->caption(filename);
+                    item->addTag("F", 210, 210, 255);
+                    out.push_back(item);
+                    break;
+                }
+            }
+        }
+    }
+}
+
+/*!
+** \brief An item has been selected
+*/
+bool FileSearchProvider::onSelect(Spotlight::IItem::Ptr&)
+{
+    return false;
+}
+
+void FileSearchProvider::onFileSearchAdd(const YString& filename)
+{
+    pFiles.push_back(filename);
+}
+
+void FileSearchProvider::onFileSearchClear()
+{
+    pFiles.clear();
+}
 
 void AnalyzerWizard::ResetLastFolderToCurrentStudyUser()
 {
@@ -742,10 +709,10 @@ AnalyzerWizard::AnalyzerWizard(wxFrame* parent) :
             files->AddSpacer(6);
 
             pFileSearch = new Component::Spotlight(panelTS, 0);
-            auto* provider = new FileSearchProvider();
-            onFileSearchAdd.connect(provider, &FileSearchProvider::onFileSearchAdd);
-            onFileSearchClear.connect(provider, &FileSearchProvider::onFileSearchClear);
-            pFileSearch->provider(provider);
+            mProvider = std::shared_ptr<FileSearchProvider>(new FileSearchProvider());
+            onFileSearchAdd.connect(mProvider.get(), &FileSearchProvider::onFileSearchAdd);
+            onFileSearchClear.connect(mProvider.get(), &FileSearchProvider::onFileSearchClear);
+            pFileSearch->provider(mProvider);
             files->Add(pFileSearch, 1, wxALL | wxEXPAND);
 
             split->AddSpacer(5);
@@ -1098,41 +1065,6 @@ void AnalyzerWizard::onProceed(void*)
     // Reset internal IO statistics
     Statistics::Reset();
 
-    if (License::Limits::areaCount) // checking for license restrictions
-    {
-        auto& study = *Data::Study::Current::Get();
-        bool isTrial = (study.areas.size() > License::Limits::areaCount);
-        if (not isTrial and License::Limits::thermalClusterCount)
-        {
-            study.areas.each([&](const Data::Area& area) {
-                if (area.thermal.list.size() + area.thermal.mustrunList.size()
-                    > License::Limits::thermalClusterCount)
-                    isTrial = true;
-            });
-        }
-
-        if (isTrial)
-        {
-            wxString text;
-            if (License::Limits::thermalClusterCount)
-            {
-                text << wxT("Analyzer limited to ") << License::Limits::areaCount
-                     << wxT(" areas and ") << License::Limits::thermalClusterCount
-                     << wxT(" thermal clusters / area.");
-            }
-            else
-            {
-                text << wxT("Analyzer limited to ") << License::Limits::areaCount << wxT(" areas");
-            }
-
-            Window::Message message(
-              this, wxT("Analyzer"), wxT("LICENSE RESTRICTION"), text, "images/misc/warning.png");
-            message.add(Window::Message::btnCancel, true);
-            message.showModal();
-            return;
-        }
-    }
-
     Enable(false);
     if (StudyHasBeenModified())
     {
@@ -1312,7 +1244,7 @@ void AnalyzerWizard::updateInfoForTempFolder()
     }
 }
 
-void AnalyzerWizard::fileMapping(FileMapping* m)
+void AnalyzerWizard::fileMapping(FileMappingPtr m)
 {
     pFileMapping = m;
 

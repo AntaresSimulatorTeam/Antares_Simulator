@@ -33,7 +33,7 @@ namespace Window
 {
 namespace Inspector
 {
-InspectorData::InspectorData(Antares::Data::Study& s) : study(s), empty(true)
+InspectorData::InspectorData(Antares::Data::Study::Ptr s) : study(s), empty(true)
 {
 }
 
@@ -47,7 +47,8 @@ void InspectorData::clear()
     {
         areas.clear();
         links.clear();
-        clusters.clear();
+        ThClusters.clear();
+        RnClusters.clear();
         constraints.clear();
         studies.clear();
         empty = true;
@@ -56,8 +57,8 @@ void InspectorData::clear()
 
 uint InspectorData::totalNbOfItems() const
 {
-    return (uint)areas.size() + (uint)links.size() + (uint)clusters.size()
-           + (uint)constraints.size();
+    return (uint)areas.size() + (uint)links.size() + (uint)ThClusters.size()
+           + (uint)RnClusters.size() + (uint)constraints.size();
 }
 
 } // namespace Inspector

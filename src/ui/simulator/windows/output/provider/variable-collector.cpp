@@ -40,7 +40,7 @@ void VariableCollector::add(const AnyString& name,
             return;
     }
 
-    Spotlight::IItem* item = new Spotlight::IItem();
+    auto item = std::make_shared<Spotlight::IItem>();
     if (item)
     {
         item->caption(name);
@@ -73,7 +73,7 @@ void VariableCollector::addCluster(const String& name)
             return;
     }
 
-    Spotlight::IItem* item = new Spotlight::IItem();
+    auto item = std::make_shared<Spotlight::IItem>();
     if (item)
     {
         item->caption(name);

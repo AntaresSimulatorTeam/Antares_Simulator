@@ -69,11 +69,11 @@ void Unselect();
 /*!
 ** \brief Clear the selection then Add a study
 */
-void SelectStudy(const Data::Study* study);
+void SelectStudy(const Data::Study::Ptr& study);
 /*!
 ** \brief Add a study into the selection
 */
-void AddStudy(const Data::Study* study);
+void AddStudy(const Data::Study::Ptr& study);
 //@}
 
 //! \name Areas
@@ -185,6 +185,18 @@ void AddThermalClusters(const Data::ThermalCluster::Set& clusters);
 void RemoveThermalCluster(const Data::ThermalCluster* cluster);
 //@}
 
+//! \name Renewable clusters
+//@{
+/*!
+** \brief Clear the selection then Add a renewable cluster
+*/
+void SelectRenewableCluster(const Data::RenewableCluster* cluster);
+
+/*!
+** \brief Remove a renewable cluster from the selection
+*/
+void RemoveRenewableCluster(const Data::RenewableCluster* cluster);
+
 //! \name Data::Binding constraints
 //@{
 /*!
@@ -253,7 +265,7 @@ bool ConstraintsSelected(const std::set<Yuni::String>& set);
 bool IsLinkSelected(const Data::AreaName& from, const Data::AreaName& with);
 bool LinksSelected(std::map<Data::AreaName, std::map<Data::AreaName, bool>>& set);
 
-bool IsThermalClusterSelected(const Data::AreaName& area, const Data::ThermalClusterName& name);
+bool IsThermalClusterSelected(const Data::AreaName& area, const Data::ClusterName& name);
 
 void FirstSelectedArea(Data::AreaName& out);
 

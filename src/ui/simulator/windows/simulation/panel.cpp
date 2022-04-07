@@ -30,10 +30,10 @@
 #include <ui/common/component/scrollbox/scrollbox.h>
 #include "../../toolbox/components/notebook/notebook.h"
 #include "../../toolbox/components/captionpanel.h"
-#include "../../toolbox/components/datagrid/component.h"
-#include "../../toolbox/components/datagrid/renderer/simulation.h"
+#include "../../toolbox/components/datagrid/renderer/ts-management-aggregated-as-renewables.h"
+#include "../../toolbox/components/datagrid/renderer/ts-management-clusters-as-renewables.h"
 #include "../../application/main.h"
-#include "../../application/study.h"
+#include "../../windows/options/advanced/advanced.h"
 #include "../../toolbox/validator.h"
 #include "../../toolbox/resources.h"
 #include "../../toolbox/create.h"
@@ -72,22 +72,36 @@ Panel::Panel(wxWindow* parent) : Antares::Component::Panel(parent)
 
     // TS Management
     {
-        auto* vs = new wxBoxSizer(wxVERTICAL);
-        vs->Add(
+        typedef Component::Datagrid::Renderer::TSmanagementAggregatedAsRenewable
+          TSmanagementAggregatedAsRenewable;
+        typedef Component::Datagrid::Renderer::TSmanagementRenewableCluster
+          TSmanagementRenewableCluster;
+
+        verticalSizer_ = new wxBoxSizer(wxVERTICAL);
+        verticalSizer_->Add(
           new Component::CaptionPanel(this, wxT("Time-Series Management")), 0, wxALL | wxEXPAND);
-        typedef Component::Datagrid::Component DatagridType;
-        typedef Component::Datagrid::Renderer::SimulationTSManagement RendererType;
-        RendererType* renderer = new RendererType();
-        DatagridType* grid = new DatagridType(this, renderer, wxEmptyString, false, true, true);
-        renderer->control(grid);
-        vs->Add(grid, 1, wxALL | wxEXPAND);
-        hz->Add(vs, 1, wxALL | wxEXPAND);
+
+        TSmanagementAggregatedAsRenewable* renderer_agg = new TSmanagementAggregatedAsRenewable();
+        TSmanagementRenewableCluster* renderer_rn_cl = new TSmanagementRenewableCluster();
+
+        grid_ts_mgt_ = new DatagridType(this, renderer_agg, wxEmptyString, false, true, true);
+        grid_ts_mgt_rn_cluster_
+          = new DatagridType(this, renderer_rn_cl, wxEmptyString, false, true, true);
+
+        verticalSizer_->Add(grid_ts_mgt_, 1, wxALL | wxEXPAND);
+        verticalSizer_->Add(grid_ts_mgt_rn_cluster_, 1, wxALL | wxEXPAND);
+
+        renderer_agg->control(grid_ts_mgt_);
+        renderer_rn_cl->control(grid_ts_mgt_rn_cluster_);
+
+        hz->Add(verticalSizer_, 1, wxALL | wxEXPAND);
     }
 
     SetSizer(hz);
 
     // External events
-    OnStudyLoaded.connect(this, &Panel::onStudyLoaded);
+    Options::OnRenewableGenerationModellingChanged.connect(
+      this, &Panel::onRenewableGenerationModellingChanged);
     OnStudyClosed.connect(this, &Panel::onStudyClosed);
     OnStudyUpdatePlaylist.connect(this, &Panel::onUpdatePlaylist);
 }
@@ -105,8 +119,26 @@ Panel::~Panel()
         sizer->Clear(true);
 }
 
-void Panel::onStudyLoaded()
+void Panel::onRenewableGenerationModellingChanged(bool)
 {
+    auto study = Data::Study::Current::Get();
+    if (!study)
+        return;
+
+    if (study->parameters.renewableGeneration.isAggregated())
+    {
+        verticalSizer_->Hide(grid_ts_mgt_rn_cluster_);
+        verticalSizer_->Show(grid_ts_mgt_);
+        grid_ts_mgt_->forceRefresh();
+    }
+    else
+    {
+        verticalSizer_->Hide(grid_ts_mgt_);
+        verticalSizer_->Show(grid_ts_mgt_rn_cluster_);
+        grid_ts_mgt_rn_cluster_->forceRefresh();
+    }
+    verticalSizer_->Layout();
+
     Dispatcher::GUI::Post(this, &Panel::onDelayedStudyLoaded, 20 /*ms*/);
 }
 
@@ -115,7 +147,7 @@ void Panel::onDelayedStudyLoaded()
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        auto* data = new Window::Inspector::InspectorData(*study);
+        auto data = std::make_shared<Window::Inspector::InspectorData>(study);
         data->studies.insert(study);
         pUpdateInfoStudy(data);
     }
@@ -128,7 +160,7 @@ void Panel::onUpdatePlaylist()
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        auto* data = new Window::Inspector::InspectorData(*study);
+        auto data = std::make_shared<Window::Inspector::InspectorData>(study);
         data->studies.insert(study);
         pUpdateInfoStudy(data);
     }

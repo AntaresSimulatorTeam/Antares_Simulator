@@ -38,13 +38,13 @@
 #include "../daily2/h2o2_j_fonctions.h"
 #include "../../simulation/sim_extern_variables_globales.h"
 #include <cassert>
+#include <limits>
 #include <variable/state.h>
+#include <array>
 
 using namespace Yuni;
 
 #define SEP IO::Separator
-
-#define HYDRO_DAILY_SOLVER_DEBUG 0
 
 namespace Antares
 {
@@ -55,6 +55,162 @@ enum
 enum
 {
     maxDTG = 32
+};
+
+struct DebugData
+{
+    using PerArea = HydroManagement::PerArea;
+    using InflowsType = Matrix<double, Yuni::sint32>::ColumnType;
+    using MaxPowerType = Matrix<double, double>::ColumnType;
+    using ReservoirLevelType = Matrix<double>::ColumnType;
+
+    std::array<double, 366> OPP;
+    std::array<double, 366> DTG;
+
+    std::array<double, 365> OVF;
+    std::array<double, 365> DEV;
+    std::array<double, 365> VIO;
+    std::array<double, 12> deviationMax;
+    std::array<double, 12> violationMax;
+    std::array<double, 12> WASTE;
+    std::array<double, 12> CoutTotal;
+    std::array<double, 12> previousMonthWaste;
+
+    const PerArea& data;
+    const VALEURS_GENEREES_PAR_PAYS& valgen;
+    const InflowsType& srcinflows;
+    const MaxPowerType& maxP;
+    const MaxPowerType& maxE;
+    const double* dtg;
+    const ReservoirLevelType& lowLevel;
+    const double reservoirCapacity;
+
+    DebugData(const PerArea& data,
+              const VALEURS_GENEREES_PAR_PAYS& valgen,
+              const InflowsType& srcinflows,
+              const MaxPowerType& maxP,
+              const MaxPowerType& maxE,
+              const double* dtg,
+              const ReservoirLevelType& lowLevel,
+              double reservoirCapacity) :
+     data(data),
+     valgen(valgen),
+     srcinflows(srcinflows),
+     maxP(maxP),
+     maxE(maxE),
+     dtg(dtg),
+     lowLevel(lowLevel),
+     reservoirCapacity(reservoirCapacity)
+    {
+        OVF.fill(0);
+        DEV.fill(0);
+        VIO.fill(0);
+
+        deviationMax.fill(0);
+        violationMax.fill(0);
+        WASTE.fill(0);
+        CoutTotal.fill(0);
+    }
+
+    void writeTurb(const String& folderOutput, const String& filename, uint y) const
+    {
+        String folder;
+        folder << folderOutput << SEP << "debug" << SEP << "solver" << SEP << (1 + y);
+        if (IO::Directory::Create(folder))
+        {
+            String buffer = folder;
+            buffer << SEP << filename;
+            IO::File::Stream file;
+            if (file.openRW(buffer))
+            {
+                file << "\tTurbine\t\t\tOPP\t\t\t\tTurbine Cible\tDLE\t\t\t\tDLN\n";
+                for (uint day = 0; day != 365; ++day)
+                {
+                    double value = valgen.HydrauliqueModulableQuotidien[day];
+                    file << day << '\t' << value << '\t' << OPP[day] << '\t' << DTG[day] << '\t'
+                         << data.DLE[day] << '\t' << data.DLN[day];
+                    file << '\n';
+                }
+            }
+        }
+    }
+
+    void writeDailyDebugData(const Yuni::String& folder,
+                             const Date::Calendar& calendar,
+                             int initReservoirLvlMonth,
+                             uint y,
+                             const Data::AreaName& areaName) const
+    {
+        String buffer;
+        buffer << folder << SEP << "debug" << SEP << "solver" << SEP << (1 + y);
+        if (IO::Directory::Create(buffer))
+        {
+            buffer << SEP << "daily." << areaName << ".txt";
+            IO::File::Stream file;
+            if (file.openRW(buffer))
+            {
+                file << "\tNiveau init : " << data.MOL[initReservoirLvlMonth] << "\n";
+
+                for (uint month = 0; month != 12; ++month)
+                {
+                    uint realmonth = (initReservoirLvlMonth + month) % 12;
+                    uint simulationMonth = calendar.mapping.months[realmonth];
+
+                    auto daysPerMonth = calendar.months[simulationMonth].days;
+
+                    auto monthName = calendar.text.months[simulationMonth].name;
+
+                    uint firstDay = calendar.months[simulationMonth].daysYear.first;
+                    uint endDay = firstDay + daysPerMonth;
+
+                    file << "\n";
+                    file << "-------------\n";
+                    file << monthName << "\n";
+                    file << "-------------\n";
+                    file << "\t\t\tNiveauMin\tApports\t\tTurbMax\t\tTurbCible\tTurbCible "
+                            "MAJ\tNiveaux D\tNiveaux F\tTurbines\t";
+                    file << "Overflows\tDeviations\tViolations\tDeviation Max\tViolation "
+                            "Max\tWaste\t\tCout total\tTurb mois no previous W\t\tTurb mois + "
+                            "previous W \n";
+
+                    uint dayMonth = 1;
+                    for (uint day = firstDay; day != endDay; ++day)
+                    {
+                        double turbines
+                          = valgen.HydrauliqueModulableQuotidien[day] / reservoirCapacity;
+                        double niveauDeb = valgen.NiveauxReservoirsDebutJours[day];
+                        double niveauFin = valgen.NiveauxReservoirsFinJours[day];
+                        double apports = srcinflows[day] / reservoirCapacity;
+                        double turbMax = maxP[day] * maxE[day] / reservoirCapacity;
+                        double turbCible = dtg[day] / reservoirCapacity;
+                        double turbCibleUpdated = dtg[day] / reservoirCapacity
+                                                  + previousMonthWaste[realmonth] / daysPerMonth;
+                        file << day << '\t' << '\t' << dayMonth << '\t' << lowLevel[day] * 100
+                             << '\t' << apports * 100 << '\t' << turbMax * 100 << '\t'
+                             << turbCible * 100 << '\t' << turbCibleUpdated * 100 << '\t' << '\t'
+                             << niveauDeb * 100 << '\t' << niveauFin * 100 << '\t' << turbines * 100
+                             << '\t' << OVF[day] * 100 << '\t' << DEV[day] * 100 << '\t'
+                             << VIO[day] * 100;
+                        if (dayMonth == 1)
+                        {
+                            file << '\t' << deviationMax[realmonth] * 100 << '\t' << '\t'
+                                 << violationMax[realmonth] * 100 << '\t' << '\t'
+                                 << WASTE[realmonth] * 100 << '\t' << CoutTotal[realmonth] << '\t'
+                                 << (data.MOG[realmonth] / reservoirCapacity) * 100 << '\t' << '\t'
+                                 << '\t' << '\t' << '\t'
+                                 << (data.MOG[realmonth] / reservoirCapacity
+                                     + previousMonthWaste[realmonth])
+                                      * 100;
+                        }
+                        file << '\n';
+
+                        dayMonth++;
+                    }
+                }
+            }
+            file.close();
+        }
+    }
 };
 
 inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& state,
@@ -92,11 +248,11 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     auto const& valgen = *ValeursGenereesParPays[numSpace][z];
 
-#if HYDRO_DAILY_SOLVER_DEBUG != 0
-    double debugOPP[366];
-    double debugDTG[366];
-#endif
+    std::shared_ptr<DebugData> debugData(nullptr);
 
+    if (study.parameters.hydroDebug)
+        debugData = std::make_shared<DebugData>(
+          data, valgen, srcinflows, maxP, maxE, dtg, lowLevel, reservoirCapacity);
     for (uint month = 0; month != 12; ++month)
     {
         auto daysPerMonth = study.calendar.months[month].days;
@@ -111,9 +267,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             assert(dYear < 366);
             scratchpad.optimalMaxPower[dYear] = maxP[dYear];
 
-#if HYDRO_DAILY_SOLVER_DEBUG != 0
-            debugOPP[dYear] = maxP[dYear] * maxE[dYear];
-#endif
+            if (debugData)
+                debugData->OPP[dYear] = maxP[dYear] * maxE[dYear];
         }
 
         dayYear += daysPerMonth;
@@ -188,13 +343,14 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                     dtg[day + dayYear] = srcinflows[dayYear + day];
             }
 
-#if HYDRO_DAILY_SOLVER_DEBUG != 0
-            for (uint day = 0; day != daysPerMonth; ++day)
+            if (debugData)
             {
-                auto dYear = day + dayYear;
-                debugDTG[dYear] = dtg[dYear];
+                for (uint day = 0; day != daysPerMonth; ++day)
+                {
+                    auto dYear = day + dayYear;
+                    debugData->DTG[dYear] = dtg[dYear];
+                }
             }
-#endif
 
             dayYear += daysPerMonth;
         }
@@ -213,6 +369,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             uint endDay = firstDay + daysPerMonth;
 
             DONNEES_MENSUELLES& problem = *H2O_J_Instanciation();
+            H2O_J_AjouterBruitAuCout(&problem);
             problem.NombreDeJoursDuMois = (int)daysPerMonth;
             problem.TurbineDuMois = data.MOG[realmonth];
 
@@ -256,61 +413,18 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 #endif
         }
 
-#if HYDRO_DAILY_SOLVER_DEBUG != 0
+        if (debugData)
         {
-            String folder;
-            folder << study.folderOutput << SEP << "debug" << SEP << "solver" << SEP << (1 + y);
-            if (IO::Directory::Create(folder))
-            {
-                String filename = folder;
-                filename << SEP << "daily." << area.name << ".txt";
-                IO::File::Stream file;
-                if (file.openRW(filename))
-                {
-                    file << "\tTurbine\t\t\tOPP\t\t\t\tTurbine Cible\tDLE\t\t\t\tDLN\n";
-                    for (uint day = 0; day != 365; ++day)
-                    {
-                        double value = valgen.HydrauliqueModulableQuotidien[day];
-                        file << day << '\t' << value << '\t' << debugOPP[day] << '\t'
-                             << debugDTG[day] << '\t' << data.DLE[day] << '\t' << data.DLN[day];
-                        file << '\n';
-                    }
-                }
-            }
+            String filename;
+            filename << "daily." << area.name << ".txt";
+            debugData->writeTurb(study.folderOutput, filename, y);
         }
-#endif
     }
 
     else
     {
         double monthInitialLevel = data.MOL[initReservoirLvlMonth];
         double wasteFromPreviousMonth = 0.;
-
-#if HYDRO_DAILY_SOLVER_DEBUG != 0
-        double OVF[365];
-        double DEV[365];
-        double VIO[365];
-        double deviationMax[12];
-        double violationMax[12];
-        double WASTE[12];
-        double CoutTotal[12];
-        double previousMonthWaste[12];
-
-        for (int i = 0; i < 365; i++)
-        {
-            OVF[i] = 0.;
-            DEV[i] = 0.;
-            VIO[i] = 0.;
-        }
-
-        for (int i = 0; i < 12; i++)
-        {
-            deviationMax[i] = 0.;
-            violationMax[i] = 0.;
-            WASTE[i] = 0.;
-            CoutTotal[i] = 0.;
-        }
-#endif
 
         Hydro_problem_costs h2o2_optim_costs(study);
 
@@ -327,9 +441,9 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             DONNEES_MENSUELLES_ETENDUES& problem = *H2O2_J_Instanciation();
             H2O2_J_apply_costs(h2o2_optim_costs, problem);
 
-#if HYDRO_DAILY_SOLVER_DEBUG != 0
-            previousMonthWaste[realmonth] = wasteFromPreviousMonth / reservoirCapacity;
-#endif
+            if (debugData)
+                debugData->previousMonthWaste[realmonth]
+                  = wasteFromPreviousMonth / reservoirCapacity;
 
             problem.NombreDeJoursDuMois = (int)daysPerMonth;
 
@@ -358,12 +472,13 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             {
             case OUI:
 
-#if HYDRO_DAILY_SOLVER_DEBUG != 0
-                deviationMax[realmonth] = problem.deviationMax;
-                violationMax[realmonth] = problem.violationMax;
-                WASTE[realmonth] = problem.waste;
-                CoutTotal[realmonth] = problem.CoutSolution;
-#endif
+                if (debugData)
+                {
+                    debugData->deviationMax[realmonth] = problem.deviationMax;
+                    debugData->violationMax[realmonth] = problem.violationMax;
+                    debugData->WASTE[realmonth] = problem.waste;
+                    debugData->CoutTotal[realmonth] = problem.CoutSolution;
+                }
 
                 dayMonth = 0;
                 for (uint day = firstDay; day != endDay; ++day)
@@ -373,11 +488,12 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
                     valgen.NiveauxReservoirsFinJours[day] = problem.niveauxFinJours[dayMonth];
 
-#if HYDRO_DAILY_SOLVER_DEBUG != 0
-                    OVF[day] = problem.overflows[dayMonth];
-                    DEV[day] = problem.deviations[dayMonth];
-                    VIO[day] = problem.violations[dayMonth];
-#endif
+                    if (debugData)
+                    {
+                        debugData->OVF[day] = problem.overflows[dayMonth];
+                        debugData->DEV[day] = problem.deviations[dayMonth];
+                        debugData->VIO[day] = problem.violations[dayMonth];
+                    }
 
                     dayMonth++;
                 }
@@ -409,81 +525,11 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
         state.problemeHebdo->previousSimulationFinalLevel[z]
           = valgen.NiveauxReservoirsDebutJours[firstDaySimu] * reservoirCapacity;
 
-#if HYDRO_DAILY_SOLVER_DEBUG != 0
+        if (debugData)
         {
-            String folder;
-            folder << study.folderOutput << SEP << "debug" << SEP << "solver" << SEP << (1 + y);
-            if (IO::Directory::Create(folder))
-            {
-                String filename = folder;
-                filename << SEP << "daily." << area.name << ".txt";
-                IO::File::Stream file;
-                if (file.openRW(filename))
-                {
-                    file << "\tNiveau init : " << data.MOL[initReservoirLvlMonth] << "\n";
-
-                    for (uint month = 0; month != 12; ++month)
-                    {
-                        uint realmonth = (initReservoirLvlMonth + month) % 12;
-                        uint simulationMonth = study.calendar.mapping.months[realmonth];
-
-                        auto daysPerMonth = study.calendar.months[simulationMonth].days;
-
-                        auto monthName = study.calendar.text.months[simulationMonth].name;
-
-                        uint firstDay = study.calendar.months[simulationMonth].daysYear.first;
-                        uint endDay = firstDay + daysPerMonth;
-
-                        file << "\n";
-                        file << "-------------\n";
-                        file << monthName << "\n";
-                        file << "-------------\n";
-                        file << "\t\t\tNiveauMin\tApports\t\tTurbMax\t\tTurbCible\tTurbCible "
-                                "MAJ\tNiveaux D\tNiveaux F\tTurbines\t";
-                        file << "Overflows\tDeviations\tViolations\tDeviation Max\tViolation "
-                                "Max\tWaste\t\tCout total\tTurb mois no previous W\t\tTurb mois + "
-                                "previous W \n";
-
-                        uint dayMonth = 1;
-                        for (uint day = firstDay; day != endDay; ++day)
-                        {
-                            double turbines
-                              = valgen.HydrauliqueModulableQuotidien[day] / reservoirCapacity;
-                            double niveauDeb = valgen.NiveauxReservoirsDebutJours[day];
-                            double niveauFin = valgen.NiveauxReservoirsFinJours[day];
-                            double apports = srcinflows[day] / reservoirCapacity;
-                            double turbMax = maxP[day] * maxE[day] / reservoirCapacity;
-                            double turbCible = dtg[day] / reservoirCapacity;
-                            double turbCibleUpdated
-                              = dtg[day] / reservoirCapacity
-                                + previousMonthWaste[realmonth] / daysPerMonth;
-                            file << day << '\t' << '\t' << dayMonth << '\t' << lowLevel[day] * 100
-                                 << '\t' << apports * 100 << '\t' << turbMax * 100 << '\t'
-                                 << turbCible * 100 << '\t' << turbCibleUpdated * 100 << '\t'
-                                 << '\t' << niveauDeb * 100 << '\t' << niveauFin * 100 << '\t'
-                                 << turbines * 100 << '\t' << OVF[day] * 100 << '\t'
-                                 << DEV[day] * 100 << '\t' << VIO[day] * 100;
-                            if (dayMonth == 1)
-                            {
-                                file << '\t' << deviationMax[realmonth] * 100 << '\t' << '\t'
-                                     << violationMax[realmonth] * 100 << '\t' << '\t'
-                                     << WASTE[realmonth] * 100 << '\t' << CoutTotal[realmonth]
-                                     << '\t' << (data.MOG[realmonth] / reservoirCapacity) * 100
-                                     << '\t' << '\t' << '\t' << '\t' << '\t'
-                                     << (data.MOG[realmonth] / reservoirCapacity
-                                         + previousMonthWaste[realmonth])
-                                          * 100;
-                            }
-                            file << '\n';
-
-                            dayMonth++;
-                        }
-                    }
-                }
-                file.close();
-            }
+            debugData->writeDailyDebugData(
+              study.folderOutput, study.calendar, initReservoirLvlMonth, y, area.name);
         }
-#endif
     }
 }
 

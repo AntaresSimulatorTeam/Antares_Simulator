@@ -60,7 +60,6 @@
 #include "../../application/study.h"
 #include <antares/config.h>
 #include <antares/io/statistics.h>
-#include "../../../../internet/limits.h"
 #include "../../application/main.h"
 
 using namespace Yuni;
@@ -259,7 +258,7 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
         vS = new wxBoxSizer(wxVERTICAL);
 
         vS->AddSpacer(15);
-        vS->Add(Antares::Component::CreateLabel(panelGrid, wxT(" to "), true), 0, wxALIGN_BOTTOM);
+        vS->Add(Antares::Component::CreateLabel(panelGrid, wxT(" to "), true), 0, wxALIGN_NOT);
         hS->Add(vS, 0, wxALIGN_LEFT);
 
         hS->AddSpacer(5);
@@ -478,15 +477,6 @@ void ConstraintsBuilderWizard::onIncludeLoopFlow(wxCommandEvent& evt)
     pCBuilder->setUpToDate(false);
     pCBuilder->saveCBuilderToFile();
 
-    // update all lines in the study
-    /*for (auto link : pCBuilder->pLink)
-    {
-            link->ptr->useLoopFlow = value;
-            //onConnectionChanged(link->ptr);
-            OnStudyLinkChanged(link->ptr);
-    }
-    MarkTheStudyAsModified();*/
-    // Forms::ApplWnd::Instance()->pageLinksDetails->refresh();
     pGrid->forceRefresh();
 }
 
@@ -499,15 +489,6 @@ void ConstraintsBuilderWizard::onUsePhaseShift(wxCommandEvent& evt)
     pCBuilder->setUpToDate(false);
     pCBuilder->saveCBuilderToFile();
 
-    // update all lines in the study
-    /*for (auto link : pCBuilder->pLink)
-    {
-            link->ptr->usePST = value;
-            //onConnectionChanged(link->ptr);
-            OnStudyLinkChanged(link->ptr);
-    }*/
-    // MarkTheStudyAsModified();
-    // Forms::ApplWnd::Instance()->pageLinksDetails->refresh();
     pGrid->forceRefresh();
 }
 
@@ -623,7 +604,7 @@ void ConstraintsBuilderWizard::onDelete(void*)
     if (not Data::Study::Current::Valid())
         return;
     auto studyptr = Data::Study::Current::Get();
-    if (not studyptr)
+    if (!studyptr)
         return;
     auto& study = *studyptr;
 
@@ -690,7 +671,7 @@ void ConstraintsBuilderWizard::enableAll(bool v)
     pBtnBuild->Enable(false);
 }
 
-void ConstraintsBuilderWizard::fileMapping(FileMapping* m)
+void ConstraintsBuilderWizard::fileMapping(FileMappingPtr m)
 {
     pFileMapping = m;
 

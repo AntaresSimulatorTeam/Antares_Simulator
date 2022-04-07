@@ -225,6 +225,10 @@ bool Economy::year(Progression::Task& progression,
 
     updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
 
+    logs.info() << pProblemesHebdo[numSpace]->optimizationStatistics_object.toString();
+    auto& optStat = pProblemesHebdo[numSpace]->optimizationStatistics_object;
+    state.averageOptimizationTime = optStat.getAverageSolveTime();
+    optStat.reset();
     return true;
 }
 
@@ -234,10 +238,19 @@ void Economy::incrementProgression(Progression::Task& progression)
         ++progression;
 }
 
-AvgExchangeResults* Economy::callbackRetrieveBalanceData(Data::Area* area)
+// Retrieve weighted average balance for each area
+static std::vector<AvgExchangeResults*> retrieveBalance(
+  const Data::Study& study,
+  Solver::Variable::Economy::AllVariables& variables)
 {
-    AvgExchangeResults* balance = nullptr;
-    variables.retrieveResultsForArea<Variable::Economy::VCardBalance>(&balance, area);
+    const uint nbAreas = study.areas.size();
+    std::vector<AvgExchangeResults*> balance(nbAreas, nullptr);
+    for (uint areaIndex = 0; areaIndex < nbAreas; ++areaIndex)
+    {
+        const Data::Area* area = study.areas.byIndex[areaIndex];
+        variables.retrieveResultsForArea<Variable::Economy::VCardBalance>(&balance[areaIndex],
+                                                                          area);
+    }
     return balance;
 }
 
@@ -245,9 +258,8 @@ void Economy::simulationEnd()
 {
     if (!preproOnly && study.runtime->interconnectionsCount > 0)
     {
-        CallbackBalanceRetrieval callback;
-        callback.bind(this, &Economy::callbackRetrieveBalanceData);
-        PerformQuadraticOptimisation(study, *pProblemesHebdo[0], callback, pNbWeeks);
+        auto balance = retrieveBalance(study, variables);
+        ComputeFlowQuad(study, *pProblemesHebdo[0], balance, pNbWeeks);
     }
 }
 

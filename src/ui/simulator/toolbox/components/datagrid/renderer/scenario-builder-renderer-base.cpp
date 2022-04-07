@@ -38,24 +38,13 @@ namespace Datagrid
 {
 namespace Renderer
 {
-ScBuilderRendererBase::ScBuilderRendererBase() : pControl(nullptr), pArea(nullptr)
-{
-}
+// ==================================
+// Scenario builder base class
+// ==================================
 
 ScBuilderRendererBase::~ScBuilderRendererBase()
 {
     destroyBoundEvents();
-}
-
-void ScBuilderRendererBase::onAreaChanged(Data::Area* area)
-{
-    if (area != pArea)
-    {
-        pArea = area;
-        onRefresh();
-        if (pControl)
-            pControl->Refresh();
-    }
 }
 
 void ScBuilderRendererBase::onRulesChanged(Data::ScenarioBuilder::Rules::Ptr rules)
@@ -65,14 +54,9 @@ void ScBuilderRendererBase::onRulesChanged(Data::ScenarioBuilder::Rules::Ptr rul
         pRules = rules;
         invalidate = true;
         onRefresh();
-        if (pControl)
-            RefreshAllControls(pControl);
+        if (gridPanel())
+            RefreshAllControls(gridPanel());
     }
-}
-
-bool ScBuilderRendererBase::valid() const
-{
-    return !(!study) && pRules && study->areas.size() != 0 && !(!pRules);
 }
 
 int ScBuilderRendererBase::width() const
@@ -80,19 +64,68 @@ int ScBuilderRendererBase::width() const
     return (!study || !pRules) ? 0 : (int)study->parameters.nbYears;
 }
 
-int ScBuilderRendererBase::height() const
+wxString ScBuilderRendererBase::columnCaption(int x) const
+{
+    return wxString(wxT("year ")) << (1 + x);
+}
+
+wxString ScBuilderRendererBase::cellValue(int x, int y) const
+{
+    const double d = cellNumericValue(x, y);
+    return (Math::Zero(d)) ? wxString() << wxT("rand") : wxString() << (uint)d;
+}
+
+static IRenderer::CellStyle alternateEnabledDisabled(int rowIndex, bool enabled)
+{
+    if (enabled)
+    {
+        if (rowIndex % 2 == 0)
+            return IRenderer::cellStyleDefaultCenter;
+        else
+            return IRenderer::cellStyleDefaultCenterAlternate;
+    }
+    else
+    {
+        if (rowIndex % 2 == 0)
+            return IRenderer::cellStyleDefaultCenterDisabled;
+        else
+            return IRenderer::cellStyleDefaultCenterAlternateDisabled;
+    }
+}
+
+IRenderer::CellStyle ScBuilderRendererBase::cellStyle(int x, int y) const
+{
+    if (Math::Zero(cellNumericValue(x, y)))
+        return alternateEnabledDisabled(y, false);
+
+    bool valid = (!(!study) && !(!pRules));
+    if (valid)
+    {
+        auto& parameters = study->parameters;
+        if (parameters.userPlaylist && parameters.yearsFilter)
+            valid = parameters.yearsFilter[x];
+    }
+    return alternateEnabledDisabled(y, valid);
+}
+
+void ScBuilderRendererBase::onStudyClosed()
+{
+    pRules = nullptr;
+    IRenderer::onStudyClosed();
+}
+
+// ========================================
+// Class ScBuilderRendererAreasAsRows
+// ========================================
+
+int ScBuilderRendererAreasAsRows::height() const
 {
     if (!(!study) && !(!pRules))
         return (int)pRules->areaCount();
     return 0;
 }
 
-wxString ScBuilderRendererBase::columnCaption(int x) const
-{
-    return wxString(wxT("year ")) << (1 + x);
-}
-
-wxString ScBuilderRendererBase::rowCaption(int rowIndx) const
+wxString ScBuilderRendererAreasAsRows::rowCaption(int rowIndx) const
 {
     if (!(!study) && !(!pRules))
     {
@@ -103,31 +136,45 @@ wxString ScBuilderRendererBase::rowCaption(int rowIndx) const
     return wxEmptyString;
 }
 
-wxString ScBuilderRendererBase::cellValue(int x, int y) const
+bool ScBuilderRendererAreasAsRows::valid() const
 {
-    const double d = cellNumericValue(x, y);
-    return (Math::Zero(d)) ? wxString() << wxT("rand") : wxString() << (uint)d;
+    return !(!study) && pRules && study->areas.size() != 0 && !(!pRules);
 }
 
-IRenderer::CellStyle ScBuilderRendererBase::cellStyle(int x, int y) const
+// ========================================
+// Class ScBuilderRendererForAreaSelector
+// ========================================
+ScBuilderRendererForAreaSelector::ScBuilderRendererForAreaSelector(
+  const Toolbox::InputSelector::Area* notifier)
 {
-    bool valid = (!(!study) && !(!pRules) && Math::Zero(cellNumericValue(x, y)));
-    if (valid)
+    if (notifier)
     {
-        auto& parameters = study->parameters;
-        if (parameters.userPlaylist && parameters.yearsFilter)
-            valid = !parameters.yearsFilter[x];
+        // Event: The current selected area
+        Toolbox::InputSelector::Area::onAreaChanged.connect(
+          this, &ScBuilderRendererForAreaSelector::onAreaChanged);
     }
-    return (valid)
-             ? ((y % 2) ? cellStyleDefaultCenterAlternateDisabled : cellStyleDefaultCenterDisabled)
-             : ((y % 2) ? cellStyleDefaultCenterAlternate : cellStyleDefaultCenter);
 }
 
-void ScBuilderRendererBase::onStudyClosed()
+void ScBuilderRendererForAreaSelector::onStudyClosed()
 {
     pArea = nullptr;
-    pRules = nullptr;
-    IRenderer::onStudyClosed();
+    ScBuilderRendererBase::onStudyClosed();
+}
+
+void ScBuilderRendererForAreaSelector::onAreaChanged(Data::Area* area)
+{
+    if (area != pArea)
+    {
+        pArea = area;
+        onRefresh();
+        if (gridPanel())
+            gridPanel()->Refresh();
+    }
+}
+
+bool ScBuilderRendererForAreaSelector::valid() const
+{
+    return !(!study) && pRules && !study->areas.empty() && !(!pRules) && pArea;
 }
 
 } // namespace Renderer

@@ -126,7 +126,7 @@ bool Create::prepareWL(Context& ctx)
         if (suffix == "<auto>" || !explicitTarget)
         {
             TransformNameIntoID(pFuturAreaName, id);
-            areaFound = ctx.study.areas.find(id);
+            areaFound = ctx.study->areas.find(id);
             if (areaFound)
             {
                 Data::AreaName::Size sepPos = id.find_last_of('-');
@@ -147,7 +147,7 @@ bool Create::prepareWL(Context& ctx)
                     pFuturAreaName.clear() << pTargetAreaName << "-" << indx;
                     id.clear();
                     TransformNameIntoID(pFuturAreaName, id);
-                    areaFound = ctx.study.areas.find(id);
+                    areaFound = ctx.study->areas.find(id);
                 } while (areaFound);
             }
         }
@@ -155,13 +155,13 @@ bool Create::prepareWL(Context& ctx)
         {
             pFuturAreaName += suffix;
             TransformNameIntoID(pFuturAreaName, id);
-            areaFound = ctx.study.areas.find(id);
+            areaFound = ctx.study->areas.find(id);
         }
     }
     else
     {
         TransformNameIntoID(pFuturAreaName, id);
-        areaFound = ctx.study.areas.find(id);
+        areaFound = ctx.study->areas.find(id);
     }
 
     // area mapping
@@ -214,13 +214,13 @@ bool Create::performWL(Context& ctx)
 
     Data::AreaName id;
     TransformNameIntoID(pFuturAreaName, id);
-    ctx.area = ctx.study.areas.find(id);
+    ctx.area = ctx.study->areas.find(id);
 
     // The area
     if (not ctx.area)
     {
         // create the area
-        ctx.area = ctx.study.areaAdd(pFuturAreaName);
+        ctx.area = ctx.study->areaAdd(pFuturAreaName);
         logs.debug() << "[study-action] The area " << pFuturAreaName << " has been created";
     }
     else
@@ -309,7 +309,7 @@ void Create::createActionsForAStandardAreaCopy(Context& ctx, bool copyPosition)
 }
 
 IAction* Create::StandardActionsToCopyThermalCluster(const Data::AreaName& area,
-                                                     const Data::ThermalClusterName& name)
+                                                     const Data::ClusterName& name)
 {
     typedef Antares::Action::AntaresStudy::ThermalCluster::Create NodePlant;
     typedef Antares::Action::AntaresStudy::ThermalCluster::CommonData NodePlantCommonData;

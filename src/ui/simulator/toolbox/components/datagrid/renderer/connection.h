@@ -42,7 +42,7 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class Connection final : public Renderer::Matrix<>
+class Connection : public Renderer::Matrix<>
 {
 public:
     Connection(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
@@ -57,11 +57,9 @@ public:
         return Renderer::Matrix<>::height();
     }
 
-    virtual wxString columnCaption(int colIndx) const;
-
     virtual wxString rowCaption(int rowIndx) const;
 
-    virtual wxString cellValue(int x, int y) const
+    wxString cellValue(int x, int y) const override
     {
         return Renderer::Matrix<>::cellValue(x, y);
     }
@@ -71,11 +69,8 @@ public:
         return Renderer::Matrix<>::cellNumericValue(x, y);
     }
 
-    virtual bool cellValue(int x, int y, const Yuni::String& value);
-
-    virtual void resetColors(int, int, wxColour&, wxColour&) const
-    {
-        // Do nothing
+    void resetColors(int, int, wxColour&, wxColour&) const override
+    { /* Do nothing*/
     }
 
     virtual wxColour horizontalBorderColor(int x, int y) const;
@@ -85,24 +80,88 @@ public:
         return Renderer::Matrix<>::valid();
     }
 
-    virtual uint maxWidthResize() const
+    uint maxWidthResize() const override
     {
-        return 0;
+        return 1000;
     }
-    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
 
-    virtual Date::Precision precision()
+    Date::Precision precision() override
     {
         return Date::hourly;
     }
 
 protected:
     wxWindow* pControl;
+    bool mUseLoopFlow = false;
 
 private:
+    virtual void setMatrix(Data::AreaLink* link) = 0;
     void onConnectionChanged(Data::AreaLink* link);
 
-}; // class ARendererArea
+}; // class Connection
+
+// ===========================
+// Parameters grid renderer
+// ===========================
+class connectionParameters final : public Connection
+{
+public:
+    connectionParameters(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
+    ~connectionParameters() override = default;
+    wxString columnCaption(int colIndx) const override;
+    bool cellValue(int x, int y, const Yuni::String& value) override;
+    IRenderer::CellStyle cellStyle(int col, int row) const override;
+
+private:
+    void setMatrix(Data::AreaLink* link) override;
+
+    Antares::Matrix<>* direct_ntc_ = nullptr;
+    Antares::Matrix<>* indirect_ntc_ = nullptr;
+};
+
+// ===========================
+// NTC grid renderer
+// ===========================
+class connectionNTC : public Connection
+{
+public:
+    connectionNTC(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
+    ~connectionNTC() override = default;
+    bool cellValue(int x, int y, const Yuni::String& value) override;
+    IRenderer::CellStyle cellStyle(int col, int row) const override;
+    virtual bool checkLoopFlow(double ntcIndirect, double loopFlow) const = 0;
+
+protected:
+    Antares::Matrix<>::ColumnType* mLoopFlowData = nullptr;
+};
+
+// ----------------
+// Direct
+// ----------------
+class connectionNTCdirect : public connectionNTC
+{
+public:
+    connectionNTCdirect(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
+    ~connectionNTCdirect() override = default;
+    bool checkLoopFlow(double ntcIndirect, double loopFlow) const override;
+
+private:
+    void setMatrix(Data::AreaLink* link) override;
+};
+
+// ----------------
+// Indirect
+// ----------------
+class connectionNTCindirect : public connectionNTC
+{
+public:
+    connectionNTCindirect(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
+    ~connectionNTCindirect() override = default;
+    bool checkLoopFlow(double ntcIndirect, double loopFlow) const override;
+
+private:
+    void setMatrix(Data::AreaLink* link) override;
+};
 
 } // namespace Renderer
 } // namespace Datagrid

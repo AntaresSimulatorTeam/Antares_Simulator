@@ -29,19 +29,20 @@
 
 #include <stdexcept>
 
-namespace Antares {
-
-namespace Data {
-
-class UnfeasibleProblemError : public std::runtime_error {
+namespace Antares
+{
+namespace Data
+{
+class UnfeasibleProblemError : public std::runtime_error
+{
 public:
     explicit UnfeasibleProblemError(const std::string& message);
 
     ~UnfeasibleProblemError() noexcept override = default;
 };
 
-}  // namespace Data
+} // namespace Data
 
-}  // namespace Antares
+} // namespace Antares
 
-#endif  // ANTARES_DATA_UNFEASIBLEPROBLEMERROR_HPP
+#endif // ANTARES_DATA_UNFEASIBLEPROBLEMERROR_HPP

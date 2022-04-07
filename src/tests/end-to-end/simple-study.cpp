@@ -85,10 +85,10 @@ Area* addArea(Study::Ptr pStudy, const std::string& areaName, int nbTS)
 }
 
 
-ThermalCluster* addCluster(Study::Ptr pStudy, Area* pArea, const std::string& clusterName, double maximumPower, double cost, int nbTS, int unitCount = 1)
+std::shared_ptr<ThermalCluster> addCluster(Study::Ptr pStudy, Area* pArea, const std::string& clusterName, double maximumPower, double cost, int nbTS, int unitCount = 1)
 {
-	ThermalCluster* pCluster = new ThermalCluster(pArea, pStudy->maxNbYearsInParallel);
-	pCluster->name(clusterName);
+    auto pCluster = std::make_shared<ThermalCluster>(pArea, pStudy->maxNbYearsInParallel);
+	pCluster->setName(clusterName);
 	pCluster->reset();
 	
 	pCluster->unitCount			= unitCount;
@@ -128,9 +128,11 @@ ThermalCluster* addCluster(Study::Ptr pStudy, Area* pArea, const std::string& cl
 	
 	pCluster->nominalCapacityWithSpinning = pCluster->nominalCapacity;
 
-	BOOST_CHECK(pArea->thermal.list.add(pCluster));
+    auto added = pArea->thermal.list.add(pCluster);
 
-	pArea->thermal.list.mapping[pCluster->id()] = pCluster;
+	BOOST_CHECK(added != nullptr);
+
+    pArea->thermal.list.mapping[pCluster->id()] = added;
 
 	return pCluster;
 }
@@ -204,7 +206,7 @@ void cleanSimulation(Study::Ptr pStudy, Solver::Simulation::ISimulation< Solver:
 BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 {
 	//Create study
-	Study::Ptr pStudy = new Study(true); // for the solver
+	Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
 
 	//On year  and one TS
 	int nbYears = 1;
@@ -226,7 +228,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 	double availablePower	= 50.0;
 	double cost				= 2.0;
 	double maximumPower		= 100.0;
-	ThermalCluster* pCluster = addCluster(pStudy, pArea,"Cluster 1", maximumPower,cost, nbTS);
+	auto pCluster = addCluster(pStudy, pArea,"Cluster 1", maximumPower,cost, nbTS);
 
 	//Initialize time series
 	pCluster->series->series.fillColumn(0, availablePower);
@@ -248,7 +250,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
 {
 	//Create study
-	Study::Ptr pStudy = new Study(true); // for the solver
+	Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
 
 	//On year  and one TS
 	int nbYears = 2;
@@ -270,7 +272,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
 	double availablePower	= 10.0;
 	double cost				= 2.0;
 	double maximumPower		= 100.0;
-	ThermalCluster* pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
+	auto pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
 
 	//Initialize time series
 	pCluster->series->series.fillColumn(0, availablePower);
@@ -293,7 +295,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
 BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
 {
 	//Create study
-	Study::Ptr pStudy = new Study(true); // for the solver
+	Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
 
 	//On year  and one TS
 	int nbYears = 2;
@@ -316,7 +318,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
 	double availablePower = 10.0;
 	double cost = 2.0;
 	double maximumPower = 100.0;
-	ThermalCluster* pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
+	auto pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
 
 	//Initialize time series
 	pCluster->series->series.fillColumn(0, availablePower);
@@ -341,7 +343,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
 BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
 {
 	//Create study
-	Study::Ptr pStudy = new Study(true); // for the solver
+	Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
 
 	//On year  and one TS
 	int nbYears = 2;
@@ -366,7 +368,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
 	double availablePower	= 20.0;
 	double cost				= 2.2;
 	double maximumPower		= 100.0;
-	ThermalCluster* pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
+	auto pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
 
 	//Initialize time series
 	pCluster->series->series.fillColumn(0, availablePower);
@@ -402,7 +404,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
 BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_different_weight)
 {
 	//Create study
-	Study::Ptr pStudy = new Study(true); // for the solver
+	Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
 
 	//Two years  and two TS
 	int nbYears = 2;
@@ -438,7 +440,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_different_weight)
 	double availablePower	= 20.0;
 	double cost				= 2.2;
 	double maximumPower		= 100.0;
-	ThermalCluster* pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
+	auto pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
 
 	//Initialize time series
 	pCluster->series->series.fillColumn(0, availablePower);

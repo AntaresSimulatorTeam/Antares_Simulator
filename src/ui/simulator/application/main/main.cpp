@@ -43,7 +43,6 @@
 
 // MainPanel
 #include "../../toolbox/components/mainpanel.h"
-#include "../../../../internet/license.h"
 
 // Jobs
 #include "../../toolbox/jobs.h"
@@ -65,6 +64,8 @@
 #include "internal-ids.h"
 #include "internal-data.h"
 #include "../wait.h"
+
+#include "../../windows/options/advanced/advanced.h"
 
 using namespace Yuni;
 
@@ -118,6 +119,7 @@ EVT_MENU(mnIDViewNotes, ApplWnd::evtOnViewNotes)
 EVT_MENU(mnIDViewLoad, ApplWnd::evtOnViewLoad)
 EVT_MENU(mnIDViewSolar, ApplWnd::evtOnViewSolar)
 EVT_MENU(mnIDViewWind, ApplWnd::evtOnViewWind)
+EVT_MENU(mnIDViewRenewable, ApplWnd::evtOnViewRenewable)
 EVT_MENU(mnIDViewHydro, ApplWnd::evtOnViewHydro)
 EVT_MENU(mnIDViewThermal, ApplWnd::evtOnViewThermal)
 EVT_MENU(mnIDViewMiscGen, ApplWnd::evtOnViewMiscGen)
@@ -181,10 +183,7 @@ EVT_MENU(mnIDHelpPDFOptimizationProblemsFormulation,
 EVT_MENU(mnIDHelpPDFSystemMapEditorReferenceGuide,
          ApplWnd::evtOnHelpPDFSystemMapEditorReferenceGuide)
 EVT_MENU(mnIDHelpPDFExamplesLibrary, ApplWnd::evtOnHelpPDFExamplesLibrary)
-EVT_MENU(mnIDHelpContinueOnline, ApplWnd::evtOnHelpContinueOnline)
-EVT_MENU(mnIDHelpContinueOffline, ApplWnd::evtOnHelpContinueOffline)
-EVT_MENU(mnIDHelpShowID, ApplWnd::evtOnShowID)
-
+EVT_MENU(mnIDHelpOnlineDocumentation, ApplWnd::evtOnHelpOnlineDocumentation)
 EVT_MENU(mnInternalLogMessage, ApplWnd::onLogMessage)
 EVT_MENU(mnIDLaunchAnalyzer, ApplWnd::evtLaunchAnalyzer)
 EVT_MENU(mnIDLaunchConstraintsBuilder, ApplWnd::evtLaunchConstraintsBuilder)
@@ -256,14 +255,13 @@ ApplWnd::ApplWnd() :
  pageThermalTimeSeries(nullptr),
  pageThermalPrepro(nullptr),
  pageThermalCommon(nullptr),
- pageLinksSummary(nullptr),
- pageLinksDetails(nullptr),
+ pageRenewableClusterList(nullptr),
+ pageRenewableCommon(nullptr),
  pageNodalOptim(nullptr),
  pWndBindingConstraints(nullptr),
  pGridSelectionOperator(new Component::Datagrid::Selection::CellCount()),
  pGridSelectionAttachedGrid(nullptr),
  pMapContextMenu(nullptr),
- pOnLineConsent(this),
  pUserNotes(nullptr),
  pMainNotebookAlreadyHasItsComponents(false),
  pLogFlusherTimer(nullptr),
@@ -491,8 +489,14 @@ void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
         EnableItem(menu, mnIDViewSimulation, opened);
         EnableItem(menu, mnIDViewNotes, opened);
         EnableItem(menu, mnIDViewLoad, opened);
-        EnableItem(menu, mnIDViewSolar, opened);
-        EnableItem(menu, mnIDViewWind, opened);
+
+        EnableItem(
+          menu, mnIDViewSolar, opened && study->parameters.renewableGeneration.isAggregated());
+        EnableItem(
+          menu, mnIDViewWind, opened && study->parameters.renewableGeneration.isAggregated());
+        EnableItem(
+          menu, mnIDViewRenewable, opened && study->parameters.renewableGeneration.isClusters());
+
         EnableItem(menu, mnIDViewHydro, opened);
         EnableItem(menu, mnIDViewThermal, opened);
         EnableItem(menu, mnIDViewMiscGen, opened);
@@ -537,6 +541,7 @@ void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
     // Keep informed all other dependencies that something has changed
     OnStudyAreasChanged();
     OnStudySettingsChanged();
+    Window::Options::OnRenewableGenerationModellingChanged(true);
 
     // Make some components visible
     pAUIManager.GetPane(pBigDaddy).Show(opened);
@@ -645,6 +650,8 @@ void ApplWnd::onMainNotebookPageChanging(Component::Notebook::Page& page)
         pCurrentEquipmentPage = Data::timeSeriesLoad;
     else if (page.name() == wxT("thermal"))
         pCurrentEquipmentPage = Data::timeSeriesThermal;
+    else if (page.name() == wxT("renewable"))
+        pCurrentEquipmentPage = Data::timeSeriesRenewable;
     else if (page.name() == wxT("solar"))
         pCurrentEquipmentPage = Data::timeSeriesSolar;
     else if (page.name() == wxT("wind"))
@@ -770,6 +777,62 @@ void ApplWnd::onSectionNotebookPageChanging(Component::Notebook::Page& page)
 void ApplWnd::onSystemParametersChanged()
 {
     // Do nothing
+}
+
+void ApplWnd::refreshHomePageOnRenewableModellingChanged(bool aggregated, bool init)
+{
+    // Main window
+    for (auto s : {"wind", "solar"})
+        pNotebook->set_page_visibility(wxString(s), aggregated);
+    pNotebook->set_page_visibility(wxString("renewable"), not aggregated);
+
+    // Page selection after the renewable modelling changed
+    if (!init)
+    {
+        const Component::Notebook::Page* windPage = pNotebook->find("wind");
+        const Component::Notebook::Page* solarPage = pNotebook->find("solar");
+        const Component::Notebook::Page* renewablePage = pNotebook->find("renewable");
+        if (aggregated)
+        {
+            if (pNotebook->selected() == renewablePage)
+                pNotebook->select(wxT("wind"));
+        }
+        else
+        {
+            if (pNotebook->selected() == windPage || pNotebook->selected() == solarPage)
+                pNotebook->select(wxT("renewable"));
+        }
+        pNotebook->forceRefresh();
+    }
+}
+
+void ApplWnd::refreshScenarioBuilderPagOnRenewableModellingChanged(bool aggregated)
+{
+    for (auto s : {"wind", "solar"})
+        pScenarioBuilderNotebook->set_page_visibility(wxString(s), aggregated);
+
+    pScenarioBuilderNotebook->set_page_visibility(wxString("renewable"), not aggregated);
+}
+
+void ApplWnd::refreshInputMenuOnRenewableModellingChanged(bool aggregated)
+{
+    auto* menu = GetMenuBar();
+    EnableItem(menu, mnIDViewSolar, aggregated);
+    EnableItem(menu, mnIDViewWind, aggregated);
+    EnableItem(menu, mnIDViewRenewable, not aggregated);
+}
+
+void ApplWnd::onRenewableGenerationModellingChanged(bool init)
+{
+    auto study = Data::Study::Current::Get();
+    if (!study)
+        return;
+
+    const bool aggregated = study->parameters.renewableGeneration.isAggregated();
+
+    refreshHomePageOnRenewableModellingChanged(aggregated, init);
+    refreshScenarioBuilderPagOnRenewableModellingChanged(aggregated);
+    refreshInputMenuOnRenewableModellingChanged(aggregated);
 }
 
 void ApplWnd::gridOperatorSelectedCells(Component::Datagrid::Selection::IOperator* v)
@@ -920,8 +983,14 @@ void ApplWnd::selectAllDefaultPages()
         pageThermalClusterList->select();
     if (pageThermalCommon)
         pageThermalCommon->select();
-    if (pageLinksDetails)
-        pageLinksDetails->select();
+    if (pageRenewableClusterList)
+        pageRenewableClusterList->select();
+    if (pageRenewableCommon)
+        pageRenewableCommon->select();
+    if (pageLinksParameters)
+        pageLinksParameters->select();
+    if (pageLinksNTC)
+        pageLinksNTC->select();
     if (pageWindPreproDailyProfile)
         pageWindPreproDailyProfile->select();
     if (pWndBindingConstraints)

@@ -106,6 +106,10 @@ typedef enum // Version
     version720 = 720,
     //! Study version 8.0
     version800 = 800,
+    //! Study version 8.1
+    version810 = 810,
+    //! Study version 8.2
+    version820 = 820,
 
     // see versionLatest below
 
@@ -118,7 +122,7 @@ typedef enum // Version
 enum
 {
     //! The latest version
-    versionLatest = version800,
+    versionLatest = version820,
 };
 
 /*!

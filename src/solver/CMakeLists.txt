@@ -7,6 +7,7 @@ if(MSVC)
 endif(MSVC)
 
 
+include("cmake/infeasible-problem-analysis.cmake")
 include("cmake/solver.cmake")
 include("cmake/hydro.cmake")
 include("cmake/main.cmake")
@@ -68,12 +69,12 @@ macro(solver_app name swap)
 		mps/mps_extern_global.h
 		mps/mps_global.c
 		${SRCS}
-		main.h main.hxx main.cpp
+		main.cpp
+        application.h application.cpp
 	)
 	
 	set(ANTARES_SOLVER_LIBS		
 		libantares-core-calendar
-		libantares-license
 		yuni-static-uuid
 		yuni-static-core		
 		${CMAKE_THREADS_LIBS_INIT}

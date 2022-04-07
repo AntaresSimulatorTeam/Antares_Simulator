@@ -27,6 +27,7 @@
 #ifndef __ANTARES_LIBS_STUDY_RUNTIME_RUNTIME_INFOS_H__
 #define __ANTARES_LIBS_STUDY_RUNTIME_RUNTIME_INFOS_H__
 
+#include <string>
 #include "../study.h"
 #include "../../mersenne-twister/mersenne-twister.h"
 
@@ -93,6 +94,7 @@ public:
     int* clusterOffset;
     long* clusterIndex;
     long* clustersAreaIndex;
+    std::string name;
 };
 
 /*!
@@ -162,6 +164,9 @@ public:
     uint thermalPlantTotalCount;
     uint thermalPlantTotalCountMustRun;
 
+    //! Override enable/disable TS generation per cluster
+    bool thermalTSRefresh;
+
     //! The maximum number of clusters for each area
     uint maxThermalClustersForSingleArea;
 
@@ -211,11 +216,12 @@ private:
     void initializeBindingConstraints(BindConstList& list);
     void initializeRangeLimits(const Study& study, StudyRangeLimits& limits);
     //! Prepare all thermal clusters in 'must-run' mode
-    bool initializeThermalClustersInMustRunMode(Study& study);
+    void initializeThermalClustersInMustRunMode(Study& study);
     void removeDisabledThermalClustersFromSolverComputations(Study& study);
-
+    void removeDisabledRenewableClustersFromSolverComputations(Study& study);
+    void removeAllRenewableClustersFromSolverComputations(Study& study);
     void disableAllFilters(Study& study);
-
+    void checkThermalTSGeneration(Study& study);
 }; // struct StudyRuntimeInfos
 
 /*!

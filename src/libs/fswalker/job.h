@@ -30,6 +30,8 @@
 #include <yuni/yuni.h>
 #include <yuni/job/job.h>
 
+#include <memory>
+
 namespace FSWalker
 {
 // Forward declaration
@@ -37,14 +39,13 @@ class Walker;
 class WalkerThread;
 
 //! Internal job counter
-typedef Yuni::SmartPtr<Yuni::Atomic::Int<32>> InternalJobCounter;
+using InternalJobCounter = std::shared_ptr<Yuni::Atomic::Int<32>>;
 
 class IJob : public Yuni::Job::IJob
 {
 public:
     //! The most suitable smart pointer for the class
-    // typedef Yuni::SmartPtr<IJob> Ptr;
-    typedef Yuni::Job::IJob::Ptr::Promote<IJob>::Ptr Ptr;
+    using Ptr = Yuni::Job::IJob::Ptr::Promote<IJob>::Ptr;
 
 public:
     IJob()

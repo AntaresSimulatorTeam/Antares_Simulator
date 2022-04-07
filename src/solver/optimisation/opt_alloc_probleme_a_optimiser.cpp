@@ -25,6 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <limits>
+
 #include "opt_structure_probleme_a_resoudre.h"
 
 #include "../simulation/simulation.h"
@@ -174,6 +176,9 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int
       = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
     ProblemeAResoudre->Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
 
+    ProblemeAResoudre->NomDesVariables.resize(ProblemeAResoudre->NombreDeVariables);
+    ProblemeAResoudre->NomDesContraintes.resize(ProblemeAResoudre->NombreDeContraintes);
+
     logs.info();
     logs.info() << " Status of Preliminary Allocations for Generic Problem Resolution : Successful";
     logs.info();
@@ -255,6 +260,9 @@ void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* ProblemeHebdo)
         MemFree(ProblemeAResoudre->ComplementDeLaBase);
         MemFree(ProblemeAResoudre->Pi);
         MemFree(ProblemeAResoudre->Colonne);
+
+        ProblemeAResoudre->NomDesVariables.clear();
+        ProblemeAResoudre->NomDesContraintes.clear();
 
         MemFree(ProblemeAResoudre);
 

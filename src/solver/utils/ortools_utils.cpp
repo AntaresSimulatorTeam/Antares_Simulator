@@ -9,39 +9,41 @@
 
 using namespace operations_research;
 
-template<typename T_PROBLEM>
-MPSolver* convert_to_MPSolver(T_PROBLEM* problemeSimplexe);
-
-void extract_from_MPSolver(MPSolver* solver, PROBLEME_SIMPLEXE* problemeSimplexe);
-void extract_from_MPSolver(MPSolver* solver, PROBLEME_A_RESOUDRE* problemeSimplexe);
-
-void change_MPSolver_objective(MPSolver* solver, double* costs, int nbVar);
-void change_MPSolver_rhs(MPSolver* solver, double* rhs, char* sens, int nbRow);
-void change_MPSolver_variables_bounds(MPSolver* solver,
-                                      double* bMin,
-                                      double* bMax,
-                                      int nbVar,
-                                      PROBLEME_SIMPLEXE* problemeSimplexe);
-
-void transferVariables(MPSolver* solver, double* bMin, double* bMax, double* costs, int nbVar)
+static void transferVariables(MPSolver* solver,
+                              const double* bMin,
+                              const double* bMax,
+                              const double* costs,
+                              int nbVar,
+                              const std::vector<std::string>& NomDesVariables)
 {
     MPObjective* const objective = solver->MutableObjective();
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
-        std::ostringstream oss;
-        oss << "x" << idxVar;
         double min_l = 0.0;
         if (bMin != NULL)
         {
             min_l = bMin[idxVar];
         }
         double max_l = bMax[idxVar];
-        auto x = solver->MakeNumVar(min_l, max_l, oss.str());
-        objective->SetCoefficient(x, costs[idxVar]);
+        std::string varName;
+        if (NomDesVariables[idxVar].empty())
+        {
+            varName = "x" + std::to_string(idxVar);
+        }
+        else
+        {
+            varName = NomDesVariables[idxVar];
+        }
+        const MPVariable* var = solver->MakeNumVar(min_l, max_l, varName);
+        objective->SetCoefficient(var, costs[idxVar]);
     }
 }
 
-void transferRows(MPSolver* solver, double* rhs, char* sens, int nbRow)
+static void transferRows(MPSolver* solver,
+                         const double* rhs,
+                         const char* sens,
+                         int nbRow,
+                         const std::vector<std::string>& NomDesContraintes)
 {
     for (int idxRow = 0; idxRow < nbRow; ++idxRow)
     {
@@ -58,18 +60,27 @@ void transferRows(MPSolver* solver, double* rhs, char* sens, int nbRow)
         {
             bMin = rhs[idxRow];
         }
-        std::ostringstream oss;
-        oss << "c" << idxRow;
-        MPConstraint* const ct = solver->MakeRowConstraint(bMin, bMax, oss.str());
+
+        std::string constraintName;
+        if (NomDesContraintes[idxRow].empty())
+        {
+            constraintName = "c" + std::to_string(idxRow);
+        }
+        else
+        {
+            constraintName = NomDesContraintes[idxRow];
+        }
+
+        solver->MakeRowConstraint(bMin, bMax, constraintName);
     }
 }
 
-void transferMatrix(MPSolver* solver,
-                    int* indexRows,
-                    int* terms,
-                    int* indexCols,
-                    double* coeffs,
-                    int nbRow)
+static void transferMatrix(const MPSolver* solver,
+                           const int* indexRows,
+                           const int* terms,
+                           const int* indexCols,
+                           const double* coeffs,
+                           int nbRow)
 {
     auto variables = solver->variables();
     auto constraints = solver->constraints();
@@ -86,7 +97,12 @@ void transferMatrix(MPSolver* solver,
     }
 }
 
-MPSolver* convert_to_MPSolver(PROBLEME_SIMPLEXE* problemeSimplexe)
+namespace Antares
+{
+namespace Optimization
+{
+MPSolver* convert_to_MPSolver(
+  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
     auto& study = *Data::Study::Current::Get();
 
@@ -102,13 +118,15 @@ MPSolver* convert_to_MPSolver(PROBLEME_SIMPLEXE* problemeSimplexe)
                       problemeSimplexe->Xmin,
                       problemeSimplexe->Xmax,
                       problemeSimplexe->CoutLineaire,
-                      problemeSimplexe->NombreDeVariables);
+                      problemeSimplexe->NombreDeVariables,
+                      problemeSimplexe->NomDesVariables);
 
     // Create constraints and set coefs
     transferRows(solver,
                  problemeSimplexe->SecondMembre,
                  problemeSimplexe->Sens,
-                 problemeSimplexe->NombreDeContraintes);
+                 problemeSimplexe->NombreDeContraintes,
+                 problemeSimplexe->NomDesContraintes);
     transferMatrix(solver,
                    problemeSimplexe->IndicesDebutDeLigne,
                    problemeSimplexe->NombreDeTermesDesLignes,
@@ -118,61 +136,11 @@ MPSolver* convert_to_MPSolver(PROBLEME_SIMPLEXE* problemeSimplexe)
 
     return solver;
 }
+} // namespace Optimization
+} // namespace Antares
 
-MPSolver* convert_to_MPSolver(PROBLEME_A_RESOUDRE* problemeAResoudre)
-{
-    auto& study = *Data::Study::Current::Get();
-
-    // Define solver used depending on study option
-    MPSolver::OptimizationProblemType solverType
-      = OrtoolsUtils().getMixedIntegerOptimProblemType(study.parameters.ortoolsEnumUsed);
-
-    MPSolver* solver = new MPSolver("simple_lp_program", solverType);
-
-    // Create the variables and set objective cost.
-    transferVariables(solver,
-                      problemeAResoudre->Xmin,
-                      problemeAResoudre->Xmax,
-                      problemeAResoudre->CoutLineaire,
-                      problemeAResoudre->NombreDeVariables);
-
-    // Create constraints and set coefs
-    transferRows(solver,
-                 problemeAResoudre->SecondMembre,
-                 problemeAResoudre->Sens,
-                 problemeAResoudre->NombreDeContraintes);
-    transferMatrix(solver,
-                   problemeAResoudre->IndicesDebutDeLigne,
-                   problemeAResoudre->NombreDeTermesDesLignes,
-                   problemeAResoudre->IndicesColonnes,
-                   problemeAResoudre->CoefficientsDeLaMatriceDesContraintes,
-                   problemeAResoudre->NombreDeContraintes);
-
-    return solver;
-}
-
-void extract_from_MPSolver(MPSolver* solver, PROBLEME_A_RESOUDRE* problemePne)
-{
-    auto& variables = solver->variables();
-    int nbVar = problemePne->NombreDeVariables;
-
-    // Extracting variable values and reduced costs
-    for (int idxVar = 0; idxVar < nbVar; ++idxVar)
-    {
-        auto& var = variables[idxVar];
-        problemePne->X[idxVar] = var->solution_value();
-    }
-
-    auto& constraints = solver->constraints();
-    int nbRow = problemePne->NombreDeContraintes;
-    for (int idxRow = 0; idxRow < nbRow; ++idxRow)
-    {
-        auto& row = constraints[idxRow];
-        problemePne->VariablesDualesDesContraintes[idxRow] = row->dual_value();
-    }
-}
-
-void extract_from_MPSolver(MPSolver* solver, PROBLEME_SIMPLEXE* problemeSimplexe)
+static void extract_from_MPSolver(const MPSolver* solver,
+                                  Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
     auto& variables = solver->variables();
     int nbVar = problemeSimplexe->NombreDeVariables;
@@ -194,7 +162,7 @@ void extract_from_MPSolver(MPSolver* solver, PROBLEME_SIMPLEXE* problemeSimplexe
     }
 }
 
-void change_MPSolver_objective(MPSolver* solver, double* costs, int nbVar)
+static void change_MPSolver_objective(MPSolver* solver, const double* costs, int nbVar)
 {
     auto& variables = solver->variables();
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
@@ -204,31 +172,10 @@ void change_MPSolver_objective(MPSolver* solver, double* costs, int nbVar)
     }
 }
 
-void change_MPSolver_variables_bounds(MPSolver* solver,
-                                      double* bMin,
-                                      double* bMax,
-                                      int nbVar,
-                                      PROBLEME_SIMPLEXE* problemeSimplexe)
-{
-    auto& variables = solver->variables();
-    for (int idxVar = 0; idxVar < nbVar; ++idxVar)
-    {
-        double min_l
-          = ((problemeSimplexe->TypeDeVariable[idxVar] == VARIABLE_NON_BORNEE)
-                 || (problemeSimplexe->TypeDeVariable[idxVar] == VARIABLE_BORNEE_SUPERIEUREMENT)
-               ? -MPSolver::infinity()
-               : bMin[idxVar]);
-        double max_l
-          = ((problemeSimplexe->TypeDeVariable[idxVar] == VARIABLE_NON_BORNEE)
-                 || (problemeSimplexe->TypeDeVariable[idxVar] == VARIABLE_BORNEE_INFERIEUREMENT)
-               ? MPSolver::infinity()
-               : bMax[idxVar]);
-        auto& var = variables[idxVar];
-        var->SetBounds(min_l, max_l);
-    }
-}
-
-void change_MPSolver_rhs(MPSolver* solver, double* rhs, char* sens, int nbRow)
+static void change_MPSolver_rhs(const MPSolver* solver,
+                                const double* rhs,
+                                const char* sens,
+                                int nbRow)
 {
     auto& constraints = solver->constraints();
     for (int idxRow = 0; idxRow < nbRow; ++idxRow)
@@ -282,13 +229,13 @@ bool solveAndManageStatus(MPSolver* solver, int& resultStatus, MPSolverParameter
     return resultStatus == OUI_SPX;
 }
 
-MPSolver* solveProblem(PROBLEME_SIMPLEXE* Probleme, MPSolver* ProbSpx)
+MPSolver* solveProblem(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme, MPSolver* ProbSpx)
 {
     MPSolver* solver = ProbSpx;
 
     if (solver == NULL)
     {
-        solver = convert_to_MPSolver(Probleme);
+        solver = Antares::Optimization::convert_to_MPSolver(Probleme);
     }
 
     MPSolverParameters params;
@@ -301,70 +248,50 @@ MPSolver* solveProblem(PROBLEME_SIMPLEXE* Probleme, MPSolver* ProbSpx)
     return solver;
 }
 
-MPSolver* solveProblem(PROBLEME_A_RESOUDRE* Probleme, MPSolver* ProbSpx)
+MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
+                           MPSolver* ProbSpx)
 {
-    MPSolver* solver = ProbSpx;
-
-    if (solver == NULL)
-    {
-        solver = convert_to_MPSolver(Probleme);
-    }
-
-    MPSolverParameters params;
-    if (Probleme->FaireDuPresolve == NON_PNE)
-    {
-        params.SetIntegerParam(MPSolverParameters::PRESOLVE, MPSolverParameters::PRESOLVE_OFF);
-    }
-    else
-    {
-        params.SetIntegerParam(MPSolverParameters::PRESOLVE, MPSolverParameters::PRESOLVE_ON);
-    }
-
-    if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
-    {
-        extract_from_MPSolver(solver, Probleme);
-    }
-
-    return solver;
+    return solveProblem(Probleme, ProbSpx);
 }
 
-extern "C"
+void ORTOOLS_ModifierLeVecteurCouts(MPSolver* solver, const double* costs, int nbVar)
 {
-    MPSolver* ORTOOLS_Simplexe(PROBLEME_SIMPLEXE* Probleme, MPSolver* ProbSpx)
-    {
-        return solveProblem(Probleme, ProbSpx);
-    }
+    change_MPSolver_objective(solver, costs, nbVar);
+}
 
-    MPSolver* ORTOOLS_Simplexe_PNE(PROBLEME_A_RESOUDRE* Probleme, MPSolver* ProbSpx)
-    {
-        return solveProblem(Probleme, ProbSpx);
-    }
+void ORTOOLS_ModifierLeVecteurSecondMembre(MPSolver* solver,
+                                           const double* rhs,
+                                           const char* sens,
+                                           int nbRow)
+{
+    change_MPSolver_rhs(solver, rhs, sens, nbRow);
+}
 
-    void ORTOOLS_ModifierLeVecteurCouts(MPSolver* solver, double* costs, int nbVar)
+void ORTOOLS_CorrigerLesBornes(MPSolver* solver,
+                               const double* bMin,
+                               const double* bMax,
+                               const int* typeVar,
+                               int nbVar)
+{
+    auto& variables = solver->variables();
+    for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
-        change_MPSolver_objective(solver, costs, nbVar);
+        double min_l = ((typeVar[idxVar] == VARIABLE_NON_BORNEE)
+                            || (typeVar[idxVar] == VARIABLE_BORNEE_SUPERIEUREMENT)
+                          ? -MPSolver::infinity()
+                          : bMin[idxVar]);
+        double max_l = ((typeVar[idxVar] == VARIABLE_NON_BORNEE)
+                            || (typeVar[idxVar] == VARIABLE_BORNEE_INFERIEUREMENT)
+                          ? MPSolver::infinity()
+                          : bMax[idxVar]);
+        auto& var = variables[idxVar];
+        var->SetBounds(min_l, max_l);
     }
+}
 
-    void ORTOOLS_ModifierLeVecteurSecondMembre(MPSolver* solver, double* rhs, char* sens, int nbRow)
-    {
-        change_MPSolver_rhs(solver, rhs, sens, nbRow);
-    }
-
-    void ORTOOLS_CorrigerLesBornes(MPSolver* solver,
-                                   double* bMin,
-                                   double* bMax,
-                                   int* typeVar,
-                                   int nbVar,
-                                   PROBLEME_SIMPLEXE* Probleme)
-    {
-        Probleme->TypeDeVariable = typeVar;
-        change_MPSolver_variables_bounds(solver, bMin, bMax, nbVar, Probleme);
-    }
-
-    void ORTOOLS_LibererProbleme(MPSolver* solver)
-    {
-        delete solver;
-    }
+void ORTOOLS_LibererProbleme(MPSolver* solver)
+{
+    delete solver;
 }
 
 using namespace Antares::Data;

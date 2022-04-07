@@ -167,22 +167,14 @@ public:
         if (link->useLoopFlow)
         {
             // Flow assessed over all MC years (linear)
-            unsigned int height = link->data.height;
+            unsigned int height = link->parameters.height;
             (void)::memcpy(pValuesForTheCurrentYear.hour,
-                           link->data[Data::fhlLoopFlow],
+                           link->parameters[Data::fhlLoopFlow],
                            sizeof(double) * height);
         }
 
         // Next
         NextType::initializeFromAreaLink(study, link);
-    }
-
-    void initializeFromThermalCluster(Data::Study* study,
-                                      Data::Area* area,
-                                      Data::ThermalCluster* cluster)
-    {
-        // Next
-        NextType::initializeFromThermalCluster(study, area, cluster);
     }
 
     void simulationBegin()
@@ -206,20 +198,6 @@ public:
     {
         // Next variable
         NextType::yearBegin(year, numSpace);
-    }
-
-    void yearEndBuildPrepareDataForEachThermalCluster(State& state,
-                                                      uint year,
-                                                      unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
-    }
-
-    void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
     }
 
     void yearEndBuild(State& state, unsigned int year)
@@ -251,12 +229,6 @@ public:
     {
         // Next variable
         NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
-    {
-        // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
     }
 
     void hourForEachLink(State& state, unsigned int numSpace)

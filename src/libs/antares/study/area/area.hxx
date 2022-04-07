@@ -61,8 +61,12 @@ inline bool Area::storeTimeseriesNumbers(Study& study)
         // Thermal
     case timeSeriesThermal:
         return storeTimeseriesNumbersForThermal(study);
-
-        // Useless here
+        // Renewable
+    case timeSeriesRenewable:
+        return storeTimeseriesNumbersForRenewable(study);
+        // Transmission capacities (NTC)
+    case timeSeriesTransmissionCapacities:
+        return storeTimeseriesNumbersForTransmissionCapacities(study);
     case timeSeriesCount:
         break;
     }

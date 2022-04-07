@@ -256,6 +256,26 @@ inline void IVariable<ChildT, NextT, VCardT>::yearEndSpatialAggregates(V& allVar
 }
 
 template<class ChildT, class NextT, class VCardT>
+inline void IVariable<ChildT, NextT, VCardT>::yearEndBuildPrepareDataForEachThermalCluster(
+  State& state,
+  uint year,
+  uint numSpace)
+{
+    // Next variable
+    NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
+}
+
+template<class ChildT, class NextT, class VCardT>
+inline void IVariable<ChildT, NextT, VCardT>::yearEndBuildPrepareDataForEachRenewableCluster(
+  State& state,
+  uint year,
+  uint numSpace)
+{
+    // Next variable
+    NextType::yearEndBuildPrepareDataForEachRenewableCluster(state, year, numSpace);
+}
+
+template<class ChildT, class NextT, class VCardT>
 template<class V>
 inline void IVariable<ChildT, NextT, VCardT>::simulationEndSpatialAggregates(V& allVars)
 {
@@ -305,6 +325,32 @@ inline void IVariable<ChildT, NextT, VCardT>::hourForEachThermalCluster(State& s
 {
     // Next item in the list
     NextType::hourForEachThermalCluster(state);
+}
+
+template<class ChildT, class NextT, class VCardT>
+inline void IVariable<ChildT, NextT, VCardT>::hourForEachRenewableCluster(State& state,
+                                                                          unsigned int numSpace)
+{
+    // Next item in the list
+    NextType::hourForEachRenewableCluster(state, numSpace);
+}
+
+template<class ChildT, class NextT, class VCardT>
+inline void IVariable<ChildT, NextT, VCardT>::hourForEachThermalCluster(State& state,
+                                                                        unsigned int numSpace)
+{
+    // Next item in the list
+    NextType::hourForEachThermalCluster(state, numSpace);
+}
+
+template<class ChildT, class NextT, class VCardT>
+inline void IVariable<ChildT, NextT, VCardT>::yearEndBuildForEachThermalCluster(
+  State& state,
+  unsigned int year,
+  unsigned int numSpace)
+{
+    // Next item in the list
+    NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
 }
 
 template<class ChildT, class NextT, class VCardT>

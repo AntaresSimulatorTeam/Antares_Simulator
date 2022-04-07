@@ -140,11 +140,13 @@ void SIM_AllocationTableaux()
               = (VALEURS_GENEREES_PAR_PAYS*)MemAlloc(sizeof(VALEURS_GENEREES_PAR_PAYS));
 
             NumeroChroniquesTireesParPays[numSpace][i]->ThermiqueParPalier
-              = (int*)MemAlloc(area.thermal.clusterCount * sizeof(int));
+              = (int*)MemAlloc(area.thermal.clusterCount() * sizeof(int));
+            NumeroChroniquesTireesParPays[numSpace][i]->RenouvelableParPalier
+              = (int*)MemAlloc(area.renewable.clusterCount() * sizeof(int));
             ValeursGenereesParPays[numSpace][i]->HydrauliqueModulableQuotidien
               = (double*)MemAlloc(study.runtime->nbDaysPerYear * sizeof(double));
             ValeursGenereesParPays[numSpace][i]->AleaCoutDeProductionParPalier
-              = (double*)MemAlloc(area.thermal.clusterCount * sizeof(double));
+              = (double*)MemAlloc(area.thermal.clusterCount() * sizeof(double));
             if (area.hydro.reservoirManagement)
             {
                 ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsDebutJours
@@ -153,6 +155,16 @@ void SIM_AllocationTableaux()
                   = (double*)MemAlloc(study.runtime->nbDaysPerYear * sizeof(double));
             }
         }
+    }
+    NumeroChroniquesTireesParInterconnexion
+      = (NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION**)MemAlloc(study.maxNbYearsInParallel
+                                                                * sizeof(void*));
+    const uint intercoCount = study.areas.areaLinkCount();
+    for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
+    {
+        NumeroChroniquesTireesParInterconnexion[numSpace]
+          = (NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION*)MemAlloc(
+            intercoCount * sizeof(NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION*));
     }
 
     if (not study.parameters.adequacyDraft())
@@ -177,6 +189,7 @@ void SIM_DesallocationTableaux()
                 auto& area = *study.areas.byIndex[i];
 
                 MemFree(NumeroChroniquesTireesParPays[numSpace][i]->ThermiqueParPalier);
+                MemFree(NumeroChroniquesTireesParPays[numSpace][i]->RenouvelableParPalier);
                 MemFree(NumeroChroniquesTireesParPays[numSpace][i]);
                 MemFree(ValeursGenereesParPays[numSpace][i]->HydrauliqueModulableQuotidien);
 
@@ -188,14 +201,20 @@ void SIM_DesallocationTableaux()
 
                 MemFree(ValeursGenereesParPays[numSpace][i]);
             }
-            MemFree(NumeroChroniquesTireesParPays[numSpace]);
             MemFree(ValeursGenereesParPays[numSpace]);
+            MemFree(NumeroChroniquesTireesParPays[numSpace]);
+        }
+        for (uint numSpace = 0; numSpace < study.maxNbYearsInParallel; numSpace++)
+        {
+            MemFree(NumeroChroniquesTireesParInterconnexion[numSpace]);
         }
     }
     MemFree(NumeroChroniquesTireesParPays);
     MemFree(ValeursGenereesParPays);
+    MemFree(NumeroChroniquesTireesParInterconnexion);
     NumeroChroniquesTireesParPays = NULL;
     ValeursGenereesParPays = NULL;
+    NumeroChroniquesTireesParInterconnexion = nullptr;
 
     MemFree(DonneesParPays);
     DonneesParPays = NULL;

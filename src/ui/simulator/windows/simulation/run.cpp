@@ -33,7 +33,6 @@
 #include <yuni/io/file.h>
 #include <antares/study/parameters.h>
 #include <antares/study/memory-usage.h>
-#include "../../../../internet/limits.h"
 
 #include <wx/stattext.h>
 #include <wx/button.h>
@@ -671,42 +670,6 @@ void Run::onRun(void*)
 {
     if (not Data::Study::Current::Valid())
         return;
-
-    if (License::Limits::areaCount) // checking for license restrictions
-    {
-        auto& study = *Data::Study::Current::Get();
-        bool isTrial = (study.areas.size() > License::Limits::areaCount);
-        if (not isTrial and License::Limits::thermalClusterCount)
-        {
-            study.areas.each([&](const Data::Area& area) {
-                if (area.thermal.list.size() + area.thermal.mustrunList.size()
-                    > License::Limits::thermalClusterCount)
-                    isTrial = true;
-            });
-        }
-
-        if (isTrial)
-        {
-            wxString text;
-            if (License::Limits::thermalClusterCount)
-            {
-                text << wxT("Simulation limited to ") << License::Limits::areaCount
-                     << wxT(" areas and ") << License::Limits::thermalClusterCount
-                     << wxT(" thermal clusters / area.");
-            }
-            else
-            {
-                text << wxT("Simulation limited to ") << License::Limits::areaCount
-                     << wxT(" areas");
-            }
-
-            Window::Message message(
-              this, wxT("Simulation"), wxT("LICENSE RESTRICTION"), text, "images/misc/warning.png");
-            message.add(Window::Message::btnCancel, true);
-            message.showModal();
-            return;
-        }
-    }
 
     bool canNotifyUserForLowResources = true;
     switch (checkForLowResources())

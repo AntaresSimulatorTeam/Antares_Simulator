@@ -166,14 +166,6 @@ public:
         NextType::initializeFromAreaLink(study, link);
     }
 
-    void initializeFromThermalCluster(Data::Study* study,
-                                      Data::Area* area,
-                                      Data::ThermalCluster* cluster)
-    {
-        // Next
-        NextType::initializeFromThermalCluster(study, area, cluster);
-    }
-
     void simulationBegin()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
@@ -193,20 +185,6 @@ public:
         pValuesForTheCurrentYear[numSpace].reset();
         // Next variable
         NextType::yearBegin(year, numSpace);
-    }
-
-    void yearEndBuildPrepareDataForEachThermalCluster(State& state,
-                                                      uint year,
-                                                      unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
-    }
-
-    void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
     }
 
     void yearEndBuild(State& state, unsigned int year)
@@ -244,12 +222,6 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
-    {
-        // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
-    }
-
     void hourForEachLink(State& state, unsigned int numSpace)
     {
         // Flow assessed over all MC years (linear)
@@ -265,7 +237,8 @@ public:
                 {
                     const double hurdleCostDirect
                       = (flowLinear - loopFlow)
-                        * state.link->data.entry[Data::fhlHurdlesCostDirect][state.hourInTheYear];
+                        * state.link->parameters
+                            .entry[Data::fhlHurdlesCostDirect][state.hourInTheYear];
                     pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
                       += hurdleCostDirect;
                     // Incrementing annual system cost (to be printed in output in a separate file)
@@ -275,7 +248,8 @@ public:
                 {
                     const double hurdleCostIndirect
                       = -(flowLinear - loopFlow)
-                        * state.link->data.entry[Data::fhlHurdlesCostIndirect][state.hourInTheYear];
+                        * state.link->parameters
+                            .entry[Data::fhlHurdlesCostIndirect][state.hourInTheYear];
                     pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
                       += hurdleCostIndirect;
                     // Incrementing annual system cost (to be printed in output into a separate
@@ -289,7 +263,8 @@ public:
                 {
                     const double hurdleCostDirect
                       = flowLinear
-                        * state.link->data.entry[Data::fhlHurdlesCostDirect][state.hourInTheYear];
+                        * state.link->parameters
+                            .entry[Data::fhlHurdlesCostDirect][state.hourInTheYear];
                     pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
                       += hurdleCostDirect;
                     // Incrementing annual system cost (to be printed in output in a separate file)
@@ -299,7 +274,8 @@ public:
                 {
                     const double hurdleCostIndirect
                       = -flowLinear
-                        * state.link->data.entry[Data::fhlHurdlesCostIndirect][state.hourInTheYear];
+                        * state.link->parameters
+                            .entry[Data::fhlHurdlesCostIndirect][state.hourInTheYear];
                     pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
                       += hurdleCostIndirect;
                     // Incrementing annual system cost (to be printed in output into a separate

@@ -28,7 +28,7 @@
 #define __ANTARES_LIB_ASSEMBLY_INTRUSIVEREFERENCE_H__
 
 #include "../antares.h"
-#include <yuni/core/smartptr.h>
+#include <memory>
 
 namespace Antares
 {

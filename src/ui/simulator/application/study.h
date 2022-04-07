@@ -123,7 +123,7 @@ void UpdateGUIFromStudyState();
 /*!
 ** \brief Rename an area immediatly
 */
-bool StudyRenameArea(Data::Area* area, const AnyString& newname, Data::Study::Ptr study = nullptr);
+bool StudyRenameArea(Data::Area* area, const AnyString& newname, Data::Study* study = nullptr);
 
 /*!
 ** \brief Mark the current study as modified
@@ -290,6 +290,16 @@ extern Yuni::Event<void()> OnStudyThermalClusterCommonSettingsChanged;
 
 extern Yuni::Event<void(Data::ThermalCluster*)> OnStudyThermalClusterRenamed;
 extern Yuni::Event<void(Data::Area*)> OnStudyThermalClusterGroupChanged;
+
+/*!
+** \brief Event: The common settings of a renewable cluster has been changed
+**
+** This event may concern one or several renewable clusters.
+*/
+extern Yuni::Event<void()> OnStudyRenewableClusterCommonSettingsChanged;
+
+extern Yuni::Event<void(Data::RenewableCluster*)> OnStudyRenewableClusterRenamed;
+extern Yuni::Event<void(Data::Area*)> OnStudyRenewableClusterGroupChanged;
 
 /*!
 ** \brief Event triggered when the data related to the Scenario Builder are loaded

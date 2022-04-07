@@ -27,8 +27,11 @@
 #ifndef __SOLVER_MISC_GETOPT_H__
 #define __SOLVER_MISC_GETOPT_H__
 
+#include<memory>
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+#include <yuni/core/getopt.h>
+
 #include <antares/study/study.h>
 
 /*!
@@ -60,14 +63,18 @@ public:
     //! Swap folder
     Yuni::String swap;
 
+    Yuni::String PID;
+
+    void checkAndSetStudyFolder(Yuni::String folder);
+    void reset();
 }; // class Settings
 
 /*!
 ** \brief Interprete options given in command line
 */
-bool GrabOptionsFromCommandLine(int argc,
-                                char* argv[],
-                                Settings& settings,
-                                Antares::Data::StudyLoadOptions& options);
+std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, Antares::Data::StudyLoadOptions& options);
 
+void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options);
+
+void checkOrtoolsSolver(Data::StudyLoadOptions& options);
 #endif /* __SOLVER_MISC_GETOPT_H__ */

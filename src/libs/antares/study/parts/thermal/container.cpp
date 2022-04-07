@@ -31,6 +31,8 @@
 #include "container.h"
 #include "../../../logs.h"
 
+#include <algorithm>
+
 using namespace Yuni;
 using namespace Antares;
 
@@ -38,8 +40,9 @@ namespace Antares
 {
 namespace Data
 {
-PartThermal::PartThermal() :
- unsuppliedEnergyCost(0.), spilledEnergyCost(0.), clusters(nullptr), clusterCount((uint)-1)
+using NamedCluster = std::pair<ClusterName, ThermalClusterList::SharedPtr>;
+
+PartThermal::PartThermal() : unsuppliedEnergyCost(0.), spilledEnergyCost(0.)
 {
 }
 
@@ -65,30 +68,25 @@ void PartThermal::estimateMemoryUsage(StudyMemoryUsage& u) const
 
 PartThermal::~PartThermal()
 {
-    if (clusterCount)
-        delete[] clusters;
 }
 
 void PartThermal::prepareAreaWideIndexes()
 {
     // Copy the list with all thermal clusters
     // And init the areaWideIndex (unique index for a given area)
-    clusterCount = list.size();
-    delete[] clusters;
-    if (!clusterCount)
+    if (list.empty())
     {
-        clusters = nullptr;
+        clusters.clear();
         return;
     }
 
-    typedef ThermalCluster* ThermalClusterPointer;
-    clusters = new ThermalClusterPointer[clusterCount];
+    clusters = std::vector<ThermalCluster*>(list.size());
 
     auto end = list.end();
     uint idx = 0;
     for (auto i = list.begin(); i != end; ++i)
     {
-        ThermalCluster* t = i->second;
+        ThermalCluster* t = i->second.get();
         t->areaWideIndex = idx;
         clusters[idx] = t;
         ++idx;
@@ -113,7 +111,7 @@ uint PartThermal::prepareClustersInMustRunMode()
             if ((i->second)->mustrun)
             {
                 // Detaching the thermal cluster from the main list...
-                ThermalCluster* cluster = list.detach(i);
+                std::shared_ptr<ThermalCluster> cluster = list.detach(i);
                 if (!cluster->enabled)
                     continue;
                 // ...and attaching it into the second list
@@ -152,30 +150,18 @@ uint PartThermal::removeDisabledClusters()
     if (list.empty())
         return 0;
 
-    // the number of clusters in 'must-run' mode
-    uint count = 0;
-    bool doWeContinue;
-    do
+    std::vector<ClusterName> disabledClusters;
+
+    for (auto& it : list)
     {
-        doWeContinue = false;
-        auto end = list.end();
-        for (auto i = list.begin(); i != end; ++i)
-        {
-            if (!(i->second)->enabled)
-            {
-                // Removing the thermal cluster from the main list...
-                list.remove(i);
+        if (!it.second->enabled)
+            disabledClusters.push_back(it.first);
+    }
 
-                ++count;
+    for (const auto& cluster : disabledClusters)
+        list.remove(cluster);
 
-                // the iterator has been invalidated, loop again
-                doWeContinue = true;
-                break;
-            }
-        }
-    } while (doWeContinue);
-
-    // if some thermal cluster has been moved, we must rebuild all the indexes
+    const auto count = disabledClusters.size();
     if (count)
         list.rebuildIndex();
 
@@ -189,10 +175,23 @@ void PartThermal::reset()
 
     mustrunList.clear();
     list.clear();
+    clusters.clear();
+}
 
-    // just in case
-    clusterCount = 0;
-    delete[] clusters;
+bool PartThermal::hasForcedTimeseriesGeneration() const
+{
+    using Behavior = LocalTSGenerationBehavior;
+    return std::any_of(list.begin(), list.end(), [](const NamedCluster& namedCluster) {
+        return namedCluster.second->tsGenBehavior == Behavior::forceGen;
+    });
+}
+
+bool PartThermal::hasForcedNoTimeseriesGeneration() const
+{
+    using Behavior = LocalTSGenerationBehavior;
+    return std::any_of(list.begin(), list.end(), [](const NamedCluster& namedCluster) {
+        return namedCluster.second->tsGenBehavior == Behavior::forceNoGen;
+    });
 }
 
 } // namespace Data

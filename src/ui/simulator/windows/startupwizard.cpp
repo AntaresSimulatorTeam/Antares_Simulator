@@ -31,7 +31,6 @@
 #include <wx/settings.h>
 #include <wx/statline.h>
 
-#include "../../../internet/license.h"
 #include <antares/study/finder.h>
 #include "../toolbox/resources.h"
 #include "../toolbox/components/button.h"
@@ -46,8 +45,6 @@
 #include <ui/common/component/panel.h>
 #include <ui/common/component/spotlight.h>
 #include "../toolbox/dispatcher/study.h"
-#include "../windows/proxy/proxysetup.h"
-#include "../internet/limits.h"
 
 using namespace Yuni;
 namespace Antares
@@ -150,7 +147,7 @@ public:
             auto end = pOutputs.end();
             for (auto i = pOutputs.begin(); i != end; ++i, ++index)
             {
-                auto* item = new Spotlight::IItem();
+                auto item = std::make_shared<Spotlight::IItem>();
                 extractNumber(i->first, title, number);
                 item->caption(title);
                 item->tag = index;
@@ -171,7 +168,7 @@ public:
                     const String& text = (*ti)->text;
                     if (i->first.icontains(text))
                     {
-                        auto* item = new Spotlight::IItem();
+                        auto item = std::make_shared<Spotlight::IItem>();
                         item->caption(i->first);
                         item->tag = index;
                         item->addTag("example", 177, 209, 245);
@@ -217,13 +214,7 @@ void StartupWizard::Show()
     if (not globalWndStartupWizard)
         globalWndStartupWizard = new StartupWizard(Forms::ApplWnd::Instance());
 
-    // display welcome page or proxy setup page
-    if (Antares::License::statusOnline == Antares::License::stNotRequested
-        || Antares::License::statusOnline == Antares::License::stValidOnline)
-        Dispatcher::GUI::Show(globalWndStartupWizard, true, true);
-    else
-        Dispatcher::GUI::ShowModal(
-          new LicenseCouldNotConnectToInternetServer(Forms::ApplWnd::Instance()), true);
+    Dispatcher::GUI::Show(globalWndStartupWizard, true, true);
 }
 
 void StartupWizard::Close()
@@ -775,7 +766,8 @@ void StartupWizard::showAllExamples()
         width = 320,
 #endif
     };
-    Component::Spotlight::FrameShow(pBtnExamples, new ExampleProvider(pExFolder), 0, width);
+    Component::Spotlight::FrameShow(
+      pBtnExamples, std::make_shared<ExampleProvider>(pExFolder), 0, width);
     if (pBtnExamples)
         pBtnExamples->Enable(true);
 }
