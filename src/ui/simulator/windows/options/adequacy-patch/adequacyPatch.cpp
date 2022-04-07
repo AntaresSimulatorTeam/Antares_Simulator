@@ -97,12 +97,12 @@ static void ResetButtonPTO(Component::Button* button, Data::AdequacyPatch::Adequ
     assert(button != NULL);
     if (value == Data::AdequacyPatch::AdequacyPatchPTO::adqPtoIsLoad)
     {
-        button->image("images/16x16/light_orange.png");
+        button->image("images/16x16/tag.png");
         button->caption(wxT("Load"));
     }
     else
     {
-        button->image("images/16x16/light_green.png");
+        button->image("images/16x16/tag.png");
         button->caption(wxT("DENS"));
     }
 }
@@ -248,7 +248,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
     // PTO (Price Taking Order). User can choose between DENS and Load
     {
         label = Component::CreateLabel(this, wxT("Price taking order"));
-        button = new Component::Button(this, wxT("Day"), "images/16x16/light_green.png");
+        button = new Component::Button(this, wxT("Day"), "images/16x16/tag.png");
         button->SetBackgroundColour(bgColor);
         button->menu(true);
         onPopup.bind(this, &AdequacyPatchOptions::onPopupMenuPTO);
@@ -351,6 +351,7 @@ void AdequacyPatchOptions::onResetToDefault(void*)
             study.parameters.adqPatchPriceTakingOrder
               = Data::AdequacyPatch::AdequacyPatchPTO::adqPtoIsDens;
             study.parameters.adqPatchSaveIntermediateResults = false;
+            // study.parameters.resetAdqPatchSeeds();
 
             refresh();
             MarkTheStudyAsModified();
@@ -446,14 +447,14 @@ void AdequacyPatchOptions::onPopupMenuPTO(Component::Button&, wxMenu& menu, void
     wxMenuItem* it;
 
     it = Menu::CreateItem(
-      &menu, wxID_ANY, wxString() << wxT("DENS"), "images/16x16/light_green.png", wxEmptyString);
+      &menu, wxID_ANY, wxString() << wxT("DENS"), "images/16x16/tag.png", wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(AdequacyPatchOptions::onSelectPtoIsDens),
                  nullptr,
                  this);
     it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Load"), "images/16x16/light_orange.png", wxEmptyString);
+      &menu, wxID_ANY, wxT("Load"), "images/16x16/tag.png", wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(AdequacyPatchOptions::onSelectPtoIsLoad),

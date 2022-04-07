@@ -337,11 +337,6 @@ void Parameters::reset()
     simplexOptimizationRange = sorWeek;
 
     include.exportMPS = false;
-    include.adequacyPatch = false;
-    setToZero12LinksForAdequacyPatch = true;
-    setToZero11LinksForAdequacyPatch = true;
-    adqPatchPriceTakingOrder = AdequacyPatch::AdequacyPatchPTO::adqPtoIsDens;
-    adqPatchSaveIntermediateResults = false;
     include.exportStructure = false;
 
     include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
@@ -352,6 +347,14 @@ void Parameters::reset()
 
     ortoolsUsed = false;
     ortoolsEnumUsed = OrtoolsSolver::sirius;
+    
+    // Adequacy patch
+    include.adequacyPatch = false;
+    setToZero12LinksForAdequacyPatch = true;
+    setToZero11LinksForAdequacyPatch = true;
+    adqPatchPriceTakingOrder = AdequacyPatch::AdequacyPatchPTO::adqPtoIsDens;
+    adqPatchSaveIntermediateResults = false;
+    // resetAdqPatchSeeds();
 
     // Initialize all seeds
     resetSeeds();
