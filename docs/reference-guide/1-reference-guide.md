@@ -366,6 +366,8 @@ values of a given variable were encountered in a previous simulation).
   In addition, each MC year i=1, …, N can be given a relative “weight” \\(W_i\\)  in the simulation (default value: 1). The expectation and standard deviation of all random variables will then be computed as if the scenarios simulated were sampled from a probability density function in which MC year i is given the probability 
   $$\frac{W_{i}}{\sum_{j=1,...,N}{W_{j}}}$$
 
+- **Adequacy Patch**
+
 - **Optimization preferences** Defines a set of options related to the optimization core used in the simulations.
 The set of preferences is study-specific; it can be changed at any time and saved along with study data.
 Options refer to objects (binding constraints, etc.) that are presented in subsequent sections of this document.  

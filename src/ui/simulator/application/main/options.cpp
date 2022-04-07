@@ -32,6 +32,7 @@
 #include "../../windows/options/select-output/select-output.h"
 #include "../../windows/options/playlist/playlist.h"
 #include "../../windows/options/optimization/optimization.h"
+#include "../../windows/options/adequacy-patch/adequacyPatch.h"
 #include "../../windows/options/advanced/advanced.h"
 #include "../../windows/message.h"
 
@@ -108,6 +109,13 @@ void ApplWnd::evtOnOptionsMCScenarioBuilder(wxCommandEvent&)
         // Open the MC Scenario Builder
         pSectionNotebook->select(wxT("scenariobuilder"), true);
     }
+}
+
+void ApplWnd::evtOnOptionsAdequacyPatch(wxCommandEvent&)
+{
+    Forms::Disabler<ApplWnd> disabler(*this);
+    if (Data::Study::Current::Valid())
+        Dispatcher::GUI::CreateAndShowModal<Window::Options::AdequacyPatchOptions>(this);
 }
 
 void ApplWnd::evtOnOptionsOptimizationPrefs(wxCommandEvent&)

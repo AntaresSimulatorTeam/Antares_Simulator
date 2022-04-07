@@ -157,6 +157,7 @@ EVT_MENU(mnIDOptionConfigureLinksTrimming, ApplWnd::evtOnOptionsSelectLinksTrimm
 EVT_MENU(mnIDOptionConfigureDistricts, ApplWnd::evtOnOptionsDistricts)
 EVT_MENU(mnIDOptionConfigureMCScenarioPlaylist, ApplWnd::evtOnOptionsMCPlaylist)
 EVT_MENU(mnIDOptionConfigureMCScenarioBuilder, ApplWnd::evtOnOptionsMCScenarioBuilder)
+EVT_MENU(mnIDOptionConfigureAdequacyPatch, ApplWnd::evtOnOptionsAdequacyPatch)
 EVT_MENU(mnIDOptionOptimizationPrefs, ApplWnd::evtOnOptionsOptimizationPrefs)
 EVT_MENU(mnIDOptionAdvanced, ApplWnd::evtOnOptionsAdvanced)
 
@@ -514,6 +515,7 @@ void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
         // Options
         EnableItem(menu, mnIDOptionConfigureMCScenarioBuilder, opened);
         EnableItem(menu, mnIDOptionConfigureMCScenarioPlaylist, opened);
+        EnableItem(menu, mnIDOptionConfigureAdequacyPatch, opened);
         EnableItem(menu, mnIDOptionOptimizationPrefs, opened);
         EnableItem(menu, mnIDOptionAdvanced, opened);
 

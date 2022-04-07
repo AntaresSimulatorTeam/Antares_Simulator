@@ -132,6 +132,7 @@ enum MenusID
     mnIDOptionConfigureDistricts,
     mnIDOptionConfigureMCScenarioBuilder,
     mnIDOptionConfigureMCScenarioPlaylist,
+    mnIDOptionConfigureAdequacyPatch,
     mnIDOptionOptimizationPrefs,
     mnIDOptionAdvanced,
     //@}

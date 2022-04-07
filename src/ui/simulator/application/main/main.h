@@ -569,6 +569,8 @@ private:
     //! MC Playlist
     void evtOnOptionsMCPlaylist(wxCommandEvent& evt);
     //! MC Scenario Builder
+    void evtOnOptionsAdequacyPatch(wxCommandEvent& evt);
+    //! Adequacy Patch
     void evtOnOptionsMCScenarioBuilder(wxCommandEvent& evt);
     //! Optimization preferences
     void evtOnOptionsOptimizationPrefs(wxCommandEvent& evt);
