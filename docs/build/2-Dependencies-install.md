@@ -65,8 +65,6 @@ The install procedure can be done
 
 ALL dependency can be built at configure time using the option `-DBUILD_ALL=ON` (`OFF` by default). For a list of available option see [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps).
 
-Some dependencies can't be installed with a package manager. They can be built at configure step with a cmake option  : `-DBUILD_not_system=ON` (`ON` by default):
-
 ### Defining dependency install directory
 When using multiple directories for antares development with multiple branches it can be useful to have a common dependency install directory.
 
