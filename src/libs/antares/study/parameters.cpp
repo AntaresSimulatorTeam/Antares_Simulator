@@ -233,6 +233,14 @@ void Parameters::resetSeeds()
     for (auto i = (uint)seedTsGenLoad; i != seedMax; ++i)
         seed[i] = (s += increment);
 }
+void Parameters::resetSeedsAdqPatch()
+{
+    // Initialize all seeds for adequacy patch
+    seedAdqPatch[seedThresholdInitiateCurtailmentSharingRule]
+      = (float)seedDefaultThresholdInitiateCurtailmentSharingRule;
+    seedAdqPatch[seedThresholdDisplayLocalMatchingRuleViolations]
+      = (float)seedDefaultThresholdDisplayLocalMatchingRuleViolations;
+}
 
 void Parameters::reset()
 {
@@ -354,7 +362,7 @@ void Parameters::reset()
     setToZero11LinksForAdequacyPatch = true;
     adqPatchPriceTakingOrder = AdequacyPatch::AdequacyPatchPTO::adqPtoIsDens;
     adqPatchSaveIntermediateResults = false;
-    // resetAdqPatchSeeds();
+    resetSeedsAdqPatch();
 
     // Initialize all seeds
     resetSeeds();
@@ -671,6 +679,13 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
         return StringToPriceTakingOrder(value, d.adqPatchPriceTakingOrder);
         return false;
     }
+    // Thresholds
+    if (key == "threshold-initiate-curtailment-sharing-rule")
+        return value.to<float>(
+          d.seedAdqPatch[AdequacyPatch::seedThresholdInitiateCurtailmentSharingRule]);
+    if (key == "threshold-display-local-matching-rule-violations")
+        return value.to<float>(
+          d.seedAdqPatch[AdequacyPatch::seedThresholdDisplayLocalMatchingRuleViolations]);
 
     return false;
 }
@@ -1791,6 +1806,11 @@ void Parameters::saveToINI(IniFile& ini) const
                      setToZero11LinksForAdequacyPatch);
         section->add("save-intermediate-results", adqPatchSaveIntermediateResults);
         section->add("price-taking-order", PriceTakingOrderToString(adqPatchPriceTakingOrder));
+        // Threshholds
+        section->add("threshold-initiate-curtailment-sharing-rule",
+                     seedAdqPatch[AdequacyPatch::seedThresholdInitiateCurtailmentSharingRule]);
+        section->add("threshold-display-local-matching-rule-violations",
+                     seedAdqPatch[AdequacyPatch::seedThresholdDisplayLocalMatchingRuleViolations]);
     }
 
     // Other preferences

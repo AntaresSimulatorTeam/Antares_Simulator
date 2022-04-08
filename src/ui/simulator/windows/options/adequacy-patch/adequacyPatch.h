@@ -72,6 +72,10 @@ private:
     void refresh();
     void onClose(void*);
     void onResetToDefault(void*);
+    wxTextCtrl* insertEdit(wxWindow* parent,
+                           wxSizer* sizer,
+                           const wxString& text,
+                           wxObjectEventFunction);
 
     void onSelectPtoIsDens(wxCommandEvent&);
     void onSelectPtoIsLoad(wxCommandEvent&);
@@ -83,14 +87,15 @@ private:
     void onPopupMenuNTC(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
     void onPopupMenuPTO(Component::Button&, wxMenu& menu, void*);
 
-    void onInternalMotion(wxMouseEvent&);
-
+    void onInternalMotion(wxMouseEvent&);  
+    void onEditSeedTSDraws(wxCommandEvent&);
 private:
     Component::Button* pBtnAdequacyPatch;
     Component::Button* pBtnAdequacyPatchNTC12;
     Component::Button* pBtnAdequacyPatchNTC11;
     Component::Button* pBtnAdequacyPatchPTO;
     Component::Button* pBtnAdequacyPatchSaveIntermediateResults;
+    wxTextCtrl* pEditSeeds[Data::AdequacyPatch::seedThresholdMax];
     bool* pTargetRef;
 
 }; // class AdequacyPatchOptions

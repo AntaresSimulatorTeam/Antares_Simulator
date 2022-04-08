@@ -46,35 +46,20 @@ namespace Window
 {
 namespace Options
 {
-// static void SubTitle(wxWindow* parent, wxSizer* sizer, const wxChar* text, bool margintop = true)
-// {
-//     if (margintop)
-//     {
-//         sizer->AddSpacer(25);
-//         sizer->AddSpacer(25);
-//     }
-
-//     auto* label = Component::CreateLabel(parent, text, true);
-
-//     sizer->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-//     sizer->AddSpacer(5);
-//     sizer->AddSpacer(5);
-//     sizer->AddSpacer(5);
-// }
-
-static void ResetButton(Component::Button* button, bool value)
+static void SubTitle(wxWindow* parent, wxSizer* sizer, const wxChar* text, bool margintop = true)
 {
-    assert(button != NULL);
-    if (value)
+    if (margintop)
     {
-        button->image("images/16x16/light_green.png");
-        button->caption(wxT("local values"));
+        sizer->AddSpacer(25);
+        sizer->AddSpacer(25);
     }
-    else
-    {
-        button->image("images/16x16/light_orange.png");
-        button->caption(wxT("ignore"));
-    }
+
+    auto* label = Component::CreateLabel(parent, text, true);
+
+    sizer->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+    sizer->AddSpacer(5);
+    sizer->AddSpacer(5);
+    sizer->AddSpacer(5);
 }
 
 static void ResetButtonNTC(Component::Button* button, bool value)
@@ -122,41 +107,20 @@ static void ResetButtonSpecify(Component::Button* button, bool value)
     }
 }
 
-static void ResetButton(Component::Button* button, Data::TransmissionCapacities value)
+const char* AdqPatchSeedToCString(Data::AdequacyPatch::AdqPatchThresholdSeed seed)
 {
-    assert(button != NULL);
-    switch (value)
+    switch (seed)
     {
-    case Data::tncEnabled:
-        button->image("images/16x16/light_green.png");
-        button->caption(wxT("local values"));
-        break;
-    case Data::tncIgnore:
-        button->image("images/16x16/light_orange.png");
-        button->caption(wxT("set to null"));
-        break;
-    case Data::tncInfinite:
-        button->image("images/16x16/infinity.png");
-        button->caption(wxT("set to infinite"));
-        break;
+    case Data::AdequacyPatch::seedThresholdInitiateCurtailmentSharingRule:
+        return "Initiate curtailment sharing rule";
+    case Data::AdequacyPatch::seedThresholdDisplayLocalMatchingRuleViolations:
+        return "Display local matching rule violations";
+    case Data::AdequacyPatch::seedThresholdMax:
+        return "";
     }
+    return "";
 }
 
-static void ResetButton(Component::Button* button, Data::LinkType value)
-{
-    assert(button != NULL);
-    switch (value)
-    {
-    case Data::ltLocal:
-        button->image("images/16x16/light_green.png");
-        button->caption(wxT("local values"));
-        break;
-    case Data::ltAC:
-        button->image("images/16x16/light_orange.png");
-        button->caption(wxT("set to AC"));
-        break;
-    }
-}
 
 AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
  wxDialog(parent,
@@ -198,9 +162,6 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
     Component::Button* button;
     Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)> onPopup;
 
-   
-    // SubTitle(this, s, wxT("Adequacy Patch"));
-    // Enable Adequacy Patch
     {
         label = Component::CreateLabel(this, wxT("Enable Adequacy patch"));
         button = new Component::Button(this, wxT("true"), "images/16x16/light_green.png");
@@ -271,6 +232,18 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnAdequacyPatchSaveIntermediateResults = button;
+    }
+    SubTitle(this, s, wxT("Thresholds"));
+    // Seeds
+    for (uint i = 0; i != (uint)Data::AdequacyPatch::seedThresholdMax; ++i)
+        pEditSeeds[i] = nullptr;
+    
+    for (uint seed = 0; seed != (uint)Data::AdequacyPatch::seedThresholdMax; ++seed)
+    {
+        pEditSeeds[seed] = insertEdit(this,
+                                      s,
+                                      wxStringFromUTF8(AdqPatchSeedToCString((Data::AdequacyPatch::AdqPatchThresholdSeed)seed)),
+                                      wxCommandEventHandler(AdequacyPatchOptions::onEditSeedTSDraws));
     }
 
     {
@@ -351,7 +324,7 @@ void AdequacyPatchOptions::onResetToDefault(void*)
             study.parameters.adqPatchPriceTakingOrder
               = Data::AdequacyPatch::AdequacyPatchPTO::adqPtoIsDens;
             study.parameters.adqPatchSaveIntermediateResults = false;
-            // study.parameters.resetAdqPatchSeeds();
+            study.parameters.resetSeedsAdqPatch();
 
             refresh();
             MarkTheStudyAsModified();
@@ -386,6 +359,12 @@ void AdequacyPatchOptions::refresh()
     // Save intermediate results for adequacy patch
     ResetButtonSpecify(pBtnAdequacyPatchSaveIntermediateResults,
                        study.parameters.adqPatchSaveIntermediateResults);
+    
+    for (uint seed = 0; seed != (uint)Data::AdequacyPatch::seedThresholdMax; ++seed)
+    {
+        if (pEditSeeds[seed])
+            pEditSeeds[seed]->SetValue(wxString() << study.parameters.seedAdqPatch[seed]);
+    }
 }
 
 void AdequacyPatchOptions::onPopupMenu(Component::Button&, wxMenu& menu, void*, const PopupInfo& info)
@@ -532,6 +511,56 @@ void AdequacyPatchOptions::onSelectPtoIsLoad(wxCommandEvent&)
             study->parameters.adqPatchPriceTakingOrder = Data::AdequacyPatch::adqPtoIsLoad;
             refresh();
             MarkTheStudyAsModified();
+        }
+    }
+}
+
+wxTextCtrl* AdequacyPatchOptions::insertEdit(wxWindow* parent,
+                                             wxSizer* sizer,
+                                             const wxString& text,
+                                             wxObjectEventFunction method)
+{
+    auto* label = Component::CreateLabel(parent, text);
+    auto* edit = new wxTextCtrl(parent, wxID_ANY, wxT("2"), wxDefaultPosition, wxSize(180, 20));
+    sizer->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+    sizer->Add(edit, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+
+    // Connect event
+    edit->Connect(edit->GetId(), wxEVT_COMMAND_TEXT_UPDATED, method, nullptr, this);
+    return edit;
+}
+
+void AdequacyPatchOptions::onEditSeedTSDraws(wxCommandEvent& evt)
+{
+    if (not Data::Study::Current::Valid())
+        return;
+    auto& study = *Data::Study::Current::Get();
+
+    int id = evt.GetId();
+
+    // Looking for the good id
+    for (uint i = 0; i != (uint)Data::AdequacyPatch::seedThresholdMax; ++i)
+    {
+        if (pEditSeeds[i] && id == pEditSeeds[i]->GetId())
+        {
+            String text;
+            wxStringToString(pEditSeeds[i]->GetValue(), text);
+
+            float newseed;
+            if (not text.to(newseed))
+            {
+                logs.error() << "impossible to update the seed for '"
+                             << AdqPatchSeedToCString((Data::AdequacyPatch::AdqPatchThresholdSeed)i) << "'";
+            }
+            else
+            {
+                if (newseed != study.parameters.seedAdqPatch[i])
+                {
+                    study.parameters.seedAdqPatch[i] = newseed;
+                    MarkTheStudyAsModified();
+                }
+            }
+            return;
         }
     }
 }

@@ -606,6 +606,20 @@ enum AdequacyPatchPTO
 
 }; // enum AdequacyPatchPTO
 
+enum AdqPatchThresholdSeed
+{
+    //! The seed for initiate curtailment sharing rule
+    seedThresholdInitiateCurtailmentSharingRule = 0,
+    //! The seed for display of Local Matching Rule violations
+    seedThresholdDisplayLocalMatchingRuleViolations,
+    seedThresholdMax
+};
+
+//! A default threshold value for initiate curtailment sharing rule
+const float seedDefaultThresholdInitiateCurtailmentSharingRule = 0.5;
+//! A default threshold value for display local matching rule violations
+const float seedDefaultThresholdDisplayLocalMatchingRuleViolations = 0.5;
+
 } // namespace AdequacyPatch
 } // namespace Data
 } // namespace Antares
