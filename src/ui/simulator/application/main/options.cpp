@@ -111,13 +111,6 @@ void ApplWnd::evtOnOptionsMCScenarioBuilder(wxCommandEvent&)
     }
 }
 
-void ApplWnd::evtOnOptionsAdequacyPatch(wxCommandEvent&)
-{
-    Forms::Disabler<ApplWnd> disabler(*this);
-    if (Data::Study::Current::Valid())
-        Dispatcher::GUI::CreateAndShowModal<Window::Options::AdequacyPatchOptions>(this);
-}
-
 void ApplWnd::evtOnOptionsOptimizationPrefs(wxCommandEvent&)
 {
     Forms::Disabler<ApplWnd> disabler(*this);
@@ -130,6 +123,20 @@ void ApplWnd::evtOnOptionsAdvanced(wxCommandEvent&)
     Forms::Disabler<ApplWnd> disabler(*this);
     if (Data::Study::Current::Valid())
         Dispatcher::GUI::CreateAndShowModal<Window::Options::AdvancedParameters>(this);
+}
+
+void ApplWnd::evtOnOptionsAdequacyPatchConfigure(wxCommandEvent&)
+{
+    Forms::Disabler<ApplWnd> disabler(*this);
+    if (Data::Study::Current::Valid())
+        Dispatcher::GUI::CreateAndShowModal<Window::Options::AdequacyPatchOptions>(this);
+}
+
+void ApplWnd::evtOnOptionsAdequacyPatchAreas(wxCommandEvent&)
+{
+    Forms::Disabler<ApplWnd> disabler(*this);
+    if (Data::Study::Current::Valid())
+        Dispatcher::GUI::CreateAndShowModal<Window::Options::AdequacyPatchOptions>(this);
 }
 
 } // namespace Forms

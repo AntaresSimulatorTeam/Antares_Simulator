@@ -462,12 +462,24 @@ wxMenu* ApplWnd::createMenuOptions()
                           wxT("Advanced parameters"),
                           "images/16x16/empty.png",
                           wxT("Set advanced parameters"));
+
+    delete pMenuAdequacyPatch;
+    pMenuAdequacyPatch
+      = pMenuOptions->AppendSubMenu(new wxMenu(), wxT("Adequacy Patch..."));
+
+    wxMenu* adqPatchSubMenu = pMenuAdequacyPatch->GetSubMenu();
+    Menu::CreateItem(adqPatchSubMenu,
+                     mnIDOptionAdequacyPatchConfigure,
+                     wxT("Options"),
+                     "images/16x16/filter.png",
+                     wxT("Adequacy Patch Options"));
+    Menu::CreateItem(adqPatchSubMenu,
+                     mnIDOptionAdequacyPatchAreas,
+                     wxT("Areas"),
+                     "images/16x16/filter.png",
+                     wxT("Adequacy Patch Areas"));
+
     it->Enable(false);
-    Menu::CreateItem(pMenuOptions,
-                     mnIDOptionConfigureAdequacyPatch,
-                     wxT("Adequacy Patch"),
-                     "images/16x16/orderedlist.png",
-                     wxT("Configure Adequacy Patch"));
 
     return pMenuOptions;
 }
