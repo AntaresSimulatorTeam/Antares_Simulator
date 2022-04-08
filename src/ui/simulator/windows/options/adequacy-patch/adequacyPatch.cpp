@@ -80,7 +80,7 @@ static void ResetButtonNTC(Component::Button* button, bool value)
 static void ResetButtonPTO(Component::Button* button, Data::AdequacyPatch::AdequacyPatchPTO value)
 {
     assert(button != NULL);
-    if (value == Data::AdequacyPatch::AdequacyPatchPTO::adqPtoIsLoad)
+    if (value == Data::AdequacyPatch::AdequacyPatchPTO::adqPatchPTOIsLoad)
     {
         button->image("images/16x16/tag.png");
         button->caption(wxT("Load"));
@@ -107,15 +107,15 @@ static void ResetButtonSpecify(Component::Button* button, bool value)
     }
 }
 
-const char* AdqPatchSeedToCString(Data::AdequacyPatch::AdqPatchThresholdSeed seed)
+const char* AdqPatchSeedToCString(Data::AdequacyPatch::AdqPatchThresholdsIndex seed)
 {
     switch (seed)
     {
-    case Data::AdequacyPatch::seedThresholdInitiateCurtailmentSharingRule:
+    case Data::AdequacyPatch::adqPatchThresholdInitiateCurtailmentSharingRule:
         return "Initiate curtailment sharing rule";
-    case Data::AdequacyPatch::seedThresholdDisplayLocalMatchingRuleViolations:
+    case Data::AdequacyPatch::adqPatchThresholdDisplayLocalMatchingRuleViolations:
         return "Display local matching rule violations";
-    case Data::AdequacyPatch::seedThresholdMax:
+    case Data::AdequacyPatch::adqPatchThresholdsMax:
         return "";
     }
     return "";
@@ -234,15 +234,15 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         pBtnAdequacyPatchSaveIntermediateResults = button;
     }
     SubTitle(this, s, wxT("Thresholds"));
-    // Seeds
-    for (uint i = 0; i != (uint)Data::AdequacyPatch::seedThresholdMax; ++i)
+    // Seeds/threshold values
+    for (uint i = 0; i != (uint)Data::AdequacyPatch::adqPatchThresholdsMax; ++i)
         pEditSeeds[i] = nullptr;
     
-    for (uint seed = 0; seed != (uint)Data::AdequacyPatch::seedThresholdMax; ++seed)
+    for (uint seed = 0; seed != (uint)Data::AdequacyPatch::adqPatchThresholdsMax; ++seed)
     {
         pEditSeeds[seed] = insertEdit(this,
                                       s,
-                                      wxStringFromUTF8(AdqPatchSeedToCString((Data::AdequacyPatch::AdqPatchThresholdSeed)seed)),
+                                      wxStringFromUTF8(AdqPatchSeedToCString((Data::AdequacyPatch::AdqPatchThresholdsIndex)seed)),
                                       wxCommandEventHandler(AdequacyPatchOptions::onEditSeedTSDraws));
     }
 
@@ -322,7 +322,7 @@ void AdequacyPatchOptions::onResetToDefault(void*)
             study.parameters.setToZero12LinksForAdequacyPatch = true;
             study.parameters.setToZero11LinksForAdequacyPatch = true;
             study.parameters.adqPatchPriceTakingOrder
-              = Data::AdequacyPatch::AdequacyPatchPTO::adqPtoIsDens;
+              = Data::AdequacyPatch::AdequacyPatchPTO::adqPatchPTOIsDens;
             study.parameters.adqPatchSaveIntermediateResults = false;
             study.parameters.resetSeedsAdqPatch();
 
@@ -359,8 +359,8 @@ void AdequacyPatchOptions::refresh()
     // Save intermediate results for adequacy patch
     ResetButtonSpecify(pBtnAdequacyPatchSaveIntermediateResults,
                        study.parameters.adqPatchSaveIntermediateResults);
-    
-    for (uint seed = 0; seed != (uint)Data::AdequacyPatch::seedThresholdMax; ++seed)
+    //Threshold values
+    for (uint seed = 0; seed != (uint)Data::AdequacyPatch::adqPatchThresholdsMax; ++seed)
     {
         if (pEditSeeds[seed])
             pEditSeeds[seed]->SetValue(wxString() << study.parameters.seedAdqPatch[seed]);
@@ -492,9 +492,9 @@ void AdequacyPatchOptions::onSelectPtoIsDens(wxCommandEvent&)
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        if (study->parameters.adqPatchPriceTakingOrder != Data::AdequacyPatch::adqPtoIsDens)
+        if (study->parameters.adqPatchPriceTakingOrder != Data::AdequacyPatch::adqPatchPTOIsDens)
         {
-            study->parameters.adqPatchPriceTakingOrder = Data::AdequacyPatch::adqPtoIsDens;
+            study->parameters.adqPatchPriceTakingOrder = Data::AdequacyPatch::adqPatchPTOIsDens;
             refresh();
             MarkTheStudyAsModified();
         }
@@ -506,9 +506,9 @@ void AdequacyPatchOptions::onSelectPtoIsLoad(wxCommandEvent&)
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        if (study->parameters.adqPatchPriceTakingOrder != Data::AdequacyPatch::adqPtoIsLoad)
+        if (study->parameters.adqPatchPriceTakingOrder != Data::AdequacyPatch::adqPatchPTOIsLoad)
         {
-            study->parameters.adqPatchPriceTakingOrder = Data::AdequacyPatch::adqPtoIsLoad;
+            study->parameters.adqPatchPriceTakingOrder = Data::AdequacyPatch::adqPatchPTOIsLoad;
             refresh();
             MarkTheStudyAsModified();
         }
@@ -539,7 +539,7 @@ void AdequacyPatchOptions::onEditSeedTSDraws(wxCommandEvent& evt)
     int id = evt.GetId();
 
     // Looking for the good id
-    for (uint i = 0; i != (uint)Data::AdequacyPatch::seedThresholdMax; ++i)
+    for (uint i = 0; i != (uint)Data::AdequacyPatch::adqPatchThresholdsMax; ++i)
     {
         if (pEditSeeds[i] && id == pEditSeeds[i]->GetId())
         {
@@ -550,7 +550,7 @@ void AdequacyPatchOptions::onEditSeedTSDraws(wxCommandEvent& evt)
             if (not text.to(newseed))
             {
                 logs.error() << "impossible to update the seed for '"
-                             << AdqPatchSeedToCString((Data::AdequacyPatch::AdqPatchThresholdSeed)i) << "'";
+                             << AdqPatchSeedToCString((Data::AdequacyPatch::AdqPatchThresholdsIndex)i) << "'";
             }
             else
             {

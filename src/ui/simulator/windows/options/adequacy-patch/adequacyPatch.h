@@ -95,7 +95,7 @@ private:
     Component::Button* pBtnAdequacyPatchNTC11;
     Component::Button* pBtnAdequacyPatchPTO;
     Component::Button* pBtnAdequacyPatchSaveIntermediateResults;
-    wxTextCtrl* pEditSeeds[Data::AdequacyPatch::seedThresholdMax];
+    wxTextCtrl* pEditSeeds[Data::AdequacyPatch::adqPatchThresholdsMax];
     bool* pTargetRef;
 
 }; // class AdequacyPatchOptions

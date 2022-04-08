@@ -184,12 +184,12 @@ bool StringToPriceTakingOrder(const AnyString& text, AdequacyPatch::AdequacyPatc
     s.toLower();
     if (s == "dens")
     {
-        out = AdequacyPatch::adqPtoIsDens;
+        out = AdequacyPatch::adqPatchPTOIsDens;
         return true;
     }
     if (s == "load")
     {
-        out = AdequacyPatch::adqPtoIsLoad;
+        out = AdequacyPatch::adqPatchPTOIsLoad;
         return true;
     }
 
@@ -202,9 +202,9 @@ const char* PriceTakingOrderToString(AdequacyPatch::AdequacyPatchPTO pto)
 {
     switch (pto)
     {
-    case AdequacyPatch::adqPtoIsDens:
+    case AdequacyPatch::adqPatchPTOIsDens:
         return "DENS";
-    case AdequacyPatch::adqPtoIsLoad:
+    case AdequacyPatch::adqPatchPTOIsLoad:
         return "Load";
     }
     return "";
@@ -235,11 +235,11 @@ void Parameters::resetSeeds()
 }
 void Parameters::resetSeedsAdqPatch()
 {
-    // Initialize all seeds for adequacy patch
-    seedAdqPatch[seedThresholdInitiateCurtailmentSharingRule]
-      = (float)seedDefaultThresholdInitiateCurtailmentSharingRule;
-    seedAdqPatch[seedThresholdDisplayLocalMatchingRuleViolations]
-      = (float)seedDefaultThresholdDisplayLocalMatchingRuleViolations;
+    // Initialize all seeds/threshold values for adequacy patch
+    seedAdqPatch[adqPatchThresholdInitiateCurtailmentSharingRule]
+      = (float)adqPatchDefaultValueThresholdInitiateCurtailmentSharingRule;
+    seedAdqPatch[adqPatchThresholdDisplayLocalMatchingRuleViolations]
+      = (float)adqPatchDefaultValueThresholdDisplayLocalMatchingRuleViolations;
 }
 
 void Parameters::reset()
@@ -360,7 +360,7 @@ void Parameters::reset()
     include.adequacyPatch = false;
     setToZero12LinksForAdequacyPatch = true;
     setToZero11LinksForAdequacyPatch = true;
-    adqPatchPriceTakingOrder = AdequacyPatch::AdequacyPatchPTO::adqPtoIsDens;
+    adqPatchPriceTakingOrder = AdequacyPatch::AdequacyPatchPTO::adqPatchPTOIsDens;
     adqPatchSaveIntermediateResults = false;
     resetSeedsAdqPatch();
 
@@ -682,10 +682,10 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
     // Thresholds
     if (key == "threshold-initiate-curtailment-sharing-rule")
         return value.to<float>(
-          d.seedAdqPatch[AdequacyPatch::seedThresholdInitiateCurtailmentSharingRule]);
+          d.seedAdqPatch[AdequacyPatch::adqPatchThresholdInitiateCurtailmentSharingRule]);
     if (key == "threshold-display-local-matching-rule-violations")
         return value.to<float>(
-          d.seedAdqPatch[AdequacyPatch::seedThresholdDisplayLocalMatchingRuleViolations]);
+          d.seedAdqPatch[AdequacyPatch::adqPatchThresholdDisplayLocalMatchingRuleViolations]);
 
     return false;
 }
@@ -1808,9 +1808,9 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("price-taking-order", PriceTakingOrderToString(adqPatchPriceTakingOrder));
         // Threshholds
         section->add("threshold-initiate-curtailment-sharing-rule",
-                     seedAdqPatch[AdequacyPatch::seedThresholdInitiateCurtailmentSharingRule]);
+                     seedAdqPatch[AdequacyPatch::adqPatchThresholdInitiateCurtailmentSharingRule]);
         section->add("threshold-display-local-matching-rule-violations",
-                     seedAdqPatch[AdequacyPatch::seedThresholdDisplayLocalMatchingRuleViolations]);
+                     seedAdqPatch[AdequacyPatch::adqPatchThresholdDisplayLocalMatchingRuleViolations]);
     }
 
     // Other preferences

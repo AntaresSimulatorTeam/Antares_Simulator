@@ -595,30 +595,30 @@ enum LinkCapacityForAdequacyPatchFirstStep
 }; // enum NTC
 
 /*!
-** \brief Types of Price Taking Order for Adequacy patch
+** \brief Types of Price Taking Order (PTO) for Adequacy Patch
 */
 enum AdequacyPatchPTO
 {
     //! PTO is DENS
-    adqPtoIsDens = 0,
+    adqPatchPTOIsDens = 0,
     //! PTO is Load
-    adqPtoIsLoad
+    adqPatchPTOIsLoad
 
 }; // enum AdequacyPatchPTO
 
-enum AdqPatchThresholdSeed
+enum AdqPatchThresholdsIndex
 {
-    //! The seed for initiate curtailment sharing rule
-    seedThresholdInitiateCurtailmentSharingRule = 0,
-    //! The seed for display of Local Matching Rule violations
-    seedThresholdDisplayLocalMatchingRuleViolations,
-    seedThresholdMax
+    //! Threshold to initiate curtailment sharing rule
+    adqPatchThresholdInitiateCurtailmentSharingRule = 0,
+    //! Threshold to display Local Matching Rule violations
+    adqPatchThresholdDisplayLocalMatchingRuleViolations,
+    adqPatchThresholdsMax
 };
 
 //! A default threshold value for initiate curtailment sharing rule
-const float seedDefaultThresholdInitiateCurtailmentSharingRule = 0.5;
+const float adqPatchDefaultValueThresholdInitiateCurtailmentSharingRule = 0.5;
 //! A default threshold value for display local matching rule violations
-const float seedDefaultThresholdDisplayLocalMatchingRuleViolations = 0.5;
+const float adqPatchDefaultValueThresholdDisplayLocalMatchingRuleViolations = 0.5;
 
 } // namespace AdequacyPatch
 } // namespace Data

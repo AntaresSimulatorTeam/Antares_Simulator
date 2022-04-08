@@ -139,7 +139,7 @@ public:
     */
     void resetSeeds();
     /*!
-    ** \brief Reset to default all seeds in adequacy patch
+    ** \brief Reset to default all seeds/threshold values in adequacy patch
     */
     void resetSeedsAdqPatch();
 
@@ -521,8 +521,8 @@ public:
     //! Select whether the intermediate result before the application of the curtailment sharing is
     //! to be kept in the results
     bool adqPatchSaveIntermediateResults;
-    //! Seeds for adequacy patch threshold values
-    float seedAdqPatch[AdequacyPatch::seedThresholdMax];
+    //! threshold values for adequacy patch 
+    float seedAdqPatch[AdequacyPatch::adqPatchThresholdsMax];
 
     //! \name Scenariio Builder - Rules
     //@{
