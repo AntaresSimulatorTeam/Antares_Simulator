@@ -140,6 +140,23 @@ void OPT_OptimisationHebdomadaireAdqPatch(PROBLEME_HEBDO* pProblemeHebdo,
     OPT_OptimisationHebdomadaire(pProblemeHebdo, numSpace);
 }
 
+
+void AdequacyPatchCurtailmentSharingRuleWeekly(
+Data::Study& study, 
+PROBLEME_HEBDO* pProblemesHebdo, 
+Variable::State& state, 
+uint numSpace, 
+int hourInTheYear, 
+uint nbHoursInAWeek)
+{
+    //todo
+    //check if Local matching rule violations 
+
+    //for each hour (?) in pProblemesHebdo (??? do we need to check hourly), 
+    return;
+}
+
+
 bool Economy::year(Progression::Task& progression,
                    Variable::State& state,
                    uint numSpace,
@@ -198,6 +215,12 @@ bool Economy::year(Progression::Task& progression,
               study, *pProblemesHebdo[numSpace], state, hourInTheYear, nbHoursInAWeek);
 
             updatingWeeklyFinalHydroLevel(study, *pProblemesHebdo[numSpace], nbHoursInAWeek);
+
+            //CurtailmentSharingRule CSR [option B], we run CurtailmentSharingRule directly after each weekly optim
+            if (pProblemesHebdo[numSpace]->adqPatch)
+            {
+                AdequacyPatchCurtailmentSharingRuleWeekly(study, pProblemesHebdo[numSpace], state, numSpace, hourInTheYear, nbHoursInAWeek);
+            }
 
             variables.weekBegin(state);
             uint previousHourInTheYear = state.hourInTheYear;
@@ -291,12 +314,35 @@ static std::vector<AvgExchangeResults*> retrieveBalance(
     return balance;
 }
 
+
+void AdequacyPatchCurtailmentSharingRule(Data::Study& study, 
+PROBLEME_HEBDO** pProblemesHebdo, 
+uint pNbMaxPerformedYearsInParallel, 
+uint nbWeeks)
+{
+    //###todo quadratic optimization for curtailment sharing rule
+    for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
+    {
+        //AdequacyPatchCurtailmentSharingRuleWeekly();
+    }
+}
+
 void Economy::simulationEnd()
 {
     if (!preproOnly && study.runtime->interconnectionsCount > 0)
     {
         auto balance = retrieveBalance(study, variables);
         ComputeFlowQuad(study, *pProblemesHebdo[0], balance, pNbWeeks);
+    }
+    //###todo [Option A] Curtailment Sharing rule (CSR) start point
+    if (!preproOnly && study.parameters.include.adequacyPatch)
+    {
+        // One option [option A] is to run here the quadratic optimization for curtailment sharing rule [CSR]
+        // which will be similar to ComputeFlowQuad(...) above
+        // but since CSR should be a hourly optimization (or maybe weekly ??? ),
+        // it could be easier to run this direclty after each hourly (weekly??? ) optimization
+        // that option [option B] will then be inside Economy::year(...)
+        AdequacyPatchCurtailmentSharingRule(study, pProblemesHebdo, pNbMaxPerformedYearsInParallel, pNbWeeks); 
     }
 }
 
