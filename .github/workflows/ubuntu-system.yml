@@ -48,7 +48,7 @@ jobs:
     # simtest
     - name: Read simtest version
       id: simtest-version
-notiz-dev/github-action-json-property@release
+      uses: notiz-dev/github-action-json-property@release
       with: 
         path: 'simtest.json'
         prop_path: 'version'
