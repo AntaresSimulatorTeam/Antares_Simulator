@@ -33,6 +33,7 @@
 #include "../../windows/options/playlist/playlist.h"
 #include "../../windows/options/optimization/optimization.h"
 #include "../../windows/options/adequacy-patch/adequacy-patch-options.h"
+#include "../../windows/options/adequacy-patch/adequacy-patch-areas.h"
 #include "../../windows/options/advanced/advanced.h"
 #include "../../windows/message.h"
 
@@ -136,7 +137,7 @@ void ApplWnd::evtOnOptionsAdequacyPatchAreas(wxCommandEvent&)
 {
     Forms::Disabler<ApplWnd> disabler(*this);
     if (Data::Study::Current::Valid())
-        Dispatcher::GUI::CreateAndShowModal<Window::Options::AdequacyPatchOptions>(this);
+        Dispatcher::GUI::CreateAndShowModal<Window::Options::AdequacyPatchAreas>(this);
 }
 
 } // namespace Forms

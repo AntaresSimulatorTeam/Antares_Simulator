@@ -12,6 +12,8 @@ set(SRC_UI_WINDOWS_OPTIONS
 	windows/options/playlist/playlist.cpp
 	windows/options/adequacy-patch/adequacy-patch-options.h
 	windows/options/adequacy-patch/adequacy-patch-options.cpp
+	windows/options/adequacy-patch/adequacy-patch-areas.h
+	windows/options/adequacy-patch/adequacy-patch-areas.cpp
 	windows/options/optimization/optimization.h
 	windows/options/optimization/optimization.cpp
 	windows/options/advanced/advanced.h
