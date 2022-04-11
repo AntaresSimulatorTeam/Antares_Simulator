@@ -32,7 +32,7 @@
 #include "../../windows/options/select-output/select-output.h"
 #include "../../windows/options/playlist/playlist.h"
 #include "../../windows/options/optimization/optimization.h"
-#include "../../windows/options/adequacy-patch/adequacyPatch.h"
+#include "../../windows/options/adequacy-patch/adequacy-patch-options.h"
 #include "../../windows/options/advanced/advanced.h"
 #include "../../windows/message.h"
 

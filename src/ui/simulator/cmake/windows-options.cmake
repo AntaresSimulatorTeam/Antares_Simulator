@@ -10,8 +10,8 @@ set(SRC_UI_WINDOWS_OPTIONS
 	windows/options/select-output/select-output.cpp
 	windows/options/playlist/playlist.h
 	windows/options/playlist/playlist.cpp
-	windows/options/adequacy-patch/adequacyPatch.h
-	windows/options/adequacy-patch/adequacyPatch.cpp
+	windows/options/adequacy-patch/adequacy-patch-options.h
+	windows/options/adequacy-patch/adequacy-patch-options.cpp
 	windows/options/optimization/optimization.h
 	windows/options/optimization/optimization.cpp
 	windows/options/advanced/advanced.h

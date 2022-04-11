@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "adequacyPatch.h"
+#include "adequacy-patch-options.h"
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/stattext.h>
