@@ -1,0 +1,23 @@
+name: "Download and extract test study batches"
+description: "Download and extract .zip precompiled libraries from SimTest"
+inputs:
+  simtest-tag:
+    description: 'SimTest tag'
+    required: true
+  batch-name:
+    description: 'Name of the study batch'
+    required: true
+  os:
+    description: 'OS used for github action'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+  - id: download-extract
+    shell: bash
+    run: |
+           cd src/tests/resources
+           wget https://github.com/AntaresSimulatorTeam/SimTest/releases/download/${{ inputs.simtest-tag }}/${{ inputs.batch-name }}-${{ inputs.os }}.zip -O batch.zip
+           unzip batch.zip
+           rm batch.zip

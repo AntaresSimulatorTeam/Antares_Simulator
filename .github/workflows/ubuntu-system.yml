@@ -23,7 +23,7 @@ jobs:
     
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1
-      
+
     - name: Install libraries
       run: |
            sudo apt-get update
@@ -34,20 +34,20 @@ jobs:
       id: antares-deps-version
       uses: notiz-dev/github-action-json-property@release
       with: 
-        path: 'antares-deps-version.json'
-        prop_path: 'antares_deps_version'
-        
-    - name: Download pre-compiled librairies
-      uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
+        path: 'simtest-version.json'
+        prop_path: 'version'
+
+    - name: Download study batches
+      uses: ./.github/workflows/download-extract-tests
       with:
-        antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
+        simtest-tag: ${{steps.antares-deps-version.outputs.prop}}
+        batch-name: short-tests # TODO : add more batches
         os: ${{matrix.os}}
-        os-full-name: Ubuntu-20.04
            
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
-        python-version: 3.8
+        python-version: 3.x
           
     - name: Install dependencies
       run: |
@@ -67,23 +67,15 @@ jobs:
            ls -1
            cmake --build _build --config release -j2
 
-    - name: Run unit tests
+    - name: Run unit and end-to-end tests
       run: |
            cd _build
-           ctest -C Release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
+           ctest -C Release --output-on-failure -L "unit|end-to-end" -LE ortools
 
-
-    - name: Inject slug/short variables
-      uses: rlespinasse/github-slug-action@v3.x
-
-    - name : Run non-regression tests
+    - name: Run simtest
       run: |
-         if [[ "${{ env.GITHUB_REF_SLUG }}" =~ "release" ]]; then
-            cd _build
-            ctest -C Release --output-on-failure -L "non-regression"
-         else
-            echo "Non-regression tests were not run"
-         fi
+           cd _build
+           ctest -C Release --output-on-failure -L "short"
 
     - name: Installer .deb creation
       run: |
