@@ -30,20 +30,36 @@ jobs:
            sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
            sudo apt-get install libboost-test-dev
 
+    # antares-deps
     - name: Read antares-deps version
       id: antares-deps-version
       uses: notiz-dev/github-action-json-property@release
       with: 
-        path: 'simtest-version.json'
+        path: 'antares-deps-version.json'
+        prop_path: 'antares_deps_version'
+        
+    - name: Download pre-compiled librairies
+      uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
+      with:
+        antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
+        os: ${{matrix.os}}
+        os-full-name: Ubuntu-20.04
+
+    # simtest
+    - name: Read simtest version
+      id: simtest-version
+notiz-dev/github-action-json-property@release
+      with: 
+        path: 'simtest.json'
         prop_path: 'version'
 
     - name: Download study batches
       uses: ./.github/workflows/download-extract-tests
       with:
-        simtest-tag: ${{steps.antares-deps-version.outputs.prop}}
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests # TODO : add more batches
         os: ${{matrix.os}}
-           
+
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
