@@ -51,7 +51,7 @@ bool AdequacyPatchAreaGrid::cellValue(int, int row, const Yuni::String& value)
         s.trim();
         s.toLower();
 
-        bool vir = s.to<int>() == 0 || s == "virtual" || s == "virtual area";
+        bool vir = s == "0" || s == "virtual" || s == "virtual area";
         bool ins = s.to<int>() == 2 || s == "inside" || s == "physical area inside patch";
         bool out = s.to<int>() == 1 || s == "outside" || s == "physical area outside patch";
 
