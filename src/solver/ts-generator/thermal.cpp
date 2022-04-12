@@ -675,7 +675,7 @@ bool GenerateThermalTimeSeries(Data::Study& study,
         {
             auto& cluster = *(it->second);
 
-            if (cluster.doWeGenerateTS(globalThermalTSgeneration, refreshTSonCurrentYear))
+            if (cluster.doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear)
             {
                 (*generator)(area, cluster);
             }

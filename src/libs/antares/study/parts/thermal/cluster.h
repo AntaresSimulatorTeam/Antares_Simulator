@@ -217,7 +217,7 @@ public:
     bool checkMinStablePowerWithNewModulation(uint index, double value);
     //@}
 
-    bool doWeGenerateTS(bool globalThermalTSgeneration, bool refresh) const;
+    bool doWeGenerateTS(bool globalThermalTSgeneration) const;
 
 public:
     /*!
