@@ -66,8 +66,7 @@ AdequacyPatchAreas::AdequacyPatchAreas(wxFrame* parent) :
     wxButton* btn;
 
     // Datagrid
-    auto* renderer
-      = new Component::Datagrid::Renderer::AdequacyPatchAreaGrid();
+    auto* renderer = new Component::Datagrid::Renderer::AdequacyPatchAreaGrid();
     renderer->study = study;
     auto* grid
       = new Component::Datagrid::Component(pPanel, renderer, wxEmptyString, false, true, true);
@@ -100,8 +99,6 @@ AdequacyPatchAreas::AdequacyPatchAreas(wxFrame* parent) :
     Centre(wxBOTH);
 
     SetAutoLayout(true);
-
-    onUpdateStatus();
     grid->forceRefresh();
 }
 
@@ -118,23 +115,6 @@ void AdequacyPatchAreas::mouseMoved(wxMouseEvent&)
 {
     // Notify other components as well
     Antares::Component::Panel::OnMouseMoveFromExternalComponent();
-}
-
-void AdequacyPatchAreas::onUpdateStatus()
-{
-    auto studyptr = Data::Study::Current::Get();
-    if (!studyptr)
-        return;
-
-    Freeze();
-    bool b = true;
-
-    wxSizer& sizer = *GetSizer();
-    sizer.Show(pPanel, b);
-    pPanel->Show(b);
-    sizer.Layout();
-    Thaw();
-    Refresh();
 }
 
 } // namespace Options
