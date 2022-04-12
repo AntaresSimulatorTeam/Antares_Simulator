@@ -49,6 +49,8 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS
 		toolbox/components/datagrid/renderer.hxx
 		toolbox/components/datagrid/renderer.cpp
 		toolbox/components/datagrid/selectionoperation.h
+		toolbox/components/datagrid/renderer/adequacy-patch-area-grid.h
+		toolbox/components/datagrid/renderer/adequacy-patch-area-grid.cpp
 		toolbox/components/datagrid/renderer/area.h
 		toolbox/components/datagrid/renderer/area.cpp
 		toolbox/components/datagrid/renderer/analyzer/areas.h
