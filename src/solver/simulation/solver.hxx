@@ -1069,21 +1069,15 @@ uint ISimulation<Impl>::buildSetsOfParallelYears(
         // Do we refresh just before this year ? If yes a new set of parallel years has to be
         // created
         bool refreshing = false;
-        refreshing = pData.haveToRefreshTSLoad && (!y || ((y % pData.refreshIntervalLoad) == 0));
-        refreshing
-          = refreshing
-            || (pData.haveToRefreshTSSolar && (!y || ((y % pData.refreshIntervalSolar) == 0)));
-        refreshing
-          = refreshing
-            || (pData.haveToRefreshTSWind && (!y || ((y % pData.refreshIntervalWind) == 0)));
-        refreshing
-          = refreshing
-            || (pData.haveToRefreshTSHydro && (!y || ((y % pData.refreshIntervalHydro) == 0)));
+        refreshing = pData.haveToRefreshTSLoad && (y % pData.refreshIntervalLoad == 0);
+        refreshing = refreshing || (pData.haveToRefreshTSSolar && (y % pData.refreshIntervalSolar == 0));
+        refreshing = refreshing || (pData.haveToRefreshTSWind && (y % pData.refreshIntervalWind == 0));
+        refreshing = refreshing || (pData.haveToRefreshTSHydro && (y % pData.refreshIntervalHydro == 0));
 
         // Some thermal clusters may override the global parameter.
         // Therefore, we may want to refresh TS even if pData.haveToRefreshTSThermal == false
         bool haveToRefreshTSThermal = pData.haveToRefreshTSThermal || study.runtime->thermalTSRefresh;
-        refreshing = refreshing || (haveToRefreshTSThermal && (!y || ((y % pData.refreshIntervalThermal) == 0)));
+        refreshing = refreshing || (haveToRefreshTSThermal && (y % pData.refreshIntervalThermal == 0));
 
         // We build a new set of parallel years if one of these conditions is fulfilled :
         //	- We have to refresh (or regenerate) some or all time series before running the
