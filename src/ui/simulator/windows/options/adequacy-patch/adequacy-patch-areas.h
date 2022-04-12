@@ -33,7 +33,6 @@ protected:
 
 protected:
     void onClose(void*);
-    void onUpdateStatus();
 
 private:
     Component::Datagrid::Component* pGrid;
