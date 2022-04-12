@@ -80,7 +80,6 @@ jobs:
            
     - name: Build
       run: |
-           ls -1
            cmake --build _build --config release -j2
 
     - name: Run unit and end-to-end tests
