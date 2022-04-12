@@ -51,9 +51,9 @@ bool AdequacyPatchAreaGrid::cellValue(int, int row, const Yuni::String& value)
         s.trim();
         s.toLower();
 
-        bool vir = s == "0" || s == "virtual" || s == "virtual area";
-        bool ins = s == "2" || s == "inside" || s == "physical area inside patch";
-        bool out = s == "1" || s == "outside" || s == "physical area outside patch";
+        bool vir = s.to<int>() == 0 || s == "virtual" || s == "virtual area";
+        bool ins = s.to<int>() == 2 || s == "inside" || s == "physical area inside patch";
+        bool out = s.to<int>() == 1 || s == "outside" || s == "physical area outside patch";
 
         if (vir)
             study->areas.byIndex[row]->adequacyPatchMode = Data::AdequacyPatch::adqmVirtualArea;
@@ -76,7 +76,21 @@ double AdequacyPatchAreaGrid::cellNumericValue(int, int row) const
     if (!(!study) && (uint)row < gridSize())
     {
         assert(gridSize() != 0);
-        // return study->areas.byIndex[row]->adequacyPatchMode;
+        // for saving into *.txt file
+        switch (study->areas.byIndex[row]->adequacyPatchMode)
+        {
+        case Data::AdequacyPatch::adqmVirtualArea:
+            return 0.;
+            break;
+        case Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch:
+            return 1.;
+            break;
+        case Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch:
+            return 2.;
+            break;
+        default:
+            break;
+        }
     }
     return 0.;
 }
