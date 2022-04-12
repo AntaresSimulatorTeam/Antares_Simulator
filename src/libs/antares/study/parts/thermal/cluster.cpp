@@ -47,15 +47,15 @@ namespace Antares
 {
 namespace Data
 {
-bool ThermalCluster::doWeGenerateTS(GlobalTSGenerationBehavior global, bool refresh) const
+bool ThermalCluster::doWeGenerateTS(bool globalThermalTSgeneration, bool refreshTSonCurrentYear) const
 {
     switch (tsGenBehavior)
     {
     // Generate if global tells us to
     case LocalTSGenerationBehavior::useGlobalParameter:
-        return (global == GlobalTSGenerationBehavior::generate) && refresh;
+        return globalThermalTSgeneration && refreshTSonCurrentYear;
     case LocalTSGenerationBehavior::forceGen:
-        return refresh;
+        return refreshTSonCurrentYear;
     default:
         return false;
     }
