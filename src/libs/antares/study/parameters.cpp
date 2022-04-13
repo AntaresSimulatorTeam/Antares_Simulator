@@ -675,10 +675,7 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
         return value.to<bool>(d.adqPatchSaveIntermediateResults);
     // Price taking order
     if (key == "price-taking-order")
-    {
         return StringToPriceTakingOrder(value, d.adqPatchPriceTakingOrder);
-        return false;
-    }
     // Thresholds
     if (key == "threshold-initiate-curtailment-sharing-rule")
         return value.to<float>(
