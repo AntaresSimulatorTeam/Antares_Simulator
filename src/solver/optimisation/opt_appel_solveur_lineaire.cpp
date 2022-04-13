@@ -55,6 +55,8 @@ extern "C"
 
 #include <chrono>
 
+#define OPT_APPEL_SOLVEUR_BUFFER_SIZE 256
+
 using namespace operations_research;
 
 using namespace Antares;
@@ -120,8 +122,8 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
     ProbSpx = (PROBLEME_SPX*)((ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[(int)NumIntervalle]);
     solver = (MPSolver*)((ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[(int)NumIntervalle]);
 
-    auto& study = *Data::Study::Current::Get();
-    bool ortoolsUsed = study.parameters.ortoolsUsed;
+    auto study = Data::Study::Current::Get();
+    bool ortoolsUsed = study->parameters.ortoolsUsed;
 
 RESOLUTION:
 
@@ -418,8 +420,8 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     else
         CoutOptimalDeLaSolution = Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
 
-    auto& study = *Data::Study::Current::Get();
-    Flot = study.createFileIntoOutputWithExtension("criterion", "txt", numSpace);
+    auto study = Data::Study::Current::Get();
+    Flot = study->createFileIntoOutputWithExtension("criterion", "txt", numSpace);
     if (!Flot)
         AntaresSolverEmergencyShutdown(2);
 
@@ -438,7 +440,6 @@ void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
     int il;
     int ilk;
     int ilMax;
-    char* Nombre;
     int* Cder;
     int* Cdeb;
     int* NumeroDeContrainte;
@@ -458,13 +459,13 @@ void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
     Cdeb = (int*)malloc(Pb->NombreDeVariables * sizeof(int));
     NumeroDeContrainte = (int*)malloc(ilMax * sizeof(int));
     Csui = (int*)malloc(ilMax * sizeof(int));
-    Nombre = (char*)malloc(1024);
 
-    if (Cder == NULL || Cdeb == NULL || NumeroDeContrainte == NULL || Csui == NULL
-        || Nombre == NULL)
+    char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
+
+    if (Cder == NULL || Cdeb == NULL || NumeroDeContrainte == NULL || Csui == NULL)
     {
         logs.fatal() << "Not enough memory";
-        AntaresSolverEmergencyShutdown();
+        AntaresSolverEmergencyShutdown(2);
     }
 
     for (Var = 0; Var < Pb->NombreDeVariables; Var++)
@@ -499,11 +500,11 @@ void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
 
     free(Cder);
 
-    auto& study = *Data::Study::Current::Get();
-    Flot = study.createFileIntoOutputWithExtension("fixed-part", "mps", numSpace);
+    auto study = Data::Study::Current::Get();
+    Flot = study->createFileIntoOutputWithExtension("fixed-part", "mps", numSpace);
 
     if (!Flot)
-        exit(2);
+        AntaresSolverEmergencyShutdown(2);
 
     fprintf(Flot, "* Number of variables:   %d\n", Pb->NombreDeVariables);
     fprintf(Flot, "* Number of constraints: %d\n", Pb->NombreDeContraintes);
@@ -532,7 +533,6 @@ void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
                     "partie des sens reconnus\n",
                     Pb->Sens[Cnt]);
             AntaresSolverEmergencyShutdown();
-            exit(0);
         }
     }
 
@@ -542,8 +542,11 @@ void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
         il = Cdeb[Var];
         while (il >= 0)
         {
-            SNPRINTF(Nombre, 1024, "%-.10lf", Pb->CoefficientsDeLaMatriceDesContraintes[il]);
-            fprintf(Flot, "    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il], Nombre);
+            SNPRINTF(buffer,
+                     OPT_APPEL_SOLVEUR_BUFFER_SIZE,
+                     "%-.10lf",
+                     Pb->CoefficientsDeLaMatriceDesContraintes[il]);
+            fprintf(Flot, "    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il], buffer);
             il = Csui[il];
         }
     }
@@ -553,7 +556,6 @@ void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
     free(Cdeb);
     free(NumeroDeContrainte);
     free(Csui);
-    free(Nombre);
 
     fclose(Flot);
 }
@@ -563,22 +565,14 @@ void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
     FILE* Flot;
     int Cnt;
     int Var;
-    char* Nombre;
 
-    Nombre = (char*)malloc(1024);
+    char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
 
-    if (Nombre == NULL)
-    {
-        logs.fatal() << "Not enough memory";
-        AntaresSolverEmergencyShutdown();
-    }
-
-    // gp : to be changed
-    auto& study = *Data::Study::Current::Get();
-    Flot = study.createFileIntoOutputWithExtension("variable-part", "mps", numSpace);
+    auto study = Data::Study::Current::Get();
+    Flot = study->createFileIntoOutputWithExtension("variable-part", "mps", numSpace);
 
     if (!Flot)
-        exit(2);
+        AntaresSolverEmergencyShutdown(2);
 
     fprintf(Flot, "* Number of variables:   %d\n", Pb->NombreDeVariables);
     fprintf(Flot, "* Number of constraints: %d\n", Pb->NombreDeContraintes);
@@ -589,8 +583,8 @@ void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
     {
         if (Pb->CoutLineaire[Var] != 0.0)
         {
-            SNPRINTF(Nombre, 1024, "%-.10lf", Pb->CoutLineaire[Var]);
-            fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, Nombre);
+            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.10lf", Pb->CoutLineaire[Var]);
+            fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, buffer);
         }
     }
 
@@ -599,8 +593,8 @@ void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
     {
         if (Pb->SecondMembre[Cnt] != 0.0)
         {
-            SNPRINTF(Nombre, 1024, "%-.9lf", Pb->SecondMembre[Cnt]);
-            fprintf(Flot, "    RHSVAL    R%07d  %s\n", Cnt, Nombre);
+            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Pb->SecondMembre[Cnt]);
+            fprintf(Flot, "    RHSVAL    R%07d  %s\n", Cnt, buffer);
         }
     }
 
@@ -610,9 +604,9 @@ void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
     {
         if (Pb->TypeDeVariable[Var] == VARIABLE_FIXE)
         {
-            SNPRINTF(Nombre, 1024, "%-.9lf", Pb->Xmin[Var]);
+            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Pb->Xmin[Var]);
 
-            fprintf(Flot, " FX BNDVALUE  C%07d  %s\n", Var, Nombre);
+            fprintf(Flot, " FX BNDVALUE  C%07d  %s\n", Var, buffer);
             continue;
         }
 
@@ -620,20 +614,20 @@ void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
         {
             if (Pb->Xmin[Var] != 0.0)
             {
-                SNPRINTF(Nombre, 1024, "%-.9lf", Pb->Xmin[Var]);
-                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, Nombre);
+                SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Pb->Xmin[Var]);
+                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, buffer);
             }
 
-            SNPRINTF(Nombre, 1024, "%-.9lf", Pb->Xmax[Var]);
-            fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, Nombre);
+            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Pb->Xmax[Var]);
+            fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, buffer);
         }
 
         if (Pb->TypeDeVariable[Var] == VARIABLE_BORNEE_INFERIEUREMENT)
         {
             if (Pb->Xmin[Var] != 0.0)
             {
-                SNPRINTF(Nombre, 1024, "%-.9lf", Pb->Xmin[Var]);
-                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, Nombre);
+                SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Pb->Xmin[Var]);
+                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, buffer);
             }
         }
 
@@ -642,8 +636,8 @@ void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
             fprintf(Flot, " MI BNDVALUE  C%07d\n", Var);
             if (Pb->Xmax[Var] != 0.0)
             {
-                SNPRINTF(Nombre, 1024, "%-.9lf", Pb->Xmax[Var]);
-                fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, Nombre);
+                SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Pb->Xmax[Var]);
+                fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, buffer);
             }
         }
 
@@ -654,8 +648,6 @@ void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
     }
 
     fprintf(Flot, "ENDATA\n");
-
-    free(Nombre);
 
     fclose(Flot);
 }
@@ -668,7 +660,6 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     int il;
     int ilk;
     int ilMax;
-    char* Nombre;
     int* Cder;
     int* Cdeb;
     int* NumeroDeContrainte;
@@ -690,6 +681,8 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     int* IndicesColonnes;
     int ExistenceDUneSolution;
     double* X;
+
+    char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
 
     Probleme = (PROBLEME_SIMPLEXE*)Prob;
 
@@ -732,10 +725,8 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     Cdeb = (int*)malloc(NombreDeVariables * sizeof(int));
     NumeroDeContrainte = (int*)malloc(ilMax * sizeof(int));
     Csui = (int*)malloc(ilMax * sizeof(int));
-    Nombre = (char*)malloc(1024);
 
-    if (Cder == NULL || Cdeb == NULL || NumeroDeContrainte == NULL || Csui == NULL
-        || Nombre == NULL)
+    if (Cder == NULL || Cdeb == NULL || NumeroDeContrainte == NULL || Csui == NULL)
     {
         logs.fatal() << "Not enough memory";
         AntaresSolverEmergencyShutdown();
@@ -773,8 +764,8 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
 
     free(Cder);
 
-    auto& study = *Data::Study::Current::Get();
-    Flot = study.createFileIntoOutputWithExtension("problem", "mps", numSpace);
+    auto study = Data::Study::Current::Get();
+    Flot = study->createFileIntoOutputWithExtension("problem", "mps", numSpace);
 
     if (!Flot)
         AntaresSolverEmergencyShutdown(2);
@@ -801,12 +792,9 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
         }
         else
         {
-            fprintf(Flot,
-                    "%s : le sens de la contrainte %c ne fait pas partie "
-                    "des sens reconnus\n",
-                    __FUNCTION__,
-                    Sens[Cnt]);
-            AntaresSolverEmergencyShutdown(2);
+            logs.error() << "OPT_EcrireJeuDeDonneesMPS : Wrong direction for constraint no. "
+                << Sens[Cnt];
+            AntaresSolverEmergencyShutdown();
         }
     }
 
@@ -815,15 +803,18 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     {
         if (CoutLineaire[Var] != 0.0)
         {
-            SNPRINTF(Nombre, 1024, "%-.10lf", CoutLineaire[Var]);
-            fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, Nombre);
+            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.10lf", CoutLineaire[Var]);
+            fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, buffer);
         }
 
         il = Cdeb[Var];
         while (il >= 0)
         {
-            SNPRINTF(Nombre, 1024, "%-.10lf", CoefficientsDeLaMatriceDesContraintes[il]);
-            fprintf(Flot, "    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il], Nombre);
+            SNPRINTF(buffer,
+                     OPT_APPEL_SOLVEUR_BUFFER_SIZE,
+                     "%-.10lf",
+                     CoefficientsDeLaMatriceDesContraintes[il]);
+            fprintf(Flot, "    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il], buffer);
             il = Csui[il];
         }
     }
@@ -833,8 +824,8 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     {
         if (SecondMembre[Cnt] != 0.0)
         {
-            SNPRINTF(Nombre, 1024, "%-.9lf", SecondMembre[Cnt]);
-            fprintf(Flot, "    RHSVAL    R%07d  %s\n", Cnt, Nombre);
+            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", SecondMembre[Cnt]);
+            fprintf(Flot, "    RHSVAL    R%07d  %s\n", Cnt, buffer);
         }
     }
 
@@ -844,9 +835,9 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     {
         if (TypeDeBorneDeLaVariable[Var] == VARIABLE_FIXE)
         {
-            SNPRINTF(Nombre, 1024, "%-.9lf", Xmin[Var]);
+            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
 
-            fprintf(Flot, " FX BNDVALUE  C%07d  %s\n", Var, Nombre);
+            fprintf(Flot, " FX BNDVALUE  C%07d  %s\n", Var, buffer);
             continue;
         }
 
@@ -854,20 +845,20 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
         {
             if (Xmin[Var] != 0.0)
             {
-                SNPRINTF(Nombre, 1024, "%-.9lf", Xmin[Var]);
-                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, Nombre);
+                SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
+                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, buffer);
             }
 
-            SNPRINTF(Nombre, 1024, "%-.9lf", Xmax[Var]);
-            fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, Nombre);
+            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmax[Var]);
+            fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, buffer);
         }
 
         if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_INFERIEUREMENT)
         {
             if (Xmin[Var] != 0.0)
             {
-                SNPRINTF(Nombre, 1024, "%-.9lf", Xmin[Var]);
-                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, Nombre);
+                SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
+                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, buffer);
             }
         }
 
@@ -876,8 +867,8 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
             fprintf(Flot, " MI BNDVALUE  C%07d\n", Var);
             if (Xmax[Var] != 0.0)
             {
-                SNPRINTF(Nombre, 1024, "%-.9lf", Xmax[Var]);
-                fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, Nombre);
+                SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmax[Var]);
+                fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, buffer);
             }
         }
 
@@ -892,7 +883,6 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char T
     free(Cdeb);
     free(NumeroDeContrainte);
     free(Csui);
-    free(Nombre);
 
     fclose(Flot);
 }
