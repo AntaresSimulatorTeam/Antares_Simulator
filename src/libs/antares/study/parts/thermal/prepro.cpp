@@ -225,7 +225,7 @@ bool PreproThermal::loadFromFolder(Study& study,
                              << ": invalid value for FO Duration (line:" << (i + 1) << ")";
                 ++errors;
             }
-            if (foDuration < 1. or poDuration > 365.)
+            if (poDuration < 1. or poDuration > 365.)
             {
                 logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << itsThermalCluster->id()
                              << ": invalid value for PO Duration (line:" << (i + 1) << ")";
