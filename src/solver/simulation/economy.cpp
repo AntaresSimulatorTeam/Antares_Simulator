@@ -141,11 +141,11 @@ void OPT_OptimisationHebdomadaireAdqPatch(PROBLEME_HEBDO* pProblemeHebdo,
     OPT_OptimisationHebdomadaire(pProblemeHebdo, numSpace);
 }
 
-std::set<int> InitiateCurtailmentSharingRuleIndexSet(PROBLEME_HEBDO* pProblemeHebdo)
+void InitiateCurtailmentSharingRuleIndexSet(PROBLEME_HEBDO* pProblemeHebdo,
+                                            std::set<int>& triggerCsrSet)
 {
     float threshold = pProblemeHebdo->adqPatch->ThresholdInitiateCurtailmentSharingRule;
     double sumENS[nbHoursInAWeek] = {};
-    std::set<int> triggerCsrSet;
 
     for (int pays = 0; pays < pProblemeHebdo->NombreDePays; ++pays)
     {
@@ -161,7 +161,6 @@ std::set<int> InitiateCurtailmentSharingRuleIndexSet(PROBLEME_HEBDO* pProblemeHe
         if ((int)sumENS[i] >= threshold)
             triggerCsrSet.insert(i);
     }
-    return triggerCsrSet;
 }
 
 bool Economy::year(Progression::Task& progression,
