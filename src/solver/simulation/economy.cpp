@@ -35,6 +35,7 @@
 #include "simulation.h"
 #include "../optimisation/opt_fonctions.h"
 #include "common-eco-adq.h"
+#include <set>
 
 using namespace Yuni;
 
@@ -138,6 +139,29 @@ void OPT_OptimisationHebdomadaireAdqPatch(PROBLEME_HEBDO* pProblemeHebdo,
     // part that we need
     ::SIM_RenseignementProblemeHebdo(*pProblemeHebdo, state, numSpace, hourInTheYear);
     OPT_OptimisationHebdomadaire(pProblemeHebdo, numSpace);
+}
+
+std::set<int> InitiateCurtailmentSharingRuleIndexSet(PROBLEME_HEBDO* pProblemeHebdo)
+{
+    float threshold = pProblemeHebdo->adqPatch->ThresholdInitiateCurtailmentSharingRule;
+    double sumENS[nbHoursInAWeek] = {};
+    std::set<int> triggerCsrSet;
+
+    for (int pays = 0; pays < pProblemeHebdo->NombreDePays; ++pays)
+    {
+        if (pProblemeHebdo->adequacyPatchRuntimeData.areaMode[pays]
+            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+            Math::sumTwoArrays<double>(
+              sumENS,
+              pProblemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive,
+              pProblemeHebdo->NombreDePasDeTemps);
+    }
+    for (int i = 0; i < nbHoursInAWeek; ++i)
+    {
+        if ((int)sumENS[i] >= threshold)
+            triggerCsrSet.insert(i);
+    }
+    return triggerCsrSet;
 }
 
 bool Economy::year(Progression::Task& progression,

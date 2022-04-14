@@ -501,6 +501,10 @@ struct AdequacyPatchParameters
     bool AdequacyFirstStep;
     bool LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq;
     bool LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq;
+    bool SaveIntermediateResults;
+    // AdequacyPatch::AdequacyPatchPTO PriceTakingOrder;
+    float ThresholdInitiateCurtailmentSharingRule;
+    float ThresholdDisplayLocalMatchingRuleViolations;
 };
 
 struct PROBLEME_HEBDO
