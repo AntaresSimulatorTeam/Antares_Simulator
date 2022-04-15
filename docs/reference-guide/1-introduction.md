@@ -38,18 +38,17 @@ These steps most often involve:
 2. GUI session dedicated to the definition of simulation contexts
 (definition of the number and consistency of the "Monte-Carlo years" to simulate)
 
-3. Simulation session producing actual numeric scenarios following the directives defined in (2)
+3. Simulation session producing actual numeric scenarios following the directives defined in (b)
 
 4. Optimization session aiming at solving all the optimization problems associated with
-each of the scenarios produced in (3)
+each of the scenarios produced in (c)
 
-5. GUI session dedicated to the exploitation of the detailed results yielded by (4)
+5. GUI session dedicated to the exploitation of the detailed results yielded by (d)
 
 The scope of this document is to give a detailed description of the software involved in
 step (1) to (5) mostly based on a functional approach, leaving thereby aside a significant
-part of the mathematical content involved in several of these steps.[^2]
-
-The following picture gives a functional view of all that is involved in steps (1) to (5).
+part of the mathematical content involved in several of these steps.
+[^2] The following picture gives a functional view of all that is involved in steps (a) to (e).
 
 ![Antares_Process](Antares_Process.png)
 
@@ -62,24 +61,8 @@ the formulation of the problems or their resolution.
 
 In terms of power studies, the different fields of application Antares has been designed for are the following:
 
-- **Generation adequacy problems:** Adequacy problems aim to study the need for new generating plants to keep the security of
-supply above a given critical threshold.
-
-	What is most important in these studies is to survey a great number of scenarios that represent well enough
-the random factors that may affect the balance between load and generation. Economic parameters do not play
-as much a critical role as they do in the other kinds of studies since the stakes are mainly to know if and
-when supply security is likely to be jeopardized (detailed costs incurred in more ordinary conditions are of
-comparatively lower importance). In these studies, the default Antares option to use is the "Adequacy"
-simulation mode, or the "Draft" simulation mode (which is extremely fast but which produces crude results).
-
-- **Transmission project profitability:** Transmission project profitability studies the savings brought by a specific reinforcement of the grid,
-in terms of decrease of the overall system generation cost (using an assumption of fair and perfect market) and/or
-improvement of the security of supply (reduction of the loss-of-load expectation).
-
-	In these studies, economic parameters and the physical modeling of the dynamic constraints bearing on
-the generating units are of paramount importance. Though a thorough survey of many "Monte-Carlo years"
-is still required, the number of scenarios to simulate is not as large as in generation adequacy studies.
-In these studies, the default Antares option to use is the "Economy" simulation mode.
+- **Generation adequacy problems:**
+- **Transmission project profitability:**
 
 The common rationale of the modeling used in all of these studies is, whenever it is possible,
 to decompose the general issue (representation of the system behavior throughout many years,
@@ -95,10 +78,29 @@ assumed to be independent to some extent (note that, however, issues such as the
 possibly other kinds of energy storage facilities– may bring a significant coupling between the successive problems,
 which needs to be addressed properly).
 
+### Generation adequacy problems
+Adequacy problems aim to study the need for new generating plants to keep the security of
+supply above a given critical threshold.
+
+What is most important in these studies is to survey a great number of scenarios that represent well enough
+the random factors that may affect the balance between load and generation. Economic parameters do not play
+as much a critical role as they do in the other kinds of studies since the stakes are mainly to know if and
+when supply security is likely to be jeopardized (detailed costs incurred in more ordinary conditions are of
+comparatively lower importance). In these studies, the default Antares option to use is the "Adequacy"
+simulation mode, or the "Draft" simulation mode (which is extremely fast but which produces crude results).
+
+### Transmission project profitability
+Transmission project profitability studies the savings brought by a specific reinforcement of the grid,
+in terms of decrease of the overall system generation cost (using an assumption of fair and perfect market) and/or
+improvement of the security of supply (reduction of the loss-of-load expectation).
+
+In these studies, economic parameters and the physical modeling of the dynamic constraints bearing on
+the generating units are of paramount importance. Though a thorough survey of many "Monte-Carlo years"
+is still required, the number of scenarios to simulate is not as large as in generation adequacy studies.
+In these studies, the default Antares option to use is the "Economy" simulation mode.
+
+
 
 [^1]: For simplicity's sake, the _**Antares\_Simulator**_ 8.1.1 application will as of now be simply denoted "Antares".
 
 [^2]: A detailed expression of the basic mathematical problem solved in the red box of the following figure can be found in the document "Optimization problems formulation".
-
-
-
