@@ -30,7 +30,18 @@ theme:
 nav:
   - 'Home': index.md
   - 'Antares ecosystem' : 'https://antares-doc.readthedocs.io'
-  - 'Reference guide': 'reference-guide/1-reference-guide.md'
+  - 'Reference guide':
+    - 'Introduction': 'reference-guide/1-introduction.md'
+    - 'Data organization': 'reference-guide/2-data_organization.md'
+    - 'Commands': 'reference-guide/3-commands.md'
+    - 'Active windows': 'reference-guide/4-active_windows.md'
+    - 'Output files': 'reference-guide/5-output_files.md'
+    - 'Time-Series analysis and generation': 'reference-guide/6-time_series_analysis_and_generation.md'
+    - 'Kirchhoff\'s constraint generator': 'reference-guide/7-kirchhoffs_constraint_generator.md'
+    - 'Miscellaneous': 'reference-guide/8-miscellaneous.md'
+    - 'System requirements': 'reference-guide/9-system_requirements.md'
+    - 'Command line': 'reference-guide/10-command_line.md'
+    - 'Attribution notices': 'reference-guide/11-attribution_notices.md'
   - 'Optimisation problem' : 'reference-guide/2-modeling.md'
   - 'Build':
     - 'Introduction': 'build/0-INSTALL.md'
@@ -55,8 +66,7 @@ extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
 
 markdown_extensions:
-  - footnotes:
-      SEPARATOR: _footnote_
+  - footnotes
   - attr_list
   - toc:
       permalink: true

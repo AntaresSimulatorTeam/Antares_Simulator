@@ -4,45 +4,45 @@ The Antares GUI gives access to a general menu of commands whose name and meanin
 
 ## File
 
-- **New:** Create a new empty study to be defined entirely from scratch (network topology, interconnections
-ratings, thermal power plants list, fuel costs, hydro inflows stats, wind speed stats, load profiles ,etc.).
+- **New** Create a new empty study to be defined entirely from scratch (network topology, interconnections
+ratings, thermal power plants list, fuel costs, hydro inflows stats, wind speed stats, load profiles ,etc.)
   
-- **Open:** Load in memory data located in a specified Antares study folder. Once loaded, these data may be reviewed,
+- **Open** Load in memory data located in a specified Antares study folder. Once loaded, these data may be reviewed,
 updated, deleted, and simulations may be performed. If "open" is performed while a study was already opened, the former study will be automatically closed.
 
-- **Quick Open:** Same action as open, with a direct access to the recently opened studies.
+- **Quick Open** Same action as open, with a direct access to the recently opened studies
 
-- **Save:** Save the current state of the study, if necessary by replacing original files by updated ones.
+- **Save** Save the current state of the study, if necessary by replacing original files by updated ones.
 After using this command the original study is no longer available, though some original files may be kept until
-the "clean" command is used (see "clean" command ).
+the "clean" command is used (see "clean" command )
 
-- **Save as:** Save the current state of the study under a different name and / or location.
+- **Save as** Save the current state of the study under a different name and / or location.
 Using this command does not affect the original study. When "saving as", the user may choose whether
 he/she prefers to save input and output data or only input data. Note that Antares does not perform "autosave":
 Therefore, the actions performed on the input data during an Antares session (adding an interconnection,
-removing a plant, etc.) will have no effect until either "save" or "save as" have been used.
+removing a plant, etc.) will have no effect until either "save" or "save as" have been used
 
-- **Export Map:** Save a picture of the current map as a PNG, JPEG or SVG file. Default background color and
-storage location can be changed.
+- **Export Map** Save a picture of the current map as a PNG, JPEG or SVG file. Default background color and
+storage location can be changed
 
-- **Open in Windows Explorer:** Open the folder containing the study in a standard Windows Explorer window.
+- **Open in Windows Explorer** Open the folder containing the study in a standard Windows Explorer window
 
-- **Clean:** Remove all junk files that may remain in the study folder if the Antares session has involved lots
+- **Clean** Remove all junk files that may remain in the study folder if the Antares session has involved lots
 of sequences such as "create area – add plant –save –rename area – save - rename plant ..."
-(Antares performs only low level auto-clean for the sake of GUI's efficiency).
+(Antares performs only low level auto-clean for the sake of GUI's efficiency)
 
-- **Close:** Close the study folder. If no "save" or "save as" commands have been performed,
-all the modifications made on the input data during the Antares session will be ignored.
+- **Close** Close the study folder. If no "save" or "save as" commands have been performed,
+all the modifications made on the input data during the Antares session will be ignored
 
-- **Quit:** Exit from Antares.
+- **Quit** Exit from Antares
 
 ## Edit
 
-- **Copy:** Prepare a copy of elements selected on the current system map.
+- **Copy** Prepare a copy of elements selected on the current system map.
 The command is available only if the current active tab (whose name appears at the top line of the subcommand menu)
 is actually that of the System maps.
 
-- **Paste:** Paste elements previously prepared for copy. The command is available only if the current
+- **Paste** Paste elements previously prepared for copy. The command is available only if the current
 active tab (whose name appears at the top line of the subcommand menu) is actually that of the System maps.
 Note that copy/paste may be performed either within the same map or between two different maps, attached to
 the same study or to different studies. To achieve that, launch one instance of Antares to open the "origin" study,
@@ -50,27 +50,27 @@ select elements on the map and perform copy, launch another instance of Antares 
 perform paste. Copied elements are stored in an Antares clipboard that remains available for subsequent (multiple)
 paste as long as the system map is used as active window.
 
-- **Paste Special:** Same as Paste, with a comprehensive set of parameterized actions (skip, merge, update, import)
+- **Paste Special** Same as Paste, with a comprehensive set of parameterized actions (skip, merge, update, import)
 that can be defined for each data cluster copied in the clipboard. This gives a high level of flexibility for
 carrying out complex copy/paste actions.
 
-- **Reverse:** The elements currently selected on the system map are no longer selected and are replaced by
+- **Reverse** The elements currently selected on the system map are no longer selected and are replaced by
 those not selected beforehand.
 
-- **Unselect All:** Unselect all elements currently selected on the system map.
+- **Unselect All** Unselect all elements currently selected on the system map.
 
-- **Select All:** Select all elements on the system map.
+- **Select All** Select all elements on the system map.
 
 ## Input
 
-- **Name of the study:** Give a reference name to the study. The default name is identical to that of 
-the study's folder but the user may modify it. The default name of a new study is "no title".
+- **Name of the study** Give a reference name to the study. The default name is identical to that of 
+the study's folder but the user may modify it. The default name of a new study is "no title"
 
-- **Author(s):** Set the study's author(s) name. Default value is "memory".
+- **Author(s)** Set the study's author(s) name. Default value is "memory"
 
 The other "input" subcommands here below are used to move from one active window to another.
 Note that the availability of the __Wind__, __Solar__, and __Renewable__ subcommands depend on the advanced 
-parameter *"Renewable Generation modeling"* described in [miscellaneous **TO BE UPDATED**](#miscellaneous).
+parameter *"Renewable Generation modeling"* described in [miscellaneous](#miscellaneous).
 
 - **System Maps**
 - **Simulation**
@@ -89,56 +89,54 @@ parameter *"Renewable Generation modeling"* described in [miscellaneous **TO BE 
 
 ## Output
 
-- **\<Simulation type\>\<simulation tag\>**
+**\<Simulation type\>\<simulation tag\>**
 
-	For each simulation run for which results have been generated, open a GUI for displaying results.
+For each simulation run for which results have been generated, open a GUI for displaying results.
 Results may be viewed by multiple selections made on a number of parameters. Note that, since all simulations do
 not include all kinds of results (depending on user's choices), some parameters are not always visible.
 Parameters stand as follows:
 
-	- Antares area (node)
-	- Antares interconnection (link)
-	- Class of Monte-Carlo results :
-	    - Monte-Carlo synthesis (throughout all years simulated)
-	    - Year-by-Year (detailed results for one specific year)
-	- Category of Monte-Carlo results :
-	    - General values (operating cost, generation breakdown, ...)
-	    - Thermal plants (detailed thermal generation breakdown)
-	    - Renewable generation (per cluster)
-	    - Record years (for each Antares variable, identification of the Monte-Carlo year for which lowest and highest values were encountered)
+- Antares area (node)
+- Antares interconnection (link)
+- Class of Monte-Carlo results :
+    - Monte-Carlo synthesis (throughout all years simulated)
+    - Year-by-Year (detailed results for one specific year)
+- Category of Monte-Carlo results :
+    - General values (operating cost, generation breakdown, ...)
+    - Thermal plants (detailed thermal generation breakdown)
+    - Renewable generation (per cluster)
+    - Record years (for each Antares variable, identification of the Monte-Carlo year for which lowest and highest values were encountered)
 
-	- Span of Monte-Carlo results :
-	    - Hourly
-	    - Daily
-	    - Weekly
-	    - Monthly
-	    - Annual
+- Span of Monte-Carlo results :
+    - _Hourly_
+    - _Daily_
+    - _Weekly_
+    - _Monthly_
+    - _Annual_
 
-	The interface provides a user-friendly way for the comparison of results between multiple simulations
-	(e.g. "before" and "after" commissioning of a new plant or interconnection):
-	
-	- Use "new tab" button and choose a first set of simulation results
-	- Use again "new tab" and choose a second set of simulation results
-	
-	The results window will be automatically split so as to show the two series of results in parallel.
-	To the right of the "new tab" button, a symbolic (icon) button gives further means to compare results on a
-	split window (average, differences, minimum, maximum and sum).
-	
-	Besides, when the simulation results contain the "year-by-year" class, it is possible to carry out an
-	extraction query on any given specific variable (e.g. "monthly amounts of CO2 tons emitted") throughout
-	all available years of simulation.
-	
-	The results of such queries are automatically stored within the output file structures, so as to
-	be available at very short notice if they have to be examined later in another session (extractions may require 
-	a significant computer time when there are many Monte-Carlo years to process).
+The interface provides a user-friendly way for the comparison of results between multiple simulations
+(e.g. "before" and "after" commissioning of a new plant or interconnection):
 
-- **Open in Windows Explorer**
+- Use "new tab" button and choose a first set of simulation results
+- Use again "new tab" and choose a second set of simulation results
 
-	This command displays the list of available simulation results and allows
-	browsing through the output files structure. The content of these files may be reviewed by tools such as Excel.
-	File structures are detailed in [Output Files **TO BE UPDATED**](#output-files).
+The results window will be automatically split so as to show the two series of results in parallel.
+To the right of the "new tab" button, a symbolic (icon) button gives further means to compare results on a
+split window (average, differences, minimum, maximum and sum).
 
-## Run TO BE CONTINUED HERE
+Besides, when the simulation results contain the "year-by-year" class, it is possible to carry out an
+extraction query on any given specific variable (e.g. "monthly amounts of CO2 tons emitted") throughout
+all available years of simulation.
+
+The results of such queries are automatically stored within the output file structures, so as to
+be available at very short notice if they have to be examined later in another session (extractions may require 
+a significant computer time when there are many Monte-Carlo years to process).
+
+- **Open in Windows Explorer** This command displays the list of available simulation results and allows
+browsing through the output files structure. The content of these files may be reviewed by tools such as Excel.
+File structures are detailed in [Output Files](#output-files).
+
+## Run
 
 - **Monte Carlo Simulation** Runs either an economy simulation, an adequacy simulation, or a "draft" simulation,
 depending on the values of the parameters set in the "simulation" active window (see [Simulation window](#simulation)).
@@ -210,7 +208,7 @@ given back their regular capacities (infinite for those being set on "set to inf
     - _Strategic reserve (include / ignore)_
     - _Spinning reserve (include / ignore)_
     - _Export mps (false/true)_
-    - _Simplex optimization range # 4_ _(day / week)_
+    - _Simplex optimization range [^4] _(day / week)_
     - _Unfeasible problems behavior (Error Dry/ Error Verbose/ Warning Dry/ Warning Verbose_
 
 - **Advanced parameters** Advanced Parameters allow to adjust the simulation behavior regarding issues
@@ -273,53 +271,6 @@ can be bundled into an "output district" by using the Configure/district command
 - **Log viewer** Displays the log files regarding every Antares session performed on the study
 
 
+[^4]:_Weekly optimization performs a more refined unit commitment, especially when the level selected in the "advanced parameters" menu is "accurate"._
 
-[4](#sdfootnote4anc)_Weekly optimization performs a more refined unit commitment, especially when the level selected in the "advanced parameters" menu is "accurate"._
 
-[5](#sdfootnote5anc) "Economy" simulations make a full use of Antares optimization capabilities. They require economic as well as technical input data and may demand a lot of computer resources. "Adequacy" simulations are faster and require only technical input data. Their results are limited to adequacy indicators. "Draft" simulations are highly simplified adequacy simulations, in which binding constraints (e.g. DC flow rules) are ignored, while hydro storage is assumed to be able to provide its nominal maximum power whenever needed. As a consequence, draft simulations are biased towards optimism. They are, however, much faster than adequacy and economic simulations.
-
-[6](#sdfootnote6anc)In Economy an Adequacy simulations, these should be chosen so as to make the simulation span a round number of weeks. If not, the simulation span will be truncated: for instance, (1, 365) will be interpreted as (1, 364), i.e. 52 weeks (the last day of the last month will not be simulated). In Draft simulations, the simulation is always carried out on 8760 hours.
-
-[7](#sdfootnote7anc) changing the number of MC years will reset the playlist to its default value ; not available in Draft simulations
-
-[8](#sdfootnote8anc)Not available in Draft simulations
-
-[9](#sdfootnote9anc)KCG : Kirchhoff's constraints generator (see section 7)
-
-[10](#sdfootnote10anc)A typical case is given by the "Flow-Based" framework today implemented in a large portion of the European electricity market.
-
-[11](#sdfootnote11anc)This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
-
-[12](#sdfootnote12anc)Value identical to that defined under the same name in the "Misc Gen" input section.
-
-[13](#sdfootnote13anc)NODU and NP Cost do not appear in "Adequacy" results since these variables are irrelevant in that context
-
-[14](#sdfootnote14anc)This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
-
-[15](#sdfootnote15anc) The number of spanning trees is equal to the absolute value of any cofactor of the graph incidence matrix
-
-[16](#sdfootnote16anc) Mehlhorn K., Michail D. (2005) _Implementing Minimum Cycle Basis Algorithms_. In: Experimental and Efficient Algorithms. WEA 2005. Lecture Notes in Computer Science, vol 3503.
-
-[17](#sdfootnote17anc)As long as the System's list of Areas does not change
-
-[18](#sdfootnote18anc)E.g. : if three playlists A,B,C are defined over 1000 years (A: years 1 to 1000, B: years 1 to 100, C: Years 13,42,57,112), initial reservoir levels in each Area are identical in the playlists' intersection (years 13,42,57)
-
-[19](#sdfootnote19anc)If the playlist is full, these years have numbers # (k-1)B+1 ,…., #kB
-
-[20](#sdfootnote20anc)Described in the note "Optimization Problems Formulation"
-
-[21](#sdfootnote21anc) Options « default » and « swap » do not perform multi-threaded optimizations
-
-[22](#sdfootnote22anc) The « draft » mode is not multi-threaded
-
-[23](#sdfootnote23anc) This hardware characteristic, independent from Antares general parameters and from study parameters, can be checked with the Resources monitor tool ([Commands](#commands))
-
-[24](#sdfootnote24anc)When the number of MC years to run is smaller than the allowance, the parallel run includes all of these years in a single bundle and there is no "reduced allowance" message
-
-[25](#sdfootnote25anc) The Table indicates either the refresh status (No) or the refresh span (the associated refresh status "yes" is implicit)
-
-[26](#sdfootnote26anc) The smallest bundle in this case is the ninth (year number 97 to year number 100). The first 8 bundles involve 12 MC years each
-
-Copyright © RTE 2007-2021 – Version 8.1.1
-
-Last Rev : H. Antoine - 25 NOV 2021
