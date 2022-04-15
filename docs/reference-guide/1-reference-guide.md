@@ -366,7 +366,18 @@ values of a given variable were encountered in a previous simulation).
   In addition, each MC year i=1, …, N can be given a relative “weight” \\(W_i\\)  in the simulation (default value: 1). The expectation and standard deviation of all random variables will then be computed as if the scenarios simulated were sampled from a probability density function in which MC year i is given the probability 
   $$\frac{W_{i}}{\sum_{j=1,...,N}{W_{j}}}$$
 
-- **Adequacy Patch**
+- **Adequacy Patch** Auxiliary window [Options] Defines a set of options related to the adequacy patch.
+The set of preferences is study-specific; it can be changed at any time and saved along with study data.
+Auxiliary window [Areas] Opens a window in which a choice can be made regarding the individual area adequacy patch mode.
+
+    - _Enable Adequacy patch (false / true)_
+    - _NTC from physical areas outside to physical areas inside adequacy patch (set to null / local values)_
+    - _NTC between physical areas outside adequacy patch (set to null / local values)_
+    - _Price taking order (DENS / Load)_
+    - _Save intermediate results (false / true)_
+    - _Thresholds
+      - _Initiate curtailment sharing rule_
+      - _Display local maching rule violations_
 
 - **Optimization preferences** Defines a set of options related to the optimization core used in the simulations.
 The set of preferences is study-specific; it can be changed at any time and saved along with study data.
@@ -386,9 +397,6 @@ given back their regular capacities (infinite for those being set on "set to inf
     - _Strategic reserve (include / ignore)_
     - _Spinning reserve (include / ignore)_
     - _Export mps (false/true)_
-    - _Adequacy patch (false/true)_
-    - _NTC from physical areas outside to physical areas inside adequacy patch (set to null / local values)_
-    - _NTC between physical areas outside adequacy patch (set to null / local values)_
     - _Simplex optimization range # 4_ _(day / week)_
     - _Unfeasible problems behavior (Error Dry/ Error Verbose/ Warning Dry/ Warning Verbose_
 
