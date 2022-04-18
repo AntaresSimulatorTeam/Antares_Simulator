@@ -173,5 +173,11 @@ public:
     IncompatibleStudyModeForAdqPatch();
 };
 
+class NoAreaInsideAdqPatchMode : public LoadingError
+{
+public:
+    NoAreaInsideAdqPatchMode();
+};
+
 } // namespace Error
 } // namespace Antares

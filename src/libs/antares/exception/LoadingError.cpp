@@ -128,5 +128,10 @@ IncompatibleStudyModeForAdqPatch::IncompatibleStudyModeForAdqPatch() :
 {
 }
 
+NoAreaInsideAdqPatchMode::NoAreaInsideAdqPatchMode() :
+ LoadingError("Minimum one area must be inside adequacy patch mode when using adequacy patch")
+{
+}
+
 } // namespace Error
 } // namespace Antares

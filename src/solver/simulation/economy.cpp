@@ -35,7 +35,6 @@
 #include "simulation.h"
 #include "../optimisation/opt_fonctions.h"
 #include "common-eco-adq.h"
-#include "../optimisation/adequacy_patch.h"
 
 using namespace Yuni;
 
@@ -119,9 +118,6 @@ void OPT_OptimisationHebdomadaireAdqPatch(PROBLEME_HEBDO* pProblemeHebdo,
                                           int hourInTheYear)
 {
     pProblemeHebdo->adqPatch->AdequacyFirstStep = true;
-    pProblemeHebdo->adqPatch->AdqBehaviorMap = GenerateLinkRestrictionMapForAdqFirstStep(
-      pProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq,
-      pProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq);
     OPT_OptimisationHebdomadaire(pProblemeHebdo, numSpace);
     pProblemeHebdo->adqPatch->AdequacyFirstStep = false;
 
