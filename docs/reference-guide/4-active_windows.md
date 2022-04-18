@@ -85,7 +85,7 @@ These two parts are detailed hereafter.
 
     - Thematic Trimming:
         - **None** Storage, for the geographic selection defined previously,
-      of all variables defined in [Output Files](#output-files) for Areas and Links.
+      of all variables defined in [Output Files](5-output_files.md) for Areas and Links.
         - **Custom** Storage, for the geographic selection defined previously, of the variables selected with
       the "Thematic Trimming" command of the "Configure" option available in the main menu.
 
@@ -109,7 +109,7 @@ Either « ready-made » or «stochastic » (i.e. Antares-generated), defined by 
 
     - **Refresh span** Number of MC years at the end of which the renewal will be performed (if so required)
 
-    - **Seasonal correlation** ("monthly" or "annual") Indicates whether the spatial correlation matrices to use are defined month by month or if a single annual matrix for the whole year should rather be used (see [Time-series analysis and generation](#6-time-series-analysis-and-generation))
+    - **Seasonal correlation** ("monthly" or "annual") Indicates whether the spatial correlation matrices to use are defined month by month or if a single annual matrix for the whole year should rather be used (see [Time-series analysis and generation](6-time_series_analysis_and_generation.md))
 
     - **Store in input**
         - **Yes** the generated time-series will be stored in the INPUT in replacement of the original ones (wherever they may come from)
@@ -175,7 +175,7 @@ The user may pick any area appearing in the list and is then given access to dif
 
     - The "local data" tab is used to set the parameters of the stochastic generator.
     These parameters are presented in four sub-tabs whose content is presented in
-    [Time-series analysis and generation](#6-time-series-analysis-and-generation).
+    [Time-series analysis and generation](6-time_series_analysis_and_generation.md).
 
     - The "digest" tab displays for all areas a short account of the local data
 
@@ -229,47 +229,47 @@ Durations are expressed in days and rates belong to [0 , 1].
 
 - The "Common" tab is used to define the cluster's techno-economic characteristics :
 
-    - _Name_
-    - _Fuel used_
-    - _Location (Area)_
-    - _Activity status_
+    - Name
+    - Fuel used
+    - Location (Area)
+    - Activity status
         - false: not yet commissioned, moth-balled, etc.
         - true : the plant may generate
-    - _Number of units_
-    - _Nominal capacity_
-    - _Full Must-run status_
+    - Number of units
+    - Nominal capacity
+    - Full Must-run status
         - false: above a partial "must-run level" (that may exist or not, see infra) plants
       will be dispatched on the basis of their market bids.
         - true: plants will generate at their maximum capacity, regardless of market conditions
-    - _Minimum stable power (MW)_
-    - _Minimum Up time (hours)_
-    - _Minimum Down time (hours)_
-    - _Default contribution to the spinning reserve (% of nominal capacity)_
-    - _CO2 tons emitted per electric MWh_
-    - _Marginal operating cost (€/MWh)_
-    - _Volatility (forced): a parameter between 0 and 1, see section [Time-series generation (thermal)](#time-series-generation-thermal)_
-    - _Volatility (planned): a parameter between 0 and 1, see section [Time-series generation (thermal)](#time-series-generation-thermal)_
-    - _Law (forced): Probabilistic law used for the generation of the forced outage time-series, can be set to either uniform or geometric_
-    - _Law (planned): Probabilistic law used for the generation of the planned outage time-series, can be set to either uniform or geometric_
-    - _Generate TS: Parameter to specify the behavior of this cluster for TS generation. **This cluster-wise parameter takes priority over the study-wide one.** It can hold three values:_
-      - _Force generation: TS for this cluster will be generated_
-      - _Force no generation: TS for this cluster will not be generated_
-      - _Use global parameter: Will use the parameter for the study (the one in the [Simulation Window](#simulation))._
-    - _Fixed cost (No-Load heat cost) (€ / hour of operation )_
-    - _Start-up cost (€/start-up)_
-    - _Market bid (€/MWh)_
-    - _Random spread on the market bid (€/MWh)_
-    - _Seasonal marginal cost variations (gas more expensive in winter, ...)_
-    - _Seasonal market bid modulations (assets costs charging strategy )_
-    - _Nominal capacity modulations (seasonal thermodynamic efficiencies, special over-generation allowances, etc.). These modulations are taken into account during the generation of available power time-series_
-    - _Minimal generation commitment (partial must-run level) set for the cluster_
+    - Minimum stable power (MW)
+    - Minimum Up time (hours)
+    - Minimum Down time (hours)
+    - Default contribution to the spinning reserve (% of nominal capacity)
+    - CO2 tons emitted per electric MWh
+    - Marginal operating cost (€/MWh)
+    - Volatility (forced): a parameter between 0 and 1, see section [Time-series generation (thermal)](6-time_series_analysis_and_generation.md#time-series-generation-thermal)
+    - Volatility (planned): a parameter between 0 and 1, see section [Time-series generation (thermal)](6-time_series_analysis_and_generation.md#time-series-generation-thermal)
+    - Law (forced): Probabilistic law used for the generation of the forced outage time-series, can be set to either uniform or geometric
+    - Law (planned): Probabilistic law used for the generation of the planned outage time-series, can be set to either uniform or geometric
+    - Generate TS: Parameter to specify the behavior of this cluster for TS generation. **This cluster-wise parameter takes priority over the study-wide one.** It can hold three values:
+      - Force generation: TS for this cluster will be generated
+      - Force no generation: TS for this cluster will not be generated
+      - Use global parameter: Will use the parameter for the study (the one in the [Simulation Window](#simulation)).
+    - Fixed cost (No-Load heat cost) (€ / hour of operation )
+    - Start-up cost (€/start-up)
+    - Market bid (€/MWh)
+    - Random spread on the market bid (€/MWh)
+    - Seasonal marginal cost variations (gas more expensive in winter, ...)
+    - Seasonal market bid modulations (assets costs charging strategy )
+    - Nominal capacity modulations (seasonal thermodynamic efficiencies, special over-generation allowances, etc.). These modulations are taken into account during the generation of available power time-series
+    - Minimal generation commitment (partial must-run level) set for the cluster
 
     - _Note that:_
 
-        - The **optimal dispatch plan** as well as **locational marginal prices** are based on **market bids**,
+        - _The **optimal dispatch plan** as well as **locational marginal prices** are based on **market bids**,
       while the assessment of the **operating costs** associated with this optimum are based on **cost parameters**.
       (In standard "perfect" market modeling, there is no difference of approaches because market
-      bids are equal to marginal costs)
+      bids are equal to marginal costs)_
 
 ## Hydro
 
@@ -309,18 +309,18 @@ In the main Window, the user may pick any area appearing in the list and is then
       area should have either one single time-series or the same given number (e.g. 25 , 25 , 1 , 25...)_
     
 
-- _The "spatial correlation" tab gives access to an annual inter-area correlation matrix that will be used by the stochastic generator if it is activated. Correlations are expressed in percentages, hence to be valid this matrix must be symmetric, p.s.d, with a main diagonal of 100s and all terms lying between (-100 ,+100)_
+- The "spatial correlation" tab gives access to an annual inter-area correlation matrix that will be used by the stochastic generator if it is activated. Correlations are expressed in percentages, hence to be valid this matrix must be symmetric, p.s.d, with a main diagonal of 100s and all terms lying between (-100 ,+100)
 
 
-- _The "Allocation" tab gives access to an annual inter-area allocation matrix A(i,j) that may be used during a heuristic hydro pre-allocation process, regardless of whether the stochastic time-series generator is used or not. This matrix describes the weights that are given to the loads of areas (i) in the definition of the monthly and weekly hydro storage generation profiles of areas (j). The way this is done in detailed in [Miscellaneous](#miscellaneous)._
+- The "Allocation" tab gives access to an annual inter-area allocation matrix A(i,j) that may be used during a heuristic hydro pre-allocation process, regardless of whether the stochastic time-series generator is used or not. This matrix describes the weights that are given to the loads of areas (i) in the definition of the monthly and weekly hydro storage generation profiles of areas (j). The way this is done in detailed in [Miscellaneous](8-miscellaneous.md).
 
 
-- _The "local data" tab is used to set up the parameters of the stochastic generator_ **AND** _to define techno-economic characteristics of the hydro system that are used in Economy and Adequacy optimizations. For the purpose of versatility (use of the hydro section to model storage facilities quite different in size and nature), this "local tab" is itself divided up into four different subtabs whose list follows and which are further described:_
+- The "local data" tab is used to set up the parameters of the stochastic generator_ **AND** _to define techno-economic characteristics of the hydro system that are used in Economy and Adequacy optimizations. For the purpose of versatility (use of the hydro section to model storage facilities quite different in size and nature), this "local tab" is itself divided up into four different subtabs whose list follows and which are further described:
 
-    - _Inflow Structure_
-    - _Reservoir Levels and water value_
-    - _Daily Power and Energy Credits_
-    - _Management options_
+    - Inflow Structure
+    - Reservoir Levels and water value
+    - Daily Power and Energy Credits
+    - Management options
 
 **Inflow Structure**
 
@@ -389,7 +389,7 @@ It includes 15 parameters (out of which 7 are booleans) presented hereafter:
 
 - "Inter-daily breakdown" and "Inter-monthly breakdown" : parameters used in the assessment, through a 
 heuristic process, of an "ideal" seasonal generation profile, if the use of such a profile is required 
-(the heuristic itself is presented in [Miscellaneous](#miscellaneous))
+(the heuristic itself is presented in [Miscellaneous](8-miscellaneous.md))
 
 - "Intra-daily modulation": parameter which represents, for the storage power, the maximum authorized value for
 the ratio of the daily peak to the average power generated throughout the day. This parameter is meant to allow 
@@ -399,11 +399,12 @@ the day 24 : use of the whole daily energy in one single hour is allowed
 - "Reservoir management" `y|n`: defines whether the storage should be explicitly modeled or not.
 
     Choosing "No" implies that available data allow or require that, regardless of the reservoir characteristics:
-  - The whole amount of STOR energy of each month MUST be used during this month (no long-term storage) 
+    
+	- The whole amount of STOR energy of each month MUST be used during this month (no long-term storage) 
+	
+	- The actual daily generation should follow, during the month, an "ideal" profile defined by the heuristic defined in [Miscellaneous](8-miscellaneous.md)
 
-  - The actual daily generation should follow, during the month, an "ideal" profile defined by the heuristic defined in [Miscellaneous](#miscellaneous)
-
-  Choosing "Yes" implies that available data allow or require explicit modeling of the storage facility,
+ 	Choosing "Yes" implies that available data allow or require explicit modeling of the storage facility,
 regardless of whether a pre-allocation heuristic is used or not.
 
 - "Reservoir capacity": size of the storage facility, in MWh
@@ -465,32 +466,32 @@ The user may pick any area appearing in the list and is then given access to dif
     $$\forall i,\ \forall j,\ {A_{ii} = 100; -100 \le A_{ij} \le 100}; A\ symmetric; A\ positive\ semi\mbox{-}definite$$
     When given invalid matrices, the TS generator emits an infeasibility diagnosis
 
-- The "local data" tab is used to set the parameters of the stochastic generator. These parameters are presented in four subtabs whose content is presented in [Time-series analysis and generation](#6-time-series-analysis-and-generation).
+- The "local data" tab is used to set the parameters of the stochastic generator. These parameters are presented in four subtabs whose content is presented in [Time-series analysis and generation](6-time_series_analysis_and_generation.md).
 
 - The "digest" tab displays for all areas a short account of the local data
 
 
 ## Solar
 
-_This window is used to handle all input data regarding Solar power. Both thermal solar generation and PV solar generation are assumed to be bundled in this data section._ </br>
+This window is used to handle all input data regarding Solar power. Both thermal solar generation and PV solar generation are assumed to be bundled in this data section.  
 _This window is only accessible when the advanced parameter Renewable Generation modeling is set to "aggregated”._
 
-_The user may pick any area appearing in the list and is then given access to different tabs:_
+The user may pick any area appearing in the list and is then given access to different tabs:
 
-- _The "time-series" tab display the "ready-made" 8760-hour time-series available for simulation purposes. These data may come from any origin outside Antares, or be data formerly generated by the Antares time-series stochastic generator, stored as input data on the user's request. Different ways to update data are :_
+- The "time-series" tab display the "ready-made" 8760-hour time-series available for simulation purposes. These data may come from any origin outside Antares, or be data formerly generated by the Antares time-series stochastic generator, stored as input data on the user's request. Different ways to update data are :
 
-    - _direct typing_
-    - _copy/paste a selected field to/from the clipboard_
-    - _load/save all the time-series from/to a file (usually located in the "user" subfolder)_
-    - _Apply different functions (+,-, \*, /,etc.) to the existing (possibly filtered) values (e.g. simulate a 2% growth rate by choosing "multiply-all-by-1.02")_
-    - _Handle the whole (unfiltered) existing dataset to either_
+    - direct typing
+    - copy/paste a selected field to/from the clipboard
+    - load/save all the time-series from/to a file (usually located in the "user" subfolder)
+    - Apply different functions (+,-, \*, /,etc.) to the existing (possibly filtered) values (e.g. simulate a 2% growth rate by choosing "multiply-all-by-1.02")
+    - Handle the whole (unfiltered) existing dataset to either
 
-        - _Change the number of columns (function name: resize)_
-        - _Adjust the values associated with the current first day of the year (function name: shift rows)_
+        - Change the number of columns (function name: resize)
+        - Adjust the values associated with the current first day of the year (function name: shift rows)
 
-    _Versatile "Filter" functions allow quick access to user-specified sections of data (e.g. display only the solar power expected in August at noon, for all time-series)._
+    Versatile "Filter" functions allow quick access to user-specified sections of data (e.g. display only the solar power expected in August at noon, for all time-series).
 
-    _Hourly solar power is expressed in round numbers and in MW. If a smaller unit has to be used, the user should define accordingly ALL the data of the study (size of thermal plants, interconnection capacities, etc.)_
+    Hourly solar power is expressed in round numbers and in MW. If a smaller unit has to be used, the user should define accordingly ALL the data of the study (size of thermal plants, interconnection capacities, etc.)
 
     - _Note that:_
 
@@ -498,41 +499,40 @@ _The user may pick any area appearing in the list and is then given access to di
 
         - _If the "intra-modal correlated draws" option was selected in the_ **simulation** _window, every area should have either one single time-series or the same given number (e.g. 25 , 25 , 1 , 25...)_
 
-- _The "spatial correlation" tab gives access to the inter-area correlation matrices that will be used by the stochastic generator if it is activated. Different sub-tabs are available for the definition of 12 monthly correlation matrices and of an overall annual correlation matrix._
+- The "spatial correlation" tab gives access to the inter-area correlation matrices that will be used by the stochastic generator if it is activated. Different sub-tabs are available for the definition of 12 monthly correlation matrices and of an overall annual correlation matrix.
 
     A matrix A must meet three conditions to be a valid correlation matrix:
 
   $$\forall i,\ \forall j,\ {A_{ii} = 100; -100 \le A_{ij} \le 100}; A\ symmetric; A\ positive\ semi\mbox{-}definite$$
-
     When given invalid matrices, the TS generator emits an infeasibility diagnosis
 
 
-- _The "local data" tab is used to set the parameters of the stochastic generator. These parameters are presented in four subtabs whose content is presented in [Time-series analysis and generation](#6-time-series-analysis-and-generation).
+- The "local data" tab is used to set the parameters of the stochastic generator. These parameters are presented in four subtabs whose content is presented in [Time-series analysis and generation](6-time_series_analysis_and_generation.md).
 
-- _The "digest" tab displays for all areas a short account of the local data_
+- The "digest" tab displays for all areas a short account of the local data
 
 
 ## Renewable
 
-_This window is used to handle all input data regarding renewable generation._ </br>
+This window is used to handle all input data regarding renewable generation.  
 _This window is only accessible when the advanced parameter Renewable Generation modeling is set to "cluster” (default value)._
 
-_The user may pick any area appearing in the area list and is then given access to the list of renewable clusters defined for the area (e.g. "Onshore Wind Farm 200MW", "Solar Rooftop 50MW", etc.). Once a given cluster has been selected, a choice can be made between different tabs:_
+The user may pick any area appearing in the area list and is then given access to the list of renewable clusters defined for the area (e.g. "Onshore Wind Farm 200MW", "Solar Rooftop 50MW", etc.). Once a given cluster has been selected, a choice can be made between different tabs:
 
-- _The "time-series" tab displays the "ready-made" 8760-hour time-series available for simulation purposes. These data may come from any origin outside Antares, or be data formerly generated by the Antares time-series stochastic generator, stored as input data on the user's request. Different ways to update data are :_
+- The "time-series" tab displays the "ready-made" 8760-hour time-series available for simulation purposes. These data may come from any origin outside Antares, or be data formerly generated by the Antares time-series stochastic generator, stored as input data on the user's request. Different ways to update data are :
 
-    - _direct typing_
-    - _copy/paste a selected field to/from the clipboard_
-    - _load/save all the time-series from/to a file (usually located in the "user" subfolder)_
-    - _Apply different functions (+,-, \*, /,etc.) to the existing (possibly filtered) values (e.g. simulate a 2% growth rate by choosing "multiply-all-by-1.02")_
-    - _Handle the whole (unfiltered) existing dataset to either_
+    - direct typing
+    - copy/paste a selected field to/from the clipboard
+    - load/save all the time-series from/to a file (usually located in the "user" subfolder)
+    - Apply different functions (+,-, \*, /,etc.) to the existing (possibly filtered) values (e.g. simulate a 2% growth rate by choosing "multiply-all-by-1.02")
+    - Handle the whole (unfiltered) existing dataset to either
 
-        - _Change the number of columns (function name: resize)_
-        - _Adjust the values associated with the current first day of the year (function name: shift rows)_
+        - Change the number of columns (function name: resize)
+        - Adjust the values associated with the current first day of the year (function name: shift rows)
 
-  _Versatile "Filter" functions allow quick access to user-specified sections of data (e.g. display only the generation expected on Sundays at midnight, for all time-series)._
+ 	Versatile "Filter" functions allow quick access to user-specified sections of data (e.g. display only the generation expected on Sundays at midnight, for all time-series).
 
-  _Hourly thermal generation is expressed in round numbers and in MW. If a smaller unit has to be used, the user should define accordingly ALL the data of the study (Wind generation, interconnection capacities, load, hydro generation, solar, etc.)_
+	Hourly thermal generation is expressed in round numbers and in MW. If a smaller unit has to be used, the user should define accordingly ALL the data of the study (Wind generation, interconnection capacities, load, hydro generation, solar, etc.)
 
     - _Note that:_
 
@@ -541,158 +541,164 @@ _The user may pick any area appearing in the area list and is then given access 
         - _If the "intra-modal correlated draws" option has been selected in the_ **simulation** _window, every area should have either one single time-series or the same given number (e.g. 25, 25, 1, 25, etc.). Note that, unlike the other time-series (load, hydro, etc.), which depend on meteorological conditions and are therefore inter-area-correlated, the thermal plants time-series should usually be considered as uncorrelated. Using the "correlated draws" feature makes sense only in the event of having to play predefined scenarios (outside regular MC scope)_
 
 
-- _The "TS generator" tab is not accessible for this version._
+- The "TS generator" tab is not accessible for this version.
 
 
-- _The "Common" tab is used to define the cluster's techno-economic characteristics :_
+- The "Common" tab is used to define the cluster's techno-economic characteristics :
 
-    - _Name_
-    - _Group: The group can be any one of the following: Wind Onshore, Wind Offshore, Solar Thermal, Solar PV, Solar Rooftop, Other RES 1, Other RES 2, Other RES 3, or Other RES 4. If not specified, the renewable cluster will be part of the group Other RES 1._
-    - _Location (Area)_
-    - _Timeseries mode:_
-        - _Power generation means that the unit of the timeseries is in MW_
-        - _Production factor means that the unit of the timeseries is in p.u. (between 0 and 1, 1 meaning the full installed capacity)_
-    - _Activity status_
-        - _false: not yet commissioned, moth-balled, etc._
-        - _true: the cluster may generate_
-    - _Number of units_
-    - _Nominal capacity (in MW per unit)_
+    - Name
+    - Group: The group can be any one of the following: Wind Onshore, Wind Offshore, Solar Thermal, Solar PV, Solar Rooftop, Other RES 1, Other RES 2, Other RES 3, or Other RES 4. If not specified, the renewable cluster will be part of the group Other RES 1.
+    - Location (Area)
+    - Timeseries mode:
+        - Power generation means that the unit of the timeseries is in MW
+        - Production factor means that the unit of the timeseries is in p.u. (between 0 and 1, 1 meaning the full installed capacity)
+    - Activity status
+        - false: not yet commissioned, moth-balled, etc.
+        - true: the cluster may generate
+    - Number of units
+    - Nominal capacity (in MW per unit)
 
 
 ## Misc. Gen.
 
-_This window is used to handle all input data regarding miscellaneous non dispatchable generation._
+This window is used to handle all input data regarding miscellaneous non dispatchable generation.
 
-_On picking any area in the primary list, the user gets direct access to all data regarding the area, which amount to_ **8** _ready-made 8760-hour time-series (expressed in MW):_
+On picking any area in the primary list, the user gets direct access to all data regarding the area, which amount to **8** ready-made 8760-hour time-series (expressed in MW):
 
-- _CHP generation_
+- CHP generation
 
-- _Bio Mass generation_
+- Bio Mass generation
 
-- _Bio-gas generation_
+- Bio-gas generation
 
-- _Waste generation_
+- Waste generation
 
-- _Geothermal generation_
+- Geothermal generation
 
-- _Any other kind of non-dispatchable generation_
+- Any other kind of non-dispatchable generation
 
-- _A predefined time-series for the operation of Pumped Storage Power plants, if they are not explicitly modeled. A positive value is considered as an output (generating) to the grid, a negative value is an input (pumping) to the station._
+- A predefined time-series for the operation of Pumped Storage Power plants, if they are not explicitly modeled. A positive value is considered as an output (generating) to the grid, a negative value is an input (pumping) to the station.
 
-  _Note that the sum of the 8760 values must be negative, since the pumping to generating efficiency is lower than 1. The user may also use only the negative values (prescribed pumping), while transferring at the same time the matching generating credit on the regular hydro storage energy credit._
+  Note that the sum of the 8760 values must be negative, since the pumping to generating efficiency is lower than 1. The user may also use only the negative values (prescribed pumping), while transferring at the same time the matching generating credit on the regular hydro storage energy credit.
 
-- _ROW balance: the balance with the rest of the world. A negative value is an export to ROW, a positive value is an import from ROW. These values acts as boundary conditions for the model. Different ways to update data are:_
+- ROW balance: the balance with the rest of the world. A negative value is an export to ROW, a positive value is an import from ROW. These values acts as boundary conditions for the model. Different ways to update data are:
 
-    - _direct typing_
-    - _copy/paste a selected field to/from the clipboard_
-    - _load/save all the time-series from/to a file (usually located in the "user" subfolder)_
-    - _Apply different functions (+,-, \*, /,etc.) to the existing (possibly filtered) values (e.g. simulate a 2% growth rate by choosing "multiply-all-by-1.02")_
-    - _Handle the whole (unfiltered) existing dataset to either_
+    - direct typing
+    - copy/paste a selected field to/from the clipboard
+    - load/save all the time-series from/to a file (usually located in the "user" subfolder)
+    - Apply different functions (+,-, \*, /,etc.) to the existing (possibly filtered) values (e.g. simulate a 2% growth rate by choosing "multiply-all-by-1.02")
+    - Handle the whole (unfiltered) existing dataset to either
 
-        - _Change the number of columns (function name: resize)_
-        - _Adjust the values associated with the current first day of the year (function name: shift rows)_
+        - Change the number of columns (function name: resize)
+        - Adjust the values associated with the current first day of the year (function name: shift rows)
 
 ## Reserves / DSM
 
-_This window is used to handle all input data regarding reserves and the potential of "smart" load management (when not modeled using "fake" thermal dispatchable plants). On picking any area in the primary list, the user gets direct access to all data regarding the area, which amount to_ **four** _ready-made 8760-hour time-series (expressed in MW). The first two are used only in "draft" simulations, while the last two are available in either "adequacy" or "economy" simulations:_
+This window is used to handle all input data regarding reserves and the potential of "smart" load management (when not modeled using "fake" thermal dispatchable plants). On picking any area in the primary list, the user gets direct access to all data regarding the area, which amount to **four** ready-made 8760-hour time-series (expressed in MW). The first two are used only in "draft" simulations, while the last two are available in either "adequacy" or "economy" simulations:
 
-- _Primary reserve: must be provided whatever the circumstances, even at the price of some unsupplied energy (Draft simulations only)_
+- Primary reserve: must be provided whatever the circumstances, even at the price of some unsupplied energy (Draft simulations only)
 
-- _Strategic reserve: sets a limit on the backup power that an area is supposed to be able to export to its neighbors. This reserve may represent an actual generation reserve, an energy constraint too complex to model by standard means (e.g. energy policy regarding special reservoirs) or can also be justified by simplifications made in grid modeling. (Draft simulations only)._
+- Strategic reserve: sets a limit on the backup power that an area is supposed to be able to export to its neighbors. This reserve may represent an actual generation reserve, an energy constraint too complex to model by standard means (e.g. energy policy regarding special reservoirs) or can also be justified by simplifications made in grid modeling. (Draft simulations only).
 
-- _Day-ahead reserve: power accounted for in setting up the optimal unit-commitment and schedule of the following day(s), which must consider possible forecasting errors or last-minute incidents. If the optimization range is of one day, the reserve will be actually seen as "day-ahead". If the optimization range is of one week, the need for reserve will be interpreted as "week-ahead". (Adequacy and Economy simulations)_
+- Day-ahead reserve: power accounted for in setting up the optimal unit-commitment and schedule of the following day(s), which must consider possible forecasting errors or last-minute incidents. If the optimization range is of one day, the reserve will be actually seen as "day-ahead". If the optimization range is of one week, the need for reserve will be interpreted as "week-ahead". (Adequacy and Economy simulations)
 
-- _DSM: power (decrease or increase) to add to the load. A negative value is a load decrease, a positive value is a load increase. Note that an efficient demand side management scheme may result in a negative overall sum (All simulation modes)._
+- DSM: power (decrease or increase) to add to the load. A negative value is a load decrease, a positive value is a load increase. Note that an efficient demand side management scheme may result in a negative overall sum (All simulation modes).
 
 ## Links
 
-_This window is used to handle all input data regarding the interconnections. On picking any interconnection in the primary list, the user gets direct access to all data regarding the link, which are five annual parameters and a set of eight ready-made 8760-hour time-series_
+This window is used to handle all input data regarding the interconnections. On picking any interconnection in the primary list, the user gets direct access to all data regarding the link, which are five annual parameters and a set of eight ready-made 8760-hour time-series
 
-_The five parameters, used in economy or adequacy simulations (not in draft), are namely:_
+The five parameters, used in economy or adequacy simulations (not in draft), are namely:
 
-- "_Hurdle cost": set by the user to state whether (linear) transmission fees should be taken into account or not in economy and adequacy simulations_
-- "_Transmission capacities": set by the user to state whether the capacities to consider are those indicated in 8760-hour arrays or if zero or infinite values should be used instead (actual values / set to zero / set to infinite)_
-- "_Asset type": set by the user to state whether the link is either an AC component (subject to Kirchhoff's laws), a DC component, or another type of asset_
-- "_Account for loop flows": set by the KCG [^9] to include (or not) passive loop flows in the formulation of the constraints enforcing Kirchhoff's laws_
-- "_Account for PST": set by the KCG to include (or not) the settings of phase-shifting transformers in the formulation of the constraints enforcing Kirchhoff's laws_
+- "Hurdle cost": set by the user to state whether (linear) transmission fees should be taken into account or not in economy and adequacy simulations
+- "Transmission capacities": set by the user to state whether the capacities to consider are those indicated in 8760-hour arrays or if zero or infinite values should be used instead (actual values / set to zero / set to infinite)
+- "Asset type": set by the user to state whether the link is either an AC component (subject to Kirchhoff's laws), a DC component, or another type of asset
+- "Account for loop flows": set by the KCG [^9] to include (or not) passive loop flows in the formulation of the constraints enforcing Kirchhoff's laws
+- "Account for PST": set by the KCG to include (or not) the settings of phase-shifting transformers in the formulation of the constraints enforcing Kirchhoff's laws
 
-_The eight 8760-hour times-series are:_
+The eight 8760-hour times-series are:
 
-- _NTC direct: the upstream-to-downstream capacity, in MW_
+- NTC direct: the upstream-to-downstream capacity, in MW
 
-- _NTC indirect: the downstream-to-upstream capacity, in MW_
+- NTC indirect: the downstream-to-upstream capacity, in MW
 
-- _Hurdle cost direct: an upstream-to-downstream transmission fee, in €/MWh_
+- Hurdle cost direct: an upstream-to-downstream transmission fee, in €/MWh
 
-- _Hurdle cost indirect: a downstream-to-upstream transmission fee, in €/MWh_
+- Hurdle cost indirect: a downstream-to-upstream transmission fee, in €/MWh
 
-- _Impedance: used in economy simulations to give a physical meaning to raw outputs, when no binding constraints have been defined to enforce Kirchhoff's laws (see "Output" section, variable "Flow Quad") OR used by the Kirchhoff's constraint generator to build up proper flow constraints (AC flow computed with the classical "DC approximation"). Since voltage levels are not explicitly defined and handled within Antares, all impedances are assumed to be scaled to some reference_ $$U_{ref}$$
+- Impedance: used in economy simulations to give a physical meaning to raw outputs, when no binding constraints have been defined to enforce Kirchhoff's laws (see "Output" section, variable "Flow Quad") OR used by the Kirchhoff's constraint generator to build up proper flow constraints (AC flow computed with the classical "DC approximation"). Since voltage levels are not explicitly defined and handled within Antares, all impedances are assumed to be scaled to some reference $$U_{ref}$$
 
-- _Loop flow: amount of power flowing circularly though the grid when all "nodes" are perfectly balanced (no import and no export). Such loop flows may be expected on any "simplified" grid in which large regions (or even countries) are modeled by a small number of "macro" nodes, and should accordingly be accounted for._
+- Loop flow: amount of power flowing circularly though the grid when all "nodes" are perfectly balanced (no import and no export). Such loop flows may be expected on any "simplified" grid in which large regions (or even countries) are modeled by a small number of "macro" nodes, and should accordingly be accounted for.
 
-- _PST min (denoted \\(Y^-\\) in [Kirchhoff Constraints Generator](#kirchhoff-constraints-generator)): lower bound of phase-shifting that can be reached by a PST installed on the link, if any (note : the effect of the active loop flow generated by the PST may be superimposed to that of the passive loop flow)_
+- PST min (denoted \\(Y^-\\) in [Kirchhoff Constraints Generator](7-kirchhoffs_constraints_generator.md)): lower bound of phase-shifting that can be reached by a PST installed on the link, if any (note : the effect of the active loop flow generated by the PST may be superimposed to that of the passive loop flow)
 
-- _PST max (denoted \\(Y^+\\) in [Kirchhoff Constraints Generator](#kirchhoff-constraints-generator)): upper bound of phase-shifting that can be reached by a PST installed on the link, if any (note : the effect of the active loop flow generated by the PST may be superimposed to that of the passive loop flow)_
+- PST max (denoted \\(Y^+\\) in [Kirchhoff Constraints Generator](7-kirchhoffs_constraints_generator.md)): upper bound of phase-shifting that can be reached by a PST installed on the link, if any (note : the effect of the active loop flow generated by the PST may be superimposed to that of the passive loop flow)
 
-_For the sake of simplicity and homogeneity with the convention used for impedance, PST settings are assumed to be expressed in_ $$rad/U^2_{ref}$$
+For the sake of simplicity and homogeneity with the convention used for impedance, PST settings are assumed to be expressed in $$rad/U^2_{ref}$$
 
 ## Binding constraints
 
-_This section of the GUI is used to handle all data regarding special constraints that one may wish to include in the formulation of the optimization problems to solve._
+This section of the GUI is used to handle all data regarding special constraints that one may wish to include in the formulation of the optimization problems to solve.
 
-_The set of tabs described hereafter provides for that purpose all the means required to define arbitrary linear constraints on any subset of continuous variables involved in the modeling of the power system._
+The set of tabs described hereafter provides for that purpose all the means required to define arbitrary linear constraints on any subset of continuous variables involved in the modeling of the power system.
 
-_Since no limitation is set on the number and content of the constraints that may be defined that way, it is the user's sole responsibility to make sure that these so-called "binding constraints" are realistic and meaningful, be it from a technical or economic standpoint._
+Since no limitation is set on the number and content of the constraints that may be defined that way, it is the user's sole responsibility to make sure that these so-called "binding constraints" are realistic and meaningful, be it from a technical or economic standpoint.
 
-_A typical situation in which this feature proves useful is, for instance, encountered when data at hand regarding the grid include an estimate of the impedances of the interconnections._
+A typical situation in which this feature proves useful is, for instance, encountered when data at hand regarding the grid include an estimate of the impedances of the interconnections.
 
-_In such cases, assuming that:_
+In such cases, assuming that:
 
 - \\(Z_l\\) denotes the impedance of interconnections \\(l=1, L\\)
-- _A preliminary study of the graph modeling the grid has shown that it can be described by a set of independent meshes_ \\(c=1, C\\)_(cycle basis of the graph)_
+- A preliminary study of the graph modeling the grid has shown that it can be described by a set of independent meshes \\(c=1, C\\)(cycle basis of the graph)
 
-_Then the DC flow approximation may be implemented, for each time-step of the simulation, by a set of C binding constraints between AC flows \\(F_l\\):_
+Then the DC flow approximation may be implemented, for each time-step of the simulation, by a set of C binding constraints between AC flows \\(F_l\\):
 
 $$ c= 1, ..., C : \sum_{i \in C}{sign(l,c)F_lZ_l = 0}$$
 
-_Note that such specific binding constraints can be automatically generated within Antares by using the auxiliary module "Kirchhoff's Constraints Generator" further described in [Kirchhoff Constraints Generator](#kirchhoff-constraints-generator)._
+_Note that such specific binding constraints can be automatically generated within Antares by using the auxiliary module "Kirchhoff's Constraints Generator" further described in [Kirchhoff Constraints Generator](7-kirchhoffs_constraints_generator.md)._
 
-_Aside from such sets of constraints, which may help to give realistic geographic patterns to the flows, completely different sets of constraints may be also defined, such as those set up by the market organization, which may define precise perimeters for valid commercial flows [^10]._
+Aside from such sets of constraints, which may help to give realistic geographic patterns to the flows, completely different sets of constraints may be also defined, such as those set up by the market organization, which may define precise perimeters for valid commercial flows [^10].
 
-_More generally, Antares allows to define three categories of binding constraints between transmission flows and/or power generated from generating units:_
+More generally, Antares allows to define three categories of binding constraints between transmission flows and/or power generated from generating units:
 
-- "_hourly" binding constraints, which are applied to instant power (transmitted and/or generated)_
+- "hourly" binding constraints, which are applied to instant power (transmitted and/or generated)
 
-- "_daily" binding constraints, that are applied to daily energies. This class makes more sense for commercial modeling (say: imports and exports from/to such and such area should be comprised between such and such lower bound and upper bound). Daily binding constraints are also commonly used to model specific facilities, such as pumped storage units operated on a daily cycle_
+- "daily" binding constraints, that are applied to daily energies. This class makes more sense for commercial modeling (say: imports and exports from/to such and such area should be comprised between such and such lower bound and upper bound). Daily binding constraints are also commonly used to model specific facilities, such as pumped storage units operated on a daily cycle
 
-- "_weekly" binding constraints, that are applied to weekly energies. Like the previous ones, these constraints may be used to model commercial contracts or various phenomena, such as the operation of a pumped storage power plant operated on a weekly cycle._
+- "weekly" binding constraints, that are applied to weekly energies. Like the previous ones, these constraints may be used to model commercial contracts or various phenomena, such as the operation of a pumped storage power plant operated on a weekly cycle.
 
-_The Binding Constraints section of the GUI involves six main tabs described hereafter:_
+The Binding Constraints section of the GUI involves six main tabs described hereafter:
 
-- **TAB "summary"** _Creation, edition or removal of a binding constraint. A binding constraint is here defined by four macroscopic attributes that can be set by the edit command:_
+- **TAB "summary"**  
+Creation, edition or removal of a binding constraint. A binding constraint is here defined by four macroscopic attributes that can be set by the edit command:
 
-    - _Name (caption)_
-    - _Time-range (hourly, daily, weekly)_
-    - _Numerical type (equality, bounded above, below, on both sides)_
-    - _Status (active /enabled or inactive/disabled)_
+    - Name (caption)
+    - Time-range (hourly, daily, weekly)
+    - Numerical type (equality, bounded above, below, on both sides)
+    - Status (active /enabled or inactive/disabled)
 
-- **TAB "weights"** _Definition of the coefficients given to each flow variable or generation variable in the formulation of the constraints. Two sub-tabs make it possible to handle the coefficients associated with transmission assets (links) and those associated with generation assets (thermal clusters). In both cases:_
+- **TAB "weights"**  
+Definition of the coefficients given to each flow variable or generation variable in the formulation of the constraints. Two sub-tabs make it possible to handle the coefficients associated with transmission assets (links) and those associated with generation assets (thermal clusters). In both cases:
 
-    - _The lines of the tables show only the components (links or clusters) that are visible on the current map_
-    - _The columns of the tables show only the constraints that do not have non-zero weights attached to components that are nor visible on the current map_
+    - The lines of the tables show only the components (links or clusters) that are visible on the current map
+    - The columns of the tables show only the constraints that do not have non-zero weights attached to components that are nor visible on the current map
 
-- **TAB "offsets"** _Definition of the time-lag (in hours) assigned to each flow variable or generation variable in the formulation of the constraints. Two sub-tabs make it possible to handle the offsets associated with transmission assets (links) and those associated with generation assets (thermal clusters). In both cases:_
+- **TAB "offsets"**  
+Definition of the time-lag (in hours) assigned to each flow variable or generation variable in the formulation of the constraints. Two sub-tabs make it possible to handle the offsets associated with transmission assets (links) and those associated with generation assets (thermal clusters). In both cases:
 
-    - _The lines of the tables show only the components (links or clusters) that are visible on the current map_
-    - _The columns of the tables show only the constraints that do not have non-zero weights attached to components that are nor visible on the current map_
+    - The lines of the tables show only the components (links or clusters) that are visible on the current map
+    - The columns of the tables show only the constraints that do not have non-zero weights attached to components that are nor visible on the current map
 
-- **TAB "="** _Definition of the right-hand side of equality constraints. This RHS has either 8760 values (hourly constraints) or 365 values (daily or weekly constraints). Depending on the range actually chosen for the simplex optimization (see section_ **Configure** _of the main menu), the weekly constraints RHS will either be represented by the sum of seven daily terms or by a set of seven daily terms (weekly constraint downgraded to daily status)._
+- **TAB "="**  
+Definition of the right-hand side of equality constraints. This RHS has either 8760 values (hourly constraints) or 365 values (daily or weekly constraints). Depending on the range actually chosen for the simplex optimization (see section **Configure** of the main menu), the weekly constraints RHS will either be represented by the sum of seven daily terms or by a set of seven daily terms (weekly constraint downgraded to daily status).
 
-- **TAB "&gt;"** _Definition of the right-hand side of "bounded below" and "bounded on both sides" inequality constraints. This RHS has either 8760 values (hourly constraints) or 365 values (daily or weekly constraints). Depending on the range actually chosen for the simplex optimization (see section_ **Configure** _of the main menu), the weekly constraints RHS will either be represented by the sum of seven daily terms or by a set of seven daily terms (weekly constraint downgraded to daily status)._
+- **TAB "&gt;"**  
+Definition of the right-hand side of "bounded below" and "bounded on both sides" inequality constraints. This RHS has either 8760 values (hourly constraints) or 365 values (daily or weekly constraints). Depending on the range actually chosen for the simplex optimization (see section **Configure** of the main menu), the weekly constraints RHS will either be represented by the sum of seven daily terms or by a set of seven daily terms (weekly constraint downgraded to daily status).
 
-- **TAB "&lt;"** _Definition of the right-hand side of "bounded above" and "bounded on both sides" inequality constraints. This RHS has either 8760 values (hourly constraints) or 365 values (daily or weekly constraints). Depending on the range actually chosen for the simplex optimization (see section_ **Configure** _of the main menu), the weekly constraints RHS will either be represented by the sum of seven daily terms or by a set of seven daily terms (weekly constraint downgraded to daily status)._
+- **TAB "&lt;"**  
+Definition of the right-hand side of "bounded above" and "bounded on both sides" inequality constraints. This RHS has either 8760 values (hourly constraints) or 365 values (daily or weekly constraints). Depending on the range actually chosen for the simplex optimization (see section **Configure** of the main menu), the weekly constraints RHS will either be represented by the sum of seven daily terms or by a set of seven daily terms (weekly constraint downgraded to daily status).
 
-_When defining binding constraints between (hourly) power, daily or weekly (energy) flows, special attention should be paid to potential conflicts between them or with the "basic" problem constraints. Lack of caution may result in situations for which the optimization has no solution. Consider for instance a case in which three variables X1, X2, X3 (whatever they physical meaning) are involved in the following binding constraints:_
+When defining binding constraints between (hourly) power, daily or weekly (energy) flows, special attention should be paid to potential conflicts between them or with the "basic" problem constraints. Lack of caution may result in situations for which the optimization has no solution. Consider for instance a case in which three variables X1, X2, X3 (whatever they physical meaning) are involved in the following binding constraints:
 
 $$X1 + X2 > 5$$
 
@@ -702,7 +708,7 @@ $$X3 > 0$$
 
 $$X1 + X3 < 7$$
 
-_These commitments are obviously impossible to meet and, if the economic simulator is run on a dataset including such a set of constraints, it will produce an infeasibility analysis that looks like the following._
+These commitments are obviously impossible to meet and, if the economic simulator is run on a dataset including such a set of constraints, it will produce an infeasibility analysis that looks like the following.
 ```
 [solver][notic]  Solver: Starting infeasibility analysis...
 [solver][error] The following constraints are suspicious (first = most suspicious)
@@ -720,28 +726,28 @@ _These commitments are obviously impossible to meet and, if the economic simulat
 
 This report should help you identify constraints that generate infeasible linear optimization problems such what is presented above.
 
-_The advanced preference "Unfeasible Problems Behavior" gives to the user the ability to choose between four different strategies regarding these situations._
+The advanced preference "Unfeasible Problems Behavior" gives to the user the ability to choose between four different strategies regarding these situations.
 
 ## Economic Opt.
 
-_This window is used to set the value of a number of area-related parameters that, aside from the costs of each generating plant, define the optimal solution that Antares has to find in economic simulations. These parameters are namely, for each area of the system:_
+This window is used to set the value of a number of area-related parameters that, aside from the costs of each generating plant, define the optimal solution that Antares has to find in economic simulations. These parameters are namely, for each area of the system:
 
-- _The value of the unsupplied energy (also commonly denoted Value Of Lost Load,VOLL) , in €/MWh. This value should usually be set much higher than the cost of the most expensive generating plant of the area_
+- The value of the unsupplied energy (also commonly denoted Value Of Lost Load,VOLL) , in €/MWh. This value should usually be set much higher than the cost of the most expensive generating plant of the area
 
-- _The random spread within which the nominal unsupplied energy value is assumed to vary_
+- The random spread within which the nominal unsupplied energy value is assumed to vary
 
-- _The value of the spilled energy, in € /MWh. This value reflects the specific penalty that should be added to the economic function for each wasted MWh, if any. Note that even if this value is set to zero no energy will be shed needlessly_
+- The value of the spilled energy, in € /MWh. This value reflects the specific penalty that should be added to the economic function for each wasted MWh, if any. Note that even if this value is set to zero no energy will be shed needlessly
 
-- _The random spread within which the nominal unsupplied energy value is assumed to vary_
+- The random spread within which the nominal unsupplied energy value is assumed to vary
 
-- _Three parameters named "shedding status" and related to different kinds of generation. If the system cannot be balanced without shedding some generation, these parameters give control on how each kind of generation ("Non dispatchable power","Dispatchable hydropower" and "Other dispatchable generating plants") should contribute to the shedding. Depending on the value chosen for the status, the generation can or cannot be shed to find a solution to the load/generation balance problem. Note that enforcing a negative status for all types of plants may lead to simulations scenarios for which there are no mathematical solutions._
+- Three parameters named "shedding status" and related to different kinds of generation. If the system cannot be balanced without shedding some generation, these parameters give control on how each kind of generation ("Non dispatchable power","Dispatchable hydropower" and "Other dispatchable generating plants") should contribute to the shedding. Depending on the value chosen for the status, the generation can or cannot be shed to find a solution to the load/generation balance problem. Note that enforcing a negative status for all types of plants may lead to simulations scenarios for which there are no mathematical solutions.
 
-_On running the economic simulator, such situations produce an infeasibility diagnosis._
+On running the economic simulator, such situations produce an infeasibility diagnosis.
 
 
 ## Miscellaneous
 
-_In all previous windows showing Input data, the content can be filtered so as to reflect only items that are associated with Areas and Links defined as "visible" in a particular map. In that regard, binding constraints are considered as visible if and only if all of their non-zero weight associated objects are visible on the map._
+In all previous windows showing Input data, the content can be filtered so as to reflect only items that are associated with Areas and Links defined as "visible" in a particular map. In that regard, binding constraints are considered as visible if and only if all of their non-zero weight associated objects are visible on the map.
 
 
 [^5]: "Economy" simulations make a full use of Antares optimization capabilities. They require economic as well as technical input data and may demand a lot of computer resources. "Adequacy" simulations are faster and require only technical input data. Their results are limited to adequacy indicators. "Draft" simulations are highly simplified adequacy simulations, in which binding constraints (e.g. DC flow rules) are ignored, while hydro storage is assumed to be able to provide its nominal maximum power whenever needed. As a consequence, draft simulations are biased towards optimism. They are, however, much faster than adequacy and economic simulations.

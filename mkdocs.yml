@@ -37,7 +37,7 @@ nav:
     - 'Active windows': 'reference-guide/4-active_windows.md'
     - 'Output files': 'reference-guide/5-output_files.md'
     - 'Time-Series analysis and generation': 'reference-guide/6-time_series_analysis_and_generation.md'
-    - 'Kirchhoff constraint generator': 'reference-guide/7-kirchhoffs_constraint_generator.md'
+    - 'Kirchhoff''s constraint generator': 'reference-guide/7-kirchhoffs_constraint_generator.md'
     - 'Miscellaneous': 'reference-guide/8-miscellaneous.md'
     - 'System requirements': 'reference-guide/9-system_requirements.md'
     - 'Command line': 'reference-guide/10-command_line.md'
