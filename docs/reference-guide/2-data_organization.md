@@ -2,7 +2,7 @@
 
 In Antares, all input and output data regarding a given study are located within a folder named after the study
 and which should preferably be stored within a dedicated library of studies
-(for instance: `C/.../A\_name\_for\_an\_Antares\_lib/Study-number-one`).
+(for instance: `C/.../A_name_for_an_Antares_lib/Study-number-one`).
 
 The software has been designed so that all input data may be handled (initialized, updated, deleted) through
 the simulator's GUI. Likewise, all results in the output data can be displayed and analyzed within the simulator:
@@ -49,7 +49,7 @@ study or anywhere else (for instance, on a remote "historical data" or "Meteorol
 
 3. The study folder contains a specific subfolder named "user", whose status is particular: Antares is not allowed
 to delete any files within it (yet files may be updated on the user's requirement). As a consequence,
-the "user" subfolder is unaffected by the "clean study" command (see [Commands](#commands)).
+the "user" subfolder is unaffected by the "clean study" command (see [Commands](3-commands.md)).
 This subfolder is therefore a
 "private" user space, where all kinds of information can be stored without any kind of interference with Antares.
 Note that on using the "save as" command (described further below), the choice is given to make or not a copy of
@@ -74,6 +74,4 @@ be accessed to be reviewed, updated and deleted at any time through the GUI.
 
 
 [^3]:
-    Many various graphic extensions (under the form of programs written in the R language) are available at :
-
-[https://cran.r-project.org/web/packages/antaresViz/index.html](https://cran.r-project.org/web/packages/antaresViz/index.html)
+    Many various graphic extensions (under the form of programs written in the R language) are available at: [https://cran.r-project.org/web/packages/antaresViz/index.html](https://cran.r-project.org/web/packages/antaresViz/index.html)

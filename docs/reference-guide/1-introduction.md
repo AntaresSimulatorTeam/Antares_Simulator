@@ -38,17 +38,17 @@ These steps most often involve:
 2. GUI session dedicated to the definition of simulation contexts
 (definition of the number and consistency of the "Monte-Carlo years" to simulate)
 
-3. Simulation session producing actual numeric scenarios following the directives defined in (b)
+3. Simulation session producing actual numeric scenarios following the directives defined in (2)
 
 4. Optimization session aiming at solving all the optimization problems associated with
-each of the scenarios produced in (c)
+each of the scenarios produced in (3)
 
-5. GUI session dedicated to the exploitation of the detailed results yielded by (d)
+5. GUI session dedicated to the exploitation of the detailed results yielded by (4)
 
 The scope of this document is to give a detailed description of the software involved in
 step (1) to (5) mostly based on a functional approach, leaving thereby aside a significant
 part of the mathematical content involved in several of these steps.
-[^2] The following picture gives a functional view of all that is involved in steps (a) to (e).
+[^2] The following picture gives a functional view of all that is involved in steps (1) to (5).
 
 ![Antares_Process](Antares_Process.png)
 
