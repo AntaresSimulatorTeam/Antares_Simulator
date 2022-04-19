@@ -116,14 +116,12 @@ public:
     */
     bool normalizeAndCheckNPO();
 
-private:
-    std::shared_ptr<const ThermalCluster> itsThermalCluster = nullptr;
-
-public:
     //! All {FO,PO}{Duration,Rate} annual values
     // max x DAYS_PER_YEAR
     Matrix<> data;
 
+private:
+    std::shared_ptr<const ThermalCluster> itsThermalCluster = nullptr;
 }; // class PreproThermal
 
 } // namespace Data
