@@ -30,6 +30,7 @@
 #include "../../../array/matrix.h"
 #include "defines.h"
 #include "../../fwd.h"
+#include <memory>
 
 namespace Antares
 {
@@ -65,7 +66,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    PreproThermal(ThermalCluster* thermalCluster);
+    PreproThermal(std::shared_ptr<const ThermalCluster> cluster);
     //@}
 
     bool invalidate(bool reload) const;
@@ -116,7 +117,7 @@ public:
     */
     bool normalizeAndCheckNPO();
 private:
-    ThermalCluster* itsThermalCluster = nullptr;
+    std::shared_ptr<const ThermalCluster> itsThermalCluster = nullptr;
 
 public:
     //! All {FO,PO}{Duration,Rate} annual values

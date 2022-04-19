@@ -43,12 +43,13 @@ namespace Antares
 {
 namespace Data
 {
-PreproThermal::PreproThermal(ThermalCluster* thermalCluster) : itsThermalCluster(thermalCluster)
+PreproThermal::PreproThermal(std::shared_ptr<const ThermalCluster> cluster) : itsThermalCluster(cluster)
 {
 }
 
 void PreproThermal::copyFrom(const PreproThermal& rhs)
 {
+    itsThermalCluster = rhs.itsThermalCluster;
     data = rhs.data;
     rhs.data.unloadFromMemory();
 }
