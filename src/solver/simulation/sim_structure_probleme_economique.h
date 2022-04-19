@@ -673,6 +673,9 @@ public:
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
     double maxPminThermiqueByDay[366];
+
+    /* Debug */
+    char debugFolder[1024];
 };
 
 #endif

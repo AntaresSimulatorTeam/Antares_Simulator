@@ -36,6 +36,8 @@
 #include "../optimisation/opt_fonctions.h"
 #include "common-eco-adq.h"
 
+#include <cstring>
+
 using namespace Yuni;
 
 namespace Antares
@@ -143,6 +145,14 @@ bool Economy::year(Progression::Task& progression,
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim ? OUI_ANTARES : NON_ANTARES;
         reinitOptim = false;
+
+        Yuni::String folder;
+        folder << study.folderOutput << SEP << "debug" << SEP << "solver" << SEP << state.year << SEP << w;
+        if (Yuni::IO::Directory::Create(folder)) {
+          strncpy(pProblemesHebdo[numSpace]->debugFolder,
+                  folder.c_str(),
+                  1024);
+        }
 
         try
         {

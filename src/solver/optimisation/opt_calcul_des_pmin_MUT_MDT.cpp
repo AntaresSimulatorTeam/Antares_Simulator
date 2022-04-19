@@ -33,7 +33,12 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include <yuni/io/file.h>
+#include <yuni/io/io.h>
+#include <yuni/string.h>
+
 #include "opt_fonctions.h"
+
+#define SEP Yuni::IO::Separator
 
 double OPT_CalculerAireMaxPminJour(int PremierPdt,
                                    int DernierPdt,
@@ -129,8 +134,12 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* ProblemeH
     NbGrpCourbeGuide = ProblemeHebdo->NbGrpCourbeGuide;
     NbGrpOpt = ProblemeHebdo->NbGrpOpt;
 
+
     for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; ++Pays)
     {
+        Yuni::String folder = ProblemeHebdo->debugFolder;
+        folder << SEP << ProblemeHebdo->NomsDesPays[Pays];
+
         ResultatsHoraires = ProblemeHebdo->ResultatsHoraires[Pays];
         PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
         PminDuPalierThermiquePendantUneHeure
@@ -143,6 +152,14 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* ProblemeH
 
         for (Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++)
         {
+            Yuni::String filename = folder;
+            filename << "_" << Palier << ".txt";
+            Yuni::IO::File::Stream file;
+            if (file.open(filename, Yuni::IO::OpenMode::append))
+            {
+              file << 1;
+            }
+
             PuissanceDispoEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Palier];
             PuissanceMinDuPalierThermique = PuissanceDispoEtCout->PuissanceMinDuPalierThermique;
             PuissanceDisponibleDuPalierThermique
