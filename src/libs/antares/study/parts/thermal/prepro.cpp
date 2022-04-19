@@ -43,7 +43,8 @@ namespace Antares
 {
 namespace Data
 {
-PreproThermal::PreproThermal(std::shared_ptr<const ThermalCluster> cluster) : itsThermalCluster(cluster)
+PreproThermal::PreproThermal(std::shared_ptr<const ThermalCluster> cluster) :
+ itsThermalCluster(cluster)
 {
 }
 
@@ -96,8 +97,7 @@ static bool LoadPreproThermal350(Study& study, Matrix<>& data, const AnyString& 
     return ret;
 }
 
-bool PreproThermal::loadFromFolder(Study& study,
-                                   const AnyString& folder)
+bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
 {
     bool ret = true;
     auto& buffer = study.bufferLoadingTS;

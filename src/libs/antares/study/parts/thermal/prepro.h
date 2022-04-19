@@ -89,8 +89,7 @@ public:
     ** \param folder The source folder
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
-    bool loadFromFolder(Study& study,
-                        const AnyString& folder);
+    bool loadFromFolder(Study& study, const AnyString& folder);
 
     /*!
     ** \brief Save settings used by the thermal prepro to a folder
@@ -116,6 +115,7 @@ public:
     ** This method should only be used by the solver
     */
     bool normalizeAndCheckNPO();
+
 private:
     std::shared_ptr<const ThermalCluster> itsThermalCluster = nullptr;
 
