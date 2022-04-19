@@ -137,7 +137,7 @@ public:
     */
     virtual void search(Spotlight::IItem::Vector& out,
                         const Spotlight::SearchToken::Vector& tokens,
-                        const Yuni::String& text = "") override
+                        const Yuni::String& /* text */) override
     {
         String title;
         String number;

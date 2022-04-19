@@ -267,7 +267,7 @@ RESOLUTION:
         }
         else
         {
-            OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace, ANTARES_SIMPLEXE);
+            OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace);
         }
     }
 
@@ -376,8 +376,7 @@ RESOLUTION:
             }
             else
             {
-                OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(
-                  (void*)&Probleme, numSpace, ANTARES_SIMPLEXE);
+                OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace);
             }
         }
 
@@ -415,7 +414,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     return;
 }
 
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char Type)
+void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
 {
     FILE* Flot;
     int Cnt;
