@@ -58,9 +58,6 @@ public:
         // reset IO statistics
         Statistics::Reset();
 
-        // The main form
-        Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
-
         // Normalize the folder
         IO::Normalize(pFilename, filename);
     }

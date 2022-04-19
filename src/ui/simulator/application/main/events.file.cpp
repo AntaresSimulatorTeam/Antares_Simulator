@@ -92,7 +92,7 @@ public:
 
     virtual void search(Spotlight::IItem::Vector& out,
                         const Spotlight::SearchToken::Vector& tokens,
-                        const Yuni::String& text = "")
+                        const Yuni::String& /* text */)
     {
         auto& framelist = Component::Frame::Registry::List();
         int elemIdx = -1;

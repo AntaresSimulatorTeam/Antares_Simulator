@@ -110,7 +110,7 @@ public:
     /*!
     ** \brief Get the visivility for a layerId
     */
-    virtual const bool isVisibleOnLayer(const size_t& layerID) const
+    virtual bool isVisibleOnLayer(const size_t& /* layerID */) const
     {
         return false;
     }
