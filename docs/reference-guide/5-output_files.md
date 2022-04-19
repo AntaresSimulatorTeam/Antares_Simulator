@@ -1,9 +1,9 @@
 # Output files
 
-_The general file organization is the same for Economy, Adequacy and Draft simulations._
+The general file organization is the same for Economy, Adequacy and Draft simulations.
 
-- _Economy and Adequacy results may be displayed in the GUI ( "Output" in main menu)_
-- _Draft results are available only as flat .txt files. They can be viewed with "Tool /csv viewer" in the main menu (As well as any other files, they can also be accessed by Excel or suchlike)_
+- Economy and Adequacy results may be displayed in the GUI ( "Output" in main menu)
+- Draft results are available only as flat .txt files. They can be viewed with "Tool /csv viewer" in the main menu (As well as any other files, they can also be accessed by Excel or suchlike)
 
 **Economy:**
 
@@ -16,8 +16,8 @@ _The general file organization is the same for Economy, Adequacy and Draft simul
 |                                  |                    |/areas/name/...| contains area-related results|
 |                                  |                    |/links/name/...| contains interconnection-related results|
 
-_("mc-all" files contain synthetic results over all years, "year-number" files contain results for a single year)_
-_The variables present in each file are detailed in the following sections._
+_("mc-all" files contain synthetic results over all years, "year-number" files contain results for a single year)_  
+_The variables present in each file are detailed in the following sections._  
 _In "Economy" simulations, all variables have a techno-economic meaning._
 
 **Adequacy:**
@@ -31,8 +31,8 @@ _In "Economy" simulations, all variables have a techno-economic meaning._
 |                                  |                    |/areas/name/...| contains area-related results|
 |                                  |                    |/links/name/...| contains interconnection-related results|
 
-_("mc-all" files contain synthetic results over all years, "year-number" files contain results for a single year)_
-_The variables present in each file bear exactly the same name as in Economy simulations but do not have the same values._
+_("mc-all" files contain synthetic results over all years, "year-number" files contain results for a single year)_  
+_The variables present in each file bear exactly the same name as in Economy simulations but do not have the same values._  
 _The only variables that have a techno-economic meaning are the "Adequacy" indicators (unsupplied energy,LOLD,LOLP)_
 
 **Draft:**
@@ -45,35 +45,35 @@ _The only variables that have a techno-economic meaning are the "Adequacy" indic
 
 _("mc-all" files contains mostly synthetic results over all years; However, there is (for each area) a "mc-annual.txt" file that gives a short view of local results for each simulated year)_
 
-**IMPORTANT** _Adequacy and Economy files look the same but their content are specific_
+**IMPORTANT** Adequacy and Economy files look the same but their content are specific
 
-_In "Economy" and "Adequacy" simulations, the optimization ignores the "primary" and "strategic" reserves (however, it may include the [other] spinning and day-ahead reserves, depending on the settings made in "optimization preferences")._
+In "Economy" and "Adequacy" simulations, the optimization ignores the "primary" and "strategic" reserves (however, it may include the [other] spinning and day-ahead reserves, depending on the settings made in "optimization preferences").
 
-_In "Adequacy" simulations, all dispatchable thermal units are given the "must-run" status (hence, they will generate at Pmax, regardless of the demand). As a consequence the only variables that are actually meaningful are the adequacy indicators (unsupplied energy, LOLD,LOLP), that may depend on assumptions made regarding the economic values of Unsupplied and spilled energies, and on hurdle costs on interconnections._
+In "Adequacy" simulations, all dispatchable thermal units are given the "must-run" status (hence, they will generate at Pmax, regardless of the demand). As a consequence the only variables that are actually meaningful are the adequacy indicators (unsupplied energy, LOLD,LOLP), that may depend on assumptions made regarding the economic values of Unsupplied and spilled energies, and on hurdle costs on interconnections.
 
-_As a consequence, both "Adequacy" and "Economy" simulations yield the same values for the adequacy indicators under the following conditions: if hurdle costs on interconnections are higher than the difference between the maximum VOLL and the minimum VOLL assigned to the different areas of the system._
+As a consequence, both "Adequacy" and "Economy" simulations yield the same values for the adequacy indicators under the following conditions: if hurdle costs on interconnections are higher than the difference between the maximum VOLL and the minimum VOLL assigned to the different areas of the system.
 
-_The files and their content are hereafter described._
+The files and their content are hereafter described.
 
 ## Economy and Adequacy, area results [^11]
 
-**15** _files resulting from the combination of the following attributes:_
+**15** files resulting from the combination of the following attributes:
 **[values | id | details] X [hourly | daily | weekly | monthly | annual]**
 
-- _The second attribute defines the time span over which the results are assessed: hourly detail, daily bundle, weekly bundle, monthly bundle, annual bundle._
+- The second attribute defines the time span over which the results are assessed: hourly detail, daily bundle, weekly bundle, monthly bundle, annual bundle.
 
-- _The first attribute defines the nature of the results presented in the file :_
+- The first attribute defines the nature of the results presented in the file :
 
-**Values** _Values of different variables (price, load, overall generation issued from coal, etc.), the list of which is common to all areas of the interconnected system. Files of type "values" have therefore the same size for all areas._ <br/>
-_These results appear under the label "general values" in the output GUI_
+**Values** Values of different variables (price, load, overall generation issued from coal, etc.), the list of which is common to all areas of the interconnected system. Files of type "values" have therefore the same size for all areas.  
+These results appear under the label "general values" in the output GUI.
 
-**details** _Values regarding the different dispatchable thermal generating plants of each area (e.g. "older 300 MW coal from the south coast"). The sizes of these files differ from one area to another._ <br/>
-_These results appear under the label "thermal plants" in the output GUI_
+**details** Values regarding the different dispatchable thermal generating plants of each area (e.g. "older 300 MW coal from the south coast"). The sizes of these files differ from one area to another.  
+These results appear under the label "thermal plants" in the output GUI.
 
-**id** _Identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different variables presented in the « values » files_ <br/>
-_These results appear under the label "record years" in the output GUI_
+**id** Identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different variables presented in the « values » files  
+These results appear under the label "record years" in the output GUI
 
-_The area files that belong to the « values » class display_ **122** _fields corresponding to the expectation, standard deviation, minimal and maximal values of the variables whose list is given hereafter._
+The area files that belong to the « values » class display **122** fields corresponding to the expectation, standard deviation, minimal and maximal values of the variables whose list is given hereafter.
 
 | variables | description |
 |-----------|-------------|
@@ -127,21 +127,21 @@ _The area files that belong to the « values » class display_ **122** _fields c
 
 
 ## Economy and Adequacy, interconnection results [^14]
-**10** _files resulting from the combination of the following attributes:_
+**10** files resulting from the combination of the following attributes:
 **[values | id] X [hourly | daily | weekly | monthly | annual]**
 
-- _The second attribute defines the period of time over which the results are assessed: hourly detail, daily bundle, weekly bundle, monthly bundle, annual bundle._
-- _The first attribute defines the nature of the results presented in the file_
+- The second attribute defines the period of time over which the results are assessed: hourly detail, daily bundle, weekly bundle, monthly bundle, annual bundle.
+- The first attribute defines the nature of the results presented in the file.
 
 
-**values** _values of different variables (flow, congestion rent) the list of which is common to all interconnections. The files of type "values" have therefore the same size everywhere_ <br/>
-_These results appear under the label "general values" in the output GUI_
+**values** values of different variables (flow, congestion rent) the list of which is common to all interconnections. The files of type "values" have therefore the same size everywhere  
+These results appear under the label "general values" in the output GUI.
 
-**id** _identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different variables presented in the « values » files_ <br/>
-_These results appear under the label "record years" in the output GUI_
+**id** identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different variables presented in the « values » files.  
+These results appear under the label "record years" in the output GUI.
 
 
-_The area files that belong to the « values » class display_  **28**  _fields corresponding to the expectation, standard deviation, minimal and maximal values of the variables whose list is given hereafter._
+The area files that belong to the « values » class display  **28**  fields corresponding to the expectation, standard deviation, minimal and maximal values of the variables whose list is given hereafter.
 
 | variables | description |
 |-----------|-------------|
@@ -158,7 +158,7 @@ _The area files that belong to the « values » class display_  **28**  _fields 
 
 ## Economy and Adequacy, other results
 
-_Depending on the options chosen in the main simulation window, the output folders may also include either, both or none of the following sections:_
+Depending on the options chosen in the main simulation window, the output folders may also include either, both or none of the following sections:
 
 | OUTPUT/Simu id/ts-numbers/   |                    |                                |
 |------------------------------|--------------------|--------------------------------|
@@ -168,7 +168,7 @@ _Depending on the options chosen in the main simulation window, the output folde
 |                              |/Wind               | /area names/...                |
 |                              |/Solar              | /area names/...                |
 
-_These files contain, for each kind of time-series, the number drawn (randomly or not) in each Monte-Carlo year (files are present if "output profile / MC scenarios" was set to "true")_
+These files contain, for each kind of time-series, the number drawn (randomly or not) in each Monte-Carlo year (files are present if "output profile / MC scenarios" was set to "true").
 
 | OUTPUT/Simu id/ts-generator/ |                    |                                |
 |------------------------------|--------------------|--------------------------------|
@@ -178,24 +178,25 @@ _These files contain, for each kind of time-series, the number drawn (randomly o
 |                              |/Solar              | /batch number/area names/...   |
 
 
-_These files contain, for each kind of Antares-generated time-series, copies of the whole set of time-series generated. Batch numbers depend on the values set for the "refresh span" parameters of the stochastic generators (files are present if "store in output" was set to "true")_
+These files contain, for each kind of Antares-generated time-series, copies of the whole set of time-series generated. Batch numbers depend on the values set for the "refresh span" parameters of the stochastic generators (files are present if "store in output" was set to "true").
+
 
 ## Draft, area results
 
-**1** _file « annual » +_ **6** _files resulting from the combination of the following attributes :_
+**1** file « annual » + **6** files resulting from the combination of the following attributes :
 [with-network | without-network | id] X [hourly | annual]
 
-- _The second attribute defines the period of time over which the results are assessed : hourly detail or annual summary._
+- The second attribute defines the period of time over which the results are assessed : hourly detail or annual summary.
 
-- _The first attribute defines the nature of the results presented in the file_
+- The first attribute defines the nature of the results presented in the file
 
-**with network** _values of adequacy indices (shortfall duration, loss of load probability) assessed while taking into account the effective grid capacities. The results in these files bear the suffix –CN (connex)_
+**with network** values of adequacy indices (shortfall duration, loss of load probability) assessed while taking into account the effective grid capacities. The results in these files bear the suffix –CN (connex).
 
-**without network** _values of adequacy indices (shortfall duration, loss of load probability) assessed without taking into account any interconnection. The results in these files bear the suffix –IS (isolated areas)_
+**without network** values of adequacy indices (shortfall duration, loss of load probability) assessed without taking into account any interconnection. The results in these files bear the suffix –IS (isolated areas).
 
-**id** _identifiers (numbers) of the MC years for which were observed the extreme values of the different variables presented in the « w/net » and "wo/net" files_
+**id** identifiers (numbers) of the MC years for which were observed the extreme values of the different variables presented in the « w/net » and "wo/net" files.
 
-_Files « with network » et « without network » present the expectations and extreme values observed for the variables whose list is given hereafter:_
+Files « with network » and « without network » present the expectations and extreme values observed for the variables whose list is given hereafter:
 
 | variables | description |
 |-----------|-------------|
@@ -205,7 +206,7 @@ _Files « with network » et « without network » present the expectations and 
 |MARG | Margin = available generation – (load + primary reserve) <br/> When MARG &gt; 0, MARG is a security margin <br/> When MARG &lt; 0, MARG is a curtailment depth |
 
 
-_The file « annual » has one line per simulated Monte-Carlo year and gives, for each year, the following information:_
+The file « annual » has one line per simulated Monte-Carlo year and gives, for each year, the following information:
 
 | variables | description |
 |-----------|-------------|
@@ -227,11 +228,10 @@ _Min { MC years } MAX DEPTH CN = Min { hours} MARG CN [MIN]_
 
 ## Miscellaneous
 
-_Alike Input data, output results can be filtered so as to include only items that are associated with Areas and Links defined as "visible" in the current map. In addition, the output filtering dialog box makes it possible to filter according to two special categories (**Districts** and **Unknown**) that are not related to standard maps:_
+Alike Input data, output results can be filtered so as to include only items that are associated with Areas and Links defined as "visible" in the current map. In addition, the output filtering dialog box makes it possible to filter according to two special categories (**Districts** and **Unknown**) that are not related to standard maps:
 
-- **Districts** _displays only results obtained for spatial aggregates_
-- **Unknown** _displays only results attached to Areas or Links that no longer exist in the Input dataset (i.e. study has changed since the last simulation)_
-
+- **Districts** displays only results obtained for spatial aggregates
+- **Unknown** displays only results attached to Areas or Links that no longer exist in the Input dataset (i.e. study has changed since the last simulation)
 
 [^11]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
 
