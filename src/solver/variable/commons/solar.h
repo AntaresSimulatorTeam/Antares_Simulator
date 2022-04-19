@@ -153,6 +153,9 @@ public:
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+
+        isRenewableGenerationAggregrated = study.parameters.renewableGeneration.isAggregated();
+
         // Next
         NextType::initializeFromStudy(study);
     }
@@ -192,11 +195,13 @@ public:
 
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
-        // The current time-series
-        (void)::memcpy(pValuesForTheCurrentYear[numSpace].hour,
-                       pArea->solar.series->series
-                         .entry[NumeroChroniquesTireesParPays[numSpace][pArea->index]->Solar],
-                       sizeof(double) * pArea->solar.series->series.height);
+        if (isRenewableGenerationAggregrated)
+        {
+            // The current solar time-series
+            (void)::memcpy(pValuesForTheCurrentYear[numSpace].hour,
+                pArea->solar.series->series.entry[NumeroChroniquesTireesParPays[numSpace][pArea->index]->Solar],
+                sizeof(double) * pArea->solar.series->series.height);
+        }
 
         // Next variable
         NextType::yearBegin(year, numSpace);
@@ -278,6 +283,7 @@ private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
+    bool isRenewableGenerationAggregrated = true;
 
 }; // class TimeSeriesValuesSolar
 
