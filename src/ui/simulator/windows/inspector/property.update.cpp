@@ -192,7 +192,6 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
                     area->adequacyPatchMode = Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch;
             }
         }
-        OnStudyAreaUseAdequacyPatchChanged();
         return true;
     }
     if (name == "area.links_count")
