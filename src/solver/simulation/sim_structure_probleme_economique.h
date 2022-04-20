@@ -506,7 +506,9 @@ struct AdequacyPatchParameters
     float ThresholdInitiateCurtailmentSharingRule;
     float ThresholdDisplayLocalMatchingRuleViolations;
 };
+
 class HOURLY_CSR_PROBLEM;
+
 struct PROBLEME_HEBDO
 {
     /* Business problem */
@@ -734,7 +736,7 @@ public:
         pWeeklyProblemBelongedTo = pProblemeHebdo;
     };
 
-
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     /* variables */
     std::vector<double> ENS;
     /* Results */
