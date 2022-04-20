@@ -651,7 +651,7 @@ void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
     fclose(Flot);
 }
 
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char Type)
+void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
 {
     FILE* Flot;
     int Cnt;
