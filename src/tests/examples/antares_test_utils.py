@@ -52,6 +52,12 @@ def run_study(solver_path, study_path, use_ortools = False, ortools_solver = "si
     if "Solver returned error" in output[0].decode('utf-8'):
         raise_assertion("Solver returned error")
 
+def enable_study_output(study_path, enable):
+    st = Study(str(study_path))
+    st.check_files_existence()
+
+    synthesis_value = "true" if enable else "false"
+    st.set_variable(variable = "synthesis", value = synthesis_value, file_nick_name="general")
 # ===============================================================
 # Old functions : can be used for generating reference results
 # ===============================================================
