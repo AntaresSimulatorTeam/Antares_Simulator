@@ -721,7 +721,7 @@ void ThermalClusterList::ensureDataPrepro()
     {
         auto c = it->second;
         if (not c->prepro)
-            c->prepro = new PreproThermal(c.get());
+            c->prepro = new PreproThermal(c);
     }
 }
 

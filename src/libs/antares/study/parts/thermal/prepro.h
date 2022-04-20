@@ -27,9 +27,11 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_H__
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_H__
 
+#include "cluster.h"
 #include "../../../array/matrix.h"
 #include "defines.h"
 #include "../../fwd.h"
+#include <memory>
 
 namespace Antares
 {
@@ -65,7 +67,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    PreproThermal(ThermalCluster* thermalCluster);
+    explicit PreproThermal(std::shared_ptr<const ThermalCluster> cluster);
     //@}
 
     bool invalidate(bool reload) const;
@@ -88,8 +90,7 @@ public:
     ** \param folder The source folder
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
-    bool loadFromFolder(Study& study,
-                        const AnyString& folder);
+    bool loadFromFolder(Study& study, const AnyString& folder);
 
     /*!
     ** \brief Save settings used by the thermal prepro to a folder
@@ -115,20 +116,18 @@ public:
     ** This method should only be used by the solver
     */
     bool normalizeAndCheckNPO();
-private:
-    ThermalCluster* itsThermalCluster = nullptr;
 
-public:
     //! All {FO,PO}{Duration,Rate} annual values
     // max x DAYS_PER_YEAR
     Matrix<> data;
-
+    // Parent thermal cluster
+    std::shared_ptr<const ThermalCluster> itsThermalCluster = nullptr;
 }; // class PreproThermal
 
 } // namespace Data
 } // namespace Antares
 
 #include "prepro.hxx"
-#include "cluster.h"
+
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_HXX__
