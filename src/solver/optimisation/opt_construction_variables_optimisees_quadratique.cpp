@@ -61,5 +61,30 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_H
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
   //CSR todo :build list of variable to be optimized in hourly CSR quadratic problem.
+
+  //CSR todo: let us first to create an optim problem like this:
+  // variables: ENS of each area
+  // objective function: Sum (2 * (ENS)^2) of all area
+  // upper bound and lower bound: for each ENS: 0 <= ENS <= 3000
+  // constraint: No constraint
+
+  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+  int NumberOfVariables = 0;
+
+  CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+  
+  //CSR todo, we re-use ProblemeAResoudre from weekly ProblemeHebdo, shall we instead use a new one created inside HOURLY_CSR_PROBLEM?
+  ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre; 
+  assert(ProblemeAResoudre != NULL);
+
+  CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0];
+
+  for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
+  {
+      CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area] = NumberOfVariables;
+      ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+      NumberOfVariables++;
+  }
+  ProblemeAResoudre->NombreDeVariables = NumberOfVariables;  
   return;
 }
