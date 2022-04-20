@@ -245,6 +245,7 @@ bool Economy::year(Progression::Task& progression,
                     pProblemesHebdo[numSpace]->houlyCsrProblems.clear(); // we clear houlyCsrProblems from previous week in case there is any
                     for(int hourInWeek : hoursInWeekTriggerCsrSet)
                     {
+                        //CSR todo if we reuse pProblemesHebdo, there will be no need to create HOURLY_CSR_PROBLEM
                         HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, pProblemesHebdo[numSpace]);
                         pProblemesHebdo[numSpace]->houlyCsrProblems.push_back(hourlyCsrProblem);
                         OPT_OptimisationHourlyCurtailmentSharingRule(hourlyCsrProblem); //CSR todo

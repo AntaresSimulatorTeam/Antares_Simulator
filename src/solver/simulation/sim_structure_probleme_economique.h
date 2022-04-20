@@ -737,7 +737,8 @@ public:
     };
 
     /* variables */
-    std::vector<double> ENS;
+    // std::vector<double> ENS; //CSR todo if we reuse pProblemesHebdo, there will be no need to create variables inside HOURLY_CSR_PROBLEM
+
     /* Results */
     HOURLY_CSR_RESULT hourlyResult; //CSR todo: shall we create a new HOURLY_CSR_RESULT structure, or do we update directly inside RESULTATS_HORAIRES?
 
