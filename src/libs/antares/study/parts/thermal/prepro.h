@@ -27,6 +27,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_H__
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_H__
 
+#include "cluster.h"
 #include "../../../array/matrix.h"
 #include "defines.h"
 #include "../../fwd.h"
@@ -119,8 +120,7 @@ public:
     //! All {FO,PO}{Duration,Rate} annual values
     // max x DAYS_PER_YEAR
     Matrix<> data;
-
-private:
+    // Parent thermal cluster
     std::shared_ptr<const ThermalCluster> itsThermalCluster = nullptr;
 }; // class PreproThermal
 
@@ -128,6 +128,6 @@ private:
 } // namespace Antares
 
 #include "prepro.hxx"
-#include "cluster.h"
+
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_HXX__
